@@ -1,538 +1,669 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4645C24BC00
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 16:42:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D0B31C8603;
+	Tue, 20 May 2025 16:42:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747759346; cv=none; b=TvIZRaYD0dTtkISa072lZZhFx2QSnpAKugXGFIVyMCGnprMoppVA42pCoosmMZputo54ZeZ2m2Qv2ttRQacSSimXqYRHENQY2Dqj+0erMnL3wv4inD6/HWRjfkTghr2h1Qi9ve5ANAw6/IXSl2N+2AxvzIVtLUw+vII6h4dAmJA=
+	t=1747759363; cv=none; b=GNM9KQ5EDhH+VipmJYRBJKVa2dDnS7EP3pBLmjzfiYqH6mbVCeTzpUPSUYQhx9oRsMNJ/KkAJAwQkcVLTXEY8X2r6CZU3Rd942gTpAXYSIZNikuGnwNHLc7Dm04iItB6GlEKgZ2id3i0ofkeNI0vhQ55oVp54fNxGuS1TpbRaAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747759346; c=relaxed/simple;
-	bh=ShdCKhfpQeYRoHbhq8KbtTZA8oZ8Vru+Ex2vMYikRx8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HIh1lp2r/W5GOQYqLpy+krxKA3T2tF2LJuyc4teqULTHDySdSwIhqCNolV+hO+rsSyw0j7+eHlXcjKwfRKj6lHYS52JKKWw1HeljvjqwZrldWsJJFfcRmeBhMGTNCgofprej7w++xgpyFbrBCpJQcmdaVpjW0pDpJ0kn3nj/XoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iqJZNLbZ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747759363; c=relaxed/simple;
+	bh=1Iemnh2QpFzqVrSOBPzppyuBAefTs+QBKRDP0XvTom4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=SNAq782lRqTEFAwF27wLV5RdyeemEfwJJLURAwPPK7181cu7U4CdlNPNO1/ESYDgQ4rAzwrxsUxC8oi5okgOyikIt00siZEUQk9AsnhnGI4pwwM4td2FeIVJxnJGnT94CsIGU6C/ohJ1FxKBeeQGreSWDwaCuto/zOKIdj4+NGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=leuxlEg3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iqJZNLbZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747759343;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XRAuiiuKUzc4rhXjyRrXCt0d5GzT75T2F5bv0+cES6U=;
-	b=iqJZNLbZKWUIZ6zxN0xiaWTIRPDtC2/NR2JH6tD6WJBHNU3ysHhZJ0xxxoW59YVp04RQNp
-	Fbo/XoSZ08Ouep9LzTpTcecar/BhAqG2Tm9ts/9sekpD8AoxFevdlPDT/+ruhQr2y5asQY
-	bvyZWWuwBNGQD52jKLLJoCfILhdH36A=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-596-TyJ_4NO9ORGZnNOggoPNCQ-1; Tue, 20 May 2025 12:42:22 -0400
-X-MC-Unique: TyJ_4NO9ORGZnNOggoPNCQ-1
-X-Mimecast-MFC-AGG-ID: TyJ_4NO9ORGZnNOggoPNCQ_1747759341
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a3683aa00eso1661117f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 09:42:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747759341; x=1748364141;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XRAuiiuKUzc4rhXjyRrXCt0d5GzT75T2F5bv0+cES6U=;
-        b=wWL9wgS5Ibly354OGSu3PNjquLd9c+Y9BduQmCa7K2prA+gKcqa/51L2K1UpBbDVk6
-         +in7GYPEFqbSmKnq5KgdlToUaTmnfWxvLw6/z6kPF6lkPektOAivO8Bu7XQ9JdkxrUx8
-         K99TQugA85C7O7gEnBkFRSMyPhbqcslC4n5nxebpGQN4LvEQSWcln9EZJzKY1zmQv9/B
-         xD5X5nNgepTM3gpwBGewsVsyId7O/+ilaMKsSujkM9svNlCdhiLEeV9PJ/HWx5ME5kAU
-         7E33pORomMkF6zc4k53+ELoqInN4rm+5xtJDQz9BPjgb4udjkJUGMZ6cVs8f5kPQitdK
-         SL4w==
-X-Gm-Message-State: AOJu0YyaFkHOgVMYy4FUR2FlY+fpnIYNTTDVMBQhrXtY7IvIc3ElSyV2
-	QVTMZdySqD60ahhto7E5pBaD0dYZmW3q/eYUHN+PdNyAXIBmG4vdComF6ruPTVbDT+MDNpBsgc2
-	cX1NiL9VhQo7j0pszCaPIXVcpihQjYZMB+xrwYaHSZjvA1sHuohQeSzv0rYQkoYp8l/Lc86rsYr
-	HJMR1ot/pF4B3Sj8uQXzMZJY2l5G6nwmDSUj4o4e3GIltartO4
-X-Gm-Gg: ASbGnctHAwP6rD28gIs7f2xlgwASvGxRzQ9ptK7ITBgrIqMf2d4N6Bh+DL61DUDVHNQ
-	F7iFyE4eysrSeHMY82+hTQI4OWDGkuv8CUY1Ih6K++UmNQhVXmkLd8+lKEps/7ruQJ/1rmmMqRu
-	x48qhjAuAXiQqThNtKfmUvgArux4tYjb2utxz2j62W9TCHEtfpnAs23AZsUcFh95eZkcM9ywQ/O
-	pEhzy6A9G47YA6Kc3fWwqUsTgYJOnd8Sbpe4JZD7EOcdSh1VhLI3I0vYDhT+upOUqWe5m9eJHuK
-	6KCQVxwd0YtY+4U+MBrQFf1Ry3G+gU3DklNTzqX0TfnK/4RHk5xr4gFc33qPT6K4oe55IF5C
-X-Received: by 2002:a05:6000:1445:b0:3a3:7be3:d0aa with SMTP id ffacd0b85a97d-3a37be3d129mr2164865f8f.18.1747759340773;
-        Tue, 20 May 2025 09:42:20 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGt/+A47lkkCyLI3eniGpwruEPnFTKW281JOcFxHtaeq1LLg6rqhYozaZ48z7f6iQ9krDwXBA==
-X-Received: by 2002:a05:6000:1445:b0:3a3:7be3:d0aa with SMTP id ffacd0b85a97d-3a37be3d129mr2164792f8f.18.1747759339984;
-        Tue, 20 May 2025 09:42:19 -0700 (PDT)
-Received: from localhost (p200300d82f287c00a95eac49f2adab84.dip0.t-ipconnect.de. [2003:d8:2f28:7c00:a95e:ac49:f2ad:ab84])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a35ca88899sm16762029f8f.80.2025.05.20.09.42.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 May 2025 09:42:19 -0700 (PDT)
-From: David Hildenbrand <david@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org,
-	virtualization@lists.linux.dev,
-	David Hildenbrand <david@redhat.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Oscar Salvador <osalvador@suse.de>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Brendan Jackman <jackmanb@google.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Zi Yan <ziy@nvidia.com>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>
-Subject: [PATCH v2 1/1] mm/memory_hotplug: PG_offline_skippable for offlining memory blocks with PageOffline pages
-Date: Tue, 20 May 2025 18:42:11 +0200
-Message-ID: <20250520164216.866543-2-david@redhat.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250520164216.866543-1-david@redhat.com>
-References: <20250520164216.866543-1-david@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="leuxlEg3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFA64C4CEE9;
+	Tue, 20 May 2025 16:42:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747759362;
+	bh=1Iemnh2QpFzqVrSOBPzppyuBAefTs+QBKRDP0XvTom4=;
+	h=From:Date:Subject:To:Cc:From;
+	b=leuxlEg3CADCGomWO71Lnpf9fwy4Cw6Ututf9DHO3r8G5Ywfqxu2Rk5DE7mUDl9dd
+	 9l21GFvvBeF3UJTEmyWxCvnEvSEScp5Sl88sAyzCtFmn5S35YYvGxsb4O/dYlEoF5v
+	 Ln+zTnACGQeSUxX87qn96ahaj4mzbcBntM6Br9uBdzAV+c/C6R5z77V7r+2PqJ6Dto
+	 1e6ZQ8mDCoyyS8xuDVWJ+cjZ7ZVRwlUAhQKng1NfymKqv3tuel/weQOKUpsr1T/Fk/
+	 eSqTOwaG39J39jByZrzYFL5bTKbpqqsfRRU49kj2fKzfJjYOin1sUHoKMkFfS1RTom
+	 3NkUlybj1e68w==
+From: Konrad Dybcio <konradybcio@kernel.org>
+Date: Tue, 20 May 2025 18:42:32 +0200
+Subject: [PATCH] arm64: dts: qcom: x1p42100: Fix thermal sensor
+ configuration
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250520-topic-x1p4_tsens-v1-1-bdadd91b7024@oss.qualcomm.com>
+X-B4-Tracking: v=1; b=H4sIAPewLGgC/x3MQQqAIBBA0avErBMmS7CuEhFhY83GxIkQpLsnL
+ d/i/wJCiUlgagokelj4ChVd24A7t3CQ4r0aNGqDRqO6r8hO5S4O6y0URG1o/E7U29Ei1Cwm8pz
+ /5by87wdDv0ofYgAAAA==
+X-Change-ID: 20250520-topic-x1p4_tsens-a05fdee38980
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: jens.glathe@oldschoolsolutions.biz, 
+ Marijn Suijten <marijn.suijten@somainline.org>, 
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747759359; l=11618;
+ i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
+ bh=U/ZzbkPh3ghwqH+tLF6loTXJYPSBNt7pM+xzEP+/17U=;
+ b=yBYPdohl3jl8XPmfNEexx9KLORIUJd62zjCQk3Un5nmJr+h5bK6riuahIxOheVnKVn18MijeB
+ wBB5lvLA7jzCat88JmWZEkn4HI8a+rUlID48lPx5WvjuLAWi845TqPV
+X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
+ pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
 
-A long-term goal is supporting frozen PageOffline pages, and later
-PageOffline pages that don't have a refcount at all. Some more work for
-that is needed -- in particular around non-folio page migration and
-memory ballooning drivers -- but let's start by handling PageOffline pages
-that can be skipped during memory offlining differently.
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-Note that PageOffline is used to mark pages that are logically offline
-in an otherwise online memory block (e.g., 128 MiB). If a memory
-block is offline, the memmap is considered compeltely uninitialized
-and stale (see pfn_to_online_page()).
+The 8-core SKUs of the X1 family have a different sensor configuration.
+Override it to expose what the sensors really measure.
 
-Let's introduce a PageOffline specific page flag (PG_offline_skippable)
-that for now reuses PG_owner_2. In the memdesc future, it will be one of
-a small number of per-memdesc flags stored alongside the type.
-
-By setting PG_offline_skippable, a driver indicates that it can
-restore the PageOffline state of these specific pages when re-onlining a
-memory block: it knows that these pages are supposed to be PageOffline()
-without the information in the vmemmap, so it can filter them out and
-not expose them to the buddy -> they stay PageOffline().
-
-While PG_offline_offlineable might be clearer, it is also super
-confusing. Alternatives (PG_offline_sticky?) also don't quite feel right.
-So let's use "skippable" for now.
-
-The flag is not supposed to be used for movable PageOffline pages as
-used for balloon compaction; movable PageOffline() pages can simply be
-migrated during the memory offlining stage, turning the migration
-destination page PageOffline() and turning the migration source page
-into a free buddy page.
-
-Let's convert the single user from our MEM_GOING_OFFLINE approach
-to the new PG_offline_skippable approach: virtio-mem. Fortunately,
-this simplifies the code quite a lot. The only corner case we have to
-take care of is when force-unloading the virtio-mem driver: we have to
-prevent partially-plugged memory blocks from getting offlined by
-clearing PG_offline_skippable again.
-
-What if someone decides to grab a reference on these pages although they
-really shouldn't? After all, we'll now keep the refcount at 1 (until we
-can properly stop using the refcount completely).
-
-Well, less worse things will happen than would currently: currently,
-if someone would grab a reference to these pages, in MEM_GOING_OFFLINE
-we would run into the
-		if (WARN_ON(!page_ref_dec_and_test(page)))
-			dump_page(page, "fake-offline page referenced");
-
-And once that unexpected reference would get dropped, we would end up
-freeing that page to the buddy: ouch.
-
-Now, we'll allow for offlining that memory, and when that unexpected
-reference would get dropped, we would not end up freeing that page to
-the buddy. Once we have frozen PageOffline() pages, it will all get a
-lot cleaner.
-
-Note that we didn't see the existing WARN_ON so far, because nobody
-should ever be referencing such pages.
-
-An alternative might be to have another callback chain from memory hotplug
-code, where a driver that owns that page could agree to skip the
-PageOffline() page. However, we would have to repeatedly issue these
-callbacks for individual PageOffline() pages, which does not sound
-compelling. As we have spare bits, let's use this simpler approach for
-now.
-
-Acked-by: Zi Yan <ziy@nvidia.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
+Fixes: f08edb529916 ("arm64: dts: qcom: Add X1P42100 SoC and CRD")
+Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 ---
- drivers/virtio/virtio_mem.c | 141 ++++++++----------------------------
- include/linux/page-flags.h  |  29 ++++++--
- mm/memory_hotplug.c         |  17 +++--
- mm/page_alloc.c             |   8 +-
- mm/page_isolation.c         |  21 ++----
- 5 files changed, 74 insertions(+), 142 deletions(-)
+Compile-tested only
+---
+ arch/arm64/boot/dts/qcom/x1e80100.dtsi |   2 +-
+ arch/arm64/boot/dts/qcom/x1p42100.dtsi | 556 +++++++++++++++++++++++++++++++++
+ 2 files changed, 557 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
-index 56d0dbe621637..e3b00ac8ada29 100644
---- a/drivers/virtio/virtio_mem.c
-+++ b/drivers/virtio/virtio_mem.c
-@@ -278,10 +278,6 @@ static DEFINE_MUTEX(virtio_mem_mutex);
- static LIST_HEAD(virtio_mem_devices);
+diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+index 60dcffb7db04a0734f3495dcf3dfab6e102e4e1b..92b2da38a1402e3d41f346266ce281dabe0f7a08 100644
+--- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
++++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
+@@ -8496,7 +8496,7 @@ timer {
+ 			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
+ 	};
  
- static void virtio_mem_online_page_cb(struct page *page, unsigned int order);
--static void virtio_mem_fake_offline_going_offline(unsigned long pfn,
--						  unsigned long nr_pages);
--static void virtio_mem_fake_offline_cancel_offline(unsigned long pfn,
--						   unsigned long nr_pages);
- static void virtio_mem_retry(struct virtio_mem *vm);
- static int virtio_mem_create_resource(struct virtio_mem *vm);
- static void virtio_mem_delete_resource(struct virtio_mem *vm);
-@@ -924,64 +920,6 @@ static void virtio_mem_sbm_notify_online(struct virtio_mem *vm,
- 	virtio_mem_sbm_set_mb_state(vm, mb_id, new_state);
- }
+-	thermal-zones {
++	thermal_zones: thermal-zones {
+ 		aoss0-thermal {
+ 			thermal-sensors = <&tsens0 0>;
  
--static void virtio_mem_sbm_notify_going_offline(struct virtio_mem *vm,
--						unsigned long mb_id)
--{
--	const unsigned long nr_pages = PFN_DOWN(vm->sbm.sb_size);
--	unsigned long pfn;
--	int sb_id;
--
--	for (sb_id = 0; sb_id < vm->sbm.sbs_per_mb; sb_id++) {
--		if (virtio_mem_sbm_test_sb_plugged(vm, mb_id, sb_id, 1))
--			continue;
--		pfn = PFN_DOWN(virtio_mem_mb_id_to_phys(mb_id) +
--			       sb_id * vm->sbm.sb_size);
--		virtio_mem_fake_offline_going_offline(pfn, nr_pages);
--	}
--}
--
--static void virtio_mem_sbm_notify_cancel_offline(struct virtio_mem *vm,
--						 unsigned long mb_id)
--{
--	const unsigned long nr_pages = PFN_DOWN(vm->sbm.sb_size);
--	unsigned long pfn;
--	int sb_id;
--
--	for (sb_id = 0; sb_id < vm->sbm.sbs_per_mb; sb_id++) {
--		if (virtio_mem_sbm_test_sb_plugged(vm, mb_id, sb_id, 1))
--			continue;
--		pfn = PFN_DOWN(virtio_mem_mb_id_to_phys(mb_id) +
--			       sb_id * vm->sbm.sb_size);
--		virtio_mem_fake_offline_cancel_offline(pfn, nr_pages);
--	}
--}
--
--static void virtio_mem_bbm_notify_going_offline(struct virtio_mem *vm,
--						unsigned long bb_id,
--						unsigned long pfn,
--						unsigned long nr_pages)
--{
--	/*
--	 * When marked as "fake-offline", all online memory of this device block
--	 * is allocated by us. Otherwise, we don't have any memory allocated.
--	 */
--	if (virtio_mem_bbm_get_bb_state(vm, bb_id) !=
--	    VIRTIO_MEM_BBM_BB_FAKE_OFFLINE)
--		return;
--	virtio_mem_fake_offline_going_offline(pfn, nr_pages);
--}
--
--static void virtio_mem_bbm_notify_cancel_offline(struct virtio_mem *vm,
--						 unsigned long bb_id,
--						 unsigned long pfn,
--						 unsigned long nr_pages)
--{
--	if (virtio_mem_bbm_get_bb_state(vm, bb_id) !=
--	    VIRTIO_MEM_BBM_BB_FAKE_OFFLINE)
--		return;
--	virtio_mem_fake_offline_cancel_offline(pfn, nr_pages);
--}
--
- /*
-  * This callback will either be called synchronously from add_memory() or
-  * asynchronously (e.g., triggered via user space). We have to be careful
-@@ -1040,12 +978,6 @@ static int virtio_mem_memory_notifier_cb(struct notifier_block *nb,
- 			break;
- 		}
- 		vm->hotplug_active = true;
--		if (vm->in_sbm)
--			virtio_mem_sbm_notify_going_offline(vm, id);
--		else
--			virtio_mem_bbm_notify_going_offline(vm, id,
--							    mhp->start_pfn,
--							    mhp->nr_pages);
- 		break;
- 	case MEM_GOING_ONLINE:
- 		mutex_lock(&vm->hotplug_mutex);
-@@ -1094,12 +1026,6 @@ static int virtio_mem_memory_notifier_cb(struct notifier_block *nb,
- 	case MEM_CANCEL_OFFLINE:
- 		if (!vm->hotplug_active)
- 			break;
--		if (vm->in_sbm)
--			virtio_mem_sbm_notify_cancel_offline(vm, id);
--		else
--			virtio_mem_bbm_notify_cancel_offline(vm, id,
--							     mhp->start_pfn,
--							     mhp->nr_pages);
- 		vm->hotplug_active = false;
- 		mutex_unlock(&vm->hotplug_mutex);
- 		break;
-@@ -1157,6 +1083,7 @@ static void virtio_mem_set_fake_offline(unsigned long pfn,
- 			SetPageDirty(page);
- 		else
- 			__SetPageOffline(page);
-+		__SetPageOfflineSkippable(page);
- 		VM_WARN_ON_ONCE(!PageOffline(page));
- 	}
- 	page_offline_end();
-@@ -1172,6 +1099,7 @@ static void virtio_mem_clear_fake_offline(unsigned long pfn,
- 	for (; nr_pages--; pfn++) {
- 		struct page *page = pfn_to_page(pfn);
+diff --git a/arch/arm64/boot/dts/qcom/x1p42100.dtsi b/arch/arm64/boot/dts/qcom/x1p42100.dtsi
+index 27f479010bc330eb6445269a1c46bf78ec6f1bd4..004f5e87f8e132cdd5ebb06a44e34d6746f459e1 100644
+--- a/arch/arm64/boot/dts/qcom/x1p42100.dtsi
++++ b/arch/arm64/boot/dts/qcom/x1p42100.dtsi
+@@ -18,6 +18,7 @@
+ /delete-node/ &cpu_pd10;
+ /delete-node/ &cpu_pd11;
+ /delete-node/ &pcie3_phy;
++/delete-node/ &thermal_zones;
  
-+		__ClearPageOfflineSkippable(page);
- 		if (!onlined)
- 			/* generic_online_page() will clear PageOffline(). */
- 			ClearPageDirty(page);
-@@ -1261,41 +1189,6 @@ static int virtio_mem_fake_offline(struct virtio_mem *vm, unsigned long pfn,
- 	return -EBUSY;
- }
- 
--/*
-- * Handle fake-offline pages when memory is going offline - such that the
-- * pages can be skipped by mm-core when offlining.
-- */
--static void virtio_mem_fake_offline_going_offline(unsigned long pfn,
--						  unsigned long nr_pages)
--{
--	struct page *page;
--	unsigned long i;
--
--	/* Drop our reference to the pages so the memory can get offlined. */
--	for (i = 0; i < nr_pages; i++) {
--		page = pfn_to_page(pfn + i);
--		if (WARN_ON(!page_ref_dec_and_test(page)))
--			dump_page(page, "fake-offline page referenced");
--	}
--}
--
--/*
-- * Handle fake-offline pages when memory offlining is canceled - to undo
-- * what we did in virtio_mem_fake_offline_going_offline().
-- */
--static void virtio_mem_fake_offline_cancel_offline(unsigned long pfn,
--						   unsigned long nr_pages)
--{
--	unsigned long i;
--
--	/*
--	 * Get the reference again that we dropped via page_ref_dec_and_test()
--	 * when going offline.
--	 */
--	for (i = 0; i < nr_pages; i++)
--		page_ref_inc(pfn_to_page(pfn + i));
--}
--
- static void virtio_mem_online_page(struct virtio_mem *vm,
- 				   struct page *page, unsigned int order)
- {
-@@ -2981,6 +2874,23 @@ static int virtio_mem_probe(struct virtio_device *vdev)
- 	return rc;
- }
- 
-+static void virtio_mem_sbm_mark_mb_non_skippable(struct virtio_mem *vm,
-+		unsigned long mb_id)
-+{
-+	const unsigned long nr_pages = PFN_DOWN(vm->sbm.sb_size);
-+	unsigned long i, pfn;
-+	int sb_id;
+ &gcc {
+ 	compatible = "qcom,x1p42100-gcc", "qcom,x1e80100-gcc";
+@@ -79,3 +80,558 @@ pcie3_phy: phy@1bd4000 {
+ 		status = "disabled";
+ 	};
+ };
 +
-+	for (sb_id = 0; sb_id < vm->sbm.sbs_per_mb; sb_id++) {
-+		if (virtio_mem_sbm_test_sb_plugged(vm, mb_id, sb_id, 1))
-+			continue;
-+		pfn = PFN_DOWN(virtio_mem_mb_id_to_phys(mb_id) +
-+			       sb_id * vm->sbm.sb_size);
-+		for (i = 0; i < nr_pages; i++)
-+			__ClearPageOfflineSkippable(pfn_to_page(pfn + i));
-+	}
-+}
++/* While physically present, this controller is left unconfigured and unused */
++&tsens3 {
++	status = "disabled";
++};
 +
- static void virtio_mem_deinit_hotplug(struct virtio_mem *vm)
- {
- 	unsigned long mb_id;
-@@ -3013,10 +2923,17 @@ static void virtio_mem_deinit_hotplug(struct virtio_mem *vm)
- 						    VIRTIO_MEM_SBM_MB_UNUSED);
- 		}
- 		/*
--		 * After we unregistered our callbacks, user space can no longer
--		 * offline partially plugged online memory blocks. No need to
--		 * worry about them.
-+		 * User space could offline partially plugged online memory
-+		 * blocks and re-online them without us being able to keep
-+		 * unplugged pieces PageOffline. Prevent offlining by marking
-+		 * unplugged pieces as non-skippable.
- 		 */
-+		virtio_mem_sbm_for_each_mb(vm, mb_id,
-+					   VIRTIO_MEM_SBM_MB_KERNEL_PARTIAL)
-+			virtio_mem_sbm_mark_mb_non_skippable(vm, mb_id);
-+		virtio_mem_sbm_for_each_mb(vm, mb_id,
-+					   VIRTIO_MEM_SBM_MB_MOVABLE_PARTIAL)
-+			virtio_mem_sbm_mark_mb_non_skippable(vm, mb_id);
- 	}
- 
- 	/* unregister callbacks */
-diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-index 4fe5ee67535b2..2f3b62b2b4c0f 100644
---- a/include/linux/page-flags.h
-+++ b/include/linux/page-flags.h
-@@ -178,6 +178,9 @@ enum pageflags {
- 	PG_vmemmap_self_hosted = PG_owner_priv_1,
- #endif
- 
-+	/* The driver allows for skipping these pages during memory offlining */
-+	PG_offline_skippable = PG_owner_2,
++/ {
++	thermal-zones {
++		aoss0-thermal {
++			thermal-sensors = <&tsens0 0>;
 +
- 	/*
- 	 * Flags only valid for compound pages.  Stored in first tail page's
- 	 * flags word.  Cannot use the first 8 flags or any flag marked as
-@@ -1036,14 +1039,23 @@ PAGE_TYPE_OPS(Buddy, buddy, buddy)
-  * refcount of 1 and PageOffline(). generic_online_page() will
-  * take care of clearing PageOffline().
-  *
-- * If a driver wants to allow to offline unmovable PageOffline() pages without
-- * putting them back to the buddy, it can do so via the memory notifier by
-- * decrementing the reference count in MEM_GOING_OFFLINE and incrementing the
-- * reference count in MEM_CANCEL_OFFLINE. When offlining, the PageOffline()
-- * pages (now with a reference count of zero) are treated like free (unmanaged)
-- * pages, allowing the containing memory block to get offlined. A driver that
-- * relies on this feature is aware that re-onlining the memory block will
-- * require not giving them to the buddy via generic_online_page().
-+ * If a driver wants to allow for offlining unmovable PageOffline() pages
-+ * when offlining a memory block without exposing these pages as "free" to
-+ * the buddy, it can mark them as PG_offline_skippable.
-+ *
-+ * By marking these PageOffline pages PG_offline_skippable, the driver
-+ * acknowledges that it
-+ * (a) knows which pages are PageOffline even without the memmap.
-+ * (b) implements the online_page_callback_t callback to exclude these pages
-+ *     from getting exposed to the buddy, so they will stay PageOffline()
-+ *     when onlining a memory block.
-+ * (c) synchronizes against concurrent memory onlining/offlining whenever
-+ *     adjusting the PG_offline_skippable flag.
-+ *
-+ * Note that the refcount of these pages will for now be assumed to always
-+ * be 1: nobody except the owner should be referencing these pages.
-+ * Offlining code will complain if the refcount is not 1. In the future,
-+ * these pages will always be frozen and not have a refcount.
-  *
-  * Memory offlining code will not adjust the managed page count for any
-  * PageOffline() pages, treating them like they were never exposed to the
-@@ -1055,6 +1067,7 @@ PAGE_TYPE_OPS(Buddy, buddy, buddy)
-  * page_offline_freeze()/page_offline_thaw().
-  */
- PAGE_TYPE_OPS(Offline, offline, offline)
-+__PAGEFLAG(OfflineSkippable, offline_skippable, PF_NO_COMPOUND)
- 
- extern void page_offline_freeze(void);
- extern void page_offline_thaw(void);
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index b1caedbade5b1..ed04fc4ca6761 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1767,12 +1767,10 @@ static int scan_movable_pages(unsigned long start, unsigned long end,
- 			goto found;
- 
- 		/*
--		 * PageOffline() pages that are not marked __PageMovable() and
--		 * have a reference count > 0 (after MEM_GOING_OFFLINE) are
--		 * definitely unmovable. If their reference count would be 0,
--		 * they could at least be skipped when offlining memory.
-+		 * PageOffline() pages that are neither "movable" nor
-+		 * "skippable" prevent memory offlining.
- 		 */
--		if (PageOffline(page) && page_count(page))
-+		if (PageOffline(page) && !PageOfflineSkippable(page))
- 			return -EBUSY;
- 
- 		if (!PageHuge(page))
-@@ -1807,6 +1805,15 @@ static void do_migrate_range(unsigned long start_pfn, unsigned long end_pfn)
- 		struct page *page;
- 
- 		page = pfn_to_page(pfn);
++			trips {
++				trip-point0 {
++					temperature = <90000>;
++					hysteresis = <2000>;
++					type = "hot";
++				};
 +
-+		/*
-+		 * Only PageOffline() pages that are marked "skippable" cannot
-+		 * be migrated but can be skipped when offlining. See
-+		 * scan_movable_pages().
-+		 */
-+		if (PageOffline(page) && PageOfflineSkippable(page))
-+			continue;
++				trip-point1 {
++					temperature = <115000>;
++					hysteresis = <1000>;
++					type = "critical";
++				};
++			};
++		};
 +
- 		folio = page_folio(page);
- 
- 		if (!folio_try_get(folio))
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index f6482223e28a2..7e4c41e46a911 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -7023,12 +7023,12 @@ unsigned long __offline_isolated_pages(unsigned long start_pfn,
- 			continue;
- 		}
- 		/*
--		 * At this point all remaining PageOffline() pages have a
--		 * reference count of 0 and can simply be skipped.
-+		 * At this point all remaining PageOffline() pages must be
-+		 * "skippable" and have exactly one reference.
- 		 */
- 		if (PageOffline(page)) {
--			BUG_ON(page_count(page));
--			BUG_ON(PageBuddy(page));
-+			WARN_ON_ONCE(!PageOfflineSkippable(page));
-+			WARN_ON_ONCE(page_count(page) != 1);
- 			already_offline++;
- 			pfn++;
- 			continue;
-diff --git a/mm/page_isolation.c b/mm/page_isolation.c
-index b2fc5266e3d26..debd898b794ea 100644
---- a/mm/page_isolation.c
-+++ b/mm/page_isolation.c
-@@ -121,16 +121,11 @@ static struct page *has_unmovable_pages(unsigned long start_pfn, unsigned long e
- 			continue;
- 
- 		/*
--		 * We treat all PageOffline() pages as movable when offlining
--		 * to give drivers a chance to decrement their reference count
--		 * in MEM_GOING_OFFLINE in order to indicate that these pages
--		 * can be offlined as there are no direct references anymore.
--		 * For actually unmovable PageOffline() where the driver does
--		 * not support this, we will fail later when trying to actually
--		 * move these pages that still have a reference count > 0.
--		 * (false negatives in this function only)
-+		 * PageOffline() pages that are marked as "skippable"
-+		 * are treated like movable pages for memory offlining.
- 		 */
--		if ((flags & MEMORY_OFFLINE) && PageOffline(page))
-+		if ((flags & MEMORY_OFFLINE) && PageOffline(page) &&
-+		    PageOfflineSkippable(page))
- 			continue;
- 
- 		if (__PageMovable(page) || PageLRU(page))
-@@ -577,11 +572,11 @@ __test_page_isolated_in_pageblock(unsigned long pfn, unsigned long end_pfn,
- 			/* A HWPoisoned page cannot be also PageBuddy */
- 			pfn++;
- 		else if ((flags & MEMORY_OFFLINE) && PageOffline(page) &&
--			 !page_count(page))
-+			 PageOfflineSkippable(page))
- 			/*
--			 * The responsible driver agreed to skip PageOffline()
--			 * pages when offlining memory by dropping its
--			 * reference in MEM_GOING_OFFLINE.
-+			 * If the page is a skippable PageOffline() page,
-+			 * we can offline the memory block, as the driver will
-+			 * re-discover them when re-onlining the memory.
- 			 */
- 			pfn++;
- 		else
++		cpu0-0-top-thermal {
++			thermal-sensors = <&tsens0 1>;
++
++			trips {
++				trip-point1 {
++					temperature = <115000>;
++					hysteresis = <1000>;
++					type = "critical";
++				};
++			};
++		};
++
++		cpu0-0-btm-thermal {
++			thermal-sensors = <&tsens0 2>;
++
++			trips {
++				trip-point1 {
++					temperature = <115000>;
++					hysteresis = <1000>;
++					type = "critical";
++				};
++			};
++		};
++
++		cpu0-1-top-thermal {
++			thermal-sensors = <&tsens0 3>;
++
++			trips {
++				trip-point1 {
++					temperature = <115000>;
++					hysteresis = <1000>;
++					type = "critical";
++				};
++			};
++		};
++
++		cpu0-1-btm-thermal {
++			thermal-sensors = <&tsens0 4>;
++
++			trips {
++				trip-point1 {
++					temperature = <115000>;
++					hysteresis = <1000>;
++					type = "critical";
++				};
++			};
++		};
++
++		cpu0-2-top-thermal {
++			thermal-sensors = <&tsens0 5>;
++
++			trips {
++				trip-point1 {
++					temperature = <115000>;
++					hysteresis = <1000>;
++					type = "critical";
++				};
++			};
++		};
++
++		cpu0-2-btm-thermal {
++			thermal-sensors = <&tsens0 6>;
++
++			trips {
++				trip-point1 {
++					temperature = <115000>;
++					hysteresis = <1000>;
++					type = "critical";
++				};
++			};
++		};
++
++		cpu0-3-top-thermal {
++			thermal-sensors = <&tsens0 7>;
++
++			trips {
++				trip-point1 {
++					temperature = <115000>;
++					hysteresis = <1000>;
++					type = "critical";
++				};
++			};
++		};
++
++		cpu0-3-btm-thermal {
++			thermal-sensors = <&tsens0 8>;
++
++			trips {
++				trip-point1 {
++					temperature = <115000>;
++					hysteresis = <1000>;
++					type = "critical";
++				};
++			};
++		};
++
++		cpuss0-top-thermal {
++			thermal-sensors = <&tsens0 9>;
++
++			trips {
++				trip-point1 {
++					temperature = <115000>;
++					hysteresis = <1000>;
++					type = "critical";
++				};
++			};
++		};
++
++		cpuss0-btm-thermal {
++			thermal-sensors = <&tsens0 10>;
++
++			trips {
++				trip-point1 {
++					temperature = <115000>;
++					hysteresis = <1000>;
++					type = "critical";
++				};
++			};
++		};
++
++		mem-thermal {
++			thermal-sensors = <&tsens0 11>;
++
++			trips {
++				trip-point0 {
++					temperature = <90000>;
++					hysteresis = <2000>;
++					type = "hot";
++				};
++
++				trip-point1 {
++					temperature = <115000>;
++					hysteresis = <0>;
++					type = "critical";
++				};
++			};
++		};
++
++		video-thermal {
++			thermal-sensors = <&tsens0 12>;
++
++			trips {
++				trip-point0 {
++					temperature = <90000>;
++					hysteresis = <2000>;
++					type = "hot";
++				};
++
++				trip-point1 {
++					temperature = <115000>;
++					hysteresis = <1000>;
++					type = "critical";
++				};
++			};
++		};
++
++		aoss1-thermal {
++			thermal-sensors = <&tsens1 0>;
++
++			trips {
++				trip-point0 {
++					temperature = <90000>;
++					hysteresis = <2000>;
++					type = "hot";
++				};
++
++				trip-point1 {
++					temperature = <115000>;
++					hysteresis = <1000>;
++					type = "critical";
++				};
++			};
++		};
++
++		cpu1-0-top-thermal {
++			thermal-sensors = <&tsens1 1>;
++
++			trips {
++				trip-point1 {
++					temperature = <115000>;
++					hysteresis = <1000>;
++					type = "critical";
++				};
++			};
++		};
++
++		cpu1-0-btm-thermal {
++			thermal-sensors = <&tsens1 2>;
++
++			trips {
++				trip-point1 {
++					temperature = <115000>;
++					hysteresis = <1000>;
++					type = "critical";
++				};
++			};
++		};
++
++		cpu1-1-top-thermal {
++			thermal-sensors = <&tsens1 3>;
++
++			trips {
++				trip-point1 {
++					temperature = <115000>;
++					hysteresis = <1000>;
++					type = "critical";
++				};
++			};
++		};
++
++		cpu1-1-btm-thermal {
++			thermal-sensors = <&tsens1 4>;
++
++			trips {
++				trip-point1 {
++					temperature = <115000>;
++					hysteresis = <1000>;
++					type = "critical";
++				};
++			};
++		};
++
++		cpu1-2-top-thermal {
++			thermal-sensors = <&tsens1 5>;
++
++			trips {
++				trip-point1 {
++					temperature = <115000>;
++					hysteresis = <1000>;
++					type = "critical";
++				};
++			};
++		};
++
++		cpu1-2-btm-thermal {
++			thermal-sensors = <&tsens1 6>;
++
++			trips {
++				trip-point1 {
++					temperature = <115000>;
++					hysteresis = <1000>;
++					type = "critical";
++				};
++			};
++		};
++
++		cpu1-3-top-thermal {
++			thermal-sensors = <&tsens1 7>;
++
++			trips {
++				trip-point1 {
++					temperature = <115000>;
++					hysteresis = <1000>;
++					type = "critical";
++				};
++			};
++		};
++
++		cpu1-3-btm-thermal {
++			thermal-sensors = <&tsens1 8>;
++
++			trips {
++				trip-point1 {
++					temperature = <115000>;
++					hysteresis = <1000>;
++					type = "critical";
++				};
++			};
++		};
++
++		cpuss1-top-thermal {
++			thermal-sensors = <&tsens1 9>;
++
++			trips {
++				trip-point1 {
++					temperature = <115000>;
++					hysteresis = <1000>;
++					type = "critical";
++				};
++			};
++		};
++
++		cpuss1-btm-thermal {
++			thermal-sensors = <&tsens1 10>;
++
++			trips {
++				trip-point1 {
++					temperature = <115000>;
++					hysteresis = <1000>;
++					type = "critical";
++				};
++			};
++		};
++
++		aoss2-thermal {
++			thermal-sensors = <&tsens2 0>;
++
++			trips {
++				trip-point0 {
++					temperature = <90000>;
++					hysteresis = <2000>;
++					type = "hot";
++				};
++
++				trip-point1 {
++					temperature = <115000>;
++					hysteresis = <1000>;
++					type = "critical";
++				};
++			};
++		};
++
++		nsp0-thermal {
++			thermal-sensors = <&tsens2 1>;
++
++			trips {
++				trip-point0 {
++					temperature = <90000>;
++					hysteresis = <2000>;
++					type = "hot";
++				};
++
++				trip-point1 {
++					temperature = <115000>;
++					hysteresis = <1000>;
++					type = "critical";
++				};
++			};
++		};
++
++		nsp1-thermal {
++			thermal-sensors = <&tsens2 2>;
++
++			trips {
++				trip-point0 {
++					temperature = <90000>;
++					hysteresis = <2000>;
++					type = "hot";
++				};
++
++				trip-point1 {
++					temperature = <115000>;
++					hysteresis = <1000>;
++					type = "critical";
++				};
++			};
++		};
++
++		nsp2-thermal {
++			thermal-sensors = <&tsens2 3>;
++
++			trips {
++				trip-point0 {
++					temperature = <90000>;
++					hysteresis = <2000>;
++					type = "hot";
++				};
++
++				trip-point1 {
++					temperature = <115000>;
++					hysteresis = <1000>;
++					type = "critical";
++				};
++			};
++		};
++
++		nsp3-thermal {
++			thermal-sensors = <&tsens2 4>;
++
++			trips {
++				trip-point0 {
++					temperature = <90000>;
++					hysteresis = <2000>;
++					type = "hot";
++				};
++
++				trip-point1 {
++					temperature = <115000>;
++					hysteresis = <1000>;
++					type = "critical";
++				};
++			};
++		};
++
++		gpuss-0-thermal {
++			polling-delay-passive = <200>;
++
++			thermal-sensors = <&tsens2 5>;
++
++			cooling-maps {
++				map0 {
++					trip = <&gpuss0_alert0>;
++					cooling-device = <&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++				};
++			};
++
++			trips {
++				gpuss0_alert0: trip-point0 {
++					temperature = <95000>;
++					hysteresis = <1000>;
++					type = "passive";
++				};
++
++				trip-point1 {
++					temperature = <115000>;
++					hysteresis = <1000>;
++					type = "critical";
++				};
++			};
++		};
++
++		gpuss-1-thermal {
++			polling-delay-passive = <200>;
++
++			thermal-sensors = <&tsens2 6>;
++
++			cooling-maps {
++				map0 {
++					trip = <&gpuss1_alert0>;
++					cooling-device = <&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++				};
++			};
++
++			trips {
++				gpuss1_alert0: trip-point0 {
++					temperature = <95000>;
++					hysteresis = <1000>;
++					type = "passive";
++				};
++
++				trip-point1 {
++					temperature = <115000>;
++					hysteresis = <1000>;
++					type = "critical";
++				};
++			};
++		};
++
++		gpuss-2-thermal {
++			polling-delay-passive = <200>;
++
++			thermal-sensors = <&tsens2 7>;
++
++			cooling-maps {
++				map0 {
++					trip = <&gpuss2_alert0>;
++					cooling-device = <&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++				};
++			};
++
++			trips {
++				gpuss2_alert0: trip-point0 {
++					temperature = <95000>;
++					hysteresis = <1000>;
++					type = "passive";
++				};
++
++				trip-point1 {
++					temperature = <115000>;
++					hysteresis = <1000>;
++					type = "critical";
++				};
++			};
++		};
++
++		gpuss-3-thermal {
++			polling-delay-passive = <200>;
++
++			thermal-sensors = <&tsens2 8>;
++
++			cooling-maps {
++				map0 {
++					trip = <&gpuss3_alert0>;
++					cooling-device = <&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++				};
++			};
++
++			trips {
++				gpuss3_alert0: trip-point0 {
++					temperature = <95000>;
++					hysteresis = <1000>;
++					type = "passive";
++				};
++
++				trip-point1 {
++					temperature = <115000>;
++					hysteresis = <1000>;
++					type = "critical";
++				};
++			};
++		};
++
++		camera0-thermal {
++			thermal-sensors = <&tsens2 9>;
++
++			trips {
++				trip-point0 {
++					temperature = <90000>;
++					hysteresis = <2000>;
++					type = "hot";
++				};
++
++				trip-point1 {
++					temperature = <115000>;
++					hysteresis = <1000>;
++					type = "critical";
++				};
++			};
++		};
++
++		camera1-thermal {
++			thermal-sensors = <&tsens2 10>;
++
++			trips {
++				trip-point0 {
++					temperature = <90000>;
++					hysteresis = <2000>;
++					type = "hot";
++				};
++
++				trip-point1 {
++					temperature = <115000>;
++					hysteresis = <1000>;
++					type = "critical";
++				};
++			};
++		};
++	};
++};
+
+---
+base-commit: edef457004774e598fc4c1b7d1d4f0bcd9d0bb30
+change-id: 20250520-topic-x1p4_tsens-a05fdee38980
+
+Best regards,
 -- 
-2.49.0
+Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
