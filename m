@@ -1,190 +1,258 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA2AE238152;
-	Tue, 20 May 2025 03:54:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 049BD21B8E0
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 03:55:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747713245; cv=none; b=FhstxFytG+XjTWXeABIXFKaO7FKKbE1JS+qDKnsjneNqKz9bdMFuUaKOD2Ib5h3RVg3mvWx+QN40IO6mW8kuMApdklE3Z3hygv5Efw9nUFMw3LCKMPsEszkyF4PYQtuAkSeUjnXRrn+I7SgLSH3QXlDnaqIrUYXRHDawYmFkQiQ=
+	t=1747713345; cv=none; b=J5eCQ1G+WEiUbVQmXprW4RZ1oc4mEQT1IX0UqZ91sluQH7Z7jhKswYPVP8yX9R3pBTayFe8u9lr1ejEpFQ8Tyz01ijQnx95qIlGWwqQqoe6cXDmBJt/iqVHB/ymmq51UdALeuPbeBmb2ox+qNlCddvTyNgBP/vSjITd8Ew4gBIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747713245; c=relaxed/simple;
-	bh=q5wVY9c5ZPA69PfiOdhIK17xTDSEDcrWg6odtPauNPE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=l796UQaL/I/U2URorHVIf54t/TkCdg4xS3/stoC0+uUOj02P5mCLS9efi4cBwY/LOOVh3dl2zxik1TalyULh5DRWr+vxLLUkLjyJcdzLVU8kWT9Q9xCpVJMxmPWTO5wBkWXQFh+j4vrpoRdFns8fv3Yi78tZF5/sA3NQgKOgbEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=bRglVG/a; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1747713345; c=relaxed/simple;
+	bh=w8WHRQYEpuCWeHAPB9nFkldqFCPHSRWCIyyrfG+VjFU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nHFv/AahtxcJoqo4Fqz27O2S4vCOOmAqJ31JSl5StO6W7pSv3gU3T+I6+HOZ0rfrspdovJ3DEBu4kFHqxr4HS2MZvSBwN5lmzIrbBOvL7pt72XjBTPo3daduMAlvnSGdUOTuTP+bEPGWuhGycKxOpguzSzl83PjeQwNSX4iuJJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=pNNlH6sk; arc=none smtp.client-ip=95.215.58.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="bRglVG/a"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id CEB20260B9;
-	Tue, 20 May 2025 05:53:59 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id dKH9mDnhu9xu; Tue, 20 May 2025 05:53:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1747713239; bh=q5wVY9c5ZPA69PfiOdhIK17xTDSEDcrWg6odtPauNPE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=bRglVG/azLZ19gIcL7BUT6PSdMpeIK2cyN1B5rrDEjCfZdCI28h2AUrsUisFHdCSS
-	 hky1ueQKFAfq0zNVhJr34EAr7koJmAQDW4NTglUujmRVgElNFw3aZHafDrr+QimJ0d
-	 6AIwAblYSddp8ho8ZvO1RI/8A54pPzFOtuEWd0aXwi3UvJwKIfHgeEmJzWZgwPkNtP
-	 lJVVC/K5uKI/N5tfaRFI/S9O1GfHDGTkpdlhihlSIPJMsjLdhZp2bRBo0yHiHUOS9b
-	 JINGMlkIldMVYEbjAtXcJbS2aIy2JPZggM9wnqJd+lkGBGhbC9ah0LoR6h1EYUIUSK
-	 8v7O25M68YUdQ==
-Date: Tue, 20 May 2025 03:53:33 +0000
-From: Yao Zi <ziyao@disroot.org>
-To: "Diederik de Haas" <didi.debian@cknow.org>,
-	"Vinod Koul" <vkoul@kernel.org>,
-	"Kishon Vijay Abraham I" <kishon@kernel.org>,
-	"Rob Herring" <robh@kernel.org>,
-	"Krzysztof Kozlowski" <krzk+dt@kernel.org>,
-	"Conor Dooley" <conor+dt@kernel.org>,
-	"Heiko Stuebner" <heiko@sntech.de>,
-	"Frank Wang" <frank.wang@rock-chips.com>,
-	"Andy Yan" <andy.yan@rock-chips.com>,
-	"Cristian Ciocaltea" <cristian.ciocaltea@collabora.com>,
-	"Detlev Casanova" <detlev.casanova@collabora.com>,
-	"Shresth Prasad" <shresthprasad7@gmail.com>,
-	"Chukun Pan" <amadeus@jmu.edu.cn>,
-	"Jonas Karlman" <jonas@kwiboo.se>
-Cc: <linux-phy@lists.infradead.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>,
-	<linux-rockchip@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 3/5] phy: rockchip: naneng-combphy: Add SoC prefix to
- register definitions
-Message-ID: <aCv8vRu8gjrvK8wr@pie.lan>
-References: <20250519161612.14261-1-ziyao@disroot.org>
- <20250519161612.14261-4-ziyao@disroot.org>
- <DA0DU2P8UWSV.3U07EFFLKBPXQ@cknow.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="pNNlH6sk"
+Message-ID: <ac4301b5-6f82-49f2-9c71-7c4c015d48f7@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747713332;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0vG90czwujKi76lIQqwAygZDtoFqpt79hvyKmQojSMw=;
+	b=pNNlH6sk3FlySAJ2Aw+t5Bg4vSx9G6WX8djrJhqbRgeMvqruf1NO15m2qRa2PpbBOPRc2S
+	Fy1yTcad3nqHDLHSgyckiR558t39k1/j+oSFYS1c9+HcaOOoJ/Km+GZwdy0UItkQ2Beinh
+	+8rG3OypIkNx9VpA/94mcyJ07b7xtoE=
+Date: Tue, 20 May 2025 11:55:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DA0DU2P8UWSV.3U07EFFLKBPXQ@cknow.org>
+Subject: Re: [PATCH 3/4] mm: prevent KSM from completely breaking VMA merging
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>, David Hildenbrand <david@redhat.com>,
+ Xu Xin <xu.xin16@zte.com.cn>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+References: <cover.1747431920.git.lorenzo.stoakes@oracle.com>
+ <418d3edbec3a718a7023f1beed5478f5952fc3df.1747431920.git.lorenzo.stoakes@oracle.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Chengming Zhou <chengming.zhou@linux.dev>
+In-Reply-To: <418d3edbec3a718a7023f1beed5478f5952fc3df.1747431920.git.lorenzo.stoakes@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, May 19, 2025 at 09:26:05PM +0200, Diederik de Haas wrote:
-> On Mon May 19, 2025 at 6:16 PM CEST, Yao Zi wrote:
-> > All supported variants of naneng-combphy follow a register layout
-> > similar to the RK3568 variant with some exceptions of SoC-specific
-> > registers.
-> >
-> > Add RK3568 prefix for the common set of registers and the corresponding
-> > SoC prefix for SoC-specific registers, making usage of definitions clear
-> > and preparing for future COMBPHY variants with a different register
-> > layout.
-> >
-> > Signed-off-by: Yao Zi <ziyao@disroot.org>
-> > Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-> > ---
-> >  .../rockchip/phy-rockchip-naneng-combphy.c    | 560 +++++++++---------
-> >  1 file changed, 288 insertions(+), 272 deletions(-)
-> >
-> > diff --git a/drivers/phy/rockchip/phy-rockchip-naneng-combphy.c b/drivers/phy/rockchip/phy-rockchip-naneng-combphy.c
-> > index ce91fb1d5167..1d1c7723584b 100644
-> > --- a/drivers/phy/rockchip/phy-rockchip-naneng-combphy.c
-> > +++ b/drivers/phy/rockchip/phy-rockchip-naneng-combphy.c
-> > @@ -21,78 +21,80 @@
-> >  #define REF_CLOCK_100MHz		(100 * HZ_PER_MHZ)
-> >  
-> >  /* COMBO PHY REG */
-> > <snip>
-> > -#define PHYREG33_PLL_KVCO_VALUE_RK3576	4
-> > +#define RK3568_PHYREG6				0x14
-> > +#define RK3568_PHYREG6_PLL_DIV_MASK		GENMASK(7, 6)
-> > +#define RK3568_PHYREG6_PLL_DIV_SHIFT		6
-> > +#define RK3568_PHYREG6_PLL_DIV_2		1
-> > +
-> > +#define RK3568_PHYREG7				0x18
-> > +#define RK3568_PHYREG7_TX_RTERM_MASK		GENMASK(7, 4)
-> > +#define RK3568_PHYREG7_TX_RTERM_SHIFT		4
-> > +#define RK3568_PHYREG7_TX_RTERM_50OHM		8
-> > +#define RK3568_PHYREG7_RX_RTERM_MASK		GENMASK(3, 0)
-> > +#define RK3568_PHYREG7_RX_RTERM_SHIFT		0
-> > +#define RK3568_PHYREG7_RX_RTERM_44OHM		15
-> > +
-> > +#define RK3568_PHYREG8				0x1C
-> > +#define RK3568_PHYREG8_SSC_EN			BIT(4)
-> > +
-> > +#define RK3568_PHYREG11				0x28
-> > +#define RK3568_PHYREG11_SU_TRIM_0_7		0xF0
-> > +
-> > +#define RK3568_PHYREG12				0x2C
-> > +#define RK3568_PHYREG12_PLL_LPF_ADJ_VALUE	4
-> > +
-> > +#define RK3568_PHYREG13				0x30
-> > +#define RK3568_PHYREG13_RESISTER_MASK		GENMASK(5, 4)
-> > +#define RK3568_PHYREG13_RESISTER_SHIFT		0x4
-> > +#define RK3568_PHYREG13_RESISTER_HIGH_Z		3
-> > +#define RK3568_PHYREG13_CKRCV_AMP0		BIT(7)
-> > +
-> > +#define RK3568_PHYREG14				0x34
-> > +#define RK3568_PHYREG14_CKRCV_AMP1		BIT(0)
-> > +
-> > +#define RK3568_PHYREG15				0x38
-> > +#define RK3568_PHYREG15_CTLE_EN			BIT(0)
-> > +#define RK3568_PHYREG15_SSC_CNT_MASK		GENMASK(7, 6)
-> > +#define RK3568_PHYREG15_SSC_CNT_SHIFT		6
-> > +#define RK3568_PHYREG15_SSC_CNT_VALUE		1
-> > +
-> > +#define RK3568_PHYREG16				0x3C
-> > +#define RK3568_PHYREG16_SSC_CNT_VALUE		0x5f
-> > +
-> > +#define RK3568_PHYREG18				0x44
-> > +#define RK3568_PHYREG18_PLL_LOOP		0x32
-> > +
-> > +#define RK3568_PHYREG32				0x7C
-> > +#define RK3568_PHYREG32_SSC_MASK		GENMASK(7, 4)
-> > +#define RK3568_PHYREG32_SSC_DIR_MASK		GENMASK(5, 4)
-> > +#define RK3568_PHYREG32_SSC_DIR_SHIFT		4
-> > +#define RK3568_PHYREG32_SSC_UPWARD		0
-> > +#define RK3568_PHYREG32_SSC_DOWNWARD		1
-> > +#define RK3568_PHYREG32_SSC_OFFSET_MASK	GENMASK(7, 6)
-> > +#define RK3568_PHYREG32_SSC_OFFSET_SHIFT	6
-> > +#define RK3568_PHYREG32_SSC_OFFSET_500PPM	1
-> > +
-> > +#define RK3568_PHYREG33				0x80
-> > +#define RK3568_PHYREG33_PLL_KVCO_MASK		GENMASK(4, 2)
-> > +#define RK3568_PHYREG33_PLL_KVCO_SHIFT		2
-> > +#define RK3568_PHYREG33_PLL_KVCO_VALUE		2
-> > +#define RK3576_PHYREG33_PLL_KVCO_VALUE		4
-> > +
-> > +/* RK3588 COMBO PHY registers */
-> > +#define RK3588_PHYREG27				0x6C
-> > +#define RK3588_PHYREG27_RX_TRIM			0x4C
+On 2025/5/19 16:51, Lorenzo Stoakes wrote:
+> If a user wishes to enable KSM mergeability for an entire process and all
+> fork/exec'd processes that come after it, they use the prctl()
+> PR_SET_MEMORY_MERGE operation.
 > 
-> Would it be better if RK3588_PHYREG* comes after RK3576_PHYREG*?
+> This defaults all newly mapped VMAs to have the VM_MERGEABLE VMA flag set
+> (in order to indicate they are KSM mergeable), as well as setting this flag
+> for all existing VMAs.
 > 
-> Cheers,
->   Diederik
+> However it also entirely and completely breaks VMA merging for the process
+> and all forked (and fork/exec'd) processes.
+> 
+> This is because when a new mapping is proposed, the flags specified will
+> never have VM_MERGEABLE set. However all adjacent VMAs will already have
+> VM_MERGEABLE set, rendering VMAs unmergeable by default.
+> 
+> To work around this, we try to set the VM_MERGEABLE flag prior to
+> attempting a merge. In the case of brk() this can always be done.
+> 
+> However on mmap() things are more complicated - while KSM is not supported
+> for file-backed mappings, it is supported for MAP_PRIVATE file-backed
+> mappings.
+> 
+> And these mappings may have deprecated .mmap() callbacks specified which
+> could, in theory, adjust flags and thus KSM merge eligiblity.
+> 
+> So we check to determine whether this at all possible. If not, we set
+> VM_MERGEABLE prior to the merge attempt on mmap(), otherwise we retain the
+> previous behaviour.
+> 
+> When .mmap_prepare() is more widely used, we can remove this precaution.
+> 
+> While this doesn't quite cover all cases, it covers a great many (all
+> anonymous memory, for instance), meaning we should already see a
+> significant improvement in VMA mergeability.
+> 
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 
-It's intended to keep RK3576 definitions below RK3588 ones. The RK3576
-driver makes use of a register introduced for RK3588 variant
-(RK3588_PHYREG27). Since similar reusing doesn't happen reversely, I
-consider the design of RK3576 a superset of the RK3588 one, and put
-RK3576 definitions later in the file.
+Looks good to me with the build fix. And it seems that ksm_add_vma()
+is not used anymore..
 
-> > +
-> > +/* RK3576 COMBO PHY registers */
-> > +#define RK3576_PHYREG10				0x24
-> > +#define RK3576_PHYREG10_SSC_PCM_MASK		GENMASK(3, 0)
-> > +#define RK3576_PHYREG10_SSC_PCM_3500PPM		7
-> > +
-> > +#define RK3576_PHYREG17				0x40
-> > +
-> > +#define RK3576_PHYREG21				0x50
-> > +#define RK3576_PHYREG21_RX_SQUELCH_VAL		0x0D
-> > +
-> > +#define RK3576_PHYREG30				0x74
-> >  
-> >  struct rockchip_combphy_priv;
-> > <snip>
+Reviewed-by: Chengming Zhou <chengming.zhou@linux.dev>
 
+Thanks!
 
-Thanks,
-Yao Zi
+> ---
+>   include/linux/ksm.h |  4 ++--
+>   mm/ksm.c            | 20 ++++++++++++------
+>   mm/vma.c            | 49 +++++++++++++++++++++++++++++++++++++++++++--
+>   3 files changed, 63 insertions(+), 10 deletions(-)
+> 
+> diff --git a/include/linux/ksm.h b/include/linux/ksm.h
+> index d73095b5cd96..ba5664daca6e 100644
+> --- a/include/linux/ksm.h
+> +++ b/include/linux/ksm.h
+> @@ -17,8 +17,8 @@
+>   #ifdef CONFIG_KSM
+>   int ksm_madvise(struct vm_area_struct *vma, unsigned long start,
+>   		unsigned long end, int advice, unsigned long *vm_flags);
+> -
+> -void ksm_add_vma(struct vm_area_struct *vma);
+> +vm_flags_t ksm_vma_flags(const struct mm_struct *mm, const struct file *file,
+> +			 vm_flags_t vm_flags);
+>   int ksm_enable_merge_any(struct mm_struct *mm);
+>   int ksm_disable_merge_any(struct mm_struct *mm);
+>   int ksm_disable(struct mm_struct *mm);
+> diff --git a/mm/ksm.c b/mm/ksm.c
+> index d0c763abd499..022af14a95ea 100644
+> --- a/mm/ksm.c
+> +++ b/mm/ksm.c
+> @@ -2731,16 +2731,24 @@ static int __ksm_del_vma(struct vm_area_struct *vma)
+>   	return 0;
+>   }
+>   /**
+> - * ksm_add_vma - Mark vma as mergeable if compatible
+> + * ksm_vma_flags - Update VMA flags to mark as mergeable if compatible
+>    *
+> - * @vma:  Pointer to vma
+> + * @mm:       Proposed VMA's mm_struct
+> + * @file:     Proposed VMA's file-backed mapping, if any.
+> + * @vm_flags: Proposed VMA"s flags.
+> + *
+> + * Returns: @vm_flags possibly updated to mark mergeable.
+>    */
+> -void ksm_add_vma(struct vm_area_struct *vma)
+> +vm_flags_t ksm_vma_flags(const struct mm_struct *mm, const struct file *file,
+> +			 vm_flags_t vm_flags)
+>   {
+> -	struct mm_struct *mm = vma->vm_mm;
+> +	vm_flags_t ret = vm_flags;
+>   
+> -	if (test_bit(MMF_VM_MERGE_ANY, &mm->flags))
+> -		__ksm_add_vma(vma);
+> +	if (test_bit(MMF_VM_MERGE_ANY, &mm->flags) &&
+> +	    __ksm_should_add_vma(file, vm_flags))
+> +		ret |= VM_MERGEABLE;
+> +
+> +	return ret;
+>   }
+>   
+>   static void ksm_add_vmas(struct mm_struct *mm)
+> diff --git a/mm/vma.c b/mm/vma.c
+> index 3ff6cfbe3338..5bebe55ea737 100644
+> --- a/mm/vma.c
+> +++ b/mm/vma.c
+> @@ -2482,7 +2482,6 @@ static int __mmap_new_vma(struct mmap_state *map, struct vm_area_struct **vmap)
+>   	 */
+>   	if (!vma_is_anonymous(vma))
+>   		khugepaged_enter_vma(vma, map->flags);
+> -	ksm_add_vma(vma);
+>   	*vmap = vma;
+>   	return 0;
+>   
+> @@ -2585,6 +2584,45 @@ static void set_vma_user_defined_fields(struct vm_area_struct *vma,
+>   	vma->vm_private_data = map->vm_private_data;
+>   }
+>   
+> +static void update_ksm_flags(struct mmap_state *map)
+> +{
+> +	map->flags = ksm_vma_flags(map->mm, map->file, map->flags);
+> +}
+> +
+> +/*
+> + * Are we guaranteed no driver can change state such as to preclude KSM merging?
+> + * If so, let's set the KSM mergeable flag early so we don't break VMA merging.
+> + *
+> + * This is applicable when PR_SET_MEMORY_MERGE has been set on the mm_struct via
+> + * prctl() causing newly mapped VMAs to have the KSM mergeable VMA flag set.
+> + *
+> + * If this is not the case, then we set the flag after considering mergeability,
+> + * which will prevent mergeability as, when PR_SET_MEMORY_MERGE is set, a new
+> + * VMA will not have the KSM mergeability VMA flag set, but all other VMAs will,
+> + * preventing any merge.
+> + */
+> +static bool can_set_ksm_flags_early(struct mmap_state *map)
+> +{
+> +	struct file *file = map->file;
+> +
+> +	/* Anonymous mappings have no driver which can change them. */
+> +	if (!file)
+> +		return true;
+> +
+> +	/* shmem is safe. */
+> +	if (shmem_file(file))
+> +		return true;
+> +
+> +	/*
+> +	 * If .mmap_prepare() is specified, then the driver will have already
+> +	 * manipulated state prior to updating KSM flags.
+> +	 */
+> +	if (file->f_op->mmap_prepare)
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+>   static unsigned long __mmap_region(struct file *file, unsigned long addr,
+>   		unsigned long len, vm_flags_t vm_flags, unsigned long pgoff,
+>   		struct list_head *uf)
+> @@ -2595,6 +2633,7 @@ static unsigned long __mmap_region(struct file *file, unsigned long addr,
+>   	bool have_mmap_prepare = file && file->f_op->mmap_prepare;
+>   	VMA_ITERATOR(vmi, mm, addr);
+>   	MMAP_STATE(map, mm, &vmi, addr, len, pgoff, vm_flags, file);
+> +	bool check_ksm_early = can_set_ksm_flags_early(&map);
+>   
+>   	error = __mmap_prepare(&map, uf);
+>   	if (!error && have_mmap_prepare)
+> @@ -2602,6 +2641,9 @@ static unsigned long __mmap_region(struct file *file, unsigned long addr,
+>   	if (error)
+>   		goto abort_munmap;
+>   
+> +	if (check_ksm_early)
+> +		update_ksm_flags(&map);
+> +
+>   	/* Attempt to merge with adjacent VMAs... */
+>   	if (map.prev || map.next) {
+>   		VMG_MMAP_STATE(vmg, &map, /* vma = */ NULL);
+> @@ -2611,6 +2653,9 @@ static unsigned long __mmap_region(struct file *file, unsigned long addr,
+>   
+>   	/* ...but if we can't, allocate a new VMA. */
+>   	if (!vma) {
+> +		if (!check_ksm_early)
+> +			update_ksm_flags(&map);
+> +
+>   		error = __mmap_new_vma(&map, &vma);
+>   		if (error)
+>   			goto unacct_error;
+> @@ -2713,6 +2758,7 @@ int do_brk_flags(struct vma_iterator *vmi, struct vm_area_struct *vma,
+>   	 * Note: This happens *after* clearing old mappings in some code paths.
+>   	 */
+>   	flags |= VM_DATA_DEFAULT_FLAGS | VM_ACCOUNT | mm->def_flags;
+> +	flags = ksm_vma_flags(mm, NULL, flags);
+>   	if (!may_expand_vm(mm, flags, len >> PAGE_SHIFT))
+>   		return -ENOMEM;
+>   
+> @@ -2756,7 +2802,6 @@ int do_brk_flags(struct vma_iterator *vmi, struct vm_area_struct *vma,
+>   
+>   	mm->map_count++;
+>   	validate_mm(mm);
+> -	ksm_add_vma(vma);
+>   out:
+>   	perf_event_mmap(vma);
+>   	mm->total_vm += len >> PAGE_SHIFT;
