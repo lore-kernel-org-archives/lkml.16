@@ -1,140 +1,59 @@
-Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BF2C25A2D9
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 17:52:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D37B1A83FB;
+	Tue, 20 May 2025 17:53:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747763551; cv=none; b=Q3hOMYIjRCsuCTf50ztlEFxP30J2Kx5OREQ+VKel1TTCCH0/sVuVh0xzh5muLGegN3ymio5/sGLSR88e4F3cBHWhQDjs4UO5owgFdiwxng3MIAME+YLG3O3du0kKyJ2XctVxQqB+Z+TWsUSZN3WDdr7z4q/noVyqgq6A/3hK5hU=
+	t=1747763601; cv=none; b=pmxxcQwjGHg6ORr3D5+7XcdsMxJEb7oTN5ear/Re8A0T1YTcuVWbB9pQRDw1gkdmz7JB88tD6sDcDZ8KGSZAbj8SCHhMLaLv8TgnX1KueKOXZ2Nwbq7SJixX6afOi25SmqznofC/FD4D8kxVtJgMa3boCcZlzFxB0twRL1hhWSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747763551; c=relaxed/simple;
-	bh=vWVcBsC9mzrZPsjoG3wIgtaU4yrU3K4N0P1LOA/Wtkg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AxeCkHmk/PnD2she25V3c2hVMw+na/FuQzbKsVcnhu0azerDKwqcHyxdHgfnJpFruGHxiEydmg2ZFtT9AJRrCJDIFrC9YjRlC4HxDRfEdF8L9lBC/kOoOmbk8JtnMZ5BHYYKzA4B+C3vh0KoyYY4oo06gl/Ox9MWStUPLjsMZZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=xmfopyOu; arc=none smtp.client-ip=149.28.215.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
+	s=arc-20240116; t=1747763601; c=relaxed/simple;
+	bh=k3NQLgEEWquiEaMW04bfBp11JwsCzmF7UqfW52cvxC4=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=rtskkVsgx+mJKV+ZgwoGr2KytMhN25HATasQs3qA5Y0oYLdCc9YmO8G/LGo1Gf+7u1pKeKtYxwslg3i1DX53oXHuMPTA/v8cP93o48DyF7fUDRvcw88qfVdXCHIJJI1aaU9orJbQBLcJ1YcrlLh2dfX7MQIoIBK7w9vbU56km1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=ZqBsc5HF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="xmfopyOu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
- h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
- Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
- s=fe-e1b5cab7be; t=1747763543;
- bh=uKHEwnYvk3DoQnbDm76DtOrSSIM/yuksJQK3RjrtSzY=;
- b=xmfopyOusjtBFmE4rVoGUF+wJ9vCOtsjFWz+xNezP7ODeAhgDS73w/8cZ6o9c2K27d4CDhO0C
- +/urC9e6M7i9+LslhrFlcdv5fcAy8uPTnlGugt0mRL+pwOu9dPcSTot+oxLm7FsgHw10yW7CCWK
- X1QMUQtPflHelM2LfMeEocWIN5SLNj0Xu4LGZeBlSgGS9pe4y1WtfFqow1ELWf+YgxV/Vr+KDfH
- XGsdaeWxvkC486EvdP0m02xsTnXPqyvFM51RGiH2bxcVN/O4AiYnjgOlFcbSpx8h54uzBR07jxQ
- NIXC23YbhwAu7CfkpeL3QbLZmn21IPY/vQLRCmS/LwZw==
-X-Forward-Email-ID: 682cc1437730016263d49d6d
-X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
- 149.28.215.223
-X-Forward-Email-Version: 1.0.3
-X-Forward-Email-Website: https://forwardemail.net
-X-Complaints-To: abuse@forwardemail.net
-X-Report-Abuse: abuse@forwardemail.net
-X-Report-Abuse-To: abuse@forwardemail.net
-Message-ID: <079c08bc-e8cc-4ed6-a71e-7ef103f635c0@kwiboo.se>
-Date: Tue, 20 May 2025 19:51:57 +0200
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="ZqBsc5HF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB50CC4CEE9;
+	Tue, 20 May 2025 17:53:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1747763600;
+	bh=k3NQLgEEWquiEaMW04bfBp11JwsCzmF7UqfW52cvxC4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ZqBsc5HFIPyN/31NShiUu1aE6ezcxCZLt0AQY8Be4Ubp0fGYvIKRKOhlAE4r8GDQ6
+	 tFtOh/AFHYKtriMjtIbvOdUDlGZkPzLmT83E/Cvin2R7ELx1QKgraQFIkTro+5yquU
+	 so9nc7FFf1Ol0QTad9+fWk8kUlZLpzF8psk8Ou+U=
+Date: Tue, 20 May 2025 10:53:19 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Joshua Hahn <joshua.hahnjy@gmail.com>
+Cc: gourry@gourry.net, harry.yoo@oracle.com, ying.huang@linux.alibaba.com,
+ honggyu.kim@sk.com, yunjeong.mun@sk.com, gregkh@linuxfoundation.org,
+ rakie.kim@sk.com, rafael@kernel.org, lenb@kernel.org,
+ dan.j.williams@intel.com, Jonathan.Cameron@huawei.com,
+ dave.jiang@intel.com, horen.chuang@linux.dev, hannes@cmpxchg.org,
+ osalvador@suse.de, linux-kernel@vger.kernel.org,
+ linux-acpi@vger.kernel.org, linux-mm@kvack.org, kernel-team@meta.com
+Subject: Re: [PATCH v9] mm/mempolicy: Weighted Interleave Auto-tuning
+Message-Id: <20250520105319.99f3f2f980617e213db6be20@linux-foundation.org>
+In-Reply-To: <20250520141236.2987309-1-joshua.hahnjy@gmail.com>
+References: <20250520141236.2987309-1-joshua.hahnjy@gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/5] arm64: dts: rockchip: Add naneng-combphy for
- RK3528
-To: Yao Zi <ziyao@disroot.org>
-Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I
- <kishon@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- Frank Wang <frank.wang@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>,
- Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
- Detlev Casanova <detlev.casanova@collabora.com>,
- Shresth Prasad <shresthprasad7@gmail.com>, Chukun Pan <amadeus@jmu.edu.cn>,
- linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250519161612.14261-1-ziyao@disroot.org>
- <20250519161612.14261-6-ziyao@disroot.org>
-Content-Language: en-US
-From: Jonas Karlman <jonas@kwiboo.se>
-In-Reply-To: <20250519161612.14261-6-ziyao@disroot.org>
-Content-Type: text/plain; charset=UTF-8
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 2025-05-19 18:16, Yao Zi wrote:
-> Rockchip RK3528 ships a naneng-combphy that is shared by PCIe and USB
-> 3.0 controllers. Describe it and the pipe-phy grf which it depends on.
-> 
-> Signed-off-by: Yao Zi <ziyao@disroot.org>
-> ---
->  arch/arm64/boot/dts/rockchip/rk3528.dtsi | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3528.dtsi b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
-> index b2724c969a76..314afb94e19b 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3528.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
-> @@ -318,6 +318,11 @@ vpu_grf: syscon@ff340000 {
->  			reg = <0x0 0xff340000 0x0 0x8000>;
->  		};
->  
-> +		pipe_phy_grf: syscon@ff348000 {
-> +			compatible = "rockchip,rk3528-pipe-phy-grf", "syscon";
-> +			reg = <0x0 0xff348000 0x0 0x8000>;
-> +		};
-> +
->  		vo_grf: syscon@ff360000 {
->  			compatible = "rockchip,rk3528-vo-grf", "syscon";
->  			reg = <0x0 0xff360000 0x0 0x10000>;
-> @@ -867,6 +872,23 @@ dmac: dma-controller@ffd60000 {
->  			arm,pl330-periph-burst;
->  		};
->  
-> +		combphy: phy@ffdc0000 {
-> +			compatible = "rockchip,rk3528-naneng-combphy";
-> +			reg = <0x0 0xffdc0000 0x0 0x10000>;
-> +			#phy-cells = <1>;
+On Tue, 20 May 2025 07:12:35 -0700 Joshua Hahn <joshua.hahnjy@gmail.com> wrote:
 
-Should probably be sorted at end or before resets prop.
+> Changelog
+> v9:
+> - Code cleanups & wordsmithing
+> - Added tags for Honggyu and Ying
 
-> +			clocks = <&cru CLK_REF_PCIE_INNER_PHY>, <&cru PCLK_PCIE_PHY>,
-
-This break the ~80 line length limit mostly kept in this file.
-
-> +				 <&cru PCLK_PIPE_GRF>;
-> +			clock-names = "ref", "apb",
-> +				      "pipe";
-
-Could be kept on a single line.
-
-> +			assigned-clocks = <&cru CLK_REF_PCIE_INNER_PHY>;
-> +			assigned-clock-rates = <100000000>;
-
-Other assigned-clock props are sorted before clocks props in this file.
-
-This is also missing power-domains information (also missing from
-dt-bindings patch):
-
-	power-domains = <&power RK3528_PD_VPU>;
-
-> +			resets = <&cru SRST_PCIE_PIPE_PHY>, <&cru SRST_P_PCIE_PHY>;
-
-This also break the ~80 line length limit mostly kept in this file.
-
-Regards,
-Jonas
-
-> +			reset-names = "phy", "apb";
-> +			rockchip,pipe-grf = <&vpu_grf>;
-> +			rockchip,pipe-phy-grf = <&pipe_phy_grf>;
-> +			status = "disabled";
-> +		};
-> +
->  		pinctrl: pinctrl {
->  			compatible = "rockchip,rk3528-pinctrl";
->  			rockchip,grf = <&ioc_grf>;
+Honggyu's Reviewed-by is the only change I'm seeing between v8 and v9,
+which is unexpected?
 
