@@ -1,92 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF8592627F9;
-	Tue, 20 May 2025 15:56:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1874E2627F9;
+	Tue, 20 May 2025 15:56:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747756595; cv=none; b=trHHT1ggNsf2xizY8uNpybaVXQHJLlNF/ug0ImhbTP2Whvg9zoCKg1Z4l5R+Y1nmReIjZ9MKdUMSCXuq30E+3MEDQZizPVss8QOscXhiQ4QT1wjJsvIR4+YLgwp0Llw7iiGtAaj2UyMM2pnSj2msZJ6IbiWnujEpXMzUwg+srcY=
+	t=1747756601; cv=none; b=UYKPDetKhdd2ziqfXuaObKrJgw8syF39ksS+seTJ70sBmF9rpJaEHU+VkZ85Bf2EMUSyjCNrS/BDEWpnRVByJoQ3as57DUPpBhr9OX4qxyyeyKZSI9UILQjxw8JHOxjJCqIZtEcKQkdfVfKmjc3bcmqUtWOHSMGidFrcTBFW3j0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747756595; c=relaxed/simple;
-	bh=n1pxIM65d8MoHw115XP1NVDZAKKeEk/k6mze3yHO8s4=;
+	s=arc-20240116; t=1747756601; c=relaxed/simple;
+	bh=38+Oaln/YQrWvyjxstfyQuJ7we5KEYC6rNh0i/3nfOA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u4Xu3IcRGTMcadMrwtg/S7Va+hdsOUb2tk5f0NnqFgZu69ZQwyFCBkbW7ziWGKCtbn9OGDVor0fJ3ADTCNl7QR7gMFhkS/HQdsToRzlxLHAk2rKTad85+ysl92WtYQ+7y49+K2F3BRwkm3YIJtghkyAUFYClondHIF+cAOrgivE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U7XBpT+e; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=lYknWbANW6w7+DXFpB11lfCbDT5jOO06O29Jrx6ONcWU54c9zZa+yV0DJP5mirM+WvJxL26z8JvGRJW2/ahIRXnZQqjSTAsnzEaJqY5+lRFzVjoffRoS96gHyNPfFIm1Ra1jFqjOR1un819oSnLUC4oUA4fnEy07mmCh26DYGQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CaPdkLmH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U7XBpT+e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FD3AC4CEE9;
-	Tue, 20 May 2025 15:56:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CaPdkLmH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13B3AC4CEE9;
+	Tue, 20 May 2025 15:56:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747756593;
-	bh=n1pxIM65d8MoHw115XP1NVDZAKKeEk/k6mze3yHO8s4=;
+	s=k20201202; t=1747756599;
+	bh=38+Oaln/YQrWvyjxstfyQuJ7we5KEYC6rNh0i/3nfOA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=U7XBpT+epQQjXsP8yAqN2XraGSgMh8piR5ajbSpVPDUaH4r+x5+81+SVQq34FXmTz
-	 AbuW/jbx1xIcfy+2hw+gF3aWO1+lojCd/9Pg5qx4jMWLYXwPrs7mnOLTie8cmN0Z4u
-	 jE6FqXRZOjuV2gQcwkuZghvDXum/x0IbticiC4VExuxfZjdDd2kZmiXHMIpZd01P4T
-	 VhiHsuXI1TW4trYh99AJ5yx27EJyCESSPhDxclDQQs7LFER5PyBQRlPMd3R3aHaTaN
-	 kBu5EZNwKHLlrw/eAwAZ4/3365c/87QtuEw/prjx1v9unenMntbKknWXn8GK+EBSUf
-	 ags6MohDMZPGA==
-Date: Tue, 20 May 2025 16:56:28 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Gabriel Fernandez <gabriel.fernandez@foss.st.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Nicolas Le Bayon <nicolas.le.bayon@foss.st.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: stm32: add STM32MP21 clocks and
- reset bindings
-Message-ID: <20250520-absence-sixtyfold-0fd9bb03a42d@spud>
-References: <20250520-upstream_rcc_mp21-v2-0-3c776a6e5862@foss.st.com>
- <20250520-upstream_rcc_mp21-v2-1-3c776a6e5862@foss.st.com>
+	b=CaPdkLmHFu3cfOELOO5R5MIY57KOZBZyrLilsaO/+EW4gbl6oGEKfBmINihS9rhd5
+	 HAsA9e73KYpxdwFJwZte5kmXNZ3M4D/uckLOAOyYftfQoXCQsVwoswzKmqznCZC4nu
+	 1kfQzFIoI2DqJL9RzoRlILF8w2QSlHsILpqhsjRjyv99YqBHzIU7m3+vDsbw4If6x5
+	 sSbgIZmzG50iW4xKjETKhcnwksEfCuV0TE0d9uNAGTj42e6ZJuwz995rPgGsOT1JzF
+	 10w+qgu+LHYZOTRJy5dVSLR0ShU8tSCLNsx2uQZMl2hk6pXKgCct0pgFGrOVeusVsF
+	 nthau0vr5RQjA==
+Date: Tue, 20 May 2025 12:56:36 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Yury Norov <yury.norov@gmail.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	I Hsin Cheng <richard120310@gmail.com>,
+	"Michael S . Tsirkin" <mst@redhat.com>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Peng Jiang <jiang.peng9@zte.com.cn>,
+	Stefano Garzarella <sgarzare@redhat.com>,
+	Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
+	Yazen Ghannam <yazen.ghannam@amd.com>
+Subject: Re: [PATCH FYI 0/7] Updating some kernel headers with the kernel
+ sources
+Message-ID: <aCymNKCDygqWrd20@x1>
+References: <20250519214126.1652491-1-acme@kernel.org>
+ <aCv7e4Jr0s6ViN1I@yury>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="jx9VuttWMZGkwh2m"
-Content-Disposition: inline
-In-Reply-To: <20250520-upstream_rcc_mp21-v2-1-3c776a6e5862@foss.st.com>
-
-
---jx9VuttWMZGkwh2m
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <aCv7e4Jr0s6ViN1I@yury>
 
-On Tue, May 20, 2025 at 05:28:37PM +0200, Gabriel Fernandez wrote:
-> +
-> +  access-controllers:
-> +    description: phandle to the rifsc device to check access right.
-> +    items:
-> +      - description: phandle to access controller
-> +
-> +    minItems: 1
-> +    maxItems: 1
+On Mon, May 19, 2025 at 11:48:11PM -0400, Yury Norov wrote:
+> On Mon, May 19, 2025 at 06:41:19PM -0300, Arnaldo Carvalho de Melo wrote:
+> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > Just FYI,
 
-That's just maxItems: 1, the minItems is redundant.
+> > 	Updating some kernel headers with the kernel sources.
 
+> For patches 5, 6 and 7:
+> Acked-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
 
-> +    rcc: clock-controller@44200000 {
+Thanks, added to the patches.
+ 
+> Would you like me to take those in bitmap-for-next?
 
-Remove the label, there's no user.
+Since this affects just the tooling, and removes a warning when building
+them, I think its better for those to be carried in the perf-tools-next
+tree, ok?
 
---jx9VuttWMZGkwh2m
-Content-Type: application/pgp-signature; name="signature.asc"
+Cheers,
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaCymLAAKCRB4tDGHoIJi
-0kaJAP4grAh/GT4IdIk9FDbZ3XvjNvZh5my/Az0+lUyaEjrXHwD8CskVJGC8F6if
-ly0yvkmRUH6dHXpa2Y3SE/anCpfV+QQ=
-=C2Ym
------END PGP SIGNATURE-----
-
---jx9VuttWMZGkwh2m--
+- Arnaldo
