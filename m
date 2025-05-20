@@ -1,179 +1,150 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-op-o10.zoho.com (sender4-op-o10.zoho.com [136.143.188.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FB882609F7
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 09:07:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747732069; cv=none; b=Le+FBKRmBZzFfRRUKSSRLCNoOp1qKeI0cJ96H+Q3OcBxHoXcrtL9De+I6DLO79ZkS/HwdZn+Opodo2ryjLcopaiBeADtjMBzDRPwWtX1e+BhH8FasNJDhEwNx/b1G/t5ZRbk4egIIGdb9QWak5coFrSkzxGbBhb4GNzZ9m5oQ58=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747732069; c=relaxed/simple;
-	bh=N9ujteMhCBKejVu/8USvsZhZkHo/Zouv/RmtPEYjTDA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=S7eEvVSG8sHnXtaEovY5eLZj58XgHrqTkWaDd+nykGNwVPif7nB0qdGEqaUwVI9GLCnVbBAaD6aASctLwLOpAD4rd2Wbhsgqkgyhf86LIWn8hGiZPlUH1Nsin7HLBy9pGMFLyWBmdtc4WPnSSK3tagmeF5FQJu51w3nxB+J5fgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xZQ+Xdtt; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B12AA2185A6;
+	Tue, 20 May 2025 09:08:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.10
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747732106; cv=pass; b=dCmSceFpbDQ44BEguIHlzxk3BGHjm/B/SXycgvbGrsExPNK69PtCTZiK0EfR7yIwcXT5QBafuNUW2ply836tHjxsh6x77jWKKyIBY9lIKjTM/HFVVLW05raEJFGKaSOBoHPwLCRwWs8qqOPI2Ri6Ict77KdR5LiWFJBwkth/yRI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747732106; c=relaxed/simple;
+	bh=EQzKfktN95HTIFpLcNeTxBoB8M051ppF/sUAYoUVdDM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CiKs3ENQqOELojBdfYK3IvYvhm5iHy25sV+z9O3luFSRuCY/B5M2VCDeLgsroRCr5w+zbXyw6byM+OfyPQPAbiyEH2L2UedcSmfbCWyCK+xIz0Thksd1B84F3h3yRZMHiJJT4HJaJcaWvL2zOeVHaXyanbLqaE+U0jC9ruCGwFw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=martyn.welch@collabora.com header.b=SfTLMz2c; arc=pass smtp.client-ip=136.143.188.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xZQ+Xdtt"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5fb55d8671dso1080009a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 02:07:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747732066; x=1748336866; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=TWIMZcWXWHJPpBFkj5suhON9ygcNcJxNJCQlC1Ja84g=;
-        b=xZQ+XdttxSjfiyJwR5szmCMjDPGrybM93RESEYn9B454EyiPNb1+2zvhhlLqEC7Oog
-         g9jxYYoQJNahhDL+zPIz/9ZuWTOncZbFTao/XsvsHl17eON+ajIR3g4DDQsm6/5uTstj
-         wST+9gJhLqgkX47mq8Fy37vfb2EGQtVEqWINDIsCyku/z5VOiYsMGBqokVGg1gSw52BY
-         NxTl0+9FcP3cAwmfY01QR0xNAbnMPkHKd3WeNSnCGcSxzQGZ0834SWe9bEb8o4OOZTmV
-         YT20Ctbamns3etZFgpCG83UOVQX1kHeUtIed8810khPAJRNrviLE49fWts4ntSGoV0Sc
-         n5tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747732066; x=1748336866;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TWIMZcWXWHJPpBFkj5suhON9ygcNcJxNJCQlC1Ja84g=;
-        b=EOLqmjGQO2O7QTHgmn0G+uy9CcCX7MhTck2dZkLzWLehhiKiPkqNx6YzIu9Gb1/xWc
-         LqeSt/O7FqO8gz9oIzr1TORgeRXkQu2K+bGk9UujdArzIrdFzllm2iPQkI9ex5GU5upB
-         bkS7kO3C5hZUEJMDDeMpuCaYUv6yX3XxPnsEFOlt+XxXAVtm32TO0c+SzdqxI3dFOAOf
-         ZUdVIEH44BIMfJEGgBq/utWASzY78FAgPjAnTSBi6N7Fi2k4xVI4wU1BqnAPEFUFUPjc
-         dYywUQpbSGTswo8tgF8rGQpB8lZLR5VJj2p9eMYtD2/5TUVoJYINMsxbeGri7aVmvWYq
-         +eWg==
-X-Forwarded-Encrypted: i=1; AJvYcCXr/wzXsYSU8O0aZIY8sdS+8YrLhYqhMeC/9dLCIfI3HnVPUUkzWMIAjdkoDoUeOw5xmGLvaZPxWrNl/Ps=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx47hXOfXdgAALIUzDwand+kv0dht/nq4AcdvZTCJZ29OHjuOEj
-	F3Q0kYLmqbKXnv8okRvtG1pX9iNReyAYbopUjXjxCoPyZTSgypQQo+kI0s5heOMW/5o=
-X-Gm-Gg: ASbGncuhXRz4XdHxuhHIgXK7cco8jrawUv1Ag7TuRW6nnNkLJDWStutKsRbbuoxaWlr
-	eCWU2zEv+RsqAy+CGkB7s8zFPPnuow60wHtmMPD1Rclan0iYf5c6CMiFRlC0bOlV/6CQA7WA+Re
-	BUWnHFaW0F2lwKXPvMfexuir5LHgCXZtDDtlXzd6Wmes/Z7hgEBJ+TGaD2V11izFagAxLACAxAt
-	9oO/JEGNuq8kIdqsla8cHXXiRFM8kcKu1v8JXH9w5nlncv60TM2T+YINqDDUFngdwVfCf+DFjk7
-	tv70dQoJ5TduOh1a/TsJOltm8OMy2ddT+nffAB3PYX0zbyqLRYaTlQdjhrdrXw==
-X-Google-Smtp-Source: AGHT+IFDWKtjf+GIZ+hmqdWusENVFWvkwZw0IaHDDGHBg4cVXUO+3LikDLu2ftoBC/yId8PIRHI1tQ==
-X-Received: by 2002:a05:6402:50cf:b0:5f4:d131:dbef with SMTP id 4fb4d7f45d1cf-6009013eb1fmr5183896a12.8.1747732065651;
-        Tue, 20 May 2025 02:07:45 -0700 (PDT)
-Received: from kuoka.. ([178.197.223.125])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6004d501f0dsm6944875a12.21.2025.05.20.02.07.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 02:07:45 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Bjorn Andersson <andersson@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	linux-arm-msm@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org,
-	Abhinav Kumar <quic_abhinavk@quicinc.com>,
-	Dmitry Baryshkov <lumag@kernel.org>
-Subject: [PATCH v6] clk: qcom: dispcc-sm8750: Fix setting rate byte and pixel clocks
-Date: Tue, 20 May 2025 11:07:42 +0200
-Message-ID: <20250520090741.45820-2-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=martyn.welch@collabora.com header.b="SfTLMz2c"
+ARC-Seal: i=1; a=rsa-sha256; t=1747732092; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=Jy6euOTXP5YLMuqnexIA4dl4Wbv189sWDcTC0XSViR8jOp2Zj4bxirSuYHbtzFSG2Z357ARBevugK1eif68zA6Na1OoYEC464OluvC8iZemcoiJHazRLUGniAVvIovuxlku8gYyfaOz5T6TfzpjCr/B9+sC0yn3Y+1N6K3rrWNk=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1747732092; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=wmdL8H13ur+9yRNBU4GhAviHzBEWJiDdLNvMilyCdXE=; 
+	b=Oqyy2e+i7lua6XsulMwoL2qqxjukftzzqqX43LU17GD7j7+gVNbMVbu6SC58sLEqvD9+2o1VWAhPdoZC/52cHaJCFWiWA8RShLVUNV199cJefZysHoS06aSjz/hN0UqUvdFD2hdupSisvx2VEDUuqjWopvOtBnlsDFFZZ2eD7Cs=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=martyn.welch@collabora.com;
+	dmarc=pass header.from=<martyn.welch@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1747732092;
+	s=zohomail; d=collabora.com; i=martyn.welch@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=wmdL8H13ur+9yRNBU4GhAviHzBEWJiDdLNvMilyCdXE=;
+	b=SfTLMz2cUWOYhQjFu/mFyI/rD3phRWG1ecblWYjZAje0TPDqv/qf8UAnnc+cB07t
+	lOLLBCKDx5oF6vrnfu0ZEr5UvR0RyN1LoGk6kYk79JT4btGoaAp+1zHgqE3p5QwGeWg
+	430uev6yGn2jzzFyykGdTEk+OYqMaYpLXrfsOt9k=
+Received: by mx.zohomail.com with SMTPS id 1747732074385971.7477326343657;
+	Tue, 20 May 2025 02:07:54 -0700 (PDT)
+Message-ID: <c746e97a-7792-4dfb-902b-7f1e705cb413@collabora.com>
+Date: Tue, 20 May 2025 10:07:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2997; i=krzysztof.kozlowski@linaro.org;
- h=from:subject; bh=N9ujteMhCBKejVu/8USvsZhZkHo/Zouv/RmtPEYjTDA=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoLEZdW9vZjhTlxiVJQUjnkfg0QHRUFDmTGntZM
- 74WyCS4AZyJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaCxGXQAKCRDBN2bmhouD
- 1/IZEACINMCMKaTwiOSimXOh8GaE6v0tAFFTzOHWlL0jwRm7bUvELVemxFp8ZvEje41v+YJsZY1
- aNWedMVSL1zAa4P9K0/ItTVtH3n5JMMIEcqRBd4fVQfVOcL0UD/jGvva0PPftkzF7lfUqHMUZOv
- B6BQp2X2VArvpweJ5tvL7HC78L03rsNjlGUJKKx2dDjSvwMIZVrNcmkFgtYZkeiF8MRaLgPC+hf
- EulVGG4/MoECuVWPbXIR+qKBexXGaDPFbf+hfKodLGGjH717WNZ0sfAr0fAPHWeKizKlGzdcYLa
- 0VLCKjJXz9+QMgBvEcAD0l5kwD4nbAGYZjW1e2jaDOZedKQqtCq9CDBHhnrkE+pujWE5j9SiElj
- zXuUj/FLuHyRjQrsGufCg/uBRgAR6ANjbkj9HJHwxC10mqKenJ7Sh+F6wLwVkoORdSnTDQ3lWMJ
- kXcNgE0zJM14Ku7FI5bFeJS7e4z3fRXT3nfKnSU4N1KCgCYLEk/fumUIpNc9Z0BayHiIqlQ+5UK
- +gv6eUlc40zi5c2kiJpqKYYM+KlOmuSj8wWCJYWhb8Bke8u0VjbmRbj5+07ISgM3q7PMTtjgA9R
- OblsU6pU44zHv0j6T/5BZDRO5hyS16SUbUoN7PXnQcKUvyarM3h1PEyPAlqc2cxHLsx/b9bTUPI tnOOZhUNsie9Vzw==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 04/36] remoteproc: k3-m4: Don't assert reset in detach
+ routine
+To: Beleswar Prasad Padhi <b-padhi@ti.com>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: andersson@kernel.org, afd@ti.com, hnagalla@ti.com, u-kumar1@ti.com,
+ jm@ti.com, jan.kiszka@siemens.com, christophe.jaillet@wanadoo.fr,
+ jkangas@redhat.com, eballetbo@redhat.com, linux-remoteproc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250513054510.3439842-1-b-padhi@ti.com>
+ <20250513054510.3439842-5-b-padhi@ti.com> <aCddoCUIpIV1ZxEW@p14s>
+ <057cffb6-3ff6-4795-8501-7695d7ebc6fa@ti.com>
+Content-Language: en-US
+From: Martyn Welch <martyn.welch@collabora.com>
+In-Reply-To: <057cffb6-3ff6-4795-8501-7695d7ebc6fa@ti.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-On SM8750 the setting rate of pixel and byte clocks, while the parent
-DSI PHY PLL, fails with:
 
-  disp_cc_mdss_byte0_clk_src: rcg didn't update its configuration.
 
-DSI PHY PLL has to be unprepared and its "PLL Power Down" bits in
-CMN_CTRL_0 asserted.
+On 17/05/2025 14:23, Beleswar Prasad Padhi wrote:
+> 
+> On 5/16/2025 9:15 PM, Mathieu Poirier wrote:
+>> On Tue, May 13, 2025 at 11:14:38AM +0530, Beleswar Padhi wrote:
+>>> The rproc_detach() function invokes __rproc_detach() before
+>>> rproc_unprepare_device(). The __rproc_detach() function sets the
+>>> rproc->state to "RPROC_DETACHED".
+>>>
+>>> However, the TI K3 M4 driver erroneously looks for "RPROC_ATTACHED"
+>>> state in its .unprepare ops to identify IPC-only mode; which leads to
+>>> resetting the rproc in detach routine.
+>>>
+>>> Therefore, correct the IPC-only mode detection logic to look for
+>>> "RPROC_DETACHED" in k3_m4_rproc_unprepare() function.
+>>>
+>> This driver has been upstream for 9 whole months, it is hard for me to 
+>> believe
+>> this but was just noticed.  Martyn from Collabora should be CC'ed on 
+>> this, and I
+>> will also need the required R-b/T-b tags.
+> 
+> 
+> Cc: Martyn Welch martyn.welch@collabora.com
+> 
+> Requesting Andrew/Judith for review and test too.
+> 
 
-Mark these clocks with CLK_OPS_PARENT_ENABLE to ensure the parent is
-enabled during rate changes.
+It's been a while since I used this, IIRC the project I thought we 
+needed this for went in a different direction almost as soon as I'd 
+managed to get the driver upstream...  ...But I've spent some time to 
+review as best as I can:
 
-Cc: <stable@vger.kernel.org>
-Fixes: f1080d8dab0f ("clk: qcom: dispcc-sm8750: Add SM8750 Display clock controller")
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Reviewed-by: Martyn Welch <martyn.welch@collabora.com>
 
----
-
-Changes in v6:
-1. Add CLK_OPS_PARENT_ENABLE also to pclk1, pclk2 and byte1.
-2. Add Fixes tag and cc-stable
-
-Previously part of v5 (thus b4 diff might not work nice here):
-https://lore.kernel.org/r/20250430-b4-sm8750-display-v5-6-8cab30c3e4df@linaro.org/
-
-Changes in v5:
-1. New patch in above patchset.
-
-Cc: Abhinav Kumar <quic_abhinavk@quicinc.com>
-Cc: Dmitry Baryshkov <lumag@kernel.org>
----
- drivers/clk/qcom/dispcc-sm8750.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/clk/qcom/dispcc-sm8750.c b/drivers/clk/qcom/dispcc-sm8750.c
-index 877b40d50e6f..ca09da111a50 100644
---- a/drivers/clk/qcom/dispcc-sm8750.c
-+++ b/drivers/clk/qcom/dispcc-sm8750.c
-@@ -393,7 +393,7 @@ static struct clk_rcg2 disp_cc_mdss_byte0_clk_src = {
- 		.name = "disp_cc_mdss_byte0_clk_src",
- 		.parent_data = disp_cc_parent_data_1,
- 		.num_parents = ARRAY_SIZE(disp_cc_parent_data_1),
--		.flags = CLK_SET_RATE_PARENT,
-+		.flags = CLK_SET_RATE_PARENT | CLK_OPS_PARENT_ENABLE,
- 		.ops = &clk_byte2_ops,
- 	},
- };
-@@ -408,7 +408,7 @@ static struct clk_rcg2 disp_cc_mdss_byte1_clk_src = {
- 		.name = "disp_cc_mdss_byte1_clk_src",
- 		.parent_data = disp_cc_parent_data_1,
- 		.num_parents = ARRAY_SIZE(disp_cc_parent_data_1),
--		.flags = CLK_SET_RATE_PARENT,
-+		.flags = CLK_SET_RATE_PARENT | CLK_OPS_PARENT_ENABLE,
- 		.ops = &clk_byte2_ops,
- 	},
- };
-@@ -712,7 +712,7 @@ static struct clk_rcg2 disp_cc_mdss_pclk0_clk_src = {
- 		.name = "disp_cc_mdss_pclk0_clk_src",
- 		.parent_data = disp_cc_parent_data_1,
- 		.num_parents = ARRAY_SIZE(disp_cc_parent_data_1),
--		.flags = CLK_SET_RATE_PARENT,
-+		.flags = CLK_SET_RATE_PARENT | CLK_OPS_PARENT_ENABLE,
- 		.ops = &clk_pixel_ops,
- 	},
- };
-@@ -727,7 +727,7 @@ static struct clk_rcg2 disp_cc_mdss_pclk1_clk_src = {
- 		.name = "disp_cc_mdss_pclk1_clk_src",
- 		.parent_data = disp_cc_parent_data_1,
- 		.num_parents = ARRAY_SIZE(disp_cc_parent_data_1),
--		.flags = CLK_SET_RATE_PARENT,
-+		.flags = CLK_SET_RATE_PARENT | CLK_OPS_PARENT_ENABLE,
- 		.ops = &clk_pixel_ops,
- 	},
- };
-@@ -742,7 +742,7 @@ static struct clk_rcg2 disp_cc_mdss_pclk2_clk_src = {
- 		.name = "disp_cc_mdss_pclk2_clk_src",
- 		.parent_data = disp_cc_parent_data_1,
- 		.num_parents = ARRAY_SIZE(disp_cc_parent_data_1),
--		.flags = CLK_SET_RATE_PARENT,
-+		.flags = CLK_SET_RATE_PARENT | CLK_OPS_PARENT_ENABLE,
- 		.ops = &clk_pixel_ops,
- 	},
- };
--- 
-2.45.2
+>>
+>> Typically bug fixes are not part of refactoring exercises.
+> 
+> 
+> Typically, yes. But the refactor depends on this fix. This 
+> k3_m4_rproc_unprepare() function is entirely refactored to common driver 
+> in [PATCH v12 26/36].
+> 
+> So, If the refactor is picked without this patch fix, the mainline M4 
+> driver would be fixed, but the older stable kernels would always have 
+> this bug. Let me know what you think.
+> 
+> Thanks,
+> Beleswar
+> 
+>>   I suggest to apply
+>> this set without this patch - you can then work on fixing this bug.
+>>
+>> Thanks,
+>> Mathieu
+>>
+>>> Fixes: ebcf9008a895 ("remoteproc: k3-m4: Add a remoteproc driver for 
+>>> M4F subsystem")
+>>> Signed-off-by: Beleswar Padhi <b-padhi@ti.com>
+>>> ---
+>>> v12: Changelog:
+>>> 1. New patch. Fixup a state detection logic.
+>>>
+>>>   drivers/remoteproc/ti_k3_m4_remoteproc.c | 2 +-
+>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/remoteproc/ti_k3_m4_remoteproc.c b/drivers/ 
+>>> remoteproc/ti_k3_m4_remoteproc.c
+>>> index a16fb165fcedd..6cd50b16a8e82 100644
+>>> --- a/drivers/remoteproc/ti_k3_m4_remoteproc.c
+>>> +++ b/drivers/remoteproc/ti_k3_m4_remoteproc.c
+>>> @@ -228,7 +228,7 @@ static int k3_m4_rproc_unprepare(struct rproc 
+>>> *rproc)
+>>>       int ret;
+>>>       /* If the core is going to be detached do not assert the module 
+>>> reset */
+>>> -    if (rproc->state == RPROC_ATTACHED)
+>>> +    if (rproc->state == RPROC_DETACHED)
+>>>           return 0;
+>>>       ret = kproc->ti_sci->ops.dev_ops.put_device(kproc->ti_sci,
+>>> -- 
+>>> 2.34.1
+>>>
 
