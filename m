@@ -1,62 +1,72 @@
-Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BBF725F965
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 16:44:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25C37248F46
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 16:44:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747759461; cv=none; b=aNpDlUyveQqa9Z9NaqxK6A3EdQKXQzXo2du+c/BI/ZLy6bmxsbqju1J9tkDweV2X3oglVWNNru14i9eu1lieKt/lAt53jRScjjZKH4+CAPgyk8hZYZd7Fihq6sgKAOys18fpivWB+WJ/dfv+99xaGtsBlv4m4++xXjXvAjUfLmY=
+	t=1747759481; cv=none; b=KKnp03u85TlG7o8p0vXOn5WfvLF7MKL9BWlSPQ5HgYs1Q4wB6sY4faoRN6K640f8XDVBY7jxEDUQwdKubo3eEYaKyC+kFT98lOMHrIAIyMKLaEw18dOvHUD/QX6nXjDYdNizpSZJf5ygH1SJiy3aM2MwTfHIL6UG2snbbYW5SSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747759461; c=relaxed/simple;
-	bh=I8LrWZqIHYlb56pv6j0QfitWQLXKD3XwqYdsmYabKlw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=LHwbW8+Ji2jB7Up2jUohWQgLFTi1XtjjaspMk3Q7Ynwx7N80n4EsMIP4YJp9lJTiqaHEUj57JZceStEAgLQ32O2JX5YeW0zribNhBkaTWHud6pDGF2jQ7DdxqK+TsXQZ0Mt3q5HTlXxt8DpExFYjqLrBjkV0LRdVDCckB3QOZC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ieee.org; spf=pass smtp.mailfrom=ieee.org; dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b=TvHMWY1D; arc=none smtp.client-ip=209.85.166.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ieee.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ieee.org
+	s=arc-20240116; t=1747759481; c=relaxed/simple;
+	bh=I842f8QC/KMfYaWpLg9cY6lpFSAzcGFG5grlUZY7DNU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ceUVPct/PESKs788o/j5OoXiMnwCGErCCzFVJfkJCtsiznZ3kqcMHKnBrW1It3NSLRlBaghUpw8TjaMcCLQiu2XH7SLB+gZ6LyPEUHXg9W5ASAMlHTldUfex8OLMp6SrqqFhB4/bUv8nr1MMRFIkSGf4NQNmscT/sqeNAs84UAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=KiEKW9Dm; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b="TvHMWY1D"
-Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3dc75fe4e9bso6456445ab.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 09:44:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ieee.org; s=google; t=1747759457; x=1748364257; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=dIhSOsd6KsjfJUD60NW9xxZfhreQZz87ROZ1U+eqjAc=;
-        b=TvHMWY1D5krt6vooVpMoMNrnD3xZC623xhOoO0N0EB6SCfd0JpOc6hqXR6MraworQc
-         TYqXlxDRmhtEZSvs7eG53CUMiak4WiuYgJ9KwPebVnLVpO65soNNo+0f6Vu+gX2U6rY2
-         +YThxTJM67pBxTbrUSjgnuftsKMUr0H/t/a5c=
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="KiEKW9Dm"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54KGeDsf018394
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 16:44:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	c2Cr0Q3aujptwyPPP/18wEcr3RB2aPvaUVraUjgKeIo=; b=KiEKW9DmkbNJnmvr
+	vMjxlDtRo8r5fXRGGWzTBX04jtarGLosI/E+U2UD5kTdezwZwdfC6SeVORsmKP0X
+	suf+Xf6LM4UoZYqwNZ7n5/WKCS9wlQuYRQGAkKCCTc66pqOjPCaEBt+8jLCsIB1+
+	M1O9P1WnWhahyt/4WqEbjhFXwW65SRRCiogj47qj5vFid5XwMKc/nlM9wm4dVcT7
+	EEm1w/pQ94qv/gWowM+LfF97uuQD1mVWeBZi1BG8U7kufy887DNIUA6L9reb9FfE
+	BF/XJO2fEb2CAbXbsAhP/qAhoe0nDnTh0bMQAHa8Z2LkO6UlO4pJydCKu0x1kcXp
+	r8Cmnw==
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf9r0dm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 16:44:39 +0000 (GMT)
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6f8a8883437so7569196d6.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 09:44:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747759457; x=1748364257;
+        d=1e100.net; s=20230601; t=1747759478; x=1748364278;
         h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dIhSOsd6KsjfJUD60NW9xxZfhreQZz87ROZ1U+eqjAc=;
-        b=oFFBsHl1sh3B2GkvbLfh3HyDGdlG0GkuKxrs4fsFgHtWiUgMnASlo6LyIUNRm7lCwo
-         POcsL2Cd2S9DQQiag1Qfsu81Lf5E3stJnt+Xf5F2FiD9djnM3IVOBXqU677d+zFc89WF
-         Ne8sMBWPu8SThU7V07hU6qG8GcCYFYTy9z71ZtH0l4iep2Fe/ThZBQYA/TKLhlHTDHR/
-         wQhNL1zMe0AV65Sc8AXDvOmo8zpexFBXAHdou3I5XnCx9Yk4gNaKxO98WfYzKSHiodsx
-         ZQtGBfz+eYkXFB5XLN9DGC7NRkNmbmwN/tmrn4fgQ8zxe5hLWS1NhZasy1ZsVBUmJfiT
-         llEA==
-X-Forwarded-Encrypted: i=1; AJvYcCXLKr8NHvPx4OppFOdCCFoGXoPnKMQgcHfIgOhDZsyqvxuSbWNb0bL/f4OfxfpkFJE/ovXTkP/OQZR+J9g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFlPtJu768ip0ptzf7Y7un/3TDVfNeFYQHB+JqweZTW//P9Lfq
-	uv2PcPuaVEajSILyW9hw8AjaPEPiDg0f8+PczKkdmZ3Nu90ulB3ssSE2I8a+3xr6fQ==
-X-Gm-Gg: ASbGnctm5H9z5Qoj1UKOeV0YtxDbH6tgY61RAutA2HTtUcJBUVdtfZ3/igmGoqWyXQu
-	Qy7ooDx12S30FgT4wgMMppksN04sa8zS8gbT/1XIVq/8h8l9nJ3ZFncrXyGAVKyzFjGS3o3Ir5V
-	+R3VrGaUV9FSw2Nu73B5woRMAhKSQ+TCBZH0jttE4pDLtTTYJs6LZfZclqENX5XrX9WROY/TH73
-	tSUsOiBGEv5tsFyj4wHBWbugeAGf2j5ejz4VyZX0PPOZksPzHyu2Pk3LJp4UbLoSCQ8/69Y8Soj
-	rheTkI0e/ttNMuO45pkrOUPJIJs4byrmOKoISLyJM/kYx63S8XXJVjTt1QiDVqaZiqdOsX5RsOu
-	F8wYwXbfkvA==
-X-Google-Smtp-Source: AGHT+IHY7B5sqXo+CEWbfToCa57PdPA6J2aKxv4nOj0xzwl7zY48v0c2pBUeeGTux6+dhIv/h45ldA==
-X-Received: by 2002:a05:6e02:2191:b0:3dc:6824:53ab with SMTP id e9e14a558f8ab-3dc682457camr98502715ab.8.1747759457395;
-        Tue, 20 May 2025 09:44:17 -0700 (PDT)
-Received: from [172.22.22.28] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
-        by smtp.googlemail.com with ESMTPSA id 8926c6da1cb9f-4fbcc4ea4d3sm2317814173.134.2025.05.20.09.44.16
+        bh=c2Cr0Q3aujptwyPPP/18wEcr3RB2aPvaUVraUjgKeIo=;
+        b=jqBiSQovbs9tmSJkPvgmLAFzHq6edCvr8r9dJbJhJjhWwg/dQyeoujCEs1jGfg7cYJ
+         qeIKmgiioeZomyfsVzphdzsPMPg14/n5uovbmUVle999t1GQsGH/9CKn4gNj0X4/RPSx
+         Wt57DBRTvGpIwHPOd6eq2c5TUFVNP3cjeA3EqRF1v3ZNYvby/hl11U1OIA93s6nUK0+w
+         QyvHgrreb5N8EpII6M2Z/0sM5XnBNk+84gGI2IcimEugEsFkQVxNSO/CioUPUqfped3p
+         hUfhqTtVZZVgYD1HL2USph7PF0orYNRE9LXCY5rGgtpQvg2M6yzxZnkuRCsigL171/MK
+         L+cA==
+X-Forwarded-Encrypted: i=1; AJvYcCXyLj5ZZWtCq4bhRH0g73THr/WarG71j5bbeGZ3Cnq5Ey0LzDSX1s6Cf6cv0y1+XR3VQqaLqo9Eokt5ZAI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkUYE55sw7lDJg+jzll2pHuoOt4QA66W6lLB4g5B/wrCl8tTN6
+	Vqviu4J7mkahIoQPuMNsM2o4cMh2m9othvIftcMDQPb4d6s7m51ALkEhzcyZUfGQPHsP8vA6k2h
+	GgTY2mo7JXnhN9CWbyIQ8RQgRNChRwfczqJLO/YNbNSO+UDrzZ3/kBLAFPgLmU82hKrA=
+X-Gm-Gg: ASbGnctKojOyRicFUXqeGb7hA3T+amSo9bezxP4+HuJlGlZpsWoqpqnEZdCMOkXm51L
+	aqURtX13mB3JCqxYI8RoJYfM2zBdnmf91KtWUbT02Y0EKJPCpneV9UM00N0zUMeFnvV6bVO4eCv
+	FTRDuGNz/4uAxbtxF5EQLQaAT4KkgPxcSPcyWcisqRekzja3nrshu3YuZfYUlNWvHIryPyICMtj
+	aiWtFlkSyRVBP4tk/+rnFzGOihGuT+jMD9WAFTE0UlLKfbcXQjbuduLc+t9i+DWCrKdDQ3afjrK
+	+k6Y8wdG9Ppthn6NTVseObOQpzdYq/9zhP6boz2DS+IsWv346nK5o+OUr/U+ekJ8DQ==
+X-Received: by 2002:a05:6214:18f2:b0:6f8:b104:4186 with SMTP id 6a1803df08f44-6f8b10441bdmr82991726d6.2.1747759477861;
+        Tue, 20 May 2025 09:44:37 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE4a0OdI4aLpuBYrJMMu6xHS4MmAbVCMTTGLWKZDGXZ+g4jOZbXkvgeQMFRDEnmvpFkP5lQcw==
+X-Received: by 2002:a05:6214:18f2:b0:6f8:b104:4186 with SMTP id 6a1803df08f44-6f8b10441bdmr82991556d6.2.1747759477341;
+        Tue, 20 May 2025 09:44:37 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d442069sm762552866b.103.2025.05.20.09.44.35
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 May 2025 09:44:16 -0700 (PDT)
-Message-ID: <f92ddea4-edf1-42f9-a738-51233ce3d45e@ieee.org>
-Date: Tue, 20 May 2025 11:44:15 -0500
+        Tue, 20 May 2025 09:44:36 -0700 (PDT)
+Message-ID: <6f12b7e6-5743-45ba-a425-029655096f5b@oss.qualcomm.com>
+Date: Tue, 20 May 2025 18:44:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,117 +74,54 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] rbd: replace strcpy() with strscpy()
-To: Siddarth Gundu <siddarthsgml@gmail.com>, idryomov@gmail.com,
- dongsheng.yang@easystack.cn, axboe@kernel.dk, ceph-devel@vger.kernel.org,
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250519063840.6743-1-siddarthsgml@gmail.com>
+Subject: Re: [PATCH v2 2/2] arm64: dts: qcom: sm8750-mtp: Add sound (speakers,
+ headset codec, dmics)
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20250519-sm8750-audio-part-2-v2-0-5ac5afdf4ee2@linaro.org>
+ <20250519-sm8750-audio-part-2-v2-2-5ac5afdf4ee2@linaro.org>
 Content-Language: en-US
-From: Alex Elder <elder@ieee.org>
-In-Reply-To: <20250519063840.6743-1-siddarthsgml@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250519-sm8750-audio-part-2-v2-2-5ac5afdf4ee2@linaro.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: RidV3FKm5dZsbBRT7toC6E_NK6OhwU8X
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDEzOSBTYWx0ZWRfX1fPJchTFqPuI
+ j1eaKeLl7MyYKBtiikPHssegc1ZBIj++ySfeMmOQHXYsdTbTLbHvCjk1Ntw2NhwPCfaeYni+/su
+ LUFpbWBRkebKskom+Rwt1CVT9mkJZcLjxfV41PxfSEnzkCZfeDLuxCsBNW47AXuskQTrRf2ZWb9
+ 3EWzlpHues6Qa14wfz8Bq9hYtG0Ic4uyLFaHYtHGhv36gw7ZiyAebHBopAEDyZ5V9E4XwLvMwlm
+ UE9cGpLci5WWBY0ACZK6/350K9Vkz3zzMspjlDwQbUjugLEuUX8kGMC3PZ+dk4HwGDikvxowuMY
+ VqdQ+HZzwFxXkJFV06SAU9rSa5zuzKRNmnK+6vsK1RpLNduTgBrqinEXAvtuSw=
+X-Proofpoint-GUID: RidV3FKm5dZsbBRT7toC6E_NK6OhwU8X
+X-Authority-Analysis: v=2.4 cv=V9990fni c=1 sm=1 tr=0 ts=682cb177 cx=c_pps
+ a=oc9J++0uMp73DTRD5QyR2A==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8
+ a=er6kI1bek27KySCzKVEA:9 a=QEXdDO2ut3YA:10 a=zgiPjhLxNE0A:10
+ a=iYH6xdkBrDN1Jqds4HTS:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-20_06,2025-05-20_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxlogscore=910 bulkscore=0 lowpriorityscore=0 spamscore=0 mlxscore=0
+ phishscore=0 suspectscore=0 adultscore=0 malwarescore=0 classifier=spam
+ authscore=0 authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505160000 definitions=main-2505200139
 
-On 5/19/25 1:38 AM, Siddarth Gundu wrote:
-> strcpy() is deprecated; use strscpy() instead.
+On 5/19/25 11:54 AM, Krzysztof Kozlowski wrote:
+> Add device nodes for most of the sound support - WSA883x smart speakers,
+> WCD9395 audio codec (headset) and sound card - which allows sound
+> playback via speakers and recording via DMIC microphones.  Changes bring
+> necessary foundation for headset playback/recording via USB, but that
+> part is not yet ready.
 > 
-> Both the destination and source buffer are of fixed length
-> so strscpy with 2-arguments is used.
-> 
-> Introduce a typedef for cookie array to improve code clarity.
-> 
-> Link: https://github.com/KSPP/linux/issues/88
-> Signed-off-by: Siddarth Gundu <siddarthsgml@gmail.com>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > ---
-> changes since v1
-> - added a typedef for cookie arrays
-> 
-> About the typedef: I was a bit hesitant to add it since the kernel
-> style guide is against adding new typedef but I wanted to follow
-> the review feedback for this.
 
-I personally think the typedef here is the appropriate.  But
-it's really up to Ilya whether he likes this approach.  Get
-his input before you do more.
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-There's a basic question about whether this is a useful
-abstraction.  It's used for "lock cookies" but do they
-serve a broader purpose?
-
-The other part of my suggestion was to define functions that
-provide an API.  For example:
-
-static inline rbd_cookie_t rbd_cookie_set(rbd_cookie_t cookie, u64 id);
-static inline u64 rbd_cookie_get(rbd_cookie_t cookie);
-
-Anyway, before I say any more let's see if Ilya even wants
-to go in this direction.  Your original proposal was OK, I
-just thought specifying the length might be safer.
-
-					-Alex
-
->   drivers/block/rbd.c | 13 ++++++++-----
->   1 file changed, 8 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/block/rbd.c b/drivers/block/rbd.c
-> index faafd7ff43d6..863d9c591aa5 100644
-> --- a/drivers/block/rbd.c
-> +++ b/drivers/block/rbd.c
-> @@ -46,11 +46,14 @@
->   #include <linux/slab.h>
->   #include <linux/idr.h>
->   #include <linux/workqueue.h>
-> +#include <linux/string.h>
->   
->   #include "rbd_types.h"
->   
->   #define RBD_DEBUG	/* Activate rbd_assert() calls */
->   
-> +typedef char rbd_cookie_t[32];
-> +
->   /*
->    * Increment the given counter and return its updated value.
->    * If the counter is already 0 it will not be incremented.
-> @@ -411,7 +414,7 @@ struct rbd_device {
->   
->   	struct rw_semaphore	lock_rwsem;
->   	enum rbd_lock_state	lock_state;
-> -	char			lock_cookie[32];
-> +	rbd_cookie_t		lock_cookie;
->   	struct rbd_client_id	owner_cid;
->   	struct work_struct	acquired_lock_work;
->   	struct work_struct	released_lock_work;
-> @@ -3649,12 +3652,12 @@ static void format_lock_cookie(struct rbd_device *rbd_dev, char *buf)
->   	mutex_unlock(&rbd_dev->watch_mutex);
->   }
->   
-> -static void __rbd_lock(struct rbd_device *rbd_dev, const char *cookie)
-> +static void __rbd_lock(struct rbd_device *rbd_dev, const rbd_cookie_t cookie)
->   {
->   	struct rbd_client_id cid = rbd_get_cid(rbd_dev);
->   
->   	rbd_dev->lock_state = RBD_LOCK_STATE_LOCKED;
-> -	strcpy(rbd_dev->lock_cookie, cookie);
-> +	strscpy(rbd_dev->lock_cookie, cookie);
->   	rbd_set_owner_cid(rbd_dev, &cid);
->   	queue_work(rbd_dev->task_wq, &rbd_dev->acquired_lock_work);
->   }
-> @@ -3665,7 +3668,7 @@ static void __rbd_lock(struct rbd_device *rbd_dev, const char *cookie)
->   static int rbd_lock(struct rbd_device *rbd_dev)
->   {
->   	struct ceph_osd_client *osdc = &rbd_dev->rbd_client->client->osdc;
-> -	char cookie[32];
-> +	rbd_cookie_t cookie;
->   	int ret;
->   
->   	WARN_ON(__rbd_is_lock_owner(rbd_dev) ||
-> @@ -4581,7 +4584,7 @@ static void rbd_unregister_watch(struct rbd_device *rbd_dev)
->   static void rbd_reacquire_lock(struct rbd_device *rbd_dev)
->   {
->   	struct ceph_osd_client *osdc = &rbd_dev->rbd_client->client->osdc;
-> -	char cookie[32];
-> +	rbd_cookie_t cookie;
->   	int ret;
->   
->   	if (!rbd_quiesce_lock(rbd_dev))
-
+Konrad
