@@ -1,102 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD7DB2528FD;
-	Tue, 20 May 2025 21:25:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F0262528FD;
+	Tue, 20 May 2025 21:26:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747776331; cv=none; b=m6h83F8Q0cMv1TU0ahx2PdL0lqpRcsPDqMHtpZja0iRlUn7hbiXE2Vod1QP+nvXr+jIswqSnyFKXkrMGrB4Bv6xlYWfzc0IRT24eyEPl2GjqlJN/a9fMTcDHamUKsFKF3pI0OmeBMAp8ibQL+77rHhdhlHbOer5Ud3V4jAlAsIw=
+	t=1747776398; cv=none; b=AryAYn+i2jKDSAIzHN4+clAT4V7+wbOJFMBBL5L4NSlJud1663iiQRa0slparMWqGMgflhmAhfLye8RmCpPDjSyhLS0ahmaRnypjOjTFOxC6Ti3CxpE1sNhn4peU4M4IbeYdeVRlF1FldVpmCn+zzC92JDI5aeEkeUrY1M8WsXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747776331; c=relaxed/simple;
-	bh=FCNh0IptjSh80eH+CVfsMlmlvLVALzpv2FwtcV3n7ag=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=SWfIOhW4GsqtBm5rFk4UySmS7IeU5BLEYdAwiMQ75+7bwWeFbT5m7CY2o3UXu+FfpHOEODsiapDZC89QU0Bq7gCm0oJDd+/LBo6xM3Z8QQi6W3NfCnaS7atyJbUd13HqNg0r2FAO/IFUnFfY/8V0k+eJFnzdYoitGzKlh/WYdiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k/zc6R9g; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747776398; c=relaxed/simple;
+	bh=nQGih8zxH/VoEsswrvKaa1/NqFqGIDNLNQwrrXd1bfM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GaI25CzrP6CQlt0o/I9uECkWbO5XGtC0rheXWVQde7KZb4/UQx9Wva0aN4+6ebH1JoHMzE1fDZOvYavvxTS9jqmYEFPARAFmavc6X796z8JWdKb9x6HfkD6O/vWzHE0IWNzcXFGViJuMyrfrTf8QMFgr8jlTUCfIix7hYYeeXoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZNgvsFW8; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k/zc6R9g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E87F9C4CEED;
-	Tue, 20 May 2025 21:25:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747776331;
-	bh=FCNh0IptjSh80eH+CVfsMlmlvLVALzpv2FwtcV3n7ag=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=k/zc6R9g4IGcsWMS5g9FRrSbMEwAuPBO6xeTI3aYQvkDIPrw7jEYQf4eBXcLbuKep
-	 ApH4aK8G6zlw/+k3RK6TmGTaMvBCaZEPKHiLx9l+2TKrfRtzvgGeOmSTuh+VjH9+mo
-	 Yf1fz2Gemqi+t399nvUmwGCdAe2NC0jPcqA8hpOR0qZ+rrYX+3NAJ5urb7UWc9Sls0
-	 0syMfuk5Wyp+7qUt7+oYqj+D8kfI8+J0qbii876QDCXqqPrH29Nsk5bvDdc2w9xQDx
-	 xEjdFycI8TT8esLLQqMXgJ5WP2DukC52mLK1C+59BEuXXqtgGcfBbbnQFxJ+02MPvk
-	 zA5MVGPdjhymQ==
-Date: Tue, 20 May 2025 16:25:29 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>,
-	Karolina Stolarek <karolina.stolarek@oracle.com>,
-	Martin Petersen <martin.petersen@oracle.com>,
-	Ben Fuller <ben.fuller@oracle.com>,
-	Drew Walton <drewwalton@microsoft.com>,
-	Anil Agrawal <anilagrawal@meta.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Sargun Dhillon <sargun@meta.com>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Kai-Heng Feng <kaihengf@nvidia.com>,
-	Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
-	Terry Bowman <terry.bowman@amd.com>,
-	Shiju Jose <shiju.jose@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v6 13/16] PCI/AER: Rename struct aer_stats to aer_report
-Message-ID: <20250520212529.GA1301402@bhelgaas>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZNgvsFW8"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-231c88cc984so6646785ad.1;
+        Tue, 20 May 2025 14:26:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747776396; x=1748381196; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HS12UrQYG8FOz8WwBWci8HxogfBg3U2CIyyf4Uw5/Ik=;
+        b=ZNgvsFW8Jhsh5RXneXAlTjWpEc67XuVkXqK8OEAoeVWZT2LBbj92tOPTQ7sTTHPpeG
+         pS66Qdvs7uBVbcz8bol0jOGQ8fjoU0k568LZ2dH6THXOyXtN+ODwVAGlKLvQtl+TXpRf
+         2cRZSi6LMHJVUPwP3U5M4HMA3W0nc8FOc5StVR+QSsuwVGODcskriNp2IxrPO1dBvLAa
+         O29CG2t7R4Czvrj13XiRBPNUsVIyfdBRWWGZvh/3ELlVOre8UJC2fFEOYo3Q4Hh3q/Jj
+         Wu6Yhk5x9IDb3C/efGklkzYRQfe+h8l5+B6KbS/JT7MA4TiR9hZ2AjJSXsXpp9kcpXaE
+         ZBPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747776396; x=1748381196;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HS12UrQYG8FOz8WwBWci8HxogfBg3U2CIyyf4Uw5/Ik=;
+        b=A0Kp85KIZyQ+c948Ka5Fd4TJqg9BO/jJKwq/RTM9jgwJo+iHsjmGSy2nkJ0mu7ImLq
+         iekpP1g5jfef9Vc2X5E7xy+peRfeba3SULcPdA5nUurm8Yl4V8KdwyGwYOHiHqYWtvrh
+         hXa4Ok3fnhU8GUr7y/gWqUUT0PL2qMuHCz/CICJPs/9RWrBhKJw8bPWgNSj4HhlyBA6j
+         HXbaKwkixWmuUo21t9JB5NANxllXPRKd4Bh6tLEFyxv3Khv9mSDYujOmFaK859bTEI0F
+         J++GZ6zXmtzQ+BGHnnQ5vFCsaCqcIcGMe5Em1ZE473nXDm5wFZQQvX2/eurCyFM8yh5F
+         TGkg==
+X-Forwarded-Encrypted: i=1; AJvYcCUKXJuTgTNWMUCymJ85w25L7+V0waDKN/9tXyno3RqsB9CwlIl4JFUGjoDR7e9WMCiNEtoM3juciAONRZIP8To=@vger.kernel.org, AJvYcCUX6uIkC1fa9hQ8TTNc9IfsJX6JN2zxaMxoyVULAAXjON58XBPSEPkaPRqXRXLXEPIFOAQTKR6UxajRcdI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYLAPLIhA4gHwui0BrKbaJD0/RqlBn4xOG5GDdeJDghuBIXWKI
+	EC3dBWmpZbqCc/XBM1K47DyZfX5ZI8cM2J1mF6Bd562ej9GoGI7Do1jdsxAJd0f5GOs8pHD4u3L
+	xVO9NtzTheOQRACzXUjw0NHg3GZSGE20=
+X-Gm-Gg: ASbGncskm5BRMKT8r5dlH5ltr/9M6czIisx5Ba27RSb+IXwUbcb3HWFCwt9FoNp3exl
+	fjv0TtQxhiqai3y96sAj/OLo0Rs3DsG4SDHHjJ7DQ+tTSuqCbZ1gZDXc/YCYNh5uFABhx/hdc+m
+	UGjEpIBZWUrMkjxXzShXDoZFCMMdsSeBnf7au3YiFCoyA=
+X-Google-Smtp-Source: AGHT+IFe7MmjlmtUNXGOQwgtb0GunBupn24MRWKrlZVElPHZgZU+iZUAdlM7xHeK50gn3/K2wWFs+xCavEyfHI6B4rw=
+X-Received: by 2002:a17:903:2285:b0:223:49ce:67a2 with SMTP id
+ d9443c01a7336-231d4502e3bmr89430325ad.9.1747776396506; Tue, 20 May 2025
+ 14:26:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8624dd16-83a3-4fd3-a5d9-a79c50236e58@linux.intel.com>
+References: <20250511-rust_unsafe_pinned-v4-0-a86c32e47e3d@gmail.com> <20250511-rust_unsafe_pinned-v4-1-a86c32e47e3d@gmail.com>
+In-Reply-To: <20250511-rust_unsafe_pinned-v4-1-a86c32e47e3d@gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 20 May 2025 23:26:22 +0200
+X-Gm-Features: AX0GCFtV2Jx7NnypTgqMG-mZr9OtcqXo72rNX0dRAhFEUfAeCCyratYCcrsBNPA
+Message-ID: <CANiq72n0EcibX3Vx95tiPEkd04DA4hjY-TJQs9YSOmHj=VZ_5g@mail.gmail.com>
+Subject: Re: [PATCH v4 1/3] rust: add UnsafePinned type
+To: Sky <sky@sky9.dev>, Christian Schrefl <chrisi.schrefl@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, =?UTF-8?Q?Gerald_Wisb=C3=B6ck?= <gerald.wisboeck@feather.ink>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 19, 2025 at 08:30:09PM -0700, Sathyanarayanan Kuppuswamy wrote:
-> 
-> On 5/19/25 2:35 PM, Bjorn Helgaas wrote:
-> > From: Karolina Stolarek <karolina.stolarek@oracle.com>
-> > 
-> > Update name to reflect the broader definition of structs/variables that are
-> > stored (e.g. ratelimits). This is a preparatory patch for adding rate limit
-> > support.
-> > 
-> > Link: https://lore.kernel.org/r/20250321015806.954866-6-pandoh@google.com
-> > Signed-off-by: Karolina Stolarek <karolina.stolarek@oracle.com>
-> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> > ---
-> 
-> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> 
-> >   drivers/pci/pcie/aer.c | 50 +++++++++++++++++++++---------------------
-> >   include/linux/pci.h    |  2 +-
-> >   2 files changed, 26 insertions(+), 26 deletions(-)
-> > 
-> > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> > index 06a7dda20846..da62032bf024 100644
-> > --- a/drivers/pci/pcie/aer.c
-> > +++ b/drivers/pci/pcie/aer.c
-> > @@ -54,11 +54,11 @@ struct aer_rpc {
-> >   	DECLARE_KFIFO(aer_fifo, struct aer_err_source, AER_ERROR_SOURCES_MAX);
-> >   };
-> > -/* AER stats for the device */
-> > -struct aer_stats {
-> > +/* AER report for the device */
-> > +struct aer_report {
-> 
-> For me aer_report also sounds like stats like struct. I prefer
-> aer_info, but it is up to you.
+On Sun, May 11, 2025 at 8:21=E2=80=AFPM Christian Schrefl
+<chrisi.schrefl@gmail.com> wrote:
+>
+> Signed-off-by: Sky <sky@sky9.dev>
 
-I tend to agree and can imagine a future where we might collect the
-stats, ratelimits, and maybe aer_capability_regs into a per-device AER
-structure.  "aer_info" seems like a decent generic name, so I did
-s/\<aer_stats\>/aer_info/
+Apologies for not noticing this earlier...
+
+Since this is a Signed-off-by, the DCO applies, and it requires that
+the name is a "known identity":
+
+    https://docs.kernel.org/process/submitting-patches.html#developer-s-cer=
+tificate-of-origin-1-1
+
+Sky: is that name one you use to sign paperwork etc.? If so, that is
+fine (and apologies in that case!) -- please let me know. If not,
+please feel free to ping me in private if needed.
+
+Thanks!
+
+Cheers,
+Miguel
