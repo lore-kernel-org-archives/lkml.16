@@ -1,133 +1,278 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7903B1DE2A8
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 11:38:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FA25276030;
+	Tue, 20 May 2025 11:38:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747741112; cv=none; b=e9f75za3QSnP9XdGrPLQZERcHr55ZeaagLs1O669AK1I2vAB7G1IHP824XvLJWhVV5tldyt7jEfE8BOp9DLRuqCaCqHqcXhN8LHI7yuFqZvsm74a9E1bvg/DIOTk/teO9VaeJfxYLaJ362Ruui98WxtEEU52LxAuKU2Zfw8WK/A=
+	t=1747741133; cv=none; b=rn6k8O5U5+7A7Kq1pmJrJXJWLQexEHLXz8H2ff1679I5FxaC4ojALhtFw9g7cbN52ZTzzeKT5ya0ZrjTlt5enaJB4SN/nVVxwU3VQCjaqwo+aJriKtGXA9yA2we7nnXudtkCyoQTfof4ZF3KbMVinC+go6KJlA9eb35z7WVOOww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747741112; c=relaxed/simple;
-	bh=onzNthu//TqCk8fXRF+KW7Sh7xAH/kuJP5cNr1Ekph8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H9ZTRbKRsyviyo6ZX616NgnOw+/n2EHIXs6sNs9HqcFfCwRUd63JYOCs3FHA7Qvp4mCrF16kcWY1dN+PYbSEAiS9Bfytei4mqDnYuKtkPT8d9ywrADmvGwb2M1mjtptIn1j9DYHpyAzclhefjuhsW/IZyrxagpJHpL6pEa/nR0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ike68lEc; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747741133; c=relaxed/simple;
+	bh=ZBhy5jTMuX/islvsvsIGuvvsPNEPu6gzFj5aeGdgWNU=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=ljyAaXv2g7iowlZnYER7xVQh3gpwPxaIa6b72mkNYV8Ks+86/kmGkdntUBQDZsKRcrKOyPntLNcNgZ/7L/tH6D3t0IFfBx3yGu/BTiBTnHGB3dKeaREcp2bUNJqg26CD+szOKHxXmUeqehv9wHGp5yKwiRSHtqFWpGKT7RLkv4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gIL2MzaW; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ike68lEc"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gIL2MzaW"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747741111; x=1779277111;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=onzNthu//TqCk8fXRF+KW7Sh7xAH/kuJP5cNr1Ekph8=;
-  b=Ike68lEcif+N038jj6lkvkNidjiIHHutRCxsmdROREITSdBwQru9ZvS5
-   dAOU//EJXM1jdM9EOU5F3Bl1Z17vi0KY+p3qOvISl+MS0u6tgAUsilELa
-   3XwhiEt7CfG1+FZN0OKoykUgpY7/p52ZnTSJ35DHGrTqxSrRD3sXrjnA3
-   DHPhzfTIss9omGJhCUg/ACxwHvJyA6q+SMLWYt/0LuLAKhcCxlikcH48r
-   okcJjgmrg76TXVbr+Irlpe+t63M91exYig9eqHGC7mtSGfC8IDEGstyXm
-   Ou5yt9nS5V8pJlQWtsUSxv/aPEQpzVvN1N6IlQCUaegdTHx8bkDwpfNrh
-   A==;
-X-CSE-ConnectionGUID: I6uQWjmqSVSV6xlJEJUvaw==
-X-CSE-MsgGUID: SniKjU/vTQK4GxRI3a+fNA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="67077655"
+  t=1747741132; x=1779277132;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=ZBhy5jTMuX/islvsvsIGuvvsPNEPu6gzFj5aeGdgWNU=;
+  b=gIL2MzaW0hVvtxc6CsUyG+SOV5Hq9QGYSmDRXKXnjWn8RHM9pt5ovkHZ
+   rmsrWGIeVTuVujs1pnBzgVui6ohhiYXG0w105IZO1Gr79Hmgak1Rps4XS
+   /IxF5OICb781kV0BBymJJ1mBDrdT5gP6llShGIk0aZ/XCzfSIilatcvTH
+   Xged+N00CceulQUQO07HN6Cqy6VW+3hC1CzpYRo3atGNkFX3BBbEVBv1y
+   l9jW9kCM6cbOt9PWU6mSdSH4Ch37U2/qNYOG4BTy4vqwfvaOKWRFMApTU
+   rddnO7CHdVMnC6IACuSEeCGwEcvyrFDlf09At17QxQAnYCeRwPQCruty+
+   w==;
+X-CSE-ConnectionGUID: lnWI1HU1TEu9nPJlX6KfvQ==
+X-CSE-MsgGUID: rGmLfMc2To62jFu/wwN1Bw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="53340875"
 X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="67077655"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 04:38:30 -0700
-X-CSE-ConnectionGUID: DrZeBAEoRoSZV2ne/NJw+A==
-X-CSE-MsgGUID: 40bjcX6FQiOqBb0EKDbWuQ==
+   d="scan'208";a="53340875"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 04:38:50 -0700
+X-CSE-ConnectionGUID: KQtvJJ91TcO/jpGFcfksrg==
+X-CSE-MsgGUID: Zwa6PwrpScOkOLk4GToe3w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="139567031"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 20 May 2025 04:38:28 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uHLIg-000MWW-0l;
-	Tue, 20 May 2025 11:38:26 +0000
-Date: Tue, 20 May 2025 19:38:05 +0800
-From: kernel test robot <lkp@intel.com>
-To: Siddarth Gundu <siddarthsgml@gmail.com>, geert@linux-m68k.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
-	linux-kernel@vger.kernel.org,
-	Siddarth Gundu <siddarthsgml@gmail.com>
-Subject: Re: [PATCH] m68k: apollo: replace strcpy() with strscpy()
-Message-ID: <202505201919.YX6T8TcK-lkp@intel.com>
-References: <20250514052327.96537-1-siddarthsgml@gmail.com>
+   d="scan'208";a="139506684"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.235])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 04:38:43 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 20 May 2025 14:38:40 +0300 (EEST)
+To: Bjorn Helgaas <helgaas@kernel.org>
+cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>, 
+    Karolina Stolarek <karolina.stolarek@oracle.com>, 
+    Martin Petersen <martin.petersen@oracle.com>, 
+    Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, 
+    Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, 
+    Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, 
+    Lukas Wunner <lukas@wunner.de>, 
+    Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+    Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney" <paulmck@kernel.org>, 
+    Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
+    Oliver O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>, 
+    Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>, 
+    Terry Bowman <terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>, 
+    Dave Jiang <dave.jiang@intel.com>, LKML <linux-kernel@vger.kernel.org>, 
+    linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v6 13/16] PCI/AER: Rename struct aer_stats to
+ aer_report
+In-Reply-To: <20250519213603.1257897-14-helgaas@kernel.org>
+Message-ID: <c5d071eb-c389-6f63-95e0-1b133bc1a620@linux.intel.com>
+References: <20250519213603.1257897-1-helgaas@kernel.org> <20250519213603.1257897-14-helgaas@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250514052327.96537-1-siddarthsgml@gmail.com>
+Content-Type: multipart/mixed; boundary="8323328-1916209925-1747741120=:936"
 
-Hi Siddarth,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-kernel test robot noticed the following build errors:
+--8323328-1916209925-1747741120=:936
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-[auto build test ERROR on geert-m68k/for-next]
-[also build test ERROR on geert-m68k/for-linus gerg-m68knommu/for-next linus/master v6.15-rc7 next-20250516]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+On Mon, 19 May 2025, Bjorn Helgaas wrote:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Siddarth-Gundu/m68k-apollo-replace-strcpy-with-strscpy/20250514-132427
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/geert/linux-m68k.git for-next
-patch link:    https://lore.kernel.org/r/20250514052327.96537-1-siddarthsgml%40gmail.com
-patch subject: [PATCH] m68k: apollo: replace strcpy() with strscpy()
-config: m68k-defconfig (https://download.01.org/0day-ci/archive/20250520/202505201919.YX6T8TcK-lkp@intel.com/config)
-compiler: m68k-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250520/202505201919.YX6T8TcK-lkp@intel.com/reproduce)
+> From: Karolina Stolarek <karolina.stolarek@oracle.com>
+>=20
+> Update name to reflect the broader definition of structs/variables that a=
+re
+> stored (e.g. ratelimits). This is a preparatory patch for adding rate lim=
+it
+> support.
+>=20
+> Link: https://lore.kernel.org/r/20250321015806.954866-6-pandoh@google.com
+> Signed-off-by: Karolina Stolarek <karolina.stolarek@oracle.com>
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
+>  drivers/pci/pcie/aer.c | 50 +++++++++++++++++++++---------------------
+>  include/linux/pci.h    |  2 +-
+>  2 files changed, 26 insertions(+), 26 deletions(-)
+>=20
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 06a7dda20846..da62032bf024 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -54,11 +54,11 @@ struct aer_rpc {
+>  =09DECLARE_KFIFO(aer_fifo, struct aer_err_source, AER_ERROR_SOURCES_MAX)=
+;
+>  };
+> =20
+> -/* AER stats for the device */
+> -struct aer_stats {
+> +/* AER report for the device */
+> +struct aer_report {
+> =20
+>  =09/*
+> -=09 * Fields for all AER capable devices. They indicate the errors
+> +=09 * Stats for all AER capable devices. They indicate the errors
+>  =09 * "as seen by this device". Note that this may mean that if an
+>  =09 * Endpoint is causing problems, the AER counters may increment
+>  =09 * at its link partner (e.g. Root Port) because the errors will be
+> @@ -80,7 +80,7 @@ struct aer_stats {
+>  =09u64 dev_total_nonfatal_errs;
+> =20
+>  =09/*
+> -=09 * Fields for Root Ports & Root Complex Event Collectors only; these
+> +=09 * Stats for Root Ports & Root Complex Event Collectors only; these
+>  =09 * indicate the total number of ERR_COR, ERR_FATAL, and ERR_NONFATAL
+>  =09 * messages received by the Root Port / Event Collector, INCLUDING th=
+e
+>  =09 * ones that are generated internally (by the Root Port itself)
+> @@ -377,7 +377,7 @@ void pci_aer_init(struct pci_dev *dev)
+>  =09if (!dev->aer_cap)
+>  =09=09return;
+> =20
+> -=09dev->aer_stats =3D kzalloc(sizeof(struct aer_stats), GFP_KERNEL);
+> +=09dev->aer_report =3D kzalloc(sizeof(*dev->aer_report), GFP_KERNEL);
+> =20
+>  =09/*
+>  =09 * We save/restore PCI_ERR_UNCOR_MASK, PCI_ERR_UNCOR_SEVER,
+> @@ -398,8 +398,8 @@ void pci_aer_init(struct pci_dev *dev)
+> =20
+>  void pci_aer_exit(struct pci_dev *dev)
+>  {
+> -=09kfree(dev->aer_stats);
+> -=09dev->aer_stats =3D NULL;
+> +=09kfree(dev->aer_report);
+> +=09dev->aer_report =3D NULL;
+>  }
+> =20
+>  #define AER_AGENT_RECEIVER=09=090
+> @@ -537,10 +537,10 @@ static const char *aer_agent_string[] =3D {
+>  {=09=09=09=09=09=09=09=09=09\
+>  =09unsigned int i;=09=09=09=09=09=09=09\
+>  =09struct pci_dev *pdev =3D to_pci_dev(dev);=09=09=09=09\
+> -=09u64 *stats =3D pdev->aer_stats->stats_array;=09=09=09\
+> +=09u64 *stats =3D pdev->aer_report->stats_array;=09=09=09\
+>  =09size_t len =3D 0;=09=09=09=09=09=09=09\
+>  =09=09=09=09=09=09=09=09=09\
+> -=09for (i =3D 0; i < ARRAY_SIZE(pdev->aer_stats->stats_array); i++) {\
+> +=09for (i =3D 0; i < ARRAY_SIZE(pdev->aer_report->stats_array); i++) {\
+>  =09=09if (strings_array[i])=09=09=09=09=09\
+>  =09=09=09len +=3D sysfs_emit_at(buf, len, "%s %llu\n",=09\
+>  =09=09=09=09=09     strings_array[i],=09=09\
+> @@ -551,7 +551,7 @@ static const char *aer_agent_string[] =3D {
+>  =09=09=09=09=09     i, stats[i]);=09=09\
+>  =09}=09=09=09=09=09=09=09=09\
+>  =09len +=3D sysfs_emit_at(buf, len, "TOTAL_%s %llu\n", total_string,=09\
+> -=09=09=09     pdev->aer_stats->total_field);=09=09\
+> +=09=09=09     pdev->aer_report->total_field);=09=09\
+>  =09return len;=09=09=09=09=09=09=09\
+>  }=09=09=09=09=09=09=09=09=09\
+>  static DEVICE_ATTR_RO(name)
+> @@ -572,7 +572,7 @@ aer_stats_dev_attr(aer_dev_nonfatal, dev_nonfatal_err=
+s,
+>  =09=09     char *buf)=09=09=09=09=09=09\
+>  {=09=09=09=09=09=09=09=09=09\
+>  =09struct pci_dev *pdev =3D to_pci_dev(dev);=09=09=09=09\
+> -=09return sysfs_emit(buf, "%llu\n", pdev->aer_stats->field);=09\
+> +=09return sysfs_emit(buf, "%llu\n", pdev->aer_report->field);=09\
+>  }=09=09=09=09=09=09=09=09=09\
+>  static DEVICE_ATTR_RO(name)
+> =20
+> @@ -599,7 +599,7 @@ static umode_t aer_stats_attrs_are_visible(struct kob=
+ject *kobj,
+>  =09struct device *dev =3D kobj_to_dev(kobj);
+>  =09struct pci_dev *pdev =3D to_pci_dev(dev);
+> =20
+> -=09if (!pdev->aer_stats)
+> +=09if (!pdev->aer_report)
+>  =09=09return 0;
+> =20
+>  =09if ((a =3D=3D &dev_attr_aer_rootport_total_err_cor.attr ||
+> @@ -623,28 +623,28 @@ static void pci_dev_aer_stats_incr(struct pci_dev *=
+pdev,
+>  =09unsigned long status =3D info->status & ~info->mask;
+>  =09int i, max =3D -1;
+>  =09u64 *counter =3D NULL;
+> -=09struct aer_stats *aer_stats =3D pdev->aer_stats;
+> +=09struct aer_report *aer_report =3D pdev->aer_report;
+> =20
+>  =09trace_aer_event(pci_name(pdev), (info->status & ~info->mask),
+>  =09=09=09info->severity, info->tlp_header_valid, &info->tlp);
+> =20
+> -=09if (!aer_stats)
+> +=09if (!aer_report)
+>  =09=09return;
+> =20
+>  =09switch (info->severity) {
+>  =09case AER_CORRECTABLE:
+> -=09=09aer_stats->dev_total_cor_errs++;
+> -=09=09counter =3D &aer_stats->dev_cor_errs[0];
+> +=09=09aer_report->dev_total_cor_errs++;
+> +=09=09counter =3D &aer_report->dev_cor_errs[0];
+>  =09=09max =3D AER_MAX_TYPEOF_COR_ERRS;
+>  =09=09break;
+>  =09case AER_NONFATAL:
+> -=09=09aer_stats->dev_total_nonfatal_errs++;
+> -=09=09counter =3D &aer_stats->dev_nonfatal_errs[0];
+> +=09=09aer_report->dev_total_nonfatal_errs++;
+> +=09=09counter =3D &aer_report->dev_nonfatal_errs[0];
+>  =09=09max =3D AER_MAX_TYPEOF_UNCOR_ERRS;
+>  =09=09break;
+>  =09case AER_FATAL:
+> -=09=09aer_stats->dev_total_fatal_errs++;
+> -=09=09counter =3D &aer_stats->dev_fatal_errs[0];
+> +=09=09aer_report->dev_total_fatal_errs++;
+> +=09=09counter =3D &aer_report->dev_fatal_errs[0];
+>  =09=09max =3D AER_MAX_TYPEOF_UNCOR_ERRS;
+>  =09=09break;
+>  =09}
+> @@ -656,19 +656,19 @@ static void pci_dev_aer_stats_incr(struct pci_dev *=
+pdev,
+>  static void pci_rootport_aer_stats_incr(struct pci_dev *pdev,
+>  =09=09=09=09 struct aer_err_source *e_src)
+>  {
+> -=09struct aer_stats *aer_stats =3D pdev->aer_stats;
+> +=09struct aer_report *aer_report =3D pdev->aer_report;
+> =20
+> -=09if (!aer_stats)
+> +=09if (!aer_report)
+>  =09=09return;
+> =20
+>  =09if (e_src->status & PCI_ERR_ROOT_COR_RCV)
+> -=09=09aer_stats->rootport_total_cor_errs++;
+> +=09=09aer_report->rootport_total_cor_errs++;
+> =20
+>  =09if (e_src->status & PCI_ERR_ROOT_UNCOR_RCV) {
+>  =09=09if (e_src->status & PCI_ERR_ROOT_FATAL_RCV)
+> -=09=09=09aer_stats->rootport_total_fatal_errs++;
+> +=09=09=09aer_report->rootport_total_fatal_errs++;
+>  =09=09else
+> -=09=09=09aer_stats->rootport_total_nonfatal_errs++;
+> +=09=09=09aer_report->rootport_total_nonfatal_errs++;
+>  =09}
+>  }
+> =20
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 0e8e3fd77e96..4b11a90107cb 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -346,7 +346,7 @@ struct pci_dev {
+>  =09u8=09=09hdr_type;=09/* PCI header type (`multi' flag masked out) */
+>  #ifdef CONFIG_PCIEAER
+>  =09u16=09=09aer_cap;=09/* AER capability offset */
+> -=09struct aer_stats *aer_stats;=09/* AER stats for this device */
+> +=09struct aer_report *aer_report;=09/* AER report for this device */
+>  #endif
+>  #ifdef CONFIG_PCIEPORTBUS
+>  =09struct rcec_ea=09*rcec_ea;=09/* RCEC cached endpoint association */
+>=20
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505201919.YX6T8TcK-lkp@intel.com/
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
-All errors (new ones prefixed by >>):
+--=20
+ i.
 
-   In file included from include/linux/build_bug.h:5,
-                    from include/linux/init.h:5,
-                    from arch/m68k/apollo/config.c:2:
-   arch/m68k/apollo/config.c: In function 'dn_get_model':
->> include/linux/compiler.h:197:62: error: static assertion failed: "must be array"
-     197 | #define __BUILD_BUG_ON_ZERO_MSG(e, msg) ((int)sizeof(struct {_Static_assert(!(e), msg);}))
-         |                                                              ^~~~~~~~~~~~~~
-   include/linux/compiler.h:202:33: note: in expansion of macro '__BUILD_BUG_ON_ZERO_MSG'
-     202 | #define __must_be_array(a)      __BUILD_BUG_ON_ZERO_MSG(!__is_array(a), \
-         |                                 ^~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/string.h:80:47: note: in expansion of macro '__must_be_array'
-      80 |         sized_strscpy(dst, src, sizeof(dst) + __must_be_array(dst) +    \
-         |                                               ^~~~~~~~~~~~~~~
-   include/linux/args.h:25:24: note: in expansion of macro '__strscpy0'
-      25 | #define __CONCAT(a, b) a ## b
-         |                        ^
-   include/linux/args.h:26:27: note: in expansion of macro '__CONCAT'
-      26 | #define CONCATENATE(a, b) __CONCAT(a, b)
-         |                           ^~~~~~~~
-   include/linux/string.h:114:9: note: in expansion of macro 'CONCATENATE'
-     114 |         CONCATENATE(__strscpy, COUNT_ARGS(__VA_ARGS__))(dst, src, __VA_ARGS__)
-         |         ^~~~~~~~~~~
-   arch/m68k/apollo/config.c:222:5: note: in expansion of macro 'strscpy'
-     222 |     strscpy(model, "Apollo ");
-         |     ^~~~~~~
-
-
-vim +197 include/linux/compiler.h
-
-230fa253df6352a Christian Borntraeger 2014-11-25  193  
-cb7380de9e4cbc9 Kees Cook             2025-02-05  194  #ifdef __CHECKER__
-cb7380de9e4cbc9 Kees Cook             2025-02-05  195  #define __BUILD_BUG_ON_ZERO_MSG(e, msg) (0)
-cb7380de9e4cbc9 Kees Cook             2025-02-05  196  #else /* __CHECKER__ */
-cb7380de9e4cbc9 Kees Cook             2025-02-05 @197  #define __BUILD_BUG_ON_ZERO_MSG(e, msg) ((int)sizeof(struct {_Static_assert(!(e), msg);}))
-cb7380de9e4cbc9 Kees Cook             2025-02-05  198  #endif /* __CHECKER__ */
-cb7380de9e4cbc9 Kees Cook             2025-02-05  199  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+--8323328-1916209925-1747741120=:936--
