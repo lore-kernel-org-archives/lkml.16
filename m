@@ -1,177 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C03F2B9A9;
-	Tue, 20 May 2025 16:31:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA9E324E010;
+	Tue, 20 May 2025 16:31:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747758663; cv=none; b=GXbj+foCmV8eCB8Rm3RX1GmMucklbKYi7nTYBbiqLLHT6mPivmxIptsdGKl7ds6uhRynbm3NKv976vQvYOWMwSFFxf/Jmalc8PEnDx/iG6PNcO93IxkZunVNzPeD+3WgCofU7Gg2zOVG9whGT1Fbp2dnSwcPQBsa2t5TPEg4NF8=
+	t=1747758674; cv=none; b=gidG3BwRIXsVCAvKTLNt9a6VxvReRbd0KPVOH3ArJb8vKjRSGGcav0LP+GIAlyBuWG2GrALFbPe6OX2p7fxsjTBukp0HzW5A1sTKNgB2mO4IVjNs1Gi+nJIRDOJ6LK0zgVlQ7vJEKV95DM9uueNlMLMwjxKvDDS5cmishndlEho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747758663; c=relaxed/simple;
-	bh=Hem8uB3zD/uymJ9qJM41N8VYIt7YRxLcq73u4y3iXZQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=sUYaNraYH3Y0+MgpDbweSn4wigLYDrILCwk6N9RQpMOiEheOTwXv1T5dFTzxWs+m3wehZ1h/exAsTTJzpkQq25VxZhsPyHoEKKca3hMWNmYqyr2AyLmXLnc3HyXhezfT612vkellPiT0FCQOB08IFKlhrepJQT5H7Y9SdXQ+Gmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qZPrfh52; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747758674; c=relaxed/simple;
+	bh=A1uJoYur0CJnK5muRGxD+LMFE0Wmuv2z5f3tDoh1UVY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JbEBiG88kIMgSQYZJut7cumf8eIngOGd5EV6YybTpEburO5b7+FvWRRmNSdVOjVEFcg810zyNTTFN0cTEK3w55UuxtDJABRDxdKEZ3lVrldVz4nVFkwTukKcdQoc8GZJ21Ibzllais264IzXbo621wrCdSL+Yim5oM4X8R/1mGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IP0xUmHy; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qZPrfh52"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5206CC4CEE9;
-	Tue, 20 May 2025 16:31:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747758662;
-	bh=Hem8uB3zD/uymJ9qJM41N8VYIt7YRxLcq73u4y3iXZQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=qZPrfh52H9nmCtaZEzHwRsuSjNG60L8K+op7YjP/4d3Clt8YrQ61bHb4RMRebkQYp
-	 ZlfbFO/xEeyf3YewDEOrx+Gsz/ioRAER2UxfGLorG8iVIO7cNDTqMWBFQ9n2/f1+5p
-	 GaUbj1QCopmcrQvH294U3xHiBoEaRf0UPLpni9r23pLebn/8/003ycFdkfhuI2VLlt
-	 BLLWuhfkeGcf26KXqG192DtM77svvxhattM5I7y1gXS+2A5aZTh+G+/KIZFjAuGbT9
-	 CSBhrSR1NKdXdr06Ibm3CHtR7lB9c9Z5ns4XBHRJzFPUd1oFaKN9HSZLBplRI/Alg7
-	 TSa9BmbDkwVWQ==
-Date: Tue, 20 May 2025 11:31:00 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>,
-	Karolina Stolarek <karolina.stolarek@oracle.com>,
-	Martin Petersen <martin.petersen@oracle.com>,
-	Ben Fuller <ben.fuller@oracle.com>,
-	Drew Walton <drewwalton@microsoft.com>,
-	Anil Agrawal <anilagrawal@meta.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Sargun Dhillon <sargun@meta.com>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Kai-Heng Feng <kaihengf@nvidia.com>,
-	Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
-	Terry Bowman <terry.bowman@amd.com>,
-	Shiju Jose <shiju.jose@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	LKML <linux-kernel@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v6 16/16] PCI/AER: Add sysfs attributes for log ratelimits
-Message-ID: <20250520163100.GA1307206@bhelgaas>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IP0xUmHy"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-30ea8b7c5c2so3209614a91.3;
+        Tue, 20 May 2025 09:31:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747758672; x=1748363472; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=U2t05IAhu5JS6yf2a0L1zsY+gn4NL8gR5pf4kfZkSQo=;
+        b=IP0xUmHyxxhxDKJdzauRevns7e5KOJ4x/oEj9jKVEzFDwMue8nFY6dhU1qh70BSyYm
+         kIvI8c4yr3cEpfbejY9BiysEgnIzjpSU6M3c/nxqS0PbTzB79AhmpjNI8WE/bSdgujsl
+         7+ZMNOFUsqEGdTH2bO272HDMlUZubAKB0r14aya4w3FY17ftjleuojXrtQedc8inGIPG
+         ri5Tprv2sQTlFF7kEX7KON/LTc882k0MNwRl5B1JZRaOs0UZjoNuxknuzpH1jTr39mle
+         21yun3ane6NDYtSoqbgGHqu5jO6TP8oimUmROJXlzZARqyI8XzTAEfIo3knsAeX42gOh
+         R/DA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747758672; x=1748363472;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=U2t05IAhu5JS6yf2a0L1zsY+gn4NL8gR5pf4kfZkSQo=;
+        b=gvKXIlemUmK/6JvAvUad+VXU6Z9bw8wvWr5AdEVawMt4AWfe1BZXsrW4DVNOUX62+S
+         HDhme5wQvXpfXkEku7lOi2lAHhjT/JW2KeurqCRy9Y1LNaSQMog4vz3ypd+CA8g2NMeW
+         IHDV1GqWdXceaSas7smnuQT/081OdJSxPkqDRyLWT6CUArWKyXi4XNyPCeHWluK+Zk01
+         EQ0amUBGWWXfEpz0nWaqp1fS4JVzFW8JMtYKS6RQZOvmKyRobwgVJszzHjZrZI8TSjdl
+         ER6PwGgI39xIuFkM7YYqexX+5WBYfENVI1HGNj/pV2Zgx3u+H+ZwE+iNfQwEfZoLlfQp
+         JHUA==
+X-Forwarded-Encrypted: i=1; AJvYcCV3VZTpDpyQgm19VpaHFMYEUYFvQq/IwxAIa09Z+MnX5knH2IADL/ruEPQOwmfokp0iCOAJkpuJJEZKmNyB@vger.kernel.org, AJvYcCVgrBFtmQvFgRI4sYwWulK1Qcr0Z5lbLLU5VaC7Ab96kU2qsTEQ9lwACKNGsUKIXyRI260UheaO@vger.kernel.org, AJvYcCWSsbR5vJJPnzsKC/u7+xPTfmIz76c+1Sqc0GiIrbYm2dO/AWBMnr5tX9Yhoca1wQfLc+0=@vger.kernel.org, AJvYcCXc2XkNdfwU8BX+MbL4+5PAWtwLhu3WjN8HpLMovrk8H9hNzYObqYE/lsPHZberZKHcY7jGoda8BS8FFSw8Kv7W@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2o9MyYY4BP0vLX0sBMEzLs3+FXCKZ8DOC7KRc4Mq+M30coqSt
+	a93X89RdIhwZgHXtT58FekGlq7fWu8bD9tvHFdfjxIuHvaAx5e7q+/4b
+X-Gm-Gg: ASbGncuLSAzrhsypXGBLlxUxX6pT5e31cXhZlSFXLvJUwY6QtIx1IIXzxcftAmeTUUG
+	YY8AKHUR5wUPd0z4wNgK2vek67Nxla7o+bUzSoY06RvNJB7QdhnJ+Kb17n9S2Atm5baAquyglft
+	00dG+unfyn2V1fJfS9RLiLJlpQHxVksplpeDqQdbkR1PqxUWf/uLQJVg2XN5FAw3FngZSg6l8A9
+	+bpaJ8ZEea5NMGZDWFa5Xox8NFfQkrWLSHWtDDbPFtWYiZYJB06KgD5R7QlhSlC+e6ELw40HbAp
+	xxcsG5BTNXCaAVIX6mjlbucq6oqrPmc0+nYgVZJYLWrorxfmobxfuTaY617hfKW+uHlx0Dw=
+X-Google-Smtp-Source: AGHT+IEtnb8aYdRjb2chzZc4KFgAuKLohjg+W8+FnvIkeyuCGBJPJPSMAMhgJm+kE/2axZm/rVc6cw==
+X-Received: by 2002:a17:90b:570b:b0:305:5f32:d9f0 with SMTP id 98e67ed59e1d1-30e7d540033mr26297107a91.19.1747758671634;
+        Tue, 20 May 2025 09:31:11 -0700 (PDT)
+Received: from devbig793.prn5.facebook.com ([2a03:2880:ff:3::])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eb0843d1sm8290669a12.49.2025.05.20.09.31.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 09:31:10 -0700 (PDT)
+Date: Tue, 20 May 2025 09:31:08 -0700
+From: Bobby Eshleman <bobbyeshleman@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: Stefano Garzarella <sgarzare@redhat.com>,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	Shuah Khan <shuah@kernel.org>, kvm@vger.kernel.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>,
+	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
+	netdev@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH net-next v7] selftests/vsock: add initial vmtest.sh for
+ vsock
+Message-ID: <aCyuTMNkRzCBMp1i@devbig793.prn5.facebook.com>
+References: <20250515-vsock-vmtest-v7-1-ba6fa86d6c2c@gmail.com>
+ <f7dpfvsdupcf4iucmmit2xzgwk53ial6mcl445uxocizw6iow5@rhmh6m2qd3zu>
+ <73a4740e-755e-4ba8-8130-df09bd25197a@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cfe3d2a5-fe32-ca35-98f5-812da367dc99@linux.intel.com>
+In-Reply-To: <73a4740e-755e-4ba8-8130-df09bd25197a@redhat.com>
 
-On Tue, May 20, 2025 at 03:02:06PM +0300, Ilpo Järvinen wrote:
-> On Mon, 19 May 2025, Bjorn Helgaas wrote:
+On Tue, May 20, 2025 at 12:58:18PM +0200, Paolo Abeni wrote:
+> On 5/20/25 10:24 AM, Stefano Garzarella wrote:
 > 
-> > From: Jon Pan-Doh <pandoh@google.com>
-> > 
-> > Allow userspace to read/write log ratelimits per device (including
-> > enable/disable). Create aer/ sysfs directory to store them and any
-> > future aer configs.
-> > 
-> > Update AER sysfs ABI filename to reflect the broader scope of AER sysfs
-> > attributes (e.g. stats and ratelimits).
-> > 
-> >   Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats ->
-> >     sysfs-bus-pci-devices-aer
-> > 
-> > Tested using aer-inject[1]. Configured correctable log ratelimit to 5.
-> > Sent 6 AER errors. Observed 5 errors logged while AER stats
-> > (cat /sys/bus/pci/devices/<dev>/aer_dev_correctable) shows 6.
-> > 
-> > Disabled ratelimiting and sent 6 more AER errors. Observed all 6 errors
-> > logged and accounted in AER stats (12 total errors).
-> > 
-> > [1] https://git.kernel.org/pub/scm/linux/kernel/git/gong.chen/aer-inject.git
-> > 
-> > Signed-off-by: Karolina Stolarek <karolina.stolarek@oracle.com>
-> > Signed-off-by: Jon Pan-Doh <pandoh@google.com>
-> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> > Acked-by: Paul E. McKenney <paulmck@kernel.org>
-> > ---
-> >  ...es-aer_stats => sysfs-bus-pci-devices-aer} | 34 +++++++
-> >  Documentation/PCI/pcieaer-howto.rst           |  5 +-
-> >  drivers/pci/pci-sysfs.c                       |  1 +
-> >  drivers/pci/pci.h                             |  1 +
-> >  drivers/pci/pcie/aer.c                        | 99 +++++++++++++++++++
-> >  5 files changed, 139 insertions(+), 1 deletion(-)
-> >  rename Documentation/ABI/testing/{sysfs-bus-pci-devices-aer_stats => sysfs-bus-pci-devices-aer} (77%)
-> > 
-> > diff --git a/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats b/Documentation/ABI/testing/sysfs-bus-pci-devices-aer
-> > similarity index 77%
-> > rename from Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
-> > rename to Documentation/ABI/testing/sysfs-bus-pci-devices-aer
-> > index d1f67bb81d5d..771204197b71 100644
-> > --- a/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
-> > +++ b/Documentation/ABI/testing/sysfs-bus-pci-devices-aer
-> > @@ -117,3 +117,37 @@ Date:		July 2018
-> >  KernelVersion:	4.19.0
-> >  Contact:	linux-pci@vger.kernel.org, rajatja@google.com
-> >  Description:	Total number of ERR_NONFATAL messages reported to rootport.
-> > +
-> > +PCIe AER ratelimits
-> > +-------------------
-> > +
-> > +These attributes show up under all the devices that are AER capable.
-> > +They represent configurable ratelimits of logs per error type.
-> > +
-> > +See Documentation/PCI/pcieaer-howto.rst for more info on ratelimits.
-> > +
-> > +What:		/sys/bus/pci/devices/<dev>/aer/ratelimit_log_enable
-> > +Date:		March 2025
-> > +KernelVersion:	6.15.0
+> https://github.com/linux-netdev/nipa/wiki/How-to-run-netdev-selftests-CI-style
 > 
-> This ship has sailed.
-
-Updated to May 2025 and 6.16.0 (I hope :)).
-
-> > +Contact:	linux-pci@vger.kernel.org, pandoh@google.com
-> > +Description:	Writing 1/0 enables/disables AER log ratelimiting. Reading
-> > +		gets whether or not AER is currently enabled.
+> @Bobby: AFAICS this now has all the ingredients to fit NIPA integration
+> am I correct? the last commit message sentence could possibly be dropped.
 > 
-> AER or AER ratelimiting is enabled?
 
-I think we want "AER ratelimiting" here, thanks!
+NP, I can drop it. All of the ingredients should be here, but I haven't
+completed setting up an environment yet to test that integretation.
 
-> > + * Ratelimit enable toggle
-> > + * 0: disabled with ratelimit.interval = 0
-> > + * 1: enabled with ratelimit.interval = nonzero
-> > + */
-> > +static ssize_t ratelimit_log_enable_show(struct device *dev,
-> > +					 struct device_attribute *attr,
-> > +					 char *buf)
-> > +{
-> > +	struct pci_dev *pdev = to_pci_dev(dev);
-> > +	bool enabled = pdev->aer_report->cor_log_ratelimit.interval != 0;
-> > +
-> > +	return sysfs_emit(buf, "%d\n", enabled);
-> > +}
-> > +
-> > +static ssize_t ratelimit_log_enable_store(struct device *dev,
-> > +					  struct device_attribute *attr,
-> > +					  const char *buf, size_t count)
-> > +{
-> > +	struct pci_dev *pdev = to_pci_dev(dev);
-> > +	bool enable;
-> > +	int interval;
-> > +
-> > +	if (!capable(CAP_SYS_ADMIN))
-> > +		return -EPERM;
-> > +
-> > +	if (kstrtobool(buf, &enable) < 0)
-> > +		return -EINVAL;
-> > +
-> > +	if (enable)
-> > +		interval = DEFAULT_RATELIMIT_INTERVAL;
-> > +	else
-> > +		interval = 0;
-> > +
-> > +	pdev->aer_report->cor_log_ratelimit.interval = interval;
-> > +	pdev->aer_report->uncor_log_ratelimit.interval = interval;
-> > +
-> > +	return count;
-> > +}
-> > +static DEVICE_ATTR_RW(ratelimit_log_enable);
+> Still it could be worthy to re-introduce (behind a command line option)
+> the ability to build the kernel as per Stefano request, to fit his
+> existing workflow (sorry for the partial back and forth).
+> 
+> Thanks,
+> 
+> Paolo
+> 
+
+No worries. I can add a "build and run the built kernel" option... it
+should probably build the tools too to be all streamlined.
+
+Best,
+Boby
