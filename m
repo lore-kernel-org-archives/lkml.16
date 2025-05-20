@@ -1,193 +1,167 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFE5D25D212;
-	Tue, 20 May 2025 06:27:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49C6925EF8B;
+	Tue, 20 May 2025 06:27:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747722431; cv=none; b=ZBgbpof7ZehM2DQ0ASHm73F8FVkdjajiTgHELa9U1nwsPJQWqbwv2mh1KCbwhDdCHB6djVugaAkb7SNYxIJsxGLgOgtDEPqGeB0ynFPR0WrPktW2dOpqgk3/WXwjAT2fzcH3NYLUstUREMTeKXsf47Tt093aLTygcELBPcvKgKM=
+	t=1747722434; cv=none; b=R9XtnFwbzlOsX9kofwDh8kE2gJdixw7W1+qtEjT9wP7gz7GBAB2pIVYnP3gxivcsxnV/RBl1vU2qFVdSI8h6hxJNVZdCLVxxZmPmGl/a+TASVGFFPtkXwSu4xL0FWsgxGuqizpaGYsnto+TJ5QCWHwBJ4q6kUxEcBer7QP9EgDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747722431; c=relaxed/simple;
-	bh=nqPc55hB1GQrg7mDhr6kPojKNVIjxArQHxvup5R3NAU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nPegaC9McH8Q+nIFfIjn+W1H94hChb5HrAZ8X6bns7sHz0Q8F692Ya8KqF9ySznvjv62DLCp2W23VAmaDomAcvJA2XwEW6SEcCxZV/qlZ7TcLepTofqnJp/WGnQreigYmvkA2gnl/qUKaCcpIEyj3BREa6N/OYW9fJgzGUfPb1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=mKuDSlKR; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1747722434; c=relaxed/simple;
+	bh=zP6SDHTIuKSL2ym0vtEEnrQ7j+shMIs+JbhfY6qCzvc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=vES78QETTcvrHVngGomgqKV3E661+RxwFYcSemQDOuS1OJva0J1kNmiZKYLWsWxtQSq+71oEhZ0/QJdiXLYlxVK+UMk/myog8yMgYYL7frSTgob4sIlQT5+y+z1uQDtdVlx4mUUguMN4RpnH163+gx3aAnKM+MdO4UQK69LI79w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gNJh2BrK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="mKuDSlKR"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54JLX64D022874;
-	Tue, 20 May 2025 06:27:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=B7lbn7xRT5f
-	uFb9AmBt5kRQKYgLtyfgkbTvwbEoA6zo=; b=mKuDSlKR8U1l3P7SznXFAMk26xv
-	jEYF5zBeCYkmZ9szoorZ6K1Zxv/0l8GbuhT8LQi+OSCGUs8DntL64NV14wAs3l2J
-	+qS3Tdymqew34VjjuG29ZjcrTFIlj0f1gkuLWIznxLSnO4OJDmXOav2/5ZkN7GAE
-	pVNit7dS+hlKNqG6lrs12qWDYiRhtltzPb1a817AluUMPKdNb30WuCxeGUxHeL9I
-	ZJBS1lyz9FlQI38O/6bS3qCg4vmxStq9ItOgDc2Xpy8mUzrDCMqnlTsZsRq3wsfm
-	LEy0y/WhUoJszKjgN2Z4qgzB+Kumv6BE4uHSqcYTIhTkYw62IPsJG79ni+Q==
-Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46r29d2vcx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 May 2025 06:27:03 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 54K6QwLd011085;
-	Tue, 20 May 2025 06:27:00 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 46pkhm5t4t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 May 2025 06:27:00 +0000
-Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 54K6R0Xb011102;
-	Tue, 20 May 2025 06:27:00 GMT
-Received: from hu-devc-hyd-u22-c.qualcomm.com (hu-pkumpatl-hyd.qualcomm.com [10.147.245.204])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 54K6QxXf011095
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 May 2025 06:27:00 +0000
-Received: by hu-devc-hyd-u22-c.qualcomm.com (Postfix, from userid 3914174)
-	id EDE8F5C7; Tue, 20 May 2025 11:56:58 +0530 (+0530)
-From: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc: cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        quic_pkumpatl@quicinc.com, kernel@oss.qualcomm.com,
-        Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-Subject: [PATCH v3 3/7] arm64: dts: qcom: qcs6490-audioreach: Modify LPASS macros clock settings for audioreach
-Date: Tue, 20 May 2025 11:56:14 +0530
-Message-Id: <20250520062618.2765109-4-quic_pkumpatl@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250520062618.2765109-1-quic_pkumpatl@quicinc.com>
-References: <20250520062618.2765109-1-quic_pkumpatl@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gNJh2BrK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7690C4CEEF;
+	Tue, 20 May 2025 06:27:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747722433;
+	bh=zP6SDHTIuKSL2ym0vtEEnrQ7j+shMIs+JbhfY6qCzvc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=gNJh2BrKsRrCE1lUH4HyJPqdUV60P6z2FdarI0T4xyW3sDJZPvIRI1EeRZV6akljn
+	 HkLJ/LBR0tGS8OonknGDd/R/D02qEy11CsvLOPso5LRAYH2fiCERMEI64Aug0aQrHw
+	 tM/N67BDthBLMGisgPm9VnAKdK//Hzbh/232IGbNOzAxqWPNfaK+aziiISuwuZF4/A
+	 49fghvE8Xxp8V3/J0eT/x9Kt59fK7kviOSINzlAmpA9RsqnZwEpYW2OJcXTc7jf8Ia
+	 Qmn+v8w7JWV+Dvp9utA46SYRzi6HaZdg37CMEMrvz6GlgftSLOJ4rnJ5xNFaTivy01
+	 2h8U5tGU03b7A==
+Message-ID: <f9eb4322-cf6f-445d-8ba8-39182325ca4e@kernel.org>
+Date: Tue, 20 May 2025 08:27:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDA1MSBTYWx0ZWRfX2VQJbOky0H18
- Wt3RfpcI5+OZG31QV8aBUNUhzn2eaiF12Pnly5VUDkEsyTdS268VSQXupAMIUAuUVgdguUCQSDe
- mJcqEiE8qeYW5HD06ZGnwY3xs2MW25Vz9U0URQBSt8R4KHfNAKZ9BPbU2nKf1UUwzC/k5liOvqk
- u4xvwrzexQSiRFaEHSARgb1+tpcUaSZXbFBZOxAkCyNfy7mns4VwvFhpaLAQ8JQN+j5Lsp10/e3
- 9f+EVn8v0vBQNlPBczTs5Imjlvj8zVdzzORZE8LQWubK2ekxQSjieqDisOS4uFhgWdOVKvPu31N
- gtdINgSAoF9tBeY9if/N2GngAhjmxzkFDwzVrh2vBIn0LlJu+TBAYrMPHDo8rdECzGGEc85UUYE
- 0Pl0k8HTaCF5x0EuhCUFM1qKNjRkPNGQ2ignGx7evJHTn+suGhyXpWpehM3im/s/IGhtJLT9
-X-Proofpoint-GUID: KSNJnxS7aNUNNrYLMvGEXKvjJPxYHMid
-X-Authority-Analysis: v=2.4 cv=KLdaDEFo c=1 sm=1 tr=0 ts=682c20b7 cx=c_pps
- a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
- a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=ArhgNfssI8JOQl8lT-YA:9
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: KSNJnxS7aNUNNrYLMvGEXKvjJPxYHMid
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-20_03,2025-05-16_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 priorityscore=1501 clxscore=1015 malwarescore=0 spamscore=0
- phishscore=0 lowpriorityscore=0 bulkscore=0 mlxlogscore=999 mlxscore=0
- suspectscore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505200051
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/8] dt-bindings: media: nxp: Add Wave6 video codec
+ device
+To: Nas Chung <nas.chung@chipsnmedia.com>
+Cc: "mchehab@kernel.org" <mchehab@kernel.org>,
+ "hverkuil@xs4all.nl" <hverkuil@xs4all.nl>, "robh@kernel.org"
+ <robh@kernel.org>, "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+ "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-imx@nxp.com" <linux-imx@nxp.com>, "marex@denx.de" <marex@denx.de>,
+ "jackson.lee" <jackson.lee@chipsnmedia.com>,
+ "lafley.kim" <lafley.kim@chipsnmedia.com>
+References: <20250422093119.595-1-nas.chung@chipsnmedia.com>
+ <20250422093119.595-3-nas.chung@chipsnmedia.com>
+ <20250425-romantic-truthful-dove-3ef949@kuoka>
+ <SL2P216MB124656A87931B153F815820BFB8AA@SL2P216MB1246.KORP216.PROD.OUTLOOK.COM>
+ <f1073f21-0885-486f-80c8-00f91dfd7448@kernel.org>
+ <SL2P216MB1246002B8EFD5CBE69E447ACFB96A@SL2P216MB1246.KORP216.PROD.OUTLOOK.COM>
+ <cafba18a-5391-4d9d-aa4c-2f06f93af0f8@kernel.org>
+ <SL2P216MB1246B1DA93D85C1536476D74FB9CA@SL2P216MB1246.KORP216.PROD.OUTLOOK.COM>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <SL2P216MB1246B1DA93D85C1536476D74FB9CA@SL2P216MB1246.KORP216.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+On 19/05/2025 07:08, Nas Chung wrote:
+> Hi, Krzysztof.
+> 
+>> -----Original Message-----
+>> From: Krzysztof Kozlowski <krzk@kernel.org>
+>> Sent: Friday, May 16, 2025 9:56 PM
+>> To: Nas Chung <nas.chung@chipsnmedia.com>
+>> Cc: mchehab@kernel.org; hverkuil@xs4all.nl; sebastian.fricke@collabora.com;
+>> robh@kernel.org; krzk+dt@kernel.org; conor+dt@kernel.org; linux-
+>> media@vger.kernel.org; devicetree@vger.kernel.org; linux-
+>> kernel@vger.kernel.org; linux-imx@nxp.com; marex@denx.de; jackson.lee
+>> <jackson.lee@chipsnmedia.com>; lafley.kim <lafley.kim@chipsnmedia.com>
+>> Subject: Re: [PATCH v2 2/8] dt-bindings: media: nxp: Add Wave6 video codec
+>> device
+>>
+>> On 13/05/2025 09:39, Nas Chung wrote:
+>>>>
+>>>> All of above are wrong for the SoC...
+>>>>
+>>>>>
+>>>>>         #include <dt-bindings/interrupt-controller/arm-gic.h>
+>>>>>         #include <dt-bindings/clock/nxp,imx95-clock.h>
+>>>>>
+>>>>>         soc {
+>>>>>           #address-cells = <2>;
+>>>>>           #size-cells = <2>;
+>>>>>
+>>>>>           vpu: video-codec {
+>>>>>             compatible = "nxp,imx95-vpu", "cnm,wave633c";
+>>>>
+>>>> What does this device represent? It is not "ctrl", because you made ctrl
+>>>> separate device node. Your binding description suggests that is the VPU
+>>>> control region.
+>>>
+>>> My intention was to represent the MMIO VPU device, which includes
+>>> both the core and control nodes.
+>>
+>> Then what is the VPU device if not CTRL? What is the CTRL device?
+> 
+> The VPU device represents the entire VPU hardware block,
+> which includes 1 CTRL component(node) and 4 CORE components(nodes).
 
-Modify and enable WSA, VA, RX and TX lpass macros and lpass_tlmm clock
-settings. For audioreach solution mclk, npl and fsgen clocks are enabled
-through the q6prm clock driver.
+What is entire VPU hardware block?
 
-For qcs6490 RX drives clk from TX CORE which is mandated from DSP side,
-Unlike dedicated core clocks. Core TX clk is used for both RX and
-WSA as per DSP recommendations.
+> 
+> The CTRL device represents the VCPU, a 32-bit processor embedded within the
+> VPU hardware block. This VCPU is responsible for executing the VPU firmware.
+> The CTRL device is in charge of tasks such as firmware booting, power management
+> (sleep and wakeup command), and managing memory regions that are exclusively
+> accessed by the firmware.
 
-Signed-off-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-Co-developed-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
-Signed-off-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
----
- .../boot/dts/qcom/qcs6490-audioreach.dtsi     | 63 +++++++++++++++++++
- 1 file changed, 63 insertions(+)
+This sounds like CTRL is responsible for entire VPU block. What are the
+tasks of VPU block then? What are its registers? What is that device
+exactly doing?
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs6490-audioreach.dtsi b/arch/arm64/boot/dts/qcom/qcs6490-audioreach.dtsi
-index 29d4a6a2db26..4111091f77b2 100644
---- a/arch/arm64/boot/dts/qcom/qcs6490-audioreach.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs6490-audioreach.dtsi
-@@ -11,6 +11,69 @@
- #include <dt-bindings/sound/qcom,q6afe.h>
- #include <dt-bindings/sound/qcom,q6dsp-lpass-ports.h>
- 
-+&lpass_rx_macro {
-+	/delete-property/ power-domains;
-+	/delete-property/ power-domain-names;
-+	clocks = <&q6prmcc LPASS_CLK_ID_TX_CORE_MCLK LPASS_CLK_ATTRIBUTE_COUPLE_NO>,
-+		 <&q6prmcc LPASS_CLK_ID_TX_CORE_NPL_MCLK  LPASS_CLK_ATTRIBUTE_COUPLE_NO>,
-+		 <&q6prmcc LPASS_HW_MACRO_VOTE LPASS_CLK_ATTRIBUTE_COUPLE_NO>,
-+		 <&q6prmcc LPASS_HW_DCODEC_VOTE LPASS_CLK_ATTRIBUTE_COUPLE_NO>,
-+		 <&lpass_va_macro>;
-+	clock-names = "mclk",
-+		      "npl",
-+		      "macro",
-+		      "dcodec",
-+		      "fsgen";
-+};
-+
-+&lpass_tlmm {
-+	clocks = <&q6prmcc LPASS_HW_MACRO_VOTE LPASS_CLK_ATTRIBUTE_COUPLE_NO>,
-+		 <&q6prmcc LPASS_HW_DCODEC_VOTE LPASS_CLK_ATTRIBUTE_COUPLE_NO>;
-+	clock-names = "core",
-+		      "audio";
-+};
-+
-+&lpass_tx_macro {
-+	/delete-property/ power-domains;
-+	/delete-property/ power-domain-names;
-+	clocks = <&q6prmcc LPASS_CLK_ID_TX_CORE_MCLK LPASS_CLK_ATTRIBUTE_COUPLE_NO>,
-+		 <&q6prmcc LPASS_CLK_ID_TX_CORE_NPL_MCLK  LPASS_CLK_ATTRIBUTE_COUPLE_NO>,
-+		 <&q6prmcc LPASS_HW_MACRO_VOTE LPASS_CLK_ATTRIBUTE_COUPLE_NO>,
-+		 <&q6prmcc LPASS_HW_DCODEC_VOTE LPASS_CLK_ATTRIBUTE_COUPLE_NO>,
-+		 <&lpass_va_macro>;
-+	clock-names = "mclk",
-+		      "npl",
-+		      "macro",
-+		      "dcodec",
-+		      "fsgen";
-+};
-+
-+&lpass_va_macro {
-+	/delete-property/ power-domains;
-+	/delete-property/ power-domain-names;
-+	clocks = <&q6prmcc LPASS_CLK_ID_VA_CORE_MCLK LPASS_CLK_ATTRIBUTE_COUPLE_NO>,
-+		 <&q6prmcc LPASS_HW_MACRO_VOTE LPASS_CLK_ATTRIBUTE_COUPLE_NO>,
-+		 <&q6prmcc LPASS_HW_DCODEC_VOTE LPASS_CLK_ATTRIBUTE_COUPLE_NO>;
-+	clock-names = "mclk",
-+		      "macro",
-+		      "dcodec";
-+};
-+
-+&lpass_wsa_macro {
-+	/delete-property/ power-domains;
-+	/delete-property/ power-domain-names;
-+	clocks = <&q6prmcc LPASS_CLK_ID_TX_CORE_MCLK LPASS_CLK_ATTRIBUTE_COUPLE_NO>,
-+		 <&q6prmcc LPASS_CLK_ID_TX_CORE_NPL_MCLK LPASS_CLK_ATTRIBUTE_COUPLE_NO>,
-+		 <&q6prmcc LPASS_HW_MACRO_VOTE LPASS_CLK_ATTRIBUTE_COUPLE_NO>,
-+		 <&q6prmcc LPASS_HW_DCODEC_VOTE LPASS_CLK_ATTRIBUTE_COUPLE_NO>,
-+		 <&lpass_va_macro>;
-+	clock-names = "mclk",
-+		      "npl",
-+		      "macro",
-+		      "dcodec",
-+		      "fsgen";
-+};
-+
- &remoteproc_adsp_glink {
- 	/delete-node/ apr;
- 
--- 
-2.34.1
+You keep repeating the same, so my initial idea - CTRL is not a separate
+block - still stands. Can you have more CTRL blocks than one?
 
+Best regards,
+Krzysztof
