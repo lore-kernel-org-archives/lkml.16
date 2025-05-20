@@ -1,35 +1,51 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C17E26F45F;
-	Tue, 20 May 2025 10:24:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DB95258CFD;
+	Tue, 20 May 2025 10:25:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747736665; cv=none; b=NnxxCY1SaSAAGtBc5aC8WD0CLuARi6B0AlA46uqMZaMKFWLv06civMccO5gFcqLeFF5+F66kUBLDipTTE+kT0t2gMlepW2IesQ8x8X5btPyd3lpErQrBMGH0GfXwhF6nDc/bAYYWSs/JicG8XYiSC6qx826LwgvYG74zIiMeXkA=
+	t=1747736754; cv=none; b=nsG7VHGu+4L8VJPRpUzL7ovBVnaZSYqtys3TxPje1cor1Z5SPaz15fhCCECIvGf/MSUKxA3Yees0VB4DraoLh1xagUKViXodExqw6pNuUTxOiBEpC4g0qxV2eeMiK5l2FClvbexKGW7PvER48t4ojQYoQWrtDJK2gqsd55Uq3Ms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747736665; c=relaxed/simple;
-	bh=7bF1g5BtF5y8HRNr5uPegmqpZJu6hsSnvWmZWf6Q/iY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bCxhhhuCFs0WIZLhokJrRS+aOQV6eox3pD6NuuoEB3b2nNOF+p0lyg/d+EH4ZeGLjeh96kyWTbYyhwnhdrON9a0OdHEF9BEfKOpIkiyYArSVvcBcZGSvZYxqFwkqxeXf4PO9Erewl8fYIhwcEJSkEnD1oJG69NbZ1aYOyfNd7PI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UcmZeny2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747736754; c=relaxed/simple;
+	bh=TAEOQvbzZejm7YyxqI096TZatZJmHDMuFPXOIy2uu7E=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=gAxYRo02ah12or0nHkdlMTkSlRXv90wVtJnPHcbSo5nF7T69Qlty3T5l6QQkvhe46Mz4QaqOjWeDOLm5aEsZj18SURyG0CwKDXHPT7bi45iBUmYWV69PvolyBUt70AJhVuQGiJ++UP7ETB0sZtiN4MBQzRUBf/F9+AEc7cysGAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=LlUv5ZTH; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UcmZeny2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B653C4CEF1;
-	Tue, 20 May 2025 10:24:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747736665;
-	bh=7bF1g5BtF5y8HRNr5uPegmqpZJu6hsSnvWmZWf6Q/iY=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=UcmZeny2V+OVqF1UOuUD8Jh/MQqIacA9L/qr4YU96otM70AsfGSMElfRCKoaN+Xat
-	 Wz8sfaaKixrboNcxCObymaQbECItyxTbS171YyPnq4mRPo4Z6jzSUHlZsAD3fgCfv2
-	 vGrop3Lve/PsZ9NyZpVt5VneT6dYoRNQ4IqVhpaWPjRPOgBUyibWWPhYOMuTTmCa9v
-	 gZrDUGrUznVdjrGqCogC4BkQ7g+ORfjxlEM6sLeVvKy+yQslSBjKAaQQ0iEsE0nU2e
-	 6H0Md/fIduMEnyAzViwFlfkQhPx1f5QgE38y3Vz3DrXZsMvgCRy5XPbe/YHILWiFGM
-	 B+p7TV31fGyEw==
-From: Roger Quadros <rogerq@kernel.org>
-Date: Tue, 20 May 2025 13:23:54 +0300
-Subject: [PATCH RFC net-next 5/5] net: ethernet: ti: am65-cpsw: enable zero
- copy in XDP features
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="LlUv5ZTH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1747736745;
+	bh=TAEOQvbzZejm7YyxqI096TZatZJmHDMuFPXOIy2uu7E=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=LlUv5ZTHvfYzBYBf20gv/d92kW3WgpupVE/JmMtpXqlLOkigEN1zGg8FNEo9nwdYr
+	 qJUjALBEajB59/Pz2rvRAUSow6S7gZKN/rePyJ8FcVLaomg8uVPz8ZguJqdXU8FuuY
+	 Hhl6YPXR4WePrjxjpJl3Dq06Hys2s9uoLgXbqBbcaoqIL1RfEh4KuqyJoT/L+0huet
+	 1aHcgOb/FGOWiJhIYAmCtrS85/V9/E3/4Z20QxIUMkLozmpb4ctJPEVshNnJr3Nl3A
+	 LPODYBtpEG0DAFKwbSfoSP1Dl9gVG4uk9c3dqGYuz55VObYT7LrOj5N+k4Q5gpcdT1
+	 AdDrFpWvv7feQ==
+Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id EB81517E0256;
+	Tue, 20 May 2025 12:25:44 +0200 (CEST)
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+Cc: kernel@collabora.com, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org
+In-Reply-To: <20250515-mt8365-evk-enable-touchscreen-v1-1-7ba3c87b2a71@collabora.com>
+References: <20250515-mt8365-evk-enable-touchscreen-v1-1-7ba3c87b2a71@collabora.com>
+Subject: Re: [PATCH] arm64: dts: mt8365-evk: Add goodix touchscreen support
+Message-Id: <174773674488.3414755.9299343068235578994.b4-ty@collabora.com>
+Date: Tue, 20 May 2025 12:25:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,63 +54,24 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250520-am65-cpsw-xdp-zc-v1-5-45558024f566@kernel.org>
-References: <20250520-am65-cpsw-xdp-zc-v1-0-45558024f566@kernel.org>
-In-Reply-To: <20250520-am65-cpsw-xdp-zc-v1-0-45558024f566@kernel.org>
-To: Siddharth Vadapalli <s-vadapalli@ti.com>, 
- Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
- Jesper Dangaard Brouer <hawk@kernel.org>, 
- John Fastabend <john.fastabend@gmail.com>, 
- Sumit Semwal <sumit.semwal@linaro.org>, 
- =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: srk@ti.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- bpf@vger.kernel.org, linux-media@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
- Roger Quadros <rogerq@kernel.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1004; i=rogerq@kernel.org;
- h=from:subject:message-id; bh=7bF1g5BtF5y8HRNr5uPegmqpZJu6hsSnvWmZWf6Q/iY=;
- b=owEBbQKS/ZANAwAIAdJaa9O+djCTAcsmYgBoLFg9QqfTMXHaac7LIFLSN7eraJrtyYderlPHO
- EhdBr0HXECJAjMEAAEIAB0WIQRBIWXUTJ9SeA+rEFjSWmvTvnYwkwUCaCxYPQAKCRDSWmvTvnYw
- kxhMD/9mdKqlMkzj8if68+vDH5qPukpjWb03+Wk/8S775fc1UwkpQ6gsQhHl5a6MRbjxE0j3kIg
- QP1x7fmCuM4IT0RGVKoZ9a1oS5k+7DhJJ5KJ2CLT3/NFNoxuBXZGFY+2PDMKkkG6DUGidwk7dC6
- PVOajDtNuKysAC9yXvnDP9om5Y28gd3Tn1wcn8g9ofDDZLRh50l+Nbk2QYLN6Zlv9GnDGRX/4qX
- ndWVkJDDmDFwz2GSfNMqZ7PpSP7g/ZHNCGHUrL3lSas+CNnFwYS9yCfJ2Akl/2eroFike45WlHg
- 1MoKQBPhdE5yrl/lV4eDM76hJEggnbeuEawryBw0RxbOlpESBSEf2pP3pCDopevaUkZb2IbJEfz
- Dx4NayeRCxozAfQjlCVX7nD1ZHN1p0UILfBLl5JXoEb7hq9I5wY7onBmLrmVfh+TiPX8rR9h8Kb
- U57jsFJeqAp9jWOqa6IyKaeHyjPCpSCnes2lke5msQ9CtkJ1HqfHeWf/7cv/zfWxbYfvxeV0aG2
- Sq6yRxj0JICaUvv+cbWPjKchwbsn8RXWo6aX0l1+Jb7btIJyRQvgLB3nvmvHrpWbDm/a1VvcU4K
- PuKRIw398Y29PWrfsqBhGBNdcMUUdQGG1hZ0bGhr6dBb4S9Q67i+ceWAVyyFf/UE5AWiL1yQq2R
- gBEcc5+KQtzlzRw==
-X-Developer-Key: i=rogerq@kernel.org; a=openpgp;
- fpr=412165D44C9F52780FAB1058D25A6BD3BE763093
+X-Mailer: b4 0.14.2
 
-Now that we have the plumbing in for XDP zero copy RX and TX, enable
-the zero copy feature flag.
+On Thu, 15 May 2025 12:04:11 +0200, Louis-Alexis Eyraud wrote:
+> The Mediatek Genio 350-EVK board has on the DSI0 connector a StarTek
+> KD070FHFID015 display panel that uses a Goodix GT9271 I2C capacitive
+> touch controller.
+> 
+> The mt8365-evk devicetree already have the display panel support but
+> lacks the touchscreen support, so add it.
+> 
+> [...]
 
-Signed-off-by: Roger Quadros <rogerq@kernel.org>
----
- drivers/net/ethernet/ti/am65-cpsw-nuss.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Applied to v6.15-next/dts64, thanks!
 
-diff --git a/drivers/net/ethernet/ti/am65-cpsw-nuss.c b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-index e89b3cefcb05..894a0bd2a810 100644
---- a/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-+++ b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-@@ -3173,7 +3173,8 @@ am65_cpsw_nuss_init_port_ndev(struct am65_cpsw_common *common, u32 port_idx)
- 			       NETIF_F_HW_VLAN_CTAG_FILTER;
- 	port->ndev->xdp_features = NETDEV_XDP_ACT_BASIC |
- 				   NETDEV_XDP_ACT_REDIRECT |
--				   NETDEV_XDP_ACT_NDO_XMIT;
-+				   NETDEV_XDP_ACT_NDO_XMIT |
-+				   NETDEV_XDP_ACT_XSK_ZEROCOPY;
- 	port->ndev->vlan_features |=  NETIF_F_SG;
- 	port->ndev->netdev_ops = &am65_cpsw_nuss_netdev_ops;
- 	port->ndev->ethtool_ops = &am65_cpsw_ethtool_ops_slave;
+[1/1] arm64: dts: mt8365-evk: Add goodix touchscreen support
+      commit: a11e6951396613cddac3d7c9119de1a9ed3feaac
 
--- 
-2.34.1
+Cheers,
+Angelo
+
 
