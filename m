@@ -1,202 +1,113 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [195.130.137.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA53024290D;
-	Tue, 20 May 2025 14:33:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FE84242D89
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 14:34:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.89
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747751610; cv=none; b=hkNr5jkwovdIyyEwvgBMUxYHF95/urVi87vjl7xlrBNQrpDO9vbDDOcvCA5ZPYvWom3fKH25BJMxt5ZowkST9rogd4kevshGIwgFjSCRm8EGsDg9RihNELRZA5+dmj+s1TbBgyuCM0FrjW6aVbr/e2ssZt/POokAtJibgchyysY=
+	t=1747751654; cv=none; b=H8T2tcSlh++LnKS0DM7nt7vHxQQzc3weMc+7cVBCwmqGRoT4UOmw629vIo8iQP8MNPfKkNsDHRsUGtYCLWrgjGyvUfLpVTXv/4GDYohiXZqb1C6bOU9bTgVdsZDl4FX6gC9NV1Ixh6fub4eCC4OXp65ISN9X72laDRr9Y9SQXjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747751610; c=relaxed/simple;
-	bh=8iI1J3ZgarD0harWDKfKAmvjN5IOTKu+McZtK6H2ccM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WvVUZxZpvyxldReWpTKKxtEcXEh9KYtAtEh/J/bKbMnWchbRbFgMEzbuA3938rFvLBnpee2S7EvnARyE36lPCEEk8sKkDpLl2HC+5LaAudJBT/QJofFkMlyjzBU/TXrWn1AieFTc/5N7Zay4q3PvYPOt+Q3AePFhQ8W8Eegt1RQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QR/8TPl/; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QR/8TPl/"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ad5297704aaso886680066b.2;
-        Tue, 20 May 2025 07:33:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747751606; x=1748356406; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=skqxCutqMBERu++ynJRArdD2cHdMY8od/873evDrCUA=;
-        b=QR/8TPl/nfxC2q7gLMJQVzNIU/3b/KYDxfwntZQNNKnxAQ/t+wOExkEjTAy9ab0b9c
-         NaBJFD6tnGaZQ+1XRmOK+LHuFROBU5PgkUZn5XsGNYdw84SpMea7VIjRPRK9GUbROlPf
-         6yTZZBVL7HjhiM5IoaNBDg3ytd6onkOisiumOo31zalTgZeUU5a4m6JaeY+gwenxgq1p
-         UuSruRfI099JqbZtNC1KbxGfc3Ni9OQXVQ6Wo6D836y2YJoAyumNXTBNPzN2llF8ngTQ
-         7+xsbSbgjT/0rR6jTn74DNiIpMtGfNcJdP9dtvyXuHPfgdQ59cqXDQ5K2k1D31QzMK3V
-         kY3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747751606; x=1748356406;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=skqxCutqMBERu++ynJRArdD2cHdMY8od/873evDrCUA=;
-        b=JPzStZtxsiOIjVHEVrx8XwzDbAYTPmS0G4TiL6XhQsy8NvyfMWVwkjISHRUxVn3Tmx
-         0Q0pxx1Osr0GMJCpwT59hm/wUB7IpptqbTLYHTaKJhvX6rWbnq7I8XlkUBMwSpDM1aYG
-         ghrVk1iJ9QCB0ssVf9uRw+SvkDc98tMOJPDswtPjLT9ZlN7YFYXsKTFntgOWmXstEcN+
-         LaNEQeR77IATe8BqnXJaRe0pHPfTHNuHUL+8o7PKjBAih64R1+u49yRBaQEu8W9f9whi
-         CnHSxBwH7o7x6A4yep3v+tOD1y2YTRn/+ILPQG38Spxi4kfVNt5rs58UVdAiMWuSNH4F
-         3TtA==
-X-Forwarded-Encrypted: i=1; AJvYcCUQ8tc+99EVDc71A6LuPq8FCN/kVzJ2GaREHhJk27VHSH5D3Rf1fjrIan1l069H+c3nUVKBO+IWT3+Fn1WNGw==@vger.kernel.org, AJvYcCWhd5Ynws32flV5K405aMJE1BLytUGModhVVSoR5XGcq+v8a8lUTU58IrQ9iEWZcAvb0/C08432YY/St+z8@vger.kernel.org, AJvYcCXZTSF3M2rbCchKNX3OFXWCdJgH1NGDnpl/70OpcDGyeA8s18CF537e2NlkLPqxY/q2pz6TkUM7OHXlA6R+cg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzE9F/L1N/d1STSHlUvJ6YBQtDB4df8NmFMyqTbk39ntIRKnyq8
-	BuTxhiFiYh3babhFXm3ACw+Bc6CCe18HlCGWHYw2uu9Yf7xliSlSxb4ltGUdXm78TQ4aRwu4E4w
-	Tdr8OFqAb09WbNLUMKn1e1jdPWLnQ1zs=
-X-Gm-Gg: ASbGncuCkjclF+rHnj3Ro2m52nTwe9hmPkYoYvZMO2FxJ1UXqyhk1atVEcoTWwzFsnH
-	qoK7y1YfvgRHSekxP0av08odhoJ/7uhfspxB/qazSJGC16g/A4e5Tf+Hra32a6nTyprUKQMMdQv
-	2oJZhUMZa3F7iA6CtWGMjaV2UMkPTJQ9mk
-X-Google-Smtp-Source: AGHT+IHVFDQUfDhzVWuHavHmyfFDUVSBk1mCtqjdNFD8Tbgzcf7WpV5Da2Wh680mw44GTQ30JSks6nR4ZUQKlhECUVg=
-X-Received: by 2002:a17:906:3acf:b0:ad5:3055:a025 with SMTP id
- a640c23a62f3a-ad53055f958mr1159631066b.6.1747751605751; Tue, 20 May 2025
- 07:33:25 -0700 (PDT)
+	s=arc-20240116; t=1747751654; c=relaxed/simple;
+	bh=pUkqCPI9QwC01P8lVL9uJA5wXPW4QfoUL7u02fQS+Gg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dSMNTW/mGDn7WzwpGmSRV6Td4zPhoFy8YtTLR7LhMDHX9VDjX/b5phUsAAnRJapB1KRsvzxgPZwzqkHNMNukZs7cEjmeaoczcBkeKOe+emJ2uBYoEWlHlYlB3687pEyM/O7HfCrYm7eeFiHgl72VG8SZ4ij6ycXSJCO3GyHV4SY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:2bba:d77b:9240:3c4e])
+	by laurent.telenet-ops.be with cmsmtp
+	id rSa32E00R4GqtyW01Sa4as; Tue, 20 May 2025 16:34:04 +0200
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.97)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1uHO2R-00000002bgm-1Jt7;
+	Tue, 20 May 2025 16:34:03 +0200
+Received: from geert by rox.of.borg with local (Exim 4.97)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1uHO2d-00000002Nn4-3LGJ;
+	Tue, 20 May 2025 16:34:03 +0200
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: Marcus Folkesson <marcus.folkesson@gmail.com>,
+	Javier Martinez Canillas <javierm@redhat.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2] drm/sitronix: Remove broken backwards-compatibility layer
+Date: Tue, 20 May 2025 16:33:59 +0200
+Message-ID: <20395b14effe5e2e05a4f0856fdcda51c410329d.1747751592.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250520051600.1903319-1-kent.overstreet@linux.dev>
- <CAOQ4uxg8p2Kg0BKrU4NSUzLVVLWcW=vLaw4kJkVR1Q-LyRbRXA@mail.gmail.com>
- <osbsqlzkc4zttz4gxa25exm5bhqog3tpyirsezcbcdesaucd7g@4sltqny4ybnz>
- <CAOQ4uxjUC=1MinjDCOfY5t89N3ga6msLmpVXL1p23qdQax6fSg@mail.gmail.com>
- <gdvg6zswvq4zjzo6vntggoacrgxxh33zmejo72yusp7aqkqzic@kaibexik7lvh>
- <CAOQ4uxg9sKC_8PLARkN6aB3E_U62_S3kfnBuRbAvho9BNzGAsQ@mail.gmail.com> <rkbkjp7xvefmtutkwtltyd6xch2pbw47x5czx6ctldemus2bvj@2ukfdmtfjjbw>
-In-Reply-To: <rkbkjp7xvefmtutkwtltyd6xch2pbw47x5czx6ctldemus2bvj@2ukfdmtfjjbw>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Tue, 20 May 2025 16:33:14 +0200
-X-Gm-Features: AX0GCFs3uIGlKS2e_SbTljkNn7JB3BFRnIpoJrABp_l8XO6h5grs8_mb9jdwHio
-Message-ID: <CAOQ4uxgOM83u1SOd4zxpDmWFsGvrgqErKRwea=85_drpF6WESA@mail.gmail.com>
-Subject: Re: [PATCH 0/6] overlayfs + casefolding
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: linux-fsdevel@vger.kernel.org, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-unionfs@vger.kernel.org, 
-	Miklos Szeredi <miklos@szeredi.hu>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 20, 2025 at 4:12=E2=80=AFPM Kent Overstreet
-<kent.overstreet@linux.dev> wrote:
->
-> On Tue, May 20, 2025 at 04:03:27PM +0200, Amir Goldstein wrote:
-> > On Tue, May 20, 2025 at 2:43=E2=80=AFPM Kent Overstreet
-> > <kent.overstreet@linux.dev> wrote:
-> > >
-> > > On Tue, May 20, 2025 at 02:40:07PM +0200, Amir Goldstein wrote:
-> > > > On Tue, May 20, 2025 at 2:25=E2=80=AFPM Kent Overstreet
-> > > > <kent.overstreet@linux.dev> wrote:
-> > > > >
-> > > > > On Tue, May 20, 2025 at 10:05:14AM +0200, Amir Goldstein wrote:
-> > > > > > On Tue, May 20, 2025 at 7:16=E2=80=AFAM Kent Overstreet
-> > > > > > <kent.overstreet@linux.dev> wrote:
-> > > > > > >
-> > > > > > > This series allows overlayfs and casefolding to safely be use=
-d on the
-> > > > > > > same filesystem by providing exclusion to ensure that overlay=
-fs never
-> > > > > > > has to deal with casefolded directories.
-> > > > > > >
-> > > > > > > Currently, overlayfs can't be used _at all_ if a filesystem e=
-ven
-> > > > > > > supports casefolding, which is really nasty for users.
-> > > > > > >
-> > > > > > > Components:
-> > > > > > >
-> > > > > > > - filesystem has to track, for each directory, "does any _des=
-cendent_
-> > > > > > >   have casefolding enabled"
-> > > > > > >
-> > > > > > > - new inode flag to pass this to VFS layer
-> > > > > > >
-> > > > > > > - new dcache methods for providing refs for overlayfs, and fi=
-lesystem
-> > > > > > >   methods for safely clearing this flag
-> > > > > > >
-> > > > > > > - new superblock flag for indicating to overlayfs & dcache "f=
-ilesystem
-> > > > > > >   supports casefolding, it's safe to use provided new dcache =
-methods are
-> > > > > > >   used"
-> > > > > > >
-> > > > > >
-> > > > > > I don't think that this is really needed.
-> > > > > >
-> > > > > > Too bad you did not ask before going through the trouble of thi=
-s implementation.
-> > > > > >
-> > > > > > I think it is enough for overlayfs to know the THIS directory h=
-as no
-> > > > > > casefolding.
-> > > > >
-> > > > > overlayfs works on trees, not directories...
-> > > >
-> > > > I know how overlayfs works...
-> > > >
-> > > > I've explained why I don't think that sanitizing the entire tree is=
- needed
-> > > > for creating overlayfs over a filesystem that may enable casefoldin=
-g
-> > > > on some of its directories.
-> > >
-> > > So, you want to move error checking from mount time, where we _just_
-> > > did a massive API rework so that we can return errors in a way that
-> > > users will actually see them - to open/lookup, where all we have are =
-a
-> > > small fixed set of error codes?
-> >
-> > That's one way of putting it.
-> >
-> > Please explain the use case.
-> >
-> > When is overlayfs created over a subtree that is only partially case fo=
-lded?
-> > Is that really so common that a mount time error justifies all the vfs
-> > infrastructure involved?
->
-> Amir, you've got two widely used filesystem features that conflict and
-> can't be used on the same filesystem.
->
-> That's _broken_.
+When moving the Sitronix DRM drivers and renaming their Kconfig symbols,
+the old symbols were kept, aiming to provide a seamless migration path
+when running "make olddefconfig" or "make oldconfig".
 
-Correct.
+However, the old compatibility symbols are not visible.  Hence unless
+they are selected by another symbol (which they are not), they can never
+be enabled, and no backwards compatibility is provided.
 
-I am saying that IMO a smaller impact (and less user friendly) fix is more
-appropriate way to deal with this problem.
+Drop the broken mechanism and the old symbols.
 
->
-> Users hate partitioning just for separate /boot and /home, having to
-> partition for different applications is horrible. And since overlay fs
-> is used under the hood by docker, and casefolding is used under the hood
-> for running Windows applications, this isn't something people can
-> predict in advance.
+Fixes: 9b8f32002cddf792 ("drm/sitronix: move tiny Sitronix drivers to their own subdir")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+v2:
+  - Drop backwards-compatibility instead of fixing it.
+---
+ drivers/gpu/drm/sitronix/Kconfig | 10 ----------
+ 1 file changed, 10 deletions(-)
 
-Right, I am not expecting users to partition by application,
-but my question was this:
+diff --git a/drivers/gpu/drm/sitronix/Kconfig b/drivers/gpu/drm/sitronix/Kconfig
+index c069d0d417753bcf..25cae32e5c3ec113 100644
+--- a/drivers/gpu/drm/sitronix/Kconfig
++++ b/drivers/gpu/drm/sitronix/Kconfig
+@@ -10,10 +10,6 @@ config DRM_ST7571_I2C
+ 
+ 	  if M is selected the module will be called st7571-i2c.
+ 
+-config TINYDRM_ST7586
+-	tristate
+-	default n
+-
+ config DRM_ST7586
+ 	tristate "DRM support for Sitronix ST7586 display panels"
+ 	depends on DRM && SPI
+@@ -21,17 +17,12 @@ config DRM_ST7586
+ 	select DRM_KMS_HELPER
+ 	select DRM_GEM_DMA_HELPER
+ 	select DRM_MIPI_DBI
+-	default TINYDRM_ST7586
+ 	help
+ 	  DRM driver for the following Sitronix ST7586 panels:
+ 	  * LEGO MINDSTORMS EV3
+ 
+ 	  If M is selected the module will be called st7586.
+ 
+-config TINYDRM_ST7735R
+-	tristate
+-	default n
+-
+ config DRM_ST7735R
+ 	tristate "DRM support for Sitronix ST7715R/ST7735R display panels"
+ 	depends on DRM && SPI
+@@ -40,7 +31,6 @@ config DRM_ST7735R
+ 	select DRM_GEM_DMA_HELPER
+ 	select DRM_MIPI_DBI
+ 	select BACKLIGHT_CLASS_DEVICE
+-	default TINYDRM_ST7735R
+ 	help
+ 	  DRM driver for Sitronix ST7715R/ST7735R with one of the following
+ 	  LCDs:
+-- 
+2.43.0
 
-When is overlayfs created over a subtree that is only partially case-folded=
-?
-
-Obviously, docker would create overlayfs on parts of the fs
-and smbd/cygwin could create a case folder subtree on another
-part of the fs.
-I just don't see a common use case when these sections overlap.
-
-Perhaps I am wrong (please present real world use cases),
-but my claim is that this case is not common enough and therefore,
-a suboptimal EIO error from lookup is good enough to prevert crossing
-over into the case folded zone by mistake, just as EIO on lookup is
-enough to deal with the unsupported use case of modifying
-overlayfs underlying layers with overlay is mounted.
-
-BTW, it is not enough to claim that there is no case folding for the
-entire subtree to allow the mount.
-For overlayfs to allow d_hash()/d_compare() fs must claim that
-these implementations are the default implementation in all subtree
-or at least that all layers share the same implementation.
-
-Thanks,
-Amir.
