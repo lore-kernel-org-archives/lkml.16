@@ -1,119 +1,120 @@
-Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57AB11FF7B3
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 14:56:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 274EF24C076
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 14:57:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747752967; cv=none; b=EDox8gOUUCPzZHicIY5DFwSiY64Jfedm2tGdimGVl2uQla5W0kcJAh4wW0ISI+/ulCxGCwGt+1P5SaeoGDmm28v2fUWCeb0Qi+M7e5jV/ozZfkpMhEJwHKqNwQNeUWftn7rdK6vrzYIKyf2B/qQEF2J90OnaDVep08J8MjRzkl4=
+	t=1747753037; cv=none; b=Numx8KsuxxyEPUAMRLm3lnQARjVW9sL6pBCZFLySrZgqqCsTvwhye42loawH6IlfO9Zhq1GOibFntykxPuMTLbR1GbHmeNOLva1n0i/M2PAvncqPRIQ47DOyXN1cXVwpTbMmG1cQXqyAJH7HBaadVPTErVcJ5FGqxX4dvG+IixQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747752967; c=relaxed/simple;
-	bh=y0VfecFzDhr5bGdapkf3y1ZJhequieL6dE/5l0Ihe8g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EGojhGTkIoLsjm1dp1ec3/y2rUHXq9dAsy62CXKklLWt2V5bUOsq/nwTiYI3UkDilKTW3Y2BI0aFL/qyWcUtO8kLRzz0Fi37CrVeGBWGPT1hzAWwScicB4xBsg2PS5NcQab1dbBBHTyH+KYb4jH5tTL2+3tVmPo0y8jU3f60M2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ougTOzs8; arc=none smtp.client-ip=91.218.175.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1747753037; c=relaxed/simple;
+	bh=LnU2HMu5FQVmbbV130tV8yW5KhXwrlRqqNXp4oAg6Rc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MHSOck4ICduIrFsWNXaQmpMp3kSD/1SpDo8o355od/paSthUYGGrDDI8exk73f6PGVwwWLduqycONwDyB8FNdsZyT1Kl1sD56iD8ood4dV5uQx3UMlpBkFUyFTBIPVizF+RQl1UZ/skBVfOF3KPkWYvL9IJHCD4j8cTl0Q8nYSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TbG3J6Xu; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ougTOzs8"
-Date: Tue, 20 May 2025 07:55:22 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747752959;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Zj+ANRRCM3elfcsUYTWPFAAqMrBVEKBDUe1b3TfKqtc=;
-	b=ougTOzs8lk/ovza5YLoy9N0ZdDaLIty8216yrXX/PTHRFPrYWOAr39Ky7KXAitDyEwpSI7
-	VdxjjfIwFeqk5Ta8Zp2V99dfZWbxov+vnaXJih+KqhKG4yJlyfF5YYhmqXLQZVtbYtqcNv
-	VuRBvCtO4RA5O6IBzs2Ndd4/VnqHjIw=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: ankita@nvidia.com
-Cc: jgg@nvidia.com, maz@kernel.org, joey.gouly@arm.com,
-	suzuki.poulose@arm.com, yuzenghui@huawei.com,
-	catalin.marinas@arm.com, will@kernel.org, ryan.roberts@arm.com,
-	shahuang@redhat.com, lpieralisi@kernel.org, david@redhat.com,
-	aniketa@nvidia.com, cjia@nvidia.com, kwankhede@nvidia.com,
-	kjaju@nvidia.com, targupta@nvidia.com, vsethi@nvidia.com,
-	acurrid@nvidia.com, apopple@nvidia.com, jhubbard@nvidia.com,
-	danw@nvidia.com, zhiw@nvidia.com, mochs@nvidia.com,
-	udhoke@nvidia.com, dnigam@nvidia.com, alex.williamson@redhat.com,
-	sebastianene@google.com, coltonlewis@google.com,
-	kevin.tian@intel.com, yi.l.liu@intel.com, ardb@kernel.org,
-	akpm@linux-foundation.org, gshan@redhat.com, linux-mm@kvack.org,
-	ddutile@redhat.com, tabba@google.com, qperret@google.com,
-	seanjc@google.com, kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	maobibo@loongson.cn
-Subject: Re: [PATCH v4 2/5] KVM: arm64: Make stage2_has_fwb global scope
-Message-ID: <aCyX2nJzBXmQarAJ@linux.dev>
-References: <20250518054754.5345-1-ankita@nvidia.com>
- <20250518054754.5345-3-ankita@nvidia.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TbG3J6Xu"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-329119a3a8eso27779581fa.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 07:57:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747753032; x=1748357832; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=OirvPWyIXir2GaJImkb/fUid8xpI91V6lGP/kVK2Qzk=;
+        b=TbG3J6XuMRaAIiBm7Ar3LJnPr4XEZTpWEiete+YCjsPrTNje9GywxJVr5Wk6Z9PGEq
+         0OmPKk4S+mFozYZQ813aKMVyZnIJbqRf5lygOkaZRYaFh7LJTRejRPEwURX4GoFfjZvD
+         vfuat5Z0vsYtDSFBs/tzJxMsygQmX7/nyRBjWGEHIEzTSThU2yR6OzG5fouj4VSJy+75
+         ufT/5db6P9rknUq/ly+S2CRumc13R60lrZf8pjZ0ZYLycFAn3COzU7N3yKCK58DrnEc8
+         KY1p66G5HV9oRz3WI3hJ959QEjNT2Er+/SQ9mem8AaWEqv/Ha+0Q0qmo4ajL7LrFnLoI
+         /tHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747753032; x=1748357832;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OirvPWyIXir2GaJImkb/fUid8xpI91V6lGP/kVK2Qzk=;
+        b=MqQzrYndN/yjiD3Odm7IlQ6yAMxoF1zt6QydvhgdQJUqUXFSTzcwbrwoWQw6RaVpcL
+         CxBjD7L9bthLt+pID7BhpthYIdwnTIsKl4BTQvTFGHGvikoU7a3jrxdfeHN/rus2Nmrl
+         WB6fRkU/4MayzPXBsRzI1vl7cq/rJQUqDay8aPlks8zJxxDzssSf30YR6ddNvQNYWnsD
+         xORRPRWuYeoGdbY3ym6Q6KwHKeWMxieK9Qmh8HgnCNPR3M53oDRadChHDbQLhtW9LV5i
+         k+eaSOKh2OioRxCsiohJTrkvDgo1mAI5loJ2CEKDPYb66Av1gCTOjdjFbD2qAeH6/wu2
+         +9YQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXa+CiN0dYeeU9oC/mdpA7+SIdoExx72AkdXg92qXg5I9HwTouLW7fXCjANkzEdLdytAsS9qR3jZlZiiec=@vger.kernel.org
+X-Gm-Message-State: AOJu0YymVn4qWZ3CelT0pydBovA9zCD29Pe5BT+lo/52FHG3slSgWbp/
+	8YkFR0n1EFa4k3nwjh3ix3oD292OTnEoFmCVRoKTY81usfaZWpQXOKlSeJNzMDu4bsuTrtro0mo
+	JHpxOIrXJYMDdrfJOfetuj4+0J1oBp7JTlPvWc+fR
+X-Gm-Gg: ASbGncty8khEZmoUgiRQ7fLEIC1bBl7Q7RluAG8m2Oj9vnfj6ls2bfXKT3glwlMLJhX
+	/Qu3ymWbQSNFNRnF9MqOySdHNwq00g8fruuV15zxXqwCzRdMG1vLax26xgwgGEuN5OcmqG1vytu
+	XalmXACJKESsK+gsD+36bqV24BkUfb/yY4zlhE/+W72V0vjExykgySMkhd77W00dQmjt4TlWK/T
+	wtULaBPaSCv
+X-Google-Smtp-Source: AGHT+IHFbaYVWzc1ZO5BGosZBfzj44Zpo0rr1Dn5JGoDuJZkthl8WSCb7+ygGcUCz6PdtphRgmFsQlDrLdMxMmEMC48=
+X-Received: by 2002:a2e:bcca:0:b0:30b:f0dd:9096 with SMTP id
+ 38308e7fff4ca-327f8484885mr66095551fa.12.1747753032039; Tue, 20 May 2025
+ 07:57:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250518054754.5345-3-ankita@nvidia.com>
-X-Migadu-Flow: FLOW_OUT
+References: <20250507133043.61905-1-lukas.bulwahn@redhat.com> <20250508164425.GD834338@ax162>
+In-Reply-To: <20250508164425.GD834338@ax162>
+From: Dmitry Vyukov <dvyukov@google.com>
+Date: Tue, 20 May 2025 16:56:59 +0200
+X-Gm-Features: AX0GCFvIRljugCIcQbtSXjz8NxSFlDDJZ4BA92IeoXfPnXvtaGyqWo21owy367U
+Message-ID: <CACT4Y+a=FLk--rrN0TQiKcQ+NjND_vnSRnwrrg1XzAYaUmKxhw@mail.gmail.com>
+Subject: Re: [PATCH] Makefile.kcov: apply needed compiler option
+ unconditionally in CFLAGS_KCOV
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Lukas Bulwahn <lbulwahn@redhat.com>, Masahiro Yamada <masahiroy@kernel.org>, 
+	Nicolas Schier <nicolas.schier@linux.dev>, Andrey Konovalov <andreyknvl@gmail.com>, 
+	Arnd Bergmann <arnd@arndb.de>, linux-kbuild@vger.kernel.org, kasan-dev@googlegroups.com, 
+	kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Lukas Bulwahn <lukas.bulwahn@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Ankit,
+On Thu, 8 May 2025 at 18:44, Nathan Chancellor <nathan@kernel.org> wrote:
+>
+> On Wed, May 07, 2025 at 03:30:43PM +0200, Lukas Bulwahn wrote:
+> > From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+> >
+> > Commit 852faf805539 ("gcc-plugins: remove SANCOV gcc plugin") removes the
+> > config CC_HAS_SANCOV_TRACE_PC, as all supported compilers include the
+> > compiler option '-fsanitize-coverage=trace-pc' by now.
+> >
+> > The commit however misses the important use of this config option in
+> > Makefile.kcov to add '-fsanitize-coverage=trace-pc' to CFLAGS_KCOV.
+> > Include the compiler option '-fsanitize-coverage=trace-pc' unconditionally
+> > to CFLAGS_KCOV, as all compilers provide that option now.
+> >
+> > Fixes: 852faf805539 ("gcc-plugins: remove SANCOV gcc plugin")
+> > Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+>
+> Good catch.
+>
+> Reviewed-by: Nathan Chancellor <nathan@kernel.org>
 
-On Sun, May 18, 2025 at 05:47:51AM +0000, ankita@nvidia.com wrote:
-> From: Ankit Agrawal <ankita@nvidia.com>
-> 
-> Change the scope of stage2_has_fwb as it will be used in
-> broader KVM code to determine whether the FWB feature is
-> supported by the hardware.
+Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
 
-Please just use the cpucap directly outside of the page table code. The
-only non-FWB stage-2 that KVM maintains on a FEAT_S2FWB machine is for
-the host when using protected mode. I don't anticipate that changing any
-time soon.
+Thanks for fixing this!
 
-Thanks,
-Oliver
-
-> ---
->  arch/arm64/include/asm/kvm_pgtable.h | 8 ++++++++
->  arch/arm64/kvm/hyp/pgtable.c         | 2 +-
->  2 files changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/include/asm/kvm_pgtable.h b/arch/arm64/include/asm/kvm_pgtable.h
-> index 6b9d274052c7..f21e2fae2bfe 100644
-> --- a/arch/arm64/include/asm/kvm_pgtable.h
-> +++ b/arch/arm64/include/asm/kvm_pgtable.h
-> @@ -507,6 +507,14 @@ u64 kvm_pgtable_hyp_unmap(struct kvm_pgtable *pgt, u64 addr, u64 size);
->   */
->  u64 kvm_get_vtcr(u64 mmfr0, u64 mmfr1, u32 phys_shift);
->  
-> +/**
-> + * stage2_has_fwb() - Determine whether FWB is supported
-> + * @pgt:    Page-table structure initialised by kvm_pgtable_stage2_init*()
-> + *
-> + * Return: True if FWB is supported.
-> + */
-> +bool stage2_has_fwb(struct kvm_pgtable *pgt);
-> +
->  /**
->   * kvm_pgtable_stage2_pgd_size() - Helper to compute size of a stage-2 PGD
->   * @vtcr:	Content of the VTCR register.
-> diff --git a/arch/arm64/kvm/hyp/pgtable.c b/arch/arm64/kvm/hyp/pgtable.c
-> index df5cc74a7dd0..ee6b98fefd61 100644
-> --- a/arch/arm64/kvm/hyp/pgtable.c
-> +++ b/arch/arm64/kvm/hyp/pgtable.c
-> @@ -637,7 +637,7 @@ u64 kvm_get_vtcr(u64 mmfr0, u64 mmfr1, u32 phys_shift)
->  	return vtcr;
->  }
->  
-> -static bool stage2_has_fwb(struct kvm_pgtable *pgt)
-> +bool stage2_has_fwb(struct kvm_pgtable *pgt)
->  {
->  	if (!cpus_have_final_cap(ARM64_HAS_STAGE2_FWB))
->  		return false;
-> -- 
-> 2.34.1
-> 
+> > ---
+> >  scripts/Makefile.kcov | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/scripts/Makefile.kcov b/scripts/Makefile.kcov
+> > index 67de7942b3e7..01616472f43e 100644
+> > --- a/scripts/Makefile.kcov
+> > +++ b/scripts/Makefile.kcov
+> > @@ -1,5 +1,5 @@
+> >  # SPDX-License-Identifier: GPL-2.0-only
+> > -kcov-flags-$(CONFIG_CC_HAS_SANCOV_TRACE_PC)  += -fsanitize-coverage=trace-pc
+> > +kcov-flags-y                                 += -fsanitize-coverage=trace-pc
+> >  kcov-flags-$(CONFIG_KCOV_ENABLE_COMPARISONS) += -fsanitize-coverage=trace-cmp
+> >
+> >  export CFLAGS_KCOV := $(kcov-flags-y)
+> > --
+> > 2.49.0
+> >
