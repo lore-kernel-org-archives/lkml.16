@@ -1,130 +1,150 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25A801B042C;
-	Tue, 20 May 2025 00:10:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3BE01B042C
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 00:12:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747699831; cv=none; b=QxdxdX6/9wncWYMbe0uZZ9bK0+wDQNCSkAjt4UlBA5WBbZHxXedT5hLU/mPzdo25HdvXRSYgAuSwG5J8RVBcnWWCe2QnGzBostiAVKXFAyXvDOxexX0/A1GE1rjI7hRm515p6QcEdGKtkRFtOJ4XD5DFB9tYM3zR6V3qnvNul3o=
+	t=1747699956; cv=none; b=CDn1JB4SyINAEW9Xehr8/2wQdOKjNGjmuELFuuovvCAvFUIsn85XgHvttXQzksrZPGL0mVu7abl4PCJo/fXyw8j3HcFlvJGO5pWnEx+isPya6IcG8eAIfSboklQ/+LtLNDZDLSP51Yx5m8tAtiqVgs4Ha4OoN3ai0c+4r17Zq98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747699831; c=relaxed/simple;
-	bh=fpW1z6JAwhT/LbCvwhlOwFt1f2dC69euiK/l3k6G1VE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XAwXoo998dkoaS5VFSKpJe0hi3zifLCkvqC934p9Ap03MJwwF80TSu9CFpu/TcPiyOOwbp6nbAAPGEC3MZYV6+HQf1/tcpl9ATCBQ1mtZSzVqfzuHewifwShvC7l98kyMT+5ZhoxYvEP9pkd9XSREWjztR5nkt4AxqsDHjS+324=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NASBEsxb; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747699956; c=relaxed/simple;
+	bh=IT9pHtUz+s0Q1gCJStym6qSugp/fBQlHxKJt8Jm1lqY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oMCxEV2m/17BxiEkQ8cBrvN1fflu3k1sMDkppcKdKAlQtW+GXLJSH8CrRGbdUTchWJMn7iX5tMipp6JXbZjZEa3yNVuZ3/9dF0WoRdjedReAitO4KUI40eHQIVN8iWewpTG10evBmhfqIoBYXCUeABC+px1J04kc1aGGq0XiZzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=google.com; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ArDLwFJk; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NASBEsxb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747699828; x=1779235828;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=fpW1z6JAwhT/LbCvwhlOwFt1f2dC69euiK/l3k6G1VE=;
-  b=NASBEsxbYEI6wy4mfvS7Ciwq8qEC6zrL/hMnRwwfwedy3VsctmA+u34D
-   xy55ayb0pi5RIjsQHR6vkICnSLzux0KldByBBQsXEADqvMgYv/Nhuc2q1
-   iQ/Wl9JQNfrWfzEAnFo2YzZIcCuftnhYpBS0zKHrHPOz5kT4OE37QWYZx
-   MX773lIKiRhAGgry4zM6ktxjy7Q+ih60R7CPiVlIFAAeoYiDOyuxiPmfv
-   5MwamvyQekf5IR8S6+IcgiIBbN5FLrWzZbr1Rc0XsRhm8vxzk1t2iNO4K
-   IYOl5zT2zssLJGv5B/0VzHN1QqMsYilAN6RZJ+sKHnSiBJQUG4/dyHGEl
-   A==;
-X-CSE-ConnectionGUID: 5TZX00j4Qd+E+V+vip8e6w==
-X-CSE-MsgGUID: GvzoYnDORhqcGlH398XCKA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="61008770"
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="61008770"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 17:10:27 -0700
-X-CSE-ConnectionGUID: xb/wyjMtTACFqV1nNAi5Hw==
-X-CSE-MsgGUID: KuZYUgR7Rx+HLRDNJFgMHw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="139425255"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 19 May 2025 17:10:25 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uHAYp-000M0a-1M;
-	Tue, 20 May 2025 00:10:23 +0000
-Date: Tue, 20 May 2025 08:09:24 +0800
-From: kernel test robot <lkp@intel.com>
-To: Wentao Liang <vulab@iscas.ac.cn>, adrian.hunter@intel.com,
-	vigneshr@ti.com, ulf.hansson@linaro.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-mmc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Wentao Liang <vulab@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] mmc: sdhci-omap: Add error handling for
- sdhci_runtime_suspend_host()
-Message-ID: <202505200727.1k4LfYCQ-lkp@intel.com>
-References: <20250519125143.2331-1-vulab@iscas.ac.cn>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ArDLwFJk"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-48b7747f881so808301cf.1
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 17:12:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1747699954; x=1748304754; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XSOzuf4zM3x/LvxSKSjkkww83y4Ey5iG99RHEpA5ilY=;
+        b=ArDLwFJkiaHPZv6ar0tUkpSfpcjTh4ZWx39OrgqYhKaK7LRPeLL21cn2us6xNzt3Bg
+         uDzqGaA0dVzuymvoWTbsJPTCQr9rDZCUC9Mj2poxy38XTvlsz1FEekWMntS5n+e/WhR1
+         jBKTn2ruvv/x3KA3XWVIgmBxP941wlkzX+r2A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747699954; x=1748304754;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XSOzuf4zM3x/LvxSKSjkkww83y4Ey5iG99RHEpA5ilY=;
+        b=LjcXu94guP1Qat/rCHrI9f+BghL9zm4lqAHn/T6hcf25Bjf+xNyxqjFAdHlrCkNlip
+         UjJ+3CEc2K2IBKfA8CN52qnc8RvkzmYDfn0PxQzREoRNpmsilwctAB65tNxsoz+U9yTj
+         SvluR3t9LbPVOoNPWojN4CBLxanL4FkwLVfA83DosjzXZAgX5V/AFZaIX+2LjRPJBaas
+         sbTE+sarBICKVPkROjthTPGRWxyrhjDupKDnR/CO41Jp9v1nHLMg9EnSuNQrPuqIJgUq
+         yQe09IQKxTJw8yLcjwCSmEiaTdLqYG97D0Sr03uE1NQiAn4AMxapo/lFHZPXHHQw3ZVe
+         3/Bw==
+X-Forwarded-Encrypted: i=1; AJvYcCUm9B21hFRecQzJljMqkFWQThLMQfYA5Ydpz7NK6NcQA+eB54QzG7i6ELjZH7OTmc4yGRBSF2ncW26K508=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyv3D5A9Iw24a+jOqduEJvCN427zVBTSNTWBBJhBFvbd8zNuEe5
+	x6RLfdE+ODnyLYzOb4EHeaBeAhlXD0MvLzXfD9lPVFHRTL2WI7Tu/ZBFFqxwsuwDo9NyqvBMd9B
+	flAfHUx6k5KpcxYV6fZrDXVCtHH4qTqQgZDKG3TQPNXbk2zO22SZtQh3K
+X-Gm-Gg: ASbGncuFudmJ8J0PrDmFCpziiRmgnE1QGPBxz9rVpNPNSCAeuxAKisji6BZq7MkiAyi
+	/lMZwx5zMOJwliuDuGW4ECikLnop8SCtVVUmabGiZpo4DBOMAcY3lDZzkEwYuFCPo9P1GUVogiD
+	i7xySWCZjNqDlYCsDAZno0LOT/EHwv0zeWmSGaKecLvIRu+xk5HMc=
+X-Google-Smtp-Source: AGHT+IGeiEqytsKfbvcOJoATsM9r1IDoSbSawj6sJz4yq7+zFCOByAUS9aOucjOKsanjqRavnKGD/ACfZHzBtCS7E5k=
+X-Received: by 2002:a05:622a:4a:b0:478:f8ac:8adf with SMTP id
+ d75a77b69052e-49601270e9bmr8144761cf.19.1747699953197; Mon, 19 May 2025
+ 17:12:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250519125143.2331-1-vulab@iscas.ac.cn>
+References: <20250519170055.205544-1-antonio.borneo@foss.st.com> <df2124f7-8df9-4fb3-b687-5968805c668a@roeck-us.net>
+In-Reply-To: <df2124f7-8df9-4fb3-b687-5968805c668a@roeck-us.net>
+From: Julius Werner <jwerner@chromium.org>
+Date: Mon, 19 May 2025 17:12:20 -0700
+X-Gm-Features: AX0GCFuJfn0H6VbpxEdzZcu5Pm6YQSV9kAZ5ya8oZZA3CzSoInnwOJUz-Vgz-14
+Message-ID: <CAODwPW-gEOotp8KGhzk3E11PqF9xdan8dOwxe_SW4txh+uQp=w@mail.gmail.com>
+Subject: Re: [PATCH] watchdog: arm_smc_wdt: get wdt status through SMCWD_GET_TIMELEFT
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Antonio Borneo <antonio.borneo@foss.st.com>, Julius Werner <jwerner@chromium.org>, 
+	Evan Benn <evanbenn@chromium.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, 
+	linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Wentao,
+I don't really know about the issue Guenter mentioned, but otherwise,
+from the driver's side this looks good to me.
 
-kernel test robot noticed the following build errors:
+Reviewed-by: Julius Werner <jwerner@chromium.org>
 
-[auto build test ERROR on linus/master]
-[also build test ERROR on v6.15-rc7 next-20250516]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Wentao-Liang/mmc-sdhci-omap-Add-error-handling-for-sdhci_runtime_suspend_host/20250519-205341
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20250519125143.2331-1-vulab%40iscas.ac.cn
-patch subject: [PATCH] mmc: sdhci-omap: Add error handling for sdhci_runtime_suspend_host()
-config: sparc-randconfig-001-20250520 (https://download.01.org/0day-ci/archive/20250520/202505200727.1k4LfYCQ-lkp@intel.com/config)
-compiler: sparc-linux-gcc (GCC) 8.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250520/202505200727.1k4LfYCQ-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505200727.1k4LfYCQ-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   drivers/mmc/host/sdhci-omap.c: In function 'sdhci_omap_runtime_suspend':
->> drivers/mmc/host/sdhci-omap.c:1449:6: error: void value not ignored as it ought to be
-     ret = sdhci_omap_context_save(omap_host);
-         ^
-
-
-vim +1449 drivers/mmc/host/sdhci-omap.c
-
-  1435	
-  1436	static int __maybe_unused sdhci_omap_runtime_suspend(struct device *dev)
-  1437	{
-  1438		struct sdhci_host *host = dev_get_drvdata(dev);
-  1439		struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-  1440		struct sdhci_omap_host *omap_host = sdhci_pltfm_priv(pltfm_host);
-  1441		int ret;
-  1442	
-  1443		if (host->tuning_mode != SDHCI_TUNING_MODE_3)
-  1444			mmc_retune_needed(host->mmc);
-  1445	
-  1446		if (omap_host->con != -EINVAL)
-  1447			sdhci_runtime_suspend_host(host);
-  1448	
-> 1449		ret = sdhci_omap_context_save(omap_host);
-  1450		if (ret)
-  1451			return ret;
-  1452	
-  1453		pinctrl_pm_select_idle_state(dev);
-  1454	
-  1455		return 0;
-  1456	}
-  1457	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+On Mon, May 19, 2025 at 10:58=E2=80=AFAM Guenter Roeck <linux@roeck-us.net>=
+ wrote:
+>
+> On 5/19/25 10:00, Antonio Borneo wrote:
+> > The optional SMCWD_GET_TIMELEFT command can be used to detect if
+> > the watchdog has already been started.
+> > See the implementation in OP-TEE secure OS [1].
+> >
+> > If CONFIG_WATCHDOG_HANDLE_BOOT_ENABLED is set, at probe time check
+> > if the watchdog is already started and then set WDOG_HW_RUNNING in
+> > the watchdog status. This will cause the watchdog framework to
+> > ping the watchdog until a userspace watchdog daemon takes over the
+> > control.
+> >
+> > Link: https://github.com/OP-TEE/optee_os/commit/a7f2d4bd8632 [1]
+> >
+> > Signed-off-by: Antonio Borneo <antonio.borneo@foss.st.com>
+> > ---
+> >   drivers/watchdog/arm_smc_wdt.c | 18 +++++++++++++++---
+> >   1 file changed, 15 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/watchdog/arm_smc_wdt.c b/drivers/watchdog/arm_smc_=
+wdt.c
+> > index 8f3d0c3a005fb..f1268f43327ea 100644
+> > --- a/drivers/watchdog/arm_smc_wdt.c
+> > +++ b/drivers/watchdog/arm_smc_wdt.c
+> > @@ -46,6 +46,8 @@ static int smcwd_call(struct watchdog_device *wdd, en=
+um smcwd_call call,
+> >               return -ENODEV;
+> >       if (res->a0 =3D=3D PSCI_RET_INVALID_PARAMS)
+> >               return -EINVAL;
+> > +     if (res->a0 =3D=3D PSCI_RET_DISABLED)
+> > +             return -ENODATA;
+> >       if (res->a0 !=3D PSCI_RET_SUCCESS)
+> >               return -EIO;
+> >       return 0;
+> > @@ -131,10 +133,20 @@ static int smcwd_probe(struct platform_device *pd=
+ev)
+> >
+> >       wdd->info =3D &smcwd_info;
+> >       /* get_timeleft is optional */
+> > -     if (smcwd_call(wdd, SMCWD_GET_TIMELEFT, 0, NULL))
+> > -             wdd->ops =3D &smcwd_ops;
+> > -     else
+> > +     err =3D smcwd_call(wdd, SMCWD_GET_TIMELEFT, 0, NULL);
+> > +     switch (err) {
+> > +     case 0:
+> > +             if (IS_ENABLED(CONFIG_WATCHDOG_HANDLE_BOOT_ENABLED))
+> > +                     set_bit(WDOG_HW_RUNNING, &wdd->status);
+>
+> This is the wrong use of this configuration option. It is only needed
+> in a driver if the watchdog status can not be read from hardware.
+> That is not the case here. Worse, using it in a driver like this
+> overrides the watchdog core module parameter "handle_boot_enabled".
+>
+> Guenter
+>
+> > +             fallthrough;
+> > +     case -ENODATA:
+> >               wdd->ops =3D &smcwd_timeleft_ops;
+> > +             break;
+> > +     default:
+> > +             wdd->ops =3D &smcwd_ops;
+> > +             break;
+> > +     }
+> > +
+> >       wdd->timeout =3D res.a2;
+> >       wdd->max_timeout =3D res.a2;
+> >       wdd->min_timeout =3D res.a1;
+> >
+> > base-commit: a5806cd506af5a7c19bcd596e4708b5c464bfd21
+>
