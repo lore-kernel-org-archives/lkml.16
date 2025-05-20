@@ -1,218 +1,188 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD0C620E32B;
-	Tue, 20 May 2025 07:42:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02DBCEEC8;
+	Tue, 20 May 2025 07:43:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747726975; cv=none; b=LRaxGqS82w5Mig+36jdpwNTgTreLkOvfhcWxaseDJeDnVxU4TeN8lrpaM33SqmFEk10XOmSPgyMhNKZdaOKX35Q2ciP28mY8lt8REWlJQXEPJUR51uYZ/CIbb4I1+4aXpBiAqzRwGTvB9yAOgFvUZL3D8SXIcrCBNrM2HbERnEA=
+	t=1747727041; cv=none; b=KYu86dcYrMcsOnZqckU4+MDe7QfiJVQXGY5Tardm+H7K66q7GeEsPoVK3pNHq3Rzlgef9JlC5w7MH1js4TfdCBfugX3vnG3VldRxodN7Sl8ppFWlvclgc2oCKxD0UW87crXOZReu7bKqEJD7nJZLQ5/jsODX8HxmJX+/MHG2r/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747726975; c=relaxed/simple;
-	bh=We+cooXol/fNixHdbPL5YUpqXHGi1HULXp8uxcV/F3o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Yvy4goCVR2SX3z6TNY8rcxmlCgbTc/TXY2xLURcKVClCiWmUee1Pb6V8v66n57DLJotm4jYYSgRHyyHQZJtA9HEotd2QqA/5XDFiWiAfWRHVH+Q4144Qlg959QN6g6YiwGqt26aodPE+6DNTAw8/939/wEbwIuUW8oTf5OJD+/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tvWWdfz+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747727041; c=relaxed/simple;
+	bh=zIL2YBPH1fTre1k7ZCpC3okZ8sjc/bzzUxupO/yQ9jA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ABdsd7w7kmpYkDlSyEtoIv6gOrli5TST+e8hdkR1bfEB/yN7VZc8Hr8IogWI5mZ/TLjiYPdO75a/ZBv0ZeNWo9CgbFPqTHuuyVIsmDtID+niWIULnvaUyIg+02GnffRKpBKr1bkNgWsto7UW8gGLgv45E9blh/wiszFUHcwRtt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mO8c8ad3; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tvWWdfz+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E466C4CEEF;
-	Tue, 20 May 2025 07:42:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747726975;
-	bh=We+cooXol/fNixHdbPL5YUpqXHGi1HULXp8uxcV/F3o=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=tvWWdfz+KPUpt6Ym0juySnOuAYIGqeEqzMRrQabicXt7wN+R2UTeYjF3uL6XGFfFx
-	 X4+aZcKAK/G5KZJK3Ubed5xrtpTK6GgbivCAHZetAhUEWkrEiXTGjN9ejK3PLGUlRk
-	 itz2U0rgWumrfDgb4Dkfg+YPLFNtD2Y8ztC5Jr5rakrbCg4W33GnzBJ+OMmyahANx1
-	 l+nPH2nVDdam6zWjLWD93wJsk0RhR38TtxX1wAUfdl5h3Jge8wckHTnKZnVPu4fdhe
-	 mfDX1hJgGQffiq5t9eWfJf5EvQg6wq+AWZUAh1Ec+HAHYeEarqp4Cwdg5vyR5ENP+6
-	 u0sf4pCi6la7A==
-Message-ID: <1f63af35-7d10-434b-b802-115611ce2ed6@kernel.org>
-Date: Tue, 20 May 2025 09:42:48 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mO8c8ad3"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-742c46611b6so3178993b3a.1;
+        Tue, 20 May 2025 00:43:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747727039; x=1748331839; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9uo8wrvNhdGkpDaupALM2V4X4G0GERtYOC9S6Rbd7JE=;
+        b=mO8c8ad3TQkXvGNdx4kaZSrIM4zaUAN+RJUY3jv/XzJBUNQym7YOqpAsO0HGgHAzjb
+         1BryM9JvF2h5sVJ8NSNIbWmds/aa6W04EwMKE1TceIPM/Jt11Twe1e1l1j0qA418Y2w5
+         VUQ8DrXtFxKwfvA9Tsb4pDilvMsq+z2ioRTTmkKg+ZgIxZZ3bO0bpsLFYE6e1jIZcrB4
+         jA+EQST7BLyKE2VzfB9LMv75iikS4X/uUdwoUeIr5r5u7J+hgwO2O4yIurUfqWl/d9bf
+         zruCyKSwRnKxsh5s6aAA2sul6iRYDd5mbxTRUsiZ+WLFzMvSsQOiu+d1qGSFYF98rfl+
+         8EeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747727039; x=1748331839;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9uo8wrvNhdGkpDaupALM2V4X4G0GERtYOC9S6Rbd7JE=;
+        b=OM2oc2J7Gl6k4OY9BH2nigp1zWPlGsN9kAyUBogkYCF3ZuldU9DLN+lnJF1DRbG3Kq
+         iOjwD1DB9VA94b6BKDkvULPs0+F4fazg8wcRFKm5svluWL7X01fwBDfkSQ8v9wX6voJI
+         ZmrWkDBo3nGrheczSjhxj51srBYeoT9dpa5TieYLxbVwq3i6ZMVJ5W+0HoRhkHOhPk5+
+         Oyp8w9Cg/aWVgdnlhewPzv372oYMP5vPY/+agg63UmrsnzjZedCt3p5nlH0imIUX+NQA
+         MxUwmz+PUOA2o7hhplbs3uJw6O1QWMlprXuhkqJlVTrgnkC32KilfnXiApIJi+qvNQYK
+         lMUg==
+X-Forwarded-Encrypted: i=1; AJvYcCVJQG98KYU6Vrp5MUXn/GOjifIPL2wkeVB9KIU04477razE5VI3ty8x2VkpDa86teY7GZFWQU0NhRizvhHLU2gw@vger.kernel.org, AJvYcCVbaoj3Wz/tHxBCbC+2eEfYpCP7SpUgkoMNwvIx4QYRTnlhhNRizooAs3NycVNqEdwXeBoMZTKOu/I=@vger.kernel.org, AJvYcCVzYnmJ/AenULUd0KqcZ1HUjT/3BpnDccQ16I6VjCYPXTF0KJt6FknrzJkLR2kDnNhaqrxDzRpg1HenY+Ah@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCoCi9WBdL6B8iBDO0gVaQiu/oEHRs20zyriB4BdLXfar60Dsy
+	6S4FRmLyekTUJ6PbAdpazu8n6d4I1BMsYrDPp5wGrPRfXpJTc44eYr+0xPlpd25d6Az7KusVNQn
+	KlJrFUqOe66x4FXb1lP3Z2Y/KJqzVjxiQxfiFYM8=
+X-Gm-Gg: ASbGncvSlZuoEzr0oIwwfu/2/lWnIqj1XUyuVNIoUJhzouWkVaO0QSZHWCcX1nAepbI
+	wLY7OSyrDW4IdM+9Wv5OFrrgCC6zeHYJfZDStzV4xDKLa+ZlLpyeUDqRsxUIBoiXbIP8c0LYemG
+	tTdszUdIgDzEaDb3zVu1plqODxSwS3ezp2Og==
+X-Google-Smtp-Source: AGHT+IH2XeVratNvJ8FEJrrphJj/JDteq0tJv39Wdwj//5c4Z8WnAee6xYifV9WTkK9RBrjweCf0CdsRboWOvSrgV9Y=
+X-Received: by 2002:ad4:5caa:0:b0:6f8:9a8c:9d83 with SMTP id
+ 6a1803df08f44-6f8b2d0d149mr244508426d6.35.1747727028940; Tue, 20 May 2025
+ 00:43:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] phy: exyons5-usbdrd: support HS phy for
- ExynosAutov920
-To: Neil Armstrong <neil.armstrong@linaro.org>,
- Pritam Manohar Sutar <pritam.sutar@samsung.com>, vkoul@kernel.org,
- kishon@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- alim.akhtar@samsung.com, andre.draszik@linaro.org, peter.griffin@linaro.org,
- kauschluss@disroot.org, m.szyprowski@samsung.com, s.nawrocki@samsung.com
-Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-samsung-soc@vger.kernel.org, rosa.pila@samsung.com,
- dev.tailor@samsung.com, faraz.ata@samsung.com, muhammed.ali@samsung.com,
- selvarasu.g@samsung.com
-References: <20250516102650.2144487-1-pritam.sutar@samsung.com>
- <CGME20250516101803epcas5p2d9403d89d840dcad88a03d437a48aceb@epcas5p2.samsung.com>
- <20250516102650.2144487-3-pritam.sutar@samsung.com>
- <a5c1a064-d760-4140-9e78-d74823b400a8@linaro.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <a5c1a064-d760-4140-9e78-d74823b400a8@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250515033857.132535-1-npache@redhat.com> <20250515033857.132535-2-npache@redhat.com>
+In-Reply-To: <20250515033857.132535-2-npache@redhat.com>
+From: Yafang Shao <laoar.shao@gmail.com>
+Date: Tue, 20 May 2025 15:43:12 +0800
+X-Gm-Features: AX0GCFvt6zLLvpZVET4ZwVYJYj9_BSwEJPuE1M1fe9g1tsw5I4FK7vP9A1HV5ug
+Message-ID: <CALOAHbCkhakdoD=HtM7=XwkHvsWu5BA6dLVofO7oFY_Os168uw@mail.gmail.com>
+Subject: Re: [PATCH v6 1/4] mm: defer THP insertion to khugepaged
+To: Nico Pache <npache@redhat.com>
+Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	rientjes@google.com, hannes@cmpxchg.org, lorenzo.stoakes@oracle.com, 
+	rdunlap@infradead.org, mhocko@suse.com, Liam.Howlett@oracle.com, 
+	zokeefe@google.com, surenb@google.com, jglisse@google.com, cl@gentwo.org, 
+	jack@suse.cz, dave.hansen@linux.intel.com, will@kernel.org, tiwai@suse.de, 
+	catalin.marinas@arm.com, anshuman.khandual@arm.com, dev.jain@arm.com, 
+	raquini@redhat.com, aarcange@redhat.com, kirill.shutemov@linux.intel.com, 
+	yang@os.amperecomputing.com, thomas.hellstrom@linux.intel.com, 
+	vishal.moola@gmail.com, sunnanyong@huawei.com, usamaarif642@gmail.com, 
+	wangkefeng.wang@huawei.com, ziy@nvidia.com, shuah@kernel.org, 
+	peterx@redhat.com, willy@infradead.org, ryan.roberts@arm.com, 
+	baolin.wang@linux.alibaba.com, baohua@kernel.org, david@redhat.com, 
+	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, rostedt@goodmis.org, 
+	corbet@lwn.net, akpm@linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 20/05/2025 09:39, neil.armstrong@linaro.org wrote:
->> diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
->> index 634c4310c660..b440b56c6595 100644
->> --- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
->> +++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
->> @@ -177,6 +177,9 @@
->>   #define HSPHYPLLTUNE_PLL_P_TUNE			GENMASK(3, 0)
->>   
->>   /* Exynos850: USB DRD PHY registers */
->> +#define EXYNOSAUTOv920_DRD_CTRL_VER		0x00
->> +#define CTRL_VER_MAJOR_VERSION			GENMASK(31, 24)
->> +
->>   #define EXYNOS850_DRD_LINKCTRL			0x04
->>   #define LINKCTRL_FORCE_RXELECIDLE		BIT(18)
->>   #define LINKCTRL_FORCE_PHYSTATUS		BIT(17)
->> @@ -1772,6 +1775,10 @@ static const char * const exynos5_regulator_names[] = {
->>   	"vbus", "vbus-boost",
->>   };
->>   
->> +static const char * const exynosautov920_clk_names[] = {
->> +	"ext_xtal",
->> +};
->> +
->>   static const struct exynos5_usbdrd_phy_drvdata exynos5420_usbdrd_phy = {
->>   	.phy_cfg		= phy_cfg_exynos5,
->>   	.phy_ops		= &exynos5_usbdrd_phy_ops,
->> @@ -1847,6 +1854,81 @@ static const struct exynos5_usbdrd_phy_drvdata exynos850_usbdrd_phy = {
->>   	.n_regulators		= ARRAY_SIZE(exynos5_regulator_names),
->>   };
->>   
->> +static void exynosautov920_usbdrd_utmi_init(struct exynos5_usbdrd_phy *phy_drd)
->> +{
->> +	u32 version;
->> +
->> +	version = readl(phy_drd->reg_phy + EXYNOSAUTOv920_DRD_CTRL_VER);
->> +	dev_info(phy_drd->dev, "usbphy: version:0x%x\n", version);
-> 
-> Please do not add mode info to boot log, use dev_dbg instead.
+On Thu, May 15, 2025 at 12:39=E2=80=AFPM Nico Pache <npache@redhat.com> wro=
+te:
+>
+> setting /transparent_hugepages/enabled=3Dalways allows applications
+> to benefit from THPs without having to madvise. However, the page fault
+> handler takes very few considerations to decide weather or not to actuall=
+y
+> use a THP. This can lead to a lot of wasted memory. khugepaged only
+> operates on memory that was either allocated with enabled=3Dalways or
+> MADV_HUGEPAGE.
+>
+> Introduce the ability to set enabled=3Ddefer, which will prevent THPs fro=
+m
+> being allocated by the page fault handler unless madvise is set,
+> leaving it up to khugepaged to decide which allocations will collapse to =
+a
+> THP. This should allow applications to benefits from THPs, while curbing
+> some of the memory waste.
+>
+> Acked-by: Zi Yan <ziy@nvidia.com>
+> Co-developed-by: Rafael Aquini <raquini@redhat.com>
+> Signed-off-by: Rafael Aquini <raquini@redhat.com>
+> Signed-off-by: Nico Pache <npache@redhat.com>
+> ---
+>  include/linux/huge_mm.h | 15 +++++++++++++--
+>  mm/huge_memory.c        | 31 +++++++++++++++++++++++++++----
+>  2 files changed, 40 insertions(+), 6 deletions(-)
+>
+> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+> index e3d15c737008..02038e3db829 100644
+> --- a/include/linux/huge_mm.h
+> +++ b/include/linux/huge_mm.h
+> @@ -48,6 +48,7 @@ enum transparent_hugepage_flag {
+>         TRANSPARENT_HUGEPAGE_UNSUPPORTED,
+>         TRANSPARENT_HUGEPAGE_FLAG,
+>         TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG,
+> +       TRANSPARENT_HUGEPAGE_DEFER_PF_FLAG,
+>         TRANSPARENT_HUGEPAGE_DEFRAG_DIRECT_FLAG,
+>         TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_FLAG,
+>         TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_OR_MADV_FLAG,
+> @@ -186,6 +187,7 @@ static inline bool hugepage_global_enabled(void)
+>  {
+>         return transparent_hugepage_flags &
+>                         ((1<<TRANSPARENT_HUGEPAGE_FLAG) |
+> +                       (1<<TRANSPARENT_HUGEPAGE_DEFER_PF_FLAG) |
+>                         (1<<TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG));
+>  }
+>
+> @@ -195,6 +197,12 @@ static inline bool hugepage_global_always(void)
+>                         (1<<TRANSPARENT_HUGEPAGE_FLAG);
+>  }
+>
+> +static inline bool hugepage_global_defer(void)
+> +{
+> +       return transparent_hugepage_flags &
+> +                       (1<<TRANSPARENT_HUGEPAGE_DEFER_PF_FLAG);
+> +}
+> +
+>  static inline int highest_order(unsigned long orders)
+>  {
+>         return fls_long(orders) - 1;
+> @@ -291,13 +299,16 @@ unsigned long thp_vma_allowable_orders(struct vm_ar=
+ea_struct *vma,
+>                                        unsigned long tva_flags,
+>                                        unsigned long orders)
+>  {
+> +       if ((tva_flags & TVA_IN_PF) && hugepage_global_defer() &&
+> +                       !(vm_flags & VM_HUGEPAGE))
+> +               return 0;
+> +
+>         /* Optimization to check if required orders are enabled early. */
+>         if ((tva_flags & TVA_ENFORCE_SYSFS) && vma_is_anonymous(vma)) {
+>                 unsigned long mask =3D READ_ONCE(huge_anon_orders_always)=
+;
+> -
+>                 if (vm_flags & VM_HUGEPAGE)
+>                         mask |=3D READ_ONCE(huge_anon_orders_madvise);
+> -               if (hugepage_global_always() ||
+> +               if (hugepage_global_always() || hugepage_global_defer() |=
+|
+>                     ((vm_flags & VM_HUGEPAGE) && hugepage_global_enabled(=
+)))
+>                         mask |=3D READ_ONCE(huge_anon_orders_inherit);
+>
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index 700988a0d5cf..ce0ee74753af 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -297,12 +297,15 @@ static ssize_t enabled_show(struct kobject *kobj,
+>         const char *output;
+>
+>         if (test_bit(TRANSPARENT_HUGEPAGE_FLAG, &transparent_hugepage_fla=
+gs))
+> -               output =3D "[always] madvise never";
+> +               output =3D "[always] madvise defer never";
 
-Just drop entirely, not even worth dbg (see coding style, driver
-development debugging guide). It is fixed per given compatible, isn't
-it? If not, there is entire commit msg to explain unusual things.
+a small nit: alphabetical ordering might improve readability here.
 
-> 
->> +
->> +	if (FIELD_GET(CTRL_VER_MAJOR_VERSION, version) == 0x3)
->> +		/* utmi init for exynosautov920 HS phy */
->> +		exynos850_usbdrd_utmi_init(phy_drd);
->> +}
->> +
->> +static int exynosautov920_usbdrd_phy_init(struct phy *phy)
->> +{
->> +	struct phy_usb_instance *inst = phy_get_drvdata(phy);
->> +	struct exynos5_usbdrd_phy *phy_drd = to_usbdrd_phy(inst);
->> +	int ret = 0;
->> +
->> +	ret = clk_bulk_prepare_enable(phy_drd->drv_data->n_clks, phy_drd->clks);
->> +	if (ret)
->> +		return ret;
->> +
->> +	/* UTMI or PIPE3 specific init */
->> +	inst->phy_cfg->phy_init(phy_drd);
->> +
->> +	clk_bulk_disable_unprepare(phy_drd->drv_data->n_clks, phy_drd->clks);
->> +
->> +	return 0;
->> +}
->> +
->> +static void exynosautov920_v3p1_phy_dis(struct phy *phy)
->> +{
->> +	struct phy_usb_instance *inst = phy_get_drvdata(phy);
->> +	struct exynos5_usbdrd_phy *phy_drd = to_usbdrd_phy(inst);
->> +	void __iomem *reg_phy = phy_drd->reg_phy;
->> +	u32 version;
->> +
->> +	version = readl(reg_phy + EXYNOSAUTOv920_DRD_CTRL_VER);
->> +
->> +	if (FIELD_GET(CTRL_VER_MAJOR_VERSION, version) == 0x3)
->> +		exynos850_usbdrd_phy_exit(phy);
->> +}
->> +
->> +static int exynosautov920_usbdrd_phy_exit(struct phy *phy)
->> +{
->> +	struct phy_usb_instance *inst = phy_get_drvdata(phy);
->> +
->> +	if (inst->phy_cfg->id == EXYNOS5_DRDPHY_UTMI)
->> +		exynosautov920_v3p1_phy_dis(phy);
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct phy_ops exynosautov920_usbdrd_phy_ops = {
->> +	.init		= exynosautov920_usbdrd_phy_init,
->> +	.exit		= exynosautov920_usbdrd_phy_exit,
-> 
-> <snip>
-> 
->> +		.id		= EXYNOS5_DRDPHY_UTMI,
->> +		.phy_init	= exynosautov920_usbdrd_utmi_init,
-> 
-> <snip>
-> 
->> +	}, {
->> +		.compatible = "samsung,exynosautov920-usb31drd-phy",
->> +		.data = &exynosautov920_usb31drd_phy
-> 
-> All those new ops are only called when matching this compatible, it it really
-> necessary to check the version ? is there "samsung,exynosautov920-usb31drd-phy" PHYs
-> with version different from 3 in the wild ?
-
-
-Yeah, this looks like downstream code. Anyway this would need
-explanation in the commit msg.
-
-Best regards,
-Krzysztof
+--=20
+Regards
+Yafang
