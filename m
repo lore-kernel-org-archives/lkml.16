@@ -1,246 +1,159 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAA2E25F7B7
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 22:25:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ADB425CC73
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 22:26:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747779904; cv=none; b=o0TAUy1ZZVv+lAZUx5CUSlYVNRW3Hx96icPrTmEPX7fodzf01Z5+Z8oCqyJ2XCFVLY/6P3ycAhoenCruzxpD1A9Zlm4I0JijLXvWbkW88h/G1ZP0LW6hIaqj7LCghwd/B8/m5xB8RRBW6TRi/zXrLJlkmeZFHLTzrw8g+Y3wdc0=
+	t=1747779977; cv=none; b=bHOXFgZgtQM6MktL7JdPFMjA3lIQbaeXZmzaB89siGSfrf/73PmJc3OpZPMqH1MtgRezxqIqqXattiISeqqFRRTD4Jg3yH7dqxv3fIk4bBuzi66EUVXuUaH0Jm64CPEHI/Ck6pSmP/SKFMLNeGTFHSjppeD3qxmyEb0fCO1bkeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747779904; c=relaxed/simple;
-	bh=B6r5hTWpoh1U2740qk7rYCJkSWyhycNyNqe9N32aM1w=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=OYkdtSaOXeb/4xCAoPD+UbRE2mgI0DXOfnwEkauvIJCyJXmqoldWuQef7RPq5B8kLw6DZhzJU5D99OskxMt+N5o2ZFqsMXR0Cey0OIbSY58Ca2FcSgjeStIv9KqTOI4wVVY8lEqo2OLjf4GHK22EKKJ9gL2XigOPE6iBOwuAVQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=HzVx3PT1; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1747779977; c=relaxed/simple;
+	bh=7zIW62S8FT0W61WJ4qnpKEs5q/3hT8q1Eo/7ZVtyKtQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=obgSOv/KOVQnkbdmQf0M7K6OW43N6QGYvYMoLIgLjfev12QrV+HxO2SsjSw9KUSYD9OKzpenDfjSc72q3taGzZp3i+qQIhX6qNfAJlhLi5JiiWwD2nRiiJ3mOBi/KNwBiF8YaXOKNDfeOrTF8rXmkmq1NbojvBJA3L4NDq9VMBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=aK4Wx6kT; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="HzVx3PT1"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-476ac73c76fso88672021cf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 15:25:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="aK4Wx6kT"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-476ac73c76fso88683221cf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 15:26:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747779899; x=1748384699; darn=vger.kernel.org;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=++WPZvoZ0IgHd+3LaXjNjz7H44vasBaQPAgtiA1Awa8=;
-        b=HzVx3PT1V6WgiwCfBkGXAeNVDIV2sfPnW/l8XzHE+XccY/qDUgbrXlTRVjf4LZdPu0
-         YQnmEbDHZUxXH421V6bfy1BSOTPIPeU6G2sg2NsFzaoJq43rrpq8oNO388PW+fIrLIAq
-         v40+bce7Tl8YJUItRJPQ2ZYzTBV6gx/pU06F/gcnONPpijCooZ5fjSwetCILsL/sn49K
-         qgQReluCMb+gTZ3OlNSlrQ7cZUNmdYi4vXY/2ZiOOfFtfIG0p8nie2zZMVU8fQ3yk/Mg
-         TE5UxD+VybAdY0Xl0Fo7LvQAtSd4FGldstZCjIIXlMuG175PUjQAPh88wCqNRJ0JPlPb
-         2F5Q==
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1747779974; x=1748384774; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=qTt4YG/1vRUxTQuaxShMs9T/QiIlq/ei1whZCWMU2pI=;
+        b=aK4Wx6kTXvy8ycxeBZkYcgOfFVWcwCDOmwDU5rRLjzcDdhVd9TOz5ChRSqrqVnNRDC
+         KhpyVYyFZOvDVWgUkwlWHsRf/tu70VoCpqIUUO9CY6cV/bzTuTXQdDnXPCdzv7guOF2Z
+         rJiljyXdBLv2bj4CaOFPJRjfOKS027zjgvXTeYcyBQgaa4VDtv5pf5DG7Bp1wu2yXduy
+         jmzEPwZ2xSpn9cJOVkYCqZP/nmmIz+Zd3k7oSzwXdB7r+J7GdZ1c+4oCDPS8xtasF45C
+         EBGcPeXwKFaElrzetsCin/Vm+19OdoFDMbI1ScF4KrqPTaP6JB4stU1oJj0GTTrvoMjD
+         Ftjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747779899; x=1748384699;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=++WPZvoZ0IgHd+3LaXjNjz7H44vasBaQPAgtiA1Awa8=;
-        b=vemM4znvnAPXg9QYBx3eKDTGGGSlobfaU5T+Piavd7Q9vXqsWsg172g/QVQ0zIK//V
-         n4iSksPiogZpyhZkRlE7NhfUR2E5hja525zC61s/9VgSgSKnzKkJDW+fo5EPAXTYmaY6
-         hmVSBq8Yt2gHIsebXM6b6EDK22MjBpYh9NJL0otdN7KulA/Cx4Qg9aXUr0ypBSQKbuiE
-         1/QVDg3EHZHQ3uJ0vxqhXf3p4GQBeDSkKBaQPxRmdThSnGMuOaDc489lHDmwz6RnPGXK
-         EfXw9mzIyplw+wGc35kriSKTYRvxVobcYhAQ7Be43jhJooX848GZ50xMAvlmdZNx1v4Y
-         RDfw==
-X-Forwarded-Encrypted: i=1; AJvYcCXm6dpZekJd+YTdrFwei85YsZuGZORAd/G710asjJTlakOc6i6kH+earuVMwdWaZIEYOcin7vP7JYjB0po=@vger.kernel.org
-X-Gm-Message-State: AOJu0YycTkNBttHd3O+H3HExnbttOhlijJrpn7e9XV+2Kby43R10IaB/
-	V361LQIHuYVBxcJC7dT/XgxFRyAMIiXJElRMXBWUn0QXXC+YCOh2L4NOLjsdFdbKwaE=
-X-Gm-Gg: ASbGncuFssSA3FFRaD8GAVj7+xGvc7IcE74p0pxunktVWZF5eq4RMLjBoVSPfshVJLe
-	gH5NBLCpVFUDKjdNBPlfBJRzj8VA366uwUZ1HYQbE7xALBOXdBxnGKDncidzkh/LrNIdmoaUNJB
-	RcEKD8iFDTEzmS7Eo57WZ9jOrlbfv15JoWX4v63Y+mDXdo6lFjFd0L7N9GdeGkw0xGYCPdOjWRQ
-	5jlHo35oHNFR7vNCx+4We8HGs2IfsBKDACD40+BOLlg9FQ2kTvMS9Q5QIGGSya8vyw6boQ3xVk4
-	UcVbhsYn47bGUoM/lYoQ6ZtWGWoUefDIZ02Z3OPQrrG4+o5ZR0r4ZPiMkAAGp2gaA+PMBKRVWgG
-	tV6GNmanl6sZLTIoq+TuKci8/
-X-Google-Smtp-Source: AGHT+IHsgVes1i2RPfj5sNlf3VtNl5vNdoTvDSNQD6pn13mL9QEgkpNxostYgEKzTG191QW/9MunKw==
-X-Received: by 2002:a05:622a:1dc7:b0:48a:4465:bfd8 with SMTP id d75a77b69052e-494ae4cb62fmr314051021cf.49.1747779899503;
-        Tue, 20 May 2025 15:24:59 -0700 (PDT)
-Received: from xanadu (modemcable179.17-162-184.mc.videotron.ca. [184.162.17.179])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-494ae3cef4csm76090371cf.1.2025.05.20.15.24.58
+        d=1e100.net; s=20230601; t=1747779974; x=1748384774;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qTt4YG/1vRUxTQuaxShMs9T/QiIlq/ei1whZCWMU2pI=;
+        b=EZTh0kH+6DroZ1HWZQQEobizkvSQwCL38/CO8VkbPqizkN2I7FgNLf8n77U7OaVbzb
+         OWbeSZ+hVkKVG5txY1A8WG74KYIZXCMJjFmB/8XA/QdAoOwdbHVpNpe2vUf/6zMf7ee5
+         fVRsmfTXCrdcxW+OqM3xuRWujKk8v2v/LmIahe4tOr2ehpF+j5I2LVPajkCnV7gRy4pH
+         XISCfJVk4hP6W4+6fNdZBSGtw8xejfPCdgnVLflTQrRKrWFNIignN1Lye9isbeWBHMlm
+         yUVhCmAl8hQ7H1pG5I9Kvsrs+AbHMpieKWEBQqJW75QOLDoTCZre7YexAn/R//8wJgqL
+         ht+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVUT7KYyzTZKpzSC/tHceWT0ZtBs7/Qyq57nAETVVHg32RsXBwOyVZ3FXvMAXtAyy56QnhBes7+FWOrXWM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9WEGNE3dkyfBFIccPl8ExmMG8cHFnBDzT5UeTnapkzU1EoMJv
+	NR5kNIyad9raFad1X0fYlLcxwlBfP5HXuqjQXsM1yjIS0Fj/Ohl/+M7ARe51lJ/izUE=
+X-Gm-Gg: ASbGncvxVCH2mLtkkr32LRvQ33CyNBdVadHsB8k4YB5YSjQUOiRwtgW0o1AolTmfsUM
+	8KD4LYz6MuegK4cb2Dz0UYFZ25N8Axodn6qR8dQ3nTr5tPaSVfldLQPq0DK9RNYR/lPQOkJ0fg2
+	DqlwcD+hDuckLSt91hEitCIYXzPfNHpFx0BsxmWO2PW9+jg1sNOEK86CoQ1lbrMoUwoDYYnqBcj
+	uAEAcSURzNY3N8IsKs7LpH/SjvhRup+1iobyejhaOxdRkHv65OML0dVQcUMYd8VvyTy5qC9tlKZ
+	1YbCJa1NQWk/cywAFIAjoJPO6Ejqop/04L/V/TNTaXoW9kUKkdQMGMCjXZtM
+X-Google-Smtp-Source: AGHT+IHMBmeI7kQYoN9s4JX0ZSBxX+F3xv2rOANEi+wTad8PvFB/MkLVXNhM3peN4djRz8GJun6CxA==
+X-Received: by 2002:ac8:5cca:0:b0:476:a03b:96ec with SMTP id d75a77b69052e-494ae47d89emr378227251cf.32.1747779973665;
+        Tue, 20 May 2025 15:26:13 -0700 (PDT)
+Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
+        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-494ae3f89a9sm76683591cf.20.2025.05.20.15.26.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 15:24:59 -0700 (PDT)
-Date: Tue, 20 May 2025 18:24:58 -0400 (EDT)
-From: Nicolas Pitre <npitre@baylibre.com>
-To: David Laight <david.laight.linux@gmail.com>
-cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
-    u.kleine-koenig@baylibre.com, Oleg Nesterov <oleg@redhat.com>, 
-    Peter Zijlstra <peterz@infradead.org>, 
-    Biju Das <biju.das.jz@bp.renesas.com>
-Subject: Re: [PATCH v2 next 3/4] lib: Add mul_u64_add_u64_div_u64() and
- mul_u64_u64_div_u64_roundup()
-In-Reply-To: <20250520223700.2ec735fd@pumpkin>
-Message-ID: <148nop5q-s958-n0q4-66r8-o91ns4pnr4on@onlyvoer.pbz>
-References: <20250518133848.5811-1-david.laight.linux@gmail.com> <20250518133848.5811-4-david.laight.linux@gmail.com> <321rs9r7-8858-p195-263n-49q78q8rn25o@onlyvoer.pbz> <20250520223700.2ec735fd@pumpkin>
+        Tue, 20 May 2025 15:26:12 -0700 (PDT)
+Date: Tue, 20 May 2025 18:26:09 -0400
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	David Hildenbrand <david@redhat.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Christian Brauner <brauner@kernel.org>, linux-mm@kvack.org,
+	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+	SeongJae Park <sj@kernel.org>, Usama Arif <usamaarif642@gmail.com>
+Subject: Re: [RFC PATCH 4/5] mm/madvise: add PMADV_SET_FORK_EXEC_DEFAULT
+ process_madvise() flag
+Message-ID: <20250520222609.GD773385@cmpxchg.org>
+References: <cover.1747686021.git.lorenzo.stoakes@oracle.com>
+ <617413860ff194dfb1afedb175b2d84a457e449d.1747686021.git.lorenzo.stoakes@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <617413860ff194dfb1afedb175b2d84a457e449d.1747686021.git.lorenzo.stoakes@oracle.com>
 
-On Tue, 20 May 2025, David Laight wrote:
+On Mon, May 19, 2025 at 09:52:41PM +0100, Lorenzo Stoakes wrote:
+> We intentionally limit this only to flags that we know should function
+> correctly without issue, and to be conservative about this, so we initially
+> limit ourselves only to MADV_HUGEPAGE, MADV_NOHUGEPAGE, that is - setting
+> the VM_HUGEPAGE, VM_NOHUGEPAGE VMA flags.
 
-> On Mon, 19 May 2025 23:03:21 -0400 (EDT)
-> Nicolas Pitre <npitre@baylibre.com> wrote:
-> 
-> > On Sun, 18 May 2025, David Laight wrote:
-> > 
-> > > The existing mul_u64_u64_div_u64() rounds down, a 'rounding up'
-> > > variant needs 'divisor - 1' adding in between the multiply and
-> > > divide so cannot easily be done by a caller.
-> > > 
-> > > Add mul_u64_add_u64_div_u64(a, b, c, d) that calculates (a * b + c)/d
-> > > and implement the 'round down' and 'round up' using it.
-> > > 
-> > > Update the x86-64 asm to optimise for 'c' being a constant zero.
-> > > 
-> > > For architectures that support u128 check for a 64bit product after
-> > > the multiply (will be cheap).
-> > > Leave in the early check for other architectures (mostly 32bit) when
-> > > 'c' is zero to avoid the multi-part multiply.  
-> > 
-> > I agree with this, except for the "'c' is zero" part. More below.
-> > 
-> > > Note that the cost of the 128bit divide will dwarf the rest of the code.
-> > > This function is very slow on everything except x86-64 (very very slow
-> > > on 32bit).
-> > > 
-> > > Add kerndoc definitions for all three functions.
-> > > 
-> > > Signed-off-by: David Laight <david.laight.linux@gmail.com>
-> > > ---
-> > > Changes for v2 (formally patch 1/3):
-> > > - Reinstate the early call to div64_u64() on 32bit when 'c' is zero.
-> > >   Although I'm not convinced the path is common enough to be worth
-> > >   the two ilog2() calls.
-> > > 
-> > >  arch/x86/include/asm/div64.h | 19 ++++++++++-----
-> > >  include/linux/math64.h       | 45 +++++++++++++++++++++++++++++++++++-
-> > >  lib/math/div64.c             | 21 ++++++++++-------
-> > >  3 files changed, 70 insertions(+), 15 deletions(-)
-> > > 
-> > > diff --git a/arch/x86/include/asm/div64.h b/arch/x86/include/asm/div64.h
-> > > index 9931e4c7d73f..7a0a916a2d7d 100644
-> > > --- a/arch/x86/include/asm/div64.h
-> > > +++ b/arch/x86/include/asm/div64.h
-> > > @@ -84,21 +84,28 @@ static inline u64 mul_u32_u32(u32 a, u32 b)
-> > >   * Will generate an #DE when the result doesn't fit u64, could fix with an
-> > >   * __ex_table[] entry when it becomes an issue.
-> > >   */
-> > > -static inline u64 mul_u64_u64_div_u64(u64 a, u64 mul, u64 div)
-> > > +static inline u64 mul_u64_add_u64_div_u64(u64 a, u64 mul, u64 add, u64 div)
-> > >  {
-> > >  	u64 q;
-> > >  
-> > > -	asm ("mulq %2; divq %3" : "=a" (q)
-> > > -				: "a" (a), "rm" (mul), "rm" (div)
-> > > -				: "rdx");
-> > > +	if (statically_true(!add)) {
-> > > +		asm ("mulq %2; divq %3" : "=a" (q)
-> > > +					: "a" (a), "rm" (mul), "rm" (div)
-> > > +					: "rdx");
-> > > +	} else {
-> > > +		asm ("mulq %2; addq %3, %%rax; adcq $0, %%rdx; divq %4"
-> > > +			: "=a" (q)
-> > > +			: "a" (a), "rm" (mul), "rm" (add), "rm" (div)
-> > > +			: "rdx");
-> > > +	}
-> > >  
-> > >  	return q;
-> > >  }
-> > > -#define mul_u64_u64_div_u64 mul_u64_u64_div_u64
-> > > +#define mul_u64_add_u64_div_u64 mul_u64_add_u64_div_u64
-> > >  
-> > >  static inline u64 mul_u64_u32_div(u64 a, u32 mul, u32 div)
-> > >  {
-> > > -	return mul_u64_u64_div_u64(a, mul, div);
-> > > +	return mul_u64_add_u64_div_u64(a, mul, 0, div);
-> > >  }
-> > >  #define mul_u64_u32_div	mul_u64_u32_div
-> > >  
-> > > diff --git a/include/linux/math64.h b/include/linux/math64.h
-> > > index 6aaccc1626ab..e1c2e3642cec 100644
-> > > --- a/include/linux/math64.h
-> > > +++ b/include/linux/math64.h
-> > > @@ -282,7 +282,50 @@ static inline u64 mul_u64_u32_div(u64 a, u32 mul, u32 divisor)
-> > >  }
-> > >  #endif /* mul_u64_u32_div */
-> > >  
-> > > -u64 mul_u64_u64_div_u64(u64 a, u64 mul, u64 div);
-> > > +/**
-> > > + * mul_u64_add_u64_div_u64 - unsigned 64bit multiply, add, and divide
-> > > + * @a: first unsigned 64bit multiplicand
-> > > + * @b: second unsigned 64bit multiplicand
-> > > + * @c: unsigned 64bit addend
-> > > + * @d: unsigned 64bit divisor
-> > > + *
-> > > + * Multiply two 64bit values together to generate a 128bit product
-> > > + * add a third value and then divide by a fourth.
-> > > + * May BUG()/trap if @d is zero or the quotient exceeds 64 bits.
-> > > + *
-> > > + * Return: (@a * @b + @c) / @d
-> > > + */
-> > > +u64 mul_u64_add_u64_div_u64(u64 a, u64 b, u64 c, u64 d);
-> > > +
-> > > +/**
-> > > + * mul_u64_u64_div_u64 - unsigned 64bit multiply and divide
-> > > + * @a: first unsigned 64bit multiplicand
-> > > + * @b: second unsigned 64bit multiplicand
-> > > + * @d: unsigned 64bit divisor
-> > > + *
-> > > + * Multiply two 64bit values together to generate a 128bit product
-> > > + * and then divide by a third value.
-> > > + * May BUG()/trap if @d is zero or the quotient exceeds 64 bits.  
-> > 
-> > If the quotient exceeds 64 bits, the optimized x86 version truncates the 
-> > value to the low 64 bits. The C version returns a saturated value i.e. 
-> > UINT64_MAX (implemented with a -1). Nothing actually traps in that case.
-> 
-> Nope. I've only got the iAPX 286 and 80386 reference manuals to hand.
-> Both say that 'interrupt 0' happens on overflow.
-> I don't expect the later documentation is any different.
+Hm, but do we actually expect more to show up? Looking at the current
+list of advisories, we have the conventional ones:
 
-Hmmm... OK, you're right. I must have botched my test code initially.
+       MADV_NORMAL
+              No special treatment.  This is the default.
 
-> If the kernel code is going to have an explicit instruction to trap
-> (rather then the code 'just trapping') it really is best to use BUG().
-> If nothing else it guarantees a trap regardless of the architecture
-> and compiler.
+       MADV_RANDOM
+              Expect page references in random order.  (Hence, read ahead may be less useful than normally.)
 
-OK in the overflow case.
+       MADV_SEQUENTIAL
+              Expect page references in sequential order.  (Hence, pages in the given range can be aggressively read ahead, and may be freed soon after they are accessed.)
 
-However in the div-by_0 case it is best if, for a given architecture, 
-the behavior is coherent across all division operations.
+       MADV_WILLNEED
+              Expect access in the near future.  (Hence, it might be a good idea to read some pages ahead.)
 
-> > > +	if (!c && ilog2(a) + ilog2(b) <= 62)
-> > > +		return div64_u64(a * b, d);
-> > > +  
-> > 
-> > Here you should do:
-> > 
-> > 	if (ilog2(a) + ilog2(b) <= 62) {
-> > 		u64 ab = a * b;
-> > 		u64 abc = ab + c;
-> > 		if (ab <= abc)
-> > 			return div64_u64(abc, d);
-> > 	}
-> > 
-> > This is cheap and won't unconditionally discard the faster path when c != 0;
-> 
-> That isn't really cheap.
-> ilog2() is likely to be a similar cost to a multiply
-> (my brain remembers them both as 'latency 3' on x86).
+       MADV_DONTNEED
+              Do not expect access in the near future.  (For the time being, the application is finished with the given range, so the kernel can free resources associated with it.)
 
-I'm not discussing the ilog2() usage though. I'm just against limiting 
-the test to !c. My suggestion is about supporting all values of c.
+where only RANDOM and SEQUENTIAL are actual policies. But since those
+apply to file mappings only, they don't seem to make much sense for a
+process-wide setting.
 
-> My actual preference is to completely delete that test and rely
-> on the post-multiply check.
-> 
-> The 64 by 64 multiply code is actually fairly cheap.
-> On x86-64 it is only a few clocks slower than the u128 version
-> (and that is (much) the same code that should be generated for 32bit).
+For Linux-specific advisories we have
 
-Of course x86-64 is not the primary target here as it has its own 
-optimized version.
+	MADV_REMOVE		- action
+	MADV_DONTFORK		- policy, but not sure how this could work as a process-wide thing
+	MADV_HWPOISON		- action
+	MADV_MERGEABLE		- policy, but we have a prctl() for process-wide settings
+	MADV_SOFTOFFLINE	- action
+	MADV_HUGEPAGE		- policy, but we have a prctl() for process-wide disabling
+	MADV_COLLAPSE		- action
+	MADV_DONTDUMP		- policy, but there is /proc/<pid>/coredump_filter for process-wide settings
+	MADV_FREE		- action
+	MADV_WIPEONFORK		- policy, but similar to DONTFORK, not sure how this would work process-wide
+	MADV_COLD		- action
+	MADV_PAGEOUT		- action
+	MADV_POPULATE_READ	- action
+	MADV_POPULATE_WRITE	- action
+	MADV_GUARD_INSTALL	- action
 
+So the vast majority of advisories are either one-off actions, or they
+are policies that naturally only make sense for very specific ranges.
 
-Nicolas
+KSM and THP really seem like the notable exception[1], rather than a
+rule. And we already *have* prctl() ops to modify per-process policies
+for these. So I'm reluctant to agree we should drill open and expand
+madvise() to cover them - especially with the goal or the expectation
+that THP per-process policies shouldn't matter that much down the line.
+
+I will admit, I don't hate prctl() as much as you do. It *is* a fairly
+broad interface - setting per-process policies. So it's bound to pick
+odds and ends of various subsystems that don't quite fit elsewhere.
+
+Is it the right choice everywhere? Of course not. And can its
+broadness be abused to avoid real interface design? Absolutely.
+
+I don't think that makes it inherently bad, though. As long as we make
+an honest effort to find the best home for new knobs.
+
+But IMO, in this case it is. The inheritance-along-the-process-tree
+behavior that we want here is an established pattern in prctl().
+
+And *because* that propagation is a security-sensitive pattern
+(although I don't think the THP policy specifically *is* a security
+issue), to me it makes more sense to keep this behavior confined to
+prctl() at least, and not add it to madvise too.
+
+[1] Maybe we should have added sys_andrea() to cover those, as well as
+    the SECCOMP prctl()s ;)
