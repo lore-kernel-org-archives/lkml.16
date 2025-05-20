@@ -1,25 +1,60 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6641262807
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 09:21:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC0A266EEA;
+	Tue, 20 May 2025 09:21:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747732910; cv=none; b=Ab7NhUyWWXiE3Bl5PlWz6NYDLcw/+X8FmZyYet/XHPEEsAm1Xtej3kY6fx4/ieYYG/L5076crVX6naeV4sBwPoy4coTOPBkk1ITleLJNzWp/N9bI1dTw8nYpbb1Ho+HWbUEv++BBaZV1jZR5cMEUFfDr4o8bCy8CBLjKq1Ptnmw=
+	t=1747732915; cv=none; b=kYA8RRuHZXx4xUCK8U567UM9GKhWlsyuHHrl7qPRIj3a8gy4Vu9b5AnrMBYsw0kN1EqnUMVOR2csl5YJ3x8fexgnR+r5X5MMT5pzMc/2gdkYmI2ijIlZwKDB0QcqBYHHZhq5Oogr7KqT9d9rT9CFIPut4oDMYnx4s/xQTtVtirY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747732910; c=relaxed/simple;
-	bh=5LearHUE//FO6554JRsvDiIOyclElROM2x/Io+yLjos=;
+	s=arc-20240116; t=1747732915; c=relaxed/simple;
+	bh=nRck76upIrqayF48r0JMEfKggSJcdZp1u2tGZS16wqs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dDu3a2UvomXVXXOWSU3UxJzfYuRNU6PxNmCW9dQAag90RAI2vkWdG5m62dtsquZmF9hTmQD65kBIkGeuw2GXP3221X9UXsNQbU/n7JVb0A+Zbd+am7MuSaO/G4SWlkOv3Hyy0o7aqX3oJ+p0kPXGyn1+JOrpklEa4/rD6PBUpJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A4BC1150C;
-	Tue, 20 May 2025 02:21:34 -0700 (PDT)
-Received: from [10.164.18.48] (unknown [10.164.18.48])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 568403F5A1;
-	Tue, 20 May 2025 02:21:42 -0700 (PDT)
-Message-ID: <712f21ea-e2e6-4a56-8bdb-6ad071b6972e@arm.com>
-Date: Tue, 20 May 2025 14:51:39 +0530
+	 In-Reply-To:Content-Type; b=X6i8eqIGnAkYIAiywQqGxubfd+1dWDwZ/QRxr80+PWbYRHnl84lVt6mm2RrTU5kdIZ1BtfWCOahSsBCvW/d1uw6xqFo10id8FQ8mgYDJZnedNMu5gEBcLxAbYcMv0J1+G7H0dQnbvkMPuLibTnmJjeVIRmjIqJkrwvdw4+YtJB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=JGbX0jbF; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="JGbX0jbF"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54K7K1NC012077;
+	Tue, 20 May 2025 09:21:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=m2Upju
+	Q/5KwMg+65JZtPR4E0vx7qlZD6xAt9dld09JI=; b=JGbX0jbFVwGCRv0iByTjJW
+	kVSzg+KBv3LpDWCKR7tviyfCr12E+nFR0y+G4a68Haf9vTqx1BulUOCHtXQsEcmf
+	H8w4h5Pj+lzN5iAfyH/TJGUkcNszJS3e/MKmVZaMZlDJqesbrFQ+xFJhmrm4Bhdg
+	iRCrKUTqleaxFSlNti10cHja6JtmKMlUTM/A7F9ICW4q7/i+Wtu4laOfRueN0MDq
+	WgcA9yy12xTnN6gqTEgj1xMU6KZ6IirqxgWfCKjV/P1qsxDtmuDG5yLN+6Tv6Xfq
+	4EuQ3eiVFTo05O5XxPTBoI7vdB1LVZUCI/0QssYN20jTkUaxZ42RVX1rGkGDXvwQ
+	==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46rab734y5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 20 May 2025 09:21:44 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54K87GZX015958;
+	Tue, 20 May 2025 09:21:43 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46q7g2aspj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 20 May 2025 09:21:43 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54K9LdJl55705870
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 20 May 2025 09:21:39 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id ACEB220244;
+	Tue, 20 May 2025 09:21:39 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5C52C20242;
+	Tue, 20 May 2025 09:21:39 +0000 (GMT)
+Received: from [9.152.212.130] (unknown [9.152.212.130])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 20 May 2025 09:21:39 +0000 (GMT)
+Message-ID: <1660a81e-e057-44d3-be99-ec91fbf512e7@linux.ibm.com>
+Date: Tue, 20 May 2025 11:21:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,358 +62,156 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] mm: Optimize mremap() by PTE batching
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: akpm@linux-foundation.org, Liam.Howlett@oracle.com, vbabka@suse.cz,
- jannh@google.com, pfalcato@suse.de, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, david@redhat.com, peterx@redhat.com,
- ryan.roberts@arm.com, mingo@kernel.org, libang.li@antgroup.com,
- maobibo@loongson.cn, zhengqi.arch@bytedance.com, baohua@kernel.org,
- anshuman.khandual@arm.com, willy@infradead.org, ioworker0@gmail.com,
- yang@os.amperecomputing.com, baolin.wang@linux.alibaba.com, ziy@nvidia.com,
- hughd@google.com
-References: <20250507060256.78278-1-dev.jain@arm.com>
- <20250507060256.78278-3-dev.jain@arm.com>
- <fdb76016-396a-4ee4-9c9d-beb18c86cfdb@lucifer.local>
- <c038b7cf-3b72-403f-b988-bf3009287502@arm.com>
- <55cc1cef-1ece-48c3-af17-22ece8df5ed3@lucifer.local>
+Subject: Re: [PATCH v2] perf ftrace: Use process/session specific trace
+ settings
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, acme@kernel.org,
+        agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, Alexander Egorenkov <egorenar@linux.ibm.com>
+References: <20250519145235.56006-1-tmricht@linux.ibm.com>
+ <aCvGF547Y3eteLRK@google.com>
 Content-Language: en-US
-From: Dev Jain <dev.jain@arm.com>
-In-Reply-To: <55cc1cef-1ece-48c3-af17-22ece8df5ed3@lucifer.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+In-Reply-To: <aCvGF547Y3eteLRK@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=ELgG00ZC c=1 sm=1 tr=0 ts=682c49a8 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=VwQbUJbxAAAA:8 a=uxB-eVp_abppLh5YTSIA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: XvjZbF10tOtyVpdm3aWD2c0FeYSTQV1q
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDA3NCBTYWx0ZWRfX3ckwVGefrPpf as27ZneEG13UyW1uUbXzpVs7aKQeK+Rhq8AWD4fwE/woXS/SDZqRKbA9fX05fQqGBdGKh4sUbDc Ul8v4tHxQBYJdsHkudyLaK/+vCl6GoAhOIAbcw5f4z2IEF0Q1509z/tfHPQZJlczTp1NTeb0Nn3
+ XiFJCXgzkqDmS2zij7aOWx66hkZa30SIujhABjl4eHQ+c0/vDxPFPfQy1uJuHcMrYicU1hXFmMn /K5vC3XGe4MndrPN9EXcp8Ba0g6WflcmbjGIubx++RtRmoeArVWvqR0ALt4zNUjvcbBuCQVvGiw IfbQYnwkMOPHn8kTGoD93Yhk4/zYd6hynxWUydgGUdhWdnxjOXQ/aU+apdq0K/Jc2Gp9mE/+P/N
+ 0YMqTFx7uBvolq+b6vqzQd6w+zfQR0bU/MW/0OiDk6rMNgyW4c/G6fuzFxuxkW3f9IfQO4Qe
+X-Proofpoint-GUID: XvjZbF10tOtyVpdm3aWD2c0FeYSTQV1q
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-20_04,2025-05-16_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxlogscore=999
+ adultscore=0 lowpriorityscore=0 spamscore=0 bulkscore=0 suspectscore=0
+ phishscore=0 priorityscore=1501 impostorscore=0 mlxscore=0 malwarescore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505200074
 
-
-
-On 19/05/25 2:34 pm, Lorenzo Stoakes wrote:
-> On Sun, May 18, 2025 at 01:47:35PM +0530, Dev Jain wrote:
->>
->>
->> On 08/05/25 3:34 pm, Lorenzo Stoakes wrote:
->>> Before getting into the review, just to say thanks for refactoring as per
->>> my (and of course other's) comments, much appreciated and big improvement!
->>> :)
->>>
->>> We're getting there...
->>>
->>> On Wed, May 07, 2025 at 11:32:56AM +0530, Dev Jain wrote:
->>>> To use PTE batching, we want to determine whether the folio mapped by
->>>> the PTE is large, thus requiring the use of vm_normal_folio(). We want
->>>> to avoid the cost of vm_normal_folio() if the code path doesn't already
->>>> require the folio. For arm64, pte_batch_hint() does the job. To generalize
->>>> this hint, add a helper which will determine whether two consecutive PTEs
->>>> point to consecutive PFNs, in which case there is a high probability that
->>>> the underlying folio is large.
->>>> Next, use folio_pte_batch() to optimize move_ptes(). On arm64, if the ptes
->>>> are painted with the contig bit, then ptep_get() will iterate through all 16
->>>> entries to collect a/d bits. Hence this optimization will result in a 16x
->>>> reduction in the number of ptep_get() calls. Next, ptep_get_and_clear()
->>>> will eventually call contpte_try_unfold() on every contig block, thus
->>>> flushing the TLB for the complete large folio range. Instead, use
->>>> get_and_clear_full_ptes() so as to elide TLBIs on each contig block, and only
->>>> do them on the starting and ending contig block.
->>>>
->>>> Signed-off-by: Dev Jain <dev.jain@arm.com>
->>>> ---
->>>>    include/linux/pgtable.h | 29 +++++++++++++++++++++++++++++
->>>>    mm/mremap.c             | 37 ++++++++++++++++++++++++++++++-------
->>>>    2 files changed, 59 insertions(+), 7 deletions(-)
->>>>
->>>> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
->>>> index b50447ef1c92..38dab1f562ed 100644
->>>> --- a/include/linux/pgtable.h
->>>> +++ b/include/linux/pgtable.h
->>>> @@ -369,6 +369,35 @@ static inline pgd_t pgdp_get(pgd_t *pgdp)
->>>>    }
->>>>    #endif
->>>>
->>>> +/**
->>>> + * maybe_contiguous_pte_pfns - Hint whether the page mapped by the pte belongs
->>>> + * to a large folio.
->>>> + * @ptep: Pointer to the page table entry.
->>>> + * @pte: The page table entry.
->>>> + *
->>>> + * This helper is invoked when the caller wants to batch over a set of ptes
->>>> + * mapping a large folio, but the concerned code path does not already have
->>>> + * the folio. We want to avoid the cost of vm_normal_folio() only to find that
->>>> + * the underlying folio was small; i.e keep the small folio case as fast as
->>>> + * possible.
->>>> + *
->>>> + * The caller must ensure that ptep + 1 exists.
->>>> + */
->>>> +static inline bool maybe_contiguous_pte_pfns(pte_t *ptep, pte_t pte)
->>>> +{
->>>> +	pte_t *next_ptep, next_pte;
->>>> +
->>>> +	if (pte_batch_hint(ptep, pte) != 1)
->>>> +		return true;
->>>> +
->>>> +	next_ptep = ptep + 1;
->>>> +	next_pte = ptep_get(next_ptep);
->>>> +	if (!pte_present(next_pte))
->>>> +		return false;
->>>> +
->>>> +	return unlikely(pte_pfn(next_pte) - pte_pfn(pte) == 1);
->>>
->>> Let's not do unlikely()'s unless we have data for them... it shouldn't mean
->>> 'what the programmer believes' :)
->>>
->>>> +}
->>>
->>> Yeah I'm with Andrew and Anshuman, I mean this is kind of a nasty interface
->>> (I mean _perhaps_ unavoidably) and we've done the relevant check in
->>> mremap_folio_pte_batch(), so let's just move it there with comments, as this
->>>
->>>> +
->>>>    #ifndef __HAVE_ARCH_PTEP_TEST_AND_CLEAR_YOUNG
->>>>    static inline int ptep_test_and_clear_young(struct vm_area_struct *vma,
->>>>    					    unsigned long address,
->>>> diff --git a/mm/mremap.c b/mm/mremap.c
->>>> index 0163e02e5aa8..9c88a276bec4 100644
->>>> --- a/mm/mremap.c
->>>> +++ b/mm/mremap.c
->>>> @@ -170,6 +170,23 @@ static pte_t move_soft_dirty_pte(pte_t pte)
->>>>    	return pte;
->>>>    }
->>>>
->>>> +/* mremap a batch of PTEs mapping the same large folio */
->>>> +static int mremap_folio_pte_batch(struct vm_area_struct *vma, unsigned long addr,
->>>> +		pte_t *ptep, pte_t pte, int max_nr)
->>>> +{
->>>> +	const fpb_t flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
->>>> +	struct folio *folio;
->>>> +	int nr = 1;
->>>> +
->>>> +	if ((max_nr != 1) && maybe_contiguous_pte_pfns(ptep, pte)) {
->>>> +		folio = vm_normal_folio(vma, addr, pte);
->>>> +		if (folio && folio_test_large(folio))
->>>> +			nr = folio_pte_batch(folio, addr, ptep, pte, max_nr,
->>>> +					     flags, NULL, NULL, NULL);
->>>> +	}
->>>
->>> This needs some refactoring, avoid nesting at all costs :)
->>>
->>> We'll want to move the maybe_contiguous_pte_pfns() function over here, so
->>> that'll change things, but in general let's use a guard clause.
->>>
->>> So an if block like:
->>>
->>> if (foo) {
->>> 	... bunch of logic ...
->>> }
->>>
->>> Is better replaced with a guard clause so you have:
->>>
->>> if (!foo)
->>> 	return ...;
->>>
->>> ... bunch of logic ...
->>>
->>> Here we could really expand things out to make things SUPER clear like:
->>>
->>> static int mremap_folio_pte_batch(struct vm_area_struct *vma, unsigned long addr,
->>> 		pte_t *ptep, pte_t pte, int max_nr)
->>> {
->>> 	const fpb_t flags;
->>> 	struct folio *folio;
->>>
->>> 	if (max_nr == 1)
->>> 		return 1;
->>> 	if (!maybe_contiguous_pte_pfns(ptep, pte)) // obviously replace with open code...
->>> 		return 1;
->>>
->>> 	folio = vm_normal_folio(vma, addr, pte);
->>> 	if (!folio)
->>> 		return 1;
->>> 	if (!folio_test_large(folio))
->>> 		return 1;
->>>
->>> 	flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
->>> 	return folio_pte_batch(folio, addr, ptep, pte, max_nr,
->>> 		flags, NULL, NULL, NULL);
->>> }
->>>
->>> I mean you could argue assign nr would be neater here, but you get the point!
->>>
->>> David mentioned a point about this code over in v1 discussion (see
->>> [0]). Trying to bring converastion here to avoid it being split across
->>> old/new series. There he said:
->>>
->>> David H:
->>>> (2) Do we really need "must be part of the same folio", or could be just batch over present
->>>> ptes that map consecutive PFNs? In that case, a helper that avoids folio_pte_batch() completely
->>>> might be better.
->>>
->>> Hm, if we didn't do the batch test, can we batch a split large folio here ok?
->>> I'm guessing we can in which case this check is actually limiting...
->>>
->>> Are we _explicitly_ only considering the cont pte case and ignoring the
->>> split THP case?
->>>
->>> [0]: https://lore.kernel.org/all/887fb371-409e-4dad-b4ff-38b85bfddf95@redhat.com/
->>>
->>> And in what circumstances will the hint be set, with a present subsequent
->>> PTE but !folio_test_large()?
->>>
->>> I guess the hint might not be taken? But then isn't the valid check just
->>> folio_test_large() and we don't need this batched check at all?
->>>
->>> Is it only to avoid the split THP case?
->>>
->>> We definitely need some clarity here, and a comment in the code explaining
->>> what's going on as this is subtle stuff.
->>
->> I am focussed only on batching large folios. Split THPs won't be batched;
->> you can use pte_batch() (from David's refactoring) and
->> figure the split THP batch out, but then get_and_clear_full_ptes()
->> will be gathering a/d bits and smearing them across the batch, which will be
->> incorrect. Even if we introduce a new version of get_and_clear_full_ptes()
->> which does not gather a/d bits, then if the pte_batch actually belongs to a
->> folio, then we will *not* be smearing a/d bits, which is again wrong. So in
->> any case we must know what the underlying folio looks like :) So my agenda
->> for v3 is,
+On 5/20/25 02:00, Namhyung Kim wrote:
+> Hello,
 > 
-> Right, ack, there being a large folio per se doesn't mean A/D collection is
-> appropriate in THP case.
-> 
-> I guess then this is really _only_ about the mTHP case, where essentially
-> the other PTEs are to be disregarded going forwards?
-
-Yes.
-
-> 
+> On Mon, May 19, 2025 at 04:52:35PM +0200, Thomas Richter wrote:
+>> V1 --> V2: Add Suggestion from Arnaldo Cavalho de Melo confirmed by
+>>            Steven Rostedt. Use rmdir(../tracing/instances/dir) to stop
+>> 	   process/session specific tracing and delete all 
+>> 	   process/session specific setings.
 >>
->> - Incorporate your refactoring comments
->> - Remove maybe_contiguous_pte_pfns and just use vm_normal_folio +
->> folio_test_large
->> - Fix indentation
+>> Executing perf ftrace commands ftrace, profile and latency
+>> leave tracing disabled as can seen in this output:
 >>
->> Sounds good?
-> 
-> Sure, but can we hold off until the mprotect() stuff is done first please?
-> I mean obviously you're free to do things as you like, but this will help
-> workload-wise on my side :>)
-> 
-> Thanks!
-
-No problem, thanks for reviewing!
-
-> 
+>>  # echo 1 > /sys/kernel/debug/tracing/tracing_on
+>>  # cat /sys/kernel/debug/tracing/tracing_on
+>>  1
+>>  # perf ftrace trace --graph-opts depth=5 sleep 0.1 > /dev/null
+>>  # cat /sys/kernel/debug/tracing/tracing_on
+>>  0
+>>  #
 >>
->>>
->>>> +	return nr;
->>>> +}
->>>> +
->>>>    static int move_ptes(struct pagetable_move_control *pmc,
->>>>    		unsigned long extent, pmd_t *old_pmd, pmd_t *new_pmd)
->>>>    {
->>>> @@ -177,7 +194,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
->>>>    	bool need_clear_uffd_wp = vma_has_uffd_without_event_remap(vma);
->>>>    	struct mm_struct *mm = vma->vm_mm;
->>>>    	pte_t *old_ptep, *new_ptep;
->>>> -	pte_t pte;
->>>> +	pte_t old_pte, pte;
->>>>    	pmd_t dummy_pmdval;
->>>>    	spinlock_t *old_ptl, *new_ptl;
->>>>    	bool force_flush = false;
->>>> @@ -186,6 +203,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
->>>>    	unsigned long old_end = old_addr + extent;
->>>>    	unsigned long len = old_end - old_addr;
->>>>    	int err = 0;
->>>> +	int max_nr;
->>>>
->>>>    	/*
->>>>    	 * When need_rmap_locks is true, we take the i_mmap_rwsem and anon_vma
->>>> @@ -236,12 +254,13 @@ static int move_ptes(struct pagetable_move_control *pmc,
->>>>    	flush_tlb_batched_pending(vma->vm_mm);
->>>>    	arch_enter_lazy_mmu_mode();
->>>>
->>>> -	for (; old_addr < old_end; old_ptep++, old_addr += PAGE_SIZE,
->>>> -				   new_ptep++, new_addr += PAGE_SIZE) {
->>>> -		if (pte_none(ptep_get(old_ptep)))
->>>> +	for (int nr = 1; old_addr < old_end; old_ptep += nr, old_addr += nr * PAGE_SIZE,
->>>> +				   new_ptep += nr, new_addr += nr * PAGE_SIZE) {
->>>
->>> Really nitty thing here but the indentation is all messed up here, I mean
->>> nothing is going to be nice but maybe indent by two tabs below 'for'.
->>>
->>> I'm not a fan of this declaration of nr, typically in a for loop a declaration
->>> here would be the counter, so this is just confusing.
->>>
->>> In the old implementation, declaring nr in the for loop would make sense,
->>> but in the newly refactored one you should just declare it at the top.
->>>
->>> Also as per Anshuman review, I think nr_ptes, max_nr_ptes would be better.
->>>
->>> I don't think 'nr' needs to be initialised either, since the conditional is
->>> 'old_addr < old_end' and you _should_ only perform the
->>>
->>>> +		max_nr = (old_end - old_addr) >> PAGE_SHIFT;
->>>> +		old_pte = ptep_get(old_ptep);
->>>> +		if (pte_none(old_pte))
->>>
->>> This seems broken.
->>>
->>> You're missing a nr assignment here, so you'll happen to offset by the
->>> number of pages of the last folio you encountered?
->>>
->>> Should be:
->>>
->>> 	if (pte_none(old_pte)) {
->>> 		nr_ptes = 1;
->>> 		continue;
->>> 	}
->>>
->>> Or, alternatively, you can reset nr_ptes to 1 at the start of each loop.
->>>
->>>
->>>>    			continue;
->>>>
->>>> -		pte = ptep_get_and_clear(mm, old_addr, old_ptep);
->>>
->>>>    		/*
->>>>    		 * If we are remapping a valid PTE, make sure
->>>>    		 * to flush TLB before we drop the PTL for the
->>>> @@ -253,8 +272,12 @@ static int move_ptes(struct pagetable_move_control *pmc,
->>>>    		 * the TLB entry for the old mapping has been
->>>>    		 * flushed.
->>>>    		 */
->>>> -		if (pte_present(pte))
->>>> +		if (pte_present(old_pte)) {
->>>> +			nr = mremap_folio_pte_batch(vma, old_addr, old_ptep,
->>>> +						    old_pte, max_nr);
->>>>    			force_flush = true;
->>>> +		}
->>>
->>> Thanks this is much clearer compared to v1
->>>
->>>> +		pte = get_and_clear_full_ptes(mm, old_addr, old_ptep, nr, 0);
->>>
->>> Nit but...
->>>
->>> Can we have a comment indicating what the last parameter refers to? I think
->>> David maybe doens't like this so obviously if he prefers not that fine, but
->>> I'm thinking something like:
->>>
->>> pte = get_and_clear_full_ptes(mm, old_addr, old_ptep, nr, /*full=*/false);
->>>
->>> I think we are good to just use 'false' here right? As it's only an int for
->>> historical purposes...
->>>
->>>>    		pte = move_pte(pte, old_addr, new_addr);
->>>>    		pte = move_soft_dirty_pte(pte);
->>>>
->>>> @@ -267,7 +290,7 @@ static int move_ptes(struct pagetable_move_control *pmc,
->>>>    				else if (is_swap_pte(pte))
->>>>    					pte = pte_swp_clear_uffd_wp(pte);
->>>>    			}
->>>> -			set_pte_at(mm, new_addr, new_ptep, pte);
->>>> +			set_ptes(mm, new_addr, new_ptep, pte, nr);
->>>>    		}
->>>>    	}
->>>>
->>>> --
->>>> 2.30.2
->>>>
+>> The tracing_on file is not restored to its value before the command.
+>> Fix this behavior and restore the trace setting to what
+>> is was before the invocation of the command.
+>> On Fedora 41 and 42 tracing is turned on by default.
 >>
+>> This patch use the .../tracing/instances/XXX subdirectory feature.
+>> Each perf ftrace invocation creates its own session/process
+>> specific subdirectory and does not change the global state
+>> in the .../tracing directory itself.
+>>
+>> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+>> Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+>> Reported-by: Alexander Egorenkov <egorenar@linux.ibm.com>
+>> ---
+>>  tools/perf/builtin-ftrace.c | 105 +++++++++++++++++++++++++++++++-----
+>>  1 file changed, 91 insertions(+), 14 deletions(-)
+>>
+>> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+>> index 7caa18d5ffc3..3faf96e7185e 100644
+>> --- a/tools/perf/builtin-ftrace.c
+>> +++ b/tools/perf/builtin-ftrace.c
+>> @@ -38,6 +38,8 @@
+>>  #include "util/units.h"
+>>  #include "util/parse-sublevel-options.h"
+>>  
+>> +#include <sys/stat.h>
+> 
+> The standard header files are placed in the above.  Let's put it there.
+> 
+>> +
+>>  #define DEFAULT_TRACER  "function_graph"
+>>  
+>>  static volatile sig_atomic_t workload_exec_errno;
+>> @@ -45,6 +47,8 @@ static volatile sig_atomic_t done;
+>>  
+>>  static struct stats latency_stats;  /* for tracepoints */
+>>  
+>> +static char tracing_instance[PATH_MAX];	/* Trace instance directory */
+>> +
+>>  static void sig_handler(int sig __maybe_unused)
+>>  {
+>>  	done = true;
+>> @@ -100,6 +104,34 @@ static bool is_ftrace_supported(void)
+>>  	return supported;
+>>  }
+>>  
+>> +/*
+>> + * Wrapper to test if a file in directory .../tracing/instances/XXX
+>> + * exists. If so return the .../tracing/instances/XXX file for use.
+>> + * Otherwise the file exists only in directory .../tracing and
+>> + * is applicable to all instances, for example file available_filter_functions.
+>> + * Return that file name in this case.
+> 
+> Not sure if it's needed.  Can we call get_tracing_file() directly for
+> the global files?
+> 
+[SNIP]
+>> +static char *get_tracing_instance_file(const char *name)
 
+Not really, some files are not available in the tracing/instances/XXX
+directory, for example 
+
+   ret = read_tracing_file_by_line("available_filter_functions",         
+                                   list_function_cb, filter);  
+
+That file is not created in the instances subdirectory:
+ # pwd
+/sys/kernel/debug/tracing
+[
+# find . -name tracing_on | grep -E '(\.|foo)/t'
+./instances/foo/tracing_on
+./tracing_on
+# find . -name available_filter_functions | grep -E '(\.|foo)/a'
+./available_filter_functions
+#
+
+The easiest approach is to always test for file existance in the
+instances/XXX directory first and if it is missing, fall back
+to the tracing directory. Otherwise the file location has to
+be known by file name.
+The other files which are not created in the instances/XXX subdirectory
+are
+  max_graph_depth, tracing_thres, set_graph_function and set_graph_notrace.
+
+Hope this helps.
+
+I will add all your other rewiev comment and submit V3.
+
+Thanks a lot
+    
+-- 
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+IBM Deutschland Research & Development GmbH
+
+Vorsitzender des Aufsichtsrats: Wolfgang Wendt
+
+Geschäftsführung: David Faller
+
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
