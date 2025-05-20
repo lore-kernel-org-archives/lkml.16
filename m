@@ -1,168 +1,121 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94AE9281360
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 20:07:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 596011EE7B9;
+	Tue, 20 May 2025 20:08:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747771637; cv=none; b=JMdiKdl/O1dojTgxdKDlAzcb0W3FUuJ4DbU/xFVRb3gocwJiQrAsnGt8efryCwA132SO+VoqVExBgFtsM4R+lTcvGZG17JjMgt99IueSr+UAfqoWDiMikV8D3HKX92sfAZ9Zi4nZ6h68OGZ9Q8XmR/IeVq2Dfj2igxh3PoMjrps=
+	t=1747771694; cv=none; b=PhCjxl4mlGfzARD7wi4uWsG/6P/ZkeZlTL4fVZQq2vzDcJwo93tmgf000IFXbifJ591Evz5Vvog/tRKNWExZhKrzg2zL1oWSdkow53pxUBVpOJKkJFuRj4yoeI85xYI+3orxSDf/OcXXCo/dsyDY3kVborw/Qe5pb4bjEsn2Hg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747771637; c=relaxed/simple;
-	bh=XPuvDT6TSWe7zvKeUnoGJQNymZiLkHqbbi39dBJDQqY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LULa8m93uz7nYvbNBirsxKQlK9FcG3wZjzJ3mOcxwV4VGTvTdsrpvAQvQ5PpqFbDIbhOPWqMDKb8+EuyUKL8TPuckYqYhTZZzFH0KiUwXQkf+W8SpT6+6xJRQUSVaxqdoaMlKeg2AJK5DrSNFOgBsAllBn3IRcGq5zra9k5F9MU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Zo+n/FMs; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1747771694; c=relaxed/simple;
+	bh=8Er8OhibuPRtXGUsiYNrQztXPWzDdhAQ89FUTn+HcLI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MbwQiAFdc1lxoM9tO7OpyjPg7rrLy9c1UkBU2Z2gsCujdTqXzoLNfrgfN/DU8fl0uI8adEeE12JaJhSHMx/OA2XzVKBCIg/H35w08TE9+F6WCHa4kZ1Dy5LMx95FSxv3v8cK0ZbSMIuLYQ3slSidytBAq1GYkrhJKg7VrqNDWd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SGBbPy5e; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Zo+n/FMs"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54KGe0w1000714
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 20:07:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=4+TilPmXDGw/Gtk0BqOASle1
-	/UOmT/X4bq+tNDck6q8=; b=Zo+n/FMszjKFBUWpEfP52eZJPyhg4y7h1VjyQptn
-	9X1oEHTRtb/0U2ZF5HaCpX3xq4i0JAX1yB5ZmxqXyKSBliCiigqjulOhXff3qJcc
-	/JdtG9DuzWUM2DYKZR5aRquMgfE+Rzow5zwtpHbN8llRmKPpqJ4INUe6k+CmWabu
-	YEkNKSuTQsIp7oLRHDO3DBSS5kPpQTAP2gLg8K6avYEhLg86cQQc0jddhdm+vL0o
-	qz4L76TeOq9SjQ6V/NsS5wiGmqHuHCvc24JhdSEHwIYWEc8jc19EeM5zFj9+dHnh
-	WevVPQU6n/7qtHLVAryGlXgb4E2z5572+nZcaEzo6x+izQ==
-Received: from mail-vk1-f200.google.com (mail-vk1-f200.google.com [209.85.221.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf4rga9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 20:07:14 +0000 (GMT)
-Received: by mail-vk1-f200.google.com with SMTP id 71dfb90a1353d-5293788a7e1so4521675e0c.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 13:07:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747771633; x=1748376433;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SGBbPy5e"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a361b8a664so4419997f8f.3;
+        Tue, 20 May 2025 13:08:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747771690; x=1748376490; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4+TilPmXDGw/Gtk0BqOASle1/UOmT/X4bq+tNDck6q8=;
-        b=H7KSJJLHVr6zU0gaEVUs+qHc1R84QSI1/bdU20uGAG/6NlLd8+tF29yJVVZuzsnzpE
-         xIUX4KnNoSroHBtKlvGLOjk87BXhAlSNQnwBgPBjZenWxazpS2cH6hG+pOtO1KpKpYlx
-         JDcBQFm29i6+m/y3yTLCnXIDdTuj/l9QFdSXV6iUGJuKdmIeU2wB+3lQNoWaQGA1h+2i
-         pMo4L+ZEQ6X+I0MOYPgcj4Rq+jRrTWhz3F+tLSsDk9sWQdjZjy9TnlzQY2lXzTLayt0N
-         GcKYS+cI9ZU9zCCLfKPlA0QF8FJiO7VBoIAF8G0M+eKGpa9r+15jBahmzCY5rhaexxZt
-         o7aA==
-X-Forwarded-Encrypted: i=1; AJvYcCWssrdN2wED4e6xK9buSkUg+bA+ZZEG83EFzVKgpcGCoX7rC3XvlfIhQll55G8K5wT1RgBEGqmYrG/JXSo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6CXNniAqycdjvtWqAMUXoA6cljbFMnyqI8HOJixSQw+fB0Uv5
-	hI8uIl+W/x6wHw2etHQ8cszpMQw7M5iq5B1AUcGQiSj1b7khOaBgzVpPqjReuS8+A/h2XakAJL2
-	9q8E4WYkqdOYj2SbWBW7clh0t+dtYghsxLg5CaNPUoG6FKC/udRUmmWVE0qJGli1o/pzvctSh3x
-	wseg==
-X-Gm-Gg: ASbGncuaFAD/eOYZP3IDQAYP04oebkXqx4ErQ2HYFnSlB3FXk8fdiRNx9wqWh5j+iTm
-	rqCCEuWVBU53Cc8r4apDPhX9k9LPmU56rfScsPqBwFaCPJblXIhz23oIm8JQFN+G6cjYRFzLv1U
-	G7Haq7OBfuJlbLL8o554gMWwBQZpi9cDnyJi0B6+r8FKg9PShyM8cVZofxAEe0UVSUAOoiJYFCa
-	TVPOuWGU38UFAtgvueZ6KGhg/kzcg9Zvt2rmi7zxMXhL+ujyJiKBCY0A8DumHaV4Uy9db7xcN7F
-	ixs1+/Nb+/F6xhVPdeEdN7XjXD6WJnYPQ+CGwgkvvJS+JCLO2321hXCi0Nla7CXyrsX3M+e/M3I
-	=
-X-Received: by 2002:a05:6122:31a0:b0:52c:5590:72c9 with SMTP id 71dfb90a1353d-52dba8909a4mr17000978e0c.5.1747771627835;
-        Tue, 20 May 2025 13:07:07 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHZ0ooob77YB33x3sc9TZXU71R5l2H/nFxJ6YO2AEHokNTU7hQE0QXzh10z0MZ3u3nyRxcaMg==
-X-Received: by 2002:a05:6214:1251:b0:6e6:6964:ca77 with SMTP id 6a1803df08f44-6f8b09023b4mr282754806d6.28.1747771614002;
-        Tue, 20 May 2025 13:06:54 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e7017f18sm2485042e87.158.2025.05.20.13.06.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 13:06:53 -0700 (PDT)
-Date: Tue, 20 May 2025 23:06:51 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Sean Paul <sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/msm/dsi/dsi_phy_10nm: Fix missing initial VCO rate
-Message-ID: <3ywacd4x23zadvwikw4hdprgbgxxdmbcar3lyayy4ezmd5lcyw@3h2oosmbk6yb>
-References: <20250520111325.92352-2-krzysztof.kozlowski@linaro.org>
+        bh=A3IPTweDtnrYm7kj/ndhlz8BOXodo3QwD16xiasY3w4=;
+        b=SGBbPy5eISIamHyMln7V6YjnIL1lGSHJ/FwvGoh9mu6G3MxhHpry6Y4UP12LT796w0
+         Hh9ZqwKM0isce9tpCUHoMKOsmZDvqdRy7CvHWa+XJJgSYa3og77y3hI0hZPga8BK4HHx
+         AgpBM6LaefOr76s3geHcnApD7/5mZnzLJyudV7gpRuZ3vMciI3Zt3SInjDkqWrjQDfp/
+         0FUemGHg63vjRbohkj91xPcNhs4isVVCyPE7NnwtoMJs/3tQcr05TBBRobEwuvvZZyil
+         ApDL+6qs4caSD38gHu5sU/EmyWdyIY6b9iaVLWESm/3wxx8FbHmve+NkD0AdkoKeQpc5
+         Jvkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747771690; x=1748376490;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=A3IPTweDtnrYm7kj/ndhlz8BOXodo3QwD16xiasY3w4=;
+        b=vijc2kcBxJyXPTw4dxkt4CH+7L842971eZDghIAVgu2mJXWBT6oVM4o2PHyMgaaV0L
+         VY/ngTdeggc6Wed7KJeRwEt0YJOvU2KmlCTYFWDdZ2LUP6q00aG74RODokKSDqmUb4tj
+         X25jXUIjoHz6qbZnOfas9sWTaBlVB2lrRZp6z773tGjNMm9d6tIhMVWpSqt964SPxuQd
+         y5W1hf2G9J5RKvrugnzUYqnzZ9NsA6pKmpuqNqb+2I4uLyxI7P3gp1ixxKgv47SDzUGB
+         E9cJm2qAcbeQ3sBw7AOQIn2076P9xWWGbVLcYAAJvEf77uk22mSBCJfcto80eaKMpc2q
+         /bBg==
+X-Forwarded-Encrypted: i=1; AJvYcCVIxpqxzLz6HWZhQpErUzGMt4AVShgcR/ME/KZcdSuGOb71FNUrh1RKKZkNEZt51FQog4gVx09CvLv1FiuK@vger.kernel.org, AJvYcCVSkFZFLFlnmEg7uZ+xyQSTg+lsbw9jOr/P+5IMw1PvlLwY+yQIUkejkQ8CNdNnGRdU55kzpK/HTk/Ctj7TzUYHR14B@vger.kernel.org, AJvYcCXy+A2gRrKHpjONDB0qqbUOKNc76ZVxMOHjpJkvj02FNEIMxG03wcsfN2v0d9BfftaR4+A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxu1I6LLX8vD6u7ILQXCIdFpnZd0D7Qnn3No+rLotJfWIQL8d7T
+	u0vq3AFLAtzgC3WnrLPp4XxF3pfgVDoVYIph54amoeNXEMpzdKDnWtFEtlCv+G0OIEOjrK7v1fH
+	+1PsqJSidkwTHKvKkMtSGY5UJBH2QU3Y=
+X-Gm-Gg: ASbGncsetdUMoDQcabsNJpZ36KvWlq/Ho43cD8EzGsLwQ0hDlXlKBXUtA9u55qgHffE
+	+54vF4DRY7lJAobChigJW9/RmtzfDHQxwCy+IbnJlfwcArGHp4XgXicJRemvpFoqxjbq+2jkk6b
+	i8tMv5uXUI+Y2eBZGUukgMHJCCpqSbSgmdgCFfc4TmZ+a4OkDg
+X-Google-Smtp-Source: AGHT+IE1Nhc3de9UWe3Uxv90peDfXcg1RuNvCCTJNxAJCrPuuxtt0XQoISjWo9GfCVadN4ymgJNiD6mSYc+5zATWoSA=
+X-Received: by 2002:a05:6000:2502:b0:3a3:712e:c4c9 with SMTP id
+ ffacd0b85a97d-3a3712ec624mr6806601f8f.52.1747771690406; Tue, 20 May 2025
+ 13:08:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250520111325.92352-2-krzysztof.kozlowski@linaro.org>
-X-Proofpoint-GUID: UU6HwpFfu8TsqLNnqmOuwtlrHbh1UaDP
-X-Proofpoint-ORIG-GUID: UU6HwpFfu8TsqLNnqmOuwtlrHbh1UaDP
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDE2MSBTYWx0ZWRfXwvHUOX9JWl2o
- SItqWUm3S10XVVOd/83YvpZC8k3awle989i+2P/hi5TTCsJ6mRkZeKigdIkB/7Gfh/DPvImVGQW
- SWwr1qMFvC4tRWeazD9A/2ZbsDMxufd/Sr0X6kkmooT7wMhA49vVjNnCCRS5Ygma4TLkSmslFwp
- Xm9Nn6+o6Rm+gEq5sHW26fp9W52IF9CfqPaPoDwjMCXX7ThvvjUoa+Q8LXfkaQ5ooNfZEX02xLF
- di6ws1uXxkzV/MN/02Syzmz2FuXK39bNhoTHnDKVRz4Gr57LH/eaQvjD/zcsYyilQSHfqJX/x9h
- mq24DiSqEAcnLRdnhT5jSXFEbMqocH3RcGV90MToxKyNKlIhBDmNTDdQnIyNoUdC5TkWjU0825+
- ojf/ImKON7D5ECWeDPyji1jTYfyBy1Ucrw4jlRBgyp2XsSX2nXmCP+iU8nlZpc5okY7ikNNJ
-X-Authority-Analysis: v=2.4 cv=R7UDGcRX c=1 sm=1 tr=0 ts=682ce0f2 cx=c_pps
- a=wuOIiItHwq1biOnFUQQHKA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=KKAkSRfTAAAA:8
- a=qeqVY09uaiYIOShEJ-EA:9 a=CjuIK1q_8ugA:10 a=XD7yVLdPMpWraOa8Un9W:22
- a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-20_09,2025-05-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 clxscore=1015 mlxlogscore=999 priorityscore=1501 spamscore=0
- bulkscore=0 lowpriorityscore=0 malwarescore=0 suspectscore=0 mlxscore=0
- impostorscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505200161
+References: <20250520054943.5002-1-xuewen.yan@unisoc.com>
+In-Reply-To: <20250520054943.5002-1-xuewen.yan@unisoc.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Tue, 20 May 2025 13:07:59 -0700
+X-Gm-Features: AX0GCFsnSVJV_z_TzSzEMH1vd6p0Zn_P57_mmxCuj59sGtD1WNdRI0jcFppQQ7A
+Message-ID: <CAADnVQKZti=SXM=4owtk9jEqGMcD0mUqb46PNYwhquYfyORUuw@mail.gmail.com>
+Subject: Re: [PATCH] Revert "bpf: remove unnecessary rcu_read_{lock,unlock}()
+ in multi-uprobe attach logic"
+To: Xuewen Yan <xuewen.yan@unisoc.com>
+Cc: Song Liu <song@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Steven Rostedt <rostedt@goodmis.org>, Alexei Starovoitov <ast@kernel.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, bpf <bpf@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, xuewen.yan94@gmail.com, 
+	di.shen@unisoc.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 20, 2025 at 01:13:26PM +0200, Krzysztof Kozlowski wrote:
-> Driver unconditionally saves current state on first init in
-> dsi_pll_10nm_init(), but does not save the VCO rate, only some of the
-> divider registers.  The state is then restored during probe/enable via
-> msm_dsi_phy_enable() -> msm_dsi_phy_pll_restore_state() ->
-> dsi_10nm_pll_restore_state().
-> 
-> Restoring calls dsi_pll_10nm_vco_set_rate() with
-> pll_10nm->vco_current_rate=0, which basically overwrites existing rate of
-> VCO and messes with clock hierarchy, by setting frequency to 0 to clock
-> tree.  This makes anyway little sense - VCO rate was not saved, so
-> should not be restored.
-> 
-> If PLL was not configured configure it to minimum rate to avoid glitches
-> and configuring entire in clock hierarchy to 0 Hz.
-> 
-> Suggested-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> Link: https://lore.kernel.org/r/sz4kbwy5nwsebgf64ia7uq4ee7wbsa5uy3xmlqwcstsbntzcov@ew3dcyjdzmi2/
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-Fixes?
-
-> 
+On Mon, May 19, 2025 at 10:51=E2=80=AFPM Xuewen Yan <xuewen.yan@unisoc.com>=
+ wrote:
+>
+> From: Di Shen <di.shen@unisoc.com>
+>
+> This reverts commit 4a8f635a60540888dab3804992e86410360339c8.
+>
+> Althought get_pid_task() internally already calls rcu_read_lock() and
+> rcu_read_unlock(), the find_vpid() was not.
+>
+> The documentation for find_vpid() clearly states:
+>
+>   "Must be called with the tasklist_lock or rcu_read_lock() held."
+>
+> Add proper rcu_read_lock/unlock() to protect the find_vpid().
+>
+> Reported-by: Xuewen Yan <xuewen.yan@unisoc.com>
+> Signed-off-by: Di Shen <di.shen@unisoc.com>
 > ---
-> 
-> Not tested on hardware.
-> ---
->  drivers/gpu/drm/msm/dsi/phy/dsi_phy_10nm.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_10nm.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_10nm.c
-> index 9812b4d69197..af2e30f3f842 100644
-> --- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_10nm.c
-> +++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_10nm.c
-> @@ -704,6 +704,13 @@ static int dsi_pll_10nm_init(struct msm_dsi_phy *phy)
->  	/* TODO: Remove this when we have proper display handover support */
->  	msm_dsi_phy_pll_save_state(phy);
->  
-> +	/*
-> +	 * Store also proper vco_current_rate, because its value will be used in
-> +	 * dsi_10nm_pll_restore_state().
-> +	 */
-> +	if (!dsi_pll_10nm_vco_recalc_rate(&pll_10nm->clk_hw, VCO_REF_CLK_RATE))
-> +		pll_10nm->vco_current_rate = pll_10nm->phy->cfg->min_pll_rate;
-> +
->  	return 0;
->  }
->  
-> -- 
-> 2.45.2
-> 
+>  kernel/trace/bpf_trace.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index 187dc37d61d4..0c4b6af10601 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -3417,7 +3417,9 @@ int bpf_uprobe_multi_link_attach(const union bpf_at=
+tr *attr, struct bpf_prog *pr
+>         }
+>
+>         if (pid) {
+> +               rcu_read_lock();
+>                 task =3D get_pid_task(find_vpid(pid), PIDTYPE_TGID);
+> +               rcu_read_unlock();
+>                 if (!task) {
+>                         err =3D -ESRCH;
+>                         goto error_path_put;
 
--- 
-With best wishes
-Dmitry
+hmm. indeed.
+
+Jiri ?
