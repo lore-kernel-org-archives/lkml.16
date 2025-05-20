@@ -1,79 +1,94 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BAC01D435F;
-	Tue, 20 May 2025 13:10:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D819A101F2;
+	Tue, 20 May 2025 13:11:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.78.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747746645; cv=none; b=Bdl1eZnX5xS/ybFaj/MlsSYBtNBXFrKllGVFZe3ga99M50jTSBk6IOtI9OkHDYZGqfSKei7H1ry2Lg+jxtV4JM7jEu6K+WXdtIjo53hnc8RLukLFTWTPYdhJxjlkrCUI9I/kxpN3ykHeRw/ILrNUJ3t5Sl31d8DWPQXz4xDcx5o=
+	t=1747746677; cv=none; b=Uf6D17HcrFct4U9OnOF6aOBGLPbxqSnneXKhZOm15pfuk9LaHReJ0LJD0+3JE88uBBvnlhpA3POOixIEze3AZouSMWGBT8TjZoPwi1tuM6R8i1n9Y4tUmeAaWZZ47tE9nYjcFYJJ4Y6eOyQFlY+5UkHF95/j3dvFZWEgqaNpDW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747746645; c=relaxed/simple;
-	bh=xjcsDn8Pb0XQOzvhBZ6YontXS5HX+UgcU0pwJ+Ol8+8=;
+	s=arc-20240116; t=1747746677; c=relaxed/simple;
+	bh=lnhhPRrsOk4MPxnSZJQvFL1yIitI5QzXVX9Hhlx1fa4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tm/DE4ffGbwAb2rRvdUvakPKiGbdie8GgrFmBawg3ptLUoFLTvI/0yHN5OF1RcH7RYDtzLEjQTz16T5bTCR29/oAgbLLkiezcjUClDhWzDn8XvQuMVuQdEXYzxMZnzZZElGWHciW7zAqjpO6P94nMlMCV5olPLGJPk5h+iYtNrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=uyyF6WXa; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="uyyF6WXa"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=7lnb2fa3B6bnU+waKuD8VYR7+DTkGppt/6P7VJxp6SY=; b=uyyF6WXaICTXt3hbiOkMjahne/
-	NmJdwwH+J8CKt4Uj5zFcKkkUYbkhLaXONqoZkWi1EOFDwq46fTGSUla+ghkVsXy2QT+hZgAHo0AFB
-	tuYtLdtYubpe5ffZfMJzM9JgvilB5+B21S5OtBK4x2yQFYULPkHcTTmSFPrcGdiWVYPg=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uHMjw-00D7mw-JM; Tue, 20 May 2025 15:10:40 +0200
-Date: Tue, 20 May 2025 15:10:40 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: stefano.radaelli21@gmail.com
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Xu Liang <lxu@maxlinear.com>
-Subject: Re: [PATCH net-next v4] net: phy: add driver for MaxLinear MxL86110
- PHY
-Message-ID: <c8a05994-367f-42a4-8464-c0a0ea3bc748@lunn.ch>
-References: <20250520124521.440639-1-stefano.radaelli21@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=qWjr5oSZe7xBcl5deiwEV3UIdXd4oHBsoNnLKwOBPxvXZJpGEbrAiVF0YSn444+Ivg2tVKgiaaoaxgT74HKLjJnc7/ntxLkOOXc8fJY6pP+QqIvuVi2KFTffjFzhqYrKAyE/v/WwiDslBe0nH/XuzmEs+c6cTUBw+1S9wgo9TWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.78.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout2.hostsharing.net (Postfix) with ESMTPS id 040CB20091A5;
+	Tue, 20 May 2025 15:11:06 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id CDE601B8296; Tue, 20 May 2025 15:11:05 +0200 (CEST)
+Date: Tue, 20 May 2025 15:11:05 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Shuai Xue <xueshuai@linux.alibaba.com>, rostedt@goodmis.org,
+	linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+	linux-edac@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	helgaas@kernel.org, bhelgaas@google.com, tony.luck@intel.com,
+	bp@alien8.de, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+	oleg@redhat.com, naveen@kernel.org, davem@davemloft.net,
+	anil.s.keshavamurthy@intel.com, mark.rutland@arm.com,
+	peterz@infradead.org, tianruidong@linux.alibaba.com
+Subject: Re: [PATCH v8] PCI: hotplug: Add a generic RAS tracepoint for
+ hotplug event
+Message-ID: <aCx_aXy9MEs6XKZE@wunner.de>
+References: <20250512013839.45960-1-xueshuai@linux.alibaba.com>
+ <87b1f8c6-bd72-b1a8-40a6-bbf552552806@linux.intel.com>
+ <650cd4e4-561b-4d50-9cf2-c601518c9b9f@linux.alibaba.com>
+ <31693574-e8bc-9a56-bad0-6a22280c4b6b@linux.intel.com>
+ <aCxdFm_BpgOTFFUv@wunner.de>
+ <aCxxA-4HEnZ-O2W0@wunner.de>
+ <9b46a12b-90e2-c1ba-9394-5caa23a5cad7@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250520124521.440639-1-stefano.radaelli21@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9b46a12b-90e2-c1ba-9394-5caa23a5cad7@linux.intel.com>
 
-On Tue, May 20, 2025 at 02:45:18PM +0200, stefano.radaelli21@gmail.com wrote:
-> From: Stefano Radaelli <stefano.radaelli21@gmail.com>
+On Tue, May 20, 2025 at 03:52:56PM +0300, Ilpo Järvinen wrote:
+> On Tue, 20 May 2025, Lukas Wunner wrote:
+> > A link speed event could contain a "reason" field
+> > which indicates why the link speed changed,
+> > e.g. "hotplug", "autonomous", "thermal", "retrain", etc.
+> > 
+> > In other words, instead of mixing the infomation for hotplug
+> > and link speed events together in one event, a separate link
+> > speed event could point to hotplug as one possible reason for
+> > the new speed.
 > 
-> Add support for the MaxLinear MxL86110 Gigabit Ethernet PHY, a low-power,
-> cost-optimized transceiver supporting 10/100/1000 Mbps over twisted-pair
-> copper, compliant with IEEE 802.3.
+> It will be somewhat challenging to link LBMS into what caused it, 
+> especially in cases where there is more than one LBMS following a single 
+> Link Retraining.
 > 
-> The driver implements basic features such as:
-> - Device initialization
-> - RGMII interface timing configuration
-> - Wake-on-LAN support
-> - LED initialization and control via /sys/class/leds
-> 
-> This driver has been tested on multiple Variscite boards, including:
-> - VAR-SOM-MX93 (i.MX93)
-> - VAR-SOM-MX8M-PLUS (i.MX8MP)
-> 
-> Example boot log showing driver probe:
-> [    7.692101] imx-dwmac 428a0000.ethernet eth0:
->         PHY [stmmac-0:00] driver [MXL86110 Gigabit Ethernet] (irq=POLL)
-> 
-> Signed-off-by: Stefano Radaelli <stefano.radaelli21@gmail.com>
+> Do you have opinion on should the event be only recorded from LBMS/LABS 
+> if the speed changed from the previous value? The speed should probably 
+> also be reported also for the first time (initial enumeration, hotplugging 
+> a new board).
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+One idea would be to amend struct pcie_bwctrl_data with an
+enum member describing the reason.
 
-    Andrew
+pcie_bwnotif_irq() uses that reason when reporting the speed change
+in a trace event.
+
+After an Endpoint has been removed, the Downstream Port or Root Port
+above resets the reason to "hotplug", so that the next link event
+is assigned that reason.
+
+Similarly pcie_set_target_speed() could be amended with an enum argument
+for the reason and it would set that in struct pcie_bwctrl_data before
+calling pcie_bwctrl_change_speed().
+
+Thanks,
+
+Lukas
