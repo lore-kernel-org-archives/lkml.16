@@ -1,122 +1,171 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD2DE1D8DE1;
-	Tue, 20 May 2025 20:20:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 529A6286D79;
+	Tue, 20 May 2025 20:20:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747772432; cv=none; b=RcfVwmIyWkeleS/uo+RIKAAuUHbcN08EHA08qs/jVG7FA5DCfQSPalw/mtsIHvu5hJXN0AzxG65Ig+i6nFyzbntaavH7bQTnguP1fXi1ulOdYCAgcyKDduvhXsww/j70fTqmmgcKaQHjEAXaHxdvgwlwenlxj2ZvnM7WHkH8vLY=
+	t=1747772450; cv=none; b=qTt1qkUSE8BCLSXBhnbXdFQJTtAI3fTnnqmn78SNXq6JeHZRnzzAl2ucsIrbF+Vi31UWFp9i5Qamzdcl9TwIT2SwEx2zmoRom3OzZIA2zsiznw835zNo5FcHlTHTdE7gBxL7ObRVDi15Bp9RQT/QHzHHdJ6C0Z5MDT1GMc51bgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747772432; c=relaxed/simple;
-	bh=TB7KUPAA/+hO+X3P8oeWLd2+l/tAXTTsTaO4pzWAyYE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OmGnzIcCCJSTabcQ2OXf8mgSxAJ6F4D4Y4PSqt7wIWigoYLEtIsK5Pe9/NVKVQiPjIV9+K9oY4+gifV6Ot+B+a0Z+0t4BBq5dT5wCDQXJbdA4PNq+Vf6y7eZVa3K4CiJLQ+60bOzt/j/5U0Yupb8WPUxGBuBcfDyXCkhIv3Watk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i1s/Xc7/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747772450; c=relaxed/simple;
+	bh=cZ+4U9kgatmoeCSsgij4EoatV0fM1sck7jQtvddR508=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tWCOfJFALOhaMGwnnIvIhDAV9Mz/xewiqRg8HVTPN32brcIFwJLp2/cywOE7FG2PAZbQYlNZX7CfNbilktc5ssgJy5VpRBCgOV9dNDE1rpxDaDe9NgidEKwzCX1ofamU3YBodg5ELJ9M6TS2uk7FcB7uryCb4xh9iDeqpsvmJgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZiG/pXXj; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i1s/Xc7/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD8D2C4CEE9;
-	Tue, 20 May 2025 20:20:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747772431;
-	bh=TB7KUPAA/+hO+X3P8oeWLd2+l/tAXTTsTaO4pzWAyYE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=i1s/Xc7/9ulM1jdL58nP47MVZZcNNoY1dt9L6rLBL6GtQWruSlSfmCWGsgZWJQNcx
-	 dSh8FdV53DIFTLZPsZ1MZvRGr1YKl1gP/e53f6LB9BvTU/K+HeI4kD/ruIUaiz3vne
-	 3qdih0e6to7Tls9aXCC6NWms3U+moB3j2Tv0S1wQ41av5VF+gwbwTznD/myqREisKQ
-	 zhVq17wHiXXawg1i8GVsA6PwIu7oQf8ZlfqfznPqVdc/cUCQHsEOXP162L1JUK2+49
-	 IEpxi290jZu9ZP1g6gN6b/QLortNeDTiNVB9JOwp6Ti6B/iTU5QX314Q3MGHBJ7SqS
-	 cVCgNezR+i3Pw==
-Date: Tue, 20 May 2025 13:20:28 -0700
-From: Kees Cook <kees@kernel.org>
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Jann Horn <jannh@google.com>, Max Kellermann <max.kellermann@ionos.com>,
-	"Serge E. Hallyn" <serge@hallyn.com>, paul@paul-moore.com,
-	jmorris@namei.org, Andy Lutomirski <luto@kernel.org>,
-	morgan@kernel.org, Christian Brauner <christian@brauner.io>,
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] exec: Correct the permission check for unsafe exec
-Message-ID: <202505201319.D57FDCB2A@keescook>
-References: <20250306082615.174777-1-max.kellermann@ionos.com>
- <878qmxsuy8.fsf@email.froward.int.ebiederm.org>
- <202505151451.638C22B@keescook>
- <87ecwopofp.fsf@email.froward.int.ebiederm.org>
- <CAG48ez1VpuTR9_cvLrJEMmjOxTCYpYFswXVPmN6fE3NcSmPPVA@mail.gmail.com>
- <87wmagnnhq.fsf@email.froward.int.ebiederm.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZiG/pXXj"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-231e331baceso44921655ad.0;
+        Tue, 20 May 2025 13:20:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747772448; x=1748377248; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=TKfpG0z72c+FzPNEz+Be4a0vT+/uMfpo+ezumBqOcCY=;
+        b=ZiG/pXXj+Kl9yn3u/LF8wlQAj3PyAZXOaTrNZtSFVzHfodUbqzmxewcSHTKhGiUSTC
+         8/mNAtAxrFGcuY9SKmjMtDnxzolIYwBi4Sdet0vGHBAb6Ttj+Y3aNTYY0yuQKiwE6/Ng
+         lgOwviaTzC9shdaN0tD+DXTxrqGUBXi+plsEvO/3hs470UwYdxxQ5aU+FlshX48PjG1N
+         osDLJSok6ny5WTrqiaVAfraOST1Pp7IkoR0o2JFopVixR0KovaQAyhBGArMR24iKev6I
+         BQ8PCVLqfTDQ1Ub+4O6livK2CI/Kiiaz7946daXlBTiEicB7oJBnM8nE/k5oYgGzswnq
+         rMJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747772448; x=1748377248;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TKfpG0z72c+FzPNEz+Be4a0vT+/uMfpo+ezumBqOcCY=;
+        b=dHLtWFFQsJQ/8PgtotxFMp+vfH7Jz8zOf9fxmO2v59bvsmalTLwIcNe8mV/2xpXzgk
+         TelTN7lFp8OLgfUq16ueDyAMGssqtbK0VDXeEJDl3YAkFYLgT/1Xk2Av2xhJ5qHGpcu/
+         1Sb6s1ObLvJbD6gOna80AQ7uG/Nqya7YgLwfDfMNmYdb3hoX/LxT3YXaX9NFH5/n5RQb
+         V1YwIgwWRUky3r0ClZ311HIOkp1GCAVS6XDM8QOjr08uR9nzM5rbtVctFbLvsSM8j+0N
+         Bh245/N4avfy3surcaOS9RP3MrkTDpwXPsCooIZ+mKk1u//hMASEE6YczPNzOd+y/CAS
+         ENPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVe5Rl+b+ZJbb+GcgekHe8+JVM7Ycip6XmyL+SOth/BM0Vo5W6hyDoWYhvwDRGa/UsoNUDaIwY0fcu7Jes=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNfH69j/E7qglEO7tkKCsYTajojhCrkNxDV26CWWfNqv04Wwwt
+	tF661thbB8E2f5bgiUBxkzjAuumOLbr2f84FtknERdB211wX/ySkh4ZqJFkd
+X-Gm-Gg: ASbGnct9mbP7WI8Z0KUZSmzrGqlqT52gifqXEK5oc6/QdVcTf6LLa6A/eWofthP5yrf
+	nJMTsIEMiIl9m1GWP5KsLc1hsuUzZKaTzbrDd8eayOTsEnyCfx4ypLF8TfOwYi2PoPPhZ4dbv/I
+	naCTUI8/kldGjNx1EigKM6Sh7WgrHQeYHlN4JWm9RKn6Ftro/9jopiGjpZOd0qoxlFWkUFmj0fR
+	jJyP6CfQnEoyoDFRsOGtBt0Ar2wsQ4T/GW+BfIFkT9nHwcVJo2C7c1bR5i8oa8GfjcLUbYf/p2p
+	UBBdguphyBuN45HFU6Tte0R0HdDlE+643cAp6bwb+F7Q+t53vneZq0zBdRoiOmXCunX8Mbh3WBl
+	cxBeIwBxu+Nnu
+X-Google-Smtp-Source: AGHT+IEPd4NXgZVBHc2xGeFDUKqvlOteo5oD3ZWsA74QUPNrv0GAiRl08iSNIstGUUy5HKdZqaFkMA==
+X-Received: by 2002:a17:902:f691:b0:220:e63c:5b13 with SMTP id d9443c01a7336-231d45aba50mr270363665ad.46.1747772448068;
+        Tue, 20 May 2025 13:20:48 -0700 (PDT)
+Received: from localhost (c-73-158-218-242.hsd1.ca.comcast.net. [73.158.218.242])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-232044a0a23sm62082755ad.112.2025.05.20.13.20.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 13:20:47 -0700 (PDT)
+From: Stanislav Fomichev <stfomichev@gmail.com>
+To: netdev@vger.kernel.org
+Cc: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	willemdebruijn.kernel@gmail.com,
+	horms@kernel.org,
+	stfomichev@gmail.com,
+	linux-kernel@vger.kernel.org,
+	syzbot+b191b5ccad8d7a986286@syzkaller.appspotmail.com
+Subject: [PATCH net] af_packet: move notifier's packet_dev_mc out of rcu critical section
+Date: Tue, 20 May 2025 13:20:46 -0700
+Message-ID: <20250520202046.2620300-1-stfomichev@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <87wmagnnhq.fsf@email.froward.int.ebiederm.org>
 
-On Fri, May 16, 2025 at 06:29:21PM -0500, Eric W. Biederman wrote:
-> Jann Horn <jannh@google.com> writes:
-> 
-> > On Fri, May 16, 2025 at 5:26 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
-> >> Kees Cook <kees@kernel.org> writes:
-> >>
-> >> > On Thu, May 15, 2025 at 11:24:47AM -0500, Eric W. Biederman wrote:
-> >> >> I have condensed the logic from Linux-2.4.0-test12 to just:
-> >> >>      id_changed = !uid_eq(new->euid, old->euid) || !in_group_p(new->egid);
-> >> >>
-> >> >> This change is userspace visible, but I don't expect anyone to care.
-> >> >> [...]
-> >> >> -static inline bool __is_setuid(struct cred *new, const struct cred *old)
-> >> >> -{ return !uid_eq(new->euid, old->uid); }
-> >> >> -
-> >> >> -static inline bool __is_setgid(struct cred *new, const struct cred *old)
-> >> >> -{ return !gid_eq(new->egid, old->gid); }
-> >> >> -
-> >> >> [...]
-> >> >> -    is_setid = __is_setuid(new, old) || __is_setgid(new, old);
-> >> >> +    id_changed = !uid_eq(new->euid, old->euid) || !in_group_p(new->egid);
-> >> >
-> >> > The core change here is testing for differing euid rather than
-> >> > mismatched uid/euid. (And checking for egid in the set of all groups.)
-> >>
-> >> Yes.
-> >>
-> >> For what the code is trying to do I can't fathom what was trying to
-> >> be accomplished by the "mismatched" uid/euid check.
-> >
-> > I remember that when I was looking at this code years ago, one case I
-> > was interested in was what happens when a setuid process (running with
-> > something like euid=1000,ruid=0) execve()'s a normal binary. Clearly
-> > the LSM_UNSAFE_* stuff is not so interesting there, because we're
-> > already coming from a privileged context; but the behavior of
-> > bprm->secureexec could be important.
-> >
-> > Like, I think currently a setuid binary like this is probably (?) not
-> > exploitable:
-> >
-> > int main(void) {
-> >   execl("/bin/echo", "echo", "hello world");
-> > }
-> >
-> > but after your proposed change, I think it might (?) become
-> > exploitable because "echo" would not have AT_SECURE set (I think?) and
-> > would therefore load libraries based on environment variables?
-> 
-> Yes.  bprm->secureexec controls AT_SECURE.
-> 
-> I am fine if we want to set secureexec and AT_SECURE in this situation.
-> It is a bit odd, but I don't see a problem with that.
+Calling `PACKET_ADD_MEMBERSHIP` on an ops-locked device can trigger
+the `NETDEV_UNREGISTER` notifier, which may require disabling promiscuous
+and/or allmulti mode. Both of these operations require acquiring the netdev
+instance lock. Move the call to `packet_dev_mc` outside of the RCU critical
+section.
 
-So the idea would be that uid/euid mismatch would still induce AT_SECURE?
+Closes: https://syzkaller.appspot.com/bug?extid=b191b5ccad8d7a986286
+Reported-by: syzbot+b191b5ccad8d7a986286@syzkaller.appspotmail.com
+Fixes: ad7c7b2172c3 ("net: hold netdev instance lock during sysfs operations")
+Signed-off-by: Stanislav Fomichev <stfomichev@gmail.com>
+---
+ net/packet/af_packet.c | 20 +++++++++++++++-----
+ net/packet/internal.h  |  1 +
+ 2 files changed, 16 insertions(+), 5 deletions(-)
 
-That seems reasonable.
-
-I was already waiting for the after the coming merge window to put this
-into -next, so if you cant update it for the AT_SECURE logic, we can
-give that a try and see what we get.
-
-Thanks!
-
--Kees
-
+diff --git a/net/packet/af_packet.c b/net/packet/af_packet.c
+index d4dba06297c3..5a6132816b2e 100644
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -3713,15 +3713,15 @@ static int packet_dev_mc(struct net_device *dev, struct packet_mclist *i,
+ }
+ 
+ static void packet_dev_mclist_delete(struct net_device *dev,
+-				     struct packet_mclist **mlp)
++				     struct packet_mclist **mlp,
++				     struct list_head *list)
+ {
+ 	struct packet_mclist *ml;
+ 
+ 	while ((ml = *mlp) != NULL) {
+ 		if (ml->ifindex == dev->ifindex) {
+-			packet_dev_mc(dev, ml, -1);
++			list_add(&ml->remove_list, list);
+ 			*mlp = ml->next;
+-			kfree(ml);
+ 		} else
+ 			mlp = &ml->next;
+ 	}
+@@ -4233,9 +4233,11 @@ static int packet_getsockopt(struct socket *sock, int level, int optname,
+ static int packet_notifier(struct notifier_block *this,
+ 			   unsigned long msg, void *ptr)
+ {
+-	struct sock *sk;
+ 	struct net_device *dev = netdev_notifier_info_to_dev(ptr);
+ 	struct net *net = dev_net(dev);
++	struct packet_mclist *ml, *tmp;
++	LIST_HEAD(mclist);
++	struct sock *sk;
+ 
+ 	rcu_read_lock();
+ 	sk_for_each_rcu(sk, &net->packet.sklist) {
+@@ -4244,7 +4246,8 @@ static int packet_notifier(struct notifier_block *this,
+ 		switch (msg) {
+ 		case NETDEV_UNREGISTER:
+ 			if (po->mclist)
+-				packet_dev_mclist_delete(dev, &po->mclist);
++				packet_dev_mclist_delete(dev, &po->mclist,
++							 &mclist);
+ 			fallthrough;
+ 
+ 		case NETDEV_DOWN:
+@@ -4277,6 +4280,13 @@ static int packet_notifier(struct notifier_block *this,
+ 		}
+ 	}
+ 	rcu_read_unlock();
++
++	/* packet_dev_mc might grab instance locks so can't run under rcu */
++	list_for_each_entry_safe(ml, tmp, &mclist, remove_list) {
++		packet_dev_mc(dev, ml, -1);
++		kfree(ml);
++	}
++
+ 	return NOTIFY_DONE;
+ }
+ 
+diff --git a/net/packet/internal.h b/net/packet/internal.h
+index d5d70712007a..1e743d0316fd 100644
+--- a/net/packet/internal.h
++++ b/net/packet/internal.h
+@@ -11,6 +11,7 @@ struct packet_mclist {
+ 	unsigned short		type;
+ 	unsigned short		alen;
+ 	unsigned char		addr[MAX_ADDR_LEN];
++	struct list_head	remove_list;
+ };
+ 
+ /* kbdq - kernel block descriptor queue */
 -- 
-Kees Cook
+2.49.0
+
