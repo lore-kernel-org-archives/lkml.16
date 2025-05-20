@@ -1,117 +1,91 @@
-Received: from mail-yw1-f225.google.com (mail-yw1-f225.google.com [209.85.128.225])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF5721FDE19
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 19:33:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.225
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EDE524C692;
+	Tue, 20 May 2025 19:37:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747769624; cv=none; b=f39y755ZZ8R0mNBNy/vcIBFTl56wkbenXmJdTu9KcAXZtWt6fuFc/I8our16nSzjUSAiG3cIvFRNKf+Ydlszu35rLyDH3tbiBaxtEG/TawTg2Qop3D6nSBM4krXNToMRwTPijAn75cS9whioH8jW31308vfuY9RPZSYDaLbpCOs=
+	t=1747769833; cv=none; b=eScNpyA0l19oUbscCs6MKSQBvRgqvGcLQRMTDlI98OcHovphUuPr5Q8l3Xos092mtXsxxbsBl0Tb6Tsax079CPglgdi32e1KW9ZYhX+Pq/L1+0LOm8+zobtB+2/E8NMWzr8ykJ0kaOevgEgZaf0hz0QZM6HeBS5LAQy1qCU1rLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747769624; c=relaxed/simple;
-	bh=l+qROxyg0ykG2Mdiot91acNqc4DuZpFYb+lXFeYrL9M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t3DlaRMCmAubvJqabV4DE9GU8RO6W7w/ij7Dtr6yaTI10AvoZiE38ZwxhDCgwCX6gw6B/Ga7nXJ+Lx5JIOLhNuY7JLYAMbKgghr88eMfmxGS3xz1fAuRl4xgP4iOPv3OIX0svDzJKsfsfHi3GChrQsg249QTwubfwKNJ+x3od9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=ZaJpf29t; arc=none smtp.client-ip=209.85.128.225
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	s=arc-20240116; t=1747769833; c=relaxed/simple;
+	bh=yJmrJvk+batnwnKet1/z0D18l948QTmCnCbwr2N/m5I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uhleKY+cyiWnMKUft1dpJv/XbKIT8PgOPwVKpdRn452kjCsl7LkBpxefyaVM6Z/1URVl1zddIyj4Ta6b6r2FzeY5o5tIe5xZzoQ+m1WvtfnOif13HTYQIeHiYi9087C45chphCXUkyrhFlDr36NnkPwAKBNST4CWq+X/+VvKevQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=con0xA/k; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="ZaJpf29t"
-Received: by mail-yw1-f225.google.com with SMTP id 00721157ae682-70c9fabeffdso4164047b3.1
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 12:33:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="con0xA/k"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-231c88cc984so6544105ad.1;
+        Tue, 20 May 2025 12:37:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1747769621; x=1748374421; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=6mWsxB/jvz+1DvjRqofhZH3x2dukYd3c9R9FoQWshso=;
-        b=ZaJpf29tnEy0P00YIglsr/wr2nAuEipKt0gvk3ukCjM9A7vt9qFHFjfFFiPcbbOI/r
-         GjpHVEU4zQ8vwDTLkiNBHq54+C8gzgavHeBF2R2AfivdWt5keJXr+kdkI489AVt5UXeq
-         hxFD/CmYazLpQDoFBa2XPbHF0CSctuBIzK8zvv1chxXHXq3sQfNiCO0RrWppXEmM8gjo
-         MhKO8SzeaoK+fr5QQLU5x2RpsVsxJccfHQDBpWaLCVEKYLcRjBOA4DsKj8EogEwbCWYm
-         iXzVtDFlEwIGHnmSZkzdPck6pscr2Y9XSvo4Pxnk54dWEGNPOjwKn/Y3Nma7hhVWpLS+
-         b99g==
+        d=gmail.com; s=20230601; t=1747769831; x=1748374631; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yJmrJvk+batnwnKet1/z0D18l948QTmCnCbwr2N/m5I=;
+        b=con0xA/kWTW/xK0tg040qkLzknxgv8KC85yzKgZ0hvHhaKduUPmF86SOjae/CE3RR8
+         psKpvvSsE8Zy5BKQBzy5TpbEeYOLcFk58s+HThhsq31t5KffC2wmMeSSkNl7IUNtMjLh
+         puvUk6YDDg4CeWT8fD4u/63aZ1OIH2naYvTVnzXYYK2ReNArm2VPqhfVUkG5N8VquhHG
+         Gwz7bJKif0lUhz1puLougTi8d2xYTT2GlhZ9MbSYf/rW95T24vM+j+DP4L8wp002Rdxx
+         AhVWCUhoZx0GLr+uwAsEryLCRjGtyz2ReIl/G7jWH5DxZm9CsiaqE2UHV5IBnkezYw7f
+         7NUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747769621; x=1748374421;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6mWsxB/jvz+1DvjRqofhZH3x2dukYd3c9R9FoQWshso=;
-        b=OEMNJfluyz+3rlA5JZI8DMhRE1f4U9jlG+uaeZlnxLaixQZAeCHqmSedOfp9ZpfKAt
-         IDrkwm0JR8czTVqrhgU2OTRbbj5c8GTcPgw2DzfAEYiL634HjbI4LsFvSoQl90uh61V2
-         Asmfb2+6GcBVsZkGvhJBQFbeyoBvzVb1NCd66kPsH1xtfX2N4li+gz2WE4QvRKiM1C6z
-         yCiPsibpJ1EBA26SRTS/d2NS+C9Sshd2yEkk/YtQMblIHymm98ZRC1HOeKrasy3dHE2r
-         DSjIa5FtxPR/ilB9t54dvMYp/vLuDpju4beaTOEPwBc+eQXx60X48ddsiudTV3i4o9GR
-         jCyw==
-X-Forwarded-Encrypted: i=1; AJvYcCXaLZvyz5ddhOzY3s2FhKQB6jo3GqOOQIAb2/bfQIa1iXN3Fb166oOO0DewH6sz7zh9GTbMYhEYDFfrAYA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwL0RXfeJ5z8q2hPjWQWxWllSaIPZAlPM6gxGQBiNoTXaNUnpTT
-	60d6hDw9Dux9aBnbaPICbIxIs26g85ukMoDlPWv+DZ6apShHE0NfouVW19icXOnXjHCCPg6QsO7
-	3siEdSyAAgdWn9JZGgQSKbhRnnbJCkYSM3JIOYXBFNXF8syiPj3z4
-X-Gm-Gg: ASbGnctSBDkwlJDM7ZK0zGEJO+mhOLIU58X1iZ8xKe2e7FafyoyEo3m5UAiBTBA8m2A
-	UvRfki0uZJn7NJktOfIE4Y/jhJLdk1T8KhaFvKK/dwiZ8I5hRq+yUtKh/YWIVRZquxveiSPNTJt
-	NSpndJxk/AimwYk15RnbacoVukl3dhknOqIsKIvmrnJkW9KV9rv3KE96uuEcdJZnoRtKviW8ibh
-	QZ144bqo5aa+gIVnGcPXpBOtkaQqw+PIz7tBLFDwckguLlD2jKHDDCTles+rTt78GUAob7GwNND
-	FjXTksuC0A3UUKbyrN4iKQpgJmnJlw==
-X-Google-Smtp-Source: AGHT+IEUva7c4rpdUdj0LTfCEBCJ0Q+y2yyHuXGIJcNMe/w5WuNfZ6Q+mBZ5Es7cTzaGxsdJNmpHcyG2e6Ch
-X-Received: by 2002:a05:690c:74c8:b0:706:cc3d:61ef with SMTP id 00721157ae682-70ca7be358emr131945217b3.8.1747769620584;
-        Tue, 20 May 2025 12:33:40 -0700 (PDT)
-Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
-        by smtp-relay.gmail.com with ESMTPS id 00721157ae682-70ca84bee70sm1876407b3.52.2025.05.20.12.33.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 12:33:40 -0700 (PDT)
-X-Relaying-Domain: purestorage.com
-Received: from dev-csander.dev.purestorage.com (unknown [IPv6:2620:125:9007:640:ffff::418a])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id F1119340441;
-	Tue, 20 May 2025 13:33:39 -0600 (MDT)
-Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
-	id E3389E41C7B; Tue, 20 May 2025 13:33:39 -0600 (MDT)
-From: Caleb Sander Mateos <csander@purestorage.com>
-To: Jens Axboe <axboe@kernel.dk>,
-	Pavel Begunkov <asml.silence@gmail.com>
-Cc: Caleb Sander Mateos <csander@purestorage.com>,
-	io-uring@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] io_uring/cmd: axe duplicate io_uring_cmd_import_fixed_vec() declaration
-Date: Tue, 20 May 2025 13:33:36 -0600
-Message-ID: <20250520193337.1374509-1-csander@purestorage.com>
-X-Mailer: git-send-email 2.45.2
+        d=1e100.net; s=20230601; t=1747769831; x=1748374631;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yJmrJvk+batnwnKet1/z0D18l948QTmCnCbwr2N/m5I=;
+        b=oowsOODQP+8zKYXMJh/LViE8MORdKTvWh+trT52xO65YhII/P0OO1G8mehSnZ/3QvC
+         8rydxQfzeBuUyrnlZVLZVMPYU6P8dlQmE+c0oXNTHrjaAl73A+K/oVV9NhW8LdNeRkio
+         60bsRaaTGcdgBKN21lsPkwRDkXav06phcs3C55eRAQJDo5eUPf5kHqXRDT6GQxgTiZlA
+         HJuAsltBZTLCjKp4+B9ALRseCIbYMohBYUxv5ChxKkSR+8FvPZL2fQ4q89sodgtLtsRA
+         0sPr8I9LXq3a6zWmYRcU+Xmo0R6kvkUim6/BRrLZotQg+foF1fe6eXxPh9I5ZzqKAWA1
+         ru8A==
+X-Forwarded-Encrypted: i=1; AJvYcCU1H0gc+KIyb/h0cIjM9R6U/MGJqkPvikQkaQO0BedM9Jk0DC4neY2RRy1SZQYn8GgA9DR8/8Jfq90ybXX3@vger.kernel.org, AJvYcCU3nUpYi0Ynk5H4NRexqZDFPP5WYXnzv1xse3wTuTA7UTK3C3ZXaV6XCH4aG1l9NIr3sAuSh+PDJUEXKn4=@vger.kernel.org, AJvYcCV/wpMYiUWdGkSSKTkufQJI94KSbJ9/hIU/wnH54s9iywr87EoX8zRUK201GRREI50vnJdbY0AU2qWhifrf3wY=@vger.kernel.org, AJvYcCV1tyAPx7O1a/+5n9s2lb+WYUh2dqaQ47gbcvrJoN4ix63Ms0tD/Ne9fLeT8pg+IiB1oPQJEHjt@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfNT85DJds+GEFNWXSi4vH0KoqjDucVlj69BXBX1CQ0v6c1TzI
+	RizhYGLgWjbWAEsueQSD1cI0XNzmIuyK49TJ4RvDBaSCTE6bunpiwCvUQiWN0WP0lntgC7mlKIJ
+	JME3k02z8Bbo8whDBUYYuuRXYsfeA9Qw=
+X-Gm-Gg: ASbGncsEvV+7BG0idjRWjVr1MZTbgsqCn4JMT1qtyPLDkcsx+iAtWz9VM+ikWmuDJ4I
+	bnfqZP4fcaOipDobIqMW0Iu2vPx0wdu36sd3JiHLCIKUAVMsjIkDmqAq5Du/YqfCiWIgLkZzYOp
+	tW+bVQrKYak/twFvyJiVCiHb7LB4l+Hbav
+X-Google-Smtp-Source: AGHT+IHRYWQO+o6MeHbMj6f06qEP8DvM7w1Xe2r2Fhyflg1I5VaCbhW3BSNMk/qJJgj1bw9CC+AcMMksSMpaZZLrGkA=
+X-Received: by 2002:a17:903:1aa7:b0:224:1212:7da1 with SMTP id
+ d9443c01a7336-231d454c962mr86733025ad.13.1747769831293; Tue, 20 May 2025
+ 12:37:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250520192034.889415-1-ojeda@kernel.org> <CAJ-ks9=4DJdbUBiy_45wWPviOs48NEK1DmeqWnDaFSpkoda_GQ@mail.gmail.com>
+In-Reply-To: <CAJ-ks9=4DJdbUBiy_45wWPviOs48NEK1DmeqWnDaFSpkoda_GQ@mail.gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 20 May 2025 21:36:57 +0200
+X-Gm-Features: AX0GCFv7GwY_uuzeDx4i5uB4OAE_8m-4VXTRgK6xXtbANDNefPefyVLnTkVFpw0
+Message-ID: <CANiq72mZafMsLOnLHGTsn_2yfYy4xf=OrTVHR68EqAx+6OBdww@mail.gmail.com>
+Subject: Re: [PATCH] rust: kbuild: rebuild if `.clippy.toml` changes
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Masahiro Yamada <masahiroy@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas@fjasle.eu>, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-io_uring_cmd_import_fixed_vec() is declared in both
-include/linux/io_uring/cmd.h and io_uring/uring_cmd.h. The declarations
-are identical (if redundant) for CONFIG_IO_URING=y. But if
-CONFIG_IO_URING=N, include/linux/io_uring/cmd.h declares the function as
-static inline while io_uring/uring_cmd.h declares it as extern. This
-causes linker errors if the declaration in io_uring/uring_cmd.h is used.
+On Tue, May 20, 2025 at 9:24=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
+ wrote:
+>
+> It is possible to do this only if CLIPPY=3D1?
 
-Remove the declaration in io_uring/uring_cmd.h to avoid linker errors
-and prevent the declarations getting out of sync.
+I kept it simple on purpose, since we will not save much (changing
+`.clippy.toml` is quite rare to begin with), but I can add a
+conditional (likely in a variable). Not sure if it is worth it.
 
-Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
-Fixes: ef4902752972 ("io_uring/cmd: introduce io_uring_cmd_import_fixed_vec")
----
- io_uring/uring_cmd.h | 6 ------
- 1 file changed, 6 deletions(-)
-
-diff --git a/io_uring/uring_cmd.h b/io_uring/uring_cmd.h
-index b04686b6b5d2..e6a5142c890e 100644
---- a/io_uring/uring_cmd.h
-+++ b/io_uring/uring_cmd.h
-@@ -15,11 +15,5 @@ void io_uring_cmd_cleanup(struct io_kiocb *req);
- 
- bool io_uring_try_cancel_uring_cmd(struct io_ring_ctx *ctx,
- 				   struct io_uring_task *tctx, bool cancel_all);
- 
- void io_cmd_cache_free(const void *entry);
--
--int io_uring_cmd_import_fixed_vec(struct io_uring_cmd *ioucmd,
--				  const struct iovec __user *uvec,
--				  size_t uvec_segs,
--				  int ddir, struct iov_iter *iter,
--				  unsigned issue_flags);
--- 
-2.45.2
-
+Cheers,
+Miguel
