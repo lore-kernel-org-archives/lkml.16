@@ -1,97 +1,248 @@
-Received: from sonic311-22.consmr.mail.sg3.yahoo.com (sonic311-22.consmr.mail.sg3.yahoo.com [106.10.244.39])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2DB137160
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 02:29:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=106.10.244.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FDCF1E492;
+	Tue, 20 May 2025 02:36:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747708174; cv=none; b=AlgQ2U49q3bjo0CtH92vvjNLgH9W5zqxYUdqrjdFbWySV7Wdk5NqUjEoM22mCpRDCoiIQO0Ose9s1AYTT08RVU4EEkhCRBOyCEETRc91Kx5QpbprZi3gSvwMgCaffnwxnWhKsIgFYno1wXwJBgntZ+xfC0ySUgrzpr76U3c07a4=
+	t=1747708578; cv=none; b=RELpW0uOvD+M6sX9j23vaz72qfVCDZbwhhN1fmJV5WNrhw1skMSK6mGdaFTRhA6NYgNQ8LY7kZQqfTkAU43RzUbufZ8AuHUjKvyk/67gw5WLNhG5fFPrrXikZ/rjnWF1t+y2PMWIHtsq6ih2jEA75EyxNYieOi7af7ugiJ7TkMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747708174; c=relaxed/simple;
-	bh=ZrnAq0IuNgUpeEiPhB3wQpdZsL7zL3sWVc2GoRNIiiA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:References; b=Br8o6R5sYCVEhYVGWzkMVzdKAmRQB0UrHP9B0Cvj0cOyWSH2pT7SOHOcTpeZrXMc0KtVd5wYfMSAMCs4wNS+xK5lxmwNzbmB3dT6mpg+sqhyKnuOZyZkI2UtYhaOpkQEI/3FT6w+d9GuPA38f2ujzoEoGlDqYP6qRp1Oqd3981U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com; spf=pass smtp.mailfrom=yahoo.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=MbBN47Ju; arc=none smtp.client-ip=106.10.244.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
+	s=arc-20240116; t=1747708578; c=relaxed/simple;
+	bh=7KpnOLhxcCredMBeviPLH4FL4tigVI7I8UfgLjMf5vE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Y4unAZ86Y2i4yMak7SyIyXijnQvJ7WquBbIA8VQojrcQChgiVnr6lsJvVR8k3DghnxVctU1j77F3lpF4IaEuRDJ3+9fyO6n7g21/vYXcJUaecwc/FXq7xmt9DSlA3u9CXcPPVG/BB44ukatA48hA1qK2KdqhYfoABmjI4ediamw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=fXhvvNke; arc=none smtp.client-ip=115.124.30.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="MbBN47Ju"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1747708165; bh=dMhdvCMDHfOzaQHLfNHzAlqFXumuXI3KNrHscno3n5A=; h=From:To:Cc:Subject:Date:References:From:Subject:Reply-To; b=MbBN47Ju3PQTho3Y+szJWk+kBNSqOW9Db/BEPIsES34BU1qBtWm0WPXtCeeXj3vJnP+UmTHUae18g+XpUdf5Qlu8no+iOqhGHKJRCwvnW2CTu9sQYuW/T2C9ktrapy5ZhT3V4S8q////ncAS3xLEagAfvEW6dsBwd3vOQd0M4+pX3P5Wf99/2TD30QStaiIvtCzFzZcKOGG//LmiZswX6KxhHrRH+ie72L8cfsqBF3eaf7MqCOjmQanFHNKEWiwAQlYTJrheLeRd0bnNKhl+ht/TV+sp5D/p/FMq0apNZTIIRB+rhvM3EjRpI4ktQwZYu0FMpNWpOjYiPWMCevTqmw==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1747708165; bh=tyskrGpds4aenF9KAOE0r1akmL1FGG3JFNT59a919GH=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=E/r3FLUGku6RN1PlAsHPgQHZLZLw0A8l+nfoRKZz6xS3JXC05lyKAGyPvkd2FyPsyAJaR/if0psHeQ7oPr33I7+ax3vKAvmBQzVlh/TjMdR9GlzEE1lJEufUNdb8olZXUcXVVk3Ixb30FT1BUXtl3IjPHJx5QZMkR+q8Iu9s/Ke8bWNQwIh0e/58/hMIqcfnNMXTKu2ty9Zc9UinhV1xHhJWgQQN5tKJLODgvfc9zjRe5GHbDIQhWSg/KbCoBe6dTu6iriA7pHOFZbK+uK5Dbo2P9VZYV7N70vkXKH9qNYfqqx2amscB/GuwCdtTGek5L0y85wWJomsAvRLFfFOcqQ==
-X-YMail-OSG: ctBhk54VM1l95g47RH7NymbbDYogTKxxIwSq8UVbxj9QOpPW12wokiGbQ00QAxh
- tGJhs0TeJWLUCMSJGOdlHFcTd6.sO4W98HkhH71uZBAcdx_ISgdwN6hn4JBYZuLx2UpGgHIktHyE
- U4DMItDKzLPjiEGOXrJaWhUmxJrwy6_TcwgtrzoCnoSqZC2CUjloTVkJrRamqphRX2uxSvz.vAG.
- DI1MNkIV..y8P2dueKBi1pa7EqWwVu7UCZtVOWyi0pl1TBvH_ddQxxs66dww104mds.roXfMV3AI
- nrAvs7MITnTttwdKy1S4h4jDr0d7fiGacusUhAOb.N0pZiOObnVUayaTAU4a1JcXYSipSiQfVMGN
- MDaM5mefUU83dvIvBOb18RGWTAThnn_Pq0mEl8071tI1c2OR.suDAZXi.TBscHwitVhUVBvEO3mu
- QCUa2_wHNqV1vaCboURe3di.UKN51o2l6DrSDU.V8h_IRbH7jWMjxflaOBAS7QlzDEcUCaUQ9T8Y
- T1dSy796TmOIQ4vk6oH8eLVZfwY3DYs4OjBSosbfunMI1Ma7FxTPUw5w1A3IFCBibbOJVlzf7a2N
- WEs1_O8M.Sz6eH4OnyiCH56if2VrRJCsrA6O1Y0rpxR3kyRIslLAc9mdGy6JQ0Y4z75zV_ttH0DX
- DtazBY93GaA5QCrhp1IRwuGO2XsIuFbnWAcRPYwHsS8gV2_A1i9uzq3x.TlZfQ9pSRPuy9bi3gR3
- eNhCumxqDm_W3JPzAU8GvBXBl1lRDskv4i9LRH6v7XqHX74OiCigBcN88zTbRrvsbiU58MxXlwYt
- KM3xaZpQfxVTp9pn2bpqXrvpR2MKEuZh3TWHh.mrozlu1BjT6V5v2uQ3epFmVm5rnS.v7liVH17M
- p2Lb1BB9ees.TSZ57.42OFq9tqBtCVWs1rqDALSmF0mclTebpHM35zoG7gw1aa2I4hynCADj4E0F
- JbaQVTaoBksXi0dtYFu8DWCbMkaZoxsirClnBTMBl5O7YpWORTv9ZdOVvITM7Bk6nlw3fSsAHOM9
- anjFCnDY8Zl_a2GeM4dDRxhDiXk79oerqvNtaNUS_gup49wo51HsQLwsCXlxjkqBB3C39AW5FdQC
- jEtUdiOXWfil43AHqdjS0ExelaR7tSB.4vTnFgdDqHbVthc4heDFrq.cfk.xAFWgpY_UodPmEJQe
- b0kxn1Ts7vaTapeddjHhgjw8QlI5Y.wjRctXCQHYY.ChgdxTKpAcyAfClM0lxiqB8UbZ77JyStxy
- KELf0XrBuCkF7cdbtzlrvci6xZHlT6NrVgkA4cckYJnL0WaaknEWyZBNgNMklN48T6RK0UmV3jr3
- 4NCElmDf8mqp38LLxjjItCUofz0QGNAxObNprAskCiNbTj27uOVXSvF6EMVPtXrER6qevJh842aL
- mEu.BSkNXAzwmctHvvBa3q14rUZlKrQW9iLX0mOO8Ul_n7z6YmyBMKwWN_XmsartUyR88.BaZ3aN
- Qwf3qSZ_o5KxDDz.3wyMaeW4Z1hDfv3M8ODW82YEdvveNuVRIpXmLozGOuxrbxWBx.raF1Tmxw0A
- 2ELxuo.HLjZjb6w858dC4bKH1oQBbpjN2BdV5KZZ4KsNsVn21Y1m5VcVv0gjek0dKmyRjEk5.Hv_
- pHAmicqjfoc7TXWWctQyPGAjH1bs2M8ysa6OMnvQX4tM9NJCY1Da7tv9_IADWqWFe7SnXE8r6J3G
- gLdJ.tjwNyExzVXgfyWy8oqu1FqmMIB0APcEq7HmIuG9uMiVlFUvUq_GI9X5uZnvcl4xILZjfp_3
- T0pnjZkQ7tQ_gdAbwwV9WY8Toh5.FmjNjnsaVK7Qkrz1Bm_g5acCGqhiO59Mv4hFJbFB2f.FsiA4
- MXernSktZcAP1.CI9cShfdeOgEuUx4Q.9Jj1Rlqf6gz5FzPKoajbZQjdqpIz6SdZ.DXy8pzkAOx0
- EwOP2WdajflpmBpLWcwFrXf1ih8YWmHT8ttH93bAIUaz.Flv.t5QSzyNo1uJ_3pfMwL3gK5mYSRW
- YHJwbzlbqUSjQQgdZT.68p.bDbbDxDyt3MDOhKazdVs72Esg_6xF7GH72yUqo85wGrK9jNdnnGVf
- oPZ.mc3DXuH4EfGh.4urAX5m5noj6t3rXzG.1r4pgRYmP4B.LlJFKJvGOlCpoYLIOH6dO4vugPGO
- JJwlYQygrpAT2Jdivvx3YkBPCMdP8KTatqaE6yQjK8SwJhCEDSwykURNFnLIxbjUvZmdQ7VfWZdq
- MEN4BknuCXG_.dHi_lDlJlTrPijDsgpkbBZnrNQtmFOxUgFCmyjAFzVClH3fcTC.3DH8E5uO1wIf
- kBnyqLeDewifQH6ndtSKKXkBoPWjiKhOCNT17stTUgQ--
-X-Sonic-MF: <sumanth.gavini@yahoo.com>
-X-Sonic-ID: 934109f5-ed5d-45db-a919-865090521a6a
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic311.consmr.mail.sg3.yahoo.com with HTTP; Tue, 20 May 2025 02:29:25 +0000
-Received: by hermes--production-gq1-74d64bb7d7-s6s6l (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID c55adf946ccac4d66aa5f3a67630743c;
-          Tue, 20 May 2025 02:29:21 +0000 (UTC)
-From: Sumanth Gavini <sumanth.gavini@yahoo.com>
-To: lgirdwood@gmail.com,
-	broonie@kernel.org
-Cc: Sumanth Gavini <sumanth.gavini@yahoo.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] regulator: max8952: Correct Samsung "Electronics" spelling in copyright headers
-Date: Mon, 19 May 2025 19:29:16 -0700
-Message-ID: <20250520022918.162189-1-sumanth.gavini@yahoo.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="fXhvvNke"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1747708565; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=OcLiZg9ZpVoBrJtJjMV8giKcAzcADBiu4oE3444yGmA=;
+	b=fXhvvNkecmcf3z9yUjhwbkdFcq5aTKQRvSj+xDQeSq3x54lSWjwKkZ/RchkgaKjbizQt4nF2tCziFJA40fPSpmp/nJ0TPINL+coaVvYnZlYaziGCRxLIPNR77wW8NQFzPh276NoRXgxh8w8tAPfFHt89yoRI42aWiFOH5H+mEGk=
+Received: from 30.246.160.208(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WbJOtjU_1747708562 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 20 May 2025 10:36:03 +0800
+Message-ID: <650cd4e4-561b-4d50-9cf2-c601518c9b9f@linux.alibaba.com>
+Date: Tue, 20 May 2025 10:36:01 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8] PCI: hotplug: Add a generic RAS tracepoint for hotplug
+ event
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: rostedt@goodmis.org, Lukas Wunner <lukas@wunner.de>,
+ linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ linux-edac@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ helgaas@kernel.org, bhelgaas@google.com, tony.luck@intel.com, bp@alien8.de,
+ mhiramat@kernel.org, mathieu.desnoyers@efficios.com, oleg@redhat.com,
+ naveen@kernel.org, davem@davemloft.net, anil.s.keshavamurthy@intel.com,
+ mark.rutland@arm.com, peterz@infradead.org, tianruidong@linux.alibaba.com
+References: <20250512013839.45960-1-xueshuai@linux.alibaba.com>
+ <87b1f8c6-bd72-b1a8-40a6-bbf552552806@linux.intel.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <87b1f8c6-bd72-b1a8-40a6-bbf552552806@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-References: <20250520022918.162189-1-sumanth.gavini.ref@yahoo.com>
 
-Fix the misspelling of 'Electronics' in max8952 driver copyright headers.
+Hi, Ilpo,
 
-Signed-off-by: Sumanth Gavini <sumanth.gavini@yahoo.com>
----
- include/linux/regulator/max8952.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+在 2025/5/20 01:10, Ilpo Järvinen 写道:
+> On Mon, 12 May 2025, Shuai Xue wrote:
+> 
+>> Hotplug events are critical indicators for analyzing hardware health,
+>> particularly in AI supercomputers where surprise link downs can
+>> significantly impact system performance and reliability.
+>>
+>> To this end, define a new TRACING_SYSTEM named pci, add a generic RAS
+>> tracepoint for hotplug event to help healthy check, and generate
+>> tracepoints for pcie hotplug event. Add enum pci_hotplug_event in
+>> include/uapi/linux/pci.h so applications like rasdaemon can register
+>> tracepoint event handlers for it.
+>>
+>> The output like below:
+>>
+>> $ echo 1 > /sys/kernel/debug/tracing/events/pci/pci_hp_event/enable
+>> $ cat /sys/kernel/debug/tracing/trace_pipe
+>>      <...>-206     [001] .....    40.373870: pci_hp_event: 0000:00:02.0 slot:10, event:Link Down
+>>
+>>      <...>-206     [001] .....    40.374871: pci_hp_event: 0000:00:02.0 slot:10, event:Card not present
+>>
+>> Suggested-by: Lukas Wunner <lukas@wunner.de>
+>> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+>> Reviewed-by: Lukas Wunner <lukas@wunner.de>
+>> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>> ---
+>> changes since v7:
+>> - replace the TRACE_INCLUDE_PATH to avoid macro conflict per Steven
+>> - pick up Reviewed-by from Lukas Wunner
+>> ---
+>>   drivers/pci/hotplug/Makefile      |  3 ++
+>>   drivers/pci/hotplug/pciehp_ctrl.c | 33 ++++++++++++---
+>>   drivers/pci/hotplug/trace.h       | 68 +++++++++++++++++++++++++++++++
+>>   include/uapi/linux/pci.h          |  7 ++++
+>>   4 files changed, 105 insertions(+), 6 deletions(-)
+>>   create mode 100644 drivers/pci/hotplug/trace.h
+>>
+>> diff --git a/drivers/pci/hotplug/Makefile b/drivers/pci/hotplug/Makefile
+>> index 40aaf31fe338..a1a9d1e98962 100644
+>> --- a/drivers/pci/hotplug/Makefile
+>> +++ b/drivers/pci/hotplug/Makefile
+>> @@ -3,6 +3,9 @@
+>>   # Makefile for the Linux kernel pci hotplug controller drivers.
+>>   #
+>>   
+>> +# define_trace.h needs to know how to find our header
+>> +CFLAGS_pciehp_ctrl.o				:= -I$(src)
+>> +
+>>   obj-$(CONFIG_HOTPLUG_PCI)		+= pci_hotplug.o
+>>   obj-$(CONFIG_HOTPLUG_PCI_COMPAQ)	+= cpqphp.o
+>>   obj-$(CONFIG_HOTPLUG_PCI_IBM)		+= ibmphp.o
+>> diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
+>> index d603a7aa7483..f9beb4d3a9b8 100644
+>> --- a/drivers/pci/hotplug/pciehp_ctrl.c
+>> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
+>> @@ -23,6 +23,9 @@
+>>   #include "../pci.h"
+>>   #include "pciehp.h"
+>>   
+>> +#define CREATE_TRACE_POINTS
+>> +#include "trace.h"
+>> +
+>>   /* The following routines constitute the bulk of the
+>>      hotplug controller logic
+>>    */
+>> @@ -244,12 +247,20 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+>>   	case ON_STATE:
+>>   		ctrl->state = POWEROFF_STATE;
+>>   		mutex_unlock(&ctrl->state_lock);
+>> -		if (events & PCI_EXP_SLTSTA_DLLSC)
+>> +		if (events & PCI_EXP_SLTSTA_DLLSC) {
+>>   			ctrl_info(ctrl, "Slot(%s): Link Down\n",
+>>   				  slot_name(ctrl));
+>> -		if (events & PCI_EXP_SLTSTA_PDC)
+>> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
+>> +					   slot_name(ctrl),
+>> +					   PCI_HOTPLUG_LINK_DOWN);
+>> +		}
+>> +		if (events & PCI_EXP_SLTSTA_PDC) {
+>>   			ctrl_info(ctrl, "Slot(%s): Card not present\n",
+>>   				  slot_name(ctrl));
+>> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
+>> +					   slot_name(ctrl),
+>> +					   PCI_HOTPLUG_CARD_NOT_PRESENT);
+>> +		}
+>>   		pciehp_disable_slot(ctrl, SURPRISE_REMOVAL);
+>>   		break;
+>>   	default:
+>> @@ -269,6 +280,9 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+>>   					      INDICATOR_NOOP);
+>>   			ctrl_info(ctrl, "Slot(%s): Card not present\n",
+>>   				  slot_name(ctrl));
+>> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
+>> +					   slot_name(ctrl),
+>> +					   PCI_HOTPLUG_CARD_NOT_PRESENT);
+>>   		}
+>>   		mutex_unlock(&ctrl->state_lock);
+>>   		return;
+>> @@ -281,12 +295,19 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+>>   	case OFF_STATE:
+>>   		ctrl->state = POWERON_STATE;
+>>   		mutex_unlock(&ctrl->state_lock);
+>> -		if (present)
+>> +		if (present) {
+>>   			ctrl_info(ctrl, "Slot(%s): Card present\n",
+>>   				  slot_name(ctrl));
+>> -		if (link_active)
+>> -			ctrl_info(ctrl, "Slot(%s): Link Up\n",
+>> -				  slot_name(ctrl));
+>> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
+>> +					   slot_name(ctrl),
+>> +					   PCI_HOTPLUG_CARD_PRESENT);
+>> +		}
+>> +		if (link_active) {
+>> +			ctrl_info(ctrl, "Slot(%s): Link Up\n", slot_name(ctrl));
+>> +			trace_pci_hp_event(pci_name(ctrl->pcie->port),
+>> +					   slot_name(ctrl),
+>> +					   PCI_HOTPLUG_LINK_UP);
+>> +		}
+>>   		ctrl->request_result = pciehp_enable_slot(ctrl);
+>>   		break;
+>>   	default:
+>> diff --git a/drivers/pci/hotplug/trace.h b/drivers/pci/hotplug/trace.h
+>> new file mode 100644
+>> index 000000000000..21329c198019
+>> --- /dev/null
+>> +++ b/drivers/pci/hotplug/trace.h
+>> @@ -0,0 +1,68 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +#if !defined(_TRACE_HW_EVENT_PCI_HP_H) || defined(TRACE_HEADER_MULTI_READ)
+>> +#define _TRACE_HW_EVENT_PCI_HP_H
+>> +
+>> +#include <linux/tracepoint.h>
+>> +
+>> +#undef TRACE_SYSTEM
+>> +#define TRACE_SYSTEM pci
+>> +
+>> +#define PCI_HOTPLUG_EVENT					\
+>> +	EM(PCI_HOTPLUG_LINK_UP,			"Link Up")	\
+>> +	EM(PCI_HOTPLUG_LINK_DOWN,		"Link Down")	\
+>> +	EM(PCI_HOTPLUG_CARD_PRESENT,		"Card present")	\
+>> +	EMe(PCI_HOTPLUG_CARD_NOT_PRESENT,	"Card not present")
+> 
+> Hi,
+> 
+> While I was thinking of adding tracing into PCIe BW controller (bwctrl),
+> I ended up thinking that perhaps it would make more sense to have PCIe
+> Link related tracepoints which would cover both hotplug and bwctrl so that
+> also Link Speed changes would be reported through the same trace event.
+> 
+> Downgraded speed may indicate there's something wrong with the card and
+> the Link Speed does have performance impact too for those who are pushing
+> BW boundaries such as AI systems.
 
-diff --git a/include/linux/regulator/max8952.h b/include/linux/regulator/max8952.h
-index 8712c091abf0..61dcd8e00a2f 100644
---- a/include/linux/regulator/max8952.h
-+++ b/include/linux/regulator/max8952.h
-@@ -2,7 +2,7 @@
- /*
-  * max8952.h - Voltage regulation for the Maxim 8952
-  *
-- *  Copyright (C) 2010 Samsung Electrnoics
-+ *  Copyright (C) 2010 Samsung Electronics
-  *  MyungJoo Ham <myungjoo.ham@samsung.com>
-  */
- 
--- 
-2.43.0
+Agreed!
 
+> 
+> So my suggestion is:
+> 
+> - Add "Link Speed changed" to the event types.
+> - Add Link Speed and Width into the event format (and probably also Flit
+>    mode as PCIe gen6 is coming).
+
+
+How about bellow event format:
+
++	TP_STRUCT__entry(
++		__string(	port_name,	port_name	)
++		__field(	unsigned char,	cur_bus_speed	)
++		__field(	unsigned char,	max_bus_speed	)
++		__field(	unsigned char,	flit_mode	)
++	),
+
+And add the event to pcie_update_link_speed():
+
+@@ -796,6 +799,10 @@ void pcie_update_link_speed(struct pci_bus *bus)
+         pcie_capability_read_word(bridge, PCI_EXP_LNKSTA, &linksta);
+         pcie_capability_read_word(bridge, PCI_EXP_LNKSTA2, &linksta2);
+         __pcie_update_link_speed(bus, linksta, linksta2);
++
++       trace_pci_link_event(pci_name(bridge), bus->cur_bus_speed,
++                                          bus->max_bus_speed,
++                                          PCI_HOTPLUG_LINK_SPEED_CHANGED);
+
+But I don't find link speed changed in hotplug driver, and the
+format of "Link Speed changed" is a bit different from "pci_hp_event".
+
+Do we really need a PCI_HOTPLUG_EVENT? May PCI_LINK_EVENT is more
+appropriate?
+
+Thanks.
+Best Regards.
+Shuai
