@@ -1,208 +1,200 @@
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C6DF25B1C5;
-	Tue, 20 May 2025 09:24:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84FAC4B1E4B
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 09:26:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747733096; cv=none; b=uQjATmDwsI3e9UzrE3xvVtvoFSc4XPBzGIz3sCySoaxj+Sw66OYhBUrhabx+5HjFVpgZxhhvsHKTfirZ6jDN6DiVe7P+qFOCugJ9mabRKGNTm1Kz3W6MLGsuWzWBHUVCXIINhp9FixKh8naFOdW+ACp9PNOa4yiVtfP6Sfn6zgY=
+	t=1747733178; cv=none; b=qiqWYWn9s07DXY8yWMC268gvdhOP6Ux8hGlK4N6rv9u3jLBP0Z7NCc8MT+pg+UOsrJwDE+MznJQTiBQcQATNgzP9d2tUSv5L1tJ3sHk/jRqCUQhS3c7qtM6sIPMJvSFkDXJJwkI7zbO2OSUVl7zwVEpmqfr+KzMxbPlxRwnL7dU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747733096; c=relaxed/simple;
-	bh=8lqQQP4T8U24N8XgiVMBAB9dvBkyWQckbVdZ4ZEwckU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OgsawpDf4yuLwQEUHFyTFAfAU75eh+j6RW15bf+0G8raxUHD1q93Z+EJhpOPYCfz2hxlVgLaMNmuoNJ23KR69JAQ+5XvK0xyrODPCu1QHatxpDLnKS2+Uw/Ycdn+5P4eehLVACJcCxvuzitkhuwiN/ElAfBep2GYnofp1d7UdBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mfGvtzNB; arc=none smtp.client-ip=209.85.219.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747733178; c=relaxed/simple;
+	bh=OxfJMzp34cC2Kd7GhstqxirxKR6G5mbAV5uFLcHCCWo=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=TY+vWTtxQm3LVSTVMV2AXALASPOdAsggSSPbo3st56ZfuUxIzJT8aSGaQ2CwPncjcF+TpHzH87INUwlnAMe6oC/9A4YJm9j2Oq7KvYur7egBKcWsV+AVNki3rgKAMGIPYi0P+5WSuxjVdWf6YUSq0hToYPRQTE95I3RnmZON0po=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PqIP4DMG; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mfGvtzNB"
-Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6f8cb6b3340so45299006d6.1;
-        Tue, 20 May 2025 02:24:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747733093; x=1748337893; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xx//TkYKG/87T6qfujpj4GQczz4RSpoekiQT+JUTLAs=;
-        b=mfGvtzNBMuMptWP++LSaQ1dMlqMX/AQ5CSVcMOohu4y+gIsyv7tHZDqVsE1CkBy8Bx
-         qj6lOiZO15AMLWCG0sMXDPQGls71ayREZq6m6l9U4G58QU1aPXAQWwk1cz6/qklCmf4j
-         mEGOEMzjkIbGZhHPbbDQAOIwQgxGj2BQP87kjeJXEDzJB4xzqA6I1w4ik9wx20Dvsbml
-         b5jEdu3LezhA3lSgyoQXA0tBvoRRhpMFnPchvHjwZRo0QssOSXieffKk/mxpp/MCC44W
-         ju/nI3d0udaZ/rjMp5X0zXCJ+1DkG1iY2DFOfdkQ8TuxULh8IXIL7XtDWE8jtBwuy/x/
-         sgBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747733093; x=1748337893;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xx//TkYKG/87T6qfujpj4GQczz4RSpoekiQT+JUTLAs=;
-        b=CFfZi+oAouBeo/R8F3gVyKRaXNkB7A5AiWEDJ16GoE6sEtMRTHhxABHJi+yYXX2J2N
-         cOeS4tzhuicGt8tXG713ZxOnsm6zfI0ndct2jl8Kyw+Nmneh8IfPBiJ3fQE7ougwsBPT
-         8woSeLCP5gTxe9XP8AozPUNusflIfENeOe3rMf9RGP/1ooqBwTwOIX2aFpHBd4Swp9Sw
-         ii7nrQCTu1SJ4Lv1ZGAimDCY8IG8kk9Tfgx+0j1fhheFYigoMbsciNSllqwi68wmdvq8
-         fozZdXPfCwZ3Yv7ylGnUzo8pkqQ1DpErYWSkMTtLb5mgkDH+daQN2zjKOMWRgjWH0Qsa
-         PXyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVmqr487JOZtRYOPzco+RT2KAHjpx+Os9hcrHBAt+wBfMGhpqfPM0Pw4MmyCnnGG37EhhIFDb4235q9MwTPx4Kc@vger.kernel.org, AJvYcCVyIQiOmWoXolyT6IeebjKnC7HNf3EqwezrBD5yoEQXTfgwVp6qp/najBp9I51VRIc1XSFxyTgCvWReQO3I@vger.kernel.org, AJvYcCWW9feh+uweAYJMc5/Uiapn3tBmYG7rixCu8BuiU8R6vPp0K+pdvN0RIbphHBIuNx3fTZ6s/dkclzI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YydMj/DUzC+vly4eA1i8KkdjKJhtXLyMjaVhf+Xu8xttiDJu4U2
-	mmhN0KL7KslJL/Um/SXmVunTwSZ1bk4aa4vRFXeG0raKgES0H2u1j7XbaG8NTjktm3+TeH+/2Zf
-	hgtameIHv9GzQNYUgW02gZ8F+jJOx9I4=
-X-Gm-Gg: ASbGncvTp5K7HGWFuzvee+fijXTwy9MiUP60bdoiBmrw3s/TMlIWzWvVZgpO5CB+q3d
-	tKuzdBDDtUTOt+8ntAksfLgWpEHYR7p9SwzV9VThvkZ9vfilU2PFwarmsUdwxLAEApBdHZRDHBt
-	HV791qHdV+bpW5L4I3Mr95jEpGH6LsOCHq7g==
-X-Google-Smtp-Source: AGHT+IGgparnaxmNvuHM/lrDoY1fvAKD0ORwmu9fSSm7EZPsILX0++SVjr2wKYyuavU6HNxWcE8IYtysoLY8rG5k1Go=
-X-Received: by 2002:ad4:5aa3:0:b0:6f5:38a2:52dd with SMTP id
- 6a1803df08f44-6f8b2d12d21mr267363036d6.31.1747733093356; Tue, 20 May 2025
- 02:24:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PqIP4DMG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747733176; x=1779269176;
+  h=date:from:to:cc:subject:message-id;
+  bh=OxfJMzp34cC2Kd7GhstqxirxKR6G5mbAV5uFLcHCCWo=;
+  b=PqIP4DMGZOPzTjF2jE7XUHELzgzVvsSbjKnqcECqF6Zs1BLdWJpb1j6I
+   EQx1YGLltIJuatzeBXg90kX5Jtx6XgKAVYKnn3TRq3qk4XWWOPCByjg52
+   HxJyIHMSkgslZ+SXr1ZcP8g2trLtq83X0cgqMGrnwxSq6j05z9oTmqwsx
+   eq4C8D1L3VgmQqw8jZuM2NOWaT/ej/eF54eqmkU7kUrQG2OxSqxs/q+cT
+   itGVwElwWvAySQ3oDOyteYElQtOKdLLWa3Ya8LUuGuZM26UEmBlIQPjnD
+   zwcfiDWLhgD1ZemU4uSkQ/VzFbptI9pmG0p6UYEQYhhiiqPcDX2WIxWXx
+   g==;
+X-CSE-ConnectionGUID: NrMeMXRQSbaRO9zFoousJA==
+X-CSE-MsgGUID: Qcgg0tg3Q0eKuB8kOqapEw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="67210635"
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="67210635"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 02:26:15 -0700
+X-CSE-ConnectionGUID: VFv5grCCTHCplLjvia5DmQ==
+X-CSE-MsgGUID: UCUqreAKQCOtLvWST+glfQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="143630393"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa003.fm.intel.com with ESMTP; 20 May 2025 02:26:15 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uHJEi-000MO8-2f;
+	Tue, 20 May 2025 09:26:12 +0000
+Date: Tue, 20 May 2025 17:25:45 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:master] BUILD SUCCESS
+ 3ee84e3dd88e39b55b534e17a7b9a181f1d46809
+Message-ID: <202505201735.bwSHe7U4-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250515033857.132535-1-npache@redhat.com>
-In-Reply-To: <20250515033857.132535-1-npache@redhat.com>
-From: Yafang Shao <laoar.shao@gmail.com>
-Date: Tue, 20 May 2025 17:24:16 +0800
-X-Gm-Features: AX0GCFuzkEn4ubaObVckXJemP0oCOx73QZ9HTjLQbxewFSpT9IkcJKm3ftBH9v4
-Message-ID: <CALOAHbAa7DY6+hO4RJtjg-MS+cnUmsiPXX8KS1MKSfgy6HLYAQ@mail.gmail.com>
-Subject: Re: [PATCH v6 0/4] mm: introduce THP deferred setting
-To: Nico Pache <npache@redhat.com>
-Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	rientjes@google.com, hannes@cmpxchg.org, lorenzo.stoakes@oracle.com, 
-	rdunlap@infradead.org, mhocko@suse.com, Liam.Howlett@oracle.com, 
-	zokeefe@google.com, surenb@google.com, jglisse@google.com, cl@gentwo.org, 
-	jack@suse.cz, dave.hansen@linux.intel.com, will@kernel.org, tiwai@suse.de, 
-	catalin.marinas@arm.com, anshuman.khandual@arm.com, dev.jain@arm.com, 
-	raquini@redhat.com, aarcange@redhat.com, kirill.shutemov@linux.intel.com, 
-	yang@os.amperecomputing.com, thomas.hellstrom@linux.intel.com, 
-	vishal.moola@gmail.com, sunnanyong@huawei.com, usamaarif642@gmail.com, 
-	wangkefeng.wang@huawei.com, ziy@nvidia.com, shuah@kernel.org, 
-	peterx@redhat.com, willy@infradead.org, ryan.roberts@arm.com, 
-	baolin.wang@linux.alibaba.com, baohua@kernel.org, david@redhat.com, 
-	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, rostedt@goodmis.org, 
-	corbet@lwn.net, akpm@linux-foundation.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 15, 2025 at 11:41=E2=80=AFAM Nico Pache <npache@redhat.com> wro=
-te:
->
-> This series is a follow-up to [1], which adds mTHP support to khugepaged.
-> mTHP khugepaged support is a "loose" dependency for the sysfs/sysctl
-> configs to make sense. Without it global=3D"defer" and  mTHP=3D"inherit" =
-case
-> is "undefined" behavior.
->
-> We've seen cases were customers switching from RHEL7 to RHEL8 see a
-> significant increase in the memory footprint for the same workloads.
->
-> Through our investigations we found that a large contributing factor to
-> the increase in RSS was an increase in THP usage.
->
-> For workloads like MySQL, or when using allocators like jemalloc, it is
-> often recommended to set /transparent_hugepages/enabled=3Dnever. This is
-> in part due to performance degradations and increased memory waste.
->
-> This series introduces enabled=3Ddefer, this setting acts as a middle
-> ground between always and madvise. If the mapping is MADV_HUGEPAGE, the
-> page fault handler will act normally, making a hugepage if possible. If
-> the allocation is not MADV_HUGEPAGE, then the page fault handler will
-> default to the base size allocation. The caveat is that khugepaged can
-> still operate on pages that are not MADV_HUGEPAGE.
->
-> This allows for three things... one, applications specifically designed t=
-o
-> use hugepages will get them, and two, applications that don't use
-> hugepages can still benefit from them without aggressively inserting
-> THPs at every possible chance. This curbs the memory waste, and defers
-> the use of hugepages to khugepaged. Khugepaged can then scan the memory
-> for eligible collapsing. Lastly there is the added benefit for those who
-> want THPs but experience higher latency PFs. Now you can get base page
-> performance at the PF handler and Hugepage performance for those mappings
-> after they collapse.
->
-> Admins may want to lower max_ptes_none, if not, khugepaged may
-> aggressively collapse single allocations into hugepages.
->
-> TESTING:
-> - Built for x86_64, aarch64, ppc64le, and s390x
-> - selftests mm
-> - In [1] I provided a script [2] that has multiple access patterns
-> - lots of general use.
-> - redis testing. This test was my original case for the defer mode. What =
-I
->    was able to prove was that THP=3Dalways leads to increased max_latency
->    cases; hence why it is recommended to disable THPs for redis servers.
->    However with 'defer' we dont have the max_latency spikes and can still
->    get the system to utilize THPs. I further tested this with the mTHP
->    defer setting and found that redis (and probably other jmalloc users)
->    can utilize THPs via defer (+mTHP defer) without a large latency
->    penalty and some potential gains. I uploaded some mmtest results
->    here[3] which compares:
->        stock+thp=3Dnever
->        stock+(m)thp=3Dalways
->        khugepaged-mthp + defer (max_ptes_none=3D64)
->
->   The results show that (m)THPs can cause some throughput regression in
->   some cases, but also has gains in other cases. The mTHP+defer results
->   have more gains and less losses over the (m)THP=3Dalways case.
->
-> V6 Changes:
-> - nits
-> - rebased dependent series and added review tags
->
-> V5 Changes:
-> - rebased dependent series
-> - added reviewed-by tag on 2/4
->
-> V4 Changes:
-> - Minor Documentation fixes
-> - rebased the dependent series [1] onto mm-unstable
->     commit 0e68b850b1d3 ("vmalloc: use atomic_long_add_return_relaxed()")
->
-> V3 Changes:
-> - Combined the documentation commits into one, and moved a section to the
->   khugepaged mthp patchset
->
-> V2 Changes:
-> - base changes on mTHP khugepaged support
-> - Fix selftests parsing issue
-> - add mTHP defer option
-> - add mTHP defer Documentation
->
-> [1] - https://lore.kernel.org/all/20250515032226.128900-1-npache@redhat.c=
-om/
-> [2] - https://gitlab.com/npache/khugepaged_mthp_test
-> [3] - https://people.redhat.com/npache/mthp_khugepaged_defer/testoutput2/=
-output.html
->
-> Nico Pache (4):
->   mm: defer THP insertion to khugepaged
->   mm: document (m)THP defer usage
->   khugepaged: add defer option to mTHP options
->   selftests: mm: add defer to thp setting parser
->
->  Documentation/admin-guide/mm/transhuge.rst | 31 +++++++---
->  include/linux/huge_mm.h                    | 18 +++++-
->  mm/huge_memory.c                           | 69 +++++++++++++++++++---
->  mm/khugepaged.c                            |  8 +--
->  tools/testing/selftests/mm/thp_settings.c  |  1 +
->  tools/testing/selftests/mm/thp_settings.h  |  1 +
->  6 files changed, 106 insertions(+), 22 deletions(-)
->
-> --
-> 2.49.0
->
->
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git master
+branch HEAD: 3ee84e3dd88e39b55b534e17a7b9a181f1d46809  Merge branch into tip/master: 'x86/sgx'
 
-Hello Nico,
+elapsed time: 1143m
 
-Upon reviewing the series, it occurred to me that BPF could solve this
-more cleanly. Adding a 'tva_flags' parameter to the BPF hook would
-handle this case and future scenarios without requiring new modes. The
-BPF mode could then serve as a unified solution.
+configs tested: 123
+configs skipped: 9
 
---=20
-Regards
-Yafang
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-14.2.0
+arc                               allnoconfig    gcc-14.2.0
+arc                              allyesconfig    gcc-14.2.0
+arc                   randconfig-001-20250520    gcc-11.5.0
+arc                   randconfig-002-20250520    gcc-14.2.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    gcc-14.2.0
+arm                            hisi_defconfig    gcc-14.2.0
+arm                        mvebu_v7_defconfig    clang-21
+arm                   randconfig-001-20250520    gcc-6.5.0
+arm                   randconfig-002-20250520    gcc-10.5.0
+arm                   randconfig-003-20250520    clang-19
+arm                   randconfig-004-20250520    gcc-7.5.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250520    clang-21
+arm64                 randconfig-002-20250520    gcc-9.5.0
+arm64                 randconfig-003-20250520    clang-18
+arm64                 randconfig-004-20250520    gcc-9.5.0
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250519    gcc-10.5.0
+csky                  randconfig-002-20250519    gcc-14.2.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon               randconfig-001-20250519    clang-21
+hexagon               randconfig-002-20250519    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250519    clang-20
+i386        buildonly-randconfig-002-20250519    clang-20
+i386        buildonly-randconfig-003-20250519    gcc-12
+i386        buildonly-randconfig-004-20250519    gcc-12
+i386        buildonly-randconfig-005-20250519    gcc-12
+i386        buildonly-randconfig-006-20250519    clang-20
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250519    gcc-14.2.0
+loongarch             randconfig-002-20250519    gcc-12.4.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                         db1xxx_defconfig    clang-21
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250519    gcc-14.2.0
+nios2                 randconfig-002-20250519    gcc-6.5.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-14.2.0
+parisc                randconfig-001-20250519    gcc-7.5.0
+parisc                randconfig-002-20250519    gcc-13.3.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-21
+powerpc                   motionpro_defconfig    clang-21
+powerpc                     ppa8548_defconfig    gcc-14.2.0
+powerpc                     rainier_defconfig    gcc-14.2.0
+powerpc               randconfig-001-20250519    gcc-8.5.0
+powerpc               randconfig-002-20250519    gcc-6.5.0
+powerpc               randconfig-003-20250519    gcc-8.5.0
+powerpc64             randconfig-001-20250519    clang-20
+powerpc64             randconfig-002-20250519    gcc-6.5.0
+powerpc64             randconfig-003-20250519    gcc-6.5.0
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    gcc-14.2.0
+riscv                            allyesconfig    clang-16
+riscv                               defconfig    clang-21
+riscv                 randconfig-001-20250519    gcc-14.2.0
+riscv                 randconfig-002-20250519    clang-17
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-14.2.0
+s390                                defconfig    clang-21
+s390                  randconfig-001-20250519    gcc-7.5.0
+s390                  randconfig-002-20250519    gcc-9.3.0
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                                  defconfig    gcc-14.2.0
+sh                        dreamcast_defconfig    gcc-14.2.0
+sh                         ecovec24_defconfig    gcc-14.2.0
+sh                     magicpanelr2_defconfig    gcc-14.2.0
+sh                    randconfig-001-20250519    gcc-12.4.0
+sh                    randconfig-002-20250519    gcc-14.2.0
+sparc                            alldefconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250519    gcc-11.5.0
+sparc                 randconfig-002-20250519    gcc-7.5.0
+sparc64                             defconfig    gcc-14.2.0
+sparc64               randconfig-001-20250519    gcc-7.5.0
+sparc64               randconfig-002-20250519    gcc-11.5.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-21
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250519    gcc-12
+um                    randconfig-002-20250519    gcc-12
+um                           x86_64_defconfig    clang-21
+x86_64      buildonly-randconfig-001-20250519    clang-20
+x86_64      buildonly-randconfig-002-20250519    gcc-12
+x86_64      buildonly-randconfig-003-20250519    clang-20
+x86_64      buildonly-randconfig-004-20250519    clang-20
+x86_64      buildonly-randconfig-005-20250519    gcc-12
+x86_64      buildonly-randconfig-006-20250519    gcc-12
+x86_64                              defconfig    gcc-11
+x86_64                          rhel-9.4-rust    clang-18
+xtensa                           alldefconfig    gcc-14.2.0
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                       common_defconfig    gcc-14.2.0
+xtensa                randconfig-001-20250519    gcc-7.5.0
+xtensa                randconfig-002-20250519    gcc-9.3.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
