@@ -1,121 +1,114 @@
-Received: from michel.telenet-ops.be (michel.telenet-ops.be [195.130.137.88])
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04E6FDDAB
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 12:40:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.88
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28FEA19F461
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 12:42:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747744834; cv=none; b=XBfp8mM5Df5DqMcFX5C/+aWkShXcVsMxuSwEGcuOYp0ZrKfPgLqilcbtZ/yUP9q/6LV/2yUDY/X1YPEQDJeqDW/lPtU25ImAUxwOvvFWdeCLpaWCz4nzL22KqATPMNVdRXO02+Vcd6ORCgn5h78TtgYw0eOiWMltQuz4DiMnmlc=
+	t=1747744982; cv=none; b=GSpI12vGi6/TSUJ93FGw1wE6hv2ET1RDdbRw1oREy6DAPrcArxtIc60kDjoVblt3ZkhIaGi35GOLdCNKBxY89pNjUEKWvHwpTQHd+nzRSosgcY843YhjZuh/XxOcrirP1YomyPWkydWL14W5l1qPs2fgW8nBtiPltXVtQWMC0dA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747744834; c=relaxed/simple;
-	bh=SPEPZrzQkNSoq4fcbmSQ+umxM6urkRvQ52y2PdGX1dU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VZFijWtMI8NHRBmV1UsWBDmuQBZHrM1KclMvGOd+U/+TDZcdV7wtrwzZ0sT05CgRRCSE31Yaub3OKlTXvGkH2PTdgcub1UI2OcK3uiyA3evCNUJBIQjN1l95tn0BlsBYk6yDTxegnjF62zkHyPCMWHyMyYA2Gz9km2A1Yu7mLww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:9a55:e9b9:b3a5:760c])
-	by michel.telenet-ops.be with cmsmtp
-	id rQgP2E00H09zvkf06QgPXW; Tue, 20 May 2025 14:40:24 +0200
-Received: from rox.of.borg ([192.168.97.57])
-	by ramsan.of.borg with esmtp (Exim 4.97)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1uHMGR-00000002Xmu-0Onv;
-	Tue, 20 May 2025 14:40:23 +0200
-Received: from geert by rox.of.borg with local (Exim 4.97)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1uHMGd-00000001Kbv-2IxB;
-	Tue, 20 May 2025 14:40:23 +0200
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-To: Marcus Folkesson <marcus.folkesson@gmail.com>,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] drm/sitronix: Fix broken backwards-compatibility layer
-Date: Tue, 20 May 2025 14:40:19 +0200
-Message-ID: <1682cd80989f9ab98a7a9910a086a3a4d9769cc6.1747744752.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1747744982; c=relaxed/simple;
+	bh=kAYBhgA7SbgPwIuhLi3KNN6TuETDW3sCCCLPjUs9KLY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tbJZajCJ1aOr06mD94qztx60LqMc0V+8dB5vMsp+HKVsRIQPqGPHN3SoVdSx5MKAxt7824R2l9I8uAUqFqPzlY1PaopJsgm0tT5gpqjI6+brlb97FbKlZT2bbdqiWJNHViFM+94MVAp7ngG2q2TPxacl0eiOLP7ErsQVmadTUms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=z68jTGdF; arc=none smtp.client-ip=209.85.219.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="z68jTGdF"
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e7b3178473eso5192144276.2
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 05:42:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747744978; x=1748349778; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=88lOLN3//BdORRDyk/6LjlOBy9fkXDogVmGs1sgPhyI=;
+        b=z68jTGdFqiP6o81qhSPfWRQRBkTV68YKQY5rKGT9CAo0H+HjAXa4IDbhPYQLD/0m/A
+         szy5ZbxzUoFCGFcXm+9cseyJm8i2GVo+Bl0W/SlByNxBlKXNu7uCRh4au012ZLSHVJpq
+         hvyXUGGQT7tYWXQLFERvM8QFyzQAjwAA1aSqjeh9kWWYTRUltZE5Z6/VD8MQCWk7jL8C
+         uF5/wjjpyZRDo+Aj7xAODjjf44F8fpNVXOOGDNUcxoxaVSfSLt3AtkN4aF5XGfmz6VNa
+         GsevA4kQw122PHEaY4UBLaHW76GvyvyJUG7EX+/zCFtXswtE/T5t98OoKMgBWess8xRV
+         3lyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747744978; x=1748349778;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=88lOLN3//BdORRDyk/6LjlOBy9fkXDogVmGs1sgPhyI=;
+        b=lCb2XkvFQjxidUdJ1xaCJ/z8aoTYCW2q2MNfqqQTvVVl/IttjdGNInHnUSc38x9WMJ
+         rTIWCEqx6t+NqyVxONUAI9+JCWtD2HI29ly3S5jolmNKTtO18d4QwoKMxFg4xLBiOHoK
+         jOfqdE8GDHNrZxgxwfnBdGWgvMDFnw03s3U5CAJsHqjEom6FWD4xbp2zoA8Lyex4hAHV
+         rMhg1p0S6W5kQDe9h0wFOQH5E2E8S+++MnXzQxKV7MaFCP+Au9fzxcK2XsYMVqTYnlnJ
+         aMrV2dDSQv9yofv5bn7nV9bMxNO89KJEaFQx6iOa68htYX604dYMZXAu/l/GBM86rVoK
+         18ag==
+X-Forwarded-Encrypted: i=1; AJvYcCUlHhXdH6PC+73dlFn2TG3dB1KBJ4n4LCk9XbMZjcvRehXNgUZ5d60UnZseYDrMrVDCguJCFVpsG+rDHKA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHq5oeQijswef43jXA9RddJgDQ1QZj5PchmHslO0WrO1nFFhxl
+	PrCbdBwXefAq2EXRjHBGvkw2d30XISbaE9mimu8qffMH80FejeGfwUimklMC1d3e/cD3l3BlRPP
+	5oVI8hVOqw2VJIxqasJerikOeelAtKnBngBgZbr6t0A==
+X-Gm-Gg: ASbGncvrOnG5xY1OXw5lrCbqBFq6XVma+Dkm5vB2uxX98PVTMf8bsYYMBqEcD/b5PsK
+	TE26y3baqfzuKU/r7kf1SaNt0Up+UKDaJ/cDbapYSnIJ4nXJWRRX69CW4siJhF/73fOsH4agZfs
+	eAmPHOxe5awYOKcoOQUsAEQ12HqiJ+JqeE8Q==
+X-Google-Smtp-Source: AGHT+IGhT+v8r+0GZsiYhs7CHph95cb2P8MRGP6RGC8fZ7dFYUwqCE9+mfUsNw7SyUvETHMbFtvpOAcTqK/Ng1hl+qE=
+X-Received: by 2002:a05:6902:1201:b0:e79:774:866f with SMTP id
+ 3f1490d57ef6-e7b69e80915mr20083103276.17.1747744978059; Tue, 20 May 2025
+ 05:42:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250518220707.669515-1-jonas@kwiboo.se> <20250518220707.669515-6-jonas@kwiboo.se>
+In-Reply-To: <20250518220707.669515-6-jonas@kwiboo.se>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Tue, 20 May 2025 14:42:20 +0200
+X-Gm-Features: AX0GCFs3Un2EF18YwTSrDKI84LtGeBLBa79SYyXbjLKaJiwIZzX41KzumIQh4bM
+Message-ID: <CAPDyKFqu-ox90dEnK8L0C8CqXJDsvgGwH00__nfQcOYu8hNM9Q@mail.gmail.com>
+Subject: Re: [PATCH 5/9] dt-bindings: mmc: sdhci-of-dwcmhsc: Allow use of a power-domain
+To: Jonas Karlman <jonas@kwiboo.se>
+Cc: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jisheng Zhang <jszhang@kernel.org>, Yao Zi <ziyao@disroot.org>, Chukun Pan <amadeus@jmu.edu.cn>, 
+	linux-rockchip@lists.infradead.org, linux-pm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-When moving the Sitronix DRM drivers and renaming their Kconfig symbols,
-the old symbols were kept, aiming to provide a seamless migration path
-when running "make olddefconfig" or "make oldconfig".
+On Mon, 19 May 2025 at 00:07, Jonas Karlman <jonas@kwiboo.se> wrote:
+>
+> The commit 7e856617a1f3 ("dt-bindings: mmc: Add support for rk3576
+> eMMC") limited use of power-domains to Rockchip RK3576.
+>
+> Remove the power-domains: false to allow use of power-domains with more
+> controllers, e.g. with SDHCI on Rockchip RK3528.
+>
+> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
 
-However, the old compatibility symbols are not visible.  Hence unless
-they are selected by another symbol (which they are not), they can never
-be enabled, and no backwards compatibility is provided.
+Applied for next, thanks!
 
-Fix this by making them visible, and inverting the selection logic.
-Add comments to make it clear why there are two symbols with the same
-description.
+Kind regards
+Uffe
 
-Fixes: 9b8f32002cddf792 ("drm/sitronix: move tiny Sitronix drivers to their own subdir")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-arch/arm/configs/davinci_all_defconfig must be updated after this has
-hit upstream.
----
- drivers/gpu/drm/sitronix/Kconfig | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/sitronix/Kconfig b/drivers/gpu/drm/sitronix/Kconfig
-index c069d0d417753bcf..8b3565b8eca3918e 100644
---- a/drivers/gpu/drm/sitronix/Kconfig
-+++ b/drivers/gpu/drm/sitronix/Kconfig
-@@ -10,9 +10,11 @@ config DRM_ST7571_I2C
- 
- 	  if M is selected the module will be called st7571-i2c.
- 
-+# To be removed once all users have updated their (def)configs
- config TINYDRM_ST7586
--	tristate
--	default n
-+	tristate "DRM support for Sitronix ST7586 display panels"
-+	depends on DRM && SPI
-+	select DRM_ST7586
- 
- config DRM_ST7586
- 	tristate "DRM support for Sitronix ST7586 display panels"
-@@ -21,16 +23,17 @@ config DRM_ST7586
- 	select DRM_KMS_HELPER
- 	select DRM_GEM_DMA_HELPER
- 	select DRM_MIPI_DBI
--	default TINYDRM_ST7586
- 	help
- 	  DRM driver for the following Sitronix ST7586 panels:
- 	  * LEGO MINDSTORMS EV3
- 
- 	  If M is selected the module will be called st7586.
- 
-+# To be removed once all users have updated their (def)configs
- config TINYDRM_ST7735R
--	tristate
--	default n
-+	tristate "DRM support for Sitronix ST7715R/ST7735R display panels"
-+	depends on DRM && SPI
-+	select DRM_ST7735R
- 
- config DRM_ST7735R
- 	tristate "DRM support for Sitronix ST7715R/ST7735R display panels"
-@@ -40,7 +43,6 @@ config DRM_ST7735R
- 	select DRM_GEM_DMA_HELPER
- 	select DRM_MIPI_DBI
- 	select BACKLIGHT_CLASS_DEVICE
--	default TINYDRM_ST7735R
- 	help
- 	  DRM driver for Sitronix ST7715R/ST7735R with one of the following
- 	  LCDs:
--- 
-2.43.0
-
+> ---
+>  Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yaml | 4 ----
+>  1 file changed, 4 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yaml b/Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yaml
+> index 5fb347167004..f882219a0a26 100644
+> --- a/Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yaml
+> +++ b/Documentation/devicetree/bindings/mmc/snps,dwcmshc-sdhci.yaml
+> @@ -120,10 +120,6 @@ allOf:
+>        required:
+>          - power-domains
+>
+> -    else:
+> -      properties:
+> -        power-domains: false
+> -
+>  unevaluatedProperties: false
+>
+>  examples:
+> --
+> 2.49.0
+>
