@@ -1,147 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A7DB248F75;
-	Tue, 20 May 2025 18:50:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747767034; cv=none; b=b1KnUfPnWToR8z3/xo+bHuGXm+UKPITi/rIHXdYIgmMouojM45AsW0N5uCsAIEy9cAfz4ouZCe6gmHFnxmNtuZxXM8OLroIep9Q8Of9nvePWywGc7IBB0UkQMlsrmdm9ITT5k/AwYHhmDdPmQTgzrp1p21n6XEdwE655IjVG1i4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747767034; c=relaxed/simple;
-	bh=4Xz+qUHB2YCNCR2CV7QYNfulgNvPj70zCp9v+dNVwig=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BV8TOVabC5hRixJw6XHN6OQyS0IiQnnjadXWbFM/nAPlbd0U5mgHBG0NsZh2BL140pyWoN7gFQNqC7NqMRKQx/AMP6Z9SbcyhiuRa1SpO8rtXjmlKw18zgF3LZ3iajCihlJat8BOcD8T+LrG/cpkCZ07wRXfPDrITwevw4NKaAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bwhZZdYD; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D392D26C390;
+	Tue, 20 May 2025 18:50:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747767044; cv=pass; b=VkDaIMlbZKsDu3AM3x30VJ/JxXIEznE5p2l8DGoWirIbV79XPWBGDcy9iaIU4MDejcAw+OFg5Z71eRI4P1wdo66cm36IiGqmErgsTMBNinLzd8hOocVBBpU+sNfHpwy+Hud0PAFPYUhoiTeZFswMyjYJSENwHMkZ9E2EpvcuM3E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747767044; c=relaxed/simple;
+	bh=KQXWX7fm4qp4WFDvVNw6sksu5NgiaHTZhcXk+f0JzCE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=lS/CZbjND+NIOjy1TaQOteYvPAMsb5jVtqSpvSkDfzTfe08bF1WmBAJBWpMr9RvmUfs0iii3LdkZDEmWR1o/btobPQZnqznXdHo3IB2Ac4JyIXm1zCfpNcKr/rW0iB6H+KaY/nkwirtL7D6HfxZGgMzZfcuBpOS6+k6+IdhHxKQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=Whd973Ac; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bwhZZdYD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747767033; x=1779303033;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=4Xz+qUHB2YCNCR2CV7QYNfulgNvPj70zCp9v+dNVwig=;
-  b=bwhZZdYDBnBQONXGGBqd/VT6CtxKDbiDXMGoBF/xOOUQRl6WvOVbSDUb
-   oKU5Ap77UR1myCMBLuKo2gQNVwNNJZ4lQsSaL9xJEEbVDrKMFCsJR5u5Z
-   2zWNGdq2WmKDDe1XyCcaBBNYVlrQjdNVe1wvVLCU/Vklmj4Rds83A7sN1
-   67agHcTk3eiAGeRWXBgBwDDmPdxDbATTXmiEai8v0T+kX+6no8FLajPLl
-   yD6ShZByd518WBgyQFAckYKBNXpSc1tlu9bpbvygaWsjGDpxcPyLYVG9n
-   7R3vHaGVC20HDg7lJ2ot8pCAJXiYGBH9+ub3vrBJW1gtgiXiVHZHSJis4
-   Q==;
-X-CSE-ConnectionGUID: TjO85QopSf+tZLHcHj/WKA==
-X-CSE-MsgGUID: 6BEDDGCeTuCbUJGoSeW7PA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="59946398"
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="59946398"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 11:50:31 -0700
-X-CSE-ConnectionGUID: XEW4GmabSG2u9P81egzzEw==
-X-CSE-MsgGUID: 9Lv+wtraReqXT+hvIqH6Hw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="140708012"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 11:50:31 -0700
-Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id CAD4A20B5736;
-	Tue, 20 May 2025 11:50:28 -0700 (PDT)
-Message-ID: <800f99f6-a1bf-41f3-bc65-67fbe4c61368@linux.intel.com>
-Date: Tue, 20 May 2025 14:50:27 -0400
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="Whd973Ac"
+ARC-Seal: i=1; a=rsa-sha256; t=1747767026; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=eHu2J4PaPD2w25JBiwNwKEsKhYsJ45o9UOB4EqCKIpibP7MjyFSMpL7rb9LZnkyEubGWTt9Yx2XLEanBgMiUQFPuAMCpxyiYzsqAvkLlO8hhvrVGWfeokPvFuMCVMsxno6fHem+OFuyansOaZMmEoI2TpU3vDH7hRoubERTEJLg=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1747767026; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=Xt+rrywOZe1K7faJK05oG26s0MPfO6rH8IpO8iFtn9g=; 
+	b=cfsYRfGkYGoHMKQ5HIjBIElExks1RplnPi++uiZv1r/k88Gr5G4NmhA6erXkUzCCuODCE6W2MjWC99BAzptY4sSVnQBiLz+oF0Fh7I+UKF20gBYzymz73MoeUFeY2AiFKPVQ3cMqTSTAyZqLM2xu0rIje4F842cOc8h832PhRrU=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1747767026;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Type:Content-Transfer-Encoding:To:To:Cc:Cc:Reply-To;
+	bh=Xt+rrywOZe1K7faJK05oG26s0MPfO6rH8IpO8iFtn9g=;
+	b=Whd973AcSD5HhW7fN2N1pe54wwBxWwpNoNezVwaMoIUUI8OWW7xfzZLboiykFygN
+	R0WNhzXtr+cj2v3zbhSE4Yijk7MnLn5YSr5vpjz2LfYWjdQ+3mRqkhbM7KtSzSW4bF+
+	4ZfMlvIVwRrNrK0hg4m+xz/VFojsRGqllF2AgQXI=
+Received: by mx.zohomail.com with SMTPS id 1747767025843367.77627410500713;
+	Tue, 20 May 2025 11:50:25 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Subject: [PATCH v2 0/4] Add RADXA ROCK 5T support
+Date: Tue, 20 May 2025 20:50:07 +0200
+Message-Id: <20250520-add-rock5t-v2-0-1f1971850a20@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 04/38] perf: Add a EVENT_GUEST flag
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Mingwei Zhang <mizhang@google.com>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Sean Christopherson <seanjc@google.com>, Paolo Bonzini
- <pbonzini@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com,
- "H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
- linux-kselftest@vger.kernel.org, Yongwei Ma <yongwei.ma@intel.com>,
- Xiong Zhang <xiong.y.zhang@linux.intel.com>,
- Dapeng Mi <dapeng1.mi@linux.intel.com>, Jim Mattson <jmattson@google.com>,
- Sandipan Das <sandipan.das@amd.com>, Zide Chen <zide.chen@intel.com>,
- Eranian Stephane <eranian@google.com>, Shukla Manali
- <Manali.Shukla@amd.com>, Nikunj Dadhania <nikunj.dadhania@amd.com>
-References: <20250324173121.1275209-1-mizhang@google.com>
- <20250324173121.1275209-5-mizhang@google.com> <aCrWqhaID9-b_jmr@google.com>
- <09ed8cb5-707d-4b13-b230-cff4fab02b72@linux.intel.com>
- <aCzBDaHdELjiKHfc@google.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <aCzBDaHdELjiKHfc@google.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAN/OLGgC/22OQQ6CMBBFr0Jm7Zi2WgiuvIdhUdqpNALVthIM4
+ e5W2Lp8k7z3Z4FIwVGES7FAoMlF58cM4lCA7tR4J3QmMwgmJJOsRmUMBq8fMqE1JGtRGTqVLWT
+ hGci6eYvdmp0Dvd65mfYjtCoSaj8MLl2KkeaEe5eX8BM6F5MPn+2ZiW/Gv92JI0NtLTdUnUmTu
+ Wrf96r1QR1zHJp1Xb8HWI6M2QAAAA==
+X-Change-ID: 20250509-add-rock5t-fde5927de36b
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
+ Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc: kernel@collabora.com, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, 
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
 
+The ROCK 5T is quite similar to the ROCK 5B+ and the ROCK 5B, so to
+share as much DT boilerplate between them as we can, this series
+reorganises things a bit and then adds the ROCK 5T .dts.
 
+Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+---
+Changes in v2:
+- Split up "reorganise common rock5* nodes" into two patches, where the
+  first simply renamed the file and changes the includes, and the second
+  moves B/+ nodes out of the shared include into a common B/+ include,
+  to address Sebastian Reichel's review.
+- Rebase onto next-20250516
+- Drop anything relating to the USB-C patch that wasn't picked
+- Link to v1: https://lore.kernel.org/r/20250509-add-rock5t-v1-0-cff1de74eced@collabora.com
 
-On 2025-05-20 1:51 p.m., Namhyung Kim wrote:
->>>> @@ -1089,6 +1094,7 @@ struct bpf_perf_event_data_kern {
->>>>   */
->>>>  struct perf_cgroup_info {
->>>>  	struct perf_time_ctx		time;
->>>> +	struct perf_time_ctx		timeguest;
->>>>  	int				active;
->>>>  };
->>>>  
->>>> diff --git a/kernel/events/core.c b/kernel/events/core.c
->>>> index e38c8b5e8086..7a2115b2c5c1 100644
->>>> --- a/kernel/events/core.c
->>>> +++ b/kernel/events/core.c
->>>> @@ -163,7 +163,8 @@ enum event_type_t {
->>>>  	/* see ctx_resched() for details */
->>>>  	EVENT_CPU	= 0x10,
->>>>  	EVENT_CGROUP	= 0x20,
->>>> -	EVENT_FLAGS	= EVENT_CGROUP,
->>>> +	EVENT_GUEST	= 0x40,
->>> It's not clear to me if this flag is for events to include guests or
->>> exclude them.  Can you please add a comment?
->>>
->> /*
->>  * There are guest events. The for_each_epc() iteration can
->>  * skip those PMUs which doesn't support guest events via the
->>  * MEDIATED_VPMU. It is also used to indicate the start/end of
->>  * guest events to calculate the guest running time.
->>  */
-> Thanks for the explanation.  So it's for events with !exclude_guest on
-> host 
+---
+Nicolas Frattaroli (4):
+      dt-bindings: arm: rockchip: add RADXA ROCK 5T
+      arm64: dts: rockchip: rename rk3588-rock-5b.dtsi
+      arm64: dts: rockchip: move common ROCK 5B/+ nodes into own tree
+      arm64: dts: rockchip: add ROCK 5T device tree
 
-The above "guest events" means that the events in a guest. The KVM
-should only invokes the interface when a guest requires PMU.
+ .../devicetree/bindings/arm/rockchip.yaml          |   5 +
+ arch/arm64/boot/dts/rockchip/Makefile              |   1 +
+ .../boot/dts/rockchip/rk3588-rock-5b-5bp-5t.dtsi   | 878 +++++++++++++++++++++
+ arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dtsi   | 875 +-------------------
+ arch/arm64/boot/dts/rockchip/rk3588-rock-5t.dts    | 105 +++
+ 5 files changed, 997 insertions(+), 867 deletions(-)
+---
+base-commit: 8e7386987569f6c99e6dc86d939476350049b9fd
+change-id: 20250509-add-rock5t-fde5927de36b
 
-For the host, for now, only the event with exclude_guest is supported.
-The !exclude_guest event on host must be failed to be created if there
-is a running VM.
+Best regards,
+-- 
+Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 
-and to do some operation only for host-only events on mediated
-> vPMUs.
-
-Yes.
-
-Update the comments as below.
-
-/*
- * There are events in a guest enabled with MEDIATED_VPMU.
- * The flag can be used in two places.
- * - The for_each_epc() iteration can skip those PMUs which
- *   doesn't support the events in a guest via the MEDIATED_VPMU.
- * - Indicate the start/end point of the events in a guest.
- *   The guest running time can be deducted for the
- *   host-only (exclude_guest) events.
- */
-
-Thanks,
-Kan
