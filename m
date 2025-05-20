@@ -1,95 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from out.smtpout.orange.fr (out-66.smtpout.orange.fr [193.252.22.66])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAD22242910;
-	Tue, 20 May 2025 16:11:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8D90276054;
+	Tue, 20 May 2025 16:12:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747757515; cv=none; b=Ma428zK8/nAaywx9vGrjOUqwohGWWOgEwUDn3AYZAd8a/nvTof468xpaaL5LAKITyjzXNJvcJdgfsfl742dX06n7JyOLkSAQWvxJ1LE//1X+0P3/Arj+WocriSZnABAEFqbIbyhOUAmfg+anztVDBB1Zwo9eTGSn0yytwQkYQ0o=
+	t=1747757523; cv=none; b=rarZ2hQfIZool7de6AyDLFRQJRdCt0mKGY+TSWiWPSiYt5+9jk6JBpkmO7VKpm1kb/tjDoPkkD48RSk4NManvNLSMmpOOiQKGW9T0d28c1UaiasIjbkytIj1QLEka+VYGoV8ngGWWP/stH5CfhY9GQP43bAq/jq4Wwu/qbOyTFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747757515; c=relaxed/simple;
-	bh=8TCv7iaNOgpcGg7fLSHMHTHKnprZSRXQCZrTY/VJgR8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uVDs6rDy6E+TY44z8lV79Hnw2p8ETUHmtFPlAEDBFfzSRnIgSiIz/Sj/pYCPrApg9wAh4vunZcpUeLFjQahBiXwjBr0FHsEJf4r/HexfJlpF2vACecDjZX4ASCBgPJ8fOSQU8Ifs9Y89w0i3zqAVySlLpw/m6ftndRnBFDC6JRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ddIqWwlM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747757523; c=relaxed/simple;
+	bh=U6lo7wpJePXrQN+8jqAd6+6cxb+SFV2VYr+GvxVd548=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nqAIM6Hw5W/O9sgBvOsHO2Awj5Pa6Fa68R6lxxrMOK9O5rniPYwpoNmFMWnXLpiESdVaxBgUD14GLd9pDQFDtQ/kHA8h3A5YobWBGJa1lQBo73j9QltOFpPYFjtjKoyZLNrYURORhLl1Kte8hR+UIQNLDE9V78339yK/jx2wZYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=dMMaR+AF; arc=none smtp.client-ip=193.252.22.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ddIqWwlM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA7CFC4CEE9;
-	Tue, 20 May 2025 16:11:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747757514;
-	bh=8TCv7iaNOgpcGg7fLSHMHTHKnprZSRXQCZrTY/VJgR8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ddIqWwlM5IMoAd6xU9iYH1SfbJrgQ9hh/qOVHQbYahrwQsOUCSCtqri/AMep18FEU
-	 QaXE5PAwESrihZRRUB00HFBaPm3e7iSw5jyIQ6csehhjYxyP99r9dRboT7dDUsHAXF
-	 oDVmjS/M0nQ58LSViKa3Dn9gAnrYMkDMRWWO9oWaGjfFF7xSWMdJscfKBka4Vd0p3P
-	 crh3+BFlg4os0UVFSiqhwhWoMtizS6VLZLI8mYssETQarrjdD7LhnJ5zVEYt7TaJ5I
-	 DkHiIIg3KnhRAbRXnJ/6WfXISzZhZQ1RXua4P1Lr07TgDf7HJBO2Dagyritsu3Ni9l
-	 fcdJm/O+DzU4A==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Karthikeyan Gopal <karthikeyan.gopal@intel.com>,
-	Laurent M Coquerel <laurent.m.coquerel@intel.com>,
-	Suman Kumar Chakraborty <suman.kumar.chakraborty@intel.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	George Abraham P <george.abraham.p@intel.com>,
-	qat-linux@intel.com,
-	linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] crypto: qat - add missing header inclusion
-Date: Tue, 20 May 2025 18:11:36 +0200
-Message-Id: <20250520161148.3562622-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="dMMaR+AF"
+Received: from [172.16.82.72] ([124.33.176.97])
+	by smtp.orange.fr with ESMTPA
+	id HPQYu9zeCFfBZHPQfuCi6a; Tue, 20 May 2025 18:03:09 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1747756989;
+	bh=U6lo7wpJePXrQN+8jqAd6+6cxb+SFV2VYr+GvxVd548=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=dMMaR+AFCHRDRqO/p9iL5eji6THqnlwGIZf0pOLqdvEGZ76W4qhMTn+EiagUzdWxQ
+	 CPytae6VjbfmGmLazR6+oB1RU1rhqxBt1Z7DKF4xxVCUDXmf1cpRc6UvyrT6rwNAbZ
+	 n9H2RMmZaDVOECX0m/P5L7y9wBPZZvgiL993jini4zAjlyKJjscVr9e3XnujHeOyxj
+	 PPJU1TFkfamk71h0rw3hVUKHM2ITkdhzgDXEIMvbi9pXjqE8acGw8o6b2jfI0Qw1oN
+	 1LMgj7K/GD1Gapjq6CGwjHJE3SCvoujZuArtvIQ260vmRZuCWJaFE3kpl2UWI6fe+O
+	 Vse/wByRNa1Mg==
+X-ME-Helo: [172.16.82.72]
+X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
+X-ME-Date: Tue, 20 May 2025 18:03:09 +0200
+X-ME-IP: 124.33.176.97
+Message-ID: <5b83c1b3-6370-4df1-8a57-7940d7a629fd@wanadoo.fr>
+Date: Wed, 21 May 2025 01:02:49 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH FYI 0/7] Updating some kernel headers with the kernel
+ sources
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>, James Clark <james.clark@linaro.org>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, Clark Williams <williams@redhat.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Arnaldo Carvalho de Melo <acme@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ I Hsin Cheng <richard120310@gmail.com>, "Michael S . Tsirkin"
+ <mst@redhat.com>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+ Peng Jiang <jiang.peng9@zte.com.cn>, Stefano Garzarella
+ <sgarzare@redhat.com>, Yazen Ghannam <yazen.ghannam@amd.com>,
+ Yury Norov <yury.norov@gmail.com>
+References: <20250519214126.1652491-1-acme@kernel.org>
+ <CAMZ6RqJUf=LpczMNu9WwLik9i-4tJHYENvM3d15nxjNM+_vc5w@mail.gmail.com>
+ <aCylQUlY3W7rbZAs@x1>
+Content-Language: en-US
+From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Autocrypt: addr=mailhol.vincent@wanadoo.fr; keydata=
+ xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
+ LFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI+wrIEExYKAFoC
+ GwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQTtj3AFdOZ/IOV06OKrX+uI
+ bbuZwgUCZx41XhgYaGtwczovL2tleXMub3BlbnBncC5vcmcACgkQq1/riG27mcIYiwEAkgKK
+ BJ+ANKwhTAAvL1XeApQ+2NNNEwFWzipVAGvTRigA+wUeyB3UQwZrwb7jsQuBXxhk3lL45HF5
+ 8+y4bQCUCqYGzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrbYZzu0JG5w8gxE6EtQe6LmxKMqP6E
+ yR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDldOjiq1/riG27mcIFAmceMvMCGwwF
+ CQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8VzsZwr/S44HCzcz5+jkxnVVQ5LZ4B
+ ANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
+In-Reply-To: <aCylQUlY3W7rbZAs@x1>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+On 21/05/2025 at 00:52, Arnaldo Carvalho de Melo wrote:
+> On Tue, May 20, 2025 at 09:44:05AM +0900, Vincent Mailhol wrote:
+>> On Tue. 20 May 2025 at 06:41, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-Without this header, building the new driver fails with:
+(...)
 
-In file included from drivers/crypto/intel/qat/qat_common/adf_gen6_shared.c:7:
-drivers/crypto/intel/qat/qat_common/adf_gen4_pfvf.h: In function 'adf_gen4_init_pf_pfvf_ops':
-drivers/crypto/intel/qat/qat_common/adf_gen4_pfvf.h:13:34: error: 'adf_pfvf_comms_disabled' undeclared (first use in this function)
-   13 |         pfvf_ops->enable_comms = adf_pfvf_comms_disabled;
-      |                                  ^~~~~~~~~~~~~~~~~~~~~~~
+> I think there is value in doing it now, as it clears up the build
+> warnings and solves already one prep work that syncing would entail,
+> namely the inclusion of const_true() in the tools compiler.h file.
 
-Fixes: 17fd7514ae68 ("crypto: qat - add qat_6xxx driver")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/crypto/intel/qat/qat_common/adf_gen2_pfvf.h | 1 +
- drivers/crypto/intel/qat/qat_common/adf_gen4_pfvf.h | 1 +
- 2 files changed, 2 insertions(+)
+Ack.
 
-diff --git a/drivers/crypto/intel/qat/qat_common/adf_gen2_pfvf.h b/drivers/crypto/intel/qat/qat_common/adf_gen2_pfvf.h
-index a716545a764c..9efee0053f3a 100644
---- a/drivers/crypto/intel/qat/qat_common/adf_gen2_pfvf.h
-+++ b/drivers/crypto/intel/qat/qat_common/adf_gen2_pfvf.h
-@@ -4,6 +4,7 @@
- #define ADF_GEN2_PFVF_H
- 
- #include <linux/types.h>
-+#include "adf_common_drv.h"
- #include "adf_accel_devices.h"
- 
- #define ADF_GEN2_ERRSOU3 (0x3A000 + 0x0C)
-diff --git a/drivers/crypto/intel/qat/qat_common/adf_gen4_pfvf.h b/drivers/crypto/intel/qat/qat_common/adf_gen4_pfvf.h
-index 17d1b774d4a8..2c8708117f70 100644
---- a/drivers/crypto/intel/qat/qat_common/adf_gen4_pfvf.h
-+++ b/drivers/crypto/intel/qat/qat_common/adf_gen4_pfvf.h
-@@ -4,6 +4,7 @@
- #define ADF_GEN4_PFVF_H
- 
- #include "adf_accel_devices.h"
-+#include "adf_common_drv.h"
- 
- #ifdef CONFIG_PCI_IOV
- void adf_gen4_init_pf_pfvf_ops(struct adf_pfvf_ops *pfvf_ops);
--- 
-2.39.5
+> I think I can take your "I am not objecting to this series in any way."
+> as an Acked-by?
+
+Sure. You can add my Acked-by to patch 6 and 7 (the ones in which you put me in
+CC). I did not have a look at the other ones (and do not plan to do so).
+
+
+Yours sincerely,
+Vincent Mailhol
 
