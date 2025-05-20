@@ -1,144 +1,88 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15EC6244186;
-	Tue, 20 May 2025 14:34:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D3111DFD84
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 14:35:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747751679; cv=none; b=FlhSEPttISRaL3CdG6oD022Elvl/L4nyd6FlwSYMbQHDO8gAa9IETTFk7KyLeq3OECKTjberVxWBx2YSuJ0EdAiw0NJRzhgnerWIg4ektldMsnbeXE9t8snwM2eLAXIpwL4649jQUImD6dE7qSNeDxf1B+j0I7m6yI6KMaYnzg0=
+	t=1747751755; cv=none; b=RTWwKXp51wF9UckC4LI/ea/9L6LvL+jEJQaF4/nZiBzEipHGYRCMrC6HpGGPNaiScx7nSzx6fA97tM+ahClT3bxBAHmcZpU10S2Bd3034a0/v6TodrsYlTRtEoGkVAU8fZBir0UCeeQXXRyH/GS5hSa+9I3CxHoNXRcnThqIQjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747751679; c=relaxed/simple;
-	bh=+t4Cf/Brla4nzolbLo0Ygx1cF3WxLLE+qrpDmLvVm1g=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=CQaouyQ8Ap4meySlgjYPtQ2qcdN635hGA2AIocjEWTTWgjI+D2eOPp+xcIsajb2ixjmtzmN2u74gibStQtZT4K8VYg4/OwXj2pc62e0seRlSgM7RjLgKjCnsvW8gAQZxNBCftz7w8U3jh9m9lcVh0Rnk23lg4b2xGHoVwaLvSXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Ki2ztVZr; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1747751755; c=relaxed/simple;
+	bh=oJBQOa2GEwHEtA5Wa1brzfL4kjnHeEJxtnJPod039Uo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hbjKqzdFf7jv+cm37TO3+Q35o0Gjw8M0NWzOWpImQ0dOId95/BVSLIpmgvUrmIsrZ3gD2cMtVerqTKRzo7OAGM9zeMkrOSeKPjh6TiJ/UxZiRbLSIsD8m1PpdNpKVc+M0Q0RdO37y1a4AHQzEmNU7ilfOOa7muh8mKa9UrD0zCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Q3Uh0ATL; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Ki2ztVZr"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54K7iMPr013649;
-	Tue, 20 May 2025 14:34:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=dij2jB
-	Lp8c/R0MTxWsUN34ZE33F2NvyD6QkC15mUbGM=; b=Ki2ztVZrmBs/pegHaNdFB2
-	6WANajhC9mF6qEddRx/RTgkUqRgAj4NrJ9sugZffZhuRXxMTa9m34xjBcJDnhxFU
-	2F8TWgoWuTn2PY6IbW8T11NXDflE0Yjtk6kgA8yvenrv8tiXrapw2Kob+If+tWRT
-	BtO92ikPJ4okBrQBXXggiOUB26rmPwOBx9r/HT6kku8zKJ19zSTV9zpmL/3NqlZt
-	6uAEmMzd7n5pr4VpGndPhaAOl15xZN5GC/fbYxJNWRandLBzGxwLZgFD9nxXiHhG
-	6tBDzjxTyEBez8DIP6mrhFVGNOCPID+ciHNszq2Zd/DJFmCFY+inwgxdbj8qBX1A
-	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46ra99mufp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 May 2025 14:34:35 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54KC3gws016147;
-	Tue, 20 May 2025 14:34:34 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46q7g2c2vg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 May 2025 14:34:34 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54KEYUsi56557876
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 20 May 2025 14:34:30 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4B7EE2004B;
-	Tue, 20 May 2025 14:34:30 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A1C8720040;
-	Tue, 20 May 2025 14:34:29 +0000 (GMT)
-Received: from li-978a334c-2cba-11b2-a85c-a0743a31b510.ibm.com (unknown [9.111.32.248])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 20 May 2025 14:34:29 +0000 (GMT)
-Message-ID: <0b90cd0ad24727c9d7b110f09fd79b2525b4fbe1.camel@linux.ibm.com>
-Subject: Re: [PATCH v1 2/5] KVM: s390: remove unneeded srcu lock
-From: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
-To: Claudio Imbrenda <imbrenda@linux.ibm.com>, linux-kernel@vger.kernel.org
-Cc: kvm@vger.kernel.org, linux-s390@vger.kernel.org, frankja@linux.ibm.com,
-        borntraeger@de.ibm.com, seiden@linux.ibm.com, nrb@linux.ibm.com,
-        david@redhat.com, hca@linux.ibm.com, agordeev@linux.ibm.com,
-        svens@linux.ibm.com, gor@linux.ibm.com
-Date: Tue, 20 May 2025 16:34:30 +0200
-In-Reply-To: <8373c4a476e6a8f714a559d0fad8f3fed66089f1.camel@linux.ibm.com>
-References: <20250514163855.124471-1-imbrenda@linux.ibm.com>
-		 <20250514163855.124471-3-imbrenda@linux.ibm.com>
-	 <8373c4a476e6a8f714a559d0fad8f3fed66089f1.camel@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Q3Uh0ATL"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 4233440E01FA;
+	Tue, 20 May 2025 14:35:50 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id tgluREqaE9dV; Tue, 20 May 2025 14:35:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1747751746; bh=WFmTxWsVyZNK7w/tKFuaV2DiUsno6+F95Y+v9aOJP0E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Q3Uh0ATLnVP+ytWULY2ytyVSEu5P4PxtY4d1OiPEPsPDAs52G39impKzumvqeBqhp
+	 XTnju9ZbZIfEmLfFhPguEYTlWqTrtoT7yj1ln9BZnbmINoe/7ODWUtPIDkab/zwGMT
+	 adCuz2+SHRgBdDdS1DmpH3LMSPve8PZGWhhNLDZckt+m6q6mPB5JiIKz2t28tawpWT
+	 TLpEEV6HBZx2qRnQ61tZtUoBCIqk46BvTBCKpuXceCVclZDJIRmNrGiLDmvEMzoqpu
+	 PDJEbpUOWENyZlorV7hjQqHTckh5Co1h+J9ThNdT8REFsKuepW228vYj9DdIRrWey2
+	 8SIxk0C0Lxzjd6gp9EkRDeW4fje2vofthNowL966dTL0mxVhAdwL/TKvLqvfnSEjwq
+	 XC7YAIf4A0BFPop2Bl6+p2IytPZwoWH3EC/ou/k7VeEcXYTNzbYs82MbsluOWCy2H7
+	 rCCErCiI3gdlwxZdlybssw/N+wG8YYe5bhogGdwHSxIZ9e5YJQTDEN+WRSycuQflm4
+	 /pSWpTLxOjBMb5E4AC6zibU7N4OReRfSOYGdlHf1wdx5iS0Q9Rzc7CrmtQNg1DLbPS
+	 DhJyY5ezqGpsYo+xSvpY5dmY5sW+r5LnL1uIqCFR5HTfSZPEKDvarEtFiu1P8Ieujd
+	 tV7raaYr+yKVu377ti0SDzBo=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4A86540E016A;
+	Tue, 20 May 2025 14:35:38 +0000 (UTC)
+Date: Tue, 20 May 2025 16:35:32 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: "Kirill A. Shutemov" <kirill@shutemov.name>,
+	Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
+	x86@kernel.org, Ingo Molnar <mingo@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Brian Gerst <brgerst@gmail.com>
+Subject: Re: [PATCH v5 2/7] x86/mm: Use a single cache hot per-CPU variable
+ to record pgdir_shift
+Message-ID: <20250520143532.GMaCyTNJqH_T2LR8q5@fat_crate.local>
+References: <20250520104138.2734372-9-ardb+git@google.com>
+ <20250520104138.2734372-11-ardb+git@google.com>
+ <awmpxjln22i5zmnv3wcwhzvpbbjqmhiw3onmpq66owbtdoujs5@f336cwpvlasn>
+ <CAMj1kXE+2P6_y0SnmtmD=J42pe67itnr5jQs6NxjMTvV7HHp0A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=J/mq7BnS c=1 sm=1 tr=0 ts=682c92fb cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=mH3vZ3oXfMAmPE_1c18A:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDExMyBTYWx0ZWRfX4M43be9fidUy OuGsDr1NmuGi8aSY0WamN+xb1/b9dBe2hzJ5PyptZf/oku0/T0enf8QlfkhJpupi8hw/GpwnRvo u059uov+VAnVCyOrHlerONKahbnfxVnfH9Krvz0QWGTwUtgHiAMv3gY/aHf2ObQ7+bPrLzHDFuJ
- xJB4qA6RMCdyUGHgJtH6hJ5kki65A27Laik8LYQvQyLYtW4Gsir4D7jJUvGldVAbDkt/4Bs1/8d ecr8/EnEaCxMWOTx/w4DnaoSCJu4SpAk3MNx1p3TRA+RgwQQFJzoBJF4v0y3rUWP5ay7ARLSNnx lzV2OJyhsZ/QPULzYwODdMPRR/PODbaoKu2KInM1gHY3aHGkQFD5uPL9qwkLN9dokqWFnF8je55
- WFtsv6yZhuZY2OD3WUZ7MU82oO1S+25UgL1lDjh3Q/vBcvLibHEfxLDBdB8nYTvZJVbiufeW
-X-Proofpoint-ORIG-GUID: qpZcX6c6IVm_wymNTKzRyJj5b9rijhVt
-X-Proofpoint-GUID: qpZcX6c6IVm_wymNTKzRyJj5b9rijhVt
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-20_06,2025-05-16_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- priorityscore=1501 impostorscore=0 bulkscore=0 mlxlogscore=929 mlxscore=0
- clxscore=1015 phishscore=0 spamscore=0 lowpriorityscore=0 malwarescore=0
- suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505200113
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXE+2P6_y0SnmtmD=J42pe67itnr5jQs6NxjMTvV7HHp0A@mail.gmail.com>
 
-On Mon, 2025-05-19 at 16:42 +0200, Nina Schoetterl-Glausch wrote:
-> On Wed, 2025-05-14 at 18:38 +0200, Claudio Imbrenda wrote:
-> > All paths leading to handle_essa() already hold the kvm->srcu.
-> > Remove unneeded srcu locking from handle_essa().
-> >=20
-> > Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
->=20
-> Reviewed-by: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
->=20
-> Why are you removing it tho?
-> It should be very low cost and it makes the code more robust,
-> since handle_essa itself ensures that it has the lock.
-> It is also easier to understand which synchronization the function does.
-> You could of course add a comment stating that the kvm srcu read side nee=
-ds
-> to be held. I think this would be good to have if you really don't want t=
-he
-> srcu_read_lock here.
-> But then you might also want that documented up the call chain.
+On Tue, May 20, 2025 at 01:28:52PM +0200, Ard Biesheuvel wrote:
+> Are you saying we shouldn't optimize prematurely? You must be new here :-)
 
-Actually, can we use __must_hold or have some assert?
->=20
-> > ---
-> >  arch/s390/kvm/priv.c | 4 ----
-> >  1 file changed, 4 deletions(-)
-> >=20
-> > diff --git a/arch/s390/kvm/priv.c b/arch/s390/kvm/priv.c
-> > index 1a49b89706f8..758cefb5bac7 100644
-> > --- a/arch/s390/kvm/priv.c
-> > +++ b/arch/s390/kvm/priv.c
-> > @@ -1297,12 +1297,8 @@ static int handle_essa(struct kvm_vcpu *vcpu)
-> >  		/* Retry the ESSA instruction */
-> >  		kvm_s390_retry_instr(vcpu);
-> >  	} else {
-> > -		int srcu_idx;
-> > -
-> >  		mmap_read_lock(vcpu->kvm->mm);
-> > -		srcu_idx =3D srcu_read_lock(&vcpu->kvm->srcu);
-> >  		i =3D __do_essa(vcpu, orc);
-> > -		srcu_read_unlock(&vcpu->kvm->srcu, srcu_idx);
-> >  		mmap_read_unlock(vcpu->kvm->mm);
-> >  		if (i < 0)
-> >  			return i;
+Right, but do you see __pgdir_shift on a seriously hot path to warrant this?
 
---=20
-IBM Deutschland Research & Development GmbH
-Vorsitzender des Aufsichtsrats: Wolfgang Wendt
-Gesch=C3=A4ftsf=C3=BChrung: David Faller
-Sitz der Gesellschaft: B=C3=B6blingen / Registergericht: Amtsgericht Stuttg=
-art, HRB 243294
+I'd expect this to happen the other way around, really: "Hey, pgdir_shift is
+getting accessed a lot, let's stick it somewhere where we can access it
+quickly..."
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
