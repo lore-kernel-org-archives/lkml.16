@@ -1,103 +1,226 @@
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBB7021772B
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 21:16:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B53C221772B;
+	Tue, 20 May 2025 21:16:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747775765; cv=none; b=lxVS6uhEaPfKJlq06OqcIRmUDfcrWPrAzSeKANpUGkHI4fFegEZ79H96OA5zV6oy7lonbZ3Mv5RESaTbDdc5LbyDvKr5FNutHkzvO1DeRsfCUMr6F99IHiTpZABvtU42pPY0ZqSyIl4OayNEExzWF1OlVqId+leOif3NeLU0fHw=
+	t=1747775772; cv=none; b=GDFTKIyaHRUwRrB94p7aZL3f7win/DJFXttKx5TdiyvlAyEv3XFWUK/HtsArsx1ezox2lqaMSRUhmOEobAt0GX2/h45XiMV2DSOFdFHMgXa8tE59t4yLn74HpjcrpOy92MRxlUPuSeTJgHtbPRrs00zaJkuGMEMwHcjm6PjDKls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747775765; c=relaxed/simple;
-	bh=PokIbil+4vzb3IM+d56Xpj4Mvgib+ySxP9q4ulJxR48=;
-	h=Date:Message-ID:MIME-Version:Content-Type:From:To:Cc:Subject:
-	 References:In-Reply-To; b=daluGO/AgUCO3WSr2HzkeZLzmmQrra6QaDsE9KCJS9HkWN41wLt5LqwHaSUpOFXVDbutsA8jAlpIgJvYF4Xu6bXSP4D29UUydm2OoiIGGvx0QGuA5yQ0nBuKE1r8EY0CIbj3n2moyRdXXtd3VBIDm3nMpE77orxhjA8iUGjYVw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=SATGsQUV; arc=none smtp.client-ip=209.85.219.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1747775772; c=relaxed/simple;
+	bh=8CteB6p8zUb1LKQ6PaOVnAOUgbNw2GtdCnfzZooLa/I=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=MLzCQuvXQ2ioe7KZelkbblVTWKnKXfibtUJnFTDAu8zXl4tGAYXnQaHyMgM6fWec2Fe/UTD/Ma/J8VUvfi4XnZdOX1//4QF1N87aCjobHNFDbHsvPY13hcLy6qzCEGiWYcO10KcUCUdxg2Y9eUEz3pX0j9gDYMIFlaBBK+s24Zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=QV65h/1F; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="SATGsQUV"
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6f8c0c8da93so63438556d6.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 14:16:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1747775760; x=1748380560; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
-         :mime-version:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0Vcim2IrvThidRodNsg/OfOdq2fd5gLucgy52LkkAJU=;
-        b=SATGsQUVNCcWA5EQ2sN31YQi0KcO0OMgg67xcYs16ITaMOe6Op0u1D+gq7ILTSB/DL
-         FQdpiltkvmAEgWIanzWiNeydwbuD0aYpWwjtKgHSWO2+a1IMCM/L2d/EDsMDVqiR/t2A
-         Dr4vo7CV/Fw3dsrFiU//gjBLuMSUaBhq8lVdNQAtdZY1PTDlbLXocFdQ0S6bxFniWug3
-         JssnaOmXDTxnsZ7//pEfNyN7VOKN1Tmeke8pl+mCHHEZ5Qa9IcHIRRtY9bPIi/qbv8Zm
-         XyXzgURy4XykbyrKYNDGCVpAz3iq+XNE3u0910/h/s0G2OWeoqOMatHPvm/cFMZvW8ps
-         LJIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747775760; x=1748380560;
-        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
-         :mime-version:message-id:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=0Vcim2IrvThidRodNsg/OfOdq2fd5gLucgy52LkkAJU=;
-        b=rxX9/UnqhCGvRjuEXI820FiczbvUVxMogjDcLYYJ6taV8/w8E/LmrwNki4cLPK6Wo9
-         /4x7pcgNTQ0h9K9VWq989Eel4fCm1CCrDCJo/cv9YymlJWeiMV6w0dnO7Z0urZrqrTKs
-         P0/lO8ySGGlTewZDyQv47zBEX/0v6iPH3F/6VipJ7B/1jc5xoEOStdxoXwOTa0ja5Mkg
-         AT0yJ6c6HlUn5hVGfSTm1fVd5iZ2pdQylEYbXW7KR6MPFVDPgJknahcy3Pvz5K6iixgc
-         ccN0Ej+9c8cqjF4mr7XdNYjyzlgHrjsr4b9I2iOXk3ImqlGm6kZrqtr9hqsGpEWMkpMs
-         y4sQ==
-X-Forwarded-Encrypted: i=1; AJvYcCULbVC+XFhDC7DkOqxk4ftwoJkSgCzjyJL2GIg4wlBgdJjfc08sgptBpYo+c6ShjWzIb7jCkyp+7hLbuak=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6bu70eJvHDWS0smyPok0+9T1U2QBPNw8KICDVJRdbO1TMGLvg
-	C9HvBakyJI/n1zpTNWU85geG9xwbDs53aACm+0aqDU6j74ic/VBezYT0aDOJNPZ75w==
-X-Gm-Gg: ASbGncu8ix5NNMuO//fnLbY4Frt8TGVIbwWVCuQSxYvp/6Q/oq867gAMzZ6kk/BQHGU
-	MDkq9d/qasygKvs9/VowKMsT2LwMHM9bojwN4ttDUE/vrp/Afk0tg8jLEDDSBOdCTLgWVFPnnUn
-	YAba2ZhtnCXtHqzxJeIn2JftvTFcE8jOmXmA7UA6tSxLwAV734K+0zGddxEik+P0O1320rtWWrF
-	Kbbh3T2cds3Vc4XggbNFaAHeZG2PKEGiZ3nE7sRykFuHl7fxA3tkJ8xyFffa6wBFkEvQ6Yzi9aQ
-	AQwad0ZuOvmbHAV/psQIfrQMt53YZ6HF+tmBknzBdbWuWhZp52+bsBSkmn7Gy0k44YL8oH/IEBx
-	UqiPPzFGxlEs6pTW7IMWUjdeMtwoaxjY=
-X-Google-Smtp-Source: AGHT+IGXRcWfO4AHv0ErYu9MQe8pxWB5OkTwD4jggVmmRyicMFT0cpUlaxE7iaZV/7atuSeHLh1gYg==
-X-Received: by 2002:ad4:5e8f:0:b0:6d8:a8e1:b57b with SMTP id 6a1803df08f44-6f8b0873ba6mr330435226d6.36.1747775760552;
-        Tue, 20 May 2025 14:16:00 -0700 (PDT)
-Received: from localhost (pool-71-126-255-178.bstnma.fios.verizon.net. [71.126.255.178])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6f8b0883b93sm76456226d6.14.2025.05.20.14.15.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 14:15:59 -0700 (PDT)
-Date: Tue, 20 May 2025 17:15:59 -0400
-Message-ID: <eb68761b5a2d53702f4d6b80fe2a6457@paul-moore.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="QV65h/1F"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1747775767;
+	bh=8CteB6p8zUb1LKQ6PaOVnAOUgbNw2GtdCnfzZooLa/I=;
+	h=From:Date:Subject:To:Cc:From;
+	b=QV65h/1FtwxUZuwlMTUNurcfKob+MktS0xOomWwHNFl0RFWjnK8hpu5iC0245zjt/
+	 l8NKnwotzs/tlSLdl7OsesMPYEFVrkpoehJGLUbC+C3ULIYISZ8Qx6aQrWayeoS/1r
+	 Ne+98lSueF+4LjtEPdQDHq6oYV4OJQ32figLR+z5PPVqgXp30BKhDoIXAb6RdGF0zX
+	 Nf/07Hi58xML+D50+kO/oBMj1aJy+4EPRTidvBTVdmua9hO8UmbIPKELv5uik3P+uZ
+	 3uRPB3A7/vubjP9BVX5q/FKkj6S1qBmbT/IauivCJ/+rlc618BxUicfAgrn5kPJnAL
+	 MdC2EGcvsVzFA==
+Received: from [192.168.1.63] (unknown [IPv6:2600:4041:5b1a:9400:99d:464c:62e0:2118])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nfraprado)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id F226017E0FD3;
+	Tue, 20 May 2025 23:16:04 +0200 (CEST)
+From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+Date: Tue, 20 May 2025 17:15:58 -0400
+Subject: [PATCH v2] pinctrl: mediatek: eint: Fix invalid pointer
+ dereference for v1 platforms
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 
-Content-Type: text/plain; charset=UTF-8 
-Content-Transfer-Encoding: 8bit 
-X-Mailer: pstg-pwork:20250520_1533/pstg-lib:20250520_1521/pstg-pwork:20250520_1533
-From: Paul Moore <paul@paul-moore.com>
-To: Li Li <dualli@chromium.org>, dualli@google.com, corbet@lwn.net, davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, donald.hunter@gmail.com, gregkh@linuxfoundation.org, arve@android.com, tkjos@android.com, maco@android.com, joel@joelfernandes.org, brauner@kernel.org, cmllamas@google.com, surenb@google.com, omosnace@redhat.com, shuah@kernel.org, arnd@arndb.de, masahiroy@kernel.org, bagasdotme@gmail.com, horms@kernel.org, tweek@google.com, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, netdev@vger.kernel.org, selinux@vger.kernel.org, linux-security-module@vger.kernel.org, hridya@google.com
-Cc: smoreland@google.com, ynaffit@google.com, kernel-team@android.com
-Subject: Re: [PATCH v17 1/3] lsm, selinux: Add setup_report permission to  binder
-References: <20250417002005.2306284-2-dualli@chromium.org>
-In-Reply-To: <20250417002005.2306284-2-dualli@chromium.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250520-genio-350-eint-null-ptr-deref-fix-v2-1-6a3ca966a7ba@collabora.com>
+X-B4-Tracking: v=1; b=H4sIAA3xLGgC/5WNQQ6DIBBFr2JYdxpAsbWr3qNxQWHUSSgYsMbGc
+ PdSb9Dl+z95b2cJI2Fit2pnEVdKFHwBeaqYmbQfEcgWZpJLxZXoYERPAWrFAckv4N/OwbxEsBh
+ xgIE2EFq0tdadtteGFc9cDtqOxqMvPFFaQvwcyVX81n/sqwAB/NI0yrZWSlPfTXBOP0PUZxNer
+ M85fwHWIO4H1gAAAA==
+X-Change-ID: 20250519-genio-350-eint-null-ptr-deref-fix-1a163aa9ad84
+To: Sean Wang <sean.wang@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Hao Chang <ot_chhao.chang@mediatek.com>, 
+ Qingliang Li <qingliang.li@mediatek.com>
+Cc: kernel@collabora.com, linux-mediatek@lists.infradead.org, 
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
+ Chen-Yu Tsai <wenst@chromium.org>, 
+ =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+X-Mailer: b4 0.14.2
 
-On Apr 16, 2025 Li Li <dualli@chromium.org> wrote:
-> 
-> Introduce a new permission "setup_report" to the "binder" class.
-> This persmission controls the ability to set up the binder generic
-> netlink driver to report certain binder transactions.
-> 
-> Signed-off-by: Thiébaud Weksteen <tweek@google.com>
-> Signed-off-by: Li Li <dualli@google.com>
-> ---
->  include/linux/lsm_hook_defs.h       |  1 +
->  include/linux/security.h            |  6 ++++++
->  security/security.c                 | 13 +++++++++++++
->  security/selinux/hooks.c            |  7 +++++++
->  security/selinux/include/classmap.h |  3 ++-
->  5 files changed, 29 insertions(+), 1 deletion(-)
+Commit 3ef9f710efcb ("pinctrl: mediatek: Add EINT support for multiple
+addresses") introduced an access to the 'soc' field of struct
+mtk_pinctrl in mtk_eint_do_init() and for that an include of
+pinctrl-mtk-common-v2.h.
 
-When possible, it is helpful to include at least one caller in the patch
-which adds a new LSM hook as it helps put the hook in context.  With that
-in mind, I think it would be best to reorder this patchset so that patch
-2/3 comes first and this patch comes second, with this patch including
-the change to binder_nl_report_setup_doit() which adds the call to the
-new LSM hook.
+However, pinctrl drivers relying on the v1 common driver include
+pinctrl-mtk-common.h instead, which provides another definition of
+struct mtk_pinctrl that does not contain an 'soc' field.
 
---
-paul-moore.com
+Since mtk_eint_do_init() can be called both by v1 and v2 drivers, it
+will now try to dereference an invalid pointer when called on v1
+platforms. This has been observed on Genio 350 EVK (MT8365), which
+crashes very early in boot (the kernel trace can only be seen with
+earlycon).
+
+In order to fix this, since 'struct mtk_pinctrl' was only needed to get
+a 'struct mtk_eint_pin', make 'struct mtk_eint_pin' a parameter
+of mtk_eint_do_init() so that callers need to supply it, removing
+mtk_eint_do_init()'s dependency on any particular 'struct mtk_pinctrl'.
+
+Fixes: 3ef9f710efcb ("pinctrl: mediatek: Add EINT support for multiple addresses")
+Suggested-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+---
+Changes in v2:
+- Completely changed approach to make mtk_eint_pin a parameter of
+  mtk_eint_do_init() as suggested by Angelo
+- Link to v1: https://lore.kernel.org/r/20250519-genio-350-eint-null-ptr-deref-fix-v1-1-07445d6d22c3@collabora.com
+---
+ drivers/pinctrl/mediatek/mtk-eint.c              | 26 ++++++++++--------------
+ drivers/pinctrl/mediatek/mtk-eint.h              |  5 +++--
+ drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c |  2 +-
+ drivers/pinctrl/mediatek/pinctrl-mtk-common.c    |  2 +-
+ 4 files changed, 16 insertions(+), 19 deletions(-)
+
+diff --git a/drivers/pinctrl/mediatek/mtk-eint.c b/drivers/pinctrl/mediatek/mtk-eint.c
+index 16af6a47028e67bb53db4041a37ebbbb8b9a1e43..d906a5e4101fb10968035fc48e9cf4a444d063a9 100644
+--- a/drivers/pinctrl/mediatek/mtk-eint.c
++++ b/drivers/pinctrl/mediatek/mtk-eint.c
+@@ -22,7 +22,6 @@
+ #include <linux/platform_device.h>
+ 
+ #include "mtk-eint.h"
+-#include "pinctrl-mtk-common-v2.h"
+ 
+ #define MTK_EINT_EDGE_SENSITIVE           0
+ #define MTK_EINT_LEVEL_SENSITIVE          1
+@@ -505,10 +504,9 @@ int mtk_eint_find_irq(struct mtk_eint *eint, unsigned long eint_n)
+ }
+ EXPORT_SYMBOL_GPL(mtk_eint_find_irq);
+ 
+-int mtk_eint_do_init(struct mtk_eint *eint)
++int mtk_eint_do_init(struct mtk_eint *eint, struct mtk_eint_pin *eint_pin)
+ {
+ 	unsigned int size, i, port, virq, inst = 0;
+-	struct mtk_pinctrl *hw = (struct mtk_pinctrl *)eint->pctl;
+ 
+ 	/* If clients don't assign a specific regs, let's use generic one */
+ 	if (!eint->regs)
+@@ -519,7 +517,15 @@ int mtk_eint_do_init(struct mtk_eint *eint)
+ 	if (!eint->base_pin_num)
+ 		return -ENOMEM;
+ 
+-	if (eint->nbase == 1) {
++	if (eint_pin) {
++		eint->pins = eint_pin;
++		for (i = 0; i < eint->hw->ap_num; i++) {
++			inst = eint->pins[i].instance;
++			if (inst >= eint->nbase)
++				continue;
++			eint->base_pin_num[inst]++;
++		}
++	} else {
+ 		size = eint->hw->ap_num * sizeof(struct mtk_eint_pin);
+ 		eint->pins = devm_kmalloc(eint->dev, size, GFP_KERNEL);
+ 		if (!eint->pins)
+@@ -533,16 +539,6 @@ int mtk_eint_do_init(struct mtk_eint *eint)
+ 		}
+ 	}
+ 
+-	if (hw && hw->soc && hw->soc->eint_pin) {
+-		eint->pins = hw->soc->eint_pin;
+-		for (i = 0; i < eint->hw->ap_num; i++) {
+-			inst = eint->pins[i].instance;
+-			if (inst >= eint->nbase)
+-				continue;
+-			eint->base_pin_num[inst]++;
+-		}
+-	}
+-
+ 	eint->pin_list = devm_kmalloc(eint->dev, eint->nbase * sizeof(u16 *), GFP_KERNEL);
+ 	if (!eint->pin_list)
+ 		goto err_pin_list;
+@@ -609,7 +605,7 @@ int mtk_eint_do_init(struct mtk_eint *eint)
+ err_wake_mask:
+ 	devm_kfree(eint->dev, eint->pin_list);
+ err_pin_list:
+-	if (eint->nbase == 1)
++	if (!eint_pin)
+ 		devm_kfree(eint->dev, eint->pins);
+ err_pins:
+ 	devm_kfree(eint->dev, eint->base_pin_num);
+diff --git a/drivers/pinctrl/mediatek/mtk-eint.h b/drivers/pinctrl/mediatek/mtk-eint.h
+index 0c6bf7cbdc3a4f16e35d576535c6cef102962356..fc31a4c0c77bf28b106943e9292d0dcc425c4922 100644
+--- a/drivers/pinctrl/mediatek/mtk-eint.h
++++ b/drivers/pinctrl/mediatek/mtk-eint.h
+@@ -88,7 +88,7 @@ struct mtk_eint {
+ };
+ 
+ #if IS_ENABLED(CONFIG_EINT_MTK)
+-int mtk_eint_do_init(struct mtk_eint *eint);
++int mtk_eint_do_init(struct mtk_eint *eint, struct mtk_eint_pin *eint_pin);
+ int mtk_eint_do_suspend(struct mtk_eint *eint);
+ int mtk_eint_do_resume(struct mtk_eint *eint);
+ int mtk_eint_set_debounce(struct mtk_eint *eint, unsigned long eint_n,
+@@ -96,7 +96,8 @@ int mtk_eint_set_debounce(struct mtk_eint *eint, unsigned long eint_n,
+ int mtk_eint_find_irq(struct mtk_eint *eint, unsigned long eint_n);
+ 
+ #else
+-static inline int mtk_eint_do_init(struct mtk_eint *eint)
++static inline int mtk_eint_do_init(struct mtk_eint *eint,
++				   struct mtk_eint_pin *eint_pin)
+ {
+ 	return -EOPNOTSUPP;
+ }
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+index 0884c0700b3ee463c4571f2ac5b0254b5583b54a..4918d38abfc29de1f27ee75bc6a51c32b3ca1ac5 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
++++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+@@ -419,7 +419,7 @@ int mtk_build_eint(struct mtk_pinctrl *hw, struct platform_device *pdev)
+ 	hw->eint->pctl = hw;
+ 	hw->eint->gpio_xlate = &mtk_eint_xt;
+ 
+-	ret = mtk_eint_do_init(hw->eint);
++	ret = mtk_eint_do_init(hw->eint, hw->soc->eint_pin);
+ 	if (ret)
+ 		goto err_free_eint;
+ 
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
+index de7bebb9a6cd98cbe7d77982698073f9c8974e3b..a4cb6d511fcdb36f67f30548636a0d64c5278840 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
++++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
+@@ -1044,7 +1044,7 @@ static int mtk_eint_init(struct mtk_pinctrl *pctl, struct platform_device *pdev)
+ 	pctl->eint->pctl = pctl;
+ 	pctl->eint->gpio_xlate = &mtk_eint_xt;
+ 
+-	return mtk_eint_do_init(pctl->eint);
++	return mtk_eint_do_init(pctl->eint, NULL);
+ }
+ 
+ /* This is used as a common probe function */
+
+---
+base-commit: 8566fc3b96539e3235909d6bdda198e1282beaed
+change-id: 20250519-genio-350-eint-null-ptr-deref-fix-1a163aa9ad84
+
+Best regards,
+-- 
+Nícolas F. R. A. Prado <nfraprado@collabora.com>
+
