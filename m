@@ -1,233 +1,204 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 032062580F7;
-	Tue, 20 May 2025 17:39:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB5D126B2C4;
+	Tue, 20 May 2025 17:39:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747762755; cv=none; b=kaUqmFz4qV1V5vD3Tzjg8hpL/rjvLWx9xqQUhNB93IkKY5ICL+QcrfIe6nDnoNYtEhPQc6HstdiULHyZdSCeaxT6xql1877UNVsDMPg2PKb9oncKbQFed4duqhq/cCGWyDlrD28sCV6bUfy+t0n/w4/EtgByj+WajBe7i1f29DM=
+	t=1747762762; cv=none; b=gFo2uOI4QFfsPVnEsMX2e2PMeHyoiElSNmVkPe6YzuYc72Epy4QaLqNAo0eGIxv+Zt0Bxo32gVfgXwsctbg5r9578nYLA6Zv7iD3E57Y+9i1+3J4rDl8P5mfp2aU4rG4l0gjS0x84YoguRK1DnwH8nv2SQPdR5CSacs8rj4jnhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747762755; c=relaxed/simple;
-	bh=AP2zSU9+0itMdwcR9lE9ZBsK1bpVd1XrPA+zEK8je/A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nOaKcuMH33M+adaP/pqV5LZ7TQOTkpGToVpH2t/LQ2DIN2+6hUoUFx5P6JoTj79QsJLVxfMAk8TLO+Cdrh3BMksJwQsHSq3DYQThMn8zBr0flHA/WyRxi+pomGuaKJt0Dt43PeFDnSy0FdkTuYS0Kjk5b+8dUVm87ny5Or5bOa8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aUaoz51r; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747762762; c=relaxed/simple;
+	bh=QM89OVSn6oFRiI0uGzP2UDQ698F7asNar2fVfWiWvYA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Z2J1QMRiOchOXuh1nGcGXKwvb77NDCe4xW0MhvUf+0IsWacDNtzC1sPEUGuM0hfoGomXEgMKGH9iBz307BTQP8qRVGxYwGc4N0wYjl5nl7QUK8Y/I5//hbudAgH/ST0O8DzB4SDu3sanFLCsApG7r4n6DwZQ7lGhghtCzRu0QL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dDhPf4V0; arc=none smtp.client-ip=209.85.160.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aUaoz51r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80A6EC4CEE9;
-	Tue, 20 May 2025 17:39:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747762754;
-	bh=AP2zSU9+0itMdwcR9lE9ZBsK1bpVd1XrPA+zEK8je/A=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=aUaoz51rp3mdIYsg0R1nyNoJ3/ohzElZj/85PNAqpVKn3E9UiabrUlaxFcViJlDi9
-	 V02g2y0QcXd8TwlwZuiDQJFwY5tclOlDFq8szdYKJt/0OuK8XxW4y92EfoDeoEyJsP
-	 WmAbjbASXj1o03EH18jYSV1ctKI1wvzEr9/2O3bk4kFNH2hAjQmn1Qj26mfmZlG/pQ
-	 f1odfak3Rd61LqlXs66F2zCtDfUSgWIuejaFSTegnWGvywEnMAQtXr7fOjuH2+kgRO
-	 Zjnp80q8g+dsSwyYFZjvUBoFgxYtJaJ58vuWKYMwR13+Di0EzvGHssME6kZcgcn0Rq
-	 0mHJin3Z89JpA==
-Message-ID: <6f23d82c-10cc-4d70-9dce-41978b05ec9a@kernel.org>
-Date: Tue, 20 May 2025 12:39:12 -0500
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dDhPf4V0"
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-476ae781d21so58017741cf.3;
+        Tue, 20 May 2025 10:39:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747762758; x=1748367558; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=U/cXnZFhK26rMDhHireAeksGXzd4YCvpdsNWOevRhCw=;
+        b=dDhPf4V0YKi1YXLQ1r/QSykytMmgqpe5W3uLnz9yeWv3remsy9ckuQ4qNlWVicUAu0
+         p9lEXWrdiOjjhPhoheLMHOgwC4cO/RKIzTefsJNNH9fWldbm4go3sNA7U8eRjMyiiKxK
+         +W1qh3gWEyhPw7jKU9SCBw1jZds7Wb8/tlGD3MHx2sQFiQgHhaXyQQ7lOTOIAADrAx5c
+         Jz6rKPpLGLdVJyDUdbRP6ayJ2uAu/Nf3qvT2DEoCw9D5jJa8iAzKfkPJoZF3qHRjw2yn
+         jeCVLBQnWs4Yv3yqLb08YK4vsfcLs+mYx/+jj5xhp1uvmmlsTDs4rPXFOjICBMh3A0eu
+         pmJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747762758; x=1748367558;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=U/cXnZFhK26rMDhHireAeksGXzd4YCvpdsNWOevRhCw=;
+        b=nnlHmuNrHlwFhceV7tPanXunvcpU5z/aUK2Q0iOLPtR5Zi+dR1ijnj2vFHgUblkl3o
+         bMFKfFnDm2w1sIOECyYT19ele4CIO8F/UZzra+flDe6KMiL/5DQdcFGqOy1SADsKSuCy
+         wkj1umCSZfExKLfKmWqdNpIrfYnFm3dbo9rtEDX/GkqPeEj++vOVn/63+l3Q4TBCiD4S
+         aN3kzU892RFNebzshT252qfoJqIWmx5pO1kYcLirfoZvFzWT+5NJBG5h3zlAiOLz/yUm
+         COEFl5yTEYXm0JCYDc231OhqZ74hkcJmUaLZCABvE9kaNCWVODvXU6KsU66w0vuzMTRB
+         YiUw==
+X-Forwarded-Encrypted: i=1; AJvYcCUFAZdLLSN4FgWWl0RzC4Ie/gaXUXu8cwK9uf9uG+ClpDHkHMXY+qLHhxnQsDQ1MumxnDKQrGWeCmuY61I6@vger.kernel.org, AJvYcCUurSD0QvbfoC+lYnoYlABlcp7rm/vbmudu1qzN2Ip2frntSYrqBEBSAmd5KMZPIeJEDNLAvsa7Wny4@vger.kernel.org, AJvYcCVPbEpQUOIIwgIgvJ/hXySerJcduHWiaKPhEuyPfHYIiqAy+HI9150IejyJx8uzdNVhggpNR4r4fvbHGIzbJ+E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYtGRHHbZslqGQv5wY3U5kHZDn8MCKZhxj3g+t2pUixut/Kf+d
+	GMA08hgnhAErj13LcHnYc9dCk0SNR2iUkAD7qMIfDxv94iCyXosfhCCLQbSTsCNviLquMr3hrxe
+	m5ShfycHGoMYZj6w3UJgMi/c8nrgJQ5aJ3Zxp
+X-Gm-Gg: ASbGncuTlaik2mKxlMaBrtongXaCJX2uqcc51ZH4nrHByjTyXSHQEpgCMgDFL4tJidh
+	HoR7gXXX4RqJUgu3T/q7UeYaPHxgsMdOK1/OVFhiMJsopFL008opgJlui5RyRXrw2SDuwUpqgXk
+	NFCdNNa7YnvZerO7I+ZIkRnKIlmi0xs2OyM9rFB+PLPoYEJoYpdBL2k+/IVX7PAAGvvA==
+X-Google-Smtp-Source: AGHT+IGCy8Dky2uDFs544GvIZ3DEH0oxECMeS+ZNPaiNhH+aATrtk0AVPWaVxOrcPA3K24xoB0ESl3vOs26Sf6ozux0=
+X-Received: by 2002:a05:622a:6202:b0:476:76df:d26d with SMTP id
+ d75a77b69052e-494b074f915mr256312981cf.8.1747762758261; Tue, 20 May 2025
+ 10:39:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] PCI: Prevent power state transition of erroneous
- device
-To: Denis Benato <benato.denis96@gmail.com>, Raag Jadav <raag.jadav@intel.com>
-Cc: rafael@kernel.org, mahesh@linux.ibm.com, oohall@gmail.com,
- bhelgaas@google.com, linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
- lukas@wunner.de, aravind.iddamsetty@linux.intel.com
-References: <20250519102808.4130271-1-raag.jadav@intel.com>
- <aCsK743YSuahPtnH@black.fi.intel.com>
- <85ed0b91-c84f-4d24-8e19-a8cb3ba02b14@gmail.com>
- <aCxP6vQ8Ep9LftPv@black.fi.intel.com>
- <a8c83435-4c91-495c-950c-4d12b955c54c@kernel.org>
- <aCyj9nbnIRet93O-@black.fi.intel.com>
- <552d75b2-2736-419f-887e-ce2692616578@kernel.org>
- <ee1117cf-6367-4e9a-aa85-ccfc6c63125d@gmail.com>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <ee1117cf-6367-4e9a-aa85-ccfc6c63125d@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250515-vt8500-timer-updates-v3-3-2197a1b062bd@gmail.com>
+ <202505180911.hDevFA1N-lkp@intel.com> <CABjd4YwJgZiq9_jKGa70GaxaW8TT=JuwDioU6jH=J_O=t+QT8w@mail.gmail.com>
+ <f74dbbcb-1628-4280-92e8-d89823a3a318@roeck-us.net>
+In-Reply-To: <f74dbbcb-1628-4280-92e8-d89823a3a318@roeck-us.net>
+From: Alexey Charkov <alchark@gmail.com>
+Date: Tue, 20 May 2025 21:39:15 +0400
+X-Gm-Features: AX0GCFu2VdGiOaPdTGNsD9E3jaLA46XfuVGvrGU1UJ1V9x-G8SIxw9EzEocSyA4
+Message-ID: <CABjd4YyXwznntcLVcYL6qx16YEwv4_VWzrXrE7_QHmQxiE0pXQ@mail.gmail.com>
+Subject: Re: [PATCH v3 3/4] clocksource/drivers/timer-vt8500: Prepare for
+ watchdog functionality
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: kernel test robot <lkp@intel.com>, Krzysztof Kozlowski <krzk@kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Wim Van Sebroeck <wim@linux-watchdog.org>, oe-kbuild-all@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 5/20/2025 12:22 PM, Denis Benato wrote:
-> 
-> On 5/20/25 17:49, Mario Limonciello wrote:
->> On 5/20/2025 10:47 AM, Raag Jadav wrote:
->>> On Tue, May 20, 2025 at 10:23:57AM -0500, Mario Limonciello wrote:
->>>> On 5/20/2025 4:48 AM, Raag Jadav wrote:
->>>>> On Mon, May 19, 2025 at 11:42:31PM +0200, Denis Benato wrote:
->>>>>> On 5/19/25 12:41, Raag Jadav wrote:
->>>>>>> On Mon, May 19, 2025 at 03:58:08PM +0530, Raag Jadav wrote:
->>>>>>>> If error status is set on an AER capable device, most likely either the
->>>>>>>> device recovery is in progress or has already failed. Neither of the
->>>>>>>> cases are well suited for power state transition of the device, since
->>>>>>>> this can lead to unpredictable consequences like resume failure, or in
->>>>>>>> worst case the device is lost because of it. Leave the device in its
->>>>>>>> existing power state to avoid such issues.
->>>>>>>>
->>>>>>>> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
->>>>>>>> ---
->>>>>>>>
->>>>>>>> v2: Synchronize AER handling with PCI PM (Rafael)
->>>>>>>> v3: Move pci_aer_in_progress() to pci_set_low_power_state() (Rafael)
->>>>>>>>        Elaborate "why" (Bjorn)
->>>>>>>> v4: Rely on error status instead of device status
->>>>>>>>        Condense comment (Lukas)
->>>>>>> Since pci_aer_in_progress() is changed I've not included Rafael's tag with
->>>>>>> my understanding of this needing a revisit. If this was a mistake, please
->>>>>>> let me know.
->>>>>>>
->>>>>>> Denis, Mario, does this fix your issue?
->>>>>>>
->>>>>> Hello,
->>>>>>
->>>>>> Unfortunately no, I have prepared a dmesg but had to remove the bootup process because it was too long of a few kb: https://pastebin.com/1uBEA1FL
->>>>>
->>>>> Thanks for the test. It seems there's no hotplug event this time around
->>>>> and endpoint device is still intact without any PCI related failure.
->>>>>
->>>>> Also,
->>>>>
->>>>> amdgpu 0000:09:00.0: PCI PM: Suspend power state: D3hot
->>>>>
->>>>> Which means whatever you're facing is either not related to this patch,
->>>>> or at best exposed some nasty side-effect that's not handled correctly
->>>>> by the driver.
->>>>>
->>>>> I'd say amdgpu folks would be of better help for your case.
->>>>>
->>>>> Raag
->>>>
->>>> So according to the logs Denis shared with v4
->>>> (https://pastebin.com/1uBEA1FL) the GPU should have been going to BOCO. This
->>>> stands for "Bus off Chip Off"
->>>>
->>>> amdgpu 0000:09:00.0: amdgpu: Using BOCO for runtime pm
->>>>
->>>> If it's going to D3hot - that's not going to be BOCO, it should be going to
->>>> D3cold.
->>>
->>> Yes, because upstream port is in D0 for some reason (might be this patch
->>> but not sure) and so will be the root port.
->>>
->>> pcieport 0000:07:00.0: PCI PM: Suspend power state: D0
->>> pcieport 0000:07:00.0: PCI PM: Skipped
->>>
->>> and my best guess is the driver is not able to cope with the lack of D3cold.
->>
->> Yes; if the driver is configured to expect BOCO (D3cold) if it doesn't get it, chaos ensues.
->>
->> I guess let's double check the behavior with CONFIG_PCI_DEBUG to verify this patch is what is changing that upstream port behavior.
-> 
-> 
-> This is the very same exact kernel, minus the patch in question:  https://pastebin.com/rwMYgG7C
-> 
-> 
-> Both previous kernel and this one have CONFIG_PCI_DEBUG=y.
-> 
-> Removed the initial bootup sequence to be able to use pastebin.
+On Mon, May 19, 2025 at 5:34=E2=80=AFPM Guenter Roeck <linux@roeck-us.net> =
+wrote:
+>
+> On 5/19/25 04:34, Alexey Charkov wrote:
+> > On Sun, May 18, 2025 at 5:24=E2=80=AFAM kernel test robot <lkp@intel.co=
+m> wrote:
+> >>
+> >> Hi Alexey,
+> >>
+> >> kernel test robot noticed the following build warnings:
+> >>
+> >> [auto build test WARNING on 92a09c47464d040866cf2b4cd052bc60555185fb]
+> >>
+> >> url:    https://github.com/intel-lab-lkp/linux/commits/Alexey-Charkov/=
+dt-bindings-timer-via-vt8500-timer-Convert-to-YAML/20250516-025729
+> >> base:   92a09c47464d040866cf2b4cd052bc60555185fb
+> >> patch link:    https://lore.kernel.org/r/20250515-vt8500-timer-updates=
+-v3-3-2197a1b062bd%40gmail.com
+> >> patch subject: [PATCH v3 3/4] clocksource/drivers/timer-vt8500: Prepar=
+e for watchdog functionality
+> >> config: loongarch-randconfig-r123-20250517 (https://download.01.org/0d=
+ay-ci/archive/20250518/202505180911.hDevFA1N-lkp@intel.com/config)
+> >> compiler: loongarch64-linux-gcc (GCC) 14.2.0
+> >> reproduce: (https://download.01.org/0day-ci/archive/20250518/202505180=
+911.hDevFA1N-lkp@intel.com/reproduce)
+> >>
+> >> If you fix the issue in a separate patch/commit (i.e. not just a new v=
+ersion of
+> >> the same patch/commit), kindly add following tags
+> >> | Reported-by: kernel test robot <lkp@intel.com>
+> >> | Closes: https://lore.kernel.org/oe-kbuild-all/202505180911.hDevFA1N-=
+lkp@intel.com/
+> >>
+> >> sparse warnings: (new ones prefixed by >>)
+> >>>> drivers/clocksource/timer-vt8500.c:201:51: sparse: sparse: incorrect=
+ type in assignment (different address spaces) @@     expected void *platfo=
+rm_data @@     got void [noderef] __iomem *static [assigned] [toplevel] reg=
+base @@
+> >>     drivers/clocksource/timer-vt8500.c:201:51: sparse:     expected vo=
+id *platform_data
+> >>     drivers/clocksource/timer-vt8500.c:201:51: sparse:     got void [n=
+oderef] __iomem *static [assigned] [toplevel] regbase
+> >>
+> >> vim +201 drivers/clocksource/timer-vt8500.c
+> >>
+> >>     175
+> >>     176  /*
+> >>     177   * This probe gets called after the timer is already up and r=
+unning. This will create
+> >>     178   * the watchdog device as a child since the registers are sha=
+red.
+> >>     179   */
+> >>     180  static int vt8500_timer_probe(struct platform_device *pdev)
+> >>     181  {
+> >>     182          struct platform_device *vt8500_watchdog_device;
+> >>     183          struct device *dev =3D &pdev->dev;
+> >>     184          int ret;
+> >>     185
+> >>     186          if (!sys_timer_ch) {
+> >>     187                  dev_info(dev, "Not enabling watchdog: only on=
+e irq was given");
+> >>     188                  return 0;
+> >>     189          }
+> >>     190
+> >>     191          if (!regbase)
+> >>     192                  return dev_err_probe(dev, -ENOMEM,
+> >>     193                          "Timer not initialized, cannot create=
+ watchdog");
+> >>     194
+> >>     195          vt8500_watchdog_device =3D platform_device_alloc("vt8=
+500-wdt", -1);
+> >>     196          if (!vt8500_watchdog_device)
+> >>     197                  return dev_err_probe(dev, -ENOMEM,
+> >>     198                          "Failed to allocate vt8500-wdt");
+> >>     199
+> >>     200          /* Pass the base address as platform data and nothing=
+ else */
+> >>   > 201          vt8500_watchdog_device->dev.platform_data =3D regbase=
+;
+> >
+> > Frankly, given that this driver only applies to VT8500 (which is ARM
+> > based), the warning appears a bit overzealous. After all, on ARM MMIO
+> > addresses are in the same physical address space as normal memory
+> > addresses, and furthermore this platform_data is never dereferenced
+> > directly anyway.
+>
+> Guess we'll need AI compilers in the future to help them know that.
+> I for my part would argue that "this warning can be ignored" is the
+> source of many problems flying under the radar.
+>
+> >
+> > I could silence the warning either by more aggressive casting or by
+> > wrapping the pointer into some struct, but both of those sound a bit
+> > overreaching. Would appreciate guidance from the list on how to best
+> > approach this.
+> >
+>
+> First of all, I am quite sure that using platform drivers for this is the
+> wrong approach to start with. This seems to be a perfect candidate for
+> an auxiliary driver.
 
-Thanks - this confirms that the problem is the root port not going to 
-D3.  This new log shows:
+TIL: auxiliary bus :)
 
-pcieport 0000:07:00.0: PCI PM: Suspend power state: D3hot
+Thanks for the pointer Guenter, it does indeed look like a more
+appropriate choice. I'll try and port the driver to use that instead,
+and resubmit.
 
-So I feel we should fixate on solving that.
-> 
->>
->>>
->>> Raag
->>>
->>>> Denis, can you redo your logs with out Raag's patch patch and set
->>>> CONFIG_PCI_DEBUG to compare?  The 6.14.6 log you shared already
->>>> (https://pastebin.com/kLZtibcD) also chooses BOCO but I'm suspecting picks
->>>> D3cold like it should.
->>>>
->>>>>
->>>>>>>> More discussion on [1].
->>>>>>>> [1] https://lore.kernel.org/all/CAJZ5v0g-aJXfVH+Uc=9eRPuW08t-6PwzdyMXsC6FZRKYJtY03Q@mail.gmail.com/
->>>>>>>>
->>>>>>>>     drivers/pci/pci.c      |  9 +++++++++
->>>>>>>>     drivers/pci/pcie/aer.c | 13 +++++++++++++
->>>>>>>>     include/linux/aer.h    |  2 ++
->>>>>>>>     3 files changed, 24 insertions(+)
->>>>>>>>
->>>>>>>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->>>>>>>> index 4d7c9f64ea24..a20018692933 100644
->>>>>>>> --- a/drivers/pci/pci.c
->>>>>>>> +++ b/drivers/pci/pci.c
->>>>>>>> @@ -9,6 +9,7 @@
->>>>>>>>      */
->>>>>>>>     #include <linux/acpi.h>
->>>>>>>> +#include <linux/aer.h>
->>>>>>>>     #include <linux/kernel.h>
->>>>>>>>     #include <linux/delay.h>
->>>>>>>>     #include <linux/dmi.h>
->>>>>>>> @@ -1539,6 +1540,14 @@ static int pci_set_low_power_state(struct pci_dev *dev, pci_power_t state, bool
->>>>>>>>            || (state == PCI_D2 && !dev->d2_support))
->>>>>>>>             return -EIO;
->>>>>>>> +    /*
->>>>>>>> +     * If error status is set on an AER capable device, it is not well
->>>>>>>> +     * suited for power state transition. Leave it in its existing power
->>>>>>>> +     * state to avoid issues like unpredictable resume failure.
->>>>>>>> +     */
->>>>>>>> +    if (pci_aer_in_progress(dev))
->>>>>>>> +        return -EIO;
->>>>>>>> +
->>>>>>>>         pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
->>>>>>>>         if (PCI_POSSIBLE_ERROR(pmcsr)) {
->>>>>>>>             pci_err(dev, "Unable to change power state from %s to %s, device inaccessible\n",
->>>>>>>> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
->>>>>>>> index a1cf8c7ef628..617fbac0d38a 100644
->>>>>>>> --- a/drivers/pci/pcie/aer.c
->>>>>>>> +++ b/drivers/pci/pcie/aer.c
->>>>>>>> @@ -237,6 +237,19 @@ int pcie_aer_is_native(struct pci_dev *dev)
->>>>>>>>     }
->>>>>>>>     EXPORT_SYMBOL_NS_GPL(pcie_aer_is_native, "CXL");
->>>>>>>> +bool pci_aer_in_progress(struct pci_dev *dev)
->>>>>>>> +{
->>>>>>>> +    int aer = dev->aer_cap;
->>>>>>>> +    u32 cor, uncor;
->>>>>>>> +
->>>>>>>> +    if (!pcie_aer_is_native(dev))
->>>>>>>> +        return false;
->>>>>>>> +
->>>>>>>> +    pci_read_config_dword(dev, aer + PCI_ERR_COR_STATUS, &cor);
->>>>>>>> +    pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS, &uncor);
->>>>>>>> +    return cor || uncor;
->>>>>>>> +}
->>>>>>>> +
->>>>>>>>     static int pci_enable_pcie_error_reporting(struct pci_dev *dev)
->>>>>>>>     {
->>>>>>>>         int rc;
->>>>>>>> diff --git a/include/linux/aer.h b/include/linux/aer.h
->>>>>>>> index 02940be66324..e6a380bb2e68 100644
->>>>>>>> --- a/include/linux/aer.h
->>>>>>>> +++ b/include/linux/aer.h
->>>>>>>> @@ -56,12 +56,14 @@ struct aer_capability_regs {
->>>>>>>>     #if defined(CONFIG_PCIEAER)
->>>>>>>>     int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
->>>>>>>>     int pcie_aer_is_native(struct pci_dev *dev);
->>>>>>>> +bool pci_aer_in_progress(struct pci_dev *dev);
->>>>>>>>     #else
->>>>>>>>     static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
->>>>>>>>     {
->>>>>>>>         return -EINVAL;
->>>>>>>>     }
->>>>>>>>     static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
->>>>>>>> +static inline bool pci_aer_in_progress(struct pci_dev *dev) { return false; }
->>>>>>>>     #endif
->>>>>>>>     void pci_print_aer(struct pci_dev *dev, int aer_severity,
->>>>>>>> -- 
->>>>>>>> 2.34.1
->>>>>>>>
->>>>
->>
+> Second, I do consider passing an iomem pointer as platform data to be
+> inherently unsafe. I would very much prefer either passing a regmap
+> pointer or, if that doesn't work, a data structure.
 
+I guess it resolves itself with the auxiliary driver approach, as I
+can then just upcast the auxiliary device pointer to the parent's
+enclosing private struct, which can then contain both a timer read
+function and the specific pointers to the two registers the watchdog
+needs. No need then for the child to do its arbitrary offsets into the
+parent's iomem region - just use what's given directly. It's still
+going to be iomem pointer access, but on the other hand putting a
+layer of indirection (i.e. regmap) into the system timer code sounds a
+bit scary to me.
+
+Best regards,
+Alexey
