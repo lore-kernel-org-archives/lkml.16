@@ -1,261 +1,247 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A30C024C66C;
-	Tue, 20 May 2025 14:51:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747752713; cv=none; b=hWMCpL1TQPJXMP/aiAcedA+3nHyoAiSZyTmuechcYsEYs4DRw7OI/DYhnQ8HegHvD2Lo7ZAXbcfWK80bNYDBffPvdK4tzrmrUvP1fMox6Dsnz3/kb8LJEAKaCaKJCkP6J5SIJtwltfZjDuaw1DumixBS07PBEu+OYpulX+bdmUQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747752713; c=relaxed/simple;
-	bh=HzZk53yXe64Q9JoYrPSSFLZy1uhVL1npi4obG+ABvaE=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ge78vw7XVJSOz6CaINk3VNdWQ7qbEmmBTx4MX9+oh++NNaZ0zLIqKxl69M2rvQrOWOYFRagFo7ethSuzOskNsrnB5lDAD48GS8Q1Wb6e/YOOl+nMu1UGAYzZqmuslCFf1718BUySAnpK2SrWkM30vCquJjUz7kWtX2o/sKvCgfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VOSMRSwj; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCBA824C063
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 14:54:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.153.30
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747752842; cv=fail; b=NqxeQ8QhTkCTxARFs4rqSBTcMzRlgcT4CZhVCj7Mh3epcTuLDrHPMlZ65RsPb2lbugkQaimY9uU30oAuBgalyqvgS+u5EOixIU0SxfasyNmemYdrPbaw5wAFHdZZFhdIUImnkAW6Ed+TwDDKWi8GLz6xh/ZvrlacVoGbvZlUIl8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747752842; c=relaxed/simple;
+	bh=8ZC7hhWaFDGTwx3GUxJUEHTx6KmAAvM/0oPoB97+i0Q=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=DkzzKo1KIZ3MZk2jhM3vgxpQsqVvm3peNPtmBCgyontq1I/FURuJ5iD8WM4U38pVA7r2StDfQ9skECs+GgOQdgsmC81tdE9A75DjQ0RKRSsYZMPP8h0m9uybpQmp+ExBAv1aLXY274mW28aOrD2mMy3Syo5FXttmYAScCZ+6VzY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b=ZGXLP9eD; arc=fail smtp.client-ip=67.231.153.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=meta.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VOSMRSwj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747752712; x=1779288712;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=HzZk53yXe64Q9JoYrPSSFLZy1uhVL1npi4obG+ABvaE=;
-  b=VOSMRSwjqxzJEsq8eXzl/FsvvSoPezeiiZ7n0Z6Cq9VyY5x+krjX/2iM
-   I16qBLS7T4jfT82jcF9CxfEZxgZnhkTa5tX/WS5aPusMpfsnM+lhfZkCj
-   pInsaZwipU/n80NIaS+z2GBaOYxeO+BIezNCIwjVPqLUJo6j1uWVOGJxT
-   sgNtgV3k+b9YsV9KhvybGu884yB9ZmZIcf/gHe80+gUi3is/ToFiDYDEK
-   1OaVgn2e20gPHJtChuoyhWteW7GmJsKDMyNinZIQ3ximC/uSgetEeJFGc
-   iElXF4I4co6fIcRgFIzVw0J5Yrzu3OD4gf82FepX+CBckiH/0vZveuHUN
-   A==;
-X-CSE-ConnectionGUID: NHD9++6uSRe0dnuU8A98SA==
-X-CSE-MsgGUID: u3nMVECaQ6i8CiQDfT7e4w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="49622240"
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="49622240"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 07:51:51 -0700
-X-CSE-ConnectionGUID: ORl7SB1eRPaBmM8MXDhtqQ==
-X-CSE-MsgGUID: 1lTvD0mKRJ6J4CdCqalxDA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="140242843"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.235])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 07:51:47 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 20 May 2025 17:51:44 +0300 (EEST)
-To: "David E. Box" <david.e.box@linux.intel.com>
-cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
-    srinivas.pandruvada@linux.intel.com, 
-    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, tony.luck@intel.com, 
-    xi.pardee@linux.intel.com, Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH 09/15] docs: Add ABI documentation for intel_pmt feature
- directories
-In-Reply-To: <20250430212106.369208-10-david.e.box@linux.intel.com>
-Message-ID: <faecf78c-ee7e-686b-ab1d-f040050c55d8@linux.intel.com>
-References: <20250430212106.369208-1-david.e.box@linux.intel.com> <20250430212106.369208-10-david.e.box@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=meta.com header.i=@meta.com header.b="ZGXLP9eD"
+Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54K7j5GS004760;
+	Tue, 20 May 2025 07:53:36 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=s2048-2021-q4;
+	 bh=KMxnNM7N2KRRWNpXf4VUmKr7BwkRPDWKTUr0Y4NQF8s=; b=ZGXLP9eDecMN
+	YhJKWBgEkpLbukr7abdAT8jzOFTuOUio5nMEewNLGY+VuUdi+iZAng9AwBPrcVW7
+	wER/Zc8E2aU7tVwIOgR36AN2GQMSL2Wp9Yv6GLUPzd+osxZtfSNRk7kSkmCWXBjd
+	N1+/sXmoADD7r/wxahC0+n7Pa7KSO2U+TYBJO7yyEhoIlEa4OIwMtffKYDro+aGM
+	AJAHZBBEncpPE1M5pHxpLBrvJ/F2dfBz9ogD5i8ygLKTHJ4Q0Dn52B9i90UEIW6D
+	jFsNpe6nKcS9C6teOlj7C18aWKzqfq8D/5P9qYH3alntI5XyuuN7jESVCpvwBteX
+	VSoeWCDScA==
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2170.outbound.protection.outlook.com [104.47.57.170])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 46rjgjbj5r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 20 May 2025 07:53:36 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=jD6mSPvHN5kY46JkwycF+Uj7EMcekjI/CjXUaye/A0DgKN9xSK8ODwvrBK4fBNTtuPBtlxdiXKreivvLCbHhnfAOSHoxgoTr+CZBaCqHPzUz8eXQQ4USRlUHHoDJLQSoBSnOcFdMQEJoMiT94m0s0frqp8dmiC3PMcf+tj/fezVk7UHqbohXCoaAyGSMb76qc9axsi8g6H6qvQjKdwg15toeSqol0Av0wOjuZRLVVnx/i3vBtNkqLL40W8qkg4dAxkeSiRSgWl2hT2vnTYwQc5cSnLBobIo74E2hCbV77yGYpA27SO82Kn7Z958QI0gs9/cJ6FBTvQD9g0I8otk4iw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KMxnNM7N2KRRWNpXf4VUmKr7BwkRPDWKTUr0Y4NQF8s=;
+ b=NJL2xVSb/wNSZYSnvKY8KIDDpeOEXB+ud1oYALvRdPO/tmkodY9TFriNOsZ8w4a2j0ykR9ysyGz0MeJ0MPzIwpvfYDuagEu1moECwy2RxsZa6ctRpUlP1McB4DiaE69xrTQQA//ICPsmJBG+Kqv8OGEiCtUeKt00KPpKx9QOwdPgqL4pCSEBH65KjT4REc9rFzlp+XD7cAKArTdiYSsBOV0t8aF+y7LiOmbUw5mhNe4vkvs0dLFRLC+ikYBd+gaeX6XQNyAgS2yZMUi2vTQ1M7XGA8llVOjDv9fB1FmXlsCbz7/YJ90UQMNmlld1mpVx5/FVGHE98B45lu1G2QQ7ug==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=meta.com; dmarc=pass action=none header.from=meta.com;
+ dkim=pass header.d=meta.com; arc=none
+Received: from LV3PR15MB6455.namprd15.prod.outlook.com (2603:10b6:408:1ad::10)
+ by SJ4PPF5E66B6E98.namprd15.prod.outlook.com (2603:10b6:a0f:fc02::89c) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.31; Tue, 20 May
+ 2025 14:53:33 +0000
+Received: from LV3PR15MB6455.namprd15.prod.outlook.com
+ ([fe80::595a:4648:51bc:d6e0]) by LV3PR15MB6455.namprd15.prod.outlook.com
+ ([fe80::595a:4648:51bc:d6e0%7]) with mapi id 15.20.8722.027; Tue, 20 May 2025
+ 14:53:33 +0000
+Message-ID: <23576497-af63-4074-8724-d75d0dca1817@meta.com>
+Date: Tue, 20 May 2025 10:53:32 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: scheduler performance regression since v6.11
+To: Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        vschneid@redhat.com, Juri Lelli <juri.lelli@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <1e3c711f-8c96-4c39-bbe2-7742940d1d31@meta.com>
+ <20250509194955.GA25798@noisy.programming.kicks-ass.net>
+ <20250512180846.GA25891@noisy.programming.kicks-ass.net>
+ <2f394a01-1cd9-4719-9394-647d8731cf3f@meta.com>
+ <d3c8527f-ffaf-4463-a305-17ca21a06ce8@meta.com>
+ <20250516101822.GC16434@noisy.programming.kicks-ass.net>
+ <2084b7d9-bb4f-4a5e-aaec-98e07b3edc2e@arm.com>
+From: Chris Mason <clm@meta.com>
+Content-Language: en-US
+In-Reply-To: <2084b7d9-bb4f-4a5e-aaec-98e07b3edc2e@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MN2PR11CA0022.namprd11.prod.outlook.com
+ (2603:10b6:208:23b::27) To LV3PR15MB6455.namprd15.prod.outlook.com
+ (2603:10b6:408:1ad::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-357066394-1747752704=:936"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV3PR15MB6455:EE_|SJ4PPF5E66B6E98:EE_
+X-MS-Office365-Filtering-Correlation-Id: 629a5eaf-9adb-4ea2-1b90-08dd97ae17a2
+X-FB-Source: Internal
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?QjdMNmxONUZES1VFNVpsVFRPYzB5c3BKeENNZXlWYS9rcXkwMnNPZ3p0KzEz?=
+ =?utf-8?B?MkVFK3dUbTZHWjhic3hmcWtuUndMVzhhUC85N1oyZjBKbDlueTQwMzBZWlJ5?=
+ =?utf-8?B?Y2VtNW56VXlyeVZ0TDArc09sdHVwR1lEY0g1QXFRcmhoM1JCWndLZU9aeHo1?=
+ =?utf-8?B?KzRxdWtReEhsNWhwWE00b0ZpU0ZhcjhORk1hR0FSTVVBTFJOSldUYjdWenJC?=
+ =?utf-8?B?dEZURTBDRHZTdDM4bXp5THdYQ1VJTmJLbVcvdStiaUtaOVdEanA4QW9pYVRC?=
+ =?utf-8?B?RUxLdlZpN3N3cmdoN1hFdlQ4NThoN01kZ2RBNXo1RW14ZlNkM05OTE1nd2tx?=
+ =?utf-8?B?TU5CcG1GSFpmZ3Y5MGNITXoydEZuNGI3VEllQzFJRjFFVFdSMkRYbTgvenl1?=
+ =?utf-8?B?bldEK0srZ043UGwyVFZ3TkRsSGxyejNUMWhlNkJid1dLYWZEOXRlTklLN0w4?=
+ =?utf-8?B?U2ZQbWpCajRseG9RdnNXemxPUG9jY3VtTU1DRkI1OTQ2MU9kckhEMlc4TzJt?=
+ =?utf-8?B?NXZodUFMaCtORFBvalJxNU9PZC85TUhMZUE5TVZlYlkwdVNiNDJ5R3MwdGI5?=
+ =?utf-8?B?S3E3ekE0WGRCSnBFWS9xaVZhcjNRWGszRkkwOFcwTVNOUE9RNS8wRndpeU4r?=
+ =?utf-8?B?dGFIZ01KVXRucWdMaGp3VlV3bVBTM2lxV3VjUDhwMGFPa3VzVXc4c1RsaTc1?=
+ =?utf-8?B?WHF5UU10WWJMdWhuTWtvMG9ZMWxRYUJvZDFZRkhjZVJGTEdSRkMxdStCbk9k?=
+ =?utf-8?B?eTU0SXdBV2l4bHlybUZNRXFsd2Z5d3JWOW5sUWF2aXBvUC9ncDl2SWMrUmF0?=
+ =?utf-8?B?cm5MRFdHQ25URStoVFZiN0U0V2xEc0JXanVrVEFQUFA5ekNTeWxQYzdRaTM3?=
+ =?utf-8?B?YzlGRnE1Y3ZQbmdEQml1WG5YZzlFdW0zcFYvbUdNamQ1ZWtuOEV2THIzK2ZB?=
+ =?utf-8?B?WXZmVzBseEs5T09OckxDSjJhd3NaeFJrS29RSDJZT0NzeTJWSTRncGh3Z2Qv?=
+ =?utf-8?B?SC95dmxyWVdSaXhLZnNDc0dIK1ZyejB1M0x4WVVJN1NaZmxkYkwvZEtITE1z?=
+ =?utf-8?B?WGNSTmJ2anFuSmY2djkzQjRHQ1ZDN1phMy95SUlSSXE3T2FTeEtuS1NGMWhS?=
+ =?utf-8?B?S2p6WTRCU2c0a0YrWW85MlBPWVBiVjV1R252Y1ZnZjZwK3I3REo0WW5mb2xC?=
+ =?utf-8?B?TFlsenkvMTdCd1g5UkxlWllDNjJaSlBZNE80Y1dJcGFDelhWaGw2WTNlcXUr?=
+ =?utf-8?B?M054TFlxWW5FSkxQdnhLRXBkUWFEbzdaQkQ5a1c4dDk2NHlRWUNtbkNBM0w2?=
+ =?utf-8?B?VTV4S2dSSVkvRUVLWVRNM3FweXJhbXpDUVBXaC9RY1RtUkZTS0FoM3RxTThm?=
+ =?utf-8?B?QXVZWmZsWDJjT2ZWbWFZdkwrU0Z6bWFwMTE3VmszcVJvYmdyZmMwSjlLRGxm?=
+ =?utf-8?B?bGJxdEdQTTRyNlZMRzMrclFpa3R2cEtmd044UjUzQkEycmc0QmQ3bWxlcysr?=
+ =?utf-8?B?ejZxM1M4eENmU0lJQlY4VGhZbko5NWlhK2Q1eENlVUdRTmRKeWhkdnNiNHp3?=
+ =?utf-8?B?OWR6STQ2Nm1FWFYvOEcrM3lKUExJRFpjWnNHSUE2SnNHbnIwQkI5Z1MvU0Fs?=
+ =?utf-8?B?WWFGUVc5N29SeE9qNFJ3bVBvV1lkZmZqMG9SNk10cXhTNkRNeDYvK3BkNk90?=
+ =?utf-8?B?bVNFOGNCKzFkTFZGR0xRbHdsVUNDNHl5dmQwSUVFMktrVFlvVTgraHQweVdR?=
+ =?utf-8?B?UEhuTit0R2tkdEkxNEdpb1FxWW5DbVQvanBDekl2TEJCMFVrNkNMb1pHUUg1?=
+ =?utf-8?Q?3Ss51HogKSfLV9Fh8krOv4xHyMQiLNy418X9o=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR15MB6455.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?eTMrWk9MYStXVi9rTTFqam5ZWlVEZjVYSitrTlBQaDBkZTFIUzd1YWUzWmZL?=
+ =?utf-8?B?dDl3VXhFeUdTclVPN2hPZUcyb0hCOTdDVHFITkd3bTRQcHFqVnlUbkFsS2hD?=
+ =?utf-8?B?TG9QbFhLcHBYY1UzREFrdHdMM3hhdnlCcThnVTU2NmdJeGFmcXpZN0dvWk53?=
+ =?utf-8?B?Uk5IMExaYUcwQ05KdzlxTEV3V3djVFZCdnM0R2FZekk0RUxUc0ZrZXhFdmV4?=
+ =?utf-8?B?R3NtbnU4QmdoU0gxRzA4TDdKZS81SHFnWE51bTc5SkhZMjJ5eE5CK2VaWGha?=
+ =?utf-8?B?KzZVY2JYMFhETEMvaFhpTmYvRzZhMEhxSFhjRUZTbm82WW44cC9CU1M4VFFm?=
+ =?utf-8?B?VlQ3LzhQMHhnL1NPT0VlQzgzZXk4bHpvNTMvem1iYjVoaWxocVNNbmtCdGZ0?=
+ =?utf-8?B?bXI0ZzRBanZMZjBCSXc4aFhRWWdudDFoYnNxWjVJZ3hDZWliRzFOTk1PWFFH?=
+ =?utf-8?B?c2lyUGxHajBLdnJlS0QzVG9uUkJzOVJ6VDBEL3p4cGVhenlTbFRZcFAxY1kx?=
+ =?utf-8?B?Q1VkeTlOSy8ybFBsWWJqbnFXekNDdk5iSzZoOFJndkU3VlQ2bGt5ZytkSWhK?=
+ =?utf-8?B?TjF4QVZzWEpaeUVzWlZpRWdkL2M1a0RudlF5Nll4K05ROGg4b1FzVnNtcmFV?=
+ =?utf-8?B?VmZlcWJoSloyVWlHUVc0ZTIrOFE4UURZVjB0bWNQWlBWcHF2amc1YWw0YWRX?=
+ =?utf-8?B?aUFQRzcyYmJtMlVSRTQxeXJRb2ZoZUwrL2hQcDl4YThmUWJlMGVyd1JYY0Zl?=
+ =?utf-8?B?WGZxN0NJYkluaFJ2Z2ZlTXdTSG52dHpQclh2aXE0Z085Rlk1V3BPTjNaSWFs?=
+ =?utf-8?B?dURacTdRdGx5WUNoQVBoZlNkdEdJaUczYWZlbldZeTVrQXVEZCsyYnk0d2pj?=
+ =?utf-8?B?RGV0OTVnZHZzUUJvRVo4dnA0OHpGdEVmOUlwZ1NMWnhpUWQvY2Q1d0VqMy8x?=
+ =?utf-8?B?R2xIc1B1cGtTZUk3R2U1OGN6MEJwK2w3cjVrL0E0S0tyU0o1VFg3aGtpdjMr?=
+ =?utf-8?B?aElnemZJOXROcmxUY0RxWDdnTDdyS1YxNGtFUTFXZ0N4WExXczBhUC8xRTRi?=
+ =?utf-8?B?WUw4V3hBZGw3aXJDT1RGYzB2azY5enFJdFJNYWxVZlZEeDV6MzdSMURJYnQw?=
+ =?utf-8?B?Ukora1FXZkJ2T0RwQlQwSGJLbmY1d1hxYkt3ekdtUmtXK2Q4YjBiK1Z2RE5v?=
+ =?utf-8?B?MlMvUFlnb3Z5bUJRVHJTOEJhRWlVdThUL1grSkQrWGd6cmg0ZHloTmVXa1RQ?=
+ =?utf-8?B?SEwrNDJNSjRPUFpHYkg0bUhwNG5NRVFzWnA3YzJmMEg2RVA3RmVqL2VMWVM0?=
+ =?utf-8?B?cE5EcUE4eWczYkk0U0g3bkdyOXljRUkwSW9EaU0rTVljYUl2ZFFJc3B1OHd2?=
+ =?utf-8?B?VklpbFV4d29tVys3VFdCMmt1QkJYYmhiZDJINkJNTVJvbnRlNWQ4OXY3dHM5?=
+ =?utf-8?B?OFA2a3Jtb2w1OUZPRzdxUExDUHBWb0ZyTHNZRlRGazBWVVZHellwQ01NVmlC?=
+ =?utf-8?B?K0xBM3JYc0g3dmhTS29kNW1oQjFpalJvQnJYQnJWOE5RaTBVdVdod29Bd21a?=
+ =?utf-8?B?cFk1S3RuT3JtODRKMXhGQk5FR0NKTmcvd3pjejhab1h0VE9TSjRxTHJ4aFIv?=
+ =?utf-8?B?bmt2aFZKRkJpVnlQYjFyNUJnL3QvdjBKMTVHbHlMb3hVL1RyM3RMSmlDWjlL?=
+ =?utf-8?B?dmNOVTllZ0dTSzBwTGRTNFkrTXNBZERMODEvb0Vxc2U1L2JqM0NKam5zNFFw?=
+ =?utf-8?B?OWNaVTBVcCtiTXJnSTd5WHhuNmdDcE84VjRvSnhSRGlMTDBpL2ltSHluTXc3?=
+ =?utf-8?B?Vi95aFZuZFFoVXYxK2JjWG1DSzNuTEU2R2c3WTJIYW1SRHp2RW1mVlk2Q3BW?=
+ =?utf-8?B?RktUN3E0SGVKOU8rNGtRdHpPM0FVenBXRURndWdrbGg2WUFQbVVVK1drMUht?=
+ =?utf-8?B?a0pYK3hSZE1ubklTejNxeklML2tZdkNJTzdVQVc4SFRUcHdndFBKMzVSdFk0?=
+ =?utf-8?B?d0ZWenp5UVVDRks5YlNCWkcrSFFET0RNYmlsWWRPbEdkY2RqOVFubXp6cmd3?=
+ =?utf-8?B?VEd1WjJkeXM4OGV5cnErZTh3ZG5mUndoTmZHckdrUmMrWHAwUU05WnY5UC9t?=
+ =?utf-8?Q?X25o=3D?=
+X-OriginatorOrg: meta.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 629a5eaf-9adb-4ea2-1b90-08dd97ae17a2
+X-MS-Exchange-CrossTenant-AuthSource: LV3PR15MB6455.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 May 2025 14:53:33.5205
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: V3454a/TurSGTWZqiRxV4DCcT/HFLpJKr4ChXCSatZIxIeCWdgvG3CDvgIzrBBZV
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ4PPF5E66B6E98
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDEyMCBTYWx0ZWRfX/aSPptf9xNiI KN6JSNTpZOtd8VfDZDkrNkCBb6yWMQjPEM+l5RpuJEpXdZUDzkKgk4DOU4mNX5JLobbnggVYNAV wSZBUxVZ9O4kyqP8gTXBf5A/zKyFv8Gh3OCMm/HxCM5XArnZPfeSMfHZnmdxwQ7n9R88zLQmsP6
+ zm+o7Hx67mPRRPb3c7Zl/mYd/GFWSVFZjU9CC7I+1YXb55r2HC3M0p6o2AG3b9k4t/8Fr3LIpWf t3g4ZM2hPBX1whz8MUXP/qHCESluEzBSdlNL2YWTGgbiLwBkRqaQzJGgH9QS610v6cXiEYSxtiP O+JAHrzKvfBLK3bRUHaM8dZo9pC2SWAmehk/sIc9++PWe46PFahQIhJH70/an1GLEMwLP4LccuZ
+ Zlv0rFGWux3QoGrhaEZw3mQEq0aHu2cg+1sQKdwlQc7FdbJp4oFZbdZju4LCyRBVH1fdBIki
+X-Proofpoint-GUID: cLYLomRWAwfJjApIvv4yxf3puRpdeLFj
+X-Proofpoint-ORIG-GUID: cLYLomRWAwfJjApIvv4yxf3puRpdeLFj
+X-Authority-Analysis: v=2.4 cv=PqCTbxM3 c=1 sm=1 tr=0 ts=682c9770 cx=c_pps a=joO5rFOndlhnht97C4Lqsw==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=7CQSdrXTAAAA:8 a=1kh535N3VjSecvVthCkA:9 a=QEXdDO2ut3YA:10 a=a-qgeE7W1pNrGK8U0ZQC:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-20_06,2025-05-20_01,2025-03-28_01
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On 5/20/25 10:38 AM, Dietmar Eggemann wrote:
+> On 16/05/2025 12:18, Peter Zijlstra wrote:
+>> On Mon, May 12, 2025 at 06:35:24PM -0400, Chris Mason wrote:
+>>
+>> Right, so I can reproduce on Thomas' SKL and maybe see some of it on my
+>> SPR.
+>>
+>> I've managed to discover a whole bunch of ways that ttwu() can explode
+>> again :-) But as you surmised, your workload *LOVES* TTWU_QUEUE, and
+>> DELAYED_DEQUEUE takes some of that away, because those delayed things
+>> remain on-rq and ttwu() can't deal with that other than by doing the
+>> wakeup in-line and that's exactly the thing this workload hates most.
+>>
+>> (I'll keep poking at ttwu() to see if I can get a combination of
+>> TTWU_QUEUE and DELAYED_DEQUEUE that does not explode in 'fun' ways)
+>>
+>> However, I've found that flipping the default in ttwu_queue_cond() seems
+>> to make up for quite a bit -- for your workload.
+>>
+>> (basically, all the work we can get away from those pinned message CPUs
+>> is a win)
+>>
+>> Also, meanwhile you discovered that the other part of your performance
+>> woes were due to dl_server, specifically, disabling that gave you back a
+>> healthy chunk of your performance.
+>>
+>> The problem is indeed that we toggle the dl_server on every nr_running
+>> from 0 and to 0 transition, and your workload has a shit-ton of those,
+>> so every time we get the overhead of starting and stopping this thing.
+>>
+>> In hindsight, that's a fairly stupid setup, and the below patch changes
+>> this to keep the dl_server around until it's not seen fair activity for
+>> a whole period. This appears to fully recover this dip.
+>>
+>> Trouble seems to be that dl_server_update() always gets tickled by
+>> random garbage, so in the end the dl_server never stops... oh well.
+>>
+>> Juri, could you have a look at this, perhaps I messed up something
+>> trivial -- its been like that this week :/
+> 
+> On the same VM I use as a SUT for the 'hammerdb-mysqld' tests:
+> 
+> https://lkml.kernel.org/r/d6692902-837a-4f30-913b-763f01a5a7ea@arm.com 
+> 
+> I can't spot any v6.11 related changes (dl_server or TTWU_QUEUE) but a
+> PSI related one for v6.12 results in a ~8% schbench regression.
+> 
+> VM (m7gd.16xlarge, 16 logical CPUs) on Graviton3:
+> 
+> schbench -L -m 4 -M auto -t 128 -n 0 -r 60
+> 
+> 3840cbe24cf0 - sched: psi: fix bogus pressure spikes from aggregation race
 
---8323328-357066394-1747752704=:936
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+I also saw a regression on this one, but it wasn't stable enough for me
+to be sure.  I'll retest, but I'm guessing this is made worse by the VM
+/ graviton setup?
 
-On Wed, 30 Apr 2025, David E. Box wrote:
+I've been testing Peter's changes, and they do help on my skylake box
+but not as much on the big turin machines.  I'm trying to sort that out,
+but we have some other variables wrt PGO/LTO that I need to rule out.
 
-> Add a new sysfs ABI documentation file describing the layout and content =
-of
-> the features-<PCI BDF>/ directory used by Intel PMT (Platform Monitoring
-> Technology). This directory exposes telemetry and control feature details
-> for a given PMT PCI device.
->=20
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> ---
->  .../testing/sysfs-class-intel_pmt-features    | 128 ++++++++++++++++++
->  MAINTAINERS                                   |   1 +
->  2 files changed, 129 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-class-intel_pmt-featu=
-res
->=20
-> diff --git a/Documentation/ABI/testing/sysfs-class-intel_pmt-features b/D=
-ocumentation/ABI/testing/sysfs-class-intel_pmt-features
-> new file mode 100644
-> index 000000000000..6dfb9b4b30b5
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-class-intel_pmt-features
-> @@ -0,0 +1,128 @@
-> +What:          /sys/class/intel_pmt/features-<PCI BDF>/
-> +Date:          2025-04-24
-> +KernelVersion: 6.16
-> +Contact:       david.e.box@linux.intel.com
-> +Description:
-> +               The `features-<PCI BDF>/` directory represents the "featu=
-res"
-> +               capability exposed by Intel PMT (Platform Monitoring Tech=
-nology)
-> +               for the given PCI device.
-> +
-> +               Each directory corresponds to a PMT feature and contains
-> +               attributes describing the available telemetry, monitoring=
-, or
-> +               control functionalities.
-> +
-> +Directory Structure:
-> +
-> +  /sys/class/intel_pmt/features-<PCI BDF>/
-> +  =E2=94=9C=E2=94=80=E2=94=80 accelerator_telemetry/=09=09# Per-accelera=
-tor telemetry data
-> +  =E2=94=9C=E2=94=80=E2=94=80 crash_log/=09=09=09# Contains system crash=
- telemetry logs
-> +  =E2=94=9C=E2=94=80=E2=94=80 per_core_environment_telemetry/=09# Enviro=
-nmental telemetry per core
-> +  =E2=94=9C=E2=94=80=E2=94=80 per_core_performance_telemetry/=09# Perfor=
-mance telemetry per core
-> +  =E2=94=9C=E2=94=80=E2=94=80 per_rmid_energy_telemetry/=09# Energy tele=
-metry for RMIDs
-> +  =E2=94=9C=E2=94=80=E2=94=80 per_rmid_perf_telemetry/=09=09# Performanc=
-e telemetry for RMIDs
-> +  =E2=94=9C=E2=94=80=E2=94=80 tpmi_control/=09=09=09# TPMI-related contr=
-ols and telemetry
-> +  =E2=94=9C=E2=94=80=E2=94=80 tracing/=09=09=09=09# PMT tracing features
-> +  =E2=94=94=E2=94=80=E2=94=80 uncore_telemetry/=09=09=09# Uncore telemet=
-ry data
-> +
-> +Common Files (Present in all feature directories):
-> +
-> +  caps
-> +    - Read-only
-> +    - Lists available capabilities for this feature.
-> +
-> +  guids
-> +    - Read-only
-> +    - Lists GUIDs associated with this feature.
-> +
-> +Additional Attributes (Conditional Presence):
-> +
-> +  max_command_size
-> +    - Read-only
-> +    - Present if the feature supports out-of-band MCTP access.
-> +    - Maximum supported MCTP command size for out-of-band PMT access (by=
-tes).
-> +
-> +  max_stream_size
-> +    - Read-only
-> +    - Present if the feature supports out-of-band MCTP access.
-> +    - Maximum supported MCTP stream size (bytes).
-> +
-> +  min_watcher_period_ms
-> +    - Read-only
-> +    - Present if the feature supports the watcher API.
-> +    - Minimum supported time period for the watcher interface (milliseco=
-nds).
-> +
-> +  num_rmids
-> +    - Read-only
-> +    - Present if the feature supports RMID telemetry.
-> +    - Maximum number of RMIDs tracked simultaneously.
-> +
-> +Example:
-> +For a device with PCI BDF `0000:00:03.1`, the directory tree could look =
-like:
-> +
-> +  /sys/class/intel_pmt/features-0000:00:03.1/
-> +  =E2=94=9C=E2=94=80=E2=94=80 accelerator_telemetry/
-> +  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 caps
-> +  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 guids
-> +  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 max_command_size
-> +  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 max_stream_size
-> +  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 min_watcher_period_ms
-> +  =E2=94=9C=E2=94=80=E2=94=80 crash_log/
-> +  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 caps
-> +  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 guids
-> +  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 max_command_size
-> +  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 max_stream_size
-> +  =E2=94=9C=E2=94=80=E2=94=80 per_core_environment_telemetry/
-> +  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 caps
-> +  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 guids
-> +  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 max_command_size
-> +  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 max_stream_size
-> +  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 min_watcher_period_ms
-> +  =E2=94=9C=E2=94=80=E2=94=80 per_rmid_energy_telemetry/
-> +  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 caps
-> +  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 guids
-> +  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 max_command_size
-> +  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 max_stream_size
-> +  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 min_watcher_period_ms
-> +  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 num_rmids
-> +  =E2=94=9C=E2=94=80=E2=94=80 tpmi_control/
-> +  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 caps
-> +  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 guids
-> +  =E2=94=9C=E2=94=80=E2=94=80 tracing/
-> +  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 caps
-> +  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 guids
-> +  =E2=94=9C=E2=94=80=E2=94=80 uncore_telemetry/
-> +  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 caps
-> +  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 guids
-> +  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 max_command_size
-> +  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 max_stream_size
-> +  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 min_watcher_period_ms
-> +
-> +Notes:
-> +  - Some attributes are only present if the corresponding feature suppor=
-ts
-> +    the capability (e.g., `max_command_size` for MCTP-capable features).
-> +  - Features supporting RMIDs include `num_rmids`.
-> +  - Features supporting the watcher API include `min_watcher_period_ms`.
-> +  - The `caps` file provides additional information about the functional=
-ity
-> +    of the feature.
-> +
-> +Example 'caps' content for the 'tracing' feature:
-> +
-> +  /sys/class/intel_pmt/features-0000:00:03.1/
-> +  =E2=94=9C=E2=94=80=E2=94=80 tracing/
-> +  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 caps
-> +
-> +=09telemetry                                Available: No
-> +=09watcher                                  Available: Yes
-> +=09crashlog                                 Available: No
-> +=09streaming                                Available: No
-> +=09threashold                               Available: No
-> +=09window                                   Available: No
-> +=09config                                   Available: Yes
-> +=09tracing                                  Available: No
-> +=09inband                                   Available: Yes
-> +=09oob                                      Available: Yes
-> +=09secure_chan                              Available: No
-> +=09pmt_sp                                   Available: Yes
-> +=09PMT SP Policy                            Available: Yes
-> +=09mailbox                                  Available: Yes
-> +=09bios_lock                                Available: Yes
-
-It would be good to open RMID somewhere as I'm not sure if that acronym=20
-is well-known.
-
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index bd9f99585894..10338ea81667 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -12181,6 +12181,7 @@ INTEL PMT DRIVERS
->  M:=09David E. Box <david.e.box@linux.intel.com>
->  S:=09Supported
->  F:=09Documentation/ABI/testing/sysfs-class-intel_pmt
-> +F:=09Documentation/ABI/testing/sysfs-class-intel_pmt-features
->  F:=09drivers/platform/x86/intel/pmt/
-> =20
->  INTEL PRO/WIRELESS 2100, 2200BG, 2915ABG NETWORK CONNECTION SUPPORT
->=20
-
---=20
- i.
-
---8323328-357066394-1747752704=:936--
+-chris
