@@ -1,381 +1,211 @@
-Received: from smtpbgeu2.qq.com (smtpbgeu2.qq.com [18.194.254.142])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6C26257AD1;
-	Tue, 20 May 2025 02:48:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.194.254.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C42E21D3C6;
+	Tue, 20 May 2025 02:49:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747709320; cv=none; b=XaqGCa4ZGV8JorEsPl5w5M0LH2zV9uTaG7117wezonDtNvA0419C9AiCYbisAflqdHvP/3678XqyzyMvcfD6sJDutyZI1hIWBriBHnCA58TD3R6VlPCk1lcTfPIYFvtT0STie6dhrEfND00B3vGL2s4mu6kHCX7VbdEHxeVqHvE=
+	t=1747709349; cv=none; b=XPGbvwld3VutGgfVaaaeHLZ/uoUcDCHjgHRPevntZNXGIkU28bKSIHr+d5gdVcVDQjW9xlrekmgUWpHUa+DVDabfh+TEXI0z2eKg29nC35cDCuwRzX1XDQxDNvFixU2wRZnIz6+8UvE3d25iiGBSb+/MqOfzScYtZMzcv/5+aeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747709320; c=relaxed/simple;
-	bh=kXx1mHnQyVCB0kq7XXxiyAX/o8QtjHcPyHUNZC9gCPU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=pJmudvhlJXt4dY2VTbpPa8VIIOHt/tqmJNo3zQA2eQJZ79cpKgK4/Vr3yFh5tl/3nWHfgI8C1r266qc37208r8RfgINhlh3tu4jo9mkXY1Yl3Eu4WnuYXxC1tJEg56sduYF4kEBG7PAdWwN36RLdHK9yRzlsLnYi8WGPeiVHG0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=airkyi.com; spf=pass smtp.mailfrom=airkyi.com; dkim=pass (1024-bit key) header.d=airkyi.com header.i=@airkyi.com header.b=hZILU21v; arc=none smtp.client-ip=18.194.254.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=airkyi.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=airkyi.com
+	s=arc-20240116; t=1747709349; c=relaxed/simple;
+	bh=f+EwkHAuPc4qt8/+C6P/FzidlYLXQ88MqyHsnREda2Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=j16nsRseR+GXzFpIUQQLqsK0/PejyAabHhy7Rr8pGD2JIpWj9v/qIoA5+is1YXb8gP8FMC45MXV+16Z2HkKg1jpPC31sfoWrC0hEOLNu0sICdF0vWiG0NJNKus3UwEpPsWDcGB0YsUd505bS65yI84mIBJM9NIxN+LhLv0Jvz90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZuGRy/oG; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=airkyi.com header.i=@airkyi.com header.b="hZILU21v"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=airkyi.com;
-	s=altu2504; t=1747709279;
-	bh=0FmmGTT7/kkpo68LJtWYV6x4TUVBTBuFVK+exAKFKeg=;
-	h=From:To:Subject:Date:Message-Id;
-	b=hZILU21vfhR4lSohELg9hcdh+ySZFFlZfht9yoouDIvJIZEi/FW7eK62x2M3FElTm
-	 9pqko348SaHwIgHF++oc4o+BAywLb+YEd7T3RAoGHaLF3jI90kIl4LKpaNFWKkNQDu
-	 KuPvxo3g1ou/9w9Ikk9bDyT927mmOQscjEeDQ7Z4=
-X-QQ-mid: zesmtpgz1t1747709277t3ccaccd6
-X-QQ-Originating-IP: WX5ZmZyYWICN6Vqork4Xt6+hfJpYFO7s+3xRsU6gpoA=
-Received: from DESKTOP-8BT1A2O.localdomain ( [58.22.7.114])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 20 May 2025 10:47:55 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 15235635931531597864
-From: Chaoyi Chen <kernel@airkyi.com>
-To: Sandy Huang <hjc@rock-chips.com>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Andy Yan <andy.yan@rock-chips.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Chaoyi Chen <chaoyi.chen@rock-chips.com>,
-	Dragan Simic <dsimic@manjaro.org>,
-	dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 2/2] dt-bindings: display: rockchip: Convert cdn-dp-rockchip.txt to yaml
-Date: Tue, 20 May 2025 10:47:18 +0800
-Message-Id: <20250520024718.142-3-kernel@airkyi.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20250520024718.142-1-kernel@airkyi.com>
-References: <20250520024718.142-1-kernel@airkyi.com>
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpgz:airkyi.com:qybglogicsvrsz:qybglogicsvrsz4a-0
-X-QQ-XMAILINFO: MmpliBmRb3iC3JDiFEMN5aU+weuBeojLZVEwIXrmSCjNsYV6rOZQ2S15
-	oBhZmVONFJbc3t6hXqRcto883+BuZuJhBLuhS6Utqd8n5rt2QBPdWbW2d/xWtQX4NRbcTMy
-	LDNt2t8Ajnta72NrWGKCas3ezXBDo2pWD7DHpGO6T5df8dra8IrGyLphGwys8uIy/YNYhOh
-	/YJHvYY0QYAr/6LuqqCHwO2H57E5/s+HbUOWV01jUY6OqKGm2pavAD44TnzEIUTIwpv9Pmq
-	XnbfYY3CT+fyvpYr9c62HCQG3x7emXhwbmPpcw5o9qOXN7ktX4LvL7CM4/zbTcdwNImOdft
-	mEuBJ79sVHaeGdYeaBJn8Wzi/oH7r27Zg6q/9o9LaB18IJqXwrKo1HpY96N4V645IrVJviI
-	PkGcN6Rt0dWzoa1c6liT5usimTuxvNWz2S4InO6PZO8gjkyxmkRg2rySvJSZaEJdm9FrmXJ
-	VY1gf3vqCwkcH5XM8W9p/Kg3nG03MILlJyxswJ3ioIPti3Z7lVz+nU2xDpByq6cNRNx+4+A
-	b1wbP2Zodq8fvyIr8i4FBIXQQYen9tEwkVH1jz9VlIXQxpwMvDSQwHGO+GPASr6z1obQsAE
-	zD8oKYWE3klknENSHfm4sID+Gyg8Homrm29jtcUNlsHH/t/d1pzOSTJMKbpWIJ/S5C+2SJY
-	u4LNMocVMQl1QlDaMQ5YJdFv2IYD5eHGTOXbloSY+jexnx02+DVqJ52iS1pQtHWTuEIrq7i
-	tqnGhCEgicggpYt0tGNXoMN6xOev5BsBK6PAg+21+HTJndbgyV1XGYOwHzB7UXA+QF9F9BO
-	Hxts/Ro8dYnSE7t8ZOt/3tvwK75qHxdz1UL1tgeurhfan09qf0bANnds4kVcCSVpyGsnARH
-	vYhjN97CO/P/zOTlO+JtsNSIf08GUfgOp2Jz6NdhzOlSRzYh4VJY+LY8RuqQ2nJYAArLIj3
-	0P19/o4qxEZYBr6VrFlXlwSlFv49pkzVfVfzN7ytq0HRhUtNrx1csyEzh0WrmHK7HoICUu6
-	H5ELRe9H9GU/Feg9x/
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-X-QQ-RECHKSPAM: 0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZuGRy/oG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747709347; x=1779245347;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=f+EwkHAuPc4qt8/+C6P/FzidlYLXQ88MqyHsnREda2Q=;
+  b=ZuGRy/oGkjdrs25deKqIuj1nMUzBWG2r83IrPmAWE3fJ448A6v5pAUcu
+   HGhrtWn+ZrXUmC0S7IavIs0pghjm/FENrofwFh8oGkXKp+3tnUXlpVGco
+   NVbrLkC3VZ6YwfHlbxCd491d8k4vK3k9mMousUMJfMKbyaptOZ1dwBwWz
+   K0/mv9AJUlXUuXd9zwdrVmOOmKZh5+qqmLOIghjSkCxwsRrfa076N7vJx
+   7P/sPA/N5DQ0OVsRcuRLHpxBDKS6A50wNvV9YKKuNKBXOZ2VRQzV628Ma
+   azp57n1IO+upa/ri5v0fotTUMh2mL+wgHFqYkebc2jnfhgYtGB5SOzDaI
+   w==;
+X-CSE-ConnectionGUID: vuX0ePrmTaSqnDKSxJFJmg==
+X-CSE-MsgGUID: fVneOD5qRTWa+LOpL1sRoQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="49726510"
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="49726510"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 19:49:07 -0700
+X-CSE-ConnectionGUID: FpHOij47RNKOcpBMhhPAWw==
+X-CSE-MsgGUID: MnG31mjTQeSpvoOY4NMz0A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="144303750"
+Received: from mdroper-mobl2.amr.corp.intel.com (HELO [10.124.221.39]) ([10.124.221.39])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 19:49:05 -0700
+Message-ID: <ea5d0024-9483-4069-aa6f-b859bfa58a4a@linux.intel.com>
+Date: Mon, 19 May 2025 19:49:04 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 11/16] PCI/AER: Check log level once and remember it
+To: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
+Cc: Jon Pan-Doh <pandoh@google.com>,
+ Karolina Stolarek <karolina.stolarek@oracle.com>,
+ Martin Petersen <martin.petersen@oracle.com>,
+ Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>,
+ Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Lukas Wunner <lukas@wunner.de>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney" <paulmck@kernel.org>,
+ Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+ Oliver O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>,
+ Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
+ Terry Bowman <terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
+References: <20250519213603.1257897-1-helgaas@kernel.org>
+ <20250519213603.1257897-12-helgaas@kernel.org>
+Content-Language: en-US
+From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20250519213603.1257897-12-helgaas@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Chaoyi Chen <chaoyi.chen@rock-chips.com>
 
-Convert cdn-dp-rockchip.txt to yaml.
+On 5/19/25 2:35 PM, Bjorn Helgaas wrote:
+> From: Karolina Stolarek <karolina.stolarek@oracle.com>
+>
+> When reporting an AER error, we check its type multiple times to determine
+> the log level for each message. Do this check only in the top-level
+> functions (aer_isr_one_error(), pci_print_aer()) and save the level in
+> struct aer_err_info.
+>
+> [bhelgaas: save log level in struct aer_err_info instead of passing it
+> as a parameter]
+> Link: https://lore.kernel.org/r/20250321015806.954866-2-pandoh@google.com
+> Signed-off-by: Karolina Stolarek <karolina.stolarek@oracle.com>
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
 
-Add new "port@1" property which represents the CDN DP output to keep
-the same style as the other display interfaces.
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-This patch also changes the constraints for "phys" and "extcon". For
-the original binding, only one phy and the corresponding extcon can
-be specified. In the new binding, one or two phys can be specified.
-Since the RK3399 has two DP-USB PHYs, specifying one allows output
-via the corresponding PHY, while specifying two lets the driver
-choose one PHY for output. This rule also applies to extcon, which
-provides the cable state for the corresponding PHY.
+>   drivers/pci/pci.h      |  1 +
+>   drivers/pci/pcie/aer.c | 21 ++++++++++-----------
+>   drivers/pci/pcie/dpc.c |  1 +
+>   3 files changed, 12 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index b81e99cd4b62..705f9ef58acc 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -588,6 +588,7 @@ static inline bool pci_dev_test_and_set_removed(struct pci_dev *dev)
+>   struct aer_err_info {
+>   	struct pci_dev *dev[AER_MAX_MULTI_ERR_DEVICES];
+>   	int error_dev_num;
+> +	const char *level;		/* printk level */
+>   
+>   	unsigned int id:16;
+>   
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 4683a99c7568..73b03a195b14 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -672,21 +672,18 @@ static void pci_rootport_aer_stats_incr(struct pci_dev *pdev,
+>   	}
+>   }
+>   
+> -static void __aer_print_error(struct pci_dev *dev,
+> -			      struct aer_err_info *info)
+> +static void __aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+>   {
+>   	const char **strings;
+>   	unsigned long status = info->status & ~info->mask;
+> -	const char *level, *errmsg;
+> +	const char *level = info->level;
+> +	const char *errmsg;
+>   	int i;
+>   
+> -	if (info->severity == AER_CORRECTABLE) {
+> +	if (info->severity == AER_CORRECTABLE)
+>   		strings = aer_correctable_error_string;
+> -		level = KERN_WARNING;
+> -	} else {
+> +	else
+>   		strings = aer_uncorrectable_error_string;
+> -		level = KERN_ERR;
+> -	}
+>   
+>   	for_each_set_bit(i, &status, 32) {
+>   		errmsg = strings[i];
+> @@ -714,7 +711,7 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+>   {
+>   	int layer, agent;
+>   	int id = pci_dev_id(dev);
+> -	const char *level;
+> +	const char *level = info->level;
+>   
+>   	pci_dev_aer_stats_incr(dev, info);
+>   
+> @@ -727,8 +724,6 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+>   	layer = AER_GET_LAYER_ERROR(info->severity, info->status);
+>   	agent = AER_GET_AGENT(info->severity, info->status);
+>   
+> -	level = (info->severity == AER_CORRECTABLE) ? KERN_WARNING : KERN_ERR;
+> -
+>   	aer_printk(level, dev, "PCIe Bus Error: severity=%s, type=%s, (%s)\n",
+>   		   aer_error_severity_string[info->severity],
+>   		   aer_error_layer[layer], aer_agent_string[agent]);
+> @@ -774,9 +769,11 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
+>   	if (aer_severity == AER_CORRECTABLE) {
+>   		status = aer->cor_status;
+>   		mask = aer->cor_mask;
+> +		info.level = KERN_WARNING;
+>   	} else {
+>   		status = aer->uncor_status;
+>   		mask = aer->uncor_mask;
+> +		info.level = KERN_ERR;
+>   		tlp_header_valid = status & AER_LOG_TLP_MASKS;
+>   	}
+>   
+> @@ -1297,6 +1294,7 @@ static void aer_isr_one_error(struct aer_rpc *rpc,
+>   		struct aer_err_info e_info = {
+>   			.id = ERR_COR_ID(e_src->id),
+>   			.severity = AER_CORRECTABLE,
+> +			.level = KERN_WARNING,
+>   			.multi_error_valid = multi ? 1 : 0,
+>   		};
+>   
+> @@ -1312,6 +1310,7 @@ static void aer_isr_one_error(struct aer_rpc *rpc,
+>   		struct aer_err_info e_info = {
+>   			.id = ERR_UNCOR_ID(e_src->id),
+>   			.severity = fatal ? AER_FATAL : AER_NONFATAL,
+> +			.level = KERN_ERR,
+>   			.multi_error_valid = multi ? 1 : 0,
+>   		};
+>   
+> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+> index 315bf2bfd570..34af0ea45c0d 100644
+> --- a/drivers/pci/pcie/dpc.c
+> +++ b/drivers/pci/pcie/dpc.c
+> @@ -252,6 +252,7 @@ static int dpc_get_aer_uncorrect_severity(struct pci_dev *dev,
+>   	else
+>   		info->severity = AER_NONFATAL;
+>   
+> +	info->level = KERN_WARNING;
 
-Signed-off-by: Chaoyi Chen <chaoyi.chen@rock-chips.com>
----
+As Weinan pointed out, it should be KERN_ERR.
 
-Changes in v5:
-- Fix constraints on extcon and phys
-- Add commit about changes to extcon and phys
-- Add "#sound-dai-cells" to required properties
+>   	return 1;
+>   }
+>   
 
-Changes in v4:
-- Add commit about port@1 node
-
-Changes in v3:
-- Add more description about phy/extcon
-- Fix some coding style
-
-Changes in v2:
-- Rename binding file name to match compatible
-- Add more description about grf/phy/extcon
-- Fix coding style
-
- .../display/rockchip/cdn-dp-rockchip.txt      |  74 --------
- .../rockchip/rockchip,rk3399-cdn-dp.yaml      | 168 ++++++++++++++++++
- 2 files changed, 168 insertions(+), 74 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/rockchip/cdn-dp-rockchip.txt
- create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip,rk3399-cdn-dp.yaml
-
-diff --git a/Documentation/devicetree/bindings/display/rockchip/cdn-dp-rockchip.txt b/Documentation/devicetree/bindings/display/rockchip/cdn-dp-rockchip.txt
-deleted file mode 100644
-index 8df7d2e393d6..000000000000
---- a/Documentation/devicetree/bindings/display/rockchip/cdn-dp-rockchip.txt
-+++ /dev/null
-@@ -1,74 +0,0 @@
--Rockchip RK3399 specific extensions to the cdn Display Port
--================================
--
--Required properties:
--- compatible: must be "rockchip,rk3399-cdn-dp"
--
--- reg: physical base address of the controller and length
--
--- clocks: from common clock binding: handle to dp clock.
--
--- clock-names: from common clock binding:
--	       Required elements: "core-clk" "pclk" "spdif" "grf"
--
--- resets : a list of phandle + reset specifier pairs
--- reset-names : string of reset names
--		Required elements: "apb", "core", "dptx", "spdif"
--- power-domains : power-domain property defined with a phandle
--		  to respective power domain.
--- assigned-clocks: main clock, should be <&cru SCLK_DP_CORE>
--- assigned-clock-rates : the DP core clk frequency, shall be: 100000000
--
--- rockchip,grf: this soc should set GRF regs, so need get grf here.
--
--- ports: contain a port nodes with endpoint definitions as defined in
--	 Documentation/devicetree/bindings/media/video-interfaces.txt.
--	 contained 2 endpoints, connecting to the output of vop.
--
--- phys: from general PHY binding: the phandle for the PHY device.
--
--- extcon: extcon specifier for the Power Delivery
--
--- #sound-dai-cells = it must be 1 if your system is using 2 DAIs: I2S, SPDIF
--
---------------------------------------------------------------------------------
--
--Example:
--	cdn_dp: dp@fec00000 {
--		compatible = "rockchip,rk3399-cdn-dp";
--		reg = <0x0 0xfec00000 0x0 0x100000>;
--		interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&cru SCLK_DP_CORE>, <&cru PCLK_DP_CTRL>,
--			 <&cru SCLK_SPDIF_REC_DPTX>, <&cru PCLK_VIO_GRF>;
--		clock-names = "core-clk", "pclk", "spdif", "grf";
--		assigned-clocks = <&cru SCLK_DP_CORE>;
--		assigned-clock-rates = <100000000>;
--		power-domains = <&power RK3399_PD_HDCP>;
--		phys = <&tcphy0_dp>, <&tcphy1_dp>;
--		resets = <&cru SRST_DPTX_SPDIF_REC>;
--		reset-names = "spdif";
--		extcon = <&fusb0>, <&fusb1>;
--		rockchip,grf = <&grf>;
--		#address-cells = <1>;
--		#size-cells = <0>;
--		#sound-dai-cells = <1>;
--
--		ports {
--			#address-cells = <1>;
--			#size-cells = <0>;
--
--			dp_in: port {
--				#address-cells = <1>;
--				#size-cells = <0>;
--				dp_in_vopb: endpoint@0 {
--					reg = <0>;
--					remote-endpoint = <&vopb_out_dp>;
--				};
--
--				dp_in_vopl: endpoint@1 {
--					reg = <1>;
--					remote-endpoint = <&vopl_out_dp>;
--				};
--			};
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3399-cdn-dp.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3399-cdn-dp.yaml
-new file mode 100644
-index 000000000000..5649e008f14a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3399-cdn-dp.yaml
-@@ -0,0 +1,168 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/rockchip/rockchip,rk3399-cdn-dp.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Rockchip RK3399 specific extensions to the CDN Display Port
-+
-+maintainers:
-+  - Andy Yan <andy.yan@rock-chip.com>
-+  - Heiko Stuebner <heiko@sntech.de>
-+  - Sandy Huang <hjc@rock-chips.com>
-+
-+allOf:
-+  - $ref: /schemas/sound/dai-common.yaml#
-+
-+properties:
-+  compatible:
-+    items:
-+      - const: rockchip,rk3399-cdn-dp
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: DP core work clock
-+      - description: APB clock
-+      - description: SPDIF interface clock
-+      - description: GRF clock
-+
-+  clock-names:
-+    items:
-+      - const: core-clk
-+      - const: pclk
-+      - const: spdif
-+      - const: grf
-+
-+  extcon:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    minItems: 1
-+    items:
-+      - description: Extcon device providing the cable state for DP PHY device 0
-+      - description: Extcon device providing the cable state for DP PHY device 1
-+    description:
-+      List of phandle to the extcon device providing the cable state for the DP PHY.
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  phys:
-+    minItems: 1
-+    items:
-+      - description: DP output to the DP PHY device 0
-+      - description: DP output to the DP PHY deivce 1
-+    description: |
-+      List of phandle to the PHY device for DP output.
-+      RK3399 have two DP-USB PHY, specifying one PHY which want to use,
-+      or specify two PHYs here to let the driver determine which PHY to use.
-+
-+  ports:
-+    $ref: /schemas/graph.yaml#/properties/ports
-+
-+    properties:
-+      port@0:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description: Input of the CDN DP
-+        properties:
-+          endpoint@0:
-+            description: Connection to the VOPB
-+          endpoint@1:
-+            description: Connection to the VOPL
-+      port@1:
-+        $ref: /schemas/graph.yaml#/properties/port
-+        description: Output of the CDN DP
-+
-+    required:
-+      - port@0
-+      - port@1
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  resets:
-+    maxItems: 4
-+
-+  reset-names:
-+    items:
-+      - const: spdif
-+      - const: dptx
-+      - const: apb
-+      - const: core
-+
-+  rockchip,grf:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description:
-+      Phandle to GRF register to control HPD.
-+
-+  "#sound-dai-cells":
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - interrupts
-+  - phys
-+  - ports
-+  - resets
-+  - reset-names
-+  - rockchip,grf
-+  - "#sound-dai-cells"
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/rk3399-cru.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/power/rk3399-power.h>
-+    soc {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        dp@fec00000 {
-+            compatible = "rockchip,rk3399-cdn-dp";
-+            reg = <0x0 0xfec00000 0x0 0x100000>;
-+            assigned-clocks = <&cru SCLK_DP_CORE>;
-+            assigned-clock-rates = <100000000>;
-+            interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+            clocks = <&cru SCLK_DP_CORE>, <&cru PCLK_DP_CTRL>, <&cru SCLK_SPDIF_REC_DPTX>,
-+                    <&cru PCLK_VIO_GRF>;
-+            clock-names = "core-clk", "pclk", "spdif", "grf";
-+            power-domains = <&power RK3399_PD_HDCP>;
-+            phys = <&tcphy0_dp>, <&tcphy1_dp>;
-+            resets = <&cru SRST_DPTX_SPDIF_REC>, <&cru SRST_P_UPHY0_DPTX>,
-+                    <&cru SRST_P_UPHY0_APB>, <&cru SRST_DP_CORE>;
-+            reset-names = "spdif", "dptx", "apb", "core";
-+            rockchip,grf = <&grf>;
-+            #sound-dai-cells = <1>;
-+
-+            ports {
-+                #address-cells = <1>;
-+                #size-cells = <0>;
-+
-+                dp_in: port@0 {
-+                    reg = <0>;
-+                    #address-cells = <1>;
-+                    #size-cells = <0>;
-+
-+                    dp_in_vopb: endpoint@0 {
-+                        reg = <0>;
-+                        remote-endpoint = <&vopb_out_dp>;
-+                    };
-+
-+                    dp_in_vopl: endpoint@1 {
-+                        reg = <1>;
-+                        remote-endpoint = <&vopl_out_dp>;
-+                    };
-+                };
-+
-+                dp_out: port@1 {
-+                    reg = <1>;
-+                };
-+            };
-+        };
-+    };
---
-2.49.0
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
