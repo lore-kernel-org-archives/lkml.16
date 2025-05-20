@@ -1,117 +1,155 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B45626FDA2
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 10:33:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79A71270EA6;
+	Tue, 20 May 2025 10:33:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747737189; cv=none; b=CyRTW7upcXaGd4ftx50kdhTuA5JqZGTW9qDrZhmPgLEIBGqJ9mqQkzi68Io6+fWa42lWslGsJvbU2EudAFDBoz0/S9lUf0yvHTrXq9h+ngvEpLm6eXRKa1hUD5qkzDZ1mlEaxbTNLgQt5nNXlka+0BZKKcqZRMiODBOPDX5+ors=
+	t=1747737214; cv=none; b=sngUwGo/SyZED5U7rawFvBwFXpJghoz27UTeXx4LELy1040+4/tg9T/EUUCn2oPaLQz3LIEhISuqqy74bHDy1NMNQrpKKGAzdI0l65Pd0gC7XZpKFH+iWKJ/zW79YtPZJ/AQOWZ4byHNCGQqH5gJdORn+O6S9zxRHf5gnO9x0Gc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747737189; c=relaxed/simple;
-	bh=Ltw5M1lySmrMauSrqTCCb0ZHHbcTroNTLc7rS9O0Oms=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ox2dH0XnnsQsZ53Uc5lQNVwvuyHeOYXsbyujuySYkefkCIDGXm2kpXYpiSWBSXiCQOBn7/0wIWB3O3KooDD2NVHaQuG+SvTY3Mmv7KBg+TP5fUKOyZeoSwggCa/41UJFGaPmyvbdgzma3RQmZNGmWdiD7MX0UBtC92krKOYpCwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nKEAvyTn; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747737214; c=relaxed/simple;
+	bh=6/pDG+AvJT15c5ska4ppz+CuaS46pEaA766nfX3ii2Y=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Xc/9tmk0oYSFNNX0B8JcmV/33FzndhcgX52pMcLwM9L1JCJsixnv4QknbDHvGNB8hi9et0mBpsTlwgkoVIDZdJIcFRisoGEQUpgDwCZyvM5NFXZ9Xms0z2VkzArn+2xTMqHjCiUoIEAfnMwOAXWZJEs+OuntfHsW8Y9qF3LIFiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oIectLYA; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nKEAvyTn"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-30e93626065so3218800a91.1
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 03:33:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747737187; x=1748341987; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=a2kiU0hliZX3M+Z93vHD55Gq88AD3oRKFF0hgKdQy4o=;
-        b=nKEAvyTnJCQ9CAKW2m8fgGQ78ddTxEiCCDkeGyAeNf5lq7PgtRcHt+CqEIqgWp6qCJ
-         VnObKfFen6GZeVK4cYDIyYL9BhMfIXBsAkMbP/l5y98UXj1qnC++oT4veeN6o5VmGYc7
-         ERj8J9JLAx2ZmC/FHohAfIcYayNitiHAZkGJKgKvWUB00fK+doJig09HQQJyJSPpyVGm
-         V58qLWhYBtp4cA4BU3RpNhb3VHo/6LZ57qIAXSYz6C2muMrxbJ2WB5acQRQvyFoaRInq
-         gl8z30Ubl6b3EDhGtnurGSr20hamNgudSLC+FaJ5njzdSrIDPpVEIZ1Yg1A1RXZ4xrIj
-         TwiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747737187; x=1748341987;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a2kiU0hliZX3M+Z93vHD55Gq88AD3oRKFF0hgKdQy4o=;
-        b=UQw6bphPkmGwvevDTXAthiyc5NOb6nnwiQlwV17EZRbwoTq6T0bKDh/nIcJULZwTjT
-         LYxvu1M2JB43x2JYHCLgGqK8ZTsziNx3pWqxfqe/T78tuh5sVAOOUBYnXbsQzrDcpVLB
-         m+0GMW2GS0DRyDN/q//nGTjN1tSyOhJ4mqqyxMBam1ezFcmof0Mh5z3wqOoGZOk9a9IO
-         f/CC/dQNUv+zV+SFi6UEWa03Rt6PzmdgdDcPh4mHaBbq5o2T7i8LeNaujmD2Iw6T/JtL
-         ToIgx+dkr4WnmU6j87pQV6f15dYMIF5W5ufACKyo6TvxGlhzSXgZfpcWd8Vp9YDVh9wU
-         nlmw==
-X-Forwarded-Encrypted: i=1; AJvYcCW4yYTHRfFFkKiLCb2a5n1MNwn8QNnTeeeZVDLDI7wAzm13/mon2qmWw+NTtsBfewsJ0rz6ZBbz/rxywT8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxskZF9/JRpsw3z03Q/KVVsH1YOV58ODde5kGxqGb62Sug3jVbb
-	sxCVAW60TB1K5HvL8fnjyJLWI25WUkAgb48Dv6G3lRNZ+bJ9GR/0akBYeCEUaHh5z+Esa9oCHnr
-	2NWZA
-X-Gm-Gg: ASbGncsWUITuYG3wi2y1UJbZGCqllbdtm1I6a3KuoAMRt38OzegaiIL1k1nf10UdYfg
-	LVQgvXdJIa5aOpKUUBl2G/GED/OJpXtE7aRdeuSKtzLkoICRY8xgklic4FB2KJUbK/tvAByKmqk
-	e3O7c2RQSRAZX+jW2+L+veJVdDCZemc8FW/SewboOig7HAaB+spCEG7FXqr4f9wt07kHiIuo9Rm
-	veplnesS8aFbJJej6d/Ccevw/FIANIA+K/ttDQfBiJwL6APUVXmCmU+Q6HEhJ7sFqyYxU3TwXuC
-	WEAUWYAbJ6IZCwr/JRsivU8ehxUbtiF2IMSt8edvwXieUj2oqGzS
-X-Google-Smtp-Source: AGHT+IHm+zce6wVGhmj39um6VsmybhdOdhuKQ+lb+Ma5CrUm2fVpCacBPSaYFhoG1FApBOr61KuRzg==
-X-Received: by 2002:a17:90b:48c6:b0:2ef:19d0:2261 with SMTP id 98e67ed59e1d1-30e8314cff5mr29948004a91.16.1747737187612;
-        Tue, 20 May 2025 03:33:07 -0700 (PDT)
-Received: from localhost ([122.172.81.72])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eb081aa2sm7772574a12.48.2025.05.20.03.33.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 03:33:07 -0700 (PDT)
-Date: Tue, 20 May 2025 16:03:04 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: Aaron Kling <webgeek1234@gmail.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] cpufreq: tegra124: Allow building as a module
-Message-ID: <20250520103304.jfevon546rft2ncr@vireshk-i7>
-References: <20250508-tegra124-cpufreq-v4-0-d142bcbd0234@gmail.com>
- <20250508-tegra124-cpufreq-v4-2-d142bcbd0234@gmail.com>
- <cd801698-d7cf-4e9e-aa01-5525f8687ab0@nvidia.com>
- <CALHNRZ_9tMi5iihyTsEuU4T72=oTQM6-rVhqozzLf9DiB_TpcA@mail.gmail.com>
- <CALHNRZ-pu9HUzVyR3-U=XZKFFZPnn5-DNLWPqPx6CSoW0dHMrA@mail.gmail.com>
- <bc0a4c75-df5b-4b4d-9c9e-a2c99d3f4f6e@nvidia.com>
- <20250519103749.falgd64ikkwkfpg7@vireshk-i7>
- <9a15ea89-5e33-48e7-8c75-b041f6832bc1@nvidia.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oIectLYA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747737214; x=1779273214;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=6/pDG+AvJT15c5ska4ppz+CuaS46pEaA766nfX3ii2Y=;
+  b=oIectLYAbb9S5c/4WHDO8UJz+aB3ckitE6PU+d4lv0QUODYNrHd1fO3L
+   ZOWXZbx2oXEQkjvS2brzGYYEZqKy7rG2iezdZjARBQ8TAfQGtcK4SS/4e
+   o5lAf0iq9vBALOeG+VcbBTbXF8QYG9cipe1TV5QtdsZI4cBuUtVLVuzi7
+   CUaBYr2340WD6/KfZjqoH6J43uLKXuRqjb744ltUddjlovhAhj7esc7Xb
+   f2vmLgtDyQGUKvVRMjTuAzIHco/gSm/3430hwhzOdYDqVKRyoPoxi7eUQ
+   FqndoKuHM2g2aBEjbi5iioHgwoKB/7nlPNGcFqzgZ4hYUso2S5Ce7w+SW
+   w==;
+X-CSE-ConnectionGUID: qqSbgg3LT426AGGR6iE/aQ==
+X-CSE-MsgGUID: VPjQfNPHS1ijXC90A4cxUA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="61058989"
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="61058989"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 03:33:32 -0700
+X-CSE-ConnectionGUID: 8xb8IhFVQtmzJreTdiAd6w==
+X-CSE-MsgGUID: rCBTico+SkGyQg6oESRtFA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="176777146"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.235])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 03:33:25 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 20 May 2025 13:33:22 +0300 (EEST)
+To: Bjorn Helgaas <helgaas@kernel.org>
+cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>, 
+    Karolina Stolarek <karolina.stolarek@oracle.com>, 
+    Martin Petersen <martin.petersen@oracle.com>, 
+    Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, 
+    Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, 
+    Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, 
+    Lukas Wunner <lukas@wunner.de>, 
+    Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+    Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney" <paulmck@kernel.org>, 
+    Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
+    Oliver O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>, 
+    Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>, 
+    Terry Bowman <terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>, 
+    Dave Jiang <dave.jiang@intel.com>, LKML <linux-kernel@vger.kernel.org>, 
+    linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v6 05/16] PCI/AER: Rename aer_print_port_info() to
+ aer_print_source()
+In-Reply-To: <20250519213603.1257897-6-helgaas@kernel.org>
+Message-ID: <2ebdfb8d-18ec-d87e-469d-c33ee245d244@linux.intel.com>
+References: <20250519213603.1257897-1-helgaas@kernel.org> <20250519213603.1257897-6-helgaas@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9a15ea89-5e33-48e7-8c75-b041f6832bc1@nvidia.com>
+Content-Type: multipart/mixed; boundary="8323328-247255916-1747737202=:936"
 
-On 20-05-25, 10:57, Jon Hunter wrote:
-> 
-> On 19/05/2025 11:37, Viresh Kumar wrote:
-> > On 15-05-25, 07:41, Jon Hunter wrote:
-> > > Yes and that is understood. I see a few drivers calling ...
-> > > 
-> > >   platform_device_register_simple("cpufreq-dt", -1, NULL, 0);
-> > > 
-> > > One option, and I don't know if this would be acceptable, would be to add a
-> > > new wrapper function in the cpufreq-dt driver for the above that other
-> > > drivers could call and that would create the dependency you need.
-> > 
-> > Doing that won't be a problem, but I doubt if that is a better than
-> > adding a soft dependency here. I personally felt that the soft
-> > dependency may be the right way here. The cpufreq-dt file presents a
-> > driver, a device can be added from any file and that doesn't require
-> > the driver file to be inserted first. If the platform wants to
-> > simplify and create a dependency, a soft dependency looks okay.
-> 
-> The only downside of a soft dependency is that this driver could load but if
-> the cpufreq-dt driver is missing for whatever reason, it might not be
-> obvious. Ideally it is better if this driver does not load at all if the
-> cpufreq-dt is not present.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Fair enough.
+--8323328-247255916-1747737202=:936
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Aaron, you can introduce a helper like cpufreq_dt_pdev_register() to
-solve the linking here.
+On Mon, 19 May 2025, Bjorn Helgaas wrote:
 
--- 
-viresh
+> From: Jon Pan-Doh <pandoh@google.com>
+>=20
+> Rename aer_print_port_info() to aer_print_source() to be more descriptive=
+=2E
+> This logs the Error Source ID logged by a Root Port or Root Complex Event
+> Collector when it receives an ERR_COR, ERR_NONFATAL, or ERR_FATAL Message=
+=2E
+>=20
+> [bhelgaas: aer_print_rp_info() -> aer_print_source()]
+> Link: https://lore.kernel.org/r/20250321015806.954866-5-pandoh@google.com
+> Signed-off-by: Jon Pan-Doh <pandoh@google.com>
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
+>  drivers/pci/pcie/aer.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index dc8a50e0a2b7..eb42d50b2def 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -733,8 +733,8 @@ void aer_print_error(struct pci_dev *dev, struct aer_=
+err_info *info)
+>  =09=09=09info->severity, info->tlp_header_valid, &info->tlp);
+>  }
+> =20
+> -static void aer_print_port_info(struct pci_dev *dev, struct aer_err_info=
+ *info,
+> -=09=09=09=09const char *details)
+> +static void aer_print_source(struct pci_dev *dev, struct aer_err_info *i=
+nfo,
+> +=09=09=09     const char *details)
+>  {
+>  =09u16 source =3D info->id;
+> =20
+> @@ -932,7 +932,7 @@ static bool find_source_device(struct pci_dev *parent=
+,
+>  =09 * RCEC that received an ERR_* Message.
+>  =09 */
+>  =09if (!e_info->error_dev_num) {
+> -=09=09aer_print_port_info(parent, e_info, " (no details found)");
+> +=09=09aer_print_source(parent, e_info, " (no details found)");
+>  =09=09return false;
+>  =09}
+>  =09return true;
+> @@ -1299,7 +1299,7 @@ static void aer_isr_one_error(struct aer_rpc *rpc,
+>  =09=09=09e_info.multi_error_valid =3D 0;
+> =20
+>  =09=09if (find_source_device(pdev, &e_info)) {
+> -=09=09=09aer_print_port_info(pdev, &e_info, "");
+> +=09=09=09aer_print_source(pdev, &e_info, "");
+>  =09=09=09aer_process_err_devices(&e_info);
+>  =09=09}
+>  =09}
+> @@ -1318,7 +1318,7 @@ static void aer_isr_one_error(struct aer_rpc *rpc,
+>  =09=09=09e_info.multi_error_valid =3D 0;
+> =20
+>  =09=09if (find_source_device(pdev, &e_info)) {
+> -=09=09=09aer_print_port_info(pdev, &e_info, "");
+> +=09=09=09aer_print_source(pdev, &e_info, "");
+>  =09=09=09aer_process_err_devices(&e_info);
+>  =09=09}
+>  =09}
+>=20
+
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+
+--=20
+ i.
+
+--8323328-247255916-1747737202=:936--
