@@ -1,149 +1,224 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B3B2AE6F;
-	Tue, 20 May 2025 01:59:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B8991ADC97;
+	Tue, 20 May 2025 02:00:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747706381; cv=none; b=uyBDM3Yqd7o16pGhYXAc1khwvQjxR9HgbdONuWeHbGyCpfZ6WP3ClAuQp2edhc/D+LXSr1H31Qs6jUGtIQKcKtai0ReIymOQAKEjaf4UDrFRE/7Qzv9IxhCr00rmqnai5pm9rMMl+60S0Xl2rhVg9Q1b+WYap0ur4Hbq12koujc=
+	t=1747706407; cv=none; b=bvkEObDcT+1lZnFwc4JZefIK0iUogjycIi7D0BswTTNuRa00+Qpgcxm8omj1QvqMl5Bg3mrNOUC38+xHo3L9U0lUNz5w5WDaqNSJkQ0tqj+OhQEqkOkj+p2McrxwWeZlFolQkIfzTRK4FOf/UUjr+ZxQOnLsACZrKQ3bCylM6d0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747706381; c=relaxed/simple;
-	bh=BAJr/4RBGvizUqVcHRgIQ46G7iWUjjNJ3dQj0dL2WsE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DenrmCgSzKeG7hpVG7nHyR1O3Fmd8kiFd6IRT79zN2Rhm+So66JfDbe8fxKvSjCrDcE7vzE782SRJggqzeSragRppefVMDhNyLK2xRMo0rdNKzKJO9OLn26GKf6+veMIN8EfHlM50TYAjeDuXHQd2keihIpzKcMiFzdijjodptM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=fMMTCmdT; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1747706407; c=relaxed/simple;
+	bh=52euy4QIRy5S1PGduCTG74ILWWuUGNpvW5W9e++vdKs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mu2+EoCGMjA5G6nQKdPhBCLx29JZSWPQp79c7WgMV2tzjpp3WWAiStIXDv4BTlr/WGY0oUwQZfgKpiqX4aaaB0a47j+qa/TEPxZoMc3aTe2Rw4wY/7cYI9BFksyDaJXuyCqtFqpSHVPrSmUJ8iv2uDDMLNr0Slx9TPsenQyKFhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jWXOsEhK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="fMMTCmdT"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54JKZHJE005266;
-	Tue, 20 May 2025 01:59:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=dN/K11DGGvzR0B2IyPE0+d
-	FpKkx5skoBPZuEN1t7XXQ=; b=fMMTCmdThl4huW1+b/JwzLN186cVIVzFyHMb62
-	jm20bhfFeOLkGr5RVMvvCE+Ou72TVNuYiiQpJHgVHN0yS3Err3Zs7cO/oa6O8djU
-	xSZdMIM/fSVpZY2aohzwJaJccQapLpwDmOUq1ACRcYxXs7hlONleKeT/b0tNCyYN
-	17pmqN8V5HpaeyTXrPPMdREIJgycP2uxeLUVnJnSRNaX6qPlPlxj9qP/V7ffPSDB
-	hWlyOLvicr191KhtAte3GoF2sO0/f9dguWuhyLWm6sFrG+C4+5dP/+hiscZeOdtv
-	VZFd7Fh/HroGCKsj4deFmUjSCi6Hvns4FFeiJ7uLLbqqDVlg==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46pjm4x6y2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 May 2025 01:59:31 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54K1xUUr021364
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 May 2025 01:59:30 GMT
-Received: from hlos-sh01-lnx.qualcomm.com (10.80.80.8) by
- nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 19 May 2025 18:59:28 -0700
-From: Kassey Li <quic_yingangl@quicinc.com>
-To: <rostedt@goodmis.org>, <James.Bottomley@HansenPartnership.com>,
-        <martin.petersen@oracle.com>, <mathieu.desnoyers@efficios.com>,
-        <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>
-CC: <quic_yingangl@quicinc.com>
-Subject: [PATCH v4] scsi: trace: show rtn in string for scsi_dispatch_cmd_error
-Date: Tue, 20 May 2025 09:59:15 +0800
-Message-ID: <20250520015915.1464093-1-quic_yingangl@quicinc.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jWXOsEhK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4ADABC4CEE4;
+	Tue, 20 May 2025 02:00:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747706406;
+	bh=52euy4QIRy5S1PGduCTG74ILWWuUGNpvW5W9e++vdKs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jWXOsEhKK41XUrZiULw+qd8Ccxr1syXDIj0Q4n2B1srvtLKQfOxqx5WciuukmtngI
+	 57Aw/93p9jKs0nZY8ZNyT4iZd8/lm3b+8tMQl8397uHKPUL7cuK2axFpKi1dFm6RUx
+	 llxDPQu5TrhNP+M70kRKeBT4gV+V4M69trRxWL6T6x4lqIMd2LKTAT29til+o31wgb
+	 v5wBfuxftKYnmoqW289Wg8A1xr7PkynTljJQmX32xg0Udth0nrVVNkE8lJU5Ngy4wt
+	 fJrQ17ZWe8/6D/kWXr/vo0NEnznwhVkZUSKox4xtE69+sF6bg/11mlR4V3KfpZoOic
+	 q4Tse2wKZJaJA==
+Date: Mon, 19 May 2025 19:00:04 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: "Liang, Kan" <kan.liang@linux.intel.com>,
+	Weilin Wang <weilin.wang@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] perf pmu intel: Adjust cpumaks for sub-NUMA clusters
+ on graniterapids
+Message-ID: <aCviJJpEYKt8wYEk@google.com>
+References: <20250515181417.491401-1-irogers@google.com>
+ <96c8fae8-b8f9-4094-b03a-9dba3ca234c2@linux.intel.com>
+ <CAP-5=fVDF4-qYL1Lm7efgiHk7X=_nw_nEFMBZFMcsnOOJgX4Kg@mail.gmail.com>
+ <aCoUMOVRjCr_t0ae@google.com>
+ <CAP-5=fXnvRLiGmV7rr2H8A2Hj7HDE9m+B6Qn0areRXBhz-tK+Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=dIimmPZb c=1 sm=1 tr=0 ts=682be203 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=HDVQ9ilCK7Bs7oLMxKUA:9
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: sHiruoNErnn5Elg5dLb5Mqxc0TUUqvJu
-X-Proofpoint-GUID: sHiruoNErnn5Elg5dLb5Mqxc0TUUqvJu
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDAxNSBTYWx0ZWRfXyF/lLc0frLUK
- E7MnaWP5FVpTG4wtPqC4RaAcAhB8rGQAnX05DMtjKYLME3KYX3XNiBxkHoc3KMCrY9APmKcg0BD
- tnAmZCx8zb0QHEQIlV8CYPE5565vdzXluvKNzlWeYF7d6dbqOv4FwYfW+dUIGFKEH68486qKHkr
- DhF/1AJdmOHAjmUng4eapFQ5UbQtLl1znFjdraEG/ZTbchPFur1bKJeRrFi/28BtQPF9bWPSZeN
- VmWQlIt7JI60laf5T5LrrXXnxObD6Vx5bdIEjJlYLb6ptAPV3ee0Hs1pWQTk+qKF/velHrbFl1V
- IwDrC+G69CJW+rrdpAiDCbfdliTWjknC3c1/zU2o5U8ZGMfPYC9vEDA1h0NUoewc67Tv7ZD/b1h
- LhSq+CDADRKvUX/KN6nhfFZlhSpY03nPWEK39Mbsie0wRriMIckSkmkgHCrPh1kXK/JKP9f9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-20_01,2025-05-16_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 mlxscore=0 bulkscore=0 malwarescore=0 suspectscore=0
- impostorscore=0 clxscore=1015 phishscore=0 adultscore=0 priorityscore=1501
- mlxlogscore=999 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505200015
+In-Reply-To: <CAP-5=fXnvRLiGmV7rr2H8A2Hj7HDE9m+B6Qn0areRXBhz-tK+Q@mail.gmail.com>
 
-By default it showed rtn in decimal:
+On Sun, May 18, 2025 at 10:45:52AM -0700, Ian Rogers wrote:
+> On Sun, May 18, 2025 at 10:09 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > Hello,
+> >
+> > On Thu, May 15, 2025 at 03:35:41PM -0700, Ian Rogers wrote:
+> > > On Thu, May 15, 2025 at 2:01 PM Liang, Kan <kan.liang@linux.intel.com> wrote:
+> > > >
+> > > > On 2025-05-15 2:14 p.m., Ian Rogers wrote:
+> > > > > On graniterapids the cache home agent (CHA) and memory controller
+> > > > > (IMC) PMUs all have their cpumask set to per-socket information. In
+> > > > > order for per NUMA node aggregation to work correctly the PMUs cpumask
+> > > > > needs to be set to CPUs for the relevant sub-NUMA grouping.
+> > > > >
+> > > > > For example, on a 2 socket graniterapids machine with sub NUMA
+> > > > > clustering of 3, for uncore_cha and uncore_imc PMUs the cpumask is
+> > > > > "0,120" leading to aggregation only on NUMA nodes 0 and 3:
+> > > > > ```
+> > > > > $ perf stat --per-node -e 'UNC_CHA_CLOCKTICKS,UNC_M_CLOCKTICKS' -a sleep 1
+> > > > >
+> > > > >  Performance counter stats for 'system wide':
+> > > > >
+> > > > > N0        1    277,835,681,344      UNC_CHA_CLOCKTICKS
+> > > > > N0        1     19,242,894,228      UNC_M_CLOCKTICKS
+> > > > > N3        1    277,803,448,124      UNC_CHA_CLOCKTICKS
+> > > > > N3        1     19,240,741,498      UNC_M_CLOCKTICKS
+> > > > >
+> > > > >        1.002113847 seconds time elapsed
+> > > > > ```
+> > > > >
+> > > > > By updating the PMUs cpumasks to "0,120", "40,160" and "80,200" then
+> > > > > the correctly 6 NUMA node aggregations are achieved:
+> > > > > ```
+> > > > > $ perf stat --per-node -e 'UNC_CHA_CLOCKTICKS,UNC_M_CLOCKTICKS' -a sleep 1
+> > > > >
+> > > > >  Performance counter stats for 'system wide':
+> > > > >
+> > > > > N0        1     92,748,667,796      UNC_CHA_CLOCKTICKS
+> > > > > N0        0      6,424,021,142      UNC_M_CLOCKTICKS
+> > > > > N1        0     92,753,504,424      UNC_CHA_CLOCKTICKS
+> > > > > N1        1      6,424,308,338      UNC_M_CLOCKTICKS
+> > > > > N2        0     92,751,170,084      UNC_CHA_CLOCKTICKS
+> > > > > N2        0      6,424,227,402      UNC_M_CLOCKTICKS
+> > > > > N3        1     92,745,944,144      UNC_CHA_CLOCKTICKS
+> > > > > N3        0      6,423,752,086      UNC_M_CLOCKTICKS
+> > > > > N4        0     92,725,793,788      UNC_CHA_CLOCKTICKS
+> > > > > N4        1      6,422,393,266      UNC_M_CLOCKTICKS
+> > > > > N5        0     92,717,504,388      UNC_CHA_CLOCKTICKS
+> > > > > N5        0      6,421,842,618      UNC_M_CLOCKTICKS
+> > > >
+> > > > Is the second coloum  the number of units?
+> > > > If so, it's wrong.
+> > > >
+> > > > On my GNR with SNC-2, I observed the similar issue.
+> > > >
+> > > > $ sudo ./perf stat -e 'UNC_M_CLOCKTICKS' --per-node -a sleep 1
+> > > >  Performance counter stats for 'system wide':
+> > > >
+> > > > N0        0      6,405,811,284      UNC_M_CLOCKTICKS
+> > > > N1        1      6,405,895,988      UNC_M_CLOCKTICKS
+> > > > N2        0      6,152,906,692      UNC_M_CLOCKTICKS
+> > > > N3        1      6,063,415,630      UNC_M_CLOCKTICKS
+> > > >
+> > > > It's supposed to be 4?
+> > >
+> > > Agreed it is weird, but it is what has historically been displayed.
+> > > The number is the aggregation number:
+> > > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/stat-display.c?h=perf-tools-next#n307
+> > > which comes from:
+> > > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/stat-display.c?h=perf-tools-next#n135
+> > > which comes from:
+> > > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/stat.c?h=perf-tools-next#n435
+> > > However, I think it is missing updates from:
+> > > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/stat.c?h=perf-tools-next#n526
+> > > but there is a comment there saying "don't increase aggr.nr for
+> > > aliases" and all the uncore events are aliases. I don't understand
+> > > what the aggregation number is supposed to be, it is commented as
+> > > "number of entries (CPUs) aggregated":
+> > > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/stat.h?h=perf-tools-next#n26
+> > > it would seem to make sense in the CHA case with SNC3 and 42 evsels
+> > > per NUMA node that the value should be 42. Maybe Namhyung (who did the
+> > > evsel__merge_aggr_counters clean up) knows why it is this way but in
+> > > my eyes it just seems like something that has been broken for a long
+> > > time.
+> >
+> > I think it's the number of aggregated entries (FDs?).
+> >
+> > For core events, it's the number of CPUs for the given aggregation as it
+> > collects from all CPUs.  But it'd be confusing with uncore events which
+> > have cpumask to collect data from a few CPUs.
+> >
+> > On my laptop, --per-socket gives different numbers depending on the
+> > events/PMUs.
+> >
+> > For core events, it's 4.
+> >
+> >   $ sudo ./perf stat -a --per-socket -e cycles sleep 1
+> >
+> >    Performance counter stats for 'system wide':
+> >
+> >   S0        4        225,297,257      cycles
+> >
+> >          1.002581995 seconds time elapsed
+> >
+> > While uncore events give 1.
+> >
+> >   $ sudo ./perf stat -a --per-socket -e unc_mc0_rdcas_count_freerun sleep 1
+> >
+> >    Performance counter stats for 'system wide':
+> >
+> >   S0        1         23,665,510      unc_mc0_rdcas_count_freerun
+> >
+> >          1.002148012 seconds time elapsed
+> 
+> I think we're agreeing. I wonder that the intent of the aggregation
+> number is to make it so that you can work out an average from the
+> aggregated count. So for core PMUs you divide the count by the
+> aggregation number and get the average count per core (CPU?). If we're
+> getting an aggregated count of say uncore memory controller events
+> then it would make sense to me that we show the aggregated total and
+> the aggregation count is the number of memory controller PMUs, so we
+> can have an average per memory controller. This should line up with
+> using the number of file descriptors.
 
-kworker/3:1H-183 [003] ....  51.035474: scsi_dispatch_cmd_error: host_no=0 channel=0 id=0 lun=4 data_sgl=1  prot_sgl=0 prot_op=SCSI_PROT
-_NORMAL cmnd=(READ_10 lba=3907214  txlen=1 protect=0 raw=28 00 00 3b 9e 8e 00 00 01 00) rtn=4181
+Sounds right.
 
-In source code we define these possible values as hexadecimal:
+> 
+> I think this isn't the current behavior, on perf v6.12:
+> ```
+> $ sudo perf stat --per-socket -e data_read -a sleep 1
+> 
+>  Performance counter stats for 'system wide':
+> 
+> S0        1           2,484.96 MiB  data_read
+> 
+>        1.001365319 seconds time elapsed
+> 
+> $ sudo perf stat -A -e data_read -a sleep 1
+> 
+>  Performance counter stats for 'system wide':
+> 
+> CPU0             1,336.48 MiB  data_read [uncore_imc_free_running_0]
+> CPU0             1,337.06 MiB  data_read [uncore_imc_free_running_1]
+> 
+>        1.001049096 seconds time elapsed
+> ```
+> so the aggregation number shows 1 but 2 events were aggregated together.
 
-include/scsi/scsi.h
+Ugh.. right.  Merging uncore PMU instances can add more confusion. :(
 
-SCSI_MLQUEUE_HOST_BUSY   0x1055
-SCSI_MLQUEUE_DEVICE_BUSY 0x1056
-SCSI_MLQUEUE_EH_RETRY    0x1057
-SCSI_MLQUEUE_TARGET_BUSY 0x1058
+> 
+> I think computing the aggregation number in the stat code is probably
+> wrong. The value should be constant for an evsel and aggr_cpu_id, it's
+> just computing it for an aggr_cpu_id is a pain due to needing topology
+> and/or PMU information. The code is ripe for refactoring. I'd prefer
+> not to do it as part of this change though which is altering a
+> particular Intel Granite Rapids issue.
 
-This change shows the rtn in strings:
+That's ok.  Just one more TODO items..
 
-dd-1059    [007] .....    31.689529: scsi_dispatch_cmd_error: host_no=0 channel=0 id=0 lun=4 data_sgl=65 prot_sgl=0 prot_op=SCSI_PROT_NORMAL driver_tag=23 scheduler_tag=117 cmnd=(READ_10 lba=0 txlen=128 protect=0 raw=28 00 00 00 00 00 00 00 80 00) rtn=SCSI_MLQUEUE_DEVICE_BUSY
-
-Signed-off-by: Kassey Li <quic_yingangl@quicinc.com>
----
- include/trace/events/scsi.h | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
-
-diff --git a/include/trace/events/scsi.h b/include/trace/events/scsi.h
-index 8e2d9b1b0e77..38743635f2c1 100644
---- a/include/trace/events/scsi.h
-+++ b/include/trace/events/scsi.h
-@@ -199,6 +199,14 @@ TRACE_EVENT(scsi_dispatch_cmd_start,
- 		  __print_hex(__get_dynamic_array(cmnd), __entry->cmd_len))
- );
- 
-+#define scsi_rtn_name(result)	{ result, #result }
-+#define show_rtn_name(val)					\
-+	__print_symbolic(val,					\
-+		scsi_rtn_name(SCSI_MLQUEUE_HOST_BUSY),		\
-+		scsi_rtn_name(SCSI_MLQUEUE_DEVICE_BUSY),	\
-+		scsi_rtn_name(SCSI_MLQUEUE_EH_RETRY),	\
-+		scsi_rtn_name(SCSI_MLQUEUE_TARGET_BUSY))
-+
- TRACE_EVENT(scsi_dispatch_cmd_error,
- 
- 	TP_PROTO(struct scsi_cmnd *cmd, int rtn),
-@@ -239,14 +247,15 @@ TRACE_EVENT(scsi_dispatch_cmd_error,
- 
- 	TP_printk("host_no=%u channel=%u id=%u lun=%u data_sgl=%u prot_sgl=%u" \
- 		  " prot_op=%s driver_tag=%d scheduler_tag=%d cmnd=(%s %s raw=%s)" \
--		  " rtn=%d",
-+		  " rtn=%s",
- 		  __entry->host_no, __entry->channel, __entry->id,
- 		  __entry->lun, __entry->data_sglen, __entry->prot_sglen,
- 		  show_prot_op_name(__entry->prot_op), __entry->driver_tag,
- 		  __entry->scheduler_tag, show_opcode_name(__entry->opcode),
- 		  __parse_cdb(__get_dynamic_array(cmnd), __entry->cmd_len),
- 		  __print_hex(__get_dynamic_array(cmnd), __entry->cmd_len),
--		  __entry->rtn)
-+		  show_rtn_name(__entry->rtn)
-+	  )
- );
- 
- DECLARE_EVENT_CLASS(scsi_cmd_done_timeout_template,
--- 
-2.34.1
+Thanks,
+Namhyung
 
