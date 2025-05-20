@@ -1,88 +1,241 @@
-Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C6AE24EA85
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 17:25:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BC2879CF
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 17:27:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747761961; cv=none; b=RDTb7V1iBHaBX7Hkw4+/DZ+d6IcfSzCdWbHPg1ARHoX8etoDhkh+R/i1d08v74FP9gNIwGYa8YF8uW/LSufhNyJ+Ub+BipfB8QBFbHE7EZE6suS61tiPCbRk8bdtfhGbwAt5rB6ayXGxqW1aiPucRLxEPWTxTVWJrgXTN6BVPFk=
+	t=1747762073; cv=none; b=D7TReB+9gV9XeQV9ebnpEU0YsSp1WqMYPRMRkztGDfiZ5RU/E3rDUpjA3JOmemX1NUOVdlQJEykKhcJHGXppW5qf212BcrmDGT4CdD5vcRBvyAqkJf4sxRTgieHZVk9pMWWW8omh3sST/QUCabTi7pJmKZH2i/VKzYef054DShE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747761961; c=relaxed/simple;
-	bh=yaQEyTq9qu2VZtURmi8lqNHxZL4f6GMQAiHJcnTGDtU=;
+	s=arc-20240116; t=1747762073; c=relaxed/simple;
+	bh=tIa5+YdrgGJbeyk0UHOg0IX4f7FfivGmhOh0TiLpCGI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d62Ejgto+9oH074pCsJQ/f3HzQyXPWPZ9zKw09yCCNyHAcsey9Nf77skradRNdoLl7pXnEeSUgj944ZCgGvR8WpGXeGvGtVsaiQgWbfujJyowZZuHr5X+zLzz8q7hoX/VHaoe9vc9d7EnNXhRn9eh9aZqItxHqy9wqiSrFuv970=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=CKXs4fQZ; arc=none smtp.client-ip=95.215.58.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=nUoX8aVSqcjxRlT+JSKlI0R+Arn+oiGH7/JCrnuPQr9odKjcUeoWSA3q5jU6A2BEjyMvNtHExj9Loiol79nE2ho090hQPQwIEsyh1wIcBK9NtEX3aqxqQBK0B+OQC99eHpp/zsoeP4qkIQajFQCMFeVb0pBSoMAxoBMKzfCoieg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nNL/EYU2; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="CKXs4fQZ"
-Date: Tue, 20 May 2025 13:25:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747761956;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yaQEyTq9qu2VZtURmi8lqNHxZL4f6GMQAiHJcnTGDtU=;
-	b=CKXs4fQZkMwRpIdaLdlJvTkZR8MLDYAck0rJ2OU+RBzeY7oqjcbrs7BNds+nptgiEX05U7
-	6Pzt2R49GURFGzscpqWF42qJsyuPXcccC2bl0Vg8C7fh92tL+S42Itu2gBHmZntNkbhpv0
-	FUguGHJ/oMYkdUSaeGgSquu44RwZaMM=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: Usama Arif <usamaarif642@gmail.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, hannes@cmpxchg.org, shakeel.butt@linux.dev, vlad.wing@gmail.com, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH 1/2] mm: slub: allocate slab object extensions
- non-contiguously
-Message-ID: <l7sk6ga4ckxo27wfbkqrmbu6yfu3ia4sttkhki6hh2omjbxkxv@fxwjog4jmjwu>
-References: <20250520122547.1317050-1-usamaarif642@gmail.com>
- <3divtzm4iapcxwbzxlmfmg3gus75n3rqh43vkjnog456jm2k34@f3rpzvcfk3p6>
- <6d015d91-e74c-48b3-8bc3-480980a74f9b@gmail.com>
- <b696e3c2-3d96-4729-9e07-87bb644f145b@gmail.com>
- <CAJuCfpEL__bRSbVWATs0qbNF3E2ZS_n7banhRxU01FFT2aTPAQ@mail.gmail.com>
- <sfh57nqbhxaycdlyitiughqc7ul3xuix5kis65l4grrnxwfqz3@gch2dlf3fnxo>
- <CAJuCfpHqGQKgU=rnJbZnbyTs3vKL-gEjLp1Yw1idWUzdkjZsLA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nNL/EYU2"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-7376dd56f8fso6717137b3a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 10:27:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747762071; x=1748366871; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=lGpWma/mkgur6OYR/XInOzF4YmcPnIMGWHs3eog6BDU=;
+        b=nNL/EYU22ld7I2s8lVcRZe5inUbzSMB989akpLO9EaykBhtuBqGzjQ33kk2FbukL5n
+         GX170YSshuzrEtsNyKl5K7KlbbQAu209ys7jlYWYmX9Xp/cCx4+YYS6Rf4UsQZT0OOS1
+         8n4ZAv+Gs+AbSuY8Cau7IbQyGn8Zn56f7JE3EunQbDr7nktJuSEY3gX9uDCZBpHQSv+D
+         /vHAtVhtrAXRf7yxQdoXkSHl1L3qG0pUYUTjhoD6lsX8sgz9eh2a9b8BCde5FeaxR3Zi
+         Gx9Jz4blASwBD3W9UX/hY9nBFP1ihIxZhtJkG6SsJfAzLTS2Jpj6WyzS5hWjyBVM5AYM
+         wf2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747762071; x=1748366871;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lGpWma/mkgur6OYR/XInOzF4YmcPnIMGWHs3eog6BDU=;
+        b=ergW81ntL57WRVq0m2claCbPL8V2Ro0PJmmyZuMVSTvCUiaL6ODyJdK6biKoNSXfqy
+         AY1jFR/OdNRMWkS/60zeh4cxA6UyASjMsg1RlQHflkFO8TOQnQZFUl/X9qNGulyG5Fq7
+         DFkxaynjlIsnz3QSr1VhG9caI6Kao9l4Dk7z0xVBnev12ojoo2ycNf/60p5cIfsbWdj2
+         JoolgtNRCeboIbwqQXm5SQJy+kEYU6zwB0/BLCroU/I6+ATtm01KHl40n4o136GSbwCx
+         xq8HN+zj0clIHoD/IeXkRZTJl/VnCIWxBUnOJI88xSEAN5MKFJaVKiR6eJa99g8yIPVM
+         VD9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW2PYZsNftd/6TQ2YrziUttqd53v+UHqffChHek5hLZX7H78bNOzOrPF5N3pewMVRDh1MU4w+NFCDa/h8U=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5sm06C/FlgYziLfRUdETUjae4MTFvLyKr9kb8Ua9R3C1mE44K
+	jDhQ0ItVK8/cWa52S1CfFqog6gYzPVWNYAemLf4jV5FZ/4cOuhl8L/nfMuAtDakZkJo=
+X-Gm-Gg: ASbGncuYj+XWaFkMN+qqnFRo8Z4iJ9wVQ1PiTHHYJw8X7xCHo9qpWzoTz/gXLm3b+2g
+	EOnMa9cFyupYkV1dtEnkVmP0bOtwSxSHU7nchf83jUByLbFRXq7x6B/QYQt2mkrLl9BNCAxUVo+
+	/y3v9WOjKErtp0ry7vGJ6HaTcJkgLc0A3aAh1qjt1xxmmCempyU7WIMMELgu5FHc0l9DVLkbQJU
+	fLNU3aKnZLs2S97LEuj4jWqAZ64pdsTkGrsFF+sm9qGaPe8A3iZ5ec3ltufoQTrJVkiM9c8qMhF
+	iCx/V9XxOlzgIAytlBVBeDqfbx3MyW3PzfGNoFMAF7Gg8quaXjBcaos=
+X-Google-Smtp-Source: AGHT+IELypXCxTME3C0bL7DzwGSM3WRIMiTXXR8LqUFOs6w45ETIPpXrqk/LociLoe4DQYW/eQP5VA==
+X-Received: by 2002:a05:6a20:7f9d:b0:1ee:e33d:f477 with SMTP id adf61e73a8af0-216218a2a6bmr28540459637.15.1747762071319;
+        Tue, 20 May 2025 10:27:51 -0700 (PDT)
+Received: from p14s ([2604:3d09:148c:c800:6d36:6772:76af:26a4])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a9876e62sm8400493b3a.147.2025.05.20.10.27.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 10:27:50 -0700 (PDT)
+Date: Tue, 20 May 2025 11:27:48 -0600
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+To: Beleswar Padhi <b-padhi@ti.com>
+Cc: andersson@kernel.org, afd@ti.com, hnagalla@ti.com, u-kumar1@ti.com,
+	jm@ti.com, jan.kiszka@siemens.com, christophe.jaillet@wanadoo.fr,
+	jkangas@redhat.com, eballetbo@redhat.com,
+	linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v12 00/36] Refactor TI K3 R5, DSP and M4 Remoteproc
+ Drivers
+Message-ID: <aCy7lNJt6bFvzud2@p14s>
+References: <20250513054510.3439842-1-b-padhi@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJuCfpHqGQKgU=rnJbZnbyTs3vKL-gEjLp1Yw1idWUzdkjZsLA@mail.gmail.com>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20250513054510.3439842-1-b-padhi@ti.com>
 
-On Tue, May 20, 2025 at 10:20:23AM -0700, Suren Baghdasaryan wrote:
-> On Tue, May 20, 2025 at 9:41 AM Kent Overstreet
-> <kent.overstreet@linux.dev> wrote:
-> I see your point. One case we would want to use vmalloc is if the
-> allocation is sizable (multiple pages), so failing it does not mean
-> critical memory pressure level yet. I don't think today's extension
-> vectors would be large enough to span multiple pages. That would
-> require a rather large obj_per_slab and in most cases I think this
-> change would not affect current behavior, the allocations will be
-> smaller than PAGE_SIZE and kvmalloc will fail anyway.
-> I guess the question is whether we want to fail if allocation size is
-> higher than PAGE_SIZE but less than PAGE_ALLOC_COSTLY_ORDER. Failing
-> that I think is reasonable and I don't think any extension vector will
-> be large enough to reach PAGE_ALLOC_COSTLY_ORDER. So, I'm ok with
-> dropping this part of the patchset.
+On Tue, May 13, 2025 at 11:14:34AM +0530, Beleswar Padhi wrote:
+> This series refactors a lot of functions & callbacks from
+> ti_k3_dsp_remoteproc.c, ti_k3_r5_remoteproc.c and ti_k3_m4_remoteproc.c
+> drivers. This is a consolidated and final series as part of the
+> refactoring of K3 remoteproc drivers. Below is the breakdown:
+> 1. PATCHES #1-#4 fixes important bugs in R5 and DSP drivers before refactoring
+> them into a common driver.
+> 2. PATCHES #5-#11 does the pre-cleanup and aligns R5, DSP, M4 data structures.
+> 3. PATCHES #12-#36 does the actual refactoring R5, DSP and M4 drivers into
+> ti_k3_common.c driver.
+> 
+> NOTE:
+> This series supersedes below series:
+> https://lore.kernel.org/all/20250219091042.263819-1-b-padhi@ti.com/
+> https://lore.kernel.org/all/20250425104135.830255-1-b-padhi@ti.com/
+> https://lore.kernel.org/all/20250108063727.1416324-1-b-padhi@ti.com/
+> 
+> Testing Done:
+> 1. Tested boot of R5Fs, C66x DSPs, C71x DSPs across Jacinto J7* devices in
+> remoteproc mode and IPC-Only mode.
+> 2. Tested boot of M4F core _only_ in _AM62xx SK_ board in Remoteproc mode and
+> IPC-Only mode.
+> 3. Tested Core stop and detach operations from sysfs for R5Fs, C66x DSPs, C71x
+> DSPs
+> 4. Tested device removal paths by executing 'modprobe -r ti_k3_dsp_remoteproc'
+> and 'modprobe -r ti_k3_r5_remoteproc'.
+> 5. Tested usecases where firmware not available at device probe time, but
+> later in sysfs, able to load firmware into a remotecore and start it. [R5Fs]
+> 6. Tested that each patch in this series generates no new warnings/errors.
+> 7. Tested IPC on AM64x EVM Device. [Thanks to Judith].
+> 8. Tested compilation of the remoteproc drivers as modules.
+> 
+> v12: Changelog:
+> Mathieu:
+> 1. Use data pointer to set num_mems in PATCHES [08/36] and [11/36].
+> 2. Declare const before variables in PATCH [11/35].
+> 3. Compile ti_k3_common driver with ti_k3_r5_remoteproc driver in PATCH [13/36].
+> General:
+> 1. New patch: [04/36]. Fix the state detection logic in M4 driver to prevent
+> resetting the rproc in detach routine.
+> 2. Update comments in ti_k3_common.{h/c} files to call out it is refactored out
+> of R5, DSP and M4 drivers in PATCHES [12/36] and [13/36].
+> 3. Carry R/B Tags from Andrew throughout series.
+> 
+> Link to v11:
+> https://lore.kernel.org/all/20250425104135.830255-1-b-padhi@ti.com/
+> 
+> v11: Changelog:
+> 1. New patches: [v11 15/35] and [v11 18/35].
+> Broken down rproc_reset() and rproc_release() refactoring patches into more
+> atomic changes.
+> 2. Carried T/B on all patches from Judith.
+> 3. Carried A/B on [PATCH v11 13/35] by Andrew.
+> 
+> Link to v10:
+> https://lore.kernel.org/all/20250417182001.3903905-1-b-padhi@ti.com/
+> 
+> v10: Changelog:
+> 1. Re-ordered Bug Fixes to the start of the series, before starting pre-cleanup
+> and finally the actual refactor. [Andrew]
+> 2. Broken down commits into more atomic changes for ease of review. [Andrew].
+> 3. Updated commit messages to have uniform flow throughout the series.
+> 4. Carried R/B tags in applicable patches.
+> 5. Further patch specific changelog is attached with patches.
+> 
+> Link to v9:
+> https://lore.kernel.org/all/20250317120622.1746415-1-b-padhi@ti.com/
+> 
+> v9: Changelog:
+> 1. Added R5 cleanup & refactoring along with existing DSP, M4 refactoring into
+> this series. [Andrew]
+> 2. Dropped Mailbox level IPC checks across R5, DSP, M4 drivers in IPC-only mode.
+> [Andrew] 
+> 
+> Link to v8:
+> https://lore.kernel.org/all/20250103101231.1508151-1-b-padhi@ti.com/
+> 
+> v8: Changelog:
+> 1. Broken down refactoring into patches, each patch dealing with one function
+> for ease in review. [Andrew]
+> 
+> Links to older versions:
+> v7: https://lore.kernel.org/all/20240202175538.1705-1-hnagalla@ti.com/
+> v6: https://lore.kernel.org/all/20230913111644.29889-1-hnagalla@ti.com/
+> v5: https://lore.kernel.org/all/20230808044529.25925-1-hnagalla@ti.com/
+> v4: https://lore.kernel.org/all/20230801141117.2559-1-hnagalla@ti.com/
+> v3: https://lore.kernel.org/all/20230302171450.1598576-1-martyn.welch@collabora.com/
+> v2: https://lore.kernel.org/all/20230301111323.1532479-4-martyn.welch@collabora.com/
+> v1: https://lore.kernel.org/all/20220110040650.18186-1-hnagalla@ti.com/
+> 
+> Thanks,
+> Beleswar
+> 
+> Beleswar Padhi (34):
+>   remoteproc: k3-r5: Refactor sequential core power up/down operations
+>   remoteproc: k3-m4: Don't assert reset in detach routine
+>   remoteproc: k3-r5: Re-order internal memory initialization functions
+>   remoteproc: k3-r5: Re-order k3_r5_release_tsp() function
+>   remoteproc: k3-r5: Refactor Data Structures to Align with DSP and M4
+>   remoteproc: k3-r5: Use k3_r5_rproc_mem_data structure for memory info
+>   remoteproc: k3-{m4/dsp}: Add a void ptr member in rproc internal
+>     struct
+>   remoteproc: k3-m4: Add pointer to rproc struct within k3_m4_rproc
+>   remoteproc: k3-m4: Use k3_rproc_mem_data structure for memory info
+>   remoteproc: k3: Refactor shared data structures
+>   remoteproc: k3: Refactor mailbox rx_callback functions into common
+>     driver
+>   remoteproc: k3: Refactor .kick rproc ops into common driver
+>   remoteproc: k3-dsp: Correct Reset logic for devices without lresets
+>   remoteproc: k3-m4: Introduce central function to put rproc into reset
+>   remoteproc: k3: Refactor rproc_reset() implementation into common
+>     driver
+>   remoteproc: k3-dsp: Correct Reset deassert logic for devices w/o
+>     lresets
+>   remoteproc: k3-m4: Introduce central function to release rproc from
+>     reset
+>   remoteproc: k3: Refactor rproc_release() implementation into common
+>     driver
+>   remoteproc: k3-m4: Ping the mbox while acquiring the channel
+>   remoteproc: k3: Refactor rproc_request_mbox() implementations into
+>     common driver
+>   remoteproc: k3-dsp: Don't override rproc ops in IPC-only mode
+>   remoteproc: k3-dsp: Assert local reset during .prepare callback
+>   remoteproc: k3: Refactor .prepare rproc ops into common driver
+>   remoteproc: k3: Refactor .unprepare rproc ops into common driver
+>   remoteproc: k3: Refactor .start rproc ops into common driver
+>   remoteproc: k3: Refactor .stop rproc ops into common driver
+>   remoteproc: k3: Refactor .attach rproc ops into common driver
+>   remoteproc: k3: Refactor .detach rproc ops into common driver
+>   remoteproc: k3: Refactor .get_loaded_rsc_table ops into common driver
+>   remoteproc: k3: Refactor .da_to_va rproc ops into common driver
+>   remoteproc: k3: Refactor of_get_memories() functions into common
+>     driver
+>   remoteproc: k3: Refactor mem_release() functions into common driver
+>   remoteproc: k3: Refactor reserved_mem_init() functions into common
+>     driver
+>   remoteproc: k3: Refactor release_tsp() functions into common driver
+> 
+> Siddharth Vadapalli (2):
+>   remoteproc: k3-r5: Drop check performed in
+>     k3_r5_rproc_{mbox_callback/kick}
+>   remoteproc: k3-dsp: Drop check performed in
+>     k3_dsp_rproc_{mbox_callback/kick}
+> 
+>  drivers/remoteproc/Makefile               |    6 +-
+>  drivers/remoteproc/ti_k3_common.c         |  551 +++++++++++
+>  drivers/remoteproc/ti_k3_common.h         |  118 +++
+>  drivers/remoteproc/ti_k3_dsp_remoteproc.c |  616 +------------
+>  drivers/remoteproc/ti_k3_m4_remoteproc.c  |  583 +-----------
+>  drivers/remoteproc/ti_k3_r5_remoteproc.c  | 1018 +++++++--------------
+>  6 files changed, 1088 insertions(+), 1804 deletions(-)
+>  create mode 100644 drivers/remoteproc/ti_k3_common.c
+>  create mode 100644 drivers/remoteproc/ti_k3_common.h
 
-Johannes raisess more pertinent points, so I think vmalloc allocation is
-out.
+I have applied this set.  Thanks to eveyone involved in making this happen.
 
-If it turns out that extension vector allocation failures do cause real
-problems (not for memory allocation profiling, but maybe someone is
-depending on memcg being precise), I think it would acceptable to dip
-into reserves for them, since they're a small fraction of the slabs
-themselves.
+Mathieu
 
-With the caveat that we'd need to look at how the reserves are sized, to
-make sure we're not running them empty and causing new problems
-elsewhere.
-
-But just failing the allocation should probably be the default approach
-here.
+> 
+> -- 
+> 2.34.1
+> 
