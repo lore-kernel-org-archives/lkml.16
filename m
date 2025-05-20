@@ -1,264 +1,137 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DAC02571C4
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 21:54:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF277256C9D
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 21:56:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747778074; cv=none; b=pjrhqmxPlim75z2cbgL3NTwt+LFvea/OYldJUyexiPeXHEqnFlYKk5mJG0p+Yt5KPrrltP7nzQ1ytsp0hMp519C9P8tUHeioHqO3RQKnn6iNVnyGKa6C+EX+63ISLGyRS2wCZoOh04I+P2HCzuKAH+huzNk3hSG/g98aOBX/j38=
+	t=1747778194; cv=none; b=Glfv2/dMv7FpBojdtgvQpxBt0os1AbhtzPE2cdL+TmyhGmzDZFJ05RcyBVLaYqHgpo474VOYHPs4rVsgGvdXeclCLVOdQJazK7zkrhxTcqH4uIMiIfbBDXEWptA1PPP3aM9Lzfeo1gNF7d8GHqnHrEDbiP08W3eU9iBhz0Obko0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747778074; c=relaxed/simple;
-	bh=OVUpSlLQHrvQA3SAi0QRyVtEeRlG5qfNWWJDAQAoMso=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=te7WJRIrONNnm5bCev/lEAjjUsV3mz+DCTQ9yWKkIM1y/YFCqSC2KgMvQrXgJmdsdtyJHtX2R9wSuZXMtQUlEVQn1v/hMuKhM+d+PGG751bLiNWF6RVBYc8rDHAsxvQNVOqAWdFDTdbMEEfH+Drv7BgXBPgwuNoPvn3vTbQAYMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=I9lNQwaP; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1747778194; c=relaxed/simple;
+	bh=oWb5hAu/l5YSX8uJ039kggIhfQkxgNS/Ezdx1ZpAoFo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kokSAX5h1FNRWA5QhI3Aiuv5cbcxGCRIIj9X79NrbcRhEOflHhoBBAwn9m9NiRqW0xs178gYEfMpkGk9p9zGtSX+ZOC66nBtW0QYhqE/b9m8606A7QOw2i/oLgpgHC3x1J6WfDnBmVnP43ptZBwOYIoLt3zavFk0kkDfVOgLkUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=F0Npc48k; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="I9lNQwaP"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54KGdoDu024716
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 21:54:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	ixEgJ9j+edtLlOT9h728vh1/XaPEUtQLSHRMgbMkV/Y=; b=I9lNQwaPAIGIF7Ug
-	CC3OgloIymUyXQG6uMjV0RYoqq67cqsuIcxaEf01TsLDif/AVr4JmheHAMtFGtn+
-	Fw12jFKmM3T3fsEbgwNcZUl9RMwfZNXlNw0JuLZ5QJgGgdU0QTZWsbJNcFIckiNq
-	6Wz8Pg4SRKTrnhFQVSV9cYkJ4ZYIWC7UOAuF/MUTEnfnnmHnry+mLbCinjrw9u4P
-	+dIBPWe+OwRu5xCusKQ8/mN8W3khyVfcdQjzG4RYj3dUVAkONBGqi8qvVaef/fQL
-	gah+rvKwZAtVdSHSZlILptiI4HSScStDHCJ9IvnXQRYT1tG1+feTZ+dGnFK8NV8b
-	JS84DA==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf30qp1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 21:54:31 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5841ae28eso164142085a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 14:54:31 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F0Npc48k"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747778191;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8I/zlDb7KnN1EE0TcCQ0JoPgED/9jrw+qsbSjcDT74Q=;
+	b=F0Npc48k8SRwrGfZ1CZAr+fCXNoDm1hq+rqEXkX5hNwEfdcgwmIsZGmzjTfqgYMbyXYwzB
+	C1VAlpgT+dblHo0EYRwVPywDdXnlSmyBTXciw89wGaEGkb33XFqTls0twzp7YJozjBy+TK
+	v1sfunhHcqaUniMe+bEMlvXCGuYDvOI=
+Received: from mail-ot1-f71.google.com (mail-ot1-f71.google.com
+ [209.85.210.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-639--hD6tPz6MP-pdITBrx74GA-1; Tue, 20 May 2025 17:56:28 -0400
+X-MC-Unique: -hD6tPz6MP-pdITBrx74GA-1
+X-Mimecast-MFC-AGG-ID: -hD6tPz6MP-pdITBrx74GA_1747778188
+Received: by mail-ot1-f71.google.com with SMTP id 46e09a7af769-72a48b91fbbso1190308a34.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 14:56:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747778070; x=1748382870;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ixEgJ9j+edtLlOT9h728vh1/XaPEUtQLSHRMgbMkV/Y=;
-        b=tGj9kPHoTYL0SXFeJ0GYqQ0AA/s88eYlh4NYYpUq4U4EjrfdPgNbvlE7/kVyUpiulo
-         7qFmtnln8TAKyhK+JT8j5D90QBdrxMPTYjfBS1Q70Yv2fd/g1Ehrred4pT3L60GPyA5q
-         BXfZgdP8BQ2ly19pS6VNvMCFZBJypu6I4YiFmltmqqLInLlR6ktcQl1ve6LxXuP19ZZa
-         Cb5nJmH+6Ardye8Y3u2zuF9cBKq2y5p8bYxQ5tR2xcH3Mcb70Ga/Dc/Cbe4NQaJpjHpA
-         pK43UHUI7z5BP6Y9qAAvZHB6jRjs4dkCwzf/J7efdoYbEmFOkjHx1CV5b9NaVc2W7o5L
-         kpNg==
-X-Forwarded-Encrypted: i=1; AJvYcCU9Q0GkrduRXdQan2Ugm2UqaJ4Vss2ilJzIggMn51NucbWwj14svdxgAMeO9ShwwMzSDSNlB1gulniNJvE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxG8fOfYvo2QKm5BI6ELC+wEOg/ciSzP4wCKgaEBNCX4Bpag+30
-	SDjEtiSTmoC6U5dhIbNxpUKB/E9WL3VreJ3joE9Od7YcUvU4mrlqaH/DXjn5RbGTUsZVJ5HduIj
-	u9IRO/DAw4cIlzTZRX266uKg8AdV2WaekzGG3x7qAqbmGGRNb3dYyXSS7NM+gbD0MAOQ=
-X-Gm-Gg: ASbGnct6+4fSmPpQqyay+15T5CLXbKwUHQnDlqzkWxHpLgkdUQcb1uuQZ1j7rVpkiVb
-	in1F4h1KVa5Ck9kI+OGPkq/MPAUnDdmIyu24vSj+kR0rV3D+8uU+OEipzPtVi43SAk6yfvm7tcy
-	6uDJzxHwk5a4vD9ivYeVHJ9lewFOh28Gtde7jRLSn/6evcKp/YtuLN7k1d9zfS1xB271tTwkgUD
-	/u1OcFvChpeN3HnMoExIWulJlxv4rF2XpGH0QaL0sLEnTFScHx+lqudWPOdy+tHq3gB7aesEPk6
-	g1qSYjjHtzwY4hLi6GJmhpo1JjIjj2qYmgKnVkUU/5OeE/edNvEryNnZCRHUvzN5nw==
-X-Received: by 2002:a05:620a:890b:b0:7c5:ac06:af8 with SMTP id af79cd13be357-7cd4674ba6dmr1105392385a.9.1747778069973;
-        Tue, 20 May 2025 14:54:29 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGG9tmoVRvNJzsOqLZYPUDRI5WZg6Fye+cvUh3jfqKfn2OZ38omodgwTK/FgcrqyiAntIJh5Q==
-X-Received: by 2002:a05:620a:890b:b0:7c5:ac06:af8 with SMTP id af79cd13be357-7cd4674ba6dmr1105390285a.9.1747778069482;
-        Tue, 20 May 2025 14:54:29 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d04e816sm782275966b.23.2025.05.20.14.54.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 May 2025 14:54:29 -0700 (PDT)
-Message-ID: <e4d65994-89dd-4068-a8db-050e698f9bb3@oss.qualcomm.com>
-Date: Tue, 20 May 2025 23:54:26 +0200
+        d=1e100.net; s=20230601; t=1747778188; x=1748382988;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8I/zlDb7KnN1EE0TcCQ0JoPgED/9jrw+qsbSjcDT74Q=;
+        b=nAAeZtBvt9HnHWTUDdzhu9nnkIaxl2CV5DAPOu3BBND9JoW8PJDFy9kP6DjqaEHRbU
+         F1x44Kt9Ag+04v2E2Iw9s3Yrc6PPKMnGgZX7/v4NgRMGRDEJMVZOLNFnviHbCJTM7D1s
+         qAOqt0X2B5RHPe44jkFYf5vkhgrxAPtVRZSath6iM3z0JJykamUJ3c+J/fILLa2x/n0F
+         HnH502eiClr8qcX8oquyYpPHwneEwr1MlPTwfNToLyyUJ9trU8k84xdih/6HhMueFNSM
+         AVvNUQ0lFUglUT4CZZauNUthqBgGiMpI44qxFkGN3fIDy1A/ILp9/e5AJsXsP13gS4o/
+         Y7Ow==
+X-Forwarded-Encrypted: i=1; AJvYcCVjkqS+0ZiYb5Htb0qC7Xhm/nboRqkF/z9TXJOhkXzTscd1Fzsp0OTaAwJD4okfUl7aapVx2oPbklpggz4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpkhILssNCsXAcrqAiDsbI2RmjFi/hG2WWmUBQIzqpOtJnsmXv
+	/Tuvg9lc2miVP3hQyR3xluspnAHDXJ1rCqEmCbSpZsoC6LEsKwAFwKqgjbt7Q0aFrF+rSe8/bCG
+	+hrlSO9G4vMHzpHT0Azez1vHgFEPCFFVZbk0ScpgvsGqeTarD4c1rM9uyKhNiU+kiJg==
+X-Gm-Gg: ASbGncs7npp5/wKV1jWmZ7ytqc1QG0bNCLOX+t3D5XDpOW/Pw9D8LYmSSbViRHtevWU
+	5Panid8YDb80Jfkgc7BAbVX/GALlaLZvoVQnbmo0F7oJwCW+qU92KR479Izwry2AnY9AQkjkdME
+	I0+HM+Qanf6tM9alKdtiDsOgsgjlawMTJJ4gyirG5SxajG8j8bZ1tzY6yIyFS1LNN2z7J8kbOtJ
+	DJWkOk1hYCyWrV+w+E4/DhLzGT63DvrbdUyA84aY6sXPICKQAoPNu+xUnaJ1bppNJ5qAgYTA7ZJ
+	nBgAlAaJCZUYUvI=
+X-Received: by 2002:a05:6830:2b10:b0:727:3b8d:6b2a with SMTP id 46e09a7af769-734f6b91e7emr5189927a34.7.1747778187739;
+        Tue, 20 May 2025 14:56:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFk9JqMhUFPwxwAxuXj2yAnvft1vt3nStZWtHNmFycnDXM5L8C/WRYPVEXsZD3K/2UWIMr5xg==
+X-Received: by 2002:a05:6830:2b10:b0:727:3b8d:6b2a with SMTP id 46e09a7af769-734f6b91e7emr5189917a34.7.1747778187411;
+        Tue, 20 May 2025 14:56:27 -0700 (PDT)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-734f6b3cbb4sm1971038a34.44.2025.05.20.14.56.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 14:56:26 -0700 (PDT)
+Date: Tue, 20 May 2025 15:56:24 -0600
+From: Alex Williamson <alex.williamson@redhat.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: Peter Xu <peterx@redhat.com>, lizhe.67@bytedance.com,
+ kvm@vger.kernel.org, linux-kernel@vger.kernel.org, muchun.song@linux.dev
+Subject: Re: [PATCH v3] vfio/type1: optimize vfio_pin_pages_remote() for
+ huge folio
+Message-ID: <20250520155624.3d0fdc38.alex.williamson@redhat.com>
+In-Reply-To: <8bd88c21-4164-4e10-8605-d6a8483d0aeb@redhat.com>
+References: <20250520070020.6181-1-lizhe.67@bytedance.com>
+	<20250520080719.2862017e.alex.williamson@redhat.com>
+	<aCy1AzYFyo4Ma1Z1@x1.local>
+	<8bd88c21-4164-4e10-8605-d6a8483d0aeb@redhat.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] arm64: dts: qcom: sm8650: Add support for Oneplus Pad
- Pro (caihong)
-To: Pengyu Luo <mitltlatltl@gmail.com>,
-        Bjorn Andersson
- <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20250520164208.516675-1-mitltlatltl@gmail.com>
- <20250520164208.516675-3-mitltlatltl@gmail.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250520164208.516675-3-mitltlatltl@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: gnkZDtAOSZjJnqJQkTHY-A72UdP5OW8w
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDE3NyBTYWx0ZWRfXz1aQhtMe9x5a
- c6vb4BUI3w6rPTo6//jaVLSjwfy26Qmm2gc4eYHlecefwVOiI+oE1PKI1xtREpEl4f+6UPErYET
- A1IM0JMN1VN3m017/63hYVhw92R7kwjCHLFMp6nxxhL5yXdF8otl9QaGz6b8c/1Ts4RDP/WwD1l
- JX9Ymn1HKG5a52eW0N4ncV9sb1OszPegHLgdZnWjCpFkh+cWrwpq5h9Ph8OU70CNMTKUGEvWywP
- lNB4Z9qv9kB05G4IRshOPIaCc9f/6pZAglouZ1zAaPZ59ybXO/oLejWWZYio1Rfw7WJZhlqMQQw
- 5tAfjIEQl133fRJEWHEScuVpDkR7EZzVJG6T1qqIwIse0QWsxCijG6JDM0unWUV9Cb/5TMF25WG
- U9NQnBFEdS96ngCq85b2hq0fDbgkCHZQH+0JPJchX+KnVp/lTx8sUQ3adMehlR90MJ6DfQdw
-X-Proofpoint-GUID: gnkZDtAOSZjJnqJQkTHY-A72UdP5OW8w
-X-Authority-Analysis: v=2.4 cv=a9kw9VSF c=1 sm=1 tr=0 ts=682cfa17 cx=c_pps
- a=qKBjSQ1v91RyAK45QCPf5w==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=NEAV23lmAAAA:8 a=_Qn17-mUnYZpERhHpVEA:9
- a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-20_10,2025-05-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 clxscore=1015 priorityscore=1501 phishscore=0 mlxscore=0
- lowpriorityscore=0 mlxlogscore=999 bulkscore=0 spamscore=0 adultscore=0
- malwarescore=0 suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505200177
 
-On 5/20/25 6:42 PM, Pengyu Luo wrote:
-> The OnePlus Pad Pro is an Android tablet based on the Qualcomm SM8650
-> platform. Its device codename is "caihong". This patch adds an initial
-> devicetree for basic functionality.
+On Tue, 20 May 2025 19:41:19 +0200
+David Hildenbrand <david@redhat.com> wrote:
+
+> On 20.05.25 18:59, Peter Xu wrote:
+> > Hi, Alex,
+> > 
+> > On Tue, May 20, 2025 at 08:07:19AM -0600, Alex Williamson wrote:  
+> >> Peter, David, if you wouldn't mind double checking the folio usage
+> >> here, I'd appreciate it.  The underlying assumption used here is that
+> >> folios always have physically contiguous pages, so we can increment at
+> >> the remainder of the folio_nr_pages() rather than iterate each page.  
+> > 
+> > Yes I think so.  E.g., there's comment above folio definition too:  
 > 
-> Currently working components include:
-> - Backlight
-> - Bluetooth
-> - Battery charging (up to 5v 0.5a) & reporting via pmic-glink (There
-> are many unknown notifications)
-> - Display panel ([1])
-> - Keyboard (via BT)
-> - Power key & volume keys
-> - Touchscreen & stylus ([2])
-> - USB Type-c port
-> - UFS storage
-> - Wi-Fi
+> It has consecutive PFNs, yes (i.e., pfn++). The "struct page" might not 
+> be consecutive (i.e., page++ does not work for larger folios).
+
+The former, contiguous PFNs is all we need here.  We're feeding the
+IOMMU mapping, so we're effectively just looking for the largest extent
+of contiguous PFNs for mapping a given IOVA.  The struct page is really
+just for GUP, finding the next pfn, and with this, finding the offset
+into the large folio.
+
+> > /**
+> >   * struct folio - Represents a contiguous set of bytes.
+> >   * ...
+> >   * A folio is a physically, virtually and logically contiguous set
+> >   * of bytes...
+> >   */
+> > 
+> > For 1G, I wonder if in the future vfio can also use memfd_pin_folios()
+> > internally when possible, e.g. after stumbled on top of a hugetlb folio
+> > when filling the batch.  
 > 
-> The following components are currently non-functional:
-> - Audio
-> - Cameras
-> - Charging pump (dual sc8547)
-> - Keyboard (via pogo pin)
-> - Stylus wireless charger (cps8601)
-> - UCSI over GLINK (PPM init fails)
+> Yeah, or have a better GUP interface that gives us folio ranges instead 
+> of individual pages.
 > 
-> [1]: The panel is a dual-DSI, dual-DSC display that requires setting
->      'slice_per_pkt = 2' in the DPU configuration. The panel driver
->      will be submitted separately later.
-> [2]: Touchscreen/stylus driver available at:
->      https://github.com/OnePlusOSS/android_kernel_modules_and_devicetree_oneplus_sm8650/blob/oneplus/sm8650_v_15.0.0_pad_pro/vendor/oplus/kernel/touchpanel/oplus_touchscreen_v2/Novatek/NT36532_noflash/nvt_drivers_nt36532_noflash.c
->      The downstream driver has been ported and tested locally, but
->      requires cleanup, it may be submitted separately later.
+> Using memfd directly is obviously better where possible.
 
-I have a Lenovo Tab P11 with a nt36523w (-23, not -32) for which I have once
-poked at the driver for.. I see the driver you posted mentions -23 as well,
-please keep me in the loop if you're going to upstream it
+Yeah, we brought up some of these issues during previous reviews.
+Ultimately we want to move to IOMMUFD, which already has these
+features, but it still lacks P2P DMA mapping and isn't as well
+supported by various management stacks.  This leaves some performance
+on the table, but has a pretty high return for a relatively trivial
+change.  Thanks,
 
-[...]
+Alex
 
-> +		/*
-> +		 * This memory region is required to initialize the backlight
-> +		 * and display for bootloader. Normally, this region is not
-> +		 * needed. However, due to limitations in the current mainline
-> +		 * KTZ8866 driver, dual backlight ICs cannot be properly
-> +		 * initialized.
-> +		 *
-> +		 * A workaround involving secondary registration was proposed,
-> +		 * but rejected by reviewers. This reserved region is kept as
-> +		 * a temporary solution until a proper initialization method
-> +		 * that satisfies upstream requirements is found.
-> +		 */
-> +		splash_region {
-> +			reg = <0 0xd5100000 0 0x2b00000>;
-> +			no-map;
-> +		};
-
-I assume this means "if the bootloader sees /reserved-memory/splash_region,
-it keeps the display online" - let's not do that, as underscores are not
-allowed in node names (kernel coding style, not dt syntax)
-
-> +	};
-> +
-> +	/* No Modem */
-> +	smp2p-modem {
-> +		status = "disabled";
-> +	};
-
-There shouldn't be any harm in keeping this node enabled
-
-[...]
-
-> +
-> +	vph_pwr: vph-pwr-regulator {
-> +		compatible = "regulator-fixed";
-> +
-> +		regulator-name = "vph_pwr";
-> +		regulator-min-microvolt = <3700000>;
-> +		regulator-max-microvolt = <3700000>;
-> +
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +	};
-> +
-> +	wcn7850-pmu {
-> +		compatible = "qcom,wcn7850-pmu";
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&wlan_en>, <&bt_default>;
-
-property-n
-property-names
-
-please
-
-[...]
-
-> +&i2c_hub_0 {
-> +	clock-frequency = <400000>;
-> +
-> +	status = "okay";
-> +
-> +	/* sc8547-charger-secondary@6F */
-> +};
-> +
-> +&i2c_hub_2 {
-> +	clock-frequency = <400000>;
-> +
-> +	status = "okay";
-> +
-> +	/* sc8547-charger-primary@6F */
-> +};
-> +
-> +&i2c_hub_3 {
-> +	status = "okay";
-> +
-> +	/* pencil-wireless-charger-cps8601@41 */
-> +};
-> +
-> +&i2c_hub_4 {
-> +	clock-frequency = <400000>;
-> +
-> +	status = "okay";
-> +
-> +	/* awinic,aw88261_smartpa @34,35,37 */
-
-We have drivers for these!
-
-sound/soc/codecs/aw88261.c
-
-> +};
-> +
-> +&i2c_hub_7 {
-> +	clock-frequency = <400000>;
-> +
-> +	status = "okay";
-> +
-> +	/* awinic,aw88261_smartpa @34,35,37 */
-> +};
-> +
-> +&i2c2 {
-> +	status = "okay";
-> +
-> +	/* secondary kinetic,ktz8866@11 */
-
-You can describe it, the driver sets some nonzero default brightness
-
-Konrad
