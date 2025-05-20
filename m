@@ -1,116 +1,84 @@
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B8641AAA1E;
-	Tue, 20 May 2025 20:47:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21DD8846F;
+	Tue, 20 May 2025 20:47:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747774054; cv=none; b=chXSyzXKJxlKYIMrTZhT5edvAH9ShSpfOXQwlIzVjazONPddvwPH4JjiR6j1e3yJYfa5n6aZwY31B9bkS7mu+2iph8/guztLprpgQUN5OvqJlVURjIA4egjHqiIotn0jck/bNDvd8IvLC7xSk3UAgrdUhJGKAlmAxJZ19deFnUw=
+	t=1747774078; cv=none; b=icSEfwmxoeFxt+MaA/iuH9KYyqBiu7TJEnnp2SXdR++YsvI/CBOzUkjVuM1dCAYn0HabjBBR8fpeBbZkoNOwMUH3IpMd8hz/BHMnUrv2nTS7GuTPtYHuV0UffTl81BiwGqT3zMAx1ZcJLgkjsnkqwbocfhk4SAGyZbFf/BDwiLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747774054; c=relaxed/simple;
-	bh=ZlhPRDOQq5cuSzYEouiUBCPS9mWtaeRxcQTVsoQCx14=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GHCdk8nNRmtgPjnNjoj/xai9wyy+imyPJPijSuuQdYGF+RguDWB3dMw3MKjPqyeBgv/G9qlJHJEx/yRUL2YvTsaI+bYr8UpSsPJawjumSRdx4oDMGPCDZjtt9ZZM3byov4A4vrBWpg5c38x/SHA05CcA2TANlkhcSOmAIfjaqts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LXQyNNd+; arc=none smtp.client-ip=209.85.217.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747774078; c=relaxed/simple;
+	bh=esWcjAZHZm91HrjZ2YAinWKjPxhlP8DKozv2RUCL+0A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O8qZbbVCDnLMtgeh0eHNbLwSmbMTC6OSB57IiHSESYlRw31gh80jX7naxTxjtLPWlEx9SQJsQETxB+haf143WXHXb96hssKCHCCuUowMRWpgYOI4bBcXdppWsDIqE8stBpfoh8LdeB/JDptdiZSvVdosXvSdHczB7G1cB9ue89M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CbfcUmJP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LXQyNNd+"
-Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-4c4ecf86e8bso2063147137.2;
-        Tue, 20 May 2025 13:47:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747774050; x=1748378850; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pfGJMBy2dxd7CZi6+emvPVZAGM+Inq3wIUnGhP15I7k=;
-        b=LXQyNNd+RRZHGY8JC6DZM0MLKaizAZOL7RxTByHCeFi6f0KFM02+DRWWD1UX5q2Bhp
-         75inpoReHeja/1Q9LryId5srp6HP5zY0hxHvVYT0y/mh9wGloWvy5lRQ/snwcYsKvh1g
-         vFD57GTvp5YdkafuX8zErOFJaBniZ9cM6N8vwxbGE29EJ9xkwD6WnJbNNvw6g2QeCby9
-         xBpYrQv+CIH8fdONi688irhxzNRH511m0jprx+J2tqy6aKftemgsL4M0JH4XlxFu7H9t
-         JAACUNTG6qHI8xSWrG1/DOTQrN3ijUd0Rl3W00j/BmkrdkO1Va4CrQt8RpsjdNX+5esu
-         BO5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747774050; x=1748378850;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pfGJMBy2dxd7CZi6+emvPVZAGM+Inq3wIUnGhP15I7k=;
-        b=TFA1SuyRwp7mxyPJIwV7YMg7wmaSwYs2RxqHqs4b9/H/Bg3l1EybjSthrzHfmrPwee
-         O/GtExYVlAZz5Jwm8LwlwL5g2V6CWoWxtPnj9+47hqbgWFISj0YFdxvMQomtsaFqfl81
-         v8ZkEsTIXJ2fzBYR9JBNOfAl11aq11f+7HjunjCIx8TdK8Q/Jwq+PuqDncqinwgJkj9U
-         UV4h4QWENHijP3JjTgtCr+UH7Kc+r04XSCoEk/Siz5Lyw1S8icB6xzsFUfTRybFvi91C
-         99zogLlBuaHKL+im3f8KDiZXKvL3j5tBs35K0p8ao3wu8YZqeBJCjc+oR8IpEQ/M3K4W
-         Fnmw==
-X-Forwarded-Encrypted: i=1; AJvYcCV1Xdf0jlVdrh4NEFISZERAeHuzJSP9Nomy3YvOIQBU4iiS+0MD59GuFudGJvpu2OHe8yFnBTvdKAcn@vger.kernel.org, AJvYcCVwBSlLZug8oJth7zonB+bjfhdm70AC9c9/CHIPoVsYQDJbok83vicSiRngcsuImPfZM0yysLukSWLtJPd8@vger.kernel.org, AJvYcCXCcl+1MkR+GWu4+Q1joBQl5REtVsac4IgQChAfHf28K23E37RGLcKGA/SKAxfsiy/HCfrRksJkWjPw@vger.kernel.org
-X-Gm-Message-State: AOJu0YwzRw1+54ZKupi3bk//Jur7LZS/N8UgmPyWr6WmWp5mjIMKJqzW
-	njmW8E+khsQsJFuK5mv0K4e6kFTP+5S/qZ4d/6dBWEsJ1H9Fi4oZMId2
-X-Gm-Gg: ASbGncva02lKbq8jG3F3PeCDzOXSwM4Z+hsl7EPzSCJT464l1ccV4gfWzmcs55AaGZf
-	2G+7x92WH6JQRZqlGPZ81ixDDH3KqxciUctJ9VqIrmtTpOvULk9+OJJPpLXnimr7hGskdiJOGxD
-	tNeMFP+x0iUYlp2SMXZjYrd79mnkdXX+2w6No6HafOud1305cmGX3PKiIOrBNGo6IJyq6te9aZW
-	Od81+0BBJqh2GFCx3mSHAWqKFDXhfQVugF5+UzeSPaNp8Mdrfso3FgAuf/Op3Gi3Z+mveEvNz7f
-	GOmC13IFSn5KjYOfeJPZENz5cp5jG3VrKjHyluJwbF6VQ5ax99zCtYP6965w7Qx60A1TVx0yFHE
-	=
-X-Google-Smtp-Source: AGHT+IHIyn+7z0vbP2fMl/H33rUQp0OuOVixMKKUcDUG3gGs6FHgPmAiG25XvucCHnyG50pGBqYAeQ==
-X-Received: by 2002:a05:6102:2049:b0:4e2:83db:82cd with SMTP id ada2fe7eead31-4e283db82e4mr7262637137.15.1747774050557;
-        Tue, 20 May 2025 13:47:30 -0700 (PDT)
-Received: from localhost.localdomain ([2804:14d:4c64:81ec:7409:107a:a63b:a3da])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4dfa66f056asm8623968137.15.2025.05.20.13.47.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 13:47:30 -0700 (PDT)
-From: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
-To: conor@kernel.org
-Cc: conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	jic23@kernel.org,
-	krzk+dt@kernel.org,
-	linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	robh@kernel.org,
-	rodrigo.gobbi.7@gmail.com,
-	~lkcamp/patches@lists.sr.ht
-Subject: Re: [PATCH v2] dt-bindings:iio:adc:st,spear600-adc: txt to yaml format conversion.
-Date: Tue, 20 May 2025 17:43:45 -0300
-Message-ID: <20250520204720.11448-1-rodrigo.gobbi.7@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250506-equivocal-snooper-8a7d1ce931c8@spud>
-References: <20250506-equivocal-snooper-8a7d1ce931c8@spud>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CbfcUmJP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20427C4CEE9;
+	Tue, 20 May 2025 20:47:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747774077;
+	bh=esWcjAZHZm91HrjZ2YAinWKjPxhlP8DKozv2RUCL+0A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CbfcUmJPMQrsfX3EKSHmzTp9OZVvQ5CwvSYrWHOljY6cTl7uGUA0SXeQQSGA/AUb9
+	 R+etIbrOOKVBZPkwVVUjTU6wro0tCMDZtZgkV9zLSA6fY6VLF/epc12NRKpohjpybp
+	 Ao0JVfb7D9zrzN5ZBZqAjV+Rc++gzXMNQIG5rruwh25R6zx7suCeg7SQ3dnfDngBaj
+	 wYb/L5UWSB8/2oWPqlhff/VefHjRG8DUXfeOyjRM3p3qfMR0GR+KOeM9APOGVEGxWm
+	 elKNQNKkZuoVrlK3QwoGbWCumHk1Fpyes3gW2qbNPVHe07YhoXV5nKYVXnlDSYWiMz
+	 9NTXYYzKQcASw==
+Date: Tue, 20 May 2025 17:47:50 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ravi Bangoria <ravi.bangoria@amd.com>
+Cc: Namhyung Kim <namhyung@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+Subject: Re: IBS perf test failures on 9950x3d
+Message-ID: <aCzqdn3AJji_yPpQ@x1>
+References: <aCfuGXUnNIbnYo_r@x1>
+ <33e86415-c90d-420a-b7a8-6a360769aea4@amd.com>
+ <aColYM3RqE4T5t5c@google.com>
+ <aCt4akGLsuuC4aLP@x1>
+ <804ac0d6-22f7-40c3-9ff5-e5f9d863d37e@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <804ac0d6-22f7-40c3-9ff5-e5f9d863d37e@amd.com>
 
-> Sounds like it's a 4-bit register where the samples is (1 + written value),
-> and the property is expected to be written directly to the register.
-> I'd then expect the property to be min 0, default 0, max 127. If you
-> write 128 to the register, you'll accidentally set the external vref
-> bit. I'd maybe go as far as &ing the value to make sure out of range
-> stuff is not permitted?
+On Tue, May 20, 2025 at 04:31:29PM +0530, Ravi Bangoria wrote:
+> > Telling that to the user and possibly skipping the test if viable using
+> > uname to get the version and if less than v6.15-rc1 print "Skip (needs
+> > v6.15-rc1 or newer)" may be an option.
+ 
+> > Then if the bug somehow reappears, people running 'perf test' will flag
+> > it.
+ 
+> Sure. Attaching a patch at the end.
 
-Well, it looks like 4bit as you said (bits 5,6,7 and 8) and 9th bit is vref.
-But, in this case, it looks to me that we can only configure 0x15 as a max value,
-(didn`t see that before) which doesn`t fit the datasheet sentence that I`ve mentioned before:
+Thanks, I'm applying it.
 
-"Programmable averaging of results from 1 (No averaging) up to 128"
+But now that I think about it, it may well be the case that, say, RHEL
+backports the fixes in v6.15 for an enterprise kernel that has an
+"older" version, so probably the best is for execute the test, if it
+fails, then do the version check to decide if it is an unexpected
+failure.
 
-I mean, I`m not sure how many samples are configured when using
-SPEAR_ADC_STATUS_AVG_SAMPLE(0xD) since we don`t have a register map describing
-how it encodes that internally. Maybe we can change the requirements for this field to be
-min 0, default 0, max 15?
-And at the drive side, we could use &ing as you said with 0xf before shiffting?
-If you have a different suggestion, I would appreciate it.
+But this can be done on top, lets make progress and apply your patch.
 
-...
-#define SPEAR_ADC_STATUS_AVG_SAMPLE(x)		((x) << 5)
-#define SPEAR_ADC_STATUS_VREF_INTERNAL		BIT(9)
+> > And I think having it in 'perf test' as well may make the feature to be
+> > tested more widely, both by those who run selftests as well as by people
+> > trying just 'perf test'.
+> 
+> Yeah, that was precisely the reason I did it in 'perf test'.
 
-...
-		status = SPEAR_ADC_STATUS_CHANNEL_NUM(chan->channel) |
-			SPEAR_ADC_STATUS_AVG_SAMPLE(st->avg_samples) |
-			SPEAR_ADC_STATUS_START_CONVERSION |
-			SPEAR_ADC_STATUS_ADC_ENABLE;
+:-)
 
-Tks and regards.
+- Arnaldo
