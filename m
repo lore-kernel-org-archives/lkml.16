@@ -1,133 +1,157 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B1632505D8
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 14:16:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CEB324A063;
+	Tue, 20 May 2025 14:16:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747750595; cv=none; b=VrW2rzdXYjZXfnCAlYIWR2jKkraFcGiGugRuhKGoDG0TBY29mkq2h33bE09Xo90G4AWCE6723rAYnwc4S/WH7QWiu2VeVSeIu9eKd+s0G8iWL+AMBczaq0iCkVG7XxT7T+6TyCuj+rJ92GPTtdMI+vwuB9ZX0Tu27aCMABmwzww=
+	t=1747750610; cv=none; b=Z2sW2iZkvHFlgcMksHPJua9dCy39SJp6CGu2EW4e/7GDAx23Gk2Q9N8R2PL7QDYhuM/k9712re0r1O/Cp8Vr5NK/5quKPzYxUpwJ6GapmzmAWaRuA4yntjmHRgW0j1AK1GBsS7XPGyBgKgqBLJtixiIsSwD0HNQS899M18ZHf0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747750595; c=relaxed/simple;
-	bh=SoMXZh2D0KD4V8N0v5ERJAEktD/6QD/dGnWO0/MEBqg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=HqPKYbL2oCtvbfMBb76kjhmt+lq2Y3AwjUNnPZ7D/J9dRTwEQ+JaRH7bbIUH8ndpq8TDPG35RAINOmn5zKvRv8y/cACvcBPoGDCt6W/VVGbbIrgmQjGYS/oEfHEMKLFEUOztP13isbXN25/E6LEX5PwDYDf8Mt+ZuU4DuxAwwxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=duUtg9kT; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747750610; c=relaxed/simple;
+	bh=9845lRrTwXYxLKnCGaZLjP7FJCySvM2kgiB80MXvo5o=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TmhDwP4Y2W1BQZCY1g810OHv7k19qupwrH9SchNi5D+T59B13BY8Ks4XqcgtnrXSakJtxv/B9vSGBgwdbheRPzs0RJvrUGMrt8GhpjQidNIfDOCLDdfo/z/VGRetiBVhAuvoClO2lUg0SVMBPkLcleXQJt2ka99rFXzrETJlM9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FhFyBJcu; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="duUtg9kT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747750593;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=61iPeRzvAixq/R6SwHKeq0ei0vc55YLY4T4B2HYFAlE=;
-	b=duUtg9kT+GZ/BbU8euQIK48OKF3qIBXJBMJ7TP9d/uMhw7pW9/GwX/gvt3MyRBC082ytcx
-	8mavr2CfZaYgnUBEm+RrLA4J4yaX71u9TyfeaUQCM6GHR4g4JvupDEKsEkzvOuCuPyEGYJ
-	QRpVJ8iEQD0AFNsJ0d/jj9ZBV37SRIg=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-203-sHURQEXWO4O4hsaO_LR3UA-1; Tue, 20 May 2025 10:16:30 -0400
-X-MC-Unique: sHURQEXWO4O4hsaO_LR3UA-1
-X-Mimecast-MFC-AGG-ID: sHURQEXWO4O4hsaO_LR3UA_1747750590
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a362939f61so2051651f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 07:16:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FhFyBJcu"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a35919fa8bso2216792f8f.0;
+        Tue, 20 May 2025 07:16:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747750607; x=1748355407; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=p8zSJjCRi1M41Zo6T5qJaK423QY8z842edzrekqdkMM=;
+        b=FhFyBJcuPmr3WOuli3LpromTOiQqLqctMvSb4drqbgm1LOqAF3KQLec4CFymYVWzfg
+         x0PaXJ8HW2+HCFKzhq1GtW4nrq+d2q/pcsWdxkTuru8jZbkAYSEcdYzUVrLWWRCXN/tQ
+         WhRcsZPVgU7RsYAs4BUps6xS2d+EWmEXnHrK/YkBMmFQUWQKstEG+07A+eZDKoURRAnx
+         EDJkZN+2R9LxzfKatGZkTWRJ8KDFgkp63iMTa8gaCsCLzuPAqGB3qbc0EvGAII+p5LN5
+         suGXhE2uZUYMqZjQ/FzCSr9XYPm0QgiZDFFj/W2fq5FOt33QMirI2aOQW2G2NGe8S07A
+         9bIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747750589; x=1748355389;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=61iPeRzvAixq/R6SwHKeq0ei0vc55YLY4T4B2HYFAlE=;
-        b=Dw0ygsB4Um92NDoJZfPeDCLckhKkTko8vy1g7nk+uaMj2g0KX4Nw38G6fFKvtylIKs
-         rnBqqoheK1EpKoJJHjtKMvI/bv4BHbUSeWnmCzg145/y+OETB6GEEQTRdxdKHAY35p2V
-         I261h/WcP4mMnsqmTaVuT8MZnLYB/5RRxixLw5osqZCMhgm4QzmU6PAarJjrGEo4dqqJ
-         hiARItgs4FQyRLYBuZgavl+19uxeIJBpA4IpWnjPlXfZaTAn6dFgRvpEXAQZz8LALE0j
-         9e0ozK/uJqVBWvIlta8MbP7985ydAsfpXGRtNBhJjO0/Qu+UH6mMDkhRfPEaWreo6pqR
-         +IyA==
-X-Forwarded-Encrypted: i=1; AJvYcCXKWZ6f+JXVTKv7zDJ1FBanvPn4F3zr2C7YfJ1YJTMxssWDwjZvP0tzer7VqSWdx5IweN4+0v7sr7fvRi0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwlQfDYOY5TJSoB7to88Ag9J7HGHV6wdpHtD95G9zMDi6e9iu3n
-	/vh+KYXih1Gvym8Yc7Yowt/HnvNue2PTXkzHdxvw50w/TTNzCZkr/kf0T61g8uLHVYnpTm/NFMr
-	UuJBcWbaPu1+2/SkNgI6nTUXfjoTaSQhgS6u2AuZYskmiXyv67OpqX308BPPon8gVTQ==
-X-Gm-Gg: ASbGncsWpSAkvcdcAj5m7P7L8ACmXCJRnn/16eFWBLVkMfC8YT4q8utAdB+gNphctS+
-	+5m4zycXEnCqOEIgSASSTXj5l4CFAwp0CWzPDim9JOLcMbceLL5+b9rql2OFGDLgp4SHK0SPfZ1
-	D4F5jmcR1wfLqq5iJDinqSu0pyEPXX0yxRPSdKgnerWHckN2En5AGD1EmRhNkdeHWVSSZytVm1A
-	hBaydOtDYOtKm2K4FOmICSNUeW36KwnEl9lrUG3K4RZsYH1pztuYf+7U5qOz8acSW/sgWTywQmi
-	0rOuTbg2A1I8yII5nXnW98GjhsGpcOb3ovBQ96QQ/dlpEPGw9vo07bQ1CjZ57gP4GQWrzQ==
-X-Received: by 2002:a05:6000:430d:b0:3a1:fed3:7108 with SMTP id ffacd0b85a97d-3a3600da40fmr14525830f8f.40.1747750589614;
-        Tue, 20 May 2025 07:16:29 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHrGDGNPueP8M5oY1rssyDAAoA7kWAMi94I273UUlkBQWltVoKwRePTOwwFy/ypnlP9yt8vbw==
-X-Received: by 2002:a05:6000:430d:b0:3a1:fed3:7108 with SMTP id ffacd0b85a97d-3a3600da40fmr14525794f8f.40.1747750589210;
-        Tue, 20 May 2025 07:16:29 -0700 (PDT)
-Received: from localhost (62-151-111-63.jazzfree.ya.com. [62.151.111.63])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca6254bsm16931304f8f.52.2025.05.20.07.16.28
+        d=1e100.net; s=20230601; t=1747750607; x=1748355407;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=p8zSJjCRi1M41Zo6T5qJaK423QY8z842edzrekqdkMM=;
+        b=KUK/QRxbBxEXvyCh0SzsMwH21Mb+KgcovAzHafwSKu6BAfACJ+vI1l0slQ0rc78uky
+         TbC2UwieO8zCravWUCHiq42cSp2fx5hZkmD8vQb36diE1q8bGtqznznIve0Us/ja2mOO
+         yEE5Abt02OqfLvm2fpy9B/xwmxFp4lCD+/dRSECGWIBvNjYWkfzmhblViHXWeOjyPAJj
+         8FYExSJ5x0cCkMZXNQ4MJW8bH3x4wi+KWEycYwYSUQkjHQZYKcX2VHDIl4GWDewbJ7tg
+         5keG+DcjUyuDJEU15Ar+Vk+cPK1jkbkto7kCiWP0lBjMT+VWs96YHS44KH1lcGRshy/M
+         kAng==
+X-Forwarded-Encrypted: i=1; AJvYcCUxc6yltiMynOHjkGZpNss9lZMJlYjYNH1G3W3ch0pvWHcRLYUWk77MN1ddlywzl/KH8DZibr+Xc2nmavY5@vger.kernel.org, AJvYcCVWoZJvNDK2oSsgR3Jc+DAitCbjltFPzpwkHqpxRQPTSRBet4BEj3Z5ObYZG0SKDJvOovU=@vger.kernel.org, AJvYcCVxhhs5iUvTtvcqgCykUShuekRNAXi23rDA/FMMnmj8Vkrji2lAFIusRVAxQxOQm39+OjQemdyESgAUZd/Eb4FqpN+/@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBk4buxF/cCpxRU96fGffRxGJhvVG0ecXsrBSQvNlbIj06QpHt
+	AxdWwkFs/4p7ro9kGTSP/F8QDEUvaY3PNJbc+Se7WOx+kalIerZuguQMqirazUcb
+X-Gm-Gg: ASbGncvrnrH/BtGPXdrb09R4mS5gQBHauS0pPbcMqS5UEqD3dPGoTk1PNeUgZwSKGVB
+	c3L3TJFnWnMf4F7t2vQlwRMOob1Y6dOrQitYFZCCE/hmETJjK1CovRHVhqtX+jRCB94P1d0pFJD
+	iRDoH6dhT+eVzOvH+VOd64q0Ss6LTHudKm8pWe9cBJBvc1l6Pd4AQ686PegOmuuYMUJlpzRT3MI
+	JJ7g9qDM5Ss8iYvzCxlZYiwxQUo7jt9H1TO9jxnudRtyk628ye8LvRA15lKG277h8CyHHeTC2fy
+	Le4XsH7P086qJVDIAwYq6M/3qGp3aapwD++i
+X-Google-Smtp-Source: AGHT+IHpAnvXNreEzLLqAUagJDkV0tQZs1tpXf9pWpAvAhFCTkj2uxZv2DHjMrxfmDDzvZhlsoXNzA==
+X-Received: by 2002:a5d:5442:0:b0:3a3:64fb:304d with SMTP id ffacd0b85a97d-3a364fb30f1mr9468037f8f.12.1747750606990;
+        Tue, 20 May 2025 07:16:46 -0700 (PDT)
+Received: from krava ([83.148.32.44])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca4d258sm16430575f8f.20.2025.05.20.07.16.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 07:16:28 -0700 (PDT)
-From: Javier Martinez Canillas <javierm@redhat.com>
-To: Thomas Zimmermann <tzimmermann@suse.de>, Geert Uytterhoeven
- <geert@linux-m68k.org>
-Cc: Marcus Folkesson <marcus.folkesson@gmail.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/sitronix: Fix broken backwards-compatibility layer
-In-Reply-To: <990c04a5-6477-42c0-986d-9b63a30ac90b@suse.de>
-References: <1682cd80989f9ab98a7a9910a086a3a4d9769cc6.1747744752.git.geert+renesas@glider.be>
- <07088966-73f4-4b5d-898d-b596dede53e4@suse.de>
- <CAMuHMdU6XD_tqXaf4-h9KeC58XDOodUWa0d-Wmp6zcr2BHTA1w@mail.gmail.com>
- <990c04a5-6477-42c0-986d-9b63a30ac90b@suse.de>
-Date: Tue, 20 May 2025 16:16:27 +0200
-Message-ID: <87plg3nz9g.fsf@minerva.mail-host-address-is-not-set>
+        Tue, 20 May 2025 07:16:46 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Tue, 20 May 2025 16:16:43 +0200
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	David Laight <David.Laight@aculab.com>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
+	Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCHv2 perf/core 01/22] uprobes: Remove breakpoint in
+ unapply_uprobe under mmap_write_lock
+Message-ID: <aCyOy1OKDSrma3rJ@krava>
+References: <20250515121121.2332905-1-jolsa@kernel.org>
+ <20250515121121.2332905-2-jolsa@kernel.org>
+ <20250520084845.6388479dd18658d2c2598953@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250520084845.6388479dd18658d2c2598953@kernel.org>
 
-Thomas Zimmermann <tzimmermann@suse.de> writes:
+On Tue, May 20, 2025 at 08:48:45AM +0900, Masami Hiramatsu wrote:
+> On Thu, 15 May 2025 14:10:58 +0200
+> Jiri Olsa <jolsa@kernel.org> wrote:
+> 
+> > Currently unapply_uprobe takes mmap_read_lock, but it might call
+> > remove_breakpoint which eventually changes user pages.
+> > 
+> > Current code writes either breakpoint or original instruction, so
+> > it can probably go away with that, but with the upcoming change that
+> > writes multiple instructions on the probed address we need to ensure
+> > that any update to mm's pages is exclusive.
+> > 
+> 
+> So, this is a bugfix, right?
 
-> Hi
->
-> Am 20.05.25 um 15:09 schrieb Geert Uytterhoeven:
->> Hi Thomas,
->>
->> On Tue, 20 May 2025 at 15:04, Thomas Zimmermann <tzimmermann@suse.de> wrote:
->>> Am 20.05.25 um 14:40 schrieb Geert Uytterhoeven:
->>>> When moving the Sitronix DRM drivers and renaming their Kconfig symbols,
->>>> the old symbols were kept, aiming to provide a seamless migration path
->>>> when running "make olddefconfig" or "make oldconfig".
->>>>
->>>> However, the old compatibility symbols are not visible.  Hence unless
->>>> they are selected by another symbol (which they are not), they can never
->>>> be enabled, and no backwards compatibility is provided.
->>>>
->>>> Fix this by making them visible, and inverting the selection logic.
->>>> Add comments to make it clear why there are two symbols with the same
->>>> description.
->>> These symbols were only meant for variants of 'make oldconfig' to pick
->>> up th enew symbols. They where never for being selected manually.
->> But that pick-up does not work, unfortunately...
->> (I know, I had one of them enabled in one of my configs ;-)
->
-> I see.
->
->>
->> The alternative is to just drop the old symbols, and ignore current users.
->> Which is not that uncommon...
->
-> If there's no easy fix for the current setup, I'd prefer removing the 
-> old symbols.
->
+nope, the current code is fine (I think), but the new code needs to go
+through 2 separate instructions changes and we determine the state of
+optimization based on the instruction we find, so we need to be sure
+there's only one thread inside remove_breakpoint call
 
-I agree. When this was discussed, I argued that we should just remove the
-old symbols and let kernel packagers to deal with it. As Geert said, it's
-not uncommon for Kconfig symbols names to change over time...
+jirka
 
--- 
-Best regards,
-
-Javier Martinez Canillas
-Core Platforms
-Red Hat
-
+> 
+> Thanks,
+> 
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > ---
+> >  kernel/events/uprobes.c | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> > index 84ee7b590861..257581432cd8 100644
+> > --- a/kernel/events/uprobes.c
+> > +++ b/kernel/events/uprobes.c
+> > @@ -483,7 +483,7 @@ static int __uprobe_write_opcode(struct vm_area_struct *vma,
+> >   * @opcode_vaddr: the virtual address to store the opcode.
+> >   * @opcode: opcode to be written at @opcode_vaddr.
+> >   *
+> > - * Called with mm->mmap_lock held for read or write.
+> > + * Called with mm->mmap_lock held for write.
+> >   * Return 0 (success) or a negative errno.
+> >   */
+> >  int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+> > @@ -1464,7 +1464,7 @@ static int unapply_uprobe(struct uprobe *uprobe, struct mm_struct *mm)
+> >  	struct vm_area_struct *vma;
+> >  	int err = 0;
+> >  
+> > -	mmap_read_lock(mm);
+> > +	mmap_write_lock(mm);
+> >  	for_each_vma(vmi, vma) {
+> >  		unsigned long vaddr;
+> >  		loff_t offset;
+> > @@ -1481,7 +1481,7 @@ static int unapply_uprobe(struct uprobe *uprobe, struct mm_struct *mm)
+> >  		vaddr = offset_to_vaddr(vma, uprobe->offset);
+> >  		err |= remove_breakpoint(uprobe, vma, vaddr);
+> >  	}
+> > -	mmap_read_unlock(mm);
+> > +	mmap_write_unlock(mm);
+> >  
+> >  	return err;
+> >  }
+> > -- 
+> > 2.49.0
+> > 
+> 
+> 
+> -- 
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
