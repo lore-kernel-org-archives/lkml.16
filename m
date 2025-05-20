@@ -1,176 +1,116 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FE0C27CB31;
-	Tue, 20 May 2025 11:14:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2023127A106;
+	Tue, 20 May 2025 11:15:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747739671; cv=none; b=g/fpJXLRkckBVmo52YlrRXi4qkZPmSfmH/3O2IYqsfhPNfecZOzBAcS0o7rpmWvRKGXS51c7Iu55oK0Pp2ipjNnB8coe+WXoUUzEesb6dTWbw/swX0BSypUINuGCtek7iehApFoAA2LljaHDlpvl4qwCyk5b5yNgBIKkOEFVR1Y=
+	t=1747739714; cv=none; b=rpU170Gi5/FDdNtaKr7VzhiHuW6ksRIBMUuyMxbkjV8ohyWTsIRUP1WjuPyAOzbpa//lh/2byajdnX36rf++TxdlWM6uDioD5GKEYh/5tJqQ/Tt2A43lqOWTlF48zcloOijGXBQ7INzEVYjdzhLv+jsMMq7IIP04THt2cYGQlBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747739671; c=relaxed/simple;
-	bh=9NOM1BnpOYdIMMsdfz/iuXKxgIAKdzhbcuh0RqV8Oes=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=nlwGht4lxoR/EYjZKZGGm/YtAJ1FnMmg52IH+mKIMLfFbCt57csmizpQq9zCTQPLGLqqnNE8JS7eXHEOYbnuDmIcrTyYIph20Nb7aPe1R6Y9YTiyJtj09CCKegDMhE1kpcbj3UWNggOZ3xxijg8dgoNskZ7pA7prgViGAsSAp0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=JLB7tyUo; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1747739714; c=relaxed/simple;
+	bh=f9pvOAMQXiWb/a/qqJyytjLQEhwxsLFruDbxIpt+uxc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=KEDNnQw/VlNYp/7ZCpg5YOjZwQ8NTve/m/mjKtXftCtDFQSkKlWFDYgBDL7VflztnEN8PKQFkuoS5SfTnqbJFidK88liMcfI68W4d4yPeoyYcdWKRMA9Ob5iIhBA5kvoo72q2ABbDT3qauYWCyBBEzSyox77ZH2vfbzuoE+zSi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DjWgacpW; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="JLB7tyUo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1747739667;
-	bh=9NOM1BnpOYdIMMsdfz/iuXKxgIAKdzhbcuh0RqV8Oes=;
-	h=From:Date:Subject:To:Cc:From;
-	b=JLB7tyUo7qUYP4jrah/fsPEOXIeqlVK9aBMagE6TeN/OgeDDwG4cDdrxo4ecTdxep
-	 vqBxcl7Q7CCy0QqZyFiBzzJ+671LtFOzxgutNbuRuTIHR0bRuuGr1a31uPjxaAl7Vp
-	 ypAqNm+4MDfJ9duxHgkikLI8d61qcEXc+Sfu30dkQuo8hdrmMFVad9hIdWU6m/OZhC
-	 OGe75UkZqN1DqC14Bubsj52QWyFar9i0ZRFm+VkI4dQqkZOwzmZQc8NdPAu6axkoBf
-	 So2j1Nqdt54QEgXHv/dbity4rLbA6oAAuDuQFxINQjlNZ5sUjZphiX6EalEBWWc2dT
-	 7ARTj/7MvRWAw==
-Received: from jupiter.universe (dyndsl-091-248-211-172.ewe-ip-backbone.de [91.248.211.172])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: sre)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id B7E5417E0256;
-	Tue, 20 May 2025 13:14:27 +0200 (CEST)
-Received: by jupiter.universe (Postfix, from userid 1000)
-	id 5DEB8480038; Tue, 20 May 2025 13:14:27 +0200 (CEST)
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-Date: Tue, 20 May 2025 13:14:27 +0200
-Subject: [PATCH] arm64: dts: rockchip: Add missing SFC power-domains to
- rk3576
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DjWgacpW"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-443a787bd14so23287375e9.1;
+        Tue, 20 May 2025 04:15:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747739710; x=1748344510; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=f9pvOAMQXiWb/a/qqJyytjLQEhwxsLFruDbxIpt+uxc=;
+        b=DjWgacpWRpA4jac/YiiFE2v0caodbmmqNfRMDeD6GDvsWA91R95FFGPQ84Rt2/73XG
+         0EYxrWGIq055IzdlGJlSKUGYChJMpAPHoUz3D16aS+tWCc0GkJNC/70kIXcicnG7OGml
+         mc5u6Q0zG1yximfXmNtuEkaV8eAkeM3W0NcAuAXurNfC2h8n2ouXhmJLMF7GxnKETUGv
+         HmvyF1WCoQTjQrFxLX5Pl5e/ERx5DFMbJjNWME9c/OvVOfWSZpM+XZt7BR+NAHLgCH9E
+         34sreuQaEdowy2I0Dm6HjazFVMLbach0IlBdGEOXGw8KXdItZPqk5TvcHR4+GI9nEmHt
+         sBDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747739710; x=1748344510;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=f9pvOAMQXiWb/a/qqJyytjLQEhwxsLFruDbxIpt+uxc=;
+        b=CoRupPG243s7dAFUgUI+ayssRVan/O66UjH9W84X/zK7O5DjEwa2/MlysRCHveCOLM
+         aWRDEOUSNc7916RBEMxVI33ymjRtKNJbKobrVlnjq3rGFP+TNmsx0AGSeMIesCghuvLZ
+         qar6bJ+UMSr3zkMLfjFFYX2ZsGBk944i3RHfMGCaj4dqYZmvRpX+csZFdvlQPTDM0+hs
+         rrDhCUKeRWO/oNESTb4Y/bpzgNGy9BC9evHstLLCSvKd2C4f6oWZ7clacE22N5VhvRIR
+         CKkmqj9rW3hsNqc2AjHcUvfWCiDQ4fdUSux8ESIYDRA+4vh6eqP2cDRnHiQcLzoBRUt5
+         /bAA==
+X-Forwarded-Encrypted: i=1; AJvYcCV5edX2dnLJulXD2cvkHgGJdxqNpoBLKb2zueVFSz18Acn8MdX9LFqvCZTqEWWJeGfTupuJK+6ytaW+zQ==@vger.kernel.org, AJvYcCXptLE2/jFEWV+IT+4nm/SKk65p7HWBH/HoOCj2nbaY/bIjVz3YlrT5soy3yl6HDGhG5N++8y4El1k1LSOy@vger.kernel.org
+X-Gm-Message-State: AOJu0YyDwJzRieyozC3ZiuZywNX/+T5iz8hwsVbSpo56QxwJyP9O9VbC
+	G2PhiF1DZsqi3jpzXfsaWhagEsqLrPiG5AsQuC7FwUhHSM6Yn9bDw1ofKT4tFk5taoI=
+X-Gm-Gg: ASbGnctaPIzx3jVbH7lUWQYWjxOVVg67Wz3Zx2ELd6EAgWILy6vFCf/8KKkbtfxmDh4
+	nva/5PgOtX8JM1cEvlJoDzns7FlZYZittgRJRnBfWE/AgGPUO6Q12Et278Gn7C3gBXuJc5DMxLJ
+	HzyhqH2AyYnpXMtfbqrZ2R/fXAGU985jhYX+bKbnpvZ0wyyRhxM6md02H49ZKzcucNQnQAumVLL
+	6VDmwBp0Tmf3CQahEhSIXYDOgrKdNegUCv8vyypK1IPJ8w/12ZL/oz+X+DH/IMvH3mVM4fGmvH9
+	vNweJN1+MvAFRKzeZJ26R/v6Ej0arO1o/71nFnqGuWUeR4WgYjNl0p+AJbaikGngnOvrOJ5h17B
+	5WellAU26agj/83C50TkKTdM=
+X-Google-Smtp-Source: AGHT+IEWQPdzMZtYVbzwHPtj9/7/m+Oig1UhDpjw5mcuSZJjnuUV3usE6qp0SIfmUKVl6lF4jfZXOg==
+X-Received: by 2002:a05:600c:46c9:b0:442:f8f6:48e5 with SMTP id 5b1f17b1804b1-442f8f6494fmr188299885e9.8.1747739709986;
+        Tue, 20 May 2025 04:15:09 -0700 (PDT)
+Received: from ?IPv6:2001:818:ea8e:7f00:2575:914:eedd:620e? ([2001:818:ea8e:7f00:2575:914:eedd:620e])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f6b29548sm27936995e9.4.2025.05.20.04.15.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 04:15:09 -0700 (PDT)
+Message-ID: <4d3e9a97e0c1f4d5a5eeaee133b5980a0a065aac.camel@gmail.com>
+Subject: Re: [PATCH 0/2] Input: adp5588-keys Please correct and add
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Denis Arefev <arefev@swemel.ru>
+Cc: dmitry.torokhov@gmail.com, linux-input@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org, 
+	michael.hennerich@analog.com
+Date: Tue, 20 May 2025 12:15:12 +0100
+In-Reply-To: <20250520111301.1346035-1-arefev@swemel.ru>
+References: <9615d118cf3e52ea67ac0421016f0b6cceb49c71.camel@gmail.com>
+	 <20250520111301.1346035-1-arefev@swemel.ru>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250520-rk3576-fix-fspi-pmdomain-v1-1-f07c6e62dadd@kernel.org>
-X-B4-Tracking: v=1; b=H4sIABJkLGgC/x2MQQqAIBAAvxJ7bsFMDfpKdLBca4lMFCII/550H
- JiZFzIlpgxj80KimzNfoULXNrDuNmyE7CqDFFILLQWmo9eDQc8P+hwZ4+mu03JAtXpLRi9GOQc
- 1j4mq9K+nuZQP3n2762oAAAA=
-X-Change-ID: 20250520-rk3576-fix-fspi-pmdomain-4cfae65b64dd
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
- Detlev Casanova <detlev.casanova@collabora.com>
-Cc: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
- kernel@collabora.com, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
- linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
- Sebastian Reichel <sebastian.reichel@collabora.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4394; i=sre@kernel.org;
- h=from:subject:message-id; bh=9NOM1BnpOYdIMMsdfz/iuXKxgIAKdzhbcuh0RqV8Oes=;
- b=owJ4nAFtApL9kA0DAAoB2O7X88g7+poByyZiAGgsZBPq91G573PsEcDL6ydWxoOCNqPv5m/s0
- oIw7A+5EZsmOYkCMwQAAQoAHRYhBO9mDQdGP4tyanlUE9ju1/PIO/qaBQJoLGQTAAoJENju1/PI
- O/qaNiUQAIdoJXFKSx/rtSlc3S9FH+fQkR0qTYaPWI1c5KPoa8zTlwmXkzaoo0/DGOgP6C+tnyW
- O82tyej7sEaBkHJTrbWrlE3uuFIhgshOTme5pKc3NrSoC2F2MuuL8QV4iOFmWuWtuK0Bi1aCUAg
- d0zeWBPn20E7TTBAcO22yZ208n+Z/Yu2kKYbwHB1qJg7iLRDut7HiqLFFk9G/10/U8jqH+CT65q
- q3rJYGGlnazZNGFmlrZ7V8TkaQ1ctyMYwX2r5el6I3PFKKq5aekFEDWFXsSFlNM9tuRf8Q90/MB
- EA/n5TDJDmRn6fjPT25MfCkhtbULkOmc/+MpOaEKRfhPF8hWslHFdzFjlQSRhrMu5vjAKySlPYD
- HxjPwZC6gWjmJ9ZQceZV9MtTlmj6r9/K5BnjwPrcVE2PmxNkIN4HUgR7okYsWPx6PtKQ9GV0z7R
- EJ/7bOT4X8Nd8q4SQQj2/46pmea4QnzrR93ZA/AfZTfp0vkSrLWmC37goYK8xEYDEkBnPN8G/hT
- gwj0/Eo3QGfc/Ff4altnk9NFZQj5Brc34VVj0Cg3OuqciL04aHMQa4l7okLUSx+npYZYErwZfP0
- MvfXApNOvjLZ4sEm4z6bcLemHLmpI0iOrX00p71SfK3W4doM8jH597139sqopGkZ//K8vxHpIkg
- wOT1vrNlahY+DbnEnHT8yUQ==
-X-Developer-Key: i=sre@kernel.org; a=openpgp;
- fpr=EF660D07463F8B726A795413D8EED7F3C83BFA9A
 
-Add the power-domains for the RK3576 SFC nodes according to the
-TRM part 1. This fixes potential SErrors when accessing the SFC
-registers without other peripherals (e.g. eMMC) doing a prior
-power-domain enable. For example this is easy to trigger on the
-Rock 4D, which enables the SFC0 interface, but does not enable
-the eMMC interface at the moment.
+On Tue, 2025-05-20 at 14:12 +0300, Denis Arefev wrote:
+> > On Fri, 2025-05-16 at 16:43 +0300, Denis Arefev wrote:
+> > > 1. Add check on return code
+> > > 2. Prevent buffer overflow
+> > >=20
+> > > Denis Arefev (2):
+> > > =C2=A0 Input: adp5588-keys Add check on return code
+> > > =C2=A0 Input: adp5588-keys Prevent buffer overflow
+> > >=20
+> > > =C2=A0drivers/input/keyboard/adp5588-keys.c | 18 ++++++++++++++----
+> > > =C2=A01 file changed, 14 insertions(+), 4 deletions(-)
+> >=20
+> > Hi,
+> >=20
+> > Thanks for the patch. However, not sure if this is really worth it... T=
+his
+> > is
+> > driver is in the process of being removed:
+> >=20
+> > https://lore.kernel.org/linux-input/04b8a6d68fdc0c0eadf69fbbc6a130ecc6c=
+49360.camel@gmail.com/T/#mad1980e9652161a6a2e36c2aeeb97f900c6e9fc2
+> >=20
+> > Unless we want somehow to backport these patches?
+> >=20
+> > - Nuno S=C3=A1
+>=20
+> Hi Nuno.
+>=20
+> It'd be great if the fix patches are applied and then directed
+> to stable kernels before the code is dropped from upstream.
+> I've sent v3 with relevant stable tags included. Thanks.
 
-Cc: stable@vger.kernel.org
-Fixes: 36299757129c8 ("arm64: dts: rockchip: Add SFC nodes for rk3576")
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
----
-I finally managed to get some RK3576 boards integrated to our CI
-pipeline and promptly got some SError on Rock 4D with the extra
-test coverage :( As we hope to get some of those boards for KernelCI,
-it would be good to get this fixed in all affected trees. It seemed
-enough to just describe the power-domain in DT (i.e. that fixed the
-SError for the arm64 defconfig when booting the Rock 4D). If we see
-further problems (I haven't so far), we might need something like
-[0] for the FSPI driver.
+Not up to me to decide that :)
 
-[0] https://lore.kernel.org/all/20250423-rk3576-emmc-fix-v3-1-0bf80e29967f@collabora.com/
-
-[   15.248915] Kernel panic - not syncing: Asynchronous SError Interrupt
-[   15.248917] CPU: 7 UID: 0 PID: 142 Comm: (udev-worker) Not tainted 6.15.0-rc6-g51237a9145a9 #1 PREEMPT
-[   15.248921] Hardware name: Radxa ROCK 4D (DT)
-[   15.248923] Call trace:
-[   15.248924]  show_stack+0x2c/0x84 (C)
-[   15.248937]  dump_stack_lvl+0x60/0x80
-[   15.248941]  dump_stack+0x18/0x24
-[   15.248944]  panic+0x168/0x360
-[   15.248948]  add_taint+0x0/0xbc
-[   15.248952]  arm64_serror_panic+0x64/0x70
-[   15.248956]  do_serror+0x3c/0x70
-[   15.248958]  el1h_64_error_handler+0x30/0x48
-[   15.248964]  el1h_64_error+0x6c/0x70
-[   15.248967]  rockchip_sfc_init.isra.0+0x20/0x8c [spi_rockchip_sfc] (P)
-[   15.248972]  platform_probe+0x68/0xdc
-[   15.248978]  really_probe+0xc0/0x39c
-[   15.248982]  __driver_probe_device+0x7c/0x14c
-[   15.248985]  driver_probe_device+0x3c/0x120
-[   15.248989]  __driver_attach+0xc4/0x200
-[   15.248992]  bus_for_each_dev+0x7c/0xdc
-[   15.248995]  driver_attach+0x24/0x30
-[   15.248998]  bus_add_driver+0x110/0x240
-[   15.249001]  driver_register+0x68/0x130
-[   15.249005]  __platform_driver_register+0x24/0x30
-[   15.249010]  rockchip_sfc_driver_init+0x20/0x1000 [spi_rockchip_sfc]
-[   15.249014]  do_one_initcall+0x60/0x1e0
-[   15.249017]  do_init_module+0x54/0x1fc
-[   15.249021]  load_module+0x18f8/0x1e50
-[   15.249024]  init_module_from_file+0x88/0xcc
-[   15.249027]  __arm64_sys_finit_module+0x260/0x358
-[   15.249031]  invoke_syscall+0x48/0x104
-[   15.249035]  el0_svc_common.constprop.0+0x40/0xe0
-[   15.249040]  do_el0_svc+0x1c/0x28
-[   15.249044]  el0_svc+0x30/0xcc
-[   15.249048]  el0t_64_sync_handler+0x10c/0x138
-[   15.249052]  el0t_64_sync+0x198/0x19c
-[   15.249057] SMP: stopping secondary CPUs
-[   15.249064] Kernel Offset: 0x38f049600000 from 0xffff800080000000
-[   15.249066] PHYS_OFFSET: 0xfff0e21340000000
-[   15.249068] CPU features: 0x0400,00041250,01000400,0200421b
-[   15.249071] Memory Limit: none
-[   15.273962] ---[ end Kernel panic - not syncing: Asynchronous SError Interrupt ]---
----
- arch/arm64/boot/dts/rockchip/rk3576.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3576.dtsi b/arch/arm64/boot/dts/rockchip/rk3576.dtsi
-index 79800959b7976950fb3655289076de70b5814283..260f9598ee6c9c1536115ca3dcb0cbaf61028057 100644
---- a/arch/arm64/boot/dts/rockchip/rk3576.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3576.dtsi
-@@ -1605,6 +1605,7 @@ sfc1: spi@2a300000 {
- 			interrupts = <GIC_SPI 255 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cru SCLK_FSPI1_X2>, <&cru HCLK_FSPI1>;
- 			clock-names = "clk_sfc", "hclk_sfc";
-+			power-domains = <&power RK3576_PD_SDGMAC>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			status = "disabled";
-@@ -1655,6 +1656,7 @@ sfc0: spi@2a340000 {
- 			interrupts = <GIC_SPI 254 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cru SCLK_FSPI_X2>, <&cru HCLK_FSPI>;
- 			clock-names = "clk_sfc", "hclk_sfc";
-+			power-domains = <&power RK3576_PD_NVM>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			status = "disabled";
-
----
-base-commit: a95d16b0324b6875f908e5965495b393c92614f8
-change-id: 20250520-rk3576-fix-fspi-pmdomain-4cfae65b64dd
-
-Best regards,
--- 
-Sebastian Reichel <sre@kernel.org>
-
+- Nuno S=C3=A1
