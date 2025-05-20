@@ -1,88 +1,84 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D711176ADB;
-	Tue, 20 May 2025 16:21:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 046221B6CE3;
+	Tue, 20 May 2025 16:22:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747758066; cv=none; b=BS9+iVH+iN+vSAom/aT2wEJjH0VTKzRTcdwVVV7A07HBXB8mXqVPkjQvJQpJxBJyNgjSDRwH9ImUnzJrjI8Y//+7ShFtyx6qljQrOXk9zfwDvxadw4Wbu5tB13CnXLfpxOWIvgBHMj35YrmhNji2cnEZF+xxkmyOQI3caGEyVSk=
+	t=1747758128; cv=none; b=t7ACKP408ulTYaE7DAPZnrXKu+vMWPMcHLf75MuQ13CSeB7EV3C7V3ttvxgR9/Evv8IK1+/kVgl3fDvLYLLUEd9L8Smg2nZ7wBSfGFYmF2waJV8qUrV1S/FlhhSyE+MM2oSlWX7LMrcOJah7fef5ebrQJ9l3dNQnJ6KUVpU7Ikg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747758066; c=relaxed/simple;
-	bh=SSobZg4XWzqdSJWhFz9pnB5W2X6X9hVUrbmWeoRJY4o=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gq4ItDSux93dB776zo5q/QUsUkBKAgH0t2MktNhvoEPfddhnc//zVJCtZaRGrnbnmd2cYLT61Db2xFsHZ/pnPaBWpMx6fPb1YifKMHSiEsFyKc78zK7CMzbv7DMQj6i2l2065CRvxufPjknITCZrRF4moRikItAFXleo/LAtrPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Il3SQxfL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747758128; c=relaxed/simple;
+	bh=PwfREHNjD08LoQHQb+2a+oNlUMWRFVPe7Pshx9/+Sd8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kPSWB7r1U+jV+NYb/MDxuk4tDQ5g/nxvMGEt4tLvUac3ucCIHSg+8d+8gcDOaYr11TOB9XLqhKdeSU9wj2ZuprArNg7/3fPQF4I6I8NX8/O4FDw+9TZlOpQKbK78RrVpGNq/E/sPpCYheHEJPauBCP+kEOrkDAI595slLJr/6gE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gS9PU2qF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Il3SQxfL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A99DC4CEE9;
-	Tue, 20 May 2025 16:21:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gS9PU2qF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00E5CC4CEE9;
+	Tue, 20 May 2025 16:22:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747758065;
-	bh=SSobZg4XWzqdSJWhFz9pnB5W2X6X9hVUrbmWeoRJY4o=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Il3SQxfLOJDWagSQuyZ2xPkF0lK36M5AGsuMd3WyrP45MCutzNlUA1uUZ8nqL9V52
-	 CgXxSLXOMzLqmu4+LLtDt67FRQn39vqfcoZEpnW9HWDFjOXZugptOnzDwY5bg2Uq4H
-	 C3tCZXpnNa2+3gywpFWLMSTk0v+lvXLyIZyKKGXkmSbqIPy5JQnyWhljHAoPQ6ACNN
-	 s+0ufCuK7MIKrKYHEWGOIRxjYNdiT8Qga9DJUe+JMyhZmF+AjIKm778wQ2K2AksFm3
-	 3m7odKUo2K/fhCCiscVMETPuwPPwAxReAIWrAr7lc5MzvogMu3kR/UkxVmATwUNYX2
-	 RrlWwo0Davthg==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Richard Fitzgerald <rf@opensource.cirrus.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] [v2] ALSA: hda/cs35l41_hda: select FW_CS_DSP
-Date: Tue, 20 May 2025 18:20:48 +0200
-Message-Id: <20250520162101.3929551-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	s=k20201202; t=1747758127;
+	bh=PwfREHNjD08LoQHQb+2a+oNlUMWRFVPe7Pshx9/+Sd8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gS9PU2qFMkHTyXBWHGpMjGBqnmICcI/5UxWYCsftTsMxQJZSbXiHsnyZTkAsmvodx
+	 PDnqBphspLZrY1SqdwpDyUyTKeQR1TO/3tFW9tvS2+lG4vQY0Ov7pSCuVolxAVrTPi
+	 mi/07FRg6VDuihqB85ocMl3Uo+09+GJd7NNeMFvd3SfFIx3riM4iSyXPAZEoYDUmgt
+	 91SteDzb6V0ab6zijrraG+XA0Z01RAbS1eb7rEFFkPKUxmd2dNrqFvul0liYWaKYNl
+	 gU5oNX85u7X/IJ9zNNjfeNGI8Igl1eqicTPUnEDc6w6bsZ53DLqQFCMNVM9KWzA8e5
+	 mDoNeqPHaWbdA==
+Date: Tue, 20 May 2025 18:22:02 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Rob Clark <robdclark@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+	linux-arm-msm@vger.kernel.org, Connor Abbott <cwabbott0@gmail.com>,
+	Rob Clark <robdclark@chromium.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 02/40] drm/gpuvm: Allow VAs to hold soft reference to
+ BOs
+Message-ID: <aCysKgGyq5eOXW87@cassiopeiae>
+References: <20250519175348.11924-1-robdclark@gmail.com>
+ <20250519175348.11924-3-robdclark@gmail.com>
+ <aCwx_9KIc9QBd7_0@pollux>
+ <CAF6AEGs6_ZgBpKwe7weZWUppCZ87Y6wOt9RsF68hsJO-VpeiJA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAF6AEGs6_ZgBpKwe7weZWUppCZ87Y6wOt9RsF68hsJO-VpeiJA@mail.gmail.com>
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Tue, May 20, 2025 at 08:54:53AM -0700, Rob Clark wrote:
+> On Tue, May 20, 2025 at 12:40 AM Danilo Krummrich <dakr@kernel.org> wrote:
+> > On Mon, May 19, 2025 at 10:51:25AM -0700, Rob Clark wrote:
+> > It invalidates the whole design and makes a lot of functions fundamentally
+> > invalid to call, which is well demonstrated by all the WARN_ON() calls this
+> > patch attempts to add.
+> 
+> I think of it more as adding a different mode of operation.  One
+> where, perhaps some functions of gpuvm are not available, but that is
+> fine because they are also unneeded in that mode of operation.  Hence
+> the WARN_ON()s to make that clear.
 
-When compile-testing this driver, the missing FW_CS_DSP module
-causes a link failure:
+This isn't a different mode of operation. You're breaking the design and
+internal guarantees and validity the code relies on. And as a consequence you
+have to disable the functions that are obviously broken by scattering it with
+WARN_ON() calls.
 
-aarch64-linux-ld: sound/pci/hda/cs35l41_hda.o: in function `cs35l41_shutdown_dsp':
-cs35l41_hda.c:(.text+0x7e4): undefined reference to `cs_dsp_stop'
-aarch64-linux-ld: cs35l41_hda.c:(.text+0x7ec): undefined reference to `cs_dsp_power_down'
-aarch64-linux-ld: sound/pci/hda/cs35l41_hda.o: in function `cs35l41_hda_remove':
-cs35l41_hda.c:(.text+0x14b4): undefined reference to `cs_dsp_remove'
-aarch64-linux-ld: sound/pci/hda/cs35l41_hda.o: in function `cs35l41_smart_amp.isra.0':
-cs35l41_hda.c:(.text+0x189c): undefined reference to `cs_dsp_halo_init'
-aarch64-linux-ld: cs35l41_hda.c:(.text+0x1bd4): undefined reference to `cs_dsp_power_up'
-aarch64-linux-ld: cs35l41_hda.c:(.text+0x1c38): undefined reference to `cs_dsp_run'
-aarch64-linux-ld: cs35l41_hda.c:(.text+0x1c80): undefined reference to `cs_dsp_get_ctl'
-aarch64-linux-ld: cs35l41_hda.c:(.text+0x1c90): undefined reference to `cs_dsp_coeff_read_ctrl'
-aarch64-linux-ld: cs35l41_hda.c:(.text+0x1cd4): undefined reference to `cs_dsp_get_ctl'
-aarch64-linux-ld: cs35l41_hda.c:(.text+0x1ce4): undefined reference to `cs_dsp_coeff_read_ctrl'
+And for the remaining code that is not disabled we'd have entirely new
+requirements on the guarantees the caller must provide in terms of reference
+counts.
 
-Fixes: bdd9ea9187c4 ("ALSA: hda/hda_cs_dsp_ctl: Delete hda_cs_dsp_ctl module")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-v2: fix subject and Fixes line to point to the correct change
----
- sound/pci/hda/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+This is as if I'd try to promote a car with a broken engine control unit and
+would tell you "It's just in a different mode of operation, where driving isn't
+supported, but you can still heat the cabin and power the radio with the
+engine.", hoping that the broken engine control unit has no other side effects.
 
-diff --git a/sound/pci/hda/Kconfig b/sound/pci/hda/Kconfig
-index 339c80d2cce5..3d4badc3f0e0 100644
---- a/sound/pci/hda/Kconfig
-+++ b/sound/pci/hda/Kconfig
-@@ -109,6 +109,7 @@ config SND_HDA_SCODEC_CS35L41
- 	tristate
- 	select SND_HDA_GENERIC
- 	select REGMAP_IRQ
-+	select FW_CS_DSP
- 
- config SND_HDA_SCODEC_COMPONENT
- 	tristate
--- 
-2.39.5
-
+Sorry, as much as I'd like to help and unblock you, I don't buy it.
