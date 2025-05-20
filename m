@@ -1,65 +1,66 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB17722AE7B
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 13:01:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 314C822B8DB
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 13:01:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747746102; cv=none; b=Q/CbMYF2Jg+sGd74gIplb6IqovpgH27YmnKVxBDvTkTYswYQeWr+qW6CqR6qakSI5/uEwGrljF9pAoc2pXcwTGGR19job8TAUPvOOInmzaEXMyC39JX5WlPHbsdg4Z0vV5FfGSIwzJiKvrMahyDGArfCidcv470joqE7AX4+ohI=
+	t=1747746104; cv=none; b=VoUbaSW5/Roc1uOSI1fDZlWYxvHAtATCeYUhR+1CwVo8ktMUh7OA4rFM/EsNKB29RX/1mpo2O7DEcSyqNYpW6TDtUbTK19oQOOye4lYNS/dWwIIQ1aQKiwYSnExkaVjP2xt7eWoN74HXBnqHtUhPiGv1dEcKbxrzGbOQXWcllRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747746102; c=relaxed/simple;
-	bh=34t1ctJUizMtaGCXNLsBowJ2GwafQ+PDmebniuWuRcQ=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ERnmdq3viWTDlBY/gIAMPnJhuSxgyh8tss4QthFdDd0kuu6fWBTo7v/IBEkFbgS8tB4dX/7w2K2zchlbqKPNAToO+kuQlWZ+Dm90WbOsn/izozSlCRDDAy3N37Dbfo0BdJ2DFCO1YVJz5JTNBbmj76HgsQWWYaaoYO1bh7HMgvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=isovalent.com; spf=pass smtp.mailfrom=isovalent.com; dkim=pass (2048-bit key) header.d=isovalent.com header.i=@isovalent.com header.b=TGZjvB2L; arc=none smtp.client-ip=209.85.128.46
+	s=arc-20240116; t=1747746104; c=relaxed/simple;
+	bh=c4jojo3FrsibvRNue34ztcliWE7ZrRLcrwLqEcNS708=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=I9Cp9uJBs2cRGLR4Kp8F4Wmv9bofbDBu9Soi+IYjr8tchPhcCERnAfytSfFNgbC7avzncRDJgxbM2PkFoSc9MYsFAAtJKWCqsPex5MYMfxssXYmcYXRmR/4tMr2RRVyIlFpAPaQxLKJTvK6NEQOo661AbTh0vcWiBMGK4oMwhtA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=isovalent.com; spf=pass smtp.mailfrom=isovalent.com; dkim=pass (2048-bit key) header.d=isovalent.com header.i=@isovalent.com header.b=PP5wTbRV; arc=none smtp.client-ip=209.85.128.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=isovalent.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=isovalent.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=isovalent.com header.i=@isovalent.com header.b="TGZjvB2L"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-442e9c00bf4so40617405e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 06:01:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=isovalent.com header.i=@isovalent.com header.b="PP5wTbRV"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so61750665e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 06:01:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=isovalent.com; s=google; t=1747746099; x=1748350899; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ALq+75rbc0YSVKBhmMHZ9TQaUd2k8+MFk3atSFaxTp0=;
-        b=TGZjvB2LUIMxlniUq3MZA6Edl0zDjL1J6kyLs/ObOnBQAsFDxB5SqtVCcnbMYlYnEH
-         VeoMg6for0eX/4qDlK9fLds0uOa1KYniTYDNZQsxF7wimcjyyUS9hBC6mGBETv4QSJLq
-         +f2unQzH5sq+nJNkVovJPtbqKLDXKfx/KLNKGrF6XizxgKHkr+ToC89tPAisGQmtluHB
-         jLOMITRenRhStiuuH98P0FD+2bo6135lyFyU9qr/RN0MlcVPaAaF4GkIVUGNL/+DeSJp
-         0TFK4myc/SEvIU5l4JL2EwA5WZmAbnBhmLVsjkHYAcxuscedzmff3bOgjxlZ8YgA/TmS
-         nynw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747746099; x=1748350899;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=isovalent.com; s=google; t=1747746100; x=1748350900; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ALq+75rbc0YSVKBhmMHZ9TQaUd2k8+MFk3atSFaxTp0=;
-        b=J51KqcV/B08DvgAoBxhFiGXWP6Nr/qOAK8qXyUjj25zm/nixs1kLoD8bQQCD/lbwHB
-         0kj8w2LeAlLvZ4zS/nHd/YZPJemqDfUMNuuSiYN20H7FFsJ04TrxXwjZZLD/y6LRxNYv
-         ZQ3Y07XC4eJRkHsGsXadkO5m+1sNKmGV16+HQNGdKNloWw11ClQETXZ1ar1OmkQj3zY8
-         vqVJqQ2iQt4He0lgviwV/zMfBopOLWGlpwq25J02TUZhBcwx2rDimhFFDf4VQt/N3d4n
-         9n2mQZjF1Maxl7QHplAW85sdgVAvln3NS5H7DIhfYsDxLSo7Z44me276Qv0RmvrFYHjS
-         M5gw==
-X-Forwarded-Encrypted: i=1; AJvYcCXGXbKUg02voDllaKFLfLw/oBE6ZefwKrHaYAk36VejAyslSnQXoSkFT1/i2Jx8TNn0om/SbgsyjdyFKiY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+NYRpdL8jU4+mEVAQ5PCzNyZRInuNz0ts/qhK7+G0fPSKopOS
-	BVS6OKoeEZO9vvf+FNAl2aOCl4pm5i9b9elj5Qs157T/yA5eoWbTEEYZXTiNMiiMX9g=
-X-Gm-Gg: ASbGncvaF+WLtzceJizfGz1eMj/kFnkrsDVG92RMhnkwZLiwpzOh5XpMJwVtV/QnHD6
-	d80MneyUHUol2cVHC6jLtxHnVaMxAQYt6Wh9HCM+X7kI5yLGebkrjUeS0zxgvvNuZaLehUHfwtd
-	ewGZc8XlUQRTWFXtg5CMet2vXHNeTlmQhXVNx31aAjJUlljsXuTTuRLZOmqIn97dm9t2BPlVi7p
-	VFBtp5tIET0/Tt6cE0B7pqUpG+T5GT8vuw7mRrkxEmiKx53H6nTwXBYuA+GQ2yGwVzSSU2g2jaT
-	yTuF8coykb1VWfWW8TaJmrtZw7s/8ZGis5mYx1/SkGXs+RO58CrHPfRB4NUFTDbWdj1q0kgx4ou
-	/3pLRCpS+OwbwL7T4EdSnk1m4bOPw89cCO0eSfJGato4U8WY=
-X-Google-Smtp-Source: AGHT+IFbIOxSLUg33BUpylzuKCK041iXvPKBjS+f2FA17A7KvsDTPjKnbUw6g/iuY+iBfbcHhkntQQ==
-X-Received: by 2002:a05:600c:6296:b0:43d:46de:b0eb with SMTP id 5b1f17b1804b1-442fefee254mr154045245e9.12.1747746099064;
-        Tue, 20 May 2025 06:01:39 -0700 (PDT)
+        bh=eaoULxe21siuTC/4/X/NX4W28Unf1olYgXifLjKBGNc=;
+        b=PP5wTbRV9rRTA1QvHhjX0QxlTMTp/P9GZYS6XNW0+7/UXLaba/GVxXixj4+P2NsvV/
+         Nxy8l7DRPnL4ITY8enPl+YyKx7kd7gprpImz6QSsCrxWtp2Cd1lWZJLqS4L7+ARyiX/h
+         ro69QgHxYAdCk+XGoMC1ousMGaHAmwr4+ZXM/XGZ+ncJGmBMu5Cbilf3fJoGGnwWTFRW
+         3hWQ0slsrindc3KPAssdwBfWKSDgL+SvcTmjcQXCnfCFsHonVFtBNjF/8eMJwA78lUw+
+         h18+HK2XOtj9rdPHddEWkYznZzupqcS/TbN9ScuJJohwxcIG3bRNvdX36zRUxZ/xNW6L
+         kC/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747746100; x=1748350900;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eaoULxe21siuTC/4/X/NX4W28Unf1olYgXifLjKBGNc=;
+        b=NWz0jJ9rsGlHss4h0W2J8P3EvY1Z38JmaKIG+aPGHufybqgZoMJWMmcM6tUW3oEDHb
+         Y1rUVb7AqJfk8l/jYPO+3MO9/99RCx8MusDEfoD19UWp8i1RQiBZnC3BUKE5gOkjl90/
+         nnh8QCRmZK7+qr1gaTaR5rSa0raRBN26FAQcDeBWoqhjoYhFlsNieypa8IZ7ulhbasCI
+         Ai98xZKv5vpze0cMDm+2iWJm1jOIulXsBv9A/TPLD8D5de8gOmuynlmjzgzxQovfrgwN
+         CYN4C3ECJEpCddbHP0fUPJByj/lgfmY2doSgXBWBPhJxWpLBRBxiTvNOO8jazJVAowmu
+         VqAg==
+X-Forwarded-Encrypted: i=1; AJvYcCUZ2ckhY2Q0RYUOajas1xFCgTxBqqIVISJHkQj+OMjFZvUwMTT+OEOgkemGq2KTtYXF4DWQbuOOuCM7WYY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy13iMuK7pPTIqEe6CIZWEZaUei8ORx1fJRqf8lIav90Ja5ARw1
+	uQbKo4go14cv2/IdQzRtVxKYViUK2JZLiEEhk0PQJr39AekbH2fIEtQZSo6BN2dVtIA=
+X-Gm-Gg: ASbGnctHUNkUAWj5RR/DO0Qsy/unH59EGys1llTReph4+t37sFmHpw9eYCKXLVSORJH
+	Yby3uDKUnNdKubZZ1seeHs2GJKYmdHSO8RtG8RXgZ/pPeqF6awdcCjidCTaImzgxlLDFA2kXJTr
+	nljspyFd+M4E8X0MqEEGRDREUFWd7Qb5cSmUP1Z88gHqJkNrlR91sbKSAaZx3QI5f26oBhweUrP
+	6b26qeP8hA1/bpsig5lCW7dJMLBmwlKpztKDdAMP2SDrOm2pXAK6yAQhC1K4MwwoTwJZsfUl48I
+	E5EnBjFvJsUpsc+jord3UusYetkUTBFO8Dn9eLSO07PcKVFtOAP8UK4mDL5zGSVClxyzs/hIxu8
+	2KtH2cjOZgVB/ZeYqJ25FzKhpPvBWIW3V5iR3dZQ3fqYlws8=
+X-Google-Smtp-Source: AGHT+IG0fsLJi/NVZ1/ziNxrgyZD18gc4dqp0HpWd7a9P0r35DxhIE6icjrA9lZempr35X+kXG5pyA==
+X-Received: by 2002:a05:600c:34d4:b0:442:e0e0:250 with SMTP id 5b1f17b1804b1-442fd67200emr153675135e9.29.1747746100077;
+        Tue, 20 May 2025 06:01:40 -0700 (PDT)
 Received: from [192.168.1.240] (0.0.6.0.0.0.0.0.0.0.0.0.0.0.0.0.f.f.6.2.a.5.a.7.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:7a5a:26ff::600])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca5a8cfsm16538095f8f.37.2025.05.20.06.01.38
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca5a8cfsm16538095f8f.37.2025.05.20.06.01.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 06:01:38 -0700 (PDT)
+        Tue, 20 May 2025 06:01:39 -0700 (PDT)
 From: Lorenz Bauer <lmb@isovalent.com>
-Subject: [PATCH bpf-next v5 0/3] Allow mmap of /sys/kernel/btf/vmlinux
-Date: Tue, 20 May 2025 14:01:16 +0100
-Message-Id: <20250520-vmlinux-mmap-v5-0-e8c941acc414@isovalent.com>
+Date: Tue, 20 May 2025 14:01:17 +0100
+Subject: [PATCH bpf-next v5 1/3] btf: allow mmap of vmlinux btf
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,12 +69,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIABx9LGgC/23OQQqDMBAF0KuUrJuSTDJau+o9ShcxjjWgUYwNF
- vHuDa5EXH4+8/4sLNDoKLDHZWEjRRdc71PA64XZxvgPcVelzEAAChSSx651/jvzrjMDB7KImbK
- KasnSyTBS7eaNe7FyqLmneWLv1DQuTP3423ai3PpzMkouuDGQg8YcsLg/XeijaclPN9t3GxZhD
- 8ABgAQUaCGXWmmUxRmg9gAeAJUArFCZ2ohM0OkHegdIcQB0ArKCNOgSTJbDEVjX9Q9WJ3bweQE
- AAA==
-X-Change-ID: 20250501-vmlinux-mmap-2ec5563c3ef1
+Message-Id: <20250520-vmlinux-mmap-v5-1-e8c941acc414@isovalent.com>
+References: <20250520-vmlinux-mmap-v5-0-e8c941acc414@isovalent.com>
+In-Reply-To: <20250520-vmlinux-mmap-v5-0-e8c941acc414@isovalent.com>
 To: Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, 
  Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
  Martin KaFai Lau <martin.lau@linux.dev>, 
@@ -88,55 +86,90 @@ Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
  Lorenz Bauer <lmb@isovalent.com>, Alan Maguire <alan.maguire@oracle.com>
 X-Mailer: b4 0.14.2
 
-I'd like to cut down the memory usage of parsing vmlinux BTF in ebpf-go.
-With some upcoming changes the library is sitting at 5MiB for a parse.
-Most of that memory is simply copying the BTF blob into user space.
-By allowing vmlinux BTF to be mmapped read-only into user space I can
-cut memory usage by about 75%.
+User space needs access to kernel BTF for many modern features of BPF.
+Right now each process needs to read the BTF blob either in pieces or
+as a whole. Allow mmaping the sysfs file so that processes can directly
+access the memory allocated for it in the kernel.
 
+remap_pfn_range is used instead of vm_insert_page due to aarch64
+compatibility issues.
+
+Tested-by: Alan Maguire <alan.maguire@oracle.com>
 Signed-off-by: Lorenz Bauer <lmb@isovalent.com>
 ---
-Changes in v5:
-- Fix error return of btf_parse_raw_mmap (Andrii)
-- Link to v4: https://lore.kernel.org/r/20250510-vmlinux-mmap-v4-0-69e424b2a672@isovalent.com
+ include/asm-generic/vmlinux.lds.h |  3 ++-
+ kernel/bpf/sysfs_btf.c            | 32 ++++++++++++++++++++++++++++++++
+ 2 files changed, 34 insertions(+), 1 deletion(-)
 
-Changes in v4:
-- Go back to remap_pfn_range for aarch64 compat
-- Dropped btf_new_no_copy (Andrii)
-- Fixed nits in selftests (Andrii)
-- Clearer error handling in the mmap handler (Andrii)
-- Fixed build on s390
-- Link to v3: https://lore.kernel.org/r/20250505-vmlinux-mmap-v3-0-5d53afa060e8@isovalent.com
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index 58a635a6d5bdf0c53c267c2a3d21a5ed8678ce73..1750390735fac7637cc4d2fa05f96cb2a36aa448 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -667,10 +667,11 @@ defined(CONFIG_AUTOFDO_CLANG) || defined(CONFIG_PROPELLER_CLANG)
+  */
+ #ifdef CONFIG_DEBUG_INFO_BTF
+ #define BTF								\
++	. = ALIGN(PAGE_SIZE);						\
+ 	.BTF : AT(ADDR(.BTF) - LOAD_OFFSET) {				\
+ 		BOUNDED_SECTION_BY(.BTF, _BTF)				\
+ 	}								\
+-	. = ALIGN(4);							\
++	. = ALIGN(PAGE_SIZE);						\
+ 	.BTF_ids : AT(ADDR(.BTF_ids) - LOAD_OFFSET) {			\
+ 		*(.BTF_ids)						\
+ 	}
+diff --git a/kernel/bpf/sysfs_btf.c b/kernel/bpf/sysfs_btf.c
+index 81d6cf90584a7157929c50f62a5c6862e7a3d081..941d0d2427e3a2d27e8f1cff7b6424d0d41817c1 100644
+--- a/kernel/bpf/sysfs_btf.c
++++ b/kernel/bpf/sysfs_btf.c
+@@ -7,14 +7,46 @@
+ #include <linux/kobject.h>
+ #include <linux/init.h>
+ #include <linux/sysfs.h>
++#include <linux/mm.h>
++#include <linux/io.h>
++#include <linux/btf.h>
+ 
+ /* See scripts/link-vmlinux.sh, gen_btf() func for details */
+ extern char __start_BTF[];
+ extern char __stop_BTF[];
+ 
++static int btf_sysfs_vmlinux_mmap(struct file *filp, struct kobject *kobj,
++				  const struct bin_attribute *attr,
++				  struct vm_area_struct *vma)
++{
++	unsigned long pages = PAGE_ALIGN(attr->size) >> PAGE_SHIFT;
++	size_t vm_size = vma->vm_end - vma->vm_start;
++	phys_addr_t addr = virt_to_phys(__start_BTF);
++	unsigned long pfn = addr >> PAGE_SHIFT;
++
++	if (attr->private != __start_BTF || !PAGE_ALIGNED(addr))
++		return -EINVAL;
++
++	if (vma->vm_pgoff)
++		return -EINVAL;
++
++	if (vma->vm_flags & (VM_WRITE | VM_EXEC | VM_MAYSHARE))
++		return -EACCES;
++
++	if (pfn + pages < pfn)
++		return -EINVAL;
++
++	if ((vm_size >> PAGE_SHIFT) > pages)
++		return -EINVAL;
++
++	vm_flags_mod(vma, VM_DONTDUMP, VM_MAYEXEC | VM_MAYWRITE);
++	return remap_pfn_range(vma, vma->vm_start, pfn, vm_size, vma->vm_page_prot);
++}
++
+ static struct bin_attribute bin_attr_btf_vmlinux __ro_after_init = {
+ 	.attr = { .name = "vmlinux", .mode = 0444, },
+ 	.read_new = sysfs_bin_attr_simple_read,
++	.mmap = btf_sysfs_vmlinux_mmap,
+ };
+ 
+ struct kobject *btf_kobj;
 
-Changes in v3:
-- Remove slightly confusing calculation of trailing (Alexei)
-- Use vm_insert_page (Alexei)
-- Simplified libbpf code
-- Link to v2: https://lore.kernel.org/r/20250502-vmlinux-mmap-v2-0-95c271434519@isovalent.com
-
-Changes in v2:
-- Use btf__new in selftest
-- Avoid vm_iomap_memory in btf_vmlinux_mmap
-- Add VM_DONTDUMP
-- Add support to libbpf
-- Link to v1: https://lore.kernel.org/r/20250501-vmlinux-mmap-v1-0-aa2724572598@isovalent.com
-
----
-Lorenz Bauer (3):
-      btf: allow mmap of vmlinux btf
-      selftests: bpf: add a test for mmapable vmlinux BTF
-      libbpf: Use mmap to parse vmlinux BTF from sysfs
-
- include/asm-generic/vmlinux.lds.h                  |  3 +-
- kernel/bpf/sysfs_btf.c                             | 32 ++++++++
- tools/lib/bpf/btf.c                                | 89 +++++++++++++++++-----
- tools/testing/selftests/bpf/prog_tests/btf_sysfs.c | 81 ++++++++++++++++++++
- 4 files changed, 186 insertions(+), 19 deletions(-)
----
-base-commit: 7220eabff8cb4af3b93cd021aa853b9f5df2923f
-change-id: 20250501-vmlinux-mmap-2ec5563c3ef1
-
-Best regards,
 -- 
-Lorenz Bauer <lmb@isovalent.com>
+2.49.0
 
