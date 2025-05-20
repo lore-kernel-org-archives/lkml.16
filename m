@@ -1,111 +1,136 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA9E324E010;
-	Tue, 20 May 2025 16:31:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D356F25228B
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 16:32:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747758674; cv=none; b=gidG3BwRIXsVCAvKTLNt9a6VxvReRbd0KPVOH3ArJb8vKjRSGGcav0LP+GIAlyBuWG2GrALFbPe6OX2p7fxsjTBukp0HzW5A1sTKNgB2mO4IVjNs1Gi+nJIRDOJ6LK0zgVlQ7vJEKV95DM9uueNlMLMwjxKvDDS5cmishndlEho=
+	t=1747758727; cv=none; b=ekBskw8SJJo70J7dzSNAj43+7L3j/ARK3HWtGjUwivFh2CuvWhS6wE/nShdhOenI2NN3dxXqk+D4qXS+D3YhlLJdS8SBKkzQPobMzrSVFd0B7J9kAubrKNHp3OtTRaN+a6gB6Z/VjFIPCT706AFlXEJUIJRCUVEt08h6zZQf7tM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747758674; c=relaxed/simple;
-	bh=A1uJoYur0CJnK5muRGxD+LMFE0Wmuv2z5f3tDoh1UVY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JbEBiG88kIMgSQYZJut7cumf8eIngOGd5EV6YybTpEburO5b7+FvWRRmNSdVOjVEFcg810zyNTTFN0cTEK3w55UuxtDJABRDxdKEZ3lVrldVz4nVFkwTukKcdQoc8GZJ21Ibzllais264IzXbo621wrCdSL+Yim5oM4X8R/1mGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IP0xUmHy; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747758727; c=relaxed/simple;
+	bh=POmbrIHo60gDWrhh/e54NXyzo1C9QXa4uEQ3RXx3osc=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
+	 In-Reply-To:Content-Type; b=dwZ/vtpoTTUQqOeBqbf/jrIqBAIz94NQDNhyL3+1UEYvFEcvZALFnWW5RTQUCde18fMpFZnyFbXJvSNE+fOZMm9PtFCSmqErLgwEer8N7itH+g2qSLppeF3b4qfhrA1Pkxs1NbuZ7yiofSImBKX2ksRrvnASzJ/mjmAWkX56p4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=nPDeI+8d; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IP0xUmHy"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-30ea8b7c5c2so3209614a91.3;
-        Tue, 20 May 2025 09:31:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747758672; x=1748363472; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=U2t05IAhu5JS6yf2a0L1zsY+gn4NL8gR5pf4kfZkSQo=;
-        b=IP0xUmHyxxhxDKJdzauRevns7e5KOJ4x/oEj9jKVEzFDwMue8nFY6dhU1qh70BSyYm
-         kIvI8c4yr3cEpfbejY9BiysEgnIzjpSU6M3c/nxqS0PbTzB79AhmpjNI8WE/bSdgujsl
-         7+ZMNOFUsqEGdTH2bO272HDMlUZubAKB0r14aya4w3FY17ftjleuojXrtQedc8inGIPG
-         ri5Tprv2sQTlFF7kEX7KON/LTc882k0MNwRl5B1JZRaOs0UZjoNuxknuzpH1jTr39mle
-         21yun3ane6NDYtSoqbgGHqu5jO6TP8oimUmROJXlzZARqyI8XzTAEfIo3knsAeX42gOh
-         R/DA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747758672; x=1748363472;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=U2t05IAhu5JS6yf2a0L1zsY+gn4NL8gR5pf4kfZkSQo=;
-        b=gvKXIlemUmK/6JvAvUad+VXU6Z9bw8wvWr5AdEVawMt4AWfe1BZXsrW4DVNOUX62+S
-         HDhme5wQvXpfXkEku7lOi2lAHhjT/JW2KeurqCRy9Y1LNaSQMog4vz3ypd+CA8g2NMeW
-         IHDV1GqWdXceaSas7smnuQT/081OdJSxPkqDRyLWT6CUArWKyXi4XNyPCeHWluK+Zk01
-         EQ0amUBGWWXfEpz0nWaqp1fS4JVzFW8JMtYKS6RQZOvmKyRobwgVJszzHjZrZI8TSjdl
-         ER6PwGgI39xIuFkM7YYqexX+5WBYfENVI1HGNj/pV2Zgx3u+H+ZwE+iNfQwEfZoLlfQp
-         JHUA==
-X-Forwarded-Encrypted: i=1; AJvYcCV3VZTpDpyQgm19VpaHFMYEUYFvQq/IwxAIa09Z+MnX5knH2IADL/ruEPQOwmfokp0iCOAJkpuJJEZKmNyB@vger.kernel.org, AJvYcCVgrBFtmQvFgRI4sYwWulK1Qcr0Z5lbLLU5VaC7Ab96kU2qsTEQ9lwACKNGsUKIXyRI260UheaO@vger.kernel.org, AJvYcCWSsbR5vJJPnzsKC/u7+xPTfmIz76c+1Sqc0GiIrbYm2dO/AWBMnr5tX9Yhoca1wQfLc+0=@vger.kernel.org, AJvYcCXc2XkNdfwU8BX+MbL4+5PAWtwLhu3WjN8HpLMovrk8H9hNzYObqYE/lsPHZberZKHcY7jGoda8BS8FFSw8Kv7W@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2o9MyYY4BP0vLX0sBMEzLs3+FXCKZ8DOC7KRc4Mq+M30coqSt
-	a93X89RdIhwZgHXtT58FekGlq7fWu8bD9tvHFdfjxIuHvaAx5e7q+/4b
-X-Gm-Gg: ASbGncuLSAzrhsypXGBLlxUxX6pT5e31cXhZlSFXLvJUwY6QtIx1IIXzxcftAmeTUUG
-	YY8AKHUR5wUPd0z4wNgK2vek67Nxla7o+bUzSoY06RvNJB7QdhnJ+Kb17n9S2Atm5baAquyglft
-	00dG+unfyn2V1fJfS9RLiLJlpQHxVksplpeDqQdbkR1PqxUWf/uLQJVg2XN5FAw3FngZSg6l8A9
-	+bpaJ8ZEea5NMGZDWFa5Xox8NFfQkrWLSHWtDDbPFtWYiZYJB06KgD5R7QlhSlC+e6ELw40HbAp
-	xxcsG5BTNXCaAVIX6mjlbucq6oqrPmc0+nYgVZJYLWrorxfmobxfuTaY617hfKW+uHlx0Dw=
-X-Google-Smtp-Source: AGHT+IEtnb8aYdRjb2chzZc4KFgAuKLohjg+W8+FnvIkeyuCGBJPJPSMAMhgJm+kE/2axZm/rVc6cw==
-X-Received: by 2002:a17:90b:570b:b0:305:5f32:d9f0 with SMTP id 98e67ed59e1d1-30e7d540033mr26297107a91.19.1747758671634;
-        Tue, 20 May 2025 09:31:11 -0700 (PDT)
-Received: from devbig793.prn5.facebook.com ([2a03:2880:ff:3::])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eb0843d1sm8290669a12.49.2025.05.20.09.31.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 09:31:10 -0700 (PDT)
-Date: Tue, 20 May 2025 09:31:08 -0700
-From: Bobby Eshleman <bobbyeshleman@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: Stefano Garzarella <sgarzare@redhat.com>,
-	Stefan Hajnoczi <stefanha@redhat.com>,
-	Shuah Khan <shuah@kernel.org>, kvm@vger.kernel.org,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>,
-	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
-	netdev@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH net-next v7] selftests/vsock: add initial vmtest.sh for
- vsock
-Message-ID: <aCyuTMNkRzCBMp1i@devbig793.prn5.facebook.com>
-References: <20250515-vsock-vmtest-v7-1-ba6fa86d6c2c@gmail.com>
- <f7dpfvsdupcf4iucmmit2xzgwk53ial6mcl445uxocizw6iow5@rhmh6m2qd3zu>
- <73a4740e-755e-4ba8-8130-df09bd25197a@redhat.com>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="nPDeI+8d"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54KEk9RU024592;
+	Tue, 20 May 2025 18:32:01 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	WLtDt6YanhmPfaOmDE+0nd7iiaBZS7FD9MJadgVpl0c=; b=nPDeI+8dm9CPaejc
+	Q0ud6zvn0FTXf8V0HOukof9Nyx6XE7pG7hhP1R8AVQCRQ+aOwkUl1UdpJp4T5uMo
+	HMFWkMJxF/0djHZO8q8QrM6GmL4pqk2qnVvXjmnPDVUMZCvLCHtw2MZ/Nb/sgQvG
+	9rAO16C+RmI/8cIMgvrCPAmIN8XW0KQazsRsAH3yIG6CORMz+39trn9VT1CgrEyb
+	yAn+dYv5ewgQW3d9OAssi8PY/fzgR0knsWWCRBfCbS5aYtvv+orefp6qVkp28RQ/
+	41Ai9ry1o46/dSFmKH0/0+k8BrGORrrLAJktIgkBZazll5P1uEclk/ZFF6/ht05A
+	dCx+cQ==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46phbgnvc5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 20 May 2025 18:32:01 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id AF92A4004F;
+	Tue, 20 May 2025 18:31:02 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D2C93B190B2;
+	Tue, 20 May 2025 18:29:44 +0200 (CEST)
+Received: from [10.252.30.65] (10.252.30.65) by SHFDAG1NODE2.st.com
+ (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 20 May
+ 2025 18:29:44 +0200
+Message-ID: <25eec2f8-8883-489e-a68b-3f80056bdc76@foss.st.com>
+Date: Tue, 20 May 2025 18:29:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <73a4740e-755e-4ba8-8130-df09bd25197a@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [V1 1/2] arm stm32mp131.dtsi: add "encoding_mode" nvmem
+ definition
+From: Yann Gautier <yann.gautier@foss.st.com>
+To: Rodolfo Giometti <giometti@enneenne.com>, <linux-kernel@vger.kernel.org>
+CC: Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Eric Fourmont <eric.fourmont-ext@st.com>
+References: <20250519130859.3389704-1-giometti@enneenne.com>
+ <20250519130859.3389704-2-giometti@enneenne.com>
+ <f1ffb147-459a-4b3b-b109-9b07b25c99ac@foss.st.com>
+Content-Language: en-US
+In-Reply-To: <f1ffb147-459a-4b3b-b109-9b07b25c99ac@foss.st.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-20_06,2025-05-20_03,2025-03-28_01
 
-On Tue, May 20, 2025 at 12:58:18PM +0200, Paolo Abeni wrote:
-> On 5/20/25 10:24 AM, Stefano Garzarella wrote:
+On 5/20/25 10:26, Yann Gautier wrote:
+> On 5/19/25 15:08, Rodolfo Giometti wrote:
+>> This patch adds the definition for the nvmem location "encoding_mode"
+>> related to the "cpu0" node.
+>>
+>> Signed-off-by: Rodolfo Giometti <giometti@enneenne.com>
+>> ---
+>>   arch/arm/boot/dts/st/stm32mp131.dtsi | 7 +++++++
+>>   1 file changed, 7 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/st/stm32mp131.dtsi 
+>> b/arch/arm/boot/dts/st/stm32mp131.dtsi
+>> index e555717c0048..52bf497e26bb 100644
+>> --- a/arch/arm/boot/dts/st/stm32mp131.dtsi
+>> +++ b/arch/arm/boot/dts/st/stm32mp131.dtsi
+>> @@ -24,6 +24,9 @@ cpu0: cpu@0 {
+>>               clocks = <&scmi_perf 0>;
+>>               clock-names = "cpu";
+>>               #cooling-cells = <2>;
+>> +
+>> +            nvmem-cells = <&encoding_mode_otp>;
+>> +            nvmem-cell-names = "encoding_mode";
+>>           };
+>>       };
+>> @@ -1167,6 +1170,10 @@ part_number_otp: part-number-otp@4 {
+>>                   reg = <0x4 0x2>;
+>>                   bits = <0 12>;
+>>               };
+>> +            encoding_mode_otp: encoding-mode-otp@4 {
 > 
-> https://github.com/linux-netdev/nipa/wiki/How-to-run-netdev-selftests-CI-style
+> This node should end with @0 instead of 4.
+> It should also be placed before part-number-otp node.
+
+I forgot that this node already was in TF-A, with a different name.
+This is better to align it here, the the node would become:
+
+			cfg0_otp: cfg0-otp@0 {
+				reg = <0x0 0x2>;
+				bits = <0 9>;
+			};
+
+Best regards,
+Yann
+
 > 
-> @Bobby: AFAICS this now has all the ingredients to fit NIPA integration
-> am I correct? the last commit message sentence could possibly be dropped.
+>> +                reg = <0x0 0x1>;
+> 
+> If I'm not mistaken, this should be:
+>      reg = <0x0 0x2>;
+> 
+> 
+> Best regards,
+> Yann
+> 
+>> +                bits = <0 9>;
+>> +            };
+>>               vrefint: vrefin-cal@52 {
+>>                   reg = <0x52 0x2>;
+>>               };
 > 
 
-NP, I can drop it. All of the ingredients should be here, but I haven't
-completed setting up an environment yet to test that integretation.
-
-> Still it could be worthy to re-introduce (behind a command line option)
-> the ability to build the kernel as per Stefano request, to fit his
-> existing workflow (sorry for the partial back and forth).
-> 
-> Thanks,
-> 
-> Paolo
-> 
-
-No worries. I can add a "build and run the built kernel" option... it
-should probably build the tools too to be all streamlined.
-
-Best,
-Boby
