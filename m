@@ -1,197 +1,243 @@
-Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazolkn19010010.outbound.protection.outlook.com [52.103.20.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0908AD4B;
-	Tue, 20 May 2025 01:35:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.20.10
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747704908; cv=fail; b=gzDi0tsXEcJ0qVUqF7fFRB+gnCcgpVM8VJ9BF1tm17FD6ywFhap/s/h8JBAxEkFh3E+Sd7suyLPESKsBZTd4icLSXcwBkyRnvT/gsb9xhM/xkJ0VRNbBu61OwdTGrZMesWM0209WWEtOD7dLVOPA5SHzjaVTmep1jHZtoah1qHo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747704908; c=relaxed/simple;
-	bh=Jwhq9S/TVgBYRdJO84Cr7pKsrGJHWwpGxPieoFi26FM=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=fgBbkMMIrRhznkeIG8kmKT6dkFbsXjjkI4hkviPMREWUwLvlHV1FG8poAEstIbvpRNmuc0azEwKAArbEfIS6KX1VdsSqO/f/dBZRZz6vku1B2vo4IW2RmWu8MM35bMOBFznXFSQ+hPv73Y+HdHnCMHd1ZjweQR3wrAYMzmYr3gA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=Jdx4qLPf; arc=fail smtp.client-ip=52.103.20.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60D2DB67A;
+	Tue, 20 May 2025 01:43:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747705406; cv=none; b=Ik3+kaB4yqb8bd4qtAHf92cQVk7vLa8aQuNqY56jDh24F+mJMd9ct118qrYdczPLlo0NWTuM5yX1s9KQ8XoTqgZWGc6SWBBIAVgdblbslRFnCg74kvZzBrx1nRKmzKwXxS4qib4YZkG2uylCQLV8yEq4IxBo76FmlnKJN8Ee2gg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747705406; c=relaxed/simple;
+	bh=wCkNYO//dwnifDIdrFoU0BI7VkcCO23Ga1rKCx3MOHs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Uo1Y2q+p+yqBhYP66Mxtg23xJHRfXCfCZUyLws4CjSRoEFUMjeqb5/vjdn9qAvZbukNIMjv18o0tMMh2roSg/MtrTsLxw/Dt1iQg8Wzu4zW2i48LXiCLy5LenVg74gPBmJvvJf5jkV7inX+7zvgbTXgUv/NRvbV4J+VviTgtLwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=smM7l7By; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="Jdx4qLPf"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=crU9YUhuyujGLV7xziks4MPCYlrnzgvrDerINIM2/XS7MEuxw/vACPWfXMqLgOm9xy1gm5tyfFR+68YO8aqdqnsgm26zqMjyj6jIH36vVAsXOOWe4JUyWCEbKD1JALhp3KEijlRMelHwFb7PeIKxUfnFt5N12O+DxPo8Ra/XZ2aveqhcRcPDIuvToRhwjP3EegSHtIidoobdRNoJFfvhtExFuBEHM2I0l/zKqyVGOEGGIhy7d9jQ/0VQPJTdrjLq6NC2LY5ETNiSLLvNLi6jVeYh+oa9F6pvaQkE92KPIXVe8n25D9H3cCgEzgkuqDVSFpwwuQTKK8zGEBHHNGRlMw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=saTKPlsqd7Se3tjozBZJaAQhNDonJtdwHBY9qI8eYEE=;
- b=YSmXee5Z5VR7D+N+0By0FaFtxPAotuvWKEjRycm2QaOJ2RvjFvEy70FwNVQDxase3txd9oLOazWk3bE43LolyLXJwwEXViZcirtDt94xM3YF4mlp06mg4oRKez1j8jcJYbyS+ILW8DaOyVnag/4VBT/08njrtJvYTblVfe3v5ewq+q5sa29+jci9EBIjktyxS4kQlofUZ/aSxlQ4tyqMSnp600v92FESokRg+lqLYO/MV96jSo+9OcWPzi6sGqFgoxCADYmwAQssxm9NxBNraeJgEqA/KvEwKSuzTtlIcPS9iITy5UttybjRdiNKi7ub/YR1Lhj+Lz3VSMhukQ3csQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=saTKPlsqd7Se3tjozBZJaAQhNDonJtdwHBY9qI8eYEE=;
- b=Jdx4qLPfsvyA3VJfm56OvSRXzD5NMZRIPDPmiZ1d7xUyzdYEnaTDSbwhmzhcwexE++EV7PXu0XeZ/0E+EhSw3fLeOhcPGwMZYBPrFsesQjRAH9Vs0l0JwAVX3Ion8WMqzkqcmIxTFc1teIigBbqLyf7kvU4VronFo+yETmqtHkeceo3hnJlqFK5tL4E3000VMPsKpu96WIVkyBN1CitgwpNo5RNYSR1+xvyfLBy0iGhijVSxVGfCE1ZE705x8jkV488YeBKAFVN/5wWEM7XnO8vSjDdN7nhdggV14Jzfd+IIFPuGJQxtWOS8JgvuMUiLjOgsuci9lxgsOaSO9wsYGA==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by BY5PR02MB7044.namprd02.prod.outlook.com (2603:10b6:a03:232::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.16; Tue, 20 May
- 2025 01:35:03 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df%3]) with mapi id 15.20.8722.027; Tue, 20 May 2025
- 01:35:03 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>, "x86@kernel.org"
-	<x86@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
-	<conor+dt@kernel.org>, Rob Herring <robh@kernel.org>, "K. Y. Srinivasan"
-	<kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu
-	<wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>
-CC: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Saurabh Sengar
-	<ssengar@linux.microsoft.com>, Chris Oo <cho@microsoft.com>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, "Kirill A.
- Shutemov" <kirill.shutemov@linux.intel.com>, "linux-acpi@vger.kernel.org"
-	<linux-acpi@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-	Ricardo Neri <ricardo.neri@intel.com>
-Subject: RE: [PATCH v3 13/13] x86/hyperv/vtl: Use the wakeup mailbox to boot
- secondary CPUs
-Thread-Topic: [PATCH v3 13/13] x86/hyperv/vtl: Use the wakeup mailbox to boot
- secondary CPUs
-Thread-Index: AQHbvF8Dz567Ty+PMEadp9diz7En47Pa1clQ
-Date: Tue, 20 May 2025 01:35:02 +0000
-Message-ID:
- <SN6PR02MB4157F93812247213DFA922ECD49FA@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20250503191515.24041-1-ricardo.neri-calderon@linux.intel.com>
- <20250503191515.24041-14-ricardo.neri-calderon@linux.intel.com>
-In-Reply-To: <20250503191515.24041-14-ricardo.neri-calderon@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|BY5PR02MB7044:EE_
-x-ms-office365-filtering-correlation-id: 27e47666-2a76-4150-259c-08dd973e8ae1
-x-ms-exchange-slblob-mailprops:
- Vs63Iqe4sQlVobdhjoRt/HQUSkoYJhJhIjBQpSR8Kc0oy9Xb6zl/PHnLS87DNiVrOnxk0kUcqb2+BmDdNoEvfAVfrV0Tb5OtgeXzi7FHEMknpROzxdPDHdlEuQpsHydeVTgz27+ALnx5szb3RAsF5G+BwnVQkjyHsGWI2xqLnEqBhr+3s6eTAwdMCrTERRIvi0ibadcZ2yex2uOmSNu4kcwD3VvtBJmw+UgofIW7bcotLsfyMu/QpOh4G2SGn+hZqBk/59mL2WtFifcj5eoN/ERYtKUFtAyfTUjiaZb6KSF128zODW/yW7KAlmVeKcLvwAaYoVTU4QqS9JDaS0c89Nk6UuYs5dYkJOfmB0P1IBkulW0BnLe8QxB4xxPkbC74GYWsGgWGjNsPxoJKz+NPk3sAWGIJy8KFGzqvkjVn342xwoZCs+VeEr+eEmp8vdG1vYTNmkr4YThNHRCCh1RDOOCME4l1DiYjSYtSusyCgumVuesnYh8ytGaRkxtrZuPdd2nPSQ31l74gqElTlytOg9+zw8k2JfzfNaRvbXUvEF2eaK5QQRkVaVVxHC9TpaGqQzACirQawWOosBoPjxH9S4a9aRh0UCMgoXClR0e9iOetnPlQwz8cv+JW/xzyAGMzhyjqOVxEOeW8ETl7lbaF7kZu3685wB6I2fbwn43CnjSILj8G8IgqcDRxPMZjCWkpxDQWLrYlveLkYnp9Ez4TbEE8V10qtDMkgqGYylkCvfw=
-x-microsoft-antispam:
- BCL:0;ARA:14566002|41001999006|8060799009|461199028|19110799006|12121999007|15080799009|8062599006|102099032|3412199025|440099028;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?fl0LUaS7h/1Xq+JlAinkII9AcHMcrp2M52VYgFUbx6qSGbWXn3wNKotHOqrd?=
- =?us-ascii?Q?Yu7dl5fSM4lZIJuczNcGmVl1+GnWfy5udxoVartVeTT1aoYVQxMHMsjF9R2x?=
- =?us-ascii?Q?Gp93nppXz/dE+ATSaQVLITnAYrlmhjXqk9ZQzuL1wOnD3mnGmjIt4SkTsdkm?=
- =?us-ascii?Q?xlmwjFspN1qW7JTLQxv9aTylYUEYHjHPH6ET6HKjlwjNB1DsYchzlgPRNqMb?=
- =?us-ascii?Q?YPblHnOeKh/ZHtow6AqEhpCLTNnk0OcOvqzffDApdEvjCeSJI59l/zgORtCz?=
- =?us-ascii?Q?n9ehyrPtkBgi0kNHS+cL9IprgfCj/eJ7VDRHB7xYkxeIgvpjWaZ7QEvNwzbs?=
- =?us-ascii?Q?6OBwOxDjdGbw+XUD0V6e6F9swWxkSYyHfO9GQb5MtS863govoc1CstMPZj82?=
- =?us-ascii?Q?pyq+jOekF7S/1yaSbyvGALoPvG3tbeilNjL4dGbc2Srydmzj4XH8TZr6S6bi?=
- =?us-ascii?Q?Knri8//oLZa2O7sqdYVkU1Cg4dLhO8wYadknshAulzH4XqHwuo7Ol+zO8B/3?=
- =?us-ascii?Q?16SyT5LqNpTEFXbUxvLp+HmxXlAC1WPlgrwuJEK0F16NdvurIPCtm/YAEaYq?=
- =?us-ascii?Q?J6Lko19b2VHkKObLZEqUjghOb7rOogcn/qWfHqQIU/aUNXnObKJaQsC5/Qtb?=
- =?us-ascii?Q?itrLQcx+F8syYpzb6il17HjzO/Ms5ydctazSOSrOWi7Vp5M34KgHWlq4fhve?=
- =?us-ascii?Q?AAcFWhd+n8wp8+KEQ/227K2JjO9PvFCQoBgLwfti7vvmS34xC5xnKzVX6NE0?=
- =?us-ascii?Q?2pFtt/p4VggXYYbFxtZSxeN4tKSx1ekU3t5/kmkvOBdRXeWWokbQsEoaVUTa?=
- =?us-ascii?Q?Sxhmd7PDcVGERmm0WSFTTP+gJo94xEMg/Ysd314kW7BOEcv/AjrscVneNhCz?=
- =?us-ascii?Q?xHRy1pb146cRivnCvPHBvJjUwOB0uIsrfHweWCQPzRvpTQk/HsYwj4pbCazT?=
- =?us-ascii?Q?51jDcKrVNb1ocWPg53bUTwAyVMvI3Sop9lUCzW15iFBPeB2NoEL4y7yVoY0j?=
- =?us-ascii?Q?tuXZFjLMznAQOdFon2yp488mUVniVAT/YKEFRgPyNkADJ4X8F0lKGDbbmF3j?=
- =?us-ascii?Q?JIXlwe7KXc8FQiavvPp7IVkf2TcD60WJUEuQKVSRELLdAVYDVGfGcWXbA5gK?=
- =?us-ascii?Q?epA+pNOEbvSt1dA+J4gymGyQzV284YppQQ=3D=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?VR1ac+sk7eDCoY2jinmBhyPUf2VxcMZyujvIoTeFKOxaPaHI/nuIFWZR9UTZ?=
- =?us-ascii?Q?RKRAcwdPNjGCGjlFd7Nftg5knVqV+2nrEVBgNI8FtRJgFQUA83uDkeeLhzAI?=
- =?us-ascii?Q?UgzyOIc/MtRWuMCly83Bal7HKwu80adRAdcMIQESZRbZcyDCVEJZfUw889aX?=
- =?us-ascii?Q?Db8VOnDmswpslLJXirDOmmL+hCj/bZTzqrE5z/zvX9CZcwY1tXQspnfrvUM9?=
- =?us-ascii?Q?qvKEp25WMBS3fYVth/EJa/cxb2fNjwFgYs4PbxjEJBatfIhjOUA/TRQhLfIt?=
- =?us-ascii?Q?VxMSJWsVjOTQDvJEJmBoURMbl+3+nFktqvbvAsoF8QMN59u2hqRDwE0bRxVg?=
- =?us-ascii?Q?EDpeMGD6UtdwgevI+gSew8WZxm0/dLTD2zakZSnXaAJHn7NbbVCM2REdXiyV?=
- =?us-ascii?Q?vWdBv8ASU21bkWHzIFkRsTi633r8wo0Eyvg06vs2XWv3+Pt7xCsge8Thsq8h?=
- =?us-ascii?Q?dDuMUZzsVDFO06NQiO6rQHoHE/MxD02pz3W9E1D6kgJKXuF0/qQYWbkqBhoy?=
- =?us-ascii?Q?EOfPtuMrQm0eCOQCTFJ9hAFxHyzRrSUq+YCjqQjgLL6052ekZAyznkcbfMDO?=
- =?us-ascii?Q?olcx+x8MWOqlEE1VSJ9ryGONU+HuitMEGnc94Kjn1Khz3zWBwR+kO61rIF0c?=
- =?us-ascii?Q?lZeB2o0S4Rr+p19+fvN0lTr1BhjtSNrpQvxHBHoYZ7IBfg3kHs/MNk0fthsy?=
- =?us-ascii?Q?1kQ+CqD5/xTiOS437K5kXG/fTrVwyRp8FBF8FYrJYZEb2dof712RPJlWqBv6?=
- =?us-ascii?Q?pJzuLy6zuDv+4kliPcrV41sEgK3GE2fJqqrD+1fZB1j8c7Km1syMKD+r/qLU?=
- =?us-ascii?Q?owDGgvEwja6giOzEoOlXJPLplHJI0S6XxXEnkVqUk1UFjhD3I6wSLd6Qj2BB?=
- =?us-ascii?Q?eLLIa9E6DzLwIfgIF8OoDo2kSGWbHySD1D6inzyt5GcTMhCzthHhkxKx49Iu?=
- =?us-ascii?Q?xPMNQC6/EhtdwOw0ueD8uPe1spzX8Y592KQ6JQbh2g7Dv2QzymiZiBp3/7tt?=
- =?us-ascii?Q?83Y9Vnu0rYWxszex++4rNotYk/HhXDWMGU1H3ropCKjUFTfPlYqjYs4J24c8?=
- =?us-ascii?Q?m6etvPH/9mBAhjaMg4F79n34YVVH808+vQf2xcTRfAZVd3zczyrwYwaP4kG2?=
- =?us-ascii?Q?FeQB0ZdJuq1BY1IXybimQrEl0sXf/r8Zpvee65jM/Z2mspzNjwumYXKu+zbN?=
- =?us-ascii?Q?PhtWGjhUwG9gxnoN5XhOrtkLWb9KKBwiC7NNmpu/0Srv6sJKVmbuAneUzzQ?=
- =?us-ascii?Q?=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="smM7l7By"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66DF2C4CEE4;
+	Tue, 20 May 2025 01:43:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747705405;
+	bh=wCkNYO//dwnifDIdrFoU0BI7VkcCO23Ga1rKCx3MOHs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=smM7l7By3f5j5Id4QIrszJ2d+/oBDppvE6QLSGq5JLSt4QFIspzXq8rUtCa+xUNC6
+	 2gfZpXlj20qeLGsYgz9ihx1/+Wj3F1BBXkr352WzP4f4QcwnewtsTXB4HB/U5vB3r2
+	 oU5i7gvGidbjx7IBAbWZz0qeGyUcd1DHzAY5t1YRr4SPqPC8cmxQ28mH7zL7G5iwH8
+	 zA9i8h6oZGh1SqTmnYs0gwafp663WQYzW3HWQ2/uFaZZVVpUoMcIreP2/3Xdmx4a64
+	 ZeaSQTZ6Y+DChNkvphI8qPjx2RV9bfOZOZ7Lj92FbKiTVFx4rcXDD57Sb4K38Y4t85
+	 x5BqkEfEnPywA==
+Date: Mon, 19 May 2025 18:43:23 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Dmitry Vyukov <dvyukov@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
+Subject: Re: [RFC/PATCH] perf report: Support latency profiling in
+ system-wide mode
+Message-ID: <aCveO4qQGy03ow5p@google.com>
+References: <aBmei7cMf-MzzX5W@google.com>
+ <CACT4Y+ameQFd3n=u+bjd+vKR6svShp3NNQzjsUo_UUBCZPzrBw@mail.gmail.com>
+ <aBmvmmRKpeVd6aT3@google.com>
+ <CACT4Y+bm4gCO_sGvEkxLQfw8JyrWvCzqV_H5h+oebt8kk1_Hwg@mail.gmail.com>
+ <aBm1x2as1fraHXHz@google.com>
+ <CACT4Y+aiU-dHVgTKEpyJtn=RUUyYJp8U5BjyWSOHm6b2ODp9cA@mail.gmail.com>
+ <aBvwFPRwA2LVQJkO@google.com>
+ <CACT4Y+YacgzrUL1uTqxkPOjQm6ryn2R_nPs8dgnrP_iKA9yasQ@mail.gmail.com>
+ <aCdo6Vz2MVv3N0kk@google.com>
+ <CACT4Y+YHxXjCU2jySTUO5kH=xC8scdzTTuP2qEBc5zMber44Aw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 27e47666-2a76-4150-259c-08dd973e8ae1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2025 01:35:02.9670
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR02MB7044
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+YHxXjCU2jySTUO5kH=xC8scdzTTuP2qEBc5zMber44Aw@mail.gmail.com>
 
-From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com> Sent: Saturday, =
-May 3, 2025 12:15 PM
->=20
-> The hypervisor is an untrusted entity for TDX guests. It cannot be used
-> to boot secondary CPUs. The function hv_vtl_wakeup_secondary_cpu() cannot
-> be used.
->=20
-> Instead, the virtual firmware boots the secondary CPUs and places them in
-> a state to transfer control to the kernel using the wakeup mailbox.
->=20
-> The kernel updates the APIC callback wakeup_secondary_cpu_64() to use
-> the mailbox if detected early during boot (enumerated via either an ACPI
-> table or a DeviceTree node).
->=20
-> Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-> ---
-> Changes since v2:
->  - Unconditionally use the wakeup mailbox in a TDX confidential VM.
->    (Michael).
->  - Edited the commit message for clarity.
->=20
-> Changes since v1:
->  - None
-> ---
->  arch/x86/hyperv/hv_vtl.c | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
->=20
-> diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
-> index cd48bedd21f0..30a5a0c156c1 100644
-> --- a/arch/x86/hyperv/hv_vtl.c
-> +++ b/arch/x86/hyperv/hv_vtl.c
-> @@ -299,7 +299,15 @@ int __init hv_vtl_early_init(void)
->  		panic("XSAVE has to be disabled as it is not supported by this module.=
-\n"
->  			  "Please add 'noxsave' to the kernel command line.\n");
->=20
-> -	apic_update_callback(wakeup_secondary_cpu_64, hv_vtl_wakeup_secondary_c=
-pu);
-> +	/*
-> +	 * TDX confidential VMs do not trust the hypervisor and cannot use it t=
-o
-> +	 * boot secondary CPUs. Instead, they will be booted using the wakeup
-> +	 * mailbox if detected during boot. See setup_arch().
-> +	 *
-> +	 * There is no paravisor present if we are here.
-> +	 */
-> +	if (!hv_isolation_type_tdx())
-> +		apic_update_callback(wakeup_secondary_cpu_64, hv_vtl_wakeup_secondary_=
-cpu);
->=20
->  	return 0;
->  }
-> --
-> 2.43.0
+On Mon, May 19, 2025 at 08:00:49AM +0200, Dmitry Vyukov wrote:
+> On Fri, 16 May 2025 at 18:33, Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > Hello,
+> >
+> > Sorry for the delay.
+> >
+> > On Thu, May 08, 2025 at 02:24:08PM +0200, Dmitry Vyukov wrote:
+> > > On Thu, 8 May 2025 at 01:43, Namhyung Kim <namhyung@kernel.org> wrote:
+> > > >
+> > > > On Tue, May 06, 2025 at 09:40:52AM +0200, Dmitry Vyukov wrote:
+> > > > > On Tue, 6 May 2025 at 09:10, Namhyung Kim <namhyung@kernel.org> wrote:
+> > > > > > > > > Where does the patch check that this mode is used only for system-wide profiles?
+> > > > > > > > > Is it that PERF_SAMPLE_CPU present only for system-wide profiles?
+> > > > > > > >
+> > > > > > > > Basically yes, but you can use --sample-cpu to add it.
+> > > > > > >
+> > > > > > > Are you sure? --sample-cpu seems to work for non-system-wide profiles too.
+> > > > > >
+> > > > > > Yep, that's why I said "Basically".  So it's not 100% guarantee.
+> > > > > >
+> > > > > > We may disable latency column by default in this case and show warning
+> > > > > > if it's requested.  Or we may add a new attribute to emit sched-switch
+> > > > > > records only for idle tasks and enable the latency report only if the
+> > > > > > data has sched-switch records.
+> > > > > >
+> > > > > > What do you think?
+> > > > >
+> > > > > Depends on what problem we are trying to solve:
+> > > > >
+> > > > > 1. Enabling latency profiling for system-wide mode.
+> > > > >
+> > > > > 2. Switch events bloating trace too much.
+> > > > >
+> > > > > 3. Lost switch events lead to imprecise accounting.
+> > > > >
+> > > > > The patch mentions all 3 :)
+> > > > > But I think 2 and 3 are not really specific to system-wide mode.
+> > > > > An active single process profile can emit more samples than a
+> > > > > system-wide profile on a lightly loaded system.
+> > > >
+> > > > True.  But we don't need to care about lightly loaded systems as they
+> > > > won't cause problems.
+> > > >
+> > > >
+> > > > > Similarly, if we rely on switch events for system-wide mode, then it's
+> > > > > equally subject to the lost events problem.
+> > > >
+> > > > Right, but I'm afraid practically it'll increase the chance of lost
+> > > > in system-wide mode.  The default size of the sample for system-wide
+> > > > is 56 byte and the size of the switch is 48 byte.  And the default
+> > > > sample frequency is 4000 Hz but it cannot control the rate of the
+> > > > switch.  I saw around 10000 Hz of switches per CPU on my work env.
+> > > >
+> > > > >
+> > > > > For problem 1: we can just permit --latency for system wide mode and
+> > > > > fully rely on switch events.
+> > > > > It's not any worse than we do now (wrt both profile size and lost events).
+> > > >
+> > > > This can be an option and it'd work well on lightly loaded systems.
+> > > > Maybe we can just try it first.  But I think it's better to have an
+> > > > option to make it work on heavily loaded systems.
+> > > >
+> > > > >
+> > > > > For problem 2: yes, we could emit only switches to idle tasks. Or
+> > > > > maybe just a fake CPU sample for an idle task? That's effectively what
+> > > > > we want, then your current accounting code will work w/o any changes.
+> > > > > This should help wrt trace size only for system-wide mode (provided
+> > > > > that user already enables CPU accounting for other reasons, otherwise
+> > > > > it's unclear what's better -- attaching CPU to each sample, or writing
+> > > > > switch events).
+> > > >
+> > > > I'm not sure how we can add the fake samples.  The switch events will be
+> > > > from the kernel and we may add the condition in the attribute.
+> > > >
+> > > > And PERF_SAMPLE_CPU is on by default in system-wide mode.
+> > > >
+> > > > >
+> > > > > For problem 3: switches to idle task won't really help. There can be
+> > > > > lots of them, and missing any will lead to wrong accounting.
+> > > >
+> > > > I don't know how severe the situation will be.  On heavily loaded
+> > > > systems, the idle task won't run much and data size won't increase.
+> > > > On lightly loaded systems, increased data will likely be handled well.
+> > > >
+> > > >
+> > > > > A principled approach would be to attach a per-thread scheduler
+> > > > > quantum sequence number to each CPU sample. The sequence number would
+> > > > > be incremented on every context switch. Then any subset of CPU should
+> > > > > be enough to understand when a task was scheduled in and out
+> > > > > (scheduled in on the first CPU sample with sequence number N, and
+> > > > > switched out on the last sample with sequence number N).
+> > > >
+> > > > I'm not sure how it can help.  We don't need the switch info itself.
+> > > > What's needed is when the CPU was idle, right?
+> > >
+> > > I mean the following.
+> > > Each sample has a TID.
+> > > We add a SEQ field, which is per-thread and is incremented after every
+> > > rescheduling of the thread.
+> > >
+> > > When we see the last sample for (TID,SEQ), we pretend there is SCHED
+> > > OUT event for this thread at this timestamp. When we see the first
+> > > sample for (TID,SEQ+1), we pretend there is SCHED IN event for this
+> > > thread at this timestamp.
+> > >
+> > > These SCHED IN/OUT events are not injected by the kernel. We just
+> > > pretend they happen for accounting purposes. We may actually
+> > > materialize them in the perf tool, or me may just update parallelism
+> > > as if they happen.
+> >
+> > Thanks for the explanation.  But I don't think it needs the SEQ and
+> > SCHED IN/OUT generated from it to track lost records.  Please see below.
+> >
+> > >
+> > > With this scheme we can lose absolutely any subset of samples, and
+> > > still get very precise accounting. When we lose samples, the profile
+> > > of course becomes a bit less precise, but the effect is local and
+> > > recoverable.
+> > >
+> > > If we lose the last/first event for (TID,SEQ), then we slightly
+> > > shorten/postpone the thread accounting in the process parallelism
+> > > level. If we lose a middle (TID,SEQ), then parallelism is not
+> > > affected.
+> >
+> > I'm afraid it cannot check parallelism by just seeing the current thread.
+> > I guess it would need information from other threads even if it has same
+> > SEQ.
+> 
+> Yes, we still count parallelism like you do in this patch, we just use
+> the SEQ info instead of CPU numbers and explicit switch events.
 
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+I mean after record lost, let's say
+
+  t1: SAMPLE for TID 1234, seq 10  (parallelism = 4)
+  t2: LOST
+  t3: SAMPLE for TID 1234, seq 10  (parallelism = ?)
+
+I don't think we can continue to use parallelism of 4 after LOST even if
+it has the same seq because it cannot know if other threads switched on
+other CPUs.  Then do we need really the seq?
+
+> 
+> > Also postpone thread accounting can be complex.  I think it should wait
+> > for all other threads to get a sample.  Maybe some threads exited and
+> > lost too.
+> 
+> Yes, in order to understand what's the last event for (TID,SEQ) we
+> need to look ahead and find the event (TID,SEQ+1). The easiest way to
+> do it would be to do 2 passes over the trace. That's the cost of
+> saving trace space + being resilient to lost events.
+> 
+> Do you see any other issues with this scheme besides requiring 2 passes?
+
+Well.. 2 pass itself can be a problem due to slowness it'd bring.  Some
+people complain about the speed of perf report as of now.
+
+I think we can simply reset the parallelism in all processes after LOST
+and set current process to the idle task.  It'll catch up as soon as it
+sees samples from all CPUs.
+
+> 
+> 
+> > In my approach, I can clear the current thread from all CPUs when it
+> > sees a LOST record and restart calculation of parallelism.
+> >
+> > >
+> > > The switches from a thread to itself is not a problem. We will just
+> > > inject a SCHED OUT followed by SCHED IN. But exactly the same happens
+> > > now when the kernel injects these events.
+> > >
+> > > But if we switch to idle task and got no samples for some period of
+> > > time on the CPU, then we properly inject SCHED OUT/IN that will
+> > > account for the thread not actually running.
+> >
+> > Hmm.. ok.  Maybe we can save the timestamp of the last sample on each
+> > CPU and clear the current thread after some period (2x of given freq?).
+> > But it may slow down perf report as it'd check all CPUs for each sample.
+> >
+> > Thanks,
+> > Namhyung
+> >
