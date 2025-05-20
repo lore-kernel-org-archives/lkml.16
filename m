@@ -1,120 +1,117 @@
-Received: from mx.mylinuxtime.de (mx.mylinuxtime.de [46.4.70.188])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2AB2BE49
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 05:39:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.4.70.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 701C7BE49;
+	Tue, 20 May 2025 05:40:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747719547; cv=none; b=o3Z25tnT0EBCI0vnDyzQO/ahmzA3EGAjQavq1HumVCMdQofnobgz4aweF4ziwlJgTS6YVSZYXdy/OkdLZDID/eI783IjeCvgTGlhiV8R5a/EmRdEyz/gin2OIyyHIB4Zgx0CuzbJGf5/fZYtTYA1zvpE/a+IW+Lt/txvQWJQf3I=
+	t=1747719657; cv=none; b=eAqBvPArqR3V8GzAle7XzF241R0W1VAmpCXmMUqyGTiPqsAtOqZM/uiRZpsnvmQlhx/BE7GYZmzphsSy/yYSIUru5lTGXGPUtazNEzq4zQaBJ1+qchNAds3uOljMi90aWryQYfJV39IipC7Uu7MlesCos/0X/Lagqol1AJGbiEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747719547; c=relaxed/simple;
-	bh=TZ1bau13uMjZ3xmEGXPxBrb/T6qFcnWWPccxnkdxN8c=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Bu9rRcWGOXeCVSkxIa6G8ArpPS630YujzS4nhtJM44vzxGAsUCLrsVgHe/7Fm+QQoaoLB+pcLYWufti0x8dxazflZg7/cn8/Je6SLiyn/JZNl1/8TmKBKjinv1mxJs2UJFaDZAqzqB7XwFnXmRxQ6+HsYoeKAzlSJ8MaSCfp7k0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eworm.de; spf=pass smtp.mailfrom=eworm.de; arc=none smtp.client-ip=46.4.70.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eworm.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eworm.de
-Received: from leda.eworm.net (unknown [194.36.25.6])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx.mylinuxtime.de (Postfix) with ESMTPSA id 59BC425A2AB;
-	Tue, 20 May 2025 07:39:02 +0200 (CEST)
-Authentication-Results: mx.mylinuxtime.de;
-	auth=pass smtp.auth=mail@eworm.de smtp.mailfrom=mail@eworm.de
-Date: Tue, 20 May 2025 07:39:01 +0200
-From: Christian Hesse <mail@eworm.de>
-To: Lizhi Xu <lizhi.xu@windriver.com>
-Cc: <axboe@kernel.dk>, <christian@heusel.eu>, <hch@infradead.org>,
- <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <ming.lei@redhat.com>,
- <syzbot+6af973a3b8dfd2faefdc@syzkaller.appspotmail.com>,
- <syzkaller-bugs@googlegroups.com>
-Subject: Re: [PATCH V5] loop: Add sanity check for read/write_iter
-Message-ID: <20250520073901.6fdfbee4@leda.eworm.net>
-In-Reply-To: <20250520030051.177205-1-lizhi.xu@windriver.com>
-References: <20250519175640.2fcac001@leda.eworm.net>
-	<20250520030051.177205-1-lizhi.xu@windriver.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-pc-linux-gnu)
-X-Face: %O:rCSk<c"<MpJ:yn<>HSKf7^4uF|FD$9$I0}g$nbnS1{DYPvs#:,~e`).mzj\$P9]V!WCveE/XdbL,L!{)6v%x4<jA|JaB-SKm74~Wa1m;|\QFlOg>\Bt!b#{;dS&h"7l=ow'^({02!2%XOugod|u*mYBVm-OS:VpZ"ZrRA4[Q&zye,^j;ftj!Hxx\1@;LM)Pz)|B%1#sfF;s;,N?*K*^)
-Face: iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAGFBMVEUZFRFENy6KVTKEd23CiGHeqofJvrX4+vdHgItOAAAACXBIWXMAAA3XAAAN1wFCKJt4AAACUklEQVQ4y2VUTZeqMAxNxXG2Io5uGd64L35unbF9ax0b3OLxgFs4PcLff0lBHeb1QIq5uelNCEJNq/TIFGyeC+iugH0WJr+B1MvzWASpuP4CYHOB0VfoDdddwA7OIFQIEHjXDiCtV5e9QX0WMu8AG0mB7g7WP4GqeqVdsi4vv/5kFBvaF/zD7zDquL4DxbrDGDyAsgNYOsJOYzth4Q9ZF6iLV+6TLAT1pi2kuvgAtZxSjoG8cL+8vIn251uoe1OOEWwbIPU04gHsmMsoxyyhYsD2FdIigF1yxaVbBuSOCAlCoX324I7wNMhrO1bhOLsRoA6DC6wQ5eQiSG5BiWQfM4gN+uItQTRDMaJUhVbGyKWCuaaUGSVFVKpl4PdoDn3yY8J+YxQxyhlHfoYOyPgyDcO+cSQK6Bvabjcy2nwRo3pxgA8jslnCuYw23ESOzHAPYwo4ITNQMaOO+RGPEGhSlPEZBh2jmBEjQ5cKbxmr0ruAe/WCriUxW76I8T3h7vqY5VR5wXLdERodg2rHEzdxxk5KpXTL4FwnarvndKM5/MWDY5CuBBdQ+3/0ivsUJHicuHd+Xh3jOdBL+FjSGq4SPCwco+orpWlERRTNo7BHCvbNXFVSIQMp+P5QsIL9upmr8kMTUOfxEHoanwzKRcNAe76WbjBwex/RkdHu48xT5YqP70DaMOhBcTHmAVDxLaBdle93oJy1QKFUh2GXT4am+YH/GGel1CeI98GdMXsytjCKIq/9cMrlgxFCROv+3/BU1fijNpcVD6DxE8VfLBaxUGr1D5usgDYdjwiPAAAAAElFTkSuQmCC
+	s=arc-20240116; t=1747719657; c=relaxed/simple;
+	bh=qlj/6e6X01GkMcGwCxlRwl1VobEAwal3xID5pNyK+dM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sLgBdvL8rmUuh1IB61tVoPeAnDvbmDi8HQGdE2fRtpKAHFseeVxBoNrqPqHH0ZuHjXawI0OCH918lqU6cdxRsy2D0oJoE1XJhXFjlV8gfpL8URIXWnTEUDvnohrCPnkMYJw0EepRTb+I5f6RdiDyGCItJBs2NKIN3Dxdj1NJwMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WNHAIq1O; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WNHAIq1O"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747719656; x=1779255656;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=qlj/6e6X01GkMcGwCxlRwl1VobEAwal3xID5pNyK+dM=;
+  b=WNHAIq1Ozrc1qxbLod5iowKd8VxxgwOFcF7V5JuJfKgYtEWcehReTOuz
+   GkyX/KBjH0NdTx92DYahTH3eFsWRHKM0Sdeuk+ATj3Ouez2EJfFG61Asr
+   j52N5f/wb71CT+fyq3AzsKHNxmUPWEzRbLePck8cyHhDTzsAWj5maSju+
+   hlloAGMI6xTB2+ANm5wTKg9Zizy1RAI1kFVArnHrJflvspJp0SU9jv/1w
+   9F/KhrqbXzx4doioN1M2Z4ZeNoY1yio8EUUYoqc4TVDaOM5T0jvWeR/m8
+   K4+FcTE2QU8gMyWN3csHroMcsvKA7jFMG3h/UMGGcSz7kWVUTHqRl6LkG
+   g==;
+X-CSE-ConnectionGUID: Aop2VF/TSwO7CU/DoCZ1TA==
+X-CSE-MsgGUID: JeyccDEiRymccn520OeBhw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="61028900"
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="61028900"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 22:40:55 -0700
+X-CSE-ConnectionGUID: 0Vv3Su49SAuaWuj6M1qcYQ==
+X-CSE-MsgGUID: 6q6mvkm4S9SBgPjoFkWBpw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="144334532"
+Received: from unknown (HELO [10.238.12.207]) ([10.238.12.207])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 22:40:49 -0700
+Message-ID: <1e1b26b5-2f42-4451-b9a4-69f9805ea05a@linux.intel.com>
+Date: Tue, 20 May 2025 13:40:46 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/fNst24p=Np=ldSTs/mAULnQ";
- protocol="application/pgp-signature"; micalg=pgp-sha512
-X-Spamd-Bar: /
-X-Spamd-Result: default: False [0.00 / 15.00];
-	TAGGED_RCPT(0.00)[6af973a3b8dfd2faefdc]
-X-Rspamd-Server: mx
-X-Rspamd-Queue-Id: 59BC425A2AB
-X-Stat-Signature: khw1e6gszj3qiaabzf4ok9wsrhekzrg3
-X-Rspamd-Action: no action
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 14/21] KVM: x86/tdp_mmu: Invoke split_external_spt
+ hook with exclusive mmu_lock
+To: Yan Zhao <yan.y.zhao@intel.com>
+Cc: pbonzini@redhat.com, seanjc@google.com, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, x86@kernel.org, rick.p.edgecombe@intel.com,
+ dave.hansen@intel.com, kirill.shutemov@intel.com, tabba@google.com,
+ ackerleytng@google.com, quic_eberman@quicinc.com, michael.roth@amd.com,
+ david@redhat.com, vannapurve@google.com, vbabka@suse.cz, jroedel@suse.de,
+ thomas.lendacky@amd.com, pgonda@google.com, zhiquan1.li@intel.com,
+ fan.du@intel.com, jun.miao@intel.com, ira.weiny@intel.com,
+ isaku.yamahata@intel.com, xiaoyao.li@intel.com, chao.p.peng@intel.com
+References: <20250424030033.32635-1-yan.y.zhao@intel.com>
+ <20250424030744.435-1-yan.y.zhao@intel.com>
+Content-Language: en-US
+From: Binbin Wu <binbin.wu@linux.intel.com>
+In-Reply-To: <20250424030744.435-1-yan.y.zhao@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
---Sig_/fNst24p=Np=ldSTs/mAULnQ
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Lizhi Xu <lizhi.xu@windriver.com> on Tue, 2025/05/20 11:00:
-> On Mon, 19 May 2025 17:56:40 +0200, Christian Hesse wrote:
-> > $ losetup --find --show --read-only --
-> > /run/archiso/bootmnt/arch/x86_64/airootfs.sfs losetup:
-> > /run/archiso/bootmnt/arch/x86_64/airootfs.sfs: failed to set up loop
-> > device: Invalid argument
->
-> I tried to reproduce the problem you mentioned using the kernel containing
-> "commit:f5c84eff", but failed to reproduce it.
-> The complete reproduction steps are as follows:
->=20
-> sudo apt install squashfs-tools debootstrap
-> sudo debootstrap --arch=3Damd64 focal rootfs http://archive.ubuntu.com/ub=
-untu/
-> sudo mksquashfs rootfs rootfs.sfs -comp xz -e boot
-> [...]
 
-That's the wrong end of the stack. After all squashfs is not directly
-involved here (that was just an etxra info on why we have a loopback file
-inside iso9660).
+On 4/24/2025 11:07 AM, Yan Zhao wrote:
+[...]
+>   
+> +static int split_external_spt(struct kvm *kvm, gfn_t gfn, u64 old_spte,
+> +			      u64 new_spte, int level)
+> +{
+> +	void *external_spt = get_external_spt(gfn, new_spte, level);
+> +	int ret;
+> +
+> +	KVM_BUG_ON(!external_spt, kvm);
+> +
+> +	ret = static_call(kvm_x86_split_external_spt)(kvm, gfn, level, external_spt);
+Better to use kvm_x86_call() instead of static_call().
 
-The issue is setting up the loopback file inside a mounted iso9660 filesyst=
-em.
-Take these steps for easy reproduction:
+> +	KVM_BUG_ON(ret, kvm);
+> +
+> +	return ret;
+> +}
+>   /**
+>    * handle_removed_pt() - handle a page table removed from the TDP structure
+>    *
+> @@ -764,13 +778,13 @@ static u64 tdp_mmu_set_spte(struct kvm *kvm, int as_id, tdp_ptep_t sptep,
+>   
+>   	handle_changed_spte(kvm, as_id, gfn, old_spte, new_spte, level, false);
+>   
+> -	/*
+> -	 * Users that do non-atomic setting of PTEs don't operate on mirror
+> -	 * roots, so don't handle it and bug the VM if it's seen.
+> -	 */
+>   	if (is_mirror_sptep(sptep)) {
+> -		KVM_BUG_ON(is_shadow_present_pte(new_spte), kvm);
+> -		remove_external_spte(kvm, gfn, old_spte, level);
+> +		if (!is_shadow_present_pte(new_spte))
+> +			remove_external_spte(kvm, gfn, old_spte, level);
+> +		else if (is_last_spte(old_spte, level) && !is_last_spte(new_spte, level))
+> +			split_external_spt(kvm, gfn, old_spte, new_spte, level);
+> +		else
+> +			KVM_BUG_ON(1, kvm);
+>   	}
+>   
+>   	return old_spte;
 
-root@leda ~ # mkdir iso.d=20
-root@leda ~ # truncate -s 10m iso.d/loopback.img
-root@leda ~ # mkisofs -o iso.iso iso.d/
-Setting input-charset to 'UTF-8' from locale.
- 94,75% done, estimate finish Tue May 20 07:34:52 2025
-Total translation table size: 0
-Total rockridge attributes bytes: 0
-Total directory bytes: 0
-Path table size(bytes): 10
-Max brk space used 0
-5294 extents written (10 MB)
-root@leda ~ # mount -o loop iso.iso /mnt/tmp=20
-mount: /mnt/tmp: WARNING: source write-protected, mounted read-only.
-root@leda ~ # losetup --find --show --read-only -- /mnt/tmp/loopback.img=20
-losetup: /mnt/tmp/loopback.img: failed to set up loop device: Invalid argum=
-ent
-
-Hope that helps, let me know if you need more assistance.
---=20
-Best regards,
-Chris
-
---Sig_/fNst24p=Np=ldSTs/mAULnQ
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iHQEARYKAB0WIQSmOl3fryo2Nzt8CpJOj8ol/axIVQUCaCwVdQAKCRBOj8ol/axI
-VYovAPjB5lx5KHvbGNCKPXj0KVsTHSS0n7UJ8OGO7WP5FGhkAQD34BN4l3pHwARk
-Z0ZeskSgLWuMZigIxE3Cqty8uJg8BA==
-=ehv3
------END PGP SIGNATURE-----
-
---Sig_/fNst24p=Np=ldSTs/mAULnQ--
