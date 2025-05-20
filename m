@@ -1,77 +1,106 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FC61BA45;
-	Tue, 20 May 2025 19:18:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C54E424C692;
+	Tue, 20 May 2025 19:20:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747768701; cv=none; b=MhiCwXB/cph9OBz7e5/1KLJeQinob+s5Hroy5JheDQ/YqxTK8T+RftT4ZYxf3H24b6BOxdQfz+W0DUhF3qduqJbyCXHarJaDNaf2+VaImu40vy/ctFZMqnOgGG9NPFWeSrIdrEfy2XXXOQ/1xy4mKIMmdustG6X4SyG1T8u4LSI=
+	t=1747768846; cv=none; b=mc4hN4BbxVlXMZx5vmA/DZV1z+pXyWzObnmgtT9PXeXyBojLhg/LCXZFJoLECgM8zMjbRSwzkUmQ1UWFFHs1IPGnpQcfc95NCVOBOZILGFqyecvYCO3dwoSKHDxWeKVuf0eUntOiL70PaA6bNpfY2m7IMQ6iiV1lyB346e4OSas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747768701; c=relaxed/simple;
-	bh=oFaXc0gdTnPLTjT7AiGdHJhgJAW5FB0t4nB354tVFoQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aCy0KYQb92aWSY8ZJ2O1hqX3I2XiV6e82XFpqnkUnSDwxglY1x/pdPjhbEKCWeAwEb4L6goaZ5PbEfYcZxHjcDogrKWGVgSi8R0IOa8tOdv5YEbfQN9coR18/y+JRRdIpC0gnQSLhPG5uHzH1u7Jw11D2cHEUaSUbq/JiaJP0kA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=QVSFD4DN; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1747768846; c=relaxed/simple;
+	bh=WL+oZ2MYQpnuVlpx+GohcQq+F1xhZWw9zI0Bz3ifrss=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OeNB3EvAEX/i3F/R72mtTdtAJ7YiFz5Si1f9oMmvgWiUzyN/UAGYFZRt2CWhs0EK1Wsl2w3c2ZeGYl4HVrzdHDcXGDWMhjDKIFywqMQcvb+/kwNNmtl22Kr7Cr8sT0JzudIaAo07nWBI8jOUaWABs2DClyYDiDJnWEM340g+tP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ki3b9EtO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QVSFD4DN"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=COSAydh429reoE4aNbcE1igiH3jcPkkYbLhSryVScJk=; b=QVSFD4DNGku4hxVzqgOTd7h1SA
-	l940GeDOLM8U52ViwNfh1bhUSna+J+WxE0VfoFFVLJVNTsHGTq5K4fx0pBFEwPabOpcYB0Xq6xe09
-	eO4C+WWflHoOEjOBYLUImVskrgLOI8y1OJrfbvg+0ap8qrV/kr6YTs6gu+PVQ0hdONEzQGLxlrGOW
-	FTodT4PWuvOoTN1pe/BX1sQ9zOIDMnuKM5YRkVXMFCITxab1B6SOXT6S47cTzIDwOI4mzSGJHnJBr
-	IcrE733soLpXYqAvTDHwC3mJIjMsGpKyp+nWjwuuw9bkwJpgBRVI0P1q0ug1Ufp8wF/bdGuN1j5kV
-	JAABW/5w==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uHSTg-00000003kOT-2YEA;
-	Tue, 20 May 2025 19:18:16 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 395B3300677; Tue, 20 May 2025 21:18:16 +0200 (CEST)
-Date: Tue, 20 May 2025 21:18:16 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev, K Prateek Nayak <kprateek.nayak@amd.com>,
-	David Matlack <dmatlack@google.com>,
-	Juergen Gross <jgross@suse.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-Subject: Re: [PATCH v2 08/12] sched/wait: Drop WQ_FLAG_EXCLUSIVE from
- add_wait_queue_priority()
-Message-ID: <20250520191816.GJ16434@noisy.programming.kicks-ass.net>
-References: <20250519185514.2678456-1-seanjc@google.com>
- <20250519185514.2678456-9-seanjc@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ki3b9EtO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9674C4CEE9;
+	Tue, 20 May 2025 19:20:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747768846;
+	bh=WL+oZ2MYQpnuVlpx+GohcQq+F1xhZWw9zI0Bz3ifrss=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Ki3b9EtO356CV2lvoGptrYkmyv1YUM6PUNwvQk1U8gfzwobfXVrSNDvAM2ZjSlgdY
+	 jfzBKouPVA0tntG14HPwl4QhVIsG1vCv40iM8rPMxkWzD8x7ldddiNSdrw3zYCNtAb
+	 EBz31sRg25d1HO6NI1kPSnN6AGxyD+B5DBhNm3PvaAUY2mdPYNAQCynd0zwlN9LbFw
+	 qb0Hz4peSUVJjfiIeFqGQ+DbuHg7L5GiXqtQwx/oXSvqVD4WMFGYRbzvNwGKZCiODG
+	 iKGeYUzz9B2kMl03rygLWEgipoFRRKCDyOvZMIe61BOSRTKq0fmrPFUKR6njaQ0r7Y
+	 PIZQAs9BDlMFg==
+From: Miguel Ojeda <ojeda@kernel.org>
+To: Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Masahiro Yamada <masahiroy@kernel.org>
+Cc: Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	rust-for-linux@vger.kernel.org,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	patches@lists.linux.dev,
+	stable@vger.kernel.org,
+	Tamir Duberstein <tamird@gmail.com>
+Subject: [PATCH] rust: kbuild: rebuild if `.clippy.toml` changes
+Date: Tue, 20 May 2025 21:20:34 +0200
+Message-ID: <20250520192034.889415-1-ojeda@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250519185514.2678456-9-seanjc@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 19, 2025 at 11:55:10AM -0700, Sean Christopherson wrote:
-> Drop the setting of WQ_FLAG_EXCLUSIVE from add_wait_queue_priority() to
-> differentiate it from add_wait_queue_priority_exclusive().  The one and
-> only user add_wait_queue_priority(), Xen privcmd's irqfd_wakeup(),
-> unconditionally returns '0', i.e. doesn't actually operate in exclusive
-> mode.
+We rarely modify `.clippy.toml`, but currently we do not rebuild if that
+happens, thus it is easy to miss possible changes in lints.
 
-I find:
+Thus rebuild in case of changes.
 
-drivers/hv/mshv_eventfd.c:      add_wait_queue_priority(wqh, &irqfd->irqfd_wait);
-drivers/xen/privcmd.c:  add_wait_queue_priority(wqh, &kirqfd->wait);
+Cc: stable@vger.kernel.org
+Reported-by: Tamir Duberstein <tamird@gmail.com>
+Closes: https://github.com/Rust-for-Linux/linux/issues/1151
+Fixes: 7d56786edcbd ("rust: introduce `.clippy.toml`")
+Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
+---
+ rust/Makefile | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-I mean, it might still be true and all, but hyperv seems to also use
-this now.
+diff --git a/rust/Makefile b/rust/Makefile
+index 3aca903a7d08..0dcc9ba0d225 100644
+--- a/rust/Makefile
++++ b/rust/Makefile
+@@ -405,11 +405,12 @@ quiet_cmd_rustc_procmacro = $(RUSTC_OR_CLIPPY_QUIET) P $@
+ 		--crate-name $(patsubst lib%.$(libmacros_extension),%,$(notdir $@)) $<
+ 
+ # Procedural macros can only be used with the `rustc` that compiled it.
+-$(obj)/$(libmacros_name): $(src)/macros/lib.rs FORCE
++$(obj)/$(libmacros_name): $(src)/macros/lib.rs $(srctree)/.clippy.toml FORCE
+ 	+$(call if_changed_dep,rustc_procmacro)
+ 
+ $(obj)/$(libpin_init_internal_name): private rustc_target_flags = --cfg kernel
+-$(obj)/$(libpin_init_internal_name): $(src)/pin-init/internal/src/lib.rs FORCE
++$(obj)/$(libpin_init_internal_name): $(src)/pin-init/internal/src/lib.rs \
++    $(srctree)/.clippy.toml FORCE
+ 	+$(call if_changed_dep,rustc_procmacro)
+ 
+ quiet_cmd_rustc_library = $(if $(skip_clippy),RUSTC,$(RUSTC_OR_CLIPPY_QUIET)) L $@
+@@ -495,7 +496,8 @@ endif
+ 
+ $(obj)/compiler_builtins.o: private skip_gendwarfksyms = 1
+ $(obj)/compiler_builtins.o: private rustc_objcopy = -w -W '__*'
+-$(obj)/compiler_builtins.o: $(src)/compiler_builtins.rs $(obj)/core.o FORCE
++$(obj)/compiler_builtins.o: $(src)/compiler_builtins.rs $(obj)/core.o \
++    $(srctree)/.clippy.toml FORCE
+ 	+$(call if_changed_rule,rustc_library)
+ 
+ $(obj)/pin_init.o: private skip_gendwarfksyms = 1
+
+base-commit: 22c3335c5dcd33063fe1894676a3a6ff1008d506
+-- 
+2.49.0
+
