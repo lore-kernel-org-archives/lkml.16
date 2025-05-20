@@ -1,45 +1,36 @@
-Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [195.130.137.89])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FE84242D89
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 14:34:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.89
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C693024418F;
+	Tue, 20 May 2025 14:34:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747751654; cv=none; b=H8T2tcSlh++LnKS0DM7nt7vHxQQzc3weMc+7cVBCwmqGRoT4UOmw629vIo8iQP8MNPfKkNsDHRsUGtYCLWrgjGyvUfLpVTXv/4GDYohiXZqb1C6bOU9bTgVdsZDl4FX6gC9NV1Ixh6fub4eCC4OXp65ISN9X72laDRr9Y9SQXjo=
+	t=1747751660; cv=none; b=G3VYpPjvI2i/C3MoSscpXaff+kwewwi7P5sgn6LSvaUgUnVQ4vK6+Cv4xX60A/Mm25MNuETBRgDYeKxNnVhauMU2bwLPWJj8u2+gkr29Z6Psa9t/8ZG/SrvTUBu8PTksmycISG4dpggThnc9aDG1UhV0Fxz6AfjU57hqvUoH9qE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747751654; c=relaxed/simple;
-	bh=pUkqCPI9QwC01P8lVL9uJA5wXPW4QfoUL7u02fQS+Gg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dSMNTW/mGDn7WzwpGmSRV6Td4zPhoFy8YtTLR7LhMDHX9VDjX/b5phUsAAnRJapB1KRsvzxgPZwzqkHNMNukZs7cEjmeaoczcBkeKOe+emJ2uBYoEWlHlYlB3687pEyM/O7HfCrYm7eeFiHgl72VG8SZ4ij6ycXSJCO3GyHV4SY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:2bba:d77b:9240:3c4e])
-	by laurent.telenet-ops.be with cmsmtp
-	id rSa32E00R4GqtyW01Sa4as; Tue, 20 May 2025 16:34:04 +0200
-Received: from rox.of.borg ([192.168.97.57])
-	by ramsan.of.borg with esmtp (Exim 4.97)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1uHO2R-00000002bgm-1Jt7;
-	Tue, 20 May 2025 16:34:03 +0200
-Received: from geert by rox.of.borg with local (Exim 4.97)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1uHO2d-00000002Nn4-3LGJ;
-	Tue, 20 May 2025 16:34:03 +0200
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-To: Marcus Folkesson <marcus.folkesson@gmail.com>,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2] drm/sitronix: Remove broken backwards-compatibility layer
-Date: Tue, 20 May 2025 16:33:59 +0200
-Message-ID: <20395b14effe5e2e05a4f0856fdcda51c410329d.1747751592.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1747751660; c=relaxed/simple;
+	bh=W6VVxh2JpTxWEhh/uRyWVQH9raW6GeHBVsleuONtBUE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CPjqUJVb3uuAmoDHPiF+qcEB5571cAyFz0PcA6TPmuzSlCS+3fN6DJTRPpHGATTAYXysJEQDQSKStdAQxqNBdTcoQX5SCDh7psVyYtJi6Q4emlL0hP0MBjzDZPdVEfofKhWcu4AfL8RfP0Upz2wdl8z5iWa2pEiilJB0wSosVBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
+Received: from inp1wst086.omp.ru (81.22.207.138) by msexch01.omp.ru
+ (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Tue, 20 May
+ 2025 17:34:02 +0300
+From: Dmitriy Privalov <d.privalov@omp.ru>
+To: <stable@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>, Joseph Qi
+	<joseph.qi@linux.alibaba.com>, <ocfs2-devel@oss.oracle.com>,
+	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>, Mohammed
+ Anees <pvmohammedanees2003@gmail.com>,
+	<syzbot+e0055ea09f1f5e6fabdd@syzkaller.appspotmail.com>, Junxiao Bi
+	<junxiao.bi@oracle.com>, Changwei Ge <gechangwei@live.cn>, Gang He
+	<ghe@suse.com>, Jun Piao <piaojun@huawei.com>, Andrew Morton
+	<akpm@linux-foundation.org>, Dmitriy Privalov <d.privalov@omp.ru>
+Subject: [PATCH 6.1 1/1] ocfs2: fix deadlock in ocfs2_get_system_file_inode
+Date: Tue, 20 May 2025 17:33:42 +0300
+Message-ID: <20250520143342.1528030-1-d.privalov@omp.ru>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,67 +38,115 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
+ (10.188.4.12)
+X-KSE-ServerInfo: msexch01.omp.ru, 9
+X-KSE-AntiSpam-Interceptor-Info: scan successful
+X-KSE-AntiSpam-Version: 6.1.1, Database issued on: 05/20/2025 14:12:09
+X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
+X-KSE-AntiSpam-Method: none
+X-KSE-AntiSpam-Rate: 0
+X-KSE-AntiSpam-Info: Lua profiles 193475 [May 20 2025]
+X-KSE-AntiSpam-Info: Version: 6.1.1.11
+X-KSE-AntiSpam-Info: Envelope from: d.privalov@omp.ru
+X-KSE-AntiSpam-Info: LuaCore: 57 0.3.57
+ 4d40b83f2d84157cf8cb531aa833108d098dc3e3
+X-KSE-AntiSpam-Info: {rep_avail}
+X-KSE-AntiSpam-Info: {Tracking_uf_ne_domains}
+X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
+X-KSE-AntiSpam-Info:
+	lkml.kernel.org:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;omp.ru:7.1.1;inp1wst086.omp.ru:7.1.1;syzkaller.appspot.com:5.0.1,7.1.1;81.22.207.138:7.1.2
+X-KSE-AntiSpam-Info: FromAlignment: s
+X-KSE-AntiSpam-Info: ApMailHostAddress: 81.22.207.138
+X-KSE-AntiSpam-Info: Rate: 0
+X-KSE-AntiSpam-Info: Status: not_detected
+X-KSE-AntiSpam-Info: Method: none
+X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
+ smtp.mailfrom=omp.ru;dkim=none
+X-KSE-Antiphishing-Info: Clean
+X-KSE-Antiphishing-ScanningType: Heuristic
+X-KSE-Antiphishing-Method: None
+X-KSE-Antiphishing-Bases: 05/20/2025 14:19:00
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 5/20/2025 1:06:00 PM
+X-KSE-Attachment-Filter-Triggered-Rules: Clean
+X-KSE-Attachment-Filter-Triggered-Filters: Clean
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-When moving the Sitronix DRM drivers and renaming their Kconfig symbols,
-the old symbols were kept, aiming to provide a seamless migration path
-when running "make olddefconfig" or "make oldconfig".
+From: Mohammed Anees <pvmohammedanees2003@gmail.com>
 
-However, the old compatibility symbols are not visible.  Hence unless
-they are selected by another symbol (which they are not), they can never
-be enabled, and no backwards compatibility is provided.
+commit 7bf1823e010e8db2fb649c790bd1b449a75f52d8 upstream.
 
-Drop the broken mechanism and the old symbols.
+syzbot has found a possible deadlock in ocfs2_get_system_file_inode [1].
 
-Fixes: 9b8f32002cddf792 ("drm/sitronix: move tiny Sitronix drivers to their own subdir")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+The scenario is depicted here,
+
+	CPU0					CPU1
+lock(&ocfs2_file_ip_alloc_sem_key);
+                               lock(&osb->system_file_mutex);
+                               lock(&ocfs2_file_ip_alloc_sem_key);
+lock(&osb->system_file_mutex);
+
+The function calls which could lead to this are:
+
+CPU0
+ocfs2_mknod - lock(&ocfs2_file_ip_alloc_sem_key);
+.
+.
+.
+ocfs2_get_system_file_inode - lock(&osb->system_file_mutex);
+
+CPU1 -
+ocfs2_fill_super - lock(&osb->system_file_mutex);
+.
+.
+.
+ocfs2_read_virt_blocks - lock(&ocfs2_file_ip_alloc_sem_key);
+
+This issue can be resolved by making the down_read -> down_read_try
+in the ocfs2_read_virt_blocks.
+
+[1] https://syzkaller.appspot.com/bug?extid=e0055ea09f1f5e6fabdd
+
+Link: https://lkml.kernel.org/r/20240924093257.7181-1-pvmohammedanees2003@gmail.com
+Signed-off-by: Mohammed Anees <pvmohammedanees2003@gmail.com>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Reported-by: <syzbot+e0055ea09f1f5e6fabdd@syzkaller.appspotmail.com>
+Closes: https://syzkaller.appspot.com/bug?extid=e0055ea09f1f5e6fabdd
+Tested-by: syzbot+e0055ea09f1f5e6fabdd@syzkaller.appspotmail.com
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
+Cc:  <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Dmitriy Privalov <d.privalov@omp.ru>
 ---
-v2:
-  - Drop backwards-compatibility instead of fixing it.
----
- drivers/gpu/drm/sitronix/Kconfig | 10 ----------
- 1 file changed, 10 deletions(-)
+ fs/ocfs2/extent_map.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/sitronix/Kconfig b/drivers/gpu/drm/sitronix/Kconfig
-index c069d0d417753bcf..25cae32e5c3ec113 100644
---- a/drivers/gpu/drm/sitronix/Kconfig
-+++ b/drivers/gpu/drm/sitronix/Kconfig
-@@ -10,10 +10,6 @@ config DRM_ST7571_I2C
+diff --git a/fs/ocfs2/extent_map.c b/fs/ocfs2/extent_map.c
+index 70a768b623cf..f7672472fa82 100644
+--- a/fs/ocfs2/extent_map.c
++++ b/fs/ocfs2/extent_map.c
+@@ -973,7 +973,13 @@ int ocfs2_read_virt_blocks(struct inode *inode, u64 v_block, int nr,
+ 	}
  
- 	  if M is selected the module will be called st7571-i2c.
- 
--config TINYDRM_ST7586
--	tristate
--	default n
--
- config DRM_ST7586
- 	tristate "DRM support for Sitronix ST7586 display panels"
- 	depends on DRM && SPI
-@@ -21,17 +17,12 @@ config DRM_ST7586
- 	select DRM_KMS_HELPER
- 	select DRM_GEM_DMA_HELPER
- 	select DRM_MIPI_DBI
--	default TINYDRM_ST7586
- 	help
- 	  DRM driver for the following Sitronix ST7586 panels:
- 	  * LEGO MINDSTORMS EV3
- 
- 	  If M is selected the module will be called st7586.
- 
--config TINYDRM_ST7735R
--	tristate
--	default n
--
- config DRM_ST7735R
- 	tristate "DRM support for Sitronix ST7715R/ST7735R display panels"
- 	depends on DRM && SPI
-@@ -40,7 +31,6 @@ config DRM_ST7735R
- 	select DRM_GEM_DMA_HELPER
- 	select DRM_MIPI_DBI
- 	select BACKLIGHT_CLASS_DEVICE
--	default TINYDRM_ST7735R
- 	help
- 	  DRM driver for Sitronix ST7715R/ST7735R with one of the following
- 	  LCDs:
+ 	while (done < nr) {
+-		down_read(&OCFS2_I(inode)->ip_alloc_sem);
++		if (!down_read_trylock(&OCFS2_I(inode)->ip_alloc_sem)) {
++			rc = -EAGAIN;
++			mlog(ML_ERROR,
++				 "Inode #%llu ip_alloc_sem is temporarily unavailable\n",
++				 (unsigned long long)OCFS2_I(inode)->ip_blkno);
++			break;
++		}
+ 		rc = ocfs2_extent_map_get_blocks(inode, v_block + done,
+ 						 &p_block, &p_count, NULL);
+ 		up_read(&OCFS2_I(inode)->ip_alloc_sem);
 -- 
-2.43.0
+2.34.1
 
