@@ -1,267 +1,78 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78155246769
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 14:11:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C94622D7A8;
+	Tue, 20 May 2025 14:11:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747750293; cv=none; b=WOB60L7inq1Dt8qreeUEaMhpcY8W+j4XMH6CfIorDgsW2JTjyVj5wg3LFaWyctKXQDosS5kvE1YnfuWv2Qqm6Vlin4GfvoT0PGnZsZmFL3wYYWr9M/8ZjVKmP3L3LbvWuRH6hlxAmvZ8K6cNk+/7CiE+H8RayEPsZVh71j0iyI8=
+	t=1747750302; cv=none; b=iEI0epcolj6QoD+r/4AGzp3mlvLFLw7MSOC7xH4YrEBRmTlyvvg1xoJtvVnzLZcQs8DLZMaA59M7l5D/tr4gno6VOPeDONhvF3VjE2cfaJYIefHVSGBzxAt77AZJoSMNOlyjmypfqo3OmCUzHlfwbPzkeOTG8eGJGs9uvyn/mc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747750293; c=relaxed/simple;
-	bh=IwGc2NrI2G4RtTLHpTIRCtdhQkLKhhGOiCGwGPHrVpo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UVTU/K1lQfzdneemZ6FjPAlD7svIV58Fet6sx66brsiJi/gIJSH5yMVZ4LjbOTq/WFRBNnH5N0U3tDgvcmjLVfCkTbnO1X9MjOaHd1o16OrGcPIhFypwN5BBrzX5rGC5Rk4Ow2oLwxlflMRTCB5ANdbcXBAY4vVg5bfIrNNlESw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=192zBdId; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747750302; c=relaxed/simple;
+	bh=7H0H5peD5j5PaLsy4ojWTCVVazkCP7uOufJFBtYwn4w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IgvarYZx3kqW2DxNRWzJLuz83ZN1hz8hvPdcHewd2jABrVC07RZk+ogZHRDEv15h4RBSMZJUyRw0QTjl1wG2PKIHgzydCHvd+lkdMB5fXQ5pe+eS+x9cz2Llh16bWw+q5ipgeqAyVKllPINNh7Q/XsqbEdcM1BnTl6vJGhLvChY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uo/q2BaQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="192zBdId"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-231f61dc510so748095ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 07:11:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747750291; x=1748355091; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W0V2ESEDZyNB2h5dvIwZaMO3TFNNthEGeGHcq7PS6fo=;
-        b=192zBdIdgKxXO2r+y9SsVACeQHKrmHf5fZBcD8sXXtxreRIbAf/kg21Vq/gyyTfIPE
-         lKy6b5FEbIS4bbcPjVqmIWdF5M/9uR7EK0DkILKRmbXRlQ2mGrm8Rbz4tRqx3IaWtX5n
-         h3ooCFON/Fh4P+fw1OLzO39fZEHAYrlhFIi5qL4WVYqRrVq3bMH8H9z5Uetuffg6UaMi
-         OCteukQQJSqJEUbgw7tDXMBdr+1YpXGGdIgmPkr9Bu5JSGFJv8td8ruY/09/vfsPnWSa
-         +0pjeaWYAGfNHLNG3m17UOo4LYWNGXTXuHA07+Bpe4R1xJ6vDF3lMBkP++MoNex+z+Xt
-         1s8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747750291; x=1748355091;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=W0V2ESEDZyNB2h5dvIwZaMO3TFNNthEGeGHcq7PS6fo=;
-        b=a9/3hg2YgVa9YSeoyxSwACNyejkDitLFzy0ldosv0sytKhoZUXlLQz9oCD09PEaRE2
-         zZK+SFrHSj+u3nPNfFrgUCK9YcHX47Honb5mNuWl/As2ZwwNmlApYlb9tjwf74UmbzB2
-         jTjQl0exVh2EKN+8xPOQCtF658TsqOGAntJTV4p9lN0y9TAPEh0JynPjcmjGMZVIXcFZ
-         1UAtqLrbFvc/BjFVyhdwFMSZWhLhVJAISAfvcSl5/E8BLVBY78EYg+6zjLSbknKuxtkS
-         kcJFRCVOSoxvkeoLFL9FHIJDLBUo87m00nouBUCY45IfE5G04LuMudEzieFtBbOhzKZp
-         tA4A==
-X-Forwarded-Encrypted: i=1; AJvYcCWj+Q20UaKDTt6aVfu48xuZwQYSGog1kz8hX0y1fedzDmKqN1WIDBEGMW3M9km2Qud1qSO4CKSS500OBco=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQX2/t9z312On6VIqCB4xvFiQIKaNSiogCHAeF6UcWIS3Z+1OL
-	gmLgtXeRxTUi482pGFV7XcY04LT/cR0ZsNczc6Lm8nl/gEIYPE4HgR5IVlKKTwgq2TyaNv+hfPI
-	X5e8Nu5ZKH/IxyH2Ho6ZmfD9cXbpjyL0lMFZU8+dL
-X-Gm-Gg: ASbGnctCziWQMePNi1MnYFtVFBK5dOyibwSWPCecH/yrewHeCKQYkheDDjSSIuzf9Me
-	Rl5qZsTH/+Vx03AVXrw6AQfKkIrzwq5va+svJr7AqHr4QNzfMrojF9RwoGDic4Mxrp6L2ikLgBw
-	O7/vhM3MpAupXCP4VMTrFJaWnsBSlQy2/HSoPpA0YTRCJovNLJsa8u8q7ilRHxiHPGKu7s/ZqFf
-	D1xujUgZ8hWOZo=
-X-Google-Smtp-Source: AGHT+IHZOvULWQMabZ1/iUJRuXlrpoOaAagjIY7TcYaquuzrKcD3XGch+6LvlFv8i9o0JrVmoU1rYJj46EvyHPibmqA=
-X-Received: by 2002:a17:903:1b6c:b0:223:f479:3860 with SMTP id
- d9443c01a7336-231ffdc5bb1mr8356255ad.18.1747750290129; Tue, 20 May 2025
- 07:11:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uo/q2BaQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1006C4CEE9;
+	Tue, 20 May 2025 14:11:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747750301;
+	bh=7H0H5peD5j5PaLsy4ojWTCVVazkCP7uOufJFBtYwn4w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Uo/q2BaQbLDQDYWOHIR/wIbPmqGhlaMgw7JEobhcTwm8mhQYXMhTJmsZbtNwqfObz
+	 lNSLhYf0HJSb3BcQvl891i9J2/p30jZ6i3tlh/RzafnQh0fPhPgqFSk0JQ9DXsbcvz
+	 kf9FOcps1fZRzlalC73mOD1/xnGXQExvIkKLdf7ZQU0qmZCbLKevJ8OOM6jjSd1ASm
+	 ZlrUgzrGnoyHL3A2JZs6R0SfBW1uKXwwG4sQlmYaVjDB4JqUqyuaEnQ/bHz3ekNQM+
+	 hQfvUxNG+eVuYhUAivOpODVarYaoi/XvezLluIV5cpXT+RAU4Y1SmBfNQg5h42zNA7
+	 waXymr7+OdYQg==
+Date: Tue, 20 May 2025 10:11:40 -0400
+From: Sasha Levin <sashal@kernel.org>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	Brian Gerst <brgerst@gmail.com>, Ingo Molnar <mingo@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>, tglx@linutronix.de,
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+	x86@kernel.org, nathan@kernel.org, ubizjak@gmail.com,
+	thomas.weissschuh@linutronix.de, llvm@lists.linux.dev
+Subject: Re: [PATCH AUTOSEL 6.14 400/642] x86/relocs: Handle
+ R_X86_64_REX_GOTPCRELX relocations
+Message-ID: <aCyNnFdhBTOby6It@lappy>
+References: <20250505221419.2672473-1-sashal@kernel.org>
+ <20250505221419.2672473-400-sashal@kernel.org>
+ <CAMj1kXF6=t9NoH5Lsh4=RwhUTHtpBt9VmZr3bEVm6=1zGiOf2w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1747264138.git.ackerleytng@google.com> <d3832fd95a03aad562705872cbda5b3d248ca321.1747264138.git.ackerleytng@google.com>
- <CA+EHjTxtHOgichL=UvAzczoqS1608RSUNn5HbmBw2NceO941ng@mail.gmail.com>
- <CAGtprH8eR_S50xDnnMLHNCuXrN2Lv_0mBRzA_pcTtNbnVvdv2A@mail.gmail.com> <CA+EHjTwjKVkw2_AK0Y0-eth1dVW7ZW2Sk=73LL9NeQYAPpxPiw@mail.gmail.com>
-In-Reply-To: <CA+EHjTwjKVkw2_AK0Y0-eth1dVW7ZW2Sk=73LL9NeQYAPpxPiw@mail.gmail.com>
-From: Vishal Annapurve <vannapurve@google.com>
-Date: Tue, 20 May 2025 07:11:17 -0700
-X-Gm-Features: AX0GCFsMvcqcyDCpl08egts_Rk9tmZhsChEdmC9Tx1PSj0Hg70TFTxOoW40ga_M
-Message-ID: <CAGtprH_Evyc7tLhDB0t0fN+BUx5qeqWq8A2yZ5-ijbJ5UJ5f-g@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 04/51] KVM: guest_memfd: Introduce
- KVM_GMEM_CONVERT_SHARED/PRIVATE ioctls
-To: Fuad Tabba <tabba@google.com>
-Cc: Ackerley Tng <ackerleytng@google.com>, kvm@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, x86@kernel.org, linux-fsdevel@vger.kernel.org, 
-	aik@amd.com, ajones@ventanamicro.com, akpm@linux-foundation.org, 
-	amoorthy@google.com, anthony.yznaga@oracle.com, anup@brainfault.org, 
-	aou@eecs.berkeley.edu, bfoster@redhat.com, binbin.wu@linux.intel.com, 
-	brauner@kernel.org, catalin.marinas@arm.com, chao.p.peng@intel.com, 
-	chenhuacai@kernel.org, dave.hansen@intel.com, david@redhat.com, 
-	dmatlack@google.com, dwmw@amazon.co.uk, erdemaktas@google.com, 
-	fan.du@intel.com, fvdl@google.com, graf@amazon.com, haibo1.xu@intel.com, 
-	hch@infradead.org, hughd@google.com, ira.weiny@intel.com, 
-	isaku.yamahata@intel.com, jack@suse.cz, james.morse@arm.com, 
-	jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, jhubbard@nvidia.com, 
-	jroedel@suse.de, jthoughton@google.com, jun.miao@intel.com, 
-	kai.huang@intel.com, keirf@google.com, kent.overstreet@linux.dev, 
-	kirill.shutemov@intel.com, liam.merwick@oracle.com, 
-	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, maz@kernel.org, 
-	mic@digikod.net, michael.roth@amd.com, mpe@ellerman.id.au, 
-	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
-	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
-	paul.walmsley@sifive.com, pbonzini@redhat.com, pdurrant@amazon.co.uk, 
-	peterx@redhat.com, pgonda@google.com, pvorel@suse.cz, qperret@google.com, 
-	quic_cvanscha@quicinc.com, quic_eberman@quicinc.com, 
-	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com, quic_pheragu@quicinc.com, 
-	quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com, richard.weiyang@gmail.com, 
-	rick.p.edgecombe@intel.com, rientjes@google.com, roypat@amazon.co.uk, 
-	rppt@kernel.org, seanjc@google.com, shuah@kernel.org, steven.price@arm.com, 
-	steven.sistare@oracle.com, suzuki.poulose@arm.com, thomas.lendacky@amd.com, 
-	usama.arif@bytedance.com, vbabka@suse.cz, viro@zeniv.linux.org.uk, 
-	vkuznets@redhat.com, wei.w.wang@intel.com, will@kernel.org, 
-	willy@infradead.org, xiaoyao.li@intel.com, yan.y.zhao@intel.com, 
-	yilun.xu@intel.com, yuzenghui@huawei.com, zhiquan1.li@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXF6=t9NoH5Lsh4=RwhUTHtpBt9VmZr3bEVm6=1zGiOf2w@mail.gmail.com>
 
-On Tue, May 20, 2025 at 6:44=E2=80=AFAM Fuad Tabba <tabba@google.com> wrote=
-:
+On Tue, May 06, 2025 at 12:32:05AM +0200, Ard Biesheuvel wrote:
+>On Tue, 6 May 2025 at 00:30, Sasha Levin <sashal@kernel.org> wrote:
+>>
+>> From: Brian Gerst <brgerst@gmail.com>
+>>
+>> [ Upstream commit cb7927fda002ca49ae62e2782c1692acc7b80c67 ]
+>>
+>> Clang may produce R_X86_64_REX_GOTPCRELX relocations when redefining the
+>> stack protector location.  Treat them as another type of PC-relative
+>> relocation.
+>>
+>> Signed-off-by: Brian Gerst <brgerst@gmail.com>
+>> Signed-off-by: Ingo Molnar <mingo@kernel.org>
+>> Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+>> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+>> Link: https://lore.kernel.org/r/20250123190747.745588-6-brgerst@gmail.com
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
 >
-> Hi Vishal,
->
-> On Tue, 20 May 2025 at 14:02, Vishal Annapurve <vannapurve@google.com> wr=
-ote:
-> >
-> > On Tue, May 20, 2025 at 2:23=E2=80=AFAM Fuad Tabba <tabba@google.com> w=
-rote:
-> > >
-> > > Hi Ackerley,
-> > >
-> > > On Thu, 15 May 2025 at 00:43, Ackerley Tng <ackerleytng@google.com> w=
-rote:
-> > > >
-> > > > The two new guest_memfd ioctls KVM_GMEM_CONVERT_SHARED and
-> > > > KVM_GMEM_CONVERT_PRIVATE convert the requested memory ranges to sha=
-red
-> > > > and private respectively.
-> > >
-> > > I have a high level question about this particular patch and this
-> > > approach for conversion: why do we need IOCTLs to manage conversion
-> > > between private and shared?
-> > >
-> > > In the presentations I gave at LPC [1, 2], and in my latest patch
-> > > series that performs in-place conversion [3] and the associated (by
-> > > now outdated) state diagram [4], I didn't see the need to have a
-> > > userspace-facing interface to manage that. KVM has all the informatio=
-n
-> > > it needs to handle conversions, which are triggered by the guest. To
-> > > me this seems like it adds additional complexity, as well as a user
-> > > facing interface that we would need to maintain.
-> > >
-> > > There are various ways we could handle conversion without explicit
-> > > interference from userspace. What I had in mind is the following (as
-> > > an example, details can vary according to VM type). I will use use th=
-e
-> > > case of conversion from shared to private because that is the more
-> > > complicated (interesting) case:
-> > >
-> > > - Guest issues a hypercall to request that a shared folio become priv=
-ate.
-> > >
-> > > - The hypervisor receives the call, and passes it to KVM.
-> > >
-> > > - KVM unmaps the folio from the guest stage-2 (EPT I think in x86
-> > > parlance), and unmaps it from the host. The host however, could still
-> > > have references (e.g., GUP).
-> > >
-> > > - KVM exits to the host (hypervisor call exit), with the information
-> > > that the folio has been unshared from it.
-> > >
-> > > - A well behaving host would now get rid of all of its references
-> > > (e.g., release GUPs), perform a VCPU run, and the guest continues
-> > > running as normal. I expect this to be the common case.
-> > >
-> > > But to handle the more interesting situation, let's say that the host
-> > > doesn't do it immediately, and for some reason it holds on to some
-> > > references to that folio.
-> > >
-> > > - Even if that's the case, the guest can still run *. If the guest
-> > > tries to access the folio, KVM detects that access when it tries to
-> > > fault it into the guest, sees that the host still has references to
-> > > that folio, and exits back to the host with a memory fault exit. At
-> > > this point, the VCPU that has tried to fault in that particular folio
-> > > cannot continue running as long as it cannot fault in that folio.
-> >
-> > Are you talking about the following scheme?
-> > 1) guest_memfd checks shareability on each get pfn and if there is a
-> > mismatch exit to the host.
->
-> I think we are not really on the same page here (no pun intended :) ).
-> I'll try to answer your questions anyway...
->
-> Which get_pfn? Are you referring to get_pfn when faulting the page
-> into the guest or into the host?
+>This patch was one of a series of about 20 patches. Did you pick all of them?
 
-I am referring to guest fault handling in KVM.
+Should we pick them all up?
 
->
-> > 2) host user space has to guess whether it's a pending refcount or
-> > whether it's an actual mismatch.
->
-> No need to guess. VCPU run will let it know exactly why it's exiting.
->
-> > 3) guest_memfd will maintain a third state
-> > "pending_private_conversion" or equivalent which will transition to
-> > private upon the last refcount drop of each page.
-> >
-> > If conversion is triggered by userspace (in case of pKVM, it will be
-> > triggered from within the KVM (?)):
->
-> Why would conversion be triggered by userspace? As far as I know, it's
-> the guest that triggers the conversion.
->
-> > * Conversion will just fail if there are extra refcounts and userspace
-> > can try to get rid of extra refcounts on the range while it has enough
-> > context without hitting any ambiguity with memory fault exit.
-> > * guest_memfd will not have to deal with this extra state from 3 above
-> > and overall guest_memfd conversion handling becomes relatively
-> > simpler.
->
-> That's not really related. The extra state isn't necessary any more
-> once we agreed in the previous discussion that we will retry instead.
-
-Who is *we* here? Which entity will retry conversion?
-
->
-> > Note that for x86 CoCo cases, memory conversion is already triggered
-> > by userspace using KVM ioctl, this series is proposing to use
-> > guest_memfd ioctl to do the same.
->
-> The reason why for x86 CoCo cases conversion is already triggered by
-> userspace using KVM ioctl is that it has to, since shared memory and
-> private memory are two separate pages, and userspace needs to manage
-> that. Sharing memory in place removes the need for that.
-
-Userspace still needs to clean up memory usage before conversion is
-successful. e.g. remove IOMMU mappings for shared to private
-conversion. I would think that memory conversion should not succeed
-before all existing users let go of the guest_memfd pages for the
-range being converted.
-
-In x86 CoCo usecases, userspace can also decide to not allow
-conversion for scenarios where ranges are still under active use by
-the host and guest is erroneously trying to take away memory. Both
-SNP/TDX spec allow failure of conversion due to in use memory.
-
->
-> This series isn't using the same ioctl, it's introducing new ones to
-> perform a task that as far as I can tell so far, KVM can handle by
-> itself.
-
-I would like to understand this better. How will KVM handle the
-conversion process for guest_memfd pages? Can you help walk an example
-sequence for shared to private conversion specifically around
-guest_memfd offset states?
-
->
-> >  - Allows not having to keep track of separate shared/private range
-> > information in KVM.
->
-> This patch series is already tracking shared/private range information in=
- KVM.
->
-> >  - Simpler handling of the conversion process done per guest_memfd
-> > rather than for full range.
-> >      - Userspace can handle the rollback as needed, simplifying error
-> > handling in guest_memfd.
-> >  - guest_memfd is single source of truth and notifies the users of
-> > shareability change.
-> >      - e.g. IOMMU, userspace, KVM MMU all can be registered for
-> > getting notifications from guest_memfd directly and will get notified
-> > for invalidation upon shareability attribute updates.
->
-> All of these can still be done without introducing a new ioctl.
->
-> Cheers,
-> /fuad
+-- 
+Thanks,
+Sasha
