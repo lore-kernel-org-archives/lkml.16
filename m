@@ -1,135 +1,201 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E141B67A
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 03:31:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 000DF253F3B;
+	Tue, 20 May 2025 03:32:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747711907; cv=none; b=sgShQZtXhAxdWbDnTen7vFEXUi/JobUwc7ybExK6VLcz58xyEj2l8UQ7VU+OVwrtnq0C5X1sUkI+CHe+2sDV5E2RPkVKyWZL2TZFCam0kvwo5t83weAd9hOL/wTVTqEOc8GI4VDOHp8HzcIlZJjXqE2kd1+JTDUP8yL4mo96ctY=
+	t=1747711924; cv=none; b=XYXdeIVXj3N9eR8EWZPF3Y+otPO0BbUqPzXxJEtZwd5GpAtYV4c43nRuk1n6XvBgTVsnnatu7p/YqXlbPld+Jb/NoaLfkpyiGTocSo9rdNyR4SqnbEfKSXUmRfYmAXtr5WB513tO0CPmSwamR2GCJ/EdizgEs7y9J1gkNMJKY3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747711907; c=relaxed/simple;
-	bh=X8ZE0IMD4f4Zvcmg0Nlq+WAKM12IVgif4WUOWd/lCqA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=k8ddVy+pQR94Jw1+grYR0E3GmRs9dkuFyRb0lVrVVT02ZhgNvHsjgjBchVBytC0djoNEAvXtfM/tUxI1SxBTOO8qF3pELejB2z5miv7aeCIObxe9xnrCzKbkkxq7ms2xoOlVunvrqFYbarpUojBCb2LVo8JXseHwe7MrSRQXHVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S+dQvhIJ; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747711924; c=relaxed/simple;
+	bh=7uAagP8R5nYG++boL0qLzn70Ikc+MfotszTo32MHa8Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ejkDXm837c8RWEHihR5g0rNt0EbvsRDo0QO0vu9G5UuDsPw+AMAFcTfdwL0Lp1/HNyxro7nmTS3tQRIvKgw1J0GgCJX+rQLWtKXrCe2REzUy/jczLhqrIqWQ5NG76A2U+sGhg4OamEbQmMPOKUqtQRPBs9e8efKDd+ajKzP1AxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=GmAQUsI9; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S+dQvhIJ"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-3292aad800aso885341fa.0
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 20:31:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747711903; x=1748316703; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Uj5duSIn2gmfsncTogIgvyhtWkcPgMLCLHq+csGoNcE=;
-        b=S+dQvhIJdg0avb20qkpeYcIy98CKQjSdHbq6APfszsCtOZFX4C1OJd9yOrfySHRF85
-         ORd3RYI1cPe3dLTiCMUHpUGN+idS+rUMjFao5T7qcXrLsl02Symd41dF+n5nxaYQbn+3
-         62fgCksVwxdjVDr/6rJYidWYVHJmqJsrPTY28BwM3GMQ6o/FEiwnc0DvLSbYO83YUjVb
-         s06eZyyKJhz66JXRW6VPo1pehaKuP9GCaJRlx0HXHmRnLHIgFzH9xiEUOKFHrwh3W3IF
-         vy8wOAWbtfcvxZ6R5EMI5eXUeuOlosc1MKYcRy+grhrEy6WUdc2es8PQt1EuyKVPFP25
-         SNdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747711903; x=1748316703;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Uj5duSIn2gmfsncTogIgvyhtWkcPgMLCLHq+csGoNcE=;
-        b=bxWri+rX+tmI2bK97wo32D7qEKY73DqBAfNIacAC/8BMkGfgxJACkNyb+IdLu059PG
-         8aWtPbqEa0ZuK1zaC5+UirhfKwFxKbUpUD+4bChNlBuNJ8ghysJPg281MmY0XMwaYiCw
-         WZq6DxyaYIE3pic5iak564UwKLEXYdpSUsRsCOYuuGGfzikRWBwxzAUK9hWeTrgazxet
-         DTJHtE2TZl8vxM1NpJdSfxPjLGgtrvuUGuAV4P5q6eu3AyrdXNuSFSMEQACNlXctC/FJ
-         pGJpBsljbGjjhST1QzUulYJ+XdQ9pQyCVyUAcvdhshR4yMqiusSztDjYwnARneIeLa0j
-         ZJKw==
-X-Forwarded-Encrypted: i=1; AJvYcCXDNg/yHEknNSMxWRjJ5gD24VoCxXrGekq7BSeiDZRHjVLRNNslhR+ih5/1QJys67VWs2FLx4lGqbT4DGk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YypMUz0cM/33cCeYLhe/j/z2xcwyRi/srK/NaLIi2YOt//2C7c2
-	R8f1PkmtqTBk8gl8OLXpEDJPEtMf6evUKyOwafofqhBmBfQ3IK1TmoGrVZcy7LGau/1fMPDjXiF
-	bkCGKv9N4wQgV2fPHRiYA4Z1HXl7EwtM=
-X-Gm-Gg: ASbGncvwGSCf1CmpO4K/LE5JE/V8+YFWQ+f7fngFj42tKSDI/405Zngy3gZfx8QKlcU
-	yH1KzcSgy5kOfKr59w/CGqZPBnLjXJMEK9OHIIAAvlOW4bCYiqS0ptrttiLQ3mL+xpx6SO38sbt
-	4TGUnXWsKgnRgK31tO99bsA67PgwUEUtXK
-X-Google-Smtp-Source: AGHT+IHOwNV/ROHaarvVVjjxiHBO8PcJTHdlYpa18GYBvmtjxh0w7NDl/facyDKOPJX60enKUhk0dIKsPlTY5Qlgdo8=
-X-Received: by 2002:a05:651c:50e:b0:329:1f6a:3222 with SMTP id
- 38308e7fff4ca-3291f6a3460mr18368461fa.7.1747711903077; Mon, 19 May 2025
- 20:31:43 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="GmAQUsI9"
+Received: by linux.microsoft.com (Postfix, from userid 1127)
+	id 4F0FB2067884; Mon, 19 May 2025 20:32:02 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4F0FB2067884
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1747711922;
+	bh=fA8qx9+0rF8iQR8ecGm4xRCN9Y4os0RUn9COBgB/VJc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GmAQUsI9gHwD/vb3P4NK37JSBdE97JwJnzoW6/+7fuPnCHoYl1MxoFlgxNbY4CVRU
+	 lbhUxTUC0MruxBogOwUdB2V6pGLc6hojLaWlSNfjTi1TeEK6y24obk+6dr0uVJCC8M
+	 eOz582tOJCS4bxVwCWT1yKIVNov2zRbSWNXMkajw=
+Date: Mon, 19 May 2025 20:32:02 -0700
+From: Saurabh Singh Sengar <ssengar@linux.microsoft.com>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: Saurabh Singh Sengar <ssengar@microsoft.com>,
+	KY Srinivasan <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>, "deller@gmx.de" <deller@gmx.de>,
+	"javierm@redhat.com" <javierm@redhat.com>,
+	"arnd@arndb.de" <arnd@arndb.de>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [EXTERNAL] [PATCH 1/1] Drivers: hv: Always select CONFIG_SYSFB
+ for Hyper-V guests
+Message-ID: <20250520033202.GA30215@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20250516235820.15356-1-mhklinux@outlook.com>
+ <KUZP153MB144472E667B0C1A421B49285BE92A@KUZP153MB1444.APCP153.PROD.OUTLOOK.COM>
+ <SN6PR02MB41575C18EA832E640484A02CD492A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <20250517161407.GA30678@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <SN6PR02MB41574848C3351DD1673A2855D492A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <20250519165454.GA11708@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <SN6PR02MB4157FD9AB9114C8DD6FF4B82D49FA@SN6PR02MB4157.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250514201729.48420-6-ryncsn@gmail.com> <20250519043847.1806-1-21cnbao@gmail.com>
-In-Reply-To: <20250519043847.1806-1-21cnbao@gmail.com>
-From: Kairui Song <ryncsn@gmail.com>
-Date: Tue, 20 May 2025 11:31:25 +0800
-X-Gm-Features: AX0GCFvroQlyfTT8oJOQql283cMjz0f6cqhQDOST_Liy09pVOHKGMSiyGdGMOEw
-Message-ID: <CAMgjq7BpfueOn9ms8apRX-6dF8rZGtbC=MuZzSD7hbZxtw=Kdg@mail.gmail.com>
-Subject: Re: [PATCH 05/28] mm, swap: sanitize swap cache lookup convention
-To: Barry Song <21cnbao@gmail.com>
-Cc: akpm@linux-foundation.org, baohua@kernel.org, 
-	baolin.wang@linux.alibaba.com, bhe@redhat.com, chrisl@kernel.org, 
-	david@redhat.com, hannes@cmpxchg.org, hughd@google.com, 
-	kaleshsingh@google.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	nphamcs@gmail.com, ryan.roberts@arm.com, shikemeng@huaweicloud.com, 
-	tim.c.chen@linux.intel.com, willy@infradead.org, ying.huang@linux.alibaba.com, 
-	yosryahmed@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SN6PR02MB4157FD9AB9114C8DD6FF4B82D49FA@SN6PR02MB4157.namprd02.prod.outlook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Mon, May 19, 2025 at 12:38=E2=80=AFPM Barry Song <21cnbao@gmail.com> wro=
-te:
->
-> > From: Kairui Song <kasong@tencent.com>
->
-> > diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
-> > index e5a0db7f3331..5b4f01aecf35 100644
-> > --- a/mm/userfaultfd.c
-> > +++ b/mm/userfaultfd.c
-> > @@ -1409,6 +1409,10 @@ static int move_pages_pte(struct mm_struct *mm, =
-pmd_t *dst_pmd, pmd_t *src_pmd,
-> >                               goto retry;
-> >                       }
-> >               }
-> > +             if (!folio_swap_contains(src_folio, entry)) {
-> > +                     err =3D -EBUSY;
-> > +                     goto out;
-> > +             }
->
-> It seems we don't need this. In move_swap_pte(), we have been checking pt=
-e pages
-> are stable:
->
->         if (!is_pte_pages_stable(dst_pte, src_pte, orig_dst_pte, orig_src=
-_pte,
->                                  dst_pmd, dst_pmdval)) {
->                 double_pt_unlock(dst_ptl, src_ptl);
->                 return -EAGAIN;
->         }
+On Tue, May 20, 2025 at 02:07:48AM +0000, Michael Kelley wrote:
+> From: Saurabh Singh Sengar <ssengar@linux.microsoft.com> Sent: Monday, May 19, 2025 9:55 AM
+> > 
+> > On Sat, May 17, 2025 at 06:47:22PM +0000, Michael Kelley wrote:
+> > > From: Saurabh Singh Sengar <ssengar@linux.microsoft.com> Sent: Saturday, May 17, 2025 9:14 AM
+> > > >
+> > > > On Sat, May 17, 2025 at 01:34:20PM +0000, Michael Kelley wrote:
+> > > > > From: Saurabh Singh Sengar <ssengar@microsoft.com> Sent: Friday, May 16, 2025 9:38 PM
+> > > > > >
+> > > > > > > From: Michael Kelley <mhklinux@outlook.com>
+> > > > > > >
+> > > > > > > The Hyper-V host provides guest VMs with a range of MMIO addresses that
+> > > > > > > guest VMBus drivers can use. The VMBus driver in Linux manages that MMIO
+> > > > > > > space, and allocates portions to drivers upon request. As part of managing
+> > > > > > > that MMIO space in a Generation 2 VM, the VMBus driver must reserve the
+> > > > > > > portion of the MMIO space that Hyper-V has designated for the synthetic
+> > > > > > > frame buffer, and not allocate this space to VMBus drivers other than graphics
+> > > > > > > framebuffer drivers. The synthetic frame buffer MMIO area is described by
+> > > > > > > the screen_info data structure that is passed to the Linux kernel at boot time,
+> > > > > > > so the VMBus driver must access screen_info for Generation 2 VMs. (In
+> > > > > > > Generation 1 VMs, the framebuffer MMIO space is communicated to the
+> > > > > > > guest via a PCI pseudo-device, and access to screen_info is not needed.)
+> > > > > > >
+> > > > > > > In commit a07b50d80ab6 ("hyperv: avoid dependency on screen_info") the
+> > > > > > > VMBus driver's access to screen_info is restricted to when CONFIG_SYSFB is
+> > > > > > > enabled. CONFIG_SYSFB is typically enabled in kernels built for Hyper-V by
+> > > > > > > virtue of having at least one of CONFIG_FB_EFI, CONFIG_FB_VESA, or
+> > > > > > > CONFIG_SYSFB_SIMPLEFB enabled, so the restriction doesn't usually affect
+> > > > > > > anything. But it's valid to have none of these enabled, in which case
+> > > > > > > CONFIG_SYSFB is not enabled, and the VMBus driver is unable to properly
+> > > > > > > reserve the framebuffer MMIO space for graphics framebuffer drivers. The
+> > > > > > > framebuffer MMIO space may be assigned to some other VMBus driver, with
+> > > > > > > undefined results. As an example, if a VM is using a PCI pass-thru NVMe
+> > > > > > > controller to host the OS disk, the PCI NVMe controller is probed before any
+> > > > > > > graphic devices, and the NVMe controller is assigned a portion of the
+> > > > > > > framebuffer MMIO space.
+> > > > > > > Hyper-V reports an error to Linux during the probe, and the OS disk fails to
+> > > > > > > get setup. Then Linux fails to boot in the VM.
+> > > > > > >
+> > > > > > > Fix this by having CONFIG_HYPERV always select SYSFB. Then the VMBus
+> > > > > > > driver in a Gen 2 VM can always reserve the MMIO space for the graphics
+> > > > > > > framebuffer driver, and prevent the undefined behavior.
+> > > > > >
+> > > > > > One question: Shouldn't the SYSFB be selected by actual graphics framebuffer driver
+> > > > > > which is expected to use it. With this patch this option will be enabled irrespective
+> > > > > > if there is any user for it or not, wondering if we can better optimize it for such systems.
+> > > > > >
+> > > > >
+> > > > > That approach doesn't work. For a cloud-based server, it might make
+> > > > > sense to build a kernel image without either of the Hyper-V graphics
+> > > > > framebuffer drivers (DRM_HYPERV or HYPERV_FB) since in that case the
+> > > > > Linux console is the serial console. But the problem could still occur
+> > > > > where a PCI pass-thru NVMe controller tries to use the MMIO space
+> > > > > that Hyper-V intends for the framebuffer. That problem is directly tied
+> > > > > to CONFIG_SYSFB because it's the VMBus driver that must treat the
+> > > > > framebuffer MMIO space as special. The absence or presence of a
+> > > > > framebuffer driver isn't the key factor, though we've been (incorrectly)
+> > > > > relying on the presence of a framebuffer driver to set CONFIG_SYSFB.
+> > > > >
+> > > >
+> > > > Thank you for the clarification. I was concerned because SYSFB is not currently
+> > > > enabled in the OpenHCL kernel, and our goal is to keep the OpenHCL configuration
+> > > > as minimal as possible. I haven't yet looked into the details to determine
+> > > > whether this might have any impact on the kernel binary size or runtime memory
+> > > > usage. I trust this won't affect negatively.
+> > > >
+> > > > OpenHCL Config Ref:
+> > > > https://github.com/microsoft/OHCL-Linux-Kernel/blob/product/hcl-main/6.12/Microsoft/hcl-x64.config
+> > > >
+> > >
+> > > Good point.
+> > >
+> > > The OpenHCL code tree has commit a07b50d80ab6 that restricts the
+> > > screen_info to being available only when CONFIG_SYSFB is enabled.
+> > > But since OpenHCL in VTL2 gets its firmware info via OF instead of ACPI,
+> > > I'm unsure what the Hyper-V host tells it about available MMIO space,
+> > > and whether that space includes MMIO space for a framebuffer. If it
+> > > doesn't, then OpenHCL won't have the problem I describe above, and
+> > > it won't need CONFIG_SYSFB. This patch could be modified to do
+> > >
+> > > select SYSFB if !HYPERV_VTL_MODE
+> > 
+> > I am worried that this is not very scalable, there could be more such
+> > Hyper-V systems in future.
+> 
+> I could see scalability being a problem if there were 20 more such
+> Hyper-V systems in the future. But if there are just 2 or 3 more, that
+> seems like it would be manageable.
+> 
+> Regardless, I'm OK with doing this with or without the
+> "if !HYPERV_VTL_MODE". I don't think we should just drop this
+> entirely. When playing around with various framebuffers drivers
+> a few weeks back, I personally encountered the problem of having
+> built a kernel that wouldn't boot in an Azure VM with an NVMe OS
+> disk. I couldn't figure out why probing the NVMe controller failed.
+> It took me an hour to sort out what was happening, and I was
+> familiar with the Hyper-V PCI driver. I'd like to prevent such a
+> problem from happening to someone else.
 
-The tricky part is when swap_cache_get_folio returns the folio, both
-folio and ptes are unlocked. So is it possible that someone else
-swapped in the entries, then swapped them out again using the same
-entries?
+I agree we want to fix this.
 
-The folio will be different here but PTEs are still the same value to
-they will pass the is_pte_pages_stable check, we previously saw
-similar races with anon fault or shmem. I think more strict checking
-won't hurt here.
+> 
+> > 
+> > >
+> > > Can you find out what MMIO space Hyper-V provides to VTL2 via OF?
+> > > It would make sense if no framebuffer is provided. And maybe
+> > > screen_info itself is not set up when VTL2 is loaded, which would
+> > > also make adding CONFIG_SYSFB pointless for VTL2.
+> > 
+> > I can only see below address range passed for MMIO to VMBus driver:
+> > ranges = <0x0f 0xf0000000 0x0f 0xf0000000 0x10000000>;
+> 
+> I'm guessing the above text is what shows up in DT?  I'm not sure
+> how to interpret it. In normal guests, Hyper-V offers a "low MMIO"
+> range that is below the 4 GiB line, and a "high MMIO" range that
+> is just before the 64 GiB line. In a normal guest in Azure, I see the
+> MLX driver using 0xfc0000000, which would be just below the 64 GiB
+> line, and in the "high MMIO" range. The "0x0f 0xf0000000" in DT might
+> be physical address 0xff0000000, which is consistent with the
+> "high MMIO" range.  I'm not sure how to interpret the second
+> occurrence of "0xf 0xf0000000".  I'm guessing the 0x10000000
+> (256 Mib) is the length of the available range, which would also
+> make sense.
+> 
+> The framebuffer address is always in the "low MMIO" range. So
+> if my interpretation is anywhere close to correct, DT isn't
+> specifying any MMIO space for a framebuffer, and there's
+> no need for CONFIG_SYSFB in a kernel running in VTL2.
+> 
+> What's your preference for how to proceed? Adding CONFIG_SYSFB
+> probably *will* increase the kernel code size, but I don't know
+> by how much. I can do a measurement.
 
->
-> Also, -EBUSY is somehow incorrect error code.
+My primary preference is to ensure that OpenHCL remains unaffected.
+And since there are no better alternatives I can think of, I am fine
+proceeding with !HYPERV_VTL_MODE
 
-Yes, thanks, I'll use EAGAIN here just like move_swap_pte.
+with that,
+Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
 
-
->
-> >               err =3D move_swap_pte(mm, dst_vma, dst_addr, src_addr, ds=
-t_pte, src_pte,
-> >                               orig_dst_pte, orig_src_pte, dst_pmd, dst_=
-pmdval,
-> >                               dst_ptl, src_ptl, src_folio);
-> >
->
-> Thanks
-> Barry
+- Saurabh
