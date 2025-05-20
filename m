@@ -1,67 +1,67 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4342625D8F7
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 08:05:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B076E21323C
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 08:06:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747728352; cv=none; b=BDgMQN7Rkx72JgbUzTbAaw17VMzOuJKSYsnUPzdNzY4VHm2gsCKNoRWVbaxF8B1q4bErToWmIG5LEsJNRR0/ywuZqA2PduOH2pcuXjkjHHIoUlJNmSXb1XboJjAUglWOTEDkLzWLoaE+xk2TAhHqJl6wh5Zg8BN/cGoBszLcq+w=
+	t=1747728375; cv=none; b=oXCu14NSK4zkBye0wVqPK7a1tjme+g1yQQV8u3sERohrF/ALI8ByMXfr44ijLALZ5r2RFrb6wIgbML2HoIR1cCYaQro9I4k8NpLimj4jcPy/FI/Y1eLv/HZO8GhDS6ZTgomD3RAGy8g5WuXdRkWaNqoxLQsAeyAxE6HklFsTfMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747728352; c=relaxed/simple;
-	bh=j4Y1lSzS/S3Lafdm6+QHQInQAjqnePQVzmbNZ55iDkY=;
+	s=arc-20240116; t=1747728375; c=relaxed/simple;
+	bh=qpuDQxaClm3z8be941HXqyX9wybTje6vApNBaYOJC6Y=;
 	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=pbKeRC9Ns5adyVnI49QtnLUse20KhWfMrGMuXAC9Wfk8sODNn0AfrRs+N2hJjctJ22eBXI8P7d+p/s5vsAo3126d1pLw95JT1lBbWbs21HPjy6EDdCGHIZEx5nB5LMMWphcdHgwqb8ANZ31EMJDY6zL4b/mRz3P4V8ujcnAx93E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AMv9aklp; arc=none smtp.client-ip=209.85.128.51
+	 In-Reply-To:Content-Type; b=JRr5qJ8Vki0npKhAO4pGyhMRsfYkt8cHW5Oagn/fgpk5myHz+E46KHRikPkRJ2wbuhQhZ3C6lz3UxNvEMmfu/WK3bhpfggRFf0Byh2gry1ROjyJV+ffclw6toFyp8+JCe4vK7nhSM0t8oEdGhMcG9kCyhL17bTvQ8duBY/mDWNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=El0bxGAf; arc=none smtp.client-ip=209.85.221.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AMv9aklp"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-442eb5d143eso52510595e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 01:05:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="El0bxGAf"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a36ab95a13so1445250f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 01:06:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747728348; x=1748333148; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1747728371; x=1748333171; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=LW4SBb8OdXfVHCDYjECI0HT6Bc340yiVBy2FcDLH3TI=;
-        b=AMv9aklpX8eMHzwmjcMlkCfJvjvem5Qo2b0QTSSlcLGb3yEGSQZ0464NBOnD/+URm0
-         Tl+yOKu+aN8PgOWKRIFVYW6o+r9IfxB3swsyimRf9nKIFcu1qzMZ8P4Gk9EEdburhKUE
-         aYrj7+QOIL1Yk4mz6/au9t0d1UBHDaOhlAB8P13/82xMrga6oUxSj34WpG/tGNrQPIaf
-         PHgrzt2tCSjd0o5ybr6nNYg0PuV8w5QQWjNLmmyAihYWRFJO5mslYAW+XF8r746/dmWd
-         yjeg/XcLVvIuQsJTkNfEIHUMPl3/kGfi3xdsgZ83RCN2/G9nJOLpANe+ALXM5VM/E/RZ
-         RTIw==
+        bh=f53RxOyUNbfIYGKYJrh6m3a+cJ+2EHowRMXuSk1JA5w=;
+        b=El0bxGAf2vmOasbVy2CUfYg//mQ6QR8f/A6J+fuTXLocnOTtmoaHlM+tPtIwRLMiyo
+         qerVm1zXcZMbsUvMbs9qZVxltQO0IRMIW2bvR0AsRPd3mJf1mx7/J2Elqn9nMmbm5JeB
+         2Y4Q4jt5yTn50rAlNeJd7Q3edwl7lUjgWG7PyjSIE3bYBSnL4i+bkWa38rqyQ1UaSCpl
+         r4MvgLvdTCXHmE1KWHsS8AvamgtN1wVQLpoWjyv+3m8ZI25SouKjoBCVF5Mz9VrwKj85
+         Z67d4EhNAYOCl3xGmfkSBNK7n5nV91hIwb3x+VqyTqjNDrjJwbaheIOae01YJdqBReCI
+         4yWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747728348; x=1748333148;
+        d=1e100.net; s=20230601; t=1747728371; x=1748333171;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=LW4SBb8OdXfVHCDYjECI0HT6Bc340yiVBy2FcDLH3TI=;
-        b=LzacOXf6pATeYSUFrGckh6+8riZVSFQM0bw1E8dsMy9xFzllDEZ1ykvXx58i0jghwB
-         7tStUlwGl0j7KtfI6uZMJao8GhAR1EyXSLSqrRtKjAWn7ZY36j77L1bhqKcAA85T3A/8
-         VOuQc/z5EVf+54prjbzQcG0mF6rNHiTHmvIhanfbUnibmCDjKgncxdyvVUgavj4HEQCg
-         7CU1//DQjxSTFTzQVnGBcbGP1eT8DFZT8ptIdTts3CPtMC3MTFj2ErjTBMf+OF+X0IXH
-         8UgjGJvgUT9KL99329WT9mB1+JtJ1DX4nzUrZXnWIImLmhTD1RCoz1C9gpZCHZUU7kI0
-         4j4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVWWOwZhrzfAWveXVtIraA8IlJ5ioMjbHXaXLnqJdDvAxgBM7bIBLjIkcIhn2KqCWaG0R8Nz+Ko9PcxMVY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1alzG9hRNvHiTvM5uFGCJuPTEF7kILAvDk2tB1AWIIPzh/MBm
-	gvCnW3n5lWOTHcv4l54EYonZ1gVxXJD0x1GKiygXSdIa/boFvUOc1LtQT5krp3DiMik=
-X-Gm-Gg: ASbGncswcigLvALE9E4SZOU2Hsvi/XuIeVUF5ybeWBxEmRyIdoLHzTQXXTAKBK3vrES
-	mIwjy8CGDVEV4+T/dSNUWEw/jqk69jEeLmQvm1oq+NvpaAfh4BuB9rKFiGW2REAuQFDe0bEMfih
-	4GmAJh3fU2+nKll1Myt3FkBlpf3PIWV+gZH/6e4x5hky0EOy2YKtv3EjUadEXSXnxSmikWUTnYw
-	AOE0GYdKp5yqgZzxyC8fcOBgin2tJPjkMj4e4sCCjhL8Gwclm+n2VF8VfPt1KQubdBm+wuSCB3Q
-	IFCdEmk8BJmh0oT6Tv5flvxuFkCqy7lvVtZK+RkbUeeYNEWWbUvtzSz9/VdOiaYu5jWiZlH52sq
-	1BCfy3V3mkDA84Q/avNNN2SQx4bH/
-X-Google-Smtp-Source: AGHT+IE7kWMfshowMacPc017b313QcFKe4fD0gGGNCCmPlmLikmttBbY7CVV+/dDiL/UigiKXTVs+A==
-X-Received: by 2002:a05:600c:3d18:b0:43d:fa59:a685 with SMTP id 5b1f17b1804b1-442fd672e0emr116929485e9.33.1747728348473;
-        Tue, 20 May 2025 01:05:48 -0700 (PDT)
+        bh=f53RxOyUNbfIYGKYJrh6m3a+cJ+2EHowRMXuSk1JA5w=;
+        b=siN0B2HTjE/hpeUgQOFxRO3Z9o69d7k2cLSOXX028yYbAyyNtjllvvIcsZH1tfl6Yv
+         Q3oDAONYCwOVWoJ+i7fQT7HrOrVQdc6EiByIUV2Uko3djjGrn+p8x6srl9bEq0wYehvU
+         4YZT7QHYmsuj4VjcFkZGU5OwYumL8+3oI88eNRg2gzOLVaHIo5rRWTNJFj6romlPzigv
+         VrGA5zKrw4W9vo/Etw0piDssDWEtRa8FwBBQmBa3Fczx5hlycqSsGLGgCl3U9D8CnPK3
+         Fgr0f+G85etLEpLYqj94J7bc0w6vbRCCB9WDSwyKKCOmqBDX4/lrgKJypFur3kG63dkp
+         jg9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVK7ZnVIdjyyP5l5Fc0LMOCRaD5YHyuMq/vyLr84UWRzo7MzxmahqmnzDZUifVKvkwEPzDTnciEah77Vcw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yziw3FQQSwzvzkn610j/60LrKbj20P0qJB9qJwyUlc1IgN5GQaO
+	n5dFFbT69J4U8FaKN+PJFbWxtxrowTkGBcnbl0h8kUCDnU79oZ6sJ/CPXcWpPK5oye8=
+X-Gm-Gg: ASbGncu3dCHdJH+EjQXo1OeT/TZXM8WvyjsQdmUGl0HWMEpPvuZHMa5LtLCxMbXicLW
+	Zibno++G28AIpe9Yh/8GIZz2bJCzXyoYBatL345mjECiONcmsmHoBUeqnwL/nSux8nKanN2R77I
+	o/YBPNYyyJQrLiI73ILn9uWY+JdYHbSicVTLiPFb8/Zby2xCjwzZZyLPBocushZ1exzzD+QIOEp
+	lwSp/yEDHFQ0p3M7/VUx0jDuc0q3tIe8QuyBbSTa6LChBuYCD/aMdVfmlhuEidX9HYJXT8iz8QT
+	FefCB8hkLkvRDcrze4FxyqPOYLdki5nxe22QI7LIzaPtlrmQ7njfrbsNhgRpb4l1IEjTvSgNZOC
+	0nu6yCVvr78YB//b6P9K05LUxqxlp
+X-Google-Smtp-Source: AGHT+IFU/KqkjaZqWA96xVqbCJbAg44BaTwi9c9qATMvcmY51YXkMbr1hDQrWO7pjZhFY+VTnRD6RQ==
+X-Received: by 2002:a05:6000:4284:b0:3a3:5da4:d80b with SMTP id ffacd0b85a97d-3a3601db731mr12950882f8f.49.1747728370901;
+        Tue, 20 May 2025 01:06:10 -0700 (PDT)
 Received: from ?IPV6:2a01:e0a:3d9:2080:fb2e:6266:4e39:ce68? ([2a01:e0a:3d9:2080:fb2e:6266:4e39:ce68])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f6b2979fsm21442065e9.1.2025.05.20.01.05.47
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f23bfdd9sm20643995e9.18.2025.05.20.01.06.10
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 May 2025 01:05:48 -0700 (PDT)
-Message-ID: <a48be7fd-ac34-4829-b423-ae7d62034b43@linaro.org>
-Date: Tue, 20 May 2025 10:05:47 +0200
+        Tue, 20 May 2025 01:06:10 -0700 (PDT)
+Message-ID: <193195a8-1e84-4ec6-aa3e-a02d00bd142c@linaro.org>
+Date: Tue, 20 May 2025 10:06:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,8 +71,7 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 From: neil.armstrong@linaro.org
 Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH v4 30/30] drm/msm/dpu: move features out of the
- DPU_HW_BLK_INFO
+Subject: Re: [PATCH v4 05/30] drm/msm/dpu: inline _setup_dspp_ops()
 To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
  Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
  Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>,
@@ -82,7 +81,7 @@ Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
  freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
  Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 References: <20250519-dpu-drop-features-v4-0-6c5e88e31383@oss.qualcomm.com>
- <20250519-dpu-drop-features-v4-30-6c5e88e31383@oss.qualcomm.com>
+ <20250519-dpu-drop-features-v4-5-6c5e88e31383@oss.qualcomm.com>
 Content-Language: en-US, fr
 Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
@@ -109,237 +108,49 @@ Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
  QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
 Organization: Linaro
-In-Reply-To: <20250519-dpu-drop-features-v4-30-6c5e88e31383@oss.qualcomm.com>
+In-Reply-To: <20250519-dpu-drop-features-v4-5-6c5e88e31383@oss.qualcomm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 19/05/2025 18:04, Dmitry Baryshkov wrote:
 > From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 > 
-> As features bits are now unused by some of the hardware block
-> configuration structures, remove the 'features' from the DPU_HW_BLK_INFO
-> so that it doesn't get included into hw info structures by default and
-> only include it when necessary.
+> Inline the _setup_dspp_ops() function, it makes it easier to handle
+> different conditions involving DSPP configuration.
 > 
 > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 > ---
->   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_3_sm6150.h |  1 -
->   drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_4_sm6125.h |  1 -
->   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h         | 17 +++++++----------
->   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dsc_1_2.c         |  5 ++---
->   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_merge3d.c         |  5 ++---
->   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_top.c             |  4 ++--
->   6 files changed, 13 insertions(+), 20 deletions(-)
+>   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dspp.c | 10 ++--------
+>   1 file changed, 2 insertions(+), 8 deletions(-)
 > 
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_3_sm6150.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_3_sm6150.h
-> index a065f102ce592311376f1186add7a47dca7fd84f..26883f6b66b3e506d14eeb1c0bd64f556d19fef8 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_3_sm6150.h
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_3_sm6150.h
-> @@ -20,7 +20,6 @@ static const struct dpu_caps sm6150_dpu_caps = {
->   static const struct dpu_mdp_cfg sm6150_mdp = {
->   	.name = "top_0",
->   	.base = 0x0, .len = 0x45c,
-> -	.features = 0,
->   	.clk_ctrls = {
->   		[DPU_CLK_CTRL_VIG0] = { .reg_off = 0x2ac, .bit_off = 0 },
->   		[DPU_CLK_CTRL_DMA0] = { .reg_off = 0x2ac, .bit_off = 8 },
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_4_sm6125.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_4_sm6125.h
-> index 2950245e7b3f5e38f3f501a7314bb97c66d05982..fbf50f279e6628cb0f92b0188e1fbdf156a899e2 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_4_sm6125.h
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_4_sm6125.h
-> @@ -22,7 +22,6 @@ static const struct dpu_caps sm6125_dpu_caps = {
->   static const struct dpu_mdp_cfg sm6125_mdp = {
->   	.name = "top_0",
->   	.base = 0x0, .len = 0x45c,
-> -	.features = 0,
->   	.clk_ctrls = {
->   		[DPU_CLK_CTRL_VIG0] = { .reg_off = 0x2ac, .bit_off = 0 },
->   		[DPU_CLK_CTRL_DMA0] = { .reg_off = 0x2ac, .bit_off = 8 },
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-> index d51f6c5cdf62f3c00829167172ef6fd61f069986..47d82b83ac5378cb0001b3ea6605dc0f98aec5ef 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-> @@ -154,14 +154,12 @@ enum {
->    * @id:                enum identifying this block
->    * @base:              register base offset to mdss
->    * @len:               length of hardware block
-> - * @features           bit mask identifying sub-blocks/features
->    */
->   #define DPU_HW_BLK_INFO \
->   	char name[DPU_HW_BLK_NAME_LEN]; \
->   	u32 id; \
->   	u32 base; \
-> -	u32 len; \
-> -	unsigned long features
-> +	u32 len
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dspp.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dspp.c
+> index 829ca272873e45b122c04bea7da22dc569732e10..0f5a74398e66642fba48c112db41ffc75ae2a79f 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dspp.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dspp.c
+> @@ -63,13 +63,6 @@ static void dpu_setup_dspp_pcc(struct dpu_hw_dspp *ctx,
+>   	DPU_REG_WRITE(&ctx->hw, base, PCC_EN);
+>   }
 >   
+> -static void _setup_dspp_ops(struct dpu_hw_dspp *c,
+> -		unsigned long features)
+> -{
+> -	if (test_bit(DPU_DSPP_PCC, &features))
+> -		c->ops.setup_pcc = dpu_setup_dspp_pcc;
+> -}
+> -
 >   /**
->    * struct dpu_scaler_blk: Scaler information
-> @@ -376,7 +374,6 @@ struct dpu_clk_ctrl_reg {
->   /* struct dpu_mdp_cfg : MDP TOP-BLK instance info
->    * @id:                index identifying this block
->    * @base:              register base offset to mdss
-> - * @features           bit mask identifying sub-blocks/features
->    * @clk_ctrls          clock control register definition
->    */
->   struct dpu_mdp_cfg {
-> @@ -392,6 +389,7 @@ struct dpu_mdp_cfg {
->    */
->   struct dpu_ctl_cfg {
->   	DPU_HW_BLK_INFO;
-> +	unsigned long features;
->   	unsigned int intr_start;
->   };
->   
-> @@ -407,6 +405,7 @@ struct dpu_ctl_cfg {
->    */
->   struct dpu_sspp_cfg {
->   	DPU_HW_BLK_INFO;
-> +	unsigned long features;
->   	const struct dpu_sspp_sub_blks *sblk;
->   	u32 xin_id;
->   	enum dpu_clk_ctrl_type clk_ctrl;
-> @@ -424,6 +423,7 @@ struct dpu_sspp_cfg {
->    */
->   struct dpu_lm_cfg {
->   	DPU_HW_BLK_INFO;
-> +	unsigned long features;
->   	const struct dpu_lm_sub_blks *sblk;
->   	u32 pingpong;
->   	u32 dspp;
-> @@ -434,7 +434,6 @@ struct dpu_lm_cfg {
->    * struct dpu_dspp_cfg - information of DSPP blocks
->    * @id                 enum identifying this block
->    * @base               register offset of this block
-> - * @features           bit mask identifying sub-blocks/features
->    *                     supported by this block
->    * @sblk               sub-blocks information
->    */
-> @@ -447,7 +446,6 @@ struct dpu_dspp_cfg  {
->    * struct dpu_pingpong_cfg - information of PING-PONG blocks
->    * @id                 enum identifying this block
->    * @base               register offset of this block
-> - * @features           bit mask identifying sub-blocks/features
->    * @intr_done:         index for PINGPONG done interrupt
->    * @intr_rdptr:        index for PINGPONG readpointer done interrupt
->    * @sblk               sub-blocks information
-> @@ -464,8 +462,6 @@ struct dpu_pingpong_cfg  {
->    * struct dpu_merge_3d_cfg - information of DSPP blocks
->    * @id                 enum identifying this block
->    * @base               register offset of this block
-> - * @features           bit mask identifying sub-blocks/features
-> - *                     supported by this block
->    * @sblk               sub-blocks information
->    */
->   struct dpu_merge_3d_cfg  {
-> @@ -483,6 +479,7 @@ struct dpu_merge_3d_cfg  {
->    */
->   struct dpu_dsc_cfg {
->   	DPU_HW_BLK_INFO;
-> +	unsigned long features;
->   	const struct dpu_dsc_sub_blks *sblk;
->   };
->   
-> @@ -490,7 +487,6 @@ struct dpu_dsc_cfg {
->    * struct dpu_intf_cfg - information of timing engine blocks
->    * @id                 enum identifying this block
->    * @base               register offset of this block
-> - * @features           bit mask identifying sub-blocks/features
->    * @type:              Interface type(DSI, DP, HDMI)
->    * @controller_id:     Controller Instance ID in case of multiple of intf type
->    * @prog_fetch_lines_worst_case	Worst case latency num lines needed to prefetch
-> @@ -521,6 +517,7 @@ struct dpu_intf_cfg  {
->    */
->   struct dpu_wb_cfg {
->   	DPU_HW_BLK_INFO;
-> +	unsigned long features;
->   	u8 vbif_idx;
->   	u32 maxlinewidth;
->   	u32 xin_id;
-> @@ -589,6 +586,7 @@ struct dpu_vbif_qos_tbl {
->    */
->   struct dpu_vbif_cfg {
->   	DPU_HW_BLK_INFO;
-> +	unsigned long features;
->   	u32 default_ot_rd_limit;
->   	u32 default_ot_wr_limit;
->   	u32 xin_halt_timeout;
-> @@ -606,7 +604,6 @@ struct dpu_vbif_cfg {
->    * @name               string name for debug purposes
->    * @id                 enum identifying this block
->    * @base               register offset of this block
-> - * @features           bit mask identifying sub-blocks/features
->    */
->   struct dpu_cdm_cfg {
->   	DPU_HW_BLK_INFO;
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dsc_1_2.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dsc_1_2.c
-> index b9c433567262a954b7f02233f6670ee6a8476846..b3395e9c34a19363019ec0ccfb0c87943553b4c9 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dsc_1_2.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dsc_1_2.c
-> @@ -360,8 +360,7 @@ static void dpu_hw_dsc_bind_pingpong_blk_1_2(struct dpu_hw_dsc *hw_dsc,
->   	DPU_REG_WRITE(hw, sblk->ctl.base + DSC_CTL, mux_cfg);
->   }
->   
-> -static void _setup_dcs_ops_1_2(struct dpu_hw_dsc_ops *ops,
-> -			       const unsigned long features)
-> +static void _setup_dcs_ops_1_2(struct dpu_hw_dsc_ops *ops)
->   {
->   	ops->dsc_disable = dpu_hw_dsc_disable_1_2;
->   	ops->dsc_config = dpu_hw_dsc_config_1_2;
-> @@ -391,7 +390,7 @@ struct dpu_hw_dsc *dpu_hw_dsc_init_1_2(struct drm_device *dev,
->   
+>    * dpu_hw_dspp_init() - Initializes the DSPP hw driver object.
+>    * should be called once before accessing every DSPP.
+> @@ -97,7 +90,8 @@ struct dpu_hw_dspp *dpu_hw_dspp_init(struct drm_device *dev,
+>   	/* Assign ops */
 >   	c->idx = cfg->id;
->   	c->caps = cfg;
-> -	_setup_dcs_ops_1_2(&c->ops, c->caps->features);
-> +	_setup_dcs_ops_1_2(&c->ops);
+>   	c->cap = cfg;
+> -	_setup_dspp_ops(c, c->cap->features);
+> +	if (test_bit(DPU_DSPP_PCC, &c->cap->features))
+> +		c->ops.setup_pcc = dpu_setup_dspp_pcc;
 >   
 >   	return c;
->   }
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_merge3d.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_merge3d.c
-> index 0b3325f9c8705999e1003e5c88872562e880229b..83b1dbecddd2b30402f47155fa2f9a148ead02c1 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_merge3d.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_merge3d.c
-> @@ -33,8 +33,7 @@ static void dpu_hw_merge_3d_setup_3d_mode(struct dpu_hw_merge_3d *merge_3d,
->   	}
->   }
->   
-> -static void _setup_merge_3d_ops(struct dpu_hw_merge_3d *c,
-> -				unsigned long features)
-> +static void _setup_merge_3d_ops(struct dpu_hw_merge_3d *c)
->   {
->   	c->ops.setup_3d_mode = dpu_hw_merge_3d_setup_3d_mode;
->   };
-> @@ -62,7 +61,7 @@ struct dpu_hw_merge_3d *dpu_hw_merge_3d_init(struct drm_device *dev,
->   
->   	c->idx = cfg->id;
->   	c->caps = cfg;
-> -	_setup_merge_3d_ops(c, c->caps->features);
-> +	_setup_merge_3d_ops(c);
->   
->   	return c;
->   }
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_top.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_top.c
-> index 5c811f0142d5e2a012d7e9b3a918818f22ec11cf..96dc10589bee6cf144eabaecf9f8ec5777431ac3 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_top.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_top.c
-> @@ -264,7 +264,7 @@ static void dpu_hw_dp_phy_intf_sel(struct dpu_hw_mdp *mdp,
->   }
->   
->   static void _setup_mdp_ops(struct dpu_hw_mdp_ops *ops,
-> -		unsigned long cap, const struct dpu_mdss_version *mdss_rev)
-> +			   const struct dpu_mdss_version *mdss_rev)
->   {
->   	ops->setup_split_pipe = dpu_hw_setup_split_pipe;
->   	ops->setup_clk_force_ctrl = dpu_hw_setup_clk_force_ctrl;
-> @@ -313,7 +313,7 @@ struct dpu_hw_mdp *dpu_hw_mdptop_init(struct drm_device *dev,
->   	 * Assign ops
->   	 */
->   	mdp->caps = cfg;
-> -	_setup_mdp_ops(&mdp->ops, mdp->caps->features, mdss_rev);
-> +	_setup_mdp_ops(&mdp->ops, mdss_rev);
->   
->   	return mdp;
 >   }
 > 
 
