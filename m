@@ -1,116 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh-b8-smtp.messagingengine.com (fhigh-b8-smtp.messagingengine.com [202.12.124.159])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EFD11C6BE;
-	Tue, 20 May 2025 06:13:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B77825A334;
+	Tue, 20 May 2025 06:14:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747721622; cv=none; b=Hd+FQd7P4Fr7k8g0wnIpeJFKjsUP+J/E2m3dstBNUSCHpyAbCwNhBNnLxygq3VtWIVW6jXt9t9vqQxow8veZ/O7G22UV8ohiQrBGT6fBUKOjki88+Hpdq6ZSw/x5YxwnmJbGHqDnHz4Nm21vzJ2MQD9HD8K6LmZFo9rxYSyQUys=
+	t=1747721645; cv=none; b=CJitSo6o56Tf4nadOo1reCKiPxDvMVP0eK/wSH9Ih8KP++ifcKrIzM9wF1muVIotIX1U7PQGQbeTX2jPlHxWFFXobxlXqzl1j4tOUVimb7eMkUYEtwcmyt0XhyyyMRKwJ6yla6kldZgrE/OReCMOJgVqCcCxtHATMOLWKwc/tCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747721622; c=relaxed/simple;
-	bh=qv24cgaIowjqbztnCwTh6HyqJ2LT0oEfi9MxLUaIjUA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tbrk9lpp6lf1qLuGFJDNbXFz64OO76WhYD9yXINSkiZ6RVi/G4P1gfTBfSsYehNCRlTvAxDNZwxKeMphiQW9MbY+BikSQfREQqJjYfIHhnoVNLYp94d2U4D8n+H5vSLbJ8DIahrx4OK+ALBjZ5aqHB2l2fqO1PaGS6pLD5t4mJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iKF/m41X; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747721645; c=relaxed/simple;
+	bh=sfOGzBxbmYxrpTmsmk9iA7kI+4GcUiAg7Ev+d64vRxA=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=UstwmppSmTF0q2myh9EN/kTRoSfGfXdEcYqN7OIaAg9m3VfCGSd9GXLP2swUPPa0Huc6V7LFvlzPbx1WEP80hbqLQxiCKJvK2C4a+Q7KIB4L6xjUZAnYCqWOM4BvceJO4itVWT2keQeXGQljkFZMlSFF+2pouW5Xqr2dW25ty3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astier.eu; spf=pass smtp.mailfrom=astier.eu; dkim=pass (2048-bit key) header.d=astier.eu header.i=@astier.eu header.b=UK1dKBGl; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=kXV3Z0ps; arc=none smtp.client-ip=202.12.124.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astier.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astier.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iKF/m41X"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12781C4CEE9;
-	Tue, 20 May 2025 06:13:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747721621;
-	bh=qv24cgaIowjqbztnCwTh6HyqJ2LT0oEfi9MxLUaIjUA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iKF/m41XkYWF6WjZcP3accTMgSHgfJaIOf79+sw65RQDHU4Oi04a62Z6UzaBkksaa
-	 BueBeSZICIWvvVfEGVFAA939xchaWIc7QWcNJTLv1f6S86a6rb0dt5VAax2S71spZQ
-	 B3WNE8S/+RMbJXIE3TQAahfXkeo/R5nOkf99jFTcUaCJTUdguphKMTkj5pnpp+KM9X
-	 JvPpOgJ6dBNZ1DeXYScbLsUO+uVKFHrJSeSGIcwJAVSevOpGgvkYy/6nuwxVTrgA35
-	 Z+LROySr56xZTaZkL5UgAUtyxeScx4VgyuOFHpgxXj42ienZi6owLiTFlXnooyoxdP
-	 YHSaAXK/ztUIA==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH] tracing: Reset last-boot buffers when reading out all cpu buffers
-Date: Tue, 20 May 2025 15:13:38 +0900
-Message-ID:  <174772161786.1341812.8912662133740822008.stgit@mhiramat.tok.corp.google.com>
-X-Mailer: git-send-email 2.49.0.1143.g0be31eac6b-goog
-In-Reply-To:  <174730775661.3893490.10420015749079085314.stgit@mhiramat.tok.corp.google.com>
-References:  <174730775661.3893490.10420015749079085314.stgit@mhiramat.tok.corp.google.com>
-User-Agent: StGit/0.19
+	dkim=pass (2048-bit key) header.d=astier.eu header.i=@astier.eu header.b="UK1dKBGl";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kXV3Z0ps"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 6119F2540156;
+	Tue, 20 May 2025 02:14:00 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-05.internal (MEProxy); Tue, 20 May 2025 02:14:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=astier.eu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1747721640;
+	 x=1747808040; bh=ebCCwKl+ctIjs3xdVcCquO8ccEzo9gT00bMAJW9tR3k=; b=
+	UK1dKBGlOE/nPbSFz2w4NVz0qzvvRxtPLIANPfir872v6f8QPbeybw8fzi0JeWj4
+	vnalmJl4JpaBJSrU3Z2FkdoQyOephsDTEdjqhfkX8Vb8tMta+dcg7LhphfWbhf7a
+	akyJcLx5Ehiq6iXJIEeOtQUnM1hm8V3GsHdS4mZKqJlFlKeYqhycgERZpMRCwwiy
+	zI0iHMLipA4FCU5uJc7ER6HPVfylazaud6VKL7eLLsvS4szv4V9+/aRpb5XzJMky
+	XAGTJjplkAKqCVkVpWheHRepDybx53LwpLxYKjuHlni+OAymlLhxZ63aeYf54OO+
+	RtyyzPdKSTSO7ItH29fL9Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1747721640; x=
+	1747808040; bh=ebCCwKl+ctIjs3xdVcCquO8ccEzo9gT00bMAJW9tR3k=; b=k
+	XV3Z0ps9QdyShz3WgtdZTFTNx4ZS/RgqjBNiy8fn05lQc2cyOiqvTR7QxmGDCtaR
+	e167ALUh3QZg2+lJUz1Tjykr9PcflQK0S/bz1gnQBWbfUfwLIzGYgoDQBdb++iL7
+	LK1rIM/qpRVRO/kxvMTJkNdswhrWfIOO3NL9KlAklw9zinyzdvRjRBhmoBBN9fNK
+	0ge2wA5diNZtojP2miy8fSnwY7SjHBjebJVzG83b0+zz1aXYVeB9/RNqvQuyftGI
+	ei+Z4LUZAYNPNjd/s40uTGFzdQNPUXU3AHYWSeLA6pbejnK0XU5IIyoqTCPmXktR
+	dNA1ffpfGnsdmLM99D0sw==
+X-ME-Sender: <xms:px0saFY933IyeKEWYu3XuDcC-SGiR6bNl4iLz_M7NuHdPfvXkjllOQ>
+    <xme:px0saMZ9ZuGp5gd440aUHBHelMRvH5_nWuDdlHln6mDWgYxZ0oLQlKhRejnK0tbX2
+    z0FaoDXmVVF2IoGz38>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdefvdefheduucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtqhertder
+    tdejnecuhfhrohhmpedftehnihhsshgvucetshhtihgvrhdfuceorghnihhsshgvsegrsh
+    htihgvrhdrvghuqeenucggtffrrghtthgvrhhnpeekvedutdeghfevfeevjefhvdfhtdeh
+    teetfedvgfdvffefveeufeduueethfegfeenucevlhhushhtvghrufhiiigvpedtnecurf
+    grrhgrmhepmhgrihhlfhhrohhmpegrnhhishhsvgesrghsthhivghrrdgvuhdpnhgspghr
+    tghpthhtohepfedupdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehlihhnuhigse
+    grrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtohepmhhtuhhrqhhuvghtthgvsegs
+    rgihlhhisghrvgdrtghomhdprhgtphhtthhopehgrghrhiesghgrrhihghhuohdrnhgvth
+    dprhgtphhtthhopegrlhgvgidrghgrhihnohhrsehgmhgrihhlrdgtohhmpdhrtghpthht
+    oheprghnughrvgifjhgsrghllhgrnhgtvgesghhmrghilhdrtghomhdprhgtphhtthhope
+    gsohhquhhnrdhfvghnghesghhmrghilhdrtghomhdprhgtphhtthhopehmihhguhgvlhdr
+    ohhjvggurgdrshgrnhguohhnihhssehgmhgrihhlrdgtohhmpdhrtghpthhtohephihurh
+    ihrdhnohhrohhvsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghlihgtvghrhihhlhes
+    ghhoohhglhgvrdgtohhm
+X-ME-Proxy: <xmx:px0saH_Ji6vuSbgAkP2LDvb94v-U3vk5LgRfgazc5HYIcqfC-vpOMA>
+    <xmx:px0saDpRhMm_Nx09JgSroPL-Ur1A8wMHKD2-6mLWZMjOv-38Pdxqpw>
+    <xmx:px0saAp2DBjw2SBZMd8AmMDJB34Elb9ERuvq7RqLGbtGWH-yQMuOQQ>
+    <xmx:px0saJTaeW3h9Vhf5t5KvcchACqLnVj3EhG2N4j48qFuWAFl1aTvJg>
+    <xmx:qB0saEPbiwR3t4qKp0RzcC6tYAfavsmtt2bjyqVbRFtLP3L5rEOWCj73>
+Feedback-ID: iccec46d4:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 4EE4B700060; Tue, 20 May 2025 02:13:59 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+X-ThreadId: Tc582061166103edd
+Date: Tue, 20 May 2025 08:13:09 +0200
+From: "Anisse Astier" <anisse@astier.eu>
+To: "Viresh Kumar" <viresh.kumar@linaro.org>,
+ "Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com>
+Cc: "Rafael J . Wysocki" <rafael@kernel.org>,
+ "Danilo Krummrich" <dakr@redhat.com>, "Miguel Ojeda" <ojeda@kernel.org>,
+ "Alex Gaynor" <alex.gaynor@gmail.com>,
+ "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ "Benno Lossin" <benno.lossin@proton.me>,
+ "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ "Danilo Krummrich" <dakr@kernel.org>, linux-pm@vger.kernel.org,
+ "Vincent Guittot" <vincent.guittot@linaro.org>,
+ "Stephen Boyd" <sboyd@kernel.org>, "Nishanth Menon" <nm@ti.com>,
+ rust-for-linux@vger.kernel.org,
+ "Manos Pitsidianakis" <manos.pitsidianakis@linaro.org>,
+ =?UTF-8?Q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>,
+ "Joakim Bech" <joakim.bech@linaro.org>, "Rob Herring" <robh@kernel.org>,
+ "Yury Norov" <yury.norov@gmail.com>, "Burak Emir" <bqe@google.com>,
+ "Rasmus Villemoes" <linux@rasmusvillemoes.dk>,
+ "Russell King" <linux@armlinux.org.uk>, linux-clk@vger.kernel.org,
+ "Michael Turquette" <mturquette@baylibre.com>,
+ "Andrew Ballance" <andrewjballance@gmail.com>,
+ linux-kernel@vger.kernel.org
+Message-Id: <e8a404b2-4ec6-4e1d-a973-15684676e870@app.fastmail.com>
+In-Reply-To: <20250520043355.wjkrslnripaqj6mm@vireshk-i7>
+References: <cover.1747634382.git.viresh.kumar@linaro.org>
+ <21b4c30db60f22d56cc6386a18564705ad3a6f4a.1747634382.git.viresh.kumar@linaro.org>
+ <CANiq72mNHYKXcDm6DiB=69W0w8pZ1KhqeARqqKBK_s01PPRsmQ@mail.gmail.com>
+ <20250520043355.wjkrslnripaqj6mm@vireshk-i7>
+Subject: Re: [PATCH V12 06/15] rust: macros: enable use of hyphens in module names
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Reset the last-boot ring buffers when read() reads out all cpu
-buffers through trace_pipe/trace_pipe_raw. This prevents ftrace to
-unwind ring buffer read pointer next boot.
 
-Note that this resets only when all per-cpu buffers are empty, and
-read via read(2) syscall. For example, if you read only one of the
-per-cpu trace_pipe, it does not reset it. Also, reading buffer by
-splice(2) syscall, it does not reset because there will be the
-data in reader page.
+Mar 20 mai 2025, =C3=A0 06:33, Viresh Kumar a =C3=A9crit=E2=80=AF:
+> On 19-05-25, 16:15, Miguel Ojeda wrote:
+>> On Mon, May 19, 2025 at 9:08=E2=80=AFAM Viresh Kumar <viresh.kumar@li=
+naro.org> wrote:
+>> >
+>> > +    /* Rust does not allow hyphens in identifiers, use underscore =
+instead */
+>>=20
+>> (In case you see this before you apply)
+>>=20
+>> Nit: `//` for comments, also please end with a period.
+>
+> Done.
 
-Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- kernel/trace/trace.c |   22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+Thank you Viresh for iterating on this and picking up review comments. D=
+o not hesitate to add your Co-developed-by.
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 2c1764ed87b0..433671d3aa43 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6677,6 +6677,22 @@ static int tracing_wait_pipe(struct file *filp)
- 	return 1;
- }
- 
-+static bool update_last_data_if_empty(struct trace_array *tr)
-+{
-+	if (!(tr->flags & TRACE_ARRAY_FL_LAST_BOOT))
-+		return false;
-+
-+	if (!ring_buffer_empty(tr->array_buffer.buffer))
-+		return false;
-+
-+	/*
-+	 * If the buffer contains the last boot data and all per-cpu
-+	 * buffers are empty, reset it from the kernel side.
-+	 */
-+	update_last_data(tr);
-+	return true;
-+}
-+
- /*
-  * Consumer reader.
-  */
-@@ -6708,6 +6724,9 @@ tracing_read_pipe(struct file *filp, char __user *ubuf,
- 	}
- 
- waitagain:
-+	if (update_last_data_if_empty(iter->tr))
-+		return 0;
-+
- 	sret = tracing_wait_pipe(filp);
- 	if (sret <= 0)
- 		return sret;
-@@ -8286,6 +8305,9 @@ tracing_buffers_read(struct file *filp, char __user *ubuf,
- 
- 	if (ret < 0) {
- 		if (trace_empty(iter) && !iter->closed) {
-+			if (update_last_data_if_empty(iter->tr))
-+				return 0;
-+
- 			if ((filp->f_flags & O_NONBLOCK))
- 				return -EAGAIN;
- 
+Kind regards,
 
+Anisse
