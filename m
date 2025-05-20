@@ -1,96 +1,112 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B29922D787;
-	Tue, 20 May 2025 14:18:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28B962505C7;
+	Tue, 20 May 2025 14:18:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747750684; cv=none; b=JlV/cuHTYcJB85q5e6a0hMyLb9sJeGuAE4XwZXa9LKeDuxt6T/KLOe8/vGXgpAVLjwxM4cTOAichL/D9s+eWaV1xFzMLqEyhYWj1hOZZLzbxqOPUxQTk5kOgVfvdDryrLM2Qgxd0uwaBvtZZ6N5+EEOPRfQm2PvlsCssBzu3bcg=
+	t=1747750685; cv=none; b=KiZ427tURaURtUtzhiqs34c5vz5S39cJ2cmtrm2LjesY6rqAqK77TkBSMNrqG7pF+Z4og4TbZc1VynQmT/ezUGPNdv8K8/QI6viiT6dPZtMs77IHHLzTVnnoD+t3mGXjkCeSmVtra7qy9D4H7imxllnQz2KBVKIaCGNOqFvz/3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747750684; c=relaxed/simple;
-	bh=eC9fXZcLgrkduXdrhf8gr0JxS85xyQcb+dyW51Km4ew=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uEXyMNaSjood0S+KWRenHgkjP8zEBjJO+X+GtB15kR2IjJ31DrXQQcQ2cZ+lpE6m/s76dkjhJrNJLFSIY+d2NFi06MVsX5eUypAKIjjMYvNdZNcKtgEFUKjPPGOPBKT8NIklFAjF7cofWdK41tDJ6ncguauK12q9IBjvQLfHNYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f5QbyuDy; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747750685; c=relaxed/simple;
+	bh=n5HLSG+HZfhC0Gthpz8JGBNHOZuHr52+38rD1o9D0lw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NM3Jl0A6+Dy08KznMrzXK1ZitkT1hqIZrHG6reTOrhkLmIQye1ieveNhdEvQ5SUgrEWKFHL/cKQjIRvUYIq6/dvCSuomO7UxB99yRkIQPGbR4uaRqvChsE2T/1e9kFe2IPAm+VUxwErf6bfBBgOrVc95izVaGn0l0geFqAp1cao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C48QBauZ; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f5QbyuDy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747750682; x=1779286682;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=eC9fXZcLgrkduXdrhf8gr0JxS85xyQcb+dyW51Km4ew=;
-  b=f5QbyuDyYOahC1fhG85f5GDegwaONo87Jz/0SRJ/s29uO8CNIJQuZbEC
-   hR23OQdA+ra7WbZ+lQHSzLvgqO7PGJT6vcayHIbcPJvbpovedIq6WtXNx
-   oUhm9t9iFu5AuHfAp6g+/garPQrjD2h8h/n9vWJrtMcoSQOwhUOQavfP5
-   1oshpaK1FiPx+EKzSdTOLZpcPjec6lKB81GWVcYCi9zYHLoZujD8aTzH3
-   VZwMp5phDpNd/tdULlLz9klHaID55ArVCS9sm2NQ7AT4SXcoXKGhd18G+
-   P1L9FppJJVLBlyQ2ZVVO4GSdq9VyuHIoHhzLArRDhzjjnlC1apJC4qg9Q
-   w==;
-X-CSE-ConnectionGUID: dVKkDzRyQvy7xu/jb8YyKA==
-X-CSE-MsgGUID: xYDeDGlsQcmOx2FmJ9Ox4w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="49788758"
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="49788758"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 07:18:01 -0700
-X-CSE-ConnectionGUID: ncukOrUSR32wBqUaLPb9+Q==
-X-CSE-MsgGUID: PdX/Vsv5RG2QWonmixk12Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="140124486"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 07:17:59 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uHNn2-00000003LPE-1FWt;
-	Tue, 20 May 2025 17:17:56 +0300
-Date: Tue, 20 May 2025 17:17:56 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	Akira Yokosawa <akiyks@gmail.com>,
-	Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org,
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/4] Some kernel-doc fixes
-Message-ID: <aCyPFAKhSQIFR_lJ@smile.fi.intel.com>
-References: <cover.1747747695.git.mchehab+huawei@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C48QBauZ"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-30ecc762cb7so2412931a91.1;
+        Tue, 20 May 2025 07:18:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747750683; x=1748355483; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cV/OQIV8ztouckrklGIhTFHAEbzSsaIMTwiOmhCaP08=;
+        b=C48QBauZAzvrCEkx9l9IdUtN9txVIgO1SUMxsplEgmS1Ey/qSGy0NTPZEEnHgkFxJk
+         bvgZsLKUsh9Cm9UYvhcw2GOkHIuB9ks+tlgdtlMxY5v4pRM/ncRS3ewcbmskbGi1dCKs
+         s0lYtG/P1MyjzJ/9RvlpmqoeiLyp3EBiqAOA6xAAGFg0AQOknybKV1N82ZdQFL+m/OCO
+         Rb/NkA5QPyuqyTBvkQKgr1qAohyV/DamIT7mQLzx666IJFT9u81n1AVAiuSRmUBf6GXH
+         Fs8gUcdXbrSQQFmHojmvC04ga3m7tCNjhyFkZVNcnRmHOFC+nZOMxY49ZBReuUOnXOxt
+         oZ9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747750683; x=1748355483;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cV/OQIV8ztouckrklGIhTFHAEbzSsaIMTwiOmhCaP08=;
+        b=CFZaAQfS+mreCd1AvpwtZeHKRMHg2UmW0yjpb1Q/dNrARnbk7i6g8Wn6Lb6PwDnazY
+         KJsVEjm/W6PTOeuVKR6H0dMCKla5JDxIKs+Tb3g7Gudjcyo87IFVNfhDkr5Oo5nDrEqM
+         uVvAr+6Zg2MgeMQG8f/mz2YVhIxZOjs2X6pdTjPa448l6SdVQpdj8hNqJReB96OPS8gS
+         adAcpfGyN0TbexaKz0RUuobFUV1KvaaOeX9asdgB/UEPrKb+KPI2gLD1QnC1TpbeqwvX
+         rYT0nPYFaHFECQqlulbdOVEDAsWSL78WUl45oP4LFwFomOtOLWOuB6FNfTDmCoHitnId
+         vqYA==
+X-Forwarded-Encrypted: i=1; AJvYcCX7qkQymgs+ybvWbHDcE2NizxQnajoVRswb5PeveFCyyaaIU/53zREzwa901x5Ium9gQsloS31bef1Jeq0=@vger.kernel.org, AJvYcCXfMpcnLsIa3ABzriOoP8ixG/+0jbSWzey5ZvnLVgd0Fgq5JaLZdmYiJQFC0+8keRwdUXCwXRde@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFWCDJwMdRd+NODQwgSmZF6rqSysdqbdqMb4ks0yQRStGS6gkI
+	4+7w+P0+NfsmX7W6UHsnEJ8x5tGiNZl+hWCZwGoWQ/LW3AQgq/p2YX2rxboLa4FhlOiKbfXLD12
+	+0LAFwDKlDKfu3oNhSxrE47WQajUK5Fs=
+X-Gm-Gg: ASbGncuY2+QcIsQzy8nPKRh8ElAr03ekGwXdJPEuuOKImwjQCK7N22GjafhA2mxrURa
+	sYkBqB9RxU//ZkUWs4bddqxEDtUr8bainIIRIOlnCX7++/1AgHnHr62NpJj3GmVw6r8rWxkT/Ik
+	AiKn9i7mqwkA6LFsoICUPNKqy6j00NM7SD9lY=
+X-Google-Smtp-Source: AGHT+IHop0vmNJRZlUx6caCyeoeYe6BDnYX4Gm7Du+V6bm/RRJ8NWj0JlPUUEXPwgVB01rPgXJlziSg6bf/mQEtweI4=
+X-Received: by 2002:a17:90b:2f03:b0:302:fc48:4f0a with SMTP id
+ 98e67ed59e1d1-30e7d6d17e6mr25420919a91.0.1747750683051; Tue, 20 May 2025
+ 07:18:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1747747695.git.mchehab+huawei@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250519153735.66940-1-aha310510@gmail.com> <aCyAcbNqKRlPnadx@hoboy.vegasvil.org>
+In-Reply-To: <aCyAcbNqKRlPnadx@hoboy.vegasvil.org>
+From: Jeongjun Park <aha310510@gmail.com>
+Date: Tue, 20 May 2025 23:17:54 +0900
+X-Gm-Features: AX0GCFtcL76npAhxQUeiUE6yEiaTCAtDhflj2Ax0XR2OXCJwmO4Pk_G2kOAmp3A
+Message-ID: <CAO9qdTHe1bR=c6dn4WEDsVZS8pRtf9FsMMQXNFVV_DT0wm_FVw@mail.gmail.com>
+Subject: Re: [PATCH] ptp: remove ptp->n_vclocks check logic in ptp_vclock_in_use()
+To: Richard Cochran <richardcochran@gmail.com>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, kuba@kernel.org, 
+	pabeni@redhat.com, yangbo.lu@nxp.com, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 20, 2025 at 03:33:05PM +0200, Mauro Carvalho Chehab wrote:
-> Hi Jon,
-> 
-> Let me consolidate some patches on a single PR to make life simpler
-> for you. Those should address Stephen and Akira's concerns with
-> regards to KernelDoc class usage via sphinx kerneldoc.py extension.
-> 
-> Patch 1:	don't let Sphinx suppress errors/warnings;
-> Patch 2:	fix a KeyError when trying to acess data from non-existing files;
-> Patch 3:	add try/except blocks to avoid crashes when handling bad
-> 	kernel-doc markups;
-> Patch 4:	makes Lore and kernel-doc ML receive patches related
-> 	to kernel-doc.py and get_abi.py.
-> 
-> Patches 1 to 3 were already submitted on separate series. Patch 4 is new.
+Richard Cochran <richardcochran@gmail.com> wrote:
+>
+> On Tue, May 20, 2025 at 12:37:35AM +0900, Jeongjun Park wrote:
+>
+> > diff --git a/drivers/ptp/ptp_clock.c b/drivers/ptp/ptp_clock.c
+> > index 35a5994bf64f..0ae9f074fc52 100644
+> > --- a/drivers/ptp/ptp_clock.c
+> > +++ b/drivers/ptp/ptp_clock.c
+> > @@ -412,9 +412,8 @@ static int unregister_vclock(struct device *dev, vo=
+id *data)
+> >
+> >  int ptp_clock_unregister(struct ptp_clock *ptp)
+> >  {
+> > -     if (ptp_vclock_in_use(ptp)) {
+> > +     if (ptp_vclock_in_use(ptp))
+> >               device_for_each_child(&ptp->dev, NULL, unregister_vclock)=
+;
+> > -     }
+> >
+> >       ptp->defunct =3D 1;
+> >       wake_up_interruptible(&ptp->tsev_wq);
+>
+> This hunk is not related to the subject of the patch.  Please remove it.
+>
+> Thanks,
+> Richard
+>
 
-Can we actually utilise CONFIG_WERROR to fail the build. If yes, the build will
-be failed. This is in align with the warnings in the C code.
+While working on the patch, I noticed an unnecessary pair of braces in
+ptp_clock_unregister() and included their removal in the patch. Since
+you=E2=80=99ve pointed out that this isn=E2=80=99t the right approach, I=E2=
+=80=99ll fix it
+immediately and send over the v2 patch.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Regards,
 
-
+Jeongjun Park
