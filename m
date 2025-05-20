@@ -1,144 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14A5025D201;
-	Tue, 20 May 2025 08:09:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC44125B69F;
+	Tue, 20 May 2025 08:11:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747728594; cv=none; b=UC5WOZdcVrBw+5AA70eLmjpBz+P4h7Gm5EIjQnlQ5b+03VfNYxTGYne4xaMB8ythsu8Wk5x3+ssUHItTXhgbIKWZRCXPT+0sghKP5C8YQXx/TS/TEZPLfDrPnby5rbdhRzCs+meHqVPIq7e+hRKv0yfQuAEk777xvQxQAXqFeyE=
+	t=1747728690; cv=none; b=EY62TvGTwlJ4ie2cSpxo/XVvh98PcWA79g1SQWHosaT1gVsOUddHYy4rDllOSgnr/XsFJgAXOio04erj/EoFHunJU+nxZl0DtnGPiRVXLCr0cHN0MypNm1ECnSNpSaqj02ByE9r595/M0DeErrUCZwP6EkdQuEKC/LCevg7u3/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747728594; c=relaxed/simple;
-	bh=/54CT6zkTCVN/5mCNRbwulyzB3iEQhKjFz7+J7/E/v8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cPVc6wpD5UdwmYIDThHcBijHSTtFHdoUTkuwxHVskJjixp6PdzaH9CBggSdxSmCEM6mHnRVCyDyV0ponZ75uCuKNpSQ1g2qP1n4Ya5o1J911tKd8RBa2B2RGA3I2mie9A4M/xb5RHMG0aj1/06XrQ5IiUhig19MBwMngXfvvgPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aWuRlo2l; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747728690; c=relaxed/simple;
+	bh=y5EmAe9o1zmGJZdkHBYv6dujAOOGfoyt38w5bFxu95I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NWn0u90aqBErE+pfvVvjgvnNqvaQ1mZKOKVeUYSE20NYPlZDV2n5hCNbIaW2PQT9WAnsfJwzAbJ10dujfC33idKt/bBBboak4UKby8MGoDAzMtbtybGTZYmrawONm+SGBFcv7FOi1DtZNqQdmBR3Hl4LMevpjck78qWEAh0odis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dPLpdPyQ; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aWuRlo2l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6052C4CEE9;
-	Tue, 20 May 2025 08:09:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747728593;
-	bh=/54CT6zkTCVN/5mCNRbwulyzB3iEQhKjFz7+J7/E/v8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=aWuRlo2lJxThlcAkvJRdrOvwZOdeqhwx41057l4cJ86XzaeAfxW8mBal41DxK5HWv
-	 69JH0ontodIXhKbc3DixM3ArBZyXW7j8LXOzfcxMKBjE/DDpggu4Rrba3iZpyQHcYH
-	 RGzVnDJkOjRkSkpM5KpW1JkxAFmGL1cHmz8tw8YzEGens+6rzQSbPMLrVdruic0kV5
-	 bS2AnI0oIyrpHUZiEqCqbB5PlB6OIXCEqEsQbYuIpHQONPM+MgAEcg5Ws9lfOPAgG3
-	 4Nr/mlMVfnmYDq3MzHz7QqlAPbIzPnkFSQh87WbVgnWLOIwVo7Q58chgrhQk/f0WLC
-	 iyhLA+rDOASQw==
-Message-ID: <8aa09712-5543-4bda-bf9e-a29c61656445@kernel.org>
-Date: Tue, 20 May 2025 10:09:47 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dPLpdPyQ"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a374f727dbso1115509f8f.0;
+        Tue, 20 May 2025 01:11:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747728687; x=1748333487; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=bMQS8LhbxO7fSprRTvxryhpgj+eGd6U/hKwb3rgYqas=;
+        b=dPLpdPyQ/diMCvML3rVnBxhasqaTAI21vGtqgDZey5kAwDokH2ZBa6fsW785ycMEjL
+         XW1cvgxnSD5DSHgs93cAwnaFNEVn5cxKX2QA1PoSRtUph7Z0u2rqHnUHlFdllg7+iBfT
+         wPDmkYZhWVeZHcF+YAuMW1dmLEYlAK73CznvELmUVPdzR0uQtJoyqA4uodq36d1+Dr1n
+         rW7cWCnfCyee5pyHv6oM+u77WYKH8KcGVbaO2ddMac7YHKjrKC67f5c9PvDxRSVoFOWP
+         ZfdWnbkAZjeHrz6KeF/Ra4Eqta18P6UbJVEEwkhuYRF+euX+g5pU6w/tZIK/JPj0WJ0C
+         85nQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747728687; x=1748333487;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bMQS8LhbxO7fSprRTvxryhpgj+eGd6U/hKwb3rgYqas=;
+        b=qQFybqCQPAIUwjTc4xd3l6cHM6NBFEkyDQY1bmSLThtAUjqeoTqKUzwI9/mkBVG6H0
+         VzXSbEgwGo92vN2Cs0o79R6xuPJPowzj6ZRLyX4Zof8vWTyoVOyHYb33i2vRzuSFVMpP
+         qbB9zHw5Im9dTntO0GjZMUCR0Pjc0Hip3SYRXXyCn0HcxxF1PcMRok2aQ1kKjWLYJ/yN
+         jJMongL5xTyHBMDlyKlUv+fej1nT+t/eijIGtNH5WQePq0vBc5yV1X18Hzj1OhZr98or
+         C5CW10WUdC3Cb4VlyzocqGrRYcRifk6yT8pugHJFnpNcRIX+D2smoSKvCbvemQxqwZxU
+         /dJw==
+X-Forwarded-Encrypted: i=1; AJvYcCWaZtSZ/UYgytJyK2E01uc+fj6cO5hgvB1jzzG9Tbi0ZB3KAS5Yg3MFT3m42p3rK7vnk6+oyFkoHExXvj8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/xh5UCnilXLu4d0yXLfKY1spnmVqmjBrMFNHadjLpPIXyawpV
+	qHz8UKt649t6GuwTqF6HWgpZTS6VNd+uvuxsjbrMeFAGLIsRGvrGQc3F
+X-Gm-Gg: ASbGncsWr+63mGDEkUmPZGK8gDxoMFTeT0z0mQ8hBg0pqPhXhazYTlRGvCRZREaiX4W
+	zqA+NmhAzl+GtGHFbDMaNxNjw1r34/KjsBFw656WnvrO+jbv4fuwPRqUiImvNaPJmTOpP7wIaif
+	h7ECgD+cNBoY69IsAI4i+Pd3T5vilRvz89NUEvZCtMQE1leCbJMf4wqQP1MsLaVC3xDz+xwLKxU
+	1RpikOHMgo2U7sEgDjEBtQZgxtu0cyG1Zv9HTQ9PUdoPfUyLM5hw2n7bID8++yMbLV0kxyeWKRO
+	nU2fREtAKG31hALA7LHWrRIyXPcvEw9uFs6SSSdWbHrVfkRbYzRZ
+X-Google-Smtp-Source: AGHT+IHPt5mJFjG5oAuprYIeJnO/pC95ipGYDXia9QgdBEyS/izQKeoP0AicXPY7/tdYWNp50rrG9Q==
+X-Received: by 2002:a05:6000:2510:b0:3a3:5c8b:5581 with SMTP id ffacd0b85a97d-3a35fe5c56bmr11561628f8f.4.1747728687040;
+        Tue, 20 May 2025 01:11:27 -0700 (PDT)
+Received: from Red ([2a01:cb1d:897:7800:4a02:2aff:fe07:1efc])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a3632a2bffsm13922363f8f.32.2025.05.20.01.11.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 01:11:26 -0700 (PDT)
+Date: Tue, 20 May 2025 10:11:24 +0200
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
+To: Paul Kocialkowski <paulk@sys-base.io>
+Cc: netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>
+Subject: Re: [PATCH] net: dwmac-sun8i: Use parsed internal PHY address
+ instead of 1
+Message-ID: <aCw5LAx1Nmfxk8Y4@Red>
+References: <20250519164936.4172658-1-paulk@sys-base.io>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 1/3] scsi: ufs: dt-bindings: Document UFS Disable LPM
- property
-To: Pavan Kondeti <pavan.kondeti@oss.qualcomm.com>,
- Nitin Rawat <quic_nitirawa@quicinc.com>
-Cc: alim.akhtar@samsung.com, avri.altman@wdc.com, bvanassche@acm.org,
- krzk+dt@kernel.org, robh@kernel.org, mani@kernel.org, conor+dt@kernel.org,
- James.Bottomley@HansenPartnership.com, martin.petersen@oracle.com,
- beanhuo@micron.com, peter.wang@mediatek.com, linux-arm-msm@vger.kernel.org,
- linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org
-References: <20250506163705.31518-1-quic_nitirawa@quicinc.com>
- <20250506163705.31518-2-quic_nitirawa@quicinc.com>
- <667e43a7-a33c-491b-83ca-fe06a2a5d9c3@kernel.org>
- <9974cf1d-6929-4c7f-8472-fd19c7a40b12@quicinc.com>
- <8ebe4439-eab8-456a-ac91-b53956eab633@quicinc.com>
- <852e3d10-5bf8-4b2e-9447-fe15c1aaf3ba@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <852e3d10-5bf8-4b2e-9447-fe15c1aaf3ba@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250519164936.4172658-1-paulk@sys-base.io>
 
-On 12/05/2025 09:41, Pavan Kondeti wrote:
-> On Mon, May 12, 2025 at 09:45:49AM +0530, Nitin Rawat wrote:
->>
->>
->> On 5/7/2025 8:34 PM, Nitin Rawat wrote:
->>>
->>>
->>> On 5/6/2025 11:46 PM, Krzysztof Kozlowski wrote:
->>>> On 06/05/2025 18:37, Nitin Rawat wrote:
->>>>> Disable UFS low power mode on emulation FPGA platforms or other
->>>>> platforms
->>>>
->>>> Why wouldn't you like to test LPM also on FPGA designs? I do not see
->>>> here correlation.
->>>
->>> Hi Krzysztof,
->>>
->>> Since the FPGA platform doesn't support UFS Low Power Modes (such as the
->>> AutoHibern8 feature specified in the UFS specification), I have included
->>> this information in the hardware description (i.e dts).
->>
->>
->> Hi Krzysztof,
->>
->> Could you please share your thoughts on my above comment? If you still see
->> concerns, I may need to consider other options like modparam.
->>
+Le Mon, May 19, 2025 at 06:49:36PM +0200, Paul Kocialkowski a écrit :
+> While the MDIO address of the internal PHY on Allwinner sun8i chips is
+> generally 1, of_mdio_parse_addr is used to cleanly parse the address
+> from the device-tree instead of hardcoding it.
 > 
-> I understand why you are inclining towards the module param here. Before
-> we take that route,
+> A commit reworking the code ditched the parsed value and hardcoded the
+> value 1 instead, which didn't really break anything but is more fragile
+> and not future-proof.
 > 
-> Is it possible to use a different compatible (for ex: qcom,sm8650-emu-ufshc) for UFS controller
-> on the emulation platform and apply the quirk in the driver based on the device_get_match_data()
-> based detection?
+> Restore the initial behavior using the parsed address returned from the
+> helper.
+> 
+> Fixes: 634db83b8265 ("net: stmmac: dwmac-sun8i: Handle integrated/external MDIOs")
+> Signed-off-by: Paul Kocialkowski <paulk@sys-base.io>
+> ---
+>  drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+> index 85723a78793a..6c7e8655a7eb 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+> @@ -964,7 +964,7 @@ static int sun8i_dwmac_set_syscon(struct device *dev,
+>  		/* of_mdio_parse_addr returns a valid (0 ~ 31) PHY
+>  		 * address. No need to mask it again.
+>  		 */
+> -		reg |= 1 << H3_EPHY_ADDR_SHIFT;
+> +		reg |= ret << H3_EPHY_ADDR_SHIFT;
+>  	} else {
+>  		/* For SoCs without internal PHY the PHY selection bit should be
+>  		 * set to 0 (external PHY).
+> -- 
+> 2.49.0
+> 
 
-I do not get what are the benefits of upstreaming such patches. It feels
-like you have some internal product, which will never be released, no
-one will ever use it and eventually will be obsolete even internally. We
-don't want patches for every broken feature or every broken hardware.
+Acked-by: Corentin LABBE <clabbe.montjoie@gmail.com>
+Tested-by: Corentin LABBE <clabbe.montjoie@gmail.com>
+Tested-on: sun50i-h6-orangepi-one-plus
+Tested-on: sun8i-h3-orangepi-pc
 
-Best regards,
-Krzysztof
+Thanks
+Regards
