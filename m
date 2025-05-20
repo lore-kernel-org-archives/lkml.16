@@ -1,145 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EBCC4B1E7B
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 21:19:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 683EB253B40
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 21:19:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747775963; cv=none; b=hkWsaOBkA1Zqk816tR94ahlNqfeHWcWm9zWwtUKfdC+CisQAzhmcSYvNpS9Zf1mbohW/iK0hxzYIsIB1iUzU6Xmu5jtfWKRKCyDXd47oqGF7jr5pBzU38fhNBTcvW8qObAg978xdVTXkkjllAbppTp3s19zvWFLp6i7RenmCBKs=
+	t=1747775986; cv=none; b=DSKvKm7J+gsj1xof6lARcXs7g7t2gjxyYRrr7O4H8wlaTp7NhmfVmxHpvbBZ9A+y6QGEpvaMfn/DzcV0mAGK4INYSVqKP7BySD94fglGYVYD4ZpLfINvwpGm50Yys+1qqme7TPX6c+Ix+AH29NrYqkWcZKbvruaS5tRkPAAbSwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747775963; c=relaxed/simple;
-	bh=4eRBBiEiyAVyCDfqjmWq5yf+lJ0Ll06sdRdnyQ0P4aw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=j8rhkO9IJtoQHU9kmANFE5MXLXP+DecAZ2vbx9HXwOlRnOpMD5p6uTMKJuRhLhG0aOUHqwuEZrGVCiOMvUe8jsEKAxdEmmfP0NWwTsrAia0lKHefZbNoW6CB/HMSh6XTLc5gSKPvPlIEN6/LsJE6KRVbv3k6j1NkGPVQOmU0YrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dlRRrvpp; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747775986; c=relaxed/simple;
+	bh=eSdCjtp/1fPo3n/voZuF4t/69QdVtMMYeXdvN1m3saQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bBGrBCrho3UM19d5Bj28NG6OOZv74iTPL5kk76Ji55pxowv0kpNhv7gyOYX8KOISdU4l2Qjwn2J56IfGpdJ1PV9b05f4uXtp/spXmscylkp22/+YVP8mytm/a2X45KW1P7CFFjP8o53OPIrK1VpSyBErNCmGPmVwuvlMYWobjmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=bilz7y8F; arc=none smtp.client-ip=209.85.166.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dlRRrvpp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747775962; x=1779311962;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=4eRBBiEiyAVyCDfqjmWq5yf+lJ0Ll06sdRdnyQ0P4aw=;
-  b=dlRRrvppd3DXD1lfgrVjk6ErdzBlOu3bhipI/CjRtJAotgBZ34/PaK9e
-   q7D+rrzJYCgFk0BQwCCvVS8qtfzAJhDSXMvE5OzkHDUFVCJvbc+zJTE15
-   MnCcWCvtAIyxBqBpcXBPXiPGwO5OAgdpCiDRDD+B3HXjavHxFjo1F7DM6
-   +YXBexNvbxMmfKyneaLz/8gjOnMctjKpyDUVeqF2CrKmiI4r5Kl7l4LeH
-   WYv38/tdwiagEYA3kGd8vCjpcplmwgcpoRcts4EoCkxTev1whHeiig2P3
-   EjOeYZY52AId2nUe0hKCiraeIsVhUj9lmcKEWhTdOhmGNbyNGERx25vep
-   g==;
-X-CSE-ConnectionGUID: MinmJGSKQ/GdsamwIwV0rQ==
-X-CSE-MsgGUID: gwdr0kofRhKZ90EBsI3uxQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="49432867"
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="49432867"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 14:19:22 -0700
-X-CSE-ConnectionGUID: 2C0io8WJT9irfPDLFYn0iw==
-X-CSE-MsgGUID: XD97Ua/+QMmO64Uxfaa6pw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="144553456"
-Received: from igk-lkp-server01.igk.intel.com (HELO a1decbf9c5f9) ([10.211.3.150])
-  by orviesa003.jf.intel.com with ESMTP; 20 May 2025 14:19:20 -0700
-Received: from kbuild by a1decbf9c5f9 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uHUMn-00011r-33;
-	Tue, 20 May 2025 21:19:17 +0000
-Date: Wed, 21 May 2025 05:18:43 +0800
-From: kernel test robot <lkp@intel.com>
-To: Mike Snitzer <snitzer@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Anna Schumaker <anna.schumaker@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>
-Subject: include/linux/rcupdate.h:538:9: error: dereferencing pointer to
- incomplete type 'struct nfsd_file'
-Message-ID: <202505210501.UEXVUlZf-lkp@intel.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="bilz7y8F"
+Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-8647e143f28so457235339f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 14:19:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1747775983; x=1748380783; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1YCTd9DwztrmkYxeGkW5TVua7369Pn3fqP+RCzxS4Co=;
+        b=bilz7y8FcMa0/I06KAdpC3hETZnKmT2ppzWQYYv0oOlbE5ACC2ta9mJ+yEqVwXNF+B
+         4gXaSSxRg1ocSxmjgdyiO/jRRvorn5A6NBRB85BMWaXKRW8/Lf/Qso7MMuAu1XNIDEK0
+         prWjVtKFl91XY/0d0qlZssdTmmYm+aLOxtrlI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747775983; x=1748380783;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1YCTd9DwztrmkYxeGkW5TVua7369Pn3fqP+RCzxS4Co=;
+        b=RysbJL0gFsHNA87fXcPNWdFE2unj5zDiEZGLIIq2Y6zLM4eYIXGML47Dz3WCIRtmSw
+         SR4VBYeA4ABkQTFIrJqXzhO+JedYYB9BqytYTEFcm4rZi8ozkderc240wK1AgBJBfs/I
+         7VRtzgjG54+VWmF84hBes8o99eHl0xOGgyA1fYRDRKeknCpC8jg1W/TtNPlF9GAWQG/n
+         dEaawb+9GJ788lb9nnKNPUrqZqjK5CCqZZO6T87IYX+GCdFBRUHIj7AL317wVL07uhaU
+         fAVTpe+Yg6ffYKYhJh7fRTVlEp5pABSaOLwJbPqrPFtay7OFBbV++BAtkFohq7AGh8+s
+         yq3w==
+X-Forwarded-Encrypted: i=1; AJvYcCVgOskSN40n8Au3/ZEPDPz1tWYnS+c8jn9DO3xfgyJM75aHAhmtsXyf/V+Ye6gYf8dmrPTGFPAg6HHA3l0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxdRjkbHp8oFWVjnLGYyTKZ0MQZTV37BZgjXrUmTDwn7bf76wuR
+	i101Jy7+J07/xtBZbVYVs479+nRsXJNEgByVQU56qgPRcn+YmGPPTwl2OwtD7U5OZW8=
+X-Gm-Gg: ASbGncsA4OTNR0wWjK7B3vaOlgFbqOu6aXcsIxiGGWzzmdIhhVsAIUjLni1URGVmISq
+	fwt47vLw1ZuenegHFMHJF5wdppuwLE7LYW3EDEnJ0n7mHsItDOWyojRqc89Tqi2i37TDKiO1e2O
+	E9cVRgoqmu0qMCicmhWBIzksudwkpTJJLGr6Q4saIswzV+ApxJPGr3XykWXKWYXarO0mG951LXq
+	AtxYhhVMa9JLifSHwFOy1uOfE5KodcVo70jNbQ15queCgdkxUEl0T1R3sKBjUVK0dFH4Hl6zfww
+	STVtDen5322i6i0VQ+l97vKRCp6wGv/Zgvmm42d0LlA0K1CbcClarlkSXm+K55F8I6v1v3nA
+X-Google-Smtp-Source: AGHT+IGHZLwTf8LjSiEncxDrt7PbnARYCjK2hr9FZIftt2iQNbyIYNrlmrCAsmfEOVXuFPxxdltMeQ==
+X-Received: by 2002:a05:6e02:2592:b0:3d4:3db1:77ae with SMTP id e9e14a558f8ab-3db843313f3mr233401395ab.18.1747775983457;
+        Tue, 20 May 2025 14:19:43 -0700 (PDT)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4fbcc3ddea4sm2410313173.69.2025.05.20.14.19.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 May 2025 14:19:43 -0700 (PDT)
+Message-ID: <eba8ae12-eb72-4913-9983-c9d600ba41d7@linuxfoundation.org>
+Date: Tue, 20 May 2025 15:19:42 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.1 00/97] 6.1.140-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20250520125800.653047540@linuxfoundation.org>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20250520125800.653047540@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   b36ddb9210e6812eb1c86ad46b66cc46aa193487
-commit: 86e00412254a717ffd5d38dc5ec0ee1cce6281b3 nfs: cache all open LOCALIO nfsd_file(s) in client
-date:   4 months ago
-config: riscv-randconfig-2004-20250521 (https://download.01.org/0day-ci/archive/20250521/202505210501.UEXVUlZf-lkp@intel.com/config)
-compiler: riscv64-linux-gcc (GCC) 7.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250521/202505210501.UEXVUlZf-lkp@intel.com/reproduce)
+On 5/20/25 07:49, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.1.140 release.
+> There are 97 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu, 22 May 2025 12:57:37 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.140-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505210501.UEXVUlZf-lkp@intel.com/
+Compiled and booted on my test system. No dmesg regressions.
 
-All errors (new ones prefixed by >>):
+Tested-by: Shuah Khan <skhan@linuxfoundation.org>
 
-   In file included from include/linux/rbtree.h:24:0,
-                    from include/linux/mm_types.h:11,
-                    from include/linux/mmzone.h:22,
-                    from include/linux/gfp.h:7,
-                    from include/linux/umh.h:4,
-                    from include/linux/kmod.h:9,
-                    from include/linux/module.h:17,
-                    from fs/nfs/localio.c:11:
-   fs/nfs/localio.c: In function 'nfs_local_open_fh':
->> include/linux/rcupdate.h:538:9: error: dereferencing pointer to incomplete type 'struct nfsd_file'
-     typeof(*p) *local = (typeof(*p) *__force)READ_ONCE(p); \
-            ^
-   include/linux/rcupdate.h:686:2: note: in expansion of macro '__rcu_dereference_check'
-     __rcu_dereference_check((p), __UNIQUE_ID(rcu), \
-     ^~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/rcupdate.h:758:28: note: in expansion of macro 'rcu_dereference_check'
-    #define rcu_dereference(p) rcu_dereference_check(p, 0)
-                               ^~~~~~~~~~~~~~~~~~~~~
-   fs/nfs/localio.c:279:7: note: in expansion of macro 'rcu_dereference'
-     nf = rcu_dereference(*pnf);
-          ^~~~~~~~~~~~~~~
-
-
-vim +538 include/linux/rcupdate.h
-
-76c8eaafe4f061 Paul E. McKenney        2021-04-21  528  
-24ba53017e188e Chun-Hung Tseng         2021-09-15  529  #define __rcu_access_pointer(p, local, space) \
-ca5ecddfa8fcbd Paul E. McKenney        2010-04-28  530  ({ \
-24ba53017e188e Chun-Hung Tseng         2021-09-15  531  	typeof(*p) *local = (typeof(*p) *__force)READ_ONCE(p); \
-423a86a610cad1 Joel Fernandes (Google  2018-12-12  532) 	rcu_check_sparse(p, space); \
-24ba53017e188e Chun-Hung Tseng         2021-09-15  533  	((typeof(*p) __force __kernel *)(local)); \
-ca5ecddfa8fcbd Paul E. McKenney        2010-04-28  534  })
-24ba53017e188e Chun-Hung Tseng         2021-09-15  535  #define __rcu_dereference_check(p, local, c, space) \
-ca5ecddfa8fcbd Paul E. McKenney        2010-04-28  536  ({ \
-ac59853c06993a Pranith Kumar           2014-11-13  537  	/* Dependency order vs. p above. */ \
-24ba53017e188e Chun-Hung Tseng         2021-09-15 @538  	typeof(*p) *local = (typeof(*p) *__force)READ_ONCE(p); \
-f78f5b90c4ffa5 Paul E. McKenney        2015-06-18  539  	RCU_LOCKDEP_WARN(!(c), "suspicious rcu_dereference_check() usage"); \
-423a86a610cad1 Joel Fernandes (Google  2018-12-12  540) 	rcu_check_sparse(p, space); \
-24ba53017e188e Chun-Hung Tseng         2021-09-15  541  	((typeof(*p) __force __kernel *)(local)); \
-ca5ecddfa8fcbd Paul E. McKenney        2010-04-28  542  })
-24ba53017e188e Chun-Hung Tseng         2021-09-15  543  #define __rcu_dereference_protected(p, local, c, space) \
-ca5ecddfa8fcbd Paul E. McKenney        2010-04-28  544  ({ \
-f78f5b90c4ffa5 Paul E. McKenney        2015-06-18  545  	RCU_LOCKDEP_WARN(!(c), "suspicious rcu_dereference_protected() usage"); \
-423a86a610cad1 Joel Fernandes (Google  2018-12-12  546) 	rcu_check_sparse(p, space); \
-ca5ecddfa8fcbd Paul E. McKenney        2010-04-28  547  	((typeof(*p) __force __kernel *)(p)); \
-ca5ecddfa8fcbd Paul E. McKenney        2010-04-28  548  })
-24ba53017e188e Chun-Hung Tseng         2021-09-15  549  #define __rcu_dereference_raw(p, local) \
-995f1405610bd8 Paul E. McKenney        2016-07-01  550  ({ \
-995f1405610bd8 Paul E. McKenney        2016-07-01  551  	/* Dependency order vs. p above. */ \
-24ba53017e188e Chun-Hung Tseng         2021-09-15  552  	typeof(p) local = READ_ONCE(p); \
-24ba53017e188e Chun-Hung Tseng         2021-09-15  553  	((typeof(*p) __force __kernel *)(local)); \
-995f1405610bd8 Paul E. McKenney        2016-07-01  554  })
-24ba53017e188e Chun-Hung Tseng         2021-09-15  555  #define rcu_dereference_raw(p) __rcu_dereference_raw(p, __UNIQUE_ID(rcu))
-ca5ecddfa8fcbd Paul E. McKenney        2010-04-28  556  
-
-:::::: The code at line 538 was first introduced by commit
-:::::: 24ba53017e188e031f9cb8b290286fad52d2af00 rcu: Replace ________p1 and _________p1 with __UNIQUE_ID(rcu)
-
-:::::: TO: Chun-Hung Tseng <henrybear327@gmail.com>
-:::::: CC: Paul E. McKenney <paulmck@kernel.org>
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+thanks,
+-- Shuah
