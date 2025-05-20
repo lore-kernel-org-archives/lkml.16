@@ -1,142 +1,90 @@
-Received: from exchange.fintech.ru (exchange.fintech.ru [195.54.195.159])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DD8D21A45A;
-	Tue, 20 May 2025 11:32:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.54.195.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B13C01CAA6E;
+	Tue, 20 May 2025 11:34:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747740782; cv=none; b=F3OJ+kpOJS3QS7XCUX52OlL58thNkbFgHeUvbLuW7VurxrRwh3A5YWNSKHyHloAuccB7jwtYhao+f/VHMBgTXLaYGIe6Qv4INXUVItW1hLxAkJTh9NFl5SE4LJlWS8HgpQFnr84/1pzCScZ32GOpouo4oVA3wDQpFaQhlVKUFAc=
+	t=1747740865; cv=none; b=eGiYyY54LQAE2yUixQIamJF2KnlUmoZyeVw/DRbaEmsFcQa8sV3eKU+tztiePti0QBbauGeeYbqf9dJ66mwojFJ/uNiocl67q/TWkDTzOKIkfmjcUR5a3Ra2KwNJAVGKQV+N8hxcZ9kTR8Hi7RwCkW5Zk3xogUbQlk+Fq70fe2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747740782; c=relaxed/simple;
-	bh=k1fG5ajRDy2nag7Bj63UX37XmQ7V6ulqT0aGln+oI1w=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=iJ6TZn3+8FP2Cu9s+qCfYlP5vCqCOTh8OcnjivHQbKbhAh2REQKL/LfcRjd6iX4oJFgzZ6YLv0Y7/eRpZKNKL8qu7u2yq1PB3oDGWFl0ZxTKDmqQ82vnRwXsQuKpUX7rk3pnPbSl/J2jPMSem0RdJkGwfNcNKM+bnBxdIAVHk5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru; spf=pass smtp.mailfrom=fintech.ru; arc=none smtp.client-ip=195.54.195.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fintech.ru
-Received: from Ex16-01.fintech.ru (10.0.10.18) by exchange.fintech.ru
- (195.54.195.159) with Microsoft SMTP Server (TLS) id 14.3.498.0; Tue, 20 May
- 2025 14:32:53 +0300
-Received: from localhost (10.0.253.101) by Ex16-01.fintech.ru (10.0.10.18)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Tue, 20 May
- 2025 14:32:53 +0300
-From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
-To: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
-	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>
-CC: Nikita Zhandarovich <n.zhandarovich@fintech.ru>, Jakub Kicinski
-	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	<linux-usb@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>,
-	<syzbot+3b6b9ff7b80430020c7b@syzkaller.appspotmail.com>,
-	<lvc-project@linuxtesting.org>
-Subject: [PATCH net-next] net: usb: aqc111: fix error handling of usbnet read calls
-Date: Tue, 20 May 2025 14:32:39 +0300
-Message-ID: <20250520113240.2369438-1-n.zhandarovich@fintech.ru>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1747740865; c=relaxed/simple;
+	bh=inUwVojIjuaaR/waOD+9jgxuZtOW6VGmFPF1U3mZQho=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Yjo8c4qq87a+KmKfENySHho8N+Q5bMikvPhIWTxq1JabH0IHEND2uXybKXTAQ6GFWPYanHvB28LDLkgNSqoJTT2s2UEKPFwtD3ICmlYg36967FsDOdIARrNIH94S3GjEhylxHMKZmw01+NQiTr4Nm3AkqtQdDdmo47S8vl9yfuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aaTkhuZS; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aaTkhuZS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 997E2C4CEEB;
+	Tue, 20 May 2025 11:34:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747740865;
+	bh=inUwVojIjuaaR/waOD+9jgxuZtOW6VGmFPF1U3mZQho=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=aaTkhuZSB/VGl0THmklOnEs/u31dbRa8IL0K3B8GYNVYUIbcJ6ZseKNMQ/9Zb/53p
+	 1iGH/Y4SNy4C72N2ckVrQ+qXLPDYirKLGGX7lWeZJIGwsci46j7AJlFfeAgV6fPq3q
+	 7ljb9q0BqPzD6UG1fWgRRrObefiE4RR0NUwpwoSygNWB3sIFEl5lV/ghjUgtsL1PTE
+	 mPkI5Nm3Va/6rmsjBUdqIdx4ZNesigxFxZrHvPHmg2n3fl5KlsdwZ8Kfw/dO12OqId
+	 H2vmjr//R8gNYRZyEXyzhiQ9t5s2zrjcowrZq+f97uxAliMJioMAo76D4miD5rHCMc
+	 xNRwkJmoT2rsA==
+From: Christian Brauner <brauner@kernel.org>
+To: Christian Brauner <brauner@kernel.org>,
+	David Howells <dhowells@redhat.com>
+Cc: Paulo Alcantara <pc@manguebit.com>,
+	netfs@lists.linux.dev,
+	linux-afs@lists.infradead.org,
+	linux-cifs@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	ceph-devel@vger.kernel.org,
+	v9fs@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/4] netfs: Miscellaneous fixes
+Date: Tue, 20 May 2025 13:34:14 +0200
+Message-ID: <20250520-aufnimmt-abgemacht-9b1ddff0e6af@brauner>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250519090707.2848510-1-dhowells@redhat.com>
+References: <20250519090707.2848510-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1470; i=brauner@kernel.org; h=from:subject:message-id; bh=inUwVojIjuaaR/waOD+9jgxuZtOW6VGmFPF1U3mZQho=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWToZOyqfCYUVsH8OenSk2WP2NI2s+jltz9Im/CCYdvfV d5mcS+iO0pZGMS4GGTFFFkc2k3C5ZbzVGw2ytSAmcPKBDKEgYtTACYSxMrIcOa3rs5nf6PDhXpb c3fFhMn/8pD7yl44+/T0f+/9tx5blsTIcJLbwrDd2maBxbwvSSpGKy0cvzyed+h15ptXx/Zb209 czQQA
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: Ex16-02.fintech.ru (10.0.10.19) To Ex16-01.fintech.ru
- (10.0.10.18)
 
-Syzkaller, courtesy of syzbot, identified an error (see report [1]) in
-aqc111 driver, caused by incomplete sanitation of usb read calls'
-results. This problem is quite similar to the one fixed in commit
-920a9fa27e78 ("net: asix: add proper error handling of usb read errors").
+On Mon, 19 May 2025 10:07:00 +0100, David Howells wrote:
+> Here are some miscellaneous fixes and changes for netfslib, if you could
+> pull them:
+> 
+>  (1) Fix an oops in write-retry due to mis-resetting the I/O iterator.
+> 
+>  (2) Fix the recording of transferred bytes for short DIO reads.
+> 
+> [...]
 
-For instance, usbnet_read_cmd() may read fewer than 'size' bytes,
-even if the caller expected the full amount, and aqc111_read_cmd()
-will not check its result properly. As [1] shows, this may lead
-to MAC address in aqc111_bind() being only partly initialized,
-triggering KMSAN warnings.
+Applied to the vfs-6.16.netfs branch of the vfs/vfs.git tree.
+Patches in the vfs-6.16.netfs branch should appear in linux-next soon.
 
-Fix the issue by verifying that the number of bytes read is
-as expected and not less.
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-[1] Partial syzbot report:
-BUG: KMSAN: uninit-value in is_valid_ether_addr include/linux/etherdevice.h:208 [inline]
-BUG: KMSAN: uninit-value in usbnet_probe+0x2e57/0x4390 drivers/net/usb/usbnet.c:1830
- is_valid_ether_addr include/linux/etherdevice.h:208 [inline]
- usbnet_probe+0x2e57/0x4390 drivers/net/usb/usbnet.c:1830
- usb_probe_interface+0xd01/0x1310 drivers/usb/core/driver.c:396
- call_driver_probe drivers/base/dd.c:-1 [inline]
- really_probe+0x4d1/0xd90 drivers/base/dd.c:658
- __driver_probe_device+0x268/0x380 drivers/base/dd.c:800
-...
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
-Uninit was stored to memory at:
- dev_addr_mod+0xb0/0x550 net/core/dev_addr_lists.c:582
- __dev_addr_set include/linux/netdevice.h:4874 [inline]
- eth_hw_addr_set include/linux/etherdevice.h:325 [inline]
- aqc111_bind+0x35f/0x1150 drivers/net/usb/aqc111.c:717
- usbnet_probe+0xbe6/0x4390 drivers/net/usb/usbnet.c:1772
- usb_probe_interface+0xd01/0x1310 drivers/usb/core/driver.c:396
-...
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
 
-Uninit was stored to memory at:
- ether_addr_copy include/linux/etherdevice.h:305 [inline]
- aqc111_read_perm_mac drivers/net/usb/aqc111.c:663 [inline]
- aqc111_bind+0x794/0x1150 drivers/net/usb/aqc111.c:713
- usbnet_probe+0xbe6/0x4390 drivers/net/usb/usbnet.c:1772
- usb_probe_interface+0xd01/0x1310 drivers/usb/core/driver.c:396
- call_driver_probe drivers/base/dd.c:-1 [inline]
-...
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs-6.16.netfs
 
-Local variable buf.i created at:
- aqc111_read_perm_mac drivers/net/usb/aqc111.c:656 [inline]
- aqc111_bind+0x221/0x1150 drivers/net/usb/aqc111.c:713
- usbnet_probe+0xbe6/0x4390 drivers/net/usb/usbnet.c:1772
-
-Reported-by: syzbot+3b6b9ff7b80430020c7b@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=3b6b9ff7b80430020c7b
-Tested-by: syzbot+3b6b9ff7b80430020c7b@syzkaller.appspotmail.com
-Fixes: df2d59a2ab6c ("net: usb: aqc111: Add support for getting and setting of MAC address")
-Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
----
-P.S. In aqc111 there are many calls to aqc111_read_cmd[_nopm]
-functions in other parts of the driver and most of them are not
-checked at all. I've chosen to forego error handling of them, as
-it seems it's missing deliberately. Correct me if I am wrong.
-
- drivers/net/usb/aqc111.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/usb/aqc111.c b/drivers/net/usb/aqc111.c
-index ff5be2cbf17b..453a2cf82753 100644
---- a/drivers/net/usb/aqc111.c
-+++ b/drivers/net/usb/aqc111.c
-@@ -30,10 +30,13 @@ static int aqc111_read_cmd_nopm(struct usbnet *dev, u8 cmd, u16 value,
- 	ret = usbnet_read_cmd_nopm(dev, cmd, USB_DIR_IN | USB_TYPE_VENDOR |
- 				   USB_RECIP_DEVICE, value, index, data, size);
- 
--	if (unlikely(ret < 0))
-+	if (unlikely(ret < size)) {
-+		ret = ret < 0 ? ret : -ENODATA;
-+
- 		netdev_warn(dev->net,
- 			    "Failed to read(0x%x) reg index 0x%04x: %d\n",
- 			    cmd, index, ret);
-+	}
- 
- 	return ret;
- }
-@@ -46,10 +49,13 @@ static int aqc111_read_cmd(struct usbnet *dev, u8 cmd, u16 value,
- 	ret = usbnet_read_cmd(dev, cmd, USB_DIR_IN | USB_TYPE_VENDOR |
- 			      USB_RECIP_DEVICE, value, index, data, size);
- 
--	if (unlikely(ret < 0))
-+	if (unlikely(ret < size)) {
-+		ret = ret < 0 ? ret : -ENODATA;
-+
- 		netdev_warn(dev->net,
- 			    "Failed to read(0x%x) reg index 0x%04x: %d\n",
- 			    cmd, index, ret);
-+	}
- 
- 	return ret;
- }
+[1/4] netfs: Fix oops in write-retry from mis-resetting the subreq iterator
+      https://git.kernel.org/vfs/vfs/c/cd084c7184ce
+[2/4] netfs: Fix setting of transferred bytes with short DIO reads
+      https://git.kernel.org/vfs/vfs/c/2973904c9b79
+[3/4] netfs: Fix the request's work item to not require a ref
+      https://git.kernel.org/vfs/vfs/c/537b296114cc
+[4/4] netfs: Fix wait/wake to be consistent about the waitqueue used
+      https://git.kernel.org/vfs/vfs/c/2a6d0284a4a3
