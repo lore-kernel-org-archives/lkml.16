@@ -1,111 +1,190 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 853821FFC54;
-	Tue, 20 May 2025 19:59:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 169E446B5;
+	Tue, 20 May 2025 20:00:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747771179; cv=none; b=VV2Odl2P6CQk7OH+0nxnq0BbRdDNuaaNlZymeGr63ht62VpmfRmWFNpEC2Pms3nrDv+jPasrxNz+nBkcsWcgBXUnLEHaViy0oF75Aj8Fy00qf5r3IExr8ZpLB7ndO7vjkXI6VAX9Ycy2xF8O8+XLNygQOloTVghz34U0eYxe+RQ=
+	t=1747771250; cv=none; b=QDVYMXXfViitNH8+1ho7SafqSwppTy/XCht4zuWN5eUhJVj7FtPa67eVT0Cpnwz4s8jO8EBxaSfdi95PkWRkKqB3X9+JalTKML+mVrm0HtbI90nhGAXf7dyKiHc2kxweVX1DDzaFvWc75uu8JM/9iZt7QYunhlWyz5e8SEjfJ7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747771179; c=relaxed/simple;
-	bh=pYVFlS69XDxsHN23lybt9RSWuBOvdx2W2TJ4J67ytOo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oBD3Opurd9VjWOBsGc9NXlZrWD1OgRnQ36b/UTmggWuQcQIcJi8be9U+eiz43cT53uNPO9acoY5VoaT7+ZiHn8RbERS9gB4jVo8ldFrSLkaHYx3HATJ4/srTrQrdDLVZHrE0EL22V7Hy5QZjpNbUGZ0x672RyRWUHCZxFNr9QQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eccU5JfO; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eccU5JfO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C674AC4CEE9;
-	Tue, 20 May 2025 19:59:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747771179;
-	bh=pYVFlS69XDxsHN23lybt9RSWuBOvdx2W2TJ4J67ytOo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eccU5JfOabmAf7qbz66mkoZeidMaFmn+BtKQqlt05ksQf5cbyiQ8YHrnIhRkvx2iV
-	 pLi3Uvm9kdSDCdv8k7fMO+kJzIyfz7vPOTN9Az0cmsEF91UJID6ecvKQQCVkQB8kRx
-	 DcrZh/S0v3v5xNwOVW3iysVp+5kBEyfqBifQVZlWGYteffmNeVV6iqNCDnO2QPhXeh
-	 3e9C/mVqJ8XGLz07WQORwxVl/2QUmFhM4tFD7Az7Nv8oXlW7fkpcoeZhMoI+wUZtid
-	 JpePLGkLIFBgKcbm9wwpSFRa343y45CPfdlOzj+rX/nYzJ1WXScoHyBb8OlqthNYvg
-	 dZuJbJ7cYFc2g==
-Date: Tue, 20 May 2025 14:59:36 -0500
-From: Rob Herring <robh@kernel.org>
-To: Charan Pedumuru <charan.pedumuru@gmail.com>
-Cc: Conor Dooley <conor@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-mmc@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] dt-bindings: mmc: ti-omap: convert text based binding
- to json schema
-Message-ID: <20250520195936.GA1261173-robh@kernel.org>
-References: <20250519-ti-omap-v2-1-2a0dbc08fb9c@gmail.com>
- <20250519-unstamped-tabasco-05d9c7223289@spud>
- <314cdaf1-b989-4cae-a275-d962186bd46c@gmail.com>
+	s=arc-20240116; t=1747771250; c=relaxed/simple;
+	bh=qKfSPG9K79WyI4EW3CnFmX5Ja+fl2qkbBt6UeOyPZ4A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=jv2tC53NraeEwHkbzIj/1govfh8hgiklqMZw4/qrchbJR7ANlpOZClwzQlvcY+PwJbvZ7JX1MYTA8PTIuDfjYbgWr6N1ekojgLcIV/vxcbs8D0dPMjPzTdWHGuWnJY4h+D9BorQczL6aijvbw8y7fISPMFS6/znAHW0pk3yWydA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buenzli.dev
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4b255S0bC4z9t2q;
+	Tue, 20 May 2025 22:00:44 +0200 (CEST)
+From: Remo Senekowitsch <remo@buenzli.dev>
+To: Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Dirk Behme <dirk.behme@de.bosch.com>,
+	Remo Senekowitsch <remo@buenzli.dev>
+Cc: linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: [PATCH v5 1/9] rust: device: Create FwNode abstraction for accessing device properties
+Date: Tue, 20 May 2025 22:00:16 +0200
+Message-ID: <20250520200024.268655-2-remo@buenzli.dev>
+In-Reply-To: <20250520200024.268655-1-remo@buenzli.dev>
+References: <20250520200024.268655-1-remo@buenzli.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <314cdaf1-b989-4cae-a275-d962186bd46c@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 4b255S0bC4z9t2q
 
-On Tue, May 20, 2025 at 10:06:50AM +0530, Charan Pedumuru wrote:
-> 
-> 
-> On 19-05-2025 21:29, Conor Dooley wrote:
-> > On Mon, May 19, 2025 at 01:11:17PM +0000, Charan Pedumuru wrote:
-> >> Convert TI MMC host controller binding to YAML format.
-> >> Changes during Conversion:
-> >> - Add new properties 'dma', 'dma-names' under required.
-> >> - Define two separate phandles for 'dmas' in the examples.
-> >> - Include appropriate header file for interrupts and use
-> >>   it in the examples.
-> >>
-> >> Signed-off-by: Charan Pedumuru <charan.pedumuru@gmail.com>
-> >> ---
-> >> Changes in v2:
-> >> - Added include statement for irq interrupt controller and
-> >>   modified the interrupts under property to use header.
-> >> - Changed maintainer to Rob Herring.
-> >> - Defined two seperate phandles for 'dmas' under examples.
-> >> - Rename the YAML file name to the compatible 'ti,omap2420-mmc'.
-> >> - Added missing type and maxItems to 'ti,hwmods' under properties.
-> >> - Link to v1: https://lore.kernel.org/r/20250510-ti-omap-v1-1-588b0ccb1823@gmail.com
-> >> ---
-> >>  .../devicetree/bindings/mmc/ti,omap2420-mmc.yaml   | 64 ++++++++++++++++++++++
-> >>  Documentation/devicetree/bindings/mmc/ti-omap.txt  | 26 ---------
-> >>  2 files changed, 64 insertions(+), 26 deletions(-)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/mmc/ti,omap2420-mmc.yaml b/Documentation/devicetree/bindings/mmc/ti,omap2420-mmc.yaml
-> >> new file mode 100644
-> >> index 0000000000000000000000000000000000000000..195db77e0063b867f318ffc6b5f8811adb531515
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/mmc/ti,omap2420-mmc.yaml
-> >> @@ -0,0 +1,64 @@
-> >> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> >> +%YAML 1.2
-> >> +---
-> >> +$id: http://devicetree.org/schemas/mmc/ti,omap2420-mmc.yaml#
-> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >> +
-> >> +title: TI MMC host controller for OMAP1 and 2420
-> >> +
-> >> +description:
-> >> +  The MMC Host controller for TI OMAP1 and 2420 family provides
-> >> +  an interface for MMC, SD and SDIO types of memory cards.
-> >> +
-> >> +allOf:
-> >> +  - $ref: mmc-controller.yaml
-> >> +
-> >> +maintainers:
-> >> +  - Rob Herring <robh@kernel.org>
-> > 
-> > This patch looks fine, but I don't want to ack this with Rob's name
-> > there. Tony Lindgren <tony@atomide.com> wrote the original binding
-> > as far as I saw from a quick check, maybe he's a more suitable pick?
-> 
-> Sure, I will add Tony to the maintainers then.
+Accessing device properties is currently done via methods on `Device`
+itself, using bindings to device_property_* functions. This is
+sufficient for the existing method property_present. However, it's not
+sufficient for other device properties we want to access. For example,
+iterating over child nodes of a device will yield a fwnode_handle.
+That's not a device, so it wouldn't be possible to read the properties
+of that child node. Thus, we need an abstraction over fwnode_handle and
+methods for reading its properties.
 
-Replace, not add.
+Add a struct FwNode which abstracts over the C struct fwnode_handle.
+Implement its reference counting analogous to other Rust abstractions
+over reference-counted C structs.
 
-Rob
+Subsequent patches will add functionality to access FwNode and read
+properties with it.
+
+Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
+---
+ MAINTAINERS                    |  1 +
+ rust/helpers/helpers.c         |  1 +
+ rust/helpers/property.c        |  8 ++++++
+ rust/kernel/device.rs          |  2 ++
+ rust/kernel/device/property.rs | 47 ++++++++++++++++++++++++++++++++++
+ 5 files changed, 59 insertions(+)
+ create mode 100644 rust/helpers/property.c
+ create mode 100644 rust/kernel/device/property.rs
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 3cbf9ac0d83f6..0b95c4b0f657e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7248,6 +7248,7 @@ F:	include/linux/property.h
+ F:	include/linux/sysfs.h
+ F:	lib/kobj*
+ F:	rust/kernel/device.rs
++F:	rust/kernel/device/
+ F:	rust/kernel/device_id.rs
+ F:	rust/kernel/devres.rs
+ F:	rust/kernel/driver.rs
+diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
+index 1e7c84df72521..6aac840417648 100644
+--- a/rust/helpers/helpers.c
++++ b/rust/helpers/helpers.c
+@@ -25,6 +25,7 @@
+ #include "platform.c"
+ #include "pci.c"
+ #include "pid_namespace.c"
++#include "property.c"
+ #include "rbtree.c"
+ #include "rcu.c"
+ #include "refcount.c"
+diff --git a/rust/helpers/property.c b/rust/helpers/property.c
+new file mode 100644
+index 0000000000000..08f68e2dac4a9
+--- /dev/null
++++ b/rust/helpers/property.c
+@@ -0,0 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <linux/property.h>
++
++void rust_helper_fwnode_handle_put(struct fwnode_handle *fwnode)
++{
++	fwnode_handle_put(fwnode);
++}
+diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
+index 0353c5552769c..d8619d4485fb4 100644
+--- a/rust/kernel/device.rs
++++ b/rust/kernel/device.rs
+@@ -14,6 +14,8 @@
+ #[cfg(CONFIG_PRINTK)]
+ use crate::c_str;
+ 
++pub mod property;
++
+ /// A reference-counted device.
+ ///
+ /// This structure represents the Rust abstraction for a C `struct device`. This implementation
+diff --git a/rust/kernel/device/property.rs b/rust/kernel/device/property.rs
+new file mode 100644
+index 0000000000000..e75d55f5856cf
+--- /dev/null
++++ b/rust/kernel/device/property.rs
+@@ -0,0 +1,47 @@
++// SPDX-License-Identifier: GPL-2.0
++
++//! Unified device property interface.
++//!
++//! C header: [`include/linux/property.h`](srctree/include/linux/property.h)
++
++use core::ptr;
++
++use crate::{bindings, types::Opaque};
++
++/// A reference-counted fwnode_handle.
++///
++/// This structure represents the Rust abstraction for a
++/// C `struct fwnode_handle`. This implementation abstracts the usage of an
++/// already existing C `struct fwnode_handle` within Rust code that we get
++/// passed from the C side.
++///
++/// # Invariants
++///
++/// A `FwNode` instance represents a valid `struct fwnode_handle` created by the
++/// C portion of the kernel.
++///
++/// Instances of this type are always reference-counted, that is, a call to
++/// `fwnode_handle_get` ensures that the allocation remains valid at least until
++/// the matching call to `fwnode_handle_put`.
++#[repr(transparent)]
++pub struct FwNode(Opaque<bindings::fwnode_handle>);
++
++impl FwNode {
++    /// Obtain the raw `struct fwnode_handle *`.
++    pub(crate) fn as_raw(&self) -> *mut bindings::fwnode_handle {
++        self.0.get()
++    }
++}
++
++// SAFETY: Instances of `FwNode` are always reference-counted.
++unsafe impl crate::types::AlwaysRefCounted for FwNode {
++    fn inc_ref(&self) {
++        // SAFETY: The existence of a shared reference guarantees that the refcount is non-zero.
++        unsafe { bindings::fwnode_handle_get(self.as_raw()) };
++    }
++
++    unsafe fn dec_ref(obj: ptr::NonNull<Self>) {
++        // SAFETY: The safety requirements guarantee that the refcount is non-zero.
++        unsafe { bindings::fwnode_handle_put(obj.cast().as_ptr()) }
++    }
++}
+-- 
+2.49.0
+
