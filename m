@@ -1,200 +1,180 @@
-Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E10A1172A;
-	Tue, 20 May 2025 12:28:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.178.238
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747744085; cv=fail; b=r7RZMXX+Lvt6GaPWHadnYOEfpmjtcfhS9+aud1HVmRpsHp2IG7Fibz5W0r2ZZoxAhu4nsusmN4iZZaDGpQVf+y0cihEFAr9DTpbSeOE88BWnwAgpIO970P0vutBQmXdwl+VcOd7ViQuK5/oc1AcjI+GUie0+NyaFv+bdocRBMQk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747744085; c=relaxed/simple;
-	bh=CN1CyN1VyfaHYPYifcmyJzOjWT2LzPY10j7crZ3YMe0=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=YYcSXGiR7uA8ksIayROOJhLg81zDPkr01T0vNuZctf4WpDcbbZ/KTdJMzFbSwINRxBSXyArVwJ+soMNQr9v/qH5doDkx4CPU4fCbOYxABvnxwXecXmV054iCzc9WfgGGaQJtG9GAfhP+LRFOTzKXzVM2sl7rZC4ZHizEhP5yWaE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=fail smtp.client-ip=205.220.178.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
-Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54K3h9j0018366;
-	Tue, 20 May 2025 12:27:48 GMT
-Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2175.outbound.protection.outlook.com [104.47.59.175])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 46phe8u702-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 May 2025 12:27:48 +0000 (GMT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=A0XtvQ6YWej/TlPfO8pWuRh3+0D6QFCpUv+v3MfU8KnuWzydIonXXi/Th8SetJq0XzwwJlzbOmxfYcNnV2EQZlzwemcBGoqHsj//tvvJKPk1vp0wNjCOdE9ZYBTASbQjyoWX8ULSHsq1DZUCYTYdrMdt+p8Ol1kyx6eFHYnjqxmG8xU4kctYkjyfDU/OzbCyZ/P9Jm9BnBtxAOA6eo1zLRatZzVJyJAP9crnb8xuVb4Xn/2wIhyAARZZt2wU/RR7visz+jp+gYiqvK9alAqkmkt6Wr9xEZ811+KhZS4a/AbygBeTSH4Cr93tUo2rv9/hDvifyqZmsKqWCWcJxUBA8Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CN1CyN1VyfaHYPYifcmyJzOjWT2LzPY10j7crZ3YMe0=;
- b=V98TIkKNLHqhpgqn5gekgkKDpgUmbS4TskANDobbyqYmiCm3YyQ3Dt/EQrW7oyPQ/biSgh/sM/ENGVJ7zAJy09H99GHLa9DknS8Y8pLGPifHXyUZB2urgAyQlHk7NRKZRWAm1sXt5OR4T8+tAFH9+9xtSJSu7nhiXzroPy3zGNQQZ/B9dsexYb/FU35IMxW71Dmiko5lxRG5Kb0rD/7ovrmfb+83qoHrnkV1Rk72xvkQq4TLdzNqcgvb9YjaYUM6z1V2snmwTFQOyzpDPd7+LgDAaYrzfoClooDuVTOb+Tya3GF08uhLeedkFzqJz+6U2audFu0XbMF6M8evmdr32w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=windriver.com; dmarc=pass action=none
- header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
-Received: from BL1PR11MB5979.namprd11.prod.outlook.com (2603:10b6:208:386::9)
- by DM6PR11MB4609.namprd11.prod.outlook.com (2603:10b6:5:28f::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.31; Tue, 20 May
- 2025 12:27:44 +0000
-Received: from BL1PR11MB5979.namprd11.prod.outlook.com
- ([fe80::b0f6:fbc:94be:2372]) by BL1PR11MB5979.namprd11.prod.outlook.com
- ([fe80::b0f6:fbc:94be:2372%6]) with mapi id 15.20.8746.030; Tue, 20 May 2025
- 12:27:44 +0000
-From: "Xu, Lizhi" <Lizhi.Xu@windriver.com>
-To: "hch@infradead.org" <hch@infradead.org>
-CC: Christian Hesse <mail@eworm.de>, "axboe@kernel.dk" <axboe@kernel.dk>,
-        "christian@heusel.eu" <christian@heusel.eu>,
-        "linux-block@vger.kernel.org"
-	<linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        "ming.lei@redhat.com" <ming.lei@redhat.com>,
-        "syzbot+6af973a3b8dfd2faefdc@syzkaller.appspotmail.com"
-	<syzbot+6af973a3b8dfd2faefdc@syzkaller.appspotmail.com>,
-        "syzkaller-bugs@googlegroups.com" <syzkaller-bugs@googlegroups.com>
-Subject: Re: [PATCH V5] loop: Add sanity check for read/write_iter
-Thread-Topic: [PATCH V5] loop: Add sanity check for read/write_iter
-Thread-Index: AQHbyYKWsbsdRPZ7tUGQAg7/UUN1ZQ==
-Date: Tue, 20 May 2025 12:27:44 +0000
-Message-ID:
- <BL1PR11MB5979EFA72DA54AB231D408CF869FA@BL1PR11MB5979.namprd11.prod.outlook.com>
-References: <20250519175640.2fcac001@leda.eworm.net>
- <20250520030051.177205-1-lizhi.xu@windriver.com>
- <20250520073901.6fdfbee4@leda.eworm.net>
- <BL1PR11MB5979C666DA3BC228C2C30E92869FA@BL1PR11MB5979.namprd11.prod.outlook.com>
- <aCwlRMEuvvP31UGG@infradead.org>
-In-Reply-To: <aCwlRMEuvvP31UGG@infradead.org>
-Accept-Language: zh-CN, en-AS, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BL1PR11MB5979:EE_|DM6PR11MB4609:EE_
-x-ms-office365-filtering-correlation-id: c34d0b58-d551-4274-614b-08dd9799b8f2
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|376014|1800799024|366016|38070700018;
-x-microsoft-antispam-message-info:
- =?gb2312?B?eXdzVWg1RU8vZE0yVlZGYkJ0OGM5YkZiQzFxSVE0WUEyNkJIVVd3M1JzVUxw?=
- =?gb2312?B?YVB0RVhXUGF6alIvcG8vSDducUZRR250OXlpS0JvN0xwSjQ3S2U0K1Bla3pL?=
- =?gb2312?B?cHpPTFlSSkhNTURaZy9IelpyeUk3V3FzSUJNMFZMNWttOVRxQWdhdkxFLzlL?=
- =?gb2312?B?MGRDV2VOWGNMOThiUzEzdlU0UTl4UWNTWVJkTG9RNEVxS2ovSytmMU51eUIy?=
- =?gb2312?B?ditmMmFNa2cvK1hlSWJaRm53VFJIbENZdWYvVnlrdk9uUTVrbXpTaFBBSjBV?=
- =?gb2312?B?R1ZWNEEvOW1DS3d1ODl1dWlYN244WGsxN3JDWElRQUVQdmp2RzFXV0N1Sklx?=
- =?gb2312?B?Y3NrblNjeHhLdlBYTW5ZUUEvcDhGUGp0VmlpYkcyQXM3WGk3ZG1WOW1QT0c1?=
- =?gb2312?B?WTVVRkRTa3BxTllBWnlGbytNSlgzSTkzYlRJWHB3c21VVFdNLzlqc1o5NFVW?=
- =?gb2312?B?ZnN4SUtibHVYejVHODV6MnhNVDZNVXdNUmZsUDU1RkFzWXRydE5WWGxOeE9q?=
- =?gb2312?B?am5GWmQ1QXBOQklOc3dOUG91WVV0UVdBbERlM3hDVWNueFI1WWpTS2tvZVNa?=
- =?gb2312?B?cnEyNzcxM3lHV0xVMEdXWmhIR0xzSHN0b0JsSzRndlJMeS8wUS9OMkFnM1Ix?=
- =?gb2312?B?SFBxTFRicEJBQ1hzWXkyaEQzRUhWZk5tNUgwNDFYSkdIOExyZzhHb1JUb2FN?=
- =?gb2312?B?OVJnN1M3SVhZeW90YlduTUJkdEQvL1lTOFRvazFNMDV5eHkraUpTRy82a3RN?=
- =?gb2312?B?MzB6Qi82ZyttUXVLdEVaa0NTSEVRRk9DblphNVI1dHgvYjhPOHNmaUFiSlM3?=
- =?gb2312?B?cWJyMDZ5ZUZMVCtzUjdFNC9BbHJMZHRwdThMZXE5cnRLcVJ2QUUzeU9JMXR0?=
- =?gb2312?B?Mk5oek5aWTBmRXV2RkJEUlNQbXo5Z1dkUmJVUlJDNTMyT3NoZzdIcUppZVJs?=
- =?gb2312?B?YU54SlVyZ3RMcVY5T1VxeDNWaU1vaWk2Tmc4bzh6YnZJZm5Uc0Z0emgrZFVq?=
- =?gb2312?B?Y2xjZHNlZVZhMlFzYXdVb1B2d3hYMmliTmZEV0lpOFpXSFE1NStlRzJVWTFw?=
- =?gb2312?B?Q1lhaWkyZTJkaHJkWjdmUi81V0VTM3V4WXk4RmF4RGpxNW5aZzRSTkdrVFRK?=
- =?gb2312?B?ZjBzVWdFNDJ0enpsSys5QUE1Zm5XWXVtamgxYXRoT0tuTlFyUWlNOVN4OVFW?=
- =?gb2312?B?K25KRXRpb3l3U0d0TUQ1TEluQXEvRXJxamROdExhallMczVSeXNscGt5a3ow?=
- =?gb2312?B?QjJxZlZDYzRibmdXL3lpbmhlQ3ZnMFlrMTdRZ1NXbzcrUFJTdU9zbUpveE4z?=
- =?gb2312?B?VXg0b3gzdTNXcWE3VDd4QnhpdHFnSlJTSDhkRlptTlNJQzYrTnI0MTdHWnJl?=
- =?gb2312?B?MWl4VG40SDV0T0NjQ3hLTUdHOEpCc1dESGFnSWlaYlFyRTZLa1BqUWhEeHVo?=
- =?gb2312?B?ME9wd2RjN0VLQngyNjJBemdHNkVablo4dDdVRzluUkxBaFVkV0Z4TEhGY09p?=
- =?gb2312?B?QnBVOEFyY1pFc1dOSi90U3doVGFac1F3SHlBRks0UWVLcC9DK0M4K3BXa051?=
- =?gb2312?B?MWdQd05TNjFrK2tzTENvZ1hZZER0WWpEeFVoeWtVYU1nTlBUYmdENDVqc2ZM?=
- =?gb2312?B?clZPeTZUZ0FRNU1sa2RKckt3OC9aWDh5aGIxWXVXMUlQeUtLcHE1SE9wQ0Fn?=
- =?gb2312?B?YlBLRXJxc1BZZS9Geld6dGlUVDJ1Q2FNc0R1d3ZkYnNXNU5zWk8wcTVDTUNz?=
- =?gb2312?B?TGt6VmhVaURmTnVMWHVENExSWXFFZzVzWGdudHpjYTFaNU9vME5MOWdoWEh0?=
- =?gb2312?B?ZmN1MnhNcFBaa2QzQThyWFZUeDdwOFVoYW9qdldYRmtncElnR2F3dWM3WFZt?=
- =?gb2312?B?cEw4dDJhRkZvVjJHb0t4VUY4anY1OFFFRUE5NTdCSGEydlFld0NreHJORlVQ?=
- =?gb2312?B?eGNSajNOS0twNk50WXJDR052TXQ3NjZzamhoN2IxYWIwZHFnLzNDTG1yVU9z?=
- =?gb2312?B?SEM2MmF2eGtRPT0=?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:zh-cn;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR11MB5979.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?gb2312?B?eDE0UjZOLzlObXM4bkdnblFQYzFtallQb0JhcmVlNGlpYTFnd1ZXZ0JSOXZK?=
- =?gb2312?B?czVTT3Q3YjJwMENPQ0ZXMWNNUjdaeUUrdEcvR2taMitiUzlrU0FqeHdzUnF4?=
- =?gb2312?B?TzI4L1BHREhFdEIxaEwzWkdhTTVUOEhUVitQMlp3T1hOSlpxYzB1S3Q2bFM3?=
- =?gb2312?B?M1l5UGUyMk82ZFFNRG9tOCtXOHhQWlZmc0lRSWRLbHhrS3B0cXY4Z2NDdzlB?=
- =?gb2312?B?OTVTd0pSc01SaW9wdGZQUm0vVEFqeFJNRWgzK05DQ3NNaCtIVEcxZVdCT1VD?=
- =?gb2312?B?SzdpR0pkVzlRczhUS0kzdW1NNnVMaEFXZEkwVVJ6Nmx1cDZjc0lDcXJDOXh0?=
- =?gb2312?B?LyszYnJtV01RRHpyVVpTcVNkU0V3VDVCQ0x3a3VDUGZGVDNXMmp6REtZMWdK?=
- =?gb2312?B?eTdqK3JQT1MrN2xENTlxSU1Femg0QWZ3cUltZEpkM2UyNUMzRUxUNHpxQktj?=
- =?gb2312?B?a3dpY2NYL1czTkl5cWZVb2NwQkhTZlY5NCtua2hEWEtyVWJ3N3laeHZWaDdl?=
- =?gb2312?B?RCtZY2g3WVQ0VWZQVzlkbE5Fd0JlNGlJWktxNGtsRm9SMHZXWHI4cCsydnVO?=
- =?gb2312?B?UFNEUFVaYmM0ejNrZ3hpWU9vNE53K2NsT1ZYeFF5amFPSXIrT2RvYXZIM3pG?=
- =?gb2312?B?MzY0M1lHVUM4NEFlY2NHNkdZdFZKRWV0QkUrMFFVK1NzeEovZWw2QmdyaFI3?=
- =?gb2312?B?NDhkRENaUW9BUzZUc0duS1I3RmF4TVdOeWI0YTlxNWRyR282T0h2VTNUeDJO?=
- =?gb2312?B?MVYzdm01aTdXRFpnY2FRcmdFdUFVTnpLbmRUMGsyR1ZjTnVJaEJycnZBMXFt?=
- =?gb2312?B?a3E5cjNBUmhLVnVjOFZQSkxqYjU0WWw0cC9YU3c5cE44Y0M4T2dZVDM3Skcz?=
- =?gb2312?B?M0diMnZLV2lXYnk3TVNycUp1NnpkYjJEaGlVa3BXU25pemJkR21ZYk1NYmxm?=
- =?gb2312?B?Zk9uWmJ0eUt0cGFVOHlkcDNIWUg2T2hsZUtEQkVrNWlCN2E4VFowQVlReldw?=
- =?gb2312?B?THN2eGZOeFhhVmNhNEY4ZDA1Ry8rdVYzVTVtaTJCYUYxZjhMbWE3Y1JIL1c2?=
- =?gb2312?B?VVZGRVluTkh0L2JaQkNhM1k5M2pZaldxQzdadzJmMEYraEFHcGhaRjV4LzlZ?=
- =?gb2312?B?ckNYS0hzSUJXbmRYbURJWmVFVlVhY2JPVlZNZkJwTUhhSC9oaWdyREF6S3pR?=
- =?gb2312?B?R0JmZ0ZiZSszQklYemR5WndoUFBrVmV6cUdmcTBKOHhKcnpZckgyWkppNmdn?=
- =?gb2312?B?c1lPZkhwOE1zQ041SWlIb2RjTXAyMDk3Wk9JL0pQRXZaVDBVU0Q3R2lBZFlo?=
- =?gb2312?B?WGpYT0U3bTliM3I4cmdrdlhrRkQ0RzQ5d0x4c0NMSE9RWU5DNHc4WlFwbDBx?=
- =?gb2312?B?YWJYTkp0ZENOYjcrLyt3eGw5YjFZRmxTU3BWOFFXM2NwblZvV0RITlJjOWtJ?=
- =?gb2312?B?QmszeVFla0RQRDBWb1BTaEpYeWk4VWh4K1YxVUtsK0M2NGpmeGtJRjR0V2pk?=
- =?gb2312?B?RmdtY01LVFRoNDNTMW15VGU3QkMxQW82MlRmZTVpQ3RoQTNLcGxOZmpSWDRG?=
- =?gb2312?B?QnVMSE9uL0UwS0kzdjNURWxobXNCbHYwNXBQR2dzVnJzU0FyNGwvajlJK2x3?=
- =?gb2312?B?a3FLRTNMUisvcjdmZGoyRXB6eVk0RytIS1VETHEzbFUxYjBJd2hyMkM5elRH?=
- =?gb2312?B?UnZsdHM1UGxxeDFJZ0xRZnh5OEtCM0hzMkdBUG5XL0psZnp2UTFBOXZzMmtE?=
- =?gb2312?B?N2Zjb0d4T0tXSllOYVA3NStOVXBscGswV1FIZExSU3laMnh3c0JzK2U1WE0r?=
- =?gb2312?B?Z1dOWjlZTjd5WS9VZ2pTb3pOM05PVE1CUWNDZEJXeExFeW9EY0hLK1VBaTNx?=
- =?gb2312?B?Yy9idUlEUFc0U2toUG1rcldRVmZaTGdORDlyNDR5OTl0Qzh5akF4ck4yQWpq?=
- =?gb2312?B?bVlSYnRxK1BIOWZOQ2lhN0psbnhLQWI5RkJ2WGVIQTQ2YWI2VEUwc2FXUE1O?=
- =?gb2312?B?SW04eVp3TWpUU2s3ZGpWSnNaTGtyMHZrUlM2N284U3ozdnByMWdIWlF4c2Fu?=
- =?gb2312?B?Q0wraUVac05FTWNLVkp2MFdQeHc4blpEZzdIUitzNmQzOG00SkZKS0g3YnZ1?=
- =?gb2312?Q?knCRiA2YBQeFlQ22rI8OwFjSe?=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5D331A5B9D
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 12:28:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747744112; cv=none; b=nB90VZ1ioDJUNtO0FR7pQDKtmzGid8tK8gJpWdE5Fu7JKdBoOqQ+G4ul3ycvEDGsPjyYwAuMBL2d/s8fD5shrvJH/FwnBz4yOwGIaCHEoYGuAfwFGb42GUbxle1VwWCndYK3dI4aIF5zrqYfDdcYYHiZNeThknOfurwhUBrlnL8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747744112; c=relaxed/simple;
+	bh=1w99zC5ZUIQPq1ZgWC4AK8q+MslsDz+45iZdr52x4Ro=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=qObvuo20GjGzfuXjBVSMfNKDVLL8OW0XqWHtxUfTDmQHlrV68hvHR4OVdsbwKGJbwlSTbolLTemZSyrZTSI/ufeVILHR3KqOaEX2gCP+mbQKhKGY38LctpPIrbfw42igi5/H+BHUj+1CHIRR5GzBQ5xeuKG+NNT+F9+2QXD1vrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=c/r4CUd2; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c/r4CUd2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747744109;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=5b8DwmjJyWtIWKCLaPFDNUFZFc5vK3ljotcJ3QRFsxo=;
+	b=c/r4CUd2toBIQladA+NcijLStWr5C0OCmodgSHNjW4fe8uei8djz1P7yX7J5wxBpv8/T4f
+	7RAx+3A99wNZduWl+m8k8PjvJEue37eAUAT4OOBCTC9/eofNpOwcavp0m+6oIvHNz1FHeE
+	YN4d5CXk676L4zY1ckQpOiNaYx+/Cww=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-30-8OLyftD7Ney1YL1AQLVFbg-1; Tue, 20 May 2025 08:28:28 -0400
+X-MC-Unique: 8OLyftD7Ney1YL1AQLVFbg-1
+X-Mimecast-MFC-AGG-ID: 8OLyftD7Ney1YL1AQLVFbg_1747744107
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a37a0d1005so440774f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 05:28:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747744107; x=1748348907;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5b8DwmjJyWtIWKCLaPFDNUFZFc5vK3ljotcJ3QRFsxo=;
+        b=KPXdOid+g844rVpHXHSxtz/M55mT5rSv0J+spQ8WkA+2nrW3d5IzeZukcaTmqP3KJE
+         K4NftLz594wn7E5TNlFrqxvj+TkZkMmjhy0Jhe0t42dKPmdNKXciNcOAf7GmASLqzAYl
+         KJ/omCr/BS85Ga9zdadU/1CJ1FcOe6UTHZx1D8fHNhdyxzR/vDF9N5ZtTvYFIi+lURTO
+         R8W0UQOltBaa1ZI8o1pMMx5tB/VUTYoi3kLNnbHENlz8Y9OXBPwjyPNvmYc3HQUf71jG
+         3BDsRQpr55eL9vnqITgynjhM3xkak6qNjdcmJ4/X4TJMTu2n2f4Yde5A5os7vtgjX4Jt
+         P2Fw==
+X-Gm-Message-State: AOJu0YzEN7eMgC8CIXqDMGqRZsmMvrPkTOqFyixNiwMfI6VjOxccpL/y
+	Myv7tGHxNR3O4tjDJI+s16mIlS3rLw8pAKmM9W/vFP+vSj79pBIVOeh9E94FlRjP11KAteVDNkR
+	eRmyq7aqMfm9xHop59NcWOVoMNdwm8tTINkafYvqnTbJlp87XYWTvkwYceLL+3PaV8g==
+X-Gm-Gg: ASbGncuqxYOi4xcbfJbGtVEZq2zEJ+8RmTQN++VvfTegCYTsdpQucehr75F0vaEzuQT
+	fYSgLqNk4CPb6adgOQcYQnNKot1zkN+7jReJU3A1g618C4ZRmgQcvm6ltHe+LT6GuiGKVpQCzsJ
+	dtfsqFFgDjaMtOjIv0bpIpyyAIKEEA79YkO9FDkqSDmvUqSQIj5aY243HyKbmmmpCgxQ1N//Yz/
+	c120l9/2iZ0Nb8kkUXIcmIT5MnSqR8/T5Ep1eA56tSc5FThZ8mGOarpWQJ/d98NBKhbKJB7MyjI
+	DVlRUrFNRARQoemcmD11OX4sRVyfQ890wy3CNg==
+X-Received: by 2002:a05:6000:2012:b0:3a0:b58c:dd8 with SMTP id ffacd0b85a97d-3a35c82fa3bmr12951135f8f.30.1747744106808;
+        Tue, 20 May 2025 05:28:26 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE08pFhTtIs4KPEaviYrIQse9rZTjPMnj74Ezvbe/ZZWj5AOJUJmvZKZFBoGQFPg5C6yij2fg==
+X-Received: by 2002:a05:6000:2012:b0:3a0:b58c:dd8 with SMTP id ffacd0b85a97d-3a35c82fa3bmr12951123f8f.30.1747744106416;
+        Tue, 20 May 2025 05:28:26 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.30])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a36835ef41sm12046155f8f.94.2025.05.20.05.28.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 05:28:25 -0700 (PDT)
+Message-ID: <7e6f50e5ffc31c512ca5e57c36ecfd733fdccf63.camel@redhat.com>
+Subject: Re: [PATCH v5 4/6] sched/isolation: Force housekeeping if isolcpus
+ and nohz_full don't leave any
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, 
+ Waiman Long <longman@redhat.com>
+Date: Tue, 20 May 2025 14:28:24 +0200
+In-Reply-To: <aCxvQxSS31PcHsDR@localhost.localdomain>
+References: <20250508145319.97794-8-gmonaco@redhat.com>
+	 <20250508145319.97794-12-gmonaco@redhat.com>
+	 <aCxvQxSS31PcHsDR@localhost.localdomain>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
+ xyhmqeUWOzFx5P43S1E1dhsrLWgP
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR11MB5979.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c34d0b58-d551-4274-614b-08dd9799b8f2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2025 12:27:44.4919
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: DhWDmq5Mk+sXhIgECPI0+DTFG5bgNbipuUfDmLRACbHF8sdbbdjeokKCWHKgzGnfygF7JcyhuBNraF6c/JlGLw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4609
-X-Proofpoint-GUID: OlcskIW8aodflR_tY8hlFHI6EQ3ZxrJu
-X-Proofpoint-ORIG-GUID: OlcskIW8aodflR_tY8hlFHI6EQ3ZxrJu
-X-Authority-Analysis: v=2.4 cv=arGyCTZV c=1 sm=1 tr=0 ts=682c7544 cx=c_pps a=c8UlD/aNTkVRGuk1JCy5IQ==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=_l4uJm6h9gAA:10
- a=dt9VzEwgFbYA:10 a=GEuU6v8Vd15IA_r8ZesA:9 a=mFyHDrcPJccA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDEwMCBTYWx0ZWRfXwABvR2+LmJUy f8d6nAbrvAhLMIaaTNyVe7ldcsNyR2RqrOXS25TcclvVPSrbGTEwN3XKDPDM42HgkL5TQDPlDtT K4QHTK7oAyx2Ml2kI21O4bbhfhTFYtxKOb/0U0SlR3FOYql5lKib/tSqGBOlLlitYqNaF7tQ2sr
- DEHAG6mlXl45FNCmJemL2BkLaaMwQ7e4JXKk8up5qZJ753n0H/3/DEnvVWUbTdiJpjO38yh/mxe FcU9hyce4uvtPYIHBvcKPN5sk+5XM93odzACruknyxBgqVZd+K+5CODYXFr+Nt8bgi070ApTo6m H2dIK6EMCsYrFB1qZo0e7T9Iwg/wEUvoOPQ9VYfNOYtcY6hyy8TkPuvlekHaHzfDE5G3aIhktvS
- 3hgPmk/rx1/UxWocDgSKscxufSn11b9ANxBjkDJJ4LpUr/bHhRySMkMZSZJR/JiJpgPvUkWj
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-20_05,2025-05-16_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
- priorityscore=1501 bulkscore=0 impostorscore=0 lowpriorityscore=0
- spamscore=0 phishscore=0 clxscore=1015 adultscore=0 suspectscore=0
- mlxlogscore=541 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.21.0-2505070000
- definitions=main-2505200100
 
-PiBpc29mcyBkb2VzIHN1cHBvcnQgcmVhZF9pdGVyLCB3aXRob3V0IHRoYXQgaXQgd291bGQgbm90
-IGhhdmUgd29ya2VkCj4gYmVmb3JlIGVpdGhlci4gVGhhdCBpcyBub3QgdGhlIHByb2JsZW0uICBJ
-dCBtdXN0IGJlIHJlbGF0ZWQgdG8KPiB0aGUgRk1PREVfV1JJVEUgY2hlY2sgLSBpLmUuIHdlIGhh
-dmUgYSB3cml0YWJsZSBGRCBoZXJlLCBidXQgYSBmaWxlCj4gc3lzdGVtIHRoYXQgZG9lcyBub3Qg
-YWN0dWFsbHkgc3VwcG9ydHMgd3JpdGVzLiAgV2hpY2ggaG9uZXN0bHkgZmVlbHMKPiB3ZWlyZCwg
-YnV0IHdlJ2xsIGhhdmUgdG8gZmlndXJlIGl0IG91dCB0byB1bmJyZWFrIHRoZXNlIHNldHVwcy4K
-SWYgaXQgaXMgYSBkaXJlY3RvcnksIGlzb2ZzX2Rpcl9vcGVyYXRpb25zIGlzIHVzZWQuIEluIHRo
-aXMgY2FzZSwKaXNvZnMgZG9lcyBub3Qgc3VwcG9ydCByZWFkX2l0ZXIgKEkgdXNlZCBhIGRpcmVj
-dG9yeSB3aGVuIHRlc3RpbmcpLgpJZiBpdCBpcyBhIHJlZ3VsYXIgZmlsZSwgZ2VuZXJpY19yb19m
-b3BzIGlzIHVzZWQuIEluIHRoaXMgY2FzZSwKaXNvZnMgc3VwcG9ydHMgcmVhZF9pdGVyLiBXaGVu
-IGEgcmVndWxhciBmaWxlIGhhcyBhIHdyaXRhYmxlIGF0dHJpYnV0ZSwKdGhlIHByb2JsZW0gd2ls
-bCByZWN1ciBiZWNhdXNlIGlzb2ZzIGRvZXMgbm90IHN1cHBvcnQgd3JpdGVfaXRlci4K
+
+
+On Tue, 2025-05-20 at 14:02 +0200, Frederic Weisbecker wrote:
+> Le Thu, May 08, 2025 at 04:53:24PM +0200, Gabriele Monaco a =C3=A9crit :
+> > Currently the user can set up isolcpus and nohz_full in such a way
+> > that
+> > leaves no housekeeping CPU (i.e. no CPU that is neither domain
+> > isolated
+> > nor nohz full). This can be a problem for other subsystems (e.g.
+> > the
+> > timer wheel imgration).
+> >=20
+> > Prevent this configuration by setting the boot CPU as housekeeping
+> > if
+> > the union of isolcpus and nohz_full covers all CPUs. In a similar
+> > fashion as it already happens if either of them covers all CPUs.
+> >=20
+> > Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+> > ---
+> > =C2=A0include/linux/tick.h=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 2 ++
+> > =C2=A0kernel/sched/isolation.c | 20 ++++++++++++++++++++
+> > =C2=A0kernel/time/tick-sched.c |=C2=A0 7 +++++++
+> > =C2=A03 files changed, 29 insertions(+)
+> >=20
+> > diff --git a/include/linux/tick.h b/include/linux/tick.h
+> > index b8ddc8e631a3..0b32c0bd3512 100644
+> > --- a/include/linux/tick.h
+> > +++ b/include/linux/tick.h
+> > @@ -278,6 +278,7 @@ static inline void tick_dep_clear_signal(struct
+> > signal_struct *signal,
+> > =C2=A0extern void tick_nohz_full_kick_cpu(int cpu);
+> > =C2=A0extern void __tick_nohz_task_switch(void);
+> > =C2=A0extern void __init tick_nohz_full_setup(cpumask_var_t cpumask);
+> > +extern void __init tick_nohz_full_clear_cpu(unsigned int cpu);
+> > =C2=A0#else
+> > =C2=A0static inline bool tick_nohz_full_enabled(void) { return false; }
+> > =C2=A0static inline bool tick_nohz_full_cpu(int cpu) { return false; }
+> > @@ -304,6 +305,7 @@ static inline void tick_dep_clear_signal(struct
+> > signal_struct *signal,
+> > =C2=A0static inline void tick_nohz_full_kick_cpu(int cpu) { }
+> > =C2=A0static inline void __tick_nohz_task_switch(void) { }
+> > =C2=A0static inline void tick_nohz_full_setup(cpumask_var_t cpumask) { =
+}
+> > +static inline void tick_nohz_full_clear_cpu(unsigned int cpu) { }
+> > =C2=A0#endif
+> > =C2=A0
+> > =C2=A0static inline void tick_nohz_task_switch(void)
+> > diff --git a/kernel/sched/isolation.c b/kernel/sched/isolation.c
+> > index 81bc8b329ef1..27b65b401534 100644
+> > --- a/kernel/sched/isolation.c
+> > +++ b/kernel/sched/isolation.c
+> > @@ -165,6 +165,26 @@ static int __init housekeeping_setup(char
+> > *str, unsigned long flags)
+> > =C2=A0			}
+> > =C2=A0		}
+> > =C2=A0
+> > +		/* Check in combination with the previously set
+> > cpumask */
+> > +		type =3D find_first_bit(&housekeeping.flags,
+> > HK_TYPE_MAX);
+> > +		first_cpu =3D
+> > cpumask_first_and_and(cpu_present_mask,
+> > +						=C2=A0
+> > housekeeping_staging,
+> > +						=C2=A0
+> > housekeeping.cpumasks[type]);
+> > +		if (first_cpu >=3D nr_cpu_ids || first_cpu >=3D
+> > setup_max_cpus) {
+> > +			pr_warn("Housekeeping: must include one
+> > present CPU neither "
+> > +				"in nohz_full=3D nor in isolcpus=3D,
+> > using boot CPU:%d\n",
+> > +				smp_processor_id());
+>=20
+> I wouldn't even bother recovering:
+>=20
+> pr_warn("Housekeeping: must include one present CPU neither in
+> nohz_full=3D nor in
+> isolcpus=3D\n ignoring setting %lx", flags);
+>=20
+> goto free_housekeeping_staging;
+
+Yeah good point, that would simplify things with the tick CPU.
+
+Thanks,
+Gabriele
+
