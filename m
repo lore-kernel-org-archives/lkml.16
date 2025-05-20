@@ -1,92 +1,143 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAF571BD9F0
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 18:36:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F4A127FD7A;
+	Tue, 20 May 2025 18:37:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747766162; cv=none; b=bBVOjhOOBYRnVmln+4kYkZ56SxIRKtKtmzs7euREjIxLzP3zgJxcx8tH9/BdyilU46YVetvT5dEuPtR2J5gkWkgjrt2QQVXINT7gUlXy6fp0HKZNXitwv+dRiP+CPme3tN/BtLF8sdQi19gYYBAeheqOEY5DOrjSYEffrPTZLTs=
+	t=1747766234; cv=none; b=qIMHfl77dMBgM6X+WtTpQG4MpHBqHXYJ5MhLhYoTJPspUvRxeDhnow8rx9CYvkdkXuVLYmvq/L9oT2oNpZXnGD+W5ZwiSSts52Tyn2+g21bVM9kX2+Fu75SYuWHtwEPP7hNtRlkrv5YotA6RrZYteDgTdTdIoGJtAhtKYi2ymgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747766162; c=relaxed/simple;
-	bh=/saHgBRVimx7l/qJ5nYDikrV8tFAWgPZS8P52xVacw4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=amVr/qhwotRVsi59RyYy2aVGQEMh0hvuciuLnCP33F0Gtj/b7f+pHdFf4NN6eWj7W3gnAROnmfxzBIqkaznOVlpzaLXX65LacUm93K0CL4+8wp0bERKtWUW6j7Uq7rh6/Dx3G74Yql8FdCVqqW07lidUbWqsVDrHKAy4H7tGPUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=QQ8RgJIp; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1747766234; c=relaxed/simple;
+	bh=JICM+9CpN5Uqo5Bozrviogbjrl0NxiJgwJj3pDdrHIc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=euEVCzSNncKyFbHnKozbc0v3PZEOOusCt1sgF1PtMsf+3HEZjVmdynpa0RVbALCe79+l4likr3VzqEDGh8lr0nAtQd0f0LXFRIQMkZJMg4PStf259NVPktRhs/f1zVivn6WY4yB/6wqcBl+571kdMHCNDmVU9YE0nf9l0en3SNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ws6OH5UL; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="QQ8RgJIp"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 75B2040E01CF;
-	Tue, 20 May 2025 18:35:58 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id itcKw6iaH3hF; Tue, 20 May 2025 18:35:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1747766155; bh=qwLau223cMPR9J1P5GGB7D9i6EY2sDIlAypqDtaFyYU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QQ8RgJIp67Xqij7hCTS9RYAZBGnvTE2PHyz8r7Ew/hu4zyZUAplCOGq0a7HVrsDcc
-	 zkV6dVqDZ2/ZqTYZErSw0lJM0herl2r6pNs+iMAPhYtK+Yg3+UAPcNhv2nYzJ6bU/z
-	 AYcIdHbv9nBnoDqKKDXzpTLFeWOrnLFtxFSO87g/5bV8XRcMDKTdxbz5AB0bW1KwY7
-	 ui6fgs4BFzg475Wr5squP7UT/kC5+wn4RN73BCws+tKDUjPr/bLYMiWv105gEv6vXk
-	 puLD5TC8H5ttYAUGH8Tn8VgYu7zI3guR1hAck/0Zi2MHcxDx4VHJcmoBcxkbjhp9xy
-	 1Ir2ZpsmM8uTL1+cB19GhmOOdArjJtVzpdeEDPx/du+ZCgC0Q8aD7nw6yDU0CxmQtM
-	 2yPjv2mIVP3iXUtLnViGiqhbvOQTknC36pc/zVIy0oJ/mZE1JhggdnqJj7kxw+QYXv
-	 6X0BBAIBy6MoZu0vzYJ4nM27N8BPx/Cra/EIUsqi8mKWMoTN0XJd9i34eBL3CyybT7
-	 3wSmyll31o26H7up+b+uth/vKkUza5ng/bpZ+ufIV8N+cwdD7M57IwAc6kf1JPtDCc
-	 Y8Qatt7TGJnJt9eHeqc9U3lVJcGt+Gi3JqwpYG6y2+zlH96NJ7EQqKXiA6G6SqCfUX
-	 pgG2KEu0vsNejIFUfJjn1chE=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DA22C40E0163;
-	Tue, 20 May 2025 18:35:46 +0000 (UTC)
-Date: Tue, 20 May 2025 20:35:40 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>,
-	"Kirill A. Shutemov" <kirill@shutemov.name>,
-	Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
-	x86@kernel.org, Ingo Molnar <mingo@kernel.org>,
-	Brian Gerst <brgerst@gmail.com>
-Subject: Re: [PATCH v5 2/7] x86/mm: Use a single cache hot per-CPU variable
- to record pgdir_shift
-Message-ID: <20250520183540.GQaCzLfHsGoWtt_6ZV@fat_crate.local>
-References: <20250520104138.2734372-9-ardb+git@google.com>
- <20250520104138.2734372-11-ardb+git@google.com>
- <awmpxjln22i5zmnv3wcwhzvpbbjqmhiw3onmpq66owbtdoujs5@f336cwpvlasn>
- <CAMj1kXE+2P6_y0SnmtmD=J42pe67itnr5jQs6NxjMTvV7HHp0A@mail.gmail.com>
- <20250520143532.GMaCyTNJqH_T2LR8q5@fat_crate.local>
- <CAMj1kXFxRZWsML_5FZvZjwOPO8cvsAwDqvX1686bqqfqkD_PHg@mail.gmail.com>
- <20250520173825.GOaCy-Eekk661c94ne@fat_crate.local>
- <CAMj1kXHpFK+=1gdo11Msw9w6gh2f-4gnSCkyA5kaB_x4mafS5A@mail.gmail.com>
- <20250520180101.GPaCzDXW2MlArU71xe@fat_crate.local>
- <CAHk-=whdFESwxUMvyMGuXzpCA6cm0d5kAc57fGWkWs0DLEi9qw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ws6OH5UL"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-231e011edfaso49123015ad.0;
+        Tue, 20 May 2025 11:37:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747766232; x=1748371032; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=dXwsJAQByoOrBBaZLY+E7MZdLUJE91UXwKqaAsM/qoY=;
+        b=Ws6OH5ULoUJRS5BvbiCTbBmli2Qv37BXmaDLifkmisHxVmNvIl7jivJ03dU40BoCkA
+         oIVeEoU6AhI42oOaLMA5S6xmw7e04gebfWIU8AFvaEj1VbCCnxR71FEE/E570b1TsC67
+         2jiDQ03m+E28FOCIUNR/LErZm0tZwZE0cxJfQRMRplHrxu5hMZUdAUHjkwLtyHvbP9B3
+         OcnHBfxeotirnctDp7J1rn1ncGc9dygfgh31pYalvYuHnJgUg1ETLSvfvzPT57+4yrhp
+         QtNA4hzD4Z48fMKtTrfflH+B+aM+VhorIe22X+y4LE6QjYR5TpqT15ydvahPmebuGD65
+         raQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747766232; x=1748371032;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dXwsJAQByoOrBBaZLY+E7MZdLUJE91UXwKqaAsM/qoY=;
+        b=n/opXnw3apyEC10ub3t6XduopxK1OE/IAz86/wausapRLJn13iVYrLL3TBmJjPsVCK
+         XGQWb65idicwkzGBzzJYeSAj8AM/kS/A5RvgWslCp3CoeAu2qj5LPlwQofpf2tN1HGKS
+         Lo4C3j66iq4Hk3A+sPydiCNlgQY5+oX6ZliHIw5benaQ96Py9towJnzvxn377CzOQ9lV
+         xFsJ4qFU955/yPoztYZZXW+33yAIcQaMkm6NbzeRE5J1oLfkakW5Zku89T0UTy5WkNNI
+         Ea6+8ANFxkb1Lddcm0o8wUyuY44oQnkRxa05QvxTQaKz2x7L2EjVlDefq935kq1N7GNv
+         vw/g==
+X-Forwarded-Encrypted: i=1; AJvYcCV5U2MW4MBEJWjURJzYhJVpgpAc26J1gQ8l0Wc4yuIYm66k1gLuvux02ShrjRUEbnGgCCyb3BFULTOflFY=@vger.kernel.org, AJvYcCXIDE4n2SjdiuYI2YrHoYXGkJQrOEFUyggegl/FL53BQUIwJIlLsIKGpaynCkvsNO0j34l5oMo0@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+rLQdXxbfECThzqZacon9dKOUEMWh7+10gMDUwwEo1moTyKQX
+	lZp894KoI2t6M9FMZtQKF4FOY2tRqQa+2bWdHzMsGWu+v7OghXbLWZL3
+X-Gm-Gg: ASbGnctbTSVnwO8ubMbf0RbJ7ixCIxkiM8B9/uPq+0EWZy7nAIExWHyHhfxGQo1SXZk
+	nLsxjs0qzo3mB/wtrjWE80xpLNV2TZ1u4iXkksakVbK8Dybd5EWG9uhz1JzMdp+sDJzp49hUyEc
+	IB6k6HRKkbaTWx58oOt/P7H1Dc3tOt5sQdL53ZuNlOA+eXxPdXmevX640vtrktZp7UzWXclbVMp
+	69KLd5XLEnrBeeb0JyO9fFVoBb2PvQgobQ5YYs88mTrQVmP7onjbXmNd3tRonb6HgG8kWkHd3LK
+	wip2aBnXgNRmHGRTxRJkzcQG81BftV6+TdEga0jAMCyqX5kySMRwvTXrJ3MYVaq0Vqk4o4Fpr9k
+	LCYs=
+X-Google-Smtp-Source: AGHT+IHJwFKbXVkEArUkxOuEvJRbwPQDqevlrFfXVoHuv3My4z4Pnv8EEjI6190Q5SCZg++y7mtAZQ==
+X-Received: by 2002:a17:903:b8f:b0:224:c76:5e57 with SMTP id d9443c01a7336-231d459bee3mr241144295ad.39.1747766232192;
+        Tue, 20 May 2025 11:37:12 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4b1020dsm80019585ad.104.2025.05.20.11.37.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 May 2025 11:37:11 -0700 (PDT)
+Message-ID: <d087b0b9-1d87-4049-affb-7220d9b96f3d@gmail.com>
+Date: Tue, 20 May 2025 11:37:09 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAHk-=whdFESwxUMvyMGuXzpCA6cm0d5kAc57fGWkWs0DLEi9qw@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.6 000/117] 6.6.92-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250520125803.981048184@linuxfoundation.org>
+Content-Language: en-US
+From: Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ WlfRzlpjIPmdjgoicA==
+In-Reply-To: <20250520125803.981048184@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 20, 2025 at 11:28:28AM -0700, Linus Torvalds wrote:
-> What happens if pgtable_l5_enabled() is made to use  __raw_cpu_read()?
-> With a compiler that is new enough to support USE_X86_SEG_SUPPORT?
+On 5/20/25 06:49, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.6.92 release.
+> There are 117 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu, 22 May 2025 12:57:37 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.92-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-Before we go play with this more, I see the same thing with gcc-13 and gcc-14
-on debian.
+On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
+BMIPS_GENERIC:
 
-Those should be fairly new, I'd think...
-
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Florian
