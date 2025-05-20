@@ -1,104 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F1B624C66C
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 19:49:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07B3D248F75;
+	Tue, 20 May 2025 19:50:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747770592; cv=none; b=jIbTC3XiB9CjOZN/v/9lkGZ1wXeTP9LL0eMp1bKkZ4TM1HZp+7QKaCSW/Q8X2SyaRfonNzWV494rjJYg4+GCxbP/6mIaYDj0bokLEfcj1h4lG/QwNGY/0queQrqbkzuJD1OJQ9b5p/qex/nBOzmVpsoLS8Bah6MYQH+r9sDqlGo=
+	t=1747770614; cv=none; b=RAvEvrIdOb5og/r0p8NEnyhbiaMN6ZjG9GOla3j2cGWjUnX6641P4gKXp+6sqzXal5ya3CuBmuROGlVajmsqtqj88+Twbc4MJSmzXBEBhyk6Lca1rXgTbNTeuClKjqQ988V6EAvz0Jw2m+MF3sExy3F5IY8pv9THmFP61wElLA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747770592; c=relaxed/simple;
-	bh=4kqGjqyHl0iy7b+yQw/1AQ3EbGuPqXxaF1bUFTgcRSY=;
+	s=arc-20240116; t=1747770614; c=relaxed/simple;
+	bh=SwiwaSdg4eQ4oxNyBzoukE5k+V15JbB2nsJEKxCXjVE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uuvbNyArE/wwVIXyVFLyojC8RjREyaDv6Zq3UREeguVfCbEHDPIvhJX4JQkQmDE9I8jnKYnCIKHp7aSU46N3v8YYKfppzpXnG+fqW/88deRpwZKmJDTt2bVFT/bnbSx/GYcIV2xL/jIGl8h+ClTuQa6OLCLpSO31asIhXeWanoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JzLxcCgI; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=lz4EYzOyS9pQAoE/mMWGvTyBEhU4SJlt04Q9IRRpx4D4QDfy30tjXwAqRnUxJ7aC+/mWh6NbqUf36rcFEvEs+RKbwsnNu/RQshT0VqQbpVLmaKCA3XKpdwgmlwo6kjS9jFKjSwcC0IDov+COFXCYxBA/MF3u0wrPUyMMG3hyYzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ymwj+OuI; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JzLxcCgI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9829C4CEF3
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 19:49:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747770591;
-	bh=4kqGjqyHl0iy7b+yQw/1AQ3EbGuPqXxaF1bUFTgcRSY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=JzLxcCgI5C35/fYQ3FvWCNMAZeFw0nvbc35swrkCe2kCJrUUzGNYgvLX4dbzS5cbM
-	 zNGwtbKUKbGQ91UJHQI2/0WaCHTNumRlSwK0bhjDLP19ggDA3cxM2OovgjclfauVOc
-	 VUdf+ySL5npmH5dR/8r/7UcG/erCVjLqusxO+ALwNNd14MqxDIBrHA5M2oEh0ms8y8
-	 3A8EFBFhWnMQibHl99v1UqTmtQOLFBpLctEasaCi4qa7/HLL+e7vhHb6gp0vMPpDBf
-	 VnaONWqutB9G2ne+87LAdme5pMFECM33PdJJ56mqPuazEh5heozezrjYasyoXAmroL
-	 mvbve+Hg3IOzg==
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-32918fe5334so25642331fa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 12:49:51 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVoiWlQA7TmwncAfLd0Q4HTL17Uevfd3bQnJ4K5J7rB2j410OHkticdc40YfyMlGISsTTMnND04fKEqNUE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YziAsNoIVH6WIB8e0ZxYmbCVkwC+Vn+lrpBRV1S0K9Z+CWBbbzu
-	mPZ2FbUTeaJ4JW6UfhoGDH90zYGYLMJvV87YsjhJacEXa0BNSRKkua1s27AITkJ9pYyrpAjqJe+
-	pMnVUs16KelQ/+pl4F+/3NlmLq/46rT4=
-X-Google-Smtp-Source: AGHT+IEnRfq2fYVLbsDEEqRD+CjFlowLHwafbWpynfinbDwaVcRGAfTefCZQE+rJtf6W6exnmSl0cfDoL1Rqz0olpps=
-X-Received: by 2002:a2e:a90d:0:b0:30b:d656:1485 with SMTP id
- 38308e7fff4ca-328077cc687mr76706091fa.32.1747770590276; Tue, 20 May 2025
- 12:49:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ymwj+OuI"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-231ba912ba1so5617255ad.2;
+        Tue, 20 May 2025 12:50:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747770612; x=1748375412; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SwiwaSdg4eQ4oxNyBzoukE5k+V15JbB2nsJEKxCXjVE=;
+        b=Ymwj+OuIOozD3ONqijb8ZHfsY28/N6YldYrAIMdcXcN7ELev5vEVrJacrSRJCs+QgC
+         WXVhlEkT45UGymdqo4XdbPZvsggjJ41jUYenkEGm9OB+s49sJMgRcQnCsnAPVp1t/14/
+         WFgD9ibfGuYkWsczp77naIeyXAr0/sJlR5G5u8+pEpM/TsMXVHWS8EFoe7FcXc44RIH4
+         0ahjMZXS6RlObdq9qlDywHmnHcJhhfbUE3Ux86n0GgDKH8DlQSTuhUF8mB9AJ2Huefjr
+         DP1rSZSu6DyJ24UVeAStXYDl7pdvd0t/3ApGEGyCwkArY9vI6QV8nLeJmZsAuqmgQE/z
+         AKXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747770612; x=1748375412;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SwiwaSdg4eQ4oxNyBzoukE5k+V15JbB2nsJEKxCXjVE=;
+        b=tBnKVX92v+cD8B/PnDun1JVrWpHTJ1N3I70OmYa37yh96Jg8EZZ1lwq3ZWxAJcYPxu
+         I+d7qIR++Rk/sqMJOUTYKhnWmM8Rjj+IbOZIy64wQZLbAsEBbDypK9FderWuLiUgYUpt
+         8umSTE/Yf486AS7mJQzzFtpcQOuzFayo+o3WbulLKiU9VpHm51pAK9AKeqbyzJqgD6Wd
+         s5Xls/OoD9gWZPQD7G0GPjn5czWvd3FjtYlaq+7wlxNTW0/A2Wyj/8j0JVW+WvVV5PPy
+         CYkkXhmU4IChcLgflC9qRwQ5Ad4xJOXkA8Z+VUmoJq2TF03guTBy/nEHaY1hm4IH48hH
+         ghBw==
+X-Forwarded-Encrypted: i=1; AJvYcCUtJYTA05VxiXUaRWk9mkzl9IvkYqs4zfgYuT+nmd2keb/CzTY/rK07Q8GqBXAvLE0QmgWHJ7C2wdeFvayOO8E=@vger.kernel.org, AJvYcCV4wCnc8GlIlP9QbADHItq0feMLMqr/6re++Jttq5L+JMzd1L5j9Gk7NkbhQagGX6jYTTdXdZhywOYDXk8=@vger.kernel.org, AJvYcCVc8L7tHZUvU4GMPpWfKWjJgLV3deupFeHYUul2hM6jm8kq/E+cZv+zmzy0Ck4bkLKOfKvFg63R@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3vuIRWUn4UIJ6ZkTSpiO6h6ymHbEG30L4J/xXe24zOPu4TL0n
+	FnQwk9cQarRfTRG3MtTNUaccMzYFIWz5vlDFWfzd5KBWVcHgafJQEI348eRxyfAuGQ8+12kY+Ni
+	jzH++lQFq98sBdZqze+Kr7Gbljz413hU=
+X-Gm-Gg: ASbGncsKhJJKNyBPs66OHncuu3xUX3aRlS10v1AFOyrAZE8woqAtZVZe+nHG5Gbooo0
+	l4nmbmauoVD0KDQcOQDosrdxNFWgeeoZqMjcO1B+LyfxjH7y2x2Qvcpyh2wNFXm1vRhyWnVLlMS
+	QBTeBHuMkqCnC8ZeoqaByQBI8jzhv/HW6h
+X-Google-Smtp-Source: AGHT+IH/GtxXV7pO420TBwvo67pv/+vuSvNQns2cFPY0rjC4suXw7a7ox5Jd3eZobSFtn1EIW9pudsE+oeNIvVQpERQ=
+X-Received: by 2002:a17:902:cf07:b0:220:e1e6:446e with SMTP id
+ d9443c01a7336-231d437f0damr92624395ad.1.1747770612110; Tue, 20 May 2025
+ 12:50:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250520104138.2734372-9-ardb+git@google.com> <20250520104138.2734372-11-ardb+git@google.com>
- <awmpxjln22i5zmnv3wcwhzvpbbjqmhiw3onmpq66owbtdoujs5@f336cwpvlasn>
- <CAMj1kXE+2P6_y0SnmtmD=J42pe67itnr5jQs6NxjMTvV7HHp0A@mail.gmail.com>
- <20250520143532.GMaCyTNJqH_T2LR8q5@fat_crate.local> <CAMj1kXFxRZWsML_5FZvZjwOPO8cvsAwDqvX1686bqqfqkD_PHg@mail.gmail.com>
- <20250520173825.GOaCy-Eekk661c94ne@fat_crate.local> <CAMj1kXHpFK+=1gdo11Msw9w6gh2f-4gnSCkyA5kaB_x4mafS5A@mail.gmail.com>
- <20250520180101.GPaCzDXW2MlArU71xe@fat_crate.local> <CAHk-=whdFESwxUMvyMGuXzpCA6cm0d5kAc57fGWkWs0DLEi9qw@mail.gmail.com>
-In-Reply-To: <CAHk-=whdFESwxUMvyMGuXzpCA6cm0d5kAc57fGWkWs0DLEi9qw@mail.gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Tue, 20 May 2025 21:49:38 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGf4tXuo9DBkjPhwxJAU4gAt7ApYZ3MF6HgD9yAX-JEGw@mail.gmail.com>
-X-Gm-Features: AX0GCFsWd7TQIwLVGSWuPHBfV2JWQK3cf-AyRkxWnKSlfWd-CV_ytP-NyCgULLM
-Message-ID: <CAMj1kXGf4tXuo9DBkjPhwxJAU4gAt7ApYZ3MF6HgD9yAX-JEGw@mail.gmail.com>
-Subject: Re: [PATCH v5 2/7] x86/mm: Use a single cache hot per-CPU variable to
- record pgdir_shift
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Borislav Petkov <bp@alien8.de>, "Kirill A. Shutemov" <kirill@shutemov.name>, 
-	Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	Ingo Molnar <mingo@kernel.org>, Brian Gerst <brgerst@gmail.com>
+References: <20250502140237.1659624-1-ojeda@kernel.org> <20250502140237.1659624-2-ojeda@kernel.org>
+ <20250513180757.GA1295002@joelnvbox>
+In-Reply-To: <20250513180757.GA1295002@joelnvbox>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 20 May 2025 21:49:58 +0200
+X-Gm-Features: AX0GCFuOY7Kz9DRWzUOglkPbmrM_Bcksvg1f806Qs5Umb82adzvopIRqYuPJnhw
+Message-ID: <CANiq72=kkejAwQJLYNjN=25Qf7qr801_Gr9zCZXJTEF9Ou54gQ@mail.gmail.com>
+Subject: Re: [PATCH 1/5] objtool/rust: add one more `noreturn` Rust function
+ for Rust 1.87.0
+To: Joel Fernandes <joelagnelf@nvidia.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev, stable@vger.kernel.org, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>, ttabi@nvidia.com, 
+	acourbot@nvidia.com, jhubbard@nvidia.com, apopple@nvidia.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 20 May 2025 at 20:28, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
+On Tue, May 13, 2025 at 8:08=E2=80=AFPM Joel Fernandes <joelagnelf@nvidia.c=
+om> wrote:
 >
-> On Tue, 20 May 2025 at 11:01, Borislav Petkov <bp@alien8.de> wrote:
-> >
-> > OMG. :-)
-> >
-> > # 32 "./arch/x86/include/asm/pgtable_64_types.h" 1
-> >         movb %gs:__pgdir_shift(%rip), %al       #, pfo_val__
-> > # 0 "" 2
-> > # ./arch/x86/include/asm/pgtable.h:1178:        if (!pgtable_l5_enabled())
-> > #NO_APP
-> >         testb   $1, %al #, pfo_val__
->
-> That's garbage.
->
-> Gcc should be able to turn it into just a
->
->         testb $1,%gs:__pgdir_shift(%rip)
->
-> What happens if pgtable_l5_enabled() is made to use  __raw_cpu_read()?
-> With a compiler that is new enough to support USE_X86_SEG_SUPPORT?
->
-> Oh, and it looks like we messed up __raw_cpu_read_stable(), because
-> that *always* uses the inline asm, so it doesn't allow the compiler to
-> just DTRT and do things like the above.
->
+> Any thoughts on how to fix the warning?
 
-I suppose that is what the this_cpu_read_const() is for, but that
-requires a const alias declaration and an entry in the linker script.
+For future reference, this gets fixed with
+https://lore.kernel.org/rust-for-linux/20250520185555.825242-1-ojeda@kernel=
+.org/
 
-If we decide to go with a per-cpu var, I can add this
-USE_X86_SEG_SUPPORT codepath like we have in other places - that
-should give the compiler sufficient insight into the fact that this
-value never changes, and generate optimal code as a result.
+I hope that helps (and apologies for the delay, a bunch of us were in
+RustWeek :)
 
-For an ordinary variable, I suppose we can still declare it as const,
-__attribute__((const)) etc if it is defined in and set from the asm
-startup code, resulting in the same potential for optimization
-(without alternatives or runtime const hacks).
+Cheers,
+Miguel
