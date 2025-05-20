@@ -1,203 +1,222 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AAAE1EB5FC
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 08:45:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2D5C1E8358
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 08:46:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747730726; cv=none; b=ihragm9iti+hiCu6i5nDkQJz9cwH55cjP/Wic6jrytWtnHia+MBVIYf8cIhalYxARJoCJgTEnOryRd1pLWFA+Dr7QQHSu3fSXGSJx1PWnVY2SurkXds/xpdU5Nxkj067XOMVwi/1aUQTNNL5m+MLP3q9SUDZF7hwX6CjWADykGQ=
+	t=1747730775; cv=none; b=hCDSB6oHmHfcHtZK2ToIc2KTPcEwD1j2B4W7f6hbDakdOwmQGidJQZjwBFsSPUslmdet1ldNVFxAZf8HwiqbyI+C5Dw3K0kdMARqL+byWhlKc7NT7JWs21V5LV6kiV7P44uMvYvMtHKqYftSS5vL6UWCxyAm4xrLl4YGtaVixkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747730726; c=relaxed/simple;
-	bh=M6rykNVaNEufQyGJphEvjzOlSqtLgnbiM/1lT8YpmXY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RBnuR5GQ39dLCijcWMer8R5uDXkC+BqpenRQSZq3pS6NZKqstQjFarDtXVEJcS99YLllGwWHZccSohHfTop5h7p7eHmegukcX5yzmzYOi45ebVTKukSW4/zO++RT9r6UtDbSHsmZPUD5Wr4o42vPUs8q3xKs0THQsfITs2rhJWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KzN1/62q; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1747730775; c=relaxed/simple;
+	bh=8xTFfl67wIQOufxQ/XTxHmawmYTtXy92FH7wmrqBR60=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eWxQm++GDfYTLEqaGkh5UhAPqRcFL6LnxBcNqPq9sM/J9xtuSsQ3/zy1Hj2JJNj5c15KdCLTk+PmiFe4YZFA69QWwrjBRswkiXSMAjGUr3GF+7sDLfK1E0CWi0fozogx0TQjPpwCBnvn9mJW4Fu80c93Q3XNETysZGE7/INxedo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=g/I3lHaq; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KzN1/62q"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g/I3lHaq"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747730722;
+	s=mimecast20190719; t=1747730772;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=PU9q+sl5/SDqyyxCnki0P2uIbGsJnsHMmzIuLZ6LVTw=;
-	b=KzN1/62qucK5xNUBKCktSTBKbdH1zqFcHLvABeNIqKW9npcmr+EK3AQlLxvK+cnnlhn3bq
-	PC5Y2nYePh3jKu7ZsBzQRQSBRipGl4H7XpMHAW/Dsx1a+FhvSsY2hxSG/MEtOXU2gxltio
-	NIWP6h5ZJFOTZkCSZ9C5TkYP0nVIh+0=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=UOPxyI8xvsODmW2CXsEeAiOYmTmUpftyoQUfAgolB4o=;
+	b=g/I3lHaqgMkL95SxwMON+Yb930f53bDS3ZSrZYvwNKTlrCFzdHtTf7BXzJRVPl/eRUFIWp
+	gkUP1tFS7muVSY21D5+8ZzzICYlpQgLPwxfjmNxoRn54wWwmKWihOWW1WczX6o1GCD05eW
+	vK8tyxgRX8rrmWkhKyP9PzaAqeI8AHo=
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
+ [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-235-8BfaKvVeMnKfnsnAaV6JqQ-1; Tue, 20 May 2025 04:45:20 -0400
-X-MC-Unique: 8BfaKvVeMnKfnsnAaV6JqQ-1
-X-Mimecast-MFC-AGG-ID: 8BfaKvVeMnKfnsnAaV6JqQ_1747730719
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-601df3b434cso1815170a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 01:45:20 -0700 (PDT)
+ us-mta-483-qiRR9bNGMeudrz1KI6cvSQ-1; Tue, 20 May 2025 04:46:11 -0400
+X-MC-Unique: qiRR9bNGMeudrz1KI6cvSQ-1
+X-Mimecast-MFC-AGG-ID: qiRR9bNGMeudrz1KI6cvSQ_1747730770
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-acf00f500d2so100039266b.2
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 01:46:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747730719; x=1748335519;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PU9q+sl5/SDqyyxCnki0P2uIbGsJnsHMmzIuLZ6LVTw=;
-        b=Fmj8hcedCPocmTa8uArfoNB2J2aLSGbYjcqQ7kJziAEiOJGmygsN9G6yh2Ax5vdjP0
-         VcsMJ37KH0W8nlwH8MnseIUVww1pmr3TGXQv5+FTvyyKchfH3Fyn5KOv03Rd46XVcarc
-         KvgQORTp6JdjmZ93xL4Ax0+U+c6av9DZddQg7DgWHC29tZVsmKRUhkVDXTWM7cXwgpp/
-         yL4zJ2sS0ls6OFhZnmHYGzkLLkqKP1jItQZxzGdY8DCjvqSsjtNwPGKJyRstPjDCsml9
-         /dgLDeM6u76A/8ApFCg5xzPF+TQi0391wcZQLTPMvQI9DA1Pn65lF96mtk0ugoCFAKPP
-         Ogjw==
-X-Forwarded-Encrypted: i=1; AJvYcCUdDhmWvJIJCFkM9qRUcJhSQRFLPlN5wyYSw6eaqVJCnNUBTHIItQuSgBhpe4JmJxE98ECBDQMb7c57tDI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyysC+601Q/2v4eSWjOwRHg5ZRh+Q+TcKXCA5alRdt5g2w4xsJB
-	WuX85MW4+S2MnGsei3ZGLHYXckOrwqlhjA/AwzlQYOXH5y/cvjYgreDSFGhodXgZdmIYiPVtVsW
-	ypzvVmsnZeEwtl1Rf2hx4vWM15F9WEQZixlhuT+gUAxQkkgUxdaFrQg1t3hrOXaWUyw==
-X-Gm-Gg: ASbGncvvVWsjJx+6oWypcMG5VTyArEex/C4XdstC69Q2E3+M88ZaAf0YsEZY2mO/feO
-	r3kbnESCvq+EoURNoKFCVNE1QH8BT6mfTzr++5bGcj7LjWVPHFXs8Fahe6k8GGsW3ttawK/opRu
-	I2obRrMCgBzsNVb1r99FwDLC4zaDYr7BnVnZ8uvLRxde6LsVoQbym7HXRODrr1v+nuy2VaCS1n/
-	lVrctLYdhtciPwHSqnOYugoiy5ifQACXpCfjVXM8vCPiPqTzwtua1HH43Gs//bqIDjwOWBs2rSo
-	prVDOIvxZgIZxLG7MqNq1/3iOdAQE1ARjYoAi8bdf3+gppxZr4l+DCqURsavU0Bq63arIDK177n
-	w94mrGTA8kjBAEZthNOcx0QM4SRYZFI6pOP0BOavEx4X5z0GMZVn848DosUV8rA==
-X-Received: by 2002:a05:6402:2804:b0:5f6:d403:fb20 with SMTP id 4fb4d7f45d1cf-6008a5ab495mr13844974a12.8.1747730719425;
-        Tue, 20 May 2025 01:45:19 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG9CGzVP2K+ea5INUct/2Z6K9Dsh9iqu/eeHcNLnNYky1QflD44xXcUwx7lfu5I/B/1qexdBw==
-X-Received: by 2002:a05:6402:2804:b0:5f6:d403:fb20 with SMTP id 4fb4d7f45d1cf-6008a5ab495mr13844950a12.8.1747730719016;
-        Tue, 20 May 2025 01:45:19 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6004d4f2f06sm6835581a12.9.2025.05.20.01.45.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 May 2025 01:45:18 -0700 (PDT)
-Message-ID: <1fe6d5fa-d379-4b1b-832c-31923d729833@redhat.com>
-Date: Tue, 20 May 2025 10:45:17 +0200
+        d=1e100.net; s=20230601; t=1747730770; x=1748335570;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UOPxyI8xvsODmW2CXsEeAiOYmTmUpftyoQUfAgolB4o=;
+        b=n3hpQk2vlZF0z/WXdzzbnvnwoU1QbON8eva19WQAetzEKnjpKjxqhfQQL9fxLMWlWa
+         +Jz2fnW/5sFwypkZ/Fx5b4Hj33rrBAbjlF7/mwsDr7qgSxh6i3YsPuEAdiwG6sUc7ERa
+         R6OCBMWLWBVl0oBcaqOtYQdDzEO0jHM8M7fXBdyloclpHfarbtKkcgv4HpdIpYfLbU0/
+         g0dlyYJ/yAK2QRaXcJsOxBo7ErV5JVrFp+msknmEfzpP3tl3+vyHm+OiySxgqE4Gy4Eo
+         8JNSZZpWXstAyvoewPwIzk6k3gsXLQAJACnD4iUNRjwpwMm1V2Vfsy86+9QwwZYuNGG+
+         mnOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXRhyKSllbMrxtTbXephgIWpeIU5afwu8eqceor+VKjb/XOy6Alwo91C9d5XC//fe2I1/9gAKWvSRMOk2M=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz02TZ696amg1shqlMmEoQGcEJQ5oHT1aJLkE+wOAo55pr2gOvj
+	Q9gSalrPlVPAXXLaYN3Jd0NKtuXGa/7UOwgVkBlOZFNQVj92es0kQh/RBMP6kTQWiqEzplEQDnv
+	qQis7dsRZJIw03Lpts95b2ba2/DeWPvbd3ddEE4SvD9YjOUEZaYSd4e4P8mbS1b+DYQ==
+X-Gm-Gg: ASbGncuq6my+p593jNvIAD4AtouCHH150b50guU7DsBGn0LLiP+a4uFd4F8/EpAvLag
+	FxfhEUwub8NfPfjQDZ5HYI8oUhGbJ7tTIgb61YOS8Wx0wrkfQjHeb4bxtMMSZi84BkYsRWAtcSN
+	S/wi5p6cBn+OO7HmsOKHaKeL5Md2jM3xWWygBXsL9xQHNAiZ6IUiEnX3O/0fwAHoCOOqPCrXRXf
+	h2ax0ua4ruh5PLn9zToTOFCzdzS0XKvxEhRS+3RZbxwddKjND+TSuYYZiHHwK22Mar8HVp90ei2
+	JLd5Q9lhZOHyPdzel8XLJx0HfiB6LJw6AD0foJixh9OlXuBh9CVzRoYYKVTr
+X-Received: by 2002:a17:907:d8b:b0:ad5:719d:3e88 with SMTP id a640c23a62f3a-ad5719d5958mr608963566b.44.1747730770006;
+        Tue, 20 May 2025 01:46:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEhQGUr9rfzMJHGnlV8hllI6xbhRlkYFydEwrW3ZoqExjBDhlLpqKETdyFe+3K/njihrbep/Q==
+X-Received: by 2002:a17:907:d8b:b0:ad5:719d:3e88 with SMTP id a640c23a62f3a-ad5719d5958mr608959666b.44.1747730769386;
+        Tue, 20 May 2025 01:46:09 -0700 (PDT)
+Received: from sgarzare-redhat (host-82-53-134-35.retail.telecomitalia.it. [82.53.134.35])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d06dc99sm702438566b.62.2025.05.20.01.46.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 01:46:08 -0700 (PDT)
+Date: Tue, 20 May 2025 10:46:03 +0200
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Xuewei Niu <niuxuewei97@gmail.com>
+Cc: mst@redhat.com, fupan.lfp@antgroup.com, pabeni@redhat.com, 
+	jasowang@redhat.com, xuanzhuo@linux.alibaba.com, davem@davemloft.net, 
+	stefanha@redhat.com, virtualization@lists.linux.dev, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Xuewei Niu <niuxuewei.nxw@antgroup.com>
+Subject: Re: [PATCH 2/3] vsock/virtio: Add SIOCINQ support for all virtio
+ based transports
+Message-ID: <ca3jkuttkt3yfdgcevp7s3ejrxx3ngkoyuopqw2k2dtgsqox7w@fhicoics2kiv>
+References: <20250519070649.3063874-1-niuxuewei.nxw@antgroup.com>
+ <20250519070649.3063874-3-niuxuewei.nxw@antgroup.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v4] media: v4l2-common: Add a helper for obtaining the
- clock producer
-To: Mehdi Djait <mehdi.djait@linux.intel.com>,
- Daniel Scally <dan.scally@ideasonboard.com>
-Cc: sakari.ailus@linux.intel.com, laurent.pinchart@ideasonboard.com,
- tomi.valkeinen@ideasonboard.com, jacopo.mondi@ideasonboard.com,
- hverkuil@xs4all.nl, kieran.bingham@ideasonboard.com, naush@raspberrypi.com,
- mchehab@kernel.org, dave.stevenson@raspberrypi.com,
- linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250321130329.342236-1-mehdi.djait@linux.intel.com>
- <f467e4a8-fcb2-4345-b8f7-7557c1a7552b@redhat.com>
- <dhbbpogydqclblzpd2qn2tr2cyyh5gq5cgostzbiq6ygsixj46@oopsp75svt4c>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <dhbbpogydqclblzpd2qn2tr2cyyh5gq5cgostzbiq6ygsixj46@oopsp75svt4c>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250519070649.3063874-3-niuxuewei.nxw@antgroup.com>
 
-Hi Mehdi,
-
-On 14-May-25 10:25 AM, Mehdi Djait wrote:
-> Hello Hans,
-> 
-> thank you for the comment.
-> 
-> On Sat, May 10, 2025 at 04:21:09PM +0200, Hans de Goede wrote:
->> Hi Mehdi,
->>
->> On 21-Mar-25 2:03 PM, Mehdi Djait wrote:
->>> Introduce a helper for v4l2 sensor drivers on both DT- and ACPI-based
->>> platforms to retrieve a reference to the clock producer from firmware.
->>>
->>> This helper behaves the same as clk_get_optional() except where there is
->>> no clock producer like in ACPI-based platforms.
->>>
->>> For ACPI-based platforms the function will read the "clock-frequency"
->>> ACPI _DSD property and register a fixed frequency clock with the frequency
->>> indicated in the property.
->>>
->>> Signed-off-by: Mehdi Djait <mehdi.djait@linux.intel.com>
->>
->> This certainly looks quite useful, thank you for working
->> on this.
->>
->> Note on some IPU3 platforms where the clk is provided by
->> a clk-generator which is part of a special sensor-PMIC
->> the situation is a bit more complicated.
->>
->> Basically if there is both a clk provider and a clock-frequency
->> property then the clock-frequency value should be set as freq
->> to the clk-provider, see:
->>
-> 
-> is it even possible to get a reference to the clock producer in ACPI
-> systems or am I missing something here ?
-
-Yes in some special cases it is possible to get a reference to
-a clock provider on ACPI. E.g. one is provided by:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/platform/x86/intel/int3472/tps68470.c
-
-on x86 ACPI systems using that sensor PMIC such as the
-"Microsoft Surface Go" and "Microsoft Surface Go 2"
-
-> Here is what I gathered online for the discussion leading to this patch:
-> ----------------------------------------------------------------------------------------------------------------------------------------------
-> ClockInput resource added to ACPI v6.5: https://uefi.org/specs/ACPI/6.5/19_ASL_Reference.html#clockinput-clock-input-resource-descriptor-macro
-> - commit adding ClockInput resource to acpica: https://github.com/acpica/acpica/commit/661feab5ee01a34af95a389a18c82e79f1aba05a
-> - commit kernel upstream: 520d4a0ee5b6d9c7a1258ace6caa13a94ac35ef8 "ACPICA: add support
->   for ClockInput resource (v6.5)"
-
-Ah I see where the confusion is coming from, the clk-provider does not come
-directly from ACPI, it comes from the PMIC driver and the PMIC driver also
-adds a clk-lookup table entry to associate it with the PMIC.
-
-> this does not mean we can use it: I found this out-of-tree patch to supports fixed clock sources
-> https://github.com/niyas-sait/linux-acpi/blob/main/0001-acpi-add-clock-bindings-for-fixed-clock-resources.patch
-> it was not sent to the acpi mailing list. It was mentioned in this
-> dicussion: https://lore.kernel.org/linux-kernel/78763d69bae04204b2af37201b09f8b5@huawei.com/
+On Mon, May 19, 2025 at 03:06:48PM +0800, Xuewei Niu wrote:
+>The virtio_vsock_sock has a new field called bytes_unread as the return
+>value of the SIOCINQ ioctl.
 >
-> Another interesting link: https://linaro.atlassian.net/wiki/spaces/CLIENTPC/pages/28822175758/ACPI+Clock+Input+Resources
-> ----------------------------------------------------------------------------------------------------------------------------------------------
-> 
-> link for the dicussion: https://lore.kernel.org/linux-media/20250220154909.152538-1-mehdi.djait@linux.intel.com/
+>Though the rx_bytes exists, we introduce a bytes_unread field to the
+>virtio_vsock_sock struct. The reason is that it will not be updated
+>until the skbuff is fully consumed, which causes inconsistency.
+>
+>The byte_unread is increased by the length of the skbuff when skbuff is
+>enqueued, and it is decreased when dequeued.
+>
+>Signed-off-by: Xuewei Niu <niuxuewei.nxw@antgroup.com>
+>---
+> drivers/vhost/vsock.c                   |  1 +
+> include/linux/virtio_vsock.h            |  2 ++
+> net/vmw_vsock/virtio_transport.c        |  1 +
+> net/vmw_vsock/virtio_transport_common.c | 17 +++++++++++++++++
+> net/vmw_vsock/vsock_loopback.c          |  1 +
+> 5 files changed, 22 insertions(+)
+>
+>diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
+>index 802153e23073..0f20af6e5036 100644
+>--- a/drivers/vhost/vsock.c
+>+++ b/drivers/vhost/vsock.c
+>@@ -452,6 +452,7 @@ static struct virtio_transport vhost_transport = {
+> 		.notify_set_rcvlowat      = virtio_transport_notify_set_rcvlowat,
+>
+> 		.unsent_bytes             = virtio_transport_unsent_bytes,
+>+		.unread_bytes             = virtio_transport_unread_bytes,
+>
+> 		.read_skb = virtio_transport_read_skb,
+> 	},
+>diff --git a/include/linux/virtio_vsock.h b/include/linux/virtio_vsock.h
+>index 0387d64e2c66..0a7bd240113a 100644
+>--- a/include/linux/virtio_vsock.h
+>+++ b/include/linux/virtio_vsock.h
+>@@ -142,6 +142,7 @@ struct virtio_vsock_sock {
+> 	u32 buf_alloc;
+> 	struct sk_buff_head rx_queue;
+> 	u32 msg_count;
+>+	size_t bytes_unread;
 
-These 2 links are not relevant, the clk-provider is not directly coming from
-ACPI instead the clk is registered by the PMIC driver for the clk-generator
-part of the PMIC.
+Can we just use `rx_bytes` field we already have?
 
+Thanks,
+Stefano
 
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/media/i2c/ov8865.c#n3020
->>
->> for an example of a driver which handles this case.
-> 
-> So if I understood the above correctly: in the ov8865 IPU3/ACPI case:
-> 
-> 1) sensor->extclk is NULL because the clock producer is not available in
-> ACPI systems. ClockInput() ACPI resource was introduced to acpica after
-> the ov8865 patch and the resource is not even being used in the upstream kernel.
-
-In this specific case it will be not NULL because the PMIC driver
-provides a clk-provider and creates a clk-lookup to match that
-to the ov8865 sensor.
-
-> 2) the sensor->extclk_rate will be set from reading
-> the clock-frequency _DSD property in:
-> 
-> 	ret = fwnode_property_read_u32(dev_fwnode(dev), "clock-frequency", &rate);
-
-This bit is correct, the special thing here is that the PMIC
-clk-provider is programmable so the sensor-driver needs to
-set it to the rate returned by reading "clock-frequency"/
-
-So basically first call both:
-
-1. devm_get_clk()
-2. fwnode_property_read_u32(dev_fwnode(dev), "clock-frequency", &rate);
-
-and in the special case when *both* succeed do a clk_set_rate()
-call on the returned clk setting it to "rate".
-
-Regards,
-
-Hans
-
-
+> };
+>
+> struct virtio_vsock_pkt_info {
+>@@ -195,6 +196,7 @@ s64 virtio_transport_stream_has_space(struct vsock_sock *vsk);
+> u32 virtio_transport_seqpacket_has_data(struct vsock_sock *vsk);
+>
+> ssize_t virtio_transport_unsent_bytes(struct vsock_sock *vsk);
+>+ssize_t virtio_transport_unread_bytes(struct vsock_sock *vsk);
+>
+> void virtio_transport_consume_skb_sent(struct sk_buff *skb,
+> 				       bool consume);
+>diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
+>index f0e48e6911fc..917881537b63 100644
+>--- a/net/vmw_vsock/virtio_transport.c
+>+++ b/net/vmw_vsock/virtio_transport.c
+>@@ -585,6 +585,7 @@ static struct virtio_transport virtio_transport = {
+> 		.notify_set_rcvlowat      = virtio_transport_notify_set_rcvlowat,
+>
+> 		.unsent_bytes             = virtio_transport_unsent_bytes,
+>+		.unread_bytes             = virtio_transport_unread_bytes,
+>
+> 		.read_skb = virtio_transport_read_skb,
+> 	},
+>diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
+>index 7f7de6d88096..11eae88c60fc 100644
+>--- a/net/vmw_vsock/virtio_transport_common.c
+>+++ b/net/vmw_vsock/virtio_transport_common.c
+>@@ -632,6 +632,7 @@ virtio_transport_stream_do_dequeue(struct vsock_sock *vsk,
+> 	free_space = vvs->buf_alloc - fwd_cnt_delta;
+> 	low_rx_bytes = (vvs->rx_bytes <
+> 			sock_rcvlowat(sk_vsock(vsk), 0, INT_MAX));
+>+	vvs->bytes_unread -= total;
+>
+> 	spin_unlock_bh(&vvs->rx_lock);
+>
+>@@ -782,6 +783,7 @@ static int virtio_transport_seqpacket_do_dequeue(struct vsock_sock *vsk,
+> 		}
+>
+> 		virtio_transport_dec_rx_pkt(vvs, pkt_len);
+>+		vvs->bytes_unread -= pkt_len;
+> 		kfree_skb(skb);
+> 	}
+>
+>@@ -1132,6 +1134,19 @@ ssize_t virtio_transport_unsent_bytes(struct vsock_sock *vsk)
+> }
+> EXPORT_SYMBOL_GPL(virtio_transport_unsent_bytes);
+>
+>+ssize_t virtio_transport_unread_bytes(struct vsock_sock *vsk)
+>+{
+>+	struct virtio_vsock_sock *vvs = vsk->trans;
+>+	size_t ret;
+>+
+>+	spin_lock_bh(&vvs->rx_lock);
+>+	ret = vvs->bytes_unread;
+>+	spin_unlock_bh(&vvs->rx_lock);
+>+
+>+	return ret;
+>+}
+>+EXPORT_SYMBOL_GPL(virtio_transport_unread_bytes);
+>+
+> static int virtio_transport_reset(struct vsock_sock *vsk,
+> 				  struct sk_buff *skb)
+> {
+>@@ -1365,6 +1380,8 @@ virtio_transport_recv_enqueue(struct vsock_sock *vsk,
+> 		goto out;
+> 	}
+>
+>+	vvs->bytes_unread += len;
+>+
+> 	if (le32_to_cpu(hdr->flags) & VIRTIO_VSOCK_SEQ_EOM)
+> 		vvs->msg_count++;
+>
+>diff --git a/net/vmw_vsock/vsock_loopback.c b/net/vmw_vsock/vsock_loopback.c
+>index 6e78927a598e..13a77db2a76f 100644
+>--- a/net/vmw_vsock/vsock_loopback.c
+>+++ b/net/vmw_vsock/vsock_loopback.c
+>@@ -99,6 +99,7 @@ static struct virtio_transport loopback_transport = {
+> 		.notify_set_rcvlowat      = virtio_transport_notify_set_rcvlowat,
+>
+> 		.unsent_bytes             = virtio_transport_unsent_bytes,
+>+		.unread_bytes             = virtio_transport_unread_bytes,
+>
+> 		.read_skb = virtio_transport_read_skb,
+> 	},
+>-- 
+>2.34.1
+>
 
