@@ -1,64 +1,38 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64A7A35893
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 16:57:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6EDC257AFB;
+	Tue, 20 May 2025 16:59:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747760251; cv=none; b=Dy3IRnu4uPhTJs/xIIkrv7TTQuSM5n5O4cbIq4tOgaXFISa6VZWnouN7lCoKY/8tsCCzQIYRV9tRADXS79yAcXTtKKz9zcM3s0udGXmzaBKDrit7V3+xSigMb17XXaalP/ILnh/wmdyQ5ON+8rghUR7tq81CZ2ExEwwTW2sHQyc=
+	t=1747760384; cv=none; b=VgWSXPKZ/6ac6ZAQs1uoiPcMvXP0UpqFIlYBX+PgCqk0j+CHCwbjgAbz0IXbk403XZFUuijMfFKqT/6qC0oKt7L6BCBN9LqFtNgAuO33cYxymJQd0fBchpED6EGbjww4Xj2YVJlvraJznTk1/ufLJSY2ZvpM/yjHS91pIyYowvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747760251; c=relaxed/simple;
-	bh=aNxL1aTVHEMzz5FK9fboIZ2vhWlwMFBKj8NyPo07GHQ=;
+	s=arc-20240116; t=1747760384; c=relaxed/simple;
+	bh=zrLVYfoIkes3LrPYLk3Pw0KFTE0IuKNEFcraBOZjca8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PWIoVEgWsX6DGu9Vvy1FufavwwwTQDvRZBXm1u+26TnyR09zuTKk566H8gIW56XErkYK3hKTGo7TPT1q350X3Wc7afUjTn9lJsxYqAqTu5/lsbwyWb9TD3WLn8R7NyagbPNavn6wSMRln4tN6mblsl4Itvh4mgZTb//Ej6C9v9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ROvd9qDI; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ROvd9qDI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747760249; x=1779296249;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=aNxL1aTVHEMzz5FK9fboIZ2vhWlwMFBKj8NyPo07GHQ=;
-  b=ROvd9qDIxVy4ryIFK+AkoowYGJjHttbh0n1+kmhdJ+umgyyRe1y1MxKP
-   QaldHVQX4O9StyO17FGrMcHiLGKTUWGsrABkCTkjpWs86kcaYud5h0ttJ
-   eul92ISb3KTP3Wlm1FrXeGxdh53DdE1UXE4YHaJw5SVuIS3LfwbWC+NOf
-   x1jfk/jrP6Ye7H5iITJvLlkY3bY6/Fa5cl0A3hg4P9vF+pGoGGM2B5aVN
-   r14ST70IXKlOGH05hai5ZePSd5jBRUIZHzWlMKJRiBLEfIhnCCWAtEFmB
-   I9e+Hn7SY2ztzn4iYyedRaMbxc7jYA7EbEBeAD6PxZndxEgQUyEbq0aZo
-   Q==;
-X-CSE-ConnectionGUID: XKY1g9TvS2SBegf2lLL0mw==
-X-CSE-MsgGUID: QNco3JPbTgKsbVo9rITwzw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="48824446"
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="48824446"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 09:57:29 -0700
-X-CSE-ConnectionGUID: HLWAKE3MR7+rj/dAWF4xgg==
-X-CSE-MsgGUID: IDACnwiPSE2EFwVcXAPxzg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="140281869"
-Received: from bruceprx-mobl.amr.corp.intel.com (HELO desk) ([10.125.146.21])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 09:57:28 -0700
-Date: Tue, 20 May 2025 09:57:24 -0700
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: David Kaplan <david.kaplan@amd.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] x86/bugs: Restructure ITS mitigation
-Message-ID: <20250520165716.5rfmxe7gqizy55zh@desk>
-References: <20250515134756.93274-1-david.kaplan@amd.com>
- <20250516193212.128782-1-david.kaplan@amd.com>
- <20250520163221.ndezdfrhoav43sxi@desk>
- <20250520164826.GMaCyyWodIiRMuBtw3@fat_crate.local>
+	 Content-Type:Content-Disposition:In-Reply-To; b=el6mWhz8iEkcLGhu2QhwPtHjT77Rr4MTzBm1ctIJnPZVU0ZJ9qivt5g4Dag29CBuD8rylAvbyAxBhAApj5XtYyQFcHy9M5XpmUDNb1aHyBdcFFCt95HwQNh44KqU3JnLn+0AUHVn55VRhGVxR/qcoobwEAI1HyVOczALWVd0q7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8AE981516;
+	Tue, 20 May 2025 09:59:28 -0700 (PDT)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AC1F23F5A1;
+	Tue, 20 May 2025 09:59:39 -0700 (PDT)
+Date: Tue, 20 May 2025 17:59:32 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Will Deacon <will@kernel.org>
+Cc: Song Liu <song@kernel.org>, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-toolchains@vger.kernel.org,
+	live-patching@vger.kernel.org, indu.bhagat@oracle.com,
+	puranjay@kernel.org, wnliu@google.com, irogers@google.com,
+	joe.lawrence@redhat.com, jpoimboe@kernel.org, peterz@infradead.org,
+	roman.gushchin@linux.dev, rostedt@goodmis.org, kernel-team@meta.com
+Subject: Re: [PATCH v3 1/2] arm64: Implement arch_stack_walk_reliable
+Message-ID: <aCy09N8TwP1wEN-X@J2N7QTR9R3>
+References: <20250320171559.3423224-1-song@kernel.org>
+ <20250320171559.3423224-2-song@kernel.org>
+ <aCs08i3u9C9MWy4M@J2N7QTR9R3>
+ <20250520142845.GA18846@willie-the-truck>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,19 +41,17 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250520164826.GMaCyyWodIiRMuBtw3@fat_crate.local>
+In-Reply-To: <20250520142845.GA18846@willie-the-truck>
 
-On Tue, May 20, 2025 at 06:48:26PM +0200, Borislav Petkov wrote:
-> On Tue, May 20, 2025 at 09:32:21AM -0700, Pawan Gupta wrote:
-> > Index 1 (which is now ITS_MITIGATION_AUTO) is missing. I understand AUTO is
-> > a temporary state, and it may not be necessary to define a string for it.
-> > But, assigning an empty string, or an error message would make this obvious
-> > for a future reader.
+On Tue, May 20, 2025 at 03:28:45PM +0100, Will Deacon wrote:
+> On Mon, May 19, 2025 at 02:41:06PM +0100, Mark Rutland wrote:
+> > I've pushed a arm64/stacktrace-updates branch [1] with fixups for those
+> > as two separate commits atop this one. If that looks good to you I
+> > suggest we post that as a series and ask Will and Catalin to take that
+> > as-is.
 > 
-> Yeah, this AUTO gets overwritten and the other AUTOs don't have strings too.
-> 
-> We can fix that after the MW if you think it is important but from what
-> I looked, all the AUTO settings get overwritten as AUTO means, user didn't
-> make any decision here so it is left to the kernel to make it.
+> Yes, please post those to the list for review.
 
-As long as AUTO setting is overwritten it is fine.
+Sure; I'm just prepping that now...
+
+Mark.
