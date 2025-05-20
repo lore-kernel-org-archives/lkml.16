@@ -1,69 +1,200 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75A4B2441B4;
-	Tue, 20 May 2025 13:46:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64C5527715
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 13:49:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747748817; cv=none; b=Nu55AerDcEN8yoqfro27Ob/3aP4T0qvZ2A+d9TuPWaLKOwwcYEVi0jkYKP1SJ+lejrSMut5gxbB4HDC/JQGvKmIu+abT7sYDZ1rBD24mPIYtLGjoiFhBvnSb0Js0s52uEahwDnRM/D4wudS3sXuyX70Vegm9x2yXSJ9vGvB3vGo=
+	t=1747748958; cv=none; b=XmyMlCIQImxkjouHKhUxLFlJYtQnBkkCwLH7aEflGRyCMvlci5uAgZz8W8PKw7OFQqq/BUYnvPKiflxg6GWPfHQqqOhHvFanTRHfWbFAlZeN6RUixDOtEdYx3xPgUTnH3OLNzPGlp4zvRRdnNfCIaGP0zLw5eRx2hMr7vUMjDuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747748817; c=relaxed/simple;
-	bh=gT0qsOxXBK/hI+CUQi4J6/Jupa+PoB/pzblsZBJac08=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DL95EdTyq9dM8QHY8rognDp5sESW4wJcwb1zyeoad+cXLWb6ydN1A11GBUOv0SEHqhKidBajFMFlvm9ZTY+Ntzk0VsNsvKFJdLvrc1Jm8LoU5ANNFAmrY+dRE2gNeswEKoH3dZob/PbXPQ5AaQt1hGWuR782GY3k+1lh5O6MT5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=0mWEg9bq; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1747748958; c=relaxed/simple;
+	bh=/7VWxyML0vhfRCRDPfsAONOkPvqvpuIQvH3cnTg6A0M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pmVf6V1LS/fqDc5U8+Mo4ZG0SauuQqS2B6WbwvvsBxOp6O+QZZP/UDpsZ425/uwRa6hm+gLZtyJa8V63JpV1cDwMwk7WEksa2YzjeMZLYq867ttVCzOuPr9io5cyIk2NnNzAGvpoxQCI1EvIoprXvyh5e7g01Wf1swqVviaz96k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Mly2KS3I; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=LRU268jS; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Mly2KS3I; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=LRU268jS; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="0mWEg9bq"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=042DvXqa0a9B9ggp4H5ETGqUUlZKP5UrH69lkxaNfCM=; b=0mWEg9bqPw8ZR9QDSBnQ55JuoV
-	QOu6tZiYPLjBamefsfJEjWOQ1kjGecUvp3K1MLPqG1qIH/loFq1uLS32wr9Cq7vVLmZ5KMKeBIWUA
-	HQZodUM1r4toW3pw+KI4komYwwahG2GR4ntl4dBS8ORTCNHlry5nKOa0Y1HlJVg19WHzMjf4hOYqm
-	ZpKanebfZcHQ0JXXkGqoJZSw2uUCzRmB99w2i/Y+99egzwnjSDJ8gMB7rxgdOBw3oMSEhTyUkYYzj
-	JTWd2zIP5cwyJba/j7uJLSHLxRasMiT+JqxGyh8tNsSX5ZQr4yxSgv0VQhm8mtT9ITaUuVpuTuHdH
-	tA4kiKIg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uHNJ2-0000000D3tD-0JWC;
-	Tue, 20 May 2025 13:46:56 +0000
-Date: Tue, 20 May 2025 06:46:56 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: Martin Wilck <mwilck@suse.com>
-Cc: Christoph Hellwig <hch@infradead.org>, Kevin Wolf <kwolf@redhat.com>,
-	Benjamin Marzinski <bmarzins@redhat.com>, dm-devel@lists.linux.dev,
-	hreitz@redhat.com, mpatocka@redhat.com, snitzer@kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] dm mpath: Interface for explicit probing of active
- paths
-Message-ID: <aCyH0KdvxLWEKdA1@infradead.org>
-References: <20250429165018.112999-1-kwolf@redhat.com>
- <47dd225b433b0df585a25084a2e793344eeda239.camel@suse.com>
- <aCIRUwt5BueQmlMZ@redhat.com>
- <d51d6f85b5728648fe9c584f9cb3acee12c4873f.camel@suse.com>
- <cc2ec011cf286cb5d119f2378ecbd7b818e46769.camel@suse.com>
- <aCW95f8RGpLJZwSA@redhat.com>
- <aCbUcdew393RZIkV@infradead.org>
- <f114a8d8497da0c452af33cbf02a55e91c47d94e.camel@suse.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Mly2KS3I";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="LRU268jS";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Mly2KS3I";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="LRU268jS"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 6921F21FD1;
+	Tue, 20 May 2025 13:49:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747748954; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=RZM3TBrxZ9gV4DGlqhfK6QoDDrye6xmauHV1rnGmWSo=;
+	b=Mly2KS3I0NbyhSJJz7h6ruYYwaHp/fHXCq11O1fT8DP7aV/C/Y30EYo2uiVDHJueRowmFb
+	w/jClxindqho6mWfikBzmJmqhlH98/sDYtKKI8FzOrqJIQDJBL9g6hygCXICADEpJPc8wm
+	6yY96T0WsokpVXC5hrrPFeyQD0AipKs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747748954;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=RZM3TBrxZ9gV4DGlqhfK6QoDDrye6xmauHV1rnGmWSo=;
+	b=LRU268jSD4WF+otrYrdGkTmH1eEoo/LZA++Bp0MzsNwIrUiKyjnHWzB1py/+OzeGrz6CtB
+	0x16ubzzcNnE0cBQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747748954; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=RZM3TBrxZ9gV4DGlqhfK6QoDDrye6xmauHV1rnGmWSo=;
+	b=Mly2KS3I0NbyhSJJz7h6ruYYwaHp/fHXCq11O1fT8DP7aV/C/Y30EYo2uiVDHJueRowmFb
+	w/jClxindqho6mWfikBzmJmqhlH98/sDYtKKI8FzOrqJIQDJBL9g6hygCXICADEpJPc8wm
+	6yY96T0WsokpVXC5hrrPFeyQD0AipKs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747748954;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=RZM3TBrxZ9gV4DGlqhfK6QoDDrye6xmauHV1rnGmWSo=;
+	b=LRU268jSD4WF+otrYrdGkTmH1eEoo/LZA++Bp0MzsNwIrUiKyjnHWzB1py/+OzeGrz6CtB
+	0x16ubzzcNnE0cBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2C7EB13A3E;
+	Tue, 20 May 2025 13:49:14 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id TgiGCVqILGgbGwAAD6G6ig
+	(envelope-from <tzimmermann@suse.de>); Tue, 20 May 2025 13:49:14 +0000
+Message-ID: <990c04a5-6477-42c0-986d-9b63a30ac90b@suse.de>
+Date: Tue, 20 May 2025 15:49:13 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f114a8d8497da0c452af33cbf02a55e91c47d94e.camel@suse.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/sitronix: Fix broken backwards-compatibility layer
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Marcus Folkesson <marcus.folkesson@gmail.com>,
+ Javier Martinez Canillas <javierm@redhat.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+References: <1682cd80989f9ab98a7a9910a086a3a4d9769cc6.1747744752.git.geert+renesas@glider.be>
+ <07088966-73f4-4b5d-898d-b596dede53e4@suse.de>
+ <CAMuHMdU6XD_tqXaf4-h9KeC58XDOodUWa0d-Wmp6zcr2BHTA1w@mail.gmail.com>
+Content-Language: en-US
+From: Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
+ AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
+ AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
+ lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
+ U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
+ vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
+ 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
+ j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
+ T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
+ 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
+ GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
+ hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
+ EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
+ C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
+ yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
+ SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
+ Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
+ 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
+In-Reply-To: <CAMuHMdU6XD_tqXaf4-h9KeC58XDOodUWa0d-Wmp6zcr2BHTA1w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: 0.20
+X-Spamd-Result: default: False [0.20 / 50.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	TAGGED_RCPT(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[gmail.com,redhat.com,linux.intel.com,kernel.org,ffwll.ch,lists.freedesktop.org,vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:email,suse.de:mid]
 
-On Mon, May 19, 2025 at 07:33:50PM +0200, Martin Wilck wrote:
-> I still don't get what this buys us.
+Hi
 
-You get one layer to deal with instead of polking into a leak
-abstraction.  Qemu sees a block devices, checks if it supports
-persistent reservations and everything is taken care underneath
-instead of having to try to understand what is below and working around
-it.
+Am 20.05.25 um 15:09 schrieb Geert Uytterhoeven:
+> Hi Thomas,
+>
+> On Tue, 20 May 2025 at 15:04, Thomas Zimmermann <tzimmermann@suse.de> wrote:
+>> Am 20.05.25 um 14:40 schrieb Geert Uytterhoeven:
+>>> When moving the Sitronix DRM drivers and renaming their Kconfig symbols,
+>>> the old symbols were kept, aiming to provide a seamless migration path
+>>> when running "make olddefconfig" or "make oldconfig".
+>>>
+>>> However, the old compatibility symbols are not visible.  Hence unless
+>>> they are selected by another symbol (which they are not), they can never
+>>> be enabled, and no backwards compatibility is provided.
+>>>
+>>> Fix this by making them visible, and inverting the selection logic.
+>>> Add comments to make it clear why there are two symbols with the same
+>>> description.
+>> These symbols were only meant for variants of 'make oldconfig' to pick
+>> up th enew symbols. They where never for being selected manually.
+> But that pick-up does not work, unfortunately...
+> (I know, I had one of them enabled in one of my configs ;-)
+
+I see.
+
+>
+> The alternative is to just drop the old symbols, and ignore current users.
+> Which is not that uncommon...
+
+If there's no easy fix for the current setup, I'd prefer removing the 
+old symbols.
+
+Best regards
+Thomas
+
+>
+> Gr{oetje,eeting}s,
+>
+>                          Geert
+>
+
+-- 
+--
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Frankenstrasse 146, 90461 Nuernberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nuernberg)
 
