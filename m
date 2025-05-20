@@ -1,136 +1,176 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FDEE2010EE;
-	Tue, 20 May 2025 07:44:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E38F20487E;
+	Tue, 20 May 2025 07:45:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747727090; cv=none; b=sXfubLogW2/0eUCYD2KzqMOHoENpKQl9DjeBmUSiD6enwJ/ukN5kdB5QkwGPPNpr3oZgho17HJ5A2OAQ9KLxPZcVm5sYLzgYZZ2ejNfAOx3vuU2r0+NOzvPQ/hpcP6DZanaT4uENrIYIAB3w8fzTW6hnSNYNAzNQF25ig78tZow=
+	t=1747727119; cv=none; b=JvHXZP1foWxVAiNZIYD1Q6yzI/aTIVpXCnKP7qxvqEB5j2XUnVSpg3DU//cU3KfdoN1G0omTA1uBkSUJVLpnP9p0nTkzpMBazPTNYo5a76LU0AmRSm7TP3/kPsZxf6ih2xb8Fe+Ervanf/d6gpmPvzihpUBrRyDxKuHBA4snE5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747727090; c=relaxed/simple;
-	bh=Ectfg8n4iR1olYWwlS3iE4cQtuS/TQ5wL1WOKpMzJpg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UBWRmiYt2OIdvFHn6VLUf3eo74/6g4riFujX4WCcf0J7tORBMsZOfcjdZPv/ZBz0ZPZg5ZJdi2/3Bp4P8qU12gj6CoQN+eG8fTk6DtntlrSVPQHk+xtQR4z/c6R2GmDQFz9+b5dPazVBeG1h6HbXrowibJ+lmiLn4qw7PFaZahs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A881X+u7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747727119; c=relaxed/simple;
+	bh=xk8IMs+O+5nMbwmtVbXL7vN3XIeGEwoPkHYOFjHo2n0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mYME++PxN2pRU9jDMGMxlWU6We07EAqPpemSr+9t6CQSL6gduRXq3k0n+xgFWicqF+Kkid6vWS8C8aFNjaK7mU825JmgrTyjWeB7vCHZEyJ7tcziNKpatDkovl/ghXQg2ST5fp+R7sZ+YJeh09iz8aRHDQKop0VBJn/hrnfWgyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SuGhHI1T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A881X+u7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C041C4CEEF;
-	Tue, 20 May 2025 07:44:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SuGhHI1T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C03EC4CEE9;
+	Tue, 20 May 2025 07:45:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747727089;
-	bh=Ectfg8n4iR1olYWwlS3iE4cQtuS/TQ5wL1WOKpMzJpg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=A881X+u7pG/NfCGCfv2o7WflN+HCOB06RXaISIgeLVbhcT+UULRV1zBn6fSq8NjGg
-	 rgNvjR7mE656Y7eZhuOG9gyywrhCOCcq0rGYuVKpm407K4QTwsrG07+hAsqxGWV7pA
-	 64VDmfKCVfTchKmCIGQO8EbIGNahEefA271FHHnHaYGh+Xvi8iTAs0RL09uXPyIV7s
-	 AgdwTkwNcsI8ZGrWZbCWgQUMBrshgwqnmbLZ8XHOiX5DLFXxJH7V/2S5hmKbT6MKlp
-	 P+bpLoVuoONUFlC8cwDYvVntdMUnEY/pcoxckgYNeZFDDVwzDHBrXsbwIUNy9QgwaC
-	 nqPjF/pZgV6TA==
-From: Michael Walle <mwalle@kernel.org>
-To: Neil Armstrong <neil.armstrong@linaro.org>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Sam Ravnborg <sam@ravnborg.org>
-Cc: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Michael Walle <mwalle@kernel.org>
-Subject: [PATCH 2/2] drm/panel-simple: add AUO P238HAN01 panel entry
-Date: Tue, 20 May 2025 09:44:39 +0200
-Message-Id: <20250520074439.655749-2-mwalle@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250520074439.655749-1-mwalle@kernel.org>
-References: <20250520074439.655749-1-mwalle@kernel.org>
+	s=k20201202; t=1747727119;
+	bh=xk8IMs+O+5nMbwmtVbXL7vN3XIeGEwoPkHYOFjHo2n0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=SuGhHI1Tl71rAsEAPIy0ux3u3l9tfB6V8grWjBmFHuqh4640p564ghd51PIiR2r34
+	 eUua9YeW8JqBK/o+3SnfZASghy5XwzrYWcTdpa76kSrxNh59EJO5EY/5NAleMkEYMh
+	 xwmf1aH7kD/oIXxyoHFdWR+WS/lhuTbI0jstZAQAA322mHNX+IbR8nLwRO2BA3sEeR
+	 sL6Xuo5d/w7g5ijBzm+sQagI1vrN3lPQNjjNcxbnvUFJvgC8Cr8hEiVs1P877n10bt
+	 Pa6gFI+agN5UcDXBnManU2UsBzAVN5HZpJ6Jn5368P4I+tCCwNalenUP4CvfjoNzT5
+	 cnFPozd0B8NIA==
+Message-ID: <0615877e-247a-419b-b4d6-de377cb40914@kernel.org>
+Date: Tue, 20 May 2025 09:45:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] dt-bindings: phy: samsung,usb3-drd-phy: add
+ dt-schema for ExynosAutov920
+To: Pritam Manohar Sutar <pritam.sutar@samsung.com>, vkoul@kernel.org,
+ kishon@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ alim.akhtar@samsung.com, andre.draszik@linaro.org, peter.griffin@linaro.org,
+ kauschluss@disroot.org, m.szyprowski@samsung.com, s.nawrocki@samsung.com
+Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-samsung-soc@vger.kernel.org, rosa.pila@samsung.com,
+ dev.tailor@samsung.com, faraz.ata@samsung.com, muhammed.ali@samsung.com,
+ selvarasu.g@samsung.com
+References: <20250516102650.2144487-1-pritam.sutar@samsung.com>
+ <CGME20250516101800epcas5p49fdae57cdf1fbec0427720ee38b0f925@epcas5p4.samsung.com>
+ <20250516102650.2144487-2-pritam.sutar@samsung.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250516102650.2144487-2-pritam.sutar@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Timings taken from the datasheet and the display is working in DE mode,
-thus the datasheet only specifies the blanking period. sync, back porch
-and front porch are arbitrarily chosen.
+On 16/05/2025 12:26, Pritam Manohar Sutar wrote:
+> Add a dedicated compatible for USB phy found in this SoC
+> 
+> Signed-off-by: Pritam Manohar Sutar <pritam.sutar@samsung.com>
+> ---
+>  .../bindings/phy/samsung,usb3-drd-phy.yaml    | 27 +++++++++++++++++++
+>  1 file changed, 27 insertions(+)
 
-The datasheet can be found at [1] but for reference these are the
-relevant timings:
+A nit, subject: drop second/last, redundant "dt-schema for". The
+"dt-bindings" prefix is already stating that these are bindings in
+dtschema format.
+See also:
+https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
 
- sym  |              | min  | typ  | max  | unit |
-------|--------------+------+------+------+------+
-   Tv | V period     | 1094 | 1130 | 1836 | Th   |
-      | V active     | 1080 | 1080 | 1080 | Th   |
-      | V blanking   |   14 |   50 |  756 | Th   |
-   Fv | V frequency  |   49 |   60 |   76 | Hz   |
-   Th | H period     | 1000 | 1050 | 1678 | Tclk |
-      | H active     |  960 |  960 |  960 | Tclk |
-      | H blanking   |   40 |   90 |  718 | Tclk |
-   Fh | H frequency  | 53.7 | 67.8 | 90.0 | kHz  |
- Tclk | LVDS clock   | 53.7 | 71.2 | 90.0 | MHz  |
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/samsung,usb3-drd-phy.yaml b/Documentation/devicetree/bindings/phy/samsung,usb3-drd-phy.yaml
+> index fdddddc7d611..c50f4218ded9 100644
+> --- a/Documentation/devicetree/bindings/phy/samsung,usb3-drd-phy.yaml
+> +++ b/Documentation/devicetree/bindings/phy/samsung,usb3-drd-phy.yaml
+> @@ -32,6 +32,7 @@ properties:
+>        - samsung,exynos7-usbdrd-phy
+>        - samsung,exynos7870-usbdrd-phy
+>        - samsung,exynos850-usbdrd-phy
+> +      - samsung,exynosautov920-usb31drd-phy
+>  
+>    clocks:
+>      minItems: 2
+> @@ -204,6 +205,32 @@ allOf:
+>          reg-names:
+>            maxItems: 1
+>  
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: samsung,exynosautov920-usb31drd-phy
+> +    then:
+> +      $ref: /schemas/usb/usb-switch.yaml#
+> +
+> +      properties:
+> +        clocks:
+> +          items:
 
-Keep in mind that this is a dual link LVDS panel and the horizontal
-timings are only for one half of the panel.
+Why there is no main PHY clock?
 
-[1] https://www.fortec-integrated.de/fileadmin/pdf/produkte/TFT-Displays/AUO/P238HAN01.0_Datasheet.pdf
+> +            - description: ext_xtal clock
+> +            - description: reference clock
 
-Signed-off-by: Michael Walle <mwalle@kernel.org>
----
- drivers/gpu/drm/panel/panel-simple.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+Both external oscillator and reference clocks? What are these clocks?
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 0a3b26bb4d73..47222d2d8129 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -1268,6 +1268,30 @@ static const struct panel_desc auo_g190ean01 = {
- 	.connector_type = DRM_MODE_CONNECTOR_LVDS,
- };
- 
-+static const struct display_timing auo_p238han01_timings = {
-+	.pixelclock = { 107400000, 142400000, 180000000 },
-+	.hactive = { 1920, 1920, 1920 },
-+	.hfront_porch = { 30, 70, 650 },
-+	.hback_porch = { 30, 70, 650 },
-+	.hsync_len = { 20, 40, 136 },
-+	.vactive = { 1080, 1080, 1080 },
-+	.vfront_porch = { 5, 19, 318 },
-+	.vback_porch = { 5, 19, 318 },
-+	.vsync_len = { 4, 12, 120 },
-+};
-+
-+static const struct panel_desc auo_p238han01 = {
-+	.timings = &auo_p238han01_timings,
-+	.num_timings = 1,
-+	.bpc = 8,
-+	.size = {
-+		.width = 527,
-+		.height = 296,
-+	},
-+	.bus_format = MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
-+	.connector_type = DRM_MODE_CONNECTOR_LVDS,
-+};
-+
- static const struct display_timing auo_p320hvn03_timings = {
- 	.pixelclock = { 106000000, 148500000, 164000000 },
- 	.hactive = { 1920, 1920, 1920 },
-@@ -4938,6 +4962,9 @@ static const struct of_device_id platform_of_match[] = {
- 	}, {
- 		.compatible = "auo,g190ean01",
- 		.data = &auo_g190ean01,
-+	}, {
-+		.compatible = "auo,p238han01",
-+		.data = &auo_p238han01,
- 	}, {
- 		.compatible = "auo,p320hvn03",
- 		.data = &auo_p320hvn03,
--- 
-2.39.5
+> +
+> +        clock-names:
+> +          items:
+> +            - const: ext_xtal
+> +            - const: ref
+> +
+> +        reg:
+> +          minItems: 1
 
+No, there is no such syntax. Drop.
+
+> +          maxItems: 1
+> +
+> +        reg-names:
+> +          minItems: 1
+
+No, look at existing code and do the same.
+
+> +
+>  unevaluatedProperties: false
+>  
+>  examples:
+
+
+Best regards,
+Krzysztof
