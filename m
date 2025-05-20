@@ -1,133 +1,141 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C51C27B51C;
-	Tue, 20 May 2025 11:07:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A45427CB0D;
+	Tue, 20 May 2025 11:07:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747739258; cv=none; b=kiQgdbUKagNPWfVxQ7mud5VUbM1cuLHPukse9zhC7si1UjQITUwyYBwePvztRCSlsyS8HQxA7tgPO1vMHhYueYLxqXIqK66HuiAtyUhDoi6p7fjv2btnA9dmEx4aOyn09IwYu1RA+QaU/MhqVDF0pDc9sG2YIOm8v0HxIXtKsZY=
+	t=1747739258; cv=none; b=KuobM1R3jWBbvAm9rATsZis644W8AuBHuktulqXrsgK1QpZMufqA1GULvJADRzqe+xVDsazrdPQ+lIs0+cwxUGaHplwD832BW7GatXRF72+i74ielm93w/k0zKXXnWYZxrCrA+3bHy5TDuHhqDX8eTc5KTHRwsQoFQQ5XbPkMhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747739258; c=relaxed/simple;
-	bh=583vg1UGoVVLzqSxiuKpUTbmEoP4v8+DKr/qwwa/QPA=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=HHGwmP1ZE8015ezn4ULEnWoHXzSialMAC084RSlJj6XsnsjauUlQwJmSDdYCkmtzec0cYor2RsC5jdool/Tuz+HZKb/mZXEcJ6KO3sSqxlxug36EXPGYjPYHr9YpRwhVRkPiyoLpLA2GUp4XjjnzJKGv4Zb37t031C/kgAKzb2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=HDU4XywU; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	bh=tFc9hug2b7fXl6hOuuxgkah3z/v9PQJg3mUq+erHT68=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=EIdzSlDRbI2L/p1Uxwt4sH9S00VurZA73dbeo5h2JR8cOMeQjiCi04RtUezKrhQd1ob9/zBLMurO8EArTF83JGl1JvQccWHgM0G5HOJfWfNZB0Lj1QMbfFZK1qR9iKhQTUiyeX757gxvv8PiaEqindWo9PhiiCk1JHu0YTtIBt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L7Vo1JZd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HDU4XywU"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
-	Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:In-Reply-To;
-	bh=VA8u/QPdc7wo8oqOhurIyOQjeWkHTGSNoZudB2U5izw=; b=HDU4XywURo8coRyniLZ/dwkjFo
-	6KKEVwjcziTb/8HHcD7gzx+cEV/7blGlnkUBsi/bQV/ygVgnE+P90AzAdR7zpZd/fiPKBQfxZTGWL
-	CAZSCrigSeHvtZhmnPGCPPA6rjTbs5iFcBSiCuyAxyYMTODCnzxmUwyQpmwHt0Jm3Oiwne/v9R7iZ
-	3Mxc1FyuXPJbbyCaiezJwGzIdPzIwt5DKjmDosTxXiYrV5v5NMQ0fgCcZzHnp2ddJj0YZ+P0k2sHf
-	Wk4t1o3usiBRJPWSdwXx5ydpY+VHRs4y5oGEJiOrtVSw6fO7aLGTq+rWYsUvJbKTCjWfebgpyouOF
-	0p+XHsNg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1uHKoh-00000000lqm-3EeC;
-	Tue, 20 May 2025 11:07:28 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 0)
-	id 4E41B3007CD; Tue, 20 May 2025 13:07:27 +0200 (CEST)
-Message-ID: <20250520110632.054673615@infradead.org>
-User-Agent: quilt/0.66
-Date: Tue, 20 May 2025 12:55:43 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: x86@kernel.org
-Cc: linux-kernel@vger.kernel.org,
- peterz@infradead.org,
- kys@microsoft.com,
- haiyangz@microsoft.com,
- wei.liu@kernel.org,
- decui@microsoft.com,
- tglx@linutronix.de,
- mingo@redhat.com,
- bp@alien8.de,
- dave.hansen@linux.intel.com,
- hpa@zytor.com,
- luto@kernel.org,
- linux-hyperv@vger.kernel.org
-Subject: [PATCH 1/3] x86/mm: Unexport tlb_state_shared
-References: <20250520105542.283166629@infradead.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L7Vo1JZd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30FC1C4CEEB;
+	Tue, 20 May 2025 11:07:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747739258;
+	bh=tFc9hug2b7fXl6hOuuxgkah3z/v9PQJg3mUq+erHT68=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=L7Vo1JZdMbSbyzr+WVa+cQd0QSJwf5kAog0K+3+ynLf97YhKRqLsRUW/W6+vTqBUV
+	 yGR3JHbVz1LVyrikVN8f5TzVAAZILDg1iKsDEjfcf2B8zLohxph+WAdcT7oA5bFhNL
+	 6QEefdwN5MzTJyq/EnmKFIq+4L6eiZN3Wt0sehMRt0Zd6prQAC8zWGM6GJHkMyrpiR
+	 +n0udDUqFgK82qymm9QdVkqPH8YhSsmGzpt5I+D+DrD9MJfqor0GDdVk10ErcjfM7Y
+	 vIrEnIYX17hJ2O4oyl/rwDygQe+F7Dq/JZuVqnFR0zO0GzB6vaxoot82tj03MCUP8w
+	 8cxXH+0i5J+WQ==
+From: Konrad Dybcio <konradybcio@kernel.org>
+Date: Tue, 20 May 2025 13:07:09 +0200
+Subject: [PATCH RFT v4 04/14] drm/msm/a6xx: Get a handle to the common UBWC
+ config
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250520-topic-ubwc_central-v4-4-2a461d32234a@oss.qualcomm.com>
+References: <20250520-topic-ubwc_central-v4-0-2a461d32234a@oss.qualcomm.com>
+In-Reply-To: <20250520-topic-ubwc_central-v4-0-2a461d32234a@oss.qualcomm.com>
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Clark <robdclark@gmail.com>, 
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+ Dmitry Baryshkov <lumag@kernel.org>, 
+ Akhil P Oommen <quic_akhilpo@quicinc.com>, Sean Paul <sean@poorly.run>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747739235; l=2657;
+ i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
+ bh=CuuD8qViyGRCfouTGuJaUY+h/7zt6demaKxkARZ/ecE=;
+ b=h02w63c3aoSF17iUnMsz+mkgVLvGFnXuEPEu5s2RnxTVooSDVPIW7660+9OAglwQx0AAJf1Bq
+ KzUN8I4T7uCAqBkNHT9XjzV95cvfOVnyel/kD5c7IkHd0cu+iSqRx2I
+X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
+ pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
 
-Never export data; modules have no business being able to change tlb
-state.
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Start the great despaghettification by getting a pointer to the common
+UBWC configuration, which houses e.g. UBWC versions that we need to
+make decisions.
+
+Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 ---
- arch/x86/hyperv/mmu.c           |    9 ++-------
- arch/x86/include/asm/tlbflush.h |    2 ++
- arch/x86/mm/tlb.c               |    7 ++++++-
- 3 files changed, 10 insertions(+), 8 deletions(-)
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.c   | 16 ++++++++++++++--
+ drivers/gpu/drm/msm/adreno/adreno_gpu.h |  3 +++
+ 2 files changed, 17 insertions(+), 2 deletions(-)
 
---- a/arch/x86/hyperv/mmu.c
-+++ b/arch/x86/hyperv/mmu.c
-@@ -51,11 +51,6 @@ static inline int fill_gva_list(u64 gva_
- 	return gva_n - offset;
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+index bf3758f010f4079aa86f9c658b52a70acf10b488..4399e69bd5156c9d8c6a17213ae02ae03ddae529 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+@@ -585,8 +585,13 @@ static void a6xx_set_cp_protect(struct msm_gpu *gpu)
+ 	gpu_write(gpu, REG_A6XX_CP_PROTECT(protect->count_max - 1), protect->regs[i]);
  }
  
--static bool cpu_is_lazy(int cpu)
--{
--	return per_cpu(cpu_tlbstate_shared.is_lazy, cpu);
--}
--
- static void hyperv_flush_tlb_multi(const struct cpumask *cpus,
- 				   const struct flush_tlb_info *info)
+-static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
++static int a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
  {
-@@ -113,7 +108,7 @@ static void hyperv_flush_tlb_multi(const
- 			goto do_ex_hypercall;
- 
- 		for_each_cpu(cpu, cpus) {
--			if (do_lazy && cpu_is_lazy(cpu))
-+			if (do_lazy && cpu_tlbstate_is_lazy(cpu))
- 				continue;
- 			vcpu = hv_cpu_number_to_vp_number(cpu);
- 			if (vcpu == VP_INVAL) {
-@@ -198,7 +193,7 @@ static u64 hyperv_flush_tlb_others_ex(co
- 
- 	flush->hv_vp_set.format = HV_GENERIC_SET_SPARSE_4K;
- 	nr_bank = cpumask_to_vpset_skip(&flush->hv_vp_set, cpus,
--			info->freed_tables ? NULL : cpu_is_lazy);
-+			info->freed_tables ? NULL : cpu_tlbstate_is_lazy);
- 	if (nr_bank < 0)
- 		return HV_STATUS_INVALID_PARAMETER;
- 
---- a/arch/x86/include/asm/tlbflush.h
-+++ b/arch/x86/include/asm/tlbflush.h
-@@ -172,6 +172,8 @@ struct tlb_state_shared {
- };
- DECLARE_PER_CPU_SHARED_ALIGNED(struct tlb_state_shared, cpu_tlbstate_shared);
- 
-+bool cpu_tlbstate_is_lazy(int cpu);
++	/* Inherit the common config and make some necessary fixups */
++	gpu->common_ubwc_cfg = qcom_ubwc_config_get_data();
++	if (IS_ERR(gpu->common_ubwc_cfg))
++		return PTR_ERR(gpu->common_ubwc_cfg);
 +
- bool nmi_uaccess_okay(void);
- #define nmi_uaccess_okay nmi_uaccess_okay
- 
---- a/arch/x86/mm/tlb.c
-+++ b/arch/x86/mm/tlb.c
-@@ -1322,7 +1322,12 @@ static bool should_trim_cpumask(struct m
+ 	gpu->ubwc_config.rgb565_predicator = 0;
+ 	gpu->ubwc_config.uavflagprd_inv = 0;
+ 	gpu->ubwc_config.min_acc_len = 0;
+@@ -663,6 +668,8 @@ static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
+ 		gpu->ubwc_config.highest_bank_bit = 14;
+ 		gpu->ubwc_config.min_acc_len = 1;
+ 	}
++
++	return 0;
  }
  
- DEFINE_PER_CPU_SHARED_ALIGNED(struct tlb_state_shared, cpu_tlbstate_shared);
--EXPORT_PER_CPU_SYMBOL(cpu_tlbstate_shared);
-+
-+bool cpu_tlbstate_is_lazy(int cpu)
-+{
-+	return per_cpu(cpu_tlbstate_shared.is_lazy, cpu);
-+}
-+EXPORT_SYMBOL_GPL(cpu_tlbstate_is_lazy);
+ static void a6xx_set_ubwc_config(struct msm_gpu *gpu)
+@@ -2546,7 +2553,12 @@ struct msm_gpu *a6xx_gpu_init(struct drm_device *dev)
+ 		msm_mmu_set_fault_handler(gpu->aspace->mmu, gpu,
+ 				a6xx_fault_handler);
  
- STATIC_NOPV void native_flush_tlb_multi(const struct cpumask *cpumask,
- 					 const struct flush_tlb_info *info)
+-	a6xx_calc_ubwc_config(adreno_gpu);
++	ret = a6xx_calc_ubwc_config(adreno_gpu);
++	if (ret) {
++		a6xx_destroy(&(a6xx_gpu->base.base));
++		return ERR_PTR(ret);
++	}
++
+ 	/* Set up the preemption specific bits and pieces for each ringbuffer */
+ 	a6xx_preempt_init(gpu);
+ 
+diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.h b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
+index a8f4bf416e64fadbd1c61c991db13d539581e324..06be95d3efaee94e4107a484ad3132e0a6a9ea46 100644
+--- a/drivers/gpu/drm/msm/adreno/adreno_gpu.h
++++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
+@@ -12,6 +12,8 @@
+ #include <linux/firmware.h>
+ #include <linux/iopoll.h>
+ 
++#include <linux/soc/qcom/ubwc.h>
++
+ #include "msm_gpu.h"
+ 
+ #include "adreno_common.xml.h"
+@@ -243,6 +245,7 @@ struct adreno_gpu {
+ 		 */
+ 		u32 macrotile_mode;
+ 	} ubwc_config;
++	const struct qcom_ubwc_cfg_data *common_ubwc_cfg;
+ 
+ 	/*
+ 	 * Register offsets are different between some GPUs.
 
+-- 
+2.49.0
 
