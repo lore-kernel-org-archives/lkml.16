@@ -1,148 +1,130 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5294B264621
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 09:01:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D3A211497;
+	Tue, 20 May 2025 09:02:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747731714; cv=none; b=gJ1AVZNN+D/aL0wq/nAIfTU1vEr6AQCGn7vjuWdvJkJQOX7piW9STTUjCzlNrnX76gtfA4ffIF9sCT8Z4Sle9i+rlAUgP2lyFvXeKqRxxBMWY9o7K4nKJisjRdTsj5Ak+wzufgLttLVE4uytzq/eQgfyjDflPrI6/yu/VSYysfc=
+	t=1747731778; cv=none; b=VhwzFGD6EFxhGPdu9h46SzIB0qAyiuYyND040OQC5kVlXP3okAjl+m0NldCwM5i/Biz9mvvYNtCDyMljU+y+WMldlz4ooemfJodE5MbPzesOukFRn8wRscaaugwFiBgDxcMW61v5lvej26UsS/Ftl9hNK+IAlrY1Dl7ugQfAdjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747731714; c=relaxed/simple;
-	bh=f4PFfUo3CVYvxjRWKlbGvRUOQy86q4nrR07UPkeiNIk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DVXDupc1RYINOQHUZ1QhYMmay3sD6LWaiKlGcgq48h4Wit6he7uzY0w0yHtPY2/+RvfcyAbPT59EIzAetczpCYUr1vdRhR63Vg5oM+IU17L1qW334WxwvBD+JMJc/oR9fhHBtLp5N3PGEg7QQlAXpYRtHsosW4c1nOuMrsafxGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M6dJtQ6N; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747731778; c=relaxed/simple;
+	bh=TWLgt09FaRbBxtK2loDYI9NojLCYcYDlUEYg6GGCD/k=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OjVxtVSTWe0gDWfi9rlgYt4xgXfB5du7n4uRacKnj2g+shYQpe51nbkEqEIw0DvBPxiFPuYz2fSmPH1k9PiA3u4JepkNgv59x7ZWPqj086tuLC/+rbu7POJFxtRSi1hkihjLpMkfL/83EE567LO+iTlKYOX/Wrl7lZ4JBbzcJTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=RB8b8hbi; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M6dJtQ6N"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747731712;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=f4PFfUo3CVYvxjRWKlbGvRUOQy86q4nrR07UPkeiNIk=;
-	b=M6dJtQ6NHD4vqnSt44Ul3IslqNmFcdI9fL7zqCqL0DEVQoaSBnRinvWY8ixuS9+JpLvt4d
-	1DHVEWHk1DXmLZmKVfLLJJo5DTC20DEf06WMLn+FQPdyFdLqCsXHRXk1Ig6E1i2Yd/DYRD
-	x0iC+CY0PdEdZzWmY3aJzkercp3FgGI=
-Received: from mail-yw1-f198.google.com (mail-yw1-f198.google.com
- [209.85.128.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-35-IsmX750rNaGccJj9_E-Bcw-1; Tue, 20 May 2025 05:01:48 -0400
-X-MC-Unique: IsmX750rNaGccJj9_E-Bcw-1
-X-Mimecast-MFC-AGG-ID: IsmX750rNaGccJj9_E-Bcw_1747731708
-Received: by mail-yw1-f198.google.com with SMTP id 00721157ae682-708aca58513so74055867b3.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 02:01:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747731708; x=1748336508;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=f4PFfUo3CVYvxjRWKlbGvRUOQy86q4nrR07UPkeiNIk=;
-        b=JEHeIGhcAGG00jYBfl8ebrnhFwpMhSeDGFQqrH7ZBD6ItGWziuiYZhMkA0o7KdfKen
-         F/+XCcOLaTmJJnII4uaA8+mgw/c7kgyECfoms9pisIWYk4W66oNjEPIDqGXoloLI3Wa7
-         8XBEd8KApDAKVIbYhYGetCXuEdDJJdjaIHcdoj06VbySo2VwDfHPwyFQdmtNk8YPHwdz
-         jlCSP+yUWEXIX/Fz4grQ5Q+rewZmitB1lkcqTKLqtsqoHyfvgSMfqFynUgjy4+mCIMHh
-         peG76Z8oxbsqRlbvmkGYYhLmMshCx3B+WEH5Mp5SKhF0UV5kgeosvRYNQIpTUuzRv3a1
-         wJSw==
-X-Forwarded-Encrypted: i=1; AJvYcCV2zNs2LI4RgycPDLmPlU1IunyBQwEL3XzIRDLEPzshzUXGVJG9OUyWOSC/2R4/BJHNzaF27doRSf+TKNI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxShbClw0+DJI/3hkVLJvQhadT6fGKKV/gMKjbnX5+lnbidm71Y
-	5ak0/+saEEok5sQLEKD7sYi5fIx+67qelWfEChruNxBZBzMcpORExqrOI8nNKvwBjLwSOy1lTtI
-	ZgZZ/jV/rA4DMoDF37xxhoTpepTclFIQf9e7v4IjhA3PRsKgJJsomvTTjKO3N+1L/b7tXzGAo67
-	DSFodEPnkIc5zR5hsz5DkuLEYJJE5aSHQHE+nDIriR
-X-Gm-Gg: ASbGnctGOlSZLQ6RNJ1KfDklBdi1wk2P0pUJr205h4p791iIx4TyEJflzSWe3NeEhjx
-	wT+z2ptAsdLhDY6mDOUBsK6AO631q3+BfeSmedGdNeHClkgFuHyeH1MsFL9zxa+pR/eI=
-X-Received: by 2002:a05:690c:6f03:b0:700:a988:59dc with SMTP id 00721157ae682-70ca7babbb1mr240865977b3.31.1747731707605;
-        Tue, 20 May 2025 02:01:47 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG3XkPTDHC2bT/+30vHIfK94LVFwuyNrNbVOqdnshE4e5m8CfpmTKyeL6GG9M8oi09my2f4OCE0WTxgWx8PWBs=
-X-Received: by 2002:a05:690c:6f03:b0:700:a988:59dc with SMTP id
- 00721157ae682-70ca7babbb1mr240865377b3.31.1747731707035; Tue, 20 May 2025
- 02:01:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="RB8b8hbi"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54K7gvHw014039;
+	Tue, 20 May 2025 11:02:39 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	LlTxhPCeEp6mSZq7lExD4bZqPrY3pQAprG/owac7STA=; b=RB8b8hbifDduPhh8
+	YfcydHK76FHWuz8s0Dy21q9wVeAEMLgq4Y9SNAFXDVugTnR/Az/DIGYVBTTzs3AP
+	yWxj/TRA0kbejIyM1XN8kcKryXCKY54sJd104u1O32cfPZGAhImehwXH7cI6yB3z
+	YQJS+VvxdbgSc5fmWfVsYQH5Pt8xdNuX4ZUrv0csg5wmGpaQls0ti28L159ydPk8
+	bKHVGX7kOQs6JX4BM2hmq+iNsJ0hB1+gRmbY72HWP94WQ5sBQSVET0xVBrEZkke9
+	iadu7rfH72jzG+xo7klSirVBTNDiYr2HMc+GQe7gejqreYzZPWq0eOP9ARNzlKOS
+	82bMOA==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46phbgkvsk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 20 May 2025 11:02:39 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id E1F4C40077;
+	Tue, 20 May 2025 11:01:17 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EDB0FB3FF9D;
+	Tue, 20 May 2025 10:59:56 +0200 (CEST)
+Received: from localhost (10.48.86.132) by SHFDAG1NODE1.st.com (10.75.129.69)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 20 May
+ 2025 10:59:56 +0200
+From: Antonio Borneo <antonio.borneo@foss.st.com>
+To: Julius Werner <jwerner@chromium.org>, Evan Benn <evanbenn@chromium.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck
+	<linux@roeck-us.net>, <linux-watchdog@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC: Antonio Borneo <antonio.borneo@foss.st.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: [PATCH v2] watchdog: arm_smc_wdt: get wdt status through SMCWD_GET_TIMELEFT
+Date: Tue, 20 May 2025 10:59:52 +0200
+Message-ID: <20250520085952.210723-1-antonio.borneo@foss.st.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250519170055.205544-1-antonio.borneo@foss.st.com>
+References: <20250519170055.205544-1-antonio.borneo@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250501-vsock-linger-v4-0-beabbd8a0847@rbox.co>
- <20250501-vsock-linger-v4-3-beabbd8a0847@rbox.co> <g5wemyogxthe43rkigufv7p5wrkegbdxbleujlsrk45dmbmm4l@qdynsbqfjwbk>
- <CAGxU2F59O7QK2Q7TeaP6GU9wHrDMTpcO94TKz72UQndXfgNLVA@mail.gmail.com>
- <ff959c3e-4c47-4f93-8ab8-32446bb0e0d0@rbox.co> <CAGxU2F77OT5_Pd6EUF1QcvPDC38e-nuhfwKmPSTau262Eey5vQ@mail.gmail.com>
- <720f6986-8b32-4d00-b309-66a6f0c1ca40@rbox.co> <37c5ymzjhr3pivvx6sygsdqmrr72solzqltwhcsiyvvc3iagiy@3vc3rbxrbcab>
-In-Reply-To: <37c5ymzjhr3pivvx6sygsdqmrr72solzqltwhcsiyvvc3iagiy@3vc3rbxrbcab>
-From: Stefano Garzarella <sgarzare@redhat.com>
-Date: Tue, 20 May 2025 11:01:35 +0200
-X-Gm-Features: AX0GCFvwufUSjICCevkhSa4UF6ys3CpGsz9VU3OXC4m_4xblOUg6kg956W_4nJw
-Message-ID: <CAGxU2F4ue9UxZd1_wB2D=Oww6W9r7kTBPVjjbnm24Lywz+0wSA@mail.gmail.com>
-Subject: Re: [PATCH net-next v4 3/3] vsock/test: Expand linger test to ensure
- close() does not misbehave
-To: Michal Luczaj <mhal@rbox.co>
-Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	"Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
-	Stefan Hajnoczi <stefanha@redhat.com>, virtualization@lists.linux.dev, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SAFCAS1NODE1.st.com (10.75.90.11) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-20_04,2025-05-16_03,2025-03-28_01
 
-On Tue, 20 May 2025 at 10:54, Stefano Garzarella <sgarzare@redhat.com> wrote:
->
-> On Mon, May 12, 2025 at 02:23:12PM +0200, Michal Luczaj wrote:
-> >On 5/7/25 10:26, Stefano Garzarella wrote:
-> >> On Wed, 7 May 2025 at 00:47, Michal Luczaj <mhal@rbox.co> wrote:
-> >>>
-> >>> On 5/6/25 11:46, Stefano Garzarella wrote:
-> >>>> On Tue, 6 May 2025 at 11:43, Stefano Garzarella <sgarzare@redhat.com> wrote:
-> >>>>>
-> >>>>> On Thu, May 01, 2025 at 10:05:24AM +0200, Michal Luczaj wrote:
-> >>>>>> There was an issue with SO_LINGER: instead of blocking until all queued
-> >>>>>> messages for the socket have been successfully sent (or the linger timeout
-> >>>>>> has been reached), close() would block until packets were handled by the
-> >>>>>> peer.
-> >>>>>
-> >>>>> This is a new behaviour that only new kernels will follow, so I think
-> >>>>> it is better to add a new test instead of extending a pre-existing test
-> >>>>> that we described as "SOCK_STREAM SO_LINGER null-ptr-deref".
-> >>>>>
-> >>>>> The old test should continue to check the null-ptr-deref also for old
-> >>>>> kernels, while the new test will check the new behaviour, so we can skip
-> >>>>> the new test while testing an old kernel.
-> >>>
-> >>> Right, I'll split it.
-> >>>
-> >>>> I also saw that we don't have any test to verify that actually the
-> >>>> lingering is working, should we add it since we are touching it?
-> >>>
-> >>> Yeah, I agree we should. Do you have any suggestion how this could be done
-> >>> reliably?
-> >>
-> >> Can we play with SO_VM_SOCKETS_BUFFER_SIZE like in credit-update tests?
-> >>
-> >> One peer can set it (e.g. to 1k), accept the connection, but without
-> >> read anything. The other peer can set the linger timeout, send more
-> >> bytes than the buffer size set by the receiver.
-> >> At this point the extra bytes should stay on the sender socket buffer,
-> >> so we can do the close() and it should time out, and we can check if
-> >> it happens.
-> >>
-> >> WDYT?
-> >
-> >Haven't we discussed this approach in [1]? I've reported that I can't make
->
-> Sorry, I forgot. What was the conclusion? Why this can't work?
->
-> >it work. But maybe I'm misunderstanding something, please see the code
-> >below.
->
-> What I should check in the code below?
+The optional SMCWD_GET_TIMELEFT command can be used to detect if
+the watchdog has already been started.
+See the implementation in OP-TEE secure OS [1].
 
-Okay, I see the send() is blocking (please next time explain better
-the issue, etc.)
+At probe time, check if the watchdog is already started and then
+set WDOG_HW_RUNNING in the watchdog status. This will cause the
+watchdog framework to ping the watchdog until a userspace watchdog
+daemon takes over the control.
 
-I don't want to block this series, so feel free to investigate that
-later if we have a way to test it. If I'll find some time, I'll try to
-check if we have a way.
+Link: https://github.com/OP-TEE/optee_os/commit/a7f2d4bd8632 [1]
 
-Thanks,
-Stefano
+Signed-off-by: Antonio Borneo <antonio.borneo@foss.st.com>
+---
+ drivers/watchdog/arm_smc_wdt.c | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/watchdog/arm_smc_wdt.c b/drivers/watchdog/arm_smc_wdt.c
+index 8f3d0c3a005fb..bbba23ace7b85 100644
+--- a/drivers/watchdog/arm_smc_wdt.c
++++ b/drivers/watchdog/arm_smc_wdt.c
+@@ -46,6 +46,8 @@ static int smcwd_call(struct watchdog_device *wdd, enum smcwd_call call,
+ 		return -ENODEV;
+ 	if (res->a0 == PSCI_RET_INVALID_PARAMS)
+ 		return -EINVAL;
++	if (res->a0 == PSCI_RET_DISABLED)
++		return -ENODATA;
+ 	if (res->a0 != PSCI_RET_SUCCESS)
+ 		return -EIO;
+ 	return 0;
+@@ -131,10 +133,19 @@ static int smcwd_probe(struct platform_device *pdev)
+ 
+ 	wdd->info = &smcwd_info;
+ 	/* get_timeleft is optional */
+-	if (smcwd_call(wdd, SMCWD_GET_TIMELEFT, 0, NULL))
+-		wdd->ops = &smcwd_ops;
+-	else
++	err = smcwd_call(wdd, SMCWD_GET_TIMELEFT, 0, NULL);
++	switch (err) {
++	case 0:
++		set_bit(WDOG_HW_RUNNING, &wdd->status);
++		fallthrough;
++	case -ENODATA:
+ 		wdd->ops = &smcwd_timeleft_ops;
++		break;
++	default:
++		wdd->ops = &smcwd_ops;
++		break;
++	}
++
+ 	wdd->timeout = res.a2;
+ 	wdd->max_timeout = res.a2;
+ 	wdd->min_timeout = res.a1;
+
+base-commit: a5806cd506af5a7c19bcd596e4708b5c464bfd21
+-- 
+2.34.1
 
