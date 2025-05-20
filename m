@@ -1,107 +1,94 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 225FA1DA61B
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 23:16:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7E336BFC0
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 23:16:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747782964; cv=none; b=te3nZR58CVoi80imOW8ojl1oIy/MyPVmsz70lFNPtOtxVaJnThh7jqlRqyNauJtA5niiEgOfIfA3CoH7HsiStQy0inbogz2stagZnhxMYwv0WilQus3A7DBlZ4FdKDq1il/K20IB3nvlp4AXhMLfgfu38NLFqr5YQY7Mfq4434E=
+	t=1747782995; cv=none; b=Ome/9K9VsNAK3gr7SXiMlMpfTDIyWyVLCBnPBDJnicBihoefQdgYRZG88biJRlGM7ig5EjF0TRkjFZlZWH4axBpeIXEbNaUBfN9qaQhfK2029aToSqgZL0JsKc5aKYXXCuBGkpdeQZAhGGEc4q8QaGVr40QIUDZXFhWy/emy8JQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747782964; c=relaxed/simple;
-	bh=V49+wvZSkSClDuCcnm25JfpxZ7oWhgCCRdsoYwrf/VI=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=U+kAZdiTNRncv75CgIZu3oRC+IgNEFW1sy0G4NyMHxyI2D0RhNz9VvXtX8307eJQuf6oxunnS3bbefrExkOR+oCYkaMChD3NEt3XxydvDByCmmmNjLUaidfBxQ3ECuIHi3X8nJlG0FzWXAdLDSELtzpjD7WY8XUTyRGSE4k7pC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Qpri72VT; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1747782995; c=relaxed/simple;
+	bh=rDgxYnBkRJB+1zOuCX7vDBamF1MiiKlcC/zm0HukGT0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=sERmDaGO2kTyZ751+ufVH4Ds5F1ljLOXnwwtLK9S/hhzneHhWjEgu+ONKImBlhRPsF9P0NyaNlSbMCT1jxyla2IoOnwCeDYYLqSJN49EsqT66tn8oIPSruyX4zaIIRyiosJ5AUqpVHUZPd92JZe6y5sesAhk6ei7J3pdSHgoYOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=O2w3not/; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Qpri72VT"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7429f7f9ee3so4153636b3a.2
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 16:16:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="O2w3not/"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-b2705e3810cso503856a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 16:16:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747782962; x=1748387762; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=o4cbee5BV2pMryTjZId+rssa6eMiSUYJChHQbxz3+S4=;
-        b=Qpri72VTuCRty6EX7q89ILJ3tEtTZ+xuok76F3GDrO0iIJbEvRaqBby06GqIU+WRDL
-         kpqupcvWit/AtduU8wHuKceF35zxSRMyoZ2BVDjdanQck9Yh9OQEZxXMlybIoPbH6Tai
-         02zF7/rWOt5OFE2hmwlhiZUxElYfzEXb9CIShduWMwYVTexJZxUDvVX9PAT4NGV8iFYb
-         IJuuvplhKAxOsrgwAV4lZ720lUxfUxZNYS8A3l465ef639DRG3Z1Q2erj5920lEErWf7
-         vfC8BbqoYP4Hfh64vTuVvc20aJcJ279yB00MvPmEY9c6S9ERG65XCin63C3kU0rtqR7v
-         YtzA==
+        d=purestorage.com; s=google2022; t=1747782993; x=1748387793; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rDgxYnBkRJB+1zOuCX7vDBamF1MiiKlcC/zm0HukGT0=;
+        b=O2w3not/ZnOLCBnvalBFJu4BORQdbszVYIWpoW2Qz79iFWXk3oM8MwYcQ8xIs2K6Wr
+         WNBC3uoz6fen1CfFijcHKJhls6QAteLHpaWhgmvt/moX4ssfOB6T3h7VHHTUXT2P6Myv
+         nNUGhk3x8KrvRV6wLEAsBB7/LJhMYSpyQGzjnhRb1Thnh8tn0O39RCmlrxcsMrC28bQM
+         bSN0zrk4Gi4VttKDzTNKC8YdjSvzrPp3mtM40cM0bq5gXAG0rPGPljyu0iil8Xs5LIbj
+         mADQrjUqF1Ztr5X/GB6yCRUeQbSAfiw6VvXX/5RnrS3Oxn/VW0tZf57hDic4bVE817lM
+         xatg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747782962; x=1748387762;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=o4cbee5BV2pMryTjZId+rssa6eMiSUYJChHQbxz3+S4=;
-        b=ej9w0WAbIdoCha66g6fXEXYuuYlGKQ755M0pL32XIayndkjmCJCTyYyrsNW4EunX8d
-         5tOsVXCa4RiXQ3GMmL98naeDCbSFTI2pDrkjOtOF+PCKVzCT6ziegPb5HehKxOrsUbMu
-         G/LQ9rIgCktDuAmzzu/hc2ndl83tZP+EHhjiahMLhLMX5QNObTO3v1OMxrq/9DEdpxcK
-         VZmFlZMikI2mvthsXWGbVUa7g1AeXBT2LGsaTdWh8hgCdbgfHn4PUbivBEqPSN8UKsi4
-         +jxfFdaqBTR4l0Z/X+T5kTjl80vQRutXooWv1MqyUP1uoOJpfNuvsz8tBwJapxNVx/A0
-         Oo4w==
-X-Forwarded-Encrypted: i=1; AJvYcCXsLr6SFRnm3Z0GLSiCKQZOeAzU7E4vvnQxtZGGe3jqKrA9S1QRa8K58KUU4Kq0Mi/Cc8PFw3RKbOZSHqs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPFbsty4yigMH+QcM42p2zyXdQKn8rrG4p3L7iMYZgxh678Oy0
-	oHXaR/eFLydCWeiGZc4853301gWZDhJ7op8iRIPXGLIplT0qnXV9y10sDIYc98M7tBXwT8P8ShJ
-	XhUtb3g==
-X-Google-Smtp-Source: AGHT+IHkdzkAlbF7H+doOwdZzLuUT4V6bPTxDi+HdVal9AMrCuWDaMB1CPv0u5ndAaOdTSloz6Jct2KSJAI=
-X-Received: from pgbdl10.prod.google.com ([2002:a05:6a02:d0a:b0:b0c:3032:f595])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:a341:b0:1f6:6539:e026
- with SMTP id adf61e73a8af0-216218e668fmr29244428637.15.1747782962355; Tue, 20
- May 2025 16:16:02 -0700 (PDT)
-Date: Tue, 20 May 2025 16:16:00 -0700
-In-Reply-To: <aCzUIsn1ZF2lEOJ-@x1.local>
+        d=1e100.net; s=20230601; t=1747782993; x=1748387793;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rDgxYnBkRJB+1zOuCX7vDBamF1MiiKlcC/zm0HukGT0=;
+        b=c90Ng/0DOrZHq1ChMeY8GSFfWK+yuib3WvSnIE5JSEzWGV42r9H1rpCT1KvsSG09ol
+         4J2JuGfyVKW1BvIIfIgwIBUbKSmC/c/QMt0NOp6aDspEFg6QiabKT69CLqb3rFttc3R/
+         2zZbgOgLNfmZCEbjHMOd1DBZph7Tq9mMoPAKYYkokO9JJzL315nxZfmevQovePgdlvps
+         t1L0T36QCQDY64nUILqI0tyDi53UcSTG21L5o7rzg+Bi6lfNkFRubaD7F9EYW4NR6O2J
+         lH2OSgXmuNDJ9GHuu3N4b4C6XbgQORbW4CQjKq+oAvOxH4wps8KqXY6He5Cb4NuuKHOX
+         LCZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW5oDuqOoGc4v5VkCTQNskLT6PEmOcmk7euVjE44kjUSSm6UpLulCop88XzC0Eno7WFx+u1QxZTQ3uC9ek=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRjgD+QpOgNS7CLRqH5QRS6ElAir7uGO8BoHKtLAGEaY4ln25W
+	QxQg1qg4ysWDeu1elzdmSj2xGZi2h987AC2eDfPQywEh0vK/NIpNQZmNJR7xaHVAkiI08YMnZyR
+	zuJiY/oHd0w==
+X-Gm-Gg: ASbGncvf+XSLnFA4s5Y/YbsolOeD1gmPTT1N40t75mPmUeLjncb50jBqQqfBSsDrUO0
+	WCmHtQ2sDXD/R1rbnr+Vrqvy3ZAgbrvASmcUiI66SETjpC0QnH8wh/Bgh3cKM7n6Qbzj5uNBH79
+	r0Wr9jEJl1tQ+tnhUrMEy4Q5/okGunYAGt3xoDiTx4Jy9CRiMbGbhN/BJ3yvfvPHnU7v7lYQV11
+	8A4qQPXadsOWdW0Rz9fgQFHBUdcM6xHjNVr8WhoHOeftif9ECE6u42JWqvMt92HujqtKgNjrPEh
+	JPU4CH1Bzgn7HSc49sgADmAczx09tkx+SBYmi0DWJ+gK7oeKTXJeNeHmcx3DvOu51pYdkQ==
+X-Google-Smtp-Source: AGHT+IGYamG6HaTsERBMJNn/ENfW67B+S/t9k+EMR2zfKNVUCVgJpKNQTHLIzDBFZyXXsOew65kqKQ==
+X-Received: by 2002:a17:902:d4cd:b0:231:c9bb:6105 with SMTP id d9443c01a7336-231d334d214mr98532235ad.0.1747782993056;
+        Tue, 20 May 2025 16:16:33 -0700 (PDT)
+Received: from dev-cachen.dev.purestorage.com ([2620:125:9007:640:ffff::9190])
+        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-231d4ac9510sm81858585ad.8.2025.05.20.16.16.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 16:16:32 -0700 (PDT)
+From: Casey Chen <cachen@purestorage.com>
+To: surenb@google.com
+Cc: 00107082@163.com,
+	akpm@linux-foundation.org,
+	cl@gentwo.org,
+	dennis@kernel.org,
+	kent.overstreet@linux.dev,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	pasha.tatashin@soleen.com,
+	tj@kernel.org,
+	yzhong@purestorage.com
+Subject: comments on patch "alloc_tag: allocate percpu counters for module tags dynamically"
+Date: Tue, 20 May 2025 17:16:20 -0600
+Message-ID: <20250520231620.15259-1-cachen@purestorage.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250517000739.5930-1-surenb@google.com>
+References: <20250517000739.5930-1-surenb@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250516213540.2546077-1-seanjc@google.com> <aCzUIsn1ZF2lEOJ-@x1.local>
-Message-ID: <aC0NMJIeqlgvq0yL@google.com>
-Subject: Re: [PATCH v3 0/6]  KVM: Dirty ring fixes and cleanups
-From: Sean Christopherson <seanjc@google.com>
-To: Peter Xu <peterx@redhat.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Yan Zhao <yan.y.zhao@intel.com>, Maxim Levitsky <mlevitsk@redhat.com>, 
-	Binbin Wu <binbin.wu@linux.intel.com>, James Houghton <jthoughton@google.com>, 
-	Pankaj Gupta <pankaj.gupta@amd.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 20, 2025, Peter Xu wrote:
-> On Fri, May 16, 2025 at 02:35:34PM -0700, Sean Christopherson wrote:
-> > Sean Christopherson (6):
-> >   KVM: Bound the number of dirty ring entries in a single reset at
-> >     INT_MAX
-> >   KVM: Bail from the dirty ring reset flow if a signal is pending
-> >   KVM: Conditionally reschedule when resetting the dirty ring
-> >   KVM: Check for empty mask of harvested dirty ring entries in caller
-> >   KVM: Use mask of harvested dirty ring entries to coalesce dirty ring
-> >     resets
-> >   KVM: Assert that slots_lock is held when resetting per-vCPU dirty
-> >     rings
-> 
-> For the last one, I'd think it's majorly because of the memslot accesses
-> (or CONFIG_LOCKDEP=y should yell already on resets?).  
+Hi Suren,
 
-No?  If KVM only needed to ensure stable memslot accesses, then SRCU would suffice.
-It sounds like holding slots_lock may have been a somewhat unintentional,  but the
-reason KVM can't switch to SRCU is that doing so would break ordering, not because
-slots_lock is needed to protect the memslot accesses.
+I have two questions on this patch.
+1. If load_module() fails to allocate memory for percpu counters, should we call codetag_free_module_sections() to clean up module tags memory ?
+2. How about moving percpu counters allocation to move_module() where codetag_alloc_module_section() is called ? So they can be cleaned up together.
 
-> The "serialization of concurrent RESETs" part could be a good side effect.
-> After all, the dirty rings rely a lot on the userspace to do right things..
-> for example, the userspace better also remember to reset before any slot
-> changes, or it's possible to collect a dirty pfn with a slot index that was
-> already removed and reused with a new one..
-> 
-> Maybe we could switch the sentences there in the comment of last patch, but
-> not a huge deal.
-> 
-> Reviewed-by: Peter Xu <peterx@redhat.com>
-> 
-> Thanks!
-> 
-> -- 
-> Peter Xu
-> 
+Thanks,
+Casey
