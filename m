@@ -1,236 +1,159 @@
-Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07A1D2686B1;
-	Tue, 20 May 2025 16:07:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06755241696;
+	Tue, 20 May 2025 16:07:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747757241; cv=none; b=fLpGY8XK3hy6GBUsKpgn/4U8oPA0R5s4/EAatjZ+NqkQpq1Mn8LyVDDgWnq3Ph1C1TEVULFmePsgZqQv59Ap7+VG7+dOac4n2mrTWW/Ux8+e4qN/JpdymqbkrqMeYAns/iAvPvmL+i/b5C+5JjVbjzEq7mpNAQvqbDNNC6CYuhU=
+	t=1747757263; cv=none; b=JTSoUY+TKBflwxal+TYKAGsGqF4zKnZ/drpZT2tOlRIzxCO3OQaLPDEf9YiKTn24b/rRu4Gx2W3za5qqjOCvevk689rnyrsbjwXV45OWFTJshiWPq7LrEFtGp0XHkZycjBcuDsOUqxIpPk5u6EGAwZlYLwxZ7npIZH+HYfICYyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747757241; c=relaxed/simple;
-	bh=lPPKaD6JIaa49k5hB+azXiSPpoE9hff6spghRgeoDPc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OecATDFAT4EJZavb6WgLODw9DFppqJ9+4cHY2b4/5DR5J0EENSZaaxFj3pY/YQkkiG68uHBXOyedOK92BjPWJ/aJh6Q3EhPrab1iYJcD/FqRQxlUhKKX71Kew3XKnPNt4A3isTV7hEW72QfET0rRPS+Yq5rua0auLZhBvue2uog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XXlHndhU; arc=none smtp.client-ip=209.85.166.48
+	s=arc-20240116; t=1747757263; c=relaxed/simple;
+	bh=sOzjotnO4jDD0opsHU7773NR8s7oyPcDu4CT5dafdK8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=r+bQneJNDumZbXF6Up9KM0wlEtRjS1NQWuFFnc/TbLX3ojebCyO0/IzPhVn6WFiMj8P01HBq3HlmXOuO5aFO+ru+RhcHzuB+5UQGTwwU+wMgutBzC3l3wnPdfyrbSyd1O6jlS/QqZtDaNCMLaEQ8jaWEgNh10/e7j4nQiLvzKgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TGkLMI+f; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XXlHndhU"
-Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-86a052d7897so390293539f.0;
-        Tue, 20 May 2025 09:07:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TGkLMI+f"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2320d06b728so26532405ad.1;
+        Tue, 20 May 2025 09:07:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747757238; x=1748362038; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lIlNhHqv93GvQWrqGB3ZPQbb3QiLFh5pTwSkFYPcNvg=;
-        b=XXlHndhU54C5oAYHlo/jsCDsq6q117SOyioyUiVKOFi0SpRwvqaey6qR2vcnUS1feU
-         O2/yC/bn1eP4llaGLGxmt+psJuvbkJX5LfwIE9Nu0N/zOI28RTElJJsQYN3BKd3tyNOE
-         FnfMBMT49RhIW30mivK7bpqoQJqYMuMxlo39hVMZAs0n1mMco5QHimG278qye/a6WTJc
-         NkpX13wEuE+0eSAWC3sVt9EU+sbuYhSYRC1jlb77MZtf4o6zJKx3zp2SdUrG60YUuOW+
-         aeJmuGC/88mds28W/C79CmpRV3sLJbYAi0UTXGLmvSSfIfjTOaGWUTxEgXCT/82tx8dv
-         WEiw==
+        d=gmail.com; s=20230601; t=1747757261; x=1748362061; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=f+e4tDb9ZmYBKg9MrFn8FNPWvTvXxngCCXTAK6EIg70=;
+        b=TGkLMI+fBT0FFYACt9VrvVZTmoqkcLFRG666DYNSUexnJ/bGWZae0PoeVTfpRxRTz3
+         SBdbY8X2xdqT4IBJYPdszW9hX9hgQ5SgpROYzRntl0PhXsQfgI5PYfog8gZEs+Jn67WZ
+         9NWaUeBOnQg1OSaerjOS8bFnVYUygW9u5p+up7b5mTkLi1UXDQ3fH8b3kYJe84tKFKa8
+         RvwSS+34zuXgnrCWNI9V2QQYSLzBYCvtYyiEeK+voGwPLWp0tXaPdBN8NbFQ99j6WpJC
+         8s2D7IYV3N853M/KwD1VlJfoOUbNJtMMpP8Do4IUsdsrMCXWOEItb/tugue86YzLzDBy
+         9rxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747757238; x=1748362038;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lIlNhHqv93GvQWrqGB3ZPQbb3QiLFh5pTwSkFYPcNvg=;
-        b=bCfwg5eJ8lkv6cUUkJb/ONjhgkJRkg0WZjYUC3/7FJkYk7Al1tfvu8jXRdFOJxMotQ
-         bQ61CrTH93UWddjTVD+3/XKMClZ7SlgdUEwvq7yfJjHY39StoBlf7Q4V1tMME6k++bIM
-         1KPrWRWIaDg6eFJ0dFFPnGgrT0zDYkkqqez8MpSgHeNl/dVp9BPoV7kHpc5KriVLzI2W
-         EqW76d0VTSFNPI/VNWOlgjmyfXmEFFVxxBD+/A3/um44Vrj1ikdRXwT9sE1Ss18hyzji
-         cCYGbHpCDpPWU4inC+y9eAv1cXFes7Tj1Ybll8vzC8RqsTjGjQLmCMqWkiHzHfZ25iyl
-         ZOdw==
-X-Forwarded-Encrypted: i=1; AJvYcCV7qVBvCSPRA4qAYojBUtGm6t0O1hjvkfaSgaW7pZvXItb98mJsrArPdshEzMo9lPNBBUGvYII/rTBiQpLu@vger.kernel.org, AJvYcCXDpiSp7iFRZVwwuUD6F7OFbtY956MRRaEKioeWLi91TKh+tMwRI4zf3HpqkuLJTGyn0ZSrpFeV8f/6hXPl@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEmm378Ip2EuitccIHngXAiVwy04hcLDB/uhUeZMKrVAe+IRVv
-	DvKAUKC9CV5E9vfAyFHG3mbtZAe008pyBLCKi8Y9UNnuEMGm2+cBfywmGSzPteIMJ8wKHcKGjiW
-	DQwK2SDxAQnpuU/l5wpoaOSj0cIzj8os=
-X-Gm-Gg: ASbGncvR0X+N6SGeoL/wPIqeD54FPtx4PUKayH668l+lHQgI+b2oHEh5aEVwoRUX3Mh
-	SmVjPKttEoHYOijYeUWDw8p5EsfNkWhc8Bo7Z8PjyNElPWzvWbAXzldi/9/sz/oxzQO2SPtRHWe
-	0/MgiMlEGpKd/sGL+AcRzI8v6aOZScDKJ4UWUVtLbbCSK+WFVd5wdIAo6kRPR5yB4=
-X-Google-Smtp-Source: AGHT+IFKjqLjdxKN137jXayMzSnHUHC3u3SlHWSxPDUnqzAx/6aHZ9mgDTFP7BV1sTPkWNww7XgabgYxTfCrrozjj6s=
-X-Received: by 2002:a05:6602:4186:b0:85c:c7f9:9a1c with SMTP id
- ca18e2360f4ac-86a23283c78mr2385708639f.13.1747757237853; Tue, 20 May 2025
- 09:07:17 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747757261; x=1748362061;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=f+e4tDb9ZmYBKg9MrFn8FNPWvTvXxngCCXTAK6EIg70=;
+        b=j0rB8UTAkyIuSI60Q+i3J2ya0yRu1g/rRb9tBy4Oo0x52udR3vOsx+wmPbePbcxam1
+         LAgqi8m4JZp8BhJXGoEaM+ryiL3T0evooKCCDBjOLw3pXCgietz32IhYgX+w006Zcw2L
+         po5AwGz1BtZUUMg9ZlRFnSJBN0i0KgjhSsoCKEqpSUCp4aluY9NxCifzbelEjr6kR0m5
+         Pq3VlE/tnLPOcXFDKVM8VIw3peeX4UlGwqaIHcf3/aGxVhXvNLBTeIvAzgOVuvqH+xg+
+         tHF9W8DmSHM4VrucbwKoCYris02gU/WS3GgQ1vSgDDe4/NwPlDtbovawnXRXjWLeUcU2
+         hgOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUZQ+vGUKgiy1fi4ZamahxyDY4hMtVYbcNgvktq/kSxUGpWu3cBV/h6Ku61eUVq1Ct1bSHfE/HJIOfvlQo=@vger.kernel.org, AJvYcCVSA7FeelJmg78s8t4dtYHuHJf54JS1OgsAbdZSyKrJVQpkDNfmBsqXF4bGUS8r4t2s3BUKVDw+@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJzDEOMPqPhQufbbCLqBYo5NmqXCRIetvFzDzbsEOXuHwI82Ux
+	YdcW0MGt34i3cmLJ25DkIPXAj1kTuz3nAQRj7ORa8ol1iRtKHIrzRVfV8rb/45nk
+X-Gm-Gg: ASbGncuSJ9EC7Lf7KjToHkTuCziBX92nZvOcFK3WIi8L54D1MvyOHIWaOgNWLY/6pa0
+	+23DPeog7yk6tuWUmsUbA18pYdegesN1TnJOG39C2iERpauu8feL6TlelokrFwKpvCHSJfVPe5V
+	EJYjtYjI4SyWVGxSnOKiOMQpGLNSGRUVb/Qesj3jmPC9Q7NBsG8gCeuroSERHABWmgB2QVVA4sY
+	gZYycHm0uwI5Xu48W9tjmSXwZ6Y1MPMG5ZIEyPQkYT+oBx8oDYqnUd/BsIudrxlpqdCWUD9pAiG
+	ce+CJZLcImnQoHzK768YhKmyTaOnxO7RxvqvDZ+aaClBIzFo7x7Mbb04K8R2ww7kjF7XZYd90e4
+	7uIXN
+X-Google-Smtp-Source: AGHT+IFf3tN7oijoQgx+fn/tyZ59P4T81j705hb5/J9qCMNqj3PXl7fndl3gCph+ZwZSZRjLMhwkdA==
+X-Received: by 2002:a17:903:1acf:b0:224:255b:c934 with SMTP id d9443c01a7336-231d4583e46mr225839065ad.51.1747757260890;
+        Tue, 20 May 2025 09:07:40 -0700 (PDT)
+Received: from localhost.localdomain ([121.185.186.233])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4adb73esm78383735ad.59.2025.05.20.09.07.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 09:07:40 -0700 (PDT)
+From: Jeongjun Park <aha310510@gmail.com>
+To: richardcochran@gmail.com,
+	andrew+netdev@lunn.ch
+Cc: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	yangbo.lu@nxp.com,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jeongjun Park <aha310510@gmail.com>
+Subject: [PATCH v2] ptp: remove ptp->n_vclocks check logic in ptp_vclock_in_use()
+Date: Wed, 21 May 2025 01:07:17 +0900
+Message-ID: <20250520160717.7350-1-aha310510@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250514170118.40555-1-robdclark@gmail.com> <20250514170118.40555-5-robdclark@gmail.com>
- <51f87f358fa1b7ef8db8b67ee6cde38ae071fbe8.camel@mailbox.org>
- <CAJs_Fx771FFVDVFMn8YJkR9f9Ad-UQspJ9KKQw4u6Cu4TA7YPA@mail.gmail.com>
- <CACu1E7EL+E-M0N-EAN9Bx7u9O6_pECQQdPE2ph575idhVb2Szg@mail.gmail.com>
- <aCYkk4Y7feltfp79@pollux> <CAF6AEGsoG_W3A3+BHV4n5EKZQazFubrCyfrtxVUH7+H4-j7i5A@mail.gmail.com>
- <aCY42rgJC4sQ4tp4@pollux> <CAF6AEGubHkdhfJz=bAZvctO1aTKDLwRsRyPzkoVrQ7tA6dRbKw@mail.gmail.com>
- <aCwqAGLLCC2ZLSBK@pollux>
-In-Reply-To: <aCwqAGLLCC2ZLSBK@pollux>
-From: Rob Clark <robdclark@gmail.com>
-Date: Tue, 20 May 2025 09:07:05 -0700
-X-Gm-Features: AX0GCFuJB8HyZPWl9Jg_jf4wMyFY6rVV8-Xlv-hqm4CZrVysg_4nnA4WGO4qoKc
-Message-ID: <CAF6AEGspvuTHU0t9z__p_HkdRNi=cXir3t453AbR6DFNzDpgvw@mail.gmail.com>
-Subject: Re: [PATCH v4 04/40] drm/sched: Add enqueue credit limit
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Connor Abbott <cwabbott0@gmail.com>, Rob Clark <robdclark@chromium.org>, phasta@kernel.org, 
-	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	linux-arm-msm@vger.kernel.org, Matthew Brost <matthew.brost@intel.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	open list <linux-kernel@vger.kernel.org>, 
-	Boris Brezillon <boris.brezillon@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 20, 2025 at 12:06=E2=80=AFAM Danilo Krummrich <dakr@kernel.org>=
- wrote:
->
-> On Thu, May 15, 2025 at 12:56:38PM -0700, Rob Clark wrote:
-> > On Thu, May 15, 2025 at 11:56=E2=80=AFAM Danilo Krummrich <dakr@kernel.=
-org> wrote:
-> > >
-> > > On Thu, May 15, 2025 at 10:40:15AM -0700, Rob Clark wrote:
-> > > > On Thu, May 15, 2025 at 10:30=E2=80=AFAM Danilo Krummrich <dakr@ker=
-nel.org> wrote:
-> > > > >
-> > > > > (Cc: Boris)
-> > > > >
-> > > > > On Thu, May 15, 2025 at 12:22:18PM -0400, Connor Abbott wrote:
-> > > > > > For some context, other drivers have the concept of a "synchron=
-ous"
-> > > > > > VM_BIND ioctl which completes immediately, and drivers implemen=
-t it by
-> > > > > > waiting for the whole thing to finish before returning.
-> > > > >
-> > > > > Nouveau implements sync by issuing a normal async VM_BIND and sub=
-sequently
-> > > > > waits for the out-fence synchronously.
-> > > >
-> > > > As Connor mentioned, we'd prefer it to be async rather than blockin=
-g,
-> > > > in normal cases, otherwise with drm native context for using native
-> > > > UMD in guest VM, you'd be blocking the single host/VMM virglrender
-> > > > thread.
-> > > >
-> > > > The key is we want to keep it async in the normal cases, and not ha=
-ve
-> > > > weird edge case CTS tests blow up from being _too_ async ;-)
-> > >
-> > > I really wonder why they don't blow up in Nouveau, which also support=
- full
-> > > asynchronous VM_BIND. Mind sharing which tests blow up? :)
-> >
-> > Maybe it was dEQP-VK.sparse_resources.buffer.ssbo.sparse_residency.buff=
-er_size_2_24,
->
-> The test above is part of the smoke testing I do for nouveau, but I haven=
-'t seen
-> such issues yet for nouveau.
+There is no disagreement that we should check both ptp->is_virtual_clock
+and ptp->n_vclocks to check if the ptp virtual clock is in use.
 
-nouveau is probably not using async binds for everything?  Or maybe
-I'm just pointing to the wrong test.
+However, when we acquire ptp->n_vclocks_mux to read ptp->n_vclocks in
+ptp_vclock_in_use(), we observe a recursive lock in the call trace
+starting from n_vclocks_store().
 
-> > but I might be mixing that up, I'd have to back out this patch and see
-> > where things blow up, which would take many hours.
->
-> Well, you said that you never had this issue with "real" workloads, but o=
-nly
-> with VK CTS, so I really think we should know what we are trying to fix h=
-ere.
->
-> We can't just add new generic infrastructure without reasonable and *well
-> understood* justification.
+============================================
+WARNING: possible recursive locking detected
+6.15.0-rc6 #1 Not tainted
+--------------------------------------------
+syz.0.1540/13807 is trying to acquire lock:
+ffff888035a24868 (&ptp->n_vclocks_mux){+.+.}-{4:4}, at:
+ ptp_vclock_in_use drivers/ptp/ptp_private.h:103 [inline]
+ffff888035a24868 (&ptp->n_vclocks_mux){+.+.}-{4:4}, at:
+ ptp_clock_unregister+0x21/0x250 drivers/ptp/ptp_clock.c:415
 
-What is not well understood about this?  We need to pre-allocate
-memory that we likely don't need for pagetables.
+but task is already holding lock:
+ffff888030704868 (&ptp->n_vclocks_mux){+.+.}-{4:4}, at:
+ n_vclocks_store+0xf1/0x6d0 drivers/ptp/ptp_sysfs.c:215
 
-In the worst case, a large # of async PAGE_SIZE binds, you end up
-needing to pre-allocate 3 pgtable pages (4 lvl pgtable) per one page
-of mapping.  Queue up enough of those and you can explode your memory
-usage.
+other info that might help us debug this:
+ Possible unsafe locking scenario:
 
-> > There definitely was one where I was seeing >5k VM_BIND jobs pile up,
-> > so absolutely throttling like this is needed.
->
-> I still don't understand why the kernel must throttle this? If userspace =
-uses
-> async VM_BIND, it obviously can't spam the kernel infinitely without runn=
-ing
-> into an OOM case.
+       CPU0
+       ----
+  lock(&ptp->n_vclocks_mux);
+  lock(&ptp->n_vclocks_mux);
 
-It is a valid question about whether the kernel or userspace should be
-the one to do the throttling.
+ *** DEADLOCK ***
+....
+============================================
 
-I went for doing it in the kernel because the kernel has better
-knowledge of how much it needs to pre-allocate.
+The best way to solve this is to remove the logic that checks
+ptp->n_vclocks in ptp_vclock_in_use().
 
-(There is also the side point, that this pre-allocated memory is not
-charged to the calling process from a PoV of memory accounting.  So
-with that in mind it seems like a good idea for the kernel to throttle
-memory usage.)
+The reason why this is appropriate is that any path that uses
+ptp->n_vclocks must unconditionally check if ptp->n_vclocks is greater
+than 0 before unregistering vclocks, and all functions are already
+written this way. And in the function that uses ptp->n_vclocks, we
+already get ptp->n_vclocks_mux before unregistering vclocks.
 
-> But let's assume we agree that we want to avoid that userspace can ever O=
-OM itself
-> through async VM_BIND, then the proposed solution seems wrong:
->
-> Do we really want the driver developer to set an arbitrary boundary of a =
-number
-> of jobs that can be submitted before *async* VM_BIND blocks and becomes
-> semi-sync?
->
-> How do we choose this number of jobs? A very small number to be safe, whi=
-ch
-> scales badly on powerful machines? A large number that scales well on pow=
-erful
-> machines, but OOMs on weaker ones?
+Therefore, we need to remove the redundant check for ptp->n_vclocks in
+ptp_vclock_in_use() to prevent recursive locking.
 
-The way I am using it in msm, the credit amount and limit are in units
-of pre-allocated pages in-flight.  I set the enqueue_credit_limit to
-1024 pages, once there are jobs queued up exceeding that limit, they
-start blocking.
+Fixes: 73f37068d540 ("ptp: support ptp physical/virtual clocks conversion")
+Signed-off-by: Jeongjun Park <aha310510@gmail.com>
+---
+v2: Remove changes unrelated to the patch subject
+- Link to v1: https://lore.kernel.org/all/20250519153735.66940-1-aha310510@gmail.com/
+---
+ drivers/ptp/ptp_private.h | 12 +-----------
+ 1 file changed, 1 insertion(+), 11 deletions(-)
 
-The number of _jobs_ is irrelevant, it is # of pre-alloc'd pages in flight.
-
-> I really think, this isn't the correct solution, but more a workaround.
->
-> > Part of the VM_BIND for msm series adds some tracepoints for amount of
-> > memory preallocated vs used for each job.  That plus scheduler
-> > tracepoints should let you see how much memory is tied up in
-> > prealloc'd pgtables.  You might not be noticing only because you are
-> > running on a big desktop with lots of RAM ;-)
-> >
-> > > > > > But this
-> > > > > > doesn't work for native context, where everything has to be
-> > > > > > asynchronous, so we're trying a new approach where we instead s=
-ubmit
-> > > > > > an asynchronous bind for "normal" (non-sparse/driver internal)
-> > > > > > allocations and only attach its out-fence to the in-fence of
-> > > > > > subsequent submits to other queues.
-> > > > >
-> > > > > This is what nouveau does and I think other drivers like Xe and p=
-anthor do this
-> > > > > as well.
-> > > >
-> > > > No one has added native context support for these drivers yet
-> > >
-> > > Huh? What exactly do you mean with "native context" then?
-> >
-> > It is a way to use native usermode driver in a guest VM, by remoting
-> > at the UAPI level, as opposed to the vk or gl API level.  You can
-> > generally get equal to native performance, but the guest/host boundary
-> > strongly encourages asynchronous to hide the guest->host latency.
->
-> For the context we're discussing this isn't different to other drivers su=
-pporing
-> async VM_BIND utilizing it from the host, rather than from a guest.
->
-> So, my original statement about nouveau, Xe, panthor doing the same thing
-> without running into trouble should be valid.
-
-Probably the difference is that we don't do any _synchronous_ binds.
-And that is partially motivated by the virtual machine case.
-
-BR,
--R
+diff --git a/drivers/ptp/ptp_private.h b/drivers/ptp/ptp_private.h
+index 18934e28469e..528d86a33f37 100644
+--- a/drivers/ptp/ptp_private.h
++++ b/drivers/ptp/ptp_private.h
+@@ -98,17 +98,7 @@ static inline int queue_cnt(const struct timestamp_event_queue *q)
+ /* Check if ptp virtual clock is in use */
+ static inline bool ptp_vclock_in_use(struct ptp_clock *ptp)
+ {
+-	bool in_use = false;
+-
+-	if (mutex_lock_interruptible(&ptp->n_vclocks_mux))
+-		return true;
+-
+-	if (!ptp->is_virtual_clock && ptp->n_vclocks)
+-		in_use = true;
+-
+-	mutex_unlock(&ptp->n_vclocks_mux);
+-
+-	return in_use;
++	return !ptp->is_virtual_clock;
+ }
+ 
+ /* Check if ptp clock shall be free running */
+--
