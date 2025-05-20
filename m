@@ -1,122 +1,134 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mxout2.routing.net (mxout2.routing.net [134.0.28.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 648C2258CDD
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 17:07:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B70625C6E7;
+	Tue, 20 May 2025 17:08:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747760825; cv=none; b=ACz2Ky9eBv4ZqxtsWi2hb187uJrzzTT9SWUIElDStI4DOz2smpYz/yLsMjx5sKuG2XonXod5cK56TyaXcFO+jTuepunIpf2DY4KU4gYRj3WXivS1rHJJQVnQMFmL/2XYvKylHM62uMSvAQNVEUdubzbVCQ2jhP2y7kfmgWaozF4=
+	t=1747760902; cv=none; b=WV/BbDFTRnMq0jZxDjCcVgsAfbbhs/9JmgYzoY5FG8deZfsyqDOpUXE3LPfMtfV7KGz17b9nxHTAvr80H6aBlpiy1VFWLAbsbpcjIf7/PAV++KZjMtTQzxxu8GhN/4bf3XbjF/MaXRsNaqEF8U1dgONJWj64nhhAE0YRdA7Nd7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747760825; c=relaxed/simple;
-	bh=Adr44lrbjsmXoOwujV+JXJKC/0dp11U+EuHbW3DQjGA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=luRvDeDQRV19OljRSlxdxWAJAmaywaWdAEMc3fNRkkDRXikicAezc+UFAQbEaTkvg6cdP/UbYRRHE0Egy2nEcSXZyVRaKLmNJBhy+K7ARLIUTaclR5UgdBJtDn6+WSAcd7djCmdCh+dDNDmCyODcFamY0WmQP89vdsgVkuTOqrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=lTF5QwtG; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1747760902; c=relaxed/simple;
+	bh=8RiLrstNlF9EuHrKrNRoWiTfcgsyhx9U5b/zvg9hWG8=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=mpIfjO8CqiMvM8OAHuYiVjfBVEnmdjcsE6AjEUJ2lWd2M5KWXmZvPjxwieRFnAMWasO1Ab2bRJ/qzuu33hwItULOcv3oZl/ukNTvyv4Joe+Z90bAOoUr+riQCWCb/ppjYuW1VsgqebpnHJ1w6llOsw7lI/ynmZqUu8dQoLCKk3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=tn1Bihvj; arc=none smtp.client-ip=134.0.28.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="lTF5QwtG"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-3292aad800aso9808281fa.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 10:07:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1747760821; x=1748365621; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LKZ/DOS74Nf8VMwAesCPZapfqJEzoCeBvijff87jyRE=;
-        b=lTF5QwtGMaBLkvztY7E3GRjU51KMstIpH2OjIiWiVDMUC1QVAguasaOAekQ1qTOOga
-         aLBHhJr+n+poLCBVkmEhCJiyv52F2yOWtWuwCWoI9I4MNeQLIBcdFLwlP98uFEQFTC/S
-         hGjYYV7q6nSdIoyHg5Eu5//EFGuuTVwEQ3i3CXVKXzwmAgwzcesAmr8UTmEMtgxCdoo5
-         W5/xKEk0GWk7SdBR+l2PrRgOKTTatDummLwxO3/H6Zb6gyI26RHWPqcUQdk9QLbvvL3s
-         +aTFwNudrIsNaFbVn0jcWwG30O0hSVYLKhZrBUNiq1ePkBFz4OUZg+PJaT/OVm21QO5C
-         nv9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747760821; x=1748365621;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LKZ/DOS74Nf8VMwAesCPZapfqJEzoCeBvijff87jyRE=;
-        b=TCkm4XvJ6qWFew93s6Ynqzoqy+0VW02u72hoBeUbOP8GKmGqEfrlA9r3y8PyUji5n6
-         TKgyn35NquHEIUBHee12o/2DJUmGJ34cQvm8jxWTphak8l/Brg3WuTZhoLbwnYVGFGzx
-         f+jUF7z5sbHs6PS5g3qGGclAIsNBjI2scF3ug+SLC8hiNpl7dGOwb3B10DuGf46jLoZ5
-         p1s1z1zQmD+Zn51NUK24RqOGgCDz2QF8dYzC02cO1rDgef7BxnkTdkXz0vh05ZMKtMIa
-         LntUsV+sNd5nc15yn/Zw+7MnSNPcPyNbkkJEiXHTcx+hFUM9Ytbx2H25Fa6iNw+RZ6Tp
-         dRsA==
-X-Forwarded-Encrypted: i=1; AJvYcCWZ4xKBfpIpHJwXMJFfUMe5+uOokT1kdg8T2MGxwIJYTSWuD6lV1VnuXfNNAhOaOo52/4J0le/p6TulVOU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTbCqWLsyi5JlkfLYlhPizRS1GphAJLeZEFySJPd4CyQu/1roz
-	DAQIVvC9W+vTbRvdgRTX04FJ/omjlAGPjda7CmdSMdCMNGw01D397BBoYjmIq9K31EE2+tQ0X1/
-	tPwUY4rLthB2SrhpIa2twZ8rt5tn5WGVd+ZSGKOUfug==
-X-Gm-Gg: ASbGncv8xgSoGZnZY9t+q0yTI5zseM5LnLXmn6BWfNxwkMeJE6Mt6HoCPzdv9lw9Wxj
-	y75FYvbrtBCf8MS6W3RDjAuAycouzUQUfyOHTVIK8HJx8rDZ+5jKJaM4NBKWdOxiAiuhNJr4evI
-	TMgvRkTLCXwAYA4NTAime5m7Ls1AhOOvSY1vR6ipHJfInNt5TDL0hUOmHM/JlSJTxk
-X-Google-Smtp-Source: AGHT+IE94WYPcJWNFg4NYJY80yMW+YBrxzlbo6GpAVtlZwVgXjjobfKZPhi/TuG+fBNOHPLriHho0nGdbtbKb+ATFBw=
-X-Received: by 2002:a2e:ad0a:0:b0:328:c9c4:8ca5 with SMTP id
- 38308e7fff4ca-328c9c48e0bmr53924511fa.9.1747760821408; Tue, 20 May 2025
- 10:07:01 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="tn1Bihvj"
+Received: from mxbox3.masterlogin.de (unknown [192.168.10.78])
+	by mxout2.routing.net (Postfix) with ESMTP id B507E60201;
+	Tue, 20 May 2025 17:08:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
+	s=20200217; t=1747760889;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1atJoeJZpQi4iXcinOZPKw7W7XsZAF/nspMP+bzqfBE=;
+	b=tn1Bihvj0KwV8hHaE37t3Vohm7jwgCgsfyOBKhhM64BV6mMF/uSfwvpDZOzV9Zd927FjDp
+	ib0UEXhYcEnzEi8tYnH92766++nlm16whVN09VOVY30MPcDVElsWjeFk9P0mifh80ZunPC
+	wrjFBJfjm9W2bBtdd4KkbouGffuy3kc=
+Received: from webmail.hosting.de (unknown [134.0.26.148])
+	by mxbox3.masterlogin.de (Postfix) with ESMTPSA id BEBF83601DF;
+	Tue, 20 May 2025 17:08:08 +0000 (UTC)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1747083143.git.marcelo.schmitt@analog.com> <6e7dde3fa52161873c6e05891a7410bc8ef75249.1747083143.git.marcelo.schmitt@analog.com>
-In-Reply-To: <6e7dde3fa52161873c6e05891a7410bc8ef75249.1747083143.git.marcelo.schmitt@analog.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 20 May 2025 19:06:49 +0200
-X-Gm-Features: AX0GCFu-1HWUSDG-PKcPd3_RvCPjeJCFAZE3atYyLGkjJRLlS3BwEdYRGfrtQ1c
-Message-ID: <CAMRc=MfJuT8q1jRMeSJQaE9aQGQFpph4O9TrE6xircqi3v5FgQ@mail.gmail.com>
-Subject: Re: [PATCH v3 08/10] iio: adc: ad4170: Add GPIO controller support
-To: Marcelo Schmitt <marcelo.schmitt@analog.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, jic23@kernel.org, 
-	lars@metafoo.de, Michael.Hennerich@analog.com, dlechner@baylibre.com, 
-	nuno.sa@analog.com, andy@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, linus.walleij@linaro.org, marcelo.schmitt1@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Date: Tue, 20 May 2025 19:08:08 +0200
+From: "Frank Wunderlich (linux)" <linux@fw-web.de>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Vladimir Oltean <olteanv@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
+ Dooley <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+ Frank Wunderlich <frank-w@public-files.de>, =?UTF-8?Q?Ar=C4=B1n=C3=A7_?=
+ =?UTF-8?Q?=C3=9CNAL?= <arinc.unal@arinc9.com>, Landen Chao
+ <Landen.Chao@mediatek.com>, DENG Qingfang <dqfext@gmail.com>, Sean Wang
+ <sean.wang@mediatek.com>, Daniel Golle <daniel@makrotopia.org>, Lorenzo
+ Bianconi <lorenzo@kernel.org>, Felix Fietkau <nbd@nbd.name>,
+ netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v2 06/14] arm64: dts: mediatek: mt7988: add cci node
+In-Reply-To: <7a563716-a7c6-446d-b66d-bc71c6207ef6@collabora.com>
+References: <20250516180147.10416-1-linux@fw-web.de>
+ <20250516180147.10416-8-linux@fw-web.de>
+ <7a563716-a7c6-446d-b66d-bc71c6207ef6@collabora.com>
+Message-ID: <6c0dd946bdebd8461307a3e08e60a27f@fw-web.de>
+X-Sender: linux@fw-web.de
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+X-Mail-ID: 1e75dd63-5eea-4a06-acca-51b6c01efd9c
 
-On Tue, May 13, 2025 at 2:36=E2=80=AFPM Marcelo Schmitt
-<marcelo.schmitt@analog.com> wrote:
->
-> The AD4170 has four multifunctional pins that can be used as GPIOs. The
-> GPIO functionality can be accessed when the AD4170 chip is not busy
-> performing continuous data capture or handling any other register
-> read/write request. Also, the AD4170 does not provide any interrupt based
-> on GPIO pin states so AD4170 GPIOs can't be used as interrupt sources.
->
-> Implement gpio_chip callbacks to make AD4170 GPIO pins controllable throu=
-gh
-> the gpiochip interface.
->
-> Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
-> ---
-> Change log v2 -> v3
-> - Defined masks for updating GPIO mode register.
-> - Replaced regmap_clear/set_bits() by regmap_update_bits() to set GPIO di=
-rection.
-> - Removed GPIO direction check before setting GPIO output values.
-> - Made use of regmap_assign_bits() to set GPIO output reg bits.
-> - Made value to be set as GPIO output state be either 0 or 1.
-> - No longer locking on state mutex on GPIO set since GPIO output should n=
-ot
->   conflict with other direct mode functionality (e.g. single-shot read).
->
->  drivers/iio/adc/Kconfig  |   1 +
->  drivers/iio/adc/ad4170.c | 224 ++++++++++++++++++++++++++++++++++++++-
->  2 files changed, 224 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> index 6e4b14243599..a328f03eea34 100644
-> --- a/drivers/iio/adc/Kconfig
-> +++ b/drivers/iio/adc/Kconfig
-> @@ -78,6 +78,7 @@ config AD4170
->         select IIO_BUFFER
->         select IIO_TRIGGERED_BUFFER
->         depends on COMMON_CLK
-> +       select GPIOLIB
+Am 2025-05-20 13:27, schrieb AngeloGioacchino Del Regno:
+> Il 16/05/25 20:01, Frank Wunderlich ha scritto:
+>> From: Frank Wunderlich <frank-w@public-files.de>
+>> 
+>> Add cci devicetree node for cpu frequency scaling.
+>> --- a/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
+>> +++ b/arch/arm64/boot/dts/mediatek/mt7988a.dtsi
+>> @@ -12,6 +12,35 @@ / {
+>>   	#address-cells = <2>;
+>>   	#size-cells = <2>;
+>>   +	cci: cci {
+>> +		compatible = "mediatek,mt8183-cci";
+> 
+> While you can keep the mediatek,mt8183-cci fallback, this needs its own 
+> compatible
+> as "mediatek,mt7988-cci", therefore, I had to drop this patch from the 
+> ones that I
+> picked.
+> 
+> Please add the new compatible both here and in the binding.
 
-In general GPIOLIB should be depended on, not selected.
+Hi,
 
-The rest looks good to me so with that:
+should i add the binding with 2 const (like the bpi-r4-2g5 compatible) 
+or first as enum
+to allow easier addition of further SoC bindings with same fallback?
 
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+currently i changed binding like this (2nd variant):
+
+properties:
+   compatible:
+     oneOf:
+       - items:
+           - enum:
+               - mediatek,mt8183-cci
+               - mediatek,mt8186-cci
+       - items:
+           - enum:
+               - mediatek,mt7988-cci
+           - const: mediatek,mt8183-cci
+
+but noticed that these boards are missing the required proc-supply:
+
+   DTC [C] arch/arm64/boot/dts/mediatek/mt8183-pumpkin.dtb
+arch/arm64/boot/dts/mediatek/mt8183-pumpkin.dtb: cci: 'proc-supply' is a 
+required property
+	from schema $id: 
+http://devicetree.org/schemas/interconnect/mediatek,cci.yaml#
+   DTC [C] arch/arm64/boot/dts/mediatek/mt8186-evb.dtb
+arch/arm64/boot/dts/mediatek/mt8186-evb.dtb: cci: 'proc-supply' is a 
+required property
+	from schema $id: 
+http://devicetree.org/schemas/interconnect/mediatek,cci.yaml#
+
+the others are clean so far. But because i do not have these boards i 
+cannot fix this without
+anyone telling me the proc-supply for them.
+
+In mt7988a.dtsi i can put both compatible on 1 line as there are only 75 
+chars, or should i
+add linebreak here for better readability?
+
+> Cheers,
+> Angelo
+
+regards Frank
