@@ -1,100 +1,75 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E6F526B97E;
-	Tue, 20 May 2025 17:02:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC18B1FFC54
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 17:03:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747760557; cv=none; b=nC5s3eRBhNaAE4yXnIKuEWDt9aSal5uITU2AeWXO43dGs4t/aG4LfxX5o8GMro97YGbCSH8VLYgp8UPsOmXGuWd2ciYm/7XDQNonBz2TG75rSpEHrfaX/pQx2jimzr8DTlyflr3CRSU9AU2FUWmNdwt+6FtOJq0P73sL9SSMdvg=
+	t=1747760632; cv=none; b=Z7Nq4mCRDF8b2lKCf/0L/z2jwAjh6ClSW6c5BPXPfq8UMMJzKqaogcs/UM2ZwfqINBdnr6rqbptMeIRI1u9JgFOWl4KPdk7E46l98Fh2lFuFPmyhpynkVMc4nB0p1Bho2DpDOKJawds0pEllvHOKHPdqgtiQE93nB1nOEUdDU84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747760557; c=relaxed/simple;
-	bh=g8A5zCbjZuhxigR/xz8pKAs8Gc/GyBF6sQ/fa3RFroM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AzIAY9pBdgXtC2ztNTgj4tF1x2e/ohz2OFIePpvzBIDywmzYKWuLX15YCSM9on5CezOtOzVoLpgz4p53ZGXdcjxZoK2BSePRbgjrjpIA0YFChrIIhG02UYF+ZXPsIMWWCPXVIliNWW4Py9fVDRII9MJzV8pglInKA1VnoupnBpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-74264d1832eso7538937b3a.0;
-        Tue, 20 May 2025 10:02:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747760554; x=1748365354;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2S+a2h/CzkxZTseGiaH1FJLiOpG9+0lAP93n/wBV1XI=;
-        b=cQDEM7QVGAX9bXuxcIee/TKZFsvuMxl1MhnV/TKi/EHMhd6EQ5bcz1C+5P6Cw0sJnL
-         p5APgDmxuBDkmG9enCn1rlxZLW9/7Ve706NhZX710lqFBDESkcWErmn5ceOAC7dsmaEa
-         zS/Tq9lA8MPYGT3YLU7MoNO/TLpAm/b+8kQmu/MLf6XjnbESDyblc8pPB29LfQsXDZui
-         yubeqqtQdAmWmFzluRgLL94IjzrYkPFvW4O2ws+kYvwa7zVoCJZn/VWRqrfqO6nP8kTD
-         ddfoMq/EDboMt430f6lo9Qyf6J4/dYgSOQm7GzZsTCenFPL3RUp45dbMUG3RJqtooEsr
-         MeEA==
-X-Forwarded-Encrypted: i=1; AJvYcCU8h+GKbBG3MOxFzi+bGGOGmRSp131soyWcSEZCOp66xRI4ykd6GIeTU9es6M2COa0CsMXqsnzpxVxScEoN@vger.kernel.org, AJvYcCUZu7mttZg1MhFiYlCwp0tOTeyz9HvaCYKqRxh9ECBmfarAOpXARRKBnDjF56kI0lK9NFBndM0s1iU=@vger.kernel.org, AJvYcCVeaYgFvPNahfW120HfTfLD2CEl9Rp5Hn/i1UZJZ7Q6Og0Ad9+iJ62/gM5g8AQNKQ0AWjoOm6OU8cGN@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNyYN0RyD0WCiwcDIuBYddcjGpxH128ns7k6OsiSn9LHORofVJ
-	VUd8hCWjCZbMjLX/KByIV1sxdVpyjO4ttFDSaNpkx8bzh7bzVEX+rDmu
-X-Gm-Gg: ASbGncv2JvwpsEkGMzEMReC9V8QfO9eqbNf4Ma3jQKl2SBVHaJAz6eXGcTabO5qxx0+
-	V7x8Icts7GfCh/OEh6MIMpl+MNonL9GNn0bPNigo6rTbnO5FGr1AxULuC64j4ByU+o0bkYhEm+6
-	KRSVaH9EOewfAbEkkwR8QeUKRi/XlWLRLtyM7olOzb16A7dgQftM1z0cQBb2ZmE1ej0UDv4Yf/M
-	6CcIKhIdfVrSE2EkWhZb81k6MHJJAx2RMH9Uuz+kM4sBI3BkqgvQciPj9yGxirwr4WiSTG5n/Kb
-	0VjL8PK6/5qm5dcnh5VEazoczHNK0JaKtyktwxOZbIM0BA8bWR8z0glz/fKSjr2UOm9JJuW+9H5
-	0KO3DcRgsFw==
-X-Google-Smtp-Source: AGHT+IFYtmAxpAJyCJdJh77irdlIdb9jAeb6Khn8bWcpyG2JL1R3yfPaZHoaLGAF0GW32sgkBqiY2Q==
-X-Received: by 2002:a05:6a00:4606:b0:73e:5aa:4f64 with SMTP id d2e1a72fcca58-742a98004abmr22827579b3a.10.1747760552980;
-        Tue, 20 May 2025 10:02:32 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-742a96defc3sm8189751b3a.21.2025.05.20.10.02.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 10:02:32 -0700 (PDT)
-Date: Wed, 21 May 2025 02:02:30 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Philipp Stanner <phasta@kernel.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, Bjorn Helgaas <bhelgaas@google.com>,
-	Mark Brown <broonie@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Yang Yingliang <yangyingliang@huawei.com>,
-	Zijun Hu <quic_zijuhu@quicinc.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 0/6]
-Message-ID: <20250520170230.GA1542130@rocinante>
-References: <20250519112959.25487-2-phasta@kernel.org>
+	s=arc-20240116; t=1747760632; c=relaxed/simple;
+	bh=3Ps9im7Hc9N5HbH/qseV6thcNGxd6rNY7p0Daho1VC0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tlTmQDNo/29mbUgZAScir4tUjtWIguGxm2PYWxerfyVacVDXprVYNaB5+LBOytdtTVIpo2j6NslBt17tCoYIub1Dsids0RIqok5UnX2aMPl5no7ZGj6spcUm+poXhJ8PUBYRCJyo0MEOW89dnlNk/zS+XAJx7IkNBTVVa6/Fqdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X1Xh32BF; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X1Xh32BF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57A88C4CEF1
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 17:03:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747760631;
+	bh=3Ps9im7Hc9N5HbH/qseV6thcNGxd6rNY7p0Daho1VC0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=X1Xh32BFMl/zbfaMT5/OG50JK462JRjVGUhvKzziaJ5UO6MNiX+iq+/yfhAK+zrZh
+	 Zg1godPMMJoGwE5qyRhPPbMY7S0TG3NJ/x4zh/jy92bKaGiT7YFQ71ZjKDypqBer6c
+	 0kgHfKcCDx4FGhusEzPOFlpXKH0r6YN9WW5KVFy7gsFscbw6sdWYUWu9dFu1HCtVTw
+	 VuMmBfsZaZAuw6gHsgJ/zFwNbayiwD+k6fz8WtkbIhIfdj0foGLtHQ/VL63n+6dPrp
+	 yVnn9mTdb3NVmfAJVnvsN9dDtiZC1a9moY60XrieSLkLEOVrxsX6DXnuzoiQSz5MSk
+	 N36huZa5piV8w==
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-3105ef2a08dso54229861fa.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 10:03:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUeEhEQE2/EbOyBqBzefhmzj2Ni4ESgzmIwGUyAXVS7LYVBQzQ+YdcccbL3pBATTyeRQz4H3fYfay/W/qg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5iAG2LF1YMkCgaKFgdUiBK1iqUwx4Ealk6CKv5sMcKS0QKM7+
+	0fNdQr4aZ/ku7zG/oj+8Cg/WExhttFtCYsnbe703nwCZt5MTyjEVof4xf0ZU0OuRtYl7h9n0k51
+	DBE47RIpni1CtjAvi03qMC1c4g8+XTnU=
+X-Google-Smtp-Source: AGHT+IH9edSBCBx5n6YJL5VZjNTH9UOxOovmE8e4gtRTAvmx8o9L4VKBfYBqPwwFLT2iyBhQq/JW9eTENmXtt+8tAZM=
+X-Received: by 2002:a05:651c:111a:b0:31a:3744:6ebd with SMTP id
+ 38308e7fff4ca-328076e89femr45422431fa.5.1747760629590; Tue, 20 May 2025
+ 10:03:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250519112959.25487-2-phasta@kernel.org>
+References: <20250520104138.2734372-9-ardb+git@google.com> <20250520104138.2734372-11-ardb+git@google.com>
+ <awmpxjln22i5zmnv3wcwhzvpbbjqmhiw3onmpq66owbtdoujs5@f336cwpvlasn>
+ <CAMj1kXE+2P6_y0SnmtmD=J42pe67itnr5jQs6NxjMTvV7HHp0A@mail.gmail.com> <20250520143532.GMaCyTNJqH_T2LR8q5@fat_crate.local>
+In-Reply-To: <20250520143532.GMaCyTNJqH_T2LR8q5@fat_crate.local>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Tue, 20 May 2025 19:03:37 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXFxRZWsML_5FZvZjwOPO8cvsAwDqvX1686bqqfqkD_PHg@mail.gmail.com>
+X-Gm-Features: AX0GCFt3N3voX1hVAf_deOVxGGWrKF66m70N9HJp_lPOsw0-jUebL67H2rMD1Gs
+Message-ID: <CAMj1kXFxRZWsML_5FZvZjwOPO8cvsAwDqvX1686bqqfqkD_PHg@mail.gmail.com>
+Subject: Re: [PATCH v5 2/7] x86/mm: Use a single cache hot per-CPU variable to
+ record pgdir_shift
+To: Borislav Petkov <bp@alien8.de>
+Cc: "Kirill A. Shutemov" <kirill@shutemov.name>, Ard Biesheuvel <ardb+git@google.com>, 
+	linux-kernel@vger.kernel.org, x86@kernel.org, Ingo Molnar <mingo@kernel.org>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Brian Gerst <brgerst@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+On Tue, 20 May 2025 at 16:35, Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Tue, May 20, 2025 at 01:28:52PM +0200, Ard Biesheuvel wrote:
+> > Are you saying we shouldn't optimize prematurely? You must be new here :-)
+>
+> Right, but do you see __pgdir_shift on a seriously hot path to warrant this?
+>
 
-> Howdy,
-> 
-> the great day has finally arrived, I managed to get rid of one of the
-> big three remaining problems in the PCI devres API (the other two being
-> MSI having hybrid-devres, too, and the good old pcim_iomap_tablle)!
-> 
-> It turned out that there aren't even that many users of the hybrid API,
-> where pcim_enable_device() switches certain functions in pci.c into
-> managed devres mode, which we want to remove.
+No. But if you had read the next couple of patches, you would have
+noticed that PGDIR_SHIFT, PTRS_PER_P4D and pgtable_l5_enabled() will
+all be derived from this variable, and the latter currently uses code
+patching (in cpu_feature_enabled())
 
-Applied to devres, thank you!
-
-[1/6] PCI: Remove hybrid devres nature from request functions
-      https://git.kernel.org/pci/pci/c/51f6aec99cb0
-[2/6] Documentation/driver-api: Update pcim_enable_device()
-      https://git.kernel.org/pci/pci/c/b4fb90fb9301
-[3/6] PCI: Remove pcim_request_region_exclusive()
-      https://git.kernel.org/pci/pci/c/8e9987485d9a
-[4/6] PCI: Remove exclusive requests flags from _pcim_request_region()
-      https://git.kernel.org/pci/pci/c/85826c11e77b
-[5/6] PCI: Remove redundant set of request functions
-      https://git.kernel.org/pci/pci/c/bcfc67157e41
-[6/6] PCI: Remove hybrid-devres usage warnings from kernel-doc 
-      https://git.kernel.org/pci/pci/c/90ffe1f093e8
-
-	Krzysztof
+This is also explained in the cover letter btw
