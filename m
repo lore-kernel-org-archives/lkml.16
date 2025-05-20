@@ -1,100 +1,66 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D55021C9E4;
-	Tue, 20 May 2025 11:51:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1737A219A8A;
+	Tue, 20 May 2025 11:51:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747741860; cv=none; b=ukSmM8ti8PcfsQHug/uzhNrAc2JZ/jg4QcDtsZ/Q7R3f5am04cNsWWndeHW/tInbzgI3HTFAb5VRtOrnBZJqGJheeORpWv2lncmb1VWPf2IlcXVF8gLBVuuj+fO0OFD7xb5RN1VoWq2EMpPQ1J4Pmyk8c5S0EfELlXDyzjlBrR0=
+	t=1747741901; cv=none; b=hTPMl3U6QjsU+GRltkUtDUXssBaWhNzgmFwif0twSW3YxcP7K8J7YISIiEiQVbbrLynHa+pXvYTZBw/y9Xv23q2N6dcJ2RqrFfsXSKAZ244xxFy6ug9aHCxycbAYrbD4xF1QjHgYe7FTU8Ol2pkLGRfIEZtRTdGz4mTi93NpY7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747741860; c=relaxed/simple;
-	bh=wMmHFS/gxUNNJrLm22zPA7ZFKO+YAqOzLA8fh4rwx2c=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=gDO9sVv+hjAiiMOwDRW297Yrft3hm7be6WAhdLZ2UhSsevFm8hS034Wa5J1lnfefgsGxXd73R3F97djz5jqY5NQrN2MGt9kMrHQ58l5CJ6pIayjAhNtuenIjKN2FD12XPdn/KMPGxqOgHxIyC0CUaalsjbemU3Ha+sDytfQ8sI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tm3NxKKd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747741901; c=relaxed/simple;
+	bh=n8d75Ug7ysY4z81dfYm2kCWqg7JynZz03oOVkZ/Grto=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EQgyaa09AAjeUcKqpoHFucdPZZunIKcbsZt5HAWCBhsFFP1MgVpvyDESzLlpczeZbZ7xUBor88o35+4+4k1k2lfa/AyPEpY9uBNTvfSHRsBqscHG+DhbR0l8dPIMuBUYPTFg5f1fC1jg3yz37UHh1RilQZwpOA4uWhytJbzYj4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hzoxQKyT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tm3NxKKd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50C11C4CEE9;
-	Tue, 20 May 2025 11:50:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hzoxQKyT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24603C4CEED;
+	Tue, 20 May 2025 11:51:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747741859;
-	bh=wMmHFS/gxUNNJrLm22zPA7ZFKO+YAqOzLA8fh4rwx2c=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=tm3NxKKdZURD99cPkKRWm8amh5/VXVYB1zb8111LQguUYGjsTb2pM3400/J7klL+f
-	 ntS9uqOHl8fl1heIbJmdgmFKY9LOYtHkXaEKPoQA99z0HL7/Igm/irr4KQAQLPw8tc
-	 SabuNtg1jDfsJ4ZA48fe0D3GoN8oI2OYgyPuE5xL2Tk4WaUzr2meJ/4AytAABr8wGZ
-	 6J3ZzBEufCWENWLvzwdNGc41JIHwNHzw0ScD1UUadL+gyzibOXqhK+RhoHmm/Ht1te
-	 u/hwYVss6CrvNbJFT+IBHIfKZc0SQMqQttsGQt/yc4ScaIEAX9q8+nOuAQwC4gAxGV
-	 aQDkklfKGDIJQ==
-From: Mark Brown <broonie@kernel.org>
-To: krzk@kernel.org, bongsu.jeon@samsung.com, cw00.choi@samsung.com, 
- myungjoo.ham@samsung.com, lee@kernel.org, lgirdwood@gmail.com, 
- Sumanth Gavini <sumanth.gavini@yahoo.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250518085734.88890-1-sumanth.gavini@yahoo.com>
-References: <20250518085734.88890-1-sumanth.gavini.ref@yahoo.com>
- <20250518085734.88890-1-sumanth.gavini@yahoo.com>
-Subject: Re: (subset) [PATCH 0/6] fix: Correct Samsung 'Electronics'
- spelling in copyright headers
-Message-Id: <174774185808.57504.13103081614395740317.b4-ty@kernel.org>
-Date: Tue, 20 May 2025 12:50:58 +0100
+	s=k20201202; t=1747741899;
+	bh=n8d75Ug7ysY4z81dfYm2kCWqg7JynZz03oOVkZ/Grto=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hzoxQKyTYARMfL34PU8F04/Qxv9ZoV4GDpb6hqwUVkW8weZZLoBVh/GVk4hiUbwHl
+	 etLDIu2BqWaCGolZKugIXfS+vETyiBz5BBeC63xX/8EUcs1V6wYBPo1xEkjaHbmOyx
+	 l0zlO6qpNirbIlkLzqlwIbRtQA8SQ7u/CPSgquK70XqbJ1IkGamQio0nFqT9fnc2Fs
+	 07IEOgDWmCQ3Fn7APmq6ZAtU/qljDWmqNMOVto7Nt8u04sTiCIQaMvem1+7MfRnKMO
+	 vjEfyLOzKBRtalCe5EibjG+CN2BWQfiqyiiQ4xaGAyCfM57Adstx+qdfwUMTJh1u2p
+	 Y9VSP6DnooG4A==
+Date: Tue, 20 May 2025 13:51:36 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+Cc: Wentao Liang <vulab@iscas.ac.cn>, linux-arm-msm@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] i2c: qup: Add error handling in qup_i2c_xfer_v2()
+Message-ID: <mibpejiq6cu7ehhitvksmdwdnmx76dce24ngybccpvlb5x6v7q@wgdlvcmg7uxa>
+References: <20250519141918.2522-1-vulab@iscas.ac.cn>
+ <a2ff429f-cc49-403f-9f2d-6a6b6361044d@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c25d1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a2ff429f-cc49-403f-9f2d-6a6b6361044d@quicinc.com>
 
-On Sun, 18 May 2025 01:57:26 -0700, Sumanth Gavini wrote:
-> This series fixes the misspelling of "Electronics" as "Electrnoics"
-> across multiple subsystems (MFD, NFC, EXTCON). Each patch targets
-> a different subsystem for easier review.
-> 
-> The changes are mechanical and do not affect functionality.
-> 
-> Sumanth Gavini (6):
->   nfc: s3fwrn5: Correct Samsung "Electronics" spelling in copyright
->     headers
->   nfc: virtual_ncidev: Correct Samsung "Electronics" spelling in
->     copyright headers
->   extcon: extcon-max77693: Correct Samsung "Electronics" spelling in
->     copyright headers
->   mfd: maxim: Correct Samsung "Electronics" spelling in copyright
->     headers
->   mfd: maxim: Correct Samsung "Electronics" spelling in headers
->   regulator: max8952: Correct Samsung "Electronics" spelling in
->     copyright headers
-> 
-> [...]
+Hi Mukesh,
 
-Applied to
+...
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+> > @@ -1588,7 +1588,9 @@ static int qup_i2c_xfer_v2(struct i2c_adapter *adap,
+> >   		ret = qup_i2c_bus_active(qup, ONE_BYTE);
+> >   	if (!ret)
+> > -		qup_i2c_change_state(qup, QUP_RESET_STATE);
+> > +		err = qup_i2c_change_state(qup, QUP_RESET_STATE);
+> > +	if (err)
+> > +		return err;
+> Is there an error seen around this ? Expecting this to work as is.
+> After an error, what next ? Just return back to framework ?
 
-Thanks!
-
-[6/6] regulator: max8952: Correct Samsung "Electronics" spelling in copyright headers
-      commit: c451e2da54bce183fbb270ec01ab3ca725ddf943
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+thanks for chiming in. qup_i2c_change_state() can fail, why
+shouldn't we consider the possibility to fail?
 
 Thanks,
-Mark
-
+Andi
