@@ -1,114 +1,154 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B17CC1E5702
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 04:39:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9314679CF
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 04:41:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747715944; cv=none; b=TqqcaPW7qBSTioTUOTMvhmAI6RHd3Kz/h2utHswq8NvabLQVF4sg7q4tmLzeTKP+2HDDRgBUlNMe3cXgIpNraTcyS06JT13/eJYHUfTIvAgJie3a6yuHBgaPyT3LaeXfnfn8H1Dw9t0lC5LMr68m1ViwF5yZ7dZ5tTwt/APSLm8=
+	t=1747716095; cv=none; b=YCxuUspfuhGxnUdFK4WxWq10IsH7ApfgWyv9eKg/s46hrOMnSVBpi2ob13pr0ISBf24COowRF2Sx+vQhApv600IHpCMHqPgDGvBpIgwACvhdH30+cMOqEJk6VaX6/E5pTSZdXdJwcYUIsj4VQVyl9OjAGCrYx5iVerTT7cK+9so=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747715944; c=relaxed/simple;
-	bh=UIF1grcf8IULtVJLlStXNZk9oAFBg2K6h+TyjYU2MRo=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=BMYJQDr58KqpdicAijPy6ao7KpoleA4JqWIa6KotJ5lOFtLmPeBlECde9lnszw0jqOdDRddGxmWm+wdZvN0gwBcH0LGU3fkJV4hGVe/LDf4Pf/+YuWfKZJTF8WFaNbh4O+Rlrza3DY6HBXl1/ZCqjtuTp/ONH5YAFousm+V3/NQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-85b41b906b3so462863539f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 21:39:02 -0700 (PDT)
+	s=arc-20240116; t=1747716095; c=relaxed/simple;
+	bh=ukue+xyZAxsasmJX9gDcCu/YeigtoMZDNni4ec+LRdM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mlNxF5DZHUp25bA3UNR6Zu7HweU/KfhX6TAfXIzezinvNeOiqrWBQ3yu4uze8nFBcdzDuqNJZEGw4WOFuZcCyvw4dWMMcvN5UBeCedhtvDQRP+Se7UxTp6Nsys648pZwnU6Uj2yt5Zmi1JQlXfABvN8qnbElnqTbEei/Lh7vDxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eyHn1vf+; arc=none smtp.client-ip=209.85.221.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eyHn1vf+"
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-52ee2242b24so567055e0c.0
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 21:41:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747716092; x=1748320892; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0PGsEVRuOLLAJr1H7lswziptx7jnjpDYYZxCcbVfAq4=;
+        b=eyHn1vf+1AO0ImQPjrjzUzg9AaXBQjePXHXDGZMDInW7K8T0ndN0VJfa77oOcueHnb
+         NHLj47tGWjVaPnv8AJOyvIPMVkuMPunhyG7orhqK8nk0q7wvdrv5yB9O3aEjfyNs/EZn
+         Cxh6WayPmHEiaHVhPPTyaR8vOqidbZ45MLhAszNBWMVviGtnUZUePPnUSO2bFEECctcR
+         i/hOgBzlDWZidWlIMpkEvBfF+S8BcyF6+aDo85NbXACRTEEwNUa2zI7FiP+wR79+ypLb
+         KBbMWqyrw5TydOJKpjjnwomMcfDbkdeocg6lC+LhK+KLhncf4bXlWm2yT8TTzvfgInHq
+         hlHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747715942; x=1748320742;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RdtmkfnZ2JMj0C7OqH1FutMtf/3tuL9wLni8AUX6TL0=;
-        b=DPzVWy+x5CbnrJDUPlT+nGRU5UG+d9kmftkpiQMYFwWXyHOf8LaKwJ6601z2jbtrhs
-         pKHhYMTmKP4ivkkjcdp1nT9jA0jZCDnbaAFwPtYGc0OgIEDibhmz2/3HFuIx9CgfuJ8D
-         8YT3m10XFWsJSbfek9VfrmJ6t8LX76hg5OdJhED4jDnEE7VEFGi9Wmk+gQC3yDDEnCwj
-         ci6MUBoDmI462GQe1T57UmeBmxd1F4Ik6LmDhFbzhepjK8LJ+B6DlK2+/bFxMdZElbRE
-         FJ2AG5xzdIzR9rxU0BQ0VTYjMo0Br1gp3R9aXOvIU3jbSNVCoSZkykJtF+zDNUrEKdP5
-         TpjA==
-X-Gm-Message-State: AOJu0YxO8cMhrZWzI4XgTJpYiIxI0qEUcNqoMVxILSUc4eSsJR3p6Nve
-	w2z6JlZ9oyJCw9n+A3y0wd5p8M+Wk9iU5be7pSDwPXpMmhDSGs93PRAuNGih/MM7+8CaAsKwZCx
-	fqADSgkJF0rplZBPKTCOqD1CYfHG38Y5va7q87hp6Wwt4uvRb9xlaT2kf8+w=
-X-Google-Smtp-Source: AGHT+IHnfoKl/bDT2poNddsyIcUQpSxj1fbiOAkHSUplAtS+ZGNfHxP0I0FfKW6t4DxDGQ3dZgdnDZsHtHTuf1YtQXOSZTTlq/Xu
+        d=1e100.net; s=20230601; t=1747716092; x=1748320892;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0PGsEVRuOLLAJr1H7lswziptx7jnjpDYYZxCcbVfAq4=;
+        b=CJEs3P7SkTeP6XG84Sf10MPROpzr6qFP8QSDSm5z64jypRnGOPBfMDVzOHzLJVnm4J
+         s0zJ/3CVoZErTpRoGfkkGfY+iqjGlrfG/OfNJyH7P1OKbJ7T0Gw4tvp8TtTSWLKTjNGU
+         wnY37KOif/8UEt3YqJ3oq8fqtQ6HlO0zuC1zHWoaxwTiDMcT5O81L3KpJ9w/mn/L5vI/
+         1vIcsSMEg6lzhMwGVSIg4zPd3iV5sEq6zAQX31GcCfYI1zIYq6Ax1YG016OrqkFtkjlI
+         yJxESX9POIzuQUn8NGLWMYuuFyjE7HTutp527h19vCQ1JQYFDk0o62/Hz6P1H/zFDCac
+         EJ1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX1ZEr8mL5kiJv3Tx0fPy14sMmsKZdMtJ27jXBbQcrzXQE2jhyPmlmNA71Z+KsFVv5Jz9SMBkEvtYOnHdY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyB3ZiW/6UqYSzDPxE7JHQIsW03azJ/NYfxgMkI21vdoyLsyZpr
+	WmDYTiu9X3c6Q26eRRMf9mq9VfqlRRU7CgFk94AWPZ7XPL6eBBzlTR5PApRrXmFISNOyqssBDkv
+	SYgZUfsZ6vcHqkpLfJw4Bg3Ir+Zc7/+c=
+X-Gm-Gg: ASbGncsWmOkQuJSxKgQgByLm9lR4KLac81Zm5VThPdZzJ+4qTgI5x1Jy4RSJEk9JTS8
+	kCZVl+ytckCk2/Pjza655zW2ylXFaepsEbdNG3568f9HlfBmT6ElAFuQrgYXxksSQH3q4OJ9XFC
+	t9WuMUcS9M05jPsdJUhE7cuATelgd7ovnt1WYnjf0uZIQ2
+X-Google-Smtp-Source: AGHT+IFbArCYIwR2O/XBoeciC8FmCdBof1bsivqX5W5MnnOOmOlzuLNzaRop84BOKTPpznME2mGSIpjrRoQG+H0ayQ4=
+X-Received: by 2002:a05:6122:2203:b0:52a:90d1:ed2d with SMTP id
+ 71dfb90a1353d-52dba83aa75mr13682011e0c.3.1747716092432; Mon, 19 May 2025
+ 21:41:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:6a8c:b0:867:40d9:bf7e with SMTP id
- ca18e2360f4ac-86a24c8b6admr1810043439f.9.1747715941842; Mon, 19 May 2025
- 21:39:01 -0700 (PDT)
-Date: Mon, 19 May 2025 21:39:01 -0700
-In-Reply-To: <381968B8-D95A-4925-AFB1-8B947683AFD0@gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <682c0765.a00a0220.7a43a.0083.GAE@google.com>
-Subject: Re: [syzbot] [bcachefs?] possible deadlock in __bch2_fsck_err (2)
-From: syzbot <syzbot+2c3ef91c9523c3d1a25c@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, mmpgouride@gmail.com, 
-	syzkaller-bugs@googlegroups.com
+References: <20250514201729.48420-6-ryncsn@gmail.com> <20250519043847.1806-1-21cnbao@gmail.com>
+ <CAMgjq7BpfueOn9ms8apRX-6dF8rZGtbC=MuZzSD7hbZxtw=Kdg@mail.gmail.com>
+In-Reply-To: <CAMgjq7BpfueOn9ms8apRX-6dF8rZGtbC=MuZzSD7hbZxtw=Kdg@mail.gmail.com>
+From: Barry Song <21cnbao@gmail.com>
+Date: Tue, 20 May 2025 16:41:21 +1200
+X-Gm-Features: AX0GCFtFF3WFy2ZJO51MlfJuT8MJKMwchLGRfuBGHfQPNVy5hqpUeX4HrnyUKdE
+Message-ID: <CAGsJ_4wC5_YSMLNoY5q4hUsZTpD+YPHSBtzCAdWRFH65EJA_iw@mail.gmail.com>
+Subject: Re: [PATCH 05/28] mm, swap: sanitize swap cache lookup convention
+To: Kairui Song <ryncsn@gmail.com>
+Cc: akpm@linux-foundation.org, baolin.wang@linux.alibaba.com, bhe@redhat.com, 
+	chrisl@kernel.org, david@redhat.com, hannes@cmpxchg.org, hughd@google.com, 
+	kaleshsingh@google.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	nphamcs@gmail.com, ryan.roberts@arm.com, shikemeng@huaweicloud.com, 
+	tim.c.chen@linux.intel.com, willy@infradead.org, ying.huang@linux.alibaba.com, 
+	yosryahmed@google.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Tue, May 20, 2025 at 3:31=E2=80=AFPM Kairui Song <ryncsn@gmail.com> wrot=
+e:
+>
+> On Mon, May 19, 2025 at 12:38=E2=80=AFPM Barry Song <21cnbao@gmail.com> w=
+rote:
+> >
+> > > From: Kairui Song <kasong@tencent.com>
+> >
+> > > diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+> > > index e5a0db7f3331..5b4f01aecf35 100644
+> > > --- a/mm/userfaultfd.c
+> > > +++ b/mm/userfaultfd.c
+> > > @@ -1409,6 +1409,10 @@ static int move_pages_pte(struct mm_struct *mm=
+, pmd_t *dst_pmd, pmd_t *src_pmd,
+> > >                               goto retry;
+> > >                       }
+> > >               }
+> > > +             if (!folio_swap_contains(src_folio, entry)) {
+> > > +                     err =3D -EBUSY;
+> > > +                     goto out;
+> > > +             }
+> >
+> > It seems we don't need this. In move_swap_pte(), we have been checking =
+pte pages
+> > are stable:
+> >
+> >         if (!is_pte_pages_stable(dst_pte, src_pte, orig_dst_pte, orig_s=
+rc_pte,
+> >                                  dst_pmd, dst_pmdval)) {
+> >                 double_pt_unlock(dst_ptl, src_ptl);
+> >                 return -EAGAIN;
+> >         }
+>
+> The tricky part is when swap_cache_get_folio returns the folio, both
+> folio and ptes are unlocked. So is it possible that someone else
+> swapped in the entries, then swapped them out again using the same
+> entries?
+>
+> The folio will be different here but PTEs are still the same value to
+> they will pass the is_pte_pages_stable check, we previously saw
+> similar races with anon fault or shmem. I think more strict checking
+> won't hurt here.
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-WARNING in __init_work
+This doesn't seem to be the same case as the one you fixed in
+do_swap_page(). Here, we're hitting the swap cache, whereas in that
+case, there was no one hitting the swap cache, and you used
+swap_prepare() to set up the cache to fix the issue.
 
-ODEBUG: object 000000002b138723 is on stack 00000000dac59cbe, but NOT annotated.
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 7170 at lib/debugobjects.c:655 debug_object_is_on_stack lib/debugobjects.c:-1 [inline]
-WARNING: CPU: 0 PID: 7170 at lib/debugobjects.c:655 lookup_object_or_alloc lib/debugobjects.c:688 [inline]
-WARNING: CPU: 0 PID: 7170 at lib/debugobjects.c:655 __debug_object_init+0x364/0x40c lib/debugobjects.c:743
-Modules linked in:
-CPU: 0 UID: 0 PID: 7170 Comm: bch-copygc/loop Not tainted 6.15.0-rc4-syzkaller-00229-gd27565abe66b #0 PREEMPT 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-pstate: 604000c5 (nZCv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-pc : debug_object_is_on_stack lib/debugobjects.c:-1 [inline]
-pc : lookup_object_or_alloc lib/debugobjects.c:688 [inline]
-pc : __debug_object_init+0x364/0x40c lib/debugobjects.c:743
-lr : debug_object_is_on_stack lib/debugobjects.c:-1 [inline]
-lr : lookup_object_or_alloc lib/debugobjects.c:688 [inline]
-lr : __debug_object_init+0x364/0x40c lib/debugobjects.c:743
-sp : ffff80009bef7700
-x29: ffff80009bef7700 x28: 0000000000000000 x27: dfff800000000000
-x26: ffff80009729c000 x25: ffff0000e8709ea0 x24: 0000000000000000
-x23: ffff0000dd671460 x22: 0000000000000000 x21: ffff80009715dcc0
-x20: ffff80008ae5d7c0 x19: ffff80009bef7bb0 x18: 00000000ffffffff
-x17: ffff800092f28000 x16: ffff80008adb72d4 x15: 0000000000000001
-x14: 1ffff000137dee4c x13: 0000000000000000 x12: 0000000000000000
-x11: ffff7000137dee4d x10: 0000000000ff0100 x9 : 47869bb3fecc8f00
-x8 : 47869bb3fecc8f00 x7 : 0000000000000001 x6 : 0000000000000001
-x5 : ffff80009bef7098 x4 : ffff80008f404fc0 x3 : ffff800082fbada4
-x2 : 0000000000000001 x1 : 0000000100000001 x0 : 0000000000000050
-Call trace:
- debug_object_is_on_stack lib/debugobjects.c:-1 [inline] (P)
- lookup_object_or_alloc lib/debugobjects.c:688 [inline] (P)
- __debug_object_init+0x364/0x40c lib/debugobjects.c:743 (P)
- debug_object_init+0x20/0x2c lib/debugobjects.c:779
- __init_work+0x58/0x68 kernel/workqueue.c:677
- rhashtable_init_noprof+0x734/0xa10 lib/rhashtable.c:1085
- bch2_copygc_thread+0xec/0xd40 fs/bcachefs/movinggc.c:355
- kthread+0x5fc/0x75c kernel/kthread.c:464
- ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:847
-irq event stamp: 22
-hardirqs last  enabled at (21): [<ffff800083df1134>] get_random_u32+0x2d4/0x540 drivers/char/random.c:553
-hardirqs last disabled at (22): [<ffff80008add7b2c>] __raw_spin_lock_irqsave include/linux/spinlock_api_smp.h:108 [inline]
-hardirqs last disabled at (22): [<ffff80008add7b2c>] _raw_spin_lock_irqsave+0x2c/0x7c kernel/locking/spinlock.c:162
-softirqs last  enabled at (0): [<ffff8000803a4fb0>] copy_process+0x112c/0x318c kernel/fork.c:2374
-softirqs last disabled at (0): [<0000000000000000>] 0x0
----[ end trace 0000000000000000 ]---
+By the way, if we're not hitting the swap cache, src_folio will be
+NULL. Also, it seems that folio_swap_contains(src_folio, entry) does
+not guard against that case either.
 
+But I suspect we won't have a problem, since we're not swapping in =E2=80=
+=94
+we didn't read any stale data, right? Swap-in will only occur after we
+move the PTEs.
 
-Tested on:
+>
+> >
+> > Also, -EBUSY is somehow incorrect error code.
+>
+> Yes, thanks, I'll use EAGAIN here just like move_swap_pte.
+>
+>
+> >
+> > >               err =3D move_swap_pte(mm, dst_vma, dst_addr, src_addr, =
+dst_pte, src_pte,
+> > >                               orig_dst_pte, orig_src_pte, dst_pmd, ds=
+t_pmdval,
+> > >                               dst_ptl, src_ptl, src_folio);
+> > >
+> >
 
-commit:         d27565ab bcachefs: Fix possible console lock involved ..
-git tree:       https://github.com/alanskind/bcachefs
-console output: https://syzkaller.appspot.com/x/log.txt?x=162861f4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=1358066360ea77fb
-dashboard link: https://syzkaller.appspot.com/bug?extid=2c3ef91c9523c3d1a25c
-compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
-userspace arch: arm64
-
-Note: no patches were applied.
+Thanks
+Barry
