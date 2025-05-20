@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B418C25D8F7
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 15:21:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B4B025CC6C
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 15:21:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747754474; cv=none; b=ApIkaCwSeMVQT13CX+M6JzjNMtSvmgB9f/HO0G6T5mpM8DOLtspOuM4N/JeJNS2KBznPb5NnfakdEhaTv6PY+hndkcOsyRDCQqpsVbXgZ/ybZK4cgP0UIFBu6L0Szeb2Ke++dv2NoKDvG+pmEMTgXNDcyUU/UpONqZ1eEbQvdVU=
+	t=1747754478; cv=none; b=ZjC5loczkb20JIF+cs4ZRrpD9R3JFpYzpxjrVQCA7MJLvI7uX2NXhgUM6ul4JCildCYob+mPs8KWobYMUDSj9cCo8TNh6oMrzq2zd+Lx2FfCkbXWb5CInAs8v1za57g5tzqZ7d5iNSwWMRPl5TED+CxC5Sw98KXERweRiiHdqY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747754474; c=relaxed/simple;
-	bh=6rNvaO0/ixsyVQC9lgTV46IHW9a6PNAOsbt76FA6yiI=;
+	s=arc-20240116; t=1747754478; c=relaxed/simple;
+	bh=Ac577SF1EdQVGlVaI269T+n4SvgSNPC1N5Hajobt0fM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=AYVL1y00t4WODQ5KmTDVIXCBIJse2lalIOeAn2oZTXShsn6WBcjEqVqNtEJP3H1AW4XA1X/Ih2lYKtzP7yBUeHXeye2J2VoxPeFp62jm0jUP4O1dpDpQVn/8P2OtWzmYc8BdBAbqeM8otspKzor3gFbwisUSftohv1JXC2lW4Gw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dx39u6XA; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=SCUwE5u7y9VF77HqVQParEZmTI3+/mxcSx+relx69yDhe808JNqoyjkf0R6bI9YM3bjF40j+8UWen5j+2PVqe2rdljhNoy4bV87HlPSf9QqVQ6dOfIZeUbYiluTMjN/R5w3NFWrng18o9qklTkqa2IiOICvpqkUKk/61Jw1WnIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gPbOClgy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dx39u6XA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1B36C4CEE9;
-	Tue, 20 May 2025 15:21:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gPbOClgy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 135F0C4CEE9;
+	Tue, 20 May 2025 15:21:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747754474;
-	bh=6rNvaO0/ixsyVQC9lgTV46IHW9a6PNAOsbt76FA6yiI=;
+	s=k20201202; t=1747754477;
+	bh=Ac577SF1EdQVGlVaI269T+n4SvgSNPC1N5Hajobt0fM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Dx39u6XAkATU2OaKSH89ZPRfZOJV5zSIqgbC2n1gmB/EbOb/A7Gg9MZXAoyXk1Lo5
-	 lT4nfFJY+hMcQ/PwFtHEgKthi6CooWFm7eHNsrqQjYD3WIVFZacxIsifhvI2GaaSwm
-	 RhYwcKirXCKDwOwzif6PxpFZX95yVIt2nqt3mqKmB/ugGCcENrDqIL2MqNafhdNcNW
-	 VyOgeOMV9+MHkxI1VyAG+kcEWAqlIeCWkNqxGlVPNquxkDVkDC9N9CYT/lL2hy6Bgf
-	 vSMmKav+KRu8FW80ys+L0fbfoPGCqUmT3gXgTlLreck57M9g3SlOsaq+3M0/4AsuBs
-	 cw1M4Mksuhd+w==
+	b=gPbOClgyTtlZIMJZYwGSjVD2G2MK2svN+vfrvfovNWQ8QelZQQLfICrbmBA3E6Gdf
+	 NjXsPvJaXaRVeT74MEIOWbvzgirq+82PluCGBARSQNtHx3VOa6hcEvji+9ctj6FVCZ
+	 NBhz0CpRY0GaQigQVnraMoIr/x+BpXYvv6LivQt3i8NQ95k8YVg22KDXL1/lo1udme
+	 iNOhE7WrRVjbdbQtbQPCozwSPDU+DcyqelOvLgIAreUUz2LtZcVLcyjCe0JCHFcNPN
+	 r/OoyvYvD2qX1gneGmmr1F/sWwBTzGFalf2t45L7ipSWbdjyXbxfBVrclmagvHX5ml
+	 bWyr8YeqGop2g==
 From: Arnd Bergmann <arnd@kernel.org>
 To: Dave Hansen <dave.hansen@linux.intel.com>,
 	Dan Williams <dan.j.williams@intel.com>
@@ -39,9 +39,9 @@ Cc: Andy Lutomirski <luto@kernel.org>,
 	Nikolay Borisov <nik.borisov@suse.com>,
 	linux-kernel@vger.kernel.org,
 	Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 2/3] x86/devmem: remove phys_mem_access_prot_allowed()
-Date: Tue, 20 May 2025 17:20:29 +0200
-Message-Id: <20250520152030.1499670-2-arnd@kernel.org>
+Subject: [PATCH 3/3] [RFC] x86/devmem: remove low 1MB hack for x86-64
+Date: Tue, 20 May 2025 17:20:30 +0200
+Message-Id: <20250520152030.1499670-3-arnd@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250520152030.1499670-1-arnd@kernel.org>
 References: <20250520152030.1499670-1-arnd@kernel.org>
@@ -55,89 +55,124 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-phys_mem_access_prot_allowed() was originally a workaround for
-certain 32-bit CPUs, but after commit 1886297ce0c8 ("x86/mm/pat:
-Fix BUG_ON() in mmap_mem() on QEMU/i386"), it no longer does anything
-special as the only remaining bit now is the same logic that follows in
-phys_mem_access_prot(), mapping everything as normal memory except when
-either O_DSYNC is set or the address is highmem.
+Traditionally, both reading and mapping anything in the low 1MB area is
+allowed on x86, through a series of ugly hacks.  In combination with
+features such as memory encryption, this keeps causing trouble and
+requires building additional hacks on top.
 
-Just remove the thing entirely.
+Chances are that this is only really used for 32-bit machines, as the
+usual users of this were dosemu, svgalib or ancient XFree86 versions,
+none of which should be used on 64-bit kernels any more.
+
+Remove both the custom devmem_is_allowed() and the custom
+xlate_dev_mem_ptr() on 64-bit kernels, and use the normal implementation
+based on phys_to_virt() instead for read/write access on the linear
+map.
+
+As a result, this makes x86-64 behave more like the other architecture
+on /dev/mem, allowing read/write access only on actual system RAM and
+only when CONFIG_STRICT_DEVMEM is disabled, while mmap() can be use
+on MMIO pages with the normal restrictions.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- arch/x86/mm/pat/memtype.c | 15 ---------------
- drivers/char/mem.c        | 10 ----------
- include/linux/pgtable.h   |  2 --
- 3 files changed, 27 deletions(-)
+Unlike the other two patches in this series, this one is expected to
+change the behavior on x86-64 kernels, which has the risk of
+regressions, but seems worthwhile to me.
 
-diff --git a/arch/x86/mm/pat/memtype.c b/arch/x86/mm/pat/memtype.c
-index fe24b8d2dc4b..fec14f1f53a6 100644
---- a/arch/x86/mm/pat/memtype.c
-+++ b/arch/x86/mm/pat/memtype.c
-@@ -781,21 +781,6 @@ static inline void pgprot_set_cachemode(pgprot_t *prot, enum page_cache_mode pcm
- 			 cachemode2protval(pcm));
+Are there any reasons left for keeping these hacks?
+---
+ arch/x86/Kconfig          | 3 ++-
+ arch/x86/include/asm/io.h | 3 ++-
+ arch/x86/mm/init.c        | 4 +++-
+ arch/x86/mm/ioremap.c     | 2 ++
+ 4 files changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 47a3cd5ffc4f..635328b57e35 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -85,7 +85,7 @@ config X86
+ 	select ARCH_HAS_CURRENT_STACK_POINTER
+ 	select ARCH_HAS_DEBUG_VIRTUAL
+ 	select ARCH_HAS_DEBUG_VM_PGTABLE	if !X86_PAE
+-	select ARCH_HAS_DEVMEM_IS_ALLOWED
++	select ARCH_HAS_DEVMEM_IS_ALLOWED	if !X86_64
+ 	select ARCH_HAS_DMA_OPS			if GART_IOMMU || XEN
+ 	select ARCH_HAS_EARLY_DEBUG		if KGDB
+ 	select ARCH_HAS_ELF_RANDOMIZE
+@@ -180,6 +180,7 @@ config X86
+ 	select GENERIC_IRQ_PROBE
+ 	select GENERIC_IRQ_RESERVATION_MODE
+ 	select GENERIC_IRQ_SHOW
++	select GENERIC_LIB_DEVMEM_IS_ALLOWED	if X86_64
+ 	select GENERIC_PENDING_IRQ		if SMP
+ 	select GENERIC_SMP_IDLE_THREAD
+ 	select GENERIC_TIME_VSYSCALL
+diff --git a/arch/x86/include/asm/io.h b/arch/x86/include/asm/io.h
+index 367d45755f85..c1ecca34f28d 100644
+--- a/arch/x86/include/asm/io.h
++++ b/arch/x86/include/asm/io.h
+@@ -285,11 +285,12 @@ BUILDIO(l, u32)
+ #define outsw outsw
+ #define outsl outsl
+ 
++#ifdef CONFIG_X86_32
+ extern void *xlate_dev_mem_ptr(phys_addr_t phys);
+ extern void unxlate_dev_mem_ptr(phys_addr_t phys, void *addr);
+-
+ #define xlate_dev_mem_ptr xlate_dev_mem_ptr
+ #define unxlate_dev_mem_ptr unxlate_dev_mem_ptr
++#endif
+ 
+ extern int ioremap_change_attr(unsigned long vaddr, unsigned long size,
+ 				enum page_cache_mode pcm);
+diff --git a/arch/x86/mm/init.c b/arch/x86/mm/init.c
+index aa56d9ac0b8f..16d0f242f0de 100644
+--- a/arch/x86/mm/init.c
++++ b/arch/x86/mm/init.c
+@@ -856,11 +856,12 @@ void __init poking_init(void)
+ 	pte_unmap_unlock(ptep, ptl);
  }
  
--int phys_mem_access_prot_allowed(struct file *file, unsigned long pfn,
--				unsigned long size, pgprot_t *vma_prot)
--{
--	enum page_cache_mode pcm = _PAGE_CACHE_MODE_WB;
--
--	if (!pat_enabled())
--		return 1;
--
--	if (file->f_flags & O_DSYNC)
--		pcm = _PAGE_CACHE_MODE_UC_MINUS;
--
--	pgprot_set_cachemode(vma_prot, pcm);
--	return 1;
--}
--
++#ifdef CONFIG_X86_32
  /*
-  * Change the memory type for the physical address range in kernel identity
-  * mapping space if that range is a part of identity map.
-diff --git a/drivers/char/mem.c b/drivers/char/mem.c
-index 85f963ce3b2d..30a5c0e0542a 100644
---- a/drivers/char/mem.c
-+++ b/drivers/char/mem.c
-@@ -256,12 +256,6 @@ static ssize_t write_mem(struct file *file, const char __user *buf,
- 	return written;
+  * devmem_is_allowed() checks to see if /dev/mem access to a certain address
+  * is valid. The argument is a physical page number.
+  *
+- * On x86, access has to be given to the first megabyte of RAM because that
++ * On x86-32, access has to be given to the first megabyte of RAM because that
+  * area traditionally contains BIOS code and data regions used by X, dosemu,
+  * and similar apps. Since they map the entire memory range, the whole range
+  * must be allowed (for mapping), but any areas that would otherwise be
+@@ -897,6 +898,7 @@ int devmem_is_allowed(unsigned long pagenr)
+ 
+ 	return 1;
+ }
++#endif
+ 
+ void free_init_pages(const char *what, unsigned long begin, unsigned long end)
+ {
+diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
+index 11b4ea7d7fa5..1e51d1c245bf 100644
+--- a/arch/x86/mm/ioremap.c
++++ b/arch/x86/mm/ioremap.c
+@@ -509,6 +509,7 @@ void *arch_memremap_wb(phys_addr_t phys_addr, size_t size, unsigned long flags)
+ 	return (void __force *)ioremap_encrypted(phys_addr, size);
  }
  
--int __weak phys_mem_access_prot_allowed(struct file *file,
--	unsigned long pfn, unsigned long size, pgprot_t *vma_prot)
--{
--	return 1;
--}
--
- #ifndef __HAVE_PHYS_MEM_ACCESS_PROT
- 
++#ifdef CONFIG_X86_32
  /*
-@@ -387,10 +381,6 @@ static int mmap_mem(struct file *file, struct vm_area_struct *vma)
- 	if (!range_is_allowed(vma->vm_pgoff, size))
- 		return -EPERM;
+  * Convert a physical pointer to a virtual kernel pointer for /dev/mem
+  * access
+@@ -533,6 +534,7 @@ void unxlate_dev_mem_ptr(phys_addr_t phys, void *addr)
+ {
+ 	memunmap((void *)((unsigned long)addr & PAGE_MASK));
+ }
++#endif
  
--	if (!phys_mem_access_prot_allowed(file, vma->vm_pgoff, size,
--						&vma->vm_page_prot))
--		return -EINVAL;
--
- 	vma->vm_page_prot = phys_mem_access_prot(file, vma->vm_pgoff,
- 						 size,
- 						 vma->vm_page_prot);
-diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-index adbebe2c6ce4..15b5a6b0943f 100644
---- a/include/linux/pgtable.h
-+++ b/include/linux/pgtable.h
-@@ -1764,8 +1764,6 @@ static inline int pmd_free_pte_page(pmd_t *pmd, unsigned long addr)
- #endif
- 
- struct file;
--int phys_mem_access_prot_allowed(struct file *file, unsigned long pfn,
--			unsigned long size, pgprot_t *vma_prot);
- 
- #ifndef CONFIG_X86_ESPFIX64
- static inline void init_espfix_bsp(void) { }
+ #ifdef CONFIG_AMD_MEM_ENCRYPT
+ /*
 -- 
 2.39.5
 
