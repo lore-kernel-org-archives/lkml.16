@@ -1,97 +1,127 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B0BB242D92
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 19:13:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BCE6BA45;
+	Tue, 20 May 2025 19:17:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747768440; cv=none; b=Gl8eVFwJW0iKvhx5OT/M/hUUaBSlGYfAsQwazko1mLnHjEIokM0QIQWxCF6oRBH08XeMxW35Rny/MLPOFdvApQbJdE/AVI5Q3ag1tkqCKXsJGZoshWkKpuj17BwW5VrxaIpNZ/R3d+fP+0Z2AzAcRjUdnMohQrvI+v9GnLY4wo8=
+	t=1747768655; cv=none; b=P/3OSBYjNP7OVWfFYnSuEANfRkc60An/v0A+pGSArzxtF3vTor4b5pJ9Ls43iUWanyzgtWKtorOVD8LIq3aEu5YFhGWokMac3kIiwWrEF87vPNTyUT4KKhkTykebcEp6U3kOZc8OXhWUUn1xMMC/JPDFJBKwnjMfJSXh6T/Zyog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747768440; c=relaxed/simple;
-	bh=Gg/5+OCk/JudsRhzmSzNzSjmr7paX/t9QtRcjJ+oG1o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cFDCi4Q5bojU++2j9rg9x8c+knoJc8wDbUc7EddTCoxmCddTivW6hilPyP4WwSdDabW9q8b2b0/r2HBOWjGPfUSIN6X3vwBBWGsYk0JI9jtSKbv+6YIg9DoUArUIFGcI5okppeJX/exFL/JxbpTabOW8iukhkxbLSzPaJAD+kQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rjyEKmom; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747768655; c=relaxed/simple;
+	bh=UOBHlDuPgI3vmrS6szwU9kFfDoB8g+RmM40w1+PrVtA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SPDPizOH9QvJFbDmo3lsnVwjsLSVh4mtKFqThD63OFC+4YXd9AkCfgKEMlC8aFK99TSdkI2Lfa0uMg7H0kVCowzWN/+hRXKtiRAzt/dgQQEJIUGc4/Q7Z1xr4OD3qFmp+6mar7QMx6mnhpsVb+A+jNDAm/X0o6u/X09R1/kgohg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=LC6dB+Re; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rjyEKmom"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43ede096d73so43605225e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 12:13:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747768437; x=1748373237; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=I2ItjY+ppg/pynow7rBGAmh3XSiTvHkJttkVqK8jN38=;
-        b=rjyEKmomrbo9OLuE8V3A/iyAW4qPfEdpJpzRZBgxbQgf96I1Q5Ckpcq26xPSMUZ9hi
-         KJOB3c5DHS7zMoKbKd2rPmzNg1Grui8zZl86gQJRvz8VGh/pLabYqmHGX9GULd6cy63F
-         tmlRNVO8CgFLNKAPPKDemwOf0Dip6i1zDswMSK9fmbTf9Pqg8opklyOtGqcCzERyFl0E
-         OGVy9UJib0cF7N9131E2K/0PktyAP6FSv8A1pWLhfOQ00BGOhTLTuxPoAeQo1x2vaC3Y
-         7C4dXUKwQcK3rzdXtzk7efdzTwP+4TcETOoF7VnsSXsTiR+/fHsWcAZS98ifUw4gExze
-         JOeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747768437; x=1748373237;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=I2ItjY+ppg/pynow7rBGAmh3XSiTvHkJttkVqK8jN38=;
-        b=khAajZXXvtIqCUsqj0YdWH4nrG/yli4IEyIPVWsADzXQVCJjKWabcKNFAbw5iXS8Ic
-         3TjZjpMpk3c9tAcHdgymbhle2S4nUp+1o9IOIEGZE/loHWCWtarOr7CkiDmIll2tA1Lj
-         2HeMZOG2fnYLkKlieAkhLyxkjaSkFxam+BBn6kaeFALwdJbrmFa/ylMebLaGItbwLQVm
-         9x6E1m6K7vNPg5Hv8Ic2RuD5l7vugFO3MeeA9hMY4vwqQVU0doWfS4wa2TI7O5UJ6I8t
-         MXT+wGajEpijuG0V0kOYOFrZ17ttjBggHWMxriZnmwh23UoYR+vR+BVPzWGgI1YQqPC8
-         SC0w==
-X-Gm-Message-State: AOJu0YxR7QgKPQRzZiA7t6iI9/CYBqW2VFbCJzcJmIE4YEvFDAuNtZOj
-	5Qo9Whp6uXPnAguHj7I4PZnfc0PXiAQPcCJDugVuJdzxjDwjzhgDhezMAhYBYFsjHrs=
-X-Gm-Gg: ASbGnctwf2UDeDkldcuIsjr01FlmbsneWZXTMOwe773bf/uk6XA9boWIOoPOVr80E83
-	tKzBUG4G6tg4fg2drAd6xm/6AINcpdKizAGPjdjj5LweGBtu7vY3f709yZfvMIT4J24ICbl84wv
-	nhx++1aVtHRHX3PnxS3GFBwdTXGSTzw1kAM6gJoWO9y0BFR0rRormog6liVxDdLuLOlQcIoRzKf
-	zZ0/7/JPgXx8rptyjpLtzye/IrxfM9GAO+pChNW3lHqUXlNK/d/aWKzxANyDvkkp0/FS/7yT0Lx
-	+iLCyOI5me9q81GQeLtzAMKUExlV1v7B2uZ070P4XtG9PZFaOhGHjWrEG8m/EpELT5Ix9Y4yw4H
-	W0oI0AUyiJfg89A/YkLkTc6gtD5U=
-X-Google-Smtp-Source: AGHT+IGcrcIy9jaEUMKlVB1MmWkeb0LtHs9wFmRKy8FWnDAUbDIjQBgUB938Lg+/2PJo87PETkuX7g==
-X-Received: by 2002:a05:600c:c0d2:20b0:43c:f597:d589 with SMTP id 5b1f17b1804b1-442fda2e7d3mr96042025e9.27.1747768436961;
-        Tue, 20 May 2025 12:13:56 -0700 (PDT)
-Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f6f0554fsm40830215e9.9.2025.05.20.12.13.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 May 2025 12:13:56 -0700 (PDT)
-Message-ID: <f658468d-1780-4995-b9df-96dc0203e045@linaro.org>
-Date: Tue, 20 May 2025 20:13:55 +0100
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LC6dB+Re"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=s2duOlGKkCInlwogKebH77CQ5chyg8OhYTpGQwehpGg=; b=LC6dB+ReZgqhI/16zhwmZMQYU9
+	sDZ4wpcDho5w1ohdtuG/vb638W5SbSIkUoIuVtbnSz+H1n8lZw+HPNsCKZ8loVTuIcy08EUHoDWno
+	O0PpeC6jxy3ANrcZCj47sF1EgsX6Aqf1tW5xsNF9IolDcZ8H0s2NAx4ak5W2HjyhsnyQE9cuiARsV
+	ie4mwIlqErpGlEy5obfR6XYvkRIq3oWiXPlXHAacfUiMVmlDrdb/Z+hJqTSRYmkbU9wCml8mNctns
+	t/x7jTbaBsREwn4bi/DOb7nFBC3Dl/EllEbA610LAnwX3crCo9ze/LP5saeuszj5RxAvpIZ0wi2sa
+	Z1vMIWlw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uHSSq-00000003kL2-3412;
+	Tue, 20 May 2025 19:17:24 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id CD5D3300677; Tue, 20 May 2025 21:17:23 +0200 (CEST)
+Date: Tue, 20 May 2025 21:17:23 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Ingo Molnar <mingo@redhat.com>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev, K Prateek Nayak <kprateek.nayak@amd.com>,
+	David Matlack <dmatlack@google.com>,
+	Juergen Gross <jgross@suse.com>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+Subject: Re: [PATCH v2 06/12] sched/wait: Add a waitqueue helper for fully
+ exclusive priority waiters
+Message-ID: <20250520191723.GI16434@noisy.programming.kicks-ass.net>
+References: <20250519185514.2678456-1-seanjc@google.com>
+ <20250519185514.2678456-7-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] media: qcom: camss: Add support for MSM8939
-To: vincent.knecht@mailoo.org, Robert Foss <rfoss@kernel.org>,
- Todor Tomov <todor.too@gmail.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- =?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>,
- phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
-References: <20250520-camss-8x39-vbif-v1-0-a12cd6006af9@mailoo.org>
- <20250520-camss-8x39-vbif-v1-2-a12cd6006af9@mailoo.org>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <20250520-camss-8x39-vbif-v1-2-a12cd6006af9@mailoo.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250519185514.2678456-7-seanjc@google.com>
 
-On 20/05/2025 19:39, Vincent Knecht via B4 Relay wrote:
-> +static const struct camss_subdev_resources csiphy_res_8x39[] = {
-> +	/* CSIPHY0 */
-> +	{
-> +		.regulators = {},
+On Mon, May 19, 2025 at 11:55:08AM -0700, Sean Christopherson wrote:
+> Add a waitqueue helper to add a priority waiter that requires exclusive
+> wakeups, i.e. that requires that it be the _only_ priority waiter.  The
+> API will be used by KVM to ensure that at most one of KVM's irqfds is
+> bound to a single eventfd (across the entire kernel).
+> 
+> Open code the helper instead of using __add_wait_queue() so that the
+> common path doesn't need to "handle" impossible failures.
+> 
+> Note, the priority_exclusive() name is obviously confusing as the plain
+> priority() API also sets WQ_FLAG_EXCLUSIVE.  This will be remedied once
+> KVM switches to add_wait_queue_priority_exclusive(), as the only other
+> user of add_wait_queue_priority(), Xen's privcmd, doesn't actually operate
+> in exclusive mode (more than likely, the detail was overlooked when privcmd
+> copy-pasted (sorry, "was inspired by") KVM's implementation).
+> 
+> Cc: K Prateek Nayak <kprateek.nayak@amd.com>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>  include/linux/wait.h |  2 ++
+>  kernel/sched/wait.c  | 18 ++++++++++++++++++
+>  2 files changed, 20 insertions(+)
+> 
+> diff --git a/include/linux/wait.h b/include/linux/wait.h
+> index 965a19809c7e..09855d819418 100644
+> --- a/include/linux/wait.h
+> +++ b/include/linux/wait.h
+> @@ -164,6 +164,8 @@ static inline bool wq_has_sleeper(struct wait_queue_head *wq_head)
+>  extern void add_wait_queue(struct wait_queue_head *wq_head, struct wait_queue_entry *wq_entry);
+>  extern void add_wait_queue_exclusive(struct wait_queue_head *wq_head, struct wait_queue_entry *wq_entry);
+>  extern void add_wait_queue_priority(struct wait_queue_head *wq_head, struct wait_queue_entry *wq_entry);
+> +extern int add_wait_queue_priority_exclusive(struct wait_queue_head *wq_head,
+> +					     struct wait_queue_entry *wq_entry);
+>  extern void remove_wait_queue(struct wait_queue_head *wq_head, struct wait_queue_entry *wq_entry);
+>  
+>  static inline void __add_wait_queue(struct wait_queue_head *wq_head, struct wait_queue_entry *wq_entry)
+> diff --git a/kernel/sched/wait.c b/kernel/sched/wait.c
+> index 51e38f5f4701..03252badb8e8 100644
+> --- a/kernel/sched/wait.c
+> +++ b/kernel/sched/wait.c
+> @@ -47,6 +47,24 @@ void add_wait_queue_priority(struct wait_queue_head *wq_head, struct wait_queue_
+>  }
+>  EXPORT_SYMBOL_GPL(add_wait_queue_priority);
+>  
+> +int add_wait_queue_priority_exclusive(struct wait_queue_head *wq_head,
+> +				      struct wait_queue_entry *wq_entry)
+> +{
+> +	struct list_head *head = &wq_head->head;
+> +
+> +	wq_entry->flags |= WQ_FLAG_EXCLUSIVE | WQ_FLAG_PRIORITY;
+> +
+> +	guard(spinlock_irqsave)(&wq_head->lock);
+> +
+> +	if (!list_empty(head) &&
+> +	    (list_first_entry(head, typeof(*wq_entry), entry)->flags & WQ_FLAG_PRIORITY))
+> +		return -EBUSY;
+> +
+> +	list_add(&wq_entry->entry, head);
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(add_wait_queue_priority_exclusive);
 
-Regulators should be declared with the PHY not the CSID.
-
----
-bod
+add_wait_queue_priority() is a GPL export, leading me to believe the
+whole priority thing is _GPL only, should we maintain that?
