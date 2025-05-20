@@ -1,119 +1,133 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 414E31FFC54;
-	Tue, 20 May 2025 15:39:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB621FFC54
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 15:39:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747755550; cv=none; b=XrgqNLfnGBOKeKdIhKTxsVmubFFGpvS0IHBECHCZrgwk++OtPEvXj4Rb3Pu27tcoKAPU1K+7YyK2whMM8sEoJdXoTeWTimEweFirUiZf3UKT2mJxUa7d1fInvUhdgb9QY3l9XMyPaEJFF6kzBjrTYcYjn99ma3eUXCajzY0IV7A=
+	t=1747755597; cv=none; b=QjPBagUqQB614PXuwTnCrgHLwm7o1b4bn6lVUOf16oFAAxvNpmaSku8ty93AVhYjw6bv5LOYEpKZtkLu6EfHF6fILgj9i++d7NH/UgGG8OBGxV3fEz50UZmxTtX/StfKQJtuhFTTzPra6bMt/d4eg8jUDuUovE0PDs3+ndSIJMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747755550; c=relaxed/simple;
-	bh=l1hOo4kpWzGJBNZGsCZ606pi5hXSzOaGiN8p6gFUftY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i44m9iDtJOM/R6kF1brZXkKi13sQM95R32+ysQQ16m0jsZz+wzbFiWNAe18JDOjdnHldnggFr804w3PAz5EYMmUsuYw+/svKsXPV8S/4R8Zxot1EC7R+zkq2Qxlz6BgXrdZvBKjx6KuP8HFdkGMb/aJ1oGelLNzlTEejGTb6NAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SqdfLoKM; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747755597; c=relaxed/simple;
+	bh=Gp2hypGim6KPCTrYggCBys1rov6/WLmvezT/1tOHcoI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Y3X38Rmlz3lrtCXnm3J9WQyFsG4lJHz9Z+JdBmcZ1Zrbz4vBEaoH9m3afS/7+V52soxWhcsEe8S71CKB0PE/5m2hLkHnT8TKPqlsnMdD/TihgaQ/cLD/pTK1vdgUhZUTNL0lUHTqG9LKwEKsZdSLtnuoKU7/4AixA5lwdaVe4ig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Rde3Ghgo; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SqdfLoKM"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-551f14dc30dso2420263e87.1;
-        Tue, 20 May 2025 08:39:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747755546; x=1748360346; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+l+FDt25UF55NIxFW0g1GLWBPYAD9X7H0nxKJbiYyvQ=;
-        b=SqdfLoKMEIXka8yPwVZIxvbnowdKQ/biGXU7pTdNprSkhGpMWH+hblfQs+Sjti5T4c
-         SYu4bO9Vu4MldnrXK8m+78DzwVqOT423YESq0n1qhZFmTPSPtP2oyn8rPfRUo99nybQ+
-         prOi1pOotFt440iHeUYfPDcfLRSGdpMESl1Ptzi12aClVzErSwx86v7kvMu4WYHdoyEp
-         dojV6+M1Vft9p8zk3Rc/sICr1JLYMIb/xwAy31iq2+nkD/dNmhw9L9mPS7QB33Ris2RC
-         rfs8d9cL6A6dV5VpxTfNn0DKRjgpyT+1Cq9fhB2K3b/QpjdWjQG6l6RR9Bpy/3yCngAC
-         M0pg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rde3Ghgo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747755593;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Qgw858aBfnJTsWLcya2ZIZLM65pgyUp/UWTU3v5tX6E=;
+	b=Rde3Ghgo0iWe1ePZs0X/WJLS2wRQxw/N+G2reHsFqITVV25KLgeK/JO/xPwsKhUIfKwVZN
+	l0eLg6nlbnQkXb9ksNdMsWuU6z0eW5wUpNA0iDmlM4aXxuz4saRn7S8Joyj5nbYg6KAZrX
+	fZeNwsL7O6fE/rEAGo5XwkC37lDBssQ=
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com
+ [209.85.166.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-472-fP7_FCLFPM-Ho9X_LMFWUQ-1; Tue, 20 May 2025 11:39:51 -0400
+X-MC-Unique: fP7_FCLFPM-Ho9X_LMFWUQ-1
+X-Mimecast-MFC-AGG-ID: fP7_FCLFPM-Ho9X_LMFWUQ_1747755591
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-85b5ea50d28so90725539f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 08:39:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747755546; x=1748360346;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1747755591; x=1748360391;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+l+FDt25UF55NIxFW0g1GLWBPYAD9X7H0nxKJbiYyvQ=;
-        b=UhCNdS4HI6xNMPKwjbx2SLVpS/vZvhV2zrstHrU1iBfB0/gvs7OvHPjizms4naUDfz
-         Xp3phfEs2iOGfgMgsSkNI5rIrwBFhrWDwJ0oqb05yYJFsBKxiGrU3jYAENgupK8VeYsG
-         PH6NEKC9tqdS1PUZ4L38ooQH+5QhQGhZuKGgkEnoYbhMUllI+D53BC/DZMGpojyOuUjr
-         xweSwgHQkKjbfErwRkM/R21LbdfO5Gm9eSMs9SOZlSiUqKdM07dAAHlv62csBCXpzMQ1
-         bKno+XEyJhA6bUQvGaLdZatGQj3NaUsyBoiTRumhBilM7ETeDkr81VMeouEIjGtW8Pbz
-         iXTA==
-X-Forwarded-Encrypted: i=1; AJvYcCW3ZM6UYP79vU1pnpJPN1lGHMVB9ltLu3ETkaeaeBrA3sUUB7+ZcgNm9hQycyt5Wiq6dmS1EGq+qAzqGNY=@vger.kernel.org, AJvYcCWtxx1mis5LjngCVhJrWOIhqq5trUbrvpkUyXVSWCEGqQaMf6rqJDNHk2xGmwsxGJ/yx/1wF9Z10Vo=@vger.kernel.org, AJvYcCXfH1nhahxtHNLLrNyUQrnfCfo5Vn2GkCoNOo4duHmTaB/SphVlhdkCQD4nNiOQZYgqR14Hv3t7nNxN1g8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLJeTG455nIPKCXckeJMf/wqpE2TsaMbDxZ+ZCG/gUFGj1mVPS
-	cCmQmlPZb7BqaC9Xuen5yzSNd5Xjz8OpFtpOsis/abd49sZ+cJ2kzA8wpPRPLMn5VlQECq0pEgF
-	H7EqOw78/uLwxGgtEr5G0hG/TSfGnR2UmiA==
-X-Gm-Gg: ASbGncsin9TljWY2c7Say/YK+aZ1S2H6dIenAOOiAW2KECtN6lmevY4ZRRhgzwKztPs
-	is7k8q8JKtOtIzyS/a1BmLEip1QFahaVqiWGm23tGenhMmkbZgiD/iB8dmPcLLYx1aez0ZMh0V4
-	HXWeFX/rYduXzy3P6G7vHFnyVHMDYS1IBs
-X-Google-Smtp-Source: AGHT+IEH7i9q6i9KUI6txwUbjtLe8y2vI6+YwyNe7U12nLUG+bx0jXWcJbykZxu6YF3OtmK30cumXUZ1J3n+uTatHsQ=
-X-Received: by 2002:a05:6512:660e:b0:550:e04d:2b66 with SMTP id
- 2adb3069b0e04-550e7506bb8mr5290328e87.17.1747755546022; Tue, 20 May 2025
- 08:39:06 -0700 (PDT)
+        bh=Qgw858aBfnJTsWLcya2ZIZLM65pgyUp/UWTU3v5tX6E=;
+        b=iRJW2o3SUTeFrkoCaLpJPumJ1ZzaRBWVi7aKjEAX/ObzWXc0+8srbN3GIVKC1517vb
+         zLZw/I5sB30AvkhG1wKKvM77jGG4HOEI/urTlqQ1Jl5Y108wZJpTj9f//b20fwWRrlEa
+         CpQYVrw1DVFZ8ltMhiFZSzou2nkEkpiNg85bgTe3tjkJY0Xf6WxM+m4GvQ0abA6NYyV6
+         C8GNkowYu2n2D3yaTnd4tEr/3GyhbT+fNn7qG9P0Qa0p4z4Ek8NPJ8BZ6MtYzqNDPjGe
+         mLOuk8nzlmqy7W58uaqZnR6TWFpxQ3h3uKTS38y1jpKsKfn1yysKb6zDKHlj9jC4yEk9
+         e0xA==
+X-Forwarded-Encrypted: i=1; AJvYcCXI+UadTweC+Yo4oHGtpoJF895iOcD0vcDcWDGSMuWtB1c8LsaXHnYSTRT2D8DyTa9kU8wR/RdzOuQ8Dm0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZTtZTCPeACQYQeGCZOVgBrUqKSYQJtuu3XyZXvJwcOD4HVQOM
+	F35sdMJOxhuNQfcdj1txKEXUbtaogZsNte4IxDF47ZDmYJDhSxIuf1XXWFKPiro9yME/AzTgkbU
+	3tMNU5+vXspfsVLw+9mWsyzKfgB+BHLp+tAaJNu5EginweITCQ3LkX3TMpOt+P8XFYg==
+X-Gm-Gg: ASbGncssAYNv8owmViTeRysulpEY7q/wfDPFv/dCkHAPoEBg9lAvmMWcB27ChOhnR5F
+	em0UBFIHWNl0XaJuvFM8+ikPB9+4ACokUdjMPHm9Wio0+cEw0DHzqtmixaIqu8KM0w7SPl5K2/1
+	TJjDHKSuRiZ8Zc22x3ieCgZpo3ZBjzQWkboWIakwYm24hJBMsQ3QsiJ8lmZJT6sfv3yRWPQUrEC
+	5/GZxPo3sF2smLQOe1nFrYRd3MYBCndcL3tQ8NEfBvkrxq9cXPAxa4X7nOECDAL65OvPzoXlt6p
+	HUF9UIQPpM7/BiY=
+X-Received: by 2002:a05:6e02:3810:b0:3dc:787f:2bce with SMTP id e9e14a558f8ab-3dc787f2eb9mr15376435ab.2.1747755591083;
+        Tue, 20 May 2025 08:39:51 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFwOHbonV8qiSQBLnfXYbx9Prhpc3EL9LanZ3fzLOv7nzBzsY/s+c9jTUwTOnix05087SeCPw==
+X-Received: by 2002:a05:6e02:3810:b0:3dc:787f:2bce with SMTP id e9e14a558f8ab-3dc787f2eb9mr15376255ab.2.1747755590555;
+        Tue, 20 May 2025 08:39:50 -0700 (PDT)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4fbcc3b19aasm2276374173.52.2025.05.20.08.39.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 08:39:49 -0700 (PDT)
+Date: Tue, 20 May 2025 09:39:48 -0600
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Longfang Liu <liulongfang@huawei.com>
+Cc: <jgg@nvidia.com>, <shameerali.kolothum.thodi@huawei.com>,
+ <jonathan.cameron@huawei.com>, <kvm@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linuxarm@openeuler.org>
+Subject: Re: [PATCH v8 0/6] bugfix some driver issues
+Message-ID: <20250520093948.7885dbe0.alex.williamson@redhat.com>
+In-Reply-To: <20250510081155.55840-1-liulongfang@huawei.com>
+References: <20250510081155.55840-1-liulongfang@huawei.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250508-tegra124-cpufreq-v4-0-d142bcbd0234@gmail.com>
- <20250508-tegra124-cpufreq-v4-2-d142bcbd0234@gmail.com> <cd801698-d7cf-4e9e-aa01-5525f8687ab0@nvidia.com>
- <CALHNRZ_9tMi5iihyTsEuU4T72=oTQM6-rVhqozzLf9DiB_TpcA@mail.gmail.com>
- <CALHNRZ-pu9HUzVyR3-U=XZKFFZPnn5-DNLWPqPx6CSoW0dHMrA@mail.gmail.com>
- <bc0a4c75-df5b-4b4d-9c9e-a2c99d3f4f6e@nvidia.com> <20250519103749.falgd64ikkwkfpg7@vireshk-i7>
- <9a15ea89-5e33-48e7-8c75-b041f6832bc1@nvidia.com> <20250520103304.jfevon546rft2ncr@vireshk-i7>
-In-Reply-To: <20250520103304.jfevon546rft2ncr@vireshk-i7>
-From: Aaron Kling <webgeek1234@gmail.com>
-Date: Tue, 20 May 2025 10:38:53 -0500
-X-Gm-Features: AX0GCFu2LIx9ldoHs1ixgTO3PVVcIJszJylkzn45qiIBEebHWvwZ7Z6SKL2Dr0Q
-Message-ID: <CALHNRZ9ue242oAJctGszHb128ak8ovbESs5Y-TLfesSus5FAyg@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] cpufreq: tegra124: Allow building as a module
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Jon Hunter <jonathanh@nvidia.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Thierry Reding <thierry.reding@gmail.com>, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 20, 2025 at 5:33=E2=80=AFAM Viresh Kumar <viresh.kumar@linaro.o=
-rg> wrote:
->
-> On 20-05-25, 10:57, Jon Hunter wrote:
-> >
-> > On 19/05/2025 11:37, Viresh Kumar wrote:
-> > > On 15-05-25, 07:41, Jon Hunter wrote:
-> > > > Yes and that is understood. I see a few drivers calling ...
-> > > >
-> > > >   platform_device_register_simple("cpufreq-dt", -1, NULL, 0);
-> > > >
-> > > > One option, and I don't know if this would be acceptable, would be =
-to add a
-> > > > new wrapper function in the cpufreq-dt driver for the above that ot=
-her
-> > > > drivers could call and that would create the dependency you need.
-> > >
-> > > Doing that won't be a problem, but I doubt if that is a better than
-> > > adding a soft dependency here. I personally felt that the soft
-> > > dependency may be the right way here. The cpufreq-dt file presents a
-> > > driver, a device can be added from any file and that doesn't require
-> > > the driver file to be inserted first. If the platform wants to
-> > > simplify and create a dependency, a soft dependency looks okay.
-> >
-> > The only downside of a soft dependency is that this driver could load b=
-ut if
-> > the cpufreq-dt driver is missing for whatever reason, it might not be
-> > obvious. Ideally it is better if this driver does not load at all if th=
-e
-> > cpufreq-dt is not present.
->
-> Fair enough.
->
-> Aaron, you can introduce a helper like cpufreq_dt_pdev_register() to
-> solve the linking here.
+On Sat, 10 May 2025 16:11:49 +0800
+Longfang Liu <liulongfang@huawei.com> wrote:
 
-Will do. I'll get it queued for when patch 1 is actionable.
+> As the test scenarios for the live migration function become
+> more and more extensive. Some previously undiscovered driver
+> issues were found.
+> Update and fix through this patchset.
+> 
+> Change v7 -> v8
+> 	Handle the return value of sub-functions.
+> 
+> Change v6 -> v7
+> 	Update function return values.
+> 
+> Change v5 -> v6
+> 	Remove redundant vf_qm_state status checks.
+> 
+> Change v4 -> v5
+> 	Update version matching strategy
+> 
+> Change v3 -> v4
+> 	Modify version matching scheme
+> 
+> Change v2 -> v3
+> 	Modify the magic digital field segment
+> 
+> Change v1 -> v2
+> 	Add fixes line for patch comment
+> 
+> Longfang Liu (6):
+>   hisi_acc_vfio_pci: fix XQE dma address error
+>   hisi_acc_vfio_pci: add eq and aeq interruption restore
+>   hisi_acc_vfio_pci: bugfix cache write-back issue
+>   hisi_acc_vfio_pci: bugfix the problem of uninstalling driver
+>   hisi_acc_vfio_pci: bugfix live migration function without VF device
+>     driver
+>   hisi_acc_vfio_pci: update function return values.
+> 
+>  .../vfio/pci/hisilicon/hisi_acc_vfio_pci.c    | 121 +++++++++++++-----
+>  .../vfio/pci/hisilicon/hisi_acc_vfio_pci.h    |  14 +-
+>  2 files changed, 101 insertions(+), 34 deletions(-)
+> 
 
-Aaron
+Applied to vfio next branch for v6.16.  Thanks,
+
+Alex
+
