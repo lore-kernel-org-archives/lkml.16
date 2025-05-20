@@ -1,109 +1,79 @@
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F32F1FDE19;
-	Tue, 20 May 2025 19:32:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9A101FFC54;
+	Tue, 20 May 2025 19:32:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747769577; cv=none; b=NxdmNhLH0lgV6bEb+mkLUDqyHGnMnQr1IeKAxxJH+h77BfNc4+vgZyKqAoAT1tvgwrCMNlfBwK8P3V7N1mxN2myuYTrXcQtjzGspDPmr7Kn6uYL5xT+fZ7LRbCEDeFDHtzlfHZ/xsrEXS4KsrZ3HFBMo7rhTWVCo+aepeX/jRLo=
+	t=1747769579; cv=none; b=PEW7ROp+WUlO5zfpqPXSXsfXPJ8PNt8Sfs+3aqKx11nCKRRt158wW0HNEDaeWxWE2iwfLNT4ChPLamchRItzrkzs3pBoWQ7syRAvEd7MgMxkdm07LBTeZ1qg6uruqICzBFbgpzMCcQxLqcwJzu/DSHNw16eypYeRURHV2E0A6yk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747769577; c=relaxed/simple;
-	bh=DyY1sI3JCNQaoxUjUXWnrVZV3nJ3zWYHOEWyQDjkcxM=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=PwN0yknN5hBWTFA01qMeSodJYyTEg8fnBEq7yUlJ2qVxGb+2MjnFEAWtCvDGkL7hjjoz6h7TEmHAa7Wv9bnjeOk/sINl+FLphaShRIA6eGHVT5Biz4GhBkVG79RkvinA5VcgXUBKVU0hffjFTMjD2DCIgoH2o1ZIpE/jJB54WBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MLpG4VNx; arc=none smtp.client-ip=209.85.219.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747769579; c=relaxed/simple;
+	bh=EZGRw9Q4tb3Mv4QMdVejmdHmY8SCNeUUNUC5LNs6Yac=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kHpnixR9Gvga/G+OcYvlp98jJoJfDtQMJORV/qinI52o7a9oyS9uO2Uow2S2JVqpQ2N0qvuI5ZYB9J3yRPcdnQwXg8tL9UUjcbIe/hWj3L7pR5ZqKtB1PX6f5mi7OFZidpHLjN7A25lH1f0wQ+eiNt1GoMv5eeC3mVwOEsUU01Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RYVGk4KR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MLpG4VNx"
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-e7ab5705fafso738918276.3;
-        Tue, 20 May 2025 12:32:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747769574; x=1748374374; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=MKP6+1oGcQmi64pHElG6X6g0bpuaSoRy90HYWIOpyos=;
-        b=MLpG4VNxmjYaVnNWIBCQyoGO/zLfP3AIaXFaGJk59G7CHja4v6QrHQk7vEHoXbMbNs
-         Vjk3GofMdzB34PPQNjdwpMROAzt/itpVextztl2FvVu4lX8DKpDSBJqbv4l9wosPUH2d
-         xIQKd6PjAuCl3qTjxQIqd7J2fq5533HeX3iOk6WCdN/a9E55ELE9YScC6ZJ4H/WNfC8j
-         52xX2rxE3oYLbh3J0qVtf3LdXaHkPKYWf5Oc7+v0LMEit7lXHgNhyojyz90At6oh+DMV
-         Gk3MJAxhZnL60booyhKcTvqONib8czz5BFHlXuOu4TA9CJbjSXDznoOk176SoXknie+F
-         Cc6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747769574; x=1748374374;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=MKP6+1oGcQmi64pHElG6X6g0bpuaSoRy90HYWIOpyos=;
-        b=ZUKUeeUpVhoZeTzUkf9WYMfmHMfL/aDr3MpDvZ8ASubbghW59JmFWV81FR8WuH9WzL
-         CMGf/wQdCmlZQlvdWqnjeKrpDtVN+5sGTXOkh8tspT2edCwobdfEcwstzqBFb2xsbGjT
-         gP2rNzzqhbDEtKumXxyyGA5DXFTU45GIfGwTqEp776/HEsK3Fd873/gipDPX58+WqH0l
-         Xc26dvc4uCbr7T1ql9CcynikeLMps3dhB3zUohFv7jFk8PZZAQlyrMfqE/A6irZoF9Fq
-         jx1WsrdgIpaDp00oTqIlMNvilqe9jU7X2W3KZrSdIr20MePlT2pnm3Wb0iwfjOCKUAvb
-         ztiA==
-X-Forwarded-Encrypted: i=1; AJvYcCVl2ncmWetVhk6w1sq+4FRh8kScKoTJ/fyExCUQ0WO6kS3oGM3YOhisPSGLjwnrue6oLu5zI9yq8MDOiYSz@vger.kernel.org, AJvYcCWzQre8iu3VOWE4/bs4MKm2yrW2SCc9aX52z0Hdyk9dC3Wovs9kqv2ElKsh67tQU/HYdTR21EexLa8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHMT1NOEhf0gsoHJ77boeJZz+mEiQb/sF3WzKA3jVVico0CVzI
-	IiA2p0tmK0Ssw+pFsUfDtHfcbYrjUJ5ZmjhAvRBnAGzT6gQIp1Qo1rrM/yF8FqETAjAZHKFwqgV
-	nmZzeUlPI5qkkGxCQoQcvhUDT1Aez9Ng=
-X-Gm-Gg: ASbGncvK/i3tVPekg+6FOXf5uAlTdV+AXZWu61f2ZTcDgJ1LLXhPlYtZhbqDBNEHRBu
-	q6MB65czOduTiCWaMRTq/xQoPKAWhAozgFtlX2k2h2zOWb19iZxAEfk9LlzAUoSep9QVN6v5yL0
-	3oFZQeN/W1Db5lrXXYFcqSrTz0gQosXfCXAY9w6P0zrBk=
-X-Google-Smtp-Source: AGHT+IGJiEG8zJ/8kQF0sNzLIRKcYrQVfcThLoxYp2PsjAHiGu/ZkT83IPTm/EDO5QZHcDozPrCpRV3IlyrBYFpS8Es=
-X-Received: by 2002:a05:690c:8001:b0:70c:b9c2:a966 with SMTP id
- 00721157ae682-70cb9c2b5d8mr65319227b3.3.1747769574269; Tue, 20 May 2025
- 12:32:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RYVGk4KR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D78C4C4CEE9;
+	Tue, 20 May 2025 19:32:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747769579;
+	bh=EZGRw9Q4tb3Mv4QMdVejmdHmY8SCNeUUNUC5LNs6Yac=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RYVGk4KRSLsCfbKkFb8O2MFI1ZA3lSnBE31g1iZ1lOqy/+g4geKEl1sM4Mzr/vlW+
+	 eJPnG9FHK96DIzYhlbfUeMLTJOsIpgLBv3e5YpYTGIiGfHbKZ6XeHqd4+wafrjZNVp
+	 Vw0mOrEp99UNXJDwHuFa1beVM8nlp3rqePIt6n24jD2S5Qd7xYceGQvTlHfJSWNkBa
+	 Qs198R6ze3Bu33WdwC+qQFqhiY3eS3agIwsCSaHzy5jEVHAMhC7ZhlBYs+KjmlUAl9
+	 oDnBReeD42fKi25zC9LhsvE0XCbCSkx7p4uHCitOJPAxk4Y4v2FN8DfISO+2qBghV4
+	 CiJWKNEP7uTRw==
+Date: Tue, 20 May 2025 14:32:57 -0500
+From: Rob Herring <robh@kernel.org>
+To: Chaoyi Chen <kernel@airkyi.com>
+Cc: Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Frank Wang <frank.wang@rock-chips.com>,
+	Zhang Yubing <yubing.zhang@rock-chips.com>,
+	Dragan Simic <dsimic@manjaro.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Diederik de Haas <didi.debian@cknow.org>,
+	Johan Jonker <jbx6244@gmail.com>, linux-phy@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Chaoyi Chen <chaoyi.chen@rock-chips.com>
+Subject: Re: [PATCH 2/2] dt-bindings: phy: Convert phy-rockchip-typec.txt to
+ yaml
+Message-ID: <20250520193257.GA1221161-robh@kernel.org>
+References: <20250519024820.194-1-kernel@airkyi.com>
+ <20250519024820.194-3-kernel@airkyi.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Lothar Rubusch <l.rubusch@gmail.com>
-Date: Tue, 20 May 2025 21:32:18 +0200
-X-Gm-Features: AX0GCFvICKQf8CUfKFbX0hxnd25EN6iXvBHxrIc72rFEcfC2BMMS0gVdHSaZbgo
-Message-ID: <CAFXKEHYe_LBV=95Rm75UXF97oUU5CTYzDdwXJZ=cr+4fGOf80g@mail.gmail.com>
-Subject: Re: [PATCH v1 06/12] iio: accel: adxl313: prepare interrupt handling
-To: andy@kernel.org, jic23@kernel.org, dlechner@baylibre.com, 
-	nuno.sa@analog.com, corbet@lwn.net, lucas.p.stankus@gmail.com, 
-	lars@metafoo.de, Michael.Hennerich@analog.com
-Cc: linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Lothar Rubusch <l.rubusch@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250519024820.194-3-kernel@airkyi.com>
 
-Hi Andy, I forgot to put my mail addresses as well. I copied your answer
-now from the mailing list archive. Hence, sorry for the bad formatting
-of this mail.
+On Mon, May 19, 2025 at 10:48:20AM +0800, Chaoyi Chen wrote:
+> From: Chaoyi Chen <chaoyi.chen@rock-chips.com>
+> 
+> Convert phy-rockchip-typec.txt to yaml.
 
-One question / remark down below.
+Thanks, but I already converted this one and it is queued up in 
+linux-next. There's still a few more rockchip ones to do:
 
-> On Sun, May 18, 2025 at 11:13:15AM +0000, Lothar Rubusch wrote:
-> > Evaluate the devicetree property for an optional interrupt line, and
-> > configure the interrupt mapping accordingly. When no interrupt line
-> > is defined in the devicetree, keep the FIFO in bypass mode as before.
->
-> ...
->
-> > +        ret = regmap_write(data->regmap, ADXL313_REG_INT_MAP, regval);
->
-> Don't you want to use regmap_assign_bits() or something like this to have
-> the above ternary be included?
->
+['mps,mp8859']
+['realtek,rt5651']
+['rockchip,rk3368-mailbox']
+['rockchip,rk3399-cdn-dp']
+['rockchip,rk3399-gru-sound']
+['sitronix,st1624', 'sitronix,st1633']
+['ti,tsc2007']
 
-Thank you so much. I guess this is a function I was looking for quite
-a while and I
-know several places where to use it.
+I see you already posted cdn-dp. Thanks!
 
-Anyway, I saw, my hardware test setup still runs on an older kernel
-w/o regmap_assign_bits().
-So, I kindly liked to ask if you have any objections against leaving
-regmap_write() for now? Actually I'd prefer first to see the
-activity/inactivity stuff in, in case this will need some more
-modifications and I need to verify them on hardware. I think, leaving
-regmap_write() here would make that easier for this patch set. Please,
-let me know?
-
-I'm about to send a v2, for the follow up discussion.
-Best,
-L
-
-> > +        if (ret)
-> > +            return ret;
->
+Rob
