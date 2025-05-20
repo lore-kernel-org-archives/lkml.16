@@ -1,70 +1,199 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C62B925178D;
-	Tue, 20 May 2025 15:57:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8A7D24C09C;
+	Tue, 20 May 2025 15:58:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747756670; cv=none; b=XmoOGSw64MDlOawJ470t9+6hPFb5fpuUsbMuwLiVr1W7+gjVpnsv5gWGyF8wP6DXWxaxMcmrCZUS3DiXObzScumn4Ekh8/sB9oyE3m0wVHM5EHKh+pSKMP5M/t58x76UV33Of/pOHFGYnS3dOCJIhSf1qSPPymkE8oFsXA+AADo=
+	t=1747756700; cv=none; b=briqCRjUfbllzvYbMhCUNSEWuXK6zOwdAmkx5PAqbecOiYEt85BYzWudqXLyVeNCPMhfDXpm6td6On/gtOMXkmACw7Ww7owNQ2LCUDdOw7O8fO71ZaIssorZ6BtFg+xUmZVJMbMpTKaoC8rjzVJY/gb6VpYWOxb2i4S4JAA1y9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747756670; c=relaxed/simple;
-	bh=8HEoeqGmsnu4TOM4II34Oz1U01ZgP2fZxAbjPwuTw3o=;
+	s=arc-20240116; t=1747756700; c=relaxed/simple;
+	bh=0D6zpd/zMzHiZpO1VEpRkuO+fz8DrletF6eKHu5EFbg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jA+6XPWUvCshf2aqc/cimjCyhQcjIsIKd+vGBEw8vYgW3+l2x0hSa8g6fS+HJicBKZ+CNzzPVO6YVsouC2CWuaUoX223wp+ajJCN8WhOv4s/FotgeNGpdZqKqRajYFg9KDnLNDqv5Ax9CjbPvawXc7U/yFDLQaUurPWYoW56evg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sz94cX4F; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Zj17t6lCyvzSc8p9xKNIP+TgR9L3pMIEqdSSIum7LYwTfJQElV35WP/GXZIfzz//ARjRnw3inCHavr1Qo1gbVml8eHGWKrtEhSyAWzm8q5X3P+mEiMn0KCtu0En3YCSuL7Se00saPOFlksyHzo15j6Ta2br5fmFdz6WrM3lL8x8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SJ/x9hss; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sz94cX4F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3DDFC4CEE9;
-	Tue, 20 May 2025 15:57:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SJ/x9hss"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46EF7C4CEE9;
+	Tue, 20 May 2025 15:58:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747756670;
-	bh=8HEoeqGmsnu4TOM4II34Oz1U01ZgP2fZxAbjPwuTw3o=;
+	s=k20201202; t=1747756698;
+	bh=0D6zpd/zMzHiZpO1VEpRkuO+fz8DrletF6eKHu5EFbg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Sz94cX4FWRw7YeibPYo8FWl/+9G085t01D/c/RGXguBMKBZGJJYjl/Bqd+miBYAXu
-	 4JR9f6kLduhADY/GiBqoB8XzqVwqUH3g0AC/ubCkiUnCsiACcexhyUGwrr4o2iT9Sk
-	 mP70Meo2r1zIa7jzw/fT7cNqsHPSJjcYRZS7JB2aAD084sSXWfy984whnS3T494A1G
-	 QFhVtF9i3maRz09dD4aOUxk4yabl/8Rl/eXy719piL2iYIjM0MsmLaU4qblfQt6LJs
-	 ul0zRBQnPqzLU6h/wkwAddy6FjAYVD8eWkW+PvSVV9ZM4dd2VuxywfACGYgSbK0lU7
-	 ecgHdd5Ul57wA==
-Date: Tue, 20 May 2025 12:57:47 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>
-Subject: Re: [PATCH 1/7] tools include UAPI: Sync linux/vhost.h with the
- kernel sources
-Message-ID: <aCyme7GaVBdGSTK2@x1>
-References: <20250519214126.1652491-1-acme@kernel.org>
- <20250519214126.1652491-2-acme@kernel.org>
- <cek234mjuzbh3w4jvwhpx2oundb23tmxjaa2q35ul7bu7todum@hqkjcbnf3fzf>
+	b=SJ/x9hss3iK6HAmaYJ8dQZk9o8tGYAv2XZi3YGclAF7BQ/+nf/8KswyBtYsqhazGh
+	 X3a5FvYaQ37fg8xB81gyNVyFDMOkU3pSbxBm4Z9WiUyBfEvpQ+aTt34Y0zmYBLsSXv
+	 L1vfrqIbx9/H3E6abcnhYQkEMIoqxMjoLF7WyIgKOsZrMmRDYUjfk5RuGEa0vD79d8
+	 5SgNNfRJPXLyD7SLaxv191o/YbSSB8i0pLXh56CoV1iB5NDYss0W0zm3ERAIJCUJss
+	 ld80Ix/y7BkcNmvZArTATby2CCC6xgrwQu1H07zfPon91V4jtpMz7Uj9GLgmyyff96
+	 Nw3CMA9f0XwNA==
+Date: Tue, 20 May 2025 16:58:12 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Hugo Villeneuve <hugo@hugovil.com>
+Cc: Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v2] dt-bindings: display: bridge: renesas,dsi: allow
+ properties from dsi-controller
+Message-ID: <20250520-fidelity-mooned-5d4262d0a7ef@spud>
+References: <20250520151112.3278569-1-hugo@hugovil.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="GxY0N8ktK80Cp8Ls"
+Content-Disposition: inline
+In-Reply-To: <20250520151112.3278569-1-hugo@hugovil.com>
+
+
+--GxY0N8ktK80Cp8Ls
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cek234mjuzbh3w4jvwhpx2oundb23tmxjaa2q35ul7bu7todum@hqkjcbnf3fzf>
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 20, 2025 at 09:20:04AM +0200, Stefano Garzarella wrote:
-> On Mon, May 19, 2025 at 06:41:20PM -0300, Arnaldo Carvalho de Melo wrote:
-> > From: Arnaldo Carvalho de Melo <acme@redhat.com
+On Tue, May 20, 2025 at 11:11:12AM -0400, Hugo Villeneuve wrote:
+> From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+>=20
+> Allow to inherit valid properties from the dsi-controller. This fixes the
+> following warning when adding a panel property:
+>=20
+> rzg2lc.dtb: dsi@10850000: '#address-cells', '#size-cells', 'panel@0' do n=
+ot
+>     match any of the regexes: 'pinctrl-[0-9]+'
+>     from schema $id:
+>         http://devicetree.org/schemas/display/bridge/renesas,dsi.yaml#
+>=20
+> Also add a panel property to the example.
 
-> > To get the changes in:
- 
-> >  a940e0a685575424 ("vhost: fix VHOST_*_OWNER documentation")
- 
-> Acked-by: Stefano Garzarella <sgarzare@redhat.com>
+I don't think adding the example should be in the same patch as a fix.
 
-Thanks, added to the patch,
+>=20
+> Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+> ---
+> V1 -> V2: add separate example
+> ---
+>  .../bindings/display/bridge/renesas,dsi.yaml  | 67 ++++++++++++++++++-
+>  1 file changed, 66 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/display/bridge/renesas,dsi=
+=2Eyaml b/Documentation/devicetree/bindings/display/bridge/renesas,dsi.yaml
+> index e08c24633926b..5a99d9b9635e7 100644
+> --- a/Documentation/devicetree/bindings/display/bridge/renesas,dsi.yaml
+> +++ b/Documentation/devicetree/bindings/display/bridge/renesas,dsi.yaml
+> @@ -128,7 +128,7 @@ required:
+>    - power-domains
+>    - ports
+> =20
+> -additionalProperties: false
+> +unevaluatedProperties: false
+> =20
+>  examples:
+>    - |
+> @@ -180,4 +180,69 @@ examples:
+>              };
+>          };
+>      };
+> +
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    dsi1: dsi@10860000 {
+> +        #address-cells =3D <1>;
+> +        #size-cells =3D <0>;
+> +        compatible =3D "renesas,r9a07g044-mipi-dsi", "renesas,rzg2l-mipi=
+-dsi";
+> +        reg =3D <0x10860000 0x20000>;
+> +        interrupts =3D <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>,
+> +                     <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
+> +        interrupt-names =3D "seq0", "seq1", "vin1", "rcv",
+> +                          "ferr", "ppi", "debug";
+> +        clocks =3D <&cpg CPG_MOD R9A07G044_MIPI_DSI_PLLCLK>,
+> +                 <&cpg CPG_MOD R9A07G044_MIPI_DSI_SYSCLK>,
+> +                 <&cpg CPG_MOD R9A07G044_MIPI_DSI_ACLK>,
+> +                 <&cpg CPG_MOD R9A07G044_MIPI_DSI_PCLK>,
+> +                 <&cpg CPG_MOD R9A07G044_MIPI_DSI_VCLK>,
+> +                 <&cpg CPG_MOD R9A07G044_MIPI_DSI_LPCLK>;
+> +        clock-names =3D "pllclk", "sysclk", "aclk", "pclk", "vclk", "lpc=
+lk";
+> +        resets =3D <&cpg R9A07G044_MIPI_DSI_CMN_RSTB>,
+> +                 <&cpg R9A07G044_MIPI_DSI_ARESET_N>,
+> +                 <&cpg R9A07G044_MIPI_DSI_PRESET_N>;
+> +        reset-names =3D "rst", "arst", "prst";
+> +        power-domains =3D <&cpg>;
+> +
+> +        panel@0 {
+> +            compatible =3D "rocktech,jh057n00900";
+> +            reg =3D <0>;
+> +            vcc-supply =3D <&reg_2v8_p>;
+> +            iovcc-supply =3D <&reg_1v8_p>;
+> +            reset-gpios =3D <&gpio3 13 GPIO_ACTIVE_LOW>;
+> +
+> +            port {
+> +                panel_in: endpoint {
+> +                    remote-endpoint =3D <&dsi1_out>;
+> +                };
+> +            };
+> +        };
+> +
+> +        ports {
+> +            #address-cells =3D <1>;
+> +            #size-cells =3D <0>;
+> +
+> +            port@0 {
+> +                reg =3D <0>;
+> +                dsi1_in: endpoint {
+> +                    remote-endpoint =3D <&du_out_dsi1>;
+> +                };
+> +            };
+> +
+> +            port@1 {
+> +                reg =3D <1>;
+> +                dsi1_out: endpoint {
+> +                    data-lanes =3D <1 2 3 4>;
+> +                    remote-endpoint =3D <&panel_in>;
+> +                };
+> +            };
+> +        };
+> +    };
+>  ...
+>=20
+> base-commit: 7c1a9408ce5f34ded5a85db81cf80e0975901685
+> --=20
+> 2.39.5
+>=20
 
-- Arnaldo
+--GxY0N8ktK80Cp8Ls
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaCymkwAKCRB4tDGHoIJi
+0sApAQC8C/iRVYSgNm1itU05EvPEZEBVdY6DI1FcKhilDUvTFAEAnxUxyctg9XlE
+00HssAo8Fj0oCaqOMW36C/MmRTePOQU=
+=FozJ
+-----END PGP SIGNATURE-----
+
+--GxY0N8ktK80Cp8Ls--
