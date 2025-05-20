@@ -1,88 +1,179 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D3111DFD84
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 14:35:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3F7424676B;
+	Tue, 20 May 2025 14:37:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747751755; cv=none; b=RTWwKXp51wF9UckC4LI/ea/9L6LvL+jEJQaF4/nZiBzEipHGYRCMrC6HpGGPNaiScx7nSzx6fA97tM+ahClT3bxBAHmcZpU10S2Bd3034a0/v6TodrsYlTRtEoGkVAU8fZBir0UCeeQXXRyH/GS5hSa+9I3CxHoNXRcnThqIQjc=
+	t=1747751835; cv=none; b=n64QVXYWx8Q3Y1FZq/GvteajCHkDY98i0WYck1B7PR8B5BVi8FhImklI7p88L+IZV5/Bpr/qxpLfQV38BmzFRi3q1I6bxFT4jhdbDa66s9WLALL05OoBn8+EZAEpyCxSNltxxX4WYaaFuDwslNnBmxPIKWWBJXbWpPxqvptQhtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747751755; c=relaxed/simple;
-	bh=oJBQOa2GEwHEtA5Wa1brzfL4kjnHeEJxtnJPod039Uo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hbjKqzdFf7jv+cm37TO3+Q35o0Gjw8M0NWzOWpImQ0dOId95/BVSLIpmgvUrmIsrZ3gD2cMtVerqTKRzo7OAGM9zeMkrOSeKPjh6TiJ/UxZiRbLSIsD8m1PpdNpKVc+M0Q0RdO37y1a4AHQzEmNU7ilfOOa7muh8mKa9UrD0zCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Q3Uh0ATL; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1747751835; c=relaxed/simple;
+	bh=NpHOvoz30jTvWxkTtOJChQtptjJCsdLKabk/jgfpkbc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Y4l4nIiMAk7xsM7XXeWIqDP/q+SVdA0Jw2RUO2+PyuQd4j8T/aviXQS/ZVrigD+oCNqrKtJCr8xm2HKfIHl3oZfBqvyufsOFVgY3iV2/NJYsm0+fb23ChIOvLnHkH1LugWrd2CmDkF14nAnt/wMeyZiQ7bYGiRHqD5oSr/JLmrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lrCF5EIl; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Q3Uh0ATL"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 4233440E01FA;
-	Tue, 20 May 2025 14:35:50 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id tgluREqaE9dV; Tue, 20 May 2025 14:35:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1747751746; bh=WFmTxWsVyZNK7w/tKFuaV2DiUsno6+F95Y+v9aOJP0E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Q3Uh0ATLnVP+ytWULY2ytyVSEu5P4PxtY4d1OiPEPsPDAs52G39impKzumvqeBqhp
-	 XTnju9ZbZIfEmLfFhPguEYTlWqTrtoT7yj1ln9BZnbmINoe/7ODWUtPIDkab/zwGMT
-	 adCuz2+SHRgBdDdS1DmpH3LMSPve8PZGWhhNLDZckt+m6q6mPB5JiIKz2t28tawpWT
-	 TLpEEV6HBZx2qRnQ61tZtUoBCIqk46BvTBCKpuXceCVclZDJIRmNrGiLDmvEMzoqpu
-	 PDJEbpUOWENyZlorV7hjQqHTckh5Co1h+J9ThNdT8REFsKuepW228vYj9DdIRrWey2
-	 8SIxk0C0Lxzjd6gp9EkRDeW4fje2vofthNowL966dTL0mxVhAdwL/TKvLqvfnSEjwq
-	 XC7YAIf4A0BFPop2Bl6+p2IytPZwoWH3EC/ou/k7VeEcXYTNzbYs82MbsluOWCy2H7
-	 rCCErCiI3gdlwxZdlybssw/N+wG8YYe5bhogGdwHSxIZ9e5YJQTDEN+WRSycuQflm4
-	 /pSWpTLxOjBMb5E4AC6zibU7N4OReRfSOYGdlHf1wdx5iS0Q9Rzc7CrmtQNg1DLbPS
-	 DhJyY5ezqGpsYo+xSvpY5dmY5sW+r5LnL1uIqCFR5HTfSZPEKDvarEtFiu1P8Ieujd
-	 tV7raaYr+yKVu377ti0SDzBo=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4A86540E016A;
-	Tue, 20 May 2025 14:35:38 +0000 (UTC)
-Date: Tue, 20 May 2025 16:35:32 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: "Kirill A. Shutemov" <kirill@shutemov.name>,
-	Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
-	x86@kernel.org, Ingo Molnar <mingo@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Brian Gerst <brgerst@gmail.com>
-Subject: Re: [PATCH v5 2/7] x86/mm: Use a single cache hot per-CPU variable
- to record pgdir_shift
-Message-ID: <20250520143532.GMaCyTNJqH_T2LR8q5@fat_crate.local>
-References: <20250520104138.2734372-9-ardb+git@google.com>
- <20250520104138.2734372-11-ardb+git@google.com>
- <awmpxjln22i5zmnv3wcwhzvpbbjqmhiw3onmpq66owbtdoujs5@f336cwpvlasn>
- <CAMj1kXE+2P6_y0SnmtmD=J42pe67itnr5jQs6NxjMTvV7HHp0A@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lrCF5EIl"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-73972a54919so5354933b3a.3;
+        Tue, 20 May 2025 07:37:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747751833; x=1748356633; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=dlhONOe8kjzHEf4GnqQkT/Of42VPEcZLuCZO1PPJVQo=;
+        b=lrCF5EIl03bb/2PHIkrvQPih2dMBTOh7gWABvB6ijwgIi4JptE8Bw2/ovMXrQq6NS7
+         OXsLFLBu+3uiAksh85acPSLJR8k3eevVn1F9DNYHhVTlnAvc0U8IjDj2uYKVP33CK7lt
+         0MiC+KJNXZR0ujRTCRffSrdwt1qxb3/j6MKOkgFf+/mtqD/RRHg9JSenoaTW5tZfN7dL
+         ObkWQbNeKKd/wm6kfv4/77hAKjgyqd0KvNRiV7fDOGxQaC3RYc1kBLADQzyWavI/FUtm
+         I0sc/xA+dOQdbOohca5BGwL2MPebuQ55g2we2Fd86L3CqEpHkgT5X37oGJ2VgOOooIVD
+         dqJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747751833; x=1748356633;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dlhONOe8kjzHEf4GnqQkT/Of42VPEcZLuCZO1PPJVQo=;
+        b=lAuxvYmPu3QY1XLJ1JaL0dTXMPWETp0/6kD1kSW1kMp6oEAzN+c2pWcxA9+X0qGAHr
+         1gixDNRGZWQ+wHsSZghYyWyk820BEOSnPMs8Jtg5xjf4CPEBmhNykT7XedKH/btNeEkm
+         xehpMiMYZqNC1R3RB8CON8ZL336lrawltgaYxFZLgNRWxlwdaqFUVoRnQvf8gxCku24C
+         kcCDwJMqRLO349Aivly1vUrCdU2sRH3FUN35mEM2EuMQH773swNncglW5Ofrkgs0N7Md
+         /wBcQSLspXzEh5HsaJqLN64QOkmOIaSiv+F4iw+aM6uHfyUNU+Kw25zU+u8ddqUqaTJu
+         dRBw==
+X-Forwarded-Encrypted: i=1; AJvYcCUNZk2v9cpHcCRLSqKApqif4U75PqSUaU/O2+CnHMRc0FLDY554uxhDMBs6fseMyXRYg3sIat/8Auo=@vger.kernel.org, AJvYcCUVzk2oYzYpuX9vDjTtD8ejNo/cyFbvVfKFTuxJUpaMakUOOSFrTsO7JAgJq4F7dHUggLcNuJzESfe/1OXj@vger.kernel.org, AJvYcCXMJUw1Vsg3tN2nqScL7R5pvCodlMfWAr6WwqiIO+9qYsPVK3hKrpsMZ3BAlkczDSXlYYFInfnKySrvLeL/@vger.kernel.org
+X-Gm-Message-State: AOJu0YyX5WCzOsZSWz+g5xg0KxCYcng+42G9AdXmxXtXe2wZ14t51hbX
+	bCkA0hQ/iR0cnVpc03x3QQol4DIMHIIgDF/SPDe18tV5G71hqEFU1DNJFoip3KIulRg=
+X-Gm-Gg: ASbGnctRMwheAQr0gkEYuxw3m7IzieBiRnpeYCVh8dWbWBLxll2gyZ54wSPW/SADjam
+	IwEnPMWtbN4MzjUNVp+0CaknZIpu3hq2fbILGXSQ9xkq9fJmo+yfFbWl9Q5nBvidQn7SXbFw+iG
+	JnIF6952tC6lKbLKKP3Cf8ngowrX3qTK3f8EeUGaGci0WQvb/FE3/pZShWpZudvWsCnj1iWdiTw
+	GARWp5ANt45AAmsTPhI44mpDehccc9jIu+rgFkgvYdSq/dtmU2WEQxhb0izFkAHHvfhG6wiNuJN
+	nbIXyrB7yvI2k/T+W2J3QS39rC11ooKOkv89sNo5Yj72R08PHXxnwKY70HloIT0U7+2uGL+YPV0
+	+oXpL9A==
+X-Google-Smtp-Source: AGHT+IHngVBRNUsCcZBqTb3BZacBhWqB3R/WdnqBcxzYa5uxGHUQCKHrv0wnQqRH1cITiyhcuChqrA==
+X-Received: by 2002:a05:6a21:1088:b0:215:e818:9fe5 with SMTP id adf61e73a8af0-216218e73fdmr26930787637.18.1747751832677;
+        Tue, 20 May 2025 07:37:12 -0700 (PDT)
+Received: from localhost.localdomain ([61.77.55.112])
+        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-742a98a3347sm8251439b3a.172.2025.05.20.07.37.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 07:37:12 -0700 (PDT)
+From: Taeyoung Kwon <xoduddk12345@gmail.com>
+X-Google-Original-From: Taeyoung Kwon <Taeyoung.Kwon@telit.com>
+To: Sebastian Reichel <sre@kernel.org>,
+	linux-arm-msm@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Taeyoung Kwon <Taeyoung.Kwon@telit.com>
+Subject: [PATCH] power: reset: qcom-pon: Rename variables to use generic naming
+Date: Tue, 20 May 2025 14:35:50 +0000
+Message-ID: <20250520143612.109567-1-Taeyoung.Kwon@telit.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXE+2P6_y0SnmtmD=J42pe67itnr5jQs6NxjMTvV7HHp0A@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 20, 2025 at 01:28:52PM +0200, Ard Biesheuvel wrote:
-> Are you saying we shouldn't optimize prematurely? You must be new here :-)
+As my company email adds a signature automatically,
+I am sending this from my personal Gmail account
 
-Right, but do you see __pgdir_shift on a seriously hot path to warrant this?
+---
+The qcom-pon driver was originally implemented for the PM8916 PMIC, and
+as a result, several internal variable names still refer to 'pm8916'.
+However, the driver has since been extended to support other PMICs as
+well.
 
-I'd expect this to happen the other way around, really: "Hey, pgdir_shift is
-getting accessed a lot, let's stick it somewhere where we can access it
-quickly..."
+This patch renames those variables to use more generic and consistent
+names, improving clarity and reducing confusion for non-PM8916 devices.
 
-Thx.
+Signed-off-by: Taeyoung Kwon <Taeyoung.Kwon@telit.com>
+---
+ drivers/power/reset/qcom-pon.c | 30 +++++++++++++++---------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
 
+diff --git a/drivers/power/reset/qcom-pon.c b/drivers/power/reset/qcom-pon.c
+index 1344b361a475..7e108982a582 100644
+--- a/drivers/power/reset/qcom-pon.c
++++ b/drivers/power/reset/qcom-pon.c
+@@ -19,7 +19,7 @@
+ 
+ #define NO_REASON_SHIFT			0
+ 
+-struct pm8916_pon {
++struct qcom_pon {
+ 	struct device *dev;
+ 	struct regmap *regmap;
+ 	u32 baseaddr;
+@@ -27,11 +27,11 @@ struct pm8916_pon {
+ 	long reason_shift;
+ };
+ 
+-static int pm8916_reboot_mode_write(struct reboot_mode_driver *reboot,
++static int qcom_pon_reboot_mode_write(struct reboot_mode_driver *reboot,
+ 				    unsigned int magic)
+ {
+-	struct pm8916_pon *pon = container_of
+-			(reboot, struct pm8916_pon, reboot_mode);
++	struct qcom_pon *pon = container_of
++			(reboot, struct qcom_pon, reboot_mode);
+ 	int ret;
+ 
+ 	ret = regmap_update_bits(pon->regmap,
+@@ -44,9 +44,9 @@ static int pm8916_reboot_mode_write(struct reboot_mode_driver *reboot,
+ 	return ret;
+ }
+ 
+-static int pm8916_pon_probe(struct platform_device *pdev)
++static int qcom_pon_probe(struct platform_device *pdev)
+ {
+-	struct pm8916_pon *pon;
++	struct qcom_pon *pon;
+ 	long reason_shift;
+ 	int error;
+ 
+@@ -72,7 +72,7 @@ static int pm8916_pon_probe(struct platform_device *pdev)
+ 	if (reason_shift != NO_REASON_SHIFT) {
+ 		pon->reboot_mode.dev = &pdev->dev;
+ 		pon->reason_shift = reason_shift;
+-		pon->reboot_mode.write = pm8916_reboot_mode_write;
++		pon->reboot_mode.write = qcom_pon_reboot_mode_write;
+ 		error = devm_reboot_mode_register(&pdev->dev, &pon->reboot_mode);
+ 		if (error) {
+ 			dev_err(&pdev->dev, "can't register reboot mode\n");
+@@ -85,7 +85,7 @@ static int pm8916_pon_probe(struct platform_device *pdev)
+ 	return devm_of_platform_populate(&pdev->dev);
+ }
+ 
+-static const struct of_device_id pm8916_pon_id_table[] = {
++static const struct of_device_id qcom_pon_id_table[] = {
+ 	{ .compatible = "qcom,pm8916-pon", .data = (void *)GEN1_REASON_SHIFT },
+ 	{ .compatible = "qcom,pm8941-pon", .data = (void *)NO_REASON_SHIFT },
+ 	{ .compatible = "qcom,pms405-pon", .data = (void *)GEN1_REASON_SHIFT },
+@@ -93,16 +93,16 @@ static const struct of_device_id pm8916_pon_id_table[] = {
+ 	{ .compatible = "qcom,pmk8350-pon", .data = (void *)GEN2_REASON_SHIFT },
+ 	{ }
+ };
+-MODULE_DEVICE_TABLE(of, pm8916_pon_id_table);
++MODULE_DEVICE_TABLE(of, qcom_pon_id_table);
+ 
+-static struct platform_driver pm8916_pon_driver = {
+-	.probe = pm8916_pon_probe,
++static struct platform_driver qcom_pon_driver = {
++	.probe = qcom_pon_probe,
+ 	.driver = {
+-		.name = "pm8916-pon",
+-		.of_match_table = pm8916_pon_id_table,
++		.name = "qcom-pon",
++		.of_match_table = qcom_pon_id_table,
+ 	},
+ };
+-module_platform_driver(pm8916_pon_driver);
++module_platform_driver(qcom_pon_driver);
+ 
+-MODULE_DESCRIPTION("pm8916 Power On driver");
++MODULE_DESCRIPTION("Qualcomm Power On driver");
+ MODULE_LICENSE("GPL v2");
 -- 
-Regards/Gruss,
-    Boris.
+2.49.0
 
-https://people.kernel.org/tglx/notes-about-netiquette
