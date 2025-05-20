@@ -1,85 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B003242D70;
-	Tue, 20 May 2025 14:04:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F812F37;
+	Tue, 20 May 2025 14:05:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747749899; cv=none; b=gStbrU55GBH+f0hYeaZhSGAeSX//R5sWhaRUEAHwRnyZjQEcAeK1g+qFmUztlozkDirSDwxvfsl/95gpV+vMNqztMU/fav6ubS7y6/D3aIre8W+cufM9oJu1xifasjpfU54hfI8PND0VCceb9rY9h9cvaBwfqNETohRDMhxa4HQ=
+	t=1747749924; cv=none; b=qinIm93fBfdsNfovLOFaMV9dKPLNxaS/8t90K1w67jEoV03s0FSdZK5AB+qZmGjHSdIC5CVOrz4C3aSCKFXy5NkXfICvfEbBNrYDF7BorGp9fMECI4rfENUT+TPl2G0pUxqYzJi9mTv+liPGFZa3bIOYxmUFg4sx2Q/i+IvxNh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747749899; c=relaxed/simple;
-	bh=FwTN2M9DsTfsj/6tueLnbl1Llxw38v4QaqUMi15NmgA=;
+	s=arc-20240116; t=1747749924; c=relaxed/simple;
+	bh=aFjA4hr5J+CI0Kp3gKA3bDQFHu0RiCSC/H0GYSVxbnA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eBcdjTNEFMLjDBzhDeVQjZCxkb2PzJYQ9J1peyzFp/DtfGKztMiEyX5iDNrLe2F0IRXAfc/SRPKh3sHewtlha9KhmUlDAizz+RmWY1u3YCeafPlPM8khcYg35l900UPXPZkfi3Nz1AiKrZbo0ubPhJ7HFa8/+CIkbfDht4mg0A8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ES8SmexG; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=bze7B7W+Vp8Og4/Q2ei1HalxbfjXA5uc69PCTasIUWfSrzMnfcC+BnszaevWGeeBssTE1kLiI75NbfDi1VRdPdNy3O8a7vxw70Z09gDCc8BocRAF48zheGJYBfE46OGBLfhBnNvfWBmwS2ntIAm8Pa1P05ETDDvPJBNCscZwxlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=VspSBnyQ; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ES8SmexG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3917C4CEE9;
-	Tue, 20 May 2025 14:04:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747749899;
-	bh=FwTN2M9DsTfsj/6tueLnbl1Llxw38v4QaqUMi15NmgA=;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="VspSBnyQ"
+Received: from pendragon.ideasonboard.com (179.218-130-109.adsl-dyn.isp.belgacom.be [109.130.218.179])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id EC7952EC;
+	Tue, 20 May 2025 16:04:59 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1747749900;
+	bh=aFjA4hr5J+CI0Kp3gKA3bDQFHu0RiCSC/H0GYSVxbnA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ES8SmexGvRqYBgMtzkBjOvrX8znCoPDidI0UZGzvGoeB4LDg48e4Pbi61iBWLDs+l
-	 vRwHMbBZr1dj9zKsF5t4lC+VmR7XYkv8nUYzycpmwY/LPtxMxPFPU5kmSKLGKE+ytf
-	 j/JYY/cXGPY2bd1DHz64piyGl6OT5jutJn9/54pWOyvUPGsY7rZ69SbkR+ICbTq9X6
-	 YjQ3Ouo8oynmSUZlaTNCgBUIKWPJLzcf74ZCRQYXrlif7xBV0Sw1+17+s+XCdltnw7
-	 1j2u3nI01jk9hQr0RxXck0JNmHTvm2RH3fy5aZBp6UwDQ2a6hsFmHL107VvNuyiP6p
-	 whQD/WTNnDIcQ==
-Date: Tue, 20 May 2025 15:04:54 +0100
-From: Will Deacon <will@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Nam Cao <namcao@linutronix.de>, Gabriele Monaco <gmonaco@redhat.com>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	john.ogness@linutronix.de,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v6 17/22] arm64: mm: Add page fault trace points
-Message-ID: <20250520140453.GA18711@willie-the-truck>
-References: <cover.1745999587.git.namcao@linutronix.de>
- <554038c996662282df8a9d0482ef06f8d44fccc5.1745999587.git.namcao@linutronix.de>
- <20250516140449.GB13612@willie-the-truck>
- <3E29A42D-8A6A-4342-8C60-2BEF1EDCD640@goodmis.org>
- <20250519151238.GB17177@willie-the-truck>
- <20250519120837.794f6738@batman.local.home>
+	b=VspSBnyQktAx62F++sBRhCIQrHY3QVApCMawDHNAb7OAt+yH+f47X4xsKznjuBxLg
+	 +yBhzgWmYYk4Z5svrKbV7gq1ecAEzKOB8Sw2bhyHJUQCXtJfaU9DhLFDT8TybHbgxL
+	 jlqbkAGVNh6cpphXkatdqYF8c6XcJRXDP2ciqcro=
+Date: Tue, 20 May 2025 16:05:14 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Biju Das <biju.das.jz@bp.renesas.com>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH v5 04/12] drm: renesas: rz-du: mipi_dsi: Simplify HSFREQ
+ calculation
+Message-ID: <20250520140514.GD13321@pendragon.ideasonboard.com>
+References: <20250512182330.238259-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250512182330.238259-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250519120837.794f6738@batman.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20250512182330.238259-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-On Mon, May 19, 2025 at 12:08:37PM -0400, Steven Rostedt wrote:
-> On Mon, 19 May 2025 16:12:39 +0100
-> Will Deacon <will@kernel.org> wrote:
-> 
-> > > Perf events work for perf only. My question is why isn't this a tracepoint
-> > > that perf could hook into?  
-> > 
-> > Well, the perf event came first in this case, so we're stuck with it :/
-> 
-> I wonder what effort it will take to convert perf events to tracepoints ;-)
-> 
-> Note, I'm talking about tracepoints and not trace events, where the
-> latter is exposed to tracefs and the former is not.
-> 
-> > 
-> > I was hoping we could settle for a generic helper that could emit both
-> > the trace event and the perf event (so that the ordering of the two is
-> > portable across architectures) but, judging by Nam's reply, the trace
-> > event is needed before kprobes gets a look in.
-> 
-> Perhaps we could add a helper function that does both (perf and
-> tracepoint) and hide the implementation from the code that calls it?
+Hi Prabhakar,
 
-Something like that sounds like a good idea, yes.
+Thank you for the patch.
 
-> But I'm currently still on PTO so I haven't looked at the details yet.
+On Mon, May 12, 2025 at 07:23:22PM +0100, Prabhakar wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> 
+> Simplify the high-speed clock frequency (HSFREQ) calculation by removing
+> the redundant multiplication and division by 8. The updated equation:
+> 
+>     hsfreq = (mode->clock * bpp) / (dsi->lanes);
 
-Enjoy!
+You can drop the parentheses around the second factor. You can actuall
+drop all prentheses.
 
-Will
+> 
+> produces the same result while improving readability and clarity.
+> 
+> Additionally, update the comment to clarify the relationship between HS
+> clock bit frequency, HS byte clock frequency, and HSFREQ.
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+> ---
+> v4->v5:
+> - No changes
+> 
+> v3->v4:
+> - No changes
+> 
+> v2->v3:
+> - No changes
+> 
+> v1->v2:
+> - Added Reviewed-by tag from Biju
+> ---
+>  drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
+> index ec8baecb9ba5..c5f698cd74f1 100644
+> --- a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
+> +++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
+> @@ -277,10 +277,10 @@ static int rzg2l_mipi_dsi_startup(struct rzg2l_mipi_dsi *dsi,
+>  	 *       hsclk: DSI HS Byte clock frequency (Hz)
+>  	 *       lanes: number of data lanes
+>  	 *
+> -	 * hsclk(bit) = hsclk(byte) * 8
+> +	 * hsclk(bit) = hsclk(byte) * 8 = hsfreq
+>  	 */
+>  	bpp = mipi_dsi_pixel_format_to_bpp(dsi->format);
+> -	hsfreq = (mode->clock * bpp * 8) / (8 * dsi->lanes);
+> +	hsfreq = (mode->clock * bpp) / dsi->lanes;
+
+You can drop the parentheses here too.
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+
+>  
+>  	ret = pm_runtime_resume_and_get(dsi->dev);
+>  	if (ret < 0)
+
+-- 
+Regards,
+
+Laurent Pinchart
