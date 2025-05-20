@@ -1,43 +1,43 @@
 Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCC862571CA;
-	Tue, 20 May 2025 03:26:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AFCD2571D2;
+	Tue, 20 May 2025 03:26:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747711571; cv=none; b=aJEWHuCUU+Q7TZkIPjKPv+Y+qFZBaj2Gape8PNpOUCOisQoi9oFMgLOdJtLdRx5N74kguVex/i4XKdV89G9Mw5agbbjAWRYogT2L7UQBU/JOIGKy5bY0BNnv+drsU0OZyCIYbeUi/F1Y196nrijuZ3ikjhZkoENUZ/8zx22KZV0=
+	t=1747711571; cv=none; b=B0MsF6W77Uc9/5iFq9Ba2igjpnbK93WvN5o/W94r+X8qQBMmDlnYdhP0l9ncIDOFxmUWBigchyURIDQxdwlQ4p+V8xV+B53Y6pptwsJmq9h/6VzbBrHEQlI78lqUrv1xfUhLhJKLfaEvP/h4NYzN3EXLmYTy8sOMzoXRt9CpKgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747711571; c=relaxed/simple;
-	bh=X8/nxAlnKfmIilukc3uLUJEJN3++P9YxcsunTFAgtag=;
+	bh=O5WlLJx2+c4wwI4hD4aEpExVS165ZV3Rb0A7jWj6nqc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=B2zr+Ct0Oao7gENIrII0f/BTofu6plBQnOrpdEQ54EYVfw6qoeY7HPfhQim/SYVfk8HsOZvzUWmqFrBwYdxclfKVFCbuWxTgxty0/UedDQVDFgGWFpWHKxOpvDYJpJN1UK65MAtVE42lOEhL/NI5m0ss+0nWSQO1OInm2xv5Wmo=
+	 MIME-Version; b=uPRQZpT3c3Yk/uvfRvJxnEuXSQ7zV2LZWNytVuWTcIlqPWFhLor59Sc9D2+/JTmC6P3OCJoiH0IgnqHlMYllJYgZOYGLxs7iVYL/ze/DHWU0V+hsMUaYkeZVSysm047llfeIxTzlV/dweZSxmIwTFCwDz1sGVSYUcuidBW35x+A=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 26632a3c352a11f0b29709d653e92f7d-20250520
+X-UUID: 23f5f7fc352a11f0b29709d653e92f7d-20250520
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:8315f677-45c3-4149-ac0e-359818b0b315,IP:0,U
-	RL:0,TC:0,Content:-25,EDM:-25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACT
-	ION:release,TS:-50
-X-CID-META: VersionHash:6493067,CLOUDID:c6af21dfcff07104b289def6906515e3,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:1,IP:n
-	il,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LE
-	S:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-O-INFO: VERSION:1.1.45,REQID:37b74419-d921-4320-accf-1d236675eb27,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:6493067,CLOUDID:1597e8b14a6d409660efa3b5747038bb,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3,IP:
+	nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,L
+	ES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
 X-CID-BVR: 0
 X-CID-BAS: 0,_,0,_
 X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 26632a3c352a11f0b29709d653e92f7d-20250520
+X-UUID: 23f5f7fc352a11f0b29709d653e92f7d-20250520
 Received: from mail.kylinos.cn [(10.44.16.175)] by mailgw.kylinos.cn
 	(envelope-from <zhangzihuan@kylinos.cn>)
 	(Generic MTA)
-	with ESMTP id 76439178; Tue, 20 May 2025 11:25:59 +0800
+	with ESMTP id 1874766652; Tue, 20 May 2025 11:25:55 +0800
 Received: from mail.kylinos.cn (localhost [127.0.0.1])
-	by mail.kylinos.cn (NSMail) with SMTP id 8C5CFE003505;
-	Tue, 20 May 2025 11:25:59 +0800 (CST)
-X-ns-mid: postfix-682BF647-439030297
+	by mail.kylinos.cn (NSMail) with SMTP id 79925E003505;
+	Tue, 20 May 2025 11:25:55 +0800 (CST)
+X-ns-mid: postfix-682BF643-334541295
 Received: from localhost.localdomain (unknown [172.25.120.24])
-	by mail.kylinos.cn (NSMail) with ESMTPA id 6E85AE006100;
-	Tue, 20 May 2025 11:25:58 +0800 (CST)
+	by mail.kylinos.cn (NSMail) with ESMTPA id 57878E006100;
+	Tue, 20 May 2025 11:25:54 +0800 (CST)
 From: Zihuan Zhang <zhangzihuan@kylinos.cn>
 To: rafael@kernel.org,
 	len.brown@intel.com,
@@ -53,9 +53,9 @@ Cc: linux-pm@vger.kernel.org,
 	zhangguopeng@kylinos.cn,
 	linux@weissschuh.net,
 	Zihuan Zhang <zhangzihuan@kylinos.cn>
-Subject: [PATCH 3/3] PM / Sleep: Replace mutex_trylock(&system_transition_mutex) with try_lock_system_sleep()
-Date: Tue, 20 May 2025 11:25:45 +0800
-Message-Id: <20250520032545.29558-4-zhangzihuan@kylinos.cn>
+Subject: [PATCH 1/3] PM / Sleep: Replace mutex_[un]lock(&system_transition_mutex) with [un]lock_system_sleep()
+Date: Tue, 20 May 2025 11:25:43 +0800
+Message-Id: <20250520032545.29558-2-zhangzihuan@kylinos.cn>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250520032545.29558-1-zhangzihuan@kylinos.cn>
 References: <20250520032545.29558-1-zhangzihuan@kylinos.cn>
@@ -67,120 +67,106 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch replaces the remaining instances of mutex_trylock(&system_tran=
-sition_mutex)
-that semantically intend to *try* acquiring the lock with the newly intro=
-duced
-try_lock_system_sleep(), which provides a clearer abstraction and avoids =
-direct
-mutex operations in higher-level PM logic.
+These function currently calls mutex_lock(&system_transition_mutex) and
+mutex_unlock() directly to protect the resume-from-disk operation from
+concurrent suspend/resume transitions.
 
-This improves code readability, keeps synchronization logic consistent ac=
-ross
-all system sleep paths, and helps prepare for future enhancements or lock
-substitutions (e.g., lockdep annotations or switching to a different lock
-primitive).
+However, this is inconsistent with the rest of the power management
+code, where lock_system_sleep() and unlock_system_sleep() are used to
+wrap suspend/hibernate transitions. These wrapper functions not only
+acquire system_transition_mutex, but also set PF_NOFREEZE for the
+calling thread, ensuring that it is not subject to freezing during
+suspend.
+
+This change replaces the raw mutex_lock()/unlock() with the standard
+lock_system_sleep()/unlock_system_sleep() wrapper pair, bringing it in
+line with the locking pattern used by hibernate(), pm_suspend(), and
+other similar entry points.
+
+Benefits of this change:
+
+ - Ensures the thread performing software resume is marked PF_NOFREEZE,
+   which is important during early resume paths where freezing is
+active.
+ - Improves code clarity by making the locking intent more explicit.
+ - Unifies suspend/hibernate locking style across the kernel power
+   subsystem.
+ - Reduces the risk of future maintenance issues due to inconsistent
+   locking.
+
+No functional change is expected at runtime, since the lock order and
+coverage remain the same. This is a straightforward cleanup and
+consistency fix.
 
 Signed-off-by: Zihuan Zhang <zhangzihuan@kylinos.cn>
 ---
- kernel/power/hibernate.c | 6 ++++--
- kernel/power/suspend.c   | 7 +++++--
- kernel/power/user.c      | 6 ++++--
- 3 files changed, 13 insertions(+), 6 deletions(-)
+ kernel/power/hibernate.c | 5 +++--
+ kernel/reboot.c          | 5 +++--
+ 2 files changed, 6 insertions(+), 4 deletions(-)
 
 diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
-index cfaa92f24857..c06af4008183 100644
+index 23c0f4e6cb2f..cfaa92f24857 100644
 --- a/kernel/power/hibernate.c
 +++ b/kernel/power/hibernate.c
-@@ -1448,9 +1448,11 @@ static const char * const comp_alg_enabled[] =3D {
- static int hibernate_compressor_param_set(const char *compressor,
- 		const struct kernel_param *kp)
- {
-+	unsigned int sleep_flags;
- 	int index, ret;
+@@ -988,6 +988,7 @@ static int __init find_resume_device(void)
 =20
--	if (!mutex_trylock(&system_transition_mutex))
-+	sleep_flags =3D try_lock_system_sleep();
-+	if (!sleep_flags)
- 		return -EBUSY;
-=20
- 	index =3D sysfs_match_string(comp_alg_enabled, compressor);
-@@ -1463,7 +1465,7 @@ static int hibernate_compressor_param_set(const cha=
-r *compressor,
- 		ret =3D index;
- 	}
-=20
--	mutex_unlock(&system_transition_mutex);
-+	unlock_system_sleep(sleep_flags);
-=20
- 	if (ret)
- 		pr_debug("Cannot set specified compressor %s\n",
-diff --git a/kernel/power/suspend.c b/kernel/power/suspend.c
-index 8eaec4ab121d..7d39f1ae9711 100644
---- a/kernel/power/suspend.c
-+++ b/kernel/power/suspend.c
-@@ -564,6 +564,7 @@ static void suspend_finish(void)
-  */
- static int enter_state(suspend_state_t state)
+ static int software_resume(void)
  {
 +	unsigned int sleep_flags;
  	int error;
 =20
- 	trace_suspend_resume(TPS("suspend_enter"), state, true);
-@@ -577,7 +578,9 @@ static int enter_state(suspend_state_t state)
- 	} else if (!valid_state(state)) {
- 		return -EINVAL;
- 	}
--	if (!mutex_trylock(&system_transition_mutex))
-+
-+	sleep_flags =3D try_lock_system_sleep();
-+	if (!sleep_flags)
- 		return -EBUSY;
+ 	pm_pr_dbg("Hibernation image partition %d:%d present\n",
+@@ -995,7 +996,7 @@ static int software_resume(void)
 =20
- 	if (state =3D=3D PM_SUSPEND_TO_IDLE)
-@@ -609,7 +612,7 @@ static int enter_state(suspend_state_t state)
- 	pm_pr_dbg("Finishing wakeup.\n");
- 	suspend_finish();
+ 	pm_pr_dbg("Looking for hibernation image.\n");
+=20
+-	mutex_lock(&system_transition_mutex);
++	sleep_flags =3D lock_system_sleep();
+ 	error =3D swsusp_check(true);
+ 	if (error)
+ 		goto Unlock;
+@@ -1050,7 +1051,7 @@ static int software_resume(void)
+ 	hibernate_release();
+ 	/* For success case, the suspend path will release the lock */
   Unlock:
 -	mutex_unlock(&system_transition_mutex);
 +	unlock_system_sleep(sleep_flags);
+ 	pm_pr_dbg("Hibernation image not present or could not be loaded.\n");
  	return error;
- }
-=20
-diff --git a/kernel/power/user.c b/kernel/power/user.c
-index 3f9e3efb9f6e..a41fb48b3f96 100644
---- a/kernel/power/user.c
-+++ b/kernel/power/user.c
-@@ -249,6 +249,7 @@ static int snapshot_set_swap_area(struct snapshot_dat=
-a *data,
- static long snapshot_ioctl(struct file *filp, unsigned int cmd,
- 							unsigned long arg)
+  Close_Finish:
+diff --git a/kernel/reboot.c b/kernel/reboot.c
+index ec087827c85c..68ac7e377efb 100644
+--- a/kernel/reboot.c
++++ b/kernel/reboot.c
+@@ -729,6 +729,7 @@ SYSCALL_DEFINE4(reboot, int, magic1, int, magic2, uns=
+igned int, cmd,
+ 		void __user *, arg)
  {
+ 	struct pid_namespace *pid_ns =3D task_active_pid_ns(current);
 +	unsigned int sleep_flags;
- 	int error =3D 0;
- 	struct snapshot_data *data;
- 	loff_t size;
-@@ -266,7 +267,8 @@ static long snapshot_ioctl(struct file *filp, unsigne=
-d int cmd,
- 	if (!capable(CAP_SYS_ADMIN))
- 		return -EPERM;
+ 	char buffer[256];
+ 	int ret =3D 0;
 =20
--	if (!mutex_trylock(&system_transition_mutex))
-+	sleep_flags =3D try_lock_system_sleep();
-+	if (!sleep_flags)
- 		return -EBUSY;
-=20
- 	lock_device_hotplug();
-@@ -417,7 +419,7 @@ static long snapshot_ioctl(struct file *filp, unsigne=
-d int cmd,
+@@ -761,7 +762,7 @@ SYSCALL_DEFINE4(reboot, int, magic1, int, magic2, uns=
+igned int, cmd,
+ 		cmd =3D LINUX_REBOOT_CMD_HALT;
  	}
 =20
- 	unlock_device_hotplug();
+-	mutex_lock(&system_transition_mutex);
++	sleep_flags =3D lock_system_sleep();
+ 	switch (cmd) {
+ 	case LINUX_REBOOT_CMD_RESTART:
+ 		kernel_restart(NULL);
+@@ -811,7 +812,7 @@ SYSCALL_DEFINE4(reboot, int, magic1, int, magic2, uns=
+igned int, cmd,
+ 		ret =3D -EINVAL;
+ 		break;
+ 	}
 -	mutex_unlock(&system_transition_mutex);
 +	unlock_system_sleep(sleep_flags);
-=20
- 	return error;
+ 	return ret;
  }
+=20
 --=20
 2.25.1
 
