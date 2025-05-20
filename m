@@ -1,204 +1,153 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+Received: from mail-qt1-f193.google.com (mail-qt1-f193.google.com [209.85.160.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 601C82B9A9
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 17:17:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 842532B9A9
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 17:18:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747761454; cv=none; b=O9zABfb+0r2jnnrwhFcOQu39Usojnf6Tmiv9/F9nFAvUAc67xUiTOk1EJluE+h+sxV7XVyPmR1KAvHcDhF+tAhd+jL4pE+YHXRwkVUxJS9JpBy8rQ5Bb2uxlQeFNP/98lGWP8SlAlIalvU94GLvuBUyAzLz71fIumOL2oVKbqkY=
+	t=1747761504; cv=none; b=emKufElaFH5WgIei/9dxqKDsLI/soxilpK0looNfZ8R98X3Lv6iO0W6F8He5CODqyAxllFcEkGfUoMWqY66Z0rkq8I0LLZxn4FLWXoejLSgOnKw/LjwhU+g0n0New6sdvlH6V8OTmZMxXCqlOvfulPkNWuEBRvVpnjlBWwItaJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747761454; c=relaxed/simple;
-	bh=sbBPrcKlpzkqf+EvXrK5q9JFazNaHCusAXL+IFPG8/A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=T8j96372vnz5CR1Ou9F7BDbGFICZXjNnUqvz6VWH1oLLjz6sxLNfVnyqcRNhFgZk/HqTkFqUr9A75fcmKaJxAqWw9Q3UP1E3jqa35WGNRVzGKn4lN/FTOah58C6nJiw/ufhbJwvHF6ybdDOgz4l4o64PwdOHdq72V3xqCOFQ1CY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ipDHD+9o; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747761504; c=relaxed/simple;
+	bh=uLTgLS7K1OU9M7z/y2hLRUWE61DRWKY0bmXdHAIACKw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OHVfqwWke5UImsWt2g8x0PvM1oDSLpto7rs8NM6u83Al4+jBxiFzFMcJRHwGCVY0GgJo1gT8mFvmxXq5C0stHDggNY/slQDlLKVZiAZmgsPxxSABVgza5F1vIe3jR8OIh/xtOK/pcDN1PRTC5jyK1jGj6jxiIs1Lru8kd0/0wIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=SkCL/T6Y; arc=none smtp.client-ip=209.85.160.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ipDHD+9o"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b1f7357b5b6so3907296a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 10:17:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="SkCL/T6Y"
+Received: by mail-qt1-f193.google.com with SMTP id d75a77b69052e-476ae781d21so57846221cf.3
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 10:18:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747761450; x=1748366250; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=m5sVT6y4YSnGlKGqP6gXqGwI3RzkKYcVE2Jf3DOuL9k=;
-        b=ipDHD+9oZkAe/fs9yTZcjn7prXbkHXQRwtRuf1WgXh9r7lBsfCXkNx29YEN3N5ImE+
-         X47n4qyXxBqBoxtJFW3bnB6GjQ6MTOxiV1MjXPSOYejDdSRMClIT2u+fTQtQ7tMfUJLD
-         Fp5TpXvrfLp7zrfkzggWkqYzEf61X2n/QPPVl9RD3bfQVCirb2CoUVlrKb5S4gKiRN96
-         7SPskvnvK2Z6lSGabrj+5pdrR7kpAdvgU/Y0hV3gQKEar8HFcSNEPQVXGyARIreZdMU6
-         xQPfa4AMGXYy5c7p9yhu1DFI4N/Rlp8tsZYt/GtfmvRodgSDi+2/woA0DQF0Kh8O/5ao
-         nBOg==
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1747761499; x=1748366299; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=b8g+Wzhfz5B8szoWnxmhLEqR559LReTGMLzbHkIJgXM=;
+        b=SkCL/T6YdcZyCcjlZYsMp3keLD8v8pEDnyI/g0YncLs43pFtwKCTyRLQWdrIArk79u
+         57kLU7syXpuCPraJ/oHloA5klToZbCPDxX/lgGEC5H53dcVBTPJPis6/u3jg8y9aWh/U
+         2NhB+uxtyu0WVtiwJxaqUs9jUcjwwGPdj8D7yFS+Le4BSg6KcXgrnbS3A8qp4xsZm65B
+         9ALO06YjRMUMUThPnOsIIE4dBCptQGgWUM++kQuu2tnZl5e/g/7nSa7jcVgxlJ0zqRFt
+         Jptq/Ykk7NeWay0PF9tC/1iBw9/Ph0TEkAyXWobWMZ5F/ne3cPJsoDE/GACf7nDdHmzR
+         pGEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747761450; x=1748366250;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=m5sVT6y4YSnGlKGqP6gXqGwI3RzkKYcVE2Jf3DOuL9k=;
-        b=PSr5gjdg0QXx/o1+HafN2iQVt4nZG1p40cHzTEJF5SGBO7fslt+8C0ISYlUmAI90Xr
-         FrjIZGWGyEAMA5K1jnlYC+s96IVnpKlqmkUs/4hMWnQSHqcWYvFWY7fXwUOSFJLACM/g
-         T4+/cS+6Gj4gISxtyWfrudKMqSMGQrBO2ixZEUSCiVzL953izD7zTvtGJA2RKLSlysv6
-         8sFB89T09uzmrtO5Ouh9LjbuaSibBgTA5JEva2aKPwQafvMjLpZqOrZCBwlJQYUMY+Mw
-         wQk4ZPx78v6JMkEK4YkJHvwu2cCLqLP1kHy5jV7GXjCyBakUKfUHqgDr7d9i/lmMrI43
-         cD3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXHKAzSY3R1QWm0rVzRGMY1S/wNZ+3RyPl7NliDzpBOBeeA8egkiwlgCr2YZR3f88vDf2sGo2vch9SpfRs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YylxvJ1t3H4qb9vIvxnIZ8I3qa9kOk4gv/YX2CMhtLmzs57fM54
-	r/yNBzyXyEjMAwy9sTs2LflqBnp7p7Legon21dRUWY09w4QytsRvzpbNbn2mB5T3EVvjWpWJsKU
-	O1+/PpmgGLpgXJpv+yqGhFzWpyQyQDD7lTQtnaiHa
-X-Gm-Gg: ASbGncuG5/YK9UR4W/uf/OB7H02V4WyzCU1ArlrpGRecbCMvmgJxz+ziQgEnxrwpGTc
-	q8YVEKXnxyUT41syMCN9KY/F9zXSDcTEEHG4+ZryXs3YfwBTdnFBGbDgGLG9rFhv2TVIxM4DzDa
-	/hFyj4CF2kafN2XHq99p6Dk1dKoF5qFUeCQNonk0Su9oF1tVfQf+3oqdDwCFPJk9FFR/wOem/Mp
-	4BPsY9GhPbcuqI=
-X-Google-Smtp-Source: AGHT+IHsHx+xZBgbaLrxW+q7w4hfzF7ci4/OH6M0XOp3DOGWGM+CCsEa6HV3QBQDepNNYYuHQ+OUh/rEI7VYOmFwA/E=
-X-Received: by 2002:a17:902:e885:b0:22e:421b:49b1 with SMTP id
- d9443c01a7336-231d45bfc34mr279967565ad.48.1747761450362; Tue, 20 May 2025
- 10:17:30 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747761499; x=1748366299;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=b8g+Wzhfz5B8szoWnxmhLEqR559LReTGMLzbHkIJgXM=;
+        b=mcamyNutC3RrUt2TOSEvXdgO/5TKaYsDvqeGjMT0WtkFhkyh9tGgaJfyPh6g1DgC5a
+         7hj4mkWTjyYg4vD4UHBB7KVRPiaOJrvKcAWikBT4rVptf3LfalHbujSQk6VjftVZjl9b
+         eGaKKJWXQ4Je8ITdEt+GUX1wVknarYcPR677IXo9m0pX2Cw4oxHCI6sGBqWXGLSaLVL1
+         QtBB/EQJMNK54YxuOJvqPj6Af3BX4kIWgwZJ95WZiBdAlQVm0eTJzZ6xpne87kGkQRTv
+         4BKp+yM/OJls2chkV0wbRFuf0fmru+JqDA31lueq6DfUSR5PEsLuajGhE8Vs66OsBWBZ
+         B6dg==
+X-Forwarded-Encrypted: i=1; AJvYcCVZiQdLTPgZ3B90XWul7mIgXKYagPwsWMekUz/WMKLH8Q1UwzZ23C06gDe1UqD/OIFyKLm6fMmyk6EhrZk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVtbZuhKNfPL5DhNkiLZ1ImkqRP0aRMJVtwFltVCg7OE8eBjDH
+	PqM4mv+f+zPoze5UaQMYZFPA0eIInX+YIZdG2SiUXU50B4avKCXIUzXT80TRvpHLVsU=
+X-Gm-Gg: ASbGncsefHPYcnZrfrOjWfgngRGVXCrUwea9bte3z13IaUIBDr3/D6Oed4d/IQonetI
+	VejsCcyBM+AImJ/n7gKgEkeH11UIpSv6o7rgK1hKajz1F23Mc0qIyuZB8uJ8bHLv6xDhS8y9B5X
+	4HSPKN2EArmwpyBb1rJVkhhucqjARbuVCqkn2MbcNQaWvbBM/5htWQFa1HaCI0IMFEo4YlDSi5o
+	6r4F0GicsoscTQtNsJnCeybBFvkSZdVS5wUMgekP0QMZlkDUW62dDce3fC0pGToLS5zojUVQiHd
+	ZkvJxMCR/QqqRA1sadpYBEtG+46ndtsXaam97lY7OuwLD/AIEQ==
+X-Google-Smtp-Source: AGHT+IF3vxJLFoWuPMLOAda2AzUWAGYkc1HWDEx6oFnY0D+0fW2Y+u+FWJ1vkeSFfmD0B6aa9ewRRQ==
+X-Received: by 2002:a05:622a:1e0b:b0:476:7eca:57e7 with SMTP id d75a77b69052e-494b07dcd9emr285134001cf.26.1747761498978;
+        Tue, 20 May 2025 10:18:18 -0700 (PDT)
+Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
+        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-494ae3f922csm73377711cf.26.2025.05.20.10.18.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 10:18:18 -0700 (PDT)
+Date: Tue, 20 May 2025 13:18:14 -0400
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: Usama Arif <usamaarif642@gmail.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>, shakeel.butt@linux.dev,
+	vlad.wing@gmail.com, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, kernel-team@meta.com
+Subject: Re: [PATCH 1/2] mm: slub: allocate slab object extensions
+ non-contiguously
+Message-ID: <20250520171814.GC773385@cmpxchg.org>
+References: <20250520122547.1317050-1-usamaarif642@gmail.com>
+ <3divtzm4iapcxwbzxlmfmg3gus75n3rqh43vkjnog456jm2k34@f3rpzvcfk3p6>
+ <6d015d91-e74c-48b3-8bc3-480980a74f9b@gmail.com>
+ <b696e3c2-3d96-4729-9e07-87bb644f145b@gmail.com>
+ <CAJuCfpEL__bRSbVWATs0qbNF3E2ZS_n7banhRxU01FFT2aTPAQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <680809f3.050a0220.36a438.0003.GAE@google.com> <tencent_55ACA45C1762977206C3B376C36BA96B8305@qq.com>
- <20250516193122.GS2023217@ZenIV> <20250516232046.GT2023217@ZenIV>
-In-Reply-To: <20250516232046.GT2023217@ZenIV>
-From: Aleksandr Nogikh <nogikh@google.com>
-Date: Tue, 20 May 2025 19:17:17 +0200
-X-Gm-Features: AX0GCFt0jmQ7RJlWUHtJOlQZuoQ26GKGxmJ1lhYT3ZEgehcfVvrGpSVJNfVcSOQ
-Message-ID: <CANp29Y55bJ_3qg+y4jgwuUu7nwvtrfhFEvStzFuoWzS=Xm=3uw@mail.gmail.com>
-Subject: Re: [pox on syzbot - again][exfat] exfat_mkdir() breakage on
- corrupted image
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Edward Adam Davis <eadavis@qq.com>, syzbot+321477fad98ea6dd35b7@syzkaller.appspotmail.com, 
-	brauner@kernel.org, jack@suse.cz, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
-	syzkaller <syzkaller@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJuCfpEL__bRSbVWATs0qbNF3E2ZS_n7banhRxU01FFT2aTPAQ@mail.gmail.com>
 
-Hi Al,
-
-I've only just seen this email as it landed in my Spam folder for some reas=
-on.
-
-On Sat, May 17, 2025 at 1:20=E2=80=AFAM Al Viro <viro@zeniv.linux.org.uk> w=
-rote:
->
-> On Fri, May 16, 2025 at 08:31:22PM +0100, Al Viro wrote:
-> > On Wed, May 14, 2025 at 06:39:40AM +0800, Edward Adam Davis wrote:
-> > > In the reproducer, when calling renameat2(), olddirfd and newdirfd pa=
-ssed
-> > > are the same value r0, see [1]. This situation should be avoided.
-> > >
-> > > [1]
-> > > renameat2(r0, &(0x7f0000000240)=3D'./bus/file0\x00', r0, &(0x7f000000=
-01c0)=3D'./file0\x00', 0x0)
-> > >
-> > > Reported-by: syzbot+321477fad98ea6dd35b7@syzkaller.appspotmail.com
-> > > Closes: https://syzkaller.appspot.com/bug?extid=3D321477fad98ea6dd35b=
-7
-> > > Tested-by: syzbot+321477fad98ea6dd35b7@syzkaller.appspotmail.com
-> > > Signed-off-by: Edward Adam Davis <eadavis@qq.com>
-> > > ---
-> > >  fs/namei.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/fs/namei.c b/fs/namei.c
-> > > index 84a0e0b0111c..ff843007ca94 100644
-> > > --- a/fs/namei.c
-> > > +++ b/fs/namei.c
-> > > @@ -5013,7 +5013,7 @@ int vfs_rename(struct renamedata *rd)
-> > >     struct name_snapshot old_name;
-> > >     bool lock_old_subdir, lock_new_subdir;
-> > >
-> > > -   if (source =3D=3D target)
-> > > +   if (source =3D=3D target || old_dir =3D=3D target)
-> > >             return 0;
+On Tue, May 20, 2025 at 08:20:38AM -0700, Suren Baghdasaryan wrote:
+> On Tue, May 20, 2025 at 7:13 AM Usama Arif <usamaarif642@gmail.com> wrote:
 > >
-> > What the hell?
 > >
-> > 1) olddirfd and newdirfd have nothing to do with vfs_rename() - they ar=
-e
-> > bloody well gone by the time we get there.
 > >
-> > 2) there's nothing wrong with having the same value passed in both -
-> > and it's certainly not a "quietly do nothing".
+> > On 20/05/2025 14:46, Usama Arif wrote:
+> > >
+> > >
+> > > On 20/05/2025 14:44, Kent Overstreet wrote:
+> > >> On Tue, May 20, 2025 at 01:25:46PM +0100, Usama Arif wrote:
+> > >>> When memory allocation profiling is running on memory bound services,
+> > >>> allocations greater than order 0 for slab object extensions can fail,
+> > >>> for e.g. zs_handle zswap slab which will be 512 objsperslab x 16 bytes
+> > >>> per slabobj_ext (order 1 allocation). Use kvcalloc to improve chances
+> > >>> of the allocation being successful.
+> > >>>
+> > >>> Signed-off-by: Usama Arif <usamaarif642@gmail.com>
+> > >>> Reported-by: Vlad Poenaru <vlad.wing@gmail.com>
+> > >>> Closes: https://lore.kernel.org/all/17fab2d6-5a74-4573-bcc3-b75951508f0a@gmail.com/
+> > >>> ---
+> > >>>  mm/slub.c | 2 +-
+> > >>>  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >>>
+> > >>> diff --git a/mm/slub.c b/mm/slub.c
+> > >>> index dc9e729e1d26..bf43c403ead2 100644
+> > >>> --- a/mm/slub.c
+> > >>> +++ b/mm/slub.c
+> > >>> @@ -1989,7 +1989,7 @@ int alloc_slab_obj_exts(struct slab *slab, struct kmem_cache *s,
+> > >>>     gfp &= ~OBJCGS_CLEAR_MASK;
+> > >>>     /* Prevent recursive extension vector allocation */
+> > >>>     gfp |= __GFP_NO_OBJ_EXT;
+> > >>> -   vec = kcalloc_node(objects, sizeof(struct slabobj_ext), gfp,
+> > >>> +   vec = kvcalloc_node(objects, sizeof(struct slabobj_ext), gfp,
+> > >>>                        slab_nid(slab));
+> > >>
+> > >> And what's the latency going to be on a vmalloc() allocation when we're
+> > >> low on memory?
+> > >
+> > > Would it not be better to get the allocation slighly slower than to not get
+> > > it at all?
 > >
-> > 3) the check added in this patch is... odd.  You are checking essentica=
-lly
-> > for rename("foo/bar", "foo").  It should fail (-ENOTEMPTY or -EINVAL, d=
-epending
-> > upon RENAME_EXCHANGE in flags) without having reached vfs_rename().
->
-> 4) it's definitely an exfat bug, since we are getting
->         old_dentry->d_parent !=3D target
->         old_dentry->d_parent->d_inode =3D=3D target->d_inode
->         S_ISDIR(target->d_inode->i_mode)
-> All objects involved are on the same super_block, which has "exfat" for
-> ->s_type->name, so it's exfat ending up with multiple dentries for
-> the same directory inode, and once that kind of thing has happened,
-> the system is FUBAR.
->
-> As for the root cause, almost certainly their ->mkdir() is deciding
-> that it has just created a new inode - and ending up with existing one,
-> already in icache and already with a dentry attached to it.
->
-> <adds BUG_ON(!hlist_empty(&inode->i_dentry)) into exfat_mkdir()>
->
->    [   84.780875] exFAT-fs (loop0): Volume was not properly unmounted. So=
-me data may be corrupt. Please run fsck.
->    [   84.781411] exFAT-fs (loop0): Medium has reported failures. Some da=
-ta may be lost.
->    [   84.782209] exFAT-fs (loop0): failed to load upcase table (idx : 0x=
-00010000, chksum : 0xe62de5da, utbl_chksum : 0xe619d30d)
->    [   84.783272] ------------[ cut here ]------------
->    [   84.783546] kernel BUG at fs/exfat/namei.c:881!
->
-> ... and there we go.  exfat_mkdir() getting an existing in-core inode
-> and attaching an alias to it, with expected fun results.
->
-> For crying out loud, how many times do syzbot folks need to be told that
-> getting report to attention of relevant filesystem folks is important?
->
-> Subject: [syzbot] [fs?] INFO: task hung in vfs_rename (2)
->
-> mentionings of anything exfat-related: 0.
->
-> Cc: brauner@kernel.org, jack@suse.cz, linux-fsdevel@vger.kernel.org,
->          linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
->                  viro@zeniv.linux.org.uk
->
-> mentionings of anything exfat-related: 0.
->
-> In message body:
->   fsck result: failed (log: https://syzkaller.appspot.com/x/fsck.log?x=3D=
-12655204580000)
->
-> Why, that does sound like some filesystem bug might be involved
-> and presumably the damn thing knows which type had it been.
-> <start browser, cut'n'paste the sodding link>
-> ... and the very first line is
-> fsck.exfat -n exited with status code 4
->
-> Result: 3 weeks later it *STILL* hasn't reached the relevant fs
-> maintainers.  Could that be a sufficient evidence to convince the
-> fine fellows working on syzbot that "you just need to click a few
-> links" DOES NOT WORK?
->
-> We'd been there several times already.  For relatively polite example,
-> see https://lore.kernel.org/all/Y5ZDjuSNuSLJd8Mn@ZenIV/ - I can't be arse=
-d
-> to explain that again and again, and you don't seem to mind following
-> links in email, so...
->
+> > Also a majority of them are less than 1 page. kvmalloc of less than 1 page
+> > falls back to kmalloc. So vmalloc will only be on those greater than 1 page
+> > size, which are in the minority (for e.g. zs_handle, request_sock_subflow_v6,
+> > request_sock_subflow_v4...).
+> 
+> Not just the majority. For all of these kvmalloc allocations kmalloc
+> will be tried first and vmalloc will be used only if the former
+> failed: https://elixir.bootlin.com/linux/v6.14.7/source/mm/util.c#L665
+> That's why I think this should not regress normal case when slab has
+> enough space to satisfy the allocation.
 
-I've checked the code, and there was indeed a bug in our
-classification rules, specifically concerning the recognition of the
-`syz_mount_image$exfat` call as an indicator for the "exfat"
-subsystem. The fix will reach syzbot soon.
+Alexei raised a good point offline that having slab enter vmalloc
+messes with the whole slab re-entrancy and nmi safety he has been
+pursuing for bpf/probing.
 
-Sorry for the inconvenience it has caused.
+Add that to the other concerns around vmalloc, and I think we should
+just drop that part.
 
---=20
-Aleksandr
+IMO, the more important takeaway is that we accept that this
+allocation is optimistic, and can and does fail in practice, even if
+the slab allocation itself succeeded.
+
+So it probably makes sense to 1) ax the warning entirely - since it's
+not indicative of a bug. And 2) accept that the numbers can have a
+fudge factor in practice, and mark line items in the report
+correspondingly when they do.
