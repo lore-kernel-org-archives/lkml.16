@@ -1,67 +1,71 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C2BC23BD0E
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 07:59:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CFAA2116E0
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 07:59:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747727945; cv=none; b=pcaTXCtZp/TiUu7p0asFBc6YqPt7nFUHFrPLZN1q2CtsTsX0zhLpXt61mcbbcBIkQGnNdgahZRQS6Kpo7sLUliWbZJIf+C+EFbF6aC6VzsLYUjW3eY+yDZ5YJn+Vlod0crxzYv/HrPwDZiDl0vsKzROPlBgBJJyFFqYioLFZBxI=
+	t=1747727951; cv=none; b=UO6u+w9bNKpHphB3m6dQSBac7k1R8UV56ynX7ZjhpzFUFGh/wXIlXOOUdooLdfc8drAd9KYP+Q00qnLI56rxVV6QyEXEnWZh9Tsd4h+1uqFb+kyFWz9pmk4QHqwx1zLN1epjrQIxUNiGIATkA6/JrPAoUKk8z0lkXwnDkBTZmqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747727945; c=relaxed/simple;
-	bh=HtdF/+HKNw4x8OKaYxE/Me0dMhZ7WCE3DcLVDTebkWE=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=kMoCC3hCGFVJYXS5JRGVNSyzeh2v0RCSreiSD/GndBQBT100CmRQxjUu+2PJwm+LWhkMjgT2+hRyzh0LIjVEDViOFHwXrPp+On/4GIZV0Tvsbh4RdWidAlg/7PWvUihcEYaSdBX3hbFzJ74Vwl9Tz4pQTZICr4FufLgFvC1LWL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gmY1eRW3; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747727951; c=relaxed/simple;
+	bh=Ln8Xsvd3N5Hw4TUt2qHdWEqSjFP3Z+J968tVF6I37Jc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SU2cXp+p/WsTe9G91H8lxgSNTJssN3gLnyuZxKEkG/gESsINQPre75Oh5bylqedcjpyon28ri+hVszuDeeo7FsffK4bcGePGmeK5L/mReePoNyLk/taP2qGAd+F/8L8HTtNSj3Ts5m8DPtRdsnyf4I6EmeKzDJ4Lt8yMrjpN12U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XItTF/Eb; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gmY1eRW3"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a3683d8314so2303342f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 00:59:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747727942; x=1748332742; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=I6f8cvNKScSNadpgBa20vfxx/XekVxFGIBj3EsSWOMg=;
-        b=gmY1eRW3vJmX/b6o88wvsfrIMEXatESagFmMcQIwORYZsuAmneQqiEAXEP5V6hbZk8
-         udSF4gBnoHFGRZ3KvkqQufY5QjSw+M1S5+bRJwjS7iT4cQkd3ty9p/wsSlBi9XN5P2cm
-         uRJoGTozuc8YNo+BaS/sw3MtvN23fCQvT5r/k2BGYYDgDnFiiHKgPzJze2aYAgP71OTl
-         zSn/LPAM4U9X9hB8aSzdjAPii6k/xqkKOAj8Y280SgOxbHi/+N/JD+bC/gxWQCp3PLJ3
-         xzgVqLpd89YW5g0fxGUYNnQtvpQuTlCJ/jBMXCP8wN92pzTd8gBlH5ApsbvBfI1SN24n
-         Um1Q==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XItTF/Eb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747727948;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xu6VvED+PoElv/mNcoKB85P9VgSxTAqocoeIrFfvu/o=;
+	b=XItTF/Eb7Mlzv3wJyXD1v85C4OFZ0y4eRZGrzOTbepkrb7aQUFjz852ak7L0HHWO02keAj
+	ZAepk8Kcew7JfnRlgD1HNSP/x80YrcoVr/79sKsTf137Mj0L/qn02guEZaof0RerlBZEw0
+	g3bF2h1NZFVS/SAJ+3affTnySX213Jw=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-543-UsFJuh_UOFWZelNu-e-L9A-1; Tue, 20 May 2025 03:59:06 -0400
+X-MC-Unique: UsFJuh_UOFWZelNu-e-L9A-1
+X-Mimecast-MFC-AGG-ID: UsFJuh_UOFWZelNu-e-L9A_1747727945
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a36a4c70b4so890080f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 00:59:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747727942; x=1748332742;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=I6f8cvNKScSNadpgBa20vfxx/XekVxFGIBj3EsSWOMg=;
-        b=e4Mv6/ApLQE62pvJmNQKqaRSMNk8N/qsbUpQEfMuBNyMRmVA+sMEyKaXb1Fj8leEZV
-         cuP/psnbyHgyGvfjtY4mY+CiGjxbejBvAra5lrEEMOYKqsWPHdZGbSVg8cyLK36IK4FR
-         q73UeoaLyDs6w0vp9GQOuGTvh96NAcQhCnpGa4d7L8C3xc1w0vrrhi6tMHe/Vz1Rg7VL
-         B5yfuupJEejf27yF5Pmty1tDZ3GH8JoHT0pgF1zXjWriu256/RwjLUqzDeITtSLptkVk
-         DmW8Gdp5WhemjCNJmCGG+y/yiKYSSxxJlAKqNYJhc0UPSQKxjpJ/k1kKqOyT8TCviGxO
-         H+Ug==
-X-Forwarded-Encrypted: i=1; AJvYcCWFyGLua6yTZI5m4xMDNyfcOqn5Wq9oSaCd76W2L4hhtCmDtZMWU4OOV7O1dwwrtcQEzFFvISsYy6WGVcc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwaGFEptwPY5vjp/NXhbgS+fa3XKRU/ZBUoKU5sinfxC7baz6us
-	bEyw0FLOBREj39RNHc9SBy+bMNAi7V+/KLaPFTzbIqvDSxOySncw8Idu3DTUeql/nuA=
-X-Gm-Gg: ASbGncugD/gju49O+emj+3hxsaQhafzmmmvt2M8ivOsrW2zs8vGUBLt3MV93lijIwsp
-	S+tKM+OAEO73d4sPUvDA7rAHv3bHJiSkAvMqyz0Cg5dBmxDO6Ho0Gp33FLXTDxbTGUHTnSnpICj
-	fK8xjb6tXehypwsY1q+T/RFaKc6RG/lJAWQ3Ie8XPqlUtVu/z05GEcm/sPeTOzY54pq7IJIs0+g
-	j2wCiFOSbRPGcMckVSxTG8o5mj/MNu1OBlpNawLxTgv9rzdfZpmq4MjSFKK+3COrJXfQRoCGfBK
-	8J7XxJu29UeMqIMUtwq9JhbXKjUOKHNjO31PJEr3sfrgmhu+ZJPtOoFpeRb1Er8Qm0PKlbA4u2Z
-	u1moopGDInhKsdXjmAv5G3+nns9S+3tMV6UrVyBE=
-X-Google-Smtp-Source: AGHT+IED7tfL2FyGE5Lx6JVPqKxoExtJjE4z4w7pOPtfZkvCIYhusb4i851hfqw7B3k/wFuOclLfSw==
-X-Received: by 2002:a5d:64cc:0:b0:3a3:5ae4:6e9e with SMTP id ffacd0b85a97d-3a35c8092dcmr14763199f8f.1.1747727941503;
-        Tue, 20 May 2025 00:59:01 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:fb2e:6266:4e39:ce68? ([2a01:e0a:3d9:2080:fb2e:6266:4e39:ce68])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca4d230sm15229306f8f.4.2025.05.20.00.59.00
+        d=1e100.net; s=20230601; t=1747727945; x=1748332745;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xu6VvED+PoElv/mNcoKB85P9VgSxTAqocoeIrFfvu/o=;
+        b=d1ZJQM1E1JNTSpvsKnY3Uw0r8NftcV7yAU47hL0yAYXLi2LLNjkxsOvT3++APBLmY8
+         VHF9xpH1kyBYKeAquhuIgjzHoVlLI0YHIGUkUPb9GwRh3295y14wyIL3SKYt1qogp8wM
+         10K/tRecQU+VuJZUjK+9e3VL7nRVysXewULZrdb0xSOPUlUZl6FlwxBuy0GOB+Oa6mBe
+         mx1LGnaJOyB8JMj+JAm5W9FjC/jDKccQaN9SQ0kM4huCFXxZI25HNpdseYjkyyc8QK8y
+         H4mD/PlRDFjwxdj7VDSwEfMRfY0gyN8rlWUnIGnKWvlaRxU8DQuwZKMHwoRzzIFq9npp
+         ilWg==
+X-Forwarded-Encrypted: i=1; AJvYcCWaMd97IHf7UI0lBs0PnJY4J0kXTYz7xix4leFZXr3a3SeCABDxNPWSqVTmqOKtybeQQXNtk7J3qzW2pmw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQBamtrgxfb66HujIWwURmUFKV8d0gXlR/epPsh+tnn3gQMWYc
+	oyHRT7Qrg4GlNM/VITlT8uCEnCZgzsn9V9efunl100MyM2WMSotAVKh7HUhQrGV3jENRptFULt7
+	JrtOVSgCSvOyMGjk6TikOQayI7OcGAO61+MX0sbHHPXtthakbqtRw/3KtZ+wgDkPzYQ==
+X-Gm-Gg: ASbGnctI2aHC8VZhfDracsloGaVemJMKC6XWSAbDqEp3/uIcuqQPZy+IYh3wERdP+v3
+	IS+Pov5W8c7ItNryfGnY+665fFDDze+xP1NccgKNPCYOcG3BulwagX2R7Ztz+7uBd+pihDesJnN
+	rpvZI35Rh9Ec/TAZ68CSnTqJqq0pVpW84J3P3kK+LMDUk4bIOlCwc8SzSac26oOeAN/c24eob63
+	MoDpVUQRLBenEuca73Iz1yyonOHDwbNbB8krp+0d00VhrSlKnX4I31IslmWyoOujGfZYi8Lw+wH
+	I9kHJjFx7kD5wLGHmUPPbGl0faZK+ngIobO/EkQTGAzxCpQHcNbnhlyxF3g=
+X-Received: by 2002:a05:6000:2908:b0:3a3:6c9e:1691 with SMTP id ffacd0b85a97d-3a36c9e17ffmr6618033f8f.53.1747727945381;
+        Tue, 20 May 2025 00:59:05 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHc5/i5xy+aD6gy/JpszOV8ylA+VdUGvB4VOQl1RBojQXejgZiG2fyh3K00wLwDiPqS0pH1Mg==
+X-Received: by 2002:a05:6000:2908:b0:3a3:6c9e:1691 with SMTP id ffacd0b85a97d-3a36c9e17ffmr6618016f8f.53.1747727945006;
+        Tue, 20 May 2025 00:59:05 -0700 (PDT)
+Received: from ?IPV6:2a0d:3344:244f:5710:ef42:9a8d:40c2:f2db? ([2a0d:3344:244f:5710:ef42:9a8d:40c2:f2db])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca5a8c4sm15274792f8f.27.2025.05.20.00.59.03
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 May 2025 00:59:01 -0700 (PDT)
-Message-ID: <61f3e509-328a-4484-961d-f02f37c2c014@linaro.org>
-Date: Tue, 20 May 2025 09:59:00 +0200
+        Tue, 20 May 2025 00:59:04 -0700 (PDT)
+Message-ID: <a202f5ff-2ead-457d-8f1a-9f7ab5cc9243@redhat.com>
+Date: Tue, 20 May 2025 09:59:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,155 +73,31 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH v4 21/30] drm/msm/dpu: get rid of DPU_MIXER_COMBINED_ALPHA
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
- Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Vinod Koul <vkoul@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
- freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-References: <20250519-dpu-drop-features-v4-0-6c5e88e31383@oss.qualcomm.com>
- <20250519-dpu-drop-features-v4-21-6c5e88e31383@oss.qualcomm.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20250519-dpu-drop-features-v4-21-6c5e88e31383@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH] dt-bindings: net: Convert socfpga-dwmac bindings to yaml
+To: Matthew Gerlach <matthew.gerlach@altera.com>, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, mturquette@baylibre.com,
+ richardcochran@gmail.com, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Mun Yew Tham <mun.yew.tham@altera.com>
+References: <20250513152237.21541-1-matthew.gerlach@altera.com>
+Content-Language: en-US
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20250513152237.21541-1-matthew.gerlach@altera.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 19/05/2025 18:04, Dmitry Baryshkov wrote:
-> From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+On 5/13/25 5:22 PM, Matthew Gerlach wrote:
+> From: Mun Yew Tham <mun.yew.tham@altera.com>
 > 
-> Continue migration to the MDSS-revision based checks and replace
-> DPU_MIXER_COMBINED_ALPHA feature bit with the core_major_ver >= 4 check.
+> Convert the bindings for socfpga-dwmac to yaml.
 > 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> ---
->   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c | 4 ++--
->   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h | 2 --
->   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.c      | 6 ++++--
->   drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.h      | 3 ++-
->   drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c         | 2 +-
->   5 files changed, 9 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-> index 4777a4a852da0d65e20cebc31fd05647e0b4c4b2..d64ebc729bfb589bf90af89c094181f879d5b1ef 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-> @@ -90,10 +90,10 @@
->   	(BIT(DPU_MIXER_SOURCESPLIT))
->   
->   #define MIXER_SDM845_MASK \
-> -	(BIT(DPU_MIXER_SOURCESPLIT) | BIT(DPU_DIM_LAYER) | BIT(DPU_MIXER_COMBINED_ALPHA))
-> +	(BIT(DPU_MIXER_SOURCESPLIT) | BIT(DPU_DIM_LAYER))
->   
->   #define MIXER_QCM2290_MASK \
-> -	(BIT(DPU_DIM_LAYER) | BIT(DPU_MIXER_COMBINED_ALPHA))
-> +	(BIT(DPU_DIM_LAYER))
->   
->   #define WB_SDM845_MASK (BIT(DPU_WB_LINE_MODE) | \
->   			 BIT(DPU_WB_UBWC) | \
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-> index 9ba9e273f81ab1966db1865b4ce28f8c18f750b8..5e4608d10c6d4fee387c9a599a73b15661148430 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-> @@ -85,7 +85,6 @@ enum {
->    * @DPU_MIXER_SOURCESPLIT     Layer mixer supports source-split configuration
->    * @DPU_MIXER_GC              Gamma correction block
->    * @DPU_DIM_LAYER             Layer mixer supports dim layer
-> - * @DPU_MIXER_COMBINED_ALPHA  Layer mixer has combined alpha register
->    * @DPU_MIXER_MAX             maximum value
->    */
->   enum {
-> @@ -93,7 +92,6 @@ enum {
->   	DPU_MIXER_SOURCESPLIT,
->   	DPU_MIXER_GC,
->   	DPU_DIM_LAYER,
-> -	DPU_MIXER_COMBINED_ALPHA,
->   	DPU_MIXER_MAX
->   };
->   
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.c
-> index 4f57cfca89bd3962e7e512952809db0300cb9baf..3bfb61cb83672dca4236bdbbbfb1e442223576d2 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.c
-> @@ -150,10 +150,12 @@ static void dpu_hw_lm_setup_color3(struct dpu_hw_mixer *ctx,
->    * @dev:  Corresponding device for devres management
->    * @cfg:  mixer catalog entry for which driver object is required
->    * @addr: mapped register io address of MDP
-> + * @mdss_ver: DPU core's major and minor versions
->    */
->   struct dpu_hw_mixer *dpu_hw_lm_init(struct drm_device *dev,
->   				    const struct dpu_lm_cfg *cfg,
-> -				    void __iomem *addr)
-> +				    void __iomem *addr,
-> +				    const struct dpu_mdss_version *mdss_ver)
->   {
->   	struct dpu_hw_mixer *c;
->   
-> @@ -173,7 +175,7 @@ struct dpu_hw_mixer *dpu_hw_lm_init(struct drm_device *dev,
->   	c->idx = cfg->id;
->   	c->cap = cfg;
->   	c->ops.setup_mixer_out = dpu_hw_lm_setup_out;
-> -	if (test_bit(DPU_MIXER_COMBINED_ALPHA, &c->cap->features))
-> +	if (mdss_ver->core_major_ver >= 4)
->   		c->ops.setup_blend_config = dpu_hw_lm_setup_blend_config_combined_alpha;
->   	else
->   		c->ops.setup_blend_config = dpu_hw_lm_setup_blend_config;
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.h
-> index 6f60fa9b3cd78160699a97dc7a86a5ec0b599281..fff1156add683fec8ce6785e7fe1d769d0de3fe0 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.h
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.h
-> @@ -95,6 +95,7 @@ static inline struct dpu_hw_mixer *to_dpu_hw_mixer(struct dpu_hw_blk *hw)
->   
->   struct dpu_hw_mixer *dpu_hw_lm_init(struct drm_device *dev,
->   				    const struct dpu_lm_cfg *cfg,
-> -				    void __iomem *addr);
-> +				    void __iomem *addr,
-> +				    const struct dpu_mdss_version *mdss_ver);
->   
->   #endif /*_DPU_HW_LM_H */
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c
-> index d728e275ac427f7849dad4f4a055c56840ca2d23..7bcb1e057b143a5512aafbd640199c8f3b436527 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c
-> @@ -60,7 +60,7 @@ int dpu_rm_init(struct drm_device *dev,
->   		struct dpu_hw_mixer *hw;
->   		const struct dpu_lm_cfg *lm = &cat->mixer[i];
->   
-> -		hw = dpu_hw_lm_init(dev, lm, mmio);
-> +		hw = dpu_hw_lm_init(dev, lm, mmio, cat->mdss_ver);
->   		if (IS_ERR(hw)) {
->   			rc = PTR_ERR(hw);
->   			DPU_ERROR("failed lm object creation: err %d\n", rc);
-> 
+> Signed-off-by: Mun Yew Tham <mun.yew.tham@altera.com>
+> Signed-off-by: Matthew Gerlach <matthew.gerlach@altera.com>
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+Rob, Krzysztof, Conor: looks good?
+
+Thanks,
+
+Paolo
+
