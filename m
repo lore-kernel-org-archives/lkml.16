@@ -1,89 +1,128 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.forwardemail.net (smtp.forwardemail.net [121.127.44.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A6EC213245
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 10:46:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7878268682
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 10:51:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=121.127.44.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747737988; cv=none; b=ES+2N6UVkmHzVwjfkTWz7BuOZe67NOHHE581HT/gOTmZwrcAFW2qHVEdE4y0LgCX2bI/MiyoqHDcQBoWoMtEgRzdTRK7FcU9zY3MM57/gnkxi1ymtCZ80lJ8JlsX+1WpNrRudt0NOcoIDYCeTSFS1wTLwgbpmhQZxthHPIAfx7s=
+	t=1747738282; cv=none; b=r95t9InyhK9Z34uIUiFQPx2R/9wwiPa7furC/bl/mn76VQTJgHv/Kky1RCK5Jb0QMmPP0PVeqNbiFZvOnY9TlSGenIXpMru+SmV/k3sRgC+NgTDzZ+Jz/YuJzD4eUj1sru6HKypDAhZR1oHXkMVqAlh3e3KZpcvvy0IHHJHPVD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747737988; c=relaxed/simple;
-	bh=i2cjHvwM0j5DhW6pIKoPa6g27lwFZDUXxHytZlZy7Zw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=VuFRTTxykE8ZK7mcvL2EhDSCI2YGLUI7yoXRgN8RY1tqSdncOcUuRWDO5a8Sc9grJeJEqbYV4+KdbSVF7Sqve1IEfeeTZMrg+qEyCFomHvy2VPZo30lP8owF+mneJdo4V4ak4B7sEQLH0NZYGsZPVoAbX0LcfqLptBUycz6ksKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g8swRIGH; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747738282; c=relaxed/simple;
+	bh=1IVxMRT7hTE5gir+ohubrLWQS9DrJZsBgibqpQP6RLI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eBjJVu0gVKdPp1Aq1frX59FeUV7axlFdQJc1rYEcbj5xsDcDCaAPIficjJ9knjK65tkG2Tuqc7x8ceDvRv7Tb1WwC4uEcCODLELQtXi7wI9qgS1szwvY7B8EfNUl2LiX6AUxwkCTkk/YNSAZFqyaptYrdnmtLprHP9jtnbA/rlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=UxoPjZoU; arc=none smtp.client-ip=121.127.44.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g8swRIGH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747737987; x=1779273987;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=i2cjHvwM0j5DhW6pIKoPa6g27lwFZDUXxHytZlZy7Zw=;
-  b=g8swRIGHDrsLimV6+ILwtIH+5f6K1cTzWvywGTNouqgefdgqsQM/tsCa
-   3eCiL1DMYsk4if1VfeSrBwdbRxfHxz0gVBdRb9XuGzAGjOvAa/52Q7J6f
-   EvpTXKUIQ6c4nwxFjrjJWP7iEmXrtLEZ0aqCU8n9bZPiUK9mMOneXSUv3
-   zDxvu0RzOSfPNL9i3FwI7M6QdNl4vwetc3pHZAC/5pn1odD1loXOiWxn7
-   BzqQAWT1JZI9NA/vX976uC09DHRB3XEOt0uyT0Vw5iAfIfeOpjwVGUooh
-   o+eSeVSYyOFlfg9o1Z+ihow3UwRLTBOvXq/dmtIJIZU6Eg62ZM6vIM0tb
-   A==;
-X-CSE-ConnectionGUID: P48VnAbwQVyLzUbTuqT7ew==
-X-CSE-MsgGUID: CFWV0rH3Si2+OPhkf2y7+g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="49820614"
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="49820614"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 03:46:26 -0700
-X-CSE-ConnectionGUID: Clb38QEVQw6FwCrDcOHs8Q==
-X-CSE-MsgGUID: F30S+3aaRfa+VwiojHymZQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="139377907"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 20 May 2025 03:46:24 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uHKUH-000MT3-2d;
-	Tue, 20 May 2025 10:46:21 +0000
-Date: Tue, 20 May 2025 18:45:32 +0800
-From: kernel test robot <lkp@intel.com>
-To: Shanker Donthineni <sdonthineni@nvidia.com>
-Cc: Paul Gazzillo <paul@pgazz.com>,
-	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Marc Zyngier <maz@kernel.org>, Vikram Sethi <vsethi@nvidia.com>
-Subject: kismet: WARNING: unmet direct dependencies detected for
- HAVE_ARM_SMCCC_DISCOVERY when selected by ARM_GIC_V3
-Message-ID: <202505201822.CJulARXO-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="UxoPjZoU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+ h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
+ Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
+ s=fe-e1b5cab7be; t=1747738273;
+ bh=IjZMD2eULGDwifJ6Eg5o2azP2kaC3eB2jYmU3yHnbXU=;
+ b=UxoPjZoUJrc45g5sIvR0ZUH26COyeTPktfRjT7bkP0nsiiK+GAah3KYfa+ObaHEYCRArJmNKe
+ C301BfOUXchYK4BaYifBE97R4VHMXr8jQJ7QO6/SxmXhxOixCspcylmUpVoYb5X8tU2J+S+RTNj
+ sNWkgXayr+AsqjAAbHYhsIaScmsECJz6TKLoXFRE+hiFzWAGe41dmJGpDRPapp63Mv9h7txNkPr
+ PXeleTsn/+1FXyivTPb5jYHVqkV4s5/JroK4HvJnB8+SEa/qsqWL/0W1/HoGHQAXIytvBo/CIur
+ QIsv0hwXlXJrM/lYxuu5nRsztixkpBI6vpEPXN78j8OA==
+X-Forward-Email-ID: 682c5e9c356c24cb84e6ffc4
+X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
+ 121.127.44.73
+X-Forward-Email-Version: 1.0.3
+X-Forward-Email-Website: https://forwardemail.net
+X-Complaints-To: abuse@forwardemail.net
+X-Report-Abuse: abuse@forwardemail.net
+X-Report-Abuse-To: abuse@forwardemail.net
+Message-ID: <28b03818-0290-412a-8d1e-9b88a163d387@kwiboo.se>
+Date: Tue, 20 May 2025 12:51:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] arm64: dts: rockchip: Add spi nodes for RK3528
+To: Chukun Pan <amadeus@jmu.edu.cn>, Heiko Stuebner <heiko@sntech.de>
+Cc: Yao Zi <ziyao@disroot.org>, Rob Herring <robh@kernel.org>,
+ Mark Brown <broonie@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
+References: <20250520100102.1226725-1-amadeus@jmu.edu.cn>
+ <20250520100102.1226725-3-amadeus@jmu.edu.cn>
+Content-Language: en-US
+From: Jonas Karlman <jonas@kwiboo.se>
+In-Reply-To: <20250520100102.1226725-3-amadeus@jmu.edu.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   a5806cd506af5a7c19bcd596e4708b5c464bfd21
-commit: 35727af2b15d98a2dd2811d631d3a3886111312e irqchip/gicv3: Workaround for NVIDIA erratum T241-FABRIC-4
-date:   2 years, 1 month ago
-config: arm-kismet-CONFIG_HAVE_ARM_SMCCC_DISCOVERY-CONFIG_ARM_GIC_V3-0-0 (https://download.01.org/0day-ci/archive/20250520/202505201822.CJulARXO-lkp@intel.com/config)
-reproduce: (https://download.01.org/0day-ci/archive/20250520/202505201822.CJulARXO-lkp@intel.com/reproduce)
+On 2025-05-20 12:01, Chukun Pan wrote:
+> There are 2 SPI controllers on the RK3528 SoC, describe it.
+> 
+> Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
+> ---
+>  arch/arm64/boot/dts/rockchip/rk3528.dtsi | 28 ++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3528.dtsi b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
+> index b2724c969a76..4d60c09219f9 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3528.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
+> @@ -371,6 +371,34 @@ ioc_grf: syscon@ff540000 {
+>  			reg = <0x0 0xff540000 0x0 0x40000>;
+>  		};
+>  
+> +		spi0: spi@ff9c0000 {
+> +			compatible = "rockchip,rk3528-spi",
+> +				     "rockchip,rk3066-spi";
+> +			reg = <0x0 0xff9c0000 0x0 0x1000>;
+> +			clocks = <&cru CLK_SPI0>, <&cru PCLK_SPI0>;
+> +			clock-names = "spiclk", "apb_pclk";
+> +			interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
+> +			dmas = <&dmac 25>, <&dmac 24>;
+> +			dma-names = "tx", "rx";
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505201822.CJulARXO-lkp@intel.com/
+This is missing power-domains after "rockchip: Add power controller
+support for RK3528" [1], spi0 depend on pclk_rkvenc_root:
 
-kismet warnings: (new ones prefixed by >>)
->> kismet: WARNING: unmet direct dependencies detected for HAVE_ARM_SMCCC_DISCOVERY when selected by ARM_GIC_V3
-   WARNING: unmet direct dependencies detected for HAVE_ARM_SMCCC_DISCOVERY
-     Depends on [n]: ARM_PSCI_FW [=n]
-     Selected by [y]:
-     - ARM_GIC_V3 [=y]
+	power-domains = <&power RK3528_PD_RKVENC>;
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			status = "disabled";
+> +		};
+> +
+> +		spi1: spi@ff9d0000 {
+> +			compatible = "rockchip,rk3528-spi",
+> +				     "rockchip,rk3066-spi";
+> +			reg = <0x0 0xff9d0000 0x0 0x1000>;
+> +			clocks = <&cru CLK_SPI1>, <&cru PCLK_SPI1>;
+> +			clock-names = "spiclk", "apb_pclk";
+> +			interrupts = <GIC_SPI 132 IRQ_TYPE_LEVEL_HIGH>;
+> +			dmas = <&dmac 31>, <&dmac 30>;
+> +			dma-names = "tx", "rx";
+
+Same here, spi1 depend on pclk_vpu_root:
+
+	power-domains = <&power RK3528_PD_VPU>;
+
+[1] https://lore.kernel.org/r/20250518220707.669515-1-jonas@kwiboo.se
+
+Regards,
+Jonas
+
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			status = "disabled";
+> +		};
+> +
+>  		uart0: serial@ff9f0000 {
+>  			compatible = "rockchip,rk3528-uart", "snps,dw-apb-uart";
+>  			reg = <0x0 0xff9f0000 0x0 0x100>;
+
