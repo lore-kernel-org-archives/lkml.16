@@ -1,226 +1,180 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2058.outbound.protection.outlook.com [40.107.21.58])
+Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1F5422A81D;
-	Wed, 21 May 2025 02:11:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.58
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747793510; cv=fail; b=s0bEKGm9MTRcj8/cs6iU0iPjvycJ8DmM05AjB53IyB1ukZLqWzqVvuFCF9boEY6yIy+V9aXQljRjc/S3w5An1HTb6nT6pRXIjlEwWBZkI9QgTnLN+Chr2HNzgLF5n+YRVp5gVEl3HgOxKbDF4igEn40/fU5sxiDuE760ykGZJ78=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747793510; c=relaxed/simple;
-	bh=cJKaGL4JygYZlmLVEwPQfWi59MeKAiPUTWebt6f5mx4=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=oQqZ2MtfRCVvU0mVoD7IoGLsJP49zZNBxXnhzDP9oaZ0SQhLOvcZqqA25ao4i8GoX/E9+AY6iCTDBAhE0urFZpscfcSh0XGqXoOnQc2mESHkLqLppk3zF7S2sovp1lkUMLqXI7XIpBXh5nB3menyuF+lOiNmsJBg0ZeNapfPNgc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=S9i+L6HE; arc=fail smtp.client-ip=40.107.21.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2A1922ACFA;
+	Wed, 21 May 2025 02:12:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.35
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747793531; cv=none; b=iYVJzLd0CGn7b2dDUtuTGsG3JKjoYwe9rk6DAErm6HTEkVm1y6pfla0mD7zP9YJuPmXAEXhOcMG0zN7kUNUq1+8NvSHoe95NYb6TUyCwB29O1KBQjetZduRNvxOpN4FULeOX1sfQ74pJ/L4DOSAvygO2GR9eN26UtuHAQg/KmiA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747793531; c=relaxed/simple;
+	bh=fqB2Gh+fCRyr+zOMXeymLiXY3vMa/MT5Utk3xtKbfGw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pV6I9xV5P3P4RcLDWAXRQj7ti1Png2OO0VALtetPQj0GWWM8jGQkL1Uer4bXxaTsEwDQxkElhrpr7R2y1X88yzfZfDn7NYBumMayo8JPSHSqRPE1Begmf1hBwU4fUWqpOw5D0CDGJoc3MZm8YxcNT/K6r6p685/Hf/pefBVL3o4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=VSV6PJzY; arc=none smtp.client-ip=44.202.169.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="S9i+L6HE"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Zlq+9AWxATdTBwNrdPIblv+wqhvhi+JLLA6/FFRY0Z0w9/E/FrGJq7V19bQ3+pW1qCuF83IOeAV+jhF0qxcQ/Gvi4Ln60eXwSGm0R9l+VNAZovBj7Fqygo0W6X0hkVcfrBNvFUm6dNC3MGw3hJpcPW68Mxq5Klj/OgYwjo0xZ+uIwXhq2DDYspo+c7dh2bAJlntgzqlT04xMRe3SJUFiWUbfa6njbPtTBd5HGNewuwkiCJlFnns+7zzXL8J8n3bXZ60mbVRz1ENE6Y3pfFcsesR4P1v43hK36kEk9KKRq6I32j+UG3qkS+4+PsV711r7AkNe8q2lcBJYATyAIiCB7Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FuKizMAmcGhg35GsISlXABzuQU89K6Xk4+l1jP/pmm8=;
- b=Il9xKzzue9sRTT01ytG9Esce6rjRfSci3XtXCgiLBl5mYcD2RicNITif61T8z27SlEK+I+E6oPvHna1EtOUTiOJwyYruSBfwLqmzSugPTQkGtjsN/y9wnmAnYQ5/7nJyQWeqmP0yK8swu9Q+glvlrthTos4e+fuH1EzGoHNHPwt394dc8y/zmvAsnHWH3aYUcOf2GNpDbE4w6wPE5nBOYAQESreNsarzabdSB4Y9aQ8sEhnjJtYP+r+v1h6lMGohvEjckyUiOC62NHJXKp87kZ80di0am6xUlYSJz245O0txFykXG3O3Xlkk0+UDBtHtA4bsugakQL0cS7ldc9UoTg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FuKizMAmcGhg35GsISlXABzuQU89K6Xk4+l1jP/pmm8=;
- b=S9i+L6HEh1Le/hUq6EDrtNphYvfmN7uWchaKchMYX/ZFH1irWD74dlgM6Fxhy02Iii9IX3bqb/63MO4Sr/P3TccmIb25nN3qe/PZR4yB3uywJY/sT0DfDTpIxDsQDkPqDx0WD1G949Obl9+p/OSwURBZXm1xM4gkd/5P+kAhYNVCqkRbe6JYh6dq2QQJTrH+lsvOl+zr8la7mIh6Iqxv8eFLSzz092Deh2ibQeMT2V4/prmzr9ylG9pIXgUSzO8K9m+Pj38vKawOmbLNbEeOnDbA7TdUK7Lboj8if3Szn+2dOhoxJ9eGhS7kPFfI0knq1mb9CIbUIOj79FXTNjQPwQ==
-Received: from PAXPR04MB8510.eurprd04.prod.outlook.com (2603:10a6:102:211::7)
- by AM8PR04MB7972.eurprd04.prod.outlook.com (2603:10a6:20b:236::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.31; Wed, 21 May
- 2025 02:11:44 +0000
-Received: from PAXPR04MB8510.eurprd04.prod.outlook.com
- ([fe80::a7c2:e2fa:8e04:40db]) by PAXPR04MB8510.eurprd04.prod.outlook.com
- ([fe80::a7c2:e2fa:8e04:40db%5]) with mapi id 15.20.8746.030; Wed, 21 May 2025
- 02:11:44 +0000
-From: Wei Fang <wei.fang@nxp.com>
-To: Arnd Bergmann <arnd@kernel.org>
-CC: Arnd Bergmann <arnd@arndb.de>, Heiner Kallweit <hkallweit1@gmail.com>,
-	Frank Li <frank.li@nxp.com>, "imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Claudiu Manoil
-	<claudiu.manoil@nxp.com>, Vladimir Oltean <vladimir.oltean@nxp.com>, Clark
- Wang <xiaoning.wang@nxp.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Subject: RE: [PATCH] net: enetc: fix NTMP build dependency
-Thread-Topic: [PATCH] net: enetc: fix NTMP build dependency
-Thread-Index: AQHbyaH7q6+DiN0TrUSAnsMFmAtFH7PcVL+A
-Date: Wed, 21 May 2025 02:11:44 +0000
-Message-ID:
- <PAXPR04MB851053B80F47A41520984667889EA@PAXPR04MB8510.eurprd04.prod.outlook.com>
-References: <20250520161218.3581272-1-arnd@kernel.org>
-In-Reply-To: <20250520161218.3581272-1-arnd@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PAXPR04MB8510:EE_|AM8PR04MB7972:EE_
-x-ms-office365-filtering-correlation-id: 54edb291-93ec-47ab-33b1-08dd980cd585
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|1800799024|7416014|376014|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?FwbeRGKr/dOCiii080Q94oz9M/uqsb825J21d3GmLfGKDYCF3mh/Lf99NClp?=
- =?us-ascii?Q?i1jZIBGbGMJqJ906B5VQpgoY87c0Yi3v74ce0DoGUNILNi/GgTUe7RGeYayc?=
- =?us-ascii?Q?7fjnC2+8Cn8t/qEnRpHBEPusEK1jwRxEbYgSQP2zF2EPNyPtxyqkaNiubIDY?=
- =?us-ascii?Q?fqt4QBeiMBr+Qq2OgZuHLHFoO3b+nzKm1KIdVhYk12RW6/0gLzl2wAtjhh/8?=
- =?us-ascii?Q?kuoKQX4n3G+3v+UCr5p8gYi0Lg2CepsywZSVGimNYR2NifoiRibOWorO+I54?=
- =?us-ascii?Q?14nIZc934qQtyQVCLS1Mt7PqGttuaT+zYKByovUR8gW86X6u1TUg5N8UsPXN?=
- =?us-ascii?Q?rSqDDurSz1YssEf96DKZgc23y5rtW2sbeI6tJ9gmFDXyuFt2KyiKo5EY/g2/?=
- =?us-ascii?Q?CJOaDWFV2GcOfYFWvlqL/SdhvB2ivzW+9+gLTZgVc4HQXD86IwdwDvSVr8sS?=
- =?us-ascii?Q?22/94Ud5kT5Fc1vx8jm9q9eoOnLnGu62zQZaTV3NIK89Ck4P/yfjQdxcg4ku?=
- =?us-ascii?Q?XSCr3WepHfaXSyAEE/+0qIhuChU1bG15yQtuwEpR2kAArGAG0tFcExqTAqFF?=
- =?us-ascii?Q?hOEvJ+9SurktphCIt7uc72jz3heOcT8hEDPCWqiW3qe9AfXTWx/2xMVYWLwy?=
- =?us-ascii?Q?3qbnC3af3EOBWsy4Yd3ABHf88hUBS5Gon/ZkAn2lo0sTtdkRtUDu0MdjIGVp?=
- =?us-ascii?Q?R+RABtYdx2jr8IqJl/pRcEyjAtbCVc4lKZtYs1JFbHbtSHAlMKqrvEwn97ef?=
- =?us-ascii?Q?JTWTPKPrz2HQNIL8oFH3wLTKdMnHycRvHm3uSpRHPq3YuvIaU/Eu3E03Jde9?=
- =?us-ascii?Q?4TI3ts43t23goCNyqR9bhQ3BxYsVRUCuWFrVywETi7wcqkihlXuo1CSXYMXO?=
- =?us-ascii?Q?rNgNZ9uIvNyNA/Jv45LC4mIi7YJuVU9dPLbeSV9H5rpKdxWrp8zsbdqrES9C?=
- =?us-ascii?Q?XEpRvpJmxJ5WvNlpoeVt79LDWao+xIRA8nSRa9cjSAbXPOpb5sNaZ3Fmn4+k?=
- =?us-ascii?Q?dEFY1P559eqX79vlNlqcwC8qb7boUQhrlSwp9KK7dy0PD+4q/ghUarvP3z6v?=
- =?us-ascii?Q?lNgTLW1rK7o24cliYE9aXv0YctNxjwh5XJuUmkH29rDtMK6Z4Fywpm5dSDQ1?=
- =?us-ascii?Q?ByUVORbvccdKuWnycaNCV1GbdMCDdE5F3MV6liG/XiZY3AYLh9AdCJxwerEf?=
- =?us-ascii?Q?5apyB4xQ1s4kP7RpFsguyYfd7n8PcIdmAm35U5qqrVBg5NdrbFxR4bNRcU6W?=
- =?us-ascii?Q?zI1nujFqH161h388zXypyGX5hGcXUV7Uf+FyEWWwJx+2QxvjT9sNe/hib99e?=
- =?us-ascii?Q?ptS2VzWUphHeV+yi8NIf6HS808J3RysqBSG3HXABvRzuFtQAs2aplAYk4Ojb?=
- =?us-ascii?Q?4IXNhLzoAxAA33osaFIVgKcAdRfB9QL+xUuo1ksrBVk94ytn3t9v3O3PagYJ?=
- =?us-ascii?Q?CudUeafTMx3wU0p0AV7CNa6NqoVWP+ro33zJQwj5xVJPq4nbzd21gg=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8510.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?dvLRMrsMYpVuj370Gmcv6EMOGZb8/GX28WwFmoNkrRol/4iv3j88/Z4rvtoo?=
- =?us-ascii?Q?zhiSKPhJvg5NEpa/M0ihUOGr5F1lQeHvGH9zRaxwfBJBzfMzIaHRqmsMDKVC?=
- =?us-ascii?Q?7/18sP5MsPBoaaz0/nJQAuCYq2CaqTXkT9HlM0d+bnsJwgXqIcr4zEON9A6Y?=
- =?us-ascii?Q?GkLLzU/P0mCtt7n67dOLUAKDYLwOQKmXI41uucwmtseLyOGGCAXbE9NWAXCB?=
- =?us-ascii?Q?3CzuOzu1+nMI20oBYKvCvI/MQwt/sMFzk7IWiJNuIL/GgIszQI0JOTOADHxI?=
- =?us-ascii?Q?N3RScTrh8cWx06LXgp7BdRr+XfbDiG60ZnMb6OibADFGWfoD950eCdzgmsUK?=
- =?us-ascii?Q?YQ5uZPNnApnr9bG3uDzqI8BF7KWp8QU5C1gh6RL/ohdr/3LrcFgEDP8rq343?=
- =?us-ascii?Q?39y1fLApIso+hkO+fhcf3oB+/EYCl7ATs+eitaCxrcWOPdx2QmHBQYV9wxqf?=
- =?us-ascii?Q?J9Bd7XPGkrtR3hXtOLwUWg6+X0ZAcYkYuCa01QBJmcMJaA+9c+wMLm2a6k4j?=
- =?us-ascii?Q?2t7CpUr2x0MXtcRnN9HPop7/61ckiwjPDuSL1eVIl7xgSCIYthieC2ESia98?=
- =?us-ascii?Q?x6VVMMRt/Jcvvrme0MRM4xolp86UFNrvsQjQ6227athZSoD9scyUQKe9Ljsk?=
- =?us-ascii?Q?aFtWZy/jQAqtEU99WwxUi70sk+BMCwoelZL3NpO4Ys+Rb5m09ZlcIlzeNM/1?=
- =?us-ascii?Q?yZu9c+rL0Mvp/dFdfnD/FmrpOVkXWR9ML2S/2wVQCyv4oX7nngQpGUQNNNvd?=
- =?us-ascii?Q?WZVn7zQhYWquhiMPx3sx7eNLNidf7knMtF0LU8Xl+jkM0eOWr/FsiAEfwm/b?=
- =?us-ascii?Q?2YaVAelcE+Rcn9mnCP1fdoawkJ7UiCq+5RF79YmmnxYrc1h9nzRefEZ1RmjC?=
- =?us-ascii?Q?k3C1zOPVGsjtkqk+CQ/96aEARG0PPf7gGkbEzddtrVvsgeeASs89BMxzXwer?=
- =?us-ascii?Q?VSiHq6Xcs0LTcuF3NMBts92AI9UTJmusg0XOvB0ssRiMTIfiuRs/uGRj514L?=
- =?us-ascii?Q?dVpYSvJUacwOl/oTvr2zdHFAd3Yti3IvYelc2ECKxEI+/LFhOE7m9mHA9pC3?=
- =?us-ascii?Q?LuOS0yRLk8TMNoqOmFT1yXh8FHYV5kTiR+OV7FNc08GDb3nYeG2zLGdPk4gg?=
- =?us-ascii?Q?MJNaC1/o+aqyQhbmN3yzuPBXA6MEwy4T6hhAD9C29JqCZLA7BuXh/XxdDiz6?=
- =?us-ascii?Q?kl9+fvp8MFJNXvulcs6oxdQVtLeyNJWzJqX3eeC9drOYYo4D5CIWb713jbn3?=
- =?us-ascii?Q?UTr4RiOz1NUvTt9HWunTjKn22XUL+bKK9eRhw6Ru2wuPSfdCVHtMwFXT4prt?=
- =?us-ascii?Q?1/Lxgmr5p8H5i+5InEOjsQ640DvL82FZibTX6ouVKA3xcyMP7vZZhcfmNd4s?=
- =?us-ascii?Q?mDWOvo7+oR5XkDGKZ2xuh5BLUNl9NQqmjx5X4ofVlELk6DOWGQ+qAmSpwplR?=
- =?us-ascii?Q?0Qf8+Z+zbQr10NA0F1SOyXlVQQZnbv5CrdoEir+8J2asLpnHVWLnSX5Dsygp?=
- =?us-ascii?Q?F0o4Gcnv7Pu0mokImObRSBzOQDn5qJSx5urb4rBWbupCx93kHG0b+dGEIB5W?=
- =?us-ascii?Q?5k/zUmySKK52ZO607a4=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="VSV6PJzY"
+Received: from eig-obgw-5002a.ext.cloudfilter.net ([10.0.29.215])
+	by cmsmtp with ESMTPS
+	id HUC1ulKYyzZPaHYwBuWrUa; Wed, 21 May 2025 02:12:07 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id HYwAurzAnJ4PgHYwBua7wX; Wed, 21 May 2025 02:12:07 +0000
+X-Authority-Analysis: v=2.4 cv=ZaLWNdVA c=1 sm=1 tr=0 ts=682d3677
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=efVMuJ2jJG67FGuSm7J3ww==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
+ a=pGLkceISAAAA:8 a=sEkq5x4IAAAA:8 a=P-IC7800AAAA:8 a=J1Y8HTJGAAAA:8
+ a=1XWaLZrsAAAA:8 a=20KFwNOVAAAA:8 a=gngr1YUT0vIlzbvq1ooA:9 a=QEXdDO2ut3YA:10
+ a=llby-PD1hR8gYtG5ERSV:22 a=d3PnA9EDa4IxuAV0gXij:22 a=y1Q9-5lHfBjTkpIzbSAN:22
+ a=xYX6OU9JNrHFPr8prv8u:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=7P7k8gutjP8wk9Jbfv5pLHYgNfWP20/s0ynYFVASyHQ=; b=VSV6PJzYxmzLKICGhF42m8Vi2R
+	OaT63JSAPdu+cq8rEXrP4DtdJBB20u5rEkBzK3Ff8VnoSTWNRCOBHDQ6LmxlDC0l4MZKiCt7zeFI3
+	fjX2bnEH9qeumhXPOsOuLxAb7ZARIsGyPSGvWXRr5bFW95dQBfjqKxEVkdw4vFK7rdxK10h7quROX
+	1ZXwJf6nIZUWxB7ef0Hf1m2CXne63iEscWFv8Jk0DN1QI+Jl8W3CtWTnQlGzC7OxvXLmMXvDYt7zj
+	3sYsgqQrg5wUqYmgbf5u2GzGGm9xZHvjeSfu6yTgZdbyeb4tjuUacLvfbcmmtnglDrD1zPdczfUMu
+	8DzK67iQ==;
+Received: from [177.238.17.151] (port=37062 helo=[192.168.0.27])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1uHVmK-000000014bO-0QiZ;
+	Tue, 20 May 2025 17:49:44 -0500
+Message-ID: <96e156aa-0882-46e6-bd8b-8285e76481e7@embeddedor.com>
+Date: Tue, 20 May 2025 16:49:17 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8510.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 54edb291-93ec-47ab-33b1-08dd980cd585
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 May 2025 02:11:44.5227
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: SA6tYvYsCwPgG4I61L5Vb8xtLJh3MrfRdsav7PHO1z08hCZlEJDKkNQOG59xYyyIO5Yw/yQFMOasy0gZlGbrYQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7972
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/7] ieee802154: Use struct sockaddr_storage with
+ dev_set_mac_address()
+To: Kees Cook <kees@kernel.org>, Kuniyuki Iwashima <kuniyu@amazon.com>
+Cc: Alexander Aring <alex.aring@gmail.com>,
+ Stefan Schmidt <stefan@datenfreihafen.org>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, linux-wpan@vger.kernel.org,
+ netdev@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+ Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni <kch@nvidia.com>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ Mike Christie <michael.christie@oracle.com>,
+ Max Gurtovoy <mgurtovoy@nvidia.com>, Maurizio Lombardi
+ <mlombard@redhat.com>, Dmitry Bogdanov <d.bogdanov@yadro.com>,
+ Mingzhe Zou <mingzhe.zou@easystack.cn>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ "Dr. David Alan Gilbert" <linux@treblig.org>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, Stanislav Fomichev <sdf@fomichev.me>,
+ Cosmin Ratiu <cratiu@nvidia.com>, Lei Yang <leiyang@redhat.com>,
+ Ido Schimmel <idosch@nvidia.com>, Samuel Mendoza-Jonas
+ <sam@mendozajonas.com>, Paul Fertser <fercerpav@gmail.com>,
+ Hayes Wang <hayeswang@realtek.com>, Douglas Anderson
+ <dianders@chromium.org>, Grant Grundler <grundler@chromium.org>,
+ Jay Vosburgh <jv@jvosburgh.net>, "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, Jiri Pirko <jiri@resnulli.us>,
+ Eric Biggers <ebiggers@google.com>, Milan Broz <gmazyland@gmail.com>,
+ Philipp Hahn <phahn-oss@avm.de>, Ard Biesheuvel <ardb@kernel.org>,
+ Al Viro <viro@zeniv.linux.org.uk>, Ahmed Zaki <ahmed.zaki@intel.com>,
+ Alexander Lobakin <aleksander.lobakin@intel.com>,
+ Xiao Liang <shaw.leon@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+ target-devel@vger.kernel.org, linux-usb@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20250520222452.work.063-kees@kernel.org>
+ <20250520223108.2672023-4-kees@kernel.org>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20250520223108.2672023-4-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 177.238.17.151
+X-Source-L: No
+X-Exim-ID: 1uHVmK-000000014bO-0QiZ
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.0.27]) [177.238.17.151]:37062
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 0
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfHoararcu8F0EYKq9Ut2ArH204U1J+nskEJ25RXfoDo6rpPd9AIuBJxTaggsQkzESsEQSLVdFyJF8RAdd8rOwmkm4siOWVPnbBq9aR5hLlU3jwVwSx/s
+ xdzx86ckgn30XiMyxnN2d+Ot/kCXJ33VCLRR0J0zFvA3vrLns5L4vwQuKzJP1lyj9sTgOWVuTK4x9aW7Wq5w4kTMyfWGzvIRD+Na+AhStKyz+Hypiwazoold
+ DCx4cZ6kvWcZzGsfhevuLfxAXXF8MH73RDNogWKNXZJZoOIt/EnJvatdqZa/hBB5x+70JT3OiF7gr3m4HUm0/Qx21OylLf+c6pHHnnilnWxOggNFsGJKeIJX
+ oNZPEwff+RnHiBYdKAmiSJiyoD2apy0+vvP9MGijKAayAak7APzzAoZqX9A7TU4swsoqdCpsrWcg870/ogCGtdAL6Q/1zwEVBH1bu4ZVQ3mqChAm19ve3DEw
+ DQpxYHAI0QTy08bkY0cKRLOsPGwqUWbzdyRaAA==
 
-> From: Arnd Bergmann <arnd@arndb.de>
->=20
-> When the new library driver is in a loadable module, but the enetc
-> core driver is built-in, the kernel fails to link:
->=20
-> aarch64-linux-ld: drivers/net/ethernet/freescale/enetc/enetc_cbdr.o: in f=
-unction
-> `enetc4_teardown_cbdr':
-> enetc_cbdr.c:(.text+0x70): undefined reference to `ntmp_free_cbdr'
-> aarch64-linux-ld: drivers/net/ethernet/freescale/enetc/enetc_cbdr.o: in f=
-unction
-> `enetc4_get_rss_table':
-> enetc_cbdr.c:(.text+0x98): undefined reference to `ntmp_rsst_query_entry'
-> aarch64-linux-ld: drivers/net/ethernet/freescale/enetc/enetc_cbdr.o: in f=
-unction
-> `enetc4_set_rss_table':
-> enetc_cbdr.c:(.text+0xb8): undefined reference to `ntmp_rsst_update_entry=
-'
-> aarch64-linux-ld: drivers/net/ethernet/freescale/enetc/enetc_cbdr.o: in f=
-unction
-> `enetc4_setup_cbdr':
-> enetc_cbdr.c:(.text+0x438): undefined reference to `ntmp_init_cbdr'
->=20
-> Move the ntmp code into the core module itself to avoid this link error.
->=20
-> Fixes: 4701073c3deb ("net: enetc: add initial netc-lib driver to support =
-NTMP")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+
+On 20/05/25 16:31, Kees Cook wrote:
+> Switch to struct sockaddr_storage for calling dev_set_mac_address(). Add
+> a temporary cast to struct sockaddr, which will be removed in a
+> subsequent patch.
+> 
+> Signed-off-by: Kees Cook <kees@kernel.org>
+
+Acked-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+Thanks!
+-Gustavo
+
 > ---
->  drivers/net/ethernet/freescale/enetc/Kconfig  | 2 +-
->  drivers/net/ethernet/freescale/enetc/Makefile | 3 +--
->  2 files changed, 2 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/net/ethernet/freescale/enetc/Kconfig
-> b/drivers/net/ethernet/freescale/enetc/Kconfig
-> index e917132d3714..90aa6f6dfd63 100644
-> --- a/drivers/net/ethernet/freescale/enetc/Kconfig
-> +++ b/drivers/net/ethernet/freescale/enetc/Kconfig
-> @@ -16,7 +16,7 @@ config NXP_ENETC_PF_COMMON
->  	  If compiled as module (M), the module name is nxp-enetc-pf-common.
->=20
->  config NXP_NETC_LIB
-> -	tristate
-> +	bool
->  	help
->  	  This module provides common functionalities for both ENETC and NETC
->  	  Switch, such as NETC Table Management Protocol (NTMP) 2.0, common tc
-> diff --git a/drivers/net/ethernet/freescale/enetc/Makefile
-> b/drivers/net/ethernet/freescale/enetc/Makefile
-> index f1c5ad45fd76..0af59f97b7e7 100644
-> --- a/drivers/net/ethernet/freescale/enetc/Makefile
-> +++ b/drivers/net/ethernet/freescale/enetc/Makefile
-> @@ -6,8 +6,7 @@ fsl-enetc-core-y :=3D enetc.o enetc_cbdr.o enetc_ethtool.=
-o
->  obj-$(CONFIG_NXP_ENETC_PF_COMMON) +=3D nxp-enetc-pf-common.o
->  nxp-enetc-pf-common-y :=3D enetc_pf_common.o
->=20
-> -obj-$(CONFIG_NXP_NETC_LIB) +=3D nxp-netc-lib.o
-> -nxp-netc-lib-y :=3D ntmp.o
-> +fsl-enetc-core-$(CONFIG_NXP_NETC_LIB) +=3D ntmp.o
-
-Thanks for catching this issue.
-
-The purpose of netc-lib is to be a library that provides the common interfa=
-ces
-for enetc and NETC switch drivers to use (Note that switch driver is not ad=
-ded
-to upstream yet), while enetc-core is only for the enetc drivers. So please=
- do
-not move ntmp code to enetc-core driver. I think changing "tristate" to "bo=
-ol"
-would be enough to fix this issue.
-
-BTW, the blamed commit is only present in net-next, so the target tree shou=
-ld
-be net-next.
+> Cc: Alexander Aring <alex.aring@gmail.com>
+> Cc: Stefan Schmidt <stefan@datenfreihafen.org>
+> Cc: Miquel Raynal <miquel.raynal@bootlin.com>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Cc: Simon Horman <horms@kernel.org>
+> Cc: <linux-wpan@vger.kernel.org>
+> Cc: <netdev@vger.kernel.org>
+> ---
+>   net/ieee802154/nl-phy.c | 8 ++++----
+>   1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/net/ieee802154/nl-phy.c b/net/ieee802154/nl-phy.c
+> index 359249ab77bf..ee2b190e8e0d 100644
+> --- a/net/ieee802154/nl-phy.c
+> +++ b/net/ieee802154/nl-phy.c
+> @@ -224,17 +224,17 @@ int ieee802154_add_iface(struct sk_buff *skb, struct genl_info *info)
+>   	dev_hold(dev);
+>   
+>   	if (info->attrs[IEEE802154_ATTR_HW_ADDR]) {
+> -		struct sockaddr addr;
+> +		struct sockaddr_storage addr;
+>   
+> -		addr.sa_family = ARPHRD_IEEE802154;
+> -		nla_memcpy(&addr.sa_data, info->attrs[IEEE802154_ATTR_HW_ADDR],
+> +		addr.ss_family = ARPHRD_IEEE802154;
+> +		nla_memcpy(&addr.__data, info->attrs[IEEE802154_ATTR_HW_ADDR],
+>   			   IEEE802154_ADDR_LEN);
+>   
+>   		/* strangely enough, some callbacks (inetdev_event) from
+>   		 * dev_set_mac_address require RTNL_LOCK
+>   		 */
+>   		rtnl_lock();
+> -		rc = dev_set_mac_address(dev, &addr, NULL);
+> +		rc = dev_set_mac_address(dev, (struct sockaddr *)&addr, NULL);
+>   		rtnl_unlock();
+>   		if (rc)
+>   			goto dev_unregister;
 
