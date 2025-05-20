@@ -1,348 +1,285 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB0CE2417F0
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 15:24:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747754670; cv=none; b=RfUqA/TFSmBNBcfGiqCq5d9TPYr58CHWCJD2iWmbb9VJu8PIkbtzuiIWJbCQ1giHsHk6myn9WalLM2umF1hsmst/EdowUp2dOE38cb5yoAVm3wuCv2UjsxMO0VOzWyIgEMPgNkjebWu/ZByFZK80x7ER5BQss2yJhcGKnTnv75s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747754670; c=relaxed/simple;
-	bh=f0MpGbHeYx1NDD6wBepKitb5c9aZCB95bTd81EugfAc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qHeP6gM5DTWXT53JBcWG3aU7z8v75a83+zgkKPbZAjMN+gR4bqQKDrZ3HxDpm6X/IFyMkzQs+PhC+cKGatAxJKqJD5hBHpkgJdvFhw/HxIIvu+9aw2fV2NvMYBq3qqIz1REhBoak1cyQetoKjLgIMKY+S6gh6N4pJ0uQcVQxpy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Yiq5FD8O; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90FA025FA29;
+	Tue, 20 May 2025 15:24:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747754673; cv=fail; b=QcjhZUW6PCramEurp3zrfSBvmuL/CDd/5GXAdC/p1xfSnxgDmo1zW/b4U1F1HSYYI3VVgr/WvQZFaq02Zx6MQAqsWFxK+w3SZuPmRDbm0qPVaIfNX7t6wHwNgiQzeQFoLzt5D5owStm1svgkMqwOpV2q5ILbpy3QKqNQMGoAL1g=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747754673; c=relaxed/simple;
+	bh=+JkufXq4ZY5riYXFH/y7IU04PgPVvYVdHzN4MgYIoP8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=rfuTY6Gs/sfu8xDrnbTIVDI27bcWZkr1sdIbEVBD6nhdquv5ykIob57ImSjD7xxIAIT7eZN1owHO54pbVGQUs6AY2RWHYpP84z3IbsfSPN5HRTZwoPEJu3JF1Bron+JY+9wI/UDQRDeauAf0NcEP48FZMN7XBH4MWDWYUA0zH5c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=QRJ2cEH8; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=gDMOQgSM; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Yiq5FD8O"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747754667;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Mu98gf3Jl/zQTd9OBHRRLq1ew4Yr13gaRyYVNVUQ82U=;
-	b=Yiq5FD8OxdsLigJjwNGBUGVBhvlgaCshT7m9PTJR5c7NkbFBvC3qiMXv9+1ZWmsBCpxgcR
-	sbFwqnW73WTW5yDzu1QM3kxdx/k3kTnoWiu+eWNLoWhWLI7AIOlAe+6dOcYqzecIqsaCqP
-	Z2ANBPJpp/9nwNAuIXfWAwHeQdLhjdg=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-433-FJZOttIgOeuxD7I1K5d9aQ-1; Tue, 20 May 2025 11:24:26 -0400
-X-MC-Unique: FJZOttIgOeuxD7I1K5d9aQ-1
-X-Mimecast-MFC-AGG-ID: FJZOttIgOeuxD7I1K5d9aQ_1747754665
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-441c122fa56so28294465e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 08:24:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747754665; x=1748359465;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Mu98gf3Jl/zQTd9OBHRRLq1ew4Yr13gaRyYVNVUQ82U=;
-        b=GArcGhsBU+OlARMgdwQgMoRdKGg14vdH73XX59R9IS+0YE9VT80XSeRBKgfZ7/Rfi6
-         fZLFKoqm2isT6p1aetkv55Rdr7fAm+/ZX69bsmk5Jcoen4RflOhGX072Sdn0OthgBJK+
-         25orKK1+GzVi/2Q4VrYyvfsEG20+vl8OgAsjo2ZpXC19/Uap0mroLXAzCuyaTzSi/EQP
-         9MrNjaFJsqJIVAO13Hmeol6YVT2wTb6Ji7Uf/akmZaSBXpwmujZQWyNwQD51o//4zMmq
-         5fHhPUBkgSkmQrmDa83QmvsiV0r1Ipi7ZZt1nGYzRBJ5Sl0fEJzE5TXeitHTlmsePyZp
-         dqiw==
-X-Gm-Message-State: AOJu0YwVO78URTueLs1HD0FWXfnG7S7xetY2jYft43TM5BaQyje49SHC
-	ZZQu1Q5fZWD0Ex1KHHQtcT0Uzf04lk1DUSQBuw/JG1FRxJtz/RdHy5+q8R38o5ce6RcwSwoS42i
-	a6do/+uLHoCJ0nVEFCqNxk19D7dPkZDtgzXImZdBjHng0/Jvw8zPKk9QkCOYnywuKZwaVjKNKLx
-	OW
-X-Gm-Gg: ASbGnctfekhfm0IsvS71N76qC+flHab59BI9ZqTGrQb4isd5VscDk4ILp0+HwNhoFcl
-	yk5HuvFt4tHc6REb1QUIQuJaWeD5XWj083Ati3Uj7Br3Hi/19GIJfqKZqGM/otVaoflYX7rr5LF
-	XUizq2kf0E4siJ5vre9rQ5cu32woI/pt8tE1fHljwhpkazt3xaCfswNVLelZoJ2YPC3D1Vl1vtq
-	WsmmR+itx9fuB5qYcHW7pt6OfmOtMf2gzZEdCC73cdhkKG6q8cZZFKqzkXMpJa0stEPlqgusubg
-	X4Hy9OCIwmrxV68dOSGRIv+LGcqzXAJ+2wfGWA==
-X-Received: by 2002:a05:600c:c13:b0:43d:79:ae1b with SMTP id 5b1f17b1804b1-442fd627416mr163611685e9.14.1747754664843;
-        Tue, 20 May 2025 08:24:24 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEFiijNDiL4vFMPRretgaxAz9fWfg/hsvAlE0akx/D8RUzLNfLlG5TcDgmHaznHR4BEm4KjVg==
-X-Received: by 2002:a05:600c:c13:b0:43d:79:ae1b with SMTP id 5b1f17b1804b1-442fd627416mr163611355e9.14.1747754664302;
-        Tue, 20 May 2025 08:24:24 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.30])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f78aeb56sm33712185e9.27.2025.05.20.08.24.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 08:24:23 -0700 (PDT)
-Message-ID: <da1865ac15e46469e9b4bcf1933edb3959755885.camel@redhat.com>
-Subject: Re: [PATCH v5 5/6] cgroup/cpuset: Fail if isolated and nohz_full
- don't leave any housekeeping
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, 
- Waiman Long <longman@redhat.com>, Anna-Maria Behnsen
- <anna-maria@linutronix.de>
-Date: Tue, 20 May 2025 17:24:22 +0200
-In-Reply-To: <aCyRhAeGwLSVf2LZ@localhost.localdomain>
-References: <20250508145319.97794-8-gmonaco@redhat.com>
-	 <20250508145319.97794-13-gmonaco@redhat.com>
-	 <aCyRhAeGwLSVf2LZ@localhost.localdomain>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
- xyhmqeUWOzFx5P43S1E1dhsrLWgP
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QRJ2cEH8";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="gDMOQgSM"
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54KEONln020012;
+	Tue, 20 May 2025 15:24:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2025-04-25; bh=y6Mwnl603OVZkBI5vb
+	8WPJrDKTtl8d2+3qERxchfmOc=; b=QRJ2cEH8otLg7zx6BizP3EiMIZF2WF88By
+	gQInr/pHBvwCYgpYVhj67keAK54PY+rtCAr8vqWG6wirgS+gICDzfD7MKb64sfos
+	4uNAKTt6h/uZdd/uElHlFXeUB+mK2xVYdiGJWa0f11E6jsdkOcWgfDJ7RLUUQwMI
+	FUCiEZJR3oD7jX98zMehFyDpnlF5sf20UfE8PuIglWQpqb0Pzdb0OuOWrYd4gKtb
+	Ai2VBmfWgqLEuB1Et1gLVSLRJiZTrk/DdxtEC/S91lJpN/hFaBWIDMEmq0B77PTU
+	5jgxhOIqDqXdd6KbcxL4yFU/zivyeAtzMbfc4+0Yrg2q90Yllf5w==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46rufdr6ny-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 20 May 2025 15:24:15 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 54KFGqu5000896;
+	Tue, 20 May 2025 15:24:15 GMT
+Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2176.outbound.protection.outlook.com [104.47.55.176])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 46pgw86d28-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 20 May 2025 15:24:14 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Ex0ELsxDwX4nU8h3vL8z8/0zKYA5U4g471p0R8PXcQw1je/64tCfaqxegUSxekjuPkb1Lb9IdPHAj6sPhdL4rwSkokFLmbroLoqhoACJuPBnCKAlUEfNR3TgkpTO2MSUy1y4gdZ1hdoAFnf9anFJqK5hPIKtRlm16dBZqQTSD5xrNmUotX5KCYYDi3DKy9+V7s5Tm7DvIuqqfU8lEKJFuIhsQWKrS6p/pssYy7VIutbalF/8j6nVx6U3f62aqaZt2dHj7uctBxi4wFlXvrC9RQCQ6enA7dVZh9YU0eGsdGf/UY50luMzvk3PuwBUgHJLTZxbhlzczuQp1jac4huk2g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=y6Mwnl603OVZkBI5vb8WPJrDKTtl8d2+3qERxchfmOc=;
+ b=oFG46rA5LnZcYNkkboipQiZ7sxwGM4RzKegdyFunLHChcwYOvcC3pF+lLSZaAGgpDBA9ptpeK6Ceh2XAtRVbmmCG4nJb5srUN1PIBVlhC6BCy4mzFfc3Wv2e0V5sUMoF1RfYwXW8LdVpGQHxiZpF4qgwOXg+4qg/9e9lhNxJZ9Yl+CQ3cUFo4f2pQ+aUiS+mIBssa6myephf9Fn3jhbVHVMJbS/mZrOCXCRceE/JZN7fAC9zGL0eJmPYvWwlqm31N29QZsOJz0KfGbtyovSWDpWpxMse7wdDlO2EzvyZz+GeWo6kG/v3ZBzNlqwRqDFSTvLygt4CrhYPjekmmjUpVA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=y6Mwnl603OVZkBI5vb8WPJrDKTtl8d2+3qERxchfmOc=;
+ b=gDMOQgSMBei7tNpYnonv6OCSnEVLjVUTe18zdgpnPz3RB9JwHYk/wNOCbwZenTkZ6x+oU13Mc8HRWnybjVV9Alb9nxHSqc0qpXnI2PTo2pS0191ybB/7uR1FNge27vyTclUUHqNS3VRSI5uUKDtCnTax3m8cvWOYuGYvUPBHpWs=
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
+ by SJ0PR10MB5646.namprd10.prod.outlook.com (2603:10b6:a03:3d0::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.33; Tue, 20 May
+ 2025 15:24:12 +0000
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2%5]) with mapi id 15.20.8746.030; Tue, 20 May 2025
+ 15:24:12 +0000
+Date: Tue, 20 May 2025 16:24:10 +0100
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: Claudio Imbrenda <imbrenda@linux.ibm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+        James Houghton <jthoughton@google.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>,
+        Yang Shi <yang@os.amperecomputing.com>,
+        David Hildenbrand <david@redhat.com>,
+        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>, pbonzini@redhat.com,
+        kvm@vger.kernel.org, linux-s390@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH] KVM: s390: rename PROT_NONE to PROT_TYPE_DUMMY
+Message-ID: <cb0894b6-3c41-4850-a077-2d18f5547d2e@lucifer.local>
+References: <20250519145657.178365-1-lorenzo.stoakes@oracle.com>
+ <20250520171009.49b2bd1b@p-imbrenda>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250520171009.49b2bd1b@p-imbrenda>
+X-ClientProxiedBy: LO4P265CA0124.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:2c6::14) To DM4PR10MB8218.namprd10.prod.outlook.com
+ (2603:10b6:8:1cc::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|SJ0PR10MB5646:EE_
+X-MS-Office365-Filtering-Correlation-Id: 28237671-93d0-4302-c2e8-08dd97b25fc4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?6Sm2jAFPsp4yddt+fci1thcFFob62HqaN6mj8HqTTTRY1iacx3Vlq39IB5h3?=
+ =?us-ascii?Q?selhgNVlv/wrKkcxKHpMXbnRVrcxbN2t48vE6k5xaWryW0sfSLz59QD711d1?=
+ =?us-ascii?Q?TG0NbpBJh+oqIBdbdkqcfSoLwEhr3Tw5FAsq6K7TX79fcjLegC+akuqs+xqp?=
+ =?us-ascii?Q?SyM0Kw8w49+ld4MPvX/TZCd2Q6iPS9SYw66SlMbegrqFgFx/DLX01bOs9iMR?=
+ =?us-ascii?Q?jldor3T1oFQLg33E9dP90LqNW/RN3ZFlDvYA7qvIKDjB5VmeyguUSrhfzLy8?=
+ =?us-ascii?Q?dNMjBSHEbAxIi4V3vdf2O13cXNRmmLg642Pb0nTnR3hNEl2yH2NR2WHGODqq?=
+ =?us-ascii?Q?1YyCmkjgcJIAPlET7Zgg/96nWeSD7jizPgYURcny6kWEIeHWboLEUVgtKv9b?=
+ =?us-ascii?Q?IVx4dLt1MuY3N8heJPzBm0DC7ZICgdk9aNLlJZsBl7HebrskSiXna+9bAScc?=
+ =?us-ascii?Q?b6NfJ3kuJL8vwvHk/O+nLU9P/PbCADFrR7vmumCDp7SLnnLVYpp0DswTKo1/?=
+ =?us-ascii?Q?PYeTSfY1cqX2c4v6iqnlI2EmFHp3LMoQ4ea10eVcVafN/o9HgcX7u7JQHrqx?=
+ =?us-ascii?Q?15nYE0059SZJK64dJQ8OPV75ZQ6BPbvqnp5X4M0xL1tbHT0NnCh6V7CRRhSD?=
+ =?us-ascii?Q?qqcL7yFPo/OIBkwCf9JcbCq7LSVGyRtUjYVkEVXzmtQXkL0b2Jpm50NiPXOW?=
+ =?us-ascii?Q?VLde+CU8C07Q3lqq8DB/RaqJJU5orfCBYKko7VJoc9mr0C57zivpWG6UBVQY?=
+ =?us-ascii?Q?9lLc0eO+uYJ3YyZIYHzER5/1DMbqr8gq/r04WZzMlvTG4Qz6vFMNxZbp524J?=
+ =?us-ascii?Q?a1D09H4hBWPv7qHHrZFgKL/Dl/Y+KaU2q7d33RRXJEz4HuOxvUU2CvnDzYsF?=
+ =?us-ascii?Q?x6MqEPlaXuVYjXTzfOKPYIqb8k0ZQpelJt0p4x1iOZf6w8U7U0K3FY3HQYIH?=
+ =?us-ascii?Q?vc52uP+kn3/g1iBYJ8PU7pSxyZRr49qPp4hgfAWRYOokCtij/8EJoCgQIVIA?=
+ =?us-ascii?Q?0bsxn8+zPz6weUsTaFI3VmlI66J1K1hcX0NgQtbmeodfwOlxKPmEFC87Ybha?=
+ =?us-ascii?Q?NdU0XCtrk6zGvwqZr9B1kSdIKXTqMY1PuqafnujkWt7gF1Y9G34/vWnIaZKp?=
+ =?us-ascii?Q?hkYS3ea+IsF9a6Csbeh+rgB3VlmddPKua9uIoKryB3X1TzrR4DtKXSPpT8/z?=
+ =?us-ascii?Q?R/6j88LKSAEvqSKbEX2eyhtTRX2/L6oyYuK66XpJ97wECLEXUzie/8nvQBix?=
+ =?us-ascii?Q?HtbIyCBwn7uJi8QEXArgtgYYlspbzXppTPCwEVg5aoNWxHvhZrE4B8Z0gU/9?=
+ =?us-ascii?Q?RdaVtjGMoA+iWyR2aSXw3rkz7BnxPhfyAsGV29mASvsQifBOnfctdDAOcoKg?=
+ =?us-ascii?Q?ySQZkY41urA5C01PvgID4pihsOjm?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?s7LCXv/4xeWUYvMJQmPS7JHa0T/zTk2+apux27EbGs0Du0yhVdPlJlhZiztK?=
+ =?us-ascii?Q?zebLtyYuiql+jChs+nNBqmimtYaM5dbFsB8ZS1moFIgj9FWUDbSouPaMBY8C?=
+ =?us-ascii?Q?IGQvppXMEDRl/Vata3YLgu/L6+1QMi1hqKTsXJa8UpshQ+4Kgk9MnQmXYaoQ?=
+ =?us-ascii?Q?kk/tO+/W14IQYIfv3z8gvw2AEnOW04Mw03TtpH8odegLMNc7JRnq2rz/ewhe?=
+ =?us-ascii?Q?l86UTuBhqv0016jQdkncVSj7kpw6Z2FQQ65842BZabF0g31p5UxZzmxaP00H?=
+ =?us-ascii?Q?YHACwAA6c46d32HMv3p/o8Zd9fP258/RsmedEseO4LPaJNv2HCTUZj4FHcrZ?=
+ =?us-ascii?Q?vxL26EGzZjFbbc5Ccm7gTJNdVe56pCKysECFe9fD2fLLTAYKLJS9auLUqU/5?=
+ =?us-ascii?Q?ttKfy8au6xUpuNPXuX9eAAa0S7qgTysdudA+zmRilz1cZNqkgn0IM92SsQWX?=
+ =?us-ascii?Q?7ZAabcYHb5COdAGcA6R1A7NlRQG9VTkYeaedDGwdY3OYeAUjEFSuxxY4P6do?=
+ =?us-ascii?Q?UIM+8SWG/kygm41QRrp95tLY0+Srdu1SXeMBzIIiEmOHcWwc5Vao2Z7lmobT?=
+ =?us-ascii?Q?Xv9NR+cEOOWB+RlzFQbdM1Lz3Gr24eIP/w004MRZUz4Y9DatCzJlbfa6tsMY?=
+ =?us-ascii?Q?IifYBmWKPoAXmM6jJGx3AkTh+iAu7JTTR7mAkca8gtgS4UaBVpBusYo/V5t/?=
+ =?us-ascii?Q?lD3Q+uK/77uD1dijJeM9j5K1V0IoXGvSPr/w6XXBkSOAYZiixnQbAd1muad5?=
+ =?us-ascii?Q?YGgTTEJd9+3fkGY+kEeym4wjTx27fWVodph6X7mFKZEmYVwYXxYnvIF5M4UQ?=
+ =?us-ascii?Q?5/dFMJq4b7IjgfCUyuFDLQg86kOc98qKyFemlvhxHMy+Ehg0/Lk2lglaw3JB?=
+ =?us-ascii?Q?2+6xYQx6AzTCJIP7e3r6YgQOqDo/9c3nXUxDYlU8WfeZ3rBn9wz46/rKQGCT?=
+ =?us-ascii?Q?2NcTMSbCpm/EHaGXWdN7yVLYztN7dIMUkgfdogBqKFKtFi/SXZ+lYjN3hysR?=
+ =?us-ascii?Q?HdedrG15bQ/oOC+ifTiWP4m5w4DKePUvNDSmHYbH0pKToAl1nSuWgz+jaND9?=
+ =?us-ascii?Q?YLdga0f+2SSj5PF8xa9fwKmkznhTpUviz6WpK1sQYUdGFnsjCLcqA/A82giw?=
+ =?us-ascii?Q?qDnnOffjR8bdWXENP8nuzOjIHZGv9B8iSbL+HZSM/F2IVm4ryTw9n5uUFn/c?=
+ =?us-ascii?Q?Ov2BnDJfQNPPdMGgsUBJoYYqjsHxk+7QkSc0UksTMhAIlJFIsbvxKgSjNBAw?=
+ =?us-ascii?Q?W1CizKP1lReslncC2fDQbsnCxtMKxFPyJSV2QiI0J2N1Ijrxf4bqaAonYYxG?=
+ =?us-ascii?Q?J0or3ZBC8Me3SXru1oA79Ws3NCG60hEZ6DJMKwy89JFtn1IFCvt0QgM4wH6F?=
+ =?us-ascii?Q?pEBzKjp9B/evydInfVbvqjMmzF/NRnII3UQ6fhtIOD3gE+WAUzXSpT4jefPH?=
+ =?us-ascii?Q?G/GOO22Xgt2n62V88AhjPVAetkYGorPUOlfYXH9h7yQSc9Ut1rCArkIaUE3+?=
+ =?us-ascii?Q?qymC88VOL10zfRL4QC0fiVb+z0nA/8+cMze0phKAWRRJ+80kcXZuBlARKnDe?=
+ =?us-ascii?Q?gjjysJUPmnorKk9WWMYRYHNvZoiJZRsJChQ4AyCPw5Lv6RVd7iXrRIBJvLrX?=
+ =?us-ascii?Q?bw=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	cVnXgAkx5aKYhGEKke1n5+58N/GBLFH5cKPTn9klUpaLlTBxsQq8861cVdP4Ig5kwnGlQUOlzac/QFYH8i9PowkGSU8N3xvmB5hh5sQeHp8NYQhuG3Z35el7NcBjmOEgOx1k/LYBv6pcQBCPpos1kTBe+CAf1rmCoW6RajSsPUjnQT2aeTDP2W44ZkoKCDJLub+lem5cmIn0qV7qxUjoDd2jQug6xrWosI2wZxJgnhR0Y9bOT3PRCWeFc2scC6j3SD/gTfaSLIU0SIwxfJcXLo/namuPSkw4fIBgBoWxrpXgh8YMuBpvzX8s8zLikZsf4q4nAV6wltGghu5qkGSJjPYSqeHV7cYS3iOFSue+vKFsZNwIxkPuInMA6093byE2C0IzKOWfiQnSHiwm6R0fEQcVHXqcl5VCv0ajueDZhyOoB2F6/EKQ6T0xEkY7qvMuzLXA/7Iu+0byJEby68KMvVo66C78VTx5dbO65ugw7Mzjd/2cUpYukqos28YAW4qxamY/4DOXRihOaYikY9t3kYidPYBUdScuCa7vVqAvtYkxLcpcTBzSkdV29puE7Qr0f80UQE9Ao3wSWKM0XS8Byn85yjXGiAunQ5NVdmTBBQo=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 28237671-93d0-4302-c2e8-08dd97b25fc4
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 May 2025 15:24:12.4034
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +99ZVW+hVm6nLkJ5bX6955uOBhPj9jIsLfMjUBRdY3nUXB3UvzMpHOPynb59/4YqPdWw9WOn+D1aNtMT/rPyzpp8sLqIsKE1+IjoR2WClcI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB5646
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-20_06,2025-05-20_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 phishscore=0
+ bulkscore=0 adultscore=0 mlxscore=0 suspectscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505070000
+ definitions=main-2505200125
+X-Proofpoint-GUID: rUtZaIN0jcvaFy115QkBDx1Yx9QQYB15
+X-Proofpoint-ORIG-GUID: rUtZaIN0jcvaFy115QkBDx1Yx9QQYB15
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDEyNSBTYWx0ZWRfXwW26WJRs715W TTYWtXZetc8qCTAAE9Z3mKC5UBqL0JHnk2QIYAZ7EtC9hjeOeX4sBDz2YmgvkhmSmqbdviX89w6 FeN2WoiXjDIVkbQbFijFjYEwu/NXuxrPdZax/QdqPdjVA7jqdJ8AbSW7hmYKqaLgdpYXiNpkz01
+ WEcEHLvIOXQr5XYKi6Pspu+BxL9fiI2WslltCp15dt+WIHkl6dNAob2dZSHUJ32FbQqMJWHd6rQ wHPbEc2dbE94NX7qt7ZsLQprMjcbo8zOKSMOaN0g5cdwIlv/lIghVXgh5f9GI+Vaa6Uwc5hwOw7 sg1WL3d07qtNhaazsFSsk+RVst0QC2xt6zmh7bomLJdPSgMrMAFTteFjPWJMUbh2zsYsMWwVrjQ
+ pKg9VLv/1j9+K8J2ncF5RJqKDiPlxpm2FBMQlK6fOwaRNiy6MwhW3TJDy/FIjccpFj3+66LX
+X-Authority-Analysis: v=2.4 cv=c/SrQQ9l c=1 sm=1 tr=0 ts=682c9e9f b=1 cx=c_pps a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19
+ a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=GoEa3M9JfhUA:10 a=VwQbUJbxAAAA:8 a=QyXUC8HyAAAA:8 a=yPCof4ZbAAAA:8 a=TAZUD9gdAAAA:8 a=VnNF1IyMAAAA:8 a=vzhER2c_AAAA:8 a=20KFwNOVAAAA:8 a=tigQPNLc1hilJ32vbdMA:9 a=CjuIK1q_8ugA:10
+ a=f1lSKsbWiCfrRWj5-Iac:22 a=0YTRHmU2iG2pZC6F1fw2:22 cc=ntf awl=host:14695
 
+On Tue, May 20, 2025 at 05:10:09PM +0200, Claudio Imbrenda wrote:
+> On Mon, 19 May 2025 15:56:57 +0100
+> Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
+>
+> > The enum type prot_type declared in arch/s390/kvm/gaccess.c declares an
+> > unfortunate identifier within it - PROT_NONE.
+> >
+> > This clashes with the protection bit define from the uapi for mmap()
+> > declared in include/uapi/asm-generic/mman-common.h, which is indeed what
+> > those casually reading this code would assume this to refer to.
+> >
+> > This means that any changes which subsequently alter headers in any way
+> > which results in the uapi header being imported here will cause build
+> > errors.
+> >
+> > Resolve the issue by renaming PROT_NONE to PROT_TYPE_DUMMY.
+> >
+> > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> > Suggested-by: Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
+> > Fixes: b3cefd6bf16e ("KVM: s390: Pass initialized arg even if unused")
+> > Cc: stable@vger.kernel.org
+> > Reported-by: kernel test robot <lkp@intel.com>
+> > Closes: https://lore.kernel.org/oe-kbuild-all/202505140943.IgHDa9s7-lkp@intel.com/
+> > Acked-by: Christian Borntraeger <borntraeger@linux.ibm.com>
+> > Acked-by: Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
+> > Acked-by: Yang Shi <yang@os.amperecomputing.com>
+> > Reviewed-by: David Hildenbrand <david@redhat.com>
+> > Acked-by: Liam R. Howlett <Liam.Howlett@oracle.com>
+>
+> if you had put me in CC, you would have gotten this yesterday already:
+>
+> Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
 
+Thanks and apologies for not cc-ing you, clearly my mistake.
 
-On Tue, 2025-05-20 at 16:28 +0200, Frederic Weisbecker wrote:
-> (Please keep Anna-Maria Cc'ed)
->=20
-> Le Thu, May 08, 2025 at 04:53:25PM +0200, Gabriele Monaco a =C3=A9crit :
-> > Currently the user can set up isolated cpus via cpuset and
-> > nohz_full in
-> > such a way that leaves no housekeeping CPU (i.e. no CPU that is
-> > neither
-> > domain isolated nor nohz full). This can be a problem for other
-> > subsystems (e.g. the timer wheel imgration).
-> >=20
-> > Prevent this configuration by blocking any assignation that would
-> > cause
-> > the union of domain isolated cpus and nohz_full to covers all CPUs.
-> >=20
-> > Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+Though I would suggest your level of grumpiness here is a little over the
+top under the circumstances :) we maintainers must scale our grumpiness
+accordingly...
+
+>
 > > ---
-> > =C2=A0kernel/cgroup/cpuset.c | 67
-> > ++++++++++++++++++++++++++++++++++++++++--
-> > =C2=A01 file changed, 65 insertions(+), 2 deletions(-)
-> >=20
-> > diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-> > index 95316d39c282..2f1df6f5b988 100644
-> > --- a/kernel/cgroup/cpuset.c
-> > +++ b/kernel/cgroup/cpuset.c
-> > @@ -80,6 +80,12 @@ static cpumask_var_t	subpartitions_cpus;
-> > =C2=A0 */
-> > =C2=A0static cpumask_var_t	isolated_cpus;
-> > =C2=A0
-> > +/*
-> > + * Housekeeping CPUs for both HK_TYPE_DOMAIN and
-> > HK_TYPE_KERNEL_NOISE
-> > + */
-> > +static cpumask_var_t	full_hk_cpus;
-> > +static bool		have_boot_nohz_full;
->=20
-> Do you really need to maintain those copies?
->=20
-
-Yeah good point, I wanted to avoid allocating temporary masks but it's
-probably better than maintaining those..
-
-> > +
-> > =C2=A0/*
-> > =C2=A0 * Housekeeping (HK_TYPE_DOMAIN) CPUs at boot
-> > =C2=A0 */
-> > @@ -1253,10 +1259,26 @@ static void reset_partition_data(struct
-> > cpuset *cs)
-> > =C2=A0static void isolated_cpus_update(int old_prs, int new_prs, struct
-> > cpumask *xcpus)
-> > =C2=A0{
-> > =C2=A0	WARN_ON_ONCE(old_prs =3D=3D new_prs);
-> > -	if (new_prs =3D=3D PRS_ISOLATED)
-> > +	if (new_prs =3D=3D PRS_ISOLATED) {
-> > =C2=A0		cpumask_or(isolated_cpus, isolated_cpus, xcpus);
-> > -	else
-> > +		cpumask_andnot(full_hk_cpus, full_hk_cpus, xcpus);
-> > +	} else {
-> > =C2=A0		cpumask_andnot(isolated_cpus, isolated_cpus,
-> > xcpus);
-> > +		cpumask_or(full_hk_cpus, full_hk_cpus, xcpus);
-> > +	}
-> > +}
-> > +
-> > +/*
-> > + * isolated_cpus_should_update - Returns if the isolated_cpus mask
-> > needs update
-> > + * @prs: new or old partition_root_state
-> > + * @parent: parent cpuset
-> > + * Return: true if isolated_cpus needs modification, false
-> > otherwise
-> > + */
-> > +static bool isolated_cpus_should_update(int prs, struct cpuset
-> > *parent)
-> > +{
-> > +	if (!parent)
-> > +		parent =3D &top_cpuset;
-> > +	return prs !=3D parent->partition_root_state;
-> > =C2=A0}
-> > =C2=A0
-> > =C2=A0/*
-> > @@ -1323,6 +1345,25 @@ static bool partition_xcpus_del(int old_prs,
-> > struct cpuset *parent,
-> > =C2=A0	return isolcpus_updated;
-> > =C2=A0}
-> > =C2=A0
-> > +/*
-> > + * isolcpus_nohz_conflict - check for isolated & nohz_full
-> > conflicts
-> > + * @new_cpus: cpu mask
->=20
-> The description lacks explanation about the role of this cpu mask.
->=20
-
-Mmh yeah, that was a copy paste from prstate_housekeeping_conflict but
-I agree, I should describe it better at least here..
-
-> > + * Return: true if there is conflict, false otherwise
-> > + *
-> > + * If nohz_full is enabled and we have isolated CPUs, their
-> > combination must
-> > + * still leave housekeeping CPUs.
-> > + */
-> > +static bool isolcpus_nohz_conflict(struct cpumask *new_cpus)
-> > +{
-> > +	if (!have_boot_nohz_full)
-> > +		return false;
-> > +
-> > +	if (!cpumask_weight_andnot(full_hk_cpus, new_cpus))
-> > +		return true;
->=20
-> Do we also need to make sure that in this weight there is an online
-> CPU?
->=20
-> Can you allocate a temporary mask here and do:
->=20
-> cpumask_var_t full_hk_cpus;
-> int ret;
->=20
-> if (!zalloc_cpumask_var(&full_hk_cpus, GFP_KERNEL))
-> =C2=A0=C2=A0=C2=A0 return true;
->=20
-> cpumask_copy(full_hk_cpus,
-> housekeeping_cpumask(HK_TYPE_KERNEL_NOISE));
-> cpumask_and(full_hk_cpus, housekeeping_cpumask(HK_TYPE_DOMAIN));
-> cpumask_and(full_hk_cpus, cpu_online_mask));
-> if (!cpumask_weight_andnot(full_hk_cpus, new_cpus))
-> =C2=A0=C2=A0=C2=A0 ret =3D true;
-> else
-> =C2=A0=C2=A0=C2=A0 ret =3D false;
->=20
-> free_cpumask_var(full_hk_cpus);
->=20
-
-Yeah that looks safer. I'll do with a mask.
-
-> I also realize something, what makes sure that we don't offline the
-> last
-> non isolated?
->=20
-
-Mmh, I guess we need to enforce that too then, I remember in some
-condition the system was preventing me from doing that, but need to
-play a bit more to understand what's going on...
-
-> I just did a small test:
->=20
-> # cd /sys/fs/cgroup/
-> # echo +cpuset > cgroup.subtree_control
-> # cat cpuset.cpus.effective=20
-> 0-7
-> # mkdir test
-> # cd test
-> # echo +cpuset > cgroup.subtree_control
-> # echo 0-6 > cpuset.cpus
-> # echo isolated > cpuset.cpus.partition
-> # cat ../cpuset.cpus.effective=20
-> 7
-> # echo 0 > /sys/devices/system/cpu/cpu7/online
-> [ 4590.864066] ------------[ cut here ]------------
-> [ 4590.866469] WARNING: CPU: 7 PID: 50 at kernel/cgroup/cpuset.c:1906
-> update_parent_effective_cpumask+0x770/0x8c0
-> [ 4590.870023] Modules linked in:
-> [ 4590.871058] CPU: 7 UID: 0 PID: 50 Comm: cpuhp/7 Not tainted
-> 6.15.0-rc2-g996d9d202383 #10 PREEMPT(voluntary)=20
-> [ 4590.873588] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-> BIOS rel-1.16.3-2-gc13ff2cd-prebuilt.qemu.org 04/01/2014
-> [ 4590.875689] RIP: 0010:update_parent_effective_cpumask+0x770/0x8c0
-> [ 4590.876858] Code: 06 48 8b 0c 24 ba 05 00 00 00 48 23 85 f8 00 00
-> 00 41 0f 95 c6 48 89 01 41 8b 84 24 34 01 00 00 45 0f b6 f6 e9 90 fe
-> ff ff 90 <0f> 0b 90e
-> [ 4590.880010] RSP: 0018:ffffa4ce001ebd40 EFLAGS: 00010086
-> [ 4590.880963] RAX: 00000000ffffffff RBX: 0000000000000000 RCX:
-> 0000000000000001
-> [ 4590.882342] RDX: 000000000000007f RSI: 0000000000000000 RDI:
-> 0000000000000002
-> [ 4590.883683] RBP: ffffffffbdf52f00 R08: 0000000000000000 R09:
-> 0000000000000000
-> [ 4590.885071] R10: ffffa223062d2388 R11: 0000000000000000 R12:
-> ffffa223062d2200
-> [ 4590.886604] R13: 0000000000000002 R14: 0000000000000001 R15:
-> 0000000000000004
-> [ 4590.888309] FS:=C2=A0 0000000000000000(0000) GS:ffffa223bc4d6000(0000)
-> knlGS:0000000000000000
-> [ 4590.890183] CS:=C2=A0 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [ 4590.891385] CR2: 000055ab80ada170 CR3: 00000001084ac000 CR4:
-> 00000000000006f0
-> [ 4590.892901] DR0: ffffffffbc8c8420 DR1: 0000000000000000 DR2:
-> 0000000000000000
-> [ 4590.894341] DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7:
-> 0000000000000600
-> [ 4590.895765] Call Trace:
-> [ 4590.896400]=C2=A0 <TASK>
-> [ 4590.896938]=C2=A0 cpuset_update_active_cpus+0x680/0x730
-> [ 4590.897979]=C2=A0 ? kvm_sched_clock_read+0x11/0x20
-> [ 4590.898916]=C2=A0 ? sched_clock+0x10/0x30
-> [ 4590.899785]=C2=A0 sched_cpu_deactivate+0x148/0x170
-> [ 4590.900812]=C2=A0 ? __pfx_sched_cpu_deactivate+0x10/0x10
-> [ 4590.901925]=C2=A0 cpuhp_invoke_callback+0x10e/0x480
-> [ 4590.902920]=C2=A0 ? __pfx_smpboot_thread_fn+0x10/0x10
-> [ 4590.903928]=C2=A0 cpuhp_thread_fun+0xd7/0x160
-> [ 4590.904818]=C2=A0 smpboot_thread_fn+0xee/0x220
-> [ 4590.905716]=C2=A0 kthread+0xf6/0x1f0
-> [ 4590.906471]=C2=A0 ? __pfx_kthread+0x10/0x10
-> [ 4590.907297]=C2=A0 ret_from_fork+0x2f/0x50
-> [ 4590.908110]=C2=A0 ? __pfx_kthread+0x10/0x10
-> [ 4590.908917]=C2=A0 ret_from_fork_asm+0x1a/0x30
-> [ 4590.909833]=C2=A0 </TASK>
-> [ 4590.910465] ---[ end trace 0000000000000000 ]---
-> [ 4590.916786] smpboot: CPU 7 is now offline
->=20
-> Apparently you can't trigger the same with isolcpus=3D0-6, for some
-> reason.
->=20
-> One last thing, nohz_full makes sure that we never offline the
-> timekeeper
-> (see tick_nohz_cpu_down()). The timekeeper also never shuts down its
-> tick
-> and therefore never go idle, from tmigr perspective, this way when a
-> nohz_full
-> CPU shuts down its tick, it makes sure that its global timers are
-> handled by
-> the timekeeper in last resort, because it's the last global migrator,
-> always
-> alive.
->=20
-> But if the timekeeper is HK_TYPE_DOMAIN, or isolated by cpuset, it
-> will go out
-> of the tmigr hierarchy, breaking the guarantee to have a live global
-> migrator
-> for nohz_full.
->=20
-> That one is a bit more tricky to solve. The easiest is to forbid the
-> timekeeper
-> from ever being made unavailable. It is also possible to migrate the
-> timekeeping duty
-> to another common housekeeper.
->=20
-
-Mmh, if I get it correctly, this would mean we need to:
-
-1. make sure the timekeeper is not in isolcpus at boot
-2. change timekeeper in case it is included in an isolated cpuset
-3. avoid picking domain isolated CPUs when the timekeeper gets offline
-
-All those would be meaningful only if nohz_full is active, right? Am I
-missing any corner case? Are any of those already happening?
-
-Thanks,
-Gabriele
-
+> > Separated out from [0] as problem found in other patch in series.
+> >
+> > [0]: https://lore.kernel.org/all/cover.1747338438.git.lorenzo.stoakes@oracle.com/
+> >
+> >  arch/s390/kvm/gaccess.c | 8 ++++----
+> >  1 file changed, 4 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/arch/s390/kvm/gaccess.c b/arch/s390/kvm/gaccess.c
+> > index f6fded15633a..4e5654ad1604 100644
+> > --- a/arch/s390/kvm/gaccess.c
+> > +++ b/arch/s390/kvm/gaccess.c
+> > @@ -318,7 +318,7 @@ enum prot_type {
+> >  	PROT_TYPE_DAT  = 3,
+> >  	PROT_TYPE_IEP  = 4,
+> >  	/* Dummy value for passing an initialized value when code != PGM_PROTECTION */
+> > -	PROT_NONE,
+> > +	PROT_TYPE_DUMMY,
+> >  };
+> >
+> >  static int trans_exc_ending(struct kvm_vcpu *vcpu, int code, unsigned long gva, u8 ar,
+> > @@ -334,7 +334,7 @@ static int trans_exc_ending(struct kvm_vcpu *vcpu, int code, unsigned long gva,
+> >  	switch (code) {
+> >  	case PGM_PROTECTION:
+> >  		switch (prot) {
+> > -		case PROT_NONE:
+> > +		case PROT_TYPE_DUMMY:
+> >  			/* We should never get here, acts like termination */
+> >  			WARN_ON_ONCE(1);
+> >  			break;
+> > @@ -804,7 +804,7 @@ static int guest_range_to_gpas(struct kvm_vcpu *vcpu, unsigned long ga, u8 ar,
+> >  			gpa = kvm_s390_real_to_abs(vcpu, ga);
+> >  			if (!kvm_is_gpa_in_memslot(vcpu->kvm, gpa)) {
+> >  				rc = PGM_ADDRESSING;
+> > -				prot = PROT_NONE;
+> > +				prot = PROT_TYPE_DUMMY;
+> >  			}
+> >  		}
+> >  		if (rc)
+> > @@ -962,7 +962,7 @@ int access_guest_with_key(struct kvm_vcpu *vcpu, unsigned long ga, u8 ar,
+> >  		if (rc == PGM_PROTECTION)
+> >  			prot = PROT_TYPE_KEYC;
+> >  		else
+> > -			prot = PROT_NONE;
+> > +			prot = PROT_TYPE_DUMMY;
+> >  		rc = trans_exc_ending(vcpu, rc, ga, ar, mode, prot, terminate);
+> >  	}
+> >  out_unlock:
+> > --
+> > 2.49.0
+> >
+>
