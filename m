@@ -1,22 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70A2E25487E;
-	Tue, 20 May 2025 01:30:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47C70254AE4;
+	Tue, 20 May 2025 01:30:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747704604; cv=none; b=Tmxlqpq3/jdhpai66qvP/szTazjm6JTLPfzv1TJHjr+I9qeTIuEnRsmJE6mhVz8jggtSOmP+VJ1MMSuuNQMqZBi1wlLMIL0/yrcdtpikPWiCdjxbSuiK7z+qxya0EPy5sURFSD+MIKbFWXZt/qTy69bRXQpB+/htPaSqCjHdwmM=
+	t=1747704604; cv=none; b=WCJhS2nJwSi4M1DaZBmsePK3Xwj5eAD+3Jn+lfunX8vfxzmnZ4Fl/QrnT5sGjtfSr+U6RZF5y7k6KA/pG8ekPhBAnx5k9tCEpD3RxMyEuT6aUycW/236XInjqeinGylD0CiVNVBpOCnLMRcBnEBctCtIdt0HG4KU/06RA3rmX5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747704604; c=relaxed/simple;
-	bh=DVuN8zEns8fHYtHXrrtWYwkPhcxUbXTQ6kWqeGjR4LI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MGBElY1R1uiLuiXUbKrQC1Nr2cdvsTOBqLyqYx2bdF6OqqaojAsAxgaP2fIgkMlDvlAG4ZdFqTuZd5XKh0gqkgfVApagjwB/jkLK14FSwO8M6+80wlndQUcp4tXih38IsE+g6hFLMSSgYiHp5Trzg+M3JKcfJk7dqsc/kTd1ZOk=
+	bh=4549Z/en9noEXpUOOg5Z0n8G17pW2n28/exB5AwF5IE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ggbr+V43fZMUZNQyKbAsp5vVrkxsC0uELy0lBxRnmDzsFK4Ypo43rDImCVMr7TKVoXjPDExEBycxy9Nf6o+wmj0Y3c/icmw8xTXQqKj5qs48NKZJrC2NTRnmtcMidx4i3RywURrLmadTXNZwLJB4o38D2PkGI115pWap8gv8MS8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8AxjmsV2ytoUMzyAA--.64074S3;
-	Tue, 20 May 2025 09:29:57 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8DxbKwY2ytoaczyAA--.65172S3;
+	Tue, 20 May 2025 09:30:00 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.213])
-	by front1 (Coremail) with SMTP id qMiowMDxPcUS2ytoy1ziAA--.54307S2;
-	Tue, 20 May 2025 09:29:55 +0800 (CST)
+	by front1 (Coremail) with SMTP id qMiowMDxPcUS2ytoy1ziAA--.54307S7;
+	Tue, 20 May 2025 09:29:59 +0800 (CST)
 From: Bibo Mao <maobibo@loongson.cn>
 To: Paolo Bonzini <pbonzini@redhat.com>,
 	Huacai Chen <chenhuacai@kernel.org>,
@@ -24,11 +25,14 @@ To: Paolo Bonzini <pbonzini@redhat.com>,
 Cc: Shuah Khan <shuah@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH v12 0/5] KVM: selftests: Add LoongArch support
-Date: Tue, 20 May 2025 09:29:49 +0800
-Message-Id: <20250520012954.1785088-1-maobibo@loongson.cn>
+	linux-kselftest@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH v12 5/5] KVM: selftests: Add supported test cases for LoongArch
+Date: Tue, 20 May 2025 09:29:54 +0800
+Message-Id: <20250520012954.1785088-6-maobibo@loongson.cn>
 X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20250520012954.1785088-1-maobibo@loongson.cn>
+References: <20250520012954.1785088-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -36,127 +40,112 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDxPcUS2ytoy1ziAA--.54307S2
+X-CM-TRANSID:qMiowMDxPcUS2ytoy1ziAA--.54307S7
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
 	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
 	nUUI43ZEXa7xR_UUUUUUUUU==
 
-This patchset adds KVM selftests for LoongArch system, currently only
-some common test cases are supported and pass to run. These test cases
-are listed as following:
-    coalesced_io_test
-    demand_paging_test
-    dirty_log_perf_test
-    dirty_log_test
-    guest_print_test
-    hardware_disable_test
-    kvm_binary_stats_test
-    kvm_create_max_vcpus
-    kvm_page_table_test
-    memslot_modification_stress_test
-    memslot_perf_test
-    set_memory_region_test
+Some common KVM test cases are supported on LoongArch now as following:
+  coalesced_io_test
+  demand_paging_test
+  dirty_log_perf_test
+  dirty_log_test
+  guest_print_test
+  hardware_disable_test
+  kvm_binary_stats_test
+  kvm_create_max_vcpus
+  kvm_page_table_test
+  memslot_modification_stress_test
+  memslot_perf_test
+  set_memory_region_test
 
+And other test cases are not supported by LoongArch such as rseq_test,
+since it is not supported on LoongArch physical machine either.
+
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
-Changes in v12:
-1. Replace vcpu_set_reg() with __vcpu_set_reg() in loongarch_set_csr()
-2. Remove duplicated test case including in Makefile.kvm
-3. Fix one issue reported by checkpatch
+ MAINTAINERS                                     |  2 ++
+ tools/testing/selftests/kvm/Makefile            |  2 +-
+ tools/testing/selftests/kvm/Makefile.kvm        | 17 +++++++++++++++++
+ .../selftests/kvm/set_memory_region_test.c      |  2 +-
+ 4 files changed, 21 insertions(+), 2 deletions(-)
 
-Changes in v11:
-1. Fix a typo issue in notes of patch 2, it is kvm_util_arch.h rather than
-   kvm_util_base.h
-
-Changes in v10:
-1. Add PS_64K and remove PS_8K in file include/loongarch/processor.h
-2. Fix a typo issue in file lib/loongarch/processor.c
-3. Update file MAINTAINERS about LoongArch KVM selftests
-
-Changes in v9:
-1. Add vm mode VM_MODE_P47V47_16K, LoongArch VM uses this mode by
-   default, rather than VM_MODE_P36V47_16K.
-2. Refresh some spelling issues in changelog.
-
-Changes in v8:
-1. Porting patch based on the latest version.
-2. For macro PC_OFFSET_EXREGS, offsetof() method is used for C header file,
-   still hardcoded definition for assemble language.
-
-Changes in v7:
-1. Refine code to add LoongArch support in test case
-   set_memory_region_test.
-
-Changes in v6:
-1. Refresh the patch based on latest kernel 6.8-rc1, add LoongArch
-   support about testcase set_memory_region_test.
-2. Add hardware_disable_test test case.
-3. Drop modification about macro DEFAULT_GUEST_TEST_MEM, it is problem
-   of LoongArch binutils, this issue is raised to LoongArch binutils
-   owners.
-
-Changes in v5:
-1. In LoongArch kvm self tests, the DEFAULT_GUEST_TEST_MEM could be
-   0x130000000, it is different from the default value in memstress.h.
-   So we Move the definition of DEFAULT_GUEST_TEST_MEM into LoongArch
-   ucall.h, and add 'ifndef' condition for DEFAULT_GUEST_TEST_MEM
-   in memstress.h.
-
-Changes in v4:
-1. Remove the based-on flag, as the LoongArch KVM patch series
-   have been accepted by Linux kernel, so this can be applied directly
-   in kernel.
-
-Changes in v3:
-1. Improve implementation of LoongArch VM page walk.
-2. Add exception handler for LoongArch.
-3. Add dirty_log_test, dirty_log_perf_test, guest_print_test
-   test cases for LoongArch.
-4. Add __ASSEMBLER__ macro to distinguish asm file and c file.
-5. Move ucall_arch_do_ucall to the header file and make it as
-   static inline to avoid function calls.
-6. Change the DEFAULT_GUEST_TEST_MEM base addr for LoongArch.
-
-Changes in v2:
-1. We should use ".balign 4096" to align the assemble code with 4K in
-   exception.S instead of "align 12".
-2. LoongArch only supports 3 or 4 levels page tables, so we remove the
-   hanlders for 2-levels page table.
-3. Remove the DEFAULT_LOONGARCH_GUEST_STACK_VADDR_MIN and use the common
-   DEFAULT_GUEST_STACK_VADDR_MIN to allocate stack memory in guest.
-4. Reorganize the test cases supported by LoongArch.
-5. Fix some code comments.
-6. Add kvm_binary_stats_test test case into LoongArch KVM selftests.
----
-Bibo Mao (5):
-  KVM: selftests: Add VM_MODE_P47V47_16K VM mode
-  KVM: selftests: Add KVM selftests header files for LoongArch
-  KVM: selftests: Add core KVM selftests support for LoongArch
-  KVM: selftests: Add ucall test support for LoongArch
-  KVM: selftests: Add supported test cases for LoongArch
-
- MAINTAINERS                                   |   2 +
- tools/testing/selftests/kvm/Makefile          |   2 +-
- tools/testing/selftests/kvm/Makefile.kvm      |  17 +
- .../testing/selftests/kvm/include/kvm_util.h  |   6 +
- .../kvm/include/loongarch/kvm_util_arch.h     |   7 +
- .../kvm/include/loongarch/processor.h         | 141 +++++++
- .../selftests/kvm/include/loongarch/ucall.h   |  20 +
- tools/testing/selftests/kvm/lib/kvm_util.c    |   3 +
- .../selftests/kvm/lib/loongarch/exception.S   |  59 +++
- .../selftests/kvm/lib/loongarch/processor.c   | 347 ++++++++++++++++++
- .../selftests/kvm/lib/loongarch/ucall.c       |  38 ++
- .../selftests/kvm/set_memory_region_test.c    |   2 +-
- 12 files changed, 642 insertions(+), 2 deletions(-)
- create mode 100644 tools/testing/selftests/kvm/include/loongarch/kvm_util_arch.h
- create mode 100644 tools/testing/selftests/kvm/include/loongarch/processor.h
- create mode 100644 tools/testing/selftests/kvm/include/loongarch/ucall.h
- create mode 100644 tools/testing/selftests/kvm/lib/loongarch/exception.S
- create mode 100644 tools/testing/selftests/kvm/lib/loongarch/processor.c
- create mode 100644 tools/testing/selftests/kvm/lib/loongarch/ucall.c
-
-
-base-commit: a5806cd506af5a7c19bcd596e4708b5c464bfd21
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d48dd6726fe6..369da62e4837 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13051,6 +13051,8 @@ F:	Documentation/virt/kvm/loongarch/
+ F:	arch/loongarch/include/asm/kvm*
+ F:	arch/loongarch/include/uapi/asm/kvm*
+ F:	arch/loongarch/kvm/
++F:	tools/testing/selftests/kvm/*/loongarch/
++F:	tools/testing/selftests/kvm/lib/loongarch/
+ 
+ KERNEL VIRTUAL MACHINE FOR MIPS (KVM/mips)
+ M:	Huacai Chen <chenhuacai@kernel.org>
+diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
+index 20af35a91d6f..d9fffe06d3ea 100644
+--- a/tools/testing/selftests/kvm/Makefile
++++ b/tools/testing/selftests/kvm/Makefile
+@@ -3,7 +3,7 @@ top_srcdir = ../../../..
+ include $(top_srcdir)/scripts/subarch.include
+ ARCH            ?= $(SUBARCH)
+ 
+-ifeq ($(ARCH),$(filter $(ARCH),arm64 s390 riscv x86 x86_64))
++ifeq ($(ARCH),$(filter $(ARCH),arm64 s390 riscv x86 x86_64 loongarch))
+ # Top-level selftests allows ARCH=x86_64 :-(
+ ifeq ($(ARCH),x86_64)
+ 	ARCH := x86
+diff --git a/tools/testing/selftests/kvm/Makefile.kvm b/tools/testing/selftests/kvm/Makefile.kvm
+index f62b0a5aba35..854de8089ab4 100644
+--- a/tools/testing/selftests/kvm/Makefile.kvm
++++ b/tools/testing/selftests/kvm/Makefile.kvm
+@@ -47,6 +47,10 @@ LIBKVM_riscv += lib/riscv/handlers.S
+ LIBKVM_riscv += lib/riscv/processor.c
+ LIBKVM_riscv += lib/riscv/ucall.c
+ 
++LIBKVM_loongarch += lib/loongarch/processor.c
++LIBKVM_loongarch += lib/loongarch/ucall.c
++LIBKVM_loongarch += lib/loongarch/exception.S
++
+ # Non-compiled test targets
+ TEST_PROGS_x86 += x86/nx_huge_pages_test.sh
+ 
+@@ -190,6 +194,19 @@ TEST_GEN_PROGS_riscv += coalesced_io_test
+ TEST_GEN_PROGS_riscv += get-reg-list
+ TEST_GEN_PROGS_riscv += steal_time
+ 
++TEST_GEN_PROGS_loongarch += coalesced_io_test
++TEST_GEN_PROGS_loongarch += demand_paging_test
++TEST_GEN_PROGS_loongarch += dirty_log_perf_test
++TEST_GEN_PROGS_loongarch += dirty_log_test
++TEST_GEN_PROGS_loongarch += guest_print_test
++TEST_GEN_PROGS_loongarch += hardware_disable_test
++TEST_GEN_PROGS_loongarch += kvm_binary_stats_test
++TEST_GEN_PROGS_loongarch += kvm_create_max_vcpus
++TEST_GEN_PROGS_loongarch += kvm_page_table_test
++TEST_GEN_PROGS_loongarch += memslot_modification_stress_test
++TEST_GEN_PROGS_loongarch += memslot_perf_test
++TEST_GEN_PROGS_loongarch += set_memory_region_test
++
+ SPLIT_TESTS += arch_timer
+ SPLIT_TESTS += get-reg-list
+ 
+diff --git a/tools/testing/selftests/kvm/set_memory_region_test.c b/tools/testing/selftests/kvm/set_memory_region_test.c
+index bc440d5aba57..ce3ac0fd6dfb 100644
+--- a/tools/testing/selftests/kvm/set_memory_region_test.c
++++ b/tools/testing/selftests/kvm/set_memory_region_test.c
+@@ -350,7 +350,7 @@ static void test_invalid_memory_region_flags(void)
+ 	struct kvm_vm *vm;
+ 	int r, i;
+ 
+-#if defined __aarch64__ || defined __riscv || defined __x86_64__
++#if defined __aarch64__ || defined __riscv || defined __x86_64__ || defined __loongarch__
+ 	supported_flags |= KVM_MEM_READONLY;
+ #endif
+ 
 -- 
 2.39.3
 
