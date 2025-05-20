@@ -1,107 +1,101 @@
-Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3A792517B9
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 21:12:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE2282517B9
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 21:13:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747775552; cv=none; b=hWOou9AakX3ZguqnkRvtYHGkEo4SSUXaeNi5R165qCg9L/kKhty1OtMLNarO5rNhu7XFzWH1leSoFWkdvzrocGtbbbRW4GpJfnutUijEcdS2L7AU72htQnAYbGWYu4M+3xzWrEAQvyAMA6B9n+ez+0mXozjG2PCzFGX7pivdPgU=
+	t=1747775597; cv=none; b=nAYY6oCc6K3yLXEnRGfeUDjmtx/bhk3p1u5g7/mwzWEpzIWHsuZjgeMWpG27oyrybxYXVm+DSOXP+SFuyDwefsn5BPgfYLbjSplHDNEIMFObjzhUf0vVWif3Raz6LWF4KYBO6zL7Qsu4KQUm/OfbrRlfI8wJ5aqEJi+zfmB/YVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747775552; c=relaxed/simple;
-	bh=JxHtbcJN/O4Vpsg3y6yxolxHrOTOCH+dF8W4h1Bq0C0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P982chwFY0b2KI3jhDSb8unB3QL36MHUkkEjw3jWwIFAFu/vo6C4JGk2/LDZFEWkv9HXm8JzIUVsu8kx5OOAWFhEH1jR2PbmIYFpZnr81dMCOPYfzZI+xLHms0av+kCIS0Oe9UdqzWePYzXZsY+9c3nLBfyyNEtkVGHj1Px54tE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=R9A58QQJ; arc=none smtp.client-ip=209.85.166.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1747775597; c=relaxed/simple;
+	bh=L7MRy5nZLEPp08rfjDttlaHLh2aLDq/Ts8Q00IzSj44=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=W74f1S/Lh+nveiaq8KAWBnLuRGR7i8DcJob5xiQE/PCPmEl1c9A8fIwpu0ACgeeuxHuMHdkwUSpynURCpYMhI/SATwSlv87zHA7H39hFj03qkwmjx5uYr3k6Z/zlXmrqogs8ELw+Q2IGQRBgqmJ5Vn1wXrH5tLjgB8/FtVfTZdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Gc4gETiT; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="R9A58QQJ"
-Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-8613f456960so182140839f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 14:12:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Gc4gETiT"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43cec217977so32065385e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 14:13:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1747775550; x=1748380350; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KMrFfTENF4F3SCjFNJP/23CVdgvfjcCcQGdu8rVvJBA=;
-        b=R9A58QQJgGJUeQMKdzodAysPhRA7TVHXYfJjdaOSbZn5nqOY9kxD+tItCCBQr1SeAi
-         sF4b2NMS1dXYzunHn6zA0YlpU5otKL5wjMBS44CCzKOseyKp4SwfhX4Tq7LCMTahsN7g
-         UvEU5f9HmSV4ULTeSQCPXJngfwYw6CiY3Dp9E=
+        d=google.com; s=20230601; t=1747775594; x=1748380394; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=c6k8y43kbW69Cj6+ls8AarnJHecZRyEQvRb7E86pWzI=;
+        b=Gc4gETiTPS/XYn9nyUJWyg7vNR6Co825XeWJBoNA04ugAu7vSRaeFahDtqs9t3HyKV
+         8SAykQSeWJ2KcdKeOlGwfdbqJWIQUrYKuWislmt28rCREpFBTHZsR6P/QRE/T952FMZ4
+         ov/rlMTNjTz0oCLZdRXtygcqfJfZG42liZaSrEKTSphTOEJ6BaqMsFKZfIA+KDmpTBlS
+         UZpiSbDa37gtwbd/2tucboLZT/HvjMaHUq7NJXQp+I8GpzojwuwKzJ0Ky/KSWg281DBu
+         L3tMJjTMhqgHmyYnzQ24gEwoxiEfT3DzF4wGcUZ4J1cytJ4uIWgpWAGviTiEmHwdvx7H
+         3DWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747775550; x=1748380350;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KMrFfTENF4F3SCjFNJP/23CVdgvfjcCcQGdu8rVvJBA=;
-        b=i6bVrANcRfKIoEeTRuhwC+OXYB26tg5Z4SoH9or3Sa+7izFmxhfKwKu5wTVLrWtITI
-         quj1O31RfZPdvDDdhLJkjx5ClwoQc/kQX7DF9R3hyevwWxTTvOAFpQbis0sNAn0X6Mv9
-         uPTnrUQSiwnrSiBBZZE7M0EMmdZa7Ys3jXFt9bKCZNkhVM9mYjaUOcnN3p4mK/yG9Dh5
-         OXIeVHLYplHWQwxDNd8x2s/YtOD6vXytlbOUiuYUVJTrh6O/JriNWMaovPO4LAPnrWoa
-         eeL7map0kDnb/TUHXE8fdToFbRNZCNquzgAy7IFXle/0xF3xxQTs2I2nCCrEYhebV7kJ
-         iaQA==
-X-Forwarded-Encrypted: i=1; AJvYcCWC/zbRIcp/UArlWuqTA0k3R6WoNuwFQjbeLitFfDa/FnBU0h+FTqU2EER+XTcuZj64TQ961eNI8gdkXKA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZ56xXEd5pqX7PvQrfj6+RQMNWzvn7JBPVlrrhyxtWu/+KaAK2
-	z9XfOrAHflQ05o1GSlAp9PCcHPgtknDlLBiQVdQvEt5MJGC8ZT5iJ6yYp1gMuRnuCV0=
-X-Gm-Gg: ASbGnct4hdqvt+Un5GAXZyW52y91zatfF9/oGz/KzdjC7sjJecm7MOLHjwnuI872Hku
-	KfyZCvgsTM9sWaBNz2OD/XKadb4EQ7zRCmFa6kqL8O6xMJ++N5fkbvWmIrzGRJQYBv4LUZzraez
-	LUQy2VhPIZFEYGMwaPu2sekSQR195cOLU2Qr0LC4TcgLuMFL/Bv8bmFMIf6mxf1pzQ3bRdeQL21
-	w9BlSOzjGRU5J9yG+JgTgH6tPp2cQmDIa2918SDuFci6ktVr8dRY5iPcV3oxtx7h9vzdoVnlZlI
-	5wosKxI78TYwKlmkkT75lXri0dPMYEFrS+a1OzrfxQXjKFBZaRhGHh/DYXUNNA==
-X-Google-Smtp-Source: AGHT+IH1LDM15vwRPpbt5rCMjiAO4KoSLMc0NMXg9FmElbvwrQgJ4BrS4fhsC8wXOY8J96B+wGJ9fA==
-X-Received: by 2002:a05:6602:3791:b0:861:d71f:33e3 with SMTP id ca18e2360f4ac-86a23199f69mr2609760039f.5.1747775549724;
-        Tue, 20 May 2025 14:12:29 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4fbcc38a46dsm2397257173.16.2025.05.20.14.12.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 May 2025 14:12:29 -0700 (PDT)
-Message-ID: <b316a79c-1146-4bb7-baf2-6f0727f87a0d@linuxfoundation.org>
-Date: Tue, 20 May 2025 15:12:28 -0600
+        d=1e100.net; s=20230601; t=1747775594; x=1748380394;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=c6k8y43kbW69Cj6+ls8AarnJHecZRyEQvRb7E86pWzI=;
+        b=UFtkRGvqEQOd5CWxhZrkjpOEUD1BwqW0UxuswjEau731tpDTQ/YZ509qwFW3vm/UJA
+         fx/oi2E8CkD86yTxhFDFB7iNmQJitH2WxppgopHqy2bkytwG+7CFQBjQLF2r3AW2pRFF
+         LPi6upMIQDDmg4TlvWeLMFJv2c2tJ7Kfe75frBSEAvIccNM0YU6Oackw9Rn77DzwY68V
+         F5p/dObM4+FTboyAPI99naeJQGnNj+nbsXSQABt75N9Z5/vqfuUz9GLpbM5VDVJm+WEH
+         3nhVn82jnAt4/Le8rTphlikNasxdJtEmR/3d3eU+WDhZXH1w+8ehZZ4BbJFxTTnq2+7F
+         mqOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXNvnU4pYiTF7DNLVP7wgjIOillG/grppa0UTSVUIM+J+RS6sFKSIve248JtJbDtvwIeN1sBWxTT4WN6Fo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx77LrGdE+rQai4WCy7eMjVtDeiSzhiNIYAfVjxeTqK7Tx05F1c
+	bsqKsvWUjS/4/iihp4QxTsF226oTMrfyt6FNYc95mR+7WmS54K59184vUulcbL5SS/efv/j/jbO
+	4oB40ol5A4zhpS31NZA==
+X-Google-Smtp-Source: AGHT+IEYzt7HhRWU2PItDewLmZNHUanVmZTDkUbAcKrucWyR7kx299ej8ln1aBKPhh4PGh5FlDEsAD4HjFpbxro=
+X-Received: from wmhu10.prod.google.com ([2002:a05:600c:a36a:b0:442:ff89:efb7])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:3c82:b0:43c:fffc:7886 with SMTP id 5b1f17b1804b1-445229b431cmr98895075e9.8.1747775594095;
+ Tue, 20 May 2025 14:13:14 -0700 (PDT)
+Date: Tue, 20 May 2025 21:13:12 +0000
+In-Reply-To: <20250520182125.806758-1-ojeda@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.14 000/145] 6.14.8-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20250520125810.535475500@linuxfoundation.org>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20250520125810.535475500@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20250520182125.806758-1-ojeda@kernel.org>
+Message-ID: <aCzwaCkENAiaG-As@google.com>
+Subject: Re: [PATCH] rust: remove unneeded Rust 1.87.0 `allow(clippy::ptr_eq)`
+From: Alice Ryhl <aliceryhl@google.com>
+To: Miguel Ojeda <ojeda@kernel.org>
+Cc: Alex Gaynor <alex.gaynor@gmail.com>, Danilo Krummrich <dakr@kernel.org>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	patches@lists.linux.dev
+Content-Type: text/plain; charset="utf-8"
 
-On 5/20/25 07:49, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.14.8 release.
-> There are 145 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Tue, May 20, 2025 at 08:21:25PM +0200, Miguel Ojeda wrote:
+> Before a change to relax the lint was backported to Rust 1.87.0 before
+> its release, Clippy was expected to warn with:
 > 
-> Responses should be made by Thu, 22 May 2025 12:57:37 +0000.
-> Anything received after that time might be too late.
+>     error: use `core::ptr::eq` when comparing raw pointers
+>        --> rust/kernel/list.rs:438:12
+>         |
+>     438 |         if self.first == item {
+>         |            ^^^^^^^^^^^^^^^^^^ help: try: `core::ptr::eq(self.first, item)`
+>         |
+>         = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#ptr_eq
+>         = note: `-D clippy::ptr-eq` implied by `-D warnings`
+>         = help: to override `-D warnings` add `#[allow(clippy::ptr_eq)]`
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.14.8-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.14.y
-> and the diffstat can be found below.
+> The backported finally landed indeed, thus remove the `allow`s we added
+> back then, which were added just in case the backport did not land
+> in time.
 > 
-> thanks,
+> See commit a39f30870927 ("rust: allow Rust 1.87.0's `clippy::ptr_eq`
+> lint") for details.
 > 
-> greg k-h
-> 
+> Link: https://github.com/rust-lang/rust/pull/140859 [1]
+> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
 
-Compiled and booted on my test system. No dmesg regressions.
+This commit message is worded in a confusing manner, but the change
+LGTM.
 
-Tested-by: Shuah Khan <skhan@linuxfoundation.org>
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
 
-thanks,
--- Shuah
