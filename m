@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 184FB25C80A;
-	Tue, 20 May 2025 06:34:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79CFB25D209;
+	Tue, 20 May 2025 06:34:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747722894; cv=none; b=coSwBnsr+xRup7+4sp8crSwJXiNTzRRci1OvTLVS3XbKrkmL8SLmR83fcNSkz83/smvD0VgmupvJxesFXldV/x78cKCu6GcnXPITZu/97jnpxWDr/UbWMW6O9IJJi7OJIGLthDpYNIu0CRZAauNCOcGolg6SOt5a+HOiY5j+UUs=
+	t=1747722894; cv=none; b=PG1ssELsoJwYBHajVRGbDIdTFCtZx4eW+BarKwtl6A1+cvFYQtp9ZscNjA8T0wxkN8RT8y4GbIC8BRT1qIfsQB1TbDTOdj3CyTlfHMvngJDdKDhTGQ8BLv/4ugiP+62ajBF06tSApqQ5z1OKXRiIP5XWMFyAOAZ5oWBeYypk8o4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747722894; c=relaxed/simple;
-	bh=MaCkDQE8U2QDmRDmED4Ce+Q4F2+F5eALbfrUvn+NHJQ=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=jiLEYlwlLZbc0b3h3o8Y7+VFNUJRn5P56MI3b11Tr9IF5olJ9ai99y6SFHLRgkyea1s+au5P8wptfch7H3RBrTwyqSy/724qrqrdqzdGZTEXq96yuwEPdJVpWPSz54lnMah3LY3Ho8bsX7RpGmUt1gnqraGkFKahcm+cFo97Nio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VnZdlAAt; arc=none smtp.client-ip=10.30.226.201
+	bh=XNZwlIgBkETjMefqm5oN+G/jvU1gUxJXmVuGN6RmC18=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=F5ytVIUvLHRwBftfbW8akKM+XqNakhOa3WR21JtbS/HHTVXWbf2WlPOrXOPXr7joB0hfZUDdQZBkYqW1hbr/OGTrc+9LlDMIu23gal0APSGb856VzPvdDFEazKbzcsNO3Xe/JRUpvTl8rciYCwhWGU++L+QrWY1HxGqw9NH4Vqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RUE8XaKC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VnZdlAAt"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7E2B4C4CEE9;
-	Tue, 20 May 2025 06:34:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RUE8XaKC"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2292DC4CEF9;
+	Tue, 20 May 2025 06:34:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747722893;
-	bh=MaCkDQE8U2QDmRDmED4Ce+Q4F2+F5eALbfrUvn+NHJQ=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=VnZdlAAticMb/HhGTojh/GQp/I16M6VuHn/FfRqGi3np+TYxL0WWGTyRe89RK7c5u
-	 j0L5XH3O+rNEYT4B+ihDjMFIWPK/my58MZM9ivjuI1Gf6y8ipE4QBC55vFoQtybWkE
-	 7/AhBCzCcEWE6hYxXHDMw4vJdzJ8PZdeOvYgrJCD4WYTsbsMkSqHlxK1I3EuxpdDRH
-	 mzpbb8VH1r9iE4is0vVRS11+oSpDl9PPhe2v+I9/D0zdmkI7dRzyOGk5QXuihYnrnP
-	 Kf21stZG9v27XQoFSIgUWJSpul+cvwT084L4QDmj4roJ9+4p4n8xrlPZdTyRLWluGP
-	 YHhu7uuL7ULsw==
+	s=k20201202; t=1747722894;
+	bh=XNZwlIgBkETjMefqm5oN+G/jvU1gUxJXmVuGN6RmC18=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=RUE8XaKCcX/fLXciPr5NkbkaFOHp6t+r1CarXo28/oVOO5+5SHOx3JXRBr6UqtLEc
+	 6ImfOVb3n+x+hw+9XFSSzyr/TeyDin9VbFf0c+W9vBkD9l0F+nvDv/ON/XY/fDDrcV
+	 un7L7I9O2AjZdNbmC+e5gLarCLNH2rtENCJQAcHytmlVNZuWbO5UT4v5AD0iB+yA6P
+	 b3alc5bJPaWrn5LkQmCi5qxRP52LjGEc4bqqSW0v8DqkvF8E1dHSYOKKiK8/8SygPJ
+	 BNWXqfq24YkIzR564yVc52w3QM9sVOjRHlhfIJTeDPXewuLKwf3qIi7rGCq2JWNPLi
+	 djGpM1D2taUqg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 644F6C3ABDA;
-	Tue, 20 May 2025 06:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 184F6C3DA6D;
+	Tue, 20 May 2025 06:34:54 +0000 (UTC)
 From: Maud Spierings via B4 Relay <devnull+maudspierings.gocontroll.com@kernel.org>
-Subject: [PATCH v7 0/8] arm64: dts: freescale: Add support for the
- GOcontroll Moduline Display
-Date: Tue, 20 May 2025 08:34:49 +0200
-Message-Id: <20250520-initial_display-v7-0-a8f0195420aa@gocontroll.com>
+Date: Tue, 20 May 2025 08:34:57 +0200
+Subject: [PATCH v7 8/8] arm64: dts: freescale: Add the BOE av123z7m-n17
+ variant of the Moduline Display
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,12 +41,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAIkiLGgC/3XPzWoDIRDA8VcJnmvR8TunvkcJxXU1EbZr0GVJC
- PvuNblkQXv8D8xvmAcqPkdf0PHwQNmvscQ011AfB+Qudj57HMfaCAgIAsBxnOMS7fQzxnKd7B0
- HqwGo9kR6gerWNfsQby/x+1T7EsuS8v11YKXP6f/WSjHBwrlhCJIywdnXObk0LzlN06dLv+gJr
- rBHZItARYAFGyxlRFPVRdgbYaBahFWEe228pVJJO3QR/kY4gRbhFTFBG62ZtlryLiJ2CBUtIio
- SGKnOqCg3povIPdJ5R1aEORnkCNwpGxpk27Y/1jJmPAwCAAA=
-X-Change-ID: 20250224-initial_display-fa82218e06e5
+Message-Id: <20250520-initial_display-v7-8-a8f0195420aa@gocontroll.com>
+References: <20250520-initial_display-v7-0-a8f0195420aa@gocontroll.com>
+In-Reply-To: <20250520-initial_display-v7-0-a8f0195420aa@gocontroll.com>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
  Sascha Hauer <s.hauer@pengutronix.de>, 
@@ -56,11 +53,11 @@ Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
  Maud Spierings <maudspierings@gocontroll.com>, Frank Li <Frank.Li@nxp.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747722892; l=4059;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747722892; l=4679;
  i=maudspierings@gocontroll.com; s=20250214; h=from:subject:message-id;
- bh=MaCkDQE8U2QDmRDmED4Ce+Q4F2+F5eALbfrUvn+NHJQ=;
- b=sX+e/W5gyP6cgDk/CGRsehxUQzRmluCed7s/xWuO4IpWq/A+pT52Q8KmJd8MFSG8m0B0qMgvr
- 6YIkBKGll72DcN0w5iCr0PQxDJyPiKtUmBD03WVzk9IXMaGsqNLVSH9
+ bh=I/kM7mq422c2Dzz64Wk+UlUYxhJAYXnl08GlpuY0xJQ=;
+ b=Em3JcLOF+AZcj/cesIFFGxpJJRk1UgQymUG4lIianmNrvpJdleBXisY/97A6ncutLANGLCgje
+ /8fANl3HpxyDoezIs2hkH7J1pTVoxnZF4KnEZ+YGOWhI1AOuFtuhHMZ
 X-Developer-Key: i=maudspierings@gocontroll.com; a=ed25519;
  pk=7chUb8XpaTQDvWhzTdHC0YPMkTDloELEC7q94tOUyPg=
 X-Endpoint-Received: by B4 Relay for maudspierings@gocontroll.com/20250214
@@ -68,90 +65,184 @@ X-Endpoint-Received: by B4 Relay for maudspierings@gocontroll.com/20250214
 X-Original-From: Maud Spierings <maudspierings@gocontroll.com>
 Reply-To: maudspierings@gocontroll.com
 
-Add inital support for 2 variants of the Moduline Display controller.
-This system is powered by the Ka-Ro Electronics tx8p-ml81 COM, which
-features an imx8mp SoC.
+From: Maud Spierings <maudspierings@gocontroll.com>
 
+Add the BOE av123z7m-n17 variant of the Moduline Display, this variant
+comes with a 12.3" 1920x720 display.
+
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
 Signed-off-by: Maud Spierings <maudspierings@gocontroll.com>
----
-Changes in v7:
-- Fix indentation as requested by Shawn
-- Set alias for fec to ethernet1 so eqos actually becomes end0 throught
-  systemd, without that alias eqos was both ethernet0 and ethernet1, and
-  it would become end1 instead of the desired end0.
-- Link to v6: https://lore.kernel.org/r/20250417-initial_display-v6-0-3c6f6d24c7af@gocontroll.com
-
-Changes in v6:
-- Fix spi cs formatting in baseboard dts
-- Add model to baseboard dts
-- Fix commit typo in karo tx8p ml81 dtsi
-- Link to v5: https://lore.kernel.org/r/20250415-initial_display-v5-0-f309f8d71499@gocontroll.com
-
-Changes in v5:
-- Merge the makefile patch into the two dtso patches
-- Fix references to the root node in the dtso patches
-- Enable the USB bus going to the adapter board in the mainboard dts
-- Fix some formatting issues in the mainboard dts
-- Fix some formatting issues in the COM dts
-- Change a clock as suggested in the COM dts
-- Fix the maintainers entries, remove devicetree list and imx list
-- Rebase on latest linux-next
-- Link to v4: https://lore.kernel.org/r/20250402-initial_display-v4-0-9f898838a864@gocontroll.com
-
-Changes in v4:
-- Add imx mailing list to ka-ro tx8p maintainer entry
-- Fix several small indentation and ordering issues in devicetrees
-- Change the two display adapter boards to overlays
-- Add the missing patch for the Makefile to actually be able to build
-  the new devicetrees
-- Link to v3: https://lore.kernel.org/r/20250327-initial_display-v3-0-4e89ea1676ab@gocontroll.com
-
-Changes in v3:
-- Set regulator-boot-on and always-on on LDO5 of the pmic, after 20 ish
-  seconds it auto disabled this LDO causing weird behaviour like
-  ethernet droping out, wifi not working anymore. This LDO can control
-  the IO voltage level of certain pins, just let it keep the u-boot
-  value.
-- Fix the comment style in imx8mp-pinfunc.h
-- Rebase on newest next tag
-- Link to v2: https://lore.kernel.org/r/20250226-initial_display-v2-0-23fafa130817@gocontroll.com
-
-Changes in v2:
-- Dropped the trivial-devices patch
-- Added a patch with bindings for the gocontroll,moduline-module-slot
-- Added a patch to spidev.c to enable the spidev driver for the module
-  slot
-- Added a missing usb-c connector in the av101hdt-a10 variant dts
-- Switched to the new bindings for the module slots in the base dts
-- Fixed some commit typos
-- Link to v1: https://lore.kernel.org/r/20250224-initial_display-v1-0-5ccbbf613543@gocontroll.com
 
 ---
-Maud Spierings (8):
-      dt-bindings: arm: fsl: Add GOcontroll Moduline Display
-      arm64: dts: imx8mp: Add pinctrl config definitions
-      MAINTAINERS: add maintainer for the Ka-Ro tx8p-ml81 COM module
-      MAINTAINERS: add maintainer for the GOcontroll Moduline controllers
-      arm64: dts: freescale: add Ka-Ro Electronics tx8p-ml81 COM
-      arm64: dts: freescale: Add the GOcontroll Moduline Display baseboard
-      arm64: dts: freescale: Add the BOE av101hdt-a10 variant of the Moduline Display
-      arm64: dts: freescale: Add the BOE av123z7m-n17 variant of the Moduline Display
-
- Documentation/devicetree/bindings/arm/fsl.yaml     |   1 +
- MAINTAINERS                                        |  12 +
- arch/arm64/boot/dts/freescale/Makefile             |   8 +
- arch/arm64/boot/dts/freescale/imx8mp-pinfunc.h     |  33 ++
- ...x8p-ml81-moduline-display-106-av101hdt-a10.dtso |  94 ++++
- ...x8p-ml81-moduline-display-106-av123z7m-n17.dtso | 139 ++++++
- .../imx8mp-tx8p-ml81-moduline-display-106.dts      | 527 ++++++++++++++++++++
- .../arm64/boot/dts/freescale/imx8mp-tx8p-ml81.dtsi | 548 +++++++++++++++++++++
- 8 files changed, 1362 insertions(+)
+Currently the backlight driver is not available, this will be upstreamed
+in a future patch series. It is a Maxim max25014atg.
 ---
-base-commit: fb44e19e78df2950877a9f7b4f24b58db790d293
-change-id: 20250224-initial_display-fa82218e06e5
+ arch/arm64/boot/dts/freescale/Makefile             |   3 +
+ ...x8p-ml81-moduline-display-106-av123z7m-n17.dtso | 139 +++++++++++++++++++++
+ 2 files changed, 142 insertions(+)
 
-Best regards,
+diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
+index ca3255aa9e18187b33d54c836992aca5dd5d0465..c821f9eda332abd1db1867dab196c09929316728 100644
+--- a/arch/arm64/boot/dts/freescale/Makefile
++++ b/arch/arm64/boot/dts/freescale/Makefile
+@@ -217,7 +217,10 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mp-tqma8mpql-mba8mp-ras314.dtb
+ 
+ imx8mp-tx8p-ml81-moduline-display-106-av101hdt-a10-dtbs += imx8mp-tx8p-ml81-moduline-display-106.dtb \
+ 	imx8mp-tx8p-ml81-moduline-display-106-av101hdt-a10.dtbo
++imx8mp-tx8p-ml81-moduline-display-106-av123z7m-n17-dtbs += imx8mp-tx8p-ml81-moduline-display-106.dtb \
++	imx8mp-tx8p-ml81-moduline-display-106-av123z7m-n17.dtbo
+ dtb-$(CONFIG_ARCH_MXC) += imx8mp-tx8p-ml81-moduline-display-106-av101hdt-a10.dtb
++dtb-$(CONFIG_ARCH_MXC) += imx8mp-tx8p-ml81-moduline-display-106-av123z7m-n17.dtb
+ 
+ dtb-$(CONFIG_ARCH_MXC) += imx8mp-var-som-symphony.dtb
+ dtb-$(CONFIG_ARCH_MXC) += imx8mp-venice-gw71xx-2x.dtb
+diff --git a/arch/arm64/boot/dts/freescale/imx8mp-tx8p-ml81-moduline-display-106-av123z7m-n17.dtso b/arch/arm64/boot/dts/freescale/imx8mp-tx8p-ml81-moduline-display-106-av123z7m-n17.dtso
+new file mode 100644
+index 0000000000000000000000000000000000000000..3eb665ce9d5d2a1c742ffb4feca046e406e29956
+--- /dev/null
++++ b/arch/arm64/boot/dts/freescale/imx8mp-tx8p-ml81-moduline-display-106-av123z7m-n17.dtso
+@@ -0,0 +1,139 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
++/*
++ * Copyright 2025 GOcontroll B.V.
++ * Author: Maud Spierings <maudspierings@gocontroll.com>
++ */
++
++#include <dt-bindings/gpio/gpio.h>
++
++#include "imx8mp-pinfunc.h"
++
++/dts-v1/;
++/plugin/;
++
++&{/} {
++	model = "GOcontroll Moduline Display with BOE av123z7m-n17 display";
++
++	panel {
++		compatible = "boe,av123z7m-n17";
++		enable-gpios = <&gpio1 7 GPIO_ACTIVE_HIGH>;
++		pinctrl-0 = <&pinctrl_panel>;
++		pinctrl-names = "default";
++		power-supply = <&reg_3v3_per>;
++		reset-gpios = <&gpio1 9 GPIO_ACTIVE_LOW>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				dual-lvds-odd-pixels;
++
++				panel_in0: endpoint {
++					remote-endpoint = <&lvds1_out>;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++				dual-lvds-even-pixels;
++
++				panel_in1: endpoint {
++					remote-endpoint = <&lvds0_out>;
++				};
++			};
++		};
++	};
++};
++
++&i2c4 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	/* sn65dsi85 */
++	bridge@2d {
++		compatible = "ti,sn65dsi84";
++		reg = <0x2d>;
++		enable-gpios = <&gpio4 14 GPIO_ACTIVE_HIGH>;
++		pinctrl-0 = <&pinctrl_lvds_bridge>;
++		pinctrl-names = "default";
++		vcc-supply = <&reg_1v8_per>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++
++				dsi_lvds_bridge_in: endpoint {
++					data-lanes = <1 2 3 4>;
++					remote-endpoint = <&mipi_dsi_out>;
++				};
++			};
++
++			port@2 {
++				reg = <2>;
++
++				lvds0_out: endpoint {
++					remote-endpoint = <&panel_in1>;
++				};
++			};
++
++			port@3 {
++				reg = <3>;
++
++				lvds1_out: endpoint {
++					remote-endpoint = <&panel_in0>;
++				};
++			};
++		};
++	};
++
++	/* max25014 @ 0x6f */
++};
++
++&iomuxc {
++	pinctrl_lvds_bridge: lvdsbridgegrp {
++		fsl,pins = <
++			MX8MP_IOMUXC_SAI1_TXD2__GPIO4_IO14
++				MX8MP_DSE_X1
++		>;
++	};
++
++	pinctrl_panel: panelgrp {
++		fsl,pins = <
++			MX8MP_IOMUXC_GPIO1_IO07__GPIO1_IO07
++				MX8MP_DSE_X1
++			MX8MP_IOMUXC_GPIO1_IO09__GPIO1_IO09
++				MX8MP_DSE_X1
++		>;
++	};
++};
++
++&lcdif1 {
++	status = "okay";
++};
++
++&mipi_dsi {
++	/*
++	 * burst has to be at least 2x dsi clock that the sn65dsi85 expects
++	 * display pixelclock * bpp / lanes / 2 = dsi clock
++	 * 88.000.000 * 24 / 4 / 2 = 264.000.000
++	 * range gets rounded up to 265.000.000 - 270.000.000
++	 * 267.500.000 * 2 = 535.000.000
++	 */
++	samsung,burst-clock-frequency = <535000000>;
++	samsung,esc-clock-frequency = <12000000>;
++	status = "okay";
++
++	ports {
++		port@1 {
++			mipi_dsi_out: endpoint {
++				data-lanes = <1 2 3 4>;
++				remote-endpoint = < &dsi_lvds_bridge_in>;
++			};
++		};
++	};
++};
+
 -- 
-Maud Spierings <maudspierings@gocontroll.com>
+2.49.0
 
 
