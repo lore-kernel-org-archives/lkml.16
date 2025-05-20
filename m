@@ -1,54 +1,57 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F812F37;
-	Tue, 20 May 2025 14:05:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED80DEEDE;
+	Tue, 20 May 2025 14:05:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747749924; cv=none; b=qinIm93fBfdsNfovLOFaMV9dKPLNxaS/8t90K1w67jEoV03s0FSdZK5AB+qZmGjHSdIC5CVOrz4C3aSCKFXy5NkXfICvfEbBNrYDF7BorGp9fMECI4rfENUT+TPl2G0pUxqYzJi9mTv+liPGFZa3bIOYxmUFg4sx2Q/i+IvxNh8=
+	t=1747749937; cv=none; b=V+9t32Gp77MCzhYCeZxi3TJZxamp36hGEjRJdF9Tq/tDscDvhTRkvbPykd3VppC0OvvucoGynUgrrg7Cn5qhY0ufDWveKW7Iq58RRsdmvCYlRENMFjaL1B8eL4xpYAYhxxAUAMb9Y7iyfOdW5kvDsLjXr4i7q1VPXwLpfbPfn3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747749924; c=relaxed/simple;
-	bh=aFjA4hr5J+CI0Kp3gKA3bDQFHu0RiCSC/H0GYSVxbnA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bze7B7W+Vp8Og4/Q2ei1HalxbfjXA5uc69PCTasIUWfSrzMnfcC+BnszaevWGeeBssTE1kLiI75NbfDi1VRdPdNy3O8a7vxw70Z09gDCc8BocRAF48zheGJYBfE46OGBLfhBnNvfWBmwS2ntIAm8Pa1P05ETDDvPJBNCscZwxlo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=VspSBnyQ; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1747749937; c=relaxed/simple;
+	bh=Aw0u5qiCrfy3PtV1eC5TuUu69ReE3gjbZ+S8PG4ER8c=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=nujCBHrtIL3UsWX/sb+VBGgFuHegTN0QVU+bIqdpEUa8TdxfNZ/bEKbfxudzwW2WPV+ajh0ePRTD10i+PtUZiGjttKK9/qF96hGzg28QwStjc6CZ8eYo8sIYVoHpp3+FlWvgAlIjeCpWaFGAkK8ZqKTDvZMieoGNQoqLFYduVG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lxPz/9Kl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="VspSBnyQ"
-Received: from pendragon.ideasonboard.com (179.218-130-109.adsl-dyn.isp.belgacom.be [109.130.218.179])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id EC7952EC;
-	Tue, 20 May 2025 16:04:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1747749900;
-	bh=aFjA4hr5J+CI0Kp3gKA3bDQFHu0RiCSC/H0GYSVxbnA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VspSBnyQktAx62F++sBRhCIQrHY3QVApCMawDHNAb7OAt+yH+f47X4xsKznjuBxLg
-	 +yBhzgWmYYk4Z5svrKbV7gq1ecAEzKOB8Sw2bhyHJUQCXtJfaU9DhLFDT8TybHbgxL
-	 jlqbkAGVNh6cpphXkatdqYF8c6XcJRXDP2ciqcro=
-Date: Tue, 20 May 2025 16:05:14 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Biju Das <biju.das.jz@bp.renesas.com>, David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH v5 04/12] drm: renesas: rz-du: mipi_dsi: Simplify HSFREQ
- calculation
-Message-ID: <20250520140514.GD13321@pendragon.ideasonboard.com>
-References: <20250512182330.238259-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250512182330.238259-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lxPz/9Kl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DFDCC4CEEB;
+	Tue, 20 May 2025 14:05:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747749936;
+	bh=Aw0u5qiCrfy3PtV1eC5TuUu69ReE3gjbZ+S8PG4ER8c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=lxPz/9KlwyaHpGSsfVSURFLpXxfxw+Wg3IaN5utk3Eq0AVYoy3LtaneRXZ0JNEAC/
+	 1E7refYyMYzV+n0YiKmb64U2ozIsV+TT3LjGVDcComg4d7wJDHL3SfxvGalQNK5voZ
+	 taT1mG7iqbBgrcXQZOYDYomma+RuLqbYtOmUayWHf5vGfVN1IW/eh8W5w9inEtLUNd
+	 YHTF9z+FNVDCtaF9Z7KPV4z9BWXmAeaoL1iDmcxFdgtYIM8h2tFLZl7w5O755mvlOC
+	 fX09j3zRmI9ibRN+Od5lIABbKztTq0ECUMNecZByaBMs57l/pMAZPbvVrMbCzg/uIU
+	 0KFGwVebeygmg==
+Date: Tue, 20 May 2025 09:05:35 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>,
+	Karolina Stolarek <karolina.stolarek@oracle.com>,
+	Martin Petersen <martin.petersen@oracle.com>,
+	Ben Fuller <ben.fuller@oracle.com>,
+	Drew Walton <drewwalton@microsoft.com>,
+	Anil Agrawal <anilagrawal@meta.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Sargun Dhillon <sargun@meta.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Kai-Heng Feng <kaihengf@nvidia.com>,
+	Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
+	Terry Bowman <terry.bowman@amd.com>,
+	Shiju Jose <shiju.jose@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	LKML <linux-kernel@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v6 02/16] PCI/DPC: Log Error Source ID only when valid
+Message-ID: <20250520140535.GA1291979@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,71 +60,105 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250512182330.238259-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b6ba76ff-7cbd-2d73-fdc4-41aa8c788bc9@linux.intel.com>
 
-Hi Prabhakar,
-
-Thank you for the patch.
-
-On Mon, May 12, 2025 at 07:23:22PM +0100, Prabhakar wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Tue, May 20, 2025 at 01:28:02PM +0300, Ilpo Järvinen wrote:
+> On Mon, 19 May 2025, Bjorn Helgaas wrote:
+> > DPC Error Source ID is only valid when the DPC Trigger Reason indicates
+> > that DPC was triggered due to reception of an ERR_NONFATAL or ERR_FATAL
+> > Message (PCIe r6.0, sec 7.9.14.5).
+> > 
+> > When DPC was triggered by ERR_NONFATAL (PCI_EXP_DPC_STATUS_TRIGGER_RSN_NFE)
+> > or ERR_FATAL (PCI_EXP_DPC_STATUS_TRIGGER_RSN_FE) from a downstream device,
+> > log the Error Source ID (decoded into domain/bus/device/function).  Don't
+> > print the source otherwise, since it's not valid.
+> > 
+> > For DPC trigger due to reception of ERR_NONFATAL or ERR_FATAL, the dmesg
+> > logging changes:
+> > 
+> >   - pci 0000:00:01.0: DPC: containment event, status:0x000d source:0x0200
+> >   - pci 0000:00:01.0: DPC: ERR_FATAL detected
+> >   + pci 0000:00:01.0: DPC: containment event, status:0x000d, ERR_FATAL received from 0000:02:00.0
+> > 
+> > and when DPC triggered for other reasons, where DPC Error Source ID is
+> > undefined, e.g., unmasked uncorrectable error:
+> > 
+> >   - pci 0000:00:01.0: DPC: containment event, status:0x0009 source:0x0200
+> >   - pci 0000:00:01.0: DPC: unmasked uncorrectable error detected
+> >   + pci 0000:00:01.0: DPC: containment event, status:0x0009: unmasked uncorrectable error detected
+> > 
+> > Previously the "containment event" message was at KERN_INFO and the
+> > "%s detected" message was at KERN_WARNING.  Now the single message is at
+> > KERN_WARNING.
+> > 
+> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> > ---
+> >  drivers/pci/pcie/dpc.c | 45 ++++++++++++++++++++++++++----------------
+> >  1 file changed, 28 insertions(+), 17 deletions(-)
+> > 
+> > diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+> > index fe7719238456..315bf2bfd570 100644
+> > --- a/drivers/pci/pcie/dpc.c
+> > +++ b/drivers/pci/pcie/dpc.c
+> > @@ -261,25 +261,36 @@ void dpc_process_error(struct pci_dev *pdev)
+> >  	struct aer_err_info info = { 0 };
+> >  
+> >  	pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
+> > -	pci_read_config_word(pdev, cap + PCI_EXP_DPC_SOURCE_ID, &source);
+> > -
+> > -	pci_info(pdev, "containment event, status:%#06x source:%#06x\n",
+> > -		 status, source);
+> >  
+> >  	reason = status & PCI_EXP_DPC_STATUS_TRIGGER_RSN;
+> > -	ext_reason = status & PCI_EXP_DPC_STATUS_TRIGGER_RSN_EXT;
+> > -	pci_warn(pdev, "%s detected\n",
+> > -		 (reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_UNCOR) ?
+> > -		 "unmasked uncorrectable error" :
+> > -		 (reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_NFE) ?
+> > -		 "ERR_NONFATAL" :
+> > -		 (reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_FE) ?
+> > -		 "ERR_FATAL" :
+> > -		 (ext_reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_RP_PIO) ?
+> > -		 "RP PIO error" :
+> > -		 (ext_reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_SW_TRIGGER) ?
+> > -		 "software trigger" :
+> > -		 "reserved error");
+> > +
+> > +	switch (reason) {
+> > +	case PCI_EXP_DPC_STATUS_TRIGGER_RSN_UNCOR:
+> > +		pci_warn(pdev, "containment event, status:%#06x: unmasked uncorrectable error detected\n",
+> > +			 status);
+> > +		break;
+> > +	case PCI_EXP_DPC_STATUS_TRIGGER_RSN_NFE:
+> > +	case PCI_EXP_DPC_STATUS_TRIGGER_RSN_FE:
+> > +		pci_read_config_word(pdev, cap + PCI_EXP_DPC_SOURCE_ID,
+> > +				     &source);
+> > +		pci_warn(pdev, "containment event, status:%#06x, %s received from %04x:%02x:%02x.%d\n",
+> > +			 status,
+> > +			 (reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_FE) ?
+> > +				"ERR_FATAL" : "ERR_NONFATAL",
+> > +			 pci_domain_nr(pdev->bus), PCI_BUS_NUM(source),
+> > +			 PCI_SLOT(source), PCI_FUNC(source));
+> > +		return;
+> > +	case PCI_EXP_DPC_STATUS_TRIGGER_RSN_IN_EXT:
+> > +		ext_reason = status & PCI_EXP_DPC_STATUS_TRIGGER_RSN_EXT;
+> > +		pci_warn(pdev, "containment event, status:%#06x: %s detected\n",
+> > +			 status,
+> > +			 (ext_reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_RP_PIO) ?
+> > +			 "RP PIO error" :
+> > +			 (ext_reason == PCI_EXP_DPC_STATUS_TRIGGER_RSN_SW_TRIGGER) ?
+> > +			 "software trigger" :
+> > +			 "reserved error");
+> > +		break;
+> > +	}
+> >  
+> >  	/* show RP PIO error detail information */
+> >  	if (pdev->dpc_rp_extensions &&
 > 
-> Simplify the high-speed clock frequency (HSFREQ) calculation by removing
-> the redundant multiplication and division by 8. The updated equation:
-> 
->     hsfreq = (mode->clock * bpp) / (dsi->lanes);
+> After adding that switch (reason) there, wouldn't it make sense to move 
+> also the code from the if blocks into the case blocks? That if 
+> conditions check for reason anyway so those if branches would naturally 
+> belong under one of the cases each.
 
-You can drop the parentheses around the second factor. You can actuall
-drop all prentheses.
-
-> 
-> produces the same result while improving readability and clarity.
-> 
-> Additionally, update the comment to clarify the relationship between HS
-> clock bit frequency, HS byte clock frequency, and HSFREQ.
-> 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
-> ---
-> v4->v5:
-> - No changes
-> 
-> v3->v4:
-> - No changes
-> 
-> v2->v3:
-> - No changes
-> 
-> v1->v2:
-> - Added Reviewed-by tag from Biju
-> ---
->  drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-> index ec8baecb9ba5..c5f698cd74f1 100644
-> --- a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-> +++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-> @@ -277,10 +277,10 @@ static int rzg2l_mipi_dsi_startup(struct rzg2l_mipi_dsi *dsi,
->  	 *       hsclk: DSI HS Byte clock frequency (Hz)
->  	 *       lanes: number of data lanes
->  	 *
-> -	 * hsclk(bit) = hsclk(byte) * 8
-> +	 * hsclk(bit) = hsclk(byte) * 8 = hsfreq
->  	 */
->  	bpp = mipi_dsi_pixel_format_to_bpp(dsi->format);
-> -	hsfreq = (mode->clock * bpp * 8) / (8 * dsi->lanes);
-> +	hsfreq = (mode->clock * bpp) / dsi->lanes;
-
-You can drop the parentheses here too.
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-
->  
->  	ret = pm_runtime_resume_and_get(dsi->dev);
->  	if (ret < 0)
-
--- 
-Regards,
-
-Laurent Pinchart
+Great idea, thanks!
