@@ -1,142 +1,203 @@
-Received: from ni.piap.pl (ni.piap.pl [195.187.100.5])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B12F4241CBA;
-	Tue, 20 May 2025 13:27:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.187.100.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D3FFDDAB;
+	Tue, 20 May 2025 13:28:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747747624; cv=none; b=Hq7HuFhl1RYLDQhL/3By2iZuglnkdMk7dt+7aS3geNBtHNMbVd5N7+WwM07/QJx1Q7J0Ej913nBgR7Qt19DlaJZW8UI5rM5BS/x6nNZ/bVoTaTdfRuMU9E1rA2XDp7DhXXsz4rNoYlIm056/XxXo3EBMdY5ZbaiSYpj36ca4gM0=
+	t=1747747732; cv=none; b=J4mgci6Jh8xL7w21AahOMVr7iEjUby8d4uOvSDHltmvn1kqZS1z7M5rRyZ1uRSE6880it2GEyY03RY58K1c6k4VDOK+5EXRDh1ED5BVUMvStykrTQ1s36PJf+7ERxXOXL8QRNAaUnytdXaLCWcAVyX92ZZSj5jG2xNrYfDm0E1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747747624; c=relaxed/simple;
-	bh=vykBg8ejrA86ORynX2aNEi6P3gRBY+QDembUBCdgmWE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=BRQbOZ3CN4uhk6rW+JyZugboLUtbrNGQWqlrdKKEozTwivoHqrgX43Ceu78UgXwkeWEMAw5RyYxChZBlcHC21N5s0GA59YokKgIEuwohDnYze1GNgU31WAmAV2lMin+qr9sho2bUIi5/32+16+ecyY5OlANZI0bfJNDvkPHUPLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=piap.pl; spf=pass smtp.mailfrom=piap.pl; arc=none smtp.client-ip=195.187.100.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=piap.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=piap.pl
-Received: from t19.piap.pl (OSB1819.piap.pl [10.0.9.19])
-	by ni.piap.pl (Postfix) with ESMTPS id B0B1EC405A46;
-	Tue, 20 May 2025 15:26:58 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ni.piap.pl B0B1EC405A46
-From: =?utf-8?Q?Krzysztof_Ha=C5=82asa?= <khalasa@piap.pl>
-To: Paul Elder <paul.elder@ideasonboard.com>
-Cc: Dafna Hirschfeld <dafna@fastmail.com>,  Laurent Pinchart
- <laurent.pinchart@ideasonboard.com>,  Mauro Carvalho Chehab
- <mchehab@kernel.org>,  Heiko Stuebner <heiko@sntech.de>,
-  linux-media@vger.kernel.org,  linux-rockchip@lists.infradead.org,
-  linux-arm-kernel@lists.infradead.org,  linux-kernel@vger.kernel.org,
-  Jacopo Mondi <jacopo.mondi@ideasonboard.com>,  Ondrej Jirman
- <megi@xff.cz>,  Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-  stefan.klug@ideasonboard.com
-Subject: Re: [PATCH] RKISP1: correct histogram window size
-In-Reply-To: <aB31Eg6oRpcHHEsb@pyrite.rasen.tech> (Paul Elder's message of
-	"Fri, 9 May 2025 14:29:06 +0200")
-References: <m3tt5u9q7h.fsf@t19.piap.pl> <aB31Eg6oRpcHHEsb@pyrite.rasen.tech>
-Sender: khalasa@piap.pl
-Date: Tue, 20 May 2025 15:26:58 +0200
-Message-ID: <m3jz6b8lb1.fsf@t19.piap.pl>
+	s=arc-20240116; t=1747747732; c=relaxed/simple;
+	bh=IK8/ts1xVxaVfdy8B1KewsHXLlv8M26E/kz/1qUPEBk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=fa9j5y8NDyLaEeHc7+WgmoBMwnlqRKUe8fxNGIbHmTr1DOSkF7rXCyQSDlWJjDp1L87B3G4ilmDLBFXyeKzktctJcWedhT9Vr+wQ9nT4S7NzbLILAmTeXThwUB2OeUv61tqVoiR6VqCJX+NTuwCTPTDDpQcur+KmqvW/TV6OVHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ic7Xe/ms; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ic7Xe/ms"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 044EF43AF9;
+	Tue, 20 May 2025 13:28:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1747747723;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=U5+ddWY+IAjr33UpPNdZYDm+GxijJ/BwA+uhRUf/vYE=;
+	b=ic7Xe/ms6Pv1dOym5LkF75O5Z6sb4VWwnBNb+yM+bfhpuzduH8rnpnvFLvB/AaqKUr43Pt
+	KFFMYgvdG9bL1XA7pPO3Cqr7TpNY9jPV/k1f39wC3uEQPB0qI6E2y/TTACTT84/Vs+WV7X
+	5P57TndBhc0wNIW/2zCBWoMzPGhsFXnEce132G+Dk3vXCANNnY72xSwQpHXOcrKevlTVGl
+	OBZwslBFxumsVLEy8710fWiBMajbvP7XLUxLaXPTeooZS/CHrO0dj0ws+kAJ23ZGqVI038
+	F2fEsb6SlbunUlmluCflvBb8ki8wtJeUM16iis794hSyuAGeX4sSptBwd67F5w==
+From: Thomas Richard <thomas.richard@bootlin.com>
+Subject: [PATCH v6 00/12] Add pinctrl support for the AAEON UP board FPGA
+Date: Tue, 20 May 2025 15:28:24 +0200
+Message-Id: <20250520-aaeon-up-board-pinctrl-support-v6-0-dcb3756be3c6@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHiDLGgC/4XPTWrDMBAF4KsEraswo98qq96jdCHZUiNILEeWT
+ Uvw3Ss7lJR64eUMw/fe3Mngc/QDOR3uJPspDjF1dVAvB9KcbffpaWzrTBgwAYYDtdanjo49dcn
+ mlvaxa0q+0GHs+5QLNa/BCgschAFSkT77EL/WgPePx5z9baw55bEkzg6eNul6jeV0mNQRJc0NI
+ 8vxOQ4l5e+13ITr9dIDGeJejwkpUCY0GueZVhzfXErlErtjjVrxif2CEjjqXZBVkCtkynOwVrE
+ tyJ+gQLUL8goGAVor14LyfguKPyAzu6CooOMhhAZRoG63oHyCEvYbyuVlA0oyo6Vu/708z/MPp
+ qBBvj8CAAA=
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
+ Andy Shevchenko <andy@kernel.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
+ linux-hardening@vger.kernel.org, 
+ Thomas Richard <thomas.richard@bootlin.com>
+X-Mailer: b4 0.14.1
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdeffecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffufffkgggtgffvvefosehtjeertdertdejnecuhfhrohhmpefvhhhomhgrshcutfhitghhrghrugcuoehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeetieejudffledvveeuvdeiuedvuefgkeegheejudefgfektdeuuddvfffhgffgnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvdgrtddumegtsgdugeemfhegtdemsghftddtmehftdehgeemtgeltgdvmedvudgtfeemudehieeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemfhegtdemsghftddtmehftdehgeemtgeltgdvmedvudgtfeemudehieeipdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudefpdhrtghpthhtoheplhhinhhugidqghhpihhosehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepffgrnhhivghlvgevlhgvrhhisegrrggvohhnrdgvuhdprhgtphhtthhopehlihhnuhhsrdifrghll
+ hgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhigqdhhrghruggvnhhinhhgsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepifgrrhihhggrnhhgsegrrggvohhnrdgtohhmrdhtfidprhgtphhtthhopegrnhguhieskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhm
+X-GND-Sasl: thomas.richard@bootlin.com
 
-Hi Paul,
+This is the sixth version of this series. The main change is the rework of
+the GPIO forwarder API as requested by Geert to have more consistent naming
+and parameters.
 
-I'm sorry it took that long.
+More details in changelog.
 
-Paul Elder <paul.elder@ideasonboard.com> writes:
+Best Regards,
 
->> Without the patch (i.MX8MP, all-white RGGB-12 full HD input from
->> the sensor, YUV NV12 output from ISP, full range, histogram Y mode).
->> HIST_STEPSIZE =3D 3 (lowest permitted):
->
-> According to the datasheet, the histogram bins are 16-bit integer with a
-> 4-bit fractional part. To prevent overflowing the 16-bit integer
-> counter, the step size should be 10.
->
-> Do you have any other information on this? Is it known that it's stable
-> and consistent to use all 20 bits anyway?
+Thomas
 
-Interesting. I only have those mrv_*.h files which come with
-isp-imx-4.2.2.* package(s). Here we have (among others):
+Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+---
+Changes in v6:
+- all: take Reviewed-by tags.
+- all: fix some nitpicks.
+- gpiolib: fix error reported by kernel test robot.
+- gpio: aggregator: handle correctly err_ptr returned by
+  devm_gpiochip_fwd_alloc().
+- gpio: aggregator: rework naming of GPIO fowarder API.
+- gpio: aggregator: all functions of GPIO fowarder API now take a gpiochip_fwd ptr as
+  parameter.
+- gpio: aggregator: fix some typos in kernel-doc and comments.
+- gpio: aggregator: in forwarder.h, remove unused linux/gpio/consumer.h and
+  linux/gpio/driver.h header files.
+- gpio: aggregator: add missing forward declaration in forwarder.h (struct
+  gpio_desc and struct gpio_chip).
+- gpio: aggregator: get_direction() operation now returns -ENODEV if there is no
+  GPIO descriptor for the line.
+- gpio: aggregator: handle correctly ptr returned by devm_gpiochip_fwd_alloc().
+- gpio: aggregator: free GPIO desc array after gpiochip_fwd_create().
+- pinctrl-upboard: remove useless cast in UPBOARD_UP_PIN_MUX() UPBOARD_UP_PIN_FUNC() macros.
+- pinctrl-upboard: rework the pinctrl mapping part (new struct upboard_pinctrl_map).
+- Link to v5: https://lore.kernel.org/r/20250506-aaeon-up-board-pinctrl-support-v5-0-3906529757d2@bootlin.com
 
-/*! Register: isp_hist_prop: Histogram properties (0x00000000)*/
-/*! Slice: stepsize:*/
-/*! histogram predivider, process every (stepsize)th pixel, all other pixel=
-s are skipped */
-/* 0,1,2: not allowed */
-/* 3: process every third input pixel */
-/* 4: process every fourth input pixel */
-/* ...*/
-/* 7FH: process every 127th pixel */
-#define MRV_HIST_STEPSIZE_MASK 0x000003F8
-#define MRV_HIST_STEPSIZE_SHIFT 3
+Changes in v5:
+- all: improve commit messages, fix some typos and nitpicks.
+- pinctrl: machine.h: add "Suggested-by: Andy Shevchenko <andy@kernel.org>"
+  and "Reviewed-by: Andy Shevchenko <andy@kernel.org>" tags.
+- pinctrl: core: fix kernel doc for devm_pinctrl_register_mappings().
+- pinctrl: core: do not cast pointer in devm_pinctrl_unregister_mappings().
+- gpio: aggregator: remove a useless check in patch 5/12.
+- gpio: aggregator: fix condition to identify if the gpiochip forwarder can
+  sleep or not.
+- gpio: aggregator: add "Reviewed-by: Andy Shevchenko <andy@kernel.org>" tag
+  in patch 10/12
+- string_choices: add "Suggested-by: Andy Shevchenko <andy@kernel.org>" and
+  "Reviewed-by: Andy Shevchenko <andy@kernel.org>" tags.
+- string_choices: add missing parameter for str_output_input() macro.
+- Link to v4: https://lore.kernel.org/r/20250429-aaeon-up-board-pinctrl-support-v4-0-b3fffc11417d@bootlin.com
 
-In case of my IMX290 1920x1080 sensor, 1 doesn't work well (it stops
-counting before reaching $((1920x1080)) in each bin, and even if no bin
-reaches this magic value, the total count may be invalid (not equal to
-the number of pixels). IIRC, 2 worked well. Maybe with higher
-resolutions, I don't know.
+Changes in v4:
+- gpiolib: use positive conditonal in gpiochip_add_pin_range_with_pins().
+- pinctrl: fix warning reported by kernel robot in
+  include/linux/pinctrl/machine.h.
+- pinctrl: add a patch to remove the extern specifier in machine.h.
+- pinctrl: use devm_add_action_or_reset() in
+  devm_pinctrl_register_mappings().
+- string_choices: add a patch to define str_input_output() and
+  str_output_input() helpers.
+- gpio: aggregator: set gpiochip_fwd as opaque and define getters
+  gpio_fwd_get_gpiochip() and gpio_fwd_get_data().
+- gpio: aggregator: add valid_mask in gpiochip_fwd struct to track already
+  registered gpio descs.
+- gpio: aggregator: add gpio_fwd_gpio_free() helper.
+- gpio: aggregator: add kdoc sections for exported functions.
+- gpio: aggregator: fix some nitpicks.
+- pinctrl-upboard: use str_input_output() helper.
+- pinctrl-upboard: fix some nitpicks.
+- pinctrl-upboard: add missing headers stddef.h and types.h.
+- pinctrl-upboard: add intermediate cast (unsigned long) for dmi_id->driver_data.
+- pinctrl-upboard: use getter gpio_fwd_get_gpiochip() and
+  gpio_fwd_get_data().
+- pinctrl-upboard: fix kernel robot warning 'unmet direct dependencies detected
+  for GPIO_AGGREGATOR when selected by PINCTRL_UPBOARD'.
+- pinctrl-upboard: use gpio_fwd_gpio_free() helper.
+- Link to v3: https://lore.kernel.org/r/20250416-aaeon-up-board-pinctrl-support-v3-0-f40776bd06ee@bootlin.com
 
-I'm currently using "3" per the .h file:
-isp_hist_prop:
-32E12400: 1Dh
-histogram_measurement_result:
-32E12414: 0 0 1 1004 569 476 633 1197 2373 2212 1923 2945 3632 3025 5821 20=
-4589
-which sums to 518400 =3D 1920*1080/9.
+Changes in v3:
+- pinctrl: add devm_pinctrl_register_mappings()
+- gpiolib: rename gpiochip_add_pin_range() to
+  gpiochip_add_pin_range_with_pins() and add pins parameter
+- gpiolib: add stubs gpiochip_add_pin_range() and 
+  gpiochip_add_sparse_pin_range()
+- aggregator: split to more simpler patches
+- aggregator: add a namespace for the forwarder library
+- aggregator: rename header file to forwarder.h
+- aggregator: add some missing headers and declaration in forwarder.h
+- aggregator: forwarder.h provides consumer.h and driver.h
+- aggregator: fix error code returned by gpio_fwd_request()
+- pinctrl-upboard: fix order of header files
+- pinctrl-upboard: fix some nitpicks
+- pinctrl-upboard: rework macros to define pin groups
+- pinctrl-upboard: add missing container_of.h and err.h header files
+- pinctrl-upboard: handle correctly pointer returned by dmi_first_match()
+- pinctrl-upboard: use devm_pinctrl_register_mappings()
+- pinctrl-upboard: import GPIO_FORWARDER namespace
+- Link to v2: https://lore.kernel.org/r/20250317-aaeon-up-board-pinctrl-support-v2-0-36126e30aa62@bootlin.com
 
-Setting "2", the same input scene:
-32E12400: 15h
-32E12414: 0 0 0 2194 1263 1096 1406 2528 5228 5052 4291 6354 8322 6943 1320=
-1 460522
-which sums to 518400 =3D 1920*1080/4.
+Changes in v2:
+- mfd: removed driver (already merged)
+- led: removed driver (already merged)
+- gpio-aggregator: refactor code to create a gpio-fwd library
+- pinctrl: refactor gpio part to use the gpio-fwd library
+- pinctrl: add pinctrl mappings for each board
 
-Setting "1", the same input scene:
-32E12400: Dh
-32E12414: 0 0 25 9046 4924 4317 5435 10655 20781 18965 16051 24716 32681 28=
-368 54301 1048559
-which sums to 1278824 which is rather less than 2073600.
-The last number (1048559) is the magic one, no bin can go higher. Less ligh=
-ts and:
-32E12400: Dh
-32E12414: 0 0 0 0 0 0 184 3059 11970 75298 114898 211444 429772 439922 4003=
-58 386695
-total =3D 2073600. But don't rely on it too much, the "1" has problems.
+---
+Thomas Richard (12):
+      gpiolib: add support to register sparse pin range
+      pinctrl: remove extern specifier for functions in machine.h
+      pinctrl: core: add devm_pinctrl_register_mappings()
+      gpio: aggregator: move GPIO forwarder allocation in a dedicated function
+      gpio: aggregator: refactor the code to add GPIO desc in the forwarder
+      gpio: aggregator: refactor the forwarder registration part
+      gpio: aggregator: update gpiochip_fwd_setup_delay_line() parameters
+      gpio: aggregator: export symbols of the GPIO forwarder library
+      gpio: aggregator: handle runtime registration of gpio_desc in gpiochip_fwd
+      gpio: aggregator: add possibility to attach data to the forwarder
+      lib/string_choices: Add str_input_output() helper
+      pinctrl: Add pin controller driver for AAEON UP boards
 
-In short, those are integer values. One may use them as fractionals with
-some clever step size, I guess.
+ drivers/gpio/gpio-aggregator.c    |  387 ++++++++++++--
+ drivers/gpio/gpiolib.c            |   29 +-
+ drivers/pinctrl/Kconfig           |   19 +
+ drivers/pinctrl/Makefile          |    1 +
+ drivers/pinctrl/core.c            |   29 +
+ drivers/pinctrl/pinctrl-upboard.c | 1068 +++++++++++++++++++++++++++++++++++++
+ include/linux/gpio/driver.h       |   51 +-
+ include/linux/gpio/forwarder.h    |   41 ++
+ include/linux/pinctrl/machine.h   |   19 +-
+ include/linux/string_choices.h    |    6 +
+ 10 files changed, 1588 insertions(+), 62 deletions(-)
+---
+base-commit: 8a834b0ac9ceb354a6e0b8cf5b363edca8221bdd
+change-id: 20240930-aaeon-up-board-pinctrl-support-98fa4a030490
 
->> isp_hist_h_size: 383 (=3D 1920 / 5 - 1)
->> isp_hist_v_size: 215 (=3D 1080 / 5 - 1)
->> histogram_measurement_result[16]: 0 0 0 0  0 0 0 0  0 0 0 0  0 0 0 229401
->>
->> Apparently the histogram is missing the last column (3-pixel wide,
->> though only single pixels count) and the last (same idea) row
->> of the input image: 1917 * 1077 / 3 / 3 =3D 229401
->
-> I don't quite understand this. With a sub-window width of
-> 1920 / 5 - 1 =3D 383, shouldn't the resulting total window width be
-> 383 * 5 =3D 1915? Same idea for the height.
+Best regards,
+-- 
+Thomas Richard <thomas.richard@bootlin.com>
 
-It would, but the stepsize =3D 3 makes it ignore only the last one
-- i.e., normally the counted ones are 0, 3, ... 1914, 1917 (which makes
-1920/3) and with 383, it ends at 1914, thus only 3 pixels (1 really,
-instead of 2) are missing from calculations (not 5). I guess the same
-vertically, 1080 divides / 3 and 1075 doesn't.
-
-> The fix looks fine though. Although, I'm wondering if there's a reason
-> why there was a -1 in the first place. Does anybody know?
-
-There is slight chance it's different on some other SoC, but I would be
-surprised.
---=20
-Krzysztof "Chris" Ha=C5=82asa
-
-Sie=C4=87 Badawcza =C5=81ukasiewicz
-Przemys=C5=82owy Instytut Automatyki i Pomiar=C3=B3w PIAP
-Al. Jerozolimskie 202, 02-486 Warszawa
