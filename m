@@ -1,669 +1,103 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D0B31C8603;
-	Tue, 20 May 2025 16:42:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCC5F24A076;
+	Tue, 20 May 2025 16:43:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747759363; cv=none; b=GNM9KQ5EDhH+VipmJYRBJKVa2dDnS7EP3pBLmjzfiYqH6mbVCeTzpUPSUYQhx9oRsMNJ/KkAJAwQkcVLTXEY8X2r6CZU3Rd942gTpAXYSIZNikuGnwNHLc7Dm04iItB6GlEKgZ2id3i0ofkeNI0vhQ55oVp54fNxGuS1TpbRaAI=
+	t=1747759425; cv=none; b=gNYUzSxkdyQoqk5/39cq4edK6wUMINO/O6D2gwycaotK4m4mNeQqe3CTdAeMKXZz9Zze3Eg06C+nq43cgngLL13mRM+o+A9MUcgZaVYogWNxlL2cCuj5+NUDW2QT1uOpKCNxifx9xQR0kbMrlPYEU2monqdFA82FCjk6TenE81w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747759363; c=relaxed/simple;
-	bh=1Iemnh2QpFzqVrSOBPzppyuBAefTs+QBKRDP0XvTom4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=SNAq782lRqTEFAwF27wLV5RdyeemEfwJJLURAwPPK7181cu7U4CdlNPNO1/ESYDgQ4rAzwrxsUxC8oi5okgOyikIt00siZEUQk9AsnhnGI4pwwM4td2FeIVJxnJGnT94CsIGU6C/ohJ1FxKBeeQGreSWDwaCuto/zOKIdj4+NGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=leuxlEg3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747759425; c=relaxed/simple;
+	bh=dhITEbXnPvgxwrrtbQCh7Ba4RjLia7RhjOjlcd3lwfg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=toe/W5ZV1KekLUAFm0cU75kYj42h0T9GYJarpGNmK/+NRqT6SbjqBbzv2mmSL8qUcm6nz6BRKDDu0A+FH7RRXeDJjhept7YJ/to7MvICcbeNo6vQwxsvNtHZup0dKKKE+68UQdiGQ1uS6bayWxQezL978Z23VMgkc2FsR+kzXyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kldIzCyb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="leuxlEg3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFA64C4CEE9;
-	Tue, 20 May 2025 16:42:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kldIzCyb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAB30C4CEE9;
+	Tue, 20 May 2025 16:43:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747759362;
-	bh=1Iemnh2QpFzqVrSOBPzppyuBAefTs+QBKRDP0XvTom4=;
-	h=From:Date:Subject:To:Cc:From;
-	b=leuxlEg3CADCGomWO71Lnpf9fwy4Cw6Ututf9DHO3r8G5Ywfqxu2Rk5DE7mUDl9dd
-	 9l21GFvvBeF3UJTEmyWxCvnEvSEScp5Sl88sAyzCtFmn5S35YYvGxsb4O/dYlEoF5v
-	 Ln+zTnACGQeSUxX87qn96ahaj4mzbcBntM6Br9uBdzAV+c/C6R5z77V7r+2PqJ6Dto
-	 1e6ZQ8mDCoyyS8xuDVWJ+cjZ7ZVRwlUAhQKng1NfymKqv3tuel/weQOKUpsr1T/Fk/
-	 eSqTOwaG39J39jByZrzYFL5bTKbpqqsfRRU49kj2fKzfJjYOin1sUHoKMkFfS1RTom
-	 3NkUlybj1e68w==
-From: Konrad Dybcio <konradybcio@kernel.org>
-Date: Tue, 20 May 2025 18:42:32 +0200
-Subject: [PATCH] arm64: dts: qcom: x1p42100: Fix thermal sensor
- configuration
+	s=k20201202; t=1747759424;
+	bh=dhITEbXnPvgxwrrtbQCh7Ba4RjLia7RhjOjlcd3lwfg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kldIzCyb7uZjDGXJ8CfzKS0eVN6dKSfUk96ciPwwjqXIlRzMaXDTNByI8x6o7wPTt
+	 b8S+wWB3uanSHVfjOOYB1hdCJu6OMf1TjqW7CPfiuBQXb+tus2P3BNxDrSreZXMduG
+	 2/zZ5yInQ60GsbZK1DxtHahgsG41IiVX9frINxDi1o1I4aOu1Xy+wpOFE36Qm8aUhB
+	 eCghZkKmEno+rTs3YdsWNA/qm43ZA+UFG54o9BX4K7Wsc/vSxHfybmNTzB7Bx62Vza
+	 /PUrZiMwOEL5W0cGQJDki4R5tIUjiNgppTF9ud6Mjt++FPLeSILsoYQRbMLv62azjC
+	 ULbcajpCd0FEw==
+Date: Tue, 20 May 2025 17:43:39 +0100
+From: Simon Horman <horms@kernel.org>
+To: Hariprasad Kelam <hkelam@marvell.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Sunil Goutham <sgoutham@marvell.com>,
+	Geetha sowjanya <gakula@marvell.com>,
+	Subbaraya Sundeep <sbhatta@marvell.com>,
+	Bharat Bhushan <bbhushan2@marvell.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Naveen Mamindlapalli <naveenm@marvell.com>
+Subject: Re: [net] octeontx2-pf: QOS: Fix HTB queue deletion on reboot
+Message-ID: <20250520164339.GC365796@horms.kernel.org>
+References: <20250520073523.1095939-1-hkelam@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250520-topic-x1p4_tsens-v1-1-bdadd91b7024@oss.qualcomm.com>
-X-B4-Tracking: v=1; b=H4sIAPewLGgC/x3MQQqAIBBA0avErBMmS7CuEhFhY83GxIkQpLsnL
- d/i/wJCiUlgagokelj4ChVd24A7t3CQ4r0aNGqDRqO6r8hO5S4O6y0URG1o/E7U29Ei1Cwm8pz
- /5by87wdDv0ofYgAAAA==
-X-Change-ID: 20250520-topic-x1p4_tsens-a05fdee38980
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: jens.glathe@oldschoolsolutions.biz, 
- Marijn Suijten <marijn.suijten@somainline.org>, 
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747759359; l=11618;
- i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
- bh=U/ZzbkPh3ghwqH+tLF6loTXJYPSBNt7pM+xzEP+/17U=;
- b=yBYPdohl3jl8XPmfNEexx9KLORIUJd62zjCQk3Un5nmJr+h5bK6riuahIxOheVnKVn18MijeB
- wBB5lvLA7jzCat88JmWZEkn4HI8a+rUlID48lPx5WvjuLAWi845TqPV
-X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
- pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250520073523.1095939-1-hkelam@marvell.com>
 
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+On Tue, May 20, 2025 at 01:05:23PM +0530, Hariprasad Kelam wrote:
+> During a system reboot, the interface receives TC_HTB_LEAF_DEL
+> and TC_HTB_LEAF_DEL_LAST callbacks to delete its HTB queues.
+> In the case of TC_HTB_LEAF_DEL_LAST, although the same send queue
+> is reassigned to the parent, the current logic still attempts to update
+> the real number of queues, leadning to below warnings
+> 
+>         New queues can't be registered after device unregistration.
+>         WARNING: CPU: 0 PID: 6475 at net/core/net-sysfs.c:1714
+>         netdev_queue_update_kobjects+0x1e4/0x200
+> 
+> Fixes: 5e6808b4c68d ("octeontx2-pf: Add support for HTB offload")
+> Signed-off-by: Hariprasad Kelam <hkelam@marvell.com>
+> ---
+>  drivers/net/ethernet/marvell/octeontx2/nic/qos.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/qos.c b/drivers/net/ethernet/marvell/octeontx2/nic/qos.c
+> index 35acc07bd964..5765bac119f0 100644
+> --- a/drivers/net/ethernet/marvell/octeontx2/nic/qos.c
+> +++ b/drivers/net/ethernet/marvell/octeontx2/nic/qos.c
+> @@ -1638,6 +1638,7 @@ static int otx2_qos_leaf_del_last(struct otx2_nic *pfvf, u16 classid, bool force
+>  	if (!node->is_static)
+>  		dwrr_del_node = true;
+>  
+> +	WRITE_ONCE(node->qid, OTX2_QOS_QID_INNER);
 
-The 8-core SKUs of the X1 family have a different sensor configuration.
-Override it to expose what the sensors really measure.
+Hi Hariprasad,
 
-Fixes: f08edb529916 ("arm64: dts: qcom: Add X1P42100 SoC and CRD")
-Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
----
-Compile-tested only
----
- arch/arm64/boot/dts/qcom/x1e80100.dtsi |   2 +-
- arch/arm64/boot/dts/qcom/x1p42100.dtsi | 556 +++++++++++++++++++++++++++++++++
- 2 files changed, 557 insertions(+), 1 deletion(-)
+Perhaps a comment is warranted regarding the line above.
+It would probably be more valuable than the one on the line below.
 
-diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-index 60dcffb7db04a0734f3495dcf3dfab6e102e4e1b..92b2da38a1402e3d41f346266ce281dabe0f7a08 100644
---- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-+++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-@@ -8496,7 +8496,7 @@ timer {
- 			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
- 	};
- 
--	thermal-zones {
-+	thermal_zones: thermal-zones {
- 		aoss0-thermal {
- 			thermal-sensors = <&tsens0 0>;
- 
-diff --git a/arch/arm64/boot/dts/qcom/x1p42100.dtsi b/arch/arm64/boot/dts/qcom/x1p42100.dtsi
-index 27f479010bc330eb6445269a1c46bf78ec6f1bd4..004f5e87f8e132cdd5ebb06a44e34d6746f459e1 100644
---- a/arch/arm64/boot/dts/qcom/x1p42100.dtsi
-+++ b/arch/arm64/boot/dts/qcom/x1p42100.dtsi
-@@ -18,6 +18,7 @@
- /delete-node/ &cpu_pd10;
- /delete-node/ &cpu_pd11;
- /delete-node/ &pcie3_phy;
-+/delete-node/ &thermal_zones;
- 
- &gcc {
- 	compatible = "qcom,x1p42100-gcc", "qcom,x1e80100-gcc";
-@@ -79,3 +80,558 @@ pcie3_phy: phy@1bd4000 {
- 		status = "disabled";
- 	};
- };
-+
-+/* While physically present, this controller is left unconfigured and unused */
-+&tsens3 {
-+	status = "disabled";
-+};
-+
-+/ {
-+	thermal-zones {
-+		aoss0-thermal {
-+			thermal-sensors = <&tsens0 0>;
-+
-+			trips {
-+				trip-point0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+
-+				trip-point1 {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpu0-0-top-thermal {
-+			thermal-sensors = <&tsens0 1>;
-+
-+			trips {
-+				trip-point1 {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpu0-0-btm-thermal {
-+			thermal-sensors = <&tsens0 2>;
-+
-+			trips {
-+				trip-point1 {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpu0-1-top-thermal {
-+			thermal-sensors = <&tsens0 3>;
-+
-+			trips {
-+				trip-point1 {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpu0-1-btm-thermal {
-+			thermal-sensors = <&tsens0 4>;
-+
-+			trips {
-+				trip-point1 {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpu0-2-top-thermal {
-+			thermal-sensors = <&tsens0 5>;
-+
-+			trips {
-+				trip-point1 {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpu0-2-btm-thermal {
-+			thermal-sensors = <&tsens0 6>;
-+
-+			trips {
-+				trip-point1 {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpu0-3-top-thermal {
-+			thermal-sensors = <&tsens0 7>;
-+
-+			trips {
-+				trip-point1 {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpu0-3-btm-thermal {
-+			thermal-sensors = <&tsens0 8>;
-+
-+			trips {
-+				trip-point1 {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpuss0-top-thermal {
-+			thermal-sensors = <&tsens0 9>;
-+
-+			trips {
-+				trip-point1 {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpuss0-btm-thermal {
-+			thermal-sensors = <&tsens0 10>;
-+
-+			trips {
-+				trip-point1 {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		mem-thermal {
-+			thermal-sensors = <&tsens0 11>;
-+
-+			trips {
-+				trip-point0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+
-+				trip-point1 {
-+					temperature = <115000>;
-+					hysteresis = <0>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		video-thermal {
-+			thermal-sensors = <&tsens0 12>;
-+
-+			trips {
-+				trip-point0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+
-+				trip-point1 {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		aoss1-thermal {
-+			thermal-sensors = <&tsens1 0>;
-+
-+			trips {
-+				trip-point0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+
-+				trip-point1 {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpu1-0-top-thermal {
-+			thermal-sensors = <&tsens1 1>;
-+
-+			trips {
-+				trip-point1 {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpu1-0-btm-thermal {
-+			thermal-sensors = <&tsens1 2>;
-+
-+			trips {
-+				trip-point1 {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpu1-1-top-thermal {
-+			thermal-sensors = <&tsens1 3>;
-+
-+			trips {
-+				trip-point1 {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpu1-1-btm-thermal {
-+			thermal-sensors = <&tsens1 4>;
-+
-+			trips {
-+				trip-point1 {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpu1-2-top-thermal {
-+			thermal-sensors = <&tsens1 5>;
-+
-+			trips {
-+				trip-point1 {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpu1-2-btm-thermal {
-+			thermal-sensors = <&tsens1 6>;
-+
-+			trips {
-+				trip-point1 {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpu1-3-top-thermal {
-+			thermal-sensors = <&tsens1 7>;
-+
-+			trips {
-+				trip-point1 {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpu1-3-btm-thermal {
-+			thermal-sensors = <&tsens1 8>;
-+
-+			trips {
-+				trip-point1 {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpuss1-top-thermal {
-+			thermal-sensors = <&tsens1 9>;
-+
-+			trips {
-+				trip-point1 {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpuss1-btm-thermal {
-+			thermal-sensors = <&tsens1 10>;
-+
-+			trips {
-+				trip-point1 {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		aoss2-thermal {
-+			thermal-sensors = <&tsens2 0>;
-+
-+			trips {
-+				trip-point0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+
-+				trip-point1 {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		nsp0-thermal {
-+			thermal-sensors = <&tsens2 1>;
-+
-+			trips {
-+				trip-point0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+
-+				trip-point1 {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		nsp1-thermal {
-+			thermal-sensors = <&tsens2 2>;
-+
-+			trips {
-+				trip-point0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+
-+				trip-point1 {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		nsp2-thermal {
-+			thermal-sensors = <&tsens2 3>;
-+
-+			trips {
-+				trip-point0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+
-+				trip-point1 {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		nsp3-thermal {
-+			thermal-sensors = <&tsens2 4>;
-+
-+			trips {
-+				trip-point0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+
-+				trip-point1 {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		gpuss-0-thermal {
-+			polling-delay-passive = <200>;
-+
-+			thermal-sensors = <&tsens2 5>;
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&gpuss0_alert0>;
-+					cooling-device = <&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
-+
-+			trips {
-+				gpuss0_alert0: trip-point0 {
-+					temperature = <95000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+
-+				trip-point1 {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		gpuss-1-thermal {
-+			polling-delay-passive = <200>;
-+
-+			thermal-sensors = <&tsens2 6>;
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&gpuss1_alert0>;
-+					cooling-device = <&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
-+
-+			trips {
-+				gpuss1_alert0: trip-point0 {
-+					temperature = <95000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+
-+				trip-point1 {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		gpuss-2-thermal {
-+			polling-delay-passive = <200>;
-+
-+			thermal-sensors = <&tsens2 7>;
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&gpuss2_alert0>;
-+					cooling-device = <&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
-+
-+			trips {
-+				gpuss2_alert0: trip-point0 {
-+					temperature = <95000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+
-+				trip-point1 {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		gpuss-3-thermal {
-+			polling-delay-passive = <200>;
-+
-+			thermal-sensors = <&tsens2 8>;
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&gpuss3_alert0>;
-+					cooling-device = <&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
-+
-+			trips {
-+				gpuss3_alert0: trip-point0 {
-+					temperature = <95000>;
-+					hysteresis = <1000>;
-+					type = "passive";
-+				};
-+
-+				trip-point1 {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		camera0-thermal {
-+			thermal-sensors = <&tsens2 9>;
-+
-+			trips {
-+				trip-point0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+
-+				trip-point1 {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		camera1-thermal {
-+			thermal-sensors = <&tsens2 10>;
-+
-+			trips {
-+				trip-point0 {
-+					temperature = <90000>;
-+					hysteresis = <2000>;
-+					type = "hot";
-+				};
-+
-+				trip-point1 {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+	};
-+};
-
----
-base-commit: edef457004774e598fc4c1b7d1d4f0bcd9d0bb30
-change-id: 20250520-topic-x1p4_tsens-a05fdee38980
-
-Best regards,
--- 
-Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-
+>  	/* destroy the leaf node */
+>  	otx2_qos_disable_sq(pfvf, qid);
+>  	otx2_qos_destroy_node(pfvf, node);
+> @@ -1682,9 +1683,6 @@ static int otx2_qos_leaf_del_last(struct otx2_nic *pfvf, u16 classid, bool force
+>  	}
+>  	kfree(new_cfg);
+>  
+> -	/* update tx_real_queues */
+> -	otx2_qos_update_tx_netdev_queues(pfvf);
+> -
+>  	return 0;
+>  }
+>  
+> -- 
+> 2.34.1
+> 
+> 
