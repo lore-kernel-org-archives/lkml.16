@@ -1,324 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mta-65-227.siemens.flowmailer.net (mta-65-227.siemens.flowmailer.net [185.136.65.227])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5E914A21;
-	Tue, 20 May 2025 12:02:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A68127CB3D
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 12:03:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.65.227
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747742546; cv=none; b=XoZs+64J8U4+PIOL9N2I9FyR+yDFYeQ7ByJjfU1Gm4IoSkeZXXoVZEVQLJXNDct121j3ZWitryUNrYNt37Twn51welhpENJtyoOl50nx5U1hgEXUIqNkL+QY6fpE77py6rY6tSV1nzm61yP5axN6NRr5wg2q7h/RbpXBZ3CxpYg=
+	t=1747742591; cv=none; b=t6J4mo+wU6uPgBN7tPd9AnG1UzKXKfVBpOFotE6Ja+XpwxpNt2rmcW/lq2EBY6AhYkK5W9u48/c+3kJbo8hvna5Gn8WgvzgnkK1B5n0z7gMppk5OizN6IYlXp0yZR3ce7c3kwn0mqod00h41gjT7H/JAxTExmVGU/gVCtRl7Ewc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747742546; c=relaxed/simple;
-	bh=jYo9gyvmmG2RVr4yLv9L8nuvvaWGZ4xqnkjufYfE9Ns=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=UYluCRvZHU7H3nxwNpSy5ekE45zVJTF+5di8XMDi8XxD7KjbnobDMuDj5NGwbm/ENTZ+E8zADp6fMJJZ1uJ2z/LwgQyllCNz2JNIX4S0gSv+Ov3+vH+5UzsvzywH1PIFzPcxsFQ/DgXLm5rX+BnEhrTr0c7cs71cGNZ8Q9OktnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NwPvNOPp; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747742591; c=relaxed/simple;
+	bh=jSUYGyW8/wTbzZj+BWRtL8MnXjk8eiOsjO1ir0gTyAI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=HZd4nZ4Qlpi+tJ5u40O6H9JAu98U0VkyPPz629R+6UQTzGeuSkVBdM8MqrvLrglMiNGo0MvSl+/T7A2niHvApdJXfPfgfsgyOSmgJ1pnQjIXLdu4YjUec0MfL2SOlm2KH3vPovYg91sZNyK+saAEXswDYz0gd5vJyjCNy8KB6No=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=florian.bezdeka@siemens.com header.b=H9egwS8+; arc=none smtp.client-ip=185.136.65.227
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NwPvNOPp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747742545; x=1779278545;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=jYo9gyvmmG2RVr4yLv9L8nuvvaWGZ4xqnkjufYfE9Ns=;
-  b=NwPvNOPp63P61KJ13gP9fCNWUrHPbGMpkkdI5CQyZM4d3kk3F28XdGaW
-   XHvqpCh/kq1nNjpMeIys/ewicqrY1AuuZhGqUgO+PILBasdHhyhzd6MlT
-   ta22BmqcXjaMptzG20XwjfXoCJMlp1NQt2DDO0l5Zi2XZeVjU5ERhmzKL
-   pnqfJPoZtgrxVltHmVyVpyt8ZxN+EFYXlU5PEWGEJZymcJhp9pVb323H5
-   WQ+U3coK5Drkp5supJBARmq/gmw+mfnwktwmWBedDIZJMKaPEoZe2jQY7
-   Ehkw/Zs9GQe4u0bYEm9W2AzaoPHVaWpBLK3gkhxe0Bg2Tjvh7J0uGk+rf
-   w==;
-X-CSE-ConnectionGUID: P3+n+m5aQO6wmeYpRRZ2Wg==
-X-CSE-MsgGUID: CHp7MHx8RJGSLk+AWfIJgQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="72184696"
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="72184696"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 05:02:17 -0700
-X-CSE-ConnectionGUID: A+XgE2+iQOmTI75IVxwTnA==
-X-CSE-MsgGUID: VMZ1grxaQ5isiH1pY6JTBA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="144657345"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.235])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 05:02:09 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 20 May 2025 15:02:06 +0300 (EEST)
-To: Bjorn Helgaas <helgaas@kernel.org>
-cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>, 
-    Karolina Stolarek <karolina.stolarek@oracle.com>, 
-    Martin Petersen <martin.petersen@oracle.com>, 
-    Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, 
-    Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, 
-    Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, 
-    Lukas Wunner <lukas@wunner.de>, 
-    Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-    Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney" <paulmck@kernel.org>, 
-    Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
-    Oliver O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>, 
-    Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>, 
-    Terry Bowman <terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>, 
-    Dave Jiang <dave.jiang@intel.com>, LKML <linux-kernel@vger.kernel.org>, 
-    linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v6 16/16] PCI/AER: Add sysfs attributes for log
- ratelimits
-In-Reply-To: <20250519213603.1257897-17-helgaas@kernel.org>
-Message-ID: <cfe3d2a5-fe32-ca35-98f5-812da367dc99@linux.intel.com>
-References: <20250519213603.1257897-1-helgaas@kernel.org> <20250519213603.1257897-17-helgaas@kernel.org>
+	dkim=pass (2048-bit key) header.d=siemens.com header.i=florian.bezdeka@siemens.com header.b="H9egwS8+"
+Received: by mta-65-227.siemens.flowmailer.net with ESMTPSA id 202505201202548bf66a66ec09958b00
+        for <linux-kernel@vger.kernel.org>;
+        Tue, 20 May 2025 14:02:56 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm1;
+ d=siemens.com; i=florian.bezdeka@siemens.com;
+ h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
+ bh=pdQJc6iC2TpPc0wkqbwLZ2xMcMoQ/7l9nj08pJ0xr1g=;
+ b=H9egwS8+UsaRq/q6SaOpmE3WCZOUpsiE/LOwU2XOUQaRVTRItNFd9ow/Zoxl9uHnEJn7do
+ INBtoHop7uG06R1BKWWxLmDOuqQCvllHQe5/kG+SLNSRfYTYUr0aWQPGAwkUjWHVWo9Q6RuV
+ VpCWDztQy5tOTppBeoaoC1e+msRtVr5aVnClpgVsUbjoqsKl0SoB10xDxI7JejZTpulvz2J6
+ e0Dng16gyMqELcnSWY3jrCYHwEI2Vs8Spc65xQAultPhZjIS3kGzTku9au68HpZy2MHNtG+o
+ 1+mP9XIeSN/bJZ5oCgOI8ELhyXpLWKzG0Is7CKpUEUARyvX3YolMUoBQ==;
+Message-ID: <844ecab14632381bb5dd6a168a988dede64b459e.camel@siemens.com>
+Subject: Re: [PATCH 2/7] sched/fair: prepare throttle path for task based
+ throttle
+From: Florian Bezdeka <florian.bezdeka@siemens.com>
+To: Aaron Lu <ziqianlu@bytedance.com>, Valentin Schneider
+ <vschneid@redhat.com>,  Ben Segall <bsegall@google.com>, K Prateek Nayak
+ <kprateek.nayak@amd.com>, Peter Zijlstra	 <peterz@infradead.org>, Josh Don
+ <joshdon@google.com>, Ingo Molnar	 <mingo@redhat.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Xi Wang	 <xii@google.com>
+Cc: linux-kernel@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>, 
+ Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt
+ <rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>,  Chengming Zhou
+ <chengming.zhou@linux.dev>, Chuyi Zhou <zhouchuyi@bytedance.com>, Jan
+ Kiszka	 <jan.kiszka@siemens.com>
+Date: Tue, 20 May 2025 14:02:54 +0200
+In-Reply-To: <20250520104110.3673059-3-ziqianlu@bytedance.com>
+References: <20250520104110.3673059-1-ziqianlu@bytedance.com>
+	 <20250520104110.3673059-3-ziqianlu@bytedance.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-Flowmailer-Platform: Siemens
+Feedback-ID: 519:519-68982:519-21489:flowmailer
 
-On Mon, 19 May 2025, Bjorn Helgaas wrote:
-
-> From: Jon Pan-Doh <pandoh@google.com>
-> 
-> Allow userspace to read/write log ratelimits per device (including
-> enable/disable). Create aer/ sysfs directory to store them and any
-> future aer configs.
-> 
-> Update AER sysfs ABI filename to reflect the broader scope of AER sysfs
-> attributes (e.g. stats and ratelimits).
-> 
->   Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats ->
->     sysfs-bus-pci-devices-aer
-> 
-> Tested using aer-inject[1]. Configured correctable log ratelimit to 5.
-> Sent 6 AER errors. Observed 5 errors logged while AER stats
-> (cat /sys/bus/pci/devices/<dev>/aer_dev_correctable) shows 6.
-> 
-> Disabled ratelimiting and sent 6 more AER errors. Observed all 6 errors
-> logged and accounted in AER stats (12 total errors).
-> 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/gong.chen/aer-inject.git
-> 
-> Signed-off-by: Karolina Stolarek <karolina.stolarek@oracle.com>
-> Signed-off-by: Jon Pan-Doh <pandoh@google.com>
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> Acked-by: Paul E. McKenney <paulmck@kernel.org>
-> ---
->  ...es-aer_stats => sysfs-bus-pci-devices-aer} | 34 +++++++
->  Documentation/PCI/pcieaer-howto.rst           |  5 +-
->  drivers/pci/pci-sysfs.c                       |  1 +
->  drivers/pci/pci.h                             |  1 +
->  drivers/pci/pcie/aer.c                        | 99 +++++++++++++++++++
->  5 files changed, 139 insertions(+), 1 deletion(-)
->  rename Documentation/ABI/testing/{sysfs-bus-pci-devices-aer_stats => sysfs-bus-pci-devices-aer} (77%)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats b/Documentation/ABI/testing/sysfs-bus-pci-devices-aer
-> similarity index 77%
-> rename from Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
-> rename to Documentation/ABI/testing/sysfs-bus-pci-devices-aer
-> index d1f67bb81d5d..771204197b71 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
-> +++ b/Documentation/ABI/testing/sysfs-bus-pci-devices-aer
-> @@ -117,3 +117,37 @@ Date:		July 2018
->  KernelVersion:	4.19.0
->  Contact:	linux-pci@vger.kernel.org, rajatja@google.com
->  Description:	Total number of ERR_NONFATAL messages reported to rootport.
-> +
-> +PCIe AER ratelimits
-> +-------------------
-> +
-> +These attributes show up under all the devices that are AER capable.
-> +They represent configurable ratelimits of logs per error type.
-> +
-> +See Documentation/PCI/pcieaer-howto.rst for more info on ratelimits.
-> +
-> +What:		/sys/bus/pci/devices/<dev>/aer/ratelimit_log_enable
-> +Date:		March 2025
-> +KernelVersion:	6.15.0
-
-This ship has sailed.
-
-> +Contact:	linux-pci@vger.kernel.org, pandoh@google.com
-> +Description:	Writing 1/0 enables/disables AER log ratelimiting. Reading
-> +		gets whether or not AER is currently enabled.
-
-AER or AER ratelimiting is enabled?
-
-> +             Enabled by
-> +		default.
-> +
-> +What:		/sys/bus/pci/devices/<dev>/aer/ratelimit_burst_cor_log
-> +Date:		March 2025
-> +KernelVersion:	6.15.0
-> +Contact:	linux-pci@vger.kernel.org, pandoh@google.com
-> +Description:	Ratelimit burst for correctable error logs. Writing a value
-> +		changes the number of errors (burst) allowed per interval
-> +		(5 second window) before ratelimiting. Reading gets the
-> +		current ratelimit burst.
-> +
-> +What:		/sys/bus/pci/devices/<dev>/aer/ratelimit_burst_uncor_log
-> +Date:		March 2025
-> +KernelVersion:	6.15.0
-> +Contact:	linux-pci@vger.kernel.org, pandoh@google.com
-> +Description:	Ratelimit burst for uncorrectable error logs. Writing a
-> +		value changes the number of errors (burst) allowed per
-> +		interval (5 second window) before ratelimiting. Reading
-> +		gets the current ratelimit burst.
-> diff --git a/Documentation/PCI/pcieaer-howto.rst b/Documentation/PCI/pcieaer-howto.rst
-> index 896d2a232a90..043cdb3194be 100644
-> --- a/Documentation/PCI/pcieaer-howto.rst
-> +++ b/Documentation/PCI/pcieaer-howto.rst
-> @@ -96,12 +96,15 @@ type (correctable vs. uncorrectable).
->  AER uses the default ratelimit of DEFAULT_RATELIMIT_BURST (10 events) over
->  DEFAULT_RATELIMIT_INTERVAL (5 seconds).
->  
-> +Ratelimits are exposed in the form of sysfs attributes and configurable.
-> +See Documentation/ABI/testing/sysfs-bus-pci-devices-aer.
-> +
->  AER Statistics / Counters
->  -------------------------
->  
->  When PCIe AER errors are captured, the counters / statistics are also exposed
->  in the form of sysfs attributes which are documented at
-> -Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
-> +Documentation/ABI/testing/sysfs-bus-pci-devices-aer.
->  
->  Developer Guide
->  ===============
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index c6cda56ca52c..278de99b00ce 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -1805,6 +1805,7 @@ const struct attribute_group *pci_dev_attr_groups[] = {
->  	&pcie_dev_attr_group,
->  #ifdef CONFIG_PCIEAER
->  	&aer_stats_attr_group,
-> +	&aer_attr_group,
->  #endif
->  #ifdef CONFIG_PCIEASPM
->  	&aspm_ctrl_attr_group,
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 65c466279ade..a3261e842d6d 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -963,6 +963,7 @@ void pci_no_aer(void);
->  void pci_aer_init(struct pci_dev *dev);
->  void pci_aer_exit(struct pci_dev *dev);
->  extern const struct attribute_group aer_stats_attr_group;
-> +extern const struct attribute_group aer_attr_group;
->  void pci_aer_clear_fatal_status(struct pci_dev *dev);
->  int pci_aer_clear_status(struct pci_dev *dev);
->  int pci_aer_raw_clear_status(struct pci_dev *dev);
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index c335e0bb9f51..42df5cb963b3 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -627,6 +627,105 @@ const struct attribute_group aer_stats_attr_group = {
->  	.is_visible = aer_stats_attrs_are_visible,
->  };
->  
-> +/*
-> + * Ratelimit enable toggle
-> + * 0: disabled with ratelimit.interval = 0
-> + * 1: enabled with ratelimit.interval = nonzero
-> + */
-> +static ssize_t ratelimit_log_enable_show(struct device *dev,
-> +					 struct device_attribute *attr,
-> +					 char *buf)
-> +{
-> +	struct pci_dev *pdev = to_pci_dev(dev);
-> +	bool enabled = pdev->aer_report->cor_log_ratelimit.interval != 0;
-> +
-> +	return sysfs_emit(buf, "%d\n", enabled);
-> +}
-> +
-> +static ssize_t ratelimit_log_enable_store(struct device *dev,
-> +					  struct device_attribute *attr,
-> +					  const char *buf, size_t count)
-> +{
-> +	struct pci_dev *pdev = to_pci_dev(dev);
-> +	bool enable;
-> +	int interval;
-> +
-> +	if (!capable(CAP_SYS_ADMIN))
-> +		return -EPERM;
-> +
-> +	if (kstrtobool(buf, &enable) < 0)
-> +		return -EINVAL;
-> +
-> +	if (enable)
-> +		interval = DEFAULT_RATELIMIT_INTERVAL;
-> +	else
-> +		interval = 0;
-> +
-> +	pdev->aer_report->cor_log_ratelimit.interval = interval;
-> +	pdev->aer_report->uncor_log_ratelimit.interval = interval;
-> +
-> +	return count;
-> +}
-> +static DEVICE_ATTR_RW(ratelimit_log_enable);
-> +
-> +#define aer_ratelimit_burst_attr(name, ratelimit)			\
-> +	static ssize_t							\
-> +	name##_show(struct device *dev, struct device_attribute *attr,	\
-> +		    char *buf)						\
-> +{									\
-> +	struct pci_dev *pdev = to_pci_dev(dev);				\
-> +									\
-> +	return sysfs_emit(buf, "%d\n",					\
-> +			  pdev->aer_report->ratelimit.burst);		\
-> +}									\
-> +									\
-> +	static ssize_t							\
-> +	name##_store(struct device *dev, struct device_attribute *attr,	\
-> +		     const char *buf, size_t count)			\
-> +{									\
-> +	struct pci_dev *pdev = to_pci_dev(dev);				\
-> +	int burst;							\
-> +									\
-> +	if (!capable(CAP_SYS_ADMIN))					\
-> +		return -EPERM;						\
-> +									\
-> +	if (kstrtoint(buf, 0, &burst) < 0)				\
-> +		return -EINVAL;						\
-> +									\
-> +	pdev->aer_report->ratelimit.burst = burst;			\
-> +									\
-> +	return count;							\
-> +}									\
-> +static DEVICE_ATTR_RW(name)
-> +
-> +aer_ratelimit_burst_attr(ratelimit_burst_cor_log, cor_log_ratelimit);
-> +aer_ratelimit_burst_attr(ratelimit_burst_uncor_log, uncor_log_ratelimit);
-> +
-> +static struct attribute *aer_attrs[] = {
-> +	&dev_attr_ratelimit_log_enable.attr,
-> +	&dev_attr_ratelimit_burst_cor_log.attr,
-> +	&dev_attr_ratelimit_burst_uncor_log.attr,
-> +	NULL
-> +};
-> +
-> +static umode_t aer_attrs_are_visible(struct kobject *kobj,
-> +				     struct attribute *a, int n)
-> +{
-> +	struct device *dev = kobj_to_dev(kobj);
-> +	struct pci_dev *pdev = to_pci_dev(dev);
-> +
-> +	if (!pdev->aer_report)
-> +		return 0;
-> +
-> +	return a->mode;
-> +}
-> +
-> +const struct attribute_group aer_attr_group = {
-> +	.name = "aer",
-> +	.attrs = aer_attrs,
-> +	.is_visible = aer_attrs_are_visible,
-> +};
-> +
->  static void pci_dev_aer_stats_incr(struct pci_dev *pdev,
->  				   struct aer_err_info *info)
+On Tue, 2025-05-20 at 18:41 +0800, Aaron Lu wrote:
+> @@ -6744,6 +6805,7 @@ static bool check_cfs_rq_runtime(struct cfs_rq *cfs=
+_rq) { return false; }
+>  static void check_enqueue_throttle(struct cfs_rq *cfs_rq) {}
+>  static inline void sync_throttle(struct task_group *tg, int cpu) {}
+>  static __always_inline void return_cfs_rq_runtime(struct cfs_rq *cfs_rq)=
+ {}
+> +static void task_throttle_setup_work(struct task_struct *p) {}
+> =20
+>  static inline int cfs_rq_throttled(struct cfs_rq *cfs_rq)
 >  {
-> 
+> @@ -8851,6 +8913,7 @@ static struct task_struct *pick_task_fair(struct rq=
+ *rq)
+>  {
+>  	struct sched_entity *se;
+>  	struct cfs_rq *cfs_rq;
+> +	struct task_struct *p;
+> =20
+>  again:
+>  	cfs_rq =3D &rq->cfs;
+> @@ -8871,7 +8934,14 @@ static struct task_struct *pick_task_fair(struct r=
+q *rq)
+>  		cfs_rq =3D group_cfs_rq(se);
+>  	} while (cfs_rq);
+> =20
+> -	return task_of(se);
+> +	p =3D task_of(se);
+> +	if (throttled_hierarchy(cfs_rq_of(se))) {
+> +		/* Shuold not happen for now */
 
--- 
- i.
+Typo: s/Shuold/Should
+
+Btw: Is there a trace point in place when throttling/unthrottling
+happens? Would be nice to see that in a trace, but might be that I
+missed those events in my configuration up to now.
+
+> +		WARN_ON_ONCE(1);
+> +		task_throttle_setup_work(p);
+> +	}
+> +
+> +	return p;
+>  }
 
