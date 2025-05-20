@@ -1,96 +1,146 @@
-Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7045C242D92
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 14:24:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 538421DE4C8;
+	Tue, 20 May 2025 14:26:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747751089; cv=none; b=jTbEjOrUaw5ZG8VlRmrcudfKKgMK9CU0ADazeCUciwHxhxl2dDznCKLmL6eDkECg4JwFOWQTDW0bEO3qMGHn0TqQLVVegV6a6m6MKHRaF41SmGoEyOuHOV3t5uMf9zf/2nqQUR2WQPgk2zxcRtkaeLj1BLXkysoTe9S7tuxKY9c=
+	t=1747751171; cv=none; b=PswTfNtJZnRBBWkyl+LJdyhnI2dF3ZDX1qZjPjjM2qQZWbTINVmuk64qfzCAzbO7mTGdF0GJlkz7dBPkNNa/G6e+rY8MQfFrTXewvYGzH8LFIQNzvvIWUBBFEi4qfKpfdm4qvztzVuToSY6PsssoA9K6fB05u83sQlGP0UAxSJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747751089; c=relaxed/simple;
-	bh=Yvxx6Bu2YYTpjWbmu0Eo4W+cis8fHaGJTUi5npOCmyU=;
+	s=arc-20240116; t=1747751171; c=relaxed/simple;
+	bh=7ulwypwJJ5Y11qeYAI4E5zzbs2+20sESyLFc+V69als=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QzLB3PiP0HzTFbuFuRJDPrgBqz49V9FkQaDUXtkyRSDB9uaH+9+c7G05CljQssK1JWXfosOJMorYkbmeBhOLlRNdsSRXmokpL1qN6njaQm6sDco2yjFL/mOsMWqvPj7dBG56ZAHKpUxF0CTTE/iq0fVgpJ0Dqh1iMuSDIQPbkj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Ifq71GuU; arc=none smtp.client-ip=91.218.175.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=T9GXqfBKcmlPi4NgwRcjwZUBnB498sc02GBFJFSOR/PukRpdxB8Ja1VGALHJn43O2jFy7m8tV1yJr68fVrXdDE9Bsb70jonQrApR7cySt1NURtF23ye9wFxmbu8QaRxb/7gNNlsmZjF8cQ5uJj45ecEurIJeEF2m0fysULyRw34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=O0pHPqMC; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Ifq71GuU"
-Date: Tue, 20 May 2025 07:24:40 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747751085;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=C9ImqvqQLUX0kdsxLhKUAbg/uyYeCd3CXJPyocJ5Gfw=;
-	b=Ifq71GuUaygpKgGDTzad7K32V5dz5GZMkG2WGSFMZ25+2hMaPMiz3dujQ+9TvfHyxv7R4X
-	FDXSa9PdaUuZP1QNEt8DyUcpZPdldi2SDLNjHe4zuNQGII99bGbS764tfYohY3hEzYJ3mb
-	gcpzW7HM51sMnwBo0A2o4MKT28QZrVg=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Usama Arif <usamaarif642@gmail.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, surenb@google.com, hannes@cmpxchg.org, vlad.wing@gmail.com, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH 1/2] mm: slub: allocate slab object extensions
- non-contiguously
-Message-ID: <ewn4u5ssskqzad4sjerg6zkxjhvuik6cs4st4jarpizztq4fca@p4wwfavollhm>
-References: <20250520122547.1317050-1-usamaarif642@gmail.com>
- <3divtzm4iapcxwbzxlmfmg3gus75n3rqh43vkjnog456jm2k34@f3rpzvcfk3p6>
- <6d015d91-e74c-48b3-8bc3-480980a74f9b@gmail.com>
- <22oihuvcrh5sg3urocw6wbop2v5yni7zinuhywbz7glsee4yoa@gzi5v5fcggdl>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="O0pHPqMC"
+Received: from pendragon.ideasonboard.com (179.218-130-109.adsl-dyn.isp.belgacom.be [109.130.218.179])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id A6B8F2EC;
+	Tue, 20 May 2025 16:25:47 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1747751147;
+	bh=7ulwypwJJ5Y11qeYAI4E5zzbs2+20sESyLFc+V69als=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=O0pHPqMCOcxnGJSnAo+O5VnqA122+DeVV9m1qoqKaFT5rKyyJozNqRl85bWQ6KxqE
+	 EDHshQUO+V6ApK3dIzvxdtWzD6ithBq7iP7/IYOdTlV0YaX9frCeFnuZIK5eGqrTYM
+	 wyT3rwzpbjXHTvcH3aVTr46/16ldZhAN3tI7FUW4=
+Date: Tue, 20 May 2025 16:26:02 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Biju Das <biju.das.jz@bp.renesas.com>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH v5 09/12] drm: renesas: rz-du: mipi_dsi: Add feature flag
+ for 16BPP support
+Message-ID: <20250520142602.GH13321@pendragon.ideasonboard.com>
+References: <20250512182330.238259-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250512182330.238259-10-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <22oihuvcrh5sg3urocw6wbop2v5yni7zinuhywbz7glsee4yoa@gzi5v5fcggdl>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20250512182330.238259-10-prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-On Tue, May 20, 2025 at 10:01:27AM -0400, Kent Overstreet wrote:
-> On Tue, May 20, 2025 at 02:46:14PM +0100, Usama Arif wrote:
-> > 
-> > 
-> > On 20/05/2025 14:44, Kent Overstreet wrote:
-> > > On Tue, May 20, 2025 at 01:25:46PM +0100, Usama Arif wrote:
-> > >> When memory allocation profiling is running on memory bound services,
-> > >> allocations greater than order 0 for slab object extensions can fail,
-> > >> for e.g. zs_handle zswap slab which will be 512 objsperslab x 16 bytes
-> > >> per slabobj_ext (order 1 allocation). Use kvcalloc to improve chances
-> > >> of the allocation being successful.
-> > >>
-> > >> Signed-off-by: Usama Arif <usamaarif642@gmail.com>
-> > >> Reported-by: Vlad Poenaru <vlad.wing@gmail.com>
-> > >> Closes: https://lore.kernel.org/all/17fab2d6-5a74-4573-bcc3-b75951508f0a@gmail.com/
-> > >> ---
-> > >>  mm/slub.c | 2 +-
-> > >>  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >>
-> > >> diff --git a/mm/slub.c b/mm/slub.c
-> > >> index dc9e729e1d26..bf43c403ead2 100644
-> > >> --- a/mm/slub.c
-> > >> +++ b/mm/slub.c
-> > >> @@ -1989,7 +1989,7 @@ int alloc_slab_obj_exts(struct slab *slab, struct kmem_cache *s,
-> > >>  	gfp &= ~OBJCGS_CLEAR_MASK;
-> > >>  	/* Prevent recursive extension vector allocation */
-> > >>  	gfp |= __GFP_NO_OBJ_EXT;
-> > >> -	vec = kcalloc_node(objects, sizeof(struct slabobj_ext), gfp,
-> > >> +	vec = kvcalloc_node(objects, sizeof(struct slabobj_ext), gfp,
-> > >>  			   slab_nid(slab));
-> > > 
-> > > And what's the latency going to be on a vmalloc() allocation when we're
-> > > low on memory?
-> > 
-> > Would it not be better to get the allocation slighly slower than to not get
-> > it at all?
-> 
-> Our behaviour when thrashing sucks, we don't want to do anything to make
-> that worse.
-> 
-> There's also the fact that vmalloc doesn't correctly respect gfp flags,
-> so until that gets fixed this doesn't work at all.
+Hi Prabhakar,
 
-Which gfp flags vmalloc is not respecting today?
+Thank you for the patch.
+
+On Mon, May 12, 2025 at 07:23:27PM +0100, Prabhakar wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> 
+> Introduce the `RZ_MIPI_DSI_FEATURE_16BPP` flag in `rzg2l_mipi_dsi_hw_info`
+> to indicate support for 16BPP pixel formats. The RZ/V2H(P) SoC supports
+> 16BPP, whereas this feature is missing on the RZ/G2L SoC.
+> 
+> Update the `mipi_dsi_host_attach()` function to check this flag before
+> allowing 16BPP formats. If the SoC does not support 16BPP, return an error
+> to prevent incorrect format selection.
+> 
+> This change enables finer-grained format support control for different
+> SoC variants.
+> 
+> Co-developed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+
+> ---
+> v4->v5:
+> - Updated RZ_MIPI_DSI_FEATURE_16BPP macro to use BIT(0)
+> - Added Reviewed tag from Biju
+> 
+> v3->v4:
+> - No changes
+> 
+> v2->v3:
+> - No changes
+> 
+> v1->v2:
+> - Renamed RZ_MIPI_DSI_FEATURE_16BPP
+> ---
+>  drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
+> index f93519613662..55a1c1b043c8 100644
+> --- a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
+> +++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
+> @@ -28,6 +28,8 @@
+>  
+>  #include "rzg2l_mipi_dsi_regs.h"
+>  
+> +#define RZ_MIPI_DSI_FEATURE_16BPP	BIT(0)
+> +
+>  struct rzg2l_mipi_dsi;
+>  
+>  struct rzg2l_mipi_dsi_hw_info {
+> @@ -37,6 +39,7 @@ struct rzg2l_mipi_dsi_hw_info {
+>  	u32 link_reg_offset;
+>  	unsigned long max_dclk;
+>  	unsigned long min_dclk;
+> +	u8 features;
+>  };
+>  
+>  struct rzg2l_mipi_dsi {
+> @@ -643,8 +646,16 @@ static int rzg2l_mipi_dsi_host_attach(struct mipi_dsi_host *host,
+>  
+>  	switch (mipi_dsi_pixel_format_to_bpp(device->format)) {
+>  	case 24:
+> +		break;
+>  	case 18:
+>  		break;
+> +	case 16:
+> +		if (!(dsi->info->features & RZ_MIPI_DSI_FEATURE_16BPP)) {
+> +			dev_err(dsi->dev, "Unsupported format 0x%04x\n",
+> +				device->format);
+> +			return -EINVAL;
+> +		}
+> +		break;
+>  	default:
+>  		dev_err(dsi->dev, "Unsupported format 0x%04x\n", device->format);
+>  		return -EINVAL;
+
+-- 
+Regards,
+
+Laurent Pinchart
