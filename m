@@ -1,117 +1,86 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C54DC211710;
-	Tue, 20 May 2025 06:47:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B497E19259F;
+	Tue, 20 May 2025 06:48:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747723678; cv=none; b=WcQmYmNZuazRcikd8poQ2BKF/XOLoarCZD2NIthR0QQ6pze+EzBer8wpoDk6+x+g/bRZmW0Sclw5n9eWxJp2GEh/X5nv5VObeZxJdy5MljvbQkcKL5cwU/bpYcHf8M7tPemeiFBwGkDia4PWtuE3uI+W5DNPW9Z1yDOJcIdhwLY=
+	t=1747723693; cv=none; b=h5n+Bjq9Ok6lUBEwSAcDGC18sFnuDoAleJMt4KuqqwWivrTBsTdtaV3YvBBe2nmwT8DNbQsX6cFs4r+yqChwyIm9AqbWXj+vJwP86/TS956eiPSri+ZpqoWjtzazpxsCFPscgaRV68IHox7sk645IU5LW9aUUp87HH4sUhSWhc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747723678; c=relaxed/simple;
-	bh=nmxhlZnT215RIC4vJiqcWFOXKo0rEiKjadtXHsw8O6w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Eitvm9BfHWl70D2w8TU6I7r55mwPUeDSTXKoaV9O3ylNq8n31Pk50eG0Csfwy0md/S9wKPc5H0QvAb4zK1uiG/8Yrvr3oSyQLQX5Pw73Q7hvFGtsVb1/PyQu1IArnVY4t18ZtQJOn9ITAH6304j+EsL8PDBgTuIDcrz+JQBmopo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=kvQ/J8J7; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1747723693; c=relaxed/simple;
+	bh=0+iJkTRrs7XDpaJleK3LNCPN518ONweiiRIUBZT4Fkw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IZ+8s5PJlo/2dHI3vLe7AeLWiqYa9RJwGoRQTfcGwTWlCyYXF4+myAOYQHQh1U22ZoVOTYgkPoKy2hIX06XFn43Kee8YvfAetm1m/cnCISRxixs076SOHw7Akka3BVNUKynTK5QVVwpwkO3AdCKSh7ODehDFeqbgcEM0s4y8GAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y90pPUPL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="kvQ/J8J7"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54JJU7K6027074;
-	Tue, 20 May 2025 06:47:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Rz99vmm5raphdJD90WubrzRPKriJZM2DYV/MKSPOsWI=; b=kvQ/J8J77CLz2//w
-	Qe9khL+b0HVLNWeFOxLmoEuejt2Keca25WiOQRERGE1+auLHJ5Liok3NNvnWSZbn
-	6AUjO+jG/glhORamP/6vhigohCFU5gSuWpdJOmyM/wZIuBjHVMF9vmfh8qbUzdv+
-	Z9YTQd7nBnn26ftdvvvvp0+qcWT1VgA/wYCdiwwpcS+qRuzAaDUq2Ks57567qKRh
-	DRiSjoLVe0yfggtY0sKX+v0KjwIn+hJXwdVtxSL9qtQzf1SVqQPRrM+qKXrcvvU1
-	hM9Ji+mgmWYYkt+Xi3cdKZj5Me/lFIoZnjQKQ/h666TYvHO5dJIN460FeuFJ0c4l
-	WPiO0w==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46pju7esae-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 May 2025 06:47:52 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54K6lpxk012288
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 May 2025 06:47:51 GMT
-Received: from [10.239.29.49] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 19 May
- 2025 23:47:47 -0700
-Message-ID: <70ffec25-17c9-4424-9d0b-da6560f7160d@quicinc.com>
-Date: Tue, 20 May 2025 14:47:45 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y90pPUPL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75961C4CEEB;
+	Tue, 20 May 2025 06:48:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747723693;
+	bh=0+iJkTRrs7XDpaJleK3LNCPN518ONweiiRIUBZT4Fkw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Y90pPUPLqBE90/nX/wrvHjO0GfpL6Z1+QhBNtIlX8ADk216FDvOcJpZvzQzUVRJJi
+	 0X9T2yhVWWYhrMni2pvwW/Fg1ONIdBdCgYHVJi5zpRSrwpgDivT9e+3K+yF8vWtrH4
+	 22MfW5FQ66Q29TZe7Ypr3LVrd6M0oYtH8q4DtwdYcfODfZ/qFpvBKUbBSi2M4VzPTz
+	 mi1pzjnwf6uPM0vgbIiYFGkKvFHZuEIlof6m28+k9pN8naTRFyFcHg4VZb45PexQt/
+	 2Mmu/UYgFSM5yecC5v2PQi32eUTvsWQxNf4KLrMWd3qJijbMUkpS8TrVA9jxCI8IfA
+	 0GWQzF8q7evPg==
+Date: Tue, 20 May 2025 08:48:05 +0200
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Igor Mammedov <imammedo@redhat.com>, Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>, Shiju Jose <shiju.jose@huawei.com>,
+ qemu-arm@nongnu.org, qemu-devel@nongnu.org, Philippe =?UTF-8?B?TWF0aGll?=
+ =?UTF-8?B?dS1EYXVkw6k=?= <philmd@linaro.org>, Gavin Shan
+ <gshan@redhat.com>, Ani Sinha <anisinha@redhat.com>, Cleber Rosa
+ <crosa@redhat.com>, Dongjiu Geng <gengdongjiu1@gmail.com>, Eduardo Habkost
+ <eduardo@habkost.net>, Eric Blake <eblake@redhat.com>, John Snow
+ <jsnow@redhat.com>, Marcel Apfelbaum <marcel.apfelbaum@gmail.com>, Markus
+ Armbruster <armbru@redhat.com>, Michael Roth <michael.roth@amd.com>, Paolo
+ Bonzini <pbonzini@redhat.com>, Peter Maydell <peter.maydell@linaro.org>,
+ Shannon Zhao <shannon.zhaosl@gmail.com>, Yanan Wang
+ <wangyanan55@huawei.com>, Zhao Liu <zhao1.liu@intel.com>,
+ kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 00/20] Change ghes to use HEST-based offsets and add
+ support for error inject
+Message-ID: <20250520084805.5b34d888@foz.lan>
+In-Reply-To: <20250511094546-mutt-send-email-mst@kernel.org>
+References: <cover.1741374594.git.mchehab+huawei@kernel.org>
+ <20250511094343-mutt-send-email-mst@kernel.org>
+ <20250511094546-mutt-send-email-mst@kernel.org>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] arm64: dts: qcom: sc7280: Add dma-coherent
- property for fastrpc nodes
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-CC: <cros-qcom-dts-watchers@chromium.org>, <andersson@kernel.org>,
-        <konradybcio@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <ekansh.gupta@oss.qualcomm.com>
-References: <20250516110029.1637270-1-quic_lxu5@quicinc.com>
- <20250516110029.1637270-4-quic_lxu5@quicinc.com>
- <isvo4c2taozzlovqwqvgfu2v2tbvntkaw4bdpzmiuir64avojl@3utwffmzmhq4>
-Content-Language: en-US
-From: Ling Xu <quic_lxu5@quicinc.com>
-In-Reply-To: <isvo4c2taozzlovqwqvgfu2v2tbvntkaw4bdpzmiuir64avojl@3utwffmzmhq4>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=XKEwSRhE c=1 sm=1 tr=0 ts=682c2598 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
- a=uAc4Gv8VY3djhvJMLTUA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: kJCKIAIyyW83v5VBxioFhTURYeSrPkEN
-X-Proofpoint-GUID: kJCKIAIyyW83v5VBxioFhTURYeSrPkEN
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDA1NCBTYWx0ZWRfX91fsj2tlCpF5
- y2eGB4xiv4SdqiS7nH01b66baNepR/A5RS8t3jNnbpo3zmQUL1sfNxWhq53wrbrFG40lghNGCKT
- iYT3pqmdBKqVD382THLBcIzod0in8snZzL50tUPytPevLubwZe/Uo8dFBsz+xNTVeultNLo7fSU
- 9ECRoGD5BVqUiXvOV+zkMWRQiISeXPXtezhyw2vyz4e2qR27z2NCofFObTZL3qKBRJLkbpbI6Um
- YxG5Is+4SS9M4Rs6UwI8014y6HsrZ7mRGHjZEgwgTg5lIxlGhn7TqSS8epXBZshV+xQh10bocOY
- ULkcJBQ0q1t61Qa49ZX6UnwQn8xCtub22C/O6dIQy2LbuYmQFbVrcMpKNPxcdhCO+WoNlsrCfQB
- StXP/2DLvJzFW5VdvWb5U7VKH2u8hBQ+PjXMR9l0pGY/lOTUifBCR2kz/uRzZZ4aORqgOA9U
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-20_03,2025-05-16_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 priorityscore=1501 impostorscore=0 clxscore=1015
- spamscore=0 suspectscore=0 malwarescore=0 adultscore=0 mlxscore=0
- mlxlogscore=736 phishscore=0 bulkscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505070000 definitions=main-2505200054
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-在 5/17/2025 5:48 AM, Dmitry Baryshkov 写道:
-> On Fri, May 16, 2025 at 04:30:29PM +0530, Ling Xu wrote:
->> Add dma-cherent property to fastrpc context bank nodes to ensure that
->> the DMA operations for these nodes are coherent.
+Em Sun, 11 May 2025 09:45:55 -0400
+"Michael S. Tsirkin" <mst@redhat.com> escreveu:
+
+> On Sun, May 11, 2025 at 09:45:04AM -0400, Michael S. Tsirkin wrote:
+> > On Fri, Mar 07, 2025 at 08:14:29PM +0100, Mauro Carvalho Chehab wrote:  
+> > > Hi Michael,
+> > > 
+> > > I'm sending v8 to avoid a merge conflict with v7 due to this
+> > > changeset:
+> > > 
+> > >    611f3bdb20f7 ("hw/acpi/ghes: Make  static")  
+> > 
+> > 
+> > 
+> > Applied 1-13.
+> > Patch 14 needs to apply compat to 10.0 machine type as well.  
 > 
-> Does it apply to all firmware versions?
+> Sorry i meant 1-11.
 
-No, it's not applicable for all the firmwares, especifically for older one.
-This is only applicable where IO coherency is enabled.
->>
->> Signed-off-by: Ling Xu <quic_lxu5@quicinc.com>
->> ---
->>  arch/arm64/boot/dts/qcom/sc7280.dtsi | 15 +++++++++++++++
->>  1 file changed, 15 insertions(+)
->>
-> 
+Changed on the newest version I just submitted:
 
--- 
-Thx and BRs,
-Ling Xu
+	https://lore.kernel.org/qemu-devel/cover.1747722973.git.mchehab+huawei@kernel.org/
 
+Thanks,
+Mauro
