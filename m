@@ -1,171 +1,87 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7F051E2853;
-	Tue, 20 May 2025 11:57:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47278267AF4
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 11:57:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747742225; cv=none; b=HYVPSnpbq2KTfNjUdejo9fYsflMdxQ3PEm+8D8t/yX3DaphE3szWYYSOEbaskOKbg5Qr13TmYXtZmq4RASp4TeUFrAeaihi07zNU5a2o7KQrno3/rbH2o/Cdu/Dg88T80KGl9kWIyWHj59YO0JPtZcRoxqAvZuzzvBmaV2DCONM=
+	t=1747742245; cv=none; b=Thw3CZDVi0OZRM1P9DXKrHQxGPkH8RKSHlz9aO1MS+te0N0Nfzvse3QeRrEOTr29PU8RoJWBU25Kz6nwtcPs/dsmcC/EgwZHSHrh2jOg66AtoTagpXHj4j8J+cuXrivKkj8LzEsX/mSjDDGQptmRrL73zpLLupBj41aFZMALl/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747742225; c=relaxed/simple;
-	bh=qb4Uil2Py57WrJKbeDAYU6Y5108CdaFOWckAGO0EBNc=;
+	s=arc-20240116; t=1747742245; c=relaxed/simple;
+	bh=JA5IURh3R/rz1YWIDzC4eb8tG4fWBRz24TVzdqmCUIY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TU4CtY9V8SVV8llfyB04FZCmcBb4BgaXltGSelu16shsSo6DFO8Zadixnu1nUuVDmWBkDig6gWUwbOlIJ+8zopwLIi2HcxZnoBYUy568uXGricYXR6tJOirCavGU+kbsSfmie6hV7aoF+GpZkY5l80bIm+GEeA2MW68aaCQkoj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=PDgk5NpW; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=iKVGiXFalP5L+chGN72JCDoUH33C62Uqpt27Mfy2iHWb2D7rUPsnO1wTZ7O7FVpsjG/8wOjgAqxXAJiApYR7XI8sv/yyUDRSGtkMEsjCYg6PFuT1quXSQ6K5iYLsu6L+ZoyZUp00s3D1EA5w6Kv7rmFOQQFx8vIEazCKy28Hwr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jzK0MJjY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="PDgk5NpW"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54K9FCwE008573;
-	Tue, 20 May 2025 11:57:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=0ynAJgnPnxYP7tXvcGzmX4wnNv8Ep5
-	GpU/u7NKez97I=; b=PDgk5NpWZmFkMSTi2/hLbq5CmDU/qMvWOM68bGygNjJG5D
-	CQP5yESIXh2jvwgrXNaC3rjo4Dz2bef0ELexG8LqR/OBe+k9cE6VNBjqW0LyO8cM
-	RxhyqBf0TjddP+5vVYjZzW9IxlJ/ejW+XyEDQabgxmMGzjn4k/gUAfEz/fKYVPiS
-	X/MeAb7EgftL2Jr/Nc7MyJ3LvD/tdyrHODFEl6EMe5YZQKK1L2PuUp1XJRzz8iIV
-	WurbGl45eCo3UpVamxLoMjbQs+J+pFmWIaL437wT8/+YQUoIV+5/SryJX3R1gmcx
-	DeqYbv0TJ/zmk5S+wIqwDTJii5dIxDzPdXgZV8Zg==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46rpxkrsrr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 May 2025 11:57:00 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54KBv0W3014297;
-	Tue, 20 May 2025 11:57:00 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46rpxkrsrm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 May 2025 11:57:00 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54KBUOrX008244;
-	Tue, 20 May 2025 11:56:59 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 46q70kbhpf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 May 2025 11:56:59 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54KBuwn957344432
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 20 May 2025 11:56:58 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E61DD20040;
-	Tue, 20 May 2025 11:56:57 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7C18E2004F;
-	Tue, 20 May 2025 11:56:56 +0000 (GMT)
-Received: from li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com (unknown [9.39.28.45])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Tue, 20 May 2025 11:56:56 +0000 (GMT)
-Date: Tue, 20 May 2025 17:26:53 +0530
-From: Ojaswin Mujoo <ojaswin@linux.ibm.com>
-To: Guoyu Yin <y04609127@gmail.com>
-Cc: "Theodore Ts'o" <tytso@mit.edu>, adilger.kernel@dilger.ca,
-        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [BUG] WARNING in mb_avg_fragment_size_order
-Message-ID: <aCxuBdzvhK8lfmAQ@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
-References: <CAJNGr6v57z_RR5fNV+tLuGXEVKLRfXdo+hNS81HzztaC7pgchA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jzK0MJjY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58B2EC4CEE9;
+	Tue, 20 May 2025 11:57:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747742244;
+	bh=JA5IURh3R/rz1YWIDzC4eb8tG4fWBRz24TVzdqmCUIY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jzK0MJjYXuvKtQhEAoJHYz55uFH7Pa7cnl315wCeKnDgdRBmPMhYs7hu38laa4ILd
+	 npwDGuM+qwnnawNQKjyfjpHTG0mmhFI0+yAt8q2GFIkVZHby3DQfnI0sR3FQZkdWjl
+	 qE7n1GBpplxbmNYcONc6Qrx/9TH5elOp1e7Wxe39JkbsOI5fNfG+08nBNCjkXctJU5
+	 CcLqNPVBdTVyzv/eanvHGlt26E28gm2NKscqxNcWcxtwjtMoxYvDFITDLnj1rTS9Tf
+	 dO0jkecc6qTJjRX3UOq9hS/M61lEu6eqJSpCz60BJTph5VtalApkZd7Orl9ZZy0odL
+	 /Y5COYvGDlvCg==
+Date: Tue, 20 May 2025 13:57:21 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+	Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v5 4/6] sched/isolation: Force housekeeping if isolcpus
+ and nohz_full don't leave any
+Message-ID: <aCxuIYqvbEn1xgmd@localhost.localdomain>
+References: <20250508145319.97794-8-gmonaco@redhat.com>
+ <20250508145319.97794-12-gmonaco@redhat.com>
+ <aCxWwVy2UUmvinyZ@localhost.localdomain>
+ <685cdf5db59a8aaf0b7c0d9847d109d878da039b.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAJNGr6v57z_RR5fNV+tLuGXEVKLRfXdo+hNS81HzztaC7pgchA@mail.gmail.com>
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=EM8G00ZC c=1 sm=1 tr=0 ts=682c6e0c cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=fGO4tVQLAAAA:8 a=D_i6x2QXH9yj9_nRLjAA:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-GUID: LTZWqiE52FgyVSrndm91Vjf8vmXjg3R0
-X-Proofpoint-ORIG-GUID: taZPLA5zxgFPvJUei0kZD1AVk4Gx2KYi
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDA5NSBTYWx0ZWRfX8VCxxpfGcHwZ RVufoh6WrcvnrfeIzbGPLEcVFtFNPm/nXxVNf5EZ2YiWBCAUsO/f/gn+d8WNDK6nrbjGJbgRa3A 0WDFuNAmoaU2S1SNfC2qNDAiN6nVrlvEFJLDwjDOgnNxlwZ/Q+aaDwycAS1/gItOEErRScvM6HJ
- c/ix0yDzeMIZ4nFM0llw33a2V6fGBBR1b3/rIvx2Vg6GR00v4F1qlgG2wUMxogVIhJ9lxAeZ1j5 VAHlHPIBOozDiZSBTe19RkJHQX5gWljGmEo2BGReZpYwyGLzGuVHnN4FOa7pRhTN+EI44SHPZoS ILZgrL5Mu57t/oACT9QqckHHAPyD60vHma93rYeVuKM96drlvfXlK4mmTezpDHoOMSnfxQTf6N3
- ST+Q8nyY6pb+PR6agQF4o2ELmKtuzwFqigIPqPH1mDS/7i5aXOYrCIqA1b/EA54NQ++jAAhg
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-20_04,2025-05-16_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
- mlxscore=0 lowpriorityscore=0 mlxlogscore=907 spamscore=0
- priorityscore=1501 suspectscore=0 adultscore=0 phishscore=0 clxscore=1015
- malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505200095
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <685cdf5db59a8aaf0b7c0d9847d109d878da039b.camel@redhat.com>
 
-On Tue, May 20, 2025 at 01:12:11PM +0800, Guoyu Yin wrote:
-> Hi,
+Le Tue, May 20, 2025 at 01:17:20PM +0200, Gabriele Monaco a écrit :
+> The isolcpus parameter can be used like:
+> 1. isolcpus=1,2,3
+> 2. isolcpus=domain,1,2,3
+> 3. isolcpus=nohz,1,2,3
+> 4. isolcpus=domain,nohz,1,2,3
+> ...
 > 
-> This crash can be triggered by repeatedly performing specific file
-> operations, causing a kernel warning in the Ext4 multi-block allocator
-> (mballoc) module. The issue arises in mb_avg_fragment_size_order due
-> to an invalid len parameter leading to an out-of-bound order, thus
-> triggering the WARNING.
+> 1 and 2 are equivalent (e.g. if no mode is specified, that's domain
+> isolation), 3 is equivalent to nohz_full=1,2,3 and 4 is equivalent to
+> 1-2 in combination with nohz_full=1,2,3
 > 
-> Root Cause:
-> 1. Code Path: In ext4_mb_choose_next_group_best_avail(),
-> ac_g_ex.fe_len might be incorrectly calculated as an excessively large
-> value (e.g., via roundup).
-> 2. Invalid Parameter: When ac_g_ex.fe_len is too large, order =
-> fls(len) - 2 in mb_avg_fragment_size_order() exceeds
-> MB_NUM_ORDERS(sb), triggering WARN_ON_ONCE(order > MB_NUM_ORDERS(sb)).
+> Now, the code takes into account that there are 2 arguments that can
+> isolate (isolcpus and domain) and can be passed in any order, that
+> specific code guards against those two passing inconsistent maps, e.g.:
 > 
-> Code Locations:
-> fs/ext4/mballoc.c:834.
+> 	isolcpus=nohz,0-4 nohz_full=5-8
 > 
-> Proposed Fix:
-> 1. Add validity checks for ac_g_ex.fe_len in
-> ext4_mb_choose_next_group_best_avail() to ensure it does not exceed 1
-> << (MB_NUM_ORDERS(sb) + 2).
-> 2. Enforce strict input validation for len in
-> mb_avg_fragment_size_order() to reject invalid values.
+> Strictly speaking it's guarding for any other possible inconsistency
+> but I believe that's the only one actually achievable.
 > 
-> This can be reproduced on:
-> HEAD commit:
+> Again, nothing forbids e.g.
 > 
-> fac04efc5c793dccbd07e2d59af9f90b7fc0dca4
+> 	isolcpus=domain,0-4 nohz_full=5-8
 > 
-> report: https://pastebin.com/raw/W5ejqsNx
-> 
-> console output : https://pastebin.com/raw/U9qUGBhY
-> 
-> kernel config: https://pastebin.com/raw/zrj9jd1V
-> 
-> C reproducer : https://pastebin.com/raw/TCwWzfaH
+> since they're different isolation flags and that's allowed (not sure if
+> it really should be though).
 
-Hi Guoyu,
+Duh, yes, it only refuse if the flags are common and masks are different.
+I seem to remember you already explained that to me last time and I already
+slapped my forehead. Prepare for me to ask the same question one more time
+in one week ;-)
 
-A quick run of the reproducer is not able to hit this issue for me. I'll
-try once with the config you privided. 
-
-Also, it's strange that we hit this since the ext4_mb_normalize_request
-takes care of making sure the goal doesn't cross the maximum blocks
-buddy can allocate in one shot (ie 1 << blkbits + 1), which should
-in-turn ensure that the goal length order is never greater than
-MB_NUM_ORDER.
-
-I'll try to see if I can hit it. In the meantime, if you are easily able
-to replicate it, can you provide the following information:
-
-1. I see you are testing on kernel v6.13-rc2 which is slightly old now.
-Can you check if you are able to hit it on latest mainline kenrel
-(v6.15-rc*)
-
-2. Also, if possible can you please share the output after adding the following
-tracing, example:
-
-  sudo trace-cmd record -e "ext4:ext4_mballoc_alloc" ./reproducer
-
-and then
-
-  sudo trace-cmd report -i trace.dat 
-
-to view the output in text format. (You can also use perf probe -e "ext4:ext4_mballoc_alloc")
-to collect this.
-
-Regards,
-ojaswin
-
-> 
-> Best regards,
-> Guoyu
+-- 
+Frederic Weisbecker
+SUSE Labs
