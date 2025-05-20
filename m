@@ -1,47 +1,93 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FD9A258CF9;
-	Tue, 20 May 2025 10:07:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E73AA26A0D6
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 10:07:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747735628; cv=none; b=SfEMX66HqKPdLJPkZ46S78rZ/7hP6ZvDcn6+cwq3vafMgIplkJ9A5couYmlHkNF3JffKckvYXvyfPX9aKkPLckHrQD00PAoxkKJ/HdrnwO4NCy5+oLlElQHmB162nCKjSTX5bm9Fw2FSqGI74Y6iBcGShXaF4D9osOKVXjsd/y0=
+	t=1747735660; cv=none; b=ThJwidNmEMbIDLZuL9Xrnq88Rbk2aZOTQZf2s4tvfDE3j86sdJn9BvMQM4t0X7GyydccUfx5vRl5GpId1es0GxP008tF42mA0Vgkxpk125KqibGyMh27a0rUm1kGmsOYoI40kJ7Hvml0AHrsSw20S+NLMpNpPEzSNDjYA8ybeA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747735628; c=relaxed/simple;
-	bh=p7ppXvUJEITrZqv5fOiuolGqKTskwl2XcxcfZt4xih8=;
+	s=arc-20240116; t=1747735660; c=relaxed/simple;
+	bh=25JRvNl/dx87KSxbjSstyenPOj/uDk1UPkBdv46W/6A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TIgRMA6J6jaATC5ZXibwV2/eZ0LK60a8O4q7bfY1Rbw6ICGPPvEQSPV2czAE0ObqZFR9Vzlt0OcNZnV0ycjlaH1sv8g64zOeROBBQ3x23+5F4SD0laHo6MW45LocDHZramovns7NJKrAkYGoDsC/FJOtvpiY0NToSRh7jf4K2QA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0354E1BC0;
-	Tue, 20 May 2025 03:06:52 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0246C3F6A8;
-	Tue, 20 May 2025 03:07:05 -0700 (PDT)
-Date: Tue, 20 May 2025 11:07:01 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: James Clark <james.clark@linaro.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
-	kvmarm@lists.linux.dev
-Subject: Re: [PATCH 02/10] perf: arm_spe: Support FEAT_SPEv1p4 filters
-Message-ID: <20250520100701.GL412060@e132581.arm.com>
-References: <20250506-james-perf-feat_spe_eft-v1-0-dd480e8e4851@linaro.org>
- <20250506-james-perf-feat_spe_eft-v1-2-dd480e8e4851@linaro.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Eo3ophicq8lCiuMTjJvDkg0Dfr7E8O6i6VOFzUskHGT5Zc8NWdPllAIJEP/xItXyx2M5E3xm0QoHzhWIo1UOoihpVeUtcfFT0y+NchX5KTlWoa2dRfi8T2KQZecB31+KpOpiz+DNnP+2v3U8Kte2fnI3KJ10PVbZO3yTZF4H+co=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=NBSw0pBn; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=jYIDz284; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=NBSw0pBn; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=jYIDz284; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="NBSw0pBn";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="jYIDz284";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="NBSw0pBn";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="jYIDz284"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 0D1A322825;
+	Tue, 20 May 2025 10:07:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747735657; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HZcuOoEOqHbdTzot/HwCcBkJCCvGt7biAEO66twbWi8=;
+	b=NBSw0pBnnlwFfUxGub7TFophZJF8yHh3Uu1lESogljorRKPx4UrkLkT+mUgC4SY3iFy+D6
+	Gvsb/13qrarKdU7FQGyq6XhrHYVHISlg8cl4GwdXCcLR0mQk6jnjGH5J25ukuOdU+cyK0G
+	niiLmOcDV5KnWO+4x+we4XFmNcFD8yY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747735657;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HZcuOoEOqHbdTzot/HwCcBkJCCvGt7biAEO66twbWi8=;
+	b=jYIDz284h8D2Fz/PaWrTih63BCR6jz+N+CbINtI8TFwbejxgZ1j/MeCeJ7HZ+WlGAWL7Vl
+	cAshT4iXdVGLZZCA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747735657; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HZcuOoEOqHbdTzot/HwCcBkJCCvGt7biAEO66twbWi8=;
+	b=NBSw0pBnnlwFfUxGub7TFophZJF8yHh3Uu1lESogljorRKPx4UrkLkT+mUgC4SY3iFy+D6
+	Gvsb/13qrarKdU7FQGyq6XhrHYVHISlg8cl4GwdXCcLR0mQk6jnjGH5J25ukuOdU+cyK0G
+	niiLmOcDV5KnWO+4x+we4XFmNcFD8yY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747735657;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HZcuOoEOqHbdTzot/HwCcBkJCCvGt7biAEO66twbWi8=;
+	b=jYIDz284h8D2Fz/PaWrTih63BCR6jz+N+CbINtI8TFwbejxgZ1j/MeCeJ7HZ+WlGAWL7Vl
+	cAshT4iXdVGLZZCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CB0E713A3F;
+	Tue, 20 May 2025 10:07:36 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id EArZMGhULGgrZQAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Tue, 20 May 2025 10:07:36 +0000
+Date: Tue, 20 May 2025 12:07:35 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: Donet Tom <donettom@linux.ibm.com>
+Cc: David Hildenbrand <david@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Mike Rapoport <rppt@kernel.org>, Zi Yan <ziy@nvidia.com>,
+	Ritesh Harjani <ritesh.list@gmail.com>, rafael@kernel.org,
+	Danilo Krummrich <dakr@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Dave Jiang <dave.jiang@intel.com>
+Subject: Re: [PATCH v4 4/4] drivers/base : Rename
+ register_memory_blocks_under_node() and remove context argument
+Message-ID: <aCxUZwkU4Re4XXO7@localhost.localdomain>
+References: <f94685be9cdc931a026999d236d7e92de29725c7.1747376551.git.donettom@linux.ibm.com>
+ <bb7bbc113a2f6d3b700f7e73eafd911f77748bbb.1747376551.git.donettom@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,70 +96,51 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250506-james-perf-feat_spe_eft-v1-2-dd480e8e4851@linaro.org>
+In-Reply-To: <bb7bbc113a2f6d3b700f7e73eafd911f77748bbb.1747376551.git.donettom@linux.ibm.com>
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: 0.20
+X-Spamd-Result: default: False [0.20 / 50.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[redhat.com,linux-foundation.org,kernel.org,nvidia.com,gmail.com,linuxfoundation.org,vger.kernel.org,kvack.org,huawei.com,intel.com];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,localhost.localdomain:mid,nvidia.com:email]
 
-On Tue, May 06, 2025 at 12:41:34PM +0100, James Clark wrote:
-> FEAT_SPEv1p4 (optional from Armv8.8) adds some new filter bits, so
-> remove them from the previous version's RES0 bits using
-> PMSEVFR_EL1_RES0_V1P4_EXCL. It also makes some previously available bits
-> unavailable again, so add those back using PMSEVFR_EL1_RES0_V1P4_INCL.
-> E.g:
+On Fri, May 16, 2025 at 03:19:54AM -0500, Donet Tom wrote:
+> The function register_memory_blocks_under_node() is now only called from
+> the memory hotplug path, as register_memory_blocks_under_node_early()
+> handles registration during early boot. Therefore, the context argument
+> used to differentiate between early boot and hotplug is no longer needed
+> and was removed.
 > 
->   E[30], bit [30]
->   When FEAT_SPEv1p4 is _not_ implemented ...
+> Since the function is only called from the hotplug path, we renamed
+> register_memory_blocks_under_node() to
+> register_memory_blocks_under_node_hotplug()
+> 
+> Acked-by: Zi Yan <ziy@nvidia.com>
+> Signed-off-by: Donet Tom <donettom@linux.ibm.com>
 
-Yes, that's the case. I reviewed the bits below one by one, and they
-all look correct to me.
+Acked-by: Oscar Salvador <osalvador@suse.de>
 
-> FEAT_SPE_V1P3 has the same filters as V1P2 so explicitly add it to the
-> switch.
-> 
-> Signed-off-by: James Clark <james.clark@linaro.org>
+ 
 
-Reviewed-by: Leo Yan <leo.yan@arm.com>
-
-> ---
->  arch/arm64/include/asm/sysreg.h | 7 +++++++
->  drivers/perf/arm_spe_pmu.c      | 5 ++++-
->  2 files changed, 11 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
-> index 2639d3633073..e24042e914a4 100644
-> --- a/arch/arm64/include/asm/sysreg.h
-> +++ b/arch/arm64/include/asm/sysreg.h
-> @@ -354,6 +354,13 @@
->  	(PMSEVFR_EL1_RES0_IMP & ~(BIT_ULL(18) | BIT_ULL(17) | BIT_ULL(11)))
->  #define PMSEVFR_EL1_RES0_V1P2	\
->  	(PMSEVFR_EL1_RES0_V1P1 & ~BIT_ULL(6))
-> +#define PMSEVFR_EL1_RES0_V1P4_EXCL \
-> +	(BIT_ULL(2) | BIT_ULL(4) | GENMASK_ULL(10, 8) | GENMASK_ULL(23, 19))
-> +#define PMSEVFR_EL1_RES0_V1P4_INCL \
-> +	(GENMASK_ULL(31, 26))
-> +#define PMSEVFR_EL1_RES0_V1P4	\
-> +	(PMSEVFR_EL1_RES0_V1P4_INCL | \
-> +	(PMSEVFR_EL1_RES0_V1P2 & ~PMSEVFR_EL1_RES0_V1P4_EXCL))
->  
->  /* Buffer error reporting */
->  #define PMBSR_EL1_FAULT_FSC_SHIFT	PMBSR_EL1_MSS_SHIFT
-> diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-> index 3efed8839a4e..d9f6d229dce8 100644
-> --- a/drivers/perf/arm_spe_pmu.c
-> +++ b/drivers/perf/arm_spe_pmu.c
-> @@ -701,9 +701,12 @@ static u64 arm_spe_pmsevfr_res0(u16 pmsver)
->  	case ID_AA64DFR0_EL1_PMSVer_V1P1:
->  		return PMSEVFR_EL1_RES0_V1P1;
->  	case ID_AA64DFR0_EL1_PMSVer_V1P2:
-> +	case ID_AA64DFR0_EL1_PMSVer_V1P3:
-> +		return PMSEVFR_EL1_RES0_V1P2;
-> +	case ID_AA64DFR0_EL1_PMSVer_V1P4:
->  	/* Return the highest version we support in default */
->  	default:
-> -		return PMSEVFR_EL1_RES0_V1P2;
-> +		return PMSEVFR_EL1_RES0_V1P4;
->  	}
->  }
->  
-> 
-> -- 
-> 2.34.1
-> 
+-- 
+Oscar Salvador
+SUSE Labs
