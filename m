@@ -1,107 +1,110 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED579289370;
-	Tue, 20 May 2025 18:17:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4081C280311
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 18:17:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747765046; cv=none; b=P4xtXnDFX6/Nyr6BkQqUqf+8DWKNfEs9vd/bddbj68FXzPaZZEMIJerCannbJKkFih/jE7wczq+eBeVJvcQ5BRxUcY2POuad8WmNG9eTJWEfMkC17tIItbRjZcNsSujQ188YkPYKKndwdpJ6eqgBV5f/cUQS9H7KiaZm3rdomoE=
+	t=1747765059; cv=none; b=bBpRUqfMX522f6nq4jDMRTJuGDhq+1X/2QomZf5v8472UIcxaYP8V3tH7Q0XxPC2R41BD1aX8SZnsDcqttbM7htHj/FHppGuKi0PlByjr5h2Nhv03r45B/3nvzhIk9DAe50+GnJFM8S/SO7VFh7m4iVxVDxZhDxPE4wVlhfVr8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747765046; c=relaxed/simple;
-	bh=W83BuCBEGVgUrqk/CNpFhmFYGiaT4zNHiSxidabkeh4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=s0Z96rhtW2BuJsOMBju9tvZfE7U3Mo5/n00ehlrNkLBeRJTbLVoAkkVz568g025K/NYlpvAotTFa7gjRAhpwlz6ZaSz9cu4Jb5mv/uOTaRqifTfMai8IEqxdaWDCQViHIh+ad7UeJHgb3zcNMMlvrCpfalpd3tdfwITh8FZfPPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k28WW5Sr; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747765059; c=relaxed/simple;
+	bh=mzQWAmde9GCU1HYvOGc8jSAoQhxbzid1qCVXkzRnw4c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GzpdDam2+DukSf2/Yw5nLd9NiGg51GJmsBw3bkK84fIHd/Tt1We9ej4HYjSJPBegZswAbIF/T58i6p793cr/YuXnZ7RUZh8BdxL88E/usD9f/VPd6zl5rNOn5Y5bydkKZQcPvUygJ59HCGAw+pygvruhQhaXLtp0CqtLQcYa8EM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yjewQPNY; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k28WW5Sr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747765045; x=1779301045;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=W83BuCBEGVgUrqk/CNpFhmFYGiaT4zNHiSxidabkeh4=;
-  b=k28WW5Sr21gZcGXPKSkK/mDziqHBROdeHGkLKP6OIaZ+fJVxy6opMA1F
-   2tpcvZPqBMJqoGBJrOGn/MyEVFbsKbYxCxokhdEftZ8ESowgGRbTXBfeF
-   X3Wkdtik0oz//B+1s7cQrfJSZfttTZx1poI0ReIIy5a/df0jPYrZIsPuo
-   +pFq+t6QlOX0ZXIJr/BLyxGe4ZZd5Je0wWk30JwHSH3diCwkSDZh0YNEq
-   xkUL1kGUEbQsKU1qSw1lKeVm2c6l4sNbPRGv5YHHAF96Vc+xsEYmgYymQ
-   GfPRZpm1yu3fNZ2dr/G/onrpTw1aWwWHtMa/9qVK17GO3qXFLxJmmPv3R
-   Q==;
-X-CSE-ConnectionGUID: Co81dHvPQImnN1Yh+cfmqg==
-X-CSE-MsgGUID: 73Q3a8S3Sk6lL5+UeQ1bNQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="49848063"
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="49848063"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 11:17:14 -0700
-X-CSE-ConnectionGUID: IRyZBA6xRXK9/tMskgqUFQ==
-X-CSE-MsgGUID: MvsA5NJFQOmUedhDBhk8nA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="144514724"
-Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by orviesa003.jf.intel.com with ESMTP; 20 May 2025 11:17:14 -0700
-From: kan.liang@linux.intel.com
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	namhyung@kernel.org,
-	irogers@google.com,
-	mark.rutland@arm.com,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Cc: eranian@google.com,
-	ctshao@google.com,
-	tmricht@linux.ibm.com,
-	leo.yan@arm.com,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	linux-mips@vger.kernel.org
-Subject: [PATCH V4 16/16] mips/perf: Remove driver-specific throttle support
-Date: Tue, 20 May 2025 11:16:44 -0700
-Message-Id: <20250520181644.2673067-17-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20250520181644.2673067-1-kan.liang@linux.intel.com>
-References: <20250520181644.2673067-1-kan.liang@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yjewQPNY"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-231f37e114eso791605ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 11:17:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747765057; x=1748369857; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rj6cuEtgPwaokC1YAA1DRoIYgCjBGOSAiRIOusBAydw=;
+        b=yjewQPNYwXGw0woE963lq3Uy5sOV1tp+qHWg+DTB28vM9uFpV9aYIhFLBhirxgDpxh
+         tPog1SNAN2e/zjM/QcZueKNiEmjpwz4s5JqgUkfKokYDHqPIV1f1cLDz5bIEpyZ5BDMo
+         H45ieirezR5b2NPfLjuo0Goz/s98N+R3RaemtRr+7q/4RQExIw4ZUEFeHqDJaHxtdwZ4
+         ufQvNygZjCFQoypsh1i+4rv5l1ONTevuDhn3TP1FMSYFoo378oGlafF3jJnw76W2E6uC
+         w4r7+d/3MGyldBe4dnNTfFsJyZ3ZFgajk9+mafU3FHvLMSbNAeodA3F/Liq5Ps6nUI7F
+         STuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747765057; x=1748369857;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rj6cuEtgPwaokC1YAA1DRoIYgCjBGOSAiRIOusBAydw=;
+        b=LqnYZS5/hHp+enDJcoCbfR3epmgWDwVkN2ecVXRA/6rGAEYnreWTclQi27mUJF3YvT
+         1XLGQodRUv9Hm9TY0twRKsIVfIteU2LZbHeOXQKC8Fhf1nngyM5VOpOGlryTUT4tLiEk
+         C3VdiBuausP82S6XaL/gE+l8uNKWWBnauMmctJ2PDcNq4aX4QoT2+IljiNWczdhSsJct
+         6rztt5eFEqwkq5CaX1hask+gBxvhxKnM0dzoQWFouFBVnScLggWmvvNhHPVe0j6p5ggJ
+         EhSahgfuBe/TxENmoUz6Z/vCsJZpK6+3xBzCy2mH2rj+p3ZPe+nxUOjtJfGc9oZRbm2j
+         88dw==
+X-Gm-Message-State: AOJu0YwWOUpJQaWXtEd0kcwBETkmNKDkO4ShPl2cNL32jvGV6l0w/SnR
+	hOXAU9ZBPUiO3dA7Sj95rhpchoYkbfanIPZMuFayHY5oe8EmE3Y4vJziL8WOM1NQmgAgCE07V+u
+	wmxJZ41V4yxu1ybiIn39x9bYN3dvqB6tImUFrZ2d6
+X-Gm-Gg: ASbGncvwWhwF0bE6jG2AGxBbtQDf7vbh+XPglDIBjuBVbsDNlAUvMgpfOwsUWXaghE/
+	6MiVYhZfro67BdK9Et8nWciQSMvJOIIzTOMpgbILjf+iiduJ5Ucmdrgk0vUYhxu2oq+K8Yhza4x
+	nAKD7TjYF6jb1t7JqfPQMREYGN9Gy5bOWe5eOWhGEdmlOcS4E7DFNTcUNOVVMy/O6/o7aAu7s=
+X-Google-Smtp-Source: AGHT+IGVnPvRnLKevDofFAioUmUDx1dvHtYmw/Mku7nZSxCpbeKW0qtgvmF1AgzQzrszrgq3CCnsnWp1j01gLsFhaYs=
+X-Received: by 2002:a17:903:1a27:b0:231:f6bc:5c84 with SMTP id
+ d9443c01a7336-231ffd19beemr8604455ad.8.1747765057194; Tue, 20 May 2025
+ 11:17:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250515170945.278255-1-amoorthy@google.com> <aCpGePN3w0efNtpr@google.com>
+In-Reply-To: <aCpGePN3w0efNtpr@google.com>
+From: Anish Moorthy <amoorthy@google.com>
+Date: Tue, 20 May 2025 11:16:59 -0700
+X-Gm-Features: AX0GCFsS_etfT9mkFmtFjYAT2vSjdTYz3dzVpazIXPRTrkQWmlJtQQkvq6x1LEY
+Message-ID: <CAF7b7moWAVAL-_=ZyN-cCvHePxaf15bstQ+-5VzSdpDW=3Gh2Q@mail.gmail.com>
+Subject: Re: [PATCH] Rename get_unused_fd_flags to get_unused_fd
+To: Carlos Llamas <cmllamas@google.com>
+Cc: linux-kernel@vger.kernel.org, Christian Brauner <brauner@kernel.org>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Kan Liang <kan.liang@linux.intel.com>
+On Sun, May 18, 2025 at 1:43=E2=80=AFPM Carlos Llamas <cmllamas@google.com>=
+ wrote:
+>
+> I don't understand the "unused flags" argument. Did you interpret the
+> current naming as "get the flags not used by a certain fd"?
 
-The throttle support has been added in the generic code. Remove
-the driver-specific throttle support.
+Right
 
-Besides the throttle, perf_event_overflow may return true because of
-event_limit. It already does an inatomic event disable. The pmu->stop
-is not required either.
+> If it helps, this kind of patches are usually tagged as "treewide:" and
+> are often implemented using coccinelle scripts.
 
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: linux-mips@vger.kernel.org
----
- arch/mips/kernel/perf_event_mipsxx.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Oh neat, I had no idea about conccinelle: thanks for cluing me in
 
-diff --git a/arch/mips/kernel/perf_event_mipsxx.c b/arch/mips/kernel/perf_event_mipsxx.c
-index c4d6b09136b1..196a070349b0 100644
---- a/arch/mips/kernel/perf_event_mipsxx.c
-+++ b/arch/mips/kernel/perf_event_mipsxx.c
-@@ -791,8 +791,7 @@ static void handle_associated_event(struct cpu_hw_events *cpuc,
- 	if (!mipspmu_event_set_period(event, hwc, idx))
- 		return;
- 
--	if (perf_event_overflow(event, data, regs))
--		mipsxx_pmu_disable_event(idx);
-+	perf_event_overflow(event, data, regs);
- }
- 
- 
--- 
-2.38.1
-
+> Also, for this patch in particular I would:
+> Cc: Al Viro <viro@zeniv.linux.org.uk>
+> Cc: Christian Brauner <brauner@kernel.org>
+>
+> > diff --git a/drivers/android/binder.c b/drivers/android/binder.c
+> > index 76052006bd87..e162d92e8c1d 100644
+> > --- a/drivers/android/binder.c
+> > +++ b/drivers/android/binder.c
+> > @@ -4618,7 +4618,7 @@ static int binder_apply_fd_fixups(struct binder_p=
+roc *proc,
+> >       int ret =3D 0;
+> >
+> >       list_for_each_entry(fixup, &t->fd_fixups, fixup_entry) {
+> > -             int fd =3D get_unused_fd_flags(O_CLOEXEC);
+> > +             int fd =3D get_unused_fd(O_CLOEXEC);
+> >
+> >               if (fd < 0) {
+> >                       binder_debug(BINDER_DEBUG_TRANSACTION,
+>
+> This is the only reason I found this patch (binder), and fwiw the
+> renaming looks OK to me.
+>
+> Cheers,
+> Carlos Llamas
