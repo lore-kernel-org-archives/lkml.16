@@ -1,108 +1,130 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76FB11EA7FF
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 14:38:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AF4F1EA7FF;
+	Tue, 20 May 2025 14:38:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747751894; cv=none; b=hUHuY32omymyeaHS2WarfjRlDFgCVIHDQIzt/GQNM+kGUVVeCaKdwf7EUT5t1gxnLR9LeHp2rLRj2COxHzCYIzeo2rmWJSubN60VNkk6T+wcQilwsY95uBtzYEI5r0Yo3WxlfyAEmBPkGgWNgXWiyIkTbcJFHR5tWZZ+h49LfC4=
+	t=1747751923; cv=none; b=T83lq+iY+k231dptrAtO+pBiDHeDS3rd0SINKRPfTpAdMJir6flp2hAFBFunu/tvZlHlhuvobUgi0IxhHgjaEWq8tqYQU6+pHqhbfr/8qpU+pf0Sum/6C1flZ2HJnzkcYraCmhqcFCvXsPZEsv+voFTrL+tYujj62BsGoGSUlvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747751894; c=relaxed/simple;
-	bh=lu2UlZRkKIYYnWKefY5o1Xyt41Qq573lVm13ImzoMx0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=q2+Aq7pOUum3Yo8B9H1rXLGwranuB9D0htHZ+iTLxtUsMpQJRao5QdNc+ya8BjRmCbSeq4f3rlEJQeak3L5lyapeagalrcffNo0qcZRYrtCJEW0o0UZmywjUNHJ5CD8mdB/QygbOHqGkG3CylvoXc6fyZof3tRW6vaHGMWjLKyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 260621516;
-	Tue, 20 May 2025 07:37:58 -0700 (PDT)
-Received: from [192.168.178.6] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8AEA43F6A8;
-	Tue, 20 May 2025 07:38:10 -0700 (PDT)
-Message-ID: <2084b7d9-bb4f-4a5e-aaec-98e07b3edc2e@arm.com>
-Date: Tue, 20 May 2025 16:38:09 +0200
+	s=arc-20240116; t=1747751923; c=relaxed/simple;
+	bh=9hZ98IY5t69NRybclTeywqNeLTwH6jYGal0hHUhxo9s=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=G8Zeda06RZE61ey6EEklwKPWt5D4KeVTgD8D4MpF/9j2rfgT1PZSL/3TZ6ervCAmyK4nAVoJF/XPIVa4yjjLW4qXecZyDL7tW19uDo8bRgO4ZXafwxlArpk1Pwy7It/I9LDSkZH2oyFLcPdDAylwks+lrElxl+7roGZzd/svouQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rzjmbZLl; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rzjmbZLl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D316C4CEE9;
+	Tue, 20 May 2025 14:38:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747751922;
+	bh=9hZ98IY5t69NRybclTeywqNeLTwH6jYGal0hHUhxo9s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=rzjmbZLlJFEQL80Af1kv/lGr7QRedncFHbnWG5o8x9U+egfPJa4cYvf+b6pFrJfGo
+	 Uyewa5KEnynZb7r9rMySE6KBaWk+Xt1WZmBLDmp2EbpaU0cDcMl+DX0/XaIksGdxM7
+	 o3pY68jW2YCdcuPF6D6RuzmOFmMQ5PZOVWIT/Y9XnNE5ZkvlVK5y/2tMQU0KYe8oHl
+	 vRS60U97cfYMVhfEcbWL8d2JLORClhS0aMpix5IWzW7GSHlxuKuUCodaz7AuhYop+v
+	 NDLQiod+cZjClVvn43PouWT5pRdxl4vk4ejJNo8C3Oc6dpMz9ClMAPHT/Pc6d5X9J2
+	 +foqXJC/ONzQw==
+Date: Tue, 20 May 2025 09:38:41 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>,
+	Karolina Stolarek <karolina.stolarek@oracle.com>,
+	Martin Petersen <martin.petersen@oracle.com>,
+	Ben Fuller <ben.fuller@oracle.com>,
+	Drew Walton <drewwalton@microsoft.com>,
+	Anil Agrawal <anilagrawal@meta.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Sargun Dhillon <sargun@meta.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Kai-Heng Feng <kaihengf@nvidia.com>,
+	Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
+	Terry Bowman <terry.bowman@amd.com>,
+	Shiju Jose <shiju.jose@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v6 08/16] PCI/AER: Simplify pci_print_aer()
+Message-ID: <20250520143841.GA1298026@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: scheduler performance regression since v6.11
-To: Peter Zijlstra <peterz@infradead.org>, Chris Mason <clm@meta.com>
-Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
- vschneid@redhat.com, Juri Lelli <juri.lelli@gmail.com>,
- Thomas Gleixner <tglx@linutronix.de>
-References: <1e3c711f-8c96-4c39-bbe2-7742940d1d31@meta.com>
- <20250509194955.GA25798@noisy.programming.kicks-ass.net>
- <20250512180846.GA25891@noisy.programming.kicks-ass.net>
- <2f394a01-1cd9-4719-9394-647d8731cf3f@meta.com>
- <d3c8527f-ffaf-4463-a305-17ca21a06ce8@meta.com>
- <20250516101822.GC16434@noisy.programming.kicks-ass.net>
-From: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Content-Language: en-US
-In-Reply-To: <20250516101822.GC16434@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <89d93eb8-ad95-4ac4-b0dc-44b37c458d91@linux.intel.com>
 
-On 16/05/2025 12:18, Peter Zijlstra wrote:
-> On Mon, May 12, 2025 at 06:35:24PM -0400, Chris Mason wrote:
+On Mon, May 19, 2025 at 05:02:28PM -0700, Sathyanarayanan Kuppuswamy wrote:
+> On 5/19/25 2:35 PM, Bjorn Helgaas wrote:
+> > From: Bjorn Helgaas <bhelgaas@google.com>
+> > 
+> > Simplify pci_print_aer() by initializing the struct aer_err_info "info"
+> > with a designated initializer list (it was previously initialized with
+> > memset()) and using pci_name().
+> > 
+> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> > ---
+> >   drivers/pci/pcie/aer.c | 16 ++++++++--------
+> >   1 file changed, 8 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> > index 40f003eca1c5..73d618354f6a 100644
+> > --- a/drivers/pci/pcie/aer.c
+> > +++ b/drivers/pci/pcie/aer.c
+> > @@ -765,7 +765,10 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
+> >   {
+> >   	int layer, agent, tlp_header_valid = 0;
+> >   	u32 status, mask;
+> > -	struct aer_err_info info;
 > 
-> Right, so I can reproduce on Thomas' SKL and maybe see some of it on my
-> SPR.
+> You have cleaned up other stack allocations of struct aer_err_info to zero
+> initialization in your previous patches. Why not follow the same format
+> here? I don't think this function resets all fields of aer_err_info, right?
+
+This is new to me, but IIUC this does initialize all the fields.
+https://gcc.gnu.org/onlinedocs/gcc/Designated-Inits.html says "Omitted
+fields are implicitly initialized the same as for objects that have
+static storage duration."
+
+> > +	struct aer_err_info info = {
+> > +		.severity = aer_severity,
+> > +		.first_error = PCI_ERR_CAP_FEP(aer->cap_control),
+> > +	};
+> >   	if (aer_severity == AER_CORRECTABLE) {
+> >   		status = aer->cor_status;
+> > @@ -776,14 +779,11 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
+> >   		tlp_header_valid = status & AER_LOG_TLP_MASKS;
+> >   	}
+> > -	layer = AER_GET_LAYER_ERROR(aer_severity, status);
+> > -	agent = AER_GET_AGENT(aer_severity, status);
+> > -
+> > -	memset(&info, 0, sizeof(info));
+> > -	info.severity = aer_severity;
+> >   	info.status = status;
+> >   	info.mask = mask;
+> > -	info.first_error = PCI_ERR_CAP_FEP(aer->cap_control);
+> > +
+> > +	layer = AER_GET_LAYER_ERROR(aer_severity, status);
+> > +	agent = AER_GET_AGENT(aer_severity, status);
+> >   	pci_err(dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n", status, mask);
+> >   	__aer_print_error(dev, &info);
+> > @@ -797,7 +797,7 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
+> >   	if (tlp_header_valid)
+> >   		pcie_print_tlp_log(dev, &aer->header_log, dev_fmt("  "));
+> > -	trace_aer_event(dev_name(&dev->dev), (status & ~mask),
+> > +	trace_aer_event(pci_name(dev), (status & ~mask),
+> >   			aer_severity, tlp_header_valid, &aer->header_log);
+> >   }
+> >   EXPORT_SYMBOL_NS_GPL(pci_print_aer, "CXL");
 > 
-> I've managed to discover a whole bunch of ways that ttwu() can explode
-> again :-) But as you surmised, your workload *LOVES* TTWU_QUEUE, and
-> DELAYED_DEQUEUE takes some of that away, because those delayed things
-> remain on-rq and ttwu() can't deal with that other than by doing the
-> wakeup in-line and that's exactly the thing this workload hates most.
+> -- 
+> Sathyanarayanan Kuppuswamy
+> Linux Kernel Developer
 > 
-> (I'll keep poking at ttwu() to see if I can get a combination of
-> TTWU_QUEUE and DELAYED_DEQUEUE that does not explode in 'fun' ways)
-> 
-> However, I've found that flipping the default in ttwu_queue_cond() seems
-> to make up for quite a bit -- for your workload.
-> 
-> (basically, all the work we can get away from those pinned message CPUs
-> is a win)
-> 
-> Also, meanwhile you discovered that the other part of your performance
-> woes were due to dl_server, specifically, disabling that gave you back a
-> healthy chunk of your performance.
-> 
-> The problem is indeed that we toggle the dl_server on every nr_running
-> from 0 and to 0 transition, and your workload has a shit-ton of those,
-> so every time we get the overhead of starting and stopping this thing.
-> 
-> In hindsight, that's a fairly stupid setup, and the below patch changes
-> this to keep the dl_server around until it's not seen fair activity for
-> a whole period. This appears to fully recover this dip.
-> 
-> Trouble seems to be that dl_server_update() always gets tickled by
-> random garbage, so in the end the dl_server never stops... oh well.
-> 
-> Juri, could you have a look at this, perhaps I messed up something
-> trivial -- its been like that this week :/
-
-On the same VM I use as a SUT for the 'hammerdb-mysqld' tests:
-
-https://lkml.kernel.org/r/d6692902-837a-4f30-913b-763f01a5a7ea@arm.com
-
-I can't spot any v6.11 related changes (dl_server or TTWU_QUEUE) but a
-PSI related one for v6.12 results in a ~8% schbench regression.
-
-VM (m7gd.16xlarge, 16 logical CPUs) on Graviton3:
-
-schbench -L -m 4 -M auto -t 128 -n 0 -r 60
-
-3840cbe24cf0 - sched: psi: fix bogus pressure spikes from aggregation race
-
-With CONFIG_PSI enabled we call cpu_clock(cpu) now multiple times (up to
-4 times per task switch in my setup) in:
-
-__schedule() -> psi_sched_switch() -> psi_task_switch() ->
-psi_group_change().
-
-There seems to be another/other v6.12 related patch(es) later which
-cause(s) another 4% regression I yet have to discover.
-
-[...]
