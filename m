@@ -1,52 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1859225D1E7;
-	Tue, 20 May 2025 02:15:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5561A25D213;
+	Tue, 20 May 2025 02:15:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747707322; cv=none; b=uaDGOctZinX6QrVdThUAe8NJSvbVryRXchgVBTrAvRcHEfXL1IKLekHirBBSPOL1/8Zv9U5y+pBP0BBKVf85RJLEhDxsmxVOLlPeWjBCgBJG1FON5xX8nh7M8lTlAHm6qz/6HLtkFR7BCZaGpzNio3jgnKh/2EUHk51bNnNEZDs=
+	t=1747707323; cv=none; b=kEBRkleYRCQszwGaCTzLZUxXuAvQooJBvTVS8YKBR02NWm7UUQeiyC4sgtpBtMFfdbZM6YcGvPpFGr3VUw4HlSuJAQ9xdi1lX2A5Vdz2vjoJ15HNCu72E+8ovPJ4yTK/Aghf+0gHR/bwi5koeL5NoZSkWx8u0P2gU5h83b9WXn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747707322; c=relaxed/simple;
-	bh=sDj1a2CHWVAWzTtBQAwB27Nd2fqFSCK4xyb7LVVr4mw=;
+	s=arc-20240116; t=1747707323; c=relaxed/simple;
+	bh=VeqTMYzS0fD6tBXCT0uNUcjW1AXJroijsACmY04O3x0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pf+DRUu7byBucyNJnmDQnGv9hRRNOMrzbo3MVqg+f8RFkhrCNAsroZ9yF5OaRgw4Yzej6VzF8RPgd3zCsdpQjiy/8KHNGEnwrxlYObjp33RhARuq+YkzdWnOZUJ56NpUxmmwmhvP39y7Yn37QlB+evLRN/gVnVXvAzHP05oPyoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pVsdPKdK; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=hNeiyPCqx/0xk1Ie4TbqEKALCWXo44n7LLQDEzyt0Moa/MPo4PdzAheNQkUC5nCYcLOVVd+7EyaaGboQEJzNwELx917k6z9Z9z/9sN20nQT04GYqDyejWGARU0a6PS7gTRZj5iAvFyWhpBPa1dHvvkQB0qmC12+/vElx0I8RyoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s3wvgwix; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pVsdPKdK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EBEDC4CEF3;
-	Tue, 20 May 2025 02:15:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s3wvgwix"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C821EC4CEF2;
+	Tue, 20 May 2025 02:15:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747707321;
-	bh=sDj1a2CHWVAWzTtBQAwB27Nd2fqFSCK4xyb7LVVr4mw=;
+	s=k20201202; t=1747707322;
+	bh=VeqTMYzS0fD6tBXCT0uNUcjW1AXJroijsACmY04O3x0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pVsdPKdKQHuA/Cw0N5IFr3R1kzoS9zfEb8KQL71QoEOk4+x9f5KqWlL407l4YAIvD
-	 3nRvyZLtow1ZLkH7B9OANBmza0EiJ8QgJOe/2h/C4f7/u9N2RbIz5gjNxojX3l2ZhV
-	 X89nl63egA3KLgVtypM6ysTxiFlLOdkzPKAkCL6PBRp6oLrBrdYv2axtxc8pxZbw3R
-	 qEgrnBKvSrYl1Tx+lv3jpxmhMSuyuSanGKwEyN5D2ulpriUFwBeZ/Yb91Gv0ZnKfBB
-	 Uz3KfqHishp2gRMm97wBEY1H7MH+gfeU9JBdbk3PxJbFkxFDcW4tZisq9gPH+95ZZ2
-	 Qgvj78W/MEGlw==
+	b=s3wvgwixgGDvMfWDRz9AqLc2dZlchWeJBPrlNoyR3Dg4Mcy+sjHCP5Q6YAEpsERFF
+	 Gy84B45c1vlAar9ZBgdsZ8BnhqkBdsGJDJ0G039P6Q8+C/Ys7nQpXmll5bcvSrMsnc
+	 zQBkBnmNEVM4Eyg/ppsF0WjMu0K+Hp5klQ1IYjhVSIMIviMzhaWUHAIGUXHWAoP5xH
+	 x+a8ID+nFKXlSSGGOmxwmRFW0u4auw+qTbvkjWhQVDBDmMsY3IabVjn8qXGvPfq2+m
+	 KuuMNNxcBnGiZFlOW2VSzhedStEgRuADypN0FwqyQKqaSXEAEnhiZzIqErWYmbOW27
+	 u16chZgPYpZ/Q==
 From: Bjorn Andersson <andersson@kernel.org>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Ajit Pandey <quic_ajipan@quicinc.com>
-Cc: Imran Shaik <quic_imrashai@quicinc.com>,
+To: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Imran Shaik <quic_imrashai@quicinc.com>
+Cc: Ajit Pandey <quic_ajipan@quicinc.com>,
 	Taniya Das <quic_tdas@quicinc.com>,
 	Jagadeesh Kona <quic_jkona@quicinc.com>,
 	Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
 	linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
+	linux-clk@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Subject: Re: (subset) [PATCH 0/3] pmdomain: qcom: rpmhpd: Add SM4450 power domains
-Date: Mon, 19 May 2025 21:14:49 -0500
-Message-ID: <174770727734.36693.8218880275663137820.b4-ty@kernel.org>
+	Dmitry Baryshkov <lumag@kernel.org>
+Subject: Re: [PATCH v6] clk: qcom: Add support for Camera Clock Controller on QCS8300
+Date: Mon, 19 May 2025 21:14:50 -0500
+Message-ID: <174770727720.36693.4191377559244212305.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250417-sm4450_rpmhpd-v1-0-361846750d3a@quicinc.com>
-References: <20250417-sm4450_rpmhpd-v1-0-361846750d3a@quicinc.com>
+In-Reply-To: <20250327-qcs8300-mm-patches-v6-1-b3fbde2820a6@quicinc.com>
+References: <20250327-qcs8300-mm-patches-v6-1-b3fbde2820a6@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,15 +54,17 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
 
-On Thu, 17 Apr 2025 22:37:38 +0530, Ajit Pandey wrote:
-> This series add power domains exposed by RPMh in the Qualcomm SM4450 platform.
+On Thu, 27 Mar 2025 15:32:27 +0530, Imran Shaik wrote:
+> The QCS8300 Camera clock controller is a derivative of SA8775P, but has
+> few additional clocks and offset differences. Hence, add support for
+> QCS8300 Camera clock controller by extending the SA8775P CamCC.
 > 
 > 
 
 Applied, thanks!
 
-[3/3] arm64: dts: qcom: sm4450: Add RPMh power domains support
-      commit: 654ac800d4ac6bd4bffa7e98997a1e0d336999b1
+[1/1] clk: qcom: Add support for Camera Clock Controller on QCS8300
+      commit: 1003cea3c7764ae582302c395f82e1cf7e5cd8f6
 
 Best regards,
 -- 
