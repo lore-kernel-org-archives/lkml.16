@@ -1,144 +1,89 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE3F265CC8;
-	Tue, 20 May 2025 10:12:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 534A91DA61B
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 10:13:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747735973; cv=none; b=ki9f5wBy2b4g6x6Hxh3T+SjsD9us+nF0jtPopyNBkKms/DGkeLIM7w/oqme2EY24UvTwC/JWYzwiRWtok0QWcK7xQ8MvnUTP/rvNS/7TRN4C3Q6gwt7TIPjbZQzwc7luGJe9NLsm3RRSmohsAr/uyevbAGxFvLFi9nX4oyjfWUE=
+	t=1747736004; cv=none; b=WKFpRgceCQDoYWmDiDM3Vi70QmvQCS7fUy3zNOtXZqB8R4sMY7l6D9fqB9Pnb8K3zjPvRfX+MLXCC7yfEgn115YvRBKEly6UQIKu4/hICk638ZR7haQMuzE4ycQX9TepqO3QAifA+otyaxzviunbRIqAqD4jQZ3loDdJerH8T/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747735973; c=relaxed/simple;
-	bh=QoZ1MmMxWaYoZM2DGYGuiWzzzDqsnwlVTOVWkNBAoDo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ZLNDnaScztPflUXAaG0dnfQ3rMucUnPWXWLitAYiAlNjYTStmGQsV91e3yA2/kem+AXJoJjP+6YSeKxdnndSX5wkouTvmmZkiKQsY47sNzgTxXFcpMc3WiFsE/CvYTl+x9H9y/yxbKvWeNiNM2eX9KJkq2tu48ZG0YnE7d1s44E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=g4lnDYVH; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1747736004; c=relaxed/simple;
+	bh=xedbwFYNs/SBNVB/LTfUxiDLu0V5LEWyXtUlj5WSX88=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=iLQ5ILyiqciqwsxWMhmhPbI4gULVD+b2ZY246N0v8bcKFbec1KenUddslP4OiFqpVdLb9NsgZQA1xg2guDaY6tCj5uveLt9D1f4ewKDRhgL7BXsp7wgupqTyHmjRxsytLvolPRDCKa2bzALnpe6gK5ZMTBgxeKyfW9XlLTjaWJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X0DhJZhh; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="g4lnDYVH"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54K7BGt8016028;
-	Tue, 20 May 2025 10:12:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	VHy10H/BTLtjK7UpT72cmGoRA/ruZ2FPFvwHxI9l8oc=; b=g4lnDYVHvnFDxY/z
-	92Gi4GvHFXCMgrcBDrA/29eKo29xfKVWYOdfnuDK0wESqNvolSGkb7iOh5GZhYdO
-	nSiExx1CBZ7ILAWq2zXKzHONqVUIzA2EgifRxeM8yAp3vF3lwlY6jZy/vOjKiDwy
-	9V1KdvbREMZAMNjNem1jxa9/AXF6edgyBbEt9gB/OnDCZx6mIHI/AV//nIcp73QH
-	iKClE3lyppAMPa/AuUstZgk87FKtoN5ex8KKvICwDNYeXzynlJb5v4uE3g0LAtNk
-	wk+maXgDByw8nGWMa3RqHMxSfTvcHAvfIV3iTBrKQ0E8NsM1bzyKyh6kuhIBMhDV
-	Y1v/zg==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46pjnyqd98-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 May 2025 10:12:47 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54KACkoO005766
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 May 2025 10:12:46 GMT
-Received: from [10.253.11.26] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 20 May
- 2025 03:12:42 -0700
-Message-ID: <322b6e06-8ca4-49b2-812d-ab7b798e1579@quicinc.com>
-Date: Tue, 20 May 2025 18:12:39 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X0DhJZhh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747736002; x=1779272002;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=xedbwFYNs/SBNVB/LTfUxiDLu0V5LEWyXtUlj5WSX88=;
+  b=X0DhJZhhH8fhD69tDqxIeD7A+PFazUFc3Vvm6Fa2VI+WD/I9usouI39V
+   0L7lVZM2dhrsRDXISrKZS1Xzw72bd/DQnMla38b+IJxG4P4hw+NKfTWaO
+   vM85y4aC47SwE4/CDm4B1U0PMc1Su+js57yonIfEQBRBzK09pYCc1cVXB
+   q7zf9iHLBRdNTLZIZUCapwEJePAC91I5m2rTU0/lWNVAnvaWYzilLacT1
+   abbNxXCe1bNyntFYP3E7hlibAL+Qwrr+14uvVHy9Cl7nWYtYehno1pfDz
+   Tv7nQ2svsOweBfC7AKC5kaG4zgqnT2qV6jUVUEKPvjxBuGVPrF0/BMKf8
+   A==;
+X-CSE-ConnectionGUID: QJ1jQsCtSbGS5U50ZAoSgA==
+X-CSE-MsgGUID: eyVGZkTwTW+GfRdJEVJUBQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="72174020"
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="72174020"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 03:13:21 -0700
+X-CSE-ConnectionGUID: nxYK+sFaQnmm2Q3LnXym7w==
+X-CSE-MsgGUID: LO2GgDkOTv+qExKH2b1Xtg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="139680314"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 20 May 2025 03:13:20 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uHJyH-000MQu-3C;
+	Tue, 20 May 2025 10:13:17 +0000
+Date: Tue, 20 May 2025 18:12:42 +0800
+From: kernel test robot <lkp@intel.com>
+To: Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc: Paul Gazzillo <paul@pgazz.com>,
+	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
+	oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Subject: kismet: WARNING: unmet direct dependencies detected for
+ DRM_BRIDGE_CONNECTOR when selected by DRM_IMX_PARALLEL_DISPLAY
+Message-ID: <202505201837.S8wp6yuH-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: qcom: qcs8300: Add support for camss
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, <bryan.odonoghue@linaro.org>,
-        <todor.too@gmail.com>, <rfoss@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>
-References: <20250520-qcs8300-camss-v1-1-1dfcb2e3bf93@quicinc.com>
- <db562aa7-98dc-4f0e-8b9c-4348b4c16384@kernel.org>
- <bb5c40be-85f0-497e-90de-7f7282f851e4@kernel.org>
-Content-Language: en-US
-From: Wenmeng Liu <quic_wenmliu@quicinc.com>
-In-Reply-To: <bb5c40be-85f0-497e-90de-7f7282f851e4@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDA4MiBTYWx0ZWRfX9oNk24fL/5Bl
- 7xsDLryLHJurImdS+3VbLmC0cTxfrKl0tNwjikS9jD5AyRDmZpWcE0F73ZE17kEP0kuPcUk2i5h
- +HmPa8EcpH/NuPsx0sA+lEI48NXj94q7zl5sohpVDDwfDG0wFUypXTFsburj/orIeqg8mGxr1rO
- VAz1Jd3K/HxcPRdUoFK4I0SavzvZ1syfWlianyS2v4xSJ81yInidqzoM6MlqqhGMmoHJ22yu1sW
- Ph4A2HBRzGWvxLdWJWhwO3iF2OeDCnaB13FFEKp9ynxhzlBwgVuO3SdxQVbmR91uwQNch9ifEJq
- DhC4cQqh56Mfomhok06kGYKNs3GFm7/DqoLP50MuuUsPl2xaIfgbk5H2t0PHklZ34ZJn98eECPw
- SozorIcGM5FxggAqYee5i7tWhbfZjmFOz628SzyiSHHU9NRwNbPFFSMYuI+lfiEYnGc9P7WA
-X-Authority-Analysis: v=2.4 cv=Z9XsHGRA c=1 sm=1 tr=0 ts=682c559f cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8
- a=COk6AnOGAAAA:8 a=P-IC7800AAAA:8 a=kgcyKgTirjYJsoa9ePgA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22 a=d3PnA9EDa4IxuAV0gXij:22
-X-Proofpoint-GUID: YVTNPLodSiVb90t7E4Wxz4JmuG4W2meR
-X-Proofpoint-ORIG-GUID: YVTNPLodSiVb90t7E4Wxz4JmuG4W2meR
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-20_04,2025-05-16_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 lowpriorityscore=0 mlxlogscore=999 mlxscore=0 priorityscore=1501
- adultscore=0 impostorscore=0 bulkscore=0 suspectscore=0 clxscore=1011
- malwarescore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505200082
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   a5806cd506af5a7c19bcd596e4708b5c464bfd21
+commit: f673055a46784ccea04465b9213e999f7bc5187e drm/imx: Add missing DRM_BRIDGE_CONNECTOR dependency
+date:   8 months ago
+config: m68k-kismet-CONFIG_DRM_BRIDGE_CONNECTOR-CONFIG_DRM_IMX_PARALLEL_DISPLAY-0-0 (https://download.01.org/0day-ci/archive/20250520/202505201837.S8wp6yuH-lkp@intel.com/config)
+reproduce: (https://download.01.org/0day-ci/archive/20250520/202505201837.S8wp6yuH-lkp@intel.com/reproduce)
 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505201837.S8wp6yuH-lkp@intel.com/
 
-On 2025/5/20 17:47, Krzysztof Kozlowski wrote:
-> On 20/05/2025 11:45, Krzysztof Kozlowski wrote:
->> On 20/05/2025 11:40, Wenmeng Liu wrote:
->>> This change enables camera driver for QCS8300 RIDE board.
->>>
->>> ---
->>> Signed-off-by: Wenmeng Liu <quic_wenmliu@quicinc.com>
->>> ---
->>> This patch series depends on patch series:
->>> - https://lore.kernel.org/all/20250214095611.2498950-1-quic_vikramsa@quicinc.com/
->>> - https://lore.kernel.org/all/20250211-sa8775p_tpg-v1-1-3f76c5f8431f@quicinc.com/
->>> - https://lore.kernel.org/all/20250217-qcs8300_tpg-v1-1-6e0f4dd3ad1f@quicinc.com/
->>> - https://lore.kernel.org/all/20250214094747.2483058-1-quic_vikramsa@quicinc.com/
->> No, please stop for now and see my other comments. You cannot send patch
->> which depends on 4 different patchsets! This is making merging
->> impossible and puts effort on maintainer to track these dependencies.
->>
->> Plus this was not even tested.
->>
-> ... and:
-> 
-> Please run scripts/checkpatch.pl on the patches and fix reported
-> warnings. After that, run also 'scripts/checkpatch.pl --strict' on the
-> patches and (probably) fix more warnings. Some warnings can be ignored,
-> especially from --strict run, but the code here looks like it needs a
-> fix. Feel free to get in touch if the warning is not clear.
-> 
-> Please do not use "This commit/patch/change", but imperative mood. See
-> longer explanation here:
-> https://elixir.bootlin.com/linux/v5.17.1/source/Documentation/process/submitting-patches.rst#L95
-> 
-> I suggest to read your internal guideline before posting. It is quite
-> comprehensive.
-> 
-> Best regards,
-> Krzysztof
+kismet warnings: (new ones prefixed by >>)
+>> kismet: WARNING: unmet direct dependencies detected for DRM_BRIDGE_CONNECTOR when selected by DRM_IMX_PARALLEL_DISPLAY
+   WARNING: unmet direct dependencies detected for DRM_BRIDGE_CONNECTOR
+     Depends on [n]: HAS_IOMEM [=y] && DRM [=y] && DRM_DISPLAY_HELPER [=n]
+     Selected by [y]:
+     - DRM_IMX_PARALLEL_DISPLAY [=y] && HAS_IOMEM [=y] && DRM [=y] && DRM_IMX [=y]
 
-
-Thank you for the reminder, Will make sure to pay attention to it.
-
-Thanks,
-Wenmeng
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
