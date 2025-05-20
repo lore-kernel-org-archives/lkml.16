@@ -1,96 +1,138 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f74.google.com (mail-wr1-f74.google.com [209.85.221.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD9B21DA61B;
-	Tue, 20 May 2025 08:52:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97963262815
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 08:53:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747731163; cv=none; b=oYz7nOrbyDiFVcmIn7g3zCp0fIh+tKVZMuMmWbBCCc9egrVbFbJfyjiIyaBO6PNwp+CPeBlEdoD4EBHItJKuaq3X6tr2GtJGhpJ/1D8uTDLBshH1qbSxC/4ncKXCRxTzQuZ3H4c2cNrq9MznXuCHdWiMLOWNrWTK9bHYKxac0OA=
+	t=1747731183; cv=none; b=N5jC8mxAX4HYYv0umplHPCf1WbwxuzLXj+ILkJ4aorTwOOelODisjk8r8HYBNp2FR6eUIz6RhLDRQvvdBnNRoI2kEvwmM+Fbrgf+JaHjzuZWDriJVpIKym66hyqIg9QrcdXG/sigZOyoEUNUJgkWKZ71pFELqEBnCScIFqDIpDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747731163; c=relaxed/simple;
-	bh=qXEo/UrIkGCwUrlFozHzuYP47TLSy+9BFxO8UXHRiS0=;
-	h=Message-ID:Subject:From:To:CC:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=MvrAnd8TCkQWmV0vNMgpwV++36Dzd5QWomPeFIH+oQR3c10QqjPexCr/FrjJSNewv7k3wrEKhxkYKJXiFuJnLpGbUiTynFZG7g4X9VKpfARCrrHYCuppARwu3PEmQpGjgDXbLUCXe9HnY31fneyp6DJjfU9FsfzdWXc4CRwUrxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=xYlOKwHu; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1747731183; c=relaxed/simple;
+	bh=uw13QPggAl+A94pkIcH2RFvi8JKQ4cNypwyB4yn48+4=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=FCtUWqSg4l4Si2pW8skxCR/eRGIkDf5CHuL7CxlLyJhKcQq4DHm1XZfMcV3WG5opcAzE6yZnnB/sUKqFbqKGGfs23fxVxLIBKuNS/PGYYJbd3ifIBX1KKGwnxMk44vaKWxmHIunuSoFPFg4zgOvlREy1GIonfZPo7d1TUh02i/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VbpFVDce; arc=none smtp.client-ip=209.85.221.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="xYlOKwHu"
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54K5nKFo003415;
-	Tue, 20 May 2025 10:52:21 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	qXEo/UrIkGCwUrlFozHzuYP47TLSy+9BFxO8UXHRiS0=; b=xYlOKwHuL1ZgDVwh
-	FNEeusm/eqTYERP2Y/YJk6M5jl38EMeKOQ0Nafgl68Ni7O650FDcSk2+YiizrXY/
-	FMOCEipNGP847LM5w0Aroy4tAHdSECl5HFt7duJovBokGi2fCj4psE6Ucs1uNA22
-	vHrdF66I/TiZUvTQk23RHJzYXp1Hw3FCOVw+ErtS1DimCaB39Ab/Y/IGcE5J44Ot
-	5cm6KTadkByETx7wsGFfptpOnb1l5NJJao/IYIbZZjEBhU4bqTjwd6dWz3ZHJrKc
-	zXCgK2aa1ejWu4o/NfT3p7cdRRc8BY3eCkMJY/7M/o5Di3/UaEr0ZCX1rGp9GOpX
-	8Q/IxA==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46pfvkchka-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 May 2025 10:52:21 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 58CAC40082;
-	Tue, 20 May 2025 10:51:04 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A27B1B373DB;
-	Tue, 20 May 2025 10:49:48 +0200 (CEST)
-Received: from [192.168.8.15] (10.48.86.132) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 20 May
- 2025 10:49:48 +0200
-Message-ID: <cf096db75e9a321ee86eeb1685f4f1f5cb140e4b.camel@foss.st.com>
-Subject: Re: [PATCH] watchdog: arm_smc_wdt: get wdt status through
- SMCWD_GET_TIMELEFT
-From: Antonio Borneo <antonio.borneo@foss.st.com>
-To: Guenter Roeck <linux@roeck-us.net>, Julius Werner <jwerner@chromium.org>
-CC: Evan Benn <evanbenn@chromium.org>,
-        Wim Van Sebroeck
-	<wim@linux-watchdog.org>,
-        <linux-watchdog@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-Date: Tue, 20 May 2025 10:49:46 +0200
-In-Reply-To: <2bb28691-def0-4365-98e0-7f53d4d19966@roeck-us.net>
-References: <20250519170055.205544-1-antonio.borneo@foss.st.com>
-	 <df2124f7-8df9-4fb3-b687-5968805c668a@roeck-us.net>
-	 <CAODwPW-gEOotp8KGhzk3E11PqF9xdan8dOwxe_SW4txh+uQp=w@mail.gmail.com>
-	 <2bb28691-def0-4365-98e0-7f53d4d19966@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VbpFVDce"
+Received: by mail-wr1-f74.google.com with SMTP id ffacd0b85a97d-3a36c58ef62so1281359f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 01:53:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747731180; x=1748335980; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=1R+g8p9p/0+qgGtEWSsfrtXcyJzKxwZsoiTTrliTdnI=;
+        b=VbpFVDceHp3HXl8bBVV/J5qOLTjBCpmh1aSpaqfm50AhVLiZC5RMrKDBU5bIo7ZQAe
+         1ug02m0BWCIytkLK63pCdfPSBGGeIsO7WpxbOniK2QIA//5Hjt8IIxrk0DTE+2mUjRT7
+         7DoekMaey4GyTiWn1ZKE/oaivHJnKRCD0YW7Q8g1sFYUTnyVBZ2eRsJcmu4O5y+k1nal
+         fcCOXoNsQDa0r1eAxPZmSbAau7qdc/ul3MWqlkNB2hL8I0jrQZqeAxjqOlAjaUB/ZX/5
+         ULP81L9qQkqgaZABFLure0WKdVWmTs6MEwCYUcD1w2Cz2T+BA4VpSBPZmVKELgXm2uKS
+         17Ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747731180; x=1748335980;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1R+g8p9p/0+qgGtEWSsfrtXcyJzKxwZsoiTTrliTdnI=;
+        b=nONzVdXTyZoXLrolUpQVuE1jZKJ0X3u2nDg1VRmNnZ+Hk/REvSD6TvE9SNgMI1emli
+         jcU03K2bp4boNqReo7IHMJDOe4UcneyDZ6P69LdllzDt/6ZtiJLzf2pcQMCotSDYeAwx
+         YvqYMIPI4vnQ90ynBii3nShxdBqc8zd4K+4F8z3t+UqRe9Qj78gweA+Q3earUcQ7AJV4
+         TnqQRI24peC1QUaC/VgpyNr+hmM7ldOKTHTZOCljY5F5urbbujf1fPV6QHJSUOr/1kwc
+         gm5rq5MIdVHRd5aKjPgoyF6AjLvoJAXfbTFLezg5vxU04aX6x7UhdiTE6q0klW5qKejB
+         VPxA==
+X-Forwarded-Encrypted: i=1; AJvYcCUx8Ee16+mj4VN5MDUpXWFUzJiTdRl4iqAMbRIPe/zyxP+OiprAua5LCnxGsWUIb81/cSAwLCBIvyXf7SI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPTV80+3Ihr9iQy5tUyZjIoNO+P25IJZ/J0DCmfmA6oImlKD9V
+	lh2NDLNH/Rjp0QGL1EhDKxtyGw0VYo+2ojtlZFp52IIaxuoxKsqSCS36aVS8puQyRj1YNEqjxG5
+	BNZHGpY1R4Oo2LSDJKYMr1A==
+X-Google-Smtp-Source: AGHT+IFvnJ0x096AewJLW91FfyVpd0hjBTiaPSvB/MeNfz/Q4KVLUUxYR8v5yoCX37oRP3aJR89EPXhq3td9C3jQ
+X-Received: from wrbee4.prod.google.com ([2002:a05:6000:2104:b0:3a0:b3cf:8dee])
+ (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a5d:5986:0:b0:3a3:76da:32b3 with SMTP id ffacd0b85a97d-3a376da331fmr3865387f8f.18.1747731180063;
+ Tue, 20 May 2025 01:53:00 -0700 (PDT)
+Date: Tue, 20 May 2025 09:51:51 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-20_04,2025-05-16_03,2025-03-28_01
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.1143.g0be31eac6b-goog
+Message-ID: <20250520085201.3059786-1-vdonnefort@google.com>
+Subject: [PATCH v5 00/10] Stage-2 huge mappings for pKVM np-guests
+From: Vincent Donnefort <vdonnefort@google.com>
+To: maz@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, 
+	suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, 
+	will@kernel.org
+Cc: qperret@google.com, linux-arm-kernel@lists.infradead.org, 
+	kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, kernel-team@android.com, 
+	Vincent Donnefort <vdonnefort@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 2025-05-19 at 18:13 -0700, Guenter Roeck wrote:
-> On 5/19/25 17:12, Julius Werner wrote:
-> > I don't really know about the issue Guenter mentioned, but otherwise,
-> > from the driver's side this looks good to me.
-> >=20
->=20
-> It should just be
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0set_bit(WDOG_HW_RUNNING, =
-&wdd->status);
->=20
-> There should be no dependency on CONFIG_WATCHDOG_HANDLE_BOOT_ENABLED.
->=20
-> Guenter
->=20
+Hi all,
 
-Thanks for the review!
-I agree on Guenter's comment and I will send a V2 shortly.
+This series adds support for stage-2 huge mappings (PMD_SIZE) to pKVM
+np-guests, that is installing PMD-level mappings in the stage-2,
+whenever the stage-1 is backed by either Hugetlbfs or THPs.
 
-Regards
-Antonio
+The last patch of that series is an optimization for CMOs using a shared
+PMD_SIZE fixmap.
+
+Changes since v4 (https://lore.kernel.org/all/20250509131706.2336138-1-vdonnefort@google.com/)
+
+  - Make guest CMO functions working with any input (Marc)
+  - Improve for_each_hyp_page() and fold struct hyp_page declaration
+    (Marc)
+  - in mem_protect.c "PMD_SIZE" replaced with kvm_granule_size(KVM_PGTABLE_LAST_LEVEL - 1)
+    (Marc)
+  - Remove useless guest pgtable callback force_pte (Marc)
+  - Fixblock functions fallsback on fixmap on 64KiB pages systems.
+    (Marc)
+
+Changes since v3 (https://lore.kernel.org/all/20250407082706.1239603-1-vdonnefort@google.com/)
+
+  - Rebase on kvmarm/next
+
+Changes since v2 (https://lore.kernel.org/all/20250306110038.3733649-1-vdonnefort@google.com/)
+
+  - Fix PUD_SIZE -> PMD_SIZE enforcement (Quentin)
+  - Rework pkvm_host_share_guest() to remove one hyp_page walk (Quentin)
+  - Remove one pgtable walk into __check_host_shared_guest() (Quentin)
+  - Return EBUSY on host_share_guest_count overflow
+
+Changes since v1 (https://lore.kernel.org/all/20250228102530.1229089-1-vdonnefort@google.com/)
+
+  - WARN_ON() on !PAGE_ALIGNED size for guest CMOs (Quentin)
+  - check_range_allowed_memory() before accessing the Vmemmap (Quentin)
+
+Quentin Perret (2):
+  KVM: arm64: Convert pkvm_mappings to interval tree
+  KVM: arm64: Add a range to pkvm_mappings
+
+Vincent Donnefort (8):
+  KVM: arm64: Handle huge mappings for np-guest CMOs
+  KVM: arm64: Introduce for_each_hyp_page
+  KVM: arm64: Add a range to __pkvm_host_share_guest()
+  KVM: arm64: Add a range to __pkvm_host_unshare_guest()
+  KVM: arm64: Add a range to __pkvm_host_wrprotect_guest()
+  KVM: arm64: Add a range to __pkvm_host_test_clear_young_guest()
+  KVM: arm64: Stage-2 huge mappings for np-guests
+  KVM: arm64: np-guest CMOs with PMD_SIZE fixmap
+
+ arch/arm64/include/asm/kvm_pgtable.h          |   7 +-
+ arch/arm64/include/asm/kvm_pkvm.h             |   2 +
+ arch/arm64/kvm/hyp/include/nvhe/mem_protect.h |   8 +-
+ arch/arm64/kvm/hyp/include/nvhe/memory.h      |  16 +-
+ arch/arm64/kvm/hyp/include/nvhe/mm.h          |   4 +-
+ arch/arm64/kvm/hyp/nvhe/hyp-main.c            |  16 +-
+ arch/arm64/kvm/hyp/nvhe/mem_protect.c         | 264 +++++++++++-------
+ arch/arm64/kvm/hyp/nvhe/mm.c                  |  97 ++++++-
+ arch/arm64/kvm/hyp/nvhe/setup.c               |  15 +-
+ arch/arm64/kvm/hyp/pgtable.c                  |   6 -
+ arch/arm64/kvm/mmu.c                          |   6 +-
+ arch/arm64/kvm/pkvm.c                         | 129 ++++-----
+ 12 files changed, 365 insertions(+), 205 deletions(-)
+
+
+base-commit: c4e91ea0cc7e6345a4f7b8167e838d728ca86c30
+-- 
+2.49.0.1143.g0be31eac6b-goog
+
