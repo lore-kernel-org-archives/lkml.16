@@ -1,154 +1,117 @@
-Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10A1322DA0D
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 19:53:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3F45283FF3;
+	Tue, 20 May 2025 19:53:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747770827; cv=none; b=GcHHWbKVAwfO1W1twragximdg3PfV/etwwL860wUOMx4Fd+m10OpgCSGs8mq97VuRMwpEQkkZGX0Ci4yGSIRTH5Ie4lMoxrEvEneP92GLYlFG18BabCosguMI4yhxdWJHyldGxYsRhLb7M4KvH9JZq3I88at/yRN1DALYrJpxAU=
+	t=1747770837; cv=none; b=qmPbxzerUkEFutczKGznU0wYZkGO9YmuE35KdzKoGS7Fd5Y0X0tyECZeSGNrBBr8vyZWQ4J7acDWypGc6j7OJNZokaAPpsbLfKLVlvNXEGYupxNJRsr1jfYv0VMoYhW9Th2wSUrGOO0SKZjGhAW5uZ1zNvdkJNwXTlgONxW5JEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747770827; c=relaxed/simple;
-	bh=LMow8st1O7Ysp4v8Zqt9T/zgaRzah2q6OQC3qfPUJiI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=auqQYGXA0ypW1na8nVy9JUneX8CQrTyUB3M3QQUtIayjjP5+ejX9atIBU9Nf3R+e3oEUGEJ2m3oZHU68FjwcDwjUTayQ8qnUoT3aiYciKMu/OHmd2QQ1HlQ0cbIj7COjKsmIy9dk/s5UynZJGe7vNbExZdwLnFlqumM1A+rpIfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=QFCkIs6T; arc=none smtp.client-ip=95.215.58.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1747770837; c=relaxed/simple;
+	bh=VxB9dZNjaO/CQfaln8AMXdGqbympMTXUc6XWHCuYKIo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RDL4PSL50X8QG1DARaqPouxu+DQlOzFmIEFStyIh4+bjH7+cjmhGgZtlUh4hDYEooax2sG239MQxt0jwvGQZYXC5NR62d1FdhslZUeBBRdqzp2MvS96/2L6MSt0cUrWdpwphHIODqSHvBqVPvLELHU88CPaUT/7XNhh1FPd7gbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FKeIdF3Z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="QFCkIs6T"
-Message-ID: <abf16cc2-c350-430d-a2fd-2a8bedef9f34@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747770822;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SgVreyh/32mfFDTl9eouagm/kPBKpy5gDkzprCKXQV8=;
-	b=QFCkIs6Ti1ypb1zPq6wred4TjtU/VIph0994kvbSrUFnqbsECVutNgiCCrb7t6OrfPKHk/
-	/0zEsUTsjc3PM2ue+rWJYcISlDW0c8wVJJCvSBAxxcXvP4TDVUgwtUnPNptQdelcDpPLtY
-	wFg9O67+IgAh1R5xLOxp2AHH005ADso=
-Date: Tue, 20 May 2025 20:53:32 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FKeIdF3Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5113C4CEE9;
+	Tue, 20 May 2025 19:53:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747770837;
+	bh=VxB9dZNjaO/CQfaln8AMXdGqbympMTXUc6XWHCuYKIo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=FKeIdF3ZRzsVCO7fCWbmyehAqD4H8nwF7AXfcoNX2CIpI+5dS558KzCVHoS+9flwY
+	 McSy+OMqElInL4SHyicS9HDd/Z2VR0IQNVyAzSw0LPmXbe3aASgtm+vXG5ve8tqpN3
+	 7f4ndOHqQS5m2ZMkzL51hnPaUjxguPxlActqXboDDJZ8tltmodnCyrOPYWeQZCvmzR
+	 gZ0iBz9D3RoGLQ4bKK+i2eSUzx7eeJw9YY8vM3Du3UOn2vz0l1Z8Jpto31z/MpABsR
+	 r8a40qeqmTdK89Ey2RZiqtgX62Yex82z1SUrgra7WxWa/N/6aEDXcvgaQviYbcFPU+
+	 6mmOYnYGv29kA==
+From: Miguel Ojeda <ojeda@kernel.org>
+To: Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Masahiro Yamada <masahiroy@kernel.org>
+Cc: Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	rust-for-linux@vger.kernel.org,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	patches@lists.linux.dev,
+	stable@vger.kernel.org,
+	Tamir Duberstein <tamird@gmail.com>
+Subject: [PATCH v2] rust: kbuild: rebuild if `.clippy.toml` changes
+Date: Tue, 20 May 2025 21:53:45 +0200
+Message-ID: <20250520195345.905374-1-ojeda@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH net-next v2 6/8] gve: Add rx hardware timestamp expansion
-Content-Language: en-US
-To: Ziwei Xiao <ziweixiao@google.com>
-Cc: Harshitha Ramamurthy <hramamurthy@google.com>, netdev@vger.kernel.org,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, jeroendb@google.com, andrew+netdev@lunn.ch,
- willemb@google.com, pkaligineedi@google.com, yyd@google.com,
- joshwash@google.com, shailend@google.com, linux@treblig.org,
- thostet@google.com, jfraker@google.com, richardcochran@gmail.com,
- jdamato@fastly.com, horms@kernel.org, linux-kernel@vger.kernel.org
-References: <20250517001110.183077-1-hramamurthy@google.com>
- <20250517001110.183077-7-hramamurthy@google.com>
- <50be88c9-2cb3-421d-a2bf-4ed9c7d58c58@linux.dev>
- <CAG-FcCO7H=1Xj5B830RA-=+W8umUqq=WdOjwNqzeKvJLeMgywA@mail.gmail.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-In-Reply-To: <CAG-FcCO7H=1Xj5B830RA-=+W8umUqq=WdOjwNqzeKvJLeMgywA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-On 19.05.2025 19:45, Ziwei Xiao wrote:
-> .
-> 
-> 
-> On Sun, May 18, 2025 at 2:45 PM Vadim Fedorenko
-> <vadim.fedorenko@linux.dev> wrote:
->>
->> On 17.05.2025 01:11, Harshitha Ramamurthy wrote:
->>> From: John Fraker <jfraker@google.com>
->>>
->>> Allow the rx path to recover the high 32 bits of the full 64 bit rx
->>> timestamp.
->>>
->>> Use the low 32 bits of the last synced nic time and the 32 bits of the
->>> timestamp provided in the rx descriptor to generate a difference, which
->>> is then applied to the last synced nic time to reconstruct the complete
->>> 64-bit timestamp.
->>>
->>> This scheme remains accurate as long as no more than ~2 seconds have
->>> passed between the last read of the nic clock and the timestamping
->>> application of the received packet.
->>>
->>> Signed-off-by: John Fraker <jfraker@google.com>
->>> Signed-off-by: Ziwei Xiao <ziweixiao@google.com>
->>> Reviewed-by: Willem de Bruijn <willemb@google.com>
->>> Signed-off-by: Harshitha Ramamurthy <hramamurthy@google.com>
->>> ---
->>>    Changes in v2:
->>>    - Add the missing READ_ONCE (Joe Damato)
->>> ---
->>>    drivers/net/ethernet/google/gve/gve_rx_dqo.c | 23 ++++++++++++++++++++
->>>    1 file changed, 23 insertions(+)
->>>
->>> diff --git a/drivers/net/ethernet/google/gve/gve_rx_dqo.c b/drivers/net/ethernet/google/gve/gve_rx_dqo.c
->>> index dcb0545baa50..c03c3741e0d4 100644
->>> --- a/drivers/net/ethernet/google/gve/gve_rx_dqo.c
->>> +++ b/drivers/net/ethernet/google/gve/gve_rx_dqo.c
->>> @@ -437,6 +437,29 @@ static void gve_rx_skb_hash(struct sk_buff *skb,
->>>        skb_set_hash(skb, le32_to_cpu(compl_desc->hash), hash_type);
->>>    }
->>>
->>> +/* Expand the hardware timestamp to the full 64 bits of width, and add it to the
->>> + * skb.
->>> + *
->>> + * This algorithm works by using the passed hardware timestamp to generate a
->>> + * diff relative to the last read of the nic clock. This diff can be positive or
->>> + * negative, as it is possible that we have read the clock more recently than
->>> + * the hardware has received this packet. To detect this, we use the high bit of
->>> + * the diff, and assume that the read is more recent if the high bit is set. In
->>> + * this case we invert the process.
->>> + *
->>> + * Note that this means if the time delta between packet reception and the last
->>> + * clock read is greater than ~2 seconds, this will provide invalid results.
->>> + */
->>> +static void __maybe_unused gve_rx_skb_hwtstamp(struct gve_rx_ring *rx, u32 hwts)
->>> +{
->>> +     s64 last_read = READ_ONCE(rx->gve->last_sync_nic_counter);
->>
->> I believe last_read should be u64 as last_sync_nic_counter is u64 and
->> ns_to_ktime expects u64.
->>
-> Thanks for the suggestion. The reason to choose s64 for `last_read`
-> here is to use signed addition explicitly with `last_read +
-> (s32)diff`. This allows diff (which can be positive or negative,
-> depending on whether hwts is ahead of or behind low(last_read)) to
-> directly adjust last_read without a conditional branch, which makes
-> the intent clear IMO. The s64 nanosecond value is not at risk of
-> overflow, and the positive s64 result is then safely converted to u64
-> for ns_to_ktime.
-> 
-> I'm happy to change last_read to u64 if that's preferred for type
-> consistency, or I can add a comment to clarify the rationale for the
-> current s64 approach. Please let me know what you think. Thanks!
+We rarely modify `.clippy.toml`, but currently we do not rebuild if that
+happens, thus it is easy to miss possible changes in lints.
 
-I didn't get where is the conditional branch expected? AFAIU, you can do
-direct addition u64 + s32 without any branches. The assembly is also pretty
-clean in this case (used simplified piece of code):
+Thus rebuild in case of changes.
 
-         movl    -12(%rbp), %eax
-         movslq  %eax, %rdx
-         movq    -8(%rbp), %rax
-         addq    %rax, %rdx
+Cc: stable@vger.kernel.org
+Reported-by: Tamir Duberstein <tamird@gmail.com>
+Closes: https://github.com/Rust-for-Linux/linux/issues/1151
+Fixes: 7d56786edcbd ("rust: introduce `.clippy.toml`")
+Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
+---
+ rust/Makefile | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
+diff --git a/rust/Makefile b/rust/Makefile
+index 3aca903a7d08..107299c32065 100644
+--- a/rust/Makefile
++++ b/rust/Makefile
+@@ -57,6 +57,10 @@ rustdoc_test_quiet=--test-args -q
+ rustdoc_test_kernel_quiet=>/dev/null
+ endif
+ 
++ifeq ($(KBUILD_CLIPPY),1)
++	clippy_toml := $(srctree)/.clippy.toml
++endif
++
+ core-cfgs = \
+     --cfg no_fp_fmt_parse
+ 
+@@ -405,11 +409,12 @@ quiet_cmd_rustc_procmacro = $(RUSTC_OR_CLIPPY_QUIET) P $@
+ 		--crate-name $(patsubst lib%.$(libmacros_extension),%,$(notdir $@)) $<
+ 
+ # Procedural macros can only be used with the `rustc` that compiled it.
+-$(obj)/$(libmacros_name): $(src)/macros/lib.rs FORCE
++$(obj)/$(libmacros_name): $(src)/macros/lib.rs $(clippy_toml) FORCE
+ 	+$(call if_changed_dep,rustc_procmacro)
+ 
+ $(obj)/$(libpin_init_internal_name): private rustc_target_flags = --cfg kernel
+-$(obj)/$(libpin_init_internal_name): $(src)/pin-init/internal/src/lib.rs FORCE
++$(obj)/$(libpin_init_internal_name): $(src)/pin-init/internal/src/lib.rs \
++    $(clippy_toml) FORCE
+ 	+$(call if_changed_dep,rustc_procmacro)
+ 
+ quiet_cmd_rustc_library = $(if $(skip_clippy),RUSTC,$(RUSTC_OR_CLIPPY_QUIET)) L $@
+@@ -495,7 +500,8 @@ endif
+ 
+ $(obj)/compiler_builtins.o: private skip_gendwarfksyms = 1
+ $(obj)/compiler_builtins.o: private rustc_objcopy = -w -W '__*'
+-$(obj)/compiler_builtins.o: $(src)/compiler_builtins.rs $(obj)/core.o FORCE
++$(obj)/compiler_builtins.o: $(src)/compiler_builtins.rs $(obj)/core.o \
++    $(clippy_toml) FORCE
+ 	+$(call if_changed_rule,rustc_library)
+ 
+ $(obj)/pin_init.o: private skip_gendwarfksyms = 1
 
-> 
->>> +     struct sk_buff *skb = rx->ctx.skb_head;
->>> +     u32 low = (u32)last_read;
->>> +     s32 diff = hwts - low;
->>> +
->>> +     skb_hwtstamps(skb)->hwtstamp = ns_to_ktime(last_read + diff);
->>> +}
->>> +
->>>    static void gve_rx_free_skb(struct napi_struct *napi, struct gve_rx_ring *rx)
->>>    {
->>>        if (!rx->ctx.skb_head)
->>
+base-commit: 22c3335c5dcd33063fe1894676a3a6ff1008d506
+-- 
+2.49.0
 
