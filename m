@@ -1,50 +1,49 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D21B3BE5E;
-	Tue, 20 May 2025 05:05:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EACDB1E9B2A;
+	Tue, 20 May 2025 05:06:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747717549; cv=none; b=cKAZI6MZZkh8ff2mHmyAW4wFRX9fUECn/ECL3xcS/JfIU3CjccdxWO+g+LgcB0lyFbL9YuDe2fG16kTfK87UulWkK67Ai8DZ3Nq0Zp0LfPqi0GPUoKmcjtqDazDjBbY4MpKgp8OUdGcJ9cvojXrI+FemVxRAd4tRAUHLl39YhjU=
+	t=1747717602; cv=none; b=T07ZR5Rh3HGgTvG8hhDW5fkPWzEme78fPBGGr4ClA+5EocWKm0g3yzDYYlJeHEufVDZ63Tn/QoCTVXA6GDE7YeXLJb5ETjjuKkLKF3wa1/mXQCGDkLkSZLfbEcWO0bviQ7pLYDCU00BGT2dFpCDWVcyS/hP3kwMYOQjwAa7q9hA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747717549; c=relaxed/simple;
-	bh=cVt/MR5F4AUSCy5ltlIRYhDDOljGXGJLpkRGc8I8n+4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Na+4zjIFpoAnkETkYyzL80bGKAEK5mAFXdzPH/+WXBINyQByzeISEgQTb4fHsMzpN8txbHL+z2CUBC2GMlLFvXPlDwaE7uJkGPl5gp4BW/vr5sUoXO4dQSs4ZpIHjd3ASoRn1uO8z9H7pF7V8Moyl6/cisZwsIp+6EXJAdAEt2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FSZ6+oPJ; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747717602; c=relaxed/simple;
+	bh=1wJfxsQ7E5QN6neRl8f0zOKyuFv7iUPKfiIuZQuaCBw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=iQBLy6QKYmyvvlWNTOAepITLihScw8ank/wnUqZM4ZYslFd2Afl9VYzskcSQA0QL1j3bMKWOISglTqVmDeS5XJtTu1uDTaxK2ZUVEikYlKOx3qr+YOBWVJjgMlnmv59nk0x4AI+org8D13tNgdvpYtENSZVS7aoBFbijyIUlSvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=pwa1prFw; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FSZ6+oPJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747717548; x=1779253548;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=cVt/MR5F4AUSCy5ltlIRYhDDOljGXGJLpkRGc8I8n+4=;
-  b=FSZ6+oPJBuaotmKmn23+/YYYttz6UovPKGL1mJjQqaA0SgOG8W9AwB/j
-   XZw85XQqkLlNLTMLdmRHIkxva178ze8iecy6SjUwkC1TF0yikR2oyuPRi
-   W92ZcH2lPa0s9WuUu7vAQNMty1l4eYaenJcr9dZiXFEFY8VF3zh5qI3jl
-   aW0pi0dRUtwkLKQOkUi1oSYwSpjDKUY/DJTmVR3hXRzkwkqysOHnWTo/t
-   hh1G/mD2KOpUAlge6oBWQYTbvju7dJOezutoTaFEYWw6BZaigl2RP4hFo
-   1g6QJEHBbGqxaUhstwps96Pu8QEQJwb5nGhAN5wV+P59OH0cI3qnnPQX5
-   A==;
-X-CSE-ConnectionGUID: kuo6h2BwQEmoAX3lGNECuw==
-X-CSE-MsgGUID: ZHrd0gVdQo6Xz00YHwXc4Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="61026151"
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="61026151"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 22:05:47 -0700
-X-CSE-ConnectionGUID: oxPzYVqaRrmM8SZCQc74gA==
-X-CSE-MsgGUID: 67m9MSMnSKqK1x8rlRZKtQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="144329169"
-Received: from iweiny-desk3.amr.corp.intel.com (HELO [10.124.221.231]) ([10.124.221.231])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 22:05:45 -0700
-Message-ID: <2760ba5a-f39d-4c0f-bfd3-1f5c0bdf8f6e@linux.intel.com>
-Date: Mon, 19 May 2025 22:05:44 -0700
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pwa1prFw"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 54K56IAV325444
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 20 May 2025 00:06:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1747717578;
+	bh=F+faamJ2UEc6QY9BsjEfoc4sAC9/HSj+HkOgAnMFDpI=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=pwa1prFwGNjKgemmSS6b8lOahqRW3sYZeqktWyPUAQoHRQ3i8WAjI8PCReqKZZi1Y
+	 66HT7ytBNgP3Dp5Q5kGSFBszEVtKCDGZdK2GeHC4POS+t83Q0Sp8Mi/Jd+a0YNNu3Z
+	 8nmL3UFU9XFXFNMrz+SDUsBKP82f4zadyaS6KvuY=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 54K56Ior047985
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 20 May 2025 00:06:18 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 20
+ May 2025 00:06:17 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 20 May 2025 00:06:17 -0500
+Received: from [172.24.227.151] (uda0510294.dhcp.ti.com [172.24.227.151])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 54K56DnN050080;
+	Tue, 20 May 2025 00:06:14 -0500
+Message-ID: <f480253a-225d-4941-af81-32e1a02bf793@ti.com>
+Date: Tue, 20 May 2025 10:36:12 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,272 +51,99 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 16/16] PCI/AER: Add sysfs attributes for log ratelimits
-To: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
-Cc: Jon Pan-Doh <pandoh@google.com>,
- Karolina Stolarek <karolina.stolarek@oracle.com>,
- Martin Petersen <martin.petersen@oracle.com>,
- Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>,
- Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Lukas Wunner <lukas@wunner.de>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney" <paulmck@kernel.org>,
- Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
- Oliver O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>,
- Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
- Terry Bowman <terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
-References: <20250519213603.1257897-1-helgaas@kernel.org>
- <20250519213603.1257897-17-helgaas@kernel.org>
+Subject: Re: [PATCH v12 04/36] remoteproc: k3-m4: Don't assert reset in detach
+ routine
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+CC: <andersson@kernel.org>, <afd@ti.com>, <hnagalla@ti.com>, <u-kumar1@ti.com>,
+        <jm@ti.com>, <jan.kiszka@siemens.com>, <christophe.jaillet@wanadoo.fr>,
+        <jkangas@redhat.com>, <eballetbo@redhat.com>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <martyn.welch@collabora.com>
+References: <20250513054510.3439842-1-b-padhi@ti.com>
+ <20250513054510.3439842-5-b-padhi@ti.com> <aCddoCUIpIV1ZxEW@p14s>
+ <057cffb6-3ff6-4795-8501-7695d7ebc6fa@ti.com> <aCtCEvGlqIIDYtcn@p14s>
 Content-Language: en-US
-From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20250519213603.1257897-17-helgaas@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Beleswar Prasad Padhi <b-padhi@ti.com>
+In-Reply-To: <aCtCEvGlqIIDYtcn@p14s>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+
+Hi Mathieu,
+
+On 19/05/25 20:07, Mathieu Poirier wrote:
+> On Sat, May 17, 2025 at 06:53:29PM +0530, Beleswar Prasad Padhi wrote:
+>> On 5/16/2025 9:15 PM, Mathieu Poirier wrote:
+>>> On Tue, May 13, 2025 at 11:14:38AM +0530, Beleswar Padhi wrote:
+>>>> The rproc_detach() function invokes __rproc_detach() before
+>>>> rproc_unprepare_device(). The __rproc_detach() function sets the
+>>>> rproc->state to "RPROC_DETACHED".
+>>>>
+>>>> However, the TI K3 M4 driver erroneously looks for "RPROC_ATTACHED"
+>>>> state in its .unprepare ops to identify IPC-only mode; which leads to
+>>>> resetting the rproc in detach routine.
+>>>>
+>>>> Therefore, correct the IPC-only mode detection logic to look for
+>>>> "RPROC_DETACHED" in k3_m4_rproc_unprepare() function.
+>>>>
+>>> This driver has been upstream for 9 whole months, it is hard for me to believe
+>>> this but was just noticed.  Martyn from Collabora should be CC'ed on this, and I
+>>> will also need the required R-b/T-b tags.
+>>
+>> Cc: Martyn Welch martyn.welch@collabora.com
+>>
+>> Requesting Andrew/Judith for review and test too.
+>>
+>>> Typically bug fixes are not part of refactoring exercises.
+>>
+>> Typically, yes. But the refactor depends on this fix. This
+>> k3_m4_rproc_unprepare() function is entirely refactored to common driver in
+>> [PATCH v12 26/36].
+>>
+>> So, If the refactor is picked without this patch fix, the mainline M4 driver
+>> would be fixed, but the older stable kernels would always have this bug. Let
+>> me know what you think.
+>>
+> I suggest you send this patch on its own and then the series (without this
+> patch) with a note in the cover letter that it depends on the fix.  That way we
+> get the best of both worlds.
 
 
-On 5/19/25 2:35 PM, Bjorn Helgaas wrote:
-> From: Jon Pan-Doh <pandoh@google.com>
->
-> Allow userspace to read/write log ratelimits per device (including
-> enable/disable). Create aer/ sysfs directory to store them and any
-> future aer configs.
->
-> Update AER sysfs ABI filename to reflect the broader scope of AER sysfs
-> attributes (e.g. stats and ratelimits).
->
->    Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats ->
->      sysfs-bus-pci-devices-aer
->
-> Tested using aer-inject[1]. Configured correctable log ratelimit to 5.
-> Sent 6 AER errors. Observed 5 errors logged while AER stats
-> (cat /sys/bus/pci/devices/<dev>/aer_dev_correctable) shows 6.
->
-> Disabled ratelimiting and sent 6 more AER errors. Observed all 6 errors
-> logged and accounted in AER stats (12 total errors).
->
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/gong.chen/aer-inject.git
->
-> Signed-off-by: Karolina Stolarek <karolina.stolarek@oracle.com>
-> Signed-off-by: Jon Pan-Doh <pandoh@google.com>
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> Acked-by: Paul E. McKenney <paulmck@kernel.org>
-> ---
+Sure. If I get any comments/reviews on this version, I will re-spin this patch separately than the series.
 
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Thanks,
+Beleswar
 
->   ...es-aer_stats => sysfs-bus-pci-devices-aer} | 34 +++++++
->   Documentation/PCI/pcieaer-howto.rst           |  5 +-
->   drivers/pci/pci-sysfs.c                       |  1 +
->   drivers/pci/pci.h                             |  1 +
->   drivers/pci/pcie/aer.c                        | 99 +++++++++++++++++++
->   5 files changed, 139 insertions(+), 1 deletion(-)
->   rename Documentation/ABI/testing/{sysfs-bus-pci-devices-aer_stats => sysfs-bus-pci-devices-aer} (77%)
 >
-> diff --git a/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats b/Documentation/ABI/testing/sysfs-bus-pci-devices-aer
-> similarity index 77%
-> rename from Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
-> rename to Documentation/ABI/testing/sysfs-bus-pci-devices-aer
-> index d1f67bb81d5d..771204197b71 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
-> +++ b/Documentation/ABI/testing/sysfs-bus-pci-devices-aer
-> @@ -117,3 +117,37 @@ Date:		July 2018
->   KernelVersion:	4.19.0
->   Contact:	linux-pci@vger.kernel.org, rajatja@google.com
->   Description:	Total number of ERR_NONFATAL messages reported to rootport.
-> +
-> +PCIe AER ratelimits
-> +-------------------
-> +
-> +These attributes show up under all the devices that are AER capable.
-> +They represent configurable ratelimits of logs per error type.
-> +
-> +See Documentation/PCI/pcieaer-howto.rst for more info on ratelimits.
-> +
-> +What:		/sys/bus/pci/devices/<dev>/aer/ratelimit_log_enable
-> +Date:		March 2025
-> +KernelVersion:	6.15.0
-> +Contact:	linux-pci@vger.kernel.org, pandoh@google.com
-> +Description:	Writing 1/0 enables/disables AER log ratelimiting. Reading
-> +		gets whether or not AER is currently enabled. Enabled by
-> +		default.
-> +
-> +What:		/sys/bus/pci/devices/<dev>/aer/ratelimit_burst_cor_log
-> +Date:		March 2025
-> +KernelVersion:	6.15.0
-> +Contact:	linux-pci@vger.kernel.org, pandoh@google.com
-> +Description:	Ratelimit burst for correctable error logs. Writing a value
-> +		changes the number of errors (burst) allowed per interval
-> +		(5 second window) before ratelimiting. Reading gets the
-> +		current ratelimit burst.
-> +
-> +What:		/sys/bus/pci/devices/<dev>/aer/ratelimit_burst_uncor_log
-> +Date:		March 2025
-> +KernelVersion:	6.15.0
-> +Contact:	linux-pci@vger.kernel.org, pandoh@google.com
-> +Description:	Ratelimit burst for uncorrectable error logs. Writing a
-> +		value changes the number of errors (burst) allowed per
-> +		interval (5 second window) before ratelimiting. Reading
-> +		gets the current ratelimit burst.
-> diff --git a/Documentation/PCI/pcieaer-howto.rst b/Documentation/PCI/pcieaer-howto.rst
-> index 896d2a232a90..043cdb3194be 100644
-> --- a/Documentation/PCI/pcieaer-howto.rst
-> +++ b/Documentation/PCI/pcieaer-howto.rst
-> @@ -96,12 +96,15 @@ type (correctable vs. uncorrectable).
->   AER uses the default ratelimit of DEFAULT_RATELIMIT_BURST (10 events) over
->   DEFAULT_RATELIMIT_INTERVAL (5 seconds).
->   
-> +Ratelimits are exposed in the form of sysfs attributes and configurable.
-> +See Documentation/ABI/testing/sysfs-bus-pci-devices-aer.
-> +
->   AER Statistics / Counters
->   -------------------------
->   
->   When PCIe AER errors are captured, the counters / statistics are also exposed
->   in the form of sysfs attributes which are documented at
-> -Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
-> +Documentation/ABI/testing/sysfs-bus-pci-devices-aer.
->   
->   Developer Guide
->   ===============
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index c6cda56ca52c..278de99b00ce 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -1805,6 +1805,7 @@ const struct attribute_group *pci_dev_attr_groups[] = {
->   	&pcie_dev_attr_group,
->   #ifdef CONFIG_PCIEAER
->   	&aer_stats_attr_group,
-> +	&aer_attr_group,
->   #endif
->   #ifdef CONFIG_PCIEASPM
->   	&aspm_ctrl_attr_group,
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 65c466279ade..a3261e842d6d 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -963,6 +963,7 @@ void pci_no_aer(void);
->   void pci_aer_init(struct pci_dev *dev);
->   void pci_aer_exit(struct pci_dev *dev);
->   extern const struct attribute_group aer_stats_attr_group;
-> +extern const struct attribute_group aer_attr_group;
->   void pci_aer_clear_fatal_status(struct pci_dev *dev);
->   int pci_aer_clear_status(struct pci_dev *dev);
->   int pci_aer_raw_clear_status(struct pci_dev *dev);
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index c335e0bb9f51..42df5cb963b3 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -627,6 +627,105 @@ const struct attribute_group aer_stats_attr_group = {
->   	.is_visible = aer_stats_attrs_are_visible,
->   };
->   
-> +/*
-> + * Ratelimit enable toggle
-> + * 0: disabled with ratelimit.interval = 0
-> + * 1: enabled with ratelimit.interval = nonzero
-> + */
-> +static ssize_t ratelimit_log_enable_show(struct device *dev,
-> +					 struct device_attribute *attr,
-> +					 char *buf)
-> +{
-> +	struct pci_dev *pdev = to_pci_dev(dev);
-> +	bool enabled = pdev->aer_report->cor_log_ratelimit.interval != 0;
-> +
-> +	return sysfs_emit(buf, "%d\n", enabled);
-> +}
-> +
-> +static ssize_t ratelimit_log_enable_store(struct device *dev,
-> +					  struct device_attribute *attr,
-> +					  const char *buf, size_t count)
-> +{
-> +	struct pci_dev *pdev = to_pci_dev(dev);
-> +	bool enable;
-> +	int interval;
-> +
-> +	if (!capable(CAP_SYS_ADMIN))
-> +		return -EPERM;
-> +
-> +	if (kstrtobool(buf, &enable) < 0)
-> +		return -EINVAL;
-> +
-> +	if (enable)
-> +		interval = DEFAULT_RATELIMIT_INTERVAL;
-> +	else
-> +		interval = 0;
-> +
-> +	pdev->aer_report->cor_log_ratelimit.interval = interval;
-> +	pdev->aer_report->uncor_log_ratelimit.interval = interval;
-> +
-> +	return count;
-> +}
-> +static DEVICE_ATTR_RW(ratelimit_log_enable);
-> +
-> +#define aer_ratelimit_burst_attr(name, ratelimit)			\
-> +	static ssize_t							\
-> +	name##_show(struct device *dev, struct device_attribute *attr,	\
-> +		    char *buf)						\
-> +{									\
-> +	struct pci_dev *pdev = to_pci_dev(dev);				\
-> +									\
-> +	return sysfs_emit(buf, "%d\n",					\
-> +			  pdev->aer_report->ratelimit.burst);		\
-> +}									\
-> +									\
-> +	static ssize_t							\
-> +	name##_store(struct device *dev, struct device_attribute *attr,	\
-> +		     const char *buf, size_t count)			\
-> +{									\
-> +	struct pci_dev *pdev = to_pci_dev(dev);				\
-> +	int burst;							\
-> +									\
-> +	if (!capable(CAP_SYS_ADMIN))					\
-> +		return -EPERM;						\
-> +									\
-> +	if (kstrtoint(buf, 0, &burst) < 0)				\
-> +		return -EINVAL;						\
-> +									\
-> +	pdev->aer_report->ratelimit.burst = burst;			\
-> +									\
-> +	return count;							\
-> +}									\
-> +static DEVICE_ATTR_RW(name)
-> +
-> +aer_ratelimit_burst_attr(ratelimit_burst_cor_log, cor_log_ratelimit);
-> +aer_ratelimit_burst_attr(ratelimit_burst_uncor_log, uncor_log_ratelimit);
-> +
-> +static struct attribute *aer_attrs[] = {
-> +	&dev_attr_ratelimit_log_enable.attr,
-> +	&dev_attr_ratelimit_burst_cor_log.attr,
-> +	&dev_attr_ratelimit_burst_uncor_log.attr,
-> +	NULL
-> +};
-> +
-> +static umode_t aer_attrs_are_visible(struct kobject *kobj,
-> +				     struct attribute *a, int n)
-> +{
-> +	struct device *dev = kobj_to_dev(kobj);
-> +	struct pci_dev *pdev = to_pci_dev(dev);
-> +
-> +	if (!pdev->aer_report)
-> +		return 0;
-> +
-> +	return a->mode;
-> +}
-> +
-> +const struct attribute_group aer_attr_group = {
-> +	.name = "aer",
-> +	.attrs = aer_attrs,
-> +	.is_visible = aer_attrs_are_visible,
-> +};
-> +
->   static void pci_dev_aer_stats_incr(struct pci_dev *pdev,
->   				   struct aer_err_info *info)
->   {
-
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
-
+>> Thanks,
+>> Beleswar
+>>
+>>>   I suggest to apply
+>>> this set without this patch - you can then work on fixing this bug.
+>>>
+>>> Thanks,
+>>> Mathieu
+>>>
+>>>> Fixes: ebcf9008a895 ("remoteproc: k3-m4: Add a remoteproc driver for M4F subsystem")
+>>>> Signed-off-by: Beleswar Padhi <b-padhi@ti.com>
+>>>> ---
+>>>> v12: Changelog:
+>>>> 1. New patch. Fixup a state detection logic.
+>>>>
+>>>>   drivers/remoteproc/ti_k3_m4_remoteproc.c | 2 +-
+>>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/remoteproc/ti_k3_m4_remoteproc.c b/drivers/remoteproc/ti_k3_m4_remoteproc.c
+>>>> index a16fb165fcedd..6cd50b16a8e82 100644
+>>>> --- a/drivers/remoteproc/ti_k3_m4_remoteproc.c
+>>>> +++ b/drivers/remoteproc/ti_k3_m4_remoteproc.c
+>>>> @@ -228,7 +228,7 @@ static int k3_m4_rproc_unprepare(struct rproc *rproc)
+>>>>   	int ret;
+>>>>   	/* If the core is going to be detached do not assert the module reset */
+>>>> -	if (rproc->state == RPROC_ATTACHED)
+>>>> +	if (rproc->state == RPROC_DETACHED)
+>>>>   		return 0;
+>>>>   	ret = kproc->ti_sci->ops.dev_ops.put_device(kproc->ti_sci,
+>>>> -- 
+>>>> 2.34.1
+>>>>
