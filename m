@@ -1,103 +1,113 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2427478F40;
-	Tue, 20 May 2025 04:21:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49D451E5B6F
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 04:33:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747714876; cv=none; b=YI4k3uZkVsWDci3WyXteb0l2XoFa6qH++we9L+pQT8HzjdqeqqLEX0KEp+sbehdQ3RM1jLSiPUzN6rRhvCMpW5fSwpu5+6xco/RjeRU/Kts2lXW3oTaLD/q4RzmBxft6UM2MMpvSzgIl7455yHmaNKFMuVLTqjiN9YhiEjKv1Ks=
+	t=1747715640; cv=none; b=tkwkaaev2iP8Y6oxyJlQC/q1+3WrszWmmlW1obf/ASmQT0ta43E1Jwxcflgs5dYWOkvEsSZBoYAd7hrIBwDp6+ANh0tN+So4CF3Qr8Mh9f3jVKy3at4vDml9FNZfQ4QsL7ND0/PH/nNlPm56n5eYhaqkMYX+D13sirTjZgTYl9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747714876; c=relaxed/simple;
-	bh=tki70zGOXe8uDLHnr4w6sI/6H1GrLHAbBVvNzaE1BS0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QODmCwwKmV/N0PdKmJgbpWrvaMVa+okolW4fDhO0x51XKwmq8RTWGyOEfcO91QiSsY9Gg00fbCmeJQlBdsomEX9WM96xsRonjVRsb5+jAw5SAjGmg6GkCDC2upZaPb+6vRaRiV11oIXt4/4PVJtUjnjg40oGuAAemvFifwnY/ig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=A4eeK5gg; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1747715640; c=relaxed/simple;
+	bh=TM7YWc2HanxUC5uSa/mx8mHwCfO/Qpz2hocXunXzOnQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AceYfpA3k1GG7pnAL7DoAxmLV3Ty3u8tupdpFIs48PuCc9+qSPlPIjgIDCqLmnRCsbtu6zGPpiVLzLu5d0dzjZQhlZiAwU+1h64O3GsEV4zeLBqtauN/SYuP0mnzznn4YHsje1s27SHbQPfTpsHEw6l0fc4uuUSQ2h1YQW+QWM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DTEtPKVx; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="A4eeK5gg"
-X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 54K4KhKkA2041609, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
-	t=1747714843; bh=tki70zGOXe8uDLHnr4w6sI/6H1GrLHAbBVvNzaE1BS0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:
-	 Content-Transfer-Encoding:Content-Type;
-	b=A4eeK5ggZhxkpEGEmGvxmMlQtiwm7BqF9eWmUuyIl6PVe/bzXU9wneF4NvbDJaItw
-	 bMLLPfV6QErE0flYeCvseidF6uJ9J0W0MTwhKwo4IC20l1AsG3p0vDQTT6nxyhzZK+
-	 bgfSgPwdYIwx8QY+Sr2I7Gsc9rU83L6xq7uMxA3Ws2gJVDDMb8p5h5IKG6Q2hits8U
-	 a9IdUuCbkr+74yzhTmbUy24+qYbjpb5Da7YUgJeZVHW/DF7yW8Uh4ory+WpUqOccTe
-	 Z63dYstq/nJ0QYo1MT6Z+HD2XxzBg/iDswH5V9Tk9Gw2knd0DAnFRTNLEFFPqVD7HC
-	 2qtglQT8Je25A==
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/3.13/5.93) with ESMTPS id 54K4KhKkA2041609
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 20 May 2025 12:20:43 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 20 May 2025 12:20:43 +0800
-Received: from RTDOMAIN (172.21.210.70) by RTEXMBS04.realtek.com.tw
- (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Tue, 20 May
- 2025 12:20:43 +0800
-From: Justin Lai <justinlai0215@realtek.com>
-To: <kuba@kernel.org>
-CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
-        <andrew+netdev@lunn.ch>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <horms@kernel.org>, <pkshih@realtek.com>,
-        <larry.chiu@realtek.com>, Justin Lai <justinlai0215@realtek.com>,
-        Joe Damato
-	<jdamato@fastly.com>
-Subject: [PATCH net-next v3] rtase: Use min() instead of min_t()
-Date: Tue, 20 May 2025 12:20:31 +0800
-Message-ID: <20250520042031.9297-1-justinlai0215@realtek.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DTEtPKVx"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-30ea7f78337so2470750a91.2
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 21:33:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747715638; x=1748320438; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=vmXtbFG7YZNNbJEDh1fYDcGa0WLHVZ/52LrX9t09NXg=;
+        b=DTEtPKVxPh29thGGyvRwymyu6QWa5HrLLK1TOwWteGJkisDMVF5VfmI9KQDARigvz6
+         9eeSDnSsK6REQDVEmaeBX/v2tqPUAKIrEwogrzS4cLIF1kfJaRSyZWRy4GCQbT1uMLIy
+         /DzvcOhOzF9KeGmt8fPXmATyQUT5D8htprY8ePsYCksh7rsWjvzaSV/5tzPRL+f8PUki
+         NxPoDEPc1rhdESWvJDeFvd/tQZ5vnqhrgR3D01vuP2nkzW9lX3KCqyosAWy//aCqtaIv
+         Z2mHGXpbzi8NFMHDX4F+583rdVhQ7C2RjRG3BsOEAVw4CtNTPo/D/+Kqt1zGRsFLZQoB
+         bLIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747715638; x=1748320438;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vmXtbFG7YZNNbJEDh1fYDcGa0WLHVZ/52LrX9t09NXg=;
+        b=dqjQK/QpT5rxg0FGL4Ak8YbtOIlH3OsWa3zo3hSxnjWDZyTmTw+sYvmn1sms0jc3hR
+         kigYJtLCvQA3nrMmW1W9rMQ8uQqiOSeyRUG4aNjlgZ2gLpFb0NrZHdjjAFD+N5K2LMLz
+         or6NNrj3UfOavYgqqT0JznNFIIJvgNzvHp9YUkgucnR/Yp8or18Xf2LG0J6AZcGeOeWe
+         9J8PBjIcN5NJI4nWgmGXMcT0tA3YlMxS9S61tBOPDFaRACZ0RqmJUugZs7lAye6YiYmV
+         YaBpeB7/34blbIASC+6Lp+ZYbV1hZINA8cEndo1a4OPvM60LQ42Iv/YGEMA4Z8n9D8Jb
+         jqvA==
+X-Forwarded-Encrypted: i=1; AJvYcCUYBEUdm1JKJ2tG1pwOy4xslVj1jZtZoWAfCBNhDQOisvm0Fe1Et12V3xETo0/n/dErwweXcCK71GAGEEA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBpFlj9AXhzeMsr/9+URoaStgsh8Afl/aBi5Q34TNzbFT0fFix
+	MltdNUQcLZyVVNQidGiacODAaxVPwlSYODpL0d9z5mlqz2iAQC5P+s0IfXZMJ8lqqv0=
+X-Gm-Gg: ASbGncvulIsXUPdbRlBZWOlWK4xavocIt7JK06IxsshoYpKo16VseiOdeOh5txeySpV
+	OWF279TEffoQKTEt97Y7fuMO/cZHbtzuH9nL/Q/4iyAIdTLGfhUhMOzmhEcaxDh/PV5z2KhYGhd
+	ASanDY71cVy1DVKgpbGEoe+/1KYKM2zFAAzZvamNj6ZFds+XO58w/oqPTWJpfFbNgiEJWtktfxw
+	3SCLdl18DjMsyM/nta63f8JPFXiXJNU2DPl8aRaZFHhFEjMOfx2z/KdTDtSAegC/9wC0jau9uMM
+	SYeSSu5UNtMBqDSrIVczwLREliC4Xf3KSecbYNTjB4fU+7YaAKy6
+X-Google-Smtp-Source: AGHT+IEv6gz69p3L0tnkjs4WbboIMeCV0Y6PseXGe/lkFOQuL+7jOhnn31ID8Drzpd2DcrW3kToDNw==
+X-Received: by 2002:a17:90b:1a91:b0:2ee:e113:815d with SMTP id 98e67ed59e1d1-30e830ebc99mr22665162a91.8.1747715638413;
+        Mon, 19 May 2025 21:33:58 -0700 (PDT)
+Received: from localhost ([122.172.81.72])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f36491611sm643232a91.26.2025.05.19.21.33.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 May 2025 21:33:57 -0700 (PDT)
+Date: Tue, 20 May 2025 10:03:55 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@redhat.com>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>, linux-pm@vger.kernel.org,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>,
+	rust-for-linux@vger.kernel.org,
+	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
+	Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
+	Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>,
+	Yury Norov <yury.norov@gmail.com>, Burak Emir <bqe@google.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Russell King <linux@armlinux.org.uk>, linux-clk@vger.kernel.org,
+	Michael Turquette <mturquette@baylibre.com>,
+	Andrew Ballance <andrewjballance@gmail.com>,
+	Anisse Astier <anisse@astier.eu>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V12 06/15] rust: macros: enable use of hyphens in module
+ names
+Message-ID: <20250520043355.wjkrslnripaqj6mm@vireshk-i7>
+References: <cover.1747634382.git.viresh.kumar@linaro.org>
+ <21b4c30db60f22d56cc6386a18564705ad3a6f4a.1747634382.git.viresh.kumar@linaro.org>
+ <CANiq72mNHYKXcDm6DiB=69W0w8pZ1KhqeARqqKBK_s01PPRsmQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: RTEXH36505.realtek.com.tw (172.21.6.25) To
- RTEXMBS04.realtek.com.tw (172.21.6.97)
+In-Reply-To: <CANiq72mNHYKXcDm6DiB=69W0w8pZ1KhqeARqqKBK_s01PPRsmQ@mail.gmail.com>
 
-Use min() instead of min_t() to avoid the possibility of casting to the
-wrong type.
+On 19-05-25, 16:15, Miguel Ojeda wrote:
+> On Mon, May 19, 2025 at 9:08 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> >
+> > +    /* Rust does not allow hyphens in identifiers, use underscore instead */
+> 
+> (In case you see this before you apply)
+> 
+> Nit: `//` for comments, also please end with a period.
 
-Signed-off-by: Justin Lai <justinlai0215@realtek.com>
-Reviewed-by: Joe Damato <jdamato@fastly.com>
----
-v1 -> v2:
-- Remove the Fixes tag.
- 
-v2 -> v3:
-- Nothing has changed, and it simply has been rebased and reposted.
----
- drivers/net/ethernet/realtek/rtase/rtase_main.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Done.
 
-diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-index 0efe7668e498..4d37217e9a14 100644
---- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
-+++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-@@ -1983,7 +1983,7 @@ static u16 rtase_calc_time_mitigation(u32 time_us)
- 	u8 msb, time_count, time_unit;
- 	u16 int_miti;
- 
--	time_us = min_t(int, time_us, RTASE_MITI_MAX_TIME);
-+	time_us = min(time_us, RTASE_MITI_MAX_TIME);
- 
- 	if (time_us > RTASE_MITI_TIME_COUNT_MASK) {
- 		msb = fls(time_us);
-@@ -2005,7 +2005,7 @@ static u16 rtase_calc_packet_num_mitigation(u16 pkt_num)
- 	u8 msb, pkt_num_count, pkt_num_unit;
- 	u16 int_miti;
- 
--	pkt_num = min_t(int, pkt_num, RTASE_MITI_MAX_PKT_NUM);
-+	pkt_num = min(pkt_num, RTASE_MITI_MAX_PKT_NUM);
- 
- 	if (pkt_num > 60) {
- 		pkt_num_unit = RTASE_MITI_MAX_PKT_NUM_IDX;
 -- 
-2.34.1
-
+viresh
