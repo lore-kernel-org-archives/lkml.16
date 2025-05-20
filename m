@@ -1,106 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDEAA2405FD;
-	Tue, 20 May 2025 15:47:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E42A2405FD
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 15:47:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747756064; cv=none; b=b/AHerSRhVhr4ZGWlJ/4wGl3nkN6BFuHstg8W8YyLFKAEaQq8CtHZPbSsIBdFOsvh5wXGl4gWdg/GRXUTDJ/3AdT2T9eyF67J8jvOgZMSlPOpds+XXczXVw8UuVzY6yU4/qyVuulXJeWyFRoyB8CrlLCLwLU+TuMgt3i+TXlpso=
+	t=1747756071; cv=none; b=iTj8sbCG/gM+eGxsSbvxcMd4tHKfoARRp4w5v33qRDSEsP+Egpk28l87gf6lCx0ffXbwqiRsKZKtCWolcWSKstMCBzToFhrSKI3qfpE/EuFBjdsp9zsX2vdwMvlwrZLLdVWkG6nOwq54fwB8mxOEv1vmcYM2YxHUOMzk5jEp1Uc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747756064; c=relaxed/simple;
-	bh=Kx5G6jb5VVr3oqqGbr04JrYV0NFaNI05NayVcBLr/w4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kEEjyBEaFL++tdF5Xik1bA4gM9mK5aZ5c2p/f1MDsH8mC4hzrh8i5O3jb25zu4Jq5Rhigc5/HEQDFcilTMt/QdNnbVznj5lwfeLajfHAIXLot9v3CkBBFZSjXHehkRauAyuKNwtXbeeduUZgoRotJhu+WDef9VF0RlT58+USN3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hDHIr2AL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747756071; c=relaxed/simple;
+	bh=c+NVbhKYnViiuhTIKv6ygPQwRWbXudY6EgAIzQ/rQKo=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=UVbDD9u7xyEHdxXkyZfopSGlX/pUi4QLQztDL4FaH+w83uQ2/G0YDvGCwvNRIAY9R4DnGTxiSFxfcZ6EQY5lMGs3U+rA16zmZvTs6GTNMCR25/d3v2sIeRyVGfK/T8yBZItdSG05PjtDFkvKzTMsm4nUbjC//bUeZTXfHacE0xc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=parent-leaders.com; spf=none smtp.mailfrom=parent-leaders.com; dkim=pass (2048-bit key) header.d=parent-leaders-com.20230601.gappssmtp.com header.i=@parent-leaders-com.20230601.gappssmtp.com header.b=VdquZjwc; arc=none smtp.client-ip=209.85.215.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=parent-leaders.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=parent-leaders.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hDHIr2AL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6480CC4CEE9;
-	Tue, 20 May 2025 15:47:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747756063;
-	bh=Kx5G6jb5VVr3oqqGbr04JrYV0NFaNI05NayVcBLr/w4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hDHIr2ALlh8Morhko7v8apJ8Wf7asZINSwivtyHAkUn9ZrbEKdsayhHxZXZh4H+4R
-	 Z7qxw5zKWSJGNISJvIzArsoDxoXB2buC5LyPKDBNpPJr7O2MZUxOaxZaw+kpW7d5Cb
-	 qj48E+LAch77GIp6/cqnk13gPn3LIDDyS5QDyRcvM/Tdh513xGXroq6pmuAdjnP1Qe
-	 cfwOsBrw6lNPMb7+gCZT+NDIHqIzRroJQfireRm6trozaM+8Xjv8IZCPfNyS/v4gZ4
-	 SyDv93Q91Kh/KVnQ6AC1RwUzsRNMvruQ8QL8VizeKjtyO2s21zuvV0DPGgN3I575J1
-	 tPbBN43Jku3qA==
-Date: Tue, 20 May 2025 16:47:37 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Jacky Chou <jacky_chou@aspeedtech.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, joel@jms.id.au,
-	andrew@codeconstruct.com.au, mturquette@baylibre.com,
-	sboyd@kernel.org, p.zabel@pengutronix.de, BMC-SW@aspeedtech.com
-Subject: Re: [net 1/4] dt-bindings: net: ftgmac100: Add resets property
-Message-ID: <20250520-creature-strenuous-e8b1f36ab82d@spud>
-References: <20250520092848.531070-1-jacky_chou@aspeedtech.com>
- <20250520092848.531070-2-jacky_chou@aspeedtech.com>
+	dkim=pass (2048-bit key) header.d=parent-leaders-com.20230601.gappssmtp.com header.i=@parent-leaders-com.20230601.gappssmtp.com header.b="VdquZjwc"
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-af908bb32fdso4517579a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 08:47:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=parent-leaders-com.20230601.gappssmtp.com; s=20230601; t=1747756068; x=1748360868; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=c+NVbhKYnViiuhTIKv6ygPQwRWbXudY6EgAIzQ/rQKo=;
+        b=VdquZjwcB4Tzb7UHq4NhOSKkDCrik4OUWqgc2lFxpp576GLaamYD1zj5xnMRHO1xji
+         a4AH98RE5KmKyd6fNWv3PrVnjFn9+anKjAQn+NIlavWIot8+Xn9bT6XXR1lk4HiVVMkr
+         8AP41UfGr8Sh0Ylw/OSpaIih2wwJDad0zJXlAXdvb9ZJT3aUszXuBXBolAvDO8PJc8yB
+         OzELNmucx6Qc9ZnvjcXvOHR6yOu4odbBsq7rRd5wjmd4QV/BhxvUJUh5oq9ld582mI2T
+         vs+PSSTpI/cfc9YAPDE9Tf8b5KhVdbMYiYSq0N6R5gi+KH4yLKYvw8FGotAoAkMlLKPP
+         EzGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747756068; x=1748360868;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=c+NVbhKYnViiuhTIKv6ygPQwRWbXudY6EgAIzQ/rQKo=;
+        b=emcsRzIpgy1AvV41uPy9y7VuQ2P7IUzFaQF2e4DicoLstL6T+vvPtEPev8CHDTokDR
+         Rmew5EoJ8seYXyPJj1Iyg/oKgZz4oYWInqoMgmjZPG02atnU/SIMg9W2BpQLI7hx+VPm
+         rhpe9Ifr/UlpZZJjrwCPeuOKC1EFXYycPP0Oa3mjhtdg7n00aLxThcSvjwG47qEyxqL9
+         9YqqtI8hbncRu7g/A/h+asBnmSL1u0wfmpCzZVjKJC6q//pH7vZlbRculp8IELNpQGbr
+         HsdZalnCzObGtuw78qufea9/6vCcTQqnIC8x2chlyYXtG32jevvJmd3l5d+5vAyzNPX+
+         XmWw==
+X-Gm-Message-State: AOJu0Yy6gUvnP7y1OfPYoE/Hi4MKq7KEPYIvkYQeMThAa1STdxzp77wO
+	C4dk9Au1dm2oOg8N9KBKbPS3BOI1ZaVI2G5PQHE0pfSbyen6PbJSaHlxk2YjOiYZpYlnW0jWsQ6
+	Ly3IuZHXHDnMkKnpcw0TXTObbsD0LScPQLuYRX+i6ijtE0G56U6cc
+X-Gm-Gg: ASbGnctsDEBE6LHkeaitRMS0AK64p0J/muKdL6kpwgdAOzO3qQskbBLWp4+Vrq81QAT
+	QPyTNHF8PoINKrBNUjZ6YN1s6mZY5ch6lkO9QWyiynrlyV6TE3s+7wLJoaag9Dd9+zIY+vQZ2tL
+	ZLWRIN5hiCXwf/b3cpbIswEh4q4g3WrHU6
+X-Google-Smtp-Source: AGHT+IFYt2ToKhtDoKia2ylxk5h4xbvUf4Mwd8X3jOX7KNBcqDwQo6mJinnm0Ufp74njycABfEdHaPv3NmJrWPJLp+w=
+X-Received: by 2002:a17:903:2986:b0:232:2b90:1410 with SMTP id
+ d9443c01a7336-2322b901585mr141108945ad.10.1747756068176; Tue, 20 May 2025
+ 08:47:48 -0700 (PDT)
+Received: from 402240868419 named unknown by gmailapi.google.com with
+ HTTPREST; Tue, 20 May 2025 15:47:47 +0000
+Received: from 402240868419 named unknown by gmailapi.google.com with
+ HTTPREST; Tue, 20 May 2025 15:47:47 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="vqRuqlVkPNRifbyp"
-Content-Disposition: inline
-In-Reply-To: <20250520092848.531070-2-jacky_chou@aspeedtech.com>
+From: Jenna Sherman <info@parent-leaders.com>
+Date: Tue, 20 May 2025 15:47:47 +0000
+X-Gm-Features: AX0GCFuY5lOynijh38mOz0vwgBmyyiaNlo1d43HyjVMGqA4wKlDuky116IQHW6k
+Message-ID: <CAETX--aDi52aWEv8G-f7t6yzJKPY-JX_0cF6i3POmoDQ1+bFvw@mail.gmail.com>
+Subject: Follow-Up: Enhance Daily Energy and Focus
+To: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+Hi there,
 
---vqRuqlVkPNRifbyp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'm reaching out to see if you've had a chance to consider featuring
+my guide on enhancing daily energy through simple habits. It could be
+a valuable addition to your content strategy.
 
-On Tue, May 20, 2025 at 05:28:45PM +0800, Jacky Chou wrote:
-> Add optional resets property for Aspeed SoCs to reset the MAC and
-> RGMII/RMII.
->=20
-> Signed-off-by: Jacky Chou <jacky_chou@aspeedtech.com>
-> ---
->  Documentation/devicetree/bindings/net/faraday,ftgmac100.yaml | 5 +++++
->  1 file changed, 5 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/net/faraday,ftgmac100.yaml=
- b/Documentation/devicetree/bindings/net/faraday,ftgmac100.yaml
-> index 55d6a8379025..f7af2cd432d3 100644
-> --- a/Documentation/devicetree/bindings/net/faraday,ftgmac100.yaml
-> +++ b/Documentation/devicetree/bindings/net/faraday,ftgmac100.yaml
-> @@ -35,6 +35,11 @@ properties:
->        - description: MAC IP clock
->        - description: RMII RCLK gate for AST2500/2600
-> =20
-> +  resets:
-> +    maxItems: 1
-> +    description:
-> +      Optional reset control for the MAC controller (e.g. Aspeed SoCs)
-
-If only aspeed socs support this, then please restrict to just your
-products.
-
-> +
->    clock-names:
->      minItems: 1
->      items:
-> --=20
-> 2.34.1
->=20
-
---vqRuqlVkPNRifbyp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaCykGAAKCRB4tDGHoIJi
-0ldUAQCs0SeY54j9yeQV50Qs6FaOw51w5rsiRnuKhNfqKgBERAD/bi4/ULFOC+eK
-hIqwX2TOHjPWTh/uDyZS4qnyKuCRnAs=
-=5R4U
------END PGP SIGNATURE-----
-
---vqRuqlVkPNRifbyp--
+Best,
+Jenna Sherman
