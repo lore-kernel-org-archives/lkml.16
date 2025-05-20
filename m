@@ -1,115 +1,89 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ADF225B1D8
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 18:28:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 824582116FE;
+	Tue, 20 May 2025 18:31:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747765730; cv=none; b=qfJNMNDFAQwnvLVFO2o+5xgBcpbxjTbMCHkIecCCB6RTaNNTjXOhzhmmIqvJCbuHGA/NAlMaLqQSjvwRjZLrWiF0tv0aJc1eb35Jhfwosc5qSc0kUMOwNDQopWxCZw/q/coLEFfCrsSpgzscaibazDXkhHi+uIXsK3bjPwEHw9Y=
+	t=1747765915; cv=none; b=mJfl3wlD90t8e5Q6abXBTLv9af9qXmxa7+unXH4X5wTdsdftipYYk8+Z1UmlS+RYSp15FSnYcVQriZVyVVUMl3d2LTg7ZewzE82ailmJpmt5LsYu88/lAMK39PIkywuW5DZDFt4gp0Edf+jBedDL73idLo3T6gEE7eSOPGzkPWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747765730; c=relaxed/simple;
-	bh=zeB46xGsrjZ7JRG5Aj0J31/1Fuw08jBiwz2TGCaTHJc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=H5lnJMXcaAU/sn3SYy8TU8vREm3IguzeUAJ3kCmHuX5MTFbvrYbljnRveNbmKNqBWSz+CAA9gWaLzQs76NANk9RAJ/vw5trc8sKs2+ero09S1cZ+Sp1JWdY5l+Ii3DzJ4YwozYDHsJyAU4vcMeWnm0PD9A3Ildfg5jv/R3xg7Hc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=dUxF+ldl; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1747765915; c=relaxed/simple;
+	bh=jwee9jRHKC9i3IB6hd0Exj0Pc2dnDouthrKRY1Giwiw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=A58chekjbLxkIbd2lYZ69X2SImpKrkrTTh9TlTytK1y+eivID4UuBZAxOLvqs2wLvR0+zRFxeokOhBKEfnTLxH5f2OgfzBK0kj5gVWFCumFNe1W5nRz6DuuxHjW0Ep1iV8rAF9LqpTmz2LTq4XzlJe91NKkzc6dq0CF67n93Z4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hddkKu0m; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="dUxF+ldl"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-6021b8b2c5fso1368008a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 11:28:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1747765726; x=1748370526; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=fQbIdXejFm38skr3lFeOE2v9r10+iL7vwnfvDB5rB6A=;
-        b=dUxF+ldl0nkI21hU3wpcL7IHe1lvaPnKMKZnMS4lJsFpCuC8j/X9HG9W5MarJLYlMH
-         PTyLEiZsxdUL+m4v/Vw3clpPADx9PNyDjwk7b6lKFw74zlm/+K3TZCERswClQw5qX3Mw
-         gkZN8XpkOCD8MCZoIkF1ibbRq2R1zrzkD3KJ4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747765726; x=1748370526;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fQbIdXejFm38skr3lFeOE2v9r10+iL7vwnfvDB5rB6A=;
-        b=Sg7YaT7S2g0dhVKbW6c7ICpWkMCwZ3UYQ4A6cfe1R/w7R9cxj2O+QFcD8n9C6uR7ge
-         Za3BWT/hzPzznTn/TXXs9wFlK/NiHInIXGSRg60sPkwrpmsRL8QpZFC9pfyNu8vhLE+1
-         r+PbN0+SR0D8n9K6JvZlgSflCRnRTszcJhcdauP4NM57hoi3ON8lZ+Z8dgOLvZFTjTTP
-         Jb/3pLV6rAvlmsZmQJx0UbWyOB7PY92ls902gLXzsmjcgkxAtmmElR0NfVI9qG4YIjdX
-         Mrxkfr2MKzWaJpmui8VEi4fnfXXDTjL3EnA5opf8kEaXuDHO0vvxe8i9ym9jpfY8BS11
-         5+ow==
-X-Forwarded-Encrypted: i=1; AJvYcCVqNOtC+gkdFwDo4aTzSk5H6W9paWZ280fpC07oT0h2COXq5+rEETBnx3QTlggV9wquDUwKRvV09wvrofI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIXjFkfVV6Ifw85QXKgP74QGg8TiEt18tGfp6cIVl78EvDORGv
-	m0Xbl0oe0BuAE4UBF45qpoQalDz2X6ar5LIWLGKzz3T+36921HKhwjmtqRzyfVdqrCEN4RXDE4a
-	gCsvEGXw=
-X-Gm-Gg: ASbGncsPqG6tnSpSO+ocmGiVnkQxBsVQfSsSv9fRgX2MU/N7FLunj3aEf+ekDlwo2Rc
-	hPbJzrMyIonmyDoT9tKcmxRklcy3LE0YLVJ5OcXBdEr+6/neXg9vas3VO9LkVlTI76xw0Sepj9b
-	bikEK3pHxLZAMUlAqdo1vaCS2iuJKOjFhB05tlpszS232/3pqyDl90yIJNPZ6JYp1sy0crAotSP
-	5h53HnEdNB/qkUnaDdXFSYAjdz9cuGswQHCveQPNaplpF0crsLxtCv/RGWgrzokETXR1jktUNv9
-	b+9ONUGDiYFMRfSqGmTevuqXBpM8GTE6czcuc7JAY8L+AmJltbsdQzEPFbwK/udyDahC9ep47RT
-	t+trK95T9ghGT9ghQOU8wzrZvmw==
-X-Google-Smtp-Source: AGHT+IG1sh9x/aownzCoMBEarI68102aTsmH6pdCK5+Wo7ysRUAQKPX2xBP1B+/wUiLHAp/Xz9WlKg==
-X-Received: by 2002:a05:6402:13cf:b0:601:fcc7:44fa with SMTP id 4fb4d7f45d1cf-601fcc74949mr6091315a12.30.1747765726402;
-        Tue, 20 May 2025 11:28:46 -0700 (PDT)
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com. [209.85.218.47])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6004d501f7asm7523454a12.19.2025.05.20.11.28.45
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 May 2025 11:28:45 -0700 (PDT)
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ace94273f0dso1016239466b.3
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 11:28:45 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVoIe5gUfyTbGf4mgxSvJ3hF2JbFZOPjqiuk8XVR9u/OZeINiYSagcfHO05EbnmB1xNZ2bVOrH2iPDHKcM=@vger.kernel.org
-X-Received: by 2002:a17:907:1c11:b0:ad2:48f4:5969 with SMTP id
- a640c23a62f3a-ad52d53e79emr1673656266b.28.1747765724806; Tue, 20 May 2025
- 11:28:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hddkKu0m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A596FC4CEE9;
+	Tue, 20 May 2025 18:31:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747765914;
+	bh=jwee9jRHKC9i3IB6hd0Exj0Pc2dnDouthrKRY1Giwiw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=hddkKu0mDChvBNXjmgLXbi56ACoBmD+CiBVK+DuLbZbm0ooahVgLKKbbVFt+bm3Gj
+	 ds7VCAhwsNKpDFVHR+pZDqeUeC8pAYjz+A/lZEdzJICnvU9ceiLRIJq96tkIgOp+no
+	 Dq7HcJeYijENpOEsRApyEcxf22JVb1NAYoMye7ClehwZ4godbkhHh1r9/gqiKyJ3hi
+	 w7BZXh8iCo6QLspaEWrkoPgrsJda8ViQrnv8In0hQEYhN/A+FXEnaXEA3N3yYUpeAI
+	 uz28tTNzk1ZrkL9Y1XXeDZaqwuqbPSun21G5eHxCM0i9hu8MVVNKigUMu4GUbz+Xev
+	 FK8LNbMGdjb5w==
+Date: Tue, 20 May 2025 13:31:53 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>,
+	Karolina Stolarek <karolina.stolarek@oracle.com>,
+	Martin Petersen <martin.petersen@oracle.com>,
+	Ben Fuller <ben.fuller@oracle.com>,
+	Drew Walton <drewwalton@microsoft.com>,
+	Anil Agrawal <anilagrawal@meta.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Sargun Dhillon <sargun@meta.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Kai-Heng Feng <kaihengf@nvidia.com>,
+	Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
+	Terry Bowman <terry.bowman@amd.com>,
+	Shiju Jose <shiju.jose@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v6 14/16] PCI/AER: Introduce ratelimit for error logs
+Message-ID: <20250520183153.GA1316070@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250520104138.2734372-9-ardb+git@google.com> <20250520104138.2734372-11-ardb+git@google.com>
- <awmpxjln22i5zmnv3wcwhzvpbbjqmhiw3onmpq66owbtdoujs5@f336cwpvlasn>
- <CAMj1kXE+2P6_y0SnmtmD=J42pe67itnr5jQs6NxjMTvV7HHp0A@mail.gmail.com>
- <20250520143532.GMaCyTNJqH_T2LR8q5@fat_crate.local> <CAMj1kXFxRZWsML_5FZvZjwOPO8cvsAwDqvX1686bqqfqkD_PHg@mail.gmail.com>
- <20250520173825.GOaCy-Eekk661c94ne@fat_crate.local> <CAMj1kXHpFK+=1gdo11Msw9w6gh2f-4gnSCkyA5kaB_x4mafS5A@mail.gmail.com>
- <20250520180101.GPaCzDXW2MlArU71xe@fat_crate.local>
-In-Reply-To: <20250520180101.GPaCzDXW2MlArU71xe@fat_crate.local>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 20 May 2025 11:28:28 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whdFESwxUMvyMGuXzpCA6cm0d5kAc57fGWkWs0DLEi9qw@mail.gmail.com>
-X-Gm-Features: AX0GCFvx55pH6JB6fdIpvtVTiryF5OzpJ0KhFwXnhgyf_9vqtDfdEgXeIu5p8K8
-Message-ID: <CAHk-=whdFESwxUMvyMGuXzpCA6cm0d5kAc57fGWkWs0DLEi9qw@mail.gmail.com>
-Subject: Re: [PATCH v5 2/7] x86/mm: Use a single cache hot per-CPU variable to
- record pgdir_shift
-To: Borislav Petkov <bp@alien8.de>
-Cc: Ard Biesheuvel <ardb@kernel.org>, "Kirill A. Shutemov" <kirill@shutemov.name>, 
-	Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	Ingo Molnar <mingo@kernel.org>, Brian Gerst <brgerst@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e056eb23-e38a-4a0e-83d7-c17c62c0f9f7@linux.intel.com>
 
-On Tue, 20 May 2025 at 11:01, Borislav Petkov <bp@alien8.de> wrote:
->
-> OMG. :-)
->
-> # 32 "./arch/x86/include/asm/pgtable_64_types.h" 1
->         movb %gs:__pgdir_shift(%rip), %al       #, pfo_val__
-> # 0 "" 2
-> # ./arch/x86/include/asm/pgtable.h:1178:        if (!pgtable_l5_enabled())
-> #NO_APP
->         testb   $1, %al #, pfo_val__
+On Mon, May 19, 2025 at 09:59:29PM -0700, Sathyanarayanan Kuppuswamy wrote:
+> On 5/19/25 2:35 PM, Bjorn Helgaas wrote:
+> > From: Jon Pan-Doh <pandoh@google.com>
+> > 
+> > Spammy devices can flood kernel logs with AER errors and slow/stall
+> > execution. Add per-device ratelimits for AER correctable and uncorrectable
+> > errors that use the kernel defaults (10 per 5s).
+> > 
+> > There are two AER logging entry points:
+> > 
+> >    - aer_print_error() is used by DPC and native AER
+> > 
+> >    - pci_print_aer() is used by GHES and CXL
+> > 
+> > The native AER aer_print_error() case includes a loop that may log details
+> > from multiple devices.  This is ratelimited by the union of ratelimits for
+> > these devices, set by add_error_device(), which collects the devices.  If
+> > no such device is found, the Error Source message is ratelimited by the
+> > Root Port or RCEC that received the ERR_* message.
+> > 
+> > The DPC aer_print_error() case is currently not ratelimited.
+> 
+> Can we also not rate limit fatal errors in AER driver?
 
-That's garbage.
-
-Gcc should be able to turn it into just a
-
-        testb $1,%gs:__pgdir_shift(%rip)
-
-What happens if pgtable_l5_enabled() is made to use  __raw_cpu_read()?
-With a compiler that is new enough to support USE_X86_SEG_SUPPORT?
-
-Oh, and it looks like we messed up __raw_cpu_read_stable(), because
-that *always* uses the inline asm, so it doesn't allow the compiler to
-just DTRT and do things like the above.
-
-                Linus
+In other words, only rate limit AER_CORRECTABLE and AER_NONFATAL for
+AER?  Seems plausible to me.
