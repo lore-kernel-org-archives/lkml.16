@@ -1,30 +1,65 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C19ECBA45;
-	Tue, 20 May 2025 13:41:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08B33242D72
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 13:42:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747748499; cv=none; b=ULBQvn0Wic0VgXmgstY0osGnH/7PCBfsmJVDSKDCj3rEtXSudAJaXNEGuJAqf2fbDu4V23vKUjUv1go4kUvKu0pabAKOOF3qbgJSNoB7BN5zsCbdN2mujXQN5Zw/XnS7uAfWmIIsNXQDVKmSSnqoBdMHnaPsZwCQ1snkaYsE/FQ=
+	t=1747748534; cv=none; b=cyDGgbCpyzCSslKfYpOWv2PFFjx+nvfVTSo2kIulBwMTCrGVhxA0a5ZvTyQziLXCxgMb744mJWkPzPNWsGCIp2by9E/EAeT9VYV7L9aoXn5VJ/60BuiI4hO2Td0GRjEdoeh7+h+ZZ+RKVl486Fn+abuTGreXpuUUrBbmLcPpNK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747748499; c=relaxed/simple;
-	bh=Pl97RPJA65yK6wsBR+Mdo3QzFLJwyLoN2KOV3HaMVWQ=;
+	s=arc-20240116; t=1747748534; c=relaxed/simple;
+	bh=KQFFi8NhuJFkJln1jBSQBI3RE1hum+aPMoYzJqhDFFY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=khqCIRD3J1ryb6x0ZZFErmnAi/VGfcfY0ixcq69DFDUgzJe/0w1YEByJLG7DM7+EPDR/3sDN4vD5wX4RIEXli+IDEGpnwg75/V7fdAth8ZziMDG0rzVqbUsQ6P83eaB01+2yANRNXHm58aXOQb/ETJ+oKaEvzzAE9Mv6v1JmXKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4b1wgW1yr4z4f3k5c;
-	Tue, 20 May 2025 21:41:11 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 18A5E1A0359;
-	Tue, 20 May 2025 21:41:31 +0800 (CST)
-Received: from [10.174.179.80] (unknown [10.174.179.80])
-	by APP4 (Coremail) with SMTP id gCh0CgDnSl+IhixoqLbsMw--.53088S3;
-	Tue, 20 May 2025 21:41:29 +0800 (CST)
-Message-ID: <1988ee26-c250-41c3-a5eb-aa3af70828a2@huaweicloud.com>
-Date: Tue, 20 May 2025 21:41:27 +0800
+	 In-Reply-To:Content-Type; b=OMRKO/NaMUc9fTgoPDMAxoLS83Lmn7P9yvHvVrngXwlUWjS0iAZZzN33MqAzliIEShWm9elYc2PRJmtGY8Kk/ilvHE4ouwAcZk4iyXMYm1rGkqFNhzAU0lBRePcvhDnfwtaFHxY/HNWS+i2qNuk/o2nicbrwfHL53b7YF6l0hsw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PEoWWtcn; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PEoWWtcn"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ad1d1f57a01so970831366b.2
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 06:42:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747748531; x=1748353331; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=54KmLxIQehegZFn9M1QJb5N7gg26IMl0qsKo4ufd/T0=;
+        b=PEoWWtcnXdqGdGRwe/per8p6MEWMiIUaXf0QsLcCPQFfrPWJMTdQO1H6VAH+4xCFxb
+         CdiM8tlLcQfq496ww5jOM8bxeEgnfsknntn8wEADGZOy1iYA53QGDm/vKxG1jgpPg39X
+         Z5ybqC74hPKMhsxyX87jNzENbG4frASpySfLUVsJiMCaDyltiHoDWJYtOPS27CE+FPAw
+         BZmzc4YW7rTY6NR2MYh0jVlf/0QogvlYy1RZrz+YOYk7ez7sjhbwUHesDhLSW5rWuOGT
+         R/QXhxzi8bIz2mgacqH3BYm6k9BhlRw3WY2oDwqzwiCDCqXOvarFG/Dz30K8gYq48Svz
+         ws9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747748531; x=1748353331;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=54KmLxIQehegZFn9M1QJb5N7gg26IMl0qsKo4ufd/T0=;
+        b=pAr4TQxnzSWV7OMfkfqoRBkApqUaD+9PomP5OpaZo/fViookGH8iEXuJAtCcYPaqwf
+         hY6Y7sVB8nvWc44fHRg/rHifCPBXBgaxxiUMxlY9XDUerqQVMePJwgaOSMYGHFZlqyfc
+         54D6TNBOUNl70TLaDYo6C3gvgN9Fxs1MQqQxekOIoXhz7Vdhd6IDDcLhea6hpMYxmg3J
+         1Ho6VaBbxK1YSZf8lp7369yY3dk9PpsP1uvTwwSHymSFhnDgqiQDXOdSzk2kEtukigqK
+         YwZgAEEsJaotSlfWm6TAM/j9zTSeICx1GfvAsckIonpRY0KmSqI0lwisfzi982P7rul9
+         wNkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWF8LB106CF7EPDIrQHAbEJnKVS040DTzgHpp/2PzxI4mMu1q9hyYRLRVIt++fR0S/6Px3Ue1S09EHHFCQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGnz+y51O3psaqTJ4JIG582dcAWEEGvRZTs6J+boEJP+yiHQ64
+	E8jI4xxNC5t+nDMs4rGYKaDAQkcmbszdIYjNFFQkXzA40vndih4ASLX5
+X-Gm-Gg: ASbGnctwrMa0WJEek7LfcA4Dyt6AqtNy8K+SNHmQrhCqya/VoDKaKEFFx8gFaXbpxwT
+	sVtzECD1uGph/7TZds5Hj5yUEMP/4X2331NKeetPX7yUqT1Jz+4n57REmvhfll7uxhHGd3Svohc
+	8ddBXwZP4mnUf+wn7bNKFb6WV+t1aB6VidS9XGWXf0WX36P/ZWQ5CZaGzXLnJYDcLdk22QqG+g7
+	rWQ52P0FylG+hsh0YfJsY9FTme0VD3mc7wRVLx6q3rOcbUW2rTuy5CxycNy5ucmwidEIJIX5/8i
+	DtAT8NgLAvKG831vz1RexCxsW9We604leEGtRyKdEE3GSPGrfGDC8lXGADS+7fpX04HoLHbYpIf
+	C9SXepXiQMQZGh/4zr1VgLhv0iv0uncXD26c=
+X-Google-Smtp-Source: AGHT+IEo9WgQ4J+MDIfx1a+Red90PxVBvCLFP+FVI8c5BkozlwlAKL1rsaRIwhktXihym+t9QLu1dQ==
+X-Received: by 2002:a17:907:1c91:b0:ad5:5857:ece2 with SMTP id a640c23a62f3a-ad55857f064mr1014595066b.37.1747748530861;
+        Tue, 20 May 2025 06:42:10 -0700 (PDT)
+Received: from ?IPV6:2a03:83e0:1126:4:1c0a:f3ac:4087:51c8? ([2620:10d:c092:500::7:66a9])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d49656bsm733490866b.136.2025.05.20.06.42.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 May 2025 06:42:10 -0700 (PDT)
+Message-ID: <cf17cfde-cd1a-4217-a09a-1aa86347f830@gmail.com>
+Date: Tue, 20 May 2025 14:42:09 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,153 +67,94 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/8] ext4: enable large folio for regular files
-To: Ojaswin Mujoo <ojaswin@linux.ibm.com>
-Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, willy@infradead.org, tytso@mit.edu,
- adilger.kernel@dilger.ca, jack@suse.cz, yi.zhang@huawei.com,
- libaokun1@huawei.com, yukuai3@huawei.com, yangerkun@huawei.com
-References: <20250512063319.3539411-1-yi.zhang@huaweicloud.com>
- <aCxbeamCS5r2ivy5@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
+Subject: Re: [PATCH 2/2] mm: slub: only warn once when allocating slab obj
+ extensions fails
+To: Harry Yoo <harry.yoo@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, surenb@google.com,
+ hannes@cmpxchg.org, shakeel.butt@linux.dev, vlad.wing@gmail.com,
+ linux-mm@kvack.org, kent.overstreet@linux.dev, linux-kernel@vger.kernel.org,
+ kernel-team@meta.com, vbabka@suse.cz, cl@gentwo.org, rientjes@google.com,
+ roman.gushchin@linux.dev
+References: <20250520122547.1317050-1-usamaarif642@gmail.com>
+ <20250520122547.1317050-2-usamaarif642@gmail.com> <aCyEyxHEXQ7DU9I1@harry>
 Content-Language: en-US
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-In-Reply-To: <aCxbeamCS5r2ivy5@li-dc0c254c-257c-11b2-a85c-98b6c1322444.ibm.com>
+From: Usama Arif <usamaarif642@gmail.com>
+In-Reply-To: <aCyEyxHEXQ7DU9I1@harry>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:gCh0CgDnSl+IhixoqLbsMw--.53088S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxtr4fKFWDJF4fAw4rtr13Jwb_yoW7WrW8p3
-	4a9F43Kr4Sg34UC397Ar1YqrW0ya1UJr4rAa4xW340vryUAr17uw1Igr4F93srAryxCr1S
-	yrWUAryxuF1YyrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
-	ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1
-	7KsUUUUUU==
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
-
-On 2025/5/20 18:37, Ojaswin Mujoo wrote:
-> On Mon, May 12, 2025 at 02:33:11PM +0800, Zhang Yi wrote:
->> From: Zhang Yi <yi.zhang@huawei.com>
->>
->> Changes since v1:
->>  - Rebase codes on 6.15-rc6.
->>  - Drop the modifications in block_read_full_folio() which has supported
->>    by commit b72e591f74de ("fs/buffer: remove batching from async
->>    read").
->>  - Fine-tuning patch 6 without modifying the logic.
->>
->> v1: https://lore.kernel.org/linux-ext4/20241125114419.903270-1-yi.zhang@huaweicloud.com/
->>
->> Original Description:
->>
->> Since almost all of the code paths in ext4 have already been converted
->> to use folios, there isn't much additional work required to support
->> large folios. This series completes the remaining work and enables large
->> folios for regular files on ext4, with the exception of fsverity,
->> fscrypt, and data=journal mode.
->>
->> Unlike my other series[1], which enables large folios by converting the
->> buffered I/O path from the classic buffer_head to iomap, this solution
->> is based on the original buffer_head, it primarily modifies the block
->> offset and length calculations within a single folio in the buffer
->> write, buffer read, zero range, writeback, and move extents paths to
->> support large folios, doesn't do further code refactoring and
->> optimization.
->>
->> This series have passed kvm-xfstests in auto mode several times, every
->> thing looks fine, any comments are welcome.
->>
->> About performance:
->>
->> I used the same test script from my iomap series (need to drop the mount
->> opts parameter MOUNT_OPT) [2], run fio tests on the same machine with
->> Intel Xeon Gold 6240 CPU with 400GB system ram, 200GB ramdisk and 4TB
->> nvme ssd disk. Both compared with the base and the IOMAP + large folio
->> changes.
->>
->>  == buffer read ==
->>
->>                 base          iomap+large folio base+large folio
->>  type     bs    IOPS  BW(M/s) IOPS  BW(M/s)     IOPS   BW(M/s)
->>  ----------------------------------------------------------------
->>  hole     4K  | 576k  2253  | 762k  2975(+32%) | 747k  2918(+29%)
->>  hole     64K | 48.7k 3043  | 77.8k 4860(+60%) | 76.3k 4767(+57%)
->>  hole     1M  | 2960  2960  | 4942  4942(+67%) | 4737  4738(+60%)
->>  ramdisk  4K  | 443k  1732  | 530k  2069(+19%) | 494k  1930(+11%)
->>  ramdisk  64K | 34.5k 2156  | 45.6k 2850(+32%) | 41.3k 2584(+20%)
->>  ramdisk  1M  | 2093  2093  | 2841  2841(+36%) | 2585  2586(+24%)
->>  nvme     4K  | 339k  1323  | 364k  1425(+8%)  | 344k  1341(+1%)
->>  nvme     64K | 23.6k 1471  | 25.2k 1574(+7%)  | 25.4k 1586(+8%)
->>  nvme     1M  | 2012  2012  | 2153  2153(+7%)  | 2122  2122(+5%)
->>
->>
->>  == buffer write ==
->>
->>  O: Overwrite; S: Sync; W: Writeback
->>
->>                      base         iomap+large folio    base+large folio
->>  type    O S W bs    IOPS  BW     IOPS  BW(M/s)        IOPS  BW(M/s)
->>  ----------------------------------------------------------------------
->>  cache   N N N 4K  | 417k  1631 | 440k  1719 (+5%)   | 423k  1655 (+2%)
->>  cache   N N N 64K | 33.4k 2088 | 81.5k 5092 (+144%) | 59.1k 3690 (+77%)
->>  cache   N N N 1M  | 2143  2143 | 5716  5716 (+167%) | 3901  3901 (+82%)
->>  cache   Y N N 4K  | 449k  1755 | 469k  1834 (+5%)   | 452k  1767 (+1%)
->>  cache   Y N N 64K | 36.6k 2290 | 82.3k 5142 (+125%) | 67.2k 4200 (+83%)
->>  cache   Y N N 1M  | 2352  2352 | 5577  5577 (+137%  | 4275  4276 (+82%)
->>  ramdisk N N Y 4K  | 365k  1424 | 354k  1384 (-3%)   | 372k  1449 (+2%)
->>  ramdisk N N Y 64K | 31.2k 1950 | 74.2k 4640 (+138%) | 56.4k 3528 (+81%)
->>  ramdisk N N Y 1M  | 1968  1968 | 5201  5201 (+164%) | 3814  3814 (+94%)
->>  ramdisk N Y N 4K  | 9984  39   | 12.9k 51   (+29%)  | 9871  39   (-1%)
->>  ramdisk N Y N 64K | 5936  371  | 8960  560  (+51%)  | 6320  395  (+6%)
->>  ramdisk N Y N 1M  | 1050  1050 | 1835  1835 (+75%)  | 1656  1657 (+58%)
->>  ramdisk Y N Y 4K  | 411k  1609 | 443k  1731 (+8%)   | 441k  1723 (+7%)
->>  ramdisk Y N Y 64K | 34.1k 2134 | 77.5k 4844 (+127%) | 66.4k 4151 (+95%)
->>  ramdisk Y N Y 1M  | 2248  2248 | 5372  5372 (+139%) | 4209  4210 (+87%)
->>  ramdisk Y Y N 4K  | 182k  711  | 186k  730  (+3%)   | 182k  711  (0%)
->>  ramdisk Y Y N 64K | 18.7k 1170 | 34.7k 2171 (+86%)  | 31.5k 1969 (+68%)
->>  ramdisk Y Y N 1M  | 1229  1229 | 2269  2269 (+85%)  | 1943  1944 (+58%)
->>  nvme    N N Y 4K  | 373k  1458 | 387k  1512 (+4%)   | 399k  1559 (+7%)
->>  nvme    N N Y 64K | 29.2k 1827 | 70.9k 4431 (+143%) | 54.3k 3390 (+86%)
->>  nvme    N N Y 1M  | 1835  1835 | 4919  4919 (+168%) | 3658  3658 (+99%)
->>  nvme    N Y N 4K  | 11.7k 46   | 11.7k 46   (0%)    | 11.5k 45   (-1%)
->>  nvme    N Y N 64K | 6453  403  | 8661  541  (+34%)  | 7520  470  (+17%)
->>  nvme    N Y N 1M  | 649   649  | 1351  1351 (+108%) | 885   886  (+37%)
->>  nvme    Y N Y 4K  | 372k  1456 | 433k  1693 (+16%)  | 419k  1637 (+12%)
->>  nvme    Y N Y 64K | 33.0k 2064 | 74.7k 4669 (+126%) | 64.1k 4010 (+94%)
->>  nvme    Y N Y 1M  | 2131  2131 | 5273  5273 (+147%) | 4259  4260 (+100%)
->>  nvme    Y Y N 4K  | 56.7k 222  | 56.4k 220  (-1%)   | 59.4k 232  (+5%)
->>  nvme    Y Y N 64K | 13.4k 840  | 19.4k 1214 (+45%)  | 18.5k 1156 (+38%)
->>  nvme    Y Y N 1M  | 714   714  | 1504  1504 (+111%) | 1319  1320 (+85%)
->>
->> [1] https://lore.kernel.org/linux-ext4/20241022111059.2566137-1-yi.zhang@huaweicloud.com/
->> [2] https://lore.kernel.org/linux-ext4/3c01efe6-007a-4422-ad79-0bad3af281b1@huaweicloud.com/
->>
->> Thanks,
->> Yi.
-> 
-> Hi Yi,
-> 
-> I don't see any obvious functional regressions on PowerPC with 64k
-> pagesize. I know Ted has picked this up, but feel free to add:
-> 
-> Tested-by: Ojaswin Mujoo <ojaswin@linux.ibm.com> # on powerpc ps > bs
-> 
-> I'll give my RVBs individually, since I'm still not sure about some of
-> the patches.
-> 
-
-Thank you very much for the test and review.
-
-Best Regards,
-Yi.
 
 
+
+On 20/05/2025 14:34, Harry Yoo wrote:
+> On Tue, May 20, 2025 at 01:25:47PM +0100, Usama Arif wrote:
+>> In memory bound systems, a large number of warnings for failing this
+>> allocation repeatedly may mask any real issues in the system
+>> during memory pressure being reported in dmesg. Change this to
+>> WARN_ONCE.
+>>
+>> Signed-off-by: Usama Arif <usamaarif642@gmail.com>
+>> Reported-by: Vlad Poenaru <vlad.wing@gmail.com>
+>> Closes: https://lore.kernel.org/all/17fab2d6-5a74-4573-bcc3-b75951508f0a@gmail.com/
+>> ---
+> 
+> Hi,
+> 
+> Please Cc SLAB ALLOCATOR folks in MAINTAINERS on patches that touch
+> slab code ;)
+> 
+
+Thanks for adding them to CC! I was just thinking of this as a memory
+allocation profiling issue and added the maintainers for it,
+but should have added slab maintainers as well.
+
+
+>>  mm/slub.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/mm/slub.c b/mm/slub.c
+>> index bf43c403ead2..97cb3d9e8d00 100644
+>> --- a/mm/slub.c
+>> +++ b/mm/slub.c
+>> @@ -2102,7 +2102,7 @@ prepare_slab_obj_exts_hook(struct kmem_cache *s, gfp_t flags, void *p)
+>>  
+>>  	slab = virt_to_slab(p);
+>>  	if (!slab_obj_exts(slab) &&
+>> -	    WARN(alloc_slab_obj_exts(slab, s, flags, false),
+>> +	    WARN_ONCE(alloc_slab_obj_exts(slab, s, flags, false),
+>>  		 "%s, %s: Failed to create slab extension vector!\n",
+>>  		 __func__, s->name))
+> 
+> I think this should be pr_warn_once()?
+> I'm not sure why this was WARN() in the first place.
+> 
+
+Isn't WARN_ONCE the same as pr_warn_once but with needing the condition
+of the first arg to be true? We only want to warn if alloc_slab_obj_exts
+returns non-zero. So WARN_ONCE should be ok?
+
+> The coding style guide explicitly states that:
+>> Do not WARN lightly
+>> ===================
+>>
+>> WARN*() is intended for unexpected, this-should-never-happen situations.
+>> WARN*() macros are not to be used for anything that is expected to happen
+>> during normal operation. These are not pre- or post-condition asserts,
+>> for example. Again: WARN*() must not be used for a condition that is
+>> expected to trigger easily, for example, by user space actions.
+>> pr_warn_once() is a possible alternative, if you need to notify the user
+>> of a problem.
+> 
+> And failing to allocate the extension vector can happen during normal
+> operations.
+> 
+> panic_on_warn users will be unhappy if they notice their kernel panicked
+> just because their kernel failed to allocate slab extension vectors, which is
+> a totally normal situtation.
+> 
+>>  		return NULL;
+>> -- 
+>> 2.47.1
+>>
+>>
+> 
 
