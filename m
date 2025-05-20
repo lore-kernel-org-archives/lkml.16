@@ -1,86 +1,77 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 331FD17CA17;
-	Tue, 20 May 2025 15:30:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6004F10785;
+	Tue, 20 May 2025 15:30:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747755045; cv=none; b=IxFTheQ/SBwkXwcEiJ35QJPl3FZyY/WyPhOftoe7VTxqfsygbxOjFrhNxT21YjqR4MGj//74bx4N6HG/9zFOAwK21/8y/K4WTS/KjCEERfeZBlkI6zt81tX76faBWfzOMqfNXjxDMywcjKnRg65EjqTaDpA1XgwAjX+OBRecOx0=
+	t=1747755059; cv=none; b=PJLjKXv2584IVD1/l/OH20I43Nb3mDkpgKrjvL3ta5Fqvf7FNwWNbd/rywgiK3ggqC1GhwTuKx4k+6/qmfhvr7sok1C+joB8VwPwUd27AbVHLV23/BPlGy1NoSspXnZSz8FkhrAz074e0XptFO2EBSA9oIijfhsL21tlYXLPTuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747755045; c=relaxed/simple;
-	bh=/M0Tgs9QxYpIk8o+T30VylDWJ5zWp/G8POnHSWgeHf0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Kb8tZo76CFg9iM/yobEWdKM/6yQ1xxxYQO9lbAxGQog9OxTbq9BbJA1khMFMnCyiYD9XWf71JUJm4+9sw6RN2a9MCcyPVeunWw+PaYH2aH5cHFghZcuJnuKjw7EevLyrNzxfg9QOOyAvXVwDF+WLKA2YfTGwuPoeyUB1KNCXd0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-742af84818cso3368462b3a.1;
-        Tue, 20 May 2025 08:30:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747755043; x=1748359843;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wDY53oX8mGxS1FXJLkELY04Q+1YWHFFn/d1fBAtNG2o=;
-        b=ZakIT3Uh/nvWLBCVos26gSk4jPTym7qyPO9IR7NtnHBuwY1ccoqCtCmq2zGd0Itki0
-         LHGbaSKiuB1dmh56t+1V9meEAq2a8bJ3L+2Aob2m/1/ix3sE4laXrAK7at1S//qTQe+j
-         azX1bjWnYziFboyOZIY/hMkASMZowuTpSa66hFJUxo6lRlu3AYyS4NqvmNpHvgEAtvYO
-         1hrNGpMG+ftKvl655zwBKwFp1/ozz9cr8JT3Y3Xm4BwtYPXvmIQZhBjvU+vpYi+DGVu+
-         ANDw7nSeTrdlY4PmhIsyRSgwfMUN7mMCdPtikL/OnMTGUKIGHXOlHfA3MsxiGhK2pHR7
-         N6CA==
-X-Forwarded-Encrypted: i=1; AJvYcCUCk29LFGQolMrSxyoBH2hlqpuekrWoW8Kefh65Ss/n0PMCevwqXeXpFml1BMGc8VOk54bZRfALo1iE@vger.kernel.org, AJvYcCXLW654xgaRIeJTloKu10ccMoy6YHR1WpjMipGI3qwl2OuCudI27J7bR7dMCAeKX7VrkN5FOf+td5BCcJE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxv55YDIko0tm7IWrrPedpBmlpNYou35HQt47Jp7Sq8imsV1qqb
-	S/nvZ2CRJdndT0/LjI6ub868Bj06Ef3e2GbiOYvXxEXXTrcc0PaZYqLb
-X-Gm-Gg: ASbGncv3yOgvhf8uyWCwIJuTwYbX5ekBKUlV8EPDvH5r7NT3E970flupzBfDIk/d4/q
-	tJfXN54dE/tbdKWbr3CbN/LNimqC9+vjAixRgF3dBF0iAbd5A0Ps6YHEc8ozwMnfJBDB6XaqmEf
-	uajU/fG6EAdh/u181C9lWg07xh5J67DDQxj7jihQYXkMp2XULMNXxtPB4PmrAZsgyjHYs94Bfzl
-	54ZLvuQOmEtTZDebC7/qhk36HM4PQc3zGO9pUiOXfwX9c0vI7l3gADqS7mDLI4IRNQa5ii4OLm3
-	oONlbmQBCiUwAlutQf9ubHrTl4aZIF/sVcmneSHy8i3Tu7c1vCT+uX9tRLm9Q41Q2beIQjxkDmc
-	HptCcHca8vw==
-X-Google-Smtp-Source: AGHT+IHlDh9zNNHwGu5UolfhpnNtJWPRM7nlX5pxDjlVvzkOzQaXX8J5nK8S0wfEjuyJxNw5gUOYBQ==
-X-Received: by 2002:a05:6a20:430f:b0:216:1fc7:5d51 with SMTP id adf61e73a8af0-216219fffa7mr28791725637.37.1747755043344;
-        Tue, 20 May 2025 08:30:43 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-b26eaf6dc3csm8086989a12.24.2025.05.20.08.30.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 08:30:42 -0700 (PDT)
-Date: Wed, 21 May 2025 00:30:41 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/1] PCI: Unnecessary linesplit in __pci_setup_bridge()
-Message-ID: <20250520153041.GB2622460@rocinante>
-References: <20250404124547.51185-1-ilpo.jarvinen@linux.intel.com>
- <20250516132016.GA2390647@rocinante>
- <9dd35654-e6eb-a531-457c-93ddc5ff371d@linux.intel.com>
+	s=arc-20240116; t=1747755059; c=relaxed/simple;
+	bh=8QuMfgUWEBlpjoRNSEka1bX0eoS7zBDoQTiDZd+pO5I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mVVhUqS2ogwfAfZ7P8aKGU37dImpIWAGl/CgdqzW4SGgArCTCD2XKOyGt7hChkm6OWanK9HapHUdw7Y+LixxvaEpwENv0dHuRKKEI5mxvwCBJcJH/N/b8fe4biI1N0x30Qe3DdIc/CaOhbIYoLvsZOisQioCaHdYZbh19MuHz8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eoaskE5a; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eoaskE5a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9711BC4CEE9;
+	Tue, 20 May 2025 15:30:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747755058;
+	bh=8QuMfgUWEBlpjoRNSEka1bX0eoS7zBDoQTiDZd+pO5I=;
+	h=From:To:Cc:Subject:Date:From;
+	b=eoaskE5aP7FB1HEzHw26H/vk/euYgqd3B04iKz2AAjaWbhqlmkYjoOZiB/on/Bkwa
+	 p0f66U76zmW+uDYEquES+foXOzsfrWe+EL1fxqHZXTNM4hva+FMonRlht7HjZp8ahX
+	 KRR4/ForJQdWIMREIwSNBjCLU1ZTh+50JW9K4cIQyF+ru1xzJAxeBROCBvzR7NxmoJ
+	 HPUx6J2P7uotjDu0jXEkJL5NoddG7s4uHZiN65bPSZdP+4Ed3cfC4GARkdemToFkZL
+	 lDQk6tGS5Dd4n8iZ0RCoXttBHcqpljWGXIjz32r6g43aOjP6SySsyfFXH4ydwq8FCe
+	 0pEG+ZG+Qcknw==
+From: Eric Biggers <ebiggers@kernel.org>
+To: x86@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-crypto@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	Borislav Petkov <bp@alien8.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ayush Jain <Ayush.Jain3@amd.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Ard Biesheuvel <ardb@kernel.org>
+Subject: [PATCH v3 0/2] x86/fpu: Fix irq_fpu_usable() to return false during CPU onlining
+Date: Tue, 20 May 2025 08:29:36 -0700
+Message-ID: <20250520152938.21881-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9dd35654-e6eb-a531-457c-93ddc5ff371d@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 
-Hello,
+This series fixes a crash in the SHA-256 code during hotplug CPU
+onlining.
 
-[...]
-> You can check my track record on discovering e.g. real concurrency issues
-> recently so I hope you can give a bit slack on a few trivial patches here
-> and there ;-).
+Changed in v3:
+  - Split into two patches, as requested by Ingo.
+Changed in v2:
+  - Add WARN_ON_FPU when kernel_fpu_allowed has unexpected value in
+    fpu__init_cpu() or cpu_disable_common().  Since WARN_ON_FPU is
+    defined in fpu/internal.h which should not be included by smpboot.c,
+    made cpu_disable_common() call a new function fpu__disable_cpu().
+  - Added Tested-by.
 
-We love your work!  The unparalleled attention to details, especially. :)
+Eric Biggers (2):
+  x86/fpu: Replace in_kernel_fpu with kernel_fpu_allowed
+  x86/fpu: Fix irq_fpu_usable() to return false during CPU onlining
 
-On the topic of trivial patches...  There has been a debate within the
-community at large about trivial patches, per:
+ arch/x86/include/asm/fpu/api.h |  1 +
+ arch/x86/kernel/fpu/core.c     | 34 +++++++++++++++++++++-------------
+ arch/x86/kernel/fpu/init.c     | 13 +++++++++++++
+ arch/x86/kernel/fpu/internal.h |  2 ++
+ arch/x86/kernel/smpboot.c      |  6 ++++++
+ 5 files changed, 43 insertions(+), 13 deletions(-)
 
-  https://lore.kernel.org/all/YIGXzB0CyRtGfqfE@zeniv-ca.linux.org.uk/t/
 
-Lot of opinions there...  Ultimately, most of the time things are up to
-the maintainers, as per usual.
+base-commit: 3ee84e3dd88e39b55b534e17a7b9a181f1d46809
+-- 
+2.49.0
 
-Thank you again for all your work!  Much appreciated!
-
-	Krzysztof
