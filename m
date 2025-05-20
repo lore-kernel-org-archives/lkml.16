@@ -1,238 +1,151 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A89F251780;
-	Tue, 20 May 2025 15:05:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58D452505AC;
+	Tue, 20 May 2025 15:06:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747753560; cv=none; b=sBZHZS3bhthwnA+nd2L/bgsQOUokzx+8xN0W9jFjvf5h0WxEZHJkrzvW79YXHjJxQ6KtzIDAc5CnyvGNA/UoH85R3R0rO9wE0pnhcrvlWwQnh6pZarS8RW5+kM3G8NUAiqxQRm5MRWB+piWy5FKwVNFoQhcQA/BXWkaDZc2CPiI=
+	t=1747753616; cv=none; b=GKfJIhHIf7m0va3zZVmsGgPuiw1fYG3V1hRFjYafus99BeyWhCRBIxGhSi44wL1QUMsrYDYkyno4SUOb3ahoOyvjWxMAKYsirhhB7hW5Td6Aw1+d23gYjYoyyy51oVlD7W1t/ChdYUVuJU7c1OidRbX3gt/7WJynaCwjFWadpfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747753560; c=relaxed/simple;
-	bh=PYMltNyB/s1ZLI9HtiPI7l83cEbGBKz9U4TzsmiVfZc=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=GpnuMFIZPLfY5FQ30B1FD4hpwuElkmzr5KEsV6/5v2T7CreU119qb0JnEtKWe3X28hFxlsAUt/jr3Pj/VK7hfTN1zr8HYC48lI+ADDvszKygQd17UojSAd5zxqBbGd6RAcug4kwJ15y9N+RnLI/4YNIcg/W7mt3fgSZbFNmhVv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZBSs0r3x; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747753616; c=relaxed/simple;
+	bh=5nGJFy6nrUZcxCfljXCPiovm3928lZBYOBaJ0nYBuCs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eJ4iDNHN0mcy1YYgyjh3hVQlm74jAJwE2KFEfrQ0+f5op9sM+4d+Spqs2NWFBs2Qx54LDDW27Y7pnCdBot1qEqbE3z+8N89ADc5OfIfpJkjGo9XrqF0tLdFMMYjRB+BIKV+Z5k830jHJA03+4vRGGYXEXlDpPJrHtJ1s3Ap9l7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hB+bdiw7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZBSs0r3x"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747753558; x=1779289558;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=PYMltNyB/s1ZLI9HtiPI7l83cEbGBKz9U4TzsmiVfZc=;
-  b=ZBSs0r3xkkt4cIyzj0I6+J0PwLnTdhH0azdKgy3GPWunA4BlME6XNSjT
-   vCvIxNDj169nhf5ECC64UC/lncNk3vAXcjwWe+mtD7X7lHtkqs75qNK8k
-   N1EbuiP55c2GU7/yhqVcL4OgVkx0XlN2zWxQo5wyQApYo/lihcB+g7c7N
-   ill8KRilM9KU3IpsRTny75XjPnNr+V1higIhZjESdKU+O63Mvl+ppKmcy
-   DTlMFamunF4f8nAu6qCtc4JAtAYvDPVfg6RZfvNOFd9l+C+jLbMtQPEDk
-   htng3zXvWaEDetuD4oQymGk6Uy6cxoF/mjI+iO3VFMwy2GQuZ6F2S0FOl
-   w==;
-X-CSE-ConnectionGUID: efqYR3IeRuS+clHEQ12A5Q==
-X-CSE-MsgGUID: k2HXHWK4QZKsRb+6hoKVYQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="49565986"
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="49565986"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 08:05:58 -0700
-X-CSE-ConnectionGUID: v+zaXnDrReWzbCESIFs49A==
-X-CSE-MsgGUID: dMzI1H8HShm8S17zQVkk2Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="143713635"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.235])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 08:05:54 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 20 May 2025 18:05:50 +0300 (EEST)
-To: "David E. Box" <david.e.box@linux.intel.com>
-cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
-    srinivas.pandruvada@linux.intel.com, 
-    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, tony.luck@intel.com, 
-    xi.pardee@linux.intel.com, Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH 14/15] platform/x86/intel/pmt/telemetry: Add API to
- retrieve telemetry regions by feature
-In-Reply-To: <20250430212106.369208-15-david.e.box@linux.intel.com>
-Message-ID: <8433cbaf-253b-cc7f-77d4-fa48142aa603@linux.intel.com>
-References: <20250430212106.369208-1-david.e.box@linux.intel.com> <20250430212106.369208-15-david.e.box@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hB+bdiw7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAF81C4CEE9;
+	Tue, 20 May 2025 15:06:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747753615;
+	bh=5nGJFy6nrUZcxCfljXCPiovm3928lZBYOBaJ0nYBuCs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hB+bdiw7rCP7qDw3zQtwy4j4c+iRwFTXhAwiS0GR6EI0vt5TSEa/Ue9acRSsVDYHK
+	 1QUyc4M92A7qAh3lKu9Wdq0ZngI9Rja7ZwHjKoDBpEZ+7AvyrCR2OZ1S1Oi86ITH/3
+	 9iFBrQVJZcp5u1iAjw8HWXqgEdZxDorIpKZbxxZ5gOa3Yb4Ukn6oh71w+ii928ARhK
+	 DBVK1fXfE6kvvmFgf4fxORsrMyCFETmSDWLp8g8TZOHRvcsR5p7t51MruLrBmFuMZL
+	 OjBq1/S6DgxFwUGYU2jPhqJiA6EF+fp1num9ECQzvnkd+uIsNuowXLsuvbPgrQ6ljN
+	 28GQznW2WhzaQ==
+Date: Tue, 20 May 2025 18:06:49 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: David Hildenbrand <david@redhat.com>
+Cc: Oscar Salvador <osalvador@suse.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Pratyush Yadav <ptyadav@amazon.de>, linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH] mm/cma: make detection of highmem_start more robust
+Message-ID: <aCyaiXO7nmjC3wWj@kernel.org>
+References: <20250519171805.1288393-1-rppt@kernel.org>
+ <aCw9mpmhx9SrL8Oy@localhost.localdomain>
+ <d2751191-fc32-418a-8b62-dedab41d0615@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d2751191-fc32-418a-8b62-dedab41d0615@redhat.com>
 
-On Wed, 30 Apr 2025, David E. Box wrote:
+On Tue, May 20, 2025 at 11:14:28AM +0200, David Hildenbrand wrote:
+> On 20.05.25 10:30, Oscar Salvador wrote:
+> > On Mon, May 19, 2025 at 08:18:05PM +0300, Mike Rapoport wrote:
+> > > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+> > > 
+> > > Pratyush Yadav reports the following crash:
+> > > 
+> > >      ------------[ cut here ]------------
+> > >      kernel BUG at arch/x86/mm/physaddr.c:23!
+> > >      ception 0x06 IP 10:ffffffff812ebbf8 error 0 cr2 0xffff88903ffff000
+> > >      CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.15.0-rc6+ #231 PREEMPT(undef)
+> > >      Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Arch Linux 1.16.3-1-1 04/01/2014
+> > >      RIP: 0010:__phys_addr+0x58/0x60
+> > >      Code: 01 48 89 c2 48 d3 ea 48 85 d2 75 05 e9 91 52 cf 00 0f 0b 48 3d ff ff ff 1f 77 0f 48 8b 05 20 54 55 01 48 01 d0 e9 78 52 cf 00 <0f> 0b 90 0f 1f 44 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90
+> > >      RSP: 0000:ffffffff82803dd8 EFLAGS: 00010006 ORIG_RAX: 0000000000000000
+> > >      RAX: 000000007fffffff RBX: 00000000ffffffff RCX: 0000000000000000
+> > >      RDX: 000000007fffffff RSI: 0000000280000000 RDI: ffffffffffffffff
+> > >      RBP: ffffffff82803e68 R08: 0000000000000000 R09: 0000000000000000
+> > >      R10: ffffffff83153180 R11: ffffffff82803e48 R12: ffffffff83c9aed0
+> > >      R13: 0000000000000000 R14: 0000001040000000 R15: 0000000000000000
+> > >      FS:  0000000000000000(0000) GS:0000000000000000(0000) knlGS:0000000000000000
+> > >      CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > >      CR2: ffff88903ffff000 CR3: 0000000002838000 CR4: 00000000000000b0
+> > >      Call Trace:
+> > >       <TASK>
+> > >       ? __cma_declare_contiguous_nid+0x6e/0x340
+> > >       ? cma_declare_contiguous_nid+0x33/0x70
+> > >       ? dma_contiguous_reserve_area+0x2f/0x70
+> > >       ? setup_arch+0x6f1/0x870
+> > >       ? start_kernel+0x52/0x4b0
+> > >       ? x86_64_start_reservations+0x29/0x30
+> > >       ? x86_64_start_kernel+0x7c/0x80
+> > >       ? common_startup_64+0x13e/0x141
+> > > 
+> > >    The reason is that __cma_declare_contiguous_nid() does:
+> > > 
+> > >            highmem_start = __pa(high_memory - 1) + 1;
+> > > 
+> > >    If dma_contiguous_reserve_area() (or any other CMA declaration) is
+> > >    called before free_area_init(), high_memory is uninitialized. Without
+> > >    CONFIG_DEBUG_VIRTUAL, it will likely work but use the wrong value for
+> > >    highmem_start.
+> > > 
+> > > The issue occurs because commit e120d1bc12da ("arch, mm: set high_memory in
+> > > free_area_init()") moved initialization of high_memory after the call to
+> > > dma_contiguous_reserve() -> __cma_declare_contiguous_nid() on several
+> > > architectures.
+> > > 
+> > > In the case CONFIG_HIGHMEM is enabled, some architectures that actually
+> > > support HIGHMEM (arm, powerpc and x86) have initialization of high_memory
+> > > before a possible call to __cma_declare_contiguous_nid() and some
+> > > initialized high_memory late anyway (arc, csky, microblase, mips, sparc,
+> > > xtensa) even before the commit e120d1bc12da so they are fine with using
+> > > uninitialized value of high_memory.
+> > > 
+> > > And in the case CONFIG_HIGHMEM is disabled high_memory essentially becomes
+> > > the first address after memory end, so instead of relying on high_memory to
+> > > calculate highmem_start use memblock_end_of_DRAM() and eliminate the
+> > > dependency of CMA area creation on high_memory in majority of
+> > > configurations.
+> > > 
+> > > Reported-by: Pratyush Yadav <ptyadav@amazon.de>
+> > > Tested-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+> > > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> > 
+> > Reviewed-by: Oscar Salvador <osalvador@suse.de>
+> > 
+> > I will note though that it is a bit akward to have highmem involved here
+> > when we might not have CONFIG_HIGHMEM enabled.
+> > I get that for !CONFIG_HIGHMEM it is a no-op situation, but still I
+> > wonder whether we could abstract that from this function.
 
-> Introduce a new API, intel_pmt_get_regions_by_feature(), that gathers
-> telemetry regions based on a provided capability flag. This API enables
-> retrieval of regions with various capabilities (for example, RMID-based
-> telemetry) and provides a unified interface for accessing them. Resource
-> management is handled via reference counting using
-> intel_pmt_put_feature_group().
+Highmem is there for some time now (see f7426b983a6a ("mm: cma: adjust
+address limit to avoid hitting low/high memory boundary"))
+We might try abstracting it from that function but I'd prefer not doing it
+that late in the release cycle.
+ 
+> Same thought here.
 > 
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> ---
->  drivers/platform/x86/intel/pmt/telemetry.c | 89 +++++++++++++++++++++-
->  include/linux/intel_vsec.h                 | 15 ++++
->  2 files changed, 103 insertions(+), 1 deletion(-)
+> Can't we do some IS_ENABLED(CONFIG_HIGHMEM) magic or similar to not even use
+> that variable without CONFIG_HIGHMEM?
+
+You mean highmem_start or high_memory?
+
+high_memory is one of the ways to say "end of directly/linearly addressable
+memory" and some other places in the kernel (outside arch) still use it
+regardless of CONFIG_HIGHMEM.
+
+And I don't think we have another way to say where directly addressable
+memory ends, and this IMHO is something that should replace high_memory.
+ 
+> -- 
+> Cheers,
 > 
-> diff --git a/drivers/platform/x86/intel/pmt/telemetry.c b/drivers/platform/x86/intel/pmt/telemetry.c
-> index 58d06749e417..d071dca4a689 100644
-> --- a/drivers/platform/x86/intel/pmt/telemetry.c
-> +++ b/drivers/platform/x86/intel/pmt/telemetry.c
-> @@ -9,16 +9,20 @@
->   */
->  
->  #include <linux/auxiliary_bus.h>
-> +#include <linux/bitops.h>
-> +#include <linux/err.h>
->  #include <linux/intel_pmt_features.h>
->  #include <linux/intel_vsec.h>
->  #include <linux/kernel.h>
->  #include <linux/kref.h>
->  #include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/overflow.h>
->  #include <linux/pci.h>
->  #include <linux/slab.h>
->  #include <linux/types.h>
->  #include <linux/uaccess.h>
-> -#include <linux/overflow.h>
-> +#include <linux/xarray.h>
->  
->  #include "class.h"
->  
-> @@ -209,6 +213,88 @@ int pmt_telem_get_endpoint_info(int devid, struct telem_endpoint_info *info)
->  }
->  EXPORT_SYMBOL_NS_GPL(pmt_telem_get_endpoint_info, "INTEL_PMT_TELEMETRY");
->  
-> +static int pmt_copy_region(struct telemetry_region *region,
-> +			   struct intel_pmt_entry *entry)
-> +{
-> +
-> +	struct oobmsm_plat_info *plat_info;
-> +
-> +	plat_info = intel_vsec_get_mapping(entry->ep->pcidev);
-> +	if (IS_ERR(plat_info))
-> +		return PTR_ERR(plat_info);
-> +
-> +	region->plat_info = *plat_info;
-> +	region->guid = entry->guid;
-> +	region->addr = entry->ep->base;
-> +	region->size = entry->size;
-> +	region->num_rmids = entry->num_rmids;
-> +
-> +	return 0;
-> +}
-> +
-> +static void pmt_feature_group_release(struct kref *kref)
-> +{
-> +	struct pmt_feature_group *feature_group;
-> +
-> +	feature_group = container_of(kref, struct pmt_feature_group, kref);
-> +	kfree(feature_group);
-> +}
-> +
-> +struct pmt_feature_group *intel_pmt_get_regions_by_feature(enum pmt_feature_id id)
-> +{
-> +	struct pmt_feature_group *feature_group;
-> +	struct telemetry_region *region;
-> +	struct intel_pmt_entry *entry;
-> +	unsigned long idx;
-> +	int count = 0;
-> +	size_t size;
-> +
-> +	if (!pmt_feature_id_is_valid(id))
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	guard(mutex)(&ep_lock);
-> +	xa_for_each(&telem_array, idx, entry) {
-> +		if (entry->feature_flags & BIT(id))
-> +			count++;
-> +	}
-> +
-> +	if (!count)
-> +		return ERR_PTR(-ENOENT);
-> +
-> +	size = struct_size(feature_group, regions, count);
-> +	feature_group = kzalloc(size, GFP_KERNEL);
-> +	if (!feature_group)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	feature_group->count = count;
-> +
-> +	region = feature_group->regions;
-> +	xa_for_each(&telem_array, idx, entry) {
-> +		int ret;
-> +
-> +		if (!(entry->feature_flags & BIT(id)))
-> +			continue;
-> +
-> +		ret = pmt_copy_region(region, entry);
-> +		if (ret) {
-> +			kfree(feature_group);
-
-Use __free() instead.
-
-> +			return ERR_PTR(ret);
-> +		}
-> +		region++;
-> +	}
-> +
-> +	kref_init(&feature_group->kref);
-> +
-> +	return feature_group;
-> +}
-> +EXPORT_SYMBOL(intel_pmt_get_regions_by_feature);
-> +
-> +void intel_pmt_put_feature_group(struct pmt_feature_group *feature_group)
-> +{
-> +	kref_put(&feature_group->kref, pmt_feature_group_release);
-> +}
-> +EXPORT_SYMBOL(intel_pmt_put_feature_group);
-> +
->  int pmt_telem_read(struct telem_endpoint *ep, u32 id, u64 *data, u32 count)
->  {
->  	u32 offset, size;
-> @@ -353,3 +439,4 @@ MODULE_AUTHOR("David E. Box <david.e.box@linux.intel.com>");
->  MODULE_DESCRIPTION("Intel PMT Telemetry driver");
->  MODULE_LICENSE("GPL v2");
->  MODULE_IMPORT_NS("INTEL_PMT");
-> +MODULE_IMPORT_NS("INTEL_VSEC");
-> diff --git a/include/linux/intel_vsec.h b/include/linux/intel_vsec.h
-> index f63e67398a8e..f41d2ec974fd 100644
-> --- a/include/linux/intel_vsec.h
-> +++ b/include/linux/intel_vsec.h
-> @@ -220,4 +220,19 @@ static inline struct oobmsm_plat_info *intel_vsec_get_mapping(struct pci_dev *pd
->  	return ERR_PTR(-ENODEV);
->  }
->  #endif
-> +
-> +#if IS_ENABLED(CONFIG_INTEL_PMT_TELEMETRY)
-> +struct pmt_feature_group *
-> +intel_pmt_get_regions_by_feature(enum pmt_feature_id id);
-> +
-> +void intel_pmt_put_feature_group(struct pmt_feature_group *feature_group);
-> +#else
-> +static inline struct pmt_feature_group *
-> +intel_pmt_get_regions_by_feature(enum pmt_feature_id id)
-> +{ return ERR_PTR(-ENODEV); }
-
-Please add include for ERR_PTR().
-
-Change this to follow the normal function coding style even if it takes
-2 lines more that way. :-)
-
-> +
-> +static inline void
-> +intel_pmt_put_feature_group(struct pmt_feature_group *feature_group) {}
-> +#endif
-> +
->  #endif
+> David / dhildenb
 > 
 
 -- 
- i.
-
+Sincerely yours,
+Mike.
