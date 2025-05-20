@@ -1,195 +1,348 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44C2F1AF0C8;
-	Tue, 20 May 2025 15:23:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB0CE2417F0
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 15:24:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747754639; cv=none; b=kwd5fM3fSFad3jdJQd3Y2HKs+lYglQAjBfEyuwWf6ZLil17oPGQ7FuecU6Dn1DaoHhae4Mled2ckcn1wCIe0GrAgpaEL23R7SRPMukwZvOE/frnb5ZwQ/LTJsMm+PpvEe1seB+gLYu90sNpc5TvKMzitzI6eAQzw67WwNX1OtMA=
+	t=1747754670; cv=none; b=RfUqA/TFSmBNBcfGiqCq5d9TPYr58CHWCJD2iWmbb9VJu8PIkbtzuiIWJbCQ1giHsHk6myn9WalLM2umF1hsmst/EdowUp2dOE38cb5yoAVm3wuCv2UjsxMO0VOzWyIgEMPgNkjebWu/ZByFZK80x7ER5BQss2yJhcGKnTnv75s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747754639; c=relaxed/simple;
-	bh=xHCm3UhoDYa2v9e+5nIaZq2Jb82Z3T+hUAeKAk7buOU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q7QsMzIOW0p3XMufhEhJpUP7U2pGUtB70hXoEh4tKhoWUfVaejKVfZ31Swbmk+xShigO1982K4cH5rVRIOdG1UkNtj0qDJpnsyx2J74Y5xr1L74fV9o+oqZnNZ+Mbp9gk6e2FoIAZvYEfvzTmx8AnqSZeGYtVt9qbFFHAuCzYwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q6zbErAj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747754670; c=relaxed/simple;
+	bh=f0MpGbHeYx1NDD6wBepKitb5c9aZCB95bTd81EugfAc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=qHeP6gM5DTWXT53JBcWG3aU7z8v75a83+zgkKPbZAjMN+gR4bqQKDrZ3HxDpm6X/IFyMkzQs+PhC+cKGatAxJKqJD5hBHpkgJdvFhw/HxIIvu+9aw2fV2NvMYBq3qqIz1REhBoak1cyQetoKjLgIMKY+S6gh6N4pJ0uQcVQxpy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Yiq5FD8O; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q6zbErAj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0D8AC4CEEF;
-	Tue, 20 May 2025 15:23:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747754638;
-	bh=xHCm3UhoDYa2v9e+5nIaZq2Jb82Z3T+hUAeKAk7buOU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Q6zbErAj1tnRf0n7QbCTp/r4qRNsrWkWoEWoVO3nZkq65cQpbqhwgG9seU2dZG8uH
-	 h8qX9fKSh9g824hpofrNw/iauk6+PhGSlkW+zf7BQhNILrdy3XvBrHSKmeIM42zH39
-	 nknLSRAjPsC9ardWhS+/7hhLj91Z0tbA/pWeKh4iyGQtY/xWxYAtg0TK90baOSDY9o
-	 KSnacF/CYMU00pXhLO14iexzwBsqcK2WXh9yTRY+2W7ZEnqGH8k+llW/QnGAryThCx
-	 rGQ1ICSZcVq+N76AjIXcCh2NJ//JUCkiqc7b3+LPUGfFSKzbf8IzG8VpqT4vQbDd9P
-	 4lfe1a0Ino8EQ==
-Message-ID: <a8c83435-4c91-495c-950c-4d12b955c54c@kernel.org>
-Date: Tue, 20 May 2025 10:23:57 -0500
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Yiq5FD8O"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747754667;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Mu98gf3Jl/zQTd9OBHRRLq1ew4Yr13gaRyYVNVUQ82U=;
+	b=Yiq5FD8OxdsLigJjwNGBUGVBhvlgaCshT7m9PTJR5c7NkbFBvC3qiMXv9+1ZWmsBCpxgcR
+	sbFwqnW73WTW5yDzu1QM3kxdx/k3kTnoWiu+eWNLoWhWLI7AIOlAe+6dOcYqzecIqsaCqP
+	Z2ANBPJpp/9nwNAuIXfWAwHeQdLhjdg=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-433-FJZOttIgOeuxD7I1K5d9aQ-1; Tue, 20 May 2025 11:24:26 -0400
+X-MC-Unique: FJZOttIgOeuxD7I1K5d9aQ-1
+X-Mimecast-MFC-AGG-ID: FJZOttIgOeuxD7I1K5d9aQ_1747754665
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-441c122fa56so28294465e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 08:24:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747754665; x=1748359465;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Mu98gf3Jl/zQTd9OBHRRLq1ew4Yr13gaRyYVNVUQ82U=;
+        b=GArcGhsBU+OlARMgdwQgMoRdKGg14vdH73XX59R9IS+0YE9VT80XSeRBKgfZ7/Rfi6
+         fZLFKoqm2isT6p1aetkv55Rdr7fAm+/ZX69bsmk5Jcoen4RflOhGX072Sdn0OthgBJK+
+         25orKK1+GzVi/2Q4VrYyvfsEG20+vl8OgAsjo2ZpXC19/Uap0mroLXAzCuyaTzSi/EQP
+         9MrNjaFJsqJIVAO13Hmeol6YVT2wTb6Ji7Uf/akmZaSBXpwmujZQWyNwQD51o//4zMmq
+         5fHhPUBkgSkmQrmDa83QmvsiV0r1Ipi7ZZt1nGYzRBJ5Sl0fEJzE5TXeitHTlmsePyZp
+         dqiw==
+X-Gm-Message-State: AOJu0YwVO78URTueLs1HD0FWXfnG7S7xetY2jYft43TM5BaQyje49SHC
+	ZZQu1Q5fZWD0Ex1KHHQtcT0Uzf04lk1DUSQBuw/JG1FRxJtz/RdHy5+q8R38o5ce6RcwSwoS42i
+	a6do/+uLHoCJ0nVEFCqNxk19D7dPkZDtgzXImZdBjHng0/Jvw8zPKk9QkCOYnywuKZwaVjKNKLx
+	OW
+X-Gm-Gg: ASbGnctfekhfm0IsvS71N76qC+flHab59BI9ZqTGrQb4isd5VscDk4ILp0+HwNhoFcl
+	yk5HuvFt4tHc6REb1QUIQuJaWeD5XWj083Ati3Uj7Br3Hi/19GIJfqKZqGM/otVaoflYX7rr5LF
+	XUizq2kf0E4siJ5vre9rQ5cu32woI/pt8tE1fHljwhpkazt3xaCfswNVLelZoJ2YPC3D1Vl1vtq
+	WsmmR+itx9fuB5qYcHW7pt6OfmOtMf2gzZEdCC73cdhkKG6q8cZZFKqzkXMpJa0stEPlqgusubg
+	X4Hy9OCIwmrxV68dOSGRIv+LGcqzXAJ+2wfGWA==
+X-Received: by 2002:a05:600c:c13:b0:43d:79:ae1b with SMTP id 5b1f17b1804b1-442fd627416mr163611685e9.14.1747754664843;
+        Tue, 20 May 2025 08:24:24 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEFiijNDiL4vFMPRretgaxAz9fWfg/hsvAlE0akx/D8RUzLNfLlG5TcDgmHaznHR4BEm4KjVg==
+X-Received: by 2002:a05:600c:c13:b0:43d:79:ae1b with SMTP id 5b1f17b1804b1-442fd627416mr163611355e9.14.1747754664302;
+        Tue, 20 May 2025 08:24:24 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.30])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f78aeb56sm33712185e9.27.2025.05.20.08.24.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 08:24:23 -0700 (PDT)
+Message-ID: <da1865ac15e46469e9b4bcf1933edb3959755885.camel@redhat.com>
+Subject: Re: [PATCH v5 5/6] cgroup/cpuset: Fail if isolated and nohz_full
+ don't leave any housekeeping
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, 
+ Waiman Long <longman@redhat.com>, Anna-Maria Behnsen
+ <anna-maria@linutronix.de>
+Date: Tue, 20 May 2025 17:24:22 +0200
+In-Reply-To: <aCyRhAeGwLSVf2LZ@localhost.localdomain>
+References: <20250508145319.97794-8-gmonaco@redhat.com>
+	 <20250508145319.97794-13-gmonaco@redhat.com>
+	 <aCyRhAeGwLSVf2LZ@localhost.localdomain>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
+ xyhmqeUWOzFx5P43S1E1dhsrLWgP
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] PCI: Prevent power state transition of erroneous
- device
-To: Raag Jadav <raag.jadav@intel.com>, Denis Benato <benato.denis96@gmail.com>
-Cc: rafael@kernel.org, mahesh@linux.ibm.com, oohall@gmail.com,
- bhelgaas@google.com, linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
- lukas@wunner.de, aravind.iddamsetty@linux.intel.com
-References: <20250519102808.4130271-1-raag.jadav@intel.com>
- <aCsK743YSuahPtnH@black.fi.intel.com>
- <85ed0b91-c84f-4d24-8e19-a8cb3ba02b14@gmail.com>
- <aCxP6vQ8Ep9LftPv@black.fi.intel.com>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <aCxP6vQ8Ep9LftPv@black.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-On 5/20/2025 4:48 AM, Raag Jadav wrote:
-> On Mon, May 19, 2025 at 11:42:31PM +0200, Denis Benato wrote:
->> On 5/19/25 12:41, Raag Jadav wrote:
->>> On Mon, May 19, 2025 at 03:58:08PM +0530, Raag Jadav wrote:
->>>> If error status is set on an AER capable device, most likely either the
->>>> device recovery is in progress or has already failed. Neither of the
->>>> cases are well suited for power state transition of the device, since
->>>> this can lead to unpredictable consequences like resume failure, or in
->>>> worst case the device is lost because of it. Leave the device in its
->>>> existing power state to avoid such issues.
->>>>
->>>> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
->>>> ---
->>>>
->>>> v2: Synchronize AER handling with PCI PM (Rafael)
->>>> v3: Move pci_aer_in_progress() to pci_set_low_power_state() (Rafael)
->>>>      Elaborate "why" (Bjorn)
->>>> v4: Rely on error status instead of device status
->>>>      Condense comment (Lukas)
->>> Since pci_aer_in_progress() is changed I've not included Rafael's tag with
->>> my understanding of this needing a revisit. If this was a mistake, please
->>> let me know.
->>>
->>> Denis, Mario, does this fix your issue?
->>>
->> Hello,
->>
->> Unfortunately no, I have prepared a dmesg but had to remove the bootup process because it was too long of a few kb: https://pastebin.com/1uBEA1FL
-> 
-> Thanks for the test. It seems there's no hotplug event this time around
-> and endpoint device is still intact without any PCI related failure.
-> 
-> Also,
-> 
-> amdgpu 0000:09:00.0: PCI PM: Suspend power state: D3hot
-> 
-> Which means whatever you're facing is either not related to this patch,
-> or at best exposed some nasty side-effect that's not handled correctly
-> by the driver.
-> 
-> I'd say amdgpu folks would be of better help for your case.
-> 
-> Raag
 
-So according to the logs Denis shared with v4 
-(https://pastebin.com/1uBEA1FL) the GPU should have been going to BOCO. 
-This stands for "Bus off Chip Off"
 
-amdgpu 0000:09:00.0: amdgpu: Using BOCO for runtime pm
+On Tue, 2025-05-20 at 16:28 +0200, Frederic Weisbecker wrote:
+> (Please keep Anna-Maria Cc'ed)
+>=20
+> Le Thu, May 08, 2025 at 04:53:25PM +0200, Gabriele Monaco a =C3=A9crit :
+> > Currently the user can set up isolated cpus via cpuset and
+> > nohz_full in
+> > such a way that leaves no housekeeping CPU (i.e. no CPU that is
+> > neither
+> > domain isolated nor nohz full). This can be a problem for other
+> > subsystems (e.g. the timer wheel imgration).
+> >=20
+> > Prevent this configuration by blocking any assignation that would
+> > cause
+> > the union of domain isolated cpus and nohz_full to covers all CPUs.
+> >=20
+> > Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+> > ---
+> > =C2=A0kernel/cgroup/cpuset.c | 67
+> > ++++++++++++++++++++++++++++++++++++++++--
+> > =C2=A01 file changed, 65 insertions(+), 2 deletions(-)
+> >=20
+> > diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+> > index 95316d39c282..2f1df6f5b988 100644
+> > --- a/kernel/cgroup/cpuset.c
+> > +++ b/kernel/cgroup/cpuset.c
+> > @@ -80,6 +80,12 @@ static cpumask_var_t	subpartitions_cpus;
+> > =C2=A0 */
+> > =C2=A0static cpumask_var_t	isolated_cpus;
+> > =C2=A0
+> > +/*
+> > + * Housekeeping CPUs for both HK_TYPE_DOMAIN and
+> > HK_TYPE_KERNEL_NOISE
+> > + */
+> > +static cpumask_var_t	full_hk_cpus;
+> > +static bool		have_boot_nohz_full;
+>=20
+> Do you really need to maintain those copies?
+>=20
 
-If it's going to D3hot - that's not going to be BOCO, it should be going 
-to D3cold.
+Yeah good point, I wanted to avoid allocating temporary masks but it's
+probably better than maintaining those..
 
-Denis, can you redo your logs with out Raag's patch patch and set 
-CONFIG_PCI_DEBUG to compare?  The 6.14.6 log you shared already 
-(https://pastebin.com/kLZtibcD) also chooses BOCO but I'm suspecting 
-picks D3cold like it should.
+> > +
+> > =C2=A0/*
+> > =C2=A0 * Housekeeping (HK_TYPE_DOMAIN) CPUs at boot
+> > =C2=A0 */
+> > @@ -1253,10 +1259,26 @@ static void reset_partition_data(struct
+> > cpuset *cs)
+> > =C2=A0static void isolated_cpus_update(int old_prs, int new_prs, struct
+> > cpumask *xcpus)
+> > =C2=A0{
+> > =C2=A0	WARN_ON_ONCE(old_prs =3D=3D new_prs);
+> > -	if (new_prs =3D=3D PRS_ISOLATED)
+> > +	if (new_prs =3D=3D PRS_ISOLATED) {
+> > =C2=A0		cpumask_or(isolated_cpus, isolated_cpus, xcpus);
+> > -	else
+> > +		cpumask_andnot(full_hk_cpus, full_hk_cpus, xcpus);
+> > +	} else {
+> > =C2=A0		cpumask_andnot(isolated_cpus, isolated_cpus,
+> > xcpus);
+> > +		cpumask_or(full_hk_cpus, full_hk_cpus, xcpus);
+> > +	}
+> > +}
+> > +
+> > +/*
+> > + * isolated_cpus_should_update - Returns if the isolated_cpus mask
+> > needs update
+> > + * @prs: new or old partition_root_state
+> > + * @parent: parent cpuset
+> > + * Return: true if isolated_cpus needs modification, false
+> > otherwise
+> > + */
+> > +static bool isolated_cpus_should_update(int prs, struct cpuset
+> > *parent)
+> > +{
+> > +	if (!parent)
+> > +		parent =3D &top_cpuset;
+> > +	return prs !=3D parent->partition_root_state;
+> > =C2=A0}
+> > =C2=A0
+> > =C2=A0/*
+> > @@ -1323,6 +1345,25 @@ static bool partition_xcpus_del(int old_prs,
+> > struct cpuset *parent,
+> > =C2=A0	return isolcpus_updated;
+> > =C2=A0}
+> > =C2=A0
+> > +/*
+> > + * isolcpus_nohz_conflict - check for isolated & nohz_full
+> > conflicts
+> > + * @new_cpus: cpu mask
+>=20
+> The description lacks explanation about the role of this cpu mask.
+>=20
 
-> 
->>>> More discussion on [1].
->>>> [1] https://lore.kernel.org/all/CAJZ5v0g-aJXfVH+Uc=9eRPuW08t-6PwzdyMXsC6FZRKYJtY03Q@mail.gmail.com/
->>>>
->>>>   drivers/pci/pci.c      |  9 +++++++++
->>>>   drivers/pci/pcie/aer.c | 13 +++++++++++++
->>>>   include/linux/aer.h    |  2 ++
->>>>   3 files changed, 24 insertions(+)
->>>>
->>>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->>>> index 4d7c9f64ea24..a20018692933 100644
->>>> --- a/drivers/pci/pci.c
->>>> +++ b/drivers/pci/pci.c
->>>> @@ -9,6 +9,7 @@
->>>>    */
->>>>   
->>>>   #include <linux/acpi.h>
->>>> +#include <linux/aer.h>
->>>>   #include <linux/kernel.h>
->>>>   #include <linux/delay.h>
->>>>   #include <linux/dmi.h>
->>>> @@ -1539,6 +1540,14 @@ static int pci_set_low_power_state(struct pci_dev *dev, pci_power_t state, bool
->>>>   	   || (state == PCI_D2 && !dev->d2_support))
->>>>   		return -EIO;
->>>>   
->>>> +	/*
->>>> +	 * If error status is set on an AER capable device, it is not well
->>>> +	 * suited for power state transition. Leave it in its existing power
->>>> +	 * state to avoid issues like unpredictable resume failure.
->>>> +	 */
->>>> +	if (pci_aer_in_progress(dev))
->>>> +		return -EIO;
->>>> +
->>>>   	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
->>>>   	if (PCI_POSSIBLE_ERROR(pmcsr)) {
->>>>   		pci_err(dev, "Unable to change power state from %s to %s, device inaccessible\n",
->>>> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
->>>> index a1cf8c7ef628..617fbac0d38a 100644
->>>> --- a/drivers/pci/pcie/aer.c
->>>> +++ b/drivers/pci/pcie/aer.c
->>>> @@ -237,6 +237,19 @@ int pcie_aer_is_native(struct pci_dev *dev)
->>>>   }
->>>>   EXPORT_SYMBOL_NS_GPL(pcie_aer_is_native, "CXL");
->>>>   
->>>> +bool pci_aer_in_progress(struct pci_dev *dev)
->>>> +{
->>>> +	int aer = dev->aer_cap;
->>>> +	u32 cor, uncor;
->>>> +
->>>> +	if (!pcie_aer_is_native(dev))
->>>> +		return false;
->>>> +
->>>> +	pci_read_config_dword(dev, aer + PCI_ERR_COR_STATUS, &cor);
->>>> +	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS, &uncor);
->>>> +	return cor || uncor;
->>>> +}
->>>> +
->>>>   static int pci_enable_pcie_error_reporting(struct pci_dev *dev)
->>>>   {
->>>>   	int rc;
->>>> diff --git a/include/linux/aer.h b/include/linux/aer.h
->>>> index 02940be66324..e6a380bb2e68 100644
->>>> --- a/include/linux/aer.h
->>>> +++ b/include/linux/aer.h
->>>> @@ -56,12 +56,14 @@ struct aer_capability_regs {
->>>>   #if defined(CONFIG_PCIEAER)
->>>>   int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
->>>>   int pcie_aer_is_native(struct pci_dev *dev);
->>>> +bool pci_aer_in_progress(struct pci_dev *dev);
->>>>   #else
->>>>   static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
->>>>   {
->>>>   	return -EINVAL;
->>>>   }
->>>>   static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
->>>> +static inline bool pci_aer_in_progress(struct pci_dev *dev) { return false; }
->>>>   #endif
->>>>   
->>>>   void pci_print_aer(struct pci_dev *dev, int aer_severity,
->>>> -- 
->>>> 2.34.1
->>>>
+Mmh yeah, that was a copy paste from prstate_housekeeping_conflict but
+I agree, I should describe it better at least here..
+
+> > + * Return: true if there is conflict, false otherwise
+> > + *
+> > + * If nohz_full is enabled and we have isolated CPUs, their
+> > combination must
+> > + * still leave housekeeping CPUs.
+> > + */
+> > +static bool isolcpus_nohz_conflict(struct cpumask *new_cpus)
+> > +{
+> > +	if (!have_boot_nohz_full)
+> > +		return false;
+> > +
+> > +	if (!cpumask_weight_andnot(full_hk_cpus, new_cpus))
+> > +		return true;
+>=20
+> Do we also need to make sure that in this weight there is an online
+> CPU?
+>=20
+> Can you allocate a temporary mask here and do:
+>=20
+> cpumask_var_t full_hk_cpus;
+> int ret;
+>=20
+> if (!zalloc_cpumask_var(&full_hk_cpus, GFP_KERNEL))
+> =C2=A0=C2=A0=C2=A0 return true;
+>=20
+> cpumask_copy(full_hk_cpus,
+> housekeeping_cpumask(HK_TYPE_KERNEL_NOISE));
+> cpumask_and(full_hk_cpus, housekeeping_cpumask(HK_TYPE_DOMAIN));
+> cpumask_and(full_hk_cpus, cpu_online_mask));
+> if (!cpumask_weight_andnot(full_hk_cpus, new_cpus))
+> =C2=A0=C2=A0=C2=A0 ret =3D true;
+> else
+> =C2=A0=C2=A0=C2=A0 ret =3D false;
+>=20
+> free_cpumask_var(full_hk_cpus);
+>=20
+
+Yeah that looks safer. I'll do with a mask.
+
+> I also realize something, what makes sure that we don't offline the
+> last
+> non isolated?
+>=20
+
+Mmh, I guess we need to enforce that too then, I remember in some
+condition the system was preventing me from doing that, but need to
+play a bit more to understand what's going on...
+
+> I just did a small test:
+>=20
+> # cd /sys/fs/cgroup/
+> # echo +cpuset > cgroup.subtree_control
+> # cat cpuset.cpus.effective=20
+> 0-7
+> # mkdir test
+> # cd test
+> # echo +cpuset > cgroup.subtree_control
+> # echo 0-6 > cpuset.cpus
+> # echo isolated > cpuset.cpus.partition
+> # cat ../cpuset.cpus.effective=20
+> 7
+> # echo 0 > /sys/devices/system/cpu/cpu7/online
+> [ 4590.864066] ------------[ cut here ]------------
+> [ 4590.866469] WARNING: CPU: 7 PID: 50 at kernel/cgroup/cpuset.c:1906
+> update_parent_effective_cpumask+0x770/0x8c0
+> [ 4590.870023] Modules linked in:
+> [ 4590.871058] CPU: 7 UID: 0 PID: 50 Comm: cpuhp/7 Not tainted
+> 6.15.0-rc2-g996d9d202383 #10 PREEMPT(voluntary)=20
+> [ 4590.873588] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
+> BIOS rel-1.16.3-2-gc13ff2cd-prebuilt.qemu.org 04/01/2014
+> [ 4590.875689] RIP: 0010:update_parent_effective_cpumask+0x770/0x8c0
+> [ 4590.876858] Code: 06 48 8b 0c 24 ba 05 00 00 00 48 23 85 f8 00 00
+> 00 41 0f 95 c6 48 89 01 41 8b 84 24 34 01 00 00 45 0f b6 f6 e9 90 fe
+> ff ff 90 <0f> 0b 90e
+> [ 4590.880010] RSP: 0018:ffffa4ce001ebd40 EFLAGS: 00010086
+> [ 4590.880963] RAX: 00000000ffffffff RBX: 0000000000000000 RCX:
+> 0000000000000001
+> [ 4590.882342] RDX: 000000000000007f RSI: 0000000000000000 RDI:
+> 0000000000000002
+> [ 4590.883683] RBP: ffffffffbdf52f00 R08: 0000000000000000 R09:
+> 0000000000000000
+> [ 4590.885071] R10: ffffa223062d2388 R11: 0000000000000000 R12:
+> ffffa223062d2200
+> [ 4590.886604] R13: 0000000000000002 R14: 0000000000000001 R15:
+> 0000000000000004
+> [ 4590.888309] FS:=C2=A0 0000000000000000(0000) GS:ffffa223bc4d6000(0000)
+> knlGS:0000000000000000
+> [ 4590.890183] CS:=C2=A0 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [ 4590.891385] CR2: 000055ab80ada170 CR3: 00000001084ac000 CR4:
+> 00000000000006f0
+> [ 4590.892901] DR0: ffffffffbc8c8420 DR1: 0000000000000000 DR2:
+> 0000000000000000
+> [ 4590.894341] DR3: 0000000000000000 DR6: 00000000ffff0ff0 DR7:
+> 0000000000000600
+> [ 4590.895765] Call Trace:
+> [ 4590.896400]=C2=A0 <TASK>
+> [ 4590.896938]=C2=A0 cpuset_update_active_cpus+0x680/0x730
+> [ 4590.897979]=C2=A0 ? kvm_sched_clock_read+0x11/0x20
+> [ 4590.898916]=C2=A0 ? sched_clock+0x10/0x30
+> [ 4590.899785]=C2=A0 sched_cpu_deactivate+0x148/0x170
+> [ 4590.900812]=C2=A0 ? __pfx_sched_cpu_deactivate+0x10/0x10
+> [ 4590.901925]=C2=A0 cpuhp_invoke_callback+0x10e/0x480
+> [ 4590.902920]=C2=A0 ? __pfx_smpboot_thread_fn+0x10/0x10
+> [ 4590.903928]=C2=A0 cpuhp_thread_fun+0xd7/0x160
+> [ 4590.904818]=C2=A0 smpboot_thread_fn+0xee/0x220
+> [ 4590.905716]=C2=A0 kthread+0xf6/0x1f0
+> [ 4590.906471]=C2=A0 ? __pfx_kthread+0x10/0x10
+> [ 4590.907297]=C2=A0 ret_from_fork+0x2f/0x50
+> [ 4590.908110]=C2=A0 ? __pfx_kthread+0x10/0x10
+> [ 4590.908917]=C2=A0 ret_from_fork_asm+0x1a/0x30
+> [ 4590.909833]=C2=A0 </TASK>
+> [ 4590.910465] ---[ end trace 0000000000000000 ]---
+> [ 4590.916786] smpboot: CPU 7 is now offline
+>=20
+> Apparently you can't trigger the same with isolcpus=3D0-6, for some
+> reason.
+>=20
+> One last thing, nohz_full makes sure that we never offline the
+> timekeeper
+> (see tick_nohz_cpu_down()). The timekeeper also never shuts down its
+> tick
+> and therefore never go idle, from tmigr perspective, this way when a
+> nohz_full
+> CPU shuts down its tick, it makes sure that its global timers are
+> handled by
+> the timekeeper in last resort, because it's the last global migrator,
+> always
+> alive.
+>=20
+> But if the timekeeper is HK_TYPE_DOMAIN, or isolated by cpuset, it
+> will go out
+> of the tmigr hierarchy, breaking the guarantee to have a live global
+> migrator
+> for nohz_full.
+>=20
+> That one is a bit more tricky to solve. The easiest is to forbid the
+> timekeeper
+> from ever being made unavailable. It is also possible to migrate the
+> timekeeping duty
+> to another common housekeeper.
+>=20
+
+Mmh, if I get it correctly, this would mean we need to:
+
+1. make sure the timekeeper is not in isolcpus at boot
+2. change timekeeper in case it is included in an isolated cpuset
+3. avoid picking domain isolated CPUs when the timekeeper gets offline
+
+All those would be meaningful only if nohz_full is active, right? Am I
+missing any corner case? Are any of those already happening?
+
+Thanks,
+Gabriele
 
