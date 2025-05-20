@@ -1,46 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D439026738B;
-	Tue, 20 May 2025 11:05:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B610826738B;
+	Tue, 20 May 2025 11:05:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747739122; cv=none; b=P4+85zoV8MDhhf2nbENi0MOgW75VA+eZxduWlaT1jl1BnfIk120XsgXUmZcPnz2IwvkaHUCxkGAcdHASc5eM9gkyEmGb1SWNgUVYLy1fMPW6NjC6TJZh3XEX51645jyiXPmqThtkoibwpjjU1v+QNrCHKzWXchjd45n7MA5KNEY=
+	t=1747739136; cv=none; b=VWGj80oIxwG7EJOIvRKJBrmCQj22DZSY6SyigJx7VtPgqPjKlsidc5LLhJpi5wQST7S/X7P/WXy/EQWfghwt4sIlMs+xRIEL8w43ZLLHuyCdGtB0as4o4uXU4lhHTcwj/qFwRkp79PKiKj3lzTbAdk3tfufC5tUCIcpRP9VNwzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747739122; c=relaxed/simple;
-	bh=tUyeTPexFgQtJ0LVk2MC1amsZJhPQ5WhJKR+TnrkfY8=;
+	s=arc-20240116; t=1747739136; c=relaxed/simple;
+	bh=moJr557cLpcwfssxs4X6NO0Ta6elVHfYr4Rk4IzgEJU=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=gRjhQU1Nl75Z8iUwLJ1BMiT/TWI9E+4k39EowfpWdhVLFmN16YWALwD2rO/eLEUHMQaUC+J9k8UUD60tDSwVnXg//Vre/ZieG4w7ANRjwSEyOBZexuxmHWywbG31oiUUjJV+VnMONngRdBbZHumyJg5xG5XwQuoTguosXLueDZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GmPWC8ml; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=iFwnfuvF6jsA9ZHPx0kcCdmLVYs8I8RhHR1AzxyoOUYrRWb44VVhek/PIamL+oVLPPK++1u1hFsEdyKTQFl+houEa3LYlKtcSl8Df5IaRBDJs1RHnaj+mYbQXIGuPUfUbfjN0W388Qx6ivqCoaPu0SawkciA65eSXYGSSS3aoBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gdQMgIOp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GmPWC8ml"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17554C4CEF1;
-	Tue, 20 May 2025 11:05:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gdQMgIOp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9A50C4CEEB;
+	Tue, 20 May 2025 11:05:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747739121;
-	bh=tUyeTPexFgQtJ0LVk2MC1amsZJhPQ5WhJKR+TnrkfY8=;
+	s=k20201202; t=1747739136;
+	bh=moJr557cLpcwfssxs4X6NO0Ta6elVHfYr4Rk4IzgEJU=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=GmPWC8ml2RNiVFqKAcGEFeZv3c7EPp4+mWHQPqy4aGSELE9/4DhSNYvcw7NT0Jj4C
-	 +65KQt3ACyX/SZM6ragCX8v+6igXXW0Tov9HUJG8ZdtVXb1Be264ulRO3jXzwvZkNw
-	 gAlNGvdBN/jC27AltEFbh2IS/dyakncgocphOMjdpwDi6USDE2yxfxxvoSRbw6zQ2h
-	 +h9HPD73vZPS1g8WgHhRiDiQBP6Ho2SNe1GV0IJvfkcAootr9V+RilQrnjGzvSTkV+
-	 xvGsDswdMYhqL+KNYvMp9F7fbVQnRVHIM3Cwx/22hM5z7lXa4ZXF70QAOJfbX8w/xD
-	 Gd62x/yDAZCng==
+	b=gdQMgIOpmMAyWGmvCDjPOQwDXR6RGsVp36+EM0AsuL7GUQLpbVcRPWQlUbaIWa0xE
+	 x/7t3Yg+5cocNnBgvaVsz6VX+wxW4BuQO/kya5ZHuC+ocHQ1q/fOm4goHCUkxjwE3q
+	 bgk78ESVWn28w1RR7vpv6QqF7pnjSmRKbKmO3f6wPx8bU4Hx0brmiRcsamyE9/v8ax
+	 4XeOtaSHg9ThOy3/AZ64q3Cxj1cHBVvXsjYYZOYQJ8YdfCJyK8w5xFeayg2zqGKjws
+	 BWmCfqV030Bpdi93s2LoSeE40cJ0VZBTNaFlwNDWsFJe1vDMZD4X3Iq+lM87ZZIxZT
+	 s4gP7/4RUCVIw==
 From: Mark Brown <broonie@kernel.org>
-To: Srinivas Kandagatla <srini@kernel.org>, 
- Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>, 
- Takashi Iwai <tiwai@suse.com>, 
- Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
-Cc: linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- quic_pkumpatl@quicinc.com, kernel@oss.qualcomm.com
-In-Reply-To: <20250519083244.4070689-1-mohammad.rafi.shaik@oss.qualcomm.com>
-References: <20250519083244.4070689-1-mohammad.rafi.shaik@oss.qualcomm.com>
-Subject: Re: [PATCH v1 0/2] Add sound card support for QCS9100 and QCS9075
-Message-Id: <174773911882.44858.10139663344496764867.b4-ty@kernel.org>
-Date: Tue, 20 May 2025 12:05:18 +0100
+To: Raju Rangoju <Raju.Rangoju@amd.com>
+Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ krishnamoorthi.m@amd.com, akshata.mukundshetty@amd.com
+In-Reply-To: <20250516100658.585654-1-Raju.Rangoju@amd.com>
+References: <20250516100658.585654-1-Raju.Rangoju@amd.com>
+Subject: Re: [PATCH v2 0/3] spi: spi_amd: Add DMA write and Kconfig changes
+Message-Id: <174773913545.45044.805296108345217999.b4-ty@kernel.org>
+Date: Tue, 20 May 2025 12:05:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,26 +45,28 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c25d1
 
-On Mon, 19 May 2025 14:02:42 +0530, Mohammad Rafi Shaik wrote:
-> This patchset adds support for sound card on Qualcomm QCS9100 and
-> QCS9075 boards.
-> 
-> Mohammad Rafi Shaik (2):
->   ASoC: dt-bindings: qcom,sm8250: Add QCS9100 and QCS9075 sound card
->   ASoC: qcom: sc8280xp: Add sound card support for QCS9100 and QCS9075
+On Fri, 16 May 2025 15:36:55 +0530, Raju Rangoju wrote:
+> This series include following changes to spi_amd driver:
+> - Changes to replace read{q,b} functions with direct memory copy logic on
+>   DMA buffer.
+> - Support for HID2 DMA single mode basic write operation for the HID2
+>   SPI controller.
+> - Changes to add missing Kconfig dependencies.
 > 
 > [...]
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
 Thanks!
 
-[1/2] ASoC: dt-bindings: qcom,sm8250: Add QCS9100 and QCS9075 sound card
-      commit: 689a95178f31ccfc9af0a11abcb11f2a200095bc
-[2/2] ASoC: qcom: sc8280xp: Add sound card support for QCS9100 and QCS9075
-      commit: 5b5bf5922f4c104e4e829c0dbfdd9399b7cfc434
+[1/3] spi: spi_amd: Remove read{q,b} usage on DMA buffer
+      commit: 8cd079e69dc51e707b0a7ce105b01f6dbb66ddc1
+[2/3] spi: spi_amd: Add HIDDMA basic write support
+      commit: a5733666c775eb852409261d7a6363883d97ff93
+[3/3] spi: spi_amd: Update Kconfig dependencies
+      commit: dbb79974193a2932e828ebbd216efb428c81dc63
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
