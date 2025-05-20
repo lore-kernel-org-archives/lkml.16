@@ -1,97 +1,131 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EB6024EF7B
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 22:09:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F30B925EF98
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 22:09:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747778961; cv=none; b=uQAMbgdy0esWydOT47U0OUA8w1XaBlrtR1nQUfXy8E0DkIOIrPgq1xrt58aYWoJ17a3PTVv+du0prC1qSTJoOCjT22egHJ4fY4kEcTCumfveZHgQj4m6d2F52nmpS8CelHd3K6ZDixbzOlI938RNmFowq0PsHAehL/6DIBQDj24=
+	t=1747778965; cv=none; b=bOTc7VVts400sY52DDTcMZVcxETvxI8za9xFpQ8MOTvz+AEV5pdtUBlsyCzuY0Iw9cXqxURKOfhjyNifGTFQxTtJ11DFhk4xpLwAQbaxKk1d8ZZRARACsvYTGqgEnJ5VRLbuP4w650gBOXW61moEEpGUVV3zG+lURNegrJ/8+dI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747778961; c=relaxed/simple;
-	bh=ratdE9jXoB0SJ0Y0w3wsjguEzkshW/vmeLVeCaT31+I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Xrbqt3GSDGwyt+zDXIhqbeeLL4ngvAdW0MdAhCJpSncVO71k18KI8XVhWg7Q2yDshmSAae0wl6UDPoPCudpacd2fsa60DTTdtoft9lGxzSH8f7KaL16ofIhVpdKSUJOfit/t6k8XU+w+kbZ7L4WE5IrzAjqG2rjz2o69zVJYTTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kXxQds9W; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747778965; c=relaxed/simple;
+	bh=5LjWvjQNtMdkAUmp6O5fS2MlE1GG0CffyzbkOB+Xrvw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iiM5YlxPiCitA19T1I5FVDd07qqWXUMTF/6908WYBc8kP9IEfPUitN7KhQuAfy3l22Dm0okpNjvmhbhKBjlHXwfSP6V//qRY63wiZY/CDVlUfHRLw2jB/9xxeyvKjPTLJKHGG1Glyl2EMsCRZlvDdPfnhJI48LqytgbwVbLfZOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kLmX5cRE; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kXxQds9W"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-329157c9f79so14139771fa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 15:09:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747778957; x=1748383757; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ratdE9jXoB0SJ0Y0w3wsjguEzkshW/vmeLVeCaT31+I=;
-        b=kXxQds9WJE5ExFVqwoDfR2GDf6QmPSyRr2o5LlJd4431twbWsr86m523JEQAppzsA3
-         HB3lHzmVD7oGKUXV17UntYDhSqYW+BBMr/Wx07HwH8fJLniKqtKeISFbtDlbRLqExHkj
-         MzhkERe6mSLNmp33IbTI1W7Zgp8ItpmHPfe33U1wwSLHE6DCkGUIAPSPqLhAXtvwu48G
-         2xnKNy269clSO3A3OzpFRiKLhrCEtFtr93WR3SiSnjKsNdPhTqg4y/Yzra1MEEeqtVuv
-         9ZmF/LSIKsBJF73v6eBRXyR3T3LRCUfDiQzdL6x/T0WgUZagwUBAW/kcqKqO6OnF0Y70
-         cgWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747778957; x=1748383757;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ratdE9jXoB0SJ0Y0w3wsjguEzkshW/vmeLVeCaT31+I=;
-        b=W9BM+GB+O6Z/L1flgo6855uqhcS5UB0cxv/FTL+pn8akZrG3pnviyyF6vvgnmYWmCl
-         j9VVYdrvJazwJK3AeLuQ2jYkTQi/mc8NnvtjO/euLCtEd9uPhUvcb+igy03y+dwUmdqO
-         Ipd70AELx6GBoEBP3zHAY6ABf+ygxUfVIxp8Cw5GwGmgvu4r4py6jnIHOySjySkF8JtS
-         Uhlh3qPsNEfVyuG9/IhzM0mdgkODgEl5kB7nWbLVyc/v+bWQIBVdlGc4WJafAc3VVx51
-         aQb2SJTSwmP5QXYcpfavg60UrMkt7r6q4VcAznhsLY7MTF1/yIicPSlGv91Bpe1wv5SK
-         7Muw==
-X-Forwarded-Encrypted: i=1; AJvYcCUviO5VrBVdgaDhnJeG10/PajIDx9G1W1l1nfWYFYNivF/yjBmieq2X0Z7NfrlokfCtFSt137vMDwt7unY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxs9OR/Sp5RQOZuhTZEnmmjQZDCfO2Wd+VjojUYqzGbB9h9Tpt2
-	5R3z1TPtcbtJCRTCDm1wI9Y9lMik/TrkZmWoiuwmgXICE1jj8lxQLeQ3GoCRRjabAYgQVxQrDVp
-	ZoKVC/RRDJoSjFczQ0Xc+wOdT4IKnqLL8wYuGnU4QNA==
-X-Gm-Gg: ASbGncseGQryA5ur22Rp/mavKWI5Ed28CP4UGVLGLvreZpZfDn6qnBxAAhvB34V3owZ
-	i28r9ilDrIJKqwnHozNiLCAzhzOTO/ags1BDlloGNEyQ8BgyZzcxby4bFc5nh5ljVcfJp7IQp/c
-	1BR7VGwxJKdqbTuqHHHmePDgLN/g8RIgJ9wqpC0AAiIfs=
-X-Google-Smtp-Source: AGHT+IHDDQJhnWX2kmTO5v1Pk0nimoh123FoAZWbqbQl+FUgai9VCQfwTjo/Tn4PNUMetJyi+2gPAW5SomZT1SLUvWQ=
-X-Received: by 2002:a2e:8a87:0:b0:30b:d05a:c103 with SMTP id
- 38308e7fff4ca-328077a2e75mr64717311fa.29.1747778957098; Tue, 20 May 2025
- 15:09:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kLmX5cRE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747778963; x=1779314963;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=5LjWvjQNtMdkAUmp6O5fS2MlE1GG0CffyzbkOB+Xrvw=;
+  b=kLmX5cRE0L4VOW8LL+1sZ/kOUcKWCQaZbF5XRRtY6C/RED4XKKme91BB
+   ZiQQjkkTbZ5mw+tGNGJUeBTjiRlMp5t/HDeZzzOXMqoRapMualHDNWhzn
+   6qNAWwuB6jofwUCuhp2Bod94k55rKI/rAkqI7uOv+1pW7Uk7HE+VBE2T1
+   Ufe40UEIuowH2/oC1wLrDeLCU3qEzVtAdtwSUTsAcBgoCDinWteVuakQ0
+   AuZi2nEMNwH7hafYEj7BDp9kM5ThMmk5y8oI8srOF9H815j5pWpgCr9D5
+   TsAtuxcz6eJ+tytkX/tn81XBrwktmyOVzcK1g1BLg4OKi93325ZtCpaDy
+   w==;
+X-CSE-ConnectionGUID: vznC4A0eQCahN77+JTub/g==
+X-CSE-MsgGUID: OAAhmpHcSvWLpgkf0znoZg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="48851032"
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="48851032"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 15:09:22 -0700
+X-CSE-ConnectionGUID: Spp9ai0hStWnwDQBynSd5A==
+X-CSE-MsgGUID: KhKj1ZKIR1qvDQsCpxeMAw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="176964381"
+Received: from ettammin-mobl2.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.244.93])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 15:09:21 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with ESMTP id 2EAC711F746;
+	Wed, 21 May 2025 01:09:18 +0300 (EEST)
+Date: Tue, 20 May 2025 22:09:18 +0000
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] container_of: Document container_of() is not to be
+ used in new code
+Message-ID: <aCz9jlMcXDooqx0s@kekkonen.localdomain>
+References: <20250520103437.468691-1-sakari.ailus@linux.intel.com>
+ <aCyOzUIIvMk6Gp8o@smile.fi.intel.com>
+ <2025052000-widen-lip-350b@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250520-gpio-dts-v3-0-04771c6cf325@nxp.com>
-In-Reply-To: <20250520-gpio-dts-v3-0-04771c6cf325@nxp.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 21 May 2025 00:09:05 +0200
-X-Gm-Features: AX0GCFuwZ5Uj2GFu8v9SUCd9XbxxK9oH9Hmv5mkp9JeCnQEfeHNWxb9r3Wl8bto
-Message-ID: <CACRpkda6D_OayG2DDFG6+sQ5vyYCrTojHs2H1ZVUMw4rpbuC9g@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] Add 'ngpios' and 'gpio-reserved-ranges' for
- vf610-gpio driver
-To: Haibo Chen <haibo.chen@nxp.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Stefan Agner <stefan@agner.ch>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, devicetree@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, peng.fan@nxp.com, wahrenst@gmx.net, 
-	conor@kernel.org, Frank Li <Frank.Li@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2025052000-widen-lip-350b@gregkh>
 
-On Tue, May 20, 2025 at 5:44=E2=80=AFAM Haibo Chen <haibo.chen@nxp.com> wro=
-te:
+Hi Greg,
 
-> Not all GPIO ports have 32 pads, so add 'ngpios' property to specify
-> the number. This can save some memory when alloc bitmap for GPIO,
-> besides GPIO tools like gpioinfo will show the correct information.
->
-> Some GPIO ports even more special, e.g. GPIO7 on imx94, it only support
-> IO0~IO9 and IO16~IO27, so add 'gpio-reserved-ranges' property.
->
-> Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
+On Tue, May 20, 2025 at 04:30:19PM +0200, Greg Kroah-Hartman wrote:
+> On Tue, May 20, 2025 at 05:16:45PM +0300, Andy Shevchenko wrote:
+> > On Tue, May 20, 2025 at 01:34:37PM +0300, Sakari Ailus wrote:
+> > > There is a warning in the kerneldoc documentation of container_of() that
+> > > constness of its ptr argument is lost. While this is a faible suggestion
+> > > container_of_const() should be used instead, the vast majority of new code
+> > > still uses container_of():
+> > > 
+> > > $ git diff v6.13 v6.14|grep container_of\(|wc -l
+> > > 646
+> > > $ git diff v6.13 v6.14|grep container_of_const|wc -l
+> > > 9
+> > > 
+> > > Make an explicit recommendation to use container_of_const().
+> > > 
+> > > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > > ---
+> > > Hi Greg, Andy,
+> > > 
+> > > I guess we generally agree the additional constness check in
+> > > container_of_const() is useful, but adding the same check to
+> > > container_of() generates warnings -- there are some errors, too -- such as
+> > > this one currently:
+> > > 
+> > > In file included from /home/sailus/src/linux/include/linux/bcma/bcma.h:14,
+> > >                  from /home/sailus/src/linux/arch/x86/kernel/early-quirks.c:17:
+> > > /home/sailus/src/linux/include/linux/ssb/ssb.h: In function ‘dev_to_ssb_dev’:
+> > > /home/sailus/src/linux/include/linux/ssb/ssb.h:291:14: warning: assignment discards ‘const’ qualifier from pointer target type [-Wdiscarded-qualifiers]
+> > >   291 |         wrap = container_of(dev, struct __ssb_dev_wrapper, dev);
+> > >       |              ^
+> > > 
+> > > As noted above, 646 new missing constness checks were introduced through
+> > > container_of() macro use during the 6.14 cycle alone. Most of these are
+> > > likely harmless, but with so many new users some are bound to be ignoring
+> > > constness.
+> > > 
+> > > Once the warnings from bad container_of() use are worked out in a way or
+> > > another, the constness check could be added to the container_of() macro
+> > > and the current container_of_const() be dropped altogether.
+> > > 
+> > > If this patch is accepted, I'll see how to add a warning on container_of()
+> > > to checkpatch.pl.
+> > 
+> > Hmm... Wouldn't be better to fix non-const cases and add the const check, etc
+> > to the container_of() instead of doing these comments?
+> 
+> Yes, fixing up the existing places where it is broken would be best, how
+> many of them are there now?
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Adding constness check for container_of(), with my partial build on x86-64
+I'm getting 893 such warnings. A fair number are probably duplicates or
+repeat of the same pattern, but also the compilation didn't succeed --
+there were multiple compilation failures.
 
-Yours,
-Linus Walleij
+-- 
+Regards,
+
+Sakari Ailus
