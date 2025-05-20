@@ -1,308 +1,415 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54A221A5B8F;
-	Tue, 20 May 2025 14:47:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CEC4248F65;
+	Tue, 20 May 2025 14:47:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747752447; cv=none; b=UzPzaYsFkL7fSZVOwnoaghtobuIu+i+XxM8Hvk87wnG1nex/NkEcYms919xifZ1kp1I9COiA3SUSfIBiefx6lno/C4IzqDPHyxWrbzEArbB+hD+RdJY45OSL5xM3mXPxd7H5IcQVXhxyqIHowTqN1mjBzvbVFlQdL9GEb4+u//w=
+	t=1747752452; cv=none; b=P4lGfrN3A1LkR7M0Rs9XrvZve+8UfG9l5la66w04he7bUkvhRPXxFXPzVhGAnRT8wh16BzhUnmkz6C0GmKHmI4Y3572yMmCLfJeFkB5m00y/FQwjN3NcuEvxn2Yf1nkVtn8y/7kYodwOITSugyaVW0AwgejAS3ZAZ43Gs3fykMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747752447; c=relaxed/simple;
-	bh=fwCsx5WLt3ZQeFdDnvmckZt7EDQG19hnTJU+XiWf8Q4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U+yw8cbn/QdEdbkSsEnbmJONzoy0LNNnGVlHv1/X/GIVU/4Keb5/HT/KL4DemDowcZIhXRtbB9vmun4FdcFuPqGsGiYFOTTE9W0iB/NCNwGMTapoOdGF2D7ITLnQUtKbVRw7+DUkygzfKtrh5BwOY+TaU4Ta0B7zCTNuTYmCEIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O/OpS6Rd; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747752452; c=relaxed/simple;
+	bh=Tx7/FcEU6Bw90Yjwe4KaoxrW48XMQgTlH5CIeNph+bk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UaCpv1YAAx946hh6FPM4ZD4Q57bt+04YbiN4xJlHc9c031+8x19mWrXa+nzAIdlIHw5kZ9sV+g64+0dK1kv/emRbmXQ0il+IlqfTHJZbZxQyLnlfUuDlU45MbH7AzTYV0MZFulNxAAAmGsC1s82EyWNjaFbVSM8eOx6H7rRtOLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=pX8Mi0bU; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O/OpS6Rd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747752446; x=1779288446;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=fwCsx5WLt3ZQeFdDnvmckZt7EDQG19hnTJU+XiWf8Q4=;
-  b=O/OpS6RdPv4toNgoyiptUMTGjiVqQONpo2H0dDoHhQslvgVMqUHLvqYE
-   EadWApTvcP3wkr6sEvay2dltQOh0PT9lZNqzCf9sLAGQ4tgp2TnQDcZwy
-   sl4XyTt/TFq44AwRU5KCNG5mUmeZxegEvJrIDBvYw2m5DJzZjSqbluweV
-   qU9NSm267jRSyXZw/JWH0NaSY4rTCHt+wS3L+dHLnRkjoop4886Wqqif+
-   3Y8L6Au45WAs7LRoXkH4QH3FpTXlMFrRUbO1aVUJc7NWD97j6nYv5Iik9
-   smGLHeWRPyA1GYe9EwS+S9xf/FD8B6Rax/6G3WCbvE2Yo8/3/LvikgLpQ
-   Q==;
-X-CSE-ConnectionGUID: ZqYishBvQ5uI8LI2lCK2nQ==
-X-CSE-MsgGUID: 56Pn+RlxQPiqnwgslAXTDQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="72204919"
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="72204919"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 07:47:25 -0700
-X-CSE-ConnectionGUID: H9dQgZVPS8CRHosJ0NPvsQ==
-X-CSE-MsgGUID: CfcfUXyxRMi+OQEaxPM92A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="143708067"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 07:47:24 -0700
-Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id A768120B5736;
-	Tue, 20 May 2025 07:47:22 -0700 (PDT)
-Message-ID: <8e2c5349-571d-4436-a10e-ae1a50ed6b1f@linux.intel.com>
-Date: Tue, 20 May 2025 10:47:21 -0400
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="pX8Mi0bU"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=9Wxg0bmAoZMwL7DP1FILaNYigKUm5O9FzWzy/QHJHkI=; b=pX8Mi0bUJ6hoQj29r3i0g1OlW+
+	F7PCyKksKYZca1wgvyIbC6eoBMDnVf12DNbkZB6iwqXHieeea005dByLCB03jd/wFr+VRkB4dnneC
+	mlkMEy1AJRPN9DJ+OwA3nHySQTiRESYuIqxD6ct7MAk5N2IgO6rk8+2M5uoJBt/w+Ba0MlywjRe5S
+	WMLHcPWPI7ovYIjtBX+M2r0AB8LQF+C4CWi7GP3S9aUcMTaccA+Xrzjz1idndjIGar2d3H589bZmv
+	gXyj6stTXgwskn2NRQ3BwVP/4PAyzQHjUV2rnVbxU9lcGlQ+8CZItLzYVvvNeBAgMgcbF8K46lDbR
+	FanQuf/g==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:37484)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1uHOFY-0007Sm-2h;
+	Tue, 20 May 2025 15:47:24 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1uHOFW-0002yr-0L;
+	Tue, 20 May 2025 15:47:22 +0100
+Date: Tue, 20 May 2025 15:47:21 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: stefano.radaelli21@gmail.com
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Xu Liang <lxu@maxlinear.com>
+Subject: Re: [PATCH net-next v4] net: phy: add driver for MaxLinear MxL86110
+ PHY
+Message-ID: <aCyV-Zaeg-BLV0Vt@shell.armlinux.org.uk>
+References: <20250520124521.440639-1-stefano.radaelli21@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 02/16] perf: Fix the throttle logic for a group
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: peterz@infradead.org, mingo@redhat.com, irogers@google.com,
- mark.rutland@arm.com, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, eranian@google.com, ctshao@google.com,
- tmricht@linux.ibm.com, leo.yan@arm.com
-References: <20250516182853.2610284-1-kan.liang@linux.intel.com>
- <20250516182853.2610284-3-kan.liang@linux.intel.com>
- <aCoynoKRbpnOZ7QE@google.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <aCoynoKRbpnOZ7QE@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250520124521.440639-1-stefano.radaelli21@gmail.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
+On Tue, May 20, 2025 at 02:45:18PM +0200, stefano.radaelli21@gmail.com wrote:
+> +/**
+> + * mxl86110_write_extended_reg() - write to a PHY's extended register
+> + * @phydev: pointer to a &struct phy_device
+> + * @regnum: register number to write
+> + * @val: value to write to @regnum
+> + *
+> + * Note: This function assumes the caller already holds the MDIO bus lock
+> + * or otherwise has exclusive access to the PHY.
+> + *
+> + * Return: 0 or negative error code
+> + */
+> +static int mxl86110_write_extended_reg(struct phy_device *phydev,
+> +				       u16 regnum, u16 val)
+> +{
+> +	int ret;
+> +
+> +	ret = __phy_write(phydev, MXL86110_EXTD_REG_ADDR_OFFSET, regnum);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return __phy_write(phydev, MXL86110_EXTD_REG_ADDR_DATA, val);
+> +}
+> +
+> +/**
+> + * mxl86110_read_extended_reg - Read a PHY's extended register
+> + * @phydev: Pointer to the PHY device structure
+> + * @regnum: Extended register number to read (address written to reg 30)
+> + *
+> + * Reads the content of a PHY extended register using the MaxLinear
+> + * 2-step access mechanism: write the register address to reg 30 (0x1E),
+> + * then read the value from reg 31 (0x1F).
+> + *
+> + * Note: This function assumes the caller already holds the MDIO bus lock
+> + * or otherwise has exclusive access to the PHY.
+> + *
+> + * Return: 16-bit register value on success, or negative errno code on failure.
+> + */
+> +static int mxl86110_read_extended_reg(struct phy_device *phydev, u16 regnum)
+> +{
+> +	int ret;
+> +
+> +	ret = __phy_write(phydev, MXL86110_EXTD_REG_ADDR_OFFSET, regnum);
+> +	if (ret < 0)
+> +		return ret;
+> +	return __phy_read(phydev, MXL86110_EXTD_REG_ADDR_DATA);
+> +}
+> +
+> +/**
+> + * mxl86110_modify_extended_reg() - modify bits of a PHY's extended register
+> + * @phydev: pointer to the phy_device
+> + * @regnum: register number to write
+> + * @mask: bit mask of bits to clear
+> + * @set: bit mask of bits to set
+> + *
+> + * Note: register value = (old register value & ~mask) | set.
+> + * This function assumes the caller already holds the MDIO bus lock
+> + * or otherwise has exclusive access to the PHY.
+> + *
+> + * Return: 0 or negative error code
+> + */
+> +static int mxl86110_modify_extended_reg(struct phy_device *phydev,
+> +					u16 regnum, u16 mask, u16 set)
+> +{
+> +	int ret;
+> +
+> +	ret = __phy_write(phydev, MXL86110_EXTD_REG_ADDR_OFFSET, regnum);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return __phy_modify(phydev, MXL86110_EXTD_REG_ADDR_DATA, mask, set);
+> +}
 
+As these are all unlocked variants, I wonder whether they should have
+__ prefixes. I'm wondering whether our paged accessors could be re-used
+for this phy, even though effectively there is only one "paged" register
+at offset 31 with the page index at offset 30.
 
-On 2025-05-18 3:18 p.m., Namhyung Kim wrote:
-> Hi Kan,
-> 
-> On Fri, May 16, 2025 at 11:28:39AM -0700, kan.liang@linux.intel.com wrote:
->> From: Kan Liang <kan.liang@linux.intel.com>
->>
->> The current throttle logic doesn't work well with a group, e.g., the
->> following sampling-read case.
->>
->> $ perf record -e "{cycles,cycles}:S" ...
->>
->> $ perf report -D | grep THROTTLE | tail -2
->>             THROTTLE events:        426  ( 9.0%)
->>           UNTHROTTLE events:        425  ( 9.0%)
->>
->> $ perf report -D | grep PERF_RECORD_SAMPLE -a4 | tail -n 5
->> 0 1020120874009167 0x74970 [0x68]: PERF_RECORD_SAMPLE(IP, 0x1):
->> ... sample_read:
->> .... group nr 2
->> ..... id 0000000000000327, value 000000000cbb993a, lost 0
->> ..... id 0000000000000328, value 00000002211c26df, lost 0
->>
->> The second cycles event has a much larger value than the first cycles
->> event in the same group.
->>
->> The current throttle logic in the generic code only logs the THROTTLE
->> event. It relies on the specific driver implementation to disable
->> events. For all ARCHs, the implementation is similar. Only the event is
->> disabled, rather than the group.
->>
->> The logic to disable the group should be generic for all ARCHs. Add the
->> logic in the generic code. The following patch will remove the buggy
->> driver-specific implementation.
->>
->> The throttle only happens when an event is overflowed. Stop the entire
->> group when any event in the group triggers the throttle.
->> The MAX_INTERRUPTS is set to all throttle events.
->>
->> The unthrottled could happen in 3 places.
->> - event/group sched. All events in the group are scheduled one by one.
->>   All of them will be unthrottled eventually. Nothing needs to be
->>   changed.
->> - The perf_adjust_freq_unthr_events for each tick. Needs to restart the
->>   group altogether.
->> - The __perf_event_period(). The whole group needs to be restarted
->>   altogether as well.
->>
->> With the fix,
->> $ sudo perf report -D | grep PERF_RECORD_SAMPLE -a4 | tail -n 5
->> 0 3573470770332 0x12f5f8 [0x70]: PERF_RECORD_SAMPLE(IP, 0x2):
->> ... sample_read:
->> .... group nr 2
->> ..... id 0000000000000a28, value 00000004fd3dfd8f, lost 0
->> ..... id 0000000000000a29, value 00000004fd3dfd8f, lost 0
-> 
-> Thanks for working on this!
-> 
->>
->> Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
->> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
->> ---
->>  kernel/events/core.c | 60 ++++++++++++++++++++++++++++++++------------
->>  1 file changed, 44 insertions(+), 16 deletions(-)
->>
->> diff --git a/kernel/events/core.c b/kernel/events/core.c
->> index af78ec118e8f..52490c2ce45b 100644
->> --- a/kernel/events/core.c
->> +++ b/kernel/events/core.c
->> @@ -2739,6 +2739,39 @@ void perf_event_disable_inatomic(struct perf_event *event)
->>  static void perf_log_throttle(struct perf_event *event, int enable);
->>  static void perf_log_itrace_start(struct perf_event *event);
->>  
->> +static void perf_event_unthrottle(struct perf_event *event, bool start)
->> +{
->> +	event->hw.interrupts = 0;
->> +	if (start)
->> +		event->pmu->start(event, 0);
->> +	perf_log_throttle(event, 1);
->> +}
->> +
->> +static void perf_event_throttle(struct perf_event *event)
->> +{
->> +	event->pmu->stop(event, 0);
->> +	event->hw.interrupts = MAX_INTERRUPTS;
->> +	perf_log_throttle(event, 0);
->> +}
->> +
->> +static void perf_event_unthrottle_group(struct perf_event *event, bool skip_start_event)
->> +{
->> +	struct perf_event *sibling, *leader = event->group_leader;
->> +
->> +	perf_event_unthrottle(leader, skip_start_event ? leader != event : true);
->> +	for_each_sibling_event(sibling, leader)
->> +		perf_event_unthrottle(sibling, skip_start_event ? sibling != event : true);
-> 
-> This will add more PERF_RECORD_THROTTLE records for sibling events.
+Also, given the number of single accesses to the registers, I wonder if
+it also makes sense to have variants that take the MDIO bus lock, which
+would allow simplification of sites such as...
 
-Yes
+> +
+> +/**
+> + * mxl86110_get_wol() - report if wake-on-lan is enabled
+> + * @phydev: pointer to the phy_device
+> + * @wol: a pointer to a &struct ethtool_wolinfo
+> + */
+> +static void mxl86110_get_wol(struct phy_device *phydev,
+> +			     struct ethtool_wolinfo *wol)
+> +{
+> +	int value;
+> +
+> +	wol->supported = WAKE_MAGIC;
+> +	wol->wolopts = 0;
+> +	phy_lock_mdio_bus(phydev);
+> +	value = mxl86110_read_extended_reg(phydev, MXL86110_EXT_WOL_CFG_REG);
+> +	phy_unlock_mdio_bus(phydev);
 
-> Maybe we can generate it for the actual target event only?
+... here.
 
-The current code cannot track the actual target event for unthrottle.
-Because the MAX_INTERRUPTS are set for all events when event_throttle.
+> +	if (value >= 0 && (value & MXL86110_WOL_CFG_WOLE_MASK))
+> +		wol->wolopts |= WAKE_MAGIC;
+> +}
+> +
+> +/**
+> + * mxl86110_set_wol() - enable/disable wake-on-lan
+> + * @phydev: pointer to the phy_device
+> + * @wol: a pointer to a &struct ethtool_wolinfo
+> + *
+> + * Configures the WOL Magic Packet MAC
+> + *
+> + * Return: 0 or negative errno code
+> + */
+> +static int mxl86110_set_wol(struct phy_device *phydev,
+> +			    struct ethtool_wolinfo *wol)
+> +{
+> +	struct net_device *netdev;
+> +	const u8 *mac;
 
-But I think we can only add a PERF_RECORD_THROTTLE record for the leader
-event, which can reduce the number of THROTTLE records.
+Use "const unsigned char *mac" - that way you don't need the cast below.
 
-The sample right after the THROTTLE record must be generated by the
-actual target event. I think it should be good enough for the perf tool
-to locate the event.
+> +	int ret = 0;
+> +
+> +	phy_lock_mdio_bus(phydev);
+> +
+> +	if (wol->wolopts & WAKE_MAGIC) {
+> +		netdev = phydev->attached_dev;
+> +		if (!netdev) {
+> +			ret = -ENODEV;
+> +			goto out;
+> +		}
+> +
+> +		/* Configure the MAC address of the WOL magic packet */
+> +		mac = (const u8 *)netdev->dev_addr;
+> +		ret = mxl86110_write_extended_reg(phydev,
+> +						  MXL86110_EXT_MAC_ADDR_CFG1,
+> +						  ((mac[0] << 8) | mac[1]));
+> +		if (ret < 0)
+> +			goto out;
+> +
+> +		ret = mxl86110_write_extended_reg(phydev,
+> +						  MXL86110_EXT_MAC_ADDR_CFG2,
+> +						  ((mac[2] << 8) | mac[3]));
+> +		if (ret < 0)
+> +			goto out;
+> +
+> +		ret = mxl86110_write_extended_reg(phydev,
+> +						  MXL86110_EXT_MAC_ADDR_CFG3,
+> +						  ((mac[4] << 8) | mac[5]));
+> +		if (ret < 0)
+> +			goto out;
+> +
+> +		ret = mxl86110_modify_extended_reg(phydev,
+> +						   MXL86110_EXT_WOL_CFG_REG,
+> +						   MXL86110_WOL_CFG_WOLE_MASK,
+> +						   MXL86110_EXT_WOL_CFG_WOLE);
+> +		if (ret < 0)
+> +			goto out;
+> +
+> +		/* Enables Wake-on-LAN interrupt in the PHY. */
+> +		ret = __phy_modify(phydev, PHY_IRQ_ENABLE_REG, 0,
+> +				   PHY_IRQ_ENABLE_REG_WOL);
+> +		if (ret < 0)
+> +			goto out;
+> +
+> +		phydev_dbg(phydev,
+> +			   "%s, MAC Addr: %02X:%02X:%02X:%02X:%02X:%02X\n",
+> +			   __func__,
+> +			   mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+> +	} else {
+> +		ret = mxl86110_modify_extended_reg(phydev,
+> +						   MXL86110_EXT_WOL_CFG_REG,
+> +						   MXL86110_WOL_CFG_WOLE_MASK,
+> +						   0);
+> +		if (ret < 0)
+> +			goto out;
+> +
+> +		/* Disables Wake-on-LAN interrupt in the PHY. */
+> +		ret = __phy_modify(phydev, PHY_IRQ_ENABLE_REG,
+> +				   PHY_IRQ_ENABLE_REG_WOL, 0);
+> +	}
+> +
+> +out:
+> +	phy_unlock_mdio_bus(phydev);
+> +	return ret;
+> +}
+> +
 
-I will add the below patch as a separate improvement in V4.
+...
+> +static int mxl86110_led_hw_control_get(struct phy_device *phydev, u8 index,
+> +				       unsigned long *rules)
+> +{
+> +	int val;
+> +
+> +	if (index >= MXL86110_MAX_LEDS)
+> +		return -EINVAL;
+> +
+> +	phy_lock_mdio_bus(phydev);
+> +	val = mxl86110_read_extended_reg(phydev,
+> +					 MXL86110_LED0_CFG_REG + index);
+> +	phy_unlock_mdio_bus(phydev);
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 52490c2ce45b..cd559501cfbd 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2744,14 +2744,16 @@ static void perf_event_unthrottle(struct
-perf_event *event, bool start)
-  	event->hw.interrupts = 0;
-  	if (start)
-  	event->pmu->start(event, 0);
--	perf_log_throttle(event, 1);
-+	if (event == event->group_leader)
-+		perf_log_throttle(event, 1);
-  }
+This could also be simplified with the locking accessors.
 
-  static void perf_event_throttle(struct perf_event *event)
-  {
-  	event->pmu->stop(event, 0);
-  	event->hw.interrupts = MAX_INTERRUPTS;
--	perf_log_throttle(event, 0);
-+	if (event == event->group_leader)
-+		perf_log_throttle(event, 0);
-  }
+> +	if (val < 0)
+> +		return val;
+> +
+> +	if (val & MXL86110_LEDX_CFG_LINK_UP_TX_ACT_ON)
+> +		*rules |= BIT(TRIGGER_NETDEV_TX);
+> +
+> +	if (val & MXL86110_LEDX_CFG_LINK_UP_RX_ACT_ON)
+> +		*rules |= BIT(TRIGGER_NETDEV_RX);
+> +
+> +	if (val & MXL86110_LEDX_CFG_LINK_UP_HALF_DUPLEX_ON)
+> +		*rules |= BIT(TRIGGER_NETDEV_HALF_DUPLEX);
+> +
+> +	if (val & MXL86110_LEDX_CFG_LINK_UP_FULL_DUPLEX_ON)
+> +		*rules |= BIT(TRIGGER_NETDEV_FULL_DUPLEX);
+> +
+> +	if (val & MXL86110_LEDX_CFG_LINK_UP_10MB_ON)
+> +		*rules |= BIT(TRIGGER_NETDEV_LINK_10);
+> +
+> +	if (val & MXL86110_LEDX_CFG_LINK_UP_100MB_ON)
+> +		*rules |= BIT(TRIGGER_NETDEV_LINK_100);
+> +
+> +	if (val & MXL86110_LEDX_CFG_LINK_UP_1GB_ON)
+> +		*rules |= BIT(TRIGGER_NETDEV_LINK_1000);
+> +
+> +	return 0;
+> +};
+> +
+> +static int mxl86110_led_hw_control_set(struct phy_device *phydev, u8 index,
+> +				       unsigned long rules)
+> +{
+> +	u16 val = 0;
+> +	int ret;
+> +
+> +	if (index >= MXL86110_MAX_LEDS)
+> +		return -EINVAL;
+> +
+> +	if (rules & BIT(TRIGGER_NETDEV_LINK_10))
+> +		val |= MXL86110_LEDX_CFG_LINK_UP_10MB_ON;
+> +
+> +	if (rules & BIT(TRIGGER_NETDEV_LINK_100))
+> +		val |= MXL86110_LEDX_CFG_LINK_UP_100MB_ON;
+> +
+> +	if (rules & BIT(TRIGGER_NETDEV_LINK_1000))
+> +		val |= MXL86110_LEDX_CFG_LINK_UP_1GB_ON;
+> +
+> +	if (rules & BIT(TRIGGER_NETDEV_TX))
+> +		val |= MXL86110_LEDX_CFG_LINK_UP_TX_ACT_ON;
+> +
+> +	if (rules & BIT(TRIGGER_NETDEV_RX))
+> +		val |= MXL86110_LEDX_CFG_LINK_UP_RX_ACT_ON;
+> +
+> +	if (rules & BIT(TRIGGER_NETDEV_HALF_DUPLEX))
+> +		val |= MXL86110_LEDX_CFG_LINK_UP_HALF_DUPLEX_ON;
+> +
+> +	if (rules & BIT(TRIGGER_NETDEV_FULL_DUPLEX))
+> +		val |= MXL86110_LEDX_CFG_LINK_UP_FULL_DUPLEX_ON;
+> +
+> +	if (rules & BIT(TRIGGER_NETDEV_TX) ||
+> +	    rules & BIT(TRIGGER_NETDEV_RX))
+> +		val |= MXL86110_LEDX_CFG_LAB_BLINK;
+> +
+> +	phy_lock_mdio_bus(phydev);
+> +	ret = mxl86110_write_extended_reg(phydev,
+> +					  MXL86110_LED0_CFG_REG + index, val);
+> +	phy_unlock_mdio_bus(phydev);
 
+and this... and with the locking accessors it could become simply:
 
-> 
-> Also the condition for skip_start_event is if it's a freq event.
-> I think we can skip pmu->start() if the sibling is also a freq event.
+	return mxl86110_write_extended_reg(...);
 
-The skip_start_event is if it will be start later separately. It intends
-to avoid the double start.
+> +	if (ret)
+> +		return ret;
+> +
+> +	return 0;
+> +};
+> +
+> +/**
+> + * mxl86110_synce_clk_cfg() - applies syncE/clk output configuration
+> + * @phydev: pointer to the phy_device
+> + *
+> + * Note: This function assumes the caller already holds the MDIO bus lock
+> + * or otherwise has exclusive access to the PHY.
+> + *
+> + * Return: 0 or negative errno code
+> + */
+> +static int mxl86110_synce_clk_cfg(struct phy_device *phydev)
+> +{
+> +	u16 mask = 0, val = 0;
+> +	int ret;
+> +
+> +	/*
+> +	 * Configures the clock output to its default
+> +	 * setting as per the datasheet.
+> +	 * This results in a 25MHz clock output being selected in the
+> +	 * COM_EXT_SYNCE_CFG register for SyncE configuration.
+> +	 */
+> +	val = MXL86110_EXT_SYNCE_CFG_EN_SYNC_E |
+> +			FIELD_PREP(MXL86110_EXT_SYNCE_CFG_CLK_SRC_SEL_MASK,
+> +				   MXL86110_EXT_SYNCE_CFG_CLK_SRC_SEL_25M);
+> +	mask = MXL86110_EXT_SYNCE_CFG_EN_SYNC_E |
+> +	       MXL86110_EXT_SYNCE_CFG_CLK_SRC_SEL_MASK |
+> +	       MXL86110_EXT_SYNCE_CFG_CLK_FRE_SEL;
+> +
+> +	/* Write clock output configuration */
+> +	ret = mxl86110_modify_extended_reg(phydev, MXL86110_EXT_SYNCE_CFG_REG,
+> +					   mask, val);
+> +
+> +	return ret;
 
-In the perf_adjust_freq_unthr_events(), it will only adjust and start
-the leader event, not group. If we skip pmu->start() for a freq sibling
-event, it will not start until the next context switch.
+No need for "ret":
 
-Thanks,
-Kan
+	return mxl86110_modify_extended_reg(phydev, MXL86110_EXT_SYNCE_CFG_REG,
+					    mask, val);
 
-> I remember KVM folks concern about the number of PMU accesses as it
-> can cause VM exits.
-> 
-> Thanks,
-> Namhyung
-> 
->> +}
->> +
->> +static void perf_event_throttle_group(struct perf_event *event)
->> +{
->> +	struct perf_event *sibling, *leader = event->group_leader;
->> +
->> +	perf_event_throttle(leader);
->> +	for_each_sibling_event(sibling, leader)
->> +		perf_event_throttle(sibling);
->> +}
->> +
->>  static int
->>  event_sched_in(struct perf_event *event, struct perf_event_context *ctx)
->>  {
->> @@ -4393,12 +4426,8 @@ static void perf_adjust_freq_unthr_events(struct list_head *event_list)
->>  
->>  		hwc = &event->hw;
->>  
->> -		if (hwc->interrupts == MAX_INTERRUPTS) {
->> -			hwc->interrupts = 0;
->> -			perf_log_throttle(event, 1);
->> -			if (!is_event_in_freq_mode(event))
->> -				event->pmu->start(event, 0);
->> -		}
->> +		if (hwc->interrupts == MAX_INTERRUPTS)
->> +			perf_event_unthrottle_group(event, is_event_in_freq_mode(event));
->>  
->>  		if (!is_event_in_freq_mode(event))
->>  			continue;
->> @@ -6426,14 +6455,6 @@ static void __perf_event_period(struct perf_event *event,
->>  	active = (event->state == PERF_EVENT_STATE_ACTIVE);
->>  	if (active) {
->>  		perf_pmu_disable(event->pmu);
->> -		/*
->> -		 * We could be throttled; unthrottle now to avoid the tick
->> -		 * trying to unthrottle while we already re-started the event.
->> -		 */
->> -		if (event->hw.interrupts == MAX_INTERRUPTS) {
->> -			event->hw.interrupts = 0;
->> -			perf_log_throttle(event, 1);
->> -		}
->>  		event->pmu->stop(event, PERF_EF_UPDATE);
->>  	}
->>  
->> @@ -6441,6 +6462,14 @@ static void __perf_event_period(struct perf_event *event,
->>  
->>  	if (active) {
->>  		event->pmu->start(event, PERF_EF_RELOAD);
->> +		/*
->> +		 * Once the period is force-reset, the event starts immediately.
->> +		 * But the event/group could be throttled. Unthrottle the
->> +		 * event/group now to avoid the next tick trying to unthrottle
->> +		 * while we already re-started the event/group.
->> +		 */
->> +		if (event->hw.interrupts == MAX_INTERRUPTS)
->> +			perf_event_unthrottle_group(event, true);
->>  		perf_pmu_enable(event->pmu);
->>  	}
->>  }
->> @@ -10331,8 +10360,7 @@ __perf_event_account_interrupt(struct perf_event *event, int throttle)
->>  	if (unlikely(throttle && hwc->interrupts >= max_samples_per_tick)) {
->>  		__this_cpu_inc(perf_throttled_count);
->>  		tick_dep_set_cpu(smp_processor_id(), TICK_DEP_BIT_PERF_EVENTS);
->> -		hwc->interrupts = MAX_INTERRUPTS;
->> -		perf_log_throttle(event, 0);
->> +		perf_event_throttle_group(event);
->>  		ret = 1;
->>  	}
->>  
->> -- 
->> 2.38.1
->>
-> 
+> +}
+> +
+> +/**
+> + * mxl86110_broadcast_cfg - Configure MDIO broadcast setting for PHY
+> + * @phydev: Pointer to the PHY device structure
+> + *
+> + * This function configures the MDIO broadcast behavior of the MxL86110 PHY.
+> + * Currently, broadcast mode is explicitly disabled by clearing the EPA0 bit
+> + * in the RGMII_MDIO_CFG extended register.
+> + *
+> + * Note: This function assumes the caller already holds the MDIO bus lock
+> + * or otherwise has exclusive access to the PHY.
+> + *
+> + * Return: 0 on success or a negative errno code on failure.
+> + */
+> +static int mxl86110_broadcast_cfg(struct phy_device *phydev)
+> +{
+> +	int ret;
+> +
+> +	ret = mxl86110_modify_extended_reg(phydev,
+> +					   MXL86110_EXT_RGMII_MDIO_CFG,
+> +					   MXL86110_RGMII_MDIO_CFG_EPA0_MASK,
+> +					   0);
+> +
+> +	return ret;
 
+No need for "ret".
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
