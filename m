@@ -1,54 +1,57 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6194E22AE75;
-	Tue, 20 May 2025 14:26:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B2518BEC;
+	Tue, 20 May 2025 14:27:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747751211; cv=none; b=bpn6H4dPs3uxVaFwXUi8DDAUPWNXdaYQyiBAs339iIQSE1WHh8tUgxwmOMxjsP6wra1CzUWtnXr7vYf28C8ORpu/mEex1ZHxTmE+UHF2YnoF9+nUJMQdXqjJaZD7JLzYQg+wQa2flPLeUB/8ddK7HByzlSuNZwSd2lHjd5s8WE0=
+	t=1747751229; cv=none; b=fGLb5g2Xn+97TDyYBtVXW2+jV155Z3d5CS44PQsIQ2LO2g7HK/HGvBcjvXqf4t6AiQFWNPt9mYHLLrUUQaRTuMsw/xQ//Dq5g3Rf9hkjGrgwy7TzLU2J09zEdF1V9sdtZfwqssjTRC+WA2WG6v76TN3Cxhr+4q6T4g8xAoT38s0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747751211; c=relaxed/simple;
-	bh=w9icpQsgrGNjR6K6qPPXvDTkb5teyRmMFTM80GcS1us=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ui47Cm0qq170XNB8xCn8rRttbx8RxUNF5pFShpR1/EZaAVRQZ8blhix+ZfVgRm8SB7pno5LaWrwS4vq/L7rYsNOjrkjBfA2KKejYUuW5XJFfEkZGUO0pD9wlTMwf1LvUVUFNoBLhjXM0i17EPPAIQg0dogMJe74few/6Uhz85W4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=lLOoKyl8; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1747751229; c=relaxed/simple;
+	bh=oCLBYeP1sLVu5Ws29+9UfDbRGJI3ciUnpG/nTA1olYM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=rrYvgsGQy6U/J8XH0+7AwJoV+aFuUfJ/b+cn3hbaYiHoAlbthntI5dOnPpSv/lCsSe2a36RexTEATYJXKK+mDt0ILRdVHh4p4CtkWT+gNhZersvpMHyBVfTJb82lE90AfncWgo80/H12MWxnedhufaKLRiZraaW5R5BgrRLglKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KRrcIo3O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="lLOoKyl8"
-Received: from pendragon.ideasonboard.com (179.218-130-109.adsl-dyn.isp.belgacom.be [109.130.218.179])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 6E4752EC;
-	Tue, 20 May 2025 16:26:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1747751188;
-	bh=w9icpQsgrGNjR6K6qPPXvDTkb5teyRmMFTM80GcS1us=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lLOoKyl8NpCeTZXW2Mq6J4UmQhCiz4Q2tJ3RihwwZCyJp1Vc2yr1n8EqqfA7ylGzV
-	 oEUu+jD67QLNt/uDcIFSP65wRMi8rWSrT/zwDeIb6dh8NOfdEOWC9+EBblOZL6iWlm
-	 APaNF6NKOT3xQ58nNWNEkEHm8GOyVtERxgaeZ2D4=
-Date: Tue, 20 May 2025 16:26:43 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Biju Das <biju.das.jz@bp.renesas.com>, David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH v5 07/12] drm: renesas: rz-du: mipi_dsi: Make "rst" reset
- control optional for RZ/V2H(P)
-Message-ID: <20250520142643.GI13321@pendragon.ideasonboard.com>
-References: <20250512182330.238259-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250512182330.238259-8-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KRrcIo3O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7789C4CEE9;
+	Tue, 20 May 2025 14:27:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747751229;
+	bh=oCLBYeP1sLVu5Ws29+9UfDbRGJI3ciUnpG/nTA1olYM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=KRrcIo3ONGaX7Pi2FUjzUMa9ejaXw+b9Vm9fA9E3drThkSwBDBErRwftIqGCKAhYl
+	 bgvtywYaGpxfZmkvw1WGrNyTx5+9cqmvDol7+KmjgP6gYZ5Y0jtXzaDt+lj0PjVRLq
+	 EhGYy0wxjqBs2GooRe6qM+uu2Y0X+5SJGczXyS0LIOv6RpJ1MOJE0XmDdR0XDCrx6T
+	 gmlU+1+zpu6h4u32w077LBi3dm342l6zDXzZQC9Zkr0gnH5zeDii9wXcwdbBZ/cB/p
+	 JGV7/hDyqx5nG9Yg+Os07MjY52JZ6Hk85v7bL3fQXtVc5++fHv7e9lly/iSdoAgJK4
+	 YkIlmYSK7kkHg==
+Date: Tue, 20 May 2025 09:27:07 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>,
+	Karolina Stolarek <karolina.stolarek@oracle.com>,
+	Martin Petersen <martin.petersen@oracle.com>,
+	Ben Fuller <ben.fuller@oracle.com>,
+	Drew Walton <drewwalton@microsoft.com>,
+	Anil Agrawal <anilagrawal@meta.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Sargun Dhillon <sargun@meta.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Kai-Heng Feng <kaihengf@nvidia.com>,
+	Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
+	Terry Bowman <terry.bowman@amd.com>,
+	Shiju Jose <shiju.jose@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	LKML <linux-kernel@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org,
+	Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v6 07/16] PCI/AER: Initialize aer_err_info before using it
+Message-ID: <20250520142707.GA1297901@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,48 +60,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250512182330.238259-8-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0d429918-b42c-5714-ef40-ce2a9e129a6b@linux.intel.com>
 
-Hi Prabhakar,
-
-On Mon, May 12, 2025 at 07:23:25PM +0100, Prabhakar wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Tue, May 20, 2025 at 01:39:06PM +0300, Ilpo Järvinen wrote:
+> On Mon, 19 May 2025, Bjorn Helgaas wrote:
 > 
-> In preparation for adding support for the Renesas RZ/V2H(P) SoC, make the
-> "rst" reset control optional in the MIPI DSI driver. The RZ/V2H(P) SoC
-> does not provide this reset line, and attempting to acquire it using the
-> mandatory API causes probe failure.
+> > From: Bjorn Helgaas <bhelgaas@google.com>
+> > 
+> > Previously the struct aer_err_info "e_info" was allocated on the stack
+> > without being initialized, so it contained junk except for the fields we
+> > explicitly set later.
+> > 
+> > Initialize "e_info" at declaration with a designated initializer list,
+> > which initializes the other members to zero.
+> > 
+> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> > ---
+> >  drivers/pci/pcie/aer.c | 37 ++++++++++++++++---------------------
+> >  1 file changed, 16 insertions(+), 21 deletions(-)
+> > 
+> > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> > index 95a4cab1d517..40f003eca1c5 100644
+> > --- a/drivers/pci/pcie/aer.c
+> > +++ b/drivers/pci/pcie/aer.c
+> > @@ -1281,7 +1281,7 @@ static void aer_isr_one_error(struct aer_rpc *rpc,
+> >  		struct aer_err_source *e_src)
 > 
-> Switching to devm_reset_control_get_optional_exclusive() ensures
-> compatibility with both SoCs that provide this reset line and those that
-> do not, such as RZ/V2H(P).
-> 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Unrelated to this change, these would fit on a single line.
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-
-> ---
-> v4->v5:
-> - New patch
-> ---
->  drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-> index 00c2bc6e9d6c..5fc607be0c46 100644
-> --- a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-> +++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-> @@ -748,7 +748,7 @@ static int rzg2l_mipi_dsi_probe(struct platform_device *pdev)
->  	if (IS_ERR(dsi->vclk))
->  		return PTR_ERR(dsi->vclk);
->  
-> -	dsi->rstc = devm_reset_control_get_exclusive(dsi->dev, "rst");
-> +	dsi->rstc = devm_reset_control_get_optional_exclusive(dsi->dev, "rst");
->  	if (IS_ERR(dsi->rstc))
->  		return dev_err_probe(dsi->dev, PTR_ERR(dsi->rstc),
->  				     "failed to get rst\n");
-
--- 
-Regards,
-
-Laurent Pinchart
+Thanks, fixed!
