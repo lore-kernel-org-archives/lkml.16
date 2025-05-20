@@ -1,218 +1,195 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02019261596;
-	Tue, 20 May 2025 15:54:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B39F225178C;
+	Tue, 20 May 2025 15:55:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747756494; cv=none; b=OU7LDK3tlZ5vHtGAMVs/owEufqOwAIu4SVl0wfJ/AGuTz7OcAxOpG9ahZ4pfGrQkixNcFZ9ZvUFyqukXJQyFANUv09Cgj/PFVhBHLhpOEZx6VtbT981ZbDpgPN8mrOR2eTj9mCv7X7v6ZryahgceLJ8Rf23BH1TtFodT5IcLlKU=
+	t=1747756509; cv=none; b=dl+mNsrzVFBgCVA/qOTUlXj0LXeCJqNMFVOL6KLvp6z+xWAuadwxixECgVrkGu05bGQmwa0Q0onR0DwXW1rHkdDIfINHoc+o27ARRajiDAm5EoJa/kuaV0gO92wDvImZNAqxEaO+/gnaKNoN3G9dEG63di5DQYs9hpP3Pl/peao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747756494; c=relaxed/simple;
-	bh=khpO6nTdgEs/t+6f2mpbp5mVcH9V/RCYTZNqzcCFOpE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Oc5ugXaNInjnbcFzCi+brZ99dOHp4f62ncO6/WFXtBb4HcKcG9xQ9SqsYxPdiGL2qG0EnvQrfn3EQ5H76FZmFEKAA0o1l2NFMDGqsh1ZaUJiHHKPbtBz1NSfzeVyYCvNeOm14Gzq1alHM5aKJD0Y7vKpcwi6uAAzY4mAy+QDnhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=XiNVxsZl; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1747756509; c=relaxed/simple;
+	bh=FYxaZIFYiSlSkrrsjnZzOBg9yth/DKqMvh6hwwlrvac=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ThOElcdWW6532OIviAohr3zDFL8ZyHUBo2Kpp9UUX9SwNSpeuYtz9CxNLkGGTUvEhK7FEK2YnteTaydCxFvygHayIaOWl6lhngem189KmnKtDQPOkYJ7FR6D+TiNGwVhzQfQW1Dpf/SR7l5u74O7JHFF4oEeIKuoQw+SW0F8bAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G9c8keaC; arc=none smtp.client-ip=209.85.166.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="XiNVxsZl"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54KDn9Rb014272;
-	Tue, 20 May 2025 15:54:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=wdJ1jw
-	LeaCaXnJQgO3tBJIQWMGl4H2EoSYzh9CBvdn0=; b=XiNVxsZlvaP6AUdLPjj/1Z
-	pZwRwscvLPGeLDxhp3AXf/zq7zDOUSitKESagUOL/ol+eEC8esL91WN4LC/Ko6yg
-	u3EDTpbb+Zg1v4XZV0Nm4EDLcFi3MsTsPVSdbq+UivqiuaP7EQazJEh2XhJxf7LV
-	rQRD6p2wA+iyOBU8Yz7/+3am3XIPyjhIOQ1g1lh9Co7wfSQjwJhzQhP9NnxC86Ez
-	+RLUR/u7g8qDHYEUQzNd4pROQ1KFQGda/sOginb8wNj/rwCReRG8Va44pd+D0dQg
-	9OPOGVz05fDXTP9vVRbZ3pzczrYAAmz6ZNBRedGFzioEDJFl9ZgUL+OO+ztnpjVw
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46rty3gqvb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 May 2025 15:54:37 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54KFg5Ki019123;
-	Tue, 20 May 2025 15:54:36 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46rty3gqv1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 May 2025 15:54:36 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54KDCAuq014262;
-	Tue, 20 May 2025 15:54:35 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 46q4stcy3q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 May 2025 15:54:35 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54KFsVPU50594076
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 20 May 2025 15:54:31 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 54DEB2004B;
-	Tue, 20 May 2025 15:54:31 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C967020043;
-	Tue, 20 May 2025 15:54:30 +0000 (GMT)
-Received: from p-imbrenda (unknown [9.152.224.66])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 20 May 2025 15:54:30 +0000 (GMT)
-Date: Tue, 20 May 2025 17:54:28 +0200
-From: Claudio Imbrenda <imbrenda@linux.ibm.com>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-        James Houghton
- <jthoughton@google.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>,
-        Yang Shi
- <yang@os.amperecomputing.com>,
-        David Hildenbrand <david@redhat.com>,
-        "Liam
- R . Howlett" <Liam.Howlett@oracle.com>,
-        Matthew Wilcox
- <willy@infradead.org>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Heiko
- Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander
- Gordeev <agordeev@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>, pbonzini@redhat.com,
-        kvm@vger.kernel.org, linux-s390@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH] KVM: s390: rename PROT_NONE to PROT_TYPE_DUMMY
-Message-ID: <20250520175428.24ec47b7@p-imbrenda>
-In-Reply-To: <cb0894b6-3c41-4850-a077-2d18f5547d2e@lucifer.local>
-References: <20250519145657.178365-1-lorenzo.stoakes@oracle.com>
-	<20250520171009.49b2bd1b@p-imbrenda>
-	<cb0894b6-3c41-4850-a077-2d18f5547d2e@lucifer.local>
-Organization: IBM
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G9c8keaC"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3da73df6c4eso48540465ab.0;
+        Tue, 20 May 2025 08:55:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747756507; x=1748361307; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QsfE5Ws7A5y4XkBVdsDW8KUKRVAk9/PTVUELtxrBWGA=;
+        b=G9c8keaC7+amk3Kpblrqk7hVEtgAfEgC9B+dvOZiCa2ATMhoKYPjKRF5cH5eMIo7I2
+         E7gNmzp5SW/MKL8gzvyYE3x2+N1GJhlPYw/UaiiX6IHFHfq7HQEaTeHdvKtKqhSRdT6/
+         XJx6y4uZLHrQebqXHewEB2YHAIzXi6+i09LSbzTM/gljDwNWRDuIt3O7vXFGvMQAaXuH
+         PuDvSQv8MDXqlCinl8IiyyfHZaowE1CUKhHutEBDaIiYtNLoFf3SOgt10TQ0p6pUoDKD
+         /I43ObHxmk4Yx4o3SN6PaAVJj6Q96w0jx6AEbkxUgce65EUn3OvKfIKybNr8cWUWWRz4
+         1g+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747756507; x=1748361307;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QsfE5Ws7A5y4XkBVdsDW8KUKRVAk9/PTVUELtxrBWGA=;
+        b=YRJ459K6XngIa7m8xUCgMaIDGl6scR9/Cya6TsfjaM5JAqiiwaWoyfgME1aS3UZc7g
+         eeNEmd5JbJq5AfuChuwDSIdufJcrLAYCWk2EOxGGAFpAFAnJn6IMIQeG/n1Hy78gJDTX
+         rooUnyiI8h6gYkg/B9ggTyvuotxeErkJ1Oj1stCRlrOYmT9sL3q+qCxqDMfRk6kU4iZn
+         OiCNhn7u0dyLaSD/gJxKYPr9cGn0BJk5+udVD9l2RMzqPjaX2CALCgMzJc/c1zJOpIv1
+         9k0IpQllt0Mq7dv89F0f6Oi0Qf/wrnvwjoHy8J/qGgJOgSYujzknB2MdmSHQTy6kQTRV
+         lsMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVX98JQjijjCtIg/jqa5VVyzKXsWA+F2kLqpKwvYp5DMqHxb1a7rocnbayRcC7BkyVr4OZaSJw8c/bpPnaG@vger.kernel.org, AJvYcCVmXkKMRHIGNiMP3uQDJTX08co0lt20bivVTM2pKroP7pozmemBHA0JtLRcycaIPTHTz0kF8f75UX/mL1Yu@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUzCIrBFxlwntuU+1AtNHijN95R3HaWGs60cfPljd9CPFxF8qP
+	YFbReRRXvII8IDhpJaZh8bXwJS8vHTpU0VtcedMas29uPapczahoJSSAAtaSWYvvyMTo90frb/I
+	PZmZ32aRtt25AQKvwB8ApNsAzIX/11iop1Q==
+X-Gm-Gg: ASbGnct1wlRSiTf3hBrSTol3A2wavxYbpIrnLbxZ+ww8ekHepzOaCnw4JMQWFqPUA37
+	IRoCILZMsrzeVRnYU6SlW5i0v3qophvp6Taz62Qo/Tf6Xi3V5Kmyw0Gj1QU2iA0IAHFHe0ISF6F
+	KhC628ku+1wPPDQDB5qyS1wfB6T9MepJShYsveU7ups+I6O5k84mXI260U3u3K/Ac=
+X-Google-Smtp-Source: AGHT+IFhLr1++r1gjYcEo/FgI0W3OZZ8mTrCTZfvNmuvRbd7YcTCPIl0/iL0jILe3yB2gSChaKoPV9tO234fgVqUVIQ=
+X-Received: by 2002:a05:6e02:1745:b0:3d9:36a8:3d98 with SMTP id
+ e9e14a558f8ab-3db84296deemr208995435ab.2.1747756505533; Tue, 20 May 2025
+ 08:55:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDEyOCBTYWx0ZWRfX+SmD9pxtFRWL Y1A5CvRO5j3pLbJXgfJ3tYZTv5xTJ2ADxBegmCEskjfRhabnYdPZwMZsYAzewILo2kFo8TrOUs1 rqQklZ9hOB2kjgti7XAoPtboPYftAQT7x+MpZ+fwDgmEsqQ3G2n2EbA7P69GK2+wWYp8Vh/uwu/
- RJvfhG7lfNn/YGLB3Jibr9Lpc38LUjY8AIVRh9Vb41QK9g33sTJ90TAvd39dEie+lbImUQZYZW0 kleqa2qaU1QNXMeeGAgVShdYsJ2bQ6K1og+rvffMapKCP9P7W3RR1VPZdlAyN1DMRcqAMM08St4 hnAeBWDHcYuwv5yE9qGA/Htf+o4mb7hyfCy/WL0Jhe8LDwkUJhslstLenI0aORMJvpvvveGJqYq
- TBBK8tr+yv+pDpofjLYbs9z5QRhcb5GqZAnNVOnGmwV7+FqHIsM7J3QoLnnBTiScT4NuujDM
-X-Proofpoint-ORIG-GUID: NqSYhNXr9uJIwok2XATvZpjkj1adV_zo
-X-Authority-Analysis: v=2.4 cv=DKeP4zNb c=1 sm=1 tr=0 ts=682ca5bd cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=QyXUC8HyAAAA:8 a=yPCof4ZbAAAA:8 a=TAZUD9gdAAAA:8 a=VnNF1IyMAAAA:8
- a=vzhER2c_AAAA:8 a=20KFwNOVAAAA:8 a=-dfg5vNDZjZ0OaYXpFQA:9 a=CjuIK1q_8ugA:10 a=f1lSKsbWiCfrRWj5-Iac:22 a=0YTRHmU2iG2pZC6F1fw2:22
-X-Proofpoint-GUID: uIm7Ji6apohDdQkSspMSiXzoGwXD6Qz_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-20_06,2025-05-20_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- lowpriorityscore=0 suspectscore=0 mlxscore=0 impostorscore=0
- malwarescore=0 phishscore=0 bulkscore=0 clxscore=1015 adultscore=0
- spamscore=0 mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505200128
+References: <20250519175348.11924-1-robdclark@gmail.com> <20250519175348.11924-3-robdclark@gmail.com>
+ <aCwx_9KIc9QBd7_0@pollux>
+In-Reply-To: <aCwx_9KIc9QBd7_0@pollux>
+From: Rob Clark <robdclark@gmail.com>
+Date: Tue, 20 May 2025 08:54:53 -0700
+X-Gm-Features: AX0GCFstOcmcGHOhFOrI3CrX7srdksd9YcxyBYxwwonSJJrqAmG4Xy5DWrOKG6Y
+Message-ID: <CAF6AEGs6_ZgBpKwe7weZWUppCZ87Y6wOt9RsF68hsJO-VpeiJA@mail.gmail.com>
+Subject: Re: [PATCH v5 02/40] drm/gpuvm: Allow VAs to hold soft reference to BOs
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+	linux-arm-msm@vger.kernel.org, Connor Abbott <cwabbott0@gmail.com>, 
+	Rob Clark <robdclark@chromium.org>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 20 May 2025 16:24:10 +0100
-Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
-
-> On Tue, May 20, 2025 at 05:10:09PM +0200, Claudio Imbrenda wrote:
-> > On Mon, 19 May 2025 15:56:57 +0100
-> > Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
-> >  
-> > > The enum type prot_type declared in arch/s390/kvm/gaccess.c declares an
-> > > unfortunate identifier within it - PROT_NONE.
-> > >
-> > > This clashes with the protection bit define from the uapi for mmap()
-> > > declared in include/uapi/asm-generic/mman-common.h, which is indeed what
-> > > those casually reading this code would assume this to refer to.
-> > >
-> > > This means that any changes which subsequently alter headers in any way
-> > > which results in the uapi header being imported here will cause build
-> > > errors.
-> > >
-> > > Resolve the issue by renaming PROT_NONE to PROT_TYPE_DUMMY.
-> > >
-> > > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> > > Suggested-by: Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
-> > > Fixes: b3cefd6bf16e ("KVM: s390: Pass initialized arg even if unused")
-> > > Cc: stable@vger.kernel.org
-> > > Reported-by: kernel test robot <lkp@intel.com>
-> > > Closes: https://lore.kernel.org/oe-kbuild-all/202505140943.IgHDa9s7-lkp@intel.com/
-> > > Acked-by: Christian Borntraeger <borntraeger@linux.ibm.com>
-> > > Acked-by: Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
-> > > Acked-by: Yang Shi <yang@os.amperecomputing.com>
-> > > Reviewed-by: David Hildenbrand <david@redhat.com>
-> > > Acked-by: Liam R. Howlett <Liam.Howlett@oracle.com>  
+On Tue, May 20, 2025 at 12:40=E2=80=AFAM Danilo Krummrich <dakr@kernel.org>=
+ wrote:
+>
+> On Mon, May 19, 2025 at 10:51:25AM -0700, Rob Clark wrote:
+> > From: Rob Clark <robdclark@chromium.org>
 > >
-> > if you had put me in CC, you would have gotten this yesterday already:
+> > Eases migration for drivers where VAs don't hold hard references to
+> > their associated BO, avoiding reference loops.
 > >
-> > Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>  
-> 
-> Thanks and apologies for not cc-ing you, clearly my mistake.
-> 
-> Though I would suggest your level of grumpiness here is a little over the
-> top under the circumstances :) we maintainers must scale our grumpiness
-> accordingly...
+> > In particular, msm uses soft references to optimistically keep around
+> > mappings until the BO is distroyed.  Which obviously won't work if the
+> > VA (the mapping) is holding a reference to the BO.
+> >
+> > By making this a per-VM flag, we can use normal hard-references for
+> > mappings in a "VM_BIND" managed VM, but soft references in other cases,
+> > such as kernel-internal VMs (for display scanout, etc).
+> >
+> > Cc: Danilo Krummrich <dakr@kernel.org>
+> > Signed-off-by: Rob Clark <robdclark@chromium.org>
+> > ---
+> >  drivers/gpu/drm/drm_gpuvm.c | 37 ++++++++++++++++++++++++++++++++-----
+> >  include/drm/drm_gpuvm.h     | 19 +++++++++++++++++--
+> >  2 files changed, 49 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/drm_gpuvm.c b/drivers/gpu/drm/drm_gpuvm.c
+> > index 1e89a98caad4..892b62130ff8 100644
+> > --- a/drivers/gpu/drm/drm_gpuvm.c
+> > +++ b/drivers/gpu/drm/drm_gpuvm.c
+> > @@ -1125,6 +1125,8 @@ __drm_gpuvm_prepare_objects(struct drm_gpuvm *gpu=
+vm,
+> >       LIST_HEAD(extobjs);
+> >       int ret =3D 0;
+> >
+> > +     WARN_ON(gpuvm->flags & DRM_GPUVM_VA_WEAK_REF);
+>
+> No, here and below, please don't scatter WARN_ON() calls in various code =
+paths
+> for this hack.
 
-it was not meant to be grumpy, sorry if it came through that way!
+I do prefer WARN_ON()s to make it clear what is or is not proper
+usage, but if you really don't want them I can remove them.
 
-> 
-> >  
-> > > ---
-> > > Separated out from [0] as problem found in other patch in series.
-> > >
-> > > [0]: https://lore.kernel.org/all/cover.1747338438.git.lorenzo.stoakes@oracle.com/
-> > >
-> > >  arch/s390/kvm/gaccess.c | 8 ++++----
-> > >  1 file changed, 4 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/arch/s390/kvm/gaccess.c b/arch/s390/kvm/gaccess.c
-> > > index f6fded15633a..4e5654ad1604 100644
-> > > --- a/arch/s390/kvm/gaccess.c
-> > > +++ b/arch/s390/kvm/gaccess.c
-> > > @@ -318,7 +318,7 @@ enum prot_type {
-> > >  	PROT_TYPE_DAT  = 3,
-> > >  	PROT_TYPE_IEP  = 4,
-> > >  	/* Dummy value for passing an initialized value when code != PGM_PROTECTION */
-> > > -	PROT_NONE,
-> > > +	PROT_TYPE_DUMMY,
-> > >  };
-> > >
-> > >  static int trans_exc_ending(struct kvm_vcpu *vcpu, int code, unsigned long gva, u8 ar,
-> > > @@ -334,7 +334,7 @@ static int trans_exc_ending(struct kvm_vcpu *vcpu, int code, unsigned long gva,
-> > >  	switch (code) {
-> > >  	case PGM_PROTECTION:
-> > >  		switch (prot) {
-> > > -		case PROT_NONE:
-> > > +		case PROT_TYPE_DUMMY:
-> > >  			/* We should never get here, acts like termination */
-> > >  			WARN_ON_ONCE(1);
-> > >  			break;
-> > > @@ -804,7 +804,7 @@ static int guest_range_to_gpas(struct kvm_vcpu *vcpu, unsigned long ga, u8 ar,
-> > >  			gpa = kvm_s390_real_to_abs(vcpu, ga);
-> > >  			if (!kvm_is_gpa_in_memslot(vcpu->kvm, gpa)) {
-> > >  				rc = PGM_ADDRESSING;
-> > > -				prot = PROT_NONE;
-> > > +				prot = PROT_TYPE_DUMMY;
-> > >  			}
-> > >  		}
-> > >  		if (rc)
-> > > @@ -962,7 +962,7 @@ int access_guest_with_key(struct kvm_vcpu *vcpu, unsigned long ga, u8 ar,
-> > >  		if (rc == PGM_PROTECTION)
-> > >  			prot = PROT_TYPE_KEYC;
-> > >  		else
-> > > -			prot = PROT_NONE;
-> > > +			prot = PROT_TYPE_DUMMY;
-> > >  		rc = trans_exc_ending(vcpu, rc, ga, ar, mode, prot, terminate);
-> > >  	}
-> > >  out_unlock:
-> > > --
-> > > 2.49.0
-> > >  
-> >  
+> This won't ever be a valid and supported mode, please keep the diff as sm=
+all as
+> possible.
+>
+> <snip>
+>
+> > diff --git a/include/drm/drm_gpuvm.h b/include/drm/drm_gpuvm.h
+> > index 2a9629377633..652e0fb66413 100644
+> > --- a/include/drm/drm_gpuvm.h
+> > +++ b/include/drm/drm_gpuvm.h
+> > @@ -205,10 +205,25 @@ enum drm_gpuvm_flags {
+> >        */
+> >       DRM_GPUVM_RESV_PROTECTED =3D BIT(0),
+> >
+> > +     /**
+> > +      * @DRM_GPUVM_VA_WEAK_REF:
+> > +      *
+> > +      * Flag indicating that the &drm_gpuva (or more correctly, the
+> > +      * &drm_gpuvm_bo) only holds a weak reference to the &drm_gem_obj=
+ect.
+> > +      * This mode is intended to ease migration to drm_gpuvm for drive=
+rs
+> > +      * where the GEM object holds a referece to the VA, rather than t=
+he
+> > +      * other way around.
+> > +      *
+> > +      * In this mode, drm_gpuvm does not track evicted or external obj=
+ects.
+> > +      * It is intended for legacy mode, where the needed objects are a=
+ttached
+> > +      * to the command submission ioctl, therefore this tracking is un=
+needed.
+> > +      */
+> > +     DRM_GPUVM_VA_WEAK_REF =3D BIT(1),
+>
+> As mentioned in v4, I do *not* agree with making this a valid and support=
+ed
+> mode. If at all, it should be an exception for MSM, i.e.
+> DRM_GPUVM_MSM_LEGACY_QUIRK with an explicit approval from Dave / Sima [1]=
+.
 
+I can rename it if you really insist, but "legacy" implies it is
+something that will go away.
+
+Unfortunately there is too much map/unmap cost for things like
+pageflip, so the VM related to scanout will continue to use this mode
+forever, even if all of the userspace related VMs are not using this
+flag.  If I could opportunistically keep around a mapping while using
+gpuvm as it is "intended", I would.  But I don't see how that can work
+when the VMA/VM_BO holds a reference to the GEM object.
+
+> It invalidates the whole design and makes a lot of functions fundamentall=
+y
+> invalid to call, which is well demonstrated by all the WARN_ON() calls th=
+is
+> patch attempts to add.
+
+I think of it more as adding a different mode of operation.  One
+where, perhaps some functions of gpuvm are not available, but that is
+fine because they are also unneeded in that mode of operation.  Hence
+the WARN_ON()s to make that clear.
+
+BR,
+-R
+
+> > +
+> >       /**
+> >        * @DRM_GPUVM_USERBITS: user defined bits
+> >        */
+> > -     DRM_GPUVM_USERBITS =3D BIT(1),
+> > +     DRM_GPUVM_USERBITS =3D BIT(2),
+> >  };
+>
+> [1] https://lore.kernel.org/dri-devel/aCb-72KH-NrzvGXy@pollux/
