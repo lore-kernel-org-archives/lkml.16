@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E7C925CC69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E83225CC75
 	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 06:41:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747723316; cv=none; b=a3u5wJmOUK+BihH8cYkLMCK9Gz0vdIcgozoo1I38sIcXbzSGb3fg0jVYZcmp2nGGbkXc0auBdMnFb+6WFbCNxlqFM1krVACm7QlGxaxNb7/hHQ5XGA6NYYuUVJO4dMkh+8bZAhJPgSrybV4OAJuV6FpKZ1CVgNJ6XOZayqoFIDM=
+	t=1747723316; cv=none; b=YMjlFlRLDUCoFTRuIg9ajyh/aPvNc2HLOD+JVbLTso2gUl7AEE5OzkSBasAsIkajLeJSq64HIx1LTkxN9FaiVtIrETvFgk9qMxFTxPlJBI80m4S+0ZkP/RYMMJ4zMRbqa/uJTDj1sN6wd/jxzT3zNZQOvaLOqhwREUPEFMA/Izw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747723316; c=relaxed/simple;
-	bh=5800+9pcKbpwq9CBW/e+YLPVT84qYs9jAiAX5nQsi/M=;
+	bh=Ru70Z0gfk7r/ztNDvEUpiGKGD5w8V2rasl2zsjCvPA0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=p9YEkMwAm0ZV7d7Bv4uhiQp3nKF/mMBp++pncC1hLgioaxb/fAGGPt7FqjDZoyZF+fb1PuD0r+ESUAStt2o8Cx3L3WWfoq+3OMp+gdre1Y76JE+AJvOMi6dVkVPUIUi1moOfuQ6gr2O+MaOfVaML8W5bYMLxZZb9QBAgY/7R5iY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uvpQZvo9; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Ps37YaZX+QrhNkzbxhUk28CHwUSM6jytjJ7tedkKkGWaT30wqVaFJRR5S9As1neGBjvlwdp5j+25KJfL/j3yVD4ceiA/+8b8M+L3dClUl9zbsoM4E9Msj6sOErrA7u1nHJfsKjUdQwAF3nKDwxAFQZbKwDKxPBkl8LBszePdAYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VBuYz06M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uvpQZvo9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7B8AC4CEEF;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VBuYz06M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3228C4CEE9;
 	Tue, 20 May 2025 06:41:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1747723315;
-	bh=5800+9pcKbpwq9CBW/e+YLPVT84qYs9jAiAX5nQsi/M=;
+	bh=Ru70Z0gfk7r/ztNDvEUpiGKGD5w8V2rasl2zsjCvPA0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=uvpQZvo9EPb1u7NTzIgzcgU6azMIAEeH0HkmaMSL4vjhWM5Gl07e/SkXyjP42xcNE
-	 55IMlT9HHJe75l7jSL+BA5mdZ6wyopH4uvgu0Wb2EDcAwWC0s/Xioqoeg+70052Xmw
-	 Rv16B8nDEo16mOYBFPCM5r+BT2U3//9M3L3g2jB2r5bOYg0AaiKYPettWgyOM89MqH
-	 djRlvN390SUwMUMBllh6fWE9fmQoKogmKi/DmFu4tOly9bPZNTXMcl+OXSuITy0KbK
-	 sf30Cvxy+vc3yEGJgNVqwOD1YKk4RYPAeyikKPd/OzBpGWSdd+CPz0xS5j+gGtpqUu
-	 fp8jz1LwCXAwA==
+	b=VBuYz06MRfh9VZgXTy6TtG/VN96a0tEFAkJyi3giyKjMIIfXe79Uy6URatuzkSpsX
+	 f+7Es9GWeQxVkCUTt8B+tQ1xg+staHWIIOXP+/GAdi+VTyVueDiSuC1QgSuA8nLfY7
+	 dgQrcTZHixh1kYlehURs6Szy+YbEsPcQdDisiWYUzKLClDEnoeXCKriDenBbVEkrZT
+	 ZCpLKHPd0TDicgukrrjsL0InEUumhMrAo+/PZ5Srl+b5wSIHSzf/qBdruwEEuRJ/Vg
+	 xZKe+MDi5ATv0csVs2bKBhMgpaBVRdZdr01hqj4N/Cvl6mxQURCCqR9B9K+G/+r6Si
+	 u3b1ecWMiFgiQ==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1uHGfi-00000005qts-084I;
-	Tue, 20 May 2025 08:41:54 +0200
+	id 1uHGfh-00000005qtg-3yev;
+	Tue, 20 May 2025 08:41:53 +0200
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Igor Mammedov <imammedo@redhat.com>,
 	"Michael S . Tsirkin" <mst@redhat.com>
@@ -40,9 +40,9 @@ Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
 	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	Ani Sinha <anisinha@redhat.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v9 14/20] tests/acpi: virt: allow acpi table changes at DSDT and HEST tables
-Date: Tue, 20 May 2025 08:41:33 +0200
-Message-ID: <0c9eb582c0b0a9c8f74e901384416ab39d01a3d3.1747722973.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v9 11/20] acpi/generic_event_device: Update GHES migration to cover hest addr
+Date: Tue, 20 May 2025 08:41:30 +0200
+Message-ID: <5cfb087459104f5661ead08748c9712f2dfa1ef4.1747722973.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1747722973.git.mchehab+huawei@kernel.org>
 References: <cover.1747722973.git.mchehab+huawei@kernel.org>
@@ -55,31 +55,62 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-We'll be adding a new GED device for HEST GPIO notification and
-increasing the number of entries at the HEST table.
-
-Blocklist testing HEST and DSDT tables until such changes
-are completed.
+The GHES migration logic should now support HEST table location too.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Acked-by: Igor Mammedov <imammedo@redhat.com>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Igor Mammedov <imammedo@redhat.com>
 ---
- tests/qtest/bios-tables-test-allowed-diff.h | 6 ++++++
- 1 file changed, 6 insertions(+)
+ hw/acpi/generic_event_device.c | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/tests/qtest/bios-tables-test-allowed-diff.h b/tests/qtest/bios-tables-test-allowed-diff.h
-index dfb8523c8bf4..0a1a26543ba2 100644
---- a/tests/qtest/bios-tables-test-allowed-diff.h
-+++ b/tests/qtest/bios-tables-test-allowed-diff.h
-@@ -1 +1,7 @@
- /* List of comma-separated changed AML files to ignore */
-+"tests/data/acpi/aarch64/virt/HEST",
-+"tests/data/acpi/aarch64/virt/DSDT",
-+"tests/data/acpi/aarch64/virt/DSDT.acpihmatvirt",
-+"tests/data/acpi/aarch64/virt/DSDT.memhp",
-+"tests/data/acpi/aarch64/virt/DSDT.pxb",
-+"tests/data/acpi/aarch64/virt/DSDT.topology",
+diff --git a/hw/acpi/generic_event_device.c b/hw/acpi/generic_event_device.c
+index 7a62f8d5bca1..d292f61b4e41 100644
+--- a/hw/acpi/generic_event_device.c
++++ b/hw/acpi/generic_event_device.c
+@@ -386,6 +386,34 @@ static const VMStateDescription vmstate_ghes_state = {
+     }
+ };
+ 
++static const VMStateDescription vmstate_hest = {
++    .name = "acpi-hest",
++    .version_id = 1,
++    .minimum_version_id = 1,
++    .fields = (const VMStateField[]) {
++        VMSTATE_UINT64(hest_addr_le, AcpiGhesState),
++        VMSTATE_END_OF_LIST()
++    },
++};
++
++static bool hest_needed(void *opaque)
++{
++    AcpiGedState *s = opaque;
++    return s->ghes_state.hest_addr_le;
++}
++
++static const VMStateDescription vmstate_hest_state = {
++    .name = "acpi-ged/hest",
++    .version_id = 1,
++    .minimum_version_id = 1,
++    .needed = hest_needed,
++    .fields = (const VMStateField[]) {
++        VMSTATE_STRUCT(ghes_state, AcpiGedState, 1,
++                       vmstate_hest, AcpiGhesState),
++        VMSTATE_END_OF_LIST()
++    }
++};
++
+ static const VMStateDescription vmstate_acpi_ged = {
+     .name = "acpi-ged",
+     .version_id = 1,
+@@ -398,6 +426,7 @@ static const VMStateDescription vmstate_acpi_ged = {
+         &vmstate_memhp_state,
+         &vmstate_cpuhp_state,
+         &vmstate_ghes_state,
++        &vmstate_hest_state,
+         NULL
+     }
+ };
 -- 
 2.49.0
 
