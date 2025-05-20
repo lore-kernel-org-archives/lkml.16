@@ -1,95 +1,94 @@
-Received: from mx.mylinuxtime.de (mx.mylinuxtime.de [46.4.70.188])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B00A25C6F9
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 06:34:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.4.70.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1848A25C6F9;
+	Tue, 20 May 2025 06:34:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747722882; cv=none; b=i8iq4dAk6F/u1yD0P1VREbDUW5JV5EbgbVUi2AGf/4nCxa//mPYz0alSPTrrvzhr1ocWfHtjjCr4ko/jfMIZ7RHFpwn3rlYTjrxJN7ve9SwDSn6/b3E0ZD7UrU3gZh8tn3VBISSEWHFHimTvWQypC+6R8UqowCi2/gBCNuhZOkU=
+	t=1747722894; cv=none; b=REuvTL2VlFl7kyriFva6ETwPmaod/y5o7+BIRgvIa8+Tj/yPoAdoCZUJOjvolKTe9T/R7RMTWAKLBNOub3HJrO1n1AQO5cVyDj43ER1S5y2WjfFimy0g+tzLeRUitzMBQwl4pB8SXHwGDAs3lNKegd5wkx3zNVIenMmVKR5hoSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747722882; c=relaxed/simple;
-	bh=2RUinEL1Eq5U6TvPMd7m9XAO3DZWMF0UfUS5bEdGUL0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EdaUZi086XH559J71TNDGd9fGm7SYMv1mX13t2/yAU8/UbJ55Sy3wvosPWpqup4udckfTCWyyPl3ZXf9UI6rqkJ8JapKLJM2m1hDdqYzuifoeYeiqsjuiYA6fD2B1KWXx9mzNgPVWN7rxQuEinnrGAsrn1GnCVE1zzhqp3dJ3eg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eworm.de; spf=pass smtp.mailfrom=eworm.de; arc=none smtp.client-ip=46.4.70.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eworm.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eworm.de
-Received: from leda.eworm.net (unknown [194.36.25.6])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx.mylinuxtime.de (Postfix) with ESMTPSA id CFC1C25AAFF;
-	Tue, 20 May 2025 08:34:38 +0200 (CEST)
-Authentication-Results: mx.mylinuxtime.de;
-	auth=pass smtp.auth=mail@eworm.de smtp.mailfrom=list@eworm.de
-Date: Tue, 20 May 2025 08:34:38 +0200
-From: Christian Hesse <list@eworm.de>
-To: Salvatore Bonaccorso <carnil@debian.org>
-Cc: Roland Clobus <rclobus@rclobus.nl>, Lizhi Xu <lizhi.xu@windriver.com>,
- Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
- 1106070@bugs.debian.org, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org,
- regressions@lists.linux.dev
-Subject: Re: [6.12.y regression] loosetup: failed to set up loop device:
- Invalid argument after 184b147b9f7f ("loop: Add sanity check for
- read/write_iter")
-Message-ID: <20250520083438.295e415a@leda.eworm.net>
-In-Reply-To: <aCwZy6leWNvr7EMd@eldamar.lan>
-References: <3a333f27-6810-4313-8910-485df652e897@rclobus.nl>
-	<aCwZy6leWNvr7EMd@eldamar.lan>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-pc-linux-gnu)
-X-Face: %O:rCSk<c"<MpJ:yn<>HSKf7^4uF|FD$9$I0}g$nbnS1{DYPvs#:,~e`).mzj\$P9]V!WCveE/XdbL,L!{)6v%x4<jA|JaB-SKm74~Wa1m;|\QFlOg>\Bt!b#{;dS&h"7l=ow'^({02!2%XOugod|u*mYBVm-OS:VpZ"ZrRA4[Q&zye,^j;ftj!Hxx\1@;LM)Pz)|B%1#sfF;s;,N?*K*^)
-Face: iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAGFBMVEUZFRFENy6KVTKEd23CiGHeqofJvrX4+vdHgItOAAAACXBIWXMAAA3XAAAN1wFCKJt4AAACUklEQVQ4y2VUTZeqMAxNxXG2Io5uGd64L35unbF9ax0b3OLxgFs4PcLff0lBHeb1QIq5uelNCEJNq/TIFGyeC+iugH0WJr+B1MvzWASpuP4CYHOB0VfoDdddwA7OIFQIEHjXDiCtV5e9QX0WMu8AG0mB7g7WP4GqeqVdsi4vv/5kFBvaF/zD7zDquL4DxbrDGDyAsgNYOsJOYzth4Q9ZF6iLV+6TLAT1pi2kuvgAtZxSjoG8cL+8vIn251uoe1OOEWwbIPU04gHsmMsoxyyhYsD2FdIigF1yxaVbBuSOCAlCoX324I7wNMhrO1bhOLsRoA6DC6wQ5eQiSG5BiWQfM4gN+uItQTRDMaJUhVbGyKWCuaaUGSVFVKpl4PdoDn3yY8J+YxQxyhlHfoYOyPgyDcO+cSQK6Bvabjcy2nwRo3pxgA8jslnCuYw23ESOzHAPYwo4ITNQMaOO+RGPEGhSlPEZBh2jmBEjQ5cKbxmr0ruAe/WCriUxW76I8T3h7vqY5VR5wXLdERodg2rHEzdxxk5KpXTL4FwnarvndKM5/MWDY5CuBBdQ+3/0ivsUJHicuHd+Xh3jOdBL+FjSGq4SPCwco+orpWlERRTNo7BHCvbNXFVSIQMp+P5QsIL9upmr8kMTUOfxEHoanwzKRcNAe76WbjBwex/RkdHu48xT5YqP70DaMOhBcTHmAVDxLaBdle93oJy1QKFUh2GXT4am+YH/GGel1CeI98GdMXsytjCKIq/9cMrlgxFCROv+3/BU1fijNpcVD6DxE8VfLBaxUGr1D5usgDYdjwiPAAAAAElFTkSuQmCC
+	s=arc-20240116; t=1747722894; c=relaxed/simple;
+	bh=xj1/d4nkyU14Uz0z2ygXiCJS8S9VEH7Pg1iUVkAGGlY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=uHiZoAzuRp8s3kwyR9PzOEROX5ZZenoU5xi80OtyMS3eaDHPsfjuGQoi2aRSTeeLQINgWz5bARr3Qgq6jj3Z5t28M6CXeCWff1EczRi50AEw0s+Wuk3dOFkRc6vQCdURMerUcgAh97Ywm0xiLvTw6rzxkLs9dUZGaoXwBoL3Dq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KilYpwdG; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KilYpwdG"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 918DBC4CEEF;
+	Tue, 20 May 2025 06:34:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747722893;
+	bh=xj1/d4nkyU14Uz0z2ygXiCJS8S9VEH7Pg1iUVkAGGlY=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=KilYpwdG18NBtpo1GQlMo5gyKIVpDIzKGHGuzh6ZcbSFh31+nPdoXJZyc0jE4SAgP
+	 nMCtvWhS797w9FvvEtL/oT+zuG35zTmS1PhIhZwXt/dVEsP236LRfz447O3ORmuB0e
+	 wuFPqRcILoO+/b6C7JXQImMuYEQCSkNLeosmVExQVGgCCFyqi0B7KF0pcjJoeHfWMU
+	 5KP6sG/9VYDR4u/GcZR771ik/pSotk7P/r84fA46rQ6GWqnImR0ulp/vhHw5TU6w6F
+	 SP3uApiQNy2DGajiyYqdZwcxEE39Gb1Bs2iaBTYXPnLYHltLu1o1eWvi9zSauzvNoZ
+	 gAgPttk0R020A==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C917C3ABDD;
+	Tue, 20 May 2025 06:34:53 +0000 (UTC)
+From: Maud Spierings via B4 Relay <devnull+maudspierings.gocontroll.com@kernel.org>
+Date: Tue, 20 May 2025 08:34:50 +0200
+Subject: [PATCH v7 1/8] dt-bindings: arm: fsl: Add GOcontroll Moduline
+ Display
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/pHHCVVO63xn3l9rY3DXDkq1";
- protocol="application/pgp-signature"; micalg=pgp-sha512
-X-Spamd-Bar: /
-X-Spamd-Result: default: False [0.00 / 15.00]
-X-Rspamd-Server: mx
-X-Rspamd-Queue-Id: CFC1C25AAFF
-X-Stat-Signature: tto66ciskyy4jxzcwht5ucfkrgp8hxhr
-X-Rspamd-Action: no action
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250520-initial_display-v7-1-a8f0195420aa@gocontroll.com>
+References: <20250520-initial_display-v7-0-a8f0195420aa@gocontroll.com>
+In-Reply-To: <20250520-initial_display-v7-0-a8f0195420aa@gocontroll.com>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+ Maud Spierings <maudspierings@gocontroll.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747722892; l=1206;
+ i=maudspierings@gocontroll.com; s=20250214; h=from:subject:message-id;
+ bh=7LK5io9tXyJrf5fT7pNPykcX/YAUSsMUIEqjia8Pbmw=;
+ b=cIHZnnDGBjVlYMnVnr15Baq4iQ5GbRfwYKNbHYbdVGdz2NiZmnj/8g7K+USmDmACK1Wfw54nU
+ 9mGdbQk82PJCpaLR0dm6eiTs9UOtXpmvbvshhKjgsbXkThhhe4ws8Hl
+X-Developer-Key: i=maudspierings@gocontroll.com; a=ed25519;
+ pk=7chUb8XpaTQDvWhzTdHC0YPMkTDloELEC7q94tOUyPg=
+X-Endpoint-Received: by B4 Relay for maudspierings@gocontroll.com/20250214
+ with auth_id=341
+X-Original-From: Maud Spierings <maudspierings@gocontroll.com>
+Reply-To: maudspierings@gocontroll.com
 
---Sig_/pHHCVVO63xn3l9rY3DXDkq1
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Maud Spierings <maudspierings@gocontroll.com>
 
-Salvatore Bonaccorso <carnil@debian.org> on Tue, 2025/05/20 07:57:
-> In Debian Roland Clobus reported a regression with setting up loop
-> devices from a backing squashfs file lying on read-only mounted target
-> directory from a iso.
->=20
-> The original report is at:
-> https://bugs.debian.org/1106070
+Document the compatible strings for the Moduline Display controller.
 
-We are suffering the same for Arch Linux. Already reported here:
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Signed-off-by: Maud Spierings <maudspierings@gocontroll.com>
+---
+ Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-https://lore.kernel.org/all/20250519175640.2fcac001@leda.eworm.net/
---=20
-main(a){char*c=3D/*    Schoene Gruesse                         */"B?IJj;MEH"
-"CX:;",b;for(a/*    Best regards             my address:    */=3D0;b=3Dc[a+=
-+];)
-putchar(b-1/(/*    Chris            cc -ox -xc - && ./x    */b/42*2-3)*42);}
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index 1b90870958a22e49355dd1f932bf3d84cd864b5f..ecde2123ea0fae38ef233929c7ad343812851a58 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -1095,6 +1095,7 @@ properties:
+               - gateworks,imx8mp-gw74xx   # i.MX8MP Gateworks Board
+               - gateworks,imx8mp-gw75xx-2x # i.MX8MP Gateworks Board
+               - gateworks,imx8mp-gw82xx-2x # i.MX8MP Gateworks Board
++              - gocontroll,moduline-display # GOcontroll Moduline Display controller
+               - skov,imx8mp-skov-basic # SKOV i.MX8MP baseboard without frontplate
+               - skov,imx8mp-skov-revb-hdmi # SKOV i.MX8MP climate control without panel
+               - skov,imx8mp-skov-revb-lt6 # SKOV i.MX8MP climate control with 7” panel
 
---Sig_/pHHCVVO63xn3l9rY3DXDkq1
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+-- 
+2.49.0
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCgAdFiEEXHmveYAHrRp+prOviUUh18yA9HYFAmgsIn4ACgkQiUUh18yA
-9HYgZAgA4bNSTczRx+NihDV8Xfx3/KM7eGuNVbcIFhiXgm6AnWmqrobyQQU3vygo
-79dKyAXYTmB7dxGDOkmMv5JiqJ3yzOUNx4gX6OlAoX9ZlLA7PUrqBcPvLyAhrhvd
-0VR5wSwLOsBo4ujSlR0wQNTc03UwtIRm+t6gdTrqAGBhe7yJNMYCutvwuqEe67wH
-pMszcc7rOHNM8h/2//xz6uyIK1whIO1DU4hsvbZiGMcayKZnNeClGB4JdCZDwaH6
-M6Dpv5aZ05JySqPg1eQvXA/QR6VWPNjoj/J9Ph2yAcx5gQ8bwS3quyhjETOajgad
-5ACdS83Ua+gZs3Iy8M1Pb0a+JxmsvA==
-=Hr/4
------END PGP SIGNATURE-----
-
---Sig_/pHHCVVO63xn3l9rY3DXDkq1--
