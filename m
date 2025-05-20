@@ -1,125 +1,139 @@
-Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C447824C07A
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 15:43:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B58D248F46
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 15:44:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747755818; cv=none; b=l9jTaPUFsDGP5rrhDZUaioGFWe8NxsnvIZs4M71VBPHH0pVWyhCWCE3Tdbb1LOiTT8Oo4hjdAv/C+jlqK/S3EChF4bF92L61R+sj0SK4CnQ8d+SdRXPomSkBtC0SeFt9HLGr7Q31RxBR+eToVpXxMqjDd2sDF4+pglqwRhNXAcI=
+	t=1747755881; cv=none; b=BOFtzdF3zB34+/bFLKk+zLDYSQ5Wl1piklXcYCYUG+dSbwuv+IarqKCPcbMNssk3dHLI9vEdAkbBQv7Kmd8T0nnqa9NpHwJRHdxRLwIhx+vTwdiGX6CNsOAfw1WI/34KAytI3/2f7u+BDl0Bft+irPnolj/VdAlVLsf6ppnkpKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747755818; c=relaxed/simple;
-	bh=a3pH7ZiIwbTGKChJw4K0D5EhESOzWIYHz3GR6ZLllJo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LwviaU0wvjlGHhVa1tzuyNGrxngwJqCc2UDTrNNJiN+Sd6cO/w3QgZukDB0eqM7t2BoKq3bF86FeudxXQZifcqxrJ8p+bmKi+lYAadX55U+isuB1I5cb+inJia63SPVjTx3gBOYU3xwEHuZLlxWU0sCorvGzMXxbdezpbaF+QOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=Zm9fFzDU; arc=none smtp.client-ip=209.85.166.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
+	s=arc-20240116; t=1747755881; c=relaxed/simple;
+	bh=vHPtQTp95qgHiVjk0rfgT4rumfQnjKWibWtqb4WPsqc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q/ICGF1b8x6pP8oF5qNb9qUCk/OvK9EyokpsKOblr71jwpbblrh6114SMf5OR/5lZ5NZdwlFen8IoM2O0iOeKCMCLtTZuo6trHQg+Wzr/T58IqkFfMqG/X+BpyJu40OUkzxTQloR52lHuS9G6fgnCqjcF3gvS7cjFhMbgOHNLqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=dDUitAJD; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="Zm9fFzDU"
-Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3d80bbf3aefso13564375ab.1
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 08:43:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1747755816; x=1748360616; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=f2VRa/jUrsGCKDxS5Z6TMKwtooPNwiNaoz1os+RUkm4=;
-        b=Zm9fFzDUZQiaZ4NwQr47ZI5jmc4k1BVpF8Nb7POTZJoKNLAF7gjMCGM13ZGJp7YF8G
-         yoPsbGNaUos95FbF1cvLKjMHtR/UcczCcAivFLWU3z4Vgx0S7W3xU7UynYxChNu0S8cC
-         dgnT4pl7f9RDepsM+fiPXnvCqqfvgNnzVhSjpso1bS/QIQPjNAPvxEk/BtkxAWjC+R5D
-         hCmj+8aVmFlmp3vnSKJusV7N9s0F1ioA2AdoeO1za3zyrOcKfxsAN6rlj1r1qDr/uh3+
-         E0PRB2miFAPo870F/4b+TyAMiUmaAMARgAW3k9lVVR0JxTvYKrUqKzMgp6djVIq58wev
-         LVbQ==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="dDUitAJD"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54K80lqJ027736
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 15:44:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=lSAgwbIDWc01IeRoKRHNp/WQ
+	jOOH+8S+Tdt/kRAF/+U=; b=dDUitAJDaU/aF0f3WyenDEDOHDcJoqmo3QtouF7W
+	ITxRFH3aVq7oy1IEqbHkWEYQu3SvK7wKmgnY6sF/Fh3XwySUHp8pRjbPMMzLulB0
+	kF5TPBQcFAniHLe7AId1JPitZWC36jqD6ZOoYBfwc0/HyhZqGOWR0V3+GCnzOM1Q
+	ShuTLOA8aGwc54ypNWRcHBH58EGLzB8KkuOqTo8wJM05U7Zb4jAqwP7iV7kcwQVj
+	Mkb1xCaD4TsDgDNWn68Z/cts62LZuS/AL11/X6oPaBdXfZxa9CsuvVeRQh+w2TEW
+	ltgP58JVAb9eSMevVQaJ89J/PLkTumzNVUIt4X5FsOuwvw==
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46pjm50aj3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 15:44:39 +0000 (GMT)
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6f8b14d49a4so54795426d6.2
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 08:44:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747755816; x=1748360616;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=f2VRa/jUrsGCKDxS5Z6TMKwtooPNwiNaoz1os+RUkm4=;
-        b=EySiTjyMQv+Ki6ZQ//sSQmP/lLmi6iEXkGJI15PSk51s8FMpVW+2TvEVnL1PprLNBq
-         6+rUpIQzfGvSpmk4iXwOsZNXpN3K0/vNgZ45k464No2KZ0J6XHBoSO+7MavtrQi4e0+j
-         ZVfc3M9wodmGMxKB0PfVc4tdKEFBYXDwS3VW3C1Hc4zsnA5nf3HChBsVHgsBF4b9DJZv
-         H1ukFbQFyMKlL29AJdA9hrmVul7Wk8fteR66ZCxT95z7Ne3QqAtHBMmVwz8rCMvNO1BE
-         JxRFASr2W2ZyM4FBy3ACOJThQ1vSyKcGtLHHN+seF/IHZNrOH8jTkfAAxV9t5SOK5g07
-         hNaA==
-X-Forwarded-Encrypted: i=1; AJvYcCWa3aLIC0J0PDWndAXQJDiudunXEkm8K2Xvk2e43Ma3TzWM54KheI1YH8UW6yJbAJoQlYRbVoAKgfWxKr4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwdHFN621eCyHE74KR1ywVo+zl0RjJqWniopOieA42jCHhDEhnb
-	5yO8FKYNpZVymuM7t3sapsWCuzK/xA0weUgfI0UG0xuuhP6pGL2wXWAN3zV3Bv9K9mXAwIqb+NU
-	Zd4KcKqiPtmMqDhtGbAA4dPpBpoEFvQBJdXeM4VuG1A==
-X-Gm-Gg: ASbGncvUvzu3YdJSKvIBRTvksBMnPMGVfFQZjuKyfGHuiKmeSAUjFyfZ3BHrq5atin2
-	aY4oK/sNfq6M4grAwo2pRNqX0ezpgsMZ+YYqJCFmtaa5e32SK83sc+Fzhgshrw20we27R17RzS+
-	MZ6Tg2GbsH/rXxZoCawDWiOakZRaLiG1QlNA==
-X-Google-Smtp-Source: AGHT+IF3svIngYATXdacDmgtwqS4kspeKGV9kirg85JkxovKAXbQkjkXEoyYlC+whI2UvtEsLa8NT9F24c12+s1HAI0=
-X-Received: by 2002:a05:6e02:308b:b0:3db:74b3:3875 with SMTP id
- e9e14a558f8ab-3db8435664amr168934525ab.22.1747755815659; Tue, 20 May 2025
- 08:43:35 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747755878; x=1748360678;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lSAgwbIDWc01IeRoKRHNp/WQjOOH+8S+Tdt/kRAF/+U=;
+        b=DFEz2ChZRuOwZkmRHZYjngWP9CQBLdYx8LbVOQbtdFmXOHVwQwZJf2KhPz88nC9bH5
+         rB9VuSLmsHLEd+IGVcO8N645JRzg6cZlE3API+BP58lB9bnPP+97/r5LmG24vuStsAk/
+         Ip6CrxzZ/c7DtNGjqXe5qStklVjpolAT3wKk3v4uoIjPkufPnp5o9ENAVIir3bd86oJs
+         e/LMdfdY0GsBjgKQ6vNjD6FpEj73/Ay6EQUeHkg7D2MMOts1lCJagw2Jua2KinH/Atr+
+         +bqDBJ2yYSY9+WOSMSSWCbuKKaXslU2ZB/aAKUUVgFE7gyaRgL5kiloYaLfCLYPPQg+f
+         WuFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWG2unyAKoyoWBsjgIz7NH3mdq38qxORmd2Ifw6E5ak76xU2k9RFYfKLQ2rlG7S9GcSGLbHmHny2SOwg34=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywf8Ayt8yqxt4ESi3koaGa83ozW5F04R4p9CSgnqwOkiHiyN5xS
+	8ZlDEiVhzJXhnYRdBJmVUaQMFVxay5BytxnPQR5GYus/d3gQMTkUloR2xuR/AUe36TFGqVlkzmn
+	RaX33LDXVag6uONDpwRM6wDFwAVvHW2x17ky0Eqg4nmdT6np12fNsPTl0Y9jM3zG5tqOjCVI+Zq
+	ee4A==
+X-Gm-Gg: ASbGncuw8hM+mhh5TJiSHU/FEyezWxNSNB+jAk6V6IonVIip2djvJ2/EfW5CaJDQDqR
+	GYyV9JbwhM+tdlXNZOCe7Zjrb+UU1ZZTLq+M/VfKlsEgXSbaHgiJJb2ODQQqkiRPffv8/8yhu1h
+	bhqDwFBwbz7/raX5aqNRy/g+qpAtAtlnqRoQeIuRCacWQGzDS0R/1IdO4SUgARZzCjqximN8pKP
+	Z/RZwASUZ7FwnsrTEawC8lTwMQs5pkGSeVuvN0NV2GDGYIwy5OrIcRN6L1K2I7t/1sxxo5zZP0l
+	k3KchGRi/Zdopg2rlPMNCeNCH261uY46y0JxXCqFxGzpxjYhLx9DLONS9FM8b0Aj9seWUn62ZWs
+	=
+X-Received: by 2002:a05:6214:528b:b0:6f8:c23c:5278 with SMTP id 6a1803df08f44-6f8c23c8524mr209650756d6.12.1747755877460;
+        Tue, 20 May 2025 08:44:37 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGm9hVZxx6jSsGoAw0nQEashx/KJKae4VdE14/j2OPoOQ0PtJya6PHIlpK4xtUsXtkz6QIb3g==
+X-Received: by 2002:a05:6214:528b:b0:6f8:c23c:5278 with SMTP id 6a1803df08f44-6f8c23c8524mr209650276d6.12.1747755876852;
+        Tue, 20 May 2025 08:44:36 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e7017f39sm2401148e87.151.2025.05.20.08.44.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 08:44:34 -0700 (PDT)
+Date: Tue, 20 May 2025 18:44:33 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Taeyoung Kwon <xoduddk12345@gmail.com>
+Cc: Sebastian Reichel <sre@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Taeyoung Kwon <Taeyoung.Kwon@telit.com>
+Subject: Re: [PATCH] power: reset: qcom-pon: Rename variables to use generic
+ naming
+Message-ID: <xyhqu7bw3kqlkl5q3q3hexceq2irm4vru6lfspsnpmxkhp6vuc@jpqtvyke5aec>
+References: <20250520143612.109567-1-Taeyoung.Kwon@telit.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515143723.2450630-4-rkrcmar@ventanamicro.com>
- <20250515143723.2450630-5-rkrcmar@ventanamicro.com> <CAAhSdy1Z43xRC7tGS21-5rcX7uMeuWCHhABSuqNzELbp26aj0Q@mail.gmail.com>
- <DA04W4PO99EJ.1XWOAUMZV4BXG@ventanamicro.com>
-In-Reply-To: <DA04W4PO99EJ.1XWOAUMZV4BXG@ventanamicro.com>
-From: Anup Patel <anup@brainfault.org>
-Date: Tue, 20 May 2025 21:13:24 +0530
-X-Gm-Features: AX0GCFudAM8hKKKbM9JFa9_NSe9H8wPOJAH-Y_DVCC6e_pSoJwQHL9S3iyHiauo
-Message-ID: <CAAhSdy1uKpp=WKXmbnH5BQvTSrK9o-Jd6+nCrQEi3A3efLX52g@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] RISC-V: KVM: add KVM_CAP_RISCV_MP_STATE_RESET
-To: =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>
-Cc: kvm-riscv@lists.infradead.org, kvm@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	Atish Patra <atishp@atishpatra.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Andrew Jones <ajones@ventanamicro.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250520143612.109567-1-Taeyoung.Kwon@telit.com>
+X-Authority-Analysis: v=2.4 cv=dIimmPZb c=1 sm=1 tr=0 ts=682ca367 cx=c_pps
+ a=7E5Bxpl4vBhpaufnMqZlrw==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=dt9VzEwgFbYA:10 a=8xVn4GeRAAAA:8 a=38eAcjmzj4vKwzUmQakA:9 a=CjuIK1q_8ugA:10
+ a=zgiPjhLxNE0A:10 a=pJ04lnu7RYOZP9TFuWaZ:22 a=By6hKCY_mHIbKsINY6vW:22
+X-Proofpoint-ORIG-GUID: vHja4b1OfOPgQ5MdAa0Z5HeLwC01eoJt
+X-Proofpoint-GUID: vHja4b1OfOPgQ5MdAa0Z5HeLwC01eoJt
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDEyOSBTYWx0ZWRfX2mLUl9WzGpEa
+ BXaXrDoG0K06pgk6FIdgQvWCcpiiXI09wRvBug+PODuoVfY7T3n1p5mp5Y3Q98t1vVHgz0WVjxt
+ k9lbc06ldFmOlI+AURd7/zf5/wez1Mmwld53JJBMdyWmOoyr7Ztk6Zg2QCbKGbRyBoXPPBvm9pw
+ HweHmSRHO9oU0D8veE/2uDZtFQPyCQ9f7hvqppIDaOP9pnsLvHphnYKLjjePSh70Y6gRAN4FrCx
+ h45XIC3esRBe64grDZTq9vop4K8WSPl41Vh1ZdB3afBt4t1JopjlybJUi5j10CtWhE/7f0ldedz
+ LCTglhmk1VRbDnyEiI/Xtii4o9F3IUMEKnQkqDCfWglurEMsS/MMfcjBn8cidIn5ozU+Q/benur
+ y78Jno7YT0iZ1WUKH1yV2n//3nn0I/XKbUhbSCdqPETn2Vdd2R2U+Lqmq0BxHmzn5vewZyc+
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-20_06,2025-05-20_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 mlxscore=0 bulkscore=0 malwarescore=0 suspectscore=0
+ impostorscore=0 clxscore=1015 phishscore=0 adultscore=0 priorityscore=1501
+ mlxlogscore=884 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
+ definitions=main-2505200129
 
-On Mon, May 19, 2025 at 5:55=E2=80=AFPM Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcma=
-r@ventanamicro.com> wrote:
->
-> 2025-05-16T17:55:05+05:30, Anup Patel <anup@brainfault.org>:
-> > On Thu, May 15, 2025 at 8:22=E2=80=AFPM Radim Kr=C4=8Dm=C3=A1=C5=99 <rk=
-rcmar@ventanamicro.com> wrote:
-> >>
-> >> Add a toggleable VM capability to reset the VCPU from userspace by
-> >> setting MP_STATE_INIT_RECEIVED through IOCTL.
-> >>
-> >> Reset through a mp_state to avoid adding a new IOCTL.
-> >> Do not reset on a transition from STOPPED to RUNNABLE, because it's
-> >> better to avoid side effects that would complicate userspace adoption.
-> >> The MP_STATE_INIT_RECEIVED is not a permanent mp_state -- IOCTL resets
-> >> the VCPU while preserving the original mp_state -- because we wouldn't
-> >> gain much from having a new state it in the rest of KVM, but it's a ve=
-ry
-> >> non-standard use of the IOCTL.
-> >>
-> >> Signed-off-by: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@ventanamicro.com>
-> >> ---
-> >> If we want a permanent mp_state, I think that MP_STATE_UNINITIALIZED
-> >> would be reasonable.  KVM could reset on transition to any other state=
-.
-> >
-> > Yes, MP_STATE_UNINITIALIZED looks better. I also suggest
-> > that VCPU should be reset when set_mpstate() is called with
-> > MP_STATE_UNINITIALIZED and the current state is
-> > MP_STATE_STOPPED.
->
-> That would result in two resets (stopped -> uninitialized -> *), unless
-> we changed the logic.
->
-> Would you prefer to reset on transition to the new permanent mp_state?
-> MP_STATE_INIT_RECEIVED seems a more fitting name for the state, then.
->
+On Tue, May 20, 2025 at 02:35:50PM +0000, Taeyoung Kwon wrote:
+> As my company email adds a signature automatically,
+> I am sending this from my personal Gmail account
+> 
+> ---
+> The qcom-pon driver was originally implemented for the PM8916 PMIC, and
+> as a result, several internal variable names still refer to 'pm8916'.
+> However, the driver has since been extended to support other PMICs as
+> well.
+> 
+> This patch renames those variables to use more generic and consistent
+> names, improving clarity and reducing confusion for non-PM8916 devices.
+> 
+> Signed-off-by: Taeyoung Kwon <Taeyoung.Kwon@telit.com>
 
-Let's not introduce unnecessary state transitions and go ahead with
-MP_STATE_INIT_RECEIVED
+Now your SoB doesn't match your From address. Please move your
+explanation under the '---' line and instead add the 'From: Your Name
+<company@address>' as the first line.
 
-Reviewed-by: Anup Patel <anup@brainfault.org>
+The patch LGTM.
 
-Queued this patch for Linux-6.16
+> ---
+>  drivers/power/reset/qcom-pon.c | 30 +++++++++++++++---------------
+>  1 file changed, 15 insertions(+), 15 deletions(-)
+> 
 
-Thanks,
-Anup
+-- 
+With best wishes
+Dmitry
