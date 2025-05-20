@@ -1,146 +1,333 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E73AA26A0D6
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 10:07:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 872FF26A0F6;
+	Tue, 20 May 2025 10:07:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747735660; cv=none; b=ThJwidNmEMbIDLZuL9Xrnq88Rbk2aZOTQZf2s4tvfDE3j86sdJn9BvMQM4t0X7GyydccUfx5vRl5GpId1es0GxP008tF42mA0Vgkxpk125KqibGyMh27a0rUm1kGmsOYoI40kJ7Hvml0AHrsSw20S+NLMpNpPEzSNDjYA8ybeA0=
+	t=1747735661; cv=none; b=qgTmuhb5Z78xtUYLGqa5FGbmlPZAr60FAICacAj52TH3AW19eksZJPprvin6fhu8/xkRnXRih5UyfDRMza5oLOMe7YT3XkZJvn6OQJhcoV2iIBZLWUL3TAZY0tTUB8/maf24L88yO39lX7Fc/6Oz1pYjKDYyIkPXNr7fh0CyQBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747735660; c=relaxed/simple;
-	bh=25JRvNl/dx87KSxbjSstyenPOj/uDk1UPkBdv46W/6A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Eo3ophicq8lCiuMTjJvDkg0Dfr7E8O6i6VOFzUskHGT5Zc8NWdPllAIJEP/xItXyx2M5E3xm0QoHzhWIo1UOoihpVeUtcfFT0y+NchX5KTlWoa2dRfi8T2KQZecB31+KpOpiz+DNnP+2v3U8Kte2fnI3KJ10PVbZO3yTZF4H+co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=NBSw0pBn; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=jYIDz284; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=NBSw0pBn; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=jYIDz284; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1747735661; c=relaxed/simple;
+	bh=nBJkZXNbdiTT4TtUhW1xrZ1w9aUSLA3c/ko7B4Kt5Os=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=c7njjv7OIt/fksDkLCTWOt7Ih2PNt4gfX5IufEJpl6NI7dUXNdUUCoIKEvGp67SmeI+ECAcY1ZUGV0Xn1AaGmsKvPBsUJ9ZnJ5p8TmjldBEMYSF3ImClcBoYC9/5VkVCeRi/iqXLVTaRs8Fb99BB5/IQ3ff9ZXDlTT33cqlg7PM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G/P8ZdAT; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="NBSw0pBn";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="jYIDz284";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="NBSw0pBn";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="jYIDz284"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 0D1A322825;
-	Tue, 20 May 2025 10:07:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747735657; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HZcuOoEOqHbdTzot/HwCcBkJCCvGt7biAEO66twbWi8=;
-	b=NBSw0pBnnlwFfUxGub7TFophZJF8yHh3Uu1lESogljorRKPx4UrkLkT+mUgC4SY3iFy+D6
-	Gvsb/13qrarKdU7FQGyq6XhrHYVHISlg8cl4GwdXCcLR0mQk6jnjGH5J25ukuOdU+cyK0G
-	niiLmOcDV5KnWO+4x+we4XFmNcFD8yY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747735657;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HZcuOoEOqHbdTzot/HwCcBkJCCvGt7biAEO66twbWi8=;
-	b=jYIDz284h8D2Fz/PaWrTih63BCR6jz+N+CbINtI8TFwbejxgZ1j/MeCeJ7HZ+WlGAWL7Vl
-	cAshT4iXdVGLZZCA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747735657; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HZcuOoEOqHbdTzot/HwCcBkJCCvGt7biAEO66twbWi8=;
-	b=NBSw0pBnnlwFfUxGub7TFophZJF8yHh3Uu1lESogljorRKPx4UrkLkT+mUgC4SY3iFy+D6
-	Gvsb/13qrarKdU7FQGyq6XhrHYVHISlg8cl4GwdXCcLR0mQk6jnjGH5J25ukuOdU+cyK0G
-	niiLmOcDV5KnWO+4x+we4XFmNcFD8yY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747735657;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HZcuOoEOqHbdTzot/HwCcBkJCCvGt7biAEO66twbWi8=;
-	b=jYIDz284h8D2Fz/PaWrTih63BCR6jz+N+CbINtI8TFwbejxgZ1j/MeCeJ7HZ+WlGAWL7Vl
-	cAshT4iXdVGLZZCA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CB0E713A3F;
-	Tue, 20 May 2025 10:07:36 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id EArZMGhULGgrZQAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Tue, 20 May 2025 10:07:36 +0000
-Date: Tue, 20 May 2025 12:07:35 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: Donet Tom <donettom@linux.ibm.com>
-Cc: David Hildenbrand <david@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Mike Rapoport <rppt@kernel.org>, Zi Yan <ziy@nvidia.com>,
-	Ritesh Harjani <ritesh.list@gmail.com>, rafael@kernel.org,
-	Danilo Krummrich <dakr@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Yury Norov <yury.norov@gmail.com>,
-	Dave Jiang <dave.jiang@intel.com>
-Subject: Re: [PATCH v4 4/4] drivers/base : Rename
- register_memory_blocks_under_node() and remove context argument
-Message-ID: <aCxUZwkU4Re4XXO7@localhost.localdomain>
-References: <f94685be9cdc931a026999d236d7e92de29725c7.1747376551.git.donettom@linux.ibm.com>
- <bb7bbc113a2f6d3b700f7e73eafd911f77748bbb.1747376551.git.donettom@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G/P8ZdAT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747735659; x=1779271659;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=nBJkZXNbdiTT4TtUhW1xrZ1w9aUSLA3c/ko7B4Kt5Os=;
+  b=G/P8ZdATz8JmJcoxQg11MSiziugSdX5uJelsKrBIbu9C1IGX1td6IdL0
+   NqpXuBvOnmUxD17z/SEHD3sFXZYvVKpFt/SRynoT7XyJk/8yspkatLvB0
+   r9UxfgivCIqVOYImHuxkLQEqw9a18nNWTardyjBiGDYFVTWTCkFTvVyPe
+   joTlz5gCJTO5evvpXUNAhmO5RiWAsajAgR/xqxQuF43cPIPCdHrwZzOtL
+   NNpRKRt1zxZ/uN6TL43XGm2IHLGW/bEU++z6+16Zj+5zFFVpVowuf2Fy3
+   LA3k9a+glP0LJt6sdpHcZMsoF19iuFaxHSlAyV4CUh4QksxhhuMuA5aD6
+   w==;
+X-CSE-ConnectionGUID: qkOrKZjVQCa3V5yU2DL3mQ==
+X-CSE-MsgGUID: jGEsh26QTkugH2XmccNwBQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="72173352"
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="72173352"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 03:07:38 -0700
+X-CSE-ConnectionGUID: NYKCjjLCTTO+ND9iovPoSg==
+X-CSE-MsgGUID: Uj2IGygfQsSchAx47NQFeg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="139678174"
+Received: from johunt-mobl9.ger.corp.intel.com (HELO localhost) ([10.245.245.235])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 03:07:31 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 20 May 2025 13:07:28 +0300 (EEST)
+To: Shuai Xue <xueshuai@linux.alibaba.com>
+cc: rostedt@goodmis.org, Lukas Wunner <lukas@wunner.de>, 
+    linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+    linux-edac@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+    helgaas@kernel.org, bhelgaas@google.com, tony.luck@intel.com, bp@alien8.de, 
+    mhiramat@kernel.org, mathieu.desnoyers@efficios.com, oleg@redhat.com, 
+    naveen@kernel.org, davem@davemloft.net, anil.s.keshavamurthy@intel.com, 
+    mark.rutland@arm.com, peterz@infradead.org, tianruidong@linux.alibaba.com
+Subject: Re: [PATCH v8] PCI: hotplug: Add a generic RAS tracepoint for hotplug
+ event
+In-Reply-To: <650cd4e4-561b-4d50-9cf2-c601518c9b9f@linux.alibaba.com>
+Message-ID: <31693574-e8bc-9a56-bad0-6a22280c4b6b@linux.intel.com>
+References: <20250512013839.45960-1-xueshuai@linux.alibaba.com> <87b1f8c6-bd72-b1a8-40a6-bbf552552806@linux.intel.com> <650cd4e4-561b-4d50-9cf2-c601518c9b9f@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bb7bbc113a2f6d3b700f7e73eafd911f77748bbb.1747376551.git.donettom@linux.ibm.com>
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: 0.20
-X-Spamd-Result: default: False [0.20 / 50.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[redhat.com,linux-foundation.org,kernel.org,nvidia.com,gmail.com,linuxfoundation.org,vger.kernel.org,kvack.org,huawei.com,intel.com];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,localhost.localdomain:mid,nvidia.com:email]
+Content-Type: multipart/mixed; boundary="8323328-653060713-1747735648=:936"
 
-On Fri, May 16, 2025 at 03:19:54AM -0500, Donet Tom wrote:
-> The function register_memory_blocks_under_node() is now only called from
-> the memory hotplug path, as register_memory_blocks_under_node_early()
-> handles registration during early boot. Therefore, the context argument
-> used to differentiate between early boot and hotplug is no longer needed
-> and was removed.
-> 
-> Since the function is only called from the hotplug path, we renamed
-> register_memory_blocks_under_node() to
-> register_memory_blocks_under_node_hotplug()
-> 
-> Acked-by: Zi Yan <ziy@nvidia.com>
-> Signed-off-by: Donet Tom <donettom@linux.ibm.com>
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Acked-by: Oscar Salvador <osalvador@suse.de>
+--8323328-653060713-1747735648=:936
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
- 
+On Tue, 20 May 2025, Shuai Xue wrote:
 
--- 
-Oscar Salvador
-SUSE Labs
+> Hi, Ilpo,
+>=20
+> =E5=9C=A8 2025/5/20 01:10, Ilpo J=C3=A4rvinen =E5=86=99=E9=81=93:
+> > On Mon, 12 May 2025, Shuai Xue wrote:
+> >=20
+> > > Hotplug events are critical indicators for analyzing hardware health,
+> > > particularly in AI supercomputers where surprise link downs can
+> > > significantly impact system performance and reliability.
+> > >=20
+> > > To this end, define a new TRACING_SYSTEM named pci, add a generic RAS
+> > > tracepoint for hotplug event to help healthy check, and generate
+> > > tracepoints for pcie hotplug event. Add enum pci_hotplug_event in
+> > > include/uapi/linux/pci.h so applications like rasdaemon can register
+> > > tracepoint event handlers for it.
+> > >=20
+> > > The output like below:
+> > >=20
+> > > $ echo 1 > /sys/kernel/debug/tracing/events/pci/pci_hp_event/enable
+> > > $ cat /sys/kernel/debug/tracing/trace_pipe
+> > >      <...>-206     [001] .....    40.373870: pci_hp_event: 0000:00:02=
+=2E0
+> > > slot:10, event:Link Down
+> > >=20
+> > >      <...>-206     [001] .....    40.374871: pci_hp_event: 0000:00:02=
+=2E0
+> > > slot:10, event:Card not present
+> > >=20
+> > > Suggested-by: Lukas Wunner <lukas@wunner.de>
+> > > Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+> > > Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+> > > Reviewed-by: Lukas Wunner <lukas@wunner.de>
+> > > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > > ---
+> > > changes since v7:
+> > > - replace the TRACE_INCLUDE_PATH to avoid macro conflict per Steven
+> > > - pick up Reviewed-by from Lukas Wunner
+> > > ---
+> > >   drivers/pci/hotplug/Makefile      |  3 ++
+> > >   drivers/pci/hotplug/pciehp_ctrl.c | 33 ++++++++++++---
+> > >   drivers/pci/hotplug/trace.h       | 68 ++++++++++++++++++++++++++++=
++++
+> > >   include/uapi/linux/pci.h          |  7 ++++
+> > >   4 files changed, 105 insertions(+), 6 deletions(-)
+> > >   create mode 100644 drivers/pci/hotplug/trace.h
+> > >=20
+> > > diff --git a/drivers/pci/hotplug/Makefile b/drivers/pci/hotplug/Makef=
+ile
+> > > index 40aaf31fe338..a1a9d1e98962 100644
+> > > --- a/drivers/pci/hotplug/Makefile
+> > > +++ b/drivers/pci/hotplug/Makefile
+> > > @@ -3,6 +3,9 @@
+> > >   # Makefile for the Linux kernel pci hotplug controller drivers.
+> > >   #
+> > >   +# define_trace.h needs to know how to find our header
+> > > +CFLAGS_pciehp_ctrl.o=09=09=09=09:=3D -I$(src)
+> > > +
+> > >   obj-$(CONFIG_HOTPLUG_PCI)=09=09+=3D pci_hotplug.o
+> > >   obj-$(CONFIG_HOTPLUG_PCI_COMPAQ)=09+=3D cpqphp.o
+> > >   obj-$(CONFIG_HOTPLUG_PCI_IBM)=09=09+=3D ibmphp.o
+> > > diff --git a/drivers/pci/hotplug/pciehp_ctrl.c
+> > > b/drivers/pci/hotplug/pciehp_ctrl.c
+> > > index d603a7aa7483..f9beb4d3a9b8 100644
+> > > --- a/drivers/pci/hotplug/pciehp_ctrl.c
+> > > +++ b/drivers/pci/hotplug/pciehp_ctrl.c
+> > > @@ -23,6 +23,9 @@
+> > >   #include "../pci.h"
+> > >   #include "pciehp.h"
+> > >   +#define CREATE_TRACE_POINTS
+> > > +#include "trace.h"
+> > > +
+> > >   /* The following routines constitute the bulk of the
+> > >      hotplug controller logic
+> > >    */
+> > > @@ -244,12 +247,20 @@ void pciehp_handle_presence_or_link_change(stru=
+ct
+> > > controller *ctrl, u32 events)
+> > >   =09case ON_STATE:
+> > >   =09=09ctrl->state =3D POWEROFF_STATE;
+> > >   =09=09mutex_unlock(&ctrl->state_lock);
+> > > -=09=09if (events & PCI_EXP_SLTSTA_DLLSC)
+> > > +=09=09if (events & PCI_EXP_SLTSTA_DLLSC) {
+> > >   =09=09=09ctrl_info(ctrl, "Slot(%s): Link Down\n",
+> > >   =09=09=09=09  slot_name(ctrl));
+> > > -=09=09if (events & PCI_EXP_SLTSTA_PDC)
+> > > +=09=09=09trace_pci_hp_event(pci_name(ctrl->pcie->port),
+> > > +=09=09=09=09=09   slot_name(ctrl),
+> > > +=09=09=09=09=09   PCI_HOTPLUG_LINK_DOWN);
+> > > +=09=09}
+> > > +=09=09if (events & PCI_EXP_SLTSTA_PDC) {
+> > >   =09=09=09ctrl_info(ctrl, "Slot(%s): Card not present\n",
+> > >   =09=09=09=09  slot_name(ctrl));
+> > > +=09=09=09trace_pci_hp_event(pci_name(ctrl->pcie->port),
+> > > +=09=09=09=09=09   slot_name(ctrl),
+> > > +=09=09=09=09=09   PCI_HOTPLUG_CARD_NOT_PRESENT);
+> > > +=09=09}
+> > >   =09=09pciehp_disable_slot(ctrl, SURPRISE_REMOVAL);
+> > >   =09=09break;
+> > >   =09default:
+> > > @@ -269,6 +280,9 @@ void pciehp_handle_presence_or_link_change(struct
+> > > controller *ctrl, u32 events)
+> > >   =09=09=09=09=09      INDICATOR_NOOP);
+> > >   =09=09=09ctrl_info(ctrl, "Slot(%s): Card not present\n",
+> > >   =09=09=09=09  slot_name(ctrl));
+> > > +=09=09=09trace_pci_hp_event(pci_name(ctrl->pcie->port),
+> > > +=09=09=09=09=09   slot_name(ctrl),
+> > > +=09=09=09=09=09   PCI_HOTPLUG_CARD_NOT_PRESENT);
+> > >   =09=09}
+> > >   =09=09mutex_unlock(&ctrl->state_lock);
+> > >   =09=09return;
+> > > @@ -281,12 +295,19 @@ void pciehp_handle_presence_or_link_change(stru=
+ct
+> > > controller *ctrl, u32 events)
+> > >   =09case OFF_STATE:
+> > >   =09=09ctrl->state =3D POWERON_STATE;
+> > >   =09=09mutex_unlock(&ctrl->state_lock);
+> > > -=09=09if (present)
+> > > +=09=09if (present) {
+> > >   =09=09=09ctrl_info(ctrl, "Slot(%s): Card present\n",
+> > >   =09=09=09=09  slot_name(ctrl));
+> > > -=09=09if (link_active)
+> > > -=09=09=09ctrl_info(ctrl, "Slot(%s): Link Up\n",
+> > > -=09=09=09=09  slot_name(ctrl));
+> > > +=09=09=09trace_pci_hp_event(pci_name(ctrl->pcie->port),
+> > > +=09=09=09=09=09   slot_name(ctrl),
+> > > +=09=09=09=09=09   PCI_HOTPLUG_CARD_PRESENT);
+> > > +=09=09}
+> > > +=09=09if (link_active) {
+> > > +=09=09=09ctrl_info(ctrl, "Slot(%s): Link Up\n",
+> > > slot_name(ctrl));
+> > > +=09=09=09trace_pci_hp_event(pci_name(ctrl->pcie->port),
+> > > +=09=09=09=09=09   slot_name(ctrl),
+> > > +=09=09=09=09=09   PCI_HOTPLUG_LINK_UP);
+> > > +=09=09}
+> > >   =09=09ctrl->request_result =3D pciehp_enable_slot(ctrl);
+> > >   =09=09break;
+> > >   =09default:
+> > > diff --git a/drivers/pci/hotplug/trace.h b/drivers/pci/hotplug/trace.=
+h
+> > > new file mode 100644
+> > > index 000000000000..21329c198019
+> > > --- /dev/null
+> > > +++ b/drivers/pci/hotplug/trace.h
+> > > @@ -0,0 +1,68 @@
+> > > +/* SPDX-License-Identifier: GPL-2.0 */
+> > > +#if !defined(_TRACE_HW_EVENT_PCI_HP_H) ||
+> > > defined(TRACE_HEADER_MULTI_READ)
+> > > +#define _TRACE_HW_EVENT_PCI_HP_H
+> > > +
+> > > +#include <linux/tracepoint.h>
+> > > +
+> > > +#undef TRACE_SYSTEM
+> > > +#define TRACE_SYSTEM pci
+> > > +
+> > > +#define PCI_HOTPLUG_EVENT=09=09=09=09=09\
+> > > +=09EM(PCI_HOTPLUG_LINK_UP,=09=09=09"Link Up")=09\
+> > > +=09EM(PCI_HOTPLUG_LINK_DOWN,=09=09"Link Down")=09\
+> > > +=09EM(PCI_HOTPLUG_CARD_PRESENT,=09=09"Card present")=09\
+> > > +=09EMe(PCI_HOTPLUG_CARD_NOT_PRESENT,=09"Card not present")
+> >=20
+> > Hi,
+> >=20
+> > While I was thinking of adding tracing into PCIe BW controller (bwctrl)=
+,
+> > I ended up thinking that perhaps it would make more sense to have PCIe
+> > Link related tracepoints which would cover both hotplug and bwctrl so t=
+hat
+> > also Link Speed changes would be reported through the same trace event.
+> >=20
+> > Downgraded speed may indicate there's something wrong with the card and
+> > the Link Speed does have performance impact too for those who are pushi=
+ng
+> > BW boundaries such as AI systems.
+>=20
+> Agreed!
+>=20
+> >=20
+> > So my suggestion is:
+> >=20
+> > - Add "Link Speed changed" to the event types.
+> > - Add Link Speed and Width into the event format (and probably also Fli=
+t
+> >    mode as PCIe gen6 is coming).
+>=20
+>=20
+> How about bellow event format:
+>=20
+> +=09TP_STRUCT__entry(
+> +=09=09__string(=09port_name,=09port_name=09)
+> +=09=09__field(=09unsigned char,=09cur_bus_speed=09)
+> +=09=09__field(=09unsigned char,=09max_bus_speed=09)
+
+Add also the Link Width.
+
+> +=09=09__field(=09unsigned char,=09flit_mode=09)
+> +=09),
+>=20
+> And add the event to pcie_update_link_speed():
+>=20
+> @@ -796,6 +799,10 @@ void pcie_update_link_speed(struct pci_bus *bus)
+>         pcie_capability_read_word(bridge, PCI_EXP_LNKSTA, &linksta);
+>         pcie_capability_read_word(bridge, PCI_EXP_LNKSTA2, &linksta2);
+>         __pcie_update_link_speed(bus, linksta, linksta2);
+> +
+> +       trace_pci_link_event(pci_name(bridge), bus->cur_bus_speed,
+> +                                          bus->max_bus_speed,
+
+I don't think outputting the internal values of enum pci_bus_speed is a=20
+good idea. Maybe these could be printed as a string (with=20
+pci_speed_string()) or encoded with trace interface specific values.
+
+Perhaps it would make sense to check if the speed really changed before=20
+sending that event, but there are good sides in both approaches as I=20
+know some platforms assert LBMS more than once during a single Link Speed=
+=20
+change.
+
+> +                                          PCI_HOTPLUG_LINK_SPEED_CHANGED=
+);
+>=20
+> But I don't find link speed changed in hotplug driver
+
+pciehp_check_link_status() calls __pcie_update_link_speed().
+
+> , and the format of "Link Speed changed" is a bit different from=20
+> "pci_hp_event".
+
+The difference is only because when the Link is down, there's no Link
+Speed (obviously). Whenever a new device is hotplugged and it comes up,=20
+there's also Link Speed for it which can be included into the trace event.=
+=20
+
+I think the trace event should have some special value for the fields that=
+=20
+are N/A due to Link being off. While it would be possible to create=20
+separate events for speed changes and hotplug, I don't see any pros in=20
+that approach over just having the N/A fields marked as such when the Link=
+=20
+is Down.
+
+Perhaps it would even make sense to add PCIE_SPEED_LINK_DOWN into=20
+bus->cur_bus_speed when hotplug finds the card is gone (I'm not entirely=20
+sure how bwctrl or pcie_cooling driver would cope with that though, they=20
+might need minor tweaking to support it, and there are a few other drivers=
+=20
+that use that field).
+
+> Do we really need a PCI_HOTPLUG_EVENT? May PCI_LINK_EVENT is more
+> appropriate?
+
+Ah, right, I forgot to mention it would make sense to rename it to=20
+PCI_LINK_EVENT.
+
+--=20
+ i.
+
+--8323328-653060713-1747735648=:936--
