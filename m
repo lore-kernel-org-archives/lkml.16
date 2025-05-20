@@ -1,89 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF66825E440;
-	Tue, 20 May 2025 22:14:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F53321516E
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 22:19:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747779267; cv=none; b=uDsBpAwQ2piSxaTiEn69jEaw0J4SwOgpjProx/na936uAxRkgnOsgEgq805odd1KNa62UKwd0pJ8hAk4XQzj9rMOmYMW2x2ETidzWgGjSRYkon/bE4ybi7TajAa516ce8gwUc+k/QkQG/hsO6HnjDSfOIOmID/sMhqr9hgg2GlA=
+	t=1747779561; cv=none; b=G2lgejU7ViBSPqI4LuOilNAG9eaMl5XlKL3zcd4zILjjl5LnIQwKGM2BYv+GQfZFC+1hWoHT+CyLNTo4fBlA3f+F81K7uPwnHxQ0raTrjzUEB46x9wBdDuBQOTa1789d4tTvJpFMPYftGhT/S3aKe+HHYnRnYiogXAKebLu8HQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747779267; c=relaxed/simple;
-	bh=1a+y93hIub8/pSVvLmPKFLuPjxNtRlTjBHf2JqedxYQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mNiCg2v2qX5982l9gjFWwTzX02J76Qw8vJ350aQBXibAZoc0lQP+NRrPfhUMgeRViozssPmkXPU37VCqai8QcLUz/fiHphI1JSjWUKppQe1DQQWcLWsnTxLKytqeBHO9+9fMl4e2/bvzKAik25R4ffGGKvCmIQgBFphhTG5sk50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kGm0uLxc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747779561; c=relaxed/simple;
+	bh=zZ3dMFhzEwUmlj6GDS4VfT/nsqtJbGAw6nColxOnEpg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZAvEKwRBJLn+5ytXFaaFB28Ima+FgDjkhq+XCSxfL2fKoQ7cxXJxndC+JEy7VH1TSqY6m+73v/GbIDoCP62DB7G/Ttvx5uSF/ZR8kER20BIcNPKTwzb8oyrDjPXQcGhe/y1NqPDeQWs4OQ4eq/wSjPTZYrel9NzgsmmYGoKQb3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Nqzk9IHX; arc=none smtp.client-ip=95.215.58.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kGm0uLxc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03409C4CEEF;
-	Tue, 20 May 2025 22:14:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747779266;
-	bh=1a+y93hIub8/pSVvLmPKFLuPjxNtRlTjBHf2JqedxYQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kGm0uLxc4vwvkdSvImwL4uPLradBjvvRNXTO93ScNuVgibIzAJ7IBVYlwrbcQP/ui
-	 1ueIGgPBHVZNlcSg7zqQ9pGi4G5UyyOu381/gKPXWaGbTObfK8SaKnyyVhCTrLatYc
-	 DBO3TEsh9pj7WZ1xGEMyRRx5cVd+cpR6CPJa4rujmaAs8PuOklZMa5IOPsfQJfqN1p
-	 BfknnVpPpRNMKtp1m4Vw2+Q4lm3eq1CNWqvYtE1uknaB4nBukdKxmj6NJO81IDHk0p
-	 C2kfjgacAAG89NivGN0R99a2QUfiJD2Mm5Ci5MYfMAmuJlOrhUC6lxXHtsB5BTKw4S
-	 B4CCG6iQnnMkg==
-Date: Tue, 20 May 2025 15:14:24 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Howard Chu <howardchu95@gmail.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf trace: Increase syscall handler map size to 1024
-Message-ID: <aCz-wD2Syq8mj2_0@google.com>
-References: <20250519232539.831842-1-namhyung@kernel.org>
- <CAH0uvohxb4gvHYswCZMvCrrOn=0qSOeOaYyDVPEFb4GPhwntgw@mail.gmail.com>
- <CAP-5=fWZectSpLzkfJUj-W-_oxhDJdnnOE18ET_iPb+bjmTdHw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Nqzk9IHX"
+Message-ID: <0364f8d2-9aa5-4dc0-b7f6-1c8572932814@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747779546;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XKb0gnOHlciTS6MFRPmrAwCVe1IGdy183kVWTGpCTUs=;
+	b=Nqzk9IHXZ5wcLJAOB7SOOqfQafxl5qrD4y2BeetsNgMI/EXHN5JOjKMaw+0lPa3ketk7gm
+	3hABdTtpen4ekkqXZvQUtmchddXoO0jBUh4t9YJgWVvCGxnaUXp+CdXHW9zvLMGOK9d2qq
+	ND3cQKueCyAxyY2WH4zTrTHcryUR/qg=
+Date: Tue, 20 May 2025 15:18:52 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Subject: Re: [PATCH bpf-next/net v3 4/5] selftests/bpf: Add mptcp_subflow
+ bpf_iter subtest
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
+ Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>,
+ Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+References: <20250320-bpf-next-net-mptcp-bpf_iter-subflows-v3-0-9abd22c2a7fd@kernel.org>
+ <20250320-bpf-next-net-mptcp-bpf_iter-subflows-v3-4-9abd22c2a7fd@kernel.org>
+ <98348a02-9f8b-4648-8abe-e6b802ae9a63@linux.dev>
+ <1621611c-8cf1-4281-986f-cfd8cc0e70f0@kernel.org>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Martin KaFai Lau <martin.lau@linux.dev>
+In-Reply-To: <1621611c-8cf1-4281-986f-cfd8cc0e70f0@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWZectSpLzkfJUj-W-_oxhDJdnnOE18ET_iPb+bjmTdHw@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-Hi Ian,
-
-On Tue, May 20, 2025 at 08:05:37AM -0700, Ian Rogers wrote:
-> On Mon, May 19, 2025 at 4:36 PM Howard Chu <howardchu95@gmail.com> wrote:
-> >
-> > Hello Namhyung,
-> >
-> > On Mon, May 19, 2025 at 4:25 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > >
-> > > The syscalls_sys_{enter,exit} map in augmented_raw_syscalls.bpf.c has
-> > > max entries of 512.  Usually syscall numbers are smaller than this but
-> > > x86 has x32 ABI where syscalls start from 512.
-> > >
-> > > That makes trace__init_syscalls_bpf_prog_array_maps() fail in the middle
-> > > of the loop when it accesses those keys.  As the loop iteration is not
-> > > ordered by syscall numbers anymore, the failure can affect non-x32
-> > > syscalls.
-> > >
-> > > Let's increase the map size to 1024 so that it can handle those ABIs
-> > > too.  While most systems won't need this, increasing the size will be
-> > > safer for potential future changes.
+On 5/19/25 3:04 AM, Matthieu Baerts wrote:
+>>> +SEC("cgroup/getsockopt")
+>>> +int iters_subflow(struct bpf_sockopt *ctx)
+>>> +{
+>>> +    struct mptcp_subflow_context *subflow;
+>>> +    struct bpf_sock *sk = ctx->sk;
+>>> +    struct sock *ssk = NULL;
+>>> +    struct mptcp_sock *msk;
+>>> +    int local_ids = 0;
+>>> +
+>>> +    if (ctx->level != SOL_TCP || ctx->optname != TCP_IS_MPTCP)
+>>> +        return 1;
+>>> +
+>>> +    msk = bpf_core_cast(sk, struct mptcp_sock);
+>>> +    if (!msk || msk->pm.server_side || !msk->pm.subflows)
+>>> +        return 1;
+>>> +
+>>> +    bpf_for_each(mptcp_subflow, subflow, (struct sock *)sk) {
+>>> +        /* Here MPTCP-specific packet scheduler kfunc can be called:
+>>> +         * this test is not doing anything really useful, only to
+>>
+>> Lets fold the bpf_iter_mptcp_subflow addition into the future
+>> "mptcp_sched_ops" set (the github link that you mentioned in patch 2).
+>> Post them as one set to have a more practical example.
 > 
-> Do we need to worry about MIPS where syscalls can be offset by 1000s?
-> https://lore.kernel.org/lkml/8ed7dfb2-1e4d-4aa4-a04b-0397a89365d1@app.fastmail.com/
+> Thank you for this suggestion. We can delay that if needed.
+> 
+> Note that we have two struct_ops in preparation: mptcp_sched_ops and
+> mptcp_pm_ops. We don't know which one will be ready first. They are both
+> "blocked" by internal API modifications we would like to do to ease the
+> maintenance later before "exposing" such API's via BPF. That's why we
+> suggested to upstream this common part first as it is ready. But we can
+> of course wait if you prefer.
 
-Argh..
+This set is useful for discussing the questions you raised in patch 2.
 
-> We could do with a map that combines BPF_MAP_TYPE_HASH with the tails
-> calls of BPF_MAP_TYPE_PROG_ARRAY.
+I still don't see it useful to upstream patch 2 alone. The existing 
+selftests/bpf/progs/mptcp_subflow.c has already shown a way to do similar 
+iteration in SEC("cgroup/getsockopt") without patch 2.
 
-Right, it'd complicate things but I think it's doable.
+I would prefer to wait for a fuller picture on the main struct_ops use case 
+first to ensure that we didn't overlook things. iiuc, improving the iteration in 
+SEC("cgroup/getsockopt") is not the main objective.
 
-Thanks,
-Namhyung
+> 
+>>> +         * verify the iteration works.
+>>> +         */
+>>> +
+>>> +        local_ids += subflow->subflow_id;
+>>> +
+>>> +        /* only to check the following helper works */
+>>> +        ssk = mptcp_subflow_tcp_sock(subflow);
+>>> +    }
+>>> +
+>>> +    if (!ssk)
+>>> +        goto out;
+>>> +
+>>> +    /* assert: if not OK, something wrong on the kernel side */
+>>> +    if (ssk->sk_dport != ((struct sock *)msk)->sk_dport)
+>>> +        goto out;
+>>> +
+>>> +    /* only to check the following kfunc works */
+>>> +    subflow = bpf_mptcp_subflow_ctx(ssk);
+>>
+>> bpf_core_cast should be as good instead of adding a new
+>> bpf_mptcp_subflow_ctx() kfunc, so patch 1 should not be needed.
+> 
+> OK, indeed, in this series we don't need it. We will need it later to
+> modify some fields from the "subflow" structure directly. We can do the
+
+The "ssk" here is not a trusted pointer. Note that in patch 1, the kfunc 
+bpf_mptcp_subflow_ctx() does not specify KF_TRUSTED_ARGS. I suspect it should be 
+KF_TRUSTED_ARGS based on what you described here.
+
 
