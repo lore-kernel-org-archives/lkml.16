@@ -1,74 +1,39 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A16A92571D7;
-	Tue, 20 May 2025 15:41:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D92725D203
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 15:42:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747755717; cv=none; b=S7RzSdtTyD9TmWNL0WQmGEtJ/i8OU+XJu3hQ3DJXNyZ6/HgE/WYdackFFH3Rv2j+lGakBlCWGn6hngskAnVK+jccBoT2TqEdWbX5oM1amiZphy/c4kD6TQvNtdWYUuIRWHE6eYHjctbB4eNGuHYdcfc0gEcSEcQUdkXlCB3kd3U=
+	t=1747755729; cv=none; b=EHvHSly7KXtA6X2QabG/2DcQXY/O/uqBqXDdEUyVEg8VPrcuAIp58DAqkBLvGKgvnC7bZYjpYiUYGM/o4e26Sm6R8+JSxXDHacgT4xXUSLMLBTGpq30IfZHrUYA08Rmc9LqEFyhaoK1/2yQap7pEWDl/sPQ68WHX02tiZ240XkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747755717; c=relaxed/simple;
-	bh=iM0kAw4/nWyGDWNAeRKHD+BaGigBrgJDfwS7US+j1/o=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cwOfSrLaABz4gvlfvcSd/qxLdBArXtwkc9iZvrmGNAaWoW5R/hIBWUJVY+km+4n4R3foK3a1mR3W5/vMtWxlOSh6Jqum4C2Az52TqzEp+FK32MWx/MaVtFhIeHv7PjM5R80brQ64XlMOJCOPHQw8Ez9QJEsHsNLPnMwWCNy86Og=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t27D2+vi; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t27D2+vi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28519C4CEE9;
-	Tue, 20 May 2025 15:41:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747755717;
-	bh=iM0kAw4/nWyGDWNAeRKHD+BaGigBrgJDfwS7US+j1/o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=t27D2+viqHtztdjdMHjpCAUF8Lu+Bh7vLVPgZNSS1odAFu1XXczgWH7kHbfpaBEGr
-	 HEgBUnBfyhAlQkRsvW0C1tYawmvIA2hhoWpcy/PRroqBUwvn/C+VhepxJ5F3DgVnk7
-	 1ZgMlfNhmBf5urqytVfLAomqHfodvYUYiRraCDn+hSn2x4zPupzSmDhaAXxKomruqa
-	 bI/OVbbtIx/+vBz5qyGqCRXiZmCcGflHovDOa/EhQt+4pZ1p8jYO/qh2UHJe8qMBk7
-	 mIG95JCsWo4nvdkFHHIHx9aLAvsD2D+vH5hbprSknGWT0DJ1oCdco1SCgGuSqjDRbz
-	 kdqVr+fGe9V7w==
-From: Will Deacon <will@kernel.org>
-To: dri-devel@lists.freedesktop.org,
-	Rob Clark <robdclark@gmail.com>
-Cc: catalin.marinas@arm.com,
-	kernel-team@android.com,
-	Will Deacon <will@kernel.org>,
-	freedreno@lists.freedesktop.org,
-	linux-arm-msm@vger.kernel.org,
-	Connor Abbott <cwabbott0@gmail.com>,
-	Rob Clark <robdclark@chromium.org>,
-	Abhinav Kumar <quic_abhinavk@quicinc.com>,
-	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	=?UTF-8?q?Barnab=C3=A1s=20Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
-	Christopher Snowhill <chris@kode54.net>,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-	Dmitry Baryshkov <lumag@kernel.org>,
-	Eugene Lepshy <fekz115@gmail.com>,
-	iommu@lists.linux.dev,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Joao Martins <joao.m.martins@oracle.com>,
-	Jonathan Marek <jonathan@marek.ca>,
-	Jun Nie <jun.nie@linaro.org>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	linaro-mm-sig@lists.linaro.org,
+	s=arc-20240116; t=1747755729; c=relaxed/simple;
+	bh=QI4jvEcA60Ps4kNF/VOq0M1EwfjwQ92S4nm9GJDHxek=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GywVdPx9MDLmSZ4xGZKZRZOzMIuHujvOFH9YgfEBs4uJ/dvJ16uG972EmPrQb8PbSGCe8s/tJguqXJwPPNA4kr32r50vsjByPfpw5+O3HDqVPodkX73m9admio6GZQGX65ifH6wDeXKRQx9KGJRyXACIqVM1/ajnWH0ai29PkCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 435B81516;
+	Tue, 20 May 2025 08:41:53 -0700 (PDT)
+Received: from ewhatever.cambridge.arm.com (ewhatever.cambridge.arm.com [10.1.197.1])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 88F8F3F6A8;
+	Tue, 20 May 2025 08:42:05 -0700 (PDT)
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+To: mike.leach@linaro.org,
+	james.clark@linaro.org,
+	alexander.shishkin@linux.intel.com,
+	leo.yan@arm.com,
+	Yeoreum Yun <yeoreum.yun@arm.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
+	coresight@lists.linaro.org,
 	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	Nicolin Chen <nicolinc@nvidia.com>,
-	"Rob Herring (Arm)" <robh@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Sean Paul <sean@poorly.run>
-Subject: Re: [PATCH v5 00/40] drm/msm: sparse / "VM_BIND" support
-Date: Tue, 20 May 2025 16:41:47 +0100
-Message-Id: <174774086363.2165484.11245120942986308301.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20250519175348.11924-1-robdclark@gmail.com>
-References: <20250519175348.11924-1-robdclark@gmail.com>
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 0/3] coresight: prevent deactivate active config while enabling the config
+Date: Tue, 20 May 2025 16:41:56 +0100
+Message-ID: <174775569626.300098.16572506497364238562.b4-ty@arm.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250514161951.3427590-1-yeoreum.yun@arm.com>
+References: <20250514161951.3427590-1-yeoreum.yun@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,27 +43,34 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Mon, 19 May 2025 10:51:23 -0700, Rob Clark wrote:
-> Conversion to DRM GPU VA Manager[1], and adding support for Vulkan Sparse
-> Memory[2] in the form of:
+
+On Wed, 14 May 2025 17:19:48 +0100, Yeoreum Yun wrote:
+> While enable active config via cscfg_csdev_enable_active_config(),
+> active config could be deactivated via configfs' sysfs interface.
+> This could make UAF issue in below scenario:
 > 
-> 1. A new VM_BIND submitqueue type for executing VM MSM_SUBMIT_BO_OP_MAP/
->    MAP_NULL/UNMAP commands
-> 
-> 2. A new VM_BIND ioctl to allow submitting batches of one or more
->    MAP/MAP_NULL/UNMAP commands to a VM_BIND submitqueue
+> CPU0                                          CPU1
+> (sysfs enable)                                load module
+>                                               cscfg_load_config_sets()
+>                                               activate config. // sysfs
+>                                               (sys_active_cnt == 1)
+> ...
+> cscfg_csdev_enable_active_config()
+> lock(csdev->cscfg_csdev_lock)
+> // here load config activate by CPU1
+> unlock(csdev->cscfg_csdev_lock)
 > 
 > [...]
 
-Applied io-pgtable change to iommu (arm/smmu/updates), thanks!
+Applied, thanks!
 
-[05/40] iommu/io-pgtable-arm: Add quirk to quiet WARN_ON()
-        https://git.kernel.org/iommu/c/3318f7b5cefb
+[1/3] coresight/etm4: fix missing disable active config
+      https://git.kernel.org/coresight/c/895b12b7
+[2/3] coresight: holding cscfg_csdev_lock while removing cscfg from csdev
+      https://git.kernel.org/coresight/c/53b9e265
+[3/3] coresight: prevent deactivate active config while enabling the config
+      https://git.kernel.org/coresight/c/408c97c4
 
-Cheers,
+Best regards,
 -- 
-Will
-
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
+Suzuki K Poulose <suzuki.poulose@arm.com>
