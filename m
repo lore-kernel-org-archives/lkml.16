@@ -1,117 +1,199 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E56C2F2E
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 13:46:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DB5122DA15;
+	Tue, 20 May 2025 13:46:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747748779; cv=none; b=sbtMl3bh9ABjFDC75hIzP4mbXZ7OUcKITUCaPP76XohQTY6/bHKX0E2ZVgaX10Ml7vAoEUovsD7QXQl4NkQyAa7xYsVYDsjklaMO2jrdYBr5M6i4uDE45QF5V3zCvrgqt+5hwd2ou4aP4AI/pKhIadeMM17zEOuvXP0GZnR2MFQ=
+	t=1747748799; cv=none; b=vDeDCPPZqT48XC9DlXwwjTdt7gLqr5Zofu78a4NIJNEVSxuYW+G7boP7tBlPzVnRbO+BurHb93B+DlVYt62gBkzPihw1tuqEtxfczFspu/dyArXBrabBXiqAXVtmuf58ltWPtdJAVF7m2LfJzZexcgdXikadx9R4/0n4DAXCP8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747748779; c=relaxed/simple;
-	bh=17tVo6xv1++L2o0D5azY3yKyZllJq7pWrBCxPz1VaFA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iC2hzPPEKcqsRq6cO2vTki2L0aFYEf8YRzOOeRRlSNcf0Z52qXeY18vSegLyXIZwyY9HYb+OAXN8gpzLPa/2JLfuVAEhA1cvK/ap6cDQA+gEzIBrHM0lLL4Boi2cxqci0FpFQ+7EhBhg/uGPokfgNMtu7Q0wqIb+SjBC3fLDS/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gF3c8ac1; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gF3c8ac1"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-601afe51106so3865585a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 06:46:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747748776; x=1748353576; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=x63hT6SO5GsWt+J4N7rT5dncXL6uLcyTmJsrqz9Z+Ls=;
-        b=gF3c8ac1sCXlGtggNJRIwFlDofo9dmNCcy0UKx4JTr+wwSDgvz4m6I3yHLZ9efmXcb
-         NWDV4SkMg6uYIwOtLbdMa9zRHweqGfZbNqmW8m0eKdBYyVePh7oSVcoEE2+ZhIJRwnCA
-         EIHrA66V5XZh1ln6Rwse+tcgnGwF2Aan7qg2aGxjqAOea2jW6tZDusDmfFlAzdW7jk6k
-         z46oP9lCDztDJLX6Pc3tQY0kdTSy6/fP0GMcgSXZRgzBnDIrVU18SjmcOBhPT21/Fl0+
-         6oeum+B6jykCPTZXWqkQBWKYwQ50yx2MLQX0kI1uXILzNp6YzxCHxehcWtuYCvtBl6on
-         ysuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747748776; x=1748353576;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=x63hT6SO5GsWt+J4N7rT5dncXL6uLcyTmJsrqz9Z+Ls=;
-        b=dBmpEYqu2UgoGRh6a7A+JB9YA9zOb9pcKxbj1wJ4TpUUnlsvGG7kJyR0j4hVRc3240
-         ea+0tbWZhokYFoBOoXUpqpvPfSOFdY6RcXbm/8O8WrhwQZLEF+UiqdFrbFZq5gJpE0Ho
-         Ovg+gEti5mbcLz18MvGFT7PafHnLPhkQAwgYBHqSgwC8l5HDzR7HEPBN9OMiQ/1jvnW+
-         ABbu1h4X6pHK4o2Aulj+6mp0qH/aDTWC/Owhhz1uZtn+99AlHQT0f4wZtjL46Y1gbzxo
-         YRDGjXwZckqUd+QAgX4wSYAQRwB0kw8nzfYwrbjXThlalVkDgIoTYTr/D2iFxVrHye5E
-         bJVA==
-X-Forwarded-Encrypted: i=1; AJvYcCV2d6qEd+P98AayomVu1WSI2lmPt4sy3RFLcnvYF5Ibmiz4ME30t2VgWixU9qs/GgReNylHHywNqCSj5aA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGmA6SHQ6jowf+gUcBTeLqFvfgIy5Fo6+CvCqXOo4LQ2y1QcWi
-	0vQ8sszvgZN6AGEyVPzKIXlayTMKGzDnNGdbI16JGx3H/xEITklf+GEM
-X-Gm-Gg: ASbGncspSREaeKknJAw7GujvZR4h8mvNf0W9GpCgwyABoRfXe3MXGJ7zADvOkH9WrS6
-	e/ZOnNYmcyzP/X4mPlcOMgLPYa8jQmQe0TVAWQbhnwkAwBWLz74akQxuLADp0nw/LgPxbeU51tJ
-	LubCf+LA+8UL8SOvbewpunQBCDH2b7RMoX96X2zSw2ZBhRE8+Ocqp6K9bjWJd281JylclBVx+G0
-	3y88gp1MUhGnj4wY2ygyFY4QXHNJo6Jb6Hp29bxBkvFsvlInjaweMAB69pGRPkyekdoMmotCoH7
-	QsM+EYJvR2jRKc8pryB0k37lQRKW3M7W0mjF2OngA1d5vyCQXdYjsYO7Hg/uVLNBUDgxkLdJD25
-	O0GLcKDzOttMeI6UqL13kAJgh
-X-Google-Smtp-Source: AGHT+IF1em6fQ+dQmzsQ58BrTPYM6PFztA3fy3AGPzn1H3XqZ+KObnhKheRQYGrFfIvF4334SIkJWQ==
-X-Received: by 2002:a17:907:3e20:b0:ad5:6d1a:6fa4 with SMTP id a640c23a62f3a-ad56d1a72c0mr763299466b.44.1747748775442;
-        Tue, 20 May 2025 06:46:15 -0700 (PDT)
-Received: from ?IPV6:2a03:83e0:1126:4:1c0a:f3ac:4087:51c8? ([2620:10d:c092:500::7:66a9])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d06b497sm727382466b.42.2025.05.20.06.46.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 May 2025 06:46:15 -0700 (PDT)
-Message-ID: <6d015d91-e74c-48b3-8bc3-480980a74f9b@gmail.com>
-Date: Tue, 20 May 2025 14:46:14 +0100
+	s=arc-20240116; t=1747748799; c=relaxed/simple;
+	bh=A3ymgb18BnOuOySJr5/XRA0C9ZYBVPd49CK+UkvTeoc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X8tY3LD7q/OVK1QefhINkxvO6ViBFfr6IwQcmPE0UP0WysY3JfTeBXZd0Vft9nl7GoKvQsjjpQuujk5piR0PFicrkqJ8ypmtihgKCump4wC65MEbOqPRCtBbBkG/PY48KFdcyNZtRPD8DEJo0Zk0c5uVqZ/ZguHqKSRrHAiQOm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 709A31516;
+	Tue, 20 May 2025 06:46:23 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7CBB93F5A1;
+	Tue, 20 May 2025 06:46:36 -0700 (PDT)
+Date: Tue, 20 May 2025 14:46:32 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: James Clark <james.clark@linaro.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
+	kvmarm@lists.linux.dev
+Subject: Re: [PATCH 07/10] perf: arm_spe: Add support for filtering on data
+ source
+Message-ID: <20250520134632.GR412060@e132581.arm.com>
+References: <20250506-james-perf-feat_spe_eft-v1-0-dd480e8e4851@linaro.org>
+ <20250506-james-perf-feat_spe_eft-v1-7-dd480e8e4851@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] mm: slub: allocate slab object extensions
- non-contiguously
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>, surenb@google.com,
- hannes@cmpxchg.org, shakeel.butt@linux.dev, vlad.wing@gmail.com,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, kernel-team@meta.com
-References: <20250520122547.1317050-1-usamaarif642@gmail.com>
- <3divtzm4iapcxwbzxlmfmg3gus75n3rqh43vkjnog456jm2k34@f3rpzvcfk3p6>
-Content-Language: en-US
-From: Usama Arif <usamaarif642@gmail.com>
-In-Reply-To: <3divtzm4iapcxwbzxlmfmg3gus75n3rqh43vkjnog456jm2k34@f3rpzvcfk3p6>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250506-james-perf-feat_spe_eft-v1-7-dd480e8e4851@linaro.org>
 
-
-
-On 20/05/2025 14:44, Kent Overstreet wrote:
-> On Tue, May 20, 2025 at 01:25:46PM +0100, Usama Arif wrote:
->> When memory allocation profiling is running on memory bound services,
->> allocations greater than order 0 for slab object extensions can fail,
->> for e.g. zs_handle zswap slab which will be 512 objsperslab x 16 bytes
->> per slabobj_ext (order 1 allocation). Use kvcalloc to improve chances
->> of the allocation being successful.
->>
->> Signed-off-by: Usama Arif <usamaarif642@gmail.com>
->> Reported-by: Vlad Poenaru <vlad.wing@gmail.com>
->> Closes: https://lore.kernel.org/all/17fab2d6-5a74-4573-bcc3-b75951508f0a@gmail.com/
->> ---
->>  mm/slub.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/mm/slub.c b/mm/slub.c
->> index dc9e729e1d26..bf43c403ead2 100644
->> --- a/mm/slub.c
->> +++ b/mm/slub.c
->> @@ -1989,7 +1989,7 @@ int alloc_slab_obj_exts(struct slab *slab, struct kmem_cache *s,
->>  	gfp &= ~OBJCGS_CLEAR_MASK;
->>  	/* Prevent recursive extension vector allocation */
->>  	gfp |= __GFP_NO_OBJ_EXT;
->> -	vec = kcalloc_node(objects, sizeof(struct slabobj_ext), gfp,
->> +	vec = kvcalloc_node(objects, sizeof(struct slabobj_ext), gfp,
->>  			   slab_nid(slab));
+On Tue, May 06, 2025 at 12:41:39PM +0100, James Clark wrote:
+> SPE_FEAT_FDS adds the ability to filter on the data source of packets.
+> Like the other existing filters, enable filtering with PMSFCR_EL1.FDS
+> when any of the filter bits are set.
 > 
-> And what's the latency going to be on a vmalloc() allocation when we're
-> low on memory?
+> Each bit maps to data sources 0-63 described by bits[0:5] in the data
+> source packet (although the full range of data source is 16 bits so
+> higher value data sources can't be filtered on). The filter is an OR of
+> all the bits, so for example setting bits 0 and 3 filters packets from
+> data sources 0 OR 3.
 
-Would it not be better to get the allocation slighly slower than to not get
-it at all?
+As Arm ARM says:
+
+  0b0 : If PMSFCR_EL1.FDS is 1, do not record load operations that have
+        bits [5:0] of the Data Source packet set to <m>.
+  0b1 : Load operations with Data Source <m> are unaffected by
+        PMSFCR_EL1.FDS.
+
+We need extra handling for this configuration (0b0 means filtering,
+0b1 means no affaction):
+
+- By default, the driver should set all bits in the 'data_src_filter'
+  field.
+
+- The perf tool needs an extra patch in userspace to initialize all
+  bits in config4 unless user specify other values.
+
+Thanks,
+Leo
+
+> Signed-off-by: James Clark <james.clark@linaro.org>
+> ---
+>  drivers/perf/arm_spe_pmu.c | 31 +++++++++++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+> 
+> diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
+> index 9309b846f642..d04318411f77 100644
+> --- a/drivers/perf/arm_spe_pmu.c
+> +++ b/drivers/perf/arm_spe_pmu.c
+> @@ -87,6 +87,7 @@ struct arm_spe_pmu {
+>  #define SPE_PMU_FEAT_INV_FILT_EVT		(1UL << 6)
+>  #define SPE_PMU_FEAT_DISCARD			(1UL << 7)
+>  #define SPE_PMU_FEAT_EFT			(1UL << 8)
+> +#define SPE_PMU_FEAT_FDS			(1UL << 9)
+>  #define SPE_PMU_FEAT_DEV_PROBED			(1UL << 63)
+>  	u64					features;
+>  
+> @@ -232,6 +233,10 @@ static const struct attribute_group arm_spe_pmu_cap_group = {
+>  #define ATTR_CFG_FLD_inv_event_filter_LO	0
+>  #define ATTR_CFG_FLD_inv_event_filter_HI	63
+>  
+> +#define ATTR_CFG_FLD_data_src_filter_CFG	config4	/* PMSDSFR_EL1 */
+> +#define ATTR_CFG_FLD_data_src_filter_LO	0
+> +#define ATTR_CFG_FLD_data_src_filter_HI	63
+> +
+>  GEN_PMU_FORMAT_ATTR(ts_enable);
+>  GEN_PMU_FORMAT_ATTR(pa_enable);
+>  GEN_PMU_FORMAT_ATTR(pct_enable);
+> @@ -248,6 +253,7 @@ GEN_PMU_FORMAT_ATTR(float_filter);
+>  GEN_PMU_FORMAT_ATTR(float_filter_mask);
+>  GEN_PMU_FORMAT_ATTR(event_filter);
+>  GEN_PMU_FORMAT_ATTR(inv_event_filter);
+> +GEN_PMU_FORMAT_ATTR(data_src_filter);
+>  GEN_PMU_FORMAT_ATTR(min_latency);
+>  GEN_PMU_FORMAT_ATTR(discard);
+>  
+> @@ -268,6 +274,7 @@ static struct attribute *arm_spe_pmu_formats_attr[] = {
+>  	&format_attr_float_filter_mask.attr,
+>  	&format_attr_event_filter.attr,
+>  	&format_attr_inv_event_filter.attr,
+> +	&format_attr_data_src_filter.attr,
+>  	&format_attr_min_latency.attr,
+>  	&format_attr_discard.attr,
+>  	NULL,
+> @@ -286,6 +293,9 @@ static umode_t arm_spe_pmu_format_attr_is_visible(struct kobject *kobj,
+>  	if (attr == &format_attr_inv_event_filter.attr && !(spe_pmu->features & SPE_PMU_FEAT_INV_FILT_EVT))
+>  		return 0;
+>  
+> +	if (attr == &format_attr_data_src_filter.attr && !(spe_pmu->features & SPE_PMU_FEAT_FDS))
+> +		return 0;
+> +
+>  	if ((attr == &format_attr_branch_filter_mask.attr ||
+>  	     attr == &format_attr_load_filter_mask.attr ||
+>  	     attr == &format_attr_store_filter_mask.attr ||
+> @@ -406,6 +416,9 @@ static u64 arm_spe_event_to_pmsfcr(struct perf_event *event)
+>  	if (ATTR_CFG_GET_FLD(attr, inv_event_filter))
+>  		reg |= PMSFCR_EL1_FnE;
+>  
+> +	if (ATTR_CFG_GET_FLD(attr, data_src_filter))
+> +		reg |= PMSFCR_EL1_FDS;
+> +
+>  	if (ATTR_CFG_GET_FLD(attr, min_latency))
+>  		reg |= PMSFCR_EL1_FL;
+>  
+> @@ -430,6 +443,12 @@ static u64 arm_spe_event_to_pmslatfr(struct perf_event *event)
+>  	return FIELD_PREP(PMSLATFR_EL1_MINLAT, ATTR_CFG_GET_FLD(attr, min_latency));
+>  }
+>  
+> +static u64 arm_spe_event_to_pmsdsfr(struct perf_event *event)
+> +{
+> +	struct perf_event_attr *attr = &event->attr;
+> +	return ATTR_CFG_GET_FLD(attr, data_src_filter);
+> +}
+> +
+>  static void arm_spe_pmu_pad_buf(struct perf_output_handle *handle, int len)
+>  {
+>  	struct arm_spe_pmu_buf *buf = perf_get_aux(handle);
+> @@ -788,6 +807,10 @@ static int arm_spe_pmu_event_init(struct perf_event *event)
+>  	if (arm_spe_event_to_pmsnevfr(event) & arm_spe_pmsevfr_res0(spe_pmu->pmsver))
+>  		return -EOPNOTSUPP;
+>  
+> +	if (arm_spe_event_to_pmsdsfr(event) &&
+> +	    !(spe_pmu->features & SPE_PMU_FEAT_FDS))
+> +		return -EOPNOTSUPP;
+> +
+>  	if (attr->exclude_idle)
+>  		return -EOPNOTSUPP;
+>  
+> @@ -857,6 +880,11 @@ static void arm_spe_pmu_start(struct perf_event *event, int flags)
+>  		write_sysreg_s(reg, SYS_PMSNEVFR_EL1);
+>  	}
+>  
+> +	if (spe_pmu->features & SPE_PMU_FEAT_FDS) {
+> +		reg = arm_spe_event_to_pmsdsfr(event);
+> +		write_sysreg_s(reg, SYS_PMSDSFR_EL1);
+> +	}
+> +
+>  	reg = arm_spe_event_to_pmslatfr(event);
+>  	write_sysreg_s(reg, SYS_PMSLATFR_EL1);
+>  
+> @@ -1116,6 +1144,9 @@ static void __arm_spe_pmu_dev_probe(void *info)
+>  	if (FIELD_GET(PMSIDR_EL1_EFT, reg))
+>  		spe_pmu->features |= SPE_PMU_FEAT_EFT;
+>  
+> +	if (FIELD_GET(PMSIDR_EL1_FDS, reg))
+> +		spe_pmu->features |= SPE_PMU_FEAT_FDS;
+> +
+>  	/* This field has a spaced out encoding, so just use a look-up */
+>  	fld = FIELD_GET(PMSIDR_EL1_INTERVAL, reg);
+>  	switch (fld) {
+> 
+> -- 
+> 2.34.1
+> 
