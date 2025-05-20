@@ -1,108 +1,329 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14A151D86C6
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 20:57:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 051F4BE5E;
+	Tue, 20 May 2025 20:58:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747774625; cv=none; b=MeF2XrOy1pNAwD07r1xold9KDbAlw8hi0n0p62xZuit2TRsjgdHk6qyfCzhZ8Y/uro4sD/ddWnuPkHewbqDbaD3gbotKrhxKGQe/72iEZxWV7IGFcQLeAVSCA6xUdCeOZP6fqzU26BCoyAvCuL+bzkHwA2hZh+TwITLOY7d9Jj4=
+	t=1747774699; cv=none; b=rFolH3+65iApjASc4IfphjgNFazoK619ZlhZausofvqgY+tm0XSUA1BZOCX68lDuqFarTpZ6ITgDiKykKettrnPgzpQpLd4pW3K19GpBGsT0lprX4IFqsunSYuXcEgGDQ+/kUzUt5xy5fXDmP6m+s1NMADMZEnvAT+nTDc5YtTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747774625; c=relaxed/simple;
-	bh=4NVAqMmE/xJIFdHB7+CceGBJ43TCYvrJvvG0LTTS2Ps=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=LfETlO11zQGrXSZzAXnbWltIYTifGtck/pWAMLVOx9I72rv/XC8BalpcUlfPH2FO2XaFIS5gkZ8oZunLh+X0F/2IcH6R0X24jzDmFOCa36KgDVjsM0IbL3konBdCeKMZDgFbEzg3RQ5M/iOMkcsDN+CVfXd6zQDm6eOf8r9IMPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ov+kSPuw; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1747774699; c=relaxed/simple;
+	bh=vjBOBT2RpUdaxCZk0wTsxRrqGDPLiEQBWGYV9BYr3W8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S/Rb+rE2+qHIyWP1bncvtLLST867CaKZMiRxT0G3XTu28Vx3fUJa+VJP/ILA/MttN6slTPMG9E8tABP7/idsfzZTIhCRkOTB7XNQkMwW7ELbNqiUqhpbHias9MPHZYQCb5i9jrC7TYc/iW4xTrg7ZFPkppKuPNVKKWJ7efl/ua0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mPnTrowE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ov+kSPuw"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30ed0017688so2774877a91.2
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 13:57:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747774622; x=1748379422; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UKutgaWFEQ+3gu/ouPLFwWIwK8y5oHoRF19CwGZ+S/c=;
-        b=ov+kSPuwGREzGhEk/6rPaJvFmOnkVhMx736btHmwNlHQPgFYn91dRwtEzUmdjnuBPb
-         GwFeL7VPPly6FlEzx1bZzy56ULs3xC9O+W0Y3qoqCp+PCIvNJvyZ4u6cFZASbsFakxqa
-         SlxsN51uPvp8mntIZTZOPZF1jrNhmpNojPJYifcJW9hbHXNb1BS7yQdgWY4qdfsUhy9M
-         P658VEsf/a+VXFkS+UhH8h6dO3g5HTHyb6FBykR9NKfn5QI8PrtZnur8uR4BjPUkXxc9
-         r0xJVf9T7x47XNESs+srni6czVycphFIElekLYWOUdpieB63hcDXVXe5y4CD2t7njkBk
-         6nZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747774622; x=1748379422;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UKutgaWFEQ+3gu/ouPLFwWIwK8y5oHoRF19CwGZ+S/c=;
-        b=GwKlQIRIw9TU1XAoedxuFV5MSiC8Y11mZd+RFrjHh+gZ01xs5shbpp2McogXzcr2qn
-         mq6skzQFD5MqdR6IMTXuOltEX/kCQQV2cQUSF+QU+b3W6LKAEzk27AIBtZMgW5O/jECp
-         /fsmMe796p/UXEyfmbZGArbcz0dJA3nxw8g74xs2EiwKPiyGpwGqkjztfVsfrO1zxO3J
-         TpteNW9YkIDQnQFFFVwAzsX3U0F7vBITvYY4qotrUF/6ZXPfwmQonS/+Kx35JIwQ5k4j
-         Y9AyPhASnFmVtQnv18SDiVpamoo25tF06znBZ2bnNFlCgv7dwuK2/K0min6ZmzPAUMrK
-         nVPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWd5O6HOee14+zXEN2LMHAOBq0ZD56aEEVyvSaV2QA1pHoCf8eKrQgpx1nEB4AUn9z1SzZBc32PX2ugQak=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqL7aWQw4Umdf2p3J6B3YORIinfSKJUNFm0Pp2e8ow6SdQouZd
-	RmTHa927ww6IS+SoiWEsLNy/IFKbtxzzF2ZcvRcHWtSd6o93BPHlYy1p39396y5LhqzH3ftx1j5
-	9CZa7FA==
-X-Google-Smtp-Source: AGHT+IFjfH39vLCcnXRNh1tmz9SqmTftxmR4IbkXgvupWrNryIrlY6xpDKX1XUbGhNR1KVx0wuk++Q37G+U=
-X-Received: from pjbli1.prod.google.com ([2002:a17:90b:48c1:b0:30e:840f:131e])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1846:b0:2ff:6488:e01c
- with SMTP id 98e67ed59e1d1-30e7d5bb354mr29441493a91.29.1747774622388; Tue, 20
- May 2025 13:57:02 -0700 (PDT)
-Date: Tue, 20 May 2025 13:57:01 -0700
-In-Reply-To: <20250520191723.GI16434@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mPnTrowE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3FEDC4CEE9;
+	Tue, 20 May 2025 20:58:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747774696;
+	bh=vjBOBT2RpUdaxCZk0wTsxRrqGDPLiEQBWGYV9BYr3W8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mPnTrowEu3n+/nxVmwYGOFqfG2CO/onOWj8MOS98sC15GSYCn2f8ZLb9x88c7aAop
+	 GBKoyA1aTeC9eBco3aIg5nA+kPu4USUamTMVB9ahuX9GXU1KcYxF43dienJ1NC4HwU
+	 q+pkc72LW1AA0R1z3JOqK1DxcF3ms4cY80GgTqkmpUGj/JRcXVwOEOheQjKay2FMsF
+	 XRWEYh+GqedcnDqLKRtwRWYyC9UJKaYJL9dN+g9KSup/xFRJOUTXy1teJ8RMzx81t4
+	 NLweQ4tcJmREm/Zzdq+byUBclkjMjjWGWxC7OpgsgPmuiTD8O6yzgyR2iJPYtZTptc
+	 LmZXDXeqjc9VA==
+Date: Tue, 20 May 2025 17:58:09 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, namhyung@kernel.org,
+	agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+	hca@linux.ibm.com, Alexander Egorenkov <egorenar@linux.ibm.com>
+Subject: Re: [PATCH V3] perf ftrace: Use process/session specific trace
+ settings
+Message-ID: <aCzs4ZP1tIPkbD9N@x1>
+References: <20250520093726.2009696-1-tmricht@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250519185514.2678456-1-seanjc@google.com> <20250519185514.2678456-7-seanjc@google.com>
- <20250520191723.GI16434@noisy.programming.kicks-ass.net>
-Message-ID: <aCzsnXPQ0TtKtqu9@google.com>
-Subject: Re: [PATCH v2 06/12] sched/wait: Add a waitqueue helper for fully
- exclusive priority waiters
-From: Sean Christopherson <seanjc@google.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Ingo Molnar <mingo@redhat.com>, 
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, K Prateek Nayak <kprateek.nayak@amd.com>, 
-	David Matlack <dmatlack@google.com>, Juergen Gross <jgross@suse.com>, 
-	Stefano Stabellini <sstabellini@kernel.org>, 
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250520093726.2009696-1-tmricht@linux.ibm.com>
 
-On Tue, May 20, 2025, Peter Zijlstra wrote:
-> On Mon, May 19, 2025 at 11:55:08AM -0700, Sean Christopherson wrote:
-> > diff --git a/kernel/sched/wait.c b/kernel/sched/wait.c
-> > index 51e38f5f4701..03252badb8e8 100644
-> > --- a/kernel/sched/wait.c
-> > +++ b/kernel/sched/wait.c
-> > @@ -47,6 +47,24 @@ void add_wait_queue_priority(struct wait_queue_head *wq_head, struct wait_queue_
-> >  }
-> >  EXPORT_SYMBOL_GPL(add_wait_queue_priority);
-> >  
-> > +int add_wait_queue_priority_exclusive(struct wait_queue_head *wq_head,
-> > +				      struct wait_queue_entry *wq_entry)
-> > +{
-> > +	struct list_head *head = &wq_head->head;
-> > +
-> > +	wq_entry->flags |= WQ_FLAG_EXCLUSIVE | WQ_FLAG_PRIORITY;
-> > +
-> > +	guard(spinlock_irqsave)(&wq_head->lock);
-> > +
-> > +	if (!list_empty(head) &&
-> > +	    (list_first_entry(head, typeof(*wq_entry), entry)->flags & WQ_FLAG_PRIORITY))
-> > +		return -EBUSY;
-> > +
-> > +	list_add(&wq_entry->entry, head);
-> > +	return 0;
-> > +}
-> > +EXPORT_SYMBOL(add_wait_queue_priority_exclusive);
+On Tue, May 20, 2025 at 11:37:26AM +0200, Thomas Richter wrote:
+> V2 --> V3: Use Arnaldo's proposal for the commit message.
+>            Add Namhyung's review comments.
+> V1 --> V2: Add Suggestion from Arnaldo Cavalho de Melo confirmed by
+>            Steven Rostedt. Use rmdir(../tracing/instances/dir) to stop
+> 	   process/session specific tracing and delete all
+> 	   process/session specific setings.
+
+I added it to my branch, will do more tests later together with the
+other patches in tmp.perf-tools-next and barring more reviewing comments
+to address, push it out for testing in linux-next.
+
+Thanks,
+
+- Arnaldo
+ 
+> Executing 'perf ftrace' commands 'ftrace', 'profile' and 'latency' leave
+> tracing disabled as can seen in this output:
 > 
-> add_wait_queue_priority() is a GPL export, leading me to believe the
-> whole priority thing is _GPL only, should we maintain that?
-
-Oh, yes, definitely.  Simply a goof.
+>  # echo 1 > /sys/kernel/debug/tracing/tracing_on
+>  # cat /sys/kernel/debug/tracing/tracing_on
+>  1
+>  # perf ftrace trace --graph-opts depth=5 sleep 0.1 > /dev/null
+>  # cat /sys/kernel/debug/tracing/tracing_on
+>  0
+>  #
+> 
+> The 'tracing_on' file is not restored to its value before the command.
+> 
+> To fix that this patch uses the .../tracing/instances/XXX subdirectory
+> feature.
+> 
+> Each 'perf ftrace' invocation creates its own session/process
+> specific subdirectory and does not change the global state
+> in the .../tracing directory itself.
+> 
+> Use rmdir(../tracing/instances/dir) to stop process/session specific
+> tracing and delete all process/session specific setings.
+> 
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Reported-by: Alexander Egorenkov <egorenar@linux.ibm.com>
+> ---
+>  tools/perf/builtin-ftrace.c | 101 +++++++++++++++++++++++++++++++-----
+>  1 file changed, 87 insertions(+), 14 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+> index 7caa18d5ffc3..bba36ebc2aa7 100644
+> --- a/tools/perf/builtin-ftrace.c
+> +++ b/tools/perf/builtin-ftrace.c
+> @@ -19,6 +19,7 @@
+>  #include <ctype.h>
+>  #include <linux/capability.h>
+>  #include <linux/string.h>
+> +#include <sys/stat.h>
+>  
+>  #include "debug.h"
+>  #include <subcmd/pager.h>
+> @@ -45,6 +46,8 @@ static volatile sig_atomic_t done;
+>  
+>  static struct stats latency_stats;  /* for tracepoints */
+>  
+> +static char tracing_instance[PATH_MAX];	/* Trace instance directory */
+> +
+>  static void sig_handler(int sig __maybe_unused)
+>  {
+>  	done = true;
+> @@ -100,6 +103,34 @@ static bool is_ftrace_supported(void)
+>  	return supported;
+>  }
+>  
+> +/*
+> + * Wrapper to test if a file in directory .../tracing/instances/XXX
+> + * exists. If so return the .../tracing/instances/XXX file for use.
+> + * Otherwise the file exists only in directory .../tracing and
+> + * is applicable to all instances, for example file available_filter_functions.
+> + * Return that file name in this case.
+> + *
+> + * This functions works similar to get_tracing_file() and expects its caller
+> + * to free the returned file name.
+> + *
+> + * The global variable tracing_instance is set in init_tracing_instance()
+> + * called at the  beginning to a process specific tracing subdirectory.
+> + */
+> +static char *get_tracing_instance_file(const char *name)
+> +{
+> +	char *file;
+> +
+> +	if (asprintf(&file, "%s/%s", tracing_instance, name) < 0)
+> +		return NULL;
+> +
+> +	if (!access(file, F_OK))
+> +		return file;
+> +
+> +	free(file);
+> +	file = get_tracing_file(name);
+> +	return file;
+> +}
+> +
+>  static int __write_tracing_file(const char *name, const char *val, bool append)
+>  {
+>  	char *file;
+> @@ -109,7 +140,7 @@ static int __write_tracing_file(const char *name, const char *val, bool append)
+>  	char errbuf[512];
+>  	char *val_copy;
+>  
+> -	file = get_tracing_file(name);
+> +	file = get_tracing_instance_file(name);
+>  	if (!file) {
+>  		pr_debug("cannot get tracing file: %s\n", name);
+>  		return -1;
+> @@ -167,7 +198,7 @@ static int read_tracing_file_to_stdout(const char *name)
+>  	int fd;
+>  	int ret = -1;
+>  
+> -	file = get_tracing_file(name);
+> +	file = get_tracing_instance_file(name);
+>  	if (!file) {
+>  		pr_debug("cannot get tracing file: %s\n", name);
+>  		return -1;
+> @@ -209,7 +240,7 @@ static int read_tracing_file_by_line(const char *name,
+>  	char *file;
+>  	FILE *fp;
+>  
+> -	file = get_tracing_file(name);
+> +	file = get_tracing_instance_file(name);
+>  	if (!file) {
+>  		pr_debug("cannot get tracing file: %s\n", name);
+>  		return -1;
+> @@ -299,6 +330,39 @@ static int reset_tracing_files(struct perf_ftrace *ftrace __maybe_unused)
+>  	return 0;
+>  }
+>  
+> +/* Remove .../tracing/instances/XXX subdirectory created with
+> + * init_tracing_instance().
+> + */
+> +static void exit_tracing_instance(void)
+> +{
+> +	if (rmdir(tracing_instance))
+> +		pr_err("failed to delete tracing/instances directory\n");
+> +}
+> +
+> +/* Create subdirectory within .../tracing/instances/XXX to have session
+> + * or process specific setup. To delete this setup, simply remove the
+> + * subdirectory.
+> + */
+> +static int init_tracing_instance(void)
+> +{
+> +	char dirname[] = "instances/perf-ftrace-XXXXXX";
+> +	char *path;
+> +
+> +	path = get_tracing_file(dirname);
+> +	if (!path)
+> +		goto error;
+> +	strncpy(tracing_instance, path, sizeof(tracing_instance) - 1);
+> +	put_tracing_file(path);
+> +	path = mkdtemp(tracing_instance);
+> +	if (!path)
+> +		goto error;
+> +	return 0;
+> +
+> +error:
+> +	pr_err("failed to create tracing/instances directory\n");
+> +	return -1;
+> +}
+> +
+>  static int set_tracing_pid(struct perf_ftrace *ftrace)
+>  {
+>  	int i;
+> @@ -629,14 +693,17 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace)
+>  
+>  	select_tracer(ftrace);
+>  
+> +	if (init_tracing_instance() < 0)
+> +		goto out;
+> +
+>  	if (reset_tracing_files(ftrace) < 0) {
+>  		pr_err("failed to reset ftrace\n");
+> -		goto out;
+> +		goto out_reset;
+>  	}
+>  
+>  	/* reset ftrace buffer */
+>  	if (write_tracing_file("trace", "0") < 0)
+> -		goto out;
+> +		goto out_reset;
+>  
+>  	if (set_tracing_options(ftrace) < 0)
+>  		goto out_reset;
+> @@ -648,7 +715,7 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace)
+>  
+>  	setup_pager();
+>  
+> -	trace_file = get_tracing_file("trace_pipe");
+> +	trace_file = get_tracing_instance_file("trace_pipe");
+>  	if (!trace_file) {
+>  		pr_err("failed to open trace_pipe\n");
+>  		goto out_reset;
+> @@ -723,7 +790,7 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace)
+>  out_close_fd:
+>  	close(trace_fd);
+>  out_reset:
+> -	reset_tracing_files(ftrace);
+> +	exit_tracing_instance();
+>  out:
+>  	return (done && !workload_exec_errno) ? 0 : -1;
+>  }
+> @@ -924,6 +991,9 @@ static int prepare_func_latency(struct perf_ftrace *ftrace)
+>  	if (ftrace->target.use_bpf)
+>  		return perf_ftrace__latency_prepare_bpf(ftrace);
+>  
+> +	if (init_tracing_instance() < 0)
+> +		return -1;
+> +
+>  	if (reset_tracing_files(ftrace) < 0) {
+>  		pr_err("failed to reset ftrace\n");
+>  		return -1;
+> @@ -942,7 +1012,7 @@ static int prepare_func_latency(struct perf_ftrace *ftrace)
+>  		return -1;
+>  	}
+>  
+> -	trace_file = get_tracing_file("trace_pipe");
+> +	trace_file = get_tracing_instance_file("trace_pipe");
+>  	if (!trace_file) {
+>  		pr_err("failed to open trace_pipe\n");
+>  		return -1;
+> @@ -993,7 +1063,7 @@ static int cleanup_func_latency(struct perf_ftrace *ftrace)
+>  	if (ftrace->target.use_bpf)
+>  		return perf_ftrace__latency_cleanup_bpf(ftrace);
+>  
+> -	reset_tracing_files(ftrace);
+> +	exit_tracing_instance();
+>  	return 0;
+>  }
+>  
+> @@ -1304,17 +1374,20 @@ static int __cmd_profile(struct perf_ftrace *ftrace)
+>  		goto out;
+>  	}
+>  
+> +	if (init_tracing_instance() < 0)
+> +		goto out;
+> +
+>  	if (reset_tracing_files(ftrace) < 0) {
+>  		pr_err("failed to reset ftrace\n");
+> -		goto out;
+> +		goto out_reset;
+>  	}
+>  
+>  	/* reset ftrace buffer */
+>  	if (write_tracing_file("trace", "0") < 0)
+> -		goto out;
+> +		goto out_reset;
+>  
+>  	if (set_tracing_options(ftrace) < 0)
+> -		return -1;
+> +		goto out_reset;
+>  
+>  	if (write_tracing_file("current_tracer", ftrace->tracer) < 0) {
+>  		pr_err("failed to set current_tracer to %s\n", ftrace->tracer);
+> @@ -1323,7 +1396,7 @@ static int __cmd_profile(struct perf_ftrace *ftrace)
+>  
+>  	setup_pager();
+>  
+> -	trace_file = get_tracing_file("trace_pipe");
+> +	trace_file = get_tracing_instance_file("trace_pipe");
+>  	if (!trace_file) {
+>  		pr_err("failed to open trace_pipe\n");
+>  		goto out_reset;
+> @@ -1385,7 +1458,7 @@ static int __cmd_profile(struct perf_ftrace *ftrace)
+>  out_close_fd:
+>  	close(trace_fd);
+>  out_reset:
+> -	reset_tracing_files(ftrace);
+> +	exit_tracing_instance();
+>  out:
+>  	return (done && !workload_exec_errno) ? 0 : -1;
+>  }
+> -- 
+> 2.49.0
+> 
