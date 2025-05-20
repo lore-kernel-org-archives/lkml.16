@@ -1,359 +1,259 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp-42ac.mail.infomaniak.ch (smtp-42ac.mail.infomaniak.ch [84.16.66.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C0F524C07F;
-	Tue, 20 May 2025 14:54:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 471FB24290D
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 14:54:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747752854; cv=none; b=eELqGMOaJCExKbzZ6R8+FySQhhHMyuTmMyLAu6j8wnyeY+CG+xOIpxaRSRqvOsLXnbnK32wj14BSFLxhXAlXaJb42WT9lcg15MUdPbXUmbXfSwhniws2YHfZnDqdZNSnT+FG+CXWPALklmXSJ0tjjVgWL8W1hTiaGFDqgmHcCwk=
+	t=1747752878; cv=none; b=sQX0R/X/HTU98FHBKPB0pBquwJJ1BTS9xWZoOODCTVJ7vOYeGXcsdJt6vLCdh2x4BVMbRNGfQgNWDPCXThPNIYPl8NEOcUT1gSwn3gyqLQDY32eiJxghz2xxbG1Zqpr8T+lveg6W3t6q1pT64eEAOUP/hHFkkO+/T2pLyihZg8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747752854; c=relaxed/simple;
-	bh=OeKfSVs/1QSZvK90pEfiggOvCGaV0fnju6Pbjxm6QD0=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=TtBJxf8gyW0xDz4A+6O1rsvV2q52nwF1Y+UUJ6a6xZ2QjWysUF5kLSnAWv0wohj8ZrUZFeymln2AgN5PNNbbqa75n8XlYQ1k5sLXMhN1fo6dmLL28OeGYMnQnTVXkEYYnZckUMrqbG0KrDNW2H2P+SiN8DfNjRl5FZa9t1nPrv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HfTlj2D8; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747752878; c=relaxed/simple;
+	bh=OWK0Zt23bPSbE4Ll64xGeV+57pDChH+4wfdXg+cVc3s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kRvtJr6t1kCkC7MEqdg5xHYxs3kBHu7p0XlrTDfBEKl2wPzk+zf9kouCU2IWlxQn3s/1dpgrPVNZizUuSXZdg/l+2SLjbOAvvHDCifYgnvc17g89bfU1zdcaeiJ0QA7pVCn1Wl7w7INhG6LkgdFq3D4iR0bmwDOoUNbZkYF8CE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=GUW33kDg; arc=none smtp.client-ip=84.16.66.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HfTlj2D8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747752853; x=1779288853;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=OeKfSVs/1QSZvK90pEfiggOvCGaV0fnju6Pbjxm6QD0=;
-  b=HfTlj2D8OGpVng25aHkEGbGVms49LoI4L/+r11KFlIGfaF/trxeew3za
-   /xtEjeAlroxzDRCQXK8UOYax/gg2SlQk0ZJdGKWpELVBjlmoDO4cVJvqi
-   TuFC/01jIYLdrlG8XboaHYY8GjUXrKu8+OguChmO2DGM3KYEW4eWPiSXn
-   1KPzw6f8SY0zM/4GGQZIvd5Aw+jSlcLapRH3Xc3iTMSDSogV4BKzZMpZJ
-   XmHHVGBw7SB7QAAQ5JdAHwglMpmjdcnqMVOUFTFw1XOAWspI0mR37dbbD
-   BqXM09H4TVP6vjxv29iRWewnTy+i/HIR9iz475Sm0t4Q+CsmBOJFs0k4Y
-   A==;
-X-CSE-ConnectionGUID: uck0+I18QdKgPcnMRK8+Fg==
-X-CSE-MsgGUID: HgvFF8tdQ86/A0JmBNW4Yg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="49792613"
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="49792613"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 07:54:12 -0700
-X-CSE-ConnectionGUID: rRvW8EdYTXmXpCdQ3c/WXg==
-X-CSE-MsgGUID: w6TSiCYCRJKypAfjwHEufw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="144457832"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.235])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 07:54:08 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 20 May 2025 17:54:05 +0300 (EEST)
-To: "David E. Box" <david.e.box@linux.intel.com>
-cc: LKML <linux-kernel@vger.kernel.org>, platform-driver-x86@vger.kernel.org, 
-    srinivas.pandruvada@linux.intel.com, 
-    Andy Shevchenko <andriy.shevchenko@linux.intel.com>, tony.luck@intel.com, 
-    xi.pardee@linux.intel.com, Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH 10/15] platform/x86/intel/tpmi: Relocate platform info
- to intel_vsec.h
-In-Reply-To: <20250430212106.369208-11-david.e.box@linux.intel.com>
-Message-ID: <b8b5bcf8-bac9-4e92-f876-2c6ac595596f@linux.intel.com>
-References: <20250430212106.369208-1-david.e.box@linux.intel.com> <20250430212106.369208-11-david.e.box@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="GUW33kDg"
+Received: from smtp-3-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246c])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4b1y5d1xbbz7RK;
+	Tue, 20 May 2025 16:45:25 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
+	s=20191114; t=1747752325;
+	bh=iXHCzy2mvfq2Ah5c6EuTknCOAZP225QNWQ+0yp2MqCw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GUW33kDg4zawPBatwVSy4eRcRjatDTSIqFlfaozDG5UBG2OcJ+ffulyqejP0x/R8+
+	 hU8kc1HItRcQEMnssiBbQFOumHxomHzA+ylvimYlFgm5On2E6/YcVhan4LMgM8+Z5g
+	 rXIz1DgFuSkvv0NTcWgdc2pk2/0BqeQBuLn+OgUM=
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4b1y5Z3wXyz443;
+	Tue, 20 May 2025 16:45:22 +0200 (CEST)
+Date: Tue, 20 May 2025 16:45:19 +0200
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: Kees Cook <kees@kernel.org>
+Cc: Randy Dunlap <rdunlap@infradead.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Stephen Rothwell <sfr@canb.auug.org.au>, 
+	Linux Next Mailing List <linux-next@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	linux-security-module@vger.kernel.org, =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>
+Subject: Re: linux-next: Tree for May 16 (security/landlock/ruleset.c)
+Message-ID: <20250520.uof4li6vac3I@digikod.net>
+References: <20250516202417.31b13d13@canb.auug.org.au>
+ <e3754f69-1dea-4542-8de0-a567a14fb95b@infradead.org>
+ <20250519.jiveise8Rau8@digikod.net>
+ <202505191117.C094A90F88@keescook>
+ <20250519.ba8eoZu3XaeJ@digikod.net>
+ <202505191212.61EE1AE80@keescook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1116251625-1747752845=:936"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <202505191212.61EE1AE80@keescook>
+X-Infomaniak-Routing: alpha
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Mon, May 19, 2025 at 12:15:30PM -0700, Kees Cook wrote:
+> On Mon, May 19, 2025 at 08:41:17PM +0200, Mickaël Salaün wrote:
+> > On Mon, May 19, 2025 at 11:19:53AM -0700, Kees Cook wrote:
+> > > On Mon, May 19, 2025 at 05:29:30PM +0200, Mickaël Salaün wrote:
+> > > > On Fri, May 16, 2025 at 07:54:14PM -0700, Randy Dunlap wrote:
+> > > > > 
+> > > > > 
+> > > > > On 5/16/25 3:24 AM, Stephen Rothwell wrote:
+> > > > > > Hi all,
+> > > > > > 
+> > > > > > Changes since 20250515:
+> > > > 
+> > > > Thanks for the report.
+> > > > 
+> > > > It is the same warning as reported here:
+> > > > https://lore.kernel.org/all/202501040747.S3LYfvYq-lkp@intel.com/
+> > > > 
+> > > > I don't know what the actual issue is though.
+> > > > 
+> > > > > 
+> > > > > on i386:
+> > > > > 
+> > > > > In file included from ../arch/x86/include/asm/string.h:3,
+> > > > >                  from ../include/linux/string.h:65,
+> > > > >                  from ../include/linux/bitmap.h:13,
+> > > > >                  from ../include/linux/cpumask.h:12,
+> > > > >                  from ../include/linux/smp.h:13,
+> > > > >                  from ../include/linux/lockdep.h:14,
+> > > > >                  from ../security/landlock/ruleset.c:16:
+> > > > > ../security/landlock/ruleset.c: In function 'create_rule':
+> > > > > ../arch/x86/include/asm/string_32.h:150:25: warning: '__builtin_memcpy' accessing 4294967295 bytes at offsets 20 and 0 overlaps 6442450943 bytes at offset -2147483648 [-Wrestrict]
+> > > > >   150 | #define memcpy(t, f, n) __builtin_memcpy(t, f, n)
+> > > > >       |                         ^~~~~~~~~~~~~~~~~~~~~~~~~
+> > > > > ../security/landlock/ruleset.c:137:9: note: in expansion of macro 'memcpy'
+> > > > >   137 |         memcpy(new_rule->layers, layers,
+> > > > >       |         ^~~~~~
+> > > > > 
+> > > > > 
+> > > > > Full randconfig file is attached.
+> > > 
+> > > The trigger appears to be CONFIG_PROFILE_ALL_BRANCHES, and GCC getting
+> > > tricked into thinking check_mul_overflow() returns true:
+> > > 
+> > > In file included from ../arch/x86/include/asm/string.h:3,
+> > >                  from ../include/linux/string.h:65,
+> > >                  from ../include/linux/bitmap.h:13,
+> > >                  from ../include/linux/cpumask.h:12,
+> > >                  from ../include/linux/smp.h:13,
+> > >                  from ../include/linux/lockdep.h:14,
+> > >                  from ../security/landlock/ruleset.c:16:
+> > > ../security/landlock/ruleset.c: In function 'create_rule':
+> > > ../arch/x86/include/asm/string_32.h:150:25: warning: '__builtin_memcpy' accessing 4294967295 bytes at offsets 0 and 0 overlaps 6442450943 bytes at offset -2147483648 [-Wrestrict]
+> > >   150 | #define memcpy(t, f, n) __builtin_memcpy(t, f, n)
+> > >       |                         ^~~~~~~~~~~~~~~~~~~~~~~~~
+> > > ../security/landlock/ruleset.c:137:9: note: in expansion of macro 'memcpy'
+> > >   137 |         memcpy(new_rule->layers, layers,
+> > >       |         ^~~~~~
+> > >   'create_rule': event 1
+> > > ../include/linux/compiler.h:69:46:
+> > >    68 |         (cond) ?                                        \
+> > >       |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > >    69 |                 (__if_trace.miss_hit[1]++,1) :          \
+> > >       |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
+> > >       |                                              |
+> > >       |                                              (1) when the condition is evaluated to true
+> > >    70 |                 (__if_trace.miss_hit[0]++,0);           \
+> > >       |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~  
+> > > ../include/linux/compiler.h:57:69: note: in expansion of macro '__trace_if_value'
+> > >    57 | #define __trace_if_var(cond) (__builtin_constant_p(cond) ? (cond) : __trace_if_value(cond))
+> > >       |                                                                     ^~~~~~~~~~~~~~~~
+> > > ../include/linux/compiler.h:55:28: note: in expansion of macro '__trace_if_var'
+> > >    55 | #define if(cond, ...) if ( __trace_if_var( !!(cond , ## __VA_ARGS__) ) )
+> > >       |                            ^~~~~~~~~~~~~~
+> > > ../include/linux/overflow.h:270:9: note: in expansion of macro 'if'
+> > >   270 |         if (check_mul_overflow(factor1, factor2, &bytes))
+> > >       |         ^~
+> > >   'create_rule': event 2
+> > > ../arch/x86/include/asm/string_32.h:150:25:
+> > >   150 | #define memcpy(t, f, n) __builtin_memcpy(t, f, n)
+> > >       |                         ^~~~~~~~~~~~~~~~~~~~~~~~~
+> > >       |                         |
+> > >       |                         (2) out of array bounds here
+> > > ../security/landlock/ruleset.c:137:9: note: in expansion of macro 'memcpy'
+> > >   137 |         memcpy(new_rule->layers, layers,
+> > >       |         ^~~~~~
+> > > make[1]: Leaving directory '/srv/code/gcc-bug'
+> > 
+> > That's interesting...
+> > 
+> > > 
+> > > 
+> > > I'll take a look at ways to make either the overflow macros or memcpy
+> > > robust against this kind of weirdness...
+> > 
+> > Thanks!
+> 
+> I'm doing some build testing, but the below patch makes GCC happy.
+> Alternatively we could make CONFIG_PROFILE_ALL_BRANCHES=y depend on
+> CONFIG_FORTIFY_SOURCE=y ...
+> 
+> 
+> From 6fbf66fdfd0a7dac809b77faafdd72c60112bb8d Mon Sep 17 00:00:00 2001
+> From: Kees Cook <kees@kernel.org>
+> Date: Mon, 19 May 2025 11:52:06 -0700
+> Subject: [PATCH] string.h: Provide basic sanity checks for fallback memcpy()
+> MIME-Version: 1.0
+> Content-Type: text/plain; charset=UTF-8
+> Content-Transfer-Encoding: 8bit
+> 
+> Instead of defining memcpy() in terms of __builtin_memcpy() deep
+> in arch/x86/include/asm/string_32.h, notice that it is needed up in
+> the general string.h, as done with other common C String APIs. This
+> allows us to add basic sanity checking for pathological "size"
+> arguments to memcpy(). Besides the run-time checking benefit, this
+> avoids GCC trying to be very smart about value range tracking[1] when
+> CONFIG_PROFILE_ALL_BRANCHES=y but FORTIFY_SOURCE=n.
 
---8323328-1116251625-1747752845=:936
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+It works for me but I couldn't reproduce the issue.  I tried with
+CONFIG_PROFILE_ALL_BRANCHES=y and CONFIG_FORTIFY_SOURCE=n but it always
+works without a warning.  I'm using GCC 15.  Is it specific to a version
+of GCC?
 
-On Wed, 30 Apr 2025, David E. Box wrote:
-
-> The TPMI platform information provides a mapping of OOBMSM PCI devices to
-> logical CPUs. Since this mapping is consistent across all OOBMSM features
-> (e.g., TPMI, PMT, SDSi), it can be leveraged by multiple drivers. To
-> facilitate reuse, relocate the struct intel_tpmi_plat_info to intel_vsec.=
-h,
-> renaming it to struct oobmsm_plat_info, making it accessible to other
-> features. While modifying headers, place them in alphabetical order.
->=20
-> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> 
+> Link: https://lore.kernel.org/all/202505191117.C094A90F88@keescook/ [1]
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/all/202501040747.S3LYfvYq-lkp@intel.com/
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Closes: https://lore.kernel.org/all/e3754f69-1dea-4542-8de0-a567a14fb95b@infradead.org/
+> Signed-off-by: Kees Cook <kees@kernel.org>
 > ---
->  drivers/platform/x86/intel/plr_tpmi.c         |  3 ++-
->  .../intel/speed_select_if/isst_tpmi_core.c    |  9 ++++---
->  .../uncore-frequency/uncore-frequency-tpmi.c  |  5 ++--
->  drivers/platform/x86/intel/vsec_tpmi.c        |  4 +--
->  drivers/powercap/intel_rapl_tpmi.c            |  9 ++++---
->  include/linux/intel_tpmi.h                    | 26 ++-----------------
->  include/linux/intel_vsec.h                    | 22 ++++++++++++++++
->  7 files changed, 41 insertions(+), 37 deletions(-)
->=20
-> diff --git a/drivers/platform/x86/intel/plr_tpmi.c b/drivers/platform/x86=
-/intel/plr_tpmi.c
-> index 2b55347a5a93..58132da47745 100644
-> --- a/drivers/platform/x86/intel/plr_tpmi.c
-> +++ b/drivers/platform/x86/intel/plr_tpmi.c
-> @@ -14,6 +14,7 @@
->  #include <linux/err.h>
->  #include <linux/gfp_types.h>
->  #include <linux/intel_tpmi.h>
-> +#include <linux/intel_vsec.h>
->  #include <linux/io.h>
->  #include <linux/iopoll.h>
->  #include <linux/kstrtox.h>
-> @@ -256,7 +257,7 @@ DEFINE_SHOW_STORE_ATTRIBUTE(plr_status);
-> =20
->  static int intel_plr_probe(struct auxiliary_device *auxdev, const struct=
- auxiliary_device_id *id)
->  {
-> -=09struct intel_tpmi_plat_info *plat_info;
-> +=09struct oobmsm_plat_info *plat_info;
->  =09struct dentry *dentry;
->  =09int i, num_resources;
->  =09struct resource *res;
-> diff --git a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c =
-b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-> index 9978cdd19851..875afa6835cd 100644
-> --- a/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-> +++ b/drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c
-> @@ -22,6 +22,7 @@
->  #include <linux/auxiliary_bus.h>
->  #include <linux/delay.h>
->  #include <linux/intel_tpmi.h>
-> +#include <linux/intel_vsec.h>
->  #include <linux/fs.h>
->  #include <linux/io.h>
->  #include <linux/kernel.h>
-> @@ -1446,7 +1447,7 @@ int tpmi_sst_dev_add(struct auxiliary_device *auxde=
-v)
->  {
->  =09struct tpmi_per_power_domain_info *pd_info;
->  =09bool read_blocked =3D 0, write_blocked =3D 0;
-> -=09struct intel_tpmi_plat_info *plat_info;
-> +=09struct oobmsm_plat_info *plat_info;
->  =09struct device *dev =3D &auxdev->dev;
->  =09struct tpmi_sst_struct *tpmi_sst;
->  =09u8 i, num_resources, io_die_cnt;
-> @@ -1598,7 +1599,7 @@ EXPORT_SYMBOL_NS_GPL(tpmi_sst_dev_add, "INTEL_TPMI_=
-SST");
->  void tpmi_sst_dev_remove(struct auxiliary_device *auxdev)
->  {
->  =09struct tpmi_sst_struct *tpmi_sst =3D auxiliary_get_drvdata(auxdev);
-> -=09struct intel_tpmi_plat_info *plat_info;
-> +=09struct oobmsm_plat_info *plat_info;
-> =20
->  =09plat_info =3D tpmi_get_platform_data(auxdev);
->  =09if (!plat_info)
-> @@ -1620,7 +1621,7 @@ void tpmi_sst_dev_suspend(struct auxiliary_device *=
-auxdev)
->  {
->  =09struct tpmi_sst_struct *tpmi_sst =3D auxiliary_get_drvdata(auxdev);
->  =09struct tpmi_per_power_domain_info *power_domain_info;
-> -=09struct intel_tpmi_plat_info *plat_info;
-> +=09struct oobmsm_plat_info *plat_info;
->  =09void __iomem *cp_base;
-> =20
->  =09plat_info =3D tpmi_get_platform_data(auxdev);
-> @@ -1648,7 +1649,7 @@ void tpmi_sst_dev_resume(struct auxiliary_device *a=
-uxdev)
->  {
->  =09struct tpmi_sst_struct *tpmi_sst =3D auxiliary_get_drvdata(auxdev);
->  =09struct tpmi_per_power_domain_info *power_domain_info;
-> -=09struct intel_tpmi_plat_info *plat_info;
-> +=09struct oobmsm_plat_info *plat_info;
->  =09void __iomem *cp_base;
-> =20
->  =09plat_info =3D tpmi_get_platform_data(auxdev);
-> diff --git a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency=
--tpmi.c b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi=
-=2Ec
-> index 4aa6c227ec82..23a86feb12ef 100644
-> --- a/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
-> +++ b/drivers/platform/x86/intel/uncore-frequency/uncore-frequency-tpmi.c
-> @@ -22,9 +22,10 @@
->  #include <linux/auxiliary_bus.h>
->  #include <linux/bitfield.h>
->  #include <linux/bits.h>
-> +#include <linux/intel_tpmi.h>
-> +#include <linux/intel_vsec.h>
->  #include <linux/io.h>
->  #include <linux/module.h>
-> -#include <linux/intel_tpmi.h>
-> =20
->  #include "uncore-frequency-common.h"
-> =20
-> @@ -421,7 +422,7 @@ static void remove_cluster_entries(struct tpmi_uncore=
-_struct *tpmi_uncore)
->  static int uncore_probe(struct auxiliary_device *auxdev, const struct au=
-xiliary_device_id *id)
->  {
->  =09bool read_blocked =3D 0, write_blocked =3D 0;
-> -=09struct intel_tpmi_plat_info *plat_info;
-> +=09struct oobmsm_plat_info *plat_info;
->  =09struct tpmi_uncore_struct *tpmi_uncore;
->  =09bool uncore_sysfs_added =3D false;
->  =09int ret, i, pkg =3D 0;
-> diff --git a/drivers/platform/x86/intel/vsec_tpmi.c b/drivers/platform/x8=
-6/intel/vsec_tpmi.c
-> index 5c383a27bbe8..d95a0d994546 100644
-> --- a/drivers/platform/x86/intel/vsec_tpmi.c
-> +++ b/drivers/platform/x86/intel/vsec_tpmi.c
-> @@ -116,7 +116,7 @@ struct intel_tpmi_info {
->  =09struct intel_vsec_device *vsec_dev;
->  =09int feature_count;
->  =09u64 pfs_start;
-> -=09struct intel_tpmi_plat_info plat_info;
-> +=09struct oobmsm_plat_info plat_info;
->  =09void __iomem *tpmi_control_mem;
->  =09struct dentry *dbgfs_dir;
->  };
-> @@ -187,7 +187,7 @@ struct tpmi_feature_state {
->  /* Used during auxbus device creation */
->  static DEFINE_IDA(intel_vsec_tpmi_ida);
-> =20
-> -struct intel_tpmi_plat_info *tpmi_get_platform_data(struct auxiliary_dev=
-ice *auxdev)
-> +struct oobmsm_plat_info *tpmi_get_platform_data(struct auxiliary_device =
-*auxdev)
->  {
->  =09struct intel_vsec_device *vsec_dev =3D auxdev_to_ivdev(auxdev);
-> =20
-> diff --git a/drivers/powercap/intel_rapl_tpmi.c b/drivers/powercap/intel_=
-rapl_tpmi.c
-> index af2368f4db10..82201bf4685d 100644
-> --- a/drivers/powercap/intel_rapl_tpmi.c
-> +++ b/drivers/powercap/intel_rapl_tpmi.c
-> @@ -9,9 +9,10 @@
->  #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> =20
->  #include <linux/auxiliary_bus.h>
-> -#include <linux/io.h>
-> -#include <linux/intel_tpmi.h>
->  #include <linux/intel_rapl.h>
-> +#include <linux/intel_tpmi.h>
-> +#include <linux/intel_vsec.h>
-> +#include <linux/io.h>
->  #include <linux/module.h>
->  #include <linux/slab.h>
-> =20
-> @@ -48,7 +49,7 @@ enum tpmi_rapl_register {
-> =20
->  struct tpmi_rapl_package {
->  =09struct rapl_if_priv priv;
-> -=09struct intel_tpmi_plat_info *tpmi_info;
-> +=09struct oobmsm_plat_info *tpmi_info;
->  =09struct rapl_package *rp;
->  =09void __iomem *base;
->  =09struct list_head node;
-> @@ -253,7 +254,7 @@ static int intel_rapl_tpmi_probe(struct auxiliary_dev=
-ice *auxdev,
->  =09=09=09=09 const struct auxiliary_device_id *id)
->  {
->  =09struct tpmi_rapl_package *trp;
-> -=09struct intel_tpmi_plat_info *info;
-> +=09struct oobmsm_plat_info *info;
->  =09struct resource *res;
->  =09u32 offset;
->  =09int ret;
-> diff --git a/include/linux/intel_tpmi.h b/include/linux/intel_tpmi.h
-> index ff480b47ae64..d1fe2469b0a4 100644
-> --- a/include/linux/intel_tpmi.h
-> +++ b/include/linux/intel_tpmi.h
-> @@ -7,6 +7,7 @@
->  #define _INTEL_TPMI_H_
-> =20
->  #include <linux/bitfield.h>
-
-Add an empty line here.
-
-Once that is addressed,
-
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-
-
-> +struct oobmsm_plat_info;
-> =20
->  #define TPMI_VERSION_INVALID=090xff
->  #define TPMI_MINOR_VERSION(val)=09FIELD_GET(GENMASK(4, 0), val)
-> @@ -26,30 +27,7 @@ enum intel_tpmi_id {
->  =09TPMI_INFO_ID =3D 0x81,=09/* Special ID for PCI BDF and Package ID inf=
-ormation */
->  };
-> =20
-> -/**
-> - * struct intel_tpmi_plat_info - Platform information for a TPMI device =
-instance
-> - * @cdie_mask:       Mask of all compute dies in the partition
-> - * @package_id:      CPU Package id
-> - * @partition:       Package partition id when multiple VSEC PCI devices=
- per package
-> - * @segment:         PCI segment ID
-> - * @bus_number:      PCI bus number
-> - * @device_number:   PCI device number
-> - * @function_number: PCI function number
-> - *
-> - * Structure to store platform data for a TPMI device instance. This
-> - * struct is used to return data via tpmi_get_platform_data().
-> - */
-> -struct intel_tpmi_plat_info {
-> -=09u16 cdie_mask;
-> -=09u8 package_id;
-> -=09u8 partition;
-> -=09u8 segment;
-> -=09u8 bus_number;
-> -=09u8 device_number;
-> -=09u8 function_number;
-> -};
+> Cc: "Mickaël Salaün" <mic@digikod.net>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: <x86@kernel.org>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Andy Shevchenko <andy@kernel.org>
+> Cc: Uros Bizjak <ubizjak@gmail.com>
+> Cc: <linux-hardening@vger.kernel.org>
+> ---
+>  arch/x86/include/asm/string_32.h |  6 ------
+>  include/linux/string.h           | 13 +++++++++++++
+>  2 files changed, 13 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/string_32.h b/arch/x86/include/asm/string_32.h
+> index e9cce169bb4c..74397c95fa37 100644
+> --- a/arch/x86/include/asm/string_32.h
+> +++ b/arch/x86/include/asm/string_32.h
+> @@ -145,12 +145,6 @@ static __always_inline void *__constant_memcpy(void *to, const void *from,
+>  #define __HAVE_ARCH_MEMCPY
+>  extern void *memcpy(void *, const void *, size_t);
+>  
+> -#ifndef CONFIG_FORTIFY_SOURCE
 > -
-> -struct intel_tpmi_plat_info *tpmi_get_platform_data(struct auxiliary_dev=
-ice *auxdev);
-> +struct oobmsm_plat_info *tpmi_get_platform_data(struct auxiliary_device =
-*auxdev);
->  struct resource *tpmi_get_resource_at_index(struct auxiliary_device *aux=
-dev, int index);
->  int tpmi_get_resource_count(struct auxiliary_device *auxdev);
->  int tpmi_get_feature_status(struct auxiliary_device *auxdev, int feature=
-_id, bool *read_blocked,
-> diff --git a/include/linux/intel_vsec.h b/include/linux/intel_vsec.h
-> index a07796d7d43b..cd78d0b2e623 100644
-> --- a/include/linux/intel_vsec.h
-> +++ b/include/linux/intel_vsec.h
-> @@ -144,6 +144,28 @@ struct intel_vsec_device {
->  =09unsigned long cap_id;
->  };
-> =20
-> +/**
-> + * struct oobmsm_plat_info - Platform information for a device instance
-> + * @cdie_mask:       Mask of all compute dies in the partition
-> + * @package_id:      CPU Package id
-> + * @partition:       Package partition id when multiple VSEC PCI devices=
- per package
-> + * @segment:         PCI segment ID
-> + * @bus_number:      PCI bus number
-> + * @device_number:   PCI device number
-> + * @function_number: PCI function number
-> + *
-> + * Structure to store platform data for a OOBMSM device instance.
-> + */
-> +struct oobmsm_plat_info {
-> +=09u16 cdie_mask;
-> +=09u8 package_id;
-> +=09u8 partition;
-> +=09u8 segment;
-> +=09u8 bus_number;
-> +=09u8 device_number;
-> +=09u8 function_number;
-> +};
+> -#define memcpy(t, f, n) __builtin_memcpy(t, f, n)
+> -
+> -#endif /* !CONFIG_FORTIFY_SOURCE */
+> -
+>  #define __HAVE_ARCH_MEMMOVE
+>  void *memmove(void *dest, const void *src, size_t n);
+>  
+> diff --git a/include/linux/string.h b/include/linux/string.h
+> index 01621ad0f598..ffcee31a14f9 100644
+> --- a/include/linux/string.h
+> +++ b/include/linux/string.h
+> @@ -3,6 +3,7 @@
+>  #define _LINUX_STRING_H_
+>  
+>  #include <linux/args.h>
+> +#include <linux/bug.h>
+>  #include <linux/array_size.h>
+>  #include <linux/cleanup.h>	/* for DEFINE_FREE() */
+>  #include <linux/compiler.h>	/* for inline */
+> @@ -390,7 +391,19 @@ static inline const char *kbasename(const char *path)
+>  
+>  #if !defined(__NO_FORTIFY) && defined(__OPTIMIZE__) && defined(CONFIG_FORTIFY_SOURCE)
+>  #include <linux/fortify-string.h>
+> +#else
+> +/* Basic sanity checking even without FORTIFY_SOURCE */
+> +# ifndef __HAVE_ARCH_MEMCPY
+> +#  define memcpy(t, f, n)					\
+> +	do {							\
+> +		typeof(n) __n = (n);				\
+> +		/* Skip impossible sizes. */			\
+> +		if (!WARN_ON(__n < 0 || __n == SIZE_MAX))	\
+> +			__builtin_memcpy(t, f, __n);		\
+> +	} while (0)
+> +# endif
+>  #endif
 > +
->  int intel_vsec_add_aux(struct pci_dev *pdev, struct device *parent,
->  =09=09       struct intel_vsec_device *intel_vsec_dev,
->  =09=09       const char *name);
->=20
-
---=20
- i.
-
---8323328-1116251625-1747752845=:936--
+>  #ifndef unsafe_memcpy
+>  #define unsafe_memcpy(dst, src, bytes, justification)		\
+>  	memcpy(dst, src, bytes)
+> -- 
+> 2.34.1
+> 
+> 
+> 
+> -- 
+> Kees Cook
+> 
