@@ -1,43 +1,54 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4604025F994;
-	Tue, 20 May 2025 08:23:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E510325F994;
+	Tue, 20 May 2025 08:23:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747729384; cv=none; b=Tmid1apHxWZ7/23KSvvN8sTDkspRzT//R/hm0Uc3tcGvSHEef0iedGIwsd02zIcPuTRkOe6+rS9NiVPyfZ7+0Va1ZNJWc8xFSLCx3YPxkRdjtJE0Q/uq48hnJXT/SyLtponEK4DhZjxFRVoC04yjEeoiUlb7ggIPBE7Fq/QufGg=
+	t=1747729398; cv=none; b=QduUpuHX463j4WrlG+Woiv9y/f8gh+9s9nJFDiqjuYeqINZkeMSFJlMs9rU8GQHRJ0P8l+77/oPMKv2zrQG5qd28OmtNjpU9IfQpbsuk1T3OfF8daXDaKzjRBa9tSu6Kr53dshpLbGsSMuaKcz1hUQ9tUJQYi6+9IHUs7duvBqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747729384; c=relaxed/simple;
-	bh=CbpYojFOx9hi6fdWZji6aYnRHJDIhGVyI2NkMIQwV6E=;
+	s=arc-20240116; t=1747729398; c=relaxed/simple;
+	bh=+y0ms533sl2v+6l/eq8yPL6k6+m+DNYi0UCVrrXPVlk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j/7oiNib0+bRyBipmNu2kvZ5I9Nus3VB+4RR157uR1w9vvDWas16RkcREQCllbUpG+VfvCDWizjRBRISxoWfxaEnG0ALQBn7OwbKLWlCiGuzP9vlycZNi4Q/C5gC4x487lPon74Wfd/dT1a6PHe2Nh9xr5eBHBjON6GJEvKHeKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=jUr8jGEJ; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=LP1V6r8lDamPdn/XSPVHP5UsfQ/ZiGW6dJuqon5kTJp20mhukBaj5X2X6v/ubgih4mzA9iDcoehKbztf04rxqsrKTn5WZzz3cSJRSWP+qrVosZeSyagjcP+bbCnELHMt8qdbyz/y4akNSRbiPnl1uSKadFuFxK3cmLRgPF+xJTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sIWBUvLF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="jUr8jGEJ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=BwzWdX9UlxauyFitnj8K7HxgnGbZaQA6IrXxNXDLqjA=; b=jUr8jGEJ/jjaGU4sdJ49zJc1my
-	9YDku1GJGK1m+i+kdpEoy2TKpaM6cry7J8cWiCJq6/hRYq9V+VaJ3Ak7d0SR0Y8dKCPvx3pHvhYsb
-	yIAkI30B0XVGhcLEY830vHZ2K+rntaGKoFHM2IcyOCMMeQFyaUC2ymlDnKp7qKx1Ch7MoL0hp4quU
-	MIo0esmeu37Hl6Vk8/JQMBvR+1feNt2Whnbs25l8W5yRJyXOka8JxNrTaLEBeCYCVikaDNZICXLQq
-	uQvRh+svheAUforKZiL/OmwZZDr5LhRsrZrEZGsFAFFgOI8e5JpGm8jK3iCl3ojpl3m/WntnBUjZR
-	Y4VyYKpw==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uHIFW-0000000GDin-0OIq;
-	Tue, 20 May 2025 08:22:58 +0000
-Date: Tue, 20 May 2025 09:22:58 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	linux-fsdevel@vger.kernel.org, bpf@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dcache: Define DNAME_INLINE_LEN as a number directly
-Message-ID: <20250520082258.GC2023217@ZenIV>
-References: <20250520064707.31135-1-yangtiezhu@loongson.cn>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sIWBUvLF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F63DC4CEE9;
+	Tue, 20 May 2025 08:23:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747729397;
+	bh=+y0ms533sl2v+6l/eq8yPL6k6+m+DNYi0UCVrrXPVlk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sIWBUvLFDc4MpGlGvJZV90gqdyDP6WfewZpC0I4VOha3csMAOXkIZzJ/vo9CgJBTv
+	 35leoM1k5RZSdBQ9vtxpX6jltaBzA33k4K65JvSk15RfdazmrPSSECWx9s10gN238i
+	 6zp/KJhrPk0frJPjJ9Fb51tQ2E+z4zmCJtJJQ4es6RTQHcFY8Zmh7CLYFSLy5qYOQY
+	 1obov4sZJlyMEaOoV99itOXnsJBQK8+YQKJlSYcUrrAvNDEg6v5/8aN5yHcRr4E5o7
+	 Yg+eT6EAN8zvsOmyS1enPlx9SVoIB5mG1Nj4b5KixKq0a9CLNAPNgv2r9rtY4h9b3G
+	 xFRO/nPTBIczA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1uHIFk-000000001sn-3CPX;
+	Tue, 20 May 2025 10:23:13 +0200
+Date: Tue, 20 May 2025 10:23:12 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+	Robert Foss <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] media: qcom: camss: vfe: Stop spamming logs with
+ version
+Message-ID: <aCw78CRda6VS6ost@hovoldconsulting.com>
+References: <20250429180828.950219-4-krzysztof.kozlowski@linaro.org>
+ <aBHQejn_ksLyyUm1@hovoldconsulting.com>
+ <3e34ce09-1207-4dba-bff8-38c01cad9b78@linaro.org>
+ <4d942a6c-cbff-41ac-af8b-12a1ff5181aa@linaro.org>
+ <883eb54a-fcaf-443c-a4d7-e1278fd43f5a@linaro.org>
+ <ea9f570c-b135-4a98-91ea-ceeb2f48a0e5@linaro.org>
+ <aCw09Vci12txhYj-@hovoldconsulting.com>
+ <190100e7-8a59-4cf3-8434-bcb6292cacb2@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,42 +57,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250520064707.31135-1-yangtiezhu@loongson.cn>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+In-Reply-To: <190100e7-8a59-4cf3-8434-bcb6292cacb2@linaro.org>
 
-On Tue, May 20, 2025 at 02:47:07PM +0800, Tiezhu Yang wrote:
-> When executing the bcc script, there exists the following error
-> on LoongArch and x86_64:
+On Tue, May 20, 2025 at 10:02:32AM +0200, Krzysztof Kozlowski wrote:
+> On 20/05/2025 09:53, Johan Hovold wrote:
 
-NOTABUG.  You can't require array sizes to contain no arithmetics,
-including sizeof().  Well, you can, but don't expect your requests
-to be satisfied.
+> > Spamming the logs as the driver currently does is clearly broken and
+> > should be fixed. Keeping a hw version dev_dbg() is generally perfectly
+> > fine, though.
 
-> How to reproduce:
-> 
-> git clone https://github.com/iovisor/bcc.git
-> mkdir bcc/build; cd bcc/build
-> cmake ..
-> make
-> sudo make install
-> sudo /usr/share/bcc/tools/filetop
+> My main argument, expressed in the commit msg to which no one objected,
+> is that this debug is 100% useless: deducible from the compatible,
+> always known upfront, always the same.
 
-So fix the script.  Or report it to whoever wrote it, if it's
-not yours.
+To me that deduction does not seem straightforward, at least not without
+access to internal qualcomm docs, for example:
 
-I'm sorry, but we are NOT going to accomodate random parsers
-poking inside the kernel-internal headers and failing to
-actually parse the language they are written in.
+	compatible = "qcom,sc8280xp-camss";
 
-If you want to exfiltrate a constant, do what e.g. asm-offsets is
-doing.  Take a look at e.g.  arch/loongarch/kernel/asm-offsets.c
-and check what ends up in include/generated/asm-offsets.h - the
-latter is entirely produced out of the former.
+        qcom-camss ac5a000.camss: VFE:0 HW Version = 1.2.2
+	qcom-camss ac5a000.camss: VFE:1 HW Version = 1.2.2
+        qcom-camss ac5a000.camss: VFE:2 HW Version = 1.2.2
+        qcom-camss ac5a000.camss: VFE:3 HW Version = 1.2.2
+        qcom-camss ac5a000.camss: VFE:4 HW Version = 1.3.0
+        qcom-camss ac5a000.camss: VFE:5 HW Version = 1.3.0
+        qcom-camss ac5a000.camss: VFE:6 HW Version = 1.3.0
+        qcom-camss ac5a000.camss: VFE:7 HW Version = 1.3.0
 
-The trick is to have inline asm that would spew a recognizable
-line when compiled into assembler, with the value(s) you want
-substituted into it.  See include/linux/kbuild.h for the macros.
+Whether the hw version is actually useful to anyone debugging this
+driver I can't say, but keeping it printed *once* seems perfectly
+alright if someone wants to keep it (e.g. as we have a long history of
+working around hw bugs based on revision information like this).
 
-Then you pick these lines out of generated your_file.s - no need
-to use python, sed(1) will do just fine.  See filechk_offsets in
-scripts/Makefile.lib for that part.
+Johan
