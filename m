@@ -1,71 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CA70288D6;
-	Tue, 20 May 2025 17:06:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 648C2258CDD
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 17:07:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747760780; cv=none; b=HMT4MrUoQSqprDQC/dkOOJxmbrSDAPYXcuhqc88yvH5i1/qHjx+pmd8t4W/jGkNm0DJRy9rsYUEFFdLzurAL2/+RdT6xKCS3oXwa4AuG/sfnI4QiVPkfnisJbPMwO9NWBtJi6wzdYglyhUoAubDzsRYPZdgexxz2/LGfmdHZovI=
+	t=1747760825; cv=none; b=ACz2Ky9eBv4ZqxtsWi2hb187uJrzzTT9SWUIElDStI4DOz2smpYz/yLsMjx5sKuG2XonXod5cK56TyaXcFO+jTuepunIpf2DY4KU4gYRj3WXivS1rHJJQVnQMFmL/2XYvKylHM62uMSvAQNVEUdubzbVCQ2jhP2y7kfmgWaozF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747760780; c=relaxed/simple;
-	bh=4+x/WzJqcocQ57G/pMHfGlGvRWRP3I3t99jvTgG0zGI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dU5zjZpOtZPDDlV+53BdBt1z9GpDifWtN5hUpQDetIrN34/F5bDHR0XrO4jDMfkPn6zQuHdf5Xjx/RdyTFM8A4aqmfIzRUcxGXUlP9VdXFpvja3rDj5tw2CMGg3GkTRBoeLHIHvcd2W1cVfcCtAoYfYk1vdXBFOAkpf3ygARp9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tG9LV55E; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747760825; c=relaxed/simple;
+	bh=Adr44lrbjsmXoOwujV+JXJKC/0dp11U+EuHbW3DQjGA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=luRvDeDQRV19OljRSlxdxWAJAmaywaWdAEMc3fNRkkDRXikicAezc+UFAQbEaTkvg6cdP/UbYRRHE0Egy2nEcSXZyVRaKLmNJBhy+K7ARLIUTaclR5UgdBJtDn6+WSAcd7djCmdCh+dDNDmCyODcFamY0WmQP89vdsgVkuTOqrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=lTF5QwtG; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tG9LV55E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6680C4CEE9;
-	Tue, 20 May 2025 17:06:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747760780;
-	bh=4+x/WzJqcocQ57G/pMHfGlGvRWRP3I3t99jvTgG0zGI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tG9LV55E86YtwIbQonnRfogH4Z/1ML9Id5+9pe/+Ad6wMpPuSNAKt8dx/W+YEBgeG
-	 bc5Ni3p2MJjJFSJ9CHFplXB8nAuvn60pckBrd2z8LqM5g5ENa4bl0Hn9zHn9FvKtkm
-	 TIFnxLbNEf21icElfbyAxYpFY2C4m3Ngiue4VRAlNN87ipEfwTe1lwlq7DvF7a3A6b
-	 77BwOp1DcFR60LyCtDTWfrH76CrgKH9JeKH705euQt7bXh6Bsxzx5aawewsYGSG5ly
-	 9JaB5F8pocn6KuNq8y+V04xYVg1r2ZL2kuCwUs46yY+Buw6dNCxegwSMvddxekHxWQ
-	 ++5Fgo6DuPFdQ==
-Date: Tue, 20 May 2025 18:06:15 +0100
-From: Simon Horman <horms@kernel.org>
-To: Hariprasad Kelam <hkelam@marvell.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Sunil Goutham <sgoutham@marvell.com>,
-	Geetha sowjanya <gakula@marvell.com>,
-	Subbaraya Sundeep <sbhatta@marvell.com>,
-	Bharat Bhushan <bbhushan2@marvell.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Subject: Re: [net-next] octeontx2-pf: QOS: Perform cache sync on send queue
- teardown
-Message-ID: <20250520170615.GO365796@horms.kernel.org>
-References: <20250520092248.1102707-1-hkelam@marvell.com>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="lTF5QwtG"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-3292aad800aso9808281fa.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 10:07:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1747760821; x=1748365621; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LKZ/DOS74Nf8VMwAesCPZapfqJEzoCeBvijff87jyRE=;
+        b=lTF5QwtGMaBLkvztY7E3GRjU51KMstIpH2OjIiWiVDMUC1QVAguasaOAekQ1qTOOga
+         aLBHhJr+n+poLCBVkmEhCJiyv52F2yOWtWuwCWoI9I4MNeQLIBcdFLwlP98uFEQFTC/S
+         hGjYYV7q6nSdIoyHg5Eu5//EFGuuTVwEQ3i3CXVKXzwmAgwzcesAmr8UTmEMtgxCdoo5
+         W5/xKEk0GWk7SdBR+l2PrRgOKTTatDummLwxO3/H6Zb6gyI26RHWPqcUQdk9QLbvvL3s
+         +aTFwNudrIsNaFbVn0jcWwG30O0hSVYLKhZrBUNiq1ePkBFz4OUZg+PJaT/OVm21QO5C
+         nv9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747760821; x=1748365621;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LKZ/DOS74Nf8VMwAesCPZapfqJEzoCeBvijff87jyRE=;
+        b=TCkm4XvJ6qWFew93s6Ynqzoqy+0VW02u72hoBeUbOP8GKmGqEfrlA9r3y8PyUji5n6
+         TKgyn35NquHEIUBHee12o/2DJUmGJ34cQvm8jxWTphak8l/Brg3WuTZhoLbwnYVGFGzx
+         f+jUF7z5sbHs6PS5g3qGGclAIsNBjI2scF3ug+SLC8hiNpl7dGOwb3B10DuGf46jLoZ5
+         p1s1z1zQmD+Zn51NUK24RqOGgCDz2QF8dYzC02cO1rDgef7BxnkTdkXz0vh05ZMKtMIa
+         LntUsV+sNd5nc15yn/Zw+7MnSNPcPyNbkkJEiXHTcx+hFUM9Ytbx2H25Fa6iNw+RZ6Tp
+         dRsA==
+X-Forwarded-Encrypted: i=1; AJvYcCWZ4xKBfpIpHJwXMJFfUMe5+uOokT1kdg8T2MGxwIJYTSWuD6lV1VnuXfNNAhOaOo52/4J0le/p6TulVOU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTbCqWLsyi5JlkfLYlhPizRS1GphAJLeZEFySJPd4CyQu/1roz
+	DAQIVvC9W+vTbRvdgRTX04FJ/omjlAGPjda7CmdSMdCMNGw01D397BBoYjmIq9K31EE2+tQ0X1/
+	tPwUY4rLthB2SrhpIa2twZ8rt5tn5WGVd+ZSGKOUfug==
+X-Gm-Gg: ASbGncv8xgSoGZnZY9t+q0yTI5zseM5LnLXmn6BWfNxwkMeJE6Mt6HoCPzdv9lw9Wxj
+	y75FYvbrtBCf8MS6W3RDjAuAycouzUQUfyOHTVIK8HJx8rDZ+5jKJaM4NBKWdOxiAiuhNJr4evI
+	TMgvRkTLCXwAYA4NTAime5m7Ls1AhOOvSY1vR6ipHJfInNt5TDL0hUOmHM/JlSJTxk
+X-Google-Smtp-Source: AGHT+IE94WYPcJWNFg4NYJY80yMW+YBrxzlbo6GpAVtlZwVgXjjobfKZPhi/TuG+fBNOHPLriHho0nGdbtbKb+ATFBw=
+X-Received: by 2002:a2e:ad0a:0:b0:328:c9c4:8ca5 with SMTP id
+ 38308e7fff4ca-328c9c48e0bmr53924511fa.9.1747760821408; Tue, 20 May 2025
+ 10:07:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250520092248.1102707-1-hkelam@marvell.com>
+References: <cover.1747083143.git.marcelo.schmitt@analog.com> <6e7dde3fa52161873c6e05891a7410bc8ef75249.1747083143.git.marcelo.schmitt@analog.com>
+In-Reply-To: <6e7dde3fa52161873c6e05891a7410bc8ef75249.1747083143.git.marcelo.schmitt@analog.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 20 May 2025 19:06:49 +0200
+X-Gm-Features: AX0GCFu-1HWUSDG-PKcPd3_RvCPjeJCFAZE3atYyLGkjJRLlS3BwEdYRGfrtQ1c
+Message-ID: <CAMRc=MfJuT8q1jRMeSJQaE9aQGQFpph4O9TrE6xircqi3v5FgQ@mail.gmail.com>
+Subject: Re: [PATCH v3 08/10] iio: adc: ad4170: Add GPIO controller support
+To: Marcelo Schmitt <marcelo.schmitt@analog.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, jic23@kernel.org, 
+	lars@metafoo.de, Michael.Hennerich@analog.com, dlechner@baylibre.com, 
+	nuno.sa@analog.com, andy@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, linus.walleij@linaro.org, marcelo.schmitt1@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 20, 2025 at 02:52:48PM +0530, Hariprasad Kelam wrote:
-> QOS is designed to create a new send queue whenever  a class
-> is created, ensuring proper shaping and scheduling. However,
-> when multiple send queues are created and deleted in a loop,
-> SMMU errors are observed.
-> 
-> This patch addresses the issue by performing an data cache sync
-> during the teardown of QOS send queues.
-> 
-> Signed-off-by: Hariprasad Kelam <hkelam@marvell.com>
+On Tue, May 13, 2025 at 2:36=E2=80=AFPM Marcelo Schmitt
+<marcelo.schmitt@analog.com> wrote:
+>
+> The AD4170 has four multifunctional pins that can be used as GPIOs. The
+> GPIO functionality can be accessed when the AD4170 chip is not busy
+> performing continuous data capture or handling any other register
+> read/write request. Also, the AD4170 does not provide any interrupt based
+> on GPIO pin states so AD4170 GPIOs can't be used as interrupt sources.
+>
+> Implement gpio_chip callbacks to make AD4170 GPIO pins controllable throu=
+gh
+> the gpiochip interface.
+>
+> Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+> ---
+> Change log v2 -> v3
+> - Defined masks for updating GPIO mode register.
+> - Replaced regmap_clear/set_bits() by regmap_update_bits() to set GPIO di=
+rection.
+> - Removed GPIO direction check before setting GPIO output values.
+> - Made use of regmap_assign_bits() to set GPIO output reg bits.
+> - Made value to be set as GPIO output state be either 0 or 1.
+> - No longer locking on state mutex on GPIO set since GPIO output should n=
+ot
+>   conflict with other direct mode functionality (e.g. single-shot read).
+>
+>  drivers/iio/adc/Kconfig  |   1 +
+>  drivers/iio/adc/ad4170.c | 224 ++++++++++++++++++++++++++++++++++++++-
+>  2 files changed, 224 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index 6e4b14243599..a328f03eea34 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -78,6 +78,7 @@ config AD4170
+>         select IIO_BUFFER
+>         select IIO_TRIGGERED_BUFFER
+>         depends on COMMON_CLK
+> +       select GPIOLIB
 
-Hi Hariprasad,
+In general GPIOLIB should be depended on, not selected.
 
-This feels like a fix and if so:
-* Warrants a Fixes tag
-* Should also be targeted at net rather than net-next if it fixes a problem
-  present in net
+The rest looks good to me so with that:
+
+Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
