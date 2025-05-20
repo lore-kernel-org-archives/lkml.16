@@ -1,89 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 824582116FE;
-	Tue, 20 May 2025 18:31:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAF571BD9F0
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 18:36:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747765915; cv=none; b=mJfl3wlD90t8e5Q6abXBTLv9af9qXmxa7+unXH4X5wTdsdftipYYk8+Z1UmlS+RYSp15FSnYcVQriZVyVVUMl3d2LTg7ZewzE82ailmJpmt5LsYu88/lAMK39PIkywuW5DZDFt4gp0Edf+jBedDL73idLo3T6gEE7eSOPGzkPWE=
+	t=1747766162; cv=none; b=bBVOjhOOBYRnVmln+4kYkZ56SxIRKtKtmzs7euREjIxLzP3zgJxcx8tH9/BdyilU46YVetvT5dEuPtR2J5gkWkgjrt2QQVXINT7gUlXy6fp0HKZNXitwv+dRiP+CPme3tN/BtLF8sdQi19gYYBAeheqOEY5DOrjSYEffrPTZLTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747765915; c=relaxed/simple;
-	bh=jwee9jRHKC9i3IB6hd0Exj0Pc2dnDouthrKRY1Giwiw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=A58chekjbLxkIbd2lYZ69X2SImpKrkrTTh9TlTytK1y+eivID4UuBZAxOLvqs2wLvR0+zRFxeokOhBKEfnTLxH5f2OgfzBK0kj5gVWFCumFNe1W5nRz6DuuxHjW0Ep1iV8rAF9LqpTmz2LTq4XzlJe91NKkzc6dq0CF67n93Z4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hddkKu0m; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747766162; c=relaxed/simple;
+	bh=/saHgBRVimx7l/qJ5nYDikrV8tFAWgPZS8P52xVacw4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=amVr/qhwotRVsi59RyYy2aVGQEMh0hvuciuLnCP33F0Gtj/b7f+pHdFf4NN6eWj7W3gnAROnmfxzBIqkaznOVlpzaLXX65LacUm93K0CL4+8wp0bERKtWUW6j7Uq7rh6/Dx3G74Yql8FdCVqqW07lidUbWqsVDrHKAy4H7tGPUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=QQ8RgJIp; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hddkKu0m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A596FC4CEE9;
-	Tue, 20 May 2025 18:31:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747765914;
-	bh=jwee9jRHKC9i3IB6hd0Exj0Pc2dnDouthrKRY1Giwiw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=hddkKu0mDChvBNXjmgLXbi56ACoBmD+CiBVK+DuLbZbm0ooahVgLKKbbVFt+bm3Gj
-	 ds7VCAhwsNKpDFVHR+pZDqeUeC8pAYjz+A/lZEdzJICnvU9ceiLRIJq96tkIgOp+no
-	 Dq7HcJeYijENpOEsRApyEcxf22JVb1NAYoMye7ClehwZ4godbkhHh1r9/gqiKyJ3hi
-	 w7BZXh8iCo6QLspaEWrkoPgrsJda8ViQrnv8In0hQEYhN/A+FXEnaXEA3N3yYUpeAI
-	 uz28tTNzk1ZrkL9Y1XXeDZaqwuqbPSun21G5eHxCM0i9hu8MVVNKigUMu4GUbz+Xev
-	 FK8LNbMGdjb5w==
-Date: Tue, 20 May 2025 13:31:53 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>,
-	Karolina Stolarek <karolina.stolarek@oracle.com>,
-	Martin Petersen <martin.petersen@oracle.com>,
-	Ben Fuller <ben.fuller@oracle.com>,
-	Drew Walton <drewwalton@microsoft.com>,
-	Anil Agrawal <anilagrawal@meta.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Sargun Dhillon <sargun@meta.com>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Kai-Heng Feng <kaihengf@nvidia.com>,
-	Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
-	Terry Bowman <terry.bowman@amd.com>,
-	Shiju Jose <shiju.jose@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v6 14/16] PCI/AER: Introduce ratelimit for error logs
-Message-ID: <20250520183153.GA1316070@bhelgaas>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="QQ8RgJIp"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 75B2040E01CF;
+	Tue, 20 May 2025 18:35:58 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id itcKw6iaH3hF; Tue, 20 May 2025 18:35:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1747766155; bh=qwLau223cMPR9J1P5GGB7D9i6EY2sDIlAypqDtaFyYU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QQ8RgJIp67Xqij7hCTS9RYAZBGnvTE2PHyz8r7Ew/hu4zyZUAplCOGq0a7HVrsDcc
+	 zkV6dVqDZ2/ZqTYZErSw0lJM0herl2r6pNs+iMAPhYtK+Yg3+UAPcNhv2nYzJ6bU/z
+	 AYcIdHbv9nBnoDqKKDXzpTLFeWOrnLFtxFSO87g/5bV8XRcMDKTdxbz5AB0bW1KwY7
+	 ui6fgs4BFzg475Wr5squP7UT/kC5+wn4RN73BCws+tKDUjPr/bLYMiWv105gEv6vXk
+	 puLD5TC8H5ttYAUGH8Tn8VgYu7zI3guR1hAck/0Zi2MHcxDx4VHJcmoBcxkbjhp9xy
+	 1Ir2ZpsmM8uTL1+cB19GhmOOdArjJtVzpdeEDPx/du+ZCgC0Q8aD7nw6yDU0CxmQtM
+	 2yPjv2mIVP3iXUtLnViGiqhbvOQTknC36pc/zVIy0oJ/mZE1JhggdnqJj7kxw+QYXv
+	 6X0BBAIBy6MoZu0vzYJ4nM27N8BPx/Cra/EIUsqi8mKWMoTN0XJd9i34eBL3CyybT7
+	 3wSmyll31o26H7up+b+uth/vKkUza5ng/bpZ+ufIV8N+cwdD7M57IwAc6kf1JPtDCc
+	 Y8Qatt7TGJnJt9eHeqc9U3lVJcGt+Gi3JqwpYG6y2+zlH96NJ7EQqKXiA6G6SqCfUX
+	 pgG2KEu0vsNejIFUfJjn1chE=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DA22C40E0163;
+	Tue, 20 May 2025 18:35:46 +0000 (UTC)
+Date: Tue, 20 May 2025 20:35:40 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>,
+	"Kirill A. Shutemov" <kirill@shutemov.name>,
+	Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
+	x86@kernel.org, Ingo Molnar <mingo@kernel.org>,
+	Brian Gerst <brgerst@gmail.com>
+Subject: Re: [PATCH v5 2/7] x86/mm: Use a single cache hot per-CPU variable
+ to record pgdir_shift
+Message-ID: <20250520183540.GQaCzLfHsGoWtt_6ZV@fat_crate.local>
+References: <20250520104138.2734372-9-ardb+git@google.com>
+ <20250520104138.2734372-11-ardb+git@google.com>
+ <awmpxjln22i5zmnv3wcwhzvpbbjqmhiw3onmpq66owbtdoujs5@f336cwpvlasn>
+ <CAMj1kXE+2P6_y0SnmtmD=J42pe67itnr5jQs6NxjMTvV7HHp0A@mail.gmail.com>
+ <20250520143532.GMaCyTNJqH_T2LR8q5@fat_crate.local>
+ <CAMj1kXFxRZWsML_5FZvZjwOPO8cvsAwDqvX1686bqqfqkD_PHg@mail.gmail.com>
+ <20250520173825.GOaCy-Eekk661c94ne@fat_crate.local>
+ <CAMj1kXHpFK+=1gdo11Msw9w6gh2f-4gnSCkyA5kaB_x4mafS5A@mail.gmail.com>
+ <20250520180101.GPaCzDXW2MlArU71xe@fat_crate.local>
+ <CAHk-=whdFESwxUMvyMGuXzpCA6cm0d5kAc57fGWkWs0DLEi9qw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <e056eb23-e38a-4a0e-83d7-c17c62c0f9f7@linux.intel.com>
+In-Reply-To: <CAHk-=whdFESwxUMvyMGuXzpCA6cm0d5kAc57fGWkWs0DLEi9qw@mail.gmail.com>
 
-On Mon, May 19, 2025 at 09:59:29PM -0700, Sathyanarayanan Kuppuswamy wrote:
-> On 5/19/25 2:35 PM, Bjorn Helgaas wrote:
-> > From: Jon Pan-Doh <pandoh@google.com>
-> > 
-> > Spammy devices can flood kernel logs with AER errors and slow/stall
-> > execution. Add per-device ratelimits for AER correctable and uncorrectable
-> > errors that use the kernel defaults (10 per 5s).
-> > 
-> > There are two AER logging entry points:
-> > 
-> >    - aer_print_error() is used by DPC and native AER
-> > 
-> >    - pci_print_aer() is used by GHES and CXL
-> > 
-> > The native AER aer_print_error() case includes a loop that may log details
-> > from multiple devices.  This is ratelimited by the union of ratelimits for
-> > these devices, set by add_error_device(), which collects the devices.  If
-> > no such device is found, the Error Source message is ratelimited by the
-> > Root Port or RCEC that received the ERR_* message.
-> > 
-> > The DPC aer_print_error() case is currently not ratelimited.
-> 
-> Can we also not rate limit fatal errors in AER driver?
+On Tue, May 20, 2025 at 11:28:28AM -0700, Linus Torvalds wrote:
+> What happens if pgtable_l5_enabled() is made to use  __raw_cpu_read()?
+> With a compiler that is new enough to support USE_X86_SEG_SUPPORT?
 
-In other words, only rate limit AER_CORRECTABLE and AER_NONFATAL for
-AER?  Seems plausible to me.
+Before we go play with this more, I see the same thing with gcc-13 and gcc-14
+on debian.
+
+Those should be fairly new, I'd think...
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
