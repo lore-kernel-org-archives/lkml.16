@@ -1,126 +1,121 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BEA224886F
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 14:10:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F196E24C060;
+	Tue, 20 May 2025 14:10:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747750209; cv=none; b=WARBDFzg1D/BAyxQIVyvhJ0r/XqpikeXa2ADnZYuJrqtHtquJ44eNV0NwkxQM5I3VFc1dluilWhdXQJxAUmzJp7stORule2ZSmZqmmyKh6mWXwTB3+Sxkk1chzqLA777r4ug1iF93Aj2UxjKE2JyFsseUIDxooklKwJZElN/Vf8=
+	t=1747750220; cv=none; b=d3VIrzC2WekLKfZhom+kisNfER829HGvtHvzLogblkEFFvJxuRIo/8LBkQra1qgpqvRiznLnw9N+sN0os5pJ90vTHxpScXXE7bVzxiBacX950IquV5AyOS+8S+VIWTthbjUrouF0S2h9WQ8Cl24xkBVQabNL1KPVfPMFot3Mn3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747750209; c=relaxed/simple;
-	bh=AqHIIv8C0BOad8IBsQ0hXoLObApMCiyZTA382rwtptU=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=a0k0SKTFp6Wu9W9HDV8auxS3FUjTbH4CjpMN3d6hMU0/emFnaZSOi4M8w2h7xtocTkoiT0C+wVxIQLZ4gYG4OWPUh9U4WIsUvpdam7Zie2XFq5q4t6RUyp9x05Bbf7aPtPiGsCfHr2DRrxYO/mQ8kYpVU9JLORgcm6J6DdUJfa4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RGoZo5K3; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=SRyqYu/k; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RGoZo5K3; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=SRyqYu/k; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1747750220; c=relaxed/simple;
+	bh=bMmsrxEeVq0r7Qtu5nKyJAvcG6TULcyBlSKlhRfKfCM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Wz+pNO2o18AAY99pWxUmWy2R0N/QahmMCRPjpOL3nLkK/qrG9AdGKRFzyRdhuYqrNKbRgVjuooKSg3HPIv/c4jFCCch/e2VDFQurQOG0o6ciaeLAg9aUIZ1E2a9O4To5MRGxK9Ys3v5sS43uFIg65z5wuvhtlSP+3rqhNY5QSJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TFXz+6SA; arc=none smtp.client-ip=209.85.219.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RGoZo5K3";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="SRyqYu/k";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RGoZo5K3";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="SRyqYu/k"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 65A3D2073E;
-	Tue, 20 May 2025 14:10:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747750205; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fO5EgNYSCwQM9/BhH5dixZwwMrpu1+34Cp9DPpZN6y4=;
-	b=RGoZo5K3WMnVHnAkNZqWXJ3pfFD0kRQvOYVFDZdxp4Y6awG5aXBc8uj+Qngxj5SieGnPID
-	CPuPgiJ4h+Eb+UHv0zWhip/E0h6TAoHWc7fmsWDOGdB1DuD5GAWKN1yE4Ul15XDfeW9Xab
-	jo1dwPSLE07bVP3I/j4eovNK02/3XZw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747750205;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fO5EgNYSCwQM9/BhH5dixZwwMrpu1+34Cp9DPpZN6y4=;
-	b=SRyqYu/kPjkZTu/mnd8p0I8I4cvi5YvzRYWwJg6iOssOUp9ioS4sx6j08xy65adJbxthVL
-	9E6JYFTUkt6+iNDA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747750205; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fO5EgNYSCwQM9/BhH5dixZwwMrpu1+34Cp9DPpZN6y4=;
-	b=RGoZo5K3WMnVHnAkNZqWXJ3pfFD0kRQvOYVFDZdxp4Y6awG5aXBc8uj+Qngxj5SieGnPID
-	CPuPgiJ4h+Eb+UHv0zWhip/E0h6TAoHWc7fmsWDOGdB1DuD5GAWKN1yE4Ul15XDfeW9Xab
-	jo1dwPSLE07bVP3I/j4eovNK02/3XZw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747750205;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fO5EgNYSCwQM9/BhH5dixZwwMrpu1+34Cp9DPpZN6y4=;
-	b=SRyqYu/kPjkZTu/mnd8p0I8I4cvi5YvzRYWwJg6iOssOUp9ioS4sx6j08xy65adJbxthVL
-	9E6JYFTUkt6+iNDA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 44A6013A3E;
-	Tue, 20 May 2025 14:10:05 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id j34BED2NLGgbIAAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Tue, 20 May 2025 14:10:05 +0000
-Date: Tue, 20 May 2025 16:09:49 +0200
-Message-ID: <877c2bqspe.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Chris Chiu <chris.chiu@canonical.com>
-Cc: perex@perex.cz,
-	tiwai@suse.com,
-	kailang@realtek.com,
-	simont@opensource.cirrus.com,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ALSA: hda/realtek - Add new HP ZBook laptop with micmute led fixup
-In-Reply-To: <20250520132101.120685-1-chris.chiu@canonical.com>
-References: <20250520132101.120685-1-chris.chiu@canonical.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TFXz+6SA"
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e7d56716544so331350276.3;
+        Tue, 20 May 2025 07:10:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747750216; x=1748355016; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=s+Eo9ZxAXL6+ljXJitFZulGVk8fJXlmfVNiFnhGchF8=;
+        b=TFXz+6SA6rlEenPQ/PRYsNJ23CjBOJAy5ns02OBA4HlqZ5DZzsbMbmgj5UzTMf8HF2
+         3P6N6lcWILr2RldagbsCfKNv2wlBqKfu/KT/DBv4YBeuqy7nTGYpUdxSk40j4TPNRPw0
+         HXepQA3ZCrAs2jc6BEkBY23K1RnhVb7TQhReHeuAbZfv5x4gJSHXxdDTtLJwDWxFQE+F
+         otCewAnsFRq3/g8hJjNhANRVpC4Au+mNOFu5j9FiQGnnT1q2x8aTrRZbwJqa0ZL6rsXB
+         GqJ1Pt/ClAFPrfBvSbUZCJbTT718xTpIvzi9x9tHLJk0TYNIZG+FhChU+VPqMbDk3CV3
+         qBQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747750216; x=1748355016;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=s+Eo9ZxAXL6+ljXJitFZulGVk8fJXlmfVNiFnhGchF8=;
+        b=nCUqSKHj8oi2Gx10Gmi3GCILPfAh/lp5a4IdFwyRaMtFAxtHJ8SwrfE+aiQnX2+fAa
+         vyHpyjodvLp7s8ym9hhfhxhKlK8D5ysKt5sjge+67pvfZx6Aho/v1mCzldfFGb1MdL9D
+         ax708tb+JOviLPWh0ySzS3wCYnVyd/XPcUSVb0oARx1egtW18nMn8iA0ZE4SCLFj5Pm/
+         z1inuq+6PuRd0aoNT//xGALG4mIFHvT/2flXD9KgrHh4WuxfXC/8NaeN4IFg0tzTfkcp
+         oDvzQeaJWcFfSj9/uZvo0FAKX7fwg4vAFvJitOasLK0d28zjMJTYzEk6A282zNtszQlr
+         /OUg==
+X-Forwarded-Encrypted: i=1; AJvYcCWu//lGhDnhP6RBz2g+i7lTSCaF7IpfYPv/mPXCKRZA3ZlDyhxS6r9NFAAGk/wG6Rqw8ESR7hc+ysY85oE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMFUUlpoc0cYy7QKcElTWgESty9baQCF6B/rdaM2qhkntcy0Qo
+	tweOiGHPg4IfpHBaraLc1rXmG4a8PYzfUMNYb0AJqKQtpio8QY6kjQlPVbOyTJW59vQ7pJeDu5U
+	Z1/lpb8Du+VoGs+kK0QX839v8Go6rdkw=
+X-Gm-Gg: ASbGnctK66v9ciD+ed4rzqk+QvrohjTAH/75sbbF72YrTEF7UMfo6tsbu5A7ht4xbIj
+	EzXyq5Y7Q1E2PPEcsWfIcoRclDc4bSP5MVgBu4KzkmQ6kMVZQ72xTTgS0Qe+Qox5h2R4+CmcoYD
+	WHQA5prkCQ11lNc2axs3rf7Wx5yDEZ9Q==
+X-Google-Smtp-Source: AGHT+IH/d0wWM/ArdMMDQzKgUpLoG1e1XADDrY94vyj5OLW2yqBdqXYJLzIgwFjoc8FrINYPemo51m2yFiOuIeekchc=
+X-Received: by 2002:a05:6902:1589:b0:e7a:b057:7e76 with SMTP id
+ 3f1490d57ef6-e7b6d447bc7mr21441922276.28.1747750215559; Tue, 20 May 2025
+ 07:10:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -0.30
-X-Spamd-Result: default: False [-0.30 / 50.00];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_SHORT(-0.20)[-0.996];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:mid]
+MIME-Version: 1.0
+References: <20250520124521.440639-1-stefano.radaelli21@gmail.com> <c8a05994-367f-42a4-8464-c0a0ea3bc748@lunn.ch>
+In-Reply-To: <c8a05994-367f-42a4-8464-c0a0ea3bc748@lunn.ch>
+From: Stefano Radaelli <stefano.radaelli21@gmail.com>
+Date: Tue, 20 May 2025 16:09:59 +0200
+X-Gm-Features: AX0GCFtOLXXdjG8G5aMCGKUGP-pNc18U-mKvaDxD8Mxn4l4qac3-bxeGBO3dprM
+Message-ID: <CAK+owohzaLMB6Dxk1MSts8kZHy2bhmyJz18_jivjziRDzTG0RA@mail.gmail.com>
+Subject: Re: [PATCH net-next v4] net: phy: add driver for MaxLinear MxL86110 PHY
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Xu Liang <lxu@maxlinear.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 20 May 2025 15:21:01 +0200,
-Chris Chiu wrote:
-> 
-> New HP ZBook with Realtek HDA codec ALC3247 needs the quirk
-> ALC236_FIXUP_HP_GPIO_LED to fix the micmute LED.
-> 
-> Signed-off-by: Chris Chiu <chris.chiu@canonical.com>
+Hi Andrew,
 
-Applied now.  Thanks.
+Thank you very much for your time and patience
+you dedicated to me in reviewing this patch.
 
+I=E2=80=99ll include your Reviewed-by tag in the upcoming v5,
+along with the minor fixes suggested by Mr. Alok Tiwari.
 
-Takashi
+Best regards,
+
+Stefano
+
+Il giorno mar 20 mag 2025 alle ore 15:10 Andrew Lunn <andrew@lunn.ch>
+ha scritto:
+>
+> On Tue, May 20, 2025 at 02:45:18PM +0200, stefano.radaelli21@gmail.com wr=
+ote:
+> > From: Stefano Radaelli <stefano.radaelli21@gmail.com>
+> >
+> > Add support for the MaxLinear MxL86110 Gigabit Ethernet PHY, a low-powe=
+r,
+> > cost-optimized transceiver supporting 10/100/1000 Mbps over twisted-pai=
+r
+> > copper, compliant with IEEE 802.3.
+> >
+> > The driver implements basic features such as:
+> > - Device initialization
+> > - RGMII interface timing configuration
+> > - Wake-on-LAN support
+> > - LED initialization and control via /sys/class/leds
+> >
+> > This driver has been tested on multiple Variscite boards, including:
+> > - VAR-SOM-MX93 (i.MX93)
+> > - VAR-SOM-MX8M-PLUS (i.MX8MP)
+> >
+> > Example boot log showing driver probe:
+> > [    7.692101] imx-dwmac 428a0000.ethernet eth0:
+> >         PHY [stmmac-0:00] driver [MXL86110 Gigabit Ethernet] (irq=3DPOL=
+L)
+> >
+> > Signed-off-by: Stefano Radaelli <stefano.radaelli21@gmail.com>
+>
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+>
+>     Andrew
