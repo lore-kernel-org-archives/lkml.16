@@ -1,88 +1,71 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40596374D1;
-	Tue, 20 May 2025 00:15:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01EED21E0A2
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 00:21:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747700159; cv=none; b=jwuYCE3f9gRQGL6nfPWjNzYE/FiJjPPcZHkrxTfcPOPN8fmJJTc5qFk7egWcv5cEC1jYYAhU7IengNsgBH09QOHUsFWHc+m11XAKXvDc1LaJCIOA+PqB4RYxnwbxKOltYxOFkNH9vVHVzS0GZjr9aa7JgS9vDRKc9qF7sRIg/gg=
+	t=1747700494; cv=none; b=L7n0DBzeF+TAl6LJqL9YmGazbMv3xTGwytcT4odcoizzi+tWnmgH8oaImFYyrp88zv9X/UI2zB8Y1rgdo2IqeiTb1fRw+hZM/HwMxrcIbi3Xu9HJa22xbZqGJnRbdxSTWfBSzsXs6r8m3GbTI+yrwS3KkO7+4D4TOJuFSHf7Qno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747700159; c=relaxed/simple;
-	bh=TU1PuU20ULP0nxdQLvR4OMMp/ktsrxHvmhb+Ek+jIT8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Zm5R2cwwpw+S5xu0Lxnnxg/wmHFhKTdlk04k7hKJjpKaAgLJYnCRqpXBQRqLiFP0r3uzilYsrXpxGYYC9LGCMwYgwh5NoOnH2uLAy0yhm7scO4xr/BamcFXI1nLe/REuulzMPtY61eYTeJJSSyVOpBfJaz+e21MK+vAzuW/h6wM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=INrmpwCZ; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1747700494; c=relaxed/simple;
+	bh=h8xahNqcwqcK2Vll16ny2anHesIxJ0V+5Fdlg3phe34=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=LDAQfrCsdhw/yQ8NkzMZu+VU0y5Pbg2cY7S+OjyRgzl6JoJZeL7DOhigxxt5F11w8O7UizdIaFzEFGhQFBIutC+TYKxk+pqhj/wwfyxCywyr3t62G5IKtm+C3t6Crkrok/mY5xhvAwM+vB7GjFoh5ycST4FAdugm5Si1wJlNa/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=EmkMpA0B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="INrmpwCZ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=7MeXPOcFmUddS1SAwooWtuqxeKXe3n1iDcpVdycH0O0=; b=INrmpwCZhz1VbKAkkOBF7qF6SG
-	7c7735Eoz0KbjiO9TR8P6WUZBywZ893FV3XP+efpALN/Pcn5HyDFmUSsFKNq1/wXMx9mK0SqTdkvb
-	mruwi448TfW+h/FHiz5+0kQUtLMZQ5qsM0mipnN3VlZ8gvCSNaG+sDaaAcCbdN8RbXB0=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uHAe1-00D4ER-DB; Tue, 20 May 2025 02:15:45 +0200
-Date: Tue, 20 May 2025 02:15:45 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Jonas Gorski <jonas.gorski@gmail.com>
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Vivien Didelot <vivien.didelot@gmail.com>,
-	=?iso-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>,
-	Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net 2/3] net: dsa: b53: fix configuring RGMII delay on
- bcm63xx
-Message-ID: <e0d25a68-057b-4839-a8cd-affe458bfea3@lunn.ch>
-References: <20250519174550.1486064-1-jonas.gorski@gmail.com>
- <20250519174550.1486064-3-jonas.gorski@gmail.com>
- <ed75677c-c3fb-41d1-a2cd-dd84d224ffe3@lunn.ch>
- <CAOiHx=nwbs7030GKZHLc6Pc6LA6Hqq0NYfNSt=3zOgnj5zpAYQ@mail.gmail.com>
- <2e5e16a1-e59e-470d-a1d9-618a1b9efdd4@lunn.ch>
- <CAOiHx=mQ8z1CO1V-8b=7pjK-Hm9_4-tcvucKXpM1i+eOOB4axg@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="EmkMpA0B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0623C4CEE4;
+	Tue, 20 May 2025 00:21:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1747700493;
+	bh=h8xahNqcwqcK2Vll16ny2anHesIxJ0V+5Fdlg3phe34=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=EmkMpA0Bhgrx4p/OGAPNLEnphHy1/QfuFwRUsMGDElV3cmnBAWb09S2O4NQvgKih2
+	 jF9BExVDPITXIeSWOOA0igSj4XWu0svzvI8rVkVlBVXhKSj/vAGhDwPxXqcroyoOst
+	 MEXsPO+fXdfGQPpYIlqSmdJYNJLACF392o2phvSg=
+Date: Mon, 19 May 2025 17:21:32 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: kent.overstreet@linux.dev, 00107082@163.com, dennis@kernel.org,
+ tj@kernel.org, cl@gentwo.org, pasha.tatashin@soleen.com,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] alloc_tag: allocate percpu counters for module tags
+ dynamically
+Message-Id: <20250519172132.c46b910bc10857c706866357@linux-foundation.org>
+In-Reply-To: <CAJuCfpGgwkAVZJJ-ffLdkBfmggm3=d+Z450matW=TzeQZJ=LDQ@mail.gmail.com>
+References: <20250517000739.5930-1-surenb@google.com>
+	<20250519155145.8378a397a755c1cc5a3e2d4e@linux-foundation.org>
+	<CAJuCfpGgwkAVZJJ-ffLdkBfmggm3=d+Z450matW=TzeQZJ=LDQ@mail.gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOiHx=mQ8z1CO1V-8b=7pjK-Hm9_4-tcvucKXpM1i+eOOB4axg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-> Without this change no mode/port works, since there is always either a
-> 0 ns delay or a 4 ns delay in the rx/tx paths (I assume, I have no
-> equipment to measure).
+On Mon, 19 May 2025 16:13:28 -0700 Suren Baghdasaryan <surenb@google.com> wrote:
+
+> > > Fixes: 0db6f8d7820a ("alloc_tag: load module tags into separate contiguous memory")
+> > > Reported-by: David Wang <00107082@163.com>
+> > > Closes: https://lore.kernel.org/all/20250516131246.6244-1-00107082@163.com/
+> > > Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+> > > ---
+> > >  include/linux/alloc_tag.h | 12 ++++++
+> > >  include/linux/codetag.h   |  8 ++--
+> > >  include/linux/percpu.h    |  4 --
+> > >  lib/alloc_tag.c           | 87 +++++++++++++++++++++++++++++++--------
+> > >  lib/codetag.c             |  5 ++-
+> > >  5 files changed, 88 insertions(+), 28 deletions(-)
+> >
+> > Should we backport this fix into -stable kernels?  I'm thinking yes.
 > 
-> With this change all modes/ports work.
+> Yes, I should have CC'ed stable. The patch this one is fixing was
+> first introduced in 6.13. I just tried and it applies cleanly to
+> stable linux-6.13.y and linux-6.14.y.
+> Should I forward this email to stable or send a separate patch to them?
 
-Which is wrong. 
-
-> With "rgmii-id" the mac doesn't
-> configure any delays (and the phy does instead), with "rgmii" it's
-> vice versa, so there is always the expected 2 ns delay. Same for rxid
-> and txid.
-
-If you read the description of what these four modes mean, you should
-understand why only one should work. And given the most likely PCB
-design, the only mode that should work is rgmii-id. You would have to
-change the PCB design, to make the other modes work.
-
-> The Switch is always integrated into the host SoC, so there is no
-> (r)gmii cpu port to configure. There's basically directly attached DMA
-> to/from the buffers of the cpu port. Not sure if there are even
-> buffers, or if it is a direct to DMA delivery.
-
-That makes it a lot simpler. It always plays the MAC side. So i
-recommend you just hard code it no delay, and let the PHY add the
-delays as needed.
-
-	Andrew
+I added cc:stable to the mm.git copy so all is OK.  That's the usual
+workflow.
