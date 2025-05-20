@@ -1,57 +1,66 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D62DA2907;
-	Tue, 20 May 2025 14:21:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 866A222D794;
+	Tue, 20 May 2025 14:22:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747750876; cv=none; b=MV4m6Ve4WVyM6dTnUOLeDL+p1X7KC/siBvply1Mp/uLdcCvczK9w1cxsbEF33WrD/QnxoOOYl7cgWtkJ1eedLk4SbhcBYSBvcJE3jOkLdi4i8GBRwSTgglmGLcwEFsVFko9I/Lg+QtQjb+A6KaZya+U5t+Bv+yjvKE7hN2aRZVA=
+	t=1747750955; cv=none; b=KjCqlbinJZPVDGb8SrmD6fPOQChQb8pOjtJ+jPCTdzHLlKpYzm2jrurxhHRFSE7eC+I4k8FMq/qjzRuvCzalhVR+i6Um0jX5RoakofRR1EYTkhK4ddq3YVi+aAaz7I0d9w8RyFNS9YkwmjOSxNipAcVtElzOcQdd8PBrp7JjnjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747750876; c=relaxed/simple;
-	bh=KubO1CN0cU7o39gPvS/zjAe4RGBlujJ7735E92PJluk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=rNOqkl2hBmtfUpyG64ObTtPcLF49iRz4eptV4Hya1xKXPtEx11aM5/XSm2J5E40YDOEAyRSSO5pdle0QVmOafedFjxXYXmfFjXipM1Isxnb5U2mo1kBj1KlvE2bNbYp+6LZapYURoow4SAQIDLashVOCnNYrgpbC0YQLULbHzIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rU5ssl0o; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747750955; c=relaxed/simple;
+	bh=Ii306wnrKpiX/43hTmXSOYB+7DgIU5Oc/UC9CBk2GlI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X62W9DbJPuDubh5lUtMeWfrCa6Y1tolf+e3hBxwhpebfRoJl9CwgVgM8wHRw8KXYZ306HCxHtRHayzYdggEConeablNDmnsOxnOJAjybTfoSFueTBcSNCrk5V0kCUvYTa5wcC/TOXuLubksXNl7fxpGyIMP4aooUW5Pyx8Xtz9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MCDXh0r8; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rU5ssl0o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80716C4CEEB;
-	Tue, 20 May 2025 14:21:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747750874;
-	bh=KubO1CN0cU7o39gPvS/zjAe4RGBlujJ7735E92PJluk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=rU5ssl0o/icooknJ+V0VLF0QrTzQlME5sLQCs6lH/lEu1SNKh9yHPTLxxrIYDnvqG
-	 P2ybIatUaHLJ1DIl+pLWpXdeaokUAbBUYS4TM64YZ11s6MnCjOmmTB7mAaVW4H2lDu
-	 2+5Nm5bMQkwAgZIlYvcJCrzAF8c97spGVd994c4JAKDBlc3HyGuHexQBN9RYva7R39
-	 J13iEjIcZJDkgg1yKOC0lQyr6uTUa+TSRNCkJtJWCsyO+TGoLOQ2sSVSpfPQ7iKvk2
-	 bktQXT267hlYsa5UgXfPj/e63H/tO8jwtrMbiWV9No2IK12fUZ/+jnFHEb+nCgv+i9
-	 ouNjOFWBVT2NA==
-Date: Tue, 20 May 2025 09:21:13 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>,
-	Karolina Stolarek <karolina.stolarek@oracle.com>,
-	Martin Petersen <martin.petersen@oracle.com>,
-	Ben Fuller <ben.fuller@oracle.com>,
-	Drew Walton <drewwalton@microsoft.com>,
-	Anil Agrawal <anilagrawal@meta.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Sargun Dhillon <sargun@meta.com>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Kai-Heng Feng <kaihengf@nvidia.com>,
-	Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
-	Terry Bowman <terry.bowman@amd.com>,
-	Shiju Jose <shiju.jose@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v6 03/16] PCI/AER: Consolidate Error Source ID logging in
- aer_print_port_info()
-Message-ID: <20250520142113.GA1292100@bhelgaas>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MCDXh0r8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747750954; x=1779286954;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Ii306wnrKpiX/43hTmXSOYB+7DgIU5Oc/UC9CBk2GlI=;
+  b=MCDXh0r8x2VfUbtyEO8v5+/+Efyf1ewT7H3/Ab0OoQdBsDAjLI9XEVXm
+   IKfnpLRmkcap/nyk0fCkjJ1P0uIr8gs8ofRqjqRbJ0hVVtgz5K1eWI0c5
+   VB+/78Gbr1kYr8yBngetbAx7L114apfPeZG/mEjA94b2GOV3yOaxnApvX
+   QoUTKNe788VOzEgNm5HDuupLCm7rIh/I8NGrEzxYkweTlGXscLdM3pKet
+   DdeBzhWF60KP280MmsD6O8pOC7bH80FJbVhVELU+yM44g96cXxTPKgOdY
+   qDkD8KJAaMVX5a2Eg58WnZWd4+THvdiskxHXGiLrXuTjLCceXAZ6Fc+1f
+   w==;
+X-CSE-ConnectionGUID: HJaAsjmISO62oEvD059umg==
+X-CSE-MsgGUID: d6tMv4VHQdaodFjVO6QvlA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="49388756"
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="49388756"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 07:22:33 -0700
+X-CSE-ConnectionGUID: 3X6mf2+VRhCP4Eh0BhbDiQ==
+X-CSE-MsgGUID: fXfQNXEbRVmudCwsVRoqBQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="143700819"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 07:22:30 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uHNrP-00000003LSd-1mL5;
+	Tue, 20 May 2025 17:22:27 +0300
+Date: Tue, 20 May 2025 17:22:27 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Akira Yokosawa <akiyks@gmail.com>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	Kees Cook <kees@kernel.org>, linux-doc@vger.kernel.org,
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] docs: kerneldoc.py: add try/except blocks for
+ kernel-doc class errors
+Message-ID: <aCyQIwBnSiPLPrDo@smile.fi.intel.com>
+References: <cover.1747747695.git.mchehab+huawei@kernel.org>
+ <064bac2f462c13f56154891d8f3fb788db94f325.1747747695.git.mchehab+huawei@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,93 +69,27 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9ac2bb02-974f-4952-b069-1bcc94682d89@linux.intel.com>
+In-Reply-To: <064bac2f462c13f56154891d8f3fb788db94f325.1747747695.git.mchehab+huawei@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, May 19, 2025 at 04:39:19PM -0700, Sathyanarayanan Kuppuswamy wrote:
-> On 5/19/25 2:35 PM, Bjorn Helgaas wrote:
-> > From: Bjorn Helgaas <bhelgaas@google.com>
-> > 
-> > Previously we decoded the AER Error Source ID in two places.  Consolidate
-> > them so both places use aer_print_port_info().  Add a "details" parameter
-> > so we can add a note when we didn't find any downstream devices with errors
-> > logged in their AER Capability.
-> > 
-> > When we didn't read any error details from the source device, we logged two
-> > messages: one in aer_isr_one_error() and another in find_source_device().
-> > Since they both contain the same information, only log the first one when
-> > when find_source_device() has found error details.
-> /s/when//
+On Tue, May 20, 2025 at 03:33:08PM +0200, Mauro Carvalho Chehab wrote:
+> Replicate the same behavior as what's done with kernel-doc.pl:
+> continue building docs even when there are exceptions.
 
-Fixed, thanks!
+...
 
-> > -	pci_info(dev, "%s%s error message received from %04x:%02x:%02x.%d\n",
-> > +	pci_info(dev, "%s%s error message received from %04x:%02x:%02x.%d%s\n",
-> 
-> Instead of relying on the callers, why not add a space before details here?
+> +            logger.warning("kernel-doc '%s' processing failed with: %s" %
+> +                           (cmd_str(cmd), str(e)))
 
-Could, but I don't like adding an extra space at the end of the line
-when the caller passes "".  The extra space could make the line wrap
-unnecessarily.
+> +                logger.warning("kernel-doc '%s' processing failed with: %s" %
+> +                               (cmd_str(cmd), str(e)))
 
-> >   		 info->multi_error_valid ? "Multiple " : "",
-> >   		 aer_error_severity_string[info->severity],
-> >   		 pci_domain_nr(dev->bus), bus, PCI_SLOT(devfn),
-> > -		 PCI_FUNC(devfn));
-> > +		 PCI_FUNC(devfn), details);
-> >   }
-> >   #ifdef CONFIG_ACPI_APEI_PCIEAER
-> > @@ -926,13 +927,13 @@ static bool find_source_device(struct pci_dev *parent,
-> >   	else
-> >   		pci_walk_bus(parent->subordinate, find_device_iter, e_info);
-> > +	/*
-> > +	 * If we didn't find any devices with errors logged in the AER
-> > +	 * Capability, just print the Error Source ID from the Root Port or
-> > +	 * RCEC that received an ERR_* Message.
-> > +	 */
-> >   	if (!e_info->error_dev_num) {
-> > -		u8 bus = e_info->id >> 8;
-> > -		u8 devfn = e_info->id & 0xff;
-> > -
-> > -		pci_info(parent, "found no error details for %04x:%02x:%02x.%d\n",
-> > -			 pci_domain_nr(parent->bus), bus, PCI_SLOT(devfn),
-> > -			 PCI_FUNC(devfn));
-> > +		aer_print_port_info(parent, e_info, " (no details found)");
-> >   		return false;
-> >   	}
-> >   	return true;
-> > @@ -1297,10 +1298,11 @@ static void aer_isr_one_error(struct aer_rpc *rpc,
-> >   			e_info.multi_error_valid = 1;
-> >   		else
-> >   			e_info.multi_error_valid = 0;
-> > -		aer_print_port_info(pdev, &e_info);
-> 
-> Instead of printing the error information in find_source_device() (a helper function), I think it be better to print it here (the error handler). source_found = find_source_device(pdev, &e_info); aer_print_port_info(pdev, &e_info, source_found? "" : "(no details found) " );
-> 
-> if (source_found) aer_process_err_devices(&e_info)
+The prefix of the message is the same for different (semantically) places.
+Is it okay? (I would expect them to slightly differ, but I dunno if
+cmd here is the same, perhaps that's enough for distinguishing the two.)
 
-Great idea, thanks!  That looks much nicer.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-> > -		if (find_source_device(pdev, &e_info))
-> > +		if (find_source_device(pdev, &e_info)) {
-> > +			aer_print_port_info(pdev, &e_info, "");
-> >   			aer_process_err_devices(&e_info);
-> > +		}
-> >   	}
-> >   	if (e_src->status & PCI_ERR_ROOT_UNCOR_RCV) {
-> > @@ -1316,10 +1318,10 @@ static void aer_isr_one_error(struct aer_rpc *rpc,
-> >   		else
-> >   			e_info.multi_error_valid = 0;
-> > -		aer_print_port_info(pdev, &e_info);
-> > -
-> > -		if (find_source_device(pdev, &e_info))
-> > +		if (find_source_device(pdev, &e_info)) {
-> > +			aer_print_port_info(pdev, &e_info, "");
-> >   			aer_process_err_devices(&e_info);
-> > +		}
-> >   	}
-> >   }
-> 
-> -- 
-> Sathyanarayanan Kuppuswamy
-> Linux Kernel Developer
-> 
+
