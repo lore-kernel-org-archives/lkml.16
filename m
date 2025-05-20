@@ -1,271 +1,184 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2062.outbound.protection.outlook.com [40.107.243.62])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A36EA2627E9;
-	Tue, 20 May 2025 18:39:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.62
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747766378; cv=fail; b=N+NfVlJNRk45vAcfuk/ksWVUBGnl0X2nWEMf3QXcyOiPQRd2sdbUSZNSPnDibPpWeq5phAE0iV4x4hgww7rbHjl9HJSEvN+L+hLgwmHElbRAkiTmeihcxAYECvjMqb8W674WLaAoJpCdsP0zVbzI5ytgE4ec1OiahKbF5HSeCQY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747766378; c=relaxed/simple;
-	bh=oWmQibJk/KR7o27nJ/82FMpIKYNQEI8XRmJ51x1IWKA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ewJU1LqvdsgY52Y4P4xzL0HYAk/GrjfBur4sMOADvyxwHwbBwU9eujtue7COKHVKXiiEdFB2OVivytnWg3plnOIAMgVaXRUtKbzqstm/2rR27Zkv5DPOO7AgqmhLJMnYSbRWC/Ti7Yi7AiJ/aW0aOwui7Wl5kbjub3XHTLOMePM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=NBLcvbhN; arc=fail smtp.client-ip=40.107.243.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17D5A281376
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 18:39:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747766383; cv=none; b=YsnlwJL6167iMuaeBhJkhEajiUSnuPkFNrmR+z0bSbAsRlO7p93sWiwXOS9zJoKbOamCifBz1zStrfWK6HG/QUMyLG+d9SCDRpRSfe3YwW6cckEhoWCStfluhj159uhBM3eKPqLJv02pTTNNUGG9giKlvFSZ9aPUBW47NDUnY24=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747766383; c=relaxed/simple;
+	bh=5QKQrev1/bzNB/AS189H+KFjgOl0eLI/F13MgOgywxs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=phNu2E4ej0cij5s0dxk6HeulFv57+FlmrbInYnSOCkeSrazBnIIB+OYB8hAQhgd1DgUzxPYkg41VZ9TG3JMTlzrJ9/vlKJ48KeHWmH2iUrPyMgOtyh3QIX1wofkBk4dQCmSnZiwtaAvSUTe4uzJYzzX9DBnnQTa/+G/xs1Pg3Sk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fj89U2Uv; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="NBLcvbhN"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=eGwTu8YaDpmyEXBAohguJSNTR9KAPoQn1wxrRQctHbiHd1YLVS8dHPHJLbQsGuVTgVLm9YiFgiAc0AhdIyAH1hJUzFHRxWigpxhlFgwwd8accZ4IldCLqyMsncMh1HbNqD4bjRSoZCfxG9J87M/oZDbEqtXCdNF2/R85yxNj7W+z/oSyv60F8GhrAYqh6Lhx6ybIra2B8WeQyyNFxz3mzul0X6I8HvdaQsL/+kaTwWV0XYhPuWjth0ZGfvW8YYghaTulr3eCFril3nyvrcelDMnj6vmYWbw76pJtvgG4ontieqGxk4uGYEuHZc73njU5pGVbrh+QWVrEenqFmE3Dtg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=S08MoZoETre68c6k1VgZZpEet407UhUzcHdX7CsqzSc=;
- b=j555MsQE+/u4JNoRIvkD9mFOhvQ+fOEjDY9NdkUnWYOzLO2T8065dVbV5otHefakUsOcqPbkjrpL+p8XGEeT7p+alYtnTf3xJ2Q8YvH+aJfIbbeMtwRQ77WYdJBJQlsKGkgBsjldSpUW5GFBCC0LKPMfLnEuyM5A/Y9tSP+jhdq1EMYYyvP1IJmczwk95hveHL30/EEASdwZVc49orAwG1fMKBKBip+AaU59ADWOkPq006iL1UoYfNi8GLU7icxc9Ytm7amtjRpXO2X24JWywOwBexwjK0kZKLRss3B4rXMCF8T0mf7JL4izyr2nlJ92QrN1SeQgFrEJY/AsXFu5Bg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=davemloft.net smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=S08MoZoETre68c6k1VgZZpEet407UhUzcHdX7CsqzSc=;
- b=NBLcvbhNmg9FgzJmHxUiAdQD03lxKWWonFgqrE7nal4bNyjzR1AnciQoLxfSJUKKnmhVXmjoE7PvMGYAsh3aw9IsswCBjRBOn7Ur1GK5BW8vVQsPXTN35Z+fOB+lrwpT0y2NsczbfWt/o9i2XToBSb5PrCfdjhp1gC0WMwq+qCyxKZXwa+6FCYwByBvNP7s/ZPuHBQruERx/CamK5EodrqLJzb/6VW+xOhp9akyqukBVftv+ik1omgY2aJOS6gePu3+cmp6ZjnFS2dtGWlaJ6Q2KRS5E0LzPUUXHwTJlammOZnP582RZ58BJ2+QVL5abUxa/Ru2QDsR8dkZ3lXZtqg==
-Received: from CH3P220CA0014.NAMP220.PROD.OUTLOOK.COM (2603:10b6:610:1e8::16)
- by MN0PR12MB6269.namprd12.prod.outlook.com (2603:10b6:208:3c3::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.31; Tue, 20 May
- 2025 18:39:31 +0000
-Received: from CH2PEPF0000014A.namprd02.prod.outlook.com
- (2603:10b6:610:1e8:cafe::62) by CH3P220CA0014.outlook.office365.com
- (2603:10b6:610:1e8::16) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.18 via Frontend Transport; Tue,
- 20 May 2025 18:39:31 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- CH2PEPF0000014A.mail.protection.outlook.com (10.167.244.107) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8769.18 via Frontend Transport; Tue, 20 May 2025 18:39:30 +0000
-Received: from rnnvmail205.nvidia.com (10.129.68.10) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 20 May
- 2025 11:39:18 -0700
-Received: from rnnvmail203.nvidia.com (10.129.68.9) by rnnvmail205.nvidia.com
- (10.129.68.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Tue, 20 May
- 2025 11:39:18 -0700
-Received: from vdi.nvidia.com (10.127.8.10) by mail.nvidia.com (10.129.68.9)
- with Microsoft SMTP Server id 15.2.1544.14 via Frontend Transport; Tue, 20
- May 2025 11:39:12 -0700
-From: Tariq Toukan <tariqt@nvidia.com>
-To: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, "Andrew
- Lunn" <andrew+netdev@lunn.ch>
-CC: Jiri Pirko <jiri@nvidia.com>, Gal Pressman <gal@nvidia.com>, "Leon
- Romanovsky" <leonro@nvidia.com>, Donald Hunter <donald.hunter@gmail.com>,
-	"Jiri Pirko" <jiri@resnulli.us>, Jonathan Corbet <corbet@lwn.net>, Saeed
- Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>, Tariq Toukan
-	<tariqt@nvidia.com>, Shuah Khan <shuah@kernel.org>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-	<linux-rdma@vger.kernel.org>, <linux-kselftest@vger.kernel.org>, "Moshe
- Shemesh" <moshe@nvidia.com>, Mark Bloch <mbloch@nvidia.com>, Carolina Jubran
-	<cjubran@nvidia.com>, Cosmin Ratiu <cratiu@nvidia.com>
-Subject: [PATCH net-next V10 0/6] Support rate management on traffic classes in devlink and mlx5
-Date: Tue, 20 May 2025 21:38:01 +0300
-Message-ID: <1747766287-950144-1-git-send-email-tariqt@nvidia.com>
-X-Mailer: git-send-email 2.8.0
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fj89U2Uv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747766379;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=oazkVRuA/8xr6yaO1AP5mGcCl5dBYx20SpTg/7GEVjY=;
+	b=fj89U2UvvOWxJw3iDCh/NW60loc24aFjuueICBrwtdlcG21cPi/JOpXVWHnby0kBtSm1QX
+	mJ8TtKUmoGwYVuKLz2EYzAP54KGFWu9F+qcl2X2SQjQSIdaRwLc96z0WnKgKzX5Qqn+qj6
+	m/2/oS8QpD1oG6ae32gBXiwJuix0yH0=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-651-mfD54SVMPRSTxbzf5DJddA-1; Tue, 20 May 2025 14:39:38 -0400
+X-MC-Unique: mfD54SVMPRSTxbzf5DJddA-1
+X-Mimecast-MFC-AGG-ID: mfD54SVMPRSTxbzf5DJddA_1747766377
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-442ffaa7dbeso12668195e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 11:39:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747766377; x=1748371177;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=oazkVRuA/8xr6yaO1AP5mGcCl5dBYx20SpTg/7GEVjY=;
+        b=saazM41TLTQVp3Wor2vt2wJxNTdB0qUUnB5gMiHnbREJzGOnqIT7lv0xwR6k3s6DW6
+         +VHtX0kLthQZWY7+IpfdaRLHwEFkpGhIaxeS7cR2EVCjBy0GQshR+FbGdxR4QkxVB5nR
+         y/NjVCOrQWwME6er01Pk/VxvHBmiMYICbNZ6jfnU8GvmL3qy/MTFQi91uZm/pgVealSb
+         2xkW1euMF2WoJj40SZz5VGW17i4tfNB/uEwNHyRWh2mHAYdqLfZDrU9qOTiV1Zsui4VB
+         tAkufLmbQ2J5yTi4dFtdYui/Ac1THcaz1j77s8f7yR6EkRJ0lwhsie6eDG4U5+WxcMO2
+         qxrA==
+X-Forwarded-Encrypted: i=1; AJvYcCW6EHGFZhXvmScSTqArJIQcYqTMn4fQ1rwrhmFSzacS+hce2uuSdhWC6IQ9hf3ZDXLwKmjKOHGNyzgdDbA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwP3mYaxf50qQDpn+FZ3xn8Iu1+gHQ4CZXnwd/tvhI6AiVq4rtR
+	T8mAsoSV/SxL9drfXkNIWZ6hhwWKgIIZ9un/1axI94TEiXO6Q8fIVnR00Lvv6fnV4w6ZH8NcOdp
+	OrBOICd4ix4VX2XqRzV93nH95KFV1AkaR+Yqx/72T05fZOJsw+OsV9rGqe7jA6Inzhg==
+X-Gm-Gg: ASbGncsocWEQigFb5jdqEMUDdGBN1nzUxdA1tqVR5SbgomUc1L2lmRpX4gq6/lya0jc
+	w5xKqeVhYlqAeN9P4ky0Tkf3UW40qtQhFJ/GCdQ4TRUWbrtIOOwAdMbAHMSuynPmOUZdpNAveEG
+	jomUqVsDDaLuibbNgLXhFpwVSf+71TFZAFa05+/U0GsW7Dbq8viSSRorgKsFdyGVU4na5jpdq3s
+	Nx11RMj6yl89qQjzYMDXpLu7I0lpKh9XpogR1bAJZjZTMTF0Jy5O8tlqBgxHPgQYtCq7xK5Dxmx
+	ho34uUHaS7klEl+ivSjKEnOM6PWw5ER6v19BZ91STZ474+3FZQxckpENzoVcK0L9/W0MchleZ8h
+	tR4xAx6jBWeP1BTNLzZnEuYOmmiq9TfCvINHqnJE=
+X-Received: by 2002:a05:600c:1d07:b0:43c:e70d:450c with SMTP id 5b1f17b1804b1-442fd664797mr117644665e9.22.1747766376936;
+        Tue, 20 May 2025 11:39:36 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH9YxDvQpu/N8+vewgsq1dqcABzcf6fx4Rd1KP/cw42FWieBp13GKqxbHTIaldPb58U8SWiQw==
+X-Received: by 2002:a05:600c:1d07:b0:43c:e70d:450c with SMTP id 5b1f17b1804b1-442fd664797mr117644575e9.22.1747766376544;
+        Tue, 20 May 2025 11:39:36 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f28:7c00:a95e:ac49:f2ad:ab84? (p200300d82f287c00a95eac49f2adab84.dip0.t-ipconnect.de. [2003:d8:2f28:7c00:a95e:ac49:f2ad:ab84])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f182538fsm42330715e9.7.2025.05.20.11.39.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 May 2025 11:39:36 -0700 (PDT)
+Message-ID: <c90c79be-f27f-40ae-89ff-c4123b639874@redhat.com>
+Date: Tue, 20 May 2025 20:39:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PEPF0000014A:EE_|MN0PR12MB6269:EE_
-X-MS-Office365-Filtering-Correlation-Id: 067bbb0f-2dee-4a42-0a27-08dd97cda8ae
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|36860700013|1800799024|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Ky83YU52ME9EZDlLcTZuM3FxUE5lUnlyNzRZNytId3YyaU5nUHQrZHUyWW5j?=
- =?utf-8?B?NFJ1SjZkdmo4ZlJNV3RwSVJCSklSYXBlcGd1RmZVNHVmaG0vTWhLQjNFRXZh?=
- =?utf-8?B?TDB5bWtxOUZndUJCTXJYWUtYMjU4aUp3c1ZZWTdvZmxWeWU1REdydDlKUmoz?=
- =?utf-8?B?V0kzZkNlMU5TNkh4THFLMzhnYVJzNnBWSUFyb3NnbGVMdGJPbWJjOENodC96?=
- =?utf-8?B?bUJJNDJPOFg1Z0dVWFF0aW5Ed04zRC9vMFRDK3Y5ckk5MlVSdlk4dWZwbTZk?=
- =?utf-8?B?VHV6MzNORE84cnl5T0N2YVNkdkNmQ0JPa3pHTmtHbk1ibXdaelZXYVRoM2hz?=
- =?utf-8?B?QWJ0YndrZTB5TnczMVNuVHoxWjJlOWRUZWg5a3NHWWFidElXQ2VTZHlya1BK?=
- =?utf-8?B?bjl5S2FueERtdG9rT3F3RnNrMnorQVROUmx6a05GSHJXajNxOFRQUWNHSkY1?=
- =?utf-8?B?ckdybXB6aFFDN3lpZXR1dWdmMUNvVzJVcnZSN2o4ZE9Yc0F2REg4czFMTjJy?=
- =?utf-8?B?MG5DUTQ5cGZsNWI0ZXhuYkg4NStmVnRVZkgxMks0cTNxR3VCcEU1Q0Y5UXp1?=
- =?utf-8?B?YnB4NnlscE5FZG83SDBaM2ZnYVFka0IxVTBOUnJQa3J0MUdvWlNuKzJ0b0tP?=
- =?utf-8?B?YU5uTENpdDNNTVhpdU5QZUFqL1lWQUpXRzdHeDJ0WWJJZ1pxcllWaUsySzdy?=
- =?utf-8?B?NVdXM2t0TmxBY1ZST2NacllRbkhKcXdHRWxOcENYSkhrcUpvL3loam5vMlRO?=
- =?utf-8?B?WFRIcEIxNHRidXpTVDhVZ05DUEQyRU9MYWVtbHhQNkIrVDF5c01RRElWR2Rl?=
- =?utf-8?B?ZXMvMVhOYUgzTi93YlI2M3dGWU9ZZkY5K0lJMnVWS2Z6WW5ES3JFS2pod0R0?=
- =?utf-8?B?Qzh0SXVZZkZtZjVDNWsxcTUxcURhajFyc0Z3ZnE2Wmsrc3l0NUVkdnM3cXV5?=
- =?utf-8?B?cFNtcWRDRkR1Tk9LUlJZOG13aytPcFdTMm8xZzEwV0VRN0tOYXlNOTJod3oz?=
- =?utf-8?B?TU9JWDdTS2FRWG4xcnFFRWlwMVZBWFp1TkphK3kzc3lGd2M0VWZCUDRxeVVx?=
- =?utf-8?B?bFdCZmFZZVVyWWliQkZBWGhnNGxqZytFbXIzSmU0czJLK0hJOXhRQ0ltYXB4?=
- =?utf-8?B?UXhLaGRNN3lCbnByQ1djcFJsbFZ3RVArWmxwWGhVbXNxSGlZRjlCYVMybU5o?=
- =?utf-8?B?WjdYTXdUZmNBVEE0MWJ4Yms5cmdwVktJdG93Z0thZjVGbHV4bU9rZk5qN0x0?=
- =?utf-8?B?YWxDODY5Ni9qVkFGNFd5OXNORXQzRnRXbDZhN2MxZnNaR3pWK0luU05nNmNX?=
- =?utf-8?B?YjRnRUc2Q25mZ3h0OVo2dzlDQlZ1YzZTbklsRDNobEdLRG5CN09pNmRJd21L?=
- =?utf-8?B?ZUdEZU5leHQ1WnlvNjhKOXpzMENVUlo0Q1p2KytaKzFWK3N1Um9CL3RBTEFj?=
- =?utf-8?B?WHUva3JKSWowaVdLREdLRVZ0WlpJVHE3czdveGlTRzgyMmZubzFqZFM4T05v?=
- =?utf-8?B?eHNXbG9vZ2NUR3ZCYmZkTTB1RTBIWnJpQkxIQml0eXNCQnFrdTVFVFhiRDZN?=
- =?utf-8?B?UEk5MTNBcVg4NTVtclhmMVZRblYwS0NFYWg0TUpRVFF6R0c5N2o1VFQzRXVI?=
- =?utf-8?B?T3JpZDBKUEFiMGh1cU5ISzVjVTNYOEpMSEFxeWF1LzdFRXpPa1BWd0JUQkNm?=
- =?utf-8?B?Tm92eE92ZWZIdjFYMGgweURONTB6MWJ1TUVPWDFHbi96ZVE2MlY2N2V4QkRS?=
- =?utf-8?B?RHMzaFpxZTJRN3NUdTVLS0FvZCs1OEtnc09zc0dRQ0tKdDZRN3orSEs3YWZP?=
- =?utf-8?B?ZnVuYk8vVXdaVHlEVDMyVTM0elQzYXJ0N1IySFN4cWcyOTZqemxYVW9xVVA0?=
- =?utf-8?B?dERCaHVkWU04OU44bEo1NzlLNFQ4ZDVpNzc4VDdCK3V6OUpBWmVLMFZSeTRT?=
- =?utf-8?B?VUJVTDJqbCtyVjdVOEVOY2hoU1c5MUV4VllWZEtiSDhFL2xkdThCblprZWJS?=
- =?utf-8?B?TWNGR09rekFHdFFuYTlSY3E3bGZZTjhUblc2bW9xQXkyR01BMHhCcDJWMnZT?=
- =?utf-8?B?ZGl0eUFQbEsyWkI3MlVNVlJpV3p3R2c3cjM3UT09?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(7416014)(376014)(36860700013)(1800799024)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 May 2025 18:39:30.9426
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 067bbb0f-2dee-4a42-0a27-08dd97cda8ae
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CH2PEPF0000014A.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6269
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 0/5] add process_madvise() flags to modify behaviour
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+ Arnd Bergmann <arnd@arndb.de>, Christian Brauner <brauner@kernel.org>,
+ linux-mm@kvack.org, linux-arch@vger.kernel.org,
+ linux-kernel@vger.kernel.org, SeongJae Park <sj@kernel.org>,
+ Usama Arif <usamaarif642@gmail.com>
+References: <cover.1747686021.git.lorenzo.stoakes@oracle.com>
+ <dd062c92-faa9-46a6-99a8-bcc46209e102@redhat.com>
+ <c54d2c5b-e061-4e77-ac10-3c29d5ccf419@lucifer.local>
+ <bbf64de9-3b15-40b8-8b9a-dbf05fa3b4c9@lucifer.local>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <bbf64de9-3b15-40b8-8b9a-dbf05fa3b4c9@lucifer.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On 20.05.25 20:25, Lorenzo Stoakes wrote:
+> On Tue, May 20, 2025 at 06:47:48PM +0100, Lorenzo Stoakes wrote:
+>> On Tue, May 20, 2025 at 05:28:35PM +0200, David Hildenbrand wrote:
+> [snip]
+>>>> 3. PMADV_SET_FORK_EXEC_DEFAULT
+>>>>
+>>>> It may be desirable for a user to specify that all VMAs mapped in a process
+>>>> address space default to having an madvise() behaviour established by
+>>>> default, in such a fashion as that this persists across fork/exec.
+>>>
+>>> This is very specific for MADV_HUGEPAGE only, so I wonder how we could
+>>> either avoid that flag or just make it clear that it shall stick around ...
+>>>
+> 
+> Sorry missed this bit.
+> 
+> I don't really like the idea of only for MADV_HUGEPAGE (and MADV_NOHUGEPAGE)
+> defaulting to doing this, I think that's far less clear than a user explicitly
+> asking for it, plus most users using process_madvise() wouldn't expect it.
 
-This patch series by Carolina is V10 of the feature that adds rate
-management support on traffic classes in devlink and mlx5, see full
-description by Carolina below [0].
+The thing is that PMADV_ENTIRE_ADDRESS_SPACE already adds something 
+unexpected: suddenly also *new* mappings will be affected.
 
-V10:
-- Added netdevsim selftest for tc-bw ops.
-- Dropped header: field as it’s unnecessary for local constants in
-  devlink.yaml.
+But maybe that'd be covered by the PMADV_SET_DEFAULT idea.
 
-Regards,
-Tariq
+Maybe
 
-[0]
-This patch series extends the devlink-rate API to support traffic class
-(TC) bandwidth management, enabling more granular control over traffic
-shaping and rate limiting across multiple TCs. The API now allows users
-to specify bandwidth proportions for different traffic classes in a
-single command. This is particularly useful for managing Enhanced
-Transmission Selection (ETS) for groups of Virtual Functions (VFs),
-allowing precise bandwidth allocation across traffic classes.
+PMADV_ENTIRE_ADDRESS_SPACE | PMADV_SET_DEFAULT | PMADV_SET_EXEC_DEFAULT
 
-Additionally the series refines the QoS handling in net/mlx5 to support
-TC arbitration and bandwidth management on vports and rate nodes.
+... hm, but "PMADV_ENTIRE_ADDRESS_SPACE" can then simply be "pass in the 
+entire address space as a range" ... and ignore errors.
 
-Discussions on traffic class shaping in net-shapers began in V5 [1],
-where we discussed with maintainers whether net-shapers should support
-traffic classes and how this could be implemented.
-
-Later, after further conversations with Paolo Abeni and Simon Horman,
-Cosmin provided an update [2], confirming that net-shapers' tree-based
-hierarchy aligns well with traffic classes when treated as distinct
-subsets of netdev queues. Since mlx5 enforces a 1:1 mapping between TX
-queues and traffic classes, this approach seems feasible, though some
-open questions remain regarding queue reconfiguration and certain mlx5
-scheduling behaviors.
-
-Building on that discussion, Cosmin has now shared a concrete
-implementation plan on the netdev mailing list [3]. The plan, developed
-in collaboration with Paolo and Simon, outlines how net-shapers can be
-extended to support the same use cases currently covered by
-devlink-rate, with the eventual goal of aligning both and simplifying
-the shaping infrastructure in the kernel.
-
-This work was presented at Netdev 0x19 in Zagreb [4].
-There we presented how TC scheduling is enforced in mlx5 hardware,
-which led to discussions on the mailing list.
-
-A summary of how things work:
-
-Classification means labeling a packet with a traffic class based on the
-packet's DSCP or VLAN PCP field, then treating packets with different
-traffic classes differently during transmit processing.
-
-In a virtualized setup, VFs are untrusted and do not control
-classification or shaping.  Classification is done by the hardware using
-a prio-to-TC mapping set by the hypervisor. VFs only select which send
-queue to use and are expected to respect the classification logic by
-sending each traffic class on its dedicated queue. As stated in the
-net-shapers plan [3], each transmit queue should carry only a single
-traffic class. Mixing classes in a single queue can lead to HOL
-blocking.
-
-In the mlx5 implementation, if the queue used does not match the
-classified traffic class, the hardware moves the queue to the correct TC
-scheduler. This movement is not a reclassification; it’s a necessary
-enforcement step to ensure traffic class isolation is maintained.
-
-Extend devlink-rate API to support rate management on TCs:
-- devlink: Extend the devlink rate API to support traffic class
-  bandwidth management
-
-Introduce a no-op implementation:
-- net/mlx5: Add no-op implementation for setting tc-bw on rate objects
-
-Add support for enabling and disabling TC QoS on vports and nodes:
-- net/mlx5: Add support for setting tc-bw on nodes
-- net/mlx5: Add traffic class scheduling support for vport QoS
-
-Support for setting tc-bw on rate objects:
-- net/mlx5: Manage TC arbiter nodes and implement full support for
-  tc-bw
-
-[1]
-https://lore.kernel.org/netdev/20241204220931.254964-1-tariqt@nvidia.com/
-[2]
-https://lore.kernel.org/netdev/67df1a562614b553dcab043f347a0d7c5393ff83.camel@nvidia.com/
-[3]
-https://lore.kernel.org/netdev/d9831d0c940a7b77419abe7c7330e822bbfd1cfb.camel@nvidia.com/T/
-[4]
-https://netdevconf.info/0x19/sessions/talk/optimizing-bandwidth-allocation-with-ets-and-traffic-classes.html
-
-Carolina Jubran (6):
-  devlink: Extend devlink rate API with traffic classes bandwidth
-    management
-  selftest: netdevsim: Add devlink rate tc-bw test
-  net/mlx5: Add no-op implementation for setting tc-bw on rate objects
-  net/mlx5: Add support for setting tc-bw on nodes
-  net/mlx5: Add traffic class scheduling support for vport QoS
-  net/mlx5: Manage TC arbiter nodes and implement full support for tc-bw
-
- Documentation/netlink/specs/devlink.yaml      |   35 +-
- .../networking/devlink/devlink-port.rst       |    7 +
- .../net/ethernet/mellanox/mlx5/core/devlink.c |    2 +
- .../net/ethernet/mellanox/mlx5/core/esw/qos.c | 1007 ++++++++++++++++-
- .../net/ethernet/mellanox/mlx5/core/esw/qos.h |    8 +
- .../net/ethernet/mellanox/mlx5/core/eswitch.h |   14 +-
- drivers/net/netdevsim/dev.c                   |   43 +
- drivers/net/netdevsim/netdevsim.h             |    1 +
- include/net/devlink.h                         |    6 +
- include/uapi/linux/devlink.h                  |    9 +
- net/devlink/netlink_gen.c                     |   15 +-
- net/devlink/netlink_gen.h                     |    1 +
- net/devlink/rate.c                            |  127 +++
- .../drivers/net/netdevsim/devlink.sh          |   51 +
- 14 files changed, 1289 insertions(+), 37 deletions(-)
+I'd probably have to see a revised proposal after the current discussions.
 
 
-base-commit: f685204c57e87d2a88b159c7525426d70ee745c9
+Anyhow, limiting the flags to a bare minimum for now usually makes 
+sense, as long as it is expandable.
+
 -- 
-2.31.1
+Cheers,
+
+David / dhildenb
 
