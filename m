@@ -1,151 +1,174 @@
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3FAE25FA11
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 15:21:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 385E72417F2
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 15:22:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747754509; cv=none; b=bt0s8rZAUXWYI54QR3NXoriE+5+WMsJ3+CLebVMeIDYG2SO8Z/B0cwarmPznAbJznZ8COKbGk5a0ZV7hYf+UhTawN7x9cACHodx5WejYZJB8wOhvHi8agLWnk1DwKNQ0ZVAwLqL5FmICj0vxcJaFWV8dVtf/g9lKAEowS5RDgnc=
+	t=1747754542; cv=none; b=rJlGXQhxqusghLjRSfnoHB3T3lHIoeeuduwanUoVfJvdQYTviZMj+YyvPjTtjUHNpNz5CP9QxeSgpb+gwRUq/A8gQxcp/wx726JaoxkZhh1iJneh+KsIH7RUHqkryF5LIs+PTdX6GeBKPsoymvSJioWIKeCFlZWyp7ji7fdJ3T8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747754509; c=relaxed/simple;
-	bh=7OCZHxgMoJZyWqUhO+LWO9/SK6u4vZjyPe4ldhYTx50=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tFAeq2oF/fi2R/j+Oirjj5wCwhCn3NYXTo9KNAnT3xvM/RUkxLe0tZ6VnOwiEAhFd3e5jMC4n3Y2o1NRb1zFhUEVgBWmZRcq1RdA6CAdhgCO/s/MS852jc7C97gTnfs0bxLVmIk16bWW6lGxu7F1xlk4lnAe4s9kaHkKO/qW4YU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=uqCvZKEO; arc=none smtp.client-ip=91.218.175.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1747754542; c=relaxed/simple;
+	bh=gD7ijCVibbuC8nWCv1gk7Cf9nObrnGN5wWXmriPSx48=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RzgfdmLsQdwI6CwrnHYWh4Vt7hQukUKm/wAZ9QEjD1/EeCHI4W7G36Glr6gkTprot1U3aHsoY4K/l+ZFc2RvmXBa5yHLtWW4jN8a14TGntnXx1/ONSSOUdlEw8YH2NyQUEOaK4uuF9m9d9YpoYGmF4LVRbFF/E/GdwkU6RQiK7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lltD1vnB; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="uqCvZKEO"
-Date: Tue, 20 May 2025 11:21:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747754494;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8A+4/WHQPGtTkhCxwLscoAmpmTmaNbybMHYotBWdP2A=;
-	b=uqCvZKEOgLQo6BEl1w2WBr/iTYWGhrTLCXX/YdRIiVzEWHD7gojgAgQ6YwB55iDzMomDpX
-	kpyAZWUCrzRPp2h/QT4F698F9SkkSZDeoTux2L/Jd7AGsJhreFnkL91gXRw9QJNjRDnEBG
-	N4IO8CKTo0hikMtMxPM1oWgp4FcE43w=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Amir Goldstein <amir73il@gmail.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-unionfs@vger.kernel.org, 
-	Miklos Szeredi <miklos@szeredi.hu>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH 0/6] overlayfs + casefolding
-Message-ID: <ztuodbbng5rgwft2wtmrbugwo3v5zgrseykhlv5w4aqysgnd6b@ef56vn7iwamn>
-References: <20250520051600.1903319-1-kent.overstreet@linux.dev>
- <CAOQ4uxg8p2Kg0BKrU4NSUzLVVLWcW=vLaw4kJkVR1Q-LyRbRXA@mail.gmail.com>
- <osbsqlzkc4zttz4gxa25exm5bhqog3tpyirsezcbcdesaucd7g@4sltqny4ybnz>
- <CAOQ4uxjUC=1MinjDCOfY5t89N3ga6msLmpVXL1p23qdQax6fSg@mail.gmail.com>
- <gdvg6zswvq4zjzo6vntggoacrgxxh33zmejo72yusp7aqkqzic@kaibexik7lvh>
- <CAOQ4uxg9sKC_8PLARkN6aB3E_U62_S3kfnBuRbAvho9BNzGAsQ@mail.gmail.com>
- <rkbkjp7xvefmtutkwtltyd6xch2pbw47x5czx6ctldemus2bvj@2ukfdmtfjjbw>
- <CAOQ4uxgOM83u1SOd4zxpDmWFsGvrgqErKRwea=85_drpF6WESA@mail.gmail.com>
- <7sa3ouxmocenlbh3r3asraedbbr6svljroyml3dpcoerhamwmy@gb32bhm4jqvh>
- <CAOQ4uxjHiorTwddK98mb60VOY8zNqnyWvW=+Uz-Sn6-Sm3PUfQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lltD1vnB"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-601dd3dfc1fso5194534a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 08:22:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747754538; x=1748359338; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=HPbVSjkW25BVpwZCUxpIFG7xTA4bYrqjMIINpvofoFc=;
+        b=lltD1vnB0QQWXUQa8OAkgwJwLsFFa/0j5+sOBOfGRPElq4EKQGezCuPn8Ynb8FR31O
+         Y3+xd9+CfYu/dlfAcVar+efwi2iJL0AT5pFEsoQyUfiEpAW5o7hF7Qoz8w3MdxeLEBkT
+         wy8TDXLxhwO/Fqq/GjsYay17XXiX51uRtLYPvdAPOroLsVFp8iRI2uNXyQHU7kuLPi9m
+         GwBR5IuhyiDoG5EnBaU1FM8/CuZFExSoC9azFk2NiwqJEr6wCaphGVWHs+X/Iv5RD+NN
+         nZbU4zmn20+jlqCFTdkxhnQY0gH5drdKdeGrzDkascN0pIUBMmvUx+7p1soJMQZh6R1F
+         X7eQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747754538; x=1748359338;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HPbVSjkW25BVpwZCUxpIFG7xTA4bYrqjMIINpvofoFc=;
+        b=vd6elK215o4eSmnjdax+lugYYhGnFzOZTz4S93LbITlA0tVruncQIOD0E74fgkKyx7
+         Xi+0Z2VBTkNtm6pKVMwQcbuJydHtrTSj9xT7vm8UhCm7PMZdSKCGVgEHjVrBizR8AAYt
+         Uovp9D36VOcQT1sXRQjZ6K8L1bbbv7MF3dpA2+ekGrN/dL8ww6RMxx2RuxZOSbP/j5rz
+         gzvR6YFw8SkGghN4OIrScaR6R0cBt8ERPiavrOuFX6rsNEky8uFFFdeOzMnOCy8WefCy
+         GQg8WShVkTchS63p7Dn2XZ3Y1HjazxoFfYwz4HvF1nPyQJlUZJWSeTBFEj17Zqy0EWN2
+         S6lw==
+X-Forwarded-Encrypted: i=1; AJvYcCXycyFTaGBEIWsNOU9QoxLy8gWBhY9HzieoX66UmB5esG52nrlfUTYLdpTD37tfn2GpwoCAPml/DC16c08=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8Who5mmTAaNYIOntDfSEaFke47bF9Go3j/OzxtmWmP3HvBJ5B
+	q62LGY4cSow54++4IYKZQLju0MMGu6PqsUxsf5WaGcNOn6IBUDrx9gGN
+X-Gm-Gg: ASbGncs2fBBfGEGgv8S/G1+9JpN1d29gnzjy7jBGaE+bgaLrqa+0JRfrK7go82cSK02
+	2Jk2LcIZJ+8/3EdRYoChlqhu6lNg0qXxwD32g6USmyb7d73i6ELYW7W431XwNWqLGOIDnmYVUot
+	qjV6puU6J/FBmdKDql4SlvyHWtYOam11Z21Cu792zvB95HTFuyxkkRuVvkNN5zXYQOm5WgK9NWr
+	M6NgLku6BT29yQCj5Y49+GT5utBv7NYnnPoCVj2FiO3rvbM+8dgrw8Nr73uWhQU6ZVQP2P64YHL
+	sa8zEfZWueOSmTXzaGexMoZ+x3/xJbzq27lZWDGMx4EzKjW4BxvSuvKK6p882IkhK/lP0xm9yMG
+	Hmymqjz5KUPu8qxejTEFYJZoi
+X-Google-Smtp-Source: AGHT+IFdBfhKTh3IRRTS1OzB+cE6Mi8ncamxWy1oCDWmqBxMDDzmmGVwOxOSP1OH37hHGmVHIGBoHw==
+X-Received: by 2002:a05:6402:3550:b0:5fd:10fe:9e86 with SMTP id 4fb4d7f45d1cf-60119cdd453mr16201818a12.28.1747754538066;
+        Tue, 20 May 2025 08:22:18 -0700 (PDT)
+Received: from ?IPV6:2a03:83e0:1126:4:1c0a:f3ac:4087:51c8? ([2620:10d:c092:500::7:66a9])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6005ac327d5sm7334255a12.63.2025.05.20.08.22.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 May 2025 08:22:17 -0700 (PDT)
+Message-ID: <64b19c8f-e02e-490b-b987-9a996f36be21@gmail.com>
+Date: Tue, 20 May 2025 16:22:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOQ4uxjHiorTwddK98mb60VOY8zNqnyWvW=+Uz-Sn6-Sm3PUfQ@mail.gmail.com>
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] mm: slub: only warn once when allocating slab obj
+ extensions fails
+To: Shakeel Butt <shakeel.butt@linux.dev>, surenb@google.com,
+ Harry Yoo <harry.yoo@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, hannes@cmpxchg.org,
+ vlad.wing@gmail.com, linux-mm@kvack.org, kent.overstreet@linux.dev,
+ linux-kernel@vger.kernel.org, kernel-team@meta.com, vbabka@suse.cz,
+ cl@gentwo.org, rientjes@google.com, roman.gushchin@linux.dev
+References: <20250520122547.1317050-1-usamaarif642@gmail.com>
+ <20250520122547.1317050-2-usamaarif642@gmail.com> <aCyEyxHEXQ7DU9I1@harry>
+ <cf17cfde-cd1a-4217-a09a-1aa86347f830@gmail.com>
+ <h7mwe4tr4r233zewdqaoehmmoktaljslgcxvr2qybon2vnxhrz@pbwpt253olkd>
+Content-Language: en-US
+From: Usama Arif <usamaarif642@gmail.com>
+In-Reply-To: <h7mwe4tr4r233zewdqaoehmmoktaljslgcxvr2qybon2vnxhrz@pbwpt253olkd>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 20, 2025 at 05:13:37PM +0200, Amir Goldstein wrote:
-> On Tue, May 20, 2025 at 4:44 PM Kent Overstreet
-> <kent.overstreet@linux.dev> wrote:
-> >
-> > On Tue, May 20, 2025 at 04:33:14PM +0200, Amir Goldstein wrote:
-> > > On Tue, May 20, 2025 at 4:12 PM Kent Overstreet
-> > > > Amir, you've got two widely used filesystem features that conflict and
-> > > > can't be used on the same filesystem.
-> > > >
-> > > > That's _broken_.
-> > >
-> > > Correct.
-> > >
-> > > I am saying that IMO a smaller impact (and less user friendly) fix is more
-> > > appropriate way to deal with this problem.
-> >
-> > Less user friendly is an understatement.
-> >
-> > Obscure errors that only get reported via overloaded standard error
-> > codes is a massive problem today, for _developers_ - have you never had
-> > a day of swearing over trying to track down where in a massive subsystem
-> > an -EINVAL is coming from?
-> >
-> > It's even worse for end users that don't know to check the dmesg log.
-> >
-> > And I support my code, so these would turn into bug reports coming
-> > across my desk - no thanks; I already get enough weird shit from other
-> > subsystems that I have to look at and at least triage.
-> >
-> > > > Users hate partitioning just for separate /boot and /home, having to
-> > > > partition for different applications is horrible. And since overlay fs
-> > > > is used under the hood by docker, and casefolding is used under the hood
-> > > > for running Windows applications, this isn't something people can
-> > > > predict in advance.
-> > >
-> > > Right, I am not expecting users to partition by application,
-> > > but my question was this:
-> > >
-> > > When is overlayfs created over a subtree that is only partially case-folded?
-> > >
-> > > Obviously, docker would create overlayfs on parts of the fs
-> > > and smbd/cygwin could create a case folder subtree on another
-> > > part of the fs.
-> > > I just don't see a common use case when these sections overlap.
-> >
-> > Today, you cannot user docker and casefolding on _different parts of_
-> > the same filesystem.
-> >
-> > So yees, today users do have to partition by application, or only use
-> > one feature or the other.
-> >
-> 
-> Didn't say there was no problem.
-> 
-> Argued that your fix is a big gun and not worth the added complexity.
-> 
-> Let's see what Miklos thinks.
-> 
-> > This isn't about allowing casefolding and overlayfs to fix on the same
-> > subtree, that would be a bigger project.
-> >
-> > > Perhaps I am wrong (please present real world use cases),
-> > > but my claim is that this case is not common enough and therefore,
-> > > a suboptimal EIO error from lookup is good enough to prevert crossing
-> > > over into the case folded zone by mistake, just as EIO on lookup is
-> > > enough to deal with the unsupported use case of modifying
-> > > overlayfs underlying layers with overlay is mounted.
-> > >
-> > > BTW, it is not enough to claim that there is no case folding for the
-> > > entire subtree to allow the mount.
-> > > For overlayfs to allow d_hash()/d_compare() fs must claim that
-> > > these implementations are the default implementation in all subtree
-> > > or at least that all layers share the same implementation.
-> >
-> 
-> Nevermind. Misread patch 6.
 
-Since you were asking for use cases - docker & related are pretty widely
-used for deploying things that are "unwieldy" within the normal packgae
-manager ecosystem - and wine is case study #1 in that, where these days
-people want to ship a specific version of wine with applications being
-emulated (that's been tested with that application).
 
-But wine wants casefolding, so - hapless user deploys docker image where
-casefolding is enabled _but only on the subdir that holds Windows data_,
-not the whole image.
+On 20/05/2025 15:18, Shakeel Butt wrote:
+> On Tue, May 20, 2025 at 02:42:09PM +0100, Usama Arif wrote:
+>>
+>>
+>> On 20/05/2025 14:34, Harry Yoo wrote:
+>>> On Tue, May 20, 2025 at 01:25:47PM +0100, Usama Arif wrote:
+>>>> In memory bound systems, a large number of warnings for failing this
+>>>> allocation repeatedly may mask any real issues in the system
+>>>> during memory pressure being reported in dmesg. Change this to
+>>>> WARN_ONCE.
+>>>>
+>>>> Signed-off-by: Usama Arif <usamaarif642@gmail.com>
+>>>> Reported-by: Vlad Poenaru <vlad.wing@gmail.com>
+>>>> Closes: https://lore.kernel.org/all/17fab2d6-5a74-4573-bcc3-b75951508f0a@gmail.com/
+>>>> ---
+>>>
+>>> Hi,
+>>>
+>>> Please Cc SLAB ALLOCATOR folks in MAINTAINERS on patches that touch
+>>> slab code ;)
+>>>
+>>
+>> Thanks for adding them to CC! I was just thinking of this as a memory
+>> allocation profiling issue and added the maintainers for it,
+>> but should have added slab maintainers as well.
+>>
+>>
+>>>>  mm/slub.c | 2 +-
+>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/mm/slub.c b/mm/slub.c
+>>>> index bf43c403ead2..97cb3d9e8d00 100644
+>>>> --- a/mm/slub.c
+>>>> +++ b/mm/slub.c
+>>>> @@ -2102,7 +2102,7 @@ prepare_slab_obj_exts_hook(struct kmem_cache *s, gfp_t flags, void *p)
+>>>>  
+>>>>  	slab = virt_to_slab(p);
+>>>>  	if (!slab_obj_exts(slab) &&
+>>>> -	    WARN(alloc_slab_obj_exts(slab, s, flags, false),
+>>>> +	    WARN_ONCE(alloc_slab_obj_exts(slab, s, flags, false),
+>>>>  		 "%s, %s: Failed to create slab extension vector!\n",
+>>>>  		 __func__, s->name))
+>>>
+>>> I think this should be pr_warn_once()?
+>>> I'm not sure why this was WARN() in the first place.
+>>>
+>>
+>> Isn't WARN_ONCE the same as pr_warn_once but with needing the condition
+>> of the first arg to be true? We only want to warn if alloc_slab_obj_exts
+>> returns non-zero. So WARN_ONCE should be ok?
+>>
+> 
+> The difference is the impact on panic_on_warn users which are mostly
+> testing bots. This warning is not actionable, so I agree with Harry to
+> covert this to pr_warn_once().
+> 
 
-Docker mounts the image, but then everything explodes when you try to
-use it with what look to the user like impenetrable IO errors.
+Sounds good! Will change it to below for the next revision.
+Will wait for the kvmalloc conversation to conclude before sending
+the next revision.
 
-That's a bad day for someone, or more likely a lot of someones.
+diff --git a/mm/slub.c b/mm/slub.c
+index 08804d2f2ead..ab0b7ee87159 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -2101,11 +2101,13 @@ prepare_slab_obj_exts_hook(struct kmem_cache *s, gfp_t flags, void *p)
+                return NULL;
+ 
+        slab = virt_to_slab(p);
+-       if (!slab_obj_exts(slab) &&
+-           WARN(alloc_slab_obj_exts(slab, s, flags, false),
+-                "%s, %s: Failed to create slab extension vector!\n",
+-                __func__, s->name))
+-               return NULL;
++       if (!slab_obj_exts(slab)) {
++               if(alloc_slab_obj_exts(slab, s, flags, false))
++                       pr_warn_once("%s, %s: Failed to create slab extension vector!\n",
++                               __func__, s->name);
++               else
++                       return NULL;
++       }
+ 
+        return slab_obj_exts(slab) + obj_to_index(s, slab, p);
+ }
+
