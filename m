@@ -1,191 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8550526D4C3;
-	Tue, 20 May 2025 15:56:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747756603; cv=none; b=NLrFkQR3AZoJL2MTttMbGR6NNQXWvMLa/8yUi/IQlTJAmgQPxy8urn6LAb6/Lbi3+sUE6JHG/wqq5VM5mxCsdolKY8itEUcrGZvDeZJ5aAbwCldnp2kLRREdES2d5G5xe7acGZvROT1a5M8P/nenVC8Cl1JxZCNQ/yPtkytlFhA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747756603; c=relaxed/simple;
-	bh=9t27kuG+nmeuoyFeo+Lr3zYDfVp+3AnIEpw2qvtpWCE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=N0f3QdsvsJK5KTXPw4ymHyLBrPo6WOB2zyiKNtCXm76mKR8R4e9Se6p1dWFVdU24n77al6HplG17y2AcpymydwXn8wOfvugr49lN5C9EuVQHv7OYPVQahVaMllTa1hj3jlbQhnzIrc2QheEJGla33vkH/ICsr/O8MJfW58YvLPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2593CC4CEEA;
-	Tue, 20 May 2025 15:56:41 +0000 (UTC)
-Date: Tue, 20 May 2025 11:57:21 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, x86@kernel.org,
- Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Jiri Olsa <jolsa@kernel.org>, Thomas
- Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Andrii
- Nakryiko <andrii@kernel.org>, "Jose E. Marchesi" <jemarch@gnu.org>, Indu
- Bhagat <indu.bhagat@oracle.com>
-Subject: Re: [PATCH v9 00/13] unwind_user: x86: Deferred unwinding
- infrastructure
-Message-ID: <20250520115721.7a4307a2@gandalf.local.home>
-In-Reply-To: <aCxM_BizulyIVcdb@gmail.com>
-References: <20250513223435.636200356@goodmis.org>
-	<20250514132720.6b16880c@gandalf.local.home>
-	<aCfMzJ-zN0JKKTjO@google.com>
-	<20250519113339.027c2a68@batman.local.home>
-	<aCxM_BizulyIVcdb@gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1A251DE2CE;
+	Tue, 20 May 2025 15:57:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747756651; cv=pass; b=jx1pcYMJxam6PHRar8f6SMXz1RqjH34VGhlc6RTDCIVezoqP2zqz6jUmKJv0ErvZ3tXBoc0CJuCRpiBDS17jaYJXT+etmrU0mVH0wFTu4URhTp8f5d9wTeX8pi1BKvsKHp5JNWozpFcnC1kEb841ur5EZ1R0Q42cNNDO1lESvw0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747756651; c=relaxed/simple;
+	bh=v9zQJEyTHVl1Upf27BmSemUeoxDmaocWCzUCXnyOGz0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=XiVjW6qyzg7t/xUPoUzqsqtE1FOYVB5Iy3umJVvgavFeQYp0YN+Ob+8gcaQQpN2OjnDW2Y+msToE39kyFlN0Rwmttr2QrzFKEl7hW7QhqBxBheYZf1uk/dcfTWmkpaJ5sYrvEmYs7mcPe3GIkkexqIMRd/yvZYzc7C6pxgo7MwQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=fYU2XLcQ; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="fYU2XLcQ"
+ARC-Seal: i=1; a=rsa-sha256; t=1747756641; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=FAuuPs2EGEjrF5/ijPrNNQPHljXOs8+RhblsbzzN0psEc8kw1/7iO1MPacJy39tHpnXUpimhdQSGzzPnVXIRQYk+xnC5bR5y6DGr4NxvUuWa6OyBOi5ojNDNr4b0Dm2LOh33SAePlyYYJApXQWFU5GOK0cfqdZ2hEorwWAZwk8o=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1747756641; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=ZqO3M2O/Ab6tmQah55wUM/rusa8GvhCdTSgFUG8XpAU=; 
+	b=XMgLIJRxDgm/7BFdJ+azqusLdYp4wzlbupb5q45bmq/ZiIpbTKQM2iQzsnumGOquUpZ2VzM+c5PYD9nOnt8zUkTDdT4YKOVsk1pnhYiwKB38z1pAbFCNqUkyDgRrJ5MA40cnNFuPpalRCU7tF+eKroq0wWV+05pksOkitY0G6LE=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1747756641;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Type:Content-Transfer-Encoding:To:To:Cc:Cc:Reply-To;
+	bh=ZqO3M2O/Ab6tmQah55wUM/rusa8GvhCdTSgFUG8XpAU=;
+	b=fYU2XLcQXxBHXM4sLUR7GMBJdjRFJOih/LaX09r3lobZ1i+/9AJs5NhtoSz7ngb1
+	7QIDPXYmGgQtQRSK0qbOjvWFfapMFGSZL0Of1Y8u6AGwXCxu2g8QUZpamKcXat7g/7T
+	Db3JZWJ+eQutnu1ggBaQoHNQt0d1YWOTYRYFK+Cs=
+Received: by mx.zohomail.com with SMTPS id 174775664091859.76751643415673;
+	Tue, 20 May 2025 08:57:20 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Subject: [PATCH 0/2] Add linked list documentation, and also documentation
+ documentation
+Date: Tue, 20 May 2025 17:57:13 +0200
+Message-Id: <20250520-linked-list-docs-v1-0-db74f7449785@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAFqmLGgC/yWMywrCMBBFf6XM2sA0JGnir0gXeUx00LaaVBFK/
+ 91gV5dz4ZwNKhWmCudug0IfrrzMDfpTB/Hm5ysJTo1BotSoJYoHz3dKbeoq0hKriKSD0yYpgxK
+ a9iyU+ftPXsaDC73erbweJwRfScRlmng9d15rE5K1MjhlZe7DQB4xx4xDdiH2xmWFKloY9/0Hh
+ TUjfK4AAAA=
+X-Change-ID: 20250520-linked-list-docs-ce5b956d4602
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: kernel@collabora.com, linux-doc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+X-Mailer: b4 0.14.2
 
-On Tue, 20 May 2025 11:35:56 +0200
-Ingo Molnar <mingo@kernel.org> wrote:
+This series started out with a much more ambitious goal of documenting
+every undocumented generic kernel data structure. About 6 hours in I had
+to tell myself that maybe it's better to do this piece-meal. So here is
+the first of what will hopefully be many similar series: documenting
+linked lists.
 
-> > Ah, I think I forgot about that. I believe the exit path can also be a
-> > faultable path. All it needs is a hook to do the exit. Is there any
-> > "task work" clean up on exit? I need to take a look.  
-> 
-> Could you please not rush this facility into v6.16? It barely had any 
-> design review so far, and I'm still not entirely sure about the 
-> approach.
+It starts out with a mostly unrelated docs patch for sphinx usage,
+because I couldn't help myself.
 
-Hi Ingo,
+The main patch follows, which is to add some rudimentary documentation
+for linked lists, to test the waters on how receptive the community is
+towards this type of documentation.
 
-Note, there has been a lot of discussion on this approach, although it's
-been mostly at conferences and in meetings. At GNU Cauldron in September
-2024 (before Plumbers) Josh, Mathieu and myself discussed it in quite
-detail. I've then been hosting a monthly meeting with engineers from
-Google, Red Hat, EffiOS, Oracle, Microsoft and others (I can invite you to
-it if you would like). There's actually two meetings (one that is in a Asia
-friendly timezone and another in a European friendly timezone). The first
-patches from this went out in October, 2024:
+Should this style of documentation be seen as acceptable or even wanted,
+then I'll continue in subsequent series to expand both this document,
+and move on to other underdocumented data structures, such as
+hashtables.
 
-  https://lore.kernel.org/all/cover.1730150953.git.jpoimboe@kernel.org/
+Based against lwn/docs-next, but b4 should let you know already.
 
-There wasn't much discussion on it, although Peter did reply, and I believe
-that we did address all of his concerns.
+Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+---
+Nicolas Frattaroli (2):
+      docs: Document how to use the recommended docs theme
+      docs: document linked lists
 
-Josh then changed the approach from what we originally discussed, which was
-to just have each tracer attach a task_work to the task it wants a trace
-thinking that would be good enough, but Mathieu and I found that it doesn't
-work because even a perf event can not handle this because it would need to
-keep track of several tasks that may migrate.
+ Documentation/core-api/index.rst   |   1 +
+ Documentation/core-api/list.rst    | 390 +++++++++++++++++++++++++++++++++++++
+ Documentation/doc-guide/sphinx.rst |   3 +-
+ 3 files changed, 393 insertions(+), 1 deletion(-)
+---
+base-commit: a556bd882b9482f1b7ea00fcf07f9bc169f404c8
+change-id: 20250520-linked-list-docs-ce5b956d4602
 
-Let me state the goal of this work, as it started from a session at the
-2022 Tracing Summit in London. We needed a way to get reliable user space
-stack traces without using frame pointers. We discussed various methods,
-including using eh_frame but they all had issues. We concluded that it
-would be nice to have an ORC unwinder (technically it's called a stack
-walker), for user space.
+Best regards,
+-- 
+Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 
-Then in Nov 2022, I read about "sframes" which was exactly what we were
-looking for:
-
-   https://www.phoronix.com/news/GNU-Binutils-SFrame
-
-At FOSDEM 2023, I asked Jose Marchesi (a GCC maintainer) about sframes, and
-it just happened to be one of his employees that created it (Indu Bhagat).
-At Kernel Recipes 2023, Brendan Gregg, during his talk, asked if it would
-be great to have user space stack walking without needing to run everything
-with frame pointers. I raised my hand and asked if he had heard about
-"sframes", which he did not. I explained what it was and he was very
-interested. After that talk, Josh Poimboeuf came up to me and asked if he
-could implement this, which I agreed.
-
-One thing that is needed for sframes is that it has to be done in a
-faultable context. The sframe sections are like ORC, where it has lookup
-tables, but they live in the user space address, and because they can be
-large, they can't be locked into memory. This brings up the deferred
-unwinding aspect.
-
-At the LSFMMBPF 2023 conference, Indu and myself ran a session on sframes
-to get a better idea on how to implement this. The perf user space stack
-tracing was mentioned, where if frame pointers are not there, perf may copy
-thousands of bytes of the user space stack into the perf buffer. If there's
-a long system call, it may do this several times, and because the user
-space stack does not change while the task is in the kernel, this is
-thousands of bytes of duplicate data. I asked Jiri Olsa "why not just defer
-the stack trace and only make a single entry", and I believe he replied "we
-are thinking about it", but nothing further came about it.
-
-Now, there's a serious push to get sframes upstream, and that will take a
-few steps. These are:
-
-1) Create a new user unwind stack call that is expected to be called in
-   faultable context. If a tracer (perf, ftrace, BPF or whatever) knows
-   it's in a faultable context and wants a trace, it can simply ask for it.
-
-   It was also asked to have a user space system call that can get this
-   trace so that a function in a user space applications can see what is
-   calling it.
-
-2) Create a deferred stack unwinding infrastructure that can be used by
-   many clients (perf, ftrace, BPF or whatever) and called in any context
-   (interrupt or NMI).
-
-   As the unwind stack call needs to be in a faultable context, and it is
-   very common to want both a kernel stack trace along with a user space
-   stack trace and this can happen in an NMI, allow the kernel stack trace
-   to be executed and delay the user stack trace.
-
-   The accounting for this is not easy, as it has a many to many
-   relationship. You could have perf, ftrace and BPF all asking for a
-   delayed stack trace and they all need to be called. But each could be
-   wanting a stack trace from a different set of tasks. Keeping track of
-   which tracer gets a callback for which task is where this patch set
-   comes in. Or at least just the infrastructure part.
-
-3) Add sframes.
-
-   The final part is to get this working with sframes. Where a distro
-   builds all its applications with sframes enabled and then perf, ftrace,
-   BPF or whatever gets access to it through this interface.
-
-There's quite a momentum of work happening today that is being built
-expecting us to get to step 3. There's no use to adding sframes to
-applications if the kernel can't read them. The only way to read them is to
-have this deferred infrastructure.
-
-We've discussed the current design quiet a bit, but until there's actual
-users starting to build on top of it, all the corner cases may not come
-out. That's why I'm suggesting if we can just get the basic infrastructure
-in this merge window, where it's not fully enabled (there are no users of
-it), we can then have several users build on top of it in the next merge
-window to see if it finds anything that breaks.
-
-As perf has the biggest user space ABI, where the delayed stack trace may
-be in a different event buffer than where the kernel stack trace occurred
-(due to migration), it's the one I'm most concern about getting this right.
-As once it is exposed to user space, it can never change. That's the one I
-do want to focus on the most. But it shouldn't delay getting the non user
-space visible aspect of the kernel side moving forward. If we find an
-issue, it can always be changed because it doesn't affect user space.
-
-I've been testing this on the ftrace side and so far, everything works
-fine. But the ftrace side has the deferred trace always in the same
-instance buffer as where it was triggered, as it doesn't depend on user
-space API for that.
-
-I've also been running this on perf and it too is working well. But I don't
-know the perf interface well enough to make sure there isn't other corner
-cases that I may be missing.
-
-For 6.16, I would just like to get the common infrastructure in the kernel
-so there's no dependency on different tracers. This patch set adds the
-changes but does not enable it yet. This way, perf, ftrace and BPF can all
-work to build on top of the changes without needing to share code.
-
-There's only two patches that touch x86 here. I have another patch series
-that removes them and implements this for ftrace, but because no
-architecture has it enabled, it's just dead code. But it would also allow
-to build on top of the infrastructure where any architecture could enable
-it. Kind of like what PREEMPT_RT did.
-
--- Steve
