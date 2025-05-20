@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E95A22DA16;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CEB322D7B8;
 	Tue, 20 May 2025 13:33:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747748003; cv=none; b=ZYVIuxUt2v09u5EUI9g3teJUtXvGpp12/XCOj552IixNGPzbWKJnTT44jOlGwj4Ul1t4+uVKCWwFj5gyfa3rTiZ4KO5Dwey5bXUD3HmqUgAPL+z1XTrkA13xzL/jvjv556dIP9wtC8MsQuyz/45PHOWGBx6Ow+JLk0SKR0CpiF8=
+	t=1747748003; cv=none; b=MTPVTDQVt/TyDdd6fIGiLj/LSSV6DihLH8OcW6iq7Q7iJgq9HwCIkkr8cAM4IrxsrQBmuyxpN38s8IRzTng9nbtg89Z6ocWIY+lKGeAP0BOmQK8yz/5AMU7/YbXnzOxxuw1Mpy8yRL5UA+/28jSkp6zS3MqYJkraCnQWeEpjuXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747748003; c=relaxed/simple;
-	bh=fEgVgn8ddmuG94XtJzRW64JNMVcuU+HToQCr20S4KM0=;
+	bh=zrs4cXgnOa//B/Txk8KhjILwuaI02i9DB4tFgWygRDc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tt5DvPSUwM4FC/UgIwwC0Z2vsGBRSdgOdCrPajMvjP6SSo+KRFzynAHM9z1CMyj3SkdTcCwvzLYptF1UxV2FgB3kgubMGjcWUtHR+w73bXKg9eI3HlxeTpr/tIxCNcIPXiHJkzH7xfpjbLy88cCb7EmGRTLVEI6UFp0xSG0oAFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kKWJAaAo; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=EMNMQVwC1IYsWE3egEt4oUtCt6KTqXYGkZUkZtyWfXyRCjhJEJ9EpVavG1phwGpi6/7DTmyc9wqLMicI/uZpWsqtd76t0jWYcbnJYt4z+UwVToghm/2MaOiWjOftPZDdA9hA2Iq/l0h+6EofbHu3+AfMjjhQHcdeEsvz25lNQ74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S7zU8NdS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kKWJAaAo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7F2CC4CEE9;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S7zU8NdS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAB29C4CEEA;
 	Tue, 20 May 2025 13:33:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1747748002;
-	bh=fEgVgn8ddmuG94XtJzRW64JNMVcuU+HToQCr20S4KM0=;
+	bh=zrs4cXgnOa//B/Txk8KhjILwuaI02i9DB4tFgWygRDc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kKWJAaAob7o5E4J6lRb1qIeP3I9g6Sq+eN3TEt43Kl8XAFUWF5BHA7P/3/7ooKv6V
-	 7uIv2FbP3lta2DxTC0Nn9w8MU4fPUTmuCQKITHBGp8QyNCYxsrIMMY84q3AHPjKAPq
-	 0wJxHffs/5Q6PWAqpFWNJhiPbWzhc6JDlwKQFd4+1nWiKsmKEmHG3qvlyJ1TQSvHsw
-	 J/SVzrFqf92+Yz6UYgU/7Clk7YsLTOV2e7XvSgD7kKa9QDIKVhpQZM6qZCSBmTxdLJ
-	 XreisQrHCDZpSeebobtLnYrEb1oJjGgHI+luXNc2w42DYxezlwt2vdlo11AxAr+6d5
-	 EOAFFdIIeK7Fg==
+	b=S7zU8NdSHh7bpbvbSe1rLW6x0DMBphFO1+oYUOSiWeTy7oP13/x++uOh1rP1oPFX4
+	 ue6lrG9ZFFVG6Mm1EbYqkl2YJPuE18oX9r/VSb1nOefneTjoXgHB5H3ext+CPbye/1
+	 szPay7N0A+NXbrVnwITw9dGDbUVuhomVQrHHHLWVMmfv3YjKHP2PRRAx8rNa7tUC2s
+	 66dr3H2c6ecOaupLFFADUki4NM8XNArLIU3MzN3FYb/ttg7zq0Lk5Ud5J7Zrq7qgEU
+	 SBTJav/CvhqSrjBLZ8R/EVXhVFk0THHp3T1A9QnD8HaLT16qHFgG/CDTfQUqPAd5a1
+	 4WaPVG/GkDuCQ==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
 	(envelope-from <mchehab@kernel.org>)
-	id 1uHN5r-00000006n8U-1bhS;
+	id 1uHN5r-00000006n8O-1Qvx;
 	Tue, 20 May 2025 15:33:19 +0200
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: "Jonathan Corbet" <corbet@lwn.net>
@@ -41,9 +41,9 @@ Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	linux-doc@vger.kernel.org,
 	linux-kbuild@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] MAINTAINERS: update linux-doc entry to cover new Python scripts
-Date: Tue, 20 May 2025 15:33:09 +0200
-Message-ID: <8eb4f06214e1eadc8aff43d7264814bf0264c80d.1747747695.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 2/4] scripts: kernel-doc: prevent a KeyError when checking output
+Date: Tue, 20 May 2025 15:33:07 +0200
+Message-ID: <d97e86c7176f671405b4c15d75cb951349022a23.1747747695.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1747747695.git.mchehab+huawei@kernel.org>
 References: <cover.1747747695.git.mchehab+huawei@kernel.org>
@@ -56,30 +56,31 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
 
-Changes to ABI and kernel-doc need to be c/c linux-doc. Update
-the maintainer's entry to cover those files.
+If a file sent to KernelFiles.msg() method doesn't exist, instead
+of producing a KeyError, output an error message.
 
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Closes: https://lore.kernel.org/linux-doc/cover.1747719873.git.mchehab+huawei@kernel.org/T/#ma43ae9d8d0995b535cf5099e5381dace0410de04
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- MAINTAINERS | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ scripts/lib/kdoc/kdoc_files.py | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 20e07e61a148..a668808769b6 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7173,7 +7173,10 @@ T:	git git://git.lwn.net/linux.git docs-next
- F:	Documentation/
- F:	scripts/check-variable-fonts.sh
- F:	scripts/documentation-file-ref-check
--F:	scripts/kernel-doc
-+F:	scripts/get_abi.py
-+F:	scripts/kernel-doc*
-+F	scripts/lib/abi/*
-+F	scripts/lib/kdoc/*
- F:	scripts/sphinx-pre-install
- X:	Documentation/ABI/
- X:	Documentation/admin-guide/media/
+diff --git a/scripts/lib/kdoc/kdoc_files.py b/scripts/lib/kdoc/kdoc_files.py
+index 630aa5ca6460..9be4a64df71d 100644
+--- a/scripts/lib/kdoc/kdoc_files.py
++++ b/scripts/lib/kdoc/kdoc_files.py
+@@ -271,6 +271,10 @@ class KernelFiles():
+                                       no_doc_sections)
+ 
+             msg = ""
++            if fname not in self.results:
++                self.config.log.warning("No kernel-doc for file %s", fname)
++                continue
++
+             for name, arg in self.results[fname]:
+                 m = self.out_msg(fname, name, arg)
+ 
 -- 
 2.49.0
 
