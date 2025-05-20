@@ -1,45 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4EE5BE49;
-	Tue, 20 May 2025 05:28:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 081A8175D53;
+	Tue, 20 May 2025 05:29:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747718881; cv=none; b=hMEdqgIKc6IFzRifm+Bbi7MX8SFO8y270wm9z+poNWvMi1N5W0dDXSnSQ8q7OiuLw1IRWHrEASwQdOrhxmRlrVsdZfNYJ35QF/zevLlIQ7AgdTBDD+ad/4M+AJER44CUU/mr7XG/6RNT7Mths9wstJSykbIKRxj1wTwtJrB/v8s=
+	t=1747718949; cv=none; b=sOidvqAGhXTODn2aUbjgfcjPN6mOTAE8Erh2CcfDynnz8jCMNBf7URzUoT5oA5uua2rbJobDlyT+/OE9ypyoCt6AUuVCs7De2HyouIUusFjDINZ7YrPC5tAnZ2vKuE8uo1m3zO04xvgwH3Pl5+IeruWGM2twG3aKvppdTBioCfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747718881; c=relaxed/simple;
-	bh=fjU7eHOpFbWozBHG2+7uIYALD+UBvajS8eM7dABToY8=;
+	s=arc-20240116; t=1747718949; c=relaxed/simple;
+	bh=ePQ6s4K8dGdIepmFCS7bzEU+DEOE0/3j/G4bEoHY0A0=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eg4SF/djx9QRsCI94peLAhNccgt3qA4rNxzls8O4oqhD0zDBl9YiTvYgRnsw88QErygEqfIzc+VMPdHrCBqp8dLuQ2Mc4QPOPjS365xtOUH6IZeAe+oU823LJP5/6zC6nR3X1RrpUdvWcyzUbGKJEsAfqoO/C5d0DmZzJpqF444=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h7CFES0W; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=CDOksPc/htsezRnj88r9gn4DLIn6PfAasbjtrlxRKBkYUmLb27thrjVNPbWhVDUKnNxtCAHGpoRByVa2LSYunU6S8via6kOSAxkc5Sn847hDNsIHsdMxp0cNK2x7Q2A/Z4hP4rJ0t7IwYUj+X3EVOFY4xWSh1J/Qi7ry4m2tgLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hDo/1xiw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h7CFES0W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D622DC4CEE9;
-	Tue, 20 May 2025 05:27:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hDo/1xiw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36716C4CEEA;
+	Tue, 20 May 2025 05:29:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747718881;
-	bh=fjU7eHOpFbWozBHG2+7uIYALD+UBvajS8eM7dABToY8=;
+	s=k20201202; t=1747718948;
+	bh=ePQ6s4K8dGdIepmFCS7bzEU+DEOE0/3j/G4bEoHY0A0=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=h7CFES0WmupxLXhItzZrDa7TKBZ9wMvyb804EDGIEvXXzLcnTrx+BGHIHIJHM/oxF
-	 f98xMjRCSKxzJdYlX+MSsxob9iric7D2l95DQZYY3XLeC5ELb/1fg8ad9cxFL3Rdm6
-	 OaSjqTRZGs48l9pilQUVNqacQBEvpO+Xdrb+770cGQLmjU2WNQ1kdxRbF//BsQlitV
-	 Y+GCjb9ATCYUkXsiwBa6iXmU5dBMcwJ3mMXD2Fpqb3mz3dEx2H+aeIGt4pYqhKC2sG
-	 xxR5CMR3+dHfNotrenCq7NEU4IlCs1UbaOf5r7XrXym1/r03BZ102O0QQpbClRrZJp
-	 wigJDH/ZmZdIg==
-Date: Tue, 20 May 2025 07:27:55 +0200
+	b=hDo/1xiwCZpplTPQL+q27PN3DsBRG5jJBCklVF3uIm43RVmiT/WKsJ25cfOPPnloJ
+	 uRpTjFj/CnFlOGSpZBulFxzVuiag9ar1NKfIbFTOfJPeyKaP/I07sfRXKKtNBwteAO
+	 MMydgVs9hwSx/M1pePGVRZaax7zrq9rgIenyXPKPGjK7hbjiuFMBP919E0/J7JzCX6
+	 a42ErGa6MPDPDJXeai+ENmkLOMO9q3eJ9x9civn+ZGMyJnNJnmvOaD1FOws7PtjHTH
+	 mQE1+FUJDHu1ziaQF2kvJVEj059QLgSG0zdu0zK2TdU6CNj9c8pQ6JEZSpoZfRN12h
+	 v2LMoGs0UJobA==
+Date: Tue, 20 May 2025 07:29:04 +0200
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Akira Yokosawa <akiyks@gmail.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Masahiro
- Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
- Nicolas Schier <nicolas.schier@linux.dev>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Stephen Rothwell
- <sfr@canb.auug.org.au>, Randy Dunlap <rdunlap@infradead.org>,
- linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Makefile: Get back to kernel-doc.pl as KERNELDOC
- default
-Message-ID: <20250520072755.2d72cf5c@foz.lan>
-In-Reply-To: <d9d0ff79-a243-456e-a7ed-eaca69d2eca7@gmail.com>
-References: <d9d0ff79-a243-456e-a7ed-eaca69d2eca7@gmail.com>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+ linux-doc@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: Re: [PATCH] Docs: doc-guide: update sphinx.rst Sphinx version
+ number
+Message-ID: <20250520072904.638da473@foz.lan>
+In-Reply-To: <20250519220413.2914890-1-rdunlap@infradead.org>
+References: <20250519220413.2914890-1-rdunlap@infradead.org>
 X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -50,90 +46,36 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Em Tue, 20 May 2025 09:08:51 +0900
-Akira Yokosawa <akiyks@gmail.com> escreveu:
+Em Mon, 19 May 2025 15:04:13 -0700
+Randy Dunlap <rdunlap@infradead.org> escreveu:
 
-> Recent conversion of kernel-doc into python has resulted in a couple of
-> glitches in "make htmldocs" [1, 2, 3].
+> Update the minimum version number to match both
+> Documentation/Changes and Documentation/conf.py.
 > 
-> This is because the python version has not gone through extensive tests
-> such as fault-injection of erroneous kernel-doc comments and/or
-> kernel-doc:: directives.
-> 
-> Python kernel-doc as it is does not meet the usual expectation of
-> backward-compatibility with its perl predecessor.
-> 
-> Get back to the perl version as KENRELDOC default for now.
-> 
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Link: https://lore.kernel.org/20250508182504.418552ef@canb.auug.org.au/ [1]
-> Link: https://lore.kernel.org/20250516193436.09bdf8cc@canb.auug.org.au/ [2]
-> Link: https://lore.kernel.org/20250516200350.63be46cd@canb.auug.org.au/ [3]
-> Signed-off-by: Akira Yokosawa <akiyks@gmail.com>
-> Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: linux-doc@vger.kernel.org
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+
+Reviewed-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+
 > ---
-> This one-liner is just a workaround, hence no Fixes: or Closes: tags.
-> 
-> Jon, it looks like we are running out of time for the upcoming merge window.
-> Let's take another development cycle for stabilizing kernel-doc in python.
-> 
-> Additional notes on glitches reported so far.
-> 
-> * Depending on the version of Sphinx, the crashing message can be useless
->   for finding out what is going on [1, 2].
->   With up-to-date Sphinx, the message even suggests a *bug* somewhere in
->   Sphinx and includes a traceback to be reported as an issue at upstream
->   Sphinx [4].
-> 
-> * The python version of kernel-doc fails to produce warnings on innocuous
->   issues under Sphinx runs [3], which have been available with the perl
->   version.
-> 
-> [4]: https://lore.kernel.org/879b49f5-7350-48e8-a84e-2c580a5b0ca8@gmail.com/
-> ---
->  Makefile | 2 +-
+>  Documentation/doc-guide/sphinx.rst |    2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/Makefile b/Makefile
-> index 2a05988740a9..c2c9f5af4986 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -460,7 +460,7 @@ HOSTPKG_CONFIG	= pkg-config
+> --- linux-next-20250516.orig/Documentation/doc-guide/sphinx.rst
+> +++ linux-next-20250516/Documentation/doc-guide/sphinx.rst
+> @@ -28,7 +28,7 @@ Sphinx Install
+>  ==============
 >  
->  # the KERNELDOC macro needs to be exported, as scripts/Makefile.build
->  # has a logic to call it
-> -KERNELDOC       = $(srctree)/scripts/kernel-doc.py
-> +KERNELDOC       = $(srctree)/scripts/kernel-doc.pl
+>  The ReST markups currently used by the Documentation/ files are meant to be
+> -built with ``Sphinx`` version 2.4.4 or higher.
+> +built with ``Sphinx`` version 3.4.3 or higher.
+>  
+>  There's a script that checks for the Sphinx requirements. Please see
+>  :ref:`sphinx-pre-install` for further details.
 
-If I understood well, the only issue is with regards to Sphinx
-hiding logs. If that's the case, better to apply instead just
-the single-line change to make kerneldoc.py extension to not
-use Sphinx own logger filters.
+
 
 Thanks,
 Mauro
-
----
-
-[PATCH] docs: kerneldoc.py: don't use Sphinx logger
-
-Unfortunately, currently Sphinx logger is suppressing too much, not
-allowing warnings to be displayed. Disable it.
-
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-
-diff --git a/Documentation/sphinx/kerneldoc.py b/Documentation/sphinx/kerneldoc.py
-index b713a2c4a615..687121300291 100644
---- a/Documentation/sphinx/kerneldoc.py
-+++ b/Documentation/sphinx/kerneldoc.py
-@@ -311,7 +311,7 @@ def setup_kfiles(app):
-     if kerneldoc_bin and kerneldoc_bin.endswith("kernel-doc.py"):
-         print("Using Python kernel-doc")
-         out_style = RestFormat()
--        kfiles = KernelFiles(out_style=out_style, logger=logger)
-+        kfiles = KernelFiles(out_style=out_style)
-     else:
-         print(f"Using {kerneldoc_bin}")
- 
-
-
