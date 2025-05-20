@@ -1,73 +1,152 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 395E622DA1A
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 13:52:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D82A622DA1A;
+	Tue, 20 May 2025 13:52:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747749124; cv=none; b=T9TeKRJhAD4zHd1cMappK8IrT/c23R48DvuII+U/p6QYdMlFts3++w6ctNLInQsQ3OyB8S8kW+9k3xXvpsx9IS8ZUmclw0PrRae5K7DOWpbJxuvwjbfFxutMUbuKr5qkbisNatPIfP8VtIkiDFoDn+xD7Ny5xMkEzTLiZD8FO2o=
+	t=1747749137; cv=none; b=ZG+HgOBche/LC7rbHRtEHGS46cOwF6XHK6WpFXERdaAD8GG9ViGYXxoA56Ebg5us1j0DWvzMG4JDRIUwFIwd9tAgoPSlNzJbwHPp3SYaY3JQFbcDo4k56ooPMbCcJv06M+XyKCBAq/gtx8a6/RP6DX+kc5YbpAzTvH84iGCv9n0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747749124; c=relaxed/simple;
-	bh=r5Djv1BMm/NJYEqrWQsF2UyWFuB6VtBbyAZAqbkmm6U=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=nLF+vISzxpe8ZXTDnJ4mErs+dgrxs5olneDusPOXq2ugJLPodbbVibDb4NI2Av388G9fFkmk8ldwsUqZpUjOlhvwfQfItirbmtb0bYquIFPe52+chSs6BfpalQ8Ko7HIwqA+4BWZTTuhFaMlpVSue+r4fwXO1JqcRdWnJ7u6vz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-85b5878a66cso1597765439f.2
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 06:52:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747749122; x=1748353922;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GkmFJKQjp+Baizaid45MG0LVOZ9asvIc4j0mZ0nRIjE=;
-        b=u/CYycZNG1xm/D+/bXFocTGMn+v3Klsp5y7KSHfbt8RV6UWDLZdcoCC6I40FSG0rWh
-         JM/5pdf95ZFFd3y22Gt1DDrMq6MSPGfouMkClGGq4IFsPuoQUk5AoYqh9hn9BtWmS4ls
-         S1a8jV8OdqkT2gIYnqOHlO0VvjpKK0lsEuNKFqO8nDIsOVsMGEQCd8loYewcVchPrVNO
-         xJtJ50fxJTi1bA5K/a9qkqnayIGnz0mHYmPbv4kRaoMM8dS4ZKyt4Gbnj17bsTJkeO6i
-         dMjBErGgR5DFUGaxOCBYQvRJ3OLrGa7+JFbaMISc9q1zbwahRdSmpZVXQOKREkbOGgTA
-         oR5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWJ6hjvFHXUXRpxKtDGJEN+7FXDLcz3WCQ9WU8UY2RoiNRwFFHlH59PxhPgw5UILlVB+EeFf3sTA4rwcnU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxH/Y/FUf3O63WYwW+aKQ2vBfEVuidFw+0EalxvjGav+npz54D5
-	nINqgf1op9FE29PahVnDKA/tpjye594eFH30ui+IArYe+KieqJI+8euF/Zy3+oHYje2TnQ9Gd0/
-	wxNhQdOHe04JAoVYmLNRx0/awnK9lU0rwQJhaqPKKf9RioDZDE3jL63QdbI8=
-X-Google-Smtp-Source: AGHT+IHDVoExMPPTf8+/uYHyEEBogZYfzCylxUscwJbFiEg5s5xvKXFmCTCIzaiiq0MDnkrNZIyNcFbhdhne6uKePiu8EL6ze7pN
+	s=arc-20240116; t=1747749137; c=relaxed/simple;
+	bh=ZDjBBWFIQA5TZm7fBQOM+u77NmrDVlIPEV0NfNuXhVE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hvZB4kSmo7zXT5x/a0tt/NpkQMkjOcfczYbZxliJghvkkQ+U3ekuW/rJRRmbNfaSOt365bun96j59vs8mNoibYVUqXDsoBYQTzagMLC7Gq8WhNklfL2ZVd6pKODsvEyHCXT2kMCMyTSJRtBscGFPMIQtCq0weI12qb+jDQuAwMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=X0dJXIpk; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="X0dJXIpk"
+Received: from pendragon.ideasonboard.com (179.218-130-109.adsl-dyn.isp.belgacom.be [109.130.218.179])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0B09774C;
+	Tue, 20 May 2025 15:51:51 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1747749112;
+	bh=ZDjBBWFIQA5TZm7fBQOM+u77NmrDVlIPEV0NfNuXhVE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=X0dJXIpksjlZMPkvvk3a6hltmrXJXIaHgucfduWdCeBtOUPdv7HRJfdJCzfcC561y
+	 fHgGsks5LQJfsve1YpejJhm/lc8hcPxXvVUNxWJKkO6UZnno8OJflJAiHbb8QUTzvh
+	 3v+T+5s0jBmydcrScOAblH1sXeVTyvpMVKVMrR5A=
+Date: Tue, 20 May 2025 15:52:06 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Biju Das <biju.das.jz@bp.renesas.com>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v5 01/12] dt-bindings: display: renesas,rzg2l-du: Add
+ support for RZ/V2H(P) SoC
+Message-ID: <20250520135206.GA13321@pendragon.ideasonboard.com>
+References: <20250512182330.238259-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250512182330.238259-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:3887:b0:864:48d3:a5cf with SMTP id
- ca18e2360f4ac-86a23257b58mr724013439f.12.1747749122238; Tue, 20 May 2025
- 06:52:02 -0700 (PDT)
-Date: Tue, 20 May 2025 06:52:02 -0700
-In-Reply-To: <da4976d9-7fe6-4f7b-a7ab-4d37db668cb6@yandex.ru>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <682c8902.050a0220.ade60.09bd.GAE@google.com>
-Subject: Re: [syzbot] [bluetooth?] KASAN: slab-use-after-free Read in
- mgmt_remove_adv_monitor_complete (3)
-From: syzbot <syzbot+feb0dc579bbe30a13190@syzkaller.appspotmail.com>
-To: dmantipov@yandex.ru, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250512182330.238259-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Hello,
+Hi Prabhakar,
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+Thank you for the patch.
 
-Reported-by: syzbot+feb0dc579bbe30a13190@syzkaller.appspotmail.com
-Tested-by: syzbot+feb0dc579bbe30a13190@syzkaller.appspotmail.com
+On Mon, May 12, 2025 at 07:23:19PM +0100, Prabhakar wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> 
+> The DU block on the RZ/V2H(P) SoC is identical to the one found on the
+> RZ/G2L SoC. However, it only supports the DSI interface, whereas the
+> RZ/G2L supports both DSI and DPI interfaces.
+> 
+> Due to this difference, a SoC-specific compatible string
+> 'renesas,r9a09g057-du' is added for the RZ/V2H(P) SoC.
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
 
-Tested on:
+Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 
-commit:         a5806cd5 Linux 6.15-rc7
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=16bede70580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9fd1c9848687d742
-dashboard link: https://syzkaller.appspot.com/bug?extid=feb0dc579bbe30a13190
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=15af7f68580000
+> ---
+> v4->v5:
+> - Added reviewed tag from Biju
+> 
+> v3->v4:
+> - No changes
+> 
+> v2->v3:
+> - Collected reviewed tag from Krzysztof
+> 
+> v1->v2:
+> - Kept the sort order for schema validation
+> - Added  `port@1: false` for RZ/V2H(P) SoC
+> ---
+>  .../bindings/display/renesas,rzg2l-du.yaml    | 23 ++++++++++++++++++-
+>  1 file changed, 22 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/renesas,rzg2l-du.yaml b/Documentation/devicetree/bindings/display/renesas,rzg2l-du.yaml
+> index 95e3d5e74b87..1e32d14b6edb 100644
+> --- a/Documentation/devicetree/bindings/display/renesas,rzg2l-du.yaml
+> +++ b/Documentation/devicetree/bindings/display/renesas,rzg2l-du.yaml
+> @@ -20,6 +20,7 @@ properties:
+>        - enum:
+>            - renesas,r9a07g043u-du # RZ/G2UL
+>            - renesas,r9a07g044-du # RZ/G2{L,LC}
+> +          - renesas,r9a09g057-du # RZ/V2H(P)
+>        - items:
+>            - enum:
+>                - renesas,r9a07g054-du    # RZ/V2L
+> @@ -101,7 +102,12 @@ allOf:
+>  
+>            required:
+>              - port@0
+> -    else:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: renesas,r9a07g044-du
+> +    then:
+>        properties:
+>          ports:
+>            properties:
+> @@ -113,6 +119,21 @@ allOf:
+>            required:
+>              - port@0
+>              - port@1
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: renesas,r9a09g057-du
+> +    then:
+> +      properties:
+> +        ports:
+> +          properties:
+> +            port@0:
+> +              description: DSI
+> +            port@1: false
+> +
+> +          required:
+> +            - port@0
+>  
+>  examples:
+>    # RZ/G2L DU
 
-Note: testing is done by a robot and is best-effort only.
+-- 
+Regards,
+
+Laurent Pinchart
