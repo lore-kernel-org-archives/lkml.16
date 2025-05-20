@@ -1,102 +1,94 @@
-Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C740182BC
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 20:41:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4C3A182BC;
+	Tue, 20 May 2025 20:43:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747773704; cv=none; b=TzjKNCCP+AGt4q7OCKM1F0XfjKOsbXbTV8Xldcdrph7Zrp2Gwphki751XB+VPC1VauQgs2Bo3lr23kYSNlgMFDQ5Hkhn9DqG7ijGuTb1hLunfeau1GlKAuYLxakhFHTVaIpg0Os+CcbnEgG/wex5PQSZFoBqxqWs1cyUtCxpg14=
+	t=1747773816; cv=none; b=WHvC1HdsYMkzVZ4mK3tvCwH/75u3B1HROa/ThfrOx/Uu+FfCECzZxh0E5Mn0mTYS76P/KowCKdHQ1FLIoC05SXVDR0U2V2l2bgnEj2cmwyLtwaL9VeTZ1IeEKXIU5mscjjcctKClqttgGDBWUVxkOqqt2Z2ZL8MPFMoN3U7CY5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747773704; c=relaxed/simple;
-	bh=VzPfPITKsCCZORcaUDoRc+xMv8uwmJxaFZiVt/qBSs4=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=UHpr29hfHGeq0XGqJ9LWTmMhw81KPeDypTOq6kPxeyPzAO0AYR39ZCVvisznjUwiqKNvCa0kjzOVyO/HB7j/GupoIGzMLqql8OsGa+bzu7mvlYYdwzxkrtwhGloOmW3lrAP+Ipfp0QjDubo72VtA/g/Aic8AbuY13dPLAY0iFXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=tp9No4vu; arc=none smtp.client-ip=209.85.166.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1747773816; c=relaxed/simple;
+	bh=QKRukmbuEwwuWzb3b6AjUBX0NaLEkAeTqogcvnWc3BU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gWL79n5j5SGUUECY1+HOzIhpZQpsS5dUPHGNcEu1AK+NEMEg7FIerVTZljyeFgmCQdh8e45wqbrGfNfwv/w5nNxg6UKUR18L9iNa1XVJ88d/mpHhNIptVqRRT04/h+Ptzr5LMLXEJTvhlisW3oyeWpGl4RvewzpodhrSo/0LKvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fYQmjl10; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="tp9No4vu"
-Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-85e15dc8035so181431239f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 13:41:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1747773701; x=1748378501; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=JNdOlqypBIUNESah+Ulojz60abI1sJD+ZTLBoSec4Eg=;
-        b=tp9No4vuTlup8N/Dv1MLkpOTsID5zyQ22hjEuvtTTRNIYu8Ap4r+6HmaGUiGybhvPa
-         fUPgXxPyxBJvSzsNlf/nj6Kjov9d9oMukWMU9TlSWgkiISpJGF9GVLm4zeuLj4kJ4EAp
-         K7r8JfaVcx56gw5OOQd64rFfZLKNs8YwP8kfnxkisiKyHtp3xZepdK/sf9CI5cLfERBK
-         S8l/SKKKyPVtJgwA2X02QibFU41wyDzV+FmCyGgSiR3BauwaPB11PDK/X7y8sXRL9W0g
-         WxLbCy5ox9DqUMod4H88lc5OfCmZYoRiKAyUd3gWLqWeJwQOOHiznp1y0pFLjwd6Mo8c
-         +M8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747773701; x=1748378501;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JNdOlqypBIUNESah+Ulojz60abI1sJD+ZTLBoSec4Eg=;
-        b=XzVEiAFcQR9aoj1PkliYzormKi/vFiYjoy2s4XhlSbBRP+TqRXucbbwi3ymG9PSDSI
-         evWKSJSKzOzzZFVAcmMMKo0cVt+jAaD4az3ptksdXGS9t0wzKPpwCnqZW/Auc0Jdy/vE
-         hSwr1KzlFFXmOYvmslFEBjxcpM1K1UYC2TFGbzQVaqj/8NsUMNYjc4TDUXDGXwt0Ag24
-         r0f+NBHME5M4qV1hPsPZgRFdDlgP90dLJ6Oq5JoyOvYr/Tn3ksGEZGtI3bVc9mdGkd9o
-         vTqQUnJpdGtKSyHGGjm8MbvWW+wAfbPa9Gt5wzlUUTqYO0hjhUoFUmqTwAADb+M04yq+
-         eKGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVT0i89EP5OJks4EkG8N8vRqhh0sEr7Qx6WdPLHl7PgYJr8OFN/OgBmSAy6MRM4r8xbMFnem1m+QAx7MMo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0BuS0ldXJ9+oW55kaL5j+cuqlfZrcVWbvyEU29QeCEYeS2wIR
-	iaw7PFi5bNDY/GvGKfFt81tjzJ781Qu3mZyBNz7XSYtkD53LF4F2Af9AWEwkht5IrNw/9XE9qhs
-	6nbty
-X-Gm-Gg: ASbGnctKRWiWdvilrPMLSFoErw7lXjidkBrxasXME2OLcnFAj1aaZ+FlA7HsBiUt3ut
-	5JraCJbBVNTsv7cJRzOCF0+HyfYxQBjPVdQLnsLU3whSOB9Vn20jzuhMedA3N3yfUkCRrxgt1sx
-	/M9YgsNV4pXhOfB0um5P2Ik6333qNn1I0/F9gNY9kQRdGAJl6TV44lLKIV3bOsDv6JDsvNVWaof
-	RingUJS3MWd2lGr+RODdhBUJOG86MeOJkPmV8KjT6WRRlqgF631Bp9e0sohP4hjxsg5wHcOXvs1
-	3s+fA1MVnWUWUetKHcvtbwPPQtZ2A6054ptQ8mE0mISNHlBpbiYxwHbk4g==
-X-Google-Smtp-Source: AGHT+IGoX2ZD+tZNrNlsPsiYxQXrZz/2hD1on2CL5k4phd3uJg7N08v8UBDuao5gQzQtOAWD1KMuhA==
-X-Received: by 2002:a05:6602:4a08:b0:86a:84f:7a45 with SMTP id ca18e2360f4ac-86a24c131a4mr2529701739f.8.1747773701247;
-        Tue, 20 May 2025 13:41:41 -0700 (PDT)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4fbcc4ea5d9sm2362573173.141.2025.05.20.13.41.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 May 2025 13:41:40 -0700 (PDT)
-Message-ID: <36ccb46d-5041-47ce-b419-f49ccaeece9b@kernel.dk>
-Date: Tue, 20 May 2025 14:41:40 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fYQmjl10"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0E35C4CEE9;
+	Tue, 20 May 2025 20:43:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747773816;
+	bh=QKRukmbuEwwuWzb3b6AjUBX0NaLEkAeTqogcvnWc3BU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fYQmjl10u8d+o/qHPxX+Z4MEajH6bpHF2ohSk/NMgfeyJ5W5YUMRkuFGZjq/d0jsx
+	 BaG0g/U2ABvNahgnQkduP/YtmH25pTyvP7MW/rqC0N8a5r01uuYJ0bsgP71CUbd45o
+	 dSBdU9zjTGvwXGTJqqKmGtOlW4OTSbwBVx3tsTKrhmPESN0Pr9xBKrrdf4j2o8NpJC
+	 nm4LNnLsxDAiZkg3dmhPe0NVMch4yJadifVjnodGrZuvk50Y92jkjqRGEMj0HNJqN8
+	 vsNcIC94Lfy1pUknXFU9sxrXGI95oXCzy6czSad81gv8n6YlT8qYoWlImEAE1gXGtI
+	 1R1MsPbymYs0Q==
+Date: Tue, 20 May 2025 15:43:34 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>,
+	Timothy Hayes <timothy.hayes@arm.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Sascha Bischoff <sascha.bischoff@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	devicetree@vger.kernel.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 01/26] dt-bindings: interrupt-controller: Add Arm GICv5
+Message-ID: <174777381319.1323810.4064448957148847478.robh@kernel.org>
+References: <20250513-gicv5-host-v4-0-b36e9b15a6c3@kernel.org>
+ <20250513-gicv5-host-v4-1-b36e9b15a6c3@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: printk NMI splat on boot
-From: Jens Axboe <axboe@kernel.dk>
-To: John Ogness <john.ogness@linutronix.de>,
- LKML <linux-kernel@vger.kernel.org>
-Cc: Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
- "senozhatsky@chromium.org" <senozhatsky@chromium.org>,
- "Paul E. McKenney" <paulmck@kernel.org>
-References: <a93e1a96-3685-41c3-8979-472b20dfca14@kernel.dk>
- <84a577t590.fsf@jogness.linutronix.de>
- <c99232fa-e861-48ec-8438-028e61d3b744@kernel.dk>
-Content-Language: en-US
-In-Reply-To: <c99232fa-e861-48ec-8438-028e61d3b744@kernel.dk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250513-gicv5-host-v4-1-b36e9b15a6c3@kernel.org>
 
-On 5/20/25 2:18 PM, Jens Axboe wrote:
->> What values are you using for CONFIG_RCU_EXP_CPU_STALL_TIMEOUT and
->> CONFIG_RCU_CPU_STALL_TIMEOUT?
+
+On Tue, 13 May 2025 19:47:54 +0200, Lorenzo Pieralisi wrote:
+> The GICv5 interrupt controller architecture is composed of:
 > 
-> CONFIG_RCU_CPU_STALL_TIMEOUT=21
-> CONFIG_RCU_EXP_CPU_STALL_TIMEOUT=2
+> - one or more Interrupt Routing Service (IRS)
+> - zero or more Interrupt Translation Service (ITS)
+> - zero or more Interrupt Wire Bridge (IWB)
+> 
+> Describe a GICv5 implementation by specifying a top level node
+> corresponding to the GICv5 system component.
+> 
+> IRS nodes are added as GICv5 system component children.
+> 
+> An ITS is associated with an IRS so ITS nodes are described
+> as IRS children - use the hierarchy explicitly in the device
+> tree to define the association.
+> 
+> IWB nodes are described as a separate schema.
+> 
+> An IWB is connected to a single ITS, the connection is made explicit
+> through the msi-parent property and therefore is not required to be
+> explicit through a parent-child relationship in the device tree.
+> 
+> Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> Cc: Conor Dooley <conor+dt@kernel.org>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>
+> Cc: Marc Zyngier <maz@kernel.org>
+> ---
+>  .../interrupt-controller/arm,gic-v5-iwb.yaml       |  78 ++++++++
+>  .../bindings/interrupt-controller/arm,gic-v5.yaml  | 202 +++++++++++++++++++++
+>  MAINTAINERS                                        |   7 +
+>  3 files changed, 287 insertions(+)
+> 
 
-This was =20 btw, guess it could cut a bit too much...
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
-Changed them to:
-
-CONFIG_RCU_CPU_STALL_TIMEOUT=100
-CONFIG_RCU_EXP_CPU_STALL_TIMEOUT=0
-
-and complaining is gone.
-
--- 
-Jens Axboe
