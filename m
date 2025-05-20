@@ -1,88 +1,129 @@
-Received: from smtpcmd10102.aruba.it (smtpcmd10102.aruba.it [62.149.156.102])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51F2C20D506
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 09:05:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.156.102
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15E0120D506;
+	Tue, 20 May 2025 09:05:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747731910; cv=none; b=GxsHrQdH8XFnYJFflM+trpX2C393+q+BmISVftNH01srVggUWNuWqWA9//NWRaDtA7kv2aN5DvkTlsAuBdzx4ee4GiBq6aNOvHOPWEKS2021HDOJBvtYJpkFZwCKIjHwj8+fptJNUZH0ODvjndbHvlXWSPzIqVC8r0Id08WbYIs=
+	t=1747731916; cv=none; b=OajXh+LqmIEQ5/1etqx8rY/kB6BLf1PT1vuxa1K0flH9ozcU6d4/jcon3gttNfUy4zu33vD0jrlAcp7Li8/hlcY5mxXRQZRboUrc0sJY/Im76Au4Dl9OXpOkKPfAiqvTc2XlXtQF/QpDvXTSF3TgS5rpEHI0gLKKaKu1IanNBbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747731910; c=relaxed/simple;
-	bh=yBbdj7NlwMTxQ67l5t0qFWn7th72f332I3gFq49d3kk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BKKh5q3gjb7Wf/1xkwgVQ5pMjyIKGUV/7lIPfwMhoZ1DOl+ru1/G1nanJAxpjGIfoZfsdNvpRYvIDYqrU9QjrVhATQD3SVZYkV3REllssD/3Z3FP09xX6k72c1eQ6J2duvLUqjh+rjp73rLaOP7kr7ALtQlx9x6cW1dGqwKW3XI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com; spf=pass smtp.mailfrom=enneenne.com; dkim=temperror (0-bit key) header.d=aruba.it header.i=@aruba.it header.b=RHnop4Z/; arc=none smtp.client-ip=62.149.156.102
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=enneenne.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=aruba.it header.i=@aruba.it header.b="RHnop4Z/"
-Received: from [192.168.1.58] ([79.0.204.227])
-	by Aruba SMTP with ESMTPSA
-	id HIrDueuvb1ugbHIrEu6UMu; Tue, 20 May 2025 11:01:56 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
-	t=1747731716; bh=yBbdj7NlwMTxQ67l5t0qFWn7th72f332I3gFq49d3kk=;
-	h=Date:MIME-Version:Subject:To:From:Content-Type;
-	b=RHnop4Z/13NUHHIaqHKFs5/V45U20yPHUv+wcekwlnZ+lngOjSR4jv9q32CXilpXc
-	 c4lpW69sNC5NOJweIRIC4PDlw7ZBZwkxlTMxlkV6sPMeyS5E2Vt++MA+D4sPi/fyoT
-	 oj2tyyL2gMptGuEzbPEpqU5HfCHx6/nydQ+rdQRTjpqLi2YD9NmVvBE4p8s5aeK46w
-	 GRNxFq8kEvRWzMl8E6lYgbmJtID0PSgvM3Walx+489OfTaIkgqRhooEVkL41wlsTJg
-	 qO/7esMlW3aE9PPW7b3j6HgVDC/hFzNS0fPckwPl6G34iC+NrnLY44tgkjuO3cKUlL
-	 8fsbyZM+rVETg==
-Message-ID: <c682e4da-ae75-4e93-bbf1-a68f31bd15de@enneenne.com>
-Date: Tue, 20 May 2025 11:01:55 +0200
+	s=arc-20240116; t=1747731916; c=relaxed/simple;
+	bh=dslqiiVnq1SOhLyyjEybB4KGFPRMGpZlVqR4W9BJhlU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ed49JsdZRIiCucoq2llaUvkET1++Z6CMewj0HMgTQG5pTBosmdUr4hX6dmtJ+JSXMW1xUVrHOXZT/kMfONI6U0WcjdZaPUpgwLZ2mx7aRZAl5/f8Xr5QTH56e62CegVYbISnaA1+mf9URWU+WoUtcHSm0ACrg+sH+c3KrvPVTyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-b26f7d2c1f1so3563103a12.0;
+        Tue, 20 May 2025 02:05:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747731914; x=1748336714;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vPLD9IYUR0Y+5sJprRW/vuKK7RVWsVDEYp/o2Jak7lM=;
+        b=FOTzOxc3SxtcuTzDJV0DkP3wQ8oA61TzUEXDF4VuYhJlVxry1uSvSaEf+hcu75kUDl
+         86++PdH9a4AbhWnkiKIVWppsWBbsHbPewQchC6ZXEZI7pTDjZoiEGA36fDIweWq+Q+zp
+         Y07JIpeaRThLXEZqhb667qzigWKhL41HxB0yJaAicrxcNeuqIIo/GLPAO9pXpihYFBxq
+         XHCnnNpUCjilzDDji4lgbmMlcxblL+ge3b26M3fY3Z5vWIMGoZxwspkm4Fku8MSOH6tl
+         L0lQaiKZqZ4VGBgt0t5xndklbKk9z6QgOc2X5T+sV4wj+7dh2pP+0FCkJLfWbMjwlrFp
+         VvVg==
+X-Forwarded-Encrypted: i=1; AJvYcCWD0YrxoY9+WxmXz0fpjlusXrM478gE7ZnW8t6umuXPDaEVtDyPIERwn0EWAx4ZBkrmADsf+AjGoAHfC8w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yye3IPVPfmqlS1Hh6qH/b8C06r0WLjHmuGLikl5Rldc6Ml+wEKY
+	gU//TmozYwjKq67ZWuKxOAkEfxTFDFjUMsuOfPFUqRCX+BgQVw3KN8z3
+X-Gm-Gg: ASbGncvBcmZtfdc+XAt7vTDmt8ahcqY3jx06xqJFfGgB537E/ngtPEnChaJIBNTVZTB
+	2wU7l/pfuuVZfLVJwta7/e0X4ZaUR1qf74Nbg6rbmfpxJYosfQIaMoAbhSOJz7JuVBj0mbti2nJ
+	RVGxstRLKKRq2HoR/cTca+zMbpGMwJ+zvJR/+RlVHdCddRD91aQ8rbUVGw+11Pw8lnufkbEOhxy
+	oPsGmh52Krdgzon35NaQuonasQHMALqQeH80Tje6yQoKvj1sHM3/t77AdBAsXEHWltqPEyN14Ba
+	g9JTa2SioO0d91nHCwiyu8mgsX94VejLk45VU1lbRCbgtl/PkyfalEoR6FbfbEDc5BOcItssU1n
+	OwMBhjYwKiA==
+X-Google-Smtp-Source: AGHT+IF9SMS8koL5Y6RdygoaqjEc6b1s5T1eXmJSkB0oyvgy8zufe4IJynlSet98+P+t12+8WtOqgQ==
+X-Received: by 2002:a17:902:f551:b0:22e:627f:ebc9 with SMTP id d9443c01a7336-231de3514e9mr164934925ad.3.1747731914152;
+        Tue, 20 May 2025 02:05:14 -0700 (PDT)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-b26eaf8cc59sm7547070a12.40.2025.05.20.02.05.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 02:05:13 -0700 (PDT)
+Date: Tue, 20 May 2025 18:05:11 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>,
+	Karolina Stolarek <karolina.stolarek@oracle.com>,
+	Martin Petersen <martin.petersen@oracle.com>,
+	Ben Fuller <ben.fuller@oracle.com>,
+	Drew Walton <drewwalton@microsoft.com>,
+	Anil Agrawal <anilagrawal@meta.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Sargun Dhillon <sargun@meta.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Kai-Heng Feng <kaihengf@nvidia.com>,
+	Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
+	Terry Bowman <terry.bowman@amd.com>,
+	Shiju Jose <shiju.jose@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v6 00/16] Rate limit AER logs
+Message-ID: <20250520090511.GC261485@rocinante>
+References: <20250519213603.1257897-1-helgaas@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [V1 2/2] drivers soc: add support for ST stm32mp13xx family
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Eric Fourmont <eric.fourmont-ext@st.com>,
- Yann GAUTIER <yann.gautier@foss.st.com>, linux-kernel@vger.kernel.org
-References: <20250519130859.3389704-1-giometti@enneenne.com>
- <20250519130859.3389704-3-giometti@enneenne.com>
- <4566f4c1-f4d0-4f32-8fcd-bb3057b5d1fa@kernel.org>
-From: Rodolfo Giometti <giometti@enneenne.com>
-In-Reply-To: <4566f4c1-f4d0-4f32-8fcd-bb3057b5d1fa@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4xfJEjQksEF2gr1H+kBdUbxxgnkrI7vfEOspMWR+zMH4bcN/GomTOL9m5YhNhmULAAHo01QUSDpomTsicddghDGtLGxp2WePiPIRXKZquNVP5Sz7CY1OY6
- 7onfNyX02udqJq7Jkyc9mSa2FQo7O/A4sg6dfaACmA3ZWRguE8wmFqG1JMgB0CgJwc+IufEqos231NdANrqJ1cw+y+pRY5mQfuZnWKe2x72P9Bri+xWZXXTH
- iEbWOP1YokbZMxVgmnEAQMHsLP2H/OxwqETIPkU85Xs7N/BuLAzlhoivY8O6z7hc9lUfecxpfUscw5OBhHWLP1njczo1EGu6sxAexIZ3Kvzv5//wtPno/8aD
- 9pZUWSLcIwiTMNCUpzRds9LmRbONIA==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250519213603.1257897-1-helgaas@kernel.org>
 
-On 19/05/25 20:34, Krzysztof Kozlowski wrote:
-> On 19/05/2025 15:08, Rodolfo Giometti wrote:
+Hello,
 
-[snip]
-
->> +
->> +static int __init stm32mp13_soc_get_idc(u32 *idc)
->> +{
->> +	struct device_node *np;
->> +	void __iomem *regs;
->> +	static const struct of_device_id devids[] = {
->> +		{ .compatible = "st,stm32mp157-syscfg" },
+> This work is mostly due to Jon Pan-Doh and Karolina Stolarek.  I rebased
+> this to v6.15-rc1, factored out some of the trace and statistics updates,
+> and added some minor cleanups.
 > 
-> No, don't add compatibles for other devices into the driver functions.
-> Use standard methods for binding, like every driver does.
+> Proposal
+> ========
+> 
+> When using native AER, spammy devices can flood kernel logs with AER errors
+> and slow/stall execution. Add per-device per-error-severity ratelimits for
+> more robust error logging. Allow userspace to configure ratelimits via
+> sysfs knobs.
+> 
+> Motivation
+> ==========
+> 
+> Inconsistent PCIe error handling, exacerbated at datacenter scale (myriad
+> of devices), affects repairabilitiy flows for fleet operators.
+> 
+> Exposing PCIe errors/debug info in-band for a userspace daemon (e.g.
+> rasdaemon) to collect/pass on to repairability services will allow for more
+> predictable repair flows and decrease machine downtime.
+> 
+> Background
+> ==========
+> 
+> AER error spam has been observed many times, both publicly (e.g. [1], [2],
+> [3]) and privately. While it usually occurs with correctable errors, it can
+> happen with uncorrectable errors (e.g. during new HW bringup).
+> 
+> There have been previous attempts to add ratelimits to AER logs ([4], [5]).
+> The most recent attempt[5] has many similarities with the proposed
+> approach.
 
-I need to access a region assigned to another driver very early on boot, and 
-this is the only way I've found to solve the problem. Can you please give me an 
-example of these standard binding methods?
+I have been testing this series locally with and without faults triggered
+using the AER error injection facility.  No issues thus far.
 
-Thanks in advance,
+And, as such...
 
-Rodolfo
+Tested-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
 
--- 
-GNU/Linux Solutions                  e-mail: giometti@enneenne.com
-Linux Device Driver                          giometti@linux.it
-Embedded Systems                     phone:  +39 349 2432127
-UNIX programming
+Thank you!
 
+	Krzysztof
