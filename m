@@ -1,92 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B2518BEC;
-	Tue, 20 May 2025 14:27:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35F7D24A074
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 14:27:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747751229; cv=none; b=fGLb5g2Xn+97TDyYBtVXW2+jV155Z3d5CS44PQsIQ2LO2g7HK/HGvBcjvXqf4t6AiQFWNPt9mYHLLrUUQaRTuMsw/xQ//Dq5g3Rf9hkjGrgwy7TzLU2J09zEdF1V9sdtZfwqssjTRC+WA2WG6v76TN3Cxhr+4q6T4g8xAoT38s0=
+	t=1747751231; cv=none; b=ivLlh+DO+Xs44WyjztkZUo9/AT496v1pn5W7c7j5KlWzjqdzg4+b2MnvXrRpoX5OuMiGCO8BfBriKTPQFp981mXVu5/zB2D5fXlmFr8T45wFKHEE1m9m6RZfaSn76OrEFtcDcn3s97DzLps60Jl1WrlFDiAeT1GCvxWPMtkJLiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747751229; c=relaxed/simple;
-	bh=oCLBYeP1sLVu5Ws29+9UfDbRGJI3ciUnpG/nTA1olYM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=rrYvgsGQy6U/J8XH0+7AwJoV+aFuUfJ/b+cn3hbaYiHoAlbthntI5dOnPpSv/lCsSe2a36RexTEATYJXKK+mDt0ILRdVHh4p4CtkWT+gNhZersvpMHyBVfTJb82lE90AfncWgo80/H12MWxnedhufaKLRiZraaW5R5BgrRLglKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KRrcIo3O; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747751231; c=relaxed/simple;
+	bh=QY76H3aN4a/GJqZDNBay2k7eHvSo+DkI5zzBCIEhHAs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NVin3w/tHYsAoqW28nzdgXe8F7F7v0guD80iRtdB00PBNvdTOoh/5wkWLZCu1+mdbXqjuQTss9R3RCahyZ6BymF6J+lnPOWdrq3TOVWbWcMLbBm3y70rZMwwquH7Qpv4YM+R3//L9hKDoK9/FX5rztlyfxuIMkiqiURvIwJXciw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=oaqEGIw/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KRrcIo3O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7789C4CEE9;
-	Tue, 20 May 2025 14:27:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747751229;
-	bh=oCLBYeP1sLVu5Ws29+9UfDbRGJI3ciUnpG/nTA1olYM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=KRrcIo3ONGaX7Pi2FUjzUMa9ejaXw+b9Vm9fA9E3drThkSwBDBErRwftIqGCKAhYl
-	 bgvtywYaGpxfZmkvw1WGrNyTx5+9cqmvDol7+KmjgP6gYZ5Y0jtXzaDt+lj0PjVRLq
-	 EhGYy0wxjqBs2GooRe6qM+uu2Y0X+5SJGczXyS0LIOv6RpJ1MOJE0XmDdR0XDCrx6T
-	 gmlU+1+zpu6h4u32w077LBi3dm342l6zDXzZQC9Zkr0gnH5zeDii9wXcwdbBZ/cB/p
-	 JGV7/hDyqx5nG9Yg+Os07MjY52JZ6Hk85v7bL3fQXtVc5++fHv7e9lly/iSdoAgJK4
-	 YkIlmYSK7kkHg==
-Date: Tue, 20 May 2025 09:27:07 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>,
-	Karolina Stolarek <karolina.stolarek@oracle.com>,
-	Martin Petersen <martin.petersen@oracle.com>,
-	Ben Fuller <ben.fuller@oracle.com>,
-	Drew Walton <drewwalton@microsoft.com>,
-	Anil Agrawal <anilagrawal@meta.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Sargun Dhillon <sargun@meta.com>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Kai-Heng Feng <kaihengf@nvidia.com>,
-	Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
-	Terry Bowman <terry.bowman@amd.com>,
-	Shiju Jose <shiju.jose@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	LKML <linux-kernel@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v6 07/16] PCI/AER: Initialize aer_err_info before using it
-Message-ID: <20250520142707.GA1297901@bhelgaas>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="oaqEGIw/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62776C4CEEA;
+	Tue, 20 May 2025 14:27:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1747751230;
+	bh=QY76H3aN4a/GJqZDNBay2k7eHvSo+DkI5zzBCIEhHAs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oaqEGIw/NJOh6x430/5jTKkndZ0q+3cvLSTM6YzlCvIC2dcBmCYyZgaIUbHC27Q7w
+	 EfhyBetwdY3JbhQW/CHGkwFGLqOAX4AoGSX6EKsNZ+dUCpANf14ZNAvMQw/5X7eSp7
+	 oyjWeO7n+w+t03IMVyqQnOV6bjnLU1b64fyn8PHY=
+Date: Tue, 20 May 2025 16:00:05 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Juergen Gross <jgross@suse.com>
+Cc: cve@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: CVE-2022-49933: KVM: VMX: Reset eVMCS controls in VP assist page
+ during hardware disabling
+Message-ID: <2025052038-reheat-upstroke-8d44@gregkh>
+References: <2025050200-CVE-2022-49933-2147@gregkh>
+ <b876424f-3364-4348-a20a-5ff271806452@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0d429918-b42c-5714-ef40-ce2a9e129a6b@linux.intel.com>
+In-Reply-To: <b876424f-3364-4348-a20a-5ff271806452@suse.com>
 
-On Tue, May 20, 2025 at 01:39:06PM +0300, Ilpo Järvinen wrote:
-> On Mon, 19 May 2025, Bjorn Helgaas wrote:
+On Sat, May 17, 2025 at 07:26:58AM +0200, Juergen Gross wrote:
+> On 02.05.25 17:54, Greg Kroah-Hartman wrote:
+> > From: Greg Kroah-Hartman <gregkh@kernel.org>
+> > 
+> > Description
+> > ===========
+> > 
+> > In the Linux kernel, the following vulnerability has been resolved:
+> > 
+> > KVM: VMX: Reset eVMCS controls in VP assist page during hardware disabling
+> > 
+> > Reset the eVMCS controls in the per-CPU VP assist page during hardware
+> > disabling instead of waiting until kvm-intel's module exit.  The controls
+> > are activated if and only if KVM creates a VM, i.e. don't need to be
+> > reset if hardware is never enabled.
+> > 
+> > Doing the reset during hardware disabling will naturally fix a potential
+> > NULL pointer deref bug once KVM disables CPU hotplug while enabling and
+> > disabling hardware (which is necessary to fix a variety of bugs).  If the
+> > kernel is running as the root partition, the VP assist page is unmapped
+> > during CPU hot unplug, and so KVM's clearing of the eVMCS controls needs
+> > to occur with CPU hot(un)plug disabled, otherwise KVM could attempt to
+> > write to a CPU's VP assist page after it's unmapped.
+> > 
+> > The Linux kernel CVE team has assigned CVE-2022-49933 to this issue.
 > 
-> > From: Bjorn Helgaas <bhelgaas@google.com>
-> > 
-> > Previously the struct aer_err_info "e_info" was allocated on the stack
-> > without being initialized, so it contained junk except for the fields we
-> > explicitly set later.
-> > 
-> > Initialize "e_info" at declaration with a designated initializer list,
-> > which initializes the other members to zero.
-> > 
-> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> > ---
-> >  drivers/pci/pcie/aer.c | 37 ++++++++++++++++---------------------
-> >  1 file changed, 16 insertions(+), 21 deletions(-)
-> > 
-> > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> > index 95a4cab1d517..40f003eca1c5 100644
-> > --- a/drivers/pci/pcie/aer.c
-> > +++ b/drivers/pci/pcie/aer.c
-> > @@ -1281,7 +1281,7 @@ static void aer_isr_one_error(struct aer_rpc *rpc,
-> >  		struct aer_err_source *e_src)
+> Is this really a security issue?
 > 
-> Unrelated to this change, these would fit on a single line.
+> I don't see how an unprivileged user could trigger the mentioned NULL deref,
+> as it requires CPU hotunplug (can't be triggered by user) to happen in parallel
+> with unloading the kvm module (can't be triggered by user either).
 
-Thanks, fixed!
+Now rejected, thanks for the review!  This came in from the big "GSD
+import" which is why it is for an old issue like this.
+
+thanks again,
+
+greg k-h
