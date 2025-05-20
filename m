@@ -1,132 +1,164 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0E1E1C860B
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 17:31:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3ED2182BC;
+	Tue, 20 May 2025 17:34:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747762286; cv=none; b=dCjFu2DYCrqTHlUcJWDhMJAqA8FLSHeucmb6Dw5jagvol8A8JZvc9Dl6wFqle/OojtNHvcn/AfZ4LKUB/1wouP+8fTfbxKzmxrptmuJfAx6KrfvAI/sq6c9D97pjeh/HF/J7n4DeMWt0awCvFfvMLpX5AvfkR3sI8B9GS7cX3ys=
+	t=1747762484; cv=none; b=o6X6oHQSGQrCJiGkS0TOkhPARVif1gYANsybglsVqI9LsDQgK8RvMk5s6yWwLvp/rcaSUZa8GrNIQHVlEQyx0Gdy1t88LsOJwHlKiQ+AS7/2GO70Fhg82Ep8/qf9jzWe7qwXrqoCfdcgGaXKVXRwnpt3HX94sbGqPlkEjc0gdm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747762286; c=relaxed/simple;
-	bh=aKyld7h5OwA2Tp0yE8iRRpriwlPf1t10b9g3LHZckzk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Up0zlFRkn5HhV8ZWlV4S3lNEtN5nYGW8THQ4D1daP4I99mhOh3rGDpfXJ/xKJ2oBJjVyhx+pIQypnTpC0yIGxf6Gn/73zDI934nY3BsxnBsQUtmvtPq35PQaXSyAzJh29ePOUVWZLYvxsHj1Gz7p6bDuMcCf5CuhKkwqxiAojlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nR15hpZc; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747762484; c=relaxed/simple;
+	bh=4Oa/oAs7QoUno9lRk6Vmd+pQV2yim2hp+jaTVoota5M=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=V/S/RPDo8k11XgdcJOP+H/2fCrlfXtNBFUear8qTle/3gFSrx0BrY3eNMeuvT3Z26PBXTQZmYK4Ov1aj7wq95G2bCIgXLYsYOluV8P5HiRJc1gAT7TMoi9kja5hxbpRYtCx3nYp/DhTHDim+xxRR+PuNI14odj/kYQ+ogW11RsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jfZwfM+E; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nR15hpZc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747762285; x=1779298285;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=aKyld7h5OwA2Tp0yE8iRRpriwlPf1t10b9g3LHZckzk=;
-  b=nR15hpZcSLQGv/WxwjL8KnYDrbEoUZo4nBp3D6VCOgofrb9l6dn0oUOM
-   4FFu5Ql9WFLXxnelNaty1TbeY76R/2lMEg6WrjXJXhD5U+PiGUKsNXSgx
-   WThdIiZEYQYb2TeB8rxOjjuS4sM6nL++YWBXXMbT2EugSLDaaev8E1moW
-   DWBYOeP4DlfGORuSJsaKWVqtbgXRygx4b92Bs27aqa4QS4Y5d4Hf1HYUa
-   mAV3W2Ahla/ScPq2BmKVn0q7XGw0w2CohdgXmXtdH0N5W/J8g6My8fdeb
-   TP0sEIBZKFatIie3yObNLS0h5LSN+egSPyqjAOukfLK7DRaECIr/m0tik
-   w==;
-X-CSE-ConnectionGUID: KAa+p01gR9KudZom2UXiYA==
-X-CSE-MsgGUID: ENAJody0ToibG/oGTZ0nVQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="49583719"
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="49583719"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 10:31:25 -0700
-X-CSE-ConnectionGUID: N2HUp1NUTKeNrYa5H8G9PA==
-X-CSE-MsgGUID: cUQ/AInPT/yQWzIWv/8eew==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
-   d="scan'208";a="143754323"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 10:31:19 -0700
-Date: Tue, 20 May 2025 20:31:16 +0300
-From: Raag Jadav <raag.jadav@intel.com>
-To: Alexander Usyskin <alexander.usyskin@intel.com>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	Karthik Poosa <karthik.poosa@intel.com>,
-	Reuven Abliyev <reuven.abliyev@intel.com>,
-	Oren Weil <oren.jer.weil@intel.com>, linux-mtd@lists.infradead.org,
-	intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	Tomas Winkler <tomasw@gmail.com>,
-	Vitaly Lubart <lubvital@gmail.com>
-Subject: Re: [PATCH v10 03/10] mtd: intel-dg: implement access functions
-Message-ID: <aCy8ZJq4eDMDQukx@black.fi.intel.com>
-References: <20250515133345.2805031-1-alexander.usyskin@intel.com>
- <20250515133345.2805031-4-alexander.usyskin@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jfZwfM+E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44EA6C4CEE9;
+	Tue, 20 May 2025 17:34:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747762482;
+	bh=4Oa/oAs7QoUno9lRk6Vmd+pQV2yim2hp+jaTVoota5M=;
+	h=From:To:Cc:Subject:Date:From;
+	b=jfZwfM+EtFOzz6o1W4wA7JkhydcX5QsZE1LXPTdGom5UBgQnzBSdDzZTcCARDp8f5
+	 Vq26/sS3c4HPDrJW6+6kkbZDzFZhuOmlInC6lqq8/bYBQcWViH5yWm4poeTKpbDicy
+	 rUvfEea0TRcffAQe6CJoYFMPCAv0/lCPTcNjzKGciGGowwesF9XUYAYgglPMhbzx60
+	 J2HO8WoHVeHV0WKwMzXrEJBc02I6yOcuVyWuVQoOC0L7LDXP7MQTSSi4JTUDReJdXH
+	 QH9WVJlsX/2KBGUX20C5U/3opbDlh1VbVFfLsN07z9XjnJ5BcU3nti2XyrTONnvi39
+	 Lvpjl7IOfAQfA==
+From: Kees Cook <kees@kernel.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Kees Cook <kees@kernel.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Simon Horman <horms@kernel.org>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Dmitry Bogdanov <d.bogdanov@yadro.com>,
+	Maurizio Lombardi <mlombard@redhat.com>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Eric Biggers <ebiggers@google.com>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	linux-kernel@vger.kernel.org,
+	linux-nvme@lists.infradead.org,
+	linux-scsi@vger.kernel.org,
+	target-devel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH net-next v3] net: core: Convert inet_addr_is_any() to sockaddr_storage
+Date: Tue, 20 May 2025 10:34:38 -0700
+Message-Id: <20250520173437.make.907-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250515133345.2805031-4-alexander.usyskin@intel.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3953; i=kees@kernel.org; h=from:subject:message-id; bh=4Oa/oAs7QoUno9lRk6Vmd+pQV2yim2hp+jaTVoota5M=; b=owGbwMvMwCVmps19z/KJym7G02pJDBk6e/UWxP4+wt+4oHy5kvm27bypzpd7FIJW7GG36yz5E vBVNOFTRykLgxgXg6yYIkuQnXuci8fb9nD3uYowc1iZQIYwcHEKwER4PzH8d/R79zXsVMzHwoNr 3S37XUPk1lmqbEzrdW2ICU1iWZ62g+GviKK1l+2mkz+NPMzufv0UoFPKn/pPtmjqu1vVTzf83nq QBQA=
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 15, 2025 at 04:33:38PM +0300, Alexander Usyskin wrote:
-> Implement read(), erase() and write() functions.
+All the callers of inet_addr_is_any() have a sockaddr_storage-backed
+sockaddr. Avoid casts and switch prototype to the actual object being
+used.
 
-...
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Simon Horman <horms@kernel.org>
+Signed-off-by: Kees Cook <kees@kernel.org>
+---
+ include/linux/inet.h                | 2 +-
+ drivers/nvme/target/rdma.c          | 2 +-
+ drivers/nvme/target/tcp.c           | 2 +-
+ drivers/target/iscsi/iscsi_target.c | 2 +-
+ net/core/utils.c                    | 8 ++++----
+ 5 files changed, 8 insertions(+), 8 deletions(-)
 
-> +__maybe_unused
-> +static unsigned int idg_nvm_get_region(const struct intel_dg_nvm *nvm, loff_t from)
-> +{
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < nvm->nregions; i++) {
-> +		if ((nvm->regions[i].offset + nvm->regions[i].size - 1) > from &&
+diff --git a/include/linux/inet.h b/include/linux/inet.h
+index bd8276e96e60..9158772f3559 100644
+--- a/include/linux/inet.h
++++ b/include/linux/inet.h
+@@ -55,6 +55,6 @@ extern int in6_pton(const char *src, int srclen, u8 *dst, int delim, const char
+ 
+ extern int inet_pton_with_scope(struct net *net, unsigned short af,
+ 		const char *src, const char *port, struct sockaddr_storage *addr);
+-extern bool inet_addr_is_any(struct sockaddr *addr);
++bool inet_addr_is_any(struct sockaddr_storage *addr);
+ 
+ #endif	/* _LINUX_INET_H */
+diff --git a/drivers/nvme/target/rdma.c b/drivers/nvme/target/rdma.c
+index 2a4536ef6184..79a5aad2e9d0 100644
+--- a/drivers/nvme/target/rdma.c
++++ b/drivers/nvme/target/rdma.c
+@@ -1999,7 +1999,7 @@ static void nvmet_rdma_disc_port_addr(struct nvmet_req *req,
+ 	struct nvmet_rdma_port *port = nport->priv;
+ 	struct rdma_cm_id *cm_id = port->cm_id;
+ 
+-	if (inet_addr_is_any((struct sockaddr *)&cm_id->route.addr.src_addr)) {
++	if (inet_addr_is_any(&cm_id->route.addr.src_addr)) {
+ 		struct nvmet_rdma_rsp *rsp =
+ 			container_of(req, struct nvmet_rdma_rsp, req);
+ 		struct rdma_cm_id *req_cm_id = rsp->queue->cm_id;
+diff --git a/drivers/nvme/target/tcp.c b/drivers/nvme/target/tcp.c
+index 12a5cb8641ca..5cd1cf74f8ff 100644
+--- a/drivers/nvme/target/tcp.c
++++ b/drivers/nvme/target/tcp.c
+@@ -2194,7 +2194,7 @@ static void nvmet_tcp_disc_port_addr(struct nvmet_req *req,
+ {
+ 	struct nvmet_tcp_port *port = nport->priv;
+ 
+-	if (inet_addr_is_any((struct sockaddr *)&port->addr)) {
++	if (inet_addr_is_any(&port->addr)) {
+ 		struct nvmet_tcp_cmd *cmd =
+ 			container_of(req, struct nvmet_tcp_cmd, req);
+ 		struct nvmet_tcp_queue *queue = cmd->queue;
+diff --git a/drivers/target/iscsi/iscsi_target.c b/drivers/target/iscsi/iscsi_target.c
+index 620ba6e0ab07..a2dde08c8a62 100644
+--- a/drivers/target/iscsi/iscsi_target.c
++++ b/drivers/target/iscsi/iscsi_target.c
+@@ -3419,7 +3419,7 @@ iscsit_build_sendtargets_response(struct iscsit_cmd *cmd,
+ 					}
+ 				}
+ 
+-				if (inet_addr_is_any((struct sockaddr *)&np->np_sockaddr))
++				if (inet_addr_is_any(&np->np_sockaddr))
+ 					sockaddr = &conn->local_sockaddr;
+ 				else
+ 					sockaddr = &np->np_sockaddr;
+diff --git a/net/core/utils.c b/net/core/utils.c
+index 27f4cffaae05..e47feeaa5a49 100644
+--- a/net/core/utils.c
++++ b/net/core/utils.c
+@@ -399,9 +399,9 @@ int inet_pton_with_scope(struct net *net, __kernel_sa_family_t af,
+ }
+ EXPORT_SYMBOL(inet_pton_with_scope);
+ 
+-bool inet_addr_is_any(struct sockaddr *addr)
++bool inet_addr_is_any(struct sockaddr_storage *addr)
+ {
+-	if (addr->sa_family == AF_INET6) {
++	if (addr->ss_family == AF_INET6) {
+ 		struct sockaddr_in6 *in6 = (struct sockaddr_in6 *)addr;
+ 		const struct sockaddr_in6 in6_any =
+ 			{ .sin6_addr = IN6ADDR_ANY_INIT };
+@@ -409,13 +409,13 @@ bool inet_addr_is_any(struct sockaddr *addr)
+ 		if (!memcmp(in6->sin6_addr.s6_addr,
+ 			    in6_any.sin6_addr.s6_addr, 16))
+ 			return true;
+-	} else if (addr->sa_family == AF_INET) {
++	} else if (addr->ss_family == AF_INET) {
+ 		struct sockaddr_in *in = (struct sockaddr_in *)addr;
+ 
+ 		if (in->sin_addr.s_addr == htonl(INADDR_ANY))
+ 			return true;
+ 	} else {
+-		pr_warn("unexpected address family %u\n", addr->sa_family);
++		pr_warn("unexpected address family %u\n", addr->ss_family);
+ 	}
+ 
+ 	return false;
+-- 
+2.34.1
 
-Since it's already off by one, I'm wondering if this should be >= ?
-
-> +		    nvm->regions[i].offset <= from &&
-> +		    nvm->regions[i].size != 0)
-> +			break;
-> +	}
-> +
-> +	return i;
-> +}
-
-...
-
-> +__maybe_unused
-> +static ssize_t
-> +idg_erase(struct intel_dg_nvm *nvm, u8 region, loff_t from, u64 len, u64 *fail_addr)
-> +{
-> +	u64 i;
-> +	const u32 block = 0x10;
-> +	void __iomem *base = nvm->base;
-
-Reverse xmas order (along with all other places).
-
-> +	for (i = 0; i < len; i += SZ_4K) {
-> +		iowrite32(from + i, base + NVM_ADDRESS_REG);
-> +		iowrite32(region << 24 | block, base + NVM_ERASE_REG);
-> +		/* Since the writes are via sguint
-
-sguint?
-
-> +		 * we cannot do back to back erases.
-> +		 */
-> +		msleep(50);
-> +	}
-> +	return len;
-> +}
-
-Raag
