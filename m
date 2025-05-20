@@ -1,151 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85B7124679D;
-	Tue, 20 May 2025 14:09:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDBBE246773;
+	Tue, 20 May 2025 14:09:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747750165; cv=none; b=Vi1xQ2swtZ+JpD4ATCG2MKBTyvsf+43RmyiaKSJy6nBDIDe3JQvBPz3+1pn07ORX09RNHQkmXFCygIVgglysrljCgOvceQBN0v+0QIhY5+IEyJlty5mhIr3hIU5CMTf/ieaACesZqzaw3JUIT8ZoRwuA51yYAzLob2vz3P/imqE=
+	t=1747750166; cv=none; b=i55OmnWkfCAUK1Cu2aGURpMq0nD2r8l+9tG7q6KnmFK5Nhkd/cI2RzoSGdEOuGtNcdOvLmxgQBSq/UHeLDEi1lQWXwyK37FFaTcncPVlYtb74uzwjnnO9MvZ9SwuduEFCjQ4FLXxAWtpqyA9gLgDwQ0UbckBkjptZdjzPygG1Qs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747750165; c=relaxed/simple;
-	bh=IIghX5MSySuqPkuoyaDtQ5hfAP5HdWF11/40h0E07XA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bpihdu4A46EstJJi+QfrTcgnnv20y9buaE0Bdue14ytMJKeD0M5iJzdsgd5IuQsDiiwcHsB18uw2POzkUfsfh9sMWuKncKGP9Iem8qNALAAoMjUicFzkSD4Btfh7FIsQQbUjSdesuK7AS5T4pyfcTzwEtCYHVqZC0Zf0h6OJnmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Emg2fYdA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747750166; c=relaxed/simple;
+	bh=e8K31LOWlnlXXttOAQXevqkJDPrYDiCgd1D5Tfw4d9s=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=lcNlO2GHZ1Wzgbul/suQp3LjP0Peec4mxfPzT5IeaxJ4vWHH4iRG9+QXo9QoHHVFTOAP5PDXwqbAcK9hKYleWYf4l/983y/u3uukNnuzGXrp/LPZoIl54yFv6RF0jeVZIRqhoTMD13uZO4O3si99QMdr84Bkxqf/hgDBmdKl3Qk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T2TLDPNZ; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Emg2fYdA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E40E5C4CEEB;
-	Tue, 20 May 2025 14:09:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747750165;
-	bh=IIghX5MSySuqPkuoyaDtQ5hfAP5HdWF11/40h0E07XA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Emg2fYdAX7WudObzwHbBQJUnBz8cQ9i2pQeNTpUMJrvPV3su//gnZ4JU4RkBCHeoP
-	 J96OujqU7gxwdh15yazmNc2pwifddsPxfKk7Ih69x//H/bVGEypJt5ZcOpszOja+J1
-	 WnGdmOxPdmucTdoxmHcLc58pB73J84F+Bi0ypaTcha4xnjFHyhmCOnanCW9Uj572V2
-	 gG+YVJ4vOxI+aUcCaqR7+YGo0G8NDZmBpShrpIwDwhi69aNbWisdAosBPtzoS3As8i
-	 qX1ZewJ2lcQM+r8sri8CXyG2Q/htSki4yeqnmMS5ayg1O7c4XRB3DqEps/muRD7hIs
-	 OPKz/KeLpeVBw==
-Message-ID: <f0ae042a-7c38-4e9d-9664-157afd861c3c@kernel.org>
-Date: Tue, 20 May 2025 16:09:21 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T2TLDPNZ"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a374f727dbso1414796f8f.0;
+        Tue, 20 May 2025 07:09:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747750163; x=1748354963; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7kq9ZmrH0FhY6lpwpF+dSwBW4okcgAAitfUaBL1Vu3c=;
+        b=T2TLDPNZR0MOdm7idcQlM4qDhN64SkFJGVe+uAz0VAcBOTTydLHYaagsPReMWl3rTQ
+         VlLsYl3VO1sT5KpFZ0QHcfL3cXc9adY3FYdilItAK4/UMyhUx3VqQPUElzP0aaZkpz2x
+         1ybHKkK25hTrnlQfP1DJbyjeuMZ2Z2PQueXQj8IFjyKDPjEbaqgwNfmelPP+MFzZAgd1
+         xvnraZrAwnJfFF6Ltju0GFpAtnGFvcaynvgB6u+Q7H4HXDbwseb1rO4M+eI+d2CYndQU
+         It+Sg1pKIzgNog1Oo2hTteNd5dCePQLAj4CF3ev5TjVgttWt+BHf5sT+3/POHLdtzmIl
+         d3Nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747750163; x=1748354963;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=7kq9ZmrH0FhY6lpwpF+dSwBW4okcgAAitfUaBL1Vu3c=;
+        b=q1PxaAKUwY1bRD/zTDZvRoK0NKtt6AnGWkxajA7fiemzkj9Jh3f9h/M/8wPh4vm8Ck
+         mtDs+cvZIFpo+JGKATpUin2AaNuhT2elwdB86hE9WhWTSB6EkhVLyaTF5q9N2aREwx0o
+         ITNFRRwO7FhhCp7qcMNmERhodOkPOppFhN2N5pPEn/VZI83wEGK/o4wTagJKgc5uBynf
+         acpjOmKd6ZCCBV+OFtC6uR4XkhajeilP4CoAWLrmgvgicJzFPt70v00SF85kuKZOqvLI
+         VHQ6mHHhs45E6WJSWCa7gc9a3Ojo/GoeAPcUx5tLuMVXxjfaT3hov1uKSvNwH/NADf2F
+         nACw==
+X-Forwarded-Encrypted: i=1; AJvYcCUbCzhinIz7gbWvSE5MxfezKGIPnqaDWe1tjQMgulZp90saMm2WyphajXqKvG7mup+t7nBRfAWKvdU=@vger.kernel.org, AJvYcCWgj3Fjq0AtG1G3n/xZ8XOBWtirv7GYNFhwUdOAQb98Rg9XAxD5+6l1LmEseKyayLyDgZWM0C1bpp3C5ya2@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLx65t/XjCnoxyLnlfuSp1tnauLfdatCfIy1oHwNHe5YCtojxu
+	rkEvm3HIBo75rY0M387/AlqEmppUIFxTGgTDlLRbeX7dbqVVJWeTeF3/
+X-Gm-Gg: ASbGncv8TjgkqKmXySgpU5L8K49I0j5A7edmbmmWUgcs3eHE5D/vPTqynKqZGxTFO1w
+	j7mwAreqIsLEZshJJ7kQ3RocMWpcY6RN+hB+07AVL6LY6WmHT0yH8RQMlznzpqAjU1cmhH3stTf
+	PwM2cHQJU1FXf6Ni4Oj0YvWromIsuCQZPu70RCc68rHEndD24IgK1P3kIq4+sqx3qkIFG7RJ1EW
+	ssAvSoIsmPlmtQd08V0Y6gkYg66wIYdiXJGzUICchbqYt24J4OvSA/y1BHuRBOM7yA4ksmCAoR3
+	9yTV7uATVLa8c4XXWq8gQKqPNlitW6pOF8FOyGjb4gVvyu/9Ow==
+X-Google-Smtp-Source: AGHT+IG3xLD2kDqL20EVTJM5jSjsZFRlXQ3owNEBgPAao9TO7E7PoOUeC5QcqWf/zcYa6HONXQ5vZg==
+X-Received: by 2002:a05:6000:2212:b0:3a0:b9a4:e516 with SMTP id ffacd0b85a97d-3a35fe677b0mr14229265f8f.17.1747750162776;
+        Tue, 20 May 2025 07:09:22 -0700 (PDT)
+Received: from [10.5.0.2] ([185.128.9.85])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a369140048sm12017977f8f.57.2025.05.20.07.09.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 07:09:22 -0700 (PDT)
+Message-ID: <8b24ec167ebef4947eb9fe122d546ea8410bc6c2.camel@gmail.com>
+Subject: Re: [PATCH 2/2] iio: adc: ad4080: extend check for data lanes num
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Antoniu Miclaus <antoniu.miclaus@analog.com>, jic23@kernel.org, 
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Tue, 20 May 2025 15:09:25 +0100
+In-Reply-To: <20250520110101.29478-2-antoniu.miclaus@analog.com>
+References: <20250520110101.29478-1-antoniu.miclaus@analog.com>
+	 <20250520110101.29478-2-antoniu.miclaus@analog.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] dt-bindings: mmc: ti-omap2420-mmc: convert text based
- binding to json schema
-To: Charan Pedumuru <charan.pedumuru@gmail.com>,
- Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Tony Lindgren <tony@atomide.com>
-Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250520-ti-omap-v3-1-aa845b301c4c@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250520-ti-omap-v3-1-aa845b301c4c@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 20/05/2025 15:12, Charan Pedumuru wrote:
-> Convert TI MMC host controller binding to YAML format.
-> Changes during Conversion:
-> - Add new properties 'dma', 'dma-names' under required.
-
-Why?
-
-> - Define two separate phandles for 'dmas' in the examples.
-> - Include appropriate header file for interrupts and use
->   it in the examples.
-
-Examples are not the binding, so you can drop last two items.
-
-> 
-> Signed-off-by: Charan Pedumuru <charan.pedumuru@gmail.com>
+On Tue, 2025-05-20 at 14:01 +0300, Antoniu Miclaus wrote:
+> Extend the check for st->num_lanes to ensure it is not greater
+> than 2, preventing invalid configurations.
+>=20
+> The AD4080 only supports up to 2 data lanes.
+>=20
+> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
 > ---
-> Changes in v3:
 
+Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
 
-...
-
-> +  dmas:
-> +    maxItems: 2
-> +
-> +  dma-names:
-> +    items:
-> +      - const: tx
-> +      - const: rx
-> +
-> +  ti,hwmods:
-> +    $ref: /schemas/types.yaml#/definitions/string
-> +    description:
-> +      List of hwmod names (ascii strings), that comes from the OMAP
-> +      HW documentation, attached to a device. Must contain at least
-> +      one hwmod.
-
-Description does not match the property. It is not a list and where the
-hwmod below:
-
-> +    pattern: "^msdi[0-9]+$"
-
-I see msdi - is it something different?
-
-There was no such description in original binding, so maybe you are
-changing something but anyway it should be correct.
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - dmas
-> +  - dma-names
-> +  - ti,hwmods
-Best regards,
-Krzysztof
+> =C2=A0drivers/iio/adc/ad4080.c | 2 +-
+> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/iio/adc/ad4080.c b/drivers/iio/adc/ad4080.c
+> index c36eb41d738a..6e61787ed321 100644
+> --- a/drivers/iio/adc/ad4080.c
+> +++ b/drivers/iio/adc/ad4080.c
+> @@ -516,7 +516,7 @@ static int ad4080_properties_parse(struct ad4080_stat=
+e
+> *st)
+> =C2=A0
+> =C2=A0	st->num_lanes =3D 1;
+> =C2=A0	device_property_read_u32(dev, "adi,num-lanes", &st->num_lanes);
+> -	if (!st->num_lanes)
+> +	if (!st->num_lanes || st->num_lanes > 2)
+> =C2=A0		return dev_err_probe(dev, -EINVAL,
+> =C2=A0				=C2=A0=C2=A0=C2=A0=C2=A0 "Invalid 'adi,num-lanes' value: %u",
+> =C2=A0				=C2=A0=C2=A0=C2=A0=C2=A0 st->num_lanes);
