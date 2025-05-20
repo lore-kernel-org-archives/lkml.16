@@ -1,107 +1,93 @@
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21ADD1F03D4
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 21:16:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 761F64B1E7B;
+	Tue, 20 May 2025 21:17:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747775817; cv=none; b=U8wARDNjEVUyFeDy5TT1S4a+W3rv0FBLYaUHrDV61XPntHKJPQ+JZtly3C/zW6uK8G9TFM1uLOoGBLigivnOkLrYaC40F1F412uGALrNmwKEtlzl1BIpnZISCW2uOQqB7hZ++vrSn/G/NxOobdwe56lCA804WTWpDL8Xmt1Yrrk=
+	t=1747775846; cv=none; b=haDbMB0xyr1mS995hyei/9tZB6at7pTOK1LQTFExspqfltzxYwI8izkInxGF/1r08UKC37cdSWk2woOWXbIP3Xzty9PYlAZ/3ZXZmnSmxXxKPGslxkxDYYKNBBghvCQI3Udp7UOcIbp0OxBHSDS7p55GGQEBcyBGyTYd2YDJHqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747775817; c=relaxed/simple;
-	bh=tmAXI5Vz6kKlh04iIaEoTryqP3ZZCQEc8B5PrHjzjGw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m1O/opWD+M8ZQjbz8vxThDEAVdVm41fsSC/CaC+DGhL/Gu2VSOd2izbo4wEe8GDDjdRf1sX64GZMwhLfNtTN+mZ/mTy5ZsnN/5Ts6G/REYOLui0YEyCq9Io9GSx6PARnZ+5E/y/FHaDUDax62V5/cvz54R80B+bawI5HhbUm6xw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=CC029M17; arc=none smtp.client-ip=209.85.166.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1747775846; c=relaxed/simple;
+	bh=bGOiBceGe7MObUDUlUsMayfNL7eXQnRK0q7b1w5/tnw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eh/LaxdqzJoHJdm1CzEkaoXscFjGw1gAsS1LxfElEylv+ZWka5ivnlgAIVoS/0n8BsNgAyv2KA6pCP6TwbU+aHfQnK2cQ6W1n9nwpEuMH2UhF51bIBHJKKfta0KOoD9oM6YZkFYzMklcKV54BZUI+UFFtRQCYt3b8RDRvzGGV6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tWd9rPEx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="CC029M17"
-Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-85de3e8d0adso144057239f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 14:16:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1747775814; x=1748380614; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=yGTzXh3InLODqO504vLG8maKIJQ4gfFaDVwDUD+ra6A=;
-        b=CC029M17lJB3d/9Lq4eYrwr3yYZ9lvmeASAqS8qT4bET/DaSDc8pppVKZafML2V750
-         yOuvHjb03sSxOfOMgh5U42r1o+k/LtZ5dMxqwpFzZexzIvMDTOX8e6FGnJDDSNVTvxll
-         w0pWemy2fmoPHHTjVWNi6HyBoOSqLTvepLuxw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747775814; x=1748380614;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yGTzXh3InLODqO504vLG8maKIJQ4gfFaDVwDUD+ra6A=;
-        b=nWutQW3qvQT9UW4eza7H5GUwsnnNTIAOWCC3gxoJW8kJJnM41s4PZaCq2mqiVqUrS7
-         STPuvP201uE1vlAG5AsuTlmrkn/1O8WNjM100XkdGvWu/BTjGMnC4Iwj/SsNiApUkTMN
-         PxAv34BBnyD1Giy2CL9bJtkLdlzevDVK0tw3mV2iQH1XOHZHNIG7hDgrudSjfV3YGnab
-         wpEphr2VjoX9OED+HxvzuymX1u92vwxcW7KbQgHhySuWIf0KoadjWIcBGfimec/IrR3r
-         FnHGZI5F2FISJms4p97L+OnU1cCOFTuMQNRh+rEbnh0DQmTcxLsf0/817V5sJdTGQlcc
-         uqnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUMoyKhWIOJvgPEC544I5KFESa2RsXXH3X++eWDzOEbHE8xs5QCFu1mGCpNz1yalqOWRjXM1aTceWt2z1E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYek50a+jwSbk7+zrXoSbejtWiOTNAS50APoTaRMPW1gSTuXNE
-	KpeqgOGEa9kgBa5MNlBwG2kzAov4VStzoJjxhcaHBD41UdurZjO0NU1LET7rnUvihC8=
-X-Gm-Gg: ASbGncu3QcBSxhXaRu8J8hCHesbu3PsX9+WKbhrFzWs/O25Q3wOYjDhj2v+ouRbfNXx
-	qdCb5BYdANlH2Cb+NAPJFJmjM5t4KlGGB5EckBzieDLqiHmrjw5NODkwFrlg7XaLwsxhoa300dv
-	wdertQlWsnsdCYOzMW7GtIzFRQAHeyQP6p9c+LKeyC2sILHXs6Qf/7uKWN2HRmCDGJYijtqKZsS
-	uvqEbk28HhGscSvSveU3FRRSFLroE1vjmioNKkfOhnVNTjX10EJH/25Rv7ID7Ncf1jNl4yAqNWI
-	zK2Spcin3qo0G7O/W8JIayo1feYM35sk/rfeusT/zw7C+GkIddDadq+ue2Pr+Q==
-X-Google-Smtp-Source: AGHT+IEMRyI+8zulQv0se3ozP6ij1ybvQAhG+E/hVHlSg6txJKueo5YQaKNLbqitTbAHP3RIFXXtIA==
-X-Received: by 2002:a05:6602:3944:b0:867:3670:5d49 with SMTP id ca18e2360f4ac-86a24bfbfdcmr2441929939f.7.1747775814121;
-        Tue, 20 May 2025 14:16:54 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4fbcc4eaa3csm2357278173.143.2025.05.20.14.16.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 May 2025 14:16:53 -0700 (PDT)
-Message-ID: <010b13ee-d640-4563-9215-a78c4c4015da@linuxfoundation.org>
-Date: Tue, 20 May 2025 15:16:52 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tWd9rPEx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36F25C4CEE9;
+	Tue, 20 May 2025 21:17:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747775846;
+	bh=bGOiBceGe7MObUDUlUsMayfNL7eXQnRK0q7b1w5/tnw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tWd9rPExXIpe3JnVKhVXxEFhU4DRim78oTD+tnx4aIrwcRwlr4YCUB42M8bSDOXcg
+	 5Dvl8QDft6k5Ilz6QWFoXoX6+JK0SRrUNuX3htev/4A/MMsog0ce1bwsiFomZxecXC
+	 2Wr+eYBLjWtkMMQJcUBlt4C63NVmp8fGNjIPV067rSRLx8gritZW/cpJOGLZcPaqV3
+	 oBVBX2yLL8QEMM8SCit2yXR3T93e7SqhHkhDwiBthOJ1DVWAHfrQDsYNq2JVK+kljG
+	 7LvDh8zIXGDWGUUaJmL9eeRA/RoV0PbE5IraINf5yeoMiEUgAwea5GU7xPF8bN5KUL
+	 yJK+gIzrtGf/w==
+Date: Tue, 20 May 2025 18:17:21 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: langfei@huawei.com, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	James Clark <james.clark@linaro.org>,
+	Chaitanya S Prakash <chaitanyas.prakash@arm.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Stephen Brennan <stephen.s.brennan@oracle.com>,
+	Howard Chu <howardchu95@gmail.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [PATCH v1 1/3] perf dso: Minor refactor to allow Wthread-safety
+ analysis
+Message-ID: <aCzxYS_knO4rokdi@x1>
+References: <20250519224645.1810891-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.6 000/117] 6.6.92-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20250520125803.981048184@linuxfoundation.org>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20250520125803.981048184@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250519224645.1810891-1-irogers@google.com>
 
-On 5/20/25 07:49, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.6.92 release.
-> There are 117 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 22 May 2025 12:57:37 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.92-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+On Mon, May 19, 2025 at 03:46:43PM -0700, Ian Rogers wrote:
+> The pattern:
+> ```
+> if (x) {
+>    lock(...)
+> }
+> block1;
+> if (x) {
+>    unlock(...)
+> }
+> ```
+> defeats clang's -Wthread-safety analysis where it complains of locks
+> held on one path and not another. Add helper functions for "block1"
+> then restructure as:
+> ```
+> if (x) {
+>    lock(...);
+>    block1();
+>    unlock(...);
+> } else {
+>    block1();
+> }
+> ```
 
-Compiled and booted on my test system. No dmesg regressions.
+Got the three in the tmp.perf-tools-next branch, will try and test it
+further and then push it out to perf-tools-next.
 
-Tested-by: Shuah Khan <skhan@linuxfoundation.org>
+Thanks,
 
-thanks,
--- Shuah
+- Arnalod
