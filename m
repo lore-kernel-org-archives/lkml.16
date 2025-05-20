@@ -1,143 +1,127 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41C8524E4C4;
-	Tue, 20 May 2025 18:28:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32091280014;
+	Tue, 20 May 2025 18:28:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747765689; cv=none; b=GTX+y92OVWjwwqKxVFsmZ7dHtvHEibbpvCY6O9aYYeFTIY7NwHvPn8rOBrC3XKIYYn45A/QW2eS+7yo4AbujOwCaZqU0ltEvL/L/HkSDjtWSzJsNgmrFCN3AGlFoxG/X1iqFHJcivwLppsBGPewd667T5UAAxyvAyYgjeObL8PA=
+	t=1747765707; cv=none; b=hc2tYhksUdyvaqHMrzWsdqPHI7ufW5kMpZUATrK0WjmDJJamNLLI/rNO4gfyQyruMKzb4Ftg3sggRCXg6/ul19NjvE06NH/buFjuDLdMwruddEHYiFUEs5HY/IdLT2kxXIjC0Qu8Mp5yPqzN6BzXrA2xYbosGJ178M+A3OPtyHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747765689; c=relaxed/simple;
-	bh=rCJXx8gGWF7Y/yykzx37aKd3ZjPKtf4V2UOvUxBbtsI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EqEXCKqQdIMRIneDwKAv4stm1Mp9Cdj8maQc1L9n2lWneGcMah3Gz+GDJeRXy8jh8rmt1xsZNmvOjZDkksbC/4R5vQchYs3VJd6JyQpWJOW/BKmLMmCzHLVo15xyDw8CUNFR8Td9lGMwkjpagAjwYH7f5QBuxOiXyf7mOajorZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UeBWhHii; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747765707; c=relaxed/simple;
+	bh=Oh+ozRH8AQMk1Jb1BacF6n/ihKBHkHpapFNRAZvVOZE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=E8AxBz+0wHRgvzvVGtvRKtlN/y9mgcFwtzgswX7G3VqQbuP3qfS0+UQ9YHCyoJ+cCr4hOatRag1S4rdlizrGDoW/sWsAiia1DsyCzRLVjWZatpIGbZWqLmK7GDWd2LaFSPeD/Nhgmq7Bw9Eyt7/9W4bQdLN/EWhl1lQNAeIw7v0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KabN3m8A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UeBWhHii"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-231fc83a33aso33680325ad.0;
-        Tue, 20 May 2025 11:28:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747765687; x=1748370487; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=HYInFiFPI9ndfR/4cO64UxKvCIOi5HU+gdUwzbowEbw=;
-        b=UeBWhHiizri+zU3J3Gydos+r+6C1mNppVFZI8YYV0wW2yWp+LtOcq9GN61RB51vh40
-         3ErKm2wHO0rd7iBC5I0qyX3UkYmI1j0CUY/uXVuDh8X0QzuTPEHC+00GhZMJ5o3LRC0x
-         f9wfrlnCDGIMSfUEAZS6bJGhZ8U5p43Zkix6veigWBJMvuDteCV2pxzSjK8dJgiqENPy
-         ArnhLTym+Shp/a6R2F5rQH/FAL/Pzlh2hS+mn5zOWicEZhmSgs0dOvySXY1qHMBhl8CA
-         MmQPcQwgvKcZIvAtUxWvWyCahxYXiii2eiOkUmF1vPB9byYSFgb2rtdy7XLIf6dwcdku
-         ZhKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747765687; x=1748370487;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HYInFiFPI9ndfR/4cO64UxKvCIOi5HU+gdUwzbowEbw=;
-        b=HcCX3U1F1i3ECsB2/CCw4unpHK0fYgMt12rh4lnlCoWizpgbnw5MfyDZjLIb5CITwy
-         GdvP/dONMeCglHNoVwW4KY2wkAq9hEIt4HKi0GZbocbaid2GzzXsZxWR2z+YdbFY1Npw
-         N83lj7DoADeeiRxbn9r9ocNU8MrB+R56szdRvBie5f2fMemXUbcB1KvPkZFkzehUZyDq
-         eU4oprdJemW2Ckb6a788JH21fzUPTQ5uHSMLDNG+Rh4pHjE9SDQVk2yIzqYy5LHmqMhG
-         W9HoUKZ37Afsc/PBYNRLPs1MkrfvHBEPWinm4jy6ZSlv2elBmjZzV4dKU+1YJovq78qj
-         enuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUmKiQx3KipuHM2sv+xJCq2QT+a5j1fzF7zX4ZIFXGowg8CL1TDBcLghqS/BQp+yHhVFJOl8jo8zGkczv4=@vger.kernel.org, AJvYcCVM3wylb2NdCHoaP+37s9uqSFV50zRJ404/n95LxTE6L528JzkETegqKnvuOpgzHUvLMti/Vauq@vger.kernel.org
-X-Gm-Message-State: AOJu0YzW+JQ8BIdaGAZuZcguCZupxDV1mPIQ23ga6nXZxPgWxIdfnfB1
-	6tw8tC5ZoZWSmsXgm1mgBadwHWBzHzG/JDG704z0C5rAM0FJ29KB8QMB
-X-Gm-Gg: ASbGncuNf8MrlNPTZ4XpgLVDanFYaBV5GOoKOPvOEyNLvEhSFOz7Lk+mr0cR0yvkbra
-	+qFzfzeNqD0d1+wWuJHk3xcp4uW5HyGSLA4n2Gktwc842Ta6+WUOFiEWMsnhZIcAHnX66EQDXtz
-	Da4MTaQZwxeLbCIymRsId5ru4j7AOWqfPlZQK808VE1+ZuIM/c1qtGKwFheTNCZtvLJGya5e86F
-	ETJZGyBdeql9O64HCoy9z53GuYPx2+yubxhFTfv7aRflB1SBeRrBMibZ62Aptm7CTmgcZOrVZ7P
-	Fo45vqp0OATRwJMHnvd4+4GhIf0t/3el2ritgY3aBVuJSlgQzuaKH/0UHxYDxzE1AGenU/brisg
-	q1uc=
-X-Google-Smtp-Source: AGHT+IESgy/nLH7exbpBEzHU43OET4g19jrvnZakgXDIKVS9FFM9QSYBQYvYluFSIMlc73WVOzRMtw==
-X-Received: by 2002:a17:902:ce8f:b0:223:fdac:2e4 with SMTP id d9443c01a7336-231de3515a6mr222440185ad.1.1747765687367;
-        Tue, 20 May 2025 11:28:07 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4b04a52sm79864825ad.91.2025.05.20.11.28.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 May 2025 11:28:06 -0700 (PDT)
-Message-ID: <ce477b83-57b8-49a3-b924-73b644832b06@gmail.com>
-Date: Tue, 20 May 2025 11:28:04 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KabN3m8A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC8C2C4CEF1;
+	Tue, 20 May 2025 18:28:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747765706;
+	bh=Oh+ozRH8AQMk1Jb1BacF6n/ihKBHkHpapFNRAZvVOZE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=KabN3m8Aw3zZxEyxdGMwC47DMZNBoFV2ViaKJAhuQ/u+bW9LwBEHluK5HzwSnbftO
+	 l8bkbWoCKhyP2/xCBNSa3aI73Gih/A2Z2tWg1pfz5IxMEyrA6z01NjfCnME31/uPPx
+	 Elnzlw6cArDWFoUPNrTboGb4bZgGGYb7Xx9Cc/GN+Gt/kXfL25lDMXEmpfQpCCuCG2
+	 hnktsG77ejE+Xumg3XN8FxnSwSeZBZAFg+pNCQ4TR7ZLJfg1vVY5dAOELpjUw4c1p/
+	 gHjAvYPruYKUvH2LU+PVPrBY4JNaid8Xzv4b43/TqhptehN2DvF1NfoDTcBX84RSgY
+	 /ANR4/rISguSg==
+Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-40331f302f1so3867898b6e.2;
+        Tue, 20 May 2025 11:28:26 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVq9MR/hxjd4TJoKpYumbqusZYMOcC3CgzjnGVcsTesMbZ3bvrsW/Qfe61+ncqtS7pWIMmJa2qEg/nAEWg=@vger.kernel.org, AJvYcCXn7U1QXiCGGjnItEHtCOMMXrCp+n56SAKatlB3k+aAnh2nwn/MqxEbcUSuHyUbaxgLDW6ue8zXLFM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSbA1xUK/7dYJZoAIXxdTIkD1zyNgeRuN2dbuE8QFJaaZ+s4d6
+	4twppEnmp4SEZWBJyvFgEL4GVmJzx81tGB0fXsai7ZWl3RY915Xwwsauf4vCHX0ADbTrqRTrSI3
+	V415kOQs32iPEwbo7rXnrVntszR6Wo/g=
+X-Google-Smtp-Source: AGHT+IHUWBgovbnQBup2K25sSKTbKau3dBTRCvED87qiec8fCfdEaJsIHLdYccrxO4AUMXP2EbznX8MOrYpB5EDpK2E=
+X-Received: by 2002:a05:6808:6d0:b0:3fb:a7d0:3b1f with SMTP id
+ 5614622812f47-404d88a65b2mr9913404b6e.39.1747765706030; Tue, 20 May 2025
+ 11:28:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.1 00/97] 6.1.140-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
- conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250520125800.653047540@linuxfoundation.org>
-Content-Language: en-US
-From: Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
- WlfRzlpjIPmdjgoicA==
-In-Reply-To: <20250520125800.653047540@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250512-temp-v2-1-048be58eaaa5@chromium.org>
+In-Reply-To: <20250512-temp-v2-1-048be58eaaa5@chromium.org>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 20 May 2025 20:28:15 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0gqe2SVU3kTkb3V25kax1dyfW5HjcmJba1bcCcS-BxkdQ@mail.gmail.com>
+X-Gm-Features: AX0GCFvngb3zaLTCdGMCDoQ7oil8hZwqO52U3TwhpJ_nKhx55gtiLB6nA1eCGZI
+Message-ID: <CAJZ5v0gqe2SVU3kTkb3V25kax1dyfW5HjcmJba1bcCcS-BxkdQ@mail.gmail.com>
+Subject: Re: [PATCH v2] thermal: sysfs: Return ENODATA instead of EAGAIN for reads
+To: Hsin-Te Yuan <yuanhsinte@chromium.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, linux-pm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 5/20/25 06:49, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.1.140 release.
-> There are 97 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 22 May 2025 12:57:37 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.140-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+On Mon, May 12, 2025 at 7:53=E2=80=AFAM Hsin-Te Yuan <yuanhsinte@chromium.o=
+rg> wrote:
+>
+> According to POSIX spec, EAGAIN returned by read with O_NONBLOCK set
+> means the read would block. Hence, the common implementation in
+> nonblocking model will poll the file when the nonblocking read returns
+> EAGAIN. However, when the target file is thermal zone, this mechanism
+> will totally malfunction because thermal zone doesn't implement sysfs
+> notification and thus the poll will never return.
+>
+> For example, the read in Golang implemnts such method and sometimes
+> hangs at reading some thermal zones via sysfs.
+>
+> Change to throw ENODATA instead of EAGAIN to userspace.
+>
+> Signed-off-by: Hsin-Te Yuan <yuanhsinte@chromium.org>
+> ---
+> Changes in v2:
+> - Modify commit message to make it clear
+> - Link to v1: https://lore.kernel.org/r/20250409-temp-v1-1-9a391d8c60fd@c=
+hromium.org
+> ---
+>  drivers/thermal/thermal_sysfs.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/thermal/thermal_sysfs.c b/drivers/thermal/thermal_sy=
+sfs.c
+> index 24b9055a0b6c515b865e0d7e2db1d0de176ff767..3d1713e053dfb867933d95131=
+f1f2491d2ecd07e 100644
+> --- a/drivers/thermal/thermal_sysfs.c
+> +++ b/drivers/thermal/thermal_sysfs.c
+> @@ -40,8 +40,11 @@ temp_show(struct device *dev, struct device_attribute =
+*attr, char *buf)
+>
+>         ret =3D thermal_zone_get_temp(tz, &temperature);
+>
+> -       if (ret)
+> +       if (ret) {
+> +               if (ret =3D=3D -EAGAIN)
+> +                       return -ENODATA;
+>                 return ret;
+> +       }
 
-On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
-BMIPS_GENERIC:
+I would prefer to do
 
-Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
--- 
-Florian
+if (ret =3D=3D -EAGAIN)
+        return -ENODATA;
+
+if (ret)
+        return ret;
+
+here or even
+
+if (!ret)
+        return sprintf(buf, "%d\n", temperature);
+
+if (ret =3D=3D -EAGAIN)
+        return -ENODATA;
+
+return ret;
+
+if you want to optimize for the success case.
+
+>
+>         return sprintf(buf, "%d\n", temperature);
+>  }
+>
+> ---
