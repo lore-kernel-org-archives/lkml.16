@@ -1,88 +1,170 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE0725B66D;
-	Tue, 20 May 2025 19:38:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FF7722DA0D;
+	Tue, 20 May 2025 19:39:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747769939; cv=none; b=QKA3dBf1J0phubxoO/4yUkSkBLk4RZM6Tn2FleKHlk8jZv2CkjxkbS4sUKuHOUyd1+/5k2vUY9/jjpukN76HLip0w0pFbe3kBFna9jofE24+/O4haObwTwXUfA/Kr3kBS83iGNWPLQZB+AINSsF5opvSrTLcAFzdh2rZ6aAcYic=
+	t=1747769992; cv=none; b=rp2+O6qOXZsvPmqV6wscVzOzyZ3ro3AabcxpHCt3sBpc7qRN0Rgf3E7V0v3VhohhZLBMkO3hgQwReqZBTZIH3Zwc4mmpnalGRt+AgoCoD5xu6nfN+AccPj9C257WNAX5ObdD8+Hu7FG/Cjaw9xjxcWeHPq1LsOcF3K4F++LZZWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747769939; c=relaxed/simple;
-	bh=hvfz3f70a+l77rLPSk8ZwDyqvzU4xNGTCHx63U5c1VM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mEogvaiUaZzYO7PKHgdcT1B2FilqW7kUI6y7KyzhffEMY1Q0Lbrtcpj0vGYM+N7LmvPsSzVd5n1fYWvhyH4HTPwegWlLA1R71aKRlvwkCMmeru2DgW0QJdZ8oI9ByQdyMObQN452uWE6gbzo11ONWUTPapT64zOEWc7fseWT6Jc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OJPCb4mT; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OJPCb4mT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB498C4CEE9;
-	Tue, 20 May 2025 19:38:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747769938;
-	bh=hvfz3f70a+l77rLPSk8ZwDyqvzU4xNGTCHx63U5c1VM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OJPCb4mTDOL7sAWboKmCyamIkKMFR2ns+d0zmwPz8i0OFmGhMjoUkmwH3M0ojUVmK
-	 EiDDg4Mh6yHKZymNDW0ZjSx5mHypyCRXmu/F1QVPqa2CDLPNPPdGFCp23zFNtgPyQR
-	 9J5W3+zXzvRJqG1zLSXjv+Mi0JQ5Dgoc0j9wmlqTUh/HTuw2EM4F2nbYcAdX0grawl
-	 CL7S28i1jZhn5jhD/oisS09mpebX0ISJ3WABSWYSVRa1cItMThBElyGKExjR0OgGCc
-	 HlL5y1QAJj5b9tPPw8blsE3jTV6xxGaA7pE5G1sUOzb3smThkFUnjAbPXsrSjlmp+K
-	 n2/uJDOkyZsUw==
-Date: Tue, 20 May 2025 16:38:53 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	I Hsin Cheng <richard120310@gmail.com>,
-	"Michael S . Tsirkin" <mst@redhat.com>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Peng Jiang <jiang.peng9@zte.com.cn>,
-	Stefano Garzarella <sgarzare@redhat.com>,
-	Yazen Ghannam <yazen.ghannam@amd.com>,
-	Yury Norov <yury.norov@gmail.com>
-Subject: Re: [PATCH FYI 0/7] Updating some kernel headers with the kernel
- sources
-Message-ID: <aCzaTQJ9vwjjc22V@x1>
-References: <20250519214126.1652491-1-acme@kernel.org>
- <CAMZ6RqJUf=LpczMNu9WwLik9i-4tJHYENvM3d15nxjNM+_vc5w@mail.gmail.com>
- <aCylQUlY3W7rbZAs@x1>
- <5b83c1b3-6370-4df1-8a57-7940d7a629fd@wanadoo.fr>
+	s=arc-20240116; t=1747769992; c=relaxed/simple;
+	bh=75F8BZwSWDSrqGudZvElei0KYaFv2MODy/UlW3wQAAk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hOYnIUGpshzeYK9I/Cd9C2/mLGlnhqHlU3jG2TpMgC6JY5l70K34HBLRT0TYVVZuThK4ARChwDvbmYJjVhUgB5cd8Oh7KDKDp/zTxKPpIPCZCvf0YbXuCaTRpubkPMBs85KnHtVlIVAEsDkDIwYnBdREasGAKe3l1QH3DvJwIjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8D533339;
+	Tue, 20 May 2025 12:39:35 -0700 (PDT)
+Received: from [10.57.93.184] (unknown [10.57.93.184])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 86A723F6A8;
+	Tue, 20 May 2025 12:39:47 -0700 (PDT)
+Message-ID: <a64cd485-310f-4d4c-a3da-2d8c35d7f343@arm.com>
+Date: Tue, 20 May 2025 20:39:45 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5b83c1b3-6370-4df1-8a57-7940d7a629fd@wanadoo.fr>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] arm64: Restrict pagetable teardown to avoid false
+ warning
+Content-Language: en-GB
+To: David Hildenbrand <david@redhat.com>, Dev Jain <dev.jain@arm.com>
+Cc: anshuman.khandual@arm.com, catalin.marinas@arm.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ mark.rutland@arm.com, stable@vger.kernel.org, will@kernel.org,
+ yang@os.amperecomputing.com
+References: <df7eb016-bea4-489d-aecb-1a47eb5e33b2@arm.com>
+ <20250520090501.27273-1-dev.jain@arm.com>
+ <021dfe38-f786-46d0-a43f-769aff07b3f0@redhat.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <021dfe38-f786-46d0-a43f-769aff07b3f0@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 21, 2025 at 01:02:49AM +0900, Vincent Mailhol wrote:
-> On 21/05/2025 at 00:52, Arnaldo Carvalho de Melo wrote:
-> > On Tue, May 20, 2025 at 09:44:05AM +0900, Vincent Mailhol wrote:
-> >> On Tue. 20 May 2025 at 06:41, Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+On 20/05/2025 10:10, David Hildenbrand wrote:
+> On 20.05.25 11:05, Dev Jain wrote:
+>> On 19/05/2025 13:16, David Hildenbrand wrote:
+>>> On 19.05.25 11:08, Ryan Roberts wrote:
+>>>> On 18/05/2025 10:54, Dev Jain wrote:
+>>>>> Commit 9c006972c3fe removes the pxd_present() checks because the caller
+>>>>
+>>>> nit: please use the standard format for describing commits: Commit 9c006972c3fe
+>>>> ("arm64: mmu: drop pXd_present() checks from pXd_free_pYd_table()")
+>>>>
+>>>>> checks pxd_present(). But, in case of vmap_try_huge_pud(), the caller only
+>>>>> checks pud_present(); pud_free_pmd_page() recurses on each pmd through
+>>>>> pmd_free_pte_page(), wherein the pmd may be none. Thus it is possible to
+>>>>> hit a warning in the latter, since pmd_none => !pmd_table(). Thus, add
+>>>>> a pmd_present() check in pud_free_pmd_page().
+>>>>>
+>>>>> This problem was found by code inspection.
+>>>>>
+>>>>> This patch is based on 6.15-rc6.
+>>>>
+>>>> nit: please remove this to below the "---", its not part of the commit log.
+>>>>
+>>>>>
+>>>>> Fixes: 9c006972c3fe (arm64: mmu: drop pXd_present() checks from
+>>>>> pXd_free_pYd_table())
+>>>>>
+>>>>
+>>>> nit: remove empty line; the tags should all be in a single block with no empty
+>>>> lines.
+>>>>
+>>>>> Cc: <stable@vger.kernel.org>
+>>>>> Reported-by: Ryan Roberts <ryan.roberts@arm.com>
+>>>>> Signed-off-by: Dev Jain <dev.jain@arm.com>
+>>>>> ---
+>>>>> v1->v2:
+>>>>>    - Enforce check in caller
+>>>>>
+>>>>>    arch/arm64/mm/mmu.c | 3 ++-
+>>>>>    1 file changed, 2 insertions(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+>>>>> index ea6695d53fb9..5b1f4cd238ca 100644
+>>>>> --- a/arch/arm64/mm/mmu.c
+>>>>> +++ b/arch/arm64/mm/mmu.c
+>>>>> @@ -1286,7 +1286,8 @@ int pud_free_pmd_page(pud_t *pudp, unsigned long addr)
+>>>>>        next = addr;
+>>>>>        end = addr + PUD_SIZE;
+>>>>>        do {
+>>>>> -        pmd_free_pte_page(pmdp, next);
+>>>>> +        if (pmd_present(*pmdp))
+>>>>
+>>>> pmd_free_pte_page() is using READ_ONCE() to access the *pmdp to ensure it can't
+>>>> be torn. I suspect we don't technically need that in these functions because
+>>>> there can be no race with a writer.
+>>>
+>>> Yeah, if there is no proper locking in place the function would already
+>>> seriously mess up (double freeing etc).
+>>
+>> Indeed; there is no locking, but this portion of the vmalloc VA space has been
+>> allocated to us exclusively, so we know there can be no one else racing.
+>>
+>>>
+>>>> But the arm64 arch code always uses
+>>>> READ_ONCE() for dereferencing pgtable entries for safely. Perhaps we should be
+>>>> consistent here?
+>>>
+>>> mm/vmalloc.c:   if (pmd_present(*pmd) && !pmd_free_pte_page(pmd, addr))
+>>
+>> Yes, I saw that. I know that we don't technically need READ_ONCE(). I'm just
+>> proposng that for arm64 code we should be consistent with what it already does.
+>> See Commit 20a004e7b017 ("arm64: mm: Use READ_ONCE/WRITE_ONCE when accessing
+>> page tables")
+>>
+>> So I'll just use pmdp_get()?
 > 
-> (...)
-> 
-> > I think there is value in doing it now, as it clears up the build
-> > warnings and solves already one prep work that syncing would entail,
-> > namely the inclusion of const_true() in the tools compiler.h file.
-> 
-> Ack.
-> 
-> > I think I can take your "I am not objecting to this series in any way."
-> > as an Acked-by?
-> 
-> Sure. You can add my Acked-by to patch 6 and 7 (the ones in which you put me in
-> CC). I did not have a look at the other ones (and do not plan to do so).
+> Maybe that's the cleanest approach. 
 
-Thanks, just did it,
+Yeah let's do that.
 
-- Arnaldo
+> Likely also common code should use that at
+> some point @Ryan?
+
+This is a bit of a can of worms... :)
+
+Potted history: I converted all non-arch and arm64 code to use ptep_get() a
+while back. That was necessary because for contpte mappings, arm64 needs to do
+more than just read the pte, so that provided the needed hook.
+
+Anshuman had a go at converting all generic code to use pXdp_get() last year as
+a means to help arm64 move to supporting 128-bit pgtables - the arm64 compiler
+doesn't gurrantee to emit ldp ("load pair") when dereferencing a 128-bit type
+but it does guarrantee to emit ldr ("load register") when dereferencing a 64-bit
+type, so we don't get single-copy atomicity for *pmdp with 128-bit pgtables but
+we do for 64-bit. So we thought we would just convert all the accesses to
+pXdp_get() which would allow us to wrap and make the guarrantee.
+
+Some places (GUP, ...) were already using READ_ONCE() so we thought we would
+just default pXdp_get() to READ_ONCE() (even for the previously *pmdp case). But
+that caused issues with folded pgtable levels; the compiler was no longer able
+to optimize out the loads and arm32 and powerpc complained.
+
+We looked at implementing pXdp_get() as either READ_ONCE(*pXdp) or *pXdp
+depending on if the level was folded, but I never really convinced myself that
+it was definitely safe for cases that were previously unconditionally
+READ_ONCE(*pXdp).
+
+So that leaves us with needing 2 variants of the accessors, which is horrible IMHO.
+
+But ultimately I don't think the vast majority of existing *pXdp accesses even
+need single-copy atomicity guarrantees, so perhaps from the arm64 128-bit
+pgtables PoV it simpler just to leave it all as is and make READ_ONCE() work
+with 128-bit types (but that has a downside because arm64 can only support the
+required READ_ONCE() semantics if the HW supports it, which we don't know until
+boot time. READ_ONCE() wants the compiler to raise an error if trying to use it
+with an unsupported type).
+
+In general, it would be nice to use accessors everywhere, but I haven't figured
+how to make it all work with a single accessor per level so I'm now trying to
+side step it.
+
+In hindsight I'm not sure you really asked for all this detail :)
+
+Thanks,
+Ryan
+
