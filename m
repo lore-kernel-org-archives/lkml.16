@@ -1,278 +1,276 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B41BA610B
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 06:20:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE6AA25B1D5
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 06:20:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747722040; cv=none; b=bhxHv+k/af56eRh1nQbbPuw8PZ69f2iN4pKb3M8ckNltm4kEwQYGS45C7PLremOtMfM322buD15YuWHzQS5PClr3BNXgMIb5f0X9DK8QtzOddAuMScX7DRbmT0mEEl/F+VmXnpaWm2n3JkPa4VpRRjBmw29PlvwlYGbywIzMZxc=
+	t=1747722053; cv=none; b=kTLpWYTnvPIrp+G7AUhHdYtM0n8wWi6EWY51mCm7ZiwK/Hwv4LmVnsAVw+N4Zrlkzwcy1lXluy3p/70F/7Hq4fBydu39RfuCOJSD1iacGFY5TzXQMvGesRTbcdKE+zMdUD8MdOqtxDD0mx72SY/INeICZ+U4S9FWPxmZl02jhFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747722040; c=relaxed/simple;
-	bh=fnO117JPO5Ovmm08Gq4uGbtkp3RU3N4PkTIM6qeBaR8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=X1UNSrdpYfzj+JmfvwIZlKumjfbI+g6Sij+hmBHyZn9vkATIlKpz5RbB0OF0O1cyNCtyQEGIX+NRmoUSQT9TMnzAV24/zRCMTKWwaeaRBqIaE1CR6hVFyDhFEp8dPpIuvqb1PCQI2MWn3tgqu6n7ViZuUHOD5LwlC0HidhqW1+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=atBvTXRq; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1747722053; c=relaxed/simple;
+	bh=TOUJJP9HBNSkN9xCbbCsJB+0OTQHGMK7Y1/W6LTIGZ8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZL/nptrbB7tc0kaE+QYqc0Ky9PQ366LwiUOnXLISu7rqQeiUSlIUC9fmlhHh0AeqttEp4wcxdJMrcLKuNZ8S2JzYWWHPsU6CtWHfTd+bemenbarL/VqrQ/OU+7heSjlsL9x4VUCXnC/gjf3x0Lh45AvVEaELk+PKWN/HQdHiuUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=W6CVEz8I; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="atBvTXRq"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b1a1930a922so3684978a12.3
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 23:20:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1747722038; x=1748326838; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MN1daik4SPrO/LXhkvtoUfhBhzWkiMoNJcsHxqO1LD8=;
-        b=atBvTXRqgqCbURF28TQjbvQzwBrFqM8dK9M7P8APWh4riKF2q5JdgE5uj0pX4y/tLJ
-         r99mdkGcs/Xkw1n5M8NwdUsTjwy1JU9M3uxnY299o5zAMAsxUfjidVKNZ5bXsz/QAxyb
-         GI6VNhJPPYhM1WovNzl2cm5FJqPcz1z1tHmogNwtaKWDr2RM7zOzDzcfvFb06RpDFdRK
-         CnF9yEUpQacZSHfNi3+AQfVt0QD+IqA+qW3YTL+aJ4fs9QXh/cnnkHFBX7+hR5a4EbCS
-         kZKblKYHv1svUaDKHjCm033i0q7Unx4mCAep5dRkqT0w5PVlD6Z2FVw8OqbeyTA604HX
-         awuQ==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="W6CVEz8I"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54K0qHZP011756
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 06:20:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	yanYT6sVYOon7uUBSTMPU7zBvlZZ91XRvVjmXSRoWUY=; b=W6CVEz8ITlLArJJG
+	pNr2xMax7mn4yVca7Kff3BDnKZh25fkYwEG7Mwq8wKvwmZmiz04Zkak8rCjc5dJz
+	/nDMHRbQS2cYYRbnU2i7jQMUf38OsSwZkX3ma00zybZws8wCW/s4OSjD3LfAee/R
+	VmNrXWhyaLAXYbcC/brlZMnYRT38PucJCoCnobRDsuVG0ArnSxOojPWHvRjC330i
+	nVcoZXfcAcnS5XY+rI+p4nPGQdSiMNl98klpZe08OpGQDrbzvD7CvHLLIVs2fFRh
+	tFcUOjLaw+eXH8AQATGsOJeQcKb8fq4YE06dQue7YUplZ0KZho8naaQ8NXZbekbB
+	LRaJmQ==
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46pjjsxmn6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 06:20:50 +0000 (GMT)
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-22e7e097ef7so39664485ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 23:20:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747722038; x=1748326838;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MN1daik4SPrO/LXhkvtoUfhBhzWkiMoNJcsHxqO1LD8=;
-        b=DYuQ+L8cHupgVO7ZlMJOwi4TdLWvYPTolQjBzvhnH9ccjOcHHXVEYkMvxHvaZT5L3A
-         Xu+AXlyVtL93ij3qPRN/kZfhwX8qMdL4MBgLRZgvVk3ZTsHeR8YDqXQVmYgRGGynbzDI
-         Vwa2Iq1J3xx47DdPeDwMzRxSta1JAigYsdhlCcyx1c7BJrFUgfiWr1uEV+5q27YQZ+Zk
-         A33G9VXRJjvSsspJMfkLD5JwVQLpqJxSnMH7lXf2wYsO3xoGsZuC/dFaTio3X+IDH0nb
-         G+8heGDlEelHOazJd115i5afsxvmI01wBFSiZ6jI9rWTYdcWFkbkFHVNtG+JRfMQ7nB6
-         bUvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW0gXeEe5Z4K5xURy4/9MvzbdeoGZ97co23h2VWOTP+Cu4WGdXgPVphWuy51FHC8RxkmPW9s0xbosed6YM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHziDRh+ZAFM+6ZYvhsT8RHMZsmdLZnJixzgp9LLmjzWkGJHiN
-	49PTEdV4M9v3FG/7DeHgCQaX0IBXB5QYucXoE3GzcRNMf8UuTSmIt7JYt+Sg70UEMf7jJp+DEGY
-	3a2Yl
-X-Gm-Gg: ASbGncvMdvV9zb3lnnE5l8JCAnv6dT58pBdrQ2WodS3j5o8BkdkZMZqhivd5Mxjewtl
-	+K90Lx0ZaBkYK18X4yzeRvXyaq935D14LsE8Ej3yBAv/c0Pd16mEnMBOQrcDHn5BB95gNGDJVLg
-	4pTDey/fpCRnrLaOnw7M3X5ZsVL1klAKLoeN7n2yfAWw61G/UNZbA8NdQ5F6J+wiG1VzGy5zyaT
-	hgOXG7rjAPxspB91yXGILHJ3ZnGVXUAB5MMV3FkC4v9xo+ICeJPeLEnleob6uMPrko96F2eNnpU
-	KwRu7SLGEnli0YdZN3d0FOniqW35gPdizEUqC+CtDg/A09IofFdJzLUXB8oYXSteBco7UYdw1w+
-	G9zg=
-X-Google-Smtp-Source: AGHT+IEt/08SvJhgzov4+pV4DqatdXF+Gh5UCHJPwmhb/xclldIzUixkeTG8fgB09jR/93ACDRKnqQ==
-X-Received: by 2002:a17:903:1ace:b0:231:c90e:292d with SMTP id d9443c01a7336-231d45af19fmr245770045ad.44.1747722037924;
-        Mon, 19 May 2025 23:20:37 -0700 (PDT)
-Received: from localhost.localdomain ([203.208.189.11])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4e98009sm69694575ad.152.2025.05.19.23.20.34
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Mon, 19 May 2025 23:20:37 -0700 (PDT)
-From: lizhe.67@bytedance.com
-To: alex.williamson@redhat.com
-Cc: kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	lizhe.67@bytedance.com,
-	muchun.song@linux.dev,
-	peterx@redhat.com
-Subject: Re: [PATCH v2] vfio/type1: optimize vfio_pin_pages_remote() for hugetlbfs folio
-Date: Tue, 20 May 2025 14:20:31 +0800
-Message-ID: <20250520062031.3023-1-lizhe.67@bytedance.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250519100724.7fd6cc1e.alex.williamson@redhat.com>
-References: <20250519100724.7fd6cc1e.alex.williamson@redhat.com>
+        d=1e100.net; s=20230601; t=1747722049; x=1748326849;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yanYT6sVYOon7uUBSTMPU7zBvlZZ91XRvVjmXSRoWUY=;
+        b=LZpCyr1yOTEmKn75ZIfgNhlVefT6b3JAxMeg++Rt0jZmkvrB9emQGtur2dAwKojJH4
+         3xAWRR9GE3DhGaZkfR2Ny27Hu7zCVDaYGDB6oUudL2kwg8fPmVHz7hiupk0nXufs4ERJ
+         dBGXZTE2/YhMnheq/3Ee5XuNYJ9eZ4x3yzKALt328o2WBu+iJsH+ntBYVctTuIbPlmz4
+         7Gqv0+6nbPRXuR4s/NOGPkkBmU3mJfqNUNb7e4x8izOAKQgfo8MTtS3Hw1OIH1tEKys0
+         kCaPXIzJCMFIMtiP+XK+bQTFs/esrhKH3KfEUKGQWcToHgSar28pMDfaA2+m2P7EuPXs
+         RQXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVK03PEMmMFoq6Kg3C1dey5WZSYGYtiDr7TyjAsC2dayssRjbmkFSV4G1QB+IIXLbm4ZwwRZmjL8b5VdYE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxoTBigV/ejvLPeR4mJEy5l3HYUnSeTgiXpOR/ZS4UWTGYKC2QD
+	AU2ufjOXDp6Ft9BdQH24dvcgj4Afw/jhvrzsQJlFkPeUZIL8BcfV/S2t1IG8lnedIac35aeDgPD
+	aUZXBujVXMYKbx2HfD1ZRUvqqKmINYNEsO1Cvhq4IV0Sdtw69ioP89ydDN86AS9XLM9s8JnFNk7
+	k=
+X-Gm-Gg: ASbGnctbG9voBzqRcKNEHW7eVpR8LD/sA5jNIvGks0Ms2Kk3TwQqn7mkygEHaB3nm3m
+	g40C/AfevaUID1dt4b2PoRVAu7FNgioVyTeEpNzZzbUIzqow4vysexyFajF/IzCq5Eu8Dmqm2nK
+	oGVkDlavDkbDZUKZLrKFBhw1YVoV0PDGNM3xExjftNT9v8i1exLnovdTN8PSmi7FpRAsZBbqHP5
+	Z+a9oti4g4ysZHbnAMNPklETrRiNrlmZ2W+yxwG9m9SMSnU+eCXSZPmpuw9Eknsup+Fe9a3hB2N
+	KSa3/xqM1vV8UZ1RclzVr8tlweYi+ULuc0dvHbmD
+X-Received: by 2002:a17:902:ce8f:b0:223:fdac:2e4 with SMTP id d9443c01a7336-231de3515a6mr193661605ad.1.1747722049093;
+        Mon, 19 May 2025 23:20:49 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGTX8hp5weskPEE5GDjz/pk/LjB3S3wezIwyc7zvRNHdSFb9Vg1zsGhKvMWA085CsYcUQkZyA==
+X-Received: by 2002:a17:902:ce8f:b0:223:fdac:2e4 with SMTP id d9443c01a7336-231de3515a6mr193661335ad.1.1747722048622;
+        Mon, 19 May 2025 23:20:48 -0700 (PDT)
+Received: from [10.92.166.0] ([202.46.23.19])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4adafedsm69345285ad.56.2025.05.19.23.20.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 19 May 2025 23:20:48 -0700 (PDT)
+Message-ID: <a6382f2d-2b66-45d6-b903-da8822f9f883@oss.qualcomm.com>
+Date: Tue, 20 May 2025 11:50:43 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 2/2] usb: dwc3: eic7700: Add EIC7700 usb driver
+To: zhangsenchuan@eswincomputing.com
+Cc: ningyu@eswincomputing.com, robh@kernel.org, p.zabel@pengutronix.de,
+        Thinh.Nguyen@synopsys.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        conor+dt@kernel.org, krzk+dt@kernel.org, linmin@eswincomputing.com,
+        yangwei1@eswincomputing.com, gregkh@linuxfoundation.org
+References: <20250516095237.1516-1-zhangsenchuan@eswincomputing.com>
+ <20250516095408.704-1-zhangsenchuan@eswincomputing.com>
+Content-Language: en-US
+From: Krishna Kurapati <krishna.kurapati@oss.qualcomm.com>
+In-Reply-To: <20250516095408.704-1-zhangsenchuan@eswincomputing.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: LWXrA4_PqjO8cLT1fBnc38jIicUFgZgV
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDA1MCBTYWx0ZWRfXz94ShNkURDKe
+ Xyyz6o8tRuIcob7Lt1wNx8oFXbKCePprAn6mHJd7hT1mrOa93jxx+kP1srnSoZkm/4AAOZk2wuV
+ dVRvVmsImVxp4w57D0EcxtYYeOqz4Ru6CoLevIWi4zcd2FMNNgGTr5c7T6PcyZr16shhsSuY2tM
+ ZfrNPAC3eJvBw+M5JV8hUmIe4iqVfFbqWX3nZWPJ2vrMPtbd9cVqfspU6j/LHtoMCxo65+b/k02
+ BHB/qgMEHXISqRCh+RlQw9zrFsrSrR1gEbYWNx47hBcNW+nuvBRNh/fEBIsxOT2CLEqhQMfJJnT
+ ciGGGe7D2UOmi7NtZ0NJ5AaaYgT8/EE+xLeHe54GojSI0USKe48TsFnH78yddYWoKbkNPIL4R7j
+ cvMWUUqD+lY8iA1s0VS1BHBCTDid0LuDKkhX7M7qSAkDUnTBJ5W8Gtpm1OCYbFLUh0Nh3j5Y
+X-Authority-Analysis: v=2.4 cv=K4giHzWI c=1 sm=1 tr=0 ts=682c1f42 cx=c_pps
+ a=IZJwPbhc+fLeJZngyXXI0A==:117 a=j4ogTh8yFefVWWEFDRgCtg==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=h4SL0BZ7AAAA:8 a=2JH7PhIhr8-xlRfLaC8A:9
+ a=QEXdDO2ut3YA:10 a=uG9DUKGECoFWVXl0Dc02:22 a=Cfupvnr7wbb3QRzVG_cV:22
+X-Proofpoint-GUID: LWXrA4_PqjO8cLT1fBnc38jIicUFgZgV
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-20_03,2025-05-16_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 spamscore=0 mlxlogscore=921 suspectscore=0 phishscore=0
+ clxscore=1015 malwarescore=0 lowpriorityscore=0 impostorscore=0
+ priorityscore=1501 mlxscore=0 adultscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505070000 definitions=main-2505200050
 
-On Mon, 19 May 2025 10:07:24 -0600, alex.williamson@redhat.com wrote:
 
->>  /*
->> - * Helper Functions for host iova-pfn list
->> + * Find the first vfio_pfn that overlapping the range
->> + * [iova, iova + PAGE_SIZE * npage) in rb tree
->>   */
->> -static struct vfio_pfn *vfio_find_vpfn(struct vfio_dma *dma, dma_addr_t iova)
->> +static struct vfio_pfn *vfio_find_vpfn_range(struct vfio_dma *dma,
->> +		dma_addr_t iova, unsigned long npage)
->>  {
->>  	struct vfio_pfn *vpfn;
->>  	struct rb_node *node = dma->pfn_list.rb_node;
->> +	dma_addr_t end_iova = iova + PAGE_SIZE * npage;
->>  
->>  	while (node) {
->>  		vpfn = rb_entry(node, struct vfio_pfn, node);
->>  
->> -		if (iova < vpfn->iova)
->> +		if (end_iova <= vpfn->iova)
->>  			node = node->rb_left;
->>  		else if (iova > vpfn->iova)
->>  			node = node->rb_right;
->> @@ -337,6 +340,14 @@ static struct vfio_pfn *vfio_find_vpfn(struct vfio_dma *dma, dma_addr_t iova)
->>  	return NULL;
->>  }
->>  
->> +/*
->> + * Helper Functions for host iova-pfn list
->> + */
->
->This comment should still precede the renamed function above, it's in
->reference to this section of code related to searching, inserting, and
->removing entries from the pfn list.
 
-Thanks!
-
-I will place it in the comments before the function vfio_find_vpfn_range()
-in v3 patch.
-
->> @@ -681,32 +692,67 @@ static long vfio_pin_pages_remote(struct vfio_dma *dma, unsigned long vaddr,
->>  		 * and rsvd here, and therefore continues to use the batch.
->>  		 */
->>  		while (true) {
->> +			int page_step = 1;
->> +			long lock_acct_step = 1;
->> +			struct folio *folio = page_folio(batch->pages[batch->offset]);
->> +			bool found_vpfn;
->> +
->>  			if (pfn != *pfn_base + pinned ||
->>  			    rsvd != is_invalid_reserved_pfn(pfn))
->>  				goto out;
->>  
->> +			/* Handle hugetlbfs page */
->> +			if (folio_test_hugetlb(folio)) {
->
->Why do we care to specifically test for hugetlb vs
->folio_large_nr_pages(), at which point we can just use folio_nr_pages()
->directly here.
->
->> +				unsigned long start_pfn = PHYS_PFN(vaddr);
->
->Using this macro on a vaddr looks wrong.
->
->> +
->> +				/*
->> +				 * Note: The current page_step does not achieve the optimal
->> +				 * performance in scenarios where folio_nr_pages() exceeds
->> +				 * batch->capacity. It is anticipated that future enhancements
->> +				 * will address this limitation.
->> +				 */
->> +				page_step = min(batch->size,
->> +					ALIGN(start_pfn + 1, folio_nr_pages(folio)) - start_pfn);
->
->Why do we assume start_pfn is the beginning of the folio?
->
->> +				found_vpfn = !!vfio_find_vpfn_range(dma, iova, page_step);
->> +				if (rsvd || !found_vpfn) {
->> +					lock_acct_step = page_step;
->> +				} else {
->> +					dma_addr_t tmp_iova = iova;
->> +					int i;
->> +
->> +					lock_acct_step = 0;
->> +					for (i = 0; i < page_step; ++i, tmp_iova += PAGE_SIZE)
->> +						if (!vfio_find_vpfn(dma, tmp_iova))
->> +							lock_acct_step++;
->> +					if (lock_acct_step)
->> +						found_vpfn = false;
->
->Why are we making this so complicated versus falling back to iterating
->at page per page?
->
->> +				}
->> +			} else {
->> +				found_vpfn = vfio_find_vpfn(dma, iova);
->> +			}
->> +
->>  			/*
->>  			 * Reserved pages aren't counted against the user,
->>  			 * externally pinned pages are already counted against
->>  			 * the user.
->>  			 */
->> -			if (!rsvd && !vfio_find_vpfn(dma, iova)) {
->> +			if (!rsvd && !found_vpfn) {
->>  				if (!dma->lock_cap &&
->> -				    mm->locked_vm + lock_acct + 1 > limit) {
->> +				    mm->locked_vm + lock_acct + lock_acct_step > limit) {
->>  					pr_warn("%s: RLIMIT_MEMLOCK (%ld) exceeded\n",
->>  						__func__, limit << PAGE_SHIFT);
->>  					ret = -ENOMEM;
->>  					goto unpin_out;
->>  				}
->> -				lock_acct++;
->> +				lock_acct += lock_acct_step;
->>  			}
->>  
->> -			pinned++;
->> -			npage--;
->> -			vaddr += PAGE_SIZE;
->> -			iova += PAGE_SIZE;
->> -			batch->offset++;
->> -			batch->size--;
->> +			pinned += page_step;
->> +			npage -= page_step;
->> +			vaddr += PAGE_SIZE * page_step;
->> +			iova += PAGE_SIZE * page_step;
->> +			batch->offset += page_step;
->> +			batch->size -= page_step;
->>  
->>  			if (!batch->size)
->>  				break;
->
->Why is something like below (untested) not sufficient?
->
->NB. (vaddr - folio_address()) still needs some scrutiny to determine if
->it's valid.
->
->@@ -681,32 +692,40 @@ static long vfio_pin_pages_remote(struct vfio_dma *dma, unsigned long vaddr,
-> 		 * and rsvd here, and therefore continues to use the batch.
-> 		 */
-> 		while (true) {
->+			struct folio *folio = page_folio(batch->pages[batch->offset]);
->+			long nr_pages;
->+
-> 			if (pfn != *pfn_base + pinned ||
-> 			    rsvd != is_invalid_reserved_pfn(pfn))
-> 				goto out;
+On 5/16/2025 3:24 PM, zhangsenchuan@eswincomputing.com wrote:
+> From: Senchuan Zhang <zhangsenchuan@eswincomputing.com>
 > 
->+			nr_pages = min(batch->size, folio_nr_pages(folio) -
->+						folio_page_idx(folio, batch->pages[batch->offset]);
->+			if (nr_pages > 1 && vfio_find_vpfn_range(dma, iova, nr_pages))
->+				nr_pages = 1;
->+
-> 			/*
-> 			 * Reserved pages aren't counted against the user,
-> 			 * externally pinned pages are already counted against
-> 			 * the user.
-> 			 */
->-			if (!rsvd && !vfio_find_vpfn(dma, iova)) {
->+			if (!rsvd && (nr_pages > 1 || !vfio_find_vpfn(dma, iova))) {
-> 				if (!dma->lock_cap &&
->-				    mm->locked_vm + lock_acct + 1 > limit) {
->+				    mm->locked_vm + lock_acct + nr_pages > limit) {
-> 					pr_warn("%s: RLIMIT_MEMLOCK (%ld) exceeded\n",
-> 						__func__, limit << PAGE_SHIFT);
-> 					ret = -ENOMEM;
-> 					goto unpin_out;
-> 				}
->-				lock_acct++;
->+				lock_acct += nr_pages;
-> 			}
+> Add the eic7700 usb driver, which is responsible for
+> identifying,configuring and connecting usb devices,and
+> provides interfaces for accessing these devices.
 > 
->-			pinned++;
->-			npage--;
->-			vaddr += PAGE_SIZE;
->-			iova += PAGE_SIZE;
->-			batch->offset++;
->-			batch->size--;
->+			pinned += nr_pages;
->+			npage -= nr_pages;
->+			vaddr += PAGE_SIZE * nr_pages;
->+			iova += PAGE_SIZE * nr_pages;
->+			batch->offset += nr_pages;
->+			batch->size -= nr_pages;
-> 
-> 			if (!batch->size)
-> 				break;
+> Co-developed-by: Wei Yang <yangwei1@eswincomputing.com>
+> Signed-off-by: Wei Yang <yangwei1@eswincomputing.com>
+> Signed-off-by: Senchuan Zhang <zhangsenchuan@eswincomputing.com>
+> ---
 
-The input parameter vaddr is a user-space address, while folio_address()
-returns a kernel space address. I agree that using folio_page_idx() is
-the best approach.
+[...]
 
-This approach indeed simplifies things a lot. I have conducted basic
-functionality tests on it and have not found any issues. Please allow me
-to integrate it into the v3 patch. Thanks!
+> +static ssize_t dwc3_mode_show(struct device *device,
+> +			      struct device_attribute *attr, char *buf)
+> +{
+> +	struct dwc3_eswin *eswin = dev_get_drvdata(device);
+> +	struct dwc3 *dwc = eswin->dwc;
+> +	int ret;
+> +
+> +	switch (dwc->current_dr_role) {
+> +	case USB_DR_MODE_HOST:
+> +		ret = sprintf(buf, "host\n");
+> +		break;
+> +	case USB_DR_MODE_PERIPHERAL:
+> +		ret = sprintf(buf, "peripheral\n");
+> +		break;
+> +	case USB_DR_MODE_OTG:
+> +		ret = sprintf(buf, "otg\n");
+> +		break;
+> +	default:
+> +		ret = sprintf(buf, "UNKNOWN\n");
+> +	}
+> +
+
+Use sysfs_emit instead [1].
+
+> +	return ret;
+> +}
+> +
+> +static ssize_t dwc3_mode_store(struct device *device,
+> +			       struct device_attribute *attr, const char *buf,
+> +			       size_t count)
+> +{
+> +	struct dwc3_eswin *eswin = dev_get_drvdata(device);
+> +	struct dwc3 *dwc = eswin->dwc;
+> +	enum usb_role new_role;
+> +	struct usb_role_switch *role_sw = dwc->role_sw;
+> +
+> +	if (!strncmp(buf, "1", 1) || !strncmp(buf, "host", 4)) {
+> +		new_role = USB_ROLE_HOST;
+> +	} else if (!strncmp(buf, "0", 1) || !strncmp(buf, "peripheral", 10)) {
+> +		new_role = USB_ROLE_DEVICE;
+> +	} else {
+> +		dev_info(eswin->dev, "illegal dr_mode\n");
+> +		return count;
+> +	}
+> +	eswin->force_mode = true;
+> +
+> +	mutex_lock(&eswin->lock);
+> +	usb_role_switch_set_role(role_sw, new_role);
+> +	mutex_unlock(&eswin->lock);
+> +
+> +	return count;
+> +}
+> +
+> +static DEVICE_ATTR_RW(dwc3_mode);
+> +
+> +static ssize_t dwc3_hub_rst_show(struct device *device,
+> +				 struct device_attribute *attr, char *buf)
+> +{
+> +	struct dwc3_eswin *eswin = dev_get_drvdata(device);
+> +
+> +	if (!IS_ERR(eswin->hub_gpio))
+> +		return sprintf(buf, "%d", gpiod_get_raw_value(eswin->hub_gpio));
+> +
+> +	return sprintf(buf, "UNKONWN");
+
+Here too, Use sysfs_emit instead [1].
+
+> +}
+> +
+> +static ssize_t dwc3_hub_rst_store(struct device *device,
+> +				  struct device_attribute *attr,
+> +				  const char *buf, size_t count)
+> +{
+> +	struct dwc3_eswin *eswin = dev_get_drvdata(device);
+> +
+> +	if (!IS_ERR(eswin->hub_gpio)) {
+> +		if (!strncmp(buf, "0", 1))
+> +			gpiod_set_raw_value(eswin->hub_gpio, 0);
+> +		else
+> +			gpiod_set_raw_value(eswin->hub_gpio, 1);
+> +	}
+> +
+> +	return count;
+> +}
+> +
+> +static DEVICE_ATTR_RW(dwc3_hub_rst);
+> +
+> +static struct attribute *dwc3_eswin_attrs[] = {
+> +	&dev_attr_dwc3_mode.attr,
+> +	&dev_attr_dwc3_hub_rst.attr,
+> +	NULL,
+> +};
+> +
+> +static struct attribute_group dwc3_eswin_attr_group = {
+> +	.name = NULL, /* we want them in the same directory */
+> +	.attrs = dwc3_eswin_attrs,
+> +};
+> +
+
+[...]
+
+> +static int dwc3_eswin_probe(struct platform_device *pdev)
+> +{
+> +	struct dwc3_eswin *eswin;
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *np = dev->of_node, *child;
+> +	struct platform_device *child_pdev;
+> +	unsigned int count;
+> +	int ret;
+> +	int i;
+> +	int err_desc = 0;
+> +
+
+[...]
+
+> +	child = of_get_child_by_name(np, "dwc3");
+> +	if (!child) {
+> +		dev_err(dev, "failed to find dwc3 core node\n");
+> +		ret = -ENODEV;
+> +		goto err1;
+> +	}
+> +	/* Allocate and initialize the core */
+> +	ret = of_platform_populate(np, NULL, NULL, dev);
+> +	if (ret) {
+> +		dev_err(dev, "failed to create dwc3 core\n");
+> +		goto err1;
+> +	}
+> +
+> +	INIT_WORK(&eswin->otg_work, dwc3_eswin_otg_extcon_evt_work);
+> +	child_pdev = of_find_device_by_node(child);
+> +	if (!child_pdev) {
+> +		dev_err(dev, "failed to find dwc3 core device\n");
+> +		ret = -ENODEV;
+> +		goto err2;
+> +	}
+> +	eswin->dwc = platform_get_drvdata(child_pdev);
+> +	if (!eswin->dwc) {
+> +		dev_err(dev, "failed to get drvdata dwc3\n");
+> +		ret = -EPROBE_DEFER;
+> +		goto err2;
+> +	}
+
+Try using falttened implementation if possible.
+
+Regards,
+Krishna,
