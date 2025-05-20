@@ -1,16 +1,16 @@
 Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1550C2563
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 13:00:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 997854689
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 13:00:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747746052; cv=none; b=oJAW2YJ4+fk6H9KHdzpyS+PqfugQAeIRafXnRbe1KecebcO9dRE/PYXVjb4tF49CDJcaw0sMcoDG5KXAro0YFSdsgKpfWN3Ct1D5Yjjb1dqaYlLcriYedOPWm14YrtabIDlBkFkRTX3SH+7Hw4zY6pNjCOObORJmOQhzaq9FxgE=
+	t=1747746055; cv=none; b=S52jROqfxf/VLrHHy5mHymBrjXJaPTU5BE+FnCgFesUccl3ExpXkf6S1TGt7hv/cKMzyhO3+oByzl656CD6ng2ueADDytJVZD1iNnlSwuQeJvuBqSArAmju83rEhlKCq5jf5oxkKcx7rm2WalfatthS8KWvze7lGqGXMpd92oDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747746052; c=relaxed/simple;
-	bh=xg1Y6oA45KrHl9Oogbu+myCMASgiVQYhWFcXBaXSe2U=;
+	s=arc-20240116; t=1747746055; c=relaxed/simple;
+	bh=WjhGiKBKJeTkNW7Xg+AcIBpjobKTAScRBZjiprQ/HZs=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=p12b9G1FD4Gbh0+GQaTSYGJ8hoXAkETFpDhRsOJIyW1FmbN0w6Jpq8KY1AUph5lD9u5abnmap838RhnTCcgelQWqHmOXNBkXMuEpF2pGa/uZHDS/nmQAEOxdl3oIeY8hSk21/d0nlWYQ8Ge1NiGUu2g6qnns5CQnyysGG7XoL60=
+	 Content-Type:MIME-Version; b=g45Bd6zvdiA3ImjsB8OyZN6c+5BhD6TldK4kYZWyNa7j4purMnfDzEAmu5FwluMNIad4GcBhv5U9B91hct+NMuelXtjLalcnkLdgHHBKGHqH9oZ15YdJG8wP6QPJZpqA6WrNn5eECnzyHBGQ1YPnyHWMXt0arWFJ1hFESLZ+fPY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
@@ -18,24 +18,20 @@ Received: from fangorn.home.surriel.com ([10.0.13.7])
 	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.97.1)
 	(envelope-from <riel@shelob.surriel.com>)
-	id 1uHMa9-00000000119-2u1g;
-	Tue, 20 May 2025 09:00:33 -0400
-Message-ID: <6a3290319031cd68a383e416f53aa7549bac9407.camel@surriel.com>
+	id 1uHMWo-000000000yi-2DwF;
+	Tue, 20 May 2025 08:57:06 -0400
+Message-ID: <841d88f8db26f33ede5a9277efca77e331f45e7c.camel@surriel.com>
 Subject: Re: [RFC v2 7/9] x86/mm: Introduce Remote Action Request
 From: Rik van Riel <riel@surriel.com>
-To: Nadav Amit <nadav.amit@gmail.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open
- list:MEMORY MANAGEMENT"	 <linux-mm@kvack.org>, the arch/x86 maintainers
- <x86@kernel.org>, 	kernel-team@meta.com, Dave Hansen
- <dave.hansen@linux.intel.com>, luto@kernel.org, 	peterz@infradead.org,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar	 <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, "H. Peter Anvin"	 <hpa@zytor.com>, Yu-cheng
- Yu <yu-cheng.yu@intel.com>
-Date: Tue, 20 May 2025 09:00:33 -0400
-In-Reply-To: <4A879001-E213-4239-9D25-CDA8EC3E2CD9@gmail.com>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org, 
+	kernel-team@meta.com, dave.hansen@linux.intel.com, luto@kernel.org, 
+	peterz@infradead.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	hpa@zytor.com, nadav.amit@gmail.com, Yu-cheng Yu <yu-cheng.yu@intel.com>
+Date: Tue, 20 May 2025 08:57:06 -0400
+In-Reply-To: <aCxLMsjkA9dBeKvD@gmail.com>
 References: <20250520010350.1740223-1-riel@surriel.com>
-	 <20250520010350.1740223-8-riel@surriel.com>
-	 <4A879001-E213-4239-9D25-CDA8EC3E2CD9@gmail.com>
+	 <20250520010350.1740223-8-riel@surriel.com> <aCxLMsjkA9dBeKvD@gmail.com>
 Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
  keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
  eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
@@ -71,73 +67,28 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Sender: riel@surriel.com
 
-On Tue, 2025-05-20 at 14:29 +0300, Nadav Amit wrote:
-> Not a full review, but..
+On Tue, 2025-05-20 at 11:28 +0200, Ingo Molnar wrote:
 >=20
-> > On 20 May 2025, at 4:02, Rik van Riel <riel@surriel.com> wrote:
+> * Rik van Riel <riel@surriel.com> wrote:
+>=20
+> > From: Yu-cheng Yu <yu-cheng.yu@intel.com>
 > >=20
-> > +/*
-> > + * This is a modified version of smp_call_function_many() of
-> > kernel/smp.c,
+> > Remote Action Request (RAR) is a TLB flushing broadcast facility.
+> > To start a TLB flush, the initiator CPU creates a RAR payload and
+> > sends a command to the APIC.=C2=A0 The receiving CPUs automatically
+> > flush
+> > TLBs as specified in the payload without the kernel's involement.
+> >=20
+> > [ riel: add pcid parameter to smp_call_rar_many so other mms can be
+> > flushed ]
 >=20
-> The updated function names is smp_call_function_many_cond() and it is
-> not aligned with smp_call_rar_many. I think the new version is
-> (suprisingly)
-> better, so it=E2=80=99d be beneficial to bring smp_call_rar_many() to be =
-like
-> the
-> updated one in smp.c.
->=20
-Agreed, it will be good to conditionally not send=20
-the RAR vector to some CPUs, especially ones that
-are in deeper idle states.
+> Please actually review & tidy up patches that you pass through, don't
+> just hack them up minimally and slap your tag and SOB on top of it.
 
-That means structuring the code more like
-smp_call_function_many_cond()
+I'm happy to do that now that the code is finally working.
 
-> > +	/*
-> > +	 * Can deadlock when called with interrupts disabled.
-> > +	 * We allow cpu's that are not yet online though, as no
-> > one else can
-> > +	 * send smp call function interrupt to this cpu and as
-> > such deadlocks
-> > +	 * can't happen.
-> > +	 */
-> > +	WARN_ON_ONCE(cpu_online(this_cpu) && irqs_disabled()
-> > +		=C2=A0=C2=A0=C2=A0=C2=A0 && !oops_in_progress &&
-> > !early_boot_irqs_disabled);
->=20
-> I thought you agreed to change it to make it use lockdep instead (so
-> it will
-> be compiled out without LOCKDEP), like done in
-> smp_call_function_many_cond()
->=20
-I thought I had made that change in my tree.
-
-I guess I lost it in a rebase :(
-
-> > +
-> > +	/* Try to fastpath.=C2=A0 So, what's a CPU they want?=C2=A0 Ignoring
-> > this one. */
-> > +	cpu =3D cpumask_first_and(mask, cpu_online_mask);
-> > +	if (cpu =3D=3D this_cpu)
-> > +		cpu =3D cpumask_next_and(cpu, mask,
-> > cpu_online_mask);
-> > +
->=20
-> Putting aside the rest of the code, I see you don=E2=80=99t call
-> should_flush_tlb().
-> I think it is worth mentioning in commit log or comment the rationale
-> behind
-> it (and maybe benchmarks to justify it).
->=20
->=20
-The long term plan here is to simply have the originating
-CPU included in the cpumask, and have it send a RAR
-request to itself.
-
-That way all the CPUs can invalidate their entries in
-parallel, without any extra code.
+v3 will have much more cleanups, and hopefully a few
+optimizations.
 
 --=20
 All Rights Reversed.
