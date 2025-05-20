@@ -1,258 +1,149 @@
-Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 049BD21B8E0
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 03:55:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EA971E51FE;
+	Tue, 20 May 2025 04:01:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747713345; cv=none; b=J5eCQ1G+WEiUbVQmXprW4RZ1oc4mEQT1IX0UqZ91sluQH7Z7jhKswYPVP8yX9R3pBTayFe8u9lr1ejEpFQ8Tyz01ijQnx95qIlGWwqQqoe6cXDmBJt/iqVHB/ymmq51UdALeuPbeBmb2ox+qNlCddvTyNgBP/vSjITd8Ew4gBIs=
+	t=1747713709; cv=none; b=FUAfOyPmwSH9eJISuBfnCpNgcfIWqNU0/e5D/Sf70O0NL1DWo9Z4dfLJqctQCkk1DuEaICoXOIHRrAvx8RoXhz4WelOszNKJ3ZsE30BFSUttfbBRbiD8vejhcrqA9kpyKJWIB7IFdxLB10TPAED6nYDehMo3fZBAEU8deCBCwxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747713345; c=relaxed/simple;
-	bh=w8WHRQYEpuCWeHAPB9nFkldqFCPHSRWCIyyrfG+VjFU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nHFv/AahtxcJoqo4Fqz27O2S4vCOOmAqJ31JSl5StO6W7pSv3gU3T+I6+HOZ0rfrspdovJ3DEBu4kFHqxr4HS2MZvSBwN5lmzIrbBOvL7pt72XjBTPo3daduMAlvnSGdUOTuTP+bEPGWuhGycKxOpguzSzl83PjeQwNSX4iuJJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=pNNlH6sk; arc=none smtp.client-ip=95.215.58.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1747713709; c=relaxed/simple;
+	bh=MIvXUOnMPSdi5zoVIlxm5KaWG40huaNQe6PyC6jCeoA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FmibiDi/eNt/XW8JvewVuo5RndjqmRwp3rPsPNBwLocDWuyAztGIwtOHc1qqZszILtJrajiq13q2PF5SNyQ/CY/9ySv3efFLaAy+65C/ae4B/Zpwo81M1gtIcshsW/Kuphqc2NaUR2r5jFEX/+D/us9ZHL85KevIY6HXaw5DZ+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YA9/Ym2J; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="pNNlH6sk"
-Message-ID: <ac4301b5-6f82-49f2-9c71-7c4c015d48f7@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747713332;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0vG90czwujKi76lIQqwAygZDtoFqpt79hvyKmQojSMw=;
-	b=pNNlH6sk3FlySAJ2Aw+t5Bg4vSx9G6WX8djrJhqbRgeMvqruf1NO15m2qRa2PpbBOPRc2S
-	Fy1yTcad3nqHDLHSgyckiR558t39k1/j+oSFYS1c9+HcaOOoJ/Km+GZwdy0UItkQ2Beinh
-	+8rG3OypIkNx9VpA/94mcyJ07b7xtoE=
-Date: Tue, 20 May 2025 11:55:20 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YA9/Ym2J"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-72d3b48d2ffso4983007b3a.2;
+        Mon, 19 May 2025 21:01:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747713707; x=1748318507; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=aQFyxFeCf4QFGfYKfS18VbINdnTgdEdPG+DnfYGm8vA=;
+        b=YA9/Ym2JrHX3sMzCnK5kVt21/R05fQ5n52MoaKIMDTnaLsKXjKkkR8enKgMHI7Npwe
+         VmFZaf3gMM3ed5J8MnJQNdzKOgHq43RoFehaD71+Ybxg6oVkE3Q0/M55BEcEvgwCYm2p
+         QGYnflPqPtRfnH4GhHZ0EjkILfYald1b/vJS3NwzToCsP9Vu71HK09bICtW5QQnzAt1s
+         8OzAop0KvibhrSPsofMudA4tDwmhRyeDq16bbFdNivOSJH7NKPA1zSUEsL530RIKJkb9
+         kAu9Hmqca3X8P0kWiSex/NQpm1UigGSDZ9fB8H6g223CCvauLEWllGPvbUh2yjR9+N/9
+         frWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747713707; x=1748318507;
+        h=content-transfer-encoding:mime-version:reply-to:message-id:date
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aQFyxFeCf4QFGfYKfS18VbINdnTgdEdPG+DnfYGm8vA=;
+        b=trJZMsbN/+Veazmc7aTm0k9ndqwkPU/n96ZZY5b/NeLahPHWLvVTkLHq60qAEm+HUl
+         XIli4PnHUFzm9utetMyD08pXyhQ1ke3EfKdfgxhymTv11ghvhH7CJ2oeGetCndB+DKSQ
+         nZY6C/OcRHqjHu9QYN1Q7XVY0aPOvao38SP20piG+YIGGigAbE1tP9a1SyVgvQy0RpTI
+         tRtL+5Wqx4220lZYVmp8jjtEvHxZGU9VslxaxMBy3Ggi2enxxME14qowxQfIH2eKJEtL
+         ChUvQPOPqWWwiCHp2jxFieP1baxpcIaKQr9M8Eq7Wcd1NXodUBsCPVo8CmhlOYj539E7
+         l6Kw==
+X-Forwarded-Encrypted: i=1; AJvYcCV0YiH5ZbJ7EzrRj4TcwIgMOtyc+jRl9+i8rfltymQjbbessVQ6Vgf4bFoHAcmB+KLjUFymgrNVPrVOJiA=@vger.kernel.org, AJvYcCVNdglmj0TQlPGclJNrpjCLt2eIQnV1r6nVMewG5jAoqbESvl5tVDMyuHNV1Uzq47wYxGTHMZmW@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVlIFFgWYGJCIX6KwmSppUyB2IAKywW4eYtsuJ+bk/TPWs8I+I
+	Mhyz1Rfx/v6JTXI5kRRxpF8Ms+mD8bSOAcRZ+pjBZROc45QW3FPBP833
+X-Gm-Gg: ASbGnct5lD8/a6qTF9GKorvrMxdZyzN48s1mOC5xulXGqtCgzjocQx/dkFLZhDPmGH8
+	I6Ia5dX8Zp+elckW2SsQq/2jKukBcq2KxNTkyG6IR4uD77MfdN4qLgyp8wzBF4ESBJ8537NmCvF
+	dTjAbyF79ZHllBo+9omPt+iVtSoiH2Dxu3C/1IIFlM33IIAONCEkmIfqfn5Y7eq5vs+9tLwKCVo
+	rAnUREMEFKwY9qTesPQzduQ5c1PP8ceDfoDYZlKPD9Or2qWjNlzSeTiPduQt/ePTAAieDOYvx9n
+	nEsdRvIVDcqCifFj8ADAQH407E76jQ0j7bS6BdjIlZKu/XWEnGo5LyQK+jijkQULMppQhltv9VJ
+	CgOnT8Nsn9WnwuqAYukdbsKm8GvRXJg==
+X-Google-Smtp-Source: AGHT+IFP4Cbo8/KuRNTms2PVLrIoYUdA/qTJAcnF3gJz5vdQ9Nn+4KkqyBWfkU1oU7YU7tFDSsOCHA==
+X-Received: by 2002:a05:6a00:a06:b0:742:4545:2d2b with SMTP id d2e1a72fcca58-742acc8d18amr22090011b3a.3.1747713707097;
+        Mon, 19 May 2025 21:01:47 -0700 (PDT)
+Received: from localhost.localdomain (c-67-160-120-253.hsd1.wa.comcast.net. [67.160.120.253])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a96de0e5sm6986740b3a.25.2025.05.19.21.01.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 May 2025 21:01:46 -0700 (PDT)
+From: mhkelley58@gmail.com
+X-Google-Original-From: mhklinux@outlook.com
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	deller@gmx.de,
+	javierm@redhat.com,
+	arnd@arndb.de
+Cc: linux-kernel@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH v2 1/1] Drivers: hv: Always select CONFIG_SYSFB for Hyper-V guests
+Date: Mon, 19 May 2025 21:01:43 -0700
+Message-Id: <20250520040143.6964-1-mhklinux@outlook.com>
+X-Mailer: git-send-email 2.25.1
+Reply-To: mhklinux@outlook.com
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 3/4] mm: prevent KSM from completely breaking VMA merging
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
- Pedro Falcato <pfalcato@suse.de>, David Hildenbrand <david@redhat.com>,
- Xu Xin <xu.xin16@zte.com.cn>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-References: <cover.1747431920.git.lorenzo.stoakes@oracle.com>
- <418d3edbec3a718a7023f1beed5478f5952fc3df.1747431920.git.lorenzo.stoakes@oracle.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Chengming Zhou <chengming.zhou@linux.dev>
-In-Reply-To: <418d3edbec3a718a7023f1beed5478f5952fc3df.1747431920.git.lorenzo.stoakes@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-On 2025/5/19 16:51, Lorenzo Stoakes wrote:
-> If a user wishes to enable KSM mergeability for an entire process and all
-> fork/exec'd processes that come after it, they use the prctl()
-> PR_SET_MEMORY_MERGE operation.
-> 
-> This defaults all newly mapped VMAs to have the VM_MERGEABLE VMA flag set
-> (in order to indicate they are KSM mergeable), as well as setting this flag
-> for all existing VMAs.
-> 
-> However it also entirely and completely breaks VMA merging for the process
-> and all forked (and fork/exec'd) processes.
-> 
-> This is because when a new mapping is proposed, the flags specified will
-> never have VM_MERGEABLE set. However all adjacent VMAs will already have
-> VM_MERGEABLE set, rendering VMAs unmergeable by default.
-> 
-> To work around this, we try to set the VM_MERGEABLE flag prior to
-> attempting a merge. In the case of brk() this can always be done.
-> 
-> However on mmap() things are more complicated - while KSM is not supported
-> for file-backed mappings, it is supported for MAP_PRIVATE file-backed
-> mappings.
-> 
-> And these mappings may have deprecated .mmap() callbacks specified which
-> could, in theory, adjust flags and thus KSM merge eligiblity.
-> 
-> So we check to determine whether this at all possible. If not, we set
-> VM_MERGEABLE prior to the merge attempt on mmap(), otherwise we retain the
-> previous behaviour.
-> 
-> When .mmap_prepare() is more widely used, we can remove this precaution.
-> 
-> While this doesn't quite cover all cases, it covers a great many (all
-> anonymous memory, for instance), meaning we should already see a
-> significant improvement in VMA mergeability.
-> 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+From: Michael Kelley <mhklinux@outlook.com>
 
-Looks good to me with the build fix. And it seems that ksm_add_vma()
-is not used anymore..
+The Hyper-V host provides guest VMs with a range of MMIO addresses
+that guest VMBus drivers can use. The VMBus driver in Linux manages
+that MMIO space, and allocates portions to drivers upon request. As
+part of managing that MMIO space in a Generation 2 VM, the VMBus
+driver must reserve the portion of the MMIO space that Hyper-V has
+designated for the synthetic frame buffer, and not allocate this
+space to VMBus drivers other than graphics framebuffer drivers. The
+synthetic frame buffer MMIO area is described by the screen_info data
+structure that is passed to the Linux kernel at boot time, so the
+VMBus driver must access screen_info for Generation 2 VMs. (In
+Generation 1 VMs, the framebuffer MMIO space is communicated to
+the guest via a PCI pseudo-device, and access to screen_info is
+not needed.)
 
-Reviewed-by: Chengming Zhou <chengming.zhou@linux.dev>
+In commit a07b50d80ab6 ("hyperv: avoid dependency on screen_info")
+the VMBus driver's access to screen_info is restricted to when
+CONFIG_SYSFB is enabled. CONFIG_SYSFB is typically enabled in kernels
+built for Hyper-V by virtue of having at least one of CONFIG_FB_EFI,
+CONFIG_FB_VESA, or CONFIG_SYSFB_SIMPLEFB enabled, so the restriction
+doesn't usually affect anything. But it's valid to have none of these
+enabled, in which case CONFIG_SYSFB is not enabled, and the VMBus driver
+is unable to properly reserve the framebuffer MMIO space for graphics
+framebuffer drivers. The framebuffer MMIO space may be assigned to
+some other VMBus driver, with undefined results. As an example, if
+a VM is using a PCI pass-thru NVMe controller to host the OS disk,
+the PCI NVMe controller is probed before any graphics devices, and the
+NVMe controller is assigned a portion of the framebuffer MMIO space.
+Hyper-V reports an error to Linux during the probe, and the OS disk
+fails to get setup. Then Linux fails to boot in the VM.
 
-Thanks!
+Fix this by having CONFIG_HYPERV always select SYSFB. Then the
+VMBus driver in a Gen 2 VM can always reserve the MMIO space for the
+graphics framebuffer driver, and prevent the undefined behavior. But
+don't select SYSFB when building for HYPERV_VTL_MODE as VTLs other
+than VTL 0 don't have a framebuffer and aren't subject to the issue.
+Adding SYSFB in such cases is harmless, but would increase the image
+size for no purpose.
 
-> ---
->   include/linux/ksm.h |  4 ++--
->   mm/ksm.c            | 20 ++++++++++++------
->   mm/vma.c            | 49 +++++++++++++++++++++++++++++++++++++++++++--
->   3 files changed, 63 insertions(+), 10 deletions(-)
-> 
-> diff --git a/include/linux/ksm.h b/include/linux/ksm.h
-> index d73095b5cd96..ba5664daca6e 100644
-> --- a/include/linux/ksm.h
-> +++ b/include/linux/ksm.h
-> @@ -17,8 +17,8 @@
->   #ifdef CONFIG_KSM
->   int ksm_madvise(struct vm_area_struct *vma, unsigned long start,
->   		unsigned long end, int advice, unsigned long *vm_flags);
-> -
-> -void ksm_add_vma(struct vm_area_struct *vma);
-> +vm_flags_t ksm_vma_flags(const struct mm_struct *mm, const struct file *file,
-> +			 vm_flags_t vm_flags);
->   int ksm_enable_merge_any(struct mm_struct *mm);
->   int ksm_disable_merge_any(struct mm_struct *mm);
->   int ksm_disable(struct mm_struct *mm);
-> diff --git a/mm/ksm.c b/mm/ksm.c
-> index d0c763abd499..022af14a95ea 100644
-> --- a/mm/ksm.c
-> +++ b/mm/ksm.c
-> @@ -2731,16 +2731,24 @@ static int __ksm_del_vma(struct vm_area_struct *vma)
->   	return 0;
->   }
->   /**
-> - * ksm_add_vma - Mark vma as mergeable if compatible
-> + * ksm_vma_flags - Update VMA flags to mark as mergeable if compatible
->    *
-> - * @vma:  Pointer to vma
-> + * @mm:       Proposed VMA's mm_struct
-> + * @file:     Proposed VMA's file-backed mapping, if any.
-> + * @vm_flags: Proposed VMA"s flags.
-> + *
-> + * Returns: @vm_flags possibly updated to mark mergeable.
->    */
-> -void ksm_add_vma(struct vm_area_struct *vma)
-> +vm_flags_t ksm_vma_flags(const struct mm_struct *mm, const struct file *file,
-> +			 vm_flags_t vm_flags)
->   {
-> -	struct mm_struct *mm = vma->vm_mm;
-> +	vm_flags_t ret = vm_flags;
->   
-> -	if (test_bit(MMF_VM_MERGE_ANY, &mm->flags))
-> -		__ksm_add_vma(vma);
-> +	if (test_bit(MMF_VM_MERGE_ANY, &mm->flags) &&
-> +	    __ksm_should_add_vma(file, vm_flags))
-> +		ret |= VM_MERGEABLE;
-> +
-> +	return ret;
->   }
->   
->   static void ksm_add_vmas(struct mm_struct *mm)
-> diff --git a/mm/vma.c b/mm/vma.c
-> index 3ff6cfbe3338..5bebe55ea737 100644
-> --- a/mm/vma.c
-> +++ b/mm/vma.c
-> @@ -2482,7 +2482,6 @@ static int __mmap_new_vma(struct mmap_state *map, struct vm_area_struct **vmap)
->   	 */
->   	if (!vma_is_anonymous(vma))
->   		khugepaged_enter_vma(vma, map->flags);
-> -	ksm_add_vma(vma);
->   	*vmap = vma;
->   	return 0;
->   
-> @@ -2585,6 +2584,45 @@ static void set_vma_user_defined_fields(struct vm_area_struct *vma,
->   	vma->vm_private_data = map->vm_private_data;
->   }
->   
-> +static void update_ksm_flags(struct mmap_state *map)
-> +{
-> +	map->flags = ksm_vma_flags(map->mm, map->file, map->flags);
-> +}
-> +
-> +/*
-> + * Are we guaranteed no driver can change state such as to preclude KSM merging?
-> + * If so, let's set the KSM mergeable flag early so we don't break VMA merging.
-> + *
-> + * This is applicable when PR_SET_MEMORY_MERGE has been set on the mm_struct via
-> + * prctl() causing newly mapped VMAs to have the KSM mergeable VMA flag set.
-> + *
-> + * If this is not the case, then we set the flag after considering mergeability,
-> + * which will prevent mergeability as, when PR_SET_MEMORY_MERGE is set, a new
-> + * VMA will not have the KSM mergeability VMA flag set, but all other VMAs will,
-> + * preventing any merge.
-> + */
-> +static bool can_set_ksm_flags_early(struct mmap_state *map)
-> +{
-> +	struct file *file = map->file;
-> +
-> +	/* Anonymous mappings have no driver which can change them. */
-> +	if (!file)
-> +		return true;
-> +
-> +	/* shmem is safe. */
-> +	if (shmem_file(file))
-> +		return true;
-> +
-> +	/*
-> +	 * If .mmap_prepare() is specified, then the driver will have already
-> +	 * manipulated state prior to updating KSM flags.
-> +	 */
-> +	if (file->f_op->mmap_prepare)
-> +		return true;
-> +
-> +	return false;
-> +}
-> +
->   static unsigned long __mmap_region(struct file *file, unsigned long addr,
->   		unsigned long len, vm_flags_t vm_flags, unsigned long pgoff,
->   		struct list_head *uf)
-> @@ -2595,6 +2633,7 @@ static unsigned long __mmap_region(struct file *file, unsigned long addr,
->   	bool have_mmap_prepare = file && file->f_op->mmap_prepare;
->   	VMA_ITERATOR(vmi, mm, addr);
->   	MMAP_STATE(map, mm, &vmi, addr, len, pgoff, vm_flags, file);
-> +	bool check_ksm_early = can_set_ksm_flags_early(&map);
->   
->   	error = __mmap_prepare(&map, uf);
->   	if (!error && have_mmap_prepare)
-> @@ -2602,6 +2641,9 @@ static unsigned long __mmap_region(struct file *file, unsigned long addr,
->   	if (error)
->   		goto abort_munmap;
->   
-> +	if (check_ksm_early)
-> +		update_ksm_flags(&map);
-> +
->   	/* Attempt to merge with adjacent VMAs... */
->   	if (map.prev || map.next) {
->   		VMG_MMAP_STATE(vmg, &map, /* vma = */ NULL);
-> @@ -2611,6 +2653,9 @@ static unsigned long __mmap_region(struct file *file, unsigned long addr,
->   
->   	/* ...but if we can't, allocate a new VMA. */
->   	if (!vma) {
-> +		if (!check_ksm_early)
-> +			update_ksm_flags(&map);
-> +
->   		error = __mmap_new_vma(&map, &vma);
->   		if (error)
->   			goto unacct_error;
-> @@ -2713,6 +2758,7 @@ int do_brk_flags(struct vma_iterator *vmi, struct vm_area_struct *vma,
->   	 * Note: This happens *after* clearing old mappings in some code paths.
->   	 */
->   	flags |= VM_DATA_DEFAULT_FLAGS | VM_ACCOUNT | mm->def_flags;
-> +	flags = ksm_vma_flags(mm, NULL, flags);
->   	if (!may_expand_vm(mm, flags, len >> PAGE_SHIFT))
->   		return -ENOMEM;
->   
-> @@ -2756,7 +2802,6 @@ int do_brk_flags(struct vma_iterator *vmi, struct vm_area_struct *vma,
->   
->   	mm->map_count++;
->   	validate_mm(mm);
-> -	ksm_add_vma(vma);
->   out:
->   	perf_event_mmap(vma);
->   	mm->total_vm += len >> PAGE_SHIFT;
+Fixes: a07b50d80ab6 ("hyperv: avoid dependency on screen_info")
+Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+---
+Changes in v2:
+* Made "select SYSFB" conditional on not being a build for
+  VTL mode (Saurabh Sengar)
+
+ drivers/hv/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
+index eefa0b559b73..1cd188b73b74 100644
+--- a/drivers/hv/Kconfig
++++ b/drivers/hv/Kconfig
+@@ -9,6 +9,7 @@ config HYPERV
+ 	select PARAVIRT
+ 	select X86_HV_CALLBACK_VECTOR if X86
+ 	select OF_EARLY_FLATTREE if OF
++	select SYSFB if !HYPERV_VTL_MODE
+ 	help
+ 	  Select this option to run Linux as a Hyper-V client operating
+ 	  system.
+-- 
+2.25.1
+
