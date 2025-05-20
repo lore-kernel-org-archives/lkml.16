@@ -1,99 +1,160 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41E56242D72;
-	Tue, 20 May 2025 13:34:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51C4022D794
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 13:34:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747748085; cv=none; b=Yj5/4IiEVRJxf62iiMijkuxyUn10J/0IKAP6Qy7mE4yFM67nssICAgWVZH7XfvN4Jv9NHwhuEMU2JNF2jqsVz4hdEmvtgWsozcaOKosROwHiwKy2krLwG99MAlMNtgWzJ7MtsxIyZdADVKWaDwAGeFiaSUzcQtrrjOT0uTMljkc=
+	t=1747748091; cv=none; b=gFDhuvKQKbaYdUj6vGJ9vOUu0NG7IdAZi2L8croXjE7GrNckpOTIBVTNrtd8/aseS4nJa0cpzs/RokmkTHpjmYwkVo7Zg3L868keMMK0jUjkJKZYFtK/WYrPjv6WmBQOHYHeVrn8qCZptBV2FPTdXOv+Sne4YgpCjhQMtFkD4oU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747748085; c=relaxed/simple;
-	bh=gFVBHCCsBHL4lLZoEhsrJGKq4vpU6nZU7dUlkmtYGok=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fMJ0/S/V2GDG7ld5vBrRAz1MUO2hqWdAKKTFExgvsAmOqe/Sf91YsAX2fc6CklxIDWrwJXC3A0x6UEsouqOI4M92izSgNuCvCeO75pLDjJmkRsuSfWlTlXw0Sp6nlbUHvjGSFsgZkLpcNXfFYTM/64gHZwBnicbni8mb6QNI6tI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eV4GZ6C7; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747748091; c=relaxed/simple;
+	bh=R5VbzDJWzrc3ZxG7WARI+XrXckegfKN14c/Dy6mUB68=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=bfkUgCIu4idqapUDRZW+uzl7sJ1sBMyHzPp6z3JhVgmL477O8MmFHu7ROjDhWpoUYcMc5NBmC91cZWAWeGULGslxKkBTPwznib0NdnOwid1HAHLGZbY8HepkDfUzBKv62/Rp+La8VbbPmswooeTZ9OjajMvqWyRw/5VVbfiC8/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JArgLAYh; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eV4GZ6C7"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-54c0fa6d455so7091833e87.1;
-        Tue, 20 May 2025 06:34:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747748081; x=1748352881; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XfD1s22Ic364TvVTHCagUpXijjIYK42cBGG9M8zpn10=;
-        b=eV4GZ6C7zdxo1hdHX9IfW52FaAiDhku305CC7KTM+GF/UtSzI0F0TPFVnaEqhwbQgX
-         AIIDcOu/eIZR4RnTDpcxI4PvBdgct11l6MfF7ilOqoElOEboKsd5dleGHb+GSDfTHHHr
-         ws1ApiMbaAytpDPZeKUqyyVlXPkKlTeekCpE4ld/vRFl3p5CegCnkVNVhhQuH62Z0QDO
-         up7AzKORTJWNO6j9hgtk2HjRExLBQZ7xJwn5YC7IBmdOt9cAFj9aRdtVpJtsmNm58+IE
-         9XmW0TwmLJzf72umKxf4tKnG3KV+CoofJi5o4pOGo86IjPr0smFvcsRJaMvHU1TfcFhW
-         DgMw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JArgLAYh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747748089;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zPdd0kG+A0mBSYOTCTXbGwKBOQupNoZqnxcvyos/Qtc=;
+	b=JArgLAYhHDxTUBNgluYhsk0lAcefVlv8jlBFzycFrlmoHuJsEeIGIAR7UjMqG5nXKhNaDm
+	8te0aD/W9wPen2GGVm9IR4k535G6uZZVkHeHSznBryGvGIgBiAy/QFKMVBl3WuOriIx0u3
+	ku8JqSNlFYF4pLosrxDWxM969R6IAo8=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-423-WOhr29HOPYK0YTcgZ0DhGA-1; Tue, 20 May 2025 09:34:45 -0400
+X-MC-Unique: WOhr29HOPYK0YTcgZ0DhGA-1
+X-Mimecast-MFC-AGG-ID: WOhr29HOPYK0YTcgZ0DhGA_1747748085
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c790dc38b4so1019325585a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 06:34:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747748081; x=1748352881;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XfD1s22Ic364TvVTHCagUpXijjIYK42cBGG9M8zpn10=;
-        b=Lz7xYmH5XAXEAtH83JQSKOAgfJKbUEJ4JDQHUtcnQcBvxEgPjNZiMzihfQYR8dZSQx
-         d+asxV2xIMeRt7l5FmtcEmSexXN1GeNrXc0RHxlgG9ztypXBQjp4i1DSD4pdmHsC/9Sp
-         4GpHqh/G3JTuDMqEbAI4E0KE2tAGLif4Jnn4hBz16RZDJlm0H9sarWT5hda78DnCd4n4
-         7CtF/oW3PqfSPGyvrre3/85lNxoel7n5kggFC0z7ZPpN1MS8KBMKVjNp4T+lTQUGeHqq
-         laViNSyn0JU0TGLkA9AWnrerJy0WHAMutc8f+mkWMOLaPXc/ZN89ndFQNpj7510mJ+nu
-         F7tw==
-X-Forwarded-Encrypted: i=1; AJvYcCVGDRmnLCK97Ix/uvZJSqz4mtTdMajGZ94QemYlUAcuVvBa1tJ/tCjeNDabK3BgT/Z0xWiL1Ftlue5kWQXJ@vger.kernel.org, AJvYcCXn8IZvf18gtqu/vWLNxU3jun3wg4d6kehSMcMXvBagh8oMS1LWNpCBqKOgVdsxUIfvm7Ffm98KNh5J@vger.kernel.org
-X-Gm-Message-State: AOJu0YwE/3wDXmoeVhwUelcWCVva6K31x5SpOo8sF38sxjHngrJ9D8/4
-	rawjhH35AIMgkf0RhQjiXhlRUyP5h19kz1WsiKbUm1WM62LvruFn9Izm7ugmG/DqMUJRziXOqbM
-	VqDGapwBJ3WLi0mxrkSiCX0dllDxVcmQ=
-X-Gm-Gg: ASbGncvMkFl+VknQ2vXTmYMzaZCfHM4Ku3TqLjWUZmJNQDIpsbsw+0ncQI7NsiHGWxu
-	Zds6/eY8f5m6Wclp0It2S0SDoFPuRn6puTSnbpKjZoJWOFBBFYKWXKZg7AqF/FvxA4HrRFEs6Xd
-	fDzBHtlD1zhXfN+TVZR+tQblKQICMcA04986Ne/jcZ7pnjS+rZmAIEu5MOGztCmWA=
-X-Google-Smtp-Source: AGHT+IGOdVh5BabNP6weiWFLJXZ3ZVMdQGC/USr/zeCgTmal+W0BVS9hJ31uxCQihRwgnGjI33KrTTR4UAo6HbnMaFc=
-X-Received: by 2002:a05:6512:4602:b0:549:490e:240d with SMTP id
- 2adb3069b0e04-550e71d7d90mr5140507e87.28.1747748080897; Tue, 20 May 2025
- 06:34:40 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747748085; x=1748352885;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zPdd0kG+A0mBSYOTCTXbGwKBOQupNoZqnxcvyos/Qtc=;
+        b=INSYDOnoi0uuds8PnGWxVj+aiOCIOUpZv5tuFJUp1oO7oJNqMdzwuMS3iURvzAbSEF
+         txp+qCLuWCRUFyWAxH4QaCfGkhDNM/TbfV4J0M0b8Typp+DQ7z8j+EZKlPA4Qxg0zqe1
+         DWPcAI/ihdXsucBedVe2aIrmhxYrgT5VvMfULMNCfSEeI503t5XQVoNIbAtAcVXGZOq/
+         csQo/VG0FbQ1cuuB8S98GQb4rrZIz8H6WjF2OSETmLbuWYNHwinCeNxSl2iWbnIkrQpd
+         QkenX2ACz2f2UpO+04QexMgJiB9Pb7+bRNuLitcyjzpupIczXvPhgad0idhHfVgbkPbd
+         WMng==
+X-Forwarded-Encrypted: i=1; AJvYcCUvk47Y4/ynIieFUBQuK47DZLrnOWKMu4VJHxXePE8TG8EfBeN+8xC2KO9MURMSoGm4rrFnVhEoVwl/y7Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyl7NvLD1v4nZxFSrH/o6AQFq4g38qR5j6/iIeW+2hbCv0tSp+7
+	4r1MfWW2lTC9LjLdqBDf81+ponrbx+jwbd5caiiPG0XTd7tUu9dedleoreQ49Mkm3/l6zAdhVhT
+	abY3qiGCo3tPUpTXhP+hogsMyZ3S0as9n4N3lj4MWGfM4zGEmP4S4WJklJ23z863M9w==
+X-Gm-Gg: ASbGncvW5RBopStQKwYIE+Z1nOT+DEAx/zeJJK0cUjvdBXJpwECqIbP308uhY9S6prh
+	eEF8UvINtYWVIPvCMhY2QDlRj0ffHBx5YC4QC/NAzAgPpUhTMyEQNs00yWGKsSkPzTzGg0sbuCl
+	aES9d1BahLCJ9/MxQywsoyesmqw3RoCP0uEOMyKUTtBnfonJ4ZFQqijrGLl2QwAmF9KlR8fFRKs
+	DfEXMXhRNP3+OvhIZoARhybU901zeYlhqdxNbue5DJQ0bVFf4IyuXvULh3cQnV+Xx41/duKOXa7
+	asKyTnszfOS/iPbeucQ4Fli6wrn+CJpHq3kL/I4eBDst0dVGrVfVZEY=
+X-Received: by 2002:a05:620a:2892:b0:7c5:9480:7cb4 with SMTP id af79cd13be357-7cd46af8d25mr2512086385a.9.1747748085204;
+        Tue, 20 May 2025 06:34:45 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHQL2KB+rwh53zo4Wgg3ScYG1+9jtH2wb4ybzSByGI2RDMfJa/SzjeXrDk8HgE9LBFKy6qW6g==
+X-Received: by 2002:a05:620a:2892:b0:7c5:9480:7cb4 with SMTP id af79cd13be357-7cd46af8d25mr2512082385a.9.1747748084686;
+        Tue, 20 May 2025 06:34:44 -0700 (PDT)
+Received: from ?IPV6:2601:188:c180:4250:627d:9ff:fe85:9ade? ([2601:188:c180:4250:627d:9ff:fe85:9ade])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd468cd124sm730874585a.100.2025.05.20.06.34.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 May 2025 06:34:44 -0700 (PDT)
+From: Waiman Long <llong@redhat.com>
+X-Google-Original-From: Waiman Long <longman@redhat.com>
+Message-ID: <8029d719-9dc2-4c7d-af71-4f6ae99fe256@redhat.com>
+Date: Tue, 20 May 2025 09:34:42 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250520115143.409413-1-c.stoidner@phytec.de>
-In-Reply-To: <20250520115143.409413-1-c.stoidner@phytec.de>
-From: Fabio Estevam <festevam@gmail.com>
-Date: Tue, 20 May 2025 10:34:29 -0300
-X-Gm-Features: AX0GCFu-SKgKDmlyHEywfDCC8Hm0Dm6pbXAwBI2nvYfhldnFsrevIPgWdHRuit4
-Message-ID: <CAOMZO5D8giOiBCeV5AP1pL+hCFQt9bs3gFsr2mCgMSSbcbCovw@mail.gmail.com>
-Subject: Re: [PATCH v2] arm64: dts: freescale: imx93-phycore-som: Delay the
- phy reset by a gpio
-To: Christoph Stoidner <c.stoidner@phytec.de>
-Cc: Primoz Fiser <primoz.fiser@norik.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, devicetree@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	upstream@lists.phytec.de
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cpuset: introduce non-blocking cpuset.mems setting option
+To: Zhongkun He <hezhongkun.hzk@bytedance.com>, tj@kernel.org,
+ hannes@cmpxchg.org
+Cc: cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+ muchun.song@linux.dev
+References: <20250520031552.1931598-1-hezhongkun.hzk@bytedance.com>
+Content-Language: en-US
+In-Reply-To: <20250520031552.1931598-1-hezhongkun.hzk@bytedance.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 20, 2025 at 8:52=E2=80=AFAM Christoph Stoidner <c.stoidner@phyt=
-ec.de> wrote:
+On 5/19/25 11:15 PM, Zhongkun He wrote:
+> Setting the cpuset.mems in cgroup v2 can trigger memory
+> migrate in cpuset. This behavior is fine for newly created
+> cgroups but it can cause issues for the existing cgroups.
+> In our scenario, modifying the cpuset.mems setting during
+> peak times frequently leads to noticeable service latency
+> or stuttering.
+>
+> It is important to have a consistent set of behavior for
+> both cpus and memory. But it does cause issues at times,
+> so we would hope to have a flexible option.
+>
+> This idea is from the non-blocking limit setting option in
+> memory control.
+>
+> https://lore.kernel.org/all/20250506232833.3109790-1-shakeel.butt@linux.dev/
+>
+> Signed-off-by: Zhongkun He <hezhongkun.hzk@bytedance.com>
+> ---
+>   Documentation/admin-guide/cgroup-v2.rst |  7 +++++++
+>   kernel/cgroup/cpuset.c                  | 11 +++++++++++
+>   2 files changed, 18 insertions(+)
+>
+> diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
+> index 1a16ce68a4d7..d9e8e2a770af 100644
+> --- a/Documentation/admin-guide/cgroup-v2.rst
+> +++ b/Documentation/admin-guide/cgroup-v2.rst
+> @@ -2408,6 +2408,13 @@ Cpuset Interface Files
+>   	a need to change "cpuset.mems" with active tasks, it shouldn't
+>   	be done frequently.
+>   
+> +	If cpuset.mems is opened with O_NONBLOCK then the migration is
+> +	bypassed. This is useful for admin processes that need to adjust
+> +	the cpuset.mems dynamically without blocking. However, there is
+> +	a risk that previously allocated pages are not within the new
+> +	cpuset.mems range, which may be altered by move_pages syscall or
+> +	numa_balance.
+> +
+>     cpuset.mems.effective
+>   	A read-only multiple values file which exists on all
+>   	cpuset-enabled cgroups.
+> diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+> index 24b70ea3e6ce..2a0867e0c6d2 100644
+> --- a/kernel/cgroup/cpuset.c
+> +++ b/kernel/cgroup/cpuset.c
+> @@ -3208,7 +3208,18 @@ ssize_t cpuset_write_resmask(struct kernfs_open_file *of,
+>   		retval = update_exclusive_cpumask(cs, trialcs, buf);
+>   		break;
+>   	case FILE_MEMLIST:
+> +		bool skip_migrate_once = false;
+> +
+> +		if ((of->file->f_flags & O_NONBLOCK) &&
+> +			is_memory_migrate(cs) &&
+> +			!cpuset_update_flag(CS_MEMORY_MIGRATE, cs, 0))
+> +			skip_migrate_once = true;
+> +
+>   		retval = update_nodemask(cs, trialcs, buf);
+> +
+> +		/* Restore the migrate flag */
+> +		if (skip_migrate_once)
+> +			cpuset_update_flag(CS_MEMORY_MIGRATE, cs, 1);
+>   		break;
+>   	default:
+>   		retval = -EINVAL;
 
-> diff --git a/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi b/arch/=
-arm64/boot/dts/freescale/imx93-phycore-som.dtsi
-> index 88c2657b50e6..c08f4b8a65a6 100644
-> --- a/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
-> @@ -58,6 +58,9 @@ &fec {
->                                  <&clk IMX93_CLK_SYS_PLL_PFD1_DIV2>,
->                                  <&clk IMX93_CLK_SYS_PLL_PFD1_DIV2>;
->         assigned-clock-rates =3D <100000000>, <50000000>, <50000000>;
-> +       phy-reset-gpios =3D <&gpio4 23 GPIO_ACTIVE_HIGH>;
-> +       phy-reset-duration =3D <1>;
-> +       phy-reset-post-delay =3D <0>;
+I would prefer to temporarily make is_memory_migrate() helper return 
+false by also checking an internal variable, for example, instead of 
+messing with the cpuset flags.
 
-These properties are marked as deprecated in fsl,fec.yaml.
+Cheers,
+Longman
 
-It would be better to place the properties described by
-ethernet-phy.yaml under the ethernet-phy@1 node.
