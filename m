@@ -1,121 +1,124 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFF991BD01D
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 08:27:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCF3721CC51;
+	Tue, 20 May 2025 08:29:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.166.238
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747729667; cv=none; b=Q19EtGmO/BKfTTCzqCBMFX8vdAdo5iEP+UFbHHcwuUcIRDVXhzU53uUMFZFOZNBtvBlaZF7dUTIY/2WO7eSx3IkpapwjopjheDOosMS1Z5TzULo+Sgn8UqgUkNlAtA9FgslFApinDBHQw4cfRFb0PsWm/pdz1AlKFZa2HgZ6l6U=
+	t=1747729789; cv=none; b=J5Knul8ZRuDCrHZS280qkzHNhco4WCXCi3hUS4TwB3Qs5xNJbHnjIQVZCZi4VA+Xb1BwqjQOiCMH+wlugkadjTIt/Wvjn+tdSDEFT+dHJC+o/8eH7K22PSmL24uPZZUmVqJlsItkurlMxpdTqau5vfG8mjHwJmCeiFVL3iscXE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747729667; c=relaxed/simple;
-	bh=xDriFHHEzUbZyotSRsYYBdZzAU2QomAsXKO+q4kWyxY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=n2UceA3jhYYRA3diqCJDEpFr3imKoc/PBokz9am4zLoo8JI8HBkyY2mNlzOcKBtMaaCGWSJ2tjkoLLjTx+cSFhIqd5+5u4PP0EL0vz0O35roD50azerhKnW+BLCF+WA6+oLYTDF/uuY+MI7f9kmequlLCBJ727zgQVjPa2o6YAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=0L5WNatZ; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="0L5WNatZ"
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54K8R6Mx032271;
-	Tue, 20 May 2025 10:27:40 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	bGpQ2EmPbJzylBZdpgSXUtnBLBsdGU1pVS2JhOoqres=; b=0L5WNatZulsDRa/O
-	Wh0CQhOYcR4shNjqXYSvw56GiTk4AzionMz3pDYHp3obZeYv/n9w/SYr3Wh5g6aA
-	nnbR0InGpYcsTHS3Nby1NwPJ2vNkx6RmMVRwGafmo7DczDPNdCtrbbu/ZYsJqqE8
-	RMMT88XEWzASUnjADQYebEhcZquab9xqkrh6HQFpQ7m/OwziV/VNPs1rwaB5T7b0
-	9aOwcd5pPxYE1hIM2rXkQ6QAfyGQxRWCadhLtDCNyA6sFegFhL2+DhjoF8HoWJVl
-	e5DXzP2DfwOq/1RuIe7WWknpvbUoLn4WAjd23GxY6aTVtvxDVPqUkfc8TtQFtZVg
-	iHaRfA==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46phbgkp40-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 May 2025 10:27:40 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 1CE5740098;
-	Tue, 20 May 2025 10:27:01 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2FE2CB2DB2C;
-	Tue, 20 May 2025 10:26:48 +0200 (CEST)
-Received: from [10.252.30.65] (10.252.30.65) by SHFDAG1NODE2.st.com
- (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 20 May
- 2025 10:26:47 +0200
-Message-ID: <f1ffb147-459a-4b3b-b109-9b07b25c99ac@foss.st.com>
-Date: Tue, 20 May 2025 10:26:46 +0200
+	s=arc-20240116; t=1747729789; c=relaxed/simple;
+	bh=POiTATqg05LVeisM3BzKZGvxLNPea9Z+h0WRmR+dEnM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oz9OfCe/Kt7pQH7U9ZBXzr8/dDhL9yvA516erXy6KBrtHdrjUMqO5JS3VuIIG7k76+wgLmXP67w0vZw1ToUEsRsgi6EHcL6cmQzIqkI4je5UGYSFf8TQE3aO7LYZ/AADjTzdHvs608T4yS4sQGnwGYzy5QYZwi/XOxBmOESPHmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.166.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Received: from pps.filterd (m0250810.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54K596md015733;
+	Tue, 20 May 2025 01:29:36 -0700
+Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [147.11.82.254])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 46pnr3jtnx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Tue, 20 May 2025 01:29:36 -0700 (PDT)
+Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
+ ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.43; Tue, 20 May 2025 01:29:19 -0700
+Received: from pek-lpg-core1.wrs.com (147.11.136.210) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
+ 15.1.2507.43 via Frontend Transport; Tue, 20 May 2025 01:29:15 -0700
+From: <jianqi.ren.cn@windriver.com>
+To: <gregkh@linuxfoundation.org>, <stable@vger.kernel.org>
+CC: <patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+        <jianqi.ren.cn@windriver.com>, <davem@davemloft.net>,
+        <edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
+        <atenart@kernel.org>, <kareemem@amazon.com>, <netdev@vger.kernel.org>
+Subject: [PATCH 6.1.y] net: decrease cached dst counters in dst_release
+Date: Tue, 20 May 2025 16:29:31 +0800
+Message-ID: <20250520082931.1956136-1-jianqi.ren.cn@windriver.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [V1 1/2] arm stm32mp131.dtsi: add "encoding_mode" nvmem
- definition
-To: Rodolfo Giometti <giometti@enneenne.com>, <linux-kernel@vger.kernel.org>
-CC: Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Eric Fourmont <eric.fourmont-ext@st.com>
-References: <20250519130859.3389704-1-giometti@enneenne.com>
- <20250519130859.3389704-2-giometti@enneenne.com>
-Content-Language: en-US
-From: Yann Gautier <yann.gautier@foss.st.com>
-In-Reply-To: <20250519130859.3389704-2-giometti@enneenne.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE2.st.com
- (10.75.129.70)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDA2OCBTYWx0ZWRfX7GxItn7y2WNl 1nESQBDIFku7/ujVd2tyVMldMS2fp5dLUk9armUR84/G6sqviVpNPL2/FRwGoO1XAZ8sQ1FcMDD lum8NdhET4skwqskzoW0z+uPKQ5Op2W9XVxBlv35jG9bzXZndsSs+5glgPSvDu8DlqqF346GgGL
+ 6N8qXhNLveogGuE2SiEMelkfnixcuiHxz74MWtoy0xZRd+Zp/yHy9vMqcMYXtVv0KafnRk1UxDy BFjkwSRLfNV3dlXb+1xJKAGQ/2Qbf9sWY4ReebbxI9xDKv4DY+Sw32YZwarv0EXqZGt5g89h/8s fvoLz4VxsLMvSafUKVUyy/hFLusHuweZGaTRv1b98ZN4Scja7iQxGKs0CexiGYQtnayRER9RlBt
+ not5aV3+Ww/TJlrGz0nhNo3JcD/rSMA2nlpAEwZ/towoZtW3EiyutOktVd4sh4MhUhw7fjl/
+X-Authority-Analysis: v=2.4 cv=Z8XsHGRA c=1 sm=1 tr=0 ts=682c3d70 cx=c_pps a=K4BcnWQioVPsTJd46EJO2w==:117 a=K4BcnWQioVPsTJd46EJO2w==:17 a=dt9VzEwgFbYA:10 a=bC-a23v3AAAA:8 a=VwQbUJbxAAAA:8 a=20KFwNOVAAAA:8 a=t7CeM3EgAAAA:8 a=RSTy8_7DnOH_di7dvoIA:9
+ a=-FEs8UIgK8oA:10 a=FO4_E8m0qiDe52t0p3_H:22 a=FdTzh2GWekK77mhwV6Dw:22
+X-Proofpoint-ORIG-GUID: dNukir9HOYc7GMkEcLq8JVK2yJgTaYqz
+X-Proofpoint-GUID: dNukir9HOYc7GMkEcLq8JVK2yJgTaYqz
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-20_03,2025-05-16_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
+ bulkscore=0 spamscore=0 suspectscore=0 phishscore=0 clxscore=1011
+ adultscore=0 mlxlogscore=999 priorityscore=1501 impostorscore=0
+ malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.21.0-2505070000
+ definitions=main-2505200068
 
-On 5/19/25 15:08, Rodolfo Giometti wrote:
-> This patch adds the definition for the nvmem location "encoding_mode"
-> related to the "cpu0" node.
-> 
-> Signed-off-by: Rodolfo Giometti <giometti@enneenne.com>
-> ---
->   arch/arm/boot/dts/st/stm32mp131.dtsi | 7 +++++++
->   1 file changed, 7 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/st/stm32mp131.dtsi b/arch/arm/boot/dts/st/stm32mp131.dtsi
-> index e555717c0048..52bf497e26bb 100644
-> --- a/arch/arm/boot/dts/st/stm32mp131.dtsi
-> +++ b/arch/arm/boot/dts/st/stm32mp131.dtsi
-> @@ -24,6 +24,9 @@ cpu0: cpu@0 {
->   			clocks = <&scmi_perf 0>;
->   			clock-names = "cpu";
->   			#cooling-cells = <2>;
-> +
-> +			nvmem-cells = <&encoding_mode_otp>;
-> +			nvmem-cell-names = "encoding_mode";
->   		};
->   	};
->   
-> @@ -1167,6 +1170,10 @@ part_number_otp: part-number-otp@4 {
->   				reg = <0x4 0x2>;
->   				bits = <0 12>;
->   			};
-> +			encoding_mode_otp: encoding-mode-otp@4 {
+From: Antoine Tenart <atenart@kernel.org>
 
-This node should end with @0 instead of 4.
-It should also be placed before part-number-otp node.
+[ Upstream commit 3a0a3ff6593d670af2451ec363ccb7b18aec0c0a ]
 
-> +				reg = <0x0 0x1>;
+Upstream fix ac888d58869b ("net: do not delay dst_entries_add() in
+dst_release()") moved decrementing the dst count from dst_destroy to
+dst_release to avoid accessing already freed data in case of netns
+dismantle. However in case CONFIG_DST_CACHE is enabled and OvS+tunnels
+are used, this fix is incomplete as the same issue will be seen for
+cached dsts:
 
-If I'm not mistaken, this should be:
-	reg = <0x0 0x2>;
+  Unable to handle kernel paging request at virtual address ffff5aabf6b5c000
+  Call trace:
+   percpu_counter_add_batch+0x3c/0x160 (P)
+   dst_release+0xec/0x108
+   dst_cache_destroy+0x68/0xd8
+   dst_destroy+0x13c/0x168
+   dst_destroy_rcu+0x1c/0xb0
+   rcu_do_batch+0x18c/0x7d0
+   rcu_core+0x174/0x378
+   rcu_core_si+0x18/0x30
 
+Fix this by invalidating the cache, and thus decrementing cached dst
+counters, in dst_release too.
 
-Best regards,
-Yann
+Fixes: d71785ffc7e7 ("net: add dst_cache to ovs vxlan lwtunnel")
+Signed-off-by: Antoine Tenart <atenart@kernel.org>
+Link: https://patch.msgid.link/20250326173634.31096-1-atenart@kernel.org
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+[Minor conflict resolved due to code context change.]
+Signed-off-by: Jianqi Ren <jianqi.ren.cn@windriver.com>
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+---
+Verified the build test
+---
+ net/core/dst.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-> +				bits = <0 9>;
-> +			};
->   			vrefint: vrefin-cal@52 {
->   				reg = <0x52 0x2>;
->   			};
+diff --git a/net/core/dst.c b/net/core/dst.c
+index 8db87258d145..1c16821581c8 100644
+--- a/net/core/dst.c
++++ b/net/core/dst.c
+@@ -173,6 +173,14 @@ void dst_release(struct dst_entry *dst)
+ 			net_warn_ratelimited("%s: dst:%p refcnt:%d\n",
+ 					     __func__, dst, newrefcnt);
+ 		if (!newrefcnt){
++#ifdef CONFIG_DST_CACHE
++			if (dst->flags & DST_METADATA) {
++				struct metadata_dst *md_dst = (struct metadata_dst *)dst;
++
++				if (md_dst->type == METADATA_IP_TUNNEL)
++					dst_cache_reset_now(&md_dst->u.tun_info.dst_cache);
++			}
++#endif
+ 			dst_count_dec(dst);
+ 			call_rcu(&dst->rcu_head, dst_destroy_rcu);
+ 		}
+-- 
+2.34.1
 
