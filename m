@@ -1,87 +1,133 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A921525D21A;
-	Tue, 20 May 2025 07:40:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C90625D21A;
+	Tue, 20 May 2025 07:40:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747726827; cv=none; b=TTK+2vPVVUzDQrVUaWaF0ExwgX9jk7CORsJSdLQbxfn4PMttSYQHiDv/MQIEV+PfSc+xN+CMdIoCuDpxFwqO/wRGAhoLFtxzJIH1FJgFjAuTNVcxjvTVewhjYoH/zDRPULBtnyeISWE6+yxEPtA9LDJd5wkcw37NZkoAOC85jqk=
+	t=1747726853; cv=none; b=XeNS7L8z821IDPYvt5fIS7IE+nhoWUcAnwYKE/6MPXXZ5tDfJAfwMVQ5kM9C1h4iZ5NRlF8Wgdgby38+++1gyh/SGLDopa482xXs+bTVImZ4Tzmay1bk76OR2Lk6HxFaggAHbkv2OJLghnpK6m+/pjDmoM9pIj3Rs1hBKgnPGec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747726827; c=relaxed/simple;
-	bh=08mUHlhwFK6j04MGXu77lMICbkSqG4hpUQY0b4x4o9M=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=W3JtLLNlrAXfymQm0zIh8ByIowOkoTP/ZYfVrSBQI2ZYkw6DY4g3sYa4cNRYYlW68WnRtkikD+fsNUcE2n2JyA/OeCCAplmpODaqhPIlLTFPNAWCicDQlE8MpN30+/+plduzpOXNJq5LImyXGOwuZS4qtiSA9iAwCOpixCuLtEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m2F8FMK3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747726853; c=relaxed/simple;
+	bh=du74CvAlwH4+uIAs8YMtDE8dudviPCVlSuJEObPE4mI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fa3dsMEtQEugRRTeX3kOL4rw2NSRSD86V8YdAyHVJtwrCZmAfOnmIISTY/RyTjSLU+gcbRH8e15J7FdEhuxxRZvKn0dKaHDl4Mgd3uR4+7aEu1PVKEaKvdewYTNjkjSWuBdibCcRIfFxBmF+PPLVK5QOOCK+oAO7cItFT22lLmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=duhG9Y/r; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m2F8FMK3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C312C4CEE9;
-	Tue, 20 May 2025 07:40:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="duhG9Y/r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45C58C4CEE9;
+	Tue, 20 May 2025 07:40:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747726827;
-	bh=08mUHlhwFK6j04MGXu77lMICbkSqG4hpUQY0b4x4o9M=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=m2F8FMK3o/0DLpDYs6VyFaBixwWYuWqwmoltB6zEAS6tOML5b3GspSNREaVDS21au
-	 Hcq4PRY8nqLplV+7a7wQuXS1j9bBtWiZFVMfwT2lxO6z1jRJKRNEuv1OCFp3vxmbRQ
-	 0UnKVh8UYr7ZGOpW8TZQzFVRFv/uqayxUy3KAnW3yx+Mux9bUQQN4IQRoTLXZ2AFoz
-	 U2b/E6brfrJRPhW7G+qGt6xes9L664J/p8yb7l1+jSU3PVvAj24h3CB6dDCpf2EkK8
-	 pv++efDsNUNlMzWrD6z7L1U1chMwUihSZR3oUGy3Hyx+qeCKwLhrgLcj92Lup6BTrd
-	 pKieWXnF7av/A==
+	s=k20201202; t=1747726852;
+	bh=du74CvAlwH4+uIAs8YMtDE8dudviPCVlSuJEObPE4mI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=duhG9Y/rUhQTeP5uq0AvsyPyA05wrS1p6pnd3HTUHErD22cXzXEUD74P0Muc5lzgr
+	 pSi6kcm8M6ZmvksEV66bQsu0jMdZLz88XzZ4re6wYkRztJZ2tfnLCI/yzgS5PdteQk
+	 xD5zp7EmiwEvIDrXYf/2uUJKV3DkyrUgY64DEYlDme4ovUJrNHVKHZ33zpDTYLBq06
+	 16nJ6VpllazGgcoTYBQhc056TzooRD1c3BJ8dph1i8z8VNFhPnQ8/ZW8X24loc2W5y
+	 quMPl+RljKtPnzw9Oih2EBowcIPHlu306jTqXVths11vKrLunhSStzKPx8X6gSBMve
+	 /dwEblfQ0YSaw==
+Date: Tue, 20 May 2025 09:40:47 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Rob Clark <robdclark@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+	linux-arm-msm@vger.kernel.org, Connor Abbott <cwabbott0@gmail.com>,
+	Rob Clark <robdclark@chromium.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 02/40] drm/gpuvm: Allow VAs to hold soft reference to
+ BOs
+Message-ID: <aCwx_9KIc9QBd7_0@pollux>
+References: <20250519175348.11924-1-robdclark@gmail.com>
+ <20250519175348.11924-3-robdclark@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 20 May 2025 09:40:21 +0200
-Message-Id: <DA0TG9P9N7CI.3STZPSRIV6NDX@kernel.org>
-Cc: "Rob Herring" <robh@kernel.org>, "Saravana Kannan"
- <saravanak@google.com>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
- <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
- "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
- <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Dirk Behme" <dirk.behme@de.bosch.com>,
- <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH v4 6/9] rust: device: Add bindings for reading device
- properties
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Remo Senekowitsch" <remo@buenzli.dev>, "Danilo Krummrich"
- <dakr@kernel.org>
-X-Mailer: aerc 0.20.1
-References: <20250504173154.488519-1-remo@buenzli.dev>
- <20250504173154.488519-7-remo@buenzli.dev> <aCH5WgORn9ZGl9Il@pollux>
- <DA093HA2415H.29OCPLS0M7H84@buenzli.dev> <aCtici15vSCBDbzE@pollux>
- <DA0EDC6W54E5.2CO8VXPTOXXJK@buenzli.dev>
- <DA0T1M8YEHZ9.1AW3IGD1IZX7Z@kernel.org>
-In-Reply-To: <DA0T1M8YEHZ9.1AW3IGD1IZX7Z@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250519175348.11924-3-robdclark@gmail.com>
 
-On Tue May 20, 2025 at 9:21 AM CEST, Benno Lossin wrote:
-> On Mon May 19, 2025 at 9:51 PM CEST, Remo Senekowitsch wrote:
->> On Mon May 19, 2025 at 6:55 PM CEST, Danilo Krummrich wrote:
->>> Also, the PropertyInt trait itself has to be unsafe, given that it cont=
-ains
->>> unsafe functions.
->>
->> I don't think a trait necessarily has to be marked unsafe just because
->> it has unsafe methods. Marking a trait as unsafe means that implementors
->> of the trait must uphold some invariants. This is not the case here
->> IIUC. Here's a good explanation of my understanding: [1]
->
-> Yes this is correct, I don't think that the trait itself should be
-> unsafe.
+On Mon, May 19, 2025 at 10:51:25AM -0700, Rob Clark wrote:
+> From: Rob Clark <robdclark@chromium.org>
+> 
+> Eases migration for drivers where VAs don't hold hard references to
+> their associated BO, avoiding reference loops.
+> 
+> In particular, msm uses soft references to optimistically keep around
+> mappings until the BO is distroyed.  Which obviously won't work if the
+> VA (the mapping) is holding a reference to the BO.
+> 
+> By making this a per-VM flag, we can use normal hard-references for
+> mappings in a "VM_BIND" managed VM, but soft references in other cases,
+> such as kernel-internal VMs (for display scanout, etc).
+> 
+> Cc: Danilo Krummrich <dakr@kernel.org>
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> ---
+>  drivers/gpu/drm/drm_gpuvm.c | 37 ++++++++++++++++++++++++++++++++-----
+>  include/drm/drm_gpuvm.h     | 19 +++++++++++++++++--
+>  2 files changed, 49 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/drm_gpuvm.c b/drivers/gpu/drm/drm_gpuvm.c
+> index 1e89a98caad4..892b62130ff8 100644
+> --- a/drivers/gpu/drm/drm_gpuvm.c
+> +++ b/drivers/gpu/drm/drm_gpuvm.c
+> @@ -1125,6 +1125,8 @@ __drm_gpuvm_prepare_objects(struct drm_gpuvm *gpuvm,
+>  	LIST_HEAD(extobjs);
+>  	int ret = 0;
+>  
+> +	WARN_ON(gpuvm->flags & DRM_GPUVM_VA_WEAK_REF);
 
-Ahh, I understood now why Danilo suggested this: if the trait should
-guarantee that `fwnode_property_read_*_array` is called, then the trait
-would have to be `unsafe`.
+No, here and below, please don't scatter WARN_ON() calls in various code paths
+for this hack.
 
-But I don't think that's necessary, we don't have any other unsafe code
-that needs to rely on that.
+This won't ever be a valid and supported mode, please keep the diff as small as
+possible.
 
----
-Cheers,
-Benno
+<snip>
+
+> diff --git a/include/drm/drm_gpuvm.h b/include/drm/drm_gpuvm.h
+> index 2a9629377633..652e0fb66413 100644
+> --- a/include/drm/drm_gpuvm.h
+> +++ b/include/drm/drm_gpuvm.h
+> @@ -205,10 +205,25 @@ enum drm_gpuvm_flags {
+>  	 */
+>  	DRM_GPUVM_RESV_PROTECTED = BIT(0),
+>  
+> +	/**
+> +	 * @DRM_GPUVM_VA_WEAK_REF:
+> +	 *
+> +	 * Flag indicating that the &drm_gpuva (or more correctly, the
+> +	 * &drm_gpuvm_bo) only holds a weak reference to the &drm_gem_object.
+> +	 * This mode is intended to ease migration to drm_gpuvm for drivers
+> +	 * where the GEM object holds a referece to the VA, rather than the
+> +	 * other way around.
+> +	 *
+> +	 * In this mode, drm_gpuvm does not track evicted or external objects.
+> +	 * It is intended for legacy mode, where the needed objects are attached
+> +	 * to the command submission ioctl, therefore this tracking is unneeded.
+> +	 */
+> +	DRM_GPUVM_VA_WEAK_REF = BIT(1),
+
+As mentioned in v4, I do *not* agree with making this a valid and supported
+mode. If at all, it should be an exception for MSM, i.e.
+DRM_GPUVM_MSM_LEGACY_QUIRK with an explicit approval from Dave / Sima [1].
+
+It invalidates the whole design and makes a lot of functions fundamentally
+invalid to call, which is well demonstrated by all the WARN_ON() calls this
+patch attempts to add.
+
+> +
+>  	/**
+>  	 * @DRM_GPUVM_USERBITS: user defined bits
+>  	 */
+> -	DRM_GPUVM_USERBITS = BIT(1),
+> +	DRM_GPUVM_USERBITS = BIT(2),
+>  };
+
+[1] https://lore.kernel.org/dri-devel/aCb-72KH-NrzvGXy@pollux/
