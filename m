@@ -1,294 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3992A27511F;
-	Tue, 20 May 2025 11:07:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9170427BF86;
+	Tue, 20 May 2025 11:07:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747739250; cv=none; b=UJWCgvpgxWWHhIPdpvIJehRGx5wt1PuqYvz/Dv5G1OcOtPevIEtA036f7kxkmqrhSf92kf8RRg9vMXAaHjDPPufBiN/XcImcQ3/9iIOm0VxvsH0sGSwovGlP8G21/bxeaFm8UoGghDSgfIFJdlE56OJBcgpdh5RmeBFQmXw4KGs=
+	t=1747739257; cv=none; b=CTH9X/iDwwfrL7hyWDdOxIzT+GrNazHpvRIS4isyz92KEWyz89FsDZouLWaCUVgc2860pOobcLSjU/6Nhl4ljPqKSbLHL1YY5UMHcnKOFseh+HTpYHEFRfPKmuKqvYO1R2WFfxbZuggXImCvi/QAy3snrAsyBE94uWq7Dl0C8Gc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747739250; c=relaxed/simple;
-	bh=nXhts44DJSFVNWOv7eyyjkedMSmvClEXtW/SL9iykC0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=pVDh3CaJ6e7+nksJJ+e8UfQg0jVug1rv2Ger5GNr7Eh3jNz9pT+e4py+iYm21kGiIAX96z2fG42sMb0Eay/ciz0y6h2I6OT91tAaf8Slt6h4GLaQrrQHwKVe/42HBJAePY4IHmOcBeYwsJwgqjP36MDHEdcxplOdvFhDG6AKLxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hHtOELO2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747739257; c=relaxed/simple;
+	bh=YPrh6LM3icOIY6IfyHITSL5dNozv4D5cParZvvhNWwQ=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=lUfxuXFdHBcd0fBt/Ck0TyOSmX4qTREEwqbLvYhCifYHQQH13wXLm7izgtTa7qYtkM6fTZOxoNs4i0Rj+mU4qmdri9gw4mI9G7OxGKbR5QWKOo3E0G2Uh1UlCIfW+BkxRkDY4ELx0jH78z2li5GT3VscFOTovepKDDNLqajAhMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=dHENCf1U; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hHtOELO2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB435C4CEEB;
-	Tue, 20 May 2025 11:07:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747739249;
-	bh=nXhts44DJSFVNWOv7eyyjkedMSmvClEXtW/SL9iykC0=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=hHtOELO2xNSkrlmUjvtzGHvf3IzbirD2em/YD2rNgIFihAuic1KLA+nTuuUvn4nfx
-	 82+GdDVMtAIlKxVT9snznLGsNDfJ64vpRFgYt1RqbRO4fkeA/qog95sAJKnDHCHPHI
-	 zM+XSwrVLPf3VJDbWSoc8VJ6tDAFqcZbYeeudCOfNDx0zVM2zRRnhz1/my/HZLtykW
-	 J0IRJvOYj+x5OjdQ8uuM1jv2mpGxPVGIv5ToS6KJRz+tv3k71RJJRsBEzjSm4DWRc6
-	 /TOCdNmNz46MJNCi2+NHyUHDZ1+1QQ/gde8X9umrtJgOjS/nvQOyPpbrnDxk7owraK
-	 mdp95M137wV1A==
-From: Konrad Dybcio <konradybcio@kernel.org>
-Date: Tue, 20 May 2025 13:07:07 +0200
-Subject: [PATCH RFT v4 02/14] drm/msm: Offset MDSS HBB value by 13
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dHENCf1U"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
+	Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:In-Reply-To;
+	bh=J+ixRKeK3AjeN5jLv2n9xyfjGOXeDLkzWStpWpGskeU=; b=dHENCf1UtodUN6G4lUKdMY+SIc
+	lVXXbnJUN42dhQcJmutI4BUbFM6LaYsGJMiD8YfmaVa4VDd59tcXIXcr7wUFj5iB+EJ0hS6UnYtAA
+	Izv88OSuPt1RMnHWe0cC4xKFuI2k4RT3akfGhy2tZUVz8ySl8G0r+s76xpwftiWuu2/Mv4+tJv/Qr
+	P4GaMxlRXhwKWRNy1oWKuC014VYT49Qv5EqN7PVLAHm/8NcX+NPkcQ3Zj+JA7SdXK/CpaIaumSQZH
+	77nbdKLoRxHFcqBIMWBvf8GMEqXauqW8FBFvKpKfbSMg4scVxMFyYOFIdAkXuvZUU6Mvw/E1paFiF
+	WMF5NTEw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uHKoh-00000003BbN-3KZH;
+	Tue, 20 May 2025 11:07:27 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 0)
+	id 55BDB300F1A; Tue, 20 May 2025 13:07:27 +0200 (CEST)
+Message-ID: <20250520110632.280908218@infradead.org>
+User-Agent: quilt/0.66
+Date: Tue, 20 May 2025 12:55:45 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: x86@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+ peterz@infradead.org,
+ kys@microsoft.com,
+ haiyangz@microsoft.com,
+ wei.liu@kernel.org,
+ decui@microsoft.com,
+ tglx@linutronix.de,
+ mingo@redhat.com,
+ bp@alien8.de,
+ dave.hansen@linux.intel.com,
+ hpa@zytor.com,
+ luto@kernel.org,
+ linux-hyperv@vger.kernel.org
+Subject: [PATCH 3/3] x86/mm: Clarify should_flush_tlb() ordering
+References: <20250520105542.283166629@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250520-topic-ubwc_central-v4-2-2a461d32234a@oss.qualcomm.com>
-References: <20250520-topic-ubwc_central-v4-0-2a461d32234a@oss.qualcomm.com>
-In-Reply-To: <20250520-topic-ubwc_central-v4-0-2a461d32234a@oss.qualcomm.com>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Rob Clark <robdclark@gmail.com>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, 
- Dmitry Baryshkov <lumag@kernel.org>, 
- Akhil P Oommen <quic_akhilpo@quicinc.com>, Sean Paul <sean@poorly.run>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747739235; l=7343;
- i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
- bh=gqK2qyDk6eVe/cm6cG252hpkdQutV874QkaDB+MOsmQ=;
- b=7db4sej4sHGJu/MqbJH4MHjond2tUAbDr3M6LQVSrkZ/xaMpKDXNizHqG/jsleRUIcOX89/h4
- EixaX2fWI2zAYyUFtAirqUmwjeLpcSaNbQb/bt0Jxy+Xmgpxi9QnxFQ
-X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
- pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
+Content-Type: text/plain; charset=UTF-8
 
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+The ordering in should_flush_tlb() is entirely non-obvious and is only
+correct because x86 is TSO. Clarify the situation by replacing two
+WRITE_ONCE()s with smp_store_release(), which on x86 is cosmetic.
 
-The Adreno part of the driver exposes this value to userspace, and the
-SMEM data source also presents a x+13 value. Keep things coherent and
-make the value uniform across them.
+Additionally, clarify the comment on should_flush_tlb().
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- drivers/gpu/drm/msm/msm_mdss.c | 50 +++++++++++++++++++++---------------------
- 1 file changed, 25 insertions(+), 25 deletions(-)
+ arch/x86/mm/tlb.c |   30 ++++++++++++++++++++++--------
+ 1 file changed, 22 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/msm_mdss.c b/drivers/gpu/drm/msm/msm_mdss.c
-index 709979fcfab6062c0f316f7655823e888638bfea..2c9531217eca7ac2308c6d1fa78287363ca652f9 100644
---- a/drivers/gpu/drm/msm/msm_mdss.c
-+++ b/drivers/gpu/drm/msm/msm_mdss.c
-@@ -167,7 +167,7 @@ static void msm_mdss_setup_ubwc_dec_20(struct msm_mdss *msm_mdss)
- {
- 	const struct msm_mdss_data *data = msm_mdss->mdss_data;
- 	u32 value = MDSS_UBWC_STATIC_UBWC_SWIZZLE(data->ubwc_swizzle) |
--		    MDSS_UBWC_STATIC_HIGHEST_BANK_BIT(data->highest_bank_bit);
-+		    MDSS_UBWC_STATIC_HIGHEST_BANK_BIT(data->highest_bank_bit - 13);
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@ -910,8 +910,10 @@ void switch_mm_irqs_off(struct mm_struct
+ 		 * Indicate that CR3 is about to change. nmi_uaccess_okay()
+ 		 * and others are sensitive to the window where mm_cpumask(),
+ 		 * CR3 and cpu_tlbstate.loaded_mm are not all in sync.
++		 *
++		 * Also, see should_flush_tlb().
+ 		 */
+-		WRITE_ONCE(this_tlbstate->loaded_mm, LOADED_MM_SWITCHING);
++		smp_store_release(&this_tlbstate->loaded_mm, LOADED_MM_SWITCHING);
+ 		barrier();
  
- 	if (data->ubwc_bank_spread)
- 		value |= MDSS_UBWC_STATIC_UBWC_BANK_SPREAD;
-@@ -182,7 +182,7 @@ static void msm_mdss_setup_ubwc_dec_30(struct msm_mdss *msm_mdss)
- {
- 	const struct msm_mdss_data *data = msm_mdss->mdss_data;
- 	u32 value = MDSS_UBWC_STATIC_UBWC_SWIZZLE(data->ubwc_swizzle & 0x1) |
--		    MDSS_UBWC_STATIC_HIGHEST_BANK_BIT(data->highest_bank_bit);
-+		    MDSS_UBWC_STATIC_HIGHEST_BANK_BIT(data->highest_bank_bit - 13);
+ 		/* Start receiving IPIs and then read tlb_gen (and LAM below) */
+@@ -938,10 +940,11 @@ void switch_mm_irqs_off(struct mm_struct
+ 		trace_tlb_flush(TLB_FLUSH_ON_TASK_SWITCH, 0);
+ 	}
  
- 	if (data->macrotile_mode)
- 		value |= MDSS_UBWC_STATIC_MACROTILE_MODE;
-@@ -200,7 +200,7 @@ static void msm_mdss_setup_ubwc_dec_40(struct msm_mdss *msm_mdss)
- {
- 	const struct msm_mdss_data *data = msm_mdss->mdss_data;
- 	u32 value = MDSS_UBWC_STATIC_UBWC_SWIZZLE(data->ubwc_swizzle) |
--		    MDSS_UBWC_STATIC_HIGHEST_BANK_BIT(data->highest_bank_bit);
-+		    MDSS_UBWC_STATIC_HIGHEST_BANK_BIT(data->highest_bank_bit - 13);
+-	/* Make sure we write CR3 before loaded_mm. */
+-	barrier();
+-
+-	WRITE_ONCE(this_tlbstate->loaded_mm, next);
++	/*
++	 * Make sure we write CR3 before loaded_mm.
++	 * See nmi_uaccess_okay() and should_flush_tlb().
++	 */
++	smp_store_release(&this_tlbstate->loaded_mm, next);
+ 	WRITE_ONCE(this_tlbstate->loaded_mm_asid, ns.asid);
+ 	cpu_tlbstate_update_lam(new_lam, mm_untag_mask(next));
  
- 	if (data->ubwc_bank_spread)
- 		value |= MDSS_UBWC_STATIC_UBWC_BANK_SPREAD;
-@@ -259,9 +259,9 @@ static const struct msm_mdss_data *msm_mdss_generate_mdp5_mdss_data(struct msm_m
+@@ -1280,9 +1283,20 @@ static bool should_flush_tlb(int cpu, vo
+ 	struct flush_tlb_info *info = data;
  
- 	if (hw_rev == MDSS_HW_MSM8996 ||
- 	    hw_rev == MDSS_HW_MSM8998)
--		data->highest_bank_bit = 2;
-+		data->highest_bank_bit = 15;
- 	else
--		data->highest_bank_bit = 1;
-+		data->highest_bank_bit = 14;
+ 	/*
+-	 * Order the 'loaded_mm' and 'is_lazy' against their
+-	 * write ordering in switch_mm_irqs_off(). Ensure
+-	 * 'is_lazy' is at least as new as 'loaded_mm'.
++	 * switch_mm_irqs_off()				should_flush_tlb()
++	 *   WRITE_ONCE(is_lazy, false);		  loaded_mm = READ_ONCE(loaded_mm);
++	 *   smp_store_release(loaded_mm, SWITCHING);     smp_rmb();
++	 *   mov-cr3
++	 *   smp_store_release(loaded_mm, next)
++	 *                                                if (READ_ONCE(is_lazy))
++	 *                                                  return false;
++	 *
++	 * Where smp_rmb() matches against either smp_store_release() to
++	 * ensure that if we observe loaded_mm to be either SWITCHING or next
++	 * we must also observe is_lazy == false.
++	 *
++	 * If this were not so, it would be possible to falsely return false
++	 * and miss sending an invalidation IPI.
+ 	 */
+ 	smp_rmb();
  
- 	return data;
- }
-@@ -572,13 +572,13 @@ static void mdss_remove(struct platform_device *pdev)
- static const struct msm_mdss_data msm8998_data = {
- 	.ubwc_enc_version = UBWC_1_0,
- 	.ubwc_dec_version = UBWC_1_0,
--	.highest_bank_bit = 2,
-+	.highest_bank_bit = 15,
- 	.reg_bus_bw = 76800,
- };
- 
- static const struct msm_mdss_data qcm2290_data = {
- 	/* no UBWC */
--	.highest_bank_bit = 0x2,
-+	.highest_bank_bit = 15,
- 	.reg_bus_bw = 76800,
- };
- 
-@@ -587,7 +587,7 @@ static const struct msm_mdss_data sa8775p_data = {
- 	.ubwc_dec_version = UBWC_4_0,
- 	.ubwc_swizzle = 4,
- 	.ubwc_bank_spread = true,
--	.highest_bank_bit = 0,
-+	.highest_bank_bit = 13,
- 	.macrotile_mode = true,
- 	.reg_bus_bw = 74000,
- };
-@@ -597,7 +597,7 @@ static const struct msm_mdss_data sar2130p_data = {
- 	.ubwc_dec_version = UBWC_4_3,
- 	.ubwc_swizzle = 6,
- 	.ubwc_bank_spread = true,
--	.highest_bank_bit = 0,
-+	.highest_bank_bit = 13,
- 	.macrotile_mode = 1,
- 	.reg_bus_bw = 74000,
- };
-@@ -607,7 +607,7 @@ static const struct msm_mdss_data sc7180_data = {
- 	.ubwc_dec_version = UBWC_2_0,
- 	.ubwc_swizzle = 6,
- 	.ubwc_bank_spread = true,
--	.highest_bank_bit = 0x1,
-+	.highest_bank_bit = 14,
- 	.reg_bus_bw = 76800,
- };
- 
-@@ -616,7 +616,7 @@ static const struct msm_mdss_data sc7280_data = {
- 	.ubwc_dec_version = UBWC_4_0,
- 	.ubwc_swizzle = 6,
- 	.ubwc_bank_spread = true,
--	.highest_bank_bit = 1,
-+	.highest_bank_bit = 14,
- 	.macrotile_mode = true,
- 	.reg_bus_bw = 74000,
- };
-@@ -624,7 +624,7 @@ static const struct msm_mdss_data sc7280_data = {
- static const struct msm_mdss_data sc8180x_data = {
- 	.ubwc_enc_version = UBWC_3_0,
- 	.ubwc_dec_version = UBWC_3_0,
--	.highest_bank_bit = 3,
-+	.highest_bank_bit = 16,
- 	.macrotile_mode = true,
- 	.reg_bus_bw = 76800,
- };
-@@ -634,7 +634,7 @@ static const struct msm_mdss_data sc8280xp_data = {
- 	.ubwc_dec_version = UBWC_4_0,
- 	.ubwc_swizzle = 6,
- 	.ubwc_bank_spread = true,
--	.highest_bank_bit = 3,
-+	.highest_bank_bit = 16,
- 	.macrotile_mode = true,
- 	.reg_bus_bw = 76800,
- };
-@@ -642,14 +642,14 @@ static const struct msm_mdss_data sc8280xp_data = {
- static const struct msm_mdss_data sdm670_data = {
- 	.ubwc_enc_version = UBWC_2_0,
- 	.ubwc_dec_version = UBWC_2_0,
--	.highest_bank_bit = 1,
-+	.highest_bank_bit = 14,
- 	.reg_bus_bw = 76800,
- };
- 
- static const struct msm_mdss_data sdm845_data = {
- 	.ubwc_enc_version = UBWC_2_0,
- 	.ubwc_dec_version = UBWC_2_0,
--	.highest_bank_bit = 2,
-+	.highest_bank_bit = 15,
- 	.reg_bus_bw = 76800,
- };
- 
-@@ -658,21 +658,21 @@ static const struct msm_mdss_data sm6350_data = {
- 	.ubwc_dec_version = UBWC_2_0,
- 	.ubwc_swizzle = 6,
- 	.ubwc_bank_spread = true,
--	.highest_bank_bit = 1,
-+	.highest_bank_bit = 14,
- 	.reg_bus_bw = 76800,
- };
- 
- static const struct msm_mdss_data sm7150_data = {
- 	.ubwc_enc_version = UBWC_2_0,
- 	.ubwc_dec_version = UBWC_2_0,
--	.highest_bank_bit = 1,
-+	.highest_bank_bit = 14,
- 	.reg_bus_bw = 76800,
- };
- 
- static const struct msm_mdss_data sm8150_data = {
- 	.ubwc_enc_version = UBWC_3_0,
- 	.ubwc_dec_version = UBWC_3_0,
--	.highest_bank_bit = 2,
-+	.highest_bank_bit = 15,
- 	.reg_bus_bw = 76800,
- };
- 
-@@ -681,7 +681,7 @@ static const struct msm_mdss_data sm6115_data = {
- 	.ubwc_dec_version = UBWC_2_0,
- 	.ubwc_swizzle = 7,
- 	.ubwc_bank_spread = true,
--	.highest_bank_bit = 0x1,
-+	.highest_bank_bit = 14,
- 	.reg_bus_bw = 76800,
- };
- 
-@@ -689,13 +689,13 @@ static const struct msm_mdss_data sm6125_data = {
- 	.ubwc_enc_version = UBWC_1_0,
- 	.ubwc_dec_version = UBWC_3_0,
- 	.ubwc_swizzle = 1,
--	.highest_bank_bit = 1,
-+	.highest_bank_bit = 14,
- };
- 
- static const struct msm_mdss_data sm6150_data = {
- 	.ubwc_enc_version = UBWC_2_0,
- 	.ubwc_dec_version = UBWC_2_0,
--	.highest_bank_bit = 1,
-+	.highest_bank_bit = 14,
- 	.reg_bus_bw = 76800,
- };
- 
-@@ -705,7 +705,7 @@ static const struct msm_mdss_data sm8250_data = {
- 	.ubwc_swizzle = 6,
- 	.ubwc_bank_spread = true,
- 	/* TODO: highest_bank_bit = 2 for LP_DDR4 */
--	.highest_bank_bit = 3,
-+	.highest_bank_bit = 16,
- 	.macrotile_mode = true,
- 	.reg_bus_bw = 76800,
- };
-@@ -716,7 +716,7 @@ static const struct msm_mdss_data sm8350_data = {
- 	.ubwc_swizzle = 6,
- 	.ubwc_bank_spread = true,
- 	/* TODO: highest_bank_bit = 2 for LP_DDR4 */
--	.highest_bank_bit = 3,
-+	.highest_bank_bit = 16,
- 	.macrotile_mode = true,
- 	.reg_bus_bw = 74000,
- };
-@@ -727,7 +727,7 @@ static const struct msm_mdss_data sm8550_data = {
- 	.ubwc_swizzle = 6,
- 	.ubwc_bank_spread = true,
- 	/* TODO: highest_bank_bit = 2 for LP_DDR4 */
--	.highest_bank_bit = 3,
-+	.highest_bank_bit = 16,
- 	.macrotile_mode = true,
- 	.reg_bus_bw = 57000,
- };
-@@ -738,7 +738,7 @@ static const struct msm_mdss_data x1e80100_data = {
- 	.ubwc_swizzle = 6,
- 	.ubwc_bank_spread = true,
- 	/* TODO: highest_bank_bit = 2 for LP_DDR4 */
--	.highest_bank_bit = 3,
-+	.highest_bank_bit = 16,
- 	.macrotile_mode = true,
- 	/* TODO: Add reg_bus_bw with real value */
- };
 
--- 
-2.49.0
 
