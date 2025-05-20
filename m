@@ -1,171 +1,97 @@
-Received: from smtp-fw-80008.amazon.com (smtp-fw-80008.amazon.com [99.78.197.219])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C7791E25EB;
-	Tue, 20 May 2025 18:15:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.219
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE67A2580F7;
+	Tue, 20 May 2025 18:15:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747764913; cv=none; b=eDPWDOx/TT4eGYdVM6X33N+hcPWpgV9vCpi5io8U7zzClpWmxwMAjuuPOZiq/fREYVNWnBko91jJjPGrJs4kuq9XWHhkZScVCo4eUCD1OENvxQJRzbYrHwI6lLwq2L1QQE1F8rUoPIjICmQLhmpQF+hh5PbMBGh1x0in4KtsXO8=
+	t=1747764952; cv=none; b=KsUeO7Dsg34U3lmBZfM1GqDBtkGZs8kqs4ov6fd9QFD8Rg5gRdAh+0ZBskME0Z8LuMrMIXstpVf/9Eq5P4C4vT5kaOe1CE0V95xppX7XcfBY35d2SEeoq4RA/m7Q0SH3RT0Veki3INQfCdS4EunbhACWZnWPaq+NYtZ1E+uVQpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747764913; c=relaxed/simple;
-	bh=C66kqRSeWdjx8QY1oWGBQH7q1qycqRR9JLExZ+Yrcvc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=swQZ8U4bRZF0nvdv8AStkPgk1ObRYg9JzlJ5QlinCo4IYB7rhTQL6xqxUo/owZzaRF6h9pv1gbzW6Ha/BDPB2JLw5aKBOO/zufwLBFwnPPXZhqRRKIJcFzry/E7DecPH6xSmeYFpT3GpEM6svSqULTnTD3XulmOppcju61+c3NQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=eLCfiSaw; arc=none smtp.client-ip=99.78.197.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+	s=arc-20240116; t=1747764952; c=relaxed/simple;
+	bh=gWW1its+pRU+jVBwnp6+Nlt1XMULMdHybdSfF6WhcUc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SyFMlaBNesGtylCfJKK9n9NP282kHZ4qwp4hmr9jcHrVjLbpekIznIl9Ka4bc2glj1eA4qL3FHMxauctgMivlD02lsNiO9RaJF7Jy6YhCDAAYGU+IO4iLCHzuT328TZhRU7iyRNZ/LmNcwdp0XJtDxidB+0QPt5CLfW/C5A40NQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YzK2WITH; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="eLCfiSaw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YzK2WITH"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-30ea8b7c5c2so3316998a91.3;
+        Tue, 20 May 2025 11:15:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
-  t=1747764912; x=1779300912;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=LzohEFSyN+OrM/0tt622ly3buW/LPGAt5UJsdRD3IFo=;
-  b=eLCfiSawA/UziNHDeOSciwpjh39pHHDNUneVj+L9JDM8aJawgVa8W6O/
-   bCtQPoU9+B2Ayq+ba7fj/U4+7VivbVJI8O7hLBK8+QVYmnedsuUElgTn2
-   cchHf6kVMUeExqw7cn8bhEghbZfGX5mt3ntiUX/xj9G89f7ZR6an5u3CH
-   XFeKT4bOWO5QqG4o0J68BjnUJpumwYnw3dFL35HLd5GaMUHltncWD9y1z
-   ho6Wh750QufSToQ6JGGk4nB91irwpULU5BJGBjOd7MSRzK0gVT9Y2/sBt
-   xfRznwou4ybs1ehaOXxrC7Vvc5rlsMXB1hd777IjsGJhQ7OUEeqqTPDhp
-   A==;
-X-IronPort-AV: E=Sophos;i="6.15,302,1739836800"; 
-   d="scan'208";a="198951662"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
-  by smtp-border-fw-80008.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 18:15:11 +0000
-Received: from EX19MTAUWA001.ant.amazon.com [10.0.21.151:50819]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.11.48:2525] with esmtp (Farcaster)
- id 6d333323-4d85-42d1-89c7-66d208457dbc; Tue, 20 May 2025 18:15:11 +0000 (UTC)
-X-Farcaster-Flow-ID: 6d333323-4d85-42d1-89c7-66d208457dbc
-Received: from EX19D016UWA004.ant.amazon.com (10.13.139.119) by
- EX19MTAUWA001.ant.amazon.com (10.250.64.204) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Tue, 20 May 2025 18:15:07 +0000
-Received: from 7cf34dda9133.amazon.com (10.106.239.26) by
- EX19D016UWA004.ant.amazon.com (10.13.139.119) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Tue, 20 May 2025 18:15:04 +0000
-From: Cristian Prundeanu <cpru@amazon.com>
-To: K Prateek Nayak <kprateek.nayak@amd.com>
-CC: Cristian Prundeanu <cpru@amazon.com>, Hazem Mohamed Abuelfotoh
-	<abuehaze@amazon.com>, Ali Saidi <alisaidi@amazon.com>, "Benjamin
- Herrenschmidt" <benh@kernel.crashing.org>, Geoff Blake <blakgeof@amazon.com>,
-	Borislav Petkov <bp@alien8.de>, Csaba Csoma <csabac@amazon.com>, "Dietmar
- Eggemann" <dietmar.eggemann@arm.com>, Bjoern Doebel <doebel@amazon.de>,
-	Gautham Shenoy <gautham.shenoy@amd.com>, Joseph Salisbury
-	<joseph.salisbury@oracle.com>, Chris Redpath <chris.redpath@arm.com>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<linux-tip-commits@vger.kernel.org>, <x86@kernel.org>, Ingo Molnar
-	<mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Swapnil Sapkal
-	<swapnil.sapkal@amd.com>, Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: EEVDF regression still exists
-Date: Tue, 20 May 2025 13:14:51 -0500
-Message-ID: <20250520181451.18994-1-cpru@amazon.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+        d=gmail.com; s=20230601; t=1747764950; x=1748369750; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=FwBEe20YzRFDk3bXuCFMe51to/DINvILfedoZiBzDAw=;
+        b=YzK2WITHFVkoYg4EvxeAEj48pWDqFjMCkxcLMnFDhKozynS9txzboDS/7Re3MkjXXE
+         h1t7yR0rAPbALFfKfzjIq2K//cQuEw3zb7VsoVh7O4vW8D2TQccF6Uy8QXg4Ex1bKbsm
+         3ArfzqhSFs0KRnJ4Jl5jfNHrrwpo6kkafxOQI9zOPZ2Och8c8XeefJliYmWJl9Ust0dB
+         IwI97BOX+3q7J9i02n9KiTeyjffprh+7Kz150rQWHekiqnJrUqIdkgnhCKHoRUrJSLrJ
+         JEf28rh4Y0t3dOJ4Z0E92K6O7u5mvzyq1JZDrgWL+UH3DpjMQ3Gi9CdOucGF9XHg56LB
+         6nXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747764950; x=1748369750;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FwBEe20YzRFDk3bXuCFMe51to/DINvILfedoZiBzDAw=;
+        b=f7e8VPMGgBCDf9upVOO1pVNoIgdY2uulC1VaFS6yjOLfK6ZPf36QqELB0r8O03qjHW
+         8w8RRyUJKvXgSs6FsrI5v9WDkkoF/S6dWlp8anvLNsfzlvQ+3sjV99E2X7B3Jez5c342
+         mG/bQanvWTuAhqKOcpo6GJWFnBe+RJRJUQtlJVUr/oW3DUdYrmU2QF12LM6axn3hcFMQ
+         oCHYxvdRGsEDrsQaxwLo+2SKuXW6/IYzWBoEAvduKzzo4uEsW3tiPG4uF2wubF20Yz8W
+         kDmuNxUJloA3qDPJqirkf8D9ePTCP0H6NGYqZ8vxiTOp/S2iwkbrL2b7h9H0ZtxqAGNd
+         h/5A==
+X-Forwarded-Encrypted: i=1; AJvYcCXGRSNzkBD4GZ+S7PPqeHjOgCyxRpjN1WsZrCsC9BzDchGdi486Ko/UrbE+o3jspqkfuDmqi0rFBeffakk=@vger.kernel.org, AJvYcCXJcBA1XAM+Tj5KPR7VH6/Tr03gWRdGyOgB4YWvPdOlu2C5Xtsz/rvXvdoruGjyL2q94eXH038+pCxj65iX@vger.kernel.org, AJvYcCXP4gXyxOtrP8/kzABMWUP/CcrSWEDD9I0x7CELG8arte8oHrR7Imaa5/pHqCWq1rPqWBWNttlWG6Zu@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmCmjXUmXwVET8Ah1KKujKpqXAbvBwo6J53WJXduvjv9wFDm1s
+	qXtxSwgcjpoLTEncAJ/DzkhzxVsftDvsYJ1x05hbHJd3eC5/1YD31W1N
+X-Gm-Gg: ASbGncvqLh87vQ9SMAngxcQ12mg+0w70rIyfggEoV/ONHcA9Nlq6kNQK7YC5m6iPZlm
+	C5Y5Vt1Mmt5HyrOGZUATMOJTUFeCMfbokFdmWAsYXBYNAis0ImkWcm5Td2JhtmK56E+qT0G/pEl
+	iT+rx2j4BuFHQxIJfIuTkT8WmrFQS0xjODgovU1guZ8upwr/60Ux9lkmt69iahmzrHqF+1GI8W4
+	NuSw87JlbeNq+YsYM4rDnnPNGNAQxueT5ziUQmP2GxhRUyC225nDxPsiCacLvl0xSA3Hgu7YZP8
+	BUU9u89fMnUmYPnK6yVtZiLn6nXVSBMkF976mVPoq4/84KAHQZJ0Tl16Ih30VtJ6FCAY6IxUtg=
+	=
+X-Google-Smtp-Source: AGHT+IGbB0vnb+DJNpPWratWV67dA65t5rpBhUYFtWkcTxWG0FnGyJ8c9DxzOQniu2kRWZQGmFTqhw==
+X-Received: by 2002:a17:90b:6c8:b0:30e:8f60:b4c with SMTP id 98e67ed59e1d1-30e8f600d77mr28777833a91.16.1747764949997;
+        Tue, 20 May 2025 11:15:49 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:533f:75df:b89f:cab5])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f365d460fsm2011421a91.23.2025.05.20.11.15.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 11:15:49 -0700 (PDT)
+Date: Tue, 20 May 2025 11:15:46 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Job Sava <jsava@criticallink.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Julien Panis <jpanis@baylibre.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-input@vger.kernel.org, jcormier@criticallink.com
+Subject: Re: [PATCH 2/3] mfd: tps6594-pwrbutton: Add powerbutton functionality
+Message-ID: <sfan2cfuxqvfjlwltjmtuknfm3egxahou3pmlcgovvplwdhls5@3vgrlhtztisq>
+References: <20250520-linux-stable-tps6594-pwrbutton-v1-0-0cc5c6e0415c@criticallink.com>
+ <20250520-linux-stable-tps6594-pwrbutton-v1-2-0cc5c6e0415c@criticallink.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D035UWB004.ant.amazon.com (10.13.138.104) To
- EX19D016UWA004.ant.amazon.com (10.13.139.119)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250520-linux-stable-tps6594-pwrbutton-v1-2-0cc5c6e0415c@criticallink.com>
 
->> The only _scheduler_ change that looks relevant is commit bbce3de72be5
->> ("sched/eevdf: Fix se->slice being set to U64_MAX and resulting
->> crash"). Which does affect the slice calculation, although supposedly
->> only under special circumstances.> 
->> Of course, it could be something else.
->
-> Since it is the only !SCHED_EXT change in kernel/sched, Cristian can
-> perhaps try reverting it on top of v6.15-rc4 and checking if the
-> benchmark results jump back to v6.15-rc3 level to rule that single
-> change out. Very likely it could be something else.
+On Tue, May 20, 2025 at 01:43:37PM -0400, Job Sava wrote:
+> TPS6594 defines two interrupts for the powerbutton one for push and
+> one for release.
+> 
+> This driver is very simple in that it maps the push interrupt to a key
+> input and the release interrupt to a key release.
+> 
+> Signed-off-by: Job Sava <jsava@criticallink.com>
 
-I have tested reverting this commit, and the performance indeed jumped back
-to rc3 levels.
+For the input part:
 
-> The VU count should really be based on the SUT core count, and be at least
-> 8 * SUT vCPUs to ensure a full load. 
+Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-I've modified the reproducer to more accurately configure the VU count
-based on the SUT's vCPU count, and use the above multiplier going forward.
+Thanks.
 
-Retesting the entire kernel range with the resulting 128 VUs shows a
-slightly higher performance everywhere compared to the previous 256 VUs.
-The regression is even more visible now, with a few notable points:
-- There is a performance inversion from before (6.15-rc3 now underperforms
-  6.15-rc4). This may be useful data for characterizing the regression.
-- Kernel 6.14.7 is about the same as 6.14.6 in default mode, but slower in
-  SCHED_BATCH mode (-7.1% vs -6.4%).
-- Kernel 6.15-rc5 is faster than all other 6.15-rcX builds, especially in
-  default mode.
-- Kernel 6.15-rc7 is worse than 6.15-rc6 everywhere except for the default
-  mode throughput.
-- With either VU value, disabling PLACE_LAG and RUN_TO_PARITY no longer
-  improves performance significantly on up to date kernels 6.12 and above.
-
-Summary below, full details in the reproducer repo [1].
-
-
-* All without SCHED_BATCH:
-
-Kernel   | Throughput | P50 latency       | NOPL+NORTP
-aarm64   | (NOPM)     | (larger is worse) | (NOPM)
-=========+============+===================+============
-6.5.13   |  baseline  |  baseline         | N/A
----------+------------+-------------------+------------
-6.6.91   |  -5.7%     |  +9.9%            | -2.6%
----------+------------+-------------------+------------
-6.8.12   |  -6.0%     |  +10.7%           | -3.4%
----------+------------+-------------------+------------
-6.12.29  |  -6.8%     |  +9.5%            | -8.0%
----------+------------+-------------------+------------
-6.13.12  |  -7.6%     |  +10.5%           | -8.5%
----------+------------+-------------------+------------
-6.14.7   |  -7.0%     |  +9.8%            | -9.8%
----------+------------+-------------------+------------
-6.15-rc3 |  -8.5%     |  +11.7%           |
----------+------------+-------------------+------------
-6.15-rc4 |  -7.5%     |  +10.2%           |
----------+------------+-------------------+------------
-6.15-rc5 |  -6.4%     |  +8.6 %           |
----------+------------+-------------------+------------
-6.15-rc6 |  -7.5%     |  +10.4%           | -9.0%
----------+------------+-------------------+------------
-6.15-rc7 |  -7.8%     |  +11.1%           | -8.5%
-=========+============+===================+============
-
-
-* All with SCHED_BATCH:
-
-Kernel   | Throughput | P50 latency
-aarm64   | (NOPM)     | (larger is worse)
-=========+============+==================
-6.5.13   |  baseline  |  baseline
----------+------------+------------------
-6.6.91   |  -5.1%     |  +7.4%
----------+------------+------------------
-6.8.12   |  -6.0%     |  +8.6%
----------+------------+------------------
-6.12.29  |  -6.6%     |  +8.4%
----------+------------+------------------
-6.13.12  |  -6.9%     |  +8.9%
----------+------------+------------------
-6.14.7   |  -7.1%     |  +8.7%
----------+------------+------------------
-6.15-rc3 |  -9.6%     |  +11.8%
----------+------------+------------------
-6.15-rc4 |  -7.0%     |  +8.6%
----------+------------+------------------
-6.15-rc5 |  -6.6%     |  +7.9%
----------+------------+------------------
-6.15-rc6 |  -6.6%     |  +8.4%
----------+------------+------------------
-6.15-rc7 |  -7.7%     |  +9.7%
-=========+============+==================
-
-[1] https://github.com/aws/repro-collection/blob/main/repros/repro-mysql-EEVDF-regression/results/20250519/README.md
-
--Cristian
+-- 
+Dmitry
