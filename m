@@ -1,109 +1,188 @@
-Received: from mxout3.routing.net (mxout3.routing.net [134.0.28.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73F096BB5B;
-	Tue, 20 May 2025 11:53:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06F36263F59;
+	Tue, 20 May 2025 11:54:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747742033; cv=none; b=KHHwykfFAqo2XEWhsk6Y3eppLwIb8DGhDz5BiLUwPxxBT2LN4vkxJh4DZfrd3I2d0RUES1t961/HnoDcvc8ZJfmRCqobVMpy1U8VOjgjJfS5wMnFLn3iH/Xfs+e4ueD4bYujZ0E3ylRmv4dCoksVyUnAUOrwCqze4+f2e2daeto=
+	t=1747742063; cv=none; b=t792ZZgY7hXO59qH31xXOElmchHAV05C+9SlUdBZzIKJv3OFslz9wz1NGEad6/W8uhACdzQVNmXUduBFDKpS+A88xwjUSy9AvuEstocnA9Sn/qS6/RtmOgvGLE6aVa5eDTBR4yvmRO1tOH9hi1zS7OZsp62+0Yn7unWPisAFDQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747742033; c=relaxed/simple;
-	bh=jZpv78M0XLQXvPOauuXS6ONIikwRvvKqi0uQmtH+E88=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=nvgiPrDjd/A9nf3nZZOlql7Kw0/ixfZF6WUn0uRGyIDu4YQwLw1v/SHA1eXjm+hFgCDSI8vJ18uu0l+STCUnSjOWYCEJCty/DkDWy4WntTpnumqj/w3iURZqZRZZ781OUJbtjqiNSIkZTYTp1jgAtlSJWWahK/bOFQMp4860W5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=jhZ6H4dm; arc=none smtp.client-ip=134.0.28.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
+	s=arc-20240116; t=1747742063; c=relaxed/simple;
+	bh=0LB3gKrRF3SFVit9CC5sVVaVIhIAGpiL+nMDYFs/lN0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AqXb9W9aGFln5R9Mhx4r4bQnD3Iu5511BpwekySlHBZ8J0xTifeRo9Dw/0ffeQm/qBkjPoQBjrer2Yb6cWGAZyosxptxY91+Zp1rgQpBB8zzLgqwAOpUhgUrmZHptlWniV/jR7TONPffEfpviXhlhc/LFM85Hw6oJm1fmt9ni34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PqcfLobA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="jhZ6H4dm"
-Received: from mxbox4.masterlogin.de (unknown [192.168.10.79])
-	by mxout3.routing.net (Postfix) with ESMTP id E4B4B61625;
-	Tue, 20 May 2025 11:53:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-	s=20200217; t=1747742023;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DWgu5lBfL5XpJjjET0WzNaYSrku+BoCHnp93wZOvIz8=;
-	b=jhZ6H4dmH4PqaBbiMtuQINMyJgIfDAivcHRGi8Lw23Mjc4lMh8E5D0hNQqcQC5EmT8afWX
-	Mo5cQ5OWOrIJBTK/GhIQXhYxJynUIKDOhuf6ZGuA7+PujHyTbiBhnLIXs60lGNFn3rhk7U
-	7mcN+CQ8DR158tEYKD9Cs8l4GWzftLk=
-Received: from [IPv6:::1] (unknown [IPv6:2a01:599:a12:a881:7bc8:fcdc:bd77:c992])
-	by mxbox4.masterlogin.de (Postfix) with ESMTPSA id 91EC9801A1;
-	Tue, 20 May 2025 11:53:41 +0000 (UTC)
-Date: Tue, 20 May 2025 13:53:43 +0200
-From: Frank Wunderlich <linux@fw-web.de>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Andrew Lunn <andrew@lunn.ch>, Vladimir Oltean <olteanv@gmail.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>
-CC: Frank Wunderlich <frank-w@public-files.de>,
- =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
- Landen Chao <Landen.Chao@mediatek.com>, DENG Qingfang <dqfext@gmail.com>,
- Sean Wang <sean.wang@mediatek.com>, Daniel Golle <daniel@makrotopia.org>,
- Lorenzo Bianconi <lorenzo@kernel.org>, Felix Fietkau <nbd@nbd.name>,
- netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v2 06/14] arm64: dts: mediatek: mt7988: add cci node
-User-Agent: K-9 Mail for Android
-In-Reply-To: <7a563716-a7c6-446d-b66d-bc71c6207ef6@collabora.com>
-References: <20250516180147.10416-1-linux@fw-web.de> <20250516180147.10416-8-linux@fw-web.de> <7a563716-a7c6-446d-b66d-bc71c6207ef6@collabora.com>
-Message-ID: <4BEF26F3-957D-4BB4-BF7B-69DCFCC513DC@fw-web.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PqcfLobA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3ACFC4CEE9;
+	Tue, 20 May 2025 11:54:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747742062;
+	bh=0LB3gKrRF3SFVit9CC5sVVaVIhIAGpiL+nMDYFs/lN0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PqcfLobAhQV2FBZve5MIeToYTg1PPfb92clxkq7Wb74DVWYgxkqB9QmQmmLJJDapG
+	 sJyzIuO9JBHVt63utHY+PbNK5toAhJOfXlTnWEJ3ypvh+PtAXPfCBEAYCefYkpCAUt
+	 8CUdvLIrh21EmJ5MErPP8/NfNxs/cCcKQHpdhF5ovtLnTd/j/9z8kzmEkwMB47KTc0
+	 th9Izo7Wa8K6YRfsT2alL9ECLXtJwfutgARtGzOtxcJegOL1WT34roEW2Kg1dOyCRm
+	 ukWFTV0L7RspaL4L4ftEPvdx+3y4Ew1lgrmC0Z8V9BBOE/8gp+BU1VE5ZXBUZGaa84
+	 4rJ/86STpNoxA==
+Date: Tue, 20 May 2025 20:54:19 +0900
+From: William Breathitt Gray <wbg@kernel.org>
+To: Dharma Balasubiramani <dharma.b@microchip.com>
+Cc: Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	linux-arm-kernel@lists.infradead.org, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] counter: microchip-tcb-capture: Add watch validation
+ support
+Message-ID: <aCxtaya-1SXkPiob@ishi>
+References: <F_LcZtjhYzQUlCmEka_20DiefdWFYYoq-u3JOct5ctrcMrJfTi3APjAWNAK97Mpluwkqgr9rQ-35KzO0Uuifow==@protonmail.internalid>
+ <20250520-counter-tcb-v2-1-a0617d2d220a@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="35KqwYMATj7rtnUi"
+Content-Disposition: inline
+In-Reply-To: <20250520-counter-tcb-v2-1-a0617d2d220a@microchip.com>
+
+
+--35KqwYMATj7rtnUi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-X-Mail-ID: 2d52479b-b83b-47c9-978a-066fc5c63c1d
 
-Am 20=2E Mai 2025 13:27:23 MESZ schrieb AngeloGioacchino Del Regno <angelog=
-ioacchino=2Edelregno@collabora=2Ecom>:
->Il 16/05/25 20:01, Frank Wunderlich ha scritto:
->> From: Frank Wunderlich <frank-w@public-files=2Ede>
->>=20
->> Add cci devicetree node for cpu frequency scaling=2E
->>=20
->> Signed-off-by: Daniel Golle <daniel@makrotopia=2Eorg>
->> Signed-off-by: Frank Wunderlich <frank-w@public-files=2Ede>
->> ---
->>   arch/arm64/boot/dts/mediatek/mt7988a=2Edtsi | 33 ++++++++++++++++++++=
-+++
->>   1 file changed, 33 insertions(+)
->>=20
->> diff --git a/arch/arm64/boot/dts/mediatek/mt7988a=2Edtsi b/arch/arm64/b=
-oot/dts/mediatek/mt7988a=2Edtsi
->> index ab6fc09940b8=2E=2E64466acb0e71 100644
->> --- a/arch/arm64/boot/dts/mediatek/mt7988a=2Edtsi
->> +++ b/arch/arm64/boot/dts/mediatek/mt7988a=2Edtsi
->> @@ -12,6 +12,35 @@ / {
->>   	#address-cells =3D <2>;
->>   	#size-cells =3D <2>;
->>   +	cci: cci {
->> +		compatible =3D "mediatek,mt8183-cci";
->
->While you can keep the mediatek,mt8183-cci fallback, this needs its own c=
-ompatible
->as "mediatek,mt7988-cci", therefore, I had to drop this patch from the on=
-es that I
->picked=2E
->
->Please add the new compatible both here and in the binding=2E
+On Tue, May 20, 2025 at 09:36:42AM +0530, Dharma Balasubiramani wrote:
+> The Timer Counter Block (TCB) exposes several kinds of events to the
+> Counter framework, but not every event is meaningful on every hardware
+> channel. Add a `watch_validate()` callback so userspace may register only
+> the combinations actually supported:
+>=20
+> * Channel 0 (COUNTER_MCHP_EVCHN_CV, COUNTER_MCHP_EVCHN_RA)
+>    - COUNTER_EVENT_CAPTURE
+>    - COUNTER_EVENT_CHANGE_OF_STATE
+>    - COUNTER_EVENT_OVERFLOW
+>=20
+> * Channel 1 (COUNTER_MCHP_EVCHN_RB)
+>    - COUNTER_EVENT_CAPTURE
+>=20
+> * Channel 2 (COUNTER_MCHP_EVCHN_RC)
+>    - COUNTER_EVENT_THRESHOLD
+>=20
+> Any other request is rejected with `-EINVAL`, preventing undefined
+> behaviour in userspace.
 
-Ok,but you have to drop last one too (add proc-supply) else there are buil=
-d-errors=2E
+Hi Dharma
 
->Cheers,
->Angelo
->
+The requesting an invalid watch configuration wouldn't necessarily lead
+to undefined beaviour in userspace -- at least as far as the Counter
+character device interface is concerned. What would happen is that the
+requested event is never pushed to that particular channel, so userspace
+is left watching for an event that never arrives for that particular
+watch: not an ideal situation, but not undefined.
 
+>=20
+> Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
+> ---
+> Tested the code on target (sam9x60_curiosity) using the following commands
+>=20
+> valid ones:
+> ./counter_watch_events -d -wevt_change_of_state,chan=3D0
+> ./counter_watch_events -d -wevt_ovf,chan=3D0
+> ./counter_watch_events -d -wevt_capture,chan=3D0
+> ./counter_watch_events -d -wevt_capture,chan=3D1
+> ./counter_watch_events -d -wevt_threshold,chan=3D2
+>=20
+> invalid ones:
+> ./counter_watch_events -d -wevt_threshold,chan=3D0
+> ./counter_watch_events -d -wevt_threshold,chan=3D1
+> Error adding watches[0]: Invalid argument
+> ---
+> Changes in v2:
+> - Include COUNTER_MCHP_EVCHN_CV as well for the sake of completeness.
+> - Adjust the code to ensure channel limitations.
+> - Drop sorting in this patch, will be taken care seperately.
+> - Link to v1: https://lore.kernel.org/r/20250515-counter-tcb-v1-1-e547061=
+ed80f@microchip.com
 
-regards Frank
+Thank you for the changes. I have a minor adjustment suggestion below
+that I believe makes the code look a little nicer.
+
+> ---
+>  drivers/counter/microchip-tcb-capture.c | 24 +++++++++++++++++++++++-
+>  1 file changed, 23 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/counter/microchip-tcb-capture.c b/drivers/counter/mi=
+crochip-tcb-capture.c
+> index 1de3c50b9804..fe817f4f1edc 100644
+> --- a/drivers/counter/microchip-tcb-capture.c
+> +++ b/drivers/counter/microchip-tcb-capture.c
+> @@ -337,6 +337,27 @@ static struct counter_comp mchp_tc_count_ext[] =3D {
+>  	COUNTER_COMP_COMPARE(mchp_tc_count_compare_read, mchp_tc_count_compare_=
+write),
+>  };
+>=20
+> +static int mchp_tc_watch_validate(struct counter_device *counter,
+> +				  const struct counter_watch *watch)
+> +{
+> +	if (watch->channel =3D=3D COUNTER_MCHP_EVCHN_CV || watch->channel =3D=
+=3D COUNTER_MCHP_EVCHN_RA) {
+> +		switch (watch->event) {
+> +		case COUNTER_EVENT_CHANGE_OF_STATE:
+> +		case COUNTER_EVENT_OVERFLOW:
+> +		case COUNTER_EVENT_CAPTURE:
+> +			return 0;
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +	} else if (watch->channel =3D=3D COUNTER_MCHP_EVCHN_RB) {
+> +		return (watch->event =3D=3D COUNTER_EVENT_CAPTURE) ? 0 : -EINVAL;
+> +	} else if (watch->channel =3D=3D COUNTER_MCHP_EVCHN_RC) {
+> +		return (watch->event =3D=3D COUNTER_EVENT_THRESHOLD) ? 0 : -EINVAL;
+> +	} else {
+> +		return -EINVAL;
+> +	}
+
+You can use the early returns to avoid the else statements, and some
+other additional cleanups can be done as well:
+
+    if (watch->channel =3D=3D COUNTER_MCHP_EVCHN_CV || watch->channel =3D=
+=3D COUNTER_MCHP_EVCHN_RA)
+    	switch (watch->event) {
+    	case COUNTER_EVENT_CHANGE_OF_STATE:
+    	case COUNTER_EVENT_OVERFLOW:
+    	case COUNTER_EVENT_CAPTURE:
+    		return 0;
+    	default:
+    		return -EINVAL;
+    	}
+   =20
+    if (watch->channel =3D=3D COUNTER_MCHP_EVCHN_RB && watch->event =3D=3D =
+COUNTER_EVENT_CAPTURE)
+    	return 0;
+   =20
+    if (watch->channel =3D=3D COUNTER_MCHP_EVCHN_RC && watch->event =3D=3D =
+COUNTER_EVENT_THRESHOLD)
+    	return 0;
+   =20
+    return -EINVAL;
+
+I think something like that looks a bit closer to the Linux kernel style
+present in the other drivers, so that we're all consistent.
+
+William Breathitt Gray
+
+--35KqwYMATj7rtnUi
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCaCxtawAKCRC1SFbKvhIj
+K7HiAP44UJ7XosMcMhno78Iqokz8eFSyozTDzQrtDg4VKOEBrgEAxV0xujh56HbW
+6qwUGvsDhrhwAhNzaC9eiCW4MtlD3QA=
+=mwXK
+-----END PGP SIGNATURE-----
+
+--35KqwYMATj7rtnUi--
