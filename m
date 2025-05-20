@@ -1,125 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4E9A25228B;
-	Tue, 20 May 2025 15:04:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDDBF251780
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 15:05:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747753498; cv=none; b=Xu4w5lM8EKKq2hxo/Q0IhsWFAmG1iu8oBgdHY/Ox/6KjhZpIO1E2MehCghPnK64+mKOTqv2EjEi5MAEejExedDHcAx3J+2LfF3gpbeZiJnQno0NASJd8PwGh4WnMkJeXPnVJBo62cvHtXVehFJCc9Iy86T3oCNrzbeymhtG+AT0=
+	t=1747753551; cv=none; b=g/7hD0ICN6zL2YmvEMq+27+2PWNPpJ6R4Y3BKiLpgGVBwunsXMMfOVH2eQnw4Sgo9a337DBOFAdUXBt0YtpkxMKYjCa27K8znoJSTyrYWs043c9C76Nri30blLfO/09G3qPy/pP+/pORRJ18YmupNLTWtsNAQtLi8lTMuZkRouM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747753498; c=relaxed/simple;
-	bh=386vJl/A+qlhOwBt1iwrNQY1ZNkTiZORVnCA7Xh0ge8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=JZxkm17DO/aepYIQSDiEmQozf7pkGPxl5Xuj/0sy92ZDhYHQghajef8sHceSZq7EqjWU1K8h9lhErMYq+thVWHpGd3Ugo/wSTstMEX9YY/bJoOvMsZ0tiQ2N4JJNneIiSNBnvIX5dMhf1Q8T92kUXu+FWgOhL26pRlyCgfxarMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VJWU12d6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747753551; c=relaxed/simple;
+	bh=W1Ywpvi+v/a7g4kdwj6pb+fMIlj0AIEcfL2WdrFRUrA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=M9af6JtQbpXa0I3okzM+LmBZ77kkTNRvt9zCIPAdEMUd7BzOcDawLXXMbYL7tboIVgd8ZF1FbgJ8g5PE59fRL1mgHJUI4kSH3efeXtKkU0m8xMnRehwiI14tGCVlIPOjs6Dy7yXyVhkF+CDJrnYudpwAUbRTWY1vY+rEIhN6kK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qLmtnMVI; arc=none smtp.client-ip=209.85.166.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VJWU12d6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3729AC4CEEA;
-	Tue, 20 May 2025 15:04:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747753497;
-	bh=386vJl/A+qlhOwBt1iwrNQY1ZNkTiZORVnCA7Xh0ge8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=VJWU12d62az2Yuj+AiW/gJexWUaLd+pCW0i0fnwxfBu6oNPS2cbTPk9e0zEnP2e0g
-	 3nGpWzqsHXcLuOcGrm9iKFo9cj9T9UnWcvukafFN4no84C7QpBSxSPtilNGGkXjt4b
-	 UbYDjd7v+cCptdXnJy9doVcR6avpcHvQBe7ZrUawMvCTYGyPsXeQjTP4SHNRuQlsve
-	 hhwtDsdkvAiWCPa4y1WlykZAzi7mQmNRu+v+8YjFYZPy8f62HIQAh3nHNFw9CvUv4y
-	 kz7ArCrgyOZzwaufLKWg6Xw00fU7H9Tg0ndpU5JMoji2u2qjW4+Se10JoMM72SdyZR
-	 WA+Indy/ny7cA==
-Date: Tue, 20 May 2025 10:04:55 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>,
-	Karolina Stolarek <karolina.stolarek@oracle.com>,
-	Martin Petersen <martin.petersen@oracle.com>,
-	Ben Fuller <ben.fuller@oracle.com>,
-	Drew Walton <drewwalton@microsoft.com>,
-	Anil Agrawal <anilagrawal@meta.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Sargun Dhillon <sargun@meta.com>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Kai-Heng Feng <kaihengf@nvidia.com>,
-	Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
-	Terry Bowman <terry.bowman@amd.com>,
-	Shiju Jose <shiju.jose@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	LKML <linux-kernel@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v6 12/16] PCI/AER: Make all pci_print_aer() log levels
- depend on error type
-Message-ID: <20250520150455.GA1300985@bhelgaas>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qLmtnMVI"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3d96836c1c2so760425ab.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 08:05:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747753549; x=1748358349; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ibUebolwEMjE+Z6pNyKEAzbDAGWgUPaEEHNdhnwyUZI=;
+        b=qLmtnMVICpNbCcvqeayzfllQ7lJ6wDA6OMRaO1oKAIEbU8NgVl19mp4kbLe8yzJoj8
+         KWnaSLAIV65nIZvPIeWfeXZmDUDRnBfPKdO/5fscq2vauabmRsdTk0qL65L5hl0Af7oE
+         LCUKXjhIT6eDmk5pekSHtTp6R1flXEevUh3wiv5bU/WgSJLCRb0FNvmGn/zSpImUgCLA
+         NsOfJAqF78QAlelmZiAte+zG8weF5tCA/wxzLi2lHyUvc9xL00ixzfk5/83m+n4PEnVo
+         JIQdXal73QyyC3MLJ7ANip3eAFZHoN0c4PSP7wIpx+ntz2iZg0AGuijq8s08wkTGkZN5
+         m1vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747753549; x=1748358349;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ibUebolwEMjE+Z6pNyKEAzbDAGWgUPaEEHNdhnwyUZI=;
+        b=B3cP7pGUFcCYrsh6AyCQtfxw5AMlu0EcNkMbPJrrWoRwI3e/0EnCVWv/71QkmBKxhu
+         RojZIPhL8luhdfhl4NxrzkJfPEzY2eEROvQf0zfX2RtG9U+0/mYbm1OduMMbWunWPFXi
+         eEv64/mBwHXloLLZbyXYzptwHyqJGKcoHvsn/8J6prY4auieex8i4pNse0WU+dX/9YIP
+         oDQGC9rl9za6IwDRMuDQcJu4Jbhsi96nzFvULaEhNH55FOwPiNHbXVfle75UU69TN+uf
+         fojRehIePdPGtgvkuqUvgjNCCijgubPaBl6/s0BQdz9HE58kKpQpOi4/TEDfhNhBRBW6
+         4axg==
+X-Forwarded-Encrypted: i=1; AJvYcCW7+cn/WrfFLevU2RNzrqr9aFtexDs24tHuEGM4cxjFiUtktTDN0zl3xjH5jFx92E+Z5zTHMY1WvbwPJeQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz58F0yYueizeDJjqd1CewLJPW1Z4iHE/apN5muNsuhvP4dvdq9
+	Sv09IWgw6Y0pXtJ7WUhD7KzuMjLTE8DBwHFyT4Q5VMIFWjm0aw76X28EtWKzOwJiitMw16tAG3e
+	L5wi/LHU/NnCfcxzvfvY/ypS8LuQD9YBr+p9UndhA
+X-Gm-Gg: ASbGncvc57dsns6OPCKLDmQBFHw13tl57n9hvqpMmzGXfr44tGbplwyCa6NZZB4tRhx
+	rMMmjH72e3+11XliNxfN8A04v5aL6x4EQn1ATnwZCKPXmXCKURxJWaKQ3Yju2BrSa65F42+mhOz
+	08/HEu3Qz0E7N3D+o2WV7yHs9iEHraLz6X93OaZ7Amh6Q/Vc/QxaWRA/hv7EdNQySRnt4397aHD
+	dl5Ry83tK8=
+X-Google-Smtp-Source: AGHT+IHxc+QAaZDsoEVzK7lyUBIQFVHn9l84Ub1SvqyC4el96AVxFd/31UdI3Oyx/y0B+oiTrMcQitooDGBhR0ZsUBI=
+X-Received: by 2002:a05:6e02:12c5:b0:3d8:18f8:fb02 with SMTP id
+ e9e14a558f8ab-3dc5e611675mr9307455ab.17.1747753548588; Tue, 20 May 2025
+ 08:05:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <921fea13-9a28-9dc6-90c3-48498626f317@linux.intel.com>
+References: <20250519232539.831842-1-namhyung@kernel.org> <CAH0uvohxb4gvHYswCZMvCrrOn=0qSOeOaYyDVPEFb4GPhwntgw@mail.gmail.com>
+In-Reply-To: <CAH0uvohxb4gvHYswCZMvCrrOn=0qSOeOaYyDVPEFb4GPhwntgw@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 20 May 2025 08:05:37 -0700
+X-Gm-Features: AX0GCFvJjeIxiP_mev0L_EZph5roMRRNCNBjF5sRRQXzYAlUWj18t9TZo-lt6m8
+Message-ID: <CAP-5=fWZectSpLzkfJUj-W-_oxhDJdnnOE18ET_iPb+bjmTdHw@mail.gmail.com>
+Subject: Re: [PATCH] perf trace: Increase syscall handler map size to 1024
+To: Howard Chu <howardchu95@gmail.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 20, 2025 at 02:37:33PM +0300, Ilpo Järvinen wrote:
-> On Mon, 19 May 2025, Bjorn Helgaas wrote:
-> 
-> > From: Karolina Stolarek <karolina.stolarek@oracle.com>
-> > 
-> > Some existing logs in pci_print_aer() log with error severity by default.
-> > Convert them to depend on error type (consistent with rest of AER logging).
-> > 
-> > Link: https://lore.kernel.org/r/20250321015806.954866-3-pandoh@google.com
-> > Signed-off-by: Karolina Stolarek <karolina.stolarek@oracle.com>
-> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> > ---
-> >  drivers/pci/pcie/aer.c | 16 +++++++++++-----
-> >  1 file changed, 11 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> > index 73b03a195b14..06a7dda20846 100644
-> > --- a/drivers/pci/pcie/aer.c
-> > +++ b/drivers/pci/pcie/aer.c
-> > @@ -788,15 +788,21 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
-> >  	layer = AER_GET_LAYER_ERROR(aer_severity, status);
-> >  	agent = AER_GET_AGENT(aer_severity, status);
-> >  
-> > -	pci_err(dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n", status, mask);
-> > +	aer_printk(info.level, dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n",
-> > +		   status, mask);
-> >  	__aer_print_error(dev, &info);
-> > -	pci_err(dev, "aer_layer=%s, aer_agent=%s\n",
-> > -		aer_error_layer[layer], aer_agent_string[agent]);
-> > +	aer_printk(info.level, dev, "aer_layer=%s, aer_agent=%s\n",
-> > +		   aer_error_layer[layer], aer_agent_string[agent]);
-> >  
-> >  	if (aer_severity != AER_CORRECTABLE)
-> > -		pci_err(dev, "aer_uncor_severity: 0x%08x\n",
-> > -			aer->uncor_severity);
-> > +		aer_printk(info.level, dev, "aer_uncor_severity: 0x%08x\n",
-> > +			   aer->uncor_severity);
-> >  
-> > +	/*
-> > +	 * pcie_print_tlp_log() uses KERN_ERR, but we only call it when
-> > +	 * tlp_header_valid is set, and info.level is always KERN_ERR in
-> > +	 * that case.
-> > +	 */
-> >  	if (tlp_header_valid)
-> >  		pcie_print_tlp_log(dev, &aer->header_log, dev_fmt("  "));
-> 
-> There's another similar callsite but only this has the comment added. I 
-> was thinking if this call could be made from __aer_print_error(). There 
-> would be small change in order of messages but I can't seem to decide if 
-> it would be bad/good.
+On Mon, May 19, 2025 at 4:36=E2=80=AFPM Howard Chu <howardchu95@gmail.com> =
+wrote:
+>
+> Hello Namhyung,
+>
+> On Mon, May 19, 2025 at 4:25=E2=80=AFPM Namhyung Kim <namhyung@kernel.org=
+> wrote:
+> >
+> > The syscalls_sys_{enter,exit} map in augmented_raw_syscalls.bpf.c has
+> > max entries of 512.  Usually syscall numbers are smaller than this but
+> > x86 has x32 ABI where syscalls start from 512.
+> >
+> > That makes trace__init_syscalls_bpf_prog_array_maps() fail in the middl=
+e
+> > of the loop when it accesses those keys.  As the loop iteration is not
+> > ordered by syscall numbers anymore, the failure can affect non-x32
+> > syscalls.
+> >
+> > Let's increase the map size to 1024 so that it can handle those ABIs
+> > too.  While most systems won't need this, increasing the size will be
+> > safer for potential future changes.
 
-I guess the other caller is dpc_process_rp_pio_error(), which uses
-pci_err() for other logging, so at least it matches the level used by
-pcie_print_tlp_log().
+Do we need to worry about MIPS where syscalls can be offset by 1000s?
+https://lore.kernel.org/lkml/8ed7dfb2-1e4d-4aa4-a04b-0397a89365d1@app.fastm=
+ail.com/
+We could do with a map that combines BPF_MAP_TYPE_HASH with the tails
+calls of BPF_MAP_TYPE_PROG_ARRAY.
 
-This patch uses info.level to control the message level, and
-pcie_print_tlp_log() doesn't look at info.level.  I added this comment
-to explain why that's OK and the message level happens to match
-already.  Maybe not super ideal long term.
+Thanks,
+Ian
+
+> > Cc: Howard Chu <howardchu95@gmail.com>
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+>
+> Reviewed-by: Howard Chu <howardchu95@gmail.com>
+>
+> Thanks,
+> Howard
