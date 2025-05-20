@@ -1,174 +1,144 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A024025CC54
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 09:51:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63C08266565;
+	Tue, 20 May 2025 09:52:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747734665; cv=none; b=qB/dL7RGqo6RXmCnBXUc9KjNZtUG/gUanJUm+p67Op06mFX66xQ3K6uwUbm8j3YkMmSRHl7fRltqQMHPmU+cBJJEcjtpd4hlSwUfZfHjbjiXr93nS9sy9gAIWy/5zbcd6vtdAQnrShlCLestpz3z10FBqgmTrxitZVLsdoxW4BQ=
+	t=1747734747; cv=none; b=EXFmnMovImvBc2bsd6nwVcI+fTivqkbJZAtSnGuLN/eIacokN+l95oD5mKqyKX3VzQewEHvy+/UjDLQQup4vT8QSSbb3xevbV6PQiOHILaPioOD7nZVqmoED6T5k6V6Dz/GAIzkC1yWS0zwKHTlDrstUvkfX/kJk2yx2agOroTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747734665; c=relaxed/simple;
-	bh=9crTYRF3IPBm/Bgn5R3aDPN5l04CVE1ie1SybRKid2Q=;
+	s=arc-20240116; t=1747734747; c=relaxed/simple;
+	bh=h/h0dnmW+e8eb7BpFrGOs6KEuwxdMkbEf18N/8+UCyU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OnBu2c+5ptPCZkMfXrD2GK72j5dWhyzT6nTmeN7mW7OqrofDdAK5X2HLI7oxNIT2TJefFEaeGITmcsWDeHKRS5WhC8SlUXj+u+AQCt15uKH6KKGR1T4MJiwcPjM3/tgW0uj+6LNg7e2vyaBNt2r9ylgXMSrX+i90MSQ8IPvZY24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KxvOVO1a; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=JiaqIcSOL+AN8tA/rC4hFQswJIYXjBxyrjOgZOARaNdA+BWkF5Is7AhEijvuZVrWjIkypetqsfP3P/3q1cX/vUHU9QIDwKIW382rjZaoz76FxRlqmts1UQ+sE/5Z7oYc6Md3Hj5dh34sdFoMNlsvJCk8g/qJlwmyJo8RaD4IqVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eCf4FFuy; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KxvOVO1a"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747734662;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zTiw4lyKryoPf9LERb5T4xsi4Hrz2SvWTm/GDO7hgYA=;
-	b=KxvOVO1avfrZenr0MY6jx8mw31gPj7OA9QWH/+NZXRB4JEx+tUrDyXjRZblZigcNd/Fx88
-	V6pY1qv6g9HgVqM/xv3DHuwoTffahFw0xPaQww1IFYCrCAOHNx7npFCReLFvl09Ec8lgHb
-	C8WfyvfOOa20JntZScuZ8pAy2TUmbI4=
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
- [209.85.214.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-12-gXC9bh72MrqOY4MFHu2k0A-1; Tue, 20 May 2025 05:51:00 -0400
-X-MC-Unique: gXC9bh72MrqOY4MFHu2k0A-1
-X-Mimecast-MFC-AGG-ID: gXC9bh72MrqOY4MFHu2k0A_1747734659
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-232340ba283so18941545ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 02:51:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747734659; x=1748339459;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zTiw4lyKryoPf9LERb5T4xsi4Hrz2SvWTm/GDO7hgYA=;
-        b=Ro0uD9uoXhVY46e9BQYlEK9L9fz5j4b2Pb2IbOIm6ydnHCzhF1ZyWDsuCuDeT2JXhu
-         gSNCSRpOYm4Lb4YePM6mD4hAi4+6S4L/TtYFbivX/rES7unLUzYhyLm7qW7ErcOw52iA
-         ohX24B0FC+Qnbpn+pDWQrVhWPW0OL/U+ZwjcrxQ5q0vmFgb/mvoWLjDyv9KHOqcwsp3E
-         qmU94BqKq42rdj78y2eiU5e6sRSnPU3f5JJD6yPELs3K5bQ5sHSYem0P+IGId6eDrVdj
-         XYvGsXG3dwp8D8SvjlsAwMNCvXf57h24Tf2W79x+PNTTCkq5rPcvZkVZdXJAD2HOi0z1
-         a2JQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWDTPnmsMGUg7p9cABorIIJI89sQdNQHCLI1sUiqsT6cOW2iJd8pdWv0ZajHzhQA4U8KjtTw0LFLA9syoM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqlHuMiZUgj2dZIZv2sPS+O1vhB2x+bRJtwEATzR+XedUVU7f2
-	ZyxvG0c2ZHv79mmSXWrzkcUX3EMQcw3kv1SQLHKNdg/p+Dzu/nIDHmuTJswu8RnuF+vyUrmhJQy
-	afIAIB7L6OMR3CafZfr0HWxyElxYacBnuhwq0w0pJoPxJV24PTQUJSkr23JlwXJQ5RA==
-X-Gm-Gg: ASbGncs6H4hnyW9UwSduO4sxclgoRWrL/RHRpQaFuhmi8mlhNWHGhNUKJGpeHfIuMas
-	OjC6u99w3O8teFnksUPWEKQWGFOVnaqqEPR9OAMGnYNX1GzRGWefORrsMdChvJn1PiDB6ME92zH
-	2GDwE7wBW5FwB8uihgrl/nND1Z/uHNkVyYJkiwoSPDq9us54fMtgczLYaucR+RnZiE53TLPp2fn
-	pgOvUBc3bGuThFGLOyl5K79YkqMokFPpm1PlgWKrjliKEPCNe2Q4s3trc+PkvsZBSZegI3V6nDB
-	cmM=
-X-Received: by 2002:a17:903:8c4:b0:232:1d89:722f with SMTP id d9443c01a7336-2321d8974ecmr137737475ad.15.1747734659358;
-        Tue, 20 May 2025 02:50:59 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEno06e7jSgKAhzMm60z1T/aLIr0ix0aDT7+vIpT5BSIJlcRDdsZIfL1WhZTx/cthL8P9yHmg==
-X-Received: by 2002:a17:903:8c4:b0:232:1d89:722f with SMTP id d9443c01a7336-2321d8974ecmr137737245ad.15.1747734658974;
-        Tue, 20 May 2025 02:50:58 -0700 (PDT)
-Received: from localhost ([209.132.188.88])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4ebb121sm73239025ad.202.2025.05.20.02.50.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 02:50:58 -0700 (PDT)
-Date: Tue, 20 May 2025 17:50:42 +0800
-From: Coiby Xu <coxu@redhat.com>
-To: Kees Cook <kees@kernel.org>, Baoquan He <bhe@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	fuqiang wang <fuqiang.wang@easystack.cn>, Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, 
-	kexec@lists.infradead.org, linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v4] x86/kexec: fix potential cmem->ranges out of bounds
-Message-ID: <g3zehuem3e4qqh3g7qfiquv2iwe52xo5z2pwrq3vaip2cpjche@nyjw4xbsf6vc>
-References: <ZZzBhy5bLj0JuZZw@MiWiFi-R3L-srv>
- <4de3c2onosr7negqnfhekm4cpbklzmsimgdfv33c52dktqpza5@z5pb34ghz4at>
- <20250507225959.174dd1eed6b0b1354c95a0fd@linux-foundation.org>
- <2754f4evjfumjqome63bc3inqb7ozepemejn2lcl57ryio2t6k@35l3tnn73gei>
- <aB3RqS85p6DiHKHm@MiWiFi-R3L-srv>
- <20250509183518.bf7cd732ac667a9c20f1fee1@linux-foundation.org>
- <sn775iwfnogyvgxetbcfneuuzsnr5wva6kc4vachyzc7r6uhfi@ozhimoihtk4b>
- <aCaycGEtgNvynjNQ@MiWiFi-R3L-srv>
- <202505161616.F4C1BCCF6A@keescook>
- <aCksAsgAw1jsGBL9@MiWiFi-R3L-srv>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eCf4FFuy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747734745; x=1779270745;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=h/h0dnmW+e8eb7BpFrGOs6KEuwxdMkbEf18N/8+UCyU=;
+  b=eCf4FFuyCc+i+bVcUb/wsKzac3ST57HGtcOpmqlpYq+PnR5U+K0C46QW
+   +B7yU8kRw2wseBSfVZeGXF2EqJ64I3wfzK0IhraJ1cy7o9s6gASjgv6w8
+   HNWW5gm8H30JymFj10LjTkKJCkwNABiJYdgHVFs8wBf1fp1zp5mgYK+t4
+   cTRdis7xovowyWhtySKVxvmebjON2vZ/jxI+jyrI9Lfqr6hpz05vOoRlp
+   nQtoJg5zb6KiH3asl/4f9ZU2KY21AtIUlWuz1KJsgzSa7lM7/Ec3zvUrr
+   h0EHnkQwc7e2Ey5LVmI/izz83f+k0l4ejPwA8ME5j2rU8cBDlK1ZJKWsR
+   A==;
+X-CSE-ConnectionGUID: SvDaUKMRQfmhJxkyKstojA==
+X-CSE-MsgGUID: Wcqsk+zTSTKo688DNqI8fw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="49760568"
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="49760568"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 02:52:23 -0700
+X-CSE-ConnectionGUID: 3qIB5naYSh6wPginL6Csgw==
+X-CSE-MsgGUID: 2CquOxyBQUSUf7T5Q6efTQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="170531758"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa002.jf.intel.com with ESMTP; 20 May 2025 02:52:18 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uHJdv-000MPc-23;
+	Tue, 20 May 2025 09:52:15 +0000
+Date: Tue, 20 May 2025 17:51:26 +0800
+From: kernel test robot <lkp@intel.com>
+To: Usama Arif <usamaarif642@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>, david@redhat.com
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	hannes@cmpxchg.org, shakeel.butt@linux.dev, riel@surriel.com,
+	ziy@nvidia.com, laoar.shao@gmail.com, baolin.wang@linux.alibaba.com,
+	lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
+	npache@redhat.com, ryan.roberts@arm.com, vbabka@suse.cz,
+	jannh@google.com, Arnd Bergmann <arnd@arndb.de>,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	kernel-team@meta.com, Usama Arif <usamaarif642@gmail.com>
+Subject: Re: [PATCH v3 1/7] mm: khugepaged: extract vm flag setting outside
+ of hugepage_madvise
+Message-ID: <202505201734.8Fyk3qKi-lkp@intel.com>
+References: <20250519223307.3601786-2-usamaarif642@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aCksAsgAw1jsGBL9@MiWiFi-R3L-srv>
+In-Reply-To: <20250519223307.3601786-2-usamaarif642@gmail.com>
 
-On Mon, May 19, 2025 at 09:22:30AM +0800, Baoquan He wrote:
->On 05/16/25 at 04:20pm, Kees Cook wrote:
-[...]
->> > > I'll resolve any conflict between these patches. Before that, I'm not sure
->> > > if a separate patch to fix the UBSAN warnings alone is needed to Cc
->> > > stable@vger.kernel.org because 1) the UBSAN warnings don't mean there is a
->> > > real problem;
->> > > 2) both Fuqiang's patch and my kdump LUKS support patches fix the UBSAN
->> > > warnings as a by-product.
->> > >
->> > > It seems the answer largely depends on if the stable tree or longterm
->> > > trees need it. Currently, only longterm tree 6.12.28 and the stable tree
->> > > 6.14.6 have the UBSAN warnings if they are compiled with gcc-15 or
->> > > clang-18. Any advice will be appreciated! Thanks!
->> >
->> > I personally think UBSAN warning fix is not necessary for stable kernel.
->> >
->> > Hi Kees, Andrew,
->> >
->> > Could you help answer Coiby's question about whether we need post a
->> > standalone patch to fix the UBSAN warning fix so that it can be back
->> > ported to stable kernel?
->>
->> I went back through the thread and the referenced threads and I can't
->> find any details on the USBAN splat. Can that please get reproduced in a
->> commit log? That would help understand if it's a false positive or not.
->
->
->The original patch is trying to fix a potential issue in which a memory
->range is split, while the sub-range split out is always on top of the
->entire memory range, hence no risk.
->
->Later, we encountered a UBSAN warning around the above memory range
->splitting code several times. We found this patch can mute the warning.
->
->Please see below UBSAN splat trace report from Coiby:
->https://lore.kernel.org/all/4de3c2onosr7negqnfhekm4cpbklzmsimgdfv33c52dktqpza5@z5pb34ghz4at/T/#u
->
->Later, Coiby got the root cause from investigation, please see:
->https://lore.kernel.org/all/2754f4evjfumjqome63bc3inqb7ozepemejn2lcl57ryio2t6k@35l3tnn73gei/T/#u
->
->>
->> Also, referencing the commit would be good. I assume this is discussing
->> commit 15fcedd43a08 ("kexec: Annotate struct crash_mem with __counted_by")?
->
->Right.
->
->>
->> > In the case exposed during reviewing this patch, the code UBSAN warned
->> > is not risky.
->>
->> Given that this makes things work correctly with newer compilers, I
->> would say it should be backported to whatever -stable kernels have the
->> "counted_by" annotation. (Hence the request to add a "Fixes" line so
->> that it will happen automatically.)
->
->Got it, then Coiby can post a standalone patch to fix commit 15fcedd43a08
->("kexec: Annotate struct crash_mem with __counted_by") and CC stable, then
->post a new version of this patch on top.
->
->Thanks a lot for confirming.
+Hi Usama,
 
-Yes, thank Kees for the confirmation and thank Baoquan for providing the
-context and links! I'll send a standalone patch referencing
-15fcedd43a08. But I don't think commit 15fcedd43a08 itself introduced
-any bug so I shouldn't assign a Fixes tag to it. It's commit
-5849cdf8c120 ("x86/crash: Fix crash_setup_memmap_entries() out-of-bounds
-access") which forgot to set crash_mem->max_nr_ranges.
-crash_mem->max_nr_ranges should always be set to make sure
-crash_exclude_mem_range will work as expected. If
-crash_mem->max_nr_ranges=0, crash_exclude_mem_range will return -ENOMEM
-if there a range split. So if there is no objection, I will include 
-   Fixes: 5849cdf8c120 ("x86/crash: Fix crash_setup_memmap_entries() out-of-bounds access")
+kernel test robot noticed the following build errors:
 
-A preview of to-be-sent patch is available via 
-https://github.com/torvalds/linux/commit/43c5a68f3d01b2e065cbb8686279224710cba682
+[auto build test ERROR on akpm-mm/mm-everything]
+[also build test ERROR on perf-tools-next/perf-tools-next tip/perf/core perf-tools/perf-tools linus/master acme/perf/core v6.15-rc7 next-20250516]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Usama-Arif/mm-khugepaged-extract-vm-flag-setting-outside-of-hugepage_madvise/20250520-063452
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
+patch link:    https://lore.kernel.org/r/20250519223307.3601786-2-usamaarif642%40gmail.com
+patch subject: [PATCH v3 1/7] mm: khugepaged: extract vm flag setting outside of hugepage_madvise
+config: s390-randconfig-002-20250520 (https://download.01.org/0day-ci/archive/20250520/202505201734.8Fyk3qKi-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250520/202505201734.8Fyk3qKi-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505201734.8Fyk3qKi-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> mm/khugepaged.c:359:20: error: use of undeclared identifier 'vma'
+     359 |                 if (mm_has_pgste(vma->vm_mm))
+         |                                  ^
+   1 error generated.
+
+
+vim +/vma +359 mm/khugepaged.c
+
+b46e756f5e4703 Kirill A. Shutemov 2016-07-26  348  
+d2a8f83f11a4ba Usama Arif         2025-05-19  349  int hugepage_set_vmflags(unsigned long *vm_flags, int advice)
+b46e756f5e4703 Kirill A. Shutemov 2016-07-26  350  {
+b46e756f5e4703 Kirill A. Shutemov 2016-07-26  351  	switch (advice) {
+b46e756f5e4703 Kirill A. Shutemov 2016-07-26  352  	case MADV_HUGEPAGE:
+b46e756f5e4703 Kirill A. Shutemov 2016-07-26  353  #ifdef CONFIG_S390
+b46e756f5e4703 Kirill A. Shutemov 2016-07-26  354  		/*
+b46e756f5e4703 Kirill A. Shutemov 2016-07-26  355  		 * qemu blindly sets MADV_HUGEPAGE on all allocations, but s390
+b46e756f5e4703 Kirill A. Shutemov 2016-07-26  356  		 * can't handle this properly after s390_enable_sie, so we simply
+b46e756f5e4703 Kirill A. Shutemov 2016-07-26  357  		 * ignore the madvise to prevent qemu from causing a SIGSEGV.
+b46e756f5e4703 Kirill A. Shutemov 2016-07-26  358  		 */
+b46e756f5e4703 Kirill A. Shutemov 2016-07-26 @359  		if (mm_has_pgste(vma->vm_mm))
+d2a8f83f11a4ba Usama Arif         2025-05-19  360  			return -EPERM;
+b46e756f5e4703 Kirill A. Shutemov 2016-07-26  361  #endif
+b46e756f5e4703 Kirill A. Shutemov 2016-07-26  362  		*vm_flags &= ~VM_NOHUGEPAGE;
+b46e756f5e4703 Kirill A. Shutemov 2016-07-26  363  		*vm_flags |= VM_HUGEPAGE;
+b46e756f5e4703 Kirill A. Shutemov 2016-07-26  364  		break;
+b46e756f5e4703 Kirill A. Shutemov 2016-07-26  365  	case MADV_NOHUGEPAGE:
+b46e756f5e4703 Kirill A. Shutemov 2016-07-26  366  		*vm_flags &= ~VM_HUGEPAGE;
+b46e756f5e4703 Kirill A. Shutemov 2016-07-26  367  		*vm_flags |= VM_NOHUGEPAGE;
+b46e756f5e4703 Kirill A. Shutemov 2016-07-26  368  		/*
+b46e756f5e4703 Kirill A. Shutemov 2016-07-26  369  		 * Setting VM_NOHUGEPAGE will prevent khugepaged from scanning
+b46e756f5e4703 Kirill A. Shutemov 2016-07-26  370  		 * this vma even if we leave the mm registered in khugepaged if
+b46e756f5e4703 Kirill A. Shutemov 2016-07-26  371  		 * it got registered before VM_NOHUGEPAGE was set.
+b46e756f5e4703 Kirill A. Shutemov 2016-07-26  372  		 */
+b46e756f5e4703 Kirill A. Shutemov 2016-07-26  373  		break;
+b46e756f5e4703 Kirill A. Shutemov 2016-07-26  374  	}
+b46e756f5e4703 Kirill A. Shutemov 2016-07-26  375  
+b46e756f5e4703 Kirill A. Shutemov 2016-07-26  376  	return 0;
+b46e756f5e4703 Kirill A. Shutemov 2016-07-26  377  }
+b46e756f5e4703 Kirill A. Shutemov 2016-07-26  378  
 
 -- 
-Best regards,
-Coiby
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
