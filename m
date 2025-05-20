@@ -1,134 +1,124 @@
-Received: from smtp-fw-52002.amazon.com (smtp-fw-52002.amazon.com [52.119.213.150])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0B7E25A65C;
-	Tue, 20 May 2025 04:59:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66EFCBE5E;
+	Tue, 20 May 2025 05:01:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747717180; cv=none; b=PDE8RJB3oDgI6nYAhnwbcAh8cz22k8FcB8BtQ7O+U9iIw99/NKGkAb2NQcMlt9VM1M3ivRmIEA+6jEMTH7UDI5Xqz+SStxSvEkHRwrogM+ZwuLQAEMmWtl0ns0PwfG5Qrhm6y9vzAfokrKG2ScxYrtACjHmWQsPIhPTs01qcMgY=
+	t=1747717278; cv=none; b=O8CrhT10HyHfnZDzV77TNSRvsqIEAxdpF6hxmCRW7nC/7kr7YrChghyK4vv1SKI7BSmp1PN8kAxqo0x0ZLJzFCDb5FCJmdY9C3iEg0YziZPrVVzgmIDFlhE7v5/4MGRx0k9eEu3FIX7Fk6+rDfppgIq/Li25FrqITupaNquNKp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747717180; c=relaxed/simple;
-	bh=DptRutwWA6KxqxdlcBqZhKp/gcI1ZF1zcNFYSZFJB0c=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JrhdElBoYIMCuPUgGZKL90rsaHvYBy6k67RCPHI68pVAbfC7i21zkl87BzVOORjdgswqWteYo0CB6/tgUlcUNfc219d0qa5wa0orOjONs9qBIo+NuUe/rlDzKFrud4+HyxExBVPWyLUZkrjuFPA4ZkK4InZl4YkPGUFfUGwqhRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=K9HdEcq+; arc=none smtp.client-ip=52.119.213.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1747717278; c=relaxed/simple;
+	bh=rYUVuOK5P7Bcz50bfsx98bvImcvMk1Jc4VhxeSIN7wI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jklCnybwADat+V6telWwpK7kxE7OoJnhcr2vMVq4OesmLt9RzQQiMBZJD/KWR3X/S/p3Ud/cuo4JzTWMYwRhbQGRiiiM6O4+AQhOOqKoeYioQV4mTSV9MpisHat1ZRD12OoRRGv4S0k1r2txJLm9YOBuqjX8eV+2FsJqC34J3vU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I5qknKkJ; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="K9HdEcq+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
-  t=1747717179; x=1779253179;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=+7EzC6fpwrFJPpkzxIXD6suNFs9l44QJ7ZK5ERClQV8=;
-  b=K9HdEcq+nyMSx0aVrXBPGBkLwDvWvEmdWnwnoJX+Zdb15kTRjdJr9b3S
-   94/6EHE5h4/sm7+YJd0logsEdkSF3wWF0kS46MFCjgyVYikIpkLgy1YC7
-   kD104VMxh4zalakgRIYvgqS/IhE78cEqovyfxJS5fcJCh2c/B3mStWmiu
-   B65J6qoGr6kG0KGMXPTtTsnQSSP9s0nygLPFC0uwOZazHUJJ/5+njRsx0
-   kKvh9na/oJXVvjYJgQwhTnjQRQR6PjCYsmpxdKBwAgzt3T6mGGe+vka/a
-   2TRJk1WP0ks6GLTSa+bGnMVYCkKWm4KTCJcuxdX7ANqY//hmITIxRqsHH
-   g==;
-X-IronPort-AV: E=Sophos;i="6.15,302,1739836800"; 
-   d="scan'208";a="724523668"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52002.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 04:59:35 +0000
-Received: from EX19MTAUWB002.ant.amazon.com [10.0.21.151:7547]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.45.193:2525] with esmtp (Farcaster)
- id b5978a69-a66c-4db0-92a5-3a1a7bb9aa64; Tue, 20 May 2025 04:59:34 +0000 (UTC)
-X-Farcaster-Flow-ID: b5978a69-a66c-4db0-92a5-3a1a7bb9aa64
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Tue, 20 May 2025 04:59:33 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.142.169.18) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Tue, 20 May 2025 04:59:29 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <jiang.kun2@zte.com.cn>
-CC: <davem@davemloft.net>, <edumazet@google.com>, <fan.yu9@zte.com.cn>,
-	<gnaaman@drivenets.com>, <he.peilin@zte.com.cn>, <horms@kernel.org>,
-	<kuba@kernel.org>, <kuniyu@amazon.com>, <leitao@debian.org>,
-	<linux-kernel@vger.kernel.org>, <lizetao1@huawei.com>,
-	<netdev@vger.kernel.org>, <pabeni@redhat.com>, <qiu.yutan@zte.com.cn>,
-	<tu.qiang35@zte.com.cn>, <wang.yaxin@zte.com.cn>, <xu.xin16@zte.com.cn>,
-	<yang.yang29@zte.com.cn>, <ye.xingchen@zte.com.cn>, <zhang.yunkai@zte.com.cn>
-Subject: Re: [PATCH linux next] net: neigh: use kfree_skb_reason() in neigh_resolve_output()
-Date: Mon, 19 May 2025 21:58:58 -0700
-Message-ID: <20250520045922.34528-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250520104413538Q88ZB2XVWu1BthfQkFSuW@zte.com.cn>
-References: <20250520104413538Q88ZB2XVWu1BthfQkFSuW@zte.com.cn>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I5qknKkJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747717276; x=1779253276;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=rYUVuOK5P7Bcz50bfsx98bvImcvMk1Jc4VhxeSIN7wI=;
+  b=I5qknKkJUSn1/plGAL1zHEs/MHSKIFvLHbTfdm7jI+LAr47AmqzD6uVD
+   EbBguqsPzWcd1UCYNiio+yIH0VfMPydFC+CbJLZNXmnpGTuZt6XOI9U6U
+   Ac/6odssWzS/7gPcN5DNoVWkwxxBBXwdOycPnhDkcV8KT4kGk4m4j4Q3K
+   UEbqrKIUg4yQhKA2muLEIFPNshBrLVTbu+rGdcfKnkOrnh41gbXR5Xb1s
+   26wnfBDOIXJ0rMyxtCLQ61Uz5unvX6xbzNaTZts7SckrrQdpCuaKbBh31
+   TtZGPbnTJhnGAo0sJjvEJT+f+j1p8MPueMW/e+N3wr9qbAqLrGXFAKwPS
+   Q==;
+X-CSE-ConnectionGUID: loyvM+hrS3WBZqhMUKVyUg==
+X-CSE-MsgGUID: BAonH5GrQ0+MH6WkG5sSMw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="37251772"
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="37251772"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 22:01:15 -0700
+X-CSE-ConnectionGUID: dNmfyY0QSeq8TIS4QfO6fw==
+X-CSE-MsgGUID: 43QwtQ8IRAydXYI4E+KUeQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="139306286"
+Received: from mdroper-mobl2.amr.corp.intel.com (HELO [10.124.221.39]) ([10.124.221.39])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2025 22:01:12 -0700
+Message-ID: <75a3749b-36d9-467c-80a7-7e4a42e2f9b1@linux.intel.com>
+Date: Mon, 19 May 2025 22:01:09 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D044UWA001.ant.amazon.com (10.13.139.100) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 15/16] PCI/AER: Add ratelimits to PCI AER Documentation
+To: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
+Cc: Jon Pan-Doh <pandoh@google.com>,
+ Karolina Stolarek <karolina.stolarek@oracle.com>,
+ Martin Petersen <martin.petersen@oracle.com>,
+ Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>,
+ Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Lukas Wunner <lukas@wunner.de>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney" <paulmck@kernel.org>,
+ Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+ Oliver O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>,
+ Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
+ Terry Bowman <terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
+References: <20250519213603.1257897-1-helgaas@kernel.org>
+ <20250519213603.1257897-16-helgaas@kernel.org>
+Content-Language: en-US
+From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20250519213603.1257897-16-helgaas@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: <jiang.kun2@zte.com.cn>
-Date: Tue, 20 May 2025 10:44:13 +0800 (CST)
-> From: Qiu Yutan <qiu.yutan@zte.com.cn>
-> 
-> Replace kfree_skb() used in neigh_resolve_output() with kfree_skb_reason().
-> 
-> Following new skb drop reason is added:
-> /* failed to fill the device hard header */
-> SKB_DROP_REASON_NEIGH_HH_FILLFAIL
-> 
-> Signed-off-by: Qiu Yutan <qiu.yutan@zte.com.cn>
-> Signed-off-by: Jiang Kun <jiang.kun2@zte.com.cn>
+
+On 5/19/25 2:35 PM, Bjorn Helgaas wrote:
+> From: Jon Pan-Doh <pandoh@google.com>
+>
+> Add ratelimits section for rationale and defaults.
+>
+> Signed-off-by: Karolina Stolarek <karolina.stolarek@oracle.com>
+> Signed-off-by: Jon Pan-Doh <pandoh@google.com>
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> Acked-by: Paul E. McKenney <paulmck@kernel.org>
 > ---
->  include/net/dropreason-core.h | 3 +++
->  net/core/neighbour.c          | 2 +-
->  2 files changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/net/dropreason-core.h b/include/net/dropreason-core.h
-> index bea77934a235..bcf9d7467e1a 100644
-> --- a/include/net/dropreason-core.h
-> +++ b/include/net/dropreason-core.h
-> @@ -62,6 +62,7 @@
->  	FN(NEIGH_FAILED)		\
->  	FN(NEIGH_QUEUEFULL)		\
->  	FN(NEIGH_DEAD)			\
-> +	FN(NEIGH_HH_FILLFAIL)		\
->  	FN(TC_EGRESS)			\
->  	FN(SECURITY_HOOK)		\
->  	FN(QDISC_DROP)			\
-> @@ -348,6 +349,8 @@ enum skb_drop_reason {
->  	SKB_DROP_REASON_NEIGH_QUEUEFULL,
->  	/** @SKB_DROP_REASON_NEIGH_DEAD: neigh entry is dead */
->  	SKB_DROP_REASON_NEIGH_DEAD,
-> +	/** @SKB_DROP_REASON_NEIGH_HH_FILLFAIL: failed to fill the device hard header */
-> +	SKB_DROP_REASON_NEIGH_HH_FILLFAIL,
->  	/** @SKB_DROP_REASON_TC_EGRESS: dropped in TC egress HOOK */
->  	SKB_DROP_REASON_TC_EGRESS,
->  	/** @SKB_DROP_REASON_SECURITY_HOOK: dropped due to security HOOK */
-> diff --git a/net/core/neighbour.c b/net/core/neighbour.c
-> index 254067b719da..f297296c1a43 100644
-> --- a/net/core/neighbour.c
-> +++ b/net/core/neighbour.c
-> @@ -1517,7 +1517,7 @@ int neigh_resolve_output(struct neighbour *neigh, struct sk_buff *skb)
->  	return rc;
->  out_kfree_skb:
->  	rc = -EINVAL;
-> -	kfree_skb(skb);
-> +	kfree_skb_reason(skb, SKB_DROP_REASON_NEIGH_HH_FILLFAIL);
+>   Documentation/PCI/pcieaer-howto.rst | 11 +++++++++++
+>   1 file changed, 11 insertions(+)
+>
+> diff --git a/Documentation/PCI/pcieaer-howto.rst b/Documentation/PCI/pcieaer-howto.rst
+> index f013f3b27c82..896d2a232a90 100644
+> --- a/Documentation/PCI/pcieaer-howto.rst
+> +++ b/Documentation/PCI/pcieaer-howto.rst
+> @@ -85,6 +85,17 @@ In the example, 'Requester ID' means the ID of the device that sent
+>   the error message to the Root Port. Please refer to PCIe specs for other
+>   fields.
+>   
+> +AER Ratelimits
+> +--------------
+> +
+> +Since error messages can be generated for each transaction, we may see
+> +large volumes of errors reported. To prevent spammy devices from flooding
+> +the console/stalling execution, messages are throttled by device and error
+> +type (correctable vs. uncorrectable).
 
-Is there any reason you don't change neigh_connected_output() ?
+Can we list exceptions like DPC and FATAL errors (if added) ?
 
+> +
+> +AER uses the default ratelimit of DEFAULT_RATELIMIT_BURST (10 events) over
+> +DEFAULT_RATELIMIT_INTERVAL (5 seconds).
+> +
+>   AER Statistics / Counters
+>   -------------------------
+>   
 
-If you respin, please specify net-next and the patch version in
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
-Subject: [PATCH v2 net-next] net: neighbour: ...
-
-
->  	goto out;
->  }
->  EXPORT_SYMBOL(neigh_resolve_output);
-> -- 
