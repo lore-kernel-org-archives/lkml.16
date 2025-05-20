@@ -1,285 +1,312 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90FA025FA29;
-	Tue, 20 May 2025 15:24:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747754673; cv=fail; b=QcjhZUW6PCramEurp3zrfSBvmuL/CDd/5GXAdC/p1xfSnxgDmo1zW/b4U1F1HSYYI3VVgr/WvQZFaq02Zx6MQAqsWFxK+w3SZuPmRDbm0qPVaIfNX7t6wHwNgiQzeQFoLzt5D5owStm1svgkMqwOpV2q5ILbpy3QKqNQMGoAL1g=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747754673; c=relaxed/simple;
-	bh=+JkufXq4ZY5riYXFH/y7IU04PgPVvYVdHzN4MgYIoP8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=rfuTY6Gs/sfu8xDrnbTIVDI27bcWZkr1sdIbEVBD6nhdquv5ykIob57ImSjD7xxIAIT7eZN1owHO54pbVGQUs6AY2RWHYpP84z3IbsfSPN5HRTZwoPEJu3JF1Bron+JY+9wI/UDQRDeauAf0NcEP48FZMN7XBH4MWDWYUA0zH5c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=QRJ2cEH8; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=gDMOQgSM; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14E7425F963
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 15:24:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747754685; cv=none; b=PBwFrk31iiwOKrOTH0cLeiY6boP1K6REDPH8PuxDyd6pVnp7Rs/ODfiwcy38KnbKDMqDsES+pEK3OxPob52r1dqWuk7KSzKufsubuHWFRXpAHX+6IBiVo2m1DjQ5AabiJLxGKrWvdc0UOq0WhvtLolp6LRhv8fkrZPE71MrY7Jg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747754685; c=relaxed/simple;
+	bh=T61w/yq/fD1LJCOzhaYFRZvu8ZRpJ0D5hL3C9dgYukU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RrRbLUhrCzq3Q2IEtDqvt4f5+gu4JD1Xy3/CE9/Vy9JiMYouNuMjuLjS4/Jb4kroXRdZAZSO9+ZJiKDANto/BJVpQaX4ad4grgQ3aWdSnLQ/VTpA7Z9mPHNo/m+6qY9wZXKmQbPe6wrbTQEYU3CbEH0mzqfizF5NzPZRgRD4jnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=W/9AcKjs; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QRJ2cEH8";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="gDMOQgSM"
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54KEONln020012;
-	Tue, 20 May 2025 15:24:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2025-04-25; bh=y6Mwnl603OVZkBI5vb
-	8WPJrDKTtl8d2+3qERxchfmOc=; b=QRJ2cEH8otLg7zx6BizP3EiMIZF2WF88By
-	gQInr/pHBvwCYgpYVhj67keAK54PY+rtCAr8vqWG6wirgS+gICDzfD7MKb64sfos
-	4uNAKTt6h/uZdd/uElHlFXeUB+mK2xVYdiGJWa0f11E6jsdkOcWgfDJ7RLUUQwMI
-	FUCiEZJR3oD7jX98zMehFyDpnlF5sf20UfE8PuIglWQpqb0Pzdb0OuOWrYd4gKtb
-	Ai2VBmfWgqLEuB1Et1gLVSLRJiZTrk/DdxtEC/S91lJpN/hFaBWIDMEmq0B77PTU
-	5jgxhOIqDqXdd6KbcxL4yFU/zivyeAtzMbfc4+0Yrg2q90Yllf5w==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46rufdr6ny-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 20 May 2025 15:24:15 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 54KFGqu5000896;
-	Tue, 20 May 2025 15:24:15 GMT
-Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2176.outbound.protection.outlook.com [104.47.55.176])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 46pgw86d28-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 20 May 2025 15:24:14 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Ex0ELsxDwX4nU8h3vL8z8/0zKYA5U4g471p0R8PXcQw1je/64tCfaqxegUSxekjuPkb1Lb9IdPHAj6sPhdL4rwSkokFLmbroLoqhoACJuPBnCKAlUEfNR3TgkpTO2MSUy1y4gdZ1hdoAFnf9anFJqK5hPIKtRlm16dBZqQTSD5xrNmUotX5KCYYDi3DKy9+V7s5Tm7DvIuqqfU8lEKJFuIhsQWKrS6p/pssYy7VIutbalF/8j6nVx6U3f62aqaZt2dHj7uctBxi4wFlXvrC9RQCQ6enA7dVZh9YU0eGsdGf/UY50luMzvk3PuwBUgHJLTZxbhlzczuQp1jac4huk2g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=y6Mwnl603OVZkBI5vb8WPJrDKTtl8d2+3qERxchfmOc=;
- b=oFG46rA5LnZcYNkkboipQiZ7sxwGM4RzKegdyFunLHChcwYOvcC3pF+lLSZaAGgpDBA9ptpeK6Ceh2XAtRVbmmCG4nJb5srUN1PIBVlhC6BCy4mzFfc3Wv2e0V5sUMoF1RfYwXW8LdVpGQHxiZpF4qgwOXg+4qg/9e9lhNxJZ9Yl+CQ3cUFo4f2pQ+aUiS+mIBssa6myephf9Fn3jhbVHVMJbS/mZrOCXCRceE/JZN7fAC9zGL0eJmPYvWwlqm31N29QZsOJz0KfGbtyovSWDpWpxMse7wdDlO2EzvyZz+GeWo6kG/v3ZBzNlqwRqDFSTvLygt4CrhYPjekmmjUpVA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W/9AcKjs"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ad52d9be53cso673709966b.2
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 08:24:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=y6Mwnl603OVZkBI5vb8WPJrDKTtl8d2+3qERxchfmOc=;
- b=gDMOQgSMBei7tNpYnonv6OCSnEVLjVUTe18zdgpnPz3RB9JwHYk/wNOCbwZenTkZ6x+oU13Mc8HRWnybjVV9Alb9nxHSqc0qpXnI2PTo2pS0191ybB/7uR1FNge27vyTclUUHqNS3VRSI5uUKDtCnTax3m8cvWOYuGYvUPBHpWs=
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
- by SJ0PR10MB5646.namprd10.prod.outlook.com (2603:10b6:a03:3d0::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.33; Tue, 20 May
- 2025 15:24:12 +0000
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2%5]) with mapi id 15.20.8746.030; Tue, 20 May 2025
- 15:24:12 +0000
-Date: Tue, 20 May 2025 16:24:10 +0100
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-        James Houghton <jthoughton@google.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>,
-        Yang Shi <yang@os.amperecomputing.com>,
-        David Hildenbrand <david@redhat.com>,
-        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>, pbonzini@redhat.com,
-        kvm@vger.kernel.org, linux-s390@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH] KVM: s390: rename PROT_NONE to PROT_TYPE_DUMMY
-Message-ID: <cb0894b6-3c41-4850-a077-2d18f5547d2e@lucifer.local>
-References: <20250519145657.178365-1-lorenzo.stoakes@oracle.com>
- <20250520171009.49b2bd1b@p-imbrenda>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250520171009.49b2bd1b@p-imbrenda>
-X-ClientProxiedBy: LO4P265CA0124.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:2c6::14) To DM4PR10MB8218.namprd10.prod.outlook.com
- (2603:10b6:8:1cc::16)
+        d=linaro.org; s=google; t=1747754681; x=1748359481; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4Gx+0GKtuZ3GYJAvYOnfIUtCau4b3x5OyuIdeQR0KSM=;
+        b=W/9AcKjsVn/oaigQpH1ODyKhvPWcZ+GBC6ua32bXITGKVwcZsx9K4hpAUK0tX+F0EC
+         S0Np1M/weVxOlkZz/oZ9W22uwPnMpnab9zZvmvpsvXzhxLsWHQ0FnZ6TVy+XrawYQTZI
+         2qT4K26jUiDgnMyF5U9EC6izhHPOnWGy5JaZbD83GMRv4s00HUrBD3UHzARlaJgDEnVb
+         9KEPCgDPkPwmhr9LIRUMj2+bMLD5TxZH3l5ueBoeuoPqihYsZkmXU/0ZBVWVrAepvKoI
+         wbMJlZw6cdO0mVoJM4JXYNHn5Our02lTZlfWNbJ5m53HpSfPU5YnJLEjMAxkgC5SwVX1
+         1Y5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747754681; x=1748359481;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4Gx+0GKtuZ3GYJAvYOnfIUtCau4b3x5OyuIdeQR0KSM=;
+        b=d/qKq/O8OsY/738WU/5kNXPxs358xMltrfav1PC+1MsNutAetNMx5s84qpErAVLItB
+         2P5E/G1iaoZp43rxWgL1L0RoQb5/UNiflPIFxbSskc/by5HYY2YRGDgfLUgZM0MUvsKk
+         hPoTAVU21pVu58qKa6+DkCRdtGx8A4yUWEsHBbeITZZEjXhqJPULGz1FW4S/l+8nlfxx
+         +Jy8rTxqAiaJS4Qi7BxY11ThSNzvcZbqB9Dkp6GqwGdPUExbcN3gCHbYbfgjfPf+bb7Q
+         GnXAZ6X1a00JWBv8zKoIOXk5KuqyJTd5p7UzogAghGkyEqhrmbQDQQd3JaWzVEzsxi56
+         Takw==
+X-Gm-Message-State: AOJu0Yx7p2jExuWPKS5MAsotUCQlcEQ0Ah7ZoDONiY3bSejlphkhEyaH
+	wd5cBrKru1jP43p/Z9q6/ZeGMCp9JAjoMeAR3ct/XhaNx1Mtcq6+JSeGBn9Kp+Tax0qKoKIBdTz
+	v5c6o
+X-Gm-Gg: ASbGncuzlthmuyfmoNwybdBwQi9MLwnWn2jUSmhYxXrFQX/G0ADCDLHqHtnqruZSq1z
+	+MAfDmPbrelZ0j9XoGE2wQQuRGur/EE0UvnOzrqN42WWO/6STvivpxo3a56feseLF3nxeXhJxOe
+	o1jNZApn975ykr0xUhrNXqtqMMHm5a6dN9bN/TqT26Wb5Qw++bGokFuJTxh4nu/DR/pgtudwPf0
+	D1fAjYc2mlY/XpSCBhJ+d4h7XIJaezOxnEenQURRSnFifROMHwA0zGtORRk5m3uNinYK3KgCnpk
+	DVWhM/vqMWhMUCeCH8hQFd8qltWqYK6Bbuz49bsZwkZ20LmZYZQrKdeOYoN0zjEtAhmqlyaunI3
+	4IR/+9X71VQ3sN657GD2kGWDtEHST
+X-Google-Smtp-Source: AGHT+IGiBtB/yBrwdOUmv7Ytg8eiZmw9nJDvhkMV2QRZvjED6NikmzozZ3tfcWJyGNkfRcLUty/3Kg==
+X-Received: by 2002:a17:907:3fa1:b0:ad5:5198:b2ae with SMTP id a640c23a62f3a-ad55198bc5emr1017407066b.52.1747754680675;
+        Tue, 20 May 2025 08:24:40 -0700 (PDT)
+Received: from rayden.urgonet (h-98-128-140-123.A175.priv.bahnhof.se. [98.128.140.123])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d278257sm742608766b.82.2025.05.20.08.24.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 08:24:40 -0700 (PDT)
+From: Jens Wiklander <jens.wiklander@linaro.org>
+To: linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org,
+	op-tee@lists.trustedfirmware.org,
+	linux-arm-kernel@lists.infradead.org
+Cc: Olivier Masse <olivier.masse@nxp.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Yong Wu <yong.wu@mediatek.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Brian Starkey <Brian.Starkey@arm.com>,
+	John Stultz <jstultz@google.com>,
+	"T . J . Mercier" <tjmercier@google.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	Sumit Garg <sumit.garg@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	azarrabi@qti.qualcomm.com,
+	Simona Vetter <simona.vetter@ffwll.ch>,
+	Daniel Stone <daniel@fooishbar.org>,
+	Rouven Czerwinski <rouven.czerwinski@linaro.org>,
+	Jens Wiklander <jens.wiklander@linaro.org>
+Subject: [PATCH v9 0/9] TEE subsystem for protected dma-buf allocations
+Date: Tue, 20 May 2025 17:16:43 +0200
+Message-ID: <20250520152436.474778-1-jens.wiklander@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|SJ0PR10MB5646:EE_
-X-MS-Office365-Filtering-Correlation-Id: 28237671-93d0-4302-c2e8-08dd97b25fc4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?6Sm2jAFPsp4yddt+fci1thcFFob62HqaN6mj8HqTTTRY1iacx3Vlq39IB5h3?=
- =?us-ascii?Q?selhgNVlv/wrKkcxKHpMXbnRVrcxbN2t48vE6k5xaWryW0sfSLz59QD711d1?=
- =?us-ascii?Q?TG0NbpBJh+oqIBdbdkqcfSoLwEhr3Tw5FAsq6K7TX79fcjLegC+akuqs+xqp?=
- =?us-ascii?Q?SyM0Kw8w49+ld4MPvX/TZCd2Q6iPS9SYw66SlMbegrqFgFx/DLX01bOs9iMR?=
- =?us-ascii?Q?jldor3T1oFQLg33E9dP90LqNW/RN3ZFlDvYA7qvIKDjB5VmeyguUSrhfzLy8?=
- =?us-ascii?Q?dNMjBSHEbAxIi4V3vdf2O13cXNRmmLg642Pb0nTnR3hNEl2yH2NR2WHGODqq?=
- =?us-ascii?Q?1YyCmkjgcJIAPlET7Zgg/96nWeSD7jizPgYURcny6kWEIeHWboLEUVgtKv9b?=
- =?us-ascii?Q?IVx4dLt1MuY3N8heJPzBm0DC7ZICgdk9aNLlJZsBl7HebrskSiXna+9bAScc?=
- =?us-ascii?Q?b6NfJ3kuJL8vwvHk/O+nLU9P/PbCADFrR7vmumCDp7SLnnLVYpp0DswTKo1/?=
- =?us-ascii?Q?PYeTSfY1cqX2c4v6iqnlI2EmFHp3LMoQ4ea10eVcVafN/o9HgcX7u7JQHrqx?=
- =?us-ascii?Q?15nYE0059SZJK64dJQ8OPV75ZQ6BPbvqnp5X4M0xL1tbHT0NnCh6V7CRRhSD?=
- =?us-ascii?Q?qqcL7yFPo/OIBkwCf9JcbCq7LSVGyRtUjYVkEVXzmtQXkL0b2Jpm50NiPXOW?=
- =?us-ascii?Q?VLde+CU8C07Q3lqq8DB/RaqJJU5orfCBYKko7VJoc9mr0C57zivpWG6UBVQY?=
- =?us-ascii?Q?9lLc0eO+uYJ3YyZIYHzER5/1DMbqr8gq/r04WZzMlvTG4Qz6vFMNxZbp524J?=
- =?us-ascii?Q?a1D09H4hBWPv7qHHrZFgKL/Dl/Y+KaU2q7d33RRXJEz4HuOxvUU2CvnDzYsF?=
- =?us-ascii?Q?x6MqEPlaXuVYjXTzfOKPYIqb8k0ZQpelJt0p4x1iOZf6w8U7U0K3FY3HQYIH?=
- =?us-ascii?Q?vc52uP+kn3/g1iBYJ8PU7pSxyZRr49qPp4hgfAWRYOokCtij/8EJoCgQIVIA?=
- =?us-ascii?Q?0bsxn8+zPz6weUsTaFI3VmlI66J1K1hcX0NgQtbmeodfwOlxKPmEFC87Ybha?=
- =?us-ascii?Q?NdU0XCtrk6zGvwqZr9B1kSdIKXTqMY1PuqafnujkWt7gF1Y9G34/vWnIaZKp?=
- =?us-ascii?Q?hkYS3ea+IsF9a6Csbeh+rgB3VlmddPKua9uIoKryB3X1TzrR4DtKXSPpT8/z?=
- =?us-ascii?Q?R/6j88LKSAEvqSKbEX2eyhtTRX2/L6oyYuK66XpJ97wECLEXUzie/8nvQBix?=
- =?us-ascii?Q?HtbIyCBwn7uJi8QEXArgtgYYlspbzXppTPCwEVg5aoNWxHvhZrE4B8Z0gU/9?=
- =?us-ascii?Q?RdaVtjGMoA+iWyR2aSXw3rkz7BnxPhfyAsGV29mASvsQifBOnfctdDAOcoKg?=
- =?us-ascii?Q?ySQZkY41urA5C01PvgID4pihsOjm?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?s7LCXv/4xeWUYvMJQmPS7JHa0T/zTk2+apux27EbGs0Du0yhVdPlJlhZiztK?=
- =?us-ascii?Q?zebLtyYuiql+jChs+nNBqmimtYaM5dbFsB8ZS1moFIgj9FWUDbSouPaMBY8C?=
- =?us-ascii?Q?IGQvppXMEDRl/Vata3YLgu/L6+1QMi1hqKTsXJa8UpshQ+4Kgk9MnQmXYaoQ?=
- =?us-ascii?Q?kk/tO+/W14IQYIfv3z8gvw2AEnOW04Mw03TtpH8odegLMNc7JRnq2rz/ewhe?=
- =?us-ascii?Q?l86UTuBhqv0016jQdkncVSj7kpw6Z2FQQ65842BZabF0g31p5UxZzmxaP00H?=
- =?us-ascii?Q?YHACwAA6c46d32HMv3p/o8Zd9fP258/RsmedEseO4LPaJNv2HCTUZj4FHcrZ?=
- =?us-ascii?Q?vxL26EGzZjFbbc5Ccm7gTJNdVe56pCKysECFe9fD2fLLTAYKLJS9auLUqU/5?=
- =?us-ascii?Q?ttKfy8au6xUpuNPXuX9eAAa0S7qgTysdudA+zmRilz1cZNqkgn0IM92SsQWX?=
- =?us-ascii?Q?7ZAabcYHb5COdAGcA6R1A7NlRQG9VTkYeaedDGwdY3OYeAUjEFSuxxY4P6do?=
- =?us-ascii?Q?UIM+8SWG/kygm41QRrp95tLY0+Srdu1SXeMBzIIiEmOHcWwc5Vao2Z7lmobT?=
- =?us-ascii?Q?Xv9NR+cEOOWB+RlzFQbdM1Lz3Gr24eIP/w004MRZUz4Y9DatCzJlbfa6tsMY?=
- =?us-ascii?Q?IifYBmWKPoAXmM6jJGx3AkTh+iAu7JTTR7mAkca8gtgS4UaBVpBusYo/V5t/?=
- =?us-ascii?Q?lD3Q+uK/77uD1dijJeM9j5K1V0IoXGvSPr/w6XXBkSOAYZiixnQbAd1muad5?=
- =?us-ascii?Q?YGgTTEJd9+3fkGY+kEeym4wjTx27fWVodph6X7mFKZEmYVwYXxYnvIF5M4UQ?=
- =?us-ascii?Q?5/dFMJq4b7IjgfCUyuFDLQg86kOc98qKyFemlvhxHMy+Ehg0/Lk2lglaw3JB?=
- =?us-ascii?Q?2+6xYQx6AzTCJIP7e3r6YgQOqDo/9c3nXUxDYlU8WfeZ3rBn9wz46/rKQGCT?=
- =?us-ascii?Q?2NcTMSbCpm/EHaGXWdN7yVLYztN7dIMUkgfdogBqKFKtFi/SXZ+lYjN3hysR?=
- =?us-ascii?Q?HdedrG15bQ/oOC+ifTiWP4m5w4DKePUvNDSmHYbH0pKToAl1nSuWgz+jaND9?=
- =?us-ascii?Q?YLdga0f+2SSj5PF8xa9fwKmkznhTpUviz6WpK1sQYUdGFnsjCLcqA/A82giw?=
- =?us-ascii?Q?qDnnOffjR8bdWXENP8nuzOjIHZGv9B8iSbL+HZSM/F2IVm4ryTw9n5uUFn/c?=
- =?us-ascii?Q?Ov2BnDJfQNPPdMGgsUBJoYYqjsHxk+7QkSc0UksTMhAIlJFIsbvxKgSjNBAw?=
- =?us-ascii?Q?W1CizKP1lReslncC2fDQbsnCxtMKxFPyJSV2QiI0J2N1Ijrxf4bqaAonYYxG?=
- =?us-ascii?Q?J0or3ZBC8Me3SXru1oA79Ws3NCG60hEZ6DJMKwy89JFtn1IFCvt0QgM4wH6F?=
- =?us-ascii?Q?pEBzKjp9B/evydInfVbvqjMmzF/NRnII3UQ6fhtIOD3gE+WAUzXSpT4jefPH?=
- =?us-ascii?Q?G/GOO22Xgt2n62V88AhjPVAetkYGorPUOlfYXH9h7yQSc9Ut1rCArkIaUE3+?=
- =?us-ascii?Q?qymC88VOL10zfRL4QC0fiVb+z0nA/8+cMze0phKAWRRJ+80kcXZuBlARKnDe?=
- =?us-ascii?Q?gjjysJUPmnorKk9WWMYRYHNvZoiJZRsJChQ4AyCPw5Lv6RVd7iXrRIBJvLrX?=
- =?us-ascii?Q?bw=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	cVnXgAkx5aKYhGEKke1n5+58N/GBLFH5cKPTn9klUpaLlTBxsQq8861cVdP4Ig5kwnGlQUOlzac/QFYH8i9PowkGSU8N3xvmB5hh5sQeHp8NYQhuG3Z35el7NcBjmOEgOx1k/LYBv6pcQBCPpos1kTBe+CAf1rmCoW6RajSsPUjnQT2aeTDP2W44ZkoKCDJLub+lem5cmIn0qV7qxUjoDd2jQug6xrWosI2wZxJgnhR0Y9bOT3PRCWeFc2scC6j3SD/gTfaSLIU0SIwxfJcXLo/namuPSkw4fIBgBoWxrpXgh8YMuBpvzX8s8zLikZsf4q4nAV6wltGghu5qkGSJjPYSqeHV7cYS3iOFSue+vKFsZNwIxkPuInMA6093byE2C0IzKOWfiQnSHiwm6R0fEQcVHXqcl5VCv0ajueDZhyOoB2F6/EKQ6T0xEkY7qvMuzLXA/7Iu+0byJEby68KMvVo66C78VTx5dbO65ugw7Mzjd/2cUpYukqos28YAW4qxamY/4DOXRihOaYikY9t3kYidPYBUdScuCa7vVqAvtYkxLcpcTBzSkdV29puE7Qr0f80UQE9Ao3wSWKM0XS8Byn85yjXGiAunQ5NVdmTBBQo=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 28237671-93d0-4302-c2e8-08dd97b25fc4
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 May 2025 15:24:12.4034
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +99ZVW+hVm6nLkJ5bX6955uOBhPj9jIsLfMjUBRdY3nUXB3UvzMpHOPynb59/4YqPdWw9WOn+D1aNtMT/rPyzpp8sLqIsKE1+IjoR2WClcI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB5646
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-20_06,2025-05-20_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 phishscore=0
- bulkscore=0 adultscore=0 mlxscore=0 suspectscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505070000
- definitions=main-2505200125
-X-Proofpoint-GUID: rUtZaIN0jcvaFy115QkBDx1Yx9QQYB15
-X-Proofpoint-ORIG-GUID: rUtZaIN0jcvaFy115QkBDx1Yx9QQYB15
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDEyNSBTYWx0ZWRfXwW26WJRs715W TTYWtXZetc8qCTAAE9Z3mKC5UBqL0JHnk2QIYAZ7EtC9hjeOeX4sBDz2YmgvkhmSmqbdviX89w6 FeN2WoiXjDIVkbQbFijFjYEwu/NXuxrPdZax/QdqPdjVA7jqdJ8AbSW7hmYKqaLgdpYXiNpkz01
- WEcEHLvIOXQr5XYKi6Pspu+BxL9fiI2WslltCp15dt+WIHkl6dNAob2dZSHUJ32FbQqMJWHd6rQ wHPbEc2dbE94NX7qt7ZsLQprMjcbo8zOKSMOaN0g5cdwIlv/lIghVXgh5f9GI+Vaa6Uwc5hwOw7 sg1WL3d07qtNhaazsFSsk+RVst0QC2xt6zmh7bomLJdPSgMrMAFTteFjPWJMUbh2zsYsMWwVrjQ
- pKg9VLv/1j9+K8J2ncF5RJqKDiPlxpm2FBMQlK6fOwaRNiy6MwhW3TJDy/FIjccpFj3+66LX
-X-Authority-Analysis: v=2.4 cv=c/SrQQ9l c=1 sm=1 tr=0 ts=682c9e9f b=1 cx=c_pps a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19
- a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=GoEa3M9JfhUA:10 a=VwQbUJbxAAAA:8 a=QyXUC8HyAAAA:8 a=yPCof4ZbAAAA:8 a=TAZUD9gdAAAA:8 a=VnNF1IyMAAAA:8 a=vzhER2c_AAAA:8 a=20KFwNOVAAAA:8 a=tigQPNLc1hilJ32vbdMA:9 a=CjuIK1q_8ugA:10
- a=f1lSKsbWiCfrRWj5-Iac:22 a=0YTRHmU2iG2pZC6F1fw2:22 cc=ntf awl=host:14695
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 20, 2025 at 05:10:09PM +0200, Claudio Imbrenda wrote:
-> On Mon, 19 May 2025 15:56:57 +0100
-> Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
->
-> > The enum type prot_type declared in arch/s390/kvm/gaccess.c declares an
-> > unfortunate identifier within it - PROT_NONE.
-> >
-> > This clashes with the protection bit define from the uapi for mmap()
-> > declared in include/uapi/asm-generic/mman-common.h, which is indeed what
-> > those casually reading this code would assume this to refer to.
-> >
-> > This means that any changes which subsequently alter headers in any way
-> > which results in the uapi header being imported here will cause build
-> > errors.
-> >
-> > Resolve the issue by renaming PROT_NONE to PROT_TYPE_DUMMY.
-> >
-> > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> > Suggested-by: Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
-> > Fixes: b3cefd6bf16e ("KVM: s390: Pass initialized arg even if unused")
-> > Cc: stable@vger.kernel.org
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Closes: https://lore.kernel.org/oe-kbuild-all/202505140943.IgHDa9s7-lkp@intel.com/
-> > Acked-by: Christian Borntraeger <borntraeger@linux.ibm.com>
-> > Acked-by: Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
-> > Acked-by: Yang Shi <yang@os.amperecomputing.com>
-> > Reviewed-by: David Hildenbrand <david@redhat.com>
-> > Acked-by: Liam R. Howlett <Liam.Howlett@oracle.com>
->
-> if you had put me in CC, you would have gotten this yesterday already:
->
-> Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+Hi,
 
-Thanks and apologies for not cc-ing you, clearly my mistake.
+This patch set allocates the protected DMA-bufs from a DMA-heap
+instantiated from the TEE subsystem.
 
-Though I would suggest your level of grumpiness here is a little over the
-top under the circumstances :) we maintainers must scale our grumpiness
-accordingly...
+The TEE subsystem handles the DMA-buf allocations since it is the TEE
+(OP-TEE, AMD-TEE, TS-TEE, or perhaps a future QTEE) which sets up the
+protection for the memory used for the DMA-bufs.
 
->
-> > ---
-> > Separated out from [0] as problem found in other patch in series.
-> >
-> > [0]: https://lore.kernel.org/all/cover.1747338438.git.lorenzo.stoakes@oracle.com/
-> >
-> >  arch/s390/kvm/gaccess.c | 8 ++++----
-> >  1 file changed, 4 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/arch/s390/kvm/gaccess.c b/arch/s390/kvm/gaccess.c
-> > index f6fded15633a..4e5654ad1604 100644
-> > --- a/arch/s390/kvm/gaccess.c
-> > +++ b/arch/s390/kvm/gaccess.c
-> > @@ -318,7 +318,7 @@ enum prot_type {
-> >  	PROT_TYPE_DAT  = 3,
-> >  	PROT_TYPE_IEP  = 4,
-> >  	/* Dummy value for passing an initialized value when code != PGM_PROTECTION */
-> > -	PROT_NONE,
-> > +	PROT_TYPE_DUMMY,
-> >  };
-> >
-> >  static int trans_exc_ending(struct kvm_vcpu *vcpu, int code, unsigned long gva, u8 ar,
-> > @@ -334,7 +334,7 @@ static int trans_exc_ending(struct kvm_vcpu *vcpu, int code, unsigned long gva,
-> >  	switch (code) {
-> >  	case PGM_PROTECTION:
-> >  		switch (prot) {
-> > -		case PROT_NONE:
-> > +		case PROT_TYPE_DUMMY:
-> >  			/* We should never get here, acts like termination */
-> >  			WARN_ON_ONCE(1);
-> >  			break;
-> > @@ -804,7 +804,7 @@ static int guest_range_to_gpas(struct kvm_vcpu *vcpu, unsigned long ga, u8 ar,
-> >  			gpa = kvm_s390_real_to_abs(vcpu, ga);
-> >  			if (!kvm_is_gpa_in_memslot(vcpu->kvm, gpa)) {
-> >  				rc = PGM_ADDRESSING;
-> > -				prot = PROT_NONE;
-> > +				prot = PROT_TYPE_DUMMY;
-> >  			}
-> >  		}
-> >  		if (rc)
-> > @@ -962,7 +962,7 @@ int access_guest_with_key(struct kvm_vcpu *vcpu, unsigned long ga, u8 ar,
-> >  		if (rc == PGM_PROTECTION)
-> >  			prot = PROT_TYPE_KEYC;
-> >  		else
-> > -			prot = PROT_NONE;
-> > +			prot = PROT_TYPE_DUMMY;
-> >  		rc = trans_exc_ending(vcpu, rc, ga, ar, mode, prot, terminate);
-> >  	}
-> >  out_unlock:
-> > --
-> > 2.49.0
-> >
->
+The DMA-heap uses a protected memory pool provided by the backend TEE
+driver, allowing it to choose how to allocate the protected physical
+memory.
+
+The allocated DMA-bufs must be imported with a new TEE_IOC_SHM_REGISTER_FD
+before they can be passed as arguments when requesting services from the
+secure world.
+
+Three use-cases (Secure Video Playback, Trusted UI, and Secure Video
+Recording) have been identified so far to serve as examples of what can be
+expected. The use-cases have predefined DMA-heap names,
+"protected,secure-video", "protected,trusted-ui", and
+"protected,secure-video-record". The backend driver registers protected
+memory pools for the use-cases it supports.
+
+Each use-case has its own protected memory pool since different use-cases
+require isolation from different parts of the system. A protected memory
+pool can be based on a static carveout instantiated while probing the TEE
+backend driver, or dynamically allocated from CMA (dma_alloc_pages()) and
+made protected as needed by the TEE.
+
+This can be tested on a RockPi 4B+ with the following steps:
+repo init -u https://github.com/jenswi-linaro/manifest.git -m rockpi4.xml \
+        -b prototype/sdp-v9
+repo sync -j8
+cd build
+make toolchains -j$(nproc)
+make all -j$(nproc)
+# Copy ../out/rockpi4.img to an SD card and boot the RockPi from that
+# Connect a monitor to the RockPi
+# login and at the prompt:
+gst-launch-1.0 videotestsrc ! \
+        aesenc key=1f9423681beb9a79215820f6bda73d0f \
+                iv=e9aa8e834d8d70b7e0d254ff670dd718 serialize-iv=true ! \
+        aesdec key=1f9423681beb9a79215820f6bda73d0f ! \
+        kmssink
+
+The aesdec module has been hacked to use an OP-TEE TA to decrypt the stream
+into protected DMA-bufs which are consumed by the kmssink.
+
+The primitive QEMU tests from previous patch sets can be tested on RockPi
+in the same way using:
+xtest --sdp-basic
+
+The primitive tests are tested on QEMU with the following steps:
+repo init -u https://github.com/jenswi-linaro/manifest.git -m qemu_v8.xml \
+        -b prototype/sdp-v9
+repo sync -j8
+cd build
+make toolchains -j$(nproc)
+make SPMC_AT_EL=1 all -j$(nproc)
+make SPMC_AT_EL=1 run-only
+# login and at the prompt:
+xtest --sdp-basic
+
+The SPMC_AT_EL=1 parameter configures the build with FF-A and an SPMC at
+S-EL1 inside OP-TEE. The parameter can be changed to SPMC_AT_EL=n to test
+without FF-A using the original SMC ABI instead. Please remember to do
+%make arm-tf-clean
+for TF-A to be rebuilt properly using the new configuration.
+
+https://optee.readthedocs.io/en/latest/building/prerequisites.html
+list dependencies required to build the above.
+
+The primitive tests are pretty basic, mostly checking that a Trusted
+Application in the secure world can access and manipulate the memory. There
+are also some negative tests for out of bounds buffers, etc.
+
+Thanks,
+Jens
+
+Changes since V8:
+* Using dma_alloc_pages() instead of cma_alloc() so the direct dependency on
+  CMA can be removed together with the patches
+  "cma: export cma_alloc() and cma_release()" and
+  "dma-contiguous: export dma_contiguous_default_area". The patch
+* Renaming the patch "tee: add tee_shm_alloc_cma_phys_mem()" to
+  "tee: add tee_shm_alloc_dma_mem()"
+* Setting DMA mask for the OP-TEE TEE device based on input from the secure
+  world instead of relying on the parent device so following patches are
+  removed: "tee: tee_device_alloc(): copy dma_mask from parent device" and
+  "optee: pass parent device to tee_device_alloc()".
+* Adding Sumit Garg's R-B to "tee: refactor params_from_user()"
+* In the patch "tee: implement protected DMA-heap", map the physical memory
+  passed to tee_protmem_static_pool_alloc().
+
+Changes since V7:
+* Adding "dma-buf: dma-heap: export declared functions",
+  "cma: export cma_alloc() and cma_release()", and
+  "dma-contiguous: export dma_contiguous_default_area" to export the symbols
+  needed to keep the TEE subsystem as a load module.
+* Removing CONFIG_TEE_DMABUF_HEAP and CONFIG_TEE_CMA since they aren't
+  needed any longer.
+* Addressing review comments in "optee: sync secure world ABI headers"
+* Better align protected memory pool initialization between the smc-abi and
+  ffa-abi parts of the optee driver.
+* Removing the patch "optee: account for direction while converting parameters"
+
+Changes since V6:
+* Restricted memory is now known as protected memory since to use the same
+  term as https://docs.vulkan.org/guide/latest/protected.html. Update all
+  patches to consistently use protected memory.
+* In "tee: implement protected DMA-heap" add the hidden config option
+  TEE_DMABUF_HEAP to tell if the DMABUF_HEAPS functions are available
+  for the TEE subsystem
+* Adding "tee: refactor params_from_user()", broken out from the patch
+  "tee: new ioctl to a register tee_shm from a dmabuf file descriptor"
+* For "tee: new ioctl to a register tee_shm from a dmabuf file descriptor":
+  - Update commit message to mention protected memory
+  - Remove and open code tee_shm_get_parent_shm() in param_from_user_memref()
+* In "tee: add tee_shm_alloc_cma_phys_mem" add the hidden config option
+  TEE_CMA to tell if the CMA functions are available for the TEE subsystem
+* For "tee: tee_device_alloc(): copy dma_mask from parent device" and
+  "optee: pass parent device to tee_device_alloc", added
+  Reviewed-by: Sumit Garg <sumit.garg@kernel.org>
+
+Changes since V5:
+* Removing "tee: add restricted memory allocation" and
+  "tee: add TEE_IOC_RSTMEM_FD_INFO"
+* Adding "tee: implement restricted DMA-heap",
+  "tee: new ioctl to a register tee_shm from a dmabuf file descriptor",
+  "tee: add tee_shm_alloc_cma_phys_mem()",
+  "optee: pass parent device to tee_device_alloc()", and
+  "tee: tee_device_alloc(): copy dma_mask from parent device"
+* The two TEE driver OPs "rstmem_alloc()" and "rstmem_free()" are replaced
+  with a struct tee_rstmem_pool abstraction.
+* Replaced the the TEE_IOC_RSTMEM_ALLOC user space API with the DMA-heap API
+
+Changes since V4:
+* Adding the patch "tee: add TEE_IOC_RSTMEM_FD_INFO" needed by the
+  GStreamer demo
+* Removing the dummy CPU access and mmap functions from the dma_buf_ops
+* Fixing a compile error in "optee: FF-A: dynamic restricted memory allocation"
+  reported by kernel test robot <lkp@intel.com>
+
+Changes since V3:
+* Make the use_case and flags field in struct tee_shm u32's instead of
+  u16's
+* Add more description for TEE_IOC_RSTMEM_ALLOC in the header file
+* Import namespace DMA_BUF in module tee, reported by lkp@intel.com
+* Added a note in the commit message for "optee: account for direction
+  while converting parameters" why it's needed
+* Factor out dynamic restricted memory allocation from
+  "optee: support restricted memory allocation" into two new commits
+  "optee: FF-A: dynamic restricted memory allocation" and
+  "optee: smc abi: dynamic restricted memory allocation"
+* Guard CMA usage with #ifdef CONFIG_CMA, effectively disabling dynamic
+  restricted memory allocate if CMA isn't configured
+
+Changes since the V2 RFC:
+* Based on v6.12
+* Replaced the flags for SVP and Trusted UID memory with a u32 field with
+  unique id for each use case
+* Added dynamic allocation of restricted memory pools
+* Added OP-TEE ABI both with and without FF-A for dynamic restricted memory
+* Added support for FF-A with FFA_LEND
+
+Changes since the V1 RFC:
+* Based on v6.11
+* Complete rewrite, replacing the restricted heap with TEE_IOC_RSTMEM_ALLOC
+
+Changes since Olivier's post [2]:
+* Based on Yong Wu's post [1] where much of dma-buf handling is done in
+  the generic restricted heap
+* Simplifications and cleanup
+* New commit message for "dma-buf: heaps: add Linaro restricted dmabuf heap
+  support"
+* Replaced the word "secure" with "restricted" where applicable
+
+Etienne Carriere (1):
+  tee: new ioctl to a register tee_shm from a dmabuf file descriptor
+
+Jens Wiklander (8):
+  optee: sync secure world ABI headers
+  dma-buf: dma-heap: export declared functions
+  tee: implement protected DMA-heap
+  tee: refactor params_from_user()
+  tee: add tee_shm_alloc_dma_mem()
+  optee: support protected memory allocation
+  optee: FF-A: dynamic protected memory allocation
+  optee: smc abi: dynamic protected memory allocation
+
+ drivers/dma-buf/dma-heap.c        |   3 +
+ drivers/tee/Makefile              |   1 +
+ drivers/tee/optee/Makefile        |   1 +
+ drivers/tee/optee/core.c          |  10 +
+ drivers/tee/optee/ffa_abi.c       | 147 ++++++++-
+ drivers/tee/optee/optee_ffa.h     |  27 +-
+ drivers/tee/optee/optee_msg.h     |  84 +++++-
+ drivers/tee/optee/optee_private.h |  15 +-
+ drivers/tee/optee/optee_smc.h     |  37 ++-
+ drivers/tee/optee/protmem.c       | 332 ++++++++++++++++++++
+ drivers/tee/optee/smc_abi.c       | 113 ++++++-
+ drivers/tee/tee_core.c            | 155 +++++++---
+ drivers/tee/tee_heap.c            | 487 ++++++++++++++++++++++++++++++
+ drivers/tee/tee_private.h         |  16 +
+ drivers/tee/tee_shm.c             | 183 ++++++++++-
+ include/linux/tee_core.h          |  71 +++++
+ include/linux/tee_drv.h           |  10 +
+ include/uapi/linux/tee.h          |  31 ++
+ 18 files changed, 1655 insertions(+), 68 deletions(-)
+ create mode 100644 drivers/tee/optee/protmem.c
+ create mode 100644 drivers/tee/tee_heap.c
+
+
+base-commit: b4432656b36e5cc1d50a1f2dc15357543add530e
+-- 
+2.43.0
+
