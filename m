@@ -1,169 +1,119 @@
-Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00F291FF7B3;
-	Tue, 20 May 2025 14:55:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57AB11FF7B3
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 14:56:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747752917; cv=none; b=Rc18vmp+aMWiV6VzuY35puHprtV9p94k4Uv8t1bHUOxFZSts89pqOZYfdUEiRNE3/2rOQ4xuHw/+/2ruUXROtBPqba2LIVvYf4mBrXTh2F3LjxhLG2RZy0xtk374pIUkbliCosKrOPLcgOzjzis9EMTKYORluuCoJStuPeYiBxw=
+	t=1747752967; cv=none; b=EDox8gOUUCPzZHicIY5DFwSiY64Jfedm2tGdimGVl2uQla5W0kcJAh4wW0ISI+/ulCxGCwGt+1P5SaeoGDmm28v2fUWCeb0Qi+M7e5jV/ozZfkpMhEJwHKqNwQNeUWftn7rdK6vrzYIKyf2B/qQEF2J90OnaDVep08J8MjRzkl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747752917; c=relaxed/simple;
-	bh=5t0gdhv8R1teNpgkE18HM4BYta0hXkyqjJazcPOR+ng=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qQFeT9O++rnv/lJ8UoBSqotnwJbA9dj5UCf7su2vlaz5AEnQdX+MSCJ8Xq47vbBUo82ZiSjUtHLD8m/j4mqNz5dbtDPvx1wz8y6kKTw+Knl2DuhPJixz9QW3Uz2UKlVjzy3llY5XAg996EiKfmDJA4hNn+18XyQv9rCdVhEaJzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-528ce9730cfso1255329e0c.3;
-        Tue, 20 May 2025 07:55:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747752912; x=1748357712;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ttxhK6Ti/XQOTqH6UODUStCIPGw0sZp98YSCtYewY44=;
-        b=cL+3mS+4BqZ/mDap4LhnaV/I2C5lMzmxPYCi5HtzBWbsBW+Ep2D7+U/igZZRuL9G2T
-         bhZKv3Ne2oLDga33fVyh9BRUzSoV6L+6hGHte1VI+OMg7cmY5H4yEtyPMHMFmnBFuDEk
-         VLqGNJqzjmzv040f5QSIPzIgkmFiEny57uePyj9ZMLMZwZcRTd7I1aigAMnEe1wOcJVc
-         RjbDfScsE2/IgmZLshD6nwc0gB2C/JicvYxGo0672GTTl1HMlIL9c5p2QkNNe7g+RnRK
-         L/GjsPRLVF5ijQgJ78/UOmTitJzeyCjr29f6Cv7J1sP3C3R+VZx6Wwt4b6KzamndC9AO
-         aE7A==
-X-Forwarded-Encrypted: i=1; AJvYcCWlfWX2nL6EzePZ0NlTFVj0UB/hK2moT6jGrEFZGliTeV1ru1QMJLlbbyh4KJEzueh6R+/wP1wsGaZDPNcYiEiC3nc=@vger.kernel.org, AJvYcCWo39dssUrqSFHTi6hgqP1SCUclEeYutEL3bl2cnpZziuUDpYtWdD82s4BpeRDyHXFvjMCmry+hhQC5raat@vger.kernel.org, AJvYcCXRVjNuOwtZIhfbGCdaR4SbDrQHBnM8on3LdAg6UJzTlFZG3OQ2/czRfKsWzkSGlVv4Gn2OCOgsRoUl@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMk0qgXtv40WbR4i6AvHHdWVZ0RuUWyydECM5ajanF4sdcQ5r/
-	cPkaHVfpfoZO9tRLhQYlhi/jbN3xmJ7RxJFbaxE+CvNBHvw06mf4k9DHWT7hihWT
-X-Gm-Gg: ASbGnct37/EIdU51NMYNHcoWvSjIKQjtOZbNE6M9hR2O6n+tdNV41N6cfLEeLNqjpLj
-	iKCacnerDNTF+DjmZVPdL3bvRg55xM28/lei9h2i9fVK+7xujclpyapzk/0WGLAYUI+u9l3ycKq
-	boG1kOBqRXZAHHMXxJBvlbGhp2+9hyiVz2ZbK3dHS2o3Dpth0W1jShIVUNENW+FzhY4oGhl4brj
-	DhZYWP1lOKzBSIqDFNlHK1Ui9nD1n7MsA0s42Zj6L8btDZmFwBvjeCr3N7C4L4H7ENo4Gi4GTZk
-	55qRVCg/ay1j+5OtBfMaJ8uoeM+keTkJvscb03btEqfLfQdGi4n3y4rEy8kM+CH88tChzapFhSw
-	Duz0OQeiVKLrGFHD9d+hoHfTx
-X-Google-Smtp-Source: AGHT+IGT+Pt99Y+3HfVgDShKNL8vdrHQAAbHfwHQA+KKt72ephUI5sgsIyJmD/DCo1cPN4ZNSHXkHA==
-X-Received: by 2002:a05:6122:d18:b0:529:995:5aec with SMTP id 71dfb90a1353d-52dbcc85543mr14651405e0c.4.1747752912368;
-        Tue, 20 May 2025 07:55:12 -0700 (PDT)
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com. [209.85.217.50])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52dba967b83sm8598811e0c.23.2025.05.20.07.55.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 May 2025 07:55:11 -0700 (PDT)
-Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-4e14dd8abdaso1419387137.3;
-        Tue, 20 May 2025 07:55:10 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU4RaSxuNppLtmO+MBcdr+g+j7uHeyYHEqsBeYc8hy239zJTmL+zzFC+gTQosAXoQ6w9WWn+ytdr2n0FMvy@vger.kernel.org, AJvYcCW16sqSmhkBbmgRkKc6CjougZ8RYRq/+OALGgiqpjLkIUt/zkxkmY/tZho9rhSPYkNGyqbiHa8Bi2HG@vger.kernel.org, AJvYcCWkx0jPofCStulT5Up2Zs9+edCBwEJ5SNEapORk4O9r/T4F7BdHEIL+na59dXO8uv0rbLm4+qzVjZS4HrqtCpgBG1s=@vger.kernel.org
-X-Received: by 2002:a05:6102:1528:b0:4c1:76a4:aee4 with SMTP id
- ada2fe7eead31-4e05375dcb2mr14690410137.19.1747752910647; Tue, 20 May 2025
- 07:55:10 -0700 (PDT)
+	s=arc-20240116; t=1747752967; c=relaxed/simple;
+	bh=y0VfecFzDhr5bGdapkf3y1ZJhequieL6dE/5l0Ihe8g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EGojhGTkIoLsjm1dp1ec3/y2rUHXq9dAsy62CXKklLWt2V5bUOsq/nwTiYI3UkDilKTW3Y2BI0aFL/qyWcUtO8kLRzz0Fi37CrVeGBWGPT1hzAWwScicB4xBsg2PS5NcQab1dbBBHTyH+KYb4jH5tTL2+3tVmPo0y8jU3f60M2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ougTOzs8; arc=none smtp.client-ip=91.218.175.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ougTOzs8"
+Date: Tue, 20 May 2025 07:55:22 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747752959;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Zj+ANRRCM3elfcsUYTWPFAAqMrBVEKBDUe1b3TfKqtc=;
+	b=ougTOzs8lk/ovza5YLoy9N0ZdDaLIty8216yrXX/PTHRFPrYWOAr39Ky7KXAitDyEwpSI7
+	VdxjjfIwFeqk5Ta8Zp2V99dfZWbxov+vnaXJih+KqhKG4yJlyfF5YYhmqXLQZVtbYtqcNv
+	VuRBvCtO4RA5O6IBzs2Ndd4/VnqHjIw=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Oliver Upton <oliver.upton@linux.dev>
+To: ankita@nvidia.com
+Cc: jgg@nvidia.com, maz@kernel.org, joey.gouly@arm.com,
+	suzuki.poulose@arm.com, yuzenghui@huawei.com,
+	catalin.marinas@arm.com, will@kernel.org, ryan.roberts@arm.com,
+	shahuang@redhat.com, lpieralisi@kernel.org, david@redhat.com,
+	aniketa@nvidia.com, cjia@nvidia.com, kwankhede@nvidia.com,
+	kjaju@nvidia.com, targupta@nvidia.com, vsethi@nvidia.com,
+	acurrid@nvidia.com, apopple@nvidia.com, jhubbard@nvidia.com,
+	danw@nvidia.com, zhiw@nvidia.com, mochs@nvidia.com,
+	udhoke@nvidia.com, dnigam@nvidia.com, alex.williamson@redhat.com,
+	sebastianene@google.com, coltonlewis@google.com,
+	kevin.tian@intel.com, yi.l.liu@intel.com, ardb@kernel.org,
+	akpm@linux-foundation.org, gshan@redhat.com, linux-mm@kvack.org,
+	ddutile@redhat.com, tabba@google.com, qperret@google.com,
+	seanjc@google.com, kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	maobibo@loongson.cn
+Subject: Re: [PATCH v4 2/5] KVM: arm64: Make stage2_has_fwb global scope
+Message-ID: <aCyX2nJzBXmQarAJ@linux.dev>
+References: <20250518054754.5345-1-ankita@nvidia.com>
+ <20250518054754.5345-3-ankita@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250512182330.238259-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250512182330.238259-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250512182330.238259-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 20 May 2025 16:54:57 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVEgTo7V-gzzpVVNqxnDMSdTC1ew70gbJ=Sb5Qr4asryA@mail.gmail.com>
-X-Gm-Features: AX0GCFv8LYK03_9WrEiJFFzvjW_0fJJk_EmmURtGv-joA1Jov8I_4pZ3KpumSj4
-Message-ID: <CAMuHMdVEgTo7V-gzzpVVNqxnDMSdTC1ew70gbJ=Sb5Qr4asryA@mail.gmail.com>
-Subject: Re: [PATCH v5 05/12] drm: renesas: rz-du: mipi_dsi: Use VCLK for
- HSFREQ calculation
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Biju Das <biju.das.jz@bp.renesas.com>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Magnus Damm <magnus.damm@gmail.com>, 
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, dri-devel@lists.freedesktop.org, 
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250518054754.5345-3-ankita@nvidia.com>
+X-Migadu-Flow: FLOW_OUT
 
-Hi Prabhakar,
+Hi Ankit,
 
-On Mon, 12 May 2025 at 20:23, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Update the RZ/G2L MIPI DSI driver to calculate HSFREQ using the actual
-> VCLK rate instead of the mode clock. The relationship between HSCLK and
-> VCLK is:
->
->     vclk * bpp <= hsclk * 8 * lanes
->
-> Retrieve the VCLK rate using `clk_get_rate(dsi->vclk)`, ensuring that
-> HSFREQ accurately reflects the clock rate set in hardware, leading to
-> better precision in data transmission.
->
-> Additionally, use `DIV_ROUND_CLOSEST_ULL` for a more precise division
-> when computing `hsfreq`. Also, update unit conversions to use correct
-> scaling factors for better clarity and correctness.
->
-> Since `clk_get_rate()` returns the clock rate in Hz, update the HSFREQ
-> threshold comparisons to use Hz instead of kHz to ensure correct behavior.
->
-> Co-developed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+On Sun, May 18, 2025 at 05:47:51AM +0000, ankita@nvidia.com wrote:
+> From: Ankit Agrawal <ankita@nvidia.com>
+> 
+> Change the scope of stage2_has_fwb as it will be used in
+> broader KVM code to determine whether the FWB feature is
+> supported by the hardware.
+
+Please just use the cpucap directly outside of the page table code. The
+only non-FWB stage-2 that KVM maintains on a FEAT_S2FWB machine is for
+the host when using protected mode. I don't anticipate that changing any
+time soon.
+
+Thanks,
+Oliver
+
 > ---
-> v4->v5:
-> - Added dev_info() to print the VCLK rate if it doesn't match the
->   requested rate.
-> - Added Reviewed-by tag from Biju
->
-> v3->v4:
-> - Used MILLI instead of KILO
-
-Thanks for the update!
-
-> --- a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-> +++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-
-> @@ -269,6 +271,12 @@ static int rzg2l_mipi_dsi_startup(struct rzg2l_mipi_dsi *dsi,
->         u32 golpbkt;
->         int ret;
->
-> +       ret = pm_runtime_resume_and_get(dsi->dev);
-> +       if (ret < 0)
-> +               return ret;
+>  arch/arm64/include/asm/kvm_pgtable.h | 8 ++++++++
+>  arch/arm64/kvm/hyp/pgtable.c         | 2 +-
+>  2 files changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/include/asm/kvm_pgtable.h b/arch/arm64/include/asm/kvm_pgtable.h
+> index 6b9d274052c7..f21e2fae2bfe 100644
+> --- a/arch/arm64/include/asm/kvm_pgtable.h
+> +++ b/arch/arm64/include/asm/kvm_pgtable.h
+> @@ -507,6 +507,14 @@ u64 kvm_pgtable_hyp_unmap(struct kvm_pgtable *pgt, u64 addr, u64 size);
+>   */
+>  u64 kvm_get_vtcr(u64 mmfr0, u64 mmfr1, u32 phys_shift);
+>  
+> +/**
+> + * stage2_has_fwb() - Determine whether FWB is supported
+> + * @pgt:    Page-table structure initialised by kvm_pgtable_stage2_init*()
+> + *
+> + * Return: True if FWB is supported.
+> + */
+> +bool stage2_has_fwb(struct kvm_pgtable *pgt);
 > +
-> +       clk_set_rate(dsi->vclk, mode->clock * MILLI);
-
-drm_display_mode.clock is in kHz, so s/MILLI/KILO/
-
-> +
->         /*
->          * Relationship between hsclk and vclk must follow
->          * vclk * bpp = hsclk * 8 * lanes
-> @@ -280,13 +288,11 @@ static int rzg2l_mipi_dsi_startup(struct rzg2l_mipi_dsi *dsi,
->          * hsclk(bit) = hsclk(byte) * 8 = hsfreq
->          */
->         bpp = mipi_dsi_pixel_format_to_bpp(dsi->format);
-> -       hsfreq = (mode->clock * bpp) / dsi->lanes;
-> -
-> -       ret = pm_runtime_resume_and_get(dsi->dev);
-> -       if (ret < 0)
-> -               return ret;
-> -
-> -       clk_set_rate(dsi->vclk, mode->clock * 1000);
-> +       vclk_rate = clk_get_rate(dsi->vclk);
-> +       if (vclk_rate != mode->clock * MILLI)
-> +               dev_info(dsi->dev, "Requested vclk rate %lu, actual %lu mismatch\n",
-> +                        mode->clock * MILLI, vclk_rate);
-
-Likewise.
-
-> +       hsfreq = DIV_ROUND_CLOSEST_ULL(vclk_rate * bpp, dsi->lanes);
->
->         ret = rzg2l_mipi_dsi_dphy_init(dsi, hsfreq);
->         if (ret < 0)
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+>  /**
+>   * kvm_pgtable_stage2_pgd_size() - Helper to compute size of a stage-2 PGD
+>   * @vtcr:	Content of the VTCR register.
+> diff --git a/arch/arm64/kvm/hyp/pgtable.c b/arch/arm64/kvm/hyp/pgtable.c
+> index df5cc74a7dd0..ee6b98fefd61 100644
+> --- a/arch/arm64/kvm/hyp/pgtable.c
+> +++ b/arch/arm64/kvm/hyp/pgtable.c
+> @@ -637,7 +637,7 @@ u64 kvm_get_vtcr(u64 mmfr0, u64 mmfr1, u32 phys_shift)
+>  	return vtcr;
+>  }
+>  
+> -static bool stage2_has_fwb(struct kvm_pgtable *pgt)
+> +bool stage2_has_fwb(struct kvm_pgtable *pgt)
+>  {
+>  	if (!cpus_have_final_cap(ARM64_HAS_STAGE2_FWB))
+>  		return false;
+> -- 
+> 2.34.1
+> 
