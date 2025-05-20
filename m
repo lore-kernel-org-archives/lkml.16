@@ -1,119 +1,180 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B353B4C9D
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 18:01:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEB6E1BD9F0
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 18:02:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747764084; cv=none; b=tHba7vHm683F0jZPqMLwoZLd+Htp5+1a0wpyZptKkChGH+KIBMXKW4lYU2qBm9z+8u/ue7PTmqxhcNx1H1vEYWABQpxZLwRW+r22/3EZt2JtQR1U6AHvo7wymiB7ZPCCjBJtxqB4qPz2mWb3J37aVe8K5H9GYg1fr9VZGLEIyi8=
+	t=1747764147; cv=none; b=aDr8nbKp6KT1eLwXFCMAHRfN8OmQV4n1Bg6xHPzhzVx1/PW4rZZZsNiYiuN/lVZLy1yJtt1HWR6JLdCVnzJI6PRUGS7+HKaMPyf9UBVNXaT1tUBmpA6Q4Bc56GPm/eN7PwOfcHAt/oZvy71PeU9FyrZwTo7+E9B9DQ7Ry0GS9GE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747764084; c=relaxed/simple;
-	bh=ZfP9uP9mEfZH/qD6TuMh31ayOhCzoqLXgrzZ4gWV3oc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LHbNFsSYIevjkH1UieInnk1h7on0+Wj5duEZzOYmvR/Aqdeh1vED83shIrjUDKhZPMmegxp8O9w+1g5czJ17y4L+Ta291H3qTASphTgIFMh0p5Z2CBB2dXooA51/jl4e7YbT2wrKxHl7d0Hquyk21k7g8QYtVKWZGQkREPK87Oo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Jo9fkX4M; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Jo9fkX4M"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 039E740E0163;
-	Tue, 20 May 2025 18:01:20 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id zmNaqe0VPYw5; Tue, 20 May 2025 18:01:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1747764076; bh=TXIhutX3goEJ1TZKkfSJRw3z4YKDC8u8Si3u8vDphbI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Jo9fkX4MaINhSqGdz+4J3WGUznQqxo2m1W0dP8xNENN6Ssj6xeUndElgLMdya4Gr+
-	 8TwimEcvHf9ZVOlXlYP6NmpRKox60RbSRaU8leoUzwDPhmuBjOAI15j1bO8WxRUySF
-	 N3mK6mWaDMRjLff5hWQrTsWk+yhwOu/fSFukPxk0OKDqmDAzPJAsXKAIG2HxRLD8P9
-	 QWzmg4wx0bFmxPNV4Xg1yW0lRjWorUeIPathDx+/lVjZ8N7jSkPn8uFRDlyuKVLK+N
-	 Zceo8ckzi1I7U29JW/0UkFnHzNQPpZRs6H6IHxa189g95GUuuy2BaGdVi355xY8P3l
-	 79Ojy4pXmXIyJyi4snmXKC5K23G0IfsmR4p8ZYDQluyTlg9YRc/lK8lDSgfTh06Oon
-	 jHwojlxe9rNlABznTenDPuHBH+m0CgJtwLv5V2U2p5T3hUwxbSL9qViUODAj6R9RBL
-	 g3T/gogmWQLrLTgVw4WgUFP50F9JrM531IdObA9uhDqCbFBRIc4vlSYijG+DHH6Mw0
-	 5khVFaVVNSEpJpXcliwaxYXNSmmimHzpJRVgwvRfd3sXSmJfh955rMAcOARVAgflFx
-	 wnBE9O5LKmeqJH1LOhiCXwgsB1iGukUzoJzXjpTdu2lmiT5wS4QkN06zPOSvgXqrQC
-	 WMrlLp/+yi6puv3H8eTVM/Jo=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D5A2140E01CF;
-	Tue, 20 May 2025 18:01:07 +0000 (UTC)
-Date: Tue, 20 May 2025 20:01:01 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: "Kirill A. Shutemov" <kirill@shutemov.name>,
-	Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
-	x86@kernel.org, Ingo Molnar <mingo@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Brian Gerst <brgerst@gmail.com>
-Subject: Re: [PATCH v5 2/7] x86/mm: Use a single cache hot per-CPU variable
- to record pgdir_shift
-Message-ID: <20250520180101.GPaCzDXW2MlArU71xe@fat_crate.local>
-References: <20250520104138.2734372-9-ardb+git@google.com>
- <20250520104138.2734372-11-ardb+git@google.com>
- <awmpxjln22i5zmnv3wcwhzvpbbjqmhiw3onmpq66owbtdoujs5@f336cwpvlasn>
- <CAMj1kXE+2P6_y0SnmtmD=J42pe67itnr5jQs6NxjMTvV7HHp0A@mail.gmail.com>
- <20250520143532.GMaCyTNJqH_T2LR8q5@fat_crate.local>
- <CAMj1kXFxRZWsML_5FZvZjwOPO8cvsAwDqvX1686bqqfqkD_PHg@mail.gmail.com>
- <20250520173825.GOaCy-Eekk661c94ne@fat_crate.local>
- <CAMj1kXHpFK+=1gdo11Msw9w6gh2f-4gnSCkyA5kaB_x4mafS5A@mail.gmail.com>
+	s=arc-20240116; t=1747764147; c=relaxed/simple;
+	bh=Au1RLsrcICSRk7TklPURQxKHDmZgV4OzX0iHv+Mznv4=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=F8zUucR8pXxjncpB2iVveiPUMLv0DCclWwKNoIlvMoI7Odbg4ZQSOzRTde3CiTi6OhjmTOTS/SSe+CA6wUDh8IxQJBS73cYGgijcpyfqtVNFkBQ2maezMLILCBb6QXym8mOZDKmVU8zyPJnlo8UeeQLOVSSD5rvNzGNYIQK7AUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-85e4f920dacso502219439f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 11:02:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747764145; x=1748368945;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BdtErvVnPkaTJ5W3EweEKFDiJG1wwCqJ41yNPsWj1j4=;
+        b=jFV/RMvWZk5MAGpCTXy2bcMAxYcGXT7xICnNWv8ZZZMNyhw/m3RaifgpUama2WVqSu
+         xxzug3DVYDWl9i80MSV8+uJ2DwHPX+6O1tob34ze/60boaCncI/UTSfnZ3FfAXJVT8w4
+         iS2XgiD+l3NW2s+iZPBYllvTFm1duZvXXx2H3wSjAjAZ0l/cEc/59GKqg1h3J496JF8K
+         /sJDyaZohVKZSXwpbHM8agtT2R07YiMsVmIL65GT+4S5LYxkfCgP+oq4S6cOJaTF92TS
+         EcfW0JNVhJ9qz1KyZGA38JEgu3rZYgPbQr+seexbWp4LDtX7raIn/R/ZAFyN1rNukdqf
+         qGjw==
+X-Forwarded-Encrypted: i=1; AJvYcCXCfZGH0mY1AVaTmslJ7btkNC/sz01qHXRkiPAj7Ves1Oyg12wy7CzkH2nyF2Rv5QSZ7P/edapQAaO7KWE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0PdGUZNJyobgtsY0gi600VtVOG5c/F8iUfQxXxUR1SXxbDiia
+	xt5Qh4JlNdZG1awFY91+zQ3iI8X0ShcJGI4bPHnIdOPY+xWlpa5XWmUpR8cuDkAtGI+h0Sg9g9i
+	K3a+Bw0CNz8zAOvXXYwBgbP5qCqWv3KL25RbNbUiIdeW4kjO06QoMarLRUn4=
+X-Google-Smtp-Source: AGHT+IGn7GF7KZgALUbRjqqVXLDDgunsWJwXNGwozBuTBbpUW8+wd3K8T119IudB9ejmXQI231qrFzxOnEt6GqBVafmZVmJU2u4o
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXHpFK+=1gdo11Msw9w6gh2f-4gnSCkyA5kaB_x4mafS5A@mail.gmail.com>
+X-Received: by 2002:a05:6602:4c0a:b0:86a:246:ee96 with SMTP id
+ ca18e2360f4ac-86a232298b6mr2377593439f.11.1747764144714; Tue, 20 May 2025
+ 11:02:24 -0700 (PDT)
+Date: Tue, 20 May 2025 11:02:24 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <682cc3b0.050a0220.ade60.09c0.GAE@google.com>
+Subject: [syzbot] [kernfs?] general protection fault in kernfs_rename_ns
+From: syzbot <syzbot+587821cc0410bd1e73f4@syzkaller.appspotmail.com>
+To: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com, tj@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, May 20, 2025 at 07:46:33PM +0200, Ard Biesheuvel wrote:
-> Look at pgtable_l5_enabled() please, that is the important one.
+Hello,
 
-OMG. :-)
+syzbot found the following issue on:
 
-# 32 "./arch/x86/include/asm/pgtable_64_types.h" 1
-        movb %gs:__pgdir_shift(%rip), %al       #, pfo_val__
-# 0 "" 2
-# ./arch/x86/include/asm/pgtable.h:1178:        if (!pgtable_l5_enabled())
-#NO_APP
-        testb   $1, %al #, pfo_val__
+HEAD commit:    bc3372351d0c Merge tag 'for-6.15-rc3-tag' of git://git.ker..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1604dccc580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=efa83f9a6dd67d67
+dashboard link: https://syzkaller.appspot.com/bug?extid=587821cc0410bd1e73f4
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
 
-I hadn't seen his fun yet:
+Unfortunately, I don't have any reproducer for this issue yet.
 
-!(pgdir_shift() & 1)
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/d1e89d70587d/disk-bc337235.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/423033b00699/vmlinux-bc337235.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/6a1ce597dad9/bzImage-bc337235.xz
 
-> The variable access is identical in terms of instructions, the only
-> difference is the %gs offset being applied, and the fact that using
-> cache hot data is guaranteed not to increase the number of cachelines
-> covering the working set of any existing workload (the region is
-> bounded to a fixed number of cachelines)
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+587821cc0410bd1e73f4@syzkaller.appspotmail.com
 
-Yes, but look at all the callers. I hardly see any serious hot paths to care
-about the %gs offset being applied.
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000006: 0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000030-0x0000000000000037]
+CPU: 0 UID: 0 PID: 11644 Comm: syz-executor Not tainted 6.15.0-rc3-syzkaller-00019-gbc3372351d0c #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+RIP: 0010:kernfs_rename_ns+0x3b/0xa50 fs/kernfs/dir.c:1744
+Code: 48 89 fb 4c 8d 7b 30 48 83 ec 20 48 89 14 24 48 89 4c 24 08 e8 56 e0 5b ff 4c 89 fa 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <80> 3c 02 00 0f 85 f7 08 00 00 48 8b 43 30 48 85 c0 0f 84 a6 08 00
+RSP: 0018:ffffc90003edf9a8 EFLAGS: 00010206
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000006 RSI: ffffffff825f6f9a RDI: 0000000000000000
+RBP: ffff88814368d1e0 R08: 0000000000000007 R09: 0000000000000000
+R10: 000000007fffffff R11: 0000000000000000 R12: ffff88802ff137a0
+R13: ffff888031e68040 R14: ffff888143681480 R15: 0000000000000030
+FS:  0000000000000000(0000) GS:ffff8881249b2000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f6a9f26533a CR3: 0000000059c9e000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 000000000000000e DR6: 00000000ffff0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ kobject_move+0x127/0x260 lib/kobject.c:569
+ device_move+0xa9/0x10d0 drivers/base/core.c:4583
+ hci_conn_del_sysfs+0x81/0x180 net/bluetooth/hci_sysfs.c:75
+ hci_conn_cleanup net/bluetooth/hci_conn.c:175 [inline]
+ hci_conn_del+0x55f/0xdc0 net/bluetooth/hci_conn.c:1167
+ hci_conn_hash_flush+0x186/0x260 net/bluetooth/hci_conn.c:2702
+ hci_dev_close_sync+0x602/0x11d0 net/bluetooth/hci_sync.c:5225
+ hci_dev_do_close+0x2e/0x90 net/bluetooth/hci_core.c:483
+ hci_unregister_dev+0x213/0x620 net/bluetooth/hci_core.c:2678
+ vhci_release+0x79/0xf0 drivers/bluetooth/hci_vhci.c:665
+ __fput+0x3ff/0xb70 fs/file_table.c:465
+ task_work_run+0x14d/0x240 kernel/task_work.c:227
+ exit_task_work include/linux/task_work.h:40 [inline]
+ do_exit+0xafb/0x2c30 kernel/exit.c:953
+ do_group_exit+0xd3/0x2a0 kernel/exit.c:1102
+ __do_sys_exit_group kernel/exit.c:1113 [inline]
+ __se_sys_exit_group kernel/exit.c:1111 [inline]
+ __x64_sys_exit_group+0x3e/0x50 kernel/exit.c:1111
+ x64_sys_call+0x1530/0x1730 arch/x86/include/generated/asm/syscalls_64.h:232
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xcd/0x260 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f2d69f8e169
+Code: Unable to access opcode bytes at 0x7f2d69f8e13f.
+RSP: 002b:00007ffd2f718e68 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f2d69f8e169
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000043
+RBP: 00007f2d69fee8d0 R08: 00007ffd2f716c07 R09: 0000000000000003
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
+R13: 0000000000000003 R14: 00000000ffffffff R15: 00007ffd2f719020
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:kernfs_rename_ns+0x3b/0xa50 fs/kernfs/dir.c:1744
+Code: 48 89 fb 4c 8d 7b 30 48 83 ec 20 48 89 14 24 48 89 4c 24 08 e8 56 e0 5b ff 4c 89 fa 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <80> 3c 02 00 0f 85 f7 08 00 00 48 8b 43 30 48 85 c0 0f 84 a6 08 00
+RSP: 0018:ffffc90003edf9a8 EFLAGS: 00010206
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000006 RSI: ffffffff825f6f9a RDI: 0000000000000000
+RBP: ffff88814368d1e0 R08: 0000000000000007 R09: 0000000000000000
+R10: 000000007fffffff R11: 0000000000000000 R12: ffff88802ff137a0
+R13: ffff888031e68040 R14: ffff888143681480 R15: 0000000000000030
+FS:  0000000000000000(0000) GS:ffff8881249b2000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b2f6f0ff8 CR3: 000000001293a000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 000000000000000e DR6: 00000000ffff0ff0 DR7: 0000000000000400
+----------------
+Code disassembly (best guess):
+   0:	48 89 fb             	mov    %rdi,%rbx
+   3:	4c 8d 7b 30          	lea    0x30(%rbx),%r15
+   7:	48 83 ec 20          	sub    $0x20,%rsp
+   b:	48 89 14 24          	mov    %rdx,(%rsp)
+   f:	48 89 4c 24 08       	mov    %rcx,0x8(%rsp)
+  14:	e8 56 e0 5b ff       	call   0xff5be06f
+  19:	4c 89 fa             	mov    %r15,%rdx
+  1c:	48 b8 00 00 00 00 00 	movabs $0xdffffc0000000000,%rax
+  23:	fc ff df
+  26:	48 c1 ea 03          	shr    $0x3,%rdx
+* 2a:	80 3c 02 00          	cmpb   $0x0,(%rdx,%rax,1) <-- trapping instruction
+  2e:	0f 85 f7 08 00 00    	jne    0x92b
+  34:	48 8b 43 30          	mov    0x30(%rbx),%rax
+  38:	48 85 c0             	test   %rax,%rax
+  3b:	0f                   	.byte 0xf
+  3c:	84                   	.byte 0x84
+  3d:	a6                   	cmpsb  %es:(%rdi),%ds:(%rsi)
+  3e:	08 00                	or     %al,(%rax)
 
-And I'll be really surprised if that *shows* in any sensible benchmark...
 
-Also, it doesn't make any sense for a *global* system property - what paging
-level the machine uses - to be in a *per-CPU* variable. That's a global value
-which is the same everywhere. So why waste space?
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-> Happy to keep this as a simple __ro_after_init variable if there is
-> consensus between the tip maintainers that we don't need this perf
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-Yeah, IMO, no need. But let's see what the others say.
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-Thx.
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
--- 
-Regards/Gruss,
-    Boris.
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
 
-https://people.kernel.org/tglx/notes-about-netiquette
+If you want to undo deduplication, reply with:
+#syz undup
