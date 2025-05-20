@@ -1,124 +1,103 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C18B1B4231
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 12:43:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D465833F6
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 12:43:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747744987; cv=none; b=NaJPnFkOSfJw3nbSWQSqyGQg0pc/88xA+G3rzIvzZZWK/UJVNsy/no4Phe1Iv4lxPz5jPk/q8BMo/oUaS4JqTTvQs5dxT+gVXQ2V8zpY36N/w+VCcp7wAOZYphVquwTz4dMPaUntfbcmikA6iX683iRtD5ZRG/X+FusdGMO1DhE=
+	t=1747745030; cv=none; b=PNJXlryVm4z7OOox0NTIquCz7ztHxd0c7+jkDZASClZYJUlFA+XD7FGiFcrG1ASK0ddkDSlAqZsNNo/wNR399vWpEEgzqGwRVxjZuU04CMRhCbqRw8HWkVV9+4RhZ7A2Z9diwO50y0RJ7pOT0n3vtHfE61x9YMKyL0/mrHp4yGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747744987; c=relaxed/simple;
-	bh=EAHzzRlqwHD0tyyHiLnOawAa1WH6/3DVglP+aReQHPc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ynjb5PhEW10jVgIO7XHjwEz5/NbkbAvZiK3bZ0oyOWI4g+TTslOZRZXV9TiHiVFMTfbnbEoF1WbsIbh3xNEqzpjZ7hHOqc40ZAPQYC4YoT/iw9/46onNBbcNn0vbSijIt38jMgugFItEiI1oOgTp7GF/OFQliWN5BJrUdYvqi+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=B1VMsJdU; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747745030; c=relaxed/simple;
+	bh=bQs2TS4LPEr8WtgwzfQ7lEcvHvSlnCr21QVr4ndNmdY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q5vI37IwdV77welOt/C7J8uZA86EEvkIkP83T52Amq5+20rnifAv2sn6PLFS/IcVFJSBufYKLQG0xh0Lar3fc9yvOcz1OiakO2JFa9wQxPhiYTX1Br/duoToiShl4RLduzhvxvwaIO34XqRLZonSvXr8lWG8desTz+UpcXBhpGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=E3NJTIyN; arc=none smtp.client-ip=91.218.175.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B1VMsJdU"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a35919fa8bso2155000f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 05:43:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747744983; x=1748349783; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EAHzzRlqwHD0tyyHiLnOawAa1WH6/3DVglP+aReQHPc=;
-        b=B1VMsJdUTtNZ5AeibbEr7PXGb+bgZA78QdWsAheDRcoVinv9wUHKmtW7183x/7R0Q7
-         77EZ2RqvZSAyd1Mht6XSmypEFCwYBLIbqobkXmRcFX8xPvUOGZh3Ip54AT205WhRjxzR
-         eaQ7jG6lgIEFdQX5KmLB1Pf+hjwX1x9FD0E/0hcvkbOm/4lVfm13L+ekdVyvp4l3zgD7
-         Li5wKHHeOy+310BDqvSE8RjphNofrdvBrZZP1E8AojPm495mntqF+qc5p+iA7h05mJ4F
-         vv3Iwd2Zn/cSuN959zeQ6lm9B9oZ0pSGWgudpYIRT5U59PA1KEvZXDXl5skAM1R49jQ5
-         XeRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747744983; x=1748349783;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EAHzzRlqwHD0tyyHiLnOawAa1WH6/3DVglP+aReQHPc=;
-        b=Qsn/U95PXEAXKqEg4JlkQ8RUs6tZfNElDp5viUhM6OYZAOtLrg4kPXkAObE+yxTeid
-         poDiYPy19E1Skjvu4CSOm/DyJMIh0QiDC1gCwn7QdVrrNkpmjMGZyqRo6Liftdtpfo8W
-         2wtlLvKqkNgbgdMvnxxJG3FyV/EDnNXf472imv511ubE6bKm9dFj6PWChTQFiQMLOQKr
-         mLK2D6PdgiKJ1b+og02YFuH69AwhaFuYasv8UzZAsepXIFSJ+TO/xpdI6eVyYaG6tZ2s
-         fHswEKgf7biT9g6wrfGCGCq1PhUfxgHxtDvYEcaJ/xa2Y2fgdapf54opexWV2LGhVjOZ
-         2V7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU7nc9PwrjLcVs3Ig1E049UIKeon+giuI07XDkWAy7/0vEYTeO+j2m3vSGRtWuPxi/q1WoPHXARKNFgRt8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzscdGF5PHjidZpV9tecoz0CN7qsfbpDnsfi5qQSXwGtEaCoBie
-	tfjN/aViIyImM5YxyuhfG+gB0Y7P6YnaGD5bC9rX7Ll7WmGeKXhg959SwuW9CvLvu6sQqwkEQzf
-	uO7QZP/H0M4QCViG08Sc3cjVNe26tHetb93EnCPUP
-X-Gm-Gg: ASbGncuaBip39YgrnFkDQh+pq7E+Lqtilf/QxNLldo9cKurVvcPEv4rdGkbcr3aZiZy
-	+dmyMUSntWfI018nIHX8GGBch6FT34aRry+uP560JKOTnUSGiuiL8jE3TOZELJ1SjYf0DefG27d
-	y93NYUqYHCyUcg9P9XDjgkTOEuHRUG2btMfzk7mMBtbAF9
-X-Google-Smtp-Source: AGHT+IHS0wTiDrmTRT4pPLA0kd7EuOcSAEADiFb2xPxNv7tTT14Pcvfk2m6J1zKafjkxbkm02/1Z8djAmA08uVBrLX8=
-X-Received: by 2002:a05:6000:40e0:b0:3a0:b733:f264 with SMTP id
- ffacd0b85a97d-3a35fe5ba7amr14020745f8f.11.1747744983401; Tue, 20 May 2025
- 05:43:03 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="E3NJTIyN"
+Date: Tue, 20 May 2025 08:43:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747745025;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DlzUwipsgVlhh6jWRN3VNzJZUIXouswKqdaADWLb+qA=;
+	b=E3NJTIyNU0rWA5+i8XfNlcvvAZTzIHAxLCdO4dPdrLjZUjNU6P6iBfgNaHoYLUnRW56Q47
+	uq5XhqaqeXxgFxwJdwz2bgMu/p8TuTUqo9k3fA4OH8Mn4FI/5Ajb3UcOeLI40pQBJlA+b4
+	zoDdfhYZ+aj+nKKcXOVtLCsi2QwOoUI=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Amir Goldstein <amir73il@gmail.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-bcachefs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-unionfs@vger.kernel.org, 
+	Miklos Szeredi <miklos@szeredi.hu>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH 0/6] overlayfs + casefolding
+Message-ID: <gdvg6zswvq4zjzo6vntggoacrgxxh33zmejo72yusp7aqkqzic@kaibexik7lvh>
+References: <20250520051600.1903319-1-kent.overstreet@linux.dev>
+ <CAOQ4uxg8p2Kg0BKrU4NSUzLVVLWcW=vLaw4kJkVR1Q-LyRbRXA@mail.gmail.com>
+ <osbsqlzkc4zttz4gxa25exm5bhqog3tpyirsezcbcdesaucd7g@4sltqny4ybnz>
+ <CAOQ4uxjUC=1MinjDCOfY5t89N3ga6msLmpVXL1p23qdQax6fSg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250519161712.2609395-1-bqe@google.com> <20250519161712.2609395-6-bqe@google.com>
- <CAG48ez2WdxXVCzVsAPeQWgso3ZBQS_Xm+9D1FLBx6UHFV1bGHQ@mail.gmail.com>
- <682bc528.c80a0220.13f632.9ec0@mx.google.com> <CAH5fLghNJYjxPFUc2E4-2pJpGT5umUr1EJstZvs88ox3MsXDGQ@mail.gmail.com>
- <aCwRZlkBWekRmDg7@Mac.home>
-In-Reply-To: <aCwRZlkBWekRmDg7@Mac.home>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Tue, 20 May 2025 05:42:51 -0700
-X-Gm-Features: AX0GCFvPyNIDsyx7gzZx16RwjzE4BKj1SXehnk-VJvEazvtsPhKBabrEv6qfeaI
-Message-ID: <CAH5fLgj1NVodPy-95CFUygGO7WC0siNEKSyEhgLvpX-1zMXErQ@mail.gmail.com>
-Subject: Re: [PATCH v8 5/5] rust: add dynamic ID pool abstraction for bitmap
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: Jann Horn <jannh@google.com>, Burak Emir <bqe@google.com>, Yury Norov <yury.norov@gmail.com>, 
-	Kees Cook <kees@kernel.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, "Gustavo A . R . Silva" <gustavoars@kernel.org>, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOQ4uxjUC=1MinjDCOfY5t89N3ga6msLmpVXL1p23qdQax6fSg@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, May 19, 2025 at 10:21=E2=80=AFPM Boqun Feng <boqun.feng@gmail.com> =
-wrote:
->
-> On Mon, May 19, 2025 at 08:46:37PM -0700, Alice Ryhl wrote:
-> > On Mon, May 19, 2025 at 4:56=E2=80=AFPM Boqun Feng <boqun.feng@gmail.co=
-m> wrote:
-> > >
-> > > On Tue, May 20, 2025 at 12:51:07AM +0200, Jann Horn wrote:
-> > > > On Mon, May 19, 2025 at 6:20=E2=80=AFPM Burak Emir <bqe@google.com>=
- wrote:
-> > > > > This is a port of the Binder data structure introduced in commit
-> > > > > 15d9da3f818c ("binder: use bitmap for faster descriptor lookup") =
-to
-> > > > > Rust.
-> > > >
-> > > > Stupid high-level side comment:
-> > > >
-> > > > That commit looks like it changed a simple linear rbtree scan (whic=
-h
-> > > > is O(n) with slow steps) into a bitmap thing. A more elegant option
-> > > > might have been to use an augmented rbtree, reducing the O(n) rbtre=
-e
-> > > > scan to an O(log n) rbtree lookup, just like how finding a free are=
-a
-> > >
-> > > I think RBTree::cursor_lower_bound() [1] does exactly what you said
+On Tue, May 20, 2025 at 02:40:07PM +0200, Amir Goldstein wrote:
+> On Tue, May 20, 2025 at 2:25 PM Kent Overstreet
+> <kent.overstreet@linux.dev> wrote:
 > >
-> > We need the smallest ID without a value, not the smallest ID in use.
+> > On Tue, May 20, 2025 at 10:05:14AM +0200, Amir Goldstein wrote:
+> > > On Tue, May 20, 2025 at 7:16 AM Kent Overstreet
+> > > <kent.overstreet@linux.dev> wrote:
+> > > >
+> > > > This series allows overlayfs and casefolding to safely be used on the
+> > > > same filesystem by providing exclusion to ensure that overlayfs never
+> > > > has to deal with casefolded directories.
+> > > >
+> > > > Currently, overlayfs can't be used _at all_ if a filesystem even
+> > > > supports casefolding, which is really nasty for users.
+> > > >
+> > > > Components:
+> > > >
+> > > > - filesystem has to track, for each directory, "does any _descendent_
+> > > >   have casefolding enabled"
+> > > >
+> > > > - new inode flag to pass this to VFS layer
+> > > >
+> > > > - new dcache methods for providing refs for overlayfs, and filesystem
+> > > >   methods for safely clearing this flag
+> > > >
+> > > > - new superblock flag for indicating to overlayfs & dcache "filesystem
+> > > >   supports casefolding, it's safe to use provided new dcache methods are
+> > > >   used"
+> > > >
+> > >
+> > > I don't think that this is really needed.
+> > >
+> > > Too bad you did not ask before going through the trouble of this implementation.
+> > >
+> > > I think it is enough for overlayfs to know the THIS directory has no
+> > > casefolding.
 > >
->
-> Ok, but it shouldn't be hard to write a Rust function that search that,
-> right? My point was mostly the Rust rbtree binding can do O(log n)
-> search. I have no idea about "even so, should we try something like Jann
-> suggested". And I think your other reply basically says no.
+> > overlayfs works on trees, not directories...
+> 
+> I know how overlayfs works...
+> 
+> I've explained why I don't think that sanitizing the entire tree is needed
+> for creating overlayfs over a filesystem that may enable casefolding
+> on some of its directories.
 
-We would need to store additional data in the r/b tree to know whether
-to go left or right, so it would be somewhat tricky. We don't have an
-implementation of that in Rust.
-
-Alice
+So, you want to move error checking from mount time, where we _just_
+did a massive API rework so that we can return errors in a way that
+users will actually see them - to open/lookup, where all we have are a
+small fixed set of error codes?
