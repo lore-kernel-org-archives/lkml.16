@@ -1,51 +1,55 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90DCD4B1E72
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 08:00:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7489B20E71D
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 08:01:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747728055; cv=none; b=cvVgeVCGYwzd1CaKCoZrbkH4SKhVj14IPtWzWGacCKTsjd12fiGN79rABf8YVmq8m0v4GQ7rSm0lygr9MfjxwDm5cbSvp14q3/VraurqOHWW5usgeJt9EVSI7qo7YboNqTGoPHH26QtzcxK53VTQRczLCLA6JoO2S9Jd3Le/OtI=
+	t=1747728086; cv=none; b=nYe1DKpLIsHGTY221xvgCKN2kbnJXtVzjzyIn4Qn+TGl087hIgAorC7ntoUKtGx2qw65xqCFt/OqTdFylscAv9FnZWa5SrdwpcORmYAzdkTmLsX9fvJfAceChcAiXRDvMQ2uNLzSv3q8QtLsLvbjCZcBdd+krcaxL06ycfnTAzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747728055; c=relaxed/simple;
-	bh=gamE24NGoQejusYkup+I5Ji1a0mX4DUH/gytuYEL4Kk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Hiva8hVUXrs0ogXcrF/ySJ2sOX4b6MePHG5mUPDmzRzMHkJZoYQ0yzZVUvoZ9/7KYLaB9mmOyAyZkXGg1efXaHah7YPF+D8kqFWYTV5nqWB2Rop37dFqSgmqNYRrmsLIZhESfLpJukAc6Tv7Z4/vHCP1xqQCt1WxjnVUmwdBfu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=aKbU4aXS; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1747728086; c=relaxed/simple;
+	bh=LaiWjx3hTb6Th/EihTa9jdCHV/ntKJQvs/k+9SaZYS0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=M/ZgP7/tsO8XBowp5FHR36MruqvvNuAlBTVEBgSy0KIpmphOlT+CGz3niifFOh6Sxs1xNvrb9NiFuYIzjOYAMmzd5gepq8PfoivZNqD3tXH/KHbaO8WpPn3mMl86c/D3OeRHHyEitGzydebvnM4OXYiQogAgg+IW5nhyrG2UGI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LXnv5qwF; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="aKbU4aXS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=t9
-	1xLNzhSyKaUPe8nvM+uV+kqDwLnPCNYZZUO0q5FJ4=; b=aKbU4aXSlrUWK2LLEe
-	VA+aulr/2SddWVis/G6dZSThJ53NZ61i9A/5utGy9gl7P7T13WEJKbx/XD92dAfE
-	tMpVHbEQMV0p7zd7bu+cxVG1QymPG3AFgS7v5cPY39Tyb4Co+V0fXgeoa7TUEFZv
-	liIUYq7u+zW8hC9+Ipxd1LWRo=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wAn5Tt7NixoSfCGCg--.55132S2;
-	Tue, 20 May 2025 15:59:57 +0800 (CST)
-From: oushixiong1025@163.com
-To: Xinliang Liu <xinliang.liu@linaro.org>
-Cc: Tian Tao <tiantao6@hisilicon.com>,
-	Xinwei Kong <kong.kongxinwei@hisilicon.com>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Yongqin Liu <yongqin.liu@linaro.org>,
-	John Stultz <jstultz@google.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Dmitry Baryshkov <lumag@kernel.org>,
-	Baihan Li <libaihan@huawei.com>,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	Yongbang Shi <shiyongbang@huawei.com>,
-	Jani Nikula <jani.nikula@intel.com>,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Shixiong Ou <oushixiong@kylinos.cn>
-Subject: [PATCH] drm/hisilicon: Fix a NULL pointer access when hibmc_load failed
-Date: Tue, 20 May 2025 15:59:48 +0800
-Message-Id: <20250520075948.399272-1-oushixiong1025@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LXnv5qwF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747728086; x=1779264086;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=LaiWjx3hTb6Th/EihTa9jdCHV/ntKJQvs/k+9SaZYS0=;
+  b=LXnv5qwFFom604p69SkIqQoZgbTdu1DQuwyYgYZySrX/NraiIgfF7FAb
+   VaDPpdOMvWTz9PXEeGcNFySzjd0dWVoroT+C7JaMJ6HqLYX6SUYcxvRkJ
+   U6YU/4fPsKWI0q6SaCQDMwjt9wpSWBIxeJIJgr//AkTMWJ+glR2z0qI8R
+   53NP1mCAEiQgn6oAWyl6tRYXXDS5/B/MKlO7rdRq8Jos2GP2RmpIQ8tQS
+   biDu4PkJXadaNkgFGEs6yv3v+ACUZGABcz6OZFs2Wz0yRCo3GHz/tL+L+
+   iAusFLcANANPTg9WxWQJahfYNnwtZzlY1o9KyazThSMoH4emkmdyIdBma
+   w==;
+X-CSE-ConnectionGUID: ni9zivxxSpuGJ/z0KtBccg==
+X-CSE-MsgGUID: m4hGNq68QRSTbfHNNKPdJw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="48763129"
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="48763129"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 01:01:25 -0700
+X-CSE-ConnectionGUID: 3WPXLGIZSCKVdpqXnAqu8g==
+X-CSE-MsgGUID: vhPPT1zvSS6kObQln6tdcg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="144474226"
+Received: from allen-box.sh.intel.com ([10.239.159.52])
+  by fmviesa005.fm.intel.com with ESMTP; 20 May 2025 01:01:24 -0700
+From: Lu Baolu <baolu.lu@linux.intel.com>
+To: Joerg Roedel <joro@8bytes.org>
+Cc: iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/1][PULL REQUEST] iommu/vt-d: Fixes for v6.16-rc1
+Date: Tue, 20 May 2025 15:58:48 +0800
+Message-ID: <20250520075849.755012-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,108 +57,28 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wAn5Tt7NixoSfCGCg--.55132S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxGF1UuF45Kr1kCr17Xr1kKrg_yoW5Zw15pF
-	47XFWakr4vq393JF45JrW09an8Ca1ava429Fn2y3s3ur4qkr1DXr18trW8GF1rJrWkJas5
-	ZF4xGw4UZr1DZw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jSlksUUUUU=
-X-CM-SenderInfo: xrxvxxx0lr0wirqskqqrwthudrp/1tbiXBtTD2gsLiHUmAAAsc
 
-From: Shixiong Ou <oushixiong@kylinos.cn>
+Hi Joerg,
 
-[WHY]
-If Calling hibmc_mm_init() failed in hibmc_load(), the hibmc_unload()
-will access a NULL pointer, as it don't call ww_mutex_init() to
-initialize mode_config.connection_mutex but try to lock it when
-calling drm_atomic_helper_shutdown().
+The following fix has been queued for the Intel iommu driver. It aims to
+solve the following problem:
 
-[   50.939211][  0] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000018
-	......
-[   51.149882][  0] Call trace:
-[   51.152750][  0]  ww_mutex_lock+0xf0/0x1e0
-[   51.156829][  0]  drm_modeset_lock+0x184/0x2c0
-[   51.161254][  0]  drm_modeset_lock_all_ctx+0x98/0x188
-[   51.166284][  0]  drm_atomic_helper_shutdown+0xa4/0x128
-[   51.171487][  0]  hibmc_unload+0x50/0x2f0
-[   51.175479][  0]  hibmc_load+0x5d8/0x888
-[   51.179386][  0]  drm_dev_register+0x280/0x558
-[   51.183811][  0]  drm_get_pci_dev+0x140/0x3c8
-[   51.188150][  0]  hibmc_pci_probe+0x148/0x190
-[   51.192489][  0]  local_pci_probe+0xc4/0x180
-[   51.196742][  0]  pci_device_probe+0x328/0x530
-[   51.201167][  0]  really_probe+0x498/0x9a0
-[   51.205248][  0]  driver_probe_device+0x224/0x308
-[   51.209932][  0]  device_driver_attach+0xec/0x128
-[   51.214616][  0]  __driver_attach+0x144/0x280
-[   51.218955][  0]  bus_for_each_dev+0x120/0x1a0
-[   51.223380][  0]  driver_attach+0x48/0x60
-[   51.227372][  0]  bus_add_driver+0x328/0x578
-[   51.231625][  0]  driver_register+0x148/0x398
-[   51.235965][  0]  __pci_register_driver+0x15c/0x1c8
-[   51.240823][  0]  hibmc_init+0x2c/0x34
-[   51.244557][  0]  do_one_initcall+0xc8/0x4a8
-[   51.248810][  0]  kernel_init_freeable+0x678/0x75c
-[   51.253582][  0]  kernel_init+0x18/0x128
-[   51.257489][  0]  ret_from_fork+0x10/0x18
+- Keyboard and touchpad stopped working on several Apple Macbooks
 
-[HOW]
-Do not call drm_atomic_helper_shutdown() if drmm_mode_config_init() failed.
+This fix is not so critical for v6.15-rc. Considering the upcoming merge
+window, it would be fine to include them with other patches for v6.16.
 
-Signed-off-by: Shixiong Ou <oushixiong@kylinos.cn>
----
- drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+Best regards,
+baolu
 
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-index 768b97f9e74a..8edc83db2afb 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-+++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-@@ -323,29 +323,29 @@ static int hibmc_load(struct drm_device *dev)
- 
- 	ret = hibmc_hw_init(priv);
- 	if (ret)
--		goto err;
-+		goto err_return;
- 
- 	ret = drmm_vram_helper_init(dev, pci_resource_start(pdev, 0),
- 				    pci_resource_len(pdev, 0));
- 	if (ret) {
- 		drm_err(dev, "Error initializing VRAM MM; %d\n", ret);
--		goto err;
-+		goto err_return;
- 	}
- 
- 	ret = hibmc_kms_init(priv);
- 	if (ret)
--		goto err;
-+		goto err_return;
- 
- 	ret = drm_vblank_init(dev, dev->mode_config.num_crtc);
- 	if (ret) {
- 		drm_err(dev, "failed to initialize vblank: %d\n", ret);
--		goto err;
-+		goto err_unload;
- 	}
- 
- 	ret = hibmc_msi_init(dev);
- 	if (ret) {
- 		drm_err(dev, "hibmc msi init failed, ret:%d\n", ret);
--		goto err;
-+		goto err_unload;
- 	}
- 
- 	/* reset all the states of crtc/plane/encoder/connector */
-@@ -353,8 +353,9 @@ static int hibmc_load(struct drm_device *dev)
- 
- 	return 0;
- 
--err:
-+err_unload:
- 	hibmc_unload(dev);
-+err_return:
- 	drm_err(dev, "failed to initialize drm driver: %d\n", ret);
- 	return ret;
- }
+Lu Baolu (1):
+  iommu/vt-d: Restore context entry setup order for aliased devices
+
+ drivers/iommu/intel/iommu.c  | 11 +++++++++++
+ drivers/iommu/intel/iommu.h  |  1 +
+ drivers/iommu/intel/nested.c |  4 ++--
+ 3 files changed, 14 insertions(+), 2 deletions(-)
+
 -- 
-2.17.1
+2.43.0
 
