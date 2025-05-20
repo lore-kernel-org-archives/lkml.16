@@ -1,113 +1,89 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 455E518DB2A
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 14:42:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D55E24888F
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 14:42:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747752133; cv=none; b=jxAPvyczN5fTW5+XdDGC1Ti6d0VVcjUcDQ/M1Lh6bj1CdePR6SW8y1SlDuT0JP7lHT1g3BCrA4rsZYuCjI3ZDdJHH0Zd/LndcUfS3EG/gsFc2ZUxrTBtzR3Yj3m0Ehl3jEsP3fAXS2P+W6JsrU4HKOm0WHyyoRLRvpaDSLkiKDU=
+	t=1747752157; cv=none; b=oKmM6v4nu0pVLsBHg/QXP5xnrv+0VWL15vUFul5LgKtigonJYtumifwtyTKm8hCIeYMjlyGNZvFFpAgIFhwkRvb2n7rygEsplPu0EQedHb+6ClaPW6EO2lPth0ohtalcuMCg7TQfVUUDnkYpzOF8lAkqn8hQv1C/Ha3TIHCyajo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747752133; c=relaxed/simple;
-	bh=9mdndIGZvPtVXnNoGjtPDopOUZXG1Caua5coezK8eyQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=KM/BHHdWNKN8hGADdZfN82rXkaPp4PnqqamQV9JRDdl4pbnp3sRn01R8qTME+OByCmyGmd/T1f3vLZ4GjNCNuHllKZEr5+IbmRqygsgc6zfoMAjvlgWL91zBqTc0VyCdoXAzxZAgjLSXrfDjy7IfXAXFk+TC56yUamAS104zJxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Xw8XW/D7; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1747752157; c=relaxed/simple;
+	bh=Gra0+MZowr3WZSCCQG6L5yEo0PIjNdYOZUPW9byFFZg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Zn4MD7+bt9ub53Y/yo+fs8TbZeXabmOkpEpTBE3vmHjrDWBUUmdhOxGee7vo/A5mjDPTFIxv3dkxGGKSCl4qU9/NgZXTtX7Xwj0KJ1wz1v8PFK/Q99uAWErAU1ZzAwwl7yJ0xoaVQOCVQjXkiMuyltjVILRHEifQTsRlpPTjKrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LR7iBPhI; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xw8XW/D7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LR7iBPhI"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747752131;
+	s=mimecast20190719; t=1747752155;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=BUukwfEnSXPmCGvCdBvi67igzNFP2XiJNFPtM3ycw68=;
-	b=Xw8XW/D7Yya6mvzUNA6EZfQMTinAlwdDPNvCvrtPb4yLZkfn4yDNzdUFv7A9okjXpHBko8
-	mUHwirOrX8/n2GGMIb1cTAy5Dhm3m3mOtwsgMPY1yiNqnIeAJAc108EQ/wVPyTv6sAgG01
-	T1qFJJsHqCJxuxljX+27FyXOcp6+hiE=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=Gra0+MZowr3WZSCCQG6L5yEo0PIjNdYOZUPW9byFFZg=;
+	b=LR7iBPhIh6yUyVsY2kSrE5Zs7Zcs4Z+NIx6cKfbQsCvEd4owaJG4XubNHRb1GSBHrKNeEW
+	GyxjtDdfxr2ZKxrj2dANC1lq4ESe5KmiFWDF1mSHB4/BgR7fco/qxQM5QIQ976mQJyMYvQ
+	YctjLpyBj7JhkCHgp764MsW1wNP9ZUw=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-470-6SBlNtEVO0qytXnOo-KHsw-1; Tue, 20 May 2025 10:42:09 -0400
-X-MC-Unique: 6SBlNtEVO0qytXnOo-KHsw-1
-X-Mimecast-MFC-AGG-ID: 6SBlNtEVO0qytXnOo-KHsw_1747752129
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-442f4a3851fso49548185e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 07:42:09 -0700 (PDT)
+ us-mta-590-zn0JuS32Ox26_bJpYd5iew-1; Tue, 20 May 2025 10:42:33 -0400
+X-MC-Unique: zn0JuS32Ox26_bJpYd5iew-1
+X-Mimecast-MFC-AGG-ID: zn0JuS32Ox26_bJpYd5iew_1747752152
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a3696a0d3aso1209394f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 07:42:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747752128; x=1748356928;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BUukwfEnSXPmCGvCdBvi67igzNFP2XiJNFPtM3ycw68=;
-        b=BKGDy4gYQmIMZjuj+EGiqYLAwniVPebKkk9XTEYZkB6PkoYRhd7TZ34O5+vEj/gvv5
-         KVuuCmORR+RRVRD6cglvhO+mK3t0pGI4xdJgb6bIbqiQnQjPUWEDbT/TqHl1tjYTNKuQ
-         Cw/be+7/E1K18Zh15CjTFtYoWkw9GmKXCb/s4F7BDlhE/syNvBFIpumvoYGyJ0MS51JY
-         Q8AGWF+i+AFmw+W3xRYQARXGtjc1dvgkVbmWwY0WLW1csOsQO5Akhe1s9IOxwg8wGoX3
-         NVy/+ZetqxHtF6EPEg0DeSMeIGf8U/+g8wriw/pj4Uj7JzdvNyvm4vXiEAxEsjnwQwcU
-         OGKg==
-X-Forwarded-Encrypted: i=1; AJvYcCVPBNWTY0h2hZbjNy2E49qN3eBCIUZchxq+yWPD+MRJQMxaLHxpnlgoSjA1WaUrH6z8HOmXM9m1Zlr5dsU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYWhh3UEMi5APOY78P1qV2+kI6umZkvxmfuJbmIJJrrB/gSmr8
-	FNj6giKA9JCpRKK85RLJV+VobrNSdFkfPdqtJ66nq2XTpL5w5s3/rkA3UYtndpmw80qCYmqpmSK
-	tJe9RyYdeOwwFJe3Zob4zeV37Z4KFtOhSES+PwbXPjyU0TxvNOb12qb7HnIO5XTtVPA==
-X-Gm-Gg: ASbGncsAwoDOsk4hEeH12Fs83VI2HIWU26BkF6O6pykO97FCArwHgjUW6+uGLJohXRu
-	huW06m/QjRFijUcLwX1mISU59K2hjGBPIB8xURLkqumk2/qrry7VC3A3EL+5Vey4BeG55hw+gDf
-	WqQZj1ZJOFyyEgNyzUfiHV5ai1woWKsME7TWf6iR/cMG0Jgh0ROrXxtrYO9oOZH+O7K4ci0OmbV
-	ckPsE+LvOI9Zp4a43LmuKBVuWLAd2uH+sILJC9B6wdouqyVE3y0DXY8AMsPfCLdqb1nY1Dy+TqO
-	6NsTaXDlPKCkUDx9MKh0sBK3KWBZHvLyAyQom7HTV97gFvbDwWscGuq9P1IGwDklMQNQIA==
-X-Received: by 2002:a05:600c:1e1c:b0:43c:fffc:7855 with SMTP id 5b1f17b1804b1-442feffb6damr179864175e9.15.1747752128639;
-        Tue, 20 May 2025 07:42:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHNEuQwcOFxv9bPRsE9EPoajonwSbszaR/pW3Z0ORoLRovxfk8Z15ual0SZVnipzIpeRyHUvA==
-X-Received: by 2002:a05:600c:1e1c:b0:43c:fffc:7855 with SMTP id 5b1f17b1804b1-442feffb6damr179863805e9.15.1747752128231;
-        Tue, 20 May 2025 07:42:08 -0700 (PDT)
-Received: from localhost (62-151-111-63.jazzfree.ya.com. [62.151.111.63])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca8874bsm16831518f8f.67.2025.05.20.07.42.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 07:42:07 -0700 (PDT)
-From: Javier Martinez Canillas <javierm@redhat.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>, Marcus Folkesson
- <marcus.folkesson@gmail.com>, Thomas Zimmermann <tzimmermann@suse.de>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, David Airlie <airlied@gmail.com>, Simona Vetter
- <simona@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Geert
- Uytterhoeven <geert+renesas@glider.be>
-Subject: Re: [PATCH v2] drm/sitronix: Remove broken backwards-compatibility
- layer
-In-Reply-To: <20395b14effe5e2e05a4f0856fdcda51c410329d.1747751592.git.geert+renesas@glider.be>
-References: <20395b14effe5e2e05a4f0856fdcda51c410329d.1747751592.git.geert+renesas@glider.be>
-Date: Tue, 20 May 2025 16:42:06 +0200
-Message-ID: <87msb7ny2p.fsf@minerva.mail-host-address-is-not-set>
+        d=1e100.net; s=20230601; t=1747752152; x=1748356952;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Gra0+MZowr3WZSCCQG6L5yEo0PIjNdYOZUPW9byFFZg=;
+        b=LYr+WSjt+MBtBmBimvYl8U9Mbx7MOjgGP57tTQlN88a+aHQ7BWFWhVX+F6oUdENkvs
+         spQYJ08m0+ulQO3DO+mDSizRt/Tp1XVQsPxrj/25b9rQffnw2Sz3/R2X7dmlW06/oNr5
+         stKcWxhCCM9dlb15DQ+kb6DdHXPnsjlVj9kwtSA+VG2BQlL4TIrV8g4U3ycyVD5/yiWU
+         SjViOVjZO5/xciDhddkfkFbVb1urff/hglCp04lzV06Qo2q/MILOOzszf+DbTaVu21cN
+         D7YaXVmQnmeJ9EHWezv7hxn01eWV420bWTK5Ur6djs5UCaqOnTt0e44o7fr8gQMrwhhC
+         RCNA==
+X-Forwarded-Encrypted: i=1; AJvYcCWp6vUvb9cmLZ8PYtNsxrHWiM1DGa/DPUC9CFYXzIlyuTjbuhrw+m6hLdNKcNf2XhN4Rn9onV7kFtcQcDg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YztkrUfyYtcBiOuSweJYRGgahS0eCn5x++QJmB/h96sZUvTIffJ
+	nSbZSAt9C3YYVYEPucbWAzjy5ttZ+949+TLIkcOlpOeeGlFb3Puz+2dR9NuAFGACjjhcEqAesur
+	v+trB0phgCaldhUMYSRles3/tSqM12JhviNd+iNlsxP0p9BxMMpXobad9Z9gCdoEwAOFEEea3Dh
+	xNpEtwMvHJU4X0QS3d5Wxe2C9vy8APEstUmDDwC3t6
+X-Gm-Gg: ASbGnctEYOMxU0VIjUzo5XWruC/G+Hkg0OmxGN9qSkteoCwnyAR+7PDBJ0BeJFxirj+
+	q47INE1nZ1/WEl3pW/DDrqehXjylsOe/FDGrjjNRGFSBWKCMzcP1qrlshYvnHP8/3umU=
+X-Received: by 2002:a5d:5c84:0:b0:3a3:7be3:cb92 with SMTP id ffacd0b85a97d-3a37be3cf2bmr1974447f8f.42.1747752152316;
+        Tue, 20 May 2025 07:42:32 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGNv6K3sS3FxTY6B0e3vzMwLrSUH4VeGRW7bxwLfDlRShdcMikfXMU3cfUseGSYV/4VsF8bZnz6jBIqfwQl5Eo=
+X-Received: by 2002:a5d:5c84:0:b0:3a3:7be3:cb92 with SMTP id
+ ffacd0b85a97d-3a37be3cf2bmr1974427f8f.42.1747752152007; Tue, 20 May 2025
+ 07:42:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20250516215422.2550669-1-seanjc@google.com> <20250516215422.2550669-3-seanjc@google.com>
+ <219b6bd5-9afe-4d1c-aaab-03e5c580ce5c@redhat.com> <aCtQlanun-Kaq4NY@google.com>
+In-Reply-To: <aCtQlanun-Kaq4NY@google.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
+Date: Tue, 20 May 2025 16:42:20 +0200
+X-Gm-Features: AX0GCFsdS-BiZSQg4j0UJ0s2A9xwkhZmjTwQusqPP4S_x2ekzeOBO7nXoZ6HrtA
+Message-ID: <CABgObfb7Q_ya+OEPz9VVgFF2A6=x2pBqkPj0=QaJmkrRGpd=6Q@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] KVM: x86: Use kvzalloc() to allocate VM struct
+To: Sean Christopherson <seanjc@google.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Vipin Sharma <vipinsh@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Geert Uytterhoeven <geert+renesas@glider.be> writes:
+On Mon, May 19, 2025 at 5:39=E2=80=AFPM Sean Christopherson <seanjc@google.=
+com> wrote:
+> I'll slot the below in, unless you've got a better idea.
 
-Hello Geert,
+Nope, that's a good idea. Should have thought about it a couple months ago.
 
-> When moving the Sitronix DRM drivers and renaming their Kconfig symbols,
-> the old symbols were kept, aiming to provide a seamless migration path
-> when running "make olddefconfig" or "make oldconfig".
->
-> However, the old compatibility symbols are not visible.  Hence unless
-> they are selected by another symbol (which they are not), they can never
-> be enabled, and no backwards compatibility is provided.
->
-> Drop the broken mechanism and the old symbols.
->
-> Fixes: 9b8f32002cddf792 ("drm/sitronix: move tiny Sitronix drivers to their own subdir")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-
-Acked-by: Javier Martinez Canillas <javierm@redhat.com>
-
--- 
-Best regards,
-
-Javier Martinez Canillas
-Core Platforms
-Red Hat
+Paolo
 
