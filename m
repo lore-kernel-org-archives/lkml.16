@@ -1,92 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E510325F994;
-	Tue, 20 May 2025 08:23:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB829262815;
+	Tue, 20 May 2025 08:23:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747729398; cv=none; b=QduUpuHX463j4WrlG+Woiv9y/f8gh+9s9nJFDiqjuYeqINZkeMSFJlMs9rU8GQHRJ0P8l+77/oPMKv2zrQG5qd28OmtNjpU9IfQpbsuk1T3OfF8daXDaKzjRBa9tSu6Kr53dshpLbGsSMuaKcz1hUQ9tUJQYi6+9IHUs7duvBqU=
+	t=1747729415; cv=none; b=Ttlh+BbLtT5+/Kf2sGF/JIdtvEH9TJ4h8AhW/vFoGa4My887iQKop2eCY6Pfm0oWXnHEaQzEuKtIeXtoBMD3uCjTnZFbsPeUtc1Gm5kyIBxaALondSBnmXvpcahaLMc4Lnc3uHykZQ+4Ys/FNNr8Ofl0sg594qKBDu17lk/VS4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747729398; c=relaxed/simple;
-	bh=+y0ms533sl2v+6l/eq8yPL6k6+m+DNYi0UCVrrXPVlk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LP1V6r8lDamPdn/XSPVHP5UsfQ/ZiGW6dJuqon5kTJp20mhukBaj5X2X6v/ubgih4mzA9iDcoehKbztf04rxqsrKTn5WZzz3cSJRSWP+qrVosZeSyagjcP+bbCnELHMt8qdbyz/y4akNSRbiPnl1uSKadFuFxK3cmLRgPF+xJTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sIWBUvLF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747729415; c=relaxed/simple;
+	bh=85eJrd8qf21lJrgf9znNNn+vgQiRAfNyHii39Y0MMB0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FGo2orvnWSAE8nTMPehDzTFcRPSrOyTTBYIyMmncRpnOHExJAXS+tZVqBCda5K4mGL39NxyFaRB6luj4EZwkCkpftTvrFoC6eYUsC1Joh4bLT+34Hihq35N87u25kShKlxeSfDZD39PYS0rX/94aumSVZJswj3ztu6rBJ6OHRGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ORNhjbdU; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sIWBUvLF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F63DC4CEE9;
-	Tue, 20 May 2025 08:23:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747729397;
-	bh=+y0ms533sl2v+6l/eq8yPL6k6+m+DNYi0UCVrrXPVlk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sIWBUvLFDc4MpGlGvJZV90gqdyDP6WfewZpC0I4VOha3csMAOXkIZzJ/vo9CgJBTv
-	 35leoM1k5RZSdBQ9vtxpX6jltaBzA33k4K65JvSk15RfdazmrPSSECWx9s10gN238i
-	 6zp/KJhrPk0frJPjJ9Fb51tQ2E+z4zmCJtJJQ4es6RTQHcFY8Zmh7CLYFSLy5qYOQY
-	 1obov4sZJlyMEaOoV99itOXnsJBQK8+YQKJlSYcUrrAvNDEg6v5/8aN5yHcRr4E5o7
-	 Yg+eT6EAN8zvsOmyS1enPlx9SVoIB5mG1Nj4b5KixKq0a9CLNAPNgv2r9rtY4h9b3G
-	 xFRO/nPTBIczA==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uHIFk-000000001sn-3CPX;
-	Tue, 20 May 2025 10:23:13 +0200
-Date: Tue, 20 May 2025 10:23:12 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	Robert Foss <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] media: qcom: camss: vfe: Stop spamming logs with
- version
-Message-ID: <aCw78CRda6VS6ost@hovoldconsulting.com>
-References: <20250429180828.950219-4-krzysztof.kozlowski@linaro.org>
- <aBHQejn_ksLyyUm1@hovoldconsulting.com>
- <3e34ce09-1207-4dba-bff8-38c01cad9b78@linaro.org>
- <4d942a6c-cbff-41ac-af8b-12a1ff5181aa@linaro.org>
- <883eb54a-fcaf-443c-a4d7-e1278fd43f5a@linaro.org>
- <ea9f570c-b135-4a98-91ea-ceeb2f48a0e5@linaro.org>
- <aCw09Vci12txhYj-@hovoldconsulting.com>
- <190100e7-8a59-4cf3-8434-bcb6292cacb2@linaro.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ORNhjbdU"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-231ecd4f2a5so30964635ad.0;
+        Tue, 20 May 2025 01:23:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747729413; x=1748334213; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/EAzD/tIu0MqQ7G+EY88O64O0FaxVAHT+5gF5Zrxa8s=;
+        b=ORNhjbdU+1LlF58lYLLdZMWuSAjLSSvx1hqitrP0iRjAdjWylPBphgUWpNh9RBNX0f
+         NTWxEewr2pBR1/9QF3+XQnjOZOLXj5v+9Czf1GZbULhz01PzRBtVNa4ZYPcgNiEFH/Ux
+         t0g0/vwLc2RFwFQUwhwwyP3/VDwIPZKBauTOM3qcTRHTIaXFQAiG3NfzOp4LDl4OaVc1
+         ClSAkayxc3hN90AJuSlsZcJr0F+X5TeotU9J7X/LwhEo+nOrENbR1QkrIHFAH0vvujY8
+         A/2VkT4H2D5Qp+ZBjOLOkd2pSItYNYaoKrH4UeCVPq1JZPe7Xly/b0Nil+EMCps6nR7V
+         SU1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747729413; x=1748334213;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/EAzD/tIu0MqQ7G+EY88O64O0FaxVAHT+5gF5Zrxa8s=;
+        b=Cg0NCvUYwu9GqIxelRPSOOFB8z0YA+MIu5pXsvz8c1y7qyavX2z1iJNlinE2ib756M
+         b3AilE/18HAm5PAx/cE2WYATg1nkDooS/NNbGobFsmKy/ivaqi/J62/9R7684WPgk4mA
+         Isbxkmjc92bhSZaoqH6WRgTJq14xxFy4jmMFD1sRNANkRGtgBmEgXpocYCG8o91W0j0v
+         ExdMVJLVnoroXc/0idU/KvZGBFMfMgGI7VyIpmbto7vpRwYBC1KslOZlrsVIlaN72cpX
+         8xhDWVydDABlpAldRt7k+pjCGdPVw6moPNDx2/FdfqNnqIp5SJY6heWcwrdW0/uLE8w8
+         vyZg==
+X-Forwarded-Encrypted: i=1; AJvYcCVqTr47V1hcgJ6ODJ0+mXFdbNrNLcbjpqFBfzFFX4uS43eQJmV+vOweDlD/T39zn1XYpIE+humbTBswITBH@vger.kernel.org, AJvYcCW73sSR6OgF32b/vCcBJtkutfrNFkIyre5pP/96ixN5tR6HHuRc7PIP3FiowLCdFQA5vL38uVsMQTKUwKjQ@vger.kernel.org, AJvYcCX6ux+UjGfF4j25puSlCsnsJ888R7aZpzUfDIDsyG2Bf4evrHAh3z3fGh7tSTdP5qd7q3FNtImgVrI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzvs4o1sWSVrjG7GQBPDtRexFCSy0PCkM/scXQCmup/clpe5h88
+	0Yk3U3Xwg2lUFUd4rGWIMYI44qfa5i81o1uLkbT4YWrkXKuF5miaQygZ
+X-Gm-Gg: ASbGncuMGAjq4QIIuND0ehJS1rs3uNuIUennfyScA6ZoHLuoTWE+lSQmmfT+SaseZQT
+	ejdnnsqgVEUoEWQ0aEPfGObaK8nBiG56DX9xgmDDA0CvmdW42faSo9F9jqxpbKZJBI/KQXwWN/q
+	W27s5BKcXdgeX5Fwh+ltJm6qL4lSl/1+WN/+CN4tPWKXxgjrvCmej6y4/ow2VdioKWnC3SIUl3I
+	RonvK4oWhv0sAAmIW6FwTCrVdmq4K/QiBYYL6GC+oXsdEjWBV9balFS5qdj81jizYWpWNMtfPYY
+	ONO5QieTI4tkud25QDMOH7g4mSM/YM5xv2QeX1ZtwoA3kF9DQE44KYi/+moVrvSNgd0bGVW44LK
+	2MzwguHwmTlwtCUK4ZV8cTg==
+X-Google-Smtp-Source: AGHT+IFuYg2ieDC3caAihREPImXBFbx/3VCQNzBF0LOiwMfF7rCLpeBZ3U/hwiCmzMCamPHp46lUGQ==
+X-Received: by 2002:a17:902:f648:b0:224:f12:3735 with SMTP id d9443c01a7336-231de34468fmr236710165ad.31.1747729412928;
+        Tue, 20 May 2025 01:23:32 -0700 (PDT)
+Received: from [10.0.2.15] (KD106167137155.ppp-bb.dion.ne.jp. [106.167.137.155])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4e9713bsm71474085ad.150.2025.05.20.01.23.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 May 2025 01:23:32 -0700 (PDT)
+Message-ID: <590981da-4d37-464f-a52e-ba163d3ecbc5@gmail.com>
+Date: Tue, 20 May 2025 17:23:30 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <190100e7-8a59-4cf3-8434-bcb6292cacb2@linaro.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] docs: kerneldoc.py: don't use Sphinx logger
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+ Randy Dunlap <rdunlap@infradead.org>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Nicolas Schier <nicolas.schier@linux.dev>,
+ Stephen Rothwell <sfr@canb.auug.org.au>, linux-doc@vger.kernel.org,
+ linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Akira Yokosawa <akiyks@gmail.com>
+References: <cover.1747719873.git.mchehab+huawei@kernel.org>
+ <6b81b1aaa8446b4d850064dd38ffffa1a1cb6254.1747719873.git.mchehab+huawei@kernel.org>
+ <7bbe75ff-548f-4ffd-9522-59d1518d6c72@infradead.org>
+ <20250520095037.3dc39685@sal.lan>
+Content-Language: en-US
+From: Akira Yokosawa <akiyks@gmail.com>
+In-Reply-To: <20250520095037.3dc39685@sal.lan>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 20, 2025 at 10:02:32AM +0200, Krzysztof Kozlowski wrote:
-> On 20/05/2025 09:53, Johan Hovold wrote:
+On Tue, 20 May 2025 09:50:37 +0200, Mauro Carvalho Chehab wrote:
+> Hi Randy,
+> 
+> Em Mon, 19 May 2025 22:55:08 -0700
+> Randy Dunlap <rdunlap@infradead.org> escreveu:
+> 
+[...]
 
-> > Spamming the logs as the driver currently does is clearly broken and
-> > should be fixed. Keeping a hw version dev_dbg() is generally perfectly
-> > fine, though.
+>> Traceback
+>> =========
+>>
+>>       File "/usr/lib/python3.13/site-packages/sphinx/util/parallel.py", line 137, in _join_one
+>>         raise SphinxParallelError(*result)
+>>     sphinx.errors.SphinxParallelError: KeyError: '../drivers/gpio/gpiolib-acpi.c'
+>>
+>> and then it's finished (not a normal finish).
+>> So IMHO this patch is not sufficient.
+> 
+> Well, on next-20250516:
+> 
+> 	$ ls drivers/gpio/gpiolib-acpi.c
+> 	ls: cannot access 'drivers/gpio/gpiolib-acpi.c': No such file or directory
+> 
+> Avoiding the script to abort is a matter of adding a try/except
+> block at kerneldoc.py, but I'd say that, if an include file (or any other
+> file needed for the build) is not found, "make" should abort anyway for
+> the affected target (Kernel compilation or when doc building).
 
-> My main argument, expressed in the commit msg to which no one objected,
-> is that this debug is 100% useless: deducible from the compatible,
-> always known upfront, always the same.
+Interesting ...
 
-To me that deduction does not seem straightforward, at least not without
-access to internal qualcomm docs, for example:
+So, it sounds to me you think you have the right to break Stephen's (and
+possibly other devs') workflow of test-building kernel docs, aren't you?
 
-	compatible = "qcom,sc8280xp-camss";
+I don't buy such an argument.
 
-        qcom-camss ac5a000.camss: VFE:0 HW Version = 1.2.2
-	qcom-camss ac5a000.camss: VFE:1 HW Version = 1.2.2
-        qcom-camss ac5a000.camss: VFE:2 HW Version = 1.2.2
-        qcom-camss ac5a000.camss: VFE:3 HW Version = 1.2.2
-        qcom-camss ac5a000.camss: VFE:4 HW Version = 1.3.0
-        qcom-camss ac5a000.camss: VFE:5 HW Version = 1.3.0
-        qcom-camss ac5a000.camss: VFE:6 HW Version = 1.3.0
-        qcom-camss ac5a000.camss: VFE:7 HW Version = 1.3.0
+An innocent typo in pathname somewhere in the doc tree deserves a friendly
+warning at most, not a fatal crash within Sphinx.  That would need another
+run of "make htmldocs" after fixing the fatal error to see for other
+innocuous warnings.
 
-Whether the hw version is actually useful to anyone debugging this
-driver I can't say, but keeping it printed *once* seems perfectly
-alright if someone wants to keep it (e.g. as we have a long history of
-working around hw bugs based on revision information like this).
+And your change has no effect on exposing those innocuous warnings.
 
-Johan
+On current docs-next + your change above, running:
+
+    make cleandocs; make KERNELDOC=$PWD/scripts/kernel-doc.pl htmldocs
+
+produces these 3 warnings:
+
+----------------------------------------------------------------------
+./drivers/gpu/drm/amd/include/amd_shared.h:369: warning: Incorrect use of kernel-doc format:          * @DC_HDCP_LC_ENABLE_SW_FALLBACK If set, upon HDCP Locality Check FW
+./drivers/gpu/drm/amd/include/amd_shared.h:369: warning: Incorrect use of kernel-doc format:          * @DC_HDCP_LC_ENABLE_SW_FALLBACK If set, upon HDCP Locality Check FW
+./drivers/gpu/drm/amd/include/amd_shared.h:373: warning: Enum value 'DC_HDCP_LC_ENABLE_SW_FALLBACK' not described in enum 'DC_DEBUG_MASK'
+----------------------------------------------------------------------
+
+, while running:
+
+    make cleandocs; make htmldocs
+
+or:
+
+    make cleandocs; make KERNELDOC=$PWD/scripts/kerneldoc htmldocs
+
+doesn't produce them.
+
+Sorry, but I believe you have run out of time.
+
+And let me remind you of the expectation for backward-compatibility widely
+accepted our community.
+
+Akira
+
