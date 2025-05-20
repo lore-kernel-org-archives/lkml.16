@@ -1,224 +1,212 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2049.outbound.protection.outlook.com [40.107.20.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B8991ADC97;
-	Tue, 20 May 2025 02:00:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747706407; cv=none; b=bvkEObDcT+1lZnFwc4JZefIK0iUogjycIi7D0BswTTNuRa00+Qpgcxm8omj1QvqMl5Bg3mrNOUC38+xHo3L9U0lUNz5w5WDaqNSJkQ0tqj+OhQEqkOkj+p2McrxwWeZlFolQkIfzTRK4FOf/UUjr+ZxQOnLsACZrKQ3bCylM6d0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747706407; c=relaxed/simple;
-	bh=52euy4QIRy5S1PGduCTG74ILWWuUGNpvW5W9e++vdKs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mu2+EoCGMjA5G6nQKdPhBCLx29JZSWPQp79c7WgMV2tzjpp3WWAiStIXDv4BTlr/WGY0oUwQZfgKpiqX4aaaB0a47j+qa/TEPxZoMc3aTe2Rw4wY/7cYI9BFksyDaJXuyCqtFqpSHVPrSmUJ8iv2uDDMLNr0Slx9TPsenQyKFhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jWXOsEhK; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2855B7E1;
+	Tue, 20 May 2025 02:00:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747706443; cv=fail; b=EECYU9JWp7yzfsJHsoJcajiqhw2+y7/tT/qb1yNkkCi1gMi93uMRpzwhcjjrqGZiu0xPqTsTY/9msVuQ2rXqhJDix4SBXL1cMPKoJ4/hL1u1al6tiDcH9KfFIBZlg1yMxIeecKQ/2vbW6tNH40NGGQR2rCthlFC10a7Z6xwZuj8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747706443; c=relaxed/simple;
+	bh=J/PPYDvuFR1bRHZnfveC5zXz1uYxzC2mwAC1MvU3N2Q=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=PHgG0GaYkFxOgqrRo+Nndf9IkdAnbyIZqlVPVDMMVG41HgzIlWqfGieE9Gy2nR/i7UGCURwsUA/dCDoFknkSuVSbD68B9mbz5xTnDKxWJ2tiHo2uu5nVrzTOIImYQJZXrLH4kVRvyur5ir0Z81dj2A43+y7k70AkmruzdS5j1Uw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=AKTwmll1; arc=fail smtp.client-ip=40.107.20.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jWXOsEhK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4ADABC4CEE4;
-	Tue, 20 May 2025 02:00:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747706406;
-	bh=52euy4QIRy5S1PGduCTG74ILWWuUGNpvW5W9e++vdKs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jWXOsEhKK41XUrZiULw+qd8Ccxr1syXDIj0Q4n2B1srvtLKQfOxqx5WciuukmtngI
-	 57Aw/93p9jKs0nZY8ZNyT4iZd8/lm3b+8tMQl8397uHKPUL7cuK2axFpKi1dFm6RUx
-	 llxDPQu5TrhNP+M70kRKeBT4gV+V4M69trRxWL6T6x4lqIMd2LKTAT29til+o31wgb
-	 v5wBfuxftKYnmoqW289Wg8A1xr7PkynTljJQmX32xg0Udth0nrVVNkE8lJU5Ngy4wt
-	 fJrQ17ZWe8/6D/kWXr/vo0NEnznwhVkZUSKox4xtE69+sF6bg/11mlR4V3KfpZoOic
-	 q4Tse2wKZJaJA==
-Date: Mon, 19 May 2025 19:00:04 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: "Liang, Kan" <kan.liang@linux.intel.com>,
-	Weilin Wang <weilin.wang@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] perf pmu intel: Adjust cpumaks for sub-NUMA clusters
- on graniterapids
-Message-ID: <aCviJJpEYKt8wYEk@google.com>
-References: <20250515181417.491401-1-irogers@google.com>
- <96c8fae8-b8f9-4094-b03a-9dba3ca234c2@linux.intel.com>
- <CAP-5=fVDF4-qYL1Lm7efgiHk7X=_nw_nEFMBZFMcsnOOJgX4Kg@mail.gmail.com>
- <aCoUMOVRjCr_t0ae@google.com>
- <CAP-5=fXnvRLiGmV7rr2H8A2Hj7HDE9m+B6Qn0areRXBhz-tK+Q@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="AKTwmll1"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=BZXRdNfCqLeWyFgvhGKpYAlTbAG83c9+7/9c6AOBUvJL5O5deAB7RJYhyFtqX+CsAm9d/bOq8lXI8fCymRoYUefImM4hCG644iVdGkyIvpoSC2Fcvxt1daRI0v9s+UgLGP72eEfxbymUyvuBPxMs49BBx0jKfVPZ4TRXAFuAtqTkPg0MZTEC2Gt4JLvbw8ngV/YnCIMtCwz90H/NeOlUbuW3I6ZcMBqt5XgDJFUzslVvrA4HktavfNAOF09XSiImndki6XbGyLVZkt5ZP/VYcMQkYTMZezv3DRSCvaUus1j98z92ffzoxf12JUxhep+kKHIYrWKwd8D88/qhakNwkg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=J/PPYDvuFR1bRHZnfveC5zXz1uYxzC2mwAC1MvU3N2Q=;
+ b=PcCakdtMuxQR6GmEVSpRtV90ir0Z4bRDvQhlK+1B5hEFLH1kfI4QVqld98aXa43+Rc6EXn0RC7wTNv3p6F0RCt3YwXDNbfHmeNHgh2Hdsvjg0+V9jA6WBsDl1f+I8wIBWgCfW8ups8yT9OzRA0Kl5sVNh3MLov3x+0gXPFGBA9SOtOQ7h/QaGahN24iNs5WTxEy7NWeVROXwKkdCIJA7e+P6JFa6W1/D9JL3eWUzRmM/v2WG+pEtYZws358FUXopR4BltgNZFqlgxv3YC4LC04Q10vl5nGe4d8VCE5zoni/OU+r37Ir+0+/c0Nku/Ga+w9+42Fh2uWWRXupYuyD7ww==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=J/PPYDvuFR1bRHZnfveC5zXz1uYxzC2mwAC1MvU3N2Q=;
+ b=AKTwmll1HUwK9SMj4iGY5MOW7Z8xqXQcbHnkEAoTODTMepvmKTgvchTs4SIoFogflKtIo7hFO1zLge9SMGNDTdAlEJ92oI87uzT2E8Myeqd/y6YSAcyolFURzNOXFoaCF4dSzFhmaUqvViknjwYiF3qyApSKxqAoyjsJa5kW69x0mbYdkgdXUzQH45LAk7JHm2b8jtVVSX3uBVjHDuSwCbBhZ8tXk1TCxm8ZuGTe+DD0twen9IE1Wm0KSqLQ1navylQ7CYif0pvQC9q83pGis5gl/YXi6GqgcQvvQ9jMUQi4ZKqMWzzSu1eBzlahKqjM5OIxYn9F2pTpJDPeNXr45A==
+Received: from DU0PR04MB9496.eurprd04.prod.outlook.com (2603:10a6:10:32d::19)
+ by PA4PR04MB9487.eurprd04.prod.outlook.com (2603:10a6:102:27c::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.33; Tue, 20 May
+ 2025 02:00:37 +0000
+Received: from DU0PR04MB9496.eurprd04.prod.outlook.com
+ ([fe80::4fa3:7420:14ed:5334]) by DU0PR04MB9496.eurprd04.prod.outlook.com
+ ([fe80::4fa3:7420:14ed:5334%4]) with mapi id 15.20.8722.031; Tue, 20 May 2025
+ 02:00:37 +0000
+From: Bough Chen <haibo.chen@nxp.com>
+To: Conor Dooley <conor@kernel.org>
+CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha
+ Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
+	<kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, Stefan Agner
+	<stefan@agner.ch>, Linus Walleij <linus.walleij@linaro.org>, Bartosz
+ Golaszewski <brgl@bgdev.pl>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org"
+	<linux-gpio@vger.kernel.org>
+Subject: RE: [PATCH v2 2/2] dt-bindings: gpio: vf610: add ngpios and
+ gpio-reserved-ranges
+Thread-Topic: [PATCH v2 2/2] dt-bindings: gpio: vf610: add ngpios and
+ gpio-reserved-ranges
+Thread-Index: AQHbyIOJtotboVfnW0K2Klb8iuZMaLPaHj0AgAClrsA=
+Date: Tue, 20 May 2025 02:00:37 +0000
+Message-ID:
+ <DU0PR04MB949631B73BFE4C08D77D5D2C909FA@DU0PR04MB9496.eurprd04.prod.outlook.com>
+References: <20250519-gpio-dts-v2-0-b9e77173e9c5@nxp.com>
+ <20250519-gpio-dts-v2-2-b9e77173e9c5@nxp.com>
+ <20250519-bucked-revolt-2b93a9a31422@spud>
+In-Reply-To: <20250519-bucked-revolt-2b93a9a31422@spud>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DU0PR04MB9496:EE_|PA4PR04MB9487:EE_
+x-ms-office365-filtering-correlation-id: 31283fda-fd65-4e9a-40f1-08dd97421d74
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|366016|7416014|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?gb2312?B?dERnQkFBVHR2QVZYYW9DTnlaV3o0Y3VRMGxkMjZ6MENXc0xtN3BkZ2J0bWMx?=
+ =?gb2312?B?ZjQrcEo0RTI1V2pmc0V5WElZcnFFSDB2TE5QN0JqMFVqNTF4cFV5b1NhTkFF?=
+ =?gb2312?B?U28yWWsvc1hXak9CSVBFZGMvUEQ0T1p1TzFydjU0RzFsdXZUMWcwd1hDdHVO?=
+ =?gb2312?B?dGpXbkpzMlpCVWE4ZkJSVUFUOUg1Q0E3bEpuN0krUUE4eFJQN1ZFcml6cGRY?=
+ =?gb2312?B?SnU5Sjg1cmhYR3J3YUxvMWJvVW5xR2RuMEg4SFNZSGIzVjJ4VG0wcUV0bTQr?=
+ =?gb2312?B?YXZwU3hDSzhvYVBhRHBKY0dHRWFlY1FQRTV2SXBTUk9DV2IrUkFsWUdlUTY5?=
+ =?gb2312?B?UmFBQkliRmpMYVA1dXNXY0NDQXc0REd4Vk1zaDdVZlNaN2xKMXFMdlpkd1Y5?=
+ =?gb2312?B?UXAwUDZ2V0lGVWtoMmlVRDVLbUZveXdVd3BvY2piNkdiT1ZrY1ZMWXlxM3px?=
+ =?gb2312?B?a0xjSWtZMlgrc3NNclIvaWpmY0ZZeGk4TnZOdi94dmpiTGx3b0ZWTEdqMXJr?=
+ =?gb2312?B?V2lMaUE0ZCsrMkJMRUIzN1JYQWhYaXVNczAzdWhaZ2tYMVVBZUZRVTgvQUJT?=
+ =?gb2312?B?NkZlZCtLclNTZVdWbm52QkRVTFFyZUFHRzZDOXhyL1NIT2V2bnZtMnYyL0FV?=
+ =?gb2312?B?NzdwbXBtNzVNU2VseFpKdjZ4aUlTRm1hc2FHOGpxZkdxdEE1RjdnSHoxUTJQ?=
+ =?gb2312?B?NnlaRWRCa3JpNGpqdldHUk1ESW1QZFZIblpHZ0lXMVFuZTRWU2V5VEVTVmI4?=
+ =?gb2312?B?WTR0cThNVUdDSWxvMVR6OGJ0SHV0S3RTMktUdDRmRnhka1lQcHFsWEFKMFJC?=
+ =?gb2312?B?M2ErNTdGQTgzZEpSbDIrZllDQ0VUNnRkNUhSZ0tHNkwyaUxvZGNqSFJwS1Jn?=
+ =?gb2312?B?QTY3ZXg2blJMYUsxWGdDWVNXaU5IVWh5Wm1lcTEySFFDREdTck9PUkE4WDBE?=
+ =?gb2312?B?bHpNWHNOZzFWUDZRRFpkVkxoY3JmalZZZGh0QkZCeG9sTXlvcWhXOTlKZUkz?=
+ =?gb2312?B?UlpnWm5VYXlpeXAyN1l0aElmWmZScjdQYllPNDNkNHNZKzlHaTVWbTFxTkZF?=
+ =?gb2312?B?MzRjODBYS3oxQXNnRUcrV2ZOMEhodTVmY2wzemxQR2J6dUdYWEl6bmhSQmU5?=
+ =?gb2312?B?Q3ZLdWd0YkRNSjM1SWFYT0EybUhxMU00dzh1V0dRNHlqdjJrbVVQcEFhdXFP?=
+ =?gb2312?B?ZXZCWEZrYUV2cit4cG5YWm45bVptbEdBUHAvKys1VDhTNFJNRGJOVzVpKytk?=
+ =?gb2312?B?cmVWRWtVSktSOS9DZUpYRC9XQlUyT2dNeXRzdHYxTHI3amRsNDJaZ2d3QmNh?=
+ =?gb2312?B?ai8zbThwVnFCOGxqUzUyRGwwZTRLZlJaNlZmUXNRbXBldUI4N3VQRlU3aTZ3?=
+ =?gb2312?B?OFFTTkU1YzhVRG9naDRJdXhIYlRJSDhLUGNMZVBKd040M3lPSUlkR1B3U2U0?=
+ =?gb2312?B?VnU4TlBQNzlnOWx3anhtMzlncjhmVy9sdjc5Z1Z1REZyNkFscmdhUm51akg1?=
+ =?gb2312?B?Ty92bTJSRmw1THlRZVJGOVkzb3k2RlZzNkxnbjZudmphdE1DUjVwUytlbG9U?=
+ =?gb2312?B?NDhYSnJjeEFXbUJQQk1Fd0dxWWRHaU8xVG1xeUU1aStSbm1UUW1wRUxRUENZ?=
+ =?gb2312?B?bUo4MnowMVJtcjJ1QzdqdkJXV2M0V2pTSnpEbU8vSDgrZkhnUUdVd2I1QndO?=
+ =?gb2312?B?SmdPd1VNWlQrUExaY2UzNnJHb2lybVhjUTBGMExMcGVDNE9TUjVRTXkvN1FM?=
+ =?gb2312?B?blNQWjhxdUhQSlVxSS9SVDVpSHA3RnNHeUtCSFcvVmowY1Z5azM0V2xPUE9r?=
+ =?gb2312?B?cjhheExmU0hHMlR1c0oyQll4UDhGYkdxVzlNYWs5MVdOU0I3ZGpLbVc5Y3lE?=
+ =?gb2312?B?K0VXSm1neSsrajV3ZWxCeTd5V0VPR2l4bkhDc1NFeEVHeXkwQjVLa0t3UTJI?=
+ =?gb2312?B?VzRJcFM3ME81SHVBZ2hORHpvUGtJanhwSHhsWnB4YnNYQVBWRmZIU2lyOTcv?=
+ =?gb2312?B?QXZlTDNHSEdBPT0=?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:zh-cn;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9496.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?gb2312?B?QW8zMmM1Sm1ib0psZkhyZnZQNXdnWm1vSVhCZlR0N2FJYS84TUlITEg1eE00?=
+ =?gb2312?B?RjVWeUg4NlVPdnJlTlNTVW9yam1XN25GUFlSdFpXVUZGU1V4bFdPN3A5dGQv?=
+ =?gb2312?B?Mmg1dy9uZXNUMC85K3lkeFh4RERha2lHR1l5R2NqdnNUb1ozeE13ZkEzYXVE?=
+ =?gb2312?B?YVl0U1BBWGN6bXdtM0o2S1VtVEIwWHJ5T05hS0U2bmZHSlQ3MlJ2SDZhSjFt?=
+ =?gb2312?B?V1BJa0JWRXNSVXhTYkpUWU1ZRHJQS01SNEFtTytUSVhBbC8xdFFBdmdnRXZk?=
+ =?gb2312?B?V0IvTVNPd1R3am5USTNMNDFEekpER0JqZko2WFFvVzRHbjFkbjJxYmZFV2tm?=
+ =?gb2312?B?MFlCbnlqK04wMmhnbDMyTmxNNXRheHRPdWxGR05EelZiRjJKTUh6K2lQbGY3?=
+ =?gb2312?B?ZGFHKzFSOFZ6UEVsUXgzRWp2cWFLbFFlVnlFNk5hdE11ZC9WbFF1R0tPUGM0?=
+ =?gb2312?B?c0xGaFZkYmFHVGRubzlXQ1QxbDdQZjBmNFBUWlBicGFMUVdKRVpEK1hjUTdn?=
+ =?gb2312?B?R3JOV2dRdVdhVkdieFo0SWJGYUVhQzdldFIrbzdHYiswR3M5VGpHWktRS0t2?=
+ =?gb2312?B?T2xJU1RNa2NWMk5vcGpqdkJ2V2hHRndTeCtXT3BwZHAxbUd0VHpnMngyQXQv?=
+ =?gb2312?B?SW9LUDNDdHdRM0N5WXpDTE9veG1IekRYTGoxNzNPTGxaZXo0eFArNDNwbzda?=
+ =?gb2312?B?V3cyVmhNZkM4SVRsc2VpeFRuMTA4WFFQR3VkaHovMDg1dFdrS1Z6WFl3d2xZ?=
+ =?gb2312?B?dmRGeTliWlNCSjZXL0VSVThyckVDUEVRUXV6aGxQQzUvSmVUNksrbnNxZkJL?=
+ =?gb2312?B?TUhoYTllR2JpZmhuNFFLNFdXbHQveFAvSmNkV3JjUEdmZ3BCS0R4M2ZxdE00?=
+ =?gb2312?B?YkVrYkVIYlBDWkJQSXRGc0Vkak5ENkttd2c0WXVsWXdPdHQxNE5oSU5iWlV3?=
+ =?gb2312?B?RldlZG1QU0JRNXdrT0F3M05XMi9VTjQxK1N1OXJxRmJXcnd4SG1QTEd0eExP?=
+ =?gb2312?B?ZmVONyt4VmkxdUp2SGRTamFNWDR5TW1FT1dmc09USUM1eENEZS8ySEJrQTRz?=
+ =?gb2312?B?M3FFTWRUVmpZOGxqUFVKWUpBR3RHeHRhTGtrVXlaUHE2Y3U3ZkFVZlVxMXI5?=
+ =?gb2312?B?ZiszY2Q4T3FGYlBEN3hJRjRiZFErTHp4Ulo5S3VYdHFYQlNtRDdtMU1xV1B4?=
+ =?gb2312?B?VEpaTkFkc05DVkdHZkJQalJLeWhPREFEeFg4WWM3VDRiVDJVSlppRjBIeFJu?=
+ =?gb2312?B?QTg4dlRORUViQTlMMGNzZ21relgxTWpaVzBHOFZMT0tmQmMxSUFUZkVpT3FT?=
+ =?gb2312?B?STE4TzdsTlBjV2lXaGd1SWM4VHpRNlBwQ2tLTWpuRC9RdVVacTB5N0MzaGVw?=
+ =?gb2312?B?V01EQ0R6cWtmL1ZjK2dRcU5IaHB5RFpaSGIzbXRaSGVvMUNCeGlZblJXeHJW?=
+ =?gb2312?B?cTh4Rk9UNlJ1aUFFMjg2M0VGZlFnelkvdi9vYkJtbWk4Y1RsN3Z4QnRzYkZq?=
+ =?gb2312?B?czFvaWQxMXYzZUJtNWpjV1UyTlFvaktVYlBDbkZLaWU1ellvTXBaZjFMbDUz?=
+ =?gb2312?B?WE1aamltNjBZT3dRNkJDR3NselBFRDM3bjl1dGRrRDFuMUxHMjRpaGI4a2Zj?=
+ =?gb2312?B?aFZiSVRyS1FGblFBT0pLUHQxMVl2bS9xWjg3QllkVzB1d3MwSTIxcWt2SWg2?=
+ =?gb2312?B?UW9aZFpneFRMM2ZxOFNtWlB6ZEtyZGNEZERWQWNiWGtDZHNnRXRPZ2NrcXh5?=
+ =?gb2312?B?NEVMajNNVWxwR3pWN3RObURrSHN6UHorWjhIcFk2akdka3VkV0tIaDZrcnk2?=
+ =?gb2312?B?UFNrSHlXcHZvMWQ5L1pTZFAvcVJzaTJxNE1WNjFqaERMTWtuK0FsR3FFUU0z?=
+ =?gb2312?B?NDkxeGY3azJyaTlHZDhEVTdMclJVYkszMzJXMGJ2OHJRYUpuamIvemNKaDdi?=
+ =?gb2312?B?Tm9vUWlEM3BqaXl4U0hEV1BqYWtJS1FKN0RXelRSRE9DdG5yZ3p1Rjg1djhk?=
+ =?gb2312?B?SzNEb2NyRWE1c0ZDWGUvWGw3dlhXVUxETXNxRHRCRGROdE5oV1dTaDJKWVIw?=
+ =?gb2312?B?L1lMTnRqcVRYc2VqSjVaL05hbkRhWU1Jb25UWU9OYU02cUV2M1MwaGt0RmhX?=
+ =?gb2312?Q?6hoM=3D?=
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXnvRLiGmV7rr2H8A2Hj7HDE9m+B6Qn0areRXBhz-tK+Q@mail.gmail.com>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9496.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 31283fda-fd65-4e9a-40f1-08dd97421d74
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 May 2025 02:00:37.4064
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: QN1StcoDBfIRaSFL5cac7gFXkqRvdDJRlAF3qFp9DkQO1XhAgGbfNYioce63Bhw7LWq/q7JWufexRidK8T/yEg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB9487
 
-On Sun, May 18, 2025 at 10:45:52AM -0700, Ian Rogers wrote:
-> On Sun, May 18, 2025 at 10:09 AM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > Hello,
-> >
-> > On Thu, May 15, 2025 at 03:35:41PM -0700, Ian Rogers wrote:
-> > > On Thu, May 15, 2025 at 2:01 PM Liang, Kan <kan.liang@linux.intel.com> wrote:
-> > > >
-> > > > On 2025-05-15 2:14 p.m., Ian Rogers wrote:
-> > > > > On graniterapids the cache home agent (CHA) and memory controller
-> > > > > (IMC) PMUs all have their cpumask set to per-socket information. In
-> > > > > order for per NUMA node aggregation to work correctly the PMUs cpumask
-> > > > > needs to be set to CPUs for the relevant sub-NUMA grouping.
-> > > > >
-> > > > > For example, on a 2 socket graniterapids machine with sub NUMA
-> > > > > clustering of 3, for uncore_cha and uncore_imc PMUs the cpumask is
-> > > > > "0,120" leading to aggregation only on NUMA nodes 0 and 3:
-> > > > > ```
-> > > > > $ perf stat --per-node -e 'UNC_CHA_CLOCKTICKS,UNC_M_CLOCKTICKS' -a sleep 1
-> > > > >
-> > > > >  Performance counter stats for 'system wide':
-> > > > >
-> > > > > N0        1    277,835,681,344      UNC_CHA_CLOCKTICKS
-> > > > > N0        1     19,242,894,228      UNC_M_CLOCKTICKS
-> > > > > N3        1    277,803,448,124      UNC_CHA_CLOCKTICKS
-> > > > > N3        1     19,240,741,498      UNC_M_CLOCKTICKS
-> > > > >
-> > > > >        1.002113847 seconds time elapsed
-> > > > > ```
-> > > > >
-> > > > > By updating the PMUs cpumasks to "0,120", "40,160" and "80,200" then
-> > > > > the correctly 6 NUMA node aggregations are achieved:
-> > > > > ```
-> > > > > $ perf stat --per-node -e 'UNC_CHA_CLOCKTICKS,UNC_M_CLOCKTICKS' -a sleep 1
-> > > > >
-> > > > >  Performance counter stats for 'system wide':
-> > > > >
-> > > > > N0        1     92,748,667,796      UNC_CHA_CLOCKTICKS
-> > > > > N0        0      6,424,021,142      UNC_M_CLOCKTICKS
-> > > > > N1        0     92,753,504,424      UNC_CHA_CLOCKTICKS
-> > > > > N1        1      6,424,308,338      UNC_M_CLOCKTICKS
-> > > > > N2        0     92,751,170,084      UNC_CHA_CLOCKTICKS
-> > > > > N2        0      6,424,227,402      UNC_M_CLOCKTICKS
-> > > > > N3        1     92,745,944,144      UNC_CHA_CLOCKTICKS
-> > > > > N3        0      6,423,752,086      UNC_M_CLOCKTICKS
-> > > > > N4        0     92,725,793,788      UNC_CHA_CLOCKTICKS
-> > > > > N4        1      6,422,393,266      UNC_M_CLOCKTICKS
-> > > > > N5        0     92,717,504,388      UNC_CHA_CLOCKTICKS
-> > > > > N5        0      6,421,842,618      UNC_M_CLOCKTICKS
-> > > >
-> > > > Is the second coloum  the number of units?
-> > > > If so, it's wrong.
-> > > >
-> > > > On my GNR with SNC-2, I observed the similar issue.
-> > > >
-> > > > $ sudo ./perf stat -e 'UNC_M_CLOCKTICKS' --per-node -a sleep 1
-> > > >  Performance counter stats for 'system wide':
-> > > >
-> > > > N0        0      6,405,811,284      UNC_M_CLOCKTICKS
-> > > > N1        1      6,405,895,988      UNC_M_CLOCKTICKS
-> > > > N2        0      6,152,906,692      UNC_M_CLOCKTICKS
-> > > > N3        1      6,063,415,630      UNC_M_CLOCKTICKS
-> > > >
-> > > > It's supposed to be 4?
-> > >
-> > > Agreed it is weird, but it is what has historically been displayed.
-> > > The number is the aggregation number:
-> > > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/stat-display.c?h=perf-tools-next#n307
-> > > which comes from:
-> > > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/stat-display.c?h=perf-tools-next#n135
-> > > which comes from:
-> > > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/stat.c?h=perf-tools-next#n435
-> > > However, I think it is missing updates from:
-> > > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/stat.c?h=perf-tools-next#n526
-> > > but there is a comment there saying "don't increase aggr.nr for
-> > > aliases" and all the uncore events are aliases. I don't understand
-> > > what the aggregation number is supposed to be, it is commented as
-> > > "number of entries (CPUs) aggregated":
-> > > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/stat.h?h=perf-tools-next#n26
-> > > it would seem to make sense in the CHA case with SNC3 and 42 evsels
-> > > per NUMA node that the value should be 42. Maybe Namhyung (who did the
-> > > evsel__merge_aggr_counters clean up) knows why it is this way but in
-> > > my eyes it just seems like something that has been broken for a long
-> > > time.
-> >
-> > I think it's the number of aggregated entries (FDs?).
-> >
-> > For core events, it's the number of CPUs for the given aggregation as it
-> > collects from all CPUs.  But it'd be confusing with uncore events which
-> > have cpumask to collect data from a few CPUs.
-> >
-> > On my laptop, --per-socket gives different numbers depending on the
-> > events/PMUs.
-> >
-> > For core events, it's 4.
-> >
-> >   $ sudo ./perf stat -a --per-socket -e cycles sleep 1
-> >
-> >    Performance counter stats for 'system wide':
-> >
-> >   S0        4        225,297,257      cycles
-> >
-> >          1.002581995 seconds time elapsed
-> >
-> > While uncore events give 1.
-> >
-> >   $ sudo ./perf stat -a --per-socket -e unc_mc0_rdcas_count_freerun sleep 1
-> >
-> >    Performance counter stats for 'system wide':
-> >
-> >   S0        1         23,665,510      unc_mc0_rdcas_count_freerun
-> >
-> >          1.002148012 seconds time elapsed
-> 
-> I think we're agreeing. I wonder that the intent of the aggregation
-> number is to make it so that you can work out an average from the
-> aggregated count. So for core PMUs you divide the count by the
-> aggregation number and get the average count per core (CPU?). If we're
-> getting an aggregated count of say uncore memory controller events
-> then it would make sense to me that we show the aggregated total and
-> the aggregation count is the number of memory controller PMUs, so we
-> can have an average per memory controller. This should line up with
-> using the number of file descriptors.
-
-Sounds right.
-
-> 
-> I think this isn't the current behavior, on perf v6.12:
-> ```
-> $ sudo perf stat --per-socket -e data_read -a sleep 1
-> 
->  Performance counter stats for 'system wide':
-> 
-> S0        1           2,484.96 MiB  data_read
-> 
->        1.001365319 seconds time elapsed
-> 
-> $ sudo perf stat -A -e data_read -a sleep 1
-> 
->  Performance counter stats for 'system wide':
-> 
-> CPU0             1,336.48 MiB  data_read [uncore_imc_free_running_0]
-> CPU0             1,337.06 MiB  data_read [uncore_imc_free_running_1]
-> 
->        1.001049096 seconds time elapsed
-> ```
-> so the aggregation number shows 1 but 2 events were aggregated together.
-
-Ugh.. right.  Merging uncore PMU instances can add more confusion. :(
-
-> 
-> I think computing the aggregation number in the stat code is probably
-> wrong. The value should be constant for an evsel and aggr_cpu_id, it's
-> just computing it for an aggr_cpu_id is a pain due to needing topology
-> and/or PMU information. The code is ripe for refactoring. I'd prefer
-> not to do it as part of this change though which is altering a
-> particular Intel Granite Rapids issue.
-
-That's ok.  Just one more TODO items..
-
-Thanks,
-Namhyung
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBDb25vciBEb29sZXkgPGNvbm9y
+QGtlcm5lbC5vcmc+DQo+IFNlbnQ6IDIwMjXE6jXUwjIwyNUgMDowNA0KPiBUbzogQm91Z2ggQ2hl
+biA8aGFpYm8uY2hlbkBueHAuY29tPg0KPiBDYzogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9y
+Zz47IEtyenlzenRvZiBLb3psb3dza2kgPGtyemsrZHRAa2VybmVsLm9yZz47DQo+IENvbm9yIERv
+b2xleSA8Y29ub3IrZHRAa2VybmVsLm9yZz47IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9y
+Zz47DQo+IFNhc2NoYSBIYXVlciA8cy5oYXVlckBwZW5ndXRyb25peC5kZT47IFBlbmd1dHJvbml4
+IEtlcm5lbCBUZWFtDQo+IDxrZXJuZWxAcGVuZ3V0cm9uaXguZGU+OyBGYWJpbyBFc3RldmFtIDxm
+ZXN0ZXZhbUBnbWFpbC5jb20+OyBTdGVmYW4NCj4gQWduZXIgPHN0ZWZhbkBhZ25lci5jaD47IExp
+bnVzIFdhbGxlaWogPGxpbnVzLndhbGxlaWpAbGluYXJvLm9yZz47IEJhcnRvc3oNCj4gR29sYXN6
+ZXdza2kgPGJyZ2xAYmdkZXYucGw+OyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgaW14QGxp
+c3RzLmxpbnV4LmRldjsNCj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBs
+aW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1ncGlvQHZnZXIua2VybmVsLm9y
+Zw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYyIDIvMl0gZHQtYmluZGluZ3M6IGdwaW86IHZmNjEw
+OiBhZGQgbmdwaW9zIGFuZA0KPiBncGlvLXJlc2VydmVkLXJhbmdlcw0KPiANCj4gT24gTW9uLCBN
+YXkgMTksIDIwMjUgYXQgMDI6MDM6NDNQTSArMDgwMCwgSGFpYm8gQ2hlbiB3cm90ZToNCj4gPiBB
+ZGQgb3B0aW9uYWwgbmdwaW9zIGFuZCBncGlvLXJlc2VydmVkLXJhbmdlcyBwcm9wZXJ0eQ0KPiA+
+DQo+ID4gU2lnbmVkLW9mZi1ieTogSGFpYm8gQ2hlbiA8aGFpYm8uY2hlbkBueHAuY29tPg0KPiA+
+IC0tLQ0KPiA+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3Bpby9ncGlvLXZm
+NjEwLnlhbWwgfCA2ICsrKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCsp
+DQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2dwaW8vZ3Bpby12ZjYxMC55YW1sDQo+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZ3Bpby9ncGlvLXZmNjEwLnlhbWwNCj4gPiBpbmRleA0KPiA+DQo+IDRmYjMyZTlhZWMw
+YTM0MWE1MDA4OGYzZTQzNTJlZDRkMzZmNjQ5ZDMuLjViOTgyMjg0NjZjNjQxNGJlNjgxYzQ5NA0K
+PiAxN2JiDQo+ID4gZGQ4MmYyYzQ1NzU2IDEwMDY0NA0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9ncGlvL2dwaW8tdmY2MTAueWFtbA0KPiA+ICsrKyBiL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncGlvL2dwaW8tdmY2MTAueWFtbA0KPiA+IEBA
+IC03MCw2ICs3MCwxMiBAQCBwcm9wZXJ0aWVzOg0KPiA+ICAgICAgbWluSXRlbXM6IDENCj4gPiAg
+ICAgIG1heEl0ZW1zOiA0DQo+ID4NCj4gPiArICBncGlvLXJlc2VydmVkLXJhbmdlczogdHJ1ZQ0K
+PiA+ICsNCj4gPiArICBuZ3Bpb3M6DQo+ID4gKyAgICBtaW5pbXVtOiAxDQo+ID4gKyAgICBtYXhp
+bXVtOiAzMg0KPiANCj4gRG8gdGhlc2UgcGxhdGZvcm1zIGhhdmUgYSBkZWZhdWx0PyBJJ2QgZXhw
+ZWN0IG9uZSB0byBiZSBhZGRlZCB0aGF0IGNvbnRhaW5zIHRoZQ0KPiBkZWZhdWx0IHZhbHVlIGZy
+b20gd2hhdCB0aGUgZHJpdmVyIGRvZXMgbm93Lg0KDQpPa2F5LCB0aGUgZGVmYXVsdCB2YWx1ZSBz
+aG91bGQgYmUgMzIsIEkgd2lsbCBhZGQgdGhhdC4NCg0KQnkgdGhlIHdheSwgSWYgYWRkIHRoZSBk
+ZWZhdWx0IHZhbHVlLCBmb3IgdGhlIGdwaW8gcG9ydCB3aGljaCBjb250YWluIDMyIHBhZHMsIHNl
+ZW1zIG5vIG5lZWQgdG8gYWRkIG5ncGlvcyBpbiBkdHMsIEkgd2lsbCBjaGFuZ2UgYWNjb3JkaW5n
+bHkuDQoNClJlZ2FyZHMNCkhhaWJvIENoZW4NCj4gDQo+ID4gKw0KPiA+ICBwYXR0ZXJuUHJvcGVy
+dGllczoNCj4gPiAgICAiXi4rLWhvZygtWzAtOV0rKT8kIjoNCj4gPiAgICAgIHR5cGU6IG9iamVj
+dA0KPiA+DQo+ID4gLS0NCj4gPiAyLjM0LjENCj4gPg0K
