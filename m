@@ -1,101 +1,129 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3311D262FD0;
-	Tue, 20 May 2025 15:49:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A764A2698AF;
+	Tue, 20 May 2025 15:49:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747756184; cv=none; b=F4R08woqsvmGI0ySbiyoPPi7nyVb75BMeGyTpzW09IuSZ1MkNyqTNdnKxIWEIftx/IqzznBwDHc29Vvv2B2NXSOsm4YJyMEazps0HdAXRKOzDrIHwnPomCFxDzr4iYaYeTfB49ZLeuEe7ToRBq8ZrtDL8YTxAPEgJtJYBO6odlI=
+	t=1747756187; cv=none; b=n1C55x/xytBIDq33FeAfqVMfEDeRFRYNj1EPCmNTHPee9KdqCYDUItjSb+1WQNDh1Bm+ashLXIkDAHO6I9jgPzs/r2q7XZ9SwRtJR+MtV4choTrIevvJEyiHBVPDJF9OGZqQwpsVrKy9YMUovZctPaDxf0tfQCW7xhPA4L+2kYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747756184; c=relaxed/simple;
-	bh=x/xcA2v5rT9pwMsxq/8r5xiUmJQA9aym0rnhAdmD3Yk=;
+	s=arc-20240116; t=1747756187; c=relaxed/simple;
+	bh=ThTfQqMrAs4ZQpPhlGrpY2Kxwn6p2cq77iDNGME5dEg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LjGbBP2T+uR9px6xhV6QuUN9rcTtpHEA7nygjcPqBU/OHZxsEqUImRuoIKVzEzBg/BZhHoZZNSRGeHK4MaznogmlTSK9WlVEwL6fJp3eYugeY66EdJtbMRpTahzLNmFosNOiKQNXY9djgaybNDUxzimpXcQs7ZR202FGbgURIyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M+ax18VU; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=OydwmEfOQ5ehTLEYQ2oo+owOuZd4EX3FZEVr8HXKuzCvDNcXHie0L73f8wxe0jq1i6w+yGIWbXDSY/2bopdiOFuOuU0OEp2sRXSmpEuTdePscK/+tDnmzwTo08SDSbp0mo0jJmYxyNFu1ZlBMSpD92rOoAJIPaU3Pi3wdGw22mY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HSlxBEzZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M+ax18VU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20DB1C4CEEB;
-	Tue, 20 May 2025 15:49:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HSlxBEzZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9E9DC4CEF1;
+	Tue, 20 May 2025 15:49:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747756184;
-	bh=x/xcA2v5rT9pwMsxq/8r5xiUmJQA9aym0rnhAdmD3Yk=;
+	s=k20201202; t=1747756187;
+	bh=ThTfQqMrAs4ZQpPhlGrpY2Kxwn6p2cq77iDNGME5dEg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=M+ax18VU+RapQy1TPRGI7d0iNYYDgrm9n4D23yzzpavnmHlIoBx3UDsNGB28r6Zlv
-	 Txx/bUModBFHoFNXdzBUFtZi8/L716fwB8mPvmeWfA8kfZHRkX0nkjL5pgzdelYj20
-	 Bx1UQ6uFLAsAYwGa1M7p9NvBkSYt//xnEEF5xK+BG/LzsJroxLOkpqv5Q1ywhsSZ+G
-	 RMe5y+mcakhck0stZrOzJ1cEmaYy6r8RQdkdzm9Q7vbLV9OvIAs1DBhz5wGhwwraYV
-	 L6iGRdjZV5N0Ti/S5tAyzzOFMuRmFOZ5GL+Xip4Yp4vH44pdIGiZ1iQELQnC5eCL30
-	 lQTjgebaFPo5A==
-Date: Tue, 20 May 2025 16:49:38 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Michael Walle <mwalle@kernel.org>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
+	b=HSlxBEzZI+QEDeMiGnjbY3b/GQ7sDX0iUf2gZvHnwIwJFErgWUpYBnCJ/ADxz764U
+	 8usa3GJpuvpAUQoTCC57B8Dfgy3O3nWXO8BQUZFBruohK30b9mpP4MkV9GNkLpV/s7
+	 l0MYY7SY+DUCqt8oLl3I1O7ahUEEPoVKYUk2sNf2dx5QgfFwKoQZ4g8EhJCXKpeDEW
+	 +0eRD1VmnS/5CCi/IiiX1RHpvTurH7ozqxGL9o3LYfUIZcX+q6Lk0SidLjuSsqSGa0
+	 NS9EIhNuJHijVRy1eTmJ8HSzLswavb2ZZpv0IIg1PM+kuKJDwefs2uw7Ywt8bpGqyb
+	 0bCP1S1RUi1Ug==
+Date: Tue, 20 May 2025 17:49:42 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Rob Clark <robdclark@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+	linux-arm-msm@vger.kernel.org, Connor Abbott <cwabbott0@gmail.com>,
+	Rob Clark <robdclark@chromium.org>,
 	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
 	Maxime Ripard <mripard@kernel.org>,
 	Thomas Zimmermann <tzimmermann@suse.de>,
 	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Sam Ravnborg <sam@ravnborg.org>, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: display: simple: add AUO P238HAN01 panel
-Message-ID: <20250520-certify-womanhood-678edc4a37a5@spud>
-References: <20250520074439.655749-1-mwalle@kernel.org>
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 01/40] drm/gpuvm: Don't require obj lock in destructor
+ path
+Message-ID: <aCyklmgRUq1wGb5S@cassiopeiae>
+References: <20250519175348.11924-1-robdclark@gmail.com>
+ <20250519175348.11924-2-robdclark@gmail.com>
+ <aCwt20O7SH1zQLlV@pollux>
+ <CAF6AEGvhxeCAz41F72hq=V3aD38jm+aUQqX3GwaOR4uzZGn6hg@mail.gmail.com>
+ <aCyeAb0vnQqPVbiz@cassiopeiae>
+ <CAF6AEGvegfkAeMA9-3PZN3wectQwt7=YVHoDxoK2fJcjOLbH2g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="bTHU5tE0Xeo7TnAi"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250520074439.655749-1-mwalle@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAF6AEGvegfkAeMA9-3PZN3wectQwt7=YVHoDxoK2fJcjOLbH2g@mail.gmail.com>
 
+On Tue, May 20, 2025 at 08:45:24AM -0700, Rob Clark wrote:
+> On Tue, May 20, 2025 at 8:21 AM Danilo Krummrich <dakr@kernel.org> wrote:
+> >
+> > On Tue, May 20, 2025 at 07:57:36AM -0700, Rob Clark wrote:
+> > > On Tue, May 20, 2025 at 12:23 AM Danilo Krummrich <dakr@kernel.org> wrote:
+> > > > On Mon, May 19, 2025 at 10:51:24AM -0700, Rob Clark wrote:
+> > > > > diff --git a/drivers/gpu/drm/drm_gpuvm.c b/drivers/gpu/drm/drm_gpuvm.c
+> > > > > index f9eb56f24bef..1e89a98caad4 100644
+> > > > > --- a/drivers/gpu/drm/drm_gpuvm.c
+> > > > > +++ b/drivers/gpu/drm/drm_gpuvm.c
+> > > > > @@ -1511,7 +1511,9 @@ drm_gpuvm_bo_destroy(struct kref *kref)
+> > > > >       drm_gpuvm_bo_list_del(vm_bo, extobj, lock);
+> > > > >       drm_gpuvm_bo_list_del(vm_bo, evict, lock);
+> > > > >
+> > > > > -     drm_gem_gpuva_assert_lock_held(obj);
+> > > > > +     if (kref_read(&obj->refcount) > 0)
+> > > > > +             drm_gem_gpuva_assert_lock_held(obj);
+> > > >
+> > > > Again, this is broken. What if the reference count drops to zero right after
+> > > > the kref_read() check, but before drm_gem_gpuva_assert_lock_held() is called?
+> > >
+> > > No, it is not.  If you find yourself having this race condition, then
+> > > you already have bigger problems.  There are only two valid cases when
+> > > drm_gpuvm_bo_destroy() is called.  Either:
+> > >
+> > > 1) You somehow hold a reference to the GEM object, in which case the
+> > > refcount will be a positive integer.  Maybe you race but on either
+> > > side of the race you have a value that is greater than zero.
+> > > 2) Or, you are calling this in the GEM object destructor path, in
+> > > which case no one else should have a reference to the object, so it
+> > > isn't possible to race
+> >
+> > What about:
+> >
+> > 3) You destroy the VM_BO, because the VM is destroyed, but someone else (e.g.
+> >    another VM) holds a reference of this BO, which is dropped concurrently?
+> 
+> I mean, that is already broken, so I'm not sure what your point is?
 
---bTHU5tE0Xeo7TnAi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+No, it's not. In upstream GPUVM the last thing drm_gpuvm_bo_destroy() does is
+calling drm_gem_object_put(), because a struct drm_gpuvm_bo holds a reference to
+the GEM object.
 
-On Tue, May 20, 2025 at 09:44:38AM +0200, Michael Walle wrote:
-> Add AUO P238HAN01 23.8" 1920x1080 LVDS panel compatible string.
->=20
-> Signed-off-by: Michael Walle <mwalle@kernel.org>
-> ---
->  .../devicetree/bindings/display/panel/panel-simple.yaml         | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple=
-=2Eyaml b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-> index 5542c9229d54..1ac1f0219079 100644
-> --- a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-> +++ b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-> @@ -57,6 +57,8 @@ properties:
->        - auo,g121ean01
->          # AU Optronics Corporation 15.6" (1366x768) TFT LCD panel
->        - auo,g156xtn01
-> +        # AU Optronics Corporation 23.8" FHD (1920x1080) TFT LCD panel
-> +      - auo,p238han01
->          # AU Optronics Corporation 31.5" FHD (1920x1080) TFT LCD panel
->        - auo,p320hvn03
->          # AU Optronics Corporation 21.5" FHD (1920x1080) color TFT LCD p=
-anel
+The above is only racy with your patch that disables this reference count and
+leaves this trap for the caller.
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-
---bTHU5tE0Xeo7TnAi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaCykkgAKCRB4tDGHoIJi
-0tKCAP9ow8y7bFpTF9AFOfz3Q47pX+fn3qmAmfaO2AAm4BuOlAD/XKSPjiHCNN0s
-ft5UMQAypauFLdS+TlIB4DgD2yquRQQ=
-=r6Sy
------END PGP SIGNATURE-----
-
---bTHU5tE0Xeo7TnAi--
+> 
+> This patch is specifically about the case were VMAs are torn down in
+> gem->free_object().
+> 
+> BR,
+> -R
+> 
+> > Please don't tell me "but MSM doesn't do that". This is generic infrastructure,
+> > it is perfectly valid for drivers to do that.
+> >
+> > > If the refcount drops to zero after the check, you are about to blow
+> > > up regardless.
+> >
+> > Exactly, that's why the whole approach of removing the reference count a VM_BO
+> > has on the BO, i.e. the proposed DRM_GPUVM_VA_WEAK_REF is broken.
+> >
+> > As mentioned, make it DRM_GPUVM_MSM_LEGACY_QUIRK and get an approval from Dave /
+> > Sima for it.
+> >
+> > You can't make DRM_GPUVM_VA_WEAK_REF work as a generic thing without breaking
+> > the whole design and lifetimes of GPUVM.
+> >
+> > We'd just end up with tons of traps for drivers with lots of WARN_ON() paths and
+> > footguns like the one above if a driver works slightly different than MSM.
