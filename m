@@ -1,149 +1,191 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EA971E51FE;
-	Tue, 20 May 2025 04:01:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAE262580E4
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 04:04:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747713709; cv=none; b=FUAfOyPmwSH9eJISuBfnCpNgcfIWqNU0/e5D/Sf70O0NL1DWo9Z4dfLJqctQCkk1DuEaICoXOIHRrAvx8RoXhz4WelOszNKJ3ZsE30BFSUttfbBRbiD8vejhcrqA9kpyKJWIB7IFdxLB10TPAED6nYDehMo3fZBAEU8deCBCwxA=
+	t=1747713850; cv=none; b=gOxppkh1WPvL1/fJy/cwhKF1D4M/rhE+mTa+vGkXFBmxU2xg7xgK8YOF8jB9yvIE24qEABdTM/zuQm98/RyJV4r+NAjhkysIWYF8wzAmioCZ+/AeDppmkWh/OeuZrKKd7xcYwWacgc4R3pNRWdYKhGZbVD9tkcfnYIjfE1U/qzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747713709; c=relaxed/simple;
-	bh=MIvXUOnMPSdi5zoVIlxm5KaWG40huaNQe6PyC6jCeoA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FmibiDi/eNt/XW8JvewVuo5RndjqmRwp3rPsPNBwLocDWuyAztGIwtOHc1qqZszILtJrajiq13q2PF5SNyQ/CY/9ySv3efFLaAy+65C/ae4B/Zpwo81M1gtIcshsW/Kuphqc2NaUR2r5jFEX/+D/us9ZHL85KevIY6HXaw5DZ+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YA9/Ym2J; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747713850; c=relaxed/simple;
+	bh=KMb6HEc989YS4nvOynxObwK2sZg5PsL820yo8xKWB0Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BYpfR/ilxIE9ZgA9ZiRuT5Iz5XH8dm3ax1IbWWUt/hudiTGlIHXMTtVxXWQ7wwhgSh4Nc+nHRixEIZpY2d5tHjsc8GwSh6K55Ft7NjUajiIBKGipsFhrp+TDRNp4fCCYllDTxhT0ZNRs5XEVcsnJKAMt7iiK4Q2V5yoe2z1a7js=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=MzNNnOPG; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YA9/Ym2J"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-72d3b48d2ffso4983007b3a.2;
-        Mon, 19 May 2025 21:01:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747713707; x=1748318507; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:reply-to:message-id:date
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=aQFyxFeCf4QFGfYKfS18VbINdnTgdEdPG+DnfYGm8vA=;
-        b=YA9/Ym2JrHX3sMzCnK5kVt21/R05fQ5n52MoaKIMDTnaLsKXjKkkR8enKgMHI7Npwe
-         VmFZaf3gMM3ed5J8MnJQNdzKOgHq43RoFehaD71+Ybxg6oVkE3Q0/M55BEcEvgwCYm2p
-         QGYnflPqPtRfnH4GhHZ0EjkILfYald1b/vJS3NwzToCsP9Vu71HK09bICtW5QQnzAt1s
-         8OzAop0KvibhrSPsofMudA4tDwmhRyeDq16bbFdNivOSJH7NKPA1zSUEsL530RIKJkb9
-         kAu9Hmqca3X8P0kWiSex/NQpm1UigGSDZ9fB8H6g223CCvauLEWllGPvbUh2yjR9+N/9
-         frWg==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="MzNNnOPG"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54JLeaOi008568
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 04:04:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	o+n9bkF0VD0V2oJ0zneDmypvwTmyRBfAOtjQDo3asjA=; b=MzNNnOPGPyV/g4gL
+	Io3VpNxBw/F+jVACkQGvFl0/BXrvWr+zDY5nVInGTf8gLF6kI9JmgqpNIhvKW385
+	/4dk0rIZDiP/AkSaJI/8ctqm/DlEUJ/u34ymu+XQVht8xG3xP/CVMbfJ97/sV2ty
+	XtDRWnQQW1g0+2xV1/ZDKu8e5VfkbhqBMRLqQ/hKaOyP3IrDlszg/7/nopdJabSJ
+	F/j0KWltPyd7FzKWqH7HicCnyYpNHTkWj/w697dOgfd20RcP4u/kqWoqc2EQTMQl
+	4zq/i6ns5gO4SdSZMDxj/hYPx6IQ7VTz3SgH40qTZ/2bFLMH621ogpmrmaKabgO0
+	cu+VIw==
+Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46pjjsxb5r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 04:04:05 +0000 (GMT)
+Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-742aa6581caso3209420b3a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 21:04:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747713707; x=1748318507;
-        h=content-transfer-encoding:mime-version:reply-to:message-id:date
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aQFyxFeCf4QFGfYKfS18VbINdnTgdEdPG+DnfYGm8vA=;
-        b=trJZMsbN/+Veazmc7aTm0k9ndqwkPU/n96ZZY5b/NeLahPHWLvVTkLHq60qAEm+HUl
-         XIli4PnHUFzm9utetMyD08pXyhQ1ke3EfKdfgxhymTv11ghvhH7CJ2oeGetCndB+DKSQ
-         nZY6C/OcRHqjHu9QYN1Q7XVY0aPOvao38SP20piG+YIGGigAbE1tP9a1SyVgvQy0RpTI
-         tRtL+5Wqx4220lZYVmp8jjtEvHxZGU9VslxaxMBy3Ggi2enxxME14qowxQfIH2eKJEtL
-         ChUvQPOPqWWwiCHp2jxFieP1baxpcIaKQr9M8Eq7Wcd1NXodUBsCPVo8CmhlOYj539E7
-         l6Kw==
-X-Forwarded-Encrypted: i=1; AJvYcCV0YiH5ZbJ7EzrRj4TcwIgMOtyc+jRl9+i8rfltymQjbbessVQ6Vgf4bFoHAcmB+KLjUFymgrNVPrVOJiA=@vger.kernel.org, AJvYcCVNdglmj0TQlPGclJNrpjCLt2eIQnV1r6nVMewG5jAoqbESvl5tVDMyuHNV1Uzq47wYxGTHMZmW@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVlIFFgWYGJCIX6KwmSppUyB2IAKywW4eYtsuJ+bk/TPWs8I+I
-	Mhyz1Rfx/v6JTXI5kRRxpF8Ms+mD8bSOAcRZ+pjBZROc45QW3FPBP833
-X-Gm-Gg: ASbGnct5lD8/a6qTF9GKorvrMxdZyzN48s1mOC5xulXGqtCgzjocQx/dkFLZhDPmGH8
-	I6Ia5dX8Zp+elckW2SsQq/2jKukBcq2KxNTkyG6IR4uD77MfdN4qLgyp8wzBF4ESBJ8537NmCvF
-	dTjAbyF79ZHllBo+9omPt+iVtSoiH2Dxu3C/1IIFlM33IIAONCEkmIfqfn5Y7eq5vs+9tLwKCVo
-	rAnUREMEFKwY9qTesPQzduQ5c1PP8ceDfoDYZlKPD9Or2qWjNlzSeTiPduQt/ePTAAieDOYvx9n
-	nEsdRvIVDcqCifFj8ADAQH407E76jQ0j7bS6BdjIlZKu/XWEnGo5LyQK+jijkQULMppQhltv9VJ
-	CgOnT8Nsn9WnwuqAYukdbsKm8GvRXJg==
-X-Google-Smtp-Source: AGHT+IFP4Cbo8/KuRNTms2PVLrIoYUdA/qTJAcnF3gJz5vdQ9Nn+4KkqyBWfkU1oU7YU7tFDSsOCHA==
-X-Received: by 2002:a05:6a00:a06:b0:742:4545:2d2b with SMTP id d2e1a72fcca58-742acc8d18amr22090011b3a.3.1747713707097;
-        Mon, 19 May 2025 21:01:47 -0700 (PDT)
-Received: from localhost.localdomain (c-67-160-120-253.hsd1.wa.comcast.net. [67.160.120.253])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a96de0e5sm6986740b3a.25.2025.05.19.21.01.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 21:01:46 -0700 (PDT)
-From: mhkelley58@gmail.com
-X-Google-Original-From: mhklinux@outlook.com
-To: kys@microsoft.com,
-	haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	deller@gmx.de,
-	javierm@redhat.com,
-	arnd@arndb.de
-Cc: linux-kernel@vger.kernel.org,
-	linux-hyperv@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH v2 1/1] Drivers: hv: Always select CONFIG_SYSFB for Hyper-V guests
-Date: Mon, 19 May 2025 21:01:43 -0700
-Message-Id: <20250520040143.6964-1-mhklinux@outlook.com>
-X-Mailer: git-send-email 2.25.1
-Reply-To: mhklinux@outlook.com
+        d=1e100.net; s=20230601; t=1747713844; x=1748318644;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=o+n9bkF0VD0V2oJ0zneDmypvwTmyRBfAOtjQDo3asjA=;
+        b=uZFMHrnaZ5Tgzu2cAKpzXyyKoL+wDM464J7da78ZfaXz1RtEGD/6m8yd5kqAWheN7d
+         MipE7xV5XfAyqu0wIKwIvlW6pChnPL7IGrx94MitEmVrU0YD49is4LR2/LP+RAld+YLp
+         oFfY3Nh4PXwwyQvcH4MwAlLua4Jo9mWmoPpkC3XfBf4VpAn7lmNUjI4eHoM/ezzROJAH
+         m9btg3MCet3HhJAqQIg9t0cdCBEWIGqp4zuQTxc0KLnb8g/rs70vYbMwkYDNz0S/qW6l
+         IDbEBkgEnW/AKKrX6gNx78GNSQJiDYyX/HBc+A81R1Apq8uT8ih0LDDuey6gkIL4zgNH
+         pBGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVaO6aR4uKKWvNlJrVBCyjS1s2TEx/bSuLLxCVQBscDZGNV99953uNq+KmNSYboQtrWQBpsCfxKqd9nnOU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxrsl8cL83023maxcbcHtiKly3MDDwSHIMVYBtpjZqdP7Kdcomg
+	V+PMG5uUu1hR5JHoBGtxwkzJQC5VkOrzrV6X6X14Y1tV2yTegbsecaZiZptgTjzgteLFGyGTCUg
+	pysW2aqP72HyuiCxQV5NjY9v79gMefW4HJHwf4P6x8NIWKDf0zkrxlbz9TLWl5z/4hF0=
+X-Gm-Gg: ASbGncvGcjOyMZf9bX4tqs3KLhYL+VN5/YmhekPPD+S/VrrjWXK2dy4ILGRFLWkJAnH
+	ygTCCitekw1oJLANMWERUQLORZqwOgQAFum8dpLtgZTYJFmFK2058W7pAMJ1ftTRQOOJIvx+QzM
+	BPxBJzIPC2qR8wYL5acZeoYbb6mWwk4GjKpgGsHvnyrwaVbOcxrnAUDVYt5PBiSR5zU3IEjE3o4
+	H5OofX3XdQsmUyHx4jR9q+Z1OJg36gS9oxL+xWujt20MF7mKT9gUhRTyqNFoIFkJSQDoROY+d7V
+	nxULn/6fslXocR7eJuCFfN/8BHD80dzJzyyHgVxA7Q==
+X-Received: by 2002:a05:6a00:23c8:b0:73c:b86:b47f with SMTP id d2e1a72fcca58-742acc8da94mr19341308b3a.4.1747713844016;
+        Mon, 19 May 2025 21:04:04 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGtuj7Wq5AEHuJuYXpcnavQTfMcYG2SpoMb7J/CFpeG/fY8muA2u1bn6wkzdg+/GXDT/INQfA==
+X-Received: by 2002:a05:6a00:23c8:b0:73c:b86:b47f with SMTP id d2e1a72fcca58-742acc8da94mr19341277b3a.4.1747713843631;
+        Mon, 19 May 2025 21:04:03 -0700 (PDT)
+Received: from [10.92.214.105] ([202.46.23.19])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a970d777sm7243378b3a.68.2025.05.19.21.04.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 19 May 2025 21:04:03 -0700 (PDT)
+Message-ID: <48a98603-d2b0-c279-6b04-0c89baf32d05@oss.qualcomm.com>
+Date: Tue, 20 May 2025 09:34:00 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v4] bus: mhi: host: fix endianness of BHI vector table
+Content-Language: en-US
+To: Alexander Wilhelm <alexander.wilhelm@westermo.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Jeff Hugo <jeff.hugo@oss.qualcomm.com>, mhi@lists.linux.dev,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250519145837.958153-1-alexander.wilhelm@westermo.com>
+From: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+In-Reply-To: <20250519145837.958153-1-alexander.wilhelm@westermo.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: vRmnAxDMf4VAtmIVqirT-v1clyvcThV9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDAzMSBTYWx0ZWRfX0rVn8qMbgsT5
+ VUzMkvvft85JCr/0M07QR65iWV7BKxL43OD2ZCv+ORAKDOnu9qhJSnZpdDYKsl2OmnBuByqhVFq
+ SrNI3VEXnR5SKD5p4ItlCDQ07+E/TzDQgzhs4LmOSA4gR4Ea06O+f07h0wBBv7enjTXkR+FD/76
+ ofvb6we5ne8kDbm2oHPehqpTPPbo1xeTfy0YN544RztqkzpIjN6B1KrQHaliriap+VGyWE40IEV
+ bmSBEBPJblH+bDUl3Qo5HdzEPnmZfoMrTFVALKWBJqLHBye+WafXJ3oZAOafb4WN2yeOWrakVot
+ rDJ77pGhLeYUHbnPWbVidTDF0U9QY5pzHUd6idCtGbSeDVY4YF/QGYiZdy2QQwAyRAE6+sYQQ32
+ FsvJw3Pgk0P8vrAh3lnXD+Mi9Z2kozXvfqvsaljAFe0GxluO3P0A+XR9e1J0CeWWdY3wpjUS
+X-Authority-Analysis: v=2.4 cv=K4giHzWI c=1 sm=1 tr=0 ts=682bff35 cx=c_pps
+ a=WW5sKcV1LcKqjgzy2JUPuA==:117 a=j4ogTh8yFefVWWEFDRgCtg==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=N9GNhs4bAAAA:8 a=EUspDBNiAAAA:8
+ a=QTSRpw9t3mQaVZ-RB_kA:9 a=QEXdDO2ut3YA:10 a=OpyuDcXvxspvyRM73sMx:22
+ a=PZhj9NlD-CKO8hVp7yCs:22
+X-Proofpoint-GUID: vRmnAxDMf4VAtmIVqirT-v1clyvcThV9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-20_02,2025-05-16_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 spamscore=0 mlxlogscore=999 suspectscore=0 phishscore=0
+ clxscore=1015 malwarescore=0 lowpriorityscore=0 impostorscore=0
+ priorityscore=1501 mlxscore=0 adultscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505070000 definitions=main-2505200031
 
-From: Michael Kelley <mhklinux@outlook.com>
 
-The Hyper-V host provides guest VMs with a range of MMIO addresses
-that guest VMBus drivers can use. The VMBus driver in Linux manages
-that MMIO space, and allocates portions to drivers upon request. As
-part of managing that MMIO space in a Generation 2 VM, the VMBus
-driver must reserve the portion of the MMIO space that Hyper-V has
-designated for the synthetic frame buffer, and not allocate this
-space to VMBus drivers other than graphics framebuffer drivers. The
-synthetic frame buffer MMIO area is described by the screen_info data
-structure that is passed to the Linux kernel at boot time, so the
-VMBus driver must access screen_info for Generation 2 VMs. (In
-Generation 1 VMs, the framebuffer MMIO space is communicated to
-the guest via a PCI pseudo-device, and access to screen_info is
-not needed.)
 
-In commit a07b50d80ab6 ("hyperv: avoid dependency on screen_info")
-the VMBus driver's access to screen_info is restricted to when
-CONFIG_SYSFB is enabled. CONFIG_SYSFB is typically enabled in kernels
-built for Hyper-V by virtue of having at least one of CONFIG_FB_EFI,
-CONFIG_FB_VESA, or CONFIG_SYSFB_SIMPLEFB enabled, so the restriction
-doesn't usually affect anything. But it's valid to have none of these
-enabled, in which case CONFIG_SYSFB is not enabled, and the VMBus driver
-is unable to properly reserve the framebuffer MMIO space for graphics
-framebuffer drivers. The framebuffer MMIO space may be assigned to
-some other VMBus driver, with undefined results. As an example, if
-a VM is using a PCI pass-thru NVMe controller to host the OS disk,
-the PCI NVMe controller is probed before any graphics devices, and the
-NVMe controller is assigned a portion of the framebuffer MMIO space.
-Hyper-V reports an error to Linux during the probe, and the OS disk
-fails to get setup. Then Linux fails to boot in the VM.
-
-Fix this by having CONFIG_HYPERV always select SYSFB. Then the
-VMBus driver in a Gen 2 VM can always reserve the MMIO space for the
-graphics framebuffer driver, and prevent the undefined behavior. But
-don't select SYSFB when building for HYPERV_VTL_MODE as VTLs other
-than VTL 0 don't have a framebuffer and aren't subject to the issue.
-Adding SYSFB in such cases is harmless, but would increase the image
-size for no purpose.
-
-Fixes: a07b50d80ab6 ("hyperv: avoid dependency on screen_info")
-Signed-off-by: Michael Kelley <mhklinux@outlook.com>
-Reviewed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
----
-Changes in v2:
-* Made "select SYSFB" conditional on not being a build for
-  VTL mode (Saurabh Sengar)
-
- drivers/hv/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
-index eefa0b559b73..1cd188b73b74 100644
---- a/drivers/hv/Kconfig
-+++ b/drivers/hv/Kconfig
-@@ -9,6 +9,7 @@ config HYPERV
- 	select PARAVIRT
- 	select X86_HV_CALLBACK_VECTOR if X86
- 	select OF_EARLY_FLATTREE if OF
-+	select SYSFB if !HYPERV_VTL_MODE
- 	help
- 	  Select this option to run Linux as a Hyper-V client operating
- 	  system.
--- 
-2.25.1
-
+On 5/19/2025 8:28 PM, Alexander Wilhelm wrote:
+> On big endian platform like PowerPC the MHI bus does not start properly.
+> The following example shows the error messages by using qcn9274 wireless
+> radio module with ath12k driver:
+> 
+>      ath12k_pci 0001:01:00.0: BAR 0: assigned [mem 0xc00000000-0xc001fffff 64bit]
+>      ath12k_pci 0001:01:00.0: MSI vectors: 1
+>      ath12k_pci 0001:01:00.0: Hardware name: qcn9274 hw2.0
+>      ath12k_pci 0001:01:00.0: failed to set mhi state: POWER_ON(2)
+>      ath12k_pci 0001:01:00.0: failed to start mhi: -110
+>      ath12k_pci 0001:01:00.0: failed to power up :-110
+>      ath12k_pci 0001:01:00.0: failed to create soc core: -110
+>      ath12k_pci 0001:01:00.0: failed to init core: -110
+>      ath12k_pci: probe of 0001:01:00.0 failed with error -110
+> 
+> Fix it by swapping DMA address and size of the BHI vector table.
+> 
+> Fixes: 6cd330ae76ff ("bus: mhi: core: Add support for ringing channel/event ring doorbells")
+> Signed-off-by: Alexander Wilhelm <alexander.wilhelm@westermo.com>
+> Reviewed-by: Jeff Hugo <jeff.hugo@oss.qualcomm.com>
+Reviewed-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> ---
+> Changes in v2:
+>    - Set __le64 type for dma_addr and size.
+> 
+> Changes in v3:
+>    - Improve the clarity of the commit message.
+> 
+> Changes in v4:
+>    - Add missing fixes tag.
+>    - Fix commit message character width.
+> 
+>   drivers/bus/mhi/host/boot.c     | 8 ++++----
+>   drivers/bus/mhi/host/internal.h | 4 ++--
+>   2 files changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/bus/mhi/host/boot.c b/drivers/bus/mhi/host/boot.c
+> index efa3b6dddf4d..205d83ac069f 100644
+> --- a/drivers/bus/mhi/host/boot.c
+> +++ b/drivers/bus/mhi/host/boot.c
+> @@ -31,8 +31,8 @@ int mhi_rddm_prepare(struct mhi_controller *mhi_cntrl,
+>   	int ret;
+>   
+>   	for (i = 0; i < img_info->entries - 1; i++, mhi_buf++, bhi_vec++) {
+> -		bhi_vec->dma_addr = mhi_buf->dma_addr;
+> -		bhi_vec->size = mhi_buf->len;
+> +		bhi_vec->dma_addr = cpu_to_le64(mhi_buf->dma_addr);
+> +		bhi_vec->size = cpu_to_le64(mhi_buf->len);
+>   	}
+>   
+>   	dev_dbg(dev, "BHIe programming for RDDM\n");
+> @@ -431,8 +431,8 @@ static void mhi_firmware_copy_bhie(struct mhi_controller *mhi_cntrl,
+>   	while (remainder) {
+>   		to_cpy = min(remainder, mhi_buf->len);
+>   		memcpy(mhi_buf->buf, buf, to_cpy);
+> -		bhi_vec->dma_addr = mhi_buf->dma_addr;
+> -		bhi_vec->size = to_cpy;
+> +		bhi_vec->dma_addr = cpu_to_le64(mhi_buf->dma_addr);
+> +		bhi_vec->size = cpu_to_le64(to_cpy);
+>   
+>   		buf += to_cpy;
+>   		remainder -= to_cpy;
+> diff --git a/drivers/bus/mhi/host/internal.h b/drivers/bus/mhi/host/internal.h
+> index ce566f7d2e92..1dbc3f736161 100644
+> --- a/drivers/bus/mhi/host/internal.h
+> +++ b/drivers/bus/mhi/host/internal.h
+> @@ -25,8 +25,8 @@ struct mhi_ctxt {
+>   };
+>   
+>   struct bhi_vec_entry {
+> -	u64 dma_addr;
+> -	u64 size;
+> +	__le64 dma_addr;
+> +	__le64 size;
+>   };
+>   
+>   enum mhi_fw_load_type {
