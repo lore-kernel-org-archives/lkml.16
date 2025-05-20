@@ -1,127 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32091280014;
-	Tue, 20 May 2025 18:28:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ADF225B1D8
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 18:28:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747765707; cv=none; b=hc2tYhksUdyvaqHMrzWsdqPHI7ufW5kMpZUATrK0WjmDJJamNLLI/rNO4gfyQyruMKzb4Ftg3sggRCXg6/ul19NjvE06NH/buFjuDLdMwruddEHYiFUEs5HY/IdLT2kxXIjC0Qu8Mp5yPqzN6BzXrA2xYbosGJ178M+A3OPtyHI=
+	t=1747765730; cv=none; b=qfJNMNDFAQwnvLVFO2o+5xgBcpbxjTbMCHkIecCCB6RTaNNTjXOhzhmmIqvJCbuHGA/NAlMaLqQSjvwRjZLrWiF0tv0aJc1eb35Jhfwosc5qSc0kUMOwNDQopWxCZw/q/coLEFfCrsSpgzscaibazDXkhHi+uIXsK3bjPwEHw9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747765707; c=relaxed/simple;
-	bh=Oh+ozRH8AQMk1Jb1BacF6n/ihKBHkHpapFNRAZvVOZE=;
+	s=arc-20240116; t=1747765730; c=relaxed/simple;
+	bh=zeB46xGsrjZ7JRG5Aj0J31/1Fuw08jBiwz2TGCaTHJc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=E8AxBz+0wHRgvzvVGtvRKtlN/y9mgcFwtzgswX7G3VqQbuP3qfS0+UQ9YHCyoJ+cCr4hOatRag1S4rdlizrGDoW/sWsAiia1DsyCzRLVjWZatpIGbZWqLmK7GDWd2LaFSPeD/Nhgmq7Bw9Eyt7/9W4bQdLN/EWhl1lQNAeIw7v0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KabN3m8A; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=H5lnJMXcaAU/sn3SYy8TU8vREm3IguzeUAJ3kCmHuX5MTFbvrYbljnRveNbmKNqBWSz+CAA9gWaLzQs76NANk9RAJ/vw5trc8sKs2+ero09S1cZ+Sp1JWdY5l+Ii3DzJ4YwozYDHsJyAU4vcMeWnm0PD9A3Ildfg5jv/R3xg7Hc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=dUxF+ldl; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KabN3m8A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC8C2C4CEF1;
-	Tue, 20 May 2025 18:28:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747765706;
-	bh=Oh+ozRH8AQMk1Jb1BacF6n/ihKBHkHpapFNRAZvVOZE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=KabN3m8Aw3zZxEyxdGMwC47DMZNBoFV2ViaKJAhuQ/u+bW9LwBEHluK5HzwSnbftO
-	 l8bkbWoCKhyP2/xCBNSa3aI73Gih/A2Z2tWg1pfz5IxMEyrA6z01NjfCnME31/uPPx
-	 Elnzlw6cArDWFoUPNrTboGb4bZgGGYb7Xx9Cc/GN+Gt/kXfL25lDMXEmpfQpCCuCG2
-	 hnktsG77ejE+Xumg3XN8FxnSwSeZBZAFg+pNCQ4TR7ZLJfg1vVY5dAOELpjUw4c1p/
-	 gHjAvYPruYKUvH2LU+PVPrBY4JNaid8Xzv4b43/TqhptehN2DvF1NfoDTcBX84RSgY
-	 /ANR4/rISguSg==
-Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-40331f302f1so3867898b6e.2;
-        Tue, 20 May 2025 11:28:26 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVq9MR/hxjd4TJoKpYumbqusZYMOcC3CgzjnGVcsTesMbZ3bvrsW/Qfe61+ncqtS7pWIMmJa2qEg/nAEWg=@vger.kernel.org, AJvYcCXn7U1QXiCGGjnItEHtCOMMXrCp+n56SAKatlB3k+aAnh2nwn/MqxEbcUSuHyUbaxgLDW6ue8zXLFM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSbA1xUK/7dYJZoAIXxdTIkD1zyNgeRuN2dbuE8QFJaaZ+s4d6
-	4twppEnmp4SEZWBJyvFgEL4GVmJzx81tGB0fXsai7ZWl3RY915Xwwsauf4vCHX0ADbTrqRTrSI3
-	V415kOQs32iPEwbo7rXnrVntszR6Wo/g=
-X-Google-Smtp-Source: AGHT+IHUWBgovbnQBup2K25sSKTbKau3dBTRCvED87qiec8fCfdEaJsIHLdYccrxO4AUMXP2EbznX8MOrYpB5EDpK2E=
-X-Received: by 2002:a05:6808:6d0:b0:3fb:a7d0:3b1f with SMTP id
- 5614622812f47-404d88a65b2mr9913404b6e.39.1747765706030; Tue, 20 May 2025
- 11:28:26 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="dUxF+ldl"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-6021b8b2c5fso1368008a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 11:28:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1747765726; x=1748370526; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=fQbIdXejFm38skr3lFeOE2v9r10+iL7vwnfvDB5rB6A=;
+        b=dUxF+ldl0nkI21hU3wpcL7IHe1lvaPnKMKZnMS4lJsFpCuC8j/X9HG9W5MarJLYlMH
+         PTyLEiZsxdUL+m4v/Vw3clpPADx9PNyDjwk7b6lKFw74zlm/+K3TZCERswClQw5qX3Mw
+         gkZN8XpkOCD8MCZoIkF1ibbRq2R1zrzkD3KJ4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747765726; x=1748370526;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fQbIdXejFm38skr3lFeOE2v9r10+iL7vwnfvDB5rB6A=;
+        b=Sg7YaT7S2g0dhVKbW6c7ICpWkMCwZ3UYQ4A6cfe1R/w7R9cxj2O+QFcD8n9C6uR7ge
+         Za3BWT/hzPzznTn/TXXs9wFlK/NiHInIXGSRg60sPkwrpmsRL8QpZFC9pfyNu8vhLE+1
+         r+PbN0+SR0D8n9K6JvZlgSflCRnRTszcJhcdauP4NM57hoi3ON8lZ+Z8dgOLvZFTjTTP
+         Jb/3pLV6rAvlmsZmQJx0UbWyOB7PY92ls902gLXzsmjcgkxAtmmElR0NfVI9qG4YIjdX
+         Mrxkfr2MKzWaJpmui8VEi4fnfXXDTjL3EnA5opf8kEaXuDHO0vvxe8i9ym9jpfY8BS11
+         5+ow==
+X-Forwarded-Encrypted: i=1; AJvYcCVqNOtC+gkdFwDo4aTzSk5H6W9paWZ280fpC07oT0h2COXq5+rEETBnx3QTlggV9wquDUwKRvV09wvrofI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIXjFkfVV6Ifw85QXKgP74QGg8TiEt18tGfp6cIVl78EvDORGv
+	m0Xbl0oe0BuAE4UBF45qpoQalDz2X6ar5LIWLGKzz3T+36921HKhwjmtqRzyfVdqrCEN4RXDE4a
+	gCsvEGXw=
+X-Gm-Gg: ASbGncsPqG6tnSpSO+ocmGiVnkQxBsVQfSsSv9fRgX2MU/N7FLunj3aEf+ekDlwo2Rc
+	hPbJzrMyIonmyDoT9tKcmxRklcy3LE0YLVJ5OcXBdEr+6/neXg9vas3VO9LkVlTI76xw0Sepj9b
+	bikEK3pHxLZAMUlAqdo1vaCS2iuJKOjFhB05tlpszS232/3pqyDl90yIJNPZ6JYp1sy0crAotSP
+	5h53HnEdNB/qkUnaDdXFSYAjdz9cuGswQHCveQPNaplpF0crsLxtCv/RGWgrzokETXR1jktUNv9
+	b+9ONUGDiYFMRfSqGmTevuqXBpM8GTE6czcuc7JAY8L+AmJltbsdQzEPFbwK/udyDahC9ep47RT
+	t+trK95T9ghGT9ghQOU8wzrZvmw==
+X-Google-Smtp-Source: AGHT+IG1sh9x/aownzCoMBEarI68102aTsmH6pdCK5+Wo7ysRUAQKPX2xBP1B+/wUiLHAp/Xz9WlKg==
+X-Received: by 2002:a05:6402:13cf:b0:601:fcc7:44fa with SMTP id 4fb4d7f45d1cf-601fcc74949mr6091315a12.30.1747765726402;
+        Tue, 20 May 2025 11:28:46 -0700 (PDT)
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com. [209.85.218.47])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6004d501f7asm7523454a12.19.2025.05.20.11.28.45
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 May 2025 11:28:45 -0700 (PDT)
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ace94273f0dso1016239466b.3
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 11:28:45 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVoIe5gUfyTbGf4mgxSvJ3hF2JbFZOPjqiuk8XVR9u/OZeINiYSagcfHO05EbnmB1xNZ2bVOrH2iPDHKcM=@vger.kernel.org
+X-Received: by 2002:a17:907:1c11:b0:ad2:48f4:5969 with SMTP id
+ a640c23a62f3a-ad52d53e79emr1673656266b.28.1747765724806; Tue, 20 May 2025
+ 11:28:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250512-temp-v2-1-048be58eaaa5@chromium.org>
-In-Reply-To: <20250512-temp-v2-1-048be58eaaa5@chromium.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Tue, 20 May 2025 20:28:15 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gqe2SVU3kTkb3V25kax1dyfW5HjcmJba1bcCcS-BxkdQ@mail.gmail.com>
-X-Gm-Features: AX0GCFvngb3zaLTCdGMCDoQ7oil8hZwqO52U3TwhpJ_nKhx55gtiLB6nA1eCGZI
-Message-ID: <CAJZ5v0gqe2SVU3kTkb3V25kax1dyfW5HjcmJba1bcCcS-BxkdQ@mail.gmail.com>
-Subject: Re: [PATCH v2] thermal: sysfs: Return ENODATA instead of EAGAIN for reads
-To: Hsin-Te Yuan <yuanhsinte@chromium.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <20250520104138.2734372-9-ardb+git@google.com> <20250520104138.2734372-11-ardb+git@google.com>
+ <awmpxjln22i5zmnv3wcwhzvpbbjqmhiw3onmpq66owbtdoujs5@f336cwpvlasn>
+ <CAMj1kXE+2P6_y0SnmtmD=J42pe67itnr5jQs6NxjMTvV7HHp0A@mail.gmail.com>
+ <20250520143532.GMaCyTNJqH_T2LR8q5@fat_crate.local> <CAMj1kXFxRZWsML_5FZvZjwOPO8cvsAwDqvX1686bqqfqkD_PHg@mail.gmail.com>
+ <20250520173825.GOaCy-Eekk661c94ne@fat_crate.local> <CAMj1kXHpFK+=1gdo11Msw9w6gh2f-4gnSCkyA5kaB_x4mafS5A@mail.gmail.com>
+ <20250520180101.GPaCzDXW2MlArU71xe@fat_crate.local>
+In-Reply-To: <20250520180101.GPaCzDXW2MlArU71xe@fat_crate.local>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 20 May 2025 11:28:28 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whdFESwxUMvyMGuXzpCA6cm0d5kAc57fGWkWs0DLEi9qw@mail.gmail.com>
+X-Gm-Features: AX0GCFvx55pH6JB6fdIpvtVTiryF5OzpJ0KhFwXnhgyf_9vqtDfdEgXeIu5p8K8
+Message-ID: <CAHk-=whdFESwxUMvyMGuXzpCA6cm0d5kAc57fGWkWs0DLEi9qw@mail.gmail.com>
+Subject: Re: [PATCH v5 2/7] x86/mm: Use a single cache hot per-CPU variable to
+ record pgdir_shift
+To: Borislav Petkov <bp@alien8.de>
+Cc: Ard Biesheuvel <ardb@kernel.org>, "Kirill A. Shutemov" <kirill@shutemov.name>, 
+	Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
+	Ingo Molnar <mingo@kernel.org>, Brian Gerst <brgerst@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 12, 2025 at 7:53=E2=80=AFAM Hsin-Te Yuan <yuanhsinte@chromium.o=
-rg> wrote:
+On Tue, 20 May 2025 at 11:01, Borislav Petkov <bp@alien8.de> wrote:
 >
-> According to POSIX spec, EAGAIN returned by read with O_NONBLOCK set
-> means the read would block. Hence, the common implementation in
-> nonblocking model will poll the file when the nonblocking read returns
-> EAGAIN. However, when the target file is thermal zone, this mechanism
-> will totally malfunction because thermal zone doesn't implement sysfs
-> notification and thus the poll will never return.
+> OMG. :-)
 >
-> For example, the read in Golang implemnts such method and sometimes
-> hangs at reading some thermal zones via sysfs.
->
-> Change to throw ENODATA instead of EAGAIN to userspace.
->
-> Signed-off-by: Hsin-Te Yuan <yuanhsinte@chromium.org>
-> ---
-> Changes in v2:
-> - Modify commit message to make it clear
-> - Link to v1: https://lore.kernel.org/r/20250409-temp-v1-1-9a391d8c60fd@c=
-hromium.org
-> ---
->  drivers/thermal/thermal_sysfs.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/thermal/thermal_sysfs.c b/drivers/thermal/thermal_sy=
-sfs.c
-> index 24b9055a0b6c515b865e0d7e2db1d0de176ff767..3d1713e053dfb867933d95131=
-f1f2491d2ecd07e 100644
-> --- a/drivers/thermal/thermal_sysfs.c
-> +++ b/drivers/thermal/thermal_sysfs.c
-> @@ -40,8 +40,11 @@ temp_show(struct device *dev, struct device_attribute =
-*attr, char *buf)
->
->         ret =3D thermal_zone_get_temp(tz, &temperature);
->
-> -       if (ret)
-> +       if (ret) {
-> +               if (ret =3D=3D -EAGAIN)
-> +                       return -ENODATA;
->                 return ret;
-> +       }
+> # 32 "./arch/x86/include/asm/pgtable_64_types.h" 1
+>         movb %gs:__pgdir_shift(%rip), %al       #, pfo_val__
+> # 0 "" 2
+> # ./arch/x86/include/asm/pgtable.h:1178:        if (!pgtable_l5_enabled())
+> #NO_APP
+>         testb   $1, %al #, pfo_val__
 
-I would prefer to do
+That's garbage.
 
-if (ret =3D=3D -EAGAIN)
-        return -ENODATA;
+Gcc should be able to turn it into just a
 
-if (ret)
-        return ret;
+        testb $1,%gs:__pgdir_shift(%rip)
 
-here or even
+What happens if pgtable_l5_enabled() is made to use  __raw_cpu_read()?
+With a compiler that is new enough to support USE_X86_SEG_SUPPORT?
 
-if (!ret)
-        return sprintf(buf, "%d\n", temperature);
+Oh, and it looks like we messed up __raw_cpu_read_stable(), because
+that *always* uses the inline asm, so it doesn't allow the compiler to
+just DTRT and do things like the above.
 
-if (ret =3D=3D -EAGAIN)
-        return -ENODATA;
-
-return ret;
-
-if you want to optimize for the success case.
-
->
->         return sprintf(buf, "%d\n", temperature);
->  }
->
-> ---
+                Linus
