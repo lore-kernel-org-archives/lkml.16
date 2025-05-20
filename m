@@ -1,220 +1,133 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0344265CAC
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 09:10:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1A2C265CAF;
+	Tue, 20 May 2025 09:11:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747732211; cv=none; b=uKj1Wz42g5P/I2ehNM9wVVSGusqVveDR5GGRDGmXZXhmylyWjKuQdWTUhJWc+vaBBdiVdB7iYmdzNqY+MmqYAZcp6bllAfSf3z2ydf+4e/i5A7EJyQo+yL9RxCWGNa2mzpp2o1pbUaXp5uZeCiPUpx5zpUKnnjpQAdNrt8+GTIo=
+	t=1747732313; cv=none; b=HYOpVabVhV+R5UzZR9u4nIpcblkTKi/GpJjKd/aDSeT8T/0sRPcztgY/1V5sfZ0zl7Fgr68IOZvjqHRDYpiJJHb2y7O3FuNOZwLxE/P7caclOAlutSbanSuCSAKtoAskmTMQcjS7RSzqjxNFtnTNCfgm1b1sD5JiI5TuwAbnkQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747732211; c=relaxed/simple;
-	bh=QRmAV0gSmSUP0f7c6LscqVGt+B1LZxtU9Yvv7ylAOYw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tEa4VSXPV8voiBT1PCKrs3SIsYUq0JC4e/Le6wmEn4DiHwSMz6/SpFRDHFl6MJNnUtWIzxQ49+/0rPtQF77QrwCJiD6cE/Kl1282HB3Giu4rbVEBS7Ulmx3p5uEl4s8487MeWrsINdgJdMADpN2I/M7NynHKMy+DN8tZ22NJUi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iFS60y68; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iFS60y68"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747732208;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=PSR1/u0V+jGJxOjEFN3NNH+g3uaL+3CXLAVsxo/mjXA=;
-	b=iFS60y68GT4M+9gWLvpuOHNQG/W+/UXWaO9Iprtr5RKirX5PV1Ih2V4FXfG2H8PEnhMquc
-	VVY5he5My9LgFvLWASfJoBj7vCZnVVTvWnj4mP0WCajRycBm417Ld4xNbSdRJNjmEfa5Ut
-	cUwWS3hqQlRx9x//kHNLxbCUcHGzdg0=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-393-xKiuuq7WNwSSR1EGAO8FAQ-1; Tue, 20 May 2025 05:10:07 -0400
-X-MC-Unique: xKiuuq7WNwSSR1EGAO8FAQ-1
-X-Mimecast-MFC-AGG-ID: xKiuuq7WNwSSR1EGAO8FAQ_1747732206
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43ce8f82e66so28445715e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 02:10:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747732206; x=1748337006;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=PSR1/u0V+jGJxOjEFN3NNH+g3uaL+3CXLAVsxo/mjXA=;
-        b=m89u33mJ1oMo0vo3xBxdJ/fvHVop2N0Luwc/+x05KKnAateVCIfOmBtaeajKw8Bbua
-         YIP+9b3YxzsvAvytw3ksSu7L5FRy9bqrgqabgK7okrQ4kALVT5UF9G08vPu84tb8DPYc
-         5u4QwOv6hgVImXgawbWMoBHcaCFBtP5Bm8QqGdxBcmY3VrD+m/sWwltyUMxbEB67t7xG
-         tPnChSYqXycpXFesENBXHIJlP9uUqapw919jhZdcRAiHSdeHlztmxUivPzPzNCqUJWqL
-         MkSy105JJ0QFhSS+2oECuv92BKzz+zmkCWVMUAacsVJKxXgyNw3JfyU7ShyNTULgnsJb
-         7EHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWxeuCw4h/lwe+SLqDtV9536/8eyN3XY4UPYIbEDgyeJvY83alsHWaBRtVNyI0GpXQ6KaGXuqY5JF5KQHY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyg5DpCaSWridf2sRcb9g0AQqHo2mINqqXuWMVNzT5YPUHz382U
-	Syi8/ZhN9hhj5ly/ovuVh4tbMTzpJnyH7QwRdxAKGBDw9UF/gY9fs9avKp78l57fkUwRVT+eTXa
-	fqkXzIqJ2ZK61aPdGFWQkxet+mqpr28hxwrLXcmjjVXDZ7+ILLaqIU6b1bxm2WpTJORDzTkvvoy
-	7O
-X-Gm-Gg: ASbGnctsUsxmb3NPGMr6rqQ1qH5M3w+bUg8wlwtz3si1hDcvGcdE87meu/0omIxPjWm
-	Uz+arQn8WMEkM87En7K+ZBVsE+/AueHKgqx7BdhMShUl9sxDBqQ4/mewrusSULyoF5c9NpwvgFK
-	LkOhyNWwpcp9SlK4CK2Lg5FQ2TFn1Sre5Wlp/SBIzITZiT1GMmBmZ3m8nJexyV3FqkullhSWFHv
-	mGv+OXkXqDltBoays7UkN3yBI5yTR8LoR+OBT+LP8WkB+KtLHpYFKBipLT/WAjq/ko2Jw987jFR
-	QgqDVzO+cp8UHfgRpUg9hXDU8QP81qRU160bsu8dqWxWzw6QxNVOy8CH30qiA6d5wt2aJyx+c9Y
-	VUk/TryhEv96T3L1sDPxBDqv30zSlazWUMYWtAV8=
-X-Received: by 2002:a05:600c:5008:b0:442:f482:c429 with SMTP id 5b1f17b1804b1-442fd622da0mr155950815e9.8.1747732206183;
-        Tue, 20 May 2025 02:10:06 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFg+fp/L4WVymGk9SPSBtpbctVG+Z2wbaOjNHfL4pL3y/IW6svbACJGKerPgXy0imMXlFDQmw==
-X-Received: by 2002:a05:600c:5008:b0:442:f482:c429 with SMTP id 5b1f17b1804b1-442fd622da0mr155950525e9.8.1747732205777;
-        Tue, 20 May 2025 02:10:05 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f16:e400:525a:df91:1f90:a6a8? (p200300d82f16e400525adf911f90a6a8.dip0.t-ipconnect.de. [2003:d8:2f16:e400:525a:df91:1f90:a6a8])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f1825457sm24064175e9.1.2025.05.20.02.10.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 May 2025 02:10:05 -0700 (PDT)
-Message-ID: <021dfe38-f786-46d0-a43f-769aff07b3f0@redhat.com>
-Date: Tue, 20 May 2025 11:10:04 +0200
+	s=arc-20240116; t=1747732313; c=relaxed/simple;
+	bh=IvLR8yZS+D6mKrd0DI6pDluppOn6eKtfkIRPLs4fZFI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ruN8h19K1NI+R7knMa+hZgM+wNDEfJ97Y+MSINKtAn0zz/N5V/D0nuL4qoIeWk9/TuHMrPso5ucDwOCDTkNJtNeJz0Sw+3mZh3G74BSy/pYLxw1g2tdbvnAEhwctOAUUrhWvwUGiMyJ4oGxKFWf9jOzWyL4qjlE3q3+ASxf5Vmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 725ad2b6355a11f0b29709d653e92f7d-20250520
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:87f64f3f-8ff6-4a5d-836f-e892fc7371f5,IP:0,U
+	RL:0,TC:0,Content:39,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:39
+X-CID-META: VersionHash:6493067,CLOUDID:fd4d755d8717728699b6f10f854a64c4,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:4|50,EDM:-3,IP:nil,UR
+	L:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,S
+	PR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 725ad2b6355a11f0b29709d653e92f7d-20250520
+Received: from node4.com.cn [(10.44.16.170)] by mailgw.kylinos.cn
+	(envelope-from <aichao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1902263896; Tue, 20 May 2025 17:11:43 +0800
+Received: from node4.com.cn (localhost [127.0.0.1])
+	by node4.com.cn (NSMail) with SMTP id A477B16003840;
+	Tue, 20 May 2025 17:11:42 +0800 (CST)
+X-ns-mid: postfix-682C474E-846621685
+Received: from kylin-pc.. (unknown [172.25.130.133])
+	by node4.com.cn (NSMail) with ESMTPA id 3F67B16001CC7;
+	Tue, 20 May 2025 09:11:36 +0000 (UTC)
+From: Ai Chao <aichao@kylinos.cn>
+To: johannes@sipsolutions.net,
+	perex@perex.cz,
+	tiwai@suse.com,
+	shengjiu.wang@gmail.com,
+	Xiubo.Lee@gmail.com,
+	festevam@gmail.com,
+	nicoleotsuka@gmail.com,
+	lgirdwood@gmail.com,
+	broonie@kernel.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	jbrunet@baylibre.com,
+	neil.armstrong@linaro.org,
+	khilman@baylibre.com,
+	martin.blumenstingl@googlemail.com,
+	srinivas.kandagatla@linaro.org,
+	kuninori.morimoto.gx@renesas.com,
+	zhangzekun11@huawei.com,
+	krzysztof.kozlowski@linaro.org,
+	ckeepax@opensource.cirrus.com,
+	drhodes@opensource.cirrus.com,
+	alexey.klimov@linaro.org
+Cc: linuxppc-dev@lists.ozlabs.org,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-amlogic@lists.infradead.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	Ai Chao <aichao@kylinos.cn>
+Subject: [PATCH 0/6] Use helper function for_each_child_of_node_scoped()
+Date: Tue, 20 May 2025 17:11:25 +0800
+Message-ID: <20250520091131.4150248-1-aichao@kylinos.cn>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] arm64: Restrict pagetable teardown to avoid false
- warning
-To: Dev Jain <dev.jain@arm.com>, ryan.roberts@arm.com
-Cc: anshuman.khandual@arm.com, catalin.marinas@arm.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- mark.rutland@arm.com, stable@vger.kernel.org, will@kernel.org,
- yang@os.amperecomputing.com
-References: <df7eb016-bea4-489d-aecb-1a47eb5e33b2@arm.com>
- <20250520090501.27273-1-dev.jain@arm.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250520090501.27273-1-dev.jain@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
-On 20.05.25 11:05, Dev Jain wrote:
-> On 19/05/2025 13:16, David Hildenbrand wrote:
->> On 19.05.25 11:08, Ryan Roberts wrote:
->>> On 18/05/2025 10:54, Dev Jain wrote:
->>>> Commit 9c006972c3fe removes the pxd_present() checks because the caller
->>>
->>> nit: please use the standard format for describing commits: Commit 9c006972c3fe
->>> ("arm64: mmu: drop pXd_present() checks from pXd_free_pYd_table()")
->>>
->>>> checks pxd_present(). But, in case of vmap_try_huge_pud(), the caller only
->>>> checks pud_present(); pud_free_pmd_page() recurses on each pmd through
->>>> pmd_free_pte_page(), wherein the pmd may be none. Thus it is possible to
->>>> hit a warning in the latter, since pmd_none => !pmd_table(). Thus, add
->>>> a pmd_present() check in pud_free_pmd_page().
->>>>
->>>> This problem was found by code inspection.
->>>>
->>>> This patch is based on 6.15-rc6.
->>>
->>> nit: please remove this to below the "---", its not part of the commit log.
->>>
->>>>
->>>> Fixes: 9c006972c3fe (arm64: mmu: drop pXd_present() checks from
->>>> pXd_free_pYd_table())
->>>>
->>>
->>> nit: remove empty line; the tags should all be in a single block with no empty
->>> lines.
->>>
->>>> Cc: <stable@vger.kernel.org>
->>>> Reported-by: Ryan Roberts <ryan.roberts@arm.com>
->>>> Signed-off-by: Dev Jain <dev.jain@arm.com>
->>>> ---
->>>> v1->v2:
->>>>    - Enforce check in caller
->>>>
->>>>    arch/arm64/mm/mmu.c | 3 ++-
->>>>    1 file changed, 2 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
->>>> index ea6695d53fb9..5b1f4cd238ca 100644
->>>> --- a/arch/arm64/mm/mmu.c
->>>> +++ b/arch/arm64/mm/mmu.c
->>>> @@ -1286,7 +1286,8 @@ int pud_free_pmd_page(pud_t *pudp, unsigned long addr)
->>>>        next = addr;
->>>>        end = addr + PUD_SIZE;
->>>>        do {
->>>> -        pmd_free_pte_page(pmdp, next);
->>>> +        if (pmd_present(*pmdp))
->>>
->>> pmd_free_pte_page() is using READ_ONCE() to access the *pmdp to ensure it can't
->>> be torn. I suspect we don't technically need that in these functions because
->>> there can be no race with a writer.
->>
->> Yeah, if there is no proper locking in place the function would already
->> seriously mess up (double freeing etc).
-> 
-> Indeed; there is no locking, but this portion of the vmalloc VA space has been
-> allocated to us exclusively, so we know there can be no one else racing.
-> 
->>
->>> But the arm64 arch code always uses
->>> READ_ONCE() for dereferencing pgtable entries for safely. Perhaps we should be
->>> consistent here?
->>
->> mm/vmalloc.c:   if (pmd_present(*pmd) && !pmd_free_pte_page(pmd, addr))
-> 
-> Yes, I saw that. I know that we don't technically need READ_ONCE(). I'm just
-> proposng that for arm64 code we should be consistent with what it already does.
-> See Commit 20a004e7b017 ("arm64: mm: Use READ_ONCE/WRITE_ONCE when accessing
-> page tables")
-> 
-> So I'll just use pmdp_get()?
+This patch series introduces wrapper functions
+for_each_child_of_node_scoped().=20
 
-Maybe that's the cleanest approach. Likely also common code should use 
-that at some point @Ryan?
+The for_each_child_of_node_scoped() helper provides a scope-based clean-u=
+p
+functionality to put the device_node automatically, and as such, there is
+no need to call of_node_put() directly.
 
--- 
-Cheers,
+Thus, use this helper to simplify the code.
 
-David / dhildenb
+Summary:
+
+ - Patch 1 ASoC: ppc: Use helper function for_each_child_of_node_scoped()
+
+ - Patch 2 ASoC: aoa: Use helper function for_each_child_of_node_scoped()
+
+ - Patch 3 ASoC: renesas: Use helper function for_each_child_of_node_scop=
+ed()
+
+ - Patch 4 ASoC: meson: Use helper function for_each_child_of_node_scoped=
+()
+
+ - Patch 5 ASoC: imx-card: Use helper function for_each_child_of_node_sco=
+ped()
+
+ - Patch 6 ASoC: qcom: Use helper function for_each_child_of_node_scoped(=
+)
+
+ sound/aoa/soundbus/i2sbus/core.c   |  5 ++--
+ sound/ppc/tumbler.c                |  5 ++--
+ sound/soc/fsl/imx-card.c           | 13 ++++------
+ sound/soc/meson/axg-card.c         |  3 +--
+ sound/soc/meson/meson-card-utils.c | 14 +++--------
+ sound/soc/qcom/lpass-cpu.c         |  3 +--
+ sound/soc/qcom/qdsp6/q6afe-dai.c   |  3 +--
+ sound/soc/qcom/qdsp6/q6asm-dai.c   |  4 +--
+ sound/soc/renesas/rcar/core.c      | 39 ++++++++++--------------------
+ sound/soc/renesas/rcar/ctu.c       |  8 ++----
+ sound/soc/renesas/rcar/dma.c       |  4 +--
+ sound/soc/renesas/rcar/dvc.c       |  8 ++----
+ sound/soc/renesas/rcar/mix.c       |  8 ++----
+ sound/soc/renesas/rcar/src.c       | 10 ++------
+ sound/soc/renesas/rcar/ssi.c       | 18 ++++----------
+ sound/soc/renesas/rcar/ssiu.c      |  7 ++----
+ 16 files changed, 47 insertions(+), 105 deletions(-)
+
+--=20
+2.47.1
 
