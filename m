@@ -1,125 +1,109 @@
-Received: from smtpbgeu1.qq.com (smtpbgeu1.qq.com [52.59.177.22])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28A0F2E628;
-	Tue, 20 May 2025 01:49:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.59.177.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B617E1C3C08;
+	Tue, 20 May 2025 01:52:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747705795; cv=none; b=rWsIFvMB7nCHcs7bab2ISJXzYebHFgLl4WV0AaRpUu47I7tZak9erDxphrhlBEN9dq3peMo9VpWdVU4pAlumtfdGvsxXKbsKHcRZpCABflfDAI9fn/jjntb0xSsXY15PRwj7S5YjeVyMLx6T2p4OKd/9nJJqvLtdhFyMyuPCc2s=
+	t=1747705967; cv=none; b=TPT3Lsmj/KTgQR6J+VXp+tMJRluI7nELb/x3HqWdUoJuVEW0ZHXpSZqubzzDeQDoOMFHlQ4YffAWTMGSjBcupsrU0iPJpHwAt2ugquC8mlN1cONO0puvS9i1Rc3HJeX8F7MjE9oAgrWaiOaUSVGQ5qhAkSYIdhx5EqBFBhUJ0kU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747705795; c=relaxed/simple;
-	bh=tjgdZhN+OuEJ5yG5UCg6mN4vKwI0aby5N97gzGTuyCk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KbEwF53UkkLMhq/zku0JvaKOXY8hKw9Mw0n6i/77tqoeWxLZb2RuMZkEyrd18xfoIjYgozBlu7B0Xgl+xp8nUimKXdOP+lWDg0e41d8vOYBbV2sJUhvT3FexW62R54617UlOgPES2TjvDTqKTgrNzePgyHx6EpJwa636n/CPyKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=TCmOCbIO; arc=none smtp.client-ip=52.59.177.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1747705967; c=relaxed/simple;
+	bh=7rvK125QqYiLA2+g2nikKbIyGirADh4k9rK/bWO22cE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gSozyk1O+pP2Q4nc1DXcb8dZlgGigH0JcCNPmYXQoxOri1+dSyj1Xm+OawtchLs//hVpCf53ke3Iwim3oLF4M865JvoyKWjjTGalDAY59Q0E+Srq8xMwrfEn9WOiEg7GvWRzNv0v14gukeWz2Owr0gIO0Kd4huQYmSD+3xQJnhU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bv9AbFqC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="TCmOCbIO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1747705784;
-	bh=tjgdZhN+OuEJ5yG5UCg6mN4vKwI0aby5N97gzGTuyCk=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To;
-	b=TCmOCbIOgQIeXikQSQB1ozY+xtpmBVyJmOYjAJ8T9H5njX6fBX5Esj2e1sVwLzqr9
-	 AZcEncTlsDx/wXJTnsGoID2qExBM0nFy8UrH+Rjrgei/IV8dpO/FvsEc/W7kllQTXx
-	 u1uu+Ifu3yBg7F1PICOOBfu6ddboYagg1RM3oxVw=
-X-QQ-mid: zesmtpsz4t1747705779t2221b87c
-X-QQ-Originating-IP: le8b3gHCP2RQLlA9jyaj+1lCF7gm/Q5QYaSKLrC7a7Q=
-Received: from mail-yw1-f172.google.com ( [209.85.128.172])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 20 May 2025 09:49:37 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 12257961901285456275
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-70ddcdba474so7782387b3.1;
-        Mon, 19 May 2025 18:49:38 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWfwfTDsWSgirS12tEreFX3GL7RtcCK0fkrA4TUEa8GeCBB0WWoq2BQSzvLaV2WXWcavmB58829SMQ=@vger.kernel.org, AJvYcCWy2kQWdd1YSk/JEu6d3/rXCmEFhaGE233calE1fdVsdh+UJSpoOZe54ydM11HrpUokgdkJJg7KxjcybTIMGg==@vger.kernel.org, AJvYcCXyDW1KHNi/TkEExgVCOuAOFgNVdBpRCmYZ4ln+UEg2PLLUFf0bc3Pr82sPNiLei6xhGyZjibl7ed0j7VQ4@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLWEkvEoK8AGh1lvWkfFI8Qn2qBuAWuURsoVjBI5Oyg8OJ/Jun
-	dvwA2GJyrqOOA+zJDKblkRdGWR96trgpGZlI4fNmkLGJyoE8nEbx7HlHUGIQJJ4ECCwGNMeuTSn
-	M246pAkrgu0BskuQz9t1kEyO/2w47LZ8=
-X-Google-Smtp-Source: AGHT+IH810CjoYVfbOkhgjig/gQ9xaKS6QFeP6dyioXy8QiiAJzESs18soWLNXgX4ngPE49M6E9sOXnxpQYg9yXXdt8=
-X-Received: by 2002:a05:690c:ed3:b0:70c:b882:2e9 with SMTP id
- 00721157ae682-70cb8820581mr152005717b3.3.1747705776947; Mon, 19 May 2025
- 18:49:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bv9AbFqC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9EC9C4CEE4;
+	Tue, 20 May 2025 01:52:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747705967;
+	bh=7rvK125QqYiLA2+g2nikKbIyGirADh4k9rK/bWO22cE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bv9AbFqCAYrqZGnfJyB4wz4YJOkvLpvHhamcSDmUlg33+Vrt235+fJtwn3DmvFCQS
+	 B50zaIYaRyG6K8JSZCQNuuTsxX3AdnevEtuZCoLLA8CFgEulW4aZVFWeBkW4BqzpRG
+	 ObJXuDPBaD47Rhf+vrJ+dzhQmLL4dQlSjchVnfYJV4Aounr1ZLao2rwNDBQ8zlsBVB
+	 SVgsd7QgVUYfv9cFoZxltnwZ+wpS3l5mrYvfkxOKZfKwnRVDmIKSfuFq6DDBxAn7UG
+	 q5h/EJ6LJi433s9Li8l7tspTTJmY84SKM4c8bh0h05/r3Ltb0f6ScigFwikciNWTOk
+	 oG4NqTc9tOSoA==
+Date: Mon, 19 May 2025 18:52:45 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Leo Yan <leo.yan@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf tests switch-tracking: Fix timestamp comparison
+Message-ID: <aCvgbd5dZrF0YJg7@google.com>
+References: <20250331172759.115604-1-leo.yan@arm.com>
+ <CAP-5=fVsgahBhOEOac52PmL0V+n1jqAxzf7n9PVWgWsxq9TvgQ@mail.gmail.com>
+ <20250401091422.GA115840@e132581.arm.com>
+ <CAP-5=fUGLy9xGmMO+6PXvfviB4U8Q8O7H3iTSSqEf72vin8gDA@mail.gmail.com>
+ <20250402090516.GG115840@e132581.arm.com>
+ <20250516153158.GH412060@e132581.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250507-fuse-passthrough-doc-v1-0-cc06af79c722@uniontech.com>
- <20250507-fuse-passthrough-doc-v1-2-cc06af79c722@uniontech.com>
- <CAOQ4uxiMh+3JqzqMbK+HpFt-hWaM6A2nW3UHNK9nNntDRkRBeQ@mail.gmail.com> <87tt5giqz0.fsf@trenco.lwn.net>
-In-Reply-To: <87tt5giqz0.fsf@trenco.lwn.net>
-From: Chen Linxuan <chenlinxuan@uniontech.com>
-Date: Tue, 20 May 2025 09:49:26 +0800
-X-Gmail-Original-Message-ID: <31BB50458BC05D76+CAC1kPDP9d+vQGk0Y5OpDp88b3KLot0N_h=kazQb_G5nGtoCiVQ@mail.gmail.com>
-X-Gm-Features: AX0GCFt18X2UERCjgrGPdUs4efMieIb2MBJHTjaEDO8l3Jo_-vV7H74ydc1xpwc
-Message-ID: <CAC1kPDP9d+vQGk0Y5OpDp88b3KLot0N_h=kazQb_G5nGtoCiVQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] docs: filesystems: add fuse-passthrough.rst
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: Amir Goldstein <amir73il@gmail.com>, chenlinxuan@uniontech.com, 
-	Miklos Szeredi <miklos@szeredi.hu>, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	Bernd Schubert <bernd.schubert@fastmail.fm>, Bagas Sanjaya <bagasdotme@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpsz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-1
-X-QQ-XMAILINFO: M4B45z97fsbxzGGTWoUxZYuYF+xIatUkGVd5OComXI7tqA0u/WUyjV7H
-	gBuqsk3thLbP8HIMvqmwL4ZZ/lDNX/014QhULlunmJYHYKbr+TpDeGB1hGyX0m58TiJPkxm
-	f/a2qTZtTf7seQRAFQt2NGL8sdepW3v9uQ6FRki5ipz4qP/ms0KCAnQzIz3nuPfpaY4UORk
-	mbwcU7qxOXnLqjq084d0ymQgSKwkgfKIuvt42OfMej3AFvCM3fHMYL8BMBCuWi7X2m8DvQQ
-	28oNag/AXq18yDjrrXvV8KWpKQHyBoVYcz0VRfjcd1RsgsxbXVT8cTMYgO6FXM8xuqi3vt2
-	lvGBWNaKfjXwVhWvXgXEXVnkBGTM1hBCDlyPsEZhho20jymuBlgsOQ5fvP/bA2SBjwou7xr
-	xZAG7XyK2+2pnUPULJAnyKkHpTcr5U55NRYZIr140EyOeElsD9YIWTicrRZB/nX/LFJTMN7
-	hD43WdbVpGxBDpA9wSAqZyOW3uHRV/0jKPoxd/+gcY5g8Q75L1IQ2zcWuSYSuHDx5XQ74Uc
-	ybget+H9pQcuz64k3LE5a3bu3boQ/+CoQl1H2OU7Q3mumgryy7exOc2Dd1gDswHbtoKguqM
-	gf34TpBEQmSQD3nVi2gt5fgUTA8TSk6nXPTa/KDuv4uDBwh9Ro4sukFXb9poxkfeY+uyRaA
-	xKsozVEm9SJ/rzY/i45EHFdJI31GYOQvEnUGEbGCJZU9RI72Yh8pJk29tr+kpuvhBrFWBfa
-	iuTLp2rh0nO6NYq7Li19o+W90eJgkVK0Z+kYOfUdRnUDtp1ntCvGB2NlryiSo2fHsF30ukt
-	7nCfatemYvVwHGHKHRqOTh/nGdfMhBIsV/0VhVsB1kbcBbHnLjM0frUJyZxEYR/2oUtqmaH
-	wnEGQSZTL+CL7coOAB3r3rjD/sYKV9fVT2AsNuhIk30rH2UTCYXuEyPD3q3qZAHEX+zYL3w
-	0y5CBk+u270imcukfo2aJZF/v9tx/jv1qBEseVwyD1is9oDpMxgdKdh+EGJ6AyOwmFe3mEC
-	UNHrbkJXR3l+86rcFZNyS87nFTT8OaBo65FIqvfA==
-X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
-X-QQ-RECHKSPAM: 0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250516153158.GH412060@e132581.arm.com>
 
-On Mon, May 19, 2025 at 11:02=E2=80=AFPM Jonathan Corbet <corbet@lwn.net> w=
-rote:
->
-> Amir Goldstein <amir73il@gmail.com> writes:
->
-> > On Wed, May 7, 2025 at 7:17=E2=80=AFAM Chen Linxuan via B4 Relay
-> > <devnull+chenlinxuan.uniontech.com@kernel.org> wrote:
-> >>
-> >> From: Chen Linxuan <chenlinxuan@uniontech.com>
-> >>
-> >> Add a documentation about FUSE passthrough.
-> >>
-> >> It's mainly about why FUSE passthrough needs CAP_SYS_ADMIN.
-> >>
-> >
-> > Hi Chen,
-> >
-> > Thank you for this contribution!
-> >
-> > Very good summary.
-> > with minor nits below fix you may add to both patches:
-> >
-> > Reviewed-by: Amir Goldstein <amir73il@gmail.com>
->
-> It looks like these comments were never addressed ... ?
->
+Hi Leo,
 
-See https://lore.kernel.org/all/20250507-fuse-passthrough-doc-v2-0-ae7c0dd8=
-bba6@uniontech.com/
+On Fri, May 16, 2025 at 04:31:58PM +0100, Leo Yan wrote:
+> Hi Ian, Namhyung,
+> 
+> [ - Mailing list ]
+> 
+> On Wed, Apr 02, 2025 at 10:05:16AM +0100, Leo Yan wrote:
+> > On Tue, Apr 01, 2025 at 12:54:12PM -0700, Ian Rogers wrote:
+> > > On Tue, Apr 1, 2025 at 2:14 AM Leo Yan <leo.yan@arm.com> wrote:
+> > > >
+> > > > On Mon, Mar 31, 2025 at 01:18:31PM -0700, Ian Rogers wrote:
+> > > >
+> > > > [...]
+> > > >
+> > > > > I'm reminded of a Java check I wrote for this:
+> > > >
+> > > > Nice short article.
+> > > >
+> > > > > In clang -Wshorten-64-to-32 looks to cover this. I'll see if we can
+> > > > > clean those warnings up a bit.
+> > > >
+> > > > I checked a bit and seems GCC has no this flag, but it makes sense for
+> > > > me to enable the flag for Clang.
+> > > >
+> > > > > Reviewed-by: Ian Rogers <irogers@google.com>
+> > > >
+> > > > Thanks a lot, Ian.
+> > > 
+> > > I made a small variation to the change in:
+> > > https://lore.kernel.org/lkml/20250401182347.3422199-10-irogers@google.com/
+> > > to avoid a subtract and just directly compare the values.
+> 
+> Do you mind to pick up my this patch? :) Our internal CI reports the
+> test case 109_Track_with_sched_switch failure daily, I am just wandering
+> if we could apply the fix quickly.
+
+Arnaldo is taking care of patches for v6.15.
+
+Arnaldo, can you please take this?
 
 Thanks,
-Chen Linxuan.
+Namhyung
 
-> Thanks,
->
-> jon
->
->
+> 
+> Ian is working on a patch series for resolving the Clang warning which
+> also includes a fix [1], if Ian could extract the fix for the compar()
+> function in switch-tracking.c, this either would be fine for me.
+> 
+> Thanks a lot for your helping!
+> 
+> Leo
+> 
+> [1] https://lore.kernel.org/linux-perf-users/20250401182347.3422199-10-irogers@google.com/
