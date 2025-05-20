@@ -1,197 +1,201 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E60727F171;
-	Tue, 20 May 2025 12:09:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E57B627F16F
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 12:10:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747742987; cv=none; b=MA+BCimeQ9HLxcBFTKSXeNsYskkKazwZaY15J7MUvDgkX70dx7quRh0m9lEl40GwZEMjnDePU08XBwW5whGKS19vBbQcFPcS11FIlOTi33o0PLMliZhLasxEyIPpjXxvUOjbtMoA2PwNMAUWaqa7+M4mUQx5Ab6PMQBBjZroaWw=
+	t=1747743015; cv=none; b=TiWPykISX/859JSuy2XlqemDG8Ce3HFgZZylGP/A1oygd+7MEQ55vQ3ME5XPofRyvXi5MBch64uBRaayK+KHZNuUWL1ex/YdmaW2Yh/gDJJ00SmucGMkPVZpEBRQH/SRsSyPKx67vQf/Bp4UoqINi/eb3cMrXhoWqakY673bIMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747742987; c=relaxed/simple;
-	bh=IkV86RtFSVfKB5OH7kk/gXmCGvsE/032zCO6iEOLJ84=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FJSVXdeI2k+BbCNDESqTDH/C59dd8ms1hzsZlnwdTnHXBedv3Xsryk68Tffdr3OvWHs+dtoo10B78nJHY39uBnWi2KMKaJZtzXVUPnUfqnh6Q7GgzqCvuaC5dnU3b+hwQv6PajWBoXn48C/8p1y57dcQWNGfu9XXuKIR+d+d93E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=BAYIgmSB; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1747743015; c=relaxed/simple;
+	bh=GJ0JNMLAovWgxgEBZ25jZXWcgEMBvp/li8Jc0RcIHmo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BOAAgckq/uMjsipBqPq+tfTlmnmF45SL9ukkJ0NxFzi70iuqy+zLaBD3ZNjFDDQ3mkJ3PIAzSHFEUabq+zP59jRnatqL0RfiKPQ4LSniswmhNh6KbWClcjqeN8dVDf7k1MMKjwTEy29swYSUh1DHvgpVCDtMbNl5OZ4hkGj8lbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IOM/kXfm; arc=none smtp.client-ip=209.85.219.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="BAYIgmSB"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 2E76043228;
-	Tue, 20 May 2025 12:09:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1747742979;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tmSn5XfAasjudyDa3E7vYwoQxs1qbpTg+SqpnL3/lgM=;
-	b=BAYIgmSBs6mhhyGy2RRs4bl/ABgZgU9O9gwvpemZvJBjVSMe2X+HxtSOWNu7nDMHC9tk9k
-	8PeTBBH+eUSGWTza172pWuhU41j1GKojEai+tBIepog9XasT7KdgSKVMFBVqGTcrhdUBej
-	0alsNCnvKpv0MoSRYARTostwdmaQC+M4qRXWhFBmupRxh1FOii57oCETZhgUUsc59t4Hzn
-	PCwk6pBHbETHnYAyXDxY9msScVsqINON0Y3gRSq31WExMW8676FENnGTYXoN3w9AFLnazs
-	0MqJH96I9k9wiiwQRH9PLFBtbBGZLFCaT7FfXPAVcJqr8LUNB7gSLAPyjiE4fw==
-Date: Tue, 20 May 2025 14:09:36 +0200
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>
-Cc: Alan Stern <stern@rowland.harvard.edu>, "linux-usb@vger.kernel.org"
- <linux-usb@vger.kernel.org>, Kever Yang <kever.yang@rock-chips.com>, Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>, =?UTF-8?B?SGVydsOp?= Codina
- <herve.codina@bootlin.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, Stefan Wahren <wahrenst@gmx.net>, Fabrice
- Gasnier <fabrice.gasnier@foss.st.com>
-Subject: Re: DWC2 gadget: unexpected device reenumeration on Rockchip RK3308
-Message-ID: <20250520140936.08d72db6@booty>
-In-Reply-To: <329f68fb-a097-ff3d-da9d-f535a8429ea7@synopsys.com>
-References: <20250414185458.7767aabc@booty>
-	<a96409af-4f82-4b65-b822-dd8c71508212@rowland.harvard.edu>
-	<cf84f5ca-8c7a-b6c6-492c-c9cf6f73130d@synopsys.com>
-	<20250415162825.083f351c@booty>
-	<8c2e18a9-44d1-47b3-8fe4-46bdc5be8d76@rowland.harvard.edu>
-	<20250502155308.11a991d4@booty>
-	<cc80988c-5941-46f3-8183-f3f9acb7dd5d@rowland.harvard.edu>
-	<20250509091738.4ae76d18@booty>
-	<329f68fb-a097-ff3d-da9d-f535a8429ea7@synopsys.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IOM/kXfm"
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e73e9e18556so5347011276.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 05:10:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747743013; x=1748347813; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=GJ0JNMLAovWgxgEBZ25jZXWcgEMBvp/li8Jc0RcIHmo=;
+        b=IOM/kXfmW4pkn61r9H8loQfT2CbPDiAAD/ujHC3zQ7OdBoj4iptjgvsqvHiR2/7YEg
+         x8PWrA2R8Jt9zezDCB55191cZ5fjajr89DfvAtPInXFc78rkbJSjQdJ8I+5ONwvzIFrT
+         VCph7SVpRHxxYNFY886U2MQXA+EFet+5VWYxsaZSfIK3KjCoftRf1KOYztMGP46V1ilS
+         KeMUXg6btkhZ3vslCloTY/JlwFEu3606tVNA1f8Klq+9zGb926sdyZDlJoOkyz3OjLH2
+         AnK+NNN/7L62PtCHgK2cZmb5QXxa4baIAdBdvTGRUaNA9h5uSqhqdoAfAYJhI87JHO6u
+         O0BA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747743013; x=1748347813;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GJ0JNMLAovWgxgEBZ25jZXWcgEMBvp/li8Jc0RcIHmo=;
+        b=ndqlnmPGvHBFcio4IpbsGgaej+VQbkayEQFjUiKF+JbvO9X4OIraOZAIO3h0jRNhbm
+         n6FWUasnM4Dz30gwHXlSqOvvW/cJmS7hw6JYx4aOerpMUPlGqY201lskn51wWQczKFX9
+         h4D2BYtcIxuuvqU5x2R8OThjfFa6wokJHAJ7lARaLv5EQjh5gLVMpY7AwxLQvymmoj2w
+         M0J670FZKPRR+TWSsERujDnkUtEMH3VW6RjVJvdmn55tyBOcfwrLsAm0GZNratZCluqy
+         +IvPKUuqe6hgQGq8SEMRVL2uMqBNtEDDo5aAiiH97ZoEFhmHcBO9Z6BMzZ6K2Lo2VdxC
+         hd2w==
+X-Forwarded-Encrypted: i=1; AJvYcCVUbn7frkMBDBTyIba09r9DUl8Cr96kJ/C5k2AiPsamewLKM9Z9u0ijV/A9HcGHDM+Dp5111SufPwcuIdI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvSZXJm8KEd7ve9Wu5BUd7GNhEvR9z3nVpJs3GJMHJN/U8W6BG
+	fyP6WhtuQfe4y3OPSZTcGeyEMFTwJ1haE33SFEkR3qaAd5HvGQYSYB1Q4NKKygJyzAe994kaRVC
+	HK0mUo6xmpaOOIhgYSZ4T/w6nW1z3XnqmzRxhGHRBzA==
+X-Gm-Gg: ASbGncs31ViwmrTaVfRjDRzgte42hpOGIdF8I08ZZ1Mcd6qezCfw3JV8VRuS6V37SVi
+	QLa4BSQnI4bqKWhOvq0lbriqMeSniB4zP8YIng2OABV4x5Nq6kp269o+dnH1fFN/fQGspJruMUa
+	PdjhxvsE67Vp2N40FyQnCgwPY4l1QVLA7hSQ==
+X-Google-Smtp-Source: AGHT+IEb2zwt9aalfZhKo4S79q1t9OvpKzt7oCToAtr/TuLcXSK8xWk48UxIJViQ+sFnBt6vJsguUpP0RMjJ0GKqQgA=
+X-Received: by 2002:a05:6902:c02:b0:e7a:3d4f:6355 with SMTP id
+ 3f1490d57ef6-e7b4f87732emr26855350276.19.1747743012777; Tue, 20 May 2025
+ 05:10:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddukecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthejredtredtvdenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeglefffefghefhtddvfeeufeeiveekgffgleekieduteekkeetvdehudekgfdvvdenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvpdhhvghlohepsghoohhthidpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedutddprhgtphhtthhopefoihhnrghsrdfjrghruhhthihunhihrghnsehshihnohhpshihshdrtghomhdprhgtphhtthhopehsthgvrhhnsehrohiflhgrnhgurdhhrghrvhgrrhgurdgvughupdhrtghpthhtoheplhhinhhugidquhhss
- gesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehkvghvvghrrdihrghnghesrhhotghkqdgthhhiphhsrdgtohhmpdhrtghpthhtohepghhrvghgkhhhsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhm
-X-GND-Sasl: luca.ceresoli@bootlin.com
+References: <8d83ea72-bb81-4c63-bf69-28cf5848ae20@tuxon.dev>
+ <20250305140309.744866b2@jic23-huawei> <Z8k8lDxA53gUJa0n@google.com>
+ <f74085be-7b14-4551-a0a7-779318a5dc70@tuxon.dev> <20250330163129.02f24afb@jic23-huawei>
+ <5bca6dfd-fe03-4c44-acf4-a51673124338@tuxon.dev> <95f5923f-7a8f-4947-b588-419525930bcb@tuxon.dev>
+ <CAPDyKFoMqmCFBoO8FwQe2wHh2kqQi4jUZNFyiNckK7QhGVgmvg@mail.gmail.com>
+ <c3a2950a-17ff-444a-bee7-af5e7e10e2bf@tuxon.dev> <CAPDyKFozR4qDq4mzcZBK-LcoPf=fGyuJTXwdt=Ey+_DcQOAp0g@mail.gmail.com>
+ <4o3wo76st7w6qwyye3rrayuo2qx773i6jfzcnbkhdj76ouh7ds@3e2mblehkgwf>
+In-Reply-To: <4o3wo76st7w6qwyye3rrayuo2qx773i6jfzcnbkhdj76ouh7ds@3e2mblehkgwf>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Tue, 20 May 2025 14:09:36 +0200
+X-Gm-Features: AX0GCFtcVErlvFZx1FIEgTgFELOf8mwizDWzHsBg11TTKOgl1oY6699W9dYY-yo
+Message-ID: <CAPDyKFqMB7XutXba73YHx1X4rm6uc3Fz6yMZ8yM=wgduEmgUDg@mail.gmail.com>
+Subject: Re: [PATCH] driver core: platform: Use devres group to free driver
+ probe resources
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Claudiu Beznea <claudiu.beznea@tuxon.dev>, Jonathan Cameron <jic23@kernel.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, dakr@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, geert@linux-m68k.org, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-iio@vger.kernel.org, bhelgaas@google.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hello Minas,
+[...]
 
-On Tue, 13 May 2025 07:35:40 +0000
-Minas Harutyunyan <Minas.Harutyunyan@synopsys.com> wrote:
+> > > >>>>>
+> > > >>>>
+> > > >>>> Rafael,
+> > > >>>>
+> > > >>>> Greg suggested we ask for your input on the right option:
+> > > >>>>
+> > > >>>> https://lore.kernel.org/all/2025032703-genre-excitable-9473@gregkh/
+> > > >>>> (that thread has the other option).
+> > > >>>
+> > > >>> Can you please let us know your opinion on this?
+> > > >> Can you please let us know if you have any suggestions for this?
+> > > >
+> > > > It's been a while since I looked at this. Although as I understand it,
+> > > > the main issue comes from using devm_pm_runtime_enable().
+> > >
+> > > Yes, it comes from the usage of devm_pm_runtime_enable() in drivers and the
+> > > dev_pm_domain_detach() call in platform_remove() right after calling
+> > > driver's remove function.
+> >
+> > Okay.
+>
+> This is not the root of the problem though. There is nothing really
+> special about power domain and runtime power management. The root of the
+> problem is that current code violates the order of releasing resources
+> by mixing devm- and normal resource management together. Usually it is
+> individual driver's fault, but in this case it is bus code that uses the
+> manual release (dev_om_domain_detach) that violates the "release in
+> opposite order to acquisition" rule.
 
-> >> I don't know anything about that driver, though.  Minas is the expert.
-> >> You really need his advice.  
-> > 
-> > In the meanwhile I did two event captures, one with the mainline kernel
-> > and one with the vendor kernel, using the same laptop setup and no hub
-> > in between, and for each test I captured both the usbmon log and a
-> > wireshark file. Both are available if needed.
-> > 
-> > By analyzing those captures I found that the communication between host
-> > and gadget is almost identical. The only differenceis the get
-> > configuration descriptor response has one more descriptor in the vendor
-> > case (the working one). Here it is:
-> > 
-> > OTG Descriptor:
-> >    bLength                 3
-> >    bDescriptorType         9
-> >    bmAttributes         0x03
-> >      SRP (Session Request Protocol)
-> >      HNP (Host Negotiation Protocol)
-> > 
-> > I don't know exacty what that implies, but for a quick test I went in
-> > the mainline kernel and found that it can add the same descriptor if
-> > both of these is true:
-> > 
-> >   * dr_mode = "otg" in device tree
-> >   * "DWC2 Mode Selection" is "Dual role mode" in kconfig
-> >     (i.e. CONFIG_USB_DWC2_DUAL_ROLE=y)
-> > 
-> > While I had:
-> > 
-> >   * dr_mode = "peripheral"
-> >   * "DWC2 Mode Selection" = "Gadget only mode"
-> >     (i.e. CONFIG_USB_DWC2_PERIPHERAL=y)
-> > 
-> > With those two changes the mainline kernel now behaves correctly, just
-> > like the vendor kernel. No more disconnection after 5-6 seconds.
-> > 
-> > For the records, the vendor kernel already had dr_mode = "otg" and
-> > CONFIG_USB_DWC2_DUAL_ROLE=y.
-> > 
-> > Based on my very limited knowledge of USB, intuitively it looks that:
-> > 
-> >   * in peripheral-only mode the OTG Descriptor should not be sent
-> >   * in peripheral-only mode SRP does not make sense
-> >   * in peripheral-only mode HNP does not make sense
-> > 
-> > Are the above correct?
-> > 
-> > Whether the answer, I think these new findings do not yet explain the
-> > problem nor point to a correct solution. Apart from the added
-> > descriptor, all of the initial enumeration events seen by usbmon is
-> > identical in the two cases.
-> > 
-> > Minas, were you able to have a look at the info I collected?
-> > Do they suggesting you anything about the dwc2 driver?
-> >   
-> Configuration parameters: CONFIG_USB_DWC2_HOST, 
-> CONFIG_USB_DWC2_PERIPHERAL and CONFIG_USB_DWC2_DUAL_ROLE have impact 
-> only on build process. Based on these parameters driver can build as 
-> host only, device only or host + device.
-> 
-> OTG functionality of depend on:
-> 1. On core configuration - GHWCFG2 bits 0:2:
-> Mode of Operation (OtgMode)
-> 3'b000: HNP- and SRP-Capable OTG (Host & Device)
-> 3'b001: SRP-Capable OTG (Host & Device)
-> 3'b010: Non-HNP and Non-SRP Capable OTG (Host and Device)
-> 3'b011: SRP-Capable Device
-> 3'b100: Non-OTG Device
-> 3'b101: SRP-Capable Host
-> 3'b110: Non-OTG Host
-> Others: Reserved
-> As you can see above, device only mode can support OTG, i.e. 
-> "SRP-capable device".
-> Based on provided OTG descriptor your core's OTG mode is equal to 0, 
-> which means "HNP- and SRP-Capable OTG (Host & Device)".
-> 2. Depend on platform (see dwc2/param.c) OTG functionality can be 
-> updated, if it allowed by above core configuration OTG parameter.
-> 3. OTG functionality can updated also through devicetree parameters 
-> settings.
+As I said before, runtime PM is not a regular resource, but a
+behaviour that we turn on/off for a device. Enabling and disabling
+runtime PM needs to be managed more carefully in my opinion.
 
-Thanks for the clarification. FYI the GHWCFG2 value is 0x228e2450 on
-the RK3308, so OtgMode = "3'b000: HNP- and SRP-Capable OTG (Host &
-Device)".
+For example, even if the order is made correctly, suppose a driver's
+->remove() callback completes by turning off the resources for its
+device and leaves runtime PM enabled, as it relies on devres to do it
+some point later. Beyond this point, nothing would prevent userspace
+for runtime resuming/suspending the device via sysfs. I would be quite
+worried if that happens as it certainly would lead to undefined
+behaviour.
 
-And I confirm the outcome of my tests:
+>
+> >
+> > >
+> > > On the platform I experienced issues with, the dev_pm_domain_detach() drops
+> > > the clocks from the device power domain and any subsequent PM runtime
+> > > resume calls (that may happen in the devres cleanup phase) have no effect
+> > > on enabling the clocks. If driver has functions registered (e.g. through
+> > > devm_add_action_or_reset()), or driver specific runtime PM functions that
+> > > access directly registers in the devres cleanup phase this leads to system
+> > > aborts.
+> >
+> > So if you move away from using devm_pm_runtime_enable() things would
+> > be easier to manage and there is no additional new devres-management
+> > needed.
+>
+> How exactly will it improve the situation? You still need to make sure
+> that you are not disabling things out of the order. You simply moving
+> the complexity to the driver, essentially forbidding it (and any other
+> driver on platform bus) from using any devm APIs.
 
- A) if dr_mode = "otg" in DT AND CONFIG_USB_DWC2_DUAL_ROLE=y:
-    - OTG descriptor is sent
-    - no disconnection, no re-enumeration
+The driver can still use the devres APIs to "get" all resources and
+then rely on devres to "put" them. There is nothing that prevents
+that, right?
 
- B) if dr_mode = "peripheral" in DT OR CONFIG_USB_DWC2_PERIPHERAL=y:
-    - OTG descriptor is not sent
-    - disconnection+enumeration after ~6 seconds
+Or maybe I didn't understand the problem correctly?
 
-The disconnection in case B should _not_ happen.
+>
+> >
+> > >
+> > >
+> > > >
+> > > > As I have tried to argue before, I think devm_pm_runtime_enable()
+> > > > should *not* be used. Not here, not at all. Runtime PM isn't like any
+> > > > other resources that we fetch/release. Instead, it's a behaviour that
+> > > > you turn on and off, which needs to be managed more carefully, rather
+> > > > than relying on fetch/release ordering from devres.
+>
+> I disagree. It is a resource that you turn on and off, same as clocks,
+> regulators, interrupts, etc. We manage those during lifetime of the
+> device, disable them when going into low power mode/suspend, reenable
+> them upon resume, may disable and reenable them for other reasons.
+>
+> PM is not any more special here. As long as you keep the proper order of
+> operations it works as well.
 
-The presence/absence of the OTG descriptor is not wrong AFAICU. I'm
-mentioning it just because it might give some clues.
+How would you solve the issue I pointed out above?
 
-I did a comparison of /sys/kernel/debug/usb/ff400000.usb/regdump in
-cases A and B. The only relevant difference is that bit
-USBOTG_GUSBCFG.ForceDevMode is 1 in case B. Based on the TRM, this
-seems correct.
+>
+> > > >
+> > > > That said, I would convert the driver to use pm_runtime_enable() and
+> > > > pm_runtime_disable() instead.
+> > >
+> > > I've tried this approach previously but it resulted in more complicated
+> > > code and thus, Jonathan wasn't happy with it [1].
+> >
+> > I understand that you have been trying to move forward to address
+> > people's opinions. It's not always easy to keep everybody happy. :-)
+> >
+> > That said, I still think this is the most viable option as it's how
+> > the vast majority of drivers do it today. A few lines of additional
+> > code shouldn't really be a big problem in my opinion.
+>
+> Have you tried making such change? Again, you will need to abandon use
+> of most other devm APIs so that you keep the order of releasing
+> resources. The only devm that you can still use is devm_k*alloc(), the
+> rest has to be converted into unmanaged.
 
-Doing other checks on registers and adding some logging to the code
-showed everything appears to be configured correctly.
+I guess I need to take a stab at this particular use case.
 
-So, nothing explains why after about 6 seconds there is a disconnect.
+Looking closer, could it be that it's really the combination of
+turning on/off resources using devres (not just get/put if them) like
+clocks - and using devm_pm_runtime_enable()?
 
-My tests are done on mainline Linux v6.15-rc2.
-
-Minas, do you have any hints or advice to understand why there is a
-disconnect about ~6 seconds after a successful enumeration in gadget
-mode?
-
-Luca
-
--- 
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Kind regards
+Uffe
