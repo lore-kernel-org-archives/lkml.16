@@ -1,99 +1,156 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7952D267728;
-	Tue, 20 May 2025 10:19:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8936926AAA3
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 10:20:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747736352; cv=none; b=rgBThsZph/ZJMVRDz3dPR/enMKL1PvztkJ3Yu9iCPfVo6qCs4jWotwgKj8jcduhGvwustCiu+x2T5zR/ABvS9+NQrgiGPvryCSXxx1H/7sku1Bex2ki14f79xice+qqBKJlLL0cmQ1V9VxA54qCJv3eSo12aBPNNNedL59CXHCE=
+	t=1747736427; cv=none; b=VhNRdcMgHq0VeCirR72ann02PfOjCPQHhqZh20IvRTELvN9UJo1VaVZMk9XezoFfxgxOsPrnHMhhObHZYONIZi/e1EZwVDef8ufTQTxDx4XCHbgRCWg+VocEhcD46gio3I4tBhzaC5L0IxBYAjoQNo/KwjxpDoj6mBl+fkRRFfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747736352; c=relaxed/simple;
-	bh=9IamjCqlvQvJklBW8oB2MCtgzf/uhXR8hnZBDfqkBCY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m1SHFS7YwYtO7oAYERP/sTJgUMPKqWyOV/eoesHiuIsCk6NEmVsvlHYQ7R0GQRctD8fnYE1E+t/METQPs+Xlv+61XjcOHdiBDJHFJQCxbTzlKqycpuuvzcQz4id7Su9v+RCfkqqZ8f2Bge46yrx7EDwGsd6lbvbBfplQ3JRZLvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ngqMnoV6; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1747736427; c=relaxed/simple;
+	bh=VLqZKYVWp3pwRQ8Qv/+9FpUNa5lx7oCx3DjjfaM1bAY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WfVoxstLcl/LpV9eUT8iBafZj87Wv2rnpg3PC5m9WH/qNbc1y17AFbhJfojQG1P2efu0jwAG9NxRXhxvGm05u16mXE+0Ved/U8Reo9jOpBgHH3+tlba+DLtqB68sNdHy1mgukcgA2WqeCRBMKfh3RcXyBZw6/d7yWbR2jbdofB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VIYuYCQ1; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ngqMnoV6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1747736348;
-	bh=9IamjCqlvQvJklBW8oB2MCtgzf/uhXR8hnZBDfqkBCY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ngqMnoV6TclW8p981rXnTE16VJQJ26eVm+bjym3MWdm0qLUZGena3s0d9MhDYIc+M
-	 2zz21qlgzXFmKUEHfo/+eS1NAVWe3OVGhds4uH7LDB+6I5hGoqGPzqfVwLucFBXOH8
-	 lvplK/HLelavKF0A5A5xE+24csGH2s8QZNTPiQPwpGVPll9ocV2QWHrwtDdZYtNn10
-	 rA1kO20dkhGHRfYx4jpmL/w34jAEkO5Qln3enXr5hB+lTQc7aJGYLxfeFl4Rhg4rmH
-	 Lzq1KyYblbirWYGQl0EJRG+Z3FpZPH8wPSDRKM8xfIwDm6UgxLbUOuxgvZI6Kp5/Np
-	 KxvBoN+1THKmw==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id D938817E0E89;
-	Tue, 20 May 2025 12:19:07 +0200 (CEST)
-Message-ID: <b751c8d6-58ab-4a34-8d0e-a5300834962e@collabora.com>
-Date: Tue, 20 May 2025 12:19:07 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VIYuYCQ1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747736423;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VLqZKYVWp3pwRQ8Qv/+9FpUNa5lx7oCx3DjjfaM1bAY=;
+	b=VIYuYCQ1Y5DpyanpUScI9F0Z6zd5yE6MqoZ/FoiS8YxQcziZdsi2/F0TLXVjds8WSMLayd
+	YH8C04BZGjXY3DFKwym7xDOmOHwVuAb183JW9DNjg8K6mlmRWWyqytsfUDPxRC7Q7ST3eh
+	hq29Cg+vkaZHapVHguAWNiCX8FSJahg=
+Received: from mail-yw1-f197.google.com (mail-yw1-f197.google.com
+ [209.85.128.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-167-wgWMssAmPDuTkN2Fq9qnZw-1; Tue, 20 May 2025 06:20:20 -0400
+X-MC-Unique: wgWMssAmPDuTkN2Fq9qnZw-1
+X-Mimecast-MFC-AGG-ID: wgWMssAmPDuTkN2Fq9qnZw_1747736419
+Received: by mail-yw1-f197.google.com with SMTP id 00721157ae682-706bf40bd8bso63012207b3.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 03:20:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747736419; x=1748341219;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VLqZKYVWp3pwRQ8Qv/+9FpUNa5lx7oCx3DjjfaM1bAY=;
+        b=e0WnnjESxRLPAeo74tst7JPCz4WWezWEOS2cD8BWBAXyA90HIB3tQ9nGUfIz3fqdxU
+         7wUljB4x0C6bT05lEEp5Plw5UnijiNiQ1kjlUx/oGgIZiu+2VnPGINi5mhmlVhCZQAea
+         MW/Bbjffdk28JW341MEHLUszwtd9uhDdbKHydEDnPva1aN3wmHM3uojz6PxiX5Fw13cM
+         o8LJkmwK5zCX+aggfKol58SZ6yRPy2DicEG30ymsxNHJnK+iMmaliAD9RifyPwIVEm40
+         S4NzpNkB76aucmbm38AG85xq00RiBxaJ+3O3rScM4hZOBsGS4FPGPMH65zvso+dpd1At
+         5yCg==
+X-Forwarded-Encrypted: i=1; AJvYcCXvZqAfdWoj1Q8LTDUOjbw4n3Bah0F9a55eg12DflrytDjGPf4EIxSqobDWTZE1VgQLPubBOw7FIa9LU0M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBysobh0JoenTpxapcbIGDb1j5c6Gd2SamyHMcSoVkT/numXCJ
+	1MBrix5KcZLVpwVzNpkTfOOR4osrfNvvJqlIPXpgcVX9Ek18K5a+YvFy/pFkTDCFnZY07XHf90u
+	6Au9g3yISgZra3fNetTLxZt3+jB3qPbjLMh3rCCQE1+74A/+wcCihSUk6pgQRGVpHKhvzN3omv6
+	fPGKX5Z1M2+Vc6SoPKVEd4qgMg4RpTAguc9c+deK7F
+X-Gm-Gg: ASbGncvHDBN2BSvZlRJdVkBbNTysSZWT56hgHHLaYA+4gISV5pKmc2P1Qz0iJd+UILk
+	0yqa0uzn9eY5nZFqI+iMwOqkOoP4LRm2v7FEaNL9uBDVha2eOfhUt3tXx/hMPO+YlwWE=
+X-Received: by 2002:a05:690c:89:b0:708:a265:93ab with SMTP id 00721157ae682-70ca7bc940dmr238507017b3.38.1747736419539;
+        Tue, 20 May 2025 03:20:19 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHIrLhXuLV+dgl+6nHQXYzcxdnRi1KlUM2uZdWnr9UwnY+2xxpw/9FIq+WSPvcUphoTIc9kxZUnbcKv5l5kBws=
+X-Received: by 2002:a05:690c:89:b0:708:a265:93ab with SMTP id
+ 00721157ae682-70ca7bc940dmr238506537b3.38.1747736418973; Tue, 20 May 2025
+ 03:20:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dt-bindings: clock: mediatek: Add #reset-cells
- property for MT8188
-To: Julien Massot <julien.massot@collabora.com>, kernel@collabora.com,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
- Garmin Chang <garmin.chang@mediatek.com>,
- Friday Yang <friday.yang@mediatek.com>
-Cc: Conor Dooley <conor.dooley@microchip.com>, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
-References: <20250516-dtb-check-mt8188-v2-0-fb60bef1b8e1@collabora.com>
- <20250516-dtb-check-mt8188-v2-1-fb60bef1b8e1@collabora.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250516-dtb-check-mt8188-v2-1-fb60bef1b8e1@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250501-vsock-linger-v4-0-beabbd8a0847@rbox.co>
+ <20250501-vsock-linger-v4-3-beabbd8a0847@rbox.co> <g5wemyogxthe43rkigufv7p5wrkegbdxbleujlsrk45dmbmm4l@qdynsbqfjwbk>
+ <CAGxU2F59O7QK2Q7TeaP6GU9wHrDMTpcO94TKz72UQndXfgNLVA@mail.gmail.com>
+ <ff959c3e-4c47-4f93-8ab8-32446bb0e0d0@rbox.co> <CAGxU2F77OT5_Pd6EUF1QcvPDC38e-nuhfwKmPSTau262Eey5vQ@mail.gmail.com>
+ <720f6986-8b32-4d00-b309-66a6f0c1ca40@rbox.co> <37c5ymzjhr3pivvx6sygsdqmrr72solzqltwhcsiyvvc3iagiy@3vc3rbxrbcab>
+ <CAGxU2F4ue9UxZd1_wB2D=Oww6W9r7kTBPVjjbnm24Lywz+0wSA@mail.gmail.com>
+In-Reply-To: <CAGxU2F4ue9UxZd1_wB2D=Oww6W9r7kTBPVjjbnm24Lywz+0wSA@mail.gmail.com>
+From: Stefano Garzarella <sgarzare@redhat.com>
+Date: Tue, 20 May 2025 12:20:07 +0200
+X-Gm-Features: AX0GCFvEf5TKMk_xJuszzqQAjXr1gJnrN_usz3ZZR_hOZflwpYSEOq0n4Sep-9Y
+Message-ID: <CAGxU2F7z-Fj4-_154KeYYb6YeBe1uZCc52Nq0afYAR0ViVv0Ug@mail.gmail.com>
+Subject: Re: [PATCH net-next v4 3/3] vsock/test: Expand linger test to ensure
+ close() does not misbehave
+To: Michal Luczaj <mhal@rbox.co>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	"Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
+	Stefan Hajnoczi <stefanha@redhat.com>, virtualization@lists.linux.dev, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Il 16/05/25 16:12, Julien Massot ha scritto:
-> The '#reset-cells' property is permitted for some of the MT8188
-> clock controllers, but not listed as a valid property.
-> 
-> Fixes: 9a5cd59640ac ("dt-bindings: clock: mediatek: Add SMI LARBs reset for MT8188")
-> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> Signed-off-by: Julien Massot <julien.massot@collabora.com>
+On Tue, 20 May 2025 at 11:01, Stefano Garzarella <sgarzare@redhat.com> wrote:
+>
+> On Tue, 20 May 2025 at 10:54, Stefano Garzarella <sgarzare@redhat.com> wrote:
+> >
+> > On Mon, May 12, 2025 at 02:23:12PM +0200, Michal Luczaj wrote:
+> > >On 5/7/25 10:26, Stefano Garzarella wrote:
+> > >> On Wed, 7 May 2025 at 00:47, Michal Luczaj <mhal@rbox.co> wrote:
+> > >>>
+> > >>> On 5/6/25 11:46, Stefano Garzarella wrote:
+> > >>>> On Tue, 6 May 2025 at 11:43, Stefano Garzarella <sgarzare@redhat.com> wrote:
+> > >>>>>
+> > >>>>> On Thu, May 01, 2025 at 10:05:24AM +0200, Michal Luczaj wrote:
+> > >>>>>> There was an issue with SO_LINGER: instead of blocking until all queued
+> > >>>>>> messages for the socket have been successfully sent (or the linger timeout
+> > >>>>>> has been reached), close() would block until packets were handled by the
+> > >>>>>> peer.
+> > >>>>>
+> > >>>>> This is a new behaviour that only new kernels will follow, so I think
+> > >>>>> it is better to add a new test instead of extending a pre-existing test
+> > >>>>> that we described as "SOCK_STREAM SO_LINGER null-ptr-deref".
+> > >>>>>
+> > >>>>> The old test should continue to check the null-ptr-deref also for old
+> > >>>>> kernels, while the new test will check the new behaviour, so we can skip
+> > >>>>> the new test while testing an old kernel.
+> > >>>
+> > >>> Right, I'll split it.
+> > >>>
+> > >>>> I also saw that we don't have any test to verify that actually the
+> > >>>> lingering is working, should we add it since we are touching it?
+> > >>>
+> > >>> Yeah, I agree we should. Do you have any suggestion how this could be done
+> > >>> reliably?
+> > >>
+> > >> Can we play with SO_VM_SOCKETS_BUFFER_SIZE like in credit-update tests?
+> > >>
+> > >> One peer can set it (e.g. to 1k), accept the connection, but without
+> > >> read anything. The other peer can set the linger timeout, send more
+> > >> bytes than the buffer size set by the receiver.
+> > >> At this point the extra bytes should stay on the sender socket buffer,
+> > >> so we can do the close() and it should time out, and we can check if
+> > >> it happens.
+> > >>
+> > >> WDYT?
+> > >
+> > >Haven't we discussed this approach in [1]? I've reported that I can't make
+> >
+> > Sorry, I forgot. What was the conclusion? Why this can't work?
+> >
+> > >it work. But maybe I'm misunderstanding something, please see the code
+> > >below.
+> >
+> > What I should check in the code below?
+>
+> Okay, I see the send() is blocking (please next time explain better
+> the issue, etc.)
+>
+> I don't want to block this series, so feel free to investigate that
+> later if we have a way to test it. If I'll find some time, I'll try to
+> check if we have a way.
 
-Stephen, please don't forget to pick this one, so that we resolve all those
-warnings :-)
+I've tried to take a look, and no, there's no easy way except to
+somehow slow down the receiver, but I don't think we have a reliable
+way to do that, so I can't think of anything for now. Let's skip it
+(I'll try to remember ;-)
 
-Thanks!
-Angelo
-
-> ---
->   Documentation/devicetree/bindings/clock/mediatek,mt8188-clock.yaml | 3 +++
->   1 file changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/mediatek,mt8188-clock.yaml b/Documentation/devicetree/bindings/clock/mediatek,mt8188-clock.yaml
-> index 2985c8c717d72888dd49f1f6249a9e2594d8a38d..5403242545ab12a7736ed4fbac26008aa955c724 100644
-> --- a/Documentation/devicetree/bindings/clock/mediatek,mt8188-clock.yaml
-> +++ b/Documentation/devicetree/bindings/clock/mediatek,mt8188-clock.yaml
-> @@ -52,6 +52,9 @@ properties:
->     '#clock-cells':
->       const: 1
->   
-> +  '#reset-cells':
-> +    const: 1
-> +
->   required:
->     - compatible
->     - reg
-> 
-
+Thanks,
+Stefano
 
