@@ -1,133 +1,82 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5096F25DD18;
-	Tue, 20 May 2025 09:43:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1430268C46
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 09:44:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747734239; cv=none; b=B1wOmPmwdzvJykuwAZXbrHNGdbtmRNom3wPDC1fSY7Ydv0O/pF8GPs5zbQ6DB1g5A5eBFLJMcDetCz3jfdJCmWd1wY8h7pMDqktcpWmzxjATwBfOvOrfEGorbs96CeuVQe/jrVFjOkJ0JlK8AFFZmzcLQUNkcQ8jh+D69Kvp+uI=
+	t=1747734248; cv=none; b=MvKR8MhhtgNQo87rfSLYvudT0ueE+SulgPfmsQRe6bhKULKoH2rGf7RRazKdVo3+0QQkdWsD1o/9apT1AzWHLsdKMxe4+RYKbugU68/hzAD7lMzJHb7n6VMWy5byLBWPd2onIRyPYqGGkjeZ6B9Weo4XuFTcbvbd9HU1o144QcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747734239; c=relaxed/simple;
-	bh=KRC80vXoGGKP5ZAHY2BxEV2sWz7Ool89aoaHqbBCfdg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mCUuyDikubZ8BXQdWdG+8dIjol0CS0z2cUVUG1JoBjMdWjL1z/hqL1b6SV9ere0P9uGWQE8skn/xpcmGTjeU+sKJvVbtY1KsedDEx3nc9yNNAmu1CzDHKmRCCgWRnr6c/mo8E7C7ONnPXw/RfmNwudP3y4OVzFH55JkB84ZktO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nVy0BD+X; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747734248; c=relaxed/simple;
+	bh=WaDOA0nhLVn0g1cG6OcvRA1CfBIZaKfZuXaM3IJmSSg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=ZH8Kbz3LD+ZA7ByLW9a95aUHLHZgLqwClkauDx4p6v9uqXMTioRCndpOKllwCPuP6IbLBBBS//EDkUS+D8gwxpmN/VXTpVTOgpKZICoY1PP7cQIAw/Fz+klWCstLyW/uC3wACLdH75FVwFo0uDhwhTqOc7nNUewkUb2M/CbhtQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=RcxKMs/D; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nVy0BD+X"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-7399a2dc13fso6858647b3a.2;
-        Tue, 20 May 2025 02:43:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747734237; x=1748339037; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=72RXTv/sI4vy4urdgBX3zIYwp1p5m2C94ZkpYBDXKgc=;
-        b=nVy0BD+XcjFFNPjkzR/AMwwb34w3bkz/v96UDObzPcqTpyzgacpBbX8NKjNpd/Mz9d
-         ZqEbS9nADo1JUQDUUIbxy4JYs1jixGzf0wbc05HQ/71wxiqcgjIbq6vmYbqViaooR4vp
-         26BK5Saorq3gGinfMBTS8H/UWSblUuQXwMSaBLeK1Dy5UuZG0R9on/YQzsbV/pnYvNjO
-         0GDXIkz+/WqUpllJtYFPsHufeKCj4KtuOz0y7+Q0hS2NVo5pdcXpJ52bPPIIJSXcVRT9
-         vk39sqFq+yOLcSo2Q+4ecgMTOcIC3OkS3TCqvkzAN0e+UhJ2+/yToPlktAdKpnZ9iFU0
-         vqww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747734237; x=1748339037;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=72RXTv/sI4vy4urdgBX3zIYwp1p5m2C94ZkpYBDXKgc=;
-        b=lkRwRtsKbCTTXy5BDzudLTAJq4Lewdq8DG+ROSVAc9sQL+fK9hzUTxmQZwv7m+4gid
-         DwEKb/uJ6+aK1szJuLgz6bf9yHJmCIffWBaCx+1zRadWc7hGf+AwGpPKmUsKX/nnHp3a
-         NzXI4VyBnlESv/vezUnnqHaQ3Irc70CC7+u/3gXHJX9fAYdI7y86bjqBd7z4u1aIQcOV
-         KO49WfWxaAISvqnG334FfTUrabABKaU+mJ1WwyaEMpWnoM8f2/E1Ikafy9LBDsEG2nQ1
-         SVHn1QuqbIC9uMiDZUG7alPjTk/qDBIAynnNw+C6n1D/F9XFVi848wj26oxdhn0CXvl6
-         3Fgg==
-X-Forwarded-Encrypted: i=1; AJvYcCW9HSk+zXwtJ0+pF2svqCs/cFWAJ1zvK1tWQIqDUs/smMKaO19nX5+kr9udtnaL++cxL2BtGps7kKE=@vger.kernel.org, AJvYcCWGLAr6bxWplqLeWKrwDGxl6WSCY6JkwJ3ZCs+opZ9GfyKaETPd3mUG/D+knS6kf4aVcnTl5sMyiBajVeo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/kMTjp0v8dtTDK03IkVf/f49sWRxu1j2G+Ghi6m22OXeE5PcK
-	MHc3pejZdN9ntGXQ9QZgxYHmKwnoInKx4Vt9Q2PYRBdIQipPFxoV39sj
-X-Gm-Gg: ASbGnctxqNR24fb+XFmmUTydxdGcIhZlgi6/taRILuiHM2KbPFJ7krJ/pdVxVWSpg+x
-	xxUVyco6YLSpV9qfl/BvgFY0PMST2D4KXKWAxYX72T11qB+nRNWBW+Mu7shhksdJYJ5zFTVxhao
-	TN/wDXfCePihlLZ5Wif/UHZaxmf46NDh7Q4dQL2ZkkIRCNgrV/fUzTB3cUV5FPyf0H4RxEUyH8L
-	5t60Ub0qe5RlOhIGtFNTn/Ov61OAjRS3mEOSFiaBhRtj9YHctNo577QDCLbUhlliN57IXLZRW7l
-	ObdQK1DzGeibaa9ZTfJzd1rTmsK0CI5gCNFydm6zVlhhCNFLMLYjYAI3L1MfQxA5p1ncpb+v5I4
-	Ir+ZhP1v2QcbVZA==
-X-Google-Smtp-Source: AGHT+IGowChZd0yBQuEnow5mD+xA969bcqL8YkmmtlUyLJOW3JKKttacw6iwp5p0zrT9Yq8ZzAOl4w==
-X-Received: by 2002:a05:6a20:3d1c:b0:1ee:d418:f764 with SMTP id adf61e73a8af0-2170ce33ad3mr24484932637.38.1747734237424;
-        Tue, 20 May 2025 02:43:57 -0700 (PDT)
-Received: from localhost.localdomain ([2401:4900:62fe:9593:f762:39d9:3865:830a])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eaf6ffdbsm6559891a12.20.2025.05.20.02.43.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 02:43:57 -0700 (PDT)
-From: Suchit Karunakaran <suchitkarunakaran@gmail.com>
-To: trenn@suse.com,
-	shuah@kernel.org,
-	jwyatt@redhat.com,
-	jkacur@redhat.com,
-	linux-pm@vger.kernel.org
-Cc: linux-kernel-mentees@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Suchit Karunakaran <suchitkarunakaran@gmail.com>
-Subject: [PATCH v2] cpupower: Implement powercap_set_enabled()
-Date: Tue, 20 May 2025 15:13:45 +0530
-Message-ID: <20250520094345.97200-1-suchitkarunakaran@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="RcxKMs/D"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1747734244;
+	bh=WaDOA0nhLVn0g1cG6OcvRA1CfBIZaKfZuXaM3IJmSSg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=RcxKMs/DjTuhcwv/Qud8AMpfWEmOOzGLo49z2+n6mJc88iW3vTfZ+KlmoTtlUBNcs
+	 43h5nuWQQLmqIhpXxFqipz+NA0PZJyrNR3jL+m80XnC3/4AZ2KBG8MBgDbdbPljq3v
+	 NyCEzRaIXHGzZdNyGaxc/l47F5btNls6+WFL91w22LKDT8oeznNK4OCO/0jbp2WLqc
+	 kyj7/DpBnYBu7l2sDaZVEhFMjmTDxsnJ0d6KqdEmMADBCmUnU9gipUxKD7mb83Ukfb
+	 uc3O0tyJWrwCMs1RYGG1qsZlRyIjTG1HBCDHbDPhkKxuWf3uEjKtemXBvaE94/b686
+	 4A7IWsWhC/b4g==
+Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 52E7F17E0FD3;
+	Tue, 20 May 2025 11:44:03 +0200 (CEST)
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+To: linux-mediatek@lists.infradead.org, 
+ Vignesh Raman <vignesh.raman@collabora.com>
+Cc: chunkuang.hu@kernel.org, p.zabel@pengutronix.de, 
+ nfraprado@collabora.com, krzk@kernel.org, daniels@collabora.com, 
+ airlied@gmail.com, simona.vetter@ffwll.ch, arnd@kernel.org, 
+ ck.hu@mediatek.com, laura.nao@collabora.com, matthias.bgg@gmail.com, 
+ tzimmermann@suse.de, mripard@kernel.org, lumag@kernel.org, 
+ ville.syrjala@linux.intel.com, jani.nikula@intel.com, arnd@arndb.de, 
+ geert+renesas@glider.be, wenst@chromium.org, 
+ linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250512131933.1247830-1-vignesh.raman@collabora.com>
+References: <20250512131933.1247830-1-vignesh.raman@collabora.com>
+Subject: Re: [PATCH v4] arm64: defconfig: mediatek: enable PHY drivers
+Message-Id: <174773424323.2901578.2896521674718860573.b4-ty@collabora.com>
+Date: Tue, 20 May 2025 11:44:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-The powercap_set_enabled() function previously returned a dummy value
-and was marked with a TODO comment to implement it. This patch implements the 
-function by writing the desired mode (0 or 1) to /sys/class/powercap/intel-rapl/enabled
+On Mon, 12 May 2025 18:49:24 +0530, Vignesh Raman wrote:
+> The mediatek display driver fails to probe on mt8173-elm-hana and
+> mt8183-kukui-jacuzzi-juniper-sku16 in v6.14-rc4 due to missing PHY
+> configurations.
+> 
+> Commit 924d66011f24 ("drm/mediatek: stop selecting foreign drivers")
+> stopped selecting the MediaTek PHY drivers, requiring them to be
+> explicitly enabled in defconfig.
+> 
+> [...]
 
-Signed-off-by: Suchit Karunakaran <suchitkarunakaran@gmail.com>
----
- tools/power/cpupower/lib/powercap.c | 22 ++++++++++++++++++----
- 1 file changed, 18 insertions(+), 4 deletions(-)
+Applied to v6.15-next/dts64, thanks!
 
-diff --git a/tools/power/cpupower/lib/powercap.c b/tools/power/cpupower/lib/powercap.c
-index 94a0c69e55ef..7947b9809239 100644
---- a/tools/power/cpupower/lib/powercap.c
-+++ b/tools/power/cpupower/lib/powercap.c
-@@ -70,6 +70,22 @@ static int sysfs_get_enabled(char *path, int *mode)
- 	return ret;
- }
- 
-+static int sysfs_set_enabled(const char *path, int mode)
-+{
-+	int fd;
-+	char buf[2] = { mode ? '1' : '0', '\n' };
-+	ssize_t ret;
-+
-+	fd = open(path, O_WRONLY);
-+	if (fd == -1)
-+		return -1;
-+
-+	ret = write(fd, buf, sizeof(buf));
-+	close(fd);
-+
-+	return ret == sizeof(buf) ? 0 : -1;
-+}
-+
- int powercap_get_enabled(int *mode)
- {
- 	char path[SYSFS_PATH_MAX] = PATH_TO_POWERCAP "/intel-rapl/enabled";
-@@ -77,12 +93,10 @@ int powercap_get_enabled(int *mode)
- 	return sysfs_get_enabled(path, mode);
- }
- 
--/*
-- * TODO: implement function. Returns dummy 0 for now.
-- */
- int powercap_set_enabled(int mode)
- {
--	return 0;
-+	char path[SYSFS_PATH_MAX] = PATH_TO_POWERCAP "/intel-rapl/enabled";
-+	return sysfs_set_enabled(path, mode);
- }
- 
- /*
--- 
-2.49.0
+[1/1] arm64: defconfig: mediatek: enable PHY drivers
+      (no commit info)
+
+Cheers,
+Angelo
+
 
