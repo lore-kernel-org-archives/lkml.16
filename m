@@ -1,123 +1,99 @@
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DC3925D1E3;
-	Tue, 20 May 2025 10:09:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA2BD2698AF
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 10:09:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747735773; cv=none; b=lrIsiIUehaRxyd69dK1hMaQHqOapgZb9X1FvJLGIOGz93P1/x2+DK2MiS4GVA1HjL5nUZfGRlFvgsRCkBoYjJo6Bsfys+hDg7lqyaaC7XIHNO+cGEOMIpGkvgZvC7CbptxzLsh4zjMOmMJdkCVOvFZl4tWYteWoefiuFRlXzfzM=
+	t=1747735796; cv=none; b=gD5RFHmUCPzOnOKd4DRe0KK0iZExDCJd4jghOu5S+U6Y7qY9ehder+YEkCue7cQrKx5yE7B+uIomOYzaBMgWLqOo3VxAdusgWjq0/KCfWKhg9t1qGRIu38O2qvRyVFmzzBRLekrFPFzdje1VWk/4TzI2IeR2LUVhhBTeiDuzSlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747735773; c=relaxed/simple;
-	bh=m8e9n+oAOVs4AsRimdeo9+sr4PG/7AecItEb1VRBeuQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LWDSdAdiKPuzWnbrNWq7S6YNR2N/U1bV+iiE9Rby8OeW/5FIr32gdYZEaj8kFsoougbFoqkAW6+LJyznsHy2oOfls6WDig2ExNWOkR84cNi9cSi3hEAW7+/5BymvKyEuH50Ak7UcmLOHAyG917AnCpudmGBw0F3KffKdDU16GHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ygOzCSXw; arc=none smtp.client-ip=115.124.30.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1747735796; c=relaxed/simple;
+	bh=0PA8gOT5qlDi4EOK5CzsQ2tUFLu/eRBQa3JY9IJpy/A=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=BVIt2t04kPNXsfZv4dBVkAM4rXHQpLppc9rRLgmyGDHobje3wYKBkmUgr2In0VN2HWn5iYyLaoAhn7VRtnQul9oW3CVUH2V8XQQgdv3Mc3D3RFFJAxmsf7ZkUsLEeoCxLMz5963AFolDP+zk2qGdC/V7ong8goRHWePYPd7GFnc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B/dd1pkP; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ygOzCSXw"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1747735761; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=v+l36cqnPW2zFk54RHXHgtbnmyLJo7eF/GoyqNRtyHo=;
-	b=ygOzCSXwtV1iMeD6LWrdiuqYAy1WYsPJjlI2ZQPrjge7Dhi4vclJnuy+8b7IOSeYMHRYinW4NQbA7Glsy2SJH/20FziviWtXFMIWZW839aSpj6Qn0QiRJZsAxgJIEC00WaBtAva5+v2CFcTVfr4V9kMOW8LbZuyFvzjDdesFkfk=
-Received: from 30.74.144.114(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WbNVW2L_1747735757 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 20 May 2025 18:09:18 +0800
-Message-ID: <ed1d1281-ece3-4d2c-8e58-aaeb436d3927@linux.alibaba.com>
-Date: Tue, 20 May 2025 18:09:16 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B/dd1pkP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747735795; x=1779271795;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=0PA8gOT5qlDi4EOK5CzsQ2tUFLu/eRBQa3JY9IJpy/A=;
+  b=B/dd1pkPVWtH7jkPkXjV49wfrHse3a8jo/KtfEbtYukPY4WCSWIj9+fq
+   Dpiwksd36eFheq/KVRjkYGgOmZamuodEmz8GxAmz1YRoM3w7cpt/UllqY
+   G655Id1ugHH8z9Hs/WnaziMcG/lzJrbixQHFEeONB6g7p/XIU3MyHGLAn
+   zjs8kS6TTl3EpTESGslCJ++JJ+UgieUPwv7eYnmBx11oWt8syOnKM23kL
+   qtdy3WKXjlzs4wma2SWLK2hRpfp89jvEbe7BVTpubS/cYYbilAfk98Ui/
+   18heoyu5NOGuChTi+6FJwBJTOTeuRUJVjj4+sbpA9FmhfJFzX3YZ/pTIp
+   g==;
+X-CSE-ConnectionGUID: zqyPXAqyQaqctjN8TjU5vg==
+X-CSE-MsgGUID: 3dYp32zjSmmThhudIxMfIg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="49725664"
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="49725664"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 03:09:55 -0700
+X-CSE-ConnectionGUID: ADek4IpGReaPfJVxkT8tXA==
+X-CSE-MsgGUID: Ondfzp86SAuYF/zZKs7E2w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="176774054"
+Received: from dhhellew-desk2.ger.corp.intel.com (HELO localhost) ([10.245.245.168])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 03:09:51 -0700
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Anusha Srivatsa <asrivats@redhat.com>, Neil Armstrong
+ <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
+ <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
+ <simona@ffwll.ch>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, Luca Ceresoli <luca.ceresoli@bootlin.com>
+Subject: Re: [PATCH v4 2/4] drm/panel: Add refcount support
+In-Reply-To: <20250519-singing-silent-stingray-fe5c9b@houat>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <87y0vkw8ll.fsf@intel.com>
+ <20250429-benign-sidewinder-of-defense-6dd4d8@houat>
+ <87o6wfwcef.fsf@intel.com> <20250505-slim-bizarre-marten-a674ac@houat>
+ <CAN9Xe3RLazpAXdxxJmyF2QAShDtMSgdoxMdo6ecdYd7aZiP9kA@mail.gmail.com>
+ <874ixvtbxy.fsf@intel.com>
+ <20250509-rapid-flounder-of-devotion-6b26bb@houat>
+ <87r00yj6kv.fsf@intel.com>
+ <molexnyjkiryvhetfdc66gmzecrf6f7kxl656qn46djdkixrkb@fdgnp5hispbf>
+ <875xi3im1r.fsf@intel.com> <20250519-singing-silent-stingray-fe5c9b@houat>
+Date: Tue, 20 May 2025 13:09:47 +0300
+Message-ID: <87sekztwyc.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 06/12] khugepaged: introduce khugepaged_scan_bitmap for
- mTHP support
-To: Nico Pache <npache@redhat.com>
-Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- david@redhat.com, ziy@nvidia.com, lorenzo.stoakes@oracle.com,
- Liam.Howlett@oracle.com, ryan.roberts@arm.com, dev.jain@arm.com,
- corbet@lwn.net, rostedt@goodmis.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, akpm@linux-foundation.org,
- baohua@kernel.org, willy@infradead.org, peterx@redhat.com,
- wangkefeng.wang@huawei.com, usamaarif642@gmail.com, sunnanyong@huawei.com,
- vishal.moola@gmail.com, thomas.hellstrom@linux.intel.com,
- yang@os.amperecomputing.com, kirill.shutemov@linux.intel.com,
- aarcange@redhat.com, raquini@redhat.com, anshuman.khandual@arm.com,
- catalin.marinas@arm.com, tiwai@suse.de, will@kernel.org,
- dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org,
- jglisse@google.com, surenb@google.com, zokeefe@google.com,
- hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
- rdunlap@infradead.org
-References: <20250515032226.128900-1-npache@redhat.com>
- <20250515032226.128900-7-npache@redhat.com>
- <9c54397f-3cbf-4fa2-bf69-ba89613d355f@linux.alibaba.com>
- <CAA1CXcC9MB2Nw4MmGajESfH8DhAsh4QvTj4ABG3+Rg2iPi087w@mail.gmail.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <CAA1CXcC9MB2Nw4MmGajESfH8DhAsh4QvTj4ABG3+Rg2iPi087w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Sorry for late reply.
 
-On 2025/5/17 14:47, Nico Pache wrote:
-> On Thu, May 15, 2025 at 9:20 PM Baolin Wang
-> <baolin.wang@linux.alibaba.com> wrote:
->>
->>
->>
->> On 2025/5/15 11:22, Nico Pache wrote:
->>> khugepaged scans anons PMD ranges for potential collapse to a hugepage.
->>> To add mTHP support we use this scan to instead record chunks of utilized
->>> sections of the PMD.
->>>
->>> khugepaged_scan_bitmap uses a stack struct to recursively scan a bitmap
->>> that represents chunks of utilized regions. We can then determine what
->>> mTHP size fits best and in the following patch, we set this bitmap while
->>> scanning the anon PMD. A minimum collapse order of 2 is used as this is
->>> the lowest order supported by anon memory.
->>>
->>> max_ptes_none is used as a scale to determine how "full" an order must
->>> be before being considered for collapse.
->>>
->>> When attempting to collapse an order that has its order set to "always"
->>> lets always collapse to that order in a greedy manner without
->>> considering the number of bits set.
->>>
->>> Signed-off-by: Nico Pache <npache@redhat.com>
->>
->> Sigh. You still haven't addressed or explained the issues I previously
->> raised [1], so I don't know how to review this patch again...
-> Can you still reproduce this issue?
+Maxime -
 
-Yes, I can still reproduce this issue with today's (5/20) mm-new branch.
+I'm cutting a lot of context here. Not because I don't think it deserves
+an answer, but because I seem to be failing at communication.
 
-I've disabled PMD-sized THP in my system:
-[root]# cat /sys/kernel/mm/transparent_hugepage/enabled
-always madvise [never]
-[root]# cat /sys/kernel/mm/transparent_hugepage/hugepages-2048kB/enabled
-always inherit madvise [never]
+On Mon, 19 May 2025, Maxime Ripard <mripard@kernel.org> wrote:
+> You still haven't explained why it would take anything more than
+> registering a dumb device at probe time though.
 
-And I tried calling madvise() with MADV_COLLAPSE for anonymous memory, 
-and I can still see it collapsing to a PMD-sized THP.
+With that, do you mean a dumb struct device, or any struct device with a
+suitable lifetime, that we'd pass to devm_drm_panel_alloc()?
 
-> I can no longer reproduce this issue, that's why I posted... although
-> I should have followed up, and looked into what the original issue
-> was. Nothing really sticks out so perhaps something in mm-new was
-> broken and pulled out... not sure.
-> 
-> It should now follow the expected behavior, which is that no mTHP
-> collapse occurs because if the PMD size is disabled so is khugepaged
-> collapse.
-> 
-> Lmk if you are still experiencing this issue please.
-> 
-> Cheers,
-> -- Nico
->>
->> [1]
->> https://lore.kernel.org/all/83a66442-b7c7-42e7-af4e-fd211d8ed6f8@linux.alibaba.com/
->>
+Is using devm_drm_panel_alloc() like that instead of our own allocation
+with drm_panel_init() the main point of contention for you? If yes, we
+can do that.
+
+
+BR,
+Jani.
+
+
+-- 
+Jani Nikula, Intel
