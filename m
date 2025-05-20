@@ -1,96 +1,148 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55C421854;
-	Tue, 20 May 2025 06:30:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B71252580CB;
+	Tue, 20 May 2025 06:31:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747722630; cv=none; b=fExFLI/QFjc+r/JgyyJEHDANecUI3vctdrOxKvu8iQN5f5I9rYgsnLQ13J2Fa0stS0NscKQXOStim9rKKORmQLy0JsoJcJp6mTnX/Qr7IMP8ibvSZiZFyqa8VT24qKH3llg4Qml6ATuFidQQeN+4O1Osg0ufy+P7lIIm1Py91M8=
+	t=1747722690; cv=none; b=qrFwxDsdFQyPYGBJrr8Nbp3J65bWFoPYOb0qgIBnY1YUPx920ysNzsyNIsoXCXaH36mlt90jX/LV/RjDDfWFz+v55cpGV3DdZe4NTXvZEB7coawBahiIE5OYlgB7PDX/RSOgJzcFz86IZ/cq4kq+slqS9U75E5BPR1X+kAWFj0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747722630; c=relaxed/simple;
-	bh=pC7hcoBItm/p4ikdY5pstS8S6ncVBZrRXfm7pjZ61Iw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rp+2BXd8XkaqsYh1Xz8b+Z/eEMHJkUussR5o5Unu1soalqDWPFHyFYknjvnhTCuM717DhiL1LiPtAPCotBt6ODtb+w2mjhrXFG7qJGooIQ1RP478GQF8aZOHXL+GnxQiGABVj1bsDgKQ+XhFSTytg0p/7w4eK7vzpTalDGnRqiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxWXF1ISxoEA3zAA--.152S3;
-	Tue, 20 May 2025 14:30:13 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMDxu8RxISxo+8fiAA--.53745S2;
-	Tue, 20 May 2025 14:30:10 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH for 6.14.y] perf tools: Fix build error for LoongArch
-Date: Tue, 20 May 2025 14:30:09 +0800
-Message-ID: <20250520063009.23504-1-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
+	s=arc-20240116; t=1747722690; c=relaxed/simple;
+	bh=Re+lidTtgn4qNd1zwUVxIaWwVsiZIZkKB59dSI0Tn3c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rhuDMLRSj4JAa/FVPeXDB8tvo1MaC8Q56md/q5Jf+eQPIkhM6mi/pEi0LspHk9z7AE9zIOlteVZ+bCdES2cJOs3uGajrOrs4Lo9j7yEzjbsCxCOnrBsiXFCKhjhtW3Ou+Ln2UXxQClVzFSq019Oy9XwL1BEat5K2cGp0UOd3X+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=J0HOUDM5; arc=none smtp.client-ip=82.195.75.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="J0HOUDM5"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=zOaRJ94Fm6w3ZOR6xqIqJ3OCL7WUo+919zCPbZH0zlw=; b=J0HOUDM5EP9FAFa1K3OyU4NgIL
+	i4b2Rk5wITFjxQMu1VzjVNZDvLv+pOoaHadSgN9oIwcG7RfPgv0vr4LY2fbeMwADttJaiS0GKnz1d
+	ej66NVBEe/XLYHjdSkLDG/iOCcBp6J1j6iHbojbQrVUBSo0Lz2QSIL03Xow9kgGS4EhkRaJL0WWBT
+	uBvgYUg7X2kbkVxNIYYmtnDQj+TSk/5DEItjGRaWFmJVf/qesBHYPrcV+QXtqavjWTQ8iyH8Iic8b
+	2AetF373Rh+Nha5peIV8j/EZZ7xvzXuugv9pF0p0zxh6OIuB03LFESJpwXPs5TbuaJu0ae3NhJ0im
+	cbtjak7w==;
+Received: from authenticated user
+	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.94.2)
+	(envelope-from <carnil@debian.org>)
+	id 1uHFym-00GA08-6O; Tue, 20 May 2025 05:57:32 +0000
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id 0B758BE2DE0; Tue, 20 May 2025 07:57:31 +0200 (CEST)
+Date: Tue, 20 May 2025 07:57:31 +0200
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: Roland Clobus <rclobus@rclobus.nl>, Lizhi Xu <lizhi.xu@windriver.com>,
+	Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+Cc: 1106070@bugs.debian.org, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: [6.12.y regression] loosetup: failed to set up loop device: Invalid
+ argument after 184b147b9f7f ("loop: Add sanity check for read/write_iter")
+Message-ID: <aCwZy6leWNvr7EMd@eldamar.lan>
+References: <3a333f27-6810-4313-8910-485df652e897@rclobus.nl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDxu8RxISxo+8fiAA--.53745S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7uFy3tr4kKFy5XFWDArykXrc_yoW8Ar1UpF
-	sxC34DtFWrWryrArnrur1IgFy8Gw4DX342qFy0kr45ZwnIgr9IqF97Xas8KFyxWa9FgrW0
-	vrWSkay5GF48XabCm3ZEXasCq-sJn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
-	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2I
-	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
-	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
-	0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j0FALUUUUU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3a333f27-6810-4313-8910-485df652e897@rclobus.nl>
+X-Debian-User: carnil
 
-There exists the following error when building perf tools on LoongArch:
+Hi
 
-  CC      util/syscalltbl.o
-In file included from util/syscalltbl.c:16:
-tools/perf/arch/loongarch/include/syscall_table.h:2:10: fatal error: asm/syscall_table_64.h: No such file or directory
-    2 | #include <asm/syscall_table_64.h>
-      |          ^~~~~~~~~~~~~~~~~~~~~~~~
-compilation terminated.
+In Debian Roland Clobus reported a regression with setting up loop
+devices from a backing squashfs file lying on read-only mounted target
+directory from a iso.
 
-This is because the generated syscall header is syscalls_64.h rather
-than syscall_table_64.h. The above problem was introduced from v6.14,
-then the header syscall_table.h has been removed from mainline tree
-in commit af472d3c4454 ("perf syscalltbl: Remove syscall_table.h"),
-just fix it only for the linux-6.14.y branch of stable tree.
+The original report is at:
+https://bugs.debian.org/1106070
 
-By the way, no need to fix the mainline tree and there is no upstream
-git id for this patch.
+Quoting the report:
 
-How to reproduce:
+On Mon, May 19, 2025 at 12:15:10PM +0200, Roland Clobus wrote:
+> Package: linux-image-6.12.29-amd64
+> Version: 6.12.29-1
+> Severity: important
+> X-Debbugs-Cc: debian-amd64@lists.debian.org
+> User: debian-amd64@lists.debian.org
+> Usertags: amd64
+> X-Debbugs-Cc: phil@hands.com
+> User: debian-qa@lists.debian.org
+> Usertags: openqa
+> X-Debbugs-Cc: debian-boot
+> 
+> Hello maintainers of the kernel,
+> 
+> The new kernel (6.12.29) has a modified behaviour (compared to 6.12.27) for
+> the loop device.
+> 
+> This causes the Debian live images (for sid) to fail to boot.
+> 
+> The change happened between 20250518T201633Z and 20250519T021902Z, which
+> matches the upload of 6.12.29 (https://tracker.debian.org/news/1646619/accepted-linux-signed-amd64-612291-source-into-unstable/)
+> at 20250518T230426Z.
+> 
+> To reproduce:
+> * Download the daily live image from https://openqa.debian.net/tests/396941/asset/iso/smallest-build_sid_20250519T021902Z.iso
+> * Boot into the live image (the first boot option)
+> * Result: an initramfs shell (instead of a live system) -> FAIL
+> * Try: `losetup -r /dev/loop1 /run/live/medium/live/filesystem.squashfs`
+> * Result: `failed to set up loop device: invalid argument` -> FAIL
+> * Try: `cp /run/live/medium/live/filesystem.squashfs /`
+> * Try: `losetup -r /dev/loop2 /filesystem.squashfs`
+> * Result: `loop2: detected capacity change from 0 to 1460312` -> PASS
+> 
+> It appears that the loopback device cannot be used any more with the mount
+> /run/live/medium (which is on /dev/sr0).
+> 
+> I've verified: the md5sum of the squashfs file is OK.
+> 
+> The newer kernel is not in trixie yet.
+> 
+> With kind regards,
+> Roland Clobus
 
-  git clone https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
-  cd linux && git checkout origin/linux-6.14.y
-  make JOBS=1 -C tools/perf
+A short reproducer is as follows:
 
-Fixes: fa70857a27e5 ("perf tools loongarch: Use syscall table")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- tools/perf/arch/loongarch/include/syscall_table.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+iso="netinst.iso"
+url="https://openqa.debian.net/tests/396941/asset/iso/smallest-build_sid_20250519T021902Z.iso"
+if [ ! -e "${iso}" ]; then
+        wget "${url}" -O "${iso}"
+fi
+mountdir="$(mktemp -d)"
+mount -v "./${iso}" "${mountdir}"
+losetup -v -r -f "${mountdir}/live/filesystem.squashfs"
+loosetup -l
 
-diff --git a/tools/perf/arch/loongarch/include/syscall_table.h b/tools/perf/arch/loongarch/include/syscall_table.h
-index 9d0646d3455c..b53e31c15805 100644
---- a/tools/perf/arch/loongarch/include/syscall_table.h
-+++ b/tools/perf/arch/loongarch/include/syscall_table.h
-@@ -1,2 +1,2 @@
- /* SPDX-License-Identifier: GPL-2.0 */
--#include <asm/syscall_table_64.h>
-+#include <asm/syscalls_64.h>
--- 
-2.42.0
+resulting in:
 
+mount: /tmp/tmp.HgbNe7ek3h: WARNING: source write-protected, mounted read-only.
+mount: /dev/loop0 mounted on /tmp/tmp.HgbNe7ek3h.
+losetup: /tmp/tmp.HgbNe7ek3h/live/filesystem.squashfs: failed to set up loop device: Invalid argument
+NAME       SIZELIMIT OFFSET AUTOCLEAR RO BACK-FILE         DIO LOG-SEC
+/dev/loop0         0      0         1  0 /root/netinst.iso   0     512
+
+Reverting 184b147b9f7f ("loop: Add sanity check for read/write_iter")
+on top of 6.12.29 fixes the issue:
+
+mount: /tmp/tmp.ACkkdCdYvB: WARNING: source write-protected, mounted read-only.
+mount: /dev/loop0 mounted on /tmp/tmp.ACkkdCdYvB.
+NAME       SIZELIMIT OFFSET AUTOCLEAR RO BACK-FILE                                    DIO LOG-SEC
+/dev/loop1         0      0         0  1 /tmp/tmp.ACkkdCdYvB/live/filesystem.squashfs   0     512
+/dev/loop0         0      0         1  0 /root/netinst.iso                              0     512
+
+For completeness, netinst.iso is a iso9660 fstype with mount options
+"ro,relatime,nojoliet,check=s,map=n,blocksize=2048,iocharset=utf8".
+
+#regzbot introduced: 184b147b9f7f
+#regzbot link: https://bugs.debian.org/1106070
+
+Regards,
+Salvatore
