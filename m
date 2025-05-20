@@ -1,299 +1,154 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FC9124BC14;
-	Tue, 20 May 2025 15:40:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CE5D243369;
+	Tue, 20 May 2025 15:41:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747755642; cv=none; b=iJlKkUSCsInpVpEMO/E04MZw8SzsYAmZCFR9xQR6x+v+Ku+4EHf51CRweIW/crefO3GkFMdV4yGbGeGMjpNHEF2pDS2l1jEPh9F3A26rNRcDVB1FQaprVNk6vmkwQlMnL1Q1FIB3I+8YKuI+Us6fXppySIg3JUB2yYI21M6wNY0=
+	t=1747755683; cv=none; b=Y4uO+HRfKUvuAoGgNncCoMfmusM/MTaDZNMztkUMj8j7BNM8butsCkBW9RLJnlLH80agtd3A0ENqu3Jp0/QB4ydTMKpjzoMQt9yWCgCMgFD4obLk8AnobnfeWRBWamxF5nmS4NNi5nMTnHIFZM/3CCL+FMAFfFhdx5fNsFAL/9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747755642; c=relaxed/simple;
-	bh=cjlil9G8JByys0gJ+2GwXu4Q4GO7unka4kGteTA7xdc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=G8EeezTv9l2ecIKnm1ZiYCwrWp/A/GzHf906OJbI1VYVP1FYQftMe4RqAQfk43Y3HYuQc2ozSTNc7HVEDGEG5bYYj7ku1EXBbT4ipU3Hh+uFRhMxs+RG2upDOePgUNMKSUOgRuQqwyuKOvrLPVTGh5GWYdSK6xUdDehfkWZUus0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tDMTw39n; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747755683; c=relaxed/simple;
+	bh=KbQfROc5Hg75Nw8HeRQO1lwKCtk4FnVOja7DflWtN0M=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jawVa9bTzvQZCdGvmZoIGENjxToaV6dUPdueW8j9ORrjP+cVzpPOzhcJrlMILSIWkI2eQjTSvpcUw5+sTi/XBp9voQOOUG9NC563hlD6DDjJJhCkzxP3mCnQpeQdERsGbpx0SqIgjjjPTcCAP4sf0/gKK9nBoU4aTLZ8wQw9L7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pinWP7XL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tDMTw39n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80BA5C4CEE9;
-	Tue, 20 May 2025 15:40:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pinWP7XL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E19B4C4CEE9;
+	Tue, 20 May 2025 15:41:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747755642;
-	bh=cjlil9G8JByys0gJ+2GwXu4Q4GO7unka4kGteTA7xdc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=tDMTw39nrPOPNILCsmUbXg9K+21z/s0dt+uExMsXy6Zm33Cf33SpFolaLr0qtexZR
-	 NGS5ll/ioml+RM8PIRCDaskg1GDcqibmUB/d19XPRfwnN18WDssc7Qy8KEBuKQWNME
-	 cjYdj4ZP9wr8YN+gUhhlVOuydFVCTJ/L4UbkdW/zV/RRc8/7kjv58U2jy5GxC2P+U0
-	 eql6zkdQVbGVjljI7JV+zzLLDaIdwHUNEOtaJ+ci3MPkOu9nwXc94lhpp+3ePEsINp
-	 MNIyvJkQUyn8U13BXejspOLv1Mta1+/5JeU1c2igSLpRMn0wJUt64c+F6YTkDPvqte
-	 AdUdh8oYhg7Rw==
-Date: Tue, 20 May 2025 17:40:35 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Jonathan Corbet <corbet@lwn.net>, Akira Yokosawa <akiyks@gmail.com>,
- Nicolas Schier <nicolas.schier@linux.dev>, Randy Dunlap
- <rdunlap@infradead.org>, Stephen Rothwell <sfr@canb.auug.org.au>, Kees Cook
- <kees@kernel.org>, linux-doc@vger.kernel.org, linux-kbuild@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/4] docs: kerneldoc.py: add try/except blocks for
- kernel-doc class errors
-Message-ID: <20250520174035.5f193ec3@sal.lan>
-In-Reply-To: <20250520165024.7447a107@sal.lan>
-References: <cover.1747747695.git.mchehab+huawei@kernel.org>
-	<064bac2f462c13f56154891d8f3fb788db94f325.1747747695.git.mchehab+huawei@kernel.org>
-	<aCyQIwBnSiPLPrDo@smile.fi.intel.com>
-	<20250520165024.7447a107@sal.lan>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=k20201202; t=1747755681;
+	bh=KbQfROc5Hg75Nw8HeRQO1lwKCtk4FnVOja7DflWtN0M=;
+	h=From:To:Cc:Subject:Date:From;
+	b=pinWP7XLPurM1CAOrQlu5ITfUwT8IcME14Zq0/Hpq7oG/0QwsRmN8Gsxw+1JS+oNM
+	 gzPHbhMogDUwZsbFd1nfCJQSKbqIHq4FE5VNUzCCjEDCbnhZfK61NIsYP18oZc5mpQ
+	 np00Rerr/lsGArUr3jpcUX0W5IIiuVhzF0cCtjaR/PMn5DKbf7zvDhZxM44g2IrkNK
+	 PucpYSuKfIHGcjurdOKW05KaSFq0d9J4gvCL06rV1pIbmu+NYTybV7cws55NWrldCK
+	 KfLgYJJTt8hFDkxHb4v+m64onP+JneRwBZRwUHQE4ez0lBTQpz17MElO340iVewp6a
+	 1gLvZdALj5XLQ==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Lee Jones <lee@kernel.org>,
+	Aaro Koskinen <aaro.koskinen@iki.fi>,
+	Andreas Kemnade <andreas@kemnade.info>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Roger Quadros <rogerq@kernel.org>,
+	Tony Lindgren <tony@atomide.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Chen Ni <nichen@iscas.ac.cn>,
+	linux-kernel@vger.kernel.org,
+	linux-omap@vger.kernel.org
+Subject: [PATCH] mfd: fix building without CONFIG_OF
+Date: Tue, 20 May 2025 17:40:43 +0200
+Message-Id: <20250520154106.2019525-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Em Tue, 20 May 2025 16:50:24 +0200
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> escreveu:
+From: Arnd Bergmann <arnd@arndb.de>
 
-> Em Tue, 20 May 2025 17:22:27 +0300
-> Andy Shevchenko <andriy.shevchenko@linux.intel.com> escreveu:
-> 
-> > On Tue, May 20, 2025 at 03:33:08PM +0200, Mauro Carvalho Chehab wrote:
-> > > Replicate the same behavior as what's done with kernel-doc.pl:
-> > > continue building docs even when there are exceptions.  
-> > 
-> > ...
-> > 
-> > > +            logger.warning("kernel-doc '%s' processing failed with: %s" %
-> > > +                           (cmd_str(cmd), str(e)))  
-> > 
-> > > +                logger.warning("kernel-doc '%s' processing failed with: %s" %
-> > > +                               (cmd_str(cmd), str(e)))  
-> > 
-> > The prefix of the message is the same for different (semantically) places.
-> > Is it okay? (I would expect them to slightly differ, but I dunno if
-> > cmd here is the same, perhaps that's enough for distinguishing the two.)
-> 
-> I guess it should be OK, as the "%s" variables are the ones that will
-> actually help to provide a hint about the issue. See, in practice, if
-> one wants to check what crashed, the procedure would likely be to run 
-> the command line, given by "cmd_str(cmd)" and see what output was produced.
+Using the of_fwnode_handle() means that local 'node' variables are unused
+whenever CONFIG_OF is disabled for compile testing:
 
-On a second thought, the try/except logic there is too complex. We
-need just one to cover all cases. Also, "str(e)" is not the best,
-as it doesn't really show the error. "pformat(e)" works a lot better:
+drivers/mfd/88pm860x-core.c: In function 'device_irq_init':
+drivers/mfd/88pm860x-core.c:576:29: error: unused variable 'node' [-Werror=unused-variable]
+  576 |         struct device_node *node = i2c->dev.of_node;
+      |                             ^~~~
+drivers/mfd/max8925-core.c: In function 'max8925_irq_init':
+drivers/mfd/max8925-core.c:659:29: error: unused variable 'node' [-Werror=unused-variable]
+  659 |         struct device_node *node = chip->dev->of_node;
+      |                             ^~~~
+drivers/mfd/twl4030-irq.c: In function 'twl4030_init_irq':
+drivers/mfd/twl4030-irq.c:679:46: error: unused variable 'node' [-Werror=unused-variable]
+  679 |         struct                  device_node *node = dev->of_node;
+      |                                              ^~~~
 
-	$ make htmldocs
-	Using alabaster theme
-	Using Python kernel-doc
-	Cannot find file ./drivers/gpio/gpiolib-acpi.c
-	Cannot find file ./drivers/gpio/gpiolib-acpi.c
-	WARNING: kernel-doc './scripts/kernel-doc.py -rst -enable-lineno -export ./drivers/gpio/gpiolib-acpi.c' processing failed with: KeyError('./drivers/gpio/gpiolib-acpi.c')
-	Documentation/arch/powerpc/htm.rst: WARNING: document isn't included in any toctree
+Replace these with the corresponding dev_fwnode() lookups that
+keep the code simpler in addition to avoiding the warnings.
 
-See enclosed patch (to be applied after this series).
-
-Regards,
-Mauro
-
+Fixes: e3d44f11da04 ("mfd: Switch to irq_domain_create_*()")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
+Thomas, can you pick this up into the tip/irq/cleanups branch that
+contains the earlier commit that introduced the warnings?
+---
+ drivers/mfd/88pm860x-core.c | 3 +--
+ drivers/mfd/max8925-core.c  | 6 +++---
+ drivers/mfd/twl4030-irq.c   | 3 +--
+ 3 files changed, 5 insertions(+), 7 deletions(-)
 
-[PATCH] docs: kerneldoc.py: simplify exception handling logic
-
-Instead of having try/except everywhere, place them on a common
-place.
-
-While here, get rid of some bogus logs.
-
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-
-diff --git a/Documentation/sphinx/kerneldoc.py b/Documentation/sphinx/kerneldoc.py
-index 833cb0285afc..3f9754b84566 100644
---- a/Documentation/sphinx/kerneldoc.py
-+++ b/Documentation/sphinx/kerneldoc.py
-@@ -40,6 +40,7 @@ from docutils.parsers.rst import directives, Directive
- import sphinx
- from sphinx.util.docutils import switch_source_input
- from sphinx.util import logging
-+from pprint import pformat
+diff --git a/drivers/mfd/88pm860x-core.c b/drivers/mfd/88pm860x-core.c
+index 488e346047c1..77230fbe07be 100644
+--- a/drivers/mfd/88pm860x-core.c
++++ b/drivers/mfd/88pm860x-core.c
+@@ -573,7 +573,6 @@ static int device_irq_init(struct pm860x_chip *chip,
+ 	unsigned long flags = IRQF_TRIGGER_FALLING | IRQF_ONESHOT;
+ 	int data, mask, ret = -EINVAL;
+ 	int nr_irqs, irq_base = -1;
+-	struct device_node *node = i2c->dev.of_node;
  
- srctree = os.path.abspath(os.environ["srctree"])
- sys.path.insert(0, os.path.join(srctree, "scripts/lib/kdoc"))
-@@ -49,7 +50,7 @@ from kdoc_output import RestFormat
+ 	mask = PM8607_B0_MISC1_INV_INT | PM8607_B0_MISC1_INT_CLEAR
+ 		| PM8607_B0_MISC1_INT_MASK;
+@@ -624,7 +623,7 @@ static int device_irq_init(struct pm860x_chip *chip,
+ 		ret = -EBUSY;
+ 		goto out;
+ 	}
+-	irq_domain_create_legacy(of_fwnode_handle(node), nr_irqs, chip->irq_base, 0,
++	irq_domain_create_legacy(dev_fwnode(&i2c->dev), nr_irqs, chip->irq_base, 0,
+ 				 &pm860x_irq_domain_ops, chip);
+ 	chip->core_irq = i2c->irq;
+ 	if (!chip->core_irq)
+diff --git a/drivers/mfd/max8925-core.c b/drivers/mfd/max8925-core.c
+index 78b16c67a5fc..25377dcce60e 100644
+--- a/drivers/mfd/max8925-core.c
++++ b/drivers/mfd/max8925-core.c
+@@ -656,7 +656,6 @@ static int max8925_irq_init(struct max8925_chip *chip, int irq,
+ {
+ 	unsigned long flags = IRQF_TRIGGER_FALLING | IRQF_ONESHOT;
+ 	int ret;
+-	struct device_node *node = chip->dev->of_node;
  
- __version__  = '1.0'
- kfiles = None
--logger = logging.getLogger('kerneldoc')
-+logger = logging.getLogger(__name__)
+ 	/* clear all interrupts */
+ 	max8925_reg_read(chip->i2c, MAX8925_CHG_IRQ1);
+@@ -682,8 +681,9 @@ static int max8925_irq_init(struct max8925_chip *chip, int irq,
+ 		return -EBUSY;
+ 	}
  
- def cmd_str(cmd):
-     """
-@@ -190,46 +191,35 @@ class KernelDocDirective(Directive):
+-	irq_domain_create_legacy(of_fwnode_handle(node), MAX8925_NR_IRQS, chip->irq_base, 0,
+-				 &max8925_irq_domain_ops, chip);
++	irq_domain_create_legacy(dev_fwnode(chip->dev), MAX8925_NR_IRQS,
++				 chip->irq_base, 0, &max8925_irq_domain_ops,
++				 chip);
  
-         return cmd
+ 	/* request irq handler for pmic main irq*/
+ 	chip->core_irq = irq;
+diff --git a/drivers/mfd/twl4030-irq.c b/drivers/mfd/twl4030-irq.c
+index 232c2bfe8c18..d3ab40651307 100644
+--- a/drivers/mfd/twl4030-irq.c
++++ b/drivers/mfd/twl4030-irq.c
+@@ -676,7 +676,6 @@ int twl4030_init_irq(struct device *dev, int irq_num)
+ 	static struct irq_chip	twl4030_irq_chip;
+ 	int			status, i;
+ 	int			irq_base, irq_end, nr_irqs;
+-	struct			device_node *node = dev->of_node;
  
--    def run_cmd(self):
-+    def run_cmd(self, cmd):
-         """
-         Execute an external kernel-doc command.
-         """
+ 	/*
+ 	 * TWL core and pwr interrupts must be contiguous because
+@@ -691,7 +690,7 @@ int twl4030_init_irq(struct device *dev, int irq_num)
+ 		return irq_base;
+ 	}
  
-         env = self.state.document.settings.env
--        cmd = self.handle_args()
+-	irq_domain_create_legacy(of_fwnode_handle(node), nr_irqs, irq_base, 0,
++	irq_domain_create_legacy(dev_fwnode(dev), nr_irqs, irq_base, 0,
+ 				 &irq_domain_simple_ops, NULL);
  
-         if self.verbose >= 1:
--            print(cmd_str(cmd))
-+            logger.info(cmd_str(cmd))
- 
-         node = nodes.section()
- 
--        try:
--            logger.verbose("calling kernel-doc '%s'" % (" ".join(cmd)))
--
--            p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
--            out, err = p.communicate()
--
--            out, err = codecs.decode(out, 'utf-8'), codecs.decode(err, 'utf-8')
-+        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-+        out, err = p.communicate()
- 
--            if p.returncode != 0:
--                sys.stderr.write(err)
-+        out, err = codecs.decode(out, 'utf-8'), codecs.decode(err, 'utf-8')
- 
--                logger.warning("kernel-doc '%s' failed with return code %d"
--                                    % (" ".join(cmd), p.returncode))
--                return [nodes.error(None, nodes.paragraph(text = "kernel-doc missing"))]
--            elif env.config.kerneldoc_verbosity > 0:
--                sys.stderr.write(err)
-+        if p.returncode != 0:
-+            sys.stderr.write(err)
- 
--        except Exception as e:  # pylint: disable=W0703
--            logger.warning("kernel-doc '%s' processing failed with: %s" %
--                                (" ".join(cmd), str(e)))
-+            logger.warning("kernel-doc '%s' failed with return code %d"
-+                                % (" ".join(cmd), p.returncode))
-             return [nodes.error(None, nodes.paragraph(text = "kernel-doc missing"))]
-+        elif env.config.kerneldoc_verbosity > 0:
-+            sys.stderr.write(err)
- 
-         filenames = self.parse_args["file_list"]
-         for filename in filenames:
--            ret = self.parse_msg(filename, node, out, cmd)
--            if ret:
--                return ret
-+            self.parse_msg(filename, node, out, cmd)
- 
-         return node.children
- 
-@@ -240,71 +230,62 @@ class KernelDocDirective(Directive):
- 
-         env = self.state.document.settings.env
- 
--        try:
--            lines = statemachine.string2lines(out, self.tab_width,
--                                              convert_whitespace=True)
--            result = ViewList()
--
--            lineoffset = 0;
--            line_regex = re.compile(r"^\.\. LINENO ([0-9]+)$")
--            for line in lines:
--                match = line_regex.search(line)
--                if match:
--                    # sphinx counts lines from 0
--                    lineoffset = int(match.group(1)) - 1
--                    # we must eat our comments since the upset the markup
--                else:
--                    doc = str(env.srcdir) + "/" + env.docname + ":" + str(self.lineno)
--                    result.append(line, doc + ": " + filename, lineoffset)
--                    lineoffset += 1
--
--            self.do_parse(result, node)
--
--        except Exception as e:  # pylint: disable=W0703
--            logger.warning("kernel-doc '%s' processing failed with: %s" %
--                                (cmd_str(cmd), str(e)))
--            return [nodes.error(None, nodes.paragraph(text = "kernel-doc missing"))]
-+        lines = statemachine.string2lines(out, self.tab_width,
-+                                            convert_whitespace=True)
-+        result = ViewList()
-+
-+        lineoffset = 0;
-+        line_regex = re.compile(r"^\.\. LINENO ([0-9]+)$")
-+        for line in lines:
-+            match = line_regex.search(line)
-+            if match:
-+                # sphinx counts lines from 0
-+                lineoffset = int(match.group(1)) - 1
-+                # we must eat our comments since the upset the markup
-+            else:
-+                doc = str(env.srcdir) + "/" + env.docname + ":" + str(self.lineno)
-+                result.append(line, doc + ": " + filename, lineoffset)
-+                lineoffset += 1
- 
--        return None
-+        self.do_parse(result, node)
- 
--    def run_kdoc(self, kfiles):
-+    def run_kdoc(self, cmd, kfiles):
-         """
-         Execute kernel-doc classes directly instead of running as a separate
-         command.
-         """
- 
--        cmd = self.handle_args()
-         env = self.state.document.settings.env
- 
-         node = nodes.section()
- 
--        try:
--            kfiles.parse(**self.parse_args)
--            filenames = self.parse_args["file_list"]
--
--            msgs = kfiles.msg(**self.msg_args, filenames=filenames)
--            for filename, out in msgs:
--                if self.verbose >= 1:
--                    print(cmd_str(cmd))
-+        kfiles.parse(**self.parse_args)
-+        filenames = self.parse_args["file_list"]
- 
--                ret = self.parse_msg(filename, node, out, cmd)
--                if ret:
--                    return ret
-+        msgs = kfiles.msg(**self.msg_args, filenames=filenames)
-+        for filename, out in msgs:
-+            if self.verbose >= 1:
-+                print(cmd_str(cmd))
- 
--        except Exception as e:  # pylint: disable=W0703
--            logger.warning("kernel-doc '%s' processing failed with: %s" %
--                            (cmd_str(cmd), str(e)))
--            return [nodes.error(None, nodes.paragraph(text = "kernel-doc missing"))]
-+            self.parse_msg(filename, node, out, cmd)
- 
-         return node.children
- 
-     def run(self):
-         global kfiles
- 
--        if kfiles:
--            return self.run_kdoc(kfiles)
--        else:
--            return self.run_cmd()
-+        cmd = self.handle_args()
-+
-+        try:
-+            if kfiles:
-+                return self.run_kdoc(cmd, kfiles)
-+            else:
-+                return self.run_cmd(cmd)
-+
-+        except Exception as e:  # pylint: disable=W0703
-+            logger.warning("kernel-doc '%s' processing failed with: %s" %
-+                           (cmd_str(cmd), pformat(e)))
-+            return [nodes.error(None, nodes.paragraph(text = "kernel-doc missing"))]
- 
-     def do_parse(self, result, node):
-         with switch_source_input(self.state, result):
+ 	irq_end = irq_base + TWL4030_CORE_NR_IRQS;
+-- 
+2.39.5
 
