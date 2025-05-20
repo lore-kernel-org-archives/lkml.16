@@ -1,73 +1,65 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 359A11F03FB
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 15:08:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C688C250C18;
+	Tue, 20 May 2025 15:09:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747753741; cv=none; b=IR2bq+XOPjDXr9ogWnqJ8wDwXTw7dYl65DoRUMIEg4mWWILMaIjmO7nzL2mPbPv1/argCsIJJXzndGKpsb+Y4N0mux+iqrig6PBUtVHsKSS0FLiSjbqGO5kmEIMCq0AtAifxN2j59XHpFuDWRjNafmfc2PNfJmMSkss/gtEmyk4=
+	t=1747753771; cv=none; b=ja1mv0IE5FuYKuf0HkK2myiEswJ0ER3zGKup7QHDqY+c1ZikaRX3BDnT9lLa6JDsge1vzLc+1Wfex7t4zl68GnIuXEWUsEkDu7QPIXu1SWIpmsFnJtBZFE0H0wZaixjKjj/632M6pwUq29u+9Pl/tNBcCL6OFePE5tYoVodXO+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747753741; c=relaxed/simple;
-	bh=xpvDoUvXtvvoVcinPcn6XkpZY9URU3K1MNKi0C+0AJA=;
+	s=arc-20240116; t=1747753771; c=relaxed/simple;
+	bh=LxISO3z6KWXiemomrWzTw2ALScLyGRqLuUgSVlA0vWU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iEBECBgTZ8Mkh/6uGjmP6jM+MVlViMw2kUud6CdesBAZNq5lWTu9NpCgAz5ydMcOHPrKHWTRr0i20cI+2w5HOP/JP9CmZyEythKhJR6QC5IVWR6phC7IKmrHJWfa1Wrao4mppI5ElYx8WVLM15mpyvdyPDNLxS0fIecWHmcFxtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Hitf9Jk8; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=dBtSmBxB9/zkYiV4ktFvP0+jsYTnsm0R1LGYqr97yfLzWtu9MA9J0lDdA+ZJRGPde1Q02LMHNVPRiwjoANd2XXdmPdw8e1HqdqV+wkgPZk0KGbIKO596N14x26MSBO41b8I6nWAjbNY/ZPFIO+WzRsvCrVBzwgc7bETv4Kq9K3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JD2jMFIC; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hitf9Jk8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747753737;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=epaO6bNKyNsoX0IWpCM87KgUPBgTouaLxd4ArWgJdpw=;
-	b=Hitf9Jk8DOE64DpR6Vx+abk2dEgggOHwt+rpYcaJUlLUmjImheZXMj5wOr0TFlnBoCnvNI
-	Dgpabm+6KfW1uTaIfnhJhPg4FEhZFDmDioEMs2WoeLEgYPGgh2qpSxMMV02cwroLpD1UUy
-	afGCSaensStpX9uqoKhFPOeVqYEZfiI=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-331-y0_LdcnqOaeshU1wHDd1dw-1; Tue, 20 May 2025 11:08:56 -0400
-X-MC-Unique: y0_LdcnqOaeshU1wHDd1dw-1
-X-Mimecast-MFC-AGG-ID: y0_LdcnqOaeshU1wHDd1dw_1747753735
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-441c96c1977so39432105e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 08:08:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JD2jMFIC"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ad574992fcaso396149566b.1;
+        Tue, 20 May 2025 08:09:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747753765; x=1748358565; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=K4fg7CBjj81Y+lIyXwgfxY20nHUQb0kdLesg6+u2b6k=;
+        b=JD2jMFICf9U0zXaOo09Kp3hB9E5oQ3RE26q2mRTF0Yd4HzdP05HQ0abpdg9ZcudPYM
+         gMPim2t/DIgACqLHdeukSPUY9aibTfVG8FEngv1/1Owd07B334QUJpyFEYkOcPkAINp5
+         XadJAduV/yk4YF4FZY4gyOavwqYcgu3Pwz/jJmVq5s9hxNWILZaNYb0WHsu+nKdZh1vQ
+         ZeDmLFkCJ7AAgBdnejUFbuVjVE74KVgVr0pAvl6AxjvgMA1qyiGoHDVBMOn6HjGSoyQ5
+         etFNOMDjHY/2MQ7ISFlfd2ujFyMHztp1kMotljbjp0bPyESkDLL8UUR6Egn0eJwPdNSh
+         s2Kw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747753735; x=1748358535;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=epaO6bNKyNsoX0IWpCM87KgUPBgTouaLxd4ArWgJdpw=;
-        b=dvZiyMwmJybv3i8v/V2nphuLvTxExYuCaoc9tX5eGTRGf816DKoaR2HLdLAcHj8dmd
-         Uyr6PYoWqpXoAQ1VY8JIXog0gKs5+qH1Pe6+0e1mhAHpWhWIvBLZv80ufRnqltOQ6lwG
-         95AVh7fA3GhVMWyyXgmxWzN4Egi/p9kPAB3KtNymtKZgRypiAGp/oDuPb9EVI/z3mwGN
-         9g3HtATSBfjuEyk1FtllPLYulKjbYTNvNGH3bIx74E+uoUyCl8A38zJrg26U57jaidxh
-         jjklpPY+mnLLmWqN2RZbra57xh+gE7M3fKprU6Mt4XIPCXpGSeUPu1jDb3N3cROFb2FE
-         Juvg==
-X-Forwarded-Encrypted: i=1; AJvYcCXfwFMnTZ2I1wwWvluHOD9IAusbTgcDQYxXLiIsY1t7fyarVE7KMD2v5gRt9yhvtq8SDd+PQ6o57RO0z4k=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4jwWm+7gNcfy2W1565X1XuHi+YoQOjGuAGzoWhudfcRD2lOTP
-	WSucv/m5Qf4oK4Go5SuJ6sZemhyVxTBCZeI9cKh+Al92WeCoiXQ5zey0AZrWN+a9aBlF7DOWIT2
-	efoWY57xamUhhSQbwvK09ojOaD7Ri47VmIC4UrLXDMNg1up6uJXF0NbqzhbrzaOJ9mg==
-X-Gm-Gg: ASbGncus6eaA/KecsmNhC69qlNv50ozENU+SZxwB5Q3xCUcwo0ezlvIYYGZSeGodJBU
-	oejV2OMPc6+50BKhtagWVgUDwLt3ev5E6rsSJwatozT4XZcycUN4+zykhQeh/bll/6vPOAUJ3fV
-	KR6STSz6tcX9/VyuERHFEzlIwmjo84D/9gx36ZiuFbwE0/PVJqxHNyxV7XlWmWHnVm2Wsh+tDa3
-	2W/6tUPuRgC4hDPwRVetQRywzwx8p5Qum72WTgIjbZGQOzirCZq/ZEdC3bvxQYB0T2kr+WnC8PU
-	Mfj8NgQbt0DJuRXtfErJhaIQA0ta7d8dn02JFr46cLbW3SuheD9jXD4VEZBm7vjP7IAKUfOfLUL
-	8DUcMnfo/4+xwUknmiP9O7yHonzMsesLt152yTyY=
-X-Received: by 2002:a05:600c:1c12:b0:43c:fa52:7d2d with SMTP id 5b1f17b1804b1-442ff0316bamr103545025e9.20.1747753734785;
-        Tue, 20 May 2025 08:08:54 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFoGrGo5grh6eX5e2f6SQpDqZFQSnOqc4BjwHoXSs42N+BkoVHjIFFwv9PMXS3/isdmwsmA6w==
-X-Received: by 2002:a05:600c:1c12:b0:43c:fa52:7d2d with SMTP id 5b1f17b1804b1-442ff0316bamr103544605e9.20.1747753734270;
-        Tue, 20 May 2025 08:08:54 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f28:7c00:a95e:ac49:f2ad:ab84? (p200300d82f287c00a95eac49f2adab84.dip0.t-ipconnect.de. [2003:d8:2f28:7c00:a95e:ac49:f2ad:ab84])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f73d4a3csm35883445e9.22.2025.05.20.08.08.52
+        d=1e100.net; s=20230601; t=1747753765; x=1748358565;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=K4fg7CBjj81Y+lIyXwgfxY20nHUQb0kdLesg6+u2b6k=;
+        b=RzcwhJwX9JeV9dOnWsFvszkJRqPHD+Y1Tf96UY4cNigJuCoan0WEBcXQBuu3HadZBH
+         AljGyH+lioZpeVAYs5B2tEYtmwOdD1H+H8tKm9XXOnBXCe58CZ95VTHeY9M5ZFY/3OKv
+         6RQMNzvSW4+dW1+JNzQ4LHfPdCqlEZMiXXas7AtyZGCObQPtADepgkWy2a3iR7FwiB0d
+         29fTB5tLkqkX7zXSMlc/EW3fWRTDflhqNHQQE9a/PZeoXaHDs8YfM1fC8jGolYSrMlNP
+         6GUhK4qJpkWiEOZ24pNXlMQjmUB0ngdx0+IGx4dDroA0H+Q13vmT9FKygFsJ2O7++sip
+         RokQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV9m5UmdAOw6ajaTHlzuS6ZxtKnw6tiPs77wAuFgMeU7JBmRQUWaLUtXVchfgvA8iNk+SNXD2JAhW8e2aQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7+pho7F/GD/hLoRkoWJ/Gc+rCSDhopKj4iwC7DbquO7YL4j30
+	zJAfiqQBL6HeyCISbc35tSO8DPtS5vCTXtxDKHzbIeb1JqHy1rz9yU7H
+X-Gm-Gg: ASbGncuMsUAE7u4PcHdBfjmtCj++wAlANjOp3/0Jjkaxh25UEfD0of362uVuKzRGrsX
+	VgfKSb8X2mx9Gyn7hI6xhxgyisD/txcDv6IyVERQtKfxYTZY4eAC05TGUhtHF1eSG1QPCauqfGQ
+	4gvDNlZqX73SRcYJStTO5SFMbjn5oTGOQjfy1SEk+OOgMORMq5d3F6rA11UoEUg1BttGof0rg0V
+	G+GTxJHur+XQ0yAaWL8nnw+M9CCGd/tC/Fh0bqW4aNF5ffg0o2g7JEEYkng6SVB6Ih0qzE0Bk2w
+	laXaIzpI3Qsr43csy3LNIm8TDueYegT5x80lrK3qYsck9ytfHy/jrm3wDzaY5MXuiBcI4w22Bhx
+	HaNTrHCk=
+X-Google-Smtp-Source: AGHT+IHnJC0l+gbDs00pwG1808MP+xOdj+5geC/SnK90Q7YfSO2tawHe9nZ1kBJXaAyfhzoTYpFF1A==
+X-Received: by 2002:a17:907:d716:b0:ad4:f5ed:42db with SMTP id a640c23a62f3a-ad52d4b3699mr1761549666b.17.1747753764479;
+        Tue, 20 May 2025 08:09:24 -0700 (PDT)
+Received: from ?IPV6:2620:10d:c096:325:77fd:1068:74c8:af87? ([2620:10d:c092:600::1:e7c])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d08058bsm750241866b.68.2025.05.20.08.09.23
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 May 2025 08:08:53 -0700 (PDT)
-Message-ID: <ff6c9ac0-dce2-4d3f-b5f7-15f8fff3379b@redhat.com>
-Date: Tue, 20 May 2025 17:08:52 +0200
+        Tue, 20 May 2025 08:09:23 -0700 (PDT)
+Message-ID: <7f06216e-1e66-433e-a247-2445dac22498@gmail.com>
+Date: Tue, 20 May 2025 16:10:42 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,171 +67,126 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/cma: make detection of highmem_start more robust
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Oscar Salvador <osalvador@suse.de>,
- Andrew Morton <akpm@linux-foundation.org>,
- Alexandre Ghiti <alexghiti@rivosinc.com>, Pratyush Yadav
- <ptyadav@amazon.de>, linux-arch@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <20250519171805.1288393-1-rppt@kernel.org>
- <aCw9mpmhx9SrL8Oy@localhost.localdomain>
- <d2751191-fc32-418a-8b62-dedab41d0615@redhat.com>
- <aCyaiXO7nmjC3wWj@kernel.org>
-From: David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH net-next] net: devmem: remove min_t(iter_iov_len) in
+ sendmsg
+To: Stanislav Fomichev <stfomichev@gmail.com>,
+ Al Viro <viro@zeniv.linux.org.uk>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, willemb@google.com,
+ sagi@grimberg.me, almasrymina@google.com, kaiyuanz@google.com,
+ linux-kernel@vger.kernel.org
+References: <20250517000431.558180-1-stfomichev@gmail.com>
+ <20250517000907.GW2023217@ZenIV> <aCflM0LZ23d2j2FF@mini-arch>
+ <20250517020653.GX2023217@ZenIV> <aCfxs5CiHYMJPOsy@mini-arch>
+ <20250517033951.GY2023217@ZenIV> <aCgIJSgv-yQzaHLl@mini-arch>
+ <20250517040530.GZ2023217@ZenIV> <aCgQwfyQqkD2AUSs@mini-arch>
 Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <aCyaiXO7nmjC3wWj@kernel.org>
+From: Pavel Begunkov <asml.silence@gmail.com>
+In-Reply-To: <aCgQwfyQqkD2AUSs@mini-arch>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 20.05.25 17:06, Mike Rapoport wrote:
-> On Tue, May 20, 2025 at 11:14:28AM +0200, David Hildenbrand wrote:
->> On 20.05.25 10:30, Oscar Salvador wrote:
->>> On Mon, May 19, 2025 at 08:18:05PM +0300, Mike Rapoport wrote:
->>>> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+On 5/17/25 05:29, Stanislav Fomichev wrote:
+> On 05/17, Al Viro wrote:
+>> On Fri, May 16, 2025 at 08:53:09PM -0700, Stanislav Fomichev wrote:
+>>> On 05/17, Al Viro wrote:
+>>>> On Fri, May 16, 2025 at 07:17:23PM -0700, Stanislav Fomichev wrote:
+>>>>>> Wait, in the same commit there's
+>>>>>> +       if (iov_iter_type(from) != ITER_IOVEC)
+>>>>>> +               return -EFAULT;
+>>>>>>
+>>>>>> shortly prior to the loop iter_iov_{addr,len}() are used.  What am I missing now?
+>>>>>
+>>>>> Yeah, I want to remove that part as well:
+>>>>>
+>>>>> https://lore.kernel.org/netdev/20250516225441.527020-1-stfomichev@gmail.com/T/#u
+>>>>>
+>>>>> Otherwise, sendmsg() with a single IOV is not accepted, which makes not
+>>>>> sense.
 >>>>
->>>> Pratyush Yadav reports the following crash:
->>>>
->>>>       ------------[ cut here ]------------
->>>>       kernel BUG at arch/x86/mm/physaddr.c:23!
->>>>       ception 0x06 IP 10:ffffffff812ebbf8 error 0 cr2 0xffff88903ffff000
->>>>       CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.15.0-rc6+ #231 PREEMPT(undef)
->>>>       Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Arch Linux 1.16.3-1-1 04/01/2014
->>>>       RIP: 0010:__phys_addr+0x58/0x60
->>>>       Code: 01 48 89 c2 48 d3 ea 48 85 d2 75 05 e9 91 52 cf 00 0f 0b 48 3d ff ff ff 1f 77 0f 48 8b 05 20 54 55 01 48 01 d0 e9 78 52 cf 00 <0f> 0b 90 0f 1f 44 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90
->>>>       RSP: 0000:ffffffff82803dd8 EFLAGS: 00010006 ORIG_RAX: 0000000000000000
->>>>       RAX: 000000007fffffff RBX: 00000000ffffffff RCX: 0000000000000000
->>>>       RDX: 000000007fffffff RSI: 0000000280000000 RDI: ffffffffffffffff
->>>>       RBP: ffffffff82803e68 R08: 0000000000000000 R09: 0000000000000000
->>>>       R10: ffffffff83153180 R11: ffffffff82803e48 R12: ffffffff83c9aed0
->>>>       R13: 0000000000000000 R14: 0000001040000000 R15: 0000000000000000
->>>>       FS:  0000000000000000(0000) GS:0000000000000000(0000) knlGS:0000000000000000
->>>>       CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->>>>       CR2: ffff88903ffff000 CR3: 0000000002838000 CR4: 00000000000000b0
->>>>       Call Trace:
->>>>        <TASK>
->>>>        ? __cma_declare_contiguous_nid+0x6e/0x340
->>>>        ? cma_declare_contiguous_nid+0x33/0x70
->>>>        ? dma_contiguous_reserve_area+0x2f/0x70
->>>>        ? setup_arch+0x6f1/0x870
->>>>        ? start_kernel+0x52/0x4b0
->>>>        ? x86_64_start_reservations+0x29/0x30
->>>>        ? x86_64_start_kernel+0x7c/0x80
->>>>        ? common_startup_64+0x13e/0x141
->>>>
->>>>     The reason is that __cma_declare_contiguous_nid() does:
->>>>
->>>>             highmem_start = __pa(high_memory - 1) + 1;
->>>>
->>>>     If dma_contiguous_reserve_area() (or any other CMA declaration) is
->>>>     called before free_area_init(), high_memory is uninitialized. Without
->>>>     CONFIG_DEBUG_VIRTUAL, it will likely work but use the wrong value for
->>>>     highmem_start.
->>>>
->>>> The issue occurs because commit e120d1bc12da ("arch, mm: set high_memory in
->>>> free_area_init()") moved initialization of high_memory after the call to
->>>> dma_contiguous_reserve() -> __cma_declare_contiguous_nid() on several
->>>> architectures.
->>>>
->>>> In the case CONFIG_HIGHMEM is enabled, some architectures that actually
->>>> support HIGHMEM (arm, powerpc and x86) have initialization of high_memory
->>>> before a possible call to __cma_declare_contiguous_nid() and some
->>>> initialized high_memory late anyway (arc, csky, microblase, mips, sparc,
->>>> xtensa) even before the commit e120d1bc12da so they are fine with using
->>>> uninitialized value of high_memory.
->>>>
->>>> And in the case CONFIG_HIGHMEM is disabled high_memory essentially becomes
->>>> the first address after memory end, so instead of relying on high_memory to
->>>> calculate highmem_start use memblock_end_of_DRAM() and eliminate the
->>>> dependency of CMA area creation on high_memory in majority of
->>>> configurations.
->>>>
->>>> Reported-by: Pratyush Yadav <ptyadav@amazon.de>
->>>> Tested-by: Alexandre Ghiti <alexghiti@rivosinc.com>
->>>> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+>>>> Wait a minute.  What's there to prevent a call with two ranges far from each other?
 >>>
->>> Reviewed-by: Oscar Salvador <osalvador@suse.de>
->>>
->>> I will note though that it is a bit akward to have highmem involved here
->>> when we might not have CONFIG_HIGHMEM enabled.
->>> I get that for !CONFIG_HIGHMEM it is a no-op situation, but still I
->>> wonder whether we could abstract that from this function.
-> 
-> Highmem is there for some time now (see f7426b983a6a ("mm: cma: adjust
-> address limit to avoid hitting low/high memory boundary"))
-> We might try abstracting it from that function but I'd prefer not doing it
-> that late in the release cycle.
-
-Agreed, assuming this will still make it into this release.
-
->   
->> Same thought here.
+>>> It is perfectly possible to have a call with two disjoint ranges,
+>>> net_devmem_get_niov_at should correctly resolve it to the IOVA in the
+>>> dmabuf. Not sure I understand why it's an issue, can you pls clarify?
 >>
->> Can't we do some IS_ENABLED(CONFIG_HIGHMEM) magic or similar to not even use
->> that variable without CONFIG_HIGHMEM?
+>> Er...  OK, the following is given an from with two iovecs.
+>>
+>> 	while (length && iov_iter_count(from)) {
+>> 		if (i == MAX_SKB_FRAGS)
+>> 			return -EMSGSIZE;
+>>
+>> 		virt_addr = (size_t)iter_iov_addr(from);
+>>
+>> OK, that's iov_base of the first one.
+>>
+>> 		niov = net_devmem_get_niov_at(binding, virt_addr, &off, &size);
+>> 		if (!niov)
+>> 			return -EFAULT;
+>> Whatever it does, it does *NOT* see iov_len of the first iovec.  Looks like
+>> it tries to set something up, storing the length of what it had set up
+>> into size
+>>
+>> 		size = min_t(size_t, size, length);
+>> ... no more than length, OK.  Suppose length is considerably more than iov_len
+>> of the first iovec.
+>>
+>> 		size = min_t(size_t, size, iter_iov_len(from));
+>> ... now trim it down to iov_len of that sucker.  That's what you want to remove,
+>> right?  What happens if iov_len is shorter than what we have in size?
+>>
+>> 		get_netmem(net_iov_to_netmem(niov));
+>> 		skb_add_rx_frag_netmem(skb, i, net_iov_to_netmem(niov), off,
+>> 				      size, PAGE_SIZE);
+>> Still not looking at that iov_len...
+>>
+>> 		iov_iter_advance(from, size);
+>> ... and now that you've removed the second min_t, size happens to be greater
+>> than that iovec[0].iov_len.  So we advance into the second iovec, skipping
+>> size - iovec[0].iov_len bytes after iovev[1].iov_base.
+>> 		length -= size;
+>> 		i++;
+>> 	}
+>> ... and proceed into the second iteration.
+>>
+>> Would you agree that behaviour ought to depend upon the iovec[0].iov_len?
+>> If nothing else, it affects which data do you want to be sent, and I don't
+>> see where would anything even look at that value with your change...
 > 
-> You mean highmem_start or high_memory?
-
-highmem_start in this function.
-
+> Yes, I think you have a point. I was thinking that net_devmem_get_niov_at
+> will expose max size of the chunk, but I agree that the iov might have
+> requested smaller part and it will bug out in case of multiple chunks...
 > 
-> high_memory is one of the ways to say "end of directly/linearly addressable
-> memory" and some other places in the kernel (outside arch) still use it
-> regardless of CONFIG_HIGHMEM.
+> Are you open to making iter_iov_len more ubuf friendly? Something like
+> the following:
 > 
-> And I don't think we have another way to say where directly addressable
-> memory ends, and this IMHO is something that should replace high_memory.
+> static inline size_t iter_iov_len(const struct iov_iter *i)
+> {
+> 	if (iter->iter_type == ITER_UBUF)
+> 		return ni->count;
+> 	return iter_iov(i)->iov_len - i->iov_offset;
+> }
+> 
+> Or should I handle the iter_type here?
+> 
+> if (iter->iter_type == ITER_IOVEC)
+> 	size = min_t(size_t, size, iter_iov_len(from));
+> /* else
+> 	I don think I need to clamp to iov_iter_count() because length
+> 	should take care of it */
 
-Agreed.
+FWIW, since it's not devmem specific, I looked through the callers:
+io_uring handles ubuf separately, read_write.c and madvise.c advance
+strictly by iov_iter_count() and hence always consume ubuf iters in
+one go. So the only one with a real problem is devmem tx, which and
+hasn't been released yet.
 
+With that said, it feels error prone, and IMO we should either make the
+helper work with ubuf well as Stan suggested, or force _all_ users to
+check if it's ubuf. Also, I can't say for madvise, but it's not in
+any hot / important path of neither io_uring nor rw, so we likely
+don't care about this extra check.
 
 -- 
-Cheers,
-
-David / dhildenb
+Pavel Begunkov
 
