@@ -1,149 +1,102 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8F032528FD;
-	Tue, 20 May 2025 21:25:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD7DB2528FD;
+	Tue, 20 May 2025 21:25:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747776328; cv=none; b=gYg+TnrWY2S6iqcAkiiKZDWTJ6tCiY4Kf2XMHVTwX1Q0DRyF97c/2bYceCoYxIO5gV0//SfR5hvdAT63AOVtjbc3ULWfK62Hy01D8fzyik2E7D8Uoht5eEGJLzGSFrqofRM24a2zB9gRCT+wVWU2Z0bEge0bRX7m5ZTzg0WJzKA=
+	t=1747776331; cv=none; b=m6h83F8Q0cMv1TU0ahx2PdL0lqpRcsPDqMHtpZja0iRlUn7hbiXE2Vod1QP+nvXr+jIswqSnyFKXkrMGrB4Bv6xlYWfzc0IRT24eyEPl2GjqlJN/a9fMTcDHamUKsFKF3pI0OmeBMAp8ibQL+77rHhdhlHbOer5Ud3V4jAlAsIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747776328; c=relaxed/simple;
-	bh=dg94g59K8WbJ2pSnKAEqgNe5XTuLFJMFdFvqxrKayfQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JWggH83bpCqbed8jJnat+GMJA5nHT8H57jx4Yn4SpmMYlNGlxKiaTnUX1WYl16IjYGHp0uJm8/JtCxXWG1S4idFtpP4rbf73oVwiGHLx1agJUlROY2owiZBS8TIsUToErWG9NS2uQGfhMQGcWJJzhceFMYxWoFfx6faRDbwX6ik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N/uBeVmw; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747776331; c=relaxed/simple;
+	bh=FCNh0IptjSh80eH+CVfsMlmlvLVALzpv2FwtcV3n7ag=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=SWfIOhW4GsqtBm5rFk4UySmS7IeU5BLEYdAwiMQ75+7bwWeFbT5m7CY2o3UXu+FfpHOEODsiapDZC89QU0Bq7gCm0oJDd+/LBo6xM3Z8QQi6W3NfCnaS7atyJbUd13HqNg0r2FAO/IFUnFfY/8V0k+eJFnzdYoitGzKlh/WYdiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k/zc6R9g; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N/uBeVmw"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-acacb8743a7so1014377666b.1;
-        Tue, 20 May 2025 14:25:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747776325; x=1748381125; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jjei6tpJPSQ0e9U9wsr0Ul9qD6v36GQZR4JG0Hi36U4=;
-        b=N/uBeVmwinEcVOC3oxFxlDEmnNCpmNw7PEQTdAOIDxEwsM5Kfal2YXbDPrFQP8Gnc0
-         fjEkmBa+8qpRg3OZVPlZhQ/kvrFsSqeWga//yOLntljeW0hoXltDkJ7pIDe63Kfv1Xym
-         FwKYx7vQY/jmp4RpgL8TZQ9hkmqSUCZ0rbwqjJRf3Bb6u74b1Z7eavOF80rJcUveiKlB
-         ryUACwq0B9BLewHICkg/wiOrJ4Z+w9FZK0a/r8W2tfN8Sqp6Lj6Nxplx8Jp9rXEIx4W8
-         ogmSl42xOr7sjkWPUvikuSltoy+rxoVrtaFkf3XHz4PH6qdiX5yj0czSKz53Ja7nnmg5
-         kokQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747776325; x=1748381125;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jjei6tpJPSQ0e9U9wsr0Ul9qD6v36GQZR4JG0Hi36U4=;
-        b=F6Vs9zVKank1Me1nwS2SbaiW0lsd760FNTTnZYxlEh2b97zA4zexQwlOqeV/Al8TAQ
-         sh0QT9ywUdMm6Il2ADof+fh9r75WAMY/X/VKagH4MMhZWiTfAZNQm1fHGBhdWNDZcuJb
-         2jr4hR7f50zaL/w7EkfV0kQCEaQBf9B/droBhyUg1lQIDGlHdzIFNDAKqY7u7LHCvRER
-         5Xma+6hUqqjh/675YwTAPdUmUcrti5wQbq1Cti6AWEASYBueL6G/Rmur4rIR9++JpWHm
-         Ylrblt3Xp908c5VH9wY9+VBMbit37veKmvwVbua9aalPgbn+hJ+4FciLpFjZOIGbifkB
-         PkVg==
-X-Forwarded-Encrypted: i=1; AJvYcCV90H9fbK8IM1EexCwyu1Z4eoVGE7XQHHT3yIrzv6wyfrN87C00hRTy7ID9ie4MpqMTn+GQCK2dDqq4Zc/5@vger.kernel.org, AJvYcCXLmEkJsgw6+WV8Z+CHlgZwWLCNpoUY7bBq/h2blfRM/PGrBcPOAnmZyOHcVY+jjhKFlc3njMxTtuKI1Ea2@vger.kernel.org
-X-Gm-Message-State: AOJu0YxsJhWwTeUc1rGaXQE5Sc7hXu94GPUUxfqxrAAi5Y0FccxZsINK
-	V5xyhtPd88UlJMGv07gTn+9LHIkLs7kp31kcsRn3bQwYHzVwwTWX+rmLpoGEdh+I5Eb2GhQZHp+
-	25do0nL7zG0l+vwK23QJhIRWpbv1HnOE=
-X-Gm-Gg: ASbGnctbv2x8dMPXPexd/ANo0vf0ebyIpPda6EWMxAJLqRPBjXxs0hsMDg0nRG3zvnU
-	UTH9wuJUJtxll8DEhcDX/+NzkxZT/dxenD3GDPhXRceLRxRstCEbxdMZfr98SZa3vlMb7GIPrmO
-	cIIk9nfN/zH3mXqADaQ5x+PIsck1xiIEU=
-X-Google-Smtp-Source: AGHT+IHeiaUdgEFO2So4GMMibHxdFP3yxkv+J8hkFxYuUz58iYp5XzJt7h08dQw7tqbTQ4mjFmNIXYkCfPjkMRBsMMs=
-X-Received: by 2002:a17:907:9603:b0:ad2:2e9d:7517 with SMTP id
- a640c23a62f3a-ad52f32194emr1593154366b.8.1747776324656; Tue, 20 May 2025
- 14:25:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k/zc6R9g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E87F9C4CEED;
+	Tue, 20 May 2025 21:25:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747776331;
+	bh=FCNh0IptjSh80eH+CVfsMlmlvLVALzpv2FwtcV3n7ag=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=k/zc6R9g4IGcsWMS5g9FRrSbMEwAuPBO6xeTI3aYQvkDIPrw7jEYQf4eBXcLbuKep
+	 ApH4aK8G6zlw/+k3RK6TmGTaMvBCaZEPKHiLx9l+2TKrfRtzvgGeOmSTuh+VjH9+mo
+	 Yf1fz2Gemqi+t399nvUmwGCdAe2NC0jPcqA8hpOR0qZ+rrYX+3NAJ5urb7UWc9Sls0
+	 0syMfuk5Wyp+7qUt7+oYqj+D8kfI8+J0qbii876QDCXqqPrH29Nsk5bvDdc2w9xQDx
+	 xEjdFycI8TT8esLLQqMXgJ5WP2DukC52mLK1C+59BEuXXqtgGcfBbbnQFxJ+02MPvk
+	 zA5MVGPdjhymQ==
+Date: Tue, 20 May 2025 16:25:29 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>,
+	Karolina Stolarek <karolina.stolarek@oracle.com>,
+	Martin Petersen <martin.petersen@oracle.com>,
+	Ben Fuller <ben.fuller@oracle.com>,
+	Drew Walton <drewwalton@microsoft.com>,
+	Anil Agrawal <anilagrawal@meta.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Sargun Dhillon <sargun@meta.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Kai-Heng Feng <kaihengf@nvidia.com>,
+	Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
+	Terry Bowman <terry.bowman@amd.com>,
+	Shiju Jose <shiju.jose@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v6 13/16] PCI/AER: Rename struct aer_stats to aer_report
+Message-ID: <20250520212529.GA1301402@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250514175527.42488-1-robdclark@gmail.com> <20250514175527.42488-2-robdclark@gmail.com>
- <aCWrwz2IF6VBUi4e@pollux> <aCWueFzx2QzF7LVg@pollux> <CAF6AEGu9MPxKnkHo45gSRxaCP+CTzqsKZjiLuy4Ne4GbrsStGA@mail.gmail.com>
- <aCYqlvp_T77LyuMa@pollux> <CAF6AEGsOTNedZhuBzipSQgNpG0SyVObaeq+g5U1hGUFfRYjw8w@mail.gmail.com>
- <aCb-72KH-NrzvGXy@pollux> <CAF6AEGu=KzCnkxuUsYvCHBGwo-e2W16u_cRT1NFAXLphty1_ig@mail.gmail.com>
-In-Reply-To: <CAF6AEGu=KzCnkxuUsYvCHBGwo-e2W16u_cRT1NFAXLphty1_ig@mail.gmail.com>
-From: Dave Airlie <airlied@gmail.com>
-Date: Wed, 21 May 2025 07:25:13 +1000
-X-Gm-Features: AX0GCFs9mt-wQ318QgIa3qoAgEMylqDYXoQTma-NV3k90LdxrvoZJdBGinnYee0
-Message-ID: <CAPM=9tzcvDVDOM88O8oqDHURR1nbR7KsFStavNnT1CN6C6kGgg@mail.gmail.com>
-Subject: Re: [PATCH v4 01/40] drm/gpuvm: Don't require obj lock in destructor path
-To: Rob Clark <robdclark@gmail.com>
-Cc: Danilo Krummrich <dakr@kernel.org>, dri-devel@lists.freedesktop.org, 
-	freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, 
-	Connor Abbott <cwabbott0@gmail.com>, Rob Clark <robdclark@chromium.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Simona Vetter <simona@ffwll.ch>, 
-	open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8624dd16-83a3-4fd3-a5d9-a79c50236e58@linux.intel.com>
 
-On Sat, 17 May 2025 at 02:20, Rob Clark <robdclark@gmail.com> wrote:
->
-> On Fri, May 16, 2025 at 2:01=E2=80=AFAM Danilo Krummrich <dakr@kernel.org=
-> wrote:
-> >
-> > On Thu, May 15, 2025 at 02:57:46PM -0700, Rob Clark wrote:
-> > > On Thu, May 15, 2025 at 10:55=E2=80=AFAM Danilo Krummrich <dakr@kerne=
-l.org> wrote:
-> > > > Anyways, I don't agree with that. Even if you can tweak your driver=
- to not run
-> > > > into trouble with this, we can't introduce a mode that violates GOU=
-VM's internal
-> > > > lifetimes and subsequently fix it up with WARN_ON() or BUG_ON().
-> > > >
-> > > > I still don't see a real technical reason why msm can't be reworked=
- to follow
-> > > > those lifetime rules.
-> > >
-> > > The basic issue is that (a) it would be really awkward to have two
-> > > side-by-side VM/VMA management/tracking systems.  But in legacy mode,
-> > > we have the opposite direction of reference holding.  (But at the sam=
-e
-> > > time, don't need/use most of the features of gpuvm.)
-> >
-> > Ok, let's try to move this forward; I see three options (in order of de=
-scending
-> > preference):
-> >
-> >   1) Rework the legacy code to properly work with GPUVM.
-> >   2) Don't use GPUVM for the legacy mode.
-> >   .
-> >   .
-> >   .
-> >   3) Get an ACK from Dave / Sima to implement those workarounds for MSM=
- in
-> >      GPUVM.
-> >
-> > If you go for 3), the code introduced by those two patches should be gu=
-arded
-> > with a flag that makes it very clear that this is a workaround specific=
-ally
-> > for MSM legacy mode and does not give any guarantees in terms of correc=
-tness
-> > regarding lifetimes etc., e.g. DRM_GPUVM_MSM_LEGACY_QUIRK.
->
-> I'm not even sure how #2 would work, other than just copy/pasta all of
-> drm_gpuvm into msm, which doesn't really seem great.
->
-> As for #1, even if I could get it to work, it would still be a lot
-> more mmu map/unmap (like on every pageflip, vs the current state that
-> the vma is kept around until the object is freed).  For the
-> non-VM_BIND world, there are advantages to the BO holding the ref to
-> the VMA, rather than the other way around.  Even at just a modest
-> single layer 1080p the map takes ~.2ms and unmap ~.3ms (plus the unmap
-> costs a tlbinv).  So from that standpoint, #3 is the superior option.
->
+On Mon, May 19, 2025 at 08:30:09PM -0700, Sathyanarayanan Kuppuswamy wrote:
+> 
+> On 5/19/25 2:35 PM, Bjorn Helgaas wrote:
+> > From: Karolina Stolarek <karolina.stolarek@oracle.com>
+> > 
+> > Update name to reflect the broader definition of structs/variables that are
+> > stored (e.g. ratelimits). This is a preparatory patch for adding rate limit
+> > support.
+> > 
+> > Link: https://lore.kernel.org/r/20250321015806.954866-6-pandoh@google.com
+> > Signed-off-by: Karolina Stolarek <karolina.stolarek@oracle.com>
+> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> > ---
+> 
+> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> 
+> >   drivers/pci/pcie/aer.c | 50 +++++++++++++++++++++---------------------
+> >   include/linux/pci.h    |  2 +-
+> >   2 files changed, 26 insertions(+), 26 deletions(-)
+> > 
+> > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> > index 06a7dda20846..da62032bf024 100644
+> > --- a/drivers/pci/pcie/aer.c
+> > +++ b/drivers/pci/pcie/aer.c
+> > @@ -54,11 +54,11 @@ struct aer_rpc {
+> >   	DECLARE_KFIFO(aer_fifo, struct aer_err_source, AER_ERROR_SOURCES_MAX);
+> >   };
+> > -/* AER stats for the device */
+> > -struct aer_stats {
+> > +/* AER report for the device */
+> > +struct aer_report {
+> 
+> For me aer_report also sounds like stats like struct. I prefer
+> aer_info, but it is up to you.
 
-Before we get to #3, I'll need a bit more info here on why you have to
-map/unmap the VMA on every pageflip.
-
-But actually I think 2 is the best option, I think in nouveau this is
-where we ended up, we didn't modify the old submission paths at all
-and kept the old bo/vm lifetimes.
-
-We just added completely new bind/exec ioctls and you can only use one
-method once you've opened an fd.
-
-Dave.
+I tend to agree and can imagine a future where we might collect the
+stats, ratelimits, and maybe aer_capability_regs into a per-device AER
+structure.  "aer_info" seems like a decent generic name, so I did
+s/\<aer_stats\>/aer_info/
