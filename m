@@ -1,84 +1,173 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D47220E32B
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 07:41:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CA1D20E32B;
+	Tue, 20 May 2025 07:42:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747726887; cv=none; b=gZjb7v87HplE9cA7MiGkiVXqRiMhOYthv7LhuuKghpdTegEFPU8+Cy66VXy05VDu1ZCif2mVumIn8N3uaIwC9vEkaNknEVhKph1HjMj7fAkZ/+Vlb46OMCB1QmEx6PCvbjH0Xk8FTcP1hrgRTisdU2KRTk/gk9QYAlQuPdX7aHs=
+	t=1747726940; cv=none; b=fYmLi8lGXS+2AQ8tYZyuyvkTGgNodPqRDWefpsqqCejrVnWZpcIvHSO9Z4pvjyat4judA6bcHEvkbdMTjUWTzlmmHcjtFbQumzJloYjGpLxRnRqHFbIUqeIayjlHYSmCOljirnNWKojAfGMESY3wPczWmWeakT4YWaav7cGc6ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747726887; c=relaxed/simple;
-	bh=r4jX8Azs8v5DrAXiFmtO9nabjgP5A44o2RnL8fPrWS0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ff5IdrbTzgKL8pN+KImb1RlBavAG3fGPTcZSMgF62YJRkdHbrsrCXM18myQnlvW0RBzySdQpb+szR1SUkscgj8m65aTesbxCGjQH0rNukTT5gNLJQZFbe1/2mo3lJApb+l5Mn4IJD178AAfG6+36O5zyZzrv1APZ1ArQFYJDgDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VN3W+A/z; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747726940; c=relaxed/simple;
+	bh=eEi3mKDvtMM13Ex5UlZGmEeN1NuJCNnvqtuW0peVH0Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LSax2nJ2pEYdstOmA9zGI+IqDkrVKkkY9Exip6qEAIDFsD1LRYlauR6YG5qN09OZSC/Rb9VyW4JSLl10JXZ2jYdc1cucKyKqGI9MK8ZCBQQh0bwqlGqOt6AVUjUplq8dGcO8CzsQnkPvLNxzFt+pkltbE9SJBwMh5bf1/beacC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=teIyenw9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VN3W+A/z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E563C4CEE9;
-	Tue, 20 May 2025 07:41:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="teIyenw9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D088C4CEE9;
+	Tue, 20 May 2025 07:42:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747726887;
-	bh=r4jX8Azs8v5DrAXiFmtO9nabjgP5A44o2RnL8fPrWS0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=VN3W+A/zNLw3hbn2mYfVm8M2mhK4jjRrbg1rD16Y+KOcsugzsq81QflRKhkRXK8YY
-	 GJznMwZZ4h8U8C6z0mEmRn6i/PWXZ3LYzWO76PiDl9XN4SnEacBXlKIdjVyVtVnum1
-	 VvWQVotMJn7KAD9EXxY0br9afo9BZ+lbhbPaYfAUO1tirIBor5IhyW7BujYtpia7hS
-	 fLUvVkGb0FFvSDMWCgzLyvPQgG+onRkHBntwf/HImijHJus40H6QEfoGGfIhW+ijRH
-	 VQS1KBiu4cbl8TMczJz5rEtNqFAlsKFVNz/OpekFapfjv32pGhgqnRnbXfXeeNEMLC
-	 aF1Rl0KLq+z9Q==
-From: Michael Walle <mwalle@kernel.org>
-To: Neil Armstrong <neil.armstrong@linaro.org>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Michael Walle <mwalle@kernel.org>
-Subject: [PATCH] drm/panel-simple: fix the warnings for the Evervision VGG644804
-Date: Tue, 20 May 2025 09:41:10 +0200
-Message-Id: <20250520074110.655114-1-mwalle@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	s=k20201202; t=1747726940;
+	bh=eEi3mKDvtMM13Ex5UlZGmEeN1NuJCNnvqtuW0peVH0Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=teIyenw9nDbvXgqsws1U7d+4gOHxN9QNOsFhbs8og2rTMNZnYx+yVdg8OUHsZKr0b
+	 MltxdnR8nH66sVgWyt0PCXNXhRgFfHkXeXaK/8PbLUQFFoC35UHzHamD9JVOlRaBQc
+	 M7ZUeoCSOJ+xJVf+xaYu3B4j/Xpa6rjLeteOQ1sxEWstLxp6ahrfHYr/sfJKuHhh2t
+	 yoGSnMIT+RZB3HIG37lf6mqwqox0NCB9CVw47qzLqaSQfgccIW1sKRjRjBB1l508wH
+	 6eOA/JG7/PD/VPRv1lUJf3alyR461gY1BkZkDieEagwz0mTaL5Oa1U1x3zS4InTP9H
+	 jhb3wJpDwGJiw==
+Date: Tue, 20 May 2025 09:42:14 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Eric Biggers <ebiggers@kernel.org>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+	linux-pm@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ayush Jain <Ayush.Jain3@amd.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCH 3/3] x86/fpu: Don't support kernel-mode FPU when
+ irqs_disabled()
+Message-ID: <aCwyVvgewYum4mrE@gmail.com>
+References: <20250516231858.27899-4-ebiggers@kernel.org>
+ <aCg2DSYp0nakwX3l@gmail.com>
+ <20250517183919.GC1239@sol>
+ <aCl_cSO2XqtSQEZT@gmail.com>
+ <CAMj1kXGVAbD9zxUQSwwGo=ueadqWWSdaQNDe_-7ZezpFLMJRMA@mail.gmail.com>
+ <20250518200114.GA1764@sol>
+ <aCrmZnSokvmqfel3@gmail.com>
+ <CAMj1kXGe0hMD-71KYN_htJztAL+P8vFNf+9+W_aVDkHx3nCEWA@mail.gmail.com>
+ <aCsqyrHdMWlU3yc0@gmail.com>
+ <CAMj1kXHzFiQsjUH90J56ds2fgge-MUXmFMBWKtmb0LF=UjbJcg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXHzFiQsjUH90J56ds2fgge-MUXmFMBWKtmb0LF=UjbJcg@mail.gmail.com>
 
-The panel lacked the connector type which causes a warning. Adding the
-connector type reveals wrong bus_flags and bits per pixel. Fix all of
-it.
 
-Fixes: 1319f2178bdf ("drm/panel-simple: add Evervision VGG644804 panel entry")
-Signed-off-by: Michael Walle <mwalle@kernel.org>
----
- drivers/gpu/drm/panel/panel-simple.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+* Ard Biesheuvel <ardb@kernel.org> wrote:
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 82ee2f12b8d2..0a3b26bb4d73 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -2198,13 +2198,14 @@ static const struct display_timing evervision_vgg644804_timing = {
- static const struct panel_desc evervision_vgg644804 = {
- 	.timings = &evervision_vgg644804_timing,
- 	.num_timings = 1,
--	.bpc = 8,
-+	.bpc = 6,
- 	.size = {
- 		.width = 115,
- 		.height = 86,
- 	},
- 	.bus_format = MEDIA_BUS_FMT_RGB666_1X7X3_SPWG,
--	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_SAMPLE_NEGEDGE,
-+	.bus_flags = DRM_BUS_FLAG_DE_HIGH,
-+	.connector_type = DRM_MODE_CONNECTOR_LVDS,
- };
- 
- static const struct display_timing evervision_vgg804821_timing = {
--- 
-2.39.5
+> On Mon, 19 May 2025 at 14:57, Ingo Molnar <mingo@kernel.org> wrote:
+> >
+> >
+> > * Ard Biesheuvel <ardb@kernel.org> wrote:
+> >
+> > > On Mon, 19 May 2025 at 10:06, Ingo Molnar <mingo@kernel.org> wrote:
+> > > >
+> > > >
+> > > > * Eric Biggers <ebiggers@kernel.org> wrote:
+> > > >
+> > > > > > # echo PANIC > /sys/kernel/debug/provoke-crash/DIRECT
+> > > > > >
+> > > > > > Another case that likely executes with IRQs disabled (but I 
+> > > > > > haven't double checked) is reset_system(), which may return 
+> > > > > > with an error, or reboot/poweroff the machine and never 
+> > > > > > return.
+> > > > >
+> > > > > That makes sense to me.  preempt_disable() and 
+> > > > > preempt_enable() are already allowed when IRQs are disabled, 
+> > > > > and I'm not sure why local_bh_disable() and local_bh_enable() 
+> > > > > are different.
+> > > >
+> > > > Because local_bh_enable() may run softirq handlers immediately 
+> > > > if there's pending softirqs, which shouldn't be done in hardirq 
+> > > > context.
+> > >
+> > > Sure, but why is that mandatory?
+> > >
+> > >
+> > > preempt_disable() has preempt_enable() and 
+> > > preempt_enable_no_resched() counterparts.
+> >
+> > > [...] Could we have a local_bh_enable_no_xxx() version that
+> > > re-enables async softirq processing on the current CPU but does not
+> > > kick off a synchronous processing run?
+> >
+> > Yes, that's what __local_bh_enable() does, but if used it for
+> > kernel_fpu_end() we'd be introducing random softirq processing
+> > latencies. The softirq execution model is for softirqs to be
+> > immediately executed after local_bh_enable(), and various networking
+> > code is tuned to that behavior.
+> >
+> 
+> All of that only applies when re-enabling softirqs with IRQs enabled.
 
+Yes, of course. BHs in the networking code are typically 
+disabled/enabled when IRQs are on. It's the whole *point* of the 
+facility: it was written as a 'lightweight' IRQs-on/off facility 
+originally, back in the days when local_irq_save() was very expensive, 
+especially on non-x86 platforms.
+
+> I don't see why we'd need all of that.
+> 
+> Conceptually, kernel_fpu_end() would do
+> 
+> if (irqs_disabled())
+>    local_bh_enable_no_xxx();
+> else
+>    local_bh_enable();
+
+In normal kernel code local_bh_enable() obviously cannot be done with 
+IRQs off, and local_bh_disable()/__local_bh_enable() is highly frowned 
+upon because it's generally pointless: if irqs are off to begin with, 
+why disable any BHs?
+
+What you probably mean is to only disable BHs if IRQs are not off 
+(because hardirqs-off state already disables BHs):
+
+  kernel_fpu_begin()
+	if (!irqs_disabled)
+		local_bh_disable();
+
+  kernel_fpu_end()
+	if (!irqs_disabled())
+		local_bh_enable();
+
+... which is basically what the current code does:
+
+        if (!irqs_disabled())
+                fpregs_lock();
+
+	...
+
+        if (!irqs_disabled())
+                fpregs_unlock();
+
+BTW., maybe we should add a lockdep check to make sure we never enable 
+hardirqs while kernel FPU handling is ongoing. It should be relatively 
+straightforward and cheap.
+
+But that brings is far away from the original question:
+
+> > > > > preempt_disable() and preempt_enable() are already allowed 
+> > > > > when IRQs are disabled, and I'm not sure why 
+> > > > > local_bh_disable() and local_bh_enable() are different.
+> > > >
+> > > > Because local_bh_enable() may run softirq handlers immediately 
+> > > > if there's pending softirqs, which shouldn't be done in hardirq 
+> > > > context.
+
+To rephrase my answer: local_bh_disable()/enable() are part of the 
+softirq execution mechanism whose primary historical purpose was to be 
+a lighter-weight replacement hardirq disable/enable critical sections, 
+combined with a relaxation of how long a softirq could run versus a 
+hardirq. It makes little sense to try to nest BH handling primitives to 
+within hardirq critical sections.
+
+Thanks,
+
+	Ingo
