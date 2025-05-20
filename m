@@ -1,224 +1,140 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 412F425EFB7;
-	Tue, 20 May 2025 07:48:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2A061DF75A;
+	Tue, 20 May 2025 07:50:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747727297; cv=none; b=vGvhFi5aBXMXLVJF8tJQIte1/gf5E8EMBCBBigDwN51rWtmiR2Ko7wmzp9Je7EE61JpkzjW2nYtIw62J9CvjJm3bPveSXS7sA9kYoaW414L+H2hy5OqG91QZJqHahvgU5pZMTwM283vG0lec9y2XI/R3a8nuWN+ImrrKP2Ti6lM=
+	t=1747727445; cv=none; b=sGYFkRhJ/QpjO7xh9BQt6MfxjkETyXjnPbSZ2FcEW/wCOy5baFP1vwRt/Ku/8XKV2uP24ad4O92RD+qgWIXrFanWEARKHBz3UUpOA35uMARKe78wuPiBfry/cUi2UT8/PSlUTJjROI5CsShFyIcq02TLPImPhe0EhTA6tAgrgsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747727297; c=relaxed/simple;
-	bh=OUTs4UADqQog7yriv18lJK/gwiu58uHL6MEtwAQVepU=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YJN1MOyDGHksVA/zRvDd8CqP9vO7j+BBrLkwcBRBvmDPopol9tltdy2cNqzlAJq3rBEvzMsGnZUMS84Wm9ZLEPAnstNUadiMGn1irDKEQINKm8LaCNMexw2YSmWyXkNNFStzxM+YuFo5DdFJmLagedafu4EHMBeMwdU8WNwnStI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=igmKoFxg; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1747727445; c=relaxed/simple;
+	bh=MY+OANI6tcNU38qQS3qyu6sNwLYVuil6JB3y5EnwBqQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=q52LKlDnXFaILQvVcj6g15/SFSYMCxM7f3aKO5dqXFnt1ntQ8HtrfN1w7ZIvBE/gT/1MFMi2VqpwVDG8EWLu9DwTFaApXqM/ywobWh3qJmUJi8fBJ0P+lpv3eoAFowo52cT+1szku3mmPK3cmzYH57SmOXxpZp9fupLQbU7/xcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fc1jYQZ+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="igmKoFxg"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54JKI2b7007364;
-	Tue, 20 May 2025 07:48:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	qHuF/bRr4hQqT+ZDEWtnp+Y8cwXryNjBPziNOvSElaQ=; b=igmKoFxgtFYS+kjs
-	EcF/MU11I0q5SHYf9kJc8qGHuI6N1AHd7g/WrhX2CP5Szr0uleVyXTOmxDqagsa+
-	V22Y2GdzkXwslvbmVoqlgAOJT2rnPok/aHDJpX0W7xJsAKQjI47xATfihJZlo7XH
-	p7VINUKW0+lDLRpvl60mkx6wo4GNTFc2cNSS4ZI24zJnehS4P88Enhj61WNCy8Ph
-	B3V1zOBeAzbC+SGPHBrGQ8fqlNvCQkryk13bcY3s84mPx/6bUXE6AaeU4nCrhXZQ
-	jdxTBKPsPLgUta4mv7HHWQnxR/9qBFtabxsA0Xh/bXgdUeeFDv6mEjxsIzPMoqxq
-	49DngQ==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46pjm4pued-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 May 2025 07:48:10 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54K7m9Un028035
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 May 2025 07:48:09 GMT
-Received: from hu-lxu5-sha.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 20 May 2025 00:48:06 -0700
-From: Ling Xu <quic_lxu5@quicinc.com>
-To: <cros-qcom-dts-watchers@chromium.org>, <andersson@kernel.org>,
-        <konradybcio@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_lxu5@quicinc.com>, <ekansh.gupta@oss.qualcomm.com>
-Subject: [PATCH v3 3/3] arm64: dts: qcom: sc7280: Add dma-coherent property for fastrpc nodes
-Date: Tue, 20 May 2025 13:17:37 +0530
-Message-ID: <20250520074737.1883495-4-quic_lxu5@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250520074737.1883495-1-quic_lxu5@quicinc.com>
-References: <20250520074737.1883495-1-quic_lxu5@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fc1jYQZ+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E6FDC4CEE9;
+	Tue, 20 May 2025 07:50:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747727444;
+	bh=MY+OANI6tcNU38qQS3qyu6sNwLYVuil6JB3y5EnwBqQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=fc1jYQZ+h8gkr1CZZKSNjpxmsLh1E4J+gsA3BTdus8qKHERXEb94t+5wt8/dH2Mdb
+	 HvoAtsQiLCzkmNgmVueDMTyz40ThMAADEA+Mptot1MAiJnJbJ9ybeIiOH8o3HjSRf3
+	 y1nJzZXikQUSaFf3UtdgLGkoPVENkPBuIOOUGbB/RiI5ZY/7N/k1Pmw9CU6uPiJ2A+
+	 9SQa2dfKCRS5xBCKMxSqxxOLZ8vCpG0tMr5C5w5U4dP7+oVQRPHxOWxNjkM0p0iGSn
+	 YCyIvdm1LFzsMgzuvkfeeXntIyxnw19BqQfBsEQ8J7XL2OcBQ9qkloBSv3+fr34A3b
+	 JKXgbx+yXgT9A==
+Date: Tue, 20 May 2025 09:50:37 +0200
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Akira Yokosawa <akiyks@gmail.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Nicolas Schier
+ <nicolas.schier@linux.dev>, Stephen Rothwell <sfr@canb.auug.org.au>,
+ linux-doc@vger.kernel.org, linux-kbuild@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] docs: kerneldoc.py: don't use Sphinx logger
+Message-ID: <20250520095037.3dc39685@sal.lan>
+In-Reply-To: <7bbe75ff-548f-4ffd-9522-59d1518d6c72@infradead.org>
+References: <cover.1747719873.git.mchehab+huawei@kernel.org>
+	<6b81b1aaa8446b4d850064dd38ffffa1a1cb6254.1747719873.git.mchehab+huawei@kernel.org>
+	<7bbe75ff-548f-4ffd-9522-59d1518d6c72@infradead.org>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: iCF1vlrzkN4lm6_dUR3NgdZQmkSmbIGD
-X-Authority-Analysis: v=2.4 cv=C4bpyRP+ c=1 sm=1 tr=0 ts=682c33ba cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=YsOEayTiMQgu7miS1LcA:9
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: iCF1vlrzkN4lm6_dUR3NgdZQmkSmbIGD
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDA2MiBTYWx0ZWRfXz0gjeMWK0BKb
- MSLoRjuWZ9MfK7RG8ycl2KwkFHP+k/2mEA3SlNgYJFU7fXXs+njroPFnZNgeNbP40viuIujjook
- BEE8cowQPy4O3rpVWV8EVvegzhV8JugyKHDvYe+VGLS1UIFCAweywzgnPjdWiYcf8Y6npG5/p3o
- VAhqb2Rcat7fvN4St7QrKKfeNdiV/RClhDcOOQ3Qj4EWFbGoJt6XoRllQ6F6Qc+rftIE9ZuAC21
- /jsa+j+G5Svpnf2shwJxU94BZLwtXG6IMMVLectEo3L9t7lXFJP4JnmHdiIFnUZ4e1QIx1RzBG5
- UgLLODeg7HNdHfb8qWJ2goE/Ng/64bR3HS3yKvS/uwAMsP/lda5wCosA3FlYQvmnKVTf46+EfG6
- kXv1NsBIZ+uIrrsgfJveXQjEfEMAKyRCoOUqHylGUkHHKzhSN6W4jYFBryrtvKN7aMW/btqg
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-20_03,2025-05-16_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 malwarescore=0 suspectscore=0 impostorscore=0 adultscore=0
- mlxlogscore=734 spamscore=0 lowpriorityscore=0 phishscore=0 mlxscore=0
- bulkscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505200062
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Add dma-cherent property to fastrpc context bank nodes to ensure that
-the DMA operations for these nodes are coherent.
+Hi Randy,
 
-Signed-off-by: Ling Xu <quic_lxu5@quicinc.com>
----
- arch/arm64/boot/dts/qcom/sc7280.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+Em Mon, 19 May 2025 22:55:08 -0700
+Randy Dunlap <rdunlap@infradead.org> escreveu:
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-index 17f244929714..333e4aa64d10 100644
---- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-@@ -3881,12 +3881,14 @@ compute-cb@3 {
- 						compatible = "qcom,fastrpc-compute-cb";
- 						reg = <3>;
- 						iommus = <&apps_smmu 0x1803 0x0>;
-+						dma-coherent;
- 					};
- 
- 					compute-cb@4 {
- 						compatible = "qcom,fastrpc-compute-cb";
- 						reg = <4>;
- 						iommus = <&apps_smmu 0x1804 0x0>;
-+						dma-coherent;
- 					};
- 
- 					compute-cb@5 {
-@@ -3894,6 +3896,7 @@ compute-cb@5 {
- 						reg = <5>;
- 						iommus = <&apps_smmu 0x1805 0x0>;
- 						qcom,nsessions = <5>;
-+						dma-coherent;
- 					};
- 				};
- 			};
-@@ -4121,6 +4124,7 @@ compute-cb@1 {
- 						reg = <1>;
- 						iommus = <&apps_smmu 0x11a1 0x0420>,
- 							 <&apps_smmu 0x1181 0x0420>;
-+						dma-coherent;
- 					};
- 
- 					compute-cb@2 {
-@@ -4128,6 +4132,7 @@ compute-cb@2 {
- 						reg = <2>;
- 						iommus = <&apps_smmu 0x11a2 0x0420>,
- 							 <&apps_smmu 0x1182 0x0420>;
-+						dma-coherent;
- 					};
- 
- 					compute-cb@3 {
-@@ -4135,6 +4140,7 @@ compute-cb@3 {
- 						reg = <3>;
- 						iommus = <&apps_smmu 0x11a3 0x0420>,
- 							 <&apps_smmu 0x1183 0x0420>;
-+						dma-coherent;
- 					};
- 
- 					compute-cb@4 {
-@@ -4142,6 +4148,7 @@ compute-cb@4 {
- 						reg = <4>;
- 						iommus = <&apps_smmu 0x11a4 0x0420>,
- 							 <&apps_smmu 0x1184 0x0420>;
-+						dma-coherent;
- 					};
- 
- 					compute-cb@5 {
-@@ -4149,6 +4156,7 @@ compute-cb@5 {
- 						reg = <5>;
- 						iommus = <&apps_smmu 0x11a5 0x0420>,
- 							 <&apps_smmu 0x1185 0x0420>;
-+						dma-coherent;
- 					};
- 
- 					compute-cb@6 {
-@@ -4156,6 +4164,7 @@ compute-cb@6 {
- 						reg = <6>;
- 						iommus = <&apps_smmu 0x11a6 0x0420>,
- 							 <&apps_smmu 0x1186 0x0420>;
-+						dma-coherent;
- 					};
- 
- 					compute-cb@7 {
-@@ -4163,6 +4172,7 @@ compute-cb@7 {
- 						reg = <7>;
- 						iommus = <&apps_smmu 0x11a7 0x0420>,
- 							 <&apps_smmu 0x1187 0x0420>;
-+						dma-coherent;
- 					};
- 
- 					compute-cb@8 {
-@@ -4170,6 +4180,7 @@ compute-cb@8 {
- 						reg = <8>;
- 						iommus = <&apps_smmu 0x11a8 0x0420>,
- 							 <&apps_smmu 0x1188 0x0420>;
-+						dma-coherent;
- 					};
- 
- 					/* note: secure cb9 in downstream */
-@@ -4179,6 +4190,7 @@ compute-cb@11 {
- 						reg = <11>;
- 						iommus = <&apps_smmu 0x11ab 0x0420>,
- 							 <&apps_smmu 0x118b 0x0420>;
-+						dma-coherent;
- 					};
- 
- 					compute-cb@12 {
-@@ -4186,6 +4198,7 @@ compute-cb@12 {
- 						reg = <12>;
- 						iommus = <&apps_smmu 0x11ac 0x0420>,
- 							 <&apps_smmu 0x118c 0x0420>;
-+						dma-coherent;
- 					};
- 
- 					compute-cb@13 {
-@@ -4193,6 +4206,7 @@ compute-cb@13 {
- 						reg = <13>;
- 						iommus = <&apps_smmu 0x11ad 0x0420>,
- 							 <&apps_smmu 0x118d 0x0420>;
-+						dma-coherent;
- 					};
- 
- 					compute-cb@14 {
-@@ -4200,6 +4214,7 @@ compute-cb@14 {
- 						reg = <14>;
- 						iommus = <&apps_smmu 0x11ae 0x0420>,
- 							 <&apps_smmu 0x118e 0x0420>;
-+						dma-coherent;
- 					};
- 				};
- 			};
--- 
-2.34.1
+> On 5/19/25 10:47 PM, Mauro Carvalho Chehab wrote:
+> > Unfortunately, currently Sphinx logger is suppressing too much, not
+> > allowing warnings to be displayed. Disable it.
+> > 
+> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>  
+> 
+> On linux-next-20250516, this gives me:
+> 
+> Cannot find file ../drivers/gpio/gpiolib-acpi.c
+> Cannot find file ../drivers/gpio/gpiolib-acpi.c
+> ...
+> Sphinx parallel build error!
+> 
+> Versions
+> ========
+> 
+> * Platform:         linux; (Linux-6.14.4-1-default-x86_64-with-glibc2.41)
+> * Python version:   3.13.3 (CPython)
+> * Sphinx version:   8.2.3
+> * Docutils version: 0.21.2
+> * Jinja2 version:   3.1.6
+> * Pygments version: 2.19.1
+> 
+> Last Messages
+> =============
+> 
+> 
+>     reading sources... [ 75%]
+>     translations/it_IT/subsystem-apis .. translations/zh_CN/admin-guide/mm/damon/reclaim
+> 
+>     reading sources... [ 77%]
+>     translations/zh_CN/admin-guide/mm/damon/start .. translations/zh_CN/core-api/symbol-namespaces
+> 
+>     reading sources... [ 79%]
+>     translations/zh_CN/core-api/this_cpu_ops .. translations/zh_CN/kernel-hacking/index
+> 
+> Loaded Extensions
+> =================
+> 
+> * sphinx.ext.mathjax (8.2.3)
+> * alabaster (1.0.0)
+> * sphinxcontrib.applehelp (2.0.0)
+> * sphinxcontrib.devhelp (1.0.6)
+> * sphinxcontrib.htmlhelp (2.1.0)
+> * sphinxcontrib.serializinghtml (1.1.10)
+> * sphinxcontrib.qthelp (2.0.0)
+> * kerneldoc (1.0)
+> * rstFlatTable (1.0)
+> * kernel_include (1.0)
+> * kfigure (1.0.0)
+> * sphinx.ext.ifconfig (8.2.3)
+> * automarkup (unknown version)
+> * maintainers_include (1.0)
+> * sphinx.ext.autosectionlabel (8.2.3)
+> * kernel_abi (1.0)
+> * kernel_feat (1.0)
+> * translations (unknown version)
+> 
+> Traceback
+> =========
+> 
+>       File "/usr/lib/python3.13/site-packages/sphinx/util/parallel.py", line 137, in _join_one
+>         raise SphinxParallelError(*result)
+>     sphinx.errors.SphinxParallelError: KeyError: '../drivers/gpio/gpiolib-acpi.c'
+> 
+> and then it's finished (not a normal finish).
+> So IMHO this patch is not sufficient.
 
+Well, on next-20250516:
+
+	$ ls drivers/gpio/gpiolib-acpi.c
+	ls: cannot access 'drivers/gpio/gpiolib-acpi.c': No such file or directory
+
+Avoiding the script to abort is a matter of adding a try/except
+block at kerneldoc.py, but I'd say that, if an include file (or any other
+file needed for the build) is not found, "make" should abort anyway for
+the affected target (Kernel compilation or when doc building).
+
+The only thing that bothers me is the "Sphinx parallel build error!"
+message. I'll check if there is a way to suppress it.
+
+Regards,
+Mauro
