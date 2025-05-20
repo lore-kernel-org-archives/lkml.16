@@ -1,106 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70633258CF7;
-	Tue, 20 May 2025 18:09:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DED60262D29;
+	Tue, 20 May 2025 18:11:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747764571; cv=none; b=BVsTyKdoJV5OrQS9QoGHHibInqsDM7Nr+dgXShDbM3U1i/HYET59cBmHIayqxeBPpaotC7EI+bvzlrojWyux3QhUHVr3z8uA+LpDvAavl7dsDdvzVDIqGmUpuqOS75zsZeEpKElPsWA6n9WzD3O+wrAhSLtOub2SWV+cRXqA0+Y=
+	t=1747764690; cv=none; b=G7Ww2vasxuqFpH0YW87bd0XhchgV5sGhdZBbIaL9BRR9l10N6lwHBQ2zUEPRb6JzKN21drXlwxxzqXvuALDHmTMi4FIegrANmE2DITwsMkVCToL4Hujmtzt4Dlbjyx0+Uwf7dQFhTPr+AdEaFfm/Bk6N8Bllm5J0VxVcMaTpFmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747764571; c=relaxed/simple;
-	bh=ZIG9WTKvJ+a9sMxplJs7pTUDmDH0RunUZlkZsO6YVTM=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=fxnILo+y6bCTmUty1rbwio5hS0RBrYYpB4OoyRvJTP7Wq3t3GrbDb8GZQqp5oBj21oILBaXwjyA0CGK5oQr6pvwROTHBQrLGMMrKYvTvDICwl1zLXRS2I3OJsccVKYAXCw2lPrUpgiY173Sce+OrRJoU/UOVvvC1MxwNCt8mfh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rEFf8wqi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747764690; c=relaxed/simple;
+	bh=twrW7/08eCVa9qptJqhegLazELCJFFEPNWRhDI8Zpxs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=YWXdE2vme0JiKJ6gwXhsmN0WbZnYFOMvaeqFlqJTNdlYnh8yZB7dfpQDEFJkZQh69RtHz36R+/Dt9mCXybePa1e0cac7wXTjvx1/eAZTgSmNgmaDgDFDGcO0Br4Y139ymwkNU6aTVJk03S4abgX0R5RBWrqgyH2i76SjKz67oS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IY/9Konu; arc=none smtp.client-ip=209.85.219.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rEFf8wqi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 000F8C4CEE9;
-	Tue, 20 May 2025 18:09:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747764570;
-	bh=ZIG9WTKvJ+a9sMxplJs7pTUDmDH0RunUZlkZsO6YVTM=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=rEFf8wqiPU0HnUsKcroDD2OQWIRqVZfWVRGIFKHcj1WHFIptCJxKtCEYOXDNHNfOs
-	 ryhu5gKy9VkHBWaAtCTYCRIEX4omYu931rfUbjrwFdsNyiiwopbS1GForWfsflxUdo
-	 0k0AHIo0OCXAe5lpXaSIRJkxpEJ5W27yHoJ4GcPoXpJlV+bECYm/oc2N4XVdAxTC7t
-	 MTv1ARYBefxYAdP/tGx+IFO7lPlmmY/ItR+XFgCPvDpVIGzvuXcCZ1hx5iBrDERIjO
-	 Z4the1UXcfbJWU/c7P8hBgUfK0PsjudHAgr7Qq/FPvuc1Wmyh4Yw4zLzlKvH8NTmME
-	 JLYz6mdNv6T8w==
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IY/9Konu"
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e733cd55f9eso5821491276.1;
+        Tue, 20 May 2025 11:11:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747764688; x=1748369488; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sNiU/+iVtGg8iLaaH7gZuUjEVkcmluAtZKRN5PqnkdI=;
+        b=IY/9KonuJBKdavDYRrDb6ZZJBb0/Zc4/XVpSv6q2+qmaIYFzgq2ezfLXYo5RLOYfNY
+         66QkDOdGJ0rvM2WzBbo7hGRL8YX4s7ypAIfc6XoleakJREl7NEr3n3nPNLaok7bUaUXy
+         Bw7aSkoGnyV7v0sXioxeWunA0A9zi0UzFGx3t8DWyhGaKIsIoIfhGHCwD5X4mtHgKIRb
+         xtT9E1zv30I+NuQrBMY6NNo1WOqcxQHuxzRBeMRVF3ooqL7EvBvVO99To8QLjpnUVPqp
+         IUIaCx116CReh16krsX70ZCjEyPLtKAsRwhJIbxa8eQ/YZD028Gtu80VoPUjqQqXRkOA
+         vewQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747764688; x=1748369488;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sNiU/+iVtGg8iLaaH7gZuUjEVkcmluAtZKRN5PqnkdI=;
+        b=vViN4IuFD3aeCPIqxOmHaMvaBInoLbdmOyI91/wuDGeOiwFc8EmMvvCnihb+IsxpLl
+         4AP/n+r7y0yAPVaNba0SU4XR8rLwJw7rSne9LdE/2NcWSCiAXqN5j8uHp2CNtaFK3tso
+         sfhaK+oboVrylSR/gCy6EjioDX1OzszSu9mYYKdZWDBe6s9Uh2Mbhsr5GUhzwV3/WZIb
+         kN3ZpFWr841HThyzD0kvgZ16+TZXIZPLdNY7Fe8yNjNRjofV8F8rMw8GFh4aHuyNGdYB
+         eOQmvLVuHITb1tWG2aewDm3LNRpAL5M1RxIufx+Rq87PRMlnd9603UXrV2v9GfaDvFFR
+         +2hw==
+X-Forwarded-Encrypted: i=1; AJvYcCXBayz4/DBpGk2bNLS2vIRAds9IS0ZPWlanK0WGTgH9ojTTEXtraHdsO7pcSAmpLGSKFuXBBWSoGhkV@vger.kernel.org, AJvYcCXD46X2fxORIvKYuC3vYvMI2FR/bLZpr9OyjvxXi2uQViwnQfLhMGQ5pEQE5KEZnrES7Uab64GKq7iJEilD@vger.kernel.org
+X-Gm-Message-State: AOJu0YzkwIsJP5XFBIo58YtiFaoP6CN9gKm7BfhsKhOMr3AKUwQYIRZ8
+	vbWOPukpJqnhzkyUV7DYtCkwwux/y41YCFjJ4WuWmkhtsPYXJL9IaF4J
+X-Gm-Gg: ASbGncs+3kOY6cq8EgWcayilcy6CxKk6BmZvs+LBtFUq6K4D2fKC/Hyw4saUUKMpVWe
+	mNI7VkZSQDj9rACtzUKg3bgzuVg/ywPR9h4jMx9pFv4ivqw7FEUJeU5XUu6pEkxToRLPh1aNyoi
+	eu3tJ60miqon9nKDaP1Ewkr4r0zKarzPdmNHyMUDE0oPaMGVvrBAPQeEJ683xvS+fYRvWUEK9Sd
+	KRGFoG4PRmfEut4sSLY1LkORH8PodkO8gCymA6RXqM7viMJtt10xyEaBBbHfBnGpUL9F0sTlurM
+	TsbqcvESq/6YwD34xEC9qV33qK6i+MdEQe6chU3vkmL7xSwcGb4=
+X-Google-Smtp-Source: AGHT+IF9qB2EDGLXol7oTFU3nKmNd6gAUjfzN+l8/6o4+MlEfJcVhohBDS8KzVMsF9an1hJiidQsLA==
+X-Received: by 2002:a05:6902:478e:b0:e7b:9763:6697 with SMTP id 3f1490d57ef6-e7b97636a09mr14133727276.28.1747764687532;
+        Tue, 20 May 2025 11:11:27 -0700 (PDT)
+Received: from localhost ([2a03:2880:25ff:73::])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e7b75568de3sm3303496276.3.2025.05.20.11.11.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 11:11:27 -0700 (PDT)
+From: Joshua Hahn <joshua.hahnjy@gmail.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: gourry@gourry.net,
+	harry.yoo@oracle.com,
+	ying.huang@linux.alibaba.com,
+	honggyu.kim@sk.com,
+	yunjeong.mun@sk.com,
+	gregkh@linuxfoundation.org,
+	rakie.kim@sk.com,
+	rafael@kernel.org,
+	lenb@kernel.org,
+	dan.j.williams@intel.com,
+	Jonathan.Cameron@huawei.com,
+	dave.jiang@intel.com,
+	horen.chuang@linux.dev,
+	hannes@cmpxchg.org,
+	osalvador@suse.de,
+	linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-mm@kvack.org,
+	kernel-team@meta.com
+Subject: Re: [PATCH v9] mm/mempolicy: Weighted Interleave Auto-tuning
+Date: Tue, 20 May 2025 11:11:24 -0700
+Message-ID: <20250520181125.4155631-1-joshua.hahnjy@gmail.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250520105319.99f3f2f980617e213db6be20@linux-foundation.org>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 20 May 2025 20:09:24 +0200
-Message-Id: <DA16TWRBVV1B.2IT3D3ROHA3MI@kernel.org>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
- <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
- "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
- <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Danilo
- Krummrich" <dakr@kernel.org>, "Boris Brezillon"
- <boris.brezillon@collabora.com>, "Sebastian Reichel"
- <sebastian.reichel@collabora.com>, "Liam Girdwood" <lgirdwood@gmail.com>,
- "Mark Brown" <broonie@kernel.org>, <linux-kernel@vger.kernel.org>,
- <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH v3] rust: regulator: add a bare minimum regulator
- abstraction
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Alexandre Courbot" <acourbot@nvidia.com>, "Daniel Almeida"
- <daniel.almeida@collabora.com>
-X-Mailer: aerc 0.20.1
-References: <20250513-topics-tyr-regulator-v3-1-4cc2704dfec6@collabora.com>
- <D9YXK1J1XO37.JVILKENRKYXD@nvidia.com>
- <498AB71C-58EF-487E-8D9B-C7C113862948@collabora.com>
- <D9ZQUUA4FLXD.19MJI9HD48EMZ@nvidia.com>
- <8517D6F0-C1A2-4E38-8E62-57DCCD5E58D4@collabora.com>
- <DA048ETXB1Q1.3KVZ2FHENWKDL@kernel.org>
- <DA07TW3IGHW7.1QVLH8XUMWQ8Y@nvidia.com>
-In-Reply-To: <DA07TW3IGHW7.1QVLH8XUMWQ8Y@nvidia.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Mon May 19, 2025 at 4:43 PM CEST, Alexandre Courbot wrote:
-> On Mon May 19, 2025 at 8:54 PM JST, Benno Lossin wrote:
->> On Mon May 19, 2025 at 12:52 PM CEST, Daniel Almeida wrote:
->>>> I just mean the cases where users will want to enable and disable the
->>>> regulator more frequently than just enabling it at probe time.
->>>
->>> This is already possible through kernel::types::Either.=20
->>>
->>> i.e.: the current design - or the proposed typestate one - can already =
-switch
->>> back and forth between Regulator and EnabledRegulator. Using Either mak=
-es it
->>> just work, because you can change the variant at runtime without hassle=
-. This
->>> lets you consume self in an ergonomic way.
->>
->> Have you tried to write such a use-case using `Either`? My personal
->> experience with `Either` was pretty horrible, since you always have to
->> match on it before you can do anything to the values. It's not really
->> ergonomic.
->>
->> I think we should remove it, as it also doesn't have any users at the
->> moment. Anyone that needs it should define a custom enum for their
->> use-case.
->>
->> And effectively an `Either<Regulator, EnabledRegulator>` is just a
->> `Regulator<Switch>` in Alexandre's proposal if I understood it
->> correctly.
->
-> Exactly. And btw, there is no reason to block the merging of a simple
-> version with just enabled and disabled types while we discuss the rest,
-> as long as it is implemented as a typestate. Adding more ways to control
-> the enabled status just involves adding new types to be given as
-> arguments to `Regulator<>` and their respective `impl` blocks, so it can
-> be done incrementally on top of that base, which I believe everybody
-> agrees is sound.
+On Tue, 20 May 2025 10:53:19 -0700 Andrew Morton <akpm@linux-foundation.org> wrote:
 
-Yeah, so I think it would be best if we changed to the typestate design.
+> On Tue, 20 May 2025 07:12:35 -0700 Joshua Hahn <joshua.hahnjy@gmail.com> wrote:
+> 
+> > Changelog
+> > v9:
+> > - Code cleanups & wordsmithing
+> > - Added tags for Honggyu and Ying
+> 
+> Honggyu's Reviewed-by is the only change I'm seeing between v8 and v9,
+> which is unexpected?
+> 
 
----
-Cheers,
-Benno
+Hello Andrew,
+
+The code cleanups & wordsmithing were part of the fixlets that I submitted,
+so if you are diffing against the version of v8 with the fixlets already in,
+all you should see as diffs are Honggyu's review and test tag, as well as
+Ying's review tag.
+
+I was not very familiar with the fixlet process, so I imagined that I needed
+so submit a new fixlet to add the 3 tags. If that is not the case (and you
+can just change the tags without adding a new fixlet) perhaps we can keep
+v8, just with the additional tags so we can keep the patch in the unstable
+branch?
+
+Sorry for the confusion and the noise, I am happy with whatever decision
+you make! Thank you for your help, as always.
+Joshua
