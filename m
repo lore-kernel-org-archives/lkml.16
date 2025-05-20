@@ -1,129 +1,186 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 430BD288CA5;
-	Tue, 20 May 2025 20:31:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DF0428C2CF;
+	Tue, 20 May 2025 20:31:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747773065; cv=none; b=rEdSx6CSlKlRO7/Z+pTkwvco6fw4aFUi0EAvhXIXJLxbcK8sUcTLTNIRU8wHbiDPAZeF9b1PnLnVBgbh4hQPcHm39p3L+hWMu3Q4w1AbpgElo80jhva09WzCuatnpo9sBIwUQJm9Ng4lcymuEj8arc+SnU+BHsXsrBLmvU1342Q=
+	t=1747773095; cv=none; b=se7gdbgiiLtATVW56cK1X5kVJ++vjSZTCMeYKVkvpfoJJJLu5A/3ADG/d/WztA3YPnqBxVzhm49c4iy7ZPr7o6iMR0xYn+W4Kr8MkKwvnbxDE8Ok5NdI2bvVgRu0pomhi6pihDBeb8YyBIcTfM8nGFgEkPiiAzNyRxqxQjLSugE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747773065; c=relaxed/simple;
-	bh=xgNMllPyPQbD/jsNqHCtVrLImV9tm2A22847oz+aSxI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=F5M0SYa4CRoLqErlgc/kZpCXErJZRv4cb30t1lHfk+mdtfmAJJ7F8xdRo9U+vT6mLn+5ceCCccxY5gP6paG1tFhy8QrYZcdYrjvnxvqdkUDC/fzYWIX4xaBrYjZv8H8bYV82zaOQUkUwn8V1Te2QXO0nLdr2lRkwSFpZotFU14c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kaFsiuTp; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747773095; c=relaxed/simple;
+	bh=3GWxq42/tgSqBxgPB7yrDRaLb7a882QSAs5qQK5Arp4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YxSDwfZbZt0O9gNOJxCGqt3xr22Ua8ZBRVXPIXHgdWnNfzD/dlCcQ+cyiq39AIcCVIdN2UzvbGNdewZrAN0HjEakoJAvrYWZUtlWlrunzBmLhgoKuJe2toNU+s7xiFtT/HNznNSkvKQvZN1Hh2uKFiL0YW4GpikiC4b6vMhyLYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MwFkArGp; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kaFsiuTp"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-3108d54332eso30341a91.2;
-        Tue, 20 May 2025 13:31:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747773063; x=1748377863; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GrnzUd/yQLqyU7Ecj4tNRoixyaCDlqm4F4WRkVeusgI=;
-        b=kaFsiuTphJH2OOxWuWNS3mLTQX5fFs4G11RVc/fDEaSjqvY5eYUAjNe/AIOkU2tG1H
-         cz8rULH2zV/x2wQhXpD1Ld2hY+WmbyPS6en3NI96VBAV7S5SzyQwYGChz1M11EIFHocO
-         bnt5DKDZMSKj4EaHp8R40E6o33lL4h9N1qUVOuKrLJwDozcj+3hKCvShg2BTHr744rjn
-         WoUr+a4O/CqHCxKmB+WvUfqe9B6wvtOxSh/G/r/sgAjlRUyfmLdZuIkat1kVXzAuTwIb
-         Zu279uk7YQQ28duItfAFy+vZDWCj+dj3sqZFDDzpVcyiJ0qL9dtMelMC5wxfdJkrOMev
-         f/lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747773063; x=1748377863;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GrnzUd/yQLqyU7Ecj4tNRoixyaCDlqm4F4WRkVeusgI=;
-        b=go5ZAhs82y5bx+F+D5BUcR+9bRGYcVY6jTEHwDdUw17SOAnaKq0fH83CzGuadppqku
-         qJ++u3/WGyY8JAfwAN5HRdC1OkR75SZnBcf2J+GWWIuG3AFce0vniVbrPT9N3uPSY7p0
-         PXiIHOyym8FMd6m5CY8AMaszQW/ZmZhUjlqC7p+r8Dg8B0rC7Bcohbn0rVa7G3An9Epg
-         bki6fBar/4Rnrcgqy+ful/NE/kJ9k4I9lntULKmKHMOaOm8yrlKwlXpYGxYcfaWYgwuJ
-         jGvgyVjQCLEQlF1KuH0t8hRKfjWjOCBx8G60bkVSvVq7/+GawU4Dbc9SLm4zLG/+QNfP
-         sGFA==
-X-Forwarded-Encrypted: i=1; AJvYcCUnAuQWoqwMPg60wOgNVTUMFpkXQd2u8BS98qhxt23Ju7aJs6YE+eoHOQ2E8soPVkQLn10=@vger.kernel.org, AJvYcCUx4kVQTSBfrPKi2WmZolWKObHCobrMsNU31QYk3xUwjXebOOxziuqP16XWYG2SVpCIPCq8DtxINZL0cltV@vger.kernel.org, AJvYcCX61FDYb5L+3QRvZct7b1eYKUk+iyXLscCBWGnshSiLERnnWeAKTMJe1nlEs+DG4MXSkg6HEeUxlii6hw8dAjnyCebn@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKK/tEuSDDScmczoMOa6CZ/9YWrrSoWTeI2OTQ2dI5R883VsGL
-	ut5BkIL3YsPbNWHVchiEfPTwb3gK8XK5yMZlA1/GBMm3QQxOuJsCzY8c9ER6XrVYglixpV1fY10
-	5XW7L7/EqV2rtEYFzA+kFLtj0b+iYTNk=
-X-Gm-Gg: ASbGncvZaC8GJ9PpB1B5B/dVYt3M8z/OsLGrN3oN3mkkdy2liU+6UkYKBBFijiFO2i9
-	AUreNoNlXv2ahSAOqgvIjuB9hehkoPKVQ+fZcX+EiGbMDV3q49ckXlU2SekZbyZ1WFEuJvW+uB+
-	nnDMFm00NDGSvc5mMI/bi/yTi52mazVfpvibQMmLeRvc+/SZPWMLQ1fJd9NOM=
-X-Google-Smtp-Source: AGHT+IE4ybAlv//BF8DsZphTTjPnCY4hzs7HwyQTj6wNk6+OE/f/W7jgi+Jk5MPxTYQ39xpfrlKnAcwF17FlNzlsbyk=
-X-Received: by 2002:a17:90b:4a:b0:30a:4ce4:5287 with SMTP id
- 98e67ed59e1d1-30e82fbd3a0mr34472432a91.0.1747773063310; Tue, 20 May 2025
- 13:31:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MwFkArGp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747773093; x=1779309093;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=3GWxq42/tgSqBxgPB7yrDRaLb7a882QSAs5qQK5Arp4=;
+  b=MwFkArGpeogcwVgPjgL2rJMTtRAcbp9562nAO5+Ho28kuMYAZgAPA45R
+   YucRJdLLEipn66ji1PB36597lvHwlgT6I0mpng0ReYBqGVtRx+281SUfg
+   2CKNbgmiiskW+rDoF7hSY782cSM8MST3TckWrwYVVVsNfc657cl7cI1H4
+   XBzGphp60vK8nA9qGxFaRdqUU2OklW+eF4H0XyosxWMbcyFUlFlfnxIG2
+   hjHbCredLgRrG1IBkzu/qlYfp5AiHhWZCR0YwI8Kw1oHh8tZ3VqV6H0jg
+   /Rh1yTKt2H46rY/GJbY2wzAH81dPsJjRj9VG8j1ozzLiGj5Rwa85vdMSL
+   A==;
+X-CSE-ConnectionGUID: zq8BqAp1QEGwr3K86DZSxg==
+X-CSE-MsgGUID: pKLRBb06Sc2bf3jBiEhCLg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="49861355"
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="49861355"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 13:31:32 -0700
+X-CSE-ConnectionGUID: q0AcIwtGTrC78y+QjzCHfg==
+X-CSE-MsgGUID: JQOZXCiKQOu/6s3LgSjiSA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="176941458"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 20 May 2025 13:31:30 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uHTcW-000NXg-0K;
+	Tue, 20 May 2025 20:31:28 +0000
+Date: Wed, 21 May 2025 04:30:34 +0800
+From: kernel test robot <lkp@intel.com>
+To: Wentao Liang <vulab@iscas.ac.cn>, andi.shyti@kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-arm-msm@vger.kernel.org, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Wentao Liang <vulab@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] i2c: qup: Add error handling in qup_i2c_xfer_v2()
+Message-ID: <202505210438.G4nfkpQ2-lkp@intel.com>
+References: <20250519141918.2522-1-vulab@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250520054943.5002-1-xuewen.yan@unisoc.com> <CAADnVQKZti=SXM=4owtk9jEqGMcD0mUqb46PNYwhquYfyORUuw@mail.gmail.com>
-In-Reply-To: <CAADnVQKZti=SXM=4owtk9jEqGMcD0mUqb46PNYwhquYfyORUuw@mail.gmail.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 20 May 2025 13:30:51 -0700
-X-Gm-Features: AX0GCFsY3sKiVL7c-RoHprUTofVqmOmNX1pZbpz9SDyWTlzwI07QmpOPvE0uocs
-Message-ID: <CAEf4BzaHFPpz9QmVNOHH_hJ-KOF+wsimGqBYRnNwAhz7zcj35w@mail.gmail.com>
-Subject: Re: [PATCH] Revert "bpf: remove unnecessary rcu_read_{lock,unlock}()
- in multi-uprobe attach logic"
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Xuewen Yan <xuewen.yan@unisoc.com>, Song Liu <song@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Steven Rostedt <rostedt@goodmis.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, bpf <bpf@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, xuewen.yan94@gmail.com, 
-	di.shen@unisoc.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250519141918.2522-1-vulab@iscas.ac.cn>
 
-On Tue, May 20, 2025 at 1:08=E2=80=AFPM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
->
-> On Mon, May 19, 2025 at 10:51=E2=80=AFPM Xuewen Yan <xuewen.yan@unisoc.co=
-m> wrote:
-> >
-> > From: Di Shen <di.shen@unisoc.com>
-> >
-> > This reverts commit 4a8f635a60540888dab3804992e86410360339c8.
-> >
-> > Althought get_pid_task() internally already calls rcu_read_lock() and
-> > rcu_read_unlock(), the find_vpid() was not.
-> >
-> > The documentation for find_vpid() clearly states:
-> >
-> >   "Must be called with the tasklist_lock or rcu_read_lock() held."
-> >
-> > Add proper rcu_read_lock/unlock() to protect the find_vpid().
-> >
-> > Reported-by: Xuewen Yan <xuewen.yan@unisoc.com>
-> > Signed-off-by: Di Shen <di.shen@unisoc.com>
-> > ---
-> >  kernel/trace/bpf_trace.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> > index 187dc37d61d4..0c4b6af10601 100644
-> > --- a/kernel/trace/bpf_trace.c
-> > +++ b/kernel/trace/bpf_trace.c
-> > @@ -3417,7 +3417,9 @@ int bpf_uprobe_multi_link_attach(const union bpf_=
-attr *attr, struct bpf_prog *pr
-> >         }
-> >
-> >         if (pid) {
-> > +               rcu_read_lock();
-> >                 task =3D get_pid_task(find_vpid(pid), PIDTYPE_TGID);
-> > +               rcu_read_unlock();
-> >                 if (!task) {
-> >                         err =3D -ESRCH;
-> >                         goto error_path_put;
->
-> hmm. indeed.
->
+Hi Wentao,
 
-yep, my bad, missed find_vpid() restrictions. revert LGTM
+kernel test robot noticed the following build warnings:
 
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
+[auto build test WARNING on andi-shyti/i2c/i2c-host]
+[also build test WARNING on linus/master v6.15-rc7 next-20250516]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> Jiri ?
+url:    https://github.com/intel-lab-lkp/linux/commits/Wentao-Liang/i2c-qup-Add-error-handling-in-qup_i2c_xfer_v2/20250519-222137
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git i2c/i2c-host
+patch link:    https://lore.kernel.org/r/20250519141918.2522-1-vulab%40iscas.ac.cn
+patch subject: [PATCH] i2c: qup: Add error handling in qup_i2c_xfer_v2()
+config: hexagon-randconfig-001-20250521 (https://download.01.org/0day-ci/archive/20250521/202505210438.G4nfkpQ2-lkp@intel.com/config)
+compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250521/202505210438.G4nfkpQ2-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505210438.G4nfkpQ2-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/i2c/busses/i2c-qup.c:1619:6: warning: variable 'err' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
+    1619 |         if (!ret)
+         |             ^~~~
+   drivers/i2c/busses/i2c-qup.c:1621:6: note: uninitialized use occurs here
+    1621 |         if (err)
+         |             ^~~
+   drivers/i2c/busses/i2c-qup.c:1619:2: note: remove the 'if' if its condition is always true
+    1619 |         if (!ret)
+         |         ^~~~~~~~~
+    1620 |                 err = qup_i2c_change_state(qup, QUP_RESET_STATE);
+   drivers/i2c/busses/i2c-qup.c:1570:14: note: initialize the variable 'err' to silence this warning
+    1570 |         int ret, err, idx = 0;
+         |                     ^
+         |                      = 0
+   1 warning generated.
+
+
+vim +1619 drivers/i2c/busses/i2c-qup.c
+
+7545c7dba169c4 Abhishek Sahu         2018-03-12  1564  
+191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1565  static int qup_i2c_xfer_v2(struct i2c_adapter *adap,
+191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1566  			   struct i2c_msg msgs[],
+191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1567  			   int num)
+191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1568  {
+191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1569  	struct qup_i2c_dev *qup = i2c_get_adapdata(adap);
+61f647e9d36d67 Wentao Liang          2025-05-19  1570  	int ret, err, idx = 0;
+191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1571  
+fbf9921f8b35d9 Sricharan Ramabadhran 2016-06-10  1572  	qup->bus_err = 0;
+fbf9921f8b35d9 Sricharan Ramabadhran 2016-06-10  1573  	qup->qup_err = 0;
+fbf9921f8b35d9 Sricharan Ramabadhran 2016-06-10  1574  
+191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1575  	ret = pm_runtime_get_sync(qup->dev);
+191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1576  	if (ret < 0)
+191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1577  		goto out;
+191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1578  
+7545c7dba169c4 Abhishek Sahu         2018-03-12  1579  	ret = qup_i2c_determine_mode_v2(qup, msgs, num);
+7545c7dba169c4 Abhishek Sahu         2018-03-12  1580  	if (ret)
+7545c7dba169c4 Abhishek Sahu         2018-03-12  1581  		goto out;
+7545c7dba169c4 Abhishek Sahu         2018-03-12  1582  
+191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1583  	writel(1, qup->base + QUP_SW_RESET);
+191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1584  	ret = qup_i2c_poll_state(qup, QUP_RESET_STATE);
+191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1585  	if (ret)
+191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1586  		goto out;
+191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1587  
+191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1588  	/* Configure QUP as I2C mini core */
+191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1589  	writel(I2C_MINI_CORE | I2C_N_VAL_V2, qup->base + QUP_CONFIG);
+191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1590  	writel(QUP_V2_TAGS_EN, qup->base + QUP_I2C_MASTER_GEN);
+191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1591  
+191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1592  	if (qup_i2c_poll_state_i2c_master(qup)) {
+191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1593  		ret = -EIO;
+191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1594  		goto out;
+191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1595  	}
+191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1596  
+eb422b539c1f39 Abhishek Sahu         2018-03-12  1597  	if (qup->use_dma) {
+7545c7dba169c4 Abhishek Sahu         2018-03-12  1598  		reinit_completion(&qup->xfer);
+7545c7dba169c4 Abhishek Sahu         2018-03-12  1599  		ret = qup_i2c_bam_xfer(adap, &msgs[0], num);
+eb422b539c1f39 Abhishek Sahu         2018-03-12  1600  		qup->use_dma = false;
+9cedf3b2f09946 Sricharan Ramabadhran 2016-02-22  1601  	} else {
+7545c7dba169c4 Abhishek Sahu         2018-03-12  1602  		qup_i2c_conf_mode_v2(qup);
+7545c7dba169c4 Abhishek Sahu         2018-03-12  1603  
+7545c7dba169c4 Abhishek Sahu         2018-03-12  1604  		for (idx = 0; idx < num; idx++) {
+7545c7dba169c4 Abhishek Sahu         2018-03-12  1605  			qup->msg = &msgs[idx];
+7545c7dba169c4 Abhishek Sahu         2018-03-12  1606  			qup->is_last = idx == (num - 1);
+7545c7dba169c4 Abhishek Sahu         2018-03-12  1607  
+7545c7dba169c4 Abhishek Sahu         2018-03-12  1608  			ret = qup_i2c_xfer_v2_msg(qup, idx,
+7545c7dba169c4 Abhishek Sahu         2018-03-12  1609  					!!(msgs[idx].flags & I2C_M_RD));
+7545c7dba169c4 Abhishek Sahu         2018-03-12  1610  			if (ret)
+7545c7dba169c4 Abhishek Sahu         2018-03-12  1611  				break;
+7545c7dba169c4 Abhishek Sahu         2018-03-12  1612  		}
+7545c7dba169c4 Abhishek Sahu         2018-03-12  1613  		qup->msg = NULL;
+191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1614  	}
+191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1615  
+f74187932d30e4 Sricharan Ramabadhran 2016-01-19  1616  	if (!ret)
+7545c7dba169c4 Abhishek Sahu         2018-03-12  1617  		ret = qup_i2c_bus_active(qup, ONE_BYTE);
+7545c7dba169c4 Abhishek Sahu         2018-03-12  1618  
+7545c7dba169c4 Abhishek Sahu         2018-03-12 @1619  	if (!ret)
+61f647e9d36d67 Wentao Liang          2025-05-19  1620  		err = qup_i2c_change_state(qup, QUP_RESET_STATE);
+61f647e9d36d67 Wentao Liang          2025-05-19  1621  	if (err)
+61f647e9d36d67 Wentao Liang          2025-05-19  1622  		return err;
+f74187932d30e4 Sricharan Ramabadhran 2016-01-19  1623  
+191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1624  	if (ret == 0)
+191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1625  		ret = num;
+191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1626  out:
+191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1627  	pm_runtime_mark_last_busy(qup->dev);
+191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1628  	pm_runtime_put_autosuspend(qup->dev);
+191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1629  
+191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1630  	return ret;
+191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1631  }
+191424bb6166f6 Sricharan Ramabadhran 2016-01-19  1632  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
