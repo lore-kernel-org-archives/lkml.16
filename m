@@ -1,90 +1,57 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5382267F41
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 11:41:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 184DF264A97;
+	Tue, 20 May 2025 11:41:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747741280; cv=none; b=MZyo9kGEwPMkDraHo0OF0gmUL2+nHIPFYEMjbYDrR22M/CUnCgMcm6ZRo7lrxtBWpwCqtXfF8+CGXygG0oSjdlKVRFJXkzksNVX7jaUmYA1pVVvfO8JVnfurJsPWuaafZZBS7whnWkNIdB4nBcO3fzupG4tVtuBnUFmUelIh8t4=
+	t=1747741317; cv=none; b=kYa16XSo5O7LKj3WyBmP3iHJ1OaBdV9mMXHgNcvP95d0MLJJ4MG++LVahh0qjSpfSJxa52wVPEuic8S0XvUJnjunjA1c19lfNbZim4PqJIfDGhVPEKzTBcDcxXlq+LgAlYeHzFbUmPRvhl1RxqzIoX0XSfA0f7gJA+qrYcaGKmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747741280; c=relaxed/simple;
-	bh=E8r9RWdFrcTxAoPTPdSFvWx+S9pJA1DmWFvEP1M7JWw=;
+	s=arc-20240116; t=1747741317; c=relaxed/simple;
+	bh=Ol9uSUbn2ZXUEH7qPHx1R0OZwskdpIKlJmZWMIzJyx4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QC4tABYCqm8v3t51EQsIyX1Fd0See5yWxfSWE/B5pm+Dha6hKIJArpExJ5ZL+ryjg9g/VMwqY4yhPrY262JPeSBDTd8rQGm6wAiTbTA/QDJzn+lToBCjUpzrqtalTcg3rlwnWsRYl7wa04X3mKUvMIO7xTiz0Ac/kFhHDHqteu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ZTCJx9D6; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=xOipSqIj; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ZTCJx9D6; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=xOipSqIj; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=g0De42pD7Bk3YwV8d+qxTi5hmXbfCferNarFTsmfsBoTxxSz5RGEs1Jbt64d2eg/f2349uQIy0wj0h9fJeb4yine38qKjnnHrq6FcMZyxTFPGcKwMqiSAWxuv79SqWKsPWgeCz7Ob9FgKdfYGAzsIOT/jntQPfdC6x8A5jm+u6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=xlMulO2A; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ZTCJx9D6";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="xOipSqIj";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ZTCJx9D6";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="xOipSqIj"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 0BDB620687;
-	Tue, 20 May 2025 11:41:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747741277; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0m2C8j6n/4hnJfqAn276hwrxDOhbyeI9i1wZW36wyC8=;
-	b=ZTCJx9D6Viz3UpQ90BKvRqWWBnc56CvG4cCpMe1QqrViFPaLNO28D07lE0K4qTMqTXtJiL
-	OsKUdf/r8B2/7UA7e4+M6kW+w92/rRLxWvUyzFmTktimM8wsj7TcI6JMOYZdQLwI7Sejoy
-	SMjWnB1eR7fhtdvV7GYdjljFblBPwyk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747741277;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0m2C8j6n/4hnJfqAn276hwrxDOhbyeI9i1wZW36wyC8=;
-	b=xOipSqIjQa9bRhV9Sy3AnYuBCGyjt+y2+BQY+DwCXU0OnlDlho/366rdEig0Dq5wHdjEnh
-	+RKFYl7nj3A6JsCA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747741277; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0m2C8j6n/4hnJfqAn276hwrxDOhbyeI9i1wZW36wyC8=;
-	b=ZTCJx9D6Viz3UpQ90BKvRqWWBnc56CvG4cCpMe1QqrViFPaLNO28D07lE0K4qTMqTXtJiL
-	OsKUdf/r8B2/7UA7e4+M6kW+w92/rRLxWvUyzFmTktimM8wsj7TcI6JMOYZdQLwI7Sejoy
-	SMjWnB1eR7fhtdvV7GYdjljFblBPwyk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747741277;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0m2C8j6n/4hnJfqAn276hwrxDOhbyeI9i1wZW36wyC8=;
-	b=xOipSqIjQa9bRhV9Sy3AnYuBCGyjt+y2+BQY+DwCXU0OnlDlho/366rdEig0Dq5wHdjEnh
-	+RKFYl7nj3A6JsCA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C228113A3E;
-	Tue, 20 May 2025 11:41:16 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id WOx5LlxqLGiSewAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Tue, 20 May 2025 11:41:16 +0000
-Date: Tue, 20 May 2025 12:41:00 +0100
-From: Pedro Falcato <pfalcato@suse.de>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>, David Hildenbrand <david@redhat.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Christian Brauner <brauner@kernel.org>, linux-mm@kvack.org, linux-arch@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, SeongJae Park <sj@kernel.org>, 
-	Usama Arif <usamaarif642@gmail.com>
-Subject: Re: [RFC PATCH 4/5] mm/madvise: add PMADV_SET_FORK_EXEC_DEFAULT
- process_madvise() flag
-Message-ID: <mnaqmyzodrrzzaahupzj5djayqpnt7jojqa5yaay2jdpnnwfx3@b2s4twil5cvl>
-References: <cover.1747686021.git.lorenzo.stoakes@oracle.com>
- <617413860ff194dfb1afedb175b2d84a457e449d.1747686021.git.lorenzo.stoakes@oracle.com>
- <czd62f2vzwv6fow4ikvzlkjdj5odhc3nhtc72onwip52baobg5@yc5pjiqoqnh4>
- <da1281bb-e49a-40f9-ac11-f976358e618e@lucifer.local>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="xlMulO2A"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=gmbzrUDxNH6PC6UchGiFgjmo8NW7xqmXvSTFLPxF/Cw=; b=xlMulO2AMDAuGzlA+wUXGreICR
+	OMnwUw/rpLkCYmXF8UB3nAQsv+nXbwFlNYhir8BYinsR5VIrecbip+b6b9MzTTfiLZ0dq0adVezJt
+	3ulsNAFAGUt89V9tzMopwhCSkRgKmep6kC+y2F7znyRrdaVgGc0g9u0FcK51L0uMz3ixWLy7O7Bdx
+	HNcONENmdg933DhQOIn7cnniPIwICXO70r5w02C6liIFPzkYg9tRBR5YMbLWZBDXtaFJsPsbPbTYp
+	vagARtVbh7jByNCTNUfHIIXbQVZnFNkj4F8k38Qyl/TQEiU8em5h8TPEJL4jVd4wsFPWAcGb3M/+7
+	2Lxncu5w==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uHLM0-0000000CghJ-0yKU;
+	Tue, 20 May 2025 11:41:52 +0000
+Date: Tue, 20 May 2025 04:41:52 -0700
+From: "hch@infradead.org" <hch@infradead.org>
+To: "Xu, Lizhi" <Lizhi.Xu@windriver.com>
+Cc: "hch@infradead.org" <hch@infradead.org>,
+	Christian Hesse <mail@eworm.de>,
+	"axboe@kernel.dk" <axboe@kernel.dk>,
+	"christian@heusel.eu" <christian@heusel.eu>,
+	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"ming.lei@redhat.com" <ming.lei@redhat.com>,
+	"syzbot+6af973a3b8dfd2faefdc@syzkaller.appspotmail.com" <syzbot+6af973a3b8dfd2faefdc@syzkaller.appspotmail.com>,
+	"syzkaller-bugs@googlegroups.com" <syzkaller-bugs@googlegroups.com>
+Subject: Re: =?utf-8?B?5Zue5aSNOiDlm57lpI06IOWbng==?= =?utf-8?B?5aSNOg==?=
+ [PATCH V5] loop: Add sanity check for read/write_iter
+Message-ID: <aCxqgDkHPHxrOFJH@infradead.org>
+References: <20250519175640.2fcac001@leda.eworm.net>
+ <20250520030051.177205-1-lizhi.xu@windriver.com>
+ <20250520073901.6fdfbee4@leda.eworm.net>
+ <BL1PR11MB5979C666DA3BC228C2C30E92869FA@BL1PR11MB5979.namprd11.prod.outlook.com>
+ <aCwlRMEuvvP31UGG@infradead.org>
+ <BL1PR11MB5979CBE5243379E686674B1C869FA@BL1PR11MB5979.namprd11.prod.outlook.com>
+ <aCxnTIwiVhBK-XIt@infradead.org>
+ <BL1PR11MB5979E4700AE4B7B6A09681B8869FA@BL1PR11MB5979.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -93,105 +60,13 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <da1281bb-e49a-40f9-ac11-f976358e618e@lucifer.local>
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[linux-foundation.org,oracle.com,redhat.com,suse.cz,google.com,arndb.de,kernel.org,kvack.org,vger.kernel.org,gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Score: -3.80
-X-Spam-Level: 
+In-Reply-To: <BL1PR11MB5979E4700AE4B7B6A09681B8869FA@BL1PR11MB5979.namprd11.prod.outlook.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-On Tue, May 20, 2025 at 11:21:33AM +0100, Lorenzo Stoakes wrote:
-> On Tue, May 20, 2025 at 09:38:50AM +0100, Pedro Falcato wrote:
-> > On Mon, May 19, 2025 at 09:52:41PM +0100, Lorenzo Stoakes wrote:
-> > > It's useful in certain cases to be able to default-enable an madvise() flag
-> > > for all newly mapped VMAs, and for that to survive fork/exec.
-> > >
-> > > The natural place to specify something like this is in an madvise()
-> > > invocation, and thus providing this functionality as a flag to
-> > > process_madvise() makes sense.
-> > >
-> > > We intentionally limit this only to flags that we know should function
-> > > correctly without issue, and to be conservative about this, so we initially
-> > > limit ourselves only to MADV_HUGEPAGE, MADV_NOHUGEPAGE, that is - setting
-> > > the VM_HUGEPAGE, VM_NOHUGEPAGE VMA flags.
-> > >
-> > > We implement this functionality by using the mm_struct->def_flags field.
-> >
-> > This seems super specific. How about this:
-> >
-> > - PMADV_FUTURE (mirrors MCL_FUTURE). This only applies the flag to future VMAs in the current process.
-> > - PMADV_INHERIT_FORK. This makes it so the flag is propagated to child processes (does not imply PMADV_FUTURE)
-> > - PMADV_INHERIT_EXEC. This makes it so the flag is propagated through the execve boundary
-> >   (and this is where we'd filter for 'safe' flags, at least through the secureexec boundary). Does not imply
-> >   FUTURE nor INHERIT_FORK.
-> 
-> I don't know how we could implement separate current process, fork, exec, fork/exec.
-> mm->def_flags is propagated this way automatically.
-> 
-> And again on the security stuff, I think the correct answer is to require sys
-> admin capability to be able to use this option _at all_. This simplifies
-> everything.
-> 
-> To have this kind of thing we'd have to add a whole new mechanism, literally
-> just for this, and I'd really rather not generate brand new mm_struct flags for
-> every possible mode (in fact that would probably makes the whole thing
-> intractible), or add a new field there for this.
-> 
-> The idea is that we get the advantages of an improved madvise interface, while
-> also providing the interface Usama wants without having to add some hideous
-> prctl() whose logic is disconnected from the rest of madvise(), while being, in
-> effect, a 'default madvise() for new mappings'.
-> 
-> So while specific to the case, nothing prevents us in future adding more
-> functionality if we want.
-> 
-> We could also potentially:
-> 
-> - add PMADV_SET_DEFAULT (I'm iffy about PMADV_FUTURE... but whichever we go with)
-> - add PMADV_INHERIT_FORK
-> - add PMADV_INHERIT_EXEC
-> 
-> And only support PMADV_SET_DEFAULT | PMADV_INHERIT_FORK | PMADV_INHERIT_EXEC for
-> now.
->
-> THen we could have the security semantics you specify (require cap sys admin on
-> PMADV_INHERIT_EXEC) but have that propagate to the only supported case.
-> 
-> What do you think?
->
+On Tue, May 20, 2025 at 11:39:48AM +0000, Xu, Lizhi wrote:
+> No, isofs does not support read_iter.
 
-If you don't want to add new fields, this option seems fine.
-And then if any other usecase pops up, we're ready.
- 
-> >
-> > and, while we're at it, rename PMADV_ENTIRE_ADDRESS_SPACE to PMADV_CURRENT, to align it with MCL_CURRENT.
-> 
-> I'm not sure making the mlock()/madvise() stuff analagous is a good idea, as
-> they have different semantics. I'd rather keep these flags descriptive. Though
-> I'm open to alternative naming of course...
+isofs does use generic_file_read_iter as read_iter method through
+generic_ro_fops.  Why do you keep insisting on a wrong answer instead
+of simply checking what read* method is used by isofs?
 
-Semantics are similar I think? And I do think getting shorter names is a good
-idea, however I won't insist too hard on this.
-
--- 
-Pedro
