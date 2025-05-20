@@ -1,170 +1,255 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1D262417F0
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 17:20:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98DD335893;
+	Tue, 20 May 2025 17:22:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747761637; cv=none; b=okKT5L1A1dZb3wEnNxLfjE8to7IuhNHJPnnBTMmwEqCwxwiCbVrEdZQYcnZ50diX0DCr+vtn6UojHNcYFxSemiBc6CxNcC1tFk97xB1Wkjt7QwwsBdPi8tgZj6pJawppQtXLDYiOzxsCZcBSXVhTj65Xy/MLEUHKbAqiIHeTyzE=
+	t=1747761729; cv=none; b=il2Svaei3wxZ55PFNZx5PGgsq7oCIVrc/oqzTXzMNq16n6F5Y/X41Qpw6ZddN7xNegbTSfrFCOhHvMl5Pb6BMbBXNNX2QQJnJ8LUKrj315YINgYOHrJYo3tbSGoXukUekaBvhZ7r5VAfaO1sxRkfUsqFm2SKd//QfghF4irA2rE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747761637; c=relaxed/simple;
-	bh=eaJYaU/F8iv2v2aDniB0skZs4J/E8FarK9KL5VN/QSs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FHD5vSbvrhM1jEkhNhzvZHO+TfpABTeXIcnfE9ASq/owkUFE8Fmw5/LytGV1CiApZZpGIwMh7E/TuMcvXRBwHNBgLFUcCLsKpLrPwMyNSDimBNMEQkMOBD+1326a6mPknzZepoJSJoboAoHcEn/eM3XUgEivcJl1WI3U9dLoetc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jPj5OjUm; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747761729; c=relaxed/simple;
+	bh=4tQcLsfpU5PWw/IzdXbOwqd2wS+RlrCxDYiohJMayDw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VtoqlFGmxzLkH99k+UduSa56iO2HASvoOcDkzUWFtZsLUwvJiGMjYgG6fBQUcNA8GHvbp5RRY1WAt7jAoFFm78ryYxdeO36WzXyy9O7nDm1Sx2LQv91FxdhJH+54EZigubFkLNgOpEruEWxtcCDlEJSCcYwZ+REqsjR/cHFE5MI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c5Od2F/y; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jPj5OjUm"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-47666573242so1119081cf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 10:20:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c5Od2F/y"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a36c2d3104so1757867f8f.1;
+        Tue, 20 May 2025 10:22:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747761634; x=1748366434; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pMz/GawTYm93M6wk1r8Hyis5b46n5tgbqvpVyMnXyKM=;
-        b=jPj5OjUmRuJAyrh29VWIKAJOfkz6/20+ssOgqOQiqOHBRSUF7RvEkoUIhPe67nf13Y
-         S9r87Dc+BWfkYL9SUc1xts65pQYMR6lVr/MAu/ofcE4Sbtt4AGwAROptwfsTDzPU1Ppb
-         cjPmYE8HhOnZ5kLy1uDyX4bEXaxo2IbtmjQCqcYzAf7SujmdPEvxVFdnpmDXBYBoQ62E
-         uk88RQKKtDxj6ymo8Mm+/Uq2C2D1/ZpMvpz3a7P/naHOtKQiPGC8jEwepDGI+Y3pSYIX
-         leWqpfBrT780rhe9hrCfwj0F/n+skyFKvUm2M0WDqYgYU4JkUfYturAzSJeZst1uhfes
-         ppMA==
+        d=gmail.com; s=20230601; t=1747761726; x=1748366526; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4tQcLsfpU5PWw/IzdXbOwqd2wS+RlrCxDYiohJMayDw=;
+        b=c5Od2F/yHEzjEys/bXYgVbVc4zDU0mkhtPbO9qKUGDVMa45Oaf/5gdNIrpMK9leTxl
+         0pmYMSPMkirOA1I92L0f2q9CIx3JVvJdi+FdPEpuIKbK5BeWz0SFIgMiyozwvU2/e3pb
+         06NlexEGGcQEZgg7ZLWjCfdOhmgFFQZS+GiSmUi/PTERWdvYvv9tlZXGjITliebxSdQ/
+         HxR60TeWxBbSPEZnf981kFqh0+ISdR4VC+fOxVYFAFgsYu2mTU6rPUp5NGYMc3PFDvwJ
+         wRmOiah7yFyKvSPFI8lGFRDMAFhndKGoupz//v4aFJyeuVMOrc+28DMT7ZvvmPyWkAJD
+         rFwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747761634; x=1748366434;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pMz/GawTYm93M6wk1r8Hyis5b46n5tgbqvpVyMnXyKM=;
-        b=bdwX4O+mztUGtrgLPMHTXlqIky42VwhAMhy9Zf7PgECClV+Dn7nZVYEcjMVkBlAHJd
-         8kGezgZi7mX41bVLqaKhJgdrVgxJlGXM6sL+TgCpEkSb5zBPGNhWsecMy/O0ruHUC9VK
-         9MFTtyw6RW6+hbPvRs1EiFD7ORj+clduBti0U6sJioG21UIjS8OidlzAPR54h9DGHAYm
-         EUkfmuBBWHOXTSrRl3eDvbSKHoPX+lGCWNllJ4qfz8pFSFhrDVertHp75TicUwpcMUYi
-         aKZkCf3ah6QkOM1zX9UAKQAzwZmRPfHDqzpm3crVJWS8fd4/VBwTPeJZ54ndoxyHiZWn
-         +q2w==
-X-Forwarded-Encrypted: i=1; AJvYcCWXFZlJc2xvpe9LVYDbxwAnCXViY55YSJMYJF20VcSyh6SIrcYwv/5tTZcHnRcUZqA4Suuh1ZgMtXgGqIo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6NZ1Ia152okEOT/bMufv2W3rAgLLdthsP+4BxaI3Sv6NQkq/f
-	nPYxH3NxqIX2vYDXv1+DfuTRSUU3GfpyQ3QGcboxQPGMN8342yTz5zljqhP6G0qjuSp2/BwSB0o
-	5OxxTJIY8EPh5LRbcCNzZcUSK+rZ3fLPucu3krtB8
-X-Gm-Gg: ASbGncvk6+rfQD93snudctVXOYhyxotlHJc0yfd2asGN3M519Tjvw5T0XT/vxMAvUEC
-	HdOSOQF89rJalBZojumBvchSpqKtarmAqU97XNJ9rGnJGmxGCmvnFyZthFFFxpiT+w58WgkdIiO
-	0AxyhHzv1Andsyid2i6SxFT1FgVms+0NrJ/MBzwQHhMNy8Gna1ySKJ09RM7E/dN5yqZsU4J66Mk
-	w==
-X-Google-Smtp-Source: AGHT+IEN4cy/pozJUBlzjNxeVd+YNzp86jN9uT2YcCkPwp/GNMJOJCbYMQ4W0MBZZmvegZBSiBORzw7uEBE3WptOFSo=
-X-Received: by 2002:ac8:5ac3:0:b0:467:8416:d99e with SMTP id
- d75a77b69052e-49601270e7amr11465061cf.21.1747761634113; Tue, 20 May 2025
- 10:20:34 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747761726; x=1748366526;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4tQcLsfpU5PWw/IzdXbOwqd2wS+RlrCxDYiohJMayDw=;
+        b=IhXyXE0cy/1Yxcu3mEK7JH7XOB08sgdtievAILJp/qGXzx8qeHDKbXOA0FWlHYabqa
+         r2xvKIhp8UjUCtS/SMoHbNIfnyS7zecoIF3iVGuRrquNMCI4oH94PpkrSaJR+6OdfkOU
+         ogHEcmZ6tPHcGGBlPVgZpdnDhrSkpb2NH1yqgUuM2R1dzBP88hl4jWf003JA1hYuZ1JI
+         ntalfsb44mH2AuXyYFT12OlLQMvp5mwPqIrgHKHOIPElmAwbePvG36eGDmVIRZVY+oSm
+         4ViPcebpq1jnhSLObWvFuoKMTa4eioZPdSn6CwcepRsoCsumEJvoAg9W8Ozk6lBQCn/O
+         VHrg==
+X-Forwarded-Encrypted: i=1; AJvYcCV5oKwGgC+qrib9WV7OY9HftLgkziKGUrRYmbMqKe4CD91dGEP918D0b6MDopCewiprc4rbisYMVgrXdN4=@vger.kernel.org, AJvYcCWerclaZueql4omFytcxO8SzpX0Im9zf/bq568g5Pu3DSTVNYupjt0Mnh8LyoUDe8stiFf36xuLJLc=@vger.kernel.org, AJvYcCX38JH/dRXTZVn8Q4goCdrb1DtfdTmetN94OI6eDKz6TuNnOo+DRWybY2VU8uhBjuTXAaYjI5JT1k04@vger.kernel.org
+X-Gm-Message-State: AOJu0YymnZT4ORtKN9IQW0cYqNwFqi3tDt1lSVEWCf3zISfWJOznGiL7
+	TySI1yZcNgYxq8gQ5wDobzjP0MTPUPXZsLRHZo85EKke5YprzaGANS5T
+X-Gm-Gg: ASbGncuXOJpSnu7vnKIbsTIfPGeWGfGYeLr5PC1L1AMRkwnynmt5fFpxpvEHqw+7p/9
+	khyW/5gOgQscK48b7N/+kAnxj7OcvbBg1nj+MyCFDbR/WnBwlSt7GXs8Hx7oIqOr4bB9fczcYqL
+	LHwzpcPySHte/PJGt6owLN1H1O4T0WW4xfjwwn/9qU3KlRnDNc4m/bWP4W2sMLD9WV3SMYavhXB
+	SVDenbrmeSiMFV/1icNkq3JTy607xMwI524EMqQMXf3mekxFEP5eZpGB+R1ZnEJfLuSa30DW9Oc
+	AqXo60YCA+YZGjK3X5DLsNAyWPnG5LcW5R9EHPLCaS5309e/cu6H9QtTCcIDfiFNJqWlERQbwg=
+	=
+X-Google-Smtp-Source: AGHT+IFRhd0lSGq+MvkC82Ucw+R/6mi4DD+3ATdFcakN/aGOoWrgKwEJ3BoJi7BHh+DMSro2KqDuTw==
+X-Received: by 2002:a5d:5848:0:b0:39c:1ef6:4364 with SMTP id ffacd0b85a97d-3a35c821a72mr16962975f8f.14.1747761725566;
+        Tue, 20 May 2025 10:22:05 -0700 (PDT)
+Received: from [192.168.1.121] ([176.206.99.211])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f6f062c7sm40263375e9.14.2025.05.20.10.22.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 May 2025 10:22:05 -0700 (PDT)
+Message-ID: <ee1117cf-6367-4e9a-aa85-ccfc6c63125d@gmail.com>
+Date: Tue, 20 May 2025 19:22:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250520122547.1317050-1-usamaarif642@gmail.com>
- <3divtzm4iapcxwbzxlmfmg3gus75n3rqh43vkjnog456jm2k34@f3rpzvcfk3p6>
- <6d015d91-e74c-48b3-8bc3-480980a74f9b@gmail.com> <b696e3c2-3d96-4729-9e07-87bb644f145b@gmail.com>
- <CAJuCfpEL__bRSbVWATs0qbNF3E2ZS_n7banhRxU01FFT2aTPAQ@mail.gmail.com> <sfh57nqbhxaycdlyitiughqc7ul3xuix5kis65l4grrnxwfqz3@gch2dlf3fnxo>
-In-Reply-To: <sfh57nqbhxaycdlyitiughqc7ul3xuix5kis65l4grrnxwfqz3@gch2dlf3fnxo>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Tue, 20 May 2025 10:20:23 -0700
-X-Gm-Features: AX0GCFs_pF-siV8WacuUIqWISrluJMLCa0d2yYdAA0SX13VUt7rYJEG5VlgtvtQ
-Message-ID: <CAJuCfpHqGQKgU=rnJbZnbyTs3vKL-gEjLp1Yw1idWUzdkjZsLA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] mm: slub: allocate slab object extensions non-contiguously
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Usama Arif <usamaarif642@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	hannes@cmpxchg.org, shakeel.butt@linux.dev, vlad.wing@gmail.com, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, kernel-team@meta.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] PCI: Prevent power state transition of erroneous
+ device
+To: Mario Limonciello <superm1@kernel.org>, Raag Jadav <raag.jadav@intel.com>
+Cc: rafael@kernel.org, mahesh@linux.ibm.com, oohall@gmail.com,
+ bhelgaas@google.com, linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
+ lukas@wunner.de, aravind.iddamsetty@linux.intel.com
+References: <20250519102808.4130271-1-raag.jadav@intel.com>
+ <aCsK743YSuahPtnH@black.fi.intel.com>
+ <85ed0b91-c84f-4d24-8e19-a8cb3ba02b14@gmail.com>
+ <aCxP6vQ8Ep9LftPv@black.fi.intel.com>
+ <a8c83435-4c91-495c-950c-4d12b955c54c@kernel.org>
+ <aCyj9nbnIRet93O-@black.fi.intel.com>
+ <552d75b2-2736-419f-887e-ce2692616578@kernel.org>
+Content-Language: en-US, it-IT, en-US-large
+From: Denis Benato <benato.denis96@gmail.com>
+In-Reply-To: <552d75b2-2736-419f-887e-ce2692616578@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 20, 2025 at 9:41=E2=80=AFAM Kent Overstreet
-<kent.overstreet@linux.dev> wrote:
->
-> On Tue, May 20, 2025 at 08:20:38AM -0700, Suren Baghdasaryan wrote:
-> > On Tue, May 20, 2025 at 7:13=E2=80=AFAM Usama Arif <usamaarif642@gmail.=
-com> wrote:
-> > >
-> > >
-> > >
-> > > On 20/05/2025 14:46, Usama Arif wrote:
-> > > >
-> > > >
-> > > > On 20/05/2025 14:44, Kent Overstreet wrote:
-> > > >> On Tue, May 20, 2025 at 01:25:46PM +0100, Usama Arif wrote:
-> > > >>> When memory allocation profiling is running on memory bound servi=
-ces,
-> > > >>> allocations greater than order 0 for slab object extensions can f=
-ail,
-> > > >>> for e.g. zs_handle zswap slab which will be 512 objsperslab x 16 =
-bytes
-> > > >>> per slabobj_ext (order 1 allocation). Use kvcalloc to improve cha=
-nces
-> > > >>> of the allocation being successful.
-> > > >>>
-> > > >>> Signed-off-by: Usama Arif <usamaarif642@gmail.com>
-> > > >>> Reported-by: Vlad Poenaru <vlad.wing@gmail.com>
-> > > >>> Closes: https://lore.kernel.org/all/17fab2d6-5a74-4573-bcc3-b7595=
-1508f0a@gmail.com/
-> > > >>> ---
-> > > >>>  mm/slub.c | 2 +-
-> > > >>>  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > >>>
-> > > >>> diff --git a/mm/slub.c b/mm/slub.c
-> > > >>> index dc9e729e1d26..bf43c403ead2 100644
-> > > >>> --- a/mm/slub.c
-> > > >>> +++ b/mm/slub.c
-> > > >>> @@ -1989,7 +1989,7 @@ int alloc_slab_obj_exts(struct slab *slab, =
-struct kmem_cache *s,
-> > > >>>     gfp &=3D ~OBJCGS_CLEAR_MASK;
-> > > >>>     /* Prevent recursive extension vector allocation */
-> > > >>>     gfp |=3D __GFP_NO_OBJ_EXT;
-> > > >>> -   vec =3D kcalloc_node(objects, sizeof(struct slabobj_ext), gfp=
-,
-> > > >>> +   vec =3D kvcalloc_node(objects, sizeof(struct slabobj_ext), gf=
-p,
-> > > >>>                        slab_nid(slab));
-> > > >>
-> > > >> And what's the latency going to be on a vmalloc() allocation when =
-we're
-> > > >> low on memory?
-> > > >
-> > > > Would it not be better to get the allocation slighly slower than to=
- not get
-> > > > it at all?
-> > >
-> > > Also a majority of them are less than 1 page. kvmalloc of less than 1=
- page
-> > > falls back to kmalloc. So vmalloc will only be on those greater than =
-1 page
-> > > size, which are in the minority (for e.g. zs_handle, request_sock_sub=
-flow_v6,
-> > > request_sock_subflow_v4...).
-> >
-> > Not just the majority. For all of these kvmalloc allocations kmalloc
-> > will be tried first and vmalloc will be used only if the former
-> > failed: https://elixir.bootlin.com/linux/v6.14.7/source/mm/util.c#L665
-> > That's why I think this should not regress normal case when slab has
-> > enough space to satisfy the allocation.
->
-> And you really should consider just letting the extension vector
-> allocation fail if we're under that much memory pressure.
 
-I see your point. One case we would want to use vmalloc is if the
-allocation is sizable (multiple pages), so failing it does not mean
-critical memory pressure level yet. I don't think today's extension
-vectors would be large enough to span multiple pages. That would
-require a rather large obj_per_slab and in most cases I think this
-change would not affect current behavior, the allocations will be
-smaller than PAGE_SIZE and kvmalloc will fail anyway.
-I guess the question is whether we want to fail if allocation size is
-higher than PAGE_SIZE but less than PAGE_ALLOC_COSTLY_ORDER. Failing
-that I think is reasonable and I don't think any extension vector will
-be large enough to reach PAGE_ALLOC_COSTLY_ORDER. So, I'm ok with
-dropping this part of the patchset.
+On 5/20/25 17:49, Mario Limonciello wrote:
+> On 5/20/2025 10:47 AM, Raag Jadav wrote:
+>> On Tue, May 20, 2025 at 10:23:57AM -0500, Mario Limonciello wrote:
+>>> On 5/20/2025 4:48 AM, Raag Jadav wrote:
+>>>> On Mon, May 19, 2025 at 11:42:31PM +0200, Denis Benato wrote:
+>>>>> On 5/19/25 12:41, Raag Jadav wrote:
+>>>>>> On Mon, May 19, 2025 at 03:58:08PM +0530, Raag Jadav wrote:
+>>>>>>> If error status is set on an AER capable device, most likely either the
+>>>>>>> device recovery is in progress or has already failed. Neither of the
+>>>>>>> cases are well suited for power state transition of the device, since
+>>>>>>> this can lead to unpredictable consequences like resume failure, or in
+>>>>>>> worst case the device is lost because of it. Leave the device in its
+>>>>>>> existing power state to avoid such issues.
+>>>>>>>
+>>>>>>> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
+>>>>>>> ---
+>>>>>>>
+>>>>>>> v2: Synchronize AER handling with PCI PM (Rafael)
+>>>>>>> v3: Move pci_aer_in_progress() to pci_set_low_power_state() (Rafael)
+>>>>>>>       Elaborate "why" (Bjorn)
+>>>>>>> v4: Rely on error status instead of device status
+>>>>>>>       Condense comment (Lukas)
+>>>>>> Since pci_aer_in_progress() is changed I've not included Rafael's tag with
+>>>>>> my understanding of this needing a revisit. If this was a mistake, please
+>>>>>> let me know.
+>>>>>>
+>>>>>> Denis, Mario, does this fix your issue?
+>>>>>>
+>>>>> Hello,
+>>>>>
+>>>>> Unfortunately no, I have prepared a dmesg but had to remove the bootup process because it was too long of a few kb: https://pastebin.com/1uBEA1FL
+>>>>
+>>>> Thanks for the test. It seems there's no hotplug event this time around
+>>>> and endpoint device is still intact without any PCI related failure.
+>>>>
+>>>> Also,
+>>>>
+>>>> amdgpu 0000:09:00.0: PCI PM: Suspend power state: D3hot
+>>>>
+>>>> Which means whatever you're facing is either not related to this patch,
+>>>> or at best exposed some nasty side-effect that's not handled correctly
+>>>> by the driver.
+>>>>
+>>>> I'd say amdgpu folks would be of better help for your case.
+>>>>
+>>>> Raag
+>>>
+>>> So according to the logs Denis shared with v4
+>>> (https://pastebin.com/1uBEA1FL) the GPU should have been going to BOCO. This
+>>> stands for "Bus off Chip Off"
+>>>
+>>> amdgpu 0000:09:00.0: amdgpu: Using BOCO for runtime pm
+>>>
+>>> If it's going to D3hot - that's not going to be BOCO, it should be going to
+>>> D3cold.
+>>
+>> Yes, because upstream port is in D0 for some reason (might be this patch
+>> but not sure) and so will be the root port.
+>>
+>> pcieport 0000:07:00.0: PCI PM: Suspend power state: D0
+>> pcieport 0000:07:00.0: PCI PM: Skipped
+>>
+>> and my best guess is the driver is not able to cope with the lack of D3cold.
+>
+> Yes; if the driver is configured to expect BOCO (D3cold) if it doesn't get it, chaos ensues.
+>
+> I guess let's double check the behavior with CONFIG_PCI_DEBUG to verify this patch is what is changing that upstream port behavior.
+
+
+This is the very same exact kernel, minus the patch in question:  https://pastebin.com/rwMYgG7C
+
+
+Both previous kernel and this one have CONFIG_PCI_DEBUG=y.
+
+Removed the initial bootup sequence to be able to use pastebin.
 
 >
-> Failing allocations is an important mechanism for load shedding,
-> otherwise stuff just piles up - it's a big cause of our terrible
-> behaviour when we're thrashing.
+>>
+>> Raag
+>>
+>>> Denis, can you redo your logs with out Raag's patch patch and set
+>>> CONFIG_PCI_DEBUG to compare?  The 6.14.6 log you shared already
+>>> (https://pastebin.com/kLZtibcD) also chooses BOCO but I'm suspecting picks
+>>> D3cold like it should.
+>>>
+>>>>
+>>>>>>> More discussion on [1].
+>>>>>>> [1] https://lore.kernel.org/all/CAJZ5v0g-aJXfVH+Uc=9eRPuW08t-6PwzdyMXsC6FZRKYJtY03Q@mail.gmail.com/
+>>>>>>>
+>>>>>>>    drivers/pci/pci.c      |  9 +++++++++
+>>>>>>>    drivers/pci/pcie/aer.c | 13 +++++++++++++
+>>>>>>>    include/linux/aer.h    |  2 ++
+>>>>>>>    3 files changed, 24 insertions(+)
+>>>>>>>
+>>>>>>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+>>>>>>> index 4d7c9f64ea24..a20018692933 100644
+>>>>>>> --- a/drivers/pci/pci.c
+>>>>>>> +++ b/drivers/pci/pci.c
+>>>>>>> @@ -9,6 +9,7 @@
+>>>>>>>     */
+>>>>>>>    #include <linux/acpi.h>
+>>>>>>> +#include <linux/aer.h>
+>>>>>>>    #include <linux/kernel.h>
+>>>>>>>    #include <linux/delay.h>
+>>>>>>>    #include <linux/dmi.h>
+>>>>>>> @@ -1539,6 +1540,14 @@ static int pci_set_low_power_state(struct pci_dev *dev, pci_power_t state, bool
+>>>>>>>           || (state == PCI_D2 && !dev->d2_support))
+>>>>>>>            return -EIO;
+>>>>>>> +    /*
+>>>>>>> +     * If error status is set on an AER capable device, it is not well
+>>>>>>> +     * suited for power state transition. Leave it in its existing power
+>>>>>>> +     * state to avoid issues like unpredictable resume failure.
+>>>>>>> +     */
+>>>>>>> +    if (pci_aer_in_progress(dev))
+>>>>>>> +        return -EIO;
+>>>>>>> +
+>>>>>>>        pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+>>>>>>>        if (PCI_POSSIBLE_ERROR(pmcsr)) {
+>>>>>>>            pci_err(dev, "Unable to change power state from %s to %s, device inaccessible\n",
+>>>>>>> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+>>>>>>> index a1cf8c7ef628..617fbac0d38a 100644
+>>>>>>> --- a/drivers/pci/pcie/aer.c
+>>>>>>> +++ b/drivers/pci/pcie/aer.c
+>>>>>>> @@ -237,6 +237,19 @@ int pcie_aer_is_native(struct pci_dev *dev)
+>>>>>>>    }
+>>>>>>>    EXPORT_SYMBOL_NS_GPL(pcie_aer_is_native, "CXL");
+>>>>>>> +bool pci_aer_in_progress(struct pci_dev *dev)
+>>>>>>> +{
+>>>>>>> +    int aer = dev->aer_cap;
+>>>>>>> +    u32 cor, uncor;
+>>>>>>> +
+>>>>>>> +    if (!pcie_aer_is_native(dev))
+>>>>>>> +        return false;
+>>>>>>> +
+>>>>>>> +    pci_read_config_dword(dev, aer + PCI_ERR_COR_STATUS, &cor);
+>>>>>>> +    pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS, &uncor);
+>>>>>>> +    return cor || uncor;
+>>>>>>> +}
+>>>>>>> +
+>>>>>>>    static int pci_enable_pcie_error_reporting(struct pci_dev *dev)
+>>>>>>>    {
+>>>>>>>        int rc;
+>>>>>>> diff --git a/include/linux/aer.h b/include/linux/aer.h
+>>>>>>> index 02940be66324..e6a380bb2e68 100644
+>>>>>>> --- a/include/linux/aer.h
+>>>>>>> +++ b/include/linux/aer.h
+>>>>>>> @@ -56,12 +56,14 @@ struct aer_capability_regs {
+>>>>>>>    #if defined(CONFIG_PCIEAER)
+>>>>>>>    int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
+>>>>>>>    int pcie_aer_is_native(struct pci_dev *dev);
+>>>>>>> +bool pci_aer_in_progress(struct pci_dev *dev);
+>>>>>>>    #else
+>>>>>>>    static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
+>>>>>>>    {
+>>>>>>>        return -EINVAL;
+>>>>>>>    }
+>>>>>>>    static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
+>>>>>>> +static inline bool pci_aer_in_progress(struct pci_dev *dev) { return false; }
+>>>>>>>    #endif
+>>>>>>>    void pci_print_aer(struct pci_dev *dev, int aer_severity,
+>>>>>>> -- 
+>>>>>>> 2.34.1
+>>>>>>>
+>>>
 >
-> It's equivalent to bufferbloat in the networking world.
