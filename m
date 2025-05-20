@@ -1,174 +1,174 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1741626460D
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 09:56:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF22C25EFBB
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 09:57:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747734969; cv=none; b=BBGr4CtYPqDjiGVYzEKtkq0EClZOZmm8iGioLh8F49JepXu4Dbyzy6iskauutokJHojajGyUJgc81vAcz86u0QvYrBKvn8+Uqzo8X6nVRWjhug+VmR1AC3wWokBtAefSvVxFRT+SiI8iYiU69c0naGcHcBcLaCqTB4I3Y5lMeWE=
+	t=1747735027; cv=none; b=tuNQKrJvWfEkvCDVZFQCQ2Uxap56kWs8qbu6cQT41y/ezhCqcbIgny6jhyaTHCrgyXraYMvGAjHTK4eyakF5iUquLAn//l91z3GM677sYQx+Nfcgenpr4dHH5XbDEr7paXv59fCgc+H8RqAGH2k5ayqNpJ1rBLLncWSb03eoAN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747734969; c=relaxed/simple;
-	bh=lydJCPfDF+Y8xYT9SxfHUAuxF9fHAKVBJJJryGlb13s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XhiEqvaUPDrHApm5KM9N96PVz3sZ47T4n76GY6uVWJRStlqgHW9DljQiBRqMsNSo/FPrXQvmY4+mwmtQ4B1AJl33sdOPLgQ91ypjsoN+gLD5aHD5bzrK7EtFzg34fogXBPm2EHM8zGmHMUZTqT4cLasoWVyiM+Xf0JP1O7dQsdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=gd53YKcX; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1747735027; c=relaxed/simple;
+	bh=GarkuXCkr5IXxh7NckX9YQfEQNudMTCDgtz11JyIWrk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=swF/gr9uAjGtTNimsI7/WFS3Oyx+3KNkY2QheX1rccg76J6uoLGCjt9oaI6QLmPd5EB3ws0v2IyqL5QHcV6BCCZGKCSb7oypINtrkbKhcxSSu5Cxjk6Vqv340FB6tZ0JA+rrVk1MSEhQbsfxe30VvZeQMtRIM5veA6k5ixLK910=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PhkTvSMe; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="gd53YKcX"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54K8XOZv006521
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 09:56:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	jjX5/V+ctXqdOjMw8zTg4Nlq+ms4eh9Km8lSRzO0p5s=; b=gd53YKcXimle9d3G
-	TLt+k8OPw5A8nqqG91P8ZQbIa+RAAvm/UdMenyJ7XpVTm21PUhqKpWKb8A4kHNnY
-	J7GOxNSiryLJBLdMutPkGPqEYz1J3r96HRGl1h8QsK6etyv/iXRZaaplJ3nq78xt
-	e00rgLFfrx+am7GZnZHjgqFWnJpwy2W9kmki3vt01n9JadlB9t6OpOjaiutDxTwn
-	srg/KBg6mwTSWzSjBC1FYDL7FNApO5vRZfefu1tqJU+nyTnPGxl/vMWh1Qv88BNl
-	uPK+Dio5ZdvLqXOuY6CSfeI5th8ZjzavH6WUStYqlr6dRlMB/oV8IfLk7Eae1Qxy
-	ic/pSQ==
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46pjjsy78p-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 09:56:05 +0000 (GMT)
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2322e8c4dc5so21654085ad.3
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 02:56:05 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PhkTvSMe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747735024;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QaNix5hwG/O2KInAPWrv41TuCAhnMcb8Uiy5ln7GJXQ=;
+	b=PhkTvSMev1/BxLnij2oJWbZ4l/UIz/G7UVfpwTugLe21e9foq6x7oqqk7g7ZEc2F5mR9Yh
+	84fvDokixd+cf9FO4HGaBFam2Rz8q5VhqJ/JdtcQXmXgOSj+qlRKT355SdC/c1Li+aXabV
+	LlcHx0Zz+v8OThQmoQXRHvzOxxSOmiU=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-678-nGj4BAEWOtSq_5ZYO_iYYw-1; Tue, 20 May 2025 05:57:03 -0400
+X-MC-Unique: nGj4BAEWOtSq_5ZYO_iYYw-1
+X-Mimecast-MFC-AGG-ID: nGj4BAEWOtSq_5ZYO_iYYw_1747735022
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a371fb826cso892418f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 02:57:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747734964; x=1748339764;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jjX5/V+ctXqdOjMw8zTg4Nlq+ms4eh9Km8lSRzO0p5s=;
-        b=IaNJsm3OZkJXkNy95Z56u5xYqOhmMNA3TlE7oElJuCuBWiI0FlQGZCCZIZtB4gu2ZP
-         ApJvb/QObmWz8QvFvD2KB89YowC875p+Iqt+KbAB1xebWuF5tUkKkYiuBmBkYMB6sdEt
-         b6/criWWCeY7BzWYYotwFhOzMCFLZo1l1gBzmpjrAaQVRWKWyXt3uwGAddv4nlDGsd/G
-         jRdjVe/qv4K17WKFSGs0uW9Eu2BbnkyyJhziroOkdrHd6mz7G2e65u8ZEwxZzV/8DlNG
-         VGmduNHs9uUCGuvrNooEDH7CqJokM0ZLypfl/34vBzk423+MPqJE9qUiOGpiKA2yoZm4
-         t6Fw==
-X-Forwarded-Encrypted: i=1; AJvYcCVLM5QeBFSNUKVQ5YjEweJLHk0btXhpqfIMvTg9VXTdvQ/f6JLUJBSRRfwlJ4lWM/oDiPd/rD5gls1Ran8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWlgf73/+4esyxnAqv1gtfZLkEHRzF8EVkOVoOIeE+S1DxtiGo
-	KtwC2dKoAw7HsVCJ6Sbo20oUNiyKIxdI2PvSJmyrfpYsjBjN+p9pxTNcpzDH7GEFly9PQgt1sGq
-	J3vE80bOvpmmMiiy71qX9lTw2tSuRaIsV28Lz7FIohg8fkdpYlz6NWQO2n3lF6GZpKjg=
-X-Gm-Gg: ASbGncsq3weQ2tdOSPcsz618SsBTzHgQrO/jCGJowgcsSX93uF5mkauYSH2cZS+Yb7O
-	5jPrHX1TOf3Wr6SCiKvTSoAReV3tTkjn1m8y11J82RnR8Y1RGmzRfZuXrmZQeY3oVa37XAKnnSs
-	JPM2QThbIgJzXMjSVmI/65RVVnCYkawJMU4PKzSjwwpaV1MFFNDZnFxxuwzKs7ja6TrVlx2BjPR
-	QA/9HGWhzA0Fc+h9FyJCh7ObDdLQVAvCnuWIlwN0Emd2nlHD4CoU/7Md5vHZhQ9BeSwWZISdVvo
-	4ikFqcIBTZ28oFfS+OQp1aAEu1VvHfA6kF+Z
-X-Received: by 2002:a17:903:2ed0:b0:22e:7e00:4288 with SMTP id d9443c01a7336-231d459516bmr261366405ad.53.1747734964498;
-        Tue, 20 May 2025 02:56:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFh33sx6xak778kAhEweurUJhyiCBBd6ZzkgJMIBW8tS6ffISJATJB/IBlfQ5+JHy4btgFKOg==
-X-Received: by 2002:a17:903:2ed0:b0:22e:7e00:4288 with SMTP id d9443c01a7336-231d459516bmr261366165ad.53.1747734964109;
-        Tue, 20 May 2025 02:56:04 -0700 (PDT)
-Received: from [10.218.34.181] ([202.46.22.19])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4ed576esm73392485ad.242.2025.05.20.02.56.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 May 2025 02:56:03 -0700 (PDT)
-Message-ID: <a14f58ed-fbc7-4074-ada7-3b9e50eb3047@oss.qualcomm.com>
-Date: Tue, 20 May 2025 15:25:59 +0530
+        d=1e100.net; s=20230601; t=1747735022; x=1748339822;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QaNix5hwG/O2KInAPWrv41TuCAhnMcb8Uiy5ln7GJXQ=;
+        b=bsdG2gGgMl66gvfsYIdXLHi3RXWlw0n6nCJrAfkUyF3FV/M/DkPhKeNmGpi5oF9i/9
+         v9sV5HNXuSDxzvnFHbEQT75+yajzH5S7zxdGgBxoTj1Vxzn4jHBNi4CU93lCouILB5UA
+         zXcHUhW58ZDS1n5I5PKIdsHUN/jPzmn0+ARCsudHkd230wsr2DHChbZhTY0IDCsKp7AZ
+         pffVHlb6X+e3IPRHPWHR8Ka5TeC/D3ZNFOXJUBh+GOQO7xq5Vtb4CENTFrSJmcVLPNsh
+         IQDf/sHxMcZtuzFqzJB7/UJM/fuNR3zeSvRlvFsbZhltZFYdXTmtW7rDXZbweeM6OV3C
+         JCJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVrEe/lwAC6kmNinsOHl5zO+Vh+L19d2IUGDS1wZVeNPyT4FVeNcDFeR9VJM6FAlgoE+rDknMrzPlPDaBM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkAYItsEjazZEyjc3U/F9RXFytzLc6bFvqiJOYuFKKZ3h1WSEk
+	fiTrrQG6hS1E3Il61tHFKJRqUr5ISQ8quXK/6Pt0f3Qh1qWFf0OWfga7BrKtsBjQe2e3jRkxfvD
+	7YqNSvlFB+xXnZEiJvNPWeO74v4B291c8pm0XWOy+pCJw5pwAMc2WzaJLrV3vZSVKsL9E7cMk7A
+	==
+X-Gm-Gg: ASbGnct4OXHc8qUSUpuQIGimezXbUHu5OapNlaY0BDGh401zcL7ERTe9RatRyh4lVg4
+	+X9A47SJOdF9nmstjNT0v9lSDrzfnAjfGVJL5ICX3g5E9X+LDaUOkDeIfMW+di+vjZxNFxRpzMU
+	faJv/2994UCB8axxK6hAfPhrDyq3FxguTUypiJMxQdTmUrBCl6FT/bvZhJi28a4UwUsLye98Mdw
+	zYcdZDMJwkEk64ZiTQgYLa13M0vPcuDc5CTHkWWbc1b6IQEzZq20yfFUiiiYcu8+KDlYkXJsR4W
+	UPxjrAI=
+X-Received: by 2002:a05:6000:3103:b0:3a3:6415:96c8 with SMTP id ffacd0b85a97d-3a364159712mr10826923f8f.41.1747735021856;
+        Tue, 20 May 2025 02:57:01 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEdStSqCIzuerJKIl5wmWHsWUCUxWeb0WiHCpo/dsDDXM6ixiV/uDzmbbJVpFK8aJrjTl1MAg==
+X-Received: by 2002:a05:6000:3103:b0:3a3:6415:96c8 with SMTP id ffacd0b85a97d-3a364159712mr10826905f8f.41.1747735021519;
+        Tue, 20 May 2025 02:57:01 -0700 (PDT)
+Received: from fedora (g3.ign.cz. [91.219.240.17])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f18251adsm25481865e9.2.2025.05.20.02.57.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 02:57:01 -0700 (PDT)
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, Paolo Bonzini
+ <pbonzini@redhat.com>
+Subject: Re: [PATCH 04/15] KVM: x86: Drop superfluous kvm_hv_set_sint() =>
+ kvm_hv_synic_set_irq() wrapper
+In-Reply-To: <20250519232808.2745331-5-seanjc@google.com>
+References: <20250519232808.2745331-1-seanjc@google.com>
+ <20250519232808.2745331-5-seanjc@google.com>
+Date: Tue, 20 May 2025 11:57:00 +0200
+Message-ID: <87iklvob9v.fsf@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] soc: qcom: qcom_stats: Add QMP support for syncing
- ddr stats
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        Doug Anderson <dianders@chromium.org>
-References: <20250429-ddr_stats_-v1-0-4fc818aab7bb@oss.qualcomm.com>
- <20250429-ddr_stats_-v1-2-4fc818aab7bb@oss.qualcomm.com>
- <c876ae55-a84a-436e-8c11-c0df236c1ea5@oss.qualcomm.com>
-Content-Language: en-US
-From: "Maulik Shah (mkshah)" <maulik.shah@oss.qualcomm.com>
-In-Reply-To: <c876ae55-a84a-436e-8c11-c0df236c1ea5@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: 7TECulDF5rQBgQeAhoHnVyGTFxCDvknB
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDA4MSBTYWx0ZWRfXwe+rtqjZmpSQ
- g2Eckvo0JdUzwZtsuE0rGMCXwS4+yEcosi5xqWGkQCFJ+G7tHdOfZ+NK1XiL4iiKouR2RPHwClQ
- G4ubt+8yLWSvQ8X8MBXhZriF82lwivKM+xTJsjTBSS9UAGYiNLKUnea0PYw4qFWhW4bAv3CHAFK
- 1M70yPjN8WJkzgSZ2YxUJg884fPULaNkPNed56fm48Xa+TQCBIE4lp81+1jRmaL8KcjPFfDX8NA
- Ict2/oq+2OhhIN4QdOmVNHpCChYtey7s2VWFDqLgZyZ/PRqArSiJ+IQ7TTTHTwoldt7JMZnqMpL
- AJr/+G/vS04RG/v8CGuGZYLI9QCa96NtwU90x8lnzQFbVrc+pEKC/gGzVTm2cByYSyHlZSPEXPG
- S8KOQI9nY0q6uKboCCSkTVJwLeUkhUubk9kLGH3CKF6ntng5RMUk/vfcEsUnQIRLQ/F6vwwm
-X-Authority-Analysis: v=2.4 cv=K4giHzWI c=1 sm=1 tr=0 ts=682c51b5 cx=c_pps
- a=cmESyDAEBpBGqyK7t0alAg==:117 a=fChuTYTh2wq5r3m49p7fHw==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=cm27Pg_UAAAA:8
- a=Em_3BBobWHkwEKcIpuwA:9 a=QEXdDO2ut3YA:10 a=1OuFwYUASf3TG4hYMiVC:22
-X-Proofpoint-GUID: 7TECulDF5rQBgQeAhoHnVyGTFxCDvknB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-20_04,2025-05-16_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 spamscore=0 mlxlogscore=999 suspectscore=0 phishscore=0
- clxscore=1015 malwarescore=0 lowpriorityscore=0 impostorscore=0
- priorityscore=1501 mlxscore=0 adultscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505070000 definitions=main-2505200081
+Content-Type: text/plain
 
- 
+Sean Christopherson <seanjc@google.com> writes:
 
-On 4/29/2025 4:09 PM, Konrad Dybcio wrote:
-> On 4/29/25 5:52 AM, Maulik Shah wrote:
->> +	if (qcom_stats_qmp) {
->> +		/*
->> +		 * Recent SoCs (SM8450 onwards) do not have duration field
->> +		 * populated from boot up onwards for both DDR LPM Stats
->> +		 * and DDR Frequency Stats.
->> +		 *
->> +		 * Send QMP message to Always on processor which will
->> +		 * populate duration field into MSG RAM area.
->> +		 *
->> +		 * Sent everytime to read latest data.
->> +		 */
->> +		ret = qmp_send(qcom_stats_qmp, "{class: ddr, action: freqsync}");
->> +		if (ret)
->> +			seq_printf(s, "Error updating duration field %d\n", ret);
-> 
-> let's just return some error, instead of printing "error" successfully
+> Drop the superfluous kvm_hv_set_sint() and instead wire up ->set() directly
+> to its final destination.
+>
+> No functional change intended.
+>
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
 
-Should i drop the print and also error, From details given in commit message of [1] 
-which made the qcom_subsystem_sleep_stats_show() function return 0
-in order to run command like below to collect the stats without interspersed errors
-grep ^ /sys/kernel/debug/qcom_stats/*
+Nitpick: synic_set_irq() still has trace_kvm_hv_synic_set_irq() but
+kvm_hv_synic_set_irq() is now gone, I think it may make sense to rename
+it to e.g. 'trace_kvm_hv_set_sint' or 'trace_synic_set_irq' to avoid any
+confusion.
 
-The same may break if return error from ddr stats too.
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-[1] https://lore.kernel.org/r/20230119032329.2909383-1-swboyd@chromium.org 
+> ---
+>  arch/x86/kvm/hyperv.c   | 10 +++++++---
+>  arch/x86/kvm/hyperv.h   |  3 ++-
+>  arch/x86/kvm/irq_comm.c | 12 ------------
+>  3 files changed, 9 insertions(+), 16 deletions(-)
+>
+> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+> index 24f0318c50d7..7f565636edde 100644
+> --- a/arch/x86/kvm/hyperv.c
+> +++ b/arch/x86/kvm/hyperv.c
+> @@ -497,15 +497,19 @@ static int synic_set_irq(struct kvm_vcpu_hv_synic *synic, u32 sint)
+>  	return ret;
+>  }
+>  
+> -int kvm_hv_synic_set_irq(struct kvm *kvm, u32 vpidx, u32 sint)
+> +int kvm_hv_set_sint(struct kvm_kernel_irq_routing_entry *e, struct kvm *kvm,
+> +		    int irq_source_id, int level, bool line_status)
+>  {
+>  	struct kvm_vcpu_hv_synic *synic;
+>  
+> -	synic = synic_get(kvm, vpidx);
+> +	if (!level)
+> +		return -1;
+> +
+> +	synic = synic_get(kvm, e->hv_sint.vcpu);
+>  	if (!synic)
+>  		return -EINVAL;
+>  
+> -	return synic_set_irq(synic, sint);
+> +	return synic_set_irq(synic, e->hv_sint.sint);
+>  }
+>  
+>  void kvm_hv_synic_send_eoi(struct kvm_vcpu *vcpu, int vector)
+> diff --git a/arch/x86/kvm/hyperv.h b/arch/x86/kvm/hyperv.h
+> index 913bfc96959c..4ad5a0749739 100644
+> --- a/arch/x86/kvm/hyperv.h
+> +++ b/arch/x86/kvm/hyperv.h
+> @@ -103,7 +103,8 @@ static inline bool kvm_hv_hypercall_enabled(struct kvm_vcpu *vcpu)
+>  int kvm_hv_hypercall(struct kvm_vcpu *vcpu);
+>  
+>  void kvm_hv_irq_routing_update(struct kvm *kvm);
+> -int kvm_hv_synic_set_irq(struct kvm *kvm, u32 vcpu_id, u32 sint);
+> +int kvm_hv_set_sint(struct kvm_kernel_irq_routing_entry *e, struct kvm *kvm,
+> +		    int irq_source_id, int level, bool line_status);
+>  void kvm_hv_synic_send_eoi(struct kvm_vcpu *vcpu, int vector);
+>  int kvm_hv_activate_synic(struct kvm_vcpu *vcpu, bool dont_zero_synic_pages);
+>  
+> diff --git a/arch/x86/kvm/irq_comm.c b/arch/x86/kvm/irq_comm.c
+> index 8dcb6a555902..b85e4be2ddff 100644
+> --- a/arch/x86/kvm/irq_comm.c
+> +++ b/arch/x86/kvm/irq_comm.c
+> @@ -127,18 +127,6 @@ int kvm_set_msi(struct kvm_kernel_irq_routing_entry *e,
+>  	return kvm_irq_delivery_to_apic(kvm, NULL, &irq, NULL);
+>  }
+>  
+> -#ifdef CONFIG_KVM_HYPERV
+> -static int kvm_hv_set_sint(struct kvm_kernel_irq_routing_entry *e,
+> -		    struct kvm *kvm, int irq_source_id, int level,
+> -		    bool line_status)
+> -{
+> -	if (!level)
+> -		return -1;
+> -
+> -	return kvm_hv_synic_set_irq(kvm, e->hv_sint.vcpu, e->hv_sint.sint);
+> -}
+> -#endif
+> -
+>  int kvm_arch_set_irq_inatomic(struct kvm_kernel_irq_routing_entry *e,
+>  			      struct kvm *kvm, int irq_source_id, int level,
+>  			      bool line_status)
 
-> 
->> +	}
->> +
->>  	reg += DDR_STATS_ENTRY_START_ADDR;
->>  	memcpy_fromio(data, reg, sizeof(struct ddr_stats_entry) * entry_count);
->>  
->> @@ -310,6 +329,15 @@ static int qcom_stats_probe(struct platform_device *pdev)
->>  	qcom_create_subsystem_stat_files(root, config);
->>  	qcom_create_soc_sleep_stat_files(root, reg, d, config);
->>  	qcom_create_ddr_stat_files(root, reg, config);
->> +	/*
->> +	 * QMP is used for DDR stats syncing to MSG RAM for certain SoCs having
-> 
-> having what? (you could drop that word and the sentence would still make sense)
+-- 
+Vitaly
 
-I will update the sentence  in v2.
-
-Thanks,
-Maulik
-> 
->> +	 * (SM8450 onwards). The prior SoCs do not need QMP handle as the required
->> +	 * stats are already present in MSG RAM, provided the DDR_STATS_MAGIC_KEY
->> +	 * matches.
->> +	 */
-> 
-> Konrad
