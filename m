@@ -1,102 +1,75 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 125D028D83C;
-	Tue, 20 May 2025 20:36:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E2EB28E589
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 20:36:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747773383; cv=none; b=aeMvBMbkWH0TPVZgpeoXDh/49t3gjwkfJnYZPApK8qp4z5RhyMw729GHtykE+WXU/PiL+I7E8oe6ifh5s3NyucWqr+2ghTAeU8/Ez5kcPB8CAkiX2gIYzDc68nJzTRHDhFjAshI0wFrmWtMcHaN+9LawkYNZOAYKOjolWwzrdhA=
+	t=1747773387; cv=none; b=il0BiE6BltKX8oPPc+o2YI25iFUjnMzYAWpKrXcUzA/fQ9+OeyiWEdw3dub6k2V3UPtjSbgyJRiY6vysxf7vf13FA6RyQgdtAauzdD9j8QV8hJERxZ4vzi6iqvfUdV3bz+7aaKOfkTAwZb2MmA3lPgJ8jFhoGrqf43fxCmUTLNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747773383; c=relaxed/simple;
-	bh=sAscxlcgGBd/189r8Q8WYI+rNCaB+9/SMMe0AGShgsw=;
+	s=arc-20240116; t=1747773387; c=relaxed/simple;
+	bh=KjdYEOEajHA7LELVRkRgK7y2TfZ0pdc/8gj4sas3Y70=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hPmldu/P2+zkwXW7/sfj3ZXAlpRU8ciCafRwHnA7/n4xylwjquySh2491/tfaRuJ5CUwkDRfI68pIIRHqKT1xoLMQ1WZ7p0f6m/2ji7kroCtCnOw1zS0hx/pZTz5hboY0p842/o1+86dY3AWuEL9fOUMj3/B3qDYB6C48nCgwFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gKN7ALGR; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 MIME-Version; b=BncnIKmE/kvdNa1s/7GX0KSKH5VXeG4xIiNxhxRtpcjxm/Jt3ikqgjnL0xGGzM1tDsT4QiVqELVdvtRS6tj9pska/fTOMopdbgTzlL26b8DAWkpfSgvflyoRRyFr08arsXt+jTcZgg4pI5QfJd2IXHguwos8zUeUEwkX2cinwuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QTUNENAe; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gKN7ALGR"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-b074d908e56so3955216a12.2;
-        Tue, 20 May 2025 13:36:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747773379; x=1748378179; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bSNz3/YOImSKHMykX/C1xULfEybHzA6bJIyQbld+P2Q=;
-        b=gKN7ALGRJmNt0rR7E8KZCB8wSakg4k2OyjfzmR3Vnv09CW5k9eilNhRLHxdNtuq9Oa
-         UnIc2eZvwduLKajp9U0KvfNvKkuRaFijB8EoAy3YgqNir971CVLCXbn/XoDy5MC+T2Gy
-         JH0fA5Y9KbvvQXeC7wLzAEXNrj8PHrdTNECrRsLiVEMnQUdkGRKIIFSoVykuzB9susHG
-         bA8Plk+MmRuO0P5ti/aUJS91m121O9n+n3CdwHz8WKHx7XWnGZWVwdZJ5Np2k1w0afhj
-         EpL3GAZLO+HAijltaNAGg3KTd1y5gcfAKOp80BJnuaM46t+wiCcHxnILKQggunpCQ4ki
-         +JJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747773379; x=1748378179;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bSNz3/YOImSKHMykX/C1xULfEybHzA6bJIyQbld+P2Q=;
-        b=ZoH+sgZ3Nq1aGPdhCdNkB7Wv0W0P6Qdg5TXZlFQbodWsmIoYSFw5z6sBrtMWA9EW6g
-         vjdHlyhUCUGdKRBWP6k0X91YJfQL5UpuMRUaP7gZmrdYMtUGFcA30gPEHqvihj9voEOU
-         kKrzT+e37HcaBuivW0GllVGl1rPoXhbT7w7RFrYE8OqUWerTfrRL3Ob/nKSDkqjp+jdG
-         bUAbZQWGWtecGCodqUdPhcAXG2frZoNRAjYn94wzmfOEBYsA7rVdwpcJXE8QJjC9owZs
-         WManbjiEy/MbCgFJXwpO3lUlfzRGCmpIDY0afJoLtLAiAE/aQs+vqj0gHuwnj2X2Py+u
-         L+Hg==
-X-Forwarded-Encrypted: i=1; AJvYcCW9CWlQ0wmvUVBLAMFT9HKQeRYaxnbEfapmSKjXQ6Buv2qjKiSGrNfYygn022Gpeu7mK+mckfn12vIbxzk=@vger.kernel.org, AJvYcCWPKkssl9WjS0BU/LBNmLdsSySa4V9PR/2GUrCerz1kNMDf0dA2iyLni88Lv67eINTzBDdpBMHhHYzAiQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfEtxpiwvyiCH/MzIG7zm3VfygqGP21eeawGArwqPtN5zt7vBV
-	jnNfydBTXfcNw1pWLdLXV2AqLj2FlIlr5y70Ns0tqqH04ZFhtutkp22l/0MI
-X-Gm-Gg: ASbGncvkXvyQBZPrrzLxHco5aA5KLmNqCF7IssJ66ntVAxZG2Gjk0EpEZPbpGqtcwqD
-	WCAfKCWJF83BPJ+r7sPdb0gJXDop09Mx0pkaimqdE7uqiOeAIz0NMrGhSuvtdJ26OhYuXZUXbX/
-	3z2j+1ciZqJXqki/gVLMLaTt5jt7qNQLbUtt9CHBbNK3ZwtYa0yo8bPgTOvOd2MIr21DM0iBesJ
-	8qqRMWphVDF3yTpPDh3DG6ajaRCg9awD79xOBp1MAwJumMVblD8oizdNVvTHzyIvR2dgR1jYxxg
-	N1ubI/640Eh1FnyzugqbkdhS7gKJM7n8rM3EGt3hu5h0dWbGnJf4ZM8LIxBd/BDQX8yI/yXBok5
-	jCyZNQ9e7KmcQ
-X-Google-Smtp-Source: AGHT+IFUsNDTBoIbjOoYBaGscM+WZ3RCx9bKIEKIW9VuUttnbmbneY+jkZ9nAC88mbQ+4HKviMBegA==
-X-Received: by 2002:a17:903:41ce:b0:223:4d5e:789d with SMTP id d9443c01a7336-231de31207cmr245719295ad.19.1747773378711;
-        Tue, 20 May 2025 13:36:18 -0700 (PDT)
-Received: from localhost (c-73-158-218-242.hsd1.ca.comcast.net. [73.158.218.242])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-231d4adba85sm80863375ad.73.2025.05.20.13.36.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 13:36:18 -0700 (PDT)
-From: Stanislav Fomichev <stfomichev@gmail.com>
-To: netdev@vger.kernel.org
-Cc: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	skalluru@marvell.com,
-	manishc@marvell.com,
-	andrew+netdev@lunn.ch,
-	michael.chan@broadcom.com,
-	pavan.chebbi@broadcom.com,
-	ajit.khaparde@broadcom.com,
-	sriharsha.basavapatna@broadcom.com,
-	somnath.kotur@broadcom.com,
-	anthony.l.nguyen@intel.com,
-	przemyslaw.kitszel@intel.com,
-	tariqt@nvidia.com,
-	saeedm@nvidia.com,
-	louis.peens@corigine.com,
-	shshaikh@marvell.com,
-	GR-Linux-NIC-Dev@marvell.com,
-	ecree.xilinx@gmail.com,
-	horms@kernel.org,
-	dsahern@kernel.org,
-	ruanjinjie@huawei.com,
-	mheib@redhat.com,
-	stfomichev@gmail.com,
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QTUNENAe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747773384;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/FiP53qIGqK3kQ8uYRbm+tkR4/PouMqDuk4sdgE46BE=;
+	b=QTUNENAeUxwCjR02T4ZzwXQTPYFLeODY32Vl9atEcQ82nUcw5iU8jW62IYmaI0DPHINE+k
+	TwgJFn8sOawbGO2P3jgPI6LCHm5fpy7d9kT/rICnGrRQU7g7UyvWbRvNcaT2XEizRLFXjk
+	iUgVXgUztKf5EDeaGb2DvheFrRMl1nI=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-387-ewVPIDvDNzC8IdKgTSlCag-1; Tue,
+ 20 May 2025 16:36:22 -0400
+X-MC-Unique: ewVPIDvDNzC8IdKgTSlCag-1
+X-Mimecast-MFC-AGG-ID: ewVPIDvDNzC8IdKgTSlCag_1747773379
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6DD591800366;
+	Tue, 20 May 2025 20:36:19 +0000 (UTC)
+Received: from chopper.redhat.com (unknown [10.22.64.128])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id AC4CD19560AD;
+	Tue, 20 May 2025 20:36:14 +0000 (UTC)
+From: Lyude Paul <lyude@redhat.com>
+To: dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
-	intel-wired-lan@lists.osuosl.org,
-	linux-rdma@vger.kernel.org,
-	oss-drivers@corigine.com,
-	linux-net-drivers@amd.com,
-	leon@kernel.org
-Subject: [PATCH net-next 2/3] udp_tunnel: remove rtnl_lock dependency
-Date: Tue, 20 May 2025 13:36:13 -0700
-Message-ID: <20250520203614.2693870-3-stfomichev@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250520203614.2693870-1-stfomichev@gmail.com>
-References: <20250520203614.2693870-1-stfomichev@gmail.com>
+	rust-for-linux@vger.kernel.org
+Cc: Danilo Krummrich <dakr@kernel.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Daniel Almeida <daniel.almeida@collabora.com>,
+	Asahi Lina <lina@asahilina.net>,
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	nouveau@lists.freedesktop.org (open list:DRM DRIVER FOR NVIDIA GPUS [RUST])
+Subject: [PATCH v4 4/4] rust: drm: gem: Support driver-private GEM object types
+Date: Tue, 20 May 2025 16:35:30 -0400
+Message-ID: <20250520203542.1391548-5-lyude@redhat.com>
+In-Reply-To: <20250520203542.1391548-1-lyude@redhat.com>
+References: <20250520203542.1391548-1-lyude@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -104,404 +77,207 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-Drivers that are using ops lock and don't depend on RTNL lock
-still need to manage it because udp_tunnel's RTNL dependency.
-Introduce new udp_tunnel_nic_lock and use it instead of
-rtnl_lock. Drop non-UDP_TUNNEL_NIC_INFO_MAY_SLEEP mode from
-udp_tunnel infra (udp_tunnel_nic_device_sync_work needs to
-grab udp_tunnel_nic_lock mutex and might sleep).
+One of the original intents with the gem bindings was that drivers could
+specify additional gem implementations, in order to enable for driver
+private gem objects. This wasn't really possible however, as up until now
+our GEM bindings have always assumed that the only GEM object we would run
+into was driver::Driver::Object - meaning that implementing another GEM
+object type would result in all of the BaseDriverObject callbacks assuming
+the wrong type.
 
-Cc: Michael Chan <michael.chan@broadcom.com>
-Suggested-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Stanislav Fomichev <stfomichev@gmail.com>
+This is a pretty easy fix though, all we need to do is specify a
+BaseDriverObject in driver::Driver instead of an AllocImpl, and then add an
+associated type for AllocImpl in BaseDriverObject. That way each
+BaseDriverObject has its own AllocImpl allowing it to know which type to
+provide in BaseDriverObject callbacks, and driver::Driver can simply go
+through the BaseDriverObject to its AllocImpl type in order to get access
+to ALLOC_OPS.
+
+So, let's do this and update Nova for these changes.
+
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+
 ---
- .../net/ethernet/broadcom/bnx2x/bnx2x_main.c  |  3 +-
- drivers/net/ethernet/broadcom/bnxt/bnxt.c     |  6 ++--
- drivers/net/ethernet/emulex/benet/be_main.c   |  3 +-
- drivers/net/ethernet/intel/i40e/i40e_main.c   |  1 -
- drivers/net/ethernet/intel/ice/ice_main.c     |  1 -
- .../net/ethernet/mellanox/mlx4/en_netdev.c    |  3 +-
- .../net/ethernet/mellanox/mlx5/core/en_main.c |  3 +-
- .../ethernet/netronome/nfp/nfp_net_common.c   |  3 +-
- .../net/ethernet/qlogic/qede/qede_filter.c    |  3 --
- .../net/ethernet/qlogic/qlcnic/qlcnic_main.c  |  1 -
- drivers/net/ethernet/sfc/ef10.c               |  1 -
- drivers/net/netdevsim/netdevsim.h             |  1 -
- drivers/net/netdevsim/udp_tunnels.c           | 12 -------
- include/net/udp_tunnel.h                      |  9 +++--
- net/ipv4/udp_tunnel_nic.c                     | 33 ++++++++-----------
- net/ipv4/udp_tunnel_stub.c                    |  2 ++
- 16 files changed, 27 insertions(+), 58 deletions(-)
+V4:
+* Update trait bounds. This looks gnarlier then it is:
 
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-index f522ca8ff66b..fa7e5adf9804 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
-@@ -10219,8 +10219,7 @@ static int bnx2x_udp_tunnel_sync(struct net_device *netdev, unsigned int table)
+    Self: AllocImpl<Driver = D>, <-- Get the driver for this GEM object
+    D: drm::Driver<Object = O, File = F>, <-- Get the driver's Object, File
+                                              impl
+    F: drm::file::DriverFile,
+    O: BaseDriverObject<Object = Self>, <-- Make sure we're the driver's
+                                            main GEM object impl.
+  (don't worry, the compiler can always figure out what D, F, O are)
+* Also, rename the commit. I realized I should be clearer about what this
+  does so people can stop me if this isn't what was meant by private gem
+  object implementations :).
+
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+---
+ drivers/gpu/drm/nova/driver.rs |  4 ++--
+ drivers/gpu/drm/nova/gem.rs    |  1 +
+ rust/kernel/drm/device.rs      | 17 ++++++++++-------
+ rust/kernel/drm/driver.rs      |  2 +-
+ rust/kernel/drm/gem/mod.rs     | 21 +++++++++++++--------
+ 5 files changed, 27 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/gpu/drm/nova/driver.rs b/drivers/gpu/drm/nova/driver.rs
+index b28b2e05cc156..58e534cf3ed39 100644
+--- a/drivers/gpu/drm/nova/driver.rs
++++ b/drivers/gpu/drm/nova/driver.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
  
- static const struct udp_tunnel_nic_info bnx2x_udp_tunnels = {
- 	.sync_table	= bnx2x_udp_tunnel_sync,
--	.flags		= UDP_TUNNEL_NIC_INFO_MAY_SLEEP |
--			  UDP_TUNNEL_NIC_INFO_OPEN_ONLY,
-+	.flags		= UDP_TUNNEL_NIC_INFO_OPEN_ONLY,
- 	.tables		= {
- 		{ .n_entries = 1, .tunnel_types = UDP_TUNNEL_TYPE_VXLAN,  },
- 		{ .n_entries = 1, .tunnel_types = UDP_TUNNEL_TYPE_GENEVE, },
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-index d5495762c945..a3dadde65b8d 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -15573,8 +15573,7 @@ static int bnxt_udp_tunnel_unset_port(struct net_device *netdev, unsigned int ta
- static const struct udp_tunnel_nic_info bnxt_udp_tunnels = {
- 	.set_port	= bnxt_udp_tunnel_set_port,
- 	.unset_port	= bnxt_udp_tunnel_unset_port,
--	.flags		= UDP_TUNNEL_NIC_INFO_MAY_SLEEP |
--			  UDP_TUNNEL_NIC_INFO_OPEN_ONLY,
-+	.flags		= UDP_TUNNEL_NIC_INFO_OPEN_ONLY,
- 	.tables		= {
- 		{ .n_entries = 1, .tunnel_types = UDP_TUNNEL_TYPE_VXLAN,  },
- 		{ .n_entries = 1, .tunnel_types = UDP_TUNNEL_TYPE_GENEVE, },
-@@ -15582,8 +15581,7 @@ static const struct udp_tunnel_nic_info bnxt_udp_tunnels = {
- }, bnxt_udp_tunnels_p7 = {
- 	.set_port	= bnxt_udp_tunnel_set_port,
- 	.unset_port	= bnxt_udp_tunnel_unset_port,
--	.flags		= UDP_TUNNEL_NIC_INFO_MAY_SLEEP |
--			  UDP_TUNNEL_NIC_INFO_OPEN_ONLY,
-+	.flags		= UDP_TUNNEL_NIC_INFO_OPEN_ONLY,
- 	.tables		= {
- 		{ .n_entries = 1, .tunnel_types = UDP_TUNNEL_TYPE_VXLAN,  },
- 		{ .n_entries = 1, .tunnel_types = UDP_TUNNEL_TYPE_GENEVE, },
-diff --git a/drivers/net/ethernet/emulex/benet/be_main.c b/drivers/net/ethernet/emulex/benet/be_main.c
-index 3d2e21592119..f49400ba9729 100644
---- a/drivers/net/ethernet/emulex/benet/be_main.c
-+++ b/drivers/net/ethernet/emulex/benet/be_main.c
-@@ -4031,8 +4031,7 @@ static int be_vxlan_unset_port(struct net_device *netdev, unsigned int table,
- static const struct udp_tunnel_nic_info be_udp_tunnels = {
- 	.set_port	= be_vxlan_set_port,
- 	.unset_port	= be_vxlan_unset_port,
--	.flags		= UDP_TUNNEL_NIC_INFO_MAY_SLEEP |
--			  UDP_TUNNEL_NIC_INFO_OPEN_ONLY,
-+	.flags		= UDP_TUNNEL_NIC_INFO_OPEN_ONLY,
- 	.tables		= {
- 		{ .n_entries = 1, .tunnel_types = UDP_TUNNEL_TYPE_VXLAN, },
- 	},
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
-index 120d68654e3f..3d3da9d15348 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_main.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
-@@ -15891,7 +15891,6 @@ static int i40e_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+-use kernel::{auxiliary, c_str, device::Core, drm, drm::gem, drm::ioctl, prelude::*, types::ARef};
++use kernel::{auxiliary, c_str, device::Core, drm, drm::ioctl, prelude::*, types::ARef};
  
- 	pf->udp_tunnel_nic.set_port = i40e_udp_tunnel_set_port;
- 	pf->udp_tunnel_nic.unset_port = i40e_udp_tunnel_unset_port;
--	pf->udp_tunnel_nic.flags = UDP_TUNNEL_NIC_INFO_MAY_SLEEP;
- 	pf->udp_tunnel_nic.shared = &pf->udp_tunnel_shared;
- 	pf->udp_tunnel_nic.tables[0].n_entries = I40E_MAX_PF_UDP_OFFLOAD_PORTS;
- 	pf->udp_tunnel_nic.tables[0].tunnel_types = UDP_TUNNEL_TYPE_VXLAN |
-diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
-index 20d3baf955e3..5a60ede84091 100644
---- a/drivers/net/ethernet/intel/ice/ice_main.c
-+++ b/drivers/net/ethernet/intel/ice/ice_main.c
-@@ -4745,7 +4745,6 @@ int ice_init_dev(struct ice_pf *pf)
+ use crate::file::File;
+ use crate::gem::NovaObject;
+@@ -57,7 +57,7 @@ fn probe(adev: &auxiliary::Device<Core>, _info: &Self::IdInfo) -> Result<Pin<KBo
+ impl drm::Driver for NovaDriver {
+     type Data = NovaData;
+     type File = File;
+-    type Object = gem::Object<NovaObject>;
++    type Object = NovaObject;
  
- 	pf->hw.udp_tunnel_nic.set_port = ice_udp_tunnel_set_port;
- 	pf->hw.udp_tunnel_nic.unset_port = ice_udp_tunnel_unset_port;
--	pf->hw.udp_tunnel_nic.flags = UDP_TUNNEL_NIC_INFO_MAY_SLEEP;
- 	pf->hw.udp_tunnel_nic.shared = &pf->hw.udp_tunnel_shared;
- 	if (pf->hw.tnl.valid_count[TNL_VXLAN]) {
- 		pf->hw.udp_tunnel_nic.tables[0].n_entries =
-diff --git a/drivers/net/ethernet/mellanox/mlx4/en_netdev.c b/drivers/net/ethernet/mellanox/mlx4/en_netdev.c
-index 281b34af0bb4..d2071aff7b8f 100644
---- a/drivers/net/ethernet/mellanox/mlx4/en_netdev.c
-+++ b/drivers/net/ethernet/mellanox/mlx4/en_netdev.c
-@@ -2670,8 +2670,7 @@ static int mlx4_udp_tunnel_sync(struct net_device *dev, unsigned int table)
+     const INFO: drm::DriverInfo = INFO;
  
- static const struct udp_tunnel_nic_info mlx4_udp_tunnels = {
- 	.sync_table	= mlx4_udp_tunnel_sync,
--	.flags		= UDP_TUNNEL_NIC_INFO_MAY_SLEEP |
--			  UDP_TUNNEL_NIC_INFO_IPV4_ONLY,
-+	.flags		= UDP_TUNNEL_NIC_INFO_IPV4_ONLY,
- 	.tables		= {
- 		{ .n_entries = 1, .tunnel_types = UDP_TUNNEL_TYPE_VXLAN, },
- 	},
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-index 9bd166f489e7..d5eff6c06b2c 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-@@ -5292,8 +5292,7 @@ void mlx5e_vxlan_set_netdev_info(struct mlx5e_priv *priv)
+diff --git a/drivers/gpu/drm/nova/gem.rs b/drivers/gpu/drm/nova/gem.rs
+index 68f93c9675611..a3024922f0d90 100644
+--- a/drivers/gpu/drm/nova/gem.rs
++++ b/drivers/gpu/drm/nova/gem.rs
+@@ -18,6 +18,7 @@ pub(crate) struct NovaObject {}
  
- 	priv->nic_info.set_port = mlx5e_vxlan_set_port;
- 	priv->nic_info.unset_port = mlx5e_vxlan_unset_port;
--	priv->nic_info.flags = UDP_TUNNEL_NIC_INFO_MAY_SLEEP |
--				UDP_TUNNEL_NIC_INFO_STATIC_IANA_VXLAN;
-+	priv->nic_info.flags = UDP_TUNNEL_NIC_INFO_STATIC_IANA_VXLAN;
- 	priv->nic_info.tables[0].tunnel_types = UDP_TUNNEL_TYPE_VXLAN;
- 	/* Don't count the space hard-coded to the IANA port */
- 	priv->nic_info.tables[0].n_entries =
-diff --git a/drivers/net/ethernet/netronome/nfp/nfp_net_common.c b/drivers/net/ethernet/netronome/nfp/nfp_net_common.c
-index 28997ddab966..14ba38bcb07b 100644
---- a/drivers/net/ethernet/netronome/nfp/nfp_net_common.c
-+++ b/drivers/net/ethernet/netronome/nfp/nfp_net_common.c
-@@ -2394,8 +2394,7 @@ static int nfp_udp_tunnel_sync(struct net_device *netdev, unsigned int table)
+ impl gem::BaseDriverObject for NovaObject {
+     type Driver = NovaDriver;
++    type Object = gem::Object<Self>;
  
- static const struct udp_tunnel_nic_info nfp_udp_tunnels = {
- 	.sync_table     = nfp_udp_tunnel_sync,
--	.flags          = UDP_TUNNEL_NIC_INFO_MAY_SLEEP |
--			  UDP_TUNNEL_NIC_INFO_OPEN_ONLY,
-+	.flags          = UDP_TUNNEL_NIC_INFO_OPEN_ONLY,
- 	.tables         = {
- 		{
- 			.n_entries      = NFP_NET_N_VXLAN_PORTS,
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_filter.c b/drivers/net/ethernet/qlogic/qede/qede_filter.c
-index 985026dd816f..7e341e026489 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_filter.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_filter.c
-@@ -987,20 +987,17 @@ static int qede_udp_tunnel_sync(struct net_device *dev, unsigned int table)
- 
- static const struct udp_tunnel_nic_info qede_udp_tunnels_both = {
- 	.sync_table	= qede_udp_tunnel_sync,
--	.flags		= UDP_TUNNEL_NIC_INFO_MAY_SLEEP,
- 	.tables		= {
- 		{ .n_entries = 1, .tunnel_types = UDP_TUNNEL_TYPE_VXLAN,  },
- 		{ .n_entries = 1, .tunnel_types = UDP_TUNNEL_TYPE_GENEVE, },
- 	},
- }, qede_udp_tunnels_vxlan = {
- 	.sync_table	= qede_udp_tunnel_sync,
--	.flags		= UDP_TUNNEL_NIC_INFO_MAY_SLEEP,
- 	.tables		= {
- 		{ .n_entries = 1, .tunnel_types = UDP_TUNNEL_TYPE_VXLAN,  },
- 	},
- }, qede_udp_tunnels_geneve = {
- 	.sync_table	= qede_udp_tunnel_sync,
--	.flags		= UDP_TUNNEL_NIC_INFO_MAY_SLEEP,
- 	.tables		= {
- 		{ .n_entries = 1, .tunnel_types = UDP_TUNNEL_TYPE_GENEVE, },
- 	},
-diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_main.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_main.c
-index eb69121df726..53cdd36c4123 100644
---- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_main.c
-+++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_main.c
-@@ -486,7 +486,6 @@ static int qlcnic_udp_tunnel_sync(struct net_device *dev, unsigned int table)
- 
- static const struct udp_tunnel_nic_info qlcnic_udp_tunnels = {
- 	.sync_table	= qlcnic_udp_tunnel_sync,
--	.flags		= UDP_TUNNEL_NIC_INFO_MAY_SLEEP,
- 	.tables		= {
- 		{ .n_entries = 1, .tunnel_types = UDP_TUNNEL_TYPE_VXLAN, },
- 	},
-diff --git a/drivers/net/ethernet/sfc/ef10.c b/drivers/net/ethernet/sfc/ef10.c
-index 47349c148c0c..fcec81f862ec 100644
---- a/drivers/net/ethernet/sfc/ef10.c
-+++ b/drivers/net/ethernet/sfc/ef10.c
-@@ -3985,7 +3985,6 @@ static int efx_ef10_udp_tnl_unset_port(struct net_device *dev,
- static const struct udp_tunnel_nic_info efx_ef10_udp_tunnels = {
- 	.set_port	= efx_ef10_udp_tnl_set_port,
- 	.unset_port	= efx_ef10_udp_tnl_unset_port,
--	.flags          = UDP_TUNNEL_NIC_INFO_MAY_SLEEP,
- 	.tables         = {
- 		{
- 			.n_entries = 16,
-diff --git a/drivers/net/netdevsim/netdevsim.h b/drivers/net/netdevsim/netdevsim.h
-index d04401f0bdf7..738da596f60a 100644
---- a/drivers/net/netdevsim/netdevsim.h
-+++ b/drivers/net/netdevsim/netdevsim.h
-@@ -131,7 +131,6 @@ struct netdevsim {
- 	struct nsim_macsec macsec;
- 	struct {
- 		u32 inject_error;
--		u32 sleep;
- 		u32 __ports[2][NSIM_UDP_TUNNEL_N_PORTS];
- 		u32 (*ports)[NSIM_UDP_TUNNEL_N_PORTS];
- 		struct dentry *ddir;
-diff --git a/drivers/net/netdevsim/udp_tunnels.c b/drivers/net/netdevsim/udp_tunnels.c
-index 640b4983a9a0..89fff76e51cf 100644
---- a/drivers/net/netdevsim/udp_tunnels.c
-+++ b/drivers/net/netdevsim/udp_tunnels.c
-@@ -18,9 +18,6 @@ nsim_udp_tunnel_set_port(struct net_device *dev, unsigned int table,
- 	ret = -ns->udp_ports.inject_error;
- 	ns->udp_ports.inject_error = 0;
- 
--	if (ns->udp_ports.sleep)
--		msleep(ns->udp_ports.sleep);
--
- 	if (!ret) {
- 		if (ns->udp_ports.ports[table][entry]) {
- 			WARN(1, "entry already in use\n");
-@@ -47,8 +44,6 @@ nsim_udp_tunnel_unset_port(struct net_device *dev, unsigned int table,
- 	ret = -ns->udp_ports.inject_error;
- 	ns->udp_ports.inject_error = 0;
- 
--	if (ns->udp_ports.sleep)
--		msleep(ns->udp_ports.sleep);
- 	if (!ret) {
- 		u32 val = be16_to_cpu(ti->port) << 16 | ti->type;
- 
-@@ -112,12 +107,10 @@ nsim_udp_tunnels_info_reset_write(struct file *file, const char __user *data,
- 	struct net_device *dev = file->private_data;
- 	struct netdevsim *ns = netdev_priv(dev);
- 
--	rtnl_lock();
- 	if (dev->reg_state == NETREG_REGISTERED) {
- 		memset(ns->udp_ports.ports, 0, sizeof(ns->udp_ports.__ports));
- 		udp_tunnel_nic_reset_ntf(dev);
- 	}
--	rtnl_unlock();
- 
- 	return count;
- }
-@@ -172,7 +165,6 @@ int nsim_udp_tunnels_info_create(struct nsim_dev *nsim_dev,
- 		       GFP_KERNEL);
- 	if (!info)
- 		return -ENOMEM;
--	ns->udp_ports.sleep = nsim_dev->udp_ports.sleep;
- 
- 	if (nsim_dev->udp_ports.sync_all) {
- 		info->set_port = NULL;
-@@ -181,8 +173,6 @@ int nsim_udp_tunnels_info_create(struct nsim_dev *nsim_dev,
- 		info->sync_table = NULL;
- 	}
- 
--	if (ns->udp_ports.sleep)
--		info->flags |= UDP_TUNNEL_NIC_INFO_MAY_SLEEP;
- 	if (nsim_dev->udp_ports.open_only)
- 		info->flags |= UDP_TUNNEL_NIC_INFO_OPEN_ONLY;
- 	if (nsim_dev->udp_ports.ipv4_only)
-@@ -217,6 +207,4 @@ void nsim_udp_tunnels_debugfs_create(struct nsim_dev *nsim_dev)
- 			    &nsim_dev->udp_ports.shared);
- 	debugfs_create_bool("udp_ports_static_iana_vxlan", 0600, nsim_dev->ddir,
- 			    &nsim_dev->udp_ports.static_iana_vxlan);
--	debugfs_create_u32("udp_ports_sleep", 0600, nsim_dev->ddir,
--			   &nsim_dev->udp_ports.sleep);
- }
-diff --git a/include/net/udp_tunnel.h b/include/net/udp_tunnel.h
-index 2df3b8344eb5..7f5537fdf2c9 100644
---- a/include/net/udp_tunnel.h
-+++ b/include/net/udp_tunnel.h
-@@ -221,19 +221,17 @@ static inline void udp_tunnel_encap_enable(struct sock *sk)
- #define UDP_TUNNEL_NIC_MAX_TABLES	4
- 
- enum udp_tunnel_nic_info_flags {
--	/* Device callbacks may sleep */
--	UDP_TUNNEL_NIC_INFO_MAY_SLEEP	= BIT(0),
- 	/* Device only supports offloads when it's open, all ports
- 	 * will be removed before close and re-added after open.
- 	 */
--	UDP_TUNNEL_NIC_INFO_OPEN_ONLY	= BIT(1),
-+	UDP_TUNNEL_NIC_INFO_OPEN_ONLY	= BIT(0),
- 	/* Device supports only IPv4 tunnels */
--	UDP_TUNNEL_NIC_INFO_IPV4_ONLY	= BIT(2),
-+	UDP_TUNNEL_NIC_INFO_IPV4_ONLY	= BIT(1),
- 	/* Device has hard-coded the IANA VXLAN port (4789) as VXLAN.
- 	 * This port must not be counted towards n_entries of any table.
- 	 * Driver will not receive any callback associated with port 4789.
- 	 */
--	UDP_TUNNEL_NIC_INFO_STATIC_IANA_VXLAN	= BIT(3),
-+	UDP_TUNNEL_NIC_INFO_STATIC_IANA_VXLAN	= BIT(2),
- };
- 
- struct udp_tunnel_nic;
-@@ -328,6 +326,7 @@ struct udp_tunnel_nic_ops {
- 
- #ifdef CONFIG_INET
- extern const struct udp_tunnel_nic_ops *udp_tunnel_nic_ops;
-+extern struct mutex udp_tunnel_nic_lock;
- #else
- #define udp_tunnel_nic_ops	((struct udp_tunnel_nic_ops *)NULL)
- #endif
-diff --git a/net/ipv4/udp_tunnel_nic.c b/net/ipv4/udp_tunnel_nic.c
-index b6d2d16189c0..4852397a595e 100644
---- a/net/ipv4/udp_tunnel_nic.c
-+++ b/net/ipv4/udp_tunnel_nic.c
-@@ -298,22 +298,11 @@ __udp_tunnel_nic_device_sync(struct net_device *dev, struct udp_tunnel_nic *utn)
- static void
- udp_tunnel_nic_device_sync(struct net_device *dev, struct udp_tunnel_nic *utn)
- {
--	const struct udp_tunnel_nic_info *info = dev->udp_tunnel_nic_info;
--	bool may_sleep;
--
- 	if (!utn->need_sync)
- 		return;
- 
--	/* Drivers which sleep in the callback need to update from
--	 * the workqueue, if we come from the tunnel driver's notification.
--	 */
--	may_sleep = info->flags & UDP_TUNNEL_NIC_INFO_MAY_SLEEP;
--	if (!may_sleep)
--		__udp_tunnel_nic_device_sync(dev, utn);
--	if (may_sleep || utn->need_replay) {
--		queue_work(udp_tunnel_nic_workqueue, &utn->work);
--		utn->work_pending = 1;
--	}
-+	queue_work(udp_tunnel_nic_workqueue, &utn->work);
-+	utn->work_pending = 1;
+     fn new(_dev: &NovaDevice, _size: usize) -> impl PinInit<Self, Error> {
+         try_pin_init!(NovaObject {})
+diff --git a/rust/kernel/drm/device.rs b/rust/kernel/drm/device.rs
+index 74c9a3dd719e3..6fc6995be637d 100644
+--- a/rust/kernel/drm/device.rs
++++ b/rust/kernel/drm/device.rs
+@@ -60,6 +60,9 @@ pub struct Device<T: drm::Driver> {
+     data: T::Data,
  }
  
- static bool
-@@ -554,11 +543,11 @@ static void __udp_tunnel_nic_reset_ntf(struct net_device *dev)
- 	struct udp_tunnel_nic *utn;
- 	unsigned int i, j;
- 
--	ASSERT_RTNL();
-+	mutex_lock(&udp_tunnel_nic_lock);
- 
- 	utn = dev->udp_tunnel_nic;
- 	if (!utn)
--		return;
-+		goto unlock;
- 
- 	utn->need_sync = false;
- 	for (i = 0; i < utn->n_tables; i++)
-@@ -569,7 +558,7 @@ static void __udp_tunnel_nic_reset_ntf(struct net_device *dev)
- 
- 			entry->flags &= ~(UDP_TUNNEL_NIC_ENTRY_DEL |
- 					  UDP_TUNNEL_NIC_ENTRY_OP_FAIL);
--			/* We don't release rtnl across ops */
-+			/* We don't release udp_tunnel_nic_lock across ops */
- 			WARN_ON(entry->flags & UDP_TUNNEL_NIC_ENTRY_FROZEN);
- 			if (!entry->use_cnt)
- 				continue;
-@@ -579,6 +568,9 @@ static void __udp_tunnel_nic_reset_ntf(struct net_device *dev)
- 		}
- 
- 	__udp_tunnel_nic_device_sync(dev, utn);
++/// A type alias for referring to the [`AllocImpl`] implementation for a DRM driver.
++type DriverAllocImpl<T> = <<T as drm::Driver>::Object as drm::gem::BaseDriverObject>::Object;
 +
-+unlock:
-+	mutex_unlock(&udp_tunnel_nic_lock);
+ impl<T: drm::Driver> Device<T> {
+     const VTABLE: bindings::drm_driver = drm_legacy_fields! {
+         load: None,
+@@ -70,13 +73,13 @@ impl<T: drm::Driver> Device<T> {
+         master_set: None,
+         master_drop: None,
+         debugfs_init: None,
+-        gem_create_object: T::Object::ALLOC_OPS.gem_create_object,
+-        prime_handle_to_fd: T::Object::ALLOC_OPS.prime_handle_to_fd,
+-        prime_fd_to_handle: T::Object::ALLOC_OPS.prime_fd_to_handle,
+-        gem_prime_import: T::Object::ALLOC_OPS.gem_prime_import,
+-        gem_prime_import_sg_table: T::Object::ALLOC_OPS.gem_prime_import_sg_table,
+-        dumb_create: T::Object::ALLOC_OPS.dumb_create,
+-        dumb_map_offset: T::Object::ALLOC_OPS.dumb_map_offset,
++        gem_create_object: DriverAllocImpl::<T>::ALLOC_OPS.gem_create_object,
++        prime_handle_to_fd: DriverAllocImpl::<T>::ALLOC_OPS.prime_handle_to_fd,
++        prime_fd_to_handle: DriverAllocImpl::<T>::ALLOC_OPS.prime_fd_to_handle,
++        gem_prime_import: DriverAllocImpl::<T>::ALLOC_OPS.gem_prime_import,
++        gem_prime_import_sg_table: DriverAllocImpl::<T>::ALLOC_OPS.gem_prime_import_sg_table,
++        dumb_create: DriverAllocImpl::<T>::ALLOC_OPS.dumb_create,
++        dumb_map_offset: DriverAllocImpl::<T>::ALLOC_OPS.dumb_map_offset,
+         show_fdinfo: None,
+         fbdev_probe: None,
+ 
+diff --git a/rust/kernel/drm/driver.rs b/rust/kernel/drm/driver.rs
+index 2be2a2d318e03..a77747edac80e 100644
+--- a/rust/kernel/drm/driver.rs
++++ b/rust/kernel/drm/driver.rs
+@@ -106,7 +106,7 @@ pub trait Driver {
+     type Data: Sync + Send;
+ 
+     /// The type used to manage memory for this driver.
+-    type Object: AllocImpl;
++    type Object: drm::gem::BaseDriverObject;
+ 
+     /// The type used to represent a DRM File (client)
+     type File: drm::file::DriverFile;
+diff --git a/rust/kernel/drm/gem/mod.rs b/rust/kernel/drm/gem/mod.rs
+index c459829ce5a5d..992e098d0a3e2 100644
+--- a/rust/kernel/drm/gem/mod.rs
++++ b/rust/kernel/drm/gem/mod.rs
+@@ -26,16 +26,19 @@ pub trait BaseDriverObject: Sync + Send + Sized {
+     /// Parent `Driver` for this object.
+     type Driver: drm::Driver;
+ 
++    /// The GEM object type that will be passed to various callbacks.
++    type Object: AllocImpl;
++
+     /// Create a new driver data object for a GEM object of a given size.
+     fn new(dev: &drm::Device<Self::Driver>, size: usize) -> impl PinInit<Self, Error>;
+ 
+     /// Open a new handle to an existing object, associated with a File.
+-    fn open(_obj: &<Self::Driver as drm::Driver>::Object, _file: &DriverFile<Self>) -> Result {
++    fn open(_obj: &Self::Object, _file: &DriverFile<Self>) -> Result {
+         Ok(())
+     }
+ 
+     /// Close a handle to an existing object, associated with a File.
+-    fn close(_obj: &<Self::Driver as drm::Driver>::Object, _file: &DriverFile<Self>) {}
++    fn close(_obj: &Self::Object, _file: &DriverFile<Self>) {}
  }
  
- static size_t
-@@ -709,13 +701,16 @@ static void udp_tunnel_nic_device_sync_work(struct work_struct *work)
- 	struct udp_tunnel_nic *utn =
- 		container_of(work, struct udp_tunnel_nic, work);
+ /// Trait that represents a GEM object subtype
+@@ -83,7 +86,7 @@ extern "C" fn open_callback<T: BaseDriverObject>(
  
--	rtnl_lock();
-+	mutex_lock(&udp_tunnel_nic_lock);
- 	utn->work_pending = 0;
- 	__udp_tunnel_nic_device_sync(utn->dev, utn);
+     // SAFETY: `open_callback` is specified in the AllocOps structure for `DriverObject<T>`,
+     // ensuring that `raw_obj` is contained within a `DriverObject<T>`
+-    let obj = unsafe { <<T::Driver as drm::Driver>::Object as IntoGEMObject>::as_ref(raw_obj) };
++    let obj = unsafe { T::Object::as_ref(raw_obj) };
  
--	if (utn->need_replay)
-+	if (utn->need_replay) {
-+		rtnl_lock();
- 		udp_tunnel_nic_replay(utn->dev, utn);
--	rtnl_unlock();
-+		rtnl_unlock();
-+	}
-+	mutex_unlock(&udp_tunnel_nic_lock);
+     match T::open(obj, file) {
+         Err(e) => e.to_errno(),
+@@ -100,7 +103,7 @@ extern "C" fn close_callback<T: BaseDriverObject>(
+ 
+     // SAFETY: `close_callback` is specified in the AllocOps structure for `Object<T>`, ensuring
+     // that `raw_obj` is indeed contained within a `Object<T>`.
+-    let obj = unsafe { <<T::Driver as drm::Driver>::Object as IntoGEMObject>::as_ref(raw_obj) };
++    let obj = unsafe { T::Object::as_ref(raw_obj) };
+ 
+     T::close(obj, file);
  }
+@@ -127,11 +130,12 @@ fn size(&self) -> usize {
  
- static struct udp_tunnel_nic *
-diff --git a/net/ipv4/udp_tunnel_stub.c b/net/ipv4/udp_tunnel_stub.c
-index c4b2888f5fef..d60b3262beb3 100644
---- a/net/ipv4/udp_tunnel_stub.c
-+++ b/net/ipv4/udp_tunnel_stub.c
-@@ -3,5 +3,7 @@
+     /// Creates a new handle for the object associated with a given `File`
+     /// (or returns an existing one).
+-    fn create_handle<D, F>(&self, file: &drm::File<F>) -> Result<u32>
++    fn create_handle<D, F, O>(&self, file: &drm::File<F>) -> Result<u32>
+     where
+         Self: AllocImpl<Driver = D>,
+-        D: drm::Driver<Object = Self, File = F>,
++        D: drm::Driver<Object = O, File = F>,
+         F: drm::file::DriverFile,
++        O: BaseDriverObject<Object = Self>,
+     {
+         let mut handle: u32 = 0;
+         // SAFETY: The arguments are all valid per the type invariants.
+@@ -142,11 +146,12 @@ fn create_handle<D, F>(&self, file: &drm::File<F>) -> Result<u32>
+     }
  
- #include <net/udp_tunnel.h>
- 
-+DEFINE_MUTEX(udp_tunnel_nic_lock);
-+EXPORT_SYMBOL_GPL(udp_tunnel_nic_lock);
- const struct udp_tunnel_nic_ops *udp_tunnel_nic_ops;
- EXPORT_SYMBOL_GPL(udp_tunnel_nic_ops);
+     /// Looks up an object by its handle for a given `File`.
+-    fn lookup_handle<D, F>(file: &drm::File<F>, handle: u32) -> Result<ARef<Self>>
++    fn lookup_handle<D, F, O>(file: &drm::File<F>, handle: u32) -> Result<ARef<Self>>
+     where
+         Self: AllocImpl<Driver = D>,
+-        D: drm::Driver<Object = Self, File = F>,
++        D: drm::Driver<Object = O, File = F>,
+         F: drm::file::DriverFile,
++        O: BaseDriverObject<Object = Self>,
+     {
+         // SAFETY: The arguments are all valid per the type invariants.
+         let ptr = unsafe { bindings::drm_gem_object_lookup(file.as_raw().cast(), handle) };
 -- 
 2.49.0
 
