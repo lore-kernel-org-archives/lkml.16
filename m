@@ -1,64 +1,33 @@
-Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 903AB25CC6C
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 15:23:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44C2F1AF0C8;
+	Tue, 20 May 2025 15:23:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747754586; cv=none; b=E0HkTT2WtBvptqrP4quY1TvTp0ptVWoCyQfPpJYyoTYFNlNBgvBGEg0bJlCUqbbpJcNiINXg2z0xppySvdu/C5sWx4tJTbBap7g7szF8CfurfhRsPay0f1XOJ3fdHIdSG4OpcfpoFWcrnaFi6l/a1gUmSHN/tRnQt+6KL2P41Us=
+	t=1747754639; cv=none; b=kwd5fM3fSFad3jdJQd3Y2HKs+lYglQAjBfEyuwWf6ZLil17oPGQ7FuecU6Dn1DaoHhae4Mled2ckcn1wCIe0GrAgpaEL23R7SRPMukwZvOE/frnb5ZwQ/LTJsMm+PpvEe1seB+gLYu90sNpc5TvKMzitzI6eAQzw67WwNX1OtMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747754586; c=relaxed/simple;
-	bh=vEbcuXQwEDRa0vNR50YOWWWtdFUeo4T8qpaWJJxDqHo=;
+	s=arc-20240116; t=1747754639; c=relaxed/simple;
+	bh=xHCm3UhoDYa2v9e+5nIaZq2Jb82Z3T+hUAeKAk7buOU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NonZNREV+9pqinoGBWYyePtCltTon6p9ZUEE8LuNzyw9qPBA4q7RFF7QlCs0pYe69Tke0cmBM4ps+qT9YAp38bwhFAJ5evmUg6jwdZTLYPhsVz/jphL+RT/vhd8GM+hDT/uPOElReZWo/mjAxgLRmXI+khVf+LX68/EXm2uCRVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=m9dxw+Aq; arc=none smtp.client-ip=209.85.166.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	 In-Reply-To:Content-Type; b=Q7QsMzIOW0p3XMufhEhJpUP7U2pGUtB70hXoEh4tKhoWUfVaejKVfZ31Swbmk+xShigO1982K4cH5rVRIOdG1UkNtj0qDJpnsyx2J74Y5xr1L74fV9o+oqZnNZ+Mbp9gk6e2FoIAZvYEfvzTmx8AnqSZeGYtVt9qbFFHAuCzYwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q6zbErAj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="m9dxw+Aq"
-Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3db87b9605bso37622675ab.3
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 08:23:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1747754583; x=1748359383; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=psPdOjdWIgtZdlDW5hj2GFX8fZ81Dk7SDN2MaI3x7nw=;
-        b=m9dxw+AqDQ+1rWgodAGFWnhuFaKSCIgi5ZydGaW52KKeWbLHBVKN5J79xHekkhN5uO
-         WJei/NE5ldeBweYaP+bnT5llbDOj7a+pQPJTi+IgEbQ5Od+1/K2Dkmhm9dLz+HI/G7d2
-         rkH/Fhzb/48Sh/2r5tFFoJo63I7Y9fV5z/y6gRXClhC1VZj4dLYYc96o9jduLxDM0D4c
-         ZjxXt8Ty/oei0KrLVfQHFSEuZljFE7vrHD6gwkPc23UyLRZ9MWk9Vac67r7oQIn+x121
-         TUi9xpLdBihCEhB2r3RJyfsQzO7U3wAw9EGRijgGbbnG5M6IYD5TOz53jUUymEflYwNu
-         9nYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747754583; x=1748359383;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=psPdOjdWIgtZdlDW5hj2GFX8fZ81Dk7SDN2MaI3x7nw=;
-        b=kwvPLTQrMkOeKw58opn1J6BQzxVH0svM/M3P/7RrLelJhenj0DfLhCXnAS3DOzPs3h
-         bshqPXiYZHP4/XbmE8QaA3H5O1+65OPstWSOmv5c12w1w6QCrY4yOl+VxM35E2BCBps0
-         hzJztPN3333xXSOqIDj7GvePRVfFlLsoWI4+hXHPtv27O4p68POu7d+zL4hBs99QYgXs
-         geSjbZnXML+5X4eqdJv2il1PC5fNJ51ZCkTmySB1DrSJ+nqKKflg3bAzrQsiuPqdWI2S
-         +LOaN5SaDdKiUgFl+xqfU6x8NLUl6yAAtNGKTOGF9AAe7b1imnJCf6strbiDmsGzOYNi
-         x+5g==
-X-Forwarded-Encrypted: i=1; AJvYcCX7nXk/DFClAzsiDVegA3dxpmvs5I6krJYCOgRN98wsJj3HPbuwmYm2ipmHGtyPzVt383jY9PDvzbkoVaY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyuDdfYGMAorH/MsjWMurnH8Owk2YhazL++YmmzFYLDfymRiXjI
-	tfJtVbNuO2XQqEYS8g0eXieMqUWb+1Ytdxv4GQcbHXNm1YxAObekE0TkHTC+SIjqxnU=
-X-Gm-Gg: ASbGncuUoFooAu3y/nOFo/+/LWeOtBL5Jbj9Cc6AZGSH0A0Pts+CH8e/uToAb/laT6U
-	1A8rt6AOuYdKANanA7xs4tJHwanW5w6hTVqPn6yphiKBBturyV1X/WXdfxPt6XJpjykdFm8BpWf
-	q8xasJFwjrN/PT45uDvyxyW5Gr7RC//WzoZEvwXsDI5NSFpCCiZTGPdYFLMKypDksc+b7eEQGC9
-	j2MfTXaLDPz7elGEsGoovv8ME/yYvcQVLAkZS5rFqnQkFfav+4nZN7JZHLHyKGUHYZA5D7El57x
-	9ii13xtkcs/wpuxjyA0TLSeNc2cxg9qArxkE3Hc9nHuimP7KArwSdc1ttw==
-X-Google-Smtp-Source: AGHT+IH5FiH5hdeBYNYfGJRWZ52DOo6I2S1qMZg7FuTAuJBXr6A1ts8mPNDcFL0CI9GiyXU3YCIgRA==
-X-Received: by 2002:a05:6e02:12cf:b0:3da:7cb7:79c with SMTP id e9e14a558f8ab-3db842dea53mr165651365ab.13.1747754583546;
-        Tue, 20 May 2025 08:23:03 -0700 (PDT)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4fbcc38a556sm2268664173.3.2025.05.20.08.23.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 May 2025 08:23:02 -0700 (PDT)
-Message-ID: <72139ccf-892d-40e3-8870-2dff0e30ecd9@kernel.dk>
-Date: Tue, 20 May 2025 09:23:01 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q6zbErAj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0D8AC4CEEF;
+	Tue, 20 May 2025 15:23:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747754638;
+	bh=xHCm3UhoDYa2v9e+5nIaZq2Jb82Z3T+hUAeKAk7buOU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Q6zbErAj1tnRf0n7QbCTp/r4qRNsrWkWoEWoVO3nZkq65cQpbqhwgG9seU2dZG8uH
+	 h8qX9fKSh9g824hpofrNw/iauk6+PhGSlkW+zf7BQhNILrdy3XvBrHSKmeIM42zH39
+	 nknLSRAjPsC9ardWhS+/7hhLj91Z0tbA/pWeKh4iyGQtY/xWxYAtg0TK90baOSDY9o
+	 KSnacF/CYMU00pXhLO14iexzwBsqcK2WXh9yTRY+2W7ZEnqGH8k+llW/QnGAryThCx
+	 rGQ1ICSZcVq+N76AjIXcCh2NJ//JUCkiqc7b3+LPUGfFSKzbf8IzG8VpqT4vQbDd9P
+	 4lfe1a0Ino8EQ==
+Message-ID: <a8c83435-4c91-495c-950c-4d12b955c54c@kernel.org>
+Date: Tue, 20 May 2025 10:23:57 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,29 +35,161 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [6.12.y regression] loosetup: failed to set up loop device:
- Invalid argument after 184b147b9f7f ("loop: Add sanity check for
- read/write_iter")
-To: Salvatore Bonaccorso <carnil@debian.org>,
- Roland Clobus <rclobus@rclobus.nl>, Lizhi Xu <lizhi.xu@windriver.com>,
- Christoph Hellwig <hch@lst.de>
-Cc: 1106070@bugs.debian.org, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org,
- regressions@lists.linux.dev
-References: <3a333f27-6810-4313-8910-485df652e897@rclobus.nl>
- <aCwZy6leWNvr7EMd@eldamar.lan>
+Subject: Re: [PATCH v4] PCI: Prevent power state transition of erroneous
+ device
+To: Raag Jadav <raag.jadav@intel.com>, Denis Benato <benato.denis96@gmail.com>
+Cc: rafael@kernel.org, mahesh@linux.ibm.com, oohall@gmail.com,
+ bhelgaas@google.com, linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
+ lukas@wunner.de, aravind.iddamsetty@linux.intel.com
+References: <20250519102808.4130271-1-raag.jadav@intel.com>
+ <aCsK743YSuahPtnH@black.fi.intel.com>
+ <85ed0b91-c84f-4d24-8e19-a8cb3ba02b14@gmail.com>
+ <aCxP6vQ8Ep9LftPv@black.fi.intel.com>
 Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <aCwZy6leWNvr7EMd@eldamar.lan>
-Content-Type: text/plain; charset=UTF-8
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <aCxP6vQ8Ep9LftPv@black.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Fixed here:
+On 5/20/2025 4:48 AM, Raag Jadav wrote:
+> On Mon, May 19, 2025 at 11:42:31PM +0200, Denis Benato wrote:
+>> On 5/19/25 12:41, Raag Jadav wrote:
+>>> On Mon, May 19, 2025 at 03:58:08PM +0530, Raag Jadav wrote:
+>>>> If error status is set on an AER capable device, most likely either the
+>>>> device recovery is in progress or has already failed. Neither of the
+>>>> cases are well suited for power state transition of the device, since
+>>>> this can lead to unpredictable consequences like resume failure, or in
+>>>> worst case the device is lost because of it. Leave the device in its
+>>>> existing power state to avoid such issues.
+>>>>
+>>>> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
+>>>> ---
+>>>>
+>>>> v2: Synchronize AER handling with PCI PM (Rafael)
+>>>> v3: Move pci_aer_in_progress() to pci_set_low_power_state() (Rafael)
+>>>>      Elaborate "why" (Bjorn)
+>>>> v4: Rely on error status instead of device status
+>>>>      Condense comment (Lukas)
+>>> Since pci_aer_in_progress() is changed I've not included Rafael's tag with
+>>> my understanding of this needing a revisit. If this was a mistake, please
+>>> let me know.
+>>>
+>>> Denis, Mario, does this fix your issue?
+>>>
+>> Hello,
+>>
+>> Unfortunately no, I have prepared a dmesg but had to remove the bootup process because it was too long of a few kb: https://pastebin.com/1uBEA1FL
+> 
+> Thanks for the test. It seems there's no hotplug event this time around
+> and endpoint device is still intact without any PCI related failure.
+> 
+> Also,
+> 
+> amdgpu 0000:09:00.0: PCI PM: Suspend power state: D3hot
+> 
+> Which means whatever you're facing is either not related to this patch,
+> or at best exposed some nasty side-effect that's not handled correctly
+> by the driver.
+> 
+> I'd say amdgpu folks would be of better help for your case.
+> 
+> Raag
 
-https://git.kernel.dk/cgit/linux/commit/?h=block-6.15&id=355341e4359b2d5edf0ed5e117f7e9e7a0a5dac0
+So according to the logs Denis shared with v4 
+(https://pastebin.com/1uBEA1FL) the GPU should have been going to BOCO. 
+This stands for "Bus off Chip Off"
 
-and will land upstream this week.
+amdgpu 0000:09:00.0: amdgpu: Using BOCO for runtime pm
 
--- 
-Jens Axboe
+If it's going to D3hot - that's not going to be BOCO, it should be going 
+to D3cold.
+
+Denis, can you redo your logs with out Raag's patch patch and set 
+CONFIG_PCI_DEBUG to compare?  The 6.14.6 log you shared already 
+(https://pastebin.com/kLZtibcD) also chooses BOCO but I'm suspecting 
+picks D3cold like it should.
+
+> 
+>>>> More discussion on [1].
+>>>> [1] https://lore.kernel.org/all/CAJZ5v0g-aJXfVH+Uc=9eRPuW08t-6PwzdyMXsC6FZRKYJtY03Q@mail.gmail.com/
+>>>>
+>>>>   drivers/pci/pci.c      |  9 +++++++++
+>>>>   drivers/pci/pcie/aer.c | 13 +++++++++++++
+>>>>   include/linux/aer.h    |  2 ++
+>>>>   3 files changed, 24 insertions(+)
+>>>>
+>>>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+>>>> index 4d7c9f64ea24..a20018692933 100644
+>>>> --- a/drivers/pci/pci.c
+>>>> +++ b/drivers/pci/pci.c
+>>>> @@ -9,6 +9,7 @@
+>>>>    */
+>>>>   
+>>>>   #include <linux/acpi.h>
+>>>> +#include <linux/aer.h>
+>>>>   #include <linux/kernel.h>
+>>>>   #include <linux/delay.h>
+>>>>   #include <linux/dmi.h>
+>>>> @@ -1539,6 +1540,14 @@ static int pci_set_low_power_state(struct pci_dev *dev, pci_power_t state, bool
+>>>>   	   || (state == PCI_D2 && !dev->d2_support))
+>>>>   		return -EIO;
+>>>>   
+>>>> +	/*
+>>>> +	 * If error status is set on an AER capable device, it is not well
+>>>> +	 * suited for power state transition. Leave it in its existing power
+>>>> +	 * state to avoid issues like unpredictable resume failure.
+>>>> +	 */
+>>>> +	if (pci_aer_in_progress(dev))
+>>>> +		return -EIO;
+>>>> +
+>>>>   	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+>>>>   	if (PCI_POSSIBLE_ERROR(pmcsr)) {
+>>>>   		pci_err(dev, "Unable to change power state from %s to %s, device inaccessible\n",
+>>>> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+>>>> index a1cf8c7ef628..617fbac0d38a 100644
+>>>> --- a/drivers/pci/pcie/aer.c
+>>>> +++ b/drivers/pci/pcie/aer.c
+>>>> @@ -237,6 +237,19 @@ int pcie_aer_is_native(struct pci_dev *dev)
+>>>>   }
+>>>>   EXPORT_SYMBOL_NS_GPL(pcie_aer_is_native, "CXL");
+>>>>   
+>>>> +bool pci_aer_in_progress(struct pci_dev *dev)
+>>>> +{
+>>>> +	int aer = dev->aer_cap;
+>>>> +	u32 cor, uncor;
+>>>> +
+>>>> +	if (!pcie_aer_is_native(dev))
+>>>> +		return false;
+>>>> +
+>>>> +	pci_read_config_dword(dev, aer + PCI_ERR_COR_STATUS, &cor);
+>>>> +	pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS, &uncor);
+>>>> +	return cor || uncor;
+>>>> +}
+>>>> +
+>>>>   static int pci_enable_pcie_error_reporting(struct pci_dev *dev)
+>>>>   {
+>>>>   	int rc;
+>>>> diff --git a/include/linux/aer.h b/include/linux/aer.h
+>>>> index 02940be66324..e6a380bb2e68 100644
+>>>> --- a/include/linux/aer.h
+>>>> +++ b/include/linux/aer.h
+>>>> @@ -56,12 +56,14 @@ struct aer_capability_regs {
+>>>>   #if defined(CONFIG_PCIEAER)
+>>>>   int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
+>>>>   int pcie_aer_is_native(struct pci_dev *dev);
+>>>> +bool pci_aer_in_progress(struct pci_dev *dev);
+>>>>   #else
+>>>>   static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
+>>>>   {
+>>>>   	return -EINVAL;
+>>>>   }
+>>>>   static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
+>>>> +static inline bool pci_aer_in_progress(struct pci_dev *dev) { return false; }
+>>>>   #endif
+>>>>   
+>>>>   void pci_print_aer(struct pci_dev *dev, int aer_severity,
+>>>> -- 
+>>>> 2.34.1
+>>>>
 
