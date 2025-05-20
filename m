@@ -1,67 +1,50 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D867F1DA61B
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 08:56:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8037B26658F
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 08:56:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747731402; cv=none; b=maH3pElzaPUWN30TuhGdn+4LSRzIf0fIPviMdpQXNMYEEiJY24xS7uKQiZ/ZmrZQBt8a/CFnVri+U3KWR0nkTE6NgbizF+vV7KHm+QC0emayTzqTQWFj5RCUJcH8i7tBKGXUgKbzpNG8loHvwoRvre8jeQQzcryv6mnr4EHWMZc=
+	t=1747731417; cv=none; b=kkMOywgPsUPph3rHFBUQ3Yb2PX1b7zmrU/cZejJ/NtBqY+0wGdvngmX1H3BmvQA3sEL7FIddZa3lYw/u33sRAaYJeC95wIpWabql0RwTBhjZZLotAXjpeKbmP9JTZptN89Fj0qWbahUnkwJ7C4rKdJCDyS3zh/yI9rjJSqZR5x4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747731402; c=relaxed/simple;
-	bh=gTOEFHhEVtSsMXhUVOfV50UNmO+gWk1rhRzIRqfppwQ=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=sNVoi+cJyqr3TvA85rYwNlc8OjkVC+8KShqiHRvknTMLoGY/6AbacPk1TcX8DulfGQ2PmPWLq8TzSE8qTEwgqyI0Pjh53zDP39VIL1ITvyElwOxmBcKoXPo6VwH/OevTbnwLPTFI/q9C8h4fIIrfPBJ595aUS7sAQIYYpaI6Ang=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=usU2oo39; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747731417; c=relaxed/simple;
+	bh=dNk1iquGoMnmN2AYnRnJ01D03ODWXa9mlMzCC+k30VE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=XLvE/KrWkq7oDBvydabPPcu84o8RgFPfZEhj2stSIAhF5vcsKp/+WM00glegnhsl4761VKMDXdNGRcDKEqa6Ck47rneIJA0yCvDQydVaqH4GOVk6uaxqNr/6MurSOcdQjrYX9h11ivOb/VCUqlTiBkeG3aaJC6G4rqVcPUH24Oo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=J9OgIqkr; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="usU2oo39"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-442ccf0e1b3so65547385e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 01:56:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747731399; x=1748336199; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BJKlEALqukBWVIaZSvMQu0X1rlqrFGy0vpDP61lvuJA=;
-        b=usU2oo39cNDyVJ/RDt6XxoI4HnsCj+NW5e9bRGd4ZM7tCWfUsaaIqxIN/o4SiVdrnH
-         mKdaDlYswOQZMOQekKYSHpVIFTwaCL876p+SugGnECMz09Dk2c9akJLLFOoN7mguPTid
-         3HGw7dF+dDWnw41xbwh7Nj3DEP4QWohdaVEm5K5GklBvSj9dP8a6GgFejMktfThco+op
-         hB8qAGjG1GAFbwUM7/djA47woK16Sy31g6zHzTDHZMoPZpCASnSfXruCXitVtFEI3gw9
-         7M8ct28+VdBWY0RLgFtcKZQE49CtQakm+olCHcMj9rVGlboNG45fjxLfe2v/PzB2A54l
-         RjWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747731399; x=1748336199;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=BJKlEALqukBWVIaZSvMQu0X1rlqrFGy0vpDP61lvuJA=;
-        b=MoJ/T39wOuh21D3EWuaShrg1gsSXEb/2BHSLyYxyn0/LhrfilucgaV0EauN8SyCCxc
-         0tTSBY5VW/WyY+n2iwZ45gE0e3YZCiKGfn3m3IUjk+ioMsTaY9ZK3a/pBXnd6VHctp9N
-         1amO13UbPlH7YaJs6gxj99R2OohQmZb24lbRR9L3+VqMEKo8Lc7E91L8ni2rm83GQp1u
-         mctEzxr9wrDSTMgvqyuz/guU//56cV3UrZSop32WfZJPp6X+RfRdDZSFcFHKfAkbaW2p
-         pWxVGRr55U4SuXwoVIobA5KqaXJ9ns/VPorXszo/kL0sr/Fsuc2Ztwlra0Rd3MOxAbhH
-         1ruA==
-X-Forwarded-Encrypted: i=1; AJvYcCWxlNjGr0DbLlcDfwyTDW/duYvbhX3wO9mUCJai1shgKUr7RizDOXnThXS767oGLbOBS7EdLyveCp9qBFQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/v7PFInXWY1DymPm+cOlg/YYoMQcf/b3dAYbwx/DKPY3bplny
-	aYqnbS0zHq/Hx1W8An2+ZhuUjh5mz/P3B4PMlrz733xrD9rjXtPwCdMAzxwMIVQGX0U=
-X-Gm-Gg: ASbGncufApsP2f8N/X5mFoof9p2pr6FGh5mDt3kkCEZtJSxzUazaG3V2yfQUZOv5ISn
-	K9rT2mqoueTCdOnfj0NoM35akx+vic2ekx5/luMTcdI52EuL+iIjeL/DjozJrr8KNOscZweY2B7
-	giBlsMQOtz3bUznkoAf7V3L6I+IFaRW4+KPxUQSePTdl8KcvnnXsD/kJs8DDThqL6FXt9jnfS+p
-	+HpFHFfzdchYsBorwRiCKl1Ba6m2JKXtIs1rVN0esV0UFuspFYRkTSDS75J5WIiemALrUojdoW1
-	vE6BMAZMJVXGqRrXRd63Dm2lmV/7jAiMOrmWH6N96Rjh/WspBp9ELY75x0z8wV/CKsd+B5K1zLN
-	MktPu8r+u/z7eFXDcbndVvEmSQQbY
-X-Google-Smtp-Source: AGHT+IHNhmKQWrNn4QBK50SWwlms3o9VxLv7gTlj1bGD4mEbBOIXSOIVbGOCKtrZsXub4P9ruVz32A==
-X-Received: by 2002:a05:600c:3c9b:b0:439:643a:c8d5 with SMTP id 5b1f17b1804b1-442fd5a1e4cmr153219395e9.0.1747731399071;
-        Tue, 20 May 2025 01:56:39 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:fb2e:6266:4e39:ce68? ([2a01:e0a:3d9:2080:fb2e:6266:4e39:ce68])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f3dd99edsm22193575e9.36.2025.05.20.01.56.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 May 2025 01:56:38 -0700 (PDT)
-Message-ID: <35cf95f6-30ba-4833-a059-e455d7370fda@linaro.org>
-Date: Tue, 20 May 2025 10:56:38 +0200
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="J9OgIqkr"
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54K6H1Jn015494;
+	Tue, 20 May 2025 10:56:51 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	knmAoVqqbraPwZO2+muP7+5p900Huds6/IjORYOFvnQ=; b=J9OgIqkr2AiNfTbv
+	ZCM8CBVH/g5T3lWhmO2KdveFoMqjk7VlO22UzHXRyHkbabu2LhVSRjJjBH0Gy8gK
+	sGIgPr8pWZripbSNqywGmXTuZtEnsiMOPqeQLTYdub4UPO2XGFy5aUIMKlAsWSLW
+	8Likw2h9oJFGbLPmF+jCJXd8P0jjTtAeY0N95Hf+RwoVchfpoi5949fGRBQ5Vzf+
+	Q0kcJaCutymGoLMns2UBPXDILE1+UHI+/ua39St3pXKbmRFOuFeQSm9x6OpfEqXa
+	+RBID96Y6ZCOxKnEZ1nT5SfSM9DLsB93h7LsKVGZ8KDkDnzrs5CpbzGRA85G8HMc
+	99OXiw==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46pfka431v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 20 May 2025 10:56:51 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id D1D8C40047;
+	Tue, 20 May 2025 10:56:16 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 23E9DB4E1FF;
+	Tue, 20 May 2025 10:55:15 +0200 (CEST)
+Received: from [10.48.86.79] (10.48.86.79) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 20 May
+ 2025 10:55:14 +0200
+Message-ID: <0fb1becc-94b9-4632-a3d1-501de2607a7a@foss.st.com>
+Date: Tue, 20 May 2025 10:55:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,78 +52,312 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH] drm/panel-simple: fix the warnings for the Evervision
- VGG644804
-To: Michael Walle <mwalle@kernel.org>,
- Jessica Zhang <quic_jesszhan@quicinc.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20250520074110.655114-1-mwalle@kernel.org>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20250520074110.655114-1-mwalle@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [V1 2/2] drivers soc: add support for ST stm32mp13xx family
+To: Rodolfo Giometti <giometti@enneenne.com>, <linux-kernel@vger.kernel.org>
+CC: Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Eric Fourmont
+	<eric.fourmont-ext@st.com>,
+        Yann GAUTIER <yann.gautier@foss.st.com>
+References: <20250519130859.3389704-1-giometti@enneenne.com>
+ <20250519130859.3389704-3-giometti@enneenne.com>
+Content-Language: en-US
+From: Alexandre TORGUE <alexandre.torgue@foss.st.com>
+In-Reply-To: <20250519130859.3389704-3-giometti@enneenne.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-20_04,2025-05-16_03,2025-03-28_01
 
-On 20/05/2025 09:41, Michael Walle wrote:
-> The panel lacked the connector type which causes a warning. Adding the
-> connector type reveals wrong bus_flags and bits per pixel. Fix all of
-> it.
+hi
+
+On 5/19/25 15:08, Rodolfo Giometti wrote:
+> This patch adds SoC support for the ST stm32mp13xx family. It also
+> adds the special attribute "secure" which returns the CPU's secure
+> mode status.
 > 
-> Fixes: 1319f2178bdf ("drm/panel-simple: add Evervision VGG644804 panel entry")
-> Signed-off-by: Michael Walle <mwalle@kernel.org>
+> Signed-off-by: Rodolfo Giometti <giometti@enneenne.com>
 > ---
->   drivers/gpu/drm/panel/panel-simple.c | 5 +++--
->   1 file changed, 3 insertions(+), 2 deletions(-)
+>   drivers/soc/st/Makefile        |   1 +
+>   drivers/soc/st/soc-stm32mp13.c | 253 +++++++++++++++++++++++++++++++++
+>   2 files changed, 254 insertions(+)
+>   create mode 100644 drivers/soc/st/soc-stm32mp13.c
 > 
-> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-> index 82ee2f12b8d2..0a3b26bb4d73 100644
-> --- a/drivers/gpu/drm/panel/panel-simple.c
-> +++ b/drivers/gpu/drm/panel/panel-simple.c
-> @@ -2198,13 +2198,14 @@ static const struct display_timing evervision_vgg644804_timing = {
->   static const struct panel_desc evervision_vgg644804 = {
->   	.timings = &evervision_vgg644804_timing,
->   	.num_timings = 1,
-> -	.bpc = 8,
-> +	.bpc = 6,
->   	.size = {
->   		.width = 115,
->   		.height = 86,
->   	},
->   	.bus_format = MEDIA_BUS_FMT_RGB666_1X7X3_SPWG,
-> -	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_SAMPLE_NEGEDGE,
-> +	.bus_flags = DRM_BUS_FLAG_DE_HIGH,
-> +	.connector_type = DRM_MODE_CONNECTOR_LVDS,
->   };
->   
->   static const struct display_timing evervision_vgg804821_timing = {
+> diff --git a/drivers/soc/st/Makefile b/drivers/soc/st/Makefile
+> index 6c71607f6c89..c84bf510928d 100644
+> --- a/drivers/soc/st/Makefile
+> +++ b/drivers/soc/st/Makefile
+> @@ -1,3 +1,4 @@
+>   obj-$(CONFIG_STM32_PM_DOMAINS) += stm32_pm_domain.o
+>   obj-$(CONFIG_STM32_RISAB) += stm32_risab.o
+>   obj-$(CONFIG_STM32_RISAF) += stm32_risaf.o
+> +obj-$(CONFIG_MACH_STM32MP13) += soc-stm32mp13.o
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+Your patch does not applied because the file does not exist. You can't 
+take a patch on our github, push it as it is without rebase it on 
+mainline kernel.
+
+regards
+alex
+
+> diff --git a/drivers/soc/st/soc-stm32mp13.c b/drivers/soc/st/soc-stm32mp13.c
+> new file mode 100644
+> index 000000000000..cf45dbeb926a
+> --- /dev/null
+> +++ b/drivers/soc/st/soc-stm32mp13.c
+> @@ -0,0 +1,253 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright 2025 Rodolfo Giometti <giometti@enneenne.com>
+> + */
+> +
+> +#include <linux/cpu.h>
+> +#include <linux/nvmem-consumer.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/slab.h>
+> +#include <linux/sys_soc.h>
+> +
+> +#define STM32MP131A	0x6C9
+> +#define STM32MP131C	0x6C8
+> +#define STM32MP131D	0xEC9
+> +#define STM32MP131F	0xEC8
+> +#define STM32MP133A	0x0C1
+> +#define STM32MP133C	0x0C0
+> +#define STM32MP133D	0x8C1
+> +#define STM32MP133F	0x8C0
+> +#define STM32MP135A	0x001
+> +#define STM32MP135C	0x000
+> +#define STM32MP135D	0x801
+> +#define STM32MP135F	0x800
+> +
+> +#define BSEC_RPN	0x204
+> +#define BSEC_UID	0x234
+> +#define SYSCFG_IDC	0x380
+> +
+> +/*
+> + * SoC attributes
+> + */
+> +
+> +static ssize_t
+> +secure_show(struct device *dev, struct device_attribute *attr, char *buf)
+> +{
+> +	u16 val;
+> +	char *str;
+> +	int ret;
+> +	struct device *cpu_dev;
+> +
+> +	cpu_dev = get_cpu_device(0);
+> +	if (!cpu_dev) {
+> +		dev_err(dev, "failed to get cpu0 device\n");
+> +		return -ENODEV;
+> +	}
+> +	ret = nvmem_cell_read_u16(cpu_dev, "encoding_mode", &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	switch (val) {
+> +	case 0b0000010111:
+> +		str = "open";
+> +		break;
+> +	case 0b0000111111:
+> +		str = "closed";
+> +		break;
+> +	case 0b0101111111:
+> +		str = "closed boundary-scan-disabled]";
+> +		break;
+> +	case 0b1111111111:
+> +		str = "closed JTAG-disabled";
+> +		break;
+> +	default:
+> +		str = "unknown";
+> +	}
+> +
+> +	return sprintf(buf, "%s\n", str);
+> +}
+> +static DEVICE_ATTR_RO(secure);
+> +
+> +static struct attribute *stm32mp13_soc_attrs[] = {
+> +	&dev_attr_secure.attr,
+> +	NULL
+> +};
+> +ATTRIBUTE_GROUPS(stm32mp13_soc);
+> +
+> +/*
+> + * Driver init functions
+> + */
+> +
+> +static int __init stm32mp13_soc_get_rpn_uid(u32 *rpn, u32 uid[3])
+> +{
+> +	struct device_node *np;
+> +	void __iomem *regs;
+> +	static const struct of_device_id devids[] = {
+> +		{ .compatible = "st,stm32mp13-bsec" },
+> +		{ },
+> +	};
+> +
+> +	np = of_find_matching_node(NULL, devids);
+> +	if (!np)
+> +		return -ENODEV;
+> +
+> +	regs = of_iomap(np, 0);
+> +	of_node_put(np);
+> +
+> +	if (!regs) {
+> +		pr_warn("Could not map BSEC iomem range");
+> +		return -ENXIO;
+> +	}
+> +
+> +	*rpn = readl(regs + BSEC_RPN) & 0x0fff;
+> +	uid[0] = readl(regs + BSEC_UID + 0);
+> +	uid[1] = readl(regs + BSEC_UID + 4);
+> +	uid[2] = readl(regs + BSEC_UID + 8);
+> +
+> +	iounmap(regs);
+> +
+> +	return 0;
+> +}
+> +
+> +static int __init stm32mp13_soc_get_idc(u32 *idc)
+> +{
+> +	struct device_node *np;
+> +	void __iomem *regs;
+> +	static const struct of_device_id devids[] = {
+> +		{ .compatible = "st,stm32mp157-syscfg" },
+> +		{ },
+> +	};
+> +
+> +	np = of_find_matching_node(NULL, devids);
+> +	if (!np)
+> +		return -ENODEV;
+> +
+> +	regs = of_iomap(np, 0);
+> +	of_node_put(np);
+> +
+> +	if (!regs) {
+> +		pr_warn("Could not map BSEC iomem range");
+> +		return -ENXIO;
+> +	}
+> +
+> +	*idc = readl(regs + SYSCFG_IDC);
+> +
+> +	iounmap(regs);
+> +
+> +	return 0;
+> +}
+> +
+> +static int __init stm32mp13_soc_device_init(void)
+> +{
+> +	u32 part_number, rev, chipid[3];
+> +	struct soc_device_attribute *soc_dev_attr;
+> +	struct soc_device *soc_dev;
+> +	struct device_node *root;
+> +	const char *soc_id;
+> +	int ret;
+> +
+> +	soc_dev_attr = kzalloc(sizeof(*soc_dev_attr), GFP_KERNEL);
+> +	if (!soc_dev_attr)
+> +		return -ENOMEM;
+> +	soc_dev_attr->family = "STM STM32MP13xx";
+> +
+> +	root = of_find_node_by_path("/");
+> +	ret = of_property_read_string(root, "model", &soc_dev_attr->machine);
+> +	if (ret)
+> +		of_property_read_string_index(root, "compatible", 0,
+> +						&soc_dev_attr->machine);
+> +	of_node_put(root);
+> +	if (ret)
+> +		goto free_soc;
+> +
+> +	/* Get chip info */
+> +	ret = stm32mp13_soc_get_rpn_uid(&part_number, chipid);
+> +	if (ret) {
+> +		pr_err("failed to get chip part number: %d\n", ret);
+> +		goto free_soc;
+> +	}
+> +	switch (part_number) {
+> +	case STM32MP131A:
+> +		soc_id = "131a";
+> +		break;
+> +	case STM32MP131C:
+> +		soc_id = "131c";
+> +		break;
+> +	case STM32MP131D:
+> +		soc_id = "131d";
+> +		break;
+> +	case STM32MP131F:
+> +		soc_id = "131f";
+> +		break;
+> +	case STM32MP133A:
+> +		soc_id = "133a";
+> +		break;
+> +	case STM32MP133C:
+> +		soc_id = "133c";
+> +		break;
+> +	case STM32MP133D:
+> +		soc_id = "133d";
+> +		break;
+> +	case STM32MP133F:
+> +		soc_id = "133f";
+> +		break;
+> +	case STM32MP135A:
+> +		soc_id = "135a";
+> +		break;
+> +	case STM32MP135C:
+> +		soc_id = "135c";
+> +		break;
+> +	case STM32MP135D:
+> +		soc_id = "135d";
+> +		break;
+> +	case STM32MP135F:
+> +		soc_id = "135f";
+> +		break;
+> +	default:
+> +		soc_id = "unknown";
+> +	}
+> +	soc_dev_attr->soc_id = soc_id;
+> +
+> +	ret = stm32mp13_soc_get_idc(&rev);
+> +	if (ret)
+> +		goto free_soc;
+> +	soc_dev_attr->revision = kasprintf(GFP_KERNEL, "%X", rev >> 16);
+> +	if (!soc_dev_attr->revision) {
+> +		ret = -ENOMEM;
+> +		goto free_soc;
+> +	}
+> +
+> +	soc_dev_attr->serial_number = kasprintf(GFP_KERNEL, "%08X%08X%08X",
+> +					chipid[0], chipid[1], chipid[2]);
+> +	if (!soc_dev_attr->serial_number) {
+> +		ret = -ENOMEM;
+> +		goto free_rev;
+> +	}
+> +
+> +	/* Add custom attributes group */
+> +	soc_dev_attr->custom_attr_group = stm32mp13_soc_groups[0];
+> +
+> +	/* Register the SOC device */
+> +	soc_dev = soc_device_register(soc_dev_attr);
+> +	if (IS_ERR(soc_dev)) {
+> +		ret = PTR_ERR(soc_dev);
+> +		goto free_serial_number;
+> +	}
+> +
+> +	pr_info("SoC Machine: %s\n", soc_dev_attr->machine);
+> +	pr_info("SoC family: %s\n", soc_dev_attr->family);
+> +	pr_info("SoC ID: %s, Revision: %s\n",
+> +		soc_dev_attr->soc_id, soc_dev_attr->revision);
+> +
+> +	return 0;
+> +
+> +free_serial_number:
+> +	kfree(soc_dev_attr->serial_number);
+> +free_rev:
+> +	kfree(soc_dev_attr->revision);
+> +free_soc:
+> +	kfree(soc_dev_attr);
+> +	return ret;
+> +}
+> +device_initcall(stm32mp13_soc_device_init);
