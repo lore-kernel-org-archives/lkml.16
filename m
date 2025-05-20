@@ -1,86 +1,103 @@
-Received: from jeth.damsy.net (jeth.damsy.net [51.159.152.102])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3966024338F
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 17:00:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.159.152.102
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C16A26C3AD
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 17:01:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747760437; cv=none; b=rY4IWyyPkfM5M+S4HZ1w+r7JUZWpQ+7VOKDWjmNQNXG2LbfwIfHv3Rv2KWJ4nqJpecTwYr+o6Dksw8/tkUAFsQMVwcCsZDfXjjYPycF9lYGIvzH4GdwTAS4B2MEZwU+gtq6bx0vJMg4SrLUlA1Ztc9dCwYh9eEMmILR/d/9rRHg=
+	t=1747760519; cv=none; b=EIV9Jf+BqsUAypN/VmMzPMqr4k+48YG/Y2m3soEI7eI4NprwKDFhPTWCgsTtsbST4D7+xA3qUUMILHdLIwJsq34Cxbu2DksOIpUxuXAFNHZDYoiMAj30LYdxOeNc4W9OswCbv6K4A1PyOz6cn/44zxfMlUTGFOEbFFUow93ZNW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747760437; c=relaxed/simple;
-	bh=xcDcxfy2ihH9lRNz6yAykV3gFlUPQ6q9xcUWXZPxDK8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=giOsydAXh+tkrV+1ZtEwVcB3rCpohIVkESZWeHD1xtRW075dxat4YRN5kR6hTp88J7ksmkI8TlLyeoKxXpl579ohvHJOTMwTC6pNTD7+08wQAX+WRM6f8im6VbOqQRuJfWCPuIArmORuZ1AQoZSXvoc1uwu0CC/UCfpE+9gxrt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=damsy.net; spf=pass smtp.mailfrom=damsy.net; dkim=pass (2048-bit key) header.d=damsy.net header.i=@damsy.net header.b=CwyNXFeY; dkim=permerror (0-bit key) header.d=damsy.net header.i=@damsy.net header.b=DPADTAzj; arc=none smtp.client-ip=51.159.152.102
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=damsy.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=damsy.net
+	s=arc-20240116; t=1747760519; c=relaxed/simple;
+	bh=xZSsRnGyyhGYsnjsOlnRkVM93KYOI+VXorAm5KVz+YA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MfAW1oV8G+KNcVeUR2jTlDjordVsCmQlLyt7IjBq0kLr+38q93IwOdZBtB+OibAGGL/pyV2ToA/nKRKUj9eOZxF2+vj01Qxyub6NgeWa/z/g7oI3R+e0a11Sf16YwTmGuvFXR9iGqI6sQo9nWktE4l9EOXWAnHvEe9TSZMDdVu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=mmbT9233; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=damsy.net header.i=@damsy.net header.b="CwyNXFeY";
-	dkim=permerror (0-bit key) header.d=damsy.net header.i=@damsy.net header.b="DPADTAzj"
-DKIM-Signature: v=1; a=rsa-sha256; s=202408r; d=damsy.net; c=relaxed/relaxed;
-	h=From:To:Subject:Date:Message-ID; t=1747760214; bh=bK6d56SoduXJWmbkEZP5dQH
-	CvkZGM1JG60/cVI5W0u8=; b=CwyNXFeYu5J3ksYIGHzAAy83eosq3C9+2BDOECr4ZHYLAakawj
-	q+e4Wsk4Boyl7aJOxmGbXUDW0ZtMcBFvPn6nw8v4MNzbLXQUR+96AipUpun63wgTK8dQPedOfei
-	m9puOObjCjipXYp0Wn5fNcvfb4gUrn7mmg+7ARzTv5rGuHc/pYm9oWl2KBIRTaL471arAsSLSbi
-	50ubja47xPBBaCZ8dfVl1/umZ3LK5cZZyW12MvJgynBbP4jfXDf0uwJ1q5A//5w0e9vSWHTbS7E
-	NVNU+PphMsV0l5AXeMQfOEJAePp/sCHs9fteZI1OTBrlRNFmn7ANdWmSvxOgyurRD4Q==;
-DKIM-Signature: v=1; a=ed25519-sha256; s=202408e; d=damsy.net; c=relaxed/relaxed;
-	h=From:To:Subject:Date:Message-ID; t=1747760214; bh=bK6d56SoduXJWmbkEZP5dQH
-	CvkZGM1JG60/cVI5W0u8=; b=DPADTAzjt9Kr+1Yk7wKthqzjmt53FiLLwRNYc3XTY8u6DyqL/V
-	zod8DVyUvNx7fHiumgIDVeb85KBD5aTTnsAg==;
-Message-ID: <c9794bcf-6e00-4900-ba1e-cc8b223bfbb9@damsy.net>
-Date: Tue, 20 May 2025 18:56:54 +0200
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="mmbT9233"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-329119a3a8eso29152551fa.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 10:01:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1747760515; x=1748365315; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xZSsRnGyyhGYsnjsOlnRkVM93KYOI+VXorAm5KVz+YA=;
+        b=mmbT9233GWoptDKlBIfgO4eJ7FsGvK0jq2kBwKwcafGEENTY62KnK/2lxqGkiCFWa0
+         cNLL8iSHSRQ5/vZgYUYZleYwFuEFgonDKzd0n7oS1fIVm0WB1V8afG8S5RwidQuxF8J8
+         8zLKsjP1b91lrCPPylH+ci0w2zAhDlK1CBfJcyvwo0yz5jUEkqzkcvtCWVF7CF5Fiab1
+         YD90Xi73PZaQMPIdugfzTH6fYxoLN/gDCDxA4/Yq/7xF6gyZf3xFFj+dhiarAISrvPOG
+         vc2JbX2PsZs1or5FaE/tiI02wjfOyM5FN8XTzNOSonz6mkfTSaMx+RX2zoqvPXven8Ws
+         gs5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747760515; x=1748365315;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xZSsRnGyyhGYsnjsOlnRkVM93KYOI+VXorAm5KVz+YA=;
+        b=vqzXnLk2tYN+WIO7TgaCY4oprB19NrOFujHOxru803jTtN4OOsSFv5ewqyvlEzIJ7D
+         BTCJiDGaMairPBK/9nsDnvZfwDba7Uszr+gtesfRMyNifUgUDIudNyXahg9GZot1dOXr
+         ycivAC5QvgerT64FE+QD0QPFeM1Td41YLiJvQNP4Or3MohoCc7k96FnK2kf5nY05aOGq
+         Ut433oFAGzAFIwBFNurxPTYuzxfdeN7WMwVTLY797A7ug0Z7Zxot7LiWtzB2S00LuSZZ
+         9Z9T8RpKtg2r4eSANDsVKu74H/diR8zqQ+Q7X0sUeLTkgWNEQw4tQH8ZZ8csaF+seZj6
+         pCBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXLRD8Qun4KH7V/MDUwMLnUswxWLKHsLCAUzZig+He/n2l5hiW2G0ZiLZk22RM1DYm4TTRJSray/cxVoV8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0CFyzH5kJRwC3zdHiSIrFdjCsMJFWNnNh6sfjUHL9uDUq5u2t
+	SFqTUIwlDD3VjhOTr5wHKVLQDpQSHkPESD+maXhNIF/gegyuj+Wu5UmHIJLyk2NHsRVn7Qdm7+a
+	u7NxdJY1j5FMun8r/mdQQXZeRK0TVEo/iZp7bxAEaPLNNlzhDOIxQ
+X-Gm-Gg: ASbGncvvbo15HohEkH9azafu4qUf4IVCUhdKrnMBOizD6CI2zL/6rZQ15M/cMJESrkD
+	HrDWD4681SaLViGVOh/6jirrm6hisl29EIxuy3CIyKGxkZpTabVPwmhEFAmxAyMC5raumh5g24n
+	+XaB6X6WGiRp0pjC/kh44CzE2Zhoux73atjyImElWdL3AjXx/QotsweYMWJed0jNpa
+X-Google-Smtp-Source: AGHT+IHGcton47b4SRlkezOs6A+p2hCe+G8w/Zc5+7fPgaeeCngttApkhFVS65avmm4vXQkmj3B+o9lmsenLqXUl520=
+X-Received: by 2002:a05:651c:31cd:b0:30b:ab00:846a with SMTP id
+ 38308e7fff4ca-328083fe2edmr55164311fa.3.1747760514824; Tue, 20 May 2025
+ 10:01:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 03/10] drm/sched: add device name to the
- drm_sched_process_job event
-To: Danilo Krummrich <dakr@kernel.org>,
- Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
-Cc: Matthew Brost <matthew.brost@intel.com>,
- Philipp Stanner <phasta@kernel.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20250424083834.15518-1-pierre-eric.pelloux-prayer@amd.com>
- <20250424083834.15518-4-pierre-eric.pelloux-prayer@amd.com>
- <aCtPbUaah-bmcEMk@pollux>
-Content-Language: en-US
-From: Pierre-Eric Pelloux-Prayer <pierre-eric@damsy.net>
-In-Reply-To: <aCtPbUaah-bmcEMk@pollux>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250520-aaeon-up-board-pinctrl-support-v6-0-dcb3756be3c6@bootlin.com>
+In-Reply-To: <20250520-aaeon-up-board-pinctrl-support-v6-0-dcb3756be3c6@bootlin.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 20 May 2025 19:01:42 +0200
+X-Gm-Features: AX0GCFvExND99g3-ocicUC7hcVnJlz498K7QNXubedp0La7I2nGUrjQyAJvOsTU
+Message-ID: <CAMRc=Mfpvh0jyNsOXj3rUf8bW69oq6fqt+XMf9EKunF0dni5+g@mail.gmail.com>
+Subject: Re: [PATCH v6 00/12] Add pinctrl support for the AAEON UP board FPGA
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Kees Cook <kees@kernel.org>, 
+	Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	thomas.petazzoni@bootlin.com, DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, May 20, 2025 at 3:28=E2=80=AFPM Thomas Richard
+<thomas.richard@bootlin.com> wrote:
+>
+> This is the sixth version of this series. The main change is the rework o=
+f
+> the GPIO forwarder API as requested by Geert to have more consistent nami=
+ng
+> and parameters.
+>
+> More details in changelog.
+>
+> Best Regards,
+>
+> Thomas
+>
+> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+>
 
+Hi Thomas!
 
-Le 19/05/2025 à 17:34, Danilo Krummrich a écrit :
-> On Thu, Apr 24, 2025 at 10:38:15AM +0200, Pierre-Eric Pelloux-Prayer wrote:
->> diff --git a/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h b/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
->> index f56e77e7f6d0..713df3516a17 100644
->> --- a/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
->> +++ b/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
->> @@ -42,6 +42,7 @@ DECLARE_EVENT_CLASS(drm_sched_job,
->>   			     __field(uint64_t, id)
->>   			     __field(u32, job_count)
->>   			     __field(int, hw_job_count)
->> +			     __string(dev, dev_name(sched_job->sched->dev))
-> 
-> Using the sched_job->sched pointer here and in other trace events implies that
-> the trace event must not be called before the sched_job->sched has been set,
-> i.e. in drm_sched_job_arm().
-> 
-> Please document this for the corresponding trace events.
+I appreciate your hard work on this feature in this cycle but it's now
+too late as Linus will tag v6.15 on Sunday. This will have to wait
+until the v6.16 merge window.
 
-This is not a new requirement as sched and s_fence were already used by the trace events.
-
-Still it's a good idea to document this, so I'll update the comment added in the documentation patch.
-
-Thanks,
-Pierre-Eric
+Bartosz
