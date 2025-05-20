@@ -1,64 +1,377 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36C1E25A354;
-	Tue, 20 May 2025 19:21:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0391281352
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 19:21:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747768905; cv=none; b=dqojVJ6Kwo4tCGiGW5d/lnAnm0bw5ua3ajG9fcLbDBP4DPg7PHv36iuEaffl7zWdYmf8wBKtSKWRBiDg5SkCqptDu/Cmkn7nhMBG1uF7S6Fw9AsobQRXR2xzLqcxIH6Z4irvJdA4G7fvfcacWiOX6kj+N9iN/ChAydc0Uyakv8A=
+	t=1747768907; cv=none; b=LCwYB3jgwBiFxCWJIdxkXU24jsN2bNLlkchBqOArXDlJFDE41LqQLN2ib0bMBQgMgFY3JrkptOUgyhp02wtoLDYMeGkevL0A7RdNpAy8ICxA4Q0OJq6ARmjz7XF2RhnD+S1NKpRprSJYExPi1mHpeg7aOTJn9yGg+IVFNDtp0yI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747768905; c=relaxed/simple;
-	bh=vs3CFjXmqEXOSPVSSq2eRt847mz0iU3nVHHR5d/56uk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GvfgzDlP9zatTb+4/nMjVVSFkw9DCJnImjQqAivbpKZxr2eFHjnGx3exlwKT+9z7jtJIBMkeZIw+VjMwV7chUvUfzgksFib+9X310MyU4GQooqgjpWro/Lc2Vpw7Qublgtc2GVpmj3EtJYLqqXjJip7VcvhGZL6ifz5m7MrxMfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tTelEoS/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747768907; c=relaxed/simple;
+	bh=BDitTtRWvIz2UMDQvJ11zwEAcrvBiBZ8hWp1th8DRps=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KR5CoAVFRxzJS3TyxW242Mf9R7YBbxVvu1XmpGBQkOifpq77HSJ2tm6oUaEgt1r8h3G5cZLfjTarOWEK8V5/id0rOxhsAuGQXYLS/i4LnKXZGf0Fh9MRVoedyzpsqxVfEN8X0rBBO+3wTfGaBscVdBAITG/9v0oiFw8JebddISI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LgOEdokE; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tTelEoS/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A873FC4CEE9;
-	Tue, 20 May 2025 19:21:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747768903;
-	bh=vs3CFjXmqEXOSPVSSq2eRt847mz0iU3nVHHR5d/56uk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=tTelEoS/+Ch4CXVNu8XnwfONMGSWq32RyBUgHsQLJycqZhkyFy3NXwHEqtfi+hb7h
-	 TyOmRv4IMy4Gd2WTDz27ccWRdaPPu+r3YIKz8DvEFJidFUb9IxOpj6oHQWyRbFp8eX
-	 MMT0xXZsFI9kL+JS1iv/TQPw7dbxO5rOJo8xFhixQY2N5YYe5tuvGzTj9W6NymERve
-	 FV7KENOfVGyPWgENAPjQCx0e+4yOdxsA8GpricQpQ1d+oO/ZlZ1uArSJ/Ow2IOHqEq
-	 HFwmH9TW0CaBA7evhoWPwCeEuCwBp/3xgXqXWqgLPiJLR+kDExmTJDGvCBClEPQxDL
-	 u3iA1N+Lpl9LQ==
-Date: Tue, 20 May 2025 12:21:41 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Jinjian Song <jinjian.song@fibocom.com>
-Cc: andrew+netdev@lunn.ch, angelogioacchino.delregno@collabora.com,
- chandrashekar.devegowda@intel.com, chiranjeevi.rapolu@linux.intel.com,
- corbet@lwn.net, danielwinkler@google.com, davem@davemloft.net,
- edumazet@google.com, haijun.liu@mediatek.com, helgaas@kernel.org,
- horms@kernel.org, johannes@sipsolutions.net, korneld@google.com,
- linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
- loic.poulain@linaro.org, m.chetan.kumar@linux.intel.com,
- matthias.bgg@gmail.com, netdev@vger.kernel.org, pabeni@redhat.com,
- rafael.wang@fibocom.com, ricardo.martinez@linux.intel.com,
- ryazanov.s.a@gmail.com
-Subject: Re: [net-next v1] net: wwan: t7xx: Parameterize data plane RX BAT
- and FAG count
-Message-ID: <20250520122141.025616c9@kernel.org>
-In-Reply-To: <20250516084320.66998caf@kernel.org>
-References: <20250514104728.10869-1-jinjian.song@fibocom.com>
-	<20250515180858.2568d930@kernel.org>
-	<20250516084320.66998caf@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LgOEdokE"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-442ccf0e1b3so73512295e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 12:21:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747768904; x=1748373704; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=GisGtYp9H5pY8mpY2FEw65OMLHF45oHVcxojdMvrrr4=;
+        b=LgOEdokEHY1RDDxhaJbVBbRtjmEpojzSPyy+nRvddHdAzCAYe5KmMIUgwLO8/e4HYO
+         LGNzyRYxWbmqrBiLP1k3LjHcFtD/F78s3ZIufEkDpEsdPtf6eM8/lBGo48CdJ4xx+I3I
+         2bEmPj4MUyswItcb1dRDjHGwSh+EyFDr5Jcsd7nYYLj9kOgeopXdhZ3z7z1TnFl3QJnz
+         kwA1qzNc3KZfs0nY1s6Q6K7MpoBgQIt0elIf2Qiyln3zacxomnA10TqDSEy1OQ4kwd87
+         43wbMXrWj1GoxPWcgUPtcIi3TOrMArHJIab42PLfbWEjUKhl6oex5ehUC60VY4dIYwFJ
+         H47w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747768904; x=1748373704;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GisGtYp9H5pY8mpY2FEw65OMLHF45oHVcxojdMvrrr4=;
+        b=KkdbS4/9+W7cT9rPymS2+xqqA3ckxylhgiaY7L0C+2qa5xzOXz2oeN0C4vRfiSFDPB
+         G6vp87ftA1zNI5QGTCYvw+AZJHvy1RxINwxH21OcTHknQQZ0X9Y1knOaeFsXhoMM3ia6
+         AUNzSn/VaeWLmZGdBkGrcxvEhOxhOCMFB68YLMZeBqC0+hvUIyxzKpuSv9Wnbx9IIkwY
+         mHVEfD3pcltvvKzrgQD+rkRxG8ec6uzC3rH+EP3FsnMfDR+RuQ949zcerquYajCa/3nw
+         gDN68wdDUK5SYPhhvFfWkFFnJvrR1pB163+LPF46n+g6G5ElgOJ9Nhs0XyqaeoZwzvH9
+         5U2Q==
+X-Gm-Message-State: AOJu0YwrWRL6GJynz9kf0GoQtDo1oX4uJIv+v9p8vrw8GSVx20Tx1EnS
+	/nC4GR5CrysMhxW6WJwomoIXpoa3EQiLwX52S8SdMSl5ylhm3XLeLmWWW1pcjkN+P2A=
+X-Gm-Gg: ASbGncvgvAKkZYjHUhInmZevJLziZizqq1MK/O1X2x4XQ//ZcZTm33dJX3JduCYCMeX
+	Mu7hEE+9K3fb+U6JOrh33pGxH1OQHETuoR7DqbK+CiIprm/LgH+Z9sQqBi4IVCjnux9B70Mifik
+	SlH8vbRMpGBySEobC4kf5Y8w0T5Ls/F5z2gsp/Y/2Fs6oN09AQQuGttlFZiDjPOwG8ERdpxW6Ix
+	Ie7STTrTRNCexvR63jnNO1y1EZJ3Kl7Xv1YNjcGHBRlzIjfCPHh3YSfVmffKUh3yKMp9Yf6zFEl
+	JiGHXpy6lMl9zEtwRYwimwG4H/TsBQ1ZnKYR/GJs06hExF+BGr8tonRKA43w9fK3yyLYBIAB5Hj
+	aK8vgQgoPa/8B7fGW
+X-Google-Smtp-Source: AGHT+IHY2rdorKPlsReEga2AUsycUHpEvjBSidFBsgJz9bbiCz4Cm/MX+//BE7dn2/65SPisNxGrpw==
+X-Received: by 2002:a05:600c:524d:b0:442:e109:3027 with SMTP id 5b1f17b1804b1-442fd6649bdmr161791585e9.24.1747768903979;
+        Tue, 20 May 2025 12:21:43 -0700 (PDT)
+Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447eee9d8desm43924795e9.0.2025.05.20.12.21.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 May 2025 12:21:43 -0700 (PDT)
+Message-ID: <8f5b390c-05ab-4033-9711-3ea7d97e9d5e@linaro.org>
+Date: Tue, 20 May 2025 20:21:42 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/4] media: dt-bindings: Add qcom,msm8939-camss
+To: vincent.knecht@mailoo.org, Robert Foss <rfoss@kernel.org>,
+ Todor Tomov <todor.too@gmail.com>, Mauro Carvalho Chehab
+ <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ =?UTF-8?Q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>,
+ phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
+References: <20250520-camss-8x39-vbif-v1-0-a12cd6006af9@mailoo.org>
+ <20250520-camss-8x39-vbif-v1-3-a12cd6006af9@mailoo.org>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20250520-camss-8x39-vbif-v1-3-a12cd6006af9@mailoo.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Tue, 20 May 2025 10:59:34 +0800 Jinjian Song wrote:
->   If it's not feasible to directly add parameters for configuring this RX buffer(BAT/FAG) to 
-> the mtk_t7xx driver, would it be allowed to add aparameter for a default configuration 
-> ratio (1/2, 1/4)? Or is it not recommended to use driver parameters for mtk_t7xx driver.
+On 20/05/2025 19:39, Vincent Knecht via B4 Relay wrote:
+> From: Vincent Knecht <vincent.knecht@mailoo.org>
+> 
+> Add bindings for qcom,msm8939-camss in order to support the camera
+> subsystem for MSM8939.
+> 
+> Signed-off-by: Vincent Knecht <vincent.knecht@mailoo.org>
+> ---
+>   .../bindings/media/qcom,msm8939-camss.yaml         | 269 +++++++++++++++++++++
+>   1 file changed, 269 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/qcom,msm8939-camss.yaml b/Documentation/devicetree/bindings/media/qcom,msm8939-camss.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..e300b2c84971a45cca43366817a5ed70f9bae630
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/qcom,msm8939-camss.yaml
+> @@ -0,0 +1,269 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/media/qcom,msm8939-camss.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm MSM8939 Camera Subsystem (CAMSS)
+> +
+> +maintainers:
+> +  - Vincent Knecht <vincent.knecht@mailoo.org>
+> +
+> +description:
+> +  The CAMSS IP is a CSI decoder and ISP present on Qualcomm platforms
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,msm8939-camss
+> +
+> +  clocks:
+> +    minItems: 24
+> +    maxItems: 24
+> +
+> +  clock-names:
+> +    items:
+> +      - const: top_ahb
+> +      - const: ispif_ahb
+> +      - const: csiphy0_timer
+> +      - const: csiphy1_timer
+> +      - const: csi0_ahb
+> +      - const: csi0
+> +      - const: csi0_phy
+> +      - const: csi0_pix
+> +      - const: csi0_rdi
+> +      - const: csi1_ahb
+> +      - const: csi1
+> +      - const: csi1_phy
+> +      - const: csi1_pix
+> +      - const: csi1_rdi
+> +      - const: csi2_ahb
+> +      - const: csi2
+> +      - const: csi2_phy
+> +      - const: csi2_pix
+> +      - const: csi2_rdi
+> +      - const: ahb
+> +      - const: vfe0
+> +      - const: csi_vfe0
+> +      - const: vfe_ahb
+> +      - const: vfe_axi
+> +
+> +  interrupts:
+> +    minItems: 7
+> +    maxItems: 7
+> +
+> +  interrupt-names:
+> +    items:
+> +      - const: csiphy0
+> +      - const: csiphy1
+> +      - const: csid0
+> +      - const: csid1
+> +      - const: csid2
+> +      - const: ispif
+> +      - const: vfe0
+> +
+> +  iommus:
+> +    maxItems: 1
+> +
+> +  power-domains:
+> +    items:
+> +      - description: VFE GDSC - Video Front End, Global Distributed Switch Controller.
+> +
+> +  ports:
+> +    $ref: /schemas/graph.yaml#/properties/ports
+> +
+> +    description:
+> +      CSI input ports.
+> +
+> +    properties:
+> +      port@0:
+> +        $ref: /schemas/graph.yaml#/$defs/port-base
+> +        unevaluatedProperties: false
+> +        description:
+> +          Input port for receiving CSI data.
+> +
+> +        properties:
+> +          endpoint:
+> +            $ref: video-interfaces.yaml#
+> +            unevaluatedProperties: false
+> +
+> +            properties:
+> +              data-lanes:
+> +                minItems: 1
+> +                maxItems: 4
+> +
+> +              bus-type:
+> +                enum:
+> +                  - 4 # MEDIA_BUS_TYPE_CSI2_DPHY
+> +
+> +            required:
+> +              - data-lanes
+> +
+> +      port@1:
+> +        $ref: /schemas/graph.yaml#/$defs/port-base
+> +        unevaluatedProperties: false
+> +        description:
+> +          Input port for receiving CSI data.
+> +
+> +        properties:
+> +          endpoint:
+> +            $ref: video-interfaces.yaml#
+> +            unevaluatedProperties: false
+> +
+> +            properties:
+> +              data-lanes:
+> +                minItems: 1
+> +                maxItems: 4
+> +
+> +              bus-type:
+> +                enum:
+> +                  - 4 # MEDIA_BUS_TYPE_CSI2_DPHY
+> +
+> +            required:
+> +              - data-lanes
+> +
+> +  reg:
+> +    minItems: 11
+> +    maxItems: 11
+> +
+> +  reg-names:
+> +    items:
+> +      - const: csiphy0
+> +      - const: csiphy0_clk_mux
+> +      - const: csiphy1
+> +      - const: csiphy1_clk_mux
+> +      - const: csid0
+> +      - const: csid1
+> +      - const: csid2
+> +      - const: ispif
+> +      - const: csi_clk_mux
+> +      - const: vfe0
+> +      - const: vfe0_vbif
+> +
+> +  vdda-supply:
+> +    description:
+> +      Definition of the regulator used as analog power supply.
+> +
+> +required:
+> +  - clock-names
+> +  - clocks
+> +  - compatible
+> +  - interrupt-names
+> +  - interrupts
+> +  - iommus
+> +  - power-domains
+> +  - reg
+> +  - reg-names
+> +  - vdda-supply
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/clock/qcom,gcc-msm8939.h>
+> +
+> +    camss: camss@1b0ac00 {
+> +      compatible = "qcom,msm8939-camss";
+> +
+> +      clocks = <&gcc GCC_CAMSS_TOP_AHB_CLK>,
+> +               <&gcc GCC_CAMSS_ISPIF_AHB_CLK>,
+> +               <&gcc GCC_CAMSS_CSI0PHYTIMER_CLK>,
+> +               <&gcc GCC_CAMSS_CSI1PHYTIMER_CLK>,
+> +               <&gcc GCC_CAMSS_CSI0_AHB_CLK>,
+> +               <&gcc GCC_CAMSS_CSI0_CLK>,
+> +               <&gcc GCC_CAMSS_CSI0PHY_CLK>,
+> +               <&gcc GCC_CAMSS_CSI0PIX_CLK>,
+> +               <&gcc GCC_CAMSS_CSI0RDI_CLK>,
+> +               <&gcc GCC_CAMSS_CSI1_AHB_CLK>,
+> +               <&gcc GCC_CAMSS_CSI1_CLK>,
+> +               <&gcc GCC_CAMSS_CSI1PHY_CLK>,
+> +               <&gcc GCC_CAMSS_CSI1PIX_CLK>,
+> +               <&gcc GCC_CAMSS_CSI1RDI_CLK>,
+> +               <&gcc GCC_CAMSS_CSI2_AHB_CLK>,
+> +               <&gcc GCC_CAMSS_CSI2_CLK>,
+> +               <&gcc GCC_CAMSS_CSI2PHY_CLK>,
+> +               <&gcc GCC_CAMSS_CSI2PIX_CLK>,
+> +               <&gcc GCC_CAMSS_CSI2RDI_CLK>,
+> +               <&gcc GCC_CAMSS_AHB_CLK>,
+> +               <&gcc GCC_CAMSS_VFE0_CLK>,
+> +               <&gcc GCC_CAMSS_CSI_VFE0_CLK>,
+> +               <&gcc GCC_CAMSS_VFE_AHB_CLK>,
+> +               <&gcc GCC_CAMSS_VFE_AXI_CLK>;
+> +
+> +      clock-names = "top_ahb",
+> +                    "ispif_ahb",
+> +                    "csiphy0_timer",
+> +                    "csiphy1_timer",
+> +                    "csi0_ahb",
+> +                    "csi0",
+> +                    "csi0_phy",
+> +                    "csi0_pix",
+> +                    "csi0_rdi",
+> +                    "csi1_ahb",
+> +                    "csi1",
+> +                    "csi1_phy",
+> +                    "csi1_pix",
+> +                    "csi1_rdi",
+> +                    "csi2_ahb",
+> +                    "csi2",
+> +                    "csi2_phy",
+> +                    "csi2_pix",
+> +                    "csi2_rdi",
+> +                    "ahb",
+> +                    "vfe0",
+> +                    "csi_vfe0",
+> +                    "vfe_ahb",
+> +                    "vfe_axi";
 
-Looks into devlink params then
+The ordering should be alphanum sorted.
+
+> +      interrupts = <GIC_SPI 78 IRQ_TYPE_EDGE_RISING>,
+> +                   <GIC_SPI 79 IRQ_TYPE_EDGE_RISING>,
+> +                   <GIC_SPI 51 IRQ_TYPE_EDGE_RISING>,
+> +                   <GIC_SPI 52 IRQ_TYPE_EDGE_RISING>,
+> +                   <GIC_SPI 153 IRQ_TYPE_EDGE_RISING>,
+> +                   <GIC_SPI 55 IRQ_TYPE_EDGE_RISING>,
+> +                   <GIC_SPI 57 IRQ_TYPE_EDGE_RISING>;
+> +
+> +      interrupt-names = "csiphy0",
+> +                        "csiphy1",
+> +                        "csid0",
+> +                        "csid1",
+> +                        "csid2",
+> +                        "ispif",
+> +                        "vfe0";
+> +
+> +      iommus = <&apps_iommu 3>;
+> +
+> +      power-domains = <&gcc VFE_GDSC>;
+> +
+> +      reg = <0x01b0ac00 0x200>,
+> +            <0x01b00030 0x4>,
+> +            <0x01b0b000 0x200>,
+> +            <0x01b00038 0x4>,
+> +            <0x01b08000 0x100>,
+> +            <0x01b08400 0x100>,
+> +            <0x01b08800 0x100>,
+> +            <0x01b0a000 0x500>,
+> +            <0x01b00020 0x10>,
+> +            <0x01b10000 0x1000>,
+> +            <0x01b40000 0x200>;
+> +
+> +      reg-names = "csiphy0",
+> +                  "csiphy0_clk_mux",
+> +                  "csiphy1",
+> +                  "csiphy1_clk_mux",
+> +                  "csid0",
+> +                  "csid1",
+> +                  "csid2",
+> +                  "ispif",
+> +                  "csi_clk_mux",
+> +                  "vfe0",
+> +                  "vfe0_vbif";
+> +
+> +      vdda-supply = <&reg_2v8>;
+> +
+> +      ports {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +      };
+> +
+> +    };
+> 
+
