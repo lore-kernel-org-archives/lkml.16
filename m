@@ -1,201 +1,142 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC9121AA7BF;
-	Tue, 20 May 2025 15:10:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84F9024EAA3
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 15:10:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747753837; cv=none; b=tvZRIsb3qUF+KFRD9hXcltNJxqt4w0b3e2rUIctnMlLY198vJyQRnEerba8zZabMBYeCHt5F8k/uibV8ynrWUTzWcHiQS9jrUQ4YUh60Pev4QJbOt8naTk8J+I6Nb11g49frKDTgTEagOt+kkCrB6TOfLdYKrshgvnG9lXv4C40=
+	t=1747753850; cv=none; b=uUZJrMEjlrrSsr7KFTynYwY1T3MknRErzq2l6Mfe4Ds212Bdjh638qI/gpgGlzooaiyWDd3ajyEjhuTDp6zRSZPvhTh/5lLdIYn3Bc8PAUeBEBNz1ovmbLlX0agpuxBhTZQIzdgEqCSlL1z5y32KJ2pe/i3wYaTTX4c1Sp7s7kM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747753837; c=relaxed/simple;
-	bh=8pBcx7C+wGMsAM4YE9AHNpnruMuSJOh7Nq/Sv0KEcEE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QSa1JzsmwaqGmCa9EO3GSwEh/XOfMHQe8JUdoMcVJLgytPqlHW5eK1nuNtJVWKCEmlvcPuk36J20SLTygvez3Spado4vN2g38mDF4E7y6faVByuutFSANxTBwEeKj0MwDjKmZYoXRhrQmeTw1FYZXGUVfWnunp34XDMdhkAryjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=nyRxdM4G; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1747753850; c=relaxed/simple;
+	bh=2un06VrPK/WUBLF3bKsicFJw3OV1P3KcckXmpF5KCZ4=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
+	 In-Reply-To:References; b=tNYUC2d8tEATfYh+uvOVqIK/DGB9DdsGTNdouDTTZW0PqnYYGd7cbrHrXXMFWs7runBa7Fm97O8BnOHUbrWPwaFNjce+QXk1lRYiq2/SpWzHPTh6Kik9axeSWfqG1E7lzwz/VVP2BO5jNWdAuN2ZJkCsu3MrzUBfpYM+b4b+5zs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=WyV9fTbs; arc=none smtp.client-ip=91.218.175.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="nyRxdM4G"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54K7iMUm013649;
-	Tue, 20 May 2025 15:10:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=ImJYlZ
-	5KVwozGboNulihlvH73RO/Xx8tW7cXQE7ByHk=; b=nyRxdM4GeKJxhIMiaN8DDY
-	OdePpXv6SKOB1Uq9zqBnSbPFXF2ab6uFheECxzGBYsoOQlUYtM89Bf4dl/LeACCt
-	NvYJ8yd5UHC4cMy9plevG4+keuNKZ8GQV7UbLshbWnNQhgMhRD7sI8wUSRZW7X74
-	HD5OaTnu/dtKOEvsE13oT9yJgP93LEI9BsZ13p/V7ArHLAd6stJX8jl4DqC9D9kj
-	qjTUislDibA0LaUi5KCYuP36JTsqNCTulkupGyioD17MEYli2iVMOa1vRhAosWwo
-	70uU9P52ev8XLdNC3JoaqLia6UMg2p2sLRm15FBt8mdQPyiAZHhPzDOWM1pzesCg
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46ra99n25r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 May 2025 15:10:17 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 54KF1luQ024544;
-	Tue, 20 May 2025 15:10:17 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46ra99n25g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 May 2025 15:10:17 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54KBebPD007347;
-	Tue, 20 May 2025 15:10:16 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 46q70kcb81-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 May 2025 15:10:16 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54KFAC2v49545622
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 20 May 2025 15:10:12 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 53AFF2004F;
-	Tue, 20 May 2025 15:10:12 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BD4BE20040;
-	Tue, 20 May 2025 15:10:11 +0000 (GMT)
-Received: from p-imbrenda (unknown [9.152.224.66])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 20 May 2025 15:10:11 +0000 (GMT)
-Date: Tue, 20 May 2025 17:10:09 +0200
-From: Claudio Imbrenda <imbrenda@linux.ibm.com>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-        James Houghton
- <jthoughton@google.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>,
-        Yang Shi
- <yang@os.amperecomputing.com>,
-        David Hildenbrand <david@redhat.com>,
-        "Liam
- R . Howlett" <Liam.Howlett@oracle.com>,
-        Matthew Wilcox
- <willy@infradead.org>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Heiko
- Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander
- Gordeev <agordeev@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>, pbonzini@redhat.com,
-        kvm@vger.kernel.org, linux-s390@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH] KVM: s390: rename PROT_NONE to PROT_TYPE_DUMMY
-Message-ID: <20250520171009.49b2bd1b@p-imbrenda>
-In-Reply-To: <20250519145657.178365-1-lorenzo.stoakes@oracle.com>
-References: <20250519145657.178365-1-lorenzo.stoakes@oracle.com>
-Organization: IBM
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="WyV9fTbs"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=J/mq7BnS c=1 sm=1 tr=0 ts=682c9b59 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=QyXUC8HyAAAA:8 a=yPCof4ZbAAAA:8 a=TAZUD9gdAAAA:8 a=VnNF1IyMAAAA:8
- a=vzhER2c_AAAA:8 a=20KFwNOVAAAA:8 a=TdoRMgLQO9YfxZhadQYA:9 a=CjuIK1q_8ugA:10 a=f1lSKsbWiCfrRWj5-Iac:22 a=0YTRHmU2iG2pZC6F1fw2:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDEyMyBTYWx0ZWRfX6ETF0aPitQjf tBavV1oG8+qlAYCVttmWmV9C699wqmr9mBJ7ugqpYea2/7AUQm4szrF3BjtoL9Vjiu89sIh4WEM v9gj4kS7rrh+nIrYIF8k8OJH8Lr1wLf+0DLLwOG5rXx+1dncZrB3gt1IBs//nmlzibf2W+p9ZXw
- dpsgbWgZSKCi8cXok6DHwjoPH6gr5uP5ucIhMEtCKCjL8ZMPO4eYkgbci5RXlnA/LhEK3JPbDHK lBKGmAQ5rqnEgDfbHNdlYNXkxeQfACqZhGZurgC7mVrOMISoBOy168Dgtn6HOZ6EDZp3TKfmNgG WYbnvlI2F4OYmZJFcWtso4J4bMuzK57obsynuXKlBAhs/NOlqaaZUrBTeQubwBgSxw7xwKqydv1
- vF48ry92+MzxPcfLmH35nu0N/bNJp8Xcn0+1Y6nCR8QZjV1Gsk530291vFQoHDENPYHZxapw
-X-Proofpoint-ORIG-GUID: fJP2X6P0Z10eyLO_i1XNVfQ-lXAlgR7H
-X-Proofpoint-GUID: je_od0NDs4Y-fTVlpKSl16OI1JQ3pQxb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-20_06,2025-05-20_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- priorityscore=1501 impostorscore=0 bulkscore=0 mlxlogscore=999 mlxscore=0
- clxscore=1011 phishscore=0 spamscore=0 lowpriorityscore=0 malwarescore=0
- suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505070000
- definitions=main-2505200123
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747753836;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bEX1jHUrub31rPVQwtog69oMgdloGivRIBG2sjKnaXg=;
+	b=WyV9fTbsu4lxkfYNnEJh/F1W91jONFvvTP8k7RKIjUdMFfryWEiGiONMWLuQdW/JJL9blK
+	XdrLd2ziLkffSiX2jy87Y7613p3BApHjZvemx5OIxCmOoafvfTNfc8rkoEHxwq/gyGY4Xc
+	00cCcauZG5jc9VCy9cvf0JbuLvR1k6A=
+Date: Tue, 20 May 2025 15:10:34 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Jiayuan Chen" <jiayuan.chen@linux.dev>
+Message-ID: <e568d71aa0c1f7397c755ce6f0a71540931ebc3e@linux.dev>
+TLS-Required: No
+Subject: Re: [PATCH bpf-next v1] bpf, sockmap: Fix concurrency issues between
+ memory charge and uncharge
+To: "John Fastabend" <john.fastabend@gmail.com>, "Cong Wang"
+ <xiyou.wangcong@gmail.com>
+Cc: bpf@vger.kernel.org, "Jakub Sitnicki" <jakub@cloudflare.com>, "David S.
+ Miller" <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>,
+ "Jakub Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>,
+ "Simon Horman" <horms@kernel.org>, "Cong Wang" <cong.wang@bytedance.com>,
+ "Alexei Starovoitov" <ast@kernel.org>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250519200003.46elezpkkfx5grl4@gmail.com>
+References: <20250508062423.51978-1-jiayuan.chen@linux.dev>
+ <aCorf4Cq3Fuwiw2h@pop-os.localdomain>
+ <20250519200003.46elezpkkfx5grl4@gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, 19 May 2025 15:56:57 +0100
-Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
+May 20, 2025 at 04:00, "John Fastabend" <john.fastabend@gmail.com> wrote:
 
-> The enum type prot_type declared in arch/s390/kvm/gaccess.c declares an
-> unfortunate identifier within it - PROT_NONE.
-> 
-> This clashes with the protection bit define from the uapi for mmap()
-> declared in include/uapi/asm-generic/mman-common.h, which is indeed what
-> those casually reading this code would assume this to refer to.
-> 
-> This means that any changes which subsequently alter headers in any way
-> which results in the uapi header being imported here will cause build
-> errors.
-> 
-> Resolve the issue by renaming PROT_NONE to PROT_TYPE_DUMMY.
-> 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> Suggested-by: Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
-> Fixes: b3cefd6bf16e ("KVM: s390: Pass initialized arg even if unused")
-> Cc: stable@vger.kernel.org
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202505140943.IgHDa9s7-lkp@intel.com/
-> Acked-by: Christian Borntraeger <borntraeger@linux.ibm.com>
-> Acked-by: Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
-> Acked-by: Yang Shi <yang@os.amperecomputing.com>
-> Reviewed-by: David Hildenbrand <david@redhat.com>
-> Acked-by: Liam R. Howlett <Liam.Howlett@oracle.com>
+>=20
+>=20On 2025-05-18 11:48:31, Cong Wang wrote:
+>=20
+[...]
+>=20>=20
+>=20>  Solution:
+> >=20
+>=20>  1. Add locking to the kfree_sk_msg() process, which is only called=
+ in the
+> >=20
+>=20>  user process context.
+> >=20
+>=20>  2. Integrate the charge process into sk_psock_create_ingress_msg()=
+ in the
+> >=20
+>=20>  backlog process and add locking.
+> >=20
+>=20>  3. Reuse the existing psock->ingress_lock.
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  Reusing the psock->ingress_lock looks weird to me, as it is intend=
+ed for
+> >=20
+>=20>  locking ingress queue, at least at the time it was introduced.
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  And technically speaking, it is the sock lock which is supposed to=
+ serialize
+> >=20
+>=20>  socket charging.
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  So is there any better solution here?
+> >=20
+>=20
+> Agree I would be more apt to add the sock_lock back to the backlog then
+>=20
+>=20to punish fast path this way.
+>=20
+>=20Holding the ref cnt on the psock stops blocks the sk_psock_destroy() =
+in
+>=20
+>=20backlog now so is this still an issue?
+>=20
+>=20Thanks,
+>=20
+>=20John
+>
 
-if you had put me in CC, you would have gotten this yesterday already:
+Thanks to Cong and John for their feedback.
 
-Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+For TCP, lock_sock(sk) works as expected. However, since we now support
+multiple socket types (UNIX, UDP), the locking mechanism must be adapted
+accordingly.
 
-> ---
-> Separated out from [0] as problem found in other patch in series.
-> 
-> [0]: https://lore.kernel.org/all/cover.1747338438.git.lorenzo.stoakes@oracle.com/
-> 
->  arch/s390/kvm/gaccess.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/s390/kvm/gaccess.c b/arch/s390/kvm/gaccess.c
-> index f6fded15633a..4e5654ad1604 100644
-> --- a/arch/s390/kvm/gaccess.c
-> +++ b/arch/s390/kvm/gaccess.c
-> @@ -318,7 +318,7 @@ enum prot_type {
->  	PROT_TYPE_DAT  = 3,
->  	PROT_TYPE_IEP  = 4,
->  	/* Dummy value for passing an initialized value when code != PGM_PROTECTION */
-> -	PROT_NONE,
-> +	PROT_TYPE_DUMMY,
->  };
-> 
->  static int trans_exc_ending(struct kvm_vcpu *vcpu, int code, unsigned long gva, u8 ar,
-> @@ -334,7 +334,7 @@ static int trans_exc_ending(struct kvm_vcpu *vcpu, int code, unsigned long gva,
->  	switch (code) {
->  	case PGM_PROTECTION:
->  		switch (prot) {
-> -		case PROT_NONE:
-> +		case PROT_TYPE_DUMMY:
->  			/* We should never get here, acts like termination */
->  			WARN_ON_ONCE(1);
->  			break;
-> @@ -804,7 +804,7 @@ static int guest_range_to_gpas(struct kvm_vcpu *vcpu, unsigned long ga, u8 ar,
->  			gpa = kvm_s390_real_to_abs(vcpu, ga);
->  			if (!kvm_is_gpa_in_memslot(vcpu->kvm, gpa)) {
->  				rc = PGM_ADDRESSING;
-> -				prot = PROT_NONE;
-> +				prot = PROT_TYPE_DUMMY;
->  			}
->  		}
->  		if (rc)
-> @@ -962,7 +962,7 @@ int access_guest_with_key(struct kvm_vcpu *vcpu, unsigned long ga, u8 ar,
->  		if (rc == PGM_PROTECTION)
->  			prot = PROT_TYPE_KEYC;
->  		else
-> -			prot = PROT_NONE;
-> +			prot = PROT_TYPE_DUMMY;
->  		rc = trans_exc_ending(vcpu, rc, ga, ar, mode, prot, terminate);
->  	}
->  out_unlock:
-> --
-> 2.49.0
-> 
+For UNIX sockets, we must use u->iolock instead of lock_sock(sk) in the
+backlog path. This is because we already acquire lock(u->iolock) in both:
+'''
+unix_bpf_recvmsg() (BPF handler)
+unix_stream_read_generic() (native handler)
+'''
 
+For UDP, the native handler __skb_recv_udp() locks udp_sk(sk)->reader_que=
+ue->lock,
+but no locking is implemented in udp_bpf_recvmsg(). This implies that ing=
+ress_lock
+effectively serves the same purpose as udp_sk(sk)->reader_queue->lock to =
+prevent
+concurrent user-space access.
+
+Conclusion:
+To avoid using ingress_lock, we need to implement a per-socket locking st=
+rategy into psock:
+
+Default implementation: lock_sock(sk)
+UNIX sockets: Use lock(u->iolock) in backlog path.
+UDP sockets: Explicitly use reader_queue->lock both in udp_bpf_recvmsg() =
+and backlog path.
+
+As of now, I don=E2=80=99t have any better ideas.
