@@ -1,160 +1,118 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289FE254852
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 22:39:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81B1A1F875C
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 22:42:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747780798; cv=none; b=VLkarfFUvVd3cmYvh27WTn5XoUj5cIDDVmOmjt6dCaMNaGkvvY98xGZYmbGPuXIQtX8Qc9Oc9kk8tW5WcBG0GpWSWmYvZYhOUhibXDUlvTMpv0dtTIdRhWsY53L2vYwQniJRaazHUXu9b6GJpzhkT3SWMkBYU3fVqxhNiF3N/mI=
+	t=1747780937; cv=none; b=cFV1z8Bil5Tf8sefK5RkQ6uZWbdzOpKtz5zkmU4yShOPnpMCBVVZrGFR2hPBY1QwWAkxm6YWS3ogsdrXVMTEtcHjQkXhqwHR6wzg6QEK8D+ZH+rdcsjIofEeoAw8e5cDxcVDQ3PaGh6p9g4LMyZ1y+WG+pZHMccp7I+FFuhsvBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747780798; c=relaxed/simple;
-	bh=XE25ZX58jAiZRBZmXx7jeeHy2rt2xcwnkJKCGd4Uxg0=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=g1m6qU+itYRh/bN99IVAPAalRszOF8mCb8gKiWp73WwNqti96ztrfjjv42vOUU7+xXnJ5p4qjCwCWj4Yc0S/SHjex6t9L97L1S3o528jd2x57IBU/cd+yAf2uc5qjpSMeUyZvV3XNYglUG5/xG9Pf+nF8NGXQ8yjDMCZ5TV7200=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=O1WvMlEJ; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1747780937; c=relaxed/simple;
+	bh=F+0KGjJEeMGYRbcevFKEOSgGE0ujrUpdmrmtWjYGodk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HaPlQXzGTL6C0fXn6slZd45mu7HaPWQa/ho2mF+bcSrFdJIXeeDVSfzAERfoVtQzjDKE6osZKO7t3Fk6W1pGrYKdLmM0EWUrTQuXCA4aClC+rd90gJZIyuqtDxoqY681eYUs3HCEY4jS6Yesk1oglJfOTbke7dcfb+QgoQWSK/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=U0COWbjy; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="O1WvMlEJ"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54KGeEVW027127
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 22:39:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	INGdFU5uhKSwcTxbYag2RBqvK2YNeFulWsxZPVI5EJ0=; b=O1WvMlEJz1DuPYbu
-	woYHxwqX3sIpmqqkoqhAgL0crckdvaZQqlwyTkJZqDa9rVNv7q6YtW2szt10CVza
-	0tFjixGc8pK0jMWN3dNuJVYplWYAvte1edVHUVGrBH66LsbOTri9v4f3HY1azjVM
-	korwOVXLhdjyIuZDjrQdkJbj6bp6H06hByGisS5/99zsHrRE+utGESv5dU8oL6Sr
-	+eLw9ErtUfPNgi61piNLo7RaNQOHsXFEj1X0mUtsHlVe/zmwaVN/PaFO4LgreabN
-	ceIbNIZ+CCGMltrgYJvmc2P2S4IRnU0/y8fDqOnFIFPeBsbUAzVB0aOtILNex7sX
-	FqGuDQ==
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf98stj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 22:39:55 +0000 (GMT)
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6f8cb4b1861so56976846d6.3
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 15:39:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="U0COWbjy"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-329119a3a8eso32015231fa.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 15:42:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747780933; x=1748385733; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=F+0KGjJEeMGYRbcevFKEOSgGE0ujrUpdmrmtWjYGodk=;
+        b=U0COWbjyNECRHl1cur8aqhDSQ7FmsyklzbRM8AC8XYrjIjuUysuXjW1OaV4qRCYs1u
+         tu9eCeBKf0FqnopXuNaGjEysh8jYZyv5KmKMkp9e0SYbWLz6Bj+n6nfSnw/msNesI4F+
+         DCAc2NGfhNt1OTGfYqMZ58L9YazZ0uUJWMDjy8LV0eM9RSHeQyfvVH6iT7DmcZqLj/ha
+         +N4pHwiIZYwkabUjsRslz0jr7H62D2gteo0RhNylDVwCxGIzghnv6E2d5PhKrQBTaAVa
+         FvY4vjyH0gEMoDxnzMw7Tv2jsRimFjI01A7xxuFp+NlBAofmtlvOz1nC6dC79rZvskiU
+         AvuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747780795; x=1748385595;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1747780933; x=1748385733;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=INGdFU5uhKSwcTxbYag2RBqvK2YNeFulWsxZPVI5EJ0=;
-        b=T6fSV6u8mMaA3uXK408gO8gjw1ihkyJ3HGPw+NM6jXMoUdEOdTI1KHjqnLsiZR4zDe
-         bwuVb6mBhELYEBdHdp1X2qZ4xfB307VusonQsOtJiObtVyNc3WcrWnrboTqgVaV28KOG
-         w+jh0/Wsj1NZgs8hV/qm8STzwwXoJ03NczTRvBXA0n2fpM4fcgVQzUKJuI4AQ/2WYU5k
-         ipdi3xWu1zrvcBSv5cPbptmMh4/1sPa+Tm9+OxDHTwgkIBF2CYdP/KxyR0phn/c2VEaU
-         XOzfd82f1R55UealRfzn5/Yi/B6GTS+PToPFS4XMyvSYFuLMiMuY0TB7ZCEy8IWi7h6e
-         1m1w==
-X-Forwarded-Encrypted: i=1; AJvYcCW2f93BLHn3L22oaeuFLSsywPRWDDc9KU+t2SalvzUV5gQD7HXrQhie3PwFiWjJ15MmmP2PEMhig96zQQo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx60yJTgYUvx9pGdYlBH7hTNYGhZBEP9uPHGjB1cZKqeVQDV/Ad
-	+fA98zNvcpeUKEKqLgHx4RSN317076KJNR7TanuUk37wCUzhLdgMkF05E+aHobmRDwOQLObnRg9
-	qH90StARHE7FVNjN3K4ezo04BE3LuEeeD0U7RfmrNihwdkqcB+fOFt4iZou+/ukuWNbI=
-X-Gm-Gg: ASbGncs7uidXLZP13DiMDzRVc10lHLzAJa04vtBArhiQ6pvIYm34lCe18/CqDHSCWdK
-	YPazRLXlEUpI/FUwWamIMeDlpkBbQWR96NxyrJhhZ5skh9i8z5nXj88aOCm0rzBNzkgNfe8PbeH
-	Yq7GIRsei2sCelHPnDj/fTkUO48vTEiP6TrpvfbDzfbK+9JDRPg0SQPUHTQhaJ59rZI15scFOXY
-	nn7HgrQWHzpQDfJR8xyeMs7eCZ6BBpsXYXG408bosVfuoRotPQyHZBnZYBhftwFQN9NsQfx3sha
-	1roEVnFASFMVeukQwCJD7I+A0ZLvQDvhZX2kXxj/3oXWJHCDckX/sU+7c9ed82HsgtWzLMRxiJp
-	JFvHV1nxCDO831kWr38obj5uL
-X-Received: by 2002:ad4:5aa3:0:b0:6f5:ea0:3c1e with SMTP id 6a1803df08f44-6f8b08813a0mr297701086d6.23.1747780794871;
-        Tue, 20 May 2025 15:39:54 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGD0xAlJ3wH/oaYSOPdYI13RJeyfCfPRN9Ue6gywW+z9FJavZ09CQuxwlq9iCgVyt/X5U+Qgg==
-X-Received: by 2002:ad4:5aa3:0:b0:6f5:ea0:3c1e with SMTP id 6a1803df08f44-6f8b08813a0mr297700576d6.23.1747780794401;
-        Tue, 20 May 2025 15:39:54 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-55208f7b362sm9497e87.236.2025.05.20.15.39.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 15:39:53 -0700 (PDT)
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        =?utf-8?q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>,
-        Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>,
-        Andrzej Hajda <andrzej.hajda@intel.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Robert Foss <rfoss@kernel.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Dmitry Baryshkov <lumag@kernel.org>
-In-Reply-To: <20250517-drm-hdmi-connector-cec-v6-0-35651db6f19b@oss.qualcomm.com>
-References: <20250517-drm-hdmi-connector-cec-v6-0-35651db6f19b@oss.qualcomm.com>
-Subject: Re: (subset) [PATCH v6 00/10] drm/display: generic HDMI CEC
- helpers
-Message-Id: <174778079318.1447836.14176996867060604138.b4-ty@oss.qualcomm.com>
-Date: Wed, 21 May 2025 01:39:53 +0300
+        bh=F+0KGjJEeMGYRbcevFKEOSgGE0ujrUpdmrmtWjYGodk=;
+        b=hHe9iMnVeQR/08Az8PrY+9XysI5RBUAgQhzyHPyoGCaU+QWoNHLj+W3PH9sYfE512U
+         IClDMYSgLM06Q45wK9rDFn6h90bzDNjrA00yu5Eyexpml6EfxiKvyO/rnv+YZcPXri5X
+         N96MXFyL71yieEv/5idqVUrdS/jA7wgh+7Ca7Hgbn5aQh/16E7Slc/Ag6sMAyKR4Enk4
+         VQAjvVE5qTaM7B9OBxfKO7XGZ+A5MOOmiScBR4PxneJ/fktqd3OOiLQISk67XNkXxuCM
+         1rulUCEjdrOWlG6NzBN303Zp3YHdxyORy/jha1BKSMxPVWDeLRxNqgazE8kJMPoBQrYd
+         kHJw==
+X-Forwarded-Encrypted: i=1; AJvYcCWWbE5VByuUrQFP2ZxBy8hbUq4n75CawHz51Pes7aT9kUkSOtogEDV3zSy7ZrstW8+xmduPxPw0KBWN1NA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxiBxJ4HU6AfHWtVjo0qI8NRQBcYxsSQJ5sQb8BDYq5bD7Umfq9
+	X0s5D40aGSy/dWSuEeSzG00seEivpTwlfdXFuUhCYIdE2J6mvzwRJeLkstcXTzsyyBI/Yz81JAW
+	Ya4DZhIKcXBecpM+ue9RVaxalZvQghIeKMTGx+QwOGw==
+X-Gm-Gg: ASbGncuYARAa2zBjhbvwKlPLjRB2ckuTK7LTW7JF2f4Nawg/35yyRRhML0VCb6vqnfi
+	hilaz9UGqRhnpUxiIOmRrgP/hsii9Q3UKSkZYIDCHahujNGFPGNrlVqLdWP3L4xqtCEvjbmtzsb
+	3FIEw+f+/qTB0LBmcQjE7/BPpXj9dC0Crb
+X-Google-Smtp-Source: AGHT+IHsUCF87aJBJgdi8mRkNqubc6I4D9fZMCMetg4kSiJqDTe01fpVuT5acGVm0IsXULfYXw603PwqUKvGmPST+r8=
+X-Received: by 2002:a05:651c:20d5:b0:328:d50:d7cc with SMTP id
+ 38308e7fff4ca-3280d50d846mr35144561fa.20.1747780933368; Tue, 20 May 2025
+ 15:42:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
-X-Proofpoint-ORIG-GUID: 1900JI49HRIZ62NyLa6zikoOYx2L6NCW
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDE4MyBTYWx0ZWRfX+D1OmDD/jQo3
- xA5xO64T+e90WGK/ITuBhlbSANbtCyviQFri7BY1qWLKWvohglx22XLsubPPOzkYYQngx4yFq9Z
- H+CtoPcCq1GmUQ7usBjpQ7bXsprFla6ELdorO8BD4/Mj2LIyhy9FH7Nr422wFVFuuqj9dq/+HvO
- UlPv0o0fmioNUmYUFw6GY/M5WCiXsQZi3sYiia/ov/C6/yFQmCeESj/D3i31EY1nlnMan80183i
- 7tt1x6yizDNSTRFI5v+ORSCERdINTvLMWP2LWx1Vy6revAI6Ew5tlkcS3K5qjo4jV1p+W/kJRMR
- 1CVg60iK3rAE+1T9Mm1eoLnYspLiPwEf42+xC2N8N4QLMUnW3sqJprI+08fc1+NhuCMgyqvk1bg
- y6zeyf3YUTp9dHQbv6YTVq7S6pLZj8XD8XYPCLV8LNVGQhLUDrQqj4hB6D23xZlbQQ9Cg/wn
-X-Authority-Analysis: v=2.4 cv=GawXnRXL c=1 sm=1 tr=0 ts=682d04bb cx=c_pps
- a=UgVkIMxJMSkC9lv97toC5g==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=DPgAmGmmPoEzzsVRo1kA:9 a=QEXdDO2ut3YA:10
- a=1HOtulTD9v-eNWfpl4qZ:22
-X-Proofpoint-GUID: 1900JI49HRIZ62NyLa6zikoOYx2L6NCW
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-20_10,2025-05-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxscore=0 mlxlogscore=906 lowpriorityscore=0 impostorscore=0
- priorityscore=1501 clxscore=1015 malwarescore=0 phishscore=0 bulkscore=0
- spamscore=0 suspectscore=0 adultscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505160000 definitions=main-2505200183
+References: <20250520-genio-350-eint-null-ptr-deref-fix-v2-1-6a3ca966a7ba@collabora.com>
+In-Reply-To: <20250520-genio-350-eint-null-ptr-deref-fix-v2-1-6a3ca966a7ba@collabora.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 21 May 2025 00:42:01 +0200
+X-Gm-Features: AX0GCFsxq2qbIdoCh-TtdqObwj9pvVqees80rU3HdDEUCMiHs8dNAK0ZulTRIX8
+Message-ID: <CACRpkdYor2+rCZGsZLw=_Wna=0KnyXBaVtx-VahmN6Ky-zZ-Dg@mail.gmail.com>
+Subject: Re: [PATCH v2] pinctrl: mediatek: eint: Fix invalid pointer
+ dereference for v1 platforms
+To: =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>
+Cc: Sean Wang <sean.wang@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Hao Chang <ot_chhao.chang@mediatek.com>, Qingliang Li <qingliang.li@mediatek.com>, 
+	kernel@collabora.com, linux-mediatek@lists.infradead.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
+	Chen-Yu Tsai <wenst@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, May 20, 2025 at 11:16=E2=80=AFPM N=C3=ADcolas F. R. A. Prado
+<nfraprado@collabora.com> wrote:
 
-On Sat, 17 May 2025 04:59:36 +0300, Dmitry Baryshkov wrote:
-> Currently it is next to impossible to implement CEC handling for the
-> setup using drm_bridges and drm_bridge_connector: bridges don't have a
-> hold of the connector at the proper time to be able to route CEC events.
-> 
-> At the same time it not very easy and obvious to get the CEC physical
-> address handling correctly. Drivers handle it at various places, ending
-> up with the slight differences in behaviour.
-> 
-> [...]
+> Commit 3ef9f710efcb ("pinctrl: mediatek: Add EINT support for multiple
+> addresses") introduced an access to the 'soc' field of struct
+> mtk_pinctrl in mtk_eint_do_init() and for that an include of
+> pinctrl-mtk-common-v2.h.
+>
+> However, pinctrl drivers relying on the v1 common driver include
+> pinctrl-mtk-common.h instead, which provides another definition of
+> struct mtk_pinctrl that does not contain an 'soc' field.
+>
+> Since mtk_eint_do_init() can be called both by v1 and v2 drivers, it
+> will now try to dereference an invalid pointer when called on v1
+> platforms. This has been observed on Genio 350 EVK (MT8365), which
+> crashes very early in boot (the kernel trace can only be seen with
+> earlycon).
+>
+> In order to fix this, since 'struct mtk_pinctrl' was only needed to get
+> a 'struct mtk_eint_pin', make 'struct mtk_eint_pin' a parameter
+> of mtk_eint_do_init() so that callers need to supply it, removing
+> mtk_eint_do_init()'s dependency on any particular 'struct mtk_pinctrl'.
+>
+> Fixes: 3ef9f710efcb ("pinctrl: mediatek: Add EINT support for multiple ad=
+dresses")
+> Suggested-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@colla=
+bora.com>
+> Signed-off-by: N=C3=ADcolas F. R. A. Prado <nfraprado@collabora.com>
 
-Applied, thanks!
+Patch applied for v6.16.
 
-[01/10] drm/bridge: move private data to the end of the struct
-        commit: fa3769e09be76142d51c617d7d0c72d9c725a49d
-[02/10] drm/bridge: allow limiting I2S formats
-        commit: d9f9bae6752f5a0280a80d1bc524cabd0d60c886
-[03/10] drm/connector: add CEC-related fields
-        commit: e72cd597c35012146bfe77b736a30fee3e77e61e
-[04/10] drm/display: move CEC_CORE selection to DRM_DISPLAY_HELPER
-        commit: bcc8553b6228d0387ff64978a03efa3c8983dd2f
-[05/10] drm/display: add CEC helpers code
-        commit: 8b1a8f8b2002d31136d83e4d730b4cb41e9ee868
-[06/10] drm/display: hdmi-state-helper: handle CEC physical address
-        commit: 603ce85427043ecb29ef737c1b350901ce3ebf09
-[08/10] drm/display: bridge-connector: hook in CEC notifier support
-        commit: 65a2575a68e4ff03ba887b5aef679fc95405fcd2
-[09/10] drm/display: bridge-connector: handle CEC adapters
-        commit: a74288c8ded7c34624e50b4aa8ca37ae6cc03df4
-[10/10] drm/bridge: adv7511: switch to the HDMI connector helpers
-        commit: ae01d3183d2763ed27ab71f4ef5402b683d9ad8a
+If it is needed for v6.15- then I think at this point it will need to
+be backported to stable. It also does not apply cleanly on Torvald's
+tree, just on my devel branch.
 
-Best regards,
--- 
-Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-
+Yours,
+Linus Walleij
