@@ -1,69 +1,144 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA8825CC73;
-	Tue, 20 May 2025 06:46:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 054CE2566FD;
+	Tue, 20 May 2025 06:47:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747723593; cv=none; b=Ouo6nox9216eIFv1sGrLD6tvlNyC0kt83RgD/kJcXo8Rq4oO02Zls5CtFVUEsG/nxy8u219NdpSWZ9xt3I9UdWNBS6N+TaQHHl9FMcvbRIZrR5szahUxElZ6sJLJ7Z/1lkeWR4ocHxcZTuyqBbpDif59lpn3AtsYgmt7dD94x2o=
+	t=1747723642; cv=none; b=lmO4TuEkvVOB1fPewzl11baHrvpSyKtOfQe7X9XE+xrpK426MgCORQXw+9QIcvZ8qkyGV+o/J3CKUZPMFVK16HYB2uafcTDA/gmo80YglrlkrmogwlNdwfStY4kgUGIOmQpURB583T7mM/5EWaFLDB7nJrX29QE7synPWKW+oj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747723593; c=relaxed/simple;
-	bh=JudMT2w5US/bJZIkaIQyESZDTMRoAmGcIF484L1EfsQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jhk3ygOZSGCyhevFUwiNwvzkgRWdkXFah5C/eBjwHnhsBrqKUWTWsNVohvskUAjWT4Up19mBsJfg1DrkaN+C8XAWl9UmUEFgjqNLgIvxG1q4TTWIUIaflJ/9Zc0IAt317JT2EKS3fdxxi+qOMnKMcW3Lbj9C2ESu+9ofbDkYK/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ZoqpEu0N; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZoqpEu0N"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=4Wj1nUOpZrmLk3DO5jbnDDX0+abXELMKQGPcACkmB7g=; b=ZoqpEu0N7IQ/n9C2qzg/gY4i2I
-	B9eahAZgGMuzjp91zfTx48v5xqSsVMZABILktFU427pvn9OgofUoo7Ma+7b2imwYRjnSZ4Tty6LPW
-	4cmydzv14hoDe1QRJ4VPAxgOq7zoLfhDeB20nDUFRoLn0MoIEvhVRZsvL2DSrdEkdyMI9dyGlOfHl
-	b2CKpMafpzVwfneJdX2GoHyOMjITfMWCnHVTo4PORN+EThJykezkE65Iz8p4ACIhbIW46C7GcuHvH
-	0uF7XeD8oiTqI+EAHLLMAtu3JDUV5ixDyphps9NP46iXUdCZe5aZYc8hmM71kXeBi+BCVyt0LQ6Cr
-	+WFpdMRw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uHGk8-0000000BlIa-1Djs;
-	Tue, 20 May 2025 06:46:28 +0000
-Date: Mon, 19 May 2025 23:46:28 -0700
-From: "hch@infradead.org" <hch@infradead.org>
-To: "Xu, Lizhi" <Lizhi.Xu@windriver.com>
-Cc: Christian Hesse <mail@eworm.de>, "axboe@kernel.dk" <axboe@kernel.dk>,
-	"christian@heusel.eu" <christian@heusel.eu>,
-	"hch@infradead.org" <hch@infradead.org>,
-	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"ming.lei@redhat.com" <ming.lei@redhat.com>,
-	"syzbot+6af973a3b8dfd2faefdc@syzkaller.appspotmail.com" <syzbot+6af973a3b8dfd2faefdc@syzkaller.appspotmail.com>,
-	"syzkaller-bugs@googlegroups.com" <syzkaller-bugs@googlegroups.com>
-Subject: Re: =?utf-8?B?5Zue5aSN?= =?utf-8?Q?=3A?= [PATCH V5] loop: Add sanity
- check for read/write_iter
-Message-ID: <aCwlRMEuvvP31UGG@infradead.org>
-References: <20250519175640.2fcac001@leda.eworm.net>
- <20250520030051.177205-1-lizhi.xu@windriver.com>
- <20250520073901.6fdfbee4@leda.eworm.net>
- <BL1PR11MB5979C666DA3BC228C2C30E92869FA@BL1PR11MB5979.namprd11.prod.outlook.com>
+	s=arc-20240116; t=1747723642; c=relaxed/simple;
+	bh=fZkGjgB/UcgWxFUx/tS8ABoO9Kf/EdFNI8P4PGYnnbI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=l1ZLRttNZFL9KbZDDFNFjre/DURAtg4iAeMohMcFFqyPSc8kUbT8fViBG2eNCaMv1JSOM/sZbIbYuCzadzk96/jD8vJ9RCBojxC+/kQGPaIOhP2vfaIuDcuY5vzgzcpDQOVNshMtjvdHYLa2S6GJ1jPzz3y2vv4Mb7YgIufDeY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8CxyuBzJSxoMhLzAA--.76S3;
+	Tue, 20 May 2025 14:47:15 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowMAxzMRsJSxobs7iAA--.56897S2;
+	Tue, 20 May 2025 14:47:08 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>
+Cc: linux-fsdevel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] dcache: Define DNAME_INLINE_LEN as a number directly
+Date: Tue, 20 May 2025 14:47:07 +0800
+Message-ID: <20250520064707.31135-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BL1PR11MB5979C666DA3BC228C2C30E92869FA@BL1PR11MB5979.namprd11.prod.outlook.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMAxzMRsJSxobs7iAA--.56897S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxCF4kuF13ZF1xGw4xCry8JFc_yoW5Zw4UpF
+	n0yw4DKrWfCw4jya4DZ34fury3urykJ3WrCa9Fq3y8tF98JF98WrW7t3WY9ryxJrWSqa1a
+	yrWrAan8XF4DJagCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64
+	vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
+	jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2I
+	x0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK
+	8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I
+	0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU7_MaUUUUU
 
-On Tue, May 20, 2025 at 06:29:48AM +0000, Xu, Lizhi wrote:
-> I figured out your steps to reproduce, and yes, this problem will occur if you do losetup with a file in a filesystem that does not support read_iter, which is what this patch does.
+When executing the bcc script, there exists the following error
+on LoongArch and x86_64:
 
-isofs does support read_iter, without that it would not have worked
-before either. That is not the problem.  It must be related to
-the FMODE_WRITE check - i.e. we have a writable FD here, but a file
-system that does not actually supports writes.  Which honestly feels
-weird, but we'll have to figure it out to unbreak these setups.
+Traceback (most recent call last):
+  File "/usr/share/bcc/tools/filetop", line 218, in <module>
+    counts = b.get_table("counts")
+  File "/usr/lib/python3.13/site-packages/bcc-0.34.0+a434ee50-py3.13.egg/bcc/__init__.py", line 658, in get_table
+    keytype = BPF._decode_table_type(json.loads(key_desc))
+                                     ~~~~~~~~~~^^^^^^^^^^
+  File "/usr/lib64/python3.13/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/usr/lib64/python3.13/json/decoder.py", line 345, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib64/python3.13/json/decoder.py", line 361, in raw_decode
+    obj, end = self.scan_once(s, idx)
+               ~~~~~~~~~~~~~~^^^^^^^^
+json.decoder.JSONDecodeError: Expecting ',' delimiter: line 1 column 179 (char 178)
+
+Here is the related definition in tools/filetop.py of bcc:
+
+// the key for the output summary
+struct info_t {
+    unsigned long inode;
+    dev_t dev;
+    dev_t rdev;
+    u32 pid;
+    u32 name_len;
+    char comm[TASK_COMM_LEN];
+    // de->d_name.name may point to de->d_iname so limit len accordingly
+    char name[DNAME_INLINE_LEN];
+    char type;
+};
+
+Here is the output of print(key_desc) in src/python/bcc/__init__.py
+of bcc, there is a missing ',' between "char" and "unsigned long" at
+column 179 for the "name" member.
+
+["info_t", [["inode","unsigned long"], ["dev","unsigned int"], ["rdev","unsigned int"], ["pid","unsigned int"], ["name_len","unsigned int"], ["comm","char", [16]], ["name","char""unsigned long", [40]], ["type","char"], ["__pad_end","char",[7]] ], "struct_packed"]
+
+In order to avoid such issues, define DNAME_INLINE_LEN as a number
+directly, there is only "char" and no "unsigned long" at column 179
+for the "name" member with this patch.
+
+["info_t", [["inode","unsigned long"], ["dev","unsigned int"], ["rdev","unsigned int"], ["pid","unsigned int"], ["name_len","unsigned int"], ["comm","char", [16]], ["name","char", [40]], ["type","char"], ["__pad_end","char",[7]] ], "struct_packed"]
+
+How to reproduce:
+
+git clone https://github.com/iovisor/bcc.git
+mkdir bcc/build; cd bcc/build
+cmake ..
+make
+sudo make install
+sudo /usr/share/bcc/tools/filetop
+
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ include/linux/dcache.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/dcache.h b/include/linux/dcache.h
+index e9f07e37dd6f..08e91738e3de 100644
+--- a/include/linux/dcache.h
++++ b/include/linux/dcache.h
+@@ -70,15 +70,17 @@ extern const struct qstr dotdot_name;
+  */
+ #ifdef CONFIG_64BIT
+ # define DNAME_INLINE_WORDS 5 /* 192 bytes */
++# define DNAME_INLINE_LEN 40
+ #else
+ # ifdef CONFIG_SMP
+ #  define DNAME_INLINE_WORDS 9 /* 128 bytes */
++#  define DNAME_INLINE_LEN 36
+ # else
+ #  define DNAME_INLINE_WORDS 11 /* 128 bytes */
++#  define DNAME_INLINE_LEN 44
+ # endif
+ #endif
+ 
+-#define DNAME_INLINE_LEN (DNAME_INLINE_WORDS*sizeof(unsigned long))
+ 
+ union shortname_store {
+ 	unsigned char string[DNAME_INLINE_LEN];
+-- 
+2.42.0
 
