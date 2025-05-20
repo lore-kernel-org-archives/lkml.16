@@ -1,116 +1,133 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2023127A106;
-	Tue, 20 May 2025 11:15:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F0A01F153C;
+	Tue, 20 May 2025 11:16:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747739714; cv=none; b=rpU170Gi5/FDdNtaKr7VzhiHuW6ksRIBMUuyMxbkjV8ohyWTsIRUP1WjuPyAOzbpa//lh/2byajdnX36rf++TxdlWM6uDioD5GKEYh/5tJqQ/Tt2A43lqOWTlF48zcloOijGXBQ7INzEVYjdzhLv+jsMMq7IIP04THt2cYGQlBw=
+	t=1747739818; cv=none; b=lzzkMaeuKnDIWKSFADYYE8ALaskscSa2WpX1xFv6yUppTWsfi555BnUv9J0ig6k3h5bkR06OZ57SGwFYwU0MGxoKMOgWU8Okg637sCgGaqYbJvgk2PImsdsm1KFra8pyE87StM0lqepi/TvFQJ+QQyBLFWolvrdUTZkCoP4rHJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747739714; c=relaxed/simple;
-	bh=f9pvOAMQXiWb/a/qqJyytjLQEhwxsLFruDbxIpt+uxc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=KEDNnQw/VlNYp/7ZCpg5YOjZwQ8NTve/m/mjKtXftCtDFQSkKlWFDYgBDL7VflztnEN8PKQFkuoS5SfTnqbJFidK88liMcfI68W4d4yPeoyYcdWKRMA9Ob5iIhBA5kvoo72q2ABbDT3qauYWCyBBEzSyox77ZH2vfbzuoE+zSi4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DjWgacpW; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747739818; c=relaxed/simple;
+	bh=ePV7KS5ahxsc5XrKAwy1Zy/sOqAbGlQ1CwAuKzCICNY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=GRvcK8274R+s6Ec26WgsI+mami8YXJmj1pUACi8ms1gfDNR1Iq2eO3DqTKsL2ZF4oAPXrBVpEYceo6nz2i5aQEgH0z7oE0Bw6ulT7iJREw0nMNbS3oin5Cw0/nUWFKH39srzB3Y8WfcUkmYCbElj9AhohU6aJn7IvZSENIgEsj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=iRFs209/; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DjWgacpW"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-443a787bd14so23287375e9.1;
-        Tue, 20 May 2025 04:15:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747739710; x=1748344510; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=f9pvOAMQXiWb/a/qqJyytjLQEhwxsLFruDbxIpt+uxc=;
-        b=DjWgacpWRpA4jac/YiiFE2v0caodbmmqNfRMDeD6GDvsWA91R95FFGPQ84Rt2/73XG
-         0EYxrWGIq055IzdlGJlSKUGYChJMpAPHoUz3D16aS+tWCc0GkJNC/70kIXcicnG7OGml
-         mc5u6Q0zG1yximfXmNtuEkaV8eAkeM3W0NcAuAXurNfC2h8n2ouXhmJLMF7GxnKETUGv
-         HmvyF1WCoQTjQrFxLX5Pl5e/ERx5DFMbJjNWME9c/OvVOfWSZpM+XZt7BR+NAHLgCH9E
-         34sreuQaEdowy2I0Dm6HjazFVMLbach0IlBdGEOXGw8KXdItZPqk5TvcHR4+GI9nEmHt
-         sBDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747739710; x=1748344510;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=f9pvOAMQXiWb/a/qqJyytjLQEhwxsLFruDbxIpt+uxc=;
-        b=CoRupPG243s7dAFUgUI+ayssRVan/O66UjH9W84X/zK7O5DjEwa2/MlysRCHveCOLM
-         aWRDEOUSNc7916RBEMxVI33ymjRtKNJbKobrVlnjq3rGFP+TNmsx0AGSeMIesCghuvLZ
-         qar6bJ+UMSr3zkMLfjFFYX2ZsGBk944i3RHfMGCaj4dqYZmvRpX+csZFdvlQPTDM0+hs
-         rrDhCUKeRWO/oNESTb4Y/bpzgNGy9BC9evHstLLCSvKd2C4f6oWZ7clacE22N5VhvRIR
-         CKkmqj9rW3hsNqc2AjHcUvfWCiDQ4fdUSux8ESIYDRA+4vh6eqP2cDRnHiQcLzoBRUt5
-         /bAA==
-X-Forwarded-Encrypted: i=1; AJvYcCV5edX2dnLJulXD2cvkHgGJdxqNpoBLKb2zueVFSz18Acn8MdX9LFqvCZTqEWWJeGfTupuJK+6ytaW+zQ==@vger.kernel.org, AJvYcCXptLE2/jFEWV+IT+4nm/SKk65p7HWBH/HoOCj2nbaY/bIjVz3YlrT5soy3yl6HDGhG5N++8y4El1k1LSOy@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDwJzRieyozC3ZiuZywNX/+T5iz8hwsVbSpo56QxwJyP9O9VbC
-	G2PhiF1DZsqi3jpzXfsaWhagEsqLrPiG5AsQuC7FwUhHSM6Yn9bDw1ofKT4tFk5taoI=
-X-Gm-Gg: ASbGnctaPIzx3jVbH7lUWQYWjxOVVg67Wz3Zx2ELd6EAgWILy6vFCf/8KKkbtfxmDh4
-	nva/5PgOtX8JM1cEvlJoDzns7FlZYZittgRJRnBfWE/AgGPUO6Q12Et278Gn7C3gBXuJc5DMxLJ
-	HzyhqH2AyYnpXMtfbqrZ2R/fXAGU985jhYX+bKbnpvZ0wyyRhxM6md02H49ZKzcucNQnQAumVLL
-	6VDmwBp0Tmf3CQahEhSIXYDOgrKdNegUCv8vyypK1IPJ8w/12ZL/oz+X+DH/IMvH3mVM4fGmvH9
-	vNweJN1+MvAFRKzeZJ26R/v6Ej0arO1o/71nFnqGuWUeR4WgYjNl0p+AJbaikGngnOvrOJ5h17B
-	5WellAU26agj/83C50TkKTdM=
-X-Google-Smtp-Source: AGHT+IEWQPdzMZtYVbzwHPtj9/7/m+Oig1UhDpjw5mcuSZJjnuUV3usE6qp0SIfmUKVl6lF4jfZXOg==
-X-Received: by 2002:a05:600c:46c9:b0:442:f8f6:48e5 with SMTP id 5b1f17b1804b1-442f8f6494fmr188299885e9.8.1747739709986;
-        Tue, 20 May 2025 04:15:09 -0700 (PDT)
-Received: from ?IPv6:2001:818:ea8e:7f00:2575:914:eedd:620e? ([2001:818:ea8e:7f00:2575:914:eedd:620e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f6b29548sm27936995e9.4.2025.05.20.04.15.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 04:15:09 -0700 (PDT)
-Message-ID: <4d3e9a97e0c1f4d5a5eeaee133b5980a0a065aac.camel@gmail.com>
-Subject: Re: [PATCH 0/2] Input: adp5588-keys Please correct and add
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Denis Arefev <arefev@swemel.ru>
-Cc: dmitry.torokhov@gmail.com, linux-input@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org, 
-	michael.hennerich@analog.com
-Date: Tue, 20 May 2025 12:15:12 +0100
-In-Reply-To: <20250520111301.1346035-1-arefev@swemel.ru>
-References: <9615d118cf3e52ea67ac0421016f0b6cceb49c71.camel@gmail.com>
-	 <20250520111301.1346035-1-arefev@swemel.ru>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="iRFs209/"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54KBEVNU028704;
+	Tue, 20 May 2025 11:16:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	CLY4lD5JEd+wrB3Pa6UJ01FZeLiuUjx1sm5mklY+w6g=; b=iRFs209/SaBWoM7d
+	wZyO0K6SfrrPdlNb8nRYeihyqTHgW070eMq9kTbSbBUG93of76C8+k+jt4SxWXkU
+	Wi3sOMgyyhqEDMsEm3IX7M4vV3JUTLlVYWw4vGIPaDFKD8/03q1bCgHswcPU1N8r
+	xsS6CN1xj+QzbzF1udqSZrjz3FC/q+KnCo/eXdA1YWjFbfusnxdT4F7BRjdkqOvh
+	BcRUJlrATzhIyOzzjCQhPW0UNEQt5p+ZwE4/Kd4ZlxEe3csEWKxuHJipHFwx6fK0
+	g2PlP0iMhbxs+a5Fd1iyuFAANjfVGZATWn3WzGZ9vxJLzO4DbiVniugm/Di5bwIl
+	rAig8A==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46pju7fh37-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 20 May 2025 11:16:49 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54KBGm3f019289
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 20 May 2025 11:16:48 GMT
+Received: from [10.217.219.207] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 20 May
+ 2025 04:16:46 -0700
+Message-ID: <a2ff429f-cc49-403f-9f2d-6a6b6361044d@quicinc.com>
+Date: Tue, 20 May 2025 16:46:43 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] i2c: qup: Add error handling in qup_i2c_xfer_v2()
+To: Wentao Liang <vulab@iscas.ac.cn>, <andi.shyti@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>
+References: <20250519141918.2522-1-vulab@iscas.ac.cn>
+Content-Language: en-US
+From: Mukesh Kumar Savaliya <quic_msavaliy@quicinc.com>
+In-Reply-To: <20250519141918.2522-1-vulab@iscas.ac.cn>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=XKEwSRhE c=1 sm=1 tr=0 ts=682c64a1 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8
+ a=xU49TFnZvl5CdPniB3sA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: oYF8yg5dhM4ttH8eZw0FiJb0CC48uiwb
+X-Proofpoint-GUID: oYF8yg5dhM4ttH8eZw0FiJb0CC48uiwb
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDA5MiBTYWx0ZWRfX+MIiIeyaVPCG
+ Ptm7r4dVqeU1N+op2jnVFIU3az5IRtHtlEoz8zCpFVLGkE0pXImYStuIhbNLO9yqe7ypwV2Oron
+ xjdq5v5x+t3xJQxhHMfYvepx/qpllu+rh4x/z0knAdUnP2747pKJgPYLs/J2TpphmofmYu2KSzJ
+ BB5QZKaiQf3lexL6V/xxP1GRUy9B4wSLNzqcC6QXMNrhglnaMtzk8+DknK45/l+mLd+OmpP3+0j
+ aWjxWetm4regCY19cXBdJaUlZrURfJFh169A5biIy33yNfiSYm263KIu0nOOJnBtHWUxtwjfDV2
+ eH4nTtpPYizzVS3MW4nuTiRZzH/5LyH14rwR/s/8XOisoTQTCmSc1nciosIbKKPlfUCdzGvZkeU
+ gGzGbS7MDBqvRmq6DgaRGGEo+89EgYDg9zeO3HNFv6zngBWUP+TLuLVU6MicRmkre0lB4u21
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-20_04,2025-05-16_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 priorityscore=1501 impostorscore=0 clxscore=1011
+ spamscore=0 suspectscore=0 malwarescore=0 adultscore=0 mlxscore=0
+ mlxlogscore=999 phishscore=0 bulkscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505070000 definitions=main-2505200092
 
-On Tue, 2025-05-20 at 14:12 +0300, Denis Arefev wrote:
-> > On Fri, 2025-05-16 at 16:43 +0300, Denis Arefev wrote:
-> > > 1. Add check on return code
-> > > 2. Prevent buffer overflow
-> > >=20
-> > > Denis Arefev (2):
-> > > =C2=A0 Input: adp5588-keys Add check on return code
-> > > =C2=A0 Input: adp5588-keys Prevent buffer overflow
-> > >=20
-> > > =C2=A0drivers/input/keyboard/adp5588-keys.c | 18 ++++++++++++++----
-> > > =C2=A01 file changed, 14 insertions(+), 4 deletions(-)
-> >=20
-> > Hi,
-> >=20
-> > Thanks for the patch. However, not sure if this is really worth it... T=
-his
-> > is
-> > driver is in the process of being removed:
-> >=20
-> > https://lore.kernel.org/linux-input/04b8a6d68fdc0c0eadf69fbbc6a130ecc6c=
-49360.camel@gmail.com/T/#mad1980e9652161a6a2e36c2aeeb97f900c6e9fc2
-> >=20
-> > Unless we want somehow to backport these patches?
-> >=20
-> > - Nuno S=C3=A1
->=20
-> Hi Nuno.
->=20
-> It'd be great if the fix patches are applied and then directed
-> to stable kernels before the code is dropped from upstream.
-> I've sent v3 with relevant stable tags included. Thanks.
 
-Not up to me to decide that :)
 
-- Nuno S=C3=A1
+On 5/19/2025 7:49 PM, Wentao Liang wrote:
+> The qup_i2c_xfer_v2() calls the qup_i2c_change_state() but does
+> not check its return value. A proper implementation can be
+> found in qup_i2c_xfer().
+> 
+> Add error handling for qup_i2c_change_state(). If the function
+> fails, return the error code.
+> 
+> Fixes: 7545c7dba169 ("i2c: qup: reorganization of driver code to remove polling for qup v2")
+> Cc: stable@vger.kernel.org # v4.17
+> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+> ---
+>   drivers/i2c/busses/i2c-qup.c | 6 ++++--
+>   1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-qup.c b/drivers/i2c/busses/i2c-qup.c
+> index da20b4487c9a..2477f570fe86 100644
+> --- a/drivers/i2c/busses/i2c-qup.c
+> +++ b/drivers/i2c/busses/i2c-qup.c
+> @@ -1538,7 +1538,7 @@ static int qup_i2c_xfer_v2(struct i2c_adapter *adap,
+>   			   int num)
+>   {
+>   	struct qup_i2c_dev *qup = i2c_get_adapdata(adap);
+> -	int ret, idx = 0;
+> +	int ret, err, idx = 0;
+>   
+>   	qup->bus_err = 0;
+>   	qup->qup_err = 0;
+> @@ -1588,7 +1588,9 @@ static int qup_i2c_xfer_v2(struct i2c_adapter *adap,
+>   		ret = qup_i2c_bus_active(qup, ONE_BYTE);
+>   
+>   	if (!ret)
+> -		qup_i2c_change_state(qup, QUP_RESET_STATE);
+> +		err = qup_i2c_change_state(qup, QUP_RESET_STATE);
+> +	if (err)
+> +		return err;
+Is there an error seen around this ? Expecting this to work as is.
+After an error, what next ? Just return back to framework ?
+>   
+>   	if (ret == 0)
+>   		ret = num;
+
