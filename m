@@ -1,155 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 437E1374D1;
-	Tue, 20 May 2025 07:06:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5225C1F180C
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 07:09:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747724807; cv=none; b=g710qo5tU3BsTx3xeUuqaeqWVOodap2803xUCSHT1Xo449SQmOXWzhGL410hf9CH8ZIiFQRNaRecb2lgzxXNcK48rgCS7dypMnBE/gdqeHgL42ByjKwLxYWlnbwcpt2VFSwIiZQpd5rFo4BLMJOObrdTsWhwA2d+JrAVPmsfkls=
+	t=1747724977; cv=none; b=BiPGLEcKsMawfanYHcYJdfhuDcSAifey07EUshjZeDHqg3sMAdouv3x7xgNFNtEPEH4GXybETXf95e8EPF8b/+vOyrlU7ryzRqrJzm5ItwmM+EI92PhmiE2oEuCzZ0MFB1aznh/kI2FkAm4b7khfweVZUJD+uwi7L3YmmFMikRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747724807; c=relaxed/simple;
-	bh=xbkcSstQSM7LsThUd3dW/NohXvrSVzg1IBKTfxC5v5Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QSfCS+k7vtWqnjAPaT4m+xTq++YXHO6yPeBCE8B5+/fVwbrrKE/Rid+tKZ9zrQVfMJcl6CLq6byUUfOqSaVoyETAIYeZlmo1zWZzD0XTaLtwytryhBtOF8XRzPZcJMqV6HUDh/oES4rq9qO0nMV7WhfsLEhPX51DYQ0q8Ctzi34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nHRwGMKE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747724977; c=relaxed/simple;
+	bh=3Jr9N6ml4oWa18eiywR4fE3F63DyBTroaWxscDqwQiw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Jib5WtJ/UlcGUYh+V4EJzlvpoDzyjWlmDELheCAQ8A05Te+FFw6ubETKExbzlledI01bwRqZ+NXL+cEme3hzsFa8K8xmbFgidmZNizZpfyrqhyVHxj5jeOVioRkCMX9W6yPf6X9HzXiO0vGqOAhyY5qpeuhVuWRCFbVYUBb4xaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q6c83bFW; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nHRwGMKE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84AEDC4CEE9;
-	Tue, 20 May 2025 07:06:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747724806;
-	bh=xbkcSstQSM7LsThUd3dW/NohXvrSVzg1IBKTfxC5v5Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nHRwGMKE8GzXffixF2oL6QS7YA6mXHmHgBYzNy00RsRKFYBJZaAt0fDrn4+dm0rMk
-	 xdrpD7fkjIBEWU/8v9/YLzIJAGWIR8gBJ3Ct6RbQLUlRevhKE7OyDfre2jUTwto1mI
-	 dV6oeCAoLAMScVqvjQ5ie9ZzkS4YtEL2xVHPCAOuxLa07PmMDbSB/Http52In5e5In
-	 xj0RVUR9fSE2PvgwAq/eq90IgL177hdSlY2NBfTTCWedeIvfZf074PQtdOmpg6EI3i
-	 mFiB71XJwTAA9v8PXq5QS8fbl8MAjgFalmA+V6S4+R5CYz8Z9CdxeMAf3SSOGg7Pr6
-	 j0vVoCyTCHhJw==
-Date: Tue, 20 May 2025 09:06:40 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Rob Clark <robdclark@gmail.com>
-Cc: Connor Abbott <cwabbott0@gmail.com>, Rob Clark <robdclark@chromium.org>,
-	phasta@kernel.org, dri-devel@lists.freedesktop.org,
-	freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-	Matthew Brost <matthew.brost@intel.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <ckoenig.leichtzumerken@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	open list <linux-kernel@vger.kernel.org>,
-	Boris Brezillon <boris.brezillon@collabora.com>
-Subject: Re: [PATCH v4 04/40] drm/sched: Add enqueue credit limit
-Message-ID: <aCwqAGLLCC2ZLSBK@pollux>
-References: <20250514170118.40555-1-robdclark@gmail.com>
- <20250514170118.40555-5-robdclark@gmail.com>
- <51f87f358fa1b7ef8db8b67ee6cde38ae071fbe8.camel@mailbox.org>
- <CAJs_Fx771FFVDVFMn8YJkR9f9Ad-UQspJ9KKQw4u6Cu4TA7YPA@mail.gmail.com>
- <CACu1E7EL+E-M0N-EAN9Bx7u9O6_pECQQdPE2ph575idhVb2Szg@mail.gmail.com>
- <aCYkk4Y7feltfp79@pollux>
- <CAF6AEGsoG_W3A3+BHV4n5EKZQazFubrCyfrtxVUH7+H4-j7i5A@mail.gmail.com>
- <aCY42rgJC4sQ4tp4@pollux>
- <CAF6AEGubHkdhfJz=bAZvctO1aTKDLwRsRyPzkoVrQ7tA6dRbKw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q6c83bFW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747724973;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vPiUSjLHF4gLesmtJHJcro9L18Me5fMnFwXUCoovFpI=;
+	b=Q6c83bFW88SyGs6knfjH3Pp9SGv8OT28rNtiiTAnvP565JOvwW9dy3bOyjLutNjPigy0E9
+	cwcwX5VBCQh9sZpndH0ew2RWM3+tdggiyngOfnVhw7SmCcHri5ahC+JVKGza9siiDJvRZD
+	QQpE7jlY7TDsMFTMWJFfD+XhkaZutZQ=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-215-WQH30opDPruJDfnf-ai9NA-1; Tue, 20 May 2025 03:09:31 -0400
+X-MC-Unique: WQH30opDPruJDfnf-ai9NA-1
+X-Mimecast-MFC-AGG-ID: WQH30opDPruJDfnf-ai9NA_1747724971
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-ad5385781d8so189167666b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 00:09:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747724970; x=1748329770;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vPiUSjLHF4gLesmtJHJcro9L18Me5fMnFwXUCoovFpI=;
+        b=mXmzSYCarKBQyC037g8jgbfFhBpprzMJEg9TK8fHzfpoBQ/L86voMDdVpk6o5C8kda
+         3yI5L2kaoUXHCzNYws62VBxoUt1InxgXRJIY2cArbGYkdULYblGMz7XUsFl/d+Xr9vtz
+         rnRSrEgc0WBu6v4peo3AyysEsZtqVcwdouN6VKKqT4lENntaEhAgZKokxcWI5PVZZV48
+         ytWcDRJ27L0jK4agTOBjdiLxuRzbPBzavXAgwbFGbjqAPnwIieTrHQOlhqZaMbPHer/f
+         YXJq5d+pAPdblBiRXgV1Wu+a+W4ZOuRgdH/+DEuIlcOjAii1oeGLfU3ftcJc/Qfj42jl
+         ncsg==
+X-Forwarded-Encrypted: i=1; AJvYcCVvk1hAkEkJRq+pqaknRDs9mKj9trzoZcbv1+FoD3lGUFMb/frqwE1v8F/dziv/ZrjdaPnmlk0Drckw0+E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4L4g0tNvYLDtBjNzz1469uzBYZp+bsIGk/AktKnsU7pnn+y3e
+	Hdk7DOl8G3heipMqkbFu0OFTTRAVSIttsY3QiFbRLSo7IY281kIT28yz6t+6w8k1jjGKwWHHUAh
+	etiEfDa/87quMsIR+g9jtMQaVW/wtBEL/1hQdvQxjIgTDvS4ZgdG9mykNP4gbUbd/VA==
+X-Gm-Gg: ASbGncvr1olH8U5Ok/UFkQ3iSO8UNap8/3JyLhpUHfrZzlyDaCYKW74Cwdd1NlR4A5v
+	0HA1Fq8fCrKacYlHL+KNK2OvO2j0eKOMd/8NiQblXswucLsktVdktgqkdX1p1ocUIpRF0nfPKBe
+	0FKpCZi3nS64OSH4SQfL8tBtS9MRIPXXaMFN0czctdPtqlMELkO/CwTLDwapOc9uX/5nJY4V9+6
+	2Iuea+iJMMpToS+sAom5JeIpq4X0bI4DP8rgaUQLF/fKGfbCbw7ASIXFZdPK398nG8bLbJGpOt6
+	16/mkgv2NI5UyhXslXOepHb/vRJQkEq85KiG3s2yeThDJBOJujY0FGGL4fCE
+X-Received: by 2002:a17:907:1b0d:b0:acb:88ac:e30f with SMTP id a640c23a62f3a-ad52d48d9d3mr1435406666b.20.1747724970619;
+        Tue, 20 May 2025 00:09:30 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHingV5qboFtsC1ibat0oMgCtpdeyeKGmJN6kIOJ5q97vPKOK4rqpkRhlkTwxzKBLEfD8brsw==
+X-Received: by 2002:a17:907:1b0d:b0:acb:88ac:e30f with SMTP id a640c23a62f3a-ad52d48d9d3mr1435403566b.20.1747724970191;
+        Tue, 20 May 2025 00:09:30 -0700 (PDT)
+Received: from [172.16.2.38] (5920ab7b.static.cust.trined.nl. [89.32.171.123])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d4f8c20sm680236266b.181.2025.05.20.00.09.29
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 20 May 2025 00:09:29 -0700 (PDT)
+From: Eelco Chaudron <echaudro@redhat.com>
+To: Faicker Mo <faicker.mo@zenlayer.com>
+Cc: netdev@vger.kernel.org, ovs-dev@openvswitch.org, aconole@redhat.com,
+ Ilya Maximets <i.maximets@ovn.org>, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ linux-kernel@vger.kernel.org, dev@openvswitch.org
+Subject: Re: [PATCH] net: openvswitch: Fix the dead loop of MPLS parse
+Date: Tue, 20 May 2025 09:09:27 +0200
+X-Mailer: MailMate (2.0r6256)
+Message-ID: <CBE61C0A-20CB-4AD7-8C38-4C6084A1686E@redhat.com>
+In-Reply-To: <SJ0PR20MB60791551365A54151B195E44FA9FA@SJ0PR20MB6079.namprd20.prod.outlook.com>
+References: <20250520032654.2453312-1-heapbin2@gmail.com>
+ <SJ0PR20MB60791551365A54151B195E44FA9FA@SJ0PR20MB6079.namprd20.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAF6AEGubHkdhfJz=bAZvctO1aTKDLwRsRyPzkoVrQ7tA6dRbKw@mail.gmail.com>
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 15, 2025 at 12:56:38PM -0700, Rob Clark wrote:
-> On Thu, May 15, 2025 at 11:56 AM Danilo Krummrich <dakr@kernel.org> wrote:
-> >
-> > On Thu, May 15, 2025 at 10:40:15AM -0700, Rob Clark wrote:
-> > > On Thu, May 15, 2025 at 10:30 AM Danilo Krummrich <dakr@kernel.org> wrote:
-> > > >
-> > > > (Cc: Boris)
-> > > >
-> > > > On Thu, May 15, 2025 at 12:22:18PM -0400, Connor Abbott wrote:
-> > > > > For some context, other drivers have the concept of a "synchronous"
-> > > > > VM_BIND ioctl which completes immediately, and drivers implement it by
-> > > > > waiting for the whole thing to finish before returning.
-> > > >
-> > > > Nouveau implements sync by issuing a normal async VM_BIND and subsequently
-> > > > waits for the out-fence synchronously.
-> > >
-> > > As Connor mentioned, we'd prefer it to be async rather than blocking,
-> > > in normal cases, otherwise with drm native context for using native
-> > > UMD in guest VM, you'd be blocking the single host/VMM virglrender
-> > > thread.
-> > >
-> > > The key is we want to keep it async in the normal cases, and not have
-> > > weird edge case CTS tests blow up from being _too_ async ;-)
-> >
-> > I really wonder why they don't blow up in Nouveau, which also support full
-> > asynchronous VM_BIND. Mind sharing which tests blow up? :)
-> 
-> Maybe it was dEQP-VK.sparse_resources.buffer.ssbo.sparse_residency.buffer_size_2_24,
 
-The test above is part of the smoke testing I do for nouveau, but I haven't seen
-such issues yet for nouveau.
 
-> but I might be mixing that up, I'd have to back out this patch and see
-> where things blow up, which would take many hours.
+On 20 May 2025, at 6:13, Faicker Mo wrote:
 
-Well, you said that you never had this issue with "real" workloads, but only
-with VK CTS, so I really think we should know what we are trying to fix here.
+> The unexpected MPLS packet may not end with the bottom label stack.
+> When there are many stacks, The label count value has wrapped around.
+> A dead loop occurs, soft lockup/CPU stuck finally.
+>
+> stack backtrace:
+> UBSAN: array-index-out-of-bounds in /build/linux-0Pa0xK/linux-5.15.0/ne=
+t/openvswitch/flow.c:662:26
+> index -1 is out of range for type '__be32 [3]'
+> CPU: 34 PID: 0 Comm: swapper/34 Kdump: loaded Tainted: G           OE  =
+ 5.15.0-121-generic #131-Ubuntu
+> Hardware name: Dell Inc. PowerEdge C6420/0JP9TF, BIOS 2.12.2 07/14/2021=
 
-We can't just add new generic infrastructure without reasonable and *well
-understood* justification.
+> Call Trace:
+>  <IRQ>
+>  show_stack+0x52/0x5c
+>  dump_stack_lvl+0x4a/0x63
+>  dump_stack+0x10/0x16
+>  ubsan_epilogue+0x9/0x36
+>  __ubsan_handle_out_of_bounds.cold+0x44/0x49
+>  key_extract_l3l4+0x82a/0x840 [openvswitch]
+>  ? kfree_skbmem+0x52/0xa0
+>  key_extract+0x9c/0x2b0 [openvswitch]
+>  ovs_flow_key_extract+0x124/0x350 [openvswitch]
+>  ovs_vport_receive+0x61/0xd0 [openvswitch]
+>  ? kernel_init_free_pages.part.0+0x4a/0x70
+>  ? get_page_from_freelist+0x353/0x540
+>  netdev_port_receive+0xc4/0x180 [openvswitch]
+>  ? netdev_port_receive+0x180/0x180 [openvswitch]
+>  netdev_frame_hook+0x1f/0x40 [openvswitch]
+>  __netif_receive_skb_core.constprop.0+0x23a/0xf00
+>  __netif_receive_skb_list_core+0xfa/0x240
+>  netif_receive_skb_list_internal+0x18e/0x2a0
+>  napi_complete_done+0x7a/0x1c0
+>  bnxt_poll+0x155/0x1c0 [bnxt_en]
+>  __napi_poll+0x30/0x180
+>  net_rx_action+0x126/0x280
+>  ? bnxt_msix+0x67/0x80 [bnxt_en]
+>  handle_softirqs+0xda/0x2d0
+>  irq_exit_rcu+0x96/0xc0
+>  common_interrupt+0x8e/0xa0
+>  </IRQ>
+>
+> Signed-off-by: Faicker Mo <faicker.mo@zenlayer.com>
+> ---
+>  net/openvswitch/flow.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/net/openvswitch/flow.c b/net/openvswitch/flow.c
+> index 8a848ce72e29..834b1b9110ac 100644
+> --- a/net/openvswitch/flow.c
+> +++ b/net/openvswitch/flow.c
+> @@ -805,6 +805,8 @@ static int key_extract_l3l4(struct sk_buff *skb, st=
+ruct sw_flow_key *key)
+>                         if (label_count <=3D MPLS_LABEL_DEPTH)
+>                                 memcpy(&key->mpls.lse[label_count - 1],=
+ &lse,
+>                                        MPLS_HLEN);
+> +                       else if (unlikely(label_count =3D=3D 255))
+> +                               return 0;
 
-> There definitely was one where I was seeing >5k VM_BIND jobs pile up,
-> so absolutely throttling like this is needed.
+Thanks for finding and solving this issue, Faicker. I think that if we hi=
+t 255 stack labels, it's safe to say the packet is invalid, and we should=
+ probably return -EINVAL. This also makes sense because the inner_network=
+_header is not correct based on the terminated decode.
 
-I still don't understand why the kernel must throttle this? If userspace uses
-async VM_BIND, it obviously can't spam the kernel infinitely without running
-into an OOM case.
+>
+>                         skb_set_inner_network_header(skb, skb->mac_len =
++
+>                                                      label_count * MPLS=
+_HLEN);
+> --
+> 2.34.1
 
-But let's assume we agree that we want to avoid that userspace can ever OOM itself
-through async VM_BIND, then the proposed solution seems wrong:
-
-Do we really want the driver developer to set an arbitrary boundary of a number
-of jobs that can be submitted before *async* VM_BIND blocks and becomes
-semi-sync?
-
-How do we choose this number of jobs? A very small number to be safe, which
-scales badly on powerful machines? A large number that scales well on powerful
-machines, but OOMs on weaker ones?
-
-I really think, this isn't the correct solution, but more a workaround.
-
-> Part of the VM_BIND for msm series adds some tracepoints for amount of
-> memory preallocated vs used for each job.  That plus scheduler
-> tracepoints should let you see how much memory is tied up in
-> prealloc'd pgtables.  You might not be noticing only because you are
-> running on a big desktop with lots of RAM ;-)
-> 
-> > > > > But this
-> > > > > doesn't work for native context, where everything has to be
-> > > > > asynchronous, so we're trying a new approach where we instead submit
-> > > > > an asynchronous bind for "normal" (non-sparse/driver internal)
-> > > > > allocations and only attach its out-fence to the in-fence of
-> > > > > subsequent submits to other queues.
-> > > >
-> > > > This is what nouveau does and I think other drivers like Xe and panthor do this
-> > > > as well.
-> > >
-> > > No one has added native context support for these drivers yet
-> >
-> > Huh? What exactly do you mean with "native context" then?
-> 
-> It is a way to use native usermode driver in a guest VM, by remoting
-> at the UAPI level, as opposed to the vk or gl API level.  You can
-> generally get equal to native performance, but the guest/host boundary
-> strongly encourages asynchronous to hide the guest->host latency.
-
-For the context we're discussing this isn't different to other drivers supporing
-async VM_BIND utilizing it from the host, rather than from a guest.
-
-So, my original statement about nouveau, Xe, panthor doing the same thing
-without running into trouble should be valid.
