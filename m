@@ -1,415 +1,211 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CEC4248F65;
-	Tue, 20 May 2025 14:47:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B21522AE75;
+	Tue, 20 May 2025 14:48:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747752452; cv=none; b=P4lGfrN3A1LkR7M0Rs9XrvZve+8UfG9l5la66w04he7bUkvhRPXxFXPzVhGAnRT8wh16BzhUnmkz6C0GmKHmI4Y3572yMmCLfJeFkB5m00y/FQwjN3NcuEvxn2Yf1nkVtn8y/7kYodwOITSugyaVW0AwgejAS3ZAZ43Gs3fykMo=
+	t=1747752487; cv=none; b=tc2rLApRcYtUKYDT6tO7ZHLeb21Z2sX6ff4TRL+IgoevnR8CefKyZbd8f4JrL0DIcccmJLRzUhxTR26h46Q/YIauL7ax7KloFl0Ndvq0pOBwUtbJQCd0E7Hbdok7Fhyh8kUwqiFxZuwmEFXt0asrSnmHT3MUJMl1dla0HpznoGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747752452; c=relaxed/simple;
-	bh=Tx7/FcEU6Bw90Yjwe4KaoxrW48XMQgTlH5CIeNph+bk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UaCpv1YAAx946hh6FPM4ZD4Q57bt+04YbiN4xJlHc9c031+8x19mWrXa+nzAIdlIHw5kZ9sV+g64+0dK1kv/emRbmXQ0il+IlqfTHJZbZxQyLnlfUuDlU45MbH7AzTYV0MZFulNxAAAmGsC1s82EyWNjaFbVSM8eOx6H7rRtOLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=pX8Mi0bU; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="pX8Mi0bU"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=9Wxg0bmAoZMwL7DP1FILaNYigKUm5O9FzWzy/QHJHkI=; b=pX8Mi0bUJ6hoQj29r3i0g1OlW+
-	F7PCyKksKYZca1wgvyIbC6eoBMDnVf12DNbkZB6iwqXHieeea005dByLCB03jd/wFr+VRkB4dnneC
-	mlkMEy1AJRPN9DJ+OwA3nHySQTiRESYuIqxD6ct7MAk5N2IgO6rk8+2M5uoJBt/w+Ba0MlywjRe5S
-	WMLHcPWPI7ovYIjtBX+M2r0AB8LQF+C4CWi7GP3S9aUcMTaccA+Xrzjz1idndjIGar2d3H589bZmv
-	gXyj6stTXgwskn2NRQ3BwVP/4PAyzQHjUV2rnVbxU9lcGlQ+8CZItLzYVvvNeBAgMgcbF8K46lDbR
-	FanQuf/g==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:37484)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1uHOFY-0007Sm-2h;
-	Tue, 20 May 2025 15:47:24 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1uHOFW-0002yr-0L;
-	Tue, 20 May 2025 15:47:22 +0100
-Date: Tue, 20 May 2025 15:47:21 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: stefano.radaelli21@gmail.com
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Xu Liang <lxu@maxlinear.com>
-Subject: Re: [PATCH net-next v4] net: phy: add driver for MaxLinear MxL86110
- PHY
-Message-ID: <aCyV-Zaeg-BLV0Vt@shell.armlinux.org.uk>
-References: <20250520124521.440639-1-stefano.radaelli21@gmail.com>
+	s=arc-20240116; t=1747752487; c=relaxed/simple;
+	bh=WCKzpIynvWaAtjaaXVKE+DRuvRGKoM5NxQJWUeQ9iDA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d4ClZcw3ryxe/0wtYBi+oyKzK2LC/s/F9Dsk3mTOs0fbSfqMhDsHgAao5VJxi+Islb2vO3QwTod1G2sqSh/QGu+mWxPxD0StXb/jtVMiMCCfQCUz43qmcH2rIBUCw8KsVfTapLOMaStuRFXwc/7MtoDtnZoEVQxb1oZTahlAgZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E1B6F1516;
+	Tue, 20 May 2025 07:47:51 -0700 (PDT)
+Received: from [10.57.50.40] (unknown [10.57.50.40])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3E0A53F6A8;
+	Tue, 20 May 2025 07:48:02 -0700 (PDT)
+Message-ID: <d1b3caaf-636f-48e6-90e6-0bb650753748@arm.com>
+Date: Tue, 20 May 2025 15:48:01 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250520124521.440639-1-stefano.radaelli21@gmail.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 20/43] arm64: RME: Runtime faulting of memory
+Content-Language: en-GB
+To: Steven Price <steven.price@arm.com>, Gavin Shan <gshan@redhat.com>,
+ kvm@vger.kernel.org, kvmarm@lists.linux.dev
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>, Zenghui Yu <yuzenghui@huawei.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Joey Gouly <joey.gouly@arm.com>, Alexandru Elisei
+ <alexandru.elisei@arm.com>, Christoffer Dall <christoffer.dall@arm.com>,
+ Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
+ Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+ Shanker Donthineni <sdonthineni@nvidia.com>, Alper Gun
+ <alpergun@google.com>, "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
+References: <20250416134208.383984-1-steven.price@arm.com>
+ <20250416134208.383984-21-steven.price@arm.com>
+ <c99b408c-3819-482a-a427-68045211e434@redhat.com>
+ <4fca6bfa-3687-4fdf-8204-00fa90d36e2a@arm.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <4fca6bfa-3687-4fdf-8204-00fa90d36e2a@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 20, 2025 at 02:45:18PM +0200, stefano.radaelli21@gmail.com wrote:
-> +/**
-> + * mxl86110_write_extended_reg() - write to a PHY's extended register
-> + * @phydev: pointer to a &struct phy_device
-> + * @regnum: register number to write
-> + * @val: value to write to @regnum
-> + *
-> + * Note: This function assumes the caller already holds the MDIO bus lock
-> + * or otherwise has exclusive access to the PHY.
-> + *
-> + * Return: 0 or negative error code
-> + */
-> +static int mxl86110_write_extended_reg(struct phy_device *phydev,
-> +				       u16 regnum, u16 val)
-> +{
-> +	int ret;
-> +
-> +	ret = __phy_write(phydev, MXL86110_EXTD_REG_ADDR_OFFSET, regnum);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return __phy_write(phydev, MXL86110_EXTD_REG_ADDR_DATA, val);
-> +}
-> +
-> +/**
-> + * mxl86110_read_extended_reg - Read a PHY's extended register
-> + * @phydev: Pointer to the PHY device structure
-> + * @regnum: Extended register number to read (address written to reg 30)
-> + *
-> + * Reads the content of a PHY extended register using the MaxLinear
-> + * 2-step access mechanism: write the register address to reg 30 (0x1E),
-> + * then read the value from reg 31 (0x1F).
-> + *
-> + * Note: This function assumes the caller already holds the MDIO bus lock
-> + * or otherwise has exclusive access to the PHY.
-> + *
-> + * Return: 16-bit register value on success, or negative errno code on failure.
-> + */
-> +static int mxl86110_read_extended_reg(struct phy_device *phydev, u16 regnum)
-> +{
-> +	int ret;
-> +
-> +	ret = __phy_write(phydev, MXL86110_EXTD_REG_ADDR_OFFSET, regnum);
-> +	if (ret < 0)
-> +		return ret;
-> +	return __phy_read(phydev, MXL86110_EXTD_REG_ADDR_DATA);
-> +}
-> +
-> +/**
-> + * mxl86110_modify_extended_reg() - modify bits of a PHY's extended register
-> + * @phydev: pointer to the phy_device
-> + * @regnum: register number to write
-> + * @mask: bit mask of bits to clear
-> + * @set: bit mask of bits to set
-> + *
-> + * Note: register value = (old register value & ~mask) | set.
-> + * This function assumes the caller already holds the MDIO bus lock
-> + * or otherwise has exclusive access to the PHY.
-> + *
-> + * Return: 0 or negative error code
-> + */
-> +static int mxl86110_modify_extended_reg(struct phy_device *phydev,
-> +					u16 regnum, u16 mask, u16 set)
-> +{
-> +	int ret;
-> +
-> +	ret = __phy_write(phydev, MXL86110_EXTD_REG_ADDR_OFFSET, regnum);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return __phy_modify(phydev, MXL86110_EXTD_REG_ADDR_DATA, mask, set);
-> +}
+On 16/05/2025 16:33, Steven Price wrote:
+> On 01/05/2025 01:16, Gavin Shan wrote:
+>> On 4/16/25 11:41 PM, Steven Price wrote:
+>>> At runtime if the realm guest accesses memory which hasn't yet been
+>>> mapped then KVM needs to either populate the region or fault the guest.
+>>>
+>>> For memory in the lower (protected) region of IPA a fresh page is
+>>> provided to the RMM which will zero the contents. For memory in the
+>>> upper (shared) region of IPA, the memory from the memslot is mapped
+>>> into the realm VM non secure.
+>>>
+>>> Signed-off-by: Steven Price <steven.price@arm.com>
+>>> ---
+>>> Changes since v7:
+>>>    * Remove redundant WARN_ONs for realm_create_rtt_levels() - it will
+>>>      internally WARN when necessary.
+>>> Changes since v6:
+>>>    * Handle PAGE_SIZE being larger than RMM granule size.
+>>>    * Some minor renaming following review comments.
+>>> Changes since v5:
+>>>    * Reduce use of struct page in preparation for supporting the RMM
+>>>      having a different page size to the host.
+>>>    * Handle a race when delegating a page where another CPU has faulted on
+>>>      a the same page (and already delegated the physical page) but not yet
+>>>      mapped it. In this case simply return to the guest to either use the
+>>>      mapping from the other CPU (or refault if the race is lost).
+>>>    * The changes to populate_par_region() are moved into the previous
+>>>      patch where they belong.
+>>> Changes since v4:
+>>>    * Code cleanup following review feedback.
+>>>    * Drop the PTE_SHARED bit when creating unprotected page table entries.
+>>>      This is now set by the RMM and the host has no control of it and the
+>>>      spec requires the bit to be set to zero.
+>>> Changes since v2:
+>>>    * Avoid leaking memory if failing to map it in the realm.
+>>>    * Correctly mask RTT based on LPA2 flag (see rtt_get_phys()).
+>>>    * Adapt to changes in previous patches.
+>>> ---
+>>>    arch/arm64/include/asm/kvm_emulate.h |  10 ++
+>>>    arch/arm64/include/asm/kvm_rme.h     |  10 ++
+>>>    arch/arm64/kvm/mmu.c                 | 127 ++++++++++++++++++-
+>>>    arch/arm64/kvm/rme.c                 | 180 +++++++++++++++++++++++++++
+>>>    4 files changed, 321 insertions(+), 6 deletions(-)
+>>>
+>>> diff --git a/arch/arm64/include/asm/kvm_emulate.h b/arch/arm64/
+>>> include/asm/kvm_emulate.h
+>>> index c803c8188d9c..def439d6d732 100644
+>>> --- a/arch/arm64/include/asm/kvm_emulate.h
+>>> +++ b/arch/arm64/include/asm/kvm_emulate.h
+>>> @@ -704,6 +704,16 @@ static inline bool kvm_realm_is_created(struct
+>>> kvm *kvm)
+>>>        return kvm_is_realm(kvm) && kvm_realm_state(kvm) !=
+>>> REALM_STATE_NONE;
+>>>    }
+>>>    +static inline gpa_t kvm_gpa_from_fault(struct kvm *kvm, phys_addr_t
+>>> ipa)
+>>> +{
+>>> +    if (kvm_is_realm(kvm)) {
+>>> +        struct realm *realm = &kvm->arch.realm;
+>>> +
+>>> +        return ipa & ~BIT(realm->ia_bits - 1);
+>>> +    }
+>>> +    return ipa;
+>>> +}
+>>> +
+>>>    static inline bool vcpu_is_rec(struct kvm_vcpu *vcpu)
+>>>    {
+>>>        if (static_branch_unlikely(&kvm_rme_is_available))
+>>> diff --git a/arch/arm64/include/asm/kvm_rme.h b/arch/arm64/include/
+>>> asm/kvm_rme.h
+>>> index d86051ef0c5c..47aa6362c6c9 100644
+>>> --- a/arch/arm64/include/asm/kvm_rme.h
+>>> +++ b/arch/arm64/include/asm/kvm_rme.h
+>>> @@ -108,6 +108,16 @@ void kvm_realm_unmap_range(struct kvm *kvm,
+>>>                   unsigned long ipa,
+>>>                   unsigned long size,
+>>>                   bool unmap_private);
+>>> +int realm_map_protected(struct realm *realm,
+>>> +            unsigned long base_ipa,
+>>> +            kvm_pfn_t pfn,
+>>> +            unsigned long size,
+>>> +            struct kvm_mmu_memory_cache *memcache);
+>>> +int realm_map_non_secure(struct realm *realm,
+>>> +             unsigned long ipa,
+>>> +             kvm_pfn_t pfn,
+>>> +             unsigned long size,
+>>> +             struct kvm_mmu_memory_cache *memcache);
+>>>      static inline bool kvm_realm_is_private_address(struct realm *realm,
+>>>                            unsigned long addr)
+>>> diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
+>>> index 71c04259e39f..02b66ee35426 100644
+>>> --- a/arch/arm64/kvm/mmu.c
+>>> +++ b/arch/arm64/kvm/mmu.c
+>>> @@ -338,8 +338,13 @@ static void __unmap_stage2_range(struct
+>>> kvm_s2_mmu *mmu, phys_addr_t start, u64
+>>>          lockdep_assert_held_write(&kvm->mmu_lock);
+>>>        WARN_ON(size & ~PAGE_MASK);
+>>> -    WARN_ON(stage2_apply_range(mmu, start, end,
+>>> KVM_PGT_FN(kvm_pgtable_stage2_unmap),
+>>> -                   may_block));
+>>> +
+>>> +    if (kvm_is_realm(kvm))
+>>> +        kvm_realm_unmap_range(kvm, start, size, !only_shared);
+>>> +    else
+>>> +        WARN_ON(stage2_apply_range(mmu, start, end,
+>>> +                       KVM_PGT_FN(kvm_pgtable_stage2_unmap),
+>>> +                       may_block));
+>>>    }
+>>>    
+>>
+>> As spotted previsouly, the parameter @may_block isn't handled by
+>> kvm_realm_unmap_range().
+> 
+> Ack.
+> 
+>>>    void kvm_stage2_unmap_range(struct kvm_s2_mmu *mmu, phys_addr_t start,
+>>> @@ -359,7 +364,10 @@ static void stage2_flush_memslot(struct kvm *kvm,
+>>>        phys_addr_t addr = memslot->base_gfn << PAGE_SHIFT;
+>>>        phys_addr_t end = addr + PAGE_SIZE * memslot->npages;
+>>>    -    kvm_stage2_flush_range(&kvm->arch.mmu, addr, end);
+>>> +    if (kvm_is_realm(kvm))
+>>> +        kvm_realm_unmap_range(kvm, addr, end - addr, false);
+>>> +    else
+>>> +        kvm_stage2_flush_range(&kvm->arch.mmu, addr, end);
+>>>    }
+>>>      /**
+>>> @@ -1053,6 +1061,10 @@ void stage2_unmap_vm(struct kvm *kvm)
+>>>        struct kvm_memory_slot *memslot;
+>>>        int idx, bkt;
+>>>    +    /* For realms this is handled by the RMM so nothing to do here */
+>>> +    if (kvm_is_realm(kvm))
+>>> +        return;
+>>> +
+>>>        idx = srcu_read_lock(&kvm->srcu);
+>>>        mmap_read_lock(current->mm);
+>>>        write_lock(&kvm->mmu_lock);
+>>> @@ -1078,6 +1090,7 @@ void kvm_free_stage2_pgd(struct kvm_s2_mmu *mmu)
+>>>        if (kvm_is_realm(kvm) &&
+>>>            (kvm_realm_state(kvm) != REALM_STATE_DEAD &&
+>>>             kvm_realm_state(kvm) != REALM_STATE_NONE)) {
+>>> +        kvm_stage2_unmap_range(mmu, 0, (~0ULL) & PAGE_MASK, false);
+>>>            write_unlock(&kvm->mmu_lock);
+>>>            kvm_realm_destroy_rtts(kvm, pgt->ia_bits);
+>>
+>> (~0ULL & PAGE_MASK) wouldn't be a problem since the range will be
+>> limited to
+>> [0, BIT(realm->ia_bits) - 1] in kvm_realm_unmap_range(). I think it's
+>> reasonable
+>> to pass the maximal size here, something like:
+>>
+>>          kvm_stage2_unmap_range(mmu, 0, BIT(realm->ia_bits - 1), false);
 
-As these are all unlocked variants, I wonder whether they should have
-__ prefixes. I'm wondering whether our paged accessors could be re-used
-for this phy, even though effectively there is only one "paged" register
-at offset 31 with the page index at offset 30.
+I think this must be, given the end is excluding:
+	   kvm_stage2_unmap_range(mmu, 0, BIT(realm->ia_bits), false);
 
-Also, given the number of single accesses to the registers, I wonder if
-it also makes sense to have variants that take the MDIO bus lock, which
-would allow simplification of sites such as...
+BIT(realm->ia_bits - 1) only covers the protected half. The unprotected 
+half spans  [ BIT(realm->ia_bits - 1), BIT(realm->ia_bits))
 
-> +
-> +/**
-> + * mxl86110_get_wol() - report if wake-on-lan is enabled
-> + * @phydev: pointer to the phy_device
-> + * @wol: a pointer to a &struct ethtool_wolinfo
-> + */
-> +static void mxl86110_get_wol(struct phy_device *phydev,
-> +			     struct ethtool_wolinfo *wol)
-> +{
-> +	int value;
-> +
-> +	wol->supported = WAKE_MAGIC;
-> +	wol->wolopts = 0;
-> +	phy_lock_mdio_bus(phydev);
-> +	value = mxl86110_read_extended_reg(phydev, MXL86110_EXT_WOL_CFG_REG);
-> +	phy_unlock_mdio_bus(phydev);
-
-... here.
-
-> +	if (value >= 0 && (value & MXL86110_WOL_CFG_WOLE_MASK))
-> +		wol->wolopts |= WAKE_MAGIC;
-> +}
-> +
-> +/**
-> + * mxl86110_set_wol() - enable/disable wake-on-lan
-> + * @phydev: pointer to the phy_device
-> + * @wol: a pointer to a &struct ethtool_wolinfo
-> + *
-> + * Configures the WOL Magic Packet MAC
-> + *
-> + * Return: 0 or negative errno code
-> + */
-> +static int mxl86110_set_wol(struct phy_device *phydev,
-> +			    struct ethtool_wolinfo *wol)
-> +{
-> +	struct net_device *netdev;
-> +	const u8 *mac;
-
-Use "const unsigned char *mac" - that way you don't need the cast below.
-
-> +	int ret = 0;
-> +
-> +	phy_lock_mdio_bus(phydev);
-> +
-> +	if (wol->wolopts & WAKE_MAGIC) {
-> +		netdev = phydev->attached_dev;
-> +		if (!netdev) {
-> +			ret = -ENODEV;
-> +			goto out;
-> +		}
-> +
-> +		/* Configure the MAC address of the WOL magic packet */
-> +		mac = (const u8 *)netdev->dev_addr;
-> +		ret = mxl86110_write_extended_reg(phydev,
-> +						  MXL86110_EXT_MAC_ADDR_CFG1,
-> +						  ((mac[0] << 8) | mac[1]));
-> +		if (ret < 0)
-> +			goto out;
-> +
-> +		ret = mxl86110_write_extended_reg(phydev,
-> +						  MXL86110_EXT_MAC_ADDR_CFG2,
-> +						  ((mac[2] << 8) | mac[3]));
-> +		if (ret < 0)
-> +			goto out;
-> +
-> +		ret = mxl86110_write_extended_reg(phydev,
-> +						  MXL86110_EXT_MAC_ADDR_CFG3,
-> +						  ((mac[4] << 8) | mac[5]));
-> +		if (ret < 0)
-> +			goto out;
-> +
-> +		ret = mxl86110_modify_extended_reg(phydev,
-> +						   MXL86110_EXT_WOL_CFG_REG,
-> +						   MXL86110_WOL_CFG_WOLE_MASK,
-> +						   MXL86110_EXT_WOL_CFG_WOLE);
-> +		if (ret < 0)
-> +			goto out;
-> +
-> +		/* Enables Wake-on-LAN interrupt in the PHY. */
-> +		ret = __phy_modify(phydev, PHY_IRQ_ENABLE_REG, 0,
-> +				   PHY_IRQ_ENABLE_REG_WOL);
-> +		if (ret < 0)
-> +			goto out;
-> +
-> +		phydev_dbg(phydev,
-> +			   "%s, MAC Addr: %02X:%02X:%02X:%02X:%02X:%02X\n",
-> +			   __func__,
-> +			   mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
-> +	} else {
-> +		ret = mxl86110_modify_extended_reg(phydev,
-> +						   MXL86110_EXT_WOL_CFG_REG,
-> +						   MXL86110_WOL_CFG_WOLE_MASK,
-> +						   0);
-> +		if (ret < 0)
-> +			goto out;
-> +
-> +		/* Disables Wake-on-LAN interrupt in the PHY. */
-> +		ret = __phy_modify(phydev, PHY_IRQ_ENABLE_REG,
-> +				   PHY_IRQ_ENABLE_REG_WOL, 0);
-> +	}
-> +
-> +out:
-> +	phy_unlock_mdio_bus(phydev);
-> +	return ret;
-> +}
-> +
-
-...
-> +static int mxl86110_led_hw_control_get(struct phy_device *phydev, u8 index,
-> +				       unsigned long *rules)
-> +{
-> +	int val;
-> +
-> +	if (index >= MXL86110_MAX_LEDS)
-> +		return -EINVAL;
-> +
-> +	phy_lock_mdio_bus(phydev);
-> +	val = mxl86110_read_extended_reg(phydev,
-> +					 MXL86110_LED0_CFG_REG + index);
-> +	phy_unlock_mdio_bus(phydev);
-
-This could also be simplified with the locking accessors.
-
-> +	if (val < 0)
-> +		return val;
-> +
-> +	if (val & MXL86110_LEDX_CFG_LINK_UP_TX_ACT_ON)
-> +		*rules |= BIT(TRIGGER_NETDEV_TX);
-> +
-> +	if (val & MXL86110_LEDX_CFG_LINK_UP_RX_ACT_ON)
-> +		*rules |= BIT(TRIGGER_NETDEV_RX);
-> +
-> +	if (val & MXL86110_LEDX_CFG_LINK_UP_HALF_DUPLEX_ON)
-> +		*rules |= BIT(TRIGGER_NETDEV_HALF_DUPLEX);
-> +
-> +	if (val & MXL86110_LEDX_CFG_LINK_UP_FULL_DUPLEX_ON)
-> +		*rules |= BIT(TRIGGER_NETDEV_FULL_DUPLEX);
-> +
-> +	if (val & MXL86110_LEDX_CFG_LINK_UP_10MB_ON)
-> +		*rules |= BIT(TRIGGER_NETDEV_LINK_10);
-> +
-> +	if (val & MXL86110_LEDX_CFG_LINK_UP_100MB_ON)
-> +		*rules |= BIT(TRIGGER_NETDEV_LINK_100);
-> +
-> +	if (val & MXL86110_LEDX_CFG_LINK_UP_1GB_ON)
-> +		*rules |= BIT(TRIGGER_NETDEV_LINK_1000);
-> +
-> +	return 0;
-> +};
-> +
-> +static int mxl86110_led_hw_control_set(struct phy_device *phydev, u8 index,
-> +				       unsigned long rules)
-> +{
-> +	u16 val = 0;
-> +	int ret;
-> +
-> +	if (index >= MXL86110_MAX_LEDS)
-> +		return -EINVAL;
-> +
-> +	if (rules & BIT(TRIGGER_NETDEV_LINK_10))
-> +		val |= MXL86110_LEDX_CFG_LINK_UP_10MB_ON;
-> +
-> +	if (rules & BIT(TRIGGER_NETDEV_LINK_100))
-> +		val |= MXL86110_LEDX_CFG_LINK_UP_100MB_ON;
-> +
-> +	if (rules & BIT(TRIGGER_NETDEV_LINK_1000))
-> +		val |= MXL86110_LEDX_CFG_LINK_UP_1GB_ON;
-> +
-> +	if (rules & BIT(TRIGGER_NETDEV_TX))
-> +		val |= MXL86110_LEDX_CFG_LINK_UP_TX_ACT_ON;
-> +
-> +	if (rules & BIT(TRIGGER_NETDEV_RX))
-> +		val |= MXL86110_LEDX_CFG_LINK_UP_RX_ACT_ON;
-> +
-> +	if (rules & BIT(TRIGGER_NETDEV_HALF_DUPLEX))
-> +		val |= MXL86110_LEDX_CFG_LINK_UP_HALF_DUPLEX_ON;
-> +
-> +	if (rules & BIT(TRIGGER_NETDEV_FULL_DUPLEX))
-> +		val |= MXL86110_LEDX_CFG_LINK_UP_FULL_DUPLEX_ON;
-> +
-> +	if (rules & BIT(TRIGGER_NETDEV_TX) ||
-> +	    rules & BIT(TRIGGER_NETDEV_RX))
-> +		val |= MXL86110_LEDX_CFG_LAB_BLINK;
-> +
-> +	phy_lock_mdio_bus(phydev);
-> +	ret = mxl86110_write_extended_reg(phydev,
-> +					  MXL86110_LED0_CFG_REG + index, val);
-> +	phy_unlock_mdio_bus(phydev);
-
-and this... and with the locking accessors it could become simply:
-
-	return mxl86110_write_extended_reg(...);
-
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-> +};
-> +
-> +/**
-> + * mxl86110_synce_clk_cfg() - applies syncE/clk output configuration
-> + * @phydev: pointer to the phy_device
-> + *
-> + * Note: This function assumes the caller already holds the MDIO bus lock
-> + * or otherwise has exclusive access to the PHY.
-> + *
-> + * Return: 0 or negative errno code
-> + */
-> +static int mxl86110_synce_clk_cfg(struct phy_device *phydev)
-> +{
-> +	u16 mask = 0, val = 0;
-> +	int ret;
-> +
-> +	/*
-> +	 * Configures the clock output to its default
-> +	 * setting as per the datasheet.
-> +	 * This results in a 25MHz clock output being selected in the
-> +	 * COM_EXT_SYNCE_CFG register for SyncE configuration.
-> +	 */
-> +	val = MXL86110_EXT_SYNCE_CFG_EN_SYNC_E |
-> +			FIELD_PREP(MXL86110_EXT_SYNCE_CFG_CLK_SRC_SEL_MASK,
-> +				   MXL86110_EXT_SYNCE_CFG_CLK_SRC_SEL_25M);
-> +	mask = MXL86110_EXT_SYNCE_CFG_EN_SYNC_E |
-> +	       MXL86110_EXT_SYNCE_CFG_CLK_SRC_SEL_MASK |
-> +	       MXL86110_EXT_SYNCE_CFG_CLK_FRE_SEL;
-> +
-> +	/* Write clock output configuration */
-> +	ret = mxl86110_modify_extended_reg(phydev, MXL86110_EXT_SYNCE_CFG_REG,
-> +					   mask, val);
-> +
-> +	return ret;
-
-No need for "ret":
-
-	return mxl86110_modify_extended_reg(phydev, MXL86110_EXT_SYNCE_CFG_REG,
-					    mask, val);
-
-> +}
-> +
-> +/**
-> + * mxl86110_broadcast_cfg - Configure MDIO broadcast setting for PHY
-> + * @phydev: Pointer to the PHY device structure
-> + *
-> + * This function configures the MDIO broadcast behavior of the MxL86110 PHY.
-> + * Currently, broadcast mode is explicitly disabled by clearing the EPA0 bit
-> + * in the RGMII_MDIO_CFG extended register.
-> + *
-> + * Note: This function assumes the caller already holds the MDIO bus lock
-> + * or otherwise has exclusive access to the PHY.
-> + *
-> + * Return: 0 on success or a negative errno code on failure.
-> + */
-> +static int mxl86110_broadcast_cfg(struct phy_device *phydev)
-> +{
-> +	int ret;
-> +
-> +	ret = mxl86110_modify_extended_reg(phydev,
-> +					   MXL86110_EXT_RGMII_MDIO_CFG,
-> +					   MXL86110_RGMII_MDIO_CFG_EPA0_MASK,
-> +					   0);
-> +
-> +	return ret;
-
-No need for "ret".
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Suzuki
