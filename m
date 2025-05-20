@@ -1,125 +1,107 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C7DF24C07A;
-	Tue, 20 May 2025 16:32:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52C604B1E5D;
+	Tue, 20 May 2025 16:33:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747758763; cv=none; b=sKzmvjgOrW9ACngtwxkdDQX0R+HRaNN7MirG4aSMqNKuKyHTIK5HkpygN7HfGTnWdJ3xlN2CmQZyYJa4VEGlnbWqiFYNHC8sI7Q6E3kqyqQ0eZAqqLjJLxkzSly2KtwF7JIHmmcqDGvb99vRBu4XQxBg46PvN5KrBKfOds37n1Q=
+	t=1747758789; cv=none; b=s62hZuX6gjvzvb3LxfXo26wPaQjdZM7kLpT1FgmvDylM0XzLRk4cNYaEBPTUtHUybWvs96nWSnAuKBav+ARMH0MnqY8mbRpv9b6x2iNgEYj59DCGWCpOCKx6Na1+O26p2Gbyxf+6ZqISMEnxgI8J/WJcgxKtb8XIM7xdeneND8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747758763; c=relaxed/simple;
-	bh=VxL65GSY3jg0UxcejEQeHBF4bpS7AbjITpw7p8xiujU=;
+	s=arc-20240116; t=1747758789; c=relaxed/simple;
+	bh=9iywa8LxDBmIJmnFA0mWiRWkOXXa499m0kRd7LsL7ag=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iY/jn1kO0yl/4XarLmh2ukpy0TrmIRlW8YSDCRosCcRdpUBgt4p4KB1GbG3lfno1EDILg/cbo5Czp9IjQDdr2W0prp+NfauptSpj+YmVsUilMNNO6zb/0mHDZzLKo5lKQcaMOwyiR/OPU48rSmb8sULt6D8LRONKQieM5cTEaII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f9CQM3kU; arc=none smtp.client-ip=209.85.214.174
+	 Content-Type:Content-Disposition:In-Reply-To; b=CILZL6uRGkoJQtJgmsgEQzFq8uqcaPSht9m6viTBcuer1/7wKxtbG9qYZg5sjfcPv7KOZNNZouApUF1gHtoh0IqSOETMhelZq9L8fcaX4rM/7R7P5DA6Qil7KUKf7G8cdwFMuJLX0n+DuK0vC/rnsJyQ/fwae2OvCaCBONnbxTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GA6yiitB; arc=none smtp.client-ip=209.85.210.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f9CQM3kU"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-231d4679580so39222415ad.1;
-        Tue, 20 May 2025 09:32:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GA6yiitB"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-7399838db7fso5528526b3a.0;
+        Tue, 20 May 2025 09:33:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747758761; x=1748363561; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=JfechbBoXh5EUb1CnvnuWI7jG3482+KAnoqrpf/01NM=;
-        b=f9CQM3kUwVxNL1DrFEAbLvoPYVOB73Dwd3aR3Lq4ti61JPesesdyeKdEr9LIe/mtAf
-         NhFZW869r4FXGBEiwVQFBIJ6AgQvfWwuvav8ERlm8QR6B1R2sexf0w/bAJv0FIgrzZna
-         ZWCcMcH3Ya80WPbHnyKjNKKsggn7hlhIIyD6U2mqofKgE4c5mCNH89CHDp0kP6miV5Xd
-         pvmv2zsI58/ucqa4PRJZCPBiobSgHpX/Lxr/aoCMijKEIyfs8Cq0H2V4M8m4Gor56uCR
-         wP8cDadlRompDYc0FCif+MIT19xIVMALtrgNzA+j3alAA0gTUITkkOj72FRNGIaXIXST
-         hqhA==
+        d=gmail.com; s=20230601; t=1747758787; x=1748363587; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=N4J9GjT2DkNx9RKMdFilKV2qV6BHNi7N4nhhnVWjxkM=;
+        b=GA6yiitBt6I5Rd95Do5zzbLjzJb0nj7Vw/LFeumfftUIiOVarMigpCicb698VT/wIE
+         2nY37kIUll4gH8JXK61UJqRSWJJNThxW6UF0YskbLHQfs9X6x/42qQ4dMEpixNoLmZrV
+         9vYJrOYfa5g8zR7nFotLguBfDwbcMu2w9qhxJKNv2Be0CxLrViSw3A5rKQlKj0pVcBCo
+         Gy0LE9gzr1UrTXCPSFPdf2RIgT1se1eB1zR0Lh/d/8yMeNHpNjurjoQCmmGsIRIIbasu
+         FaAnt2Hyojdg0yNr9z9KJdJip7VBsVTowzQcbR9jE9idxS+aoC9eH5nJL2bx8eGSghGa
+         27iQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747758761; x=1748363561;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JfechbBoXh5EUb1CnvnuWI7jG3482+KAnoqrpf/01NM=;
-        b=FtodKL7sru+U6sImu/rXRQaOIyVgQAPWYUqpmG4lnk20Zi0RGnon6DV67EFl1ZI7LZ
-         7z6pEXWnwygilT21g7lyazljWzGMXnUo/j9Tc5HvsOl23NFFN9j7M0LO0ZQc8KRf8GwQ
-         SH0s7xx9SyjHfSn5qwJ7GV490yRuch5L2YRJvQgGkX/YDgAFSKW62oK+oDuffC6zqjXD
-         bUVTk6GrXygyx8JZogxJ/vdOyuxdORef2z8JFuG1AmdEpEmnMBYYKlMDNePSXodxlT6g
-         /BfpqjMYecEnHPzGo+UYWbGDMDnGb1Dmv0bfoPHM7zSEcEOhsaYJmabkYduwC11e5UNt
-         OFnw==
-X-Forwarded-Encrypted: i=1; AJvYcCUkRzj5UAtiBrZD0UgD9tGbdXxCT1TeUeDUVNDSwCoY9yyOPpDz3+PnMFwrITFENhO63amHykD32rEm0VE=@vger.kernel.org, AJvYcCXdlZHrW/xjycvGZoEkQUN7lgNwfUV1wuPUTXTODqPVC6wVcB9pQDG5u3ao5qRzUngqmJ3q5rOvLMtw3ArsCKI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxalfDK6huSfMBz+jlVP25cJondBvWAsVhlU3+sI2QYB4Pz3eTC
-	3Nqr9LO5lRtMreQZ6+uyH6IqDb49IOozeV8ATgLsNFhFnOCV1T2AucWWcH5xtg==
-X-Gm-Gg: ASbGncu4NP7A3sIDr03UEN2iwb9j1K7tTH6LrLiQQ7+I++rb6GinsnvdpaHpv6GkBTP
-	ScekCBhfft2xNdceXO+8yAgn5ZULRNA4qvYnpGVZSe2fqVR5NOO92iqULiCiRpZ65ZFxjx5DcLw
-	Fcnmjam0ZWcMoFNHNROmlnE6cw+roLDObk4vulrr3XatRjJYKn+mHGSMfO0fpktbBsO/+mNck63
-	lVjip/YN+81d91LvCIAuzbPDaTPc3B3CJlPvzInpvcBRhWmsDYuZg5MpWN2wAP7VV12LBKXmt+F
-	FJGI5y03C8Hi4OEOc5vPd3HLZld7RV+NSJCeug6obb7BjCt4QpM=
-X-Google-Smtp-Source: AGHT+IG2s3iNB/QZDUNIt9beVD907qupAKc92c9ZClxDz8HYPKBX6cGcKZgHh8UEcx4pM/i/DPC5sg==
-X-Received: by 2002:a17:902:e5d1:b0:223:54aa:6d15 with SMTP id d9443c01a7336-231d44e4599mr265064745ad.12.1747758761099;
-        Tue, 20 May 2025 09:32:41 -0700 (PDT)
-Received: from localhost ([216.228.127.130])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4ebaa21sm78890125ad.162.2025.05.20.09.32.40
+        d=1e100.net; s=20230601; t=1747758787; x=1748363587;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=N4J9GjT2DkNx9RKMdFilKV2qV6BHNi7N4nhhnVWjxkM=;
+        b=hc1zSem6wVrQOJ5pPpI3773fY5VGa64rLso2SvLGpvte9Y+fB42XrSl2Kx43mbD0NU
+         CPDI/Yozcu1d31L+hxU6doxmMFTYLrlu0femnnWcBqxo4ugJpowevBnjj8E0nim1mkDa
+         vkUZ+OT68G9NXo5gehg4aBKnHQlfx3WWOaRez3m5j9y7VSjPIXlQJm87Fqym6G2p5IrH
+         7O128l6+QdSODI5LH+fqKO4fXZvOtTqeiDO+1DF8e0JXkNsINQU9VnNIL2H0AO+IMFhP
+         1LRIcB0shFmOiWsbFFGDZy2unHVk6tB0cIxlOCqPsirsmLXqMN0zA/9xhPv7gL75bMJx
+         7E6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU/z+7dIv9eX5Ng4KFXXXY7sCrSlD/kj1lC0n0qG0+5C6odjKs7Mr8yK/ydVewkrlCZ3Q6sNfpk0iVkgU3wWu3F@vger.kernel.org, AJvYcCV8Ys9VPzPe59MVXldyoa6fGcLAnqk+cR3d/51kkYEI6SsZ5O8Ebf/p9uFXl9/gRhgSohv9yMA6HiJLLScf@vger.kernel.org, AJvYcCWA+GaI7udbxBJQprH4UFfR90R2T2D5zz2jkWapTiI5kENq901ZsJUDWgZkx5jZdLm8Nx4=@vger.kernel.org, AJvYcCWvOcvTyBJrlX6qXlnZSPnlYkXT3TKnLsEzJawhoFltR6f2U7wFNfOAZL+yGPBgPKhPok8rLD7r@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyi3gtW8kxnqdJJetBjFbjA1VRtgR35yH01vpi0J2b9UTpJZlxx
+	52h0+2PnyaqOpAKYSOzVaQxkWmQMk3mH5rUfkcwwQ3IjLaTHoEjytmTW
+X-Gm-Gg: ASbGnctSmvmZWvO+hNL1+29OK/m9RJ5NbwdJY3iLZ7UvHvE9VWH140K5xYNkdfu+m3q
+	66+oisJ3p/6fIMLo49DuZzMaV1gMDz1DzyJ4TAvUtFaJwNp0wvs3+O4Z8uAOYSj+CS5l1c1Piq0
+	Ak3vSCTpNXzoYJHQUasYGuY2ara2f4tir7xYvBwooBLwYXX05SaDiTLJ8m2a0hsc7HsiIMrb+iR
+	ndnMkr5N0RJF3+a9zU+k8mei8cg3XRtE7pyOAma1GRFQ2l3q6jxN2n58oaFaVsd2M53JM/pd7kT
+	1PR8/PtxjTvPqEttUeIsvlSViV1RjHPhnI3LLuS1Pw/ZV7pFq0smrPXPbGpvMrBCtMMa5bY=
+X-Google-Smtp-Source: AGHT+IFFEtELJ7CNY/gj67X7KGAeNhJCZbOLnPiYWwQ92Z9dI1v88DKGl6Pdba0V9ObimC+EYXJnbQ==
+X-Received: by 2002:a05:6a20:12c3:b0:1f3:3547:f21b with SMTP id adf61e73a8af0-2165f641cf3mr29465576637.5.1747758787474;
+        Tue, 20 May 2025 09:33:07 -0700 (PDT)
+Received: from devbig793.prn5.facebook.com ([2a03:2880:ff:3::])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eb081aa2sm8256782a12.48.2025.05.20.09.33.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 09:32:40 -0700 (PDT)
-Date: Tue, 20 May 2025 12:32:38 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-Cc: Christian Lamparter <chunkeey@gmail.com>,
-	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] wifi: carl9170: micro-optimize carl9170_tx_shift_bm()
-Message-ID: <aCyupkU1tK-bUlZV@yury>
-References: <20250326155200.39895-1-yury.norov@gmail.com>
- <CAAd0S9BDCqw9XZSe=r5fcJuncUagJoJJ0jOe3fB2=UkyXgjozQ@mail.gmail.com>
- <aA5McagnQw49MElr@yury>
- <54f50afa-3267-4829-8be6-1542c3fef606@oss.qualcomm.com>
+        Tue, 20 May 2025 09:33:06 -0700 (PDT)
+Date: Tue, 20 May 2025 09:33:05 -0700
+From: Bobby Eshleman <bobbyeshleman@gmail.com>
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: Paolo Abeni <pabeni@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>,
+	Shuah Khan <shuah@kernel.org>, kvm@vger.kernel.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>,
+	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
+	netdev@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH net-next v7] selftests/vsock: add initial vmtest.sh for
+ vsock
+Message-ID: <aCyuwa8x9ClTOM+Z@devbig793.prn5.facebook.com>
+References: <20250515-vsock-vmtest-v7-1-ba6fa86d6c2c@gmail.com>
+ <f7dpfvsdupcf4iucmmit2xzgwk53ial6mcl445uxocizw6iow5@rhmh6m2qd3zu>
+ <73a4740e-755e-4ba8-8130-df09bd25197a@redhat.com>
+ <w6aizeb2i5m52e2ifqcikgwdbrkkbc46sf4hx5b6jsm7o4drio@n3dzlatb426s>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <54f50afa-3267-4829-8be6-1542c3fef606@oss.qualcomm.com>
+In-Reply-To: <w6aizeb2i5m52e2ifqcikgwdbrkkbc46sf4hx5b6jsm7o4drio@n3dzlatb426s>
 
-On Tue, May 20, 2025 at 09:24:14AM -0700, Jeff Johnson wrote:
-> On 4/27/2025 8:25 AM, Yury Norov wrote:
-> > On Wed, Mar 26, 2025 at 09:00:33PM +0100, Christian Lamparter wrote:
-> >> Hi,
-> >>
-> >> On Wed, Mar 26, 2025 at 4:52 PM Yury Norov <yury.norov@gmail.com> wrote:
-> >>>
-> >>> The function calls bitmap_empty() just before find_first_bit(). Both
-> >>> functions are O(N). Because find_first_bit() returns >= nbits in case of
-> >>> empty bitmap, the bitmap_empty() test may be avoided.
-> >>>
-> >>
-> >> I looked up bitmap_empty():
-> >> <https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/bitmap.h#n423>
-> >>
-> >> apart from the small_const_nbits stuff (which carl9170 likely does not qualify
-> >> for since from what I remember it's a 128bits bitmap) the function just does:
-> >>
-> >> |   return find_first_bit(src, nbits) == nbits;
-> >>
-> >> so yes, find_first_bit runs twice with same parameters... Unless the
-> >> compiler is smart
-> >> enough to detect this and (re-)use the intermediate result later. But
-> >> I haven't check
-> >> if this is the case with any current, old or future compilers. Has anyone?
-> >>
-> >> Anyway, Sure.
-> >>
-> >>> Signed-off-by: Yury Norov <yury.norov@gmail.com>
-> >>
-> >> Acked-by: Christian Lamparter <chunkeey@gmail.com>
+On Tue, May 20, 2025 at 01:09:25PM +0200, Stefano Garzarella wrote:
+> On Tue, May 20, 2025 at 12:58:18PM +0200, Paolo Abeni wrote:
+> > On 5/20/25 10:24 AM, Stefano Garzarella wrote:
 > > 
-> > Thanks, Chrustian. So, how is that supposed to be merged?
-> > I can move it with bitmap-for-next, unless there's no better
-> > branch.
-> > 
-> > Thanks,
-> > Yury
-> > 
+> > Still it could be worthy to re-introduce (behind a command line option)
+> > the ability to build the kernel as per Stefano request, to fit his
+> > existing workflow (sorry for the partial back and forth).
 > 
-> Yury, did you take this?
-> If not, I'll take it through the ath tree.
+> If that's possible, I'd appreciate it (not a strong opinion). Otherwise if
+> we don't, I'd say take the use of the direct script out of the commit
+> messaging, because to me it's confusing if we don't plan to use it without
+> the selftest infrastructure.
+> 
+> Thanks,
+> Stefano
+> 
 
-No. Please take with ath.
+No problem at all to add it back in. It's a nice feature to have for dev
+workflows too.
+
+Best,
+Bobby
