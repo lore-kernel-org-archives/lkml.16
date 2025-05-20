@@ -1,148 +1,133 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from mail-pj1-f67.google.com (mail-pj1-f67.google.com [209.85.216.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 993202701AA
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 11:30:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2C4321D581;
+	Tue, 20 May 2025 11:30:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747740603; cv=none; b=aZSzq8/vlFzdMdVvopVJ5eGtzfjNH9Mk8pewCU1qS36j5h7psNjOkWliAnM6MRKpvh3pJzlx4KJ1cHuyUDK8mDJxAN8B+YfkFfssPx/y9+BxVtT3mflmM/SFH2RdYrrRO8cPUxBrgWLggRpHwkTO0coxd4mLZIH92qtcB17EBsQ=
+	t=1747740623; cv=none; b=AJjWLYrDvEcOCAHQMQzqcImq/YaRKSik1fHrZZblsaCp8m/MdFISJqGRhd/sInWbI9aU4JAmnVhVLMx6SwiFDTOsP2oQqeWuOrqRj9QAB1eAlEYVTtKmXtFtytJeADnWn4SA0RKA6ehFZ8stuwqeieYdIsyWlsf5lWSXQPZBR/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747740603; c=relaxed/simple;
-	bh=jFnYWDnEGjQwDd2gLR9uDiOWEyDyzknYhlUitzuDj/0=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=LXV6c/FH7vg3m9heGVp7VZ50QFDc0vrUUyT6HKnBAB56PC4q5JMfXOkPEVzouvHCMLFBFqminyc5AP871vVpIeJN3TBLrGNUccZ/XuRECrU0BY/UItJHkepBuLcHY++Fb9WTCsEBhtIEsJ7wuXWxuYl4xoXJ7PlrODCoLNWqsh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PtpUo+JX; arc=none smtp.client-ip=209.85.208.47
+	s=arc-20240116; t=1747740623; c=relaxed/simple;
+	bh=O1AJ7JmMxdWQV2IgVukQ24F0/JQ7Cyra/8jwvRKG64o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WUrf0YJsdnedPAXBFE44xzZTZliXl++gLjAQEha+D4eL/UOmDZKlQqTlic3WAMI+uAJ9s6WBmI1ujNZF3F3ut9yrzDRO3UTIqJ0jlXlvfzDDJ/MamLp+GXkrg/tYvAa5sCHhSvazZTyrh0b0igVZqRKyHho41KnIjZWTEJSZaqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=An8FXgtL; arc=none smtp.client-ip=209.85.216.67
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PtpUo+JX"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-601ed5e97e9so3400117a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 04:30:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="An8FXgtL"
+Received: by mail-pj1-f67.google.com with SMTP id 98e67ed59e1d1-30ed99132abso2135371a91.3;
+        Tue, 20 May 2025 04:30:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747740600; x=1748345400; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iNSWdVp0pCGv6zZlGqB2G5Ypt6F8CERWSTLAliUg2NE=;
-        b=PtpUo+JXmKMgvTGkgzwZvWY6aJFPYOQw/ciYFUuvUmQK5FITDVJjZPWWs9vF7Uh0qb
-         j3i7lJtijieZxLXGQ/oooZSKnHpZWlT1TvXzHc2cH5TJs0P4LVvpGKf5e2EfqPXlC1my
-         ZvtbXf9RQyUrGtj0XrdVuf/ACLxonU9OCBxAd9DexX1kG/iH8vlBHTBYImEGZFEb6rDA
-         /x3dg+Sc1VZ2onIhTT5T7PWBXmy1ImHuQhd62eL49xTPzEeE/c7HvsKCo+apTOza9DVw
-         QPYZioTY/31nkWeuvJuIHa4QCUIjGjYS/62M4YJUjN02OjUb3JlFjBHIqz/VyekDWePz
-         HVyw==
+        d=gmail.com; s=20230601; t=1747740621; x=1748345421; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=SVmGprzIT1qas59bg3drprextcCuuSplhZMAI1pdd7U=;
+        b=An8FXgtLTFoySwZvHFBJDN9wYKHejL5n1R/9iZKKdq89s+J7zV0zaCaCQLeOVVUUL2
+         wjr5XR2fnBosXTlQf0RyzvPFyXlH6Rm/hc1ZVw2oFeVgh6QGUECZAxNkgCplbq9lFSO7
+         vN0u7Sp34octAaMv5tcRr9gsGx7VhuiJBc0hW51bqXIQ+88yOgA9wP/d+rb3Q2yGEzec
+         1RIxswf9emP20C3daV1NLWV77JuDKl6AZTfNz5AkibnY+pb+rVe4erYk5trUE9OpCn5h
+         vZ0KBMD6DQsDR5nv7T9Q4LroDIKeI0eAu8c0oMFsYgs5PzdjB3vZMm2EwQHrKf8USaUs
+         O2lg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747740600; x=1748345400;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iNSWdVp0pCGv6zZlGqB2G5Ypt6F8CERWSTLAliUg2NE=;
-        b=TCoTugdPdVbeOEajuvON6LZOws6ENyuyhCpJU5WfKe6LxNn16mamQAzv6KNUZLWb6H
-         p30Kkty+5hEETmjJUWxHRTPENHjRan4ABN8uFr2n8rDmHFCyXf8dlO0wTtzsDEH2lb7J
-         bkYQL3SKno6Y8ts+qosOSKwe+YNANc2pFMoUP5/iwACPyfca8pHUzjTBcnLmi6OfzzYP
-         bdDiBkfxXqAAeYVtuIli7/cifZdF4f0TP4hhgIvleScBD3zokotOUVtaPr7j2JVNpHSc
-         pe2e0loFXRmuP0XhEgxqO+VkJEa7RO06b4pjpxdj40OaAgP0UXWfZ0wv9nwZPjQnZ03f
-         KJ9g==
-X-Gm-Message-State: AOJu0YwTMhW5c1/0j7VNaw/Lbkkxj0rSA2+eVPTmwmwG2KrpGzdZC97r
-	wdtAUVV3SutF7jMChNozHnXypAZ5GXSVb+IfFJVGlL53OwrwJc0SgvfJ
-X-Gm-Gg: ASbGnct/zQvsoJAoSwIPqmXyws5vVUUAkM4RwsSnCiW4yMAUAWrAmeKXiDVHdDfmvQC
-	fsUQRrjdrnV6ZBdN0qlAd0xHNwlsmlNslPD6VoNukdEJrQwBHJ3YIQ6RxSgJZfvedWih2UfnlqH
-	qJCM3iRxy+QxaFEUoD9CU+WXFSpBLIMVPcrPFZzmjMarsR5dxInAv6BNOGxsoQ0m1wAjZO0Y+gm
-	B47MmuYK83BGuBVAs7nZ9Dnnz3XDM+jCpcf+z6Ws3ALnadoN3Ipkai9CUJdkZmV1o754AwgXHqa
-	V6hzQ++WTj47ie9AJ90polgHTRRP5fM8pExaqbXAMfNFNjoFN9R7OR09NPgfsGXm4GivL8uAUvm
-	6P0A=
-X-Google-Smtp-Source: AGHT+IFHkJS1TgytAIFMsB6vO1Cu5EW569Xn4PZHR3u4t0a3HsI/YxGapJU2ZnEmP8JJG2H20JPt0A==
-X-Received: by 2002:a17:907:7da2:b0:ace:5461:81dd with SMTP id a640c23a62f3a-ad536b5a0cfmr1500424866b.3.1747740599535;
-        Tue, 20 May 2025 04:29:59 -0700 (PDT)
-Received: from smtpclient.apple ([64.176.163.79])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d04e816sm708660766b.23.2025.05.20.04.29.56
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 20 May 2025 04:29:58 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+        d=1e100.net; s=20230601; t=1747740621; x=1748345421;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SVmGprzIT1qas59bg3drprextcCuuSplhZMAI1pdd7U=;
+        b=nBLcJx3gh6TN5z1Sa02jlAZh5kjdssHti133Ck+u+MO30T6BUnheLsVoLqP8xk5B9T
+         Ogt7vU/Z8nB16T4TT1K5NuKcFTOfKzuLoGjrdDQKGkvRL5uRZfYcRuNnXbvhgo/Qm5uv
+         YZXCmTMsjv8F9WMX7Hrnr4BuQm364ZGympn42qTkGwsuzn7gN0I8dAK2vxvl+wgYE/vn
+         jbc0Y3s5AaabF/m8l2G2BtPdjFcV7MeiuxVCq3h76yLRZxfkw61GEjba1j7c7FrG6CEb
+         MWjxFycr1KAvLVYmfIO4aiULEcw5ZyyrUrUYzhrHIudpJHBZ6ra3sxRz68jFGpzyHEZC
+         syWg==
+X-Forwarded-Encrypted: i=1; AJvYcCVC5+xpoD7CosNrLwuY5TrIVFI5gCW+FCC7ZGq+LqThNLngKR9Z40yeOMrTMH+BzWxcMHvuOE3TC5VYpvQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwT+P8B2wu9bGUEJOJzALcit7YMzXyiLds43aJcrL/HsuFwWwEX
+	ebA+TNi5WayNLRYk+CbBenkSbs3fWm95eX1/L1cgEk53m5/He1WlsuMg
+X-Gm-Gg: ASbGncuomfkLSIOoRBIweQZWd0eaqpVDdOOKRgh2otsY4x9sDjgsPCAzItUBVV3KIt3
+	RJ+l5F+sswgmjickRcJA1REeujaUgGvtXEOciCR+uV9N7hJk5ctkWNhGY6bG5QQsOJ/SOrn99Qb
+	TfEV3OeaRqUw3bcvMg02OB+e9/kfrkVoHUNYVRglmZ4Zt31mQVKV9fMg5ghUFP68i8/nnWQGbeK
+	vmkTaAinOgNYlZBWi980ulHMlka7xfkaiELFvmAziFL6zVizMuPTNkUR4MkTjkEOaRHmGbR76YP
+	wgdl+bdKmg3Gfg0ikYzLkVhy4KrqJzf7yH1GP4S0AfceiHReZY1dE5Sw6r2qyTmcRlSur4oKoo7
+	dObBC6lRp+qzkBcVn
+X-Google-Smtp-Source: AGHT+IGTMqeXJhFDTiiG1VwY9JcXuorjPRKgbVm4nDjUtWCqjClpfsMQGvEpxxzOIvO/vdgEVEL82Q==
+X-Received: by 2002:a17:90b:4c0a:b0:305:5f25:59a5 with SMTP id 98e67ed59e1d1-30e7d5bb748mr25665289a91.35.1747740620939;
+        Tue, 20 May 2025 04:30:20 -0700 (PDT)
+Received: from sid-Inspiron-15-3525.. ([106.222.235.118])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f36368e44sm1481296a91.1.2025.05.20.04.30.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 04:30:20 -0700 (PDT)
+From: Siddarth Gundu <siddarthsgml@gmail.com>
+To: perex@perex.cz,
+	tiwai@suse.com
+Cc: linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Siddarth Gundu <siddarthsgml@gmail.com>
+Subject: [PATCH] ALSA: amd7930: replace strcpy() with strscpy()
+Date: Tue, 20 May 2025 17:00:12 +0530
+Message-ID: <20250520113012.70270-1-siddarthsgml@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
-Subject: Re: [RFC v2 7/9] x86/mm: Introduce Remote Action Request
-From: Nadav Amit <nadav.amit@gmail.com>
-In-Reply-To: <20250520010350.1740223-8-riel@surriel.com>
-Date: Tue, 20 May 2025 14:29:44 +0300
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
- the arch/x86 maintainers <x86@kernel.org>,
- kernel-team@meta.com,
- Dave Hansen <dave.hansen@linux.intel.com>,
- luto@kernel.org,
- peterz@infradead.org,
- Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>,
- "H. Peter Anvin" <hpa@zytor.com>,
- Yu-cheng Yu <yu-cheng.yu@intel.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <4A879001-E213-4239-9D25-CDA8EC3E2CD9@gmail.com>
-References: <20250520010350.1740223-1-riel@surriel.com>
- <20250520010350.1740223-8-riel@surriel.com>
-To: Rik van Riel <riel@surriel.com>
-X-Mailer: Apple Mail (2.3826.500.181.1.5)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Not a full review, but..
+strcpy() is deprecated; use strscpy() instead.
 
-> On 20 May 2025, at 4:02, Rik van Riel <riel@surriel.com> wrote:
->=20
-> +/*
-> + * This is a modified version of smp_call_function_many() of =
-kernel/smp.c,
+Both the destination and source buffer are of fixed length
+so strscpy with 2-arguments is used.
 
-The updated function names is smp_call_function_many_cond() and it is
-not aligned with smp_call_rar_many. I think the new version is =
-(suprisingly)
-better, so it=E2=80=99d be beneficial to bring smp_call_rar_many() to be =
-like the
-updated one in smp.c.
+No functional changes intended.
 
-> + * without a function pointer, because the RAR handler is the ucode.
-> + */
-> +void smp_call_rar_many(const struct cpumask *mask, u16 pcid,
-> +		       unsigned long start, unsigned long end)
-> +{
-> +	unsigned long pages =3D (end - start + PAGE_SIZE) / PAGE_SIZE;
-> +	int cpu, next_cpu, this_cpu =3D smp_processor_id();
-> +	cpumask_t *dest_mask;
-> +	unsigned long idx;
-> +
-> +	if (pages > RAR_INVLPG_MAX_PAGES || end =3D=3D TLB_FLUSH_ALL)
-> +		pages =3D RAR_INVLPG_MAX_PAGES;
-> +
-> +	/*
-> +	 * Can deadlock when called with interrupts disabled.
-> +	 * We allow cpu's that are not yet online though, as no one else =
-can
-> +	 * send smp call function interrupt to this cpu and as such =
-deadlocks
-> +	 * can't happen.
-> +	 */
-> +	WARN_ON_ONCE(cpu_online(this_cpu) && irqs_disabled()
-> +		     && !oops_in_progress && !early_boot_irqs_disabled);
+Link: https://github.com/KSPP/linux/issues/88
+Signed-off-by: Siddarth Gundu <siddarthsgml@gmail.com>
+---
+ sound/sparc/amd7930.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-I thought you agreed to change it to make it use lockdep instead (so it =
-will
-be compiled out without LOCKDEP), like done in =
-smp_call_function_many_cond()
-
-> +
-> +	/* Try to fastpath.  So, what's a CPU they want?  Ignoring this =
-one. */
-> +	cpu =3D cpumask_first_and(mask, cpu_online_mask);
-> +	if (cpu =3D=3D this_cpu)
-> +		cpu =3D cpumask_next_and(cpu, mask, cpu_online_mask);
-> +
-
-Putting aside the rest of the code, I see you don=E2=80=99t call =
-should_flush_tlb().
-I think it is worth mentioning in commit log or comment the rationale =
-behind
-it (and maybe benchmarks to justify it).
+diff --git a/sound/sparc/amd7930.c b/sound/sparc/amd7930.c
+index 9bdf3db51d62..e73d3b262f57 100644
+--- a/sound/sparc/amd7930.c
++++ b/sound/sparc/amd7930.c
+@@ -39,6 +39,7 @@
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/io.h>
++#include <linux/string.h>
+ 
+ #include <sound/core.h>
+ #include <sound/pcm.h>
+@@ -754,7 +755,7 @@ static int snd_amd7930_pcm(struct snd_amd7930 *amd)
+ 
+ 	pcm->private_data = amd;
+ 	pcm->info_flags = 0;
+-	strcpy(pcm->name, amd->card->shortname);
++	strscpy(pcm->name, amd->card->shortname);
+ 	amd->pcm = pcm;
+ 
+ 	snd_pcm_set_managed_buffer_all(pcm, SNDRV_DMA_TYPE_CONTINUOUS,
+@@ -874,7 +875,7 @@ static int snd_amd7930_mixer(struct snd_amd7930 *amd)
+ 		return -EINVAL;
+ 
+ 	card = amd->card;
+-	strcpy(card->mixername, card->shortname);
++	strscpy(card->mixername, card->shortname);
+ 
+ 	for (idx = 0; idx < ARRAY_SIZE(amd7930_controls); idx++) {
+ 		if ((err = snd_ctl_add(card,
+@@ -1007,8 +1008,8 @@ static int amd7930_sbus_probe(struct platform_device *op)
+ 	if (err < 0)
+ 		return err;
+ 
+-	strcpy(card->driver, "AMD7930");
+-	strcpy(card->shortname, "Sun AMD7930");
++	strscpy(card->driver, "AMD7930");
++	strscpy(card->shortname, "Sun AMD7930");
+ 	sprintf(card->longname, "%s at 0x%02lx:0x%08Lx, irq %d",
+ 		card->shortname,
+ 		rp->flags & 0xffL,
+-- 
+2.48.1
 
