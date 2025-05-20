@@ -1,130 +1,88 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from smtpcmd10102.aruba.it (smtpcmd10102.aruba.it [62.149.156.102])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D3A211497;
-	Tue, 20 May 2025 09:02:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51F2C20D506
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 09:05:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.156.102
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747731778; cv=none; b=VhwzFGD6EFxhGPdu9h46SzIB0qAyiuYyND040OQC5kVlXP3okAjl+m0NldCwM5i/Biz9mvvYNtCDyMljU+y+WMldlz4ooemfJodE5MbPzesOukFRn8wRscaaugwFiBgDxcMW61v5lvej26UsS/Ftl9hNK+IAlrY1Dl7ugQfAdjA=
+	t=1747731910; cv=none; b=GxsHrQdH8XFnYJFflM+trpX2C393+q+BmISVftNH01srVggUWNuWqWA9//NWRaDtA7kv2aN5DvkTlsAuBdzx4ee4GiBq6aNOvHOPWEKS2021HDOJBvtYJpkFZwCKIjHwj8+fptJNUZH0ODvjndbHvlXWSPzIqVC8r0Id08WbYIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747731778; c=relaxed/simple;
-	bh=TWLgt09FaRbBxtK2loDYI9NojLCYcYDlUEYg6GGCD/k=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OjVxtVSTWe0gDWfi9rlgYt4xgXfB5du7n4uRacKnj2g+shYQpe51nbkEqEIw0DvBPxiFPuYz2fSmPH1k9PiA3u4JepkNgv59x7ZWPqj086tuLC/+rbu7POJFxtRSi1hkihjLpMkfL/83EE567LO+iTlKYOX/Wrl7lZ4JBbzcJTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=RB8b8hbi; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1747731910; c=relaxed/simple;
+	bh=yBbdj7NlwMTxQ67l5t0qFWn7th72f332I3gFq49d3kk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BKKh5q3gjb7Wf/1xkwgVQ5pMjyIKGUV/7lIPfwMhoZ1DOl+ru1/G1nanJAxpjGIfoZfsdNvpRYvIDYqrU9QjrVhATQD3SVZYkV3REllssD/3Z3FP09xX6k72c1eQ6J2duvLUqjh+rjp73rLaOP7kr7ALtQlx9x6cW1dGqwKW3XI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com; spf=pass smtp.mailfrom=enneenne.com; dkim=temperror (0-bit key) header.d=aruba.it header.i=@aruba.it header.b=RHnop4Z/; arc=none smtp.client-ip=62.149.156.102
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=enneenne.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="RB8b8hbi"
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54K7gvHw014039;
-	Tue, 20 May 2025 11:02:39 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	LlTxhPCeEp6mSZq7lExD4bZqPrY3pQAprG/owac7STA=; b=RB8b8hbifDduPhh8
-	YfcydHK76FHWuz8s0Dy21q9wVeAEMLgq4Y9SNAFXDVugTnR/Az/DIGYVBTTzs3AP
-	yWxj/TRA0kbejIyM1XN8kcKryXCKY54sJd104u1O32cfPZGAhImehwXH7cI6yB3z
-	YQJS+VvxdbgSc5fmWfVsYQH5Pt8xdNuX4ZUrv0csg5wmGpaQls0ti28L159ydPk8
-	bKHVGX7kOQs6JX4BM2hmq+iNsJ0hB1+gRmbY72HWP94WQ5sBQSVET0xVBrEZkke9
-	iadu7rfH72jzG+xo7klSirVBTNDiYr2HMc+GQe7gejqreYzZPWq0eOP9ARNzlKOS
-	82bMOA==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46phbgkvsk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 May 2025 11:02:39 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id E1F4C40077;
-	Tue, 20 May 2025 11:01:17 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id EDB0FB3FF9D;
-	Tue, 20 May 2025 10:59:56 +0200 (CEST)
-Received: from localhost (10.48.86.132) by SHFDAG1NODE1.st.com (10.75.129.69)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 20 May
- 2025 10:59:56 +0200
-From: Antonio Borneo <antonio.borneo@foss.st.com>
-To: Julius Werner <jwerner@chromium.org>, Evan Benn <evanbenn@chromium.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck
-	<linux@roeck-us.net>, <linux-watchdog@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC: Antonio Borneo <antonio.borneo@foss.st.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH v2] watchdog: arm_smc_wdt: get wdt status through SMCWD_GET_TIMELEFT
-Date: Tue, 20 May 2025 10:59:52 +0200
-Message-ID: <20250520085952.210723-1-antonio.borneo@foss.st.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250519170055.205544-1-antonio.borneo@foss.st.com>
-References: <20250519170055.205544-1-antonio.borneo@foss.st.com>
+	dkim=temperror (0-bit key) header.d=aruba.it header.i=@aruba.it header.b="RHnop4Z/"
+Received: from [192.168.1.58] ([79.0.204.227])
+	by Aruba SMTP with ESMTPSA
+	id HIrDueuvb1ugbHIrEu6UMu; Tue, 20 May 2025 11:01:56 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
+	t=1747731716; bh=yBbdj7NlwMTxQ67l5t0qFWn7th72f332I3gFq49d3kk=;
+	h=Date:MIME-Version:Subject:To:From:Content-Type;
+	b=RHnop4Z/13NUHHIaqHKFs5/V45U20yPHUv+wcekwlnZ+lngOjSR4jv9q32CXilpXc
+	 c4lpW69sNC5NOJweIRIC4PDlw7ZBZwkxlTMxlkV6sPMeyS5E2Vt++MA+D4sPi/fyoT
+	 oj2tyyL2gMptGuEzbPEpqU5HfCHx6/nydQ+rdQRTjpqLi2YD9NmVvBE4p8s5aeK46w
+	 GRNxFq8kEvRWzMl8E6lYgbmJtID0PSgvM3Walx+489OfTaIkgqRhooEVkL41wlsTJg
+	 qO/7esMlW3aE9PPW7b3j6HgVDC/hFzNS0fPckwPl6G34iC+NrnLY44tgkjuO3cKUlL
+	 8fsbyZM+rVETg==
+Message-ID: <c682e4da-ae75-4e93-bbf1-a68f31bd15de@enneenne.com>
+Date: Tue, 20 May 2025 11:01:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SAFCAS1NODE1.st.com (10.75.90.11) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-20_04,2025-05-16_03,2025-03-28_01
+User-Agent: Mozilla Thunderbird
+Subject: Re: [V1 2/2] drivers soc: add support for ST stm32mp13xx family
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Eric Fourmont <eric.fourmont-ext@st.com>,
+ Yann GAUTIER <yann.gautier@foss.st.com>, linux-kernel@vger.kernel.org
+References: <20250519130859.3389704-1-giometti@enneenne.com>
+ <20250519130859.3389704-3-giometti@enneenne.com>
+ <4566f4c1-f4d0-4f32-8fcd-bb3057b5d1fa@kernel.org>
+From: Rodolfo Giometti <giometti@enneenne.com>
+In-Reply-To: <4566f4c1-f4d0-4f32-8fcd-bb3057b5d1fa@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4xfJEjQksEF2gr1H+kBdUbxxgnkrI7vfEOspMWR+zMH4bcN/GomTOL9m5YhNhmULAAHo01QUSDpomTsicddghDGtLGxp2WePiPIRXKZquNVP5Sz7CY1OY6
+ 7onfNyX02udqJq7Jkyc9mSa2FQo7O/A4sg6dfaACmA3ZWRguE8wmFqG1JMgB0CgJwc+IufEqos231NdANrqJ1cw+y+pRY5mQfuZnWKe2x72P9Bri+xWZXXTH
+ iEbWOP1YokbZMxVgmnEAQMHsLP2H/OxwqETIPkU85Xs7N/BuLAzlhoivY8O6z7hc9lUfecxpfUscw5OBhHWLP1njczo1EGu6sxAexIZ3Kvzv5//wtPno/8aD
+ 9pZUWSLcIwiTMNCUpzRds9LmRbONIA==
 
-The optional SMCWD_GET_TIMELEFT command can be used to detect if
-the watchdog has already been started.
-See the implementation in OP-TEE secure OS [1].
+On 19/05/25 20:34, Krzysztof Kozlowski wrote:
+> On 19/05/2025 15:08, Rodolfo Giometti wrote:
 
-At probe time, check if the watchdog is already started and then
-set WDOG_HW_RUNNING in the watchdog status. This will cause the
-watchdog framework to ping the watchdog until a userspace watchdog
-daemon takes over the control.
+[snip]
 
-Link: https://github.com/OP-TEE/optee_os/commit/a7f2d4bd8632 [1]
+>> +
+>> +static int __init stm32mp13_soc_get_idc(u32 *idc)
+>> +{
+>> +	struct device_node *np;
+>> +	void __iomem *regs;
+>> +	static const struct of_device_id devids[] = {
+>> +		{ .compatible = "st,stm32mp157-syscfg" },
+> 
+> No, don't add compatibles for other devices into the driver functions.
+> Use standard methods for binding, like every driver does.
 
-Signed-off-by: Antonio Borneo <antonio.borneo@foss.st.com>
----
- drivers/watchdog/arm_smc_wdt.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+I need to access a region assigned to another driver very early on boot, and 
+this is the only way I've found to solve the problem. Can you please give me an 
+example of these standard binding methods?
 
-diff --git a/drivers/watchdog/arm_smc_wdt.c b/drivers/watchdog/arm_smc_wdt.c
-index 8f3d0c3a005fb..bbba23ace7b85 100644
---- a/drivers/watchdog/arm_smc_wdt.c
-+++ b/drivers/watchdog/arm_smc_wdt.c
-@@ -46,6 +46,8 @@ static int smcwd_call(struct watchdog_device *wdd, enum smcwd_call call,
- 		return -ENODEV;
- 	if (res->a0 == PSCI_RET_INVALID_PARAMS)
- 		return -EINVAL;
-+	if (res->a0 == PSCI_RET_DISABLED)
-+		return -ENODATA;
- 	if (res->a0 != PSCI_RET_SUCCESS)
- 		return -EIO;
- 	return 0;
-@@ -131,10 +133,19 @@ static int smcwd_probe(struct platform_device *pdev)
- 
- 	wdd->info = &smcwd_info;
- 	/* get_timeleft is optional */
--	if (smcwd_call(wdd, SMCWD_GET_TIMELEFT, 0, NULL))
--		wdd->ops = &smcwd_ops;
--	else
-+	err = smcwd_call(wdd, SMCWD_GET_TIMELEFT, 0, NULL);
-+	switch (err) {
-+	case 0:
-+		set_bit(WDOG_HW_RUNNING, &wdd->status);
-+		fallthrough;
-+	case -ENODATA:
- 		wdd->ops = &smcwd_timeleft_ops;
-+		break;
-+	default:
-+		wdd->ops = &smcwd_ops;
-+		break;
-+	}
-+
- 	wdd->timeout = res.a2;
- 	wdd->max_timeout = res.a2;
- 	wdd->min_timeout = res.a1;
+Thanks in advance,
 
-base-commit: a5806cd506af5a7c19bcd596e4708b5c464bfd21
+Rodolfo
+
 -- 
-2.34.1
+GNU/Linux Solutions                  e-mail: giometti@enneenne.com
+Linux Device Driver                          giometti@linux.it
+Embedded Systems                     phone:  +39 349 2432127
+UNIX programming
 
