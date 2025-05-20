@@ -1,111 +1,119 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7208824EABF
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 14:20:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F1FD1CAA79
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 14:20:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747750822; cv=none; b=YwKmZlQIF9E9HJ+HRnJhsMFyySpqHvaeO6D7HzHGabFFNo9mlNy5HJAzwN5MLoi2c7YsWMNjvLoDhNSV0QUCMKqi2HPisRN7fTpvo03DMTX3MNKpkOZerEUMpuwXJrokyEQsg3cto56sGrxdBHtiCsXYzB/Gayl42i5KLCmITZo=
+	t=1747750850; cv=none; b=h1rgqHGuOUZBeMS3HTm8gb48orIbdzsDpfcfnwg6BUUsB6+ARlHPYSKWChYlX6oCe01ftJ7ZJ30rGDCWLkbuAxMDSwVGuoFFboJyEYiUf4tkTkGzZxwvrkzcJAVPUaJfyEOx9NzP0r3D5tvLAzCVwZgXJJaPAw/mGpn5K7zi5r4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747750822; c=relaxed/simple;
-	bh=+pKe3ck/6B3jjTiCmlM/AatiZWL2tPejKJVBqxJfsVw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kZhcL1ZOmGSOcwbOAYlaljjz8rjAYM4vYkPKqbG3J3SBtP3XF9BjVzdRrcAABw37YA8BVwZj8105WAcZfn2/A0fynR0al7TV7iJKIeO1epdxczW09yBeB7RdxUKk0bctWxwxvIPGu62iOk7s2B+BeDeV21T5b/WICZIqFc9Ugsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TpaS5hHl; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TpaS5hHl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747750819;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+pKe3ck/6B3jjTiCmlM/AatiZWL2tPejKJVBqxJfsVw=;
-	b=TpaS5hHl11hLfIkT/mk8Y93OvwBoOXGX0Oq2I3Dk1ywmA4rwj4AMAqq569AocqVOsacd0d
-	9L05mFmI1sV42KZgar60fCW38vhSfhW0YTsMpomi5dHiYBgr+yyoJMcT/3dOXBHvtt1BZN
-	bE+CtmXHR+f/f0HnJ/HVnhTB6679rxE=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-511-H7R8yQVyM1qhTni96rWP5g-1; Tue,
- 20 May 2025 10:20:17 -0400
-X-MC-Unique: H7R8yQVyM1qhTni96rWP5g-1
-X-Mimecast-MFC-AGG-ID: H7R8yQVyM1qhTni96rWP5g_1747750815
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7499119560AE;
-	Tue, 20 May 2025 14:20:14 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.33.11])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 3330418004A7;
-	Tue, 20 May 2025 14:20:07 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Tue, 20 May 2025 16:19:33 +0200 (CEST)
-Date: Tue, 20 May 2025 16:19:26 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	David Laight <David.Laight@ACULAB.COM>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCHv2 perf/core 01/22] uprobes: Remove breakpoint in
- unapply_uprobe under mmap_write_lock
-Message-ID: <20250520141925.GA14203@redhat.com>
-References: <20250515121121.2332905-1-jolsa@kernel.org>
- <20250515121121.2332905-2-jolsa@kernel.org>
- <20250520084845.6388479dd18658d2c2598953@kernel.org>
+	s=arc-20240116; t=1747750850; c=relaxed/simple;
+	bh=Va5qoeMEVdGv0YapZun5gFjoj2QQybjvFlAWerI0i/o=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=hCAzDyDy37R7pinrTZ4JWMN9PM93Mz/28XhJrvg9s2JOS1koqp7nkoSUrn20VqF9LMddBnFK50CnxcPVgId1iopOfSy/99vgm9B7EZ9Pboxdoqr/m6dwrSaKvC4JTSNVqm3ktEv52hRHCW1bBhCnq9sP9t+gCYa2HDYHDUQ7ey0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
+Received: from [2601:18c:8180:83cc:5a47:caff:fe78:8708] (helo=fangorn)
+	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <riel@shelob.surriel.com>)
+	id 1uHNpc-000000002GA-2mBp;
+	Tue, 20 May 2025 10:20:36 -0400
+Date: Tue, 20 May 2025 10:20:36 -0400
+From: Rik van Riel <riel@surriel.com>
+To: linux-kernel@vger.kernel.org
+Cc: x86@kernel.org, kernel-team@meta.com, dave.hansen@linux.intel.com,
+ luto@kernel.org, mingo@redhat.com, bp@alien8.de, peterz@infradead.org,
+ nadav.amit@gmail.com
+Subject: [PATCH] x86/mm: fix race between flush_tlb_func and idle task
+ leave_mm
+Message-ID: <20250520102036.5d61f565@fangorn>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250520084845.6388479dd18658d2c2598953@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Sender: riel@surriel.com
 
-On 05/20, Masami Hiramatsu wrote:
->
-> On Thu, 15 May 2025 14:10:58 +0200
-> Jiri Olsa <jolsa@kernel.org> wrote:
->
-> > Currently unapply_uprobe takes mmap_read_lock, but it might call
-> > remove_breakpoint which eventually changes user pages.
-> >
-> > Current code writes either breakpoint or original instruction, so
-> > it can probably go away with that, but with the upcoming change that
-> > writes multiple instructions on the probed address we need to ensure
-> > that any update to mm's pages is exclusive.
-> >
->
-> So, this is a bugfix, right?
+There is a tiny race window between flush_tlb_func() and the call to
+leave_mm() from cpuidle_enter_state() in the idle task.
 
-No, mmap_read_lock() is fine.
+The race happens when a CPU goes idle, through enter_lazy_tlb(),
+while the process on the CPU is transitioning to a global ASID.
 
-To remind, this was already discussed with you, see
-[PATCH 02/12] uprobes: grab write mmap lock in unapply_uprobe()
-https://lore.kernel.org/all/20240625002144.3485799-3-andrii@kernel.org/
+If the TLB flush IPI arrives between the call to enter_lazy_tlb(),
+and the CPU actually going idle, the mm_needs_global_asid()
+branch in flush_tlb_func() will switch the CPU to the global
+ASID, and return with the CPU no longer in lazy TLB mode.
 
-And you even reviewed this patch
-[PATCH 1/2] uprobes: document the usage of mm->mmap_lock
-https://lore.kernel.org/all/20240710140045.GA1084@redhat.com/
+If the system then selects a deeper idle state, the warning in
+leave_mm() will trigger.
 
-But, as the changelog explains, this patch is needed for the upcoming changes.
+This race has not been observed with only the INVLPGB code running
+on several thousand hosts over several weeks, but it's showing up
+several times a minute in my tests with the RAR code.
 
---------------------------------------------------------------------------
-Just in case... I'll try to read this series tomorrow, but at first glance
-this version addresses all my concerns.
+Avoid the race by moving the .is_lazy test to before the global ASID
+test in flush_tlb_func().
 
-Oleg.
+Signed-off-by: Rik van Riel <riel@surriel.com>
+Fixes: 4afeb0ed1753 x86/mm: Enable broadcast TLB invalidation for multi-threaded processes
+Cc: stable@kernel.org
+---
+ arch/x86/mm/tlb.c | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
+
+diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+index 3feb6ae2b678..9010bcfdfc20 100644
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@ -1150,6 +1150,20 @@ static void flush_tlb_func(void *info)
+ 	if (unlikely(loaded_mm == &init_mm))
+ 		return;
+ 
++	if (this_cpu_read(cpu_tlbstate_shared.is_lazy)) {
++		/*
++		 * We're in lazy mode.  We need to at least flush our
++		 * paging-structure cache to avoid speculatively reading
++		 * garbage into our TLB.  Since switching to init_mm is barely
++		 * slower than a minimal flush, just switch to init_mm.
++		 *
++		 * This should be rare, with native_flush_tlb_multi() skipping
++		 * IPIs to lazy TLB mode CPUs.
++		 */
++		switch_mm_irqs_off(NULL, &init_mm, NULL);
++		return;
++	}
++
+ 	/* Reload the ASID if transitioning into or out of a global ASID */
+ 	if (mm_needs_global_asid(loaded_mm, loaded_mm_asid)) {
+ 		switch_mm_irqs_off(NULL, loaded_mm, NULL);
+@@ -1168,20 +1182,6 @@ static void flush_tlb_func(void *info)
+ 	VM_WARN_ON(is_dyn_asid(loaded_mm_asid) && loaded_mm->context.ctx_id !=
+ 		   this_cpu_read(cpu_tlbstate.ctxs[loaded_mm_asid].ctx_id));
+ 
+-	if (this_cpu_read(cpu_tlbstate_shared.is_lazy)) {
+-		/*
+-		 * We're in lazy mode.  We need to at least flush our
+-		 * paging-structure cache to avoid speculatively reading
+-		 * garbage into our TLB.  Since switching to init_mm is barely
+-		 * slower than a minimal flush, just switch to init_mm.
+-		 *
+-		 * This should be rare, with native_flush_tlb_multi() skipping
+-		 * IPIs to lazy TLB mode CPUs.
+-		 */
+-		switch_mm_irqs_off(NULL, &init_mm, NULL);
+-		return;
+-	}
+-
+ 	if (is_dyn_asid(loaded_mm_asid))
+ 		local_tlb_gen = this_cpu_read(cpu_tlbstate.ctxs[loaded_mm_asid].tlb_gen);
+ 
+-- 
+2.47.1
+
 
