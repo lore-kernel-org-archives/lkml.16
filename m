@@ -1,58 +1,64 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3621248166;
-	Tue, 20 May 2025 14:40:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80BAB24BBF4
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 14:40:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747752013; cv=none; b=nUFG5gG1Y/hS53LxdIQ+zUZsctjdD2Tkuzvy2/pdLdK29bmqkn9hM6eBaUhyTJ1lzwiXxIwhe+3KgWG263zygthsW3XiZ0SzUoHP/APn0Iyg7t2sSrnxu4OOvkL+KKOF44305Kk2sA0lptErC7gUjrhdSlbwQdpwrd79csl4tHI=
+	t=1747752034; cv=none; b=tgRPTpIafpy/QXeUePf6mJZ0dnNpin1XFOQNOIigiGElGS/Yol+0tR10nN8VthB6RRgfrAVSK9NHxwg+3G32aijVLcVIdxi6HwRYa0D/6jdSrbd95NqrbHcJBB/be6Xfq+CpvdtuW1ymB+8v1MAzeaheFEd28j8/G8E5aixYA40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747752013; c=relaxed/simple;
-	bh=h3PEVXdDXZNqXtyIXoCQMZ2uLekttkQ3kJBFBUtR4jQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VX9Wz3geoWFEj5/P08C1H774f/wvIYH0o1L3A3SRtmHaVy/hMfIv/Sabz0NRUmUYQVIC6q53EWVmTqU03yIvnwWkhU1GR40fBmjuH+mvicbwI6omeNWSUWA44mmWtcD1GLH1WqSyed1VFtsCipjvTmQi/Pghx85XRnitt1fn2SU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YAX6qJjP; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YAX6qJjP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D256AC4CEE9;
-	Tue, 20 May 2025 14:40:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747752012;
-	bh=h3PEVXdDXZNqXtyIXoCQMZ2uLekttkQ3kJBFBUtR4jQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YAX6qJjPAG3kZx8PsxpGyVTfLQ5pAJiHsAAYFALUOL9Sm8mGPd5W9tqC9KtPC6WBj
-	 8ugOLCR1ciFpFLRDi9KH+2YRvEZ45hlqLjKTlSQVjHry2QI78MEOd3+RgRfI2K4KXw
-	 K18od7m19MJw2JQ5em/7KAzqN97DmptDolGVD4ZUio9huBCDVp1i5RgBMblHuTiyXx
-	 54FDaW/1zaY8YBNdcwLq3GSUDj2OIEliDLLFUfkP/Y5nNwUmNQFdVtnc7K0hYqAfvz
-	 /HnUbDZshZlhtFYLY5X9SSWpjLg4kQmhVHBCvOzHS2rAbz7FvFS9JCpHolUf28yqbt
-	 5nYaSJcxMFY8A==
-Date: Tue, 20 May 2025 15:40:08 +0100
-From: Simon Horman <horms@kernel.org>
-To: Sumanth Gavini <sumanth.gavini@yahoo.com>
-Cc: skhan@linuxfoundation.org, bongsu.jeon@samsung.com, shuah@kernel.org,
-	netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] selftests: nci: Fix "Electrnoics" to "Electronics"
-Message-ID: <20250520144008.GU365796@horms.kernel.org>
-References: <20250517020003.1159640-1-sumanth.gavini.ref@yahoo.com>
- <20250517020003.1159640-1-sumanth.gavini@yahoo.com>
+	s=arc-20240116; t=1747752034; c=relaxed/simple;
+	bh=royVGE6Euv9YlUy2WwSPwxyOnR2o8jIl68zgzWacsqE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=u07emCyvKrPwz6WRgRH8z+Ewl7bqfmONXfGlglGA2aI3r/ha10FrQVjErC8oyiX+lp8RdtOjm7LS123y2zM5zcn+bvcxe07+Oxi65TmVK1pMmphvpEXgDgua0R5v00ocraMWqhfY2lh5B5DPbjdrCINULHVBCZxYbxO0Dgawmxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; arc=none smtp.client-ip=18.9.28.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
+Received: from trampoline.thunk.org (pool-173-48-111-173.bstnma.fios.verizon.net [173.48.111.173])
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 54KEeO6x013130
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 20 May 2025 10:40:25 -0400
+Received: by trampoline.thunk.org (Postfix, from userid 15806)
+	id B25F42E00DD; Tue, 20 May 2025 10:40:24 -0400 (EDT)
+From: "Theodore Ts'o" <tytso@mit.edu>
+To: jack@suse.cz, Jeongjun Park <aha310510@gmail.com>
+Cc: "Theodore Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        syzbot+de24c3fe3c4091051710@syzkaller.appspotmail.com
+Subject: Re: [PATCH v2] jbd2: fix data-race and null-ptr-deref in jbd2_journal_dirty_metadata()
+Date: Tue, 20 May 2025 10:40:09 -0400
+Message-ID: <174775151765.432196.16616898847416276522.b4-ty@mit.edu>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250514130855.99010-1-aha310510@gmail.com>
+References: <20250514130855.99010-1-aha310510@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250517020003.1159640-1-sumanth.gavini@yahoo.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 16, 2025 at 06:59:37PM -0700, Sumanth Gavini wrote:
-> Fix misspelling reported by codespell
+
+On Wed, 14 May 2025 22:08:55 +0900, Jeongjun Park wrote:
+> Since handle->h_transaction may be a NULL pointer, so we should change it
+> to call is_handle_aborted(handle) first before dereferencing it.
 > 
-> Signed-off-by: Sumanth Gavini <sumanth.gavini@yahoo.com>
+> And the following data-race was reported in my fuzzer:
+> 
+> ==================================================================
+> BUG: KCSAN: data-race in jbd2_journal_dirty_metadata / jbd2_journal_dirty_metadata
+> 
+> [...]
 
-Thanks,
+Applied, thanks!
 
-With this change this file appears to be codespell-clean.
+[1/1] jbd2: fix data-race and null-ptr-deref in jbd2_journal_dirty_metadata()
+      commit: af98b0157adf6504fade79b3e6cb260c4ff68e37
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+Best regards,
+-- 
+Theodore Ts'o <tytso@mit.edu>
