@@ -1,73 +1,63 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFF4A22D795
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 16:35:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F77C1C8603
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 16:38:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747758907; cv=none; b=XTSsmZAu20gumR9s/cveuaIUonVgwcibKIYkDdt9XAWB/eDr2XEzpHTvtF3IkKyIYdTb5JQY09x6xG+FEilfub/z/jY0W2O5QLGY7rUgNdotZzqak8y3Q+7AC0gd7605oCL+7iT+cFDqKThlLyFRiBMIh2kyCkdoLhokqgxXNoQ=
+	t=1747759142; cv=none; b=Yph96oSTfWToEpEC2hrhJweqURTxNzuQ8GS7Li5THbRmzJik1JXDlEZ8cIKqhWZPvVxrxkh9Q4za8qoVRylPgdNfKjACGv3SCXfufRuwPNiEMVDCrrOD7FAeM0A47x/9s2ujRKPR6I+38H2G8r+lb5BVPHBDFU2gHuZ6SLnInRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747758907; c=relaxed/simple;
-	bh=szeSQ0J+qD3QsqRaON48Nn+Wg54DX3y9D2NVeck5/Kk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HMjhtgqCUwJhDxbiPd4wB+k3KRatIHiawHsFiELMcdBgc5wGdecLGsqf80ZhfvzXd6zjO0VdBPReEWEv1gPCtkeP50yg+hHElMR7KlkpKDv2pDX8ZBS0je/aEkdIHi73A2jBLfjp/R9M7ndFSbXXUbJpYELr4NQQQl4TNbZ7sgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=L7GmeViS; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747759142; c=relaxed/simple;
+	bh=HdEjj9xtdOApLsV/QK9Ste8+XgzKqOObgdIxVyMFgXQ=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=SMhpBUTuh7tVlQJ9OyTn5ENTv95N6mAZYJxW5yuqZWmeQVlszkJM+/gg5u9sM1452AvPJWOrXRj8DAZE6uvNvNXpUL6XB9z5kONGSMmMNpcgpzJoLUrfdGctWlqlXAhz26gETmpjRI3AS7JejgyrgI5oaqTFSWjqc8lxWKg81pg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=jGHrdBed; arc=none smtp.client-ip=209.85.167.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L7GmeViS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747758904;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=1drPzzm4ZSSlsJLuqsPhC6CpqswhlgU+/2J4e5+ruyQ=;
-	b=L7GmeViS/nl0qrEI7iWzBcpAPwkWfGI3g7vLjDH0DUhLJSc4SbgPZnMDDAZw5H9vHsjL7g
-	1+tCeAUFW6Y+6nFvsMkE82h11vXIU2nkgwYyu7xKAvRC1QOtAu4noEZDNQdF82Z6og7MWQ
-	xtMw1fE/GFrCtRHLuhQDoo/S0WH1FeM=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-675-pL2cIOJQM_iq6DTobQ-s4A-1; Tue, 20 May 2025 12:35:03 -0400
-X-MC-Unique: pL2cIOJQM_iq6DTobQ-s4A-1
-X-Mimecast-MFC-AGG-ID: pL2cIOJQM_iq6DTobQ-s4A_1747758902
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43e9a3d2977so43614535e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 09:35:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="jGHrdBed"
+Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-40337dd3847so4070654b6e.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 09:38:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1747759137; x=1748363937; darn=vger.kernel.org;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LSpAqqvzCWxf5m3DjPx8fysiezIB4ytmZ9AUAzuI5Hk=;
+        b=jGHrdBedE4TOUvrpc4cmEhDxl34U+LWO6Kwek1j8/4W5AsJVJN/jUG0N3LJhNsheZh
+         ScpmToXitcfh3GtV9lDVDZsbZXQpn4CrEhdrDZbWV60udZgH+jT4MRisQISvt5cuCZbT
+         hk6yd28b54PbHv8mEaXpE6WdplteZNbVR55mQBupYc0bSnjg6rzMFhDrbOMnQ2U3rMQW
+         xXziMqg1jyKYv0boYINaWW393XR5Nki5TNHWcoIZ8hESYHeLlD2Y7gaJf3oEFqTkrKYC
+         Wpe39MagIJe+mVtx1V7TwiEUgE0MV5OG+HRTWc9Az0zSY0At8XLFbGbtHC+FyM5AvN84
+         xXKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747758902; x=1748363702;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=1drPzzm4ZSSlsJLuqsPhC6CpqswhlgU+/2J4e5+ruyQ=;
-        b=gQsJsRUdEaYx3FSxFuj8fqyptB4xODBN8uTKjUQQlvw9FyJJblGXhvHvA+5RmKMTt3
-         YfDiyuCktEQOLYl9gD1CNRzS7uGA42HPzMmKA7oXbOsyhXhUoC+CjudWc34S5fbd5x53
-         z+ug1t7bojKOgsGUVH9foJzd6AcuA1TAJthI/u3rmB5DQt4LyhdDVkqDpl+/UuNTNP8S
-         L6NzrdakVuDffUbVGgFoEJgJ3cBX6kbzcWcdZCIWcPEwIH8rxwArPhhF/7/o89NtXTdj
-         P22eQfPiI/o+V44tRPXE9/fpyDlSfsRZbsaCbpxFBkNkWGK7qo7wVp04iw1/E4lCtCa3
-         ROiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVLWPb5IQm/s6dFGv8fepnQ+YmxtaEltlaDF9rH76khkXQ4OhnNMQ+pP/iMJgSw59r0s+IR9VXq9x147Pw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3eaBkw/HhlKdXRIWIq94f/nBdE4HViWjDFddlwJsVU3sQGJ8g
-	8lVGSeBTak04L75ToqbEWNHexNseD10DztrNVNrOVfprOZA7z6bFbUYrKYpuiUMz+mgTaKHA0/A
-	M+v0QWvv9T82ScKh5qUkCv6zr8RZTeYw3GoPIOglHZLKMPg+B9vwnTU8nWU4C4cI1hg==
-X-Gm-Gg: ASbGncvaK9XO5XI142GH1NSvvXk8AcjIJcb8WtR+HfPDgkvEXic6E14I98LFq8CF5Ld
-	Q2fz146yk/LJOc5U3j0mPlgfbl8MbVPOdNwhIyeaYzzUG9MT18ALCZ9mylkcSpwn7lJYKBMVbvV
-	wzYPGxs1PkrpbOsFbVVX7NvjgAvoYeFa/Zj2X/JLn9xI3XGbsxQJj0ZZXDIiDRWpIO20h3effpy
-	jceV+yxNNJo0jhZU5vm4tR3ueIBzOhi0pHwn7E04zxW842oRoq0+NA5fiePKi3iDbxOHJ+95Jcj
-	wEc3CmOdYqvaMM10YCEV+bwNzFj1xi7gKbuirPc6AWeC4E9nCKyHLCExu8EnwsbsdAe/35LmoyO
-	PHuwebwrXQ4MiRAqPakAGpjcJjNs9ijkcDmxhBHo=
-X-Received: by 2002:a05:600c:3b94:b0:43c:f63c:babb with SMTP id 5b1f17b1804b1-442fd60a517mr158731275e9.1.1747758902298;
-        Tue, 20 May 2025 09:35:02 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEpdgGOmX5Lylf83j7bynkogSQmow7Gg2MaCaySAEhqvRlh5mYvZBVzZh/21C3Jf3I9LVHVew==
-X-Received: by 2002:a05:600c:3b94:b0:43c:f63c:babb with SMTP id 5b1f17b1804b1-442fd60a517mr158730985e9.1.1747758901871;
-        Tue, 20 May 2025 09:35:01 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f28:7c00:a95e:ac49:f2ad:ab84? (p200300d82f287c00a95eac49f2adab84.dip0.t-ipconnect.de. [2003:d8:2f28:7c00:a95e:ac49:f2ad:ab84])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f6b295fdsm38705305e9.5.2025.05.20.09.35.00
+        d=1e100.net; s=20230601; t=1747759137; x=1748363937;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=LSpAqqvzCWxf5m3DjPx8fysiezIB4ytmZ9AUAzuI5Hk=;
+        b=tDZrdm7Ozn7oyjamV61p/HRfLyJ3gnpajNn0RXzG+YxlPhg5zg3DyufDHR49StyFmq
+         0KXNz+4P7ac3z+6oeEQy5Ew0L1ZlTcS9gMRz0sz1wsbBwf4GzlDvxjzz0aC160Fqa/mA
+         plGI+zXz9e6izOjh0BGOHoPVLiK1OwKlMZnhkfQx5glrZq3BYamyRUmb3fb2ssd3mEXb
+         ekYGogJ8ttnr4rOPw74+has8d0i9X1LZSie+XKQ+vNWlwI9RJ5CvKS8N9iS50gbeGPwM
+         FH3f7WwydTYqdqHIkadxzxv2xzv1Oyt95ShSh8ivW6PB/KkZIiN/mrbLy3OJcEDLao/F
+         i87w==
+X-Gm-Message-State: AOJu0YxF7oxfwmYkwI7U3109FZWB3qsyoMEkUR+Z51h32QcSfiEnfpsl
+	BNsryMmKB11QIs2QiZ+/WasEV3dAKYvDc0cR+AYBA1x9+yh5ZS0aeEsUwVijbnf0P56hYEO/s3L
+	SUCYC
+X-Gm-Gg: ASbGncu1TSam8Oc1G9GW3ZkMvkNHT9/M2jnX0HpcxAYz26iqVPWgYHpXxycGzEkivVJ
+	yiZuSnjp9WBZtUDhM3XC6lhLt5KckZeWO1cCzn+EG9uG/wr+g0Rdqi4CgSEhdf/0yGFm1dz7cDR
+	XqcJQmXSHMQbkTumicfKZHaEY9SQ844p11EBbwfUowHqeCPFQpRr39QM+RwwL/iLija8aZ5Pwpt
+	KKj4sLwqHGbygiRj96pOuOr1AaANx2Kon5meOwyprJ4NUoxo6F8n5Fgul60OP2Gsd5zFClaga58
+	milbQdTVho2e0GjJ9E6oM66h4VPojneBopNMqwP3ioMTgcKmL858dqeEvw==
+X-Google-Smtp-Source: AGHT+IEzq5H1Uqhyb6uJAkgeSI25LqWEvK+3tWTWzGSKuRT1U/qjGvt3mPpaF0FBHDYFzpvyg4+idA==
+X-Received: by 2002:a05:6808:164c:b0:404:a146:9d0a with SMTP id 5614622812f47-404da715bcamr10319082b6e.10.1747759137576;
+        Tue, 20 May 2025 09:38:57 -0700 (PDT)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4fbcc38a365sm2329744173.18.2025.05.20.09.38.56
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 May 2025 09:35:01 -0700 (PDT)
-Message-ID: <a40547f1-3a47-4ba0-8b7e-8f74f91a6b6d@redhat.com>
-Date: Tue, 20 May 2025 18:35:00 +0200
+        Tue, 20 May 2025 09:38:57 -0700 (PDT)
+Message-ID: <a93e1a96-3685-41c3-8979-472b20dfca14@kernel.dk>
+Date: Tue, 20 May 2025 10:38:56 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,98 +65,82 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 4/5] mm/madvise: add PMADV_SET_FORK_EXEC_DEFAULT
- process_madvise() flag
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Jann Horn <jannh@google.com>
-Cc: Pedro Falcato <pfalcato@suse.de>,
- Andrew Morton <akpm@linux-foundation.org>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Arnd Bergmann <arnd@arndb.de>,
- Christian Brauner <brauner@kernel.org>, linux-mm@kvack.org,
- linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
- SeongJae Park <sj@kernel.org>, Usama Arif <usamaarif642@gmail.com>
-References: <cover.1747686021.git.lorenzo.stoakes@oracle.com>
- <617413860ff194dfb1afedb175b2d84a457e449d.1747686021.git.lorenzo.stoakes@oracle.com>
- <czd62f2vzwv6fow4ikvzlkjdj5odhc3nhtc72onwip52baobg5@yc5pjiqoqnh4>
- <CAG48ez2+UEifqF=GRat0dStPfDNXzzewHU=zxj0+FbOXL=mKVQ@mail.gmail.com>
- <24272ed3-0d16-412b-a7f4-78d02c347837@lucifer.local>
-From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <24272ed3-0d16-412b-a7f4-78d02c347837@lucifer.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
+ john.ogness@linutronix.de,
+ "senozhatsky@chromium.org" <senozhatsky@chromium.org>
+From: Jens Axboe <axboe@kernel.dk>
+Subject: printk NMI splat on boot
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 20.05.25 18:19, Lorenzo Stoakes wrote:
-> On Tue, May 20, 2025 at 06:11:49PM +0200, Jann Horn wrote:
->> On Tue, May 20, 2025 at 10:38 AM Pedro Falcato <pfalcato@suse.de> wrote:
->>> - PMADV_INHERIT_FORK. This makes it so the flag is propagated to child processes (does not imply PMADV_FUTURE)
->>
->> Do we think there will be flags settable through this API that we
->> explicitly _don't_ want to inherit on fork()? My understanding is that
->> sort of the default for fork() is to inherit everything, and things
->> that don't get inherited are weird special cases (like mlock() state).
->> (While the default for execve() is to inherit nothing about the MM.)
-> 
-> Yeah this is true. It is the exception rather than the rule...
-> 
->>
->> (I guess you could make a case that in a fork+exec sequence, the child
->> might not want to create hugepage between fork and exec... but this is
->> probably not the right place to control that?)
-> 
->  From my point of view it simply reads better :)
-> 
-> But perhaps we can drop the fork bit and leave that implied.
+Hi,
 
-Yes, we should. Exec is where the "fun" begins.
+This has been going on for a while, and finally getting around to
+reporting it. For every boot on my Dell R7625, I get one of these:
+
+bnxt_en 0000:01:00.2 eno12419np2: renamed from eth2
+usb 1-1.2: new low-speed USB device number 3 using xhci_hcd
+usb 1-1.2: New USB device found, idVendor=047b, idProduct=0011, bcdDevice= 1.00
+usb 3-1: New USB device found, idVendor=1604, idProduct=10c0, bcdDevice= 0.00
+usb 1-1.2: New USB device strings: Mfr=1, Product=2, SerialNumber=0
+rcu: INFO: rcu_sched detected expedited stalls on CPUs/tasks: { 96-.... } 3 jiffies s: 53 root: 0x40/.
+rcu: blocking rcu_node structures (internal RCU debug): l=1:96-111:0x1/.
+Sending NMI from CPU 0 to CPUs 96:
+NMI backtrace for cpu 96
+CPU: 96 UID: 0 PID: 3241 Comm: kworker/96:1 Not tainted 6.15.0-rc7+ #254 NONE 
+Hardware name: Dell Inc. PowerEdge R7625/06444F, BIOS 1.11.2 12/18/2024
+Workqueue: usb_hub_wq hub_event [usbcore]
+RIP: 0010:vprintk_emit+0x360/0x430
+Code: 87 01 0f 84 91 00 00 00 c6 05 36 ec 8a 01 01 c6 05 3c ec 8a 01 00 0f b6 05 28 ec 8a 01 84 c0 74 0d f3 90 0f b6 05 1b ec 8a 01 <84> c0 75 f3 e8 47 0d 00 00 80 e7 02 74 01 fb c7 05 bb ec 8c 01 00
+RSP: 0018:ffffbe47220c7b78 EFLAGS: 00000002
+RAX: 0000000000000001 RBX: 0000000000000246 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 0000000000000002 RDI: ffffffff93019c48
+RBP: ffffbe47220c7c48 R08: 00000000fffdffff R09: ffffa1bf658fffa8
+R10: ffffa1bf64e00000 R11: 0000000000000002 R12: ffffbe47220c7be0
+R13: ffffffff9260f8ee R14: ffffbe47220c7c58 R15: 0000000000000043
+FS:  0000000000000000(0000) GS:ffffa14dd4a34000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000561066512398 CR3: 00000090a0a11002 CR4: 0000000000370ef0
+Call Trace:
+ <TASK>
+ dev_vprintk_emit+0x130/0x140
+ dev_printk_emit+0x3e/0x40
+ ? __dev_printk+0x2d/0x70
+ _dev_info+0x5c/0x5e
+ usb_new_device.cold+0x87/0x3a0 [usbcore]
+ hub_event+0x1113/0x1900 [usbcore]
+ ? __schedule+0x4e5/0xaf0
+ process_one_work+0x140/0x2b0
+ worker_thread+0x2ea/0x430
+ ? process_one_work+0x2b0/0x2b0
+ kthread+0xd4/0x1d0
+ ? kthreads_online_cpu+0xf0/0xf0
+ ret_from_fork+0x2d/0x50
+ ? kthreads_online_cpu+0xf0/0xf0
+ ret_from_fork_asm+0x11/0x20
+ </TASK>
+usb 3-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+usb 1-1.2: Product: Standard USB Keyboard 
+hub 3-1:1.0: USB hub found
+usb 1-1.2: Manufacturer: Silitek
+
+which appears to be this spin section:
+
+        /* We spin waiting for the owner to release us */
+        spin_acquire(&console_owner_dep_map, 0, 0, _THIS_IP_);
+        /* Owner will clear console_waiter on hand off */
+        while (READ_ONCE(console_waiter))
+                cpu_relax();
+        spin_release(&console_owner_dep_map, _THIS_IP_);
+
+Box is a 2-socket, with 2:
+
+AMD EPYC 9754 128-Core Processor
+
+CPUs installed.
 
 -- 
-Cheers,
-
-David / dhildenb
+Jens Axboe
 
