@@ -1,81 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B519B2701B6;
-	Tue, 20 May 2025 10:32:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6453826B085;
+	Tue, 20 May 2025 10:32:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747737157; cv=none; b=BS5mpnKo6BQ1AyW+5JUqqo3RSE17BfYFLU+DZNtb5LVFTKU0M6rGelzPC/90NfX4BSBIHZW64a/1rw9FSDcBXc7GzDRlWjCGz5svfUs6J/H/ReKQmgP8Srk8EG2QUejExIhw7J3sWb9UFH0cePtL2Ux3LjzHrmgOQo0c9/fH7Xo=
+	t=1747737165; cv=none; b=hpPsISQapk0zIoJjON+fanY68FDn8pxbhkxzBoVQmNyYfNOTjqGR/mh5efYUyr6IqjcrjpMNRUjXcySuuXnUkqNNrai7nzbnMRJryvG5zUf5towJYOOiLcYD88JLi6X5aAxtPHWcAluYOlvdPUoJ+Cd0ZRBZ3YHDt1ht/z+rzFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747737157; c=relaxed/simple;
-	bh=zDpmgNIk0KgV9mLpwYhAEJqLphnW13jDgqbiqxHvUZM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k2s3ogxH4EgRmOEa5PiiTB98BmZ1hxg2NhxPaAoMvpzXRUUk75V1EEDA6+kR1qi6uJIJcII7OAujEcgz4zcgaB2prcc2gEiKZ4ykMIcYjyJp16h983PycJJIyia/qPsDE8l6/2tuUguE+dUu5zgboC2E1IiV25VWoNCBajkjQT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=tjX2seFj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747737165; c=relaxed/simple;
+	bh=jSrPTsUdiYGaIXTDtmHfRKOVo6dm+izWDCI+NqHxcFQ=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=haZTlO9vxDIJd0h/Nyw8h0/Z7h0a9SQLmw4J9s4eREIJDnZXblQiWe8EDACDXLh6wrXvnSAEdk5rbNsZV4x1B2OiAvcrJEa8Z1HVG9F9parmMKUhwBQZmNc3xBDmPgGZxMpDHM8YgkZ6KDMakFquTidM1/zv3sKYaO9b2UKBoto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=erLGK5Vb; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="tjX2seFj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 692E5C4CEE9;
-	Tue, 20 May 2025 10:32:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1747737157;
-	bh=zDpmgNIk0KgV9mLpwYhAEJqLphnW13jDgqbiqxHvUZM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tjX2seFj28kVM1MCXRY+f4rM7a6JeGQTg5sZWiT7PoHTMpa7d71V2Vyq6JSvj9t8a
-	 E5o3GukKw7ov8CeHsC+2FgCmGihirW/DYnQRdJxylygaMBXon3pi+ttHqJWjCT5fCY
-	 SBHmeb4L7oIBVDXPiE2VyuQ3avQck5Tm14PYsAWs=
-Date: Tue, 20 May 2025 12:32:34 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: jianqi.ren.cn@windriver.com
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, robdclark@gmail.com,
-	quic_abhinavk@quicinc.com, dmitry.baryshkov@linaro.org,
-	sean@poorly.run, airlied@gmail.com, daniel@ffwll.ch,
-	sashal@kernel.org, quic_vpolimer@quicinc.com,
-	quic_jesszhan@quicinc.com, linux-arm-msm@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-	quic_kalyant@quicinc.com
-Subject: Re: [PATCH 6.1.y 1/2] drm/msm/disp/dpu: use atomic enable/disable
- callbacks for encoder functions
-Message-ID: <2025052007-penalize-gummy-61e2@gregkh>
-References: <20250512033116.3331668-1-jianqi.ren.cn@windriver.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="erLGK5Vb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747737164; x=1779273164;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=jSrPTsUdiYGaIXTDtmHfRKOVo6dm+izWDCI+NqHxcFQ=;
+  b=erLGK5VbWP4FLpqa4N/vwBoft52HSKECwmrbw71ddAKVHUpFk3+xOS/a
+   5eXRnt+SrJM8gmTOQmSAtwSPWfTJ8iZkvoI35QUYoQndHU+pAgGUKvvoa
+   ik5Weuyw7iuvSEIQZEr/7j0WSOoTgjExwVqMp3FYNmU7fVxXhHGO4JuE8
+   MGJIWPq/e/28/ZMF6zHhnepOyu1RF/qqCY+Yax5bI9Vpgyn/T+bbyyZBZ
+   cLvxO1jddNxzTxLgw4BvigLgdL5lsAbtpOdFhe714+ujgCpoRUyuXhxSZ
+   JAZjAPlUNKFvKvgtH97yKRY9Hx/ydRBvRbdXRUvRBkQgnyf2BfoNDWzNK
+   Q==;
+X-CSE-ConnectionGUID: Omumm2kRT8m7w94eHoDxjA==
+X-CSE-MsgGUID: c+uVwU7PReiqEewno8JqeQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11438"; a="48917709"
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="48917709"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 03:32:43 -0700
+X-CSE-ConnectionGUID: /yTSjeFFQ7iKO4HR0N18Dw==
+X-CSE-MsgGUID: d0Ajj8wcR9+ZmqYffBY8BQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,302,1739865600"; 
+   d="scan'208";a="162956622"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.235])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 03:32:36 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 20 May 2025 13:32:32 +0300 (EEST)
+To: Bjorn Helgaas <helgaas@kernel.org>
+cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>, 
+    Karolina Stolarek <karolina.stolarek@oracle.com>, 
+    Martin Petersen <martin.petersen@oracle.com>, 
+    Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, 
+    Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, 
+    Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, 
+    Lukas Wunner <lukas@wunner.de>, 
+    Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+    Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney" <paulmck@kernel.org>, 
+    Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
+    Oliver O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>, 
+    Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>, 
+    Terry Bowman <terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>, 
+    Dave Jiang <dave.jiang@intel.com>, LKML <linux-kernel@vger.kernel.org>, 
+    linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v6 04/16] PCI/AER: Extract bus/dev/fn in aer_print_port_info()
+ with PCI_BUS_NUM(), etc
+In-Reply-To: <20250519213603.1257897-5-helgaas@kernel.org>
+Message-ID: <cf21c493-7430-fbbe-54c0-77305f5af14b@linux.intel.com>
+References: <20250519213603.1257897-1-helgaas@kernel.org> <20250519213603.1257897-5-helgaas@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250512033116.3331668-1-jianqi.ren.cn@windriver.com>
+Content-Type: multipart/mixed; boundary="8323328-699488453-1747737152=:936"
 
-On Mon, May 12, 2025 at 11:31:16AM +0800, jianqi.ren.cn@windriver.com wrote:
-> From: Vinod Polimera <quic_vpolimer@quicinc.com>
-> 
-> [ Upstream commit c0cd12a5d29fa36a8e2ebac7b8bec50c1a41fb57 ]
-> 
-> Use atomic variants for encoder callback functions such that
-> certain states like self-refresh can be accessed as part of
-> enable/disable sequence.
-> 
-> Signed-off-by: Kalyan Thota <quic_kalyant@quicinc.com>
-> Signed-off-by: Vinod Polimera <quic_vpolimer@quicinc.com>
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> Patchwork: https://patchwork.freedesktop.org/patch/524738/
-> Link: https://lore.kernel.org/r/1677774797-31063-12-git-send-email-quic_vpolimer@quicinc.com
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> Signed-off-by: Jianqi Ren <jianqi.ren.cn@windriver.com>
-> Signed-off-by: He Zhe <zhe.he@windriver.com>
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-699488453-1747737152=:936
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+
+On Mon, 19 May 2025, Bjorn Helgaas wrote:
+
+> From: Bjorn Helgaas <bhelgaas@google.com>
+>=20
+> Use PCI_BUS_NUM(), PCI_SLOT(), PCI_FUNC() to extract the bus number,
+> device, and function number directly from the Error Source ID.  There's n=
+o
+> need to shift and mask it explicitly.
+>=20
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 > ---
-> Verified the build test
-> ---
->  drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
+>  drivers/pci/pcie/aer.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index b8494ccd935b..dc8a50e0a2b7 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -736,14 +736,13 @@ void aer_print_error(struct pci_dev *dev, struct ae=
+r_err_info *info)
+>  static void aer_print_port_info(struct pci_dev *dev, struct aer_err_info=
+ *info,
+>  =09=09=09=09const char *details)
+>  {
+> -=09u8 bus =3D info->id >> 8;
+> -=09u8 devfn =3D info->id & 0xff;
+> +=09u16 source =3D info->id;
+> =20
+>  =09pci_info(dev, "%s%s error message received from %04x:%02x:%02x.%d%s\n=
+",
+>  =09=09 info->multi_error_valid ? "Multiple " : "",
+>  =09=09 aer_error_severity_string[info->severity],
+> -=09=09 pci_domain_nr(dev->bus), bus, PCI_SLOT(devfn),
+> -=09=09 PCI_FUNC(devfn), details);
+> +=09=09 pci_domain_nr(dev->bus), PCI_BUS_NUM(source),
+> +=09=09 PCI_SLOT(source), PCI_FUNC(source), details);
+>  }
+> =20
+>  #ifdef CONFIG_ACPI_APEI_PCIEAER
+>=20
 
-If patches are ment to be in a series, please properly send them as a
-series, not as individual emails like you did here :(
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
-Please fix up and resend.
+--=20
+ i.
 
-thanks,
-
-greg k-h
+--8323328-699488453-1747737152=:936--
