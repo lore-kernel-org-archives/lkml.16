@@ -1,76 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01845258CC9;
-	Tue, 20 May 2025 03:20:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D7BE257451;
+	Tue, 20 May 2025 03:20:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747711214; cv=none; b=t3KP/hUu83L+gWwgMUwNn80qOXI3ZQvI9nxeQqkAF+NojSVbFx5zZIgp3s3DAXH1Qd18OI/roRGcsLwdaVT+7V8YBnbn36j0i4hATi2cpYrqN2/GrvPM2ZrZgBQAFyo5ORUADNLtZXZHJLVHBLjvVayeuE9o5u6Bq0HOzpEPqV8=
+	t=1747711214; cv=none; b=YH7g6Z506Uf+U7XnJMq0YtD2iVoXiyDgRi18mPvh+B+Gz3Bf9hZZgA/8FnCZX3WgVgpXAtjwJZu6iOwBY1XEU9SWukZsoKaK4TiV523eRUd8JLFNvuzjQFklRTP/69zpMiLEHlPMLbS6n1vk8wqYtH5YWnlUCCQvHExs+klK/s4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747711214; c=relaxed/simple;
-	bh=Dc4AFUtanuz400vhxPYk3mbW1obhtagdapOQGbYMT1w=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=AVUQISBJk+BOrnJFML9Tgqe7j7qWj6Tmfg3LnDpi+WE4D7YhgxQRQoSFOiQk1L1EcmISKzPotOaI7Yu6yfOh/Cv5mqiX8sf5HBSpoKq2T+dkxO6ekqeZYwLnRU71KAXSDDD7wWcJaJgkWMHWJYSJM+COcNYIv5HVKynVHcOKats=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bQs3MICB; arc=none smtp.client-ip=10.30.226.201
+	bh=VKH7KRryI4ktofS9C7UuxsXcayJGKdrDWZTcnz1iCV8=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=fTHXDvtaz2kmz+pJdOpf3zvxjhukFkPFNxOv+V0MlQVgqS5YSVhvq//VSpKzb9ZEBTijDFqR4IZFTWRTGFdZoZJWg/kgT6/NsKhQiuY3sgwIS2HNhBVpD45OgETccWKLo8dQMqrM8Ozeg6y64Xf/L4gWkCM+fpkbqPaXptVKtCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=VOg79n2N; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bQs3MICB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AC00C4CEE4;
-	Tue, 20 May 2025 03:20:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747711213;
-	bh=Dc4AFUtanuz400vhxPYk3mbW1obhtagdapOQGbYMT1w=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=bQs3MICBsii5kz7CD5Vscd5l0Oag5UuSiCOnA9dYOHaXDEzIygYrWqoBUPj26MA0p
-	 UO+f5Y6ZxaxJ+ccIxQjGoVAgzi91bprygw+YvDhD2L+P+9VLps25Uu/aZHM4d15h1e
-	 Q6whY5f1SoOCzhkg7NOaNlmiBJKbhvd+Tbsze1f+sQWD89hG6rqdfgm5N8DNckaDpq
-	 PQpWHEZyG0lvFYEWgE+gJwkr7AE+l2/2uUAbV5HUp2gGMDaGtwSNj4A835gZ3JS0iV
-	 +2Sj3rYFRe65uwhGpxGNLtFaH4HKGO5BLZxL8vClloTTfbP9gQuHNKhsNE3e76QFYy
-	 6nDF926MI8JXQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADC88380AA70;
-	Tue, 20 May 2025 03:20:50 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="VOg79n2N"
+X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 54K3JglR61991624, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
+	t=1747711182; bh=VKH7KRryI4ktofS9C7UuxsXcayJGKdrDWZTcnz1iCV8=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:MIME-Version;
+	b=VOg79n2NWp3+9ktcKp9gtbrYjJUIk53irYbowRSnVHj9Ux8pIM2POAFnWSdpPZ8He
+	 QwbfGXyJoVDyWu2aMSLTfTyCLTeaCpChYYUQjfr2c8+VRAC1B3WoL9TEbbDWzT15Pr
+	 AIWgLgP0UnfM2ymQUE2ymcgcj6V1vup9/PfnhCUVd6VwdoNkZKkxb0TrT6kB3beEm/
+	 RKFX2pIcOqk96VElM0nQ06TPkV2UlmQd/kzhCUGWlY+krnYzQX5IQkBu6+xs8yS1Lc
+	 asJXJOxgPng6U42lBO2qp6HzQ9zOuebgyRcAS+SAm4kyur6U/3Hu8r2M1IZPnmC9aX
+	 FmDhcEXtd+Slg==
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/3.13/5.93) with ESMTPS id 54K3JglR61991624
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 20 May 2025 11:19:42 +0800
+Received: from RTEXMBS01.realtek.com.tw (172.21.6.94) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Tue, 20 May 2025 11:19:42 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXMBS01.realtek.com.tw (172.21.6.94) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 20 May 2025 11:19:42 +0800
+Received: from RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622]) by
+ RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622%5]) with mapi id
+ 15.01.2507.035; Tue, 20 May 2025 11:19:41 +0800
+From: Justin Lai <justinlai0215@realtek.com>
+To: Jakub Kicinski <kuba@kernel.org>
+CC: "davem@davemloft.net" <davem@davemloft.net>,
+        "edumazet@google.com"
+	<edumazet@google.com>,
+        "pabeni@redhat.com" <pabeni@redhat.com>,
+        "andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "horms@kernel.org"
+	<horms@kernel.org>,
+        Ping-Ke Shih <pkshih@realtek.com>,
+        Larry Chiu
+	<larry.chiu@realtek.com>, Joe Damato <jdamato@fastly.com>
+Subject: RE: [PATCH net-next v2] rtase: Use min() instead of min_t()
+Thread-Topic: [PATCH net-next v2] rtase: Use min() instead of min_t()
+Thread-Index: AQHbtawdSIC/HJstr0OxTEOUNg41/rPaAlkAgAAn8wCAAAG8AIAA1A0g
+Date: Tue, 20 May 2025 03:19:41 +0000
+Message-ID: <73c27a5a4c814a5a9cdf6319314f8480@realtek.com>
+References: <20250425063429.29742-1-justinlai0215@realtek.com>
+	<bb78d791abe34d9cbac30e75e7bec373@realtek.com>
+	<20250519153218.0036db7f@kernel.org> <20250519153830.112e1e0a@kernel.org>
+In-Reply-To: <20250519153830.112e1e0a@kernel.org>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+x-kse-serverinfo: RTEXMBS01.realtek.com.tw, 9
+x-kse-antispam-interceptor-info: fallback
+x-kse-antivirus-interceptor-info: fallback
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v1 0/1] queue_api: reduce risk of name collision over
- txq
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174771124949.1146050.11012119455080440521.git-patchwork-notify@kernel.org>
-Date: Tue, 20 May 2025 03:20:49 +0000
-References: <cover.1747559621.git.gur.stavi@huawei.com>
-In-Reply-To: <cover.1747559621.git.gur.stavi@huawei.com>
-To: Gur Stavi <gur.stavi@huawei.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org
+X-KSE-AntiSpam-Interceptor-Info: fallback
 
-Hello:
+> On Mon, 19 May 2025 15:32:18 -0700 Jakub Kicinski wrote:
+> > On Mon, 19 May 2025 12:16:11 +0000 Justin Lai wrote:
+> > > I apologize for the interruption, I would like to ask why this patch
+> > > is rejected on patchwork.
+> >
+> > Hm, unclear, sorry about that.
+>=20
+> It doesn't apply, perhaps that's why? Please rebase and repost.
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+Hi Jakub,
 
-On Sun, 18 May 2025 13:00:53 +0300 you wrote:
-> Rename local variable in macros from txq to _txq.
-> When macro parameter get_desc is expended it is likely to have a txq
-> token that refers to a different txq variable at the caller's site.
-> 
-> Gur Stavi (1):
->   queue_api: reduce risk of name collision over txq
-> 
-> [...]
+Thank you for your reply. I will rebase and repost.
 
-Here is the summary with links:
-  - [net-next,v1,1/1] queue_api: reduce risk of name collision over txq
-    https://git.kernel.org/netdev/net-next/c/84b21e61ebd6
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Thanks,
+Justin
