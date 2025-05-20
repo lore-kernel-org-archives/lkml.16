@@ -1,67 +1,66 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28EFD1BD9F0;
-	Tue, 20 May 2025 18:48:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74F4427D771;
+	Tue, 20 May 2025 18:48:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747766897; cv=none; b=dYb3A6YyuFZUVJCSMld6NaWVZh1LYGnZR0KqN+3XSRJ2o9bt7AtQ7l3gfNO7IGFwWy+DkYLlle5cD0ow8EMShf7jq/FCafI+Zp5LtIBtIUjZ0g2RkGwcSIAjrks1pHCiFh85ccJSv/q/CBL1ZAiBb599RSObl0LH0t2Jenc4DeA=
+	t=1747766914; cv=none; b=hU+8NyX8x3fAHpOwcs2Zifq2gSAWD5V+zQjxDsaiXGYSZf1asR80Otf9rPrhji0u/D4c5KZfHR2zlsn2TfBbx/4xFLYzXE/asFzPJKQGY0oWX0aoPS0UfDsw8DOFiM3LvxeR+VrBcNNlUPpPADvJJ+WcRx6V5vMe1mOHkp/Gbeg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747766897; c=relaxed/simple;
-	bh=CgPjo0iN42ntlFApY89YjhNLWEByIoKYEa6FJ60IKiI=;
+	s=arc-20240116; t=1747766914; c=relaxed/simple;
+	bh=eWhmDY+JzhMTlbfmEF/OGgFA8INkcIC+ByVMvWRgrZY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KoZ2FHmcgeA1fuNw944XHpvB9l2+DQePtfuGJcF9YpvQBecD5EEWrypx1+pj6nZf9JNjM0cBwjyqXrJXGShTn1qt5tVp8E3aj4QczH79xhyXHdeF2hxNOUDwhxhAgAJ3SJqV3ytCEjhkL3OiLX61ND4uFcVfBZAqVD/wvPQxgVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DKjTwWZW; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+	 In-Reply-To:Content-Type; b=Yup3DZy1pu10+1fPldJuGOVKGZ26A+SeGmvr4s+Q9n1W6HenWd/uO+m+nihfFZVYiIdbYqLktZwOM4G7CK1RWhV9OmxGBHNGDoa7N5fNPNZapuwCDAVlxmMkxzVx2q/4U6xMq8jz9A8jadki06+vChgSJEFLdGd1Zg1nbfaCi2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RKBqaRcw; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DKjTwWZW"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-73c17c770a7so6434707b3a.2;
-        Tue, 20 May 2025 11:48:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RKBqaRcw"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-30e8feb1830so3722382a91.0;
+        Tue, 20 May 2025 11:48:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747766893; x=1748371693; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1747766910; x=1748371710; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=NEGW8OYP6vqNIYspfG7hwW+otQHfZSlN8GWZjQQt5E8=;
-        b=DKjTwWZW9d4rQY9uwBAcN3x9mJ43WSJNkR/NUd4Cff2vFVgK4dzNRvhvXwmGrM1O4s
-         ca2ucs1xWsr/X0LRmDFN/M4mmk7T+6s35XoH6ZyMwmrQU7dEWAwLgOuG6gKb25AT3+4c
-         32sDLzwgHtGWvUer5IY5KCqnbZAD9uZrmTAr+Zjyhl/eB1X76A+HSLLW01dEh2Z8RdUG
-         qhjrFTmgG05R66h5QVXgiX1czuzBDXY/UOlLNKmIdJonAqa+ZXqXAbD85dCzpY/dCoEl
-         u+1zgC3k+LBQ2RbuyFUcZyWjgV1auZ6s9sNC4pIDmlS0DKoe1WGq8IyOCgxSRWRv0l6i
-         i8YQ==
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=exMlkAQN+jyrfEO32kiys6EMj6zlpuy/OgwNus9hUYc=;
+        b=RKBqaRcwKKHSNAQgLjWqyjbP5gPs8jzxF/MzWObIzS4fiCmyfabZtOzwd0piGZXlYc
+         kLX72dtBOo/Bsl8kQ8uCqHG66pgxAcDngjH5o7ReT0oQcy5UK1j1mlpq501vyFS4Qpcu
+         K5AkOHqEfnO6lvWz8w8mJ1xU+ekk4p7PUXw3RK2ecH6xy/ImlEkgLs8AFGJCmV0sWuv4
+         bGEpf9goV9n7fypogUrlZKYmb4R/3UtYzp/yXhWl5oqAjlNYkYuT2MeDz3c1xsWgS97m
+         +AekwHv6UIEdAaaEiCL4P/k3aPkyU+XJHIfvvQ9871MY8aM4VcpbpQ/OdjYZIpUx5BGL
+         t2bQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747766893; x=1748371693;
+        d=1e100.net; s=20230601; t=1747766910; x=1748371710;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=NEGW8OYP6vqNIYspfG7hwW+otQHfZSlN8GWZjQQt5E8=;
-        b=hkJ6FaLts9nmuRusOhP6vYol6BcHHNqECcMq572jmpgl5pvg64GdWRFgdc02IXXaRh
-         FCf4N9XBqHXR4AC8CbFVwEMI0WdixTHF3/HFjDGQZ2jJMUOEOYG7b1N91IsQUT6zqhp7
-         e2Qw4duy3gxRl6ixy4YLgJq07n8owN0AgBHmUyp7Zg8kJFu/f3nPelzb4i3ILKCVdc4a
-         FhRyP1yIww5Wt4fHlx2F9C6rrjzIIQXoq8X73kjVrY6ythgM7MKM733poqHAdtrc2+/9
-         4VyUR91OSY9VWRt213FJ3oHDhet2O3tt+o2gOeILVsgjCIzy7YuDEIDxSwGrmjbA0Tfp
-         okPw==
-X-Forwarded-Encrypted: i=1; AJvYcCUEMqsCnki1oSTqFiE9MsMMGgHAKSmSHs7H5suD89g+UB6MeF82ft1biUxx3yxFmpvWGxdzfr9XQBcgR9HVhaE=@vger.kernel.org, AJvYcCUlskiuRDYxskbTWHsx2IjFNx7U7KYcjRo/b+CIQfKkAnUlzyMuVRx2bMc/u4eIWCQTz7LB/P/LXqiT0hE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQxd+O8gNRkp81alos2JS8g4w76dfknsU6Zt+7DJPrjflcOjaz
-	7qfv3GYYPFG3jG7Pns4twTZr3xKf1CA8Q3I76xo9oQbh0SbbxTbn17bd
-X-Gm-Gg: ASbGncszG3Dt943BamlD7iQY/Rt2UU5nFtEIsCg0XPKerZYRihEPljr7aPSzTxKJYN8
-	Dv+Xh5YzE2Z9ok/yTALZdEszLdZshopttjndcM1NUrB+bVd4ptj6iXEUYb0W58ut3xQ1q3AFoxU
-	BxZ2OwB7epTAKyOciJvS7peIJ4pXz9Uo0OxH9DP1XTHz292ivUYRPUTZ+TKzMMab1ehZbSggDmo
-	rFLZuiXFl2qAqQd9U6h8ln3Wk9x++K+Q2huyEAX45/gf/dhNXLjMyNjUNP/JrMye2CvbF7j8ynp
-	kTw+N2wY9p6vYQIjuozVKTynEWwuoT3ho80uRr8xOf9zHRJboMBbl7JT1dUpdLdf0uxYQ9wTdqF
-	VeYEThgB0CetZ/Zbb6K9UDA+m
-X-Google-Smtp-Source: AGHT+IFWWb7cBfTk9OMRuDtWVVYPpXEqxfFx0itPACSefZ+pOiztCqmjtWe0mkzSLDRwWK1il9criQ==
-X-Received: by 2002:a05:6a21:3d8b:b0:217:ff4b:cc57 with SMTP id adf61e73a8af0-217ff4bcc70mr19982865637.39.1747766893374;
-        Tue, 20 May 2025 11:48:13 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a982ba69sm8544242b3a.91.2025.05.20.11.48.11
+        bh=exMlkAQN+jyrfEO32kiys6EMj6zlpuy/OgwNus9hUYc=;
+        b=og1Q36gq2Lra08h7AH1BePBmPUQTrPZZqzuT2f4blPUz6Jkn54WZv3T6FM+vdS9LV7
+         812EHmM5xxsaEkrZpO9KfEKisbo78KmzCshXuu+bS843PpOyTB92iEFIZa2rltFEvf/i
+         CuoT1rF6hI9Q7sQFfL444ZO1qaPngMENDmCg0Sb99x2G30rnxVKKjJeY9kX16z7K5l3P
+         z18llKLW2iUtjaWj/qAp7XmuRDtCJOvVIKTQfjHmacR66o+Xmkmb6Pys98YGxQjXb1Za
+         h6ClXbh93dxM8KFmBvrjEctZogNBaeGTJP3LhxqWH1ynIiGvjTwP0J+beMHTCD8D3dPF
+         I8Xg==
+X-Forwarded-Encrypted: i=1; AJvYcCXBy8cuDP8YwIxQvwiXITva66kjE6RbgJ6M5ufLj0DXL50qojV2+PP8zZzZb+mXJ2eI1J/NQ9lv@vger.kernel.org, AJvYcCXrB06XakNxSx7j1Mfw9zd87eDXWruQGuDnjAYtFWaD2V9soub5A2ex8lz3yKSiMSapLfCLeXx9lQDlvSQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+wx0csjZoOiud43svbJiwuxyt1JC6GCVSyLUiRvSzMj6k0LAl
+	kkIGpGBdog4Ca2t+ZkmJtxri6qhKYwOJtIZmMokVE+qvuXHL/Vt6lDU9
+X-Gm-Gg: ASbGncvIT1KSZYJVQjEXB2gvPl8m19qaXsT5m/pgWRDpVJJCCnKfp25Qp/35+xhaBcr
+	YSsf9Nska6K9PWtAKH4IeAvp3dEV4ZfpUANJkh0/V/O98KCkTKKyrRT30qNuUyIXJAg+6cotGpn
+	1zjNCefZGCjWMPUql9vKFRpQ9D4VSnQFyBMywlyGct/hhDpjLL4Cue2QLKouLpG3srPyvVJNhov
+	bomjYj6qd5Mci/guSTiP2wVYewACCPpEfx97+OuiYs5X4rdHpQIaTPcpbCS86Yt7u9gkEdoG0Oe
+	KqsxH0s9QX0kRufq5VAbX0d7sx3v1F3c070cuDhQRELEMNTk/azW8Xkakw/3bi/oH5KEmL5YxUW
+	cVROpoD7qsEviXA==
+X-Google-Smtp-Source: AGHT+IG6I1PUmZYO94K/10yCwbz28YB+rLraQhTmPlhL1JjGl7LdacLjtbaQ6Q2m2SjKi97glIc1sg==
+X-Received: by 2002:a17:90a:c105:b0:305:2d68:8d39 with SMTP id 98e67ed59e1d1-30e7d5221efmr31915083a91.12.1747766910401;
+        Tue, 20 May 2025 11:48:30 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f365e5dc6sm2047020a91.40.2025.05.20.11.48.28
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 May 2025 11:48:12 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <c45c7b81-9952-43e2-91a8-e92d0860fa5e@roeck-us.net>
-Date: Tue, 20 May 2025 11:48:11 -0700
+        Tue, 20 May 2025 11:48:29 -0700 (PDT)
+Message-ID: <419b017b-37f8-4f9b-b914-95ab4d76b334@gmail.com>
+Date: Tue, 20 May 2025 11:48:28 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,120 +68,76 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] watchdog: arm_smc_wdt: get wdt status through
- SMCWD_GET_TIMELEFT
-To: Antonio Borneo <antonio.borneo@foss.st.com>,
- Julius Werner <jwerner@chromium.org>, Evan Benn <evanbenn@chromium.org>,
- Wim Van Sebroeck <wim@linux-watchdog.org>, linux-watchdog@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: linux-stm32@st-md-mailman.stormreply.com
-References: <20250519170055.205544-1-antonio.borneo@foss.st.com>
- <20250520085952.210723-1-antonio.borneo@foss.st.com>
+Subject: Re: [PATCH 6.12 000/143] 6.12.30-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250520125810.036375422@linuxfoundation.org>
 Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- np3900V20aS7eD9K8GTU0TGC1pyz6IVJwIE=
-In-Reply-To: <20250520085952.210723-1-antonio.borneo@foss.st.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ WlfRzlpjIPmdjgoicA==
+In-Reply-To: <20250520125810.036375422@linuxfoundation.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 5/20/25 01:59, Antonio Borneo wrote:
-> The optional SMCWD_GET_TIMELEFT command can be used to detect if
-> the watchdog has already been started.
-> See the implementation in OP-TEE secure OS [1].
+On 5/20/25 06:49, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.12.30 release.
+> There are 143 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> At probe time, check if the watchdog is already started and then
-> set WDOG_HW_RUNNING in the watchdog status. This will cause the
-> watchdog framework to ping the watchdog until a userspace watchdog
-> daemon takes over the control.
+> Responses should be made by Thu, 22 May 2025 12:57:37 +0000.
+> Anything received after that time might be too late.
 > 
-> Link: https://github.com/OP-TEE/optee_os/commit/a7f2d4bd8632 [1]
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.30-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
+> and the diffstat can be found below.
 > 
-> Signed-off-by: Antonio Borneo <antonio.borneo@foss.st.com>
+> thanks,
+> 
+> greg k-h
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
+BMIPS_GENERIC:
 
-> ---
->   drivers/watchdog/arm_smc_wdt.c | 17 ++++++++++++++---
->   1 file changed, 14 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/watchdog/arm_smc_wdt.c b/drivers/watchdog/arm_smc_wdt.c
-> index 8f3d0c3a005fb..bbba23ace7b85 100644
-> --- a/drivers/watchdog/arm_smc_wdt.c
-> +++ b/drivers/watchdog/arm_smc_wdt.c
-> @@ -46,6 +46,8 @@ static int smcwd_call(struct watchdog_device *wdd, enum smcwd_call call,
->   		return -ENODEV;
->   	if (res->a0 == PSCI_RET_INVALID_PARAMS)
->   		return -EINVAL;
-> +	if (res->a0 == PSCI_RET_DISABLED)
-> +		return -ENODATA;
->   	if (res->a0 != PSCI_RET_SUCCESS)
->   		return -EIO;
->   	return 0;
-> @@ -131,10 +133,19 @@ static int smcwd_probe(struct platform_device *pdev)
->   
->   	wdd->info = &smcwd_info;
->   	/* get_timeleft is optional */
-> -	if (smcwd_call(wdd, SMCWD_GET_TIMELEFT, 0, NULL))
-> -		wdd->ops = &smcwd_ops;
-> -	else
-> +	err = smcwd_call(wdd, SMCWD_GET_TIMELEFT, 0, NULL);
-> +	switch (err) {
-> +	case 0:
-> +		set_bit(WDOG_HW_RUNNING, &wdd->status);
-> +		fallthrough;
-> +	case -ENODATA:
->   		wdd->ops = &smcwd_timeleft_ops;
-> +		break;
-> +	default:
-> +		wdd->ops = &smcwd_ops;
-> +		break;
-> +	}
-> +
->   	wdd->timeout = res.a2;
->   	wdd->max_timeout = res.a2;
->   	wdd->min_timeout = res.a1;
-> 
-> base-commit: a5806cd506af5a7c19bcd596e4708b5c464bfd21
-
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
