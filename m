@@ -1,178 +1,164 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14F7027932A
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 10:41:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DE7F2741CA
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 10:41:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747737719; cv=none; b=P2zymnlanKsIOH6yunb2NZtBHOgh32WcMiWZb17js1n9lV1WEK1CV0F8zOAVWDwQZwCqRCp8mvserCUspFdCH+asZgmaxuHWHXl69DWIAzST2C2iJ6m92EfhQNz5kjLA5/z99sYKWCnXVRNGM74QZiNje2GwHSuCkaUPbSFOsoQ=
+	t=1747737721; cv=none; b=r7X2CC+AzRZdwM22bjAGEES/kHjzhEsx+7Ve98sNpPJmmosJ3W5kYtWAu29g0zka36thguGW7z88hZ0f7Hl/PieMT/05nS8+nrBuMGEOOXSkDqf+rEnxZdNWe8Qp91jxNM1Yq5xpjvmsqW1ElL0Tk4rYHnGrHpT1rRrzn2qCJmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747737719; c=relaxed/simple;
-	bh=5+DdnQrD8Jm7ALCp3LsrdVZBmTTMhmvX4Okxp7+4aZE=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=gt6GlpcgzWWhw0q7PMWinEZMn1ajsp5Fqh+Wu2wcVZdeLMJ7CxwtxnuU5qdWqYJSTjRMQ8TJH+mnhRjFUHo4ZHrOlZ2noUt2LZp10vOBySMUGaWxqnoIYZiF5ROvO8DZyz2HVCMqWxPyqdNV07orK9nLWZluSaUKFKeoSYgLb5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Yp0bVz6p; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
+	s=arc-20240116; t=1747737721; c=relaxed/simple;
+	bh=mUWTXN9HHfTlRXKGpPk+mQJc0KnWojsAPguAI+nOV+U=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=fL8w3M40/eEqj0qEjTGPXkRO6BdJM2SS+j+p8MzFauNv3hE9UVQOXP0Wd5H7rPu/JorkTrGspemH0k1i17Bd0egRAebeFdAq2ooWymouo29HKw7rpGQxRAZ2EM6YHTDWnLXWlGMcHOe+7yXd8dDBfQWDOKnFIQukQYqWqTonjZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=U5qMx1CD; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Yp0bVz6p"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43eed325461so31616405e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 03:41:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="U5qMx1CD"
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b0b2d0b2843so4193583a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 03:41:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747737716; x=1748342516; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=syvU+98K4794Raf3X6G+lZLkSQNhm8MB57r88GVHtjY=;
-        b=Yp0bVz6pNBShaMjr51z6Hvxj2vjqyeYm/5rAZ+3/RwIOpiY2VKLh6mj+JvhGNWhJYc
-         BnSAkAEyijMAfiDsNlZv6CdKf7lWrTeQDy1bvt0JxsphVlISCefCnCrec4lbvgwDG6bs
-         XOixVbnTt+9XPIIB59neoAhjYi1NkuxOuu7SYXGZCvcywwYBAsxRlzMrszAyqqF2dD6O
-         LV1U4O/2DaY9AiUJG36HVYhjuppVcFbkpk9oKLrJZ52mml8T1F3+wbZ7/vuAWXV0In3S
-         kVyzeG1V926ts0p/FU+yAilgvdZYUY0eavd6mZ+OXt3p2X9NMhgoDUbPPjI8XXrjg1AP
-         MwsA==
+        d=bytedance.com; s=google; t=1747737718; x=1748342518; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=o/EhzKMaxIvvDCcy/f4feKI9fqwkuL11s7nWdOGRixo=;
+        b=U5qMx1CDhFxQ2AbPAyPfVLaEQQOIMtN5iSLgBUaZTEMy49KWN+0ZiNJyiGwiDVkbbY
+         KTyLDiRC5oAfn4n2sG6OxBHCSvYISwl97l35paU7KwqxiEJvsNDu4p4RSWjjwkCCUw2v
+         L6nzp50qRyhkso9a27CzU2MnsMg1FwUposHld9loTQl/dSCg59QFqxKE7F/rfb/uM0ad
+         0mHVSOghIUTbgJMo8kcmr+YwopSyvpcSB4nS1lf+BUcE+L2mh3y3GGbpjpcRyDdPXOnt
+         t7oJ9cKDRFTqdZgDcMdTN/pvU8UavNHjxPsTEcbN0LPAT3qhcVTJdsaj6EBYdqjZF55y
+         3XQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747737716; x=1748342516;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=syvU+98K4794Raf3X6G+lZLkSQNhm8MB57r88GVHtjY=;
-        b=Dv9JDr59EX+Y+Gc4O/PBg2qRdlOMmGbHpnwT2zWdXVJFWFAhWQ3eCEP/xDW27s2VsZ
-         3QCVksjUdzQUdNotevXNT5MUmNbAKM/GO0gfayzSS9EqRaBzrwUSdC+Sf7LiMpJFSX9q
-         W9L/9dOialZ1WGfa9wt7s+XgcVabIQV5BBUY13C/sjgAgV+QPiwPyWuHJQsgqSK5n5GU
-         7Ka0KpAWmGvROMml4WTJiPIwFE+tFuuEPFGK2s80pL7vANd4UgY0aLK/EDNtzVqnh6BL
-         tvUJqLGfFDTzSC36fakh/HjMfWiICfT1qdrGKJuNsTPan6uVTreJdbVu+cGcESKu+CX+
-         2hzA==
-X-Gm-Message-State: AOJu0YxB4mKEVGiBGb3lMX6zb1CUHSS2rovABWoTIeKB+6L4qCbiM/uU
-	+k3E6whNgsPFptHWFoYl8A1/QBdzxD2RYaAOtq9r4iNxTxON4ZUi57o4YWjmp6dIeuxw5atGEa3
-	TYbZQgOxDHndxkCAC4VkDvgD2oUnYhwzC88BSsB4sw/P9D9Pl9EuOqJVh62Mthy+MNd1jSsXEjP
-	XNFZ2VOqOnWOo6OTIioIfCAivj1wdGYcFRbQ==
-X-Google-Smtp-Source: AGHT+IHkTafgnDTkldvnfKXwrHhcaDnjGVxDAfPbmXSQMWezNOea/JqGoCUrkPujtq4FH7yTvRedyn+j
-X-Received: from wmbei7.prod.google.com ([2002:a05:600c:3f07:b0:442:e9ed:dccc])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:19c8:b0:43d:abd:ad0e
- with SMTP id 5b1f17b1804b1-442ff000bf6mr117767795e9.18.1747737716491; Tue, 20
- May 2025 03:41:56 -0700 (PDT)
-Date: Tue, 20 May 2025 12:41:39 +0200
+        d=1e100.net; s=20230601; t=1747737718; x=1748342518;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=o/EhzKMaxIvvDCcy/f4feKI9fqwkuL11s7nWdOGRixo=;
+        b=XKDtgPWgjlsuMKbK4Lbkt4acJkohSgtN8DK5H2nR/ws23BWBTneiWFAoPjWQkYdIjq
+         6H64lYMrMCFPQtVQDTEE8EceZLpPbuRSth9TNimNvYGNNmOzlKM4L6Mt+/Ej2qs/LtDX
+         D6Hnq+18uaiOrfVnpouLln1n23ZN4xYcydZmyNR2WvtNfU5rAO0i7mTJtCSngKQhSnGd
+         K2PwaBTpHUeY38kW6XussB0hR/DrQgTvtp67Loq0PnLBrW6avw/ghJ2Vt23u3LqjnSz9
+         X/HZZwngEND3bkXuzmH4VvmrlD6cuzkuQ00AyOPqky3AJ5dSKLdi9/QAWMQBEatqdlR7
+         zM9w==
+X-Gm-Message-State: AOJu0YxiIYYt+7e6Z3slSyAcR2KGInRbiWRDjw9HAQw07b8FYHas+e3b
+	rIlWOc5U3ujfbdtLHjr4fV5+AEwnX+qxdk6khtALXSVfUvdJ6/1fTYht3DuJhAzXVQ==
+X-Gm-Gg: ASbGnctQR5tIZAw5I59Ch1ED3GIg0JFr19CDLHu2r3OA7u15Lf/8SWG8/MtynUFz1OP
+	XvIrHX79CxxbnZBI6e2vXQXjlYI0GeOBG9cK2GoEPwpnXOdTeyodrSJdQ2OYPnlR2PwhTVk7PWA
+	3JlzlBEfeQjcT30r6f/vXQpVzb+BgSIolZTW2HYts7E2Z6IGXn2MLMOaymxr3l8IwR3fJobBFDK
+	EXNgDEQAnTVP+HWnDKybmJ7Q8vmfJoKloxp+x0gDD5imhHrdEmOLxwKDebMGBKopeLvg8XD7ksW
+	yfAdzOpN0fYX+10UKA7e2rYx9K6izKiJeY2eWtpQ+ns0bwIlroyfyGNRuMjFZ6GNuQnro1vgmAw
+	ryw==
+X-Google-Smtp-Source: AGHT+IHKvJUSPKPdHp3qQ5+Ubc2geQwAfPn/IejVahVN8wD99rI82HgnXp5cQMlWsXUPZMovKC/fmQ==
+X-Received: by 2002:a17:90a:e706:b0:30e:5c7f:5d26 with SMTP id 98e67ed59e1d1-30e7d5aca67mr25983405a91.24.1747737718476;
+        Tue, 20 May 2025 03:41:58 -0700 (PDT)
+Received: from n37-107-136.byted.org ([115.190.40.14])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f365e5d31sm1359431a91.38.2025.05.20.03.41.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 03:41:58 -0700 (PDT)
+From: Aaron Lu <ziqianlu@bytedance.com>
+To: Valentin Schneider <vschneid@redhat.com>,
+	Ben Segall <bsegall@google.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Josh Don <joshdon@google.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Xi Wang <xii@google.com>
+Cc: linux-kernel@vger.kernel.org,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mel Gorman <mgorman@suse.de>,
+	Chengming Zhou <chengming.zhou@linux.dev>,
+	Chuyi Zhou <zhouchuyi@bytedance.com>,
+	Jan Kiszka <jan.kiszka@siemens.com>,
+	Florian Bezdeka <florian.bezdeka@siemens.com>
+Subject: [PATCH 4/7] sched/fair: Take care of group/affinity/sched_class change for throttled task
+Date: Tue, 20 May 2025 18:41:07 +0800
+Message-Id: <20250520104110.3673059-5-ziqianlu@bytedance.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250520104110.3673059-1-ziqianlu@bytedance.com>
+References: <20250520104110.3673059-1-ziqianlu@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4847; i=ardb@kernel.org;
- h=from:subject; bh=aHOyYap++8M1FZ4FuojjmVoeUUIngzDbPEyELQnz7z8=;
- b=owGbwMvMwCFmkMcZplerG8N4Wi2JIUMnJuVcyFGbAG77t+8XvzXjaE97vpBptte+Qyuzjb+EV
- nLOCgnuKGVhEONgkBVTZBGY/ffdztMTpWqdZ8nCzGFlAhnCwMUpABNpy2f4w2cY+ugZL1fYIj5t
- wWn5Ymmq+k52Zy9JLpzO99q55uRMaYb/7ryP53Pd47kjbL30TVK21M4Ols0u+/PmnzLlYT2n+s6 UFQA=
-X-Mailer: git-send-email 2.49.0.1101.gccaa498523-goog
-Message-ID: <20250520104138.2734372-9-ardb+git@google.com>
-Subject: [PATCH v5 0/7] x86: Robustify pgtable_l5_enabled()
-From: Ard Biesheuvel <ardb+git@google.com>
-To: linux-kernel@vger.kernel.org
-Cc: x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Brian Gerst <brgerst@gmail.com>, 
-	"Kirill A. Shutemov" <kirill@shutemov.name>, Borislav Petkov <bp@alien8.de>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-From: Ard Biesheuvel <ardb@kernel.org>
+On task group change, for tasks whose on_rq equals to TASK_ON_RQ_QUEUED,
+core will dequeue it and then requeued it.
 
-This is a follow-up to the discussion at [0], broken out of that series
-so we can progress while the SEV changes are being reviewed and tested.
+The throttled task is still considered as queued by core because p->on_rq
+is still set so core will dequeue it, but since the task is already
+dequeued on throttle in fair, handle this case properly.
 
-The current implementation of pgtable_l5_enabled() is problematic
-because it has two implementations, and source files need to opt into
-the correct one if they contain code that might be called very early.
-Other related global pseudo-constants exist that assume different values
-based on the number of paging levels, and it is hard to reason about
-whether or not all memory mapping and page table code is guaranteed to
-observe consistent values of all of these at all times during the boot.
-Case in point: currently, KASAN needs to be disabled during alternatives
-patching because otherwise, it will reliably produce false positive
-reports due to such inconsistencies.
+Affinity and sched class change is similar.
 
-This revision of the series still provides a single implementation of
-pgtable_l5_enabled(), but no longer based on cpu_feature_enabled(), for
-a number of reasons:
-- fiddling with the early CPU feature detection code is not risk-free,
-  and may cause regressions that are difficult to debug;
-- Boris objected to the use of a separate capability flag, and using the
-  existing one is trickier, as it gets set and cleared during the boot
-  by the feature detection code a couple of times, even if 5-level
-  paging is not in use
-- by their very nature, manipulations of level 4 and level 5 page
-  tables occur rarely compared to lower levels, so it is not obvious
-  that the code patching in cpu_feature_enabled() is needed.
+Signed-off-by: Aaron Lu <ziqianlu@bytedance.com>
+---
+ kernel/sched/fair.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-So instead, collapse the various 5-level paging related global variables
-into a single byte wide pgdir_shift variable, and move it into the cache
-hot per-CPU section where it can be accessed cheaply. Set it from asm
-code so C will always see the same value, and derive
-pgtable_l5_enabled() and PTRS_PER_P4D from it directly, ensuring that
-all these quantities are always mutually consistent.
-
-If pgtable_l5_enabled() requires more optimization, we can consider
-alternatives, runtime constants, etc. but whether this is actually
-necessary is TBD. Suggestions welcome for (micro-)benchmarks that
-illustrate the perf delta.
-
-Build and boot tested using QEMU with LA57 emulation.
-
-Changes since v4:
-- Add patch to fix MAX_PHYSMEM_BITS (and drop an occurrence of
-  pgtable_l5_enabled())
-- Re-order the changes and split across more patches so any potential
-  performance hit is bisectable.
-
-Changes since v3:
-- Drop asm-offsets patch which has been merged already
-- Rebase onto tip/x86/core which now carries some related changes by
-  Kirill
-- Avoid adding new instances of '#ifdef CONFIG_X86_5LEVEL' where
-  possible, as it is going to be removed soon
-- Move cap override arrays straight to __ro_after_init
-- Drop KVM changes entirely - they were wrong and unnecessary
-- Drop the new "la57_hw" capability flag for now - we can always add it
-  later if there is a need.
-
-Changes since v2:
-- Drop first patch which has been merged
-- Rename existing "la57" CPU flag to "la57_hw" and use "la57" to
-  indicate that 5 level paging is being used
-- Move memset() out of identify_cpu()
-- Make set/clear cap override arrays ro_after_init
-- Split off asm-offsets update
-
-[0] https://lore.kernel.org/all/20250504095230.2932860-28-ardb+git@google.com/
-
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: Kirill A. Shutemov <kirill@shutemov.name>
-Cc: Borislav Petkov <bp@alien8.de>
-
-Ard Biesheuvel (7):
-  x86/mm: Decouple MAX_PHYSMEM_BITS from LA57 state
-  x86/mm: Use a single cache hot per-CPU variable to record pgdir_shift
-  x86/mm: Define PTRS_PER_P4D in terms of pgdir_shift()
-  x86/mm: Derive pgtable_l5_enabled() from pgdir_shift()
-  x86/boot: Drop USE_EARLY_PGTABLE_L5 definitions
-  x86/boot: Drop 5-level paging related global variable
-  x86/boot: Remove KASAN workaround for 4/5 level paging switch
-
- arch/x86/boot/compressed/misc.h         |  8 +++---
- arch/x86/boot/compressed/pgtable_64.c   | 10 --------
- arch/x86/boot/startup/map_kernel.c      | 18 +------------
- arch/x86/boot/startup/sme.c             |  9 -------
- arch/x86/include/asm/page_64_types.h    |  2 +-
- arch/x86/include/asm/pgtable_64_types.h | 27 ++++++++------------
- arch/x86/include/asm/sparsemem.h        |  2 +-
- arch/x86/kernel/alternative.c           | 12 ---------
- arch/x86/kernel/cpu/common.c            |  3 ---
- arch/x86/kernel/head64.c                |  9 -------
- arch/x86/kernel/head_64.S               |  5 ++++
- arch/x86/mm/kasan_init_64.c             |  3 ---
- arch/x86/mm/pgtable.c                   |  4 +++
- 13 files changed, 26 insertions(+), 86 deletions(-)
-
-
-base-commit: 54c2c688cd9305bdbab4883b9da6ff63f4deca5d
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 74bc320cbc238..4c66fd8d24389 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -5866,6 +5866,10 @@ static void throttle_cfs_rq_work(struct callback_head *work)
+ 		update_rq_clock(rq);
+ 		WARN_ON_ONCE(!list_empty(&p->throttle_node));
+ 		dequeue_task_fair(rq, p, DEQUEUE_SLEEP | DEQUEUE_SPECIAL);
++		/*
++		 * Must not add it to limbo list before dequeue or dequeue will
++		 * mistakenly regard this task as an already throttled one.
++		 */
+ 		list_add(&p->throttle_node, &cfs_rq->throttled_limbo_list);
+ 		resched_curr(rq);
+ 	}
+@@ -5881,6 +5885,20 @@ void init_cfs_throttle_work(struct task_struct *p)
+ 	INIT_LIST_HEAD(&p->throttle_node);
+ }
+ 
++static void dequeue_throttled_task(struct task_struct *p, int flags)
++{
++	/*
++	 * Task is throttled and someone wants to dequeue it again:
++	 * it must be sched/core when core needs to do things like
++	 * task affinity change, task group change, task sched class
++	 * change etc.
++	 */
++	WARN_ON_ONCE(p->se.on_rq);
++	WARN_ON_ONCE(flags & DEQUEUE_SLEEP);
++
++	list_del_init(&p->throttle_node);
++}
++
+ static void enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags);
+ static int tg_unthrottle_up(struct task_group *tg, void *data)
+ {
+@@ -6834,6 +6852,7 @@ static inline void sync_throttle(struct task_group *tg, int cpu) {}
+ static __always_inline void return_cfs_rq_runtime(struct cfs_rq *cfs_rq) {}
+ static void task_throttle_setup_work(struct task_struct *p) {}
+ static bool task_is_throttled(struct task_struct *p) { return false; }
++static void dequeue_throttled_task(struct task_struct *p, int flags) {}
+ 
+ static inline int cfs_rq_throttled(struct cfs_rq *cfs_rq)
+ {
+@@ -7281,6 +7300,11 @@ static int dequeue_entities(struct rq *rq, struct sched_entity *se, int flags)
+  */
+ static bool dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+ {
++	if (unlikely(task_is_throttled(p))) {
++		dequeue_throttled_task(p, flags);
++		return true;
++	}
++
+ 	if (!(p->se.sched_delayed && (task_on_rq_migrating(p) || (flags & DEQUEUE_SAVE))))
+ 		util_est_dequeue(&rq->cfs, p);
+ 
 -- 
-2.49.0.1101.gccaa498523-goog
+2.39.5
 
