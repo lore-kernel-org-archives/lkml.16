@@ -1,154 +1,216 @@
-Received: from stravinsky.debian.org (stravinsky.debian.org [82.195.75.108])
+Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 055E81DB124;
-	Tue, 20 May 2025 06:10:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.195.75.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AB6E1DB124;
+	Tue, 20 May 2025 06:10:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747721411; cv=none; b=uoh1Zw4SHIfRKMOP2mA6622PZMUP5KdyKdB1A12/DNtULLCQ1xGNqYPKN3TFtnxaX7fyTBYPeekjuW0ofcgv2Q96mCiOpl5Nj/jHHnisM5tiLA4z7Beffg212DArCaMqDGDo9uO2+zp2gaqq1/aCPrnEDHdcG+YkqSNox6U06DQ=
+	t=1747721418; cv=none; b=lyZFrWZtZJZOO4q+kmKRStO7lhoRYiRLg/1/ADWGaWjbTzDdNFN9cdYksF4nCWUXPSqcGBkzQkmuFZKObWT541Q3722EW3FhufUTng44ehm8SVwzGILm86mJMVT3JEzNrtvNK3cDtE83Kpk0Up9FoqG/o53bHkinneyaR9YAiBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747721411; c=relaxed/simple;
-	bh=3inkbt8TL1lFoRCu53H4E/rxKOPuy4Fw9iBX9yfI1EA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uryXOx+GTEr4IhThQkt9u3Cr+8csa1QPZOxjp2vPeRPvfdKV8ZVsgzwXJmjvAbmI39T+cJ36Rjy1rVU+qJxitE8ZkJh8po05p/wHVNEAvvrSfZaKfQAnzvk5lAIX5BV+ukV9GFYw6hThm3hxZW4eg6NtqhXq8Dn+68Wfzmjrtko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b=IuofMIoD; arc=none smtp.client-ip=82.195.75.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
+	s=arc-20240116; t=1747721418; c=relaxed/simple;
+	bh=5F3dDItauTYHudAvONgsRxNKYrhpGJJLwRjmNywRbRQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jbZKFh/U8IctfM6f7Y+plw7vwVYdu+269Wn01zQoRwgQKvTYxUbOkr+aRzxTKn30h+VTmRtgpJHn1UdV8axs7ZUrOaUQ0PHA858L04U5ous6d4GAVoxBfdtr4tFGEXZao4f6XG2YfmSiZC47zBycgPgKuAiyDu6fsLgG+W1anQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=KZQ4LcS3; arc=none smtp.client-ip=67.231.148.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="IuofMIoD"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=G7Kx0ZtWsfXqw30Vxg8hLBL8MP5DK1Zph4yxRDD3jAc=; b=IuofMIoDA6/GxCoqUO+bj/xGM9
-	/YzUYj2Dm9Xkdu92t6jcUkeX/gyoGdKcpsmBoTttu+WEzuF7rr4eoBQLA5CopLnsVG4gUd3epTFN2
-	iT0q5MDt5QKDnxp3HEZShGLpOiR1oVvAflWmSYT+/5QzFzaHxiWcfnpifZUOivkWzcVVKHeU7FSqi
-	Ve2jA6iXN888dRQcH0RvE2bfMR1a31gCX6FZekP6gPjAACpTzpg+5MHhA+MQLQxdYz/fnK3C1FsGs
-	0CazuZXoc/hOBGvOpkeL4g71qsRkOdXII0wLvEtu9VnqhFhnNFNAKyJYMiHB5Umpyy2ikl/zfdZHA
-	9eNdLXwg==;
-Received: from authenticated user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.94.2)
-	(envelope-from <carnil@debian.org>)
-	id 1uHGAv-00GASm-Et; Tue, 20 May 2025 06:10:06 +0000
-Received: by eldamar.lan (Postfix, from userid 1000)
-	id 929F3BE2DE0; Tue, 20 May 2025 08:10:04 +0200 (CEST)
-Date: Tue, 20 May 2025 08:10:04 +0200
-From: Salvatore Bonaccorso <carnil@debian.org>
-To: Roland Clobus <rclobus@rclobus.nl>, Lizhi Xu <lizhi.xu@windriver.com>,
-	Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
-Cc: 1106070@bugs.debian.org, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [6.12.y regression] loosetup: failed to set up loop device:
- Invalid argument after 184b147b9f7f ("loop: Add sanity check for
- read/write_iter")
-Message-ID: <aCwcvC4KBu6j4Dqz@eldamar.lan>
-References: <3a333f27-6810-4313-8910-485df652e897@rclobus.nl>
- <aCwZy6leWNvr7EMd@eldamar.lan>
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="KZQ4LcS3"
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54JM4oa5011988;
+	Mon, 19 May 2025 23:10:03 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pfpt0220; bh=Do35XLd5RGV6NCIHo8nqtBU
+	tOevhNsdBsCJJFl+4BOg=; b=KZQ4LcS31OBP6iJR2pAlxRCauBKKCnn6JZjXBkn
+	gkAx0Tjc6elcObYTgZXzFuFqiZcqDo264dJeHaRmVSpL5JyFTmnVq+sFmKV7AnmQ
+	yQkHcqoLdyKw88jv9ZopCD+CzmL7dNuVdw9tWKr3k8sXckRHkGryPM0tIBALeLPl
+	BTuj7HfOHPUHprlKHNROLk9OA6mH8u4X8VspPThir8lgRIVAK8Is1YOeiix58lRx
+	MNCr1J4Autf0jxBaVc2LkPjNqsJywcXyAqjiTGpQga7VMtIwoBdrtf+vyB7xvW9L
+	XVyzccDZ8W8HNNewnRBVMbIjpFP1Muwh/+t56a3zvnzgrwA==
+Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 46rd3u0qby-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 19 May 2025 23:10:03 -0700 (PDT)
+Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
+ DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Mon, 19 May 2025 23:10:02 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
+ (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Mon, 19 May 2025 23:10:02 -0700
+Received: from test-OptiPlex-Tower-Plus-7010.marvell.com (unknown [10.29.37.157])
+	by maili.marvell.com (Postfix) with ESMTP id A3C3C3F7061;
+	Mon, 19 May 2025 23:09:57 -0700 (PDT)
+From: Hariprasad Kelam <hkelam@marvell.com>
+To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: Hariprasad Kelam <hkelam@marvell.com>,
+        Sunil Goutham
+	<sgoutham@marvell.com>,
+        Linu Cherian <lcherian@marvell.com>,
+        Geetha sowjanya
+	<gakula@marvell.com>,
+        Jerin Jacob <jerinj@marvell.com>,
+        Subbaraya Sundeep
+	<sbhatta@marvell.com>,
+        Andrew Lunn <andrew+netdev@lunn.ch>,
+        "David S. Miller"
+	<davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>
+Subject: [net-next] octeontx2-af: NPC: Clear Unicast rule on nixlf detach
+Date: Tue, 20 May 2025 11:39:52 +0530
+Message-ID: <20250520060952.1080092-1-hkelam@marvell.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCwZy6leWNvr7EMd@eldamar.lan>
-X-Debian-User: carnil
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-GUID: K8YM7B7X9Q_vVpFn4_q2aX_z-Y4FFD7K
+X-Proofpoint-ORIG-GUID: K8YM7B7X9Q_vVpFn4_q2aX_z-Y4FFD7K
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIwMDA0OSBTYWx0ZWRfX37V6lxgYlwKM yBgb0BoN3qh/d6x+juJUEqe30t95hOSaL3dWdMbm1OULrWY6cv9iJR1TXkCo/cMJzpnkaf1h1bb KbVWboCoTeLHBvdz5h507R/fTd9uWZSzLk4HG5d6IgCGcEK4uNG6EVkR+i0XuSGb4ZaoDpfEydU
+ ljiAlSTyFEPS7zVOvEYJyQFfqrIfolO52OKsxa0M9A8qKBY7Dh3vvvIypRMG+l9o6+IjTwo7bTe TY3Z/yBwUGMSRbBgotBaHFoRutVY02SRQKWFhV932JxJelhGJpkbatUAcQuRxxhglLHXTHcZ/IS TtAQEmH22eEvzHOgAZrzQky72ap77EfQvncmsAK6dtXCvphr0rIxCX+7AUuhCGuO+izxjmPvp3y
+ kE4PBrV12DzZ+HHQQeuTWoTKO+ti6HgGHalXbBTzb2tlFNhQzGuPoMJcxMfw6BwbM/Nha+cn
+X-Authority-Analysis: v=2.4 cv=f7NIBPyM c=1 sm=1 tr=0 ts=682c1cbb cx=c_pps a=gIfcoYsirJbf48DBMSPrZA==:117 a=gIfcoYsirJbf48DBMSPrZA==:17 a=dt9VzEwgFbYA:10 a=M5GUcnROAAAA:8 a=WfLIaZI_07ispqDUzUwA:9 a=OBjm3rFKGHvpk9ecZwUJ:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-20_03,2025-05-16_03,2025-03-28_01
 
-On Tue, May 20, 2025 at 07:57:31AM +0200, Salvatore Bonaccorso wrote:
-> Hi
-> 
-> In Debian Roland Clobus reported a regression with setting up loop
-> devices from a backing squashfs file lying on read-only mounted target
-> directory from a iso.
-> 
-> The original report is at:
-> https://bugs.debian.org/1106070
-> 
-> Quoting the report:
-> 
-> On Mon, May 19, 2025 at 12:15:10PM +0200, Roland Clobus wrote:
-> > Package: linux-image-6.12.29-amd64
-> > Version: 6.12.29-1
-> > Severity: important
-> > X-Debbugs-Cc: debian-amd64@lists.debian.org
-> > User: debian-amd64@lists.debian.org
-> > Usertags: amd64
-> > X-Debbugs-Cc: phil@hands.com
-> > User: debian-qa@lists.debian.org
-> > Usertags: openqa
-> > X-Debbugs-Cc: debian-boot
-> > 
-> > Hello maintainers of the kernel,
-> > 
-> > The new kernel (6.12.29) has a modified behaviour (compared to 6.12.27) for
-> > the loop device.
-> > 
-> > This causes the Debian live images (for sid) to fail to boot.
-> > 
-> > The change happened between 20250518T201633Z and 20250519T021902Z, which
-> > matches the upload of 6.12.29 (https://tracker.debian.org/news/1646619/accepted-linux-signed-amd64-612291-source-into-unstable/)
-> > at 20250518T230426Z.
-> > 
-> > To reproduce:
-> > * Download the daily live image from https://openqa.debian.net/tests/396941/asset/iso/smallest-build_sid_20250519T021902Z.iso
-> > * Boot into the live image (the first boot option)
-> > * Result: an initramfs shell (instead of a live system) -> FAIL
-> > * Try: `losetup -r /dev/loop1 /run/live/medium/live/filesystem.squashfs`
-> > * Result: `failed to set up loop device: invalid argument` -> FAIL
-> > * Try: `cp /run/live/medium/live/filesystem.squashfs /`
-> > * Try: `losetup -r /dev/loop2 /filesystem.squashfs`
-> > * Result: `loop2: detected capacity change from 0 to 1460312` -> PASS
-> > 
-> > It appears that the loopback device cannot be used any more with the mount
-> > /run/live/medium (which is on /dev/sr0).
-> > 
-> > I've verified: the md5sum of the squashfs file is OK.
-> > 
-> > The newer kernel is not in trixie yet.
-> > 
-> > With kind regards,
-> > Roland Clobus
-> 
-> A short reproducer is as follows:
-> 
-> iso="netinst.iso"
-> url="https://openqa.debian.net/tests/396941/asset/iso/smallest-build_sid_20250519T021902Z.iso"
-> if [ ! -e "${iso}" ]; then
->         wget "${url}" -O "${iso}"
-> fi
-> mountdir="$(mktemp -d)"
-> mount -v "./${iso}" "${mountdir}"
-> losetup -v -r -f "${mountdir}/live/filesystem.squashfs"
-> loosetup -l
-> 
-> resulting in:
-> 
-> mount: /tmp/tmp.HgbNe7ek3h: WARNING: source write-protected, mounted read-only.
-> mount: /dev/loop0 mounted on /tmp/tmp.HgbNe7ek3h.
-> losetup: /tmp/tmp.HgbNe7ek3h/live/filesystem.squashfs: failed to set up loop device: Invalid argument
-> NAME       SIZELIMIT OFFSET AUTOCLEAR RO BACK-FILE         DIO LOG-SEC
-> /dev/loop0         0      0         1  0 /root/netinst.iso   0     512
-> 
-> Reverting 184b147b9f7f ("loop: Add sanity check for read/write_iter")
-> on top of 6.12.29 fixes the issue:
-> 
-> mount: /tmp/tmp.ACkkdCdYvB: WARNING: source write-protected, mounted read-only.
-> mount: /dev/loop0 mounted on /tmp/tmp.ACkkdCdYvB.
-> NAME       SIZELIMIT OFFSET AUTOCLEAR RO BACK-FILE                                    DIO LOG-SEC
-> /dev/loop1         0      0         0  1 /tmp/tmp.ACkkdCdYvB/live/filesystem.squashfs   0     512
-> /dev/loop0         0      0         1  0 /root/netinst.iso                              0     512
-> 
-> For completeness, netinst.iso is a iso9660 fstype with mount options
-> "ro,relatime,nojoliet,check=s,map=n,blocksize=2048,iocharset=utf8".
-> 
-> #regzbot introduced: 184b147b9f7f
-> #regzbot link: https://bugs.debian.org/1106070
+The AF driver assigns reserved MCAM entries (for unicast, broadcast,
+etc.) based on the NIXLF number. When a NIXLF is detached, these entries
+are disabled.
 
-Just tested: The regression exists as well in 6.15-rc7 so it is not
-specific to the stable 6.12.y update.
+For example,
 
-Regards,
-Salvatore
+         PF           NIXLF
+        --------------------
+         PF0             0
+         SDP-VF0         1
+
+If the user unbinds both PF0 and SDP-VF0 interfaces and then binds them in
+reverse order
+
+         PF            NIXLF
+        ---------------------
+         SDP-VF0         0
+         PF0             1
+
+In this scenario, the PF0 unicast entry is getting corrupted because
+the MCAM entry contains stale data (SDP-VF0 ucast data)
+
+This patch resolves the issue by clearing the unicast MCAM entry during
+NIXLF detach
+
+Signed-off-by: Hariprasad Kelam <hkelam@marvell.com>
+---
+ .../net/ethernet/marvell/octeontx2/af/rvu.c   |  6 ++-
+ .../net/ethernet/marvell/octeontx2/af/rvu.h   |  2 +
+ .../ethernet/marvell/octeontx2/af/rvu_npc.c   | 40 +++++++++++++++++--
+ 3 files changed, 43 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
+index 511eb5b2a2d4..19a5f0da4c7f 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
++++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
+@@ -1393,8 +1393,6 @@ static void rvu_detach_block(struct rvu *rvu, int pcifunc, int blktype)
+ 	if (blkaddr < 0)
+ 		return;
+ 
+-	if (blktype == BLKTYPE_NIX)
+-		rvu_nix_reset_mac(pfvf, pcifunc);
+ 
+ 	block = &hw->block[blkaddr];
+ 
+@@ -1407,6 +1405,10 @@ static void rvu_detach_block(struct rvu *rvu, int pcifunc, int blktype)
+ 		if (lf < 0) /* This should never happen */
+ 			continue;
+ 
++		if (blktype == BLKTYPE_NIX) {
++			rvu_nix_reset_mac(pfvf, pcifunc);
++			rvu_npc_clear_ucast_entry(rvu, pcifunc, lf);
++		}
+ 		/* Disable the LF */
+ 		rvu_write64(rvu, blkaddr, block->lfcfg_reg |
+ 			    (lf << block->lfshift), 0x00ULL);
+diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu.h b/drivers/net/ethernet/marvell/octeontx2/af/rvu.h
+index 147d7f5c1fcc..48f66292ad5c 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/af/rvu.h
++++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu.h
+@@ -994,6 +994,8 @@ void rvu_npc_get_mcam_entry_alloc_info(struct rvu *rvu, u16 pcifunc,
+ void rvu_npc_get_mcam_counter_alloc_info(struct rvu *rvu, u16 pcifunc,
+ 					 int blkaddr, int *alloc_cnt,
+ 					 int *enable_cnt);
++void rvu_npc_clear_ucast_entry(struct rvu *rvu, int pcifunc, int nixlf);
++
+ bool is_npc_intf_tx(u8 intf);
+ bool is_npc_intf_rx(u8 intf);
+ bool is_npc_interface_valid(struct rvu *rvu, u8 intf);
+diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_npc.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu_npc.c
+index 6296a3cdabbb..da15bb451178 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_npc.c
++++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_npc.c
+@@ -1107,6 +1107,7 @@ void npc_enadis_default_mce_entry(struct rvu *rvu, u16 pcifunc,
+ static void npc_enadis_default_entries(struct rvu *rvu, u16 pcifunc,
+ 				       int nixlf, bool enable)
+ {
++	struct rvu_pfvf *pfvf = rvu_get_pfvf(rvu, pcifunc);
+ 	struct npc_mcam *mcam = &rvu->hw->mcam;
+ 	int index, blkaddr;
+ 
+@@ -1115,9 +1116,12 @@ static void npc_enadis_default_entries(struct rvu *rvu, u16 pcifunc,
+ 		return;
+ 
+ 	/* Ucast MCAM match entry of this PF/VF */
+-	index = npc_get_nixlf_mcam_index(mcam, pcifunc,
+-					 nixlf, NIXLF_UCAST_ENTRY);
+-	npc_enable_mcam_entry(rvu, mcam, blkaddr, index, enable);
++	if (npc_is_feature_supported(rvu, BIT_ULL(NPC_DMAC),
++				     pfvf->nix_rx_intf)) {
++		index = npc_get_nixlf_mcam_index(mcam, pcifunc,
++						 nixlf, NIXLF_UCAST_ENTRY);
++		npc_enable_mcam_entry(rvu, mcam, blkaddr, index, enable);
++	}
+ 
+ 	/* Nothing to do for VFs, on platforms where pkt replication
+ 	 * is not supported
+@@ -3570,3 +3574,33 @@ int rvu_mbox_handler_npc_mcam_entry_stats(struct rvu *rvu,
+ 
+ 	return 0;
+ }
++
++void rvu_npc_clear_ucast_entry(struct rvu *rvu, int pcifunc, int nixlf)
++{
++	struct npc_mcam *mcam = &rvu->hw->mcam;
++	struct rvu_npc_mcam_rule *rule;
++	int ucast_idx, blkaddr;
++
++	blkaddr = rvu_get_blkaddr(rvu, BLKTYPE_NPC, 0);
++	if (blkaddr < 0)
++		return;
++
++	ucast_idx = npc_get_nixlf_mcam_index(mcam, pcifunc,
++					     nixlf, NIXLF_UCAST_ENTRY);
++
++	npc_enable_mcam_entry(rvu, mcam, blkaddr, ucast_idx, false);
++
++	npc_set_mcam_action(rvu, mcam, blkaddr, ucast_idx, 0);
++
++	npc_clear_mcam_entry(rvu, mcam, blkaddr, ucast_idx);
++
++	mutex_lock(&mcam->lock);
++	list_for_each_entry(rule, &mcam->mcam_rules, list) {
++		if (rule->entry == ucast_idx) {
++			list_del(&rule->list);
++			kfree(rule);
++			break;
++		}
++	}
++	mutex_unlock(&mcam->lock);
++}
+-- 
+2.34.1
+
