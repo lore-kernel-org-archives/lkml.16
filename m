@@ -1,155 +1,117 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a4-smtp.messagingengine.com (fhigh-a4-smtp.messagingengine.com [103.168.172.155])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A02B322D795;
-	Tue, 20 May 2025 16:34:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D172248895;
+	Tue, 20 May 2025 16:34:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747758858; cv=none; b=dTsjmPHwQYKOtQ8mz8bQm+LC3L+zU6NhiDCccCjpJR/p4cdAIa1agdyDmB1CtIpcsJ8mAqr9NlZ8csJN1XcKsSAHp9SG14V0FvFRjT+4XGBO3FAXGZ7uEjNG7qI/5Tj053aF5KaBA8Y5cUOqPEyCcmqemKrxaVdTGqNvIEAz5Hc=
+	t=1747758883; cv=none; b=IpgQ6z+YdN6fxr/or2YN7X8lmhIpvMmtR4PyaUX7vS3u1ifIWSkwVG4PuHC0L5p9HV9t4WmpxXiyQeG1uKV3fKs+rO9OPRchAqH2tvdn/+dxxMqw4hiu2cJKU2xwEm9YqlfnRk9PDAMwU01mQNacHNAUUYOjJUVRoocoT0O26nM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747758858; c=relaxed/simple;
-	bh=VyyYOhKbGdK6Q4Vh3+ZAnFAI49OgnPA+WshnAQ64g5c=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jVYVCvRudql0lrnYMfKbl4oj78Y8p3q9mFMIAG1W5nXlHJdkF1HtReb1qDX1wBuuzqtxzvKN0tnJEA0F4zvFWNTDTEsKZUmfxWk5OYGF2FO/SaieSuUbR5cqk6kKqddyde4jHSIPHwd37PdEWE5WzhcohqItTEnAuitmnNgjNNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ktkRFswK; arc=none smtp.client-ip=209.85.160.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747758883; c=relaxed/simple;
+	bh=P2O37HzNh0Nda2elBwcK/r/ztmkVrVoMjJoyPLYWE04=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=VcTXMA/qpC2ytmx8uRBcHWMTBztlPP6hX04YKY6noXY4C5Xrt86+UrYqwzTIrDGGqCszMFVNIFFML+weCG2x4BCxIcVnDzzauunegjXA3CmDMFuQ6BGuNvaPBl0cTdpk7H9ojgEx0dj8pYrfns/R97uzX/S9fbccEOxOipe7W9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net; spf=pass smtp.mailfrom=fluxnic.net; dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b=kNbZy5an; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=aQN6erTe; arc=none smtp.client-ip=103.168.172.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fluxnic.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ktkRFswK"
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-4769f3e19a9so39497521cf.0;
-        Tue, 20 May 2025 09:34:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747758855; x=1748363655; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VyyYOhKbGdK6Q4Vh3+ZAnFAI49OgnPA+WshnAQ64g5c=;
-        b=ktkRFswKT/ch7S2Bayh/huowdTggpYrn+iOIYoShwoyqlTlI1or6q7bezTeWlqtE2u
-         D70UcQoSJIu9xCzl6o9QT6dLJdivoiuEagy2P7YugEP8jucnYsQoOoN+qsj+Hnw7Cm/6
-         jmqrbIH98vcTuFVuvi8OkmlCZX2f8QLZKdDO2WO+PWCPZlimoz4f4RqzFYEKlqiGtIyo
-         zhjQ8RPcShfLUPe1yNWD4UzA1qBr1sXRRTT2opYPAzYQLlFXKXyjP/4tLiy0uv1cGvUU
-         oJYIiS2DeBGqePxDOaA07lKny2rA+o4zPhuBFxw/SC3LDdj6YgFupzGTfA4e7Ult12eG
-         U8Ew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747758855; x=1748363655;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VyyYOhKbGdK6Q4Vh3+ZAnFAI49OgnPA+WshnAQ64g5c=;
-        b=LFxZECiFFFuj5PaBc0z9AOtUJ0u0ywnA9DA/1ltAaISdiaQPIlN1288C2IOIAvZDJ9
-         dS8ut/ObS3c1qAjjg6KK7jbe4dQ6IKb2lHYHuMGTDYUVM1+idyBc7JGO2ctF7hD5N+sJ
-         4NBP4OYTnLafPWSmcSspZK8LZguQMwEwhzzvIdG6/y9dfUq9090ISLCCbRTDNQOfTiSq
-         3SlwYikoUE30jJ/BicT/Jp6Ta+y72Ge/9sJmFFrprJBlWikwd9IXRssMtn+AlN9YLjbH
-         EigXifkrtvxPqh3lphbWBgIP7bPoaa9WizqQZZLWVlVuuYyX2Z1A43OvgBvGrgrltvvV
-         rM3A==
-X-Forwarded-Encrypted: i=1; AJvYcCVrdfwayBuqJ4TT4U0IKK/1CWMYAXCSPERsuqSUiqk7xt3JoMqEKcu91+z/ticQo6djJzEoxm0rOqiIqW3m@vger.kernel.org, AJvYcCW5jo8IO3qPuH651wiXxvoq2bIr+WSOu5oNd2YyV/McIyXwHAZf0aBZfEQ+XGs/0b7LPX/Z@vger.kernel.org, AJvYcCX66u0VwnPH6lz8UoU2sokGR+h/MxQtMLEXtuR8pNQNS81UGwSEqI//rG9WBDn3IE4IMJXf0A==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzW0Qhl1iZQ4vLfllDsr9ojTWZ/kENj9EIXIRjjBCImtrsdahiD
-	ueF+JlxuUWXlu7U9QMJA4Z5v+iuMJW/VckPUMn7muXKuOp9qdOzN1ufW
-X-Gm-Gg: ASbGncscJWfFPj4qfKRtZ1AO7kdTj08/NYLjwzAisz34tnbmogvWi+lCga/sFGRZ6fD
-	zxHx5mqpXcvMoVjPW3c9ZPFK4IkjV7YJLmBiDpWRsPh9Bh9CoZqtKgFdtg4DiUNEMRKuRyqVVqZ
-	dsNMMx7wytvqCG4U069Xz/AaPPAPn6ORPMwjQY86FHQAvVFqhFX9gzBuHRTRn6xpXw9TKVsTmtj
-	whSsJH1iLj0BpCId92GD7JhYdvfERd6uKO3+E+iLXDR69xN0NDBPL+02Y5KFiAvRheewI2B0AfW
-	AbXm5oQhfhLc9Wy0KkTBpgUP6pBG5CL3dOI41ndbVrmmqAtLzClXypajT82Tmg5H4g7QMbCv4aj
-	JsByM675tspMByvVoq10XCKFVNg==
-X-Google-Smtp-Source: AGHT+IHF89vB9sSkJ+0Go8jzkQaq8IlhxufFTHLal/lvGAHMBlLkCEK8kQavtZYLi/oDmSbgOit/iQ==
-X-Received: by 2002:a05:622a:4105:b0:494:a4c2:57fd with SMTP id d75a77b69052e-494ae34b716mr270643771cf.9.1747758855231;
-        Tue, 20 May 2025 09:34:15 -0700 (PDT)
-Received: from worker0.chath-257877.iommu-security-pg0.utah.cloudlab.us ([128.110.220.58])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-494ae3ccf9dsm72118821cf.12.2025.05.20.09.34.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 09:34:14 -0700 (PDT)
-From: Chathura Rajapaksha <chathura.abeyrathne.lk@gmail.com>
-X-Google-Original-From: Chathura Rajapaksha <chath@bu.edu>
-To: paul@paul-moore.com
-Cc: Yunxiang.Li@amd.com,
-	alex.williamson@redhat.com,
-	audit@vger.kernel.org,
-	avihaih@nvidia.com,
-	bhelgaas@google.com,
-	chath@bu.edu,
-	chathura.abeyrathne.lk@gmail.com,
-	eparis@redhat.com,
-	kevin.tian@intel.com,
-	kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	schnelle@linux.ibm.com,
-	xin.zeng@intel.com,
-	xwill@bu.edu,
-	yahui.cao@intel.com,
-	zhangdongdong@eswincomputing.com
-Subject: Re: [PATCH RFC 2/2] audit accesses to unassigned PCI config regions
-Date: Tue, 20 May 2025 10:33:55 -0600
-Message-Id: <20250520163355.13346-1-chath@bu.edu>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <669e1abd542da9fbcfb466d134f01767@paul-moore.com>
-References: <669e1abd542da9fbcfb466d134f01767@paul-moore.com>
+	dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="kNbZy5an";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="aQN6erTe"
+Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 47DAE1140116;
+	Tue, 20 May 2025 12:34:39 -0400 (EDT)
+Received: from phl-frontend-01 ([10.202.2.160])
+  by phl-compute-04.internal (MEProxy); Tue, 20 May 2025 12:34:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fluxnic.net; h=
+	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm1; t=1747758879; x=1747845279; bh=QnFTV+24z4
+	RnwaKMJjOmGrH2cprdkqCWnr/+fNT7CHA=; b=kNbZy5anszPa/LXxo0OCr3hdCo
+	Im88AN+u1xZTgpm4BWMgs/4/Iokt7C1CwThFHmFP2o7WgzdHV6X8hW4crt/O5da7
+	0rA5+70/7YDrGXys66jJNJ4M0roXzzYuYEkPQhPBbltAYJkIg2/qIOUiGcS/HAQd
+	UW2fQF6Pfe51d36uES62JGt0CGv3Olrx0WIMnz6ytI+BtuLEDWhSSo3n6xKqTvM9
+	XzgbfXsnM9fPYUnWpcuzB4BWqTvbx5cduD18mAq64YqHDF9Yh7ma2TVPNJrGG31z
+	lBSbzaRg1inVlJbHMgxHzf7U6NwlCDNAOi0KwYS0QiAcxrohE3wh9iMCcfIA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1747758879; x=1747845279; bh=QnFTV+24z4RnwaKMJjOmGrH2cprdkqCWnr/
+	+fNT7CHA=; b=aQN6erTe2q7U6T4Avgg+5XPNpDTiNk+uZio/0RGFzt1DhSVyG6E
+	Njha/w5QnZ5sSmgDLd0iMBVra0QEt/XYEqA/6XP0lGGH6VXdIqlINfu/l8aGYp2n
+	RhvjsRGhopPXAIO/9nvIAvyye5jGjJS2K4jcgDGuIpCkQxVKHQjyMut/SRiSbgkQ
+	VNmSjBnU2RwNe8dPPoruaNhvi9OoIwWMTj1pHb1bY5+Vtnx/RI5sgsdplpG/BO9N
+	UhZbzmlO3UGMc2AZKsm/osnbvypwMRdKA0JFFdshDDRWM7s1hIrqcyLvvps8lCae
+	RLJ1Q9xz7+IclzkNKPJceGf/DAfYiWv/8tQ==
+X-ME-Sender: <xms:H68saLWB0cgtzKFzCX7fT75TcuWrKVGsfkR3eS2HX08l8vrl1tbk2Q>
+    <xme:H68saDn0joy_67idtBBDsF4KAHYJEYzVjbs1Fa72w9mxmCcAaq-pBbP0qE5-AOSKi
+    Shh_tYXmAjagvzda3I>
+X-ME-Received: <xmr:H68saHaKNdJWvMcUdD4MgZ1F9uKoogxaPSi_fOpo2JaEUNLhVri0p3rCp797rtTp_zNeJdbWjLmxDiwYOxfODRVURxsUz4ucBPE9G8TiV0_Jn0Oy4Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdejudculddtuddrgeefvddrtddtmd
+    cutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghn
+    shhusghstghrihgsvgdpuffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtne
+    cusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefujgfkfhgg
+    tgesthdtredttddtvdenucfhrhhomheppfhitgholhgrshcurfhithhrvgcuoehnihgtoh
+    esfhhluhignhhitgdrnhgvtheqnecuggftrfgrthhtvghrnhepgfevvdfhfeeujeeggffg
+    fefhleffieeiuddvheffudehudffkeekhfegfffhfeevnecuvehluhhsthgvrhfuihiivg
+    eptdenucfrrghrrghmpehmrghilhhfrhhomhepnhhitghosehflhhugihnihgtrdhnvght
+    pdhnsggprhgtphhtthhopeegpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehjih
+    hrihhslhgrsgihsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehgrhgvghhkhheslhhi
+    nhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnh
+    gvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhsvghr
+    ihgrlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:H68saGVk3dhVGf3Ii5grgm3jY8h5e8HFNSo7CKdGjzPe4X0tRgySUA>
+    <xmx:H68saFlB1p1MuBgZAaCN1PZY-6Z_l7aNmw32LswM__UQI3BYBABC7w>
+    <xmx:H68saDdl4p9Sc8wNZ7SfnrE8sOevCt20GC3s855pcgRaSYi2SgOR4Q>
+    <xmx:H68saPETpu3mg3Ta_esOyUm_E1QlVuqeTIxhcQA4UdwuxxjY3ZGbow>
+    <xmx:H68saFaRGSFxsZToI2eOpBy7ETVHzoTV9MYInx2u2GikcbiuCrplVpVc>
+Feedback-ID: i58514971:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 20 May 2025 12:34:38 -0400 (EDT)
+Received: from xanadu (xanadu.lan [192.168.1.120])
+	by yoda.fluxnic.net (Postfix) with ESMTPSA id 4C18111B0C33;
+	Tue, 20 May 2025 12:34:38 -0400 (EDT)
+Date: Tue, 20 May 2025 12:34:38 -0400 (EDT)
+From: Nicolas Pitre <nico@fluxnic.net>
+To: Jiri Slaby <jirislaby@kernel.org>
+cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] vt: add VT_GETCONSIZECSRPOS to retrieve console
+ size and cursor position
+In-Reply-To: <3o3q5896-8540-nro6-534o-307nn81r7r5r@syhkavp.arg>
+Message-ID: <p7p83sq1-4ro2-o924-s9o2-30spr74n076o@syhkavp.arg>
+References: <20250514194710.6709-1-nico@fluxnic.net> <20250514194710.6709-3-nico@fluxnic.net> <8fb2c16f-0e9b-402d-a7f2-4881de8c7bd9@kernel.org> <3o3q5896-8540-nro6-534o-307nn81r7r5r@syhkavp.arg>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-Hi Bjorn and Paul,
+On Thu, 15 May 2025, Nicolas Pitre wrote:
 
-Thank you for your comments, and sorry for the late reply.
+> On Thu, 15 May 2025, Jiri Slaby wrote:
+> 
+> > On 14. 05. 25, 21:42, Nicolas Pitre wrote:
+> > > +#define VT_GETCONSIZECSRPOS 0x5610  /* get console size and cursor position
+> > > */
+> > 
+> > Can we define that properly as
+> >   _IOR(0x56, 0x10, struct vt_consizecsrpos)
+> > ? Note this would still differ from "conflicting":
+> > #define VIDIOC_G_FBUF            _IOR('V', 10, struct v4l2_framebuffer)
+> 
+> Similarly as the reason above: given that no other definitions in that 
+> file use the _IO*() scheme for historical reasons, it is preferable to 
+> follow what's already there to avoid unsuspected confusion. The VT layer 
+> is pretty much unlykely to grow many additional ioctls in the 
+> foreseeable future so I'd lean towards keeping things simple and in line 
+> with the existing code.
 
-On Mon, Apr 28, 2025 at 11:05 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> Add blank line between paragraphs.
+OK... I found precedents for a mixed sheme in 
+include/uapi/asm-generic/ioctls.h. Therefore I give in.
 
-> Use imperative mood ("Introduce" instead of "This patch introduces
-> ..." and "Add ..." instead of "A new type has been introduced").
 
-> Simplify this patch by adding "blocked" in the first patch.  Then you
-> won't have to touch the permission checking that is unrelated to the
-> audit logging.  Consider adding a helper to do the checking and return
-> "blocked" so it doesn't clutter vfio_config_do_rw().
-
-I will address the above comments in the next revision.
-
-On Fri, May 16, 2025 at 4:41 PM Paul Moore <paul@paul-moore.com> wrote:
-> I try to encourage people to put a sample audit record in the commit
-> description as it helps others, even those not overly familiar with the
-> Linux kernel, know what to expect in the audit log and provide feedback.
-
-> > +static const char * const vfio_audit_str[VFIO_AUDIT_MAX] = {
-> > +     [VFIO_AUDIT_READ]  = "READ",
-> > +     [VFIO_AUDIT_WRITE] = "WRITE",
-> > +};
->
-> We generally don't capitalize things like this in audit, "read" and
-> "write" would be preferred.
-
-I will address the above comments in the next revision.
-The following is the expected audit message when a write is performed
-to an unassigned PCI config region:
-
-  device=0000:01:00.1 access=WRITE offset=0x298 size=1 blocked=0
-
-> In the commit description you talk about a general PCIe device issue
-> in the first paragraph before going into the specifics of the VFIO
-> driver.  That's all well and good, but it makes me wonder if this
-> audit code above is better done as a generic PCI function that other
-> PCI drivers could use if they had similar concerns?  Please correct
-> me if I'm wrong, but other than symbol naming I don't see anyting
-> above which is specific to VFIO.  Thoughts?
-
-While the issue is independent of VFIO, the security and availability
-concerns arise when guests are able to write to unassigned PCI config
-regions on devices passed through using VFIO. That's why we thought it
-would be better to audit these accesses in the VFIO driver. Given this
-context, do you think it would be more appropriate to audit these
-accesses through a generic PCI function instead?
-
-> Beyond that, I might also change the "access=" field to "op=" as we
-> already use the "op=" field name for similar things in audit, it would
-> be good to leverage that familiarity here.  Similarly using "res=",
-> specifically "res=0" for failure/blocked or "res=1" allowed, would
-> better fit with audit conventions.
-
-Thanks for the suggestions, I will address these in the next revision.
-
-Regards,
-Chathura
+Nicolas
