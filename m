@@ -1,97 +1,307 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mailgate02.uberspace.is (mailgate02.uberspace.is [185.26.156.114])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07B3D248F75;
-	Tue, 20 May 2025 19:50:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B853324C66C
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 19:50:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.26.156.114
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747770614; cv=none; b=RAvEvrIdOb5og/r0p8NEnyhbiaMN6ZjG9GOla3j2cGWjUnX6641P4gKXp+6sqzXal5ya3CuBmuROGlVajmsqtqj88+Twbc4MJSmzXBEBhyk6Lca1rXgTbNTeuClKjqQ988V6EAvz0Jw2m+MF3sExy3F5IY8pv9THmFP61wElLA0=
+	t=1747770616; cv=none; b=A0pAhCwZSYqwIYGccRCMjNIjDxe16AZ/iR5HmPj+9NuWTpXlK4oO0aGb7M2QTM/xIRkqODpuuxOwIKcAfSXWwr4V5TkWbSg1GMnxztQc19X5x13toHn+xJP6bk+F7yIALRPMevHV3XarHZvKuwVw5inqlKFV5KgG6GuWjS+VSQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747770614; c=relaxed/simple;
-	bh=SwiwaSdg4eQ4oxNyBzoukE5k+V15JbB2nsJEKxCXjVE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lz4EYzOyS9pQAoE/mMWGvTyBEhU4SJlt04Q9IRRpx4D4QDfy30tjXwAqRnUxJ7aC+/mWh6NbqUf36rcFEvEs+RKbwsnNu/RQshT0VqQbpVLmaKCA3XKpdwgmlwo6kjS9jFKjSwcC0IDov+COFXCYxBA/MF3u0wrPUyMMG3hyYzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ymwj+OuI; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747770616; c=relaxed/simple;
+	bh=kMiX/BWWUBpZXgzAi68O/8mLwTgRWc6IeaKIGYwCbsY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aXcUq94j8zB3dQXwaTrnx11V/3J2E8t2WHGV3Inw3zPVsLDAYYsGhRrZ3e6Gf7WW7dCEPlpa3vqdm0hwSkRcM1+AF06kX3nCZXew0BB5zazx9XqwTkRVLxvhpMWgOO3fjOX7hRg7HkrdRzANxBlfHw5OUnHg3eOIM98LXFhhBII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=david-bauer.net; spf=pass smtp.mailfrom=david-bauer.net; dkim=pass (4096-bit key) header.d=david-bauer.net header.i=@david-bauer.net header.b=gKppwhXq; arc=none smtp.client-ip=185.26.156.114
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=david-bauer.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=david-bauer.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ymwj+OuI"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-231ba912ba1so5617255ad.2;
-        Tue, 20 May 2025 12:50:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747770612; x=1748375412; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SwiwaSdg4eQ4oxNyBzoukE5k+V15JbB2nsJEKxCXjVE=;
-        b=Ymwj+OuIOozD3ONqijb8ZHfsY28/N6YldYrAIMdcXcN7ELev5vEVrJacrSRJCs+QgC
-         WXVhlEkT45UGymdqo4XdbPZvsggjJ41jUYenkEGm9OB+s49sJMgRcQnCsnAPVp1t/14/
-         WFgD9ibfGuYkWsczp77naIeyXAr0/sJlR5G5u8+pEpM/TsMXVHWS8EFoe7FcXc44RIH4
-         0ahjMZXS6RlObdq9qlDywHmnHcJhhfbUE3Ux86n0GgDKH8DlQSTuhUF8mB9AJ2Huefjr
-         DP1rSZSu6DyJ24UVeAStXYDl7pdvd0t/3ApGEGyCwkArY9vI6QV8nLeJmZsAuqmgQE/z
-         AKXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747770612; x=1748375412;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SwiwaSdg4eQ4oxNyBzoukE5k+V15JbB2nsJEKxCXjVE=;
-        b=tBnKVX92v+cD8B/PnDun1JVrWpHTJ1N3I70OmYa37yh96Jg8EZZ1lwq3ZWxAJcYPxu
-         I+d7qIR++Rk/sqMJOUTYKhnWmM8Rjj+IbOZIy64wQZLbAsEBbDypK9FderWuLiUgYUpt
-         8umSTE/Yf486AS7mJQzzFtpcQOuzFayo+o3WbulLKiU9VpHm51pAK9AKeqbyzJqgD6Wd
-         s5Xls/OoD9gWZPQD7G0GPjn5czWvd3FjtYlaq+7wlxNTW0/A2Wyj/8j0JVW+WvVV5PPy
-         CYkkXhmU4IChcLgflC9qRwQ5Ad4xJOXkA8Z+VUmoJq2TF03guTBy/nEHaY1hm4IH48hH
-         ghBw==
-X-Forwarded-Encrypted: i=1; AJvYcCUtJYTA05VxiXUaRWk9mkzl9IvkYqs4zfgYuT+nmd2keb/CzTY/rK07Q8GqBXAvLE0QmgWHJ7C2wdeFvayOO8E=@vger.kernel.org, AJvYcCV4wCnc8GlIlP9QbADHItq0feMLMqr/6re++Jttq5L+JMzd1L5j9Gk7NkbhQagGX6jYTTdXdZhywOYDXk8=@vger.kernel.org, AJvYcCVc8L7tHZUvU4GMPpWfKWjJgLV3deupFeHYUul2hM6jm8kq/E+cZv+zmzy0Ck4bkLKOfKvFg63R@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3vuIRWUn4UIJ6ZkTSpiO6h6ymHbEG30L4J/xXe24zOPu4TL0n
-	FnQwk9cQarRfTRG3MtTNUaccMzYFIWz5vlDFWfzd5KBWVcHgafJQEI348eRxyfAuGQ8+12kY+Ni
-	jzH++lQFq98sBdZqze+Kr7Gbljz413hU=
-X-Gm-Gg: ASbGncsKhJJKNyBPs66OHncuu3xUX3aRlS10v1AFOyrAZE8woqAtZVZe+nHG5Gbooo0
-	l4nmbmauoVD0KDQcOQDosrdxNFWgeeoZqMjcO1B+LyfxjH7y2x2Qvcpyh2wNFXm1vRhyWnVLlMS
-	QBTeBHuMkqCnC8ZeoqaByQBI8jzhv/HW6h
-X-Google-Smtp-Source: AGHT+IH/GtxXV7pO420TBwvo67pv/+vuSvNQns2cFPY0rjC4suXw7a7ox5Jd3eZobSFtn1EIW9pudsE+oeNIvVQpERQ=
-X-Received: by 2002:a17:902:cf07:b0:220:e1e6:446e with SMTP id
- d9443c01a7336-231d437f0damr92624395ad.1.1747770612110; Tue, 20 May 2025
- 12:50:12 -0700 (PDT)
+	dkim=pass (4096-bit key) header.d=david-bauer.net header.i=@david-bauer.net header.b="gKppwhXq"
+Received: from perseus.uberspace.de (perseus.uberspace.de [95.143.172.134])
+	by mailgate02.uberspace.is (Postfix) with ESMTPS id 734CD17F9A0
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 21:40:06 +0200 (CEST)
+Received: (qmail 31776 invoked by uid 988); 20 May 2025 19:40:06 -0000
+Authentication-Results: perseus.uberspace.de;
+	auth=pass (plain)
+Received: from unknown (HELO unkown) (::1)
+	by perseus.uberspace.de (Haraka/3.0.1) with ESMTPSA; Tue, 20 May 2025 21:40:05 +0200
+Message-ID: <16f39da9-d182-4dc6-8739-1d33fecd0e8f@david-bauer.net>
+Date: Tue, 20 May 2025 21:40:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502140237.1659624-1-ojeda@kernel.org> <20250502140237.1659624-2-ojeda@kernel.org>
- <20250513180757.GA1295002@joelnvbox>
-In-Reply-To: <20250513180757.GA1295002@joelnvbox>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 20 May 2025 21:49:58 +0200
-X-Gm-Features: AX0GCFuOY7Kz9DRWzUOglkPbmrM_Bcksvg1f806Qs5Umb82adzvopIRqYuPJnhw
-Message-ID: <CANiq72=kkejAwQJLYNjN=25Qf7qr801_Gr9zCZXJTEF9Ou54gQ@mail.gmail.com>
-Subject: Re: [PATCH 1/5] objtool/rust: add one more `noreturn` Rust function
- for Rust 1.87.0
-To: Joel Fernandes <joelagnelf@nvidia.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev, stable@vger.kernel.org, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>, ttabi@nvidia.com, 
-	acourbot@nvidia.com, jhubbard@nvidia.com, apopple@nvidia.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] dt-bindings: input: add Semtech SX951x binding
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250505203847.86714-1-mail@david-bauer.net>
+ <cbf42385-9803-4bea-bf99-a6f31f1454f6@linaro.org>
+ <8c9e5e74-966b-4969-9776-7655863fd197@david-bauer.net>
+ <b6d066ea-e47d-4495-bd0b-17ba184275a1@linaro.org>
+Content-Language: en-US
+From: David Bauer <mail@david-bauer.net>
+Autocrypt: addr=mail@david-bauer.net; keydata=
+ xjMEZgynMBYJKwYBBAHaRw8BAQdA+32xE63/l6uaRAU+fPDToCtlZtYJhzI/dt3I6VxixXnN
+ IkRhdmlkIEJhdWVyIDxtYWlsQGRhdmlkLWJhdWVyLm5ldD7CjwQTFggANxYhBLPGu7DmE/84
+ Uyu0uW0x5c9UngunBQJmDKcwBQkFo5qAAhsDBAsJCAcFFQgJCgsFFgIDAQAACgkQbTHlz1Se
+ C6eKAwEA8B6TGkUMw8X7Kv3JdBIoDqJG9+fZuuwlmFsRrdyDyHkBAPtLydDdancCVWNucImJ
+ GSk+M80qzgemqIBjFXW0CZYPzjgEZgynMBIKKwYBBAGXVQEFAQEHQPIm0qo7519c7VUOTAUD
+ 4OR6mZJXFJDJBprBfnXZUlY4AwEIB8J+BBgWCAAmFiEEs8a7sOYT/zhTK7S5bTHlz1SeC6cF
+ AmYMpzAFCQWjmoACGwwACgkQbTHlz1SeC6fP2AD8CduoErEo6JePUdZXwZ1e58+lAeXOLLvC
+ 2kj1OiLjqK4BANoZuHf/ku8ARYjUdIEgfgOzMX/OdYvn0HiaoEfMg7oB
+In-Reply-To: <b6d066ea-e47d-4495-bd0b-17ba184275a1@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Bar: ---
+X-Rspamd-Report: BAYES_HAM(-3) XM_UA_NO_VERSION(0.01) MIME_GOOD(-0.1)
+X-Rspamd-Score: -3.09
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=david-bauer.net; s=uberspace;
+	h=from:to:cc:subject:date;
+	bh=kMiX/BWWUBpZXgzAi68O/8mLwTgRWc6IeaKIGYwCbsY=;
+	b=gKppwhXqCzdpmt8JuQ8Yrn4xFo3jWWuQxZQ5mG5WsNzNGOtfyn/os6ZgRxQ3hPUq+rWp1k7+NF
+	SoFijgSyIHhkprLr+Z6SCK3YTDI76DEMjQnus/5mCa6HNqYok0esKQisdRVWGY/N8m3BVbyzoRrX
+	U0diABp/pelOHL7ALQXXGcWs+4nXLuMK4g8F+cK/E/0LkhakUhMHAAT2g1kV1vWsRDSRw+mC9b8y
+	8hfKn/8zKdA9JJhyWYGtgvSuLpeE1GnfuK9BYnWzb4PvgCOw0AYTcN/WkFYTAtEwd/+KU7hrqtEq
+	icPXzw9yWBy35cgZmQXnv8EAIzFAlOXS2fR3WoCi48psgdtwwjsQYQ2rnqRJw8y7ALoZ8/yLfdW2
+	Yw4P8d8qHBV1WNsjpU1PRH/rwYSOoc3RgjuBoof+64rdD1eRpbss7kE5ZcRL059rjpwXspYPTS3t
+	EoBuCYJZO/5QslE2vBw49EgSmK9/pASyiNJ54XvcIH3MqWtGT8KST8e9ZaZ1SyZH0RkMPCORDKK+
+	+6NeN6wl9D7dtFLRATF99M0dAtEeEfNU5lutCshZSvt3qoVkMrMhaERfhAOsOUVva7dIeI74a7ux
+	wS3TLe5Zv7yhC0DUu4z0+OV8GQ8ZBdiwt0yN0lM62iRBK1zrDMOkvNGSkc6+VnIISKPmvp/Dl4dT
+	M=
 
-On Tue, May 13, 2025 at 8:08=E2=80=AFPM Joel Fernandes <joelagnelf@nvidia.c=
-om> wrote:
->
-> Any thoughts on how to fix the warning?
+Hi Krzysztof,
 
-For future reference, this gets fixed with
-https://lore.kernel.org/rust-for-linux/20250520185555.825242-1-ojeda@kernel=
-.org/
+On 5/20/25 15:58, Krzysztof Kozlowski wrote:
+> On 06/05/2025 12:05, David Bauer wrote:
+>> Hi Krzysztof,
+>>
+>> thanks for the review.
+>>
+>> On 5/6/25 08:21, Krzysztof Kozlowski wrote:
+>>> On 05/05/2025 22:38, David Bauer wrote:
+>>>> Add device-tree binding for the Semtech SX9512/SX9513 family of touch
+>>>> controllers with integrated LED driver.
+>>>>
+>>>> Signed-off-by: David Bauer <mail@david-bauer.net>
+>>>
+>>> You CC-ed an address, which suggests you do not work on mainline kernel
+>>> or you do not use get_maintainers.pl/b4/patman. Please rebase and always
+>>> work on mainline or start using mentioned tools, so correct addresses
+>>> will be used.
+>> I'm a bit unsure what you are referring to - maybe I've set the options
+>> for get_maintainer.pl wrong, but i use
+>>
+>> get_maintainer.pl --nogit --nogit-fallback --norolestats --nol
+>>
+>> to determine TO recipients and
+>>
+>> get_maintainer.pl --nogit --nogit-fallback --norolestats --nom
+>>
+>> for CC destinations.
+>>
+>> Granted, my tree was a bit out of date but it was from mainline
+> 
+> Mainline means latest RC or maintainer tree or linux next. v5.0 is not
+> mainline anymoer.
+> 
+>> and after rebase both commands returned consistent results.
+>>
+>> Hope you can provide me with some guidance there.
+> 
+> Well, read full reply. It is impossible to get such email address from
+> above commands. Such email address does not exist since long time and it
+> easy to prove - just git grep for it. No results, so how could it be
+> printed by get_maintainers.pl?
+> 
+> If you disagree then please paste full output of:
+> 
+> $ git describe
+> $ git status
+> $ scripts/get_maintainer.pl 0*
+> 
+> I provided you extensive guideline exactly to avoid further trivial
+> discussions about that triviality, so I would really appreciate if you
+> followed it.
 
-I hope that helps (and apologies for the delay, a bunch of us were in
-RustWeek :)
+I did a complete new clone of my repository without changing the base-branch
+and now the script outputs the correct set of addresses. Be assured v2
+will reach the correct inbox(es).
 
-Cheers,
-Miguel
+Sorry for the confusion here. Still appreciate you did point this
+out to me.
+
+> 
+>>
+>>>
+>>> Please use scripts/get_maintainers.pl to get a list of necessary people
+>>> and lists to CC (and consider --no-git-fallback argument, so you will
+>>> not CC people just because they made one commit years ago). It might
+>>> happen, that command when run on an older kernel, gives you outdated
+>>> entries. Therefore please be sure you base your patches on recent Linux
+>>> kernel.
+>>>
+>>> Tools like b4 or scripts/get_maintainer.pl provide you proper list of
+>>> people, so fix your workflow. Tools might also fail if you work on some
+>>> ancient tree (don't, instead use mainline) or work on fork of kernel
+>>> (don't, instead use mainline). Just use b4 and everything should be
+>>> fine, although remember about `b4 prep --auto-to-cc` if you added new
+>>> patches to the patchset.
+>>>
+>>>
+>>>> ---
+>>>>    .../bindings/input/semtech,sx951x.yaml        | 180 ++++++++++++++++++
+>>>>    1 file changed, 180 insertions(+)
+>>>>    create mode 100644 Documentation/devicetree/bindings/input/semtech,sx951x.yaml
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/input/semtech,sx951x.yaml b/Documentation/devicetree/bindings/input/semtech,sx951x.yaml
+>>>> new file mode 100644
+>>>> index 000000000000..e4f938decd86
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/input/semtech,sx951x.yaml
+>>>> @@ -0,0 +1,180 @@
+>>>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>>>> +%YAML 1.2
+>>>> +---
+>>>> +$id: http://devicetree.org/schemas/input/semtech,sx951x.yaml#
+>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>>> +
+>>>> +title: Semtech SX9512/SX9513 based capacitive touch sensors
+>>>> +
+>>>> +description: |
+>>>
+>>> Do not need '|' unless you need to preserve formatting.
+>>>
+>>>> +  The Semtech SX9512/SX9513 Family of capacitive touch controllers
+>>>> +  with integrated LED drivers. The device communication is using I2C only.
+>>>> +
+>>>> +maintainers:
+>>>> +  - David Bauer <mail@david-bauer.net>
+>>>> +
+>>>> +properties:
+>>>> +  compatible:
+>>>> +    enum:
+>>>> +      - semtech,sx9512
+>>>> +      - semtech,sx9513
+>>>
+>>> Devices are not compatible? What are the differences?
+>>
+>> The SX9513 is a cost-reduced version which does not
+>> support proximity sensing. With the current support
+>> of the driver they work identical. Should i add this
+>> information as a comment?
+> 
+> So they are compatible and this should be expressed via fallback.
+> 
+> 
+>>
+>>>
+>>>> +
+>>>> +  reg:
+>>>> +    maxItems: 1
+>>>> +
+>>>> +  '#address-cells':
+>>>> +    const: 1
+>>>> +
+>>>> +  '#size-cells':
+>>>> +    const: 0
+>>>> +
+>>>> +  poll-interval:
+>>>> +    default: 100
+>>>> +    description: |
+>>>
+>>> Do not need '|' unless you need to preserve formatting. Same comment
+>>> everywhere.
+>>>
+>>>> +      The polling interval for touch events in milliseconds.
+>>>
+>>> Missing -ms property unit suffix... unless you are using existing
+>>> property from common schema, but I do not see any reference (and thus
+>>> unevaluatedProperties at the end).
+>>>
+>>>> +
+>>>> +patternProperties:
+>>>> +  "^channel@[0-7]$":
+>>>> +    $ref: input.yaml#
+>>>> +    type: object
+>>>> +    description: |
+>>>> +      Each node represents a channel of the touch controller.
+>>>> +      Each channel provides a capacitive touch sensor input and
+>>>> +      an LED driver output.
+>>>> +
+>>>> +    properties:
+>>>> +      reg:
+>>>> +        enum: [0, 1, 2, 3, 4, 5, 6, 7]
+>>>> +
+>>>> +      linux,keycodes:
+>>>> +        maxItems: 1
+>>>> +        description: |
+>>>> +          Specifies an array of numeric keycode values to
+>>>> +          be used for the channels. If this property is
+>>>> +          omitted, the channel is not used as a key.
+>>>> +
+>>>> +      semtech,cin-delta:
+>>>
+>>> Use proper unit suffix and express it in pF.
+>>
+>> To represent 2.3 and 3.8 pF, would it be better to represent in
+>> femtofarad?
+>>
+>>>
+>>>> +        $ref: /schemas/types.yaml#/definitions/uint32
+>>>> +        minimum: 0
+>>>> +        maximum: 3
+>>>> +        default: 3
+>>>> +        description: |
+>>>> +          The capacitance delta which is used to detect a touch
+>>>> +          or release event. The property value is mapped to a
+>>>> +          farad range between 7pF and 2.3pF internally. The delta
+>>>> +          becomes smaller the higher the value is.
+>>>> +
+>>>> +      semtech,sense-threshold:
+>>>> +        $ref: /schemas/types.yaml#/definitions/uint32
+>>>> +        minimum: 0
+>>>> +        maximum: 255
+>>>> +        default: 4
+>>>> +        description: |
+>>>> +          The threshold value after which the channel detects a touch.
+>>>> +          Refer to the datasheet for the internal calculation of the
+>>>> +          resulting touch sensitivity.
+>>>> +
+>>>> +      led:
+>>>
+>>> I think subnode is here not needed. This should be part of the channel,
+>>> probably.
+>>
+>> Just to be sure - you mean to have a property "led" upon which instructs
+>> the channel to be used to drive an LED and include the LED specific
+>> properties in the node of the channel?
+> No, I do not mean a property led. I mean that child node should be
+> folded into parent.
+
+Okay, now i get it. The hardware supports the exclusive as well as combined
+use of channels as LED-driver and touch input.
+
+In case the channel is not wired up to work as an input, the linux,keycodes
+property can be omitted, not creating the input channel.
+
+In turn if the channel is not wired up to an LED, omitting the led subnode
+prevents an led device from being created for this channel.
+
+If I were to fold the led subnode into the channel node I would still need
+a way to indicate if an LED is actually present in hardware, correct? This
+was what i was aiming for with the "led" property. However if I've had to
+choose between these two approaches, I prefer the subnode.
+
+If you have a different idea how to handle this apart from Rob's suggestion,
+It could also be the case I'm creating more problems than I solve with this
+approach :)
+
+Best
+David
+
