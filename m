@@ -1,138 +1,91 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F89944C7C
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 02:21:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EAC41A2C11
+	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 02:22:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747707680; cv=none; b=W9oeJs9Vcw/pECmVxbp8h0ycdtSkSjG/RZS6Ri8WMyKWqe9V83Svp6Ao/ZdoOwN10csUmCmoTqadyjcdlRLFzG7LEX6zSwMrsLUU6FX//QTVx7qdfXt0YR/qqO/+qlSKvnp4Yac6cQW2NPhGGu/inctqbFWOLgTMApBotx9bB1k=
+	t=1747707745; cv=none; b=sC5wLkdoxEjYFYf4aNYa8Hmb/fzxnqAZe09sp4KDcJ7Cd/9Jt/PlNxlnOAQRBq2VxQZya1+h5U01pNSl5h1cGgZJK4h+XADvPx+WIFjyZ+XPy7hNEjyh5sBVIRWxuSNs5aCNL29/rhurzDt9tdM84u4EucWcgOx2uZlM6JQWg88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747707680; c=relaxed/simple;
-	bh=rnIyZOZwXwyBX4MC9AQ4KpcUOppBZVf56gLBfOF8aaE=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=C/rgsnzjr/6mCYpUWrDloBesnFIXiCec2QwvoT6kUgqHBQIlOR5zFbyHAKRCURlOfmGVeFIEU07AqPBEo+c8xvOj+z95VR4X9/OIAcqWCLfA/JoIkyxXO7wBTLGT+ARtqjiGZCREOmxNnAUIP0inHOgKDsNTyEBnz8bB8htDSzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=zxrvWix1; arc=none smtp.client-ip=209.85.219.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1747707745; c=relaxed/simple;
+	bh=jmXrTHnVLLq/i/PxF7Fe3GkUyb8o/LpC3K9yRXSmslk=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cjmOlHCCRokficGcNyTT5JdXvWSJP7hSCCsRtUuSU1Ieaetjl1jEkXe8GzYZD3r3dEvUg28bKIxB4ZQGlZERAhz6PV9v2hS8IPElyOSUkPSLeQBiyDW0roZBDirRM3sLN5A9sj/1rJqoClxFyhbJAZ9D+xmZMqrVF6j0oq0p7kQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com; spf=none smtp.mailfrom=pdp7.com; dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b=XWlhl9Pg; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pdp7.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="zxrvWix1"
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-6f8b10b807fso53906136d6.1
-        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 19:21:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b="XWlhl9Pg"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2320e53167dso28967735ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 19 May 2025 19:22:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747707676; x=1748312476; darn=vger.kernel.org;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mv9NR1w+gxIpIc3S5gfdhi3JSLdkpRz142CJ5qGcBC8=;
-        b=zxrvWix12fXobaHp1fUkF0AKEvDN1P8oYXB+JjxtxEcpviqD0l1+UIkzAtd5vaNpA1
-         WGYrGHZFS7Mp+yQDD2+RhSwUCkbPfBH3BRe2sOygbqBPO1iPIRzylZY7XB3AUQ/iI63M
-         k4vcVi8C8lsvv5CJ+4IOqeTCcHRqwqmeYuDFmthtjWjZMBS8dc7AaDQ7WWNHdn+pOa1M
-         L4x2iWFqdIM86wC08tpcQEBNn7mODIYfojfQ0po554SiAWcBT/DyleiPl6HRoQGuUbF6
-         wz32eGcxbQi01irLvlvupoMYHIIdfQ+gkoemhKf1FmByPJMXrshlJq4qi8R4k85dYDU7
-         n4qw==
+        d=pdp7-com.20230601.gappssmtp.com; s=20230601; t=1747707743; x=1748312543; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=0x1pMRaRiUXRU9jlmtdQiRSbIB2PaGoK9fRSAZ7jcdo=;
+        b=XWlhl9PgT15OvnVBpTll3nfdFsLod01sSLXyT8JDu4pjvsjNrSHBH8hCzVr94TgrVW
+         ioNm3CXwxbEQB5HMSgaIiw67sX1Ndhuk+lojiwXUe1J6aYqf/TMdFLMK+x/efSYjMZHd
+         0JMvI0E0K2S0f3aRtjiDDyZ5Su4OAPzlOpcLCCMN1CGwC0QloBsYo++pS8trchWoUbyu
+         x6QI5oNJF5N/YyQ1E4Ct83BoqBKCXl1Olbts10FAZpkfWda3VRLkSd3zKbLw4ak0by78
+         5dtjiYR3PGw55tij8qWpHjaPcQhlMnLKRx4Un6t1CCAD8KY/itAG8p7dGjpQGe/wDlTF
+         N/aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747707676; x=1748312476;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mv9NR1w+gxIpIc3S5gfdhi3JSLdkpRz142CJ5qGcBC8=;
-        b=vcezz8uYCeWARrcTOq/KFv3QC2JGL891T/32epKu9N7IgY/vfxLgrAXEnKudSo926H
-         iAkn2fTvDzT2BWq6j87dkgBhY+3YO4frQo1el8iKWrONrqhKYMAanjwEAlj8GuR3P4zO
-         VEajaOVUSbbxELxbP+adovOj1KWqut8q16W9UJ9DMaYjLqecbT4FZwNhVfeqGQXy9aT+
-         6O3daPouNEFViYCBBYpYzL8m6kVPn/Pl/w5NT7BLtE7IMMqTVxvj1l7l5n2X82ffZqZa
-         yr+0/ebpJoEMG/+0FggPLmZbxteIDzBRkONPkC0/pS95ZwBSlywwGB1dM0T8sWfYvxS5
-         9kLg==
-X-Forwarded-Encrypted: i=1; AJvYcCVnAYOPGMpo/X7KmX+Rf5RBeTiU/g23RW/Bvady0VvOurOS9ML7XJ1ifCccDzAbCNbjvLLF460pbjtiV04=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzha5C7upSbUzgGogLeuEotD06i4QUcrgtvhNDyhcNnoWGQkamN
-	bo+GyOEKupKo/Csm6UPRep1h7km21bZQi/ATPxA/HKxFbTqwAlZlD5jP4fuWiQHVNzQ=
-X-Gm-Gg: ASbGncu+ztXYxXmE60fZNF28eMfwLvoJdnLT90Ih3K0c6tKL7rycWl4nVjYR3O/cYiB
-	E81Fy2ZT2lWzKKv/ZU2yOwtasxH8pT5g4Ch6o4GwBLNRAS+gCiSKLdtIZt3NVi8Kr01nett0cBB
-	oc+wIA5mTPBKlOzZvLJEdWoYiARX6mU1gRGd+lx5f6y2seFOZHot3uBFVwJIyufjseIOkabPsZQ
-	Rt+7SvL7CCH/XwUMd4WBZ597Fql3gJyEpi2BEWk74BaQ/UGCCHMiUJ5Bwmo5vjwRoU6+TPe86+e
-	MJ46c/j8oK7GpaxlDBqvzOR6uROfuHytd20Y8dPyxG4Z0BxzuVOPN9ce9R0DoH+G37AVXbNmgzK
-	z0goz1WCp3PnYhA==
-X-Google-Smtp-Source: AGHT+IEpKUyEwjXQJkL2YdrPEoyKd44y5EfV4NhY69IIUsVTf/AREwIFgVYdjQXub8D3/wgtOUncQA==
-X-Received: by 2002:a05:6214:2ac:b0:6f8:c621:5a0d with SMTP id 6a1803df08f44-6f8c6215d4cmr147988086d6.19.1747707676346;
-        Mon, 19 May 2025 19:21:16 -0700 (PDT)
-Received: from xanadu (modemcable179.17-162-184.mc.videotron.ca. [184.162.17.179])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f8b097a3dbsm65039696d6.101.2025.05.19.19.21.15
+        d=1e100.net; s=20230601; t=1747707743; x=1748312543;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0x1pMRaRiUXRU9jlmtdQiRSbIB2PaGoK9fRSAZ7jcdo=;
+        b=i5j7tPfXn4aXi8jL3ZaQUnTaZZKyqz9h49y87o3RI0jnWHpIXLB5TJlabxQdIMgGOc
+         31x1ePvQM/7z2Bg0Jqc1bE1ZrB88DlkdqcAE0HdGzo0wRSfTME9No7HmR1mZCYSVMChe
+         hCCt/Q6eD7QuPw/+NhBfjEjzYIiRRA7dF13XZXIMRBfZHpnMOQFqxJe3qrKNrxeiToNC
+         RI/soMb8yaVsKekhDXm5b2+WzNoCWoWI6iHsrlz6GbLWNmeeVrQcGUQd90CUREnyw374
+         +OftDLATQvPQzymLdY2XjGYq8hPcV2MY/g/8Z0/RkJjWr8ClEDv2Vntzl1LZ17xX/orB
+         bjjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV2ll6T+J7vfhCRZdyT369RRt9X3JIGv4jpeerJ7w5sCPsJAUdqFnk0bVsN+HnhqabAmTVzjDPBPczVeuI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwzpVhf5Z4h9QEzybX8nRJ16IWBawMGrYec6JZPkoedLLMv/7ql
+	8jMmkYqmN6VbZkxpbPaaZ4mpE7zZpUvjun7GRQkvolIjw94Aas6IdKfUEeHw+ljYf2g=
+X-Gm-Gg: ASbGncsBuld7/+4RObzMry2Ljz7DJ3lcjwGayTNgW8zKlzg20Dn55yf0XHVO67s1B1B
+	iRsRqKNul4UKh/BqmG4a3x+WjxRu75ySB8BIk/HxjuHkoZhp0z/HXG6tZ+t4kpngFhfpcMpLnVN
+	WgrjsfI0Zel5mlXfeMYTdgqe8R7cnsyFguvgOoSE/TAoDPXja2ppcJCTfjGyvANY9RoeKTP0q9G
+	nwHL9E+Rzvnnonm13kHNYqahDUQvBlMlzV6QIuRW5HalK+aUR5VskIHACg6LCNmIUnlN6mEZBC8
+	SKKwhmQ4pn5lUp+w+1nKfmLFaM2XkPvHJm5jEmS5yDn9/idTUpW0yEt0RuUEPydGIh8kmiez+A=
+	=
+X-Google-Smtp-Source: AGHT+IFL505dYK5kP0RzEBvKLWhjueG80hANUDXQg8Vm6xat3akzB1GhSjsarMMmvWhb64KnIqDstg==
+X-Received: by 2002:a17:903:b8f:b0:224:c76:5e57 with SMTP id d9443c01a7336-231d459bee3mr202331325ad.39.1747707743271;
+        Mon, 19 May 2025 19:22:23 -0700 (PDT)
+Received: from x1 (97-120-251-212.ptld.qwest.net. [97.120.251.212])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4adb71dsm66926355ad.62.2025.05.19.19.22.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 May 2025 19:21:15 -0700 (PDT)
-Date: Mon, 19 May 2025 22:21:15 -0400 (EDT)
-From: Nicolas Pitre <npitre@baylibre.com>
-To: David Laight <david.laight.linux@gmail.com>
-cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
-    u.kleine-koenig@baylibre.com, Oleg Nesterov <oleg@redhat.com>, 
-    Peter Zijlstra <peterz@infradead.org>, 
-    Biju Das <biju.das.jz@bp.renesas.com>
-Subject: Re: [PATCH v2 next 2/4] lib: mul_u64_u64_div_u64() Use BUG_ON() for
- divide by zero
-In-Reply-To: <20250518133848.5811-3-david.laight.linux@gmail.com>
-Message-ID: <pr79o4o1-5345-popr-r206-8qo76523657s@onlyvoer.pbz>
-References: <20250518133848.5811-1-david.laight.linux@gmail.com> <20250518133848.5811-3-david.laight.linux@gmail.com>
+        Mon, 19 May 2025 19:22:22 -0700 (PDT)
+Date: Mon, 19 May 2025 19:22:21 -0700
+From: Drew Fustini <drew@pdp7.com>
+To: Oliver O'Halloran <oohall@gmail.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, nvdimm@lists.linux.dev,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: pmem: Convert binding to YAML
+Message-ID: <aCvnXW12cC97amX3@x1>
+References: <20250520021440.24324-1-drew@pdp7.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250520021440.24324-1-drew@pdp7.com>
 
-On Sun, 18 May 2025, David Laight wrote:
-
-> Do an explicit BUG_ON(!divisor) instead of hoping the 'undefined
-> behaviour' the compiler generated for a compile-time 1/0 is in any
-> way useful.
+On Mon, May 19, 2025 at 07:14:40PM -0700, Drew Fustini wrote:
+> Convert the PMEM device tree binding from text to YAML. This will allow
+> device trees with pmem-region nodes to pass dtbs_check.
 > 
-> It may be better to define the function to return ~(u64)0 for
-> divide by zero.
-> 
-> Signed-off-by: David Laight <david.laight.linux@gmail.com>
+> Signed-off-by: Drew Fustini <drew@pdp7.com>
 > ---
-> 
-> A new change for v2 of the patchset.
-> Whereas gcc inserts (IIRC) 'ud2' clang is likely to let the code
-> continue and generate 'random' results for any 'undefined bahaviour'.
+> v2: remove the txt file to make the conversion complete
 
-clang does exactly the same as gcc.
+Krzysztof/Rob: my apologies, I forgot to add v2 to the Subject. Please
+let me know if I should resend.
 
-As mentioned earlier, this is a soft NAK from me.
-
-The above explanation is more speculation than fact. And here we really
-want to duplicate the behavior a regular runtime 32-bit by 32-bit x/0
-would produce, or in other words behave just like div64_u64() for that
-matter.
-
->  lib/math/div64.c | 10 +++-------
->  1 file changed, 3 insertions(+), 7 deletions(-)
-> 
-> diff --git a/lib/math/div64.c b/lib/math/div64.c
-> index a5c966a36836..c426fa0660bc 100644
-> --- a/lib/math/div64.c
-> +++ b/lib/math/div64.c
-> @@ -186,6 +186,9 @@ EXPORT_SYMBOL(iter_div_u64_rem);
->  #ifndef mul_u64_u64_div_u64
->  u64 mul_u64_u64_div_u64(u64 a, u64 b, u64 d)
->  {
-> +	/* Trigger exception if divisor is zero */
-> +	BUG_ON(!d);
-> +
->  	if (ilog2(a) + ilog2(b) <= 62)
->  		return div64_u64(a * b, d);
->  
-> @@ -212,13 +215,6 @@ u64 mul_u64_u64_div_u64(u64 a, u64 b, u64 d)
->  
->  #endif
->  
-> -	/* make sure d is not zero, trigger exception otherwise */
-> -#pragma GCC diagnostic push
-> -#pragma GCC diagnostic ignored "-Wdiv-by-zero"
-> -	if (unlikely(d == 0))
-> -		return 1/0;
-> -#pragma GCC diagnostic pop
-> -
->  	int shift = __builtin_ctzll(d);
->  
->  	/* try reducing the fraction in case the dividend becomes <= 64 bits */
-> -- 
-> 2.39.5
-> 
-> 
+Thank you,
+Drew
