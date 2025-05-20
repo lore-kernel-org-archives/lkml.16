@@ -1,374 +1,192 @@
-Received: from mail-wr1-f74.google.com (mail-wr1-f74.google.com [209.85.221.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2071.outbound.protection.outlook.com [40.107.237.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62E85266B59
-	for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 08:53:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.74
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747731202; cv=none; b=eWIMs7gxuZEeAOiTh2OrSc2KKmVgyNRUq0Xq9zw5F2OhuW6Jpe5VzBcJQbDd+nB0oxnksAWgHwxyxeEZRN2aocNxvIjEksHUkGs0Q08LtVeS0qGFI7Ep5zAhodmRncdHHOl3AV0UAvcGl6x6kaKu73IwDjooHlvIcGUXeYyz4hM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747731202; c=relaxed/simple;
-	bh=BlVnBCR9fA3RbHA5SLZ5mBMQQQNL+2e7KLtIBL/QhMM=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=QND6wF0pg2aacfmJE51W6ku087T5w4vumgIQfBi4Bnqz8o69Bw46p6HZTb3LGRTZsttR4Jx8b9p8Md4M17cZZ0uS1BgcyVjwzsk8irDmP0EDnj9Q7qMd3ra+OZ7KtCcpqI+M/3xkopJpXyeLr3pQ+YO126g4YG7qfKU7HSxpOW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MQLCPw4a; arc=none smtp.client-ip=209.85.221.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBB3A265CAF;
+	Tue, 20 May 2025 08:53:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.71
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747731225; cv=fail; b=i02KukC3AkRKD5IpkAc+YWmN4YQj9CWVaNyzoUu0FCqitVnx/ZnVZB1fYLnSJaLFPuqs0r5stgLj9q6nMd0wRtclSpK1MiOSKKtE/QZPmfBa0AsC5uI7CxoY67Fd8RFWPcozz7hHuhYWas18CXYLJMrUH6A5kO15MCG4Z4gOxzM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747731225; c=relaxed/simple;
+	bh=RtRTHTvEew2KUgPvM+NEamm2LkGjK5YwvcZiG3/zyec=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=FfcxC0gzZIiqYN7AYFFlqyNpSxglrZwVE2dEVWGYJ3Jt9HBCLkwv7q9VNpfkKLJvWYZB9kTyHCyQK5I9MAtgCU2hXWPA2EQkSe0dPWnUNYgcBLczxzluCh3fgXEpRssduHEXqtvX/hMoxZnAwNhJ/2CJNHxeZj5aXTPExR2tEio=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=La8RD5Bo; arc=fail smtp.client-ip=40.107.237.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MQLCPw4a"
-Received: by mail-wr1-f74.google.com with SMTP id ffacd0b85a97d-3a364394fa8so1615629f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 01:53:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747731199; x=1748335999; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=r+aKabwaAhJ4Qqck1IC3JOTjpsrC8nvKDkSPcc7wS7Q=;
-        b=MQLCPw4ah4HheoJFlbjvZwHzyWrPpI+lm689KVpJuKYmzi5VMzLDVTzD6WfIoGeMuZ
-         1yCvrurP5bPoYf+El8+4zGcMforhTSIaxs/wSb2Tnz1yoMiNd1b4iadMVViUmXoDVIDp
-         7i/BVLMNScPihlJcF8y5m0Vy4NtDtyXHSF4V0Pg8SXSfFwqsJC0stxjqQVOEm4nk/Vy0
-         /wUvfPDLyeBbaUc6wdrIKljE8T/F4xaMRT5PFTboKqCLKq7xhhNNewhFhDVcXYmOGZ32
-         ekA6ztKsdvtmMoHBFaYIsFwem32YuStJm/iOzR01qISNb0fhKyIdDIBQHhhqdAI8fCh4
-         NN+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747731199; x=1748335999;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=r+aKabwaAhJ4Qqck1IC3JOTjpsrC8nvKDkSPcc7wS7Q=;
-        b=g3XjkCbEiprprmpUoVtmGYirs73ftC+AbtHNHqeKLkiTwh31mKjUqAMvnIK9YcyBH0
-         SIDS2Neee6cIgZWDWgANbvZpT9wooW9ooxY3K/+z8PLncQkfhEpb+cwjgR1AzdyDif7v
-         hU4PYFJrYpYIDeH3641q/4qYcbRpF2a8Xuk57miv2Sy4P2k+AOpsUt6fKZoigjqIdMDy
-         qbLJ7A8b35pXGIe1T7zx0joATFCPsu/Sf1vNpbsgcm75Zh+i/NZIIuwdewbvz/w5Mxx0
-         qCCnm2WGFUtQPVbZQ9jT0K5e2uPC43N1cchZ4d3/qKLdRbXEaHlmeZWBopmH084+PBpS
-         HNPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUTyDuICe85r0bhhpwRWoL4sjE6k74cxDoge8m8eyx8byidGxdeSTxUWcvcPI467iD34NYQaN0jZCtem3k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyaQ8PAjFMIy6lHpUcDwkkpaqGbon4jmLYp5+ZH1VpUOfRGhOD8
-	DgsmKMvM1ZSkv9Kl+LeJitnRi/u+6xL3Os0JUawuF30JVKy57v+SGEbRuMQ9722xCfvvYSElALx
-	5TGmAe6YOo0C/NCGeySjiYg==
-X-Google-Smtp-Source: AGHT+IFyEo7AAWRqt3LOScZngS2mL0TgnpSaCCAD9njaDdxJtqDLnq0XfQBZVWjrQbLHNAHvCk2nCV7tVKOozZyh
-X-Received: from wmbec10.prod.google.com ([2002:a05:600c:610a:b0:441:b661:2d94])
- (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6000:2304:b0:3a0:b521:9525 with SMTP id ffacd0b85a97d-3a35fe65fb8mr12267791f8f.1.1747731198829;
- Tue, 20 May 2025 01:53:18 -0700 (PDT)
-Date: Tue, 20 May 2025 09:52:01 +0100
-In-Reply-To: <20250520085201.3059786-1-vdonnefort@google.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="La8RD5Bo"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=VwGHzGyFa0KLmUjU2d2lwO/btXNKo2iwuk+9rP3IASAHnXt2yqbqBTF2715bXXIXjkVisEuI6NZXryCYeI9sb+uxbY2+W5C/N+t8vfhQH+Y6spLDmbBcWSwbKSfcB9mnyq6MJOhpF3lQDsRaXINdSsdHrCzfFHnYuPtqm2mzOfh1XNGUHRJ66vIAuwA2gbCQu21OOVu/OaGPTj7l4G3l8yi9poeSNjRkO35aVp6MzR8Da7DtWJgAlv8xnXC+y4gPDcC4ZbPmJJ2vreDuSiUrnBYZ/FBXWsGoJ/1wRaoMzQOcYGepX5brITrj5rYj+0Cu7Mw4R80QeL++lxt8uaGrMg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WwGRw3kvOcpMy0PL7yoY1NuveNRK4RYGaMZL1qwxLiQ=;
+ b=fMXLen+Vs0Pd7/frGxB3PKvDQTNxPwE4ILo2rfGA13LB7cq1h9tgEEzsqKiaGAPZ4aJOq8IC5XawIu9+c+qvc4lJ+VqDGiCCWLlzd9Vf2j4PfZQVqhPQkZbPoIU7I0bUF1PELjD63y/8OT8ZkTO0e9afW/WOBNu4fjisuXShkAX90NFFAC6PTf2rpVp6oxHFOXpLgH8CfoYcTXh1+UXcP/J6BNHZof5uakCJJS+pq1dKLREtCrgzuWwjJ1ALTd6OmTSx/sZqdJwyuI3VSsUBl1Qobh0a98wtkQvx/j1kfPx7h/Gk2SUvKTxh6VMdp3YZ02CKBeREVdKbiQs+8A78UQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WwGRw3kvOcpMy0PL7yoY1NuveNRK4RYGaMZL1qwxLiQ=;
+ b=La8RD5BonvoTyXpFo3GQ777OdsG65AyykZZAe+VpLlgeRzv94jOTv3mAcvfEjiRFMjAuqIivdGk2VjG+ts8p3yz3m4V+ooNMKfubmW/g+K/b7HO7NIlbB01Ofwnrgh4aTafUbalsRo/E1eXje32c7iyLnBoNgGfc/e9/yI9WsC4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS7PR12MB6048.namprd12.prod.outlook.com (2603:10b6:8:9f::5) by
+ PH0PR12MB8100.namprd12.prod.outlook.com (2603:10b6:510:29b::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8746.31; Tue, 20 May 2025 08:53:39 +0000
+Received: from DS7PR12MB6048.namprd12.prod.outlook.com
+ ([fe80::6318:26e5:357a:74a5]) by DS7PR12MB6048.namprd12.prod.outlook.com
+ ([fe80::6318:26e5:357a:74a5%4]) with mapi id 15.20.8746.030; Tue, 20 May 2025
+ 08:53:39 +0000
+Message-ID: <ae0c9a42-5898-4bc6-b104-aab90ddbc751@amd.com>
+Date: Tue, 20 May 2025 14:23:31 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 rc] iommu: Skip PASID validation for devices without
+ PASID capability
+To: Tushar Dave <tdave@nvidia.com>, joro@8bytes.org, will@kernel.org,
+ robin.murphy@arm.com, kevin.tian@intel.com, jgg@nvidia.com,
+ yi.l.liu@intel.com, iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+Cc: linux-pci@vger.kernel.org, stable@vger.kernel.org
+References: <20250520011937.3230557-1-tdave@nvidia.com>
+Content-Language: en-US
+From: Vasant Hegde <vasant.hegde@amd.com>
+In-Reply-To: <20250520011937.3230557-1-tdave@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN3PR01CA0044.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:98::21) To DS7PR12MB6048.namprd12.prod.outlook.com
+ (2603:10b6:8:9f::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250520085201.3059786-1-vdonnefort@google.com>
-X-Mailer: git-send-email 2.49.0.1143.g0be31eac6b-goog
-Message-ID: <20250520085201.3059786-11-vdonnefort@google.com>
-Subject: [PATCH v5 10/10] KVM: arm64: np-guest CMOs with PMD_SIZE fixmap
-From: Vincent Donnefort <vdonnefort@google.com>
-To: maz@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, 
-	suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, 
-	will@kernel.org
-Cc: qperret@google.com, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, kernel-team@android.com, 
-	Vincent Donnefort <vdonnefort@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB6048:EE_|PH0PR12MB8100:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4e3030eb-da67-4832-00f5-08dd977bd045
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|1800799024|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?RkRRQlpRVU5CRVY1WHJMc25aNW5SR1JKYnd5cUZlYURybk1IdkNzY3JwMmRV?=
+ =?utf-8?B?VHhvdkRjVERVYXZqWG1ONWVOMmxTdGswbU9LQlROelNzUDlWeHRLZXR3S2ZB?=
+ =?utf-8?B?TlRFcEtGQVY4VUtWKzgzZXRWOERmV29XRDA3eDdtbm4rSE80L1krK2NKVU5t?=
+ =?utf-8?B?dVZlb0YxclRLK29OU3BsRHlTc2JOVlRhNE1tbElya3dOOFhJTzZzeUxCTHZR?=
+ =?utf-8?B?K1I5M0tOOWRHdzlJa0xGMzhZQjJHejk3ajBrajlGc1ZuYzZzdzNTVWZCaEhC?=
+ =?utf-8?B?N0VISUhtc3B1ZUpvdVdZMmFySDY5SzlnRU8xeVZEcGdXS1pYVUlKUHp5d0F1?=
+ =?utf-8?B?Q2puVmRWTTlZY2ttK2pFR1M5aTNhZnUyQ1hQNFpEK25EQmgyaEFxcXpuUStE?=
+ =?utf-8?B?VG1Vdjk4U2hoRjRJTGo0Mmp2cE9zUmZ6OEpIV1dBM29OcytwZ3E0RVFsaTlJ?=
+ =?utf-8?B?TDF4UXlONjFweGVHVUhlb293c2dOL1ppWTRqdnM1R1JPOXhodk1hT2kzcEdI?=
+ =?utf-8?B?QU0rdFl5a004TGh2Z0NsUURSS2tEV0lYUXJHYkYrVU1aWU1sYy9yZ2cxWEhk?=
+ =?utf-8?B?Njd4UjNBbG9FZUFDbzVCTThDTk1hdlBDUWdhUjh0OG01alJWWTVmazYzTUdk?=
+ =?utf-8?B?bDZLK2RPZDVnaTczeWpTMXJybmhSS25RVHZqbmlrcU9WTWk2T0Y2Tk9EWDRC?=
+ =?utf-8?B?blNlWEpMMmw0NzRqYlNVQUpkcDFpc0RKaHVIdDFBTnlEQTF5K3hlTytwaWcr?=
+ =?utf-8?B?WC9WZnhCbjJJZnRqdE4vR1psa1VHU1c2WkhidVRHUmNBUi9JSkJsUnViU1F4?=
+ =?utf-8?B?dXNmMGQ1TmNSOGNlUWVzbGQ5ckZINEJmU0FRV3BUd01VQ0p3N1c2WUlBTXov?=
+ =?utf-8?B?TCtNR2RiblpZL2tLckxMdFNtN0U0bW02WFR0OG5XOTNYbUx4MG9Hd2VnRVkv?=
+ =?utf-8?B?VmEybWdQYzJ0cDlKRThxanIvbW9vRkpMMjdkZlIyNEpiQTNZZmRjMjdqTTVk?=
+ =?utf-8?B?d1cxUFJndCsvRkphWXkxYTVkdXVRZFlqb1gzY21Ia2gyd2NmVFJoTEVkSnJz?=
+ =?utf-8?B?azFidEJjbGE1Qm5vR05pdEw5MXNMbUhyMXNjc241N1YzcUUrNU1GVTA3aGdX?=
+ =?utf-8?B?OVRvVWVmVENOUzQvRWt0OWxZeHE0R1FHMFRJS0NtOHZhLzZvTkx0UkozY0V2?=
+ =?utf-8?B?RTYvSWVDUEZOamNtSE9LMXhLUmMweWFidGFUUXlsZU0xTFZtRXFZWm90aVBL?=
+ =?utf-8?B?dWZEaXNibVUwc3phb2x1K3RqODVBdXc0bUMzaDEyRE16MHdHR1ZlTUg1b0RH?=
+ =?utf-8?B?Q2d3eE5NYVlvQnRGcFFpV1VFYUNyUWYvdWNwTzhvY2JDb2V0N0xJa0ZaS3Bl?=
+ =?utf-8?B?LzdrNVAvT3A2MTMrenRtK0Rqc2RudWlwekRobVp0ZG1tc0daakVseVhUbFIw?=
+ =?utf-8?B?Q3lqVjNRY0ZVaGlBTE95RmFsenI1V2FoYjBzaG9WU01sSTdtQ0hPY3ZmaXl1?=
+ =?utf-8?B?WTFmYTZGb3BXRUE4Z211NDE1ZnBGMjZyR1BsdHJSdmNWSW9nSnNPN094Y3gv?=
+ =?utf-8?B?SlFJaFV2WU5jdzFyOUEybzIxek9yRUpHYXoxUHlRNVlTNVBlY1BnVjBEV3cy?=
+ =?utf-8?B?aHJBT3JCZEtKcyt5L3g3cTh2YlV2Sng2VUZZMHo1RjdRNnBqdWZVL1JDcDlx?=
+ =?utf-8?B?R2NYWWpCTDRZb0VSMEtDRkJRdlNLYUVZQVFZVUgybTB3YTdMMlVXRE0xTXhu?=
+ =?utf-8?B?QVhWSXZxdStleGhKc0dXMDZ0SXpTV24wcWh4c0VUcDRLaHlOT1ViOG5WUVZq?=
+ =?utf-8?B?ZkIrZlpqdW51SDVpR1JrSllpeCtiOGp3eUF2ZzArcTQyNVU4eU55UTFGdWhT?=
+ =?utf-8?B?Z3Flakh2ZEdTQ3poUkRNcEN0YkFuamlVTGFlV0FBdmRKTTBvemhQNVdYM0Zt?=
+ =?utf-8?Q?QYd0eSqiTHQ=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB6048.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?bitENDlidW40ZnNiaEwwNFhYQUQ0cFBqeXBGallSNjJYV29PRGt6dlFKYWRp?=
+ =?utf-8?B?VDRRTUptUEZuZ2dsTmRSTUp1eGFhOGJxdjNDMCtFeUwzRy8zcnpjT3Qyb3Vt?=
+ =?utf-8?B?VFU5Yk9aVjJNQmFCKzNlL3ZvZHFJUTNXcFZ1L2VDbG5XbFJGbFh0bGE1eHo0?=
+ =?utf-8?B?b09PTUo2VTJqcFB5b2NRd2VpVDNBeVI3VHhnVGJFWTJMekdJRldIcG9Mcmt0?=
+ =?utf-8?B?a1Y2MnllRjBsdTFPdnE0VVFYZHF1cGRuMUVjTGVRd0tBOHF4ejkzY2dzNUpa?=
+ =?utf-8?B?MWRWeTRxVGRwanljOWFQR3U0QVVjRXBlQTNKVHBoeFdZNXFDMHZGcWJwWFNZ?=
+ =?utf-8?B?R1pocHdpOTBzMnRsVGs4UEdhYUluTjh3emFCT2JBZEVqNVN1eVNWVUQwcHVj?=
+ =?utf-8?B?ZFY4Ui9ERGFSRCt2VlUxZHpRQVNPeW42cStQaWxUNXo2QzNXeml6ME02WWF2?=
+ =?utf-8?B?TzZwUGhWYVBsSEMwQkVza3BYV2FTc0h0WmlOcWNZQ2RwbjVXZEkzblA0Umw0?=
+ =?utf-8?B?Q2JGcnZQOUt6Y0NIRndCSE9CT2N6bVBhOTFPbW5nKytObDYyaUdDZWg5dzBv?=
+ =?utf-8?B?ZzFDb1JSMmYrTWNwbjZZcTJzSWlnWUVwWktvZlMrS252OURiUUhZNTRzTzRM?=
+ =?utf-8?B?Y1B3Q3FDckVrekhndjdBYjZTbEN0R0k4ZXp3QVFzOVl0UG1Qem5yNERnQVda?=
+ =?utf-8?B?ZkY0endBdlljVjBMZmJCMytqdXR3clRwNXMyQmFPaWo4RmprS1lKYTFVbUZD?=
+ =?utf-8?B?R04wRHZveEhhU0lidEoyUjdtQ0lVWkp3amFaMFBNL1hhYkxpc3VYN3lQYXRi?=
+ =?utf-8?B?djMrU3Z0UENiYU8rRHBMSUcvK0Z5Q2UvcEh0M20xRVlPRmtzbVIyRGdsWnhT?=
+ =?utf-8?B?N3dyRG5ZU0VEY0h1MVJKS2l3alBQK0dkWms1SXZxeWFJemw0TXNJQlE5R1F5?=
+ =?utf-8?B?bkZEcis1NmJ1NVNMT25qQWc3c0RWeWVnVHFoYmdTeVlQQWpyNHJlQnlvUE83?=
+ =?utf-8?B?elo3azZkVC90WXRwb2sxZTBlb0ZjQWg5WGdRc2VRU2FDZkJ6RjVIbWlpcFZH?=
+ =?utf-8?B?a2Z3RHZ6dDBtSXJuWnRhb2U1YVNuaHJ3Y2F6cm80ZVFkMUhrZFYzNnVINjFj?=
+ =?utf-8?B?djZzVVplTlVFVk1JZm5ueEF2Mm1GenFsZ1F3NlRnTit1OVJ5b2N2eVhjWng1?=
+ =?utf-8?B?N3U5S0s3alRnRkhaY1cxclhpWG1ia3N2RHRrb3R2UkFzeDRaaUZoZ1R2YkNw?=
+ =?utf-8?B?cnRoZEhySklSOWd1ZDhEZTYwZTV6QjVpZjFwSmxLOGNkUXVrRmVab0JRSWxF?=
+ =?utf-8?B?Q2V1dGlVU2FadGNoeGZ4b0NvdFVmcFF5RndHck16dS9NMHJGRUF4Zkczakxa?=
+ =?utf-8?B?cVFYODBvRzhSWXIwM2VyMDdWRVcvcHZJQ0NZRjRYWTlnSmczaXdwRldlZWl6?=
+ =?utf-8?B?VU1wZncza3BFYWRqdFM0NmNEbVhrZmp1U1pxM2Q0WGlCTmdNMGl4bnMxdEMy?=
+ =?utf-8?B?bVllVnR3WmVEb2s1Y2pRMUZWdk5MdUZzblpZYmR3ak9yaWNydVRpNk03VHBO?=
+ =?utf-8?B?SFdqVXIwd0ZvaHZJbElVQnZNZzNIcUMvY1pvTkpLVmJRQXYzbkhZNHNWTW1w?=
+ =?utf-8?B?SWtmMFZDeE91NzJZYzlnVmEvc0M1UEVhSjY1bG14OVg5bkpMVzhZbEg0SnU3?=
+ =?utf-8?B?dlBrcXA2alFtdGV2YkxzMUtVTlcxeXRreUwwS21XYWlialRnZ3VkbURHY2tV?=
+ =?utf-8?B?MERqMC95YllEdG9qTG5DRGxGUVVJWjgxdFJISDZuTHA2dmtkT0wzSkxDQnhI?=
+ =?utf-8?B?UkpScVhhZVp3QXBpY2I3TGdDUmsyekY0aWQrcnkwTThyQllGeGJjNDJQOE04?=
+ =?utf-8?B?M2I2cm9qbWkwcmxlWXdUVU1wbURIWmE1YzNCbnAwY2RwZjJYazVmMUo5am1Z?=
+ =?utf-8?B?OXEvUXZTM0ZJdS9vTXhQR1haSDcveVJmZTlnOVBDKzVFVDVRMnMvQU5BQWJp?=
+ =?utf-8?B?U1F4cDFGWEJGN1ZYajZ2YnUvYVdVVFJENndWeDB5WEZubjRDNzZvRElIbVpW?=
+ =?utf-8?B?NWpxSWNxdlllWXd0ek4vdWdBenJCaDJ4akZTMmxUQjc1eFZ3cDlkMHFkOCs4?=
+ =?utf-8?Q?onTZp5t3ohuv462NEHl7H/vzq?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4e3030eb-da67-4832-00f5-08dd977bd045
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB6048.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 May 2025 08:53:39.1919
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: JAWMYH9F7OWlirTs2dzAWzM5f0Wdgh+IIO3xteXCpHfqwqZd+y9aMz+yPPcAvfSIAYqrtqxV1znfhpL0vBFUDw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB8100
 
-With the introduction of stage-2 huge mappings in the pKVM hypervisor,
-guest pages CMO is needed for PMD_SIZE size. Fixmap only supports
-PAGE_SIZE and iterating over the huge-page is time consuming (mostly due
-to TLBI on hyp_fixmap_unmap) which is a problem for EL2 latency.
+On 5/20/2025 6:49 AM, Tushar Dave wrote:
+> Generally PASID support requires ACS settings that usually create
+> single device groups, but there are some niche cases where we can get
+> multi-device groups and still have working PASID support. The primary
+> issue is that PCI switches are not required to treat PASID tagged TLPs
+> specially so appropriate ACS settings are required to route all TLPs to
+> the host bridge if PASID is going to work properly.
+> 
+> pci_enable_pasid() does check that each device that will use PASID has
+> the proper ACS settings to achieve this routing.
+> 
+> However, no-PASID devices can be combined with PASID capable devices
+> within the same topology using non-uniform ACS settings. In this case
+> the no-PASID devices may not have strict route to host ACS flags and
+> end up being grouped with the PASID devices.
+> 
+> This configuration fails to allow use of the PASID within the iommu
+> core code which wrongly checks if the no-PASID device supports PASID.
+> 
+> Fix this by ignoring no-PASID devices during the PASID validation. They
+> will never issue a PASID TLP anyhow so they can be ignored.
+> 
+> Fixes: c404f55c26fc ("iommu: Validate the PASID in iommu_attach_device_pasid()")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Tushar Dave <tdave@nvidia.com>
 
-Introduce a shared PMD_SIZE fixmap (hyp_fixblock_map/hyp_fixblock_unmap)
-to improve guest page CMOs when stage-2 huge mappings are installed.
+Reviewed-by: Vasant Hegde <vasant.hegde@amd.com>
 
-On a Pixel6, the iterative solution resulted in a latency of ~700us,
-while the PMD_SIZE fixmap reduces it to ~100us.
+-Vasant
 
-Because of the horrendous private range allocation that would be
-necessary, this is disabled for 64KiB pages systems.
 
-Suggested-by: Quentin Perret <qperret@google.com>
-Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
-Signed-off-by: Quentin Perret <qperret@google.com>
 
-diff --git a/arch/arm64/include/asm/kvm_pgtable.h b/arch/arm64/include/asm/kvm_pgtable.h
-index 1b43bcd2a679..2888b5d03757 100644
---- a/arch/arm64/include/asm/kvm_pgtable.h
-+++ b/arch/arm64/include/asm/kvm_pgtable.h
-@@ -59,6 +59,11 @@ typedef u64 kvm_pte_t;
- 
- #define KVM_PHYS_INVALID		(-1ULL)
- 
-+#define KVM_PTE_TYPE			BIT(1)
-+#define KVM_PTE_TYPE_BLOCK		0
-+#define KVM_PTE_TYPE_PAGE		1
-+#define KVM_PTE_TYPE_TABLE		1
-+
- #define KVM_PTE_LEAF_ATTR_LO		GENMASK(11, 2)
- 
- #define KVM_PTE_LEAF_ATTR_LO_S1_ATTRIDX	GENMASK(4, 2)
-diff --git a/arch/arm64/kvm/hyp/include/nvhe/mm.h b/arch/arm64/kvm/hyp/include/nvhe/mm.h
-index 230e4f2527de..6e83ce35c2f2 100644
---- a/arch/arm64/kvm/hyp/include/nvhe/mm.h
-+++ b/arch/arm64/kvm/hyp/include/nvhe/mm.h
-@@ -13,9 +13,11 @@
- extern struct kvm_pgtable pkvm_pgtable;
- extern hyp_spinlock_t pkvm_pgd_lock;
- 
--int hyp_create_pcpu_fixmap(void);
-+int hyp_create_fixmap(void);
- void *hyp_fixmap_map(phys_addr_t phys);
- void hyp_fixmap_unmap(void);
-+void *hyp_fixblock_map(phys_addr_t phys, size_t *size);
-+void hyp_fixblock_unmap(void);
- 
- int hyp_create_idmap(u32 hyp_va_bits);
- int hyp_map_vectors(void);
-diff --git a/arch/arm64/kvm/hyp/nvhe/mem_protect.c b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
-index 1490820b9ebe..962948534179 100644
---- a/arch/arm64/kvm/hyp/nvhe/mem_protect.c
-+++ b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
-@@ -216,34 +216,42 @@ static void guest_s2_put_page(void *addr)
- 	hyp_put_page(&current_vm->pool, addr);
- }
- 
--static void clean_dcache_guest_page(void *va, size_t size)
-+static void __apply_guest_page(void *va, size_t size,
-+			       void (*func)(void *addr, size_t size))
- {
- 	size += va - PTR_ALIGN_DOWN(va, PAGE_SIZE);
- 	va = PTR_ALIGN_DOWN(va, PAGE_SIZE);
- 	size = PAGE_ALIGN(size);
- 
- 	while (size) {
--		__clean_dcache_guest_page(hyp_fixmap_map(__hyp_pa(va)),
--					  PAGE_SIZE);
--		hyp_fixmap_unmap();
--		va += PAGE_SIZE;
--		size -= PAGE_SIZE;
-+		size_t map_size = PAGE_SIZE;
-+		void *map;
-+
-+		if (size >= PMD_SIZE)
-+			map = hyp_fixblock_map(__hyp_pa(va), &map_size);
-+		else
-+			map = hyp_fixmap_map(__hyp_pa(va));
-+
-+		func(map, map_size);
-+
-+		if (size >= PMD_SIZE)
-+			hyp_fixblock_unmap();
-+		else
-+			hyp_fixmap_unmap();
-+
-+		size -= map_size;
-+		va += map_size;
- 	}
- }
- 
--static void invalidate_icache_guest_page(void *va, size_t size)
-+static void clean_dcache_guest_page(void *va, size_t size)
- {
--	size += va - PTR_ALIGN_DOWN(va, PAGE_SIZE);
--	va = PTR_ALIGN_DOWN(va, PAGE_SIZE);
--	size = PAGE_ALIGN(size);
-+	__apply_guest_page(va, size, __clean_dcache_guest_page);
-+}
- 
--	while (size) {
--		__invalidate_icache_guest_page(hyp_fixmap_map(__hyp_pa(va)),
--					       PAGE_SIZE);
--		hyp_fixmap_unmap();
--		va += PAGE_SIZE;
--		size -= PAGE_SIZE;
--	}
-+static void invalidate_icache_guest_page(void *va, size_t size)
-+{
-+	__apply_guest_page(va, size, __invalidate_icache_guest_page);
- }
- 
- int kvm_guest_prepare_stage2(struct pkvm_hyp_vm *vm, void *pgd)
-diff --git a/arch/arm64/kvm/hyp/nvhe/mm.c b/arch/arm64/kvm/hyp/nvhe/mm.c
-index f41c7440b34b..ae8391baebc3 100644
---- a/arch/arm64/kvm/hyp/nvhe/mm.c
-+++ b/arch/arm64/kvm/hyp/nvhe/mm.c
-@@ -229,9 +229,8 @@ int hyp_map_vectors(void)
- 	return 0;
- }
- 
--void *hyp_fixmap_map(phys_addr_t phys)
-+static void *fixmap_map_slot(struct hyp_fixmap_slot *slot, phys_addr_t phys)
- {
--	struct hyp_fixmap_slot *slot = this_cpu_ptr(&fixmap_slots);
- 	kvm_pte_t pte, *ptep = slot->ptep;
- 
- 	pte = *ptep;
-@@ -243,10 +242,21 @@ void *hyp_fixmap_map(phys_addr_t phys)
- 	return (void *)slot->addr;
- }
- 
-+void *hyp_fixmap_map(phys_addr_t phys)
-+{
-+	return fixmap_map_slot(this_cpu_ptr(&fixmap_slots), phys);
-+}
-+
- static void fixmap_clear_slot(struct hyp_fixmap_slot *slot)
- {
- 	kvm_pte_t *ptep = slot->ptep;
- 	u64 addr = slot->addr;
-+	u32 level;
-+
-+	if (FIELD_GET(KVM_PTE_TYPE, *ptep) == KVM_PTE_TYPE_PAGE)
-+		level = KVM_PGTABLE_LAST_LEVEL;
-+	else
-+		level = KVM_PGTABLE_LAST_LEVEL - 1; /* create_fixblock() guarantees PMD level */
- 
- 	WRITE_ONCE(*ptep, *ptep & ~KVM_PTE_VALID);
- 
-@@ -260,7 +270,7 @@ static void fixmap_clear_slot(struct hyp_fixmap_slot *slot)
- 	 * https://lore.kernel.org/kvm/20221017115209.2099-1-will@kernel.org/T/#mf10dfbaf1eaef9274c581b81c53758918c1d0f03
- 	 */
- 	dsb(ishst);
--	__tlbi_level(vale2is, __TLBI_VADDR(addr, 0), KVM_PGTABLE_LAST_LEVEL);
-+	__tlbi_level(vale2is, __TLBI_VADDR(addr, 0), level);
- 	dsb(ish);
- 	isb();
- }
-@@ -273,9 +283,9 @@ void hyp_fixmap_unmap(void)
- static int __create_fixmap_slot_cb(const struct kvm_pgtable_visit_ctx *ctx,
- 				   enum kvm_pgtable_walk_flags visit)
- {
--	struct hyp_fixmap_slot *slot = per_cpu_ptr(&fixmap_slots, (u64)ctx->arg);
-+	struct hyp_fixmap_slot *slot = (struct hyp_fixmap_slot *)ctx->arg;
- 
--	if (!kvm_pte_valid(ctx->old) || ctx->level != KVM_PGTABLE_LAST_LEVEL)
-+	if (!kvm_pte_valid(ctx->old) || (ctx->end - ctx->start) != kvm_granule_size(ctx->level))
- 		return -EINVAL;
- 
- 	slot->addr = ctx->addr;
-@@ -296,13 +306,84 @@ static int create_fixmap_slot(u64 addr, u64 cpu)
- 	struct kvm_pgtable_walker walker = {
- 		.cb	= __create_fixmap_slot_cb,
- 		.flags	= KVM_PGTABLE_WALK_LEAF,
--		.arg = (void *)cpu,
-+		.arg	= per_cpu_ptr(&fixmap_slots, cpu),
- 	};
- 
- 	return kvm_pgtable_walk(&pkvm_pgtable, addr, PAGE_SIZE, &walker);
- }
- 
--int hyp_create_pcpu_fixmap(void)
-+#if PAGE_SHIFT < 16
-+#define HAS_FIXBLOCK
-+static struct hyp_fixmap_slot hyp_fixblock_slot;
-+static DEFINE_HYP_SPINLOCK(hyp_fixblock_lock);
-+#endif
-+
-+static int create_fixblock(void)
-+{
-+#ifdef HAS_FIXBLOCK
-+	struct kvm_pgtable_walker walker = {
-+		.cb	= __create_fixmap_slot_cb,
-+		.flags	= KVM_PGTABLE_WALK_LEAF,
-+		.arg	= &hyp_fixblock_slot,
-+	};
-+	unsigned long addr;
-+	phys_addr_t phys;
-+	int ret, i;
-+
-+	/* Find a RAM phys address, PMD aligned */
-+	for (i = 0; i < hyp_memblock_nr; i++) {
-+		phys = ALIGN(hyp_memory[i].base, PMD_SIZE);
-+		if (phys + PMD_SIZE < (hyp_memory[i].base + hyp_memory[i].size))
-+			break;
-+	}
-+
-+	if (i >= hyp_memblock_nr)
-+		return -EINVAL;
-+
-+	hyp_spin_lock(&pkvm_pgd_lock);
-+	addr = ALIGN(__io_map_base, PMD_SIZE);
-+	ret = __pkvm_alloc_private_va_range(addr, PMD_SIZE);
-+	if (ret)
-+		goto unlock;
-+
-+	ret = kvm_pgtable_hyp_map(&pkvm_pgtable, addr, PMD_SIZE, phys, PAGE_HYP);
-+	if (ret)
-+		goto unlock;
-+
-+	ret = kvm_pgtable_walk(&pkvm_pgtable, addr, PMD_SIZE, &walker);
-+
-+unlock:
-+	hyp_spin_unlock(&pkvm_pgd_lock);
-+
-+	return ret;
-+#else
-+	return 0;
-+#endif
-+}
-+
-+void *hyp_fixblock_map(phys_addr_t phys, size_t *size)
-+{
-+#ifdef HAS_FIXBLOCK
-+	*size = PMD_SIZE;
-+	hyp_spin_lock(&hyp_fixblock_lock);
-+	return fixmap_map_slot(&hyp_fixblock_slot, phys);
-+#else
-+	*size = PAGE_SIZE;
-+	return hyp_fixmap_map(phys);
-+#endif
-+}
-+
-+void hyp_fixblock_unmap(void)
-+{
-+#ifdef HAS_FIXBLOCK
-+	fixmap_clear_slot(&hyp_fixblock_slot);
-+	hyp_spin_unlock(&hyp_fixblock_lock);
-+#else
-+	hyp_fixmap_unmap();
-+#endif
-+}
-+
-+int hyp_create_fixmap(void)
- {
- 	unsigned long addr, i;
- 	int ret;
-@@ -322,7 +403,7 @@ int hyp_create_pcpu_fixmap(void)
- 			return ret;
- 	}
- 
--	return 0;
-+	return create_fixblock();
- }
- 
- int hyp_create_idmap(u32 hyp_va_bits)
-diff --git a/arch/arm64/kvm/hyp/nvhe/setup.c b/arch/arm64/kvm/hyp/nvhe/setup.c
-index c19860fc8183..a48d3f5a5afb 100644
---- a/arch/arm64/kvm/hyp/nvhe/setup.c
-+++ b/arch/arm64/kvm/hyp/nvhe/setup.c
-@@ -312,7 +312,7 @@ void __noreturn __pkvm_init_finalise(void)
- 	if (ret)
- 		goto out;
- 
--	ret = hyp_create_pcpu_fixmap();
-+	ret = hyp_create_fixmap();
- 	if (ret)
- 		goto out;
- 
-diff --git a/arch/arm64/kvm/hyp/pgtable.c b/arch/arm64/kvm/hyp/pgtable.c
-index df5cc74a7dd0..c351b4abd5db 100644
---- a/arch/arm64/kvm/hyp/pgtable.c
-+++ b/arch/arm64/kvm/hyp/pgtable.c
-@@ -11,12 +11,6 @@
- #include <asm/kvm_pgtable.h>
- #include <asm/stage2_pgtable.h>
- 
--
--#define KVM_PTE_TYPE			BIT(1)
--#define KVM_PTE_TYPE_BLOCK		0
--#define KVM_PTE_TYPE_PAGE		1
--#define KVM_PTE_TYPE_TABLE		1
--
- struct kvm_pgtable_walk_data {
- 	struct kvm_pgtable_walker	*walker;
- 
--- 
-2.49.0.1143.g0be31eac6b-goog
 
