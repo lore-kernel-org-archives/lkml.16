@@ -1,63 +1,64 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D512721FF58;
-	Wed, 21 May 2025 12:15:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94A37238C1A;
+	Wed, 21 May 2025 12:15:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747829757; cv=none; b=f36OFT8ofkoyzzRVAuCnxAWfwPWt361Xzve5h39TlXvepo89OZwwIrMnlOqebFiRg5Yx+vYQl04ryj/3Eil70Bb3Fw81Ip5oNTelnS88bqrfsaEh+OcGy9IJyPPJG+/kOAEF76h45cgOAmQZrW2JUgPyDODVrd4z924tRRKlfrw=
+	t=1747829758; cv=none; b=OcEgfzb9aMuAYkXXRSjH4siUrEApDh8V64BV3I8YSxAlGX9x+m7bPnqM4bEaiEdG2pXsDU2BRwKthWTpSrwhMQrh03EWUAfS/jYLPX4S8HN3qPn0H4TvO0Di6ckK/8z9WmTx4hTEWSotLVIqGyD1x4sifiwn2IrllqD+AJXJ/0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747829757; c=relaxed/simple;
-	bh=9ifiLf/3QsdWG879UKP7aVH2hLkpnmsXcsMhC8M7sPQ=;
+	s=arc-20240116; t=1747829758; c=relaxed/simple;
+	bh=Y1UPO9DJdHMGhRyS9KhFOhsGhMzUrH5SQyJCmAD9Xm4=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=FtumLLTyw5OGyaeIvmTQqhU3qfT0ORRLIXG+wgxuZm/rhhkUcNz9Uerop74FAZqvYlAfsRnceizZRTZp51TaSI5u5qduZki2hWAB3ea1+jbylON8H0+5yZpzP71buDLsf7hVwFLR/4hKGlry953xRmt5sexFjMvNdTPNnu6Zcxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SdrT2VkO; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=n0D3JVz+; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=p7VYT/dr3n2QWQD+lYF08YbKrWdxTHlJG4ExMIamAszVF8QIqngb061ok5ks1Bdbz4mvZpzeycQ0r+SjEfXNDbfcevm8frPcOp+bTaXGQ5UkOjbKzoF5mipotA3dL/WKBGpbqKPB5YE0rcbfkptBjz9ZUlgVlD5HTcrd/DCxwsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KBewwjZf; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kewLRMyp; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SdrT2VkO";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="n0D3JVz+"
-Date: Wed, 21 May 2025 12:15:51 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KBewwjZf";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kewLRMyp"
+Date: Wed, 21 May 2025 12:15:53 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747829752;
+	s=2020; t=1747829755;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3LY4LipDnjhIJM7Miwo8jK3aQpgW6u+WwnMU0XagHwM=;
-	b=SdrT2VkOAZ4LkJ6GJr1uMbz7BLRtbxmm3JMBGrhTf3AAYvoh9XlTvbj3GK0tJSKMzbRK6j
-	HNk0TumjTeIdZF5JXzlc6HyJ7dXnWzJ2zORBffdFt0JIYpNZdbqtHZw+dcoO3Y7bz2B9KX
-	JlZOvem3+LWf8U1mB5mHtR8Stdj7JTaaQXLPX80yEjGfD3TXyILP+gMoq/OqGJAENGg3Z1
-	uDmdXu6GHHDbmU5zOxbuUwerJHmoXnnmQQ//rB7sagkXeZF2xV3AI2s+r2GLF8B984Uhyp
-	fNcu7Naieutv1y03RDWkFOpd+oYuFqOvAiIZgoFpqzeOrfYtVu3fmvYVeifXjQ==
+	bh=XxkIFrAGLrzMwx37asP+ZMre3t6fugAXzc4hh4DU3Fc=;
+	b=KBewwjZfxjjad2tiI2Sk17dTyb92L8M07OW6clNMKJNkMEuyesQxCu6jh9uXe6jOiEClxJ
+	YG/gpA9Bcr6fFpIg4ONFV/NzdaRiNfN/pin5MqTAMDlrD+R5+5zk6nSiAwQs7LYGHW4jcC
+	7tHQ+mGcU5OLWdWSAYTUb8vZQn8pHE/KqEDfNsVBDIISn9qd6Q/8dbSHzKkK6PSru1SkLy
+	k5DY9Q8lzYVTvmITolIlB6bb1SBxle6TkFTomgg2uZx5G9vi4YCsbPPRq9BCXSyQeg9azT
+	2NDzc8UcD6Gnx57qL+JcQ47UAL7uQO99Nc/SOOicufQEAiTIjh6HaRsJexjdvw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747829752;
+	s=2020e; t=1747829755;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3LY4LipDnjhIJM7Miwo8jK3aQpgW6u+WwnMU0XagHwM=;
-	b=n0D3JVz+ft61wBlJoiPt2hp8Zapx92koqtVcQAnRaRj/gCAt1lsmgiCRsrgBYUeG+3xavK
-	9rlZ05GToPbaikAw==
+	bh=XxkIFrAGLrzMwx37asP+ZMre3t6fugAXzc4hh4DU3Fc=;
+	b=kewLRMypx2Gtyw625g5buBqiCwhJoik1mLcD4byJA6BaqL27fI+uRE79JCaaFc/E3cRxqm
+	mA8FlhzvqNr93KAA==
 From: "tip-bot2 for Kan Liang" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] mips/perf: Remove driver-specific throttle support
+Subject:
+ [tip: perf/core] loongarch/perf: Remove driver-specific throttle support
 Cc: Kan Liang <kan.liang@linux.intel.com>,
  "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250520181644.2673067-17-kan.liang@linux.intel.com>
-References: <20250520181644.2673067-17-kan.liang@linux.intel.com>
+In-Reply-To: <20250520181644.2673067-14-kan.liang@linux.intel.com>
+References: <20250520181644.2673067-14-kan.liang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174782975107.406.18030140197688379257.tip-bot2@tip-bot2>
+Message-ID: <174782975396.406.757823148231064057.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,14 +68,14 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     b216af2eb4618caec6bef32d5886a9700b0ecfeb
-Gitweb:        https://git.kernel.org/tip/b216af2eb4618caec6bef32d5886a9700b0ecfeb
+Commit-ID:     b82f8885d1fd46d88c554877a0d87e9a1c3d7165
+Gitweb:        https://git.kernel.org/tip/b82f8885d1fd46d88c554877a0d87e9a1c3d7165
 Author:        Kan Liang <kan.liang@linux.intel.com>
-AuthorDate:    Tue, 20 May 2025 11:16:44 -07:00
+AuthorDate:    Tue, 20 May 2025 11:16:41 -07:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Wed, 21 May 2025 13:57:47 +02:00
+CommitterDate: Wed, 21 May 2025 13:57:46 +02:00
 
-mips/perf: Remove driver-specific throttle support
+loongarch/perf: Remove driver-specific throttle support
 
 The throttle support has been added in the generic code. Remove
 the driver-specific throttle support.
@@ -85,22 +86,22 @@ is not required either.
 
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20250520181644.2673067-17-kan.liang@linux.intel.com
+Link: https://lore.kernel.org/r/20250520181644.2673067-14-kan.liang@linux.intel.com
 ---
- arch/mips/kernel/perf_event_mipsxx.c | 3 +--
+ arch/loongarch/kernel/perf_event.c | 3 +--
  1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/mips/kernel/perf_event_mipsxx.c b/arch/mips/kernel/perf_event_mipsxx.c
-index c4d6b09..196a070 100644
---- a/arch/mips/kernel/perf_event_mipsxx.c
-+++ b/arch/mips/kernel/perf_event_mipsxx.c
-@@ -791,8 +791,7 @@ static void handle_associated_event(struct cpu_hw_events *cpuc,
- 	if (!mipspmu_event_set_period(event, hwc, idx))
+diff --git a/arch/loongarch/kernel/perf_event.c b/arch/loongarch/kernel/perf_event.c
+index f86a4b8..8ad0987 100644
+--- a/arch/loongarch/kernel/perf_event.c
++++ b/arch/loongarch/kernel/perf_event.c
+@@ -479,8 +479,7 @@ static void handle_associated_event(struct cpu_hw_events *cpuc, int idx,
+ 	if (!loongarch_pmu_event_set_period(event, hwc, idx))
  		return;
  
 -	if (perf_event_overflow(event, data, regs))
--		mipsxx_pmu_disable_event(idx);
+-		loongarch_pmu_disable_event(idx);
 +	perf_event_overflow(event, data, regs);
  }
  
- 
+ static irqreturn_t pmu_handle_irq(int irq, void *dev)
