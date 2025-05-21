@@ -1,65 +1,32 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FA6623D298;
-	Wed, 21 May 2025 09:31:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77745238173;
+	Wed, 21 May 2025 09:33:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747819911; cv=none; b=ooXVzZLNykkPTPtykWHz0FLzGZgtRkD4xhsol6Ejo4VNKGk4aiVQ1O1vBesCXAHzUA96+4mJGCW5LQm5iDlbk0I0lz6wZ6L8NOGZKn8K+CcmdPhjbB+fmIj0qspv17yU4X04R6z4AxwQD2+VTLx2tpFWMaNyO8BL2npt/FvOLVI=
+	t=1747819986; cv=none; b=mbEzWCzQDIaWNi0Tg7M+BtNjRKbOaDJDh/7loDlbIWpzZWoI1hASriWamm8+ZrmDHko2ck6/xzX3xVfjEAxo9EewO22Soj8npCtwvLUjp7+acZD+T8/Y20eqk1pUpOdUsFLe2WlePDIPztv1cJN6hQrOeGuMdDNO0Hqf40EbUXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747819911; c=relaxed/simple;
-	bh=D9BFIHEKkseNz3jfp1CByNZ3m3tfd8g3CrLhlsqHYl4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=sg/sBSkdLhmvZ5EHJcE1Awx2H5Y0ivp3ocAiyRgI81HXF6Ui5SB9jk1wM0rHHaMe2fKsKlzlh1ymUQNPECXKjpVXRSUHuGHaMCV2Wsy0adA70ZVdNjzuqd7PdcFwvbiE92NAToGkgCOZkEAEWdig3B1k2sBDZ0IgG/JVbbi5HD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EQTDySfu; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747819986; c=relaxed/simple;
+	bh=9rMhBCzrWRItDxzdB0oQ70w0CejIZg9lVBM1AvgZ9r4=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=jmdBsjZkRIFoMUTU0USSFJqo7EkWU9WpXv9btOpgdNk4TZQQAhlmAKYKIp5MqJ50JjBxL4u84dPe19cwH+JHPeoTjvfdSw0zZTbk6CbnUeQ4VP+fvkymz0+xdwMZz7tqAY5FLd5b6m8vX+DH+HwZ/EWchbzX8NoEHco+G36W+KI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=EqxNmGmf; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EQTDySfu"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-442fda876a6so45695665e9.0;
-        Wed, 21 May 2025 02:31:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747819908; x=1748424708; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=P9vDFRwjGT9DH8ggj/eFnlYDn2aFQTm92hBOO4bpuSw=;
-        b=EQTDySfueDa+hugxBg4nm6e3KA2CnBbNceWL/bscm5wochJHmfnV1a7AMXV/J0XnAq
-         L8IOIDaaO4r7qDEEbJ6YdaFawMc3qnA9FCk6ttUB0FRHOVX37kzzwQLJPznuEdiOK73H
-         DxTXUYq6d38vvWcrOy+sRGLmxeXfTD3pP8aDkyWt0kpvlMJjD50OXIriIly9IUTLwq4E
-         7KSlgbDban49Ua6SWSVok9pedl3sqyL8MF6Q5vQosOzJTSfx0lNT28fIesKTijuB52kL
-         Jv9Oiw6pi6GczChsXfy46BWttI5vhU+89prj3wpt4+/GiCygTfPl/cl6N9dYlei0+4HL
-         WtFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747819908; x=1748424708;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=P9vDFRwjGT9DH8ggj/eFnlYDn2aFQTm92hBOO4bpuSw=;
-        b=D9hc7DdyQmY1Dnz35G4Hlv00r19JQNXAy1HxaNXQmpn+1+Z7q4gROD53slXgbfpj7s
-         hozRI9/QNnE4Wk5LZ2tAGiVhtOp2D/8D6al3tzPnXPRaYjx28dY9Rn9ecxcfywnQYene
-         f/nB+7wEVCP8fAJwi9U/oJJRZznXkCuyAL8gJP1tZ6hUn0EPI4SMrpqIHkdQpof0BUUq
-         eNItg8fJ7KAyfdP1hbqJ6Y9vwyOpEkLVOG2XsHNzFCVJM/tWUwMgtNwF+fbFmDQVsPZJ
-         FJ7bB9qOYpLSMOdZCT0SJWDKYUBn7Vk5K++q7TvjLL2IJGP74YF8csW6uDijieWcwR/M
-         NVYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU3pt2r1jovpL0rUGnCozlxtT+adUAyuW1i/GOSt0aXQ+zGDKQMrfu1oqc8d5eiT2HbY0nbSR8qMiXY/u8e@vger.kernel.org, AJvYcCWZqpgCVwSN9IHyzpRz4NONB65FDs7mt8DROnXm7ObYf8B6vFyza6yPaDj7ZiSDwCWlkqYzsZtdLBg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVpucO3xGAdGMvcO2DeAV/oEN5g0FnPBN0ZO944Sh/8Tidd6/l
-	tM1bFuMoYWeHylfAtdWj9On1t2ps1bOLCkbuOjnaJJKrGTc1/mrwbIqn
-X-Gm-Gg: ASbGncsll27fjkRUPhG+jdOlFvL4w++GjE7fw9x5q/pj4FBLMP5K0Dnx37bx1VYSj+J
-	hO8qaJyPoXeoknKeSbIeRJFH2nkU/GXFU3tP0w30G3i/r2GuiejuhogicIswle/LZdgJHaoHI56
-	XgAFTQr5RZE/fdoWv2mhFeQAoMBP5/xC049EA5Bm6Y4kFc8qZ2cC/ZhSyRfb84c7/tZMVbEusLO
-	ciUFoDbWU4m+1gL9zEFBknYr1TyOihfDiuw7IZNRBrvode2dQDIbAPrk843D0AUvF1YIHSLyh7s
-	zJ/ITeGEj2OEH0yNCUCjjTFGzV4sKfLQdclVd0aEctarfAp12SZB5aKapDo9Jr9nTgCnDhRCwCQ
-	K2pl9y7dl+sgISy3bBJa2YrXpeaUrpWRv4T+7f9jUZPjow7ZO5zpp
-X-Google-Smtp-Source: AGHT+IGLHDXCx2UnreLA/CFm4kgoBQRfWlWhp0M1orapr/8BkhOAb5uCLaMd6WGAMxPrcFwbP1RyDQ==
-X-Received: by 2002:a05:600c:34cf:b0:43d:1b95:6d0e with SMTP id 5b1f17b1804b1-442fd664aa5mr162254105e9.23.1747819907397;
-        Wed, 21 May 2025 02:31:47 -0700 (PDT)
-Received: from ?IPV6:2a02:6b6f:e750:f900:146f:2c4f:d96e:4241? ([2a02:6b6f:e750:f900:146f:2c4f:d96e:4241])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f18251c7sm62768305e9.3.2025.05.21.02.31.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 May 2025 02:31:46 -0700 (PDT)
-Message-ID: <f7f54cd8-cc60-44ad-aab1-c1c082ed70f1@gmail.com>
-Date: Wed, 21 May 2025 10:31:45 +0100
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="EqxNmGmf"
+Received: from [100.79.200.157] (unknown [4.194.122.144])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 26AD4206832D;
+	Wed, 21 May 2025 02:33:00 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 26AD4206832D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1747819984;
+	bh=efRwnBUBurx5h67bsJsPmXqW4t5F8R1u/wGA+w/MRrE=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=EqxNmGmfB6RTUUqrv97Pksk4zjBQdyuavj32uJpG9pokmTNOfl7BInzeeRsRbiCWm
+	 k70bTXZKpyTHf+klvmyMgHcz880qWQERpStTCpPNN+uz/uwLpJSn+ULLzi0rswCPlZ
+	 l/dHVsw4W6+x2e7o/VUt/Mk9ADp+xO4495UlpxWY=
+Message-ID: <3ab2597b-3a64-497c-888e-dd5d0c0e5076@linux.microsoft.com>
+Date: Wed, 21 May 2025 15:02:59 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,112 +34,223 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/7] prctl: introduce PR_SET/GET_THP_POLICY
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>, david@redhat.com,
- linux-mm@kvack.org, hannes@cmpxchg.org, shakeel.butt@linux.dev,
- riel@surriel.com, ziy@nvidia.com, laoar.shao@gmail.com,
- baolin.wang@linux.alibaba.com, lorenzo.stoakes@oracle.com,
- npache@redhat.com, ryan.roberts@arm.com, vbabka@suse.cz, jannh@google.com,
- Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, kernel-team@meta.com
-References: <20250519223307.3601786-1-usamaarif642@gmail.com>
- <p3lc5tuzpblwtikfodj5d5wjbpklqwg6oexn4xw3cdwspqwkmy@l7vhj72rjgsb>
+Subject: Re: [PATCH v3 2/2] Drivers: hv: Introduce mshv_vtl driver
+From: Naman Jain <namjain@linux.microsoft.com>
+To: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
+Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, Roman Kisel <romank@linux.microsoft.com>,
+ Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
+ Saurabh Sengar <ssengar@linux.microsoft.com>,
+ Nuno Das Neves <nunodasneves@linux.microsoft.com>,
+ ALOK TIWARI <alok.a.tiwari@oracle.com>, linux-kernel@vger.kernel.org,
+ linux-hyperv@vger.kernel.org
+References: <20250519045642.50609-1-namjain@linux.microsoft.com>
+ <20250519045642.50609-3-namjain@linux.microsoft.com>
+ <aCzQMuwQZ1Lkk7eH@skinsburskii.>
+ <80853cdb-fd34-4a5e-99a0-1a71b8ce8226@linux.microsoft.com>
 Content-Language: en-US
-From: Usama Arif <usamaarif642@gmail.com>
-In-Reply-To: <p3lc5tuzpblwtikfodj5d5wjbpklqwg6oexn4xw3cdwspqwkmy@l7vhj72rjgsb>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <80853cdb-fd34-4a5e-99a0-1a71b8ce8226@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
 
-On 21/05/2025 03:33, Liam R. Howlett wrote:
-> * Usama Arif <usamaarif642@gmail.com> [250519 18:34]:
->> This series allows to change the THP policy of a process, according to the
->> value set in arg2, all of which will be inherited during fork+exec:
->> - PR_DEFAULT_MADV_HUGEPAGE: This will set VM_HUGEPAGE and clear VM_NOHUGEPAGE
->>   for the default VMA flags. It will also iterate through every VMA in the
->>   process and call hugepage_madvise on it, with MADV_HUGEPAGE policy.
->>   This effectively allows setting MADV_HUGEPAGE on the entire process.
->>   In an environment where different types of workloads are run on the
->>   same machine, this will allow workloads that benefit from always having
->>   hugepages to do so, without regressing those that don't.
->> - PR_DEFAULT_MADV_NOHUGEPAGE: This will set VM_NOHUGEPAGE and clear VM_HUGEPAGE
->>   for the default VMA flags. It will also iterate through every VMA in the
->>   process and call hugepage_madvise on it, with MADV_NOHUGEPAGE policy.
->>   This effectively allows setting MADV_NOHUGEPAGE on the entire process.
->>   In an environment where different types of workloads are run on the
->>   same machine,this will allow workloads that benefit from having
->>   hugepages on an madvise basis only to do so, without regressing those
->>   that benefit from having hugepages always.
->> - PR_THP_POLICY_SYSTEM: This will reset (clear) both VM_HUGEPAGE and
->>   VM_NOHUGEPAGE process for the default flags.
+On 5/21/2025 11:33 AM, Naman Jain wrote:
+> 
+> 
+> On 5/21/2025 12:25 AM, Stanislav Kinsburskii wrote:
+>> On Mon, May 19, 2025 at 10:26:42AM +0530, Naman Jain wrote:
+>>> Provide an interface for Virtual Machine Monitor like OpenVMM and its
+>>> use as OpenHCL paravisor to control VTL0 (Virtual trust Level).
+>>> Expose devices and support IOCTLs for features like VTL creation,
+>>> VTL0 memory management, context switch, making hypercalls,
+>>> mapping VTL0 address space to VTL2 userspace, getting new VMBus
+>>> messages and channel events in VTL2 etc.
+>>>
+>>> Co-developed-by: Roman Kisel <romank@linux.microsoft.com>
+>>> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+>>> Co-developed-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+>>> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+>>> Reviewed-by: Roman Kisel <romank@linux.microsoft.com>
+>>> Reviewed-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+>>> Message-ID: <20250512140432.2387503-3-namjain@linux.microsoft.com>
+>>> Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
+>>> ---
+>>>   drivers/hv/Kconfig          |   20 +
+>>>   drivers/hv/Makefile         |    7 +-
+>>>   drivers/hv/mshv_vtl.h       |   52 +
+>>>   drivers/hv/mshv_vtl_main.c  | 1783 +++++++++++++++++++++++++++++++++++
+>>>   include/hyperv/hvgdk_mini.h |   81 ++
+>>>   include/hyperv/hvhdk.h      |    1 +
+>>>   include/uapi/linux/mshv.h   |   82 ++
+>>>   7 files changed, 2025 insertions(+), 1 deletion(-)
+>>>   create mode 100644 drivers/hv/mshv_vtl.h
+>>>   create mode 100644 drivers/hv/mshv_vtl_main.c
+>>>
+>>> diff --git a/drivers/hv/Kconfig b/drivers/hv/Kconfig
+>>> index eefa0b559b73..21cee5564d70 100644
+>>> --- a/drivers/hv/Kconfig
+>>> +++ b/drivers/hv/Kconfig
+>>> @@ -72,4 +72,24 @@ config MSHV_ROOT
+>>>         If unsure, say N.
+>>> +config MSHV_VTL
+>>> +    tristate "Microsoft Hyper-V VTL driver"
+>>> +    depends on HYPERV && X86_64
+>>> +    depends on TRANSPARENT_HUGEPAGE
+>>
+>> Why does it depend on TRANSPARENT_HUGEPAGE?
 >>
 > 
-> Subject seems outdated now?  PR_DEFAULT_ vs PR_SET/GET_THP ?
-
-No its not.
-
-prctl takes 5 args, the first 2 are relevant here.
-
-The first arg is to decide the op. This series introduces 2 ops. PR_SET_THP_POLICY
-and PR_GET_THP_POLICY to set and get the policy. This is the subject.
-
-The 2nd arg describes the policies: PR_DEFAULT_MADV_HUGEPAGE, PR_DEFAULT_MADV_NOHUGEPAGE
-and PR_THP_POLICY_SYSTEM.
-
-The subject is correct.
-
+> Thanks for reviewing. This config is required for below functions which
+> are used for mshv_vtl_low device.
 > 
-> On that note, doesn't it make sense to change the default mm flag under
-> PR_SET_MM?  PR_SET_MM_FLAG maybe?
-
-I don't think thats the right approach. PR_SET_MM is used to modify kernel
-memory map descriptor fields. Thats not what we are doing here.
-
-I am not sure how the usecase in this series fits at all in the below 
-switch statement for PR_SET_MM:
-
-	switch (opt) {
-	case PR_SET_MM_START_CODE:
-		prctl_map.start_code = addr;
-		break;
-	case PR_SET_MM_END_CODE:
-		prctl_map.end_code = addr;
-		break;
-	case PR_SET_MM_START_DATA:
-		prctl_map.start_data = addr;
-		break;
-	case PR_SET_MM_END_DATA:
-		prctl_map.end_data = addr;
-		break;
-	case PR_SET_MM_START_STACK:
-		prctl_map.start_stack = addr;
-		break;
-	case PR_SET_MM_START_BRK:
-		prctl_map.start_brk = addr;
-		break;
-	case PR_SET_MM_BRK:
-		prctl_map.brk = addr;
-		break;
-	case PR_SET_MM_ARG_START:
-		prctl_map.arg_start = addr;
-		break;
-	case PR_SET_MM_ARG_END:
-		prctl_map.arg_end = addr;
-		break;
-	case PR_SET_MM_ENV_START:
-		prctl_map.env_start = addr;
-		break;
-	case PR_SET_MM_ENV_END:
-		prctl_map.env_end = addr;
-		break;
-	default:
-		goto out;
-	}
-
-
+> vm_fault_t mshv_vtl_low_huge_fault ->
+> * vmf_insert_pfn_pmd
+> * vmf_insert_pfn_pud
 > 
-> Thanks,
-> Liam
+> 
+>> <snip>
+>>
+>>> diff --git a/include/hyperv/hvgdk_mini.h b/include/hyperv/hvgdk_mini.h
+>>> index 1be7f6a02304..cc11000e39f4 100644
+>>> --- a/include/hyperv/hvgdk_mini.h
+>>> +++ b/include/hyperv/hvgdk_mini.h
+>>> @@ -882,6 +882,23 @@ struct hv_get_vp_from_apic_id_in {
+>>>       u32 apic_ids[];
+>>>   } __packed;
+>>> +union hv_register_vsm_partition_config {
+>>> +    __u64 as_u64;
+>>
+>> Please, follow the file pattern: as_u64 -> as_uint64
+>>
+>>> +    struct {
+>>> +        __u64 enable_vtl_protection : 1;
+>>
+>> Ditto: __u64 -> u64
+>>
+>>> +        __u64 default_vtl_protection_mask : 4;
+>>> +        __u64 zero_memory_on_reset : 1;
+>>> +        __u64 deny_lower_vtl_startup : 1;
+>>> +        __u64 intercept_acceptance : 1;
+>>> +        __u64 intercept_enable_vtl_protection : 1;
+>>> +        __u64 intercept_vp_startup : 1;
+>>> +        __u64 intercept_cpuid_unimplemented : 1;
+>>> +        __u64 intercept_unrecoverable_exception : 1;
+>>> +        __u64 intercept_page : 1;
+>>> +        __u64 mbz : 51;
+>>> +    };
+>>> +};
+>>> +
+>>>   /*
+>>> diff --git a/include/hyperv/hvhdk.h b/include/hyperv/hvhdk.h
+>>> index b4067ada02cf..9b890126e8e8 100644
+>>> --- a/include/hyperv/hvhdk.h
+>>> +++ b/include/hyperv/hvhdk.h
+>>> @@ -479,6 +479,7 @@ struct hv_connection_info {
+>>>   #define HV_EVENT_FLAGS_COUNT        (256 * 8)
+>>>   #define HV_EVENT_FLAGS_BYTE_COUNT    (256)
+>>>   #define HV_EVENT_FLAGS32_COUNT        (256 / sizeof(u32))
+>>> +#define HV_EVENT_FLAGS_LONG_COUNT    (HV_EVENT_FLAGS_BYTE_COUNT / 
+>>> sizeof(__u64))
+>>
+>> Ditto
+>>
+>>>   /* linux side we create long version of flags to use long bit ops 
+>>> on flags */
+>>>   #define HV_EVENT_FLAGS_UL_COUNT        (256 / sizeof(ulong))
+>>> diff --git a/include/uapi/linux/mshv.h b/include/uapi/linux/mshv.h
+>>> index 876bfe4e4227..a8c39b08b39a 100644
+>>> --- a/include/uapi/linux/mshv.h
+>>> +++ b/include/uapi/linux/mshv.h
+>>> @@ -288,4 +288,86 @@ struct mshv_get_set_vp_state {
+>>>    * #define MSHV_ROOT_HVCALL            _IOWR(MSHV_IOCTL, 0x07, 
+>>> struct mshv_root_hvcall)
+>>>    */
+>>> +/* Structure definitions, macros and IOCTLs for mshv_vtl */
+>>> +
+>>> +#define MSHV_CAP_CORE_API_STABLE        0x0
+>>> +#define MSHV_CAP_REGISTER_PAGE          0x1
+>>> +#define MSHV_CAP_VTL_RETURN_ACTION      0x2
+>>> +#define MSHV_CAP_DR6_SHARED             0x3
+>>> +#define MSHV_MAX_RUN_MSG_SIZE                256
+>>> +
+>>> +#define MSHV_VP_MAX_REGISTERS   128
+>>> +
+>>> +struct mshv_vp_registers {
+>>> +    __u32 count;    /* at most MSHV_VP_MAX_REGISTERS */
+>>
+>> Same here: __u{32,64} -> u{32,64}.
+>>
+>> Please, address everywhere.
+>>
+> 
+> I'll take care of all of these in my next patch.
+> 
+
+
+One concern about this change in include/uapi/linux/mshv.h.
+I see the convention of using '__' family of data types in this file.
+Whatever we do here, will be applicable to existing code as well.
+Do you suggest we should change it to u{32,64} variants or keep
+it in current form?
+
+Regards,
+Naman
+
+>> <snip>
+>>
+>>> +
+>>> +/* vtl device */
+>>> +#define MSHV_CREATE_VTL            _IOR(MSHV_IOCTL, 0x1D, char)
+>>> +#define MSHV_VTL_ADD_VTL0_MEMORY    _IOW(MSHV_IOCTL, 0x21, struct 
+>>> mshv_vtl_ram_disposition)
+>>> +#define MSHV_VTL_SET_POLL_FILE        _IOW(MSHV_IOCTL, 0x25, struct 
+>>> mshv_vtl_set_poll_file)
+>>> +#define MSHV_VTL_RETURN_TO_LOWER_VTL    _IO(MSHV_IOCTL, 0x27)
+>>> +#define MSHV_GET_VP_REGISTERS        _IOWR(MSHV_IOCTL, 0x05, struct 
+>>> mshv_vp_registers)
+>>> +#define MSHV_SET_VP_REGISTERS        _IOW(MSHV_IOCTL, 0x06, struct 
+>>> mshv_vp_registers)
+>>> +
+>>> +/* VMBus device IOCTLs */
+>>> +#define MSHV_SINT_SIGNAL_EVENT    _IOW(MSHV_IOCTL, 0x22, struct 
+>>> mshv_vtl_signal_event)
+>>> +#define MSHV_SINT_POST_MESSAGE    _IOW(MSHV_IOCTL, 0x23, struct 
+>>> mshv_vtl_sint_post_msg)
+>>> +#define MSHV_SINT_SET_EVENTFD     _IOW(MSHV_IOCTL, 0x24, struct 
+>>> mshv_vtl_set_eventfd)
+>>> +#define MSHV_SINT_PAUSE_MESSAGE_STREAM     _IOW(MSHV_IOCTL, 0x25, 
+>>> struct mshv_sint_mask)
+>>> +
+>>> +/* hv_hvcall device */
+>>> +#define MSHV_HVCALL_SETUP        _IOW(MSHV_IOCTL, 0x1E, struct 
+>>> mshv_vtl_hvcall_setup)
+>>> +#define MSHV_HVCALL              _IOWR(MSHV_IOCTL, 0x1F, struct 
+>>> mshv_vtl_hvcall)
+>>
+>> How many of these ioctls are actually used by the mshv root driver?
+>> Should those which are VTl-specific be named as such (like 
+>> MSHV_VTL_SET_POLL_FILE)?
+>> Another option would be to keep all the names generic.
+>>
+>> Thanks,
+>> Stanislav
+> 
+> None of the IOCTLs in mshv_vtl section, introduced in this patch is used
+> by mshv_root driver. Since IOCTLs of mshv_root does not have MSHV_ROOT
+> prefix, I am OK with removing MSHV_VTL_* prefix from these IOCTL names.
+> You can let me know if you want me to prefix them with MSHV_VTL.
+> 
+> Thanks again for reviewing.
+> 
+> Regards,
+> Naman
+> 
+>>
+>>>   #endif
+>>> -- 
+>>> 2.34.1
+>>>
+> 
 
