@@ -1,314 +1,119 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A60151F8EFF
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 16:02:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 161261E51E0
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 16:03:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747843341; cv=none; b=qVjWoPCWZaXZUKd2UGxhUyGYwdTukOXNIUjFyBocMhfZPyo5ZLlZLw/3Rm9X+UBxTzcZrj1Vh5MIK3+uiUMgeWYzDU1oWFUNi2QuynOhxisRdoq17V38iwvg3EdRABt/1ZhNd8N4CT5YqxTmH2br0XdDbATlrFGHIboHEaKnopY=
+	t=1747843389; cv=none; b=bk9XfDMI6CDE1bOK3fV0GjJ8og2CK4a/6w5VxJotuCQBbxbZwHrApG/5I+MicxhVqUFWw1WYCdmA/5C1BPfPqo9Fy7oX2U/Kj3VwN1U3Jg+deHFOfeeZHn3Wfls9+W81Sy7QEaLS8685kUnISvzUmTeycQFZ7I3WE/afQZE1jVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747843341; c=relaxed/simple;
-	bh=UREKu6qch+HwsQMt1vlqYyRJDWH9laE5S9pm9bS66hE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=K3JNsZNBpyF84x3syrdFv918WGcJ37BMFDWWG9sYMdCm2ahtqftlE2EvJn3RvefUnDqbAxU6yYKNVnrdUkE0twz3zai+una4Egjj5wR+Q/PwqXtDYFuee0hzBUGfcrDIp3lH0+RY3UOfyGHSdW8H4lGQwJhpaO2W+Zj8kORC5PY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OYLnUG50; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747843389; c=relaxed/simple;
+	bh=Pz0A25gFXiiCnMqeLC0p5Rp5lvtM/J3LFMSpqFnzyms=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aeFW4osemVWMBCZjR+bkwhwd7JrwQf4DGnIP3wVSZPOA6e9kpdC29E+B22zQ1yFH4uSgJmcJvWcxtCGQ7EaEyZeB9MNG+hS2Y+H9hDIETXJwL4YI2zBDhHFw/k7x4C+PG/8EehfmOgWlR4t8ZxCLTbvWxgWrnXOadyelSnvnN8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vQccBGwV; arc=none smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OYLnUG50"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747843338;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=9fZhY6wHMdAbKA49Jq994SZ/xqO7IR+BBcalbyYYXIM=;
-	b=OYLnUG507WjMIVhuptSi/eg9KkKEalIeTZ0RW6v4fUc7aY3W0hws5Dm7V830FFqu0bWyBr
-	3SH7eZ/TSNaBvj0p1d2laocWhE8GRbx3xZf08iWZ1PH/7vsAW74bIrWTsUvkdKfvNC576i
-	M4LtYXq6fql52j7JvUW/3M3KhOQiouQ=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-548-yJ6lrV1LO_mtiBANqYJ9uQ-1; Wed, 21 May 2025 12:02:15 -0400
-X-MC-Unique: yJ6lrV1LO_mtiBANqYJ9uQ-1
-X-Mimecast-MFC-AGG-ID: yJ6lrV1LO_mtiBANqYJ9uQ_1747843335
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a370309dcbso1722470f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 09:02:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vQccBGwV"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-47e9fea29easo1775481cf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 09:03:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747843387; x=1748448187; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Vap2Fmp/jup7NN2/6dTRhAYx6PUX7E7GIsmSa7sRMi8=;
+        b=vQccBGwV204AxLbW7Vze970ODl+OWdagAIue74swtiJqXiBy67O6w1jtvg9a0o57Ag
+         7IEip0Odua+OZmguK0ccjjbcd8KQlmyEIs78MksVZ72c5DyVo5wDVbz/vj8owYhdBzW9
+         6jUF6oVgRi31W5169nwOEkgMyJgkj7ZMA+ukT73SEjdCfXMW7Z8oyadhUGHElgn0/3Tn
+         1mu1+C6Gpp1esAuIR+YoxNYQmoBg+TYnDfvcMFZJVpMlLE/CZQJwqaB4hVbUy1LDjMFc
+         OYzT7evmbik6jTPD+jGCkJQ2kTZMxI0zabLVTW1Sbigvxfvdb4EfmYiTI+9BK11NX6vE
+         3peA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747843334; x=1748448134;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=9fZhY6wHMdAbKA49Jq994SZ/xqO7IR+BBcalbyYYXIM=;
-        b=T9MCjBsguCYc3MaCEwyXcm6TbCF0V5NQ7eIGpxZjkp0ULUBEkD+gbiuLYPjfuc7y+7
-         2nvHsrFUGq7HH8Ryog31+lsBhJdrqY0YY5E/FUWLMISEQocnu8y6YOLqodTIXnhjxMRW
-         HBVxMGxEn+ZMzZRHQIuQ/6wvXwrHrxcoW9sZ0iK85Tv3Cc+0SQMuYNGzGN/HX6UM3MXH
-         mtFCyItDnTP2Xowh39EZnlXgjHRUypa1afeVfF/+/PsHRV71AbeFnI/DUL9LbyD6diWq
-         F/UMtex3YCWogFsjdrp8+WXAbkY3gf+GfAkBmOIVlTY1RMNjEBujO9+/qAksD9zJC0tp
-         3mlg==
-X-Forwarded-Encrypted: i=1; AJvYcCUuOkX9Z+VzLf4z84yNVr8aVqen3TzK7PviHmiOf6aCh0wlMkOClzO170j5iuj3lZgUXaCVSbYYFMJF7Oc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxenUQgvbnQYA1EZUKuSTcsUNZRA4t7GePD+Ta9C92wTsdKXz0d
-	Y4jGwXHFgwrLW4EN3tnBW4+pMk/IAiGlNT6PSmv1+G3o2G+p0sC/9kAtjm4HVVD1j7x/IxzoRA3
-	VHcDpDQIKA2kQx/McKVU017bHj6Ya8EXZf5jpJhvJOTn1oOjMNnB40UBx1YcdO1R+vQ==
-X-Gm-Gg: ASbGncvHEtIUsKeDiWaQqwUGYOc8BLSHKxUQJrGyz9BjBzqJfOcWgiIXadHwxErAsLh
-	KKmHAHJ2ut3DAI86z9NMj/mebvdYllf1sK5IdExyEfEPOZosR5dboyxFZ57n6bGVrl9QxI0PIcZ
-	KVW9sQk8vIAke1cilKxPTqRx5wS4oyKANIuseWrmLOq2Lbs880iLFIUa05+5kV/B2UsQDsEq41R
-	zsRZ+Qtf4T1Z0SsG0Qq1XIczM5yiSmWjOJ9v76nk4/0cRwEaIEdKqsLyiY3xb/ppa3grk4cBv2w
-	oy+Gv+Yxij/Al4LD6R70drUC0Q4LKRRFnFFzhWEpjSEJPFx1fNJMf7ZKs0yldu3wiKxSHEHF/O2
-	lH/bDPtECZD6ZnxQnF8UvZbTEbWf6OoJ5KDO1SXM=
-X-Received: by 2002:a05:6000:180e:b0:3a3:62e1:a7db with SMTP id ffacd0b85a97d-3a362e1a997mr13218485f8f.3.1747843334509;
-        Wed, 21 May 2025 09:02:14 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEVQZhAv284WgoDT4LXe2CAM32OUzc9mP8qdr2b0rFwua5ybh0oAxFZX3kGmiZjGs9lXci0Ng==
-X-Received: by 2002:a05:6000:180e:b0:3a3:62e1:a7db with SMTP id ffacd0b85a97d-3a362e1a997mr13218436f8f.3.1747843333942;
-        Wed, 21 May 2025 09:02:13 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f25:9c00:e2c7:6eb5:8a51:1c60? (p200300d82f259c00e2c76eb58a511c60.dip0.t-ipconnect.de. [2003:d8:2f25:9c00:e2c7:6eb5:8a51:1c60])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca208besm20078586f8f.0.2025.05.21.09.02.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 May 2025 09:02:13 -0700 (PDT)
-Message-ID: <f2c0f4d0-42d5-4255-a1e4-d782cfb6e50c@redhat.com>
-Date: Wed, 21 May 2025 18:02:12 +0200
+        d=1e100.net; s=20230601; t=1747843387; x=1748448187;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Vap2Fmp/jup7NN2/6dTRhAYx6PUX7E7GIsmSa7sRMi8=;
+        b=Bzi87FAkG6Inwo3FmW2Kz5G1ZrapniFQrGjcZvMZ7Ifv1WKZZNV+95MYKwwDj8pT6a
+         xFkssKvQXgb+n15TyPRHodqLOi2iPege+eKEupujrnn/1gP+Z6fqmxwndOKrORePhE5d
+         54CXv7YIyeD6PPBc/YBx9HA/nkNUWYxtFzLS6lmP9jnyg5ym+7H4MwrZ4+D8+qgajQsW
+         pZpxoM4v9zizGR0pBP7PdNAtnhKUMs9AoQLB7VWHhdxmWeRYf/lykVZbh6aSw5MXVVXw
+         w/HWnTMklamhcPsc+m6fHtFhmepeCnyHt4vzklfT//F/hSkyVkEpC3+IqsRt4IpwrB3O
+         o71A==
+X-Forwarded-Encrypted: i=1; AJvYcCWX3cmr4rSEeP5wO8fOu705+CkecYp3N2edGOkh0jCcaLZ2OluPX1pJHxFJFXxlEYcVwe+OV5PQ/tDzUdA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzrT4H4bfJ1oYZSEkJBN7qgP5Vc2VisD6HyH3wssCvsWbNvY6y/
+	JGXWkZU1cZM9OQQsLxSJzNz3OWCH3fPxdoJL+KxtfvHayPrlGV4oxqEhuQqLK5YwW0KmHTj4XrS
+	k4P3MLyAsaenzdU2S7ZiHlUHnQ89eOcpdiezu99rt
+X-Gm-Gg: ASbGncvbhe20oqQAExqpq6AL0Qlw5zkPSg5LaubSYNow5YTSp5qfPwD77oBSUTuLc2r
+	kD1JxCe+y0V7mfR5+GQHO9zrArgVxvY34X9iRAKx1xKlaXEy7FS9HDMtoTZK+I5plJahLzHJdRz
+	+vtOIynwyYM4oJCL9eTpBqaX0dfVKoRRMz/55/S1Z5NRW9//XtroJ37TkVLLQ6GuQ2adh8E1QEf
+	vfuXzSHZW8Z
+X-Google-Smtp-Source: AGHT+IFC8a5TXdX0qE1svILjR510sIlYvhF6hDRbDWibNGaSaoJrbmftu3GRHLkFT+HvyYn1OHcdW3MbY8Nto1AcWok=
+X-Received: by 2002:a05:622a:28c:b0:47e:b278:2e07 with SMTP id
+ d75a77b69052e-49595c5da5bmr15670171cf.20.1747843386476; Wed, 21 May 2025
+ 09:03:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] vfio/type1: optimize vfio_pin_pages_remote() for huge
- folio
-To: Peter Xu <peterx@redhat.com>
-Cc: Alex Williamson <alex.williamson@redhat.com>, lizhe.67@bytedance.com,
- kvm@vger.kernel.org, linux-kernel@vger.kernel.org, muchun.song@linux.dev
-References: <20250520070020.6181-1-lizhe.67@bytedance.com>
- <3f51d180-becd-4c0d-a156-7ead8a40975b@redhat.com>
- <20250520162125.772d003f.alex.williamson@redhat.com>
- <ff914260-6482-41a5-81f4-9f3069e335da@redhat.com> <aC3z_gUxJbY1_JP7@x1.local>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <aC3z_gUxJbY1_JP7@x1.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250521142521.3033264-1-usamaarif642@gmail.com>
+In-Reply-To: <20250521142521.3033264-1-usamaarif642@gmail.com>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Wed, 21 May 2025 09:02:54 -0700
+X-Gm-Features: AX0GCFvCyckIBVk8R4I8PhbM_DdMu4qHvhXwrSomWLj3BYkkVkexsCZcenpHFPg
+Message-ID: <CAJuCfpGtb9j1y93bksErU4NfjPX6tGrP6qvMrazx3+M7dJWtxQ@mail.gmail.com>
+Subject: Re: [PATCH] mm: slub: do not warn when allocating slab obj extensions fails
+To: Usama Arif <usamaarif642@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, hannes@cmpxchg.org, shakeel.butt@linux.dev, 
+	vlad.wing@gmail.com, linux-mm@kvack.org, kent.overstreet@linux.dev, 
+	cl@gentwo.org, rientjes@google.com, vbabka@suse.cz, roman.gushchin@linux.dev, 
+	harry.yoo@oracle.com, linux-kernel@vger.kernel.org, kernel-team@meta.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 21.05.25 17:40, Peter Xu wrote:
-> On Wed, May 21, 2025 at 08:35:47AM +0200, David Hildenbrand wrote:
->> On 21.05.25 00:21, Alex Williamson wrote:
->>> On Tue, 20 May 2025 19:38:45 +0200
->>> David Hildenbrand <david@redhat.com> wrote:
->>>
->>>> On 20.05.25 09:00, lizhe.67@bytedance.com wrote:
->>>>> From: Li Zhe <lizhe.67@bytedance.com>
->>>>
->>>> Subject: "huge folio" -> "large folios"
->>>>
->>>>>
->>>>> When vfio_pin_pages_remote() is called with a range of addresses that
->>>>> includes huge folios, the function currently performs individual
->>>>
->>>> Similar, we call it a "large" f
->>>>
->>>>> statistics counting operations for each page. This can lead to significant
->>>>> performance overheads, especially when dealing with large ranges of pages.
->>>>>
->>>>> This patch optimize this process by batching the statistics counting
->>>>> operations.
->>>>>
->>>>> The performance test results for completing the 8G VFIO IOMMU DMA mapping,
->>>>> obtained through trace-cmd, are as follows. In this case, the 8G virtual
->>>>> address space has been mapped to physical memory using hugetlbfs with
->>>>> pagesize=2M.
->>>>>
->>>>> Before this patch:
->>>>> funcgraph_entry:      # 33813.703 us |  vfio_pin_map_dma();
->>>>>
->>>>> After this patch:
->>>>> funcgraph_entry:      # 15635.055 us |  vfio_pin_map_dma();
->>>>>
->>>>> Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
->>>>> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
->>>>> ---
->>>>> Changelogs:
->>>>>
->>>>> v2->v3:
->>>>> - Code simplification.
->>>>> - Fix some issues in comments.
->>>>>
->>>>> v1->v2:
->>>>> - Fix some issues in comments and formatting.
->>>>> - Consolidate vfio_find_vpfn_range() and vfio_find_vpfn().
->>>>> - Move the processing logic for huge folio into the while(true) loop
->>>>>      and use a variable with a default value of 1 to indicate the number
->>>>>      of consecutive pages.
->>>>>
->>>>> v2 patch: https://lore.kernel.org/all/20250519070419.25827-1-lizhe.67@bytedance.com/
->>>>> v1 patch: https://lore.kernel.org/all/20250513035730.96387-1-lizhe.67@bytedance.com/
->>>>>
->>>>>     drivers/vfio/vfio_iommu_type1.c | 48 +++++++++++++++++++++++++--------
->>>>>     1 file changed, 37 insertions(+), 11 deletions(-)
->>>>>
->>>>> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
->>>>> index 0ac56072af9f..48f06ce0e290 100644
->>>>> --- a/drivers/vfio/vfio_iommu_type1.c
->>>>> +++ b/drivers/vfio/vfio_iommu_type1.c
->>>>> @@ -319,15 +319,22 @@ static void vfio_dma_bitmap_free_all(struct vfio_iommu *iommu)
->>>>>     /*
->>>>>      * Helper Functions for host iova-pfn list
->>>>>      */
->>>>> -static struct vfio_pfn *vfio_find_vpfn(struct vfio_dma *dma, dma_addr_t iova)
->>>>> +
->>>>> +/*
->>>>> + * Find the first vfio_pfn that overlapping the range
->>>>> + * [iova, iova + PAGE_SIZE * npage) in rb tree.
->>>>> + */
->>>>> +static struct vfio_pfn *vfio_find_vpfn_range(struct vfio_dma *dma,
->>>>> +		dma_addr_t iova, unsigned long npage)
->>>>>     {
->>>>>     	struct vfio_pfn *vpfn;
->>>>>     	struct rb_node *node = dma->pfn_list.rb_node;
->>>>> +	dma_addr_t end_iova = iova + PAGE_SIZE * npage;
->>>>>     	while (node) {
->>>>>     		vpfn = rb_entry(node, struct vfio_pfn, node);
->>>>> -		if (iova < vpfn->iova)
->>>>> +		if (end_iova <= vpfn->iova)
->>>>>     			node = node->rb_left;
->>>>>     		else if (iova > vpfn->iova)
->>>>>     			node = node->rb_right;
->>>>> @@ -337,6 +344,11 @@ static struct vfio_pfn *vfio_find_vpfn(struct vfio_dma *dma, dma_addr_t iova)
->>>>>     	return NULL;
->>>>>     }
->>>>> +static inline struct vfio_pfn *vfio_find_vpfn(struct vfio_dma *dma, dma_addr_t iova)
->>>>> +{
->>>>> +	return vfio_find_vpfn_range(dma, iova, 1);
->>>>> +}
->>>>> +
->>>>>     static void vfio_link_pfn(struct vfio_dma *dma,
->>>>>     			  struct vfio_pfn *new)
->>>>>     {
->>>>> @@ -681,32 +693,46 @@ static long vfio_pin_pages_remote(struct vfio_dma *dma, unsigned long vaddr,
->>>>>     		 * and rsvd here, and therefore continues to use the batch.
->>>>>     		 */
->>>>>     		while (true) {
->>>>> +			struct folio *folio = page_folio(batch->pages[batch->offset]);
->>>>> +			long nr_pages;
->>>>> +
->>>>>     			if (pfn != *pfn_base + pinned ||
->>>>>     			    rsvd != is_invalid_reserved_pfn(pfn))
->>>>>     				goto out;
->>>>> +			/*
->>>>> +			 * Note: The current nr_pages does not achieve the optimal
->>>>> +			 * performance in scenarios where folio_nr_pages() exceeds
->>>>> +			 * batch->capacity. It is anticipated that future enhancements
->>>>> +			 * will address this limitation.
->>>>> +			 */
->>>>> +			nr_pages = min((long)batch->size, folio_nr_pages(folio) -
->>>>> +						folio_page_idx(folio, batch->pages[batch->offset]));
->>>>> +			if (nr_pages > 1 && vfio_find_vpfn_range(dma, iova, nr_pages))
->>>>> +				nr_pages = 1;
->>>>
->>>>
->>>> You seem to assume that the batch really contains the consecutive pages
->>>> of that folio.
->>>
->>> I don't think we are.  We're iterating through our batch of pages from
->>> GUP to find consecutive pfns.  We use the page to get the pfn, the
->>> folio, and immediately above, the offset into the folio.  batch->size is
->>> the remaining length of the page array from GUP and batch->offset is our
->>> current index into that array.
->>
->> Let me try again using an example below ....
->>
->>>> This is not the case if we obtained the pages through GUP and we have
->>>>
->>>> (a) A MAP_PRIVATE mapping
->>>>
->>>> (b) We span multiple different VMAs
->>>>
->>>>
->>>> Are we sure we can rule out (a) and (b)?
->>>>
->>>> A more future-proof approach would be at least looking whether the
->>>> pages/pfns are actually consecutive.
->>>
->>> The unmodified (pfn != *pfn_base + pinned) test is where we verify we
->>> have the next consecutive pfn.  Maybe I'm not catching the dependency
->>> you're seeing on consecutive pages, I think there isn't one unless
->>> we're somehow misusing folio_page_idx() to get the offset into the
->>> folio.
->>
->> Assume our page tables look like this (case (a), a partially mapped large
->> pagecache folio mixed with COW'ed anonymous folios):
->>
->>    + page[0] of folio 0
->>    |              + COWed anonymous folio (folio 1)
->>    |              |    + page[4] of folio 0
->>    |              |    |
->>    v              v    v
->> F0P0 F0P1 F0P2 F1P0 F0P4 P0P5 F0P6 F0P7
->>
->> If we GUP that range, we get exactly these pages, except that the PFNs are
->> not consecutive, because F0P3 was replaced by another page. The large folio
->> is partially mapped.
->>
->>
->> Maybe I misunderstand that code, but wouldn't we just "jump" over F1P0
->> because we assume the batch would contain F1P0, where it really contains
->> F0P4?
-> 
-> Looks like a real issue (even if unlikely setup)..
+On Wed, May 21, 2025 at 7:25=E2=80=AFAM Usama Arif <usamaarif642@gmail.com>=
+ wrote:
+>
+> In memory bound systems, a large number of warnings for failing this
+> allocation repeatedly may mask any real issues in the system
+> during memory pressure being reported in dmesg. Failing this
+> allocation is not indicative of a bug, so remove the warning.
+>
+> Signed-off-by: Usama Arif <usamaarif642@gmail.com>
+> Reported-by: Vlad Poenaru <vlad.wing@gmail.com>
+> Closes: https://lore.kernel.org/all/17fab2d6-5a74-4573-bcc3-b75951508f0a@=
+gmail.com/
+> ---
+> v1 -> v2:
+> - remove the warning completely. We will have a way in the
+>   future to indicate that the mem alloc profile is inaccurate.
+> ---
+>  mm/slub.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+>
+> diff --git a/mm/slub.c b/mm/slub.c
+> index dc9e729e1d26..06ab9a558b73 100644
+> --- a/mm/slub.c
+> +++ b/mm/slub.c
+> @@ -2102,9 +2102,7 @@ prepare_slab_obj_exts_hook(struct kmem_cache *s, gf=
+p_t flags, void *p)
+>
+>         slab =3D virt_to_slab(p);
+>         if (!slab_obj_exts(slab) &&
+> -           WARN(alloc_slab_obj_exts(slab, s, flags, false),
+> -                "%s, %s: Failed to create slab extension vector!\n",
+> -                __func__, s->name))
+> +           alloc_slab_obj_exts(slab, s, flags, false))
 
-There are other ways to achieve that (e.g., simply mapping parts of 
-multiple files etc.).
+I thought we agreed to having pr_warn_once() here. Did I miss something?
 
-Of course, for hugetlb (as you note below) such folios partial mappings 
-are impossible.
-
--- 
-Cheers,
-
-David / dhildenb
-
+>                 return NULL;
+>
+>         return slab_obj_exts(slab) + obj_to_index(s, slab, p);
+> --
+> 2.47.1
+>
