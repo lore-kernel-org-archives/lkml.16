@@ -1,114 +1,251 @@
-Received: from fhigh-a1-smtp.messagingengine.com (fhigh-a1-smtp.messagingengine.com [103.168.172.152])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7FA938F80;
-	Wed, 21 May 2025 13:56:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA18A17A2F3
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 13:56:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747835813; cv=none; b=Ot1SpTW2M0JVunwMfGPO57/dzTJvgkAvta3quyfWz2xuW/Mz4roLDNFcTPkeEcmH/N1v0CEw4MLupkcHfgvPA8H1hQfOyOJ81+RdltsG79f9fZfKTzSmMWIr3qKd7ooJLcAViCEWgMAebyIUtO6eme/f3WYTjYwbE0C2WAIvfzY=
+	t=1747835819; cv=none; b=n99WN1zqfSh1c2r63rs0gx72A7QMnx3JYz9ogrsoHxJX8XJHAbfMI+O+ff0LQlQmvW/oNCWY9y95Ntx+Rq6sTIXqSR11f2wtTVdHciwP/6CSmDHleSsaTjVa8Wez9uKo8nLt8U3ClnbUFpfAhNNwi7hubHTMRamPQ5g9XGi6YJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747835813; c=relaxed/simple;
-	bh=K6Oqp9F5rMonkOFa3DWG+jhMVLCdnYW1GzBi5erRm0s=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=OiogKbPYWDfd0Q5wDWVhBzTrTX39sCGnjG8+8F8xiiZOoO5cnii4zYqgV/QZL6ZTYvtX7T6xKLJ+Z759Fq0hrwyFpQkh4pYVtQKlisxd+qkZOKGRVmISXGnPvGYdl0xzSYzLZUG1urexI3PLmnS4+PH0IpIPR1CtDPVaWtJkKd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Lun5uQga; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=GtimHuS8; arc=none smtp.client-ip=103.168.172.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1747835819; c=relaxed/simple;
+	bh=6Gw73Lgaz9OAHOOVAKLS6nU+39Z+c9UoRWndBf+5zP8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NlydngD5nKvNJ//lCha/Agv0l2SmB5bvyjmq6/84ZsjZ+hWVPW0RO26V5T4MO2jXH8K2YsXZiWtF5fqdWQMq8aRzRljy6A4oXVlpKCD0bd/TwC2U1wM3KXjSsvVPCVov4OEQtUbQrsCjiLfZYS5w1ZeQrReP+X9SzSIzYbQO8bk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=T048csCJ; arc=none smtp.client-ip=209.85.166.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Lun5uQga";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GtimHuS8"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 8B41A1140162;
-	Wed, 21 May 2025 09:56:49 -0400 (EDT)
-Received: from phl-imap-12 ([10.202.2.86])
-  by phl-compute-05.internal (MEProxy); Wed, 21 May 2025 09:56:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1747835809;
-	 x=1747922209; bh=ZMvZQ7v5Is6kVNWL3Keg7NmNm84v9UkKMJ3j+BK9Lb4=; b=
-	Lun5uQgajLAhuM2pfX4LISO0EGQekoMe+/tyYhrsSzmVvVzt79ghWB0SHHjPgrjN
-	+LcZvUxB/0cIC6Md8YSs9jHGWj+eohOZGJ4lAWmIpeDarKnWC3+idZP2HckXk5nE
-	L78qqb+81Ft4FhmjDIGWd4kpjyTQeUoMRRdFhgvp6ogC2uBXDRU2LZ2SpcB0u/BZ
-	YQnn5yaHaNlCMY85JP0wnEbyp6VFJbh32oIXXvVKLR6fq7MWauJvSbPA9XO/qZPI
-	COMm6bE/mkT3e0rFlqDfIkRKSlyfBFYgavJI4lXYCNwdkWvLJbVsViS1AckfUSkP
-	QqEBqJur+cJXKRAvadGcZw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1747835809; x=
-	1747922209; bh=ZMvZQ7v5Is6kVNWL3Keg7NmNm84v9UkKMJ3j+BK9Lb4=; b=G
-	timHuS8q9oFyIN9726+wfhwVlBH3uURVS83bR66E5RaDmNxKhRKkHVkRxz0lsSN2
-	ayJvV9mn4Q0lf+oPf1F2RM/vV0/pXH9tukKFalyVZ/1HCaZNaC+YE/FC3a/Z5sQe
-	HmevSQeHRiR2H6CIjxcloVrrwJKTMwrjmYCUl7VV0iTgr/Q4757x1KD6XwujfZwe
-	kI6kMdPHgXwY9wfdvL3AG0Yhv8nTaIfmCtIZC9hNWWojGJh2mpKYrQhqw6CHNiHl
-	U4P/tkOWroGpV1rJd57gkel/zgAGtUePVvPo9dSiiX5bedrGtuxBMfU2nlzowifW
-	5sgEcj1USlenfDgtZFUWA==
-X-ME-Sender: <xms:oNstaN1lwp6ghc0pEVxJJrGi1Ys2C9reKeT9d2Gduf5RAKjN0sQyYA>
-    <xme:oNstaEEJ_BX0n6lPoF29bkUGd2Ub4H0BOdFTE_-Pfhvvexm37Z6E5Ub9rWBG6n6b7
-    IpgP9jqW4jo6yLuAUo>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdefvdeiucdltddurdegfedvrddttd
-    dmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgf
-    nhhsuhgsshgtrhhisggvpdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttd
-    enucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgj
-    fhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuc
-    eorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedu
-    keetgefggffhjeeggeetfefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuih
-    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdp
-    nhgspghrtghpthhtohepkedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprghrnh
-    gusehkvghrnhgvlhdrohhrghdprhgtphhtthhopegsrhhoohhnihgvsehkvghrnhgvlhdr
-    ohhrghdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdroh
-    hrghdprhgtphhtthhopehpvghrvgigsehpvghrvgigrdgtiidprhgtphhtthhopehquhhi
-    tggpfigthhgvnhhgsehquhhitghinhgtrdgtohhmpdhrtghpthhtohepthhifigrihessh
-    hushgvrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgv
-    rhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqshhouhhnugesvhhgvghrrdhkvg
-    hrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:oNstaN6u7Km_vfAFhjKj6ECmQnmDeHBFduD55TM9zVEOy0quTmd1SA>
-    <xmx:oNstaK1UbfweH4-c7aAs9F_r5YYQdQ7_iQ2vp-XJ6c87l-cstrNIDw>
-    <xmx:oNstaAFAYAbVzTghcNv0ERO20uv1hz27xqcMx1GsIbLTHg8HkeYNTQ>
-    <xmx:oNstaL_CTpBRHdurzOxBOe3F2n_Pk4OftzgMNUIudsmIMnkmH5EHsw>
-    <xmx:odstaPJkKtcs985p2OoOkt3_YTN_4qhX3fTdQegocwDCG3FOqv0sPOzI>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id CCB0F1060060; Wed, 21 May 2025 09:56:48 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T048csCJ"
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3dc8897f64cso67515ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 06:56:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747835817; x=1748440617; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZTW2r6S8DjlZU8WpYcmM8CbKwPqqn2VMl2eVatTldJo=;
+        b=T048csCJH9CiCSJlkwWC/zK+WwfN362xaVufjR3Zwd+cpU580u6gwWBI4UQ4UEVA5J
+         rII9UZEWj9qxnA87/t1zarOjoe8bbMODmmZ03WQY1mrmnIyl/S5IXyUrtFHWpnjFgIou
+         as54ZYtda0rhY9Fvhvu6m9CbPhUgRhhuxp8CTBEupr/8ELQ681YJLq2TkLRtPX59+bL+
+         lFgf5fo7vbNy1Z/SdTgC4HM2djChauu968clF990jn6dGDPjyXX7LzjFooqZNbBws7Nz
+         Srl1tjOsburUZFtKBkhV7jU3rXsgt2nM793qNv4ohCr+LXoN4rE5NQDHFZwJJToKku/P
+         nEwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747835817; x=1748440617;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZTW2r6S8DjlZU8WpYcmM8CbKwPqqn2VMl2eVatTldJo=;
+        b=gdCCHZ/mdEh+enVWasEwkLhEtfXnzuA+kxuJmHunw4QTVBrdsJVGIMQBJCYqq9lzvN
+         Mk4UOFkWX6dxa+hZbB0DC4xom8E536w7dSTByM4sRAxQkQhrPlohu1TiDqTIpfM8YR6l
+         PYxteVUk3N7csyxqtm9cKgU+zDcLy9yxg8pjXCj+PLcuPW1EUjVMd/ewb/JInN6el+xZ
+         rJ379kG46kkXsAvFvaRjmzERDK+ovKIF2L6ncLNDuY4D2OSP/S9BEyIDqaQykffRI5v1
+         6wiQkPDv6wA3MAhPZg3Tt714tNHH2cv12EeswZ2+5NJz/6oykjnacILPDTaj/eSSu86r
+         D8BA==
+X-Forwarded-Encrypted: i=1; AJvYcCUFuSpHpwKVg3Y/W1o76dgmH5Vo6Ymzl7F1a9sjtI/fqDTU4CqPUmB/FtjZMh2+V3Tqv9XXUJwHSTSfL1g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFIFQm196iaBSEcXiGzVhjLIpqow3vIL0rHnmT8yEWYDBpNuJa
+	FOo+CxZid6NYhGmrSqio+m3x1NdVNQY6nnL/zvF/RQj6it+J6NzhLAwEW8Rt90tFypCYWSZOjfb
+	xpAfQxaZAlJGoXFVCxJZ+wK/fMemQ7BOQPBSKnIPake3TnEtNUmA0jPFZ
+X-Gm-Gg: ASbGnctLPxmE/nQ2yrHjFNQb4/LkZ91Tqy0qTsR+ZuU2p8VGOchK7a9cpjAoXZbVgWR
+	Rn3iPHX/Mak78suS0dK+Cdsti02TFkYdfbI6ngyZGEwNKaLa6rRfLTJmyWUiQ4JRVjCq0k6bA/g
+	ZDzCenuSH9B982q37fWAmnqJ2H7orb4hfeJjjpjXs2pqwa
+X-Google-Smtp-Source: AGHT+IEFL9AbHhzTmmkovuXEuvJ6CMwhfcQSQ/LXW7x7TniHWBab0jtm+JRpISECaVTnp+EHvp7JXznP1L3zQUMODWY=
+X-Received: by 2002:a05:6e02:1526:b0:3dc:6fb2:dac7 with SMTP id
+ e9e14a558f8ab-3dc6fb2dddbmr12276855ab.10.1747835816536; Wed, 21 May 2025
+ 06:56:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Te2f939405235d867
-Date: Wed, 21 May 2025 15:56:28 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Cc: "Arnd Bergmann" <arnd@kernel.org>, "Mark Brown" <broonie@kernel.org>,
- "Jaroslav Kysela" <perex@perex.cz>, "Takashi Iwai" <tiwai@suse.com>,
- "Wesley Cheng" <quic_wcheng@quicinc.com>, linux-sound@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Message-Id: <8f26081d-e44d-4674-a122-5e711943d06f@app.fastmail.com>
-In-Reply-To: <2025052115-flagman-parmesan-9f9f@gregkh>
-References: <20250505052032.1811576-1-arnd@kernel.org>
- <a60b3290-a535-4666-9f0e-18a3621e70dd@app.fastmail.com>
- <2025052115-flagman-parmesan-9f9f@gregkh>
-Subject: Re: [PATCH] ALSA: usb-audio: qcom: fix USB_XHCI dependency
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+References: <20250519195148.1708988-1-irogers@google.com> <20250519195148.1708988-5-irogers@google.com>
+ <aC3TMl2MJL1_BASE@x1>
+In-Reply-To: <aC3TMl2MJL1_BASE@x1>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 21 May 2025 06:56:44 -0700
+X-Gm-Features: AX0GCFsNLCb8k5XZOuFkn1_lBa8OUS9cmqWEbKB0DM5VgFrYYRiCewTJFnUq57M
+Message-ID: <CAP-5=fXXbpqQcFj-SUVWAQrmzWhnLNVU=3MiChdCqv4YpiGYGg@mail.gmail.com>
+Subject: Re: [PATCH v3 4/7] perf python: Add support for perf_counts_values to
+ return counter data
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Gautam Menghani <gautam@linux.ibm.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, maddy@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 21, 2025, at 14:33, Greg Kroah-Hartman wrote:
-> On Mon, May 05, 2025 at 07:59:21AM +0200, Arnd Bergmann wrote:
->> 
->> Sorry, this should have been USB_XHCI_HCD, not USB_XHCI. I have some
->> more patches for this driver that I'm still testing I'll include
->> a fixed version when I send the rest, or you can fix it up yourself
->> when applying this one.
+On Wed, May 21, 2025 at 6:20=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
 >
-> Can you send a fixed up one?
+> On Mon, May 19, 2025 at 12:51:41PM -0700, Ian Rogers wrote:
+> > From: Gautam Menghani <gautam@linux.ibm.com>
+> >
+> > Add support for perf_counts_values struct to enable the python
+> > bindings to read and return the counter data.
 >
+> This (and another one in this series) are coming from Ian, that didn't
+> modify them, so we need a Signed-off-by: Ian, as per:
+>
+> Documentation/process/submitting-patches.rst
+>
+> ---
+> Any further SoBs (Signed-off-by:'s) following the author's SoB are from
+> people handling and transporting the patch, but were not involved in its
+> development. SoB chains should reflect the **real** route a patch took
+> as it was propagated to the maintainers and ultimately to Linus, with
+> the first SoB entry signalling primary authorship of a single author.
+> ---
+>
+> I'm adding them to my local branch, please ack this,
 
-Done, sorry I had forgotten about this one by the time I had
-finished the other three.
+Ack. Thanks and sorry for the work, will try to do better next time.
 
-      Arnd
+Ian
+
+> Thanks,
+>
+> - Arnaldo
+>
+> > Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
+> > ---
+> >  tools/perf/util/python.c | 92 +++++++++++++++++++++++++++++++++++++++-
+> >  1 file changed, 91 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> > index ead3afd2d996..1cbddfe77c7c 100644
+> > --- a/tools/perf/util/python.c
+> > +++ b/tools/perf/util/python.c
+> > @@ -626,6 +626,92 @@ static int pyrf_thread_map__setup_types(void)
+> >       return PyType_Ready(&pyrf_thread_map__type);
+> >  }
+> >
+> > +struct pyrf_counts_values {
+> > +     PyObject_HEAD
+> > +
+> > +     struct perf_counts_values values;
+> > +};
+> > +
+> > +static const char pyrf_counts_values__doc[] =3D PyDoc_STR("perf counts=
+ values object.");
+> > +
+> > +static void pyrf_counts_values__delete(struct pyrf_counts_values *pcou=
+nts_values)
+> > +{
+> > +     Py_TYPE(pcounts_values)->tp_free((PyObject *)pcounts_values);
+> > +}
+> > +
+> > +#define counts_values_member_def(member, ptype, help) \
+> > +     { #member, ptype, \
+> > +       offsetof(struct pyrf_counts_values, values.member), \
+> > +       0, help }
+> > +
+> > +static PyMemberDef pyrf_counts_values_members[] =3D {
+> > +     counts_values_member_def(val, Py_T_ULONG, "Value of event"),
+> > +     counts_values_member_def(ena, Py_T_ULONG, "Time for which enabled=
+"),
+> > +     counts_values_member_def(run, Py_T_ULONG, "Time for which running=
+"),
+> > +     counts_values_member_def(id, Py_T_ULONG, "Unique ID for an event"=
+),
+> > +     counts_values_member_def(lost, Py_T_ULONG, "Num of lost samples")=
+,
+> > +     {NULL}
+> > +};
+> > +
+> > +static PyObject *pyrf_counts_values_get_values(struct pyrf_counts_valu=
+es *self, void *closure)
+> > +{
+> > +     PyObject *vals =3D PyList_New(5);
+> > +
+> > +     if (!vals)
+> > +             return NULL;
+> > +     for (int i =3D 0; i < 5; i++)
+> > +             PyList_SetItem(vals, i, PyLong_FromLong(self->values.valu=
+es[i]));
+> > +
+> > +     return vals;
+> > +}
+> > +
+> > +static int pyrf_counts_values_set_values(struct pyrf_counts_values *se=
+lf, PyObject *list,
+> > +                                      void *closure)
+> > +{
+> > +     Py_ssize_t size;
+> > +     PyObject *item =3D NULL;
+> > +
+> > +     if (!PyList_Check(list)) {
+> > +             PyErr_SetString(PyExc_TypeError, "Value assigned must be =
+a list");
+> > +             return -1;
+> > +     }
+> > +
+> > +     size =3D PyList_Size(list);
+> > +     for (Py_ssize_t i =3D 0; i < size; i++) {
+> > +             item =3D PyList_GetItem(list, i);
+> > +             if (!PyLong_Check(item)) {
+> > +                     PyErr_SetString(PyExc_TypeError, "List members sh=
+ould be numbers");
+> > +                     return -1;
+> > +             }
+> > +             self->values.values[i] =3D PyLong_AsLong(item);
+> > +     }
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static PyGetSetDef pyrf_counts_values_getset[] =3D {
+> > +     {"values", (getter)pyrf_counts_values_get_values, (setter)pyrf_co=
+unts_values_set_values,
+> > +             "Name field", NULL},
+> > +     {NULL}
+> > +};
+> > +
+> > +static PyTypeObject pyrf_counts_values__type =3D {
+> > +     PyVarObject_HEAD_INIT(NULL, 0)
+> > +     .tp_name        =3D "perf.counts_values",
+> > +     .tp_basicsize   =3D sizeof(struct pyrf_counts_values),
+> > +     .tp_dealloc     =3D (destructor)pyrf_counts_values__delete,
+> > +     .tp_flags       =3D Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,
+> > +     .tp_doc         =3D pyrf_counts_values__doc,
+> > +     .tp_members     =3D pyrf_counts_values_members,
+> > +     .tp_getset      =3D pyrf_counts_values_getset,
+> > +};
+> > +
+> > +static int pyrf_counts_values__setup_types(void)
+> > +{
+> > +     pyrf_counts_values__type.tp_new =3D PyType_GenericNew;
+> > +     return PyType_Ready(&pyrf_counts_values__type);
+> > +}
+> > +
+> >  struct pyrf_evsel {
+> >       PyObject_HEAD
+> >
+> > @@ -1475,7 +1561,8 @@ PyMODINIT_FUNC PyInit_perf(void)
+> >           pyrf_evlist__setup_types() < 0 ||
+> >           pyrf_evsel__setup_types() < 0 ||
+> >           pyrf_thread_map__setup_types() < 0 ||
+> > -         pyrf_cpu_map__setup_types() < 0)
+> > +         pyrf_cpu_map__setup_types() < 0 ||
+> > +         pyrf_counts_values__setup_types() < 0)
+> >               return module;
+> >
+> >       /* The page_size is placed in util object. */
+> > @@ -1520,6 +1607,9 @@ PyMODINIT_FUNC PyInit_perf(void)
+> >       Py_INCREF(&pyrf_cpu_map__type);
+> >       PyModule_AddObject(module, "cpu_map", (PyObject*)&pyrf_cpu_map__t=
+ype);
+> >
+> > +     Py_INCREF(&pyrf_counts_values__type);
+> > +     PyModule_AddObject(module, "counts_values", (PyObject *)&pyrf_cou=
+nts_values__type);
+> > +
+> >       dict =3D PyModule_GetDict(module);
+> >       if (dict =3D=3D NULL)
+> >               goto error;
+> > --
+> > 2.49.0.1101.gccaa498523-goog
