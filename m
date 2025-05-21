@@ -1,277 +1,246 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6DB717E
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 14:27:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19FC61C84C9
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 14:30:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747837657; cv=none; b=iP/HXhLBbf+KHuxoBHWJGM9OK1qEnxms++BVNpLLFnCCBpDvbKxUllzSsLIiQQQADsJtSFthTh9ReADz8vSVAzu2/0hpZjRyugENFc4YTMI/ccn834lLMJsF1VEmuEGMz7d+/kri74gs1MjemtlusjGoNmbdICFscax3lqIov98=
+	t=1747837822; cv=none; b=DYfiRW6t/3KjZlEaAsDYdEZOIltG4o9nRSCEJuHELS7NhfWgjNitSDqjdZ/9sWtZ0XBuCAn34DcFxJ+tyqPatdYK4cnDtyWjovH5uDIroat2cMbXTmkMXq7vA4muVio3xRlPOs3tiOYSrRyjIjxA3HPX3Sn3GTGAQoohrPU2Lkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747837657; c=relaxed/simple;
-	bh=25OiMrHTnmN8O0Pud42IS80U7rOWLOusJf6uPPxMmWw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tvatsjpIwZBKfJ9TyTqxZ4tZHLU8qfkibxCG5HZPpIweh5LFAGI9BTwUFraUIN9dpCqn2zEPPJRI7vzUZnDLuWyL4J3d95NNS2agRdeMU/vyvQ1409RtUPaaDeX68C8z+O7qZncV8hCqKiI3xtHgo2Zpvu2AoTIytJuooP3PR2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1Xak7+dh; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1Xak7+dh"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-acacb8743a7so1156591266b.1
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 07:27:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747837654; x=1748442454; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=25OiMrHTnmN8O0Pud42IS80U7rOWLOusJf6uPPxMmWw=;
-        b=1Xak7+dhcuNY2L2HK9Os0aixz1IN0otKPh0BPL853QnNJajpl6xtNs5rvjtqHp6wbD
-         3jNCDi1V/3ThWVJQ4XAAB6yFDw6K3xuW/0mMQ/stT/R14zxBhCJPVmORHK9glS27EHc+
-         s99EiXafKB7CmcDs3+gV70K+8hfcZVLU+dZsIaun9Lv5xlKK+L4O0G8+0PzhWGwy9C2q
-         BDENidYpV4J9QjtBr+eNvq7crPguB/IvYBaYOsLyRL9sScRGwK/nX6u3kgK5/lUS6gjf
-         alHe16lN7yj1y7UQYu69HBkGGeTSlcHN6mRvxRNXqLJZZYGo0GwAm51fzb8c+EF0DwpG
-         WvLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747837654; x=1748442454;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=25OiMrHTnmN8O0Pud42IS80U7rOWLOusJf6uPPxMmWw=;
-        b=HLc1Rx+e+T9nUYkKygPZLeYVGyUrPtVeKbW5mS//WpbjEjF+Ufivl6wwn4dkxGbkNA
-         IJU6WPDwjcDYX0xfv+7iawhGb+BYPR2cetGwvevz7xQt/3GNfYFE7/GP9a3uQDuUf49Q
-         1uHEx8uEyv4UuJBnr36vKWlIVy7NdDtoZVT0+2bmb/iLiPo1ky4RGl4sif+avx9xSoKF
-         6SLGe5at5V/OBRAaXfgV5ZSBLTUy76aQ1356pzuklbONPUczL4ZTncbK3A77io3FEM4l
-         7YFQfodXLxFOIQfMjpJjvQfPvLB/l/8Kfa/orZiQ56kAuSKhViFVjFaImc1hD6wuPYrm
-         3kQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUNBkO0YXO42O4xX9CrP5KCMNpPo5iTH3ce/Zhkq6KD/4Q57Rj4+wqznc1fiJxnQi034QtTA6PGtGnZqUU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YydPQiySHuTJb3YVPs6hWV282/Yz3h3I7HlxBz8hdi2sSyrnn59
-	n7rMMgFZYMdE5+FWzSJ4fngBU8q4MU+9597HTD5cSwg04Mm+oqNPEQWNlkE7UAcJLkvhfKXVfJ6
-	qsE07DrpquG6uy2LwaPdP+yp6mTTaLgjmg9ipsYlh8HMApgFjlBqKJgSFvgX1yA==
-X-Gm-Gg: ASbGncuG/q1HIZKYBTW/x/alN7SpIfptec/6EiOSAhgMVECmjwJVbI+izmjBS7P10yw
-	qRF0adlwFVlMEgadwkECc96edmfQ+D3hQq+S8SmkHLHHbrHsjN4AFhdTEh5k+WCf+w7/8DH71Vd
-	QZ1r7VRiNDjJXEBpfsHoGJWGYoHY5lkhNMSTw3udrp369YMNsdSDD323RTGnPX81FawcxVmsRaU
-	Oq4DIz4HmpD
-X-Google-Smtp-Source: AGHT+IFrVEL9vM+PK/PFMCGm5hhZiCJYxcWpaRZrgM05TsUrUUXxjj8nsmh7GYTXQ3QblzfDm36MnMKMGiQolJ7NV3M=
-X-Received: by 2002:a17:907:7f23:b0:ad5:6622:114e with SMTP id
- a640c23a62f3a-ad56622283emr1372999366b.30.1747837640170; Wed, 21 May 2025
- 07:27:20 -0700 (PDT)
+	s=arc-20240116; t=1747837822; c=relaxed/simple;
+	bh=uA96qCTfh3MvuOx3zyE5pmZCIq0A2/THR7TSIDalp8s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=U7okW5jD8t4kQ35AgcoquAKAKeKoTA4p36lLWGHHXYLELEU/I22aP/vyEsuLB/Kws32LmlYgO0syxruoVzejds0s32nPYoSo7BhvXYC2DUzVMwEqf3mIuIWKniB4AE/i6cpioIz3KXbPOoTLdKt7W/LXv1Ppg6pXvSIi1CunSPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 034001FCF3;
+	Wed, 21 May 2025 14:30:12 +0000 (UTC)
+Message-ID: <ea862473-8e8d-4d1b-8236-f8ce75d2589f@ghiti.fr>
+Date: Wed, 21 May 2025 16:30:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1747349530.git.babu.moger@amd.com> <CALPaoChSzzU5mzMZsdT6CeyEn0WD1qdT9fKCoNW_ty4tojtrkw@mail.gmail.com>
- <4dbcea13-382e-4af2-960d-0e66652cc2f5@amd.com> <8dd6e3a0-b2e1-48a7-8fa4-62e78b1407ae@intel.com>
- <6c77b065-a54e-4b9c-a4cf-8b81676f2ab2@amd.com> <f4178258-f7ad-4db2-9284-3f28e8ee8d00@intel.com>
- <92bcab75-72c6-46d4-97a2-119e7124c90c@amd.com> <11465976-f030-4c1b-88c6-3eebf0c8f13b@intel.com>
-In-Reply-To: <11465976-f030-4c1b-88c6-3eebf0c8f13b@intel.com>
-From: Peter Newman <peternewman@google.com>
-Date: Wed, 21 May 2025 16:27:08 +0200
-X-Gm-Features: AX0GCFvI_VqOz7HBCiWvX7WLMV1GSF9dYUPgJjYBds9AdJ2n5AmEAKL_72IWPfc
-Message-ID: <CALPaoCgtcz6tZnmeH8v4r2=HRVh7qEDZgraLU+Euhq3qLkRZhA@mail.gmail.com>
-Subject: Re: [PATCH v13 00/27] x86/resctrl : Support AMD Assignable Bandwidth
- Monitoring Counters (ABMC)
-To: Reinette Chatre <reinette.chatre@intel.com>
-Cc: "Moger, Babu" <bmoger@amd.com>, babu.moger@amd.com, corbet@lwn.net, tony.luck@intel.com, 
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, james.morse@arm.com, dave.martin@arm.com, 
-	fenghuay@nvidia.com, x86@kernel.org, hpa@zytor.com, paulmck@kernel.org, 
-	akpm@linux-foundation.org, thuth@redhat.com, rostedt@goodmis.org, 
-	ardb@kernel.org, gregkh@linuxfoundation.org, daniel.sneddon@linux.intel.com, 
-	jpoimboe@kernel.org, alexandre.chartre@oracle.com, 
-	pawan.kumar.gupta@linux.intel.com, thomas.lendacky@amd.com, 
-	perry.yuan@amd.com, seanjc@google.com, kai.huang@intel.com, 
-	xiaoyao.li@intel.com, kan.liang@linux.intel.com, xin3.li@intel.com, 
-	ebiggers@google.com, xin@zytor.com, sohil.mehta@intel.com, 
-	andrew.cooper3@citrix.com, mario.limonciello@amd.com, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	maciej.wieczor-retman@intel.com, eranian@google.com, Xiaojian.Du@amd.com, 
-	gautham.shenoy@amd.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 1/5] riscv: save the SR_SUM status over switches
+To: Samuel Holland <samuel.holland@sifive.com>,
+ Ben Dooks <ben.dooks@codethink.co.uk>, palmer@dabbelt.com
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ jszhang@kernel.org, syzbot+e74b94fe601ab9552d69@syzkaller.appspotmail.com,
+ Cyril Bur <cyrilbur@tenstorrent.com>, aou@eecs.berkeley.edu,
+ paul.walmsley@sifive.com, charlie@rivosinc.com, jrtc27@jrtc27.com
+References: <20250410070526.3160847-1-cyrilbur@tenstorrent.com>
+ <20250410070526.3160847-2-cyrilbur@tenstorrent.com>
+ <d09e80c2-024c-4fe0-b71e-6af88e239ea9@ghiti.fr>
+ <145b6e37-bbb3-47ec-b9dc-3450a7f3da2b@codethink.co.uk>
+ <923f3653-3df6-4587-aef1-c449f0fa3377@sifive.com>
+Content-Language: en-US
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <923f3653-3df6-4587-aef1-c449f0fa3377@sifive.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdeffedvucdltddurdegfedvrddttddmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpedvleeivdevgeekudefjeeigeeuvdekueeiuedufeethffhiedvleeileduuddtgfenucffohhmrghinhepvghnthhrhidrshgspdhinhhfrhgruggvrggurdhorhhgnecukfhppedvtddtudemkeeiudemfeefkedvmegvfheltdemudehhedvmegtvdeivdemvggsjegsmedvfhdufeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvtddtudemkeeiudemfeefkedvmegvfheltdemudehhedvmegtvdeivdemvggsjegsmedvfhdufedphhgvlhhopeglkffrggeimedvtddtudemkeeiudemfeefkedvmegvfheltdemudehhedvmegtvdeivdemvggsjegsmedvfhdufegnpdhmrghilhhfrhhomheprghlvgigsehghhhithhirdhfrhdpnhgspghrtghpthhtohepuddvpdhrtghpthhtohepshgrmhhuvghlrdhhohhllhgrnhgusehsihhfihhvvgdrtghomhdprhgtphhtthhopegsvghnr
+ dguohhokhhssegtohguvghthhhinhhkrdgtohdruhhkpdhrtghpthhtohepphgrlhhmvghrsegurggssggvlhhtrdgtohhmpdhrtghpthhtoheplhhinhhugidqrhhishgtvheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehjshiihhgrnhhgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehshiiisghothdovgejgegsleegfhgviedtudgrsgelheehvdguieelsehshiiikhgrlhhlvghrrdgrphhpshhpohhtmhgrihhlrdgtohhmpdhrtghpthhtoheptgihrhhilhgsuhhrsehtvghnshhtohhrrhgvnhhtrdgtohhm
+X-GND-Sasl: alex@ghiti.fr
 
-Hi Reinette,
+Hi Samuel,
 
-On Wed, May 21, 2025 at 1:44=E2=80=AFAM Reinette Chatre
-<reinette.chatre@intel.com> wrote:
+On 5/21/25 15:38, Samuel Holland wrote:
+> Hi Alex, Ben,
 >
-> Hi Babu,
->
-> On 5/20/25 4:25 PM, Moger, Babu wrote:
-> > Hi Reinette,
-> >
-> > On 5/20/2025 1:23 PM, Reinette Chatre wrote:
-> >> Hi Babu,
-> >>
-> >> On 5/20/25 10:51 AM, Moger, Babu wrote:
-> >>> Hi Reinette,
-> >>>
-> >>> On 5/20/25 11:06, Reinette Chatre wrote:
-> >>>> Hi Babu,
-> >>>>
-> >>>> On 5/20/25 8:28 AM, Moger, Babu wrote:
-> >>>>> On 5/19/25 10:59, Peter Newman wrote:
-> >>>>>> On Fri, May 16, 2025 at 12:52=E2=80=AFAM Babu Moger <babu.moger@am=
-d.com> wrote:
-> >>>>
-> >>>> ...
-> >>>>
-> >>>>>>> /sys/fs/resctrl/info/L3_MON/num_mbm_cntrs: Reports the number of =
-monitoring
-> >>>>>>> counters available for assignment.
-> >>>>>>
-> >>>>>> Earlier I discussed with Reinette[1] what num_mbm_cntrs should
-> >>>>>> represent in a "soft-ABMC" implementation where assignment is
-> >>>>>> implemented by assigning an RMID, which would result in all events
-> >>>>>> being assigned at once.
-> >>>>>>
-> >>>>>> My main concern is how many "counters" you can assign by assigning
-> >>>>>> RMIDs. I recall Reinette proposed reporting the number of groups w=
-hich
-> >>>>>> can be assigned separately from counters which can be assigned.
-> >>>>>
-> >>>>> More context may be needed here. Currently, num_mbm_cntrs indicates=
- the
-> >>>>> number of counters available per domain, which is 32.
-> >>>>>
-> >>>>> At the moment, we can assign 2 counters to each group, meaning each=
- RMID
-> >>>>> can be associated with 2 hardware counters. In theory, it's possibl=
-e to
-> >>>>> assign all 32 hardware counters to a group=E2=80=94allowing one RMI=
-D to be linked
-> >>>>> with up to 32 counters. However, we currently lack the interface to
-> >>>>> support that level of assignment.
-> >>>>>
-> >>>>> For now, the plan is to support basic assignment and expand functio=
-nality
-> >>>>> later once we have the necessary data structure and requirements.
-> >>>>
-> >>>> Looks like some requirements did not make it into this implementatio=
-n.
-> >>>> Do you recall the discussion that resulted in you writing [2]? Looks=
- like
-> >>>> there is a question to Peter in there on how to determine how many "=
-counters"
-> >>>> are available in soft-ABMC. I interpreted [3] at that time to mean t=
-hat this
-> >>>> information would be available in a future AMD publication.
-> >>>
-> >>> We already have a method to determine the number of counters in soft-=
-ABMC
-> >>> mode, which Peter has addressed [4].
-> >>>
-> >>> [4]
-> >>> https://lore.kernel.org/lkml/20250203132642.2746754-1-peternewman@goo=
-gle.com/
-> >>>
-> >>> This appears to be more of a workaround, and I doubt it will be inclu=
-ded
-> >>> in any official AMD documentation. Additionally, the long-term direct=
-ion
-> >>> is moving towards ABMC.
-> >>>
-> >>> I don=E2=80=99t believe this workaround needs to be part of the curre=
-nt series. It
-> >>> can be added later when soft-ABMC is implemented.
-> >>
-> >> Agreed. What about the plans described in [2]? (Thanks to Peter for
-> >> catching this!).
-> >>
-> >> It is important to keep track of requirements while working on a featu=
-re to
-> >> ensure that the implementation supports the planned use cases. Re-read=
-ing that
-> >> thread it is not clear to me how soft-ABMC's per-group assignment woul=
-d look.
-> >> Could you please share how you see it progress from this implementatio=
-n?
-> >> This includes the single event vs. multiple event assignment. I would =
-like to
-> >> highlight that this is not a request for this to be supported in this =
-implementation
-> >> but there needs to be a plan for how this can be supported on top of i=
-nterfaces
-> >> established by this work.
-> >>
-> >
-> > Here=E2=80=99s my current understanding of soft-ABMC. Peter may have a =
-more in-depth perspective on this.
-> >
-> > Soft-ABMC:
-> > a. num_mbm_cntrs: This is a software-defined limit based on the number =
-of active RMIDs that can be supported. The value can be obtained using the =
-code referenced in [4].
-> >
-> > b. Assignments: No hardware configuration is required. We simply need t=
-o ensure that no more than num_mbm_cntrs RMIDs are active at any given time=
-.
-> >
-> > c. Configuration: Controlled via /info/L3_MON/mbm_total_bytes_config an=
-d mbm_local_bytes_config.
-> >
-> > d. Events: Only two events can be assigned(local and total).
-> >
-> > ABMC:
-> > a. num_mbm_cntrs: This is defined by the hardware.
-> > b. Assignments: Requires special MSR writes to assign counters.
-> > c. Configuration: Comes from /info/L3_MON/counter_configs/.
-> > d. Events: More than two events can be assigned to a group (currently u=
-p to 2).
-> >
-> > Commonalities:
-> > a. Assignments can be either exclusive or shared in both these modes.
-> >
-> > Given these, I believe we can easily accommodate soft-ABMC in this inte=
-rface.
->
-> This is not so obvious to me. It looks to me as though the user is forced=
- to interpret
-> the content of resctrl files differently based on soft-ABMC vs ABMC makin=
-g the interface
-> inconsistent and user thus needing to know details of implementations. Th=
-is is what the previous
-> discussion I linked to aimed to address. It sounds to me as though you be=
-lieve that this is no longer
-> an issue. Could you please show examples of what a user can expect from t=
-he interfaces and how a user
-> will interact with the interfaces on both a non-ABMC and ABMC system?
+> On 2025-05-21 3:26 AM, Ben Dooks wrote:
+>> On 22/04/2025 11:22, Alexandre Ghiti wrote:
+>>> Hi Cyril,
+>>>
+>>> On 10/04/2025 09:05, Cyril Bur wrote:
+>>>> From: Ben Dooks <ben.dooks@codethink.co.uk>
+>>>>
+>>>> When threads/tasks are switched we need to ensure the old execution's
+>>>> SR_SUM state is saved and the new thread has the old SR_SUM state
+>>>> restored.
+>>>>
+>>>> The issue was seen under heavy load especially with the syz-stress tool
+>>>> running, with crashes as follows in schedule_tail:
+>>>>
+>>>> Unable to handle kernel access to user memory without uaccess routines
+>>>> at virtual address 000000002749f0d0
+>>>> Oops [#1]
+>>>> Modules linked in:
+>>>> CPU: 1 PID: 4875 Comm: syz-executor.0 Not tainted
+>>>> 5.12.0-rc2-syzkaller-00467-g0d7588ab9ef9 #0
+>>>> Hardware name: riscv-virtio,qemu (DT)
+>>>> epc : schedule_tail+0x72/0xb2 kernel/sched/core.c:4264
+>>>>    ra : task_pid_vnr include/linux/sched.h:1421 [inline]
+>>>>    ra : schedule_tail+0x70/0xb2 kernel/sched/core.c:4264
+>>>> epc : ffffffe00008c8b0 ra : ffffffe00008c8ae sp : ffffffe025d17ec0
+>>>>    gp : ffffffe005d25378 tp : ffffffe00f0d0000 t0 : 0000000000000000
+>>>>    t1 : 0000000000000001 t2 : 00000000000f4240 s0 : ffffffe025d17ee0
+>>>>    s1 : 000000002749f0d0 a0 : 000000000000002a a1 : 0000000000000003
+>>>>    a2 : 1ffffffc0cfac500 a3 : ffffffe0000c80cc a4 : 5ae9db91c19bbe00
+>>>>    a5 : 0000000000000000 a6 : 0000000000f00000 a7 : ffffffe000082eba
+>>>>    s2 : 0000000000040000 s3 : ffffffe00eef96c0 s4 : ffffffe022c77fe0
+>>>>    s5 : 0000000000004000 s6 : ffffffe067d74e00 s7 : ffffffe067d74850
+>>>>    s8 : ffffffe067d73e18 s9 : ffffffe067d74e00 s10: ffffffe00eef96e8
+>>>>    s11: 000000ae6cdf8368 t3 : 5ae9db91c19bbe00 t4 : ffffffc4043cafb2
+>>>>    t5 : ffffffc4043cafba t6 : 0000000000040000
+>>>> status: 0000000000000120 badaddr: 000000002749f0d0 cause:
+>>>> 000000000000000f
+>>>> Call Trace:
+>>>> [<ffffffe00008c8b0>] schedule_tail+0x72/0xb2 kernel/sched/core.c:4264
+>>>> [<ffffffe000005570>] ret_from_exception+0x0/0x14
+>>>> Dumping ftrace buffer:
+>>>>      (ftrace buffer empty)
+>>>> ---[ end trace b5f8f9231dc87dda ]---
+>>>>
+>>>> The issue comes from the put_user() in schedule_tail
+>>>> (kernel/sched/core.c) doing the following:
+>>>>
+>>>> asmlinkage __visible void schedule_tail(struct task_struct *prev)
+>>>> {
+>>>> ...
+>>>>           if (current->set_child_tid)
+>>>>                   put_user(task_pid_vnr(current), current->set_child_tid);
+>>>> ...
+>>>> }
+>>>>
+>>>> the put_user() macro causes the code sequence to come out as follows:
+>>>>
+>>>> 1:    __enable_user_access()
+>>>> 2:    reg = task_pid_vnr(current);
+>>>> 3:    *current->set_child_tid = reg;
+>>>> 4:    __disable_user_access()
+>>>>
+>>>> The problem is that we may have a sleeping function as argument which
+>>>> could clear SR_SUM causing the panic above. This was fixed by
+>>>> evaluating the argument of the put_user() macro outside the user-enabled
+>>>> section in commit 285a76bb2cf5 ("riscv: evaluate put_user() arg before
+>>>> enabling user access")"
+>>>>
+>>>> In order for riscv to take advantage of unsafe_get/put_XXX() macros and
+>>>> to avoid the same issue we had with put_user() and sleeping functions we
+>>>> must ensure code flow can go through switch_to() from within a region of
+>>>> code with SR_SUM enabled and come back with SR_SUM still enabled. This
+>>>> patch addresses the problem allowing future work to enable full use of
+>>>> unsafe_get/put_XXX() macros without needing to take a CSR bit flip cost
+>>>> on every access. Make switch_to() save and restore SR_SUM.
+>>>>
+>>>> Reported-by: syzbot+e74b94fe601ab9552d69@syzkaller.appspotmail.com
+>>>> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+>>>> Signed-off-by: Cyril Bur <cyrilbur@tenstorrent.com>
+>>>> ---
+>>>>    arch/riscv/include/asm/processor.h | 1 +
+>>>>    arch/riscv/kernel/asm-offsets.c    | 5 +++++
+>>>>    arch/riscv/kernel/entry.S          | 8 ++++++++
+>>>>    3 files changed, 14 insertions(+)
+>>>>
+>>>> diff --git a/arch/riscv/include/asm/processor.h b/arch/riscv/include/ asm/
+>>>> processor.h
+>>>> index 5f56eb9d114a..58fd11c89fe9 100644
+>>>> --- a/arch/riscv/include/asm/processor.h
+>>>> +++ b/arch/riscv/include/asm/processor.h
+>>>> @@ -103,6 +103,7 @@ struct thread_struct {
+>>>>        struct __riscv_d_ext_state fstate;
+>>>>        unsigned long bad_cause;
+>>>>        unsigned long envcfg;
+>>>> +    unsigned long status;
+>>>>        u32 riscv_v_flags;
+>>>>        u32 vstate_ctrl;
+>>>>        struct __riscv_v_ext_state vstate;
+>>>> diff --git a/arch/riscv/kernel/asm-offsets.c b/arch/riscv/kernel/asm- offsets.c
+>>>> index 16490755304e..969c65b1fe41 100644
+>>>> --- a/arch/riscv/kernel/asm-offsets.c
+>>>> +++ b/arch/riscv/kernel/asm-offsets.c
+>>>> @@ -34,6 +34,7 @@ void asm_offsets(void)
+>>>>        OFFSET(TASK_THREAD_S9, task_struct, thread.s[9]);
+>>>>        OFFSET(TASK_THREAD_S10, task_struct, thread.s[10]);
+>>>>        OFFSET(TASK_THREAD_S11, task_struct, thread.s[11]);
+>>>> +    OFFSET(TASK_THREAD_STATUS, task_struct, thread.status);
+>>>>        OFFSET(TASK_TI_CPU, task_struct, thread_info.cpu);
+>>>>        OFFSET(TASK_TI_PREEMPT_COUNT, task_struct, thread_info.preempt_count);
+>>>> @@ -346,6 +347,10 @@ void asm_offsets(void)
+>>>>              offsetof(struct task_struct, thread.s[11])
+>>>>            - offsetof(struct task_struct, thread.ra)
+>>>>        );
+>>>> +    DEFINE(TASK_THREAD_STATUS_RA,
+>>>> +          offsetof(struct task_struct, thread.status)
+>>>> +        - offsetof(struct task_struct, thread.ra)
+>>>> +    );
+>>>>        DEFINE(TASK_THREAD_F0_F0,
+>>>>              offsetof(struct task_struct, thread.fstate.f[0])
+>>>> diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
+>>>> index 33a5a9f2a0d4..00bd0de9faa2 100644
+>>>> --- a/arch/riscv/kernel/entry.S
+>>>> +++ b/arch/riscv/kernel/entry.S
+>>>> @@ -397,9 +397,17 @@ SYM_FUNC_START(__switch_to)
+>>>>        REG_S s9,  TASK_THREAD_S9_RA(a3)
+>>>>        REG_S s10, TASK_THREAD_S10_RA(a3)
+>>>>        REG_S s11, TASK_THREAD_S11_RA(a3)
+>>>> +
+>>>> +    /* save the user space access flag */
+>>>> +    li    s0, SR_SUM
+>>>
+>>> This is not needed anymore ^ but I'll remove it when merging your patchset.
+>>>
+>> Could you be more specific about what "this" is?
+>>
+>> If we don't save/restore the SR_SUM bit I think our old friend
+>> the sched_tail bug will just return.
+> I think Alex is saying the `li` instruction above is not needed because s0 is
+> unused. But instead I think there is an `and` instruction missing here. The
+> patch as merged ORs the entirety of the old sstatus with the new sstatus, not
+> just the SUM bit, which seems extremely dangerous.
 
-At the interface level, I think mbm_L3_assignments on a non-ABMC
-system would only need to contain a single line:
 
-0=3Ds;1=3Ds;...;31=3Ds
+I should have checked the definition of csrs, I thought it would write 
+the csr, but you're right it ORs with the current csr value which isn't 
+good at all.
 
-But maybe for consistency we would synthesize a single, unmodifiable
-counter configuration to reflect that allocating an RMID in a domain
-results in assignment to all events and deallocating the RMID
-unassigns all events. We could call it "group" to say it's assigning
-at the group level, or perhaps just '*':
+@Cyril Can you send a patch for that? Which also removes the `li` 
+instruction that I forgot to remove :) I think we can even ask Palmer to 
+squash those fixes directly into the patch.
 
-*:0=3Ds;1=3Ds;...;31=3Ds
+Let me know if you can't do it and I'll do.
 
-I'm not sure about allowing a '*' on ABMC hardware, because it could
-be interpreted as allocating a lot of counters when a large number of
-event configurations exist.
+Thanks Samuel for noticing,
 
-*:0=3Ds;1=3Ds;...;31=3Ds
-
--Peter
+Alex
 
 
 >
-> Thank you
+> Regards,
+> Samuel
 >
-> Reinette
+>>>> +    csrr  s1, CSR_STATUS
+>>>> +    REG_S s1, TASK_THREAD_STATUS_RA(a3)
+>>>> +
+>>>>        /* Save the kernel shadow call stack pointer */
+>>>>        scs_save_current
+>>>>        /* Restore context from next->thread */
+>>>> +    REG_L s0,  TASK_THREAD_STATUS_RA(a4)
+>>>> +    csrs  CSR_STATUS, s0
+>>>>        REG_L ra,  TASK_THREAD_RA_RA(a4)
+>>>>        REG_L sp,  TASK_THREAD_SP_RA(a4)
+>>>>        REG_L s0,  TASK_THREAD_S0_RA(a4)
+>>> Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+>>>
+>>> Thanks for the multiple revisions!
+>>>
+>>> Alex
+>>>
+>>>
+>>> _______________________________________________
+>>> linux-riscv mailing list
+>>> linux-riscv@lists.infradead.org
+>>> http://lists.infradead.org/mailman/listinfo/linux-riscv
+>>>
+>>
 >
-> >
-> >>>>
-> >>>> [2] https://lore.kernel.org/lkml/afb99efe-0de2-f7ad-d0b8-f2a0ea998ef=
-d@amd.com/
-> >>>> [3] https://lore.kernel.org/lkml/CALPaoCg3KpF94g2MEmfP_Ro2mQZYFA8sKV=
-kmb+7isotKNgdY9A@mail.gmail.com/
-> >>>
-> >>
-> >>
-> >
->
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
