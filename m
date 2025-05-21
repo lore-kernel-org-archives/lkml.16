@@ -1,94 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01E0A220686;
-	Wed, 21 May 2025 23:06:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02F9323A99D;
+	Wed, 21 May 2025 23:07:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747868803; cv=none; b=beOp6D7DnDvlGx6Atr7wt37ASSnRNMgQmja7fND0Xv5kvSzvnUtcQGQ/BuO6gNpgx87ziAY4SD2R5DeHeoUPk33JBS15sSdQARi412mHqU2e3yW9F2aL34zuh+d8jU1/g6RIUIq9yv3+25ZOoMAtpOdpmzuFee10j6tyJLfh2WE=
+	t=1747868826; cv=none; b=EN7h3mKXQpsuG4VWTDbr6blfDQsoRO1m+Pkr8OTHe5tglpq9zf1xfNYCyO1QcOx3eLLSzKJt17/DYto4D3AcCf2cADBOPWW7s6fc2fmpOWeU24hXemRz28YhnPUwz7iYIWeN2I5GouXAuDUtq+d2/MpBr5oXcBNCDyYDSoZpw1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747868803; c=relaxed/simple;
-	bh=NEfRGNGqd+jQ4ZBng1dfzvjrKmSVR+/dtJx0zlR93Ws=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=cw7ItFdOPxGiXkDVH4f9MVmvWAoDus7cd9oW6whVlAJsgd5mvdwEJAipe1jttSsJnWaDaZ4pWo32EzPVyTcRwBETZlGYAOTMdb2CuCkYO3r6TfRRfOtVtOohvKZ885ZIsS4NBaNg+LHxCufXvc+yeqHRcO71A4fNd9IzpbNMgcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SsUde9Z2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747868826; c=relaxed/simple;
+	bh=lVmO56p+uZGIerCgdjVgF1P4OcseONdcg4PDITx4ViY=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=p4mL6BbNpaREmSyKFRgxdD4Uxv7zv22Xz5cQTPiGhjq951ZVdOXBvd/JyRImjD9XyOmCdZZghILMn4RR6KUJ0eCIz+Z5HGpDmLOtyD6gQews9KN+pOXA7ZGqxB/c3rJM71Kd9Tja7HbUPRVKVXdw/DCzq+vC/iTB6Yg3dfu4VMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=Dm2CmnsS; arc=none smtp.client-ip=185.226.149.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SsUde9Z2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 369B4C4CEEA;
-	Wed, 21 May 2025 23:06:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747868801;
-	bh=NEfRGNGqd+jQ4ZBng1dfzvjrKmSVR+/dtJx0zlR93Ws=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=SsUde9Z2FPViWIrd9w4gBW4lxhWaZCxVaNRIUwfdG98emO4Q0nTSUmtVGXUa/K62u
-	 4kDvqYBFgk5Vjli1GmKSnXNG4CCjkJGZlKPPLZ0hPDXPQCA7vKajIGUWEHeubI/6IP
-	 T3+Xzs0eQp22gYrGHaPWQVYwKpqEuMPINy2sIw5udEBO4KjiUXbfhZ8rXJoJrTrohp
-	 aZRTX4UJs/vAqJ5qq0sxK4MBdIZiOapIz0SWEPizirFpYHQrC1plIDGXVtml7qj9x6
-	 PCZVBQGvP4tg6eiVTFEXiLhWk7M90tWuK+VjhuxZRZH5dYupM94ZZhZcJjt9KUFzL2
-	 TnwGOmuLP9dRw==
-Date: Wed, 21 May 2025 18:06:39 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>,
-	Karolina Stolarek <karolina.stolarek@oracle.com>,
-	Weinan Liu <wnliu@google.com>,
-	Martin Petersen <martin.petersen@oracle.com>,
-	Ben Fuller <ben.fuller@oracle.com>,
-	Drew Walton <drewwalton@microsoft.com>,
-	Anil Agrawal <anilagrawal@meta.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Sargun Dhillon <sargun@meta.com>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Kai-Heng Feng <kaihengf@nvidia.com>,
-	Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
-	Terry Bowman <terry.bowman@amd.com>,
-	Shiju Jose <shiju.jose@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v7 15/17] PCI/AER: Ratelimit correctable and non-fatal
- error logging
-Message-ID: <20250521230639.GA1452526@bhelgaas>
+	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="Dm2CmnsS"
+Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
+	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.93)
+	(envelope-from <mhal@rbox.co>)
+	id 1uHsWL-004HcE-TF; Thu, 22 May 2025 01:06:45 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
+	s=selector2; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:References:
+	Cc:To:Subject:From:MIME-Version:Date:Message-ID;
+	bh=eT/TvbyrfUHVMgG9STixlXp9Jk4uKrQGdUU0vHKW7lA=; b=Dm2CmnsSNwS7RAPtj91Q+z5zcY
+	igvIEnbFzYXTy0yrhVYvt8sCQ6R+8rSVbHj/t9Cnez7SLLPo0Elkql8cLlNTX5UE/nxtSzhgHMt84
+	UGX3X5T4TqaBHoH68pX6ToSDapkk5VFCcCIVdI92dR4+idwAiU0Om2pBYEP436NvkPk+w0xwj685F
+	DKQ2ZsGij97YFfOCFhWGX/SkCpRsIIjHyrBLzdSeeGVlwOnGEvvPKtmrqLRzell2EE3pzvUR9ARGN
+	+8gWRbGXOqxMzt5m26BC+oYEADptm7zjyX7jOnS1sd3nA0VYRV3koWTgqpEFVn6h5aEXT1sES/1/T
+	EMWd3L1A==;
+Received: from [10.9.9.74] (helo=submission03.runbox)
+	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
+	(envelope-from <mhal@rbox.co>)
+	id 1uHsWK-0005RK-IG; Thu, 22 May 2025 01:06:44 +0200
+Received: by submission03.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.93)
+	id 1uHsW1-002T7Y-Fq; Thu, 22 May 2025 01:06:25 +0200
+Message-ID: <bc18e277-ef88-49e2-9e51-982752253325@rbox.co>
+Date: Thu, 22 May 2025 01:06:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ac30a88d-7139-40ce-ae3c-34ef12c939a5@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+From: Michal Luczaj <mhal@rbox.co>
+Subject: Re: [PATCH net-next v5 3/5] vsock/test: Introduce vsock_wait_sent()
+ helper
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
+ <eperezma@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>,
+ virtualization@lists.linux.dev, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+References: <20250521-vsock-linger-v5-0-94827860d1d6@rbox.co>
+ <20250521-vsock-linger-v5-3-94827860d1d6@rbox.co>
+ <kva35i6sjyxuugywlanlnkbdunbyauadgnciteakxu2jsb2kl7@24fgdq2glxk6>
+Content-Language: pl-PL, en-GB
+In-Reply-To: <kva35i6sjyxuugywlanlnkbdunbyauadgnciteakxu2jsb2kl7@24fgdq2glxk6>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 20, 2025 at 03:33:45PM -0700, Sathyanarayanan Kuppuswamy wrote:
-> On 5/20/25 2:50 PM, Bjorn Helgaas wrote:
-> > From: Jon Pan-Doh <pandoh@google.com>
-> > 
-> > Spammy devices can flood kernel logs with AER errors and slow/stall
-> > execution. Add per-device ratelimits for AER correctable and non-fatal
-> > uncorrectable errors that use the kernel defaults (10 per 5s).  Logging of
-> > fatal errors is not ratelimited.
-
-> > +	/* Ratelimits for errors */
-> > +	struct ratelimit_state cor_log_ratelimit;
-> > +	struct ratelimit_state uncor_log_ratelimit;
+On 5/21/25 17:01, Stefano Garzarella wrote:
+> On Wed, May 21, 2025 at 12:55:21AM +0200, Michal Luczaj wrote:
+>> ...
+>> +/* Wait until transport reports no data left to be sent.
+>> + * Return non-zero if transport does not implement the unsent_bytes() callback.
+>> + */
+>> +int vsock_wait_sent(int fd)
 > 
-> Nit: Do you think we should name it as nonfatal_log_ratelimit?
+> nit: I just see we use `bool` in the test to store the result of this 
+> function, so maybe we can return `bool` directl from here...
+> 
+> (not a strong opinion, it's fine also this).
 
-Maybe so.  We can always change this internal name, so I guess the
-important part is the sysfs filename
-("/sys/bus/pci/devices/<dev>/aer/ratelimit_burst_uncor_log").
+Yeah, why not, let's do bool.
 
-"ratelimit_burst_nonfatal_log" is not quite parallel with
-"ratelimit_burst_cor_log" the way "ratelimit_burst_uncor_log" is.
+Thanks,
+Michal
 
-But it's definitely true that the underlying PCIe Messages are
-ERR_COR, ERR_NONFATAL, and ERR_FATAL.
-
-So I think this is more than a nit, and you're right that we should
-use "cor" and "nonfatal" somehow.
-
-I'll work on that tomorrow.
