@@ -1,48 +1,48 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB1DB22B8B9;
-	Wed, 21 May 2025 02:23:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48E2F22DFB5;
+	Wed, 21 May 2025 02:23:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747794216; cv=none; b=WQtUjj1jQvt1VdTk4XwlIqLynK76Glgy2/1seuar+u7KKs2XiQIcEi1ZRtuvAG+Kq6vDVM85wsEOpVRoCHw5+9UOeZ7Heaa6QQvO3wjNh/X8WKm8AtYPJp6gaP/5d1fGlHcqhKdRPpKY0JBiHdq/kJRwVyfR9ahjbW4p7AljJfo=
+	t=1747794219; cv=none; b=JFVGA3yi5t/WVp7mdaWjvRQxLqdYO02+GPC6/wlNVQ+mp31UGTHzelzmLeoK4qrgI87gY4WVA2CGFfLf51bTKK899lsxh4NWMS3/kPTUvQx2Ud0R3nQOtb2NSdV8N3ClduDqMlZTnz9uIXM6Kbv3eBt1lBch/Mfb3yEKU2dtmAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747794216; c=relaxed/simple;
-	bh=4m5eKGIc3AAh5ARmiRaZ3LIYlygqL6Jfa0m4ZY/ds90=;
+	s=arc-20240116; t=1747794219; c=relaxed/simple;
+	bh=0ic9nSHJIEU67IPNZMKfWmVwcxHXiqKoAMZ7l2TeF3M=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cyamt4pc7I5m2ESFz2OrLtt1bQ4lJT9rdD7TOC1w0ggrXWHQRvHhC2lXIDrHLTar7xsIYTWYB22zHDzQ3JRPx0fPQQ/bBq+wEM3cH2+muabibQMkzQaXX5chxH9xWP+82SPe3wbF8EgonE6pcTJvGKA5/a8+YU0HAdS+ddiCYtE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=XUT4hI/O; arc=none smtp.client-ip=60.244.123.138
+	 MIME-Version:Content-Type; b=Pb31zA+wECa0uoEFyoyHmDGMBuKxOadKKWsLb7swtMBtjKxk6d1ldCbFRABsQn2BnAmcoFNh67TfVvJSd4Nf5E3hgYDuDRtwFMXAzYYfOnkpOjtjw5LPh/iwjXTDRbIwels4aWOZXeRzRshTCqmXiabYgS4hvLMBsGmJ+c01rWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=NOP+KW2/; arc=none smtp.client-ip=210.61.82.184
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="XUT4hI/O"
-X-UUID: 96823ee635ea11f0813e4fe1310efc19-20250521
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="NOP+KW2/"
+X-UUID: 9587cdf835ea11f082f7f7ac98dee637-20250521
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From; bh=QprX+KMoj3M7h6MSKmehtqThWKVCgRhRqGgMlqiLkCg=;
-	b=XUT4hI/Oa91xOkt+eoVbXDhB7eIEOz7wN6QREjBO4NYdwlB/hIMI5oWx0o5z4eHRCR4z75yYLmM5nlM7wUC9H3om7ymrk6Dxuc+AqKpNUGGvOumSEpkEcYv/T1l+jZYIRqoATghZghNCh3ORXzTJB/0/dEOucRd7wew3w5aQwgg=;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:To:From; bh=u6xY90hU6nu3Tth8oHF+kYJGFxaM/O8gw2OGN1LI5xc=;
+	b=NOP+KW2/qkZFwT5JOayNwYXzupWVp85l7Xk0VcNxTo4kbUqlZddODlF/amVWK96TqegNFU7itP6BYOXZT1NHQizMBFqCKzKW+Yo2Galz3GawCl4L9IfJWTokXaFaMnmTFFdbyq9TvWExjFteQV4gg/vk8Jq3VOlH9KtnFqaNqbk=;
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:47c25c05-ebd6-4d98-ba02-224037e24913,IP:0,UR
+X-CID-O-INFO: VERSION:1.2.1,REQID:933a6eff-6bc0-4c5b-8f3a-b5f32d5db8e7,IP:0,UR
 	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
 	elease,TS:0
-X-CID-META: VersionHash:0ef645f,CLOUDID:fd288695-1f7f-49b0-938a-613851d517ad,B
+X-CID-META: VersionHash:0ef645f,CLOUDID:1659744f-c12a-49e2-926e-622a46f316c6,B
 	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102,TC:nil,Content:0|50,EDM:-3
 	,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV
 	:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
 X-CID-BVR: 0,NGT
 X-CID-BAS: 0,NGT,0,_
 X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 96823ee635ea11f0813e4fe1310efc19-20250521
-Received: from mtkmbs09n1.mediatek.inc [(172.21.101.35)] by mailgw01.mediatek.com
+X-UUID: 9587cdf835ea11f082f7f7ac98dee637-20250521
+Received: from mtkmbs11n1.mediatek.inc [(172.21.101.185)] by mailgw02.mediatek.com
 	(envelope-from <kyrie.wu@mediatek.com>)
 	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1811391770; Wed, 21 May 2025 10:23:31 +0800
+	with ESMTP id 1360875080; Wed, 21 May 2025 10:23:29 +0800
 Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
  MTKMBS09N2.mediatek.inc (172.21.101.94) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Wed, 21 May 2025 10:23:28 +0800
+ 15.2.1258.39; Wed, 21 May 2025 10:23:27 +0800
 Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
  mtkmbs13n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Wed, 21 May 2025 10:23:28 +0800
+ 15.2.1258.39 via Frontend Transport; Wed, 21 May 2025 10:23:26 +0800
 From: Kyrie Wu <kyrie.wu@mediatek.com>
 To: Hans Verkuil <hverkuil-cisco@xs4all.nl>, Mauro Carvalho Chehab
 	<mchehab@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
@@ -52,9 +52,9 @@ To: Hans Verkuil <hverkuil-cisco@xs4all.nl>, Mauro Carvalho Chehab
 	<linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
 	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
 	<linux-mediatek@lists.infradead.org>
-Subject: [PATCH v4 05/12] media: mediatek: jpeg: fix jpeg hw count setting
-Date: Wed, 21 May 2025 10:23:15 +0800
-Message-ID: <20250521022322.27576-6-kyrie.wu@mediatek.com>
+Subject: [PATCH v4 03/12] media: mediatek: jpeg: add jpeg compatible
+Date: Wed, 21 May 2025 10:23:13 +0800
+Message-ID: <20250521022322.27576-4-kyrie.wu@mediatek.com>
 X-Mailer: git-send-email 2.46.0
 In-Reply-To: <20250521022322.27576-1-kyrie.wu@mediatek.com>
 References: <20250521022322.27576-1-kyrie.wu@mediatek.com>
@@ -68,101 +68,102 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-MTK: N
 
-1. different IC has different hw core;
-2. use a parameter to set jpeg hw count.
+Add jpeg dec and enc compatible for mt8196
 
 Signed-off-by: Kyrie Wu <kyrie.wu@mediatek.com>
 ---
- drivers/media/platform/mediatek/jpeg/mtk_jpeg_core.c   | 8 ++++----
- drivers/media/platform/mediatek/jpeg/mtk_jpeg_core.h   | 2 ++
- drivers/media/platform/mediatek/jpeg/mtk_jpeg_dec_hw.c | 1 +
- drivers/media/platform/mediatek/jpeg/mtk_jpeg_enc_hw.c | 1 +
- 4 files changed, 8 insertions(+), 4 deletions(-)
+ .../platform/mediatek/jpeg/mtk_jpeg_core.c    | 34 +++++++++++++++++++
+ .../platform/mediatek/jpeg/mtk_jpeg_dec_hw.c  |  3 ++
+ .../platform/mediatek/jpeg/mtk_jpeg_enc_hw.c  |  3 ++
+ 3 files changed, 40 insertions(+)
 
 diff --git a/drivers/media/platform/mediatek/jpeg/mtk_jpeg_core.c b/drivers/media/platform/mediatek/jpeg/mtk_jpeg_core.c
-index ea890f01fa9e..0074d1edb534 100644
+index 7eb12449b63a..e89ccb8c904c 100644
 --- a/drivers/media/platform/mediatek/jpeg/mtk_jpeg_core.c
 +++ b/drivers/media/platform/mediatek/jpeg/mtk_jpeg_core.c
-@@ -1469,7 +1469,7 @@ static int mtk_jpegenc_get_hw(struct mtk_jpeg_ctx *ctx)
- 	int i;
- 
- 	spin_lock_irqsave(&jpeg->hw_lock, flags);
--	for (i = 0; i < MTK_JPEGENC_HW_MAX; i++) {
-+	for (i = 0; i < jpeg->max_hw_count; i++) {
- 		comp_jpeg = jpeg->enc_hw_dev[i];
- 		if (comp_jpeg->hw_state == MTK_JPEG_HW_IDLE) {
- 			hw_id = i;
-@@ -1516,7 +1516,7 @@ static int mtk_jpegdec_get_hw(struct mtk_jpeg_ctx *ctx)
- 	int i;
- 
- 	spin_lock_irqsave(&jpeg->hw_lock, flags);
--	for (i = 0; i < MTK_JPEGDEC_HW_MAX; i++) {
-+	for (i = 0; i < jpeg->max_hw_count; i++) {
- 		comp_jpeg = jpeg->dec_hw_dev[i];
- 		if (comp_jpeg->hw_state == MTK_JPEG_HW_IDLE) {
- 			hw_id = i;
-@@ -1613,7 +1613,7 @@ static void mtk_jpegenc_worker(struct work_struct *work)
- 		jpeg_work);
- 	struct mtk_jpeg_dev *jpeg = ctx->jpeg;
- 
--	for (i = 0; i < MTK_JPEGENC_HW_MAX; i++)
-+	for (i = 0; i < jpeg->max_hw_count; i++)
- 		comp_jpeg[i] = jpeg->enc_hw_dev[i];
- 	i = 0;
- 
-@@ -1725,7 +1725,7 @@ static void mtk_jpegdec_worker(struct work_struct *work)
- 	struct mtk_jpeg_fb fb;
- 	unsigned long flags;
- 
--	for (i = 0; i < MTK_JPEGDEC_HW_MAX; i++)
-+	for (i = 0; i < jpeg->max_hw_count; i++)
- 		comp_jpeg[i] = jpeg->dec_hw_dev[i];
- 	i = 0;
- 
-diff --git a/drivers/media/platform/mediatek/jpeg/mtk_jpeg_core.h b/drivers/media/platform/mediatek/jpeg/mtk_jpeg_core.h
-index 46899512a5e6..655dc9c3280c 100644
---- a/drivers/media/platform/mediatek/jpeg/mtk_jpeg_core.h
-+++ b/drivers/media/platform/mediatek/jpeg/mtk_jpeg_core.h
-@@ -227,6 +227,7 @@ struct mtk_jpegdec_comp_dev {
-  * @reg_decbase:	jpg decode register base addr
-  * @dec_hw_dev:	jpg decode hardware device
-  * @hw_index:		jpg hw index
-+ * @max_hw_count:	jpeg hw-core count
-  */
- struct mtk_jpeg_dev {
- 	struct mutex		lock;
-@@ -249,6 +250,7 @@ struct mtk_jpeg_dev {
- 	void __iomem *reg_decbase[MTK_JPEGDEC_HW_MAX];
- 	struct mtk_jpegdec_comp_dev *dec_hw_dev[MTK_JPEGDEC_HW_MAX];
- 	atomic_t hw_index;
-+	u32 max_hw_count;
+@@ -1918,6 +1918,19 @@ static struct mtk_jpeg_variant mtk8195_jpegenc_drvdata = {
+ 	.jpeg_worker = mtk_jpegenc_worker,
  };
  
- /**
++static struct mtk_jpeg_variant mtk8196_jpegenc_drvdata = {
++	.formats = mtk_jpeg_enc_formats,
++	.num_formats = MTK_JPEG_ENC_NUM_FORMATS,
++	.qops = &mtk_jpeg_enc_qops,
++	.m2m_ops = &mtk_jpeg_multicore_enc_m2m_ops,
++	.dev_name = "mtk-jpeg-enc",
++	.ioctl_ops = &mtk_jpeg_enc_ioctl_ops,
++	.out_q_default_fourcc = V4L2_PIX_FMT_YUYV,
++	.cap_q_default_fourcc = V4L2_PIX_FMT_JPEG,
++	.multi_core = true,
++	.jpeg_worker = mtk_jpegenc_worker,
++};
++
+ static const struct mtk_jpeg_variant mtk8195_jpegdec_drvdata = {
+ 	.formats = mtk_jpeg_dec_formats,
+ 	.num_formats = MTK_JPEG_DEC_NUM_FORMATS,
+@@ -1931,6 +1944,19 @@ static const struct mtk_jpeg_variant mtk8195_jpegdec_drvdata = {
+ 	.jpeg_worker = mtk_jpegdec_worker,
+ };
+ 
++static const struct mtk_jpeg_variant mtk8196_jpegdec_drvdata = {
++	.formats = mtk_jpeg_dec_formats,
++	.num_formats = MTK_JPEG_DEC_NUM_FORMATS,
++	.qops = &mtk_jpeg_dec_qops,
++	.m2m_ops = &mtk_jpeg_multicore_dec_m2m_ops,
++	.dev_name = "mtk-jpeg-dec",
++	.ioctl_ops = &mtk_jpeg_dec_ioctl_ops,
++	.out_q_default_fourcc = V4L2_PIX_FMT_JPEG,
++	.cap_q_default_fourcc = V4L2_PIX_FMT_YUV420M,
++	.multi_core = true,
++	.jpeg_worker = mtk_jpegdec_worker,
++};
++
+ static const struct of_device_id mtk_jpeg_match[] = {
+ 	{
+ 		.compatible = "mediatek,mt8173-jpgdec",
+@@ -1952,6 +1978,14 @@ static const struct of_device_id mtk_jpeg_match[] = {
+ 		.compatible = "mediatek,mt8195-jpgdec",
+ 		.data = &mtk8195_jpegdec_drvdata,
+ 	},
++	{
++		.compatible = "mediatek,mt8196-jpgenc",
++		.data = &mtk8196_jpegenc_drvdata,
++	},
++	{
++		.compatible = "mediatek,mt8196-jpgdec",
++		.data = &mtk8196_jpegdec_drvdata,
++	},
+ 	{},
+ };
+ 
 diff --git a/drivers/media/platform/mediatek/jpeg/mtk_jpeg_dec_hw.c b/drivers/media/platform/mediatek/jpeg/mtk_jpeg_dec_hw.c
-index 059377805706..e913f0f899b8 100644
+index e78e1d11093c..20553bf541df 100644
 --- a/drivers/media/platform/mediatek/jpeg/mtk_jpeg_dec_hw.c
 +++ b/drivers/media/platform/mediatek/jpeg/mtk_jpeg_dec_hw.c
-@@ -686,6 +686,7 @@ static int mtk_jpegdec_hw_probe(struct platform_device *pdev)
- 	master_dev->dec_hw_dev[i] = dev;
- 	master_dev->reg_decbase[i] = dev->reg_base;
- 	dev->master_dev = master_dev;
-+	master_dev->max_hw_count++;
- 
- 	ret = mtk_jpegdec_smmu_init(dev);
- 	if (ret)
+@@ -45,6 +45,9 @@ static const struct of_device_id mtk_jpegdec_hw_ids[] = {
+ 	{
+ 		.compatible = "mediatek,mt8195-jpgdec-hw",
+ 	},
++	{
++		.compatible = "mediatek,mt8196-jpgdec-hw",
++	},
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, mtk_jpegdec_hw_ids);
 diff --git a/drivers/media/platform/mediatek/jpeg/mtk_jpeg_enc_hw.c b/drivers/media/platform/mediatek/jpeg/mtk_jpeg_enc_hw.c
-index 73c55e1546aa..b92f677359c9 100644
+index 9ab27aee302a..69c95113f205 100644
 --- a/drivers/media/platform/mediatek/jpeg/mtk_jpeg_enc_hw.c
 +++ b/drivers/media/platform/mediatek/jpeg/mtk_jpeg_enc_hw.c
-@@ -408,6 +408,7 @@ static int mtk_jpegenc_hw_probe(struct platform_device *pdev)
- 	master_dev->enc_hw_dev[i] = dev;
- 	master_dev->reg_encbase[i] = dev->reg_base;
- 	dev->master_dev = master_dev;
-+	master_dev->max_hw_count++;
- 
- 	ret = mtk_jpegenc_smmu_init(dev);
- 	if (ret)
+@@ -52,6 +52,9 @@ static const struct of_device_id mtk_jpegenc_drv_ids[] = {
+ 	{
+ 		.compatible = "mediatek,mt8195-jpgenc-hw",
+ 	},
++	{
++		.compatible = "mediatek,mt8196-jpgenc-hw",
++	},
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, mtk_jpegenc_drv_ids);
 -- 
 2.46.0
 
