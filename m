@@ -1,134 +1,95 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FBB521D585;
-	Wed, 21 May 2025 11:13:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F3AE1F869E;
+	Wed, 21 May 2025 11:16:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747825987; cv=none; b=XsEqLm9XEZp/HExJv+C4sqyJ2Vm3rUBKHRS5SZ7yqJ4voDU9TVulnp7DcbruG1OKRayg/iyQLMiS5GOc7eNGttx7ek8QhPTNEa45UaW8fxm65scsl3d0dFor01mFAEDiUnrC0ev0imqtDFAgjzD51AA8lCjuHvChgIkacEWI234=
+	t=1747826167; cv=none; b=LXTV6yzX2h9XGNPChnwCewbc9DYIknugTliZwUPGmOaqnXmsToUUGXhZB10Sw5DIZ6Nubv1LNMnfeIeuwW/yUitWBmHktiVRP89XnNUySOLD1UdLNRiZM8AirTygh53wOpLCfN6b30+Teh8svoMUcjYkaWi2coeZuQwOCQcpDu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747825987; c=relaxed/simple;
-	bh=KMwk5bRKMU/LebBXEB9eWTnbBr+EpsbBuq9K0VaAGrg=;
+	s=arc-20240116; t=1747826167; c=relaxed/simple;
+	bh=xigxm7bMH8XuqVtrqqSvZoP582kjwo+0xa4s5shncFA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bhSAYizkA4j9ujFuz3arsAPQG/pmU5PEvJKjroIIYMbQBx1nWPhk5avvWBommd4pBjl5ZtZCyw0bw4vE1IjiUz7dq+zUX2PMJTztMgNSsib0eNf/sgTPNiJurHBZt99ujFbPEZvVmrLo3LOno1SSzuBBO2P404esM+0GB6QsA7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kMySf8Ho; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=I4rHSdGZ5dxi8ohLMpJOoICSz/ETEvOGeyhtkCBAvheSRMYY/qe4oqheboCC+CaZVgbKUCCC0z4OBCybRrz5Q/GGBBE9PW49IR9ZbSYeASWRSZOTqoJWoIS6GUfz6BAUbjCCA2Dl2Bgz3v8uy2yxIPUcVf4CTu+OGyqS070s+FY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=eipX4bo2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kMySf8Ho"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DDAAC4CEEA;
-	Wed, 21 May 2025 11:13:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747825985;
-	bh=KMwk5bRKMU/LebBXEB9eWTnbBr+EpsbBuq9K0VaAGrg=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="eipX4bo2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E29BC4CEE4;
+	Wed, 21 May 2025 11:16:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1747826165;
+	bh=xigxm7bMH8XuqVtrqqSvZoP582kjwo+0xa4s5shncFA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kMySf8HosZyaikPVyIScMp+hB3GqOkFWvUhUNKNKszxfbdGteSbO/Did8aatavUP/
-	 IVpBECjdkejEW911PVNXLhTcN6/ZZ72r1s4qEnDO9YKo+tJta8kNRqZciZyL/5vV+2
-	 ofuSl2tloNUKku7oWkrkFEPgGP22W1lrK+xhozxCOC2b1njBTke9/u9S4/pxfvYBYA
-	 SVV/8v73C3z7NUcy90QNLvNCT49BRRtjpFjHEh4AHuVuLQjA+I97kwL9WZprWPpMlM
-	 YXsa1+T7S7ISGFCFEBwFxwHJ8VaaJDdMuxltl60vtx+rnLAaYHamn4wkpoX6oPJtFp
-	 RYv0C3ly7qyhQ==
-Date: Wed, 21 May 2025 13:12:57 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Stephen Hemminger <stephen@networkplumber.org>
-Cc: linux-fsdevel@vger.kernel.org, Jann Horn <jannh@google.com>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Kuniyuki Iwashima <kuniyu@amazon.com>, 
-	Eric Dumazet <edumazet@google.com>, Oleg Nesterov <oleg@redhat.com>, 
-	"David S. Miller" <davem@davemloft.net>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Daan De Meyer <daan.j.demeyer@gmail.com>, David Rheinsberg <david@readahead.eu>, 
-	Jakub Kicinski <kuba@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Lennart Poettering <lennart@poettering.net>, Luca Boccassi <luca.boccassi@gmail.com>, 
-	Mike Yuan <me@yhndnzj.com>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, Alexander Mikhalitsyn <alexander@mihalicyn.com>, 
-	Serge Hallyn <serge@hallyn.com>
-Subject: Re: [PATCH v8 0/9] coredump: add coredump socket
-Message-ID: <20250521-urenkel-panne-b19f93234e6f@brauner>
-References: <20250516-work-coredump-socket-v8-0-664f3caf2516@kernel.org>
- <20250520122838.29131f04@hermes.local>
+	b=eipX4bo2MHuyV1Wf0H+QSKRrAwr8Nq8eRyGjkKGWIHPm8OoWhfStSF/y7smTLBajG
+	 Q0vFbFaJgnt+nPitD+oZUViFDoV+iJRJHrzPGN9fD4j379Lztwyqp19Rq+TWXXUUM9
+	 2+QY9pvVacvxu85ggZwIsp92bMG5qkFl5keAv/cA=
+Date: Wed, 21 May 2025 13:16:02 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Jay Chen <shawn2000100@gmail.com>
+Cc: mathias.nyman@intel.com, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org, jay.chen@siemens.com
+Subject: Re: [PATCH v4] usb: xhci: Set avg_trb_len = 8 for EP0 during Address
+ Device Command
+Message-ID: <2025052143-uptake-grudge-6e5f@gregkh>
+References: <20250521104838.15215-1-shawn2000100@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250520122838.29131f04@hermes.local>
+In-Reply-To: <20250521104838.15215-1-shawn2000100@gmail.com>
 
-On Tue, May 20, 2025 at 12:28:38PM -0700, Stephen Hemminger wrote:
-> On Fri, 16 May 2025 13:25:27 +0200
-> Christian Brauner <brauner@kernel.org> wrote:
+On Wed, May 21, 2025 at 06:48:34PM +0800, Jay Chen wrote:
+> There is a subtle contradiction between sections of the xHCI 1.2 spec
+> regarding the initialization of Input Endpoint Context fields. Section
+> 4.8.2 ("Endpoint Context Initialization") states that all fields should
+> be initialized to 0. However, Section 6.2.3 ("Endpoint Context", p.453)
+> specifies that the Average TRB Length (avg_trb_len) field shall be
+> greater than 0, and explicitly notes (p.454): "Software shall set
+> Average TRB Length to '8' for control endpoints."
 > 
-> > Coredumping currently supports two modes:
-> > 
-> > (1) Dumping directly into a file somewhere on the filesystem.
-> > (2) Dumping into a pipe connected to a usermode helper process
-> >     spawned as a child of the system_unbound_wq or kthreadd.
-> > 
-> > For simplicity I'm mostly ignoring (1). There's probably still some
-> > users of (1) out there but processing coredumps in this way can be
-> > considered adventurous especially in the face of set*id binaries.
-> > 
-> > The most common option should be (2) by now. It works by allowing
-> > userspace to put a string into /proc/sys/kernel/core_pattern like:
-> > 
-> >         |/usr/lib/systemd/systemd-coredump %P %u %g %s %t %c %h
-> > 
-> > The "|" at the beginning indicates to the kernel that a pipe must be
-> > used. The path following the pipe indicator is a path to a binary that
-> > will be spawned as a usermode helper process. Any additional parameters
-> > pass information about the task that is generating the coredump to the
-> > binary that processes the coredump.
-> > 
-> > In the example core_pattern shown above systemd-coredump is spawned as a
-> > usermode helper. There's various conceptual consequences of this
-> > (non-exhaustive list):
-> > 
-> > - systemd-coredump is spawned with file descriptor number 0 (stdin)
-> >   connected to the read-end of the pipe. All other file descriptors are
-> >   closed. That specifically includes 1 (stdout) and 2 (stderr). This has
-> >   already caused bugs because userspace assumed that this cannot happen
-> >   (Whether or not this is a sane assumption is irrelevant.).
-> > 
-> > - systemd-coredump will be spawned as a child of system_unbound_wq. So
-> >   it is not a child of any userspace process and specifically not a
-> >   child of PID 1. It cannot be waited upon and is in a weird hybrid
-> >   upcall which are difficult for userspace to control correctly.
-> > 
-> > - systemd-coredump is spawned with full kernel privileges. This
-> >   necessitates all kinds of weird privilege dropping excercises in
-> >   userspace to make this safe.
-> > 
-> > - A new usermode helper has to be spawned for each crashing process.
-> > 
-> > This series adds a new mode:
-> > 
-> > (3) Dumping into an AF_UNIX socket.
-> > 
-> > Userspace can set /proc/sys/kernel/core_pattern to:
-> > 
-> >         @/path/to/coredump.socket
-> > 
-> > The "@" at the beginning indicates to the kernel that an AF_UNIX
-> > coredump socket will be used to process coredumps.
-> > 
-> > The coredump socket must be located in the initial mount namespace.
-> > When a task coredumps it opens a client socket in the initial network
-> > namespace and connects to the coredump socket.
+> Strictly setting all fields to 0 during initialization conflicts with
+> the specific recommendation for control endpoints. In practice, setting
+> avg_trb_len = 0 is not meaningful for the hardware/firmware, as the
+> value is used for bandwidth calculation.
 > 
+> Motivation: Our company is developing a custom Virtual xHC hardware
+> platform that strictly follows the xHCI spec and its recommendations.
+> During validation, we observed that enumeration fails and a parameter
+> error (TRB Completion Code = 5) is reported if avg_trb_len for EP0 is
+> not set to 8 as recommended by Section 6.2.3. This demonstrates the
+> importance of assigning a meaningful, non-zero value to avg_trb_len,
+> even in virtualized or emulated environments.
 > 
-> There is a problem with using @ as naming convention.
-> The starting character of @ is already used to indicate abstract
-> unix domain sockets in some programs like ss.
+> This patch explicitly sets avg_trb_len to 8 for EP0 in
+> xhci_setup_addressable_virt_dev(), as recommended in Section 6.2.3, to
+> prevent potential issues with xHCI host controllers that enforce the
+> spec strictly.
+> 
+> v4:
+> - Clarify relevant spec sections and document their conflict.
+> - Remove language about "ensuring compliance with the spec" per reviewer
+>   suggestion.
+> - Update assignment to use '=' instead of '|='.
+> 
+> v3:
+> - Corrected author name in commit metadata and added changelog.
+> 
+> v2:
+> - Fixed malformed patch formatting issue.
+> 
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=220033
+> Signed-off-by: Jay Chen <shawn2000100@gmail.com>
+> ---
+>  drivers/usb/host/xhci-mem.c | 2 ++
+>  1 file changed, 2 insertions(+)
 
-This shouldn't be a problem. First because @ isn't part of the actual
-AF_UNIX path. But mostly because ss and other network related tools have
-no relationship with /proc/sys/kernel/core_pattern whatsoever. I'm not
-opposed to changing it if people do care strongly about it and send a
-patch. But that will happen as a fixup after the merge window.
+The "changes" go below the --- line, as is documented in our
+documentation.
 
-> And will the new coredump socekt allow use of abstrace unix
-> domain sockets?
+thanks,
 
-No. There's no safe permission model without involving LSMs.
-Unprivileged attackers can recycle the socket address and use it to get
-(suid) coredumps forwarded to them when the server crashes or restarts.
+greg k-h
