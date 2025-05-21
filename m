@@ -1,162 +1,124 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6CB8280CE3;
-	Wed, 21 May 2025 20:03:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C98E1A5B86;
+	Wed, 21 May 2025 20:05:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747857835; cv=none; b=ZXJ7atGv+iwqwtcxz7N7iDxnMvTpxm1jSMk8e5GMhUxsxfEYfwIO/o2pofpIxbnNDnuyHf8xQ4ZViCuu/Xp80PgDvqrEdqxiHXrduzuNumx+Y62dP3X+iRtazp37/v5UgScDB69DQsLSAfqb8z2hih9cw+cIpsn0VS21X72YUiQ=
+	t=1747857902; cv=none; b=H0scb6AU4X+sBhLGWxb1sVrNyZWnwcXpizaG6g6a4nOmJ51Qn9Wf0uT3JYdO1UOrAYCxFy90mnSKKZ1t//3/BmflZIXrKWSm2S/9GJI0T71pIGJqghT0IV/wmEnv4MZFJ3mETpW2EnDeu6iwpb6nEs+3wxTqnG3Sf6sL1QwTHBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747857835; c=relaxed/simple;
-	bh=BopD3OK5FlLBSVN/zoFHdySSFzS+n1H67L9LJofNch8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rm0NdRpcB0dW2B8yYORkt2n3aeVZ6U/uMdsYh5I6dRfM+qOlTSDxSh4UtL6IU8mrxvkbBP1ZLP4KLYrqJzbiC8l17t8dnUwxcV8KT62Ptg0Oord6PHsvBhcWWM5g4fyJ5ZxziHCjyv/YTOjEpl8mSTcZPS66rfAXmwFGBo5moL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nH4dXn0U; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+	s=arc-20240116; t=1747857902; c=relaxed/simple;
+	bh=wMqRVwT/Nyu/9c14xlcNNOnLCeR9/ETKJ25YybtF3l4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fWdrgNgS5ciXA+SFSXGV18SyYRkBXpcpTl916A8qrv7PLz6U4DHue4ovTncaeofi9qTjIHojpIpMzJITDJaqErTbAMj5IQ1/1M8JbKiDP9sr3wfYwUEtiLJgUmzIsO8RGIqJXyIuhUqYApJAZp5STyby+bqyJ3BNuNfqu/go74Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BQps1h7K; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nH4dXn0U"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-736c277331eso7136998b3a.1;
-        Wed, 21 May 2025 13:03:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BQps1h7K"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a36ab95a13so2740663f8f.3;
+        Wed, 21 May 2025 13:05:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747857833; x=1748462633; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=PuAh/cVwcjGlNjM6sVg7/AGVhkSzmkw4qVGPWu8mueQ=;
-        b=nH4dXn0UIms9V6a7Y2dbFQC4PZXvmxjwTmaIyjdnbnCLcZ27mrpjFFP3uAdbvBOFag
-         NiM0FRARO7TSGuk6908IMz5tA59+R4zJkoqkmp+s700xYuzxPlaTSb2SwslDdGXSkyPk
-         Ut0P6CyHLuIbxYADKVrCR1wauGlCxtqccAACLupyDho5pz+xH81kvBgyLk9f5kYi/jPZ
-         oWOST4DEN4NE1fPxixFcIe9E8j0zag3zZCRa5GZ7yiGpkV5Jm93l/W83iIn2BWXkit4g
-         JOqCtjUFOLEtrPswSw4CISK8ogq1Q4Q7nYJTUDhsxlbRYsHUAZZKhM9hwRT7Mv9DUZDV
-         +tmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747857833; x=1748462633;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1747857899; x=1748462699; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=PuAh/cVwcjGlNjM6sVg7/AGVhkSzmkw4qVGPWu8mueQ=;
-        b=s3sKufclaOBW3QGFgH5fJfkFvuin1m7tbqe+HtNgAgNWEMaK5779oAx2IvqtCzLnh9
-         hNp7j2+p9W3hqzdyNt9BGWi+vs5uhD9vPvthUgcCFy9RN5Ti84j03HaUvIu0Yj3UGY8I
-         JMTFEgsapg4KHSyN48vQTH2mutc4mtXERcluXz4voH/fLd38EwcLej/D5WhqdUS7+nOM
-         zcOdgfMNkXRd8mySrPbHGXnx8mgslPOHFbeLGATjvFLGg8UnosuOjh/NwklHsPbNuW9s
-         LLYcdcKmNR5sys8lSNLLDTJUU022pX3R5cD3iRjFJLqAYTwpbOMUDTjIbmV/pcHeXHlQ
-         kSdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUJ5CIOFNTV+YKBrdijNnzY6IhVyyGw+VBiBLksLZb7dxW4Bl7d6cWQRsSUG//you/p20GzCYSRx/TzRuif0io=@vger.kernel.org, AJvYcCVh9ppw5mDRQ/8XKF5oPNKhJ0de7urHivw+Yh/0N3oSq6Z8Z6SwlLLHqdJME6FGNXFwBAU3j37P0O3r9tmD@vger.kernel.org, AJvYcCWEWNS47HEpl8btFRKnOaXc0OcEdOIFBqcDAvpxC/mXDiXYsVk4G3BmbTnnN4s2gjkpGFbWnGaXB9ol@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8zoVh6HyuYtoIJrz2c9tvgKQ0s01BePtg2QOvKawNpHDYJyF+
-	8IZYh729gDFpC1s/eej1PzWmXSSylEaip08ORc2K6w0PDi5sKU3tVoyX
-X-Gm-Gg: ASbGncucwhBIFXJHeVfsRt5pmBJFFVHeOr30uqIsIjxDM0CkinrSnuh1piHXQAkBTw4
-	ZO2Ae+wflGxF5LqFvTRbEXDavWNLoflMVEThGJ8ekscrM2JIb05RNbrDtb/WZ4k4InTSMiPyG9K
-	9nxDkSnZv03p5Eq7z1A1Yu1zuEo1qiuQzmHUIKQg/i8WoNzXJlUyI3bMufDS/Y0yeh/PG2x8x38
-	bH73weLVA6HgzHkVzhW9AfwhFP7PcjBHMisdo4fvkPqeUpcQeK4jsqKe5R+mqmWLMiqBJNvSq8/
-	Kzq073XR0wBglHjd8KMlTfmA2vgV1N4DGzHAX0goBeSOcTqX6OKuD6qasXH4yez1VLDQsCZUb3e
-	gjWen5ep2TydHzDmUyH/RzyQ3vJqvvt/YugE=
-X-Google-Smtp-Source: AGHT+IE5qI3OCQC0RFp50HBwRXh1dBkNWuu3BPeN4cVEvgfhjKB7R0dk2rPodvgX0SpkUdswAFsztQ==
-X-Received: by 2002:a05:6a20:9f03:b0:1ee:5fae:8f6a with SMTP id adf61e73a8af0-2160d5b1806mr42214315637.1.1747857833079;
-        Wed, 21 May 2025 13:03:53 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eaf8e114sm10115471a12.44.2025.05.21.13.03.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 May 2025 13:03:52 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <26ee624d-ac64-46b7-837d-550df3fa7ab1@roeck-us.net>
-Date: Wed, 21 May 2025 13:03:50 -0700
+        bh=9enirY0SQGAYYvH7urd3jEIBdZ8xYI4Y7D4a+GFsDSI=;
+        b=BQps1h7K4izv+jOTkOt6dRaXVOI9smtDLtlXsNXSlwpGh5pJhKnkm3RAFvCSuib5+I
+         h4lrh1H2f6FAom/6gjfM7QO2NVcs/aEJFaI99vLOGQ/YF7MOemomNu/H7q4vqrJUuhvR
+         NeEs5MJKNuBVGaU70qK5MSF4K9c+t4OqjbviZM7sVUw9DZp6++C0Nnxq0dERe8Eo/uBG
+         8fa0xJlqFcVLlruE2MoxOLtF8RJSx5MHK0WtxeAlOFguzI2zleM+7kQMj+lUkcV0C64Z
+         k1qqlYQoMa4p2eHSXkWdEdCqv9kU0488VBI6av2N1n/M3Py0bNmVIyqlImzsK7DSpIij
+         Xdrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747857899; x=1748462699;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9enirY0SQGAYYvH7urd3jEIBdZ8xYI4Y7D4a+GFsDSI=;
+        b=WOnCu937hZFvBzeu+I4w4JImWtqrsz40WIn39PMxJH8hJIU41vgwR67zwkFrVjvUUS
+         fUTu+1gQstWp19j1Ox/t7JSbmT4ZHo3fSaIuQtjf4lVVkPqsNcQZolBXe8JvvWaf1B/O
+         XysqtFiXXQ50aw0C+h6Gy2tEex88yMjpRtlWEOhLZdkBBUqnJoEmBxZKZfhyXeu4zVym
+         0w5kuR8TX8zWYGSXGhwSgTdYN+y1s/p88SY2bvLyGUFDcTVdtGEbQAZgdjblqRfBhVNc
+         9Z2VYnVG0A4bAgfLl+HYKYxb1N7qXceaU2eUymGUXmgv8vatK33iy9PK+FOe27CLX3Cv
+         +FYw==
+X-Forwarded-Encrypted: i=1; AJvYcCUQtDjyTm1eu7R8xL1o0vAqlFtU42equVql3pfomuFxI73QeKmVnHmlximg0aQ8t+/nfiDDMENezy/PiYul@vger.kernel.org, AJvYcCXPeAxYy0uFXZihGOqx/p2OrCJAzzPUKWTLLPZw9+qdG4RciIRceLX+di/zxcO8YQ/jp1U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVhDjWcvHKeDubWitBEgLiyNLdHwWhIh13e3SCvImSRALCABbV
+	fIbuIuJnn3HlW1Qk+/WBJFNFd4BLo3/xzjYi0i1gg39hKZNZj/J1Tcy4QY68H2g3sf6HHif1+4o
+	n9p7Oi5ecWHiesGLVbfhoRXpxfDKZs3k=
+X-Gm-Gg: ASbGncvkkNMMqK3AswqGL39efV6bwo33b+dYChHcn4nawzr9WU+ORffKPsRsohipmDc
+	JgPLgSiWmDSmEcb1vdk6uWU3tn9DboRSWmmo1mNC81+HD3pqBySqaIB3O2R+cUDUIFyNEBZfOnY
+	HaSBgGKd1Loi7DksSJoBEtCSB3Da31VghLaZ0yNAYlO+wckW4xjqLmk6azVjeZcA==
+X-Google-Smtp-Source: AGHT+IH6ZeaOWdlt8xat0t3dm+8LQC6if6IHF+lydOJLJMjJKR2mjaMSP490EsNnacwJILG2meGu/YiDkY4eGa8xga4=
+X-Received: by 2002:a05:6000:2507:b0:3a3:7031:59da with SMTP id
+ ffacd0b85a97d-3a370315bcamr11376204f8f.59.1747857898663; Wed, 21 May 2025
+ 13:04:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/4] watchdog: Add support for VIA/WonderMedia SoC
- watchdog functionality
-To: Alexey Charkov <alchark@gmail.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org
-References: <20250521-vt8500-timer-updates-v4-0-2d4306a16ae4@gmail.com>
- <20250521-vt8500-timer-updates-v4-4-2d4306a16ae4@gmail.com>
- <38df2f02-efc4-465b-aa64-4c9e2c1919d8@roeck-us.net>
- <CABjd4YxZVQSuavEYojc8U4AqwUN3GkweiNNHqn=NDTE70xZm8w@mail.gmail.com>
- <ad056ba1-8fce-4735-b71e-f22c22eacc18@roeck-us.net>
- <CABjd4YxE4eDYt7MEZCrqHK7G9SuziBYEtWSK35DEUxsMmW60tA@mail.gmail.com>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- np3900V20aS7eD9K8GTU0TGC1pyz6IVJwIE=
-In-Reply-To: <CABjd4YxE4eDYt7MEZCrqHK7G9SuziBYEtWSK35DEUxsMmW60tA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250521183911.21781-1-puranjay@kernel.org> <80ef5e2e-c2d9-45b7-9a48-f8c1a4767eae@gmail.com>
+In-Reply-To: <80ef5e2e-c2d9-45b7-9a48-f8c1a4767eae@gmail.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Wed, 21 May 2025 13:04:47 -0700
+X-Gm-Features: AX0GCFsYH19tcZ41YWJ6fA48uv2fJA3v_n94P_mad8cuG-omsVdikNasd3Hmoho
+Message-ID: <CAADnVQLgPBcRAqKfCXQwZae2jKDfp=xSFZCgzHgg-jcBTYp-yw@mail.gmail.com>
+Subject: Re: [PATCH bpf] bpf: verifier: support BPF_LOAD_ACQ in insn_def_regno()
+To: Eduard Zingerman <eddyz87@gmail.com>, Peilin Ye <yepeilin@google.com>
+Cc: Puranjay Mohan <puranjay@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 5/21/25 07:15, Alexey Charkov wrote:
-...
->>> Do I get it right that the core worker will try and do its last ping
->>> of the hardware at exactly max_hw_heartbeat_ms before the user
->>> specified deadline?
->>>
->>
->> Where do you see that ? In the watchdog core:
->>
->>           hw_heartbeat_ms = min_not_zero(timeout_ms, wdd->max_hw_heartbeat_ms);
->>           keepalive_interval = ms_to_ktime(hw_heartbeat_ms / 2);
-> 
-> This comment [1] which follows the lines you've pasted: "To ensure
-> that the watchdog times out wdd->timeout seconds after the most recent
-> ping from userspace, the last worker ping has to come in
-> hw_heartbeat_ms before this timeout."
-> 
+On Wed, May 21, 2025 at 12:13=E2=80=AFPM Eduard Zingerman <eddyz87@gmail.co=
+m> wrote:
+>
+>
+> On 2025-05-21 11:39, Puranjay Mohan wrote:
+> [...]
+> > @@ -3643,6 +3643,9 @@ static bool is_reg64(struct bpf_verifier_env *env=
+, struct bpf_insn *insn,
+> >   /* Return the regno defined by the insn, or -1. */
+> >   static int insn_def_regno(const struct bpf_insn *insn)
+> >   {
+> > +     if (is_atomic_load_insn(insn))
+> > +             return insn->dst_reg;
+> > +
+> >       switch (BPF_CLASS(insn->code)) {
+> >       case BPF_JMP:
+> >       case BPF_JMP32:
+>
+> I'm confused, is_atomic_load_insn() is defined as:
+>
+>           return BPF_CLASS(insn->code) =3D=3D BPF_STX &&
+>                  BPF_MODE(insn->code) =3D=3D BPF_ATOMIC &&
+>                  insn->imm =3D=3D BPF_LOAD_ACQ;
+>
+> And insn_def_regno() has the following case:
+>
+>           case BPF_STX:
+>                   if (BPF_MODE(insn->code) =3D=3D BPF_ATOMIC ||
+>                       BPF_MODE(insn->code) =3D=3D BPF_PROBE_ATOMIC) {
+>                           if (insn->imm =3D=3D BPF_CMPXCHG)
+>                                   return BPF_REG_0;
+>                           else if (insn->imm =3D=3D BPF_LOAD_ACQ)
+>                                   return insn->dst_reg;
+>                           else if (insn->imm & BPF_FETCH)
+>                                   return insn->src_reg;
+>                   }
+>                   return -1;
+>
+> Why is it not triggering?
+>
+> Also, can this be tested with a BPF_F_TEST_RND_HI32 flag?
+> E.g. see verifier_scalar_ids.c:linked_regs_and_subreg_def() test case.
 
-Ah, yes. Sorry, I misunderstood your question. This is absolutely correct.
-If timeout is, say, 10 seconds, and the maximum hardware timeout is 8 seconds,
-the last heartbeat must be triggered by the kernel 2 seconds after the last
-userspace heartbeat request to ensure that the actual timeout happens 10
-seconds after the most recent heartbeat request from userspace.
-
-Guenter
-
+I suspect it was already fixed by commit
+fce7bd8e385a ("bpf/verifier: Handle BPF_LOAD_ACQ instructions in
+insn_def_regno()")
