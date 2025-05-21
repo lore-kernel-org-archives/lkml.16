@@ -1,141 +1,137 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BE5F223704
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 15:33:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3EA1E2606;
+	Wed, 21 May 2025 15:33:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747841633; cv=none; b=RjjYzHEn77ZcYh+yuIIV0Ietl/DneEG3VgzaidgJ3J69Se0Yl6Eo3el/apStYannzvx3YUjhfzEZiym2U0jMeLDAamCe3bYQY1pgOCrMNiloi8pKYNODKOYI7bw+e+n2sliqFG2YC3RthtqtsNevfIjfPEOG5yL5ArWRs9DGfMw=
+	t=1747841637; cv=none; b=EQ5KlwC/pi5XbjL1C0A0zX6jLKqX6SsGLoIeFJHfYuomzeON04b5OHssDSAmXHh5qY8L898Jib4ikoTJHk5SEj0gbDdXCdXVmAUE4izE5KaBqVGGE9LF6yRxzbujBwwmIOu89226sEgiTpjShpsoBeK8WRJPGqxAnJ4tuBWaXG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747841633; c=relaxed/simple;
-	bh=Vtcw7mINIlvUr04SjFTIlN54iDrSaPcKmCM119sSc1U=;
+	s=arc-20240116; t=1747841637; c=relaxed/simple;
+	bh=BSy8Koe2LlIfi02MrdJ+5aDU4ObqpdpP/dGX8EvvOjE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DJD789RHqQaNmSzi/yEmIqYALtVkuMZIKjiLwXCUhw+qLICVeRdO/YgWcu//+2d8A8mapoTSC4WqtqgOM3nAcRqYSKEdT5BRjOHfd+lAK/ujvOnXn/BGwb628nyv9kTiMgGCYpqXnBSbqiW7P8qQ3D0Gy0pNATWve8mCftd+SkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=CDdiQgZJ; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	 MIME-Version; b=T+GqnHaJc7lbIHkfAJ0WebiMjyfI/Q9kri9X3f69VFv1oAOvuyUCtSybAa5cOWaeu89m+upAn4YjPr0sSEzqRYY76A9+nMYPflwJMNjCUBnT/kUwTa8i597ucdJnyG1hkVF6RPj4EcfPzJjdwnBbetN5MBVdwOYXTbGIjL79i58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U/hVibg9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="CDdiQgZJ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:
-	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=2n0ULhZnCu8C1LAodYKH8luvq5s03x0GpqQhjbAmhMQ=; b=CDdiQgZJuyOHdycIWE5ong+n1y
-	hGKkeWEzmpu7iGH/gFNeISG2CNzvIPEZBUPc/F7/vdjfbiTjlwW6JltqSTiNwGu0IbNwxeSwiDzeD
-	LEzoEw+t07pSTz56wJRXrbqfjmz+WCvArfcA4/Wi4geAV8Kq4pwYQpPm83G2p72p3tNgbYGVPkAz7
-	eY+hUz9d7J3sIcr8+ueNcoLX9pOWfbdBif/gwiqOocBxrNARPbiZD4uQSDMvbzl3zG45w3+Ot4DgJ
-	pLyW6DBXSHWJsUQF77OxFrB9owKkJZZf40VDco6hThr22HS347JFTh9nVYGeotxpmHZW5EKDKPvv4
-	0lUmkcdA==;
-Received: from [191.204.192.64] (helo=localhost.localdomain)
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1uHlRu-00BGxd-8X; Wed, 21 May 2025 17:33:42 +0200
-From: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
-To: "Alex Deucher" <alexander.deucher@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	siqueira@igalia.com,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	"Raag Jadav" <raag.jadav@intel.com>,
-	rodrigo.vivi@intel.com,
-	jani.nikula@linux.intel.com,
-	Xaver Hugl <xaver.hugl@gmail.com>,
-	Krzysztof Karas <krzysztof.karas@intel.com>
-Cc: dri-devel@lists.freedesktop.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U/hVibg9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DC52C4CEEB;
+	Wed, 21 May 2025 15:33:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747841636;
+	bh=BSy8Koe2LlIfi02MrdJ+5aDU4ObqpdpP/dGX8EvvOjE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=U/hVibg9nuYnpKkpKuVlS/OFAvUOkLwN7QfLYvclxccteHzJxQtyZH4tBcDAcuqXF
+	 OXCm4arsAwcDfkfDBhzbVOZIIX9O3jzXuep9hXzC21mWUTxxV90/LenPw2Mtc+M4JE
+	 ZN5b+/b/98L6oNLQR+Twr+XjGYCf4FbB68LRDERhTPPq/gE6ItlaYvYbiblbrmCkPB
+	 ZgirHOFm4mmIc48rl1PGPo8arm7+tco+a7z5lIb9mDl8imOdjAFGbWh4TgG98HDimy
+	 WO5cxNG+rE3OXCASbD/rLL3uvv5BFem3QzWDOZ/dEEbUwsaYdoHsF0MP3muD2uoOxU
+	 Lb+rgPXaupRqg==
+From: Lee Jones <lee@kernel.org>
+To: lee@kernel.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>,
+	Jens Axboe <axboe@kernel.dk>,
+	Sasha Levin <sashal@kernel.org>,
+	Michal Luczaj <mhal@rbox.co>,
+	Rao Shoaib <Rao.Shoaib@oracle.com>,
+	Pavel Begunkov <asml.silence@gmail.com>,
 	linux-kernel@vger.kernel.org,
-	kernel-dev@igalia.com,
-	amd-gfx@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org,
-	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
-Subject: [PATCH v6 3/3] drm/amdgpu: Make use of drm_wedge_task_info
-Date: Wed, 21 May 2025 12:33:23 -0300
-Message-ID: <20250521153323.935974-4-andrealmeid@igalia.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250521153323.935974-1-andrealmeid@igalia.com>
-References: <20250521153323.935974-1-andrealmeid@igalia.com>
+	netdev@vger.kernel.org
+Cc: stable@vger.kernel.org
+Subject: [PATCH v6.1 14/27] af_unix: Save listener for embryo socket.
+Date: Wed, 21 May 2025 16:27:13 +0100
+Message-ID: <20250521152920.1116756-15-lee@kernel.org>
+X-Mailer: git-send-email 2.49.0.1143.g0be31eac6b-goog
+In-Reply-To: <20250521152920.1116756-1-lee@kernel.org>
+References: <20250521152920.1116756-1-lee@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-To notify userspace about which task (if any) made the device get in a
-wedge state, make use of drm_wedge_task_info parameter, filling it with
-the task PID and name.
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
 
-Signed-off-by: André Almeida <andrealmeid@igalia.com>
+[ Upstream commit aed6ecef55d70de3762ce41c561b7f547dbaf107 ]
+
+This is a prep patch for the following change, where we need to
+fetch the listening socket from the successor embryo socket
+during GC.
+
+We add a new field to struct unix_sock to save a pointer to a
+listening socket.
+
+We set it when connect() creates a new socket, and clear it when
+accept() is called.
+
+Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+Acked-by: Paolo Abeni <pabeni@redhat.com>
+Link: https://lore.kernel.org/r/20240325202425.60930-8-kuniyu@amazon.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+(cherry picked from commit aed6ecef55d70de3762ce41c561b7f547dbaf107)
+Signed-off-by: Lee Jones <lee@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 19 +++++++++++++++++--
- drivers/gpu/drm/amd/amdgpu/amdgpu_job.c    |  6 +++++-
- 2 files changed, 22 insertions(+), 3 deletions(-)
+ include/net/af_unix.h | 1 +
+ net/unix/af_unix.c    | 5 ++++-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-index d27091d5929c..c29c924aa506 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-@@ -6362,8 +6362,23 @@ int amdgpu_device_gpu_recover(struct amdgpu_device *adev,
+diff --git a/include/net/af_unix.h b/include/net/af_unix.h
+index e6f7bba19152..624fea657518 100644
+--- a/include/net/af_unix.h
++++ b/include/net/af_unix.h
+@@ -83,6 +83,7 @@ struct unix_sock {
+ 	struct path		path;
+ 	struct mutex		iolock, bindlock;
+ 	struct sock		*peer;
++	struct sock		*listener;
+ 	struct unix_vertex	*vertex;
+ 	struct list_head	link;
+ 	unsigned long		inflight;
+diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
+index 658a1680a92e..6075ecbe40b2 100644
+--- a/net/unix/af_unix.c
++++ b/net/unix/af_unix.c
+@@ -954,6 +954,7 @@ static struct sock *unix_create1(struct net *net, struct socket *sock, int kern,
+ 	sk->sk_max_ack_backlog	= READ_ONCE(net->unx.sysctl_max_dgram_qlen);
+ 	sk->sk_destruct		= unix_sock_destructor;
+ 	u = unix_sk(sk);
++	u->listener = NULL;
+ 	u->inflight = 0;
+ 	u->vertex = NULL;
+ 	u->path.dentry = NULL;
+@@ -1558,6 +1559,7 @@ static int unix_stream_connect(struct socket *sock, struct sockaddr *uaddr,
+ 	newsk->sk_type		= sk->sk_type;
+ 	init_peercred(newsk);
+ 	newu = unix_sk(newsk);
++	newu->listener = other;
+ 	RCU_INIT_POINTER(newsk->sk_wq, &newu->peer_wq);
+ 	otheru = unix_sk(other);
  
- 	atomic_set(&adev->reset_domain->reset_res, r);
- 
--	if (!r)
--		drm_dev_wedged_event(adev_to_drm(adev), DRM_WEDGE_RECOVERY_NONE, NULL);
-+	if (!r) {
-+		struct drm_wedge_task_info aux, *info = NULL;
-+
-+		if (job) {
-+			struct amdgpu_task_info *ti;
-+
-+			ti = amdgpu_vm_get_task_info_pasid(adev, job->pasid);
-+			if (ti) {
-+				aux.pid = ti->pid;
-+				aux.comm = ti->process_name;
-+				info = &aux;
-+				amdgpu_vm_put_task_info(ti);
-+			}
-+		}
-+
-+		drm_dev_wedged_event(adev_to_drm(adev), DRM_WEDGE_RECOVERY_NONE, info);
-+	}
- 
- 	return r;
- }
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c
-index a47b2eb301e5..5cb17e62df57 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c
-@@ -89,6 +89,7 @@ static enum drm_gpu_sched_stat amdgpu_job_timedout(struct drm_sched_job *s_job)
+@@ -1651,8 +1653,8 @@ static int unix_accept(struct socket *sock, struct socket *newsock, int flags,
+ 		       bool kern)
  {
- 	struct amdgpu_ring *ring = to_amdgpu_ring(s_job->sched);
- 	struct amdgpu_job *job = to_amdgpu_job(s_job);
-+	struct drm_wedge_task_info aux, *info = NULL;
- 	struct amdgpu_task_info *ti;
- 	struct amdgpu_device *adev = ring->adev;
- 	int idx;
-@@ -127,6 +128,9 @@ static enum drm_gpu_sched_stat amdgpu_job_timedout(struct drm_sched_job *s_job)
- 		dev_err(adev->dev,
- 			"Process information: process %s pid %d thread %s pid %d\n",
- 			ti->process_name, ti->tgid, ti->task_name, ti->pid);
-+		aux.pid = ti->pid;
-+		aux.comm = ti->process_name;
-+		info = &aux;
- 		amdgpu_vm_put_task_info(ti);
+ 	struct sock *sk = sock->sk;
+-	struct sock *tsk;
+ 	struct sk_buff *skb;
++	struct sock *tsk;
+ 	int err;
+ 
+ 	err = -EOPNOTSUPP;
+@@ -1677,6 +1679,7 @@ static int unix_accept(struct socket *sock, struct socket *newsock, int flags,
  	}
  
-@@ -166,7 +170,7 @@ static enum drm_gpu_sched_stat amdgpu_job_timedout(struct drm_sched_job *s_job)
- 			if (amdgpu_ring_sched_ready(ring))
- 				drm_sched_start(&ring->sched, 0);
- 			dev_err(adev->dev, "Ring %s reset succeeded\n", ring->sched.name);
--			drm_dev_wedged_event(adev_to_drm(adev), DRM_WEDGE_RECOVERY_NONE, NULL);
-+			drm_dev_wedged_event(adev_to_drm(adev), DRM_WEDGE_RECOVERY_NONE, info);
- 			goto exit;
- 		}
- 		dev_err(adev->dev, "Ring %s reset failure\n", ring->sched.name);
+ 	tsk = skb->sk;
++	unix_sk(tsk)->listener = NULL;
+ 	skb_free_datagram(sk, skb);
+ 	wake_up_interruptible(&unix_sk(sk)->peer_wait);
+ 
 -- 
-2.49.0
+2.49.0.1143.g0be31eac6b-goog
 
