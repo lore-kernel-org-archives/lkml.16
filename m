@@ -1,103 +1,139 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED5C5262FFE
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 13:17:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43D3D264A9D;
+	Wed, 21 May 2025 13:18:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747833481; cv=none; b=ljqPLYEUFeTe5GCDaH+JaUe9eOIFkKnNGO6jxG8qS59VMHHxcRWhYj3cdU5fdpBiHS9JPyzgEvpOCWJ8zeSUqk/Z0U+oKEREjDKIXco6AqSg9bxjgdUjI2Gp+/7z+9FkQTpln2rx+IkYftIeG8o3QM1rY7dwf5i4dGrFfnwB5ZM=
+	t=1747833490; cv=none; b=iz0hHNS5x9pa56gmTpbcPOYkvPRnxW/wlYusbLSCpi19H3IBCQX/4fFG82lTF4YELcddz4nsFUQIkpwvaRSAcemVZ0Edo8DRFrpL2z4KplM8QUDaMFT6qMPtbZDHe3Rmhy+tuLfUNWXXcJxCSKibPDn5SCotgi5r8Tn542fS5es=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747833481; c=relaxed/simple;
-	bh=l82KCvS3O9txW7PsSB/+FtoOF8zTK5gAC4xzD4Vn8Do=;
+	s=arc-20240116; t=1747833490; c=relaxed/simple;
+	bh=QVDTAdqMO+uiHDDTAblBjPNSYTk+rOwz6zjJhpKhzcU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f8kGJi93A5aiHfNqCXDq8kDZutvNPRJsKz75zCDLPIHXd4ZkyAXDiPpdJ4z9GsFOKSXZzXbhvfSUP+mdI9S9B/Ga9zt/JSH/AWsdZG1Gos//xugM6clM82K595YYOm/+2ZxGc+9+AfRPU90wYfKO4A6OStrRsin1yV1/62bZCeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F227F1C14
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 06:17:44 -0700 (PDT)
-Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8B38A3F5A1
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 06:17:58 -0700 (PDT)
-Date: Wed, 21 May 2025 14:17:46 +0100
-From: Liviu Dudau <liviu.dudau@arm.com>
-To: Ashley Smith <ashley.smith@collabora.com>
-Cc: Boris Brezillon <boris.brezillon@collabora.com>,
-	Steven Price <steven.price@arm.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	kernel@collabora.com, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] drm/panthor: Reset queue slots if termination fails
-Message-ID: <aC3SeiwOVZNdlLhr@e110455-lin.cambridge.arm.com>
-References: <20250519145150.2265020-1-ashley.smith@collabora.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=U3tMxCrE/x/e2r/DgzMzbKaudpKgHbdkuYSEglSyDYzoQTxShl8rjaLw8sP2INuRGdjiCoJgYgZ8AH6W94ZpowyO+wo1RK/iuoQ9cHLdzi4FSIH+fgZNv2KHAG11KksyMT7Vehc5nc98OysYN6LREi6wLfcJ8/ZyrHOWidoWu4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iUreG8Je; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iUreG8Je"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 314E0C4CEE4;
+	Wed, 21 May 2025 13:18:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747833489;
+	bh=QVDTAdqMO+uiHDDTAblBjPNSYTk+rOwz6zjJhpKhzcU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iUreG8JeacwesjET/MPTdxKgkhhG6S4FljLoR4Oht6kzJBAL6XbfSD9vWFbyhJxaM
+	 YdYqzh4YVo4Q7cT7eV6ZMfN1n+hTqeOboLrdqfUBWGnVv9+yTDJ6PsGwc88X63wi6y
+	 iT/1upQ/Cg7qzGNHonQf0Jo0RAUirHCev78DLPo5kogOkl5vNWUPU/6Sjk85BVd20s
+	 7RTfOlTfegSxI16oyAzBjwTD/mPIAnPHtVAO3sYAFusmCqKAaDU2pAYHxD0kBjo6eN
+	 1OYfyCvmsnUkPBP7apNJt+d2ODO4bD9Q78EG/4OE1bd86qE6iBL155sKieWzY/fO0S
+	 Ao0/EU3SZCL/g==
+Date: Wed, 21 May 2025 10:18:06 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Gautam Menghani <gautam@linux.ibm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, maddy@linux.ibm.com
+Subject: Re: [PATCH v3 5/7] perf python: Add evsel read method
+Message-ID: <aC3SjgsOWMh07G_K@x1>
+References: <20250519195148.1708988-1-irogers@google.com>
+ <20250519195148.1708988-6-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250519145150.2265020-1-ashley.smith@collabora.com>
+In-Reply-To: <20250519195148.1708988-6-irogers@google.com>
 
-On Mon, May 19, 2025 at 03:50:19PM +0100, Ashley Smith wrote:
-> This fixes a bug where if we timeout after a suspend and the termination
-> fails, due to waiting on a fence that will never be signalled for
-> example, we do not resume the group correctly. The fix forces a reset
-> for groups that are not terminated correctly.
+On Mon, May 19, 2025 at 12:51:42PM -0700, Ian Rogers wrote:
+> From: Gautam Menghani <gautam@linux.ibm.com>
 > 
-> Signed-off-by: Ashley Smith <ashley.smith@collabora.com>
-
-Reviewed-by: Liviu Dudau <liviu.dudau@arm.com>
-
-Best regards,
-Liviu
-
-> ---
-> Changes in v2:
->  - Fixed syntax error
-> ---
->  drivers/gpu/drm/panthor/panthor_sched.c | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
+> Add the evsel read method to enable python to read counter data for the
+> given evsel.
 > 
-> diff --git a/drivers/gpu/drm/panthor/panthor_sched.c b/drivers/gpu/drm/panthor/panthor_sched.c
-> index 43ee57728de5..65d8ae3dcac1 100644
-> --- a/drivers/gpu/drm/panthor/panthor_sched.c
-> +++ b/drivers/gpu/drm/panthor/panthor_sched.c
-> @@ -2727,8 +2727,17 @@ void panthor_sched_suspend(struct panthor_device *ptdev)
->  			 * automatically terminate all active groups, so let's
->  			 * force the state to halted here.
->  			 */
-> -			if (csg_slot->group->state != PANTHOR_CS_GROUP_TERMINATED)
-> +			if (csg_slot->group->state != PANTHOR_CS_GROUP_TERMINATED) {
->  				csg_slot->group->state = PANTHOR_CS_GROUP_TERMINATED;
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
+> ---
+> Ian modified from v2 to make the API take a CPU and thread then
+
+I'll add this note right before your Signed-off-by, with a link to the
+discussion, i.e. as:
+
+Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
+Link: https://lore.kernel.org/linux-perf-users/20250512055748.479786-1-gautam@linux.ibm.com/
+[ make the API take a CPU and thread then compute from these the appropriate indices.
+Signed-off-by: Ian Rogers <irogers@google.com>
+
+> compute from these the appropriate indices. This was discussed as the
+> preferred API with Arnaldo:
+> https://lore.kernel.org/linux-perf-users/20250512055748.479786-1-gautam@linux.ibm.com/
+> ---
+>  tools/perf/util/python.c | 37 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+> 
+> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> index 1cbddfe77c7c..281e706e102d 100644
+> --- a/tools/perf/util/python.c
+> +++ b/tools/perf/util/python.c
+> @@ -888,6 +888,37 @@ static PyObject *pyrf_evsel__threads(struct pyrf_evsel *pevsel)
+>  	return (PyObject *)pthread_map;
+>  }
+>  
+> +static PyObject *pyrf_evsel__read(struct pyrf_evsel *pevsel,
+> +				  PyObject *args, PyObject *kwargs)
+> +{
+> +	struct evsel *evsel = &pevsel->evsel;
+> +	int cpu = 0, cpu_idx, thread = 0, thread_idx;
+> +	struct perf_counts_values counts;
+> +	struct pyrf_counts_values *count_values = PyObject_New(struct pyrf_counts_values,
+> +							       &pyrf_counts_values__type);
 > +
-> +				/* Reset the queue slots manually if the termination
-> +				 * request failed.
-> +				 */
-> +				for (i = 0; i < group->queue_count; i++) {
-> +					if (group->queues[i])
-> +						cs_slot_reset_locked(ptdev, csg_id, i);
-> +				}
-> +			}
->  			slot_mask &= ~BIT(csg_id);
->  		}
->  	}
-> 
-> base-commit: 9934ab18051118385c7ea44d8e14175edbe6dc9c
+> +	if (!count_values)
+> +		return NULL;
+> +
+> +	if (!PyArg_ParseTuple(args, "ii", &cpu, &thread))
+> +		return NULL;
+> +
+> +	cpu_idx = perf_cpu_map__idx(evsel->core.cpus, (struct perf_cpu){.cpu = cpu});
+> +	if (cpu_idx < 0) {
+> +		PyErr_Format(PyExc_TypeError, "CPU %d is not part of evsel's CPUs", cpu);
+> +		return NULL;
+> +	}
+> +	thread_idx = perf_thread_map__idx(evsel->core.threads, thread);
+> +	if (cpu_idx < 0) {
+> +		PyErr_Format(PyExc_TypeError, "Thread %d is not part of evsel's threads",
+> +			     thread);
+> +		return NULL;
+> +	}
+> +	perf_evsel__read(&(evsel->core), cpu_idx, thread_idx, &counts);
+> +	count_values->values = counts;
+> +	return (PyObject *)count_values;
+> +}
+> +
+>  static PyObject *pyrf_evsel__str(PyObject *self)
+>  {
+>  	struct pyrf_evsel *pevsel = (void *)self;
+> @@ -918,6 +949,12 @@ static PyMethodDef pyrf_evsel__methods[] = {
+>  		.ml_flags = METH_NOARGS,
+>  		.ml_doc	  = PyDoc_STR("threads the event is to be used with.")
+>  	},
+> +	{
+> +		.ml_name  = "read",
+> +		.ml_meth  = (PyCFunction)pyrf_evsel__read,
+> +		.ml_flags = METH_VARARGS | METH_KEYWORDS,
+> +		.ml_doc	  = PyDoc_STR("read counters")
+> +	},
+>  	{ .ml_name = NULL, }
+>  };
+>  
 > -- 
-> 2.43.0
+> 2.49.0.1101.gccaa498523-goog
 > 
-
--- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
