@@ -1,55 +1,55 @@
 Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8851D63DF
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 15:04:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C4011EDA11
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 15:05:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747839900; cv=none; b=mSyrWqEfY90LXqmTs0jf3KRdyzb3sGl4cywC/PIOxGAPuEBW5Rr0lhpuVBY0VfvV9hssy4zXv8Y8zluteXelbGLUDriqGv8TvWLoJsEpJheN4hVZW0r5HkhyEFquSrXY8s6lnAtUsM5O4y0Tzq7DTxAJWGNcjK5nPtJvKohR2KM=
+	t=1747839902; cv=none; b=NpA8WemjtdN9UwFNlSf/oChx66w/iBPAXIszpCMlDbpVSRTghf0RRy3F8nttrLpDsd4fb+ERQs5qglnFrPzT/BBhflZxNYi9HFNO1eWw+qk9guWpaj9h4eMD/YSxKh1MJc7yCcegh1L7WGmz4JiOptkZcYCCnp8i51Z1uCJnhNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747839900; c=relaxed/simple;
-	bh=xjQw6jSKQp9URqi4C246dUlBO6uJS7bp2ad5W8wkdj8=;
+	s=arc-20240116; t=1747839902; c=relaxed/simple;
+	bh=ywESkurKr0yXlByOEVgWxFEfUZ2zhLZgUAYNni6pUTA=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=mlIYdtlu5bsWc8waxMY0u5rhgLKc18fZnN6IX9MLaWFUZ6to2JC9XB0xkBdAvvSQb7dZaHfcIYKNY/VrN1TOFz5rw809onei/nBUUvQk1nucCkCI6BC0EvmbZuNDIvJZsZWF9ABsLV30rvY6BJMcq/S1EbxjGk4i/mKYekM/V7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BRMOR0lX; arc=none smtp.client-ip=209.85.128.74
+	 To:Cc:Content-Type; b=jLCyjyDI0chbGpma6BJJrs0CY5c5dNtei8SJ2To8rqZhIiTLOovQ4oWRTmPcCUi/cvXDsup5amL4P92cU0ve/08ChRACNwRnDiqcikYxkwmUQzucHIVZPvnGvlG/opICH763EFj2gbQLRz3B4oHMXlXh4qXzL8vsGE84Nhu5a1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rEtCAQyJ; arc=none smtp.client-ip=209.85.128.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BRMOR0lX"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-440667e7f92so36154885e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 08:04:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rEtCAQyJ"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43d209dc2d3so43252835e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 08:05:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747839896; x=1748444696; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747839899; x=1748444699; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=DwAlbsdp8Pq3hojVBpIUtQJnr1hiT6SyKypwl7KjCd0=;
-        b=BRMOR0lXMFEkEpnNZEZeuOuzHHq7ctcN/Z6ACV2rWgLScISleo85nrUIlSrXHHHIcM
-         RSJGJZIATSi5mirKfCpG9p5dtvaj0riPjdEBJkMPf3sNjo7QwpBpZruEz3cNy84DeUOE
-         Y9BOrtkMSXCE21qLlxqdzePKLjLTLniRx7YVLvs//04qjemBSLM3WoLQLd4IZ19lkqg3
-         i5tgDkcY1fscEj279tkcFNmggHyYuNFI4rovvomPKmBj0dqJIz1vh/jaJosKd6AbNGm2
-         BILWLrDet1Ez7q09j2p+G+c300OZRW8x5J1fKkq+l5I8p4AhD4XEb4aGkEg27jcVGyyv
-         1hWA==
+        bh=PrgSgdosYNgER99wbA+p3mQJNyiihN5ynwjskXOpwxQ=;
+        b=rEtCAQyJP5cWGl1KNxQD5f1vlPrY6Jt+eWQviNc7NR7ARuIHvw5RcaqINNSlRc1Dre
+         bJaFfPfY3bKawE8mZkRukhtTwuH0LC9ptU2N8p5WlXSOCtVTWCrqV3xrlACXtPBgdzsX
+         e0+uhHysZIqRtpklMCXBzkhO1/C/HiIbPhdarsgo50ReAdqaJ4SN1zGQkrPEIj4u7nZE
+         AN7KBm6AWROGiQp4pLsFJ3Q/BxG2MWAXwfeF1Bi3gpKpjUfVeTVQQof6IaKFfdHkcO6H
+         KgOc4/URcTDnjoEvqpgFGY5zQrM/HF0gDPG0H6QKjHr85VjGBm05NEj/BgFu4J5jDnfj
+         Ki5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747839896; x=1748444696;
+        d=1e100.net; s=20230601; t=1747839899; x=1748444699;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DwAlbsdp8Pq3hojVBpIUtQJnr1hiT6SyKypwl7KjCd0=;
-        b=CU49+0AFrv/TkxgHgQWM145qvWq54cqEWd52wJHo8Gn1vzF7T7YwvBCTKcxP6xOg6b
-         9uobmEkqA8snUeVYsg9SqkML8VM1Cpy7GYIX/jqdNgsc8CwPAqvaa4EKBtt4IPf1Kd2A
-         NYfmw7qbuUjNMmOSuLFhB9ePvD+T2nKy27rny7WVVybdzG7MHcLd0sB7SKIpP9n3OFlJ
-         hji4gsD52MPGZdPXciq8UHv4l1g5FApx7UFkI1tN7P6Nu3UsAxoDod0/qIVevha7y4bh
-         Kaq7TcaYeKtW5yECb/4zCcUxcmIo6PObY1ZFcPWprem9ljcDFtV8sEVrVlWrzhLGxHVk
-         u4lg==
-X-Forwarded-Encrypted: i=1; AJvYcCX+CmcEzaxAjVi5MOXs1z9H2smJWI7WwX6/mVqler1uCTk4K7Tf1uen7WUSHCjCNrzlSGTqE2FyJJJs7IE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZqCG/zneHMYCdQ7EJvZkeJCyseBXrL2uh5ww2sTI9pkAVrjIJ
-	h10w5JLDnBIDA9E1JaTQENBmaZUXbFPWJcvf9XgalM23PYoRvXebfMFpJzPRM9dNZrV9GDckqcK
-	iA3Gwreb7+Q==
-X-Google-Smtp-Source: AGHT+IFHepmVs2MSdhPgR5Oldj0rNLjrGcpLT6idVGvnIJxv0l7ZoCLm98UUtS8rwQah08SYfKWBaAfO7Giv
-X-Received: from wrf20-n2.prod.google.com ([2002:a05:6000:43d4:20b0:3a3:709b:2ce3])
- (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6000:c0b:b0:3a3:5c64:c60
- with SMTP id ffacd0b85a97d-3a35c84beacmr13474911f8f.59.1747839896585; Wed, 21
- May 2025 08:04:56 -0700 (PDT)
-Date: Wed, 21 May 2025 17:04:29 +0200
+        bh=PrgSgdosYNgER99wbA+p3mQJNyiihN5ynwjskXOpwxQ=;
+        b=gdIC3HBk53SuQzR7HBFFyIhpI0rvSYI3er443MUfZvkYyuKDFG9RwyityXB6suN+t4
+         PSHIqvyb7ZIt9hAy+xcXTJWTwmKJigyq2iDPEJjEmpyws3zdfgMA5WwC64FjSZrrzLHN
+         o1cCgjC8ZMZxq4ePlQuIFqzAYYQI5Jj3gRFSoRJByj52Zzt/wZR3qqEE+xAbvdxbog0E
+         2IenrHyB4gQTm5HH752ZjHY1fo6Yo5eX+NgGjfQxxWF8loN2sIQbzm0mr4vkE6Ff43Xc
+         puWYQr4q7zyubbOtlnrBw/qlYWEe2xabaebGCUcMeG7RrovX59bRGm2ZYVFAysQ2jhV9
+         1KoA==
+X-Forwarded-Encrypted: i=1; AJvYcCWst1Zk9i+eP7vg7XpYvaSOLiY119GmuviPUvsUI3cMA7jdvt1mRPfXA/IQazP+ZlWAqz2qvKbx32CRwfY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhRyn6wuFKdCAxyMoyz+z62vClNMu8AJAm0NmLa/kmkjl/bTvh
+	IN32pfLfBHyIJKhHTGwxy5OFe/QoALoLwJw7jHLvC1j403+y/gZLSyl2fabolmo2a2IqS/UOqQx
+	uVNiJoouf+g==
+X-Google-Smtp-Source: AGHT+IFCk6Cdl+XpwT5/8fDVsK/FiGkeFImvLe+eJVfYABO4MP2OYT1Q5b8KkphKSAyYoP+T+WtvwdUSE5oD
+X-Received: from wmbem23.prod.google.com ([2002:a05:600c:8217:b0:442:e19a:2ac9])
+ (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:4449:b0:441:ac58:ead5
+ with SMTP id 5b1f17b1804b1-442fd67591fmr229849425e9.31.1747839898773; Wed, 21
+ May 2025 08:04:58 -0700 (PDT)
+Date: Wed, 21 May 2025 17:04:30 +0200
 In-Reply-To: <cover.1747839857.git.dvyukov@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,27 +59,17 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1747839857.git.dvyukov@google.com>
 X-Mailer: git-send-email 2.49.0.1143.g0be31eac6b-goog
-Message-ID: <97947cc8e205ff49675826d7b0327ef2e2c66eea.1747839857.git.dvyukov@google.com>
-Subject: [PATCH v3 2/3] syscall_user_dispatch: Add PR_SYS_DISPATCH_INCLUSIVE_ON
+Message-ID: <8df4b50b176b073550bab5b3f3faff752c5f8e17.1747839857.git.dvyukov@google.com>
+Subject: [PATCH v3 3/3] selftests: Add tests for PR_SYS_DISPATCH_INCLUSIVE_ON
 From: Dmitry Vyukov <dvyukov@google.com>
 To: krisman@collabora.com, tglx@linutronix.de, luto@kernel.org, 
 	peterz@infradead.org, keescook@chromium.org, gregory.price@memverge.com
 Cc: Dmitry Vyukov <dvyukov@google.com>, Marco Elver <elver@google.com>, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-There are two possible scenarios for syscall filtering:
- - having a trusted/allowed range of PCs, and intercepting everything else
- - or the opposite: a single untrusted/intercepted range and allowing
-   everything else (this is relevant for any kind of sandboxing scenario,
-   or monitoring behavior of a single library)
-
-The current API only allows the former use case due to allowed
-range wrap-around check. Add PR_SYS_DISPATCH_INCLUSIVE_ON that
-enables the second use case.
-
-Add PR_SYS_DISPATCH_EXCLUSIVE_ON alias for PR_SYS_DISPATCH_ON
-to make it clear how it's different from the new
-PR_SYS_DISPATCH_INCLUSIVE_ON.
+Add tests for PR_SYS_DISPATCH_INCLUSIVE_ON correct/incorrect args,
+and a test that ensures that the specified range is respected
+by both PR_SYS_DISPATCH_EXCLUSIVE_ON and PR_SYS_DISPATCH_INCLUSIVE_ON.
 
 Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
 Cc: Gabriel Krisman Bertazi <krisman@collabora.com>
@@ -93,156 +83,215 @@ Cc: linux-kernel@vger.kernel.org
 
 ---
 Changes in v3:
- - Add new PR_SYS_DISPATCH_INCLUSIVE_ON mode
-   instead of extending behavior of the old mode
----
- .../admin-guide/syscall-user-dispatch.rst     | 23 +++++++-----
- include/uapi/linux/prctl.h                    |  7 +++-
- kernel/entry/syscall_user_dispatch.c          | 36 ++++++++++++-------
- tools/include/uapi/linux/prctl.h              |  7 +++-
- 4 files changed, 49 insertions(+), 24 deletions(-)
+ - rework tests for the new PR_SYS_DISPATCH_INCLUSIVE_ON
 
-diff --git a/Documentation/admin-guide/syscall-user-dispatch.rst b/Documentation/admin-guide/syscall-user-dispatch.rst
-index e3cfffef5a633..c1768d9e80fa2 100644
---- a/Documentation/admin-guide/syscall-user-dispatch.rst
-+++ b/Documentation/admin-guide/syscall-user-dispatch.rst
-@@ -53,20 +53,25 @@ following prctl:
+Changes in v2:
+ - add tests for 0-sized range
+ - change range setup in the test to be fatal
+---
+ .../syscall_user_dispatch/sud_test.c          | 94 +++++++++++++++----
+ 1 file changed, 74 insertions(+), 20 deletions(-)
+
+diff --git a/tools/testing/selftests/syscall_user_dispatch/sud_test.c b/tools/testing/selftests/syscall_user_dispatch/sud_test.c
+index 48cf01aeec3e7..2eb2c06303f2a 100644
+--- a/tools/testing/selftests/syscall_user_dispatch/sud_test.c
++++ b/tools/testing/selftests/syscall_user_dispatch/sud_test.c
+@@ -10,6 +10,8 @@
+ #include <sys/sysinfo.h>
+ #include <sys/syscall.h>
+ #include <signal.h>
++#include <stdbool.h>
++#include <stdlib.h>
  
-   prctl(PR_SET_SYSCALL_USER_DISPATCH, <op>, <offset>, <length>, [selector])
- 
--<op> is either PR_SYS_DISPATCH_ON or PR_SYS_DISPATCH_OFF, to enable and
--disable the mechanism globally for that thread.  When
--PR_SYS_DISPATCH_OFF is used, the other fields must be zero.
--
--[<offset>, <offset>+<length>) delimit a memory region interval
--from which syscalls are always executed directly, regardless of the
--userspace selector.  This provides a fast path for the C library, which
--includes the most common syscall dispatchers in the native code
--applications, and also provides a way for the signal handler to return
-+<op> is either PR_SYS_DISPATCH_EXCLUSIVE_ON/PR_SYS_DISPATCH_INCLUSIVE_ON
-+or PR_SYS_DISPATCH_OFF, to enable and disable the mechanism globally for
-+that thread.  When PR_SYS_DISPATCH_OFF is used, the other fields must be zero.
-+
-+For PR_SYS_DISPATCH_EXCLUSIVE_ON [<offset>, <offset>+<length>) delimit
-+a memory region interval from which syscalls are always executed directly,
-+regardless of the userspace selector.  This provides a fast path for the
-+C library, which includes the most common syscall dispatchers in the native
-+code applications, and also provides a way for the signal handler to return
- without triggering a nested SIGSYS on (rt\_)sigreturn.  Users of this
- interface should make sure that at least the signal trampoline code is
- included in this region. In addition, for syscalls that implement the
- trampoline code on the vDSO, that trampoline is never intercepted.
- 
-+For PR_SYS_DISPATCH_INCLUSIVE_ON [<offset>, <offset>+<length>) delimit
-+a memory region interval from which syscalls are dispatched based on
-+the userspace selector. Syscalls from outside of the range are always
-+executed directly.
-+
- [selector] is a pointer to a char-sized region in the process memory
- region, that provides a quick way to enable disable syscall redirection
- thread-wide, without the need to invoke the kernel directly.  selector
-diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
-index 15c18ef4eb11a..11d9c7c853a53 100644
---- a/include/uapi/linux/prctl.h
-+++ b/include/uapi/linux/prctl.h
-@@ -255,7 +255,12 @@ struct prctl_mm_map {
- /* Dispatch syscalls to a userspace handler */
- #define PR_SET_SYSCALL_USER_DISPATCH	59
- # define PR_SYS_DISPATCH_OFF		0
--# define PR_SYS_DISPATCH_ON		1
-+/* Enable dispatch except for the specified range */
-+# define PR_SYS_DISPATCH_EXCLUSIVE_ON	1
-+/* Enable dispatch for the specified range */
-+# define PR_SYS_DISPATCH_INCLUSIVE_ON	2
-+/* Legacy name for backwards compatibility */
-+# define PR_SYS_DISPATCH_ON		PR_SYS_DISPATCH_EXCLUSIVE_ON
- /* The control values for the user space selector when dispatch is enabled */
+ #include <asm/unistd.h>
+ #include "../kselftest_harness.h"
+@@ -17,11 +19,15 @@
+ #ifndef PR_SET_SYSCALL_USER_DISPATCH
+ # define PR_SET_SYSCALL_USER_DISPATCH	59
+ # define PR_SYS_DISPATCH_OFF	0
+-# define PR_SYS_DISPATCH_ON	1
  # define SYSCALL_DISPATCH_FILTER_ALLOW	0
  # define SYSCALL_DISPATCH_FILTER_BLOCK	1
-diff --git a/kernel/entry/syscall_user_dispatch.c b/kernel/entry/syscall_user_dispatch.c
-index 5340c5aa89e7d..300b6c1bf07da 100644
---- a/kernel/entry/syscall_user_dispatch.c
-+++ b/kernel/entry/syscall_user_dispatch.c
-@@ -78,7 +78,7 @@ static int task_set_syscall_user_dispatch(struct task_struct *task, unsigned lon
- 		if (offset || len || selector)
- 			return -EINVAL;
- 		break;
--	case PR_SYS_DISPATCH_ON:
-+	case PR_SYS_DISPATCH_EXCLUSIVE_ON:
- 		/*
- 		 * Validate the direct dispatcher region just for basic
- 		 * sanity against overflow and a 0-sized dispatcher
-@@ -87,30 +87,40 @@ static int task_set_syscall_user_dispatch(struct task_struct *task, unsigned lon
- 		 */
- 		if (offset && offset + len <= offset)
- 			return -EINVAL;
--
-+		break;
-+	case PR_SYS_DISPATCH_INCLUSIVE_ON:
-+		if (len == 0 || offset + len <= offset)
-+			return -EINVAL;
- 		/*
--		 * access_ok() will clear memory tags for tagged addresses
--		 * if current has memory tagging enabled.
--
--		 * To enable a tracer to set a tracees selector the
--		 * selector address must be untagged for access_ok(),
--		 * otherwise an untagged tracer will always fail to set a
--		 * tagged tracees selector.
-+		 * Invert the range, the check in syscall_user_dispatch()
-+		 * supports wrap-around.
- 		 */
--		if (selector && !access_ok(untagged_addr(selector), sizeof(*selector)))
--			return -EFAULT;
--
-+		offset = offset + len;
-+		len = -len;
- 		break;
- 	default:
- 		return -EINVAL;
+ #endif
+ 
++#ifndef PR_SYS_DISPATCH_EXCLUSIVE_ON
++# define PR_SYS_DISPATCH_EXCLUSIVE_ON	1
++# define PR_SYS_DISPATCH_INCLUSIVE_ON	2
++#endif
++
+ #ifndef SYS_USER_DISPATCH
+ # define SYS_USER_DISPATCH	2
+ #endif
+@@ -65,7 +71,7 @@ TEST_SIGNAL(dispatch_trigger_sigsys, SIGSYS)
+ 	ret = sysinfo(&info);
+ 	ASSERT_EQ(0, ret);
+ 
+-	ret = prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_ON, 0, 0, &sel);
++	ret = prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_EXCLUSIVE_ON, 0, 0, &sel);
+ 	ASSERT_EQ(0, ret) {
+ 		TH_LOG("Kernel does not support CONFIG_SYSCALL_USER_DISPATCH");
  	}
+@@ -118,8 +124,8 @@ TEST(bad_prctl_param)
+ 	/* Valid parameter */
+ 	prctl_valid(_metadata, op, 0x0, 0x0, 0x0);
  
-+	/*
-+	 * access_ok() will clear memory tags for tagged addresses
-+	 * if current has memory tagging enabled.
-+
-+	 * To enable a tracer to set a tracees selector the
-+	 * selector address must be untagged for access_ok(),
-+	 * otherwise an untagged tracer will always fail to set a
-+	 * tagged tracees selector.
-+	 */
-+	if (mode != PR_SYS_DISPATCH_OFF && selector &&
-+		!access_ok(untagged_addr(selector), sizeof(*selector)))
-+		return -EFAULT;
-+
- 	task->syscall_dispatch.selector = selector;
- 	task->syscall_dispatch.offset = offset;
- 	task->syscall_dispatch.len = len;
- 	task->syscall_dispatch.on_dispatch = false;
+-	/* PR_SYS_DISPATCH_ON */
+-	op = PR_SYS_DISPATCH_ON;
++	/* PR_SYS_DISPATCH_EXCLUSIVE_ON */
++	op = PR_SYS_DISPATCH_EXCLUSIVE_ON;
  
--	if (mode == PR_SYS_DISPATCH_ON)
-+	if (mode != PR_SYS_DISPATCH_OFF)
- 		set_task_syscall_work(task, SYSCALL_USER_DISPATCH);
- 	else
- 		clear_task_syscall_work(task, SYSCALL_USER_DISPATCH);
-diff --git a/tools/include/uapi/linux/prctl.h b/tools/include/uapi/linux/prctl.h
-index 35791791a879b..5cbd56e5672a8 100644
---- a/tools/include/uapi/linux/prctl.h
-+++ b/tools/include/uapi/linux/prctl.h
-@@ -252,7 +252,12 @@ struct prctl_mm_map {
- /* Dispatch syscalls to a userspace handler */
- #define PR_SET_SYSCALL_USER_DISPATCH	59
- # define PR_SYS_DISPATCH_OFF		0
--# define PR_SYS_DISPATCH_ON		1
-+/* Enable dispatch except for the specified range */
-+# define PR_SYS_DISPATCH_EXCLUSIVE_ON	1
-+/* Enable dispatch for the specified range */
-+# define PR_SYS_DISPATCH_INCLUSIVE_ON	2
-+/* Legacy name for backwards compatibility */
-+# define PR_SYS_DISPATCH_ON		PR_SYS_DISPATCH_EXCLUSIVE_ON
- /* The control values for the user space selector when dispatch is enabled */
- # define SYSCALL_DISPATCH_FILTER_ALLOW	0
- # define SYSCALL_DISPATCH_FILTER_BLOCK	1
+ 	/* Dispatcher region is bad (offset > 0 && len == 0) */
+ 	prctl_invalid(_metadata, op, 0x1, 0x0, &sel, EINVAL);
+@@ -131,12 +137,24 @@ TEST(bad_prctl_param)
+ 	/*
+ 	 * Dispatcher range overflows unsigned long
+ 	 */
+-	prctl_invalid(_metadata, PR_SYS_DISPATCH_ON, 1, -1L, &sel, EINVAL);
++	prctl_invalid(_metadata, PR_SYS_DISPATCH_EXCLUSIVE_ON, 1, -1L, &sel, EINVAL);
+ 
+ 	/*
+ 	 * Allowed range overflows usigned long
+ 	 */
+-	prctl_invalid(_metadata, PR_SYS_DISPATCH_ON, -1L, 0x1, &sel, EINVAL);
++	prctl_invalid(_metadata, PR_SYS_DISPATCH_EXCLUSIVE_ON, -1L, 0x1, &sel, EINVAL);
++
++	/* 0 len should fail for PR_SYS_DISPATCH_INCLUSIVE_ON */
++	prctl_invalid(_metadata, PR_SYS_DISPATCH_INCLUSIVE_ON, 1, 0, 0, EINVAL);
++
++	/* Range wrap-around should fail */
++	prctl_invalid(_metadata, PR_SYS_DISPATCH_INCLUSIVE_ON, -1L, 2, 0, EINVAL);
++
++	/* Normal range shouldn't fail */
++	prctl_valid(_metadata, PR_SYS_DISPATCH_INCLUSIVE_ON, 2, 3, 0);
++
++	/* Invalid selector */
++	prctl_invalid(_metadata, PR_SYS_DISPATCH_INCLUSIVE_ON, 2, 3, (void *) -1, EFAULT);
+ }
+ 
+ /*
+@@ -147,11 +165,13 @@ char glob_sel;
+ int nr_syscalls_emulated;
+ int si_code;
+ int si_errno;
++unsigned long syscall_addr;
+ 
+ static void handle_sigsys(int sig, siginfo_t *info, void *ucontext)
+ {
+ 	si_code = info->si_code;
+ 	si_errno = info->si_errno;
++	syscall_addr = (unsigned long)info->si_call_addr;
+ 
+ 	if (info->si_syscall == MAGIC_SYSCALL_1)
+ 		nr_syscalls_emulated++;
+@@ -174,31 +194,34 @@ static void handle_sigsys(int sig, siginfo_t *info, void *ucontext)
+ #endif
+ }
+ 
+-TEST(dispatch_and_return)
++int setup_sigsys_handler(void)
+ {
+-	long ret;
+ 	struct sigaction act;
+ 	sigset_t mask;
+ 
+-	glob_sel = 0;
+-	nr_syscalls_emulated = 0;
+-	si_code = 0;
+-	si_errno = 0;
+-
+ 	memset(&act, 0, sizeof(act));
+ 	sigemptyset(&mask);
+-
+ 	act.sa_sigaction = handle_sigsys;
+ 	act.sa_flags = SA_SIGINFO;
+ 	act.sa_mask = mask;
++	return sigaction(SIGSYS, &act, NULL);
++}
+ 
+-	ret = sigaction(SIGSYS, &act, NULL);
+-	ASSERT_EQ(0, ret);
++TEST(dispatch_and_return)
++{
++	long ret;
++
++	glob_sel = 0;
++	nr_syscalls_emulated = 0;
++	si_code = 0;
++	si_errno = 0;
++
++	ASSERT_EQ(0, setup_sigsys_handler());
+ 
+ 	/* Make sure selector is good prior to prctl. */
+ 	SYSCALL_DISPATCH_OFF(glob_sel);
+ 
+-	ret = prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_ON, 0, 0, &glob_sel);
++	ret = prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_EXCLUSIVE_ON, 0, 0, &glob_sel);
+ 	ASSERT_EQ(0, ret) {
+ 		TH_LOG("Kernel does not support CONFIG_SYSCALL_USER_DISPATCH");
+ 	}
+@@ -254,7 +277,7 @@ TEST_SIGNAL(bad_selector, SIGSYS)
+ 	/* Make sure selector is good prior to prctl. */
+ 	SYSCALL_DISPATCH_OFF(glob_sel);
+ 
+-	ret = prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_ON, 0, 0, &glob_sel);
++	ret = prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_EXCLUSIVE_ON, 0, 0, &glob_sel);
+ 	ASSERT_EQ(0, ret) {
+ 		TH_LOG("Kernel does not support CONFIG_SYSCALL_USER_DISPATCH");
+ 	}
+@@ -278,7 +301,7 @@ TEST(disable_dispatch)
+ 	struct sysinfo info;
+ 	char sel = 0;
+ 
+-	ret = prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_ON, 0, 0, &sel);
++	ret = prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_EXCLUSIVE_ON, 0, 0, &sel);
+ 	ASSERT_EQ(0, ret) {
+ 		TH_LOG("Kernel does not support CONFIG_SYSCALL_USER_DISPATCH");
+ 	}
+@@ -310,7 +333,7 @@ TEST(direct_dispatch_range)
+ 	 * Instead of calculating libc addresses; allow the entire
+ 	 * memory map and lock the selector.
+ 	 */
+-	ret = prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_ON, 0, -1L, &sel);
++	ret = prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_EXCLUSIVE_ON, 0, -1L, &sel);
+ 	ASSERT_EQ(0, ret) {
+ 		TH_LOG("Kernel does not support CONFIG_SYSCALL_USER_DISPATCH");
+ 	}
+@@ -323,4 +346,35 @@ TEST(direct_dispatch_range)
+ 	}
+ }
+ 
++static void test_range(struct __test_metadata *_metadata,
++		       unsigned long op, unsigned long off,
++		       unsigned long size, bool dispatch)
++{
++	nr_syscalls_emulated = 0;
++	SYSCALL_DISPATCH_OFF(glob_sel);
++	EXPECT_EQ(0, prctl(PR_SET_SYSCALL_USER_DISPATCH, op, off, size, &glob_sel));
++	SYSCALL_DISPATCH_ON(glob_sel);
++	if (dispatch) {
++		EXPECT_EQ(syscall(MAGIC_SYSCALL_1), MAGIC_SYSCALL_1);
++		EXPECT_EQ(nr_syscalls_emulated, 1);
++	} else {
++		EXPECT_EQ(syscall(MAGIC_SYSCALL_1), -1);
++		EXPECT_EQ(nr_syscalls_emulated, 0);
++	}
++}
++
++TEST(dispatch_range)
++{
++	ASSERT_EQ(0, setup_sigsys_handler());
++	test_range(_metadata, PR_SYS_DISPATCH_EXCLUSIVE_ON, 0, 0, true);
++	test_range(_metadata, PR_SYS_DISPATCH_EXCLUSIVE_ON, syscall_addr, 1, false);
++	test_range(_metadata, PR_SYS_DISPATCH_EXCLUSIVE_ON, syscall_addr-100, 200, false);
++	test_range(_metadata, PR_SYS_DISPATCH_EXCLUSIVE_ON, syscall_addr+1, 100, true);
++	test_range(_metadata, PR_SYS_DISPATCH_EXCLUSIVE_ON, syscall_addr-100, 100, true);
++	test_range(_metadata, PR_SYS_DISPATCH_INCLUSIVE_ON, syscall_addr, 1, true);
++	test_range(_metadata, PR_SYS_DISPATCH_INCLUSIVE_ON, syscall_addr-1, 1, false);
++	test_range(_metadata, PR_SYS_DISPATCH_INCLUSIVE_ON, syscall_addr+1, 1, false);
++	SYSCALL_DISPATCH_OFF(glob_sel);
++}
++
+ TEST_HARNESS_MAIN
 -- 
 2.49.0.1143.g0be31eac6b-goog
 
