@@ -1,125 +1,187 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86C80250BED;
-	Wed, 21 May 2025 10:12:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0FF9253F3A;
+	Wed, 21 May 2025 10:12:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747822344; cv=none; b=Kjd/6/ncJD9W6+FQSVdt4jnsxZxxyU30mZp863u/SlIQ3o0TFYzp9U9pBJ3Qplb7B5bmsXg2naR4i3eD1W9bEZNabBbqLuqBEwFgysp/c1F5LFZ4CtTOKOwZ+snUy/8FDjfy6BgQTV71gunRTpxEf/OdjUH4cc/9xf/vcAREX+8=
+	t=1747822352; cv=none; b=KVDqEZr9T6w9hbDXf/N25ordnOss8HIJ4etTHpYx76/wPS1KAogE3hRJe4LJVzS50SyFCxDOe7etHkcNfX/aT/tdjVyX1RIlhOfvRSvkZcaPDGJgoXvGbR4yYyDfyBHL3jOf/UmSAMgoz5s81nBT6qAmHs6sQ6nAcAdF51vpNXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747822344; c=relaxed/simple;
-	bh=21cNdzYwUJJBEkAHlt7+sFsml8d7DmKbNlD2kUZGKoQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uys+MivWxrDAhKCtWUm7m5uPR0nGz5eTY/C7hFJ98swMXV9jS2JREOrlyDQ1nkly9ztqPsmSgP/aev6P9cph8iWJiWhRu/tU6pF0I1I3pjWukgR0XgHro0BnSWtupWccRpTOmb9r5RkOtlQINEAggjZw6YwMC20cNSzQMdEUXjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YLXOzE9H; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747822352; c=relaxed/simple;
+	bh=GnBe3IeIQt6OC2JsK7/U8UeTims0vuSmq1ePGQQjad4=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Dpj1cBY2kQQJ1E4Kr+eMF/f54rQ6TZIY4QB3GgGwnt5HDgW+G6Yi4MmvodQsQo/8ntZOzyI5R9RqZj7oEOKnzuWJTgeolPZ+lwejhIaVDPZDBXdcrrQVEyVD94B+EfUb0m+FftDNLkGtrzeHgGqzVyVxkYNoEWbqctiOS3RZ6q4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AwH8a/60; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YLXOzE9H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA7E2C4CEED;
-	Wed, 21 May 2025 10:12:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747822344;
-	bh=21cNdzYwUJJBEkAHlt7+sFsml8d7DmKbNlD2kUZGKoQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YLXOzE9HyCy+kC79+nUGLtvp+0cxfR2TUqkZ6h0MDnnvdFk9pskQlEjRl/46ec7W2
-	 TH/x2jlNbam+Us8NSZrtDSx/HbFXHChCs8KdGoSNvyu+6GIK/tABEAfZ5EIJ9jmwiU
-	 W1JLhNCmMAminpUveLFmvUvUzyFGZbmBJ7QRISsH67ON2Eldjw5CzZuxmWFFKjhaMG
-	 5hnpVMxcr0ovTQjUkq13+jJoGGK4Rsio37/Sc3vS01CWAzkYtLStJsFev+cYzyIB6D
-	 cA1Q961SLiRbMcoD6c9XC2jiHOXhz5nQrAyKFReCRaKuiywBNVKDMxR59cSAmmioWM
-	 B1TrXzju+oOcQ==
-Date: Wed, 21 May 2025 13:12:20 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: linuxppc-dev@lists.ozlabs.org, Peter Huewe <peterhuewe@gmx.de>,
-	Jens Wiklander <jens.wiklander@linaro.org>,
-	linux-integrity@vger.kernel.org,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Sumit Garg <sumit.garg@kernel.org>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, linux-kernel@vger.kernel.org,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH v5 4/4] tpm/tpm_svsm: support TPM_CHIP_FLAG_SYNC
-Message-ID: <aC2nBCxkvWWz5y5E@kernel.org>
-References: <20250514134630.137621-1-sgarzare@redhat.com>
- <20250514134630.137621-5-sgarzare@redhat.com>
- <aCVHQ-LRqHeEVEAW@kernel.org>
- <CAGxU2F5AsNY5mQPd=qajW1seFYHSYpB0Fa1iuR_f2QavtoB6sA@mail.gmail.com>
- <aCzf6aoJAC-IdS_n@kernel.org>
- <CAGxU2F6rfqGV_gJk-JxrCk3f9dWtYn_3o9RODh7cVG0X_oQWaA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AwH8a/60"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747822351; x=1779358351;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=GnBe3IeIQt6OC2JsK7/U8UeTims0vuSmq1ePGQQjad4=;
+  b=AwH8a/60LuM7c3dZvnYD5PPwqhZ0ENrOF2AIlrOgsbhiENIIQpSA7rSf
+   GS7K1PettOLDe5nsGkJGynJtZuy6WdmDhzL2ljOwx5iMph/a9Pq1UdgJF
+   rfhUrPiFhgVes8PszkjiqN8OqyB5J8WpQccDeF0bZTYYlQT2NrUnnMy5N
+   wYhK0AZ1GG50I9qF+g3VbezFe0dEVEyl1Gl3N6Iom65TWXBQuhXfLl5b6
+   Io39rD8RtpFox5oOx2rX99gJuFZhZWWLNi3e/Q+PtsbysLof78iu7WB7Q
+   cgrUl1aXR0wbl1I/z9KSch6twtXZbUucwqh1NaryFmYnQxE+7UJ6ElGQ7
+   A==;
+X-CSE-ConnectionGUID: iYHyzqdpT0ioS77VcWwBKw==
+X-CSE-MsgGUID: PwD72KSHRQWIz1NyqoS/iA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="67206817"
+X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
+   d="scan'208";a="67206817"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 03:12:30 -0700
+X-CSE-ConnectionGUID: zsQQroisTUWpPsUBeoW8Dw==
+X-CSE-MsgGUID: 8fg1fRZIRPitzdV3wAFxcA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
+   d="scan'208";a="140068274"
+Received: from dalessan-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.221])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 03:12:22 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 21 May 2025 13:12:19 +0300 (EEST)
+To: Bjorn Helgaas <helgaas@kernel.org>
+cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>, 
+    Karolina Stolarek <karolina.stolarek@oracle.com>, 
+    Weinan Liu <wnliu@google.com>, 
+    Martin Petersen <martin.petersen@oracle.com>, 
+    Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, 
+    Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, 
+    Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, 
+    Lukas Wunner <lukas@wunner.de>, 
+    Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+    Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney" <paulmck@kernel.org>, 
+    Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
+    Oliver O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>, 
+    Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>, 
+    Terry Bowman <terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>, 
+    Dave Jiang <dave.jiang@intel.com>, LKML <linux-kernel@vger.kernel.org>, 
+    linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v7 03/17] PCI/AER: Factor COR/UNCOR error handling out
+ from aer_isr_one_error()
+In-Reply-To: <20250520215047.1350603-4-helgaas@kernel.org>
+Message-ID: <95fbe3a9-fa77-c4ef-1396-618fd6944d41@linux.intel.com>
+References: <20250520215047.1350603-1-helgaas@kernel.org> <20250520215047.1350603-4-helgaas@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGxU2F6rfqGV_gJk-JxrCk3f9dWtYn_3o9RODh7cVG0X_oQWaA@mail.gmail.com>
+Content-Type: multipart/mixed; boundary="8323328-1330325227-1747822339=:946"
 
-On Wed, May 21, 2025 at 09:13:34AM +0200, Stefano Garzarella wrote:
-> On Tue, 20 May 2025 at 22:02, Jarkko Sakkinen <jarkko@kernel.org> wrote:
-> > On Tue, May 20, 2025 at 06:06:50PM +0200, Stefano Garzarella wrote:
-> > > On Thu, 15 May 2025 at 03:45, Jarkko Sakkinen <jarkko@kernel.org> wrote:
-> > > > On Wed, May 14, 2025 at 03:46:30PM +0200, Stefano Garzarella wrote:
-> > > > > From: Stefano Garzarella <sgarzare@redhat.com>
-> > > > >
-> > > > > This driver does not support interrupts, and receiving the response is
-> > > > > synchronous with sending the command.
-> > > > >
-> > > > > Enable synchronous send() with TPM_CHIP_FLAG_SYNC, which implies that
-> > > > > ->send() already fills the provided buffer with a response, and ->recv()
-> > > > > is not implemented.
-> > > > >
-> > > > > Keep using the same pre-allocated buffer to avoid having to allocate
-> > > > > it for each command. We need the buffer to have the header required by
-> > > > > the SVSM protocol and the command contiguous in memory.
-> > > > >
-> > > > > Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> > > > > ---
-> > > > > v5:
-> > > > > - changed order and parameter names to match tpm_try_transmit() [Jarkko]
-> > > > > v4:
-> > > > > - reworked commit description [Jarkko]
-> > > > > ---
-> > > > >  drivers/char/tpm/tpm_svsm.c | 27 +++++++++++----------------
-> > > > >  1 file changed, 11 insertions(+), 16 deletions(-)
-> > > > >
-> 
-> [...]
-> 
-> > > >
-> > > > I can pick this for 6.16.
-> > >
-> > > Great, thanks!
-> >
-> > Can you rebase this on top of my next branch and send one more version
-> > of the series (fake ancestor crap)?
-> 
-> I tried, but the last patch (this one) is based on the series merged
-> on the tip tree, where I introduced tpm_svsm.
-> I can see that series in linux-next merged with commit
-> 16a56ee59ab8ee05e67de35bbb5782ef9cfb4f07,
-> but I can't see it in your next tree [1].
-> 
-> How do we proceed in such cases?
-> 
-> Just to be sure, did I use the right tree?
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Thanks for the remark. Lemme check tonight. Hold on doing
-anything ;-) We'll get there...
+--8323328-1330325227-1747822339=:946
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-> 
-> Thanks,
-> Stefano
-> 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/jarkko/linux-tpmdd.git/log/?h=next
-> 
-> 
+On Tue, 20 May 2025, Bjorn Helgaas wrote:
 
-BR, Jarkko
+> From: Bjorn Helgaas <bhelgaas@google.com>
+>=20
+> aer_isr_one_error() duplicates the Error Source ID logging and AER error
+> processing for Correctable Errors and Uncorrectable Errors.  Factor out t=
+he
+> duplicated code to aer_isr_one_error_type().
+>=20
+> aer_isr_one_error() doesn't need the struct aer_rpc pointer, so pass it t=
+he
+> Root Port or RCEC pci_dev pointer instead.
+>=20
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
+>  drivers/pci/pcie/aer.c | 36 +++++++++++++++++++++++-------------
+>  1 file changed, 23 insertions(+), 13 deletions(-)
+>=20
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index a1cf8c7ef628..568229288ca3 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -1273,17 +1273,32 @@ static inline void aer_process_err_devices(struct=
+ aer_err_info *e_info)
+>  }
+> =20
+>  /**
+> - * aer_isr_one_error - consume an error detected by Root Port
+> - * @rpc: pointer to the Root Port which holds an error
+> + * aer_isr_one_error_type - consume a Correctable or Uncorrectable Error
+> + *=09=09=09    detected by Root Port or RCEC
+> + * @root: pointer to Root Port or RCEC that signaled AER interrupt
+> + * @info: pointer to AER error info
+> + */
+> +static void aer_isr_one_error_type(struct pci_dev *root,
+> +=09=09=09=09   struct aer_err_info *info)
+> +{
+> +=09aer_print_port_info(root, info);
+> +
+> +=09if (find_source_device(root, info))
+> +=09=09aer_process_err_devices(info);
+> +}
+> +
+> +/**
+> + * aer_isr_one_error - consume error(s) signaled by an AER interrupt fro=
+m
+> + *=09=09       Root Port or RCEC
+> + * @root: pointer to Root Port or RCEC that signaled AER interrupt
+>   * @e_src: pointer to an error source
+>   */
+> -static void aer_isr_one_error(struct aer_rpc *rpc,
+> +static void aer_isr_one_error(struct pci_dev *root,
+>  =09=09struct aer_err_source *e_src)
+>  {
+> -=09struct pci_dev *pdev =3D rpc->rpd;
+>  =09struct aer_err_info e_info;
+> =20
+> -=09pci_rootport_aer_stats_incr(pdev, e_src);
+> +=09pci_rootport_aer_stats_incr(root, e_src);
+> =20
+>  =09/*
+>  =09 * There is a possibility that both correctable error and
+> @@ -1297,10 +1312,8 @@ static void aer_isr_one_error(struct aer_rpc *rpc,
+>  =09=09=09e_info.multi_error_valid =3D 1;
+>  =09=09else
+>  =09=09=09e_info.multi_error_valid =3D 0;
+> -=09=09aer_print_port_info(pdev, &e_info);
+> =20
+> -=09=09if (find_source_device(pdev, &e_info))
+> -=09=09=09aer_process_err_devices(&e_info);
+> +=09=09aer_isr_one_error_type(root, &e_info);
+>  =09}
+> =20
+>  =09if (e_src->status & PCI_ERR_ROOT_UNCOR_RCV) {
+> @@ -1316,10 +1329,7 @@ static void aer_isr_one_error(struct aer_rpc *rpc,
+>  =09=09else
+>  =09=09=09e_info.multi_error_valid =3D 0;
+> =20
+> -=09=09aer_print_port_info(pdev, &e_info);
+> -
+> -=09=09if (find_source_device(pdev, &e_info))
+> -=09=09=09aer_process_err_devices(&e_info);
+> +=09=09aer_isr_one_error_type(root, &e_info);
+>  =09}
+>  }
+> =20
+> @@ -1340,7 +1350,7 @@ static irqreturn_t aer_isr(int irq, void *context)
+>  =09=09return IRQ_NONE;
+> =20
+>  =09while (kfifo_get(&rpc->aer_fifo, &e_src))
+> -=09=09aer_isr_one_error(rpc, &e_src);
+> +=09=09aer_isr_one_error(rpc->rpd, &e_src);
+>  =09return IRQ_HANDLED;
+>  }
+> =20
+>=20
+
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+
+--=20
+ i.
+
+--8323328-1330325227-1747822339=:946--
