@@ -1,138 +1,103 @@
-Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com [209.85.128.66])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BD47258CDB
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 15:58:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B116F2820C2
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 15:58:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747843129; cv=none; b=OntdDbaTEvQG/Nh/30Wuquo3jHASWkzhNrfgzyEWpZpFfz6lGHMN6mxmhxJAbkeXD1Uk10XpZy3nMyAjxA+lP2sBdg0yywo1Cy+cSSCoKB13vj54N4ORcqXCQ5Uu7RshijydAg1jsCJYL1pktjoXpv3RwTppCD/PTGJgsZycrp8=
+	t=1747843130; cv=none; b=TbXxZsJ3OVhHe6/uxPlSWxWlkMwN+MGTYrAMUOouo3rQ3M3GAic7uED8zYJA2wmaAA5+fphCXK5TWzYTRhUrOS1dHNwkW4cJ6DrRtiUVc3ehXP1m96eXoSe6IcxMtC7b6Niw7fHBP8wDahI4viMFZQJcBYPspZa/fp9aDhwYX34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747843129; c=relaxed/simple;
-	bh=I9VBBxVFYOrWsTK7GjRldDLctXPPzg+fbuHoTp+4SCk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eeiXsy7nQ0ifIaDnTvE9AkTYtlIzzEhFiKCUDCi0f0tIhE2/MQNrqI2hlblxYLtkb3YW2OLA5bdtkoZtLVYec9ep6KDQ16BpQEYxOvo/qaiGDiz4RusAk2Je1PN4IP41b/+vFDRamI4INFngRtSBVkTiauhVBSSJCNb+vwHgUUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=h6hrAbYx; arc=none smtp.client-ip=209.85.128.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747843130; c=relaxed/simple;
+	bh=DLhxBNPNm1O99GYuXfyBvGjuuh3iQnjSxQqNjAQTIYo=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=u0jDTGz8yRtC6A+c4s+ZK8ftKAOukJdNDHatvOj6f0PdxPFCQkNYPkgtIH3ur/h8sVVi3Od/CfIFBUPc6+chHO4KNFC0Ka4eUf8m4KGGW8GDq/iw6Iq3GLhxffmDUqL6xxDgPVCnIbF4fKw9UjwtIw+D8jEq/NvO4BAhs7VTVqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ud+XYJY8; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h6hrAbYx"
-Received: by mail-wm1-f66.google.com with SMTP id 5b1f17b1804b1-43edb40f357so58497555e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 08:58:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ud+XYJY8"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-742c9907967so3743044b3a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 08:58:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747843124; x=1748447924; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7jGMaRN9DTvk91Wh6QyGZY6sK/KJmkltlvMirfVWYJg=;
-        b=h6hrAbYxPLcQy8VKLANuehUMWTeH3kchwwt/Ziv7rjzpaLz/DEp8cQE8torhel0Qvz
-         Ob1lje5u0MZG/Uw7QWb/IaH2BnyuIhzYiAAa3KvUlOd53MAlb7Crxa5NiWPrWfhz8MUP
-         GsPJoBEIDSFZDw0uziIZPzR7g17niLjHxy7Q7ns/mRQhdTXW9ZlO8ELHny+RkGDpW3jw
-         u5gLLJ47LnDjKF2gEUwQQr+GE4wWUNxrmo+uXn9zZGoDcJrbwziJPsqLeqINhhuwZOL+
-         gxGqYOY93xiGMP43iLx6MMCW9dfG21kiiISGi19UXE5jXQzbUkx0xVAIH+pXLOhkAHkz
-         WPpA==
+        d=google.com; s=20230601; t=1747843127; x=1748447927; darn=vger.kernel.org;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=TdRwavDDdPRD4ph6NOjp9qIhMy3uXqZoBDVVcoXM+3M=;
+        b=ud+XYJY86Dp4L48L6X+niTNsb1TyQ4za3OUREctVDDsTYVaKQ+9OJWlCWHFQeaL+8F
+         4wnF90Svi8w8C26Rt7WJ69pWGenLtTAYanXMEZRdrgc57DrHUwN/0kcjUNks9kmDhIt4
+         bIDeIVB1Snx4PiP+VtYgctejlRMzzLsY8fTnL9Jc/tGtKpOWB9iFmWDDM1Z65WfLjuK+
+         8D/1rSelkjAWCyIFyoUfLZLvtHfetL/UArfY4yLy2Pyr1AeiZVkpIezQnXKsvYurKUgS
+         WnlsNouo2n6GcpHiRUPPOYmUA2+k99f1QZWJT38GI1AcgPHyBiHL1zFKhGdqi6OCg25l
+         QZeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747843124; x=1748447924;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7jGMaRN9DTvk91Wh6QyGZY6sK/KJmkltlvMirfVWYJg=;
-        b=jiWtP5/HuI05s7UZlOGWDuHkLlB+qpBaKBHe34icq2caKPOBOwJQxlriZDFTtGpHwo
-         lmXHfJm6a/q2sZFrsrqkEVKe+TMisjqkIDEhB6uDsQouWcmpFYI28rUNgVJEEGLEQZmx
-         PjTdJaILDN96JltGy00s9gXO403n+gpv3KUkF23GnmvU74p5ZODEA+HU5DeVV3sUaRMm
-         OAeiJfbeoNa2ZL6NcRi2RwBKnZIxlLa4GUofjOHWdLd2WCHKgxETvcMliBmQWdDH2yo4
-         u7A0HK5UPnSjI0PaamVejcow+YYjfRiBxGYnxKOQCVEOSClXjgl/9twSFEbErOKo2NyA
-         HV3A==
-X-Forwarded-Encrypted: i=1; AJvYcCXnSXDzqbKllvfF1ipgoI7tNqOniC7YL9VLkiR/FRWh4TfTQ5WO1s6+iTMldmavIwwYG+6AGueFhGJSkpA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyfu4PPLEJFCB4DLCsLbPFM9TlcIP75b2OcA6U69TUGPzh+cRCc
-	H5w2u0iKk0krW7Yc/OHhcW2DTtqRmxzIqvMPLYGShle+yW3I/5LbWhhDcHqF7Jx6QnQ=
-X-Gm-Gg: ASbGncu5IDI0+r1LwA+V8O3NQ2s575RvioeEFbmNYX6fWXCmyxbA72voYiF7TXcvPiY
-	ab70jk46ur0oHRCeZBchmlUXC8DJB75uzfNHvEiVG1x9bhQywjtm+bddjvx+CYjSFUfPPUr6Qmk
-	ODRH0/TzaoYfg9aqnx5LCgPDUNtJ/SW9kfel8DSJoxEkmdtDrBMadj53seEu3N7We2ZHC8NUz+F
-	ymmUX+T4lFcP4JvgZQY8pRgxLWKyIwVzjfwrnFLNkqXVsXEGSUIikHqRl1AiMyw4HvektPKBZtk
-	ml3q2d9nbJAk5NvMXPsx1hZFh6mM3LrsF6IRDINBE1d2oGyuBOPC2+R4WOFs2Aa8fOY=
-X-Google-Smtp-Source: AGHT+IE94Qc/sbvf18GBZCQv3ZQ8s8ZqdtBvtnfrv3gSKGcbnewhx8YlU5QP8S7QSIUDnlJDrBopzQ==
-X-Received: by 2002:a05:600c:34c4:b0:43c:ee62:33f5 with SMTP id 5b1f17b1804b1-442fd6752e7mr217340645e9.27.1747843124389;
-        Wed, 21 May 2025 08:58:44 -0700 (PDT)
-Received: from [192.168.1.3] ([37.18.136.128])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca4d2ddsm19933864f8f.7.2025.05.21.08.58.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 May 2025 08:58:44 -0700 (PDT)
-Message-ID: <119c9a70-6ea8-46f0-b877-8a433d97ce84@linaro.org>
-Date: Wed, 21 May 2025 16:58:42 +0100
+        d=1e100.net; s=20230601; t=1747843127; x=1748447927;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TdRwavDDdPRD4ph6NOjp9qIhMy3uXqZoBDVVcoXM+3M=;
+        b=byBHeykgr/mK1DcMYhIgOQwQoBggC0zGmk5rECqIOfZipDjRVUy+ohVRAkPWMAIubt
+         32pH21pubLjz4ATcxhsqHbwa3TmzYjeKxQOkKNO1g6GYrVVj0SE4CTh0uO/S/WfP60qz
+         zP9bemChOoekQsBUykXpVeClSsv+7h4aCrA7v+SHKaSYrUI9AaitjTU0VMfktmwEeLJr
+         o4t4DVgweRY8BmHRJfyuNPcjBDRT8yHL//7vsIDnvpytdroxXib9O8VRwzaJb3PV7910
+         5vIuDqgvVeOh/1fUW6IPx/iYOVYypBAuKP+OtKktYwtu8qtiQknq+AvWVYeyV8/9+C3T
+         kvfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWjARR8koU8ZCGSokjKhtnvA5UrKqpMkffCzfmKvt9yDI7Ox8bM2E2DRuwLK0thoQfWWXN9he1qikISUeY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwU17hr1S4mP4+jAfy2VbDwrw1FE9k03jBYOM3JCMMt0XbzJoWr
+	PvOWDYIwYXBSLBdNTJJIRdmtfL9IYvA3zYg3t1eByFLGaQsl3ZrBOq+kBI4ySj44fA==
+X-Gm-Gg: ASbGncuzLWmWkbyIBjL5Gx7Gud2i0mA99Nc74cif0fooKjfDIYhYhV/ndROIBzhFLIW
+	7OtQbQD4D41/C+NHzW4xyrYSLAqVFf9dNs5bwCT0QcGIEuM981yfTOsk33SsIKaczn0uzNcWPdZ
+	R4oz+80FGHmvamvc/2amVyn1j4TV8TfftznYkthgCy7VCojlOSzGdPtgiQD0VoEtaRQuGtY3u8e
+	jD9Eewp9TwPHxZe6WvV/aPe/HyaoSRqEAxqZTRmQVevbvz9j1qrK52Youw13sbv+vE1k6Z/H9WC
+	TMqYVDivMV99NIhEeqSe5qfAg8aJPTKHoKCHFHMLY6ap/HSyFu7SlJ7n1ckd6EJb5tdKgvMGvXR
+	aSEpV5Mf28TH5DlrF4lXLCZLqkXTN+Ana6fXngpTlnhfzmg==
+X-Google-Smtp-Source: AGHT+IGlxIpd2UQXUEXUyT3jJiXyp4cutpSYwnXXezPFwPzdD171HXRG1N0KN3L9uymbdbj+o9Hifg==
+X-Received: by 2002:a05:6a00:2790:b0:740:5927:bb8b with SMTP id d2e1a72fcca58-742a961837amr25764753b3a.0.1747843127416;
+        Wed, 21 May 2025 08:58:47 -0700 (PDT)
+Received: from darker.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a982b884sm10149934b3a.95.2025.05.21.08.58.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 May 2025 08:58:46 -0700 (PDT)
+Date: Wed, 21 May 2025 08:58:32 -0700 (PDT)
+From: Hugh Dickins <hughd@google.com>
+To: Oscar Salvador <osalvador@suse.de>
+cc: Hugh Dickins <hughd@google.com>, Gavin Guo <gavinguo@igalia.com>, 
+    linux-mm@kvack.org, linux-kernel@vger.kernel.org, muchun.song@linux.dev, 
+    akpm@linux-foundation.org, kernel-dev@igalia.com, stable@vger.kernel.org, 
+    Florent Revest <revest@google.com>, Gavin Shan <gshan@redhat.com>
+Subject: Re: [PATCH v2] mm/hugetlb: fix a deadlock with pagecache_folio and
+ hugetlb_fault_mutex_table
+In-Reply-To: <aC33A65HFJOSO1_R@localhost.localdomain>
+Message-ID: <54bd3d6c-d763-ae09-6ee2-7ef192a97ca9@google.com>
+References: <20250521115727.2202284-1-gavinguo@igalia.com> <30681817-6820-6b43-1f39-065c5f1b3596@google.com> <aC33A65HFJOSO1_R@localhost.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v21 4/4] perf: arm_pmuv3: Add support for the Branch
- Record Buffer Extension (BRBE)
-To: Rob Herring <robh@kernel.org>, Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>,
- Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
- Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
- Zenghui Yu <yuzenghui@huawei.com>,
- Anshuman Khandual <anshuman.khandual@arm.com>, Leo Yan <leo.yan@arm.com>,
- linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- kvmarm@lists.linux.dev
-References: <20250407-arm-brbe-v19-v21-0-ff187ff6c928@kernel.org>
- <20250407-arm-brbe-v19-v21-4-ff187ff6c928@kernel.org>
- <20250519150621.GA17177@willie-the-truck>
- <20250519215651.GB2650608-robh@kernel.org>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20250519215651.GB2650608-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 
-
-
-On 19/05/2025 10:56 pm, Rob Herring wrote:
-> On Mon, May 19, 2025 at 04:06:22PM +0100, Will Deacon wrote:
->> Hey Rob,
->>
->> On Mon, Apr 07, 2025 at 12:41:33PM -0500, Rob Herring (Arm) wrote:
->>> From: Anshuman Khandual <anshuman.khandual@arm.com>
->>>
->>> The ARMv9.2 architecture introduces the optional Branch Record Buffer
->>> Extension (BRBE), which records information about branches as they are
->>> executed into set of branch record registers. BRBE is similar to x86's
->>> Last Branch Record (LBR) and PowerPC's Branch History Rolling Buffer
->>> (BHRB).
->>
->> Since you picked this up from v19, the driver has changed considerably
->> and I presume you will be continuing to extend it in future as the
->> architecture progresses. Perhaps having you listed as Author (and
->> crucially, in git blame :p) with Anshuman as a Co-developed-by: would be
->> more appropriate?
+On Wed, 21 May 2025, Oscar Salvador wrote:
+> On Wed, May 21, 2025 at 08:10:46AM -0700, Hugh Dickins wrote:
+> > Unless you have a very strong argument why this folio is invisible to
+> > the rest of the world, including speculative accessors like compaction
+> > (and the name "pagecache_folio" suggests very much the reverse): the
+> > pattern of unlocking a lock when you see it locked is like (or worse
+> > than) having no locking at all - it is potentially unlocking someone
+> > else's lock.
 > 
-> Shrug.
+> hugetlb_fault() locks 'pagecache_folio' and unlocks it after returning
+> from hugetlb_wp().
+> This patch introduces the possibility that hugetlb_wp() can also unlock it for
+> the reasons explained.
+> So, when hugetlb_wp() returns back to hugetlb_fault(), we
 > 
->>> ---
->>>   drivers/perf/Kconfig         |  11 +
->>>   drivers/perf/Makefile        |   1 +
->>>   drivers/perf/arm_brbe.c      | 802 +++++++++++++++++++++++++++++++++++++++++++
->>>   drivers/perf/arm_brbe.h      |  47 +++
->>>   drivers/perf/arm_pmu.c       |  15 +-
->>>   drivers/perf/arm_pmuv3.c     | 129 ++++++-
->>>   include/linux/perf/arm_pmu.h |   8 +
->>>   7 files changed, 1006 insertions(+), 7 deletions(-)
->>
->> Do you know if James Clark's tests [1] are going to be respun for the
->> perf tool? It would be handy to have some way to test this new
->> functionality.
+> 1) either still hold the lock (because hugetlb_fault() took it)
+> 2) or we do not anymore because hugetlb_wp() unlocked it for us.
 > 
-> Yes. I dropped them here because I've been told by Arnaldo in the past
-> to send userspace stuff separately.
-> 
+> So it is not that we are unlocking anything blindly, because if the lock
+> is still 'taken' (folio_test_locked() returned true) it is because we,
+> hugetlb_fault() took it and we are still holding it.
 
-That version of the test was out of date so I've pushed the new version 
-here: 
-https://git.linaro.org/plugins/gitiles/people/james.clark/linux.git/+/16e4a18c2d5fc53736f05c9052b1d11d74909707
+If we unlocked it, anyone else could have taken it immediately after.
 
-But I'll wait for the driver changes to be finalised before posting it. 
-Or Rob can take it back into the patchset.
-
+Hugh
