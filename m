@@ -1,182 +1,190 @@
-Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B37D94B1E6D
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 13:19:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EBDB2798ED
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 13:20:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747833598; cv=none; b=u8du4WXZTcjtTJYjxUQhVO+55nwnlIYfBytneo0p4IdeJT4AG9gysyoJugTxdjA+oBRrrU1P5/STqGRD7xga1Cicl2fdc91s2taetA5Giqc1UCa0kKYqVBiqKAULWLDJOyw9EA3IxcHy3Hx8/Zxk4tQZ71A7iV+nDBlIDSEhyQE=
+	t=1747833603; cv=none; b=RhMcze39bjQ27vLHxtx79rz6sarYsL4FZuVk64bVQ5do+c0cpH5TdxPaS7vMhPyZ42BM+RyJaLSrYbljqnqHuNwLfxkN0UyKFr0DK1YBjmWDVZ5jNLkvxAEmfdCCcCyUmn2xIPG2eF/eDrhWxzXQZLPyLtWplMuzsz9YkmZ0PwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747833598; c=relaxed/simple;
-	bh=zxb4XuRb5OL7RbkFWFx6WphiL7nedhvIK2jhu21lh1E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WfP4P08B6RJyHc7bzmru7n0vzxsXy+XHyXwKg5z2mq8nmUjLEPzjzsQmPLqYwWJRQpMzSuG5qLFuC3FhqC1POdlEjSnMkN7qNAQ3TSLmzLw3ZY/BIm2oNJcNFQX1SC4ftXjA6E7OfD08pCkAKHsj9GLaDCKdFoeqzKetuJOMkmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=uNQGANQn; arc=none smtp.client-ip=209.85.161.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1747833603; c=relaxed/simple;
+	bh=Mp5KvBUD4ru+9Ndh/QthP4GfWu7ALeMm0VnKwSS6DW0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RfpySvJeX/TSAeEpPfHvyNt6WZdbYd8vvazjnXahFPAVOFVkYPrPIi7KRjvKJlOapIgjKeagVgd0cW+JiPl96b4sVshCDWGHF1SD0ytxKIt3gyZmRFRFqdSiSV1BebMS/feAElsUs0f8P6J+7Cs4L3w69VFhytKf3YHA+uUuD/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=ryYyLwfo; arc=none smtp.client-ip=209.85.128.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="uNQGANQn"
-Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-6021e3daeabso3643330eaf.3
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 06:19:55 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="ryYyLwfo"
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-70de8897628so12658527b3.1
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 06:20:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747833595; x=1748438395; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vqHAwKXGDB470rizfijZUWFboiXZOZHB3mYiVWRIm+0=;
-        b=uNQGANQn+VcDbM9bqffpTG/ZuvCWHNtmKHJ8PdQ4CXUf1++5OoJ6C4ce1a0RRZHgZw
-         URkZ+y1nud19ploFIgfyTh+52NsP/YKRS7rKpTF7AiEqG0YBRSBfZ2H5QRWZgPCREfrN
-         6925zM+OSo9zLJ2dz1ZLm9ReFhxDorM55vw75nBdDMi/RW+Zmgs/D4ogaXVZUoXYZsf3
-         NkIRiR/r5FKmNLXOKVRXL2rmtHMwjQqi7B4HuUftB1xxYTvbBEE2ic7Iv8kweIQEPxHl
-         Q2J8lf/w7azDV6v45/cEo2/oqRaGIg12FJi3hgJYQPqh/yqyj6/Cet/+XZUygoqe+7fo
-         51Sg==
+        d=amarulasolutions.com; s=google; t=1747833600; x=1748438400; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MdEgWSJxe9FJMYKcuUExk/aYWYfMksc/H/dM1vOfbdc=;
+        b=ryYyLwfoNXPJaY2MvqnNyIXudBs4OG+v50J2Xe6wcqlenDchiZN/pzO0I2X80w1orF
+         FcQqG0O3Rbs34fHiSmDC21K2f7XHGOvrDKEemgJBh5xL+5SrCyp4XX9LdwgkwJl0pTaG
+         VduKyZMxLFKTQoWrNlyircZo84gxp8Og7seFA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747833595; x=1748438395;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vqHAwKXGDB470rizfijZUWFboiXZOZHB3mYiVWRIm+0=;
-        b=gE/hm+nk8cB5LEtpTR7Db7rmCtzB0rsWGKUaEw7R4wjHqlo+CC6+cvzuIt2pZxIhn4
-         gO1eYsxJJCMDvicSOTjtWO/YrMhG1VoXSyy3qV2aN+ReflLOEY33WpvLhkINcNkL0qrM
-         dbL/z0Hnb6EbX+VGA10jmdiLpzm5gIK+eBC7VKOh2GalPDSlzewjs5IqDi/mVI+r1/Q1
-         zG83FSjfx5NpzrCp4C5N7LelonRX676RNmBKW4PAVcBh8MxGxkvZ48gdXkI6B2JqPSCH
-         DjhKMSu9knj+Ozybh8eOfpdyVY4srtG2x7y6beK3AVDLdY8aFZ95sFGSWfgiGq7I3tEO
-         b7OQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXN3oAY2G4ByzyhPsp1q4RXINFXIpA8LO/h9MU+L0FwE8hDpRWc5VvAs9Fzstp+3vxHaWt6FNF3c8hsSFQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9wOjR6CQlPgIVE+FWlCxFAPloGoWdFmTgKDGAfixc5RvWXjsB
-	SawOTFkZSMX0HUzRcQ8pBvbMn+031OIloW3gfjWO4icz6A6PsxZ1KTFnPcpUDwSX43Y=
-X-Gm-Gg: ASbGncvtKwjbAHHKzhGgE9qwXvU5nacZ/dKKr322InTR3vxttEJdcawocpTQ6mZb7Uv
-	wp3tTE2ADzsIbZSuqAkAbyGgbPbS0k8KvLtKEK9/WJC3KfUGkzPbM0FKMznu4QUXtsT3Jws0qPc
-	FJ6urKDdyBHE9w0oxOwb0OOpAhkaeuzj4k3Ik11Xqyps9FAw/UdgZK8fJYbDoi0KU/IXeWqCGyn
-	Huvz5aD8g2I/RzszFBkCnOBS0lD/smFG34QcIOgrtFviYoUSRCnHS/HEb0l5TC/rKUSMPk1zGKq
-	TAZXa/ZNdGcFblP+UU2h3VqoZLwsUWV4TkIOvGYnJzus+oUrIZfxqu8oe9kj4lpbcdC1V2at1XW
-	J+fW+ayNhNleKcnaa+CRqOW8OHw==
-X-Google-Smtp-Source: AGHT+IFlO2y1ouZt315gbUk3Y6YIYIDNy5KFOP0whnds4skxAXxnCCpG1q9rhgZvtK70Het4S+QSwQ==
-X-Received: by 2002:a05:6820:1806:b0:606:5531:d903 with SMTP id 006d021491bc7-609f36b742bmr12050006eaf.2.1747833594667;
-        Wed, 21 May 2025 06:19:54 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:d77b:6acc:2ad1:8ff? ([2600:8803:e7e4:1d00:d77b:6acc:2ad1:8ff])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-60a03f5bcbasm1675485eaf.19.2025.05.21.06.19.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 May 2025 06:19:53 -0700 (PDT)
-Message-ID: <0dd1a97e-ff7c-4d09-b18e-5df9944488c6@baylibre.com>
-Date: Wed, 21 May 2025 08:19:51 -0500
+        d=1e100.net; s=20230601; t=1747833600; x=1748438400;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MdEgWSJxe9FJMYKcuUExk/aYWYfMksc/H/dM1vOfbdc=;
+        b=wCC6rqc/I5FBJNA3Xa4jcW3qC1lbz3SxLBURb8HG6KcUflMd95m5IB2IawktOBPXxi
+         S/IUSJ7NHKt2cNG3WN4Hs+mPVR9RmzpG8LYYHlFG3TefddvYjAXUDt1Xz/TDDv1pwd7p
+         bjU0kP3EXab16lmliYyzmL6UEQZD7WAjjLd9jRG7t2vT3zgeTX24z8GTGGLH/mCKb3Wx
+         kROMsuKUluzN3LWt0DDCHQLeJ8UUeXF+p7z58A1IxMhQrb06zHnfjHYWdg+H6AeVo/Ep
+         t6KHiBn2poWSbgFVnFnZYIqgm+/ckTMnRW1sXCMHA7jkTdRPCqtwCkjP+Z604Uy8G7Hj
+         DNbw==
+X-Gm-Message-State: AOJu0YyEeOt98LtpCxwYEmDG1Cx/b1YRtNqwwusGS9aIJYGTgOYOUUVQ
+	vKD0d2erJGyaHZnF8sTofGrIN1ZRXa7aoo4tJIPQVn8iKyIdOuZEPXcqpwbfLrZStvokCvI62a+
+	XJhPLGWLBw4epX3qUxq0EsY1bXBHlk838JVGv0Z6YvA==
+X-Gm-Gg: ASbGncvKrblZWpVA20YUxMcbEfg3RKZCHaboSHLHot3rAw9DoetpeMNPHiCSSx6uoYg
+	K/mGhZTFH1kqIcrCYcXd0I2+PrceGQ0MGdobFJY3OGSZSXCpIToeHhN3HAaJsQPR4+c4c/DaV/i
+	Twd6fxj8pQnh//gQVOg2ia1/6sDCjnUtlcD0dVcxGQ0S4NoughBAjURpENPBUQnZlAtA==
+X-Google-Smtp-Source: AGHT+IFJuZAiihHxJLr6M/kE3uYbWzRfUS/uPkbXXA+1qG7+nEsPeLqVDoAYPRojiT4pNkEEDqIrXTdm4/tlPfieZDg=
+X-Received: by 2002:a05:690c:750e:b0:70c:b90a:5c88 with SMTP id
+ 00721157ae682-70cb90a5f24mr213677417b3.31.1747833600229; Wed, 21 May 2025
+ 06:20:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] pwm: axi-pwmgen: add support for external clock
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: Michael Hennerich <michael.hennerich@analog.com>,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Trevor Gamblin <tgamblin@baylibre.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, linux-pwm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250520-pwm-axi-pwmgen-add-external-clock-v1-0-6cd63cc001c8@baylibre.com>
- <20250520-pwm-axi-pwmgen-add-external-clock-v1-3-6cd63cc001c8@baylibre.com>
- <zdltaexty6pzbqesoluuyluygyt6w7nq7r2wccmtfktppwuw3e@qb36fsu3jq4k>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <zdltaexty6pzbqesoluuyluygyt6w7nq7r2wccmtfktppwuw3e@qb36fsu3jq4k>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250521092826.1035448-1-dario.binacchi@amarulasolutions.com>
+ <20250521092826.1035448-4-dario.binacchi@amarulasolutions.com> <CAOMZO5D-d7bmBfXKe936W5QjmsukRRX3y0ge+xtizqFx0HPE8A@mail.gmail.com>
+In-Reply-To: <CAOMZO5D-d7bmBfXKe936W5QjmsukRRX3y0ge+xtizqFx0HPE8A@mail.gmail.com>
+From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+Date: Wed, 21 May 2025 15:19:48 +0200
+X-Gm-Features: AX0GCFtbBN2xKHFMu-Zp69Kj64qn-x6_0NKQbUd_en3T7Wa4I2aai6e9qO1zzuQ
+Message-ID: <CABGWkvpPMry26DP4Wo8WEGhokdkf5GdLd=+O5SqRdh-8JBqt_w@mail.gmail.com>
+Subject: Re: [PATCH 3/3] ARM: dts: mxs: support i.MX28 Amarula rmm board
+To: Fabio Estevam <festevam@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com, 
+	michael@amarulasolutions.com, Conor Dooley <conor+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Rob Herring <robh@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 5/21/25 4:22 AM, Uwe Kleine-König wrote:
-> On Tue, May 20, 2025 at 04:00:46PM -0500, David Lechner wrote:
->> Add support for external clock to the AXI PWM generator driver.
->>
->> In most cases, there is a separate external clock that drives the PWM
->> output separate from the peripheral clock. This allows enabling both
->> clocks.
->>
->> Signed-off-by: David Lechner <dlechner@baylibre.com>
->> ---
->>  drivers/pwm/pwm-axi-pwmgen.c | 23 ++++++++++++++++++++---
->>  1 file changed, 20 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/pwm/pwm-axi-pwmgen.c b/drivers/pwm/pwm-axi-pwmgen.c
->> index 4337c8f5acf055fc87dc134f2a70b99b0cb5ede6..67992a7561ec0440b1c1fa327f844a0602872771 100644
->> --- a/drivers/pwm/pwm-axi-pwmgen.c
->> +++ b/drivers/pwm/pwm-axi-pwmgen.c
->> @@ -280,9 +280,26 @@ static int axi_pwmgen_probe(struct platform_device *pdev)
->>  	ddata = pwmchip_get_drvdata(chip);
->>  	ddata->regmap = regmap;
->>  
->> -	clk = devm_clk_get_enabled(dev, NULL);
->> -	if (IS_ERR(clk))
->> -		return dev_err_probe(dev, PTR_ERR(clk), "failed to get clock\n");
->> +	/* When clock-names is present, there is a separate ext clock. */
->> +	if (device_property_present(dev, "clock-names")) {
->> +		struct clk *axi_clk;
->> +
->> +		axi_clk = devm_clk_get_enabled(dev, "axi");
->> +		if (IS_ERR(axi_clk))
->> +			return dev_err_probe(dev, PTR_ERR(axi_clk),
->> +					     "failed to get axi clock\n");
->> +
->> +		clk = devm_clk_get_enabled(dev, "ext");
->> +		if (IS_ERR(clk))
->> +			return dev_err_probe(dev, PTR_ERR(clk),
->> +					     "failed to get ext clock\n");
->> +	} else {
->> +		/* Otherwise, a single clock does everything. */
->> +		clk = devm_clk_get_enabled(dev, NULL);
->> +		if (IS_ERR(clk))
->> +			return dev_err_probe(dev, PTR_ERR(clk),
->> +					     "failed to get clock\n");
->> +	}
-> 
-> Can you achieve the same effect with the (IMHO slightly nicer but
-> hand-crafted) following patch:
-> 
->  	ddata = pwmchip_get_drvdata(chip);
->  	ddata->regmap = regmap;
->  
-> -	clk = devm_clk_get_enabled(dev, NULL);
-> -	if (IS_ERR(clk))
-> -		return dev_err_probe(dev, PTR_ERR(clk), "failed to get clock\n");
-> +	axi_clk = devm_clk_get_enabled(dev, "axi");
-> +	if (IS_ERR(axi_clk))
-> +		return dev_err_probe(dev, PTR_ERR(axi_clk), "failed to get axi clock\n");
-> 
-> +	clk = devm_clk_get_enabled_optional(dev, "ext");
-> +	if (IS_ERR(clk))
-> +		return dev_err_probe(dev, PTR_ERR(clk), "failed to get ext clock\n");
-> +	}
+Hi Fabio,
 
-The trouble with this is that it would not work with existing .dtbs
-that don't have clock-names set. I think it would need to be more like this:
+On Wed, May 21, 2025 at 1:40=E2=80=AFPM Fabio Estevam <festevam@gmail.com> =
+wrote:
+>
+> Hi Dario,
+>
+> On Wed, May 21, 2025 at 6:28=E2=80=AFAM Dario Binacchi
+> <dario.binacchi@amarulasolutions.com> wrote:
+> >
+> > The board includes the following resources:
+> >  - 256 Mbytes NAND Flash
+> >  - 256 Mbytes SRAM
+>
+> SRAM or DDR?
+
+Sorry, DRAM DDR2
+
+>
+> >  - LCD-TFT controller
+>
+> The LCD support is not described in the dts.
+
+Yes, you're right.
+The board has been in use for a long time with a 4.19 kernel. We recently b=
+umped
+it to the LTS version 6.6.69. However, for now we've had to revert commit
+f225f1393f034 ("video: fbdev: mxsfb: Remove driver") along with other
+custom changes
+to reproduce the correct display behavior in the field. That's why we
+haven't described
+the LCD panel yet.
+We'd like to add it only after we get it working without needing to
+apply non-mainline patches.
+
+The same goes for the sound, which is neither mentioned in the commit
+description nor in the DTS.
+
+So if you're okay with it, I will remove all references to the LCD
+display =E2=80=94 both from the commit
+message and from the DTS, such as the reset pin, for example.
+
+>
+> > +/ {
+> > +       model =3D "Amarula i.MX28 rmm";
+> > +       compatible =3D "amarula,imx28-rmm", "fsl,imx28";
+> > +
+> > +       memory@40000000 {
+> > +               device_type =3D "memory";
+> > +               reg =3D <0x40000000 0x08000000>;
+>
+> In the commit log, you say 256 MB, but here we have 128 MB.
+
+We have two models, one with 128MB and one with 256MB of RAM.
+What's the recommended way to handle both cases?
+Should I define a new DTS file named imx28-amarula-rmm-256mb.dts
+that includes imx28-amarula-rmm.dts and override the reg property of
+the memory node?
+
+>
+> > +&i2c0 {
+> > +       pinctrl-names =3D "default";
+> > +       pinctrl-0 =3D <&i2c0_pins_a>;
+> > +       status =3D "okay";
+> > +
+> > +       polytouch: edt-ft5x06@38 {
+>
+> Node names should be generic: touchscreen@38
+
+Ok
+
+>
+> > +
+> > +&pinctrl {
+> > +       pinctrl-names =3D "default";
+> > +       pinctrl-0 =3D <&hog_pins_a>;
+> > +
+> > +       hog_pins_a: hog-0 {
+> > +               reg =3D <0>;
+> > +               fsl,pinmux-ids =3D <
+> > +                       MX28_PAD_LCD_RESET__GPIO_3_30 /* LCD reset */
+> > +                       MX28_PAD_SSP2_SS1__GPIO_2_20  /* External power=
+ */
+>
+> Proper panel bindings should better describe these pins than hog pins.
+
+I will drop the LCD reset pin.
+
+Thanks and regards,
+Dario
+
+>
+> Do you plan to add display support?
 
 
-	axi_clk = devm_clk_get_enabled(dev, NULL);
-	if (IS_ERR(axi_clk))
-		return dev_err_probe(dev, PTR_ERR(axi_clk), "failed to get axi clock\n");
 
-	clk = devm_clk_get_enabled_optional(dev, "ext");
-	if (IS_ERR(clk))
-		return dev_err_probe(dev, PTR_ERR(clk), "failed to get ext clock\n");
+--=20
 
-	if (!clk)
-		clk = axi_clk
+Dario Binacchi
+
+Senior Embedded Linux Developer
+
+dario.binacchi@amarulasolutions.com
+
+__________________________________
 
 
-> 
->  	ret = devm_clk_rate_exclusive_get(dev, clk);
->  	if (ret)
-> 
-> with the only side effect that for machines with a single clk we get
-> axi_clk == clk and it's enabled twice.
-> 
-> Another upside is that
-> 
-> 	clock-names = "axi";
-> 	clocks = <...>;
-> 
-> still works.
-> 
-> Best regards
-> Uwe
+Amarula Solutions SRL
 
+Via Le Canevare 30, 31100 Treviso, Veneto, IT
+
+T. +39 042 243 5310
+info@amarulasolutions.com
+
+www.amarulasolutions.com
