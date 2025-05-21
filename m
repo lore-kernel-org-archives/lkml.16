@@ -1,51 +1,54 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C690BBA27;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24054233D64;
 	Wed, 21 May 2025 06:59:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747810785; cv=none; b=kh0z6bMmKniBzKJK8FoBtjNHoeSDzMd1LGVMWbOY8ZS0rNZgNZxLxqGHogErCLQojJ4XhQIAH19mHCGNEAY1ssUc5wHWDucsP/F8rSq8ozXgD9+FaZbgdDQcYmQ9b5G2k2Fn1PqCY7x+3PBXoRXHOqnilsIodQJnDcv+3T83kD4=
+	t=1747810786; cv=none; b=YGQAQJJ/VHMlXFLQNGcDvNWn35MDTQx41zujQEDHGS0Zh4ikhwKkO3oZzF+yXJCLOg80JT1ohlAKv7ZG0pMSLaM7SSVQ3HW3/ACYGHSbdaNdAjnKbDiEfnFfMiCLRKR8nU1wj7OTEHN1gfJN9ImRoo8G6m18AdtzES1WVqkgTYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747810785; c=relaxed/simple;
-	bh=RwWdxwaSlSV5EsU5bsdskKeHVwJHrekEM/wt3trKGAo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Xq8rZAnrGZpIK1rdzs0suK7CV+iLYpJO4jvnTtX0DiUoyMmDhlK18c3jAPnGaHvv0Qbi3XYo0eZTVdWx/0r8+e3TR+i0qyJQVAevwR+9WktilvckN+rpsWPmbDmIccvIxSC3s/5nHQmahRFNpNNHLrFW/Lrjeswi7UCEPjcjV/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DiDq7k09; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747810786; c=relaxed/simple;
+	bh=zrs4cXgnOa//B/Txk8KhjILwuaI02i9DB4tFgWygRDc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=YUdGuaAROhaxt2m1WDvkN+9mkiLoHtp1n/SM8X/aO0QR3NEvUzFne7EwBvOlM6/O6RABuwTuuF7B67D+mXWrgp1YrAeaJSUVaQYTlevdNenecVUy51mxnbSjxxRNbOboXLzUvoeKiHaRNNYiHjNuQUuYPJCqycim3qEboNkymrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X26GFF/S; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DiDq7k09"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95F7AC4CEE4;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X26GFF/S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9840BC4CEEB;
 	Wed, 21 May 2025 06:59:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1747810785;
-	bh=RwWdxwaSlSV5EsU5bsdskKeHVwJHrekEM/wt3trKGAo=;
-	h=From:To:Cc:Subject:Date:From;
-	b=DiDq7k09Y8Mv5u4/8ibafb8+cRmUMQsTyI5Vzt3a34rz67fprNEguOUrcYyvErUvh
-	 jK8bcxvg6r7EdTaKL4W+eQdcXphnwZm2WyZNmATrxt++/GNog8HayQuLoxdCWQ6x71
-	 CvMlZGXWOhXf5+W8E5gaoIw2PislcvUhSFT1qPWg8SHYJeQxGlkr29ZM13vj3lyM/I
-	 tIEe0fMDIrkt4hMN8RmmPABP3S6XnLHcpGdCUjn2zCPkqUgcVk73/JybclUTQztgeY
-	 LmX918wQ+VrsHCa8P/w/BahCqcyMlZpjlr63NFQF4kKqykAk7+D2yiAPRhFbV+CdPa
-	 pvYxf0RhG+BMg==
+	bh=zrs4cXgnOa//B/Txk8KhjILwuaI02i9DB4tFgWygRDc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=X26GFF/SWaINIpDsWh3rDNXnbBSz2OXs5ORJKKrIKZ2pELxcpHw2W2jzNRwRYsanS
+	 9Zh6XSJAX3seUSVzUxmLP1IeG8CrsPwdmh5Dj6oPuqUr8oSMbUdZYOQXsprAYTKhJB
+	 mVQpNSrl94TcgfixJoteslTH9kyfcnAPWvgxUzCYGm96WCNag8sm6jiGIQcPJ4lk8/
+	 Og4R8SL+EHOXR+GsBdFZYPzaiNeRTYAaGuG9yxZALGH3JnB4/KAAOWhnnIUF9M9omc
+	 6VN+qPxgtujCWziRtyPz6WiLBNBmWlasMWiu9qUGYaEGx0o2NIrNdEjcGw64DB59tw
+	 5Rx8BQ54ADwyA==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1uHdQV-00000006IFv-2rKb;
+	id 1uHdQV-00000006IG6-3DTs;
 	Wed, 21 May 2025 08:59:43 +0200
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Jonathan Corbet <corbet@lwn.net>
 Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	Akira Yokosawa <akiyks@gmail.com>,
+	"Akira Yokosawa" <akiyks@gmail.com>,
+	"Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+	"Masahiro Yamada" <mchehab+huawei@kernel.org>,
+	"Nathan Chancellor" <mchehab+huawei@kernel.org>,
+	"Nicolas Schier" <nicolas.schier@linux.dev>,
+	"Randy Dunlap" <rdunlap@infradead.org>,
+	"Stephen Rothwell" <sfr@canb.auug.org.au>,
 	linux-doc@vger.kernel.org,
-	Masahiro Yamada <mchehab+huawei@kernel.org>,
-	Nathan Chancellor <mchehab+huawei@kernel.org>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Randy Dunlap <rdunlap@infradead.org>,
 	linux-kbuild@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/3] Some kernel-doc fixes
-Date: Wed, 21 May 2025 08:59:30 +0200
-Message-ID: <cover.1747810691.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v2 3/3] scripts: kernel-doc: prevent a KeyError when checking output
+Date: Wed, 21 May 2025 08:59:33 +0200
+Message-ID: <a99113db21c53fa5115b197310390aafd38773fa.1747810691.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <cover.1747810691.git.mchehab+huawei@kernel.org>
+References: <cover.1747810691.git.mchehab+huawei@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,60 +58,31 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Hi Jon,
+If a file sent to KernelFiles.msg() method doesn't exist, instead
+of producing a KeyError, output an error message.
 
-That's the second version of the kernel-doc fixup patch series.
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Closes: https://lore.kernel.org/linux-doc/cover.1747719873.git.mchehab+huawei@kernel.org/T/#ma43ae9d8d0995b535cf5099e5381dace0410de04
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ scripts/lib/kdoc/kdoc_files.py | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-I discovered the root cause why Sphinx logger was not working: there
-was a call there for logger.verbose(). According with:
-
-	https://www.sphinx-doc.org/en/master/extdev/logging.html
-
-This is a valid call, but it doesn't verbose messages. Instead, it is
-crashing with modern Sphinx versions, causing the log to not work.
-
-I got rid of it, replacing by logger.info().  I took the time to also
-address an issue pointed by Andy: not having the same log message
-placed everywhere. With such change, we can keep using Sphinx
-logger (which produces colored messages) inside kernel-doc
-classes.
-
-With that, we have:
-
-Patch 1:	makes Lore and kernel-doc ML receive patches related
-	to kernel-doc.py and get_abi.py.
-Patch 2:	cleanup try/except logic and get rid of logger.verbose();
-Patch 3:	fix a KeyError when trying to acess data from non-existing files;
-
-If you test just patch 1 on the top of next-20250516, you'll see the
-keyerror message (in red):
-
-	ERROR: Cannot find file ./drivers/gpio/gpiolib-acpi.c
-	ERROR: Cannot find file ./drivers/gpio/gpiolib-acpi.c
-	WARNING: kernel-doc './scripts/kernel-doc.py -rst -enable-lineno -export ./drivers/gpio/gpiolib-acpi.c' processing failed with: KeyError('./drivers/gpio/gpiolib-acpi.c')
-
-And the script doesn't crash anymore. After patch 2, the try/except
-warning gets replaced by a proper message:
-
-	ERROR: Cannot find file ./drivers/gpio/gpiolib-acpi.c
-	ERROR: Cannot find file ./drivers/gpio/gpiolib-acpi.c
-	WARNING: No kernel-doc for file ./drivers/gpio/gpiolib-acpi.c
-
-Please apply it to solve the issues that are reported by Stephen and Akira.
-
-Regards,
-Mauro
-Mauro Carvalho Chehab (3):
-  MAINTAINERS: update linux-doc entry to cover new Python scripts
-  docs: kerneldoc.py: simplify exception handling logic
-  scripts: kernel-doc: prevent a KeyError when checking output
-
- Documentation/sphinx/kerneldoc.py | 108 +++++++++++++-----------------
- MAINTAINERS                       |   5 +-
- scripts/lib/kdoc/kdoc_files.py    |   4 ++
- 3 files changed, 53 insertions(+), 64 deletions(-)
-
+diff --git a/scripts/lib/kdoc/kdoc_files.py b/scripts/lib/kdoc/kdoc_files.py
+index 630aa5ca6460..9be4a64df71d 100644
+--- a/scripts/lib/kdoc/kdoc_files.py
++++ b/scripts/lib/kdoc/kdoc_files.py
+@@ -271,6 +271,10 @@ class KernelFiles():
+                                       no_doc_sections)
+ 
+             msg = ""
++            if fname not in self.results:
++                self.config.log.warning("No kernel-doc for file %s", fname)
++                continue
++
+             for name, arg in self.results[fname]:
+                 m = self.out_msg(fname, name, arg)
+ 
 -- 
 2.49.0
-
 
