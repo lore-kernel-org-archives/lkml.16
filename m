@@ -1,167 +1,75 @@
-Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1EF81D5151;
-	Wed, 21 May 2025 22:30:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7603136351;
+	Wed, 21 May 2025 22:31:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747866619; cv=none; b=L4SCd3fFWw7Lw8Z2fb3cPDTq8veJiRNB2LeqZFf7rNoK77bXRmvqEFZ+az6EsjU+l1Lyyt+24XzsuxVKMRVLDg564/3xtY+GaUXryrOcseqhcgkEyD8O9PVrky+jyxF8xOdDfej3orjKUQqaj7wN5UgGe9Oz2nioknjg4mHcQqU=
+	t=1747866668; cv=none; b=oBhOeCuYusJY8HoZrli56bIQmOu5poX19iT4zIJg8wwsM/cipTz3KL1bvWbLCLOPS6N8qUUoGL88oa6CWv1cEUpjzGyb5NFYMji0sSuE5OpQoxlxCzvOvn3MENU7v8OY0usfRdHlO7Pi/DUGI5gL09NKuQpe3lV1sIUwx2L3CNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747866619; c=relaxed/simple;
-	bh=nb9O4TtCOuppud69ug4IkU6bS5EpzMCb96C4mzfPqcs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jJc0C2yCLsusDJaXZF1BxodW5ROmB9p6vhAkGwwoe3KjYJZIK24dyygm2JdxUF+qRMcrvQwCXqTsiNaUP1CxYTehrApkAJK5zJLXrBel0L7Yz3R0SnMdODBtbJkRLv4aUNP9znwg1btAXXI7h6o/nA1xEkav0+m8L0dnE0vvXgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zt6P5Amh; arc=none smtp.client-ip=209.85.167.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747866668; c=relaxed/simple;
+	bh=mfOAhsIWu5Z4ODKpt4UPUgtiPYOuu8DX97OEMhASu5k=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bR1h5Uh1qNpyvquQDJpb2AX8AyNkgriQZDStu1a+OH2hRvJtPio3eMjwLzkLK6C3udAkxrr6rFeunkXP0SnVNkOAjqvRwlHnnEHoNIREgGfcaeU4UziUZi1RWHQjj/1urbLw6XbavDosCxgapUZGUREwOgNSWQbEsire9TMUmYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YUL1rEPi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zt6P5Amh"
-Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-404a5f4cdedso1930703b6e.0;
-        Wed, 21 May 2025 15:30:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747866616; x=1748471416; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nb9O4TtCOuppud69ug4IkU6bS5EpzMCb96C4mzfPqcs=;
-        b=Zt6P5Amh5rIldEFh4iEbcqods8og4Qf1BbPcNY2ZLIqzzSfeOo+Yp36TjzuAyWChAB
-         AqjWocatQ+ARc3RQ3QBzUm7HlcL6+D3AfUvG4peebDN/Neh4A+/KS6gncG3shn/pTW3j
-         6G6UN4v7cl1zl5xt297RVwTblj403yrTwH3gpjMobeT6oKA0vT9wLFz08tdmywBlAt8j
-         ngrdCAAhQ3aCZO9xOqN7t0hvcPpRWZJpG70eUr3xNbZ92r//MkfCgmD6JEmLRpCE5jbn
-         ukwEv/T413GR6dGIRPcdXlXqqzDtotIj6GRCtlt+/PEK5ranA8SZ71LIigMOs9WtQO4r
-         H9Lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747866616; x=1748471416;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nb9O4TtCOuppud69ug4IkU6bS5EpzMCb96C4mzfPqcs=;
-        b=Co0Y7iBi+mgWRYJrmt9/HZLGAgxzL/AUEczJrI8eeHGSIC4FaAA9YhLe/KEtw4ZXK3
-         r++3SOzWywfhDV5qbxynNM3NXbr4npixOb6MiF2WZUR3NJkd44m1C/9roDO/ihUez+25
-         z/1H1JPZYAia8ka1E4JSuxCUd6g7QH3tgZEPb7dYTAHz19Iv7869LFDM2tffjJ4pzV/L
-         cYZppDQKPvPEkTJo9fAyLaVOo2bNJJ4ao9+jmLs0oJwbf59tTw84Pc0Ehi19dEbIt2tH
-         bQhm+aE8oNB1x4PvnT4RzpO+WQYIJfjPd9ANJsHHP9h+Q+3XX8yRLpUqaX3HYK4+0Z/K
-         bduw==
-X-Forwarded-Encrypted: i=1; AJvYcCUJLZ4ORGUHw/ZyTGGhYvMKRuIOq7XJ3h+fn+PR9Djh39+mUT62PGFTG1pjuC2ulnwoJnavLls4GnWe@vger.kernel.org, AJvYcCUKw/IVsaO5Fhq4GNqsG0R3EO+LUOkMBUtrBD67T0XD0s/breRFFyUcvEFXoVxJJKgukyxbwCsbdwU=@vger.kernel.org, AJvYcCWVWdol9rc9EfVgvnGRp4h9nf4244poxSqebsbSn3LVsrYvdt8W5KSsEHg13s4AwJyr5wGwUF004lDxnz+ing==@vger.kernel.org, AJvYcCX/rYEcd8Cp1AXt9mk+K2UkJdm/qPsGczroQrkf1rZqQqM1pmMmfmDS236gmqgXz27ylu3pR2aq8WLkv479@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGSmQStp25bHIYJlQPjteZB6sfnrW7js7QwTdRUbkyghJ4YbGn
-	xNfkfePvcQwGbGuY6zxnSalHsiDtgkKOvw8pxisZXAsEe9gv/k0LqPYB
-X-Gm-Gg: ASbGncs/gkuOx1z/qmZnSxYFOC2w7qZr0zYitI4vpSBCidd8Op7nxooyeUh3fpIWx5J
-	7+OhE9skCZR2j6zBefnfpmCbNVYnh/tnC6K/fGh+r4SSnAMeprpFnN/LTd3+tSbdEBZ9oUufK8d
-	k6hHV4zdjh5utz3C6auU55UJgnEWplOEhLv8QXHnQYI9ZkuT+23dw9N1b6vGAD3i+WflSSYfIZn
-	1cE+QhA+iaWjVbBM8wh7y7r5n029zIOMRH8+ykpjbVbw4DBJ4Nzh9DjB760isHQ434GU/FkDpUT
-	QTeumovuiQmDtyXDM5MXHTQGYXdOniqo7+jfBWdSnPgRBnN2KIqYRaYnZwhIIy7wfvvVFxA=
-X-Google-Smtp-Source: AGHT+IFRVrKFlC0xucIoI6A+MH0Ub4hMMxnTf/HTOcSeOiiFXD7vWW4zpucHXKEWzpbcRbmwqIHzEQ==
-X-Received: by 2002:a05:6808:6c8b:b0:403:37dd:e26f with SMTP id 5614622812f47-404da82bb8dmr14303754b6e.33.1747866615474;
-        Wed, 21 May 2025 15:30:15 -0700 (PDT)
-Received: from groves.net ([2603:8080:1500:3d89:b8ec:6599:4c13:ce82])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-404e303ffcasm2023067b6e.4.2025.05.21.15.30.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 15:30:14 -0700 (PDT)
-Sender: John Groves <grovesaustin@gmail.com>
-Date: Wed, 21 May 2025 17:30:12 -0500
-From: John Groves <John@groves.net>
-To: Dan Williams <dan.j.williams@intel.com>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Bernd Schubert <bschubert@ddn.com>
-Cc: John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	"Darrick J . Wong" <djwong@kernel.org>, Luis Henriques <luis@igalia.com>, 
-	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, Petr Vorel <pvorel@suse.cz>, Brian Foster <bfoster@redhat.com>, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
-	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	Amir Goldstein <amir73il@gmail.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	Stefan Hajnoczi <shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>, 
-	Josef Bacik <josef@toxicpanda.com>, Aravind Ramesh <arramesh@micron.com>, 
-	Ajay Joshi <ajayjoshi@micron.com>, Alistair Popple <apopple@nvidia.com>, john@groves.net
-Subject: Re: [RFC PATCH 00/19] famfs: port into fuse
-Message-ID: <hobxhwsn5ruaw42z4xuhc2prqnwmfnbouui44lru7lnwimmytj@fwga2crw2ych>
-References: <20250421013346.32530-1-john@groves.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YUL1rEPi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4ECAC4CEE4;
+	Wed, 21 May 2025 22:31:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747866668;
+	bh=mfOAhsIWu5Z4ODKpt4UPUgtiPYOuu8DX97OEMhASu5k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=YUL1rEPiwYnxwoN2OoAyzyGKm8BCc9d95twKiFTPMjfwdhNs5O2OzAKgdb8ggXx+3
+	 UJiiGWdX8UGQF+BSkt90/59AgI8walNx9x2AQHDpLL6v31o58OakNpvNuYrxw7/H66
+	 Md7q30GtamKasCWvDXPkncYzrf3diBC8u9KQIrQHiynVAUP8QrLDeedNCm+3GPzwx1
+	 wAX/VZbfZKn7ZiUszLGlKGGvFyNSua/3rSUb+pQcHuLFvji6290jC5Nco3RgaxFLcU
+	 qSJU78yAn1eGghCTO5w0m97NsTZKckEebotvqAqFQilRdHfd422dwk7Iu4+cEPRn+Z
+	 egpA0kYk8H4hg==
+Date: Wed, 21 May 2025 15:31:07 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Stanislav Fomichev <stfomichev@gmail.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
+ pabeni@redhat.com, skalluru@marvell.com, manishc@marvell.com,
+ andrew+netdev@lunn.ch, michael.chan@broadcom.com,
+ pavan.chebbi@broadcom.com, ajit.khaparde@broadcom.com,
+ sriharsha.basavapatna@broadcom.com, somnath.kotur@broadcom.com,
+ anthony.l.nguyen@intel.com, przemyslaw.kitszel@intel.com,
+ tariqt@nvidia.com, saeedm@nvidia.com, louis.peens@corigine.com,
+ shshaikh@marvell.com, GR-Linux-NIC-Dev@marvell.com, ecree.xilinx@gmail.com,
+ horms@kernel.org, dsahern@kernel.org, ruanjinjie@huawei.com,
+ mheib@redhat.com, linux-kernel@vger.kernel.org,
+ intel-wired-lan@lists.osuosl.org, linux-rdma@vger.kernel.org,
+ oss-drivers@corigine.com, linux-net-drivers@amd.com, leon@kernel.org
+Subject: Re: [PATCH net-next 2/3] udp_tunnel: remove rtnl_lock dependency
+Message-ID: <20250521153107.150f01e1@kernel.org>
+In-Reply-To: <aC4FK0fmUoaXYt4k@mini-arch>
+References: <20250520203614.2693870-1-stfomichev@gmail.com>
+	<20250520203614.2693870-3-stfomichev@gmail.com>
+	<20250521073401.67fbd1bc@kernel.org>
+	<aC4FK0fmUoaXYt4k@mini-arch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250421013346.32530-1-john@groves.net>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 25/04/20 08:33PM, John Groves wrote:
-> Subject: famfs: port into fuse
->
-> <snip>
+On Wed, 21 May 2025 09:54:03 -0700 Stanislav Fomichev wrote:
+> > >  enum udp_tunnel_nic_info_flags {
+> > > -	/* Device callbacks may sleep */
+> > > -	UDP_TUNNEL_NIC_INFO_MAY_SLEEP	= BIT(0),  
+> > 
+> > Could we use a different lock for sleeping and non-sleeping drivers?  
+> 
+> We can probably do it if we reorder the locks (as you ask/suggest
+> below). Overall, I'm not sure I understand why we want to have two
+> paths here. If we can do everything via work queue, why have a separate
+> path for the non-sleepable callback? (more code -> more bugs)
 
-I'm planning to apply the review comments and send v2 of
-this patch series soon - hopefully next week.
-
-I asked a couple of specific questions for Miklos and
-Amir at [1] that I hope they will answer in the next few
-days. Do you object to zeroing fuse_inodes when they're
-allocated, and do I really need an xchg() to set the
-fi->famfs_meta pointer during fuse_alloc_inode()? cmpxchg
-would be good for avoiding stepping on an "already set"
-pointer, but not useful if fi->famfs_meta has random
-contents (which it does when allocated).
-
-I plan to move the GET_FMAP message to OPEN time rather than
-LOOKUP - unless that leads to problems that I don't
-currently foresee. The GET_FMAP response will also get a
-variable-sized payload.
-
-Darrick and I have met and discussed commonality between our
-use cases, and the only thing from famfs that he will be able
-to directly use is the GET_FMAP message/response - but likely
-with a different response payload. The file operations in
-famfs.c are not applicable for Darrick, as they only handle
-mapping file offsets to devdax offsets (i.e. fs-dax over
-devdax).
-
-Darrick is primarily exploring adapting block-backed file
-systems to use fuse. These are conventional page-cache-backed
-files that will primarily be read and written between
-blockdev and page cache.
-
-(Darrick, correct me if I got anything important wrong there.)
-
-In prep for Darrick, I'll add an offset and length to the
-GET_FMAP message, to specify what range of the file map is
-being requested. I'll also add a new "first header" struct
-in the GET_FMAP response that can accommodate additional fmap
-types, and will specify the file size as well as the offset
-and length of the fmap portion described in the response
-(allowing for GET_FMAP responses that contain an incomplete
-file map).
-
-If there is desire to give GET_FMAP a different name, like
-GET_IOMAP, I don't much care - although the term "iomap" may
-be a bit overloaded already (e.g. the dax_iomap_rw()/
-dax_iomap_fault() functions debatably didn't need "iomap"
-in their names since they're about converting a file offset
-range to daxdev ranges, and they don't handle anything
-specifically iomap-related). At least "FMAP" is more narrowly
-descriptive of what it is.
-
-I don't think Darrick needs GET_DAXDEV (or anything
-analogous), because passing in the backing dev at mount time
-seems entirely sufficient - so I assume that at least for now
-GET_DAXDEV won't be shared. But famfs definitely needs
-GET_DAXDEV, because files must be able to interleave across
-memory devices.
-
-The one issue that I will kick down the road until v3 is
-fixing the "poisoned page|folio" problem. Because of that,
-v2 of this series will still be against a 6.14 kernel. Not
-solving that problem means this series won't be merge-able
-until v3.
-
-I hope this is all clear and obvious. Let me know if not (or
-if so).
-
-Thanks,
-John
-
-
-[1] https://lore.kernel.org/linux-fsdevel/20250421013346.32530-1-john@groves.net/T/#me47467b781d6c637899a38b898c27afb619206e0
-
+I think when I was pulling this code out of the drivers I was trying 
+to preserve the fast path for drivers which don't have to sleep.
+But if some drivers are okay with the wq then the mechanism must work,
+so I guess you're right, it should be fine to make all go via wq.
