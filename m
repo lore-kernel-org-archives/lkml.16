@@ -1,144 +1,187 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EA15238D53
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 09:11:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ED911A9B4C;
+	Wed, 21 May 2025 09:12:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747818676; cv=none; b=gIlKZevucrDyBMKpDkf3WSB6PFzwRWoSKm/WHZDaA7tIHTlir/Sfmh6A59oMy8mU9+GzP1Nk8wEHcEKWNHXkIlgLPGKAezpfPOMdS/5ik0EHmbCgCry1cCsWCuwvX+n5WPyC7eD6fdRkEzSGWuVEtK05CWoFdsfBUcH0w7hyD64=
+	t=1747818745; cv=none; b=fWvedgIVr6vc4JUeszXtGdNB3krRWYhjBH8+U15tLL3CQEvL75oKgA2ZYYkMl8iXsbfGWcCziLmRQczCSopckP5AwdTsHRAByBka+mbhr20O7GfzFZS6wLz0ddNqgMfkV3X86VQw+cGJ/DKaOVTns8Ciz+oWUCPNU9e2H/jwv2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747818676; c=relaxed/simple;
-	bh=AyTlo5MV4RoWb0/jlG7PaHacCmtKMIX6jHJZ5hNGkqo=;
+	s=arc-20240116; t=1747818745; c=relaxed/simple;
+	bh=Y79uDuogax25dTt9+OzgCk6nHYwyKb9v3cGEu2DGz+g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nt0XqoGsxpoLbBRyal+w4g3WPvLoTS8is6096rF1h4fKQmCE+7am/U/zBHrS263bwUlwQswP1l5emvIwJBvqIb98ZpOJ66oJE01Fwa1xFwFkA4goBkpoUzZabkgg6Qn80jLKr5Q65r8/2zfPoJt0vzfXNaW34czFFqMDTBizrS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WfzsStLm; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ayI9SBvhejXJ6F/sULny9WLdLWJ/k5+3qqHk4seLiLQNaY9+xmeFzirVIsDUzmEyut7Qm3eWth5VbUxu/so3yHW0fQ9ExlyfwQJ20fOgC0vaEtUcQrxoNl/iIgImv3uaz9o84qwIpwPiz5GjSNhBq9A0RPR9Uk2IJEtvoRpH+90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O2ZqpZVY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WfzsStLm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747818675; x=1779354675;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=AyTlo5MV4RoWb0/jlG7PaHacCmtKMIX6jHJZ5hNGkqo=;
-  b=WfzsStLml9i75yHwjIcOt+3CTxOikjzCnXzWXZek9CVg0IvPD6LtcaSh
-   8AWNaldt6fcfpNgN6wN5s+ViawYeWpexP7wteCHyka9mduP7xdKZ9ODBJ
-   k3Jcuk1kWYLW96pTYgwCDAXIer2E8xDdGfR4eGHhb0om828Irwvaz2Fd0
-   8oUIdQdPD+iS1h98Jh7pbPBU0pHigzOZCAHMOzbMjNahMyFtE/ddIDshv
-   HhKk+bivNdx+heFYge3iAljrFWcOHdvOJEWHPWaJMYQwFqbBydTUfDaMH
-   7H2B4TmVOpRNCPDGZPeOVlvbIEfQCFGfB5GT/yzRj9bx9folWcDcRZyPv
-   g==;
-X-CSE-ConnectionGUID: dX74oQ5mR92rspM4OLqE1A==
-X-CSE-MsgGUID: WojZ0WbQR5SlW0yywsurHA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="53595237"
-X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
-   d="scan'208";a="53595237"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 02:11:14 -0700
-X-CSE-ConnectionGUID: CNu791ZaRYCb5Aog6f/7NQ==
-X-CSE-MsgGUID: QRyvUxAxS/aBYV8nILle/Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
-   d="scan'208";a="140044302"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 02:11:10 -0700
-Date: Wed, 21 May 2025 12:11:07 +0300
-From: Raag Jadav <raag.jadav@intel.com>
-To: =?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	siqueira@igalia.com, airlied@gmail.com, simona@ffwll.ch,
-	rodrigo.vivi@intel.com, jani.nikula@linux.intel.com,
-	Xaver Hugl <xaver.hugl@gmail.com>,
-	Krzysztof Karas <krzysztof.karas@intel.com>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	kernel-dev@igalia.com, amd-gfx@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org, intel-gfx@lists.freedesktop.org
-Subject: Re: [PATCH v5 1/3] drm: Create a task info option for wedge events
-Message-ID: <aC2Yq89IL5tx8MY3@black.fi.intel.com>
-References: <20250520163243.328746-1-andrealmeid@igalia.com>
- <20250520163243.328746-2-andrealmeid@igalia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O2ZqpZVY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15BB7C4CEE4;
+	Wed, 21 May 2025 09:12:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747818744;
+	bh=Y79uDuogax25dTt9+OzgCk6nHYwyKb9v3cGEu2DGz+g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=O2ZqpZVY1GHVQvRnH+uS7bAcwOBaeSTumQS66Srfn7xj+j7LlO+ktInrIjSC0n1z5
+	 Mop4xRkyEeXpYUd1sXgZA1PbIsxrSoy08anRBx6uhut3Ugb2V/J12aVEKzr6iQXoU0
+	 powBgA1aXpH0J0yVHeLMCEfgPYh+09+/x0ld2pEYZ7r5aqAqIFMkeWWlRBGy/54J6I
+	 x57UfcllCfGdE5juXSdZwDGxN5215O/VY2Aa92ku1PBKW9mdKIJTRhL4A1LxgRtxRd
+	 RzErkNhAdxYQjbOdoP9Auqi2JccH/TZt55kOb9mpyP9IOxad/WzQfqLuDfknrCSIwe
+	 +c4rL0NVdPbVA==
+Date: Wed, 21 May 2025 11:12:22 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Shubhi Garg <shgarg@nvidia.com>
+Cc: jonathanh@nvidia.com, lee@kernel.org, robh@kernel.org, 
+	alexandre.belloni@bootlin.com, thierry.reding@gmail.com, devicetree@vger.kernel.org, 
+	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 3/6] mfd: nvvrs: add NVVRS PSEQ MFD driver
+Message-ID: <20250521-observant-wildcat-of-weather-8ecc4e@kuoka>
+References: <20250520090832.3564104-1-shgarg@nvidia.com>
+ <20250520090832.3564104-4-shgarg@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250520163243.328746-2-andrealmeid@igalia.com>
+In-Reply-To: <20250520090832.3564104-4-shgarg@nvidia.com>
 
-On Tue, May 20, 2025 at 01:32:41PM -0300, André Almeida wrote:
-> When a device get wedged, it might be caused by a guilty application.
-> For userspace, knowing which task was the cause can be useful for some
-> situations, like for implementing a policy, logs or for giving a chance
-> for the compositor to let the user know what task caused the problem.
-> This is an optional argument, when the task info is not available, the
-> PID and TASK string won't appear in the event string.
+On Tue, May 20, 2025 at 09:08:29AM GMT, Shubhi Garg wrote:
+> Add support for NVIDIA VRS (Voltage Regulator Specification) power
+> sequencer device driver. This driver manages ON/OFF and suspend/resume
+> power sequencing of system power rails for NVIDIA Tegra234 SoC. It also
+> provides 32kHz RTC clock support with backup battery for system timing.
 > 
-> Sometimes just the PID isn't enough giving that the task might be already
-> dead by the time userspace will try to check what was this PID's name,
-> so to make the life easier also notify what's the task's name in the user
-> event.
-
-...
-
-> -int drm_dev_wedged_event(struct drm_device *dev, unsigned long method)
-> +int drm_dev_wedged_event(struct drm_device *dev, unsigned long method,
-> +			 struct drm_wedge_task_info *info)
->  {
->  	const char *recovery = NULL;
->  	unsigned int len, opt;
-> -	/* Event string length up to 28+ characters with available methods */
-> -	char event_string[32];
-> -	char *envp[] = { event_string, NULL };
-> +	char event_string[WEDGE_STR_LEN], pid_string[PID_LEN] = "", comm_string[TASK_COMM_LEN] = "";
-> +	char *envp[] = { event_string, NULL, NULL, NULL };
+> Signed-off-by: Shubhi Garg <shgarg@nvidia.com>
+> ---
+> 
+> v2:
+> - removed unnecessary error logs
+> - changed dev_info to dev_dbg
+> - changed dev_err to dev_err_probe
+> - fixed "of_match_table" assignment
+> 
+>  drivers/mfd/Kconfig                 |  12 ++
+>  drivers/mfd/Makefile                |   1 +
+>  drivers/mfd/nvidia-vrs-pseq.c       | 270 ++++++++++++++++++++++++++++
+>  include/linux/mfd/nvidia-vrs-pseq.h | 127 +++++++++++++
+>  4 files changed, 410 insertions(+)
+>  create mode 100644 drivers/mfd/nvidia-vrs-pseq.c
+>  create mode 100644 include/linux/mfd/nvidia-vrs-pseq.h
+> 
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 6fb3768e3d71..3144b8f3eb9b 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -1437,6 +1437,18 @@ config MFD_SC27XX_PMIC
+>  	  This driver provides common support for accessing the SC27xx PMICs,
+>  	  and it also adds the irq_chip parts for handling the PMIC chip events.
 >  
->  	len = scnprintf(event_string, sizeof(event_string), "%s", "WEDGED=");
->  
-> @@ -582,6 +586,13 @@ int drm_dev_wedged_event(struct drm_device *dev, unsigned long method)
->  	drm_info(dev, "device wedged, %s\n", method == DRM_WEDGE_RECOVERY_NONE ?
->  		 "but recovered through reset" : "needs recovery");
->  
-> +	if (info && ((info->comm && info->comm[0] != '\0'))) {
+> +config MFD_NVVRS_PSEQ
+> +	tristate "NVIDIA Voltage Regulator Specification Power Sequencer"
+> +	depends on I2C=y
 
-Thanks for adding this. Should we check if pid > 0?
+Why I2C cannot be a module? This is a module.
 
-Also, I was wondering what if the driver only has info on one of the
-given members? Should we allow it to be flagged independently?
-
-> +		snprintf(pid_string, sizeof(pid_string), "PID=%u", info->pid);
-> +		snprintf(comm_string, sizeof(comm_string), "TASK=%s", info->comm);
-> +		envp[1] = pid_string;
-> +		envp[2] = comm_string;
-> +	}
+> +	select MFD_CORE
+> +	select REGMAP_I2C
+> +	select REGMAP_IRQ
+> +	help
+> +	  Say Y here to add support for NVIDIA Voltage Regulator Specification
+> +	  Power Sequencer. NVVRS_PSEQ supports ON/OFF, suspend/resume sequence of
+> +	  system power rails. It provides 32kHz RTC clock support with backup
+> +	  battery for system timing.
 > +
->  	return kobject_uevent_env(&dev->primary->kdev->kobj, KOBJ_CHANGE, envp);
->  }
->  EXPORT_SYMBOL(drm_dev_wedged_event);
 
 ...
 
-> diff --git a/include/drm/drm_device.h b/include/drm/drm_device.h
-> index e2f894f1b90a..c13fe85210f2 100644
-> --- a/include/drm/drm_device.h
-> +++ b/include/drm/drm_device.h
-> @@ -30,6 +30,14 @@ struct pci_controller;
->  #define DRM_WEDGE_RECOVERY_REBIND	BIT(1)	/* unbind + bind driver */
->  #define DRM_WEDGE_RECOVERY_BUS_RESET	BIT(2)	/* unbind + reset bus device + bind */
->  
-> +/**
-> + * struct drm_wedge_task_info - information about the guilty app of a wedge dev
+> +static int nvvrs_pseq_irq_clear(void *irq_drv_data)
+> +{
+> +	struct nvvrs_pseq_chip *chip = (struct nvvrs_pseq_chip *)irq_drv_data;
+> +	struct i2c_client *client = chip->client;
+> +	u8 reg, val;
+> +	unsigned int i;
+> +	int ret = 0;
+> +
+> +	/* Write 1 to clear the interrupt bit in the Interrupt
+> +	 * Source Register, writing 0 has no effect, writing 1 to a bit
+> +	 * which is already at 0 has no effect
+> +	 */
+> +
+> +	for (i = 0; i < chip->irq_chip->num_regs; i++) {
+> +		reg = (u8)(chip->irq_chip->status_base + i);
+> +		ret = i2c_smbus_read_byte_data(client, reg);
+> +		if (ret) {
+> +			val = (u8)ret;
+> +			dev_dbg(chip->dev, "Clearing interrupts! Interrupt status reg 0x%02x = 0x%02x\n",
+> +				reg, val);
 
-s/app/task, missed an instance ;)
+ratelimit
 
-> + */
-> +struct drm_wedge_task_info {
-> +	pid_t pid;
-> +	char *comm;
-> +};
+...
 
-Raag
+> +
+> +static int nvvrs_pseq_probe(struct i2c_client *client)
+> +{
+> +	const struct regmap_config *rmap_config;
+> +	struct nvvrs_pseq_chip *nvvrs_chip;
+> +	const struct mfd_cell *mfd_cells;
+> +	int n_mfd_cells;
+> +	int ret;
+> +
+> +	nvvrs_chip = devm_kzalloc(&client->dev, sizeof(*nvvrs_chip), GFP_KERNEL);
+> +	if (!nvvrs_chip)
+> +		return -ENOMEM;
+> +
+> +	/* Set PEC flag for SMBUS transfer with PEC enabled */
+> +	client->flags |= I2C_CLIENT_PEC;
+> +
+> +	i2c_set_clientdata(client, nvvrs_chip);
+> +	nvvrs_chip->client = client;
+> +	nvvrs_chip->dev = &client->dev;
+> +	nvvrs_chip->chip_irq = client->irq;
+> +	mfd_cells = nvvrs_pseq_children;
+> +	n_mfd_cells = ARRAY_SIZE(nvvrs_pseq_children);
+> +	rmap_config = &nvvrs_pseq_regmap_config;
+> +	nvvrs_chip->irq_chip = &nvvrs_pseq_irq_chip;
+> +
+> +	nvvrs_chip->rmap = devm_regmap_init_i2c(client, rmap_config);
+> +	if (IS_ERR(nvvrs_chip->rmap)) {
+> +		ret = PTR_ERR(nvvrs_chip->rmap);
+
+Useless assignment
+
+> +		return dev_err_probe(nvvrs_chip->dev, ret,
+> +				     "Failed to initialise regmap\n");
+> +	}
+
+Drop }
+
+> +
+> +	ret = nvvrs_pseq_vendor_info(nvvrs_chip);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	nvvrs_pseq_irq_chip.irq_drv_data = nvvrs_chip;
+> +	ret = devm_regmap_add_irq_chip(nvvrs_chip->dev, nvvrs_chip->rmap, client->irq,
+> +				       IRQF_ONESHOT | IRQF_SHARED, 0,
+> +				       &nvvrs_pseq_irq_chip,
+> +				       &nvvrs_chip->irq_data);
+> +	if (ret < 0) {
+> +		return dev_err_probe(nvvrs_chip->dev, ret,
+> +				     "Failed to add regmap irq\n");
+> +	}
+
+Drop }
+
+Your entire code is full of that.
+
+Please run scripts/checkpatch.pl on the patches and fix reported
+warnings. After that, run also 'scripts/checkpatch.pl --strict' on the
+patches and (probably) fix more warnings. Some warnings can be ignored,
+especially from --strict run, but the code here looks like it needs a
+fix. Feel free to get in touch if the warning is not clear.
+
+Best regards,
+Krzysztof
+
