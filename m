@@ -1,103 +1,109 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B116F2820C2
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 15:58:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E17A0283684
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 15:59:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747843130; cv=none; b=TbXxZsJ3OVhHe6/uxPlSWxWlkMwN+MGTYrAMUOouo3rQ3M3GAic7uED8zYJA2wmaAA5+fphCXK5TWzYTRhUrOS1dHNwkW4cJ6DrRtiUVc3ehXP1m96eXoSe6IcxMtC7b6Niw7fHBP8wDahI4viMFZQJcBYPspZa/fp9aDhwYX34=
+	t=1747843170; cv=none; b=Yh5AazdtUzIQ4qljly+9q082YAZKUv6mPokt/royaGbtpzfBoSllMAsWndZlRRQEEEfvReXoGgnAypEfCqfHige+aMzyPIj+SJWF4dLP+d8EMw2fHfh2OGqVChzupNd/TDaJb13y/znu0lUcSEmR/VvLqhg2UB2myTJd+tyuwcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747843130; c=relaxed/simple;
-	bh=DLhxBNPNm1O99GYuXfyBvGjuuh3iQnjSxQqNjAQTIYo=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=u0jDTGz8yRtC6A+c4s+ZK8ftKAOukJdNDHatvOj6f0PdxPFCQkNYPkgtIH3ur/h8sVVi3Od/CfIFBUPc6+chHO4KNFC0Ka4eUf8m4KGGW8GDq/iw6Iq3GLhxffmDUqL6xxDgPVCnIbF4fKw9UjwtIw+D8jEq/NvO4BAhs7VTVqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ud+XYJY8; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ud+XYJY8"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-742c9907967so3743044b3a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 08:58:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747843127; x=1748447927; darn=vger.kernel.org;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TdRwavDDdPRD4ph6NOjp9qIhMy3uXqZoBDVVcoXM+3M=;
-        b=ud+XYJY86Dp4L48L6X+niTNsb1TyQ4za3OUREctVDDsTYVaKQ+9OJWlCWHFQeaL+8F
-         4wnF90Svi8w8C26Rt7WJ69pWGenLtTAYanXMEZRdrgc57DrHUwN/0kcjUNks9kmDhIt4
-         bIDeIVB1Snx4PiP+VtYgctejlRMzzLsY8fTnL9Jc/tGtKpOWB9iFmWDDM1Z65WfLjuK+
-         8D/1rSelkjAWCyIFyoUfLZLvtHfetL/UArfY4yLy2Pyr1AeiZVkpIezQnXKsvYurKUgS
-         WnlsNouo2n6GcpHiRUPPOYmUA2+k99f1QZWJT38GI1AcgPHyBiHL1zFKhGdqi6OCg25l
-         QZeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747843127; x=1748447927;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TdRwavDDdPRD4ph6NOjp9qIhMy3uXqZoBDVVcoXM+3M=;
-        b=byBHeykgr/mK1DcMYhIgOQwQoBggC0zGmk5rECqIOfZipDjRVUy+ohVRAkPWMAIubt
-         32pH21pubLjz4ATcxhsqHbwa3TmzYjeKxQOkKNO1g6GYrVVj0SE4CTh0uO/S/WfP60qz
-         zP9bemChOoekQsBUykXpVeClSsv+7h4aCrA7v+SHKaSYrUI9AaitjTU0VMfktmwEeLJr
-         o4t4DVgweRY8BmHRJfyuNPcjBDRT8yHL//7vsIDnvpytdroxXib9O8VRwzaJb3PV7910
-         5vIuDqgvVeOh/1fUW6IPx/iYOVYypBAuKP+OtKktYwtu8qtiQknq+AvWVYeyV8/9+C3T
-         kvfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWjARR8koU8ZCGSokjKhtnvA5UrKqpMkffCzfmKvt9yDI7Ox8bM2E2DRuwLK0thoQfWWXN9he1qikISUeY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwU17hr1S4mP4+jAfy2VbDwrw1FE9k03jBYOM3JCMMt0XbzJoWr
-	PvOWDYIwYXBSLBdNTJJIRdmtfL9IYvA3zYg3t1eByFLGaQsl3ZrBOq+kBI4ySj44fA==
-X-Gm-Gg: ASbGncuzLWmWkbyIBjL5Gx7Gud2i0mA99Nc74cif0fooKjfDIYhYhV/ndROIBzhFLIW
-	7OtQbQD4D41/C+NHzW4xyrYSLAqVFf9dNs5bwCT0QcGIEuM981yfTOsk33SsIKaczn0uzNcWPdZ
-	R4oz+80FGHmvamvc/2amVyn1j4TV8TfftznYkthgCy7VCojlOSzGdPtgiQD0VoEtaRQuGtY3u8e
-	jD9Eewp9TwPHxZe6WvV/aPe/HyaoSRqEAxqZTRmQVevbvz9j1qrK52Youw13sbv+vE1k6Z/H9WC
-	TMqYVDivMV99NIhEeqSe5qfAg8aJPTKHoKCHFHMLY6ap/HSyFu7SlJ7n1ckd6EJb5tdKgvMGvXR
-	aSEpV5Mf28TH5DlrF4lXLCZLqkXTN+Ana6fXngpTlnhfzmg==
-X-Google-Smtp-Source: AGHT+IGlxIpd2UQXUEXUyT3jJiXyp4cutpSYwnXXezPFwPzdD171HXRG1N0KN3L9uymbdbj+o9Hifg==
-X-Received: by 2002:a05:6a00:2790:b0:740:5927:bb8b with SMTP id d2e1a72fcca58-742a961837amr25764753b3a.0.1747843127416;
-        Wed, 21 May 2025 08:58:47 -0700 (PDT)
-Received: from darker.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a982b884sm10149934b3a.95.2025.05.21.08.58.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 08:58:46 -0700 (PDT)
-Date: Wed, 21 May 2025 08:58:32 -0700 (PDT)
-From: Hugh Dickins <hughd@google.com>
-To: Oscar Salvador <osalvador@suse.de>
-cc: Hugh Dickins <hughd@google.com>, Gavin Guo <gavinguo@igalia.com>, 
-    linux-mm@kvack.org, linux-kernel@vger.kernel.org, muchun.song@linux.dev, 
-    akpm@linux-foundation.org, kernel-dev@igalia.com, stable@vger.kernel.org, 
-    Florent Revest <revest@google.com>, Gavin Shan <gshan@redhat.com>
-Subject: Re: [PATCH v2] mm/hugetlb: fix a deadlock with pagecache_folio and
- hugetlb_fault_mutex_table
-In-Reply-To: <aC33A65HFJOSO1_R@localhost.localdomain>
-Message-ID: <54bd3d6c-d763-ae09-6ee2-7ef192a97ca9@google.com>
-References: <20250521115727.2202284-1-gavinguo@igalia.com> <30681817-6820-6b43-1f39-065c5f1b3596@google.com> <aC33A65HFJOSO1_R@localhost.localdomain>
+	s=arc-20240116; t=1747843170; c=relaxed/simple;
+	bh=gyHoNs4jjORV9q6OAf+fIVSurKEhNqhM1hW154BfTUo=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Rn8eHqFlz9je6GRvmwEOuldCjz7g2UUmx9p7rhpbl1LgceuTfKbNrpHKwoWgS6QF2UOh/WjdrQlp4GnJaB8HbozBZ/wU83l0vHV9xgu53a31jHsChvr6XSC40WVVbUaLqTJ8Ld4VoKsmh6p0y3FtJsa5rp2JisTktTXhFMVHmuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
+Received: from fangorn.home.surriel.com ([10.0.13.7])
+	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <riel@shelob.surriel.com>)
+	id 1uHlqW-000000007vu-0Xwj;
+	Wed, 21 May 2025 11:59:08 -0400
+Message-ID: <4ed8b8998a18ff5ceeaec803244897d127998ae4.camel@surriel.com>
+Subject: Re: [RFC v2 6/9] x86/apic: Introduce Remote Action Request
+ Operations
+From: Rik van Riel <riel@surriel.com>
+To: Dave Hansen <dave.hansen@intel.com>, linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org, x86@kernel.org, kernel-team@meta.com, 
+	dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com, 
+	nadav.amit@gmail.com, Rik van Riel <riel@fb.com>, Yu-cheng Yu
+	 <yu-cheng.yu@intel.com>
+Date: Wed, 21 May 2025 11:59:08 -0400
+In-Reply-To: <036f8679-485a-4c99-92e7-f271a972fbf8@intel.com>
+References: <20250520010350.1740223-1-riel@surriel.com>
+	 <20250520010350.1740223-7-riel@surriel.com>
+	 <036f8679-485a-4c99-92e7-f271a972fbf8@intel.com>
+Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
+ keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
+ eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
+ Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
+ lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
+ dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
+ mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
+ gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
+ r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
+ WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
+ 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
+ Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
+ +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
+ g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
+ KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
+ fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
+ 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
+ G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
+ okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
+ TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
+ cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
+ omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
+ QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
+ c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Sender: riel@surriel.com
 
-On Wed, 21 May 2025, Oscar Salvador wrote:
-> On Wed, May 21, 2025 at 08:10:46AM -0700, Hugh Dickins wrote:
-> > Unless you have a very strong argument why this folio is invisible to
-> > the rest of the world, including speculative accessors like compaction
-> > (and the name "pagecache_folio" suggests very much the reverse): the
-> > pattern of unlocking a lock when you see it locked is like (or worse
-> > than) having no locking at all - it is potentially unlocking someone
-> > else's lock.
-> 
-> hugetlb_fault() locks 'pagecache_folio' and unlocks it after returning
-> from hugetlb_wp().
-> This patch introduces the possibility that hugetlb_wp() can also unlock it for
-> the reasons explained.
-> So, when hugetlb_wp() returns back to hugetlb_fault(), we
-> 
-> 1) either still hold the lock (because hugetlb_fault() took it)
-> 2) or we do not anymore because hugetlb_wp() unlocked it for us.
-> 
-> So it is not that we are unlocking anything blindly, because if the lock
-> is still 'taken' (folio_test_locked() returned true) it is because we,
-> hugetlb_fault() took it and we are still holding it.
+On Wed, 2025-05-21 at 08:28 -0700, Dave Hansen wrote:
+> > diff --git a/arch/x86/include/asm/smp.h
+> > b/arch/x86/include/asm/smp.h
+> > index 0c1c68039d6f..1ab9f5fcac8a 100644
+> > --- a/arch/x86/include/asm/smp.h
+> > +++ b/arch/x86/include/asm/smp.h
+> > @@ -40,6 +40,9 @@ struct smp_ops {
+> > =C2=A0
+> > =C2=A0	void (*send_call_func_ipi)(const struct cpumask *mask);
+> > =C2=A0	void (*send_call_func_single_ipi)(int cpu);
+> > +
+> > +	void (*send_rar_ipi)(const struct cpumask *mask);
+> > +	void (*send_rar_single_ipi)(int cpu);
+> > =C2=A0};
+>=20
+> I assume Yu-cheng did it this way.
+>=20
+> I'm curios why new smp_ops are needed for this, though. It's not like
+> there are a bunch of different implementations to pick between.
+>=20
+You are right, this was in the code I received.
 
-If we unlocked it, anyone else could have taken it immediately after.
+> I feel like this patch is doing three separate things:
+>=20
+> 1. Adds smp_ops
+> 2. Refactors native_send_call_func_ipi()
+> 3. Adds RAR support
+>=20
+> None of those are huge, but it would make a lot more sense to break
+> those out. I'm also still not sure of the point of the smp_ops.
+>=20
+I am not very familiar with this part of the kernel,
+but would be happy to make whatever changes the
+maintainers want to see.
 
-Hugh
+--=20
+All Rights Reversed.
