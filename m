@@ -1,151 +1,132 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F9D722B8B5;
-	Wed, 21 May 2025 07:06:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A68A22B8B5
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 07:06:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747811189; cv=none; b=dPZQPO0m3Uh6vWY8cP83oHlLNYDv6U7qqdjtIFKjRQ/fKY02vheTPWdbjIOlWn25AvS0NZutzTn8UKVAvCmNor+s79VgkWyEE5GskP6mxfZ9p/ur/7A2VykanNRD8k1ZUobtykIYO8JHykudMe5ayjDvnTW/b2fl2H9jh3o8GWo=
+	t=1747811203; cv=none; b=hBvv/enkEcwt1XFtFRXMVpUho7hel2DgjQq3Y13iliVyxKeKkQS3/UBALNQ1vz3sbGpuG+X/2eGRQLv8TRBANp3zPjcRSpNGnAox5FDpFdLMzjPamV4AyogyuQLC0Gj/FdeEw5/oQLPjwhsnPqbOjQkKbjA56djlMySuY2kIkQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747811189; c=relaxed/simple;
-	bh=x84u9qckH89jq1nabqOHuAQm5M4dSA9/eZu8we7XL1U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ssHE6vkJrrreq/JPQN8vjr3ENsMAbWpdvljSAKFrkxKVmfMH+9kbFEhlXQK1FnYBErHRw4728o23BuclS1ilISu4KwV/t8Wu3J9lknqTn72pv5705pGyoMDLbXF7uqdE8qidEkpu5K1OrTQi2i3XQFRCjpJ90o2/hhlUYTGI8FU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=aC9SZxwm; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1747811203; c=relaxed/simple;
+	bh=aPROOibqt7OOY7UY7vh6s2l/hWo7wPzeblL0fff00yY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BgjWti+Nk2z8NpjFaBlzte3tVHQ5/HdsAJPOrVBwmWFvIreuYR+PNzR+z61iKJfbCWf5L2F5/GtwAI6TlYLYZD3J3VpGWgy5LXsKJKsdN2AXEtfaGK6r9DT2AndHlcWwM9j1ofa5+lHQ90Xz/jV/uO3/jCu5yrGA69DJoBi+x88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Jq4P79YK; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=rsXfn0gf; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Jq4P79YK; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=rsXfn0gf; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="aC9SZxwm"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54L6Tc2v004354;
-	Wed, 21 May 2025 07:06:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	TQPHWZwd0L1ohEAFE8//z9F5diCwvbFjg15swR0eETE=; b=aC9SZxwmKqib79M+
-	Ma/pU0pvCtAK0RGb+sTz7fXYUZH6XOjR9Z4rStqqPpBq7f7Vn/8hugT3fq/87X0Q
-	y+4t3rx97FBLg2270OHUK5JszfyddzBolYqdAP0bE/cnjrbsNnStnG3lKFLx8ZeV
-	d2HC3lwsQ9kVdtwpxjpPDFJi0OIZhq+c54HCmb5oQNvpfv9U14SHjlbCI0YkXr7E
-	Paklt5+1RHbyWG0++GUY0zVeVnlTw751lX+7mQV5rGW0HktsNct7/yG7jdoNn67E
-	xWjzDOhagIBDhtQuACxnXdfa2YjXKZ3WChRd42sn5AJJ0H0EMU5y6s4mvjhGx5Xu
-	O32jgA==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf6su31-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 07:06:24 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54L76NjD014676
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 07:06:23 GMT
-Received: from [10.218.0.120] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 21 May
- 2025 00:06:16 -0700
-Message-ID: <6be65186-5af9-4a95-93db-41996310b715@quicinc.com>
-Date: Wed, 21 May 2025 12:36:13 +0530
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Jq4P79YK";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="rsXfn0gf";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Jq4P79YK";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="rsXfn0gf"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id B859021A3E;
+	Wed, 21 May 2025 07:06:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1747811199;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dXjDJXLnXeJnl2whXnV0KS1rM85ENd79trWuk4mT1bw=;
+	b=Jq4P79YKw+7dqfw0qllwerlndQQn3qaxtsb0o5xrATMakKDfeHBDKnosT1i83FkEuyMGVo
+	suqSSerPcizbh9wBliIXMcIG9JKBJtnmc6SkxKP7CIYgTylg7WEiu6qjNykCHMtGX8Uzxt
+	64qhfAwaRvHrz36wU06hBOw4i2kdz/c=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1747811199;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dXjDJXLnXeJnl2whXnV0KS1rM85ENd79trWuk4mT1bw=;
+	b=rsXfn0gfBh9Aqy+3tx52oZay5uJFyUaH+RGzOFw4sidPsSv6b9i/3yFf8FlgWNaD4/law3
+	qbm3RY3upM6wjCAA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1747811199;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dXjDJXLnXeJnl2whXnV0KS1rM85ENd79trWuk4mT1bw=;
+	b=Jq4P79YKw+7dqfw0qllwerlndQQn3qaxtsb0o5xrATMakKDfeHBDKnosT1i83FkEuyMGVo
+	suqSSerPcizbh9wBliIXMcIG9JKBJtnmc6SkxKP7CIYgTylg7WEiu6qjNykCHMtGX8Uzxt
+	64qhfAwaRvHrz36wU06hBOw4i2kdz/c=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1747811199;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dXjDJXLnXeJnl2whXnV0KS1rM85ENd79trWuk4mT1bw=;
+	b=rsXfn0gfBh9Aqy+3tx52oZay5uJFyUaH+RGzOFw4sidPsSv6b9i/3yFf8FlgWNaD4/law3
+	qbm3RY3upM6wjCAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A869613888;
+	Wed, 21 May 2025 07:06:39 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id G6bpKH97LWi+FwAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Wed, 21 May 2025 07:06:39 +0000
+Date: Wed, 21 May 2025 09:06:38 +0200
+From: David Sterba <dsterba@suse.cz>
+To: Yangtao Li <frank.li@vivo.com>
+Cc: clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
+	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	panchuang@vivo.com
+Subject: Re: [PATCH 01/13] btrfs: update btrfs_insert_inode_defrag to to use
+ rb helper
+Message-ID: <20250521070638.GA3687@suse.cz>
+Reply-To: dsterba@suse.cz
+References: <20250422081504.1998809-1-frank.li@vivo.com>
+ <20250422112137.GA3659@suse.cz>
+ <098cfd6e-83c7-4b7f-aeff-7199b751bdb7@vivo.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V1] mmc: sdhci-msm: Enable MMC_CAP_AGGRESSIVE_PM for
- qualcomm controllers
-To: Ulf Hansson <ulf.hansson@linaro.org>
-CC: Adrian Hunter <adrian.hunter@intel.com>, <linux-mmc@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_cang@quicinc.com>, <quic_nguyenb@quicinc.com>,
-        <quic_rampraka@quicinc.com>, <quic_pragalla@quicinc.com>,
-        <quic_sayalil@quicinc.com>, <quic_nitirawa@quicinc.com>,
-        <quic_sachgupt@quicinc.com>, <quic_bhaskarv@quicinc.com>,
-        <quic_narepall@quicinc.com>, <kernel@quicinc.com>
-References: <20241104060722.10642-1-quic_sartgarg@quicinc.com>
- <CAPDyKFrYkKFJ=+4t4ad=a4GJUCBVO7FuaRqdxSTUWtHOWgUA_w@mail.gmail.com>
-Content-Language: en-US
-From: Sarthak Garg <quic_sartgarg@quicinc.com>
-In-Reply-To: <CAPDyKFrYkKFJ=+4t4ad=a4GJUCBVO7FuaRqdxSTUWtHOWgUA_w@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 2yeWrEZCH9pEXSANZfN6AeunNkEfPVPM
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDA2OCBTYWx0ZWRfX0U5OfGVXTXUC
- VK3Yc01faWHYYT5X6T8If7Xd5V1M9fNZhwvZmmvhEsFW/nIY6u2PZjgHySFTuw3u31S3UUi4ChC
- PV06I1iQ/MgsQwuIlBhdsGolXYbMN2YstgEufdBbji03uXmS5wQ6sIIeRfiHogZfZ/c4Urf5yT7
- pbrMUJlTO0YL24m5gN/XDq4j8thCX0oCfZnQNLYzcImHDLzbYxkc+iPtpAHGjwHQucPQAUS91uD
- sSQ3df/xdDEJDSL6VbyxwhxS3PCtpJyCLWo+WufhSU4opVo0kPKYD7bIZASDg1hxFIcMLBOqbEY
- /jxuRhdo9t+hrOYG28eEfnKlpMB6Tx6/7eM60dlXPL0IFR58H+3iF0llRmRpL57N51JywZSlUA5
- h732E7dVDNNrng+oUSLbtIU2HnAasriCLhPz+PQ7KZ2heTXgHAFRfooQ0dPavCWfiqAv6KKS
-X-Authority-Analysis: v=2.4 cv=fZOty1QF c=1 sm=1 tr=0 ts=682d7b70 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
- a=FhJCr26c34s6W4MfTmIA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: 2yeWrEZCH9pEXSANZfN6AeunNkEfPVPM
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-21_01,2025-05-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 mlxscore=0 adultscore=0 spamscore=0 bulkscore=0 suspectscore=0
- malwarescore=0 priorityscore=1501 impostorscore=0 mlxlogscore=999
- lowpriorityscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505160000 definitions=main-2505210068
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <098cfd6e-83c7-4b7f-aeff-7199b751bdb7@vivo.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[]
+X-Spam-Flag: NO
+X-Spam-Score: -4.00
+X-Spam-Level: 
 
-
-
-On 11/15/2024 4:28 PM, Ulf Hansson wrote:
-> On Mon, 4 Nov 2024 at 07:07, Sarthak Garg <quic_sartgarg@quicinc.com> wrote:
->>
->> Enable MMC_CAP_AGGRESSIVE_PM for qualcomm controllers.
->> This enables runtime PM for eMMC/SD card.
->>
->> Signed-off-by: Sarthak Garg <quic_sartgarg@quicinc.com>
+On Tue, May 20, 2025 at 01:14:00PM +0800, Yangtao Li wrote:
+> Hi David，
 > 
-> In general I think using MMC_CAP_AGGRESSIVE_PM needs to be carefully
-> selected. I am not saying it's a bad idea to use it, but the commit
-> message above kind of indicates that this has only been enabled to
-> make sure we avoid wasting energy at any cost. Maybe I am wrong?
-> 
-> Today the default autosuspend timeout is set to 3000 ms, which means
-> that beyond this idle-period the card internally will no longer be
-> able to manage "garbage collect". For a poorly behaving SD card, for
-> example, that could hurt future read/writes. Or maybe that isn't such
-> a big problem after all?
-> 
-> Also note that userspace via sysfs is able to change the autosuspend
-> timeout and even disable runtime PM for the card, if that is needed.
-> 
-> Kind regards
-> Uffe
->
+> The new patchset has been send. Could you please consider taking a look？
 
-Thanks for your valuable comment.
-First of all sorry Ulf for the late reply as I was on break and came 
-back now.
-Yes you are right this has been enabled to make sure we avoid wasting 
-power at any cost.
-Moreover for a poorly behaving SD card we can't penalize the power 
-consumption of all the SOC's so thats we won't to enable this flag.
-
->> ---
->>   drivers/mmc/host/sdhci-msm.c | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
->> index e00208535bd1..6657f7db1b8e 100644
->> --- a/drivers/mmc/host/sdhci-msm.c
->> +++ b/drivers/mmc/host/sdhci-msm.c
->> @@ -2626,6 +2626,7 @@ static int sdhci_msm_probe(struct platform_device *pdev)
->>                  goto clk_disable;
->>          }
->>
->> +       msm_host->mmc->caps |= MMC_CAP_AGGRESSIVE_PM;
->>          msm_host->mmc->caps |= MMC_CAP_WAIT_WHILE_BUSY | MMC_CAP_NEED_RSP_BUSY;
->>
->>          /* Set the timeout value to max possible */
->> --
->> 2.17.1
->>
+Yes, next week once the merge window opens.
