@@ -1,108 +1,107 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C62919E97C;
-	Wed, 21 May 2025 14:23:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B09A51519B8;
+	Wed, 21 May 2025 14:24:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747837394; cv=none; b=jQed4QGwtElFNgpuBv2L3sU3a/M5sUaVRXlhYCFUfBv2KdMxGAbA6yXEz4o8C7f7RTl0h6N5e9ibEkf5BIcCkXGGE7sd/rqPLTm3YA17z6n5sUqax9k6jbXDANynKH2hnlZbP+5R/FNk9slTcsga/sB3zeGNhNRCufiC2cMYuyk=
+	t=1747837453; cv=none; b=QdS36Ieqzy7A7loqgGtXGOp+5/jnt48gxDcEGCjf2n/QWzS14V78uvsmaNlTHv+MEZE38vtH/VhjRdrC06wp3iHZNM0Fk++U7Na2b6l+IhtARu5cYqnnmeOvpiBBUpuZKBURySnGMd/yC7m5iSn/pcWV3Uf9mArlOWdhIN60lUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747837394; c=relaxed/simple;
-	bh=iHhskWt3REXPFQt3U4rsyEt/YNK9o488HeapSlwvdTA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HN0m+11Qm55bsz4am2VGeYNE9Edg/YYnFw6s5xpEyo+bMk99lIdPJc5mn/2UI1k8El51jzdefgZTZwR/vDvplXh4nXFNY+/j8Tyf6ZyjwgaNGx5tn+hjrztBmRM4g9v5oyXtdASZEZ+pDggyzKcmz+Avy8fJOT9d3bYvNmClAWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=PPGbrU2n; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	s=arc-20240116; t=1747837453; c=relaxed/simple;
+	bh=eUGk6V7wI03gCVDLIG209a4YmT/Iai4T9MJ/TF9DLyk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g6053dr1QhvfK44cbKg24HokOH2CFXvZs2dJXiC5Py0x6WGmNuTozlDlDJDsHaTEXJzlZMXFQMoECXbh3UJkmp7rGLJe/UHWkq86szDbkp0ix6mMyH/U517skQEqn0q/K/mNjfSoqBudb0kwMjGx/JEwvuClPRZ70CMxAl6sPJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BF8RR/p4; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="PPGbrU2n"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43edecbfb94so74354705e9.1;
-        Wed, 21 May 2025 07:23:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1747837391; x=1748442191; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hJdrh3L1t2pXOV+bbYlaC+xr2LBJsGiRXUAwh3/gxE0=;
-        b=PPGbrU2n4PEYb4T7Kf9dCzMFqtMg1J8qPHnzhk0O+XG/ANGXBa3DMLduCa28cbEsYZ
-         lBIgiWBQz6oymU46lpeIkv+zOC5awETTDT9bUCYAkgNqJ8/pVdg/jO2tUpK5AoWD9J0f
-         f6clK4nVZjbytrQ1BYlBlvkZY6ygeFI2RJ8B8vDbd/W0qo4bIG5iS5nf9I9Ezz+QS0GB
-         0AXwO40j+YYe9zmbvE6vkrS3Iiwpb94SOX4zToxYKX2wjPJSMS0Q9G/jebRHF4tIA1Nb
-         8rWbUuaT+XXeCOQidPwO6uaIRlNehJ4QYVuypXNtdcslYSRf96SP876vZnxW9L/ewguq
-         haQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747837391; x=1748442191;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hJdrh3L1t2pXOV+bbYlaC+xr2LBJsGiRXUAwh3/gxE0=;
-        b=vzgGJmGZhG0DGr0Z3hvPqlCIs+4NquEVIK4KAAkICr4FuNvv9eDKNuVA/eCjRmydsK
-         SyhVDRZrIsGSBZ/OeVv5ztX1ro0MG9K94qGhrU3X4TZ+dvgIdZn+o1+tZp2updBWb/z0
-         YrLptN0ajkv3WGfMHUURHgA/qwKwaoA995bho9PnjRm6vGEuYY5h4ZOX2/+xrCZWkzsx
-         VMka26m2U0KYLyyHzKdfhIYSXmcYb571MGbtqWiZwyqHZYxZRYCtP39bDCmJO+1GoChE
-         BNycr+/LEwFvVCgHBUudiUR7NhiZ9TMBGvcSAFj/IgdpuS9w9w4TrJrYuvDMBoFn/+Ow
-         Fd3w==
-X-Forwarded-Encrypted: i=1; AJvYcCWIGiHLYuXMBCZfLko6RWm8dOw/VmaIlwdFPDr9+/Qqnrf8eTVpZvLw9GxWgmZMsekoyOtvJZ2mjdQ5eis=@vger.kernel.org, AJvYcCWOna0JGKjvhElHIa+kYAELnBRkUYZmq5opYCOThqr07lVnZuWF+85N7IrjE9XGCoufDK+26rhp@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7axxW1iAjI2BFzKxEsYptiIccdw2nEAH0bgSqgJfmt5qMEx39
-	V445Au0HYbYffSWaOt4GEFj9BnZ9Zp/mH1xL4IDwDg2ST9mgU967BEY=
-X-Gm-Gg: ASbGnctajh+GRcsv/aZouUKYRApBrKPRKJByu5SmLAMcZvf3xGqDyP0ePl6D+MfSMPD
-	x2lc+YjAbEwRY0pr4dHlL4ZXkqMsaVM9CMq/ndSGVSZpVdZla3YiSxQLelqI8HYbdCjYTj8pjrI
-	OjUlPHIQ/OF9ggeg6hX2U/U+nNZHzLJzQtm62hUTGuzAQyEePeP8KUtpwPaw3zapuhQ1KxHZShZ
-	tvJtHJksq1T9VxoptronHXJ+bJh3pAHQdC4E+nuCdUrUI33ney9df3qEqE0uQ58czIhQMHI/i1d
-	wcmg0NVVfE25IUoxGMnr7nvpWvOHwo5xGNNRlRymJiiIldVx8sPV6mJGu7YKPv4r+k78M4h28kT
-	opk+A+iJfEq5GHFDPcEsZ0v25qzw=
-X-Google-Smtp-Source: AGHT+IGtE5oKab5YMYXOizL8Nkh3l5Qve9bCmylWGg2p1Wz9sS6jb3o/Zpy/DJdRh4lj5xxkad2bCw==
-X-Received: by 2002:a05:600c:6806:b0:43c:fb95:c76f with SMTP id 5b1f17b1804b1-442fd618ee7mr185274145e9.9.1747837391193;
-        Wed, 21 May 2025 07:23:11 -0700 (PDT)
-Received: from [192.168.1.3] (p5b2ac604.dip0.t-ipconnect.de. [91.42.198.4])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f6b297easm75430375e9.6.2025.05.21.07.23.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 May 2025 07:23:10 -0700 (PDT)
-Message-ID: <0b7de680-f624-493e-a7d8-072ebe68dce3@googlemail.com>
-Date: Wed, 21 May 2025 16:23:08 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BF8RR/p4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747837451; x=1779373451;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=eUGk6V7wI03gCVDLIG209a4YmT/Iai4T9MJ/TF9DLyk=;
+  b=BF8RR/p4/lkarbPBnrX1i6C6pB9Vy82dprQHyJuzEgG5Lkv1uBN8H+XL
+   eZZRKvNBa/QMyw81wAUJ+jS/7GHlkIKJtFOkTNI1pB1LyDpzcYKtDuwcV
+   F2dOH3nsK36yJZI4eq43SLwuCzOhx0shx82YTT2iI7tL2M8VC+Vqayv5i
+   OHeWMIpqWJe4jWDthIsHuCBN/v1NY7dOzHkdwUaUObWxKS9fY0Uff5+QY
+   YwbEmat8/1am7Nvmti5wI6byubHXHTjjhD2OwKE2aNTgjq39Ht7ZLuWj2
+   /N+Tzi642TByiKjXMCOeePx0G0jFKQ7wRhQj0blY7mjbr0iWk5HS+ZfDV
+   A==;
+X-CSE-ConnectionGUID: +z1SxEj/S9qrHE8IYAyq2A==
+X-CSE-MsgGUID: HBNcczIdQmqZOtbQcUfFmw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="49879915"
+X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
+   d="scan'208";a="49879915"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 07:24:11 -0700
+X-CSE-ConnectionGUID: 4BUjFANHQzO7LV0bp8FiPg==
+X-CSE-MsgGUID: cNeIdTQfQKiMknVr6oSrCQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
+   d="scan'208";a="171102153"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa001.fm.intel.com with ESMTP; 21 May 2025 07:24:08 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uHkMX-000OLs-2d;
+	Wed, 21 May 2025 14:24:05 +0000
+Date: Wed, 21 May 2025 22:24:04 +0800
+From: kernel test robot <lkp@intel.com>
+To: =?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Waiman Long <longman@redhat.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-api@vger.kernel.org,
+	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>
+Subject: Re: [PATCH v4 4/7] futex: Create set_robust_list2
+Message-ID: <202505212200.ditHHp5E-lkp@intel.com>
+References: <20250520-tonyk-robust_futex-v4-4-1123093e59de@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH 6.1 00/97] 6.1.140-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250520125800.653047540@linuxfoundation.org>
-Content-Language: de-DE
-From: Peter Schneider <pschneider1968@googlemail.com>
-In-Reply-To: <20250520125800.653047540@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250520-tonyk-robust_futex-v4-4-1123093e59de@igalia.com>
 
-Am 20.05.2025 um 15:49 schrieb Greg Kroah-Hartman:
-> This is the start of the stable review cycle for the 6.1.140 release.
-> There are 97 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+Hi Andr�,
 
-Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
-oddities or regressions found.
+kernel test robot noticed the following build errors:
 
-Tested-by: Peter Schneider <pschneider1968@googlemail.com>
+[auto build test ERROR on 3ee84e3dd88e39b55b534e17a7b9a181f1d46809]
 
+url:    https://github.com/intel-lab-lkp/linux/commits/Andr-Almeida/selftests-futex-Add-ASSERT_-macros/20250521-045231
+base:   3ee84e3dd88e39b55b534e17a7b9a181f1d46809
+patch link:    https://lore.kernel.org/r/20250520-tonyk-robust_futex-v4-4-1123093e59de%40igalia.com
+patch subject: [PATCH v4 4/7] futex: Create set_robust_list2
+config: i386-buildonly-randconfig-003-20250521 (https://download.01.org/0day-ci/archive/20250521/202505212200.ditHHp5E-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250521/202505212200.ditHHp5E-lkp@intel.com/reproduce)
 
-Beste Grüße,
-Peter Schneider
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505212200.ditHHp5E-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from <command-line>:
+>> ./usr/include/linux/futex.h:177:26: error: field 'list' has incomplete type
+     177 |         struct list_head list;
+         |                          ^~~~
 
 -- 
-Climb the mountain not to plant your flag, but to embrace the challenge,
-enjoy the air and behold the view. Climb it so you can see the world,
-not so the world can see you.                    -- David McCullough Jr.
-
-OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
-Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
