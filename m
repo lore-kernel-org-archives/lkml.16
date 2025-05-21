@@ -1,515 +1,167 @@
-Received: from TYVP286CU001.outbound.protection.outlook.com (mail-japaneastazon11011035.outbound.protection.outlook.com [52.101.125.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6126512E5B;
-	Wed, 21 May 2025 07:43:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.125.35
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747813395; cv=fail; b=uBTfgOFhywWzpILEXpy8RH/skt+NhhYU+gRIt+AQL5fsM3BGi2dWfB0NDd1hGTdfMT8AlpckBI9i4SX5M21F/Ec6R7bkN2WHZIbi4khGNA/SMXLp9/mChcmJrQVotwhBfuhcGsA6GcABda1AdpxUdpoYw26VFBSWqTPf0IUOKH8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747813395; c=relaxed/simple;
-	bh=tZVDOJvnGS5kS/mClD/VI3iizBvlW5Cw5WxSWw5Ifjk=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=QneG7B08Eew8ITy2/LgJt0mdkJQcX/GT7M3oTZBn6jpWwe+YE/NS13tn3ZxiX4UC0l4aqh4HnfCuhXqM95oLbKbYswtzvEpGoIKP3NDnj+QqtcLmfRevd6TUQqaHC68aIVXNBSTiop0GLOMqoFAAt76rjKCb+81RZsNmgH5gPUo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=Klywsko+; arc=fail smtp.client-ip=52.101.125.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B49D612E5B
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 07:43:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747813403; cv=none; b=dokeXGdYl0wzfrQkEd/N/dI3KWwOqndNSJoTL4s+fuTRfk6Mde2FZ7XMM2hlXtjpcC054dQL5kmgXODVNVEleuIyVCcikC/UijCw4godaB1KF7QqnIPsjsK8JsNFIry429YsDk3EKpIRzmKSoYi1UiqlnU95RfSb64n7Te08OI8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747813403; c=relaxed/simple;
+	bh=IaXGz566qug/+3EDaHBOJMa42yV+T656nzKq4hpX70A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RRiG83ROQ8ca5dEOuj83WDSwmdVRCr6a+8Mzxv6gAtz3i25/cs+eOOpJIxZWYGH4Smc66zEEr3KAYZsrB0Jd2x1yHlZMtjo69ZrBeyKG8mHAbQyaFrd9sZnT/d9q+RZEO2M6XADVfxt+FJoC0L/2r/werOwLqVXSLl6n7Ecc5eI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tniVTUKM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="Klywsko+"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YTQbFYsui9RCHGXNccIIsQD/iDz1weg0UANwJpYaG9BtOoI0HLsccqLtzdKLZMB/idJ79P7Ch8XFIWWv9QbQRN6zvXTh/wbiiBxfB+Dnrki/wutJFqZ3fZP0RAuiXb3i/1YYPBFklaOd08fhisG4Z/h8rlayK5nr4I6wLp3crBjzxFebupEUxn+CSprvBvSMWt3kJreyB8GbTw2evJvxOgQHoG/WGFBxS3ozfSn/Z0sn1rZvAnBqtlnDmMKQc+RmfCQRXjthJWErwGh9I2Wczn3hmKvtuaCD7i2VuVtiF6oRhcwBzRSV2vgZqrWJdlHWF5AvOu/Ln/0SbQFpR7SrFQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=K03+qsN2UnrweZ1XbhJ2HJd2V3d5AbPFdf6ZD3p/hgM=;
- b=qfIfeRF7TGAs4dLczgTEp+2eAw3boGh2iZW+crMBDVlAOW4eOCZ6i7RcaWix4/+Y0KSuqivf/WezYa1E7qKI1d7A3AM5qs1SmdHA+gx3CpEtFq458vRVBT0Z56+tdHmvAeUSHO2lE1n00hmtkGyB+SZB+kLDUgT8vHlbErXwxCjjdP+sxJ2MOuDiN+LM47si7eqLKDmLvhKQoTENbpfq0wAM7vNMEGn2SKFz4ZID3Y65a0acg5l5N02ECoOEyvXm9CqFAC3KokJwQ1fHtNCZqkTy76hBQWW0uAuQJfyLG8ny9OdiSUSRlCwrWRbN5H1INX6imixPa/FO1IDrDu8q3A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=K03+qsN2UnrweZ1XbhJ2HJd2V3d5AbPFdf6ZD3p/hgM=;
- b=Klywsko+qGcmVRcq6kKGcpcABO0U4J1vYeHPUZY30f5raHID7RhLTAncNJUDR3Bhxvk/SHQeZ2DMtrOpJkmyWgGmTsOQ8R4fjn/0v2IKX9aEmSWGltmG9rdNpyDZ06SRVsP1A/o/buP22nSgNdqh/KlOA7Ma8IMZvO7nnynK4f0=
-Received: from TYCPR01MB11332.jpnprd01.prod.outlook.com (2603:1096:400:3c0::7)
- by OSCPR01MB16193.jpnprd01.prod.outlook.com (2603:1096:604:3e9::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.19; Wed, 21 May
- 2025 07:43:08 +0000
-Received: from TYCPR01MB11332.jpnprd01.prod.outlook.com
- ([fe80::7497:30af:3081:1479]) by TYCPR01MB11332.jpnprd01.prod.outlook.com
- ([fe80::7497:30af:3081:1479%4]) with mapi id 15.20.8769.019; Wed, 21 May 2025
- 07:43:08 +0000
-From: Biju Das <biju.das.jz@bp.renesas.com>
-To: Hugo Villeneuve <hugo@hugovil.com>, "maarten.lankhorst@linux.intel.com"
-	<maarten.lankhorst@linux.intel.com>, "mripard@kernel.org"
-	<mripard@kernel.org>, "tzimmermann@suse.de" <tzimmermann@suse.de>,
-	"airlied@gmail.com" <airlied@gmail.com>, "simona@ffwll.ch" <simona@ffwll.ch>
-CC: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hugo
- Villeneuve <hvilleneuve@dimonoff.com>, Chris Brandt
-	<Chris.Brandt@renesas.com>
-Subject: RE: [PATCH 1/2] drm: rcar-du: rzg2l_mipi_dsi: Implement host
- transfers
-Thread-Topic: [PATCH 1/2] drm: rcar-du: rzg2l_mipi_dsi: Implement host
- transfers
-Thread-Index: AQHbyaojXzSdLT9CvEyaJrDByzEfXrPcn0sg
-Date: Wed, 21 May 2025 07:43:08 +0000
-Message-ID:
- <TYCPR01MB113329D284B9AFDD68F9E64A3869EA@TYCPR01MB11332.jpnprd01.prod.outlook.com>
-References: <20250520171034.3488482-2-hugo@hugovil.com>
-In-Reply-To: <20250520171034.3488482-2-hugo@hugovil.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=bp.renesas.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TYCPR01MB11332:EE_|OSCPR01MB16193:EE_
-x-ms-office365-filtering-correlation-id: 2f318990-68b0-42ab-e227-08dd983b2146
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|7416014|376014|1800799024|38070700018|7053199007;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?m0F4Uaj6TcqrESixJ3Oz0DgVEWY0bOJmUJAhejhuUGUYlwmDvN29+vFH6xS4?=
- =?us-ascii?Q?en79VkCeGZEHQG+wBTHv2aWamPRI/e/Kh/IQwQHlGLvWGFnne3pPZPXges3f?=
- =?us-ascii?Q?XbvhbJ5g7wkX3fcT3NVSsSoLjqllQG+cjllJVZQHIDUjeVqZmA7QPogm4wtB?=
- =?us-ascii?Q?LTj7c6UtLJtKuBX359PXFyBoHN3QM4Ns7URmCRB5R+P8PD9tnilVSav48lj9?=
- =?us-ascii?Q?H4afNy4caMgbD8sbT2ciCYGAT3yOku6B5XVv4UtWMCu7jPzaaEfadRz0ktr8?=
- =?us-ascii?Q?o2ATZoM/hNLmFDqsEJAKS4oRfTB93iYIjPTK9pC56WEINK1vb6IaKLPQvGWD?=
- =?us-ascii?Q?WPeSGB5/fLuTA2HT/TUpF2YjmBzaITn2wJdAHrHB4wP9sGM98cEiwFi+Zz1j?=
- =?us-ascii?Q?62Lo25GI54fklX+BVptNRKtZgV8V/gNvo0MbwPklxa+CtSrFxi1aq6x130w5?=
- =?us-ascii?Q?apNGXMHlQcw9fp7wH1kBKzf9mDuTUo8KkO3p23Bca6x3JqAh1ijap69kReg/?=
- =?us-ascii?Q?eRD+0SUITHm488ZzF2NzUN8mxd+PoJ/+SOUrAHvTBd/KQOzOxz+kAumJqPL+?=
- =?us-ascii?Q?MWI5s0gbtKS1Nf6Wv9PxLkkQYeQ/qGmqdT6ogMWDkixA/l7UYVNs9ksk8Omv?=
- =?us-ascii?Q?Irt/h/wtTFFneBndjZglKLdeusCPLvja86JqAVM5s9wgHweluneY1xNDmPJz?=
- =?us-ascii?Q?9vFfm+OiVHFYD982/Rg1KXSWSdGyRk33PCpoWvPK/DcmaKt8rlj2KtCVZyIc?=
- =?us-ascii?Q?G3m6uicQNE/+uBr/dmGPk4aNuorp7LfWX6JopnSNDPR/GysNkvVOD+TC4LU6?=
- =?us-ascii?Q?JkUMv0FPAObGjxrRWyPB8k2RjPulUztcSAPv/lua8NAqJUUYiqkd1xfeEuiT?=
- =?us-ascii?Q?BonOF7xWnxiCWFV/P+ol/03x8NL9gztvJTJSwO7IezRpPaXCy8JAMPEsz8kp?=
- =?us-ascii?Q?UavIMsOkIYDcDqNPhTCq31IbWnYhKm/WVlL1ru7lLEhlBCcW2aNx72+INcUL?=
- =?us-ascii?Q?RaZ0zm0hea2Bgg/YLlsnMhds6hMd930weUOSRyzwmo4gC8D88Q8k2de8Pdrd?=
- =?us-ascii?Q?9sdlR+rUtQmMAxU+m7+GU+6rNRJzWxFJRgc0BC27bl9EHZIjWnG1BBaiXdkr?=
- =?us-ascii?Q?6lfVGdCtuRl0/Dy3fMSdftPDLbSsgyixvVSALkZI1L9YsIUudyUqB+5nGmCY?=
- =?us-ascii?Q?Iszi3lwiviip++QGfUKXM9z3ucOF5caazZ3cpwIZCct8fsFcJhdG9yYvJrMQ?=
- =?us-ascii?Q?WxsHktQZJ2T+rmT2sq37QW5zR3PUmHDM2K5K/Grq4Q13IOsyRcW21akuU1yV?=
- =?us-ascii?Q?wsUvfnZqIQ6zBBqTYCn4u8XGuKe/uwsXNZh4z8B61vv2wDyjILsupV0z3xMX?=
- =?us-ascii?Q?4ZM53EpD2hhrM/iCX5fxuuVQFGm5VjE+Mber644/Angi98HZB4l2dz1lPT98?=
- =?us-ascii?Q?VcwCm2RkvKA=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYCPR01MB11332.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(38070700018)(7053199007);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?UJLIWa1eTT8T4B9k/L5v+skc9ifJlwfHTyWNEnQaG2B4nHjVjUIp/PF8wpcT?=
- =?us-ascii?Q?ttjiNSZYKM1CuZyWqGxFv5X0JPF585CjWKP5Tm8yoRsSRMsgeHFbMICRdnjT?=
- =?us-ascii?Q?/OD6oNmNjxFUg6LxA8HVolv7lnoYf9c9WXcRtfBE9cV4VdmpdUMb4hhYuc/v?=
- =?us-ascii?Q?YKEMKiohXI7f2qVHPidrz+8BcQMLoW2D070EZvJGjpstTEsPSBPzgkcJwwmC?=
- =?us-ascii?Q?DiLlCYoJv2WFaSTgO+/F9LVALWf9Ox8aKfEq/Lobu8lCwMcZOppLVZywz64b?=
- =?us-ascii?Q?rsTCtJErRi2RfBcIDtNgnw70ubyH3DDTiaBDwPx9tHGpf+h61vTkukskgXvf?=
- =?us-ascii?Q?pp12VlckP4swuAYrLKh9/0vWzm8nX4KmM44PbkiIq97ziafvuF2XvTipbuIk?=
- =?us-ascii?Q?lV3Kn/IlzD6MUCmnlXotBXNpHcXOF5YV9P8qhvfjnuV7EtgryPxnvZ8MHcbA?=
- =?us-ascii?Q?hkZUAMnUgmkRCIGrBInmE2akU7QHdt+WL5Nd6zP7dZTnaFB8sqB2WYRnY519?=
- =?us-ascii?Q?23Jj+KOnKRWf/6WSScwhGwCfxJV4DFJ0ZdjLrzWx8GqjU1k6PDgT+zjwD2aR?=
- =?us-ascii?Q?VZULdZxag+4gAOgU3wsW7zAoHzqpmu8j3ZkYK+QCFsHB5MlwlQSKaB28KeCB?=
- =?us-ascii?Q?F8yDSyl71g/uuPZcrAs3hzuMm4OmI8BIOnQymZ2nvJ75gyCac39pjQ46lSZt?=
- =?us-ascii?Q?W7c6LvFMSU5JbXZLnsV0SYeXyrkaWL8ygzUHYrlieeNRQzhh4o4pw16LwWDZ?=
- =?us-ascii?Q?8XRyXcyUMTi7XLE3M+ElPUvLit0j1R7Bg4bCPgbzdEKkq94GfcTF22C8mmlq?=
- =?us-ascii?Q?szy1+X7eut19DY9QNillwbuPxhEKMcwE55sWBQEN+yi6er8XB9itLmyWOxZy?=
- =?us-ascii?Q?eiu28bOLMveAyvTLvLvAomhRSZTK3x4GD5RBXgAuRBWh+/fZa/CJARLGPded?=
- =?us-ascii?Q?22R9R5Ts2LzlpsnHLOwKbBeTJeIe71GWtnBy1jdQ03gUrv5f5b3HxGpgloc1?=
- =?us-ascii?Q?rG0DGsjEghjqcBd17y/QTDcGQfjqWCQcAoZgd7ZXOvkMjMZG8N8hmE/KzMUy?=
- =?us-ascii?Q?3fBjmpyJGJ5hXLhudzt52GE9yvTaaTFscKicPEZ256KaZTW6W63fPcPyM+cx?=
- =?us-ascii?Q?VqH2/FLAmBGUI21ErrVbyk4rSd3/UwB0L8I9vkDj6Kr807JSZ3takycp7z9D?=
- =?us-ascii?Q?pKWHz04vVQivQmpBr3UfmkWpWiIDczOAHsz+gR7V5XwYroAi0+skNRozYqfl?=
- =?us-ascii?Q?GVJRlTeazTig2El+pk2dpS2SxcciOSsaWip+FF3giRd62lug2PdwYfelNIpd?=
- =?us-ascii?Q?ysyBbftWbUIObCp47RGi0CIsElA73leXjjkgFvhJYnmvUL7JQlckEdTylAXZ?=
- =?us-ascii?Q?ZjGxUIp+r5bByRqUpzo9HF+heVN3m5Qqr7TvMyQ+WYril/9wZK4qIyf1U4GK?=
- =?us-ascii?Q?HS0coAxLxlOYf/q7f4HrWQXYao9lyBEDzMdy0wbKCogLXiN/CN1kGbkDh6q6?=
- =?us-ascii?Q?rQwW9W1pCYU2CIZwiSgFwhZyJeD0Iq27TQiy2p5G62sUnahqbA+a0ydFuepk?=
- =?us-ascii?Q?77v+l0JYm3vlYPal9/D3hEHlkiQ34UbJY+QPMYg6BWYR1HYnxRxo68xfsE4J?=
- =?us-ascii?Q?fA=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tniVTUKM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC49FC4CEEA;
+	Wed, 21 May 2025 07:43:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747813403;
+	bh=IaXGz566qug/+3EDaHBOJMa42yV+T656nzKq4hpX70A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tniVTUKM4XvL4gNhywgKr7aRHfydPT1P95tSVrdRRZah7fr7CfHyu4SD8A5iOLXWQ
+	 fddFnOKbF7JJoxNQQ86pNryBmgx0W9LznRBXv/FY0L080INbPqjn644g+ce3cmKPLZ
+	 P8rcOvI00ufaMAbagclmhJ+6Flgkw01Ujifw8AQAsd0ijkHfkXe0zS8L47tcObZhCL
+	 MXxAgNQC1MJ4GAlSbbQUP6YnVlT9P5dp7Ubviph56Tsmh3ykF5eanv6mNG2tyMdosH
+	 lnw+HiM5D3oHvdkMKyy9bWTs6iVrmeDu390ARaR3VYjb8+11irgtcuGihmG3wo0yUG
+	 8cnOIEdBtjtTA==
+Date: Wed, 21 May 2025 10:43:15 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Changyuan Lyu <changyuanl@google.com>
+Cc: akpm@linux-foundation.org, bhe@redhat.com, chrisl@kernel.org,
+	graf@amazon.com, jasonmiu@google.com, kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	pasha.tatashin@soleen.com
+Subject: Re: [PATCH 1/2] memblock: show a warning if allocation in KHO
+ scratch fails
+Message-ID: <aC2EE1pg9ktQdstI@kernel.org>
+References: <aCoFphqeZAMkhq51@kernel.org>
+ <20250521070310.2478491-1-changyuanl@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TYCPR01MB11332.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2f318990-68b0-42ab-e227-08dd983b2146
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 May 2025 07:43:08.5189
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 8otGQ9d0yFyA178xgb3liJMB1U2sVtxRLnNbU7iwhMbTrU4w7WUjM6+jvRSPhBdd/neIHM4Uxg9HWZimPqC1gShePCxppHoruOLau0SmdWk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSCPR01MB16193
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250521070310.2478491-1-changyuanl@google.com>
 
-Hi Hugo,
+Hi Changyuan,
 
-Thanks for the patch.
+On Wed, May 21, 2025 at 12:03:10AM -0700, Changyuan Lyu wrote:
+> Hi Mike,
+> 
+> On Sun, May 18, 2025 at 19:07:02 +0300, Mike Rapoport <rppt@kernel.org> wrote:
+> >
+> > This can be reproduced without KHO, just squeeze the RAM size, boot with a huge
+> > kernel and initrd and you'll get the same panic.
+> >
+> > The issue is that sparse_init_nid() does not treat allocation failures as
+> > fatal and just continues with some sections being unpopulated and then
+> > subsection_map_init() presumes all the sections are valid.
+> >
+> > This should be fixed in mm/sparse.c regardless of KHO, maybe as simple as
+> >
+> > diff --git a/mm/sparse.c b/mm/sparse.c
+> > index 3c012cf83cc2..64d071f9f037 100644
+> > --- a/mm/sparse.c
+> > +++ b/mm/sparse.c
+> > @@ -197,6 +197,10 @@ void __init subsection_map_init(unsigned long pfn, unsigned long nr_pages)
+> >  		pfns = min(nr_pages, PAGES_PER_SECTION
+> >  				- (pfn & ~PAGE_SECTION_MASK));
+> >  		ms = __nr_to_section(nr);
+> > +
+> > +		if (!ms->section_mem_map)
+> > +			continue;
+> > +
+> >  		subsection_mask_set(ms->usage->subsection_map, pfn, pfns);
+> >
+> >  		pr_debug("%s: sec: %lu pfns: %lu set(%d, %d)\n", __func__, nr,
+> 
+> I tried your patch and the kernel log now looks like
+> 
+> [    0.027562] Faking a node at [mem 0x0000000000000000-0x000000057fffffff]
+> [    0.028338] NODE_DATA(0) allocated [mem 0x562bd5a00-0x562bfffff]
+> [    0.029201] Could not allocate 0x0000000014000000 bytes in KHO scratch
+> [    0.030229] sparse_init_nid: node[0] memory map backing failed. Some memory will not be available.
+> [    0.030232] Zone ranges:
+> [    0.031539]   DMA      [mem 0x0000000000001000-0x0000000000ffffff]
+> [    0.032242]   DMA32    [mem 0x0000000001000000-0x00000000ffffffff]
+> [    0.032952]   Normal   [mem 0x0000000100000000-0x000000057fffffff]
+> [    0.033658]   Device   empty
+> [    0.033987] Movable zone start for each node
+> [    0.034473] Early memory node ranges
+> [    0.034878]   node   0: [mem 0x0000000000001000-0x000000000007ffff]
+> [    0.035591]   node   0: [mem 0x0000000000100000-0x00000000773fffff]
+> [    0.036308]   node   0: [mem 0x0000000077400000-0x00000000775fffff]
+> [    0.037030]   node   0: [mem 0x0000000077600000-0x000000007fffffff]
+> [    0.037750]   node   0: [mem 0x0000000100000000-0x000000054abfffff]
+> [    0.038463]   node   0: [mem 0x000000054ac00000-0x0000000562bfffff]
+> [    0.039180]   node   0: [mem 0x0000000562c00000-0x000000057fffffff]
+> [    0.039901] Initmem setup node 0 [mem 0x0000000000001000-0x000000057fffffff]
+> [    0.040707] On node 0, zone DMA: 1 pages in unavailable ranges
+> [    0.041401] On node 0, zone DMA: 128 pages in unavailable ranges
+> [    0.221829] BUG: kernel NULL pointer dereference, address: 0000000000000018
+> [    0.222675] #PF: supervisor read access in kernel mode
+> [    0.223271] #PF: error_code(0x0000) - not-present page
+> [    0.223859] PGD 0 P4D 0
+> [    0.224152] Oops: Oops: 0000 [#1] SMP
+> [    0.224575] CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.15.0-rc4+ #279 NONE
+> [    0.225439] RIP: 0010:set_pageblock_migratetype+0x97/0xd0
+> [    0.226069] Code: b6 c9 c1 e1 04 48 01 c8 eb 02 31 c0 48 8b 70 08 89 f9 c1 e9 07 c1 ef 0d 83 e7 03 80 e1 3c 41 b8 07 00 00 00 49 d3 e0 48 d3 e2 <48> 8b 44 fe 18 49 f7 d0 48 89 c1 4c 21 c1 48 09 d1 f0 48 0f b1 4c
+> [    0.228231] RSP: 0000:ffffffffa4203d58 EFLAGS: 00010046
+> [    0.228834] RAX: ffff8e4722bd13b0 RBX: 0000000000000000 RCX: 0000000000009b00
+> [    0.229664] RDX: 0000000000000001 RSI: 0000000000000000 RDI: 0000000000000000
+> [    0.230487] RBP: ffffffffa4203d58 R08: 0000000000000007 R09: 0000000000000000
+> [    0.231303] R10: ffffffffa4edc610 R11: 000000000000000c R12: 000000000054ac00
+> [    0.232119] R13: 0017fff000000000 R14: 0000000000000002 R15: 00000000004d8000
+> [    0.232937] FS:  0000000000000000(0000) GS:0000000000000000(0000) knlGS:0000000000000000
+> [    0.233868] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [    0.234529] CR2: 0000000000000018 CR3: 000000055923e000 CR4: 00000000000200b0
+> [    0.235351] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [    0.236171] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [    0.236990] Call Trace:
+> [    0.237272]  <TASK>
+> [    0.237514]  memmap_init_range+0x1d8/0x210
+> [    0.237983]  memmap_init_zone_range+0x7f/0xb0
+> [    0.238488]  memmap_init+0x9a/0x120
+> [    0.238892]  free_area_init+0x369/0x3d0
+> [    0.239331]  zone_sizes_init+0x5e/0x80
+> [    0.239765]  paging_init+0x27/0x30
+> [    0.240153]  setup_arch+0x307/0x3e0
+> [    0.240556]  start_kernel+0x59/0x390
+> [    0.240968]  x86_64_start_reservations+0x28/0x30
+> [    0.241493]  x86_64_start_kernel+0x70/0x80
+> [    0.241962]  common_startup_64+0x13b/0x140
+> [    0.242433]  </TASK>
+> [    0.242682] CR2: 0000000000000018
+> [    0.243064] ---[ end trace 0000000000000000 ]---
+> 
+> It seems we are just defering the panic from subsection_map_init() to
+> memmap_init(). To me it is still not obvious that the failure was
+> caused by samll KHO scratch.
 
-For some reason, your cover letter is not showing link to this patch
-[1] https://lore.kernel.org/all/20250520164034.3453315-1-hugo@hugovil.com/
+Small KHO scratch only exposes the issue that from one side
+sparse_init_nid() does not treat OOM condition as fatal and tries to
+continue with hardly noticeable error message but from the other side, we
+presume that all section data was properly allocated and access it.
+ 
+> I think the error log in my original patch still makes sense since it
+> indicates potential panics early.
 
-> -----Original Message-----
-> From: Hugo Villeneuve <hugo@hugovil.com>
-> Sent: 20 May 2025 18:11
-> Subject: [PATCH 1/2] drm: rcar-du: rzg2l_mipi_dsi: Implement host transfe=
-rs
+This will add another barely noticeable message at the same place
+sparse_init_nid() reports an error.
+I don't see how it will be better.
 
-rcar-du->rz-du
+I think we should just make sparse_init_nid() panic or at least change 
+"sparse_init_nid: node[0] memory map backing failed. Some memory will not be available."
+to something more visible and clear. 
 
->=20
-> From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
->=20
-> Add support for sending MIPI DSI command packets from the host to a perip=
-heral. This is required for
-> panels that need configuration before they accept video data.
->=20
-> Based on Renesas Linux kernel v5.10 repos [1].
+> Best,
+> Changyuan
 
->=20
-> Link: https://github.com/renesas-rz/rz_linux-cip.git
-> Cc: Biju Das <biju.das.jz@bp.renesas.com>
-> Cc: Chris Brandt <chris.brandt@renesas.com>
-> Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-> ---
->  .../gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c    | 174 ++++++++++++++++++
->  .../drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h   |  56 ++++++
->  2 files changed, 230 insertions(+)
->=20
-> diff --git a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c b/drivers/gpu=
-/drm/renesas/rz-
-> du/rzg2l_mipi_dsi.c
-> index dc6ab012cdb69..77d3a31ff8e35 100644
-> --- a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-> +++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-> @@ -6,6 +6,7 @@
->   */
->  #include <linux/clk.h>
->  #include <linux/delay.h>
-> +#include <linux/dma-mapping.h>
->  #include <linux/io.h>
->  #include <linux/iopoll.h>
->  #include <linux/module.h>
-> @@ -23,9 +24,12 @@
->  #include <drm/drm_of.h>
->  #include <drm/drm_panel.h>
->  #include <drm/drm_probe_helper.h>
-> +#include <video/mipi_display.h>
->=20
->  #include "rzg2l_mipi_dsi_regs.h"
->=20
-> +#define RZG2L_DCS_BUF_SIZE	128 /* Maximum DCS buffer size in external me=
-mory. */
-> +
->  struct rzg2l_mipi_dsi {
->  	struct device *dev;
->  	void __iomem *mmio;
-> @@ -44,6 +48,10 @@ struct rzg2l_mipi_dsi {
->  	unsigned int num_data_lanes;
->  	unsigned int lanes;
->  	unsigned long mode_flags;
-> +
-> +	/* DCS buffer pointers when using external memory. */
-> +	dma_addr_t dcs_buf_phys;
-> +	u8 *dcs_buf_virt;
->  };
->=20
->  static inline struct rzg2l_mipi_dsi *
-> @@ -651,9 +659,168 @@ static int rzg2l_mipi_dsi_host_detach(struct mipi_d=
-si_host *host,
->  	return 0;
->  }
->=20
-> +static ssize_t rzg2l_mipi_dsi_read_response(struct rzg2l_mipi_dsi *dsi,
-> +					    const struct mipi_dsi_msg *msg) {
-> +	u8 *msg_rx =3D msg->rx_buf;
-> +	u16 size;
-> +	u8 datatype;
-> +	u32 result;
-
-Please arrange the variables in reverse xmas tree fashion.
-=20
-> +
-> +	result =3D rzg2l_mipi_dsi_link_read(dsi, RXRSS0R);
-> +	if (result & RXRSS0R_RXPKTDFAIL) {
-> +		dev_err(dsi->dev, "packet rx data did not save correctly\n");
-> +		return -EPROTO;
-> +	}
-> +
-> +	if (result & RXRSS0R_RXFAIL) {
-> +		dev_err(dsi->dev, "packet rx failure\n");
-> +		return -EPROTO;
-> +	}
-> +
-> +	if (!(result & RXRSS0R_RXSUC))
-> +		return -EPROTO;
-> +
-> +	datatype =3D FIELD_GET(RXRSS0R_DT, result);
-> +
-> +	switch (datatype) {
-> +	case 0:
-> +		dev_dbg(dsi->dev, "ACK\n");
-> +		return 0;
-> +	case MIPI_DSI_RX_END_OF_TRANSMISSION:
-> +		dev_dbg(dsi->dev, "EoTp\n");
-> +		return 0;
-> +	case MIPI_DSI_RX_ACKNOWLEDGE_AND_ERROR_REPORT:
-> +		dev_dbg(dsi->dev, "Acknowledge and error report: $%02x%02x\n",
-> +			(u8)FIELD_GET(RXRSS0R_DATA1, result),
-> +			(u8)FIELD_GET(RXRSS0R_DATA0, result));
-> +		return 0;
-> +	case MIPI_DSI_RX_DCS_SHORT_READ_RESPONSE_1BYTE:
-> +	case MIPI_DSI_RX_GENERIC_SHORT_READ_RESPONSE_1BYTE:
-> +		msg_rx[0] =3D FIELD_GET(RXRSS0R_DATA0, result);
-> +		return 1;
-> +	case MIPI_DSI_RX_DCS_SHORT_READ_RESPONSE_2BYTE:
-> +	case MIPI_DSI_RX_GENERIC_SHORT_READ_RESPONSE_2BYTE:
-> +		msg_rx[0] =3D FIELD_GET(RXRSS0R_DATA0, result);
-> +		msg_rx[1] =3D FIELD_GET(RXRSS0R_DATA1, result);
-> +		return 2;
-> +	case MIPI_DSI_RX_GENERIC_LONG_READ_RESPONSE:
-> +	case MIPI_DSI_RX_DCS_LONG_READ_RESPONSE:
-> +		size =3D FIELD_GET(RXRSS0R_WC, result);
-> +
-> +		if (size > msg->rx_len) {
-> +			dev_err(dsi->dev, "rx buffer too small");
-> +			return -ENOSPC;
-> +		}
-> +
-> +		memcpy(msg_rx, dsi->dcs_buf_virt, size);
-> +		return size;
-> +	default:
-> +		dev_err(dsi->dev, "unhandled response type: %02x\n", datatype);
-> +		return -EPROTO;
-> +	}
-> +}
-> +
-> +static ssize_t rzg2l_mipi_dsi_host_transfer(struct mipi_dsi_host *host,
-> +					    const struct mipi_dsi_msg *msg) {
-> +	struct rzg2l_mipi_dsi *dsi =3D host_to_rzg2l_mipi_dsi(host);
-> +	struct mipi_dsi_packet packet;
-> +	bool need_bta;
-> +	u32 value;
-> +	int ret;
-> +
-> +	ret =3D mipi_dsi_create_packet(&packet, msg);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	/* Terminate operation after this descriptor is finished */
-> +	value =3D SQCH0DSC0AR_NXACT_TERM;
-> +
-> +	if (msg->flags & MIPI_DSI_MSG_REQ_ACK) {
-> +		need_bta =3D true; /* Message with explicitly requested ACK */
-> +		value |=3D FIELD_PREP(SQCH0DSC0AR_BTA, SQCH0DSC0AR_BTA_NON_READ);
-> +	} else if (msg->rx_buf && msg->rx_len > 0) {
-> +		need_bta =3D true; /* Read request */
-> +		value |=3D FIELD_PREP(SQCH0DSC0AR_BTA, SQCH0DSC0AR_BTA_READ);
-> +	} else {
-> +		need_bta =3D false;
-> +		value |=3D FIELD_PREP(SQCH0DSC0AR_BTA, SQCH0DSC0AR_BTA_NONE);
-> +	}
-> +
-> +	/* Set transmission speed */
-> +	if (msg->flags & MIPI_DSI_MSG_USE_LPM)
-> +		value |=3D SQCH0DSC0AR_SPD_LOW;
-> +	else
-> +		value |=3D SQCH0DSC0AR_SPD_HIGH;
-> +
-> +	/* Write TX packet header */
-> +	value |=3D FIELD_PREP(SQCH0DSC0AR_DT, packet.header[0]) |
-> +		FIELD_PREP(SQCH0DSC0AR_DATA0, packet.header[1]) |
-> +		FIELD_PREP(SQCH0DSC0AR_DATA1, packet.header[2]);
-> +
-> +	if (mipi_dsi_packet_format_is_long(msg->type)) {
-> +		value |=3D SQCH0DSC0AR_FMT_LONG;
-> +
-> +		if (packet.payload_length > RZG2L_DCS_BUF_SIZE) {
-> +			dev_err(dsi->dev, "Packet Tx payload size (%d) too large",
-> +				(unsigned int)packet.payload_length);
-> +			return -ENOSPC;
-> +		}
-> +
-> +		/* Copy TX packet payload data to memory space */
-> +		memcpy(dsi->dcs_buf_virt, packet.payload, packet.payload_length);
-> +	} else {
-> +		value |=3D SQCH0DSC0AR_FMT_SHORT;
-> +	}
-> +
-> +	rzg2l_mipi_dsi_link_write(dsi, SQCH0DSC0AR, value);
-> +
-> +	/*
-> +	 * Write: specify payload data source location, only used for
-> +	 *        long packet.
-> +	 * Read:  specify payload data storage location of response
-> +	 *        packet. Note: a read packet is always a short packet.
-> +	 *        If the response packet is a short packet or a long packet
-> +	 *        with WC =3D 0 (no payload), DTSEL is meaningless.
-> +	 */
-> +	rzg2l_mipi_dsi_link_write(dsi, SQCH0DSC0BR,
-> +SQCH0DSC0BR_DTSEL_MEM_SPACE);
-> +
-> +	/*
-> +	 * Set SQCHxSR.AACTFIN bit when descriptor actions are finished.
-> +	 * Read: set Rx result save slot number to 0 (ACTCODE).
-> +	 */
-> +	rzg2l_mipi_dsi_link_write(dsi, SQCH0DSC0CR, SQCH0DSC0CR_FINACT);
-> +
-> +	/* Set rx/tx payload data address, only relevant for long packet. */
-> +	rzg2l_mipi_dsi_link_write(dsi, SQCH0DSC0DR, (u32)dsi->dcs_buf_phys);
-> +
-> +	/* Start sequence 0 operation */
-> +	value =3D rzg2l_mipi_dsi_link_read(dsi, SQCH0SET0R);
-> +	value |=3D SQCH0SET0R_START;
-> +	rzg2l_mipi_dsi_link_write(dsi, SQCH0SET0R, value);
-> +
-> +	/* Wait for operation to finish */
-> +	ret =3D read_poll_timeout(rzg2l_mipi_dsi_link_read,
-> +				value, value & SQCH0SR_ADESFIN,
-> +				2000, 20000, false, dsi, SQCH0SR);
-> +	if (ret =3D=3D 0) {
-> +		/* Success: clear status bit */
-> +		rzg2l_mipi_dsi_link_write(dsi, SQCH0SCR, SQCH0SCR_ADESFIN);
-> +
-> +		if (need_bta)
-> +			ret =3D rzg2l_mipi_dsi_read_response(dsi, msg);
-> +		else
-> +			ret =3D packet.payload_length;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->  static const struct mipi_dsi_host_ops rzg2l_mipi_dsi_host_ops =3D {
->  	.attach =3D rzg2l_mipi_dsi_host_attach,
->  	.detach =3D rzg2l_mipi_dsi_host_detach,
-> +	.transfer =3D rzg2l_mipi_dsi_host_transfer,
->  };
->=20
->  /* ---------------------------------------------------------------------=
---------
-> @@ -771,6 +938,11 @@ static int rzg2l_mipi_dsi_probe(struct platform_devi=
-ce *pdev)
->  	if (ret < 0)
->  		goto err_pm_disable;
->=20
-> +	dsi->dcs_buf_virt =3D dma_alloc_coherent(dsi->host.dev, RZG2L_DCS_BUF_S=
-IZE,
-> +					       &dsi->dcs_buf_phys, GFP_KERNEL);
-> +	if (!dsi->dcs_buf_virt)
-> +		return -ENOMEM;
-> +
->  	return 0;
->=20
->  err_phy:
-> @@ -785,6 +957,8 @@ static void rzg2l_mipi_dsi_remove(struct platform_dev=
-ice *pdev)  {
->  	struct rzg2l_mipi_dsi *dsi =3D platform_get_drvdata(pdev);
->=20
-> +	dma_free_coherent(dsi->host.dev, RZG2L_DCS_BUF_SIZE, dsi->dcs_buf_virt,
-> +			  dsi->dcs_buf_phys);
->  	mipi_dsi_host_unregister(&dsi->host);
->  	pm_runtime_disable(&pdev->dev);
->  }
-> diff --git a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h b/driver=
-s/gpu/drm/renesas/rz-
-> du/rzg2l_mipi_dsi_regs.h
-> index 1dbc16ec64a4b..33cd669bc74b1 100644
-> --- a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h
-> +++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h
-> @@ -81,6 +81,16 @@
->  #define RSTSR_SWRSTLP			(1 << 1)
->  #define RSTSR_SWRSTHS			(1 << 0)
->=20
-> +/* Rx Result Save Slot 0 Register */
-> +#define RXRSS0R				0x240
-> +#define RXRSS0R_RXPKTDFAIL		BIT(28)
-> +#define RXRSS0R_RXFAIL			BIT(27)
-> +#define RXRSS0R_RXSUC			BIT(25)
-> +#define RXRSS0R_DT			GENMASK(21, 16)
-> +#define RXRSS0R_DATA1			GENMASK(15, 8)
-> +#define RXRSS0R_DATA0			GENMASK(7, 0)
-> +#define RXRSS0R_WC			GENMASK(15, 0) /* Word count for long packet. */
-> +
->  /* Clock Lane Stop Time Set Register */
->  #define CLSTPTSETR			0x314
->  #define CLSTPTSETR_CLKKPT(x)		((x) << 24)
-> @@ -148,4 +158,50 @@
->  #define VICH1HPSETR_HFP(x)		(((x) & 0x1fff) << 16)
->  #define VICH1HPSETR_HBP(x)		(((x) & 0x1fff) << 0)
->=20
-> +/* Sequence Channel 0 Set 0 Register */
-> +#define SQCH0SET0R			0x5c0
-> +#define SQCH0SET0R_START		BIT(0)
-> +
-> +/* Sequence Channel 0 Set 1 Register */
-> +#define SQCH0SET1R			0x5c4
-
-Unused. Drop it.
-
-> +
-> +/* Sequence Channel 0 Status Register */
-> +#define SQCH0SR				0x5d0
-> +#define SQCH0SR_RUNNING			BIT(2)
-Unused
-
-> +#define SQCH0SR_ADESFIN			BIT(8)
-> +
-> +/* Sequence Channel 0 Status Clear Register */
-> +#define SQCH0SCR			0x5d4
-> +#define SQCH0SCR_ADESFIN		BIT(8)
-> +
-> +/* Sequence Channel 0 Descriptor 0-A Register */
-> +#define SQCH0DSC0AR			0x780
-> +#define SQCH0DSC0AR_NXACT_TERM		0
-> +#define SQCH0DSC0AR_NXACT_OPER		BIT(28)
-Unused
-
-> +#define SQCH0DSC0AR_BTA			GENMASK(27, 26)
-> +#define SQCH0DSC0AR_BTA_NONE		0
-> +#define SQCH0DSC0AR_BTA_NON_READ	1
-> +#define SQCH0DSC0AR_BTA_READ		2
-> +#define SQCH0DSC0AR_BTA_ONLY		3
-> +#define SQCH0DSC0AR_SPD_HIGH		0
-> +#define SQCH0DSC0AR_SPD_LOW		BIT(25)
-> +#define SQCH0DSC0AR_FMT_SHORT		0
-> +#define SQCH0DSC0AR_FMT_LONG		BIT(24)
-> +#define SQCH0DSC0AR_DT			GENMASK(21, 16)
-> +#define SQCH0DSC0AR_DATA1		GENMASK(15, 8)
-> +#define SQCH0DSC0AR_DATA0		GENMASK(7, 0)
-> +
-> +/* Sequence Channel 0 Descriptor 0-B Register */
-> +#define SQCH0DSC0BR			0x784
-> +#define SQCH0DSC0BR_DTSEL_PAYLOAD_DR	0	/* Use packet payload data regist=
-er */
-Unused
-
-> +#define SQCH0DSC0BR_DTSEL_MEM_SPACE	BIT(24)	/* Use external memory */
-> +
-> +/* Sequence Channel 0 Descriptor 0-C Register */
-> +#define SQCH0DSC0CR			0x788
-> +#define SQCH0DSC0CR_FINACT		BIT(0)
-> +#define SQCH0DSC0CR_AUXOP		BIT(22)
-Unused
-
-> +
-> +/* Sequence Channel 0 Descriptor 0-D Register */
-> +#define SQCH0DSC0DR			0x78c
-> +
-
-Cheers,
-Biju
-
->  #endif /* __RZG2L_MIPI_DSI_REGS_H__ */
-> --
-> 2.39.5
-
+-- 
+Sincerely yours,
+Mike.
