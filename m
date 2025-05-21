@@ -1,114 +1,156 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 602C321CFF6;
-	Wed, 21 May 2025 09:00:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEADC21CFF6;
+	Wed, 21 May 2025 09:00:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747818042; cv=none; b=Jg0TUF9qUtHZpXALCn9JMJobX7uJiqwtomgtvJGGQn7x5sMlnjdbUIuOmEAdwM54vV30NmBOWdHHh0QI61X8FFXHzReNTcPPmZtbrabxS4QvTSgybIFvy/TvSl2NaSr+64B3prHFytm9wru/pUDOLRdxdL0/f7UQ6/gJQvqZMuk=
+	t=1747818059; cv=none; b=Mh9je+1Axd/1RiEC3Y6XisPU0EX1Jz3SADAueMUOzjdK/XiXSpwth9XeICYtrJmf3XXPk7IjruInQkfaCndTXqKkKvLBBBq0bFbHOp9D6wBwL2m18GETuGJ36WHIjF0UJZ+SrC29SGzHLvIgjZWBBmvzvc3y+1flXM1nlwPK5ek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747818042; c=relaxed/simple;
-	bh=o1yi9i40n6Ti/5ccUtRvwf9FtcowpxHS5L7Ezdark0c=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GETFM7QcZ1xJTBDtJcGYvnmsbsUFOicG7Ss3k0fobw3gJJs40ry2phXBLQgWglWJQzNPFaZn9/CTPNZhIYw3fNOqvp5PBtJ0De9vaSvl+05t/F4MzsLPt9Jo0mP3dmhm7sMjS7ZY3xjKGX9W9g/qe7lBPkR+GXC23rSAqDSFh6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b2QNK2mzjz6GDGS;
-	Wed, 21 May 2025 16:59:45 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 06F41140557;
-	Wed, 21 May 2025 17:00:38 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 21 May
- 2025 11:00:36 +0200
-Date: Wed, 21 May 2025 10:00:35 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: <linux-pci@vger.kernel.org>, Jon Pan-Doh <pandoh@google.com>, "Karolina
- Stolarek" <karolina.stolarek@oracle.com>, Weinan Liu <wnliu@google.com>,
-	Martin Petersen <martin.petersen@oracle.com>, Ben Fuller
-	<ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, "Anil
- Agrawal" <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, Ilpo
- =?UTF-8?Q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Sathyanarayanan
- Kuppuswamy" <sathyanarayanan.kuppuswamy@linux.intel.com>, Lukas Wunner
-	<lukas@wunner.de>, Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney"
-	<paulmck@kernel.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, "Oliver
- O'Halloran" <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>, "Keith
- Busch" <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>, Terry Bowman
-	<terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>, Dave Jiang
-	<dave.jiang@intel.com>, <linux-kernel@vger.kernel.org>,
-	<linuxppc-dev@lists.ozlabs.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-Subject: Re: [PATCH v7 02/17] PCI/DPC: Log Error Source ID only when valid
-Message-ID: <20250521100035.0000544e@huawei.com>
-In-Reply-To: <20250520215047.1350603-3-helgaas@kernel.org>
-References: <20250520215047.1350603-1-helgaas@kernel.org>
-	<20250520215047.1350603-3-helgaas@kernel.org>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1747818059; c=relaxed/simple;
+	bh=+ZZ0k269drvwAZCcS2mfHtyZXHbxhAoULDCs+DKm0zw=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=VShdOZmqvRkF8CJD2WTFR6U+aoPTurBFoHOZNAZOfsHIcbVT6iSvyfP3/2bkEnKEGvX/6quxJbVUH9O83lLjnmNkc6qANSW1Gk0JnFwPhKWCRNPLsP4e0uhXCFXG7FiUyxYLwaaFOGP4zJt0rHvXrbirfI4GmWfUilYVw3Dfj98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id CE98B43150;
+	Wed, 21 May 2025 09:00:44 +0000 (UTC)
+Message-ID: <d0798e3c-953a-4f0e-a7e2-d59ce1211160@ghiti.fr>
+Date: Wed, 21 May 2025 11:00:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
- frapeml500008.china.huawei.com (7.182.85.71)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V5] raid6: Add RISC-V SIMD syndrome and recovery
+ calculations
+From: Alexandre Ghiti <alex@ghiti.fr>
+To: Chunyan Zhang <zhang.lyra@gmail.com>, Palmer Dabbelt <palmer@dabbelt.com>
+Cc: zhangchunyan@iscas.ac.cn, Paul Walmsley <paul.walmsley@sifive.com>,
+ aou@eecs.berkeley.edu, Charlie Jenkins <charlie@rivosinc.com>,
+ song@kernel.org, yukuai3@huawei.com, linux-riscv@lists.infradead.org,
+ linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250305083707.74218-1-zhangchunyan@iscas.ac.cn>
+ <mhng-63c49bc7-0f86-47f7-bc41-0186f77b9d6f@palmer-ri-x1c9>
+ <CAAfSe-vD_37uihLjGwOqQKnyKJaJ36OwxDeocMOhK4s6-cpzAA@mail.gmail.com>
+ <da18536c-cb40-42f4-a097-2e8a03780dc9@ghiti.fr>
+Content-Language: en-US
+In-Reply-To: <da18536c-cb40-42f4-a097-2e8a03780dc9@ghiti.fr>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvieeiucdltddurdegfedvrddttddmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuhffvvehfjggtgfesthekredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpeeltdffkeegffelheekvdfgleelfeffteejgeeuffegieelgfdvhfetteeujeegkeenucffohhmrghinhepihhnfhhrrgguvggrugdrohhrghenucfkphepvddttddumeekiedumeeffeekvdemvghfledtmegtugdvgeemlegsleehmeefudejsgemtgefudgrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmegtugdvgeemlegsleehmeefudejsgemtgefudgrpdhhvghloheplgfkrfggieemvddttddumeekiedumeeffeekvdemvghfledtmegtugdvgeemlegsleehmeefudejsgemtgefudgrngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopeduuddprhgtphhtthhopeiihhgrnhhgrdhlhihrrgesghhmrghilhdrtghomhdprhgtphhtthhopehprghlmhgvrhesuggrsggsvghlthdrtghom
+ hdprhgtphhtthhopeiihhgrnhhgtghhuhhnhigrnhesihhstggrshdrrggtrdgtnhdprhgtphhtthhopehprghulhdrfigrlhhmshhlvgihsehsihhfihhvvgdrtghomhdprhgtphhtthhopegrohhusegvvggtshdrsggvrhhkvghlvgihrdgvughupdhrtghpthhtoheptghhrghrlhhivgesrhhivhhoshhinhgtrdgtohhmpdhrtghpthhtohepshhonhhgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopeihuhhkuhgrihefsehhuhgrfigvihdrtghomh
+X-GND-Sasl: alex@ghiti.fr
 
-On Tue, 20 May 2025 16:50:19 -0500
-Bjorn Helgaas <helgaas@kernel.org> wrote:
+On 5/13/25 13:39, Alexandre Ghiti wrote:
+> Hi Chunyan,
+>
+> On 08/05/2025 09:14, Chunyan Zhang wrote:
+>> Hi Palmer,
+>>
+>> On Mon, 31 Mar 2025 at 23:55, Palmer Dabbelt <palmer@dabbelt.com> wrote:
+>>> On Wed, 05 Mar 2025 00:37:06 PST (-0800), zhangchunyan@iscas.ac.cn 
+>>> wrote:
+>>>> The assembly is originally based on the ARM NEON and int.uc, but uses
+>>>> RISC-V vector instructions to implement the RAID6 syndrome and
+>>>> recovery calculations.
+>>>>
+>>>> The functions are tested on QEMU running with the option "-icount 
+>>>> shift=0":
+>>> Does anyone have hardware benchmarks for this?  There's a lot more code
+>>> here than the other targets have.  If all that unrolling is 
+>>> necessary for
+>>> performance on real hardware then it seems fine to me, but just having
+>>> it for QEMU doesn't really tell us much.
+>> I made tests on Banana Pi BPI-F3 and Canaan K230.
+>>
+>> BPI-F3 is designed with SpacemiT K1 8-core RISC-V chip, the test
+>> result on BPI-F3 was:
+>>
+>>    raid6: rvvx1    gen()  2916 MB/s
+>>    raid6: rvvx2    gen()  2986 MB/s
+>>    raid6: rvvx4    gen()  2975 MB/s
+>>    raid6: rvvx8    gen()  2763 MB/s
+>>    raid6: int64x8  gen()  1571 MB/s
+>>    raid6: int64x4  gen()  1741 MB/s
+>>    raid6: int64x2  gen()  1639 MB/s
+>>    raid6: int64x1  gen()  1394 MB/s
+>>    raid6: using algorithm rvvx2 gen() 2986 MB/s
+>>    raid6: .... xor() 2 MB/s, rmw enabled
+>>    raid6: using rvv recovery algorithm
 
-> From: Bjorn Helgaas <bhelgaas@google.com>
->=20
-> DPC Error Source ID is only valid when the DPC Trigger Reason indicates
-> that DPC was triggered due to reception of an ERR_NONFATAL or ERR_FATAL
-> Message (PCIe r6.0, sec 7.9.14.5).
->=20
-> When DPC was triggered by ERR_NONFATAL (PCI_EXP_DPC_STATUS_TRIGGER_RSN_NF=
-E)
-> or ERR_FATAL (PCI_EXP_DPC_STATUS_TRIGGER_RSN_FE) from a downstream device,
-> log the Error Source ID (decoded into domain/bus/device/function).  Don't
-> print the source otherwise, since it's not valid.
->=20
-> For DPC trigger due to reception of ERR_NONFATAL or ERR_FATAL, the dmesg
-> logging changes:
->=20
->   - pci 0000:00:01.0: DPC: containment event, status:0x000d source:0x0200
->   - pci 0000:00:01.0: DPC: ERR_FATAL detected
->   + pci 0000:00:01.0: DPC: containment event, status:0x000d, ERR_FATAL re=
-ceived from 0000:02:00.0
->=20
-> and when DPC triggered for other reasons, where DPC Error Source ID is
-> undefined, e.g., unmasked uncorrectable error:
->=20
->   - pci 0000:00:01.0: DPC: containment event, status:0x0009 source:0x0200
->   - pci 0000:00:01.0: DPC: unmasked uncorrectable error detected
->   + pci 0000:00:01.0: DPC: containment event, status:0x0009: unmasked unc=
-orrectable error detected
->=20
-> Previously the "containment event" message was at KERN_INFO and the
-> "%s detected" message was at KERN_WARNING.  Now the single message is at
-> KERN_WARNING.
->=20
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> Tested-by: Krzysztof Wilczy=C5=84ski <kwilczynski@kernel.org>
-> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux=
-.intel.com>
-Matches the spec conditions as far as I can tell.
 
-I guess interesting debate on whether providing extra garbage info is
-a bug or not. Maybe a fixes tag for this one as well?
+So I'm playing with my new BananaPi and I got the following numbers:
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+[    0.628134] raid6: int64x8  gen()  1074 MB/s
+[    0.696263] raid6: int64x4  gen()  1574 MB/s
+[    0.764383] raid6: int64x2  gen()  1677 MB/s
+[    0.832504] raid6: int64x1  gen()  1387 MB/s
+[    0.833824] raid6: using algorithm int64x2 gen() 1677 MB/s
+[    0.907378] raid6: .... xor() 829 MB/s, rmw enabled
+[    0.909301] raid6: using intx1 recovery algorithm
 
-I briefly wondered if it makes sense to have a prefix string initialized
-outside the switch with "containment event, status:%#06x:"
-made sense but it's probably not worth the effort and maybe makes it
-harder to grep for the error messages.  So in the end
-I think your code here is the best option.
+So I realize that you provided the numbers I asked for...Sorry about 
+that. That's a very nice improvement, well done.
 
-Jonathan
+I'll add your patch as-is for 6.16.
+
+Thanks again,
+
+Alex
+
+
+>>
+>> The K230 uses the XuanTie C908 dual-core processor, with the larger
+>> core C908 featuring the RVV1.0 extension, the test result on K230 was:
+>>
+>>    raid6: rvvx1    gen()  1556 MB/s
+>>    raid6: rvvx2    gen()  1576 MB/s
+>>    raid6: rvvx4    gen()  1590 MB/s
+>>    raid6: rvvx8    gen()  1491 MB/s
+>>    raid6: int64x8  gen()  1142 MB/s
+>>    raid6: int64x4  gen()  1628 MB/s
+>>    raid6: int64x2  gen()  1651 MB/s
+>>    raid6: int64x1  gen()  1391 MB/s
+>>    raid6: using algorithm int64x2 gen() 1651 MB/s
+>>    raid6: .... xor() 879 MB/s, rmw enabled
+>>    raid6: using rvv recovery algorithm
+>>
+>> We can see the fastest unrolling algorithm was rvvx2 on BPI-F3 and
+>> rvvx4 on K230 compared with other rvv algorithms.
+>>
+>> I have only these two RVV boards for now, so no more testing data on
+>> more different systems, I'm not sure if rvv8 will be needed on some
+>> hardware or some other system environments.
+>
+>
+> Can we have a comparison before and after the use of your patch?
+>
+> In addition, how do you check the correctness of your implementation?
+>
+> I'll add whatever numbers you provide to the commit log and merge your 
+> patch for 6.16.
+>
+> Thanks a lot,
+>
+> Alex
+>
+>
+>>
+>> Thanks,
+>> Chunyan
+>>
+>> _______________________________________________
+>> linux-riscv mailing list
+>> linux-riscv@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-riscv
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
