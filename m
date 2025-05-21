@@ -1,83 +1,149 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 073131E47C7
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 14:54:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 796711E25E8
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 14:54:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747839249; cv=none; b=gE/oojaG34uS3ztyF8hQDnILWkuOkt17hmjPanzPn0AWBFnpwM4+N+UOnOzA9S/Mwv4GSdXx3mOXQR7LivTH2ppNJ3qnln2InwzaFqTrojsaZk9fD6++R+J5d9UJcQ4RCgL19ottiTnIn75FkAmaLvY7xmly2UuyvcAstLS5kNs=
+	t=1747839289; cv=none; b=dLZoxyjy+bKlalwoSL4ZYC8kf89xYhrOO6o+Wj5+aTwYLIJfveiacdqGhulvNemFfNiAENnuVG1+L0Xwcm+cjXK4gzDEdawXvI4RxxQQKlBUEipW6Zyoh6qWI2WFWaBYcbQ09h2cq1kc6I6DfDvxN2W6lXDf6h7fPSw3E//64oQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747839249; c=relaxed/simple;
-	bh=TBf0PdWtC0D619z/idpOBY4r3Wt4FtFdnQekOqc92to=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Smm9sVfhoqiBZs+X+ClAhohNJ+gsE0/GN/qa5FVgAzTm0tq5E/RD/y0YzrwkbNupFn8XJrAQJXQfM1q7bC+kNAanlZkAwgzZfxTBuU4OTbJY7bOmiEceGfeQDQTQrxGzEZ6++2vHjrhDeDN6wiVpJlTZAqJ4uNL3fLdT/OtwNEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=VwAGcyCc; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1747839289; c=relaxed/simple;
+	bh=g5o3Nqq+12QtnhdnyLa71d3lmoiKsw+P4TPbuoPLHZ8=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=V2JagRay0aJRxmcI8RXtw8YwYuC3iIeUS7Uu7l1xyvPgOjayDxaRrlh/PEuR8YXF5NwawGImZLkSEeJ/kRNOZ2jTgiIaNn2KD0sdHJl0cPUPC+AXBUYnrTLcvF+NvspHfHLJHfvmNMGR/YqbnO9LpEpHocSCYdseZ0pVwWmmi0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VIEvLMp1; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="VwAGcyCc"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 7D51540E023F;
-	Wed, 21 May 2025 14:54:04 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id lzSYRv2Urjmp; Wed, 21 May 2025 14:54:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1747839240; bh=DjduBGoiftbADTLrVR117JVRrl5Hfw+1MUZ5CyH7lJ0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VwAGcyCcob8JFsFmBNM19Pne9rIMl6f7BWvHSrj3JaZhpgZjOUugu5kqDUUj0+Sf9
-	 6r3vaMkfUpZzhkUgo+zhiIwgv3ab4Ek5x1k6u2ui95DB5eMTpD3HbdXy2LveJIPyQ0
-	 OG1kE+XgD0IqlI74+3JKEyhIeoEEDz4hW/90KVjZu/uzjrAAhE8MdJVcTJcFrG02th
-	 XGrURuAC6JDCDwt7qeFFeMVPZl1gselPkq4YmKHxjto7UFva85XTPW9h/GW4ybcR4E
-	 qeKjyZkN+72129OhgYYr5HAjGV3XCrC+iFKs1CEOEzM3YX5qGo/Z3RfJ3HXUUnSd8B
-	 ET2hlzhLe2axTJnS0K+aQMxrzMHII4PnJ6Q/nks2GnJAkCuEbpRJB28vdykL4J5l4e
-	 ry98tgtxq3+7zdpQ8LHPp83pWqClstMlumzJkXwVWWWsvqITYJPHCh2iYqGBhK50vu
-	 dxishF7XEDtCtQy5A6YzzChUGTkJbpKG+JcQv3Re2HYyA+lLDlJYSFz5g49P18S/FJ
-	 8bG1R/IMdmv07Xx/jIYci+54Qrory4JfQfqnIW8xzQrQabBPRvQlvlyospCx/cUv+C
-	 DtjwU9CZY2fRY0O/POgnOcogoJhGv1msSCfO5wHQ+sQT88ZMezITf5206VfdBXTEtI
-	 ln4LnfrXBEwFfxsB0sLNMf98=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7474640E0192;
-	Wed, 21 May 2025 14:53:46 +0000 (UTC)
-Date: Wed, 21 May 2025 16:53:39 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Rik van Riel <riel@surriel.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
-	kernel-team@meta.com, dave.hansen@linux.intel.com, luto@kernel.org,
-	peterz@infradead.org, tglx@linutronix.de, mingo@redhat.com,
-	hpa@zytor.com, nadav.amit@gmail.com, Rik van Riel <riel@fb.com>,
-	Yu-cheng Yu <yu-cheng.yu@intel.com>
-Subject: Re: [RFC v2 4/9] x86/mm: Introduce X86_FEATURE_RAR
-Message-ID: <20250521145339.GCaC3o87kpaouLZ_3D@fat_crate.local>
-References: <20250520010350.1740223-1-riel@surriel.com>
- <20250520010350.1740223-5-riel@surriel.com>
- <20250521115343.GCaC2-x8LsmMApUkjQ@fat_crate.local>
- <cb657cabbc3c87e0a821c7c3fcc16e62b7d854f4.camel@surriel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VIEvLMp1"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-af534e796baso4302404a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 07:54:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747839287; x=1748444087; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=thYs3889Ousb7k+ZZfQYw/dD0hy82Q8J9WVoVEq9Omc=;
+        b=VIEvLMp1i1MqExyDjT+LlPoAMtoBa7szBruNgrHtopq/NW78LLoZBvMULgt3b+/zJp
+         PMW25Uv35Xfg/Ry/S++uNZmI/4fQX9vv40M0ljlNFIhx2tDXTztL1vk+SnsiSoJFaRnl
+         sc1IdEDw+08048naNNnYDruD8vvwwOXpdKBTEj3CtR4Ib6BM1hsFy5iSNoSyrqcGTHAu
+         3q8OUBY8dKv8YCHJ28XseFU9mv6xs7c+oY38c3b5Amgor7U5jd0qjxcMPNrZPre8f8xF
+         xvizVEqguw5wP9dK93eYL7rsK9Sr0TwsbiMm85UX9wfnATzCeLVrCfdmyRyPevZ2rUdU
+         TrjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747839287; x=1748444087;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=thYs3889Ousb7k+ZZfQYw/dD0hy82Q8J9WVoVEq9Omc=;
+        b=Zhd1fQAqYs5QGex1lTHI3W/r/oCKTsNNS3gqqzZ3aUHK9rgX2BikM2r4A8Bgfwar1k
+         bqce/FTP35lD1F5W3Gp8jXYKemfH9gYRFRkp9wOW513PRLnkyrlSeti2OViVoBbII/16
+         lTjycpEfAKj35bWpc9O1K9egsBlY67G4uFdCHY/CX8iyMcOexylLp5Qsj+AY119EYcIh
+         +VG9SqF8aKx77mSgD/d86FzNtZCC34wRV9eQ4vyNV1GvkMc0XnLz5qW5u7ppiSDxd2yB
+         mJ63BBffNzlMQ+8e+PC2N64ic3SMDg8YfcUA6SMVfDVZHYcnjZllRTpnnGay+p0b+jI+
+         JHwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWAxeGopSRIc8UUaOv0uTbjqMtx+eqaHO5nIiaFAAgkQagbu8RECTx+7ZRnaWHKb/ekxPXoGNLmDeHaYuU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy98vSL/KQh7Q5saxpvIBQyudaFBODN5z5jjOZmYgpulT1h3pYN
+	9r2A04yMPYW7lSGMnY/db5Qg+LfssmL7iPes0tVIvC+EVIPQW8/SGxD28/DNC/z7VV3HPpC5Nku
+	3g32YqQ==
+X-Google-Smtp-Source: AGHT+IF6SYrFe7nPRPAq7TPWgFsw7aSxwiQ8XUDXD5y3+wwBUIEf+xIrrkqqONC3ZB2dH96qLqBKSiFqODw=
+X-Received: from pjj13.prod.google.com ([2002:a17:90b:554d:b0:2fc:11a0:c549])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3c45:b0:30a:4c29:4c9c
+ with SMTP id 98e67ed59e1d1-30e7d4eeecdmr31100671a91.6.1747839286735; Wed, 21
+ May 2025 07:54:46 -0700 (PDT)
+Date: Wed, 21 May 2025 07:54:45 -0700
+In-Reply-To: <aC2Z1X0tcJiAMWSV@yzhao56-desk.sh.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <cb657cabbc3c87e0a821c7c3fcc16e62b7d854f4.camel@surriel.com>
+Mime-Version: 1.0
+References: <20250516213540.2546077-1-seanjc@google.com> <20250516213540.2546077-6-seanjc@google.com>
+ <aC2Z1X0tcJiAMWSV@yzhao56-desk.sh.intel.com>
+Message-ID: <aC3pNVfgNcnuJXUG@google.com>
+Subject: Re: [PATCH v3 5/6] KVM: Use mask of harvested dirty ring entries to
+ coalesce dirty ring resets
+From: Sean Christopherson <seanjc@google.com>
+To: Yan Zhao <yan.y.zhao@intel.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Peter Xu <peterx@redhat.com>, Maxim Levitsky <mlevitsk@redhat.com>, 
+	Binbin Wu <binbin.wu@linux.intel.com>, James Houghton <jthoughton@google.com>, 
+	Pankaj Gupta <pankaj.gupta@amd.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Wed, May 21, 2025 at 09:57:52AM -0400, Rik van Riel wrote:
-> I had the same thought, and tried that already.
+On Wed, May 21, 2025, Yan Zhao wrote:
+> On Fri, May 16, 2025 at 02:35:39PM -0700, Sean Christopherson wrote:
+> > @@ -141,42 +140,42 @@ int kvm_dirty_ring_reset(struct kvm *kvm, struct kvm_dirty_ring *ring,
+> >  		ring->reset_index++;
+> >  		(*nr_entries_reset)++;
+> >  
+> > -		/*
+> > -		 * While the size of each ring is fixed, it's possible for the
+> > -		 * ring to be constantly re-dirtied/harvested while the reset
+> > -		 * is in-progress (the hard limit exists only to guard against
+> > -		 * wrapping the count into negative space).
+> > -		 */
+> > -		if (!first_round)
+> > +		if (mask) {
+> > +			/*
+> > +			 * While the size of each ring is fixed, it's possible
+> > +			 * for the ring to be constantly re-dirtied/harvested
+> > +			 * while the reset is in-progress (the hard limit exists
+> > +			 * only to guard against the count becoming negative).
+> > +			 */
+> >  			cond_resched();
+> >  
+> > -		/*
+> > -		 * Try to coalesce the reset operations when the guest is
+> > -		 * scanning pages in the same slot.
+> > -		 */
+> > -		if (!first_round && next_slot == cur_slot) {
+> > -			s64 delta = next_offset - cur_offset;
+> > +			/*
+> > +			 * Try to coalesce the reset operations when the guest
+> > +			 * is scanning pages in the same slot.
+> > +			 */
+> > +			if (next_slot == cur_slot) {
+> > +				s64 delta = next_offset - cur_offset;
+> >  
+> > -			if (delta >= 0 && delta < BITS_PER_LONG) {
+> > -				mask |= 1ull << delta;
+> > -				continue;
+> > -			}
+> > +				if (delta >= 0 && delta < BITS_PER_LONG) {
+> > +					mask |= 1ull << delta;
+> > +					continue;
+> > +				}
+> >  
+> > -			/* Backwards visit, careful about overflows!  */
+> > -			if (delta > -BITS_PER_LONG && delta < 0 &&
+> > -			    (mask << -delta >> -delta) == mask) {
+> > -				cur_offset = next_offset;
+> > -				mask = (mask << -delta) | 1;
+> > -				continue;
+> > +				/* Backwards visit, careful about overflows! */
+> > +				if (delta > -BITS_PER_LONG && delta < 0 &&
+> > +				(mask << -delta >> -delta) == mask) {
+> > +					cur_offset = next_offset;
+> > +					mask = (mask << -delta) | 1;
+> > +					continue;
+> > +				}
+> >  			}
+> > -		}
+> >  
+> > -		/*
+> > -		 * Reset the slot for all the harvested entries that have been
+> > -		 * gathered, but not yet fully processed.
+> > -		 */
+> > -		if (mask)
+> > +			/*
+> > +			 * Reset the slot for all the harvested entries that
+> > +			 * have been gathered, but not yet fully processed.
+> > +			 */
+> >  			kvm_reset_dirty_gfn(kvm, cur_slot, cur_offset, mask);
+> Nit and feel free to ignore it :)
 > 
-> It didn't work.
+> Would it be better to move the "cond_resched()" to here, i.e., executing it for
+> at most every 64 entries?
 
-Care to share why?
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Hmm, yeah, I think that makes sense.  The time spent manipulating the ring and
+mask+offset is quite trivial, so checking on every single entry is unnecessary.
