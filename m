@@ -1,45 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4906A236421
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 22:50:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 575D223A9B0
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 22:51:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747867860; cv=none; b=qJgHX8zVicViKx9CZCUG9qm8G1JIq0T+p4JSe2g0h38k8pmOTyWz5EOsiVy2KJPbBEdlnEP46USFxSYPmZi8cDcpDc6YITErx90eAP60qMs3X3gGnO4bY0RpebGpIWnZ5/w7R78GGOGhYytFPS27/JP8qpvhOmM1+ujRmlGhOFE=
+	t=1747867863; cv=none; b=c998MUB+kkSLhP8rqlE7jKrEKcnhpjZ8oB/74huFlbNhLOUEZyeRyaLdzA7HfPcJuot/O/W/qrePFj+3FK/oqEJiwWSZJLlJ+O2aw2IY/Bs2GArcKPMf0CEjQfIdIHPyEgxsCJJ9ncSpOD3G4tjhPev3iWuG4dduITxKi2QR2Oc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747867860; c=relaxed/simple;
-	bh=GofgvyX60XxoSkJ8fcuxSQPAk54e9Txv076yRRrF2nU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YlKULoiZuCMVGXvMuE4L4786wxt/uFtDDfHZ5xHvfMMWBYNxuOK/PAJ3O7SZJ4DHsiGK+3OVote+PanpQyW2LtwOKuIgEMdVKZhZi8fDtduYQn93RQvYfm1rn38bUkxhoAzvMbMr8hWrCOuasKtMKG1PyHddeF1/s21cfaKHXuw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=enupnSMB; arc=none smtp.client-ip=198.175.65.14
+	s=arc-20240116; t=1747867863; c=relaxed/simple;
+	bh=G+ZEs5+MSKrphrsPXnNImY6OjN0jyQ57iVz/F6B7pnI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=qeKUJrxWcnQKWZe9rtcIg6NrOnbZpRMIfCEEk3Gku6mHYuhafKOYjXLuf6rHFRyLptL5SrdxxxqJTM8qz5LP/JJMD0r/nK+kSxaJRLhFPRqjtccMoISfLI43NTMbWu47fpXjut/6Sgug06k+GmhwaG9l7isxAjxmu+Pxp2RYvcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GbuWtnoN; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="enupnSMB"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GbuWtnoN"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747867857; x=1779403857;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=GofgvyX60XxoSkJ8fcuxSQPAk54e9Txv076yRRrF2nU=;
-  b=enupnSMBmxrhXetcGS+F2a3UndYfKsk32TnQs1fMndelISGJkvCwcM8m
-   F1XFNphZf7skKZR/d4j3Ha2SYYXcYI/9KE1xkKfjKXkATgF5B57aQd++X
-   lf/0RXH6qEhSWWN4dOmYu6+uI6awqZsuSkt3EOZ3r24pUSeW7Ht4VX2Co
-   bNz4OxSwJKtDlDX0GMVNngCGqxjPz2zvhs9lx+f/Fx14ecALjDmjUFrLR
-   FxnFVpPr/XwRSMpUwlCry0I4DB3aaIDccf1xo9HBdbDPgF34GMhb2zdeo
-   tCHetcXguUgGFF2L+JeMGw9mSChpbeo5lsqoqSQ2GXXlTHUekk53w+xsM
-   g==;
-X-CSE-ConnectionGUID: 41ck4jncS0GGyE62BAncgw==
-X-CSE-MsgGUID: L1m9A7ZqRYC9sHdaaDI2uw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="53677597"
+  t=1747867861; x=1779403861;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=G+ZEs5+MSKrphrsPXnNImY6OjN0jyQ57iVz/F6B7pnI=;
+  b=GbuWtnoNkoU2GBGNgtgLz5HnvZ8Emvw9dYemXYsy6y3bI9I5hsTOr14S
+   MYjBjtxJ65LAmrbWuLADhXjI0ckUV9BGM9FnOtw9cnt9eaA1aqnPmV9N5
+   qclKJ1ccLLMlwSleNUgIvEinQAM7VEtryyqHKlX3lZuTD3r4ECa1EMBwd
+   VUQ/Ez74B9nIAiussAOOnA5Ztz6ol1LVelpdAuCs1iTdGgEH8HgIwivPh
+   bdq9uM0R4PIAwCB8ywjlw8/xPeqBegmlOZsUFORVqX4Yjoyoa1AUCyOJM
+   dM6UItHQwia7TT33YHwoufTw/9ze1XOOyzAl9YmvCpfE/p90Z18sRkYRJ
+   Q==;
+X-CSE-ConnectionGUID: avfOeGJnQc26ZWFXxa9PRw==
+X-CSE-MsgGUID: Nb48mYpRRuivqdB8IytQLw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="53677628"
 X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
-   d="scan'208";a="53677597"
+   d="scan'208";a="53677628"
 Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 15:50:56 -0700
-X-CSE-ConnectionGUID: eJgeUURmRH6Dk7hAG4jqnA==
-X-CSE-MsgGUID: 66JEUjf5SMOtpB8GMZdfdg==
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 15:50:57 -0700
+X-CSE-ConnectionGUID: VMdfxvwbSHSVy2NLaR70Fg==
+X-CSE-MsgGUID: UiBsrY2YR3mfXRgp3eKjoQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
-   d="scan'208";a="141352120"
+   d="scan'208";a="141352132"
 Received: from agluck-desk3.sc.intel.com ([172.25.103.51])
   by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 15:50:56 -0700
 From: Tony Luck <tony.luck@intel.com>
@@ -57,467 +58,346 @@ Cc: x86@kernel.org,
 	linux-kernel@vger.kernel.org,
 	patches@lists.linux.dev,
 	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v5 00/29] x86/resctrl telemetry monitoring
-Date: Wed, 21 May 2025 15:50:18 -0700
-Message-ID: <20250521225049.132551-1-tony.luck@intel.com>
+Subject: [PATCH v5 04/29] x86,fs/resctrl: Prepare for more monitor events
+Date: Wed, 21 May 2025 15:50:22 -0700
+Message-ID: <20250521225049.132551-5-tony.luck@intel.com>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250521225049.132551-1-tony.luck@intel.com>
+References: <20250521225049.132551-1-tony.luck@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-These patches are based on tip x86/cache branch. HEAD at time of
-snapshot is:
+There's a rule in computer programming that objects appear zero,
+once, or many times. So code accordingly.
 
-54d14f25664b ("MAINTAINERS: Add reviewers for fs/resctrl")
+There are two MBM events and resctrl is coded with a lot of
 
-These patches are also available in the rdt-aet-v5 branch at:
+        if (local)
+                do one thing
+        if (total)
+                do a different thing
 
-Link: git://git.kernel.org/pub/scm/linux/kernel/git/aegl/linux.git
+Change the rdt_mon_domain and rdt_hw_mon_domain structures to hold arrays
+of pointers to per event data instead of explicit fields for total and
+local bandwidth.
 
-Changes (based on feedback from Reinette and a bug report from Chen Yu)
-since v4 was posted here:
+Simplify by coding for many events using loops on which are enabled.
 
-Link: https://lore.kernel.org/all/20250429003359.375508-1-tony.luck@intel.com/
-
-Change map indexed by patch numbers in v4. Some patches have been merged,
-split, dropped, or re-ordered. The v5 patch numbers are referred to
-by their 4-digit git format-patch numbers in an attempt to avoid
-confusion.
-
-=== 1 ===
-
-v4 patch was focussed on removing rdt_mon_features bitmap
-which included moving all the mon_evt structure definitions
-into an array. Reinette noted that this array would mean the
-rdt_resource::evt_list is no longer needed.
-
-v5 splits up the changes into three parts:
-0001:	Moves mon_evt structures into an array (now named
-	mon_event_all[]) and replaces use of rdt_resource::evt_list
-	with iteration of enabled events in the array.
-0002:	Replace resctrl_arch_is_llc_occupancy_enabled() with
-	resctrl_is_mon_event_enabled(QOS_L3_OCCUP_EVENT_ID)
-	(ditto for the mbm*enabled() inline functions)
-0003:	Remove remaining use of rdt_mon_features.
-
-=== 2 ===
-
-0004:	Fix typos. Change parameter of resctrl_is_mbm_event() to enum.
-	s/QOS_NUM_MBM_EVENTS/QOS_NUM_L3_MBM_EVENTS/.
-	s/MBM_EVENT_IDX/MBM_STATE_IDX/. Rewrite get_arch_mbm_state()
-	in same simple style as get_mbm_state()
-
-=== 3 ===
-
-Dropped this patch. No immediate plans for other mbm monitor events
-that could be used as input to the "mba_MBps" feedback control.
-
-=== 4 ===
-
-Also dropped. The rdt_resource::evt_list no longer exists, so no need
-to rearrange code to build it at mount time.
-
-=== 5 ===
-
-Dropped the Kconfig changes for now. This means that intel_aet.c is
-always built with CONFIG_X86_CPU_RESCTRL=y. Will need to revisit when
-the CONFIG_INTEL_PMT_DISCOVERY driver is upstream.
-
-=== 6 ===
-
-0005:	Added comments that fake interface is deliberately crafted
-	with parameters to exercise multiple aggregators per package
-	and insufficient RMIDs supported.
-
-=== 7 ===
-
-0006:	Rename check_domain_header() to domain_header_is_valid()
-
-=== 8 ===
-
-Split into two parts:
-0007:	Better names for functions. Use "()" consistently in
-	commit message when naming functions.
-0008:	Better description that this change is just for domain add.
-
-=== 9 ===
-
-0009:	New commit message with background and rationale for change.
-
-=== 10 ===
-
-0010:	More context in commit message. Dropped an unnecessary container_of()
-	Made domain_add_cpu_ctrl() match domain_add_cpu_mon() with simple
-	path when adding a CPU to existing domain.
-
-=== 11 ===
-
-0011:	Added rational for rename of rdt_mon_domain and rdt_hw_mon_domain
-	structures. Fixed alignment in structure definitions. Fixed broken
-	fir tree ordering.
-
-=== 12 ===
-
-Split into two parts:
-0012:	Make mon_data and rmid_read structures point to mon_evt instead of
-	just holding the event enum.
-0013:	The "read from any cpu" part.
-	Fixed bug reported by Chen Yu for use of smp_processor_id()
-	New shortlog description. Fixed "cpumast" typo. Separated
-	problem description from solution.
-	Fixed reverse fir tree.
-	Avoid "usually" comment (new comments in the helper function
-	that moved out of __mon_event_count().
-
-=== 13 ===
-
-0014:	New direction. Don't bind specific value display formats
-	to specific events, limiting other architectures to follow in
-	the footsteps for the first to implement an event. Instead
-	allow architecture to specify how many binary fixed-point bits
-	are used for each event.
-
-=== 14 ===
-
-0015:	Add period to end of sentence in comment for resctrl_arch_pre_mount().
-	Use atomic_try_cmpxchg() instead of atomic_cmpxchg().
-
-=== 15 ===
-
-0016:	Updated commit comment to avoid "with code".
-	Dropped initialization of rdt_hw_resource::rid.
-
-
-=== 16 ===
-=== 17 ===
-=== 18 ===
-=== 20 ===
-=== 21 ===
-	These were "first part", "second part" ... of enumeration and
-	the sanity check for adequate MMIO space to match expectations
-	from the XML file layout description.
-
-0017:
-0018:
-0019:
-	Now describe what actions each part is doing. Building the
-	struct event_group fields as needed for each patch.
-	Split the fields into sets that are initialized from XML
-	files, and fields used by resctrl code to manage groups.
-	Fixed Link: lines with real URL to the Intel-PMT git repo.
-	Changed type of guid from int to u32.
-	Changed configure_events() return value from bool to standard
-	integer error code (and use -ENOMEM, -EINVAL where appropriate).
-	Document mmio_info structure and add an ascii art picture to the
-	commit comment showing how it is used.
-	Use kzalloc() instead of kmalloc()
-	Add a helper function skip_this_region() so that counting
-	regions and allocation for regions will do the same thing.
-
-
-=== 19 ===
-
-0020:	Add description of layout of MMIO counters to commit comment.
-
-=== 22 ===
-
-0021:	Fixed mmio address range check in intel_aet_read_event()
-	Changed return code from -EINVAL to -EIO to meet expectations
-	of rdtgroup_mondata_show().
-	Changed name of VALID_BIT define to DATA_VALID to indicate that
-	it shows that the value in a counter is valid (as opposed to the
-	counter itself).
-	Added check in resctrl_arch_rmid_read() that remainder of the
-	function after the check for RDT_RESOURCE_PERF_PKG has been
-	passed a RDT_RESOURCE_L3 resource.
-
-=== 23 ===
-
-0022:	Fix typo s/domsins/domains/
-	Kept definition of struct rdt_perf_pkg_mon_domain in architecture
-	code. Reinette comment "This may thus be ok like this for now".
-	Since this only contains the rdt_domain_hdr, there isn't anything
-	extra that file system code could look at even if it somehow
-	wanted to.
-	Things may be different for a more complex resource that has
-	to maintain additional per-domain state that file system code
-	may need to be aware of.
-
-=== 24 ===
-
-	I merged old patch 24 into new 0016
-
-=== 25 ===
-
-0023:	Unchanged
-
-=== 26 ===
-
-0024:	Split the hard-to-read rdt_check_option() function into two that
-	have names that convey what they do: rdt_is_option_force_enabled()
-	and rdt_is_option_force_disabled().
-
-=== 27 ===
-
-0025:	Updated commit comment and kerneldoc comment to note that
-	pmt_event:num_rmids field is initialized from data in the
-	XML file, but may be overwritten.
-	Added min() operation to make sure num_rmids cannot be increased
-	when processing additional event groups.
-
-=== 28 ===
-
-0026:	In V4 this added to the mount time initialization of the per-resource
-	event lists. But that code has been dropped from this series. Added
-	new one-time call in rdt_get_tree() (inside code where resctrl_mutex
-	is held). Same basic function to compute the number of RMIDs as the
-	minimum across all enabled monitor resources.
-
-=== 29 ===
-=== 30 ===
-
-0027:
-0028:	V4 presented these as RFC to add a debug info file for a resource. But
-	after some thought I changed strategy so that the per-resource function
-	can choose the name. Also avoids it showing up as an empty file in
-	the info directory for other resources.
-
-=== 31 ===
-
-0029:	No changes.
-
-
-
-Background
-----------
-
-Telemetry features are being implemented in conjunction with the
-IA32_PQR_ASSOC.RMID value on each logical CPU. This is used to send
-counts for various events to a collector in a nearby OOBMSM device to be
-accumulated with counts for each <RMID, event> pair received from other
-CPUs. Cores send event counts when the RMID value changes, or after each
-2ms elapsed time.
-
-Each OOBMSM device may implement multiple event collectors with each
-servicing a subset of the logical CPUs on a package.  In the initial
-hardware implementation, there are two categories of events: energy
-and perf.
-
-1) Energy - Two counters
-core_energy: This is an estimate of Joules consumed by each core. It is
-calculated based on the types of instructions executed, not from a power
-meter. This counter is useful to understand how much energy a workload
-is consuming.
-
-activity: This measures "accumulated dynamic capacitance". Users who
-want to optimize energy consumption for a workload may use this rather
-than core_energy because it provides consistent results independent of
-any frequency or voltage changes that may occur during the runtime of
-the application (e.g. entry/exit from turbo mode).
-
-2) Performance - Seven counters
-These are similar events to those available via the Linux "perf" tool,
-but collected in a way with much lower overhead (no need to collect data
-on every context switch).
-
-stalls_llc_hit - Counts the total number of unhalted core clock cycles
-when the core is stalled due to a demand load miss which hit in the LLC
-
-c1_res - Counts the total C1 residency across all cores. The underlying
-counter increments on 100MHz clock ticks
-
-unhalted_core_cycles - Counts the total number of unhalted core clock
-cycles
-
-stalls_llc_miss - Counts the total number of unhalted core clock cycles
-when the core is stalled due to a demand load miss which missed all the
-local caches
-
-c6_res - Counts the total C6 residency. The underlying counter increments
-on crystal clock (25MHz) ticks
-
-unhalted_ref_cycles - Counts the total number of unhalted reference clock
-(TSC) cycles
-
-uops_retired - Counts the total number of uops retired
-
-The counters are arranged in groups in MMIO space of the OOBMSM device.
-E.g. for the energy counters the layout is:
-
-Offset: Counter
-0x00	core energy for RMID 0
-0x08	core activity for RMID 0
-0x10	core energy for RMID 1
-0x18	core activity for RMID 1
-...
-
-Enumeration
------------
-
-The only CPUID based enumeration for this feature is the legacy
-CPUID(eax=7,ecx=0).ebx{12} that indicates the presence of the
-IA32_PQR_ASSOC MSR and the RMID field within it.
-
-The OOBMSM driver discovers which features are present via
-PCIe VSEC capabilities. Each feature is tagged with a unique
-identifier. These identifiers indicate which XML description file from
-https://github.com/intel/Intel-PMT describes which event counters are
-available and their layout within the MMIO BAR space of the OOBMSM device.
-
-Resctrl User Interface
-----------------------
-
-Because there may be multiple OOBMSM collection agents per processor
-package, resctrl accumulates event counts from all agents on a package
-and presents a single value to users. This will provide a consistent
-user interface on future platforms that vary the number of collectors,
-or the mappings from logical CPUs to collectors.
-
-Users will continue to see the legacy monitoring files in the "L3"
-directories and the telemetry files in the new "PERF_PKG" directories
-(with each file providing the aggregated value from all OOBMSM collectors
-on that package).
-
-$ tree /sys/fs/resctrl/mon_data/
-/sys/fs/resctrl/mon_data/
-├── mon_L3_00
-│   ├── llc_occupancy
-│   ├── mbm_local_bytes
-│   └── mbm_total_bytes
-├── mon_L3_01
-│   ├── llc_occupancy
-│   ├── mbm_local_bytes
-│   └── mbm_total_bytes
-├── mon_PERF_PKG_00
-│   ├── activity
-│   ├── c1_res
-│   ├── c6_res
-│   ├── core_energy
-│   ├── stalls_llc_hit
-│   ├── stalls_llc_miss
-│   ├── unhalted_core_cycles
-│   ├── unhalted_ref_cycles
-│   └── uops_retired
-└── mon_PERF_PKG_01
-    ├── activity
-    ├── c1_res
-    ├── c6_res
-    ├── core_energy
-    ├── stalls_llc_hit
-    ├── stalls_llc_miss
-    ├── unhalted_core_cycles
-    ├── unhalted_ref_cycles
-    └── uops_retired
-
-Resctrl Implementation
-----------------------
-
-The OOBMSM driver exposes "intel_pmt_get_regions_by_feature()"
-that returns an array of structures describing the per-RMID groups it
-found from the VSEC enumeration. Linux looks at the unique identifiers
-for each group and enables resctrl for all groups with known unique
-identifiers.
-
-The memory map for the counters for each <RMID, event> pair is described
-by the XML file. This is too unwieldy to use in the Linux kernel, so a
-simplified representation is built into the resctrl code. Note that the
-counters are in MMIO space instead of accessed using the IA32_QM_EVTSEL
-and IA32_QM_CTR MSRs. This means there is no need for cross-processor
-calls to read counters from a CPU in a specific domain. The counters
-can be read from any CPU.
-
-High level description of code changes:
-
-1) New scope RESCTRL_PACKAGE
-2) New struct rdt_resource RDT_RESOURCE_PERF_PKG
-3) Refactor monitor code paths to split existing L3 paths from new ones. In some cases this ends up with:
-        switch (r->rid) {
-        case RDT_RESOURCE_L3:
-                helper for L3
-                break;
-        case RDT_RESOURCE_PERF_PKG:
-                helper for PKG
-                break;
-        }
-4) New source code file "intel_aet.c" for the code to enumerate, configure, and report event counts.
-
-With only one platform providing this feature, it's tricky to tell
-exactly where it is going to go. I've made the event definitions
-platform specific (based on the unique ID from the VSEC enumeration). It
-seems possible/likely that the list of events may change from generation
-to generation.
-
-I've picked names for events based on the descriptions in the XML file.
+Move resctrl_is_mbm_event() to <linux/resctrl.h> so it can be used more
+widely. Also provide a for_each_mbm_event() helper macro.
 
 Signed-off-by: Tony Luck <tony.luck@intel.com>
+---
+ include/linux/resctrl.h                | 15 +++++---
+ include/linux/resctrl_types.h          |  3 ++
+ arch/x86/kernel/cpu/resctrl/internal.h |  6 ++--
+ arch/x86/kernel/cpu/resctrl/core.c     | 38 ++++++++++----------
+ arch/x86/kernel/cpu/resctrl/monitor.c  | 36 +++++++++----------
+ fs/resctrl/monitor.c                   | 13 ++++---
+ fs/resctrl/rdtgroup.c                  | 48 ++++++++++++--------------
+ 7 files changed, 82 insertions(+), 77 deletions(-)
 
-Tony Luck (29):
-  x86,fs/resctrl: Consolidate monitor event descriptions
-  x86,fs/resctrl: Replace architecture event enabled checks
-  x86/resctrl: Remove 'rdt_mon_features' global variable
-  x86,fs/resctrl: Prepare for more monitor events
-  x86/rectrl: Fake OOBMSM interface
-  x86,fs/resctrl: Improve domain type checking
-  x86,fs/resctrl: Rename some L3 specific functions
-  x86/resctrl: Move L3 initialization out of domain_add_cpu_mon()
-  x86,fs/resctrl: Refactor domain_remove_cpu_mon() ready for new domain
-    types
-  x86/resctrl: Change generic domain functions to use struct
-    rdt_domain_hdr
-  x86,fs/resctrl: Rename struct rdt_mon_domain and rdt_hw_mon_domain
-  fs/resctrl: Make event details accessible to functions when reading
-    events
-  x86,fs/resctrl: Handle events that can be read from any CPU
-  x86,fs/resctrl: Support binary fixed point event counters
-  fs/resctrl: Add an architectural hook called for each mount
-  x86/resctrl: Add and initialize rdt_resource for package scope core
-    monitor
-  x86/resctrl: Discover hardware telemetry events
-  x86/resctrl: Count valid telemetry aggregators per package
-  x86/resctrl: Complete telemetry event enumeration
-  x86,fs/resctrl: Fill in details of Clearwater Forest events
-  x86/resctrl: x86/resctrl: Read core telemetry events
-  x86,fs/resctrl: Handle domain creation/deletion for
-    RDT_RESOURCE_PERF_PKG
-  x86/resctrl: Enable RDT_RESOURCE_PERF_PKG
-  x86/resctrl: Add energy/perf choices to rdt boot option
-  x86/resctrl: Handle number of RMIDs supported by telemetry resources
-  x86,fs/resctrl: Move RMID initialization to first mount
-  fs/resctrl: Add file system mechanism for architecture info file
-  x86/resctrl: Add info/PERF_PKG_MON/status file
-  x86/resctrl: Update Documentation for package events
-
- .../admin-guide/kernel-parameters.txt         |   2 +-
- Documentation/filesystems/resctrl.rst         |  53 ++-
- include/linux/resctrl.h                       |  97 ++++-
- include/linux/resctrl_types.h                 |  14 +
- arch/x86/include/asm/resctrl.h                |  16 -
- .../cpu/resctrl/fake_intel_aet_features.h     |  73 ++++
- arch/x86/kernel/cpu/resctrl/internal.h        |  30 +-
- fs/resctrl/internal.h                         |  87 ++--
- arch/x86/kernel/cpu/resctrl/core.c            | 314 ++++++++++----
- .../cpu/resctrl/fake_intel_aet_features.c     |  97 +++++
- arch/x86/kernel/cpu/resctrl/intel_aet.c       | 388 ++++++++++++++++++
- arch/x86/kernel/cpu/resctrl/monitor.c         |  67 +--
- fs/resctrl/ctrlmondata.c                      | 108 ++++-
- fs/resctrl/monitor.c                          | 262 +++++++-----
- fs/resctrl/rdtgroup.c                         | 259 ++++++++----
- arch/x86/Kconfig                              |   2 +-
- arch/x86/kernel/cpu/resctrl/Makefile          |   2 +
- 17 files changed, 1439 insertions(+), 432 deletions(-)
- create mode 100644 arch/x86/kernel/cpu/resctrl/fake_intel_aet_features.h
- create mode 100644 arch/x86/kernel/cpu/resctrl/fake_intel_aet_features.c
- create mode 100644 arch/x86/kernel/cpu/resctrl/intel_aet.c
-
-
-base-tree: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
-base-branch: x86/cache
-base-commit: 54d14f25664bbb75c2928dd0d64a095c0f488176
+diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
+index 843ad7c8e247..40f2d0d48d02 100644
+--- a/include/linux/resctrl.h
++++ b/include/linux/resctrl.h
+@@ -161,8 +161,7 @@ struct rdt_ctrl_domain {
+  * @hdr:		common header for different domain types
+  * @ci:			cache info for this domain
+  * @rmid_busy_llc:	bitmap of which limbo RMIDs are above threshold
+- * @mbm_total:		saved state for MBM total bandwidth
+- * @mbm_local:		saved state for MBM local bandwidth
++ * @mbm_states:		saved state for each QOS MBM event
+  * @mbm_over:		worker to periodically read MBM h/w counters
+  * @cqm_limbo:		worker to periodically read CQM h/w counters
+  * @mbm_work_cpu:	worker CPU for MBM h/w counters
+@@ -172,8 +171,7 @@ struct rdt_mon_domain {
+ 	struct rdt_domain_hdr		hdr;
+ 	struct cacheinfo		*ci;
+ 	unsigned long			*rmid_busy_llc;
+-	struct mbm_state		*mbm_total;
+-	struct mbm_state		*mbm_local;
++	struct mbm_state		*mbm_states[QOS_NUM_L3_MBM_EVENTS];
+ 	struct delayed_work		mbm_over;
+ 	struct delayed_work		cqm_limbo;
+ 	int				mbm_work_cpu;
+@@ -376,6 +374,15 @@ bool resctrl_is_mon_event_enabled(enum resctrl_event_id evt);
+ 
+ bool resctrl_arch_is_evt_configurable(enum resctrl_event_id evt);
+ 
++static inline bool resctrl_is_mbm_event(enum resctrl_event_id e)
++{
++	return (e >= QOS_L3_MBM_TOTAL_EVENT_ID &&
++		e <= QOS_L3_MBM_LOCAL_EVENT_ID);
++}
++
++#define for_each_mbm_event(evt)	\
++	for (evt = QOS_L3_MBM_TOTAL_EVENT_ID; evt <= QOS_L3_MBM_LOCAL_EVENT_ID; evt++)
++
+ /**
+  * resctrl_arch_mon_event_config_write() - Write the config for an event.
+  * @config_info: struct resctrl_mon_config_info describing the resource, domain
+diff --git a/include/linux/resctrl_types.h b/include/linux/resctrl_types.h
+index a25fb9c4070d..b468bfbab9ea 100644
+--- a/include/linux/resctrl_types.h
++++ b/include/linux/resctrl_types.h
+@@ -47,4 +47,7 @@ enum resctrl_event_id {
+ 	QOS_NUM_EVENTS,
+ };
+ 
++#define QOS_NUM_L3_MBM_EVENTS	(QOS_L3_MBM_LOCAL_EVENT_ID - QOS_L3_MBM_TOTAL_EVENT_ID + 1)
++#define MBM_STATE_IDX(evt)	((evt) - QOS_L3_MBM_TOTAL_EVENT_ID)
++
+ #endif /* __LINUX_RESCTRL_TYPES_H */
+diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
+index 5e3c41b36437..ea185b4d0d59 100644
+--- a/arch/x86/kernel/cpu/resctrl/internal.h
++++ b/arch/x86/kernel/cpu/resctrl/internal.h
+@@ -54,15 +54,13 @@ struct rdt_hw_ctrl_domain {
+  * struct rdt_hw_mon_domain - Arch private attributes of a set of CPUs that share
+  *			      a resource for a monitor function
+  * @d_resctrl:	Properties exposed to the resctrl file system
+- * @arch_mbm_total:	arch private state for MBM total bandwidth
+- * @arch_mbm_local:	arch private state for MBM local bandwidth
++ * @arch_mbm_states:	arch private state for each MBM event
+  *
+  * Members of this structure are accessed via helpers that provide abstraction.
+  */
+ struct rdt_hw_mon_domain {
+ 	struct rdt_mon_domain		d_resctrl;
+-	struct arch_mbm_state		*arch_mbm_total;
+-	struct arch_mbm_state		*arch_mbm_local;
++	struct arch_mbm_state		*arch_mbm_states[QOS_NUM_L3_MBM_EVENTS];
+ };
+ 
+ static inline struct rdt_hw_ctrl_domain *resctrl_to_arch_ctrl_dom(struct rdt_ctrl_domain *r)
+diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
+index 819bc7a09327..4403a820db12 100644
+--- a/arch/x86/kernel/cpu/resctrl/core.c
++++ b/arch/x86/kernel/cpu/resctrl/core.c
+@@ -364,8 +364,8 @@ static void ctrl_domain_free(struct rdt_hw_ctrl_domain *hw_dom)
+ 
+ static void mon_domain_free(struct rdt_hw_mon_domain *hw_dom)
+ {
+-	kfree(hw_dom->arch_mbm_total);
+-	kfree(hw_dom->arch_mbm_local);
++	for (int i = 0; i < QOS_NUM_L3_MBM_EVENTS; i++)
++		kfree(hw_dom->arch_mbm_states[i]);
+ 	kfree(hw_dom);
+ }
+ 
+@@ -399,25 +399,27 @@ static int domain_setup_ctrlval(struct rdt_resource *r, struct rdt_ctrl_domain *
+  */
+ static int arch_domain_mbm_alloc(u32 num_rmid, struct rdt_hw_mon_domain *hw_dom)
+ {
+-	size_t tsize;
+-
+-	if (resctrl_is_mon_event_enabled(QOS_L3_MBM_TOTAL_EVENT_ID)) {
+-		tsize = sizeof(*hw_dom->arch_mbm_total);
+-		hw_dom->arch_mbm_total = kcalloc(num_rmid, tsize, GFP_KERNEL);
+-		if (!hw_dom->arch_mbm_total)
+-			return -ENOMEM;
+-	}
+-	if (resctrl_is_mon_event_enabled(QOS_L3_MBM_LOCAL_EVENT_ID)) {
+-		tsize = sizeof(*hw_dom->arch_mbm_local);
+-		hw_dom->arch_mbm_local = kcalloc(num_rmid, tsize, GFP_KERNEL);
+-		if (!hw_dom->arch_mbm_local) {
+-			kfree(hw_dom->arch_mbm_total);
+-			hw_dom->arch_mbm_total = NULL;
+-			return -ENOMEM;
+-		}
++	size_t tsize = sizeof(struct arch_mbm_state);
++	enum resctrl_event_id evt;
++	int idx;
++
++	for_each_mbm_event(evt) {
++		if (!resctrl_is_mon_event_enabled(evt))
++			continue;
++		idx = MBM_STATE_IDX(evt);
++		hw_dom->arch_mbm_states[idx] = kcalloc(num_rmid, tsize, GFP_KERNEL);
++		if (!hw_dom->arch_mbm_states[idx])
++			goto cleanup;
+ 	}
+ 
+ 	return 0;
++cleanup:
++	while (--idx >= 0) {
++		kfree(hw_dom->arch_mbm_states[idx]);
++		hw_dom->arch_mbm_states[idx] = NULL;
++	}
++
++	return -ENOMEM;
+ }
+ 
+ static int get_domain_id_from_scope(int cpu, enum resctrl_scope scope)
+diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
+index fda579251dba..85526e5540f2 100644
+--- a/arch/x86/kernel/cpu/resctrl/monitor.c
++++ b/arch/x86/kernel/cpu/resctrl/monitor.c
+@@ -160,18 +160,14 @@ static struct arch_mbm_state *get_arch_mbm_state(struct rdt_hw_mon_domain *hw_do
+ 						 u32 rmid,
+ 						 enum resctrl_event_id eventid)
+ {
+-	switch (eventid) {
+-	case QOS_L3_OCCUP_EVENT_ID:
+-		return NULL;
+-	case QOS_L3_MBM_TOTAL_EVENT_ID:
+-		return &hw_dom->arch_mbm_total[rmid];
+-	case QOS_L3_MBM_LOCAL_EVENT_ID:
+-		return &hw_dom->arch_mbm_local[rmid];
+-	default:
+-		/* Never expect to get here */
+-		WARN_ON_ONCE(1);
++	struct arch_mbm_state *state;
++
++	if (!resctrl_is_mbm_event(eventid))
+ 		return NULL;
+-	}
++
++	state = hw_dom->arch_mbm_states[MBM_STATE_IDX(eventid)];
++
++	return state ? &state[rmid] : NULL;
+ }
+ 
+ void resctrl_arch_reset_rmid(struct rdt_resource *r, struct rdt_mon_domain *d,
+@@ -200,14 +196,16 @@ void resctrl_arch_reset_rmid(struct rdt_resource *r, struct rdt_mon_domain *d,
+ void resctrl_arch_reset_rmid_all(struct rdt_resource *r, struct rdt_mon_domain *d)
+ {
+ 	struct rdt_hw_mon_domain *hw_dom = resctrl_to_arch_mon_dom(d);
+-
+-	if (resctrl_is_mon_event_enabled(QOS_L3_MBM_TOTAL_EVENT_ID))
+-		memset(hw_dom->arch_mbm_total, 0,
+-		       sizeof(*hw_dom->arch_mbm_total) * r->num_rmid);
+-
+-	if (resctrl_is_mon_event_enabled(QOS_L3_MBM_LOCAL_EVENT_ID))
+-		memset(hw_dom->arch_mbm_local, 0,
+-		       sizeof(*hw_dom->arch_mbm_local) * r->num_rmid);
++	enum resctrl_event_id evt;
++	int idx;
++
++	for_each_mbm_event(evt) {
++		idx = MBM_STATE_IDX(evt);
++		if (!hw_dom->arch_mbm_states[idx])
++			continue;
++		memset(hw_dom->arch_mbm_states[idx], 0,
++		       sizeof(struct arch_mbm_state) * r->num_rmid);
++	}
+ }
+ 
+ static u64 mbm_overflow_count(u64 prev_msr, u64 cur_msr, unsigned int width)
+diff --git a/fs/resctrl/monitor.c b/fs/resctrl/monitor.c
+index 325e23c1a403..4cd0789998bf 100644
+--- a/fs/resctrl/monitor.c
++++ b/fs/resctrl/monitor.c
+@@ -346,15 +346,14 @@ static struct mbm_state *get_mbm_state(struct rdt_mon_domain *d, u32 closid,
+ 				       u32 rmid, enum resctrl_event_id evtid)
+ {
+ 	u32 idx = resctrl_arch_rmid_idx_encode(closid, rmid);
++	struct mbm_state *states;
+ 
+-	switch (evtid) {
+-	case QOS_L3_MBM_TOTAL_EVENT_ID:
+-		return &d->mbm_total[idx];
+-	case QOS_L3_MBM_LOCAL_EVENT_ID:
+-		return &d->mbm_local[idx];
+-	default:
++	if (!resctrl_is_mbm_event(evtid))
+ 		return NULL;
+-	}
++
++	states = d->mbm_states[MBM_STATE_IDX(evtid)];
++
++	return states ? &states[idx] : NULL;
+ }
+ 
+ static int __mon_event_count(u32 closid, u32 rmid, struct rmid_read *rr)
+diff --git a/fs/resctrl/rdtgroup.c b/fs/resctrl/rdtgroup.c
+index 80e74940281a..8649b89d7bfd 100644
+--- a/fs/resctrl/rdtgroup.c
++++ b/fs/resctrl/rdtgroup.c
+@@ -127,12 +127,6 @@ static bool resctrl_is_mbm_enabled(void)
+ 		resctrl_is_mon_event_enabled(QOS_L3_MBM_LOCAL_EVENT_ID));
+ }
+ 
+-static bool resctrl_is_mbm_event(int e)
+-{
+-	return (e >= QOS_L3_MBM_TOTAL_EVENT_ID &&
+-		e <= QOS_L3_MBM_LOCAL_EVENT_ID);
+-}
+-
+ /*
+  * Trivial allocator for CLOSIDs. Use BITMAP APIs to manipulate a bitmap
+  * of free CLOSIDs.
+@@ -4020,8 +4014,10 @@ static void rdtgroup_setup_default(void)
+ static void domain_destroy_mon_state(struct rdt_mon_domain *d)
+ {
+ 	bitmap_free(d->rmid_busy_llc);
+-	kfree(d->mbm_total);
+-	kfree(d->mbm_local);
++	for (int i = 0; i < QOS_NUM_L3_MBM_EVENTS; i++) {
++		kfree(d->mbm_states[i]);
++		d->mbm_states[i] = NULL;
++	}
+ }
+ 
+ void resctrl_offline_ctrl_domain(struct rdt_resource *r, struct rdt_ctrl_domain *d)
+@@ -4081,32 +4077,34 @@ void resctrl_offline_mon_domain(struct rdt_resource *r, struct rdt_mon_domain *d
+ static int domain_setup_mon_state(struct rdt_resource *r, struct rdt_mon_domain *d)
+ {
+ 	u32 idx_limit = resctrl_arch_system_num_rmid_idx();
+-	size_t tsize;
++	size_t tsize = sizeof(struct mbm_state);
++	enum resctrl_event_id evt;
++	int idx;
+ 
+ 	if (resctrl_is_mon_event_enabled(QOS_L3_OCCUP_EVENT_ID)) {
+ 		d->rmid_busy_llc = bitmap_zalloc(idx_limit, GFP_KERNEL);
+ 		if (!d->rmid_busy_llc)
+ 			return -ENOMEM;
+ 	}
+-	if (resctrl_is_mon_event_enabled(QOS_L3_MBM_TOTAL_EVENT_ID)) {
+-		tsize = sizeof(*d->mbm_total);
+-		d->mbm_total = kcalloc(idx_limit, tsize, GFP_KERNEL);
+-		if (!d->mbm_total) {
+-			bitmap_free(d->rmid_busy_llc);
+-			return -ENOMEM;
+-		}
+-	}
+-	if (resctrl_is_mon_event_enabled(QOS_L3_MBM_LOCAL_EVENT_ID)) {
+-		tsize = sizeof(*d->mbm_local);
+-		d->mbm_local = kcalloc(idx_limit, tsize, GFP_KERNEL);
+-		if (!d->mbm_local) {
+-			bitmap_free(d->rmid_busy_llc);
+-			kfree(d->mbm_total);
+-			return -ENOMEM;
+-		}
++
++	for_each_mbm_event(evt) {
++		if (!resctrl_is_mon_event_enabled(evt))
++			continue;
++		idx = MBM_STATE_IDX(evt);
++		d->mbm_states[idx] = kcalloc(idx_limit, tsize, GFP_KERNEL);
++		if (!d->mbm_states[idx])
++			goto cleanup;
+ 	}
+ 
+ 	return 0;
++cleanup:
++	bitmap_free(d->rmid_busy_llc);
++	while (--idx >= 0) {
++		kfree(d->mbm_states[idx]);
++		d->mbm_states[idx] = NULL;
++	}
++
++	return -ENOMEM;
+ }
+ 
+ int resctrl_online_ctrl_domain(struct rdt_resource *r, struct rdt_ctrl_domain *d)
 -- 
 2.49.0
 
