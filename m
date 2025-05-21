@@ -1,63 +1,63 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C681B256C9F;
-	Wed, 21 May 2025 12:15:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D512721FF58;
+	Wed, 21 May 2025 12:15:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747829757; cv=none; b=m/ancnqeLl89vU0svVWVqH+SGiq45GltzqFMCDsuvbP9DAIwidfTIptvaqxeZB3S5J7duogj8w9QbFk2tAs7kckfVk2UvZMPEiMgMiN27uB/vPS8HiewMTywXNLD12KFGpcbCleHFuBiEucSCxch0IFUkwNpJMjP36Amp+xCo7Y=
+	t=1747829757; cv=none; b=f36OFT8ofkoyzzRVAuCnxAWfwPWt361Xzve5h39TlXvepo89OZwwIrMnlOqebFiRg5Yx+vYQl04ryj/3Eil70Bb3Fw81Ip5oNTelnS88bqrfsaEh+OcGy9IJyPPJG+/kOAEF76h45cgOAmQZrW2JUgPyDODVrd4z924tRRKlfrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747829757; c=relaxed/simple;
-	bh=6T15vMULp20ZQWhslpd6gsqTF99YtAagX7UyovECD64=;
+	bh=9ifiLf/3QsdWG879UKP7aVH2hLkpnmsXcsMhC8M7sPQ=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=k4pX8h6hBxiE1hN2NdPnoBR4yGGkMbIvnZjI6Bey+AOTnW3ML502Kq3BTat4kWQF2zB9srz6iIdTwzo4o4NqxLo4aOi4dLgc3BQW8uzxkkam1FBNmSFGumnvtYv3md5n8tunGtP1rUx8LzVrCvdtsrSEYxJiFfYlam1+y5+9KvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wcXlsARP; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rGJH1oda; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=FtumLLTyw5OGyaeIvmTQqhU3qfT0ORRLIXG+wgxuZm/rhhkUcNz9Uerop74FAZqvYlAfsRnceizZRTZp51TaSI5u5qduZki2hWAB3ea1+jbylON8H0+5yZpzP71buDLsf7hVwFLR/4hKGlry953xRmt5sexFjMvNdTPNnu6Zcxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SdrT2VkO; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=n0D3JVz+; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wcXlsARP";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rGJH1oda"
-Date: Wed, 21 May 2025 12:15:53 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SdrT2VkO";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="n0D3JVz+"
+Date: Wed, 21 May 2025 12:15:51 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747829754;
+	s=2020; t=1747829752;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=c6MyCTmaC+o7QI0Ag3NSS8lvSIwjJUeuywSoyrRBxts=;
-	b=wcXlsARPayy+bslX50htb/eEpRKgoECHpi43Piv5c9e3elfR8dLcE0ckkS+c/9mIv3ja6A
-	+5xUvleWiu7/TEVLvRFXRHdu9keTunOrlmUIyZPfuyz+0X+L30BL7oaYGkYGWYxdsz3UO1
-	CyyjABqIKPjR/JruGWsxVpP5sBUBTEea02Pn4wHVDLHwY1JM/f42tTlU35o2rk79StZw9z
-	gU/JXXX//IIhNd/QRGnw1JvuaBpO8ZklbN9VqtQOOX9k1hGQQDIcub/SVcX8lKEMvM1/4h
-	ynH/EAPY/b/LInFdhk6TYze81up8U6eiACn22F6huBfuregJx0FbkPEyy6GaJQ==
+	bh=3LY4LipDnjhIJM7Miwo8jK3aQpgW6u+WwnMU0XagHwM=;
+	b=SdrT2VkOAZ4LkJ6GJr1uMbz7BLRtbxmm3JMBGrhTf3AAYvoh9XlTvbj3GK0tJSKMzbRK6j
+	HNk0TumjTeIdZF5JXzlc6HyJ7dXnWzJ2zORBffdFt0JIYpNZdbqtHZw+dcoO3Y7bz2B9KX
+	JlZOvem3+LWf8U1mB5mHtR8Stdj7JTaaQXLPX80yEjGfD3TXyILP+gMoq/OqGJAENGg3Z1
+	uDmdXu6GHHDbmU5zOxbuUwerJHmoXnnmQQ//rB7sagkXeZF2xV3AI2s+r2GLF8B984Uhyp
+	fNcu7Naieutv1y03RDWkFOpd+oYuFqOvAiIZgoFpqzeOrfYtVu3fmvYVeifXjQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747829754;
+	s=2020e; t=1747829752;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=c6MyCTmaC+o7QI0Ag3NSS8lvSIwjJUeuywSoyrRBxts=;
-	b=rGJH1odaA2NJHYJbhGde/2sp8dskWmAVqkSaSBFW5GnhOMbF2AM44QAG7DPX5MhuqscXaw
-	x3eNWGLOp6DwExCQ==
+	bh=3LY4LipDnjhIJM7Miwo8jK3aQpgW6u+WwnMU0XagHwM=;
+	b=n0D3JVz+ft61wBlJoiPt2hp8Zapx92koqtVcQAnRaRj/gCAt1lsmgiCRsrgBYUeG+3xavK
+	9rlZ05GToPbaikAw==
 From: "tip-bot2 for Kan Liang" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] sparc/perf: Remove driver-specific throttle support
+Subject: [tip: perf/core] mips/perf: Remove driver-specific throttle support
 Cc: Kan Liang <kan.liang@linux.intel.com>,
  "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250520181644.2673067-15-kan.liang@linux.intel.com>
-References: <20250520181644.2673067-15-kan.liang@linux.intel.com>
+In-Reply-To: <20250520181644.2673067-17-kan.liang@linux.intel.com>
+References: <20250520181644.2673067-17-kan.liang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174782975303.406.8766309661681342115.tip-bot2@tip-bot2>
+Message-ID: <174782975107.406.18030140197688379257.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,14 +67,14 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     e4806c17bfd5d6f4363557854cbace786311d527
-Gitweb:        https://git.kernel.org/tip/e4806c17bfd5d6f4363557854cbace786311d527
+Commit-ID:     b216af2eb4618caec6bef32d5886a9700b0ecfeb
+Gitweb:        https://git.kernel.org/tip/b216af2eb4618caec6bef32d5886a9700b0ecfeb
 Author:        Kan Liang <kan.liang@linux.intel.com>
-AuthorDate:    Tue, 20 May 2025 11:16:42 -07:00
+AuthorDate:    Tue, 20 May 2025 11:16:44 -07:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Wed, 21 May 2025 13:57:46 +02:00
+CommitterDate: Wed, 21 May 2025 13:57:47 +02:00
 
-sparc/perf: Remove driver-specific throttle support
+mips/perf: Remove driver-specific throttle support
 
 The throttle support has been added in the generic code. Remove
 the driver-specific throttle support.
@@ -85,22 +85,22 @@ is not required either.
 
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20250520181644.2673067-15-kan.liang@linux.intel.com
+Link: https://lore.kernel.org/r/20250520181644.2673067-17-kan.liang@linux.intel.com
 ---
- arch/sparc/kernel/perf_event.c | 3 +--
+ arch/mips/kernel/perf_event_mipsxx.c | 3 +--
  1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/sparc/kernel/perf_event.c b/arch/sparc/kernel/perf_event.c
-index f02a283..cae4d33 100644
---- a/arch/sparc/kernel/perf_event.c
-+++ b/arch/sparc/kernel/perf_event.c
-@@ -1668,8 +1668,7 @@ static int __kprobes perf_event_nmi_handler(struct notifier_block *self,
- 		if (!sparc_perf_event_set_period(event, hwc, idx))
- 			continue;
+diff --git a/arch/mips/kernel/perf_event_mipsxx.c b/arch/mips/kernel/perf_event_mipsxx.c
+index c4d6b09..196a070 100644
+--- a/arch/mips/kernel/perf_event_mipsxx.c
++++ b/arch/mips/kernel/perf_event_mipsxx.c
+@@ -791,8 +791,7 @@ static void handle_associated_event(struct cpu_hw_events *cpuc,
+ 	if (!mipspmu_event_set_period(event, hwc, idx))
+ 		return;
  
--		if (perf_event_overflow(event, &data, regs))
--			sparc_pmu_stop(event, 0);
-+		perf_event_overflow(event, &data, regs);
- 	}
+-	if (perf_event_overflow(event, data, regs))
+-		mipsxx_pmu_disable_event(idx);
++	perf_event_overflow(event, data, regs);
+ }
  
- 	finish_clock = sched_clock();
+ 
