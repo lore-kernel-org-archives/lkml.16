@@ -1,257 +1,152 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7F401B95B;
-	Wed, 21 May 2025 13:01:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F10E1264627;
+	Wed, 21 May 2025 13:02:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747832469; cv=none; b=LIy4kfx+lA+C/V5kVjSq1f1KaDaILe8OrnjxcX63GGlQtNxliHzMfXDxh/l5eHvqk82gvUzTgTeo3UY1+x28A1Ie/tQ/iK5F4y+1eoKy+gw2JNN5+ecExw6IZiFP/yGJsNQ1urzQMqZx55sFNxbBMnSOcHSYgiGZmNqHuXtWdv4=
+	t=1747832528; cv=none; b=TC606iyYZSMCFOCYnnFxnFUV6835M3CTAB45k4qrNm6+iLT/NkkaS1qTZ4vTJs1mZiPSyXrFgpR6BP5zNCRe8qJRE+jjwFbqOaxqYMn6GOn8CS1+BUMfj53wqfJHgTKpcgl0AnAxHRUmzg3Gm3hgnAqLy8f2KUZ5yZxm/JAGQRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747832469; c=relaxed/simple;
-	bh=fg2O/NiYrG5jnAySQDhAJUCwCiNOphjw1AELvkeniPk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=dPJitPlnQQSUmTceI1o500ulwwnknWNG0nVQD8ryUjMk+u5+zexXBayUbfxIxMXEf9oaVPCOlN9SApJ40mH1quxGYlF4epfGoVR7ighzesXu/kVfpOZkd5Tb3DGt9pO70O5qAgu0YwiEhDyx1gu+UGFCtBikmar2JCSNpTCNEZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Eqj28pWA; arc=none smtp.client-ip=209.85.214.173
+	s=arc-20240116; t=1747832528; c=relaxed/simple;
+	bh=ZD3FvnIkp4Hy7XHvNTpGCTGWO5g+5SXyPjLloT8M85w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gUyyjB6UfHDec3ID30mezwDucB4jec5a2eFBPzFpjFGDGlkOBXEzMkmUR+viSrg5ZMYc8OV9ncJPQTFly7x425q4NpUD9SjrkuhN6KmHrofIdQ+qySgyjKvyZmaty+qVDHjEqU3C+tdBPP+aHAHAMhb830V5JiOaFbS/EDGSrpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NQ+OohuU; arc=none smtp.client-ip=209.85.128.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Eqj28pWA"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-23274dbcbc2so20333415ad.1;
-        Wed, 21 May 2025 06:01:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NQ+OohuU"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so76501895e9.2;
+        Wed, 21 May 2025 06:02:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747832467; x=1748437267; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YUsodPmJtak7dzPlFPK8l9nfS7vdyCUD4wkq3fhB9qw=;
-        b=Eqj28pWAZM7809XH8DfVwrHUqBTrUkXXQ9BMK+fmCruq8W1firH4+xjNzVXjtaRV9W
-         sCa4ED/b1Cl4tuCBQstWfxiH4HBnKHN9vbdNw9mT9lSvMkOs6OX//xEWeMJv4VuLYnyA
-         sCsvjHnrInk5Lk8HvY5bDU4vxv109mZ+mwEqKmot7siXsOkHa8hTbJiUqymhUkDZCMWU
-         rRAL2YO+/3cxtqDygU7XVDE+ilQZgy4qJfr7LP6yVFVa95W+Ef4bf+InAupk7D0il+E0
-         /KNIZ8F7DzaQGmzir3Ot4EzSOaSI9xHyEqb9ML9CSGxzxlYEJ1NULuMBbuyRdNJQKBa7
-         zpYQ==
+        d=gmail.com; s=20230601; t=1747832524; x=1748437324; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bmXU8KBDB233JjIK1ODnuLy3coNih7UFHZ8VsOcgN+0=;
+        b=NQ+OohuUXyAoGuKmyO2zM8jxV0dsndYuc5ZWv6wtYFH8B8o0R+QjduMJP5Ffd3o2Qm
+         86VOY+IlSP1UDGw0E0D8EAvGbnhje7cosn5sr+0rHWD81UmehlxGB4Yr5FjFApF21Rhg
+         +AJPAqfo2NttjN7WAL7w1F0SPeoKpx2CNsVqHzXEIPIIIohlia/gJh4+nvdv3Pk5S83Q
+         IO+tNlCXFLCNpx16kag++TryElapMlS5zyApjqkDY8l0DL5Z1drLz6DhWYszr8A01MpY
+         vei/+JiLrOAEduHK+llDLDj8nuRxpTZE531M28y5Cll9Xbm8h5u63St9utT0EYuY8EnK
+         qGpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747832467; x=1748437267;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1747832524; x=1748437324;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=YUsodPmJtak7dzPlFPK8l9nfS7vdyCUD4wkq3fhB9qw=;
-        b=KENEtiTpxGjLA+jxm/9ymSK1lxDV2dP6q7aymhm0jWV1EEgECmato/lepC2XzECC5I
-         4RZz3SIJZa/JfO9Cjqg2A4XyCzn5XE+Mf2HM0sK77nUS4IZexwRfTpv2iV/ZFq5h3XoM
-         XZQ7q6k2kHa3TDN42vK18BoSJEXBYsMXGYprYJt45Mqcb2/GBEsa+SL88k4vmMIE57ZR
-         5NTdE3v95kWLYhIkFvAcxL4Z8x/QXxYE/PIaVyXq5G6g3MLzs3KxbMNqAknoHK8m++2O
-         7LXRxyLDL1707I87EKV4VLA2zCiUijd0VUzIrpPvbba/7O0DZqjq0IIYviU8L+wPr48v
-         jIuA==
-X-Forwarded-Encrypted: i=1; AJvYcCVTH8hFLkGw372IoPpQ81XbxPnm7YR/kdNNeRodIkUr5w2tpvvrRxYJHOtQcuPCk+dvohI4DehO2NRQNHIW24A=@vger.kernel.org, AJvYcCVnKq6eX3lqIwvmtNX3T+6RYcFXwqSBTu7oCp2na+eZHAxSTHdx4IKh+DMH4Ztuev4+4tUJNnTZZpH0@vger.kernel.org, AJvYcCWH13AcseRAY6gWsqdabTVQHbpmNOgGfQFqDsdE8fHi7WsWFpz3c/cs8j+la5KUTkULPxmETF0B2x50lLrz@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywwe70r0SEMV1D56QYo/62JTflH2XoJSkWSn5kDXoD0jkgexRh0
-	keLule54OKceMD4le0EXbHcEGaNDBAMACp64f0qeu6kK6rcOnqufQLEb
-X-Gm-Gg: ASbGncv6gWSf+4Vd1b+XMn3KaDdDdBhqG/JdMdYurx9qARdiczVB4KkTFDEpJGfkx/d
-	szHE7cuoarbSvS+R3/2YD6jbnZy4PEnm5jXvUe/petbl91K2XU3P7F2rOoqoEyA41uRkKlsGLP8
-	DKfgnA7Z9Ckrgb2iUAUjhOYo7TtYgIGQchFG2ct9cmArjEZMPtp5zk0xFe6Q3xnU2hIQOb/ZGgZ
-	HmJyVven2q839vpwatjRHLjh9Hbd9t56iDtVHctpmUHivrVZjeBofJxkKHyqm7By4QNcdPmVCAm
-	52y/x2etrerqo6v8mqUpj5MBH1sAGtALiC46fa5yKsDwJJ9e0OMLFkDDQmUmYaQ=
-X-Google-Smtp-Source: AGHT+IHi9JKW8hrJ0oTUZGRbjiYsmE67PwWiZFYcvvLI4U1V7ygYEi+JkVupxNUINvhANVgU2PeZAg==
-X-Received: by 2002:a17:903:2284:b0:22f:b25b:8e93 with SMTP id d9443c01a7336-231de3b9f2cmr307998035ad.48.1747832466871;
-        Wed, 21 May 2025 06:01:06 -0700 (PDT)
-Received: from NB-GIGA003.letovo.school ([5.194.95.139])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4adb017sm92691165ad.53.2025.05.21.06.00.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 06:01:06 -0700 (PDT)
-From: Alexey Charkov <alchark@gmail.com>
-Date: Wed, 21 May 2025 17:00:12 +0400
-Subject: [PATCH v5 4/4] watchdog: Add support for VIA/WonderMedia SoC
- watchdog functionality
+        bh=bmXU8KBDB233JjIK1ODnuLy3coNih7UFHZ8VsOcgN+0=;
+        b=ZGvAgln+WJy2Y1A4PgXFyC7K8G3AhPTIzapNB23fTlaHJaooejMbgf8KoFgquilct1
+         Kbw3YO12zUYlFU9xjp9lQpiWEmdgrjpjlDQzc5zGLmeV6RvRuO7da6qKS5ffyLN4JyNf
+         WuawAogRzWcmvyZx2tJS2Avki+LgW2WhtzDWNtIttGlYU1q65Xs6iM6rLsD6rvnZ5arn
+         fjI6mwblbcSVpiHjBQF7XjTpAbZAxSYNf/5H3GrSsnItb+WnVJb0dX00RDsmIyCMT5D3
+         NzsEitSffoLWMtd4+5kD3RTgVcO6rajrugUi3ZfOus7Dnr/FSsIz/CnApvvZBJAV0tUY
+         0Dkg==
+X-Forwarded-Encrypted: i=1; AJvYcCUcloMViPh3nSDdwGMopi/P7H/+M/xFl/G5TPThlx3DBTJlkMuP2kHdq1ihcuKmlK7Q3SuLMgQj40GpHBBD@vger.kernel.org, AJvYcCWbMLqoqnlnwcqrotwgMKxcx4TKUdRijYBfx9jWNFZ6TtUZgP4gj4cZhW8o42wLzvYpLRY+MzP047iiZM5SSQ+/+Wo=@vger.kernel.org, AJvYcCX5fTzfePGz20AfnVW0kMpfpwQmHE8yfd3Va4UqI/fwylVhNW6NnGSrdrV+qh5xoFqZwRfrDEQdsIOQ@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkJgboeyFAU0b3I4lLXPyUGLGOL6TyOzNbK0nFixtbQg8UKpW8
+	qXuV0ImHzzpkr6Zk2DM0o7N9mQkvbQcSzdeoIfXQuiRX3AzGr+9V0RTg2RS6VkbqgRxonYiDYHG
+	POqXMC8r9CSnflEvzjItZJ5/1Q+JUxVo=
+X-Gm-Gg: ASbGncvMtbnwkKZI/5xra+zouzdqUxmpULMUOspRgG2ET2QM4t2QCbgbGhaccmQ8qTL
+	ym4vAav5+bCLiD9G1OFsOM1lua5k56mOev/9gS9bdRMlRxEygwvmaNxq5z020Mk2HVAVAt7tvoB
+	IeuIs23Bq5yDbftM3RskRUN11I560OJQPPqOpW8Q==
+X-Google-Smtp-Source: AGHT+IFoWwKL0JlRqJiqoNHNvz66aPp7wIa51xRehBMoBO1ScvekUMbPVG/LKrbcj5M69N6ry5MNkYl3/sR/JqNxWuE=
+X-Received: by 2002:a05:600c:6487:b0:43c:fe15:41c9 with SMTP id
+ 5b1f17b1804b1-442fd622e97mr179727585e9.9.1747832523172; Wed, 21 May 2025
+ 06:02:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250521-vt8500-timer-updates-v5-4-7e4bd11df72e@gmail.com>
-References: <20250521-vt8500-timer-updates-v5-0-7e4bd11df72e@gmail.com>
-In-Reply-To: <20250521-vt8500-timer-updates-v5-0-7e4bd11df72e@gmail.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>, 
- Daniel Lezcano <daniel.lezcano@linaro.org>, 
- Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Wim Van Sebroeck <wim@linux-watchdog.org>, 
- Guenter Roeck <linux@roeck-us.net>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, 
- Alexey Charkov <alchark@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747832426; l=5807;
- i=alchark@gmail.com; s=20250416; h=from:subject:message-id;
- bh=fg2O/NiYrG5jnAySQDhAJUCwCiNOphjw1AELvkeniPk=;
- b=lPyHbAc5NFVsW+VOhQpf2YBYDPTf4Ebr3BvqCdjt0B+TlJG5YPcpy/khytwwsZQyC7Hi/lIy3
- NeyS5Nvh+ayDb6Z7dhbTmUqbOjMp82ryHbvz0/v7CfcGs3yxL+GxZru
-X-Developer-Key: i=alchark@gmail.com; a=ed25519;
- pk=ltKbQzKLTJPiDgPtcHxdo+dzFthCCMtC3V9qf7+0rkc=
+References: <20250512182330.238259-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250512182330.238259-4-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250520135820.GC13321@pendragon.ideasonboard.com>
+In-Reply-To: <20250520135820.GC13321@pendragon.ideasonboard.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Wed, 21 May 2025 14:01:35 +0100
+X-Gm-Features: AX0GCFt7GSGvdoA8i47pvJvno_4NO5uT_BXI_Lak85lev8oBUTuihwtydPWscd8
+Message-ID: <CA+V-a8swf=LeUxmEFkMCOK-rJ8w+yZK_ALG=GvFRq7VRF_NW+Q@mail.gmail.com>
+Subject: Re: [PATCH v5 03/12] drm: renesas: rz-du: mipi_dsi: Add min check for
+ VCLK range
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Biju Das <biju.das.jz@bp.renesas.com>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Magnus Damm <magnus.damm@gmail.com>, dri-devel@lists.freedesktop.org, 
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-VIA/WonderMedia SoCs can use their system timer's first channel as a
-watchdog device which will reset the system if the clocksource counter
-matches the value given in its match register 0 and if the watchdog
-function is enabled.
+Hi Laurent,
 
-Since the watchdog function is tightly coupled to the timer itself, it
-is implemented as an auxiliary device of the timer device
+Thank you for the review.
 
-Signed-off-by: Alexey Charkov <alchark@gmail.com>
----
- MAINTAINERS                   |  1 +
- drivers/watchdog/Kconfig      | 15 ++++++++
- drivers/watchdog/Makefile     |  1 +
- drivers/watchdog/vt8500-wdt.c | 88 +++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 105 insertions(+)
+On Tue, May 20, 2025 at 2:58=E2=80=AFPM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> Hi Prabhakar,
+>
+> On Mon, May 12, 2025 at 07:23:21PM +0100, Prabhakar wrote:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > The VCLK range for Renesas RZ/G2L SoC is 148.5 MHz to 5.803 MHz. Add a
+>
+> I would write "5.803 MHz to 148.5 MHz" as ranges are usually expressed
+> in increasing order.
+>
+Ok, I will update the commit message as above.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5362095240627f613638197fda275db6edc16cf7..97d1842625dbdf7fdca3556260662dab469ed091 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3447,6 +3447,7 @@ F:	drivers/tty/serial/vt8500_serial.c
- F:	drivers/video/fbdev/vt8500lcdfb.*
- F:	drivers/video/fbdev/wm8505fb*
- F:	drivers/video/fbdev/wmt_ge_rops.*
-+F:	drivers/watchdog/vt8500-wdt.c
- F:	include/linux/vt8500-timer.h
- 
- ARM/ZYNQ ARCHITECTURE
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index 0d8d37f712e8cfb4bf8156853baa13c23a57d6d9..2e59303306feba7e15a015c2fce25b1290dc4cbc 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -1115,6 +1115,21 @@ config SUNPLUS_WATCHDOG
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called sunplus_wdt.
- 
-+config VT8500_WATCHDOG
-+	tristate "VIA/WonderMedia VT8500 watchdog support"
-+	depends on ARCH_VT8500 || COMPILE_TEST
-+	select WATCHDOG_CORE
-+	select AUXILIARY_BUS
-+	help
-+	  VIA/WonderMedia SoCs can use their system timer as a hardware
-+	  watchdog, as long as the first timer channel is free from other
-+	  uses and respective function is enabled in its registers. To
-+	  make use of it, say Y here and ensure that the device tree
-+	  lists at least two interrupts for the VT8500 timer device.
-+
-+	  To compile this driver as a module, choose M here.
-+	  The module will be called vt8500-wdt.
-+
- # X86 (i386 + ia64 + x86_64) Architecture
- 
- config ACQUIRE_WDT
-diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-index c9482904bf870a085c7fce2a439ac5089b6e6fee..3072786bf226c357102be3734fe6e701f753d45b 100644
---- a/drivers/watchdog/Makefile
-+++ b/drivers/watchdog/Makefile
-@@ -101,6 +101,7 @@ obj-$(CONFIG_MSC313E_WATCHDOG) += msc313e_wdt.o
- obj-$(CONFIG_APPLE_WATCHDOG) += apple_wdt.o
- obj-$(CONFIG_SUNPLUS_WATCHDOG) += sunplus_wdt.o
- obj-$(CONFIG_MARVELL_GTI_WDT) += marvell_gti_wdt.o
-+obj-$(CONFIG_VT8500_WATCHDOG) += vt8500-wdt.o
- 
- # X86 (i386 + ia64 + x86_64) Architecture
- obj-$(CONFIG_ACQUIRE_WDT) += acquirewdt.o
-diff --git a/drivers/watchdog/vt8500-wdt.c b/drivers/watchdog/vt8500-wdt.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..a47ee714e7c0172e89a31b0d6c064fff338bd5b6
---- /dev/null
-+++ b/drivers/watchdog/vt8500-wdt.c
-@@ -0,0 +1,88 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (C) 2025 Alexey Charkov <alchark@gmail.com */
-+
-+#include <linux/auxiliary_bus.h>
-+#include <linux/container_of.h>
-+#include <linux/io.h>
-+#include <linux/limits.h>
-+#include <linux/minmax.h>
-+#include <linux/module.h>
-+#include <linux/types.h>
-+#include <linux/watchdog.h>
-+#include <linux/vt8500-timer.h>
-+
-+static int vt8500_watchdog_start(struct watchdog_device *wdd)
-+{
-+	struct vt8500_wdt_info *info = watchdog_get_drvdata(wdd);
-+	u32 deadline = min(wdd->timeout * 1000, wdd->max_hw_heartbeat_ms);
-+
-+	/* The deadline is matched against the hardware clocksource counter,
-+	 * which is a u32 value incrementing at VT8500_TIMER_HZ and continuing
-+	 * past wraparound. When the return value of timer_next is greater than
-+	 * U32_MAX then the match should occur after the hardware counter wraps
-+	 * around, thus we take only the lower 32 bits of timer_next return val
-+	 */
-+	deadline = info->timer_next((u64)deadline * (VT8500_TIMER_HZ / 1000));
-+	writel(deadline, info->wdt_match);
-+	writel(1, info->wdt_en);
-+	return 0;
-+}
-+
-+static int vt8500_watchdog_stop(struct watchdog_device *wdd)
-+{
-+	struct vt8500_wdt_info *info = watchdog_get_drvdata(wdd);
-+
-+	writel(0, info->wdt_en);
-+	return 0;
-+}
-+
-+static const struct watchdog_ops vt8500_watchdog_ops = {
-+	.start			= vt8500_watchdog_start,
-+	.stop			= vt8500_watchdog_stop,
-+};
-+
-+static const struct watchdog_info vt8500_watchdog_info = {
-+	.identity		= "VIA VT8500 watchdog",
-+	.options		= WDIOF_MAGICCLOSE |
-+				  WDIOF_KEEPALIVEPING |
-+				  WDIOF_SETTIMEOUT,
-+};
-+
-+static int vt8500_wdt_probe(struct auxiliary_device *auxdev,
-+			    const struct auxiliary_device_id *id)
-+{
-+	struct vt8500_wdt_info *info;
-+	struct watchdog_device *wdd;
-+
-+	wdd = devm_kzalloc(&auxdev->dev, sizeof(*wdd), GFP_KERNEL);
-+	if (!wdd)
-+		return -ENOMEM;
-+
-+	wdd->info = &vt8500_watchdog_info;
-+	wdd->ops = &vt8500_watchdog_ops;
-+	wdd->max_hw_heartbeat_ms = U32_MAX / (VT8500_TIMER_HZ / 1000);
-+	wdd->parent = &auxdev->dev;
-+
-+	info = container_of(auxdev, struct vt8500_wdt_info, auxdev);
-+	watchdog_set_drvdata(wdd, info);
-+
-+	return devm_watchdog_register_device(&auxdev->dev, wdd);
-+}
-+
-+static const struct auxiliary_device_id vt8500_wdt_ids[] = {
-+	{ .name = "timer_vt8500.vt8500-wdt" },
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(auxiliary, my_auxiliary_id_table);
-+
-+static struct auxiliary_driver vt8500_wdt_driver = {
-+	.name =	"vt8500-wdt",
-+	.probe = vt8500_wdt_probe,
-+	.id_table = vt8500_wdt_ids,
-+};
-+module_auxiliary_driver(vt8500_wdt_driver);
-+
-+MODULE_AUTHOR("Alexey Charkov <alchark@gmail.com>");
-+MODULE_DESCRIPTION("Driver for the VIA VT8500 watchdog timer");
-+MODULE_LICENSE("GPL");
+Cheers,
+Prabhakar
 
--- 
-2.49.0
-
+> Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+>
+> > minimum clock check in the mode_valid callback to ensure that the clock
+> > value does not fall below the valid range.
+> >
+> > Co-developed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> > Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+> > ---
+> > v4->v5:
+> > - No changes
+> >
+> > v3->v4:
+> > - No changes
+> >
+> > v2->v3:
+> > - No changes
+> >
+> > v1->v2:
+> > - Added reviewed tag from Biju
+> > ---
+> >  drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c b/drivers/g=
+pu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
+> > index 4550c6d84796..ec8baecb9ba5 100644
+> > --- a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
+> > +++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
+> > @@ -584,6 +584,9 @@ rzg2l_mipi_dsi_bridge_mode_valid(struct drm_bridge =
+*bridge,
+> >       if (mode->clock > 148500)
+> >               return MODE_CLOCK_HIGH;
+> >
+> > +     if (mode->clock < 5803)
+> > +             return MODE_CLOCK_LOW;
+> > +
+> >       return MODE_OK;
+> >  }
+> >
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
