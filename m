@@ -1,112 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6660D28FFC5;
-	Wed, 21 May 2025 19:35:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0409150276;
+	Wed, 21 May 2025 19:38:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747856152; cv=none; b=psO7WjQ+0doVgdFzI93R00+KW8omOWFFCewuzCiKFdBf1hPzNAVcFvce/Ex87kXw5eIYtF25Roa38lPaHrYbcAo7cO0XwX1sp5JkpzzzrX1+WX+PnOyuX/AUKDcL/NxRihaOHG0MH58JVrMMES9J3pbdXUjeTJ8kHg2Z0fPoMVg=
+	t=1747856284; cv=none; b=NpW7Cjolj++y7R/dtG7bB5dbItvIgP5UFfGxnnLaglGFLebHYw/Usstv06KfZTbudSSQAsFeVNY3Ozs5DbIkLfbzwZLCQ+dFrBmcht0wLhRC1Ii/6KTiqnmnmBtdvSSJbZBRBc0xcrswFMqCPnI8RTBS4XcHVogsSqLD+5c1zsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747856152; c=relaxed/simple;
-	bh=rl9GZqdLGBfjBJ296zN0oZFwK2zvx5a8miUiRaAwWLs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=uGYnDCcqI5h5Y7dJ0n7pIO2iMNKvDivTxpM5NeDbFWP4BuhkQ5Qa/Uftqu36+jUaqqJkqurGNOdIux/stpoQOK1krQTqlqYA3TtiVY3DnL77aXUGEhq4CISeRU4imn/me3V5lOfX1i/y/H2xeCb66k1xnxa2G0R+dynkYelGnN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HXjUXzLm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747856284; c=relaxed/simple;
+	bh=EL4DME9cegy9dOwoK6nLFmfWpGPwKqPQDTCILYP3fdc=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=FsZ1InJBjXdSAfUMHqt2YK0hvJMLGv6IIDeemBH5d6u4xaSBzdRDuhANKPzhOMkdoM/HuQ+gx8HFoO27ZwI/B8QagFxBJ7g/wjY5LYGSnzj3ZIAfAis7EPJNkspZ1aWntkslfrKi7AqZ/YhcS1u5DL2cDqHlGQcJp1sWiRWvf14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mkGRAZ2s; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=5z2XYqX5; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HXjUXzLm"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 42BD1C4CEFA;
-	Wed, 21 May 2025 19:35:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747856151;
-	bh=rl9GZqdLGBfjBJ296zN0oZFwK2zvx5a8miUiRaAwWLs=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=HXjUXzLmPZK8JxZv2rMAiyQMypnvz30SOWaF5Le6MSIj0SaMX1eXUlAwi6XVMMbDr
-	 /9o7RnnsdygXgNbIrerqIWF1oXtn+9OaMhes8HqGbzKGCRyBlPPP1nDBqLkmEF62+o
-	 AI+o5suaagx4IDgxqYXEqzpVDMQp2gAAN6wEP+IDuhTdM7IoUT1NftMlQBUMyWnH1S
-	 tfa4W/5+n+X7zGt9wMTcL9eD2sNmUJUud6aHRgFx019iGspx67lrR0y/ybu3+28oDJ
-	 2DJcqVoY5+Cw/lu4eUvpTYpw6aBEsQzjHnGFW62Huf8OJdB/ilu8EV6eFlrvw+EC7H
-	 zsi+hsvUAkHHA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37109C54F2E;
-	Wed, 21 May 2025 19:35:51 +0000 (UTC)
-From: =?utf-8?q?Andr=C3=A9_Apitzsch_via_B4_Relay?= <devnull+git.apitzsch.eu@kernel.org>
-Date: Wed, 21 May 2025 21:34:28 +0200
-Subject: [PATCH v3 5/5] media: i2c: imx214: Remove hard-coded external
- clock frequency
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mkGRAZ2s";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="5z2XYqX5"
+Date: Wed, 21 May 2025 19:37:59 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747856281;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6vA1sl5ygboXyeOCUpcIPaZApKSyrq46gaZuyIT3ZS4=;
+	b=mkGRAZ2s9BRM7Z8OeEignP82ZQ5j7uzQYWPzGvbtt4v6+7g045bbFTsNjyqCuUS1ZBWD/j
+	ak7p80HRog3Zw6wBAf0qYfJxCG7vBKhPpd7gj6BKgMWOf2l0rY4h+3+zrIxknF+BZA55I8
+	FODPWcJVLyrsw2yFOphLxczz1/wRnXHacTIIwpenyB/7xUmk1CAsW6VZrq2Hvgjb5IPEMl
+	d5FKFgnknL4h7WZH7y/5pSUY6O/dYW+6hxisyx6LUYYnM5Wb05HnFDrrMMFUF92XUphw5j
+	BMPyekM8TkS8d9wNeV/Mar/rN4LkXel/OrV6VVmXqcQIR6n2hC3Qr5z58yz0tQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747856281;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6vA1sl5ygboXyeOCUpcIPaZApKSyrq46gaZuyIT3ZS4=;
+	b=5z2XYqX5+v21o9aXwuMAbprkv/j2y68bH0CtCr5QIaTLrK61n8zEozgApUjIZ0YYs9DnyU
+	YVD8wZXUo/+KDLCw==
+From: "tip-bot2 for Hans Zhang" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/msi] PCI/MSI: Use bool for MSI enable state tracking
+Cc: Hans Zhang <hans.zhang@cixtech.com>, Thomas Gleixner <tglx@linutronix.de>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250516165223.125083-2-18255117159@163.com>
+References: <20250516165223.125083-2-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Message-ID: <174785627988.406.2996126912434384302.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250521-imx214_ccs_pll-v3-5-bfb4a2b53d14@apitzsch.eu>
-References: <20250521-imx214_ccs_pll-v3-0-bfb4a2b53d14@apitzsch.eu>
-In-Reply-To: <20250521-imx214_ccs_pll-v3-0-bfb4a2b53d14@apitzsch.eu>
-To: Ricardo Ribalda <ribalda@kernel.org>, 
- Sakari Ailus <sakari.ailus@linux.intel.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
- Sascha Hauer <s.hauer@pengutronix.de>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Fabio Estevam <festevam@gmail.com>
-Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
- linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- devicetree@vger.kernel.org, imx@lists.linux.dev, 
- linux-arm-kernel@lists.infradead.org, 
- =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747856148; l=1194;
- i=git@apitzsch.eu; s=20240325; h=from:subject:message-id;
- bh=81a5knJurFPeQFihfZmv0dfoKheJNZM//Pf1vhwjDog=;
- b=u047Jl0beOhUD9XDWfSja6SNCQ6YB0IeZ8wgFG7Akslb+UIKriMBQ9i130y9Wed440+cMBspz
- QG7lRqWCUyCDV3miprXvcQ6wRM8n0Z/7cCMw+Mji4SqHPK7t5ohzqKG
-X-Developer-Key: i=git@apitzsch.eu; a=ed25519;
- pk=wxovcZRfvNYBMcTw4QFFtNEP4qv39gnBfnfyImXZxiU=
-X-Endpoint-Received: by B4 Relay for git@apitzsch.eu/20240325 with
- auth_id=142
-X-Original-From: =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>
-Reply-To: git@apitzsch.eu
+Content-Transfer-Encoding: 7bit
 
-From: André Apitzsch <git@apitzsch.eu>
+The following commit has been merged into the irq/msi branch of tip:
 
-Instead rely on the rate set on the clock (using assigned-clock-rates
-etc.)
+Commit-ID:     4e7bca76e3fed58437dcd7f747d1c8d98507379e
+Gitweb:        https://git.kernel.org/tip/4e7bca76e3fed58437dcd7f747d1c8d98507379e
+Author:        Hans Zhang <hans.zhang@cixtech.com>
+AuthorDate:    Sat, 17 May 2025 00:52:22 +08:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Wed, 21 May 2025 21:28:53 +02:00
 
-Signed-off-by: André Apitzsch <git@apitzsch.eu>
+PCI/MSI: Use bool for MSI enable state tracking
+
+Convert pci_msi_enable and pci_msi_enabled() to use bool type for clarity.
+No functional changes, only code cleanup.
+
+Signed-off-by: Hans Zhang <hans.zhang@cixtech.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/all/20250516165223.125083-2-18255117159@163.com
+
 ---
- drivers/media/i2c/imx214.c | 6 ------
- 1 file changed, 6 deletions(-)
+ drivers/pci/msi/api.c | 2 +-
+ drivers/pci/msi/msi.c | 4 ++--
+ drivers/pci/msi/msi.h | 2 +-
+ include/linux/pci.h   | 4 ++--
+ 4 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/media/i2c/imx214.c b/drivers/media/i2c/imx214.c
-index 19b494c08ece9894de67a4ee34c6f8e6e2708e41..264e897ec6e8e3d2fcd9d58db82090c7dd85d526 100644
---- a/drivers/media/i2c/imx214.c
-+++ b/drivers/media/i2c/imx214.c
-@@ -32,7 +32,6 @@
+diff --git a/drivers/pci/msi/api.c b/drivers/pci/msi/api.c
+index e686400..818d55f 100644
+--- a/drivers/pci/msi/api.c
++++ b/drivers/pci/msi/api.c
+@@ -399,7 +399,7 @@ EXPORT_SYMBOL_GPL(pci_restore_msi_state);
+  * Return: true if MSI has not been globally disabled through ACPI FADT,
+  * PCI bridge quirks, or the "pci=nomsi" kernel command-line option.
+  */
+-int pci_msi_enabled(void)
++bool pci_msi_enabled(void)
+ {
+ 	return pci_msi_enable;
+ }
+diff --git a/drivers/pci/msi/msi.c b/drivers/pci/msi/msi.c
+index 593bae2..80ac764 100644
+--- a/drivers/pci/msi/msi.c
++++ b/drivers/pci/msi/msi.c
+@@ -15,7 +15,7 @@
+ #include "../pci.h"
+ #include "msi.h"
  
- #define IMX214_REG_FAST_STANDBY_CTRL	CCI_REG8(0x0106)
+-int pci_msi_enable = 1;
++bool pci_msi_enable = true;
  
--#define IMX214_DEFAULT_CLK_FREQ	24000000
- #define IMX214_DEFAULT_LINK_FREQ	600000000
- /* Keep wrong link frequency for backward compatibility */
- #define IMX214_DEFAULT_LINK_FREQ_LEGACY	480000000
-@@ -1402,11 +1401,6 @@ static int imx214_probe(struct i2c_client *client)
- 		return dev_err_probe(dev, PTR_ERR(imx214->xclk),
- 				     "failed to get xclk\n");
+ /**
+  * pci_msi_supported - check whether MSI may be enabled on a device
+@@ -970,5 +970,5 @@ EXPORT_SYMBOL(msi_desc_to_pci_dev);
  
--	ret = clk_set_rate(imx214->xclk, IMX214_DEFAULT_CLK_FREQ);
--	if (ret)
--		return dev_err_probe(dev, ret,
--				     "failed to set xclk frequency\n");
--
- 	ret = imx214_get_regulators(dev, imx214);
- 	if (ret < 0)
- 		return dev_err_probe(dev, ret, "failed to get regulators\n");
-
--- 
-2.49.0
-
-
+ void pci_no_msi(void)
+ {
+-	pci_msi_enable = 0;
++	pci_msi_enable = false;
+ }
+diff --git a/drivers/pci/msi/msi.h b/drivers/pci/msi/msi.h
+index ee53cf0..fc70b60 100644
+--- a/drivers/pci/msi/msi.h
++++ b/drivers/pci/msi/msi.h
+@@ -87,7 +87,7 @@ static inline __attribute_const__ u32 msi_multi_mask(struct msi_desc *desc)
+ void msix_prepare_msi_desc(struct pci_dev *dev, struct msi_desc *desc);
+ 
+ /* Subsystem variables */
+-extern int pci_msi_enable;
++extern bool pci_msi_enable;
+ 
+ /* MSI internal functions invoked from the public APIs */
+ void pci_msi_shutdown(struct pci_dev *dev);
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 0e8e3fd..f5e908a 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1669,7 +1669,7 @@ void pci_disable_msi(struct pci_dev *dev);
+ int pci_msix_vec_count(struct pci_dev *dev);
+ void pci_disable_msix(struct pci_dev *dev);
+ void pci_restore_msi_state(struct pci_dev *dev);
+-int pci_msi_enabled(void);
++bool pci_msi_enabled(void);
+ int pci_enable_msi(struct pci_dev *dev);
+ int pci_enable_msix_range(struct pci_dev *dev, struct msix_entry *entries,
+ 			  int minvec, int maxvec);
+@@ -1702,7 +1702,7 @@ static inline void pci_disable_msi(struct pci_dev *dev) { }
+ static inline int pci_msix_vec_count(struct pci_dev *dev) { return -ENOSYS; }
+ static inline void pci_disable_msix(struct pci_dev *dev) { }
+ static inline void pci_restore_msi_state(struct pci_dev *dev) { }
+-static inline int pci_msi_enabled(void) { return 0; }
++static inline bool pci_msi_enabled(void) { return false; }
+ static inline int pci_enable_msi(struct pci_dev *dev)
+ { return -ENOSYS; }
+ static inline int pci_enable_msix_range(struct pci_dev *dev,
