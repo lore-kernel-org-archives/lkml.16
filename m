@@ -1,129 +1,138 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C5A3253B7C;
-	Wed, 21 May 2025 10:45:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45BD211185;
+	Wed, 21 May 2025 10:45:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747824324; cv=none; b=eQV0mESaCMsW8s7AyBdp35NbeApuxaF0ayB2AufCfkByiRbnYahzExRwE9Gh9jU79q3CQShuc7DjP2zOB8LNSbS6KR+AcwXeX2D3Z2oaMNF2F3wOQ/1fmdwlBHhnt1drhbBudT7Iz5ZYsAsOU8AH68k8jLUl96nlW9S1J142m2A=
+	t=1747824341; cv=none; b=NSH+ROMGuYLQZ1I2lfFn9YZyeAy9WmAznAL9ga5DAx/7K7Ft8ichv6DK18Fa9yepzJPkacJlADrJUlR4ZWFpigy0urQIgm4tnocNTWuTrrgAmimQk2CnQq44SqTFgzulsXyskgaccVLv1KUwsjr0+0zeIaDGXGImFKCumQOr/8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747824324; c=relaxed/simple;
-	bh=bGejNSfCVWgSr1ZfFclNYtj9IL87+zotGg7h8IGudQs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PPJtpOKXZISlTARJ2zVPt8rAgRydgC5yF8BQ7QY4T2oX9V6Zxcq3sqEHhD7PUI6Q3YlhP5m1z3fxPjDLgQCpcR+jk6KyRFnYsPwRdlPyYjQcr2CQroqpYniXFOVQrbDbjW6PWDmJJBqLrvRhZjCOzx72OPCKz34GbdpcU6lLa8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OO98oYux; arc=none smtp.client-ip=209.85.221.45
+	s=arc-20240116; t=1747824341; c=relaxed/simple;
+	bh=nBFVOBAzCwLiPJlbF86jc8AtqkeBEhLpQjQSOowZjjA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cNiX53OocDNxLq53cgqg+Gme14Q3AuDHCVGp1pWI/fYiNYcYMZIOV9ALztSEVPBiLgLeEj2z6lmCbylaSaoqF3jXakT3VcFNlF7NaJAif3CX9/efrOqCGeRxvtxFoo/0rpJPHRRF22j81UW3wLx3c5xI+bofEAzaMJ3jBtidDNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GgCsJyWM; arc=none smtp.client-ip=209.85.221.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OO98oYux"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a0adcc3e54so4201939f8f.1;
-        Wed, 21 May 2025 03:45:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GgCsJyWM"
+Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-52413efd0d3so2016519e0c.2;
+        Wed, 21 May 2025 03:45:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747824321; x=1748429121; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=/W9iTls2ZAgc4qnXli7lmiG97t6EfuhQ77mSw3T6AOc=;
-        b=OO98oYux42+TcTw508VBUXPzuNz/cLGi7VfuNgqDM7wNJbubGzN2QelRq7MtG6P0Kx
-         /RF1kbAce6wu6c+T5kva6Hpjbc2VwASfDpsuAzLeNcgcL7UO4HNa7ltdXbqmzFeq/jbf
-         gj4mLnjALVdrQPAZgnHABBJiTBrOf5rgmqj30O1gqOMOB3980sUAOJ5FIknJAIMLvCUu
-         PH5YlWcu55FA2QlTPqNOSFsOXlZf6fYdiZOtqw12fRbKFMXWp25Af69xl+3gj7s/Hzya
-         F3v5fGIid0u6xjlb8FVVMysgIeD3kF86kIOkNt1901qWnxj2DDZpgAJ4dL8THkUmSdFs
-         d4rA==
+        d=gmail.com; s=20230601; t=1747824339; x=1748429139; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jI7WFIT3oOKIZEUz+s1sh9xGeM7AAYe8al+Kc062RVw=;
+        b=GgCsJyWMiKpMzYcSoGwtjStkmAJWc0fdtemUTTcstDwNp1kA/K1PfW7+8+Wh41pGPA
+         pCPoN1v1ZSTRta5iA/MhQE9615NJcZGNOlQtlWOe3gHXuTSsdj/3FhJAToxnT9WTqlaI
+         m3LXS8auofXfLaf85v/FRqP3F6DdlvM4vD/gKx19Xv6XnK+gzDuAhJjiC7vGb9PaWa80
+         2wtKNDjXZeZiOCold/kkgMI2Qovg68X3hdgcsxCrU8IBSA/NOc7zvoxGSyneDuGrY8qa
+         a3CCtdBvyxHsETkHHgL8V5JiR+w8133amMnKDVO/KBjmFL1HhIRRck4Ytrg/2/DuGt4I
+         fylw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747824321; x=1748429121;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/W9iTls2ZAgc4qnXli7lmiG97t6EfuhQ77mSw3T6AOc=;
-        b=HZfeRFin2YAylIMMu2Dvw7vkVVsy8t0yPnwmh61cxmS5f28LCdy8IXopHoeOnWuO6i
-         gKe+dueyljEbW3wAgDyq4YCzjKuA4SZXwZluU3ZilXbZelmWPDmXUIqoXyrdXdmr+t8x
-         iv/+e3d1PP2QI+aAAaYFCZEYWr2EUSB4cfbNeTncD4uuJ0lEv8bek+e0C9xxM6f3QAhV
-         lziLpsDcviygiGReSaSG5/CGtXbpxEMHpmBT6cAVldgheIZ1S4SitH0qHx5NChIXa2U/
-         G//6HPWxTssO8UCzKnPSFP+zta/He/2eDKefs8NGSISuBKUJXAjRpco5FKfvEFDwwqQG
-         gB9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUP4stJAWLqLPPQU4Kk46RUfWWRfAavVUZAQvP/Tp3LrtUlegf60qWqLowWP0m59hWXPyebdK6d7kVOFgOl@vger.kernel.org, AJvYcCV0nprTjnfxWxCoRu6aHNTic2Ha2H5IYiL5V5XqDKtgLZqo6e6eri/oWeJXoJFJJXuEWsicz5s0dTvX8DE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOd6HO/eGNB+MIcq/i4k4wX2uIPVCz0UucfT9ZKHC28mwhVemi
-	VGhU8JyJgTt9ECrUIcQULjP0pWBWBgGcWPF7pqRX/Y7S+UEKQ8JsjBz/
-X-Gm-Gg: ASbGncsWL7EGArQy7ffmoEeVCjxddLuzH735TqD5zmnMaBsMmvjA184X7nQsIpce48K
-	kHQCZc2a9T8eBZ/pmRUfWR0+ByvkBcYrlI9J2tXrI4NxiLzJ5n8ieo5SGN4K4SnhWOS/VfXo2g1
-	gvl9FgovGxUe3Ugfn32E0oKk1p1VZRRbIdR38MVL4Caj0aP9xWWshgHdc2MKUnB17rDfijAKfPL
-	M05KXpm54noMoUnDU1C9z4MGIhsBuIu5/5zoAH0BCX68oKc3twiHAMPTfKVRQ4f4SoVsHqq7wpt
-	wCceVXhgD/p+qwVCsfGPoe8jRKOXsf/RK3qbi18ZUUsUqfm/0cbW
-X-Google-Smtp-Source: AGHT+IHNm8eCWXpqWiOB470uYCBV2jSEzGedXfvesvpPaSdlSL1MRW2fMlz2O97E+XfF+63q2pKtrg==
-X-Received: by 2002:a05:6000:2507:b0:3a3:7031:59da with SMTP id ffacd0b85a97d-3a370315bcamr9483123f8f.59.1747824320694;
-        Wed, 21 May 2025 03:45:20 -0700 (PDT)
-Received: from Red ([2a01:cb1d:897:7800:4a02:2aff:fe07:1efc])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a35ca88a13sm19100674f8f.74.2025.05.21.03.45.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 03:45:19 -0700 (PDT)
-Date: Wed, 21 May 2025 12:45:18 +0200
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Klaus Kudielka <klaus.kudielka@gmail.com>,
-	Eric Biggers <ebiggers@kernel.org>, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	Boris Brezillon <bbrezillon@kernel.org>,
-	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
-	Romain Perier <romain.perier@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] crypto: marvell/cesa - Avoid empty transfer descriptor
-Message-ID: <aC2uvvzlR89iVFGW@Red>
-References: <20dde00750d803a9a364ded99dab1e3e22daec77.camel@gmail.com>
- <20250515182131.GC1411@quark>
- <f0dc235e3d7bfa1f60cc01fd527da52024af54e0.camel@gmail.com>
- <aCZ3_ZMAFu6gzlyt@gondor.apana.org.au>
- <aCcyXkeBvHQYvf2d@Red>
- <aCczV6MF6xk5rRA3@gondor.apana.org.au>
- <aChx_ODF_hYKL8XO@Red>
- <aCmTQoJw6XG1CkuZ@gondor.apana.org.au>
- <aC1fY6IP-8MzVIbx@gondor.apana.org.au>
- <aC2aAvX07Aaho08d@gondor.apana.org.au>
+        d=1e100.net; s=20230601; t=1747824339; x=1748429139;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jI7WFIT3oOKIZEUz+s1sh9xGeM7AAYe8al+Kc062RVw=;
+        b=PwbFlq/AdMfadDgGLuyB4YkyfoPbVwYAZIpt3oDqdGz+hENGWOdta3bZhlzLkaNoD8
+         hi6Lfg4VjG19+8SToSd/SwHC83odachefCnY9r51eaP5mNp9xiUMkaxp19UwJn3YHPQI
+         uLAYYnW5VnjvJsSWIbn4R2VuSfMk1j2S19QtDnsb6UFS0ZlGbUL7lL410AMvcsR+xGsH
+         e4Uo7evHkq7vIljGY5LgVeTQk7AOmBNcoy0YQ2PLVx3tKokDAhkjy4zDkKQHmP5tVKs7
+         EOBmE1Er6DUe1jJzJYzTaztPa0RNgNdwqI6W3caoXD3hWOhn5d6BU3xld5SXraQqdKpK
+         6uFg==
+X-Forwarded-Encrypted: i=1; AJvYcCWLpXh6rvKpQQvurlkph9jTvvATJqiDYj1JZXj8zo3b2DqdEKIDUQC9bIvRvXCu5abDt5jn7lngX/NM@vger.kernel.org, AJvYcCXjNGuvkTAFHJKC6cevnUrN5CspP4O2wnbKXqfxevt3SPFcq8uL9B9VYhFZnzhCPVvyEX/3+hMmSoDeePs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCkhAJoIt7I2oE2EUjYZXiVfV8LJCU1RIjd3RCTls1icdaXyPB
+	JC4CjhMrHK0Tr+XW5DfBL2xiFd56osKldc11Q4Kvm4kcL+Cio66/TGMrjb0AY3wvyX03YO6s/Ry
+	/aPO9mPEVhtIj3H6qatXyuJ3m78gLB9wJIZr7
+X-Gm-Gg: ASbGncvoNA9wEN4TQiozHh/Dnkp37nRJ/MqbtDHS7lmzcqjTqRmzk4ldxXeoXOpXK36
+	P8kQXphrm98xv0ThAk15uv7mK2c5BXxG+UlpJNENrhSPWrSLXzjPfpo/pYW0SqMCP271mj4+QXo
+	u/wAVbKF8Jer8zK+F3NtTn7CXFiEhOO+whtTYAdvwVrlPjGZ8y09gpz+AUEP3FB1BatA==
+X-Google-Smtp-Source: AGHT+IFWF5OsgsU1QzpUJixobWdrzKZcXKaR0HkmiUChadkshUDPW61+RL/bvsQALDrLp7/ocx0XIQLx8Ht21EVNx+k=
+X-Received: by 2002:a05:6122:da7:b0:52d:b8fc:991f with SMTP id
+ 71dfb90a1353d-52dbce2ab91mr16664934e0c.6.1747824338903; Wed, 21 May 2025
+ 03:45:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aC2aAvX07Aaho08d@gondor.apana.org.au>
+References: <20250516092716.3918-1-victorshihgli@gmail.com>
+ <20250516092716.3918-2-victorshihgli@gmail.com> <CAPDyKFrKRw2kOQ9Gq=eCmm0N24hSEamNeCWGzC6X-Qg33ad-gw@mail.gmail.com>
+In-Reply-To: <CAPDyKFrKRw2kOQ9Gq=eCmm0N24hSEamNeCWGzC6X-Qg33ad-gw@mail.gmail.com>
+From: Victor Shih <victorshihgli@gmail.com>
+Date: Wed, 21 May 2025 18:45:26 +0800
+X-Gm-Features: AX0GCFtUXh2b2WmqbWg3oVW5IpySFiz1dAa98yuROK1LERLAVrWp1wc5Otj8SME
+Message-ID: <CAK00qKBRtBfWe_vGKz7Bbw3ZZfY4bxXiFDd3bSqzwdqP9hK01A@mail.gmail.com>
+Subject: Re: [PATCH V1 1/2] mmc: core: Adjust some error messages for SD
+ UHS-II cards
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: adrian.hunter@intel.com, linux-mmc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, benchuanggli@gmail.com, 
+	HL.Liu@genesyslogic.com.tw, Greg.tu@genesyslogic.com.tw, 
+	Ben Chuang <ben.chuang@genesyslogic.com.tw>, 
+	Victor Shih <victor.shih@genesyslogic.com.tw>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Le Wed, May 21, 2025 at 05:16:50PM +0800, Herbert Xu a écrit :
-> On Wed, May 21, 2025 at 01:06:43PM +0800, Herbert Xu wrote:
+On Mon, May 19, 2025 at 8:10=E2=80=AFPM Ulf Hansson <ulf.hansson@linaro.org=
+> wrote:
+>
+> On Fri, 16 May 2025 at 11:27, Victor Shih <victorshihgli@gmail.com> wrote=
+:
 > >
-> > Can you please try this patch to see if it makes a difference?
-> 
-> Actually, please try this one instead.
-> 
-> Thanks,
-> -- 
-> Email: Herbert Xu <herbert@gondor.apana.org.au>
-> Home Page: http://gondor.apana.org.au/~herbert/
-> PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
-> --
-> diff --git a/drivers/crypto/marvell/cesa/hash.c b/drivers/crypto/marvell/cesa/hash.c
-> index 6815eddc9068..8a9ea83372c9 100644
-> --- a/drivers/crypto/marvell/cesa/hash.c
-> +++ b/drivers/crypto/marvell/cesa/hash.c
-> @@ -15,6 +15,7 @@
->  #include <crypto/sha2.h>
->  #include <linux/device.h>
->  #include <linux/dma-mapping.h>
-> +#include <linux/dma-map-ops.h>
->  
->  #include "cesa.h"
->  
-> @@ -532,6 +533,7 @@ mv_cesa_ahash_dma_add_cache(struct mv_cesa_tdma_chain *chain,
->  		return ret;
->  
->  	memcpy(ahashdreq->cache, creq->cache, creq->cache_ptr);
-> +	arch_sync_dma_for_device(ahashdreq->cache_dma, creq->cache_ptr, DMA_TO_DEVICE);
->  
->  	return mv_cesa_dma_add_data_transfer(chain,
->  					     CESA_SA_DATA_SRAM_OFFSET,
+> > From: Victor Shih <victor.shih@genesyslogic.com.tw>
+> >
+> > Adjust some error messages to debug mode to avoid causing
+> > misunderstanding it is an error.
+> >
+> > Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
+> > Signed-off-by: Victor Shih <victor.shih@genesyslogic.com.tw>
+> > ---
+> >  drivers/mmc/core/sd_uhs2.c | 8 ++++++--
+> >  1 file changed, 6 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/mmc/core/sd_uhs2.c b/drivers/mmc/core/sd_uhs2.c
+> > index 1c31d0dfa961..58c4cef37f7c 100644
+> > --- a/drivers/mmc/core/sd_uhs2.c
+> > +++ b/drivers/mmc/core/sd_uhs2.c
+> > @@ -36,6 +36,10 @@
+> >  #include "sd_ops.h"
+> >  #include "mmc_ops.h"
+> >
+> > +#define DRIVER_NAME "sd_uhs2"
+> > +#define DBG(f, x...) \
+> > +       pr_debug(DRIVER_NAME " [%s()]: " f, __func__, ## x)
+> > +
+>
+> We don't need a macro for this, just use a pr_debug() below instead.
+>
 
-It fails to build with:
-ERROR: modpost: "arch_sync_dma_for_device" [drivers/crypto/marvell/cesa/marvell-cesa.ko] undefined!
+Hi, Ulf
+
+I will drop this macro and use pr_debug() instead in the next version.
+
+Thanks, Victor Shih
+
+> >  #define UHS2_WAIT_CFG_COMPLETE_PERIOD_US  (1 * 1000)
+> >  #define UHS2_WAIT_CFG_COMPLETE_TIMEOUT_MS 100
+> >
+> > @@ -91,8 +95,8 @@ static int sd_uhs2_phy_init(struct mmc_host *host)
+> >
+> >         err =3D host->ops->uhs2_control(host, UHS2_PHY_INIT);
+> >         if (err) {
+> > -               pr_err("%s: failed to initial phy for UHS-II!\n",
+> > -                      mmc_hostname(host));
+> > +               DBG("%s: failed to initial phy for UHS-II!\n",
+> > +                   mmc_hostname(host));
+> >         }
+> >
+> >         return err;
+> > --
+> > 2.43.0
+> >
+>
+> Kind regards
+> Uffe
