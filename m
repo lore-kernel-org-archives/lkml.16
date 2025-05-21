@@ -1,183 +1,106 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CACC02A1BF;
-	Wed, 21 May 2025 14:00:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F35E2A1BF;
+	Wed, 21 May 2025 14:00:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747836037; cv=none; b=I8YT9MwFu26+rpQLiPEQscQgNXzHjKA/QEUem+nh1LiHTYb0GhTn7ab5El23IWfkf9vknyN5ZyHKJsAS3vvcmY8cW+tpNYORdg1YLsGFk9dv3HtQGYWO48tMlK+0LsOigM2DHEjxau1LAx1pbRVPsgBiTCbPwMzTYUoM0BqBuqs=
+	t=1747836043; cv=none; b=kdTCENC7AzR9+1/SJ8h8YRCOkXp95G0Q0YxkcwLG7XtpLlmZ4MnUDDUoIRcOlufGHmh1kOjkbL9wM3+TILaMZG+ufaHjaP5LDEYsX0jT7z/Q5j0Ko0diQ2japa4y0ADUTbNcgfcx0RG7hXuTOevPDRkVjsF9d+KX0mAGKvyVaTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747836037; c=relaxed/simple;
-	bh=D+Mvs7RFKZ/0GX5Zw7fITc4N+ZIlI2mUX9o8UrHJTN0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=B8Cv62eCKFcP3pWdmT7MPi7DJh/+LK2TtSpnrzK3n16+txB6iBg4DOrDTkW5DQ96nLYKoGbFTFyJJym6BatogEE+zhHmAnFqqMweiqKfIZn8LyuDICkbhb4mJvsmPVOzLmyqyb9mYPGxmB2Ib2kUdgfCnEpCSbv8Gtz1RZFgfWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=bP4ASjJV reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1747836043; c=relaxed/simple;
+	bh=TG7KGt9Z8KkHwG8PtZech7PK1ytDELh9NZgI+4R2pzI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fPqi0J9ceAmpT0mOvAbu4fwL2Jem9KmiCiwjTRtUfcWP4jC5oV6O0lJmYW78nXLDiRYlqyZPS+b5eD4U8gtxonifwKnU+8h2IPkygRZP7ePlFXiAtJ3yS4YBp9OIVZgEZLZ2f5ZjxhbTPKVxqiOmR1ulUFIuq6S7lq/c5aUr+bk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KbALZD/d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="bP4ASjJV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=odIh3Xcoz5u21rQP2IhXIrwC0wra0N4YjYB03t6onMs=; b=b
-	P4ASjJVEPxgtPus10opmqWKpgk0hjSS3hO7ZIKhKGxE/p40q+oq/aL6A8uNauR68
-	ztMVNgCai2F/ZNbwcQtLh7k2yFKgplxX2cg9ojVWUS0B5WSJ26MgQzhrQo9qOr2g
-	aX0SrwZ9fYK87ZhfhAmPFC+M41wfntSZT0H32SglrI=
-Received: from 00107082$163.com ( [111.35.189.95] ) by
- ajax-webmail-wmsvr-40-135 (Coremail) ; Wed, 21 May 2025 22:00:14 +0800
- (CST)
-Date: Wed, 21 May 2025 22:00:14 +0800 (CST)
-From: "David Wang" <00107082@163.com>
-To: "Greg KH" <gregkh@linuxfoundation.org>
-Cc: mathias.nyman@intel.com, oneukum@suse.com, stern@rowland.harvard.edu,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] USB: core: add a memory pool to urb caching
- host-controller private data
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <2025052132-sloped-strewn-397a@gregkh>
-References: <20250517083819.6127-1-00107082@163.com>
- <2025052148-cannot-football-74e1@gregkh>
- <572f1814.9a08.196f2971eea.Coremail.00107082@163.com>
- <2025052132-sloped-strewn-397a@gregkh>
-X-NTES-SC: AL_Qu2fBfSYuUgq4imRZOkZnEYQheY4XMKyuPkg1YJXOp80hiXs5y0de1tdNELQyv2tARCglDysXjJszPZVeZNJZIzqDc3c+IqBij8cMEDRMGAz
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KbALZD/d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7F81C4CEE4;
+	Wed, 21 May 2025 14:00:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747836043;
+	bh=TG7KGt9Z8KkHwG8PtZech7PK1ytDELh9NZgI+4R2pzI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=KbALZD/dEscVsNoTk46Tney3bpr9YBapbD6kPiCrP6jYQVYeU1B+lRBw0hGJnMIxA
+	 fxhEojnMsplG0brkRHU0kGSzA5rdSej0MtquM4ljjzCMg9FPzyYqsj6CWuJ/qtqwNZ
+	 Fxb8yRoc6SMYtWQIldMJI9Zxjot0qbS9IkvzCHwhM3q4XLQ5WEcKQCHFerrp3fdCfc
+	 dqxQN6LjTj71cn1owXAGH822pLzILvFd4FnLld/oIDJrS/AXKscTyAjPwLxBMi4rER
+	 bDKJdtaZftPXqHhCUJEqVAWvWy2P/P3VNs41LeT1kV9IV/+5Ic94ygZ6pgDCKo4vnM
+	 RoY6vcigApi+w==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uHjzs-00Gxn5-Mt;
+	Wed, 21 May 2025 15:00:40 +0100
+From: Marc Zyngier <maz@kernel.org>
+To: oliver.upton@linux.dev,
+	joey.gouly@arm.com,
+	suzuki.poulose@arm.com,
+	yuzenghui@huawei.com,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	Vincent Donnefort <vdonnefort@google.com>
+Cc: qperret@google.com,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	kernel-team@android.com
+Subject: Re: [PATCH v6 00/10] Stage-2 huge mappings for pKVM np-guests
+Date: Wed, 21 May 2025 15:00:36 +0100
+Message-Id: <174783602755.119525.10800483609741009182.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20250521124834.1070650-1-vdonnefort@google.com>
+References: <20250521124834.1070650-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <5d02ca20.a42f.196f3251196.Coremail.00107082@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:hygvCgD33+9w3C1oHf4JAA--.23023W
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbBkBNUqmgt1RAoigAHsY
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, vdonnefort@google.com, qperret@google.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-CkF0IDIwMjUtMDUtMjEgMjA6NTk6MDIsICJHcmVnIEtIIiA8Z3JlZ2toQGxpbnV4Zm91bmRhdGlv
-bi5vcmc+IHdyb3RlOgo+T24gV2VkLCBNYXkgMjEsIDIwMjUgYXQgMDc6MjU6MTJQTSArMDgwMCwg
-RGF2aWQgV2FuZyB3cm90ZToKPj4gQXQgMjAyNS0wNS0yMSAxODozMjowOSwgIkdyZWcgS0giIDxn
-cmVna2hAbGludXhmb3VuZGF0aW9uLm9yZz4gd3JvdGU6Cj4+ID5PbiBTYXQsIE1heSAxNywgMjAy
-NSBhdCAwNDozODoxOVBNICswODAwLCBEYXZpZCBXYW5nIHdyb3RlOgo+PiA+PiAtLS0KPj4gPj4g
-Q2hhbmdlcyBzaW5jZSB2MjoKPj4gPj4gMS4gYWN0aXZhdCB0aGUgcG9vbCBvbmx5IHdoZW4gdGhl
-IHVyYiBvYmplY3QgaXMgY3JlYXRlZCB2aWEKPj4gPj4gdXNiX2FsbG9jX3VyYigpCj4+ID4+IFRo
-YW5rcyB0byBPbGl2ZXIgTmV1a3VtIDxvbmV1a3VtQHN1c2UuY29tPidzIHJldmlldy4KPj4gPgo+
-PiA+Q2hhbmdlcyBnbyBiZWxvdyB0aGUgYm90dG9tIC0tLSBsaW5lLCBub3QgYXQgdGhlIHRvcC4g
-IFBsZWFzZSByZWFkIHRoZQo+PiA+ZG9jdW1lbnRhdGlvbiBmb3IgaG93IHRvIGRvIHRoaXMuCj4+
-ID4KPj4gPkFsc28sIHRoZXNlIGFyZSBub3QgInRocmVhZGVkIiB0b2dldGhlciwgbWFraW5nIHRo
-ZW0gaGFyZCB0byBwaWNrIG91dC4KPj4gPlBsZWFzZSB3aGVuIHlvdSByZXNlbmQsIG1ha2UgdGhl
-bSBiZSB0b2dldGhlciB1c2luZyBnaXQgc2VuZC1lbWFpbCBvcgo+PiA+c29tZSBzdWNoIHRvb2wu
-Cj4+IAo+PiA+Cj4+IAo+PiBSb2dlciB0aGF0fgo+PiAKPj4gCj4+ID4+IC0tLQo+PiA+PiBVUkIg
-b2JqZWN0cyBoYXZlIGxvbmcgbGlmZWN5Y2xlLCBhbiB1cmIgY2FuIGJlIHJldXNlZCBiZXR3ZWVu
-Cj4+ID4+IHN1Ym1pdCBsb29wczsgVGhlIHByaXZhdGUgZGF0YSBuZWVkZWQgYnkgc29tZSBob3N0
-IGNvbnRyb2xsZXIKPj4gPj4gaGFzIHZlcnkgc2hvcnQgbGlmZWN5Y2xlLCB0aGUgbWVtb3J5IGlz
-IGFsbG9jZWQgd2hlbiBlbnF1ZXVlLCBhbmQKPj4gPj4gcmVsZWFzZWQgd2hlbiBkZXF1ZXVlLiBG
-b3IgZXhhbXBsZSwgb24gYSBzeXN0ZW0gd2l0aCB4aGNpLCBpbgo+PiA+PiB4aGNpX3VyYl9lbnF1
-ZXVlOgo+PiA+PiBVc2luZyBhIFVTQiB3ZWJjYW0gd291bGQgaGF2ZSB+MjUwL3MgbWVtb3J5IGFs
-bG9jYXRpb247Cj4+ID4+IFVzaW5nIGEgVVNCIG1pYyB3b3VsZCBoYXZlIH4xSy9zIG1lbW9yeSBh
-bGxvY2F0aW9uOwo+PiA+PiAKPj4gPj4gSGlnaCBmcmVxdWVudCBhbGxvY2F0aW9ucyBmb3IgaG9z
-dC1jb250cm9sbGVyIHByaXZhdGUgZGF0YSBjYW4gYmUKPj4gPj4gYXZvaWRlZCBpZiB1cmIgdGFr
-ZSBvdmVyIHRoZSBvd25lcnNoaXAgb2YgbWVtb3J5LCB0aGUgbWVtb3J5IHRoZW4gc2hhcmVzCj4+
-ID4+IHRoZSBsb25nZXIgbGlmZWN5Y2xlIHdpdGggdXJiIG9iamVjdHMuCj4+ID4+IAo+PiA+PiBB
-ZGQgYSBtZW1wb29sIHRvIHVyYiBmb3IgaGNwcml2IHVzYWdlLCB0aGUgbWVtcG9vbCBvbmx5IGhv
-bGRzIG9uZSBibG9jawo+PiA+PiBvZiBtZW1vcnkgYW5kIGdyb3dzIHdoZW4gbGFyZ2VyIHNpemUg
-aXMgcmVxdWVzdGVkLgo+PiA+PiAKPj4gPj4gVGhlIG1lbXBvb2wgaXMgYWN0aXZhdGVkIG9ubHkg
-d2hlbiB0aGUgVVJCIG9iamVjdCBpcyBjcmVhdGVkIHZpYQo+PiA+PiB1c2JfYWxsb2NfdXJiKCkg
-aW4gY2FzZSBzb21lIGRyaXZlcnMgY3JlYXRlIGEgVVJCIG9iamVjdCBieSBvdGhlcgo+PiA+PiBt
-ZWFucyBhbmQgbWFuYWdlIGl0IGxpZmVjeWNsZSB3aXRob3V0IGNvcnJlc3BvbmRpbmcgdXNiX2Zy
-ZWVfdXJiLgo+PiA+PiAKPj4gPj4gVGhlIHBlcmZvcm1hbmNlIGRpZmZlcmVuY2Ugd2l0aCB0aGlz
-IGNoYW5nZSBpcyBpbnNpZ25pZmljYW50IHdoZW4KPj4gPj4gc3lzdGVtIGlzIHVuZGVyIG5vIG1l
-bW9yeSBwcmVzc3VyZSBvciB1bmRlciBoZWF2eSBtZW1vcnkgcHJlc3N1cmUuCj4+ID4+IFRoZXJl
-IGNvdWxkIGJlIGEgcG9pbnQgaW5iZXR3ZWVuIHdoZXJlIGV4dHJhIDFrL3MgbWVtb3J5IGFsbG9j
-dGlvbgo+PiA+PiB3b3VsZCBkb21pbmF0ZSB0aGUgcHJlZm9ybWFuY2UsIGJ1dCB2ZXJ5IGhhcmQg
-dG8gcGlucG9pbnQgaXQuCj4+ID4+IAo+PiA+PiBTaWduZWQtb2ZmLWJ5OiBEYXZpZCBXYW5nIDww
-MDEwNzA4MkAxNjMuY29tPgo+PiA+PiAtLS0KPj4gPj4gIGRyaXZlcnMvdXNiL2NvcmUvdXJiLmMg
-fCA0NSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKPj4gPj4gIGlu
-Y2x1ZGUvbGludXgvdXNiLmggICAgfCAgNSArKysrKwo+PiA+PiAgMiBmaWxlcyBjaGFuZ2VkLCA1
-MCBpbnNlcnRpb25zKCspCj4+ID4+IAo+PiA+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2IvY29y
-ZS91cmIuYyBiL2RyaXZlcnMvdXNiL2NvcmUvdXJiLmMKPj4gPj4gaW5kZXggNWU1MmEzNTQ4NmFm
-Li41MzExNzc0MzE1MGYgMTAwNjQ0Cj4+ID4+IC0tLSBhL2RyaXZlcnMvdXNiL2NvcmUvdXJiLmMK
-Pj4gPj4gKysrIGIvZHJpdmVycy91c2IvY29yZS91cmIuYwo+PiA+PiBAQCAtMjMsNiArMjMsOCBA
-QCBzdGF0aWMgdm9pZCB1cmJfZGVzdHJveShzdHJ1Y3Qga3JlZiAqa3JlZikKPj4gPj4gIAo+PiA+
-PiAgCWlmICh1cmItPnRyYW5zZmVyX2ZsYWdzICYgVVJCX0ZSRUVfQlVGRkVSKQo+PiA+PiAgCQlr
-ZnJlZSh1cmItPnRyYW5zZmVyX2J1ZmZlcik7Cj4+ID4+ICsJaWYgKHVyYi0+aGNwcml2X21lbXBv
-b2xfYWN0aXZhdGVkKQo+PiA+PiArCQlrZnJlZSh1cmItPmhjcHJpdl9tZW1wb29sKTsKPj4gPj4g
-IAo+PiA+PiAgCWtmcmVlKHVyYik7Cj4+ID4+ICB9Cj4+ID4+IEBAIC03Nyw2ICs3OSw4IEBAIHN0
-cnVjdCB1cmIgKnVzYl9hbGxvY191cmIoaW50IGlzb19wYWNrZXRzLCBnZnBfdCBtZW1fZmxhZ3Mp
-Cj4+ID4+ICAJaWYgKCF1cmIpCj4+ID4+ICAJCXJldHVybiBOVUxMOwo+PiA+PiAgCXVzYl9pbml0
-X3VyYih1cmIpOwo+PiA+PiArCS8qIGFjdGl2YXRlIGhjcHJpdiBtZW1wb29sIHdoZW4gdXJiIGlz
-IGNyZWF0ZWQgdmlhIHVzYl9hbGxvY191cmIgKi8KPj4gPj4gKwl1cmItPmhjcHJpdl9tZW1wb29s
-X2FjdGl2YXRlZCA9IHRydWU7Cj4+ID4+ICAJcmV0dXJuIHVyYjsKPj4gPj4gIH0KPj4gPj4gIEVY
-UE9SVF9TWU1CT0xfR1BMKHVzYl9hbGxvY191cmIpOwo+PiA+PiBAQCAtMTAzNywzICsxMDQxLDQ0
-IEBAIGludCB1c2JfYW5jaG9yX2VtcHR5KHN0cnVjdCB1c2JfYW5jaG9yICphbmNob3IpCj4+ID4+
-ICAKPj4gPj4gIEVYUE9SVF9TWU1CT0xfR1BMKHVzYl9hbmNob3JfZW1wdHkpOwo+PiA+PiAgCj4+
-ID4+ICsvKioKPj4gPj4gKyAqIHVyYl9oY3ByaXZfbWVtcG9vbF96YWxsb2MgLSBhbGxvYyBtZW1v
-cnkgZnJvbSBtZW1wb29sIGZvciBoY3ByaXYKPj4gPj4gKyAqIEB1cmI6IHBvaW50ZXIgdG8gVVJC
-IGJlaW5nIHVzZWQKPj4gPj4gKyAqIEBzaXplOiBtZW1vcnkgc2l6ZSByZXF1ZXN0ZWQgYnkgY3Vy
-cmVudCBob3N0IGNvbnRyb2xsZXIKPj4gPj4gKyAqIEBtZW1fZmxhZ3M6IHRoZSB0eXBlIG9mIG1l
-bW9yeSB0byBhbGxvY2F0ZQo+PiA+PiArICoKPj4gPj4gKyAqIFJldHVybjogTlVMTCBpZiBvdXQg
-b2YgbWVtb3J5LCBvdGhlcndpc2UgbWVtb3J5IGFyZSB6ZXJvZWQKPj4gPj4gKyAqLwo+PiA+PiAr
-dm9pZCAqdXJiX2hjcHJpdl9tZW1wb29sX3phbGxvYyhzdHJ1Y3QgdXJiICp1cmIsIHNpemVfdCBz
-aXplLCBnZnBfdCBtZW1fZmxhZ3MpCj4+ID4+ICt7Cj4+ID4+ICsJaWYgKCF1cmItPmhjcHJpdl9t
-ZW1wb29sX2FjdGl2YXRlZCkKPj4gPj4gKwkJcmV0dXJuIGt6YWxsb2Moc2l6ZSwgbWVtX2ZsYWdz
-KTsKPj4gPj4gKwo+PiA+PiArCWlmICh1cmItPmhjcHJpdl9tZW1wb29sX3NpemUgPCBzaXplKSB7
-Cj4+ID4+ICsJCWtmcmVlKHVyYi0+aGNwcml2X21lbXBvb2wpOwo+PiA+PiArCQl1cmItPmhjcHJp
-dl9tZW1wb29sX3NpemUgPSBzaXplOwo+PiA+PiArCQl1cmItPmhjcHJpdl9tZW1wb29sID0ga21h
-bGxvYyhzaXplLCBtZW1fZmxhZ3MpOwo+PiA+PiArCX0KPj4gPj4gKwlpZiAodXJiLT5oY3ByaXZf
-bWVtcG9vbCkKPj4gPj4gKwkJbWVtc2V0KHVyYi0+aGNwcml2X21lbXBvb2wsIDAsIHNpemUpOwo+
-PiA+PiArCWVsc2UKPj4gPj4gKwkJdXJiLT5oY3ByaXZfbWVtcG9vbF9zaXplID0gMDsKPj4gPj4g
-KwlyZXR1cm4gdXJiLT5oY3ByaXZfbWVtcG9vbDsKPj4gPj4gK30KPj4gPj4gK0VYUE9SVF9TWU1C
-T0xfR1BMKHVyYl9oY3ByaXZfbWVtcG9vbF96YWxsb2MpOwo+PiA+PiArCj4+ID4+ICsvKioKPj4g
-Pj4gKyAqIHVyYl9mcmVlX2hjcHJpdiAtIGZyZWUgaGNwcml2IGRhdGEgaWYgbmVjZXNzYXJ5Cj4+
-ID4+ICsgKiBAdXJiOiBwb2ludGVyIHRvIFVSQiBiZWluZyB1c2VkCj4+ID4+ICsgKgo+PiA+PiAr
-ICogSWYgbWVtcG9vbCBpcyBhY3RpdmF0ZWQsIHByaXZhdGUgZGF0YSdzIGxpZmVjeWNsZQo+PiA+
-PiArICogaXMgbWFuYWdlZCBieSB1cmIgb2JqZWN0Lgo+PiA+PiArICovCj4+ID4+ICt2b2lkIHVy
-Yl9mcmVlX2hjcHJpdihzdHJ1Y3QgdXJiICp1cmIpCj4+ID4+ICt7Cj4+ID4+ICsJaWYgKCF1cmIt
-PmhjcHJpdl9tZW1wb29sX2FjdGl2YXRlZCkgewo+PiA+PiArCQlrZnJlZSh1cmItPmhjcHJpdik7
-Cj4+ID4+ICsJCXVyYi0+aGNwcml2ID0gTlVMTDsKPj4gPgo+PiA+WW91IHNlZW0gdG8gc2V0IHRo
-aXMgdG8gTlVMTCBmb3Igbm8gcmVhc29uLCBBTkQgY2hlY2sgZm9yCj4+ID5oY3ByaXZfbWVtcG9v
-bF9hY3RpdmF0ZWQuICBPbmx5IG9uZSBpcyBnb2luZyB0byBiZSBuZWVkZWQsIHlvdSBkb24ndAo+
-PiAKPj4gPm5lZWQgdG8gaGF2ZSBib3RoLCByaWdodD8gIFdoeSBub3QganVzdCByZWx5IG9uIGhj
-ZHByaXYgYmVpbmcgc2V0Pwo+PiAKPj4gSSBuZWVkcyB0byBkaXN0aW5ndWlzaCB0d28gc2l0dWF0
-aW9uczsKPj4gMS4gIHRoZSBtZW1vcnkgcG9vbCBpcyB1c2VkLCB0aGVuIHRoZSB1cmJfZnJlZV9o
-Y3ByaXYgc2hvdWxkIGRvIG5vdGhpbmcKPj4gMi4gIHRoZSBtZW1vcnkgd2FzIGFsbG9jZWQgYnkg
-aGNkLCAgdGhlbiB0aGUgbWVtb3J5IHNob3VsZCBiZSBrZnJlZWQKPj4gCj4+IFVzaW5nIGhjcHJp
-dl9tZW1wb29sX2FjdGl2YXRlZCBkb2VzIGxvb2sgY29uZnVzaW5nLi4uCj4+IHdoYXQgYWJvdXQg
-Zm9sbG93aW5nIGNoYW5nZXM6Cj4+IAo+PiArCWlmICh1cmItPmhjcHJpdiAhPSB1cmItPmhjcHJp
-dl9tZW1wb29sKSB7Cj4+ICsJCWtmcmVlKHVyYi0+aGNwcml2KTsKPj4gKwkJdXJiLT5oY3ByaXYg
-PSBOVUxMOwo+PiArCX0KPj4gCj4+ID4KPj4gPkFuZCBhcmUgeW91IHN1cmUgdGhhdCB0aGUgaGNk
-IGNhbiBhY3R1YWxseSB1c2UgYSBrbWFsbG9jZWQgIm1lbXBvb2wiPyAgSQo+PiAKPj4gVGhlIHBh
-dGNoIGZvciB4aGNpIGlzIGhlcmU6ICBodHRwczovL2xvcmUua2VybmVsLm9yZy9sa21sLzIwMjUw
-NTE3MDgzNzUwLjYwOTctMS0wMDEwNzA4MkAxNjMuY29tLwo+PiB4aGNpIHdhcyBremFsbG9jaW5n
-IG1lbW9yeSBmb3IgaXRzIHByaXZhdGUgZGF0YSwgYW5kIHdoZW4gdXNpbmcgVVNCIHdlYmNhbS9t
-aWMsIEkgY2FuIG9ic2VydmUgMWsrL3Mga3phbGxvY3MKPj4gQW5kIHdpdGggdGhpcyBwYXRjaCwg
-ZHVyaW5nIG15IG9icyBzZXNzaW9uKHdpdGggVVNCIHdlYmNhbS9taWMpLCBubyBtZW1vcnkgYWxs
-b2NhdGlvbgo+PiBvYnNlcnZlZCBmb3IgdXNiIHN1YiBzeXN0ZW07Cj4+IAo+PiA+ZG9uJ3QgdW5k
-ZXJzdGFuZCB3aHkgeGhjaSBjYW4ndCBqdXN0IGRvIHRoaXMgaW4gaXRzIGRyaXZlciBpbnN0ZWFk
-IG9mCj4+ID50aGlzIGJlaW5nIHJlcXVpcmVkIGluIHRoZSB1c2IgY29yZSBhbmQgYWRkaW5nIGV4
-dHJhIGxvZ2ljIGFuZCBzaXplIHRvCj4+ID5ldmVyeSB1cmIgaW4gdGhlIHN5c3RlbS4KPj4gCj4+
-IFllcywgaXQgaXMgcG9zc2libGUgdG8gbWFrZSBhIG1lbXBvb2wgaW4gaGNkcy4gQnV0IHRoZSBs
-aWZlY3ljbGUgbWFuYWdlbWVudCB3b3VsZCBub3QgYmUgYW4gZWFzeSBvbmUsCj4+IGJhc2ljYWxs
-eSBhICJtZW1wb29sIiB3b3VsZCBuZWVkIHRvIGJlIGJ1aWxkIHVwIGZyb20gemVyby1ncm91bmQs
-IGxvdHMgb2YgZGV0YWlscyBuZWVkIHRvIGJlIGFkZHJlc3NlZCwKPj4gZS5nLiB3aGVuIHNob3Vs
-ZCByZXNpemUgdGhlIG1lbXBvb2wgd2hlbiBtZW1wb29sIGlzIHRvbyBiaWcuCj4KPlRoYXQncyB1
-cCB0byB0aGUgSENEIHRvIG1hbmFnZSwgSUYgdGhleSBuZWVkIHRoaXMuICBPdGhlcndpc2UgdGhp
-cyBpcyBhCj5idXJkZW4gb24gYWxsIG90aGVyIHN5c3RlbXMgd2l0aCB0aGUgaW5jcmVhc2VkIG1l
-bW9yeSBzaXplIGZvciBubyBuZWVkZWQKPnJlYXNvbi4KCkFncmVlIHRoYXQgb3RoZXIgaGNkcyBt
-YXkgbm90IG5lZWQgcHJpdmF0ZSBkYXRhIGFsbG9jYXRpb24gYXQgYWxsLCB0aGlzIGNoYW5nZXMg
-d291bGQgd2FzdGUgdGhlbSB0aHJlZSBtb3JlIGZpZWxkcyB0aGV5IHdvdWxkIG5ldmVyCnVzZSBp
-biBVUkI7IGJ1dCBpZiBhIGhjZCBuZWVkcyBwcml2YXRlIGRhdGEsIHRoZXkgY2FuIHVzZSB0aG9z
-ZSBmaWVsZCB3aXRob3V0IG1hbmFnZSBpdCBieSB0aGVpciBvd24uIAooSSB0aGluayBtb3N0IGhj
-ZHMgbmVlZCBwcml2YXRlIGRhdGEpCgpXaGVuIGxvb2tpbmcgaW4gY29kZXMsIEkgbm90aWNlIHhl
-bi1oY2QgaGF2ZSBhbHJlYWR5IGltcGxlbWVudGVkIGEgbWVtcG9vbCwgZm9yIGV4YW1wbGU6CmRy
-aXZlcnMvdXNiL2hvc3QveGVuLWhjZC5jCjEzMjMgc3RhdGljIGludCB4ZW5oY2RfdXJiX2VucXVl
-dWUoc3RydWN0IHVzYl9oY2QgKmhjZCwgc3RydWN0IHVyYiAqdXJiCi4uLgoxMzM0ICAgICAgICAg
-dXJicCA9IGttZW1fY2FjaGVfemFsbG9jKHhlbmhjZF91cmJwX2NhY2hlcCwgbWVtX2ZsYWdzKTsK
-MTMzNSAgICAgICAgIGlmICghdXJicCkKMTMzNiAgICAgICAgICAgICAgICAgcmV0dXJuIC1FTk9N
-RU07CjEzMzcgCjEzMzggICAgICAgICBzcGluX2xvY2tfaXJxc2F2ZSgmaW5mby0+bG9jaywgZmxh
-Z3MpOwoxMzM5IAoxMzQwICAgICAgICAgdXJicC0+dXJiID0gdXJiOwoxMzQxICAgICAgICAgdXJi
-LT5oY3ByaXYgPSB1cmJwOwoxMzQyICAgICAgICAgdXJicC0+cmVxX2lkID0gfjA7CgpCdXQgbW9z
-dCBvdGhlcnMgc3RpbGwgdXNlIGt6YWxsb2MuICAgCkJldHdlZW4ga21lbV9jYWNoZSBhbmQgYSBt
-ZW0gc2xvdCBpbiBVUkIsIEkgd2FudCBzYXkgdGhlIG1lbSBzbG90IGluIFVSQiBpcyBtYW5hZ2Vk
-IG1vcmUgZWZmaWNpZW50bHkvYmFsYW5jZWQsCmFuZCB3b3VsZCBpdCBiZSAgaGVhbHRoeSB0byBh
-ZGQga21lbV9jYWNoZSBpbiBlYWNoIGhjZHMgYXMgdGhleSBzZWUgdGhlIG5lZWRzLCB3ZSB3b3Vs
-ZCBoYXZlIHNlcGFyYXRlZCBrbWVtX2NhY2hlCmV2ZXJ5d2hlcmUuCgoKVGhhbmtzCkRhdmlk
+On Wed, 21 May 2025 13:48:24 +0100, Vincent Donnefort wrote:
+> This series adds support for stage-2 huge mappings (PMD_SIZE) to pKVM
+> np-guests, that is installing PMD-level mappings in the stage-2,
+> whenever the stage-1 is backed by either Hugetlbfs or THPs.
+> 
+> The last patch of that series is an optimization for CMOs using a shared
+> PMD_SIZE fixmap.
+> 
+> [...]
+
+Applied to next, thanks!
+
+[01/10] KVM: arm64: Handle huge mappings for np-guest CMOs
+        commit: 944a1ed8cc3ea6c5b16b6aca11475ced0daf68a9
+[02/10] KVM: arm64: Introduce for_each_hyp_page
+        commit: 3db771fa23ed6aecdf28ce4b806309198eea84e2
+[03/10] KVM: arm64: Add a range to __pkvm_host_share_guest()
+        commit: 4274385ebf090461b46b9bddb0f7c526182ba3c0
+[04/10] KVM: arm64: Add a range to __pkvm_host_unshare_guest()
+        commit: f28f1d02f4eaac05c2ad6bf7264a8696dc21d011
+[05/10] KVM: arm64: Add a range to __pkvm_host_wrprotect_guest()
+        commit: 0eb802b3b4ecfb10046bc325f47e7fd741c72ffe
+[06/10] KVM: arm64: Add a range to __pkvm_host_test_clear_young_guest()
+        commit: c4d99a833d34d8041a568f0c076379ae53c47896
+[07/10] KVM: arm64: Convert pkvm_mappings to interval tree
+        commit: b38c9775f73941ee59aebc0a489aa5c22e632def
+[08/10] KVM: arm64: Add a range to pkvm_mappings
+        commit: 3669ddd8fa8b5a46d96b9c54a6fa519a17e4a4fa
+[09/10] KVM: arm64: Stage-2 huge mappings for np-guests
+        commit: db14091d8f75852d960b18834c7bdb1b7c2bb74f
+[10/10] KVM: arm64: np-guest CMOs with PMD_SIZE fixmap
+        commit: c353fde17d8f7e710884532da50393cd22ddbfbe
+
+Cheers,
+
+	M.
+-- 
+Without deviation from the norm, progress is not possible.
+
+
