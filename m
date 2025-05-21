@@ -1,141 +1,143 @@
-Received: from mail.netfilter.org (mail.netfilter.org [217.70.190.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E482525B688;
-	Wed, 21 May 2025 10:07:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.190.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B295D230D0A
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 10:07:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747822036; cv=none; b=Rd6kGuZI0YOaKhhP7Efua1EUse23TJpSXLBj6fzCLdOqcnLJBr4cBRxe7TUW3mv/UuF19MfMjStAiJaSsVLQCZ0aok2QpurCR3GHyybOtQuMZo4/OA9TXFhpKdWveptzSf1ym5Xr0raV2Xe2a1h+jdMiQ0AbMTFDCPq+mXETSPQ=
+	t=1747822048; cv=none; b=f3TfLAY8RwxhJT1QFXMemTB4GNkWc5i2YV//RnFLYGaeHKpn3P0CQGb+HYmr4KdUaYGZNroUx+csks7H+ACsJkX6YQGvuJ3Yt1qQ7kjULtqKeX8a3ZtNLXNPH7jXGOR+Jjim84/hDAdLdXdEGW8PbXAz6/6+6U5ouArPBySsWoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747822036; c=relaxed/simple;
-	bh=S5Z4lpB+PVEMLATY/9LtfcmptgY13HExZPi6ZL1tZ9I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WOIc/X3aCGBguGv3Jsc5pN09rg8no+GAnDAgrJZJ172suYWVyoHjUttJfQlN+jNpsZQTeciGBVKva4pf+FOSPit7ISaf9oNcUjTjn9M8bYo851icOEkyfFJo4Lh4mvsErmBFZZA45RgfeJcT7LwndJn8bwZLMmT2hUVmBAw9SVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org; spf=pass smtp.mailfrom=netfilter.org; dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b=m55KzAKi; dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b=RYAiDCX2; arc=none smtp.client-ip=217.70.190.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netfilter.org
+	s=arc-20240116; t=1747822048; c=relaxed/simple;
+	bh=s70l0RzgckCjo3mnTRJ4NRxVGh71GKYFGpMyc2nLVCc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MocgDW1ngVFseq+fL8zPwPHfQPJjeVtYJikiTaVAg1e+2iCScK37c861rqvffjlY4XiObjUGvSdx3FYZF1irlCa2tsuGwODMdzuGsVUCUglGUDQOjSLuP9NDdfLZTlWo6X5M4Ferr022SEjjiQqFolsVv59HNiNnswqMwCN5s60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tEqb53yr; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b="m55KzAKi";
-	dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b="RYAiDCX2"
-Received: by mail.netfilter.org (Postfix, from userid 109)
-	id BB40C60724; Wed, 21 May 2025 12:07:11 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=netfilter.org;
-	s=2025; t=1747822031;
-	bh=FCKLw1/BI8fQGqiFzPRPzkBL4jrZBBv292m0Eoh2Ad8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=m55KzAKirQEN2JgIW0IxRi4qNm2RpFBITJ4UCGcsunYkwREFnWb+2PcC4GfTTg5hg
-	 rBcCYGyaj5YTUHtDNnH4Ok0YHtPVBcYnlv1eFMSRJBnaIth86s74tnYNn9YOhmDLCZ
-	 Xhn4OHGggu2skk2uj4DGu1lN65iHe/obg5jXNWCrAkkbNICmbHUA1fYHK/XlkWglSe
-	 ufLjV3nagZdS7+P/5hEX/bhIFMNN+DEQ+B0p+b+DLENyy2eGvPlK7qGcl0n9/pYU6T
-	 gsJyfBUzTVly5HW1xOjLRNCRzSljJ9VFPbtw/jWGqcqYZgprZOkCyVoHkGP2jLWFjh
-	 kjwznBXzIZ9AQ==
-X-Spam-Level: 
-Received: from netfilter.org (mail-agni [217.70.190.124])
-	by mail.netfilter.org (Postfix) with ESMTPSA id 4537C606ED;
-	Wed, 21 May 2025 12:07:08 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=netfilter.org;
-	s=2025; t=1747822028;
-	bh=FCKLw1/BI8fQGqiFzPRPzkBL4jrZBBv292m0Eoh2Ad8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RYAiDCX2OcSSzxyuBAls8SzlhXb1m5VY+qAabqz3ZwGb/StUlrOsNnyyX77Wq4ldu
-	 MZBPnqMfeqh0+e605adkl6cUWwc2+741hOBZAQNufbNrOXKAVoW7bhs3+tS2md3Ryn
-	 c3Z6QT6hVzl60hyMNn3gj/nQEBXFSFq3C3RInYGK/YeQbAl5mRXq9J/v/UOpbYdz0T
-	 MVi0BHncJsV3I9OCUFyNRWjlZw1z/29HCUbWMKB+wcjJuhZCTBH/V+wOUYjSjzVv6f
-	 sVAF4wxT14R2Zpehp6356fc6156xag3KpLpHUmrqt/22y2dcQbO4a44yyOem5cKHAZ
-	 u4lVeki4xC0IQ==
-Date: Wed, 21 May 2025 12:07:05 +0200
-From: Pablo Neira Ayuso <pablo@netfilter.org>
-To: Lance Yang <ioworker0@gmail.com>
-Cc: kadlec@netfilter.org, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
-	coreteam@netfilter.org, linux-kernel@vger.kernel.org,
-	netfilter-devel@vger.kernel.org, Zi Li <zi.li@linux.dev>,
-	Lance Yang <lance.yang@linux.dev>, fw@strlen.de
-Subject: Re: [RESEND PATCH 1/1] netfilter: load nf_log_syslog on enabling
- nf_conntrack_log_invalid
-Message-ID: <aC2lyYN72raND8S0@calendula>
-References: <20250514053751.2271-1-lance.yang@linux.dev>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tEqb53yr"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-551fe540b74so1788231e87.0
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 03:07:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747822045; x=1748426845; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Bg3KxafjaR6S+uofCX5Tlv+8Ue5WhF8d1zNhWCIK12U=;
+        b=tEqb53yr71rZCsjfcfVQjPO2fTi2FSvIIpn5EByRRl0ZlJ2VU92jSSMXXHbrSL+5/2
+         najy8gMEG7diyFF/o58kHt3ihDMpWzkZWTdA4OKNEYZ/la1fvgYb1hG3bd2Dcs8gQeNz
+         H1HJ0e0mN5jipP1yWql5t0OC4Y1m7iirQ0M9leLCneTH5W/y1Rjasz4kWRBqkv0RWjLX
+         FB6rKafcDgwslbAUeLDRVGF0KJ5e5RoclP0/LmVmYhzgj6rA/juEbLPQctu0xSwgejN7
+         kqErZmjlKv8tvvxGWt0j3h8kK/hzlaLdnaOgOu5dVwAz0CUAudYmraiA8JMYx7J2uJWa
+         Xa0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747822045; x=1748426845;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Bg3KxafjaR6S+uofCX5Tlv+8Ue5WhF8d1zNhWCIK12U=;
+        b=GVv8FLiaArHzUJazxWLf0o80Vhb3hg2jXocI9LmBW33ChmoIVrVRxC8UHEBFWLvN4C
+         9dCrhy0IM1kZ9BmA0rZJSDFwLu7wkJ535aMzBuOSFG1F+J8o7glr6aFZwWCj/Hi1+kZg
+         4wj2JDbTXTRu8VbNkibeo4LqojRE/x8jELwc5/reRVbJqNRR/xugCDX95FVekZHkykA6
+         /L3i57AKDd1TOIt9X3wN4tQenulPwG8Zm5Cnc5raH2Kr/XsSEI/3Vw2Tgz7g20IXHykV
+         gjos6IORD9GLKmwjtC14GfeEmlcaFm4QIK8wJdxxwoeAXu9fk4B9LonDAS2laFo1KLv/
+         xAeg==
+X-Forwarded-Encrypted: i=1; AJvYcCX6xn+4y9/jyozFStcQROMiV7EU7qyHF9dOUBfDd4kpyixdAzf3YA/cM5TRqxxx0ihCxeGxhRW+Ikm+CaM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCpgVnLisCLg03uQ0jjzgEU4MjtwVbiSpHWdqiFafyPcac4tIw
+	E0xGrAIC4MpzixSTWqOqC5HFGeYBZMPO7VawXfDNCYupRfwKS1Q9+kaoxemW8e6fQlPapDoUVk2
+	ho4pAdeMVwsdOvKFVsdskK7rp8XBnQ6CSpUF8HHn+
+X-Gm-Gg: ASbGncv1zlT1c6+o14lARPk4vHpO8MRtT1RbSKKFocfkty1qk4GjngrILKLn5O1gaE1
+	Nfsa5uCYXoFiZ29DofXbNnx+GS09TTnM4K6M5afl2emxFTkkcgpVUpOCz61VR+iyX7L378stSWf
+	A7mefohMqWx4ftedVwVY5Sg2vXDk3gA14DEIqEqs2UIWvOVz4dYH42pmNrs7axmw0gYqj4uXFs5
+	1s=
+X-Google-Smtp-Source: AGHT+IEpQHiVRQXYCzR8oB85uk38anT7Ra5PRP9jwe38F+43aa4a/dJJUntY/14RO3Yp1ZmYTfCS4kQUVGSALXsIcYg=
+X-Received: by 2002:a05:6512:2601:b0:54f:c580:af96 with SMTP id
+ 2adb3069b0e04-550e990732emr4994286e87.50.1747822044609; Wed, 21 May 2025
+ 03:07:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250514053751.2271-1-lance.yang@linux.dev>
+References: <cover.1740386567.git.dvyukov@google.com> <d11d91e0c27ef78affcef06e00d1cf4cd8747fcc.1740386567.git.dvyukov@google.com>
+ <87v7sj3dlx.ffs@tglx>
+In-Reply-To: <87v7sj3dlx.ffs@tglx>
+From: Dmitry Vyukov <dvyukov@google.com>
+Date: Wed, 21 May 2025 12:07:13 +0200
+X-Gm-Features: AX0GCFvertoxlIfbHZN9m4OCQuVInznAUpxCLCYXbH3wgOYemmFcG0el6ki3YYU
+Message-ID: <CACT4Y+a3EPcAS4yB8c2d65+T3zXoTYwN6-G4G0C_JDWBEo6EOA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] selftests: Fix errno checking in
+ syscall_user_dispatch test
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: krisman@collabora.com, luto@kernel.org, peterz@infradead.org, 
+	keescook@chromium.org, gregory.price@memverge.com, 
+	Marco Elver <elver@google.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Sat, 8 Mar 2025 at 13:34, Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> On Mon, Feb 24 2025 at 09:45, Dmitry Vyukov wrote:
+> >
+> > Also use EXPECT/ASSERT consistently. Currently there is an inconsistent=
+ mix
+> > without obvious reasons for usage of one or another.
+> >
+> > Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
+>
+> As Gregory said, this should be the first patch in the series with a
+> proper Fixes tag.
+>
+> >       /* Invalid op */
+> >       op =3D -1;
+> > -     prctl(PR_SET_SYSCALL_USER_DISPATCH, op, 0, 0, &sel);
+> > -     ASSERT_EQ(EINVAL, errno);
 
-Cc: Florian Westphal.
+> > +     EXPECT_EQ(-1, prctl(PR_SET_SYSCALL_USER_DISPATCH, op, 0, 0, &sel)=
+);
+> > +     EXPECT_EQ(EINVAL, errno);
+>
+> Seriously?
+>
+> Something like:
+>
+> static void prctl_invalid(unsigned long op, unsigned long offs, unsigned =
+long len,
+>                           void *sel, int err)
+> {
+>         EXPECT_EQ(-1, prctl(PR_SET_SYSCALL_USER_DISPATCH, op, offs, len, =
+0, (unsigned long)sel));
+>         EXPECT_EQ(err, errno);
+> }
+>
+> static void prctl_valid(unsigned long op, unsigned long offs, unsigned lo=
+ng len,
+>                         void *sel)
+> {
+>         EXPECT_EQ(0, prctl(PR_SET_SYSCALL_USER_DISPATCH, op, offs, len, 0=
+, (unsigned long)sel));
+> }
+>
+> ....
+>         /* Invalid op */
+>         prctl_invalid(-1, 0, 0, &sel, -EINVAL);
+>         /* offset !=3D 0 */
+>         prctl_invalid(PR_SYS_DISPATCH_OFF, 1, 0, NULL, -EINVAL);
+>         ....
+>         /* The odd valid test in bad_prctl_param() */
+>         prctl_valid(PR_SYS_DISPATCH_OFF, 0, 0, NULL);
+>
+> But that's not enough macro uglyness sprinkled all over the place and
+> too readable, right?
 
-On Wed, May 14, 2025 at 01:37:51PM +0800, Lance Yang wrote:
-> From: Lance Yang <lance.yang@linux.dev>
-> 
-> When nf_log_syslog is not loaded, nf_conntrack_log_invalid fails to log
-> invalid packets, leaving users unaware of actual invalid traffic. Improve
-> this by loading nf_log_syslog, similar to how 'iptables -I FORWARD 1 -m
-> conntrack --ctstate INVALID -j LOG' triggers it.
+The EXPECT* macros unfortunately can't be used in helper functions,
+they require some hidden _metadata variable that is present only in
+TEST/TEST_F functions:
 
-I have been beaten by this usability issue in the past, it happens
-since conntrack is loaded on demand.
-
-Maybe add an inconditionally soft dependency? This is a oneliner patch.
-
-        MODULE_SOFTDEP("pre: nf_log_syslog");
-
-Florian, do you prefer this patch (on-demand) or a oneliner to load
-this module when conntrack gets loaded too?
-
-It is a bit more memory to make it inconditional, but better to expose
-to users this soft dependency via lsmod.
-
-Thanks.
-
-> Signed-off-by: Zi Li <zi.li@linux.dev>
-> Signed-off-by: Lance Yang <lance.yang@linux.dev>
-> ---
->  net/netfilter/nf_conntrack_standalone.c | 20 +++++++++++++++++++-
->  1 file changed, 19 insertions(+), 1 deletion(-)
-> 
-> diff --git a/net/netfilter/nf_conntrack_standalone.c b/net/netfilter/nf_conntrack_standalone.c
-> index 2f666751c7e7..b4acff01088f 100644
-> --- a/net/netfilter/nf_conntrack_standalone.c
-> +++ b/net/netfilter/nf_conntrack_standalone.c
-> @@ -543,6 +543,24 @@ nf_conntrack_hash_sysctl(const struct ctl_table *table, int write,
->  	return ret;
->  }
->  
-> +static int
-> +nf_conntrack_log_invalid_sysctl(const struct ctl_table *table, int write,
-> +				void *buffer, size_t *lenp, loff_t *ppos)
-> +{
-> +	int ret;
-> +
-> +	ret = proc_dou8vec_minmax(table, write, buffer, lenp, ppos);
-> +	if (ret < 0 || !write)
-> +		return ret;
-> +
-> +	if (*(u8 *)table->data == 0)
-> +		return ret;
-> +
-> +	request_module("%s", "nf_log_syslog");
-> +
-> +	return ret;
-> +}
-> +
->  static struct ctl_table_header *nf_ct_netfilter_header;
->  
->  enum nf_ct_sysctl_index {
-> @@ -649,7 +667,7 @@ static struct ctl_table nf_ct_sysctl_table[] = {
->  		.data		= &init_net.ct.sysctl_log_invalid,
->  		.maxlen		= sizeof(u8),
->  		.mode		= 0644,
-> -		.proc_handler	= proc_dou8vec_minmax,
-> +		.proc_handler	= nf_conntrack_log_invalid_sysctl,
->  	},
->  	[NF_SYSCTL_CT_EXPECT_MAX] = {
->  		.procname	= "nf_conntrack_expect_max",
-> -- 
-> 2.49.0
-> 
+sud_test.c: In function =E2=80=98prctl_valid=E2=80=99:
+../kselftest_harness.h:107:45: error: =E2=80=98_metadata=E2=80=99 undeclare=
+d (first
+use in this function)
+  107 |                         __FILE__, __LINE__, _metadata->name,
+##__VA_ARGS__)
