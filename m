@@ -1,145 +1,129 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34B0A270548;
-	Wed, 21 May 2025 13:22:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 346D926560A
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 13:22:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747833732; cv=none; b=Uudp9ffDKcqFaAmeZvVPYRyOJ2rtUnU7pT92njXR4YLxDCPO1irm9CEdK8j6CteUsTIlLt6nDS71MEoZNopmAQNIHuWS0ZZTcQuWgeylVzQEW8wCc+XD4CzFnvkgZGTDvZfKi00Wt0bYua8lze8cW4JUwIbNsPMgDVkAYzYeO6w=
+	t=1747833741; cv=none; b=R1fYdKOfta/nAmUJSc0amnR3iuS9LHjW8d6ZnjstNcwScxxWXvhe0pErDLQwfpvLuBwOWYNt7OAth78VcIVS9nmI+LwcRjZH9MT8mcLSYSo6gPxZwQH+ex+KU7sP8UhsX2JWBUWqtTUI1vRQ/k8MFPcDaaMKbmZ2JkP9PSatRrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747833732; c=relaxed/simple;
-	bh=EX4ui2tQT7UMETR1W+xK25rJPJELgoGDLpEuPhuzklw=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bsXw8bW4GHdo0WjrHtSXpUhb60NtltfO9+//SsF78MpmMyQLkAWMG6u1ZpJhe06UI4D4QKAnJV9UIkTfyurnEt6+VyMivqzfs8HsVF6VnodkA25fFab6dwKT5XZwy/Ry90ksrKY2ltFSAz0lkLf44IEJNofwzpJqgjT45R/xNgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E6jBTMek; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747833741; c=relaxed/simple;
+	bh=pL7KrFPJBcnRvkIWPhrK9DH3N/TMrMEbdkvtYpq9ZfI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VMaqw8uM4Ran72mw/G1/GTmOfY6SlkWuW9CMSZc0I3+Md/hAfu9qCA9Z+lDHKD4dMDXag4QB+5dYwQVFKnmErbaL+TS8UqReA7nciICLAuohExJy6UfTFtA51+iqPHKrfP0P2hU7njkmPAdBhR2uhzcl9ms6UnUZRGWu4KjVu2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gJP9l5W8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E6jBTMek"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CBF4C4CEE7;
-	Wed, 21 May 2025 13:22:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gJP9l5W8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE59EC4CEE7
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 13:22:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747833729;
-	bh=EX4ui2tQT7UMETR1W+xK25rJPJELgoGDLpEuPhuzklw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=E6jBTMekBv+UH9ycukXQK3H0XIxjnYZg58I9raQ05E10M9qL3PlndBrrRB12kMb08
-	 iqktE52OFdoAFLtISTnJFqKBhKN6BdmAjziVHoh95aCf7PaCdh9+0fllYKDz6oCBk+
-	 6Q+Q7u3ytdNjmawsULl8BmV8rLtnCf/C4DViZyhMpbkOXa/d7hZVJT49XCTw/Ik1DD
-	 S2u5NI+atPUaOeHnw6+813IgVJvh92MGCgJ/+k4L2qd9kIeNJS86XhcWACfsUuRx7T
-	 MMFLYsUWhGzRyyRgwQVdL+eguZVorq2GrBcVSfnaikocXW3qRLNswt4DtvbPiskgkg
-	 FRmF6L9gww5xA==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uHjOZ-00GwxK-Fd;
-	Wed, 21 May 2025 14:22:07 +0100
-Date: Wed, 21 May 2025 14:22:06 +0100
-Message-ID: <86r00idrpd.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	James Clark <james.clark@linaro.org>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Leo Yan <leo.yan@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	kvmarm@lists.linux.dev
-Subject: Re: [PATCH v22 4/5] KVM: arm64: nvhe: Disable branch generation in nVHE guests
-In-Reply-To: <20250520-arm-brbe-v19-v22-4-c1ddde38e7f8@kernel.org>
-References: <20250520-arm-brbe-v19-v22-0-c1ddde38e7f8@kernel.org>
-	<20250520-arm-brbe-v19-v22-4-c1ddde38e7f8@kernel.org>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=k20201202; t=1747833740;
+	bh=pL7KrFPJBcnRvkIWPhrK9DH3N/TMrMEbdkvtYpq9ZfI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=gJP9l5W8a8gc23lm7vCutuykMSn20MHY5j88UE9ZnTUnD4AXxU4eB55hZ17XZybYo
+	 CcUpCiCd1n5u4/BlsDh55EWpHfl49VtnE24tTBVsfRUqNooH9vUXn7CxCGUCIc2lKn
+	 JYw6DleKAB9AmH6fqi/1ruTJ74Ikn9Ck97F0jnA2yEpnikpLx+Hvwmh0r7PEgIRtZU
+	 9auuk5GPkAxRhMb0DifaAi+lhHx6abCAL7jn+W/IWC4ls8uCJygy+vjtEJH9UtqgS4
+	 2apdtdjCdUyhXv1dO+Ku74E/dDybc3vtm9amOg21q4FleayjldHTLC/95PigrD4rZe
+	 m6cXntncONlNg==
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-551fe540b74so1969653e87.0
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 06:22:20 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXBD+FwgK2vaccjN0GIDyCK0DpnBRV7Sn3jtbOmKsgWS/vqsTW00k4vdooA+0DgAmNZzS5IZqOtZ4F6o60=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxR1O9RbmSv17+sJWTXhZNXUYBiNxozFlzrkM1tjO2Zr380LRw4
+	+QyYnbzukPZoJ0arGehC3iqPrXZBb2YFMWmm/zn71j5KvVYISrxhA1J6csl9Iy5hzyVE79fxe6J
+	19Z8ctfmDJ7P1T7g94eanCpRqekPCHIo=
+X-Google-Smtp-Source: AGHT+IGmKN13CvFDMKUqelNdcpGyhbQoEjCw6El3mvH6M4PpyqeXWZEY1G5GDvea4rEvDGLFsNfWPjDf9x9lSchC/xY=
+X-Received: by 2002:a05:6512:3d91:b0:54a:cc75:3d81 with SMTP id
+ 2adb3069b0e04-550e971af25mr6861035e87.4.1747833739070; Wed, 21 May 2025
+ 06:22:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: robh@kernel.org, will@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, corbet@lwn.net, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, james.clark@linaro.org, anshuman.khandual@arm.com, leo.yan@arm.com, linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, kvmarm@lists.linux.dev
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+References: <20250513111157.717727-8-ardb+git@google.com> <20250513111157.717727-11-ardb+git@google.com>
+ <CAMzpN2jTPFTA9NhXfsrTZ0-prUH-1DbZ5ewt92BZSMqBCZyskw@mail.gmail.com>
+In-Reply-To: <CAMzpN2jTPFTA9NhXfsrTZ0-prUH-1DbZ5ewt92BZSMqBCZyskw@mail.gmail.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Wed, 21 May 2025 15:22:06 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXEC38Gw=uY7suCw5=dZs6kTwX6w6vWyV9DKDpQpm0OtZA@mail.gmail.com>
+X-Gm-Features: AX0GCFtdKNWL8WltQFtjk3CeA9Q_6OiU0QWAQ7ZIwKWj-O9ll15-kq1uNI2EIhE
+Message-ID: <CAMj1kXEC38Gw=uY7suCw5=dZs6kTwX6w6vWyV9DKDpQpm0OtZA@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 3/6] x86/cpu: Allow caps to be set arbitrarily early
+To: Brian Gerst <brgerst@gmail.com>
+Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
+	Ingo Molnar <mingo@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 20 May 2025 23:27:39 +0100,
-"Rob Herring (Arm)" <robh@kernel.org> wrote:
-> 
-> From: Anshuman Khandual <anshuman.khandual@arm.com>
-> 
-> While BRBE can record branches within guests, the host recording
-> branches in guests is not supported by perf (though events are).
-> Support for BRBE in guests will supported by providing direct access
-> to BRBE within the guests. That is how x86 LBR works for guests.
-> Therefore, BRBE needs to be disabled on guest entry and restored on
-> exit.
-> 
-> For nVHE, this requires explicit handling for guests. Before
-> entering a guest, save the BRBE state and disable the it. When
-> returning to the host, restore the state.
-> 
-> For VHE, it is not necessary. We initialize
-> BRBCR_EL1.{E1BRE,E0BRE}=={0,0} at boot time, and HCR_EL2.TGE==1 while
-> running in the host. We configure BRBCR_EL2.{E2BRE,E0HBRE} to enable
-> branch recording in the host. When entering the guest, we set
-> HCR_EL2.TGE==0 which means BRBCR_EL1 is used instead of BRBCR_EL2.
-> Consequently for VHE, BRBE recording is disabled at EL1 and EL0 when
-> running a guest.
-> 
-> Should recording in guests (by the host) ever be desired, the perf ABI
-> will need to be extended to distinguish guest addresses (struct
-> perf_branch_entry.priv) for starters. BRBE records would also need to be
-> invalidated on guest entry/exit as guest/host EL1 and EL0 records can't
-> be distinguished.
-> 
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-> Co-developed-by: Rob Herring (Arm) <robh@kernel.org>
-> Tested-by: James Clark <james.clark@linaro.org>
-> Reviewed-by: Leo Yan <leo.yan@arm.com>
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
-> v20:
->  - Reword commit message about no guest recording.
->  - Add BRBE to __kvm_vcpu_run() synchronization comment
-> 
-> v19:
->  - Rework due to v6.14 debug flag changes
->  - Redo commit message
-> ---
->  arch/arm64/include/asm/kvm_host.h  |  2 ++
->  arch/arm64/kvm/debug.c             |  4 ++++
->  arch/arm64/kvm/hyp/nvhe/debug-sr.c | 32 ++++++++++++++++++++++++++++++++
->  arch/arm64/kvm/hyp/nvhe/switch.c   |  2 +-
->  4 files changed, 39 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-> index e98cfe7855a6..e3f1e7b5ce52 100644
-> --- a/arch/arm64/include/asm/kvm_host.h
-> +++ b/arch/arm64/include/asm/kvm_host.h
-> @@ -654,6 +654,7 @@ struct kvm_host_data {
->  #define KVM_HOST_DATA_FLAG_HAS_TRBE			1
->  #define KVM_HOST_DATA_FLAG_TRBE_ENABLED			4
->  #define KVM_HOST_DATA_FLAG_EL1_TRACING_CONFIGURED	5
-> +#define KVM_HOST_DATA_FLAG_HAS_BRBE			6
+On Tue, 13 May 2025 at 20:37, Brian Gerst <brgerst@gmail.com> wrote:
+>
+> On Tue, May 13, 2025 at 7:40=E2=80=AFAM Ard Biesheuvel <ardb+git@google.c=
+om> wrote:
+> >
+> > From: Ard Biesheuvel <ardb@kernel.org>
+> >
+> > cpu_feature_enabled() uses a ternary alternative, where the late varian=
+t
+> > is based on code patching and the early variant accesses the capability
+> > field in boot_cpu_data directly.
+> >
+> > This allows cpu_feature_enabled() to be called quite early, but it stil=
+l
+> > requires that the CPU feature detection code runs before being able to
+> > rely on the return value of cpu_feature_enabled().
+> >
+> > This is a problem for the implementation of pgtable_l5_enabled(), which
+> > is based on cpu_feature_enabled(X86_FEATURE_5LEVEL_PAGING), and may be
+> > called extremely early. Currently, there is a hacky workaround where
+> > some source files that may execute before (but also after) CPU feature
+> > detection have a different version of pgtable_l5_enabled(), based on th=
+e
+> > USE_EARLY_PGTABLE_L5 preprocessor macro.
+> >
+> > Instead, let's make it possible to set CPU feature arbitrarily early, s=
+o
+> > that the X86_FEATURE_5LEVEL_PAGING capability can be set before even
+> > entering C code.
+> >
+> > This involves relying on static initialization of boot_cpu_data and the
+> > cpu_caps_set/cpu_caps_cleared arrays, so they all need to reside in
+> > .data. This ensures that they won't be cleared along with the rest of
+> > BSS.
+> >
+> > Note that forcing a capability involves setting it in both
+> > boot_cpu_data.x86_capability[] and cpu_caps_set[].
+> >
+> > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> > ---
+> >  arch/x86/kernel/cpu/common.c | 10 ++++------
+> >  1 file changed, 4 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.=
+c
+> > index bbec5c4cd8ed..aaa6d9e51ef1 100644
+> > --- a/arch/x86/kernel/cpu/common.c
+> > +++ b/arch/x86/kernel/cpu/common.c
+> > @@ -704,8 +704,8 @@ static const char *table_lookup_model(struct cpuinf=
+o_x86 *c)
+> >  }
+> >
+> >  /* Aligned to unsigned long to avoid split lock in atomic bitmap ops *=
+/
+> > -__u32 cpu_caps_cleared[NCAPINTS + NBUGINTS] __aligned(sizeof(unsigned =
+long));
+> > -__u32 cpu_caps_set[NCAPINTS + NBUGINTS] __aligned(sizeof(unsigned long=
+));
+> > +__u32 __read_mostly cpu_caps_cleared[NCAPINTS + NBUGINTS] __aligned(si=
+zeof(unsigned long));
+> > +__u32 __read_mostly cpu_caps_set[NCAPINTS + NBUGINTS] __aligned(sizeof=
+(unsigned long));
+>
+> Is there any scenario where capabilities are changed after boot?  If
+> not, this could possibly be __ro_after_init.
+>
 
-Just as a heads up: this is going to clash with what is currently
-queued in -next (bits 6 and 7 are already claimed).
+Turns out that this is not possible.
 
-Otherwise,
-
-Acked-by: Marc Zyngier <maz@kernel.org>
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+https://lore.kernel.org/all/202505211627.1f9b653f-lkp@intel.com/T/#u
