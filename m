@@ -1,311 +1,202 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013001.outbound.protection.outlook.com [40.107.159.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E836222B8B9
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 07:33:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747812807; cv=none; b=DpeQhF9UphQaUWkY7wkUU7k5yzQeUpqH95PCghPsvLTvaIr5A6fuGyKZFU4/vKhnGSONthm/692UzjIMyJVGnQvyJ3b2B/ZxZd5SMJKSNH3AYY+5FZ/Bsv1yrwQb7BRZtC3Ubhn1KEJw9kOP2AyvP874mvs/8Njzs859URISHw0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747812807; c=relaxed/simple;
-	bh=I8Ykh65vPHTzVgLSZXoDXsnk85rbPPSfczOEZ7/zLkE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kWi9zajQ+eH86KyJ8qM15oFdORBc8SCoXNH/85Qws8ZgLdNdZHF/pJOZgg1Rcmb7it3fOQSxy+U7/HLwb0Yhrmmt6YlCZ8gwwDgmTI/6LlwNqbPtZwoTc8sABbe+V9GEDZ+NBRfpYkPBiBpZIiAqAL3P/AYzO+yZfw11jZlUnIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=QbJllpgh; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD907232785;
+	Wed, 21 May 2025 07:33:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.1
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747812819; cv=fail; b=ioRChW+uC7bYNgPTohg3RpKjLCyyQIwbXSM0uTwUFTH6r5hFGg1DbHRFnWCUl1JtnzgWmy9iRcRWKrzwSzdS6+Ez0lu1L1xDtTuIndhIAVDQJdyjUV12ZmkD9ih4s9mu+EK7eSFbsCLyvLDafVo/4OhGLsWUvnqdGX1/8gnU4iM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747812819; c=relaxed/simple;
+	bh=RNCLlyTUc6GcPE5tUi79NPcvuUD6bQtObPDwsR9tIkY=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=UR8kYObotex3Ft+bMnU+UJzlyIgMnPgUU0Iti5nWBMQ6Oj7QaYBv4PpYLHnbTGCbcnIX+R6oUqeokmYq6c/rEqSohP+2hQtioVZWqccNJpwqtKefg1gsuPRuM5ZeKrZwildAtuFPOBFoGgY+WdnQLAX72LhEYqU6eMTCDBmpED0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=PoeB/nyv; arc=fail smtp.client-ip=40.107.159.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QbJllpgh"
-Received: from lelvem-sh02.itg.ti.com ([10.180.78.226])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 54L7Wg7w272056;
-	Wed, 21 May 2025 02:32:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1747812762;
-	bh=ERFJooSfJlL9/YRWqddt2gXryT1aSLvVABRJgdqPkKk=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=QbJllpghKHT6Nhv6gjjdkIuSZ3K0T+OHsXP9QdlpGMpaA/GMxNHRE9mqAxDldrGHb
-	 PeNKxKawy5KNNXhV28NGt8dMGTW2r4aR9VHOzsnowUzmFN/KaUHMXeY+XQTpn1Ad/b
-	 fl2l5Jx6LcAtYGK5BnXJTtws9th3TCCSfwl571DU=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-	by lelvem-sh02.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 54L7Wg0o551172
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Wed, 21 May 2025 02:32:42 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 21
- May 2025 02:32:41 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 21 May 2025 02:32:41 -0500
-Received: from localhost (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [10.24.72.182])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 54L7WeFQ068568;
-	Wed, 21 May 2025 02:32:41 -0500
-From: Jayesh Choudhary <j-choudhary@ti.com>
-To: <dianders@chromium.org>, <andrzej.hajda@intel.com>,
-        <neil.armstrong@linaro.org>, <rfoss@kernel.org>,
-        <Laurent.pinchart@ideasonboard.com>, <dri-devel@lists.freedesktop.org>,
-        <tomi.valkeinen@ideasonboard.com>, <alexander.stein@ew.tq-group.com>
-CC: <jonas@kwiboo.se>, <jernej.skrabec@gmail.com>,
-        <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-        <tzimmermann@suse.de>, <airlied@gmail.com>, <simona@ffwll.ch>,
-        <lumag@kernel.org>, <jani.nikula@intel.com>, <andy.yan@rock-chips.com>,
-        <mordan@ispras.ru>, <linux@treblig.org>, <viro@zeniv.linux.org.uk>,
-        <yamonkar@cadence.com>, <sjakhade@cadence.com>,
-        <quentin.schulz@free-electrons.com>, <jsarha@ti.com>,
-        <linux-kernel@vger.kernel.org>, <devarsht@ti.com>,
-        <j-choudhary@ti.com>
-Subject: [RFC PATCH v2 1/3] drm/bridge: cadence: cdns-mhdp8546-core: Remove legacy support for connector initialisation in bridge
-Date: Wed, 21 May 2025 13:02:35 +0530
-Message-ID: <20250521073237.366463-2-j-choudhary@ti.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250521073237.366463-1-j-choudhary@ti.com>
-References: <20250521073237.366463-1-j-choudhary@ti.com>
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="PoeB/nyv"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=lGk8XrH5Ru0FLIZJdMoRTnQZq18Gfy0OrQY19fs3DoyajAaIIhICuWA8l4ltMwgOS1luwJKe3Siawe4P68BgB6XFgtUFsJt8uJ0PFaMCPKoTFJBCJ8oZqBZ/gSsU2088lqGZsd3gfykXtr704dYSt37aw6PEQuBBKydzz7f3B9WwCaJKDFfy6DLQFApJxzgOPrApq3c9JoBkyFQh1EXGskRmVbG0dIqq50UYNndvbSMQerVMFg8sGObMYLufFCoXFstsMc/FY/4JhjXCk1y4Gm0Lahwx/bbBAe596EtGi5Q9iEtLSjCWhZJQg+9AcVDYo8iZSxiueStSOLFNJelxQA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=RNCLlyTUc6GcPE5tUi79NPcvuUD6bQtObPDwsR9tIkY=;
+ b=fcyf2gj7SYZ6QJR1PGfx9cvVusjGfDT/O1lJACobJyq3J0qCF1SamLhHy6lK8CL5w4C5LO8Awlp262Mm67WrltElVXUdIsDY1elDkz7ccXmUJDnfoWMnS2pslYR1MFQ86NswjEYQROcyTz0jzbAbGnooaqSQzg/nzI6rGA462WSpwZigHz8rYmFn66JzZiAOInn+2Ep5tNxer2el1fd6mX8LhojRBCnE0K0y5m5UT1tW7I4RxjCdzl4O0MDTzH7LbtJynWU18Ui8RZoZP51AIvhUfKsmiI4gUuHIVRMcC1BcgmzxA8nxkQjx7Tj7HKuM58P/xL10U7/WOv7DTTd1Zw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RNCLlyTUc6GcPE5tUi79NPcvuUD6bQtObPDwsR9tIkY=;
+ b=PoeB/nyvWHxwU3yhp5EB+3fN7gZyITPdLLGdt0Uxs+0E4moCwKNCIrR4K0OP1vcoCVK5y8eaQAEpjOM48jpz4ze6CPi3syVt40p7QJvdeT/eLydpcqaTlQ0/C94K4hqPYzGXRiRHXPgmO8qfAVbMXY5mQ2pasI0blY/tuT8qdJc1cHnXKRMPnCXzqN/DSBGy45DxMCz6NoT4JtIUBRzYNWQa00k1NJ0KmKCTm6eRjfMtJI32G97bIx/mf2EejsuiKi34su9ZtdSANuIhDVapO21JO5Ww1pUGrNp7fTieeLbyjf0gxN6jNFuUIFFjCoIKThBWAKmmcgpenpG6iZQyww==
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
+ by GV1PR04MB10393.eurprd04.prod.outlook.com (2603:10a6:150:1c9::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.31; Wed, 21 May
+ 2025 07:33:32 +0000
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630%4]) with mapi id 15.20.8722.031; Wed, 21 May 2025
+ 07:33:32 +0000
+From: Peng Fan <peng.fan@nxp.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>, "Peng Fan (OSS)"
+	<peng.fan@oss.nxp.com>
+CC: "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, kernel test
+ robot <lkp@intel.com>
+Subject: RE: [PATCH] gpio: davinci: select GPIOLIB_IRQCHIP
+Thread-Topic: [PATCH] gpio: davinci: select GPIOLIB_IRQCHIP
+Thread-Index: AQHbyiEjEl7a/CI4dUeAWBDO4NdhhbPcr++AgAAAq+A=
+Date: Wed, 21 May 2025 07:33:31 +0000
+Message-ID:
+ <PAXPR04MB8459A099FF0649D61BD21218889EA@PAXPR04MB8459.eurprd04.prod.outlook.com>
+References: <20250521072048.1053190-1-peng.fan@oss.nxp.com>
+ <CAMRc=MfbQMebHDa4_=79ZaFRf_0V47wQHh8bP+MQh1Qj=wjOyA@mail.gmail.com>
+In-Reply-To:
+ <CAMRc=MfbQMebHDa4_=79ZaFRf_0V47wQHh8bP+MQh1Qj=wjOyA@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PAXPR04MB8459:EE_|GV1PR04MB10393:EE_
+x-ms-office365-filtering-correlation-id: 1b36a451-8716-49c1-24ea-08dd9839c9ac
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?dmlXYjNEQVFzR1ZTekp3SnJTazNGNVo5Q0ZPYnppMEU4Rm43YmduNk8zdEp4?=
+ =?utf-8?B?aW1lNXgwVE1sSHlITFBtaENrRnFCd0Iwb2h6OHBMR1BPZ2ltcmN0dHFaRXBi?=
+ =?utf-8?B?SjFLdDlQbTVhK1pWczl3QjFHNG8yZm1UM1lSZjNnMEYzc2lOM3VWOVZuTUxn?=
+ =?utf-8?B?QjlmWjkyYUROVzVHdC9GdVRQaUpTa0ZqRk1Ub1Q0K01QanVQbHFsTnJKQWJa?=
+ =?utf-8?B?c1QvTjlQSFFZTVJpb0pCSGtiVFdrUWQ5N29rWVRqcFJSR3RJNFVMK2laRldm?=
+ =?utf-8?B?VVRkdmh6dnFNaUp3aVd3U0dQaENGWkcrN1lGUm1RVnBibmMzMW90WkNhdFNE?=
+ =?utf-8?B?UjhsOElrdFdHTHllVGFyQnFuYUpSMk15ZGRvZHNlYXRkY1ZmUXZvWmVJUlhE?=
+ =?utf-8?B?VlY2TWE3N3dEL2o1VE8xZUdkQzNRdEVDRmp1elp4OUJxdGVpWVNnZ2UvYjUv?=
+ =?utf-8?B?VmI0ek5mYzVQQnNGYzhsZDQ0K2U0TXdyN0ZKekNxcVVUT3RzY3lreGZCdmd0?=
+ =?utf-8?B?Y0xQT3ZBTEc2VTZ4WWU2Q1NmTEdISmJEWldGMEFJTEF3SGphUnNYTXhxQ25S?=
+ =?utf-8?B?WTZpaFNyQlFoOVorMmxhMGUzRVBwNUFLM0JrbEpKdnJEWmRCbllVeHY1VE9v?=
+ =?utf-8?B?NmN4OTZJN0ZaWEtuL3haSnBnMC9HYzJ0ekpkdE02b2lUWDVvMkZ2M2Y5UWtJ?=
+ =?utf-8?B?OG1TV1J5aTBqVUFDVExNSEFxLzZNbmcxUjBoUm56TkttU3hQY1JTMWNETHZp?=
+ =?utf-8?B?VXA0Z2hQbnZTWkdyYW1IaEJFdXpRZGpuVHU1dk1IVzJTT29TM1FNbExhNWtu?=
+ =?utf-8?B?K1MzTytsUzhlQktEK0VQYjlOK0R4NTcwL0thZVpMWXVhejhJdlRWb2R0MDNW?=
+ =?utf-8?B?ZGJtbU8vdWNmSmNBR2p1SVRXb2FiUVZkcGZFQjRiRStiaWorUlhxQXZObTg0?=
+ =?utf-8?B?TjFvVEVVRFBYbGgxR2R0N3FRdHN0L3FZaE1VbURXUUsxd2FUak1sclJyNkFB?=
+ =?utf-8?B?Y2Uyd1FMdjFNK040OEdYOHZ5MDlUOU1jTjNGT2lLYktGc0NkeGJ5NE9JK3h2?=
+ =?utf-8?B?UmQ0YnVoc0lKampudy9tUCtGdUZCMW5zWjFIcHQ0cS96OFJVTmJGT1BNbXhE?=
+ =?utf-8?B?NmlBMnZHZ3dRYnJhY3lxQk5HQWF2WnB0amlMaEtXRVI5WU5mZnEvT1JTWUxr?=
+ =?utf-8?B?cEtObnhNM2ZTbmIxVVVpTm9LbHkvSE1KRWpiUzZMVEhpdlBvalpSQ085SjJS?=
+ =?utf-8?B?dWFDdjFZTXd3ZGhPcnlMQjZMV1htQmZ3bndWdWlISUF0YUJtSVE0bk1KMlZu?=
+ =?utf-8?B?ZlNIenhLcjliWlRnZVA1aCtRVzFuYVp0WWt5ajhEQUdvb3I4WUhMS3BjZDkv?=
+ =?utf-8?B?c0NjbVFUNEs5QXBGNlIyeHhYajAyWFE4eVNBTHg2NmJDSFJFdlVSTDkrVk1y?=
+ =?utf-8?B?cExKVy96MzFtKzB5dmFJamRpL01GRE9UQkUvaHZ5QjVaaG1tdEFtN2JZdmc3?=
+ =?utf-8?B?c0hyV0hna3hCYXNJenk2cjcwdzNyTmp2SXR2VnQ4Z1E4OHRmMHl4K3IwUURI?=
+ =?utf-8?B?MlhOQ2wxNXFXUzBqWTJzNFJXM1BxZ21MWGdMYmU1SzJKWmpqWi9DdkxtaVFB?=
+ =?utf-8?B?S2dTNWcreGVCUFBUNk5aclNzRUZ1UUJaYmxBUlE5ZVl0VDBhVTNGa1JSTzZm?=
+ =?utf-8?B?R2h3cDBlMjlKL2Z6eWp0STRzbnN0cVFDTjAzeXpGUldXVU11NTFmMFFqOUZZ?=
+ =?utf-8?B?NExyMGJvcGMyODV6RU5pYTZ2ZFFPRDJSUDFQNElJK3d2ak1kaVJ4ekRhVzNM?=
+ =?utf-8?B?RnBYTHc1cVErTzc0eENQVnVQMHBBWlJvYVpBSVNZd1JkK3ozc09pSE5FYzFG?=
+ =?utf-8?B?b2VkZFVYb09qKzkvRGRYZjFXWDlGL3Z3Z0VlcFlYMUl6M092cE0xalgwa0Yz?=
+ =?utf-8?Q?LCCAEwY1Uwk=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?UW9YZ3ZoZS9hMlBhOFpmL0JON0dERndNSUYvU3pjMnhOcy92dUdlNVZYVFk0?=
+ =?utf-8?B?Qm1tTXNnYldXREp5SlNTYkVQUjEzYzlFczhBZlJUZ2U4QStQOEtCelF4cUgw?=
+ =?utf-8?B?cThERmt1NDc1UTRJWmd5Znd2ZXU1N3cyR1R2MXdQWVQxbitqVzBQcDBnaWw3?=
+ =?utf-8?B?N044SXhpM0FkTVRHcFg5dEkrUEU5dGdRWFFmYWJNakdFemdQTkVNZjdqSyt2?=
+ =?utf-8?B?MXlab21YZmdjMyt1WnA1ZWl2bDVFSmpLWm9rVHMyMy9naXhuS29qUXlPUmZo?=
+ =?utf-8?B?cWh1MHBZVW9idENTZ3krU2RadXVtem1MWVdGSDJoays5bXFST1FMOFhFQzJF?=
+ =?utf-8?B?NStlbnNtVmo2UGJBdlVWcUE3RjhteGx1aUt3OGRpYTBHK2Z3ZXMxQmtNZjNt?=
+ =?utf-8?B?V0cwVk1jK1RxSjZXeEVWN2RGMEdkY2luRHZoUjZLN3hsWHpER0QxRW4wc2Vk?=
+ =?utf-8?B?Z2pNQXd0cDRqbFRoTlJ4VEYrL3hKeE00MzFnTUkvNHdkRU1Ba2RVVmNwOUtm?=
+ =?utf-8?B?UFllYlA5OStpR0tIcWJuNlZyVHpTOVdxMDZ6WWZWN01ERFkvbTl5TEF2RmxK?=
+ =?utf-8?B?d0k1b1dMQkw4eDZnSlJaVEd1N0ZKcnZKQW5sdEp5SldNRnZDUlJIMjFLY21y?=
+ =?utf-8?B?OTBrM0dqbFpMc0lxQzcvV0VHVUx6L1NxL2ZsbWpUOXcxVllDL2lVSUpxY2Vu?=
+ =?utf-8?B?c2tZUkNlQ0lCTit6ajZCcE5IMHZ6anU0dUF1K3VIb0lUbnNpUWV1bzVlaVln?=
+ =?utf-8?B?bUtTL1ZkVFIxbjVhc3BHZTR2UWE2aFdnenJGdTBFckNBL1JvNjBBbWlOMFdZ?=
+ =?utf-8?B?Q01Cd1RFTWM2WVRoREllWW03djF5OEZyK3B0Z3g3bXM3ZmlPLzhqYlNtcS8z?=
+ =?utf-8?B?QXorVWxxem9GbWZ6cllSb0JPVnhMa2JGTlhWVjVPaksvVFlLbkJFbW5VTS94?=
+ =?utf-8?B?UVdYQi9rVWRBalhvSngzMHJQRmlmN2xTcmUwT3paRVF6dnA2dHVXM1F2QTV0?=
+ =?utf-8?B?di9IWnRSVEphZDl6TkxUcDZ6MGZpOTJhNVBqWlVFTE5wS0t4aURJWFA1bVoy?=
+ =?utf-8?B?WGphK05yMDNOSFJCRDVFRUMyME40TDFDZ1djOGkrampPdGdkbWFPaGI2bXhO?=
+ =?utf-8?B?L1V1QXlQWFdVYlFmdENxN09SWUxneTRRbXltck1TZ1NyRmwvVXAzalkyV3Rn?=
+ =?utf-8?B?ZFp5K1JaZTUzajVGeFdUOUxRUWhKNVJ6Q0lHa0FRSit2K0NoRDJ6TjBuNkVh?=
+ =?utf-8?B?SmhCY3VkNWk4TEZvcllocW1PM2g2Ry9IWU9QRTIwMTk1eFBETWFaYWpoYUww?=
+ =?utf-8?B?eXRTdFd6R3NPUFVMdTd4ZlRaRm1QOG1WL1RVUlZQWEQ2TExVWVNhQm1GbytD?=
+ =?utf-8?B?SU9lbHY1aXZTV2VkRitEcm1IWmdqMEwzcVBoMk9na0lTd0hUbUxOaDBSMjZq?=
+ =?utf-8?B?SCs4NHB4UTU0U3N6S1hwSHFrWDZ2NnRobDUyeWNrRThyM3FBZ2RQOWRFWjBW?=
+ =?utf-8?B?dHlpRUZUWkl6MnpWS1hLWlFFdElFanJRWFo0OEJRUjJyeWszdy9JUGNSNEFj?=
+ =?utf-8?B?NGZhcVdmd1VOd0trbDNJeUJ4WU1xMjNncWI0cGoza2tXSE5rUTBLbXBMYUl4?=
+ =?utf-8?B?NTVEb0RXcHRidjVwaVpibm16VHFYc2t6RHpqZWdKMGVIMnhWcHhNcTZJbEJ3?=
+ =?utf-8?B?UmJ3RFVTMnUzcFA1OFllb2x1WERsVVVPd0JLSVBPYjB1czhHdVphWVJwZWd5?=
+ =?utf-8?B?ekY1ZnIxWlk2OUE1SXhMT1l4RlhJaWViNGJzdVp3c0lqQlF4V3NUdk5WSUNW?=
+ =?utf-8?B?QVJnVVVlVnhBYVp6S2tWajJKckhTcDJkMVE3TFVFN2xaSThMUW14MWlMYlJr?=
+ =?utf-8?B?bjBNQVpLNmhwZlZpeTROYWZiSzZpVGpmQjlZOEpBMTZSMmZuRzgxVVcrME51?=
+ =?utf-8?B?SVpYeWFoSTZhbWZIQWhTaGxRQmVhQmRsQXg0YStpeFdRaFNWSnNjQWNkSUZv?=
+ =?utf-8?B?Z2E4cG9OSnhrcDVxSlV6a2hhOVR2K3hjY0l4NDVXS0N6SUVBMVJmWlJ5VG5o?=
+ =?utf-8?B?SXR6SGJEUUJKV2x4aGIyOGQ1QzFaY3haVStFZ3drTDB2ZndqdGRtS1dUc0dt?=
+ =?utf-8?Q?a69U=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1b36a451-8716-49c1-24ea-08dd9839c9ac
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 May 2025 07:33:31.9932
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 5a7I9SHyxpYhWzJi/Hgy8XrcEnXW9ye8fHKZ5ns8Gp8du+8mmAJ1rGNTDT56PnN66vrjZWvu3tZV0vnoirTaNA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR04MB10393
 
-Now that we have DBANC framework, remove the connector initialisation code
-as that piece of code is not called if DRM_BRIDGE_ATTACH_NO_CONNECTOR flag
-is used. Only TI K3 platforms consume this driver and tidss (their display
-controller) has this flag set. So this legacy support can be dropped.
-
-Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
----
- .../drm/bridge/cadence/cdns-mhdp8546-core.c   | 186 +++---------------
- 1 file changed, 25 insertions(+), 161 deletions(-)
-
-diff --git a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c b/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c
-index b431e7efd1f0..66bd916c2fe9 100644
---- a/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c
-+++ b/drivers/gpu/drm/bridge/cadence/cdns-mhdp8546-core.c
-@@ -1444,56 +1444,6 @@ static const struct drm_edid *cdns_mhdp_edid_read(struct cdns_mhdp_device *mhdp,
- 	return drm_edid_read_custom(connector, cdns_mhdp_get_edid_block, mhdp);
- }
- 
--static int cdns_mhdp_get_modes(struct drm_connector *connector)
--{
--	struct cdns_mhdp_device *mhdp = connector_to_mhdp(connector);
--	const struct drm_edid *drm_edid;
--	int num_modes;
--
--	if (!mhdp->plugged)
--		return 0;
--
--	drm_edid = cdns_mhdp_edid_read(mhdp, connector);
--
--	drm_edid_connector_update(connector, drm_edid);
--
--	if (!drm_edid) {
--		dev_err(mhdp->dev, "Failed to read EDID\n");
--		return 0;
--	}
--
--	num_modes = drm_edid_connector_add_modes(connector);
--	drm_edid_free(drm_edid);
--
--	/*
--	 * HACK: Warn about unsupported display formats until we deal
--	 *       with them correctly.
--	 */
--	if (connector->display_info.color_formats &&
--	    !(connector->display_info.color_formats &
--	      mhdp->display_fmt.color_format))
--		dev_warn(mhdp->dev,
--			 "%s: No supported color_format found (0x%08x)\n",
--			__func__, connector->display_info.color_formats);
--
--	if (connector->display_info.bpc &&
--	    connector->display_info.bpc < mhdp->display_fmt.bpc)
--		dev_warn(mhdp->dev, "%s: Display bpc only %d < %d\n",
--			 __func__, connector->display_info.bpc,
--			 mhdp->display_fmt.bpc);
--
--	return num_modes;
--}
--
--static int cdns_mhdp_connector_detect(struct drm_connector *conn,
--				      struct drm_modeset_acquire_ctx *ctx,
--				      bool force)
--{
--	struct cdns_mhdp_device *mhdp = connector_to_mhdp(conn);
--
--	return cdns_mhdp_detect(mhdp);
--}
--
- static u32 cdns_mhdp_get_bpp(struct cdns_mhdp_display_fmt *fmt)
- {
- 	u32 bpp;
-@@ -1547,114 +1497,6 @@ bool cdns_mhdp_bandwidth_ok(struct cdns_mhdp_device *mhdp,
- 	return true;
- }
- 
--static
--enum drm_mode_status cdns_mhdp_mode_valid(struct drm_connector *conn,
--					  const struct drm_display_mode *mode)
--{
--	struct cdns_mhdp_device *mhdp = connector_to_mhdp(conn);
--
--	mutex_lock(&mhdp->link_mutex);
--
--	if (!cdns_mhdp_bandwidth_ok(mhdp, mode, mhdp->link.num_lanes,
--				    mhdp->link.rate)) {
--		mutex_unlock(&mhdp->link_mutex);
--		return MODE_CLOCK_HIGH;
--	}
--
--	mutex_unlock(&mhdp->link_mutex);
--	return MODE_OK;
--}
--
--static int cdns_mhdp_connector_atomic_check(struct drm_connector *conn,
--					    struct drm_atomic_state *state)
--{
--	struct cdns_mhdp_device *mhdp = connector_to_mhdp(conn);
--	struct drm_connector_state *old_state, *new_state;
--	struct drm_crtc_state *crtc_state;
--	u64 old_cp, new_cp;
--
--	if (!mhdp->hdcp_supported)
--		return 0;
--
--	old_state = drm_atomic_get_old_connector_state(state, conn);
--	new_state = drm_atomic_get_new_connector_state(state, conn);
--	old_cp = old_state->content_protection;
--	new_cp = new_state->content_protection;
--
--	if (old_state->hdcp_content_type != new_state->hdcp_content_type &&
--	    new_cp != DRM_MODE_CONTENT_PROTECTION_UNDESIRED) {
--		new_state->content_protection = DRM_MODE_CONTENT_PROTECTION_DESIRED;
--		goto mode_changed;
--	}
--
--	if (!new_state->crtc) {
--		if (old_cp == DRM_MODE_CONTENT_PROTECTION_ENABLED)
--			new_state->content_protection = DRM_MODE_CONTENT_PROTECTION_DESIRED;
--		return 0;
--	}
--
--	if (old_cp == new_cp ||
--	    (old_cp == DRM_MODE_CONTENT_PROTECTION_DESIRED &&
--	     new_cp == DRM_MODE_CONTENT_PROTECTION_ENABLED))
--		return 0;
--
--mode_changed:
--	crtc_state = drm_atomic_get_new_crtc_state(state, new_state->crtc);
--	crtc_state->mode_changed = true;
--
--	return 0;
--}
--
--static const struct drm_connector_helper_funcs cdns_mhdp_conn_helper_funcs = {
--	.detect_ctx = cdns_mhdp_connector_detect,
--	.get_modes = cdns_mhdp_get_modes,
--	.mode_valid = cdns_mhdp_mode_valid,
--	.atomic_check = cdns_mhdp_connector_atomic_check,
--};
--
--static const struct drm_connector_funcs cdns_mhdp_conn_funcs = {
--	.fill_modes = drm_helper_probe_single_connector_modes,
--	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
--	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
--	.reset = drm_atomic_helper_connector_reset,
--	.destroy = drm_connector_cleanup,
--};
--
--static int cdns_mhdp_connector_init(struct cdns_mhdp_device *mhdp)
--{
--	u32 bus_format = MEDIA_BUS_FMT_RGB121212_1X36;
--	struct drm_connector *conn = &mhdp->connector;
--	struct drm_bridge *bridge = &mhdp->bridge;
--	int ret;
--
--	conn->polled = DRM_CONNECTOR_POLL_HPD;
--
--	ret = drm_connector_init(bridge->dev, conn, &cdns_mhdp_conn_funcs,
--				 DRM_MODE_CONNECTOR_DisplayPort);
--	if (ret) {
--		dev_err(mhdp->dev, "Failed to initialize connector with drm\n");
--		return ret;
--	}
--
--	drm_connector_helper_add(conn, &cdns_mhdp_conn_helper_funcs);
--
--	ret = drm_display_info_set_bus_formats(&conn->display_info,
--					       &bus_format, 1);
--	if (ret)
--		return ret;
--
--	ret = drm_connector_attach_encoder(conn, bridge->encoder);
--	if (ret) {
--		dev_err(mhdp->dev, "Failed to attach connector to encoder\n");
--		return ret;
--	}
--
--	if (mhdp->hdcp_supported)
--		ret = drm_connector_attach_content_protection_property(conn, true);
--
--	return ret;
--}
--
- static int cdns_mhdp_attach(struct drm_bridge *bridge,
- 			    struct drm_encoder *encoder,
- 			    enum drm_bridge_attach_flags flags)
-@@ -1671,9 +1513,11 @@ static int cdns_mhdp_attach(struct drm_bridge *bridge,
- 		return ret;
- 
- 	if (!(flags & DRM_BRIDGE_ATTACH_NO_CONNECTOR)) {
--		ret = cdns_mhdp_connector_init(mhdp);
--		if (ret)
--			goto aux_unregister;
-+		ret = -EINVAL;
-+		dev_err(mhdp->dev,
-+			"Connector initialisation not supported in bridge_attach %d\n",
-+			ret);
-+		goto aux_unregister;
- 	}
- 
- 	spin_lock(&mhdp->start_lock);
-@@ -2158,6 +2002,25 @@ static const struct drm_edid *cdns_mhdp_bridge_edid_read(struct drm_bridge *brid
- 	return cdns_mhdp_edid_read(mhdp, connector);
- }
- 
-+static enum drm_mode_status
-+cdns_mhdp_bridge_mode_valid(struct drm_bridge *bridge,
-+			    const struct drm_display_info *info,
-+			    const struct drm_display_mode *mode)
-+{
-+	struct cdns_mhdp_device *mhdp = bridge_to_mhdp(bridge);
-+
-+	mutex_lock(&mhdp->link_mutex);
-+
-+	if (!cdns_mhdp_bandwidth_ok(mhdp, mode, mhdp->link.num_lanes,
-+				    mhdp->link.rate)) {
-+		mutex_unlock(&mhdp->link_mutex);
-+		return MODE_CLOCK_HIGH;
-+	}
-+
-+	mutex_unlock(&mhdp->link_mutex);
-+	return MODE_OK;
-+}
-+
- static const struct drm_bridge_funcs cdns_mhdp_bridge_funcs = {
- 	.atomic_enable = cdns_mhdp_atomic_enable,
- 	.atomic_disable = cdns_mhdp_atomic_disable,
-@@ -2172,6 +2035,7 @@ static const struct drm_bridge_funcs cdns_mhdp_bridge_funcs = {
- 	.edid_read = cdns_mhdp_bridge_edid_read,
- 	.hpd_enable = cdns_mhdp_bridge_hpd_enable,
- 	.hpd_disable = cdns_mhdp_bridge_hpd_disable,
-+	.mode_valid = cdns_mhdp_bridge_mode_valid,
- };
- 
- static bool cdns_mhdp_detect_hpd(struct cdns_mhdp_device *mhdp, bool *hpd_pulse)
--- 
-2.34.1
-
+PiBTdWJqZWN0OiBSZTogW1BBVENIXSBncGlvOiBkYXZpbmNpOiBzZWxlY3QgR1BJT0xJQl9JUlFD
+SElQDQo+IA0KPiBPbiBXZWQsIE1heSAyMSwgMjAyNSBhdCA5OjIy4oCvQU0gUGVuZyBGYW4gKE9T
+UykNCj4gPHBlbmcuZmFuQG9zcy5ueHAuY29tPiB3cm90ZToNCj4gPg0KPiA+IEZyb206IFBlbmcg
+RmFuIDxwZW5nLmZhbkBueHAuY29tPg0KPiA+DQo+ID4gVGhpcyBkcml2ZXIgdXNlcyBncGlvY2hp
+cF9pcnFfcmVxcmVzKCkgYW5kIGdwaW9jaGlwX2lycV9yZWxyZXMoKSB3aGljaA0KPiA+IGFyZSBv
+bmx5IGJ1aWx0IHdpdGggR1BJT0xJQl9JUlFDSElQPXkuIEFkZCB0aGUgbWlzc2luZyBLY29uZmln
+DQo+IHNlbGVjdC4NCj4gPg0KPiA+IEZpeGVzOiAzZjUwYmIzMTI0ZDcgKCJncGlvOiBkYXZpbmNp
+OiBNYWtlIGlycV9jaGlwIGltbXV0YWJsZSIpDQo+ID4gUmVwb3J0ZWQtYnk6IGtlcm5lbCB0ZXN0
+IHJvYm90IDxsa3BAaW50ZWwuY29tPg0KPiA+IENsb3NlczoNCj4gPg0KPiBodHRwczovL2V1cjAx
+LnNhZmVsaW5rcy5wcm90ZWN0aW9uLm91dGxvb2suY29tLz91cmw9aHR0cHMlM0ElMkYlMkYNCj4g
+bG9yZQ0KPiA+IC5rZXJuZWwub3JnJTJGb2Uta2J1aWxkLWFsbCUyRjIwMjUwNTIxMDYwNi5QdWRQ
+bTVwQy0NCj4gbGtwJTQwaW50ZWwuY29tJTJGDQo+ID4NCj4gJmRhdGE9MDUlN0MwMiU3Q3Blbmcu
+ZmFuJTQwbnhwLmNvbSU3QzY0Mzk3NGFmMTgxMTRmNTg1MGINCj4gMjA4ZGQ5ODM5NDM3ZSUNCj4g
+Pg0KPiA3QzY4NmVhMWQzYmMyYjRjNmZhOTJjZDk5YzVjMzAxNjM1JTdDMCU3QzAlN0M2Mzg4MzQw
+OTM4DQo+IDg1MTg3NTQ1JTdDVW5rbg0KPiA+DQo+IG93biU3Q1RXRnBiR1pzYjNkOGV5SkZiWEIw
+ZVUxaGNHa2lPblJ5ZFdVc0lsWWlPaUl3TGpBdU1EDQo+IEF3TUNJc0lsQWlPaUpYDQo+ID4NCj4g
+YVc0ek1pSXNJa0ZPSWpvaVRXRnBiQ0lzSWxkVUlqb3lmUSUzRCUzRCU3QzAlN0MlN0MlN0Mmc2Rh
+dA0KPiBhPUdDSmg0UWNpWXANCj4gPiBKTVBBUVFENjNzaDBqZFVia05jeFE1YmJmeG5Md0RMZnMl
+M0QmcmVzZXJ2ZWQ9MA0KPiA+IFNpZ25lZC1vZmYtYnk6IFBlbmcgRmFuIDxwZW5nLmZhbkBueHAu
+Y29tPg0KPiA+IC0tLQ0KPiA+DQo+ID4gSGkgQmFydG9zeiwNCj4gPg0KPiA+ICBJIGZvbGxvdyBz
+YW1lIGFwcHJvYWNoIGFzIHlvdSBkaWQuDQo+ID4gIE15IGxhc3QgYnVpbGQgdXNpbmcgbXVsdGkg
+ZGVmY29uZmlnIHdhcyBub3QgZW5vdWdoLg0KPiA+ICBJIHRyaWVkIGJ1aWxkIGFsbCBhcmNoL2Fy
+bS9jb25maWdzLyosIG5vIGVycm9ycyB3aXRoIHRoaXMgcGF0Y2ggYXBwbGllZC4NCj4gPg0KPiA+
+IFRoYW5rcywNCj4gPiBQZW5nDQo+ID4NCj4gPiAgZHJpdmVycy9ncGlvL0tjb25maWcgfCAxICsN
+Cj4gPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0
+IGEvZHJpdmVycy9ncGlvL0tjb25maWcgYi9kcml2ZXJzL2dwaW8vS2NvbmZpZyBpbmRleA0KPiA+
+IGE1NTlkNWJiODI0OS4uYzM0NjVmZDgyYjA4IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvZ3Bp
+by9LY29uZmlnDQo+ID4gKysrIGIvZHJpdmVycy9ncGlvL0tjb25maWcNCj4gPiBAQCAtMjUzLDYg
+KzI1Myw3IEBAIGNvbmZpZyBHUElPX0RBVklOQ0kNCj4gPiAgICAgICAgIHRyaXN0YXRlICJUSSBE
+YXZpbmNpL0tleXN0b25lIEdQSU8gc3VwcG9ydCINCj4gPiAgICAgICAgIGRlZmF1bHQgeSBpZiBB
+UkNIX0RBVklOQ0kNCj4gPiAgICAgICAgIGRlcGVuZHMgb24gKChBUk0gfHwgQVJNNjQpICYmIChB
+UkNIX0RBVklOQ0kgfHwNCj4gQVJDSF9LRVlTVE9ORQ0KPiA+IHx8IEFSQ0hfSzMpKSB8fCBDT01Q
+SUxFX1RFU1QNCj4gPiArICAgICAgIHNlbGVjdCBHUElPTElCX0lSUUNISVANCj4gPiAgICAgICAg
+IGhlbHANCj4gPiAgICAgICAgICAgU2F5IHllcyBoZXJlIHRvIGVuYWJsZSBHUElPIHN1cHBvcnQg
+Zm9yIFRJIERhdmluY2kvS2V5c3RvbmUNCj4gU29Dcy4NCj4gPg0KPiA+IC0tDQo+ID4gMi4zNy4x
+DQo+ID4NCj4gDQo+IEFoLCB5b3UgYmVhdCBtZSB0byBpdCBieSAyIG1pbnV0ZXMuDQoNCk5vIHBy
+b2JsZW0sIGp1c3QgZHJvcCBteSBwYXRjaC4gUGljayB5b3Vycywgc2luY2UgSSBjb3BpZWQNCnlv
+dSBpZGVhIG9uIHRoZSBmaXguDQoNClRoYW5rcywNClBlbmcNCg0KPiANCj4gQmFydA0K
