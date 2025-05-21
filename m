@@ -1,234 +1,199 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF0804B1E57;
-	Wed, 21 May 2025 00:33:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.21
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747787591; cv=fail; b=ESF/eNchmYo3HldwH1/CRAjlLS+OT1cCJa/HLo8vV72WKAuDFLIJqXr4ZLgB3WuVvdPDw8GSq66pNhqI+GGZ3BxqXqUDBIFxrJKr6qF6bH7FNsNyfCwHccsXUHMTJkNwviEe6WesgdlCxkPBVypoKN6/DOVeFLbxxNxpVvlA6Cs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747787591; c=relaxed/simple;
-	bh=4Taq1+0e5DJ0RmNZkyYa5P2uiQwF4JJiXImPjjTFsQs=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=WH2RpIEef9dzXetSO13R7ITKC08ytqa8FM+epUEmyFD3AEkJsQ5Pull1SP3S1TTynOMCNi0ITfjiu/dTV/TBd+giYl5kSP5Cep+pxvoFziUMWZftQZ8+JH2/cjCgy71lwqi7UZJcfP5/eEuYrpueAXkOoNxmngX9ybpoj2rP9tg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oCDu1vj6; arc=fail smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95616320B
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 00:38:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747787940; cv=none; b=MySEDvFLaQKUb7HzHXkHbgznMVjVi3gZgRqHt2tkE4xiC2N0I9xzls44BDOa58R9QbVBBxTNLMZ8cl+IYiaN50suNTJXRxENeF4uEX8K1tGbR4clq2q8aEMkjpBnyEfJOY8WVQju6lhpimSlYIrEw1QQYwD8u0mdeGVdVTrWer8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747787940; c=relaxed/simple;
+	bh=U7WreOu0RES9FDjcTDjDH14RGJFWK8lQsifbrWQtRVI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Qwq81ckDjyEyV2NEl+WRynvIJWLlkkxo1kvaayNjk1G4VDhmGeby+W0DzSOc5Zz+NVXB464lHUynf6E5+TOsqvasSCXpcJyCV/Lw8+ogO7IpGwF5QCG0Mls0sRRngutofkD7xMAiYidAKEqSzWoP4Cc2hjGDntZxfwd3yDe8Zyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=l3FHKiDM; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oCDu1vj6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747787591; x=1779323591;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=4Taq1+0e5DJ0RmNZkyYa5P2uiQwF4JJiXImPjjTFsQs=;
-  b=oCDu1vj6sJqGJ0IlqBgbTvymOMorDFBs9PXwYWvE9P77zIjww+QTQ9Y5
-   sike3U69lrmC+qIl+PnZlD4oO7kl0Ddo817BKacLi5o5x8cxkGDkLkX/u
-   HvuxGTnoRm7QEq1VZv4EInsL8sM9OzFxvPJWFyfRdYSxNql9vU4flrt0M
-   JyPHxpJLHcRCHiLvMEsrR1Cl+cr8vJ+0VFBPQZVDz9yvF5Ps99dpKLgjy
-   8S2lIbNm+BRIjyxYd0KIMaViilQTcnVLzz9rG15mxagWxBIUur8C//LEH
-   2PANkJHwjScGFLrNJzP3o59u6pXhG++hvmuKgXgbyZst0o+AD8s9eMfT9
-   g==;
-X-CSE-ConnectionGUID: yjlbajmrQLqmyB8qik1Skw==
-X-CSE-MsgGUID: Qu7nODijSy6stOqdwwwcsg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="49646515"
-X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
-   d="scan'208";a="49646515"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 17:33:10 -0700
-X-CSE-ConnectionGUID: kU63dvjWTcitrkVXnkDckw==
-X-CSE-MsgGUID: lLmO7W8lTEy6P9v0f97M8g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
-   d="scan'208";a="144736346"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 17:33:08 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Tue, 20 May 2025 17:33:08 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Tue, 20 May 2025 17:33:08 -0700
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (104.47.56.41) by
- edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.55; Tue, 20 May 2025 17:33:08 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=C3Q8OSN+5VnqTN6b3Qhini7YHZ/JYMYJDW4y07fSivViIXRyt6+91HcaZBfhtqJCmFCzC7zlvKTXX5Yw9RAZ2h7FWeKZBS+SqW9eAWqW7hbUDGYKS13Eg3eiroWQzMElJKq0rZY4/jKaeWVcGJCkY6WM2r1QP/MmTUWjn5ws+pxmDkqOyJKhlzFLSlASQYKQL19OK9STh7beXlDzEDW83zMtACScx4vZeoHAOwLqE+3LNIFDWLmpSZhh2aWTl08zigSvc3DQPbk4qLWMIpM7mj2pHOtu41EPFIhglDTXWnIE9HTicJEfF6qfDGeHeX1maADTWMCafW3I3poou46ljg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SBmaSqwPdNaDFFLf5Btbmnn/nbgumZcAXiiBrc6AdCU=;
- b=O8FpA0eyYNtWfDNGjiwhoBSdpXjM21zkUBtPJXVae78pr/yV6lWzXC+wTL+TRcqUI6e7jsEGzNZDnyBJblmjsCiFA3QlcmbezpMDp5RqRCzhh+BL3lh6+AtD0TM6L0bxe4BrUDRxjOZCaGZc1uon4MO1isD8ybNSYQpPtNnq6NeCO+iuhndpBc8pPlrbIIX1/ndtNDU2iuQ9PiERAQOTvBiaJi3a47anWp7I7R+dO55C6lMdmVn9pFyoy2gqIbtOu0tLwBmT6oPXfjcN1BDOICqpEL3fnWS8CiH2D6Euz6SaiWaiWr/6ax2Yq2wzD/BAYT07H/7QP1HW5xBwFZA/eg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CH3PR11MB8660.namprd11.prod.outlook.com (2603:10b6:610:1ce::13)
- by MN0PR11MB6301.namprd11.prod.outlook.com (2603:10b6:208:3c3::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.30; Wed, 21 May
- 2025 00:33:06 +0000
-Received: from CH3PR11MB8660.namprd11.prod.outlook.com
- ([fe80::cfad:add4:daad:fb9b]) by CH3PR11MB8660.namprd11.prod.outlook.com
- ([fe80::cfad:add4:daad:fb9b%4]) with mapi id 15.20.8746.030; Wed, 21 May 2025
- 00:33:06 +0000
-Date: Wed, 21 May 2025 08:32:56 +0800
-From: Chao Gao <chao.gao@intel.com>
-To: <mlevitsk@redhat.com>
-CC: <kvm@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, "Sean
- Christopherson" <seanjc@google.com>, Borislav Petkov <bp@alien8.de>,
-	<x86@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	<linux-kernel@vger.kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, "Paolo
- Bonzini" <pbonzini@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>
-Subject: Re: [PATCH v4 3/4] x86: nVMX: check vmcs12->guest_ia32_debugctl
- value given by L2
-Message-ID: <aC0fOC8IiQJShYOe@intel.com>
-References: <20250515005353.952707-1-mlevitsk@redhat.com>
- <20250515005353.952707-4-mlevitsk@redhat.com>
- <aCaxlS+juu1Rl7Mv@intel.com>
- <d9ea18ac1148c9596755c4df8548cdb8394f2ee0.camel@redhat.com>
- <fababe6628c448a4aa96e1ad47ad862eddf90c24.camel@redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <fababe6628c448a4aa96e1ad47ad862eddf90c24.camel@redhat.com>
-X-ClientProxiedBy: SG2PR04CA0160.apcprd04.prod.outlook.com (2603:1096:4::22)
- To CH3PR11MB8660.namprd11.prod.outlook.com (2603:10b6:610:1ce::13)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="l3FHKiDM"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-601a67c6e61so26629a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 17:38:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747787937; x=1748392737; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WspCal8y8NZa4tDmuGWQBUOazVn+kNd9Xx/2Q+XoBxI=;
+        b=l3FHKiDMgU03tZ3CjADdwiVBBlpWwxcCNxQDPtgaVJ1hLG4RzwjOUWHLT0G5yFwP32
+         77FJgAXhgG1vsOlFEnIP3fk78kT7S+Irh0Bj1czpGVXvUdbMKY1Sfyw+0Kzdw2aqerzT
+         Gd6hNYWYrkS5Lfi071mOZVzqdOHbh8dTzXwrhQLwFISK2y/losuh4vkNHV66RtANTpPM
+         QA63Yqquan6H5LSY+GacPN+U3y5zLqJ84h5c/ip3GOOByhwbg398ecZf7XKEPEMUJlKE
+         uh3k092eh8+R+eYEKejLrSsLjRpcbEE5BnMOVYuMvUiYAz1ZbmaOIXUtZH/teXy/5tpC
+         /oLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747787937; x=1748392737;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WspCal8y8NZa4tDmuGWQBUOazVn+kNd9Xx/2Q+XoBxI=;
+        b=WQg0qg1bzEpt2sL4H5jzuUGJK7RpdxcVM6rQyRN5+uUGWSYLFOA3osniwvqyyJndDD
+         nd68IlvME8q7IZrzq9YZPvs9lPfn4t9w1N3I01FvCe4PAaseXlIhRmOseYzJnp/6LtNr
+         DupF/zKp7Uv5qR0qQXVMGdcK6Q5L/MMN58VyX+aN/nHIJnVYSUNEBi46S+9/npKrRGHF
+         WT2dE5Xjze3w4y1rOVpbkAcLyBXAyJY+eusWqfReV22jPKSR3x9uV+zxQqgF5uW7xK/M
+         5wSkrpj+UCKkFlFzpIeXRaL7HGG1ofmz/AqtRutatHAf5rIPJEPvdbMMes8ynDwUm64b
+         vvKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW8AdA4Z6ZWrmr/ci9i+tRAwc0+iYTGDyGR96g22xVb1/rCJhZxXedWEkLJ8vWjoaaCHgYQ9d8ykwFOYs4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5iuZ0xOuMeDTFz96AZCVoa0gngKHzpKQuAWTc6n/Vv7THxlaK
+	htXMDxvreuXpcJP91670m1wlj5MADIDS4YUzuNsrgQ8/yNT7JIfJLE79WEIrQMF6JigVMZSsUML
+	xdNqTvwSTo77dQ7uR+lZ4BIyNxh681zZ7tVKPXc2L
+X-Gm-Gg: ASbGncvH6t9ztyCpK+s9yRICJeCaC3WRipgZf2OEEIHVocM9J8s9JDDkMC5dndH7iGh
+	X3D9PUkc66dMQ6JPJUV5B8nLxa1rzLKeVnlSs53tk0xbvy1I2whbt+MpchgYEiLEyw7OYlhIDwS
+	nh6PvSeWQHut+Mh7B+Q2lmZ0vms/DcoY5E2VIjvSKBgRQP3d0AyYs74lv5TdICNnYUX2zUuZhx
+X-Google-Smtp-Source: AGHT+IFGzg1HiyU3iSRyJlcEH+h760Pi+n2Y93HX/OapY6BeDZU3wPr7AjpuGUN09T84tbsasqjEUyHQjDZU2RrY0WM=
+X-Received: by 2002:a05:6402:14d5:b0:601:233a:4f4d with SMTP id
+ 4fb4d7f45d1cf-6019bf2f776mr369506a12.2.1747787936630; Tue, 20 May 2025
+ 17:38:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR11MB8660:EE_|MN0PR11MB6301:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6fecb3de-787b-478e-63fd-08dd97ff0dd6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014|7053199007;
-X-Microsoft-Antispam-Message-Info: =?iso-8859-1?Q?mkwZcvHRk0b7ylo8f5EbgJ2gXIMLO2KWGSnJ1x2d+zAs/glT9Ny3vaJcdC?=
- =?iso-8859-1?Q?kbEW+FnUMnCprsRS2zsiWk5dRS95PQWB1sxOM+dNG+/UFH1ee9ZXtxJUdA?=
- =?iso-8859-1?Q?/45Q4iCfJofLC5zKy1UGLy4wB+dpqR9Tqeirtnw2rSJX0rbMQrP5oV1ROu?=
- =?iso-8859-1?Q?rEWfmMU78oK5ryW0ZrTIzxJVjJAx75XJzeBZgh8MDjAkIIDX3rYknhcrs+?=
- =?iso-8859-1?Q?YZ8ibz9Tn/Z6goFMf32DSStH0FCieVo0R8Iqw3+mwucGFlcMBNO+k+WMY4?=
- =?iso-8859-1?Q?x9aF3QoTrd1wVlM8L+wNO/+cxpSd9a4aUicM6CoPDXMHU3kSG8/bOSrygD?=
- =?iso-8859-1?Q?5AOjqUBc3Iel+KfoJR5C5TQJ2hRYvuFeRWae5gllxQBKuwq4SPIHlx4rxQ?=
- =?iso-8859-1?Q?1aK7Vm9d4XOm1yxXZtGD9xJE452Yyhl5EhnAcGFyIozszybHV6CzO/4bw8?=
- =?iso-8859-1?Q?vGQRKu9XFn0gcj0jlUkmQoCooB9rpP7hGGjGZqQZRDYqrMyF0+5hgHfAm5?=
- =?iso-8859-1?Q?jrHGYIAkfpKmDDG10l1oyWxnmjWp+a8VlSKzQx/13F/XeOV/CtQon8clyP?=
- =?iso-8859-1?Q?KBFVADWhfKt67PGGHr3mXQeUw5UtHATbfVDMULhJkkKiHfPItJOWRivrzQ?=
- =?iso-8859-1?Q?eSbvDfCm7ecVW0zNImUv6pCW0YI+8PHDBE9jtCigk1hrhefaJ2uX47T9g8?=
- =?iso-8859-1?Q?BrvokNghsx29X2ROiDkohFTY+3LdR0/4D8Y09nEanNJp9lIsGOsb7GBgnP?=
- =?iso-8859-1?Q?FNKswmKXEKtlO0/K41QrDRQEkyQz8KXU4P8sSGAfWJKIekM5+zla/zaIHJ?=
- =?iso-8859-1?Q?xSO1y/gXu11YJZ/MLPzjkQIlp646SDLef6f6n8w3zkhVWObD+MaWAYPMUH?=
- =?iso-8859-1?Q?ZVoa9SrOXOYzKx2BaSP0hvUZwH0Jdf1uBHn2Ka92TdpTgfNa6eX79QBX3r?=
- =?iso-8859-1?Q?3Mkzdte06Q5i8PJ21K8Jf3yUxqcX46jxPtpT4hRwNgCkfHcpfXbRvzNKfR?=
- =?iso-8859-1?Q?4dAq3M7hNAOyBr18wCdVORD9mZ9AplbOpsYtV+ymhC18rlLBFIwrtxosVG?=
- =?iso-8859-1?Q?SZSzoSeOucV32ycd8FjfCVsLwkJQgAxSRR3SDxAoO5IiQPwPqikooT3wDj?=
- =?iso-8859-1?Q?moVzRqPPNAcC+5LfPk3vR/GmD94SDS6ILnNqOWecDi08Fj6RSqeCkgkAbS?=
- =?iso-8859-1?Q?oyQpsq46h4kpGQK/FBsmVLTOP+DSjBiYmkdNacTBspcp4scfKw8H+ZYfeb?=
- =?iso-8859-1?Q?T9A8h6uHTuahcU8aheHceDFFRnri+C7vbdeKuPNSTE7vEiNsYrKUTuJOjp?=
- =?iso-8859-1?Q?DKVLybttx/PVWJVyEpd6oNnff7GXftN3+rcDCTa/nD2hLihLGZS2vUBV7i?=
- =?iso-8859-1?Q?U+VA0qqremOHdjjKOh8wjWMf9kneZdPgyZ6eoLpdNw8/r5ul8XhhTZkwzZ?=
- =?iso-8859-1?Q?OWyoo7ZPMwWuubAco6Lav5BhJ3/utfgUUSPEcRf1HSDSSi3P0UUSZG1s80?=
- =?iso-8859-1?Q?M=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR11MB8660.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?AhOx2/hmpjJl1VqSqtoG4UKdz9LIE8ikxgd4m0O5h97fpaKgZ0jZrDgDO0?=
- =?iso-8859-1?Q?kjAVQTtOOdF1jEBG1h4AlXXM2t1qHMzVHeGU1dIQbp9k4zjhW/7N+v+Gye?=
- =?iso-8859-1?Q?nKHnKViy1cLiyz0U7xvn3vngJoMYHSX7mQLL1f9ffMGPrXCN1ZcNSQiLFS?=
- =?iso-8859-1?Q?d94YV13mQKcUTlc+eU8xHP2DrEj8sl3+8MSIzaLZxFiTkmmAlFl3AYbhnp?=
- =?iso-8859-1?Q?mFuC200O4vByPwWxO3uHYdILX3IBePhdg8EBFGXcj0nhU+xv/KhIK2asTp?=
- =?iso-8859-1?Q?CmozO9KbCkMsSbcJIX3DQIfgWRvkVSIcJlCBdUMrewcNMNl3zOU04sytgi?=
- =?iso-8859-1?Q?RrEwCXaQz+9R2PL/F72hYx8lemKE1bRcZtG/kq/u2XRKYJWnfPhBG4IjD0?=
- =?iso-8859-1?Q?+kwYeJDCOdmhDA8m8RM3S0B5Mt6ulzY39V4vbZD3gIzcHYCcAH8amTUsMY?=
- =?iso-8859-1?Q?3/FUbyx65WYxdgpX0MHro6k5eeXhU8sPwSNliIMS3GD8zzU8MYeOOqXMiQ?=
- =?iso-8859-1?Q?sel1+ZGG+sS01ga8usu20T06FkWwWcSfzkcmMUtx70JSfjCr3F+TFEnQg5?=
- =?iso-8859-1?Q?9iy/fPd4h3eyHAImLfHSw4ArtgilHbyiVTH/cIhACUnO4LPK/5rL7UqVT4?=
- =?iso-8859-1?Q?uz3VhD4PwQda/aFl+VwSSSJwWsWHzz0MAeE489TYT+lgy35pGHo75nTyVh?=
- =?iso-8859-1?Q?NEgKVq09YJe/k2xjnMEZkQRQB3EH2IizyfSOIUbuD//ZxCdfKea6J0QPnI?=
- =?iso-8859-1?Q?jWSbZjiSi5/XiJuIe8Y3r5IZHWGGVhmJ4Oynmu3S8uMQlDsYEFayL6Md2a?=
- =?iso-8859-1?Q?lbXB7jPHj2EmD7mIYz0TBk8TR849wuRgye02O8bLOrWTUymL3AnPzFpFHm?=
- =?iso-8859-1?Q?9XpvTsFvlY6CFyN0WWzzWm4/D624FW+9M9GfAHeaarzh1U5KhG5tbqOVv8?=
- =?iso-8859-1?Q?3bWpF3c5MtlbpHC8P04X7IDTDvBmWWL8KAC5FUmUGL95IYsXTYXW7QHECL?=
- =?iso-8859-1?Q?JcBmWVPsyYjlnrAJeWsffqlvBvKuBS6VG7k6EkS4dFLrKYLqays+/SEzOI?=
- =?iso-8859-1?Q?XD/RvGGgHK65gEdw9OGgtSZDd/96rbxfQw1FWMBfnMNK3hPzKqhUe+FwdX?=
- =?iso-8859-1?Q?LygLpKh9rFuJQBXN+jZdvY2F6WdQYMpH+hexkwqKo7+IZS6jfzgjEp6jHw?=
- =?iso-8859-1?Q?5TYJjeOSAt10PEBr2dmIVbsqv/ZuaJbyWa/5C/F2DBpmOkkhReyDK/FOrz?=
- =?iso-8859-1?Q?cF0BpzQ9Pvw+tKLG4k6cKyQEusune+5dXjT7IG5CV1zqRKkmp9kOW9qU9E?=
- =?iso-8859-1?Q?Soa/CtEcK8AsIxyF5XbChAKheg90keismISdXV3VZ2PL/2wUArHXN/XW1i?=
- =?iso-8859-1?Q?8ey4g5awLFZ6VrLCxrCzH/dOL3C8mFWe5WJ7SS8s6NTENBNqbRkFD3IYgb?=
- =?iso-8859-1?Q?1crnIqs+uVh6FvKyRiERgcQkhapzA80DzOGlxGPz4mNoYeOUNVwJEfsJLK?=
- =?iso-8859-1?Q?aUM4wXLBrPM6SnjCVGEp/ATzmh4hf26Rwax2t01ruLCCFW1rHsIEIqwfGK?=
- =?iso-8859-1?Q?Sw1EO3EJb4EKK/5csErSiFvKSnjUnEAjdgZqHWKCJtxWJ2DDmNZ+5F8GKn?=
- =?iso-8859-1?Q?fv/XVM61O/Hc5PzGNeHJN/+N5jHNsknmCI?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6fecb3de-787b-478e-63fd-08dd97ff0dd6
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR11MB8660.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2025 00:33:06.3280
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: pYycdKRAjUPzBDcbykV5PRs1v1GfDAPcFt76i8SUktp1sGEKB7EuofX/gOPnZE2hFDHFaJM29H9InZEb/exljw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR11MB6301
-X-OriginatorOrg: intel.com
+References: <20250520214813.3946964-1-roman.gushchin@linux.dev>
+In-Reply-To: <20250520214813.3946964-1-roman.gushchin@linux.dev>
+From: Jann Horn <jannh@google.com>
+Date: Wed, 21 May 2025 02:38:20 +0200
+X-Gm-Features: AX0GCFu94sdnWGHTjJDGScJi6wHq5LLBJs6G1BkmzL4E483Bo3JMeYGYzyLmFEI
+Message-ID: <CAG48ez39SaJe=cwq3JZ6UM0BLMHEj76Kdmd9=Ho1nr17fAco6Q@mail.gmail.com>
+Subject: Re: [PATCH v5] mmu_gather: move tlb flush for VM_PFNMAP/VM_MIXEDMAP
+ vmas into free_pgtables()
+To: Roman Gushchin <roman.gushchin@linux.dev>, Hugh Dickins <hughd@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	Will Deacon <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, 
+	Nick Piggin <npiggin@gmail.com>, linux-arch@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 20, 2025 at 05:48:44PM -0400, mlevitsk@redhat.com wrote:
->On Fri, 2025-05-16 at 10:50 -0400, mlevitsk@redhat.com wrote:
->> On Fri, 2025-05-16 at 11:31 +0800, Chao Gao wrote:
->> > On Wed, May 14, 2025 at 08:53:52PM -0400, Maxim Levitsky wrote:
->> > > Check the vmcs12 guest_ia32_debugctl value before loading it, to avoid L2
->> > > being able to load arbitrary values to hardware IA32_DEBUGCTL.
->> > > 
->> > > Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
->> > > ---
->> > > arch/x86/kvm/vmx/nested.c | 4 ++++
->> > > arch/x86/kvm/vmx/vmx.c    | 2 +-
->> > > arch/x86/kvm/vmx/vmx.h    | 2 ++
->> > > 3 files changed, 7 insertions(+), 1 deletion(-)
->> > > 
->> > > diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
->> > > index e073e3008b16..0bda6400e30a 100644
->> > > --- a/arch/x86/kvm/vmx/nested.c
->> > > +++ b/arch/x86/kvm/vmx/nested.c
->> > > @@ -3193,6 +3193,10 @@ static int nested_vmx_check_guest_state(struct kvm_vcpu *vcpu,
->> > > 	     CC((vmcs12->guest_bndcfgs & MSR_IA32_BNDCFGS_RSVD))))
->> > > 		return -EINVAL;
->> > > 
->> > > +	if ((vmcs12->vm_entry_controls & VM_ENTRY_LOAD_DEBUG_CONTROLS) &&
->> > > +	     CC(vmcs12->guest_ia32_debugctl & ~vmx_get_supported_debugctl(vcpu, false)))
->> > > +		return -EINVAL;
->> > > +
->> > 
->> > How about grouping this check with the one against DR7 a few lines above?
->> 
->> Good idea, will do.
+On Tue, May 20, 2025 at 11:50=E2=80=AFPM Roman Gushchin
+<roman.gushchin@linux.dev> wrote:
+> Commit b67fbebd4cf9 ("mmu_gather: Force tlb-flush VM_PFNMAP vmas")
+> added a forced tlbflush to tlb_vma_end(), which is required to avoid a
+> race between munmap() and unmap_mapping_range(). However it added some
+> overhead to other paths where tlb_vma_end() is used, but vmas are not
+> removed, e.g. madvise(MADV_DONTNEED).
 >
->Besides the above change, is there anything else to change in this patchset?
->If not I'll sent a new version soon.
+> Fix this by moving the tlb flush out of tlb_end_vma() into new
+> tlb_flush_vmas() called from free_pgtables(), somewhat similar to the
+> stable version of the original commit:
+> commit 895428ee124a ("mm: Force TLB flush for PFNMAP mappings before
+> unlink_file_vma()").
+>
+> Note, that if tlb->fullmm is set, no flush is required, as the whole
+> mm is about to be destroyed.
+>
+> Signed-off-by: Roman Gushchin <roman.gushchin@linux.dev>
+> Cc: Jann Horn <jannh@google.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Nick Piggin <npiggin@gmail.com>
+> Cc: Hugh Dickins <hughd@google.com>
+> Cc: linux-arch@vger.kernel.org
+> Cc: linux-mm@kvack.org
+>
+> ---
+> v5:
+>   - tlb_free_vma() -> tlb_free_vmas() to avoid extra checks
+>
+> v4:
+>   - naming/comments update (by Peter Z.)
+>   - check vma->vma->vm_flags in tlb_free_vma() (by Peter Z.)
+>
+> v3:
+>   - added initialization of vma_pfn in __tlb_reset_range() (by Hugh D.)
+>
+> v2:
+>   - moved vma_pfn flag handling into tlb.h (by Peter Z.)
+>   - added comments (by Peter Z.)
+>   - fixed the vma_pfn flag setting (by Hugh D.)
+> ---
+>  include/asm-generic/tlb.h | 49 +++++++++++++++++++++++++++++++--------
+>  mm/memory.c               |  2 ++
+>  2 files changed, 41 insertions(+), 10 deletions(-)
+>
+> diff --git a/include/asm-generic/tlb.h b/include/asm-generic/tlb.h
+> index 88a42973fa47..8a8b9535a930 100644
+> --- a/include/asm-generic/tlb.h
+> +++ b/include/asm-generic/tlb.h
+> @@ -58,6 +58,11 @@
+>   *    Defaults to flushing at tlb_end_vma() to reset the range; helps wh=
+en
+>   *    there's large holes between the VMAs.
+>   *
+> + *  - tlb_free_vmas()
+> + *
+> + *    tlb_free_vmas() marks the start of unlinking of one or more vmas
+> + *    and freeing page-tables.
+> + *
+>   *  - tlb_remove_table()
+>   *
+>   *    tlb_remove_table() is the basic primitive to free page-table direc=
+tories
+> @@ -399,7 +404,10 @@ static inline void __tlb_reset_range(struct mmu_gath=
+er *tlb)
+>          * Do not reset mmu_gather::vma_* fields here, we do not
+>          * call into tlb_start_vma() again to set them if there is an
+>          * intermediate flush.
+> +        *
+> +        * Except for vma_pfn, that only cares if there's pending TLBI.
+>          */
+> +       tlb->vma_pfn =3D 0;
 
-...
+This looks dodgy to me. Can you explain here in more detail why this
+is okay? Looking at current mainline, tlb->vma_pfn is only set to 1
+when tlb_start_vma() calls into tlb_update_vma_flags(); it is never
+set again after tlb_start_vma(), so I don't think it's legal to just
+clear it in the middle of a VMA.
 
->> > > diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
->> > > index 6d1e40ecc024..1b80479505d3 100644
->> > > --- a/arch/x86/kvm/vmx/vmx.h
->> > > +++ b/arch/x86/kvm/vmx/vmx.h
->> > > @@ -413,7 +413,9 @@ static inline void vmx_set_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr,
->> > > 		vmx_disable_intercept_for_msr(vcpu, msr, type);
->> > > }
->> > > 
->> > > +
->> > 
->> > stray newline.
+If we had something like this callgraph on a VM_MIXEDMAP mapping, with
+an intermediate TLB flush in the middle of the VM_MIXEDMAP mapping:
 
-Can you remove this newline? (not sure if you've already noticed this)
+tlb_start_vma()
+  [sets tlb->vma_pfn]
+zap_pte_range
+  tlb_flush_mmu_tlbonly
+    __tlb_reset_range
+      [clears tlb->vma_pfn]
+zap_pte_range
+  [zaps more PTEs and queues a pending TLB flush]
+tlb_end_vma()
+free_pgtables
+  tlb_free_vmas
+    [checks for tlb->vma_pfn]
 
-Also, the shortlogs for patches 3-4 don't follow the convention. They should be
-"KVM: nVMX" and "KVM: VMX". With these fixed,
+then tlb_free_vmas() will erroneously not do a flush when it should've
+done one, right?
 
-Reviewed-by: Chao Gao <chao.gao@intel.com>
+Why does it even matter to you whether tlb->vma_pfn ever gets reset? I
+think more or less at worst you do one extra TLB flush in some case
+involving a munmap() across multiple VMAs including a mix of
+VM_PFNMAP/VM_MIXEDMAP and non-VM_PFNMAP/VM_MIXEDMAP VMAs (which is
+already a fairly weird scenario on its own), with the region being
+operated on large enough or complicated enough that you already did at
+least one TLB flush, and the unmap sufficiently large or with
+sufficient address space around it that page tables are getting freed,
+or something like that? That seems like a scenario in which one more
+flush isn't going to be a big deal.
+
+If you wanted to do this properly, I think you could do something like:
+
+ - add another flag tlb->current_vma_pfn that tracks whether the
+current vma is pfnmap/mixedmap
+ - reset tlb->vma_pfn on TLB flush
+ - set tlb->vma_pfn again if a TLB flush is enqueued while
+tlb->current_vma_pfn is true
+
+But that seems way too complicated, so I would just delete these three
+lines from the patch.
