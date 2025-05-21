@@ -1,119 +1,92 @@
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C1B4230BC5
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 05:41:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55F621A9B23;
+	Wed, 21 May 2025 05:42:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747806101; cv=none; b=MKZijWzq9KgKODSERjBibFKE5CQ9+nMpJHRf5dRaZ+jzzt14Ciww1JNT3LwwPdaSkMP8FK/OA0TWXeCZ39G0AjdmtY+11WwtexbKYcuzp4cLhccca2de+ep1P/gxwb8OIn16887Pnb8Ftdcd4nT8+suwSqJ1ZP674j3Jkq0xYvY=
+	t=1747806171; cv=none; b=agqzV8+qtNsUPjn0SaA+wnXbfznBXhGw5HqZ62/1NqBu4jtkwJ/JuaAl4z6/di1PELe5erV0/ATXX+cMH4M6OpQkicJoMZQ58YGqH/VuPAav/JyCpy5+Cx+TONsLE70PA+PRbXqbVkgIiRIbXKe/mj8IJADZKHkeLpVHOYhOElA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747806101; c=relaxed/simple;
-	bh=WuKPUIc4ggVixbgxrmfedA4AH8Wix3/q/5/YdGnifww=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YdbdutZsxyCkq/aVFcB5qgydR0Ghbyu2XjNMGA3yh8SXDSfSU8oNgkrRsbftXLmJik6/etV8GVlcUb1MdTDdlOAp+2y+R2PCYZuaCtMfBCcOJFvDMVoVgsiUz2no3LBJoyDDnbGxYcqlKlvGXN9dl8PCe7xnEqbcFc4QwHcmM4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DIx0B2CO; arc=none smtp.client-ip=209.85.128.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747806171; c=relaxed/simple;
+	bh=bfHK6tVkYsTsQf+l5J/IzgcORWn1682W2UW01xz2M08=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=X3GHhV+Ex/oI8DYM5G4SMaE9myvHBbSWE+zPIP5C13fb60mu3eav1MUG6cUohtScVExQaHIetSo8mjByfDWkSAxpX78vBvCEFVRnNTOhHXG6PbgyCe9A+mpirM/J9wLSarQKfqxlXfNhC7bIQS9HkR0SSTbnXeXTtOzYWRyCyRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=kiQ0wI4h; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DIx0B2CO"
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-70d70ee042dso21684167b3.2
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 22:41:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747806098; x=1748410898; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WuKPUIc4ggVixbgxrmfedA4AH8Wix3/q/5/YdGnifww=;
-        b=DIx0B2CO+iAOj6bJFmM6v9lnQGKMMtp90IhVzzly/WVQPTwV2gTXxdOriG0Wwj/8Pe
-         4o2YmrprlyoisspMz4utLMJQMZN/81uq9coGoBkpPCv/IXZDY4RDvS01eRnLVp9pg57f
-         FGHNRdJPkSM4Y6S0HTDvdQ/yv6QCTFgk8eyTrXXStlPU0yONi5MldFiQ3LsSmciiU210
-         o5rKZ63l1mqki6LL3IwT6xlE1PpkBoZAuZNcubv2LMKyEB4xxe6yUU3ClRC0B+DSkVpu
-         Iw5f8ltWIZV1k8EtZTRBgc7g9c2wRlV6D+Tcfykf6OMMogNCuDiLQk64oRSrp1BUZWFL
-         Vsyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747806098; x=1748410898;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WuKPUIc4ggVixbgxrmfedA4AH8Wix3/q/5/YdGnifww=;
-        b=b8A5qS8CiKsWqdq1yrHghRceNkFSW4H7LlF9YTUzqnKT42+xUFpTq81JaTvaJSWiC6
-         rR/9LRmhhiKWk4rjppKUk4pS8o9BNJ7fHs7ngtIinEPI8rLEJNcEX8R6c5oF4D47y/bg
-         bXCsZbkKc7XKSNMFfAlVKsaWgbuWoUZTm4ScX7tACHMuvmDC9toNdxuFIIhz5xKh1dw+
-         J7m4yjJXyYk8JJRbrFzZO4KRYRZc9AxyuN0zLzoqESoJ0e/woCe2XhbiJQxIQ5AxskF4
-         aGKGGt2IHqbZw98hKbcr/mRXKbZlBIBls3AnklnnGLPhpx0q5TCKpOB3q4rSfVt8VRKL
-         qVDg==
-X-Forwarded-Encrypted: i=1; AJvYcCUqG+F1L+QNEQqg3EQjFRL7+0/8x6N9cxmUUKvm1UcDv9vnD0wqUREE3m4Ci3EXu8KKwmFXnm50qF4GF70=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJhMRHfhZuXDDpxFG66+gaVoPJvOj8zwnXV41T37AzSz5CUW+P
-	HCsVyP84r0ztwHgNYS5yVy4/m3tBC0+FlMo/1f1NMCh6WQUH41wHkVvEeK6yN6LsSgETD3sJb4k
-	tDAVfmzhRE8dyZYdLdrSL89DuTiEMK1Cnd4tt
-X-Gm-Gg: ASbGncsYFVSzRxTx0QsacwVESkmXgR9CKXgxumHj9rdWEj7SnT/oC6KyziM4DBSNE69
-	x7E03aINNi9sq7YrRNH+AOfXr3R2mj+qxgEAuKx9aZBTk2YucOV7FjajcU72qqObvEGMq2vuaVN
-	Y/wrKtKpTymBCGGVUM5rP4hdoyXPZGAydICHg5U2h9Cb8Y5+qWwHf2vb6t+v25A2L9
-X-Google-Smtp-Source: AGHT+IGdSZe7ylfgOWcxywNa73o7coZc7jyagjAA4TlJYJVRxstnsjYUscSako9JGhA3ho960/y7DVvylMCCgAFPLnM=
-X-Received: by 2002:a05:690c:4981:b0:70c:b882:2e5 with SMTP id
- 00721157ae682-70cb88204d7mr223289207b3.2.1747806098307; Tue, 20 May 2025
- 22:41:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="kiQ0wI4h"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1747806162;
+	bh=SvpdY8EkyNmtwUbnxZfC+JBBw/CTNoWRvsweydvqOGg=;
+	h=Date:From:To:Cc:Subject:From;
+	b=kiQ0wI4h3D1SuUhEu+Qrm2prhGT9q+CUGtHRHHzyT7AWqox8QaGRG9MkueRoxSuah
+	 +XxGALN0hGOwc7uh1JHNke0Kpz8BlX0EpMYJUz41foYVa/Mh08ACNFilPsOwb0TWiH
+	 KkBd75z30Si0GN/ZyatEywcI9YXln7M2umusv6UirliHVdemdbjEGqbC5ZLYlj9YMv
+	 KIz1r9+45a26HIXl6iQVhkj5rQJq1nouaVnxPU1804GUR8SeNHuMVhrP4SN9AcW7gN
+	 ETRWX+H2v0nlTJwTn8+k9db8a1iTYvX9tXMfp3bWudQ3bL72TLeKYP9p16ZL3IRW81
+	 FZXFSxtzEXm9Q==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b2L0y1BRgz4x3J;
+	Wed, 21 May 2025 15:42:41 +1000 (AEST)
+Date: Wed, 21 May 2025 15:42:40 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build failure after merge of the mmc tree
+Message-ID: <20250521154240.4aacf1b0@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAG+54DZYz-4hW33Py9mihHDauWw55=_rP71s1MbCg-5gxw7J7Q@mail.gmail.com>
- <2025052116-diaphragm-payback-a3ef@gregkh>
-In-Reply-To: <2025052116-diaphragm-payback-a3ef@gregkh>
-From: rujra <braker.noob.kernel@gmail.com>
-Date: Wed, 21 May 2025 11:11:26 +0530
-X-Gm-Features: AX0GCFvPSzModwUdGmboKsJgQOYx09zLVKlfPKnab7JQIOmFxYmkMhIanR6ZZLk
-Message-ID: <CAG+54Db4k-sMVHUsUWx=oN-AXE5aife=Ugx4f49smGnhq6=-0g@mail.gmail.com>
-Subject: Re: [PATCH RESEND] staging : greybus : Documentation : firmware :
- Replace deprecated strncpy() with strscpy()
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Johan Hovold <johan@kernel.org>, elder@kernel.org, greybus-dev@lists.linaro.org, 
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/icK4Qe=OJAPihsqXNZSeu_6";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+
+--Sig_/icK4Qe=OJAPihsqXNZSeu_6
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-Hi greg,
+Hi all,
 
-why is this a RESEND ?:
+After merging the mmc tree, today's linux-next build (arm
+multi_v7_defconfig) failed like this:
 
->> I had sent the same patch 4 days ago and didn't get any reply , hence tr=
-ied to resend the same patch for the same,
-here is earlier mail :
-https://mail.google.com/mail/u/1/?ik=3Df63b03515e&view=3Dom&permmsgid=3Dmsg=
--a:s:12290863930259651721
-,
+drivers/mmc/host/sunxi-mmc.c: In function 'sunxi_mmc_probe':
+drivers/mmc/host/sunxi-mmc.c:1391:38: error: stray '`' in program
+ 1391 |                                      `"Failed to allocate DMA descr=
+iptor mem\n");
+      |                                      ^
 
-line does not match this:
->> sorry , i could not get it what it is exactly ?, if possible can you sha=
-re some insights or example so that from in future i would get it right.
+Caused by commit
 
-thank you,
-rujra bhatt
+  15252b7ff0b3 ("mmc: sunxi: Use devm_mmc_alloc_host() helper")
 
+I have used the mmc tree from next-20250516 for today.
 
+--=20
+Cheers,
+Stephen Rothwell
 
-On Wed, May 21, 2025 at 11:00=E2=80=AFAM Greg KH <gregkh@linuxfoundation.or=
-g> wrote:
->
-> On Wed, May 21, 2025 at 10:26:52AM +0530, rujra wrote:
-> > To ensure that the firmware tag is properly null-terminated. When
-> > copying firmware tag strings to prevent buffer overflows and ensure
-> > data integrity.
-> >
-> >
-> > changes has been made in 3 positions:
-> > 1: update firmware tag
-> > 2: backend update firmware tag
-> > 3: backend update firmware tag with unipro
-> >
-> > Signed-off-by: Rujra Bhatt <braker.noob.kernel@gmail.com>
->
-> Your From: line does not match this :(
->
-> Also, why is this a "RESEND"?
->
-> thanks,
->
-> greg k-h
+--Sig_/icK4Qe=OJAPihsqXNZSeu_6
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgtZ9EACgkQAVBC80lX
+0Gz10wf/RJccDH7Elq4rXEcbD5SL81WPFcMYTJUeYTpGXIayfvccsNBXlAArqsvi
+xnMBLKhtv4CvM+7D1mLZUqPXVZ6stdAiTxmy6nxroqd1GFG7sGfTQIke68daK6w7
+IKsOYSXroY/Wmx+FIXRxRZwbRns7Xby2sitM3l+O5eQI/KTpsZBhr3gDtEeMfhkN
+70Z9mju3b4VhrwaGbpEFNc+AURhe3WgzDKZZ6U7W/hUU4YLINI3xiq3drJeUpvwh
+VS36n+AAJa5zoOP4DdyhQoHCdDwKe9DEL8A9ZWAkzFayip2///vOdyqyUxUmmRCB
+RUB3fbAtZLGdKFlzzGnOc5+pVTIk1w==
+=pCB7
+-----END PGP SIGNATURE-----
+
+--Sig_/icK4Qe=OJAPihsqXNZSeu_6--
