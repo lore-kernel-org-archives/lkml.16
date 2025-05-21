@@ -1,128 +1,155 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FBA51537C6
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 13:50:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FAC714658D
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 13:50:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747835423; cv=none; b=UShG1A8kyEDM5oVXE7gCfMtBcpeEpzZcwaoWGML3kZ5i+mXA38Pz/noa+4/GXN1k+BdaeC64X37pHYAQSSLKPYrh1PSAtr7kuBaeh0QG9NYA+zTAObpfjD3MU+xHqu3PTZcAnmcS63hX7mHmPnN9hDx4MQi51ed1Ax38649J6oo=
+	t=1747835432; cv=none; b=pWRACIhbzl/3D09L4CRXQSA0495MF1JC7w2KY6lf+TDvH+oHnYtBHVLWwESgJkFWqXb/m/8HXFBeXQj43A4z/OzePYsK8RvWNy7aDNSCKHL4a1tV5zhABPWP/4ezD5t4RApdgqnZXliDnmzBN52f/FNQl2Fz5EDgpQpTjwLKnvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747835423; c=relaxed/simple;
-	bh=dINc/wQptmShY0mwOEHtFWIvstwWFCTzk6X6+/JBI6s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pRp33Git3YTevinVX/ouF1swPZJkq71TsSv29iFf5/u1bCAtwthKAkyXjM7FLIqrAmqVmFRhHG7QdpLWPJZuCI38Ejg2QXnHjOOPeAAHYpjtA0S2Doi2HyClj/BPh80KaqBjppBKDN3mDunhvhDtM6I7tM+Q0NdJNlK0qn5IWJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=b3qPqget; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747835432; c=relaxed/simple;
+	bh=5WNVFez13gkrFCGaq+9jGVGNf+OVB17HWFv54cA6Nvg=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=n90W44eC1lQk6hV/+1sRrQG2NhohYbocRdyFogfhfppCbRkZlV2yw9RHGLsOHFHYwrdG08rWRmrXjivK9XBdSOGlzvYcaIgJwaTwDssMMH4Zo5p413gq1ZFghM74eGo/KA5KuzpmZHYudA2x0mPIoYUcAezE9I9SIQrAGAIfrqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=q897Bi6+; arc=none smtp.client-ip=209.85.222.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b3qPqget"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b1a1930a922so4725624a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 06:50:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="q897Bi6+"
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7c58974ed57so726658585a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 06:50:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747835420; x=1748440220; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=/dGaJJt/HUGpCICV62UDPM8z7U1rRYbsKxH587Gzyjg=;
-        b=b3qPqgetEf3GiDwfbGcdsb4hqaAY0XrK5lXwb4LPWkYhbGL2gob9EyNbBai3BDOHie
-         BzxD6cqRcez38Au7gNcjK8uCvstsGHoVWZT+U/7qrLk2h7spwvM7yn6t0fuTHK/VAffK
-         yurm4euX0yVSs1U0hXIfY6dBAYQUYZlF1Kq8LhKjrUxuIQ7aYCuyUOWDQtbZ6ahrHHlc
-         hUwAss6CSnrKVaxKAiH6aT7xHtv+YNDmh8Qdo3rn7b7pPUPr1xTL5I5F22XiXffZBTCk
-         VWG+2sbcDPo5lhO8iWB66em6oAlEHPUJahXiprR50K3IjhxY+bQ31wnD9itLgqREraHs
-         d+6A==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747835430; x=1748440230; darn=vger.kernel.org;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=SHPu/rR9OhvHMhtOpQJoGCEYJPkS0HuUBXWSeViBZYw=;
+        b=q897Bi6+2vLhS5wJ7Y1NSmZut+cCfOl1vtxEtz9QOULLg2EfAg6TQQ79yvrhH+h0Rb
+         x8RgrbUSiVn4cA+QdAg8jDJmPfZTF7vBIGxbI2sRHfA9S6I7eVEFUTJbAKUwIrs2x5U8
+         DiGSqoUN8XuGWcLKWQzEGOl+jPH66kJYX78DLDPcKd51E1x+0ZkIepOXSQ+VQJqr9cNX
+         tH0qO7W5vj38cm2P2s9rpMWpL44nxd3rU9aCg+hFqMzuz6lQ6yu62qLja/lHHIQWz4aG
+         GAt9FUviMFDHFhKFsBMY5/OkOS+BaWbNvlZe2rwpPAAZgz4C8Q/v7Tz7sQPPbB2qOkHZ
+         5A3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747835420; x=1748440220;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/dGaJJt/HUGpCICV62UDPM8z7U1rRYbsKxH587Gzyjg=;
-        b=jgQUZWk3LRk2kv5SMU+YvTwzFISB9V5k7doN6qLARBAA5j0y7Xj5U+U54WfPlWH2qX
-         ehi0fSSbW+RlgmkEOjrF3jN9fQZodcjIduDUgmEbE5FZE2WMPjteghEXRzPPUgcKB+D6
-         m6PjDmeecl3geJj92bJlrQ1lEVN8GTwABmM7M8LDD6chxrYsxxJmJp91NdNGJ9WK/nXp
-         xmTYda2FIvl91oWAjjb33Aiirnux9TnohT6NOkeurTJ9TlfUitsdax3qRJwvJQjnd1pu
-         8PWy+5gJYaqCt+F3O0rc8u7N3e8x2usxRDrbkiannex/UuJ6nfadH+rGUNVrv7dgq2F7
-         k2QA==
-X-Forwarded-Encrypted: i=1; AJvYcCUiGQqT7OpT1asWbDNGpGP2/hghVRxzq8g9JEkqhXf0XUGDEBZWhlwEFeWamA9PogsEGkIRHLutY4CGgxs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywc2y3vyV1Wd799jMS97xMgoty6YBic3JRj0h/7DEXRDaMLqTW+
-	zGSmq5cYrt59gvLIby+IuG+V2tk0+6NNkYw5mQlOopan78qMYOmXW3p+gqOdQqmjoA==
-X-Gm-Gg: ASbGnct+n6pECknRd9qm+GcKA/FIqbg0KsJlQZzEm9Sktrshjhb2Dta913qaxtTCJt6
-	bz9mA6gygLAlc2y+TFFCGnpYE6eQnV3X+MDiarDv1i03Byld2N0QLj8wDja0VDyYLIB5oEiC6hg
-	X9EVeibEHcyx8Qkw1N91TXpzrRU5VLsogCbjy8gu0AmGNvhV4qoVFpSTjAJCp8T7W/kJFtJMx3W
-	DUc8D7txNwXqKR0lz7VyOrYX1kU99PuKNPCjfAmxBpcWjHWlpA4MwvhRLk4ZZ46W4j9jsAdoosy
-	2lt9oNvlIYMXszxA7k3UKvdKTVyM6Xoh1rKWPbkdoc4a9+nvdEmqehoMr2Qo
-X-Google-Smtp-Source: AGHT+IGfMgSZ1dyR31dRP9yWXfsiqsI0mIJuLiXZvdVwQ7ECl4Z67oe/m7O50OQnSlM0QTvqwXQ/Jg==
-X-Received: by 2002:a17:90b:4f4e:b0:310:8d9a:eb1c with SMTP id 98e67ed59e1d1-3108d9aeb4fmr4087282a91.21.1747835420269;
-        Wed, 21 May 2025 06:50:20 -0700 (PDT)
-Received: from thinkpad ([120.60.52.42])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f365b22a9sm3660292a91.6.2025.05.21.06.50.14
+        d=1e100.net; s=20230601; t=1747835430; x=1748440230;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SHPu/rR9OhvHMhtOpQJoGCEYJPkS0HuUBXWSeViBZYw=;
+        b=tL4lvzOwGPJIWtgAQOFPNglBuT5RApqlxB713/F7pTQM3gTH3aLqSArttBRsgCrU1w
+         LrvEMA9NtPnhM1Cvfeox6/dcrgFSSKhejy7QrCj1iZ6teU089MFd7fR3V2598NID3VOF
+         2NeALn5PmzMIhniKwVfzAekwpOCZh67uXaQWr9tsf1gtO1WjbAt6NIilevhCiq7wn2An
+         4n+lX8i+P5KxdTnU1CMe3mYlSFc0fmq4jdmFzkTDU+3z+LKIDLxY7+54blsiDmDMi1Ge
+         7/Swr6YLek0pUvEURLhdhbYz+zbOGc1AbCTRvk+1Q7Zkq3ToPSDRCfSlrn+FY09b1eFc
+         PTYA==
+X-Forwarded-Encrypted: i=1; AJvYcCXfgQ/mEZmxMBuxzKb4opNIo77V2/PauRNufU2dKUb9lEUqXg/rvh1Zvy/8dfEf/SC0dkITH4C32PLTiN4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhnETY64KtRtDokPQEFlqxuUy/KC553NawYTLqfG8/13WIQQw/
+	vwjBvRMCAQQCeJ3w5SqcoYA1fGNbmeUfgDD77Y7U5ws86xQGJbbDnivFRFN5CuCqv48=
+X-Gm-Gg: ASbGnctpYOlIdW9TMaVgh5o3WnFzaNDguN6Qj6Z0n7/sIwcFPIlzvUJlzsX+/cNZTpV
+	Q8Ob25dqHIyHEeV2pfAILHFJ2q6w2v/SHhfvO2zjxLQmaNFYeYnh5Mem4ynf/QzM++8SVezryLK
+	+DxnsXsXRbnUbhPr/I86NDyESjL4Yjetmr+FT+w6KpEvCUcwIiH8xWujON50Low4xaCD/GVcik0
+	9Ko/u+sBcPejTwqDv/lJkvbOiF6ptD4a9Xw7GjCPWyaFj44Z95+QbLO/SANVJ+VvWt1Q3wmGqpa
+	L+JbSvt2T6rBdyrRZ8mCTs78dI2d68V1WLk6dqn1EwTa3JXqic4M1Kf2rzB6ybiak+yizZpPSUn
+	ak2ahb9J0vmy/Kw==
+X-Google-Smtp-Source: AGHT+IERkKLn+onsDUJYfu3kDKklFMU9iqW5ZYQW4MKYANoCD5x2BBsG9GwZxjudRD44nWhn/7F33A==
+X-Received: by 2002:a05:620a:c4a:b0:7ce:c600:b5e1 with SMTP id af79cd13be357-7cec600b71amr897648385a.11.1747835429795;
+        Wed, 21 May 2025 06:50:29 -0700 (PDT)
+Received: from xanadu (modemcable179.17-162-184.mc.videotron.ca. [184.162.17.179])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd468cc8eesm874244585a.106.2025.05.21.06.50.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 06:50:19 -0700 (PDT)
-Date: Wed, 21 May 2025 14:50:12 +0100
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Nitin Rawat <quic_nitirawa@quicinc.com>
-Cc: vkoul@kernel.org, kishon@kernel.org, 
-	James.Bottomley@hansenpartnership.com, martin.petersen@oracle.com, bvanassche@acm.org, 
-	andersson@kernel.org, neil.armstrong@linaro.org, dmitry.baryshkov@oss.qualcomm.com, 
-	konrad.dybcio@oss.qualcomm.com, quic_rdwivedi@quicinc.com, quic_cang@quicinc.com, 
-	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-scsi@vger.kernel.org
-Subject: Re: [PATCH V5 08/11] phy: qcom-qmp-ufs: refactor qmp_ufs_power_off
-Message-ID: <heork6adpw526tfljo2cpexevplpjrlgjgeyobidvzqlsubzlc@6vn6jykxpwqx>
-References: <20250515162722.6933-1-quic_nitirawa@quicinc.com>
- <20250515162722.6933-9-quic_nitirawa@quicinc.com>
+        Wed, 21 May 2025 06:50:29 -0700 (PDT)
+Date: Wed, 21 May 2025 09:50:28 -0400 (EDT)
+From: Nicolas Pitre <npitre@baylibre.com>
+To: David Laight <david.laight.linux@gmail.com>
+cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
+    u.kleine-koenig@baylibre.com, Oleg Nesterov <oleg@redhat.com>, 
+    Peter Zijlstra <peterz@infradead.org>, 
+    Biju Das <biju.das.jz@bp.renesas.com>
+Subject: Re: [PATCH v2 next 3/4] lib: Add mul_u64_add_u64_div_u64() and
+ mul_u64_u64_div_u64_roundup()
+In-Reply-To: <20250521135246.7dab6bda@pumpkin>
+Message-ID: <403s8q39-33sp-pp3s-95o8-14s190or25o5@onlyvoer.pbz>
+References: <20250518133848.5811-1-david.laight.linux@gmail.com> <20250518133848.5811-4-david.laight.linux@gmail.com> <321rs9r7-8858-p195-263n-49q78q8rn25o@onlyvoer.pbz> <20250520223700.2ec735fd@pumpkin> <148nop5q-s958-n0q4-66r8-o91ns4pnr4on@onlyvoer.pbz>
+ <20250521135246.7dab6bda@pumpkin>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250515162722.6933-9-quic_nitirawa@quicinc.com>
+Content-Type: text/plain; charset=US-ASCII
 
-On Thu, May 15, 2025 at 09:57:19PM +0530, Nitin Rawat wrote:
-> In qmp_ufs_power_off, the PHY is already powered down by asserting
-> QPHY_PCS_POWER_DOWN_CONTROL. Therefore, additional phy_reset and
-> stopping SerDes are unnecessary. Also this approach does not
-> align with the phy HW programming guide.
+On Wed, 21 May 2025, David Laight wrote:
+
+> On Tue, 20 May 2025 18:24:58 -0400 (EDT)
+> Nicolas Pitre <npitre@baylibre.com> wrote:
 > 
-> Thus, refactor qmp_ufs_power_off to remove the phy_reset and stop
-> SerDes calls to simplify the code and ensure alignment with the PHY
-> HW programming guide.
+> > On Tue, 20 May 2025, David Laight wrote:
+> > 
+> > > On Mon, 19 May 2025 23:03:21 -0400 (EDT)
+> > > Nicolas Pitre <npitre@baylibre.com> wrote:
+> > >   
+> ...
+> > > > Here you should do:
+> > > > 
+> > > > 	if (ilog2(a) + ilog2(b) <= 62) {
+> > > > 		u64 ab = a * b;
+> > > > 		u64 abc = ab + c;
+> > > > 		if (ab <= abc)
+> > > > 			return div64_u64(abc, d);
+> > > > 	}
+> > > > 
+> > > > This is cheap and won't unconditionally discard the faster path when c != 0;  
+> > > 
+> > > That isn't really cheap.
+> > > ilog2() is likely to be a similar cost to a multiply
+> > > (my brain remembers them both as 'latency 3' on x86).  
+> > 
+> > I'm not discussing the ilog2() usage though. I'm just against limiting 
+> > the test to !c. My suggestion is about supporting all values of c.
 > 
-> Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
+> I've had further thoughts on that test.
+> Most (but not all - and I've forgotten which) 64bit cpu have a 64x64=>128
+> multiple and support u128.
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Looks like X86-64, ARM64 and RV64 have it. That's probably 99% of the market.
 
-- Mani
+> So the 'multiply in parts' code is mostly for 32bit.
 
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> ---
->  drivers/phy/qualcomm/phy-qcom-qmp-ufs.c | 7 -------
->  1 file changed, 7 deletions(-)
+Exact.
+
+> That means that the 'a * b' for the call to div64_u64() has to be three
+> 32x32=>64 multiplies with all the extra 'add' and 'adc $0' to generate
+> a correct 64bit result.
+
+4 multiplies to be precise.
+
+> This is (well should be) much the same as the multiply coded in the
+> function - except it is generated by the compiler itself.
+
+I don't follow you here. What is the same as what?
+
+> The only parts it can ignore are the those that set 'z' and 'y_hi'.
+> If my clock sequence (in the other email) is correct it saves 3 of 10
+> clocks - so test to avoid the multiply has to be better than that.
+> That probably means the only worthwhile check is for a and b being 32bit
+> so a single multiply can be used.
+
+Depends how costly the ilog2 is. On ARM the clz instruction is about 1 
+cycle. If you need to figure out the MSB manually then it might be best 
+to skip those ilog2's.
+
+> The generated code for 32bit x86 isn't as good as one might hope.
+> partially due to only having 7 (6 if %bp is a stack frame) registers.
+> clang makes a reasonable job of it, gcc doesn't.
+> There is already a mul_u32_u32() wrapper in arch/x86/include/asm/div64.h.
+> There needs to be a similar add_u64_u32() (contains add %s,%d_lo, adc $0,%d_hi).
+> Without them gcc spills a lot of values to stack - including constant zeros.
+
+I mainly looked at ARM32 and both gcc and clang do a good job here. ARM 
+registers are plentiful of course.
+
+> I might add those and use them in v3 (which I need to send anyway).
+> They'll match what my 'pending' faster code does.
 > 
-> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
-> index fca47e5e8bf0..abfebf0435d8 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
-> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
-> @@ -1827,13 +1827,6 @@ static int qmp_ufs_power_off(struct phy *phy)
->  	struct qmp_ufs *qmp = phy_get_drvdata(phy);
->  	const struct qmp_phy_cfg *cfg = qmp->cfg;
->  
-> -	/* PHY reset */
-> -	if (!cfg->no_pcs_sw_reset)
-> -		qphy_setbits(qmp->pcs, cfg->regs[QPHY_SW_RESET], SW_RESET);
-> -
-> -	/* stop SerDes */
-> -	qphy_clrbits(qmp->pcs, cfg->regs[QPHY_START_CTRL], SERDES_START);
-> -
->  	/* Put PHY into POWER DOWN state: active low */
->  	qphy_clrbits(qmp->pcs, cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL],
->  			SW_PWRDN);
-> -- 
-> 2.48.1
+> 	David
 > 
-
--- 
-மணிவண்ணன் சதாசிவம்
+> 
