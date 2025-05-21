@@ -1,75 +1,103 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08D51264A92;
-	Wed, 21 May 2025 12:05:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E753264FA6;
+	Wed, 21 May 2025 12:06:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747829149; cv=none; b=dgALn+/PrmZCKoaiCS52vynaK4rkBlbpF7GzGCctudmF9l5lbvfIHvkk27qVKEHQFVlOi3Q7hqPxoc+CmS1+jv+jvb3IO7QxRqW/RdKie3QHpRM1nyJGADr882W+cWV5G7PEkzArKBoWmQRnZzXWbR/kI5HpY15zecRH1+E71AM=
+	t=1747829171; cv=none; b=EUNMKdcfb0NMGH+9y42Oq1c8qM+ltoXUMWY1iAdf775boXwEPDj4ggMjiwoETnTIfTKFtKWkGlVLIFs8Q82yVi32MfKIa0k2HXQpT19RO1Eao/sTaOHmuuOFiidJ+Orve3mz2HOZQqUL9esRU53Li7yK01GUaBRTC8Y6y9F78xU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747829149; c=relaxed/simple;
-	bh=6y6pA2v91iQmSvQgFz0Uojt+/84qWji3dUd8c5vCkkw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=idWlK6KTJb2doRgBcLHm1vuWcwbS/Kdz/L7OSz1lNemOuIF0dFLmD/+S619MRE9oObfefI7GgpmX+gp5wJ9P9O6Pyhh70jQn/Lm4QgBqdedZhDP3szK/oGvTIMRw1voM7ogkcNnXtUkFONshEmBKOXIQ2DCK1h3I0c1+cqfDzyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=pxlgghmO; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1747829171; c=relaxed/simple;
+	bh=fElIRFETYZzr4Ifj+c9+g9RbSIsYDdiYEI5XALhK2k8=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=VkywhV1PxVVR83INWELcfYo1M08LR9D3PcFQIb95By88wq3giu/naw5fOcj2q6xhV9EtIgInGfN9X96g0bDWbqa4DHIsL1uFzhIKW90CIZsoolmQXp5TEL3LQ6wnACvMBpBp52ERIE6+wyHd7egOizbzw4wA9fkbN++5hZiT98o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ynUzWTmk; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mUVRrs54; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pxlgghmO"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=fiwT5IEBfiiewAOT9kPl+ck8nR9/bB1A4OgJlEVgr4w=; b=pxlgghmOtwAjfkB5+OFBi+X16q
-	CIldROuYOtG65qBi/T1OmF9JzmMDUj2tRHenO4jH/OrGMrOwx3bvfvmOOdPMqvBBVwx8sr+sG89Pp
-	Gh2EdoAIxGHbXQV3dskV5JrwErhXiClfC051cA+F141HG83ExLpCY3hU+oL4qXp1AeH70u8DfhHWk
-	mEruWH94WUvG286y74YuXmn1bRX/MPngMEWGqPXBRt9c/F0HRPJ868HdiOPmDEkSxDeJql2Z1wJUB
-	AVxOSYRFHcQUT30ZVYrcT1AZE3ASlpFE0IFx7hGe6Cm8yDbNzqKyl94cF8BC5qB37jrCZoYQbfUwL
-	wNEdK4Jg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uHiCc-00000004ctY-0qD5;
-	Wed, 21 May 2025 12:05:42 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id A0548300583; Wed, 21 May 2025 14:05:41 +0200 (CEST)
-Date: Wed, 21 May 2025 14:05:41 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: kan.liang@linux.intel.com
-Cc: mingo@redhat.com, namhyung@kernel.org, irogers@google.com,
-	mark.rutland@arm.com, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, eranian@google.com,
-	ctshao@google.com, tmricht@linux.ibm.com, leo.yan@arm.com
-Subject: Re: [PATCH V4 02/16] perf: Only dump the throttle log for the leader
-Message-ID: <20250521120541.GD39944@noisy.programming.kicks-ass.net>
-References: <20250520181644.2673067-1-kan.liang@linux.intel.com>
- <20250520181644.2673067-3-kan.liang@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ynUzWTmk";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mUVRrs54"
+Date: Wed, 21 May 2025 12:06:05 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747829167;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hif6vAmtKI+jSy7f55iVzWHZ92pzeGZk8llFmJ+6oy4=;
+	b=ynUzWTmkn6xQ/j31/qrSYvZJSv/vllWroqu131GTK/UwlEV+YyWsozKosQvvs40FoDHSWD
+	wk1zbER5+fhx23EdvNMCKDmmLDZjrzIQCRcIUnz4GSc5cqinqhFvjcKZwSO/46nyzZeDiV
+	e+sU6nQz5lCZxZl63R7zu/x+2VhVhULvZxwbit0o2JSSsWeAOJHRCZwIG1WQ3SGXpNz1lj
+	dJC5Ibv8LMILWU9bQN2TneroYUgReqhoPUYHKlpykG9eZZaFdYUJrGsHaGjkwaO72hFVrc
+	dBMNyAy9va32kOZRdO4WdU921lD0qa6zjqn+uicOEDCiN5Wf2EpBv1MdAewYJA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747829167;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hif6vAmtKI+jSy7f55iVzWHZ92pzeGZk8llFmJ+6oy4=;
+	b=mUVRrs54zpR7n2lvBxFfXxDdu0xhujabC17Q77fQfdyoyLeczocNNefpMBF/tI7eDMalgd
+	5/LtCdlJCJHg+MDg==
+From: "tip-bot2 for Colin Ian King" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: locking/futex] selftests/futex: Fix spelling mistake
+ "unitiliazed" -> "uninitialized"
+Cc: Colin Ian King <colin.i.king@gmail.com>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250520080657.30726-1-colin.i.king@gmail.com>
+References: <20250520080657.30726-1-colin.i.king@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250520181644.2673067-3-kan.liang@linux.intel.com>
+Message-ID: <174782916588.406.1506324316964417274.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 20, 2025 at 11:16:30AM -0700, kan.liang@linux.intel.com wrote:
-> From: Kan Liang <kan.liang@linux.intel.com>
-> 
-> The PERF_RECORD_THROTTLE records are dumped for all throttled events.
-> It's not necessary for group events, which are throttled altogether.
-> 
-> Optimize it by only dump the throttle log for the leader.
-> 
-> The sample right after the THROTTLE record must be generated by the
-> actual target event. It is good enough for the perf tool to locate the
-> actual target event.
+The following commit has been merged into the locking/futex branch of tip:
 
-So while both patches change behaviour; the first patch should preserve
-all that was done and simply do more. OTOH this patch explicitly changes
-behaviour in that what was done, is now no longer done.
+Commit-ID:     78272d44970c07899c78661f6b7492b5a7e14a90
+Gitweb:        https://git.kernel.org/tip/78272d44970c07899c78661f6b7492b5a7e14a90
+Author:        Colin Ian King <colin.i.king@gmail.com>
+AuthorDate:    Tue, 20 May 2025 09:06:57 +01:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Wed, 21 May 2025 13:57:41 +02:00
 
-Are we very sure there isn't a tool that expect per event throttle
-messages?
+selftests/futex: Fix spelling mistake "unitiliazed" -> "uninitialized"
 
-I'll take the patches, but I'm somewhat suspect of this one.
+There is a spelling mistake in a fail error message. Fix it.
+
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Link: https://lore.kernel.org/r/20250520080657.30726-1-colin.i.king@gmail.com
+---
+ tools/testing/selftests/futex/functional/futex_numa_mpol.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/testing/selftests/futex/functional/futex_numa_mpol.c b/tools/testing/selftests/futex/functional/futex_numa_mpol.c
+index d18949e..20a9d3e 100644
+--- a/tools/testing/selftests/futex/functional/futex_numa_mpol.c
++++ b/tools/testing/selftests/futex/functional/futex_numa_mpol.c
+@@ -180,7 +180,7 @@ int main(int argc, char *argv[])
+ 	test_futex(futex_ptr, 0);
+ 
+ 	if (futex_numa->numa == FUTEX_NO_NODE)
+-		ksft_exit_fail_msg("NUMA node is left unitiliazed\n");
++		ksft_exit_fail_msg("NUMA node is left uninitialized\n");
+ 
+ 	ksft_print_msg("Memory too small\n");
+ 	test_futex(futex_ptr + mem_size - 4, 1);
