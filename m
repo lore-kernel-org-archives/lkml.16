@@ -1,137 +1,108 @@
-Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5909419C569
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 14:12:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70B9919994F;
+	Wed, 21 May 2025 14:12:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747836730; cv=none; b=GQESIC0+XaHn4AKJasMK48E+T7osNTx1PszCdGkbzcSfplc8fPHTawIl0P+VD/3xGxBoTM63xHK0Diqul6qrxc7SP4+hs2ZsWHck1r04rlVpEBiAC81hS6ChDrtQVk75Uzbb3/tXmW5J8vYVNBUkADPxGX9IjeeNYx660lJQuTU=
+	t=1747836779; cv=none; b=cR9MUcxmXY7SgPhnXevFCxhYwGK+PCVJ4wICtXPGrCYV4kEhTw60GcKdiyFq1gcwS2WQWYFSjKWArTu3d+4GnXTcoVysTNcnqwxGRyynTDNUz1m+TjsqxwSVZyDqyBh0RqHSAiDcl6ODqQDFnh1g5rYureZ4ed8PrZ5EMvyMblk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747836730; c=relaxed/simple;
-	bh=odsaSqefquxp3EMnxzFyTlzs+P6tOxwI1Uga5f5WlgU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Vrr9e9Fa+6+xNbah3P5FW7+Hw9lozeYIEUXhisHYywxl64I7bDHGUJjv0X7/TLe+8/3VVTuZnl/qgrts2ETsEzrXi7F6sVUmJh/vRzeJKiI5rmIOUaIyey2EvBzz5e8s7+XhKeYxgUMac1ajv9JGreO8v/ph5Hc8/tCR0hZ1kvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=nLoqpwz+; arc=none smtp.client-ip=209.85.160.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1747836779; c=relaxed/simple;
+	bh=9koPT3VkQu5e46R8uquB22uxKLgPwZcQVQd4EqXZkeU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N65b2QVS7BDLGPlxUtA13sRaL9aR0LF2LYrH0zbQ5TL4N6GqtrnX5RIodR4D3kUUI7kTEpVSWPAP8C1ACQPLx00oOjxSOq0bXeFpA51tKXExbW4cgn4Trw7v4zIGgzjofzxaGvygsA22oRid6UIoBrSNKLEAWfqUokdFQcJ8Ivw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PNdjBJ7C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="nLoqpwz+"
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-2d0d25cebfeso3236032fac.2
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 07:12:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747836727; x=1748441527; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vYTDDF5UU1bTZpFDre3P+poUO7y3Ub4h619aw333K6I=;
-        b=nLoqpwz+1l+0GgT5dslf8/b04vpVxd21VmG+2EOcHnhColudaYAgUkLlIW/vAs5NIQ
-         qKdnNKch6c89GRSR7d3XOLHDdDQjmkGbuUD4yoBgRC2L2TNh08bqCw2v8MAc1vSG13re
-         75gZCwT5Hp8yQByKnrHTuq29qUN6OCBwOAlVASufN0OE4KXKXUC20DhjA4WI7lWNWNRh
-         422MeGgg7E3ibvjJEzL4R204EYIsgAjVhNY9rmhz8nED2u0bf1LDhc6mNJWto7wVy9HQ
-         ye48C4Nl41bNrNqZbaD3YiMpV5kQ6dMj174jpbde18EsNyxcHftXneh2D+1PgqRaPW8P
-         kXdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747836727; x=1748441527;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vYTDDF5UU1bTZpFDre3P+poUO7y3Ub4h619aw333K6I=;
-        b=FdCcxF/Kcoydb3J9V3hf/ImDevLuHzBmoEI6mbtybeZAokvD6EX+PAdUw3o8B6hi+O
-         ViQE0zSBPfmjGoS/sf9lEaeiA5rDvBqyo9az8nUvgH7jBdGt2q68uSbE/Pfkxm4jCvPi
-         u8m+nc0ciqqLIXdrJUNVNYjTPCE8aJqqP6jQhLihaweVZvQ+0m1P4ILqimUjIk11zZZE
-         0VluZNucdO3cT3ZTLtu1RMR/JTYZAWYEVxNF2yBgdLdE2HTiX7QxcIBrsI/AbsGtv8Ga
-         wOMyM9aLw/+qgXi/UQ7TTqf4jg60xgugaN4bmbbWibU8kwDnYPD4LvIUez3XOcWhrplr
-         nRgg==
-X-Forwarded-Encrypted: i=1; AJvYcCVzKMwP50uNNjPt5qwr5oTATaDnHWXOi2z6Dm5wFRBql7M6aUezsGDXmyWmK2YLTDq6MmJkAndTINEhFoY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yym854+zqgXXFEBzxWsfQI6/VlooDwji2aP09pKp3MP8ApCcnjZ
-	rKoxTiPna2ABs+qh/1FCG9BWV54Z7aX6oYW7B2pJD5wdzr6A/uVYM/sYsK0m3iddaqY=
-X-Gm-Gg: ASbGnct951qIANoaWPCHc19kagJmpErrXcX0hd/aMI3JDJAXBZRgfG3JQ6wjldMHf8X
-	CxB9UJgRRH/+cwBqLK1owdUUTlsUsA8lDt+rLsTi7h2PR23JHH1AZeKnkgC1vPjoIA+Q8EGzicw
-	PGmVPyxYLfJXAfqncUJOgEP/4hFVohHHkgYFJElP4tYEgMgqGAtflk8w5E4MEaxsx2ZXhLJ3+Wz
-	Cmnd5U4dD93McFNxuQCBD5PKTH3M1hFE+74N3uBioLjI+H/t8XQgptpEig7EDV/t9APAZItd4x0
-	YpUDAxu+NuT3oUvAZolS9zpxaWk2DI5s1NgJX7vAzKkrKCbc2/SP6W5YsH+UxChLA31a+H70tOC
-	yRERW0uL1ppXrpqPQdjVZhfT4SA==
-X-Google-Smtp-Source: AGHT+IFZ2dh+kUDz4CadhBuUt+VbW2XvI2VqdXWMjeSLEb0HI1UL7Tc8JFlMvCWqx445ddJxdyhZjw==
-X-Received: by 2002:a05:6870:7994:b0:2c2:541d:2cd6 with SMTP id 586e51a60fabf-2e3c1b61385mr14163348fac.6.1747836727294;
-        Wed, 21 May 2025 07:12:07 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:d77b:6acc:2ad1:8ff? ([2600:8803:e7e4:1d00:d77b:6acc:2ad1:8ff])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-734f6b5f68asm2146882a34.66.2025.05.21.07.12.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 May 2025 07:12:05 -0700 (PDT)
-Message-ID: <14a80484-5cfa-49bb-9608-12f25a113b23@baylibre.com>
-Date: Wed, 21 May 2025 09:12:05 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PNdjBJ7C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C11FC4CEE4;
+	Wed, 21 May 2025 14:12:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747836777;
+	bh=9koPT3VkQu5e46R8uquB22uxKLgPwZcQVQd4EqXZkeU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PNdjBJ7CSO3ZqCZ/RnABu6MtND7cIX2CCbZbc/IhR5f+iSMQyGRlg5OCcEeimrO94
+	 t1yMs9apazpeGnB/ZFy9oOh/EbWe+lFx5Vp09JvkzGBKQZqjfZb2JIqBkFFE3kTlxP
+	 5RJBvrscnSmmKyT4g8NUzxRcIbSsmh4GTnWglhEknxL55oMBv7kh1RBxv92k31aWdr
+	 mBQGUFhEmfZi/0ayRewsXoxeKI1dDN/HfYk+qf/53Bp3xgo93MZKbx4sCwurPt3t5B
+	 0BJqP6HQIyGKpk7nYwS90z2kpUWlxaeKiXXzfwNE0HOMYNS7gC57t/UcZ7acItnk5O
+	 DI6lcECyRW2Tw==
+Date: Wed, 21 May 2025 16:12:51 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Christian Schrefl <chrisi.schrefl@gmail.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee@kernel.org>,
+	Daniel Almeida <daniel.almeida@collabora.com>,
+	Gerald =?iso-8859-1?Q?Wisb=F6ck?= <gerald.wisboeck@feather.ink>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] rust: miscdevice: add additional data to
+ MiscDeviceRegistration
+Message-ID: <aC3fYyvPvTB1DkeR@cassiopeiae>
+References: <20250517-b4-rust_miscdevice_registrationdata-v3-0-cdb33e228d37@gmail.com>
+ <20250517-b4-rust_miscdevice_registrationdata-v3-1-cdb33e228d37@gmail.com>
+ <aCiSRZjOETsD8MhX@pollux>
+ <2025052107-awhile-drainer-38d0@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] pwm: axi-pwmgen: add support for external clock
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: Michael Hennerich <michael.hennerich@analog.com>,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Trevor Gamblin <tgamblin@baylibre.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, linux-pwm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250520-pwm-axi-pwmgen-add-external-clock-v1-0-6cd63cc001c8@baylibre.com>
- <20250520-pwm-axi-pwmgen-add-external-clock-v1-3-6cd63cc001c8@baylibre.com>
- <zdltaexty6pzbqesoluuyluygyt6w7nq7r2wccmtfktppwuw3e@qb36fsu3jq4k>
- <0dd1a97e-ff7c-4d09-b18e-5df9944488c6@baylibre.com>
- <p3ejuwktdxcjwv43nnap5tin33ziimgxfan2xoghtaaubsxgy7@tjmwjpwy6yy5>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <p3ejuwktdxcjwv43nnap5tin33ziimgxfan2xoghtaaubsxgy7@tjmwjpwy6yy5>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2025052107-awhile-drainer-38d0@gregkh>
 
-On 5/21/25 8:54 AM, Uwe Kleine-König wrote:
-> Hello David,
+On Wed, May 21, 2025 at 01:55:36PM +0200, Greg Kroah-Hartman wrote:
+> On Sat, May 17, 2025 at 03:42:29PM +0200, Danilo Krummrich wrote:
+> > On Sat, May 17, 2025 at 01:33:49PM +0200, Christian Schrefl wrote:
+> > > +pub struct MiscDeviceRegistration<T: MiscDevice> {
+> > >      #[pin]
+> > >      inner: Opaque<bindings::miscdevice>,
+> > > +    #[pin]
+> > > +    data: UnsafePinned<T::RegistrationData>,
+> > >      _t: PhantomData<T>,
+> > >  }
+> > 
+> > I recommend not to store data within a Registration type itself.
+> > 
+> > I know that this is designed with the focus on using misc device directly from
+> > the module scope; and in this context it works great.
+> > 
+> > However, it becomes quite suboptimal when used from a driver scope. For
+> > instance, if the misc device is registered within a platform driver's probe()
+> > function.
+> > 
+> > I know this probably isn't supported yet. At least, I assume it isn't supported
+> > "officially", given that the abstraction does not provide an option to set a
+> > parent device. Yet I think we should consider it.
 > 
-> On Wed, May 21, 2025 at 08:19:51AM -0500, David Lechner wrote:
->> On 5/21/25 4:22 AM, Uwe Kleine-König wrote:
->>> Can you achieve the same effect with the (IMHO slightly nicer but
->>> hand-crafted) following patch:
->>>
->>>  	ddata = pwmchip_get_drvdata(chip);
->>>  	ddata->regmap = regmap;
->>>  
->>> -	clk = devm_clk_get_enabled(dev, NULL);
->>> -	if (IS_ERR(clk))
->>> -		return dev_err_probe(dev, PTR_ERR(clk), "failed to get clock\n");
->>> +	axi_clk = devm_clk_get_enabled(dev, "axi");
->>> +	if (IS_ERR(axi_clk))
->>> +		return dev_err_probe(dev, PTR_ERR(axi_clk), "failed to get axi clock\n");
->>>
->>> +	clk = devm_clk_get_enabled_optional(dev, "ext");
->>> +	if (IS_ERR(clk))
->>> +		return dev_err_probe(dev, PTR_ERR(clk), "failed to get ext clock\n");
->>> +	}
->>
->> The trouble with this is that it would not work with existing .dtbs
->> that don't have clock-names set. I think it would need to be more like this:
->>
->>
->> 	axi_clk = devm_clk_get_enabled(dev, NULL);
->> 	if (IS_ERR(axi_clk))
->> 		return dev_err_probe(dev, PTR_ERR(axi_clk), "failed to get axi clock\n");
->>
->> 	clk = devm_clk_get_enabled_optional(dev, "ext");
->> 	if (IS_ERR(clk))
->> 		return dev_err_probe(dev, PTR_ERR(clk), "failed to get ext clock\n");
->>
->> 	if (!clk)
->> 		clk = axi_clk
->>
+> It's going to be a requirement to properly set the parent device, and
+> as you point out, this really should be in some sort of scope, not just
+> a module.
 > 
-> If there are no clock-names, the parameter is ignored. (I didn't test,
-> only quickly checked the code.) So passing "axi" instead of NULL should
-> work and yield a more robust solution.
+> But, we have two types of users of a misc device, one like this is
+> written, for a module-scope, and one for the "normal" device scope.  The
+> device scope is going to be tricker as it can, and will, get
+> disconnected from the device separately from the misc device lifespan,
+> so when that logic is added, it's going to be tricky as you point out.
 > 
-> Best regards
-> Uwe
+> So I'll take this now, but in the future this is going to have to be
+> cleaned up and modified.
 
+I'm about to sketch up something based on this patch that works properly for
+both cases, i.e. module-scope and driver-scope.
 
-I didn't know that. So with your suggestion, I guess we would get/enable
-the same clock twice. I guess that doesn't hurt anything. I will try it.
+I think it would also be good for the misc device abstraction to demonstrate
+how to properly make class device abstractions (such as misc device, DRM device,
+input device etc.) go along with bus devices in the context of a driver.
+
+misc device isn't *the* perfect example, given that it doesn't have the typical
+create and register split and another complication is that we also have to deal
+with the module-scope case, but it's still a very good candidate given that it
+is very simple compared to other class devices.
