@@ -1,86 +1,94 @@
-Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f74.google.com (mail-wr1-f74.google.com [209.85.221.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02F9323A99D;
-	Wed, 21 May 2025 23:07:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E664220686
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 23:08:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747868826; cv=none; b=EN7h3mKXQpsuG4VWTDbr6blfDQsoRO1m+Pkr8OTHe5tglpq9zf1xfNYCyO1QcOx3eLLSzKJt17/DYto4D3AcCf2cADBOPWW7s6fc2fmpOWeU24hXemRz28YhnPUwz7iYIWeN2I5GouXAuDUtq+d2/MpBr5oXcBNCDyYDSoZpw1Y=
+	t=1747868893; cv=none; b=U4wAE15lGTVf+hBVoEVw3n17tEAs0WDC+xNlW734dxduqYONlyQxKcb/70K0k5IM5RdmDs4PzR0wvBQ9EPIAw+DnTlEOk+GmWK0Sx+uovaMJVTujQFqQ/bVTPTZ7H83AeZ7IGuKpN+7p1r7wcFR+ETo8YgKT3lvZyoA521HaJo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747868826; c=relaxed/simple;
-	bh=lVmO56p+uZGIerCgdjVgF1P4OcseONdcg4PDITx4ViY=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=p4mL6BbNpaREmSyKFRgxdD4Uxv7zv22Xz5cQTPiGhjq951ZVdOXBvd/JyRImjD9XyOmCdZZghILMn4RR6KUJ0eCIz+Z5HGpDmLOtyD6gQews9KN+pOXA7ZGqxB/c3rJM71Kd9Tja7HbUPRVKVXdw/DCzq+vC/iTB6Yg3dfu4VMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=Dm2CmnsS; arc=none smtp.client-ip=185.226.149.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
+	s=arc-20240116; t=1747868893; c=relaxed/simple;
+	bh=hMM6ZBbu1Z03i6mNXQssFFLvBk0seumlrn1yafMIhGM=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=VhzzUa1ZPIuDIQM4wBFDgqSiiF15DzZBrLzPpxOlqTWaqMQbmcsMWnpAya9q48uGOBK8tatGpw/p4WbsiPC2aCCz6jv0Vjrx5fxX08Ol/xhN02L1EdDT/sg3k5mfzn87ni8JeIVYYFPsjv6taVDv5ZazmjLUjLbzdLxQN2uJHZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ECZVUJKe; arc=none smtp.client-ip=209.85.221.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="Dm2CmnsS"
-Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
-	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.93)
-	(envelope-from <mhal@rbox.co>)
-	id 1uHsWL-004HcE-TF; Thu, 22 May 2025 01:06:45 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
-	s=selector2; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:References:
-	Cc:To:Subject:From:MIME-Version:Date:Message-ID;
-	bh=eT/TvbyrfUHVMgG9STixlXp9Jk4uKrQGdUU0vHKW7lA=; b=Dm2CmnsSNwS7RAPtj91Q+z5zcY
-	igvIEnbFzYXTy0yrhVYvt8sCQ6R+8rSVbHj/t9Cnez7SLLPo0Elkql8cLlNTX5UE/nxtSzhgHMt84
-	UGX3X5T4TqaBHoH68pX6ToSDapkk5VFCcCIVdI92dR4+idwAiU0Om2pBYEP436NvkPk+w0xwj685F
-	DKQ2ZsGij97YFfOCFhWGX/SkCpRsIIjHyrBLzdSeeGVlwOnGEvvPKtmrqLRzell2EE3pzvUR9ARGN
-	+8gWRbGXOqxMzt5m26BC+oYEADptm7zjyX7jOnS1sd3nA0VYRV3koWTgqpEFVn6h5aEXT1sES/1/T
-	EMWd3L1A==;
-Received: from [10.9.9.74] (helo=submission03.runbox)
-	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
-	(envelope-from <mhal@rbox.co>)
-	id 1uHsWK-0005RK-IG; Thu, 22 May 2025 01:06:44 +0200
-Received: by submission03.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.93)
-	id 1uHsW1-002T7Y-Fq; Thu, 22 May 2025 01:06:25 +0200
-Message-ID: <bc18e277-ef88-49e2-9e51-982752253325@rbox.co>
-Date: Thu, 22 May 2025 01:06:24 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ECZVUJKe"
+Received: by mail-wr1-f74.google.com with SMTP id ffacd0b85a97d-3a363beb5ebso3376262f8f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 16:08:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747868890; x=1748473690; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Bk7nkRmDcObELLV9MxxzQAakXc5EAbtIqWryuUZfAWw=;
+        b=ECZVUJKe999kjhp1BabGxJNk8wNze3PPeoxzeuHUcrepj/lrff6zhLxcTD0sKsUQFI
+         XV896lGzFSb8Tou7Ze9AGXMZ2gDnWeopgcykR9bxBny+MKmJstNviZLOtquPGdB6nIw1
+         apht+GRCPwRVGZLF9dHKDQkunDbxJhsr+4qJ8IiAChLxBPUEUf8NYlA20qTj+RMTXW9q
+         sYJ9jhVSZVT+YA8nOhRH8JEomhdnLJKW7fpJokZCXvTgaSE8EeDQ7AQlQYxB8EgSTeyl
+         7OVS/zcesw46plVJTII/lHTpjZt4UTW8nUYn/vELrq6Q9iu+SWCEQuOM30eelzFCV48o
+         82aA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747868890; x=1748473690;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Bk7nkRmDcObELLV9MxxzQAakXc5EAbtIqWryuUZfAWw=;
+        b=d3CRzVQvk3elpq5eDGoO5Lwxi0Z7LA8nfo3sQJ5U9cqbk9QyjjO5ba3ZXFwoejPAEO
+         Ab6wyY4+p0fuOvVHLnxDpbJiyOFGnUxgWvsboi3L04d5aLdlLD3HAikPu2EgrPA8jnHB
+         glJehQtZdsdkiyjTs90aTOeoz77jpSC9P6ua0yVfkfLT2WR8LkvLF+jza9WtFQ2m8UFW
+         aIP6rNfT5USyEe2PWKAFpaiEuNbbFoKP6f/pfMAKSHQUdYoUfQP+leuOJJl2j0CwjN39
+         YheQA3Pgqr0jI/gnOc8e443fEGoZ4bNw8msFiyUmelVuJUb3tF0Zb/KPa/lQ00YJGQho
+         cqPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW8ze78WJpReHaLyYhAzcrtERiGlg8szgqwGwPVJw5Aqbh8X4fsrwEDJ46213zw5Ox14CfhO7DgigaSM3U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBwIiMUEthfyWQhVPURU9lWPogFTejjCHAB9QRy8mPagsIx7f+
+	vjJ3oeNZ0PHs8lKMe1pZsoCB7KLrgeiF9/5TtrLpTW9Njyn465GCbtLSyM4VNUhjH3A2ILb8OaU
+	mm/EQWghOuoU466iYsQ==
+X-Google-Smtp-Source: AGHT+IG5Ak+y0NsqThQ0r4o/665aH/C7btSt6+oGGDb7eAP6t0rwrL1Vx0qKYWSkRmlwXLgAu2h86m5nPyQnFjU=
+X-Received: from wrs24.prod.google.com ([2002:a05:6000:658:b0:3a3:6a36:d12])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6000:2288:b0:3a1:f937:6e7c with SMTP id ffacd0b85a97d-3a35fe67a7bmr21858924f8f.22.1747868889839;
+ Wed, 21 May 2025 16:08:09 -0700 (PDT)
+Date: Wed, 21 May 2025 23:08:07 +0000
+In-Reply-To: <20250311133357.90322-1-richard120310@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Michal Luczaj <mhal@rbox.co>
-Subject: Re: [PATCH net-next v5 3/5] vsock/test: Introduce vsock_wait_sent()
- helper
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
- <eperezma@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>,
- virtualization@lists.linux.dev, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <20250521-vsock-linger-v5-0-94827860d1d6@rbox.co>
- <20250521-vsock-linger-v5-3-94827860d1d6@rbox.co>
- <kva35i6sjyxuugywlanlnkbdunbyauadgnciteakxu2jsb2kl7@24fgdq2glxk6>
-Content-Language: pl-PL, en-GB
-In-Reply-To: <kva35i6sjyxuugywlanlnkbdunbyauadgnciteakxu2jsb2kl7@24fgdq2glxk6>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20250311133357.90322-1-richard120310@gmail.com>
+Message-ID: <aC5c1-VXoAIctyRI@google.com>
+Subject: Re: [RFC PATCH v2] rust: list: Add examples for linked list
+From: Alice Ryhl <aliceryhl@google.com>
+To: I Hsin Cheng <richard120310@gmail.com>
+Cc: ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, 
+	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me, 
+	a.hindborg@kernel.org, tmgross@umich.edu, dakr@kernel.org, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev, 
+	jserv@ccns.ncku.edu.tw
+Content-Type: text/plain; charset="utf-8"
 
-On 5/21/25 17:01, Stefano Garzarella wrote:
-> On Wed, May 21, 2025 at 12:55:21AM +0200, Michal Luczaj wrote:
->> ...
->> +/* Wait until transport reports no data left to be sent.
->> + * Return non-zero if transport does not implement the unsent_bytes() callback.
->> + */
->> +int vsock_wait_sent(int fd)
+On Tue, Mar 11, 2025 at 09:33:57PM +0800, I Hsin Cheng wrote:
+> Add basic examples for the structure "List", also serve as the unit
+> tests for basic list methods. Including the following manipulations:
+> * List creation
+> * List emptiness check
+> * List insertion through push_front(), push_back()
+> * List item removal through pop_front(), pop_back()
+> * Push one list to another through push_all_back()
 > 
-> nit: I just see we use `bool` in the test to store the result of this 
-> function, so maybe we can return `bool` directl from here...
+> The method "remove()" doesn't have an example here because insertion
+> with push_front() or push_back() will take the ownership of the item,
+> which means we can't keep any valid reference to the node we want to
+> remove, unless Cursor is used. The remove example through Cursor is
+> already demonstrate with 'commit 52ae96f5187c ("rust: list: make the
+> cursor point between elements")' .
 > 
-> (not a strong opinion, it's fine also this).
+> Link: https://github.com/Rust-for-Linux/linux/issues/1121
+> Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
 
-Yeah, why not, let's do bool.
+LGTM.
 
-Thanks,
-Michal
-
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
