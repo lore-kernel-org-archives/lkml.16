@@ -1,55 +1,55 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E52DD23A9B8
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 22:54:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7883C23C8CD
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 22:54:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747868054; cv=none; b=CL7oi1B0HBNqXU1opaDXiS1Iin2deN1tfiedzB56StfcN099FuZYX5x7NAOIRqexctg1DZwlhRPrHMxmREpp+eWKaOu9pIpmEULwVK7afGrBAUSzWtN38XpUGRmWTaEM/sn5QfiytRalYR18J5NcsTiNARDbMXjcrtjsTP8qvz4=
+	t=1747868058; cv=none; b=Fx9f8AdyylruugzaOYJxoUZKHzsCBUca9/mcHiegeJU+Mcn6ASUzE+00SCoMIKqndbYJUEiPwn8S0B/a30JLai3AO8Utclx6CAHBVfDYGE6EpYhWLmMxHiF/C8dSzTbctynWTW2C7hmBqcl9dX9K1bOQ/HJr1BJLk15JEBQ+DS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747868054; c=relaxed/simple;
-	bh=i4qJcHC4AXmCz4+v5m4Aw3Tqwh0i/7XUMvLhkU4ocZg=;
+	s=arc-20240116; t=1747868058; c=relaxed/simple;
+	bh=+AUYSNahAWGf9W1tBYRZu9JyCsHrw3J+A7EkvETxE5o=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=Pu29aOETUODLeLT0ltf1sOB/1RBMomPOcoeEjXEHH5ZK9fAEqnrEB2cqgIu2f/QjSDjtvjkLleHBLq2IGtenWS2KvcDIZIDw+eC+bnphEbLA45QNdQ3cYP4E4eoMW8CL+yQT3rtavVPp84wNLvUZWfub8yNotkxKsQ/tlIKJFKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yuzhuo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mTzeFZxc; arc=none smtp.client-ip=209.85.216.73
+	 To:Content-Type; b=L0/zHCqvin6RU4WZ4s1/+utTz3vlfRKeRsee2pbf98isS9xi/8o7qb4SznPhaV+rdZJuwDWmDvCl+43Ge9orJExjmehRUi3EbXiD8nmVXa/dws5jHP1646ziroYP1SyBmya1znHUdLM7P+KyPfTUaEWvaL6FucS8dTBuWGHqTJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yuzhuo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1dPv3eh6; arc=none smtp.client-ip=209.85.210.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yuzhuo.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mTzeFZxc"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30e9e81d4b0so6665392a91.3
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 15:54:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1dPv3eh6"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-74299055c3dso10043518b3a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 15:54:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747868052; x=1748472852; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747868055; x=1748472855; darn=vger.kernel.org;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=MTjLK1VK7KWwntnP1zRVvSaeiNRGhMUiu9M8vIKuSKI=;
-        b=mTzeFZxcoYmGHDiOTWbMhb/A88Ce85Wa4fxnVOJmIbCIsnaMRHLMk9hLQqe5CcZ6aE
-         bKaajKTz9rp7/Kn6TEiPF7dr1f7uoY0ojA65h7pz5m60woaw8/qH0v2PYYtXHR6S24ee
-         fJURDcVsXYT4KFhaSYOhltdM3RCtJ+m2bzits018fjBbzlL3nNGRmWJgIIiq0cuRbLrB
-         gx8aWvMJuHxFsp48jP5WXzghB8kI5pwBt9E9GTYxjvDFjf6tfm+1TtfaGkQQwwfqrZeG
-         QB4rBN3NIZ2dqm6PIJ3CTFag+ZJj+DL1E+uZOY9khoQq/DrKa+BpfWv/8KUAoIT9wE6O
-         jfWQ==
+        bh=y5iEOEtDGQjkBBG8+IR+GBcP08I1z1xCE1eB2Wanmvw=;
+        b=1dPv3eh6DxGR7kFDDGZT45Z1Kvt/N0uinbb+If1cuSxfnLdvcn+yV9d5cGiIUTz3c+
+         OUOVWXLgjPvgw3GqU407+IIsOkR1MkUxM37HJW2ElRNrzY9lbOL3Y3/Mfm2j3UbklwKk
+         cfl8MsUFrTWHG1wCDejE1le19f9dGYQ/HD6L4fY3fFH9l5mfEk14XxkFqd311SHwBTzl
+         38WAzWYN8lYDzdN0Mxg3i1aDxOqCHyE8pn6OVVFooMQvGoJobEO2sBcaSAusuwNj8VVW
+         2O45rfmSpsmLjj3XvdGThTapWNC+t9eZDSEkbg8KGgtEaUBEpo2SPT8kKyoKM19LiNN1
+         ZacA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747868052; x=1748472852;
+        d=1e100.net; s=20230601; t=1747868055; x=1748472855;
         h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MTjLK1VK7KWwntnP1zRVvSaeiNRGhMUiu9M8vIKuSKI=;
-        b=IF33mBh+iiJ/Zo2ymoS43wZudHszprWS4CJ7ZZLYFrNS7oq0wwlsUqRCX0gwS4465x
-         Jg1ZBx2Np4UlJCXRKErKztXfsQpXjo/Qqo7MutqO69LHf/4o45Qvyx6dcxKwAGwAUHWB
-         9n8/0Zqoma8HZnN2KaHIXh1v5iUk8M84GxOUigTBA+8iCc+vkxZ6pp+P7fW+JJPXVOho
-         ZXQtneb+xGHQOl63NMP/C+IMKS+7Hmg/0LNj2rNel3gOCiQShpZlaNgYIlmfLJDATDgL
-         N98+dj92DFsvW08j4QHsN4uHgs/ednRpkjf/1tOlkvBocvjmVBdljOu8/WiM1pjiWTN0
-         P0Lg==
-X-Forwarded-Encrypted: i=1; AJvYcCXNQvt+CMzhbqIn/kbMORjgyYo2kPl6Qyw3sB5PODSL7p6PUgvhjbGJThhzOcRx8MQbRCD6D3i08vO3U3Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdWbec2GscnjKMEGJ6kTRJUaEzs3XjW1MKYwe9YUqWmPOsVRQs
-	QUEIBlCnZCk3uVzRk+0UUQjPjmch+Lgg5wrsY0OjmvSjzR8kB2ZWreWrpmIDrBxCsJuprXe3lLG
-	af+w62w==
-X-Google-Smtp-Source: AGHT+IFmnmxwO0MLdVfjk/jYioN8tCVaKs4uDbmfl+l9zYOM4srNZri9GV62ypwvXHSucke23gOipFD43Yk=
-X-Received: from plkg8.prod.google.com ([2002:a17:903:19c8:b0:223:242b:480a])
- (user=yuzhuo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:d543:b0:22f:af3f:bf22
- with SMTP id d9443c01a7336-231de3ba64fmr296480105ad.42.1747868052157; Wed, 21
- May 2025 15:54:12 -0700 (PDT)
-Date: Wed, 21 May 2025 15:53:04 -0700
+        bh=y5iEOEtDGQjkBBG8+IR+GBcP08I1z1xCE1eB2Wanmvw=;
+        b=cyu5wFmDdPuK/y+9EpNPig2t86haiiyAr631/hvwY652eiol7qS6BepP4YFfjEtdAW
+         5BXUIe21P3p5z981uPMiX5pYjBtjcadhOhnTQw09Az+G05jVoZY5ollqbJnMkoTqtoPO
+         mGYzX3ut4+b3SnnibR3A3D1X46fBHkOj3wcqHeVda11aVSXfVfSaKECQzADLmi5KO+np
+         R7+t+S4Vtg6dCx8vLELwa/j+mjZ5wR8uNz+0jGqcPQRYDex9vhbuAcgq1euwQRZi3DxM
+         L3AxwT1MpNBpng/MHH3B6f1OrjaKy2LVTArO837RftH1lJMXlFq7EKtQhskucj5984Rg
+         imqA==
+X-Forwarded-Encrypted: i=1; AJvYcCXdH/yKT0YkOY1RxwlrOaMAa7aN+5oc+PW3zLjLBex06/YV1R1ABMdFnqzBk4rvUUYaT+AT3T47yn9TALw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxx/iCLGg7vMNaHf4Zpk6fT8VxgoFWDt8Ks9rKsnWOudAlsHY/W
+	7MaHsYjZGikb4qy1DPfhGeuqeVoX2bMDTS5L7CkujQV3ryuAWA3rAOFcfJe4TVCyTkmEGrUE+zo
+	Uva4toA==
+X-Google-Smtp-Source: AGHT+IEK2MKOxh7O7TqCVhedlN7LWirgEvC2NFjssFnsIa6UXUWSiPhGiHliRMQVf82CzHliIwdjxuvaB50=
+X-Received: from pfbjw12.prod.google.com ([2002:a05:6a00:928c:b0:736:b2a2:5bfe])
+ (user=yuzhuo job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:3d12:b0:1f5:59e5:8ada
+ with SMTP id adf61e73a8af0-2162187a945mr31068430637.4.1747868055561; Wed, 21
+ May 2025 15:54:15 -0700 (PDT)
+Date: Wed, 21 May 2025 15:53:06 -0700
 In-Reply-To: <20250521225307.743726-1-yuzhuo@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250521225307.743726-1-yuzhuo@google.com>
 X-Mailer: git-send-email 2.49.0.1164.gab81da1b16-goog
-Message-ID: <20250521225307.743726-2-yuzhuo@google.com>
-Subject: [PATCH v1 1/4] perf utils: Add support functions for sha1 utils
+Message-ID: <20250521225307.743726-4-yuzhuo@google.com>
+Subject: [PATCH v1 3/4] perf genelf: Remove libcrypto dependency and use sha1 utils
 From: Yuzhuo Jing <yuzhuo@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -84,103 +84,119 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
-Add missing functions to the shrunk down version tools headers from the
-kernel headers to support sha1 utils.
+genelf is the only file in perf that depends on libcrypto (or openssl)
+which only calculates a Build ID (SHA1, MD5, or URANDOM).  SHA1 was
+expected to be the default option, but MD5 was used by default due to
+previous issues when linking against Java.  This commit switches genelf
+to use in-house SHA1 utils, and also removes MD5 and URANDOM options
+since we have a reliable SHA1 implementation to rely on.  It passes the
+tools/perf/tests/shell/test_java_symbol.sh test.
 
 Signed-off-by: Yuzhuo Jing <yuzhuo@google.com>
 ---
- tools/include/linux/bitops.h   | 10 ++++++++++
- tools/include/linux/compiler.h | 17 +++++++++++++++++
- tools/include/linux/string.h   | 22 ++++++++++++++++++++++
- 3 files changed, 49 insertions(+)
+ tools/perf/util/genelf.c | 72 ++++------------------------------------
+ 1 file changed, 6 insertions(+), 66 deletions(-)
 
-diff --git a/tools/include/linux/bitops.h b/tools/include/linux/bitops.h
-index b4e4cd071f8c..6a027031225c 100644
---- a/tools/include/linux/bitops.h
-+++ b/tools/include/linux/bitops.h
-@@ -89,6 +89,16 @@ static inline __u32 rol32(__u32 word, unsigned int shift)
- 	return (word << shift) | (word >> ((-shift) & 31));
- }
- 
-+/**
-+ * ror32 - rotate a 32-bit value right
-+ * @word: value to rotate
-+ * @shift: bits to roll
-+ */
-+static inline __u32 ror32(__u32 word, unsigned int shift)
-+{
-+	return (word >> (shift & 31)) | (word << ((-shift) & 31));
-+}
-+
- /**
-  * sign_extend64 - sign extend a 64-bit value using specified bit as sign-bit
-  * @value: value to sign extend
-diff --git a/tools/include/linux/compiler.h b/tools/include/linux/compiler.h
-index 9c05a59f0184..72e92b202976 100644
---- a/tools/include/linux/compiler.h
-+++ b/tools/include/linux/compiler.h
-@@ -40,6 +40,23 @@
- /* The "volatile" is due to gcc bugs */
- #define barrier() __asm__ __volatile__("": : :"memory")
- 
-+#ifndef barrier_data
-+/*
-+ * This version is i.e. to prevent dead stores elimination on @ptr
-+ * where gcc and llvm may behave differently when otherwise using
-+ * normal barrier(): while gcc behavior gets along with a normal
-+ * barrier(), llvm needs an explicit input variable to be assumed
-+ * clobbered. The issue is as follows: while the inline asm might
-+ * access any memory it wants, the compiler could have fit all of
-+ * @ptr into memory registers instead, and since @ptr never escaped
-+ * from that, it proved that the inline asm wasn't touching any of
-+ * it. This version works well with both compilers, i.e. we're telling
-+ * the compiler that the inline asm absolutely may see the contents
-+ * of @ptr. See also: https://llvm.org/bugs/show_bug.cgi?id=15495
-+ */
-+# define barrier_data(ptr) __asm__ __volatile__("": :"r"(ptr) :"memory")
-+#endif
-+
- #ifndef __always_inline
- # define __always_inline	inline __attribute__((always_inline))
+diff --git a/tools/perf/util/genelf.c b/tools/perf/util/genelf.c
+index cdce7f173d00..cfedb29260ef 100644
+--- a/tools/perf/util/genelf.c
++++ b/tools/perf/util/genelf.c
+@@ -28,24 +28,7 @@
+ #define NT_GNU_BUILD_ID 3
  #endif
-diff --git a/tools/include/linux/string.h b/tools/include/linux/string.h
-index 8499f509f03e..df3c95792a51 100644
---- a/tools/include/linux/string.h
-+++ b/tools/include/linux/string.h
-@@ -3,6 +3,7 @@
- #define _TOOLS_LINUX_STRING_H_
  
- #include <linux/types.h>	/* for size_t */
-+#include <linux/compiler.h>	/* for barrier_data */
- #include <string.h>
+-#define BUILD_ID_URANDOM /* different uuid for each run */
+-
+-#ifdef HAVE_LIBCRYPTO_SUPPORT
+-
+-#define BUILD_ID_MD5
+-#undef BUILD_ID_SHA	/* does not seem to work well when linked with Java */
+-#undef BUILD_ID_URANDOM /* different uuid for each run */
+-
+-#ifdef BUILD_ID_SHA
+-#include <openssl/sha.h>
+-#endif
+-
+-#ifdef BUILD_ID_MD5
+-#include <openssl/evp.h>
+-#include <openssl/md5.h>
+-#endif
+-#endif
+-
++#include "sha1_base.h"
  
- void *memdup(const void *src, size_t len);
-@@ -52,4 +53,25 @@ extern void remove_spaces(char *s);
+ typedef struct {
+   unsigned int namesz;  /* Size of entry's owner string */
+@@ -92,64 +75,21 @@ static Elf_Sym symtab[]={
+ 	}
+ };
  
- extern void *memchr_inv(const void *start, int c, size_t bytes);
- extern unsigned long long memparse(const char *ptr, char **retptr);
-+
-+/**
-+ * memzero_explicit - Fill a region of memory (e.g. sensitive
-+ *		      keying data) with 0s.
-+ * @s: Pointer to the start of the area.
-+ * @count: The size of the area.
-+ *
-+ * Note: usually using memset() is just fine (!), but in cases
-+ * where clearing out _local_ data at the end of a scope is
-+ * necessary, memzero_explicit() should be used instead in
-+ * order to prevent the compiler from optimising away zeroing.
-+ *
-+ * memzero_explicit() doesn't need an arch-specific version as
-+ * it just invokes the one of memset() implicitly.
-+ */
-+static inline void memzero_explicit(void *s, size_t count)
-+{
-+	memset(s, 0, count);
-+	barrier_data(s);
-+}
-+
- #endif /* _TOOLS_LINUX_STRING_H_ */
+-#ifdef BUILD_ID_URANDOM
+-static void
+-gen_build_id(struct buildid_note *note,
+-	     unsigned long load_addr __maybe_unused,
+-	     const void *code __maybe_unused,
+-	     size_t csize __maybe_unused)
+-{
+-	int fd;
+-	size_t sz = sizeof(note->build_id);
+-	ssize_t sret;
+-
+-	fd = open("/dev/urandom", O_RDONLY);
+-	if (fd == -1)
+-		err(1, "cannot access /dev/urandom for buildid");
+-
+-	sret = read(fd, note->build_id, sz);
+-
+-	close(fd);
+-
+-	if (sret != (ssize_t)sz)
+-		memset(note->build_id, 0, sz);
+-}
+-#endif
+-
+-#ifdef BUILD_ID_SHA
+ static void
+ gen_build_id(struct buildid_note *note,
+ 	     unsigned long load_addr __maybe_unused,
+ 	     const void *code,
+ 	     size_t csize)
+ {
+-	if (sizeof(note->build_id) < SHA_DIGEST_LENGTH)
+-		errx(1, "build_id too small for SHA1");
+-
+-	SHA1(code, csize, (unsigned char *)note->build_id);
+-}
+-#endif
+-
+-#ifdef BUILD_ID_MD5
+-static void
+-gen_build_id(struct buildid_note *note, unsigned long load_addr, const void *code, size_t csize)
+-{
+-	EVP_MD_CTX *mdctx;
++	struct sha1_state sctx;
+ 
+-	if (sizeof(note->build_id) < 16)
+-		errx(1, "build_id too small for MD5");
++	if (sizeof(note->build_id) < SHA1_DIGEST_SIZE)
++		errx(1, "build_id too small for SHA1");
+ 
+-	mdctx = EVP_MD_CTX_new();
+-	if (!mdctx)
+-		errx(2, "failed to create EVP_MD_CTX");
++	sha1_base_init(&sctx);
+ 
+-	EVP_DigestInit_ex(mdctx, EVP_md5(), NULL);
+-	EVP_DigestUpdate(mdctx, &load_addr, sizeof(load_addr));
+-	EVP_DigestUpdate(mdctx, code, csize);
+-	EVP_DigestFinal_ex(mdctx, (unsigned char *)note->build_id, NULL);
+-	EVP_MD_CTX_free(mdctx);
++	crypto_sha1_finup(&sctx, code, csize, (unsigned char *)note->build_id);
+ }
+-#endif
+ 
+ static int
+ jit_add_eh_frame_info(Elf *e, void* unwinding, uint64_t unwinding_header_size,
 -- 
 2.49.0.1164.gab81da1b16-goog
 
