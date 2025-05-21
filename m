@@ -1,152 +1,353 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5425F129E6E;
-	Wed, 21 May 2025 09:09:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BA17238D53;
+	Wed, 21 May 2025 09:10:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747818587; cv=none; b=CUqKIKGG8B2SprLRKi3zoIUAf94I4VdPzla4tFjn3omu8mg9+2EDsl/3rz8JMC8zm20CskJNNKvKyNJbPxjm4cXTezXQmkFM3sYkpGI4NOvCjvZIcCaPlHRBdMbkKh6wtmKGEeRKgDDb1uCt7ZHw9Gk/GTI//cUiWbB7bxA6p60=
+	t=1747818671; cv=none; b=l4CP+IwcIM6uWXcYwon5hT96Ce9ZnhmKYYJd8y2DW2BWJ/6xaTpJgcY0i2nsCGagtlmycQ+7urmmqhm/QA57UDBDjh0ELVDZr/EoBDqoGC3KZ+/hfLhCEtGSq1i38b8FDSh/0A4MaBggavh8prEs8X692Scc0BLp4v3vcyXfgn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747818587; c=relaxed/simple;
-	bh=zF8qQy0iHUZ/jPexZJZzJkDJwfohmG1IM7OmwXiH8ds=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YhQ7pXSZAfRY3Laz7Cx7jq7eLlZcWKntNPyfo+8Exyk5Eeqaxw7jvXjAaM8nwPTVhckiRjzDI3FdbWm5D0dAawaxJtqstJ3EGo3Ukzmcz+oEKKqjaounawNZzJUHcZQNXNzzBmBVqd76KB9XONWL9asDgkPdxLHVNU0wa9j9Iyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fO9/2rEb; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fO9/2rEb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52566C4CEE4;
-	Wed, 21 May 2025 09:09:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747818586;
-	bh=zF8qQy0iHUZ/jPexZJZzJkDJwfohmG1IM7OmwXiH8ds=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fO9/2rEbxBhm4URiY4oFbDobseX/aBZQSW6r5rFEEsgsgtqLJ30WxPBb6J125QDc+
-	 67ZeUguxrhAhmRgnKjSNeTIEphyLctVDd93FgPazhGU76jY4eDR05gor6K6FortYMr
-	 K25kB7k/9SsnrOM8pXRYzh9iuW8mr3Sb674F7tDaufo1P2vOMjdPTZsJVJ3JHpBSPI
-	 bQqTAT0+gIO+3DSt6lMkwPs93+NYSOc5y0hpZHuV6Wsl/MwmJJZLUyqAEc2GuUeByv
-	 f8ofze2RHd2OtYKAQUseRtFEgWgGlWCOg36DR805vyUkI2I0wtiSqvLpZUzGm0HPWT
-	 ri/HMKBvYvkkw==
-Date: Wed, 21 May 2025 11:09:44 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Shubhi Garg <shgarg@nvidia.com>
-Cc: jonathanh@nvidia.com, lee@kernel.org, robh@kernel.org, 
-	alexandre.belloni@bootlin.com, thierry.reding@gmail.com, devicetree@vger.kernel.org, 
-	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 1/6] dt-bindings: mfd: add bindings for NVIDIA VRS PSEQ
-Message-ID: <20250521-quixotic-jackdaw-of-certainty-ac02dd@kuoka>
-References: <20250520090832.3564104-1-shgarg@nvidia.com>
- <20250520090832.3564104-2-shgarg@nvidia.com>
+	s=arc-20240116; t=1747818671; c=relaxed/simple;
+	bh=siftGh43D73bCW3rfiYqiafo3E2wCnhURCeldIYzrWQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SfCvYHllr1jmNGK57Su6LuMaFhesj2sSQRGt3gXwjme4fGVX7oF6vtJG7ca7XV8irMH6bTxxPF07JrSsyV2FAwEho4EF9quQiZn61PuFXWrfeqNnpEEMBcKxrQIKYUNUnOsbKO8wmAouSo6oIj0GKX2YBBwDhihRqig9Sd3B5sU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 00AC91515;
+	Wed, 21 May 2025 02:10:39 -0700 (PDT)
+Received: from [10.57.23.70] (unknown [10.57.23.70])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3955D3F6A8;
+	Wed, 21 May 2025 02:10:48 -0700 (PDT)
+Message-ID: <c6ae4a77-6477-4e37-bca7-1ddfdfbce803@arm.com>
+Date: Wed, 21 May 2025 10:10:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250520090832.3564104-2-shgarg@nvidia.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 20/43] arm64: RME: Runtime faulting of memory
+To: Suzuki K Poulose <suzuki.poulose@arm.com>, kvm@vger.kernel.org,
+ kvmarm@lists.linux.dev
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>, Zenghui Yu <yuzenghui@huawei.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Joey Gouly <joey.gouly@arm.com>, Alexandru Elisei
+ <alexandru.elisei@arm.com>, Christoffer Dall <christoffer.dall@arm.com>,
+ Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
+ Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+ Gavin Shan <gshan@redhat.com>, Shanker Donthineni <sdonthineni@nvidia.com>,
+ Alper Gun <alpergun@google.com>, "Aneesh Kumar K . V"
+ <aneesh.kumar@kernel.org>
+References: <20250416134208.383984-1-steven.price@arm.com>
+ <20250416134208.383984-21-steven.price@arm.com>
+ <3a04995a-524c-4d07-8c8b-82930f9bca72@arm.com>
+From: Steven Price <steven.price@arm.com>
+Content-Language: en-GB
+In-Reply-To: <3a04995a-524c-4d07-8c8b-82930f9bca72@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 20, 2025 at 09:08:27AM GMT, Shubhi Garg wrote:
-> Add bindings for NVIDIA VRS (Voltage Regulator Specification) power
-> sequencer device. NVIDIA VRS PSEQ controls ON/OFF and suspend/resume
-> power sequencing of system power rails on Tegra234 SoC. This device
-> also provides 32kHz RTC support with backup battery for system timing.
->
-
-A nit, subject: drop second/last, redundant "bindings for". The
-"dt-bindings" prefix is already stating that these are bindings.
-See also:
-https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
-
-> Signed-off-by: Shubhi Garg <shgarg@nvidia.com>
-> ---
+On 19/05/2025 18:35, Suzuki K Poulose wrote:
+> Hi Steven
 > 
-> v2:
-> - fixed copyrights
-> - updated description with RTC information
-> - added status node in dtb node example
+> On 16/04/2025 14:41, Steven Price wrote:
+>> At runtime if the realm guest accesses memory which hasn't yet been
+>> mapped then KVM needs to either populate the region or fault the guest.
+>>
+>> For memory in the lower (protected) region of IPA a fresh page is
+>> provided to the RMM which will zero the contents. For memory in the
+>> upper (shared) region of IPA, the memory from the memslot is mapped
+>> into the realm VM non secure.
+>>
+>> Signed-off-by: Steven Price <steven.price@arm.com>
 > 
->  .../bindings/mfd/nvidia,vrs-pseq.yaml         | 60 +++++++++++++++++++
->  1 file changed, 60 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/nvidia,vrs-pseq.yaml
+> Please find some comments below.
 > 
-> diff --git a/Documentation/devicetree/bindings/mfd/nvidia,vrs-pseq.yaml b/Documentation/devicetree/bindings/mfd/nvidia,vrs-pseq.yaml
-> new file mode 100644
-> index 000000000000..676a29d4e1fa
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/nvidia,vrs-pseq.yaml
-> @@ -0,0 +1,60 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mfd/nvidia,vrs-pseq.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: NVIDIA Voltage Regulator Specification Power Sequencer
-> +
-> +maintainers:
-> +  - Shubhi Garg <shgarg@nvidia.com>
-> +
-> +description:
-> +  NVIDIA Voltage Regulator Specification Power Sequencer device controls
-> +  ON/OFF and suspend/resume power sequencing of system power rails for NVIDIA
-> +  SoCs. It provides 32kHz RTC clock support with backup battery for system
-> +  timing. The device also acts as an interrupt controller for managing
-> +  interrupts from the VRS power sequencer.
-> +
-> +properties:
-> +  compatible:
-> +    const: nvidia,vrs-pseq
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  interrupt-controller: true
-> +
-> +  '#interrupt-cells':
+> ...
+> 
+>> diff --git a/arch/arm64/kvm/rme.c b/arch/arm64/kvm/rme.c
+>> index f6af3ea6ea8a..b6959cd17a6c 100644
+>> --- a/arch/arm64/kvm/rme.c
+>> +++ b/arch/arm64/kvm/rme.c
+>> @@ -714,6 +714,186 @@ static int
+>> realm_create_protected_data_page(struct realm *realm,
+>>       return -ENXIO;
+>>   }
+>>   +static int fold_rtt(struct realm *realm, unsigned long addr, int
+>> level)
+>> +{
+>> +    phys_addr_t rtt_addr;
+>> +    int ret;
+>> +
+>> +    ret = realm_rtt_fold(realm, addr, level, &rtt_addr);
+>> +    if (ret)
+>> +        return ret;
+>> +
+>> +    free_delegated_granule(rtt_addr);
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +int realm_map_protected(struct realm *realm,
+>> +            unsigned long ipa,
+>> +            kvm_pfn_t pfn,
+>> +            unsigned long map_size,
+>> +            struct kvm_mmu_memory_cache *memcache)
+>> +{
+>> +    phys_addr_t phys = __pfn_to_phys(pfn);
+>> +    phys_addr_t rd = virt_to_phys(realm->rd);
+>> +    unsigned long base_ipa = ipa;
+>> +    unsigned long size;
+>> +    int map_level;
+>> +    int ret = 0;
+>> +
+>> +    if (WARN_ON(!IS_ALIGNED(map_size, RMM_PAGE_SIZE)))
+>> +        return -EINVAL;
+>> +
+>> +    if (WARN_ON(!IS_ALIGNED(ipa, map_size)))
+>> +        return -EINVAL;
+>> +
+>> +    if (IS_ALIGNED(map_size, RMM_L2_BLOCK_SIZE))
+>> +        map_level = 2;
+> 
+> minor nit : RMM_RTT_BLOCK_LEVEL
+> 
+>> +    else
+>> +        map_level = 3;
+> 
+> minor nit:  RMM_RTT_MAX_LEVEL ?
 
-Use consistent quotes, either ' or "
+Ack
 
-> +    const: 2
-> +    description:
-> +      The first cell is the IRQ number, the second cell is the trigger type.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - interrupt-controller
-> +  - "#interrupt-cells"
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        vrs@3c {
+>> +
+>> +    if (map_level < RMM_RTT_MAX_LEVEL) {
+>> +        /*
+>> +         * A temporary RTT is needed during the map, precreate it,
+>> +         * however if there is an error (e.g. missing parent tables)
+>> +         * this will be handled below.
+>> +         */
+>> +        realm_create_rtt_levels(realm, ipa, map_level,
+>> +                    RMM_RTT_MAX_LEVEL, memcache);
+>> +    }
+>> +
+>> +    for (size = 0; size < map_size; size += RMM_PAGE_SIZE) {
+>> +        if (rmi_granule_delegate(phys)) {
+>> +            /*
+>> +             * It's likely we raced with another VCPU on the same
+>> +             * fault. Assume the other VCPU has handled the fault
+>> +             * and return to the guest.
+>> +             */
+>> +            return 0;
+>> +        }
+>> +
+>> +        ret = rmi_data_create_unknown(rd, phys, ipa);
+>> +
+>> +        if (RMI_RETURN_STATUS(ret) == RMI_ERROR_RTT) {
+>> +            /* Create missing RTTs and retry */
+>> +            int level = RMI_RETURN_INDEX(ret);
+>> +
+>> +            WARN_ON(level == RMM_RTT_MAX_LEVEL);
+>> +
+>> +            ret = realm_create_rtt_levels(realm, ipa, level,
+>> +                              RMM_RTT_MAX_LEVEL,
+>> +                              memcache);
+>> +            if (ret)
+>> +                goto err_undelegate;
+>> +
+>> +            ret = rmi_data_create_unknown(rd, phys, ipa);
+>> +        }
+>> +
+>> +        if (WARN_ON(ret))
+>> +            goto err_undelegate;
+>> +
+>> +        phys += RMM_PAGE_SIZE;
+>> +        ipa += RMM_PAGE_SIZE;
+>> +    }
+>> +
+>> +    if (map_size == RMM_L2_BLOCK_SIZE) {
+>> +        ret = fold_rtt(realm, base_ipa, map_level + 1);
+>> +        if (WARN_ON(ret))
+>> +            goto err;
+>> +    }
+>> +
+>> +    return 0;
+>> +
+>> +err_undelegate:
+>> +    if (WARN_ON(rmi_granule_undelegate(phys))) {
+>> +        /* Page can't be returned to NS world so is lost */
+>> +        get_page(phys_to_page(phys));
+>> +    }
+>> +err:
+>> +    while (size > 0) {
+>> +        unsigned long data, top;
+>> +
+>> +        phys -= RMM_PAGE_SIZE;
+>> +        size -= RMM_PAGE_SIZE;
+>> +        ipa -= RMM_PAGE_SIZE;
+>> +
+>> +        WARN_ON(rmi_data_destroy(rd, ipa, &data, &top));
+>> +
+>> +        if (WARN_ON(rmi_granule_undelegate(phys))) {
+>> +            /* Page can't be returned to NS world so is lost */
+>> +            get_page(phys_to_page(phys));
+>> +        }
+>> +    }
+>> +    return -ENXIO;
+>> +}
+>> +
+>> +int realm_map_non_secure(struct realm *realm,
+>> +             unsigned long ipa,
+>> +             kvm_pfn_t pfn,
+>> +             unsigned long size,
+>> +             struct kvm_mmu_memory_cache *memcache)
+>> +{
+>> +    phys_addr_t rd = virt_to_phys(realm->rd);
+>> +    phys_addr_t phys = __pfn_to_phys(pfn);
+>> +    unsigned long offset;
+>> +    int map_size, map_level;
+>> +    int ret = 0;
+>> +
+>> +    if (WARN_ON(!IS_ALIGNED(size, RMM_PAGE_SIZE)))
+>> +        return -EINVAL;
+>> +
+>> +    if (WARN_ON(!IS_ALIGNED(ipa, size)))
+>> +        return -EINVAL;
+>> +
+>> +    if (IS_ALIGNED(size, RMM_L2_BLOCK_SIZE)) {
+>> +        map_level = 2;
+>> +        map_size = RMM_L2_BLOCK_SIZE;
+> 
+> Same here, stick to the symbols than digits.
 
-Node names should be generic. See also an explanation and list of
-examples (not exhaustive) in DT specification:
-https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
-e.g. pmic@ or something appropriate.
+Ack
 
-> +            compatible = "nvidia,vrs-pseq";
-> +            reg = <0x3c>;
-> +            interrupt-parent = <&pmc>;
-> +            interrupts = <24 IRQ_TYPE_LEVEL_LOW>;
-> +            interrupt-controller;
-> +            #interrupt-cells = <2>;
-> +       };
+>> +    } else {
+>> +        map_level = 3;
+>> +        map_size = RMM_PAGE_SIZE;
+>> +    }
+>> +
+>> +    for (offset = 0; offset < size; offset += map_size) {
+>> +        /*
+>> +         * realm_map_ipa() enforces that the memory is writable,
+> 
+> The function names seems to be obsolete, please fix.
 
-Mixed up indentation.
+realm_map_ipa() is in arch/arm64/kvm/mmu.c and contains...
 
-Best regards,
-Krzysztof
+	/*
+	 * Write permission is required for now even though it's possible to
+	 * map unprotected pages (granules) as read-only. It's impossible to
+	 * map protected pages (granules) as read-only.
+	 */
+	if (WARN_ON(!(prot & KVM_PGTABLE_PROT_W)))
+		return -EFAULT;
+
+...which is what this is referring to.
+[And now I've read your follow up email ;) ]
+
+>> +         * so for now we permit both read and write.
+>> +         */
+>> +        unsigned long desc = phys |
+>> +                     PTE_S2_MEMATTR(MT_S2_FWB_NORMAL) |
+>> +                     KVM_PTE_LEAF_ATTR_LO_S2_S2AP_R |
+>> +                     KVM_PTE_LEAF_ATTR_LO_S2_S2AP_W;
+>> +        ret = rmi_rtt_map_unprotected(rd, ipa, map_level, desc);
+>> +
+>> +        if (RMI_RETURN_STATUS(ret) == RMI_ERROR_RTT) {
+> 
+> Could we hit the following case and end up in failure ?
+> 
+> * Initially a single page is shared and the S2 is mapped
+> * Later the Realm shares the entire L2 block and encounters a fault
+>   at a new IPA within the L2 block.
+> 
+> In this case, we may try to L2 mapping when there is a L3 mapping and
+> we could encounter (RMI_ERROR_RTT, 2).
+
+Ugh! You are of course correct, this is broken. It turns out this is all
+irrelevant as things stand because we don't currently support anything
+bigger than (host) PAGE_SIZE mappings (forced in user_mem_abort()).
+
+Given this I'm very much tempted to just delete the code supporting
+block mappings for now (just set map_level to RMM_RTT_MAX_LEVEL).
+
+Longer term, I'm not sure what is the best approach, the options are:
+
+1. Drop down and map the region at L3 (ignoring conflicting entries),
+   followed by attempting to fold.
+
+2. Destroy the table and directly map at L2.
+
+Option 2 is clearly the most performant, but is potentially racy. In
+particular I'm not 100% sure whether you could end up with another
+thread attempting to map at L3 between the destroy and map, and
+therefore recreating the table.
+
+Thanks,
+Steve
+
+> 
+>> +            /* Create missing RTTs and retry */
+>> +            int level = RMI_RETURN_INDEX(ret);
+> 
+> So we should probably go down the rtt create step, with the following
+> check.
+> 
+>             if (level < map_level) {
+> 
+>> +
+>> +            ret = realm_create_rtt_levels(realm, ipa, level,
+>> +                              map_level, memcache);
+>> +            if (ret)
+>> +                return -ENXIO;
+>> +
+>> +            ret = rmi_rtt_map_unprotected(rd, ipa, map_level, desc);
+> 
+> 
+>         } else {
+> 
+> Otherwise, may be we need to do some more hard work to fix it up.
+> 
+> 1. If map_level == 3, something is terribly wrong or we raced with
+> another thread ?
+> 
+> 2. If map_level < 3 and we didn't race :
+> 
+>   a. Going one level down and creating the mappings there and then
+> folding. But we could endup dealing with ERROR_RTT,3 as in (1).
+> 
+>   b. Easiest is to destroy the table at "map_level + 1" and retry the map.
+> 
+> 
+> Suzuki
+> 
+> 
+> 
+>> +        }
+>> +        /*
+>> +         * RMI_ERROR_RTT can be reported for two reasons: either the
+>> +         * RTT tables are not there, or there is an RTTE already
+>> +         * present for the address.  The call to
+>> +         * realm_create_rtt_levels() above handles the first case, and
+>> +         * in the second case this indicates that another thread has
+>> +         * already populated the RTTE for us, so we can ignore the
+>> +         * error and continue.
+>> +         */
+>> +        if (ret && RMI_RETURN_STATUS(ret) != RMI_ERROR_RTT)
+>> +            return -ENXIO;
+>> +
+>> +        ipa += map_size;
+>> +        phys += map_size;
+>> +    }
+>> +
+>> +    return 0;
+>> +}
+>> +
+>>   static int populate_region(struct kvm *kvm,
+>>                  phys_addr_t ipa_base,
+>>                  phys_addr_t ipa_end,
+> 
 
