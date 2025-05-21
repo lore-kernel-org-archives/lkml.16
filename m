@@ -1,91 +1,211 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2C3628682;
-	Wed, 21 May 2025 14:24:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB2F71A257D;
+	Wed, 21 May 2025 14:24:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747837471; cv=none; b=T60WB2/ruCKOj6Twtsrq7twDsV4x3yee5+u+ZWNfvSyK2CTPovZXy6OEVctVwKLJaTmHzhm7cqCqyTo/A5fI5cMnjavE96k6dtbHvcdSrWCS2U+ENs91LehcEMsKsKYLz42hPuMxJFrzXHjevf2YMpI5QFkM+vqz/8MOA4THbjw=
+	t=1747837470; cv=none; b=m07viskCZbgJdRtp6gMmq1dvZaNVX0CtWN9/nQBBNwvupVPiazDowJFpj2kMqHJadLh+l96glcGnOiYpKqEoV//oYElRgSucbWFuuyNoJ91ba32uK4c5gcVgZu9VV8FW+3vZAzkEYcUB/yFHNnxNKc/necAgP06GUoLxtT9eeRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747837471; c=relaxed/simple;
-	bh=Ourow4OK6/2Cln7586tL43/CJb5AAk27N8xfphvkees=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dDGkD6m+0D1gY+PYAdjIuV4xhcanH+2/PCri8hNXNqBI0IH40AbLaVPbcxh02gU3YVtNATEQWBy5VKJB3z7EVcztkfAhBOKFktg3L77sxx/B0+9o8+hejypGlkNjb4i1kxYFMhX5Xy4EHmXF8F3qxnR60/EkB0jLkawfOOqxwvg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-01 (Coremail) with SMTP id qwCowABHtcQT4i1oHRX6AQ--.16951S2;
-	Wed, 21 May 2025 22:24:20 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: andersson@kernel.org,
-	mathieu.poirier@linaro.org,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com
-Cc: linux-remoteproc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH] remoteproc: mediatek: Add SCP watchdog handler in IRQ processing
-Date: Wed, 21 May 2025 22:24:03 +0800
-Message-ID: <20250521142404.1077-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1747837470; c=relaxed/simple;
+	bh=ooII1SG546YuRx1haJqB/YGVc4axhqFDEgHnwiiK0E8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p7WehdrwENnM2YZMA6YkGFjMig0IoM7n3R1ziqPpjYWd97bWjCCe2dyPXaudLuILo9K+InwERxoQshesgG296y3xVpsZKNIPu6q4/GYfqXsLNGCSjocK4UNphuYCng3wg+0LblVpN/iIthSrVeK5zTq0uszl30JCH5eYarpkq4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Y/jvpc/H; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Y/jvpc/H"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54LDn2TU006457;
+	Wed, 21 May 2025 14:24:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=CUmBkivY7tO/sQL1SI7gmFR8qaMp1g
+	AKSVaJ+GrGhvY=; b=Y/jvpc/H8c2Gebn0ZcHWJGrx+40mASN/UkEGB2J4AhIb57
+	VVW+plauERibi90Ja54FKix1X5C5kutduoEf9CT/mWj2SNBWAeU9weMCzf7FIbUm
+	HiafDs7LStkm00oNhikUUUO0vaA1wWUy8LytFsCtrU9t6ze5dmlax78u0nyy+VnJ
+	WoJYvyAsBFAft6KEhl0ahtRetZ3NYUq5Fmc4LxDjMdeGsJWuVQFRbwKe0+xKaKa6
+	/HDMSaM9s+ng8jFupW7ic9o/fW273hFqITbueVZEyXF0+Y9ZR32zbe/xfinZy/jN
+	vON4tKsjl8vb+5QBakf4rb/USlXOklCHvKqR7uqw==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46sg2305rc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 21 May 2025 14:24:20 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54LDctAW024664;
+	Wed, 21 May 2025 14:24:19 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46rwkr4j49-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 21 May 2025 14:24:19 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54LEOFqf49086972
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 21 May 2025 14:24:15 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7CBBF20043;
+	Wed, 21 May 2025 14:24:15 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F3FFF20040;
+	Wed, 21 May 2025 14:24:14 +0000 (GMT)
+Received: from li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com (unknown [9.87.130.155])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed, 21 May 2025 14:24:14 +0000 (GMT)
+Date: Wed, 21 May 2025 16:24:13 +0200
+From: Sumanth Korikkar <sumanthk@linux.ibm.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-mm <linux-mm@kvack.org>, Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH 1/4] mm/memory_hotplug: Add interface for runtime
+ (de)configuration of memory
+Message-ID: <aC3iDR8mB0uFWzAT@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
+References: <20241202082732.3959803-1-sumanthk@linux.ibm.com>
+ <20241202082732.3959803-2-sumanthk@linux.ibm.com>
+ <3151b9a0-3e96-4820-b6af-9f9ec4996ee1@redhat.com>
+ <Z08WpCxt4lsIsjcN@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
+ <1b9285ba-4118-4572-9392-42ec6ba6728c@redhat.com>
+ <aCx-SJdHd-3Z12af@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
+ <fca5fe72-55a8-456c-a179-56776848091d@redhat.com>
+ <aC2sUdhavboOgS83@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
+ <496e6707-bdc9-4ad2-88e2-51236549b5f2@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowABHtcQT4i1oHRX6AQ--.16951S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7GFWkXr4xCr4DGFWrXry5Arb_yoWkZrX_ua
-	s0gFZrWF1vga1Yy34IyrsavFZa9ry8Wry8KFySqas8t39xXa47try0vF4kuw1DXF15uFy5
-	Zr4v9F4fuF4xujkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbTkFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-	Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
-	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
-	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxa
-	n2IY04v7MxkF7I0En4kS14v26r1q6r43MxkIecxEwVAFwVW5XwCF04k20xvY0x0EwIxGrw
-	CFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE
-	14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2
-	IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxK
-	x2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI
-	0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUSdgAUUUUU=
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiDAUJA2gtsvlq+gACsf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <496e6707-bdc9-4ad2-88e2-51236549b5f2@redhat.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: Q6gjXwEoWQYoOp3sliZjbUuUNyqrKs_g
+X-Authority-Analysis: v=2.4 cv=RPmzH5i+ c=1 sm=1 tr=0 ts=682de214 cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=bvEob7D9_O_jlljhXYMA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDEzNyBTYWx0ZWRfX7o+5WipuuU+M stjIdMAdyweWio/VWFcfnIcikD21aSkj3Omcty8zM8johLgnCa2laa+LmLzSzuRdJvfaS0Wb2rd lC11aUE58vDn4RCbAid57cawOVjceIJ0XmCRFceXdh+HkCoC3tbHYIuyellW1DsjHREAuQSDqvQ
+ oiaIjGawlgwcw14hjZ1u6LiD7CXcaijhJxNzQptA8u6BQoxgQq+YOsndgLPzB2VWhTJeowLSQGy 9vG9ZQ2bmdhSOS21kXLciesiMe7CAQMA2mrAJx14dtk3upK44P016Np59QEv/CxXAv4wcI74SAd r02ndZFbeAx5yOLNC2uxiKMnSapB1XQiFZZkvtsJHUQ7H+B898D6Jsrc91GgWAHUIuQX1FQapgY
+ tKgYB0MKG0RMIlKpPC5W9K9DxXoS6/FDmwr+vpQaeUCiuPM3DFS4T0b36t2SFMcJidOrr7+s
+X-Proofpoint-GUID: Q6gjXwEoWQYoOp3sliZjbUuUNyqrKs_g
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-21_04,2025-05-20_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ lowpriorityscore=0 impostorscore=0 adultscore=0 priorityscore=1501
+ bulkscore=0 phishscore=0 mlxscore=0 malwarescore=0 spamscore=0
+ mlxlogscore=999 suspectscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505160000 definitions=main-2505210137
 
-In mt8195_scp_c1_irq_handler(), only the IPC interrupt bit
-(MT8192_SCP_IPC_INT_BIT) was checked., but does not handle
-when this bit is not set. This could lead to unhandled watchdog
-events. This could lead to unhandled watchdog events. A proper
-implementation can be found in mt8183_scp_irq_handler().
+> So, the same as /sys/devices/system/memory/block_size_bytes ?
+> 
+> In a future where we could have variable sized memory blocks, what would be
+> the granularity here?
 
-Add a new branch to handle SCP watchdog events when the IPC
-interrupt bit is not set.
+I wasnt aware of this variable sized memory blocks. Then either
+introduce block_size_bytes attribute inside each memoryX/ directory ? or
+add it only when variable sized memory blocks support is implemented?
 
-Fixes: 6a1c9aaf04eb ("remoteproc: mediatek: Add MT8195 SCP core 1 operations")
-Cc: stable@vger.kernel.org # v6.7
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
- drivers/remoteproc/mtk_scp.c | 2 ++
- 1 file changed, 2 insertions(+)
+> I assume, because that is assumed to be the smallest granularity in which we
+> can add_memory().
+> 
+> And the memory block size is currently always at least the storage increment
+> size, correct?
+> 
+> > 
+> > As I understand it, add_memory() operates on memory block granularity,
+> > and this is enforced by check_hotplug_memory_range(), which ensures the
+> > requested range aligns with the memory block size.
+> 
+> Yes. I was rather wondering, if we could have storage increment size >
+> memory block size.
 
-diff --git a/drivers/remoteproc/mtk_scp.c b/drivers/remoteproc/mtk_scp.c
-index 0f4a7065d0bd..316e8c98a503 100644
---- a/drivers/remoteproc/mtk_scp.c
-+++ b/drivers/remoteproc/mtk_scp.c
-@@ -273,6 +273,8 @@ static void mt8195_scp_c1_irq_handler(struct mtk_scp *scp)
- 
- 	if (scp_to_host & MT8192_SCP_IPC_INT_BIT)
- 		scp_ipi_handler(scp);
-+	else
-+		scp_wdt_handler(scp, scp_to_host);
- 
- 	writel(scp_to_host, scp->cluster->reg_base + MT8195_SSHUB2APMCU_IPC_CLR);
- }
--- 
-2.42.0.windows.2
+I tried the following:
 
+* Config1 (zvm, 8GB online + 4GB standby)
+  vmcp q v store
+  STORAGE = 8320M MAX = 2T INC = 16M STANDBY = 3968M RESERVED = 0
+  the increment size is 16MB in this case and block size is 128MB.
+
+* Config2 (zvm, 512M online + 512M standby)
+  vmcp q v storage
+  STORAGE = 512M MAX = 2T INC = 1M STANDBY = 512M RESERVED = 0
+
+  But, memory_block_size_bytes() would return max(increment_size,
+  MIN_MEMORY_BLOCK_SIZE)
+
+  In both cases, therefore, memory block size will be 128MB.
+
+
+On the other hand, I checked one of the lpars,
+the increment size is 2GB, which is greater than MIN_MEMORY_BLOCK_SIZE.
+Hence, memory block size is 2GB here.
+
+> > I was wondering about the following practical scenario:
+> > 
+> > When online memory is nearly full, the user can add a standby memory
+> > block with memmap_on_memory enabled. This allows the system to avoid
+> > consuming already scarce online memory for metadata.
+> 
+> Right, that's the use case I mentioned. But we're talking about ~ 2/4 MiB on
+> s390x for a single memory block. There are other things we have to allocate
+> memory for when onlining memory, so there is no guarantee that it would work
+> with memmap_on_memory either.
+> 
+> It makes it more likely to succeed :)
+
+You're right, I wasn't precise.
+
+> > After enabling and bringing that standby memory online, the user now
+> > has enough free online memory to add additional memory blocks without
+> > memmap_on_memory. These later blocks can provide physically contiguous
+> > memory, which is important for workloads or devices requiring continuous
+> > physical address space.
+> > 
+> > If my interpretation is correct, I see good potential for this be be
+> > useful.
+> 
+> Again, I think only in the case where we don't have have 2/4 MiB for the
+> memmap.
+
+I think, it is not 2/4Mib in every usecase.
+
+On my LPAR, the increment size is 2GB. This means 32MB struct pages
+metadata - per memory block.
+
+> > As you pointed out, how about having something similar to
+> > 73954d379efd ("dax: add a sysfs knob to control memmap_on_memory behavior")
+> 
+> Right. But here, the use case is usually (a) to add a gigantic amount of
+> memory using add_memory(), not small blocks like on s390x (b) consume the
+> memmap from (slow) special-purpose memory as well.
+> 
+> Regarding (a), the memmap could be so big that add_memory() might never
+> really work (not just because of some temporary low-memory situation).
+
+Sorry, I didnt understand it correctly. 
+regarding a): If add_memory() is performed with memmap_on_memory, altmap
+metadata should fit into that added memory right?
+
+> > 1) To configure/deconfigure a memory block
+> > /sys/firmware/memory/memoryX/config
+> > 
+> > 1 -> configure
+> > 0 -> deconfigure
+> > 
+> > 2) Determine whether memory block should have memmap_on_memory or not.
+> > /sys/firmware/memory/memoryX/memmap_on_memory
+> > 1 -> with altmap
+> > 0 -> without altmap
+> > 
+> > This attribute must be set before the memoryX is configured. Or else, it
+> > will default to CONFIG_MHP_MEMMAP_ON_MEMORY / memmap_on_memory parameter.
+> 
+> I don't have anything against that option. Just a thought if we really have
+> to introduce this right now.
+
+If there are no objections on this design, I'm happy to start exploring
+it further. Thank you
