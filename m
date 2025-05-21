@@ -1,246 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 106D723AE95;
-	Wed, 21 May 2025 23:19:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29CF1186294
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 23:19:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747869545; cv=none; b=AuY/zUXnSuHOjS6yjFnsuZQ+gYP/XV3QWyf5PrOUdCeRIIkV0Y2KL3f18ZJ4/h0lo2Ldvw9v/4gbvv9t1pAo4vapQisMSixFZ00p4ki7LDeupt53KXeMoRpK0tuw/esvUzk87z5Ji4Q8AR5rtm3j+mxZtFM42vcZOwliFlVwW10=
+	t=1747869554; cv=none; b=r1u5ILHVq9qAZMA2+7o5P6VzLyF4J/cv/6DjaixEjjiMaE1G46TToiAeuNdR/wbdXvDOEj85vbJdcW6juss9t0FAXC4XkYvwsusmt23lyiJ7nJJl5IMKOgGLUvYlwMKNxd7hilE9k9Up1XVJpcEpVG4AGKbFJfteyVb1PMYiqKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747869545; c=relaxed/simple;
-	bh=5KYpDNUpr65gculRdpQd+tomtSj8rRT5qn006JuM4Xc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=d/Zl7+V8FrhgyLpK79SwkcigAl13u+p5SHhm2Lrg10lasSWPrqlF29k8/gNegKGdpyPgzIUryzZEZD4yzAsV7zO+mvlwtnlhp0oHl5qv5RrDbtai4s/tuml7y7YvPKoM3hsnvjajHW8k2e7I/3GrbOpTDR/RyLKjcFPhkPsTXJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AFEBC4CEE4;
-	Wed, 21 May 2025 23:19:03 +0000 (UTC)
-Date: Wed, 21 May 2025 19:19:47 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] tracing: ring_buffer: Rewind persistent ring buffer
- when reboot
-Message-ID: <20250521191947.3f800c34@gandalf.local.home>
-In-Reply-To: <20250521145128.3a776466@gandalf.local.home>
-References: <174730775661.3893490.10420015749079085314.stgit@mhiramat.tok.corp.google.com>
-	<20250521145128.3a776466@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1747869554; c=relaxed/simple;
+	bh=iWq9f/iFnS0KxMlXLxgcT+1AH8kfkIjtjbz3fyWT6Us=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=axwEpbe5s9aMNJ3ZYrXJSpHNF9mYT4uFzmrxdZ53YD8PLImq4KsdxzSxA2MBx0DB8V9gd15SgipcpxpVvh+Ga8nckcNvaV8g/50oNvFEw8fbHM6zMNxKFSI5mUNRJqAYcDZCd5RuWSZXzrUqRSdLzdfFDFd952E9m0ckRsmU8fk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=SLQPXRM4; arc=none smtp.client-ip=95.215.58.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="SLQPXRM4"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747869548;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=l3nM082bM78TtBWdFK27NatUNhqNWPO8Kx/xITC8UGs=;
+	b=SLQPXRM4c2ybnviDAzkg3dcZX/UufqeoocZCLJ9yfGe3WM/k5apJrn8p3DiKZAd7Pp1vGV
+	neWg4i35MAnuqBiftk9UoRWk1KwXUEUJk5n0xfJNQ+QuNdhM8xuKus72eoweVcWtsbhGYm
+	ho3n+P/xsrJh529idIISqWdnFPcsV9w=
+From: Thorsten Blum <thorsten.blum@linux.dev>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH RESEND] drm: Use strscpy() instead of strscpy_pad()
+Date: Thu, 22 May 2025 01:18:40 +0200
+Message-ID: <20250521231841.8088-1-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, 21 May 2025 14:51:28 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+kzalloc() already zero-initializes the destination buffers, making
+strscpy() sufficient for safely copying the names. The additional
+NUL-padding performed by strscpy_pad() is unnecessary.
 
-> On Thu, 15 May 2025 20:15:56 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-> 
-> > diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> > index 6859008ca34d..48f5f248eb4c 100644
-> > --- a/kernel/trace/ring_buffer.c
-> > +++ b/kernel/trace/ring_buffer.c
-> > @@ -1358,6 +1358,13 @@ static inline void rb_inc_page(struct buffer_page **bpage)
-> >  	*bpage = list_entry(p, struct buffer_page, list);
-> >  }
-> >  
-> > +static inline void rb_dec_page(struct buffer_page **bpage)
-> > +{
-> > +	struct list_head *p = rb_list_head((*bpage)->list.prev);
-> > +
-> > +	*bpage = list_entry(p, struct buffer_page, list);
-> > +}
-> > +
-> >  static struct buffer_page *
-> >  rb_set_head_page(struct ring_buffer_per_cpu *cpu_buffer)
-> >  {
-> > @@ -1866,10 +1873,11 @@ static int rb_validate_buffer(struct buffer_data_page *dpage, int cpu)
-> >  static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
-> >  {
-> >  	struct ring_buffer_cpu_meta *meta = cpu_buffer->ring_meta;
-> > -	struct buffer_page *head_page;
-> > +	struct buffer_page *head_page, *orig_head;
-> >  	unsigned long entry_bytes = 0;
-> >  	unsigned long entries = 0;
-> >  	int ret;
-> > +	u64 ts;
-> >  	int i;
-> >  
-> >  	if (!meta || !meta->head_buffer)
-> > @@ -1885,8 +1893,93 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
-> >  	entry_bytes += local_read(&cpu_buffer->reader_page->page->commit);
-> >  	local_set(&cpu_buffer->reader_page->entries, ret);
-> >  
-> > -	head_page = cpu_buffer->head_page;
-> > +	orig_head = head_page = cpu_buffer->head_page;
-> > +	ts = head_page->page->time_stamp;
-> > +
-> > +	/*
-> > +	 * Try to rewind the head so that we can read the pages which already
-> > +	 * read in the previous boot.
-> > +	 */
-> > +	if (head_page == cpu_buffer->tail_page)
-> > +		goto rewound;  
-> 
-> Hmm, jumping to a label called "rewound" when you didn't do a rewind seems
-> confusing.
-> 
-> Perhaps call the label "skip_rewind"?
-> 
-> > +
-> > +	rb_dec_page(&head_page);
-> > +	for (i = 0; i < meta->nr_subbufs + 1; i++, rb_dec_page(&head_page)) {
-> > +
-> > +		/* Rewind until tail (writer) page. */
-> > +		if (head_page == cpu_buffer->tail_page)
-> > +			break;
-> > +
-> > +		/* Ensure the page has older data than head. */
-> > +		if (ts < head_page->page->time_stamp)
-> > +			break;
-> > +
-> > +		ts = head_page->page->time_stamp;
-> > +		/* Ensure the page has correct timestamp and some data. */
-> > +		if (!ts || rb_page_commit(head_page) == 0)
-> > +			break;
-> > +
-> > +		/* Stop rewind if the page is invalid. */
-> > +		ret = rb_validate_buffer(head_page->page, cpu_buffer->cpu);
-> > +		if (ret < 0)
-> > +			break;
-> > +
-> > +		/* Recover the number of entries and update stats. */
-> > +		local_set(&head_page->entries, ret);
-> > +		if (ret)
-> > +			local_inc(&cpu_buffer->pages_touched);
-> > +		entries += ret;
-> > +		entry_bytes += rb_page_commit(head_page);
-> > +	}
-> > +	pr_info("Rewound %d pages on cpu%d\n", i, cpu_buffer->cpu);  
-> 
-> Should state this is coming from the ring buffer and use "[%d]" for cpu
-> number as the other pr_info()'s do. Also only print if it did a rewind:
-> 
-> 	if (i)
-> 		pr_info("Ring buffer [%d] rewound %d pages\n", cpu_buffer->cpu, i);
-> 
-> 
-> > +
-> > +	/* The last rewound page must be skipped. */
-> > +	if (head_page != orig_head)
-> > +		rb_inc_page(&head_page);
-> >  
-> > +	/* If there are rewound pages, rewind the reader page too. */  
-> 
-> I would change the comment to:
-> 
-> 	/*
-> 	 * If the ring buffer was rewound, then inject the reader page
-> 	 * into the location just before the original head page.
-> 	 */
-> 
-> > +	if (head_page != orig_head) {
-> > +		struct buffer_page *bpage = orig_head;
-> > +
-> > +		rb_dec_page(&bpage);
-> > +		/*
-> > +		 * Insert the reader_page before the original head page.
-> > +		 * Since the list encode RB_PAGE flags, general list
-> > +		 * operations should be avoided.
-> > +		 */
-> > +		cpu_buffer->reader_page->list.next = &orig_head->list;
-> > +		cpu_buffer->reader_page->list.prev = orig_head->list.prev;
-> > +		orig_head->list.prev = &cpu_buffer->reader_page->list;
-> > +		bpage->list.next = &cpu_buffer->reader_page->list;
-> > +
-> > +		/* Make the head_page tthe new read page */  
-> 
-> Typo "tthe" and call it "new reader page", not "read page".
-> 
-> > +		cpu_buffer->reader_page = head_page;
-> > +		bpage = head_page;
-> > +		rb_inc_page(&head_page);
-> > +		head_page->list.prev = bpage->list.prev;
-> > +		rb_dec_page(&bpage);
-> > +		bpage->list.next = &head_page->list;
-> > +		rb_set_list_to_head(&bpage->list);
+If the destination buffer has a fixed length, strscpy() automatically
+determines its size using sizeof() when the argument is omitted. This
+makes the explicit size arguments unnecessary.
 
-When testing this patch, it kept crashing. I had to add this here:
+No functional changes intended.
 
-		cpu_buffer->pages = &head_page->list;
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+---
+ drivers/gpu/drm/drm_property.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-That's because my test would end up having cpu_buffer->pages pointing to
-the reader page, and that will cause issues later. It has to point into the
-writing portion of the buffer.
-
-> > +
-> > +		cpu_buffer->head_page = head_page;
-> > +		meta->head_buffer = (unsigned long)head_page->page;
-> > +
-> > +		/* Reset all the indexes */
-> > +		bpage = cpu_buffer->reader_page;
-> > +		meta->buffers[0] = rb_meta_subbuf_idx(meta, bpage->page);
-> > +		bpage->id = 0;
-> > +
-> > +		for (i = 0, bpage = head_page; i < meta->nr_subbufs;
-> > +		     i++, rb_inc_page(&bpage)) {
-> > +			meta->buffers[i + 1] = rb_meta_subbuf_idx(meta, bpage->page);
-> > +			bpage->id = i + 1;
-> > +		}
-
-Can we convert the above to:
-
-		for (i = 1, bpage = head_page; i < meta->nr_subbufs;
-		     i++, rb_inc_page(&bpage)) {
-			meta->buffers[i] = rb_meta_subbuf_idx(meta, bpage->page);
-			bpage->id = i;
-		}
-
-By starting i at one, we can remove the "+ 1" inside the loop. It's a bit
-cleaner that way.
-
--- Steve
-
-
-> > +
-> > +		/* We'll restart verifying from orig_head */
-> > +		head_page = orig_head;
-> > +	}
-> > +
-> > + rewound:  
-> 
->  skip_rewind:
-> 
-> Also, I know other's don't like to do this, but I do add a space before
-> labels. It makes patch diffs easier to see which functions they are,
-> otherwise the patch shows the label and not the function.
-> 
-> -- Steve
-> 
-> 
-> >  	/* If the commit_buffer is the reader page, update the commit page */
-> >  	if (meta->commit_buffer == (unsigned long)cpu_buffer->reader_page->page) {
-> >  		cpu_buffer->commit_page = cpu_buffer->reader_page;
-> > @@ -5348,7 +5441,6 @@ rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
-> >  	 */
-> >  	local_set(&cpu_buffer->reader_page->write, 0);
-> >  	local_set(&cpu_buffer->reader_page->entries, 0);
-> > -	local_set(&cpu_buffer->reader_page->page->commit, 0);
-> >  	cpu_buffer->reader_page->real_end = 0;
-> >  
-> >   spin:
-> > @@ -6642,7 +6734,6 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
-> >  		cpu_buffer->read_bytes += rb_page_size(reader);
-> >  
-> >  		/* swap the pages */
-> > -		rb_init_page(bpage);
-> >  		bpage = reader->page;
-> >  		reader->page = data_page->data;
-> >  		local_set(&reader->write, 0);  
-> 
+diff --git a/drivers/gpu/drm/drm_property.c b/drivers/gpu/drm/drm_property.c
+index 596272149a35..47f2891f3f06 100644
+--- a/drivers/gpu/drm/drm_property.c
++++ b/drivers/gpu/drm/drm_property.c
+@@ -128,7 +128,7 @@ struct drm_property *drm_property_create(struct drm_device *dev,
+ 	property->num_values = num_values;
+ 	INIT_LIST_HEAD(&property->enum_list);
+ 
+-	strscpy_pad(property->name, name, DRM_PROP_NAME_LEN);
++	strscpy(property->name, name);
+ 
+ 	list_add_tail(&property->head, &dev->mode_config.property_list);
+ 
+@@ -421,7 +421,7 @@ int drm_property_add_enum(struct drm_property *property,
+ 	if (!prop_enum)
+ 		return -ENOMEM;
+ 
+-	strscpy_pad(prop_enum->name, name, DRM_PROP_NAME_LEN);
++	strscpy(prop_enum->name, name);
+ 	prop_enum->value = value;
+ 
+ 	property->values[index] = value;
+-- 
+2.49.0
 
