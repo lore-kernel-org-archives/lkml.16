@@ -1,143 +1,195 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C178B23504B
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 06:09:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A3AB233701
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 06:09:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747807745; cv=none; b=SVOU5SE306DYy9AfZH+TT/8fNob8S90Y8TFYcIO6BeUV6wh+8WrFWTRfGX2ES97V8nTiq5LslEsrUWr+7nVF/xrMbhzSobdGqnmGTR5yhbPOaH0I37CRDPUvXA8O4bByB2ch5L9m666k3ocO7U2jL1aej1LEXPSZHNsiV2Ogbqg=
+	t=1747807761; cv=none; b=TXlmyPB+zqWDVexnIrvLvErhGprQc8liqT/MUklOFfjFonVRSsampIVzGNe13wfy5GHVUlPIn+3RvpcFRWjld4PD+Uh063v3aJyYDlFoX3aSPbftbhitfjcnm7uoWtFkpUcgw4oXU27eGpJqMoj9rVfWnNxoNGqBvSFEePm+B04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747807745; c=relaxed/simple;
-	bh=7XDeMyyzQBhrnDADaYeES07Q9+a7IWYOyBUinXwzpoU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EJb1QRAtqx5hZb7b8XUdJjI7KoGtKLyqsDwjMHTmhG8ZHGbe8BmeUaoGgN86faw+/NuBeDtVBPABLqLYvri1a90SZrwDFtRTS6JvNIPIisy33XTkq8/KgGyDVy1Uhjc5Hvw76VLeURi9QjXPyZJkvYPvx5HtREAGmuRdZ7+o+nY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=SxOXhaUV; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1747807761; c=relaxed/simple;
+	bh=L4OQtarvf/1bJvzk2XlyPF3hgExBeKzDuxc92ewezoQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tXj1LguzT9KHMa81bPgtKlSENMQ7U07XMVtfhilr7PFqII6EnfB3O1+j0nEdYpMvkD8/VUjPdUKwWjTuJlZCP5BRWlspLFIwjMojoAowJYjbB/3qIX+NDMNP0roGcBK8XZB3/FNhkFvCVKvv69LIxSMMFD4bETkcqVjOnwDDTOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=cayQCvX9; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="SxOXhaUV"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-329157c9f79so15719501fa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 23:09:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1747807742; x=1748412542; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Kk7tve0D+1Pg7EfOZteEFafimD45UzCXl3cwN1jHuNg=;
-        b=SxOXhaUVM8Yug3MTFlHn3mo7HvyWZQbqQHSrcA4f+/jrMVVL7beUkrbS731qr78esw
-         r2x4k1U2HnboF4VVIRjlqCwj032uQf1PfpbjzDfsUvDR5m/z/H7P+K3fVwlOConp+l4T
-         yFCN6npjCOh5E8oPYKLcA1J1sBw6ID5YEn8rTJQ7hMO+LyLK32kgJ18sNoR7n3YifWkR
-         FzRX5aFBp4IWVWmjoqupoMG/nZPkfnQxsP1nup6sGVVtvKCdGhyu9b51YqrlrIDpngTV
-         PMxszoxsmpI6VO2XkAF+kw9hp9gq4WpKBLYOaTUdYbUJUiusItBxCKAoqTrxixZzNOLi
-         7oFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747807742; x=1748412542;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Kk7tve0D+1Pg7EfOZteEFafimD45UzCXl3cwN1jHuNg=;
-        b=snb5rWFWxHeZWU5ltVU1RfAtYktzpOS0ZLpbPlPUt0Ydi1hSNCxbtB4GY4uIOhkknV
-         qMs63DaCB7S+WxTztPhN/B6PwvHBEJMIjgl9Qf4wi7SE4+kfxTKhyvJf8TrC0nLWZAfC
-         vCcwpiWFioULE4oU2sVaJtOaxM11XLFp1q4fLbKNunUqPArbDb6ESGMPdtSOt5ZFj5SY
-         CkrDUKThKzfB6B0DN+P4JFNrR5lbC7IFUeR1HL1LkXAhwJOqKWTQMaXLW9fIykOYhOjc
-         h9pTliB7uRmOpXNOH77j5wKPmjqIozwy9A3wLWAnBXedwfTcoWLhZMsbBh2OvTy8sOpM
-         Tp0w==
-X-Forwarded-Encrypted: i=1; AJvYcCVa3n5ATkY9pSQ+/j9Urc86ajjzxgo67xCvdBoLPvJsP6ukMs9dwtTKDMW5AtyaS6GTI4rUGCnuZZWkt+8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0ZfHKAT9tICVNAhECFx6Fx/vSZckLUIuQKm7uQZ9YmmhAxe6x
-	uZ9hX+8FZf73RjVHGGJpguqX2HtNFE3C8AX6LrP2l20X75mcBYd9AOUTqzd4y95+uCH67klTsGE
-	6iFFL2ltEqx6aKs5Qg/T584HKCx9lFCUf8fJEbfIpPQ==
-X-Gm-Gg: ASbGncvEicFuxQRNQr34nbNB1AkIO7MF8cvFVms5KhxIEq06Zsnr/xhlNdx+69wFsfu
-	thg6BUupRqFhn0hmWtwAvxWgWmKCp/lLM+vtQVTCy40NPLBXi1slUFDp6LFlgMKYh6OsUUc216G
-	LbUNWZZE7Tm/KzY9xTkHAgOOYs6clB+/8++g==
-X-Google-Smtp-Source: AGHT+IG/ijYmqO23QeZ1aE3WFzSnbU9SjPJREE5AAB9eJlu7O6h0wLI3eFr8ZVc9F4TKF98L9DEYFiwBk2o9Z5nia5s=
-X-Received: by 2002:a05:651c:f09:b0:30c:1441:9e84 with SMTP id
- 38308e7fff4ca-32807712dfamr55578621fa.13.1747807741824; Tue, 20 May 2025
- 23:09:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="cayQCvX9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1747807757;
+	bh=L4OQtarvf/1bJvzk2XlyPF3hgExBeKzDuxc92ewezoQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=cayQCvX9UdhV30m49XW8d7V4VpiLD07dq+iHWSLqUJQxxejtSuQxpKpqlAAlKsjBT
+	 L5/LPl9UmpsSLMSVI+izwuqFdHCqJELKumry4Tnm+h0Zgm6icXJ1vE4TfFRe81/VwV
+	 bTGwTrzNv+RcPkBZW22iShrRBnqK91qBCvky3HzETzi+ec2KAE2JDqn5IJnlDKCk7u
+	 RAXDLs7acDPzOmxp/xPoWhNrrHom3AXM5Vkw/awvjZbqy4TDWEocX8J4LvK+uOXmzd
+	 4yDAgjhKS5pkonaz/jHmlNfRWY8mIwOLT8UcKT8aXnKtPUQ4iSOhg/lbjykD2xSGxi
+	 g0hvxnO0/scbA==
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bbrezillon)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id B383917E0FBA;
+	Wed, 21 May 2025 08:09:16 +0200 (CEST)
+Date: Wed, 21 May 2025 08:09:13 +0200
+From: Boris Brezillon <boris.brezillon@collabora.com>
+To: =?UTF-8?B?QWRyacOhbg==?= Larumbe <adrian.larumbe@collabora.com>
+Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ kernel@collabora.com, Steven Price <steven.price@arm.com>, Rob Herring
+ <robh@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann
+ <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
+ <simona@ffwll.ch>
+Subject: Re: [PATCH v3 1/5] drm/panfrost: Add BO labelling to Panfrost
+Message-ID: <20250521080913.476d8b78@collabora.com>
+In-Reply-To: <20250520174634.353267-2-adrian.larumbe@collabora.com>
+References: <20250520174634.353267-1-adrian.larumbe@collabora.com>
+	<20250520174634.353267-2-adrian.larumbe@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250511133939.801777-1-apatel@ventanamicro.com>
- <20250511133939.801777-8-apatel@ventanamicro.com> <8734d9lkww.ffs@tglx>
-In-Reply-To: <8734d9lkww.ffs@tglx>
-From: Anup Patel <apatel@ventanamicro.com>
-Date: Wed, 21 May 2025 11:38:50 +0530
-X-Gm-Features: AX0GCFu61i3AUthehDtL9xq27qbaFkv0eH6gSaBfv0P1Z2ikn1u_-esbTNLJB7I
-Message-ID: <CAK9=C2VJ=qw+F7Q0y-6ZMMyJUaM3Aw7o4zFL0n_h=hAOSJaQKA@mail.gmail.com>
-Subject: Re: [PATCH v3 07/23] mailbox: Add RISC-V SBI message proxy (MPXY)
- based mailbox driver
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jassi Brar <jassisinghbrar@gmail.com>, "Rafael J . Wysocki" <rafael@kernel.org>, 
-	Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>, 
-	Rahul Pathak <rpathak@ventanamicro.com>, Leyfoon Tan <leyfoon.tan@starfivetech.com>, 
-	Atish Patra <atish.patra@linux.dev>, Andrew Jones <ajones@ventanamicro.com>, 
-	Samuel Holland <samuel.holland@sifive.com>, Anup Patel <anup@brainfault.org>, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 13, 2025 at 12:24=E2=80=AFAM Thomas Gleixner <tglx@linutronix.d=
-e> wrote:
->
-> On Sun, May 11 2025 at 19:09, Anup Patel wrote:
-> > +
-> > +static irqreturn_t mpxy_mbox_irq_event(int irq, void *dev_id)
-> > +{
-> > +     /* We only have MSI for notification so just wakeup IRQ thread */
-> > +     return IRQ_WAKE_THREAD;
->
-> I was idly reading through this because I looked at the irq chip.
->
-> This function is competely pointless.
->
-> > +}
-> > +
-> > +static irqreturn_t mpxy_mbox_irq_thread(int irq, void *dev_id)
-> > +{
-> > +     mpxy_mbox_peek_data(dev_id);
-> > +     return IRQ_HANDLED;
-> > +}
-> > +
-> > +static int mpxy_mbox_setup_msi(struct mbox_chan *chan,
-> > +                            struct mpxy_mbox_channel *mchan)
-> > +{
-> > +     struct device *dev =3D mchan->mbox->dev;
-> > +     int rc;
-> > +
-> > +     /* Do nothing if MSI not supported */
-> > +     if (mchan->msi_irq =3D=3D U32_MAX)
-> > +             return 0;
-> > +
-> > +     /* Fail if MSI already enabled */
-> > +     if (mchan->attrs.msi_control)
-> > +             return -EALREADY;
-> > +
-> > +     /* Request channel MSI handler */
-> > +     rc =3D request_threaded_irq(mchan->msi_irq,
-> > +                               mpxy_mbox_irq_event,
-> > +                               mpxy_mbox_irq_thread,
-> > +                               0, dev_name(dev), chan);
->
-> Just do:
->
->         rc =3D request_threaded_irq(mchan->msi_irq, NULL, mpxy_mbox_irq_t=
-hread,
->                                   0, dev_name(dev), chan);
->
-> and be done with it. The core code will happily wake up your thread.
+On Tue, 20 May 2025 18:43:58 +0100
+Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com> wrote:
 
-I did not see the irq_default_primary_handler() set by irq core.
-Thanks for catching it, I will update in the next revision.
+> Functions for labelling UM-exposed an internal BOs are provided. An
+> example of the latter would be the Perfcnt sample buffer.
+>=20
+> This commit is done in preparation of a following one that will allow
+> UM to set BO labels through a new ioctl().
+>=20
+> Signed-off-by: Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com>
+> Reviewed-by: Steven Price <steven.price@arm.com>
 
-Regards,
-Anup
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+
+> ---
+>  drivers/gpu/drm/panfrost/panfrost_gem.c | 42 +++++++++++++++++++++++++
+>  drivers/gpu/drm/panfrost/panfrost_gem.h | 17 ++++++++++
+>  2 files changed, 59 insertions(+)
+>=20
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_gem.c b/drivers/gpu/drm/pa=
+nfrost/panfrost_gem.c
+> index 963f04ba2de6..4c5be7ccc9cc 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_gem.c
+> +++ b/drivers/gpu/drm/panfrost/panfrost_gem.c
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  /* Copyright 2019 Linaro, Ltd, Rob Herring <robh@kernel.org> */
+> =20
+> +#include <linux/cleanup.h>
+>  #include <linux/err.h>
+>  #include <linux/slab.h>
+>  #include <linux/dma-buf.h>
+> @@ -35,6 +36,9 @@ static void panfrost_gem_free_object(struct drm_gem_obj=
+ect *obj)
+>  	 */
+>  	WARN_ON_ONCE(!list_empty(&bo->mappings.list));
+> =20
+> +	kfree_const(bo->label.str);
+> +	mutex_destroy(&bo->label.lock);
+> +
+>  	if (bo->sgts) {
+>  		int i;
+>  		int n_sgt =3D bo->base.base.size / SZ_2M;
+> @@ -260,6 +264,7 @@ struct drm_gem_object *panfrost_gem_create_object(str=
+uct drm_device *dev, size_t
+>  	mutex_init(&obj->mappings.lock);
+>  	obj->base.base.funcs =3D &panfrost_gem_funcs;
+>  	obj->base.map_wc =3D !pfdev->coherent;
+> +	mutex_init(&obj->label.lock);
+> =20
+>  	return &obj->base.base;
+>  }
+> @@ -302,3 +307,40 @@ panfrost_gem_prime_import_sg_table(struct drm_device=
+ *dev,
+> =20
+>  	return obj;
+>  }
+> +
+> +void
+> +panfrost_gem_set_label(struct drm_gem_object *obj, const char *label)
+> +{
+> +	struct panfrost_gem_object *bo =3D to_panfrost_bo(obj);
+> +	const char *old_label;
+> +
+> +	scoped_guard(mutex, &bo->label.lock) {
+> +		old_label =3D bo->label.str;
+> +		bo->label.str =3D label;
+> +	}
+> +
+> +	kfree_const(old_label);
+> +}
+> +
+> +void
+> +panfrost_gem_internal_set_label(struct drm_gem_object *obj, const char *=
+label)
+> +{
+> +	struct panfrost_gem_object *bo =3D to_panfrost_bo(obj);
+> +	const char *str;
+> +
+> +	/* We should never attempt labelling a UM-exposed GEM object */
+> +	if (drm_WARN_ON(bo->base.base.dev, bo->base.base.handle_count > 0))
+> +		return;
+> +
+> +	if (!label)
+> +		return;
+> +
+> +	str =3D kstrdup_const(label, GFP_KERNEL);
+> +	if (!str) {
+> +		/* Failing to allocate memory for a label isn't a fatal condition */
+> +		drm_warn(bo->base.base.dev, "Not enough memory to allocate BO label");
+> +		return;
+> +	}
+> +
+> +	panfrost_gem_set_label(obj, str);
+> +}
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_gem.h b/drivers/gpu/drm/pa=
+nfrost/panfrost_gem.h
+> index 7516b7ecf7fe..6c187b9b66fc 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_gem.h
+> +++ b/drivers/gpu/drm/panfrost/panfrost_gem.h
+> @@ -41,6 +41,20 @@ struct panfrost_gem_object {
+>  	 */
+>  	size_t heap_rss_size;
+> =20
+> +	/**
+> +	 * @label: BO tagging fields. The label can be assigned within the
+> +	 * driver itself or through a specific IOCTL.
+> +	 */
+> +	struct {
+> +		/**
+> +		 * @label.str: Pointer to NULL-terminated string,
+> +		 */
+> +		const char *str;
+> +
+> +		/** @lock.str: Protects access to the @label.str field. */
+> +		struct mutex lock;
+> +	} label;
+> +
+>  	bool noexec		:1;
+>  	bool is_heap		:1;
+>  };
+> @@ -89,4 +103,7 @@ void panfrost_gem_teardown_mappings_locked(struct panf=
+rost_gem_object *bo);
+>  int panfrost_gem_shrinker_init(struct drm_device *dev);
+>  void panfrost_gem_shrinker_cleanup(struct drm_device *dev);
+> =20
+> +void panfrost_gem_set_label(struct drm_gem_object *obj, const char *labe=
+l);
+> +void panfrost_gem_internal_set_label(struct drm_gem_object *obj, const c=
+har *label);
+> +
+>  #endif /* __PANFROST_GEM_H__ */
+>=20
+> base-commit: 9ff4fdf4f44b69237c0afc1d3a8dac916ce66f3e
+
