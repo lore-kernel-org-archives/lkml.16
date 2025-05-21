@@ -1,110 +1,206 @@
-Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8C541372;
-	Wed, 21 May 2025 16:17:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7734617A310
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 16:17:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747844223; cv=none; b=ZJOzs5fx7KE5AFe13+zsgV9dv5X0k0mm0vJzmeLby+V12beZtu2jkXKo0KLAatfVoXLlujdti4WUOn87UtJaCFQQufF26wlYwX85Fa+aP6y6Nt7e2/eQ3WrE3Ftn+OsJCRl1ntZZmF1JMcYDWuNmHzuXgOjAEVptIXNszpNVfZA=
+	t=1747844229; cv=none; b=qpLCSF+yR4ROLBUKiov6wals/2yvAtwq0RadoJ6clRbSx+bZeluC37CWdj8Au/74BTAuIHLtC7PV2IasV0fHZurkYV400954qaSXijzOc5LYjPFLIOlCybihL3kjruSpm7cxVtQ/oPbIO9lUo+ocsozxOzZXcaalbmHyBqS1Wlc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747844223; c=relaxed/simple;
-	bh=2dtOAUddtSvsu415GWAbHa+laloC6JCGcRZlcSsx8fw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=o/ReQdNhFIFymBEXvbMOlNGcvm1bP65JY85IZMJEf7ecS2N8QW9/BXsOJ4yASQm0mZJio3c7uXLU9hAyqECUCiAB6x+7Xl6qKXpIPoEaIH8ETdaqyc0QEOpCIgJG3cygrjQfFIpm5PY2Ow2rCbeXbxIBJpxWVrVx3lEP3AH8P8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CRc3HZPQ; arc=none smtp.client-ip=209.85.167.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747844229; c=relaxed/simple;
+	bh=IOvjsG0sugglptp4PGCfbQ+YKLHnzj68iHSyQ277vXk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nf24MCrefMI86pH6z5AUmJ0Eb15iKmasNNjTtZyqOY8xt/reSAA+5b9nsh1lVNP+e6F/TxMJ/s34GszS9eHcdkUy7sjILb3ll5UZIAIfUsbpEq2ywNgEhKZfu2vZUrlUMx3cWJHTVn1yc7BnE1eATdOW3zocvEcL6XXslzTBjmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zU8fPcB9; arc=none smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CRc3HZPQ"
-Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-3fe83c8cbdbso2554709b6e.3;
-        Wed, 21 May 2025 09:17:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zU8fPcB9"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-47e9fea29easo1782491cf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 09:17:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747844221; x=1748449021; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1747844224; x=1748449024; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=S82yr5lePzBSesD0K5DFXc8OPBPiv5saKdlDUFM2LMo=;
-        b=CRc3HZPQIG27tuXuuX2DcLWOKQW3aiVp410Xfifh9m7foAdNs1+HDaMPs/rOI8ORzF
-         ETi36i3OoEWqg3I6RxbIur4GVE5N3Mmscn7Is4Ur9BrNhbkPU8hAgM6b08GmWop8mCiI
-         rxs1HWhOhMxKbWXAvBUUBB6QJScE7Yb+0UnDLgfVw4/KBrQW6iws6nNNicyvWX4J7IYv
-         WXUAzBzvy821zYM44zjrifE8O7Hhg9xj/mefIeJE40eTXRNWPqekfmKerS3MLR/KjNJk
-         +EDBPa8xoI6kEan/W+EXMgNasMmecd+5CS5Vzv1ExiGxsjKtq2Ng87l4rzkHu/sIy+Ks
-         HJxw==
+        bh=2su35M/1woi88PA/W3LYgGvlRpYxMTPNv9iFOVqohJU=;
+        b=zU8fPcB9JYAEl5q3lEZQTuSaeAGYEPuhzYVtoxdS+442yeHl+WbK9CihtCU2a5Z3MJ
+         oNxuR/v2fSdjJvUGz/vaEYjXOnhUOchS3EFegUUmynshkfQ5huNNzB/NHnR6/thhoRQ4
+         5Hn7d6oa6RWqR9jHZzcApD/KBj9JDa7KfsLSVRW4GKRsWbxoVLaRG/zTlu5JZtVzZjB2
+         dM22L4eDM9QhLTMmNd6OjKwZaZPd071u5w4w3pes3ihIJN/3Smyt3upfi4my7KF2oouT
+         mSM8zMg2esmmZu/dm5LlsWkkKzN8EF3WXc59TEyXqdLhao1cXUI8Lhj2JPiMgCr3eSG4
+         EoYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747844221; x=1748449021;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1747844224; x=1748449024;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=S82yr5lePzBSesD0K5DFXc8OPBPiv5saKdlDUFM2LMo=;
-        b=lZZkhljN8CQeCx78/Ozp52/X3MqWa3MVvuW0pSDhk6NrCfwXhd4cw93fKVyUg0Mvh4
-         1DNuIUo9DcBTRov6ndtQTClLOyiUqkfbDlQ5Ms/sT1afIUaCWWHi5F6gUKxUaLKegSbc
-         aYjG3rbnt1KpJp7p+jaTcmwxcQjqdFWewwYV1BfyMgO3O3bfcl5bRNsCbURJZM3ixa18
-         eIPkBsV9d5WEyN8c+xFRK7a9L2fta4C+DcRNoNvtgP19yqt7X3pLbvx7OZpMT3A8CIdU
-         z1OD2aPjuJQYuuQHm9UvR0U4j+BnAWNtqFFGtMeXhEXth9Jfv+QS8IZiDQM3AzeP5zes
-         Pweg==
-X-Forwarded-Encrypted: i=1; AJvYcCXsoXw4Y0a9nbMxeH6l/u0CqyToMYXBA7PIIk7+VMVMaapDf7R1Sm4uAvuhDtEvbhK1oWm8rMarztELN069LjD/Crn1@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrB2Y565thiUL55nSwHtPGhhC3Wv63kh1VwH6hk6A1/q0j2aiw
-	qMXMSeR6W6WEtzi65tcPN3CkH9g4JiykAXJCGz4ch+MEqBOLOna/B1rLJfChBw==
-X-Gm-Gg: ASbGnctCXdpzhTEQPGQJYQHC8JhQSyx9ozD2ynZeXs2NaRCcqXWb3rXLuKfi4T8N56N
-	+JZVAQ79N1zVRA2UMGrGJ+cJJj2lmVnGj+LRWRSXv1yK+euIKWo+MJNLdFIKOCbcJ+qQ4YlduDQ
-	GtmPt3LrSIJkRO1UE5USWzdA0pCDVSvK/SgCY5rofQs7Lp3vDTPIS4vQjw/jAwRiXiC24sCdxzR
-	tX7foMwWQtiaq3RLFr1wBoyqZCsRq28qR0QICRefNzrsXsEsDpoQ4zehgWhtduN6HFysFsnzu8Q
-	tzRMnmqMUuqwQk4rTsyNXXy9t1f3h5Fi1NzkkY4mgDTVlZ+sWN+WI8QQoxgWfg+24jiF2kq/EqZ
-	d+iHvvsLffsaFm+P27A==
-X-Google-Smtp-Source: AGHT+IFmzQsQ0bpXXAkiXBa+TSHO8qNIF6q/Ml7bs/9rjpm0CwHDGg5gOnsSjELLHCAw9jmGLfBG0g==
-X-Received: by 2002:a05:6808:624b:b0:3f6:8c64:8bc8 with SMTP id 5614622812f47-404da82c656mr9629207b6e.38.1747844220776;
-        Wed, 21 May 2025 09:17:00 -0700 (PDT)
-Received: from localhost.localdomain.adc.delllabs.net ([143.166.81.254])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-404d9809bccsm2180129b6e.29.2025.05.21.09.17.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 09:17:00 -0700 (PDT)
-From: Stuart Hayes <stuart.w.hayes@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org
-Cc: Stuart Hayes <stuart.w.hayes@gmail.com>
-Subject: [PATCH 2/2] platform/x86: dell_rbu: Stop overwriting data buffer
-Date: Wed, 21 May 2025 11:16:39 -0500
-Message-ID: <20250521161639.47357-3-stuart.w.hayes@gmail.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250521161639.47357-1-stuart.w.hayes@gmail.com>
-References: <20250521161639.47357-1-stuart.w.hayes@gmail.com>
+        bh=2su35M/1woi88PA/W3LYgGvlRpYxMTPNv9iFOVqohJU=;
+        b=SznurucjvAmWZTnMkVSpuWha0fmvZ7vhk7qoMWoUXs5eqAb107SxNGc9Rahy50iJLg
+         ijVKgZMJI3xrW0qGGEB/gC6M6zaMDfSd3mZweUZjhwJ4FCl8ntVqWKqZD5KO8w4oz5Em
+         sFCZvmG85m8VVnSrsZnF226LihwigoPLVPIVlGgqfdtOXyulIzTe8mO26c+mrXXcTu/y
+         7UTzi44206RhqE2Nd7d3TDLYps1N1USc10lW7AX6Dqxd4Odmtc03juAQsPgCEMm9IVeY
+         uZR8eSNo26+9z8pBUx+28bZjAMe1bub4Ipu4Aac9gVsQf2yULBkhlNVd6ISLkh2pNorW
+         Jurg==
+X-Forwarded-Encrypted: i=1; AJvYcCUvQ2qeDj+U8N2ECf8OUOOVqndw9cGzC/+mkJ+qjHjpTeV78TjYcd7/+q3btAkUiqu7v2dZTRnKWZj5fxM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywc3zFfAfN2b2bgRBMRd/ibzrmKExe+YiRj+cAFbTnhQFsfen+g
+	AOdJ1WWwntqQSI7og69QgjXdpDqYVsN9auABtTYh8/6EJ8X37XkdR5f78RYpUpEIPslY6g7qNGR
+	VtSFXU2RwDxHrumuBMDVvRdYwCcGT6i2y8h8rOlPu
+X-Gm-Gg: ASbGncsoXJpbFogbTlCOv9PQH1sAj801Y18qR81zTXrNyxHOqaxxwM+Ge39Tzyx6s0E
+	ZaIWKDLGSo+MfYBbVDVZ/4mk3HTQBAzuvNIj02/XShlWDaak1LSRJVow4Zkcj+OJBKeoJAcY2Vm
+	00c4zRgMwZMg4ahwB2RnEMeEZJjqnJqycPwHUtlAfrE51GDJC7N1kaWtW4PN3hswVaL7LYZtz3C
+	A==
+X-Google-Smtp-Source: AGHT+IEuQqqcPpxUbfAIyCjihAWxW6OtiHWuZOiPIv9/nbxruNyxnYM8BWux4MlQrcGYdr4v2ORrHqQZzS9xhb9/zhE=
+X-Received: by 2002:a05:622a:449:b0:494:4aa0:ad5b with SMTP id
+ d75a77b69052e-4958cc22bc1mr16836641cf.2.1747844223803; Wed, 21 May 2025
+ 09:17:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250517000739.5930-1-surenb@google.com> <20250520231620.15259-1-cachen@purestorage.com>
+ <CAJuCfpEz2mbVmGJnp0JHKsip2HVkp+=yHOj3oRtDrKzXXG5Xag@mail.gmail.com>
+ <CALCePG1uoNN4vB3HguOi+ZYjwUcTPHmtp4RCZey0r6qCUJMLCg@mail.gmail.com>
+ <CAJuCfpF+YYBEZPmf-+k7N05R+T96MM3nzegcGWOPguX=Xu8ANA@mail.gmail.com> <CAJuCfpEmqtcrvuSxTzkt28Yf+x4mfDKfWCH_25H+4uDHXaie6g@mail.gmail.com>
+In-Reply-To: <CAJuCfpEmqtcrvuSxTzkt28Yf+x4mfDKfWCH_25H+4uDHXaie6g@mail.gmail.com>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Wed, 21 May 2025 09:16:52 -0700
+X-Gm-Features: AX0GCFu09bEI8eb2_SwUKuimcpX9e4GHOBrkheslsnz0f2SFy9hm_tjUlV8oiaA
+Message-ID: <CAJuCfpEyX-2Uh=nAW3w8VyOMKKTQejbn1hq4BpH2d=rDZ-beSQ@mail.gmail.com>
+Subject: Re: comments on patch "alloc_tag: allocate percpu counters for module
+ tags dynamically"
+To: Casey Chen <cachen@purestorage.com>
+Cc: 00107082@163.com, akpm@linux-foundation.org, cl@gentwo.org, 
+	dennis@kernel.org, kent.overstreet@linux.dev, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, pasha.tatashin@soleen.com, tj@kernel.org, 
+	yzhong@purestorage.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The dell_rbu driver will use memset to clear the data held by each packet
-when it is no longer needed (when the driver is unloaded, the packet size
-is changed, etc).
+On Tue, May 20, 2025 at 6:22=E2=80=AFPM Suren Baghdasaryan <surenb@google.c=
+om> wrote:
+>
+> On Wed, May 21, 2025 at 12:45=E2=80=AFAM Suren Baghdasaryan <surenb@googl=
+e.com> wrote:
+> >
+> > On Tue, May 20, 2025 at 11:48=E2=80=AFPM Casey Chen <cachen@purestorage=
+.com> wrote:
+> > >
+> > > On Tue, May 20, 2025 at 4:26=E2=80=AFPM Suren Baghdasaryan <surenb@go=
+ogle.com> wrote:
+> > > >
+> > > > On Tue, May 20, 2025 at 4:16=E2=80=AFPM Casey Chen <cachen@purestor=
+age.com> wrote:
+> > > > >
+> > > > > Hi Suren,
+> > > >
+> > > > Hi Casey,
+> > > >
+> > > > >
+> > > > > I have two questions on this patch.
+> > > > > 1. If load_module() fails to allocate memory for percpu counters,=
+ should we call codetag_free_module_sections() to clean up module tags memo=
+ry ?
+> > > >
+> > > > Does this address your question:
+> > > > https://lore.kernel.org/all/20250518101212.19930-1-00107082@163.com=
+/
+> > > >
+> > >
+> > > module_deallocate() is called in error handling of load_module(). And
+> > > codetag_load_module() is at the very end of load_module(). If counter
+> > > allocation fails, it doesn't go to the error path to clean up module
+> > > tag memory.
+> >
+> > Ah, right. I didn't have the code in front of me but now I see what
+> > you mean. codetag_load_module() does not return a fault if percpu
+> > counters fail to allocate.
+> >
+> > >
+> > > My code base is at a5806cd506af ("Linux 6.15-rc7")
+> > > 3250 /*
+> > > 3251  * Allocate and load the module: note that size of section 0 is =
+always
+> > > 3252  * zero, and we rely on this for optional sections.
+> > > 3253  */
+> > > 3254 static int load_module(struct load_info *info, const char __user=
+ *uargs,
+> > > 3255                        int flags)
+> > > 3256 {
+> > > ...
+> > > 3403
+> > > 3404         codetag_load_module(mod);
+> > > 3405
+> > > 3406         /* Done! */
+> > > 3407         trace_module_load(mod);
+> > > 3408
+> > > 3409         return do_init_module(mod);
+> > > ...
+> > > 3445  free_module:
+> > > 3446         mod_stat_bump_invalid(info, flags);
+> > > 3447         /* Free lock-classes; relies on the preceding sync_rcu()=
+ */
+> > > 3448         for_class_mod_mem_type(type, core_data) {
+> > > 3449                 lockdep_free_key_range(mod->mem[type].base,
+> > > 3450                                        mod->mem[type].size);
+> > > 3451         }
+> > > 3452
+> > > 3453         module_memory_restore_rox(mod);
+> > > 3454         module_deallocate(mod, info);
+> > >
+> > >
+> > > > > 2. How about moving percpu counters allocation to move_module() w=
+here codetag_alloc_module_section() is called ? So they can be cleaned up t=
+ogether.
+> > > >
+> > > > That would not work because tag->counters are initialized with NULL
+> > > > after move_module() executes, so if we allocate there our allocatio=
+ns
+> > > > will be overridden. We have to do that at the end of load_module()
+> > > > where codetag_load_module() is.
+> > >
+> > > codetag_alloc_module_section() is called in move_module() to allocate
+> > > module tag memory. I mean we can also allocate memory for percpu
+> > > counters inside move_module().
+> >
+> > I thought you were suggesting to allocate percpu counters inside
+> > codetag_alloc_module_section(). I guess we could introduce another
+> > callback to allocate these counters at the end of the move_module(). I
+> > think simpler option is to let codetag_load_module() to fail and
+> > handle that failure, OTOH that means that we do more work before
+> > failing... Let me think some more on which way is preferable and I'll
+> > post a fixup to my earlier patch.
+>
+> After inspecting the code some more I'm leaning towards a simpler
+> solution of letting codetag_load_module() to return failure and
+> handling it with codetag_free_module_sections(). This would avoid
+> introducing additional hook inside move_module(). I'll wait until
+> tomorrow and if no objections received will post a fixup to my
+> previous patch.
 
-The amount of memory that is cleared is (currently) the normal packet
-size.  However, the last packet in the list may be smaller.  Fix this to
-only clear the memory actually used by each packet, to prevent it from
-writing past the end of data buffer.
+Posted the fix at
+https://lore.kernel.org/all/20250521160602.1940771-1-surenb@google.com/
 
-Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
----
- drivers/platform/x86/dell/dell_rbu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/platform/x86/dell/dell_rbu.c b/drivers/platform/x86/dell/dell_rbu.c
-index 6a602a80160a..bedf03fa4f41 100644
---- a/drivers/platform/x86/dell/dell_rbu.c
-+++ b/drivers/platform/x86/dell/dell_rbu.c
-@@ -322,7 +322,7 @@ static void packet_empty_list(void)
- 		 * zero out the RBU packet memory before freeing
- 		 * to make sure there are no stale RBU packets left in memory
- 		 */
--		memset(newpacket->data, 0, rbu_data.packetsize);
-+		memset(newpacket->data, 0, newpacket->length);
- 		set_memory_wb((unsigned long)newpacket->data,
- 			1 << newpacket->ordernum);
- 		free_pages((unsigned long) newpacket->data,
--- 
-2.47.1
-
+>
+> >
+> > > We have implemented such a thing in our code base and it works fine.
+> > > Just do it right after copying ELF sections to memory. If it fails it
+> > > goes to the error path and calls codetag_free_module_sections() to
+> > > clean up.
+> > >
+> > > 2650                 if (codetag_needs_module_section(mod, sname,
+> > > shdr->sh_size)) {
+> > > 2651                         dest =3D codetag_alloc_module_section(mo=
+d,
+> > > sname, shdr->sh_size,
+> > > 2652
+> > > arch_mod_section_prepend(mod, i), shdr->sh_addralign);
+> > >
+> > > > Thanks,
+> > > > Suren.
+> > > >
+> > > > >
+> > > > > Thanks,
+> > > > > Casey
