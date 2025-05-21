@@ -1,170 +1,146 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96D5B25D548
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 17:01:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24E0A22F15E;
+	Wed, 21 May 2025 17:01:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747846873; cv=none; b=QvjzuodOFFWh5dMhBHEwYXrqO5UqVHesz3fwFl2ryIy+W22/RFH6T7eddhIt0nTN5ssnSqnp+gDJXR4dnIEIpjJfbeUvG6qkZKQEBoZpQ3ttpsnvdLQzFmv57+FQVNTODLHFehx0Nk+cl6dWr/xKgM5uzg3A8P+9unTiiNVttNE=
+	t=1747846912; cv=none; b=WltghUFFMw1f4J5mJKck/N9hFHQi87Ddhz2r9Gud2XAuVNLvxUry/dA1Ige5DxVZbGAwpHUmUUPi+rZM5LpEASXuRh+wW8u8xCM8u6eSULj7Ozrbz25AkQZGJ6MjO18kjegI4PbhRmIZlgcJZZ2rhtpBWSSe7mFFyqjql3IWr4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747846873; c=relaxed/simple;
-	bh=W2xFQ+2/E/Rk+8ShlLetpjcpac5haLT7J5spEwuRII0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bZCxGF843skXtBV1sCoownDuuCfw4iieABIzwGqW6mxSe5zFcsGmKo7gUJeQs7w96pxJJXPeidsQQqcjKui85W4wXWzbB74cy+9bbsWAzUjbhJ47dDRPEY3CVEs77ZWwhf8IHc60723bvg1yXCpXHMmXVNF8CakgvQQ39ebbXNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=VcafkNJn; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1747846912; c=relaxed/simple;
+	bh=1VT/9jZFLOXENQjEMSO3cV9vUhB4/4XxiCpXx9AgHhc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O71NGXj7tt9OJ/5XOIyOrUAlDxeJfQw6r6OOr+p5qUz+VSZXJl3WTcNo07PMjbVoclXkXrqDM+IC4tMvu6mZzpfP2RK32Zmzlg/K9oI770gDFDKIDfC/dfRUC4p0fZzv1FaBNY5xiD+gi4NoMH0pWjC5XoqQIAbmXZXmFE3jivQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YEUWSBcZ; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="VcafkNJn"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54L9XNRs027639
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 17:01:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	s9XUDoddwcOnxMajTIY/aI4OKKGbnFz3720ytXGqLnk=; b=VcafkNJnIJdLeHra
-	mA/ut3LSw+pWUfJEbhgJxz3wzhfyT8Z/wZSSgScYVmBxkqo2RrvomknvlR73bW3J
-	edmJcwK//rVNKYBD6oxM8lGHy1w+vaaRhDH+au9aSt2apXz59GkU9/4gDd5CqbtC
-	Yf0VxKfk1AkkmH++hF6E65AZREcXyYOGLoCXSwRhrsEWUWXV0FVV1CZiM0xMwcrS
-	+nDAcCE1FqCYb2QMVvuK4THDEKcmVneM2Z54TrovsspgtPVkHIZP3kMom/UDn9if
-	JFtm0kUBWQP7bAW/1yAS4rpC1m/Ax2FSJhsIPbCfk9VJc/PsHFM0N2uo2Mr3RiNI
-	MnfKTA==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf9bmgh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 17:01:10 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c552802e9fso176713985a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 10:01:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YEUWSBcZ"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-231ecd4f2a5so45245385ad.0;
+        Wed, 21 May 2025 10:01:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747846910; x=1748451710; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PWmX5o1KZHES75Hln8YX3lrBwYIMaAXXEFNBxe0jHFM=;
+        b=YEUWSBcZPXVjokfotdKKg/zka6gnfrsrHcdWXBsXOJ09PcndbTJqxv/r7aLFGtMlMk
+         5HnMYpOHhZv6o2CoE1yDeLhW+p+HN2/QU15/Seoi67hdsJqlisZAPA3IiUCduEUvwmhG
+         2bMU1q/B+ErhH8i8B6+V/eMLB23YdVwGeNIKslPWSINHY7CjLUl6muwcZ6zeMufXzSYK
+         QkPfYjS9cEUEuVg8aBGO9IQST/XAmh4Bp3Gpa2F4SRgYmRRTWuyKG8kGANFgfEpkamme
+         aCVPdM/FUyi3bj/kqRe4+agre36U4FIKEJ4ioyzrhLuLlmh4R4+ypAAHDXm2YTujpePr
+         IvDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747846869; x=1748451669;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=s9XUDoddwcOnxMajTIY/aI4OKKGbnFz3720ytXGqLnk=;
-        b=enKXrjhQrvJspc24X9HeEPd5wjm6cgjtROG+oBsspQIN9LrNsX1eJYoQu5rypPRFZv
-         0INAk/RaOQw5Ysl9KQm6R1rnU1HIzyrMFN3Ym7nRIvtyJQuCADjP+fxr5JyInK+6OVRz
-         Al9fGj88/Mx0V4gOvyBGGqz4CQXwV4/u9OceGpsCX1wPR5H14PgWDIqB1JNoZPm7DzgS
-         iZWByCCpb3Rigk50hBuhXZaohqNW/pUPw7IlBp7/6+WtQHwTWwakXH1L9uBPlsZEewEh
-         mGCYQPs15ZaeZpjpneqYg/aRgb7WmcsydSQ4I14YF8FtqtlIGjQbAvAAzuJdwSsmZZV+
-         iGlA==
-X-Forwarded-Encrypted: i=1; AJvYcCVBa3qOSJRUwTi+yhIYUWhJiDQpi5OFnDw7ZyvHtuc4b07WUSDxSreQ2erSxUWggOmAHHo0H8A/ppv9SlQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxsw4HK4VeoYmd2QNekEhcz7V4IZuB9tXGsMcZVrRP5C4xVpvev
-	kefSnxhD/8Ygc/jZlxxSWsPLZalChSMIcAeEqMby6iRXXwYUdoXxKloTpMfGnmvdKvDaarrLnHJ
-	vx0JowctX+E61LF9gEZKgkolQ4KItWhJ259HoFga1Z3B3aPYQS0vUyZPAg9a/O7eRNVo=
-X-Gm-Gg: ASbGncsnwe0l+ZSjomgXyM2XuOvUOj2L1GfwGT+KB+NXFsuYSBSCg8oWGizMRIwKtBX
-	jdgpW0sz5q/sP8Tgl8T6Y+4/bbJsIfMCuTxWZZTNzTn/JHdzDLO8MLcG8MNHtBkdm7fSddeiPTy
-	7qRGAIAfdrA/LDBLFUgWNVolH+7QHivbl5t2Vh/tDeqGUEksvL1/2UIGGjiFkjD5v/6et7HJM/C
-	kb+2vXUNWEwo/Vuow/r5qmhmXED2kLB60SwcDaVi/AxMBjrqwr5gbitKt9bqH7RhZ1bIgAOhxTi
-	YPvew+bnLvMt+uN3b1UN0CnR9a4UjWt1XygeIlp+l2rQx4QZg++iNLN7WI084MV6dA==
-X-Received: by 2002:a05:620a:2693:b0:7c7:a574:c6d2 with SMTP id af79cd13be357-7cd467334f1mr1333948785a.9.1747846869447;
-        Wed, 21 May 2025 10:01:09 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHNHS1lDDeDBQUllE4zZV5CnCSt8BLX//4DkjdEKYf+qhDNZ7uIRPICPWLey3JSoexL/h+InQ==
-X-Received: by 2002:a05:620a:2693:b0:7c7:a574:c6d2 with SMTP id af79cd13be357-7cd467334f1mr1333944685a.9.1747846868906;
-        Wed, 21 May 2025 10:01:08 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d498b4bsm941652966b.148.2025.05.21.10.01.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 May 2025 10:01:08 -0700 (PDT)
-Message-ID: <c4442c3b-4f05-4031-8b1c-243e3028fc78@oss.qualcomm.com>
-Date: Wed, 21 May 2025 19:01:06 +0200
+        d=1e100.net; s=20230601; t=1747846910; x=1748451710;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PWmX5o1KZHES75Hln8YX3lrBwYIMaAXXEFNBxe0jHFM=;
+        b=qtNRERutm497IIbxW/zFKKbwVuGO0Hoh6a0o5oTx/kdVe+R9yPbf57pDS4fzEbreNj
+         vciF7vV4n5ZcX6vnpiohgYDdU5ibpmdfbGhecUh8iY4QZKnhmI5rQV9e34ZNex8npuV+
+         ZSo9ZgwPCSnJn7gWe5zDnBCkxP+97boMr5ZbYVYjBHu8qg2ynWt/kIAsSOPdy1yXe+be
+         E2ECvVh4cISl4wb75dqLlOcSgoanADXV6lfEWK/wJcpPdPuouLAL7gugLX5qNMO9PdjQ
+         supZ01BCl0H3dNEvybP5RKWUKchKwbZbOT38nntJZ3g9t8X5ignZ0IKdbpXgeYKPvY4+
+         yWgg==
+X-Forwarded-Encrypted: i=1; AJvYcCVFcnuMdkyDe29QHkYdvglpkWwgmME2mWykdBP1rlpHCJCC/f1zry9YZYhL4yNFQwsLed/AxIW9m+WyPA==@vger.kernel.org, AJvYcCWHKlc8cRBbNXs+Nu0KqL0JExKUU+EuXklRqEmwyn/YApNvje9KtYtwqWtypQI72ckXoKFtyIEIOfPBxyQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzdrn6nA4mLOlOT02NhY9SUXEta5xol8bC/ZKKNItHMHnPtWsQy
+	v/pxb13EruT0rtHgnMgIks2zc0d0SWD+JG1CtGKUGUX3Mc94GVttelw=
+X-Gm-Gg: ASbGncsAlYet/0RJwPsDP2sHscNkAQR8fl+kzCosaNwbyyoBAP5rU3tLPBXfCDa7Hx4
+	039ozl0OJMZImz7wEobAATL2lM7Fg0GTXRmePAeYKYn2rPYeP7hdLAvMIpIV+RafZO8ILXFOexW
+	hTOGJLY3KxHPEBgnQC5VlMKBjy784gYcsK5y3oSsOwqOuzojcaS7/MKBGTysUt3Ge3kS1g8ZTX4
+	rJcunb5ygw5d+L/0y2gegx7Zj8pORzK/Jk7Tc0zDrwuefBqU4HGrYwL5J50LuZYGpLIUR4ka3S7
+	X4ndXebM6xR8HhO94ojM2/tR/axwQgkS39zixxtN+BdQSqH57Y2u20fOo+20H4+B6E3UDGhrb6x
+	Oq/4CTDocsZpl3XPcGA48G1o=
+X-Google-Smtp-Source: AGHT+IG0Sa3DbuCkqkmdcG/fc0MxWlV6cSP48i9+QjTx97ZOfBSkfimF0N4vSUQyUW8Hx/YktfqF6A==
+X-Received: by 2002:a17:902:ea0c:b0:22e:61b2:5eb6 with SMTP id d9443c01a7336-231de3030bemr301106515ad.15.1747846910234;
+        Wed, 21 May 2025 10:01:50 -0700 (PDT)
+Received: from localhost (c-73-158-218-242.hsd1.ca.comcast.net. [73.158.218.242])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-231d4e988c3sm95414665ad.120.2025.05.21.10.01.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 May 2025 10:01:49 -0700 (PDT)
+Date: Wed, 21 May 2025 10:01:48 -0700
+From: Stanislav Fomichev <stfomichev@gmail.com>
+To: "Loktionov, Aleksandr" <aleksandr.loktionov@intel.com>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"davem@davemloft.net" <davem@davemloft.net>,
+	"edumazet@google.com" <edumazet@google.com>,
+	"kuba@kernel.org" <kuba@kernel.org>,
+	"pabeni@redhat.com" <pabeni@redhat.com>,
+	"skalluru@marvell.com" <skalluru@marvell.com>,
+	"manishc@marvell.com" <manishc@marvell.com>,
+	"andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
+	"michael.chan@broadcom.com" <michael.chan@broadcom.com>,
+	"pavan.chebbi@broadcom.com" <pavan.chebbi@broadcom.com>,
+	"ajit.khaparde@broadcom.com" <ajit.khaparde@broadcom.com>,
+	"sriharsha.basavapatna@broadcom.com" <sriharsha.basavapatna@broadcom.com>,
+	"somnath.kotur@broadcom.com" <somnath.kotur@broadcom.com>,
+	"Nguyen, Anthony L" <anthony.l.nguyen@intel.com>,
+	"Kitszel, Przemyslaw" <przemyslaw.kitszel@intel.com>,
+	"tariqt@nvidia.com" <tariqt@nvidia.com>,
+	"saeedm@nvidia.com" <saeedm@nvidia.com>,
+	"louis.peens@corigine.com" <louis.peens@corigine.com>,
+	"shshaikh@marvell.com" <shshaikh@marvell.com>,
+	"GR-Linux-NIC-Dev@marvell.com" <GR-Linux-NIC-Dev@marvell.com>,
+	"ecree.xilinx@gmail.com" <ecree.xilinx@gmail.com>,
+	"horms@kernel.org" <horms@kernel.org>,
+	"dsahern@kernel.org" <dsahern@kernel.org>,
+	"ruanjinjie@huawei.com" <ruanjinjie@huawei.com>,
+	"mheib@redhat.com" <mheib@redhat.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	"oss-drivers@corigine.com" <oss-drivers@corigine.com>,
+	"linux-net-drivers@amd.com" <linux-net-drivers@amd.com>,
+	"leon@kernel.org" <leon@kernel.org>
+Subject: Re: [Intel-wired-lan] [PATCH net-next 1/3] net: ASSERT_RTNL remove
+ netif_set_real_num_{rx, tx}_queues
+Message-ID: <aC4G_Pj118yoW-35@mini-arch>
+References: <20250520203614.2693870-1-stfomichev@gmail.com>
+ <20250520203614.2693870-2-stfomichev@gmail.com>
+ <SJ0PR11MB58660E85F76E4A347197C768E59EA@SJ0PR11MB5866.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] soc: qcom: qcom_stats: Add support to read DDR
- statistic
-To: Maulik Shah <maulik.shah@oss.qualcomm.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        Doug Anderson <dianders@chromium.org>
-References: <20250521-ddr_stats_-v2-0-2c54ea4fc071@oss.qualcomm.com>
- <20250521-ddr_stats_-v2-1-2c54ea4fc071@oss.qualcomm.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250521-ddr_stats_-v2-1-2c54ea4fc071@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: ueQAwgBDC2CSbDjmOS29Aq5IWk1teM4O
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDE2NyBTYWx0ZWRfX0H12KPatjURN
- HOu2QSCS+ms0qncz6pFsBrb/pWcBdDV08v67kuY6uIZ0yB8u1A5cNf7xDTWu9LUyS1gY1mOoORY
- LCd7qraazMRb2C6MOD3MMreOyZs1YjsVpAIW4t2xNWCrG2KjZC5D1OFdZdq3Gq6TqXr0uojCZHU
- b3lCh98f5gNaCVHLj175AdNe8eq12e2rhpyeqoncecKCLTWionJAizAaZBHhipiNLB1vXluxY6n
- VribLT/9KZVHiPdgmPlBQsMqCWpXXXi5uZ1c7R2i/221FuO+yIhkj0fy98OLeDb8jfdxhg55Eww
- PbMzujqWoT/LltjlEeN2HQy5+QKEsog6PboitXwMTxsx9CJadJbwzfY5rSHvJkbttbZ7EmZsIHL
- gVzy6sZKSC5bowDkFqdvO6WQhFYY24HtVbcKqQJ0SZ2dfhi8w/ktmEhrs1JTbIu2sZ7oGyIp
-X-Authority-Analysis: v=2.4 cv=GawXnRXL c=1 sm=1 tr=0 ts=682e06d6 cx=c_pps
- a=qKBjSQ1v91RyAK45QCPf5w==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=px1QxGzWThjcCEIoTy4A:9
- a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22
-X-Proofpoint-GUID: ueQAwgBDC2CSbDjmOS29Aq5IWk1teM4O
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-21_05,2025-05-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxscore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0
- priorityscore=1501 clxscore=1015 malwarescore=0 phishscore=0 bulkscore=0
- spamscore=0 suspectscore=0 adultscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505160000 definitions=main-2505210167
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <SJ0PR11MB58660E85F76E4A347197C768E59EA@SJ0PR11MB5866.namprd11.prod.outlook.com>
 
-On 5/21/25 10:32 AM, Maulik Shah wrote:
-> DDR statistic provide different DDR LPM and DDR frequency statistic.
-> Add support to read from MSGRAM and display via debugfs.
+On 05/21, Loktionov, Aleksandr wrote:
 > 
-> Signed-off-by: Maulik Shah <maulik.shah@oss.qualcomm.com>
-> ---
+> 
+> > -----Original Message-----
+> > From: Intel-wired-lan <intel-wired-lan-bounces@osuosl.org> On Behalf
+> > Of Stanislav Fomichev
+> > Sent: Tuesday, May 20, 2025 10:36 PM
+> > To: netdev@vger.kernel.org
+> > Cc: davem@davemloft.net; edumazet@google.com; kuba@kernel.org;
+> > pabeni@redhat.com; skalluru@marvell.com; manishc@marvell.com;
+> > andrew+netdev@lunn.ch; michael.chan@broadcom.com;
+> > pavan.chebbi@broadcom.com; ajit.khaparde@broadcom.com;
+> > sriharsha.basavapatna@broadcom.com; somnath.kotur@broadcom.com;
+> > Nguyen, Anthony L <anthony.l.nguyen@intel.com>; Kitszel, Przemyslaw
+> > <przemyslaw.kitszel@intel.com>; tariqt@nvidia.com; saeedm@nvidia.com;
+> > louis.peens@corigine.com; shshaikh@marvell.com; GR-Linux-NIC-
+> > Dev@marvell.com; ecree.xilinx@gmail.com; horms@kernel.org;
+> > dsahern@kernel.org; ruanjinjie@huawei.com; mheib@redhat.com;
+> > stfomichev@gmail.com; linux-kernel@vger.kernel.org; intel-wired-
+> > lan@lists.osuosl.org; linux-rdma@vger.kernel.org; oss-
+> > drivers@corigine.com; linux-net-drivers@amd.com; leon@kernel.org
+> > Subject: [Intel-wired-lan] [PATCH net-next 1/3] net: ASSERT_RTNL
+> > remove netif_set_real_num_{rx, tx}_queues
+> > 
+> Can you consider more explicit title like:
+> net: remove redundant ASSERT_RTNL() in queue setup functions
+> ?
+> 
+> > Existing netdev_ops_assert_locked takes care of asserting either
+> > netdev lock or RTNL.
+> > 
+> I'd recommend rephrasing like:
+> The existing netdev_ops_assert_locked() already asserts that either
+> the RTNL lock or the per-device lock is held, making the explicit
+> ASSERT_RTNL() redundant.
 
-[...]
-
-> +	case 0:
-> +		seq_printf(s, "DDR LPM Stat Name:0x%x\tcount:%u\tDuration (ticks):%llu\n",
-> +			   DDR_STATS_LPM_NAME(data->name), data->count, data->duration);
-> +		break;
-> +	case 1:
-> +		if (!data->count || !DDR_STATS_FREQ(data->name))
-> +			return;
-> +
-> +		cp_idx = DDR_STATS_CP_IDX(data->name);
-> +		seq_printf(s, "DDR Freq %uMhz:\tCP IDX:%u\tcount:%u\tDuration (ticks):%llu\n",
-> +			   DDR_STATS_FREQ(data->name), cp_idx, data->count, data->duration);
-
-clang complains about both prints:
-
-drivers/soc/qcom/qcom_stats.c:173:7: warning: format specifies type 'unsigned int' but the argument has type 'unsigned long' [-Wformat]
-  172 |                 seq_printf(s, "DDR LPM Stat Name:0x%x\tcount:%u\tDuration (ticks):%llu\n",
-      |                                                    ~~
-      |                                                    %lx
-  173 |                            DDR_STATS_LPM_NAME(data->name), data->count, data->duration);
-      |                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-drivers/soc/qcom/qcom_stats.c:181:7: warning: format specifies type 'unsigned int' but the argument has type 'unsigned long' [-Wformat]
-  180 |                 seq_printf(s, "DDR Freq %uMhz:\tCP IDX:%u\tcount:%u\tDuration (ticks):%llu\n",
-      |                                         ~~
-      |                                         %lu
-  181 |                            DDR_STATS_FREQ(data->name), cp_idx, data->count, data->duration);
-      |                            ^~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-
-
-> +
-> +	key = readl_relaxed(reg + config->ddr_stats_offset + DDR_STATS_MAGIC_KEY_ADDR);
-> +	if (key == DDR_STATS_MAGIC_KEY)
-> +		debugfs_create_file("ddr_stats", 0400, root,
-> +				    (__force void *)reg + config->ddr_stats_offset,
-> +				    &qcom_ddr_stats_fops);
-
-else
-	pr_err("Found invalid DDR stats magic\n");
-
-(because through the compatible, we much expect it to be present)
-
-Konrad
+Sure, will do, thanks!
