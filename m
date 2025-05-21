@@ -1,249 +1,148 @@
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-b3-smtp.messagingengine.com (fout-b3-smtp.messagingengine.com [202.12.124.146])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0430521D585;
-	Wed, 21 May 2025 11:36:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 902C321D585;
+	Wed, 21 May 2025 11:36:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747827374; cv=none; b=X9y++8vAERCLSDRA/DiY6vTkOQwK6QI1ZBlDI5TyyyTUDzsPtVOjMHnyNbHbOOK6EsQnJNauf4wWKtnvU+2HBhu+kP4yvOeZXyZ5V1PvM6Ag1DORJV1gFPYmy03AzCbI7ppyKho46yeEftvQeyFqdHYS9GJmzsLvXp48rHE7QHA=
+	t=1747827390; cv=none; b=VkPn0gOmq8o1Ub+WOBbLO2edFAVoHWBuPrVrVlePiELTYK2VKbc1n/sljxRqiWq6yxBK1EC2IsbFOsqLxLQ6cijTKh3IZKq1aVpuC2DBXjRsCrYZ28Va9o8iY4qTZd4HZirmNi8+VpZ2fcLTlUx/DlPgrs+nppWYCTBZkWdG4kY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747827374; c=relaxed/simple;
-	bh=9Ef79o5yBUit9XL3M4Px4rdgyAc4s1/1oAG8IcTcFms=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=t+RIehKBGlvdHpWTcN7ruu6FjgdlGayY6g4ReL/JV/WLBs2/2H3xllkCWGT361DP24VdDo0iFNR7ppAUkt+6bnl4RhSoUMMFzxmZAKxdkARl5t76nWkVZy2y9rITYXFRsUu+E2L9A2CWNcNx9TinOHDmnBgpQJuxw28hfrLCVoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jp2dTmtt; arc=none smtp.client-ip=209.85.222.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747827390; c=relaxed/simple;
+	bh=xTbNpjfZN34GRRoRHO5aWamaazzkYztBSsMKGrn1dvE=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=HsM7+lc8bf5ctaRMHnoAfpJhxPCIu+9f93Ln9on41weafjvxpDEb/xHWa1MNX6X5A0sUg6uKkvw67ZgmqBQ4ls2Hv3QLqEEKTy8szYRbnW+LpKdrt1ocb3RQcds6JvfpL5LdsDscYzMRTtgQn1Y5uJPS3s3gmaSAL2tt64lc5s8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=vfTiLOfE; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Qm26I6T6; arc=none smtp.client-ip=202.12.124.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jp2dTmtt"
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7c55500d08cso741013285a.0;
-        Wed, 21 May 2025 04:36:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747827372; x=1748432172; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MYdOgdcjYPnCY9yhLEBUShjQzNMS1iD03XTdqPSE560=;
-        b=jp2dTmttzkOs/8NtZlKmgqLYmnrnPFGTXLwO40Iu+DLzFELsMrpqQeysCSk6IB88Dq
-         d3aclT3cHyQdZqf0tKzZ6ZPvRaeeDsJi3itDBucznRAxqZor8fnluEELu7bPGIeUakgF
-         YYu/gEXo41y76r97mQVAW9f/ZxeR4bHAV1/lbFDgf+AvmxZd76mttqmSU3XOmMkICpVz
-         I5ZgYS49fnyL2uHJHF49OtF3bQw/I3ceHHZRciSHxX5S3nF4+0sQlLZCfcWv2fCCpYru
-         0fnyh5Hd4A8hl6mJ/c+3L0L/XykpoUrYXJFkvQpXn+mpSpEN64W7h4x2WbdrZmB2JoRg
-         dAPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747827372; x=1748432172;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MYdOgdcjYPnCY9yhLEBUShjQzNMS1iD03XTdqPSE560=;
-        b=B2NL3H0A3mMsE52jGWGhHsZ9RrWNWEK/7SAS++Exsv4TFYkWJbWn7USMBX+oQElt4V
-         vvWg8O7O9iTGLPJIKQo25r1DRvmOOdE74G/lNsLg+KfBCGosi5lcl86FZJm7eJ7irptT
-         lUMw+6Sa0atYoQpeG1cjEIwJlox/nsHNApbtHi2Z9zBpz9jNnmJ9J5tfgjWsMsqkN5S0
-         js/YdnNJHL4nV+IX3K+2S8UG+b88FqGOZbtaD7FEslB1T42uvzvPEYQYOw4jVZIJplaC
-         57Rpdi2bUxeENxHHjL3IPeV7UVX4IXBgjFv3ws9y5XI5YY8h4nQCPYH4Zcmi5mxuFdEo
-         gEgA==
-X-Forwarded-Encrypted: i=1; AJvYcCUTKlDhX4qdRfuj1jYIRWhRxqf/UU+349akalG6AVUuk+s/CRmOUK1M5QIENamkYQlohDId3Pl7NSU90IfK@vger.kernel.org, AJvYcCVA86SE85Ha9vV9RJfGxRlAYYpCBkzZLbA1yz6NMycJz23YxBOHSZXcHtJN6cgBtvQ6wc1S1WU3kks=@vger.kernel.org, AJvYcCVX9dvk25hVN8IEqJVV2nqHOcAiuyijs1Gf03V+xZweCCTEEavXtKNq2T6oUBOUmcNFxNEc+uI0MlfZ58i2QkeM@vger.kernel.org
-X-Gm-Message-State: AOJu0YxW27+H46d6kPpyOaunfjm6faa5NknZLIMnUjR98pvNnTTf1Ru0
-	/Mc9w8xMwqDLo/4j13jiLTXyqwy3coyPzc7J1omxJ473lo2ZhvKFUyQ4A/TJ4Dc7LGcvv0JhCue
-	XRelpeCWfkNLX7c8v38XgPdS3kAt6kJc=
-X-Gm-Gg: ASbGncsTR1DQKJjGnuzybky9JCwnvPFQslieIKPPqn+G6+jPWSDTQZiIMDvKtX/V0uW
-	a7h4XOIz7DQ6zjsCA0O2LTPadzHfgE40dLxpAs0sUSDL9fV7BjP2cVjrw4tbaGj2EKl73bAFqOt
-	ezmnvKbPPQEy9Vky4ZN42Kl9IgrGMR6G3H1w==
-X-Google-Smtp-Source: AGHT+IG0NSqVB+WG0qBhrlsKA2H54Ax1QA3WrMlpFSukxISaFW+UsqeUomOGi6GkNqpdR+aDMSvDlBsRCUMQuSB19Xw=
-X-Received: by 2002:a05:6214:1302:b0:6f8:ac7b:c1ab with SMTP id
- 6a1803df08f44-6f8b08bfa84mr330355896d6.34.1747827371620; Wed, 21 May 2025
- 04:36:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="vfTiLOfE";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Qm26I6T6"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.stl.internal (Postfix) with ESMTP id 6A04611400F9;
+	Wed, 21 May 2025 07:36:27 -0400 (EDT)
+Received: from phl-imap-12 ([10.202.2.86])
+  by phl-compute-05.internal (MEProxy); Wed, 21 May 2025 07:36:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1747827387;
+	 x=1747913787; bh=CIqSpvAb/w6MeH6RH67fY52ebgYd8rXK46WCijqn65A=; b=
+	vfTiLOfE4IW0yqfJigIDkPtieD+Z62J7ROahJoOV3fbseZ7jUkYbDtIuSCEPqkuG
+	+oCs6jwdHL3prGZtcjz7FFiArCeSVMo72jS6U4J/eki/TKQjL2nW2F1k1mEjX8uD
+	HdqmN50HIhgxXnuE8p33LQMSrE3iYfX4/6eIsFswHfFbxHMHRkMbvSBvEdjgM8+y
+	Qoh6ZOXnp8q5CWkDrHt6oWa+02Kgr8xNQSNCSjAcx5RBtvijBTVyOGICemU7ELiJ
+	KwyOnzIpzhvkIZcBvVKZND0dRaDNWb+nHTiwUvptE6bzjwda0wax2YqiOX8BSJAO
+	RnhG5VyMhhd7iD4Gsbcm4g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1747827387; x=
+	1747913787; bh=CIqSpvAb/w6MeH6RH67fY52ebgYd8rXK46WCijqn65A=; b=Q
+	m26I6T6LBBO7C6YjNTdTE4YnRrssA4bKvIObFFS9nEnwZvcOqLmGcS2Y7bs6dd+6
+	WRPR0AtmCfzFKMt3HHzpvHFYC88z7cTWKSvGDmXYnEGjxcw5w+M6j/lEjYAnzcRV
+	mxs4inr+tHc6TfuMmSk7yJe9wHU1LgWXjxd1Jkp4OGZVqUexmfp5QCVBEQNTCggD
+	axrlfpTnnqajL01h7xqhl6Ken+mj/Oe9j1f1xgtLLJQyMndVgUfFNeBFVWli0HQe
+	a4pB8RvYyjy0MibHNKI9QWEWOZ4BoeMt+mhENMhst/IrXwtay6WbLtzDlai4+23J
+	uhJqzcEqoyk7jks8bRN0w==
+X-ME-Sender: <xms:urotaFEuekNqLsitrn6lKiIId9aYo-rtbMyuwo359I2Tu9F_aCijHg>
+    <xme:urotaKWaRLl2lU9VtPgzqAoIu7au1wGwWHBNlTJYPhSdDA2k3DLL6holwe69tWkq0
+    wlIRpTRerWh_cqlLbE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvleekucdltddurdegfedvrddttd
+    dmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgf
+    nhhsuhgsshgtrhhisggvpdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttd
+    enucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgj
+    fhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuc
+    eorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedu
+    keetgefggffhjeeggeetfefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuih
+    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdp
+    nhgspghrtghpthhtohepuddtpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegtlh
+    grsggsvgdrmhhonhhtjhhoihgvsehgmhgrihhlrdgtohhmpdhrtghpthhtohepkhhlrghu
+    shdrkhhuughivghlkhgrsehgmhgrihhlrdgtohhmpdhrtghpthhtoheprhhomhgrihhnrd
+    hpvghrihgvrhesghhmrghilhdrtghomhdprhgtphhtthhopehhvghrsggvrhhtsehgohhn
+    ughorhdrrghprghnrgdrohhrghdrrghupdhrtghpthhtohepsggsrhgviihilhhlohhnse
+    hkvghrnhgvlhdrohhrghdprhgtphhtthhopegvsghighhgvghrsheskhgvrhhnvghlrdho
+    rhhgpdhrtghpthhtoheprhgvghhrvghsshhiohhnsheslhhishhtshdrlhhinhhugidrug
+    gvvhdprhgtphhtthhopegrrhhnrghuugdrvggsrghlrghrugesshhsihdrghhouhhvrdhf
+    rhdprhgtphhtthhopehlihhnuhigqdgtrhihphhtohesvhhgvghrrdhkvghrnhgvlhdroh
+    hrgh
+X-ME-Proxy: <xmx:urotaHJuoiLvTugjsJt7qszTsX2Wvsj0CUYNtGCZ3I0Nz7YGYTujXg>
+    <xmx:urotaLHeXqAIrP7KXbC1evzP4RyxPwoH2hv2IhusQ0z1Cev3Gh7j_w>
+    <xmx:urotaLWb54lmDMOIFroeYrVI5uFAK3FWiINkdDX5c1tQF6LUOsGEVA>
+    <xmx:urotaGOGRM9oYGiC-x-rJtcMZ59LY1gFHGxny_8RyjkkQXav2IsYkg>
+    <xmx:u7otaNKUdx4VygAsSDKp3LfVXkd4eW1NGM8aXEvEKPVixVG9mFV8JztK>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id C14631060061; Wed, 21 May 2025 07:36:26 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515033857.132535-1-npache@redhat.com> <CALOAHbAa7DY6+hO4RJtjg-MS+cnUmsiPXX8KS1MKSfgy6HLYAQ@mail.gmail.com>
- <CAA1CXcA0WX+qGKvL4VcTM_bazFxRyDmp5DK60ycoS4OCDUnH-Q@mail.gmail.com>
-In-Reply-To: <CAA1CXcA0WX+qGKvL4VcTM_bazFxRyDmp5DK60ycoS4OCDUnH-Q@mail.gmail.com>
-From: Yafang Shao <laoar.shao@gmail.com>
-Date: Wed, 21 May 2025 19:35:35 +0800
-X-Gm-Features: AX0GCFuRjloFvRQwWoX3nj3PIwElDQvn-OuuZckoV7z_HUQsvYM0MLMqgtm-VHg
-Message-ID: <CALOAHbATH4+y71TfVOaGU9NV5coy9XnLfDD1pDBfniv=T-cyqw@mail.gmail.com>
-Subject: Re: [PATCH v6 0/4] mm: introduce THP deferred setting
-To: Nico Pache <npache@redhat.com>
-Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	rientjes@google.com, hannes@cmpxchg.org, lorenzo.stoakes@oracle.com, 
-	rdunlap@infradead.org, mhocko@suse.com, Liam.Howlett@oracle.com, 
-	zokeefe@google.com, surenb@google.com, jglisse@google.com, cl@gentwo.org, 
-	jack@suse.cz, dave.hansen@linux.intel.com, will@kernel.org, tiwai@suse.de, 
-	catalin.marinas@arm.com, anshuman.khandual@arm.com, dev.jain@arm.com, 
-	raquini@redhat.com, aarcange@redhat.com, kirill.shutemov@linux.intel.com, 
-	yang@os.amperecomputing.com, thomas.hellstrom@linux.intel.com, 
-	vishal.moola@gmail.com, sunnanyong@huawei.com, usamaarif642@gmail.com, 
-	wangkefeng.wang@huawei.com, ziy@nvidia.com, shuah@kernel.org, 
-	peterx@redhat.com, willy@infradead.org, ryan.roberts@arm.com, 
-	baolin.wang@linux.alibaba.com, baohua@kernel.org, david@redhat.com, 
-	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, rostedt@goodmis.org, 
-	corbet@lwn.net, akpm@linux-foundation.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-ThreadId: Te525b7ee476102fc
+Date: Wed, 21 May 2025 13:36:06 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Herbert Xu" <herbert@gondor.apana.org.au>
+Cc: "Corentin Labbe" <clabbe.montjoie@gmail.com>,
+ "Klaus Kudielka" <klaus.kudielka@gmail.com>,
+ "Eric Biggers" <ebiggers@kernel.org>, regressions@lists.linux.dev,
+ linux-kernel@vger.kernel.org,
+ "Linux Crypto Mailing List" <linux-crypto@vger.kernel.org>,
+ "'bbrezillon@kernel.org'" <bbrezillon@kernel.org>,
+ "EBALARD Arnaud" <Arnaud.Ebalard@ssi.gouv.fr>,
+ "Romain Perier" <romain.perier@gmail.com>
+Message-Id: <1024b1b7-9d58-4db4-a71a-108f6df7b623@app.fastmail.com>
+In-Reply-To: <aC2p6xkMz4BtzPYH@gondor.apana.org.au>
+References: <20250515182131.GC1411@quark>
+ <f0dc235e3d7bfa1f60cc01fd527da52024af54e0.camel@gmail.com>
+ <aCZ3_ZMAFu6gzlyt@gondor.apana.org.au> <aCcyXkeBvHQYvf2d@Red>
+ <aCczV6MF6xk5rRA3@gondor.apana.org.au> <aChx_ODF_hYKL8XO@Red>
+ <aCmTQoJw6XG1CkuZ@gondor.apana.org.au> <aC1fY6IP-8MzVIbx@gondor.apana.org.au>
+ <aC2aAvX07Aaho08d@gondor.apana.org.au>
+ <23fe1dec-032a-41fb-8e60-3a1b6c098c4e@app.fastmail.com>
+ <aC2p6xkMz4BtzPYH@gondor.apana.org.au>
+Subject: Re: [PATCH] crypto: marvell/cesa - Avoid empty transfer descriptor
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 21, 2025 at 6:19=E2=80=AFPM Nico Pache <npache@redhat.com> wrot=
-e:
+On Wed, May 21, 2025, at 12:24, Herbert Xu wrote:
+> On Wed, May 21, 2025 at 11:58:49AM +0200, Arnd Bergmann wrote:
+>>
+>> I did not see the entire background of the discussion, but would
+>> point out that this is not supposed to work at all:
 >
-> On Tue, May 20, 2025 at 3:25=E2=80=AFAM Yafang Shao <laoar.shao@gmail.com=
-> wrote:
-> >
-> > On Thu, May 15, 2025 at 11:41=E2=80=AFAM Nico Pache <npache@redhat.com>=
- wrote:
-> > >
-> > > This series is a follow-up to [1], which adds mTHP support to khugepa=
-ged.
-> > > mTHP khugepaged support is a "loose" dependency for the sysfs/sysctl
-> > > configs to make sense. Without it global=3D"defer" and  mTHP=3D"inher=
-it" case
-> > > is "undefined" behavior.
-> > >
-> > > We've seen cases were customers switching from RHEL7 to RHEL8 see a
-> > > significant increase in the memory footprint for the same workloads.
-> > >
-> > > Through our investigations we found that a large contributing factor =
-to
-> > > the increase in RSS was an increase in THP usage.
-> > >
-> > > For workloads like MySQL, or when using allocators like jemalloc, it =
-is
-> > > often recommended to set /transparent_hugepages/enabled=3Dnever. This=
- is
-> > > in part due to performance degradations and increased memory waste.
-> > >
-> > > This series introduces enabled=3Ddefer, this setting acts as a middle
-> > > ground between always and madvise. If the mapping is MADV_HUGEPAGE, t=
-he
-> > > page fault handler will act normally, making a hugepage if possible. =
-If
-> > > the allocation is not MADV_HUGEPAGE, then the page fault handler will
-> > > default to the base size allocation. The caveat is that khugepaged ca=
-n
-> > > still operate on pages that are not MADV_HUGEPAGE.
-> > >
-> > > This allows for three things... one, applications specifically design=
-ed to
-> > > use hugepages will get them, and two, applications that don't use
-> > > hugepages can still benefit from them without aggressively inserting
-> > > THPs at every possible chance. This curbs the memory waste, and defer=
-s
-> > > the use of hugepages to khugepaged. Khugepaged can then scan the memo=
-ry
-> > > for eligible collapsing. Lastly there is the added benefit for those =
-who
-> > > want THPs but experience higher latency PFs. Now you can get base pag=
-e
-> > > performance at the PF handler and Hugepage performance for those mapp=
-ings
-> > > after they collapse.
-> > >
-> > > Admins may want to lower max_ptes_none, if not, khugepaged may
-> > > aggressively collapse single allocations into hugepages.
-> > >
-> > > TESTING:
-> > > - Built for x86_64, aarch64, ppc64le, and s390x
-> > > - selftests mm
-> > > - In [1] I provided a script [2] that has multiple access patterns
-> > > - lots of general use.
-> > > - redis testing. This test was my original case for the defer mode. W=
-hat I
-> > >    was able to prove was that THP=3Dalways leads to increased max_lat=
-ency
-> > >    cases; hence why it is recommended to disable THPs for redis serve=
-rs.
-> > >    However with 'defer' we dont have the max_latency spikes and can s=
-till
-> > >    get the system to utilize THPs. I further tested this with the mTH=
-P
-> > >    defer setting and found that redis (and probably other jmalloc use=
-rs)
-> > >    can utilize THPs via defer (+mTHP defer) without a large latency
-> > >    penalty and some potential gains. I uploaded some mmtest results
-> > >    here[3] which compares:
-> > >        stock+thp=3Dnever
-> > >        stock+(m)thp=3Dalways
-> > >        khugepaged-mthp + defer (max_ptes_none=3D64)
-> > >
-> > >   The results show that (m)THPs can cause some throughput regression =
-in
-> > >   some cases, but also has gains in other cases. The mTHP+defer resul=
-ts
-> > >   have more gains and less losses over the (m)THP=3Dalways case.
-> > >
-> > > V6 Changes:
-> > > - nits
-> > > - rebased dependent series and added review tags
-> > >
-> > > V5 Changes:
-> > > - rebased dependent series
-> > > - added reviewed-by tag on 2/4
-> > >
-> > > V4 Changes:
-> > > - Minor Documentation fixes
-> > > - rebased the dependent series [1] onto mm-unstable
-> > >     commit 0e68b850b1d3 ("vmalloc: use atomic_long_add_return_relaxed=
-()")
-> > >
-> > > V3 Changes:
-> > > - Combined the documentation commits into one, and moved a section to=
- the
-> > >   khugepaged mthp patchset
-> > >
-> > > V2 Changes:
-> > > - base changes on mTHP khugepaged support
-> > > - Fix selftests parsing issue
-> > > - add mTHP defer option
-> > > - add mTHP defer Documentation
-> > >
-> > > [1] - https://lore.kernel.org/all/20250515032226.128900-1-npache@redh=
-at.com/
-> > > [2] - https://gitlab.com/npache/khugepaged_mthp_test
-> > > [3] - https://people.redhat.com/npache/mthp_khugepaged_defer/testoutp=
-ut2/output.html
-> > >
-> > > Nico Pache (4):
-> > >   mm: defer THP insertion to khugepaged
-> > >   mm: document (m)THP defer usage
-> > >   khugepaged: add defer option to mTHP options
-> > >   selftests: mm: add defer to thp setting parser
-> > >
-> > >  Documentation/admin-guide/mm/transhuge.rst | 31 +++++++---
-> > >  include/linux/huge_mm.h                    | 18 +++++-
-> > >  mm/huge_memory.c                           | 69 +++++++++++++++++++-=
---
-> > >  mm/khugepaged.c                            |  8 +--
-> > >  tools/testing/selftests/mm/thp_settings.c  |  1 +
-> > >  tools/testing/selftests/mm/thp_settings.h  |  1 +
-> > >  6 files changed, 106 insertions(+), 22 deletions(-)
-> > >
-> > > --
-> > > 2.49.0
-> > >
-> > >
-> >
-> > Hello Nico,
-> >
-> > Upon reviewing the series, it occurred to me that BPF could solve this
-> > more cleanly. Adding a 'tva_flags' parameter to the BPF hook would
-> > handle this case and future scenarios without requiring new modes. The
-> > BPF mode could then serve as a unified solution.
-> Hi Yafang,
->
-> I dont see how this is the case? This would require users to
-> modify/add functionality rather than configuring the system in this
-> manner. What if BPF is not configured or being used? Having to use an
-> additional technology that requires precise configuration doesn't seem
-> cleaner.
+> We're trying to find out why this driver fails under concurrent
+> load.  It works perfectly if you do one request at a time, but
+> when you hit it with load coming from both CPUs, it ends up
+> corrupting the data.
 
-The core challenge remains: while certain tasks benefit from this new
-mode, others see no improvement=E2=80=94or may even regress.
-For that reason, implementing it globally seems unwise=E2=80=94per-task
-control would be far more effective.
+Ok. Which SoC exactly is this on? Armada XP or Armada 385?
 
---=20
-Regards
-Yafang
+> My suscipicion right now is DMA corruption.  One common thread
+> seems to be that if you only use dma_map_sg it works, but if
+> dma_alloc_coherent memory is used then it is corrupted (this
+> isn't proven yet, it's just what the printk patch was showing).
+
+I see. Just a few more ideas what it could be in case it's not
+what you suspect:
+
+- the SRAM gets mapped into kernel space using ioremap(), which
+  on Armada 375/38x uses MT_UNCACHED rather than MT_DEVICE as
+  a workaround for a possible deadlock on actual MMIO registers.
+  It's possible that the SRAM should be mapped using a different
+  map flag to ensure it's actually consistent. If a store is
+  posted to the SRAM, it may still be in flight at the time that
+  the DMA master looks at it.
+
+- I see a lot of chaining of DMA descriptors, but no dma_wmb()
+  or spinlock. A dma_wmb() or stronger (wmb, dma_mb, mb)
+  is probably required between writing to a coherent descriptor
+  and making it visible from another one. A spinlock is
+  of course needed if you have multiple CPUs adding data
+  into a shared linked list (I think this one is not shared
+  but haven't confirmed that).
+
+       Arnd
