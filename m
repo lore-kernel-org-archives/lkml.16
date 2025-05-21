@@ -1,226 +1,146 @@
-Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCA9227AC43
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 17:47:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFC2F19F42F
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 17:47:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747849652; cv=none; b=gI9t9Y1TApPoa7dwSFqYePALOLF3yq0D5VmPCVbxudfWe53/enLC9ZphGbYAhiOgGTH5SyfZwHZvUKrFh38nGYk5DumABvCZUM+97WtKpHq5wsf/blevikDRJ62iL6YuJHOHg8UvcxdEB2c7wtL+jb9SEP3YdjlMkl2yil/0F0w=
+	t=1747849669; cv=none; b=Lwp8I5hKAQo0Llw0XBPdWt/aIduZvSJEO1BjMsQBbddoi7Bfq6mkhvloylw/v2Z62GML6oT1vsofW47wA2nlvEIJwbreG9TSVZjbQUyFSjySBvUOHsFt0sA6N9OzsAHcJ/yMqn3AULPf3VkejpvYfo4MX9snPUp4wzvJUrZm4kg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747849652; c=relaxed/simple;
-	bh=miR8lyLraFkbpXwdmCbNKFQvHvtAU72aRD8h6kj2LRI=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=mJ48SweOhqeraoZ9jWgSCRyHcLFZ9GRbSxtcuIFb8VrfyZ4FtFI+MSlkVucl8WGxqxeCFMetqEETTHMtszVh/ASC/ChOgoEbaeYVRtVcUzvr6YXqBs0M67nn5jJsoUhKwT43txb0d8OZ/yluscc2q2Rr94Tfw9zZh8aW48aj02g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3dc880e5fa1so10573255ab.1
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 10:47:30 -0700 (PDT)
+	s=arc-20240116; t=1747849669; c=relaxed/simple;
+	bh=TgOo6A5A/c/4vmi6glL9bU93L3dWBs4RhVGWgQMINTM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t6idWGNI2H6/UdHLWF6TQaGGf5MNG58aVUX6NfJ0DPU3PrK2WcVW9Sl2KVSm3eFk/cezZMzp4dzDkGKMfzd+BWs1EvOxYMvhc8g/xgRiva/cC4WXsF7NF51C0YVv1MuWRnMXcso4mZSOb3T8FvVgnXrcTtNshOgqOW+MdAvSTUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=T3CRG98C; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T3CRG98C"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747849666;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=oGeZ4/qscFDpgQW4r4FF8qcWixZjDJP3cGgKS2Y7uN4=;
+	b=T3CRG98C/EPHLWDDtBsyMw7fg/e7wenI0jAaoAvTvzOfQ9KzpQlOS/Uzw/ncJ68xEFDJqe
+	uS04FTi7TO96zJBhtJEZ+ZoH0giYJ8ZoOwYaNP0Of9sBCEgU9VPgtQaT5oybn6pAORLtKG
+	nPkj41t0Vi897oa2aJwsVx3ZgmzNJyg=
+Received: from mail-vs1-f69.google.com (mail-vs1-f69.google.com
+ [209.85.217.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-659-DiQh0M0nO8-JzvW15O7_zQ-1; Wed, 21 May 2025 13:47:44 -0400
+X-MC-Unique: DiQh0M0nO8-JzvW15O7_zQ-1
+X-Mimecast-MFC-AGG-ID: DiQh0M0nO8-JzvW15O7_zQ_1747849663
+Received: by mail-vs1-f69.google.com with SMTP id ada2fe7eead31-4e28ed5cbe1so505892137.1
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 10:47:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747849650; x=1748454450;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=GFRlxxr5q/oFiqmYoyxlbBF5QhEAtZh2WG5O57V5aw8=;
-        b=j1fV77ud0wQqVw9lbvySf9GJYdfBwtkzmq+GBx/ZYyRmLydcGjIz/yXuHsT4hZCYpe
-         GvztwvvqCS8zxv9HbR/lhsvfiqOdoXATn3D19tVUvd0cf4Kmc/vmcslc/bXEmUiUVNdr
-         fI3ZZqXDQcLAPdHm5raz18Ace8yFmpNA9godyflNIlZd/e/CbO6iiS68SHLTC4ffvUT2
-         RPCWBm3aAwOGsJ1Ttx5NnWdFn0VBjBtUldPQWt9QyHLcH64t2p13QqobvFR3vlaJqojB
-         KE8ngQpgCn9LMfTGgSadmus136n5V9HkgfjKPepCfPd6LpZxBaawPsI9yc0MSeLLWS2x
-         ur+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXoLAiQgKLmxPhMjfiIQ3+uL9w0gsEOgXpMcPpPGJJy9vLMwIW3Hv5ai4IZww1QaB5N4zN6Y+QaTcPq2XQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzeuZA0VZg1NNgWRZngZSwOZEkppPJ3/57jH/pEPleEWj7NsP4N
-	OPedzMGgk2RfPqt+cCg+CYWJEVVT/Aon+NiTWMra++3erMLZigOjXv8+pohMWPOadbNLSwSC8pV
-	1tZe4UydKmxdr99lxYKlOhNz+T5RPXbJp/AsXCDSF7ZGtdR45jYPzhmUJLNU=
-X-Google-Smtp-Source: AGHT+IHgAaPQ0lG4Qb3DlcMMS8TnBYFKFtvsykayCG6Bt+L/0n3F80q+nU1nO17Pm6I0dP6ygR87LyenQ3hXLXUX714DlADdD654
+        d=1e100.net; s=20230601; t=1747849663; x=1748454463;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oGeZ4/qscFDpgQW4r4FF8qcWixZjDJP3cGgKS2Y7uN4=;
+        b=AViRBOg9pWopR7gfDr0ePl3CrR6x9yKZAEZ2uPtgd6xjvLvKWKrGPz0hlSHtFhOKMB
+         FodCtQhHQzp4EhfJ0vjd/O9NBFOty5oxeOcQUFHjw2Fb4wi1g8AlW8DQ2osF6BtoRcQb
+         v/cB3LKcQGqEa1wSgsy6koBFrMbfca6BBwJfplOxGGFuUSV90IIucn1UEWaUTdLj8DGl
+         DNK5wzKMRIYY33a8AoUyPpFMvODNTMVBTDdIC2AOnVYaVCMZWuHnMJF2TJlf8zVVoEvD
+         U+j43kqrYNMjLLYdqVyJsPKlBTofWRevYcLqNvIGQv6obBZlwjuz2T4EuXM2DA3nGaz6
+         37Nw==
+X-Gm-Message-State: AOJu0YzUCdxtmPn5SMATmUx94c/CeXjvaij2IKxC6TsJdQG+UZlQ4z3z
+	igvHZabYMUdfS7+eslyr6msOrB4G78CYFY2w9ZC9U4A+uVYDfNLABPJdkcxl3z0u2MTHZkXmxa6
+	TmL/55vxTKCC4tbKevGt77THvQ1fHCWAApQYGTgZLt1j/g6Q9JB8WpNEknqyOCNhb1g==
+X-Gm-Gg: ASbGncvZAMNWySgJ0FibX9mysvEtGNONIg95jxvp9A3vBuWf2HK6k2asXCzkadicMg/
+	WuEYNj84Xop6DwiOcJ+xdrmMMj//jf/Vq8mgoh5m7000fkpZNdw6bJWrwA70Mx9zawdyxJTtG/w
+	jcw29/h5tdKDLP/vdQzP1x3Em1had5e+rrxpUz0ygAy2Tcss0fu1rILN6zi46ErLuLnUmLpHuFF
+	a6Keb12z2MIO58KDbujoVs32lWOEItxSNbzNZE+CFFI7YkICk3Ph8y+JK8MhSUXqQDqrcZXxSD2
+	isfY8NIOdrMVnJsH6gmwfQE=
+X-Received: by 2002:a05:6102:2088:b0:4e2:86e6:3785 with SMTP id ada2fe7eead31-4e286e63831mr8631160137.5.1747849663596;
+        Wed, 21 May 2025 10:47:43 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFcgJMgOdIuV2JgSyNykYGAESv4TB7nALlmfCg5UZX+HHAGsDtiwbsJqHw7g+R8vvMr49hdzw==
+X-Received: by 2002:a05:6102:2088:b0:4e2:86e6:3785 with SMTP id ada2fe7eead31-4e286e63831mr8631149137.5.1747849663281;
+        Wed, 21 May 2025 10:47:43 -0700 (PDT)
+Received: from localhost.localdomain ([2804:1b3:a801:1fb:3066:58ce:cfdd:85bd])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87bec22768fsm9242464241.30.2025.05.21.10.47.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 May 2025 10:47:42 -0700 (PDT)
+From: Leonardo Bras <leobras@redhat.com>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Leonardo Bras <leobras@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/1] local_lock: Minor improvements of local_trylock*() documentation
+Date: Wed, 21 May 2025 14:47:26 -0300
+Message-ID: <20250521174726.578303-1-leobras@redhat.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1745:b0:3d9:36a8:3d98 with SMTP id
- e9e14a558f8ab-3db84296deemr261924655ab.2.1747849649857; Wed, 21 May 2025
- 10:47:29 -0700 (PDT)
-Date: Wed, 21 May 2025 10:47:29 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <682e11b1.050a0220.ade60.09e5.GAE@google.com>
-Subject: [syzbot] [integrity?] [lsm?] INFO: task hung in process_measurement (3)
-From: syzbot <syzbot+cb9e66807bcb882cd0c5@syzkaller.appspotmail.com>
-To: bfoster@redhat.com, dmitry.kasatkin@gmail.com, eric.snowberg@oracle.com, 
-	jmorris@namei.org, kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, paul@paul-moore.com, 
-	roberto.sassu@huawei.com, serge@hallyn.com, syzkaller-bugs@googlegroups.com, 
-	zohar@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+Fix local_trylock_init() documentation, as it was mentioning the non-try
+helper instead, and use the opportunity to make clear the try_lock*() needs
+to receive a local_trylock_t variable as parameter.
 
-syzbot found the following issue on:
-
-HEAD commit:    172a9d94339c Merge tag '6.15-rc6-smb3-client-fixes' of git..
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=142a5ef4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ea35e429f965296e
-dashboard link: https://syzkaller.appspot.com/bug?extid=cb9e66807bcb882cd0c5
-compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16836e70580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1617a2d4580000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/c7d5b496fd25/disk-172a9d94.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/965a0ad50b10/vmlinux-172a9d94.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/62675d801af8/bzImage-172a9d94.xz
-mounted in repro #1: https://storage.googleapis.com/syzbot-assets/a11594a5d459/mount_0.gz
-mounted in repro #2: https://storage.googleapis.com/syzbot-assets/84492c682353/mount_4.gz
-
-The issue was bisected to:
-
-commit 1d16c605cc55ef26f0c65b362665a6c99080ccbc
-Author: Kent Overstreet <kent.overstreet@linux.dev>
-Date:   Thu Nov 9 19:22:46 2023 +0000
-
-    bcachefs: Disk space accounting rewrite
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13f61e70580000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=100e1e70580000
-console output: https://syzkaller.appspot.com/x/log.txt?x=17f61e70580000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+cb9e66807bcb882cd0c5@syzkaller.appspotmail.com
-Fixes: 1d16c605cc55 ("bcachefs: Disk space accounting rewrite")
-
-INFO: task syz-executor236:5862 blocked for more than 143 seconds.
-      Not tainted 6.15.0-rc6-syzkaller-00278-g172a9d94339c #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:syz-executor236 state:D stack:26936 pid:5862  tgid:5849  ppid:5845   task_flags:0x400140 flags:0x00004006
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5382 [inline]
- __schedule+0x168f/0x4c70 kernel/sched/core.c:6767
- __schedule_loop kernel/sched/core.c:6845 [inline]
- schedule+0x165/0x360 kernel/sched/core.c:6860
- schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6917
- rwsem_down_write_slowpath+0xbec/0x1030 kernel/locking/rwsem.c:1176
- __down_write_common kernel/locking/rwsem.c:1304 [inline]
- __down_write kernel/locking/rwsem.c:1313 [inline]
- down_write+0x1ab/0x1f0 kernel/locking/rwsem.c:1578
- inode_lock include/linux/fs.h:867 [inline]
- process_measurement+0x3d8/0x1a40 security/integrity/ima/ima_main.c:260
- ima_file_check+0xd7/0x120 security/integrity/ima/ima_main.c:613
- security_file_post_open+0xbb/0x290 security/security.c:3130
- do_open fs/namei.c:3882 [inline]
- path_openat+0x2f26/0x3830 fs/namei.c:4039
- do_filp_open+0x1fa/0x410 fs/namei.c:4066
- do_sys_openat2+0x121/0x1c0 fs/open.c:1429
- do_sys_open fs/open.c:1444 [inline]
- __do_sys_creat fs/open.c:1522 [inline]
- __se_sys_creat fs/open.c:1516 [inline]
- __x64_sys_creat+0x8f/0xc0 fs/open.c:1516
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fd31f9f4ef9
-RSP: 002b:00007fd31f95f218 EFLAGS: 00000246 ORIG_RAX: 0000000000000055
-RAX: ffffffffffffffda RBX: 00007fd31fa9b6e8 RCX: 00007fd31f9f4ef9
-RDX: ffffffffffffffb0 RSI: c9028ba210c11e9b RDI: 00002000000000c0
-RBP: 00007fd31fa9b6e0 R08: 0000000000000000 R09: 0000000000000000
-R10: 00007ffcb62f60c7 R11: 0000000000000246 R12: 00007fd31fa67314
-R13: 00002000000000c0 R14: 0030656c69662f2e R15: 00007ffcb62f60c8
- </TASK>
-
-Showing all locks held in the system:
-1 lock held by khungtaskd/31:
- #0: ffffffff8df3dce0 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
- #0: ffffffff8df3dce0 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:841 [inline]
- #0: ffffffff8df3dce0 (rcu_read_lock){....}-{1:3}, at: debug_show_all_locks+0x2e/0x180 kernel/locking/lockdep.c:6764
-1 lock held by kworker/u8:3/53:
- #0: ffff8880b88399d8 (&rq->__lock){-.-.}-{2:2}, at: raw_spin_rq_lock_nested+0x2a/0x140 kernel/sched/core.c:605
-1 lock held by klogd/5178:
- #0: ffff8880b88399d8 (&rq->__lock){-.-.}-{2:2}, at: raw_spin_rq_lock_nested+0x2a/0x140 kernel/sched/core.c:605
-2 locks held by getty/5577:
- #0: ffff8880340120a0 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:243
- #1: ffffc900036ec2f0 (&ldata->atomic_read_lock){+.+.}-{4:4}, at: n_tty_read+0x43e/0x1400 drivers/tty/n_tty.c:2222
-3 locks held by syz-executor236/5850:
- #0: ffff888078b629b8 (&f->f_pos_lock){+.+.}-{4:4}, at: fdget_pos+0x247/0x320 fs/file.c:1213
- #1: ffff88823bfbe420 (sb_writers#9){.+.+}-{0:0}, at: file_start_write include/linux/fs.h:3041 [inline]
- #1: ffff88823bfbe420 (sb_writers#9){.+.+}-{0:0}, at: vfs_write+0x211/0xa90 fs/read_write.c:680
- #2: ffff8880761b08e0 (&sb->s_type->i_mutex_key#14){+.+.}-{4:4}, at: inode_lock include/linux/fs.h:867 [inline]
- #2: ffff8880761b08e0 (&sb->s_type->i_mutex_key#14){+.+.}-{4:4}, at: bch2_direct_write+0x267/0x2d50 fs/bcachefs/fs-io-direct.c:612
-2 locks held by syz-executor236/5862:
- #0: ffff88823bfbe420 (sb_writers#9){.+.+}-{0:0}, at: mnt_want_write+0x41/0x90 fs/namespace.c:556
- #1: ffff8880761b08e0 (&sb->s_type->i_mutex_key#14){+.+.}-{4:4}, at: inode_lock include/linux/fs.h:867 [inline]
- #1: ffff8880761b08e0 (&sb->s_type->i_mutex_key#14){+.+.}-{4:4}, at: process_measurement+0x3d8/0x1a40 security/integrity/ima/ima_main.c:260
-
-=============================================
-
-NMI backtrace for cpu 0
-CPU: 0 UID: 0 PID: 31 Comm: khungtaskd Not tainted 6.15.0-rc6-syzkaller-00278-g172a9d94339c #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-Call Trace:
- <TASK>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- nmi_cpu_backtrace+0x39e/0x3d0 lib/nmi_backtrace.c:113
- nmi_trigger_cpumask_backtrace+0x17a/0x300 lib/nmi_backtrace.c:62
- trigger_all_cpu_backtrace include/linux/nmi.h:158 [inline]
- check_hung_uninterruptible_tasks kernel/hung_task.c:274 [inline]
- watchdog+0xfee/0x1030 kernel/hung_task.c:437
- kthread+0x70e/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-Sending NMI from CPU 0 to CPUs 1:
-NMI backtrace for cpu 1
-CPU: 1 UID: 0 PID: 0 Comm: swapper/1 Not tainted 6.15.0-rc6-syzkaller-00278-g172a9d94339c #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-RIP: 0010:pv_native_safe_halt+0x13/0x20 arch/x86/kernel/paravirt.c:81
-Code: 43 d4 02 00 cc cc cc 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 66 90 0f 00 2d a3 9f 18 00 f3 0f 1e fa fb f4 <e9> 18 d4 02 00 cc cc cc cc cc cc cc cc 90 90 90 90 90 90 90 90 90
-RSP: 0018:ffffc90000197de0 EFLAGS: 000002c6
-RAX: a55f7e0638390b00 RBX: ffffffff81977048 RCX: a55f7e0638390b00
-RDX: 0000000000000001 RSI: ffffffff8d73a84c RDI: ffffffff8bc12000
-RBP: ffffc90000197f20 R08: ffff8880b8932b5b R09: 1ffff1101712656b
-R10: dffffc0000000000 R11: ffffed101712656c R12: ffffffff8f7e0670
-R13: 0000000000000001 R14: 0000000000000001 R15: 1ffff110038dcb40
-FS:  0000000000000000(0000) GS:ffff8881261f6000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000055b5f126d168 CR3: 000000000dd38000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- arch_safe_halt arch/x86/include/asm/paravirt.h:107 [inline]
- default_idle+0x13/0x20 arch/x86/kernel/process.c:748
- default_idle_call+0x74/0xb0 kernel/sched/idle.c:117
- cpuidle_idle_call kernel/sched/idle.c:185 [inline]
- do_idle+0x1e8/0x510 kernel/sched/idle.c:325
- cpu_startup_entry+0x44/0x60 kernel/sched/idle.c:423
- start_secondary+0x101/0x110 arch/x86/kernel/smpboot.c:315
- common_startup_64+0x13e/0x147
- </TASK>
-
-
+Signed-off-by: Leonardo Bras <leobras@redhat.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+v1: https://lore.kernel.org/all/20250505170244.253170-1-leobras@redhat.com/
+RFC: https://lore.kernel.org/all/20250430073610.163846-1-leobras@redhat.com/
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+ include/linux/local_lock.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+diff --git a/include/linux/local_lock.h b/include/linux/local_lock.h
+index 16a2ee4f8310b..d8d5e6cfa1151 100644
+--- a/include/linux/local_lock.h
++++ b/include/linux/local_lock.h
+@@ -45,38 +45,38 @@
+ /**
+  * local_unlock_irqrestore - Release a per CPU local lock and restore
+  *			      interrupt flags
+  * @lock:	The lock variable
+  * @flags:      Interrupt flags to restore
+  */
+ #define local_unlock_irqrestore(lock, flags)			\
+ 	__local_unlock_irqrestore(lock, flags)
+ 
+ /**
+- * local_lock_init - Runtime initialize a lock instance
++ * local_trylock_init - Runtime initialize a local_trylock_t instance
+  */
+ #define local_trylock_init(lock)	__local_trylock_init(lock)
+ 
+ /**
+  * local_trylock - Try to acquire a per CPU local lock
+- * @lock:	The lock variable
++ * @lock:	The local_trylock_t variable
+  *
+  * The function can be used in any context such as NMI or HARDIRQ. Due to
+  * locking constrains it will _always_ fail to acquire the lock in NMI or
+  * HARDIRQ context on PREEMPT_RT.
+  */
+ #define local_trylock(lock)		__local_trylock(lock)
+ 
+ /**
+  * local_trylock_irqsave - Try to acquire a per CPU local lock, save and disable
+  *			   interrupts if acquired
+- * @lock:	The lock variable
++ * @lock:	The local_trylock_t variable
+  * @flags:	Storage for interrupt flags
+  *
+  * The function can be used in any context such as NMI or HARDIRQ. Due to
+  * locking constrains it will _always_ fail to acquire the lock in NMI or
+  * HARDIRQ context on PREEMPT_RT.
+  */
+ #define local_trylock_irqsave(lock, flags)			\
+ 	__local_trylock_irqsave(lock, flags)
+ 
+ DEFINE_GUARD(local_lock, local_lock_t __percpu*,
+-- 
+2.49.0
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
