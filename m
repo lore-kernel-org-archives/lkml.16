@@ -1,92 +1,177 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 098902163BD;
-	Wed, 21 May 2025 12:02:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A42F1263F32;
+	Wed, 21 May 2025 12:04:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747828970; cv=none; b=Qer+nBnBc9/E69iof3s/jMjCJBqhKiwLaU1grFrBJ416gSgyKvPT4Sk4WgD9UT5mplyG1Q6yu18lSgrtG+D2jR6Kmc1yRsFW8JOg2vQGS3j439pxRx3nqCCGCyudergBHJXwLaq+Kx88fqjgm64Sh2y7G37SG8EPm7cJBtlzEIs=
+	t=1747829064; cv=none; b=WDZvxoSlUXIiAUki/jf7akeLCXbASst63uVP1AjvFGodPtB7+eykRUVj0NvAlbeMKAZQrHyQbiwuyYahzUhA9MUUwoOKnOG3PloVfEcWMFHn7HhHOjmNgSVZKtUkXemDi9tE9ZrpnAgUmtGyv+66yC2Q6a6KbrH8EVbOOvbKVjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747828970; c=relaxed/simple;
-	bh=sdqaJ4spndMyYdm225LztWmZox/m2wDtMrpvyeg07f4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UhkUKpeag5882PmPDjypQzSsT6J0DcZ8/3/NwyTW23bhQlKKEfsw/FZ+x+Gk9seJ7VEsTo4iUBD/fpIxnscjTdOMSyCeBVBAnmWiCSDHJJkMkKMqr512Wp384H//yHUuWTBEkFruew+vzDyPqhbHXNVAR3qO/TFmw0WSOZB5yPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=wj/jfIfM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747829064; c=relaxed/simple;
+	bh=qat3JtrLHfST4FEr1k/ws3zh/QyLgSLm5qnxlDi6Jxc=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gN3QSpcn+hKA3FWUwlr/C7kz6rnwuSjYw/NyL4NLPUz/dhfnMUDWXfeUATQ6jwYTxHygFZ4eofZtSSXXXcaNPIKGzWVbfgxGEGVKHnai+eQLOXTZ5ZkhynXz1UHfej1N0kRmFs+CuKe7afPFPyaAIR97oNSD6qNUilKklSRTxI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rzx55BP/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="wj/jfIfM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE36FC4CEE7;
-	Wed, 21 May 2025 12:02:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1747828969;
-	bh=sdqaJ4spndMyYdm225LztWmZox/m2wDtMrpvyeg07f4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=wj/jfIfMbJZfR464GpB6T/cSnpn2qisnrJ1xPapKWW37XEPdWv2o1tpoD9pejFl1j
-	 5NAFgkzNEhB69/qEf3fHcFf6AQ9FpXr8EOvLhz8VXfv0Uoh3KTFEW0O0W6b9fOaFiu
-	 MFbNMkV9SktdybWFTyYQPp1ZvskXHl0+6GVvJq84=
-Date: Wed, 21 May 2025 14:02:46 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Remo Senekowitsch <remo@buenzli.dev>
-Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Dirk Behme <dirk.behme@de.bosch.com>, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v5 4/9] rust: device: Enable printing fwnode name and path
-Message-ID: <2025052153-steadier-bargraph-e81a@gregkh>
-References: <20250520200024.268655-1-remo@buenzli.dev>
- <20250520200024.268655-5-remo@buenzli.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rzx55BP/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13A30C4CEE4;
+	Wed, 21 May 2025 12:04:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747829064;
+	bh=qat3JtrLHfST4FEr1k/ws3zh/QyLgSLm5qnxlDi6Jxc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Rzx55BP/ERqnQsh9/Tdk/Ywb0mIN63mrImqtI9HncjiFfiLZKgXcvWM9HzybJg915
+	 AJi3D0OfuU6J5WgOOa6sN5o+8D1bhL3OePsb03ZO21wf2PzeQcMwbFyHDIYAx7qWS3
+	 sMvlUgMj+rC6VU7s6sbnTtg7ZxziQfg6k9+17KMsv5f17+AHXKWqfxLW9R9XaAf8Xq
+	 FaMr+TIBsSRVBNrzybxO8IGEQXqC3IQM2KlvLtz0bvkCsoC3/KM4RgPOYyyPhi4Yc/
+	 iHmWAleCieEF8cAx5GYpI75aV3GVwRh+fz8CzUlHE6PJ6hD74OP+nrlJVqzwDCcEqb
+	 bDEf9ztGn3GBw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uHiBJ-00GvRE-Vl;
+	Wed, 21 May 2025 13:04:22 +0100
+Date: Wed, 21 May 2025 13:04:21 +0100
+Message-ID: <86sekydvay.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: oliver.upton@linux.dev,
+	joey.gouly@arm.com,
+	suzuki.poulose@arm.com,
+	yuzenghui@huawei.com,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	qperret@google.com,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	kernel-team@android.com
+Subject: Re: [PATCH v5 10/10] KVM: arm64: np-guest CMOs with PMD_SIZE fixmap
+In-Reply-To: <aC28TB_2Aul4s1T6@google.com>
+References: <20250520085201.3059786-1-vdonnefort@google.com>
+	<20250520085201.3059786-11-vdonnefort@google.com>
+	<86tt5edy7t.wl-maz@kernel.org>
+	<aC28TB_2Aul4s1T6@google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250520200024.268655-5-remo@buenzli.dev>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: vdonnefort@google.com, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, qperret@google.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Tue, May 20, 2025 at 10:00:19PM +0200, Remo Senekowitsch wrote:
-> Add two new public methods `display_name` and `display_path` to
-> `FwNode`. They can be used by driver authors for logging purposes. In
-> addition, they will be used by core property abstractions for automatic
-> logging, for example when a driver attempts to read a required but
-> missing property.
+On Wed, 21 May 2025 12:43:08 +0100,
+Vincent Donnefort <vdonnefort@google.com> wrote:
 > 
-> Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
-> ---
->  rust/kernel/device/property.rs | 72 ++++++++++++++++++++++++++++++++++
->  1 file changed, 72 insertions(+)
+> On Wed, May 21, 2025 at 12:01:26PM +0100, Marc Zyngier wrote:
+> > On Tue, 20 May 2025 09:52:01 +0100,
+> > Vincent Donnefort <vdonnefort@google.com> wrote:
+> > > 
+> > > With the introduction of stage-2 huge mappings in the pKVM hypervisor,
+> > > guest pages CMO is needed for PMD_SIZE size. Fixmap only supports
+> > > PAGE_SIZE and iterating over the huge-page is time consuming (mostly due
+> > > to TLBI on hyp_fixmap_unmap) which is a problem for EL2 latency.
+> > > 
+> > > Introduce a shared PMD_SIZE fixmap (hyp_fixblock_map/hyp_fixblock_unmap)
+> > > to improve guest page CMOs when stage-2 huge mappings are installed.
+> > > 
+> > > On a Pixel6, the iterative solution resulted in a latency of ~700us,
+> > > while the PMD_SIZE fixmap reduces it to ~100us.
+> > > 
+> > > Because of the horrendous private range allocation that would be
+> > > necessary, this is disabled for 64KiB pages systems.
+> > > 
+> > > Suggested-by: Quentin Perret <qperret@google.com>
+> > > Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> > > Signed-off-by: Quentin Perret <qperret@google.com>
+> > > 
+> > > diff --git a/arch/arm64/include/asm/kvm_pgtable.h b/arch/arm64/include/asm/kvm_pgtable.h
+> > > index 1b43bcd2a679..2888b5d03757 100644
+> > > --- a/arch/arm64/include/asm/kvm_pgtable.h
+> > > +++ b/arch/arm64/include/asm/kvm_pgtable.h
+> > > @@ -59,6 +59,11 @@ typedef u64 kvm_pte_t;
+> > >  
+> > >  #define KVM_PHYS_INVALID		(-1ULL)
+> > >  
+> > > +#define KVM_PTE_TYPE			BIT(1)
+> > > +#define KVM_PTE_TYPE_BLOCK		0
+> > > +#define KVM_PTE_TYPE_PAGE		1
+> > > +#define KVM_PTE_TYPE_TABLE		1
+> > > +
+> > >  #define KVM_PTE_LEAF_ATTR_LO		GENMASK(11, 2)
+> > >  
+> > >  #define KVM_PTE_LEAF_ATTR_LO_S1_ATTRIDX	GENMASK(4, 2)
+> > > diff --git a/arch/arm64/kvm/hyp/include/nvhe/mm.h b/arch/arm64/kvm/hyp/include/nvhe/mm.h
+> > > index 230e4f2527de..6e83ce35c2f2 100644
+> > > --- a/arch/arm64/kvm/hyp/include/nvhe/mm.h
+> > > +++ b/arch/arm64/kvm/hyp/include/nvhe/mm.h
+> > > @@ -13,9 +13,11 @@
+> > >  extern struct kvm_pgtable pkvm_pgtable;
+> > >  extern hyp_spinlock_t pkvm_pgd_lock;
+> > >  
+> > > -int hyp_create_pcpu_fixmap(void);
+> > > +int hyp_create_fixmap(void);
+> > >  void *hyp_fixmap_map(phys_addr_t phys);
+> > >  void hyp_fixmap_unmap(void);
+> > > +void *hyp_fixblock_map(phys_addr_t phys, size_t *size);
+> > > +void hyp_fixblock_unmap(void);
+> > >  
+> > >  int hyp_create_idmap(u32 hyp_va_bits);
+> > >  int hyp_map_vectors(void);
+> > > diff --git a/arch/arm64/kvm/hyp/nvhe/mem_protect.c b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
+> > > index 1490820b9ebe..962948534179 100644
+> > > --- a/arch/arm64/kvm/hyp/nvhe/mem_protect.c
+> > > +++ b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
+> > > @@ -216,34 +216,42 @@ static void guest_s2_put_page(void *addr)
+> > >  	hyp_put_page(&current_vm->pool, addr);
+> > >  }
+> > >  
+> > > -static void clean_dcache_guest_page(void *va, size_t size)
+> > > +static void __apply_guest_page(void *va, size_t size,
+> > > +			       void (*func)(void *addr, size_t size))
+> > >  {
+> > >  	size += va - PTR_ALIGN_DOWN(va, PAGE_SIZE);
+> > >  	va = PTR_ALIGN_DOWN(va, PAGE_SIZE);
+> > >  	size = PAGE_ALIGN(size);
+> > >  
+> > >  	while (size) {
+> > > -		__clean_dcache_guest_page(hyp_fixmap_map(__hyp_pa(va)),
+> > > -					  PAGE_SIZE);
+> > > -		hyp_fixmap_unmap();
+> > > -		va += PAGE_SIZE;
+> > > -		size -= PAGE_SIZE;
+> > > +		size_t map_size = PAGE_SIZE;
+> > > +		void *map;
+> > > +
+> > > +		if (size >= PMD_SIZE)
+> > > +			map = hyp_fixblock_map(__hyp_pa(va), &map_size);
+> > 
+> > You seem to consider that if size if PMD_SIZE (or more), then va must
+> > be PMD aligned. I don't think this is correct.
+> > 
+> > Such an iterator should start by doing PAGE_SIZEd operations until va
+> > is PMD-aligned. Only at this point can it perform PMD_SIZEd
+> > operations, until the remaining size is less than PMD_SIZE. And at
+> > that point, it's PAGE_SIZE all over again until the end.
 > 
-> diff --git a/rust/kernel/device/property.rs b/rust/kernel/device/property.rs
-> index 70593343bd811..6ccc7947f9c31 100644
-> --- a/rust/kernel/device/property.rs
-> +++ b/rust/kernel/device/property.rs
-> @@ -32,6 +32,78 @@ pub(crate) fn as_raw(&self) -> *mut bindings::fwnode_handle {
->          self.0.get()
->      }
->  
-> +    /// Returns an object that implements [`Display`](core::fmt::Display) for
-> +    /// printing the name of a node.
-> +    pub fn display_name(&self) -> impl core::fmt::Display + '_ {
-> +        struct FwNodeDisplayName<'a>(&'a FwNode);
-> +
-> +        impl core::fmt::Display for FwNodeDisplayName<'_> {
-> +            fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-> +                // SAFETY: self is valid by its type invariant
-> +                let name = unsafe { bindings::fwnode_get_name(self.0.as_raw()) };
-> +                if name.is_null() {
-> +                    return Ok(());
+> Arg yes you're right :-\ 
+> 
+> Shall I respin a v6 with that fix or shall I wait a bit more?
 
-So if there is no name, you are returning Ok()?  Are you sure that's ok
-to do?  What will the result of the string look like then?
+Please send a new version ASAP, as I'm really getting very close to
+locking down the tree (and I keep finding embarrassing bugs...).
 
-thanks,
+Thanks,
 
-greg k-h
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
