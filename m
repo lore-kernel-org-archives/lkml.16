@@ -1,91 +1,557 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB1F1221297;
-	Wed, 21 May 2025 15:34:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0F94229B1A;
+	Wed, 21 May 2025 15:34:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747841683; cv=none; b=G/J/ETuPJWSOuH7oACay3JerWb3sAi/9td/fd9SaYgBd3wFG49Zk2nLBiIqlCD+d/dNcDEa0NhS0UA3GfdFJu2MaHmhx2y3G+diBW0KocC5wfLNztsabvqQamKKkSefAWTNyivyZ8MKstrDSfXkkL5jozjYuqaXASg6YHOqO048=
+	t=1747841686; cv=none; b=nwjAX1JV5blAi3HFrUrMa4VI4qNgp2HDI3vn1jZSs7diIYwjVKmYd/Mg/LdG19hNjYdnWFpCjQGUUcHI3SHOetc3WS2H1ve3B0Dk03JkHv4/nvuGHDR+86qEC7l6uNQ/6+b9C1DrH4wp/VYDiSzkBCzyZJHtRJeSvtTVj0XrMpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747841683; c=relaxed/simple;
-	bh=/amBSm5I9J5IaO88xw0RyZWxwOgvbaTAgzX9oG5SXMk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=plbg6JPUGtUttMdpDcEuP/6Tuhe4FurnUUCZDH1ECEzhAuiraSg7g6vc1O+bi0ilY7k/wbQ701kbk47C8ndmjhk0muT5DFTax0kmdGg1TF/+K2ic8VHl+m0dYIUHM0XThrh6N/G0mPLia9FHL0m/hGnML8EggUYmcZ5/uREkHcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yfn1GPaH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747841686; c=relaxed/simple;
+	bh=Z4yeiZqWZpuNmbt9uzWikv0yXPuruF94qxI5kAwDCSg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=XUsyepezwES8rAXAVSwAqIGNz4alQsDCacBBruFySQZ1NsgoB22Q13TS40YAm8IgawWhGHVp15RVe4Aip1JOvfyegwoKR4D2ayJ5ORi6Hq6Ifb8rm/o0ht75m3QhH7WXhusD1O0+dB+ODmNQQoHroTMUkjQZkS2mAkNQbrL1euA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SR4w3AP3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yfn1GPaH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A056BC4CEE4;
-	Wed, 21 May 2025 15:34:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SR4w3AP3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 670B9C4CEEB;
+	Wed, 21 May 2025 15:34:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747841683;
-	bh=/amBSm5I9J5IaO88xw0RyZWxwOgvbaTAgzX9oG5SXMk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Yfn1GPaHIuvKHnHI+miBXmeiq85J68kYtDwLB6WZxpGTex0+8pkUdFPI4ffS0mmHk
-	 7ySSF6k6dW8gOXvH/oTo/vSEsZUbnK0r90TMMkn9BQINQAjdxOszaEbJeMtsDxE2nW
-	 l8Cr8sSHB03vzB7XVPXYNqbWoW7/nAkRaTXv/HS0lmiJcDVUF0L6kFzxrIo2uZb5Bf
-	 T0TzCMo37mfxzeg0O8D0NV9Y/DZtpOrKktgN0PBmbnZxMxTf88sVsD796RuEeoCAkO
-	 yCpzSD3C95szCTQGTnxeARQGH5IUHTiZhTX8TXUpjnWnLcQaKirOT+yhgrTX14dxji
-	 DhWdLLEE9M3iw==
-Date: Wed, 21 May 2025 17:34:39 +0200
-From: Antoine Tenart <atenart@kernel.org>
-To: Horatiu Vultur <horatiu.vultur@microchip.com>
-Cc: andrew@lunn.ch, hkallweit1@gmail.com, linux@armlinux.org.uk, 
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	richardcochran@gmail.com, kory.maincent@bootlin.com, shannon.nelson@amd.com, 
-	viro@zeniv.linux.org.uk, atenart@kernel.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] net: phy: mscc: Fix memory leak when using one step
- timestamping
-Message-ID: <vmtli7u7fnsj56xhih7eqtzt6w3v4yp7dviyssqyyybvsioznj@lzwdr5dpo5wg>
-References: <20250521131114.2719084-1-horatiu.vultur@microchip.com>
+	s=k20201202; t=1747841686;
+	bh=Z4yeiZqWZpuNmbt9uzWikv0yXPuruF94qxI5kAwDCSg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=SR4w3AP3mCN08c3pDl31W71B4LJP/WgDfH6dJB/z9lVQX3Xkx2RGk2WbXaRR/S0ox
+	 I9vFhdoqpjzb6rSnpVIOUiYurvsgj+oRvPqR7cKeVAExs3LNK+MyuPWFsyoWijL5UO
+	 hWpAn8f6obkOmglDexHmP4uBv1C8bb7XgfJwId6vfqohxS+oUtFxV+Db1FSEnjPXYT
+	 MHs2qGwj34LMzEs/SWSmz3FcPSuWQE5UMP/LaBTCERql/HjKlYAlZQMjTvWvGGO2S2
+	 tGPc/o5NA0iTXtaOzuurWhXMXQa2l4u5wxxYPgXT5+2jhLF+l5v3mepvvKAdx+iVXq
+	 Il0pX8lWPN2nw==
+From: Lee Jones <lee@kernel.org>
+To: lee@kernel.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>,
+	Jens Axboe <axboe@kernel.dk>,
+	Sasha Levin <sashal@kernel.org>,
+	Michal Luczaj <mhal@rbox.co>,
+	Rao Shoaib <Rao.Shoaib@oracle.com>,
+	Pavel Begunkov <asml.silence@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Cc: stable@vger.kernel.org
+Subject: [PATCH v6.1 21/27] af_unix: Replace garbage collection algorithm.
+Date: Wed, 21 May 2025 16:27:20 +0100
+Message-ID: <20250521152920.1116756-22-lee@kernel.org>
+X-Mailer: git-send-email 2.49.0.1143.g0be31eac6b-goog
+In-Reply-To: <20250521152920.1116756-1-lee@kernel.org>
+References: <20250521152920.1116756-1-lee@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250521131114.2719084-1-horatiu.vultur@microchip.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 21, 2025 at 03:11:14PM +0200, Horatiu Vultur wrote:
-> Fix memory leak when running one-step timestamping. When running
-> one-step sync timestamping, the HW is configured to insert the TX time
-> into the frame, so there is no reason to keep the skb anymore. As in
-> this case the HW will never generate an interrupt to say that the frame
-> was timestamped, then the frame will never released.
-> Fix this by freeing the frame in case of one-step timestamping.
-> 
-> Fixes: 7d272e63e0979d ("net: phy: mscc: timestamping and PHC support")
-> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
-> ---
->  drivers/net/phy/mscc/mscc_ptp.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/drivers/net/phy/mscc/mscc_ptp.c b/drivers/net/phy/mscc/mscc_ptp.c
-> index ed8fb14a7f215..db8ca1dfd5322 100644
-> --- a/drivers/net/phy/mscc/mscc_ptp.c
-> +++ b/drivers/net/phy/mscc/mscc_ptp.c
-> @@ -1173,6 +1173,13 @@ static void vsc85xx_txtstamp(struct mii_timestamper *mii_ts,
->  		return;
->  	}
->  
-> +	if (vsc8531->ptp->tx_type == HWTSTAMP_TX_ONESTEP_SYNC) {
-> +		if (ptp_msg_is_sync(skb, type)) {
-> +			kfree_skb(skb);
-> +			return;
-> +		}
-> +	}
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
 
-I don't remember everything about TS but I think the above is fine. Also
-while looking at this I saw this function is doing the following too:
+[ Upstream commit 4090fa373f0e763c43610853d2774b5979915959 ]
 
-  if (!vsc8531->ptp->configured)
-	return;
+If we find a dead SCC during iteration, we call unix_collect_skb()
+to splice all skb in the SCC to the global sk_buff_head, hitlist.
 
-I guess we should free the skb for all paths not putting it in the tx
-queue. As there would be 3 paths freeing the skb + returning, you might
-as well use a label for easier maintenance.
+After iterating all SCC, we unlock unix_gc_lock and purge the queue.
 
-Thanks,
-Antoine
+Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+Acked-by: Paolo Abeni <pabeni@redhat.com>
+Link: https://lore.kernel.org/r/20240325202425.60930-15-kuniyu@amazon.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+(cherry picked from commit 4090fa373f0e763c43610853d2774b5979915959)
+Signed-off-by: Lee Jones <lee@kernel.org>
+---
+ include/net/af_unix.h |   8 --
+ net/unix/af_unix.c    |  12 --
+ net/unix/garbage.c    | 318 +++++++++---------------------------------
+ 3 files changed, 64 insertions(+), 274 deletions(-)
+
+diff --git a/include/net/af_unix.h b/include/net/af_unix.h
+index 14d56b07a54d..47808e366731 100644
+--- a/include/net/af_unix.h
++++ b/include/net/af_unix.h
+@@ -19,9 +19,6 @@ static inline struct unix_sock *unix_get_socket(struct file *filp)
+ 
+ extern spinlock_t unix_gc_lock;
+ extern unsigned int unix_tot_inflight;
+-
+-void unix_inflight(struct user_struct *user, struct file *fp);
+-void unix_notinflight(struct user_struct *user, struct file *fp);
+ void unix_add_edges(struct scm_fp_list *fpl, struct unix_sock *receiver);
+ void unix_del_edges(struct scm_fp_list *fpl);
+ void unix_update_edges(struct unix_sock *receiver);
+@@ -85,12 +82,7 @@ struct unix_sock {
+ 	struct sock		*peer;
+ 	struct sock		*listener;
+ 	struct unix_vertex	*vertex;
+-	struct list_head	link;
+-	unsigned long		inflight;
+ 	spinlock_t		lock;
+-	unsigned long		gc_flags;
+-#define UNIX_GC_CANDIDATE	0
+-#define UNIX_GC_MAYBE_CYCLE	1
+ 	struct socket_wq	peer_wq;
+ 	wait_queue_entry_t	peer_wake;
+ 	struct scm_stat		scm_stat;
+diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
+index 4d8b2b2b9a70..25f66adf47d1 100644
+--- a/net/unix/af_unix.c
++++ b/net/unix/af_unix.c
+@@ -955,12 +955,10 @@ static struct sock *unix_create1(struct net *net, struct socket *sock, int kern,
+ 	sk->sk_destruct		= unix_sock_destructor;
+ 	u = unix_sk(sk);
+ 	u->listener = NULL;
+-	u->inflight = 0;
+ 	u->vertex = NULL;
+ 	u->path.dentry = NULL;
+ 	u->path.mnt = NULL;
+ 	spin_lock_init(&u->lock);
+-	INIT_LIST_HEAD(&u->link);
+ 	mutex_init(&u->iolock); /* single task reading lock */
+ 	mutex_init(&u->bindlock); /* single task binding lock */
+ 	init_waitqueue_head(&u->peer_wait);
+@@ -1744,8 +1742,6 @@ static inline bool too_many_unix_fds(struct task_struct *p)
+ 
+ static int unix_attach_fds(struct scm_cookie *scm, struct sk_buff *skb)
+ {
+-	int i;
+-
+ 	if (too_many_unix_fds(current))
+ 		return -ETOOMANYREFS;
+ 
+@@ -1757,9 +1753,6 @@ static int unix_attach_fds(struct scm_cookie *scm, struct sk_buff *skb)
+ 	if (!UNIXCB(skb).fp)
+ 		return -ENOMEM;
+ 
+-	for (i = scm->fp->count - 1; i >= 0; i--)
+-		unix_inflight(scm->fp->user, scm->fp->fp[i]);
+-
+ 	if (unix_prepare_fpl(UNIXCB(skb).fp))
+ 		return -ENOMEM;
+ 
+@@ -1768,15 +1761,10 @@ static int unix_attach_fds(struct scm_cookie *scm, struct sk_buff *skb)
+ 
+ static void unix_detach_fds(struct scm_cookie *scm, struct sk_buff *skb)
+ {
+-	int i;
+-
+ 	scm->fp = UNIXCB(skb).fp;
+ 	UNIXCB(skb).fp = NULL;
+ 
+ 	unix_destroy_fpl(scm->fp);
+-
+-	for (i = scm->fp->count - 1; i >= 0; i--)
+-		unix_notinflight(scm->fp->user, scm->fp->fp[i]);
+ }
+ 
+ static void unix_peek_fds(struct scm_cookie *scm, struct sk_buff *skb)
+diff --git a/net/unix/garbage.c b/net/unix/garbage.c
+index 1f53c25fc71b..89ea71d9297b 100644
+--- a/net/unix/garbage.c
++++ b/net/unix/garbage.c
+@@ -322,6 +322,52 @@ static bool unix_vertex_dead(struct unix_vertex *vertex)
+ 	return true;
+ }
+ 
++enum unix_recv_queue_lock_class {
++	U_RECVQ_LOCK_NORMAL,
++	U_RECVQ_LOCK_EMBRYO,
++};
++
++static void unix_collect_skb(struct list_head *scc, struct sk_buff_head *hitlist)
++{
++	struct unix_vertex *vertex;
++
++	list_for_each_entry_reverse(vertex, scc, scc_entry) {
++		struct sk_buff_head *queue;
++		struct unix_edge *edge;
++		struct unix_sock *u;
++
++		edge = list_first_entry(&vertex->edges, typeof(*edge), vertex_entry);
++		u = edge->predecessor;
++		queue = &u->sk.sk_receive_queue;
++
++		spin_lock(&queue->lock);
++
++		if (u->sk.sk_state == TCP_LISTEN) {
++			struct sk_buff *skb;
++
++			skb_queue_walk(queue, skb) {
++				struct sk_buff_head *embryo_queue = &skb->sk->sk_receive_queue;
++
++				/* listener -> embryo order, the inversion never happens. */
++				spin_lock_nested(&embryo_queue->lock, U_RECVQ_LOCK_EMBRYO);
++				skb_queue_splice_init(embryo_queue, hitlist);
++				spin_unlock(&embryo_queue->lock);
++			}
++		} else {
++			skb_queue_splice_init(queue, hitlist);
++
++#if IS_ENABLED(CONFIG_AF_UNIX_OOB)
++			if (u->oob_skb) {
++				kfree_skb(u->oob_skb);
++				u->oob_skb = NULL;
++			}
++#endif
++		}
++
++		spin_unlock(&queue->lock);
++	}
++}
++
+ static bool unix_scc_cyclic(struct list_head *scc)
+ {
+ 	struct unix_vertex *vertex;
+@@ -345,7 +391,8 @@ static bool unix_scc_cyclic(struct list_head *scc)
+ static LIST_HEAD(unix_visited_vertices);
+ static unsigned long unix_vertex_grouped_index = UNIX_VERTEX_INDEX_MARK2;
+ 
+-static void __unix_walk_scc(struct unix_vertex *vertex, unsigned long *last_index)
++static void __unix_walk_scc(struct unix_vertex *vertex, unsigned long *last_index,
++			    struct sk_buff_head *hitlist)
+ {
+ 	LIST_HEAD(vertex_stack);
+ 	struct unix_edge *edge;
+@@ -430,7 +477,9 @@ static void __unix_walk_scc(struct unix_vertex *vertex, unsigned long *last_inde
+ 				scc_dead = unix_vertex_dead(vertex);
+ 		}
+ 
+-		if (!unix_graph_maybe_cyclic)
++		if (scc_dead)
++			unix_collect_skb(&scc, hitlist);
++		else if (!unix_graph_maybe_cyclic)
+ 			unix_graph_maybe_cyclic = unix_scc_cyclic(&scc);
+ 
+ 		list_del(&scc);
+@@ -441,7 +490,7 @@ static void __unix_walk_scc(struct unix_vertex *vertex, unsigned long *last_inde
+ 		goto prev_vertex;
+ }
+ 
+-static void unix_walk_scc(void)
++static void unix_walk_scc(struct sk_buff_head *hitlist)
+ {
+ 	unsigned long last_index = UNIX_VERTEX_INDEX_START;
+ 
+@@ -454,7 +503,7 @@ static void unix_walk_scc(void)
+ 		struct unix_vertex *vertex;
+ 
+ 		vertex = list_first_entry(&unix_unvisited_vertices, typeof(*vertex), entry);
+-		__unix_walk_scc(vertex, &last_index);
++		__unix_walk_scc(vertex, &last_index, hitlist);
+ 	}
+ 
+ 	list_replace_init(&unix_visited_vertices, &unix_unvisited_vertices);
+@@ -463,7 +512,7 @@ static void unix_walk_scc(void)
+ 	unix_graph_grouped = true;
+ }
+ 
+-static void unix_walk_scc_fast(void)
++static void unix_walk_scc_fast(struct sk_buff_head *hitlist)
+ {
+ 	while (!list_empty(&unix_unvisited_vertices)) {
+ 		struct unix_vertex *vertex;
+@@ -480,279 +529,40 @@ static void unix_walk_scc_fast(void)
+ 				scc_dead = unix_vertex_dead(vertex);
+ 		}
+ 
++		if (scc_dead)
++			unix_collect_skb(&scc, hitlist);
++
+ 		list_del(&scc);
+ 	}
+ 
+ 	list_replace_init(&unix_visited_vertices, &unix_unvisited_vertices);
+ }
+ 
+-static LIST_HEAD(gc_candidates);
+-static LIST_HEAD(gc_inflight_list);
+-
+-/* Keep the number of times in flight count for the file
+- * descriptor if it is for an AF_UNIX socket.
+- */
+-void unix_inflight(struct user_struct *user, struct file *filp)
+-{
+-	struct unix_sock *u = unix_get_socket(filp);
+-
+-	spin_lock(&unix_gc_lock);
+-
+-	if (u) {
+-		if (!u->inflight) {
+-			WARN_ON_ONCE(!list_empty(&u->link));
+-			list_add_tail(&u->link, &gc_inflight_list);
+-		} else {
+-			WARN_ON_ONCE(list_empty(&u->link));
+-		}
+-		u->inflight++;
+-	}
+-
+-	spin_unlock(&unix_gc_lock);
+-}
+-
+-void unix_notinflight(struct user_struct *user, struct file *filp)
+-{
+-	struct unix_sock *u = unix_get_socket(filp);
+-
+-	spin_lock(&unix_gc_lock);
+-
+-	if (u) {
+-		WARN_ON_ONCE(!u->inflight);
+-		WARN_ON_ONCE(list_empty(&u->link));
+-
+-		u->inflight--;
+-		if (!u->inflight)
+-			list_del_init(&u->link);
+-	}
+-
+-	spin_unlock(&unix_gc_lock);
+-}
+-
+-static void scan_inflight(struct sock *x, void (*func)(struct unix_sock *),
+-			  struct sk_buff_head *hitlist)
+-{
+-	struct sk_buff *skb;
+-	struct sk_buff *next;
+-
+-	spin_lock(&x->sk_receive_queue.lock);
+-	skb_queue_walk_safe(&x->sk_receive_queue, skb, next) {
+-		/* Do we have file descriptors ? */
+-		if (UNIXCB(skb).fp) {
+-			bool hit = false;
+-			/* Process the descriptors of this socket */
+-			int nfd = UNIXCB(skb).fp->count;
+-			struct file **fp = UNIXCB(skb).fp->fp;
+-
+-			while (nfd--) {
+-				/* Get the socket the fd matches if it indeed does so */
+-				struct unix_sock *u = unix_get_socket(*fp++);
+-
+-				/* Ignore non-candidates, they could have been added
+-				 * to the queues after starting the garbage collection
+-				 */
+-				if (u && test_bit(UNIX_GC_CANDIDATE, &u->gc_flags)) {
+-					hit = true;
+-
+-					func(u);
+-				}
+-			}
+-			if (hit && hitlist != NULL) {
+-				__skb_unlink(skb, &x->sk_receive_queue);
+-				__skb_queue_tail(hitlist, skb);
+-			}
+-		}
+-	}
+-	spin_unlock(&x->sk_receive_queue.lock);
+-}
+-
+-static void scan_children(struct sock *x, void (*func)(struct unix_sock *),
+-			  struct sk_buff_head *hitlist)
+-{
+-	if (x->sk_state != TCP_LISTEN) {
+-		scan_inflight(x, func, hitlist);
+-	} else {
+-		struct sk_buff *skb;
+-		struct sk_buff *next;
+-		struct unix_sock *u;
+-		LIST_HEAD(embryos);
+-
+-		/* For a listening socket collect the queued embryos
+-		 * and perform a scan on them as well.
+-		 */
+-		spin_lock(&x->sk_receive_queue.lock);
+-		skb_queue_walk_safe(&x->sk_receive_queue, skb, next) {
+-			u = unix_sk(skb->sk);
+-
+-			/* An embryo cannot be in-flight, so it's safe
+-			 * to use the list link.
+-			 */
+-			WARN_ON_ONCE(!list_empty(&u->link));
+-			list_add_tail(&u->link, &embryos);
+-		}
+-		spin_unlock(&x->sk_receive_queue.lock);
+-
+-		while (!list_empty(&embryos)) {
+-			u = list_entry(embryos.next, struct unix_sock, link);
+-			scan_inflight(&u->sk, func, hitlist);
+-			list_del_init(&u->link);
+-		}
+-	}
+-}
+-
+-static void dec_inflight(struct unix_sock *usk)
+-{
+-	usk->inflight--;
+-}
+-
+-static void inc_inflight(struct unix_sock *usk)
+-{
+-	usk->inflight++;
+-}
+-
+-static void inc_inflight_move_tail(struct unix_sock *u)
+-{
+-	u->inflight++;
+-
+-	/* If this still might be part of a cycle, move it to the end
+-	 * of the list, so that it's checked even if it was already
+-	 * passed over
+-	 */
+-	if (test_bit(UNIX_GC_MAYBE_CYCLE, &u->gc_flags))
+-		list_move_tail(&u->link, &gc_candidates);
+-}
+-
+ static bool gc_in_progress;
+ 
+ static void __unix_gc(struct work_struct *work)
+ {
+ 	struct sk_buff_head hitlist;
+-	struct unix_sock *u, *next;
+-	LIST_HEAD(not_cycle_list);
+-	struct list_head cursor;
+ 
+ 	spin_lock(&unix_gc_lock);
+ 
+-	if (!unix_graph_maybe_cyclic)
++	if (!unix_graph_maybe_cyclic) {
++		spin_unlock(&unix_gc_lock);
+ 		goto skip_gc;
+-
+-	if (unix_graph_grouped)
+-		unix_walk_scc_fast();
+-	else
+-		unix_walk_scc();
+-
+-	/* First, select candidates for garbage collection.  Only
+-	 * in-flight sockets are considered, and from those only ones
+-	 * which don't have any external reference.
+-	 *
+-	 * Holding unix_gc_lock will protect these candidates from
+-	 * being detached, and hence from gaining an external
+-	 * reference.  Since there are no possible receivers, all
+-	 * buffers currently on the candidates' queues stay there
+-	 * during the garbage collection.
+-	 *
+-	 * We also know that no new candidate can be added onto the
+-	 * receive queues.  Other, non candidate sockets _can_ be
+-	 * added to queue, so we must make sure only to touch
+-	 * candidates.
+-	 *
+-	 * Embryos, though never candidates themselves, affect which
+-	 * candidates are reachable by the garbage collector.  Before
+-	 * being added to a listener's queue, an embryo may already
+-	 * receive data carrying SCM_RIGHTS, potentially making the
+-	 * passed socket a candidate that is not yet reachable by the
+-	 * collector.  It becomes reachable once the embryo is
+-	 * enqueued.  Therefore, we must ensure that no SCM-laden
+-	 * embryo appears in a (candidate) listener's queue between
+-	 * consecutive scan_children() calls.
+-	 */
+-	list_for_each_entry_safe(u, next, &gc_inflight_list, link) {
+-		struct sock *sk = &u->sk;
+-		long total_refs;
+-
+-		total_refs = file_count(sk->sk_socket->file);
+-
+-		WARN_ON_ONCE(!u->inflight);
+-		WARN_ON_ONCE(total_refs < u->inflight);
+-		if (total_refs == u->inflight) {
+-			list_move_tail(&u->link, &gc_candidates);
+-			__set_bit(UNIX_GC_CANDIDATE, &u->gc_flags);
+-			__set_bit(UNIX_GC_MAYBE_CYCLE, &u->gc_flags);
+-
+-			if (sk->sk_state == TCP_LISTEN) {
+-				unix_state_lock_nested(sk, U_LOCK_GC_LISTENER);
+-				unix_state_unlock(sk);
+-			}
+-		}
+-	}
+-
+-	/* Now remove all internal in-flight reference to children of
+-	 * the candidates.
+-	 */
+-	list_for_each_entry(u, &gc_candidates, link)
+-		scan_children(&u->sk, dec_inflight, NULL);
+-
+-	/* Restore the references for children of all candidates,
+-	 * which have remaining references.  Do this recursively, so
+-	 * only those remain, which form cyclic references.
+-	 *
+-	 * Use a "cursor" link, to make the list traversal safe, even
+-	 * though elements might be moved about.
+-	 */
+-	list_add(&cursor, &gc_candidates);
+-	while (cursor.next != &gc_candidates) {
+-		u = list_entry(cursor.next, struct unix_sock, link);
+-
+-		/* Move cursor to after the current position. */
+-		list_move(&cursor, &u->link);
+-
+-		if (u->inflight) {
+-			list_move_tail(&u->link, &not_cycle_list);
+-			__clear_bit(UNIX_GC_MAYBE_CYCLE, &u->gc_flags);
+-			scan_children(&u->sk, inc_inflight_move_tail, NULL);
+-		}
+ 	}
+-	list_del(&cursor);
+ 
+-	/* Now gc_candidates contains only garbage.  Restore original
+-	 * inflight counters for these as well, and remove the skbuffs
+-	 * which are creating the cycle(s).
+-	 */
+-	skb_queue_head_init(&hitlist);
+-	list_for_each_entry(u, &gc_candidates, link) {
+-		scan_children(&u->sk, inc_inflight, &hitlist);
++	__skb_queue_head_init(&hitlist);
+ 
+-#if IS_ENABLED(CONFIG_AF_UNIX_OOB)
+-		if (u->oob_skb) {
+-			kfree_skb(u->oob_skb);
+-			u->oob_skb = NULL;
+-		}
+-#endif
+-	}
+-
+-	/* not_cycle_list contains those sockets which do not make up a
+-	 * cycle.  Restore these to the inflight list.
+-	 */
+-	while (!list_empty(&not_cycle_list)) {
+-		u = list_entry(not_cycle_list.next, struct unix_sock, link);
+-		__clear_bit(UNIX_GC_CANDIDATE, &u->gc_flags);
+-		list_move_tail(&u->link, &gc_inflight_list);
+-	}
++	if (unix_graph_grouped)
++		unix_walk_scc_fast(&hitlist);
++	else
++		unix_walk_scc(&hitlist);
+ 
+ 	spin_unlock(&unix_gc_lock);
+ 
+-	/* Here we are. Hitlist is filled. Die. */
+ 	__skb_queue_purge(&hitlist);
+-
+-	spin_lock(&unix_gc_lock);
+-
+-	/* All candidates should have been detached by now. */
+-	WARN_ON_ONCE(!list_empty(&gc_candidates));
+ skip_gc:
+-	/* Paired with READ_ONCE() in wait_for_unix_gc(). */
+ 	WRITE_ONCE(gc_in_progress, false);
+-
+-	spin_unlock(&unix_gc_lock);
+ }
+ 
+ static DECLARE_WORK(unix_gc_work, __unix_gc);
+-- 
+2.49.0.1143.g0be31eac6b-goog
+
