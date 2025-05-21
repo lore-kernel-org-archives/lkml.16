@@ -1,63 +1,66 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FEC8184
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 22:54:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E52DD23A9B8
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 22:54:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747868052; cv=none; b=ZoNyAomEza6AaudWaKEX3QnCE3njLmOUgA1YTdauZl2BON3LxdE2p6RVXw8aczaHJBECoM9m17C90d3TDKdFSbKXM5YaxvDSaNNYKx9tTU1c7KCfx/19SrZja2T65LgI78bfSXUExLYSqzJBrEcKfV91kP+BcgihulUJbbf8H/A=
+	t=1747868054; cv=none; b=CL7oi1B0HBNqXU1opaDXiS1Iin2deN1tfiedzB56StfcN099FuZYX5x7NAOIRqexctg1DZwlhRPrHMxmREpp+eWKaOu9pIpmEULwVK7afGrBAUSzWtN38XpUGRmWTaEM/sn5QfiytRalYR18J5NcsTiNARDbMXjcrtjsTP8qvz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747868052; c=relaxed/simple;
-	bh=QAggP+lM/j8Yzi2qMtUyogpJwyHr1XRiUmUWlJAfYEw=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=Ns8NIiFCCWYQul2ajornoLYM9qIFFiDbWk6+3jwYigMytN3FKHdWUoMK4NUEBTPSbCySmxG++ujIzmzwnCvGDBDtFqVPV3ShSOHo95YsHlVQwda3Ywcxi9RnM4+Hm6DvHGnV5jIXOJbhznULZ8PnMObtCaQFKM429n1zzuhjK+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yuzhuo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Gcwl7eQ+; arc=none smtp.client-ip=209.85.210.202
+	s=arc-20240116; t=1747868054; c=relaxed/simple;
+	bh=i4qJcHC4AXmCz4+v5m4Aw3Tqwh0i/7XUMvLhkU4ocZg=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Content-Type; b=Pu29aOETUODLeLT0ltf1sOB/1RBMomPOcoeEjXEHH5ZK9fAEqnrEB2cqgIu2f/QjSDjtvjkLleHBLq2IGtenWS2KvcDIZIDw+eC+bnphEbLA45QNdQ3cYP4E4eoMW8CL+yQT3rtavVPp84wNLvUZWfub8yNotkxKsQ/tlIKJFKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yuzhuo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mTzeFZxc; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yuzhuo.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Gcwl7eQ+"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7398d70abbfso9935306b3a.2
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 15:54:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mTzeFZxc"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30e9e81d4b0so6665392a91.3
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 15:54:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747868050; x=1748472850; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=e5xiyzjaDsO3It6y2mmvth2hLq6HIh9F/ymtgdkp/7U=;
-        b=Gcwl7eQ+/HoLQU70ZlZ/T0YR/dHm8iCeMinI0s9iOAn4x6RYyPtdKih5TD0ClVFssE
-         efUVrLXg4GOr76nYcgqW77MgabBYfhJSjyZuqB+uc8cWdVjOkbRShPbyFYZnPWbDe+b3
-         NXWyNDUbHXUoNRjgdMDYE9hI+qlJgMsfoePYx0jfeXEEDPCrzBAXf36Mb4f6JsbgwsG0
-         rwSz/uJOP3VYxkwXQn1uZSpyExlRUQXEfo3qiMfR9xX8c5fVdrx9NuKgFv1+PLABNlZn
-         /YlkMcR7hHxj+2op+cWPSbqBkQWjhZRfEHP/nC4rXjKm2udBRVXJemoPN3U4lhjYfaL8
-         WrPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747868050; x=1748472850;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+        d=google.com; s=20230601; t=1747868052; x=1748472852; darn=vger.kernel.org;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=e5xiyzjaDsO3It6y2mmvth2hLq6HIh9F/ymtgdkp/7U=;
-        b=RGcPhYRXhORZVInIqVbXWOaKs+ORCobSx55bfWQWDyO9YQuuwA9WoCuGEDSAFI9KJg
-         RuhZ2sFHmJZI8tmQIhrDvM0jr9xcjucJmriDhuXgkRHflbHXTyXjswf4NpjE7uoCiSn3
-         nkeDY2IhgVKAxB9C5nDLMzhsRszfTsDBCQm+yCAOer9SXy0noCzhIVb4Pojwt8vcW5Ho
-         iblpzevS2Kihc4rh3lNtlVt8CG34to9fRAaGI5z5lWT9mrl1Ysoihn+jLxGce5vRFGNN
-         09Ibsdx0osDMxgef432hqIvqMvu8FYZlcJ63xLFf8whLPr9ljHvr99oDQlGbD58vXlDy
-         twww==
-X-Forwarded-Encrypted: i=1; AJvYcCVhyo+L1D1PnPIi9WpbQIwIuHkdso7mun2JKDH66JyQiIsUPL6/e2DVB6WtCvZhRSyTQGmrWeJMP7u2L+E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfBx/qph7C7OYahBCh3QWmUi9+zaDZIkAY6ZUta0Bq20e8IStj
-	fbg9OkOXq+cQmRRYWARKg899QYovm27FsvAUk/LTm8+3zMOs60Wj+F/m+f6siKGoX9bd0I3PIVL
-	pcm/ljA==
-X-Google-Smtp-Source: AGHT+IFFAeeYwZo8g7rnKGgMqq9ef4KSzj7XjVvtF1mrE7Ad+JDdHJD4QWr288U1fWDVQWnorSbC+q7HAbM=
-X-Received: from pfux21.prod.google.com ([2002:a05:6a00:bd5:b0:740:b53a:e67f])
- (user=yuzhuo job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:3a14:b0:740:67ce:1d8b
- with SMTP id d2e1a72fcca58-742a97b7a1bmr31736812b3a.7.1747868050314; Wed, 21
- May 2025 15:54:10 -0700 (PDT)
-Date: Wed, 21 May 2025 15:53:03 -0700
+        bh=MTjLK1VK7KWwntnP1zRVvSaeiNRGhMUiu9M8vIKuSKI=;
+        b=mTzeFZxcoYmGHDiOTWbMhb/A88Ce85Wa4fxnVOJmIbCIsnaMRHLMk9hLQqe5CcZ6aE
+         bKaajKTz9rp7/Kn6TEiPF7dr1f7uoY0ojA65h7pz5m60woaw8/qH0v2PYYtXHR6S24ee
+         fJURDcVsXYT4KFhaSYOhltdM3RCtJ+m2bzits018fjBbzlL3nNGRmWJgIIiq0cuRbLrB
+         gx8aWvMJuHxFsp48jP5WXzghB8kI5pwBt9E9GTYxjvDFjf6tfm+1TtfaGkQQwwfqrZeG
+         QB4rBN3NIZ2dqm6PIJ3CTFag+ZJj+DL1E+uZOY9khoQq/DrKa+BpfWv/8KUAoIT9wE6O
+         jfWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747868052; x=1748472852;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MTjLK1VK7KWwntnP1zRVvSaeiNRGhMUiu9M8vIKuSKI=;
+        b=IF33mBh+iiJ/Zo2ymoS43wZudHszprWS4CJ7ZZLYFrNS7oq0wwlsUqRCX0gwS4465x
+         Jg1ZBx2Np4UlJCXRKErKztXfsQpXjo/Qqo7MutqO69LHf/4o45Qvyx6dcxKwAGwAUHWB
+         9n8/0Zqoma8HZnN2KaHIXh1v5iUk8M84GxOUigTBA+8iCc+vkxZ6pp+P7fW+JJPXVOho
+         ZXQtneb+xGHQOl63NMP/C+IMKS+7Hmg/0LNj2rNel3gOCiQShpZlaNgYIlmfLJDATDgL
+         N98+dj92DFsvW08j4QHsN4uHgs/ednRpkjf/1tOlkvBocvjmVBdljOu8/WiM1pjiWTN0
+         P0Lg==
+X-Forwarded-Encrypted: i=1; AJvYcCXNQvt+CMzhbqIn/kbMORjgyYo2kPl6Qyw3sB5PODSL7p6PUgvhjbGJThhzOcRx8MQbRCD6D3i08vO3U3Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxdWbec2GscnjKMEGJ6kTRJUaEzs3XjW1MKYwe9YUqWmPOsVRQs
+	QUEIBlCnZCk3uVzRk+0UUQjPjmch+Lgg5wrsY0OjmvSjzR8kB2ZWreWrpmIDrBxCsJuprXe3lLG
+	af+w62w==
+X-Google-Smtp-Source: AGHT+IFmnmxwO0MLdVfjk/jYioN8tCVaKs4uDbmfl+l9zYOM4srNZri9GV62ypwvXHSucke23gOipFD43Yk=
+X-Received: from plkg8.prod.google.com ([2002:a17:903:19c8:b0:223:242b:480a])
+ (user=yuzhuo job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:d543:b0:22f:af3f:bf22
+ with SMTP id d9443c01a7336-231de3ba64fmr296480105ad.42.1747868052157; Wed, 21
+ May 2025 15:54:12 -0700 (PDT)
+Date: Wed, 21 May 2025 15:53:04 -0700
+In-Reply-To: <20250521225307.743726-1-yuzhuo@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250521225307.743726-1-yuzhuo@google.com>
 X-Mailer: git-send-email 2.49.0.1164.gab81da1b16-goog
-Message-ID: <20250521225307.743726-1-yuzhuo@google.com>
-Subject: [PATCH v1 0/4] perf: Remove libcrypto dependency
+Message-ID: <20250521225307.743726-2-yuzhuo@google.com>
+Subject: [PATCH v1 1/4] perf utils: Add support functions for sha1 utils
 From: Yuzhuo Jing <yuzhuo@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -81,44 +84,103 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
-Currently, genelf.c is the only file in the perf tool that depends on
-libcrypto (e.g. openssl), which only uses it to calculate a SHA1/MD5
-Build ID.  This patch series pulls in the SHA1 implementation from the
-kernel tree, and removes the libcrypto dependency from perf.  This also
-switches the default Build ID calculation method from MD5 to the more
-commonly used SHA1.
+Add missing functions to the shrunk down version tools headers from the
+kernel headers to support sha1 utils.
 
-Yuzhuo Jing (4):
-  perf utils: Add support functions for sha1 utils
-  perf tools: Add sha1 utils
-  perf genelf: Remove libcrypto dependency and use sha1 utils
-  tools: Remove libcrypto dependency
+Signed-off-by: Yuzhuo Jing <yuzhuo@google.com>
+---
+ tools/include/linux/bitops.h   | 10 ++++++++++
+ tools/include/linux/compiler.h | 17 +++++++++++++++++
+ tools/include/linux/string.h   | 22 ++++++++++++++++++++++
+ 3 files changed, 49 insertions(+)
 
- tools/build/Makefile.feature            |   2 -
- tools/build/feature/Makefile            |   4 -
- tools/build/feature/test-all.c          |   5 -
- tools/build/feature/test-libcrypto.c    |  25 -----
- tools/include/linux/bitops.h            |  10 ++
- tools/include/linux/compiler.h          |  17 ++++
- tools/include/linux/string.h            |  22 +++++
- tools/perf/Documentation/perf-check.txt |   1 -
- tools/perf/Makefile.config              |  13 ---
- tools/perf/Makefile.perf                |   3 -
- tools/perf/builtin-check.c              |   1 -
- tools/perf/tests/make                   |   4 +-
- tools/perf/util/Build                   |   2 +
- tools/perf/util/genelf.c                |  72 ++------------
- tools/perf/util/sha1.c                  | 122 ++++++++++++++++++++++++
- tools/perf/util/sha1.h                  |  41 ++++++++
- tools/perf/util/sha1_base.h             | 103 ++++++++++++++++++++
- tools/perf/util/sha1_generic.c          |  49 ++++++++++
- 18 files changed, 373 insertions(+), 123 deletions(-)
- delete mode 100644 tools/build/feature/test-libcrypto.c
- create mode 100644 tools/perf/util/sha1.c
- create mode 100644 tools/perf/util/sha1.h
- create mode 100644 tools/perf/util/sha1_base.h
- create mode 100644 tools/perf/util/sha1_generic.c
-
+diff --git a/tools/include/linux/bitops.h b/tools/include/linux/bitops.h
+index b4e4cd071f8c..6a027031225c 100644
+--- a/tools/include/linux/bitops.h
++++ b/tools/include/linux/bitops.h
+@@ -89,6 +89,16 @@ static inline __u32 rol32(__u32 word, unsigned int shift)
+ 	return (word << shift) | (word >> ((-shift) & 31));
+ }
+ 
++/**
++ * ror32 - rotate a 32-bit value right
++ * @word: value to rotate
++ * @shift: bits to roll
++ */
++static inline __u32 ror32(__u32 word, unsigned int shift)
++{
++	return (word >> (shift & 31)) | (word << ((-shift) & 31));
++}
++
+ /**
+  * sign_extend64 - sign extend a 64-bit value using specified bit as sign-bit
+  * @value: value to sign extend
+diff --git a/tools/include/linux/compiler.h b/tools/include/linux/compiler.h
+index 9c05a59f0184..72e92b202976 100644
+--- a/tools/include/linux/compiler.h
++++ b/tools/include/linux/compiler.h
+@@ -40,6 +40,23 @@
+ /* The "volatile" is due to gcc bugs */
+ #define barrier() __asm__ __volatile__("": : :"memory")
+ 
++#ifndef barrier_data
++/*
++ * This version is i.e. to prevent dead stores elimination on @ptr
++ * where gcc and llvm may behave differently when otherwise using
++ * normal barrier(): while gcc behavior gets along with a normal
++ * barrier(), llvm needs an explicit input variable to be assumed
++ * clobbered. The issue is as follows: while the inline asm might
++ * access any memory it wants, the compiler could have fit all of
++ * @ptr into memory registers instead, and since @ptr never escaped
++ * from that, it proved that the inline asm wasn't touching any of
++ * it. This version works well with both compilers, i.e. we're telling
++ * the compiler that the inline asm absolutely may see the contents
++ * of @ptr. See also: https://llvm.org/bugs/show_bug.cgi?id=15495
++ */
++# define barrier_data(ptr) __asm__ __volatile__("": :"r"(ptr) :"memory")
++#endif
++
+ #ifndef __always_inline
+ # define __always_inline	inline __attribute__((always_inline))
+ #endif
+diff --git a/tools/include/linux/string.h b/tools/include/linux/string.h
+index 8499f509f03e..df3c95792a51 100644
+--- a/tools/include/linux/string.h
++++ b/tools/include/linux/string.h
+@@ -3,6 +3,7 @@
+ #define _TOOLS_LINUX_STRING_H_
+ 
+ #include <linux/types.h>	/* for size_t */
++#include <linux/compiler.h>	/* for barrier_data */
+ #include <string.h>
+ 
+ void *memdup(const void *src, size_t len);
+@@ -52,4 +53,25 @@ extern void remove_spaces(char *s);
+ 
+ extern void *memchr_inv(const void *start, int c, size_t bytes);
+ extern unsigned long long memparse(const char *ptr, char **retptr);
++
++/**
++ * memzero_explicit - Fill a region of memory (e.g. sensitive
++ *		      keying data) with 0s.
++ * @s: Pointer to the start of the area.
++ * @count: The size of the area.
++ *
++ * Note: usually using memset() is just fine (!), but in cases
++ * where clearing out _local_ data at the end of a scope is
++ * necessary, memzero_explicit() should be used instead in
++ * order to prevent the compiler from optimising away zeroing.
++ *
++ * memzero_explicit() doesn't need an arch-specific version as
++ * it just invokes the one of memset() implicitly.
++ */
++static inline void memzero_explicit(void *s, size_t count)
++{
++	memset(s, 0, count);
++	barrier_data(s);
++}
++
+ #endif /* _TOOLS_LINUX_STRING_H_ */
 -- 
 2.49.0.1164.gab81da1b16-goog
 
