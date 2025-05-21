@@ -1,114 +1,127 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.75])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2C522472BC
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 09:37:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 128F4250C0E;
+	Wed, 21 May 2025 09:38:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.75
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747820275; cv=none; b=sVLu3xl1/BIc1GieIUZe/WbALbWO3BFccU6Zy2BBKnmShUqAMsMv/WlAEwcnp7BJQ8WE47IxFUQxKMwXiXD3j283v3YaM77RSFIocpDWfRYy7aNympcCf5p6umNiDPSwxvtqOcSkWlXz37YqPoyQaGhyKLIyCngkSj9BCohTaTQ=
+	t=1747820301; cv=none; b=cGqZYNByhclJRH6bEplX8B6HPJX1DzuKi5LMTKBz4WAHVAReTr9dxvusKgKumVaI4YK4L+DWX+/fOz1whpnsg8TCZFE/FqpDxNSjy7LjLTz0YeI7jbMIZ5WJFfn/a9kj8/+h3v5sF5zfaepxalGjVHE6mc4G17O3JiFT35G/sOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747820275; c=relaxed/simple;
-	bh=xGkVPsNx3EjbZaaLCIIJY0B+44SY4L34GyTVckp2hbE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=m2oy3h/GCNFvPS2sLR0djgzZxnJnuN/Zub3xeWZnCmdT22/GN8GUS45n4SOx2VPlZ7yGNk191GUXG1xnr1cWTLfiWYqOKiTmOS7Jvs4HfIPCfW2/G/w5Rzffj0i8flOs9p1fwKJ94Hay/4/itFfsAL3KcgJ38hb8jmSywXrGLK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com; dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b=EXra/pjx; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com
+	s=arc-20240116; t=1747820301; c=relaxed/simple;
+	bh=sN2Q9enEwjF44Vc0IzGcKmrBEuDT+LX8rXmGkj3fLUI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ffuj5ujzMnvqlGbOVG6L5JInAVROhsGaQd/hbqM7yODxvTCCfY+ovtiXVqVRULUMzFnIDMq2l2mVhqMRAXz0aafqIW+TpP2fAI/GuJX40UgkVqTi5YB9XKipoMmakVtdgcV1pxo6Nz0WAQhBjFsu/gH3MD0ELXd/ylmFR4zO2G8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oldschoolsolutions.biz; spf=pass smtp.mailfrom=oldschoolsolutions.biz; dkim=pass (2048-bit key) header.d=oldschoolsolutions.biz header.i=jens.glathe@oldschoolsolutions.biz header.b=ONGMrYib; arc=none smtp.client-ip=217.72.192.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oldschoolsolutions.biz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oldschoolsolutions.biz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b="EXra/pjx"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-742af84818cso3929320b3a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 02:37:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oldschoolsolutions.biz header.i=jens.glathe@oldschoolsolutions.biz header.b="ONGMrYib"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=huaqin-corp-partner-google-com.20230601.gappssmtp.com; s=20230601; t=1747820273; x=1748425073; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LO1gHHlVF6gGZvRY9viyv0hbKtAsLTQwKpaodCCIfU8=;
-        b=EXra/pjxXibxbFvRmfP+734Hz5LHuz2tw0WTA8pTamq+a+vgUmuTiO2F+uohHMqEgI
-         G1Z7aKLYU1IsOwimnDVOOgnQJN5fHWDwk+FWOghX0lIaeGZr95hXT7FKcCBiwtLEO16q
-         cBmyymgQ1iChW8WsUp0UUJT82PMCIzeBZB90mNJZR2WbDfj7PWszv2BkKXyDop3cUgt3
-         7ngfRywtK20OODRVae5yXGPz9T10Oxm7NY2CMW6LykKWMVBS3IQmes0GzTAuzuxTCvJ/
-         AblpkDO4Lu8Uq2s38uz/YBL6qks8YgwPsHaQVCRbuhnMWxbat7fcxH8FpLh1QNQqbC2C
-         pJ5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747820273; x=1748425073;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LO1gHHlVF6gGZvRY9viyv0hbKtAsLTQwKpaodCCIfU8=;
-        b=QZSh6mxcQ94UhrtII/ZS8qSPTdMKRpBo6O1uaTeisWc74+pf4wkbq2VnFjYAiv0IKV
-         qTi86mx9g4mj+UJ9MZeKZH+aisd9OPU0p0xzqQdjIsA5JQjcsa/f6LDxFgoOe4hM/Svo
-         GqNBKSidlM4X1MXQf3BgYzVtGAWZxiCIGK+cuIeJo8YjGDFw/kKX42bHeWsd2tFF/LZN
-         +0SxgtxD6CHaC1vauP9YDjPz+BLU4mCGppLEw/pXlLAVkeVGffdFQSiDz5RpIuZY7WfX
-         AGTmOP6pyp6qTJJo/iWIEIJiYkWD7rM0SF7BPMkNFUm4uWfObGKSN3LDS8NIjwBvqaPS
-         fVHg==
-X-Forwarded-Encrypted: i=1; AJvYcCVUv+qYn8LoKEs0wt12livILx16gry4UrONy3KloZ0Arj62pRiTSeg9ChlqXbdwYYEHwhH7XkcFsp4jOk8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx68rPF5jLIR/tPfXIaBUHC7S9JmVJ8H4uKlL4dyOoSsTK2g9EQ
-	n9+URpZ774oEUavesJ0BJH7EHfU+P4YfrGTCuxrM01YSuZ75BQFEyp5jTrKjhAziO4s=
-X-Gm-Gg: ASbGncvKm7pnrXk0EPL+RliyrEzLnnnkMAFn1KKEH+rKieHhsZxHVxnwYTtYrLLVHSC
-	fYWXXN0FUhaLB9ET3P210zJf26UFQp3UgnM8XBMPdvlPHVnjDrrkYodGkuhDJ7e8ShbbcFfNYRN
-	0XBRCgvCYV2Jc97ER+w0MFx3M0qFVH7bpcyABsPt1FAHdbV7SANJowDDm8YLUiSDAeQnkFhcffT
-	QVmIw9s30MSo42wAlVfGZvAzU4//8QnS+3LyS4b4Z8NcLGcvZX8yCRzLRKSChyQzXvrzk7wuxUQ
-	1c+AA1JzV0PQd0N5NtFTaM4t9M4eSw6jFM9j5VEE1VjSmAEEA3a6fv1p1NoI8rCbwcVNak32CSy
-	CUuZBpHihFV5W7CFNOd35jeFv/LGgABkMQwMwEHG9Xf0K
-X-Google-Smtp-Source: AGHT+IGj9/GHt1Rkhv1de4jt6AZ2GtCQzoZhDnZ4wR++SUUYWHHoHoOcBO/UQQls4RGHP/cLUW/uhg==
-X-Received: by 2002:a05:6a00:ab87:b0:73d:fefb:325 with SMTP id d2e1a72fcca58-742a9787708mr27488901b3a.5.1747820272879;
-        Wed, 21 May 2025 02:37:52 -0700 (PDT)
-Received: from dgp100339560-01.huaqin.com ([116.66.212.162])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a970c6b1sm9575827b3a.59.2025.05.21.02.37.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 02:37:52 -0700 (PDT)
-From: Langyan Ye <yelangyan@huaqin.corp-partner.google.com>
-To: dianders@chromium.org,
-	neil.armstrong@linaro.org,
-	quic_jesszhan@quicinc.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	simona@ffwll.ch
-Cc: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Langyan Ye <yelangyan@huaqin.corp-partner.google.com>
-Subject: [PATCH] drm/panel-edp: Add KDC KD116N3730A05
-Date: Wed, 21 May 2025 17:37:43 +0800
-Message-Id: <20250521093743.1057466-1-yelangyan@huaqin.corp-partner.google.com>
-X-Mailer: git-send-email 2.34.1
+	d=oldschoolsolutions.biz; s=s1-ionos; t=1747820277; x=1748425077;
+	i=jens.glathe@oldschoolsolutions.biz;
+	bh=7VLMvy2/SiHpLHzXDbguzK+cxknfwXkiYEJ48cxEgk0=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=ONGMrYibtZPFPHn73ZQRyDXzsCevkdjGHMlSD1ilaMlW1GCkbKgIjVzjtLway87x
+	 x3r4Ib1soAD1GwRo7d5vNQiL9lzGmvri7vu0C5Gg79hnc3ouoWAwIVjpREdWUI5MQ
+	 mcgA0UC+XigfNyPFLIvhGvmaaC/fq5X852hvUx9f6CzTevvXSNN5xAkMBvP8CvQIk
+	 LJLmZuIsNUPBSmxBZPJfcwroUH/2oNPskmpi2AjSfrIoXLbqjCLuv1V1kaU83erA/
+	 ciu97pFF0euOumtp+qGMmOTs8RykdRdUDVbRnelqPOgVN4so6RlGO4IZE7R5Pcc+U
+	 ORTMkrWv/vNqa/g6nw==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from [192.168.0.107] ([91.64.235.193]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1N5mSj-1v25J02w4h-011uwu; Wed, 21 May 2025 11:37:57 +0200
+Message-ID: <cb403a64-205c-479b-b203-0926389d34fd@oldschoolsolutions.biz>
+Date: Wed, 21 May 2025 11:37:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/4] dt-bindings: arm: qcom: Add Lenovo Thinkbook 16
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Johan Hovold <johan+linaro@kernel.org>,
+ Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+References: <20250515-tb16-dt-v1-0-dc5846a25c48@oldschoolsolutions.biz>
+ <20250515-tb16-dt-v1-1-dc5846a25c48@oldschoolsolutions.biz>
+ <20250521-abstract-rampant-vole-5b3ee6@kuoka>
+Content-Language: en-US
+From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+In-Reply-To: <20250521-abstract-rampant-vole-5b3ee6@kuoka>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:0YpkTuqDad5bigRrM8K4KvRNJrk+LjUZR18ae8RxPYlF1mt9w2z
+ dNQsXQbtKlEOlYcM0fH7mJyufAxXomE53+HHIYbxUZy/+W1FlLOQxbGaAwJxpIxI9qOX43U
+ 5BaAMasOR21sSFcsREqGWvGsWyTXZ7ZqpUSYISfERuILy6aIIBHAxYfikpIw0hE5eO1NGbS
+ 7FSM84UAyhR1Iexliwhdw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:SIBpl62xUk4=;epCa8/EZQNPnPo+qQp1jMVhHtE7
+ ot9UcIdCbtb9Ykc9YTRa0OsHx82pl0POWeU+uSkI7s8wNkKtgx+7JDF3dh0xg27SGpLJKWXXa
+ qd4QKoThUuoFMrhkM2TD8Bc6BD+PPzMlntOLcqxql/XFVHjB/gBPUf220IuR/j3nILbl8kZEa
+ jNMSGWkgdhU8hh69nxNigavVYlRrbMg3Npola55DVDLzKFDPECjEWsuWvZE1SaZ+EoxVSxSZu
+ JlbKj7YnvX2yc0w3Ai4o71YE0b06d0FjBJNvKkHIa2YFF6KTMBLr+4vH3fKCXiLPNdBMKM3Zu
+ mEc1VEQmC30/4qmv6tQNugGkeBxkLkR3n+WqC1IOTClHEabiXNi0LLVhwvnP1owxj49e0Tv9t
+ 7mmjTJmGD4hmBtQFX+Z6UKGtFTe4rqrFrQJnHzDXJE1cF1XyDwajMsYoeDu0k6r39QLOr/Iy6
+ S0iZrlIv5kkvQa69Fx5HKpr87H/DAfmgmJ5zUM2WceYRxmnmUetcxqh2q7TUGPPLMUadf2rgD
+ q1uRRw9hLLYcMuBKePwHpVWFJS1fXZh/AMIG6JNbJ8VLLbzVZZgX4QI8FWoHrGmRVtPo++csK
+ ZWjRuChdlXiwvX0J6ArCPpYqiFvOlaYWfWaqF5pueInBLDyE6lwe+rVqeDe0AIs4u2swHfMdX
+ Z26lzHcqWFKaaYPQIYrI1lun68ZNayaErFWKc5s66u0hpe7U1Gmgv/Qik8UqX8CskZuJri1XP
+ TF95Iw/tfZzKNGAeSfvRkIyzzzDtUsEt/jlS0vWVZdnJIpXbtYUv6A9EAdizF4wwrBjtI/4U6
+ gpO4r67hbsexOJzpnM4rB+hBWd8r40sh9G9avzhwuXeDvlT30Gdnwvlrc5qW+tZ/plYiqkUqp
+ BhDtO25okwVV5nNyoTaZvjigaJZsjTOvmeKcP8f0kvUSqUiy4Qs9k15iouAKHEzJr+/df9zx6
+ Tzp5fQy7+VadzDMF7YfVMkYvFz3TjKSmnrhN5CR6DEuiAJAMnkZ9Ov+N/e39h2rl7r+AQ9wKX
+ 9+PixVXVozAvoaFgnjPWlsfqahn/TZU3OYENfn/qFy8HUls2twP6ulv695lwv/qZx/dIqguOA
+ qULl470lZnJCUiq3RbzbQBuFOUcIqUXM6Fh8UYffILUyA3dR2GYqQmrjFwveIfFp6em7C5mMs
+ /6cX1KWUFMcy1C9ANBTtApWQKsWLxJe+ymYicoLaq1JA4UQuHl7NLLi0si5cZuqBU1U9Tt7sT
+ Csyb3U5xQYC/qmZbkT/hM7OV/egH0CBEXlh3r/SC+uf2S1zE/W4sO5G14gCg5I05Loscr5d54
+ aRK7Rzx8cZyXktkP+Zmac7KkVqr8Yb+/X6Rf66kZzZd2+dhyHumxvF9bBQ6VcRayA0DsRaVak
+ Uu1FRVKKZVaQKa6J1BW2OMMhv+aSQsw+oz50iVxzk9fNJlPgvrpClTUIJW
 
-Add support for the KDC KD116N3730A05, pleace the EDID here for
-subsequent reference.
+On 21.05.25 11:31, Krzysztof Kozlowski wrote:
+> On Thu, May 15, 2025 at 10:38:55PM GMT, Jens Glathe wrote:
+>> Document the x1p-42-100/x1-26-100 variants of the Thinkbook 16 G7 QOY.
+>>
+>> [1]: https://psref.lenovo.com/syspool/Sys/PDF/ThinkBook/ThinkBook_16_G7=
+_QOY/ThinkBook_16_G7_QOY_Spec.pdf
+>>
+>> Signed-off-by: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
+>> ---
+>>   Documentation/devicetree/bindings/arm/qcom.yaml | 2 ++
+>>   1 file changed, 2 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Document=
+ation/devicetree/bindings/arm/qcom.yaml
+>> index a61c85a47e2e759c7c86f3bd49f8597fc5054929..42d22e2fb7817810742a152=
+26807bd6a984e6acd 100644
+>> --- a/Documentation/devicetree/bindings/arm/qcom.yaml
+>> +++ b/Documentation/devicetree/bindings/arm/qcom.yaml
+>> @@ -1152,8 +1152,10 @@ properties:
+>>         - items:
+>>             - enum:
+>>                 - asus,zenbook-a14-ux3407qa
+>> +              - lenovo,thinkbook-16
+>>                 - qcom,x1p42100-crd
+>>             - const: qcom,x1p42100
+>> +          - const: qcom,x1e80100
+> You break existing DTS without any explanation in commit msg. What's
+> more, your commit msg says something quite different than you are doing
+> here.
 
-00 ff ff ff ff ff ff 00 2c 83 20 12 00 00 00 00
-30 22 01 04 95 1a 0e 78 03 3a 75 9b 5d 5b 96 28
-19 50 54 00 00 00 01 01 01 01 01 01 01 01 01 01
-01 01 01 01 01 01 09 1e 56 dc 50 00 28 30 30 20
-36 00 00 90 10 00 00 1a 00 00 00 00 00 00 00 00
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 fe
-00 4b 44 31 31 36 4e 33 37 33 30 41 30 35 00 e2
+My bad, v2 is also still wrong. Preparing a v3 which will only add the=20
+Thinkbook 16 to qcom.yaml and only say compatible to qcom, x1p42100.
 
-Signed-off-by: Langyan Ye <yelangyan@huaqin.corp-partner.google.com>
----
- drivers/gpu/drm/panel/panel-edp.c | 1 +
- 1 file changed, 1 insertion(+)
+with best regards
 
-diff --git a/drivers/gpu/drm/panel/panel-edp.c b/drivers/gpu/drm/panel/panel-edp.c
-index 9adbe0f11421..5426648e7116 100644
---- a/drivers/gpu/drm/panel/panel-edp.c
-+++ b/drivers/gpu/drm/panel/panel-edp.c
-@@ -2007,6 +2007,7 @@ static const struct edp_panel_entry edp_panels[] = {
- 	EDP_PANEL_ENTRY('K', 'D', 'C', 0x044f, &delay_200_500_e50, "KD116N9-30NH-F3"),
- 	EDP_PANEL_ENTRY('K', 'D', 'C', 0x05f1, &delay_200_500_e80_d50, "KD116N5-30NV-G7"),
- 	EDP_PANEL_ENTRY('K', 'D', 'C', 0x0809, &delay_200_500_e50, "KD116N2930A15"),
-+	EDP_PANEL_ENTRY('K', 'D', 'C', 0x1220, &delay_200_500_e50, "KD116N3730A05"),
- 
- 	EDP_PANEL_ENTRY('L', 'G', 'D', 0x0000, &delay_200_500_e200_d200, "Unknown"),
- 	EDP_PANEL_ENTRY('L', 'G', 'D', 0x048d, &delay_200_500_e200_d200, "Unknown"),
--- 
-2.34.1
+Jens
 
