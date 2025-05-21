@@ -1,90 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1413C253B5E;
-	Wed, 21 May 2025 10:59:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2D2221516E
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 11:00:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747825154; cv=none; b=dLENtx0ekZA+E/88OUz9IDYfSR8Wa7FopBEvIg/7TcPideILwiyB3DoeVhzeqDM4xTIQL+EEPHkF3Ev9VwW4+cMl6AL7rlbxayPcyO63AJAB3N59W6XR5AKyaGBcoONVpAX/+I/xBB1ISM0JU1YNxi5cvSinmbz5+6Oh1FtdnTw=
+	t=1747825258; cv=none; b=dGn+AYgFoQBpbeC3t82sSFBTWXJofqGsYIFfacnZjpFrbYZ6UVVIG2176XURGndlF4N6kHJEJOTHpXsQXWsk6bDBc/KhlS+3N24wL1dRVl5whPzUPmK6dw3FPg4w582v1gbEhwZvv3uJrf8y2L8v8SslyJIwR8eLafCNV8VE5OY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747825154; c=relaxed/simple;
-	bh=OAPtjhvGq2rqLYOSN3p3U2UsnP7gFs9SLcjeVDkoB/w=;
+	s=arc-20240116; t=1747825258; c=relaxed/simple;
+	bh=kQeuco4+e5SsARtY3nfrCmGKpElXymN3zNb4E6sJy9I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NPalB9NUrUGm6e8N8UpuLsrokSuPsbpv9uMwJNmw/BA2TR/+kWvNK61U991PbO1QNn6+Lml4Xq6ni8UTyFboijnwP7XJ9qkvgP25hGCYRXPVwBH0H6fXttshdAZmFzsfs5xuHtPhkWH+88hBao5khCcWql/9UNiZG+d8Aj9Ye70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=M3RALjd4; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=jrC3FTQNhACgKhHyTeQ7ETvnS5FYTFRkpk+7EhcCa6U48PSs7f8DeIKAzliOkziG8j4s9n/b3bTp7FLw4bMhEHz3dm83oeF3umWrBt9W0CczV7jqhupmcwNoK1TTAs6fUYrw+vx0Uu8FhTmT/psP5Ef1XPKEzbZ230uUIJor77c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=QjI942zD; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="M3RALjd4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2B4DC4CEED;
-	Wed, 21 May 2025 10:59:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1747825153;
-	bh=OAPtjhvGq2rqLYOSN3p3U2UsnP7gFs9SLcjeVDkoB/w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=M3RALjd4MZ6xII4SHpXnUz/mbl1P+P6a6UUibxCyRdMuN5yZqkZnZutqsVGCAv/vR
-	 nJOjQYrs76Y0llc6g+8rpiOrob2kXzWXVODvK7ubB9ghsPmVrp7c87WE3Ksi+iqj57
-	 kruH+X8BD4pV87/VXXNqrWPrOrHyIdD4mgdduJwo=
-Date: Wed, 21 May 2025 12:59:10 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Ethan Carter Edwards <ethan@ethancedwards.com>
-Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] usb: misc: adutux: replace kmalloc() with kmalloc_array()
-Message-ID: <2025052111-able-unfocused-cdcf@gregkh>
-References: <20250503-adutux_kmalloc_array-v1-1-80c74c4bd3e7@ethancedwards.com>
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="QjI942zD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=RM2B
+	44woUcjorhr9JLF9M8YKkzNP8iwLoLPgMAmQoBE=; b=QjI942zDQMU3wXSQKXRZ
+	R4gk1IzYpI5zjowjyt4U6b5trqpvVoelFRw7Xuk3wLlADF9qGgZX9y1uoY5+Fvgh
+	Fyse6BZWQo2cw/6H4MCkzEmTqjTMABMj6LW+kan2njJqiY816apQI7pRZTc3/DO6
+	lJpJ3Jr6h6p6U5xSt+GYkw4Ddr+REaJtQs8OgbCtZF7SjLnWFbVj7t36+iVq2mLs
+	pb3hN70dzGXhrucPn+M42xkCtuDLkYMz1vEs99zsihXcJIZCp3No63yBD2CSl6MP
+	QNkGacs34XVz/qN7+XjK0+Yndf6lDpqKMD3WTArctgvCI18HJhOQAEBjFBzY/Rtr
+	VA==
+Received: (qmail 3232836 invoked from network); 21 May 2025 13:00:48 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 21 May 2025 13:00:48 +0200
+X-UD-Smtp-Session: l3s3148p1@Ea4MR6M1bLlehhrc
+Date: Wed, 21 May 2025 13:00:48 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+Cc: thierry.bultel@linatsea.fr, linux-renesas-soc@vger.kernel.org,
+	geert@linux-m68k.org, paul.barker.ct@bp.renesas.com,
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: Re: [PATCH v9 06/10] serial: sh-sci: Use private port ID
+Message-ID: <aC2yYDpsv7ef9IVA@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Thierry Bultel <thierry.bultel.yh@bp.renesas.com>,
+	thierry.bultel@linatsea.fr, linux-renesas-soc@vger.kernel.org,
+	geert@linux-m68k.org, paul.barker.ct@bp.renesas.com,
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+References: <20250515141828.43444-1-thierry.bultel.yh@bp.renesas.com>
+ <20250515141828.43444-7-thierry.bultel.yh@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="/HOrjV2F0H4FDVet"
+Content-Disposition: inline
+In-Reply-To: <20250515141828.43444-7-thierry.bultel.yh@bp.renesas.com>
+
+
+--/HOrjV2F0H4FDVet
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250503-adutux_kmalloc_array-v1-1-80c74c4bd3e7@ethancedwards.com>
 
-On Sat, May 03, 2025 at 04:43:21PM -0400, Ethan Carter Edwards wrote:
-> Replace kmalloc with internal multiplication with kmalloc_array to
-> improve code readability and prevent potential overflows.
+On Thu, May 15, 2025 at 04:18:21PM +0200, Thierry Bultel wrote:
+> New port types cannot be added in serial_core.h, which is shared with
+> userspace.
+> In order to support new port types, the coming new ones will have
+> BIT(7) set in the id value, and in this case, uartport->type is
+> set to PORT_GENERIC.
+> This commit therefore changes all the places where the port type is
+> read, by not relying on uartport->type but on the private
+> value stored in struct sci_port.
 
-But this is not an array of a structure size.
+I quite like this approach to become independent of serial_core.h by
+adding a driver-local type. Because it changes only access to the
+variables but not much the logic of this driver. Two high level comments
+I do have:
 
-> 
-> Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
-> ---
->  drivers/usb/misc/adutux.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/usb/misc/adutux.c b/drivers/usb/misc/adutux.c
-> index ed6a19254d2ff9fead898adad0b3996822e10167..000a3ade743258f381d85397395a43c28a8481cc 100644
-> --- a/drivers/usb/misc/adutux.c
-> +++ b/drivers/usb/misc/adutux.c
-> @@ -680,7 +680,7 @@ static int adu_probe(struct usb_interface *interface,
->  	in_end_size = usb_endpoint_maxp(dev->interrupt_in_endpoint);
->  	out_end_size = usb_endpoint_maxp(dev->interrupt_out_endpoint);
->  
-> -	dev->read_buffer_primary = kmalloc((4 * in_end_size), GFP_KERNEL);
-> +	dev->read_buffer_primary = kmalloc_array(4, in_end_size, GFP_KERNEL);
+- I'd go for bit 31 as the flag, though. It is extremly unlikely that we
+  ever need a number in serial_core.h again, but if, it could likely be
+  > 127
 
-This is a buffer and you need the size to be correct based on the
-commands, right?  It's not an array of a structure, but rather a stream
-of bytes.
+- whatever bit numer we choose, it should be hidden as a constant. My
+  suggestion:
+
+#define SCI_LOCAL_PORT_FLAG	BIT(x)
+
+?
 
 
->  	if (!dev->read_buffer_primary)
->  		goto error;
->  
-> @@ -690,7 +690,7 @@ static int adu_probe(struct usb_interface *interface,
->  	memset(dev->read_buffer_primary + (2 * in_end_size), 'c', in_end_size);
->  	memset(dev->read_buffer_primary + (3 * in_end_size), 'd', in_end_size);
->  
-> -	dev->read_buffer_secondary = kmalloc((4 * in_end_size), GFP_KERNEL);
-> +	dev->read_buffer_secondary = kmalloc_array(4, in_end_size, GFP_KERNEL);
+--/HOrjV2F0H4FDVet
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Same here.
+-----BEGIN PGP SIGNATURE-----
 
-I think the original code is just fine as there's no bug here or way it
-can overflow, right?
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmgtslwACgkQFA3kzBSg
+KbY9hw/+KCPfBEqpxSdVAC0NmTxrvYGMxQdLx9nhBGbKTSF65kHMvHbCeB3/VCMX
+EtIonj5Gm+ZLLEUFw7rPOlByOAXn/50pzmLN5Z9h6I++dM4MDMdj24LUMGLU7DbG
+/Eydt4Du2bjmKviosBJnpV/Whz2wfI4FUOHinI8fWvuo4BwLHuYUHj0EtIkrI992
+EbaUg77yTdb0qZF+e322wS2+E+b483MZHmgYzT19jbd9RzfLJ4BbLbw9SXXldpoM
+ljbVN1Jg6T9tZxQjFGJmhTRdW/BHMF+nimu4/uSuIp9ANGDhzahxbm200+TQtNl9
+0De1Bu2rKqanFLWbNZns4xcsj3eQVn719zt30g1GxB3PLJuHazLRzX1ed+yha85C
+KczWWLWECmpY9X7FooNEJjUI8IAx8hupjPo76lFQUrapujwFrbk0ilRbRS7tnB/g
+FeMxPbYgkQB/rPThjTo3lqdFxGSur/HUzGwdddiCEZvYayhbG5wWNXjWiVHJoMen
+cgxyhpFmcQVyE2dT9wNKtSLxApxPgRlfMxpqfcAvWHXHtntk6Swa85Ti1FVg1UhM
+/LU5p0RfsWJoB75ooAiISVN+7cPrtRsnLONK7YyZ1G+UK4A2fnn4EuIzwlE02bjB
+Ul0khEfB+0kv2wZYUqsxmoMTDjT44Q9Sz8gOWKSiRcbNc4uyPPs=
+=vEFG
+-----END PGP SIGNATURE-----
 
-thanks,
-
-greg k-h
+--/HOrjV2F0H4FDVet--
