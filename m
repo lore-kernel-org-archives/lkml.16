@@ -1,42 +1,50 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.thorsis.com (mail.thorsis.com [217.92.40.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7DC123507F;
-	Wed, 21 May 2025 07:30:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A56F22B8B9;
+	Wed, 21 May 2025 07:31:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.92.40.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747812630; cv=none; b=IH4CBZm0rZlOqbZ4TecL7dIxV0ImhRXVVBrOEGdoWK7GJrlVXp1cstWXvpyyzkADHs2eEcYXVx8LjQBGNDBjCBUBRUZ5kQoDyMH72p87rA2r9jwRvEqZwhNMfW6pCbl/k+F92UNKY1wLcGF9H81jzBVGwEXVCCChZsZ2CA0diYo=
+	t=1747812704; cv=none; b=HVYeMS/Mjv0YxzZnpSgbo534LqY8vz6CxnZ8OT3iCG2dF4MofwPX2xfeW4zeFsL3ctN5uACX6bcYGhMX0rOVmvcGKADp12Mt4mGbxcnJVEAxVHWEGxpwlnwvFKOzcQNdSCm0LzUTM79qPmf07bpPjCnO09SFbSwwRQKFAjAAEt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747812630; c=relaxed/simple;
-	bh=pi89e961IptILl8yg1vOTDMZsRpZ32Iwcr13PBivbzs=;
+	s=arc-20240116; t=1747812704; c=relaxed/simple;
+	bh=m88lqQJ1ivvA36g7P3O18bCRbixD3RDFJ8xZLwXrm0s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DuUlmxEAEaijR8EObWL7lUBSU46NwFdzpcHG/ILtTQmetKwtbdsMXFilrHvay3bmgD+akM6McwvDi0sfP57NA5UmHRTNbTruW2wWQx+Ie4dmJrhOiXyMHBeR/z1I813YsSdXFYSd3pDJbIf4A9UTgwLSZeqdgHQ1LU2qB/wzJGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J1662TOC; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=iKzHMJmfp5Un/bGxETiRlp+gl5OrC7Oa5malK4sPxzk+u3UIKF06cAdJc9R7cEMEH5GvFnq2Us8ZVR8yFK/DOR3L0KtWwizlhB1Fa1lNDdxH5YQrGod8KtUlTnkUwxCCSbqkmxq8DCLKnN8Wu0ORfpuFHHTGNid9RHlpfWikM5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com; spf=pass smtp.mailfrom=thorsis.com; dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b=g0XjGnbs; arc=none smtp.client-ip=217.92.40.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thorsis.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J1662TOC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77E2BC4CEE4;
-	Wed, 21 May 2025 07:30:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747812630;
-	bh=pi89e961IptILl8yg1vOTDMZsRpZ32Iwcr13PBivbzs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=J1662TOCtdKRCu7FEpSvECZWr2yHMTuXAsAYhPb6fpb4Wex7tW6Zljo/t3bKp1f52
-	 uX2NZOrJGMue7LqzbAfPNlg1RRBWXjp2N9fX6MSlPRD9TGmvJUAv/5g0WRHlgY6Twl
-	 XSjrdhdRmwpiE2L3de4P3mu5w/Uj1BNTJd7kuZlfgeqca6YkDxeEnt+X2v0XJy6Ugf
-	 4Vk/CwruT5XhrGUjb50QHR3sfm9pez1OI72AHWAdl2wg4kGiM/5GrRGcReDYhJ4HXs
-	 Q5TIf8+pZigCmJj+zhUgEH0KJ2qnD5GAaPijKdHjgHuoDR0IUWQxaNtirJdAOkQbia
-	 c0eVsTLHvWZPA==
-Date: Wed, 21 May 2025 09:30:25 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Thomas Gleixner <tglx@linutronix.de>, "H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	"Xin Li (Intel)" <xin@zytor.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: Fixes tag needs some work in the tip tree
-Message-ID: <aC2BERLkcx1LbED8@gmail.com>
-References: <20250520224906.61135dd4@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b="g0XjGnbs"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 9ED0E1483EA6;
+	Wed, 21 May 2025 09:31:39 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=thorsis.com; s=dkim;
+	t=1747812700; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 in-reply-to:references; bh=vQJzbvORYC3qBJW5bkNYYbLB/XMom/qkj5UONQP+FfI=;
+	b=g0XjGnbsgpvNRMG+QRiSHGkKupascOtHMHBsxB1DJMyIKHlEX0gMY3tzgzOt+F6GW6MBj4
+	TrAIRx3z7QjRY0LF2B5sNJPrSVmZjkNDCwb+doQyB2ROUoHxAQbAVxdOQBa0X/uG4weZCT
+	WMExvCvZW9gFzxy5+H3SdL1GBcJL/ucyTWSeHTPbgeb0AWOSsAEYjJjt/V2qRaExN/wCqg
+	xjW+QXt0pdNzXFSndEFTqhvgl5GY7S8vOyP5Rc+b0fEbR2lC6vdHa/riz1gsB8VVQTVWQI
+	Td2+bRb2z39L9tN0EYFJ04egtO7BLrBWgFiUqbvyVCMQyr8mcD3Xfw9kXqKbUg==
+Date: Wed, 21 May 2025 09:31:38 +0200
+From: Alexander Dahl <ada@thorsis.com>
+To: Manikandan Muralidharan <manikandan.m@microchip.com>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+	claudiu.beznea@tuxon.dev, tudor.ambarus@linaro.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] ARM: dts: microchip: sama5d27_som1: rename
+ spi-cs-setup-ns property to spi-cs-setup-delay-ns
+Message-ID: <20250521-outsource-unholy-8c063337eb6f@thorsis.com>
+Mail-Followup-To: Manikandan Muralidharan <manikandan.m@microchip.com>,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
+	claudiu.beznea@tuxon.dev, tudor.ambarus@linaro.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+References: <20250521054309.361894-1-manikandan.m@microchip.com>
+ <20250521054309.361894-2-manikandan.m@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,29 +53,41 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250520224906.61135dd4@canb.auug.org.au>
+In-Reply-To: <20250521054309.361894-2-manikandan.m@microchip.com>
+User-Agent: Mutt/2.2.12 (2023-09-09)
+X-Last-TLS-Session-Version: TLSv1.3
 
+Hello,
 
-* Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+Am Wed, May 21, 2025 at 11:13:07AM +0530 schrieb Manikandan Muralidharan:
+> The naming scheme for delay properties includes "delay" in the name,
+> so renaming spi-cs-setup-ns property to spi-cs-setup-delay-ns.
+> 
+> Fixes: 09ce8651229b ("ARM: dts: at91-sama5d27_som1: Set sst26vf064b SPI NOR flash at its maximum frequency")
+> Signed-off-by: Manikandan Muralidharan <manikandan.m@microchip.com>
+> ---
+> changes in v2:
+> - add fixes tag
+> ---
+>  arch/arm/boot/dts/microchip/at91-sama5d27_som1.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/microchip/at91-sama5d27_som1.dtsi b/arch/arm/boot/dts/microchip/at91-sama5d27_som1.dtsi
+> index 8ac85dac5a96..13c28e92b17e 100644
+> --- a/arch/arm/boot/dts/microchip/at91-sama5d27_som1.dtsi
+> +++ b/arch/arm/boot/dts/microchip/at91-sama5d27_som1.dtsi
+> @@ -44,7 +44,7 @@ flash@0 {
+>  					compatible = "jedec,spi-nor";
+>  					reg = <0>;
+>  					spi-max-frequency = <104000000>;
+> -					spi-cs-setup-ns = <7>;
+> +					spi-cs-setup-delay-ns = <7>;
+>  					spi-tx-bus-width = <4>;
+>  					spi-rx-bus-width = <4>;
+>  					m25p,fast-read;
 
-> Hi all,
-> 
-> In commit
-> 
->   54c2c688cd93 ("x86/xen/msr: Fix uninitialized variable 'err'")
-> 
-> Fixes tag
-> 
->   Fixes: d815da84fdd0 ("x86/msr: Change the function type of native_read_msr_safe()"
-> 
-> has these problem(s):
-> 
->   - Target SHA1 does not exist
-> 
-> Maybe you meant
-> 
-> Fixes: 502ad6e5a619 ("x86/msr: Change the function type of native_read_msr_safe()")
+Reviewed-by: Alexander Dahl <ada@thorsis.com>
 
-Thanks, I've fixed this up for tomorrow's -next.
+Greets
+Alex
 
-	Ingo
