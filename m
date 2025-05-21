@@ -1,115 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14FFC18B495;
-	Wed, 21 May 2025 14:21:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2EA61A317A;
+	Wed, 21 May 2025 14:22:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747837320; cv=none; b=eyX8akT2O+FXPJ8+Su3bf2KtZO+vgPYmWWLI+Hd78YxbbgGNH/H1aLs2kqgyA/fWxPIm8jxqd5AsBCgO8G3G5jvfqqG6EKS0AIle0pZ+Tag9lR0M7JW1MPC6zNcGJ/WvtrZZB4bVx7wN0YWEalTxxmwyeBDygrRHXg0Oj7GmxlE=
+	t=1747837326; cv=none; b=aumOM+Lei3guk0jF3D1YeCNbQSntQqxb1YybUJg/EARTN+3UkHWromXSl69+DDVaywwqrY8a7gDyI2D5vsSRS8J7D3y5l4Ah7mMTr1gISZPEjk5kUpTZ+dsN2u0t4o++Icfieas1/SHur+e9v9mE0X9hvy4q9PkJgsr2GQeVYFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747837320; c=relaxed/simple;
-	bh=oLbDPsjGUpXmI1lm4DUrFd0jUGYLf/dNE3S1fqfjBi0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ThwG6ZJbKo6UOtYah5yTNqshpfNs+of8fYK2krVRJ35x32GCeLvbRlSKcrvyoXw4HujTC+iVtnS+IXcQEMdiT9zUfx3m2yAiMW6m+Y4d0N/D81Lm+QFm3OSDvG1WukeYMObpFHXbm3PKh5Zjz+bBXZW0y4b4uDqMNULCneYcsnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ere03Gzm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747837326; c=relaxed/simple;
+	bh=DeEkaq/YR/aYXQ8EJo2m5wKNuGyxAH40rEpWj4GBF4A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SbobBDr9uxaQsum2ZvmoqGKJAKhazx38TSIIXpTZeBRGEzahfvHxhe092tWPi2JZAK/HyUThT1Z2Ke3/ZxnBTexb4Secgjq8bOFy9uZo2iwEfaqSN32Vrta9jkBBvpWTL7Oa9GTKmYNRwn0tSTMqPtXayDyy3MxULnfK3BU9JZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=mTsSVMSI; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ere03Gzm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DE44C4CEE4;
-	Wed, 21 May 2025 14:21:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747837319;
-	bh=oLbDPsjGUpXmI1lm4DUrFd0jUGYLf/dNE3S1fqfjBi0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Ere03Gzm3kM5wXDqIcNY9d/58JbrTN/jwoOFLRNqK0RWr/ZGRH4/YBEUDSLas0TQQ
-	 0YelKfYb6V3V+i0nz7e79QORZghpxgp9/FZ/oxN2+yO3ffcix/G65Y9jSnK3hFywYN
-	 daGdqYyxTzbweE3IeqbGlWMNwVOL3R36bN17MVYoorgDiRcY+QK10zyUGCAI0tLrdR
-	 ws0LelFl7+4TwVWshSbqhvnjiG3vYlUx5U5iOHaeqwYC4FNjR+W6kOshAd4uWAjAQh
-	 eX7QBu1JsLnY+chQGT7Wi4xoYTh9npBOqzXMMsaa6RKeekwZO/zXJJzDfkcu5CTRA+
-	 6Uk2RLVPKZbBw==
-Message-ID: <49b7964a-6471-4ee1-9c27-cb75e35983d6@kernel.org>
-Date: Wed, 21 May 2025 16:21:54 +0200
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="mTsSVMSI"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54L8NSB8012153;
+	Wed, 21 May 2025 14:21:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=+pbdGlDVQ9Os2VXqbYRLNQcB+/6pA2
+	U3W63QKyIuekw=; b=mTsSVMSII5BvDvxamWrcmQPJkQfui6b6maA6SRPeusJUVr
+	EL+3/agoe/RKh6BDypzUYHR74hqAA/Qu5PVSeoSTjorxFtYDTudvTLeq1NcY1n8d
+	XwjeSLvJtZxxstTFgiyrKYipDWC8WKhN2waaHXJwWgwMdXDYWpODY/EzvGavnwha
+	k0tNDXehgaYdibJmlDR18HcktLlYyTBLyeyQc8XhVQeyEO6cflS5X6pc2o/QQy5g
+	a/9Vvz8nGBcFcbRbqppaD8MPsVf+V0Y28AtDZLTyk/hxQmMT+C8b+4SfpUpmB9Hp
+	1ttGLfqzynvmbd0HPnulaQuiJddrDUieHOV5chLQ==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46rye6mhn9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 21 May 2025 14:21:56 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54LDZZUp015480;
+	Wed, 21 May 2025 14:21:55 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 46rwnnchb5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 21 May 2025 14:21:55 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54LELpm218350516
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 21 May 2025 14:21:51 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id AECE42004B;
+	Wed, 21 May 2025 14:21:51 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3075420040;
+	Wed, 21 May 2025 14:21:51 +0000 (GMT)
+Received: from osiris (unknown [9.87.128.135])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed, 21 May 2025 14:21:51 +0000 (GMT)
+Date: Wed, 21 May 2025 16:21:49 +0200
+From: Heiko Carstens <hca@linux.ibm.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: Sumanth Korikkar <sumanthk@linux.ibm.com>, linux-mm <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH 1/4] mm/memory_hotplug: Add interface for runtime
+ (de)configuration of memory
+Message-ID: <20250521142149.11483C95-hca@linux.ibm.com>
+References: <20241202082732.3959803-1-sumanthk@linux.ibm.com>
+ <20241202082732.3959803-2-sumanthk@linux.ibm.com>
+ <3151b9a0-3e96-4820-b6af-9f9ec4996ee1@redhat.com>
+ <Z08WpCxt4lsIsjcN@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
+ <1b9285ba-4118-4572-9392-42ec6ba6728c@redhat.com>
+ <aCx-SJdHd-3Z12af@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
+ <fca5fe72-55a8-456c-a179-56776848091d@redhat.com>
+ <aC2sUdhavboOgS83@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
+ <496e6707-bdc9-4ad2-88e2-51236549b5f2@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 5/6] arm64: dts: qcom: Add support L4C LDO for qcs9075
- IQ-9075-EVK
-To: Wasim Nazir <quic_wasimn@quicinc.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, kernel@quicinc.com, kernel@oss.qualcomm.com,
- Rakesh Kota <quic_kotarake@quicinc.com>,
- Sayali Lokhande <quic_sayalil@quicinc.com>
-References: <20250521140807.3837019-1-quic_wasimn@quicinc.com>
- <20250521140807.3837019-6-quic_wasimn@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250521140807.3837019-6-quic_wasimn@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <496e6707-bdc9-4ad2-88e2-51236549b5f2@redhat.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDEzNyBTYWx0ZWRfX+es2tdgCqTRk DJ+MBFcXGJjGaWxKeOwxOXX3HaifE2jsF6o6EwdTUz637IAAyyIRmyLieBEilYuL54IzOfj0uKG 8HHZ05z1Lql7XFezD4n0z5MK24sCeu3zexFnWdV1fJwa6WuHsVUolLZibcVmeHFKhcknn9qtLkd
+ +kaIFrHEc3EIIymkdgsHfPT4OzYAuhh8oZOZ1jUO5628XXKDKI4nh0bsHAz2yEk2qqAjfNgvG+m Cw1MKRlRUONC51E+plTgUo7+a6cbh3VwUCjX0y4oF9p7caNfRkw5uoMW5fWQN2cWjo2R8Wa1m1a +bOe8AKjG39CDxcnSp7JJ+InPS70cPMvcfE6kJ+HgJrpOYlozVzL7EkbH0Gml0uthDWVH5qziRt
+ 8q6zrAwx7FEjXojfog8xb5rI6LNv5FstR6KVYmRF0dFL6jq/wj8OYGvrRPKXXwchRIxRoaI3
+X-Authority-Analysis: v=2.4 cv=esrfzppX c=1 sm=1 tr=0 ts=682de184 cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=nzSEty_UkPgyXC6r39YA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-ORIG-GUID: x4PT5vUB9_qT4dlNxpPKkjz48cYLT3z2
+X-Proofpoint-GUID: x4PT5vUB9_qT4dlNxpPKkjz48cYLT3z2
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-21_04,2025-05-20_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
+ lowpriorityscore=0 impostorscore=0 suspectscore=0 spamscore=0 phishscore=0
+ priorityscore=1501 clxscore=1011 bulkscore=0 mlxscore=0 mlxlogscore=346
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505210137
 
-On 21/05/2025 16:08, Wasim Nazir wrote:
-> From: Rakesh Kota <quic_kotarake@quicinc.com>
+On Wed, May 21, 2025 at 02:33:42PM +0200, David Hildenbrand wrote:
+> On 21.05.25 12:34, Sumanth Korikkar wrote:
+> > As you pointed out, how about having something similar to
+> > 73954d379efd ("dax: add a sysfs knob to control memmap_on_memory behavior")
 > 
-> Add support L4C LDO for qcs9075 IQ-9075-EVK.
+> Right. But here, the use case is usually (a) to add a gigantic amount of
+> memory using add_memory(), not small blocks like on s390x (b) consume the
+> memmap from (slow) special-purpose memory as well.
 > 
-> Signed-off-by: Rakesh Kota <quic_kotarake@quicinc.com>
-> Signed-off-by: Sayali Lokhande <quic_sayalil@quicinc.com>
-> Signed-off-by: Wasim Nazir <quic_wasimn@quicinc.com>
-> ---
->  arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts | 10 ++++++++++
+> Regarding (a), the memmap could be so big that add_memory() might never
+> really work (not just because of some temporary low-memory situation).
 
-You just added this file. What is the point of doing changes node by node?
-
-
-
-Best regards,
-Krzysztof
+What is "big"? Worst case for s390 with existing machines would be an
+increment size (aka memory block size) of 64GB. So more than 1GB for
+memmap plus pages tables, etc would be required.
