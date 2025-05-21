@@ -1,190 +1,181 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2057.outbound.protection.outlook.com [40.107.95.57])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24E44220F51
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 15:46:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.57
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747842404; cv=fail; b=SVFwnY0MfTyQjT7T6kdr7kMgZ6a2mAQtrvfLHEBYq5+BtsNDhV3PXAUXdi4y0UjmFhLYzGO99V+m4Y3elgqhjSPwX6UBlv+YnG5XcFWWkK2d6+ufoKSifvNTHv4+VPs+YqkqqRs0sVA2PgJtBSo1nDrSX3BA7zfqXQQvyguP858=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747842404; c=relaxed/simple;
-	bh=lCCXy60KwtKZ+v4z0Jj+v1jX++nUlG7Cr4/rJdJQkn8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TV426ILL6u93YDuv6HKqWm8Ak/05gFvBChH4HCmWua9ZULfDMh0zi2/6Q6BwkEqUHtgy8SBkaCQ+gYFPRutjVRj55MV0Rfb902+4uSSbOAcDVA/+dEGq+tj6DoDcslSsZhea0URUwCGXQL12mMw0MQYqaA1EoWCifODcFm4ZCSw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=aKuyCe+q; arc=fail smtp.client-ip=40.107.95.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 890511EB18D;
+	Wed, 21 May 2025 15:46:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747842416; cv=none; b=RbcpGhQmShYkfgGTr2NH9P5F3uNAV9ngWDhRs09Cx+iUB8dxSPLHK+jnWyF18At0aS3PsfEv9JJwzeZO08OWv2RC92Y5UYQjOqXAo3lmW8Rm7MNYYDKkW0NygCSC7tJq/Cg82Foc+rO72WS0IyJXgvqRi0FHIhd4Q0lus4dZTdc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747842416; c=relaxed/simple;
+	bh=xs6MyiJsl4816VLbkiYJIjZ52nVBNYDg6IflP+yXM5o=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ozyabUKB9ceBH35oSMyqlLIgBFFobE5D496v196aZWNE6ky5jWR0naXCttl6PY+MiDfc4SEIWnrgviCB0bivTOLxMkng7ACibcZAFkoZcFdVDTE602THaTHqSQm7S6Np2Gjo7PFEHgU/nF/axysWeUVc6I/fgvKMn+mRnzA9hzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=KAHkfWdQ; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="aKuyCe+q"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JHqQ4Ofqt/t2CpKkAfuWUNGQVWE9dEa9yYHjWix2McBSnMJapwqmVyYpciLOqmHGGBEPuh7T6Cj6dpXPYz9l1Vt3hzQsRfUsajuk1P07EOo4+lbtL9Bc54KGukcB5IGX26EYFug5SAAxuZiBb5m20ZKDNoD6eAnJwfESt1C6D3z+mFLa3XOoTBZAtnMTRGVuatBhKwjKDteXbSXY/JWmbgsqGJYMzSVLceH0hT4XU53wkYO//btzgBNJRB5LjmG1KTlAZIcq0d3+m1BW5GSHYjMwtLYk8OADAm7wigFJ0OT/Ga/hRuijsFIoXiXqXqWCLkRSk95BDjgKFFx47TH+LA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BRHfJWdBNDdbJgIotWKTW+P1jKDophQih4cbrUQesh4=;
- b=VXBiCJvGQbecH1FA/4pr5Dp2VebFr7ZxlYNp1dX+sb02G8O4I2AVEto4UmUoyFHpsqBi3Mo10pp6s+ufPObw7cHKHYUDr7KC940pdbCr/NWi2lOk7P2liJG6m1offlF8S80iSUPMFw3+5BQhsOQapNKikxF56cU9LWgmj28aLGO7Xbf8fu6SN3SnZPSExT/3YzhAwxmxpqaJTsryY/9BrWQdrck8wXbNeMt1XQoZx+9FobZ/oLLinUC7NpjFvJE4Wd7YQc2GzVkCiLdRhUOmPlaUHT+s86h5zgcZMqLMm2CoEOFDH/Fz8dXZEUiSWgkt20N2mw47UzMw42gVcQRAkw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BRHfJWdBNDdbJgIotWKTW+P1jKDophQih4cbrUQesh4=;
- b=aKuyCe+q38LATTKP6aQAwdQLX0JNJ83IZWQCyf19SNt2iFCigT9v71ZsSk94gPrRABYrcz7KpzW9Sqoo95Rs/qDrXHISJp+M2S7FfDoKAg3ug1nsoo9PC8UKvTOmzsBxJLfxLis8hw5g275nAw7bca3YTlhtix+xrOv1e9c+Nu0=
-Received: from BYAPR05CA0066.namprd05.prod.outlook.com (2603:10b6:a03:74::43)
- by DM6PR12MB4338.namprd12.prod.outlook.com (2603:10b6:5:2a2::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.31; Wed, 21 May
- 2025 15:46:35 +0000
-Received: from SJ1PEPF00001CE9.namprd03.prod.outlook.com
- (2603:10b6:a03:74:cafe::38) by BYAPR05CA0066.outlook.office365.com
- (2603:10b6:a03:74::43) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8769.18 via Frontend Transport; Wed,
- 21 May 2025 15:46:34 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ1PEPF00001CE9.mail.protection.outlook.com (10.167.242.25) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8769.18 via Frontend Transport; Wed, 21 May 2025 15:46:34 +0000
-Received: from FRAPPELLOUX01.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 21 May
- 2025 10:46:31 -0500
-From: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
-To: Matthew Brost <matthew.brost@intel.com>, Danilo Krummrich
-	<dakr@kernel.org>, Philipp Stanner <phasta@kernel.org>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
-	<mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
-	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-CC: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v10 03/10] drm/sched: Add device name to the drm_sched_process_job event
-Date: Wed, 21 May 2025 17:45:05 +0200
-Message-ID: <20250521154531.10541-4-pierre-eric.pelloux-prayer@amd.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250521154531.10541-1-pierre-eric.pelloux-prayer@amd.com>
-References: <20250521154531.10541-1-pierre-eric.pelloux-prayer@amd.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="KAHkfWdQ"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54LDnJmq006706;
+	Wed, 21 May 2025 15:46:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=Wx1Lgm
+	ZxF+Xwm4tlerhs5YqUIvIJlk0ChbGGpQkmSYs=; b=KAHkfWdQZKB4cbteFbtz8V
+	Ex11MQzhuBFamyqER/nkOQ/MauwI77DW+qYZ99McBOsljKu1a+be6TXhWp9NtFpV
+	E29jRXfNEWkrwWqsw0qzLMFY+filt+GqOO5tqvpa8mhF6qxHZ3v/L1WwyEqNI2t7
+	epxbY/Pyh7KVpU3yh0OHQ3lYUK6XJYwqLQ/xMR72duwd/jiphwZiLGMEqgqAOULC
+	9mkikP/HC7oaLVc71+wocKIotZVUZj9ciu4dvV5qSywMEjFtcgc2S5/4SB9nN0mu
+	q6oDGFDvgkNZsX7Gjq2DA/fHFD2TQsIEwAaVb0Tz6seNflsUtORmrVrLpVvnKouQ
+	==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46sg230m3d-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 21 May 2025 15:46:50 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54LDu4Oj015444;
+	Wed, 21 May 2025 15:46:50 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 46rwnncv3j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 21 May 2025 15:46:49 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54LFkkhn19136806
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 21 May 2025 15:46:46 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F366A20043;
+	Wed, 21 May 2025 15:46:45 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8E1B620040;
+	Wed, 21 May 2025 15:46:45 +0000 (GMT)
+Received: from li-978a334c-2cba-11b2-a85c-a0743a31b510.ibm.com (unknown [9.152.224.80])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 21 May 2025 15:46:45 +0000 (GMT)
+Message-ID: <bfec98c2f53cc71603445b0339f53111cbf86e9e.camel@linux.ibm.com>
+Subject: Re: [PATCH v1 4/5] KVM: s390: refactor and split some gmap helpers
+From: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
+To: Claudio Imbrenda <imbrenda@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, frankja@linux.ibm.com,
+        borntraeger@de.ibm.com, seiden@linux.ibm.com, nrb@linux.ibm.com,
+        david@redhat.com, hca@linux.ibm.com, agordeev@linux.ibm.com,
+        svens@linux.ibm.com, gor@linux.ibm.com
+Date: Wed, 21 May 2025 17:46:46 +0200
+In-Reply-To: <20250521174137.5b2baaf6@p-imbrenda>
+References: <20250514163855.124471-1-imbrenda@linux.ibm.com>
+		<20250514163855.124471-5-imbrenda@linux.ibm.com>
+		<277aa125e8edaf55e82ca66a15b26eee6ba3320b.camel@linux.ibm.com>
+		<20250521171930.2edaaa8a@p-imbrenda>
+		<d495d17902955839b0d7d092334b47efbdcb55a1.camel@linux.ibm.com>
+	 <20250521174137.5b2baaf6@p-imbrenda>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CE9:EE_|DM6PR12MB4338:EE_
-X-MS-Office365-Filtering-Correlation-Id: f0d6668f-b419-4e02-ecfb-08dd987eaa5b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WlE1SG51cTlTSmJ0VGJhT2Z1Nko1djhabStuUkhFZzdjN2dPRTAvbEl3K1gx?=
- =?utf-8?B?czdPV04zdHNUY0VWT0pLSTI1eFh5VU9RRFIxM0p1QVg2ZitWejdGMjVSd2xz?=
- =?utf-8?B?TFpBd1cvbWJxTVRZN251UDRmaFBlSk1ac1FTRGFkdStOTERLZ20xSytCNEd1?=
- =?utf-8?B?eTZJV0RZK0pQbDdqYThUOGhzS2VNbDhzNkJrbWhJNTdZNmplMExBVWNJTFVG?=
- =?utf-8?B?ajRSczdPQ1NxYm43b1dHWXBTV0NKQWxkd3N5MXN3cm9xbEFjU3NMaTcrOEQw?=
- =?utf-8?B?TUs3dXk4TkNwWGV5VHNrUEpCckJScXV4RjJMbGFnMVdIZmNvdHhmTkZRQ25M?=
- =?utf-8?B?ZkZnS2daV1dJWk9kVFYxOENwOHBVSEpwdmx4SlJkZSt0NkpqRnRhdzQyUFFX?=
- =?utf-8?B?QkcrdnptNnRlVTAvUE1scDUzUXpKYUtBd1lOQlFMaVg2Y3lUeE90WW85V2hk?=
- =?utf-8?B?S0ZpeHlpRE1xS3p1WmNqVXF1S0g3bktLTlBsL29XYmk5TU9NTG43bXBvWnZ2?=
- =?utf-8?B?bitVVnd3OGxHT0NXa0dnbWpzY21hdUIvZEJ6RjdYL203UDlXUHpWNzZCRCtY?=
- =?utf-8?B?ZUl4b0JsNWxRTVFNclZRNGZPeXFMWDIvR3dWNHdtWDhhMUI0aStNTDJVVXhq?=
- =?utf-8?B?N3QwUnliRmxEelljcVdtSzhFS1lFRGQ5aEkvbzVWNmN3VDJ1TnN1ajErSExD?=
- =?utf-8?B?dHpXR3JRZ1hIc0ZpUElGbTNTbkhPNkxwUVJTSXBtMHpyQXErWGhHSEYxY3Rw?=
- =?utf-8?B?U3lNdStBWEJzcUJhY0N5bHhWdC81bkRBZVVLRXprSWpoMmp5V05OZmVBTzBD?=
- =?utf-8?B?ck54RXF6WEhmUFhQeGY5SkR0SXppRnlKY0EreWFGUjhEcFpHL3hDYkljK1oz?=
- =?utf-8?B?UG5qWEVVenYyeWY4QjRwYXEyclA5OEpjMEdNV2ZqeGtLMEliQ3A5RWlpL3ZX?=
- =?utf-8?B?ZVdpdExpdENiV1hXMW8yL2ZnQWZQa0JyL2VGaUlpZXgyS2V1WUNDTGNUWHQ3?=
- =?utf-8?B?YWtqY3dNTnhiaUhVNzUwR21iMElWdUxiY2Fobm40SGRlSnVPWUNoc3hmd05j?=
- =?utf-8?B?OWVTM0sxMkxBM204b05JK2Roc1NoMWQvWEZVYm9NRVdJSDBwMnNKd1ZoN1Zv?=
- =?utf-8?B?cHZrd1dkZmFRMVIzWXZiZGtqQ2tCUzNIL3ZIazB1cVkyM2FkbW95cHJGMndz?=
- =?utf-8?B?bVIwVXVibDFjc0JNYmJ4cmVxdGVNL2tXbHRiSzFUbFJ5bDJ2SHQwdURhTkZD?=
- =?utf-8?B?YmVMdXBnRUJiSnJtdjNXYkVkOVUrY1ZLRWlXRis5ZVhOc0hnMHRsRk5TcDdx?=
- =?utf-8?B?K2xHRlNKSEQzNGh2Zm5tRFNsUERYaDYzYkttNVo5dXZhcnR4MXhwTzBhK2RS?=
- =?utf-8?B?VTU1M1E4dkdVcnNDMUVuNmFPTnE0VDJmaEhGaWxpU2x1ZFpRMG11V2RrVXdM?=
- =?utf-8?B?UFpxS00yTGRCM0dFUU9PVkZmQ21tR2lBamJxcGE1cE93Ri9kQWxVNWNyRWhx?=
- =?utf-8?B?OWdXM0N2NXhWQXJPUnZFRklDazRZVjg4dlFkdzRvRzgxeFp4WlRlWUt5L25h?=
- =?utf-8?B?aVZFQksxYzdvbllBNWp0Wk90bktrMFZRM3JyaVBIcG5iWTk1N2F5ZGFWL0NO?=
- =?utf-8?B?U1lmd1hOM0VqaVJ0TkkzbjN2YkNkUjRVR0RrS2J5ZFh2ZTVpZmIvZGxNVkpR?=
- =?utf-8?B?WmxQaWxSckwwWVdWdHlPMGwzc25EcTZXMXBrZzQ1UDZselAyUVhGSmFJNDhy?=
- =?utf-8?B?TkpLRGxiMnd0aFYxZmQzbzJEZUR5enA5NFZkSGU2UFJjQjNObmJRQjYrOXor?=
- =?utf-8?B?SFdpY0pFY0tQamlrN3g0bWFEcVRnYzdQaEZtdUxYZWpPV28wWDZJL3p1em1a?=
- =?utf-8?B?YjJWVWoyM25YZjVHTFVPd1RwQmd3SitjMnhleGtDT3hBYVJTbzZOaVNWc1g2?=
- =?utf-8?B?N3FFYVhROE5vQ1orRHJTS2NvSTV4RGxZaFhWVkVwaXFDdFFhaHRTTXArQmxG?=
- =?utf-8?B?WkZzcWljdWJZK0xzQkwwZllvYmtsd0sxMGhpc3p3eGY3T1hWVmNXRWhNSEUx?=
- =?utf-8?Q?5lRNje?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(376014)(7416014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2025 15:46:34.6660
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f0d6668f-b419-4e02-ecfb-08dd987eaa5b
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00001CE9.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4338
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: Hq-FJRa7WzcXG0d_ztc0OJq8XzVcwHOx
+X-Authority-Analysis: v=2.4 cv=RPmzH5i+ c=1 sm=1 tr=0 ts=682df56a cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=TZB5Y_STSF-BKAUI658A:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDE1MyBTYWx0ZWRfX2h2c5+cRJedL Btxuig7rXmaT4u4xFJsmDoQZsnvLG2JRPPiwN4wj85jOWRnEVYnGgYQOle6D9dspSwxihNiDiru hBy3ESEcCJ9fR19MwT5fl1JoOy/RjWeScK5GSs2RSnWgykrPV12/jWA55wbEkqvvQDv2D5cWNOE
+ zSE41r0GpqUNYZ+278mp4SriXauIS5ljvGr4tKaGGnHCkOgOkrl+kRzNm/dUMtzsZ+LLuWZ+4DV o4vBxGSnG6w73pTaQ0RtI69jPnmBjj+E/hASyrzD4fdrsy4az9P6hIYwiNcLRPYP7EYqVZKRour xZ4gIiEdkNCeUpqvLg7dgw9KmX2QC1xcdeMnk7aPR/e0zlUrNFRNAOYZS+RcbJe2MRmx1H7EE9e
+ exykHny+ksWE7iCnEmwCcj9+mEr84d+0B8KZsfd0ed5Ln/kvMfe+fL0fJZ7vVMhW3VvcyCbX
+X-Proofpoint-GUID: Hq-FJRa7WzcXG0d_ztc0OJq8XzVcwHOx
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-21_05,2025-05-20_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ lowpriorityscore=0 impostorscore=0 adultscore=0 priorityscore=1501
+ bulkscore=0 phishscore=0 mlxscore=0 malwarescore=0 spamscore=0
+ mlxlogscore=999 suspectscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505160000 definitions=main-2505210153
 
-Since switching the scheduler from using kthreads to workqueues in
-commit a6149f039369 ("drm/sched: Convert drm scheduler to use a work
-queue rather than kthread") userspace applications cannot determine
-the device from the PID of the threads sending the trace events
-anymore.
+On Wed, 2025-05-21 at 17:41 +0200, Claudio Imbrenda wrote:
+> On Wed, 21 May 2025 17:30:00 +0200
+> Nina Schoetterl-Glausch <nsg@linux.ibm.com> wrote:
+>=20
+> > On Wed, 2025-05-21 at 17:19 +0200, Claudio Imbrenda wrote:
+> > > On Wed, 21 May 2025 16:55:18 +0200
+> > > Nina Schoetterl-Glausch <nsg@linux.ibm.com> wrote:
+> > >  =20
+> > > > On Wed, 2025-05-14 at 18:38 +0200, Claudio Imbrenda wrote: =20
+> > > > > Refactor some gmap functions; move the implementation into a sepa=
+rate
+> > > > > file with only helper functions. The new helper functions work on=
+ vm
+> > > > > addresses, leaving all gmap logic in the gmap functions, which mo=
+stly
+> > > > > become just wrappers.
+> > > > >=20
+> > > > > The whole gmap handling is going to be moved inside KVM soon, but=
+ the
+> > > > > helper functions need to touch core mm functions, and thus need t=
+o
+> > > > > stay in the core of kernel.
+> > > > >=20
+> > > > > Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+> > > > > ---
+> > > > >  MAINTAINERS                          |   2 +
+> > > > >  arch/s390/include/asm/gmap_helpers.h |  18 ++
+> > > > >  arch/s390/kvm/diag.c                 |  11 +-
+> > > > >  arch/s390/kvm/kvm-s390.c             |   3 +-
+> > > > >  arch/s390/mm/Makefile                |   2 +
+> > > > >  arch/s390/mm/gmap.c                  |  46 ++---
+> > > > >  arch/s390/mm/gmap_helpers.c          | 266 +++++++++++++++++++++=
+++++++
+> > > > >  7 files changed, 307 insertions(+), 41 deletions(-)
+> > > > >  create mode 100644 arch/s390/include/asm/gmap_helpers.h
+> > > > >  create mode 100644 arch/s390/mm/gmap_helpers.c
+> > > > >    =20
+> > [...]
+> >=20
+> > > > > +void __gmap_helper_zap_one(struct mm_struct *mm, unsigned long v=
+maddr)   =20
+> > > >=20
+> > > > __gmap_helper_zap_mapping_pte ? =20
+> > >=20
+> > > but I'm not taking a pte as parameter =20
+> >=20
+> > The pte being zapped is the one mapping vmaddr, right?
+>=20
+> I don't know, _pte kinda sounds to me as the function would be taking a
+> pte as parameter
 
-Each queue had its own kthread which had a given PID for the whole
-time. So, at least for amdgpu, it was possible to associate a PID
-to the hardware queues of each GPU in the system. Then, when a
-drm_run_job trace event was received by userspace, the source PID
-allowed to associate it back to the correct GPU.
+__gmap_helper_zap_pte_mapping_addr ?
 
-With workqueues this is not possible anymore, so the event needs to
-contain the dev_name() to identify the device.
+IMO __gmap_helper_zap_one is rather vague. Zap one? Which one?
 
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
----
- drivers/gpu/drm/scheduler/gpu_scheduler_trace.h | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+[...]
 
-diff --git a/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h b/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
-index f56e77e7f6d0..713df3516a17 100644
---- a/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
-+++ b/drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
-@@ -42,6 +42,7 @@ DECLARE_EVENT_CLASS(drm_sched_job,
- 			     __field(uint64_t, id)
- 			     __field(u32, job_count)
- 			     __field(int, hw_job_count)
-+			     __string(dev, dev_name(sched_job->sched->dev))
- 			     ),
- 
- 	    TP_fast_assign(
-@@ -52,9 +53,10 @@ DECLARE_EVENT_CLASS(drm_sched_job,
- 			   __entry->job_count = spsc_queue_count(&entity->job_queue);
- 			   __entry->hw_job_count = atomic_read(
- 				   &sched_job->sched->credit_count);
-+			   __assign_str(dev);
- 			   ),
--	    TP_printk("entity=%p, id=%llu, fence=%p, ring=%s, job count:%u, hw job count:%d",
--		      __entry->entity, __entry->id,
-+	    TP_printk("dev=%s, entity=%p, id=%llu, fence=%p, ring=%s, job count:%u, hw job count:%d",
-+		      __get_str(dev), __entry->entity, __entry->id,
- 		      __entry->fence, __get_str(name),
- 		      __entry->job_count, __entry->hw_job_count)
- );
--- 
-2.43.0
+> > >=20
+> > > > The stuff below is from arch/s390/mm/gmap.c right?
+> > > > Are you going to delete it from there? =20
+> > >=20
+> > > not in this series, but the next series will remove mm/gmap.c altoget=
+her =20
+> >=20
+> > Can't you do it with this one?
+>=20
+> if you mean removing mm/gmap.c, no. I would need to push the whole gmap
+> rewrite series, which is not ready yet.
+>=20
+> if you mean removing the redundant functions... I guess I could
 
+The latter. I think that would be cleaner.
+>=20
+> >=20
+> >=20
+> > [...]
+
+--=20
+IBM Deutschland Research & Development GmbH
+Vorsitzender des Aufsichtsrats: Wolfgang Wendt
+Gesch=C3=A4ftsf=C3=BChrung: David Faller
+Sitz der Gesellschaft: B=C3=B6blingen / Registergericht: Amtsgericht Stuttg=
+art, HRB 243294
