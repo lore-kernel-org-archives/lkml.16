@@ -1,132 +1,105 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A68A22B8B5
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 07:06:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 476F8235049;
+	Wed, 21 May 2025 07:06:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747811203; cv=none; b=hBvv/enkEcwt1XFtFRXMVpUho7hel2DgjQq3Y13iliVyxKeKkQS3/UBALNQ1vz3sbGpuG+X/2eGRQLv8TRBANp3zPjcRSpNGnAox5FDpFdLMzjPamV4AyogyuQLC0Gj/FdeEw5/oQLPjwhsnPqbOjQkKbjA56djlMySuY2kIkQs=
+	t=1747811212; cv=none; b=KtD/iue6XnxtTx90RzoJ8mMNAuc15CYhTaJMjEFbKqc5A3RH2Iu9iYiF6e9LLLSPrRVk1hBsfeGjekEFpbdZ7fdp8Ll27XdWM9dLPp7QT0Hc44EDHlPgXRH8FraO/Tr10QHamW+erNaB3NnPmwce5d4FPkmaLJx3qXEsoicuU38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747811203; c=relaxed/simple;
-	bh=aPROOibqt7OOY7UY7vh6s2l/hWo7wPzeblL0fff00yY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BgjWti+Nk2z8NpjFaBlzte3tVHQ5/HdsAJPOrVBwmWFvIreuYR+PNzR+z61iKJfbCWf5L2F5/GtwAI6TlYLYZD3J3VpGWgy5LXsKJKsdN2AXEtfaGK6r9DT2AndHlcWwM9j1ofa5+lHQ90Xz/jV/uO3/jCu5yrGA69DJoBi+x88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Jq4P79YK; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=rsXfn0gf; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Jq4P79YK; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=rsXfn0gf; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1747811212; c=relaxed/simple;
+	bh=y+EqpJywUMH9nHGD6s9CiK+qnZyK9vnfU8hT14XBxxs=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wl0gVdAiaN7jKnTZrqODk+FC8fh5FtysLRD0qbEyJmusjOK7RMG1EXc+QCKbLr+HhTb/WHLGMOlFXM04IdSXL9rfcopK7tPyFJ/MeCiIaW+K/0Hpw0i1zGHCGbQq3XqcTzALwkxvHV/lZoXuTvL/aJDg0dxeFQX9i6dcbJyHUXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=U3PA9w87; arc=none smtp.client-ip=67.231.148.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Jq4P79YK";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="rsXfn0gf";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Jq4P79YK";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="rsXfn0gf"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id B859021A3E;
-	Wed, 21 May 2025 07:06:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1747811199;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dXjDJXLnXeJnl2whXnV0KS1rM85ENd79trWuk4mT1bw=;
-	b=Jq4P79YKw+7dqfw0qllwerlndQQn3qaxtsb0o5xrATMakKDfeHBDKnosT1i83FkEuyMGVo
-	suqSSerPcizbh9wBliIXMcIG9JKBJtnmc6SkxKP7CIYgTylg7WEiu6qjNykCHMtGX8Uzxt
-	64qhfAwaRvHrz36wU06hBOw4i2kdz/c=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1747811199;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dXjDJXLnXeJnl2whXnV0KS1rM85ENd79trWuk4mT1bw=;
-	b=rsXfn0gfBh9Aqy+3tx52oZay5uJFyUaH+RGzOFw4sidPsSv6b9i/3yFf8FlgWNaD4/law3
-	qbm3RY3upM6wjCAA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1747811199;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dXjDJXLnXeJnl2whXnV0KS1rM85ENd79trWuk4mT1bw=;
-	b=Jq4P79YKw+7dqfw0qllwerlndQQn3qaxtsb0o5xrATMakKDfeHBDKnosT1i83FkEuyMGVo
-	suqSSerPcizbh9wBliIXMcIG9JKBJtnmc6SkxKP7CIYgTylg7WEiu6qjNykCHMtGX8Uzxt
-	64qhfAwaRvHrz36wU06hBOw4i2kdz/c=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1747811199;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dXjDJXLnXeJnl2whXnV0KS1rM85ENd79trWuk4mT1bw=;
-	b=rsXfn0gfBh9Aqy+3tx52oZay5uJFyUaH+RGzOFw4sidPsSv6b9i/3yFf8FlgWNaD4/law3
-	qbm3RY3upM6wjCAA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A869613888;
-	Wed, 21 May 2025 07:06:39 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id G6bpKH97LWi+FwAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Wed, 21 May 2025 07:06:39 +0000
-Date: Wed, 21 May 2025 09:06:38 +0200
-From: David Sterba <dsterba@suse.cz>
-To: Yangtao Li <frank.li@vivo.com>
-Cc: clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	panchuang@vivo.com
-Subject: Re: [PATCH 01/13] btrfs: update btrfs_insert_inode_defrag to to use
- rb helper
-Message-ID: <20250521070638.GA3687@suse.cz>
-Reply-To: dsterba@suse.cz
-References: <20250422081504.1998809-1-frank.li@vivo.com>
- <20250422112137.GA3659@suse.cz>
- <098cfd6e-83c7-4b7f-aeff-7199b751bdb7@vivo.com>
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="U3PA9w87"
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54KNkISX015649;
+	Wed, 21 May 2025 00:06:39 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pfpt0220; bh=P8/ITfuQzWsLicHCkKnjp1NaO
+	TkPX9FT0tQbKECukXg=; b=U3PA9w87VighZgQ2Eyu7VtItKdloDjeOA+dP4Don6
+	beAelgGYfgsCE4vIjjvZiXARxnUnUH0rol9FAFafPJJr/d6l741mAPgq7CqKzbdF
+	ABDqvoQMTDrpJ+X4eBalIDPeVhGrRnd01psBrsZP//Z/PrQAE8cFe9slbxtqm9+j
+	QuQ7CNtMfMz/yp98y1VSOFnTLJu5fBPizcbLzoZ6YtLDFb3owXWwv/ugrZQCouI5
+	jRq4G6MFwakzdfhOX3N6J7HjJJIt9skAVYiQ3GmtmPF4fM9+8t38xiRFKGL0QlRV
+	QJP+Qli3C2Q8k2mkdVnXFLSvS1nLcrm/3UIs2ZopJtuzw==
+Received: from dc5-exch05.marvell.com ([199.233.59.128])
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 46s3purnqt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 21 May 2025 00:06:39 -0700 (PDT)
+Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
+ DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Wed, 21 May 2025 00:06:38 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
+ (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Wed, 21 May 2025 00:06:38 -0700
+Received: from test-OptiPlex-Tower-Plus-7010 (unknown [10.29.37.157])
+	by maili.marvell.com (Postfix) with SMTP id B01243F70B3;
+	Wed, 21 May 2025 00:06:34 -0700 (PDT)
+Date: Wed, 21 May 2025 12:36:33 +0530
+From: Hariprasad Kelam <hkelam@marvell.com>
+To: Simon Horman <horms@kernel.org>
+CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Sunil Goutham
+	<sgoutham@marvell.com>,
+        Geetha sowjanya <gakula@marvell.com>,
+        "Subbaraya
+ Sundeep" <sbhatta@marvell.com>,
+        Bharat Bhushan <bbhushan2@marvell.com>,
+        "Andrew Lunn" <andrew+netdev@lunn.ch>,
+        "David S. Miller"
+	<davem@davemloft.net>,
+        "Eric Dumazet" <edumazet@google.com>,
+        Jakub Kicinski
+	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Subject: Re: [net-next] octeontx2-pf: QOS: Perform cache sync on send queue
+ teardown
+Message-ID: <aC17efTkxDQ5+h1P@test-OptiPlex-Tower-Plus-7010>
+References: <20250520092248.1102707-1-hkelam@marvell.com>
+ <20250520170615.GO365796@horms.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <098cfd6e-83c7-4b7f-aeff-7199b751bdb7@vivo.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[]
-X-Spam-Flag: NO
-X-Spam-Score: -4.00
-X-Spam-Level: 
+In-Reply-To: <20250520170615.GO365796@horms.kernel.org>
+X-Authority-Analysis: v=2.4 cv=SMtCVPvH c=1 sm=1 tr=0 ts=682d7b7f cx=c_pps a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=M5GUcnROAAAA:8 a=t23tOx8119NCeN4cTkAA:9 a=CjuIK1q_8ugA:10
+ a=OBjm3rFKGHvpk9ecZwUJ:22 a=lhd_8Stf4_Oa5sg58ivl:22
+X-Proofpoint-ORIG-GUID: PVwdN8hdBB8HBBQh2nnlqKgbtslK1qdU
+X-Proofpoint-GUID: PVwdN8hdBB8HBBQh2nnlqKgbtslK1qdU
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDA2OCBTYWx0ZWRfXyFLO16LhMdPj 4QvyK1wwECkcehZbXFitX5LN4mv9Ia6VcmdOFqNm3a0ZYp+CH2QB0FvQxL/Vx7A0CRk9h1n/UFa LYlTsOD8eJQMvShXSAD+WPT2HOrGao67azz0PIdS5KWLz7m+qGIvGzSzUdSIaXNN8yJPwuWYMmS
+ eJAawmc7xox8MwHBZ87KBzM8jBhbVvdApZifSiPB1OizzSaCYvYKIA1J/kaw4G0NWSp9QeDlvqJ /Haomni4zofly+vUlCYIXJlFyIMT+UO3XSK/OcbXuoXyAej4gjGH8uXbcDxdNd5+WRDproNnwk0 mmkdZgXKiBpZwzt6dKNTD83vJmxC+qhQNYpPKcesdo+rMiViENmYUvCgKrKbBlCPwVUqnwj6iL+
+ uPa1hkTVOzFI+V+PcMNdjyUcnuFfbbUYgufoFCokEV1xsZa0BNMmE4jjyLqaJ1mhYgQyFYk5
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-21_01,2025-05-20_03,2025-03-28_01
 
-On Tue, May 20, 2025 at 01:14:00PM +0800, Yangtao Li wrote:
-> Hi David，
+On 2025-05-20 at 22:36:15, Simon Horman (horms@kernel.org) wrote:
+> On Tue, May 20, 2025 at 02:52:48PM +0530, Hariprasad Kelam wrote:
+> > QOS is designed to create a new send queue whenever  a class
+> > is created, ensuring proper shaping and scheduling. However,
+> > when multiple send queues are created and deleted in a loop,
+> > SMMU errors are observed.
+> > 
+> > This patch addresses the issue by performing an data cache sync
+> > during the teardown of QOS send queues.
+> > 
+> > Signed-off-by: Hariprasad Kelam <hkelam@marvell.com>
 > 
-> The new patchset has been send. Could you please consider taking a look？
-
-Yes, next week once the merge window opens.
+> Hi Hariprasad,
+> 
+> This feels like a fix and if so:
+> * Warrants a Fixes tag
+> * Should also be targeted at net rather than net-next if it fixes a problem
+>   present in net
+> 
+   Ack, will post to net 
