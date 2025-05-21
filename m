@@ -1,260 +1,143 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B15D78C9C
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 08:48:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A52278C9C
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 08:49:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747817325; cv=none; b=CptKLeSewCcQ/77BjaLhPzrqby6FEWZCa2UZueZJuCCp39hqcWgIZ7EYJmpcYrz57PIDhk7q2o3Rxni6UBA9YJHZyzuOw2yFWyh/NL2z6kSNrozMknf/wGunRaodiEIzcOIOvJDFFpeYWamKa0zo40QRum+WWvfgW7liHvElAYI=
+	t=1747817342; cv=none; b=rekxHBicSd05/8ZKTzv/asMYaJPfy2zqHcM3odjwkcjpt/2EPB6w2Wx5877+xFlANxg9tqTNzE7gwdfDAxr95aWVDL8nMnmqxxi/2453VzphSfgQqMammVj+gibpAQx/arKSAz4v4AX15N44JyIItBVQlcxFV+gpAx4cG4AaQMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747817325; c=relaxed/simple;
-	bh=oks16V55Al3cIwa3tzMhKIQg+6JISq/7X+SJWpAWNGk=;
+	s=arc-20240116; t=1747817342; c=relaxed/simple;
+	bh=IdTAw/7q5n4CViYIVlLpy2vbeybQVr45doe2wYSwj1s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iyGu0iFMkUy3Jtg9ZrlEwsJby0o2eNOcIzgvZi3iBzV2OuzgkJlDiUTVYwRjeiLPOZwTqW/aKieMYG+/hiYxMohp8qEDyfGm5NLu7ZCqXHnRdwu+cczxNjS0zKprNgvoHQCVjDsSOT1QVgHUgJP4ERD3dXbLUGvQE7DFfBZcUrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RI8mkj+S; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=k4l7oC2/1gOurmwIFkZwgAQYTf76MwkUEY0Wenl390tK/grxC2K9N5Qj8FGASTUI/nnU9OT6SEjThsJbXUggiWxQEVGcwQg5kb2h7zVydyakxzPWhQLfYehTmiqGfV+OhDrPrTNjs1Y7IDy9yVAup1wgaDECtFQ7uOrZD2HbosY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=IYnp7blK; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=kHeRh3wj; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0CkkL/cY; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=GRdrTkGa; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RI8mkj+S"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747817322;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="IYnp7blK";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="kHeRh3wj";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0CkkL/cY";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="GRdrTkGa"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 192BC2125A;
+	Wed, 21 May 2025 08:48:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747817338; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=UBrTKYMZkRkR/+obIFDmt3FxVCfGaAspFXfSUz2lNvE=;
-	b=RI8mkj+SS49vSOxzhHWQYBoO/VxdWCxWEPhFW/3bhoW9IakoXkLPED7RqN4XXJcRItZzon
-	W7uWh+7UeK4dfVAVORk9uPWvfTeVRvEAeqNCuDm3lwk3M4UzPqWLfRkQkM0yEbWaXVwQpi
-	BsyoCNqpmMGlXHZWoo8GUDN6IfafTkk=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-551-lNRO7LD9OfSOFlPfXbGwyw-1; Wed, 21 May 2025 04:48:41 -0400
-X-MC-Unique: lNRO7LD9OfSOFlPfXbGwyw-1
-X-Mimecast-MFC-AGG-ID: lNRO7LD9OfSOFlPfXbGwyw_1747817320
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-acbbb000796so481667066b.2
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 01:48:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747817320; x=1748422120;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UBrTKYMZkRkR/+obIFDmt3FxVCfGaAspFXfSUz2lNvE=;
-        b=aRnFb8rRjpGC6Vuhy9+ts1dQoGfIYWwh7lT/GzTguUDIePlDlpp2qgEihWVjrx2e0Z
-         7tqtQgLen1KppIrFUCfeUC0IzqXnW30ETkhLWjhUsLuSBet41w8H2ekHhzPG5++eDFW7
-         SrlE9W1h03l6iYQ+M292qJ/SRFBZYZMSmtcX5ptJsXrBGRwUL4tQOKcAZLZ48Cg3009u
-         4wBRBw+GPjNlZijMwOTc9y7qMOnaNcrkr6pts1YsnBZNuRxCjsK+JEcSLKu7Qf2nTMGx
-         dhstZwUL1cLokMknqG/SGgCpRgYbyqOF/c/ZVczTOjbR2ss3sAAhid+d18iZGhP6FrYt
-         JUYA==
-X-Forwarded-Encrypted: i=1; AJvYcCXTHPdCzd6+tWv9Ke1xMQrUouEX+kLiZZZkS1I/bG7t5M0FvXDV7BXLN0RL5RtGCMXxrrhiL+BEVF4Mi4g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJsElSUk4qaLVtVbA4h6wNX7rb0XA1qnX5llfxDSXxYmsuD7sw
-	Io0usZTXM2n2laGQOdgHwSAMx8znXD7uvwRse7Y6+MlveJnhbSlBO40t7Z/MPT2EV2dYmA6EmI3
-	X6y5MRpdBWoOM8xsiWe/E67GBsh/khoSZj2DoJEg5y1B219RbV9gFRD1z6E6/NUeR
-X-Gm-Gg: ASbGncv7hAuZEtX+lggK0bUGgT4SIMNLthul/qrq9ly4qHs3gXb3SG3vx4HGNjwvFLH
-	UwtucD8Bxz4SPCxpD0NwcuI7mIFf5VIu7v724/1ljUFXLjBnu5VPgI49Oz7yNQ03D3diTtziryu
-	E29DoCv+oTc6BzaoQv9cvZkKA7Ep/EJhzm2uMBuKItNV9uK3LkT4UKZrVFK6aXnPRoRIRmBFBTN
-	qiRLxmdlJO99rSg36NsDzx59txx8zS7seduoxhjDngFeSyuSNQ7sbtTkdDgvoCHaVGmsybjOOs9
-	WQ==
-X-Received: by 2002:a17:907:96a1:b0:ad4:cfbd:efd0 with SMTP id a640c23a62f3a-ad536c1a813mr1851020766b.36.1747817319672;
-        Wed, 21 May 2025 01:48:39 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG4Uad4LLY/qbicMx/bjSP1amiyVw6y5+cI+R+l9yVSKq3rctv7sT91m06PC9V35nY4DdIi0w==
-X-Received: by 2002:a17:907:96a1:b0:ad4:cfbd:efd0 with SMTP id a640c23a62f3a-ad536c1a813mr1851012766b.36.1747817319102;
-        Wed, 21 May 2025 01:48:39 -0700 (PDT)
-Received: from thinky ([2a0e:fd87:a051:1:d224:1f1f:6cfc:763a])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad5505131f7sm659880666b.67.2025.05.21.01.48.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 01:48:38 -0700 (PDT)
-Date: Wed, 21 May 2025 10:48:26 +0200
-From: Andrey Albershteyn <aalbersh@redhat.com>
-To: Dave Chinner <david@fromorbit.com>
-Cc: Amir Goldstein <amir73il@gmail.com>, 
-	Christian Brauner <brauner@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Richard Henderson <richard.henderson@linaro.org>, Matt Turner <mattst88@gmail.com>, 
-	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	Michal Simek <monstr@monstr.eu>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Naveen N Rao <naveen@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
-	Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, 
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, "David S . Miller" <davem@davemloft.net>, 
-	Andreas Larsson <andreas@gaisler.com>, Andy Lutomirski <luto@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>, =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, 
-	Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>, Paul Moore <paul@paul-moore.com>, 
-	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
-	Stephen Smalley <stephen.smalley.work@gmail.com>, Ondrej Mosnacek <omosnace@redhat.com>, 
-	Tyler Hicks <code@tyhicks.com>, Miklos Szeredi <miklos@szeredi.hu>, linux-alpha@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-api@vger.kernel.org, 
-	Linux-Arch <linux-arch@vger.kernel.org>, selinux@vger.kernel.org, ecryptfs@vger.kernel.org, 
-	linux-unionfs@vger.kernel.org, linux-xfs@vger.kernel.org, 
-	Andrey Albershteyn <aalbersh@kernel.org>
-Subject: Re: [PATCH v5 0/7] fs: introduce file_getattr and file_setattr
- syscalls
-Message-ID: <sfmrojifgnrpeilqxtixyqrdjj5uvvpbvirxmlju5yce7z72vi@ondnx7qbie4y>
-References: <20250513-xattrat-syscall-v5-0-22bb9c6c767f@kernel.org>
- <399fdabb-74d3-4dd6-9eee-7884a986dab1@app.fastmail.com>
- <20250515-bedarf-absagen-464773be3e72@brauner>
- <CAOQ4uxicuEkOas2UR4mqfus9Q2RAeKKYTwbE2XrkcE_zp8oScQ@mail.gmail.com>
- <aCsX4LTpAnGfFjHg@dread.disaster.area>
+	bh=PYJxRSWIj9WyqHxSTfPZjOkXna9NizDI98LlLiwmMyk=;
+	b=IYnp7blKnCEQ+CSBUy3sB7zTf5bnWzcKXg4aN4TVqNIJKNGa1Z8gm3PwojSDjrnhIBfWpU
+	xRc5vSw66F3bgraR1EQIQEOnhPCZXl3hsFIbjYbE/ymetaSBJW6yfwppvEMXOgbgHlTsEQ
+	TcTrEI495qNPL4GxRfIAjfqUPNVskHI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747817338;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PYJxRSWIj9WyqHxSTfPZjOkXna9NizDI98LlLiwmMyk=;
+	b=kHeRh3wjbPyBx/6GhLlOhp239jRDYDZADrBbDO/OCDUNXOPZkjYavcQbBr2ko6WBcYaZUf
+	mK4tolpeDKljPABg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="0CkkL/cY";
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=GRdrTkGa
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747817337; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PYJxRSWIj9WyqHxSTfPZjOkXna9NizDI98LlLiwmMyk=;
+	b=0CkkL/cYNyrA1hH6nyhrkHau7b3GUDvRZMnQgV/g+FIX9VoPpfTjJ8TY9vK9qvVC9bxwB6
+	q75U7fjqLvmb79pWzZv+CabAf9FTT3VkS9CPShLlGqdPZmehKnsE3FH/DguDE3Sg037Qlj
+	B/pBG3CkIb+Eyn7Qm3BWNVxZQrgG1bs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747817337;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PYJxRSWIj9WyqHxSTfPZjOkXna9NizDI98LlLiwmMyk=;
+	b=GRdrTkGaRD8RwdohSA6XOzmHEwc0n7KQtZBuXkisP9h9J3W/Mg/a/BsVH0u3iwi4q3MwxI
+	R+JAt3pGVkBdtoBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E23AE13AA0;
+	Wed, 21 May 2025 08:48:56 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id P1uLNniTLWiaNAAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Wed, 21 May 2025 08:48:56 +0000
+Date: Wed, 21 May 2025 10:48:55 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Changyuan Lyu <changyuanl@google.com>, akpm@linux-foundation.org,
+	bhe@redhat.com, chrisl@kernel.org, graf@amazon.com,
+	jasonmiu@google.com, kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	pasha.tatashin@soleen.com
+Subject: Re: [PATCH 1/2] memblock: show a warning if allocation in KHO
+ scratch fails
+Message-ID: <aC2TdzP1AwYrQdcW@localhost.localdomain>
+References: <aCoFphqeZAMkhq51@kernel.org>
+ <20250521070310.2478491-1-changyuanl@google.com>
+ <aC2EE1pg9ktQdstI@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aCsX4LTpAnGfFjHg@dread.disaster.area>
+In-Reply-To: <aC2EE1pg9ktQdstI@kernel.org>
+X-Rspamd-Action: no action
+X-Spam-Level: 
+X-Rspamd-Queue-Id: 192BC2125A
+X-Spam-Score: -1.51
+X-Spam-Flag: NO
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-1.51 / 50.00];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	RCVD_TLS_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[localhost.localdomain:mid];
+	RCVD_COUNT_TWO(0.00)[2];
+	DKIM_TRACE(0.00)[suse.de:+]
 
-On 2025-05-19 21:37:04, Dave Chinner wrote:
-> On Thu, May 15, 2025 at 12:33:31PM +0200, Amir Goldstein wrote:
-> > On Thu, May 15, 2025 at 11:02 AM Christian Brauner <brauner@kernel.org> wrote:
-> > >
-> > > On Tue, May 13, 2025 at 11:53:23AM +0200, Arnd Bergmann wrote:
-> > > > On Tue, May 13, 2025, at 11:17, Andrey Albershteyn wrote:
-> > > >
-> > > > >
-> > > > >     long syscall(SYS_file_getattr, int dirfd, const char *pathname,
-> > > > >             struct fsxattr *fsx, size_t size, unsigned int at_flags);
-> > > > >     long syscall(SYS_file_setattr, int dirfd, const char *pathname,
-> > > > >             struct fsxattr *fsx, size_t size, unsigned int at_flags);
-> > > >
-> > > > I don't think we can have both the "struct fsxattr" from the uapi
-> > > > headers, and a variable size as an additional argument. I would
-> > > > still prefer not having the extensible structure at all and just
-> > >
-> > > We're not going to add new interfaces that are fixed size unless for the
-> > > very basic cases. I don't care if we're doing that somewhere else in the
-> > > kernel but we're not doing that for vfs apis.
-> > >
-> > > > use fsxattr, but if you want to make it extensible in this way,
-> > > > it should use a different structure (name). Otherwise adding
-> > > > fields after fsx_pad[] would break the ioctl interface.
-> > >
-> > > Would that really be a problem? Just along the syscall simply add
-> > > something like:
-> > >
-> > > diff --git a/fs/ioctl.c b/fs/ioctl.c
-> > > index c91fd2b46a77..d3943805c4be 100644
-> > > --- a/fs/ioctl.c
-> > > +++ b/fs/ioctl.c
-> > > @@ -868,12 +868,6 @@ static int do_vfs_ioctl(struct file *filp, unsigned int fd,
-> > >         case FS_IOC_SETFLAGS:
-> > >                 return ioctl_setflags(filp, argp);
-> > >
-> > > -       case FS_IOC_FSGETXATTR:
-> > > -               return ioctl_fsgetxattr(filp, argp);
-> > > -
-> > > -       case FS_IOC_FSSETXATTR:
-> > > -               return ioctl_fssetxattr(filp, argp);
-> > > -
-> > >         case FS_IOC_GETFSUUID:
-> > >                 return ioctl_getfsuuid(filp, argp);
-> > >
-> > > @@ -886,6 +880,20 @@ static int do_vfs_ioctl(struct file *filp, unsigned int fd,
-> > >                 break;
-> > >         }
-> > >
-> > > +       switch (_IOC_NR(cmd)) {
-> > > +       case _IOC_NR(FS_IOC_FSGETXATTR):
-> > > +               if (WARN_ON_ONCE(_IOC_TYPE(cmd) != _IOC_TYPE(FS_IOC_FSGETXATTR)))
-> > > +                       return SOMETHING_SOMETHING;
-> > > +               /* Only handle original size. */
-> > > +               return ioctl_fsgetxattr(filp, argp);
-> > > +
-> > > +       case _IOC_NR(FFS_IOC_FSSETXATTR):
-> > > +               if (WARN_ON_ONCE(_IOC_TYPE(cmd) != _IOC_TYPE(FFS_IOC_FSSETXATTR)))
-> > > +                       return SOMETHING_SOMETHING;
-> > > +               /* Only handle original size. */
-> > > +               return ioctl_fssetxattr(filp, argp);
-> > > +       }
-> > > +
-> > 
-> > I think what Arnd means is that we will not be able to change struct
-> > sfxattr in uapi
-> > going forward, because we are not going to deprecate the ioctls and
-> 
-> There's no need to deprecate anything to rev an ioctl API.  We have
-> had to solve this "changing struct size" problem previously in XFS
-> ioctls. See XFS_IOC_FSGEOMETRY and the older XFS_IOC_FSGEOMETRY_V4
-> and XFS_IOC_FSGEOMETRY_V1 versions of the API/ABI.
-> 
-> If we need to increase the structure size, we can rename the existing
-> ioctl and struct to fix the version in the API, then use the
-> original name for the new ioctl and structure definition.
-> 
-> The only thing we have to make sure of is that the old and new
-> structures have exactly the same overlapping structure. i.e.
-> extension must always be done by appending new varibles, they can't
-> be put in the middle of the structure.
-> 
-> This way applications being rebuild will pick up the new definition
-> automatically when the system asserts that it is suppored, whilst
-> existing binaries will always still be supported by the kernel.
-> 
-> If the application wants/needs to support all possible kernels, then
-> if XFS_IOC_FSGEOMETRY is not supported, call XFS_IOC_FSGEOMETRY_V4,
-> and if that fails (only on really old irix!) or you only need
-> something in that original subset, call XFS_IOC_FSGEOMETRY_V1 which
-> will always succeed....
-> 
-> > Should we will need to depart from this struct definition and we might
-> > as well do it for the initial release of the syscall rather than later on, e.g.:
-> > 
-> > --- a/include/uapi/linux/fs.h
-> > +++ b/include/uapi/linux/fs.h
-> > @@ -148,6 +148,17 @@ struct fsxattr {
-> >         unsigned char   fsx_pad[8];
-> >  };
-> > 
-> > +/*
-> > + * Variable size structure for file_[sg]et_attr().
-> > + */
-> > +struct fsx_fileattr {
-> > +       __u32           fsx_xflags;     /* xflags field value (get/set) */
-> > +       __u32           fsx_extsize;    /* extsize field value (get/set)*/
-> > +       __u32           fsx_nextents;   /* nextents field value (get)   */
-> > +       __u32           fsx_projid;     /* project identifier (get/set) */
-> > +       __u32           fsx_cowextsize; /* CoW extsize field value (get/set)*/
-> > +};
-> > +
-> > +#define FSXATTR_SIZE_VER0 20
-> > +#define FSXATTR_SIZE_LATEST FSXATTR_SIZE_VER0
-> 
-> If all the structures overlap the same, all that is needed in the
-> code is to define the structure size that should be copied in and
-> parsed. i.e:
-> 
-> 	case FSXATTR..._V1:
-> 		return ioctl_fsxattr...(args, sizeof(fsx_fileattr_v1));
-> 	case FSXATTR..._V2:
-> 		return ioctl_fsxattr...(args, sizeof(fsx_fileattr_v2));
-> 	case FSXATTR...:
-> 		return ioctl_fsxattr...(args, sizeof(fsx_fileattr));
-> 
-> -Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
-> 
+On Wed, May 21, 2025 at 10:43:15AM +0300, Mike Rapoport wrote:
+> I think we should just make sparse_init_nid() panic or at least change 
+> "sparse_init_nid: node[0] memory map backing failed. Some memory will not be available."
+> to something more visible and clear. 
 
-So, looks like there's at least two solutions to this concern.
-Considering also that we have a bit of space in fsxattr,
-'fsx_pad[8]', I think it's fine to stick with the current fsxattr
-for now.
+Panicking the system seems a bit too harsh.
+Those sections will not be initialized, and sure you will lose some memory,
+but still.
+
+I think that making sure that subsection_map_init() does not access
+non-initialized values is enough.
+Because wrt. error message, I am not sure it can get more clear that we
+failed we allocate memory to back the section and so that section will
+not be activated :-)
+
+ 
 
 -- 
-- Andrey
-
+Oscar Salvador
+SUSE Labs
