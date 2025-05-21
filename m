@@ -1,157 +1,127 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC6492367D4;
-	Wed, 21 May 2025 09:52:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DC5223815C;
+	Wed, 21 May 2025 09:57:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747821176; cv=none; b=JD5uw5ZWdAQhZde/6Kok4RJE7cANECpBanaGA5xesAuuKEWBG7FahSNw9edzerGdF/r2pYP1FXTkZGm+DNQVmSFe2aMDu0oe2KvgiuKlJRCDhmA6jS78MkKDtx4Tln/rgLYO5eb+bLeoUGO/V6Bm79Ts4oAIXyUJi3wlOKHcLcg=
+	t=1747821428; cv=none; b=j6SWEvZ2Gfq4XiqmD8qhpuNVbuzbi8iMSo3r/s/5aZ9LZq5iUP0JJCpUBpgbqDi3uPSsjipdvUDJVhPksnqHPrZyL7Tbi+a8sI609pirpNJs2TeI3F951X6yeVqggaoc2hGLkkRfYzRxqoehSJYCxog5OaoFBTVN4CLU2yfygbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747821176; c=relaxed/simple;
-	bh=s+OJJh6wEUSG2CbJb4VTBrTFAe2fTwvbV/JtwgKXfzo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=rXXtsGlmUEcLqldxK6xI0nO+dGV6C+y/xHCv3pWwGPdnCNpUcd/gBjvu8inEFmB4t9CdzEZefPey15fD/tgHuUMNxoqsb9PwHuUoCRFiq3KYAxTUxlZHjb9u44UPiLvzqS0m4dsqBe78QsMRq/8+L2mMtSSzse3SpvBYvPpZCZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=BkFXkMX3; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="BkFXkMX3"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54L8WjP4012800;
-	Wed, 21 May 2025 11:52:41 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	OHCrVLLAGlouvcMb1tlHih+m6bTWke9YqMBcp1oO9Vk=; b=BkFXkMX3H7zyFr2c
-	MHSey3reiprVN7T5LDv3bR145OYKa3jLTzqo6ZvVVG0MOCQfX9xz9Truk0PRXnIZ
-	PVpBQFkKBA5SdRd1GRC0esDMHsHJaY+5divF1lcfn5u31ygADHmFlwQf9a7QljDt
-	8PAWIi5OHHuMTewIp/LFRr8vsGKSu+f5gxeyY3WypE6sjvKRgC3d8t2fV24hz1Om
-	h2rKVlpD81IjyL5pgJoTiQsK44nA2S9BBIN0Pxv1X7yljLUSerjndCAxcMPcD9F+
-	e7+RDbpF++ZyEl8es1kMy9w6TFj7GsI7UKhT/Jv7pValL+DykGrCRuO++OGn27SE
-	Dz5Igw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46rwfabc0j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 11:52:40 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id EA0E74004B;
-	Wed, 21 May 2025 11:51:36 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 486ECAA8652;
-	Wed, 21 May 2025 11:49:49 +0200 (CEST)
-Received: from [10.48.81.67] (10.48.81.67) by SHFDAG1NODE2.st.com
- (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 21 May
- 2025 11:49:48 +0200
-Message-ID: <94795d0c-0c73-41eb-ada6-9a01b2ac5892@foss.st.com>
-Date: Wed, 21 May 2025 11:49:47 +0200
+	s=arc-20240116; t=1747821428; c=relaxed/simple;
+	bh=xGaksPgpEasmhO3rCSR2E6fCeqW3eIFR+NlMfHfdbAY=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MrqFy9Kr+B80s/znrhutyS+lhK2XblpxveEnTpucb03hWo9o1j+zohtglsKp35Q56hz0kpNJCPykRdlK7v9tRT9Tgj0GI2A0hPOR7pu/9fS70D2Ddh5fb6U/sQnQqwy1yIKbHUAkkn74ld6jhk2ijIQG2y7zzgDibVh6wtlGgh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b2RZl5QMtz6L5BP;
+	Wed, 21 May 2025 17:53:51 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id BAC101400F4;
+	Wed, 21 May 2025 17:57:02 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 21 May
+ 2025 11:57:01 +0200
+Date: Wed, 21 May 2025 10:56:59 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: <linux-pci@vger.kernel.org>, Jon Pan-Doh <pandoh@google.com>, "Karolina
+ Stolarek" <karolina.stolarek@oracle.com>, Weinan Liu <wnliu@google.com>,
+	Martin Petersen <martin.petersen@oracle.com>, Ben Fuller
+	<ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, "Anil
+ Agrawal" <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, Ilpo
+ =?UTF-8?Q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Sathyanarayanan
+ Kuppuswamy" <sathyanarayanan.kuppuswamy@linux.intel.com>, Lukas Wunner
+	<lukas@wunner.de>, Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney"
+	<paulmck@kernel.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, "Oliver
+ O'Halloran" <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>, "Keith
+ Busch" <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>, Terry Bowman
+	<terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>, Dave Jiang
+	<dave.jiang@intel.com>, <linux-kernel@vger.kernel.org>,
+	<linuxppc-dev@lists.ozlabs.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+Subject: Re: [PATCH v7 13/17] PCI/AER: Make all pci_print_aer() log levels
+ depend on error type
+Message-ID: <20250521105659.000064bd@huawei.com>
+In-Reply-To: <20250520215047.1350603-14-helgaas@kernel.org>
+References: <20250520215047.1350603-1-helgaas@kernel.org>
+	<20250520215047.1350603-14-helgaas@kernel.org>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/8] pinctrl: stm32: Introduce HDP driver
-To: Linus Walleij <linus.walleij@linaro.org>
-CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin
-	<mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, <linux-kernel@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20250520-hdp-upstream-v2-0-53f6b8b5ffc8@foss.st.com>
- <20250520-hdp-upstream-v2-2-53f6b8b5ffc8@foss.st.com>
- <CACRpkdZp6D-duzyVRLv5+PURb3Nu69njJx_33D-2aYS4DjmsoQ@mail.gmail.com>
-Content-Language: en-US
-From: Clement LE GOFFIC <clement.legoffic@foss.st.com>
-In-Reply-To: <CACRpkdZp6D-duzyVRLv5+PURb3Nu69njJx_33D-2aYS4DjmsoQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-21_03,2025-05-20_03,2025-03-28_01
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On 5/21/25 00:34, Linus Walleij wrote:
-> Hi Clément,
-> 
-> thanks for your patch!
-> 
-> On Tue, May 20, 2025 at 5:04 PM Clément Le Goffic
-> <clement.legoffic@foss.st.com> wrote:
-> 
->> This patch introduce the driver for the Hardware Debug Port available on
->> STM32MP platforms. The HDP allows the observation of internal SoC
->> signals by using multiplexers. Each HDP port can provide up to 16
->> internal signals (one of them can be software controlled as a GPO).
->>
->> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
-> 
-> (...)
->> +static int stm32_hdp_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
->> +{
->> +       return GPIO_LINE_DIRECTION_OUT;
->> +}
-> 
-> That's reasonable.
-> 
->> +static int stm32_hdp_gpio_get(struct gpio_chip *gc, unsigned int offset)
->> +{
->> +       struct stm32_hdp *hdp = gpiochip_get_data(gc);
->> +
->> +       if (((hdp->mux_conf & HDP_MUX_MASK(offset))) == HDP_MUX_GPOVAL(offset))
->> +               return !!(readl_relaxed(hdp->base + HDP_GPOVAL) & BIT(offset));
->> +       else
->> +               return !!(readl_relaxed(hdp->base + HDP_VAL) & BIT(offset));
->> +}
-> 
-> ...but you still make it possible to read the value of the line
-> if it's not muxed as GPO?
-> 
-> Should it not stm32_hdp_gpio_get_direction() return
-> GPIO_LINE_DIRECTION_IN if HDP_MUX_MASK(offset))) != HDP_MUX_GPOVAL(offset)?
+On Tue, 20 May 2025 16:50:30 -0500
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-Hi, oops, you're right !
+> From: Karolina Stolarek <karolina.stolarek@oracle.com>
+>=20
+> Some existing logs in pci_print_aer() log with error severity by default.
+> Convert them to depend on error type (consistent with rest of AER logging=
+).
+>=20
+> Signed-off-by: Karolina Stolarek <karolina.stolarek@oracle.com>
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> Tested-by: Krzysztof Wilczy=C5=84ski <kwilczynski@kernel.org>
+> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux=
+.intel.com>
+> Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
 
-> 
->> +static void stm32_hdp_gpio_set(struct gpio_chip *gc, unsigned int offset, int value)
->> +{
->> +       struct stm32_hdp *hdp = gpiochip_get_data(gc);
->> +
->> +       if (value)
->> +               writel_relaxed(BIT(offset), hdp->base + HDP_GPOSET);
->> +       else
->> +               writel_relaxed(BIT(offset), hdp->base + HDP_GPOCLR);
->> +}
-> 
-> Can't you just use GPIO_GENERIC for this?
-> 
-> bgpio_init(gc, dev, ARRAY_SIZE(stm32_hdp_pins), // == 8
->      hdp->base + HDP_VAL,
->      hdp->base + HDP_GPOSET,
->      hdp->base + HDP_GPOCLR,
->      NULL,
->      NULL,
->      0);
-> 
-> The default behaviour of GPIO MMIO is to read the output register
-> for the value if the line is in output mode.
-> 
-> You may wanna override the .get_direction() callback after bgpio_init()
-> and before registering the chip, either with what you have or what
-> I described above.
+One comment inline. It is painful to have a non trivial comment
+that says we didn't pass a parameter for 'reason X' when maybe
+it would be simpler to just pass it and not care that it always
+takes the same value?
 
-I didn't know about it, I'll take a look and provide a V3.
+Either way this is fine.
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Thank you,
+> ---
+>  drivers/pci/pcie/aer.c | 16 +++++++++++-----
+>  1 file changed, 11 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index f5e9961d2c63..4cdcf0ebd86d 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -788,15 +788,21 @@ void pci_print_aer(struct pci_dev *dev, int aer_sev=
+erity,
+>  	layer =3D AER_GET_LAYER_ERROR(aer_severity, status);
+>  	agent =3D AER_GET_AGENT(aer_severity, status);
+> =20
+> -	pci_err(dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n", status, mask);
+> +	aer_printk(info.level, dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n",
+> +		   status, mask);
+>  	__aer_print_error(dev, &info);
+> -	pci_err(dev, "aer_layer=3D%s, aer_agent=3D%s\n",
+> -		aer_error_layer[layer], aer_agent_string[agent]);
+> +	aer_printk(info.level, dev, "aer_layer=3D%s, aer_agent=3D%s\n",
+> +		   aer_error_layer[layer], aer_agent_string[agent]);
+> =20
+>  	if (aer_severity !=3D AER_CORRECTABLE)
+> -		pci_err(dev, "aer_uncor_severity: 0x%08x\n",
+> -			aer->uncor_severity);
+> +		aer_printk(info.level, dev, "aer_uncor_severity: 0x%08x\n",
+> +			   aer->uncor_severity);
+> =20
+> +	/*
+> +	 * pcie_print_tlp_log() uses KERN_ERR, but we only call it when
+> +	 * tlp_header_valid is set, and info.level is always KERN_ERR in
+> +	 * that case.
 
-Clément
+I wonder if it's easier to just pass the level in than have the
+comment?
 
-> Yours,
-> Linus Walleij
+> +	 */
+>  	if (tlp_header_valid)
+>  		pcie_print_tlp_log(dev, &aer->header_log, dev_fmt("  "));
+>  }
 
