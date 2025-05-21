@@ -1,81 +1,88 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84FB322D4F0;
-	Wed, 21 May 2025 15:56:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60D7A221FAF
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 15:57:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747843019; cv=none; b=U7kB5kBVoETCa4TfskxuQq579HcnABg0wZcsA+b6Za1InqT9lg8O3E3Nyh0PcL1JsQ4PDegSU2Arzw1EWW0bVrkULxPj0qnU24CssGw37zO/hfFHVQv/YioEBwxhgLlJtIFmkkxZZcR3aXybxfhsRHxVh1GimF4i07SNENknL2w=
+	t=1747843034; cv=none; b=Bc2o+bjniTiflskU2lXKYnBUIroyvgRgrwcbuMhYXv7MPe4ZkwYWbY3F6qYgHxoN53CoGkax3yDwbgOWTFibnz1b7QtSPihviJxiowouMk5rINkFoy8TrdCJhstuxQPYVwQZWluec6Vivf3sSMlil5K9DdMWeJd8/xGwqzP1HCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747843019; c=relaxed/simple;
-	bh=44jrVkR8r5/We3U3Esl7+w0C93M7tsfXlNxUrYFK5fQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=u7ofpx9z8zA4sw9fKZheuySMKgJl1kTVhSgCw9iYFyCaRSb6W2jfntW28QDxD2nLvEf38NqEEeKqPd1x5AMSkZgWDRYc7GKqecgppgm98XeOqUMOFIPUS+nDJT9cdHDISLOmTh2JVBtjm0F0aardA6X62OyirrvDGqs5oZDK1yk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=n+hcwn7R; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1747843034; c=relaxed/simple;
+	bh=Gi+3AysAFVE04l5WwXRekokP65YcIVrI6vfG5zRYtJw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ze53Ms4ZuVWfkEk36mLOuRokZjBTs2fgDiWtWm7TahwGuXexoLMe86Mxwl8ZNLaHi9snF+LK0DIrX9NoZZjXDeXNqAahkGEqMJbJMpFDQzh+3P7atTXnLifUOP/YZi2GhF4MBrzOx8RQZbNYCxGElYxjvKWox7ts7HHhkEVsdnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oS9+YVEx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="n+hcwn7R"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id F1831433F0;
-	Wed, 21 May 2025 15:56:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1747843009;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NWMkDdl6E2fycIBGTT9cUcWO0Zk2SA4xCgPlwZJN26I=;
-	b=n+hcwn7RTfB6RUWG4Qaa+kthM06ioRUzKoagzup19r9II0PqT1zDbMVMiAd6SjNYdrjQn4
-	OeEWR0QLX+HVcfInIp2RYDidv66zJsKipJVuDUSvZvea9ZGxrDnaszJSWgrlejiXcchQA3
-	5h+VaM5xsV3dfBpb67Q7bxT5Cbhfo5ZCCdUHUMPOp7wJWDW6fCJJXzz+XOh/wI4UI3gutB
-	8urU/4ZCx8+neBs4umx4HGKp0XF+74VDWeBoUOOwBQIURFJ7ogRgNG+yxqr3sQB6T8cx4z
-	EGHpSVHi2MtdxV9WQHHcnr4hTgsOMuKKZXXq2pdHycCmp06r3wvBZEHa8VwtfA==
-Date: Wed, 21 May 2025 17:56:46 +0200
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: Cosmin Tanislav <demonsingur@gmail.com>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, Tomi Valkeinen
- <tomi.valkeinen@ideasonboard.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>, Romain Gantois <romain.gantois@bootlin.com>, Arnd
- Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org
-Subject: Re: [PATCH v5 3/9] i2c: atr: split up i2c_atr_get_mapping_by_addr()
-Message-ID: <20250521175646.2aa73fb9@booty>
-In-Reply-To: <20250507121917.2364416-4-demonsingur@gmail.com>
-References: <20250507121917.2364416-1-demonsingur@gmail.com>
-	<20250507121917.2364416-4-demonsingur@gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oS9+YVEx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9D8FC4CEED;
+	Wed, 21 May 2025 15:57:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747843033;
+	bh=Gi+3AysAFVE04l5WwXRekokP65YcIVrI6vfG5zRYtJw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oS9+YVEx88/EzrjNxmvXRlfxPY5It6xbTNZnaDSVr42SfbpSKUCMSSslTS5YnGbiq
+	 YSQrhFCtcQESdQw8/aBFXQel9eHivdO71X6tlsVQV6iTyfIrKmlB/OoZon+1XumM6T
+	 jW71FnnAqKIeaiQDwkZnBL36B5z0TBxn4gOrhoJCqdxloKTvaDedoPk0SYXdq758W+
+	 zXrtki3ZXtZuqMAMobz1G8TwyjoSDUQU+jr0M+QBNif4bzEVqhFLtcdGdNBh33qi6h
+	 nDUwFXFsL+Pdco07f5DJuWf2dBlAL0NvUqiF5OJp1cEW9RxbB/Rj5vZ3BmsFngu40g
+	 wXXdhjpyq6TpQ==
+Date: Wed, 21 May 2025 08:57:11 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: John <john.cs.hey@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	linux-kernel@vger.kernel.org, Paul Moore <paul@paul-moore.com>, 
+	Stephen Smalley <stephen.smalley.work@gmail.com>
+Subject: Re: [Bug] "BUG: soft lockup in perf_event_open" in Linux kernel v6.14
+Message-ID: <jnrnpz2sms365aleeowcwisbefiekvkhbd6s5x42z7wuqnfxcy@dr6tkjizp3v5>
+References: <CAP=Rh=PtKsiXGLYeK5tr4LSw-AHJ6LM4kuTWR3Hs5sQQp02wCw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdefhedtucdltddurdegfedvrddttddmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeelffefgfehhfdtvdefueefieevkefggfelkeeiudetkeektedvhedukefgvddvnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegsohhothihpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtohepuggvmhhonhhsihhnghhurhesghhmrghilhdrtghomhdprhgtphhtthhopeifshgrodhrvghnvghsrghssehsrghnghdqvghnghhinhgvvghrihhnghdrtghomhdprhgtphhtt
- hhopehtohhmihdrvhgrlhhkvghinhgvnhesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtohepmhgthhgvhhgrsgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhomhgrihhnrdhgrghnthhoihhssegsohhothhlihhnrdgtohhmpdhrtghpthhtoheprghrnhgusegrrhhnuggsrdguvgdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehlihhnuhigqdhivdgtsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-GND-Sasl: luca.ceresoli@bootlin.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAP=Rh=PtKsiXGLYeK5tr4LSw-AHJ6LM4kuTWR3Hs5sQQp02wCw@mail.gmail.com>
 
-On Wed,  7 May 2025 15:19:09 +0300
-Cosmin Tanislav <demonsingur@gmail.com> wrote:
-
-> The i2c_atr_get_mapping_by_addr() function handles three separate
-> usecases: finding an existing mapping, creating a new mapping, or
-> replacing an existing mapping if a new mapping cannot be created
-> because there aren't enough aliases available.
+On Wed, May 21, 2025 at 09:49:41PM +0800, John wrote:
+> Dear Linux Kernel Maintainers,
 > 
-> Split up the function into three different functions handling its
-> individual usecases to prepare for better usage of each one.
+> I hope this message finds you well.
 > 
-> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
+> I am writing to report a potential vulnerability I encountered during
+> testing of the Linux Kernel version v6.14.
+> 
+> Git Commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557 (tag: v6.14)
+> 
+> Bug Location: 0010:orc_find arch/x86/kernel/unwind_orc.c:217
+> 
+> Bug report: https://pastebin.com/QzuTF9kT
+> 
+> Complete log: https://pastebin.com/XjZYbiCH
+> 
+> Entire kernel config: https://pastebin.com/MRWGr3nv
+> 
+> Root Cause Analysis:
+> 
+> A soft lockup occurred on CPU#0 in the unwind_next_frame() function
+> during stack unwinding triggered by arch_stack_walk().
+> This was called in the middle of __kasan_slab_free() as part of RCU
+> reclamation path (rcu_do_batch()), likely triggered by a SLAB object
+> free in SELinux's avc_reclaim_node().
+> The system was under heavy AVC pressure due to continuous audit and
+> avc_has_perm() calls (e.g., from selinux_perf_event_open), leading to
+> repeated avc_node allocations and reclamations under spinlocks.
 
-Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+I'm out of the office but I couldn't help myself glancing at it.
+
+It looks like a deadlock in the selinux code.  Two of the CPUs are
+waiting for a spinlock in avc_reclaim_node().  A third CPU is running in
+avc code (currently context_struct_compute_av).
+
+Adding a few selinux folks.
 
 -- 
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Josh
