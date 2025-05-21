@@ -1,89 +1,71 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8472E25B67E;
-	Wed, 21 May 2025 10:26:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 324DE25C71F;
+	Wed, 21 May 2025 10:28:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747823210; cv=none; b=TV/HkCFhEuqbUcQbTqT6t1pvNe8O9XBiOh3tWIpWu6b4vwc+4bZEsDzdNQ/3JLXTmD81bdgDjO56WwgOa2s19lAtQWI26PS+AtdfbBlpRrBy2gjeuiILJWuO5XSMNVHB7ImoqGv+6gvg1Zr6OiRe/K4ioYZXP3P4j6A+L1iShnE=
+	t=1747823301; cv=none; b=qO9WWn8GNTNlZOryKt8Duw6fLlARenH4TPTE/UQ+/NZIpHw3ijPXtoYIA5/nTJ7Hj3ik+BjGTc4dflPMVqzM9ZMgTQDb0rh6uMEUYo5zq4YRykhZGXlTxMJIUcPknGpboE/TR9ZkNIH0byqaa5ShGI+bFwTy+Eb9ZvTeQoFvr/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747823210; c=relaxed/simple;
-	bh=Hs6qdEKelj3z4mpZde9psEVGMz6cGM+tvSkLFEKJBNs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=FSt90/EWNlnBrZubY56rCOH40EnnJYZVhkNaWDIvIyjg7ffLFiZ4bBWxrcTxsynySA0fc1revRLGfeNbs29KbzAsxToU3Cv7KS0F5kiLrk2x79qyVHwGQK4MTnVOpHVxx6ROp5sdJa6MLc81MOohaGaQCvsgpAyyWDoYmdk/44I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=G2WFQgDd; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1747823301; c=relaxed/simple;
+	bh=+b5wisJAut+hU0zRdAguhp2vQL9rL3QPh5LieBHvr1A=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=RyQO0SiqZ/d3KCSADE8YPEPiu6D8+wZk2Z//XQ65BIQdlU9s1ejpAZPaMcIQwkxSiOIcUSHuOb9nxceFD5+bpCZ7wqbP046eGRcWdQpePCaHYyNxN4ezdfXfwMD0ihYLZXMVZb5xnuMlZMC/FnDV9/+9yf0junac0Xcnmk5p3Sw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=pO9FmomT; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="G2WFQgDd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1747823202;
-	bh=4E8tJ+zW5WhcyHadKqtGYVqBSRgkH3XD3TfPB8AabDA=;
-	h=Date:From:To:Cc:Subject:From;
-	b=G2WFQgDdjl5xJjr+L0i7Cz8msV8qd6srlDsE4O4ybhexHzJ3Zs/Y28yIHcIKZPaSt
-	 b7x6uG2UllrNmsXCIyRkwuZphxoTAq0oiB6ON7Rxe/t1yWjMSVud3nM4Xm/mu4hg7P
-	 3/5mKCJSSyp0z+pAFucJ4fr5TJjcR492RVaJ6Kn17pMmVVMsisUoR3SErD5hbXi8bP
-	 rPZzyfl9K3pwvZL58ClUEN1jAvAqMTnSC5NlrtIyN4qODcaa1jhJ8fuNExXnhKOqhW
-	 K2+bbWp6ECQ2BkO63rNgfUJmFVt8l3DEisillaqEGZDMs+EvfrkL5Tjnn01sLLUchp
-	 CEJc1vpbjtHlw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="pO9FmomT"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net DA6A541A9E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1747823296; bh=/HOgoEuDftBola8QtS0fRmGZYzDxz5CSSMNf98lwlYA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=pO9FmomT0M4NqBILByQi4XhOxEp40liea/8YRjwYfnUICuOK8keHGxFCygPNQcLQ+
+	 EBvDUhwQ6ieoIDgLJ3RQC744MWHl3fxDWmzD0sWSh+JvZu30sGnnOHygCn4wPTIIOZ
+	 KPxN46D4qq5ri8o4uteuFWw5yorIrxBoJ3LKghUKo8qRNNz9FL86odg8edFJioCj6p
+	 1rgUdR/3mizzG9ih5zGFwkw4Mjnz6Qj/X3gmzbXsZ95gMugkVembe1k1ZjZ5uqLjrd
+	 j6kslvcnTdtTvp0Tr5mDFaIzFzMo+mQ89/wbgxXQY3ZYdwu8FVRP8bIuGNtziIAHOs
+	 cufvLG2RBvaAA==
+Received: from localhost (unknown [93.187.88.32])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b2SJd4pKTz4x8Z;
-	Wed, 21 May 2025 20:26:41 +1000 (AEST)
-Date: Wed, 21 May 2025 20:26:40 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi
- <lpieralisi@kernel.org>, Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?=
- <kwilczynski@kernel.org>
-Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Linux Kernel
- Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build warning after merge of the pci tree
-Message-ID: <20250521202640.53a4fc3d@canb.auug.org.au>
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id DA6A541A9E;
+	Wed, 21 May 2025 10:28:15 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
+Cc: Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org, Mauro
+ Carvalho Chehab <mchehab@kernel.org>
+Subject: Re: [PATCH] docs: doc-guide: clarify latest theme usage
+In-Reply-To: <20250519223613.37277-1-rdunlap@infradead.org>
+References: <20250519223613.37277-1-rdunlap@infradead.org>
+Date: Wed, 21 May 2025 04:28:12 -0600
+Message-ID: <87v7pufebn.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/G=Dq+zjUKC44yE1qGMJvGPS";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain
 
---Sig_/G=Dq+zjUKC44yE1qGMJvGPS
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Randy Dunlap <rdunlap@infradead.org> writes:
 
-Hi all,
+> We have been using the Alabaster theme as the default theme since
+> Sept. 2022.
+>
+> Keep the information on the RTD theme around in case someone wants to
+> try it with the DOCS_THEME environment variable.
+>
+> Fixes: 26d797ffc1c0 ("docs: update sphinx.rst to reflect the default theme change")
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: linux-doc@vger.kernel.org
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> ---
+>  Documentation/doc-guide/sphinx.rst |   12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
 
-After merging the pci tree, today's linux-next build (htmldocs) produced
-this warning:
+Applied, thanks.
 
-Documentation/PCI/rcar-pcie-firmware.rst: WARNING: document isn't included =
-in any toctree
-
-Introduced by commit
-
-  2bdf6ffe9f66 ("PCI: rcar-gen4: Document how to obtain platform firmware")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/G=Dq+zjUKC44yE1qGMJvGPS
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgtqmAACgkQAVBC80lX
-0Gw4NAf5AblevEkhGowA6I82ZGqUuW/cI3ovR1Zh1Oi6sUKfZDhz2zbrHXQih/Yz
-DILHiJVrWW4nHvxZJ2r+CxG0X4cB/TOVeayjVOfGY5h02/D4Kw/QOsthft+CP37K
-mjq+E7deRa6ILTmPgBKuH5bRho3Ev9tWGio9glkUCKSKI4Pf/1qpTOJeIM9jnnB2
-gCvDfXkCiSRd9SXJmHtzRuQ0MuB1hv4pX8qEd3VaKEuQmRI2rOso3kcNd/9YUxBg
-u9Po1JSNn5bbm4De8eDqq8cR4BLDmDGBei4QwQuFfR1sMBWcWRTSAKl2R5tfP4vR
-xTbP/xGUnvfBqCkqHVmt6PxtKd3jxw==
-=wiRt
------END PGP SIGNATURE-----
-
---Sig_/G=Dq+zjUKC44yE1qGMJvGPS--
+jon
