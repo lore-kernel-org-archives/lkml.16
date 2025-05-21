@@ -1,67 +1,108 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 546C41459F6;
-	Wed, 21 May 2025 16:45:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CC7B1DB92C;
+	Wed, 21 May 2025 16:48:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747845942; cv=none; b=GnbnmlX/aSoh+CvkbvwkXlNtTd9aXAQ5lJJJGpDRRrzB0nrVU28bfMMifgQEu7o+Spf/vwi0hzTLhOcIvDB90pSG2+1QMUkA5TRPu7fKqXwMKMmrnNwgoLuYrGsHQHeXyYSLYYLgdBEDEBZHxRUsSYtti5cEvFjy2fSOcpP/CLk=
+	t=1747846110; cv=none; b=WMfqBXzAiTu+wfTotP6qaN+9I/QZMMhU1f8rtGgJCDtWZ66lEBS8iXEmzViywLBoM5saY7PjjXoOk+BsX7AF2bxtVZiiHJOBpG1ws/rcNH82bgW4nhhl9d5htz3DCuZ22Y+EQrqVoHlJkgOsQ81hvu05y3rl1iL7M6qGtdLpk84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747845942; c=relaxed/simple;
-	bh=Bplp0R6ehE/qK1Y+wrRr+0p/f01IFIQxvxbQgueu2vE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=F3tn7V3wohaSSJjeg1QheVwLEXEdFiLVbMAIK+9kwEmHw2dEeBqw1jGgRDg2YH1Qfetc4f6OLNtmWPiQN/3rybixWSy/swtoV2p9zIxb1J/rcVIz0NlG0tha9kq+EAdeFszCEj1ACJeJ8cD1mUoRwHLxfZ7S6CT8rryVGrEe3EI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=RQ20b01C; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1747846110; c=relaxed/simple;
+	bh=b7xXyi+01O5AFpi8W80L9Y1cFNIs1LdnBBXdAsf/Ba4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eLhERwHdw0zvzsulle+/W7rc+fuxIrPR4HeP5YdQcDkEf0JCXakmDEXPMpaH6LKg3/LF+PhD7WU5sB3l+OT24FzOzApFie97MXzg5/ShOqPDOUpgayP53cIplZDK+vcH2H6B6KZy591oFRci8pRB9Vhnc+IdNKpeg43eb52lheo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=lCWnMDoe; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="RQ20b01C"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=Bplp0R6ehE/qK1Y+wrRr+0p/f01IFIQxvxbQgueu2vE=;
-	t=1747845941; x=1749055541; b=RQ20b01CdDfLdLDQmSaB9njtfdlO127q3aNSzy0lQGplef4
-	dqaKT+75a4BhywUc6ZpTq9u3VIbD628AsjfkTtL+BhY7K5FrT8wk0RiG4rlpt5kT2YGFQdJ+X6XgW
-	Y5ckZYZGBSbFaWGWObcmRJDhknnMgixafdf6AKDGAtIEltB+SrT0XfAhbnsM1qY0CrfLAMWbkTPFm
-	VDxLmUxRVQNbFQO0X0j+eklXafewMOOhSCzl+zIOx/B9xdTIuyFh7CHOQeto0dDcCxppb05Bq5N+Y
-	a6C2O9tUsCTM7UEbSLXW/Y5bud46FHWaaU6JHjLSK7Qw3QUZXOAzP/LsXDmGHmOQ==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98.2)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1uHmZW-0000000Eovo-2s3q;
-	Wed, 21 May 2025 18:45:38 +0200
-Message-ID: <1418960c71272ec745fe2186a769e8b555dfafdc.camel@sipsolutions.net>
-Subject: Re: [Bug] soft lockup in ieee80211_handle_queued_frames in Linux
- kernel v6.15-rc5
-From: Johannes Berg <johannes@sipsolutions.net>
-To: John <john.cs.hey@gmail.com>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Wed, 21 May 2025 18:45:37 +0200
-In-Reply-To: <CAP=Rh=PV2nqPkBV8rALZRHLO4n58XwKTYRGYkS5snNc0Zo0YuQ@mail.gmail.com> (sfid-20250521_183237_575261_4D4284EF)
-References: 
-	<CAP=Rh=PV2nqPkBV8rALZRHLO4n58XwKTYRGYkS5snNc0Zo0YuQ@mail.gmail.com>
-	 (sfid-20250521_183237_575261_4D4284EF)
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="lCWnMDoe"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cfebc343dso54047275e9.2;
+        Wed, 21 May 2025 09:48:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20230601; t=1747846107; x=1748450907; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=R21FvzuR5H03XLkhE7ZezmCTwEQzFxDVoCgSjcClEyI=;
+        b=lCWnMDoekrVLTw4euLB6GvrQIyczVbLA+8t67tiwp0JBlu3eTbJcfe3Qj2UxVoOH1b
+         zrSj9XejTcOzo/e8OgTwCb0SaXdslEFdnEoI7V2e9WYNZCH07N4zg2aVd6GRyvQE2SOy
+         V1V+YZQKtHblRDpneotnMe5bIdmZOqs8TGERWO7oxQIeGgu5bbU9zPlqxR3sEZSShhrg
+         mgql1t+TesDipv8FD6WpqvjOci52o6+CaeZOWGzIlN6jCFCsp/UEerSVWAp81ejwMDaX
+         ZEAaF5FbTu9QkbDkUinMv932qDzv+CYsEk8sYNrZ9V5mDDVwgBsbGgwWVAa78e5F4up0
+         bPJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747846107; x=1748450907;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=R21FvzuR5H03XLkhE7ZezmCTwEQzFxDVoCgSjcClEyI=;
+        b=k0spzDVa3KOCrAKXozJZQMJzyZxDdZTNuP4ob8NgrPnI5ExCz9+ovi1sGMsK5J4Tgb
+         nE0oqAEsrsM/DzQKyMbeHsnYauRK4FRX/OnvmnEl7KtPruBembULoV3v6s++c01fQg6G
+         1/25sKOsrJhfgMhseTmkEuoqlEFUUPQKPLQIcMtEzdByBdHg3lqSoR1evcaK5BkzixrK
+         ejT6fkJtuIbLAkVgg4aaKHvGR7+m1cmgCRv/iEGVnQUkdc2DfyIiITnisn50qCGRx+vi
+         xwj6KgGg5YlgDVBZSheiq9VFezT7jexfWc42Zu/179r3rlKHZpQEA+ZdpZgxVh7JygEd
+         4Gww==
+X-Forwarded-Encrypted: i=1; AJvYcCVPqsYrqUxX7suP1BHYorS9+rR/f5u9d4s6uYq9WRztKebAqArpMYKTm/bzAZlveyfUCSDRxgkR@vger.kernel.org, AJvYcCWpSZbldXv8vqMlSAhjQ77LYPeZMo+9L9/0Z++FqRk8+wW7oKcBOp0+9Mo2Wrvqenm9si+XV3H3P5ascik=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhClxgT/cY5G96fNcJByb6onsdhuadKIGoHAGPvlvuJA6iQB3M
+	HAgSFuNRb5Jk33+lBDq/lmxOl6ab9+C1CUUqbLtOxDP3DQnGhNnpm3c=
+X-Gm-Gg: ASbGncv3R9acAV++++O8L8ky7GUsrND/AaCfGmm8HuRIxruKaz19H8YsEQbbxYBeyNB
+	tUFXT48pr+FErnGNZhFoSZX4hseK6rhi45vElV9nvCy5KjX4YVtBhgjdckAkdtiLUhE7xZopv5M
+	IB8Ixg/PDNNGVYZP/xL6YPEyoLsW2SZo/kcAsW595hOTIDhdG/AgZzH/5XhNi9mYcm7gWHunUq+
+	n0NBJcliwxmbQqldeEynCVcQDGrKfPvGtSUxoNt5BYrpoLTIokFn5FxwK9gAzVWUMBz4JbhMsqG
+	qOStZ/qATH8wsr1mJNhhrMVbXVXMCMw96wcSFnzCxU4exEhmoYGBEdLtbhRmVqvOFNSwsDQbP2V
+	NHII9Bt6YsbVkW0XeWXhTFiZEqJk=
+X-Google-Smtp-Source: AGHT+IGIu3gbuINcDndwdP4p4mOyqy+li64ELdayYdyjK95FwdHBw8FjbzsVCoxES8ZbmatD0+A9XA==
+X-Received: by 2002:a05:600c:3c85:b0:43d:fa58:81d3 with SMTP id 5b1f17b1804b1-442fd6790f4mr190944295e9.32.1747846107250;
+        Wed, 21 May 2025 09:48:27 -0700 (PDT)
+Received: from [192.168.1.3] (p5b2ac604.dip0.t-ipconnect.de. [91.42.198.4])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f1825193sm80172405e9.5.2025.05.21.09.48.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 May 2025 09:48:26 -0700 (PDT)
+Message-ID: <741506d2-6447-4580-adac-962d9e45842d@googlemail.com>
+Date: Wed, 21 May 2025 18:48:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH 6.12 000/143] 6.12.30-rc1 review
+Content-Language: de-DE
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250520125810.036375422@linuxfoundation.org>
+From: Peter Schneider <pschneider1968@googlemail.com>
+In-Reply-To: <20250520125810.036375422@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, 2025-05-22 at 00:32 +0800, John wrote:
-> Dear Linux Kernel Maintainers,
->=20
-> I hope this message finds you well.
->=20
-> I am writing to report a potential vulnerability I encountered during
-> testing of the Linux Kernel version v6.15-rc5.
+Am 20.05.2025 um 15:49 schrieb Greg Kroah-Hartman:
+> This is the start of the stable review cycle for the 6.12.30 release.
+> There are 143 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-I don't know why you're rehashing what's obviously syzbot reports.
-Please don't.
+Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
+oddities or regressions found.
 
-johannes
+Tested-by: Peter Schneider <pschneider1968@googlemail.com>
+
+
+Beste Grüße,
+Peter Schneider
+
+-- 
+Climb the mountain not to plant your flag, but to embrace the challenge,
+enjoy the air and behold the view. Climb it so you can see the world,
+not so the world can see you.                    -- David McCullough Jr.
+
+OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
+Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
