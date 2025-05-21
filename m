@@ -1,232 +1,209 @@
-Received: from imap4.hz.codethink.co.uk (imap4.hz.codethink.co.uk [188.40.203.114])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6BCA20D509
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 08:26:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.203.114
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82F8B233D85
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 08:28:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747815988; cv=none; b=ReFgGySQhoOfs29iI2icP2vaHlpzZPWy2CFpZ5OAQ0GEiX1gCFnumgUKqQJZB9mmrJse2aWl4272Fj7bdqIU9+iK037v16IDdh96UZpjmd8FReKfVqw8Y1ubSrgd4IT9WBwHv2m/rq22zfjt+8nlcHVspaCkWCWHa8BMoOdgn6U=
+	t=1747816083; cv=none; b=LczjzzwyKcmhPUHn10JO8FthKVhTBIl7GhKhl0nm1JnjMHesCcyyb3U5dJndb9/2k6n6xqqI/tMjXIkIsl/h8/Rt84JL/TnBwSOtTYSnZ75EWrHmJG7uAugJUXDPjqbIPZH/m6slMOSNgGETmFfuisUgxriGAEUCRr4Ue3XMjrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747815988; c=relaxed/simple;
-	bh=exX6EiFRV2s9NLbkGlB/wKAtH/cp6uJ0cB7HcdMbvyg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jtDz70eVOqqm4NxBsbs0Ojvc1yNimgiKe71C/1n6sSp7RHSxa482ROZpca5R/x1/i9qwQ+XmLTO4Skf1vK3BYXJ/NKDpvsE7jXPpZ+7gljyuBt53G/xpmayqFKmF6pdeAolInXYSJFELe1ARgyT0ibdTMi+iag2dnlKAWQhq5tY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk; spf=pass smtp.mailfrom=codethink.co.uk; dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b=f0kP9C9p; arc=none smtp.client-ip=188.40.203.114
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codethink.co.uk
+	s=arc-20240116; t=1747816083; c=relaxed/simple;
+	bh=T6VDtDsW8xN/epSr/6EgEzigDBnPXRz0hTC47i+yneM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=KGIg0dWe9OHvtjXokB7bgWM2ScE40TMwy/9/lDdNFjtxWP73CeIXKqQB5aM6uoXam+0eRQ2J7At27XKyF6i2vSsgaWsbaHXhOpqzC9U9fJgT5xSPHEdh8pBZdxqOKjcCi5eqzXW2gSqN8YKZb9QS2UwJNstrdU7FcuLgT/KmjJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=Ls98qlBa reason="signature verification failed"; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b="f0kP9C9p"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=codethink.co.uk; s=imap4-20230908; h=Sender:Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=unY4ZkkFJvMvzpRLBpHRrQvWzW6DFaqYnyjHyxE82Yk=; b=f0kP9C9pbk5QepmdxX7LsfuN/C
-	97Tur95xdAkqqpgmOzWxOU6tiNaFGxvuLGp3gJ+OodpUleMfqAz4Mw5Ub4J9bDYZH+OzuBBC+xAGE
-	ji4tBK69AG4TWEEzsijBnQnc1DdW/9VMDxXZVRWLwq07oEi1sQ0bgnjTiGybaQlgiQT1c1uGcru3x
-	xdZR6Q8cdxPGZLMauLxnUrH6yGbMzviVvMq+PXAq7yJ0WZD1TX5RYP/IKupyS+OvZibxbcAkk0Yy8
-	ybVUv4b/FKJfjjeNUt5ccF/mK91bIkpZcqXAx6l9LghMrl/R9yd8gpFDDDYNSM+Uy0L5Q3flh7qhb
-	JDGabJ4Q==;
-Received: from [167.98.27.226] (helo=[10.35.6.194])
-	by imap4.hz.codethink.co.uk with esmtpsa  (Exim 4.94.2 #2 (Debian))
-	id 1uHemB-00FE3X-F6; Wed, 21 May 2025 09:26:12 +0100
-Message-ID: <145b6e37-bbb3-47ec-b9dc-3450a7f3da2b@codethink.co.uk>
-Date: Wed, 21 May 2025 09:26:10 +0100
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="Ls98qlBa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=JISsKWMI+Mu3IJtcvxk9p0FcmVda2VN3lDglUK3yl18=; b=L
+	s98qlBa7lFQ0m1Pl4Y3JZweBHmTl6eXQKQv+NCWjwmpJxJ4ObYWz/129wWVuzGlh
+	Zt0vUmetzxUzeso59adApkOV7bKU1TDvxwZcCK8p3+RxBqRcoj1bVlLyTIC0KQN5
+	weKeVX1lrNu9cqmN4aI524/JPmI7O7oXJ4INRUCCR0=
+Received: from andyshrk$163.com ( [58.22.7.114] ) by
+ ajax-webmail-wmsvr-40-123 (Coremail) ; Wed, 21 May 2025 16:26:30 +0800
+ (CST)
+Date: Wed, 21 May 2025 16:26:30 +0800 (CST)
+From: "Andy Yan" <andyshrk@163.com>
+To: "Jayesh Choudhary" <j-choudhary@ti.com>
+Cc: dianders@chromium.org, andrzej.hajda@intel.com,
+	neil.armstrong@linaro.org, rfoss@kernel.org,
+	Laurent.pinchart@ideasonboard.com, dri-devel@lists.freedesktop.org,
+	tomi.valkeinen@ideasonboard.com, alexander.stein@ew.tq-group.com,
+	jonas@kwiboo.se, jernej.skrabec@gmail.com,
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+	tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
+	lumag@kernel.org, jani.nikula@intel.com, andy.yan@rock-chips.com,
+	mordan@ispras.ru, linux@treblig.org, viro@zeniv.linux.org.uk,
+	yamonkar@cadence.com, sjakhade@cadence.com,
+	quentin.schulz@free-electrons.com, jsarha@ti.com,
+	linux-kernel@vger.kernel.org, devarsht@ti.com
+Subject: Re:Re:[RFC PATCH v2 1/3] drm/bridge: cadence: cdns-mhdp8546-core:
+ Remove legacy support for connector initialisation in bridge
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
+ Copyright (c) 2002-2025 www.mailtech.cn 163com
+In-Reply-To: <6202fa6.78f2.196f1e97ccc.Coremail.andyshrk@163.com>
+References: <20250521073237.366463-1-j-choudhary@ti.com>
+ <20250521073237.366463-2-j-choudhary@ti.com>
+ <6202fa6.78f2.196f1e97ccc.Coremail.andyshrk@163.com>
+X-NTES-SC: AL_Qu2fBfSaukEi5iSZZekfmkcVgOw9UcO5v/Qk3oZXOJF8jAnp4h0vRHlFF0T18sKdCjuCnh6Rezd+48txc5VhR4MFPyBsaf5azR6Uahp/Y6Crfg==
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/5] riscv: save the SR_SUM status over switches
-To: Alexandre Ghiti <alex@ghiti.fr>, Cyril Bur <cyrilbur@tenstorrent.com>,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, paul.walmsley@sifive.com,
- charlie@rivosinc.com, jrtc27@jrtc27.com
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- jszhang@kernel.org, syzbot+e74b94fe601ab9552d69@syzkaller.appspotmail.com
-References: <20250410070526.3160847-1-cyrilbur@tenstorrent.com>
- <20250410070526.3160847-2-cyrilbur@tenstorrent.com>
- <d09e80c2-024c-4fe0-b71e-6af88e239ea9@ghiti.fr>
-Content-Language: en-GB
-From: Ben Dooks <ben.dooks@codethink.co.uk>
-Organization: Codethink Limited.
-In-Reply-To: <d09e80c2-024c-4fe0-b71e-6af88e239ea9@ghiti.fr>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Sender: ben.dooks@codethink.co.uk
+Message-ID: <6c97bbb3.7c88.196f1f3848d.Coremail.andyshrk@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:eygvCgD3f0E2ji1o4KsJAA--.8526W
+X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/xtbB0g5UXmgtiQakMgACsI
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-On 22/04/2025 11:22, Alexandre Ghiti wrote:
-> Hi Cyril,
-> 
-> On 10/04/2025 09:05, Cyril Bur wrote:
->> From: Ben Dooks <ben.dooks@codethink.co.uk>
->>
->> When threads/tasks are switched we need to ensure the old execution's
->> SR_SUM state is saved and the new thread has the old SR_SUM state
->> restored.
->>
->> The issue was seen under heavy load especially with the syz-stress tool
->> running, with crashes as follows in schedule_tail:
->>
->> Unable to handle kernel access to user memory without uaccess routines
->> at virtual address 000000002749f0d0
->> Oops [#1]
->> Modules linked in:
->> CPU: 1 PID: 4875 Comm: syz-executor.0 Not tainted
->> 5.12.0-rc2-syzkaller-00467-g0d7588ab9ef9 #0
->> Hardware name: riscv-virtio,qemu (DT)
->> epc : schedule_tail+0x72/0xb2 kernel/sched/core.c:4264
->>   ra : task_pid_vnr include/linux/sched.h:1421 [inline]
->>   ra : schedule_tail+0x70/0xb2 kernel/sched/core.c:4264
->> epc : ffffffe00008c8b0 ra : ffffffe00008c8ae sp : ffffffe025d17ec0
->>   gp : ffffffe005d25378 tp : ffffffe00f0d0000 t0 : 0000000000000000
->>   t1 : 0000000000000001 t2 : 00000000000f4240 s0 : ffffffe025d17ee0
->>   s1 : 000000002749f0d0 a0 : 000000000000002a a1 : 0000000000000003
->>   a2 : 1ffffffc0cfac500 a3 : ffffffe0000c80cc a4 : 5ae9db91c19bbe00
->>   a5 : 0000000000000000 a6 : 0000000000f00000 a7 : ffffffe000082eba
->>   s2 : 0000000000040000 s3 : ffffffe00eef96c0 s4 : ffffffe022c77fe0
->>   s5 : 0000000000004000 s6 : ffffffe067d74e00 s7 : ffffffe067d74850
->>   s8 : ffffffe067d73e18 s9 : ffffffe067d74e00 s10: ffffffe00eef96e8
->>   s11: 000000ae6cdf8368 t3 : 5ae9db91c19bbe00 t4 : ffffffc4043cafb2
->>   t5 : ffffffc4043cafba t6 : 0000000000040000
->> status: 0000000000000120 badaddr: 000000002749f0d0 cause:
->> 000000000000000f
->> Call Trace:
->> [<ffffffe00008c8b0>] schedule_tail+0x72/0xb2 kernel/sched/core.c:4264
->> [<ffffffe000005570>] ret_from_exception+0x0/0x14
->> Dumping ftrace buffer:
->>     (ftrace buffer empty)
->> ---[ end trace b5f8f9231dc87dda ]---
->>
->> The issue comes from the put_user() in schedule_tail
->> (kernel/sched/core.c) doing the following:
->>
->> asmlinkage __visible void schedule_tail(struct task_struct *prev)
->> {
->> ...
->>          if (current->set_child_tid)
->>                  put_user(task_pid_vnr(current), current->set_child_tid);
->> ...
->> }
->>
->> the put_user() macro causes the code sequence to come out as follows:
->>
->> 1:    __enable_user_access()
->> 2:    reg = task_pid_vnr(current);
->> 3:    *current->set_child_tid = reg;
->> 4:    __disable_user_access()
->>
->> The problem is that we may have a sleeping function as argument which
->> could clear SR_SUM causing the panic above. This was fixed by
->> evaluating the argument of the put_user() macro outside the user-enabled
->> section in commit 285a76bb2cf5 ("riscv: evaluate put_user() arg before
->> enabling user access")"
->>
->> In order for riscv to take advantage of unsafe_get/put_XXX() macros and
->> to avoid the same issue we had with put_user() and sleeping functions we
->> must ensure code flow can go through switch_to() from within a region of
->> code with SR_SUM enabled and come back with SR_SUM still enabled. This
->> patch addresses the problem allowing future work to enable full use of
->> unsafe_get/put_XXX() macros without needing to take a CSR bit flip cost
->> on every access. Make switch_to() save and restore SR_SUM.
->>
->> Reported-by: syzbot+e74b94fe601ab9552d69@syzkaller.appspotmail.com
->> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
->> Signed-off-by: Cyril Bur <cyrilbur@tenstorrent.com>
->> ---
->>   arch/riscv/include/asm/processor.h | 1 +
->>   arch/riscv/kernel/asm-offsets.c    | 5 +++++
->>   arch/riscv/kernel/entry.S          | 8 ++++++++
->>   3 files changed, 14 insertions(+)
->>
->> diff --git a/arch/riscv/include/asm/processor.h b/arch/riscv/include/ 
->> asm/processor.h
->> index 5f56eb9d114a..58fd11c89fe9 100644
->> --- a/arch/riscv/include/asm/processor.h
->> +++ b/arch/riscv/include/asm/processor.h
->> @@ -103,6 +103,7 @@ struct thread_struct {
->>       struct __riscv_d_ext_state fstate;
->>       unsigned long bad_cause;
->>       unsigned long envcfg;
->> +    unsigned long status;
->>       u32 riscv_v_flags;
->>       u32 vstate_ctrl;
->>       struct __riscv_v_ext_state vstate;
->> diff --git a/arch/riscv/kernel/asm-offsets.c b/arch/riscv/kernel/asm- 
->> offsets.c
->> index 16490755304e..969c65b1fe41 100644
->> --- a/arch/riscv/kernel/asm-offsets.c
->> +++ b/arch/riscv/kernel/asm-offsets.c
->> @@ -34,6 +34,7 @@ void asm_offsets(void)
->>       OFFSET(TASK_THREAD_S9, task_struct, thread.s[9]);
->>       OFFSET(TASK_THREAD_S10, task_struct, thread.s[10]);
->>       OFFSET(TASK_THREAD_S11, task_struct, thread.s[11]);
->> +    OFFSET(TASK_THREAD_STATUS, task_struct, thread.status);
->>       OFFSET(TASK_TI_CPU, task_struct, thread_info.cpu);
->>       OFFSET(TASK_TI_PREEMPT_COUNT, task_struct, 
->> thread_info.preempt_count);
->> @@ -346,6 +347,10 @@ void asm_offsets(void)
->>             offsetof(struct task_struct, thread.s[11])
->>           - offsetof(struct task_struct, thread.ra)
->>       );
->> +    DEFINE(TASK_THREAD_STATUS_RA,
->> +          offsetof(struct task_struct, thread.status)
->> +        - offsetof(struct task_struct, thread.ra)
->> +    );
->>       DEFINE(TASK_THREAD_F0_F0,
->>             offsetof(struct task_struct, thread.fstate.f[0])
->> diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
->> index 33a5a9f2a0d4..00bd0de9faa2 100644
->> --- a/arch/riscv/kernel/entry.S
->> +++ b/arch/riscv/kernel/entry.S
->> @@ -397,9 +397,17 @@ SYM_FUNC_START(__switch_to)
->>       REG_S s9,  TASK_THREAD_S9_RA(a3)
->>       REG_S s10, TASK_THREAD_S10_RA(a3)
->>       REG_S s11, TASK_THREAD_S11_RA(a3)
->> +
->> +    /* save the user space access flag */
->> +    li    s0, SR_SUM
-> 
-> 
-> This is not needed anymore ^ but I'll remove it when merging your patchset.
-> 
-
-Could you be more specific about what "this" is?
-
-If we don't save/restore the SR_SUM bit I think our old friend
-the sched_tail bug will just return.
-
-
->> +    csrr  s1, CSR_STATUS
->> +    REG_S s1, TASK_THREAD_STATUS_RA(a3)
->> +
->>       /* Save the kernel shadow call stack pointer */
->>       scs_save_current
->>       /* Restore context from next->thread */
->> +    REG_L s0,  TASK_THREAD_STATUS_RA(a4)
->> +    csrs  CSR_STATUS, s0
->>       REG_L ra,  TASK_THREAD_RA_RA(a4)
->>       REG_L sp,  TASK_THREAD_SP_RA(a4)
->>       REG_L s0,  TASK_THREAD_S0_RA(a4)
-> 
-> Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-> 
-> Thanks for the multiple revisions!
-> 
-> Alex
-> 
-> 
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
-> 
-
-
--- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
-
-https://www.codethink.co.uk/privacy.html
+CkhlbGxvIEpheWVzaCwKCkF0IDIwMjUtMDUtMjEgMTY6MTU6MzMsICJBbmR5IFlhbiIgPGFuZHlz
+aHJrQDE2My5jb20+IHdyb3RlOgo+Cj4KPkhlbGxvIEphdmVzaCwKPgo+QXQgMjAyNS0wNS0yMSAx
+NTozMjozNSwgIkpheWVzaCBDaG91ZGhhcnkiIDxqLWNob3VkaGFyeUB0aS5jb20+IHdyb3RlOgo+
+Pk5vdyB0aGF0IHdlIGhhdmUgREJBTkMgZnJhbWV3b3JrLCByZW1vdmUgdGhlIGNvbm5lY3RvciBp
+bml0aWFsaXNhdGlvbiBjb2RlCj4+YXMgdGhhdCBwaWVjZSBvZiBjb2RlIGlzIG5vdCBjYWxsZWQg
+aWYgRFJNX0JSSURHRV9BVFRBQ0hfTk9fQ09OTkVDVE9SIGZsYWcKPj5pcyB1c2VkLiBPbmx5IFRJ
+IEszIHBsYXRmb3JtcyBjb25zdW1lIHRoaXMgZHJpdmVyIGFuZCB0aWRzcyAodGhlaXIgZGlzcGxh
+eQo+PmNvbnRyb2xsZXIpIGhhcyB0aGlzIGZsYWcgc2V0LiBTbyB0aGlzIGxlZ2FjeSBzdXBwb3J0
+IGNhbiBiZSBkcm9wcGVkLgo+Pgo+PlNpZ25lZC1vZmYtYnk6IEpheWVzaCBDaG91ZGhhcnkgPGot
+Y2hvdWRoYXJ5QHRpLmNvbT4KPj4tLS0KPj4gLi4uL2RybS9icmlkZ2UvY2FkZW5jZS9jZG5zLW1o
+ZHA4NTQ2LWNvcmUuYyAgIHwgMTg2ICsrKy0tLS0tLS0tLS0tLS0tLQo+PiAxIGZpbGUgY2hhbmdl
+ZCwgMjUgaW5zZXJ0aW9ucygrKSwgMTYxIGRlbGV0aW9ucygtKQo+Pgo+PmRpZmYgLS1naXQgYS9k
+cml2ZXJzL2dwdS9kcm0vYnJpZGdlL2NhZGVuY2UvY2Rucy1taGRwODU0Ni1jb3JlLmMgYi9kcml2
+ZXJzL2dwdS9kcm0vYnJpZGdlL2NhZGVuY2UvY2Rucy1taGRwODU0Ni1jb3JlLmMKPj5pbmRleCBi
+NDMxZTdlZmQxZjAuLjY2YmQ5MTZjMmZlOSAxMDA2NDQKPj4tLS0gYS9kcml2ZXJzL2dwdS9kcm0v
+YnJpZGdlL2NhZGVuY2UvY2Rucy1taGRwODU0Ni1jb3JlLmMKPj4rKysgYi9kcml2ZXJzL2dwdS9k
+cm0vYnJpZGdlL2NhZGVuY2UvY2Rucy1taGRwODU0Ni1jb3JlLmMKPj5AQCAtMTQ0NCw1NiArMTQ0
+NCw2IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2VkaWQgKmNkbnNfbWhkcF9lZGlkX3JlYWQo
+c3RydWN0IGNkbnNfbWhkcF9kZXZpY2UgKm1oZHAsCj4+IAlyZXR1cm4gZHJtX2VkaWRfcmVhZF9j
+dXN0b20oY29ubmVjdG9yLCBjZG5zX21oZHBfZ2V0X2VkaWRfYmxvY2ssIG1oZHApOwo+PiB9Cj4+
+IAo+Pi1zdGF0aWMgaW50IGNkbnNfbWhkcF9nZXRfbW9kZXMoc3RydWN0IGRybV9jb25uZWN0b3Ig
+KmNvbm5lY3RvcikKPj4tewo+Pi0Jc3RydWN0IGNkbnNfbWhkcF9kZXZpY2UgKm1oZHAgPSBjb25u
+ZWN0b3JfdG9fbWhkcChjb25uZWN0b3IpOwo+Pi0JY29uc3Qgc3RydWN0IGRybV9lZGlkICpkcm1f
+ZWRpZDsKPj4tCWludCBudW1fbW9kZXM7Cj4+LQo+Pi0JaWYgKCFtaGRwLT5wbHVnZ2VkKQo+Pi0J
+CXJldHVybiAwOwo+Pi0KPj4tCWRybV9lZGlkID0gY2Ruc19taGRwX2VkaWRfcmVhZChtaGRwLCBj
+b25uZWN0b3IpOwo+Pi0KPj4tCWRybV9lZGlkX2Nvbm5lY3Rvcl91cGRhdGUoY29ubmVjdG9yLCBk
+cm1fZWRpZCk7Cj4+LQo+Pi0JaWYgKCFkcm1fZWRpZCkgewo+Pi0JCWRldl9lcnIobWhkcC0+ZGV2
+LCAiRmFpbGVkIHRvIHJlYWQgRURJRFxuIik7Cj4+LQkJcmV0dXJuIDA7Cj4+LQl9Cj4+LQo+Pi0J
+bnVtX21vZGVzID0gZHJtX2VkaWRfY29ubmVjdG9yX2FkZF9tb2Rlcyhjb25uZWN0b3IpOwo+Pi0J
+ZHJtX2VkaWRfZnJlZShkcm1fZWRpZCk7Cj4+LQo+Pi0JLyoKPj4tCSAqIEhBQ0s6IFdhcm4gYWJv
+dXQgdW5zdXBwb3J0ZWQgZGlzcGxheSBmb3JtYXRzIHVudGlsIHdlIGRlYWwKPj4tCSAqICAgICAg
+IHdpdGggdGhlbSBjb3JyZWN0bHkuCj4+LQkgKi8KPj4tCWlmIChjb25uZWN0b3ItPmRpc3BsYXlf
+aW5mby5jb2xvcl9mb3JtYXRzICYmCj4+LQkgICAgIShjb25uZWN0b3ItPmRpc3BsYXlfaW5mby5j
+b2xvcl9mb3JtYXRzICYKPj4tCSAgICAgIG1oZHAtPmRpc3BsYXlfZm10LmNvbG9yX2Zvcm1hdCkp
+Cj4+LQkJZGV2X3dhcm4obWhkcC0+ZGV2LAo+Pi0JCQkgIiVzOiBObyBzdXBwb3J0ZWQgY29sb3Jf
+Zm9ybWF0IGZvdW5kICgweCUwOHgpXG4iLAo+Pi0JCQlfX2Z1bmNfXywgY29ubmVjdG9yLT5kaXNw
+bGF5X2luZm8uY29sb3JfZm9ybWF0cyk7Cj4+LQo+Pi0JaWYgKGNvbm5lY3Rvci0+ZGlzcGxheV9p
+bmZvLmJwYyAmJgo+Pi0JICAgIGNvbm5lY3Rvci0+ZGlzcGxheV9pbmZvLmJwYyA8IG1oZHAtPmRp
+c3BsYXlfZm10LmJwYykKPj4tCQlkZXZfd2FybihtaGRwLT5kZXYsICIlczogRGlzcGxheSBicGMg
+b25seSAlZCA8ICVkXG4iLAo+Pi0JCQkgX19mdW5jX18sIGNvbm5lY3Rvci0+ZGlzcGxheV9pbmZv
+LmJwYywKPj4tCQkJIG1oZHAtPmRpc3BsYXlfZm10LmJwYyk7Cj4+LQo+Pi0JcmV0dXJuIG51bV9t
+b2RlczsKPj4tfQo+Pi0KPj4tc3RhdGljIGludCBjZG5zX21oZHBfY29ubmVjdG9yX2RldGVjdChz
+dHJ1Y3QgZHJtX2Nvbm5lY3RvciAqY29ubiwKPj4tCQkJCSAgICAgIHN0cnVjdCBkcm1fbW9kZXNl
+dF9hY3F1aXJlX2N0eCAqY3R4LAo+Pi0JCQkJICAgICAgYm9vbCBmb3JjZSkKPj4tewo+Pi0Jc3Ry
+dWN0IGNkbnNfbWhkcF9kZXZpY2UgKm1oZHAgPSBjb25uZWN0b3JfdG9fbWhkcChjb25uKTsKPj4t
+Cj4+LQlyZXR1cm4gY2Ruc19taGRwX2RldGVjdChtaGRwKTsKPj4tfQo+Pi0KPj4gc3RhdGljIHUz
+MiBjZG5zX21oZHBfZ2V0X2JwcChzdHJ1Y3QgY2Ruc19taGRwX2Rpc3BsYXlfZm10ICpmbXQpCj4+
+IHsKPj4gCXUzMiBicHA7Cj4+QEAgLTE1NDcsMTE0ICsxNDk3LDYgQEAgYm9vbCBjZG5zX21oZHBf
+YmFuZHdpZHRoX29rKHN0cnVjdCBjZG5zX21oZHBfZGV2aWNlICptaGRwLAo+PiAJcmV0dXJuIHRy
+dWU7Cj4+IH0KPj4gCj4+LXN0YXRpYwo+Pi1lbnVtIGRybV9tb2RlX3N0YXR1cyBjZG5zX21oZHBf
+bW9kZV92YWxpZChzdHJ1Y3QgZHJtX2Nvbm5lY3RvciAqY29ubiwKPj4tCQkJCQkgIGNvbnN0IHN0
+cnVjdCBkcm1fZGlzcGxheV9tb2RlICptb2RlKQo+Pi17Cj4+LQlzdHJ1Y3QgY2Ruc19taGRwX2Rl
+dmljZSAqbWhkcCA9IGNvbm5lY3Rvcl90b19taGRwKGNvbm4pOwo+Pi0KPj4tCW11dGV4X2xvY2so
+Jm1oZHAtPmxpbmtfbXV0ZXgpOwo+Pi0KPj4tCWlmICghY2Ruc19taGRwX2JhbmR3aWR0aF9vayht
+aGRwLCBtb2RlLCBtaGRwLT5saW5rLm51bV9sYW5lcywKPj4tCQkJCSAgICBtaGRwLT5saW5rLnJh
+dGUpKSB7Cj4+LQkJbXV0ZXhfdW5sb2NrKCZtaGRwLT5saW5rX211dGV4KTsKPj4tCQlyZXR1cm4g
+TU9ERV9DTE9DS19ISUdIOwo+Pi0JfQo+Pi0KPj4tCW11dGV4X3VubG9jaygmbWhkcC0+bGlua19t
+dXRleCk7Cj4+LQlyZXR1cm4gTU9ERV9PSzsKPj4tfQo+Pi0KPj4tc3RhdGljIGludCBjZG5zX21o
+ZHBfY29ubmVjdG9yX2F0b21pY19jaGVjayhzdHJ1Y3QgZHJtX2Nvbm5lY3RvciAqY29ubiwKPj4t
+CQkJCQkgICAgc3RydWN0IGRybV9hdG9taWNfc3RhdGUgKnN0YXRlKQo+Pi17Cj4+LQlzdHJ1Y3Qg
+Y2Ruc19taGRwX2RldmljZSAqbWhkcCA9IGNvbm5lY3Rvcl90b19taGRwKGNvbm4pOwo+Pi0Jc3Ry
+dWN0IGRybV9jb25uZWN0b3Jfc3RhdGUgKm9sZF9zdGF0ZSwgKm5ld19zdGF0ZTsKPj4tCXN0cnVj
+dCBkcm1fY3J0Y19zdGF0ZSAqY3J0Y19zdGF0ZTsKPj4tCXU2NCBvbGRfY3AsIG5ld19jcDsKPj4t
+Cj4+LQlpZiAoIW1oZHAtPmhkY3Bfc3VwcG9ydGVkKQo+Pi0JCXJldHVybiAwOwo+Pi0KPj4tCW9s
+ZF9zdGF0ZSA9IGRybV9hdG9taWNfZ2V0X29sZF9jb25uZWN0b3Jfc3RhdGUoc3RhdGUsIGNvbm4p
+Owo+Pi0JbmV3X3N0YXRlID0gZHJtX2F0b21pY19nZXRfbmV3X2Nvbm5lY3Rvcl9zdGF0ZShzdGF0
+ZSwgY29ubik7Cj4+LQlvbGRfY3AgPSBvbGRfc3RhdGUtPmNvbnRlbnRfcHJvdGVjdGlvbjsKPj4t
+CW5ld19jcCA9IG5ld19zdGF0ZS0+Y29udGVudF9wcm90ZWN0aW9uOwo+Pi0KPj4tCWlmIChvbGRf
+c3RhdGUtPmhkY3BfY29udGVudF90eXBlICE9IG5ld19zdGF0ZS0+aGRjcF9jb250ZW50X3R5cGUg
+JiYKPj4tCSAgICBuZXdfY3AgIT0gRFJNX01PREVfQ09OVEVOVF9QUk9URUNUSU9OX1VOREVTSVJF
+RCkgewo+Pi0JCW5ld19zdGF0ZS0+Y29udGVudF9wcm90ZWN0aW9uID0gRFJNX01PREVfQ09OVEVO
+VF9QUk9URUNUSU9OX0RFU0lSRUQ7Cj4+LQkJZ290byBtb2RlX2NoYW5nZWQ7Cj4+LQl9Cj4+LQo+
+Pi0JaWYgKCFuZXdfc3RhdGUtPmNydGMpIHsKPj4tCQlpZiAob2xkX2NwID09IERSTV9NT0RFX0NP
+TlRFTlRfUFJPVEVDVElPTl9FTkFCTEVEKQo+Pi0JCQluZXdfc3RhdGUtPmNvbnRlbnRfcHJvdGVj
+dGlvbiA9IERSTV9NT0RFX0NPTlRFTlRfUFJPVEVDVElPTl9ERVNJUkVEOwo+Pi0JCXJldHVybiAw
+Owo+Pi0JfQo+Pi0KPj4tCWlmIChvbGRfY3AgPT0gbmV3X2NwIHx8Cj4+LQkgICAgKG9sZF9jcCA9
+PSBEUk1fTU9ERV9DT05URU5UX1BST1RFQ1RJT05fREVTSVJFRCAmJgo+Pi0JICAgICBuZXdfY3Ag
+PT0gRFJNX01PREVfQ09OVEVOVF9QUk9URUNUSU9OX0VOQUJMRUQpKQo+Pi0JCXJldHVybiAwOwo+
+Pi0KPj4tbW9kZV9jaGFuZ2VkOgo+Pi0JY3J0Y19zdGF0ZSA9IGRybV9hdG9taWNfZ2V0X25ld19j
+cnRjX3N0YXRlKHN0YXRlLCBuZXdfc3RhdGUtPmNydGMpOwo+Pi0JY3J0Y19zdGF0ZS0+bW9kZV9j
+aGFuZ2VkID0gdHJ1ZTsKPj4tCj4+LQlyZXR1cm4gMDsKPj4tfQo+Pi0KPj4tc3RhdGljIGNvbnN0
+IHN0cnVjdCBkcm1fY29ubmVjdG9yX2hlbHBlcl9mdW5jcyBjZG5zX21oZHBfY29ubl9oZWxwZXJf
+ZnVuY3MgPSB7Cj4+LQkuZGV0ZWN0X2N0eCA9IGNkbnNfbWhkcF9jb25uZWN0b3JfZGV0ZWN0LAo+
+Pi0JLmdldF9tb2RlcyA9IGNkbnNfbWhkcF9nZXRfbW9kZXMsCj4+LQkubW9kZV92YWxpZCA9IGNk
+bnNfbWhkcF9tb2RlX3ZhbGlkLAo+Pi0JLmF0b21pY19jaGVjayA9IGNkbnNfbWhkcF9jb25uZWN0
+b3JfYXRvbWljX2NoZWNrLAo+Pi19Owo+Pi0KPj4tc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fY29u
+bmVjdG9yX2Z1bmNzIGNkbnNfbWhkcF9jb25uX2Z1bmNzID0gewo+Pi0JLmZpbGxfbW9kZXMgPSBk
+cm1faGVscGVyX3Byb2JlX3NpbmdsZV9jb25uZWN0b3JfbW9kZXMsCj4+LQkuYXRvbWljX2R1cGxp
+Y2F0ZV9zdGF0ZSA9IGRybV9hdG9taWNfaGVscGVyX2Nvbm5lY3Rvcl9kdXBsaWNhdGVfc3RhdGUs
+Cj4+LQkuYXRvbWljX2Rlc3Ryb3lfc3RhdGUgPSBkcm1fYXRvbWljX2hlbHBlcl9jb25uZWN0b3Jf
+ZGVzdHJveV9zdGF0ZSwKPj4tCS5yZXNldCA9IGRybV9hdG9taWNfaGVscGVyX2Nvbm5lY3Rvcl9y
+ZXNldCwKPj4tCS5kZXN0cm95ID0gZHJtX2Nvbm5lY3Rvcl9jbGVhbnVwLAo+Pi19Owo+Pi0KPj4t
+c3RhdGljIGludCBjZG5zX21oZHBfY29ubmVjdG9yX2luaXQoc3RydWN0IGNkbnNfbWhkcF9kZXZp
+Y2UgKm1oZHApCj4+LXsKPj4tCXUzMiBidXNfZm9ybWF0ID0gTUVESUFfQlVTX0ZNVF9SR0IxMjEy
+MTJfMVgzNjsKPj4tCXN0cnVjdCBkcm1fY29ubmVjdG9yICpjb25uID0gJm1oZHAtPmNvbm5lY3Rv
+cjsKPj4tCXN0cnVjdCBkcm1fYnJpZGdlICpicmlkZ2UgPSAmbWhkcC0+YnJpZGdlOwo+Pi0JaW50
+IHJldDsKPj4tCj4+LQljb25uLT5wb2xsZWQgPSBEUk1fQ09OTkVDVE9SX1BPTExfSFBEOwo+Pi0K
+Pj4tCXJldCA9IGRybV9jb25uZWN0b3JfaW5pdChicmlkZ2UtPmRldiwgY29ubiwgJmNkbnNfbWhk
+cF9jb25uX2Z1bmNzLAo+Pi0JCQkJIERSTV9NT0RFX0NPTk5FQ1RPUl9EaXNwbGF5UG9ydCk7Cj4+
+LQlpZiAocmV0KSB7Cj4+LQkJZGV2X2VycihtaGRwLT5kZXYsICJGYWlsZWQgdG8gaW5pdGlhbGl6
+ZSBjb25uZWN0b3Igd2l0aCBkcm1cbiIpOwo+Pi0JCXJldHVybiByZXQ7Cj4+LQl9Cj4+LQo+Pi0J
+ZHJtX2Nvbm5lY3Rvcl9oZWxwZXJfYWRkKGNvbm4sICZjZG5zX21oZHBfY29ubl9oZWxwZXJfZnVu
+Y3MpOwo+Pi0KPj4tCXJldCA9IGRybV9kaXNwbGF5X2luZm9fc2V0X2J1c19mb3JtYXRzKCZjb25u
+LT5kaXNwbGF5X2luZm8sCj4+LQkJCQkJICAgICAgICZidXNfZm9ybWF0LCAxKTsKPj4tCWlmIChy
+ZXQpCj4+LQkJcmV0dXJuIHJldDsKPj4tCj4+LQlyZXQgPSBkcm1fY29ubmVjdG9yX2F0dGFjaF9l
+bmNvZGVyKGNvbm4sIGJyaWRnZS0+ZW5jb2Rlcik7Cj4+LQlpZiAocmV0KSB7Cj4+LQkJZGV2X2Vy
+cihtaGRwLT5kZXYsICJGYWlsZWQgdG8gYXR0YWNoIGNvbm5lY3RvciB0byBlbmNvZGVyXG4iKTsK
+Pj4tCQlyZXR1cm4gcmV0Owo+Pi0JfQo+Pi0KPj4tCWlmIChtaGRwLT5oZGNwX3N1cHBvcnRlZCkK
+Pj4tCQlyZXQgPSBkcm1fY29ubmVjdG9yX2F0dGFjaF9jb250ZW50X3Byb3RlY3Rpb25fcHJvcGVy
+dHkoY29ubiwgdHJ1ZSk7Cj4+LQo+Pi0JcmV0dXJuIHJldDsKPj4tfQo+Pi0KPj4gc3RhdGljIGlu
+dCBjZG5zX21oZHBfYXR0YWNoKHN0cnVjdCBkcm1fYnJpZGdlICpicmlkZ2UsCj4+IAkJCSAgICBz
+dHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXIsCj4+IAkJCSAgICBlbnVtIGRybV9icmlkZ2VfYXR0
+YWNoX2ZsYWdzIGZsYWdzKQo+PkBAIC0xNjcxLDkgKzE1MTMsMTEgQEAgc3RhdGljIGludCBjZG5z
+X21oZHBfYXR0YWNoKHN0cnVjdCBkcm1fYnJpZGdlICpicmlkZ2UsCj4+IAkJcmV0dXJuIHJldDsK
+Pj4gCj4+IAlpZiAoIShmbGFncyAmIERSTV9CUklER0VfQVRUQUNIX05PX0NPTk5FQ1RPUikpIHsK
+Pj4tCQlyZXQgPSBjZG5zX21oZHBfY29ubmVjdG9yX2luaXQobWhkcCk7Cj4+LQkJaWYgKHJldCkK
+Pj4tCQkJZ290byBhdXhfdW5yZWdpc3RlcjsKPj4rCQlyZXQgPSAtRUlOVkFMOwo+PisJCWRldl9l
+cnIobWhkcC0+ZGV2LAo+PisJCQkiQ29ubmVjdG9yIGluaXRpYWxpc2F0aW9uIG5vdCBzdXBwb3J0
+ZWQgaW4gYnJpZGdlX2F0dGFjaCAlZFxuIiwKPj4rCQkJcmV0KTsKPj4rCQlnb3RvIGF1eF91bnJl
+Z2lzdGVyOwo+PiAJfQo+PiAKPj4gCXNwaW5fbG9jaygmbWhkcC0+c3RhcnRfbG9jayk7Cj4+QEAg
+LTIxNTgsNiArMjAwMiwyNSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9lZGlkICpjZG5zX21o
+ZHBfYnJpZGdlX2VkaWRfcmVhZChzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZAo+PiAJcmV0dXJuIGNk
+bnNfbWhkcF9lZGlkX3JlYWQobWhkcCwgY29ubmVjdG9yKTsKPj4gfQo+PiAKPj4rc3RhdGljIGVu
+dW0gZHJtX21vZGVfc3RhdHVzCj4+K2NkbnNfbWhkcF9icmlkZ2VfbW9kZV92YWxpZChzdHJ1Y3Qg
+ZHJtX2JyaWRnZSAqYnJpZGdlLAo+PisJCQkgICAgY29uc3Qgc3RydWN0IGRybV9kaXNwbGF5X2lu
+Zm8gKmluZm8sCj4+KwkJCSAgICBjb25zdCBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSAqbW9kZSkK
+Pj4rewo+PisJc3RydWN0IGNkbnNfbWhkcF9kZXZpY2UgKm1oZHAgPSBicmlkZ2VfdG9fbWhkcChi
+cmlkZ2UpOwo+PisKPj4rCW11dGV4X2xvY2soJm1oZHAtPmxpbmtfbXV0ZXgpOwo+PisKPj4rCWlm
+ICghY2Ruc19taGRwX2JhbmR3aWR0aF9vayhtaGRwLCBtb2RlLCBtaGRwLT5saW5rLm51bV9sYW5l
+cywKPj4rCQkJCSAgICBtaGRwLT5saW5rLnJhdGUpKSB7Cj4+KwkJbXV0ZXhfdW5sb2NrKCZtaGRw
+LT5saW5rX211dGV4KTsKPj4rCQlyZXR1cm4gTU9ERV9DTE9DS19ISUdIOwo+PisJfQo+PisKPj4r
+CW11dGV4X3VubG9jaygmbWhkcC0+bGlua19tdXRleCk7Cj4+KwlyZXR1cm4gTU9ERV9PSzsKPj4r
+fQo+PisKPj4gc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fYnJpZGdlX2Z1bmNzIGNkbnNfbWhkcF9i
+cmlkZ2VfZnVuY3MgPSB7Cj4+IAkuYXRvbWljX2VuYWJsZSA9IGNkbnNfbWhkcF9hdG9taWNfZW5h
+YmxlLAo+PiAJLmF0b21pY19kaXNhYmxlID0gY2Ruc19taGRwX2F0b21pY19kaXNhYmxlLAo+PkBA
+IC0yMTcyLDYgKzIwMzUsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9icmlkZ2VfZnVuY3Mg
+Y2Ruc19taGRwX2JyaWRnZV9mdW5jcyA9IHsKPj4gCS5lZGlkX3JlYWQgPSBjZG5zX21oZHBfYnJp
+ZGdlX2VkaWRfcmVhZCwKPj4gCS5ocGRfZW5hYmxlID0gY2Ruc19taGRwX2JyaWRnZV9ocGRfZW5h
+YmxlLAo+PiAJLmhwZF9kaXNhYmxlID0gY2Ruc19taGRwX2JyaWRnZV9ocGRfZGlzYWJsZSwKPj4r
+CS5tb2RlX3ZhbGlkID0gY2Ruc19taGRwX2JyaWRnZV9tb2RlX3ZhbGlkLAo+Cj5EbyB3ZSBuZWVk
+IHRoZSBkZXRlY3QgaG9vayBmb3IgYnJpZGdlIGFmdGVyIGNkbnNfbWhkcF9jb25uZWN0b3JfZGV0
+ZWN0IHJlbW92ZWQgPwoKU29ycnksIEkgZGlkbid0IG5vdGljZSBiZWZvcmUuIEl0J3MgYWxyZWFk
+eSBoZXJlLgoKClJldmlld2VkLWJ5OiBBbmR5IFlhbiA8YW5keXNocmtAMTYzLmNvbT4KCj4KPgo+
+Cj4+IH07Cj4+IAo+PiBzdGF0aWMgYm9vbCBjZG5zX21oZHBfZGV0ZWN0X2hwZChzdHJ1Y3QgY2Ru
+c19taGRwX2RldmljZSAqbWhkcCwgYm9vbCAqaHBkX3B1bHNlKQo+Pi0tIAo+PjIuMzQuMQo=
