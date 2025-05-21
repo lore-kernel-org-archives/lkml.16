@@ -1,387 +1,380 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D22FE8633F
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 21:57:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED1902367CF
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 21:58:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747864676; cv=none; b=YTGoAo4Z/aAzJ6z9BMiG+cyl5eEzddyXZT6SUzQ4xzqVz0cIAWrpHvJIOCHwrjHVfEREEjg8+N292B4JiYp3qPNJkD3YCw/LObKYCMntX82DDlj0RPCZ2ReeWl5DsyboIlOhuRlC5BPoHnlN8zSO5tvJk8OwnriTatd7ys+vc80=
+	t=1747864693; cv=none; b=toxEln9g9yO3nqIySWB7KgRWlVfHHf4AQt+rujfHGyCJSfMoSmeRRTzc/SNegakBH5I4SFHQxGuCBForVF8lRiGB+Ry2Vxp/ZRS3LMv2yS4O16vSz7/OOi8rgi059Dd4kbiwdjZ7cE9rZICRct4X27nDTjFTUESr7oNZWaq0sCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747864676; c=relaxed/simple;
-	bh=ezJsTZIOHLnsSfo92RZFN7R3lM5cMwfNZI8X86PkOHo=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=BYZ0rj72ovem9HzmmKIj65uQlvr1nY9Bd94TK9ICIi5GDJNfBiiikrUtGAzTuu3NPSD5KPyD2WifIbRSPYDV6V9tjVmUa/+/OIWEgdeCa8/htjZx1lvx0cNjCv3Rw4iiYmxDurmNAnNSflZlM9OAtoTyACJ/u/ZfDBauufyoKQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-86a5def8869so353850039f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 14:57:54 -0700 (PDT)
+	s=arc-20240116; t=1747864693; c=relaxed/simple;
+	bh=F8ldumZNG6TdtaLY0kXWVWu78ZAGFEBcpDQNxt/iU2w=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=c3Q2lt8H+RkFPjWbZO4tA9ysM7FMfB36N04RmcxIQg04tP+GZgfiGZd+SV4bmE+gohOCCLNFWiSjvYTFAG3KiXfCHWgO/q8FTIuueE/bMBvKsbeuo11h+2MEqWHrs6MU+T8Dh3oXLYm1/Qnx89QFFfGEvVCMmwahmnVpYjwEZ9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jyescas.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xWbinlM3; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jyescas.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xWbinlM3"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7394772635dso5363892b3a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 14:58:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747864691; x=1748469491; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=el4Dd0m8a/fOGplojvOcuXYWIbG/ywyVgqHsfpMvSSI=;
+        b=xWbinlM3F/iuyuZX5DnXw6iX3BRCwQuLCZmXyQVWfdQVaCmuc9gNnHBrpXIZSWpyKO
+         FleFB+u/St+G/xAgTMt24cH/uOkHLVIK06ydV5/p6T7potWxbxwbyEK3PUvNJB+iW+hh
+         RPD3UgUXr3Ry8gaShgrDJmiExij5UTR+p76Uyb2teJY/+/Wz/InS+qZdglhLpGMvSwn6
+         BAkWVUumG3KzAGXRz1TntubAN+SnJZJ7oT+Q0ju9LE7kcMhJ48RHaRn1VUmapx4G8hT4
+         xocwSMMOXYNouAajHq9cWbpsGvsHy0gc3KSWcLVQZcUHo/q1Wq4y/QgbhQ6xAStBUJ5E
+         Ba1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747864674; x=1748469474;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+FiU59m1NdRUOrncNUFof24Wvl4zcyKpxxi8IJX8MoI=;
-        b=Zo9Cft0gW/3zC17vQ0o6PFYQta7flyu7yZlUaK3aQyCxEtFpxQyVJQf7NIQJNow454
-         oSyBMyT+g5ZkyBzXXNTfcUuYE/NA6LA+ZpZI77IbHd7Er4yZvS7Nuo47zfYBRUTwRL0t
-         1wrvjN3jNa97V56Fsm1+bkv5n+mEC4ZDpxaFq9UE90woJo8a1WJSYdtiLKnxgLzb3RCl
-         mxvXR4HZ2JVFbxNQ4KkGzfUM7gc2DYsSlxbjS7z5nH3uDVvoK/abv3Zg3oaC7S84Abvp
-         eASXb/hHSk0sz6TgjXgki1SpVitYWnCk9nHDIDuiuBlGRBg4bca9b6IoGUHT29HywBst
-         jToQ==
-X-Gm-Message-State: AOJu0Yyt8ICyLki887qY8v1iGJy75aeEWWNYOu9XFwtQxUU2Xgrf/OWz
-	VUyvTsqjyjgojSbwtWUtbJ/ylNSruf9N8Pmd1Dbmwk5f63lYrvxZkwyMZBAqUvwb9LiQkYAH4N4
-	TqBYzRWIPEzvfk5A5hWKfwfehr06aHbBZ7EtHcxzKWDjcCOxKp1vSq1YSCVM=
-X-Google-Smtp-Source: AGHT+IFUzZ6O+7nM95gS0dcss4UwSqC/W5SLKReTFm/W82MUcnGwUZgRme9ExGdWb0FOb5om/Mmjt8t9mxMe+2piLV9KMIqSEZMe
+        d=1e100.net; s=20230601; t=1747864691; x=1748469491;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=el4Dd0m8a/fOGplojvOcuXYWIbG/ywyVgqHsfpMvSSI=;
+        b=SFguLnn2cJndcJSjkwxbBq2Dt6i6iboG3aZSHhN/cQfamrYE6H+0Wst7SE3m5tvp++
+         QU1XEszIBaw2U8KdosvFIzDN/2wI9F663RVi6z6hXxoDnEaaljcstpxRbYi8vOl9IoZX
+         LSJ2WS2aY8uSFe2s0K5CqC73XcKYW3za8Bv6R8fZEaeAhoKOj5G5B+2Q8qaaD9wXBt33
+         wuUan6+5tKLV6eCYqXf7F9wl+I40Q+LknE2oY7xXfIVgrgWYPuHVVxmoEl+Ryc0q622p
+         2y6DljVohFy25XJSWOLIURXf5zWquvZsMflfybVQXVvf+dM5AnI0QJnggcTduzm6gbl6
+         eIRg==
+X-Forwarded-Encrypted: i=1; AJvYcCWOivrEwCRUD63AUBaZ8QJ2kR9VmdIDdbhlHYeu5fhzgZkT2gSYTF+ZcV+6orHwwFmAMQFsEacQZ4MfMiw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6qz96ToUNyAhVadrVMqvrejb6f6HUIZSUBtPKRe+KZXYCxyek
+	3HyQc6eholDTYAMmAmOtOJ4A77OSyjFBVD0Ilxw5NcrNgvtyqnJmkJt4XwzJvIAWPmnJcJ+/p/z
+	cnrKvb0VxXw==
+X-Google-Smtp-Source: AGHT+IEZn6rur6/gnO9De4Zq3up1HMcj0eMjKblw43oh13iMWFKMc9F0JoX/YucCsBiBQbky93ivlA4HozSw
+X-Received: from pfbeg26.prod.google.com ([2002:a05:6a00:801a:b0:742:a83f:bc00])
+ (user=jyescas job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:3492:b0:740:596e:1489
+ with SMTP id d2e1a72fcca58-742acd736e4mr28533320b3a.23.1747864691174; Wed, 21
+ May 2025 14:58:11 -0700 (PDT)
+Date: Wed, 21 May 2025 14:57:45 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3a01:b0:3d6:cbad:235c with SMTP id
- e9e14a558f8ab-3db8573b700mr221390045ab.6.1747864673982; Wed, 21 May 2025
- 14:57:53 -0700 (PDT)
-Date: Wed, 21 May 2025 14:57:53 -0700
-In-Reply-To: <682c7f0d.a00a0220.29bc26.027d.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <682e4c61.a00a0220.2a3337.0006.GAE@google.com>
-Subject: Re: [syzbot] Re: BUG: sleeping function called from invalid context
- in team_change_rx_flags
-From: syzbot <syzbot+b191b5ccad8d7a986286@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.1143.g0be31eac6b-goog
+Message-ID: <20250521215807.1860663-1-jyescas@google.com>
+Subject: [PATCH v7] mm: Add CONFIG_PAGE_BLOCK_ORDER to select page block order
+From: Juan Yescas <jyescas@google.com>
+To: Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Juan Yescas <jyescas@google.com>, Zi Yan <ziy@nvidia.com>, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc: tjmercier@google.com, isaacmanjarres@google.com, kaleshsingh@google.com, 
+	masahiroy@kernel.org, Minchan Kim <minchan@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 
-For archival purposes, forwarding an incoming command email to
-linux-kernel@vger.kernel.org.
+Problem: On large page size configurations (16KiB, 64KiB), the CMA
+alignment requirement (CMA_MIN_ALIGNMENT_BYTES) increases considerably,
+and this causes the CMA reservations to be larger than necessary.
+This means that system will have less available MIGRATE_UNMOVABLE and
+MIGRATE_RECLAIMABLE page blocks since MIGRATE_CMA can't fallback to them.
 
-***
+The CMA_MIN_ALIGNMENT_BYTES increases because it depends on
+MAX_PAGE_ORDER which depends on ARCH_FORCE_MAX_ORDER. The value of
+ARCH_FORCE_MAX_ORDER increases on 16k and 64k kernels.
 
-Subject: Re: BUG: sleeping function called from invalid context in team_change_rx_flags
-Author: penguin-kernel@i-love.sakura.ne.jp
+For example, in ARM, the CMA alignment requirement when:
 
-#syz test
+- CONFIG_ARCH_FORCE_MAX_ORDER default value is used
+- CONFIG_TRANSPARENT_HUGEPAGE is set:
 
-diff --git a/drivers/net/team/team_core.c b/drivers/net/team/team_core.c
-index b75ceb90359f..e4e49f8e566f 100644
---- a/drivers/net/team/team_core.c
-+++ b/drivers/net/team/team_core.c
-@@ -933,7 +933,7 @@ static bool team_port_find(const struct team *team,
-  * Enable/disable port by adding to enabled port hashlist and setting
-  * port->index (Might be racy so reader could see incorrect ifindex when
-  * processing a flying packet, but that is not a problem). Write guarded
-- * by team->lock.
-+ * by RTNL.
+PAGE_SIZE | MAX_PAGE_ORDER | pageblock_order | CMA_MIN_ALIGNMENT_BYTES
+-----------------------------------------------------------------------
+   4KiB   |      10        |       9         |  4KiB * (2 ^  9) =   2MiB
+  16Kib   |      11        |      11         | 16KiB * (2 ^ 11) =  32MiB
+  64KiB   |      13        |      13         | 64KiB * (2 ^ 13) = 512MiB
+
+There are some extreme cases for the CMA alignment requirement when:
+
+- CONFIG_ARCH_FORCE_MAX_ORDER maximum value is set
+- CONFIG_TRANSPARENT_HUGEPAGE is NOT set:
+- CONFIG_HUGETLB_PAGE is NOT set
+
+PAGE_SIZE | MAX_PAGE_ORDER | pageblock_order |  CMA_MIN_ALIGNMENT_BYTES
+------------------------------------------------------------------------
+   4KiB   |      15        |      15         |  4KiB * (2 ^ 15) = 128MiB
+  16Kib   |      13        |      13         | 16KiB * (2 ^ 13) = 128MiB
+  64KiB   |      13        |      13         | 64KiB * (2 ^ 13) = 512MiB
+
+This affects the CMA reservations for the drivers. If a driver in a
+4KiB kernel needs 4MiB of CMA memory, in a 16KiB kernel, the minimal
+reservation has to be 32MiB due to the alignment requirements:
+
+reserved-memory {
+    ...
+    cma_test_reserve: cma_test_reserve {
+        compatible = "shared-dma-pool";
+        size = <0x0 0x400000>; /* 4 MiB */
+        ...
+    };
+};
+
+reserved-memory {
+    ...
+    cma_test_reserve: cma_test_reserve {
+        compatible = "shared-dma-pool";
+        size = <0x0 0x2000000>; /* 32 MiB */
+        ...
+    };
+};
+
+Solution: Add a new config CONFIG_PAGE_BLOCK_ORDER that
+allows to set the page block order in all the architectures.
+The maximum page block order will be given by
+ARCH_FORCE_MAX_ORDER.
+
+By default, CONFIG_PAGE_BLOCK_ORDER will have the same
+value that ARCH_FORCE_MAX_ORDER. This will make sure that
+current kernel configurations won't be affected by this
+change. It is a opt-in change.
+
+This patch will allow to have the same CMA alignment
+requirements for large page sizes (16KiB, 64KiB) as that
+in 4kb kernels by setting a lower pageblock_order.
+
+Tests:
+
+- Verified that HugeTLB pages work when pageblock_order is 1, 7, 10
+on 4k and 16k kernels.
+
+- Verified that Transparent Huge Pages work when pageblock_order
+is 1, 7, 10 on 4k and 16k kernels.
+
+- Verified that dma-buf heaps allocations work when pageblock_order
+is 1, 7, 10 on 4k and 16k kernels.
+
+Benchmarks:
+
+The benchmarks compare 16kb kernels with pageblock_order 10 and 7. The
+reason for the pageblock_order 7 is because this value makes the min
+CMA alignment requirement the same as that in 4kb kernels (2MB).
+
+- Perform 100K dma-buf heaps (/dev/dma_heap/system) allocations of
+SZ_8M, SZ_4M, SZ_2M, SZ_1M, SZ_64, SZ_8, SZ_4. Use simpleperf
+(https://developer.android.com/ndk/guides/simpleperf) to measure
+the # of instructions and page-faults on 16k kernels.
+The benchmark was executed 10 times. The averages are below:
+
+           # instructions         |     #page-faults
+    order 10     |  order 7       | order 10 | order 7
+--------------------------------------------------------
+ 13,891,765,770	 | 11,425,777,314 |    220   |   217
+ 14,456,293,487	 | 12,660,819,302 |    224   |   219
+ 13,924,261,018	 | 13,243,970,736 |    217   |   221
+ 13,910,886,504	 | 13,845,519,630 |    217   |   221
+ 14,388,071,190	 | 13,498,583,098 |    223   |   224
+ 13,656,442,167	 | 12,915,831,681 |    216   |   218
+ 13,300,268,343	 | 12,930,484,776 |    222   |   218
+ 13,625,470,223	 | 14,234,092,777 |    219   |   218
+ 13,508,964,965	 | 13,432,689,094 |    225   |   219
+ 13,368,950,667	 | 13,683,587,37  |    219   |   225
+-------------------------------------------------------------------
+ 13,803,137,433  | 13,131,974,268 |    220   |   220    Averages
+
+There were 4.85% #instructions when order was 7, in comparison
+with order 10.
+
+     13,803,137,433 - 13,131,974,268 = -671,163,166 (-4.86%)
+
+The number of page faults in order 7 and 10 were the same.
+
+These results didn't show any significant regression when the
+pageblock_order is set to 7 on 16kb kernels.
+
+- Run speedometer 3.1 (https://browserbench.org/Speedometer3.1/) 5 times
+ on the 16k kernels with pageblock_order 7 and 10.
+
+order 10 | order 7  | order 7 - order 10 | (order 7 - order 10) %
+-------------------------------------------------------------------
+  15.8	 |  16.4    |         0.6        |     3.80%
+  16.4	 |  16.2    |        -0.2        |    -1.22%
+  16.6	 |  16.3    |        -0.3        |    -1.81%
+  16.8	 |  16.3    |        -0.5        |    -2.98%
+  16.6	 |  16.8    |         0.2        |     1.20%
+-------------------------------------------------------------------
+  16.44     16.4            -0.04	          -0.24%   Averages
+
+The results didn't show any significant regression when the
+pageblock_order is set to 7 on 16kb kernels.
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Liam R. Howlett <Liam.Howlett@oracle.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: David Hildenbrand <david@redhat.com>
+CC: Mike Rapoport <rppt@kernel.org>
+Cc: Zi Yan <ziy@nvidia.com>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: Minchan Kim <minchan@kernel.org>
+Signed-off-by: Juan Yescas <jyescas@google.com>
+Acked-by: Zi Yan <ziy@nvidia.com>
+---
+Changes in v7:
+  - Update alignment calculation to 2MiB as per David's
+    observation.
+  - Update page block order calculation in mm/mm_init.c for
+    powerpc when CONFIG_HUGETLB_PAGE_SIZE_VARIABLE is set.
+
+Changes in v6:
+  - Applied the change provided by Zi Yan to fix
+    the Kconfig. The change consists in evaluating
+    to true or false in the if expression for range:
+    range 1 <symbol> if <expression to eval true/false>.
+
+Changes in v5:
+  - Remove the ranges for CONFIG_PAGE_BLOCK_ORDER. The
+    ranges with config definitions don't work in Kconfig,
+    for example (range 1 MY_CONFIG).
+  - Add PAGE_BLOCK_ORDER_MANUAL config for the
+    page block order number. The default value was not
+    defined.
+  - Fix typos reported by Andrew.
+  - Test default configs in powerpc. 
+
+Changes in v4:
+  - Set PAGE_BLOCK_ORDER in incluxe/linux/mmzone.h to
+    validate that MAX_PAGE_ORDER >= PAGE_BLOCK_ORDER at
+    compile time.
+  - This change fixes the warning in:
+    https://lore.kernel.org/oe-kbuild-all/202505091548.FuKO4b4v-lkp@intel.com/
+
+Changes in v3:
+  - Rename ARCH_FORCE_PAGE_BLOCK_ORDER to PAGE_BLOCK_ORDER
+    as per Matthew's suggestion.
+  - Update comments in pageblock-flags.h for pageblock_order
+    value when THP or HugeTLB are not used.
+
+Changes in v2:
+  - Add Zi's Acked-by tag.
+  - Move ARCH_FORCE_PAGE_BLOCK_ORDER config to mm/Kconfig as
+    per Zi and Matthew suggestion so it is available to
+    all the architectures.
+  - Set ARCH_FORCE_PAGE_BLOCK_ORDER to 10 by default when
+    ARCH_FORCE_MAX_ORDER is not available.
+
+ include/linux/mmzone.h          | 16 ++++++++++++++++
+ include/linux/pageblock-flags.h |  8 ++++----
+ mm/Kconfig                      | 34 +++++++++++++++++++++++++++++++++
+ mm/mm_init.c                    |  2 +-
+ 4 files changed, 55 insertions(+), 5 deletions(-)
+
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index 6ccec1bf2896..05610337bbb6 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -37,6 +37,22 @@
+ 
+ #define NR_PAGE_ORDERS (MAX_PAGE_ORDER + 1)
+ 
++/* Defines the order for the number of pages that have a migrate type. */
++#ifndef CONFIG_PAGE_BLOCK_ORDER
++#define PAGE_BLOCK_ORDER MAX_PAGE_ORDER
++#else
++#define PAGE_BLOCK_ORDER CONFIG_PAGE_BLOCK_ORDER
++#endif /* CONFIG_PAGE_BLOCK_ORDER */
++
++/*
++ * The MAX_PAGE_ORDER, which defines the max order of pages to be allocated
++ * by the buddy allocator, has to be larger or equal to the PAGE_BLOCK_ORDER,
++ * which defines the order for the number of pages that can have a migrate type
++ */
++#if (PAGE_BLOCK_ORDER > MAX_PAGE_ORDER)
++#error MAX_PAGE_ORDER must be >= PAGE_BLOCK_ORDER
++#endif
++
+ /*
+  * PAGE_ALLOC_COSTLY_ORDER is the order at which allocations are deemed
+  * costly to service.  That is between allocation orders which should
+diff --git a/include/linux/pageblock-flags.h b/include/linux/pageblock-flags.h
+index fc6b9c87cb0a..e73a4292ef02 100644
+--- a/include/linux/pageblock-flags.h
++++ b/include/linux/pageblock-flags.h
+@@ -41,18 +41,18 @@ extern unsigned int pageblock_order;
+  * Huge pages are a constant size, but don't exceed the maximum allocation
+  * granularity.
   */
- static void team_port_enable(struct team *team,
- 			     struct team_port *port)
-@@ -1660,8 +1660,6 @@ static int team_init(struct net_device *dev)
- 		goto err_options_register;
- 	netif_carrier_off(dev);
+-#define pageblock_order		MIN_T(unsigned int, HUGETLB_PAGE_ORDER, MAX_PAGE_ORDER)
++#define pageblock_order		MIN_T(unsigned int, HUGETLB_PAGE_ORDER, PAGE_BLOCK_ORDER)
  
--	lockdep_register_key(&team->team_lock_key);
--	__mutex_init(&team->lock, "team->team_lock_key", &team->team_lock_key);
- 	netdev_lockdep_set_classes(dev);
+ #endif /* CONFIG_HUGETLB_PAGE_SIZE_VARIABLE */
  
- 	return 0;
-@@ -1682,7 +1680,7 @@ static void team_uninit(struct net_device *dev)
- 	struct team_port *port;
- 	struct team_port *tmp;
+ #elif defined(CONFIG_TRANSPARENT_HUGEPAGE)
  
--	mutex_lock(&team->lock);
-+	ASSERT_RTNL();
- 	list_for_each_entry_safe(port, tmp, &team->port_list, list)
- 		team_port_del(team, port->dev);
+-#define pageblock_order		MIN_T(unsigned int, HPAGE_PMD_ORDER, MAX_PAGE_ORDER)
++#define pageblock_order		MIN_T(unsigned int, HPAGE_PMD_ORDER, PAGE_BLOCK_ORDER)
  
-@@ -1691,9 +1689,7 @@ static void team_uninit(struct net_device *dev)
- 	team_mcast_rejoin_fini(team);
- 	team_notify_peers_fini(team);
- 	team_queue_override_fini(team);
--	mutex_unlock(&team->lock);
- 	netdev_change_features(dev);
--	lockdep_unregister_key(&team->team_lock_key);
- }
+ #else /* CONFIG_TRANSPARENT_HUGEPAGE */
  
- static void team_destructor(struct net_device *dev)
-@@ -1778,7 +1774,7 @@ static void team_change_rx_flags(struct net_device *dev, int change)
- 	struct team_port *port;
- 	int inc;
+-/* If huge pages are not used, group by MAX_ORDER_NR_PAGES */
+-#define pageblock_order		MAX_PAGE_ORDER
++/* If huge pages are not used, group by PAGE_BLOCK_ORDER */
++#define pageblock_order		PAGE_BLOCK_ORDER
  
--	mutex_lock(&team->lock);
-+	ASSERT_RTNL();
- 	list_for_each_entry(port, &team->port_list, list) {
- 		if (change & IFF_PROMISC) {
- 			inc = dev->flags & IFF_PROMISC ? 1 : -1;
-@@ -1789,7 +1785,6 @@ static void team_change_rx_flags(struct net_device *dev, int change)
- 			dev_set_allmulti(port->dev, inc);
- 		}
- 	}
--	mutex_unlock(&team->lock);
- }
+ #endif /* CONFIG_HUGETLB_PAGE */
  
- static void team_set_rx_mode(struct net_device *dev)
-@@ -1811,14 +1806,13 @@ static int team_set_mac_address(struct net_device *dev, void *p)
- 	struct team *team = netdev_priv(dev);
- 	struct team_port *port;
+diff --git a/mm/Kconfig b/mm/Kconfig
+index e113f713b493..13a5c4f6e6b6 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -989,6 +989,40 @@ config CMA_AREAS
  
-+	ASSERT_RTNL();
- 	if (dev->type == ARPHRD_ETHER && !is_valid_ether_addr(addr->sa_data))
- 		return -EADDRNOTAVAIL;
- 	dev_addr_set(dev, addr->sa_data);
--	mutex_lock(&team->lock);
- 	list_for_each_entry(port, &team->port_list, list)
- 		if (team->ops.port_change_dev_addr)
- 			team->ops.port_change_dev_addr(team, port);
--	mutex_unlock(&team->lock);
- 	return 0;
- }
+ 	  If unsure, leave the default value "8" in UMA and "20" in NUMA.
  
-@@ -1829,10 +1823,10 @@ static int team_change_mtu(struct net_device *dev, int new_mtu)
- 	int err;
- 
- 	/*
--	 * Alhough this is reader, it's guarded by team lock. It's not possible
-+	 * Alhough this is reader, it's guarded by RTNL. It's not possible
- 	 * to traverse list in reverse under rcu_read_lock
- 	 */
--	mutex_lock(&team->lock);
-+	ASSERT_RTNL();
- 	team->port_mtu_change_allowed = true;
- 	list_for_each_entry(port, &team->port_list, list) {
- 		err = dev_set_mtu(port->dev, new_mtu);
-@@ -1843,7 +1837,6 @@ static int team_change_mtu(struct net_device *dev, int new_mtu)
- 		}
- 	}
- 	team->port_mtu_change_allowed = false;
--	mutex_unlock(&team->lock);
- 
- 	WRITE_ONCE(dev->mtu, new_mtu);
- 
-@@ -1853,7 +1846,6 @@ static int team_change_mtu(struct net_device *dev, int new_mtu)
- 	list_for_each_entry_continue_reverse(port, &team->port_list, list)
- 		dev_set_mtu(port->dev, dev->mtu);
- 	team->port_mtu_change_allowed = false;
--	mutex_unlock(&team->lock);
- 
- 	return err;
- }
-@@ -1904,23 +1896,21 @@ static int team_vlan_rx_add_vid(struct net_device *dev, __be16 proto, u16 vid)
- 	int err;
- 
- 	/*
--	 * Alhough this is reader, it's guarded by team lock. It's not possible
-+	 * Alhough this is reader, it's guarded by RTNL. It's not possible
- 	 * to traverse list in reverse under rcu_read_lock
- 	 */
--	mutex_lock(&team->lock);
-+	ASSERT_RTNL();
- 	list_for_each_entry(port, &team->port_list, list) {
- 		err = vlan_vid_add(port->dev, proto, vid);
- 		if (err)
- 			goto unwind;
- 	}
--	mutex_unlock(&team->lock);
- 
- 	return 0;
- 
- unwind:
- 	list_for_each_entry_continue_reverse(port, &team->port_list, list)
- 		vlan_vid_del(port->dev, proto, vid);
--	mutex_unlock(&team->lock);
- 
- 	return err;
- }
-@@ -1930,10 +1920,9 @@ static int team_vlan_rx_kill_vid(struct net_device *dev, __be16 proto, u16 vid)
- 	struct team *team = netdev_priv(dev);
- 	struct team_port *port;
- 
--	mutex_lock(&team->lock);
-+	ASSERT_RTNL();
- 	list_for_each_entry(port, &team->port_list, list)
- 		vlan_vid_del(port->dev, proto, vid);
--	mutex_unlock(&team->lock);
- 
- 	return 0;
- }
-@@ -1955,9 +1944,8 @@ static void team_netpoll_cleanup(struct net_device *dev)
++#
++# Select this config option from the architecture Kconfig, if available, to set
++# the max page order for physically contiguous allocations.
++#
++config ARCH_FORCE_MAX_ORDER
++	int
++
++#
++# When ARCH_FORCE_MAX_ORDER is not defined,
++# the default page block order is MAX_PAGE_ORDER (10) as per
++# include/linux/mmzone.h.
++#
++config PAGE_BLOCK_ORDER
++	int "Page Block Order"
++	range 1 10 if ARCH_FORCE_MAX_ORDER = 0
++	default 10 if ARCH_FORCE_MAX_ORDER = 0
++	range 1 ARCH_FORCE_MAX_ORDER if ARCH_FORCE_MAX_ORDER != 0
++	default ARCH_FORCE_MAX_ORDER if ARCH_FORCE_MAX_ORDER != 0
++	help
++	  The page block order refers to the power of two number of pages that
++	  are physically contiguous and can have a migrate type associated to
++	  them. The maximum size of the page block order is limited by
++	  ARCH_FORCE_MAX_ORDER.
++
++	  This config allows overriding the default page block order when the
++	  page block order is required to be smaller than ARCH_FORCE_MAX_ORDER
++	  or MAX_PAGE_ORDER.
++
++	  Reducing pageblock order can negatively impact THP generation
++	  success rate. If your workloads uses THP heavily, please use this
++	  option with caution.
++
++	  Don't change if unsure.
++
+ config MEM_SOFT_DIRTY
+ 	bool "Track memory changes"
+ 	depends on CHECKPOINT_RESTORE && HAVE_ARCH_SOFT_DIRTY && PROC_FS
+diff --git a/mm/mm_init.c b/mm/mm_init.c
+index 327764ca0ee4..ada5374764e4 100644
+--- a/mm/mm_init.c
++++ b/mm/mm_init.c
+@@ -1511,7 +1511,7 @@ static inline void setup_usemap(struct zone *zone) {}
+ /* Initialise the number of pages represented by NR_PAGEBLOCK_BITS */
+ void __init set_pageblock_order(void)
  {
- 	struct team *team = netdev_priv(dev);
+-	unsigned int order = MAX_PAGE_ORDER;
++	unsigned int order = PAGE_BLOCK_ORDER;
  
--	mutex_lock(&team->lock);
-+	ASSERT_RTNL();
- 	__team_netpoll_cleanup(team);
--	mutex_unlock(&team->lock);
- }
- 
- static int team_netpoll_setup(struct net_device *dev)
-@@ -1966,7 +1954,7 @@ static int team_netpoll_setup(struct net_device *dev)
- 	struct team_port *port;
- 	int err = 0;
- 
--	mutex_lock(&team->lock);
-+	ASSERT_RTNL();
- 	list_for_each_entry(port, &team->port_list, list) {
- 		err = __team_port_enable_netpoll(port);
- 		if (err) {
-@@ -1974,7 +1962,6 @@ static int team_netpoll_setup(struct net_device *dev)
- 			break;
- 		}
- 	}
--	mutex_unlock(&team->lock);
- 	return err;
- }
- #endif
-@@ -1985,9 +1972,8 @@ static int team_add_slave(struct net_device *dev, struct net_device *port_dev,
- 	struct team *team = netdev_priv(dev);
- 	int err;
- 
--	mutex_lock(&team->lock);
-+	ASSERT_RTNL();
- 	err = team_port_add(team, port_dev, extack);
--	mutex_unlock(&team->lock);
- 
- 	if (!err)
- 		netdev_change_features(dev);
-@@ -2000,18 +1986,12 @@ static int team_del_slave(struct net_device *dev, struct net_device *port_dev)
- 	struct team *team = netdev_priv(dev);
- 	int err;
- 
--	mutex_lock(&team->lock);
-+	ASSERT_RTNL();
- 	err = team_port_del(team, port_dev);
--	mutex_unlock(&team->lock);
- 
- 	if (err)
- 		return err;
- 
--	if (netif_is_team_master(port_dev)) {
--		lockdep_unregister_key(&team->team_lock_key);
--		lockdep_register_key(&team->team_lock_key);
--		lockdep_set_class(&team->lock, &team->team_lock_key);
--	}
- 	netdev_change_features(dev);
- 
- 	return err;
-@@ -2308,6 +2288,7 @@ static struct team *team_nl_team_get(struct genl_info *info)
- 	struct net_device *dev;
- 	struct team *team;
- 
-+	ASSERT_RTNL();
- 	if (!info->attrs[TEAM_ATTR_TEAM_IFINDEX])
- 		return NULL;
- 
-@@ -2319,13 +2300,12 @@ static struct team *team_nl_team_get(struct genl_info *info)
- 	}
- 
- 	team = netdev_priv(dev);
--	mutex_lock(&team->lock);
- 	return team;
- }
- 
- static void team_nl_team_put(struct team *team)
- {
--	mutex_unlock(&team->lock);
-+	ASSERT_RTNL();
- 	dev_put(team->dev);
- }
- 
-@@ -2961,11 +2941,8 @@ static void __team_port_change_port_removed(struct team_port *port)
- 
- static void team_port_change_check(struct team_port *port, bool linkup)
- {
--	struct team *team = port->team;
--
--	mutex_lock(&team->lock);
-+	ASSERT_RTNL();
- 	__team_port_change_check(port, linkup);
--	mutex_unlock(&team->lock);
- }
- 
- 
-diff --git a/drivers/net/team/team_mode_activebackup.c b/drivers/net/team/team_mode_activebackup.c
-index e0f599e2a51d..4e133451f4d6 100644
---- a/drivers/net/team/team_mode_activebackup.c
-+++ b/drivers/net/team/team_mode_activebackup.c
-@@ -68,7 +68,7 @@ static void ab_active_port_get(struct team *team, struct team_gsetter_ctx *ctx)
- 	struct team_port *active_port;
- 
- 	active_port = rcu_dereference_protected(ab_priv(team)->active_port,
--						lockdep_is_held(&team->lock));
-+						rtnl_is_locked());
- 	if (active_port)
- 		ctx->data.u32_val = active_port->dev->ifindex;
- 	else
-diff --git a/drivers/net/team/team_mode_loadbalance.c b/drivers/net/team/team_mode_loadbalance.c
-index 00f8989c29c0..6f9944108f5a 100644
---- a/drivers/net/team/team_mode_loadbalance.c
-+++ b/drivers/net/team/team_mode_loadbalance.c
-@@ -302,7 +302,7 @@ static int lb_bpf_func_set(struct team *team, struct team_gsetter_ctx *ctx)
- 		/* Clear old filter data */
- 		__fprog_destroy(lb_priv->ex->orig_fprog);
- 		orig_fp = rcu_dereference_protected(lb_priv->fp,
--						lockdep_is_held(&team->lock));
-+						    rtnl_is_locked());
- 	}
- 
- 	rcu_assign_pointer(lb_priv->fp, fp);
-@@ -325,7 +325,7 @@ static void lb_bpf_func_free(struct team *team)
- 
- 	__fprog_destroy(lb_priv->ex->orig_fprog);
- 	fp = rcu_dereference_protected(lb_priv->fp,
--				       lockdep_is_held(&team->lock));
-+				       rtnl_is_locked());
- 	bpf_prog_destroy(fp);
- }
- 
-@@ -336,7 +336,7 @@ static void lb_tx_method_get(struct team *team, struct team_gsetter_ctx *ctx)
- 	char *name;
- 
- 	func = rcu_dereference_protected(lb_priv->select_tx_port_func,
--					 lockdep_is_held(&team->lock));
-+					 rtnl_is_locked());
- 	name = lb_select_tx_port_get_name(func);
- 	BUG_ON(!name);
- 	ctx->data.str_val = name;
-@@ -478,7 +478,8 @@ static void lb_stats_refresh(struct work_struct *work)
- 	team = lb_priv_ex->team;
- 	lb_priv = get_lb_priv(team);
- 
--	if (!mutex_trylock(&team->lock)) {
-+	/* This rtnl_trylock() might be easy to compete... */
-+	if (!rtnl_trylock()) {
- 		schedule_delayed_work(&lb_priv_ex->stats.refresh_dw, 0);
- 		return;
- 	}
-@@ -515,7 +516,7 @@ static void lb_stats_refresh(struct work_struct *work)
- 	schedule_delayed_work(&lb_priv_ex->stats.refresh_dw,
- 			      (lb_priv_ex->stats.refresh_interval * HZ) / 10);
- 
--	mutex_unlock(&team->lock);
-+	rtnl_unlock();
- }
- 
- static void lb_stats_refresh_interval_get(struct team *team,
-diff --git a/include/linux/if_team.h b/include/linux/if_team.h
-index cdc684e04a2f..ce97d891cf72 100644
---- a/include/linux/if_team.h
-+++ b/include/linux/if_team.h
-@@ -191,8 +191,6 @@ struct team {
- 
- 	const struct header_ops *header_ops_cache;
- 
--	struct mutex lock; /* used for overall locking, e.g. port lists write */
--
- 	/*
- 	 * List of enabled ports and their count
- 	 */
-@@ -223,7 +221,6 @@ struct team {
- 		atomic_t count_pending;
- 		struct delayed_work dw;
- 	} mcast_rejoin;
--	struct lock_class_key team_lock_key;
- 	long mode_priv[TEAM_MODE_PRIV_LONGS];
- };
- 
+ 	/* Check that pageblock_nr_pages has not already been setup */
+ 	if (pageblock_order)
 -- 
-2.43.5
-
+2.49.0.1143.g0be31eac6b-goog
 
