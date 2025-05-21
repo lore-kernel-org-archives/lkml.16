@@ -1,172 +1,124 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F64B2472B4;
-	Wed, 21 May 2025 10:16:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0BE824BBFA;
+	Wed, 21 May 2025 10:17:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747822581; cv=none; b=aMhwNx9ccpJtYRP+jwPsMNY6N//aNMUbzdoSopyoTfRm72n1aZVN4w266E6mSp+WXiaM/qUoOrepDwBIkkM7fugt3482N2XAVA8FvRq5KBjQwJ8jzHIWFVy52DpEdX21PxQ/BBEbjLtVW7jtUDCVderaWsY0NPgmuu53sy/hN/E=
+	t=1747822640; cv=none; b=mbrTldyS6ZSawZ5emcl/y9Tssf75rvwhgS/Qj8HHn5v2zjjGjG4botQ/rugkmPUjLb8j1ojh+yac4vXIjTLbFoCaZ2QVEsSvn+7obH0g0ORAI4Ospk/9Lvx+Wc+lROlZlIZ3aZLm99yVtsXt3H2JE8hCv3GVly/0HftIJ6vxt08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747822581; c=relaxed/simple;
-	bh=/k/a4J1ZQRWcPa1nH/vET9PeEU5HG1j8mbumv3W+SpQ=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=bt735nEqfocNsR/nTOfjlNDXNDBnJA9kzMLAQzFriSLW9AspyoJieypEoDMpsiEsyBEPTfFN6QzVnkzvIYnw9ubQcfE8CsKVTD1lhb7DZen95dsfRyFcg/ZjZw4s62iwrkMIkJZUQerGwKNkrIoRCHHFi2qRMO58NDNyDlJr+EM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=L9Lrz04i; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="L9Lrz04i"
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54L9l708029646;
-	Wed, 21 May 2025 12:16:04 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	mzFSpe7hA7gsH1lLUxy+lsRSjB0E3F7awJ9YqjsAY4c=; b=L9Lrz04iPTNTANgU
-	AKn3QsTq5dcgGz47H847d41uhxzoY61n5IoRI0nrz4Co/AAerPLM1nXJl+Gka6Mc
-	xpuoprRQrzPLxjwWcHd9ywcv89aIa8MmPt+Uy52O5UtBbHAlI3XGZRunVv4vpF5T
-	zoLxA2NfNvHX6g/Qp+eIgppFFmFngRtaNv7H2b5BG3ao/A0ir6Ne6QOhq1UU4MwP
-	dMw0y5vMCCR+2d5Cce7ik92e1mbry3KRzGFu/EMaQIJG+1Tj1ohirKJRub5LVpxF
-	K19jwKBV9gMhfIVdLueGckH8Dmzc9uU7fB4TW8smZAsFyOZNmin++aI5/zBp2a03
-	Ni/JnA==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46rwff3fgh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 12:16:04 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id B70F940045;
-	Wed, 21 May 2025 12:14:55 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 14265BAEB1E;
-	Wed, 21 May 2025 12:14:10 +0200 (CEST)
-Received: from [10.48.81.67] (10.48.81.67) by SHFDAG1NODE2.st.com
- (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 21 May
- 2025 12:14:09 +0200
-Message-ID: <929f6f1f-d47f-4954-8c8b-91c932127975@foss.st.com>
-Date: Wed, 21 May 2025 12:14:08 +0200
+	s=arc-20240116; t=1747822640; c=relaxed/simple;
+	bh=uJK95ugA0HSoGYOFlI28Y1sjfGBHT7L/o9KnriVaucE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=P7VjIk8j6WakftCbBVFbiwsMklhKVUn3EWt/LXsIWslHijv4DdV511kkreZubYUIsqbrvF+Dbkqp4V2nQjJKOM4mnJKVK2q5QuS05wEP/x5QDsIxZvRb07nWxMM41PEOjh1/KODgw6ssHLoaOjZwnpHdzdbLOWEJOQBWlpJkhO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-5240764f7c1so1940938e0c.2;
+        Wed, 21 May 2025 03:17:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747822635; x=1748427435;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Pl0dTytafVhoCB0H0aa0pIPSG1UF8OiXB5MtAo2OXlg=;
+        b=PhtvUVL7hQkiKSb0qdGDZ1fe60TrBVeHyBJNDrFFf9Z3v71wrzBR4Je+U97yIH8lIi
+         E+3wIm3n11ICMhyCBJ3hPmaHuEcweOcm566zsO9YMpbdflhjgWAhL72AzIXH284K4tX5
+         1n+0u2nlM+Vlski2jnZeMC2UlPEoSai1OoH2eRyPBq66iDVV30/JLsxWVNIyNaR0LO6z
+         QWNq/tTyb9IUhmtIjPqDL786ZqfsGGfBGVKGGH12SK4m9hxTnMQN+ksmmmNjEj2KdrBg
+         6Y9DmlA/OiNMoq1/Lov5I2wsRI+CHbxzWDC+89nUytWr9YTyG7o6BE9dF802tfmYCmRS
+         0llQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV9oRZDLW6h1PDOtp0YhgaP9+7C8Gi73FBx7RI+v9f8BaKNlT7P2MyzUtlFNrT4Cb2PjPuP0t0njJPg1m3s4DmCnQ0=@vger.kernel.org, AJvYcCVJLU1kUsuaua52PAXqlSkXYrTd+z3kC7TBo9aLVOs9QD2C43faag+2jcq0ZKp7H3swJtkFHo8vQ3Gg@vger.kernel.org, AJvYcCVzJmOSE9xWIve2DtGaDPpYMk45exmjJ85hF9uAzTmyfevCaY/t5XQmH7or4CRBiaDivcKLCR/eowlR5CfS@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLtTiJP2hrLz/B4+kQ3mbmjB8+A295mXSX2S1OXqNOAuLmtRlt
+	P1LkORTdnu9wH77VGqSjiqtn5SfDnK/49Nw5FHi1lBHc4RFUbN25C2UB0nJGB8ae
+X-Gm-Gg: ASbGnctiU38UBo/Ypmn10asAYfwTiE+PT5RwY63Q1gRjn2uo2qukeKI1mHXy6QM24QC
+	NMZdzpl8QP3GjpSYVs0KUKRa6YiOANdPMA8/aimQxNToEW2DcmRr6eVvB+EUXOJq0dWHE7PQDB4
+	OoHiy9bKBDtbbkWxrKLWHLhoV+iPjrBCcsnUmT+yos6w459nniym3H9bxpSL1myVR9XqNl5ZEs2
+	2mzx1dylDeaDBnqclfQD2Zt1djYaPkQk8vJon0dNhH2zmyt4RiJ3r0LMxE7Dhve0TKVxjGzoiXp
+	b/QjEc4YzFgpe+3Yr7fx5btGcukbtWjA11RMalDmet+em6bt+f920tXDcKxbM2TmEhBb+75CkU9
+	7/L7GjwU2V34hQw==
+X-Google-Smtp-Source: AGHT+IGX6d+ZVKWaADCU+OWm0aUNQ4iMjbHIYa9e2dH/6HJEzytKvQzfH9DI8ycTaSchtRefhx+wNw==
+X-Received: by 2002:a05:6122:885:b0:526:42c2:8453 with SMTP id 71dfb90a1353d-52dba9649b2mr17818459e0c.7.1747822635320;
+        Wed, 21 May 2025 03:17:15 -0700 (PDT)
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com. [209.85.217.49])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52dba96a3efsm9872256e0c.26.2025.05.21.03.17.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 May 2025 03:17:14 -0700 (PDT)
+Received: by mail-vs1-f49.google.com with SMTP id ada2fe7eead31-4e041582fd2so1917244137.0;
+        Wed, 21 May 2025 03:17:14 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVKv6pQDLyjhwIefWpMXGTb0F6g45eekpaH14KlprK3QzG9vp76tmsxJRZpnH8+tI+0vDUBm+pl3yI1zzFVg5HxvX8=@vger.kernel.org, AJvYcCVwNbIl3Plr1nD/BiRn3H+5icNw3LaXE/1dZgB32oIFnWcbf4D2rxEgyVPO7HomHye5YyoOsCg102hR@vger.kernel.org, AJvYcCX6xZ4GKPrsvZ3uMw2753ZMijedgIGHKfW8zPK+AUzTM0lMTVf07c9rqB8WKzphLUqPx9nUUyMABV4Hki+4@vger.kernel.org
+X-Received: by 2002:a05:6102:c0e:b0:4bd:22d5:fbd7 with SMTP id
+ ada2fe7eead31-4dfa6b9be4fmr20657171137.11.1747822634503; Wed, 21 May 2025
+ 03:17:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/8] pinctrl: stm32: Introduce HDP driver
-From: Clement LE GOFFIC <clement.legoffic@foss.st.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-CC: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin
-	<mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, <linux-kernel@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20250520-hdp-upstream-v2-0-53f6b8b5ffc8@foss.st.com>
- <20250520-hdp-upstream-v2-2-53f6b8b5ffc8@foss.st.com>
- <CACRpkdZp6D-duzyVRLv5+PURb3Nu69njJx_33D-2aYS4DjmsoQ@mail.gmail.com>
- <94795d0c-0c73-41eb-ada6-9a01b2ac5892@foss.st.com>
-Content-Language: en-US
-In-Reply-To: <94795d0c-0c73-41eb-ada6-9a01b2ac5892@foss.st.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-21_03,2025-05-20_03,2025-03-28_01
+References: <20250513131412.253091-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250513131412.253091-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250513131412.253091-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 21 May 2025 12:17:02 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdU+NBJNcijYCK3SJrqL7xEyW9wveT40iHoH7n_E1o+R-w@mail.gmail.com>
+X-Gm-Features: AX0GCFtxmB0B30CkwBMhEHZGJnl-GCxoFG6iXqHAFR1FCnIMGsgF4hqdZ1BWFk4
+Message-ID: <CAMuHMdU+NBJNcijYCK3SJrqL7xEyW9wveT40iHoH7n_E1o+R-w@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] arm64: dts: renesas: r9a09g057: Add GBETH nodes
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 5/21/25 11:49, Clement LE GOFFIC wrote:
-> On 5/21/25 00:34, Linus Walleij wrote:
->> Hi Clément,
->>
->> thanks for your patch!
->>
->> On Tue, May 20, 2025 at 5:04 PM Clément Le Goffic
->> <clement.legoffic@foss.st.com> wrote:
->>
->>> This patch introduce the driver for the Hardware Debug Port available on
->>> STM32MP platforms. The HDP allows the observation of internal SoC
->>> signals by using multiplexers. Each HDP port can provide up to 16
->>> internal signals (one of them can be software controlled as a GPO).
->>>
->>> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
->>
->> (...)
->>> +static int stm32_hdp_gpio_get_direction(struct gpio_chip *gc, 
->>> unsigned int offset)
->>> +{
->>> +       return GPIO_LINE_DIRECTION_OUT;
->>> +}
->>
->> That's reasonable.
->>
->>> +static int stm32_hdp_gpio_get(struct gpio_chip *gc, unsigned int 
->>> offset)
->>> +{
->>> +       struct stm32_hdp *hdp = gpiochip_get_data(gc);
->>> +
->>> +       if (((hdp->mux_conf & HDP_MUX_MASK(offset))) == 
->>> HDP_MUX_GPOVAL(offset))
->>> +               return !!(readl_relaxed(hdp->base + HDP_GPOVAL) & 
->>> BIT(offset));
->>> +       else
->>> +               return !!(readl_relaxed(hdp->base + HDP_VAL) & 
->>> BIT(offset));
->>> +}
->>
->> ...but you still make it possible to read the value of the line
->> if it's not muxed as GPO?
->>
->> Should it not stm32_hdp_gpio_get_direction() return
->> GPIO_LINE_DIRECTION_IN if HDP_MUX_MASK(offset))) != 
->> HDP_MUX_GPOVAL(offset)?
-> 
-> Hi, oops, you're right !
+Hi Prabhakar,
 
-I've answer too quickly. All the pins are "out" in fact.
-The hardware is not able to read input signal.
-I wanted to implement a way to read the register value in any case by 
-leaving the line direction unchanged.
+On Tue, 13 May 2025 at 15:14, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Renesas RZ/V2H(P) SoC is equipped with 2x Synopsys DesignWare Ethernet
+> Quality-of-Service IP block version 5.20. Add GBETH nodes to R9A09G057
+> RZ/V2H(P) SoC DTSI.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+> v2->v3:
+> - Added the mdio0/1 nodes to SoC DTSI.
 
->>
->>> +static void stm32_hdp_gpio_set(struct gpio_chip *gc, unsigned int 
->>> offset, int value)
->>> +{
->>> +       struct stm32_hdp *hdp = gpiochip_get_data(gc);
->>> +
->>> +       if (value)
->>> +               writel_relaxed(BIT(offset), hdp->base + HDP_GPOSET);
->>> +       else
->>> +               writel_relaxed(BIT(offset), hdp->base + HDP_GPOCLR);
->>> +}
->>
->> Can't you just use GPIO_GENERIC for this?
->>
->> bgpio_init(gc, dev, ARRAY_SIZE(stm32_hdp_pins), // == 8
->>      hdp->base + HDP_VAL,
->>      hdp->base + HDP_GPOSET,
->>      hdp->base + HDP_GPOCLR,
->>      NULL,
->>      NULL,
->>      0);
->>
->> The default behaviour of GPIO MMIO is to read the output register
->> for the value if the line is in output mode.
->>
->> You may wanna override the .get_direction() callback after bgpio_init()
->> and before registering the chip, either with what you have or what
->> I described above.
-> 
-> I didn't know about it, I'll take a look and provide a V3.
-> 
-> Thank you,
-> 
-> Clément
-> 
->> Yours,
->> Linus Walleij
-> 
+Thanks for the update!
 
+> --- a/arch/arm64/boot/dts/renesas/r9a09g057.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r9a09g057.dtsi
+> @@ -701,6 +701,215 @@ sdhi2_vqmmc: vqmmc-regulator {
+>                                 status = "disabled";
+>                         };
+>                 };
+> +
+> +               eth0: ethernet@15c30000 {
+
+> +                       mdio0: mdio {
+> +                               compatible = "snps,dwmac-mdio";
+> +                               #address-cells = <0x1>;
+
+1
+
+> +                               #size-cells = <0x0>;
+
+0
+
+The rest LGTM, so
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v6.17 with the above fixed.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
