@@ -1,85 +1,62 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AABC1537C6;
-	Wed, 21 May 2025 16:33:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EE071537C6;
+	Wed, 21 May 2025 16:35:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747845222; cv=none; b=AUQr5AGN3yKT3lNnUlr3x0TY2v6jgSsKnNJHYj7ReGSv9jY/xIIrgkkk9GYd5gMhR9csGN8dJJam8XDpnr9izeQNh9bP0EWrPWdTDq4+th1/eg3w4WA4XQKUS6IT1E2x0jqhwdNfMHODY5TC6p39m5WIKb7P29q4+JgbDK8VRQE=
+	t=1747845306; cv=none; b=JGX9AIQbfBL2PtQYnuChHSwX/EFBgIfYGsQLeJ7CQb7rkOeL7nT9l093nFcLKyrEjZpDbMlD5JRoOwi8IoMxKtHeTNH1+M5FbXsu7L/myzXkdsktJCavtwY5fmnU3xP2IWV1q7XTnHJkU0ElnIqaPGPNfg/kSRAe1vjuiIeFktI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747845222; c=relaxed/simple;
-	bh=yYL5QTXg94mpBYScKovOIYefpClIwY3axIYfrJSf6o8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DCOtOJRWkGtYQdzXs3bl2kgjseM6x9mNsrWgPWbv4nq5j9g/7IgMfyelQj0TE762RlGPlzHuMHXTzJiRTr2/wGg9zU3toQdNfYy30J/mOtmcz+s+10j5BIYrTK32/98n1vNxc51WpW7QSJfJ1I1ziilrf1HmbHBjqdBn/j++LK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SgLL2NFI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747845306; c=relaxed/simple;
+	bh=WlSMZxIVGKgk3pfDff8mZ2qggiwFRsXoxjNQzoTE4yU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jc+f/QzdPfivETbcRkbUGA9jdr8RP+rIFH30zhFd4dD7/7npLO/xku2PyWASOyEDAzKAlbUnmRCC7GZ+FYr+NSZdmaoNkqExq3+OrBBUirGizGVuKCExhRGTd7yBspaPcGqXME+JMAQ12GEviDhasvsGK2XiBrq7NUWHAruwamY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ib09jWN1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SgLL2NFI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 440B9C4CEE4;
-	Wed, 21 May 2025 16:33:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ib09jWN1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B843C4CEE7;
+	Wed, 21 May 2025 16:35:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747845221;
-	bh=yYL5QTXg94mpBYScKovOIYefpClIwY3axIYfrJSf6o8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=SgLL2NFIy+hUJkuFsNEjz+YpHCAqL1WHRL2k+0pqIHJfNXGJ9Kpr5CXdnsgBYgPg9
-	 TjplK59dhSaplvs2J0PA9VBsNxiIqIPkIjFi78y9RACCOR8D5UFd4ToflTF1gj2MAU
-	 /a11FqG35IMrNmIt5YBuk2JEygwnajsRXj//52eBtI0rY1dn+4NXYJ3aOR0ZVFzE3V
-	 ZdYM6FnOr8UzUnUVpa8gKeNUMjNWP6gBzNUPpHfipVBCoSL32MS32mu2r5iz6QQwEI
-	 prLCQLqARJm+N0FAj/Wr7C4DFJK0yR5/eZOoBDZjMR5wHqygxMZlFJyK3cSC9zrdAd
-	 25tiH2LwcyA5w==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Joyce Ooi <joyce.ooi@intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] pci: altera: remove unused 'node' variable
-Date: Wed, 21 May 2025 18:29:48 +0200
-Message-Id: <20250521163329.2137973-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	s=k20201202; t=1747845305;
+	bh=WlSMZxIVGKgk3pfDff8mZ2qggiwFRsXoxjNQzoTE4yU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Ib09jWN1SgKcjMnB2M3jGaKTGHxhqDlLfyCnHFsYMXbVBnzO81zsrSQ9Jxl8f5Ca8
+	 kaF7AXEvWuNAGosppZFgLlDM5v860PiXMMe3KH2ctrS4ugFWP+0/iPUtbHrS3ntQf6
+	 vjfCY4ZXGGzzlJNlUkSy7rYYp39j4oFt3qkquOY2tDiS8Tb0cf6mF9A6AAq6liAaal
+	 gp+ER8nx/JS6EUecFN/TLCE6SNKa3xXOiqKzlghoD71xoqE1CamaVCuW3W0mIspv0U
+	 yS8g7kiozI190moOp45WVLM2ztta701B+TqjChFz90dxsHeurSYJ5RKymGBn9qPAM5
+	 abNhUd+4XYRaw==
+Date: Wed, 21 May 2025 06:35:04 -1000
+From: Tejun Heo <tj@kernel.org>
+To: shashank.mahadasyam@sony.com
+Cc: Johannes Weiner <hannes@cmpxchg.org>,
+	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+	Jonathan Corbet <corbet@lwn.net>, cgroups@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Shinya Takumi <shinya.takumi@sony.com>
+Subject: Re: [PATCH v2 1/3] cgroup, docs: be specific about bandwidth control
+ of rt processes
+Message-ID: <aC4AuPxKGcTf1A5t@slm.duckdns.org>
+References: <20250520-rt-and-cpu-controller-doc-v2-0-70a2b6a1b703@sony.com>
+ <20250520-rt-and-cpu-controller-doc-v2-1-70a2b6a1b703@sony.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250520-rt-and-cpu-controller-doc-v2-1-70a2b6a1b703@sony.com>
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Tue, May 20, 2025 at 11:07:45PM +0900, Shashank Balaji via B4 Relay wrote:
+> From: Shashank Balaji <shashank.mahadasyam@sony.com>
+> 
+> Signed-off-by: Shashank Balaji <shashank.mahadasyam@sony.com>
 
-This variable is only used when CONFIG_OF is enabled:
+Applied to cgroup/for-6.16.
 
-drivers/pci/controller/pcie-altera.c: In function 'altera_pcie_init_irq_domain':
-drivers/pci/controller/pcie-altera.c:855:29: error: unused variable 'node' [-Werror=unused-variable]
-  855 |         struct device_node *node = dev->of_node;
+Thanks.
 
-Use dev_fwnode() in place of of_node_to_fwnode() to avoid this.
-
-Fixes: bbc94e6f72f2 ("PCI: Switch to irq_domain_create_linear()")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-----
-I checked the other PCI host bridge drivers as well, this is the
-only one with that problem.
----
- drivers/pci/controller/pcie-altera.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
-index 0fc77176a52e..3dbb7adc421c 100644
---- a/drivers/pci/controller/pcie-altera.c
-+++ b/drivers/pci/controller/pcie-altera.c
-@@ -852,10 +852,9 @@ static void aglx_isr(struct irq_desc *desc)
- static int altera_pcie_init_irq_domain(struct altera_pcie *pcie)
- {
- 	struct device *dev = &pcie->pdev->dev;
--	struct device_node *node = dev->of_node;
- 
- 	/* Setup INTx */
--	pcie->irq_domain = irq_domain_create_linear(of_fwnode_handle(node), PCI_NUM_INTX,
-+	pcie->irq_domain = irq_domain_create_linear(dev_fwnode(dev), PCI_NUM_INTX,
- 					&intx_domain_ops, pcie);
- 	if (!pcie->irq_domain) {
- 		dev_err(dev, "Failed to get a INTx IRQ domain\n");
 -- 
-2.39.5
-
+tejun
