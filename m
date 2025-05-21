@@ -1,128 +1,114 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 236A41DC1AB;
-	Wed, 21 May 2025 06:58:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C690BBA27;
+	Wed, 21 May 2025 06:59:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747810688; cv=none; b=OweYaojzfVySZaKLeCqTsmeC3/6pVYqPmRnKVx+noxcndF9L9T5l2xB96ehCm7c6EuKL3YKhPnizMVX3y/OwACzKQWh9GZ0QxLKG/ID78d9xcewTHbr9KC23ZtQNzKFqQsu10XpV0uwt+XG/Lv8aG0aN5NW1rwwXzcGcXbSVxqU=
+	t=1747810785; cv=none; b=kh0z6bMmKniBzKJK8FoBtjNHoeSDzMd1LGVMWbOY8ZS0rNZgNZxLxqGHogErCLQojJ4XhQIAH19mHCGNEAY1ssUc5wHWDucsP/F8rSq8ozXgD9+FaZbgdDQcYmQ9b5G2k2Fn1PqCY7x+3PBXoRXHOqnilsIodQJnDcv+3T83kD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747810688; c=relaxed/simple;
-	bh=IWz6Yy/BcLz6PFo1jEHDIlrywfsNwNmZ069v+JGYxUY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IJlvCpLZK9Kaw/EsckaRNr5kCCxC4tic2mLZ1dXGe/qMJmwTOqFyXxHZVtvwJkX6BAk8m+qTlnksX2E0A6lnW4Ad1oHmGmgbVTrxtDRayl+ErUSKSSjEo6VHRfzDsRtpqelHpBNeJRYhgpH71ZAKaxPY7jg6qUS8E5QonVD1w10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Edpjpf68; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=7IOWTLCV; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1747810785; c=relaxed/simple;
+	bh=RwWdxwaSlSV5EsU5bsdskKeHVwJHrekEM/wt3trKGAo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Xq8rZAnrGZpIK1rdzs0suK7CV+iLYpJO4jvnTtX0DiUoyMmDhlK18c3jAPnGaHvv0Qbi3XYo0eZTVdWx/0r8+e3TR+i0qyJQVAevwR+9WktilvckN+rpsWPmbDmIccvIxSC3s/5nHQmahRFNpNNHLrFW/Lrjeswi7UCEPjcjV/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DiDq7k09; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Edpjpf68";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="7IOWTLCV"
-Date: Wed, 21 May 2025 08:58:00 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747810685;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gdBcXY08SFR0xzfgVF5rY3+1lWSMx/XtZ80Wkh6Zt5Q=;
-	b=Edpjpf68A1uKzaP0QrwzhV1XWzGzmtCqSbPMr84wq8Z4mxdOcdWoAfU3ugeZbqHPag4wAo
-	CsBDDfsDq7rMLSxIZLcjvPVZoSHcgfaplwBo1ObxGGb+WFkVUt4I71qKCDsTmXyRimPxaj
-	QpPKj3cCzDNi7y7hKtoBIki51hbNsgxI36KFUYzKpiOeNBIdWZ2j3lsF8C/v6GdkfILxGh
-	n3OIx4qf3N27eAkXMi42uO40CljN32kg5rOhhlVwxu48v72FGqqv6ICIU7bIh5Zv6w3z1d
-	6AziKRVZitnc+snBXA9QbD/QXZKG6kfDT5AeIxvfCG7l5v0aAAuGLctDAz+AIQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747810685;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gdBcXY08SFR0xzfgVF5rY3+1lWSMx/XtZ80Wkh6Zt5Q=;
-	b=7IOWTLCV94pErTphukCDvEfRUUt+2wfK7tjAEX3KdEcL7Ln508RjKfuP+sHHSecZHIk7bX
-	eRHBHnqpczRasHDA==
-From: Nam Cao <namcao@linutronix.de>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-	linux-trace-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>
-Subject: Re: [RFC PATCH v2 10/12] rv: Retry when da monitor detects race
- conditions
-Message-ID: <20250521065800.jgtPyWd7@linutronix.de>
-References: <20250514084314.57976-1-gmonaco@redhat.com>
- <20250514084314.57976-11-gmonaco@redhat.com>
- <20250519090626.zjiYgUGW@linutronix.de>
- <5f1365f2cd84597fd3547544fcceab5c79682624.camel@redhat.com>
- <20250519103809.nuEUQbVl@linutronix.de>
- <cdcab46480cbfe2c3320e060ea9603adbd04956c.camel@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DiDq7k09"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95F7AC4CEE4;
+	Wed, 21 May 2025 06:59:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747810785;
+	bh=RwWdxwaSlSV5EsU5bsdskKeHVwJHrekEM/wt3trKGAo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=DiDq7k09Y8Mv5u4/8ibafb8+cRmUMQsTyI5Vzt3a34rz67fprNEguOUrcYyvErUvh
+	 jK8bcxvg6r7EdTaKL4W+eQdcXphnwZm2WyZNmATrxt++/GNog8HayQuLoxdCWQ6x71
+	 CvMlZGXWOhXf5+W8E5gaoIw2PislcvUhSFT1qPWg8SHYJeQxGlkr29ZM13vj3lyM/I
+	 tIEe0fMDIrkt4hMN8RmmPABP3S6XnLHcpGdCUjn2zCPkqUgcVk73/JybclUTQztgeY
+	 LmX918wQ+VrsHCa8P/w/BahCqcyMlZpjlr63NFQF4kKqykAk7+D2yiAPRhFbV+CdPa
+	 pvYxf0RhG+BMg==
+Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
+	(envelope-from <mchehab+huawei@kernel.org>)
+	id 1uHdQV-00000006IFv-2rKb;
+	Wed, 21 May 2025 08:59:43 +0200
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	Akira Yokosawa <akiyks@gmail.com>,
+	linux-doc@vger.kernel.org,
+	Masahiro Yamada <mchehab+huawei@kernel.org>,
+	Nathan Chancellor <mchehab+huawei@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/3] Some kernel-doc fixes
+Date: Wed, 21 May 2025 08:59:30 +0200
+Message-ID: <cover.1747810691.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cdcab46480cbfe2c3320e060ea9603adbd04956c.camel@redhat.com>
+Content-Transfer-Encoding: 8bit
+Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-On Mon, May 19, 2025 at 01:13:01PM +0200, Gabriele Monaco wrote:
-> 
-> 
-> On Mon, 2025-05-19 at 12:38 +0200, Nam Cao wrote:
-> > On Mon, May 19, 2025 at 12:28:12PM +0200, Gabriele Monaco wrote:
-> > > Mmh, although definitely unlikely, I'm thinking of a case in which
-> > > the
-> > > event starts on one CPU and at the same time we see events in IRQ
-> > > and 
-> > > on another CPU, let's say continuously. Nothing forbids that
-> > > between
-> > > any two consecutive try_cmpxchg another CPU/context changes the
-> > > next
-> > > state (making the local try_cmpxchg fail).
-> > > In practice I've never seen it going on the second iteration, as
-> > > the
-> > > critical section is really tiny, but I'm not sure we can guarantee
-> > > this
-> > > never happens.
-> > > Or am I missing something?
-> > 
-> > I have a feeling that you missed my point. I agree that the retrying
-> > is
-> > needed, because we may race with another.
-> > 
-> > What I am proposing is that we drop the MAX_DA_RETRY_RACING_EVENTS,
-> > and
-> > just keep retrying until we succeed.
-> > 
-> > And that's safe to do, because the maximum number of retries is the
-> > number
-> > of tasks contending with us to set the monitor's state. So we know we
-> > won't
-> > be retrying for long.
-> 
-> I get this point, what I mean is: can we really guarantee the number of
-> contending tasks (or contexts) is finite?
-> In other words, the try_cmpxchg guarantees 1 and only 1 actor wins
-> every time, but cannot guarantee all actors will eventually win, an
-> actor /could/ be hanging there forever.
-> 
-> This handler is running for each event in the monitor and tracepoint
-> handlers can be interrupted as well as run in interrupt context (where
-> of course they cannot be interrupted). I don't think the number of
-> actors is bounded by the number of CPUs.
-> I see this situation is extremely unlikely, but in an exotic scenario
-> where a CPU is sufficiently slower than others (e.g. in a VM) I believe
-> we can see this critical section large enough for this to potentially
-> happen.
-> 
-> I'm not quite afraid of infinite loops, but rather RV introducing
-> unbounded latency very hard to track and without any reporting.
-> Chances are, since tracepoints and actual traced events are not atomic,
-> that by the time this delayed context /wins/ the RV event is no longer
-> current, so we may see an error already.
-> 
-> Does it make sense to you or am I making it more complex than it should
-> be?
+Hi Jon,
 
-Right, I can see that being a problem. But I don't know enough about it to
-comment further, so do as you think best, maybe someone else can help.
+That's the second version of the kernel-doc fixup patch series.
 
-Best regards,
-Nam
+I discovered the root cause why Sphinx logger was not working: there
+was a call there for logger.verbose(). According with:
+
+	https://www.sphinx-doc.org/en/master/extdev/logging.html
+
+This is a valid call, but it doesn't verbose messages. Instead, it is
+crashing with modern Sphinx versions, causing the log to not work.
+
+I got rid of it, replacing by logger.info().  I took the time to also
+address an issue pointed by Andy: not having the same log message
+placed everywhere. With such change, we can keep using Sphinx
+logger (which produces colored messages) inside kernel-doc
+classes.
+
+With that, we have:
+
+Patch 1:	makes Lore and kernel-doc ML receive patches related
+	to kernel-doc.py and get_abi.py.
+Patch 2:	cleanup try/except logic and get rid of logger.verbose();
+Patch 3:	fix a KeyError when trying to acess data from non-existing files;
+
+If you test just patch 1 on the top of next-20250516, you'll see the
+keyerror message (in red):
+
+	ERROR: Cannot find file ./drivers/gpio/gpiolib-acpi.c
+	ERROR: Cannot find file ./drivers/gpio/gpiolib-acpi.c
+	WARNING: kernel-doc './scripts/kernel-doc.py -rst -enable-lineno -export ./drivers/gpio/gpiolib-acpi.c' processing failed with: KeyError('./drivers/gpio/gpiolib-acpi.c')
+
+And the script doesn't crash anymore. After patch 2, the try/except
+warning gets replaced by a proper message:
+
+	ERROR: Cannot find file ./drivers/gpio/gpiolib-acpi.c
+	ERROR: Cannot find file ./drivers/gpio/gpiolib-acpi.c
+	WARNING: No kernel-doc for file ./drivers/gpio/gpiolib-acpi.c
+
+Please apply it to solve the issues that are reported by Stephen and Akira.
+
+Regards,
+Mauro
+Mauro Carvalho Chehab (3):
+  MAINTAINERS: update linux-doc entry to cover new Python scripts
+  docs: kerneldoc.py: simplify exception handling logic
+  scripts: kernel-doc: prevent a KeyError when checking output
+
+ Documentation/sphinx/kerneldoc.py | 108 +++++++++++++-----------------
+ MAINTAINERS                       |   5 +-
+ scripts/lib/kdoc/kdoc_files.py    |   4 ++
+ 3 files changed, 53 insertions(+), 64 deletions(-)
+
+-- 
+2.49.0
+
+
