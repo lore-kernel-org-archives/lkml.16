@@ -1,101 +1,191 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F2E02AF1E
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 15:22:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C85C4189513
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 15:22:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747840930; cv=none; b=J8CCYflT53PIjEmkGCO19OqY1at1nq15NJwpwzXZEYVXcLovHEaCvXqOgOrn0DxOgK7F4IDRcDQxWp9DBfGLUNVI3NAChZEUO+LY1BmaWgg0y08ooUI673ebt1FXFa3+f8lMQNPHy0R5uda4pJHvFZ5Xq/gFT2h0jN3/Zxexbeo=
+	t=1747840947; cv=none; b=U+9cA06zW7Et0VnqcPGGRPiqlHxDaJy/PTo6wz6bnoMhYahsKOvEF2K2SDFVnv5f0YEZlfxLVAJIRThlwjH9LNl4yukBkMrpjrrNLdh4XrZxvRHy96ZTp6mF9DO12ntGveW70JMwj76RH1baOPI9OCL8AEB0CYL7B23aQ4FR38U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747840930; c=relaxed/simple;
-	bh=GFKhmbuUQucyfYyIeEkAVA9XLa8smldr0M/nQft6Drc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d8y9yd32mGL87Xle2ds8vpsiNRvD58CoOQpUV+8ykK6SOfiUJMMABBQqrhP2HEr0l1kMZJ5KKz0Nc64PuGQpfMTZUJPmt6rh4Lp94VbSoJ1lAbCxKy1CEqm9tmPO58T2h7jHqa6t/kIqQonqSgmN8xyWcwJp/62MM7vdgdCgP6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=LgCKjKRT; arc=none smtp.client-ip=95.215.58.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1747840947; c=relaxed/simple;
+	bh=cyorVbV+bvd3pMFT0Pcn7XPfJZwPAhId89v8L031Ymo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JUaKBKIEtlD6shIjyznEWT03vA/EQWwYlfvViBezm6zo8pKG6no1Ay3pSEll/1GipypoqTpov+W1Uv+/9zJjsy8C0G/A50AZ2sY+DzmoXwzWqraEpiJow+VtBtaJpxBLYLeh9czAJrxrn2afy4G9NEqtMapPiltCs6En6GxKHHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wz/dvelT; arc=none smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="LgCKjKRT"
-Message-ID: <6f35a7af-bae7-472d-8db6-7d33fb3e5a96@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747840926;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XjTP0D8RvhabPX+yOSJlJgd7qda/73QUkgNtD9M1PFY=;
-	b=LgCKjKRTSCH5jjtERxa/Hgu7EZ9kXGXSRC81VN3ZHTm90s2WkLa1t/nhQCVQK5lkgv3XIf
-	f7EOdUBPBKp6GGa9n8E1rpL7+gXOY78EX6GG5UUycXH1JwZn5sxZa5JudTzKtgWn2qrJiK
-	yt4jUrz+8s0pOGJybbTEPdh/suv9164=
-Date: Wed, 21 May 2025 23:21:45 +0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wz/dvelT"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-47666573242so1480441cf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 08:22:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747840944; x=1748445744; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cyorVbV+bvd3pMFT0Pcn7XPfJZwPAhId89v8L031Ymo=;
+        b=wz/dvelTbEq7Aiu/k2VyQ2d5GdHjoH0Qv3Suw8HGNvOm89E/ZiNXe5ARoIf6mRR4Zo
+         jRaIKCPBCCJ/quBLD6RvXi+fJkBmOqnY1G75ili4y3YHsgo9Dx1pJsNxydlptHhRjR9P
+         B1wAHk9PQGZXoyYyREL/x/5qf4fK61xdA0mP1Xyw5goEnowds+xa2sh/U43jM/bawv99
+         fL3+moPXP8Y9cNCGy5hvqubX2b3SC9SGZV3xDax6uo1MZNj9+PQB9DX3Hh0DeO3DRVFS
+         nMCj2vYU+pv4t/mnICalk1ChBtUAzx1WjZ7Wi5v/zeNEXtw0ryEblBKRcwcQA1OKJ5FB
+         xfww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747840944; x=1748445744;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cyorVbV+bvd3pMFT0Pcn7XPfJZwPAhId89v8L031Ymo=;
+        b=QFNUADaOdUUcKN4bMNU+48bL3WW3el0FdU1eslOGyDmGAWdhsipQIdb4Ooq5DwXxmR
+         aYedqRUxfwYW14ixEKOsfYIVZ5GY7vOPgkbLfInA1uS48LuiPxUGMWP7kSrdtLtydqWV
+         aVOZP78BRCfOkK4JMUqqHdUema1Er83vp7k6emeUD9Z9rXK6GqYuaOOM8JqotrlDGOrh
+         OGMQJXDmwZ0GUEy+gJEuunAQk9p4xDuPSZxNffQJ6XaULIr0Cbdv/SIRdkdgVkE7D+nI
+         hWF24nPnTjPKz+Xu5yb9hEFvuqWj7tkgKombbZwsNC8wj+lktG0zrKxwE/7ljkVHuTbN
+         Nl8w==
+X-Forwarded-Encrypted: i=1; AJvYcCUfk9gWbmoMvffTfW67vrolu6+e39ByGo8+HlmJdSP8eDNXojfbCoFdmIgfGtwAoIAim41z0sdehF39khc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxogtkFyZUW0V4LuE+VxTB1Vd9AebnkoWmDszIyx7z7WeuOn/AP
+	BqiZnxO0ad4M3e215QDizCV5EJRiFjbsF8pMru9jQ8OoYFtv/BTm0g9mDx7O379zG8O5YGBsEY6
+	77lJxkRWhU66TzBctDSvrSOD6te2qtJdME9WlyQaM
+X-Gm-Gg: ASbGncsXPTqLBjJ8Sli7Ctd03KWrkCHt7Cn5LhnLd8j43in0SWB5O1GW3goevHiQfsE
+	0MTi7IEuaW4TnKeyapI2mHUuxn0QUxGmVS/6KYYcfHrjuM/jfR+sShmDK9HvfovmoKaEyqNcBRL
+	0SU9eO+Iq5DkgA2Lx9Jn8396GAW0T3ktzfqTLMeKg+NHOvlv27ucT3dQ==
+X-Google-Smtp-Source: AGHT+IE9sWx0eO9CaSEERbSlz8WHSAH0nRVx3exSAXfCOfLTtTCtFAKZo3qwXtV1LJJtoEI1TnqjZGTpW4mH4zrZQIM=
+X-Received: by 2002:a05:622a:449:b0:48a:42fa:78fa with SMTP id
+ d75a77b69052e-4958cd26812mr16408901cf.2.1747840944231; Wed, 21 May 2025
+ 08:22:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [RESEND PATCH 1/1] netfilter: load nf_log_syslog on enabling
- nf_conntrack_log_invalid
-Content-Language: en-US
-To: Florian Westphal <fw@strlen.de>, Pablo Neira Ayuso <pablo@netfilter.org>
-Cc: Lance Yang <ioworker0@gmail.com>, kadlec@netfilter.org,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, horms@kernel.org, coreteam@netfilter.org,
- linux-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org,
- Zi Li <zi.li@linux.dev>
-References: <20250514053751.2271-1-lance.yang@linux.dev>
- <aC2lyYN72raND8S0@calendula> <aC23TW08pieLxpsf@strlen.de>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Lance Yang <lance.yang@linux.dev>
-In-Reply-To: <aC23TW08pieLxpsf@strlen.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+References: <cover.1747264138.git.ackerleytng@google.com> <d3832fd95a03aad562705872cbda5b3d248ca321.1747264138.git.ackerleytng@google.com>
+ <CA+EHjTxtHOgichL=UvAzczoqS1608RSUNn5HbmBw2NceO941ng@mail.gmail.com>
+ <CAGtprH8eR_S50xDnnMLHNCuXrN2Lv_0mBRzA_pcTtNbnVvdv2A@mail.gmail.com>
+ <CA+EHjTwjKVkw2_AK0Y0-eth1dVW7ZW2Sk=73LL9NeQYAPpxPiw@mail.gmail.com>
+ <CAGtprH_Evyc7tLhDB0t0fN+BUx5qeqWq8A2yZ5-ijbJ5UJ5f-g@mail.gmail.com>
+ <CA+EHjTy7iBNBb9DRdtgq8oYmvgykhSNvZL3FrRV4XF90t3XgBg@mail.gmail.com>
+ <CAGtprH_7jSpwF77j1GW8rjSrbtZZ2OW2iGck5=Wk67+VnF9vjQ@mail.gmail.com>
+ <CA+EHjTzMhKCoftfJUuL0WUZW4DdqOHgVDcn0Cmf-0r--8rBdbg@mail.gmail.com>
+ <diqzecwjnk95.fsf@ackerleytng-ctop.c.googlers.com> <CA+EHjTyY5C1QgkoAqvJ0kHM4nUvKc1e1nQ0Uq+BANtVEnZH90w@mail.gmail.com>
+ <CAGtprH-fE=G923ctBAcq5zFna+2WULhmHDSbXUsZKUrin29b4g@mail.gmail.com>
+In-Reply-To: <CAGtprH-fE=G923ctBAcq5zFna+2WULhmHDSbXUsZKUrin29b4g@mail.gmail.com>
+From: Fuad Tabba <tabba@google.com>
+Date: Wed, 21 May 2025 16:21:46 +0100
+X-Gm-Features: AX0GCFunsX4s_S9rg-xVdpk--w8XHiF75FQSZUzqMS7j0X8kX-1qix4ZgGpOcAc
+Message-ID: <CA+EHjTxvufYVA8LQWRKEX7zA0gWLQUHVO2LvwKc5JXVu-XAEEA@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 04/51] KVM: guest_memfd: Introduce
+ KVM_GMEM_CONVERT_SHARED/PRIVATE ioctls
+To: Vishal Annapurve <vannapurve@google.com>
+Cc: Ackerley Tng <ackerleytng@google.com>, kvm@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, x86@kernel.org, linux-fsdevel@vger.kernel.org, 
+	aik@amd.com, ajones@ventanamicro.com, akpm@linux-foundation.org, 
+	amoorthy@google.com, anthony.yznaga@oracle.com, anup@brainfault.org, 
+	aou@eecs.berkeley.edu, bfoster@redhat.com, binbin.wu@linux.intel.com, 
+	brauner@kernel.org, catalin.marinas@arm.com, chao.p.peng@intel.com, 
+	chenhuacai@kernel.org, dave.hansen@intel.com, david@redhat.com, 
+	dmatlack@google.com, dwmw@amazon.co.uk, erdemaktas@google.com, 
+	fan.du@intel.com, fvdl@google.com, graf@amazon.com, haibo1.xu@intel.com, 
+	hch@infradead.org, hughd@google.com, ira.weiny@intel.com, 
+	isaku.yamahata@intel.com, jack@suse.cz, james.morse@arm.com, 
+	jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, jhubbard@nvidia.com, 
+	jroedel@suse.de, jthoughton@google.com, jun.miao@intel.com, 
+	kai.huang@intel.com, keirf@google.com, kent.overstreet@linux.dev, 
+	kirill.shutemov@intel.com, liam.merwick@oracle.com, 
+	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, maz@kernel.org, 
+	mic@digikod.net, michael.roth@amd.com, mpe@ellerman.id.au, 
+	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
+	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
+	paul.walmsley@sifive.com, pbonzini@redhat.com, pdurrant@amazon.co.uk, 
+	peterx@redhat.com, pgonda@google.com, pvorel@suse.cz, qperret@google.com, 
+	quic_cvanscha@quicinc.com, quic_eberman@quicinc.com, 
+	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com, quic_pheragu@quicinc.com, 
+	quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com, richard.weiyang@gmail.com, 
+	rick.p.edgecombe@intel.com, rientjes@google.com, roypat@amazon.co.uk, 
+	rppt@kernel.org, seanjc@google.com, shuah@kernel.org, steven.price@arm.com, 
+	steven.sistare@oracle.com, suzuki.poulose@arm.com, thomas.lendacky@amd.com, 
+	usama.arif@bytedance.com, vbabka@suse.cz, viro@zeniv.linux.org.uk, 
+	vkuznets@redhat.com, wei.w.wang@intel.com, will@kernel.org, 
+	willy@infradead.org, xiaoyao.li@intel.com, yan.y.zhao@intel.com, 
+	yilun.xu@intel.com, yuzenghui@huawei.com, zhiquan1.li@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Pablo and Florian,
+Hi Vishal,
 
-Thanks for taking the time to review!
+On Wed, 21 May 2025 at 15:42, Vishal Annapurve <vannapurve@google.com> wrot=
+e:
+>
+> On Wed, May 21, 2025 at 5:36=E2=80=AFAM Fuad Tabba <tabba@google.com> wro=
+te:
+> > ....
+> > > When rebooting, the memslots may not yet be bound to the guest_memfd,
+> > > but we want to reset the guest_memfd's to private. If we use
+> > > KVM_SET_MEMORY_ATTRIBUTES to convert, we'd be forced to first bind, t=
+hen
+> > > convert. If we had a direct ioctl, we don't have this restriction.
+> > >
+> > > If we do the conversion via vcpu_run() we would be forced to handle
+> > > conversions only with a vcpu_run() and only the guest can initiate a
+> > > conversion.
+> > >
+> > > On a guest boot for TDX, the memory is assumed to be private. If the =
+we
+> > > gave it memory set as shared, we'd just have a bunch of
+> > > KVM_EXIT_MEMORY_FAULTs that slow down boot. Hence on a guest reboot, =
+we
+> > > will want to reset the guest memory to private.
+> > >
+> > > We could say the firmware should reset memory to private on guest
+> > > reboot, but we can't force all guests to update firmware.
+> >
+> > Here is where I disagree. I do think that this is the CoCo guest's
+> > responsibility (and by guest I include its firmware) to fix its own
+> > state after a reboot. How would the host even know that a guest is
+> > rebooting if it's a CoCo guest?
+>
+> There are a bunch of complexities here, reboot sequence on x86 can be
+> triggered using multiple ways that I don't fully understand, but few
+> of them include reading/writing to "reset register" in MMIO/PCI config
+> space that are emulated by the host userspace directly. Host has to
+> know when the guest is shutting down to manage it's lifecycle.
 
-On 2025/5/21 19:21, Florian Westphal wrote:
-> Pablo Neira Ayuso <pablo@netfilter.org> wrote:
->> I have been beaten by this usability issue in the past, it happens
->> since conntrack is loaded on demand.
->>
->> Maybe add an inconditionally soft dependency? This is a oneliner patch.
->>
->>          MODULE_SOFTDEP("pre: nf_log_syslog");
->>
->> Florian, do you prefer this patch (on-demand) or a oneliner to load
->> this module when conntrack gets loaded too?
->>
->> It is a bit more memory to make it inconditional, but better to expose
->> to users this soft dependency via lsmod.
->>
->> Thanks.
-> 
-> I don't like this patch or the above because we do have two log
-> backends, syslog + nflog.
+In that case, I think we need to fully understand these complexities
+before adding new IOCTLs. It could be that once we understand these
+issues, we find that we don't need these IOCTLs. It's hard to justify
+adding an IOCTL for something we don't understand.
 
-Ah, good to know! I wasn't aware of that :(
+> x86 CoCo VM firmwares don't support warm/soft reboot and even if it
+> does in future, guest kernel can choose a different reboot mechanism.
+> So guest reboot needs to be emulated by always starting from scratch.
+> This sequence needs initial guest firmware payload to be installed
+> into private ranges of guest_memfd.
+>
+> >
+> > Either the host doesn't (or cannot even) know that the guest is
+> > rebooting, in which case I don't see how having an IOCTL would help.
+>
+> Host does know that the guest is rebooting.
 
-> 
-> There is no need for 'syslog' to be active for 'log_invalid' to be
-> useful as long as the system in question has e.g. ulogd running
-> and listening to nflog messages.
-> 
-> If anything, the modprobe should be done only when no logger
-> is registered.
+In that case, that (i.e., the host finding out that the guest is
+rebooting) could trigger the conversion back to private. No need for
+an IOCTL.
 
-Yes, could we load the module only when no logger exists? Something
-like:
+> > Or somehow the host does know that, i.e., via a hypercall that
+> > indicates that. In which case, we could have it so that for that type
+> > of VM, we would reconvert its pages to private on a reboot.
+>
+> This possibly could be solved by resetting the ranges to private when
+> binding with a memslot of certain VM type. But then Google also has a
+> usecase to support intrahost migration where a live VM and associated
+> guest_memfd files are bound to new KVM VM and memslots.
+>
+> Otherwise, we need an additional contract between userspace/KVM to
+> intercept/handle guest_memfd range reset.
 
-+ if (nf_logger_find_get(NFPROTO_IPV4, NF_LOG_TYPE_LOG) != 0)
-+ 	request_module("%s", "nf_log_syslog");
+Then this becomes a migration issue to be solved then, not a huge page
+support issue. If such IOCTLs are needed for migration, it's too early
+to add them now.
 
-Hmm... is nf_logger_find_get() the correct way to check if no
-logger is registered, or are there preferred alternatives?
-
-Thanks,
-Lance
-
-
+Cheers,
+/fuad
