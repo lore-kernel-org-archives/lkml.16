@@ -1,164 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9580221DB5;
-	Wed, 21 May 2025 15:35:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3FA1DE8A6
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 15:35:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747841730; cv=none; b=bWcyVB4a/VwcTI+0WWqXy7VogwJSV+gB50A1yPV+mvQCvxFbMmlg403gLifzuwqNFpvKQjeMtVjNOZn4ul6EM16RTpD8GllHCjJNGgLOgaWONzEwmcAVnWPJn5Uugc/q9aG2nfZOkVxOrcAvJSLAiJ9ogq4tLjafB060yhDNhYY=
+	t=1747841751; cv=none; b=a07+Cq6VzxuuZ43ly7aFGBykUnvgcPfJnreackNgGzbDXqCbzLApb4dg5z3pREAUE7CjNuLKdlR408+L4IBWmGqc+oXVUE8xISBEcc/h/xRXszfByvGcFS3eqAHZ/u9kbqdcmYybxLc6//ORk5u6891oNMlDfTuIrFjjyseKwTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747841730; c=relaxed/simple;
-	bh=SvoYm9cLZxsVGUhdWCKXpdKXEpXhlruEw3SXmHGIogA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OGjm5iKsCZt3HvMlCFiBjABhQfvE04fVcTYXEwLvz/MRytrQlTwR9MOf+GVdivevJGhCDyhIPvDXU1rwpqYb0jlbTNRMKZzMou8v6E4N28VU/3yCaQTg64632OLB2yRg+PgDR8/i2X5P3e/j5KnY4LEW6nlK7JzX20E6xam7Srk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LHaSSF/F; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747841751; c=relaxed/simple;
+	bh=Ji/NJC0jS20Z218vWjgerhtA9zNemwT1VchT19GibRU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uL8NFMFrWV/8zjC1Efc6mvI+kC99Ikdzvzj6koaDnmbf/YcSWfkpj3vHJBU0hIAKPOjg78WiL27cWODEwfj4AZiju2dIRhMgTvtOA2p4BElgd1fw6PvcaL94h1iTQar7/O+/lZYwwqo6zbCo10YvkGAnZb+wP9QDj2WntUpfZwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=d7G9z/bS; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LHaSSF/F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F383BC4CEE4;
-	Wed, 21 May 2025 15:35:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747841730;
-	bh=SvoYm9cLZxsVGUhdWCKXpdKXEpXhlruEw3SXmHGIogA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LHaSSF/Fy3guyqdDiWwPzUqDlUzYT6GKMDfJ389bO4fjwDTbytNCRXezZ7UHxA709
-	 Sdb1e8VneNYpNnkWVceB+mqVblHC66pes2ZAV68PDMWohN6WZ+Albwsw71wvUGJ3tC
-	 +yV802jx2wBz4SazDoP1rvLJ9k2/QoclqlnKHElwtQN4UiIXgRErZk67qFFaMSEO6T
-	 /7Nldxppb/KMXbh23+w38saz3xkMcNEOdHgHiMVJOXHck7Nkn7E5P7YuxX47kIDsRz
-	 AG5tlA8FhKwuqpoRmW3Bn5Qx54IhD8v2QYnR0jPFiB5UFsB+VTwqjErNq6oz845m+x
-	 9yqw0Hqj1T/hQ==
-From: Lee Jones <lee@kernel.org>
-To: lee@kernel.org,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Jens Axboe <axboe@kernel.dk>,
-	Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>,
-	Sasha Levin <sashal@kernel.org>,
-	Michal Luczaj <mhal@rbox.co>,
-	Rao Shoaib <Rao.Shoaib@oracle.com>,
-	Simon Horman <horms@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Cc: stable@vger.kernel.org,
-	Shigeru Yoshida <syoshida@redhat.com>,
-	syzkaller <syzkaller@googlegroups.com>
-Subject: [PATCH v6.1 27/27] af_unix: Fix uninit-value in __unix_walk_scc()
-Date: Wed, 21 May 2025 16:27:26 +0100
-Message-ID: <20250521152920.1116756-28-lee@kernel.org>
-X-Mailer: git-send-email 2.49.0.1143.g0be31eac6b-goog
-In-Reply-To: <20250521152920.1116756-1-lee@kernel.org>
-References: <20250521152920.1116756-1-lee@kernel.org>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="d7G9z/bS"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54L9XMoB016599
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 15:35:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=ZqbR0fKZ+8evj8gXjmb3Yq6g
+	rxO0kRUezTH9ydk9GVU=; b=d7G9z/bS43rrmEoAfUML4SvB1LjWtrdwXZ1o/Sho
+	QQIwI8J7T8TUppmC0ukO4nnMJ3rC9+HLEMts4oONoxr5Z3RcHpLVI+zw9DaNURHl
+	C84FUou8xhctHDKCF9WMwTAdCbFE0NXpIZbNRgSRjwMlWroTYtAQWYTiDqEr57Hp
+	q3iEvJDtxd30jF7+3C3StUN47b3Pe84qLGzFXRSgvH5gA+CaR8seKEAfhVfCfrSB
+	K/I6D+OebToFtS6EnkPtlJ/x/jWPVwbqnziHWBXcO+0J5eNCMB5JTA086Bpj4ZTX
+	tahmepDCBoNqI+EQlOMjafQlD7IyDA635ZCzGaRsRcAbuA==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf9uess-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 15:35:48 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7caee990715so1894482085a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 08:35:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747841747; x=1748446547;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZqbR0fKZ+8evj8gXjmb3Yq6grxO0kRUezTH9ydk9GVU=;
+        b=ry1BwY+SgQklAafXtF5GPo/Kb1JlO6YI7FX4EN6/Ki8cqy5ag9qd8CzlRyIg4V2kpg
+         uqalYMUBjaDw8mprRVYFqmIHADlkzicT+hCul3VmtTOFZMO/LwHewByvgCcT5EwYDQLj
+         dOgKJ3d1jNc4QHV2LmKoIgqaMft3gSe9RmOpcnFso6BouPrFZ3Mpjju0jRbU9mz1hV4I
+         pKwyRHcNyT7/gJ+HVXSI1LwkTSYA0LkThJ1vj00GgNRRS7f5RzTub3COi1l3SRcpXSyu
+         ahhop/84gE1gk/hzx4XzVtICqOeDfZ601uLrFlYMHltjncebnctjvzsjudUtqvDqPK3/
+         JX/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX6SZ0kjmpAcdO6TQDkfjTrBJkg4RDOHdhWm9Ko6aViIechTNmsLTbbhu+Lo5AF2RyN3mbQP1Hc3VoVpeo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2/lIOIYgPeuB4Q1hg/YLhGVfVszEzHeDvbyr5NY8uWYhPXbd1
+	jVfpxb7VCyCD0JEvOd3ZYnpwi24ohLVDdiUYKu6GHny+AhqkzKAH+fb0RKa+6hZJ5sbtZaiQQK3
+	2zDO2SKMOK/keKLDLKReFFu4ZO8bLpvutLpHe03cQVN7xQ5tBp7i+AUXO9g7VPsk3gSI=
+X-Gm-Gg: ASbGncs2/luqmaAa0W2B1tCHiuLQUJBFm15/ba5kHaRSwKmibnS1lQ0wbp/I002L7kw
+	IkxS/Z91/dVOnvuid8ZKrnovuwNLXT4ZMF4fknpbWrI0d5Np2ITDuCBxnpLvVjFGhY1vO/nwx9Q
+	qCJ/u8ehcIGMCEPu7VjVNSndvST8fdmX0TUTN84EthDseqO+tGSes232DtBdKTHnNdbwX5AQ5X2
+	62k1VCj41/qSSFp3e8lSL1VBdQjDGwwCzqaa8WxCmO8B5NwaKnw297AoOYNbucyNLlWHSFXpAe8
+	rQXmfUjYwapXPBB7GVsNrDLqgEG1CY9YoJzWaHHvsopNkfu9Pk6nAHattfZTZ4PrJ0+TnRmyYlY
+	=
+X-Received: by 2002:a05:620a:f13:b0:7c5:5909:18e5 with SMTP id af79cd13be357-7cd46718919mr2924692285a.3.1747841747265;
+        Wed, 21 May 2025 08:35:47 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEif88mxj+wAdT9xL/pZzi6HaDSZ1ONvlON73ZZu7ioxiYyL60zLC0ZSOy7v6VGihut3FvXnw==
+X-Received: by 2002:a05:620a:f13:b0:7c5:5909:18e5 with SMTP id af79cd13be357-7cd46718919mr2924687485a.3.1747841746729;
+        Wed, 21 May 2025 08:35:46 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-328084dd099sm28483211fa.57.2025.05.21.08.35.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 May 2025 08:35:45 -0700 (PDT)
+Date: Wed, 21 May 2025 18:35:44 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@oss.qualcomm.com, Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+Subject: Re: [PATCH v3 5/7] arm64: dts: qcom: qcs6490-rb3gen2: Add sound card
+Message-ID: <u77g7yhjr3ruwkmz4qnmyssuypk46lvvn7oiqdgf5lnofpczj6@y7qa2nx6ss2x>
+References: <20250520062618.2765109-1-quic_pkumpatl@quicinc.com>
+ <20250520062618.2765109-6-quic_pkumpatl@quicinc.com>
+ <3fbffse4iqkegqjheeptnmsofz7fasqgnpbhhbzlzibv5qjxx6@dft4vafwlkfr>
+ <3b498b4e-7159-4cb4-bc71-78f32feaf402@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3b498b4e-7159-4cb4-bc71-78f32feaf402@quicinc.com>
+X-Authority-Analysis: v=2.4 cv=V9990fni c=1 sm=1 tr=0 ts=682df2d4 cx=c_pps
+ a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=46_AkE07xEbgfvBdi1cA:9
+ a=CjuIK1q_8ugA:10 a=zgiPjhLxNE0A:10 a=PEH46H7Ffwr30OY-TuGO:22
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: 0ekEykqWKSBQQFHor2Y3S3zJpdwOAzY-
+X-Proofpoint-GUID: 0ekEykqWKSBQQFHor2Y3S3zJpdwOAzY-
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDE1MiBTYWx0ZWRfX4QBZP3mztQ6c
+ iYeRr3mODKdlOD+o4JVfbAzycW7Yt1ASc8icsUR8N1uSFZr3zGXlRNcetDg+Kai6ED1lrMad5J1
+ 6avpwDtPbRGiVsrbGT51GoTjoFOzyUGkl93SRvjVDBQCVGZCDt6Y5j2oU6q19F85sHVriRywvZl
+ rox+jwssLWvgV6YpZLbNfakOrsIb5XfGFmCAx53qVaPDuAGtYk/YYOhewWjNwbj+UWDfMuimkvl
+ hEhj6DbIkzc1z+eQjTXnRL5xiX3oYpBIBzu11umLJd0RFlNFG3DRdC+5HVhl8uSlh3a+gq3LJLD
+ GnBSob6Rz9zSmGBq+82sJwYpqpw2GviSCxK85B/hR51197zFZnAsVAXWxPhIszkXxrbQiq2OeXN
+ 0vCAqzgtheDeYlr+8HYGuv9DOgxI2a6sKqrVkapO5ajcN/CuUjTdWOpsjCyvvjiFg8ys5YO2
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-21_05,2025-05-20_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxlogscore=656 bulkscore=0 impostorscore=0 clxscore=1015 priorityscore=1501
+ lowpriorityscore=0 mlxscore=0 spamscore=0 phishscore=0 suspectscore=0
+ adultscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505210152
 
-From: Shigeru Yoshida <syoshida@redhat.com>
+On Wed, May 21, 2025 at 07:36:31PM +0530, Prasad Kumpatla wrote:
+> 
+> 
+> On 5/21/2025 1:33 AM, Dmitry Baryshkov wrote:
+> > On Tue, May 20, 2025 at 11:56:16AM +0530, Prasad Kumpatla wrote:
+> > > From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+> > > 
+> > > Add the sound card node with tested playback over WSA8835 speakers
+> > > and digital on-board mics.
+> > 
+> > No WCD codec?
+> 
+> Yes, No WCD on qcs6490-rb3gen2.
+> 
 
-[ Upstream commit 927fa5b3e4f52e0967bfc859afc98ad1c523d2d5 ]
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
-KMSAN reported uninit-value access in __unix_walk_scc() [1].
-
-In the list_for_each_entry_reverse() loop, when the vertex's index
-equals it's scc_index, the loop uses the variable vertex as a
-temporary variable that points to a vertex in scc. And when the loop
-is finished, the variable vertex points to the list head, in this case
-scc, which is a local variable on the stack (more precisely, it's not
-even scc and might underflow the call stack of __unix_walk_scc():
-container_of(&scc, struct unix_vertex, scc_entry)).
-
-However, the variable vertex is used under the label prev_vertex. So
-if the edge_stack is not empty and the function jumps to the
-prev_vertex label, the function will access invalid data on the
-stack. This causes the uninit-value access issue.
-
-Fix this by introducing a new temporary variable for the loop.
-
-[1]
-BUG: KMSAN: uninit-value in __unix_walk_scc net/unix/garbage.c:478 [inline]
-BUG: KMSAN: uninit-value in unix_walk_scc net/unix/garbage.c:526 [inline]
-BUG: KMSAN: uninit-value in __unix_gc+0x2589/0x3c20 net/unix/garbage.c:584
- __unix_walk_scc net/unix/garbage.c:478 [inline]
- unix_walk_scc net/unix/garbage.c:526 [inline]
- __unix_gc+0x2589/0x3c20 net/unix/garbage.c:584
- process_one_work kernel/workqueue.c:3231 [inline]
- process_scheduled_works+0xade/0x1bf0 kernel/workqueue.c:3312
- worker_thread+0xeb6/0x15b0 kernel/workqueue.c:3393
- kthread+0x3c4/0x530 kernel/kthread.c:389
- ret_from_fork+0x6e/0x90 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-
-Uninit was stored to memory at:
- unix_walk_scc net/unix/garbage.c:526 [inline]
- __unix_gc+0x2adf/0x3c20 net/unix/garbage.c:584
- process_one_work kernel/workqueue.c:3231 [inline]
- process_scheduled_works+0xade/0x1bf0 kernel/workqueue.c:3312
- worker_thread+0xeb6/0x15b0 kernel/workqueue.c:3393
- kthread+0x3c4/0x530 kernel/kthread.c:389
- ret_from_fork+0x6e/0x90 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-
-Local variable entries created at:
- ref_tracker_free+0x48/0xf30 lib/ref_tracker.c:222
- netdev_tracker_free include/linux/netdevice.h:4058 [inline]
- netdev_put include/linux/netdevice.h:4075 [inline]
- dev_put include/linux/netdevice.h:4101 [inline]
- update_gid_event_work_handler+0xaa/0x1b0 drivers/infiniband/core/roce_gid_mgmt.c:813
-
-CPU: 1 PID: 12763 Comm: kworker/u8:31 Not tainted 6.10.0-rc4-00217-g35bb670d65fc #32
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-2.fc40 04/01/2014
-Workqueue: events_unbound __unix_gc
-
-Fixes: 3484f063172d ("af_unix: Detect Strongly Connected Components.")
-Reported-by: syzkaller <syzkaller@googlegroups.com>
-Signed-off-by: Shigeru Yoshida <syoshida@redhat.com>
-Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
-Link: https://patch.msgid.link/20240702160428.10153-1-syoshida@redhat.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-(cherry picked from commit 927fa5b3e4f52e0967bfc859afc98ad1c523d2d5)
-Signed-off-by: Lee Jones <lee@kernel.org>
----
- net/unix/garbage.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/net/unix/garbage.c b/net/unix/garbage.c
-index dfe94a90ece4..23efb78fe9ef 100644
---- a/net/unix/garbage.c
-+++ b/net/unix/garbage.c
-@@ -476,6 +476,7 @@ static void __unix_walk_scc(struct unix_vertex *vertex, unsigned long *last_inde
- 	}
- 
- 	if (vertex->index == vertex->scc_index) {
-+		struct unix_vertex *v;
- 		struct list_head scc;
- 		bool scc_dead = true;
- 
-@@ -486,15 +487,15 @@ static void __unix_walk_scc(struct unix_vertex *vertex, unsigned long *last_inde
- 		 */
- 		__list_cut_position(&scc, &vertex_stack, &vertex->scc_entry);
- 
--		list_for_each_entry_reverse(vertex, &scc, scc_entry) {
-+		list_for_each_entry_reverse(v, &scc, scc_entry) {
- 			/* Don't restart DFS from this vertex in unix_walk_scc(). */
--			list_move_tail(&vertex->entry, &unix_visited_vertices);
-+			list_move_tail(&v->entry, &unix_visited_vertices);
- 
- 			/* Mark vertex as off-stack. */
--			vertex->index = unix_vertex_grouped_index;
-+			v->index = unix_vertex_grouped_index;
- 
- 			if (scc_dead)
--				scc_dead = unix_vertex_dead(vertex);
-+				scc_dead = unix_vertex_dead(v);
- 		}
- 
- 		if (scc_dead)
 -- 
-2.49.0.1143.g0be31eac6b-goog
-
+With best wishes
+Dmitry
