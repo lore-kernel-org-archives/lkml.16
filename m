@@ -1,261 +1,362 @@
-Received: from smtpbgsg2.qq.com (smtpbgsg2.qq.com [54.254.200.128])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 203BA23506E
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 09:43:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.128
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE8F7253B5A;
+	Wed, 21 May 2025 09:43:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747820601; cv=none; b=AdG6HsPWN32jqQqlXLstnJjCz3/YLr+uwB+gdurqVw4wNZ8UWnaEgjZEzurjJE4b1KyG9llOe+O3KSTcb/w+nQVCorOMfrpBaLDnXLGBqyKc3Tt1oQEGp1vqRo0crTDsfPLW3Ij3QNDZxJ0Xoq1JxZqbehT06Wv3bVRKRQt9LEY=
+	t=1747820607; cv=none; b=USStwPEQS2KlwC8lgJEG5bHjVmg+dxOOuaiECwV9qBLqVn5AImZgLrR2eJoNFqqdJ9UREVNm00qk191Q2nTzUTI9T5lb/6xZKinjMPDAKCL1jIwH/NAxppo993YdLo0JtslRJEjljmrSnZgKPg1uWOJaOn8AkWbpEd63f+P82BY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747820601; c=relaxed/simple;
-	bh=wNlIDxRKVIzfJNKE3Yzwp/kKjnqr+FQFZNDCSYg6NDw=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=Ac7/tw1p/eY6aSwn3t8HDHL/bJRS+pP8p1JX9MfyABnf9z19UjSYObVti57D6WTNKsZQqVSMfFhgW9Oq7xLzvgc8cEXuFruiEoC3B6BiWd7ij3SKisS8FakmqwM5L4817kx0bihZYqG+s9ZnPBvLd2EY7EcLRDt0FD/bmuT93xg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=m.fudan.edu.cn; spf=pass smtp.mailfrom=m.fudan.edu.cn; dkim=pass (1024-bit key) header.d=m.fudan.edu.cn header.i=@m.fudan.edu.cn header.b=yCobIU2F; arc=none smtp.client-ip=54.254.200.128
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=m.fudan.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=m.fudan.edu.cn
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=m.fudan.edu.cn header.i=@m.fudan.edu.cn header.b="yCobIU2F"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=m.fudan.edu.cn;
-	s=sorc2401; t=1747820536;
-	bh=KRTKNd+TvCuHfC3gkUEnLHi6+nKNJuXiunK3jK4+BrQ=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=yCobIU2FUpmylBmdyzNsV5zYC9xXUc9YvzXc8EFXJJnPRjPJ69WngWIHv3p8b/s4N
-	 nMSqXx0lk29/O5nnRJSX8ExGBX9BopFgYR6kXdbINfeXhGT793H2hi6gY44lWYQl4e
-	 u2m3jKU8RCe57pJtPUEtTXBa/hXYh5DdP4n8XjsY=
-X-QQ-mid: zesmtpip3t1747820533t6a38a173
-X-QQ-Originating-IP: h7cXqADGaoiptxOnAXv2xTDzWJ8zV/2sswtxOYZPQA4=
-Received: from TYSPR06MB7158.apcprd06.prod.out ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 21 May 2025 17:42:11 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 8463398514593646057
-EX-QQ-RecipientCnt: 7
-From: "huk23@m.fudan.edu.cn" <huk23@m.fudan.edu.cn>
-To: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>
-CC: Jiaji Qin <jjtan24@m.fudan.edu.cn>, Shuoran Bai <baishuoran@hrbeu.edu.cn>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"syzkaller@googlegroups.com" <syzkaller@googlegroups.com>,
-	"loongarch@lists.linux.dev" <loongarch@lists.linux.dev>
-Subject: KASAN: out-of-bounds Read in unwind_next_frame
-Thread-Topic: KASAN: out-of-bounds Read in unwind_next_frame
-Thread-Index: AQHbyZeyt4U4hIVkp0euwxnd9fTvtg==
-X-MS-Exchange-MessageSentRepresentingType: 1
-Date: Wed, 21 May 2025 09:42:11 +0000
-Message-ID:
-	<TYSPR06MB71586268DF7C558479DB7248F69FA@TYSPR06MB7158.apcprd06.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-Exchange-Organization-SCL: -1
-X-MS-TNEF-Correlator:
-X-MS-Exchange-Organization-RecordReviewCfmType: 0
-msip_labels:
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1747820607; c=relaxed/simple;
+	bh=AB6vrtrGKSOlL4+NIB8XxZHaFKUtRBpHMQJtFBmqnTA=;
+	h=To:CC:From:Subject:Message-ID:Date:MIME-Version:Content-Type; b=K8SyqDF8JD6joOZTlYAxYZfRR+8Hr+aE9EUnl2BGHlC4/HoOK6dyyu13DfbAw/JsRq/W9XNVOCVgngJj3qIrghEPUWrs09y7OKHmEVDP645dtfJSg7EQvK/5Mt78LhEQtXqJi/HIyuxqes6PhmeaAZUOyb/5jNTM/XAlN3Y/UpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4b2RK42XjxzVmcT;
+	Wed, 21 May 2025 17:42:00 +0800 (CST)
+Received: from dggemv706-chm.china.huawei.com (unknown [10.3.19.33])
+	by mail.maildlp.com (Postfix) with ESMTPS id EEA6F18006C;
+	Wed, 21 May 2025 17:43:15 +0800 (CST)
+Received: from kwepemq500009.china.huawei.com (7.202.195.53) by
+ dggemv706-chm.china.huawei.com (10.3.19.33) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 21 May 2025 17:43:15 +0800
+Received: from [10.174.179.5] (10.174.179.5) by kwepemq500009.china.huawei.com
+ (7.202.195.53) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 21 May
+ 2025 17:43:14 +0800
+To: <ankur.a.arora@oracle.com>, Frederic Weisbecker <frederic@kernel.org>,
+	"Paul E . McKenney" <paulmck@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
+	<neeraj.upadhyay@kernel.org>, <urezki@gmail.com>
+CC: <rcu@vger.kernel.org>, <linux-kernel@vger.kernel.org>, <xiqi2@huawei.com>,
+	"Wangshaobo (bobo)" <bobo.shaobowang@huawei.com>
+From: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Subject: [QUESTION] problems report: rcu_read_unlock_special() called in
+ irq_exit() causes dead loop
+Message-ID: <9acd5f9f-6732-7701-6880-4b51190aa070@huawei.com>
+Date: Wed, 21 May 2025 17:43:14 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpip:m.fudan.edu.cn:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: NoS5wdqc5dY8u2JAu9efz37vyv6MCFypw4lDqwOrLVlFps1aVjEMVkuN
-	CL4FhKKyJnEqVvFSrmf6O0JQLSdqVcOwrXENsr4ITwirOlpVYKpH7NdfJ1kZvp/7HwLdMfw
-	Vzn6Gi3Wjga5c9H1nvyhRfqUn5RZXZgnav4ijdhu6LOpBKF6APVrwUJTRKaAoz4b10bN93i
-	I+JvCKySPy4kQMS7ZytJztwfa720dpQv5OdPbb/YLVJizFmpbfHM8LWHeEnlF9TBl5MD3Iw
-	QxdoTzYSaJjIWu/mOzFl6FLIDrC/XRAAOoP+zHHX3BAI0vpk6Z8KMN0UdTqKtmfFu4+T8Uu
-	HuGSDKewOz5GmHTT0bNbxOa8CSvswugkl/CJOTqQJbCZgZo2Zk3Q53E6wttn+irIH8BEQLZ
-	B3j5z9RSD+WDW5MblWQLmgEkikNg75iDFGGVQ9NPJ6/N5n5czQip5ef6tJOGU3Bp6LtLCne
-	31+H4XIBnXy9Q2PVsGw1CQZOQfiQU3IjRcLxzy2EK9uHCTFKjcWoixb6L1bAoZB7Hd87txx
-	OxiGTuQ+V1ASisrZMPxYg89k1y/ohay0BbSwzCkNZa/Zzy9h/5Y+LEjQMjuh1ZuiAHoQ/8D
-	YGwd9QPpz5iKftawDxGGCHq4aJCaaoeXajtok5UN9N8dD7Yloveu1j9c+1+rccOFSBk/nv0
-	63au4mYOUojnvwbyrkk76aGAQ9ct3SdfZKVqAK0iDiDQ61884v7Y+tfnuLvIZvRKgdfzuIP
-	iGxbjRv/HH+2mp8+11z3bylDYFlpLyY/iMLd/c659CD9RLA37uGQodZMJgdUCL8qJ5N7yys
-	zDtGQhjVQftolAgqp0xjwaHLaNuWP4FoOMB6lv/xRrVhG9aUtAfE11hDSdfFRV0TIhMJVZ5
-	6CqeQqJcCkwvKE3oEnAzTPfYGb/Ia2bRkf5soy13VfgVDa+4w36eFy9DId7fKC2iHEOuK4s
-	rLpsNKLFHVtNZ3FpjG03bxnnGfruLUfQEAog3ReppVV0aJrbqrveMKRDTZc+HtdVeI4t7/w
-	5HZ7cF+Q==
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
-X-QQ-RECHKSPAM: 0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
+ kwepemq500009.china.huawei.com (7.202.195.53)
 
-Dear Maintainers,=0A=
-=0A=
-=0A=
-=0A=
-When using our customized Syzkaller to fuzz the latest Linux kernel, the fo=
-llowing crash (100th)was triggered.=0A=
-=0A=
-=0A=
-HEAD commit: 6537cfb395f352782918d8ee7b7f10ba2cc3cbf2=0A=
-git tree: upstream=0A=
-Output:https://github.com/pghk13/Kernel-Bug/blob/main/0520_6.15-rc6/100_KAS=
-AN%3A%20out-of-bounds%20Read%20in%20unwind_next_frame/100report.txt=0A=
-Kernel config:https://github.com/pghk13/Kernel-Bug/blob/main/0520_6.15-rc6/=
-config.txt=0A=
-C reproducer:https://github.com/pghk13/Kernel-Bug/blob/main/0520_6.15-rc6/1=
-00_KASAN%3A%20out-of-bounds%20Read%20in%20unwind_next_frame/100repro.c=0A=
-Syzlang reproducer:https://github.com/pghk13/Kernel-Bug/blob/main/0520_6.15=
--rc6/100_KASAN%3A%20out-of-bounds%20Read%20in%20unwind_next_frame/100repro.=
-txt=0A=
-=0A=
-=0A=
-The issue might occur in the stack_access_ok function call, which attempts =
-to validate whether an address is within a valid stack range. In theASAN re=
-port, we see an out-of-bounds read of size 2, corresponding to the address =
-ffff c90013b67600 Note the on_stack function within the stack_access_ok fun=
-ction, which triggers the out-of-bounds read when checking if an address is=
- within the stack range, and invalid address is calculated when preparing t=
-o execute p =3D (unsigned long *)(state->sp   orc->ra_offset); or regs =3D =
-(struct pt_regsstate->sp;=0A=
-Most likely, a pointer calculation in the unwind_next_frame function result=
-ed in an invalid address, and KASAN detected the out-of- access when the co=
-de tried to read data via that address.=0A=
-We have reproduced this issue several times on 6.15-rc6 again.=0A=
-=0A=
-=0A=
-=0A=
-=0A=
-=0A=
-=0A=
-If you fix this issue, please add the following tag to the commit:=0A=
-Reported-by: Kun Hu <huk23@m.fudan.edu.cn>, Jiaji Qin <jjtan24@m.fudan.edu.=
-cn>, Shuoran Bai <baishuoran@hrbeu.edu.cn>=0A=
-=0A=
-=0A=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=0A=
-BUG: KASAN: out-of-bounds in unwind_next_frame+0xd87/0x1c20=0A=
-Read of size 2 at addr ffffc90013b67600 by task kworker/3:3/14224=0A=
-=0A=
-CPU: 3 UID: 0 PID: 14224 Comm: kworker/3:3 Not tainted 6.15.0-rc6 #1 PREEMP=
-T(full) =0A=
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1=
-.1 04/01/2014=0A=
-Workqueue: events console_callback=0A=
-Call Trace:=0A=
- <IRQ>=0A=
- dump_stack_lvl+0x116/0x1b0=0A=
- print_report+0xc1/0x630=0A=
- kasan_report+0x96/0xd0=0A=
- unwind_next_frame+0xd87/0x1c20=0A=
- show_trace_log_lvl+0x20c/0x380=0A=
- sched_show_task+0x410/0x660=0A=
- show_state_filter+0xf7/0x390=0A=
- k_spec+0xeb/0x140=0A=
- kbd_event+0xdd9/0x3930=0A=
- input_handle_events_default+0x10a/0x1a0=0A=
- input_pass_values+0x68d/0x870=0A=
- input_event_dispose+0x4db/0x640=0A=
- input_handle_event+0x122/0xde0=0A=
- input_event+0x83/0xb0=0A=
- hidinput_hid_event+0xa7b/0x2040=0A=
- hid_process_event+0x4a6/0x5d0=0A=
- hid_input_array_field+0x4dc/0x670=0A=
- hid_report_raw_event+0xa53/0x1230=0A=
- __hid_input_report.constprop.0+0x33d/0x440=0A=
- hid_irq_in+0x35d/0x850=0A=
- __usb_hcd_giveback_urb+0x2e5/0x6b0=0A=
- usb_hcd_giveback_urb+0x391/0x450=0A=
- dummy_timer+0x124b/0x3580=0A=
- __hrtimer_run_queues+0x1af/0xc60=0A=
- hrtimer_run_softirq+0x17f/0x2e0=0A=
- handle_softirqs+0x1be/0x850=0A=
- irq_exit_rcu+0xfd/0x150=0A=
- sysvec_apic_timer_interrupt+0xa8/0xc0=0A=
- </IRQ>=0A=
- <TASK>=0A=
- asm_sysvec_apic_timer_interrupt+0x1a/0x20=0A=
-RIP: 0010:bit_putcs+0x5f4/0xd80=0A=
-Code: 41 89 c5 e8 7e 27 9a fc 48 89 ef 48 83 c5 01 48 b9 00 00 00 00 00 fc =
-ff df 48 89 f8 48 89 fa 48 c1 e8 03 83 e2 07 0f b6 04 08 <38> d0 7f 08 84 c=
-0 0f 85 24 06 00 00 4c 89 e0 4c 89 e1 0f b6 55 ff=0A=
-RSP: 0018:ffffc9000865f838 EFLAGS: 00000202=0A=
-RAX: 0000000000000000 RBX: ffff8880430a1822 RCX: dffffc0000000000=0A=
-RDX: 0000000000000007 RSI: ffff8880774d8000 RDI: ffffffff8bf73a3f=0A=
-RBP: ffffffff8bf73a40 R08: 0000000000000000 R09: 0000000000000000=0A=
-R10: fffffbfff2107af3 R11: ffffffff9083d79f R12: ffff8880430a1fa2=0A=
-R13: 0000000000000000 R14: ffff888028d06000 R15: 0000000000000000=0A=
- fbcon_putcs+0x37a/0x4b0=0A=
- do_update_region+0x2e5/0x3f0=0A=
- redraw_screen+0x62d/0x750=0A=
- complete_change_console+0x110/0x3b0=0A=
- change_console+0x1a5/0x2e0=0A=
- console_callback+0x1a1/0x4c0=0A=
- process_scheduled_works+0x5de/0x1bd0=0A=
- worker_thread+0x5a9/0xd10=0A=
- kthread+0x447/0x8a0=0A=
- ret_from_fork+0x48/0x80=0A=
- ret_from_fork_asm+0x1a/0x30=0A=
- </TASK>=0A=
-=0A=
-The buggy address belongs to the virtual mapping at=0A=
- [ffffc90013b60000, ffffc90013b69000) created by:=0A=
- kernel_clone+0xea/0xee0=0A=
-=0A=
-The buggy address belongs to the physical page:=0A=
-page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x51f4d=
-=0A=
-memcg:ffff888000901b02=0A=
-flags: 0x4fff00000000000(node=3D1|zone=3D1|lastcpupid=3D0x7ff)=0A=
-raw: 04fff00000000000 0000000000000000 dead000000000122 0000000000000000=0A=
-raw: 0000000000000000 0000000000000000 00000001ffffffff ffff888000901b02=0A=
-page dumped because: kasan: bad access detected=0A=
-page_owner tracks the page as allocated=0A=
-page last allocated via order 0, migratetype Unmovable, gfp_mask 0x2dc2(GFP=
-_KERNEL|__GFP_HIGHMEM|__GFP_ZERO|__GFP_NOWARN), pid 708, tgid 708 (kworker/=
-u19:2), ts 86243875317, free_ts 0=0A=
- prep_new_page+0x1b0/0x1e0=0A=
- get_page_from_freelist+0x1c80/0x3a40=0A=
- __alloc_frozen_pages_noprof+0x2fd/0x6d0=0A=
- alloc_pages_mpol+0x209/0x550=0A=
- alloc_pages_noprof+0x1c/0x250=0A=
- __vmalloc_node_range_noprof+0xa75/0x13a0=0A=
- __vmalloc_node_noprof+0x73/0xa0=0A=
- copy_process+0x439c/0x77f0=0A=
- kernel_clone+0xea/0xee0=0A=
- user_mode_thread+0xc5/0x110=0A=
- call_usermodehelper_exec_work+0xd0/0x180=0A=
- process_scheduled_works+0x5de/0x1bd0=0A=
- worker_thread+0x5a9/0xd10=0A=
- kthread+0x447/0x8a0=0A=
- ret_from_fork+0x48/0x80=0A=
- ret_from_fork_asm+0x1a/0x30=0A=
-page_owner free stack trace missing=0A=
-=0A=
-Memory state around the buggy address:=0A=
- ffffc90013b67500: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00=0A=
- ffffc90013b67580: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00=0A=
->ffffc90013b67600: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00=0A=
-                   ^=0A=
- ffffc90013b67680: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00=0A=
- ffffc90013b67700: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00=0A=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=0A=
-----------------=0A=
-Code disassembly (best guess):=0A=
-   0:	41 89 c5             	mov    %eax,%r13d=0A=
-   3:	e8 7e 27 9a fc       	callq  0xfc9a2786=0A=
-   8:	48 89 ef             	mov    %rbp,%rdi=0A=
-   b:	48 83 c5 01          	add    $0x1,%rbp=0A=
-   f:	48 b9 00 00 00 00 00 	movabs $0xdffffc0000000000,%rcx=0A=
-  16:	fc ff df=0A=
-  19:	48 89 f8             	mov    %rdi,%rax=0A=
-  1c:	48 89 fa             	mov    %rdi,%rdx=0A=
-  1f:	48 c1 e8 03          	shr    $0x3,%rax=0A=
-  23:	83 e2 07             	and    $0x7,%edx=0A=
-  26:	0f b6 04 08          	movzbl (%rax,%rcx,1),%eax=0A=
-* 2a:	38 d0                	cmp    %dl,%al <-- trapping instruction=0A=
-  2c:	7f 08                	jg     0x36=0A=
-  2e:	84 c0                	test   %al,%al=0A=
-  30:	0f 85 24 06 00 00    	jne    0x65a=0A=
-  36:	4c 89 e0             	mov    %r12,%rax=0A=
-  39:	4c 89 e1             	mov    %r12,%rcx=0A=
-  3c:	0f b6 55 ff          	movzbl -0x1(%rbp),%edx=0A=
-=0A=
-=0A=
-thanks,=0A=
-Kun Hu=
+Hi RCU experts,
+
+When I ran syskaller in Linux 6.6 with CONFIG_PREEMPT_RCU enabled, I got
+the following soft lockup. The Calltrace is too long. I put it in the end.
+The issue can also be reproduced in the latest kernel.
+
+The issue is as follows. CPU3 is waiting for a spin_lock, which is got by CPU1.
+But CPU1 stuck in the following dead loop.
+
+irq_exit()
+  __irq_exit_rcu()
+    /* in_hardirq() returns false after this */
+    preempt_count_sub(HARDIRQ_OFFSET)
+    tick_irq_exit()
+      tick_nohz_irq_exit()
+	    tick_nohz_stop_sched_tick()
+	      trace_tick_stop()  /* a bpf prog is hooked on this trace point */
+		   __bpf_trace_tick_stop()
+		      bpf_trace_run2()
+			    rcu_read_unlock_special()
+                              /* will send a IPI to itself */
+			      irq_work_queue_on(&rdp->defer_qs_iw, rdp->cpu);
+
+/* after interrupt is enabled again, the irq_work is called */
+asm_sysvec_irq_work()
+  sysvec_irq_work()
+irq_exit() /* after handled the irq_work, we again enter into irq_exit() */
+  __irq_exit_rcu()
+    ...skip...
+	   /* we queue a irq_work again, and enter a dead loop */
+	   irq_work_queue_on(&rdp->defer_qs_iw, rdp->cpu);
+	
+I am not familiar with RCU code and don't know how to solve this problem.
+Any guidance would be appreciated.
+
+Thanks,
+Xiongfeng
+
+
+[ 1901.634222][    C3] watchdog: BUG: soft lockup - CPU#3 stuck for 913s!
+[syz.8.781:8076]
+[ 1901.634947][    C3] Modules linked in:
+[ 1901.635261][    C3] CPU: 3 PID: 8076 Comm: syz.8.781 Tainted: G             L
+    6.6.0+ #1873
+[ 1901.635981][    C3] Hardware name: QEMU Ubuntu 24.04 PC (i440FX + PIIX,
+1996), BIOS 0.0.0 02/06/2015
+[ 1901.636735][    C3] RIP: 0010:queued_spin_lock_slowpath+0x109/0x9c0
+[ 1901.637281][    C3] Code: 00 48 8b 44 24 60 65 48 2b 04 25 28 00 00 00 0f 85
+ca 07 00 00 48 83 c4 68 5b 5d 41 5c 41 5d 41 5e 41 5f c3 cc cc cc cc f3 90 <eb>
+85 81 fe 00 01 00 00 0f 84 dc 00 00 00 81 fe ff 00 00 00 0f 87
+[ 1901.638858][    C3] RSP: 0000:ff1100002900f8b0 EFLAGS: 00000202
+[ 1901.639364][    C3] RAX: 0000000000000000 RBX: 0000000000000001 RCX:
+ffffffff961f5ecd
+[ 1901.640001][    C3] RDX: fffa7c000005f936 RSI: 0000000000000004 RDI:
+ffd40000002fc9a8
+[ 1901.640624][    C3] RBP: 0000000000000003 R08: 0000000000000000 R09:
+fffa7c000005f935
+[ 1901.641255][    C3] R10: ffd40000002fc9ab R11: 0000000000000000 R12:
+fffa7c000005f935
+[ 1901.641905][    C3] R13: 0000000000000001 R14: 1fe2200005201f17 R15:
+ffd40000002fc9a8
+[ 1901.642527][    C3] FS:  000000002316c500(0000) GS:ff11000107980000(0000)
+knlGS:0000000000000000
+[ 1901.643272][    C3] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 1901.643818][    C3] CR2: 0000000020000000 CR3: 0000000036592004 CR4:
+0000000000771ee0
+[ 1901.644469][    C3] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
+0000000000000000
+[ 1901.645105][    C3] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:
+0000000000000400
+[ 1901.645724][    C3] PKRU: 80000000
+[ 1901.646010][    C3] Call Trace:
+[ 1901.646287][    C3]  <TASK>
+[ 1901.646526][    C3]  ? __pfx_queued_spin_lock_slowpath+0x10/0x10
+[ 1901.647053][    C3]  _raw_spin_lock+0xd0/0xe0
+[ 1901.647450][    C3]  ? __pfx__raw_spin_lock+0x10/0x10
+[ 1901.647883][    C3]  __pte_offset_map_lock+0x129/0x270
+[ 1901.648335][    C3]  ? __pfx___pte_offset_map_lock+0x10/0x10
+[ 1901.648820][    C3]  migration_entry_wait+0x85/0x270
+[ 1901.649247][    C3]  ? __pfx_migration_entry_wait+0x10/0x10
+[ 1901.649705][    C3]  ? __pfx___schedule+0x10/0x10
+[ 1901.650122][    C3]  ? __hrtimer_start_range_ns+0x355/0xd00
+[ 1901.650623][    C3]  do_swap_page+0x36d2/0x4670
+[ 1901.651016][    C3]  ? plist_del+0x24c/0x450
+[ 1901.651453][    C3]  ? __pte_offset_map+0x2b9/0x3d0
+[ 1901.651981][    C3]  ? __pfx_do_swap_page+0x10/0x10
+[ 1901.652432][    C3]  ? __pfx_default_wake_function+0x10/0x10
+[ 1901.652947][    C3]  handle_pte_fault+0x5ae/0x7b0
+[ 1901.653387][    C3]  __handle_mm_fault+0xf9e/0x17f0
+[ 1901.653839][    C3]  ? __pfx___handle_mm_fault+0x10/0x10
+[ 1901.654335][    C3]  ? lock_vma_under_rcu+0x377/0x4d0
+[ 1901.654797][    C3]  ? __pfx_lock_vma_under_rcu+0x10/0x10
+[ 1901.655294][    C3]  handle_mm_fault+0x4bf/0xa20
+[ 1901.655725][    C3]  exc_page_fault+0x20b/0x7f0
+[ 1901.656150][    C3]  asm_exc_page_fault+0x26/0x30
+[ 1901.656582][    C3] RIP: 0033:0x51d788
+[ 1901.656927][    C3] Code: 66 89 74 17 02 88 0f c3 c5 fa 6f 06 c5 fa 6f 4c 16
+f0 c5 fa 7f 07 c5 fa 7f 4c 17 f0 c3 0f 1f 44 00 00 48 8b 4c 16 f8 48 8b 36 <48>
+89 37 48 89 4c 17 f8 c3 62 e1 fe 28 6f 54 16 ff 62 e1 fe 28 6f
+[ 1901.658618][    C3] RSP: 002b:00007fff991f9118 EFLAGS: 00010202
+[ 1901.659157][    C3] RAX: 0000000020000000 RBX: 0000000000000004 RCX:
+002367732f766564
+[ 1901.659856][    C3] RDX: 0000000000000009 RSI: 2367732f7665642f RDI:
+0000000020000000
+[ 1901.660553][    C3] RBP: 0000000000797ba0 R08: 00007f10a7800000 R09:
+0000000000000001
+[ 1901.661240][    C3] R10: 0000000000000001 R11: 0000000000000009 R12:
+0000000000000032
+[ 1901.661906][    C3] R13: 00000000000e2c77 R14: 0000000000795fa0 R15:
+0000000000795fac
+[ 1901.662589][    C3]  </TASK>
+[ 1901.662864][    C3] Sending NMI from CPU 3 to CPUs 0-2:
+[ 1901.663358][    C1] NMI backtrace for cpu 1
+[ 1901.663365][    C1] AAA2 1901441189248 1901441163169 0 0 0 1901441162197
+[ 1901.663374][    C1] AAA2 1901441197984 993372484411 993372484804 993372484875
+928887973527 928887973577 928887974425 // handle_softirqs
+[ 1901.663383][    C1] softirq_handle_start:
+[ 1901.663385][    C1] 0
+[ 1901.663387][    C1] 928330006990
+[ 1901.663390][    C1] 924221567459
+[ 1901.663392][    C1] 928817263100
+[ 1901.663395][    C1] 928328744939
+[ 1901.663397][    C1] 0
+[ 1901.663399][    C1] 921062008817
+[ 1901.663401][    C1] 928879010614
+[ 1901.663403][    C1] 0
+[ 1901.663405][    C1] 928887973635
+[ 1901.663407][    C1]
+[ 1901.663409][    C1] softirq_handle_end_time:
+[ 1901.663410][    C1] 0
+[ 1901.663412][    C1] 928330009295
+[ 1901.663415][    C1] 924221568491
+[ 1901.663417][    C1] 928817511439
+[ 1901.663419][    C1] 928328806233
+[ 1901.663421][    C1] 0
+[ 1901.663423][    C1] 921062009968
+[ 1901.663425][    C1] 928879011708
+[ 1901.663427][    C1] 0
+[ 1901.663429][    C1] 928887974243
+[ 1901.663432][    C1]
+[ 1901.663434][    C1] CPU: 1 PID: 8079 Comm: syz.8.781 Tainted: G             L
+    6.6.0+ #1873
+[ 1901.663444][    C1] Hardware name: QEMU Ubuntu 24.04 PC (i440FX + PIIX,
+1996), BIOS 0.0.0 02/06/2015
+[ 1901.663448][    C1] RIP: 0010:irq_work_claim+0x5c/0xa0
+[ 1901.663464][    C1] Code: 14 02 48 89 e8 83 e0 07 83 c0 03 38 d0 7c 04 84 d2
+75 44 8b 5b 08 e8 c3 74 e7 ff 89 da 41 89 dc 89 d8 83 ca 23 f0 0f b1 55 00 <41>
+0f 94 c5 31 ff 89 c3 44 89 ee e8 74 6a e7 ff 45 84 ed 74 d7 e8
+[ 1901.663473][    C1] RSP: 0018:ff11000107889c68 EFLAGS: 00000046
+[ 1901.663480][    C1] RAX: 0000000000000000 RBX: 0000000000000000 RCX:
+ffffffff8dc11a4d
+[ 1901.663486][    C1] RDX: 0000000000000023 RSI: 0000000000000004 RDI:
+ff110001078c6838
+[ 1901.663491][    C1] RBP: ff110001078c6838 R08: 0000000000000001 R09:
+ffe21c0020f18d07
+[ 1901.663496][    C1] R10: ff110001078c683b R11: 0000000000000000 R12:
+0000000000000000
+[ 1901.663502][    C1] R13: ff110001078c6bf0 R14: 0000000000000000 R15:
+ffffffff99f43000
+[ 1901.663507][    C1] FS:  00007f10a79556c0(0000) GS:ff11000107880000(0000)
+knlGS:0000000000000000
+[ 1901.663517][    C1] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 1901.663523][    C1] CR2: 0000000000638300 CR3: 0000000036592002 CR4:
+0000000000771ee0
+[ 1901.663529][    C1] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
+0000000000000000
+[ 1901.663534][    C1] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:
+0000000000000400
+[ 1901.663539][    C1] PKRU: 00000000
+[ 1901.663542][    C1] Call Trace:
+[ 1901.663546][    C1]  <IRQ>
+[ 1901.663551][    C1]  irq_work_queue_on+0x59/0x130
+[ 1901.663563][    C1]  rcu_read_unlock_special+0x46a/0x530
+[ 1901.663577][    C1]  bpf_trace_run2+0xf7/0x220
+[ 1901.663588][    C1]  ? __pfx_bpf_trace_run2+0x10/0x10
+[ 1901.663599][    C1]  ? __pfx_ep_poll_callback+0x10/0x10
+[ 1901.663613][    C1]  __bpf_trace_tick_stop+0xb4/0xf0
+[ 1901.663623][    C1]  ? __pfx___bpf_trace_tick_stop+0x10/0x10
+[ 1901.663633][    C1]  ? __pfx_sched_clock_cpu+0x10/0x10
+[ 1901.663643][    C1]  ? __wake_up+0x44/0x60
+[ 1901.663657][    C1]  check_tick_dependency+0x362/0x670
+[ 1901.663673][    C1]  __tick_nohz_full_update_tick+0xd1/0x220
+[ 1901.663683][    C1]  tick_nohz_irq_exit+0x22c/0x2a0
+[ 1901.663694][    C1]  sysvec_irq_work+0x36/0x80
+[ 1901.663705][    C1]  asm_sysvec_irq_work+0x1a/0x20
+[ 1901.663720][    C1] RIP: 0010:handle_softirqs+0x230/0x8d0
+[ 1901.663734][    C1] Code: 24 f5 80 5d 84 98 e8 1f 9b 27 00 4c 89 e2 48 c1 ea
+03 42 80 3c 3a 00 0f 85 d5 05 00 00 49 89 04 24 fb 65 44 8b 35 0c 2c 93 72 <4d>
+63 f6 49 c7 c4 20 0c 03 00 4a 8d 3c f5 80 5d 84 98 48 89 f8 48
+[ 1901.663742][    C1] RSP: 0018:ff11000107889f68 EFLAGS: 00000246
+[ 1901.663748][    C1] RAX: 000000e7499d350b RBX: 0000000000000000 RCX:
+0000000000000018
+[ 1901.663754][    C1] RDX: 1fe2200020f16185 RSI: 00000000001e2170 RDI:
+0000000000000004
+[ 1901.663759][    C1] RBP: ff1100003ae422c0 R08: 0000000000000001 R09:
+ffe21c0020f16239
+[ 1901.663765][    C1] R10: 00000000001e2170 R11: 3030303030302052 R12:
+ff110001078b0c28
+[ 1901.663770][    C1] R13: 0000000000400140 R14: 0000000000000001 R15:
+dffffc0000000000
+[ 1901.663779][    C1]  ? handle_softirqs+0x211/0x8d0
+[ 1901.663792][    C1]  ? update_sibling_normalize_runtime+0x1a/0x410
+[ 1901.663807][    C1]  irq_exit_rcu+0x134/0x190
+[ 1901.663820][    C1]  sysvec_irq_work+0x6a/0x80
+[ 1901.663830][    C1]  </IRQ>
+[ 1901.663833][    C1]  <TASK>
+[ 1901.663835][    C1]  asm_sysvec_irq_work+0x1a/0x20
+[ 1901.663849][    C1] RIP: 0010:rcu_read_unlock_special+0x186/0x530
+[ 1901.663861][    C1] Code: 0f 85 01 01 00 00 4d 85 f6 0f 84 6a 01 00 00 40 84
+ed 0f 84 61 01 00 00 bf 09 00 00 00 e8 c2 45 df ff fb 65 8b 2d 26 65 72 72 <48>
+63 ed 48 c7 c3 40 1a 03 00 48 b8 00 00 00 00 00 fc ff df 48 8d
+[ 1901.663869][    C1] RSP: 0018:ff110000380b6fe8 EFLAGS: 00000283
+[ 1901.663875][    C1] RAX: 0000000000000001 RBX: ff110001078c6800 RCX:
+ffffffff8d7c6a90
+[ 1901.663881][    C1] RDX: 0000000000000001 RSI: 0000000000000046 RDI:
+ff11000100e33084
+[ 1901.663886][    C1] RBP: 0000000000000001 R08: 0000000000000000 R09:
+fffffbfff3716ab4
+[ 1901.663891][    C1] R10: 0000000000000000 R11: 0000000000000001 R12:
+0000000000000000
+[ 1901.663896][    C1] R13: dffffc0000000000 R14: 0000000000000200 R15:
+ffffffff99f43000
+[ 1901.663903][    C1]  ? ttwu_do_activate+0x520/0x6f0
+[ 1901.663918][    C1]  ? rcu_read_unlock_special+0x17e/0x530
+[ 1901.663930][    C1]  page_vma_mapped_walk+0x1e00/0x2b50
+[ 1901.663948][    C1]  ? __netlink_deliver_tap_skb+0x352/0x4d0
+[ 1901.663959][    C1]  ? __pfx_page_vma_mapped_walk+0x10/0x10
+[ 1901.663974][    C1]  ? netlink_ack+0x614/0xba0
+[ 1901.663986][    C1]  try_to_migrate_one+0x3f0/0x2cb0
+[ 1901.663999][    C1]  ? __sys_sendmsg+0xee/0x1b0
+[ 1901.664015][    C1]  ? __pfx_try_to_migrate_one+0x10/0x10
+[ 1901.664028][    C1]  ? __orc_find+0x109/0x140
+[ 1901.664041][    C1]  ? arch_stack_walk+0x92/0x160
+[ 1901.664058][    C1]  ? __anon_vma_interval_tree_subtree_search+0x171/0x1f0
+[ 1901.664080][    C1]  ? __pfx_try_to_migrate_one+0x10/0x10
+[ 1901.664094][    C1]  rmap_walk_anon+0x2b0/0x980
+[ 1901.664108][    C1]  try_to_migrate+0x19f/0x350
+[ 1901.664122][    C1]  ? __pfx_try_to_migrate+0x10/0x10
+[ 1901.664135][    C1]  ? __pfx_try_to_migrate_one+0x10/0x10
+[ 1901.664148][    C1]  ? __pfx_folio_not_mapped+0x10/0x10
+[ 1901.664159][    C1]  ? __pfx_folio_lock_anon_vma_read+0x10/0x10
+[ 1901.664173][    C1]  ? __pfx_invalid_migration_vma+0x10/0x10
+[ 1901.664184][    C1]  ? folio_total_mapcount+0xb4/0x210
+[ 1901.664197][    C1]  split_huge_page_to_list_to_order+0xc84/0x17f0
+[ 1901.664213][    C1]  ? __pfx_split_huge_page_to_list_to_order+0x10/0x10
+[ 1901.664226][    C1]  ? __orc_find+0x109/0x140
+[ 1901.664240][    C1]  ? __orc_find+0x109/0x140
+[ 1901.664253][    C1]  ? entry_SYSCALL_64_after_hwframe+0x77/0xe2
+[ 1901.664269][    C1]  madvise_cold_or_pageout_pte_range+0x1966/0x2450
+[ 1901.664284][    C1]  ? arch_stack_walk+0x92/0x160
+[ 1901.664298][    C1]  ? __read_once_word_nocheck+0x9/0x20
+[ 1901.664311][    C1]  ? deref_stack_reg+0x1a4/0x2b0
+[ 1901.664326][    C1]  ? entry_SYSCALL_64_after_hwframe+0x77/0xe2
+[ 1901.664340][    C1]  ? __pfx_madvise_cold_or_pageout_pte_range+0x10/0x10
+[ 1901.664354][    C1]  ? __read_once_word_nocheck+0x9/0x20
+[ 1901.664368][    C1]  ? __orc_find+0x109/0x140
+[ 1901.664381][    C1]  ? __pfx_madvise_cold_or_pageout_pte_range+0x10/0x10
+[ 1901.664395][    C1]  walk_pmd_range.isra.0+0x240/0x720
+[ 1901.664405][    C1]  ? __read_once_word_nocheck+0x9/0x20
+[ 1901.664419][    C1]  walk_pud_range.isra.0+0x3d3/0x6c0
+[ 1901.664431][    C1]  walk_p4d_range+0x2ef/0x4f0
+[ 1901.664441][    C1]  walk_pgd_range+0x27e/0x530
+[ 1901.664452][    C1]  __walk_page_range+0x4ab/0x5a0
+[ 1901.664461][    C1]  ? find_vma+0x81/0xb0
+[ 1901.664469][    C1]  ? __pfx_find_vma+0x10/0x10
+[ 1901.664477][    C1]  ? folios_put_refs+0x510/0x740
+[ 1901.664487][    C1]  ? walk_page_test+0xa0/0x190
+[ 1901.664503][    C1]  walk_page_range+0x2a0/0x530
+[ 1901.664513][    C1]  ? __pfx_walk_page_range+0x10/0x10
+[ 1901.664522][    C1]  ? vtime_task_switch_generic+0x278/0x5a0
+[ 1901.664535][    C1]  ? folio_batch_move_lru+0x2b8/0x3d0
+[ 1901.664544][    C1]  ? __pfx_lru_add_fn+0x10/0x10
+[ 1901.664554][    C1]  madvise_pageout_page_range+0x1cc/0x6d0
+[ 1901.664567][    C1]  ? __pfx_madvise_pageout_page_range+0x10/0x10
+[ 1901.664582][    C1]  madvise_pageout+0x1f4/0x400
+[ 1901.664595][    C1]  ? __pfx_madvise_pageout+0x10/0x10
+[ 1901.664608][    C1]  ? futex_wait+0x552/0x680
+[ 1901.664624][    C1]  ? __sanitizer_cov_trace_switch+0x54/0x90
+[ 1901.664635][    C1]  ? __sanitizer_cov_trace_switch+0x54/0x90
+[ 1901.664645][    C1]  ? mas_prev_setup.constprop.0+0xb4/0x530
+[ 1901.664661][    C1]  madvise_vma_behavior+0x8fa/0xe30
+[ 1901.664675][    C1]  ? __pfx_madvise_vma_behavior+0x10/0x10
+[ 1901.664688][    C1]  ? find_vma_prev+0xf5/0x170
+[ 1901.664698][    C1]  ? __pfx_find_vma_prev+0x10/0x10
+[ 1901.664711][    C1]  ? do_futex+0x135/0x360
+[ 1901.664724][    C1]  do_madvise+0x3af/0x650
+[ 1901.664737][    C1]  ? __pfx_do_madvise+0x10/0x10
+[ 1901.664749][    C1]  ? __se_sys_futex+0xf7/0x390
+[ 1901.664762][    C1]  ? kvm_steal_clock+0xca/0x100
+[ 1901.664778][    C1]  ? get_vtime_delta+0xd7/0x250
+[ 1901.664793][    C1]  __x64_sys_madvise+0xaf/0x120
+[ 1901.664805][    C1]  ? __ct_user_exit+0x70/0xe0
+[ 1901.664819][    C1]  do_syscall_64+0x59/0x110
+[ 1901.664834][    C1]  entry_SYSCALL_64_after_hwframe+0x78/0xe2
+[ 1901.664849][    C1] RIP: 0033:0x54d2cd
+[ 1901.664856][    C1] Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa
+48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48>
+3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+[ 1901.664864][    C1] RSP: 002b:00007f10a7955048 EFLAGS: 00000246 ORIG_RAX:
+000000000000001c
+[ 1901.664873][    C1] RAX: ffffffffffffffda RBX: 0000000000795fa0 RCX:
+000000000054d2cd
+[ 1901.664878][    C1] RDX: 0000000000000015 RSI: 0000000000003000 RDI:
+0000000020001000
+[ 1901.664884][    C1] RBP: 0000000000000000 R08: 0000000000000000 R09:
+0000000000000000
+[ 1901.664889][    C1] R10: 0000000000000000 R11: 0000000000000246 R12:
+0000000000795fac
+[ 1901.664894][    C1] R13: 0000000000000000 R14: 0000000000795fa0 R15:
+00007f10a7935000
