@@ -1,216 +1,101 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BC841A9B4C;
-	Wed, 21 May 2025 10:09:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B1E723D285
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 10:09:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747822162; cv=none; b=LzBfMU4r6OKwt9i30X3FfS23X9Z7dBkyCMFk/V7KNuvcDdQKYas3xyIFzuv8qbtO8cwGEpxGuKbRCNp1vq9P52XPsFAx7ANBIckoLXZnc5RH7mfaf/QiMAAG8YxJ2isuqhvz415q0v8ue7D3Nj7Fl6nuBGBlpMjWMX4rZue1Txg=
+	t=1747822172; cv=none; b=d9wdzz+yCca0zf9M03Dqf0ytcOAAGIG/lSjHoK0SNd0dRj4phnhY3QKMTqBYsbvwmuO5gCXVm3RwoYDLr3xe/dQZJKS6DyWotBpGCOdyTp2Nz6jsCysPU+sN3n2dWOdU5V9H/sLGO3zhp3zNN2RwQfbvnyir6kpRrDFJF4l8f4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747822162; c=relaxed/simple;
-	bh=GJtjHLwbxetCaPY6Nh168eeCsJmjGpcxn+Lhe8fiWAE=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=FpJ2uHdfDD0zahe7DVouZnGYJfOdqxFRgoaje9EnbycBh1PJVePPyfCFkXJNTvbfk4XyHaPjIgoybGQtfXlnKRJJLenJF+gSmrR56OYzJ9BWiYyTGciBSzTQBv9uBBQx5S9FOkBnZyo3Pwp00q5q+JKKfS8tAPzwGjQC0psuLTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OcGfn1pH; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747822172; c=relaxed/simple;
+	bh=T2ohZniJWBi98PVxpm8ErkwXwbAvhGQujUtaKkLYYH0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=l4ojBSvanjaFEvCyornQx3nrswWRMBgHVqyDOZf7ACNlENiDCIHUq6pozxEm4voqlH/w7G27h06M18fE7Zsu0oh+woqhel5cnCZYogAu09xZOCH+404p0+fs7bUj2WgZ5man0kB0MN5KyiRtsK+9D89jku7wrBfQXM8OBbbucLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omnibond.com; spf=pass smtp.mailfrom=omnibond.com; dkim=pass (2048-bit key) header.d=omnibond-com.20230601.gappssmtp.com header.i=@omnibond-com.20230601.gappssmtp.com header.b=IjDzG+Dk; arc=none smtp.client-ip=209.85.215.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omnibond.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omnibond.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OcGfn1pH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747822160; x=1779358160;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=GJtjHLwbxetCaPY6Nh168eeCsJmjGpcxn+Lhe8fiWAE=;
-  b=OcGfn1pHXNHot1vlbmv29CmADiSwF/sLipCyPKcGisrj1kORNU1xjSFC
-   kkPHw4+DRZjUvtxpXCY0Lf4Pw68lwihdz4wWbZio0TOjmo/3r+8DKs+Ep
-   /Op7iE0BVCqRwo5qgQmYMHMs0z9SCoAASp4Ke3BopywIIEs8QNt6lnoCe
-   8vcQNgOk7sJnmcYbHh3MTQc3FQiUIkuMoRA2wS2HSywv7DfGpM7c5Swxo
-   KUFIYED3ZNqFH5WTuoDHD7E7tRv1xXIqdklheSYJA9k/xPm52TmAcmldh
-   av2duxYpmKGHtS6/WAVIltvJreUuYVlH345KfcaR+bO+dE0zmIw89JE7f
-   A==;
-X-CSE-ConnectionGUID: kF4dPLqOS6mIA++2zoQheA==
-X-CSE-MsgGUID: iOoI2siGTXWgQ0nZBJ7OsQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="67206364"
-X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
-   d="scan'208";a="67206364"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 03:09:18 -0700
-X-CSE-ConnectionGUID: Kxou+FeYTkafmcT1p1KDGQ==
-X-CSE-MsgGUID: lFkPEBM2QBigZhWKqGkOsg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
-   d="scan'208";a="143993372"
-Received: from dalessan-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.221])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 03:09:10 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 21 May 2025 13:09:07 +0300 (EEST)
-To: Bjorn Helgaas <helgaas@kernel.org>
-cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>, 
-    Karolina Stolarek <karolina.stolarek@oracle.com>, 
-    Weinan Liu <wnliu@google.com>, 
-    Martin Petersen <martin.petersen@oracle.com>, 
-    Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, 
-    Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, 
-    Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, 
-    Lukas Wunner <lukas@wunner.de>, 
-    Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-    Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney" <paulmck@kernel.org>, 
-    Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
-    Oliver O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>, 
-    Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>, 
-    Terry Bowman <terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>, 
-    Dave Jiang <dave.jiang@intel.com>, LKML <linux-kernel@vger.kernel.org>, 
-    linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>, 
-    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kwilczynski@kernel.org>
-Subject: Re: [PATCH v7 02/17] PCI/DPC: Log Error Source ID only when valid
-In-Reply-To: <20250520215047.1350603-3-helgaas@kernel.org>
-Message-ID: <804a9b61-44dd-0f72-d12f-07cf14ff931b@linux.intel.com>
-References: <20250520215047.1350603-1-helgaas@kernel.org> <20250520215047.1350603-3-helgaas@kernel.org>
+	dkim=pass (2048-bit key) header.d=omnibond-com.20230601.gappssmtp.com header.i=@omnibond-com.20230601.gappssmtp.com header.b="IjDzG+Dk"
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-b26f5f47ba1so3270908a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 03:09:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=omnibond-com.20230601.gappssmtp.com; s=20230601; t=1747822169; x=1748426969; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QYGknq2XTmKqZ9GVMDYnnP5431Y08W1eWrL73PlrmDQ=;
+        b=IjDzG+DkhkWIOAF0mvkcvdLqQsTtX9XN/BNRwiKdhp72NpstjGYvy8iiYiP07/tT0E
+         AhiUcA1SPIRi8p4htxlxZZiTw+GDF82MzDoAvjm1KtZS7q4n/uTAuVdnvOUyi4dP18VU
+         3s4yWjB8qU+PqzJxq5w78FreNTLDy3CJ/WDM1mQbAga4yNMb/8X4QdV5sX/N2isl0OiS
+         jDNUYs0CoDeE+0EexqocgXYf5m+DgVEx18UThBNV6jztjDrl66ixnbEHZYK6d4/tR6rJ
+         DWykcVcPbAI3wIjnAw1nVh3FTQqLVY6mHNe+aGc9BT3esY+vvS4B8Bd68E0pX9T2BQr2
+         MhyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747822169; x=1748426969;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QYGknq2XTmKqZ9GVMDYnnP5431Y08W1eWrL73PlrmDQ=;
+        b=HPIdRQcJwyhHk6VB4GQyDSqqQQEg2MMYpRn9czAGo+FC6b0R9f0j+oot/PAbGfQIKF
+         V+RWf3c/4Q/WGFZriT5rxunMIG3Nd9MxhkW6MzjmvpBj/p2nfc0WTV+4jYq+bRH+xQve
+         36BiNsl28vNCD/8vE5sQBprzyJPBc9Pf3fl9MQDpTcsSBvZ+y/F035NaN+3fmy3g6o8t
+         3Ql8KlpBeXaoT2arscKPJuw67V31Jbj2IQP6nqrqirKJ8HChul4hsiPB8DKTYK5Yp9pU
+         YKXZJLiVFzkYmT4gsubpGyTcBXfyOB0fsVgcdmlFK9CD9AjHPSar3TTJEht8Mx856ESl
+         PN7A==
+X-Gm-Message-State: AOJu0YyeGhaUAd0Lgn4F1ifHrChfOC/dO/4V5WOuR9ECZyZa56/znchB
+	Ph4aPCl+OPaNYIrTLdjsOs2x67zO3tgNfmCI7kRURhE1GIMUSx96RZLiaBYpAgwOWkOUAowjeuq
+	v9Z1hSJrgcu9Z8FAi49pTZdwcXy7y/PK/D8wngo6M
+X-Gm-Gg: ASbGncuTpEVO2zKr1p04xoih1wBRR1zt0eHTT8CopOWbfVpsVTATNhS++kSndXdoayT
+	xFr4/pkQloyqD8S20dJW2jHPashwPWu8auXX9CRV4JZyCh0zwpl5U+VNukRfUspUusJmfzjVPzO
+	Eer5+GRG92AWclQPxKEvRwXkllYDyc1T/xHKncI//nTvYL
+X-Google-Smtp-Source: AGHT+IHxaq57x4qvgJ09saZBZQthjkNcpgYB/gaf0cvHhyJ/IV0TqlMsd6tqs8OeJATTJ07pkvn5esWsPDCQY49Kk84=
+X-Received: by 2002:a17:903:11c6:b0:21f:7880:8472 with SMTP id
+ d9443c01a7336-231de370156mr298025245ad.35.1747822169450; Wed, 21 May 2025
+ 03:09:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1798336978-1747822147=:946"
+References: <20250521075357.0e34ded8@canb.auug.org.au>
+In-Reply-To: <20250521075357.0e34ded8@canb.auug.org.au>
+From: Mike Marshall <hubcap@omnibond.com>
+Date: Wed, 21 May 2025 06:09:18 -0400
+X-Gm-Features: AX0GCFu4Vg0xRrfR2zj0EthKnbD8HeN7pz2lAAiEnN1jZW6HflKtoS-jmJ8jA7I
+Message-ID: <CAOg9mSRCmCY6zSDGwFz=+XDvJQcwe6k7s27h5uabqD4A0592Cg@mail.gmail.com>
+Subject: Re: linux-next: duplicate patch in the orangefs tree
+To: Stephen Rothwell <sfr@canb.auug.org.au>, Mike Marshall <hubcap@omnibond.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi Stephen... I asked for one of my patches to be
+pulled early because of a regression... I'll get the
+extra commit out of my regular linux-next tree today...
 
---8323328-1798336978-1747822147=:946
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+-Mike Marshall
 
-On Tue, 20 May 2025, Bjorn Helgaas wrote:
-
-> From: Bjorn Helgaas <bhelgaas@google.com>
->=20
-> DPC Error Source ID is only valid when the DPC Trigger Reason indicates
-> that DPC was triggered due to reception of an ERR_NONFATAL or ERR_FATAL
-> Message (PCIe r6.0, sec 7.9.14.5).
->=20
-> When DPC was triggered by ERR_NONFATAL (PCI_EXP_DPC_STATUS_TRIGGER_RSN_NF=
-E)
-> or ERR_FATAL (PCI_EXP_DPC_STATUS_TRIGGER_RSN_FE) from a downstream device=
-,
-> log the Error Source ID (decoded into domain/bus/device/function).  Don't
-> print the source otherwise, since it's not valid.
->=20
-> For DPC trigger due to reception of ERR_NONFATAL or ERR_FATAL, the dmesg
-> logging changes:
->=20
->   - pci 0000:00:01.0: DPC: containment event, status:0x000d source:0x0200
->   - pci 0000:00:01.0: DPC: ERR_FATAL detected
->   + pci 0000:00:01.0: DPC: containment event, status:0x000d, ERR_FATAL re=
-ceived from 0000:02:00.0
->=20
-> and when DPC triggered for other reasons, where DPC Error Source ID is
-> undefined, e.g., unmasked uncorrectable error:
->=20
->   - pci 0000:00:01.0: DPC: containment event, status:0x0009 source:0x0200
->   - pci 0000:00:01.0: DPC: unmasked uncorrectable error detected
->   + pci 0000:00:01.0: DPC: containment event, status:0x0009: unmasked unc=
-orrectable error detected
->=20
-> Previously the "containment event" message was at KERN_INFO and the
-> "%s detected" message was at KERN_WARNING.  Now the single message is at
-> KERN_WARNING.
->=20
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> Tested-by: Krzysztof Wilczy=C5=84ski <kwilczynski@kernel.org>
-> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux=
-=2Eintel.com>
-> ---
->  drivers/pci/pcie/dpc.c | 64 ++++++++++++++++++++++++------------------
->  1 file changed, 36 insertions(+), 28 deletions(-)
->=20
-> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> index 3daaf61c79c9..9d85f1b3b761 100644
-> --- a/drivers/pci/pcie/dpc.c
-> +++ b/drivers/pci/pcie/dpc.c
-> @@ -261,37 +261,45 @@ void dpc_process_error(struct pci_dev *pdev)
->  =09struct aer_err_info info =3D {};
-> =20
->  =09pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
-> -=09pci_read_config_word(pdev, cap + PCI_EXP_DPC_SOURCE_ID, &source);
-> -
-> -=09pci_info(pdev, "containment event, status:%#06x source:%#06x\n",
-> -=09=09 status, source);
-> =20
->  =09reason =3D status & PCI_EXP_DPC_STATUS_TRIGGER_RSN;
-> -=09ext_reason =3D status & PCI_EXP_DPC_STATUS_TRIGGER_RSN_EXT;
-> -=09pci_warn(pdev, "%s detected\n",
-> -=09=09 (reason =3D=3D PCI_EXP_DPC_STATUS_TRIGGER_RSN_UNCOR) ?
-> -=09=09 "unmasked uncorrectable error" :
-> -=09=09 (reason =3D=3D PCI_EXP_DPC_STATUS_TRIGGER_RSN_NFE) ?
-> -=09=09 "ERR_NONFATAL" :
-> -=09=09 (reason =3D=3D PCI_EXP_DPC_STATUS_TRIGGER_RSN_FE) ?
-> -=09=09 "ERR_FATAL" :
-> -=09=09 (ext_reason =3D=3D PCI_EXP_DPC_STATUS_TRIGGER_RSN_RP_PIO) ?
-> -=09=09 "RP PIO error" :
-> -=09=09 (ext_reason =3D=3D PCI_EXP_DPC_STATUS_TRIGGER_RSN_SW_TRIGGER) ?
-> -=09=09 "software trigger" :
-> -=09=09 "reserved error");
-> =20
-> -=09/* show RP PIO error detail information */
-> -=09if (pdev->dpc_rp_extensions &&
-> -=09    reason =3D=3D PCI_EXP_DPC_STATUS_TRIGGER_RSN_IN_EXT &&
-> -=09    ext_reason =3D=3D PCI_EXP_DPC_STATUS_TRIGGER_RSN_RP_PIO)
-> -=09=09dpc_process_rp_pio_error(pdev);
-> -=09else if (reason =3D=3D PCI_EXP_DPC_STATUS_TRIGGER_RSN_UNCOR &&
-> -=09=09 dpc_get_aer_uncorrect_severity(pdev, &info) &&
-> -=09=09 aer_get_device_error_info(pdev, &info)) {
-> -=09=09aer_print_error(pdev, &info);
-> -=09=09pci_aer_clear_nonfatal_status(pdev);
-> -=09=09pci_aer_clear_fatal_status(pdev);
-> +=09switch (reason) {
-> +=09case PCI_EXP_DPC_STATUS_TRIGGER_RSN_UNCOR:
-> +=09=09pci_warn(pdev, "containment event, status:%#06x: unmasked uncorrec=
-table error detected\n",
-> +=09=09=09 status);
-> +=09=09if (dpc_get_aer_uncorrect_severity(pdev, &info) &&
-> +=09=09    aer_get_device_error_info(pdev, &info)) {
-> +=09=09=09aer_print_error(pdev, &info);
-> +=09=09=09pci_aer_clear_nonfatal_status(pdev);
-> +=09=09=09pci_aer_clear_fatal_status(pdev);
-> +=09=09}
-> +=09=09break;
-> +=09case PCI_EXP_DPC_STATUS_TRIGGER_RSN_NFE:
-> +=09case PCI_EXP_DPC_STATUS_TRIGGER_RSN_FE:
-> +=09=09pci_read_config_word(pdev, cap + PCI_EXP_DPC_SOURCE_ID,
-> +=09=09=09=09     &source);
-> +=09=09pci_warn(pdev, "containment event, status:%#06x, %s received from =
-%04x:%02x:%02x.%d\n",
-> +=09=09=09 status,
-> +=09=09=09 (reason =3D=3D PCI_EXP_DPC_STATUS_TRIGGER_RSN_FE) ?
-> +=09=09=09=09"ERR_FATAL" : "ERR_NONFATAL",
-> +=09=09=09 pci_domain_nr(pdev->bus), PCI_BUS_NUM(source),
-> +=09=09=09 PCI_SLOT(source), PCI_FUNC(source));
-> +=09=09break;
-> +=09case PCI_EXP_DPC_STATUS_TRIGGER_RSN_IN_EXT:
-> +=09=09ext_reason =3D status & PCI_EXP_DPC_STATUS_TRIGGER_RSN_EXT;
-> +=09=09pci_warn(pdev, "containment event, status:%#06x: %s detected\n",
-> +=09=09=09 status,
-> +=09=09=09 (ext_reason =3D=3D PCI_EXP_DPC_STATUS_TRIGGER_RSN_RP_PIO) ?
-> +=09=09=09 "RP PIO error" :
-> +=09=09=09 (ext_reason =3D=3D PCI_EXP_DPC_STATUS_TRIGGER_RSN_SW_TRIGGER) =
-?
-> +=09=09=09 "software trigger" :
-> +=09=09=09 "reserved error");
-> +=09=09/* show RP PIO error detail information */
-> +=09=09if (ext_reason =3D=3D PCI_EXP_DPC_STATUS_TRIGGER_RSN_RP_PIO &&
-> +=09=09    pdev->dpc_rp_extensions)
-> +=09=09=09dpc_process_rp_pio_error(pdev);
-> +=09=09break;
->  =09}
->  }
-> =20
->=20
-
-Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-
---=20
- i.
-
---8323328-1798336978-1747822147=:946--
+On Tue, May 20, 2025 at 5:54=E2=80=AFPM Stephen Rothwell <sfr@canb.auug.org=
+.au> wrote:
+>
+> Hi all,
+>
+> The following commit is also in Linus Torvalds' tree as a different commi=
+t
+> (but the same patch):
+>
+>   ddaa7202a930 ("orangefs: adjust counting code to recover from 665575cf"=
+)
+>
+> This is commit
+>
+>   219bf6edd7ef ("orangefs: adjust counting code to recover from 665575cf"=
+)
+>
+> in Linus' tree.
+>
+> --
+> Cheers,
+> Stephen Rothwell
