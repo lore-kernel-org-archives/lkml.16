@@ -1,199 +1,91 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28055231A37
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 12:24:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD1EF79CF
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 12:25:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747830293; cv=none; b=ZNqTF5lY8RDtFyX6jvh58D3G+dlUh4ZxgzyWCIr2GAPJE/YPFeDWiTjXVur/Sm9ru2SqPWfNkS27UvoT+0zKjcPScGNZ/PVid8MY3+aB0Fhxicu0wQR4SVZH0sqBte3iWx7QvtK5Ipns4hNo8jajHZ/eN2BNEcytcIgTN0E36ng=
+	t=1747830328; cv=none; b=Jm1JvzErLTDP+Vk1261BUvnFBwDmEceIHAzQei85OECVwWXDXHaxayQXlW1NhvU73c7HOVP2n9MPyyh16EosT1vqkFlV9lGxjGhxnPnOAifrHXpPKvW7nbK1EfGqbDXl7T1f0c1hAknTRaeg7czFd0imHe9kyI/mLqEnUKv5UkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747830293; c=relaxed/simple;
-	bh=wjLY7AIai8qSlFWdRLQdWDD0L4OkD/Igtz6mbreEDLM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ifj+dXIzkDHJyHkazXvhijF2hqKUkNeD3q+Ne/QO++CHaYeQcwnUE3ZINGlBQ3ifTzIdTeZ2qeRXPeKfvIsAoB5hZ7H6mtBfZdSY2nGFl4QVOWvKY/GKHTAoJd+WbzBnj3pw+DdTcDZyzwjurv+CNwr13mIg/R505clozh/qOsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DfOpjPXZ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747830328; c=relaxed/simple;
+	bh=fMe4GJl2U+oM6kikbPqxC/xSrL1klr4ugpaio1HDWH0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=evHGQxX40fjVxxIb1CpTFOWUJ04nWP5ySI1Mf0DpjW36MtjI3ZhzfQcYpREmjAr+povX8htVz4SRqOzMC8mAgRY6ZMDnNVoWZqsfqF2S8Y7Zt2l0r9Ax6iiggp+051fCYCIT3AOSjHej4PVt5hMjnA3f8lexN8K0Oej93L1tb8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=acqBl7qF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DfOpjPXZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747830291;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=o3U/NCNCT27I8c/APqD5BdP8Dg6ivclL0fCgxsI3jm8=;
-	b=DfOpjPXZm9hcEMoYQZy8lOXF+J+0wiMpqukgzKrTgI14zJ0722Sjj/7P7EM9RXgPh/BXOP
-	wK/DqXs9RLECV/tJb9g5Jif2t2OzYK3FGU0p0eYq4f7j0xXOWsSLSoyZABdnAO3y+hAG4N
-	xq/TiG6xTBOVmgziBT3X+PuAEcEMVYk=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-475-tZuOJfwoNly5XNBffweFZA-1; Wed, 21 May 2025 08:24:49 -0400
-X-MC-Unique: tZuOJfwoNly5XNBffweFZA-1
-X-Mimecast-MFC-AGG-ID: tZuOJfwoNly5XNBffweFZA_1747830289
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a364d2d0efso2398395f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 05:24:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747830288; x=1748435088;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=o3U/NCNCT27I8c/APqD5BdP8Dg6ivclL0fCgxsI3jm8=;
-        b=REMSjNgf+omt6oXPDvZ4y9UkUgkVI1VseZkrpY2pwUawbXisGdgCUvnBm9zhi1VbWD
-         kmXMbD9oXdw9epMDDMAkUq9LbEI4pbUfyoetG0VLLKWqw7XxNKnO4Ms/EWRD/RCk/PnZ
-         HJtvW1NsOh0/cEMpvAXc9ExMBrOR9FsyTGz8dy6/vBvmkq4wddrpr/Fb3p10LDSvq8YK
-         YMg+WttN+oINAwVHDalk9tCYsAB9t2kPQrFMUoKpvmi6CcKF0o9kHlhikHElXP3KBqp5
-         Ij0Z/SFPf+gpteyoc4sGfg6StS4sAy7OVWsNPzYhuB9OIM4FtMOYBOVF+ot+e45emkRw
-         yyPg==
-X-Forwarded-Encrypted: i=1; AJvYcCVaT0r3zUAfk0UsK3coVNHd7p9yu0Xjy52M0ISjkM2Shlh2TR3ohnToZpI4czHknYA5Ygc3YP0P3HSltww=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqBHcs8ZtII9r4Bd7pCPi6fn1dw+Kc99gdqvI7iu/nFOqhQYKU
-	IDwvhKtmzxBVwbxmjLm7AnrCuhxxWNkWxxi6UqXx6gBokt8qFgEtqxqX/rRP2e+TCiRaNgmf1r7
-	GeYncnCzFtCN8ELNNjijSdJCmdF+3HTV0tfU07a6Ve7zW6dyN9NRyof+LrDOhGkgEnw==
-X-Gm-Gg: ASbGnctQQnN7Hxk0RIqPLwUVSUCnD6ISP0iC0Au1m56W7xQGQJArc6ljpZmlnkweilz
-	6LARZRIYKJe8q6gC6QPRXYRyUM0s6YgRlOGvk4J6d5R0Ujul4LhfxV7w+pwfOxiJsAJZoX2zfy/
-	uf0s2dgfqamIoVF1ifFV0f2gQpOApw+U1AM4IMzj6h9LnQvRcrPi/gnD4LjKvALAYwVNBJ1zBEj
-	KYqgczzhr5el2ix0I3aMKv5AFzlexD5BVsmpB7wFjOvesyCxThl/Y5M+KS7PPsZGfCpUizcvnEG
-	WpyaCp0y3XDsCtwQVLn3Vt8INzTf9gVk3nyCo9uM681I51Klj+q2IEb9JuL999kjNbcatxrjJPN
-	i/VPdwxt0LnrbEyYjeeo1zI1FYVU/OPXvz8yX0DI=
-X-Received: by 2002:a05:6000:184c:b0:3a3:6aa4:bf28 with SMTP id ffacd0b85a97d-3a36aa4bfe0mr12682529f8f.10.1747830288359;
-        Wed, 21 May 2025 05:24:48 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHlp35uB+nW8DT5l428dL7oAEzwqU6VVd2srOdXBOOPxCe7UlC6ZTPSsou+1mi29prF4u88tg==
-X-Received: by 2002:a05:6000:184c:b0:3a3:6aa4:bf28 with SMTP id ffacd0b85a97d-3a36aa4bfe0mr12682472f8f.10.1747830287846;
-        Wed, 21 May 2025 05:24:47 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f25:9c00:e2c7:6eb5:8a51:1c60? (p200300d82f259c00e2c76eb58a511c60.dip0.t-ipconnect.de. [2003:d8:2f25:9c00:e2c7:6eb5:8a51:1c60])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f1825457sm70806135e9.1.2025.05.21.05.24.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 May 2025 05:24:47 -0700 (PDT)
-Message-ID: <db190425-9959-4d0c-b928-c537c69bc5a7@redhat.com>
-Date: Wed, 21 May 2025 14:24:45 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="acqBl7qF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E6D7C4CEE7;
+	Wed, 21 May 2025 12:25:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747830328;
+	bh=fMe4GJl2U+oM6kikbPqxC/xSrL1klr4ugpaio1HDWH0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=acqBl7qFyvJlwAGNeLBHrZzkuoNJjdbb5WW8RcC+bVIWz9CtT7xJ9/xT5ZG4rqOXV
+	 Rhp/pq5ho/o0Vrr2NS5NB7nj4JVD3lIjVp7Rhl4r3gvUbq8Upcvgaf6Djzk55/8rOY
+	 gRvICTh5dbbnzQn/fHbQHEt1WtPMz1ZWocZCm1PbKibvFvueoQYiLT5tCP0bMeSvBo
+	 ZbNMydOOrSXZcd4XzT888s+xBOLnpBFrN+OtFTtPoPZjHcIRZpKRJHRnLBAsgTN0wN
+	 fV3NSDH55BOngjeSkFrXBC2Y/bksdw2SwGeNl15/2/4RBtuOFN6a2SB58Vd05QfzbI
+	 85crK0yB2LZ/w==
+Date: Wed, 21 May 2025 13:25:24 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Romain Gantois <romain.gantois@bootlin.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] regulator: core: do not ignore repeated requests on
+ stepped regulators
+Message-ID: <9b06c8ac-87a8-49d4-bf0b-89c73ea933ff@sirena.org.uk>
+References: <20250521-regulator-stepping-v1-1-b681ad012c0f@bootlin.com>
+ <65ea2969-b528-4a7d-b6ae-21376fe2e517@sirena.org.uk>
+ <6190301.lOV4Wx5bFT@fw-rgant>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 0/4] mm: introduce THP deferred setting
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, rientjes@google.com, hannes@cmpxchg.org,
- rdunlap@infradead.org, mhocko@suse.com, Liam.Howlett@oracle.com,
- zokeefe@google.com, surenb@google.com, jglisse@google.com, cl@gentwo.org,
- jack@suse.cz, dave.hansen@linux.intel.com, will@kernel.org, tiwai@suse.de,
- catalin.marinas@arm.com, anshuman.khandual@arm.com, dev.jain@arm.com,
- raquini@redhat.com, aarcange@redhat.com, kirill.shutemov@linux.intel.com,
- yang@os.amperecomputing.com, thomas.hellstrom@linux.intel.com,
- vishal.moola@gmail.com, sunnanyong@huawei.com, usamaarif642@gmail.com,
- wangkefeng.wang@huawei.com, ziy@nvidia.com, shuah@kernel.org,
- peterx@redhat.com, willy@infradead.org, ryan.roberts@arm.com,
- baolin.wang@linux.alibaba.com, baohua@kernel.org,
- mathieu.desnoyers@efficios.com, mhiramat@kernel.org, rostedt@goodmis.org,
- corbet@lwn.net, akpm@linux-foundation.org
-References: <20250515033857.132535-1-npache@redhat.com>
- <a8bc6012-578b-412a-8dc9-fa9349feaa8b@lucifer.local>
- <CAA1CXcD8FCdCsBkyW=Ppbr-ZRD8PNmPu-3khipX0fVK3mxs-EQ@mail.gmail.com>
- <c027a3db-eb6d-4a3c-98b0-635f3f842ee6@lucifer.local>
- <43d6aa16-3e52-45df-9366-e072c0cb3065@redhat.com>
- <a41ea49b-2bac-44c8-9a4a-dd55dfd0d171@lucifer.local>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <a41ea49b-2bac-44c8-9a4a-dd55dfd0d171@lucifer.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="mzW2MNSmwyEGNhSa"
+Content-Disposition: inline
+In-Reply-To: <6190301.lOV4Wx5bFT@fw-rgant>
+X-Cookie: 42
 
->>
->> Anyhow, to me the dependency is obvious, but I've followed the MM meeting
->> discussions, development etc.
-> 
-> Right but is it clear to Andrew? I mean the cover letter was super unclear
-> to me.
 
-I mean, assuming that it would not be clear to Andrew (and I think it is 
-clear to Andrew), I we would get CCed on these emails and could 
-immediately scream STOOOOOP :)
+--mzW2MNSmwyEGNhSa
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-And until this would hit mm-stable, a bit more time would pass.
+On Wed, May 21, 2025 at 01:50:22PM +0200, Romain Gantois wrote:
+> On Wednesday, 21 May 2025 12:07:05 CEST Mark Brown wrote:
 
-> 
-> What's to prevent things getting merged out of order?
+> > No, if there's an issue here we should handle it the first time we set
+> > the voltage by doing multiple steps in one set_voltage() call.  Having
+> > individual client drivers all having to repeatedly call set_voltage() is
+> > obviously not a good API.
 
-Fortunately, there are still people working here and not machines (at 
-least, that's what I hope).
+> Understood, would it make sense to handle this directly in=20
+> regulator_set_voltage_unlocked()?  For example by checking for a max_uV_s=
+tep=20
+> condition and repeating calls to regulator_do_balance_voltage() until the=
+=20
+> resulting voltage stabilizes?
 
-> And do people 'just
-> have to remember' to resend?
+Yes, handling it there seems sensible.
 
-Yes, in this case Nico wants to get his stuff upstream and must drive it 
-once the dependencies are met IMHO.
+--mzW2MNSmwyEGNhSa
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> 
-> If there's a requirement related to the ordering of these series it really
-> has to be expressed very clearly.
+-----BEGIN PGP SIGNATURE-----
 
-Jup. I'll note that for now there was no strict rule what to tag as RFC 
-and what not that I know of. Of course, if people send broken, 
-half-implemented, untested ... crap, it should *clearly* be RFC.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgtxjMACgkQJNaLcl1U
+h9B/egf/REtz+H2xjYEpfb239fB8UY9jlC3eam5JPFJy6V63T9wxuRkxSBStYP+k
+oVWf8goXjj2QO1f/JdqaGeOi2CKOMyeZMAvFzKaAGcUVBjpfze/MAfYiuZ07A9AL
+EKmlHnsn16AJXOoKXa2My4jCMxgPBr3euqGhpqcOTrVKJ/wZ4e7ru+5HNRsVorS6
+lmpZhNb6qXZVclJKdADui1AuZHpLfL6w9v5XoGokgfFUprBq7CFm9gkZe+Uau41D
+i/PzNLwNaJlQFkW16lvY5MyAav7w/xYizOFI3qNigMOt6fh+RQVR5Wg6cpkD440j
+vyl+7g20TcTQ9XqBIvYp4KNI59z1vw==
+=cxY5
+-----END PGP SIGNATURE-----
 
-People should be spelling out dependencies in any case (especially for 
-non-RFC versions) clearly.
-
-I'll note that even if there would be a rule, I'm afraid we don't have a 
-good place to document it (and not sure if people would find it or even 
-try finding it ...) :/
-
-A big problem is when some subsystems have their own rules for how to 
-handle such things. That causes major pain for contributors ...
-
--- 
-Cheers,
-
-David / dhildenb
-
+--mzW2MNSmwyEGNhSa--
