@@ -1,233 +1,120 @@
-Received: from smtp01.aussiebb.com.au (smtp01.aussiebb.com.au [121.200.0.92])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 117C8635;
-	Wed, 21 May 2025 06:09:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=121.200.0.92
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2173C23314B
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 06:09:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747807790; cv=none; b=vB3k7M0wMCTxA8i7LcxMgbE40yNMukTTfCDVC/rTSMk3fWexjECoQgGRRfo1FY4mDxcYE8oyJt2bCLFWHVfgCj4P4A+zoKBRDFIvJi7YPEYSKUy4VU6126qLjTN8hNNe74iNMyOgHQjmQ9K3LdaYMwt8oIaghFb6jeaCVI6it8U=
+	t=1747807797; cv=none; b=M9FHe1Sf165Oof4vBt1XEQsGz3EaNY2VA2e2rOIxUGV+T13Ol8KCobJ6XJHXPowgk7Xj0JMrrNvyk8ShKpbT91xBptWiUwmvkqiZtiG9zeXsjQ/P8UxDONaL19zLiUnScYXIFcYUREg3hyyIuvK/V1yzpNBUVYaoXrfm5AlY3z4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747807790; c=relaxed/simple;
-	bh=mnNRJkZi6gF9GPc+4DEd9yX4jfVkL1nTvpti+jEwQQg=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=VwhU75omCyIFdtPa1YkJIbrvW+Kb/wAA6IIRnUSYgF5j+AXzRf4ih85DIHWeEjrT4FRDt7YOGAZROeUlzB/jwol/7f5rSk7KMTCjwTlmgzLXaO+bVv4CSOSsObqr+gCl9wXQV1BazXlo0IO9EruL5oTRocFq3RGHE+vniPxzb7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=themaw.net; spf=fail smtp.mailfrom=themaw.net; arc=none smtp.client-ip=121.200.0.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=themaw.net
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=themaw.net
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by smtp01.aussiebb.com.au (Postfix) with ESMTP id 97FCF10046A;
-	Wed, 21 May 2025 16:09:45 +1000 (AEST)
-X-Virus-Scanned: Debian amavisd-new at smtp01.aussiebb.com.au
-Received: from smtp01.aussiebb.com.au ([127.0.0.1])
-	by localhost (smtp01.aussiebb.com.au [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id R9Be8wtoUa3F; Wed, 21 May 2025 16:09:45 +1000 (AEST)
-Received: by smtp01.aussiebb.com.au (Postfix, from userid 116)
-	id 6A8AD10046C; Wed, 21 May 2025 16:09:45 +1000 (AEST)
-X-Spam-Level: 
-Received: from [192.168.68.229] (159-196-82-144.9fc452.per.static.aussiebb.net [159.196.82.144])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	s=arc-20240116; t=1747807797; c=relaxed/simple;
+	bh=lsoNQydVBe6kyb2yf9EKCr711zBK69XTFkmPXqoOOGM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UW1hJWMtUZpn5En/VUEfwfdiWB22Jrh8P7JnlPKCf3aKkv/CFlPiewpnKdFA0p+Bk+69mgUdxF6ujAz/DFoscEzSYfBXYUB1jKPtQZt4moV/5oYVEAz6lT9fCLsakOxUzVxr1yd7u5GEjmOJ4qTXZ7BxdBYRT0sfwKuMUGDAf/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=gh5hGvmq; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="gh5hGvmq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1747807793;
+	bh=lsoNQydVBe6kyb2yf9EKCr711zBK69XTFkmPXqoOOGM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=gh5hGvmqHACRwikgRWx0e7RR5z8SkiGFX7Q8bj+XVZUby8zWmIZnugenLArIdtiqk
+	 GxB2PwHSPkQXpvZAKYu1byfL8zC6RHovb2NaSz+FLLUWZ0Rtr/t5jFSWGA7DQfdPOo
+	 ijKEhuonB5G4bXuvh6pxIG/z6OkVqU6Md7zVUikkLUyy0vmAFUepmRuqanQ9UWlNZH
+	 Kg6a6Xo+jiTnM9cd+xuvB6xktGsE1l2Rbgry1wsGEinAtjuhxVSVFGomyRMRIdCxaM
+	 S57zQPLIrFmLKrUdq977kSYE5P7cuDoGbrLBTG3M/AAGPQhxjDU5ROGdMWXGUTvwHv
+	 IQdEH5+gXAUIQ==
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: ian146@aussiebb.com.au)
-	by smtp01.aussiebb.com.au (Postfix) with ESMTPSA id 9EA4E10046A;
-	Wed, 21 May 2025 16:09:43 +1000 (AEST)
-Message-ID: <97895fbb-21ae-40c4-9af4-3fa7a1b11729@themaw.net>
-Date: Wed, 21 May 2025 14:09:42 +0800
+	(Authenticated sender: bbrezillon)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id BEF8317E0FBA;
+	Wed, 21 May 2025 08:09:52 +0200 (CEST)
+Date: Wed, 21 May 2025 08:09:48 +0200
+From: Boris Brezillon <boris.brezillon@collabora.com>
+To: =?UTF-8?B?QWRyacOhbg==?= Larumbe <adrian.larumbe@collabora.com>
+Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ kernel@collabora.com, Rob Herring <robh@kernel.org>, Steven Price
+ <steven.price@arm.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>
+Subject: Re: [PATCH v3 2/5] drm/panfrost: Internally label some BOs
+Message-ID: <20250521080948.1b68a6a1@collabora.com>
+In-Reply-To: <20250520174634.353267-3-adrian.larumbe@collabora.com>
+References: <20250520174634.353267-1-adrian.larumbe@collabora.com>
+	<20250520174634.353267-3-adrian.larumbe@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5.10 0/5] kernfs: backport locking and concurrency
- improvement
-From: Ian Kent <raven@themaw.net>
-To: Qingfang Deng <dqfext@gmail.com>, stable@vger.kernel.org,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tejun Heo <tj@kernel.org>,
- linux-kernel@vger.kernel.org
-References: <20250521015336.3450911-1-dqfext@gmail.com>
- <c36cb32c-9434-4978-af75-ff6f04468c44@themaw.net>
-Content-Language: en-US
-Autocrypt: addr=raven@themaw.net; keydata=
- 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
-In-Reply-To: <c36cb32c-9434-4978-af75-ff6f04468c44@themaw.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On 21/5/25 13:35, Ian Kent wrote:
-> On 21/5/25 09:53, Qingfang Deng wrote:
->> KCSAN reports concurrent accesses to inode->i_mode:
->>
->> ==================================================================
->> BUG: KCSAN: data-race in generic_permission / kernfs_iop_permission
->>
->> write to 0xffffffe001129590 of 2 bytes by task 2477 on cpu 1:
->>   kernfs_iop_permission+0x72/0x1a0
->>   link_path_walk.part.0.constprop.0+0x348/0x420
->>   path_openat+0xee/0x10f0
->>   do_filp_open+0xaa/0x160
->>   do_sys_openat2+0x252/0x380
->>   sys_openat+0x4c/0xa0
->>   ret_from_syscall+0x0/0x2
->>
->> read to 0xffffffe001129590 of 2 bytes by task 3902 on cpu 3:
->>   generic_permission+0x26/0x120
->>   kernfs_iop_permission+0x150/0x1a0
->>   link_path_walk.part.0.constprop.0+0x348/0x420
->>   path_lookupat+0x58/0x280
->>   filename_lookup+0xae/0x1f0
->>   user_path_at_empty+0x3a/0x70
->>   vfs_statx+0x82/0x170
->>   __do_sys_newfstatat+0x36/0x70
->>   sys_newfstatat+0x2e/0x50
->>   ret_from_syscall+0x0/0x2
->>
->> Reported by Kernel Concurrency Sanitizer on:
->> CPU: 3 PID: 3902 Comm: ls Not tainted 5.10.104+ #0
->> ==================================================================
->
-> It's been soo long since this was merged.
->
-> I seem to vaguely remember something along these lines and after 
-> analyzing it
->
-> came to the conclusion it was a false positive.
->
-> Let me think about it for a while and see if I can remember the reasoning.
+On Tue, 20 May 2025 18:43:59 +0100
+Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com> wrote:
 
-Ok, IIRC, so my thinking was that mode is actually stored in the node 
-->mode and is
+> Perfcnt samples buffer is not exposed to UM, but we would like to keep
+> a tag on it as a potential debug aid.
+>=20
+> PRIME imported GEM buffers are UM exposed, but since the usual Panfrost
+> UM driver code path is not followed in their creation, they might remain
+> unlabelled for their entire lifetime, so a generic tag was deemed
+> preferable. The tag is assigned before a UM handle is created so it
+> doesn't contradict the logic about labelling internal BOs.
+>=20
+> Signed-off-by: Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com>
 
-always updated while holding the write lock and copying the same value 
-from ->mode
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
 
-in multiple concurrent threads wouldn't lead to corruption of inode->mode.
+> ---
+>  drivers/gpu/drm/panfrost/panfrost_gem.c     | 10 ++++++++++
+>  drivers/gpu/drm/panfrost/panfrost_perfcnt.c |  2 ++
+>  2 files changed, 12 insertions(+)
+>=20
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_gem.c b/drivers/gpu/drm/pa=
+nfrost/panfrost_gem.c
+> index 4c5be7ccc9cc..04483d5fb45d 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_gem.c
+> +++ b/drivers/gpu/drm/panfrost/panfrost_gem.c
+> @@ -305,6 +305,16 @@ panfrost_gem_prime_import_sg_table(struct drm_device=
+ *dev,
+>  	bo =3D to_panfrost_bo(obj);
+>  	bo->noexec =3D true;
+> =20
+> +	/*
+> +	 * We assign this generic label because this function cannot
+> +	 * be reached through any of the Panfrost UM driver-specific
+> +	 * code paths, unless one is given by explicitly calling the
+> +	 * SET_LABEL_BO ioctl. It is therefore preferable to have a
+> +	 * blanket BO tag that tells us the object was imported from
+> +	 * another driver than nothing at all.
+> +	 */
+> +	panfrost_gem_internal_set_label(obj, "GEM PRIME buffer");
+> +
+>  	return obj;
+>  }
+> =20
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_perfcnt.c b/drivers/gpu/dr=
+m/panfrost/panfrost_perfcnt.c
+> index 52befead08c6..563f16bae543 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_perfcnt.c
+> +++ b/drivers/gpu/drm/panfrost/panfrost_perfcnt.c
+> @@ -111,6 +111,8 @@ static int panfrost_perfcnt_enable_locked(struct panf=
+rost_device *pfdev,
+>  		goto err_put_mapping;
+>  	perfcnt->buf =3D map.vaddr;
+> =20
+> +	panfrost_gem_internal_set_label(&bo->base, "Perfcnt sample buffer");
+> +
+>  	/*
+>  	 * Invalidate the cache and clear the counters to start from a fresh
+>  	 * state.
 
-
->
->
->
-> Ian
->
->>
->> kernfs_iop_permission+0x72/0x1a0:
->>
->> kernfs_refresh_inode at fs/kernfs/inode.c:174
->>   169
->>   170     static void kernfs_refresh_inode(struct kernfs_node *kn, 
->> struct inode *inode)
->>   171     {
->>   172         struct kernfs_iattrs *attrs = kn->iattr;
->>   173
->>> 174<        inode->i_mode = kn->mode;
->>   175         if (attrs)
->>   176             /*
->>   177              * kernfs_node has non-default attributes get them 
->> from
->>   178              * persistent copy in kernfs_node.
->>   179              */
->>
->> (inlined by) kernfs_iop_permission at fs/kernfs/inode.c:285
->>   280             return -ECHILD;
->>   281
->>   282         kn = inode->i_private;
->>   283
->>   284         mutex_lock(&kernfs_mutex);
->>> 285<        kernfs_refresh_inode(kn, inode);
->>   286         mutex_unlock(&kernfs_mutex);
->>   287
->>   288         return generic_permission(inode, mask);
->>   289     }
->>   290
->>
->> generic_permission+0x26/0x120:
->>
->> acl_permission_check at fs/namei.c:298
->>   293      * Note that the POSIX ACL check cares about the 
->> MAY_NOT_BLOCK bit,
->>   294      * for RCU walking.
->>   295      */
->>   296     static int acl_permission_check(struct inode *inode, int mask)
->>   297     {
->>> 298<        unsigned int mode = inode->i_mode;
->>   299
->>   300         /* Are we the owner? If so, ACL's don't matter */
->>   301         if (likely(uid_eq(current_fsuid(), inode->i_uid))) {
->>   302             mask &= 7;
->>   303             mode >>= 6;
->>
->> (inlined by) generic_permission at fs/namei.c:353
->>   348         int ret;
->>   349
->>   350         /*
->>   351          * Do the basic permission checks.
->>   352          */
->>> 353<        ret = acl_permission_check(inode, mask);
->>   354         if (ret != -EACCES)
->>   355             return ret;
->>   356
->>   357         if (S_ISDIR(inode->i_mode)) {
->>   358             /* DACs are overridable for directories */
->>
->> Backport the series from 5.15 to fix the concurrency bug.
->> https://lore.kernel.org/all/162642752894.63632.5596341704463755308.stgit@web.messagingengine.com 
->>
->>
->> Ian Kent (5):
->>    kernfs: add a revision to identify directory node changes
->>    kernfs: use VFS negative dentry caching
->>    kernfs: switch kernfs to use an rwsem
->>    kernfs: use i_lock to protect concurrent inode updates
->>    kernfs: dont call d_splice_alias() under kernfs node lock
->>
->>   fs/kernfs/dir.c             | 153 ++++++++++++++++++++----------------
->>   fs/kernfs/file.c            |   4 +-
->>   fs/kernfs/inode.c           |  26 +++---
->>   fs/kernfs/kernfs-internal.h |  24 +++++-
->>   fs/kernfs/mount.c           |  12 +--
->>   fs/kernfs/symlink.c         |   4 +-
->>   include/linux/kernfs.h      |   7 +-
->>   7 files changed, 138 insertions(+), 92 deletions(-)
->>
->
