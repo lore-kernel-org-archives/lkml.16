@@ -1,140 +1,70 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-80006.amazon.com (smtp-fw-80006.amazon.com [99.78.197.217])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B1F4143736
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 13:31:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51B8438F80
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 13:31:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.217
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747834262; cv=none; b=sNHWBMsl5K6Y69hwUpxTHWt0dlgCArpNMWbqA6KDowrEmmOVmqCCnFOID8uUxdyPMgb/WOhcft4+3cFMN9aClJHSsPb+Qip444Erl6Ao0wIFkZJSzP9c8Lm955bJw5GqexPYXNEeyRFYGNbopi/rm/5X5qKfd5A1OFK6fwoo2ew=
+	t=1747834264; cv=none; b=ItL1UbVwc+7malFm1/Vay7PY1Iv1c8pRxMPu2D3fhjiSDvvMcatbZX6PrxYKfeVa4qCQDrNgH+5yZfMsblPtMyH1brjRWlsF8oxMADsRt7rkHQqHx1sUJluU+zZkbQF7Hzdg5Iu6glims/YAUoRnDmgVQjG6FlwEOVz4ROMNQVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747834262; c=relaxed/simple;
-	bh=dE8S8U/P80oKy7v+PkEG7Bznl75i8IVoc76G1GRGRf8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OygRCc3guDA5ADiDVp5c/IVomFo6XdMNJ7EsuBTZHEykaqnT+o3/0Do5erubeIGYFIQeAUbWn3hhhL1tHhsaPx6zXBlcsGnYn63jNPRl2B9ZKvl4yHzp5Gn3l+5Cxyv7fjyfuArgXaXrzE+GfF9V2UQhvnVmVNAdd44elSdri5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ykx86oHR; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747834264; c=relaxed/simple;
+	bh=P44aB8a1enw1Q7BLrCYUQEhkhj0QPfIw9MrqF9vRoLQ=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kTPFOf5f1dxSaH6qDCMlC273BHIejqHVlLKOmoRm+TsRwvNAYh5LDgsNcKwycVGE3XMPFb3Cxu0EA4Lh9jn5uk2JiGa5eyl51om8vvmKCCPb81GJH4zIYmYcCsYLiSuevSjU4bamusTHixGYV6r7vZ0GZ/g6KgTUspTajBdBf+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=pDOV2AOZ; arc=none smtp.client-ip=99.78.197.217
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ykx86oHR"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-30572effb26so6288392a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 06:31:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="pDOV2AOZ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747834260; x=1748439060; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=z1dbDjgMLEJrOwumrDgSLpVT4yaU17ZjFGTyjnMHOQ4=;
-        b=ykx86oHRpqzZLUu/PhAr12S1HWVP3F9SAavNqBFCef9dPiX7Amh+HvtTgtvoe1ghdL
-         4ZVunBabZhX8TKIHZ3+BZ0bEs1E4BEU97/2D/rmqHSr8tjKFOfPNVnsAgqrAYXdLca6V
-         4CYl0ihbhDn/ckt4ETo0KEkFVqvcfcmME3P4MvrIuwgQZl6AitENJTC9LzKlM48hiaET
-         0Ng5X1KqBAgkJGW9rO4J/jRpDvCJdPvEYskDlwpsRdq9UkIzzJmm6xXj+eF+YaQY7j/C
-         TiKmXpZ397Wa521vp2cqBqMgl3Abptd3GsDmYjLXJbpFVXJjmX5kcoxYxMLx9Ck8v6ku
-         Yk7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747834260; x=1748439060;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=z1dbDjgMLEJrOwumrDgSLpVT4yaU17ZjFGTyjnMHOQ4=;
-        b=Q5fZps04gQOXmgb4ok1G/OxQJpQ+c/W0gmfYUjaLfOe0VrQ2tC355vWfx3+rAtwTLZ
-         YITQn5TbUWo0If9THYClTi5Vgf8+UZ8lT7vg64ijWs/TyIoO+vK1U8tozTKnMcqKPAhx
-         t6HAWufLNiwl74HinAEO+xntbzBxINWVQocWlpLqpbyWHgC0M5S94khn9rHqotib9MFi
-         OYBxXq6uzqrxQ9lY7cAN2i/J1LD7xmJnxOiCCFFZIjYypBw0GFpsQJ2Zh1UHTyTO08aR
-         IjK4HxC5IfRzQRIHLc1pINx8S3YxsWujZAcfdP9I8rua5+HVPdPd2vkk+rCuhI37HJGw
-         nNMg==
-X-Forwarded-Encrypted: i=1; AJvYcCVUO0YDGlDaWo5mkn7A1Ud7RL1fEIazda0Mf4YEYjSW0PTUWmANgzIdaWhrYd5QjGSzDFMGQbQZiYyUXpQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPz2FJeI1q4IjQUhz0MDUoK3zvgptfcfbj7EbSRSkPKMc1Gja/
-	ZSTqYllhXrYzeeqxOCthysFSCSygLWIMbeeMWEf8RVF2UjLUqSzxdCrQQ66W6FCWTA==
-X-Gm-Gg: ASbGncuav6wGggnkQfmztaHfwDh1MWTxZZf5Qnn6IZBfifVR+o33aC6I+fqpg5yZNwz
-	ASmn0qeqjDkOgTX5S6LovI3urYn15Xr9mrFnlWUosjRZmJ3teix9stKMON/Bz9PwK3UUdDzAnNT
-	dh69pED4eGWjyId2sMr6vkCmCNfoJYVhibxnIu91/TE7iGB9sXxynBydUrzZDy4gha0tuJXmMcy
-	5KHDgi8zLMiwHsEkpa0ILC2qXBepDxH1jVIs2OFc7a6ahrHcjaeP/vbP/rU0Rp+ahhuAZadn7QR
-	NfNDcFBdPbv30ezF2nqb7y7cZtftK5Vkly+iqCkd3DN/2V30/DgHsw6KhDHW9FT7Q0qCrLA=
-X-Google-Smtp-Source: AGHT+IGPKkuMknbqbSMLVX+JBJd/UAyJcjpyOY/yvUsxjBau5eWt4Mkj+OEXtvgnfC9urBGO+cN+Qg==
-X-Received: by 2002:a17:90b:2f0d:b0:2fe:68a5:d84b with SMTP id 98e67ed59e1d1-30e7d4e7e1bmr29895277a91.1.1747834260260;
-        Wed, 21 May 2025 06:31:00 -0700 (PDT)
-Received: from thinkpad ([120.60.52.42])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f364907dfsm3632884a91.23.2025.05.21.06.30.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 06:30:59 -0700 (PDT)
-Date: Wed, 21 May 2025 14:30:53 +0100
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Nitin Rawat <quic_nitirawa@quicinc.com>
-Cc: vkoul@kernel.org, kishon@kernel.org, 
-	James.Bottomley@hansenpartnership.com, martin.petersen@oracle.com, bvanassche@acm.org, 
-	andersson@kernel.org, neil.armstrong@linaro.org, dmitry.baryshkov@oss.qualcomm.com, 
-	konrad.dybcio@oss.qualcomm.com, quic_rdwivedi@quicinc.com, quic_cang@quicinc.com, 
-	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-scsi@vger.kernel.org
-Subject: Re: [PATCH V5 05/11] phy: qcom-qmp-ufs: Remove qmp_ufs_com_init()
-Message-ID: <z3yfou4oolymsgb72dpakwcsmq6v3gnx64mdals7krnxdhpc2a@lsepak4kc2mg>
-References: <20250515162722.6933-1-quic_nitirawa@quicinc.com>
- <20250515162722.6933-6-quic_nitirawa@quicinc.com>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
+  t=1747834263; x=1779370263;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=P44aB8a1enw1Q7BLrCYUQEhkhj0QPfIw9MrqF9vRoLQ=;
+  b=pDOV2AOZ14M04fOrUpvvRSsXqrw8RmcTS31mr0qaJqllXI9ZGzYVJ45K
+   4Rc34ev20sfrkUpJkrTKZroOVQjumGbJ4QNHU0ZR9KHAdjyJTN1a5GfIA
+   kk5ZGap9LJvZ7XUc+7NQFWs7MKvRRr6CSH6VdeDYUYRPf3Ipk4NhWiDiE
+   5KCd3YHz9YT4V3mRXdLBfuPTjQhOV5neU9WwT+7McO37UczCIv8t/y8ic
+   7/jjB1ifQjQUE58vEy1iEllyhUvxhs+2A08IX+kjaFEkQjDDkU1B+fBGt
+   3JSnfZZUBUSkHYtAIQY2ScZG6Y6uvYh8lubtpUUDWqAry+005B2l9xA2S
+   Q==;
+X-IronPort-AV: E=Sophos;i="6.15,303,1739836800"; 
+   d="scan'208";a="52411332"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
+  by smtp-border-fw-80006.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 13:31:03 +0000
+Received: from EX19MTAUWC001.ant.amazon.com [10.0.21.151:25288]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.33.138:2525] with esmtp (Farcaster)
+ id 18b2b7c1-d798-4e19-82a7-cf54732f9f2d; Wed, 21 May 2025 13:31:02 +0000 (UTC)
+X-Farcaster-Flow-ID: 18b2b7c1-d798-4e19-82a7-cf54732f9f2d
+Received: from EX19D016UWA004.ant.amazon.com (10.13.139.119) by
+ EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Wed, 21 May 2025 13:31:02 +0000
+Received: from 7cf34dda9133.amazon.com (10.106.239.34) by
+ EX19D016UWA004.ant.amazon.com (10.13.139.119) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Wed, 21 May 2025 13:31:01 +0000
+From: Cristian Prundeanu <cpru@amazon.com>
+To: <linux-kernel@vger.kernel.org>
+CC: Cristian Prundeanu <cpru@amazon.com>
+Subject: Re: EEVDF regression still exists
+Date: Wed, 21 May 2025 08:30:18 -0500
+Message-ID: <20250521133018.99124-1-cpru@amazon.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+In-Reply-To: <6a83c7fb-dbfa-49df-be8b-f1257ad1a47a@amd.com>
+References: <20250520181451.18994-1-cpru@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250515162722.6933-6-quic_nitirawa@quicinc.com>
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D031UWA004.ant.amazon.com (10.13.139.19) To
+ EX19D016UWA004.ant.amazon.com (10.13.139.119)
 
-On Thu, May 15, 2025 at 09:57:16PM +0530, Nitin Rawat wrote:
-> The qmp_ufs_power_on() function acts as a wrapper, solely invoking
-> qmp_ufs_com_init(). Additionally, the code within qmp_ufs_com_init()
-> does not correspond well with its name.
-> 
-> Therefore, to enhance the readability and eliminate unnecessary
-> function call inline qmp_ufs_com_init() into qmp_ufs_power_on().
-> 
-> There is no change to the functionality.
-> 
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
-> ---
->  drivers/phy/qualcomm/phy-qcom-qmp-ufs.c | 43 ++++++++++---------------
->  1 file changed, 17 insertions(+), 26 deletions(-)
-> 
-> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
-> index 33d238cf49aa..d3f9ee490a32 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
-> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
-> @@ -1758,12 +1758,28 @@ static void qmp_ufs_init_registers(struct qmp_ufs *qmp, const struct qmp_phy_cfg
->  		qmp_ufs_init_all(qmp, &cfg->tbls_hs_b);
->  }
->  
-> -static int qmp_ufs_com_init(struct qmp_ufs *qmp)
-> +static int qmp_ufs_com_exit(struct qmp_ufs *qmp)
+Apologies for the loose threading, accidentally posted a detached reply [1].
 
-Since there is no qmp_ufs_com_init() now, qmp_ufs_com_exit() lacks symmetry.
-Maybe you should rename it too.
-
->  {
->  	const struct qmp_phy_cfg *cfg = qmp->cfg;
-> +
-> +	reset_control_assert(qmp->ufs_reset);
-> +
-> +	clk_bulk_disable_unprepare(qmp->num_clks, qmp->clks);
-> +
-> +	regulator_bulk_disable(cfg->num_vregs, qmp->vregs);
-> +
-> +	return 0;
-> +}
-> +
-> +static int qmp_ufs_power_on(struct phy *phy)
-> +{
-> +	struct qmp_ufs *qmp = phy_get_drvdata(phy);
-> +	const struct qmp_phy_cfg *cfg = qmp->cfg;
->  	void __iomem *pcs = qmp->pcs;
->  	int ret;
->  
-> +	dev_vdbg(qmp->dev, "Initializing QMP phy\n");
-
-Now, this debug print doesn't make sense. You can drop it.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+[1] https://lore.kernel.org/all/20250520181451.18994-1-cpru@amazon.com/
