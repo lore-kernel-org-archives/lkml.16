@@ -1,176 +1,235 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F0B2256C9F
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 11:58:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EA00236451;
+	Wed, 21 May 2025 11:59:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747828732; cv=none; b=osj0IBNi6H50klD/tPOdolXE8tLVtZ+0K4yX22KB0B62Ka1rz/A/mJZZwB9+cbWGU1LXeu7WsBiZxyTprJ8FWmvbU9Wgq9hneH6nqa4dlgu0CPC1FphJh93uDyCoJ0b0VNDq/RWAfV8ePm0h+U/waZKQXIj5ghnPYpWsU1d9rf0=
+	t=1747828766; cv=none; b=lPVSo5E1FsSX6BN5OtsXRawG1dCq9do2WEka+PZ5FzPi2nuw61b6hgghLb3K5Ogyfy5RNIAZ0/JwWvCK/FPfD0DtmHfpcQ4CGTPSYYCyIjMf7y7P3hLreMYCS4PIaItLPJ3IrtTC2TQnzfQrbt6IKNiRehVsabHEZK/CgtdYZXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747828732; c=relaxed/simple;
-	bh=y8LNvCTSqWoC7VyYuBorMydHeaA5NTUu9Pu7gTfSwEE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FDXdra60KPnDPpfqk9iDHhKqWr/TFNbj279H17r2RVcRa8TuBK1PMs9C6Sa+v2MiH2/MyIiYmJ5Ue3l5kh6pd2FKHdlIO64IjWb6Em9aW6yZO0dwHfBWgXKcmTGIb7JK1w0vZNjD1ZcKPYk8wLDzOi4aTWijrovYqDoHa+ELOsk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 092FB1515;
-	Wed, 21 May 2025 04:58:36 -0700 (PDT)
-Received: from [10.57.94.227] (unknown [10.57.94.227])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1B24B3F5A1;
-	Wed, 21 May 2025 04:58:45 -0700 (PDT)
-Message-ID: <00555927-bfa1-4df0-8107-7080447acaa6@arm.com>
-Date: Wed, 21 May 2025 12:58:44 +0100
+	s=arc-20240116; t=1747828766; c=relaxed/simple;
+	bh=5dt1g8pn+Jh8br5QSCoVGCe/8Bkvni/CW+cuvrKopqQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Zrwthejd8gekMD1ybO3omBNUO9/s3zCaMe3UvKw/Ku7jb6j5RRwNs2jo84SrL/JAuIvDjI0ePVyvGjRqAC58C3TB1/pTI6wk0x0tOhuxQ6ND2taxQD5kgl90nBtGSE1dyxiI6tT8esdEZdDOHp0rlmaS4Zz1NMNol2pJSay+Qk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=I+5vvgji; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="I+5vvgji"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:
+	Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=N9sYw0TeO31vWyO3chtwUv0asVF+M8rR6zI58PzyBRY=; b=I+5vvgjii/9GWHaI3gAduroUyu
+	bR3m6GfpDP9MRZwUhO55qDIwiRseoQLeVX3Bk93j/BP+nMjtY8il6QLKJoOZUX/3viW1f+B6mJyCP
+	F0akexuNwXPgeoiDZmXBNzXCVaH23an8sX+u1Hmb45Yw//BxEHPQ7Q9R+y6fwJb4ogTigG8HXxn8A
+	6t3tP9OLbpjvGO6UgSwoCds3OemKEnaVz8FjkMczE+km5oHV8xJGfMKYC0RSFgA6KJ+pBL+O01wvL
+	zQ51S4W++BQ5vK4/jc0iKGZlSeHc7xcuQRxj9flkocawak6C/KQO9hxuHxm37wDuaZt7F2hnY4tou
+	4LTquzQw==;
+Received: from 114-44-250-28.dynamic-ip.hinet.net ([114.44.250.28] helo=gavin-HP-Z840-Workstation..)
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1uHi6P-00BBJI-EF; Wed, 21 May 2025 13:59:18 +0200
+From: Gavin Guo <gavinguo@igalia.com>
+To: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org,
+	muchun.song@linux.dev,
+	osalvador@suse.de,
+	akpm@linux-foundation.org,
+	mike.kravetz@oracle.com,
+	kernel-dev@igalia.com,
+	Gavin Guo <gavinguo@igalia.com>,
+	stable@vger.kernel.org,
+	Hugh Dickins <hughd@google.com>,
+	Florent Revest <revest@google.com>,
+	Gavin Shan <gshan@redhat.com>
+Subject: [PATCH v2] mm/hugetlb: fix a deadlock with pagecache_folio and hugetlb_fault_mutex_table
+Date: Wed, 21 May 2025 19:57:27 +0800
+Message-ID: <20250521115727.2202284-1-gavinguo@igalia.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/5] mm: Optimize mprotect() by batch-skipping PTEs
-Content-Language: en-GB
-To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org
-Cc: david@redhat.com, willy@infradead.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will@kernel.org,
- Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, vbabka@suse.cz,
- jannh@google.com, anshuman.khandual@arm.com, peterx@redhat.com,
- joey.gouly@arm.com, ioworker0@gmail.com, baohua@kernel.org,
- kevin.brodsky@arm.com, quic_zhenhuah@quicinc.com,
- christophe.leroy@csgroup.eu, yangyicong@hisilicon.com,
- linux-arm-kernel@lists.infradead.org, hughd@google.com,
- yang@os.amperecomputing.com, ziy@nvidia.com
-References: <20250519074824.42909-1-dev.jain@arm.com>
- <20250519074824.42909-2-dev.jain@arm.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <20250519074824.42909-2-dev.jain@arm.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 19/05/2025 08:48, Dev Jain wrote:
-> In case of prot_numa, there are various cases in which we can skip to the
-> next iteration. Since the skip condition is based on the folio and not
-> the PTEs, we can skip a PTE batch.
-> 
-> Signed-off-by: Dev Jain <dev.jain@arm.com>
-> ---
->  mm/mprotect.c | 36 +++++++++++++++++++++++++++++-------
->  1 file changed, 29 insertions(+), 7 deletions(-)
-> 
-> diff --git a/mm/mprotect.c b/mm/mprotect.c
-> index 88608d0dc2c2..1ee160ed0b14 100644
-> --- a/mm/mprotect.c
-> +++ b/mm/mprotect.c
-> @@ -83,6 +83,18 @@ bool can_change_pte_writable(struct vm_area_struct *vma, unsigned long addr,
->  	return pte_dirty(pte);
->  }
->  
-> +static int mprotect_batch(struct folio *folio, unsigned long addr, pte_t *ptep,
+The patch fixes a deadlock which can be triggered by an internal
+syzkaller [1] reproducer and captured by bpftrace script [2] and its log
+[3] in this scenario:
 
-Perhaps it should be called mprotect_folio_pte_batch() to match the existing
-madvise_folio_pte_batch()?
+Process 1                              Process 2
+---				       ---
+hugetlb_fault
+  mutex_lock(B) // take B
+  filemap_lock_hugetlb_folio
+    filemap_lock_folio
+      __filemap_get_folio
+        folio_lock(A) // take A
+  hugetlb_wp
+    mutex_unlock(B) // release B
+    ...                                hugetlb_fault
+    ...                                  mutex_lock(B) // take B
+                                         filemap_lock_hugetlb_folio
+                                           filemap_lock_folio
+                                             __filemap_get_folio
+                                               folio_lock(A) // blocked
+    unmap_ref_private
+    ...
+    mutex_lock(B) // retake and blocked
 
-> +		pte_t pte, int max_nr_ptes)
-> +{
-> +	const fpb_t flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
-> +
-> +	if (!folio_test_large(folio) || (max_nr_ptes == 1))
-> +		return 1;
-> +
-> +	return folio_pte_batch(folio, addr, ptep, pte, max_nr_ptes, flags,
-> +			       NULL, NULL, NULL);
-> +}
-> +
->  static long change_pte_range(struct mmu_gather *tlb,
->  		struct vm_area_struct *vma, pmd_t *pmd, unsigned long addr,
->  		unsigned long end, pgprot_t newprot, unsigned long cp_flags)
-> @@ -94,6 +106,7 @@ static long change_pte_range(struct mmu_gather *tlb,
->  	bool prot_numa = cp_flags & MM_CP_PROT_NUMA;
->  	bool uffd_wp = cp_flags & MM_CP_UFFD_WP;
->  	bool uffd_wp_resolve = cp_flags & MM_CP_UFFD_WP_RESOLVE;
-> +	int nr_ptes;
->  
->  	tlb_change_page_size(tlb, PAGE_SIZE);
->  	pte = pte_offset_map_lock(vma->vm_mm, pmd, addr, &ptl);
-> @@ -108,8 +121,10 @@ static long change_pte_range(struct mmu_gather *tlb,
->  	flush_tlb_batched_pending(vma->vm_mm);
->  	arch_enter_lazy_mmu_mode();
->  	do {
-> +		nr_ptes = 1;
->  		oldpte = ptep_get(pte);
->  		if (pte_present(oldpte)) {
-> +			int max_nr_ptes = (end - addr) >> PAGE_SHIFT;
->  			pte_t ptent;
->  
->  			/*
-> @@ -126,15 +141,18 @@ static long change_pte_range(struct mmu_gather *tlb,
->  					continue;
->  
->  				folio = vm_normal_folio(vma, addr, oldpte);
-> -				if (!folio || folio_is_zone_device(folio) ||
-> -				    folio_test_ksm(folio))
-> +				if (!folio)
->  					continue;
+This is a ABBA deadlock involving two locks:
+- Lock A: pagecache_folio lock
+- Lock B: hugetlb_fault_mutex_table lock
 
-You modify mprotect_batch() to handle folio == NULL later, perhaps just add that
-here, then you don't need to unpick this conditional and can just goto
-skip_branch, even for the !folio case.
+The deadlock occurs between two processes as follows:
+1. The first process (let’s call it Process 1) is handling a
+copy-on-write (COW) operation on a hugepage via hugetlb_wp. Due to
+insufficient reserved hugetlb pages, Process 1, owner of the reserved
+hugetlb page, attempts to unmap a hugepage owned by another process
+(non-owner) to satisfy the reservation. Before unmapping, Process 1
+acquires lock B (hugetlb_fault_mutex_table lock) and then lock A
+(pagecache_folio lock). To proceed with the unmap, it releases Lock B
+but retains Lock A. After the unmap, Process 1 tries to reacquire Lock
+B. However, at this point, Lock B has already been acquired by another
+process.
 
-Thanks,
-Ryan
+2. The second process (Process 2) enters the hugetlb_fault handler
+during the unmap operation. It successfully acquires Lock B
+(hugetlb_fault_mutex_table lock) that was just released by Process 1,
+but then attempts to acquire Lock A (pagecache_folio lock), which is
+still held by Process 1.
 
->  
-> +				if (folio_is_zone_device(folio) ||
-> +				    folio_test_ksm(folio))
-> +					goto skip_batch;
-> +
->  				/* Also skip shared copy-on-write pages */
->  				if (is_cow_mapping(vma->vm_flags) &&
->  				    (folio_maybe_dma_pinned(folio) ||
->  				     folio_maybe_mapped_shared(folio)))
-> -					continue;
-> +					goto skip_batch;
->  
->  				/*
->  				 * While migration can move some dirty pages,
-> @@ -143,7 +161,7 @@ static long change_pte_range(struct mmu_gather *tlb,
->  				 */
->  				if (folio_is_file_lru(folio) &&
->  				    folio_test_dirty(folio))
-> -					continue;
-> +					goto skip_batch;
->  
->  				/*
->  				 * Don't mess with PTEs if page is already on the node
-> @@ -151,7 +169,7 @@ static long change_pte_range(struct mmu_gather *tlb,
->  				 */
->  				nid = folio_nid(folio);
->  				if (target_node == nid)
-> -					continue;
-> +					goto skip_batch;
->  				toptier = node_is_toptier(nid);
->  
->  				/*
-> @@ -159,8 +177,12 @@ static long change_pte_range(struct mmu_gather *tlb,
->  				 * balancing is disabled
->  				 */
->  				if (!(sysctl_numa_balancing_mode & NUMA_BALANCING_NORMAL) &&
-> -				    toptier)
-> +				    toptier) {
-> +skip_batch:
-> +					nr_ptes = mprotect_batch(folio, addr, pte,
-> +								 oldpte, max_nr_ptes);
->  					continue;
-> +				}
->  				if (folio_use_access_time(folio))
->  					folio_xchg_access_time(folio,
->  						jiffies_to_msecs(jiffies));
-> @@ -280,7 +302,7 @@ static long change_pte_range(struct mmu_gather *tlb,
->  				pages++;
->  			}
->  		}
-> -	} while (pte++, addr += PAGE_SIZE, addr != end);
-> +	} while (pte += nr_ptes, addr += nr_ptes * PAGE_SIZE, addr != end);
->  	arch_leave_lazy_mmu_mode();
->  	pte_unmap_unlock(pte - 1, ptl);
->  
+As a result, Process 1 (holding Lock A) is blocked waiting for Lock B
+(held by Process 2), while Process 2 (holding Lock B) is blocked waiting
+for Lock A (held by Process 1), constructing a ABBA deadlock scenario.
+
+The error message:
+INFO: task repro_20250402_:13229 blocked for more than 64 seconds.
+      Not tainted 6.15.0-rc3+ #24
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:repro_20250402_ state:D stack:25856 pid:13229 tgid:13228 ppid:3513   task_flags:0x400040 flags:0x00004006
+Call Trace:
+ <TASK>
+ __schedule+0x1755/0x4f50
+ schedule+0x158/0x330
+ schedule_preempt_disabled+0x15/0x30
+ __mutex_lock+0x75f/0xeb0
+ hugetlb_wp+0xf88/0x3440
+ hugetlb_fault+0x14c8/0x2c30
+ trace_clock_x86_tsc+0x20/0x20
+ do_user_addr_fault+0x61d/0x1490
+ exc_page_fault+0x64/0x100
+ asm_exc_page_fault+0x26/0x30
+RIP: 0010:__put_user_4+0xd/0x20
+ copy_process+0x1f4a/0x3d60
+ kernel_clone+0x210/0x8f0
+ __x64_sys_clone+0x18d/0x1f0
+ do_syscall_64+0x6a/0x120
+ entry_SYSCALL_64_after_hwframe+0x76/0x7e
+RIP: 0033:0x41b26d
+ </TASK>
+INFO: task repro_20250402_:13229 is blocked on a mutex likely owned by task repro_20250402_:13250.
+task:repro_20250402_ state:D stack:28288 pid:13250 tgid:13228 ppid:3513   task_flags:0x400040 flags:0x00000006
+Call Trace:
+ <TASK>
+ __schedule+0x1755/0x4f50
+ schedule+0x158/0x330
+ io_schedule+0x92/0x110
+ folio_wait_bit_common+0x69a/0xba0
+ __filemap_get_folio+0x154/0xb70
+ hugetlb_fault+0xa50/0x2c30
+ trace_clock_x86_tsc+0x20/0x20
+ do_user_addr_fault+0xace/0x1490
+ exc_page_fault+0x64/0x100
+ asm_exc_page_fault+0x26/0x30
+RIP: 0033:0x402619
+ </TASK>
+INFO: task repro_20250402_:13250 blocked for more than 65 seconds.
+      Not tainted 6.15.0-rc3+ #24
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:repro_20250402_ state:D stack:28288 pid:13250 tgid:13228 ppid:3513   task_flags:0x400040 flags:0x00000006
+Call Trace:
+ <TASK>
+ __schedule+0x1755/0x4f50
+ schedule+0x158/0x330
+ io_schedule+0x92/0x110
+ folio_wait_bit_common+0x69a/0xba0
+ __filemap_get_folio+0x154/0xb70
+ hugetlb_fault+0xa50/0x2c30
+ trace_clock_x86_tsc+0x20/0x20
+ do_user_addr_fault+0xace/0x1490
+ exc_page_fault+0x64/0x100
+ asm_exc_page_fault+0x26/0x30
+RIP: 0033:0x402619
+ </TASK>
+
+Showing all locks held in the system:
+1 lock held by khungtaskd/35:
+ #0: ffffffff879a7440 (rcu_read_lock){....}-{1:3}, at: debug_show_all_locks+0x30/0x180
+2 locks held by repro_20250402_/13229:
+ #0: ffff888017d801e0 (&mm->mmap_lock){++++}-{4:4}, at: lock_mm_and_find_vma+0x37/0x300
+ #1: ffff888000fec848 (&hugetlb_fault_mutex_table[i]){+.+.}-{4:4}, at: hugetlb_wp+0xf88/0x3440
+3 locks held by repro_20250402_/13250:
+ #0: ffff8880177f3d08 (vm_lock){++++}-{0:0}, at: do_user_addr_fault+0x41b/0x1490
+ #1: ffff888000fec848 (&hugetlb_fault_mutex_table[i]){+.+.}-{4:4}, at: hugetlb_fault+0x3b8/0x2c30
+ #2: ffff8880129500e8 (&resv_map->rw_sema){++++}-{4:4}, at: hugetlb_fault+0x494/0x2c30
+
+Link: https://drive.google.com/file/d/1DVRnIW-vSayU5J1re9Ct_br3jJQU6Vpb/view?usp=drive_link [1]
+Link: https://github.com/bboymimi/bpftracer/blob/master/scripts/hugetlb_lock_debug.bt [2]
+Link: https://drive.google.com/file/d/1bWq2-8o-BJAuhoHWX7zAhI6ggfhVzQUI/view?usp=sharing [3]
+Fixes: 40549ba8f8e0 ("hugetlb: use new vma_lock for pmd sharing synchronization")
+Cc: stable@vger.kernel.org
+Cc: Hugh Dickins <hughd@google.com>
+Cc: Florent Revest <revest@google.com>
+Cc: Gavin Shan <gshan@redhat.com>
+Suggested-by: Oscar Salvador <osalvador@suse.de>
+Signed-off-by: Gavin Guo <gavinguo@igalia.com>
+---
+V1 -> V2
+Suggested-by Oscar Salvador:
+  - Use folio_test_locked to replace the unnecessary parameter passing.
+
+ mm/hugetlb.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 7ae38bfb9096..ed501f134eff 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -6226,6 +6226,12 @@ static vm_fault_t hugetlb_wp(struct folio *pagecache_folio,
+ 			u32 hash;
+ 
+ 			folio_put(old_folio);
++			/*
++			 * The pagecache_folio needs to be unlocked to avoid
++			 * deadlock when the child unmaps the folio.
++			 */
++			if (pagecache_folio)
++				folio_unlock(pagecache_folio);
+ 			/*
+ 			 * Drop hugetlb_fault_mutex and vma_lock before
+ 			 * unmapping.  unmapping needs to hold vma_lock
+@@ -6823,8 +6829,13 @@ vm_fault_t hugetlb_fault(struct mm_struct *mm, struct vm_area_struct *vma,
+ out_ptl:
+ 	spin_unlock(vmf.ptl);
+ 
++	/*
++	 * hugetlb_wp() might have already unlocked pagecache_folio, so
++	 * skip it if that is the case.
++	 */
+ 	if (pagecache_folio) {
+-		folio_unlock(pagecache_folio);
++		if (folio_test_locked(pagecache_folio))
++			folio_unlock(pagecache_folio);
+ 		folio_put(pagecache_folio);
+ 	}
+ out_mutex:
+
+base-commit: 4a95bc121ccdaee04c4d72f84dbfa6b880a514b6
+-- 
+2.43.0
 
