@@ -1,156 +1,175 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-9105.amazon.com (smtp-fw-9105.amazon.com [207.171.188.204])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 092FF231833
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 18:05:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C3A7231A3B;
+	Wed, 21 May 2025 18:10:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.188.204
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747850748; cv=none; b=gLIdKsoyZceE+LQ3/gtyUTlUvGMAUZpC7LHVlv0b2HRJJxKVEHnlwxC5PlL4HxMIaB6/0TSryM/ZoT97iplVLSKVVHUpg5bloqWQvR07s3Xr/jN5AmV7AxaeCRU4Wa+pyhnfI5NdV6sgnANSRt3XThEyyynd8+gIpEd87eQ0TJA=
+	t=1747851051; cv=none; b=O06aniRNGnzZPDv6Hrow7e7dr7WA2OQXKwPnAsvhb2vf4TDqNbrqqqON5xGmSMQljclu67IRTyeUxYtE+GWCVAgwkwdIdRdJEwN/YWeegXqp2auKr8z4+8ktIlun2LTJlktBa6Z3aCuDwOW0fcN0sW4TNOHxH8zTSPSC0kJfJxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747850748; c=relaxed/simple;
-	bh=/kBCkQlxjXnin3hiwXC845Y7K1IJf3aW28/KCZJ7/Bk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=j37S8QTbDvIgQPpA3Jj5M9BdwDmCzxhwS7IT1Z/PxD2wd8bx0Y9ItmBPeXZCl8FIpjmdJmabdtkI0zI7a9DXRNbI4bZ+dVxXuD82OPZdyP+HjjbtJ+yOqgMQ5hc1R3656BFpeqbFFJNKHnPDe2FC7VGWtvmdMcG1sAwnYNgbE9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mTZOwT1q; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747851051; c=relaxed/simple;
+	bh=Ja9FUurKvoLNhRg6VryUifWCri778qJhxOwLPadH5sk=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HmtzXwWVf3nCcc9IYXS3w+XI8f3AbhPSkYt867pGe34vbcuCPk5HgvtK7EQ4CgIJgLfE0OB9wm3t50peBPsnHrp4Tt/PUsidR52UMtx8pozRnhTeRK4v6GJT7SsO6wCU8cGdyEHG1r82z4Hm5CveIGnllalsmSa6g15HG3rNJ6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=BAF37v0b; arc=none smtp.client-ip=207.171.188.204
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mTZOwT1q"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-231ba6da557so763745ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 11:05:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="BAF37v0b"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747850746; x=1748455546; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ubZduvx/cYHhuXsc0YXgIW6eAhMzKqsU08W4pEGJ/Pc=;
-        b=mTZOwT1qMPpFi469dgS9oR82Aj2A+a1WAI2JMt9OUhtT32dbbz2jocD2GmJx72uKjB
-         eB/ztFfnWDMZpXyYBoJbskw5htRJKUYP9YzgjlJ4Kira6exmWiHocqb2bKUZMFiCdBFJ
-         UNgGYO8pD+CQ6nSC0jwdQSD1zN+ZDxJJVXu/CIv9Z7ZixX2kpzfxYTH6en2j4GMe/B4V
-         T56CZ84nRCjhxQnr/qGxuteDNqpy2+oqjcYV9ql/WnWmVPDmf45UXSLvsYSsKbjoktGm
-         LI2MvTW/zccZP2ZiPaOxlgmbjTA6igzbdrQYy8fI+S69nBDthOasTBH6nCusp/ffSwi8
-         PS8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747850746; x=1748455546;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ubZduvx/cYHhuXsc0YXgIW6eAhMzKqsU08W4pEGJ/Pc=;
-        b=tHPXRig3cYIB2zFFzuu36gedoZ5/wJej3jPZT+kjZnxbGuk+9pjr1pyia0WY5zfIbA
-         RcvSHIVK18eJgozlyRj4Ot7/CvjvdIu9D+RSdi60iBZDPgWX2x9wwxL4pOX2rNMDCRa1
-         2s9YIHM+YuMzLbcJWIzoaXnkQraHLvev/qGGO7BTLuxfI4asLSDPiqd4iYU2Msag8+Zr
-         GTpP9MZ2KmRFmUOjOI0lfq0TljB7D5+XwCwTeyqnM4QOJmQSPBCsDSOfMMkGh9dcJdl2
-         TGoczO++xFzkeN+1v6FJ8adxA1yjsusMIuZpXdH6Jr96MwySfSxx/SHqiC4ZkJn4EQSk
-         /CXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV7MDPfUSarZQp4tos0kWQ3hZMPShhG0v2swQaH02nkG6NfVuJtrn6Mkihi8riecih/CGU851aMvS3Cp0Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEZjRQKrmYFpPmRnfAzh0m/bPUUVJC9LuhoOd8zCdbexdi4Y37
-	bMV1hYxFDCF29EEG1eP3gexz41b2gzBI7qEqdVAhR9rG3AXEjUJESKLT84WE+zuynXyYN2ocsNq
-	xzQ7t0nHh5LvHLH9fGADxWBU3bdi3IU7OUsyjH7zO
-X-Gm-Gg: ASbGncvRmGuysFfyVR8tOQ3jKYLpWRcHco6M2VQwl8KBK8nHOpwDfIzop3lOdPmjssr
-	IQwqjeN+tgrRefWfMzHptdLIihXrtNEyxhdxwqjsr04gNMSPPCw1zjDmulC7tap7mrq15Hhodrc
-	/dAfdR/LNBwFUQyEwtfABuCSRysxM146PfkKCwPbdmmCg75DjnkIVLbjwIspZvDuqvUa/J9Iv+W
-	Q==
-X-Google-Smtp-Source: AGHT+IHmVPisOoELNyl8TlIo/1z2Gy2JQdvRF1i2iTDr537dKpeYFIvLF3liBXDQzvSnoGIzUR4n3Bcy350EhBXDWOw=
-X-Received: by 2002:a17:902:f545:b0:231:e0d0:bf65 with SMTP id
- d9443c01a7336-23204143657mr12533785ad.7.1747850745624; Wed, 21 May 2025
- 11:05:45 -0700 (PDT)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
+  t=1747851049; x=1779387049;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=8lqaKRMn9Y61ZMcGQCu5I5Bk7vV0gkXoSTtlGN9WxCI=;
+  b=BAF37v0bRwTdriJZcpPDT4oalRs5Tf8agCTG+WogZeFYeaX+Aj2j7XAO
+   tWfw0AI0bvXOcBCGjxpkSnmQVWTl3hXntQlxMhtqNpfOJ8DqIyJ1VNCvg
+   UU+1QnuaBU+fUuQ5J2BiHh1DVPXTYdXzFUWw5WwrCG4aje7sc9ks2h/wG
+   ffg0YlSjPccvfyeoiNJKMgognluXkIP9L9Gc/ohUVqxfcoY0GV5+FfLHy
+   2MSsPjLQ6K+Urfbh8jFYC5U3jVZ5wXT4DKPEsg8j+kn5mMNYVqqpr4Ry9
+   1GXoARYpayw2uTE7AgcJMkj/oc0txVEdlMk8O2IPVD/N4Wg331PjzR0Cc
+   Q==;
+X-IronPort-AV: E=Sophos;i="6.15,304,1739836800"; 
+   d="scan'208";a="22321835"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
+  by smtp-border-fw-9105.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 18:10:38 +0000
+Received: from EX19MTAUWA001.ant.amazon.com [10.0.7.35:62904]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.17.121:2525] with esmtp (Farcaster)
+ id a3c8e3af-5f1b-4900-aae2-5c02fe40f192; Wed, 21 May 2025 18:10:36 +0000 (UTC)
+X-Farcaster-Flow-ID: a3c8e3af-5f1b-4900-aae2-5c02fe40f192
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWA001.ant.amazon.com (10.250.64.218) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Wed, 21 May 2025 18:10:35 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.94.52.104) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Wed, 21 May 2025 18:10:32 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <john.cs.hey@gmail.com>
+CC: <davem@davemloft.net>, <dsahern@kernel.org>, <edumazet@google.com>,
+	<horms@kernel.org>, <kuba@kernel.org>, <linux-kernel@vger.kernel.org>,
+	<netdev@vger.kernel.org>, <pabeni@redhat.com>
+Subject: Re: [Bug] "general protection fault in calipso_sock_setattr" in Linux kernel v6.12
+Date: Wed, 21 May 2025 11:08:09 -0700
+Message-ID: <20250521181024.44883-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <CAP=Rh=M1LzunrcQB1fSGauMrJrhL6GGps5cPAKzHJXj6GQV+-g@mail.gmail.com>
+References: <CAP=Rh=M1LzunrcQB1fSGauMrJrhL6GGps5cPAKzHJXj6GQV+-g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1747264138.git.ackerleytng@google.com> <e9aaf20d31281d00861b1805404dbed40024f824.1747264138.git.ackerleytng@google.com>
-In-Reply-To: <e9aaf20d31281d00861b1805404dbed40024f824.1747264138.git.ackerleytng@google.com>
-From: Vishal Annapurve <vannapurve@google.com>
-Date: Wed, 21 May 2025 11:05:32 -0700
-X-Gm-Features: AX0GCFvVdSODjor7OXlVRx2yQTS_EDakZDYyd8FkQ0_ENzjc8DIITkJ6cFhT2Qk
-Message-ID: <CAGtprH-G6hA6dfFrRtFh+gazmr+27mvpoV-MNphbvKzm3WS4Rg@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 33/51] KVM: guest_memfd: Allocate and truncate from
- custom allocator
-To: Ackerley Tng <ackerleytng@google.com>
-Cc: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	x86@kernel.org, linux-fsdevel@vger.kernel.org, aik@amd.com, 
-	ajones@ventanamicro.com, akpm@linux-foundation.org, amoorthy@google.com, 
-	anthony.yznaga@oracle.com, anup@brainfault.org, aou@eecs.berkeley.edu, 
-	bfoster@redhat.com, binbin.wu@linux.intel.com, brauner@kernel.org, 
-	catalin.marinas@arm.com, chao.p.peng@intel.com, chenhuacai@kernel.org, 
-	dave.hansen@intel.com, david@redhat.com, dmatlack@google.com, 
-	dwmw@amazon.co.uk, erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, 
-	graf@amazon.com, haibo1.xu@intel.com, hch@infradead.org, hughd@google.com, 
-	ira.weiny@intel.com, isaku.yamahata@intel.com, jack@suse.cz, 
-	james.morse@arm.com, jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, 
-	jhubbard@nvidia.com, jroedel@suse.de, jthoughton@google.com, 
-	jun.miao@intel.com, kai.huang@intel.com, keirf@google.com, 
-	kent.overstreet@linux.dev, kirill.shutemov@intel.com, liam.merwick@oracle.com, 
-	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, maz@kernel.org, 
-	mic@digikod.net, michael.roth@amd.com, mpe@ellerman.id.au, 
-	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
-	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
-	paul.walmsley@sifive.com, pbonzini@redhat.com, pdurrant@amazon.co.uk, 
-	peterx@redhat.com, pgonda@google.com, pvorel@suse.cz, qperret@google.com, 
-	quic_cvanscha@quicinc.com, quic_eberman@quicinc.com, 
-	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com, quic_pheragu@quicinc.com, 
-	quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com, richard.weiyang@gmail.com, 
-	rick.p.edgecombe@intel.com, rientjes@google.com, roypat@amazon.co.uk, 
-	rppt@kernel.org, seanjc@google.com, shuah@kernel.org, steven.price@arm.com, 
-	steven.sistare@oracle.com, suzuki.poulose@arm.com, tabba@google.com, 
-	thomas.lendacky@amd.com, usama.arif@bytedance.com, vbabka@suse.cz, 
-	viro@zeniv.linux.org.uk, vkuznets@redhat.com, wei.w.wang@intel.com, 
-	will@kernel.org, willy@infradead.org, xiaoyao.li@intel.com, 
-	yan.y.zhao@intel.com, yilun.xu@intel.com, yuzenghui@huawei.com, 
-	zhiquan1.li@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D044UWB004.ant.amazon.com (10.13.139.134) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-On Wed, May 14, 2025 at 4:43=E2=80=AFPM Ackerley Tng <ackerleytng@google.co=
-m> wrote:
-> ...
-> +/**
-> + * kvm_gmem_zero_range() - Zeroes all sub-pages in range [@start, @end).
-> + *
-> + * @mapping: the filemap to remove this range from.
-> + * @start: index in filemap for start of range (inclusive).
-> + * @end: index in filemap for end of range (exclusive).
-> + *
-> + * The pages in range may be split. truncate_inode_pages_range() isn't t=
-he right
-> + * function because it removes pages from the page cache; this function =
-only
-> + * zeroes the pages.
-> + */
-> +static void kvm_gmem_zero_range(struct address_space *mapping,
-> +                               pgoff_t start, pgoff_t end)
-> +{
-> +       struct folio_batch fbatch;
-> +
-> +       folio_batch_init(&fbatch);
-> +       while (filemap_get_folios(mapping, &start, end - 1, &fbatch)) {
-> +               unsigned int i;
-> +
-> +               for (i =3D 0; i < folio_batch_count(&fbatch); ++i) {
-> +                       struct folio *f;
-> +                       size_t nr_bytes;
-> +
-> +                       f =3D fbatch.folios[i];
-> +                       nr_bytes =3D offset_in_folio(f, end << PAGE_SHIFT=
-);
-> +                       if (nr_bytes =3D=3D 0)
-> +                               nr_bytes =3D folio_size(f);
-> +
-> +                       folio_zero_segment(f, 0, nr_bytes);
+From: John <john.cs.hey@gmail.com>
+Date: Wed, 21 May 2025 22:50:38 +0800
+> Dear Linux Kernel Maintainers,
+> 
+> I hope this message finds you well.
+> 
+> I am writing to report a potential vulnerability I encountered during
+> testing of the Linux Kernel version v6.12.
+> 
+> Git Commit: adc218676eef25575469234709c2d87185ca223a (tag: v6.12)
+> 
+> Bug Location: calipso_sock_setattr+0xf6/0x380 net/ipv6/calipso.c:1128
+> 
+> Bug report: https://hastebin.com/share/iredodibar.yaml
+> 
+> Complete log: https://hastebin.com/share/biqowozonu.perl
+> 
+> Entire kernel config: https://hastebin.com/share/huqucavidu.ini
 
-folio_zero_segment takes byte offset and number of bytes within the
-folio. This invocation needs to operate on the folio range that is
-overlapping with [Start, end) and instead it's always starting from 0
-and ending at an unaligned offset within the folio. This will result
-in zeroing more than requested or lesser than requested or both
-depending on the request and folio size.
+Thanks for the report.
 
-> +               }
-> +
-> +               folio_batch_release(&fbatch);
-> +               cond_resched();
-> +       }
-> +}
-> +
+
+> 
+> Root Cause Analysis:
+> The crash is caused by a NULL pointer dereference in txopt_get() (at
+> include/net/ipv6.h:390) due to an uninitialized struct inet6_opt *opt
+> field.
+
+This is not correct.  The splat says the null deref happens at
+np->opt.
+
+> RIP: 0010:txopt_get root/zhangqiang/kernel_fuzzing/Drivers_Fuzz/linux-6.12/include/net/ipv6.h:390 [inline]
+
+   385	static inline struct ipv6_txoptions *txopt_get(const struct ipv6_pinfo *np)
+   386	{
+   387		struct ipv6_txoptions *opt;
+   388	
+   389		rcu_read_lock();
+   390		opt = rcu_dereference(np->opt);
+
+and the offset is 0x70, which is of opt in struct ipv6_pinfo.
+
+> KASAN: null-ptr-deref in range [0x0000000000000070-0x0000000000000077]
+
+$ python3
+>>> 0x70
+112
+
+$ pahole -C ipv6_pinfo vmlinux
+struct ipv6_pinfo {
+...
+	struct ipv6_txoptions *    opt;                  /*   112     8 */
+
+
+np + 0x70 = 0x70, meaning np was NULL here.
+
+np is always initialised for IPv6 socket in inet6_create(), so this
+should never happens for IPv6 sockets.
+
+But looking at netlbl_conn_setattr(), it swtiched branch based on
+sockaddr.sa_family provided by userspace, and it does not check if
+the socket is actually IPv6 one.
+
+So, the fix will be:
+
+
+diff --git a/net/netlabel/netlabel_kapi.c b/net/netlabel/netlabel_kapi.c
+index cd9160bbc919..067f707f194d 100644
+--- a/net/netlabel/netlabel_kapi.c
++++ b/net/netlabel/netlabel_kapi.c
+@@ -1165,6 +1165,9 @@ int netlbl_conn_setattr(struct sock *sk,
+ 		break;
+ #if IS_ENABLED(CONFIG_IPV6)
+ 	case AF_INET6:
++		if (sk->sk_family != AF_INET6)
++			return -EPROTONOSUPPORT;
++
+ 		addr6 = (struct sockaddr_in6 *)addr;
+ 		entry = netlbl_domhsh_getentry_af6(secattr->domain,
+ 						   &addr6->sin6_addr);
+
+
+> The function is indirectly invoked during an SELinux policy
+> enforcement path via calipso_sock_setattr(), which expects an
+> initialized inet6_sk(sk)->opt structure.
+> However, the socket in question does not have IPv6 tx options set up
+> at the time of the call, likely due to missing or out-of-order
+> initialization during socket creation or connection setup.
+> This leads to an invalid access at offset +0x70, detected by KASAN,
+> and results in a general protection fault.
+> 
+> At present, I have not yet obtained a minimal reproducer for this
+> issue. However, I am actively working on reproducing it, and I will
+> promptly share any additional findings or a working reproducer as soon
+> as it becomes available.
+
+Try setting CALIPSO and calling connect(IPv6 addr) for IPv4 socket.
+
+
+> 
+> Thank you very much for your time and attention to this matter. I
+> truly appreciate the efforts of the Linux kernel community.
+
+Could you provide your full name so that I can give proper credit
+in Reported-by tag ?
+
