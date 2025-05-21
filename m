@@ -1,155 +1,219 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F99018B495;
-	Wed, 21 May 2025 14:22:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 956DC1A23A5;
+	Wed, 21 May 2025 14:22:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747837343; cv=none; b=Iw+TYj/xk7xfxgHWTqisRNMZXHvFDkBU1RmOQt1E/Njr7XwCu/wlxQAT1F2VLBMrgQxBc5/T154SS4uAAqbOigk1k0nPnB/d635W678gfHTNTh5/TOcD5vUusK4DGe27F67Zd/ExxHABuuvpydgIm9ZHPvgEtqW2//bRQe44ARc=
+	t=1747837360; cv=none; b=Mp536ELrXPW6bANBtThrCXMBT75y2BssBa9IV53GcpNaer5pby3Psg0O9m5Td1TWwZYVkJ7i4tlPMT/10z6WE8NFty7JubiQq1r3GlyqsmAtOD/pAfXXwMer8ygjhtFenUuTD0YRaRZ7lNpJm+XCFDcb3BFAuAfCY58qeFLSG28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747837343; c=relaxed/simple;
-	bh=F5hEzDUx2SkcS2gm/dMFSeK7fTbZnXqJHdiIjgBb3Os=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=hWUKNqL5l4pa+33mnD9ty2TBINV45nW4mv+YpSYI3sXA3tltuvEsJz/PshWMiTnoZusBzGqtfJebNFvz3q12URc+rlCrE6VzFWq5ZzG96sBJ6HSZn1MmLe4mqdRGPsX2DTpRJmROSz+qn8IqZkGyMvhEB5poHogbfMac+wZ04pc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jkz+Qred; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747837360; c=relaxed/simple;
+	bh=SBMc3kULvbN/i0mN07lWs8tAIHU7iwXg5MTlRdbwlWA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Y4PVL61IK5ze/IWKC6aiKrsCraRlAhVcqHTwpwdwNobRtuExypKUWQ9O6VE6wEORKZ/64Ab/w4xTmYLInm6y3BNuCPDd+Qe4h9oKMpxit/Yofw9PHc3tnv1L0G+mfzAo/GThbopx2/lqPnXb3yyBcB4F9vt2LYOXWgA6rnKqrBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=fYSLMVVs; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jkz+Qred"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43edb40f357so57520305e9.0;
-        Wed, 21 May 2025 07:22:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747837339; x=1748442139; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=s+jyCgbLr3xrcTJHsRt9Kq15QJhKLq4lab6/AE5okc8=;
-        b=Jkz+QredGO3QBuu2nwxa9v/kMh2pYT8rWROslTKj7d4EOd7chBmo5etIfrAGJ/2+F3
-         d0ZVv4qaag2DUTyQJpRIqXVLQT5drPL9r6U7u23Bg8ySEJK04he0CnEbTZXp+qa7RrXT
-         miySCqy+xAHya+KtLJCnzAk2kMjw9aVGYuR8PbfRNI6/g3oxRfBlClw81Lb5AwFgRV15
-         BpVaRDeD8/sZkDO8FwIMWftEhqLR7zY+olAG320JBd4xHRwmaxPjWGGr9tVXrIART05J
-         vL1pR3/cBl80kAXCqedjGRV6I1SpVk/+rkHL/snr98ak6K3mqkZOYGsBeM9HWKkblG95
-         FfqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747837339; x=1748442139;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=s+jyCgbLr3xrcTJHsRt9Kq15QJhKLq4lab6/AE5okc8=;
-        b=w5ZytPDkOTZH+c6qLUougUDhP6LxPUgyJ4re8oYxHyv/wAjalHPHE9bPn763RhXh8z
-         lyAfNnxnV778QAZg2Hr/rAgPQnioj+KMZ3eco1MUvVHVtS9eQWKQqa048WssPDTGgzXL
-         POL9Ko4euNh24muTRT6JKyLC6KwuekbmR/LOIbr4wvRl932qeb1rkbMSP37JmuPohM2C
-         LnbXG/b1wGl3u1RxaiXQQm4grSXvbll44+HzSDPDQJWQJ2quPOl3jtbGbYOyQi89mx/x
-         NvlruZC8pk/uVkJAJGe5AWC7l9w6ajWjcyVdvu2c8xcmifPI3cBPQlOH1bicU8RU1moB
-         BTew==
-X-Forwarded-Encrypted: i=1; AJvYcCU0XvuH7Yx7H2oCD/yyP3MT1a5M/Y2GTnG5MhOlfiEMmsMQ78XxfSTcjhrkJACnTCN5dfS246Tx/DB0@vger.kernel.org, AJvYcCUID+rU1grRewcNPb+7BYHpGAQ+c20udZJlrEo/LWlf1eT7Cs6KVDNmXWOfZ7j+SDkAzg+S77TgIjNu@vger.kernel.org, AJvYcCVYBrnGW24YoNIhXHJ6tkU/H8JBiC93dFvTvGvztCF3HoRX/IJiEbHckByb9VfxqhKcZPeB414VrJ6cIqCi@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8hXdJcDmrCGT47mbSXSP8g1r5phi9E8zO3vgEvZxh2bzQB/7u
-	ZNyFdKhLeE9ubDPPN39yDmpuP11BjzJaRtER1KvQkzS643WMcqCQMuIw
-X-Gm-Gg: ASbGnctP9hgISM4NWSP2J7s0JNb9T9y1R5BVNPv18yaai/udb75hF7r1NevgwWq9TfU
-	BaXB1wECBMJ/jzbt5gwvAH+w0GNNhc4Im55RRCYlnOzuOyKdL3+ohEXa9pr2yy6u9mRWLJ4qwGl
-	jZA+mSkMlllbpQza8wm28R51BdKqEFtfxHmigsn29AwNR3sRxCY3k8elsNjGWXJNE5ha2qhQw2X
-	hHiPZw8ScFaHwf5XHfJvHdptYKugwjpzZ5g5GAXeoT+C+P2A84UhpHpOJI3R95iRHi8IG/wsSDX
-	c9C05jiVVOn/osfuTqu/9u4yTRxgI/mgt4xfPVTseA1DlplaTds=
-X-Google-Smtp-Source: AGHT+IHDyF8zBHr8bx3AfS49+niCmB110rPNtZqQRPC4oaWWGA8YQRunaD+V7VF8sSF1eGCeXaxB0A==
-X-Received: by 2002:a05:600c:c13:b0:43d:79:ae1b with SMTP id 5b1f17b1804b1-442fd627416mr202152715e9.14.1747837339090;
-        Wed, 21 May 2025 07:22:19 -0700 (PDT)
-Received: from [10.5.0.2] ([185.174.156.4])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f7ca2dd9sm69237755e9.37.2025.05.21.07.22.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 07:22:18 -0700 (PDT)
-Message-ID: <6b72e9dc9d574aa1f025c0f5d317dcec1d729ba9.camel@gmail.com>
-Subject: Re: [PATCH 3/3] pwm: axi-pwmgen: add support for external clock
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>, David Lechner
-	 <dlechner@baylibre.com>
-Cc: Michael Hennerich <michael.hennerich@analog.com>, Nuno
- =?ISO-8859-1?Q?S=E1?=	 <nuno.sa@analog.com>, Trevor Gamblin
- <tgamblin@baylibre.com>, Rob Herring	 <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley	 <conor+dt@kernel.org>,
- linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Date: Wed, 21 May 2025 15:22:20 +0100
-In-Reply-To: <p3ejuwktdxcjwv43nnap5tin33ziimgxfan2xoghtaaubsxgy7@tjmwjpwy6yy5>
-References: 
-	<20250520-pwm-axi-pwmgen-add-external-clock-v1-0-6cd63cc001c8@baylibre.com>
-	 <20250520-pwm-axi-pwmgen-add-external-clock-v1-3-6cd63cc001c8@baylibre.com>
-	 <zdltaexty6pzbqesoluuyluygyt6w7nq7r2wccmtfktppwuw3e@qb36fsu3jq4k>
-	 <0dd1a97e-ff7c-4d09-b18e-5df9944488c6@baylibre.com>
-	 <p3ejuwktdxcjwv43nnap5tin33ziimgxfan2xoghtaaubsxgy7@tjmwjpwy6yy5>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="fYSLMVVs"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 8FD7443B3F;
+	Wed, 21 May 2025 14:22:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1747837350;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vyPpXbcuqSIPDBMFEqspo4iXigHvW7uXfydpRN7Xbhk=;
+	b=fYSLMVVsQYfpq0UfcQjtXHhEeq5bfCS6ZfFtSy9WALjrRzfOI1oCmQiRh9/p/2Tov1lqL6
+	6hd7ysvk/ltTNuZ3CAlJ8hxNJb1U4hh9oDe0vFEV7Qmtyyl2jnGS6vHAh+CJjT02k5hPnx
+	/8mrP78Ua2u8o332sEOuGFEL01a6KTHTgbKtJYOaO92+nm28+YzX+fKLT5azjlVWA6wd7P
+	QGZK2iH33WbGHOFi2Bk+4Ix+bA6ASPEQH4bi0kJlvRry4ViIVwFyHbkOYow1fiiPEcPty3
+	9UYIHe6MjbBN6AI7Wu+J/2jCVZHKny42qJOnl6aqWr/VeHDBSzrL8xxwzk+UAA==
+Date: Wed, 21 May 2025 16:22:16 +0200
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Andrzej Hajda
+ <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>,
+ Robert Foss <rfoss@kernel.org>, Laurent Pinchart
+ <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>, Jagan Teki
+ <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
+ <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Douglas Anderson
+ <dianders@chromium.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>, Krzysztof
+ Kozlowski <krzk@kernel.org>, Liu Ying <victor.liu@nxp.com>
+Cc: Anusha Srivatsa <asrivats@redhat.com>, Paul Kocialkowski
+ <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, Hui Pu
+ <Hui.Pu@gehealthcare.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ dri-devel@lists.freedesktop.org, asahi@lists.linux.dev,
+ linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org,
+ linux-renesas-soc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ freedreno@lists.freedesktop.org, linux-stm32@st-md-mailman.stormreply.com,
+ Louis Chauvet <louis.chauvet@bootlin.com>, Alim Akhtar
+ <alim.akhtar@samsung.com>, Inki Dae <inki.dae@samsung.com>, Kyungmin Park
+ <kyungmin.park@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>,
+ Manikandan Muralidharan <manikandan.m@microchip.com>, Adam Ford
+ <aford173@gmail.com>, Adrien Grassein <adrien.grassein@gmail.com>,
+ Aleksandr Mishin <amishin@t-argos.ru>, Andy Yan <andy.yan@rock-chips.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Benson Leung <bleung@chromium.org>, Biju Das <biju.das.jz@bp.renesas.com>,
+ Christoph Fritz <chf.fritz@googlemail.com>, Cristian Ciocaltea
+ <cristian.ciocaltea@collabora.com>, Detlev Casanova
+ <detlev.casanova@collabora.com>, Dharma Balasubiramani
+ <dharma.b@microchip.com>, Guenter Roeck <groeck@chromium.org>, Heiko
+ Stuebner <heiko@sntech.de>, Jani Nikula <jani.nikula@intel.com>, Janne
+ Grunau <j@jannau.net>, Jerome Brunet <jbrunet@baylibre.com>, Jesse Van
+ Gavere <jesseevg@gmail.com>, Kevin Hilman <khilman@baylibre.com>, Kieran
+ Bingham <kieran.bingham+renesas@ideasonboard.com>, Martin Blumenstingl
+ <martin.blumenstingl@googlemail.com>, Matthias Brugger
+ <matthias.bgg@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Phong LE
+ <ple@baylibre.com>, Sasha Finkelstein <fnkl.kernel@gmail.com>, Sugar Zhang
+ <sugar.zhang@rock-chips.com>, Sui Jingfeng <sui.jingfeng@linux.dev>, Tomi
+ Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>, Vitalii Mordan
+ <mordan@ispras.ru>, "Rob Herring (Arm)" <robh@kernel.org>, Hsin-Te Yuan
+ <yuanhsinte@chromium.org>, Pin-yen Lin <treapking@chromium.org>, Xin Ji
+ <xji@analogixsemi.com>, Aradhya Bhatia <a-bhatia1@ti.com>, Tomi Valkeinen
+ <tomi.valkeinen@ideasonboard.com>, Ian Ray <ian.ray@gehealthcare.com>,
+ Martyn Welch <martyn.welch@collabora.co.uk>, Peter Senna Tschudin
+ <peter.senna@gmail.com>, Helge Deller <deller@gmx.de>, Kuninori Morimoto
+ <kuninori.morimoto.gx@renesas.com>, Laurent Pinchart
+ <laurent.pinchart+renesas@ideasonboard.com>, Alexandre Torgue
+ <alexandre.torgue@foss.st.com>, Maxime Coquelin
+ <mcoquelin.stm32@gmail.com>, Philippe Cornu <philippe.cornu@foss.st.com>,
+ Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>, Yannick Fertre
+ <yannick.fertre@foss.st.com>, Alain Volmat <alain.volmat@foss.st.com>,
+ Raphael Gallais-Pou <rgallaispou@gmail.com>, Michal Simek
+ <michal.simek@amd.com>, Jonathan Corbet <corbet@lwn.net>,
+ linux-doc@vger.kernel.org
+Subject: Re: [PATCH v3 00/22] drm: convert all bridges to
+ devm_drm_bridge_alloc()
+Message-ID: <20250521162216.79dd3290@booty>
+In-Reply-To: <20250509-drm-bridge-convert-to-alloc-api-v3-0-b8bc1f16d7aa@bootlin.com>
+References: <20250509-drm-bridge-convert-to-alloc-api-v3-0-b8bc1f16d7aa@bootlin.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdeffedtucdltddurdegfedvrddttddmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepheelfeevlefgkeekvdffveehudeihfdtjefhieehgfejveduieffgffhjeejleevnecuffhomhgrihhnpehfrhgvvgguvghskhhtohhprdhorhhgpdhkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvpdhhvghlohepsghoohhthidpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeelhedprhgtphhtthhopehmrggrrhhtvghnrdhlrghnkhhhohhrshhtsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhto
+ hepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthiiihhmmhgvrhhmrghnnhesshhushgvrdguvgdprhgtphhtthhopegrihhrlhhivggusehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopegrnhgurhiivghjrdhhrghjuggrsehinhhtvghlrdgtohhmpdhrtghpthhtohepnhgvihhlrdgrrhhmshhtrhhonhhgsehlihhnrghrohdrohhrghdprhgtphhtthhopehrfhhoshhssehkvghrnhgvlhdrohhrgh
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-On Wed, 2025-05-21 at 15:54 +0200, Uwe Kleine-K=C3=B6nig wrote:
-> Hello David,
->=20
-> On Wed, May 21, 2025 at 08:19:51AM -0500, David Lechner wrote:
-> > On 5/21/25 4:22 AM, Uwe Kleine-K=C3=B6nig wrote:
-> > > Can you achieve the same effect with the (IMHO slightly nicer but
-> > > hand-crafted) following patch:
-> > >=20
-> > > =C2=A0	ddata =3D pwmchip_get_drvdata(chip);
-> > > =C2=A0	ddata->regmap =3D regmap;
-> > > =C2=A0
-> > > -	clk =3D devm_clk_get_enabled(dev, NULL);
-> > > -	if (IS_ERR(clk))
-> > > -		return dev_err_probe(dev, PTR_ERR(clk), "failed to get
-> > > clock\n");
-> > > +	axi_clk =3D devm_clk_get_enabled(dev, "axi");
-> > > +	if (IS_ERR(axi_clk))
-> > > +		return dev_err_probe(dev, PTR_ERR(axi_clk), "failed to
-> > > get axi clock\n");
-> > >=20
-> > > +	clk =3D devm_clk_get_enabled_optional(dev, "ext");
-> > > +	if (IS_ERR(clk))
-> > > +		return dev_err_probe(dev, PTR_ERR(clk), "failed to get
-> > > ext clock\n");
-> > > +	}
-> >=20
-> > The trouble with this is that it would not work with existing .dtbs
-> > that don't have clock-names set. I think it would need to be more like =
-this:
-> >=20
-> >=20
-> > 	axi_clk =3D devm_clk_get_enabled(dev, NULL);
-> > 	if (IS_ERR(axi_clk))
-> > 		return dev_err_probe(dev, PTR_ERR(axi_clk), "failed to get
-> > axi clock\n");
-> >=20
-> > 	clk =3D devm_clk_get_enabled_optional(dev, "ext");
-> > 	if (IS_ERR(clk))
-> > 		return dev_err_probe(dev, PTR_ERR(clk), "failed to get ext
-> > clock\n");
-> >=20
-> > 	if (!clk)
-> > 		clk =3D axi_clk
-> >=20
->=20
-> If there are no clock-names, the parameter is ignored. (I didn't test,
-> only quickly checked the code.) So passing "axi" instead of NULL should
-> work and yield a more robust solution.
->=20
->=20
+Hello Maxime, Shawn, Liu, all,
 
-Are you sure? If there are no clock-names and you pass an id, you should ge=
-t an
-error back:
+On Fri, 09 May 2025 15:53:26 +0200
+Luca Ceresoli <luca.ceresoli@bootlin.com> wrote:
 
-https://elixir.bootlin.com/linux/v6.14.7/source/drivers/clk/clk.c#L5198
+> devm_drm_bridge_alloc() [0] is the new API to allocate and initialize a DRM
+> bridge, and the only one supported from now on. It is the first milestone
+> towards removal of bridges from a still existing DRM pipeline without
+> use-after-free.
 
+I applied on drm-misc-next patches 3-17,20-21 as they match all the
+criteria:
+ - At least a Acked-by (or R-by maintainers)
+ - patch is for drm-misc
 
-I know it's not exactly the same we're discussing but of_property_match_str=
-ing()
-return -EINVAL if the property is not found which leads to an index < 0 and=
- thus
-of_parse_phandle_with_args() also returns an error back.
+Being my very first commits to drm-misc, I tried to be careful, and
+double checked all the patches with Louis (thanks!).
 
-I think I'm not missing anything but it's always a possibility.
+Here are the pending questions and plan for the remaining patches.
 
-- Nuno S=C3=A1
+>       Revert "drm/exynos: mic: convert to devm_drm_bridge_alloc() API"
+
+This reverts the commit applied my mistake:
+https://gitlab.freedesktop.org/drm/misc/kernel/-/commit/91c5c7b5bb2dd09b43b025bce6d790d3c79f4518
+
+Neither the  original patch nor the revert has been reviewed/acked.
+
+As the commit was a mistake, I'm applying the revert by the end of this
+week (i.e. on Friday) unless there are better instructions.
+
+>       drm: convert many bridge drivers from devm_kzalloc() to devm_drm_bridge_alloc() API
+
+This patch affects multiple drivers. Running get_maintainers.pl
+points at Shawn Guo's repository. After reviewing the MAINTAINERS file,
+this looks like due to the 'N:' line in:
+
+ARM/FREESCALE IMX / MXC ARM ARCHITECTURE
+M:	Shawn Guo <shawnguo@kernel.org>
+M:	Sascha Hauer <s.hauer@pengutronix.de>
+R:	Pengutronix Kernel Team <kernel@pengutronix.de>
+...
+T:	git git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.git
+N:	imx
+...
+
+(https://gitlab.freedesktop.org/drm/misc/kernel/-/blob/drm-misc-next/MAINTAINERS?ref_type=heads#L2511-2528)
+
+Here 'imx' matches the 'drivers/gpu/drm/bridge/imx/imx-legacy-bridge.c'
+file that is touched by the patch. That regexp appears overly generic to me.
+
+Shawn, can it be fixed by making it less generic?
+
+If not, can we at least add a band-aid 'X:' entry for
+drivers/gpu/drm/bridge/imx?
+
+I think the other matching entry is the one to consider:
+
+DRM DRIVERS FOR FREESCALE IMX BRIDGE
+M:	Liu Ying <victor.liu@nxp.com>
+L:	dri-devel@lists.freedesktop.org
+S:	Maintained
+F:	Documentation/devicetree/bindings/display/bridge/fsl,imx8qxp-ldb.yaml
+F:	Documentation/devicetree/bindings/display/bridge/fsl,imx8qxp-pixel-combiner.yaml
+F:	Documentation/devicetree/bindings/display/bridge/fsl,imx8qxp-pixel-link.yaml
+F:	Documentation/devicetree/bindings/display/bridge/fsl,imx8qxp-pxl2dpi.yaml
+F:	drivers/gpu/drm/bridge/imx/
+
+(https://gitlab.freedesktop.org/drm/misc/kernel/-/blob/drm-misc-next/MAINTAINERS?ref_type=heads#L7940-7948)
+
+However it does not list any trees. I _guess_ drm-misc applies here as
+a fallback as well as common sense.
+
+Liu, should this entry have a 'T:' line for drm/misc?
+
+>       drm/bridge: imx8qxp-pixel-combiner: convert to devm_drm_bridge_alloc() API
+
+Not acked/reviewed, some discussion happened. I am resending it in v4,
+possibly with updates based on the discussion.
+
+But it has the same issue discussed above, with get_maintiners.pl
+pointing at Shawn Guo's tree, so in the future I'm assuming this goes
+to drm-misc unless there are news about that.
+
+>       drm/bridge: tc358767: convert to devm_drm_bridge_alloc() API
+
+No feedback, resending in v4.
+
+>       drm/todo: add entry to remove devm_drm_put_bridge()
+
+This involves documentation maintained on another tree. Where should it
+be applied? There are two matching entries in MAINTAINERS:
+
+ * DRM DRIVERS -> the drm tree
+ * DRM DRIVERS AND MISC GPU PATCHES -> the drm-misc tree
+
+To me it looks like the second is obviously the closest match as we are
+dealing with DRM bridges, so I'm applying this as well on Friday unless
+there are better instructions.
+
+Best regards,
+Luca
+
+-- 
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
