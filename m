@@ -1,113 +1,101 @@
-Received: from exchange.fintech.ru (exchange.fintech.ru [195.54.195.159])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E5FA2A1BF;
-	Wed, 21 May 2025 14:01:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.54.195.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5221A2A1BF;
+	Wed, 21 May 2025 14:01:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747836086; cv=none; b=o/0ZcW9IahCgbImuU8X21LWPydSkKj26+RLHlnUfxftr1KbdfzxK+/frca2z/wcwLhSAqC8LUdZU4Q4Jjn3Xj5t2TWEUxTbDdJzDcinjkY3b2lVYpz9Gh3iWUbXYEyp0iIRoDD/p5fgNyqB9isWLrnYnqNPEgIwOnrKECjH29ys=
+	t=1747836102; cv=none; b=bSxaojxKhkF4JKZbo9+dtLsqM8wZ14oHOp0cR9ZyrK/aEG8M26CxA/xFd7mIC+VINa/RXb+YDumSq4hRhYc6witEYSHWmdLSRA4Mt53c5sY3Zt9QYFJevhWafijdznW6k9Xm4hi1T6zf+z2O8EuKbQK4znYcbb5uTafgeTS869w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747836086; c=relaxed/simple;
-	bh=rHiSEnPQVxe41kOxSNdhkkzgEtOJynN2Wt0zY8D+RV8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=RSW6zQh2llhwMuecQfwh3P2rJ4RjiqiZv9Rffm2Id9V3/p7W4sDJpdbr7gdZbJgnLpv6PgvXbd/J/U++sSO4uA90dDwKm8UFmfzLjry0JnVeRQezy0AJIReACpBay3ENqwI3GaX8GOMKpEHCtGtFoj8B9wDX9WcCyH+vEkzzbfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru; spf=pass smtp.mailfrom=fintech.ru; arc=none smtp.client-ip=195.54.195.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fintech.ru
-Received: from Ex16-01.fintech.ru (10.0.10.18) by exchange.fintech.ru
- (195.54.195.159) with Microsoft SMTP Server (TLS) id 14.3.498.0; Wed, 21 May
- 2025 17:01:15 +0300
-Received: from [192.168.211.132] (10.0.253.138) by Ex16-01.fintech.ru
- (10.0.10.18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Wed, 21 May
- 2025 17:01:15 +0300
-Message-ID: <4b007a74-3399-41ba-8953-d7767fcad4f9@fintech.ru>
-Date: Wed, 21 May 2025 17:01:12 +0300
+	s=arc-20240116; t=1747836102; c=relaxed/simple;
+	bh=8aUOwg7cfjAHrLpnuG3R+zcViomLhaw8dORoW3xOm94=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Z3Gy9nlFmguP1hIswUSNvX1cISZy1GXw160F48SS/d8bhf0rsEUxpxeOB8OugScChx8kKZCOcRllDe/eWRK53DEZypN4WLQVxuw6Dyax44F4/83flWx2KgfMSfACE/Q4fQn8jPJ1NZ6KqSqVx56sqI8w3KcKXWheVjyl5qD95ag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UeV1lkIA; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UeV1lkIA"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-231b7b21535so5048185ad.1;
+        Wed, 21 May 2025 07:01:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747836100; x=1748440900; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dMGXupCFm/jDQdH3BwXg85XBgNeRBVeHk/IerHW/LbE=;
+        b=UeV1lkIAt805uhIVM5cPTl8QhTFN4UQHqvrYxOR+whjyUN4Z60VdCIaqpsM8LoQUbc
+         UH/vG7IDyu+k8fKOGSYfXK83alrM6u+1sK2BUcpMni6jGuDm2jrpXCuq0cn3csDGNvEZ
+         t8RmtWiplNJhXrOxzqirYFPY6fMu/UdTb80L4p4VU64nAlarSmiT2fahPrfvtwYl5cGj
+         wFQLOYolLjJUS1XzWCEH0QO6J0+Xl8Dfhjv//rgxVlNkDnE4mQFoL+TSBMa616l84Wxs
+         cLWlI/+V1sMzH8IUtg6bGtxfoF2HShgiXHdbY2qXRVEXKmdUW/pWswVWCmMZ/7Qc5wPI
+         fHtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747836100; x=1748440900;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dMGXupCFm/jDQdH3BwXg85XBgNeRBVeHk/IerHW/LbE=;
+        b=uhr8y+yx5LHwGZiJIo+ztXK9NqQJ2Z13VSn7jSFc7HraUV95CI5H6dLqk15fcc0O7P
+         eGRBsimtUOLMn5Z/l8KeQ9WPK7bT8X3padCKMziSaGrIeG87JeC5QfK7DMSZp7RkY+4g
+         EWW85F2oW4AudAZZf7pVPs3EpWLHJelSsNqNafmMvptrSR5dWITOhRtmW8Eo60qxq0os
+         D+GtdkXo2Hk/NZ67BoIsI0MOFCH5MIhoJ4d4driqo5s4HqX1BEncGEfgIz+Pi1Fs/2tx
+         d/ggF+IwNGMfXgHbpEYP8eSBbRfYimUrTZGgs+rluD2/T7Nj8KuI29RqleYPuvTk7XNC
+         mTEw==
+X-Forwarded-Encrypted: i=1; AJvYcCUy7OB3PNzlDGwmOG4RvA8Vlut8OTNl4j1UXFyc0VK2ICPfloy3LWBhdyIoIGAsQLtVzNGs9O1vE8LFYbI=@vger.kernel.org, AJvYcCVuQppHYxI3utx/gpRTxe5LY8/uv3gGDYIjyakKN28BOpi15H1fU48NWohGgDQN8LXrMIkah9Qx1mEqQY4bAe4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXO4+x1zb8PzG+uzAuw1jlIZcOCww1rmY5/hucm1d1//9sRnfZ
+	jqY5iaxz6Oj/LnFycd06Udw1ylXa/zh56NxOxqlL/rJEfDw5QZUyFstHy87WS6wkOyeqRPdPuIB
+	65GXntK+Idc9uzxO/+dwCvVA3o+l1elU=
+X-Gm-Gg: ASbGnct7ILb9kySLhMbiXzzq4pFIidONrEmHYnHFlKCZm/QaiKmCEwWlkAr9gN1JtBn
+	VSnevycLor4cHBNpOL4guDy0Iyv7WiuGA+bFSgAOGGkIZY8+gi9860i+O6epSdK9mWXSYnxvCfd
+	o/CMkoiENahGmX1dzUoqo0d8ZffUgTeZDd
+X-Google-Smtp-Source: AGHT+IEf9pI5auX2gp9RvC6XVZIT3qjdAUHxHeINEyS1iniHrOrcET60vaOXe6WxV+Ndo4dwUNM7er6CEi5Ut3dwZOE=
+X-Received: by 2002:a17:903:41d0:b0:216:30f9:93c5 with SMTP id
+ d9443c01a7336-231d43b7cb6mr111674645ad.6.1747836100471; Wed, 21 May 2025
+ 07:01:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next] net: usb: aqc111: fix error handling of usbnet
- read calls
-To: Andrew Lunn <andrew@lunn.ch>
-CC: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
-	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	<linux-usb@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>,
-	<syzbot+3b6b9ff7b80430020c7b@syzkaller.appspotmail.com>,
-	<lvc-project@linuxtesting.org>
-References: <20250520113240.2369438-1-n.zhandarovich@fintech.ru>
- <39e2951b-6e57-4003-b1c7-c68947f579be@lunn.ch>
-From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
-Content-Language: en-US
-In-Reply-To: <39e2951b-6e57-4003-b1c7-c68947f579be@lunn.ch>
+References: <20250324210359.1199574-1-ojeda@kernel.org>
+In-Reply-To: <20250324210359.1199574-1-ojeda@kernel.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Wed, 21 May 2025 16:01:28 +0200
+X-Gm-Features: AX0GCFu9hbn7oACBtc1sC-LprsFwQEelpoqzdJdMS9n5B6L5nTBBjtDwqqKl-gg
+Message-ID: <CANiq72mBHcsCpn1ZJRJ9Qa-Ass1MsoKdKcFpiFF7hNwyOXjAOA@mail.gmail.com>
+Subject: Re: [PATCH 00/10] rust: clean and enable Clippy `doc_markdown` lint
+To: Abdiel Janulgue <abdiel.janulgue@gmail.com>, Danilo Krummrich <dakr@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev, 
+	Miguel Ojeda <ojeda@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: Ex16-02.fintech.ru (10.0.10.19) To Ex16-01.fintech.ru
- (10.0.10.18)
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Mon, Mar 24, 2025 at 10:04=E2=80=AFPM Miguel Ojeda <ojeda@kernel.org> wr=
+ote:
+>
+>   rust: alloc: add missing Markdown code spans
+>   rust: alloc: add missing Markdown code span
+>   rust: dma: add missing Markdown code span
+>   rust: of: add missing Markdown code span
+>   rust: pci: fix docs related to missing Markdown code spans
+>   rust: platform: fix docs related to missing Markdown code spans
+>   rust: task: add missing Markdown code spans and intra-doc links
 
-On 5/21/25 15:34, Andrew Lunn wrote:
-> On Tue, May 20, 2025 at 02:32:39PM +0300, Nikita Zhandarovich wrote:
->> Syzkaller, courtesy of syzbot, identified an error (see report [1]) in
->> aqc111 driver, caused by incomplete sanitation of usb read calls'
->> results. This problem is quite similar to the one fixed in commit
->> 920a9fa27e78 ("net: asix: add proper error handling of usb read errors").
->>
->> For instance, usbnet_read_cmd() may read fewer than 'size' bytes,
->> even if the caller expected the full amount, and aqc111_read_cmd()
->> will not check its result properly. As [1] shows, this may lead
->> to MAC address in aqc111_bind() being only partly initialized,
->> triggering KMSAN warnings.
-> 
-> It looks like __ax88179_read_cmd() has the same issue? Please could
-> you have a look around and see if more of the same problem exists.
-> 
+Abdiel, Danilo, Rob, Saravana, Greg, Rafael: anything against me
+picking these ones up?
 
-Yes, you are correct, similar issue with ax88179. There was once an
-attempt to enable similar sanity checks there, see
-https://lore.kernel.org/all/20220514133234.33796-1-k.kahurani@gmail.com/,
-but for some reason it did not pan out.
+If you would like to pick them up through your respective trees, then
+that is great too.
 
-As for other places with the same issue, after a quick glance I see these:
+Thanks!
 
-__ax88179_read_cmd - drivers/net/usb/ax88179_178a.c
-cdc_ncm_init - drivers/net/usb/cdc_ncm.c
-nc_vendor_read - drivers/net/usb/net1080.c
-pla_read_word - drivers/net/usb/r8153_ecm.c
-pla_write_word - drivers/net/usb/r8153_ecm.c
-sierra_net_get_fw_attr - drivers/net/usb/sierra_net.c
-
-This covers all instances usbnet_read_cmd[_nopm] that do not check for
-full 'size' reads, only for straightforward errors. Roughly half of all
-usbnet_read_cmd() calls kernel-wide.
-
-> Are there any use cases where usbnet_read_cmd() can actually return
-> less than size and it not being an error? Maybe this check for ret !=
-> size can be moved inside usbnet_read_cmd()?
-
-I can't reliably state how normal it is when usbnet_read_cmd() ends up
-reading less than size. Both aqc111 and syzkaller with its repros (and
-ax88179/asix as well) tell us it does happen when it shouldn't.
-
-Personally, while I see logic of moving this fix into
-usbnet_read_cmd(), I am wary for the very reason you stated in your
-question - sometimes it may be expected. Also, more often than not
-functions that envelop usbnet_read_cmd() (like ax88179_read_cmd()) seem
-to be deliberately ignoring return values, but even an early warning
-may be helpful in such cases.
-
-In other words, I'd rather leave the decision up to the maintainers. I
-don't mind doing either option.
-
-Regards,
-Nikita
-
-> 
-> 	Andrew
-
+Cheers,
+Miguel
