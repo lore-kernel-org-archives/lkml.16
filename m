@@ -1,131 +1,158 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from rcdn-iport-6.cisco.com (rcdn-iport-6.cisco.com [173.37.86.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 388F615B0EC;
-	Wed, 21 May 2025 01:20:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61DC2145A18;
+	Wed, 21 May 2025 01:20:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.37.86.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747790430; cv=none; b=qWojgOaw7614nLx9OlDHxTd9wUdmn1xXuniH077Tn4rFxSsGEJPiBf+R3gUBSid4aHpXPoobrQ5VzR/u3ncdDjDAXsnnmWDleG4iPsjuhjTDlKimZ1EblcgbNnWaeFOjJnXspl9lutWl+Lwy5b7H1ceF/7z9ecpGOm8DB570r9o=
+	t=1747790461; cv=none; b=ni8Ideilrpd/FALVWLWyGN2WZTgk3WCOIu+qtcS0dymqki5GUnC5KJQ8jSRcNSMz+oIXkegX/ywqxADN712ZoXj+5yjzjfHZeL2W6HD/Mt84mCT8yB1t029xJPBKnmj27t7TZj9jOMJqsd6skzwDHwBUGCmsWmN97VO12NiApGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747790430; c=relaxed/simple;
-	bh=dr6iEE+te5CZeC9ffPCGDnlT7iJvdYe7b8HvhfCcXyM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QTHM4+x7MqOlLBiroOzn719L3tD9RtY27s2SKIQZwvvdy4cI1z9UDGWTt46rYcZe0sjjqCOK3xw37TPmPL+HhJCuTiyNtz6GL2kR++oZdXbI82Z2x7mR5Yj66DFPaiJqcRy0IHs49NMx8WaKdtOuxkeK2K56/kcXpVc0QHvxHDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SIzZADzx; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747790461; c=relaxed/simple;
+	bh=ZdFpzx5d3OudhHZXtSMNLgEaIS/5nAq30dYGget5Yyg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=D7GOnvWPlUubIkdAnitzOQYaQLHAmQkfgDLUTHGy5+TFg89/8GPlJw/SWpmwdmaU3lnKCYkUJHSKi88SKrWznnnGFg1Xq/xfwt2AG2VutkPEDmQrjniifHPaMe9s+WqjflrilTm8xBjeinmHWJAt59puK/JqDNYGbYggN2KBblg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com; spf=pass smtp.mailfrom=cisco.com; dkim=pass (2048-bit key) header.d=cisco.com header.i=@cisco.com header.b=jp9XMRWY; arc=none smtp.client-ip=173.37.86.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cisco.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SIzZADzx"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-7398d65476eso4900423b3a.1;
-        Tue, 20 May 2025 18:20:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=cisco.com header.i=@cisco.com header.b="jp9XMRWY"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747790428; x=1748395228; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jnKAj1wWT/aTEmBr0+5z/BZJBnA/nBahrmjpd0G356E=;
-        b=SIzZADzx+stvgOKtVwvmUJHlRalx7iKsOtiTK1ICG9wO47EZB7gq2/KBch5s/lS1u4
-         Zd3omiaIHiHxSKpLvooBLrFzWZibRAF8OK28/3QZ/O+i4gWSYBtnA4FNR3nGczVOqy1M
-         g8EjQpeWFMo9Z9ewcmHMai9+eQiAAiX/Z792Nh1Pj7cusiMuX//5IZ1QPVKD0JqUTEVi
-         C3mtKI4TGy/xr23RnB5//aP0r2Da1VfbuRlyEKpMFcv+2zRulXxqLPpHU3t53wCaieAx
-         U0X4X+Z6p/JntWcLeMFYrExb/RxLU/gYwOwOoLr7OYiQynkaJhbs6KfRG46k1reljLTn
-         aAmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747790428; x=1748395228;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jnKAj1wWT/aTEmBr0+5z/BZJBnA/nBahrmjpd0G356E=;
-        b=lGo9ths4IkhcUCWxtJ12x7fwOz7ehtjUyT2U/SXInfVI4V6nsF9hxlj8xQOF2/z366
-         ZeQD5w5g1xaHoP9tM8HHDqGxjZ8IeuydRYNcRXvUw5zo2VpHO5EuifAChfGSLswwtZUo
-         z7Qg/VpRvtFFKu+jpSv5UgFlgtwvGiSl/sUQPBrDHSZnO6xyUyZDe33o3KiGiwtXn1nw
-         lHMZPZRl8ZtXEGU07srni6zjO1jpUACu4H8aR6bgAGGlZKzBs7kWP+gm8aVGXn26SAYS
-         JyS8bPe1Q+KgKS2mrRAYoPaJSLq/Ijy7fJzMYcK6MAbO/VnCAOafBmvW+VPo+8uhZLP2
-         yC4A==
-X-Forwarded-Encrypted: i=1; AJvYcCVBna/gBcW2lIWDAvK4Z4R+ES5XJgBXPSuGnRJnudilkrntY0CnqO0mtBfxDnFKfmxVWbTpeX4xekrP6xw5@vger.kernel.org, AJvYcCWaHUadEjbLzR0eF/+QKJTptKn5xaY/nAtMoowYVxtX48kzAibq23rYDHL7B9oW/5sW/V7eDLnWX4w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWe4gpdCe0nHJxVzxZax8wsW7JRZhi5GhDhdnbQ2NNoczeA6ho
-	ILDuPwl8f537alDcWn0kuMA1K2BubM7J8vYCoPBCnQkJ1wkoo8Kv1d++
-X-Gm-Gg: ASbGnctsx2qBASy+/ZGTKrO1pnJio6A4gXqY0Eno9/K/YU3AXsiIjYWfo9ZBbUJKEiC
-	nLIy5Run9nzAFU0jel/siqdoB2xlpqTG4jnjRbN3wXQiTKLTHDnI3KQCrN5sHD2L33k2slBWldc
-	H3LvvbsZAEW76m+3n8rPOKzcP2CD2MVMlwxdJpA+jA+eH8eOUCDtImFicamZvmVU5DodvV0BhH3
-	kYJ8UbPqWrSk8htjlh8KS2j0T6OSZJod1vaUB7I1yBgPUa2ktx1EN06ZBHN5BPHEKbyJcN+i7zG
-	mY/aZzTdKQO3J+wFeMgBCNXR7BpxU8/VLeeOXbwzp6NZv8a3F2k=
-X-Google-Smtp-Source: AGHT+IGRcGw4PVFj0KvWzf8iJ8NGOPcjIwY8wENV5Bey81drCVnYSC8vD3YByIiTH8J/jVDLY5vGpw==
-X-Received: by 2002:a05:6a21:7001:b0:215:e8b5:3df with SMTP id adf61e73a8af0-2165f6458a4mr25920161637.7.1747790428180;
-        Tue, 20 May 2025 18:20:28 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a98a33c3sm8872598b3a.176.2025.05.20.18.20.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 18:20:26 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id 390A344FBDF7; Wed, 21 May 2025 08:20:22 +0700 (WIB)
-Date: Wed, 21 May 2025 08:20:21 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Maxime Ripard <mripard@kernel.org>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
-	Brian Starkey <Brian.Starkey@arm.com>,
-	John Stultz <jstultz@google.com>,
-	"T.J. Mercier" <tjmercier@google.com>,
-	Jonathan Corbet <corbet@lwn.net>
-Cc: linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Documentation: dma-buf: heaps: Add naming guidelines
-Message-ID: <aC0qVd1D_L-LtbxC@archie.me>
-References: <20250520-dma-buf-heap-names-doc-v1-1-ab31f74809ee@kernel.org>
+  d=cisco.com; i=@cisco.com; l=2065; q=dns/txt;
+  s=iport01; t=1747790459; x=1749000059;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:to:cc;
+  bh=pfBkCC3DOvXPWdAIlgZQjqu1PjeONDUG9SSWLLC2Z2w=;
+  b=jp9XMRWY+yBpIKXIy7dTHIK/PfO7TZIIj0fgdipZ8yb4hx+igp85BZnw
+   ZV7voBTW9uaEwQszqbydmjfQsXndWNtttWjA+qumIykNomPvBcvPaAkwS
+   juq6rna1oQXwlhuaA1KBZa5hwGCJoScl7sDn+HDuu7Hq0kKZ99C0acjkv
+   arn5Bq+LRdkDy+whsjLscmMwu1F1F7iMAYutJK34bv5NoEdW2GIY02zQh
+   +cjKL9rW4kb6VkN6OY7Yukz5oDWSitDw18QQRTGGLwnvUQYVZoxSbC5yr
+   BUomO3GLqruXklztfdp919bUREBXHWHSFsKxqAoCV+oOT3eAaFYCD+/Yw
+   Q==;
+X-CSE-ConnectionGUID: cMqST7m/T4uu/NAM54jyQQ==
+X-CSE-MsgGUID: k19YHlp9S7G/hxKGydvlJQ==
+X-IPAS-Result: =?us-ascii?q?A0AFAABmKS1o/47/Ja1aGgEBAQEBAQEBAQEDAQEBARIBA?=
+ =?us-ascii?q?QEBAgIBAQEBQIE/BQEBAQELAYJKgVFCSYRUiByHNI4YkiKBJQNWDwEBAQ9RB?=
+ =?us-ascii?q?AEBhQeLUgImNAkOAQIEAQEBAQMCAwEBAQEBAQEBAQEBCwEBBQEBAQIBBwWBD?=
+ =?us-ascii?q?hOGCIZdJwRSKQwCJgItGxYBEoMCgiMBAQEBRgIBsTV6fzOBAYR82TqBboEbL?=
+ =?us-ascii?q?gGITwGBbYN/O4Q8JxuBSUSBFIJ6b4QKhBSCaQSBDoIzjRiLIYcMCT+BBRwDW?=
+ =?us-ascii?q?SwBVRMNCgsHBWRSMwMgCgsMCxIcFQIUHRIPBBYyHYINgi1Pgh2CD3CBF4kEh?=
+ =?us-ascii?q?EorT4QnD2yBJoM2QAMLGA1IESw3Bg4bBj0BbgeWa4NsAYEPgTCBD5QPgzGNU?=
+ =?us-ascii?q?qF1hCWhaTOqYJkBIqQshGmBaDyBWTMaCBsVgyJSGQ/aLUM1PAIHCwEBAwmGS?=
+ =?us-ascii?q?IlggX0BAQ?=
+IronPort-Data: A9a23:NGKj9qqG+qx/QvvmkSnLNEfHMfJeBmLYZBIvgKrLsJaIsI4StFCzt
+ garIBmEOqrYZTTwe4h/Oonn8hsO75CHzNBmGws4/HpnQiNBouPIVI+TRqvS04x+DSFioGZPt
+ Zh2hgzodZhsJpPkjk7zdOCn9T8kiPngqoPUUIbsIjp2SRJvVBAvgBdin/9RqoNziLBVOSvV0
+ T/Ji5OZYQLNNwJcaDpOtvre8ks35ZwehRtB1rAATaET1LPhvyF94KI3fcmZM3b+S49IKe+2L
+ 86r5K255G7Q4yA2AdqjlLvhGmVSKlIFFVHT4pb+c/HKbilq/kTe4I5iXBYvQRs/ZwGyojxE4
+ I4lWapc5useFvakdOw1C3G0GszlVEFM0OevzXOX6aR/w6BaGpfh660GMa04AWEX0u1SGFpyq
+ vlfFGwQc1elrsfrnLCqc9A506zPLOGzVG8ekmtrwTecCbMtRorOBv2Xo9RZxzw3wMtJGJ4yZ
+ eJANmEpN0uGOUASfA5LUvrSn8/w7pX7WztVpUmeoqA+y2PS1wd2lrPqNbI5f/TRGpwIxxzD+
+ DuuE2LRAUhLBfyb0Wu+rV3rhv/ssjL3RoYwLejtnhJtqBjJroAJMzUaXEW2pNG1g1CzXtZYJ
+ VBS/CcyxYA/+FGuR8vwQzW3p3mLuhNaUN1Ve8U59QuE4qnZ+QCUAi4DVDEpQNUguNU7Wn8s2
+ 0OFks3BASFptvueSRq17r6eoDWzETIYIW8LeWkPSg5ty93ippwjyxHCVNBuFIargdDvXzL92
+ TaHqG45nbp7pcgGy6m243jZjD+24JvEVAg44kPQRG3N0+9iTJSua4rt7R3Q6uxNad7ECFKAp
+ 3MD3cOZ6YjiEK2wqcBEe81VdJnB2hpPGGS0bYJHd3X5ywmQxg==
+IronPort-HdrOrdr: A9a23:ouKjt6CqY5udiWrlHelZ55DYdb4zR+YMi2TDGXoBLiC9Ffb5qy
+ nOppUmPHDP5Ar5NEtMpTniAse9qA3nhP1ICOAqVN/INjUO01HGEGgN1/qH/xTQXwaistNH3a
+ 1jc69xYeeAb2RSvILR4QG+Hdpl4PTvytHMuc7ui1pgUg1ubbht9ENaBhbzKDwPeCB2Qbc0C5
+ aY4NNKvH6beXoRZtmmHXVtZZm7mzSyruOBXfbDbCRXkjVnSliTmcXHLyQ=
+X-Talos-CUID: =?us-ascii?q?9a23=3AR076jGpaNaw3Immt5H89qojmUcsAa0bhk3KXHxO?=
+ =?us-ascii?q?lFCFPYZjIFV2BwZoxxg=3D=3D?=
+X-Talos-MUID: 9a23:FNtjTwg5eFL6UnGhsS2hEMMpN5450oSqEBE2zrpBu9mnGj18JTO/tWHi
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-AV: E=Sophos;i="6.15,303,1739836800"; 
+   d="scan'208";a="371512361"
+Received: from rcdn-l-core-05.cisco.com ([173.37.255.142])
+  by rcdn-iport-6.cisco.com with ESMTP/TLS/TLS_AES_256_GCM_SHA384; 21 May 2025 01:19:51 +0000
+Received: from neescoba-vicdev.cisco.com (neescoba-vicdev.cisco.com [171.70.41.192])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by rcdn-l-core-05.cisco.com (Postfix) with ESMTPS id F406C18000233;
+	Wed, 21 May 2025 01:19:50 +0000 (GMT)
+Received: by neescoba-vicdev.cisco.com (Postfix, from userid 412739)
+	id 981C3CC1256; Wed, 21 May 2025 01:19:50 +0000 (GMT)
+From: Nelson Escobar <neescoba@cisco.com>
+Date: Wed, 21 May 2025 01:19:29 +0000
+Subject: [PATCH net-next] net/enic: Allow at least 8 RQs to always be used
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="NypwNQ7lUsvPyCso"
-Content-Disposition: inline
-In-Reply-To: <20250520-dma-buf-heap-names-doc-v1-1-ab31f74809ee@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250521-enic_min_8rq-v1-1-691bd2353273@cisco.com>
+X-B4-Tracking: v=1; b=H4sIACAqLWgC/x3MSwqAMAwA0atI1hZsVPxcRaRIGzULo7YigvTuF
+ pdvMfNCIM8UoM9e8HRz4F0SdJ6BXSdZSLFLBiywLmpdKhK2ZmMxrT9VhXrGsu0aZxFScnia+fl
+ 3AwhdSui5YIzxA7LY3l5oAAAA
+X-Change-ID: 20250513-enic_min_8rq-421f23897dc2
+To: Christian Benvenuti <benve@cisco.com>, 
+ Satish Kharat <satishkh@cisco.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ John Daley <johndale@cisco.com>, Nelson Escobar <neescoba@cisco.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747790390; l=2099;
+ i=neescoba@cisco.com; s=20241023; h=from:subject:message-id;
+ bh=ZdFpzx5d3OudhHZXtSMNLgEaIS/5nAq30dYGget5Yyg=;
+ b=lUVRDdfBXIxOqXvqIi97xHS+gUK/M/qQW/n81Pd94k9UsQRTC2FhZcAEjzjMjHtFR55n5WVwj
+ OwRiU9GYBdlD2BK6RyW05NM9LKvNLduB01SpMj7dfPmhApixiiqEhaS
+X-Developer-Key: i=neescoba@cisco.com; a=ed25519;
+ pk=bLqWB7VU0KFoVybF4LVB4c2Redvnplt7+5zLHf4KwZM=
+X-Outbound-SMTP-Client: 171.70.41.192, neescoba-vicdev.cisco.com
+X-Outbound-Node: rcdn-l-core-05.cisco.com
 
+Enic started using netif_get_num_default_rss_queues() to set the number
+of RQs used in commit cc94d6c4d40c ("enic: Adjust used MSI-X
+wq/rq/cq/interrupt resources in a more robust way")
 
---NypwNQ7lUsvPyCso
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This resulted in machines with less than 16 cpus using less than 8 RQs.
+Allow enic to use at least 8 RQs no matter how many cpus are in the
+machine to not impact existing enic workloads after a kernel upgrade.
 
-On Tue, May 20, 2025 at 12:00:53PM +0200, Maxime Ripard wrote:
-> +Naming Convention
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +A good heap name is a name that:
-> +
-> +- Is stable, and won't change from one version to the other;
-> +
-> +- Describes the memory region the heap will allocate from, and will
-> +  uniquely identify it in a given platform;
-> +
-> +- Doesn't use implementation details, such as the allocator;
-> +
-> +- Can describe intended usage.
-> +
-> +For example, assuming a platform with a reserved memory region located
-> +at the RAM address 0x42000000, intended to allocate video framebuffers,
-> +and backed by the CMA kernel allocator. Good names would be
-> +`memory@42000000` or `video@42000000`, but `cma-video` wouldn't.
+Reviewed-by: John Daley <johndale@cisco.com>
+Reviewed-by: Satish Kharat <satishkh@cisco.com>
+Signed-off-by: Nelson Escobar <neescoba@cisco.com>
+---
+ drivers/net/ethernet/cisco/enic/enic.h      | 1 +
+ drivers/net/ethernet/cisco/enic/enic_main.c | 3 ++-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-Looks good, thanks!
+diff --git a/drivers/net/ethernet/cisco/enic/enic.h b/drivers/net/ethernet/cisco/enic/enic.h
+index 9c12e967e9f1299e1cf3e280a16fb9bf93ac607b..301b3f3114afa8f60c34c05661ee3cf67d4d6808 100644
+--- a/drivers/net/ethernet/cisco/enic/enic.h
++++ b/drivers/net/ethernet/cisco/enic/enic.h
+@@ -26,6 +26,7 @@
+ 
+ #define ENIC_WQ_MAX		256
+ #define ENIC_RQ_MAX		256
++#define ENIC_RQ_MIN_DEFAULT	8
+ 
+ #define ENIC_WQ_NAPI_BUDGET	256
+ 
+diff --git a/drivers/net/ethernet/cisco/enic/enic_main.c b/drivers/net/ethernet/cisco/enic/enic_main.c
+index c753c35b26ebd12c500f2056b3eb583de8c6b076..6ef8a0d90bce38781d931f62518cf9bafb223288 100644
+--- a/drivers/net/ethernet/cisco/enic/enic_main.c
++++ b/drivers/net/ethernet/cisco/enic/enic_main.c
+@@ -2296,7 +2296,8 @@ static int enic_adjust_resources(struct enic *enic)
+ 		 * used based on which resource is the most constrained
+ 		 */
+ 		wq_avail = min(enic->wq_avail, ENIC_WQ_MAX);
+-		rq_default = netif_get_num_default_rss_queues();
++		rq_default = max(netif_get_num_default_rss_queues(),
++				 ENIC_RQ_MIN_DEFAULT);
+ 		rq_avail = min3(enic->rq_avail, ENIC_RQ_MAX, rq_default);
+ 		max_queues = min(enic->cq_avail,
+ 				 enic->intr_avail - ENIC_MSIX_RESERVED_INTR);
 
-Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+---
+base-commit: ae605349e1fa5a29cdeecf52f92aa76850900d90
+change-id: 20250513-enic_min_8rq-421f23897dc2
 
---=20
-An old man doll... just what I always wanted! - Clara
+Best regards,
+-- 
+Nelson Escobar <neescoba@cisco.com>
 
---NypwNQ7lUsvPyCso
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaC0qUQAKCRD2uYlJVVFO
-o0PWAPkB0WhcqMYxc22GRsTrNHTiOOPmCuqttpkhvh7zJak34wD/RfEvLDvJd4S0
-gd404Ak39Db39XlwIwe0XTZMK8hm4AA=
-=6/NP
------END PGP SIGNATURE-----
-
---NypwNQ7lUsvPyCso--
