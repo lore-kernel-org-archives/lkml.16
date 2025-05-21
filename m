@@ -1,152 +1,347 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m155101.qiye.163.com (mail-m155101.qiye.163.com [101.71.155.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 851921DE4D3;
-	Wed, 21 May 2025 14:41:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3D0514A627;
+	Wed, 21 May 2025 14:42:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.71.155.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747838508; cv=none; b=iyCMrr9u2cTe0RaLLmQIGiyHhAwpT9Bw+vjECgcL462z5pSyDo9xOQ7+dDLtBhyUoRMbDkhdO2wOBkZKFCAZrv498WCbTeq4PzJ5/cv4ZFey9Y4OIPuSmZ92ANJ/YN1KhpJSTHWo4PKMCOxYHqVeseiXoO/X2o4HFPKn94u67Jc=
+	t=1747838535; cv=none; b=EadCp5YjRA5j37tDN2pgB/m8vM+Bwq0m2vMqRJYRk0DYarf1XV9CDnXs4NON0AtcssSItL4saI8/WtS4tbq/UPwJsPN94QySuq4ZOdNFlLzRLclRetST2AHQeNyIBqjaE8b5GXgnOO2OeECXwyVmD1WbqdNoXVuZQgUxQFTHxbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747838508; c=relaxed/simple;
-	bh=xGwv8zOnBEuC2KXKMvwIoAf5LhaujZS6kwKCDX9Q3Q8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SPw8oGPPcAJzrEbhad8tnIZnmjRp6esZjzoE8PKukRJbWDlKgtOQ2Cekn4hR4BBzyfgWVmuRNBtirWNEKinzjqtHw8X3jEmS8LiNV+dkihQhu4qBa+pv8OHEq47bfsNNH4QtytEQXwtNMtO41EUZulMdQ8W100eArYwITHXABcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XB/w+SSE; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XB/w+SSE"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-acbb85ce788so1342966766b.3;
-        Wed, 21 May 2025 07:41:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747838505; x=1748443305; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=C1UUJjI6uVedXhjrW1TR558sVBfrP4UvOSPCt6T5RL8=;
-        b=XB/w+SSEFYmJW62fhRDvvFvlZCbvFunWoXiiYmEvPkcCkScnmF7LrDHPKYLnZIYUJf
-         glDpPc+iVlJU+Aies0Zbld1/rPvYnXxUIah84XGzLHZPRfdwDsysWAa79pWA53/bGc3e
-         rh+QXDhyLYR6SlQhr2M/E7bFXxdEi/18bxVn2wNzDmU1rMK/8Veg3SPQtHc3NUCxMBKA
-         QbEIdFPPPq1zkOdVxTQNarYTuY+9kYAjuptsLiVZV3h28sva5OrYWv4JmXaqdzJBK648
-         z7+OzBYGzeHYio/t+siPcANEJubEsYaTzD9QHw1W5EUMrpUrKogJdgieQVja6LY4Lm7O
-         qTdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747838505; x=1748443305;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=C1UUJjI6uVedXhjrW1TR558sVBfrP4UvOSPCt6T5RL8=;
-        b=c61khu4I/JRfdO6mRXVuD2i0kthplJXRQnoW0tzYsZB+jm+NiVGz/uj2E3lDYlyRR9
-         R0I0sZrbjt3dFZJke3R6Sol8hqPXWFXufgVum7Y/YF8ot167RiIEXoSk/1ZtATMX+QXK
-         0Cp7AYhjjV35Pej6JWggqkap158aKiWbrGKkDwCxR7TLJheOkcE9zQRQd+851npXt4Sh
-         33H/mkJedovc0DX3VYsMGOG3YhY55nZ10Zn2X9caocVXFl26UNOi7tof5qajtbbVDhuc
-         bgBypdVCbUvyZHMtLjFq0+QhuEZM3zx6bCkeM9r9WMOE4OthNNa523AX6kl2XN+YwVzI
-         XKzw==
-X-Forwarded-Encrypted: i=1; AJvYcCWMyOnp7F1F/5IrkJMtuOIdfsP3VZBa2IkS6+kcWQuAxjB2E5wyQbpx6TJnNpZM+wzSXRj84ixVEEG/Lok=@vger.kernel.org, AJvYcCWtJcUlEFMcD5qOxacG49FBuMfKseSLJwQcqUAmSwjUyuV5PX3miXPLkbJ6rszFDavOk4VbA8L7OL4jv7Uyfwc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzculH+YXphrXpQkmt3JkyYnKcXmvxTDiYG0NZ7osALuVkjNMJW
-	H0IQnTfm9o4zOsSAoXWGx9iQxArdXGmSIXyyKz3u7TRMmdy0QioHTmpt
-X-Gm-Gg: ASbGncvrYQ8yYfjPFUwPxTCLqzyGqtRWAYeBIo49NRrcwyyqXJlc1IuLNgyIV3lJztL
-	mm9VVN057uJ8qUmX4xLJ1F2KptdDh8coGlp1sD6Yv3ABFuMHL74mjW+XQS+1yxdNgmjzb4r38lg
-	dRjrQD0LUP0KoiN1f+YxBdTJ0kHHNd4V/HxpNvo/BmVxAtZ5VXQFtC9UPVk54j3diaMQz1dzqiU
-	gxXjNgByFXv58YPjaY15uFPV0zmP4C1Ii5ebIg71TXTfGknhLBuCl/5sZFdS/zAPnEImFbNBJZM
-	iqdTKtoS0SImb82SRfdpITc6zdU3zfU4OGs+pjicywCtbkdiTNVDTlVsRGfw
-X-Google-Smtp-Source: AGHT+IHdWUcyjR/eAqavzD2juSux585KrfO0BAvXyaiLmoTl1xqZVtMRB8htIIkLjTQGAHmv4MaEgw==
-X-Received: by 2002:a17:907:7fac:b0:aca:c4a6:cd90 with SMTP id a640c23a62f3a-ad52d45accemr1998919366b.5.1747838504367;
-        Wed, 21 May 2025 07:41:44 -0700 (PDT)
-Received: from [10.5.1.156] ([193.170.134.247])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d490794sm915439866b.131.2025.05.21.07.41.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 May 2025 07:41:44 -0700 (PDT)
-Message-ID: <7a6852e9-54f7-4fc1-b052-f673f9eddd97@gmail.com>
-Date: Wed, 21 May 2025 16:41:42 +0200
+	s=arc-20240116; t=1747838535; c=relaxed/simple;
+	bh=LBNFvz6isHb0XpIaBbzzP2bkphvC+OQsaypRWo1qlS8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VRImfZ98hvSwP+HecfrC3G56ljzGraREeC8mZ6/XTa1sJlymUDUrJKwuSnJ3h+iVUyLp6YO7sWSXFYL280+fC++GK2yQBsCWWfabIY1ByYWgw7IFDGNp4GYqUty5SEElW8IJMrur5bSOgRUPO2JvSyJC4UzporV0WSSa3qWVCdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn; spf=pass smtp.mailfrom=whut.edu.cn; arc=none smtp.client-ip=101.71.155.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=whut.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=whut.edu.cn
+Received: from localhost (gy-adaptive-ssl-proxy-4-entmail-virt151.gy.ntes [27.18.99.37])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 15eccc973;
+	Wed, 21 May 2025 22:42:05 +0800 (GMT+08:00)
+Date: Wed, 21 May 2025 22:42:05 +0800
+From: Ze Huang <huangze@whut.edu.cn>
+To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+	Ze Huang <huangze@whut.edu.cn>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+	"spacemit@lists.linux.dev" <spacemit@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 2/3] usb: dwc3: add common driver to support flattened
+ DT
+Message-ID: <aC3mPZRCJbq7wg1T@jean.localdomain>
+References: <20250518-b4-k1-dwc3-v3-v3-0-7609c8baa2a6@whut.edu.cn>
+ <20250518-b4-k1-dwc3-v3-v3-2-7609c8baa2a6@whut.edu.cn>
+ <20250519233723.zky3t6ynchg2a32z@synopsys.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] rust: miscdevice: add additional data to
- MiscDeviceRegistration
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>, Arnd Bergmann <arnd@arndb.de>,
- Lee Jones <lee@kernel.org>, Daniel Almeida <daniel.almeida@collabora.com>,
- =?UTF-8?Q?Gerald_Wisb=C3=B6ck?= <gerald.wisboeck@feather.ink>,
- rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250517-b4-rust_miscdevice_registrationdata-v3-0-cdb33e228d37@gmail.com>
- <20250517-b4-rust_miscdevice_registrationdata-v3-1-cdb33e228d37@gmail.com>
- <aCiSRZjOETsD8MhX@pollux> <2025052107-awhile-drainer-38d0@gregkh>
- <aC3fYyvPvTB1DkeR@cassiopeiae>
-Content-Language: en-US, de-DE
-From: Christian Schrefl <chrisi.schrefl@gmail.com>
-In-Reply-To: <aC3fYyvPvTB1DkeR@cassiopeiae>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250519233723.zky3t6ynchg2a32z@synopsys.com>
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZGE1OVh5CSh5CTE9JGE5MH1YeHw5VEwETFhoSFy
+	QUDg9ZV1kYEgtZQVlJTFVKQ1VCQlVITFlXWRYaDxIVHRRZQVlPS0hVSktISk5MT1VKS0tVSkJLS1
+	kG
+X-HM-Tid: 0a96f34b614703a1kunmbf1ba85e166a3a
+X-HM-MType: 10
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Mio6STo4FjE1Mh1ISi1WNThM
+	C0sKCjRVSlVKTE9MQ0hDTklMS0hPVTMWGhIXVRMOGhUcAR47DBMOD1UeHw5VGBVFWVdZEgtZQVlJ
+	TFVKQ1VCQlVITFlXWQgBWUFKS0hDQzcG
 
-Hi Danilo
-
-On 21.05.25 4:12 PM, Danilo Krummrich wrote:
-> On Wed, May 21, 2025 at 01:55:36PM +0200, Greg Kroah-Hartman wrote:
->> On Sat, May 17, 2025 at 03:42:29PM +0200, Danilo Krummrich wrote:
->>> On Sat, May 17, 2025 at 01:33:49PM +0200, Christian Schrefl wrote:
->>>> +pub struct MiscDeviceRegistration<T: MiscDevice> {
->>>>      #[pin]
->>>>      inner: Opaque<bindings::miscdevice>,
->>>> +    #[pin]
->>>> +    data: UnsafePinned<T::RegistrationData>,
->>>>      _t: PhantomData<T>,
->>>>  }
->>>
->>> I recommend not to store data within a Registration type itself.
->>>
->>> I know that this is designed with the focus on using misc device directly from
->>> the module scope; and in this context it works great.
->>>
->>> However, it becomes quite suboptimal when used from a driver scope. For
->>> instance, if the misc device is registered within a platform driver's probe()
->>> function.
->>>
->>> I know this probably isn't supported yet. At least, I assume it isn't supported
->>> "officially", given that the abstraction does not provide an option to set a
->>> parent device. Yet I think we should consider it.
->>
->> It's going to be a requirement to properly set the parent device, and
->> as you point out, this really should be in some sort of scope, not just
->> a module.
->>
->> But, we have two types of users of a misc device, one like this is
->> written, for a module-scope, and one for the "normal" device scope.  The
->> device scope is going to be tricker as it can, and will, get
->> disconnected from the device separately from the misc device lifespan,
->> so when that logic is added, it's going to be tricky as you point out.
->>
->> So I'll take this now, but in the future this is going to have to be
->> cleaned up and modified.
+On Mon, May 19, 2025 at 11:37:35PM +0000, Thinh Nguyen wrote:
+> On Sun, May 18, 2025, Ze Huang wrote:
+> > To support flattened dwc3 dt model and drop the glue layer, introduce the
+> > `dwc3-common` driver. This enables direct binding of the DWC3 core driver
+> > and offers an alternative to the existing glue driver `dwc3-of-simple`.
+> > 
+> > Signed-off-by: Ze Huang <huangze@whut.edu.cn>
+> > ---
+> >  drivers/usb/dwc3/Kconfig       |   9 ++
+> >  drivers/usb/dwc3/Makefile      |   1 +
+> >  drivers/usb/dwc3/dwc3-common.c | 191 +++++++++++++++++++++++++++++++++++++++++
 > 
-> I'm about to sketch up something based on this patch that works properly for
-> both cases, i.e. module-scope and driver-scope.
-
-Let me know if you have any questions for me (if you want also privately 
-or on Zulip).
-
-I currently don't have the time to work on this myself. I'm not that
-familiar with the C side and the Devres abstraction and would need to look
-into these before getting much work done here.
-
-> I think it would also be good for the misc device abstraction to demonstrate
-> how to properly make class device abstractions (such as misc device, DRM device,
-> input device etc.) go along with bus devices in the context of a driver.
+> Let's rename the dwc3-common to dwc3-generic-plat. I'd associate
+> "common" to common code that exists in all drivers; where as this is
+> mainly for generic platform driver.
 > 
-> misc device isn't *the* perfect example, given that it doesn't have the typical
-> create and register split and another complication is that we also have to deal
-> with the module-scope case, but it's still a very good candidate given that it
-> is very simple compared to other class devices.
 
-Cheers
-Christian
+You're right, will do.
+
+> >  3 files changed, 201 insertions(+)
+> > 
+> > diff --git a/drivers/usb/dwc3/Kconfig b/drivers/usb/dwc3/Kconfig
+> > index 310d182e10b50b253d7e5a51674806e6ec442a2a..852f94f906e4f339dcbb562e1ce708409ba77b76 100644
+> > --- a/drivers/usb/dwc3/Kconfig
+> > +++ b/drivers/usb/dwc3/Kconfig
+> > @@ -118,6 +118,15 @@ config USB_DWC3_OF_SIMPLE
+> >  	  Currently supports Xilinx and Qualcomm DWC USB3 IP.
+> >  	  Say 'Y' or 'M' if you have one such device.
+> >  
+> > +config USB_DWC3_COMMON
+> 
+> Let's rename to USB_DWC3_GENERIC_PLAT.
+
+Will do
+
+> I would expect to also have USB_DWC3_GENERIC_PCI at some point in the future.
+> 
+> Side note: flattened driver for PCI driver will allow the dwc3
+> host controllers to take advantage of MSIX interrupts going through the
+> dwc3 code path.
+>
+
+Thanks for pointing that out.
+
+I don’t have a convenient setup to test PCI-based DWC3 controllers by the time,
+but I’ll definitely look into it when the opportunity arises.
+
+> 
+> > +       tristate "DWC3 Platform common Driver"
+> > +       depends on OF && COMMON_CLK
+> > +       default USB_DWC3
+> > +       help
+> > +         Support USB3 functionality in simple SoC integrations.
+> > +         Currently supports SpacemiT DWC USB3 IP.
+> > +         Say 'Y' or 'M' if you have one such device.
+> > +
+> >  config USB_DWC3_ST
+> >  	tristate "STMicroelectronics Platforms"
+> >  	depends on (ARCH_STI || COMPILE_TEST) && OF
+> > diff --git a/drivers/usb/dwc3/Makefile b/drivers/usb/dwc3/Makefile
+> > index 830e6c9e5fe073c1f662ce34b6a4a2da34c407a2..ad1b0705c4d464f19e79ed0c3c63d942446e4742 100644
+> > --- a/drivers/usb/dwc3/Makefile
+> > +++ b/drivers/usb/dwc3/Makefile
+> > @@ -57,3 +57,4 @@ obj-$(CONFIG_USB_DWC3_IMX8MP)		+= dwc3-imx8mp.o
+> >  obj-$(CONFIG_USB_DWC3_XILINX)		+= dwc3-xilinx.o
+> >  obj-$(CONFIG_USB_DWC3_OCTEON)		+= dwc3-octeon.o
+> >  obj-$(CONFIG_USB_DWC3_RTK)		+= dwc3-rtk.o
+> > +obj-$(CONFIG_USB_DWC3_COMMON)		+= dwc3-common.o
+> > diff --git a/drivers/usb/dwc3/dwc3-common.c b/drivers/usb/dwc3/dwc3-common.c
+> > new file mode 100644
+> > index 0000000000000000000000000000000000000000..afd9a7bec14b68dfd4f2353d714041882660a1a4
+> > --- /dev/null
+> > +++ b/drivers/usb/dwc3/dwc3-common.c
+> > @@ -0,0 +1,191 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * dwc3-common.c - DesignWare USB3 common driver
+> > + *
+> > + * Copyright (C) 2025 Ze Huang <huangze@whut.edu.cn>
+> > + *
+> > + * Inspired by dwc3-qcom.c and dwc3-of-simple.c
+> > + */
+> > +
+> > +#include <linux/clk.h>
+> > +#include <linux/delay.h>
+> > +#include <linux/of_platform.h>
+> > +#include <linux/of_address.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/reset.h>
+> > +#include "glue.h"
+> > +
+> > +struct dwc3_common {
+> > +	struct device		*dev;
+> > +	struct dwc3		dwc;
+> > +	struct clk_bulk_data	*clks;
+> > +	int			num_clocks;
+> > +	struct reset_control	*resets;
+> > +};
+> > +
+> > +static int dwc3_common_probe(struct platform_device *pdev)
+> > +{
+> > +	struct dwc3_probe_data probe_data = {};
+> > +	struct device *dev = &pdev->dev;
+> > +	struct dwc3_common *dwc3c;
+> > +	struct resource *res;
+> > +	int ret;
+> > +
+> > +	dwc3c = devm_kzalloc(dev, sizeof(*dwc3c), GFP_KERNEL);
+> > +	if (!dwc3c)
+> > +		return -ENOMEM;
+> > +
+> > +	dwc3c->dev = dev;
+> > +
+> > +	platform_set_drvdata(pdev, dwc3c);
+> > +
+> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +	if (!res) {
+> > +		dev_err(&pdev->dev, "missing memory resource\n");
+> > +		return -ENODEV;
+> > +	}
+> > +
+> > +	dwc3c->resets = of_reset_control_array_get_optional_exclusive(dev->of_node);
+> > +	if (IS_ERR(dwc3c->resets))
+> > +		return dev_err_probe(dev, PTR_ERR(dwc3c->resets), "failed to get reset\n");
+> > +
+> > +	ret = reset_control_assert(dwc3c->resets);
+> > +	if (ret)
+> > +		return dev_err_probe(dev, ret, "failed to assert reset\n");
+> > +
+> > +	usleep_range(10, 1000);
+> > +
+> > +	ret = reset_control_deassert(dwc3c->resets);
+> > +	if (ret) {
+> > +		dev_err(dev, "failed to deassert reset\n");
+> > +		goto reset_assert;
+> > +	}
+> > +
+> > +	ret = clk_bulk_get_all(dwc3c->dev, &dwc3c->clks);
+> > +	if (ret < 0) {
+> > +		dev_err(dev, "failed to get clocks\n");
+> > +		goto reset_assert;
+> > +	}
+> > +
+> > +	dwc3c->num_clocks = ret;
+> > +
+> > +	ret = clk_bulk_prepare_enable(dwc3c->num_clocks, dwc3c->clks);
+> > +	if (ret) {
+> > +		dev_err(dev, "failed to enable clocks\n");
+> > +		goto reset_assert;
+> > +	}
+> > +
+> > +	dwc3c->dwc.dev = dev;
+> > +	probe_data.dwc = &dwc3c->dwc;
+> > +	probe_data.res = res;
+> > +	probe_data.ignore_clocks_and_resets = true;
+> > +	ret = dwc3_core_probe(&probe_data);
+> > +	if (ret)  {
+> > +		dev_err(dev, "failed to register DWC3 Core\n");
+> > +		goto clk_disable;
+> > +	}
+> > +
+> > +	return 0;
+> > +
+> > +clk_disable:
+> > +	clk_bulk_disable_unprepare(dwc3c->num_clocks, dwc3c->clks);
+> > +	clk_bulk_put_all(dwc3c->num_clocks, dwc3c->clks);
+> > +
+> > +reset_assert:
+> > +	reset_control_assert(dwc3c->resets);
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +static void dwc3_common_remove(struct platform_device *pdev)
+> > +{
+> > +	struct dwc3_common *dwc3c = platform_get_drvdata(pdev);
+> > +
+> > +	dwc3_core_remove(&dwc3c->dwc);
+> > +
+> > +	clk_bulk_disable_unprepare(dwc3c->num_clocks, dwc3c->clks);
+> > +	clk_bulk_put_all(dwc3c->num_clocks, dwc3c->clks);
+> > +
+> > +	reset_control_assert(dwc3c->resets);
+> > +}
+> > +
+> > +#ifdef CONFIG_PM_SLEEP
+> 
+> Use the new SYSTEM_SLEEP_PM_OPS macros and we can do away with these PM
+> guards.
+> 
+
+Will follow, thanks
+
+> > +static int dwc3_common_suspend(struct device *dev)
+> > +{
+> > +	struct dwc3_common *dwc3c = dev_get_drvdata(dev);
+> > +	int ret;
+> > +
+> > +	ret = dwc3_pm_suspend(&dwc3c->dwc);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	clk_bulk_disable_unprepare(dwc3c->num_clocks, dwc3c->clks);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int dwc3_common_resume(struct device *dev)
+> > +{
+> > +	struct dwc3_common *dwc3c = dev_get_drvdata(dev);
+> > +	int ret;
+> > +
+> > +	ret = clk_bulk_prepare_enable(dwc3c->num_clocks, dwc3c->clks);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	ret = dwc3_pm_resume(&dwc3c->dwc);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int dwc3_common_runtime_suspend(struct device *dev)
+> > +{
+> > +	struct dwc3_common *dwc3c = dev_get_drvdata(dev);
+> > +
+> > +	return dwc3_runtime_suspend(&dwc3c->dwc);
+> > +}
+> > +
+> > +static int dwc3_common_runtime_resume(struct device *dev)
+> > +{
+> > +	struct dwc3_common *dwc3c = dev_get_drvdata(dev);
+> > +
+> > +	return dwc3_runtime_resume(&dwc3c->dwc);
+> > +}
+> > +
+> > +static int dwc3_common_runtime_idle(struct device *dev)
+> > +{
+> > +	struct dwc3_common *dwc3c = dev_get_drvdata(dev);
+> > +
+> > +	return dwc3_runtime_idle(&dwc3c->dwc);
+> > +}
+> > +
+> > +static const struct dev_pm_ops dwc3_common_dev_pm_ops = {
+> > +	SET_SYSTEM_SLEEP_PM_OPS(dwc3_common_suspend, dwc3_common_resume)
+> > +	RUNTIME_PM_OPS(dwc3_common_runtime_suspend, dwc3_common_runtime_resume,
+> > +		       dwc3_common_runtime_idle)
+> > +};
+> > +#endif /* CONFIG_PM_SLEEP */
+> > +
+> > +static const struct of_device_id dwc3_common_of_match[] = {
+> > +	{ .compatible = "spacemit,k1-dwc3", },
+> > +	{ /* sentinel */ }
+> > +};
+> > +MODULE_DEVICE_TABLE(of, dwc3_common_of_match);
+> > +
+> > +static struct platform_driver dwc3_common_driver = {
+> > +	.probe		= dwc3_common_probe,
+> > +	.remove		= dwc3_common_remove,
+> > +	.driver		= {
+> > +		.name	= "dwc3-common",
+> > +		.of_match_table = dwc3_common_of_match,
+> > +#ifdef CONFIG_PM_SLEEP
+> > +		.pm	= &dwc3_common_dev_pm_ops,
+> > +#endif /* CONFIG_PM_SLEEP */
+> > +	},
+> > +};
+> > +module_platform_driver(dwc3_common_driver);
+> > +
+> > +MODULE_LICENSE("GPL");
+> > +MODULE_DESCRIPTION("DesignWare USB3 common driver");
+> > 
+> > -- 
+> > 2.49.0
+> > 
+> 
+> Thanks for the work. Going forward, I hope more platforms will move to
+> this and take advantage of this new flattened model.
+> 
+
+Thanks for the feedback! Looking forward to seeing it adopted more widely :-)
+
+> Thanks,
+> Thinh
