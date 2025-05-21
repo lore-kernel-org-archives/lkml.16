@@ -1,175 +1,510 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6C641EA7C6;
-	Wed, 21 May 2025 15:33:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E29E91EA7C2;
+	Wed, 21 May 2025 15:33:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747841587; cv=none; b=mny5YhJw4JZoMiNkpyIqSe+Kyg/4mPOqN7gjfE30sTGAyud5M+qHVgo347hf5lR7V+d1Srfh8fGb9U/bkzseMo1b+BCOj/UoLPOAv9xQAbZWQsSohYSw89ZLivYxxAgzx1tp4enL/YgcuePCLxZNWAstCDb7hjMraQ4j1rhfoos=
+	t=1747841587; cv=none; b=tW8NHDocAN6mry3hxOulXg+OLdkpUK/tIfvIoVy+OQi6N98Jx9jwsnHx4JomLwgaVO2EIODhqEmjG/xzkaK+WWEG+nv/JRdLUwQF5t+b79vL1ug0UZDEX1gwkD53AcV6KFKvTAulS/G/RDdO8yhNZkjeQZQ0UlP1mkWmlu5NSek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747841587; c=relaxed/simple;
-	bh=GW8fSJtIIcQfrlBHzwFuPMtHkQZy1wmn2vANi12FPSw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nZmAsV+X8XTCDgjF5NbDWF4nHe0ifxI2RonJdIJy0p9jVom8RAljKGfbhfz9btKQi9Iisyq4wRgJN+zL12cjH/Daxx8QpGRBaSmvLyxr0lTloPU0kXbka3fQxo0UpfCHCKgnOgO9s+iV5B2GXOl9kUpVPGJk3LgylW034dgykiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MEQ5S6Ze; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	bh=uy5+OGLquQ/hI58aGewGRzZaToGymlH4O2HPyG63V1g=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=WgqUQn6K0wx/yUcT2wBSbay+joVdbfQ/c7GXZMlDbwxVS9xJQn6DtZP+uhFpwGtBgGigvD561K0qNkajK/76IZnhdqkTdupaogHELH/ZHue9ewnUA5SQ5mC8/Aa71O/3mORnFhc8n99PCUVSIlTi7R1To3Fqn/NQKO3F05CDP1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u634/p1X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MEQ5S6Ze"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747841586; x=1779377586;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=GW8fSJtIIcQfrlBHzwFuPMtHkQZy1wmn2vANi12FPSw=;
-  b=MEQ5S6ZeVrA9ikBXytNAwjRI/oEFpM61UO9N79vPumUHKs8Fcabc1Tf9
-   8Strvm2ulOuyU8B0+ompKRPTARZkdihw2kWsIahLB80uhG87qB8BPoSGx
-   82REDkb7jqijcieHjl+1fyv+3XeYa9zzUqEI1kf6Rr4UDUPq+C61cOuvy
-   HYT33HSi/D/io1jX/8oTd/3Nto+qP+S8OP/OS6Yd2Zcp7u8rlUX9whMlg
-   0K2vDiIEgAGAZvwKj6gtV4umyVnjWqYLmNT8DRrM/Uoqr4cMKMYE4f1G6
-   qZrkibiaQpc9uzH4G68/4rJmsSVbuGJWK3zcaTy84ae8uCFrPG25qNUYS
-   A==;
-X-CSE-ConnectionGUID: /NlwuTENTMyvUoQTCQk15g==
-X-CSE-MsgGUID: jYIgMtlCTIyhaiPH9tW3Ag==
-X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="72345621"
-X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
-   d="scan'208";a="72345621"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 08:33:04 -0700
-X-CSE-ConnectionGUID: /0j+tz1wRYKNB1/qh7Axyg==
-X-CSE-MsgGUID: osH+72QJRYGme7yAqVUxjw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
-   d="scan'208";a="141046554"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 08:33:00 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uHlRB-00000003fEh-41bz;
-	Wed, 21 May 2025 18:32:57 +0300
-Date: Wed, 21 May 2025 18:32:57 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Kees Cook <kees@kernel.org>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
-	DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v6 12/12] pinctrl: Add pin controller driver for AAEON UP
- boards
-Message-ID: <aC3yKaCNZA8H2KPt@smile.fi.intel.com>
-References: <20250520-aaeon-up-board-pinctrl-support-v6-0-dcb3756be3c6@bootlin.com>
- <20250520-aaeon-up-board-pinctrl-support-v6-12-dcb3756be3c6@bootlin.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u634/p1X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6490FC4CEE7;
+	Wed, 21 May 2025 15:33:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747841586;
+	bh=uy5+OGLquQ/hI58aGewGRzZaToGymlH4O2HPyG63V1g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=u634/p1Xku1Cpj5EXo9jf5o8fUeQW3kQGnhsLg5J5uyM9pZQHwY5jlcVlc7pFRUUK
+	 80m1OPxP1UtkCaaRew4EvRwTT7IhjBFWmGMPlEjsVJjHOyvkBN5lu5k+Eu6lPqav7T
+	 vgEDoO+91lZheh6w4Uz4vgIu1tNDUOzoVGFgMdo4GqNbiXwUOZYhFZ0G1QUKkVk+mc
+	 AT/b1CEhUsQujhLk5A42Xxrk99mw4vhSPs0rbqZHk1OjHKqM9djVn1traUK38LxY+u
+	 KwodJBYdTyGPn6K7p/hNCWFqbA3mg3Z/qFqmPu1j/Q7jK93tHnc0iND1i56zJi2I1A
+	 qd3agsMoy/ePQ==
+From: Lee Jones <lee@kernel.org>
+To: lee@kernel.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Jens Axboe <axboe@kernel.dk>,
+	Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>,
+	Sasha Levin <sashal@kernel.org>,
+	Michal Luczaj <mhal@rbox.co>,
+	Rao Shoaib <Rao.Shoaib@oracle.com>,
+	Pavel Begunkov <asml.silence@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Cc: stable@vger.kernel.org
+Subject: [PATCH v6.1 07/27] af_unix: Remove CONFIG_UNIX_SCM.
+Date: Wed, 21 May 2025 16:27:06 +0100
+Message-ID: <20250521152920.1116756-8-lee@kernel.org>
+X-Mailer: git-send-email 2.49.0.1143.g0be31eac6b-goog
+In-Reply-To: <20250521152920.1116756-1-lee@kernel.org>
+References: <20250521152920.1116756-1-lee@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250520-aaeon-up-board-pinctrl-support-v6-12-dcb3756be3c6@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 20, 2025 at 03:28:36PM +0200, Thomas Richard wrote:
-> This enables the pin control support of the onboard FPGA on AAEON UP
-> boards.
-> 
-> This FPGA acts as a level shifter between the Intel SoC pins and the pin
-> header, and also as a mux or switch.
-> 
-> +---------+          +--------------+             +---+
->           |          |              |             |   |
->           | PWM0     |       \      |             | H |
->           |----------|------  \-----|-------------| E |
->           | I2C0_SDA |              |             | A |
-> Intel SoC |----------|------\       |             | D |
->           | GPIO0    |       \------|-------------| E |
->           |----------|------        |             | R |
->           |          |     FPGA     |             |   |
-> ----------+          +--------------+             +---+
-> 
-> For most of the pins, the FPGA opens/closes a switch to enable/disable
-> the access to the SoC pin from a pin header.
-> Each switch, has a direction flag that is set depending the status of the
-> SoC pin.
-> 
-> For some other pins, the FPGA acts as a mux, and routes one pin (or the
-> other one) to the header.
-> 
-> The driver also provides a GPIO chip. It requests SoC pins in GPIO mode,
-> and drives them in tandem with FPGA pins (switch/mux direction).
-> 
-> This commit adds support only for UP Squared board.
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
 
-...
+[ Upstream commit 99a7a5b9943ea2d05fb0dee38e4ae2290477ed83 ]
 
-> +static int upboard_pinctrl_pin_get_mode(struct pinctrl_dev *pctldev, unsigned int pin)
-> +{
-> +	struct upboard_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-> +	struct upboard_pin *p = &pctrl->pins[pin];
-> +	unsigned int val;
-> +	int ret;
-> +
-> +	if (p->funcbit) {
-> +		ret = regmap_field_read(p->funcbit, &val);
-> +		if (ret)
-> +			return ret;
-> +		if (val)
-> +			return UPBOARD_PIN_MODE_FUNCTION;
-> +	}
-> +
-> +	ret = regmap_field_read(p->enbit, &val);
-> +	if (ret)
-> +		return ret;
-> +	if (!val)
-> +		return UPBOARD_PIN_MODE_DISABLED;
-> +
-> +	ret = regmap_field_read(p->dirbit, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return val ? UPBOARD_PIN_MODE_GPIO_IN : UPBOARD_PIN_MODE_GPIO_OUT;
-> +}
-> +
-> +static void upboard_pinctrl_dbg_show(struct pinctrl_dev *pctldev, struct seq_file *s,
-> +				     unsigned int offset)
-> +{
-> +	int ret;
-> +
-> +	ret = upboard_pinctrl_pin_get_mode(pctldev, offset);
-> +	if (ret == UPBOARD_PIN_MODE_FUNCTION)
-> +		seq_puts(s, "mode function ");
-> +	else if (ret == UPBOARD_PIN_MODE_DISABLED)
-> +		seq_puts(s, "HIGH-Z ");
+Originally, the code related to garbage collection was all in garbage.c.
 
-> +	else
-> +		seq_printf(s, "GPIO (%s) ", str_input_output(ret == UPBOARD_PIN_MODE_GPIO_IN));
+Commit f4e65870e5ce ("net: split out functions related to registering
+inflight socket files") moved some functions to scm.c for io_uring and
+added CONFIG_UNIX_SCM just in case AF_UNIX was built as module.
 
-Actually this should be
+However, since commit 97154bcf4d1b ("af_unix: Kconfig: make CONFIG_UNIX
+bool"), AF_UNIX is no longer built separately.  Also, io_uring does not
+support SCM_RIGHTS now.
 
-	else if (ret < 0)
-		seq_printf(s, "N/A "); // or similar text
-	else
-		seq_printf(s, "GPIO (%s) ", str_input_output(ret == UPBOARD_PIN_MODE_GPIO_IN));
+Let's move the functions back to garbage.c
 
-as the above may return a negative error code which is not listed here.
+Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+Acked-by: Jens Axboe <axboe@kernel.dk>
+Link: https://lore.kernel.org/r/20240129190435.57228-4-kuniyu@amazon.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+(cherry picked from commit 99a7a5b9943ea2d05fb0dee38e4ae2290477ed83)
+Signed-off-by: Lee Jones <lee@kernel.org>
+---
+ include/net/af_unix.h |   7 +-
+ net/Makefile          |   2 +-
+ net/unix/Kconfig      |   5 --
+ net/unix/Makefile     |   2 -
+ net/unix/af_unix.c    |  63 +++++++++++++++++-
+ net/unix/garbage.c    |  73 ++++++++++++++++++++-
+ net/unix/scm.c        | 149 ------------------------------------------
+ net/unix/scm.h        |  10 ---
+ 8 files changed, 137 insertions(+), 174 deletions(-)
+ delete mode 100644 net/unix/scm.c
+ delete mode 100644 net/unix/scm.h
 
-> +}
-
-With the above being addressed,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-...
-
-Thanks for doing this driver, eventually we will have it working
-out-of-the-box. Do you have any plans for enabling HSI and SIM card
-slot on UP Squared 7000?
-
+diff --git a/include/net/af_unix.h b/include/net/af_unix.h
+index be488d627531..91d2036fc182 100644
+--- a/include/net/af_unix.h
++++ b/include/net/af_unix.h
+@@ -17,19 +17,20 @@ static inline struct unix_sock *unix_get_socket(struct file *filp)
+ }
+ #endif
+ 
++extern spinlock_t unix_gc_lock;
++extern unsigned int unix_tot_inflight;
++
+ void unix_inflight(struct user_struct *user, struct file *fp);
+ void unix_notinflight(struct user_struct *user, struct file *fp);
+-void unix_destruct_scm(struct sk_buff *skb);
+ void unix_gc(void);
+ void wait_for_unix_gc(struct scm_fp_list *fpl);
++
+ struct sock *unix_peer_get(struct sock *sk);
+ 
+ #define UNIX_HASH_MOD	(256 - 1)
+ #define UNIX_HASH_SIZE	(256 * 2)
+ #define UNIX_HASH_BITS	8
+ 
+-extern unsigned int unix_tot_inflight;
+-
+ struct unix_address {
+ 	refcount_t	refcnt;
+ 	int		len;
+diff --git a/net/Makefile b/net/Makefile
+index 0914bea9c335..103cd8d61f68 100644
+--- a/net/Makefile
++++ b/net/Makefile
+@@ -17,7 +17,7 @@ obj-$(CONFIG_NETFILTER)		+= netfilter/
+ obj-$(CONFIG_INET)		+= ipv4/
+ obj-$(CONFIG_TLS)		+= tls/
+ obj-$(CONFIG_XFRM)		+= xfrm/
+-obj-$(CONFIG_UNIX_SCM)		+= unix/
++obj-$(CONFIG_UNIX)		+= unix/
+ obj-y				+= ipv6/
+ obj-$(CONFIG_BPFILTER)		+= bpfilter/
+ obj-$(CONFIG_PACKET)		+= packet/
+diff --git a/net/unix/Kconfig b/net/unix/Kconfig
+index 28b232f281ab..8b5d04210d7c 100644
+--- a/net/unix/Kconfig
++++ b/net/unix/Kconfig
+@@ -16,11 +16,6 @@ config UNIX
+ 
+ 	  Say Y unless you know what you are doing.
+ 
+-config UNIX_SCM
+-	bool
+-	depends on UNIX
+-	default y
+-
+ config	AF_UNIX_OOB
+ 	bool
+ 	depends on UNIX
+diff --git a/net/unix/Makefile b/net/unix/Makefile
+index 20491825b4d0..4ddd125c4642 100644
+--- a/net/unix/Makefile
++++ b/net/unix/Makefile
+@@ -11,5 +11,3 @@ unix-$(CONFIG_BPF_SYSCALL) += unix_bpf.o
+ 
+ obj-$(CONFIG_UNIX_DIAG)	+= unix_diag.o
+ unix_diag-y		:= diag.o
+-
+-obj-$(CONFIG_UNIX_SCM)	+= scm.o
+diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
+index f74f7878b3fe..7bcc4c526274 100644
+--- a/net/unix/af_unix.c
++++ b/net/unix/af_unix.c
+@@ -116,8 +116,6 @@
+ #include <linux/file.h>
+ #include <linux/btf_ids.h>
+ 
+-#include "scm.h"
+-
+ static atomic_long_t unix_nr_socks;
+ static struct hlist_head bsd_socket_buckets[UNIX_HASH_SIZE / 2];
+ static spinlock_t bsd_socket_locks[UNIX_HASH_SIZE / 2];
+@@ -1726,6 +1724,52 @@ static int unix_getname(struct socket *sock, struct sockaddr *uaddr, int peer)
+ 	return err;
+ }
+ 
++/* The "user->unix_inflight" variable is protected by the garbage
++ * collection lock, and we just read it locklessly here. If you go
++ * over the limit, there might be a tiny race in actually noticing
++ * it across threads. Tough.
++ */
++static inline bool too_many_unix_fds(struct task_struct *p)
++{
++	struct user_struct *user = current_user();
++
++	if (unlikely(READ_ONCE(user->unix_inflight) > task_rlimit(p, RLIMIT_NOFILE)))
++		return !capable(CAP_SYS_RESOURCE) && !capable(CAP_SYS_ADMIN);
++	return false;
++}
++
++static int unix_attach_fds(struct scm_cookie *scm, struct sk_buff *skb)
++{
++	int i;
++
++	if (too_many_unix_fds(current))
++		return -ETOOMANYREFS;
++
++	/* Need to duplicate file references for the sake of garbage
++	 * collection.  Otherwise a socket in the fps might become a
++	 * candidate for GC while the skb is not yet queued.
++	 */
++	UNIXCB(skb).fp = scm_fp_dup(scm->fp);
++	if (!UNIXCB(skb).fp)
++		return -ENOMEM;
++
++	for (i = scm->fp->count - 1; i >= 0; i--)
++		unix_inflight(scm->fp->user, scm->fp->fp[i]);
++
++	return 0;
++}
++
++static void unix_detach_fds(struct scm_cookie *scm, struct sk_buff *skb)
++{
++	int i;
++
++	scm->fp = UNIXCB(skb).fp;
++	UNIXCB(skb).fp = NULL;
++
++	for (i = scm->fp->count - 1; i >= 0; i--)
++		unix_notinflight(scm->fp->user, scm->fp->fp[i]);
++}
++
+ static void unix_peek_fds(struct scm_cookie *scm, struct sk_buff *skb)
+ {
+ 	scm->fp = scm_fp_dup(UNIXCB(skb).fp);
+@@ -1773,6 +1817,21 @@ static void unix_peek_fds(struct scm_cookie *scm, struct sk_buff *skb)
+ 	spin_unlock(&unix_gc_lock);
+ }
+ 
++static void unix_destruct_scm(struct sk_buff *skb)
++{
++	struct scm_cookie scm;
++
++	memset(&scm, 0, sizeof(scm));
++	scm.pid  = UNIXCB(skb).pid;
++	if (UNIXCB(skb).fp)
++		unix_detach_fds(&scm, skb);
++
++	/* Alas, it calls VFS */
++	/* So fscking what? fput() had been SMP-safe since the last Summer */
++	scm_destroy(&scm);
++	sock_wfree(skb);
++}
++
+ static int unix_scm_to_skb(struct scm_cookie *scm, struct sk_buff *skb, bool send_fds)
+ {
+ 	int err = 0;
+diff --git a/net/unix/garbage.c b/net/unix/garbage.c
+index c04f82489abb..0104be9d4704 100644
+--- a/net/unix/garbage.c
++++ b/net/unix/garbage.c
+@@ -81,11 +81,80 @@
+ #include <net/scm.h>
+ #include <net/tcp_states.h>
+ 
+-#include "scm.h"
++struct unix_sock *unix_get_socket(struct file *filp)
++{
++	struct inode *inode = file_inode(filp);
++
++	/* Socket ? */
++	if (S_ISSOCK(inode->i_mode) && !(filp->f_mode & FMODE_PATH)) {
++		struct socket *sock = SOCKET_I(inode);
++		const struct proto_ops *ops;
++		struct sock *sk = sock->sk;
+ 
+-/* Internal data structures and random procedures: */
++		ops = READ_ONCE(sock->ops);
+ 
++		/* PF_UNIX ? */
++		if (sk && ops && ops->family == PF_UNIX)
++			return unix_sk(sk);
++	}
++
++	return NULL;
++}
++
++DEFINE_SPINLOCK(unix_gc_lock);
++unsigned int unix_tot_inflight;
+ static LIST_HEAD(gc_candidates);
++static LIST_HEAD(gc_inflight_list);
++
++/* Keep the number of times in flight count for the file
++ * descriptor if it is for an AF_UNIX socket.
++ */
++void unix_inflight(struct user_struct *user, struct file *filp)
++{
++	struct unix_sock *u = unix_get_socket(filp);
++
++	spin_lock(&unix_gc_lock);
++
++	if (u) {
++		if (!u->inflight) {
++			WARN_ON_ONCE(!list_empty(&u->link));
++			list_add_tail(&u->link, &gc_inflight_list);
++		} else {
++			WARN_ON_ONCE(list_empty(&u->link));
++		}
++		u->inflight++;
++
++		/* Paired with READ_ONCE() in wait_for_unix_gc() */
++		WRITE_ONCE(unix_tot_inflight, unix_tot_inflight + 1);
++	}
++
++	WRITE_ONCE(user->unix_inflight, user->unix_inflight + 1);
++
++	spin_unlock(&unix_gc_lock);
++}
++
++void unix_notinflight(struct user_struct *user, struct file *filp)
++{
++	struct unix_sock *u = unix_get_socket(filp);
++
++	spin_lock(&unix_gc_lock);
++
++	if (u) {
++		WARN_ON_ONCE(!u->inflight);
++		WARN_ON_ONCE(list_empty(&u->link));
++
++		u->inflight--;
++		if (!u->inflight)
++			list_del_init(&u->link);
++
++		/* Paired with READ_ONCE() in wait_for_unix_gc() */
++		WRITE_ONCE(unix_tot_inflight, unix_tot_inflight - 1);
++	}
++
++	WRITE_ONCE(user->unix_inflight, user->unix_inflight - 1);
++
++	spin_unlock(&unix_gc_lock);
++}
+ 
+ static void scan_inflight(struct sock *x, void (*func)(struct unix_sock *),
+ 			  struct sk_buff_head *hitlist)
+diff --git a/net/unix/scm.c b/net/unix/scm.c
+deleted file mode 100644
+index 6f446dd2deed..000000000000
+--- a/net/unix/scm.c
++++ /dev/null
+@@ -1,149 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-#include <linux/module.h>
+-#include <linux/kernel.h>
+-#include <linux/string.h>
+-#include <linux/socket.h>
+-#include <linux/net.h>
+-#include <linux/fs.h>
+-#include <net/af_unix.h>
+-#include <net/scm.h>
+-#include <linux/init.h>
+-#include <linux/io_uring.h>
+-
+-#include "scm.h"
+-
+-unsigned int unix_tot_inflight;
+-EXPORT_SYMBOL(unix_tot_inflight);
+-
+-LIST_HEAD(gc_inflight_list);
+-EXPORT_SYMBOL(gc_inflight_list);
+-
+-DEFINE_SPINLOCK(unix_gc_lock);
+-EXPORT_SYMBOL(unix_gc_lock);
+-
+-struct unix_sock *unix_get_socket(struct file *filp)
+-{
+-	struct inode *inode = file_inode(filp);
+-
+-	/* Socket ? */
+-	if (S_ISSOCK(inode->i_mode) && !(filp->f_mode & FMODE_PATH)) {
+-		struct socket *sock = SOCKET_I(inode);
+-		struct sock *s = sock->sk;
+-
+-		/* PF_UNIX ? */
+-		if (s && sock->ops && sock->ops->family == PF_UNIX)
+-			return unix_sk(s);
+-	}
+-
+-	return NULL;
+-}
+-EXPORT_SYMBOL(unix_get_socket);
+-
+-/* Keep the number of times in flight count for the file
+- * descriptor if it is for an AF_UNIX socket.
+- */
+-void unix_inflight(struct user_struct *user, struct file *fp)
+-{
+-	struct unix_sock *u = unix_get_socket(fp);
+-
+-	spin_lock(&unix_gc_lock);
+-
+-	if (u) {
+-		if (!u->inflight) {
+-			WARN_ON_ONCE(!list_empty(&u->link));
+-			list_add_tail(&u->link, &gc_inflight_list);
+-		} else {
+-			WARN_ON_ONCE(list_empty(&u->link));
+-		}
+-		u->inflight++;
+-		/* Paired with READ_ONCE() in wait_for_unix_gc() */
+-		WRITE_ONCE(unix_tot_inflight, unix_tot_inflight + 1);
+-	}
+-	WRITE_ONCE(user->unix_inflight, user->unix_inflight + 1);
+-	spin_unlock(&unix_gc_lock);
+-}
+-
+-void unix_notinflight(struct user_struct *user, struct file *fp)
+-{
+-	struct unix_sock *u = unix_get_socket(fp);
+-
+-	spin_lock(&unix_gc_lock);
+-
+-	if (u) {
+-		WARN_ON_ONCE(!u->inflight);
+-		WARN_ON_ONCE(list_empty(&u->link));
+-
+-		u->inflight--;
+-		if (!u->inflight)
+-			list_del_init(&u->link);
+-		/* Paired with READ_ONCE() in wait_for_unix_gc() */
+-		WRITE_ONCE(unix_tot_inflight, unix_tot_inflight - 1);
+-	}
+-	WRITE_ONCE(user->unix_inflight, user->unix_inflight - 1);
+-	spin_unlock(&unix_gc_lock);
+-}
+-
+-/*
+- * The "user->unix_inflight" variable is protected by the garbage
+- * collection lock, and we just read it locklessly here. If you go
+- * over the limit, there might be a tiny race in actually noticing
+- * it across threads. Tough.
+- */
+-static inline bool too_many_unix_fds(struct task_struct *p)
+-{
+-	struct user_struct *user = current_user();
+-
+-	if (unlikely(READ_ONCE(user->unix_inflight) > task_rlimit(p, RLIMIT_NOFILE)))
+-		return !capable(CAP_SYS_RESOURCE) && !capable(CAP_SYS_ADMIN);
+-	return false;
+-}
+-
+-int unix_attach_fds(struct scm_cookie *scm, struct sk_buff *skb)
+-{
+-	int i;
+-
+-	if (too_many_unix_fds(current))
+-		return -ETOOMANYREFS;
+-
+-	/*
+-	 * Need to duplicate file references for the sake of garbage
+-	 * collection.  Otherwise a socket in the fps might become a
+-	 * candidate for GC while the skb is not yet queued.
+-	 */
+-	UNIXCB(skb).fp = scm_fp_dup(scm->fp);
+-	if (!UNIXCB(skb).fp)
+-		return -ENOMEM;
+-
+-	for (i = scm->fp->count - 1; i >= 0; i--)
+-		unix_inflight(scm->fp->user, scm->fp->fp[i]);
+-	return 0;
+-}
+-EXPORT_SYMBOL(unix_attach_fds);
+-
+-void unix_detach_fds(struct scm_cookie *scm, struct sk_buff *skb)
+-{
+-	int i;
+-
+-	scm->fp = UNIXCB(skb).fp;
+-	UNIXCB(skb).fp = NULL;
+-
+-	for (i = scm->fp->count-1; i >= 0; i--)
+-		unix_notinflight(scm->fp->user, scm->fp->fp[i]);
+-}
+-EXPORT_SYMBOL(unix_detach_fds);
+-
+-void unix_destruct_scm(struct sk_buff *skb)
+-{
+-	struct scm_cookie scm;
+-
+-	memset(&scm, 0, sizeof(scm));
+-	scm.pid  = UNIXCB(skb).pid;
+-	if (UNIXCB(skb).fp)
+-		unix_detach_fds(&scm, skb);
+-
+-	/* Alas, it calls VFS */
+-	/* So fscking what? fput() had been SMP-safe since the last Summer */
+-	scm_destroy(&scm);
+-	sock_wfree(skb);
+-}
+-EXPORT_SYMBOL(unix_destruct_scm);
+diff --git a/net/unix/scm.h b/net/unix/scm.h
+deleted file mode 100644
+index 5a255a477f16..000000000000
+--- a/net/unix/scm.h
++++ /dev/null
+@@ -1,10 +0,0 @@
+-#ifndef NET_UNIX_SCM_H
+-#define NET_UNIX_SCM_H
+-
+-extern struct list_head gc_inflight_list;
+-extern spinlock_t unix_gc_lock;
+-
+-int unix_attach_fds(struct scm_cookie *scm, struct sk_buff *skb);
+-void unix_detach_fds(struct scm_cookie *scm, struct sk_buff *skb);
+-
+-#endif
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.49.0.1143.g0be31eac6b-goog
 
