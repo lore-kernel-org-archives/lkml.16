@@ -1,136 +1,150 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41DE0219EB;
-	Wed, 21 May 2025 06:34:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BCD522FF35
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 06:35:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747809286; cv=none; b=IJhWslnn5TULtaeD5ZU4i3hwXpF/Rn8No6DuqW/okUzE6EdKcYP6vQYE5+oKUUAfq2DtQ1i1OZI6fWeNCTcfqkmEw8irATPUKfGUItZtaUPofFTcaMplIw6FkILysAknX06O0mtqHRkrFBDO/saF7P1qTbNxIVPasJGCyvJEH0w=
+	t=1747809303; cv=none; b=Eb0SQeX2qfgz0IkDYuWNCUMy0lU7xmJmYB1uTp1i/K9BSH6drIox7JSadI7oeuz8XwnpazGE5P8WbipMgioQEJILRo9NlARsOS3ebyFm76OXlbL9ZJpyr62nxaqYEZxlCBLb511cZTjvVwN1YrcdE4kmLEXWf/+ZveKrPQ3X/jA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747809286; c=relaxed/simple;
-	bh=PXVta0mCTYq6yt9jSQRdHzSV6a2PJ/jUqh30SUGtbZc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oWkNYG0x0AgcChU1RVFQl1FVK2j5WkiOSTc/xljrQ52kuQfGDHqagDf8V//nC80uP2SOZobMqQwyu50aHnw6Vtod0jGbNAhXflLKNWV7xt2v4dP8rPE+VWEQCE1nEtddVkFjgyUSI5SJ/x8j0QaBvIqTFGqo6ibxq4fWmIjUXZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nCCxO5sR; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747809303; c=relaxed/simple;
+	bh=yX5uXk8xZuF8KykN3btTAQn+eR1OpEbcKHd8ywumTVY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QrfVGOg3QOnrFFNoOjfwL38w/XTJM3VSdS9r7mlydq1G2PpCCTdDbWKDLBi/W7Y+uYU8nPQ67xOKczzBt4iSLgc8cBIbZMKD7EKJLSOjhGTWztjntxB8qFK3a0zqQlnR4u6qErNNfuSyeV8gsaAohI9M092B0glf05+la8QzTEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=B+H/JhV3; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nCCxO5sR"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-54298ec925bso9879939e87.3;
-        Tue, 20 May 2025 23:34:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747809282; x=1748414082; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=CzYuom+zI5De3oMnCByXzViMDJT8mx4FU1edPifGipU=;
-        b=nCCxO5sRFIMB1Q1UbCmRnBCpA1Z3BlVQZtNWEDAlu71EsbjVO8bh1mvtOB4UvfuUAF
-         A5uFXRy9983XDu7WtJomT6azSGrrOGxn5Kl2fMSuIsqQ/lMNr6aNwrtSLhs3MwijR2gx
-         H69hDBAZz+o7iBAwDvXwOz9Dd5YD9n0AKgNoXkFzpBz/g8DgGYeO9Bt5RF7/RSV68Lm+
-         wmJlKoV6j4kEElf4FbNB9FxaM/is5yq8E2Io3pkklJfMcC7AHVxxEFc+V4CGd1AyPVT/
-         Cj/aWk19PoHJQGY8euQtanOPQcVLcQb/91IIIMhfLLj4KdojhC2w+Zh0wRdxTMQVlSzh
-         LnrQ==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="B+H/JhV3"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54L5xUt6013462
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 06:35:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	sZ9hKputcd1338BrnRNmVIdwAO2+8E1/p45jvoCFYRE=; b=B+H/JhV3PLJpUBSs
+	ILfVntPasJvRg5MuEQm7m/GebKraXecKRXtAvjzKBr7HD3t+miPrGSQ0B52XA+s9
+	a4HnxK3IaPuR1r/2ZROJZvQy1lH+NvXJypDYDRxR3DQOpI5GLQ7UJyXbgYSMT0wn
+	FwSJTKzCdUlJj/xVlzjBV5u8Ltlob3RztSKOgfNbT90r9LDHXeOGyBpExc5iXO8P
+	khTyGgePcFVVNvEA19V8rFkRrUguEZtsU+0m1INgf/tH3M01ghw9xSJwruQvBdI9
+	uU8MzoPqLSJk4zggSBT/RGdm3k1BElqhMKpFLGiyHA+ruqUVgRXYn2+o7w1UwKo+
+	cDWRBg==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46s95tg2yx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 06:35:00 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c5e2872e57so1143464285a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 23:35:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747809282; x=1748414082;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CzYuom+zI5De3oMnCByXzViMDJT8mx4FU1edPifGipU=;
-        b=B2mwju6nji/auTjQMa6SVEEuxJ6MFOumbdkHSC6JJXXWkyFscdEbuT/c8V5GjJSGnW
-         t8viK3+jEw21y1eiDI0xsMCPcds7GnpAnSTLJAxfnUnPHVpwSMkxrNGSH0NRGCM0kfZW
-         TNBJ2yOGRwTIbYcHWR6P1pQMRdDulwbMSdA28M+TtkpAA6Rz9jn5HZecM6WzmrsOEpzy
-         tqaADzanoiU5UNhB9I76dze89jOKbeDZstsOuRaDoF34d26eh4LPK7vGdBSHvqBf+6u+
-         VvGfO6yDbCcdohABSa+bn/3ILRXn3+H1nPazfHf3dfznkhyl9Llfx8tjsfTpYT786COf
-         vt3w==
-X-Forwarded-Encrypted: i=1; AJvYcCW838OXmO9WJ2HuA+s5zdFGbAFy0srPt4mHX1BVQ17+ngDnReECZ3sEbpzNlv/4PaREV/19qXIp@vger.kernel.org, AJvYcCXVY/HWffbh71W4YWLDTBEP5CnkCLzlX1XsbrSoMMVouNa/xfdJ290aZmL/PEdoWiSRdUNJAdsdjcSJjzA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxq7HCAAKe1rd6C7N/deCUfLIFLS9PvT8SqMiMBCy7LJTdUiEkr
-	Dx2oLFMRkJcDuwg64Mc+f3iQA8DNZuvtJ95JczgNDq6qHBybHC5MrjMB
-X-Gm-Gg: ASbGncvmqCnk7tKWllrr2hE7cMGm9zuxU8U0YbF1fkvfAMF3yYKi7yJ795I8Q8HzZip
-	fESaO6zjlgrYO4xPeINYgQ/GvbP6pajmSnuzWg2fkFk4pKKlqLts0jZ8PVdwVoATn01WrYojW/8
-	YmGodDUEOBw9un7UDJCA1xNiV/b1e/Ux7bs1WFBnyziCQfkpYjKdT1WzsJStp9MOrQolU9cQk6/
-	mQfS0oinwG4MWSlZM7ALyTbo3mrbEgnXTJnI6QN2GsusbgvqYZc7wimZE30R/drO9xOw/NmttmN
-	rCjcVVoqEedcUyJNwKKszc86on/Fykivqc81hlp4RrCmNyIL0IZedDT6GNFB2fp1bG2boQpU7FW
-	XEVm8jGGD/Eg=
-X-Google-Smtp-Source: AGHT+IFXHe4PWXlcmE49bZfwmBLGRPRzztLBYCczKRWtpTZGGJTw5C4nvUmzzCCub+1cMSMYYFoMmw==
-X-Received: by 2002:a05:6512:461b:b0:547:6733:b5a3 with SMTP id 2adb3069b0e04-550e71d6b1fmr5100149e87.28.1747809281807;
-        Tue, 20 May 2025 23:34:41 -0700 (PDT)
-Received: from localhost.localdomain ([91.197.2.199])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e702f462sm2690508e87.209.2025.05.20.23.34.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 23:34:41 -0700 (PDT)
-From: Andrey Kriulin <kitotavrik.s@gmail.com>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Andrey Kriulin <kitotavrik.s@gmail.com>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Josef Bacik <josef@toxicpanda.com>,
-	NeilBrown <neilb@suse.de>,
-	Jan Kara <jack@suse.cz>,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	stable@vger.kernel.org
-Subject: [PATCH v4] fs: minix: Fix handling of corrupted directories
-Date: Wed, 21 May 2025 09:34:31 +0300
-Message-ID: <20250521063435.3217-1-kitotavrik.s@gmail.com>
-X-Mailer: git-send-email 2.47.2
+        d=1e100.net; s=20230601; t=1747809300; x=1748414100;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sZ9hKputcd1338BrnRNmVIdwAO2+8E1/p45jvoCFYRE=;
+        b=VeZw4WicA6wuOhPvWXFKOrDNQ34JV1Nf0DxQog5x1Xekew8qmEXrBLsOrSYTJ4m/e8
+         ZIavwH/hU72YlDSFtE1u9GT0d/XlJirpZnGF80BX2pftoOffBNhBy7MWYLcySJ8h6n8B
+         VNITLReF8DwgAMWXsyEwkGCIn3peWVTfCUR5PujN0UMj7bhq9+oDVrITzhPdIyFucLdl
+         e6F0VZydhJygPD88LVzvRUawU68YM8rAH1zaIEJQbMOaRoDnTESO1RS/P703cq1WN/Hq
+         5bn34PEWhFeF6j8HiWwBfkyJ3Ps0xoZ8E3MMm0F8PqfejMQsKkOk7VEBlid2j3FdJSgz
+         Xu9g==
+X-Forwarded-Encrypted: i=1; AJvYcCVprcUYWE8So2UdeOi+Gmq8O6C9D1HOZGcjNk4OCmkjGDOCUBIhU+v6yP0CyQdQ/55uZHAMMEugxBFz4Vo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxE3XHg3ZIUFxxV4Q9UDhrjjmt6hFhHqURLJSo9Eu+H86wePaPf
+	Z/gxgDOIWRjmc2RrArxvpqczFZeTm2Ths7X61vfB0fc4hYR6vZhB8S79J6N9c5T0z6rFvNm+M5F
+	qo9s6ADcv0SR28dV0EX9oEaRIW5pF+4ITQE1vKynV6Bjh66TuNN1hhse8W4jq7B7BS6T/Fac5L0
+	HtBqRhL8Q5QYOse9uiH6htGMJxiOgo24SqUMbyx9r6vQ==
+X-Gm-Gg: ASbGncsJD02ViU9Vj+yJWp6GkoXRusKPJOFy3PmwoTBkSKjCYhGRIhGxwRzqr4RmADP
+	qLG/+FPddit791zi6H6y12PJhKZprykhYIhNcrA4WmmFVnqXR9Xd54cd5NEn+7tZt0P0Jrw==
+X-Received: by 2002:a05:622a:5c95:b0:494:b316:3c7e with SMTP id d75a77b69052e-494b31640afmr313606801cf.28.1747809299966;
+        Tue, 20 May 2025 23:34:59 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEhL/8XUvaTvdbPP3M/jAlhpC+jim7euSMn6JxVG7/tX7Zqm2OcngXdvkAaGGLBTeDl/gT4n33IPTAgb635QxE=
+X-Received: by 2002:a05:622a:5c95:b0:494:b316:3c7e with SMTP id
+ d75a77b69052e-494b31640afmr313606551cf.28.1747809299623; Tue, 20 May 2025
+ 23:34:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250520-qcs8300-camss-v1-1-1dfcb2e3bf93@quicinc.com>
+In-Reply-To: <20250520-qcs8300-camss-v1-1-1dfcb2e3bf93@quicinc.com>
+From: Loic Poulain <loic.poulain@oss.qualcomm.com>
+Date: Wed, 21 May 2025 08:34:48 +0200
+X-Gm-Features: AX0GCFugv4ozE6oN7_Lq0Cwf2qtCI-Rj0snyB97U0vzVGF9Yp5a-qiJ_uQuP00w
+Message-ID: <CAFEp6-26HVokO-0+HEUf+cm1V7=OO5z1ndP7zVAk=Qk440Qviw@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: qcom: qcs8300: Add support for camss
+To: Wenmeng Liu <quic_wenmliu@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, bryan.odonoghue@linaro.org,
+        todor.too@gmail.com, rfoss@kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Authority-Analysis: v=2.4 cv=QKBoRhLL c=1 sm=1 tr=0 ts=682d7414 cx=c_pps
+ a=50t2pK5VMbmlHzFWWp8p/g==:117 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
+ a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=PPW_EwrsXE-T7dBlnmkA:9 a=QEXdDO2ut3YA:10
+ a=IoWCM6iH3mJn3m4BftBB:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: kySnADiKfzWyNl9rIn9RKkK_MiGHjsVX
+X-Proofpoint-GUID: kySnADiKfzWyNl9rIn9RKkK_MiGHjsVX
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDA2MyBTYWx0ZWRfXwxKdTSnr3qJG
+ 8+M+ET8TdM+knnfjc5HfbboLbElJO9/mjeh2rrP9LMNXE4EjfKud6mwiXaiVYUmM7TV3d4MoBnM
+ ehStLYCHO0shwJLp98f397v2sXI1/6YBJC67nsWwdkGLFCQmmo5RInhR/CpcgNwdkG8jJpWpMN7
+ 7D1/nRq1egxh/Btq2VZXDiCqLfr9BJsxC6r8tgziUMbZJcTtHtcuY/GVSICItyFATx2uAIAi0ra
+ +Ky2Q2N1hXPnt2V9VtqYhUVx6feWnyj2Ck5lvZLkKTPMimM+bE4vzeNknOLpCuDXCGhKdfh/iro
+ csxox1DNp1ggvHGjp8nyTxxR9dTuz55tzWoTqfyN3KksPzVVllhktttY/G+IZmHT/yyoegUlCL5
+ 9O45nKbSqjWEtPItJ7A4ELMQE24pTBPFuOW6GUeLLUeDxAwll4OkKWDT/+FwHp/NzzIzG3MD
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-21_01,2025-05-20_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 spamscore=0 clxscore=1015 phishscore=0 lowpriorityscore=0
+ adultscore=0 mlxlogscore=863 suspectscore=0 bulkscore=0 impostorscore=0
+ priorityscore=1501 malwarescore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505160000 definitions=main-2505210063
 
-If the directory is corrupted and the number of nlinks is less than 2
-(valid nlinks have at least 2), then when the directory is deleted, the
-minix_rmdir will try to reduce the nlinks(unsigned int) to a negative
-value.
+On Tue, May 20, 2025 at 11:40=E2=80=AFAM Wenmeng Liu <quic_wenmliu@quicinc.=
+com> wrote:
+>
+> This change enables camera driver for QCS8300 RIDE board.
+>
+> ---
+> Signed-off-by: Wenmeng Liu <quic_wenmliu@quicinc.com>
+> ---
+> This patch series depends on patch series:
+> - https://lore.kernel.org/all/20250214095611.2498950-1-quic_vikramsa@quic=
+inc.com/
+> - https://lore.kernel.org/all/20250211-sa8775p_tpg-v1-1-3f76c5f8431f@quic=
+inc.com/
+> - https://lore.kernel.org/all/20250217-qcs8300_tpg-v1-1-6e0f4dd3ad1f@quic=
+inc.com/
+> - https://lore.kernel.org/all/20250214094747.2483058-1-quic_vikramsa@quic=
+inc.com/
+> ---
+> ---
+>  arch/arm64/boot/dts/qcom/qcs8300-ride.dts | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/qcs8300-ride.dts b/arch/arm64/boot/=
+dts/qcom/qcs8300-ride.dts
+> index 3ff8f398cad31a36fa46060855b075c8c2020aa7..97281d6d7376a406e5c31466e=
+175358b10441256 100644
+> --- a/arch/arm64/boot/dts/qcom/qcs8300-ride.dts
+> +++ b/arch/arm64/boot/dts/qcom/qcs8300-ride.dts
+> @@ -207,6 +207,10 @@ vreg_l9c: ldo9 {
+>         };
+>  };
+>
+> +&camss {
+> +       status =3D "ok";
+> +};
 
-Make nlinks validity check for directories.
+Same comment as for qcs615, what is the reason for enabling camss
+without an actual sensor? If it's for testing via TPG, I'm not sure
+why it should be enabled on this specific board.
 
-Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Cc: stable@vger.kernel.org
-Signed-off-by: Andrey Kriulin <kitotavrik.s@gmail.com>
----
-v4: Add nlinks check for parent dirictory to minix_rmdir per Jan
-Kara <jack@suse.cz> request.
-v3: Move nlinks validaty check to minix_rmdir and minix_rename per Jan
-Kara <jack@suse.cz> request.
-v2: Move nlinks validaty check to V[12]_minix_iget() per Jan Kara
-<jack@suse.cz> request. Change return error code to EUCLEAN. Don't block
-directory in r/o mode per Al Viro <viro@zeniv.linux.org.uk> request.
-
- fs/minix/namei.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/fs/minix/namei.c b/fs/minix/namei.c
-index 8938536d8d3c..ab86fd16e548 100644
---- a/fs/minix/namei.c
-+++ b/fs/minix/namei.c
-@@ -161,8 +161,12 @@ static int minix_unlink(struct inode * dir, struct dentry *dentry)
- static int minix_rmdir(struct inode * dir, struct dentry *dentry)
- {
- 	struct inode * inode = d_inode(dentry);
--	int err = -ENOTEMPTY;
-+	int err = -EUCLEAN;
- 
-+	if (inode->i_nlink < 2 || dir->i_nlink <= 2)
-+		return err;
-+
-+	err = -ENOTEMPTY;
- 	if (minix_empty_dir(inode)) {
- 		err = minix_unlink(dir, dentry);
- 		if (!err) {
-@@ -235,6 +239,10 @@ static int minix_rename(struct mnt_idmap *idmap,
- 	mark_inode_dirty(old_inode);
- 
- 	if (dir_de) {
-+		if (old_dir->i_nlink <= 2) {
-+			err = -EUCLEAN;
-+			goto out_dir;
-+		}
- 		err = minix_set_link(dir_de, dir_folio, new_dir);
- 		if (!err)
- 			inode_dec_link_count(old_dir);
--- 
-2.47.2
-
+Regards,
+Loic
