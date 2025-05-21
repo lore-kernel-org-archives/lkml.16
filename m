@@ -1,105 +1,151 @@
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 476F8235049;
-	Wed, 21 May 2025 07:06:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9044D4430;
+	Wed, 21 May 2025 07:09:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747811212; cv=none; b=KtD/iue6XnxtTx90RzoJ8mMNAuc15CYhTaJMjEFbKqc5A3RH2Iu9iYiF6e9LLLSPrRVk1hBsfeGjekEFpbdZ7fdp8Ll27XdWM9dLPp7QT0Hc44EDHlPgXRH8FraO/Tr10QHamW+erNaB3NnPmwce5d4FPkmaLJx3qXEsoicuU38=
+	t=1747811381; cv=none; b=uEhtcjnxkOL+lyKbxk0P3oZ2K04Q4NfQy2n9Uvi9XwkaYkhoObHsrjSKVNPtuXmT30MohSV0CAfJWDwkDDcSDscrp1CBPj2gN+Xwt6hAwPdtkGrPRWsEJLa6VvxFk2G/tk7eDV4VMrYzPHvHtEtm04E5EfEL5kAywNfEnd3GBi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747811212; c=relaxed/simple;
-	bh=y+EqpJywUMH9nHGD6s9CiK+qnZyK9vnfU8hT14XBxxs=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wl0gVdAiaN7jKnTZrqODk+FC8fh5FtysLRD0qbEyJmusjOK7RMG1EXc+QCKbLr+HhTb/WHLGMOlFXM04IdSXL9rfcopK7tPyFJ/MeCiIaW+K/0Hpw0i1zGHCGbQq3XqcTzALwkxvHV/lZoXuTvL/aJDg0dxeFQX9i6dcbJyHUXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=U3PA9w87; arc=none smtp.client-ip=67.231.148.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	s=arc-20240116; t=1747811381; c=relaxed/simple;
+	bh=M+QgcJjqRVEJQfA4aX9EptR04Xy9P0/WqwTgE5lgNbw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=j45i5ihJKr9jIQ596sDIcTwZWxJ6iEpDyfZFMUgCsDlIgflKPTH2xE6GZN1Zl3LmQ0xf1kZjPDPpVxphyo2zywEKJnCx3bQ4a7Mr3fvwVlWDLIy5mvM7TNM0FXDT2b8JF5RNrObywL3+ljWkAjpYn1KiDWmHDg7611VtTbXeZJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GmkLA/F4; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="U3PA9w87"
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54KNkISX015649;
-	Wed, 21 May 2025 00:06:39 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pfpt0220; bh=P8/ITfuQzWsLicHCkKnjp1NaO
-	TkPX9FT0tQbKECukXg=; b=U3PA9w87VighZgQ2Eyu7VtItKdloDjeOA+dP4Don6
-	beAelgGYfgsCE4vIjjvZiXARxnUnUH0rol9FAFafPJJr/d6l741mAPgq7CqKzbdF
-	ABDqvoQMTDrpJ+X4eBalIDPeVhGrRnd01psBrsZP//Z/PrQAE8cFe9slbxtqm9+j
-	QuQ7CNtMfMz/yp98y1VSOFnTLJu5fBPizcbLzoZ6YtLDFb3owXWwv/ugrZQCouI5
-	jRq4G6MFwakzdfhOX3N6J7HjJJIt9skAVYiQ3GmtmPF4fM9+8t38xiRFKGL0QlRV
-	QJP+Qli3C2Q8k2mkdVnXFLSvS1nLcrm/3UIs2ZopJtuzw==
-Received: from dc5-exch05.marvell.com ([199.233.59.128])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 46s3purnqt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 00:06:39 -0700 (PDT)
-Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
- DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Wed, 21 May 2025 00:06:38 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
- (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Wed, 21 May 2025 00:06:38 -0700
-Received: from test-OptiPlex-Tower-Plus-7010 (unknown [10.29.37.157])
-	by maili.marvell.com (Postfix) with SMTP id B01243F70B3;
-	Wed, 21 May 2025 00:06:34 -0700 (PDT)
-Date: Wed, 21 May 2025 12:36:33 +0530
-From: Hariprasad Kelam <hkelam@marvell.com>
-To: Simon Horman <horms@kernel.org>
-CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Sunil Goutham
-	<sgoutham@marvell.com>,
-        Geetha sowjanya <gakula@marvell.com>,
-        "Subbaraya
- Sundeep" <sbhatta@marvell.com>,
-        Bharat Bhushan <bbhushan2@marvell.com>,
-        "Andrew Lunn" <andrew+netdev@lunn.ch>,
-        "David S. Miller"
-	<davem@davemloft.net>,
-        "Eric Dumazet" <edumazet@google.com>,
-        Jakub Kicinski
-	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Subject: Re: [net-next] octeontx2-pf: QOS: Perform cache sync on send queue
- teardown
-Message-ID: <aC17efTkxDQ5+h1P@test-OptiPlex-Tower-Plus-7010>
-References: <20250520092248.1102707-1-hkelam@marvell.com>
- <20250520170615.GO365796@horms.kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GmkLA/F4"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-232219cc6d0so2532675ad.0;
+        Wed, 21 May 2025 00:09:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747811379; x=1748416179; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3b1jzIhFa2FhOCKHPrKMKsuUFishKw8l7iMGb9zVm7w=;
+        b=GmkLA/F4D60O+ChUQhWJ08J8apZ4vJY+AN1W+kMRCjRF+8p9M5TiATej247KyvkrBC
+         6M/ENMtx1X8FliRSxrz9UsX6j/9ivTTmRvXUMYs38vBooAEMeoUSZ0cduGq/U+BJ6XXo
+         IJ8LY6K/4gB/xvkyxzbdpLLi0JbdwLFizB/lwn4przcAroJIRtRyFrjLWv6X5j/WmXq2
+         u0YJtPedCKvFc+dRWl7pcNdLpu7NRJCF7TilExU6UffufoVib2cJVlWanB3IOZm8dmbq
+         fI+hTKUiDfW3cUN1Js28mg796KKjGeY1kF90HKs28063RVArv9+nN63uJWhS8asw3uyX
+         cBQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747811379; x=1748416179;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3b1jzIhFa2FhOCKHPrKMKsuUFishKw8l7iMGb9zVm7w=;
+        b=V2LOWMnAh+df3E82hW1pKIJpbi33M+FvX3LMUAFg7XPoNxxakcp1EhSPnvQ4EgdtCB
+         m/Q5hoz6RgT0nfTZTP23Knd7NAc35WDjf4afeACv1wfcvP5S+CP7FXD4SIV3sT6DsX15
+         aiGnPRwU5Jnf/n9HkhVG/F6MsleISgklhEfkoFkA9ajVd1Ffl4NsQ1Pracr7DUk9aRIS
+         EL/yp+tS4Ojm6Xzl2cVBmNYVMfXe/Np5uNExg46rX/IqL+DIptSDz07PNaF46YxJ1NUZ
+         5wGxAfxiYpOKLEpdYhA8z3X7Uu6pcXIbPc6ds2P20Rudu2Sz+3LTtufj2umDYjlmIZuy
+         w1ng==
+X-Forwarded-Encrypted: i=1; AJvYcCWWtHyXi1EkiKvT5cggymJZoAPhP1bxS6TBSFTcWQ1T9tLH9aFdg+zFr839vNj/rnSYolE7MLLq5BvJrsY=@vger.kernel.org, AJvYcCXNYr/W7Wn2JDswj4xfEf9nqSLCQ9mbGIrIN5RX/JQ6lSwYqcTj+uvquNiAPryad92xFH3klUDYgiUu7n/F2go=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyDwDqzmtvyRSA1RZLHTl4sD4jLVdQ7H+4eNx7LrCyp5XZQuDLJ
+	mRis4Bkyd5XkSIR26FL1D9UjE/Y5GauJPF1g66FQ0TmQYQLn1+cmnR6C/M9dXZEeeutxRex1+VD
+	NRs4mRE4us6Z8Vb12KWfvetVYlsvQFmE=
+X-Gm-Gg: ASbGncs52O97EXNxTcY20Kd5vODPIJLLEIAlWMHRdYsEKz6llUxBfxMqSwdDTnuAjn/
+	XPkRPzeR29DylG3EwCKyUDru2ROo5Q6p0a47wh6ZnPFkALpt951c3iSgEVsvCQgmVuao7DBwWlQ
+	XUQnZCT0HG1ZK+tEOqTJvGscgHfU1olVgf
+X-Google-Smtp-Source: AGHT+IG7OrMSs9P/zrw+dkkGpZ5+vimnflwEOeG26XH2xajGx/3nSUoi5maDfDx2SmZ+PQsdtWRVqt79c4BQdmVcmgc=
+X-Received: by 2002:a17:902:f543:b0:212:48f0:5b6f with SMTP id
+ d9443c01a7336-231d45262a6mr99145265ad.9.1747811378727; Wed, 21 May 2025
+ 00:09:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250520170615.GO365796@horms.kernel.org>
-X-Authority-Analysis: v=2.4 cv=SMtCVPvH c=1 sm=1 tr=0 ts=682d7b7f cx=c_pps a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=M5GUcnROAAAA:8 a=t23tOx8119NCeN4cTkAA:9 a=CjuIK1q_8ugA:10
- a=OBjm3rFKGHvpk9ecZwUJ:22 a=lhd_8Stf4_Oa5sg58ivl:22
-X-Proofpoint-ORIG-GUID: PVwdN8hdBB8HBBQh2nnlqKgbtslK1qdU
-X-Proofpoint-GUID: PVwdN8hdBB8HBBQh2nnlqKgbtslK1qdU
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDA2OCBTYWx0ZWRfXyFLO16LhMdPj 4QvyK1wwECkcehZbXFitX5LN4mv9Ia6VcmdOFqNm3a0ZYp+CH2QB0FvQxL/Vx7A0CRk9h1n/UFa LYlTsOD8eJQMvShXSAD+WPT2HOrGao67azz0PIdS5KWLz7m+qGIvGzSzUdSIaXNN8yJPwuWYMmS
- eJAawmc7xox8MwHBZ87KBzM8jBhbVvdApZifSiPB1OizzSaCYvYKIA1J/kaw4G0NWSp9QeDlvqJ /Haomni4zofly+vUlCYIXJlFyIMT+UO3XSK/OcbXuoXyAej4gjGH8uXbcDxdNd5+WRDproNnwk0 mmkdZgXKiBpZwzt6dKNTD83vJmxC+qhQNYpPKcesdo+rMiViENmYUvCgKrKbBlCPwVUqnwj6iL+
- uPa1hkTVOzFI+V+PcMNdjyUcnuFfbbUYgufoFCokEV1xsZa0BNMmE4jjyLqaJ1mhYgQyFYk5
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-21_01,2025-05-20_03,2025-03-28_01
+References: <20250520-rust-mno-fdpic-arm-fix-v1-1-44e77fe6b2a1@gmail.com>
+In-Reply-To: <20250520-rust-mno-fdpic-arm-fix-v1-1-44e77fe6b2a1@gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Wed, 21 May 2025 09:09:25 +0200
+X-Gm-Features: AX0GCFsPkNFGlU8TGSg9z4gQIr36f6YCgKgoros-1ed1pfYVZLXdghRHHzY45wc
+Message-ID: <CANiq72nUFqM7mnpSGZF65n3Aak37KVVSa0d830o31EuZyh+OfA@mail.gmail.com>
+Subject: Re: [PATCH] arm: Fix rustgcc unknown argument '-mno-fdpic'
+To: Rudraksha Gupta <guptarud@gmail.com>
+Cc: torvalds@linux-foundation.org, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Ben Wolsieffer <ben.wolsieffer@hefring.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Naresh Kamboju <naresh.kamboju@linaro.org>, 
+	Christian Schrrefl <chrisi.schrefl@gmail.com>, Russell King <rmk+kernel@armlinux.org.uk>, 
+	Ard Biesheuvel <ardb@kernel.org>, anders.roxell@linaro.org, arnd@arndb.de, 
+	dan.carpenter@linaro.org, laura.nao@collabora.com, 
+	lkft-triage@lists.linaro.org, regressions@lists.linux.dev, 
+	Nick Clifton <nickc@redhat.com>, Richard Earnshaw <richard.earnshaw@arm.com>, 
+	Ramana Radhakrishnan <ramanara@nvidia.com>, Linux Kernel Functional Testing <lkft@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025-05-20 at 22:36:15, Simon Horman (horms@kernel.org) wrote:
-> On Tue, May 20, 2025 at 02:52:48PM +0530, Hariprasad Kelam wrote:
-> > QOS is designed to create a new send queue whenever  a class
-> > is created, ensuring proper shaping and scheduling. However,
-> > when multiple send queues are created and deleted in a loop,
-> > SMMU errors are observed.
-> > 
-> > This patch addresses the issue by performing an data cache sync
-> > during the teardown of QOS send queues.
-> > 
-> > Signed-off-by: Hariprasad Kelam <hkelam@marvell.com>
-> 
-> Hi Hariprasad,
-> 
-> This feels like a fix and if so:
-> * Warrants a Fixes tag
-> * Should also be targeted at net rather than net-next if it fixes a problem
->   present in net
-> 
-   Ack, will post to net 
+On Wed, May 21, 2025 at 12:48=E2=80=AFAM Rudraksha Gupta <guptarud@gmail.co=
+m> wrote:
+>
+> Currently rust on arm fails to compile due to '-mno-fdpic'. This flag
+> disables a GCC feature that we don't want for kernel builds, so let's
+> skip it.
+>
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> Closes: https://lore.kernel.org/all/CA+G9fYvOanQBYXKSg7C6EU30k8sTRC0JRPJX=
+Yu7wWK51w38QUQ@mail.gmail.com/
+>
+> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
+>
+> Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+> Signed-off-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+
+Thanks for the patch!
+
+A few quick notes -- I hope these help to explain how it usually woks,
+given what you said in the other thread:
+
+  - Since you asked: in general, Linus does not take patches.
+Normally, patches go through some relevant tree, and then then
+eventually sent to Linus. In this case, the Rust tree would typically
+be the one taking this patch. Please see the `MAINTAINERS` file.
+
+  - You cannot generally send a patch in the name of someone else
+unless they provided their Signed-off-by. Here, neither I nor Naresh
+provided the Signed-off-by as far as I know. Please be careful with
+that! Please read the DCO and the rest of the Submitting Patches file:
+https://docs.kernel.org/process/submitting-patches.html#sign-your-work-the-=
+developer-s-certificate-of-origin
+
+  - Similarly, in general, you should be careful about adding tags
+from someone else unless they provided them or there was an
+understanding they meant to provide it (e.g. Tested-by). Please see
+the "Tagging people requires permission" section in the same file:
+https://docs.kernel.org/process/submitting-patches.html#tagging-people-requ=
+ires-permission.
+
+  - The chain of SoBs has a particular meaning. For instance, this
+patch would mean (as written) that I wrote the patch, and that then
+Naresh carried it, and then you carried it. And if I had written the
+patch, then the Git author should have been me ("From:" would have
+been added by Git). I guess you may have meant to indicate there were
+several contributors -- that is typically done with e.g.
+Co-developed-by or Suggested-by, depending on how they contributed.
+
+  - There is some repeated text in the non-commit message part of the
+email. Also, tags are written without empty lines between them.
+
+  - Ideally, fixes for build errors contain the main part of the build
+error message in the commit text so that it is easy to match it later
+on.
+
+What I would have suggested to do in this situation is to ping in the
+other thread with a normal email (similar to the one you sent), asking
+if Naresh or someone else was going to send it, and mention that
+otherwise you are willing to do so (under yours or perhaps Naresh's
+name).
+
+I hope this helps!
+
+Cheers,
+Miguel
