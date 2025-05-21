@@ -1,162 +1,104 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CA9686331;
-	Wed, 21 May 2025 13:58:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82D3726AE4
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 13:58:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747835907; cv=none; b=RGbl5z+lwsCpmLE+RmDYtxrFcEKrpuuYNobCdFD46IsBjaQBQHk9DCDczpBhbmDjRC09QXttaiy7TPpYcyea+ZPMH8byua6E/ELGKpZlVsGTtEaWYWwlfhPZ3wJM0iaVVQI1cTNVyTTo4NMLOgsyiYBhIOcWCj3nKayI2MtNv3A=
+	t=1747835909; cv=none; b=W6AIVmr09TrshStiBqFIUGpQwmW0sO5V9+5MP6NvEriOVunEpFGkKxxg3xFrRMirkV70/q6XKdFJEiup6yHQj6zDEqFhcLNOQSQlm43aBiLtxbVXmdfNIQvLGctEqIpuS2KT8toyhL6uyR1N5sUl+9Vl9ZZLfEllbjhEfx6lLE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747835907; c=relaxed/simple;
-	bh=8dVODYeuf0JOeF7x0WZGBk7gNGDfNr61/nf0PMQDsyQ=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=WIV3EwE79ZOeDr0rZ9wfwnWc4wkSmFf8nrueY8d7pnirzaVmOgNxjFlPGIenmo4s3a7Ec/KXYG9kK/r2newe9Am//7ShVMiiFWrUeNJG9JGcFSqJQLf1lsLp7e+UafsKNgCr+q/GsNqB5+8GC9McUXObi4qbwIAtFsf+WUImMu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=mQsU4tIf; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="mQsU4tIf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1747835903;
-	bh=8dVODYeuf0JOeF7x0WZGBk7gNGDfNr61/nf0PMQDsyQ=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=mQsU4tIfyxyX2460FiActuCd5ik325aT9ILI51Sgq4jtabuNvcShq0l8VuP6qM3CO
-	 itELbzCwkkpjq/L3a4xV7R4EFne4lDmxi8hTZaM2Y086lp/fh7z9K+I4Q9AEinpQbJ
-	 wQXrC7UC0M8dIqqk+nXKUJwaoG+T8N/ynxBzmKKASKCI9zpevJingKjOKcy7kG9x4s
-	 5aVd/utQJV+VnnIomwHu9BYnz/jfgWfTT4ABIwGMJKIwLm9cfKbP0tBb4c/LSUhPY3
-	 slfp395MQXywIEkhDEaTHRzKuwmlxJ4PQ1heuizHMc4DVLfhFNMXZKCeH8ae0E7f8s
-	 GtwLidslq3gSw==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 625FE17E02BE;
-	Wed, 21 May 2025 15:58:22 +0200 (CEST)
-Message-ID: <5e237878-bc8c-4c88-ad9d-469ce4389274@collabora.com>
-Date: Wed, 21 May 2025 15:58:21 +0200
+	s=arc-20240116; t=1747835909; c=relaxed/simple;
+	bh=uW9wgugdRaKgW7y55mEAnWqEGwNvDrKOKUgyTrcxlN0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=LzL18IOCoYXK8jqaQbwrytwYaZZWBpUzxnBe4cWTyDPTeo0nVc9pa2HE2gvvP1iXPitIC+r7SiW6e9e7BbSeE93+4BujmoKQspVmR/WcMQXMKacdtL+ObmdklStSg8drjKOaDhZQvZ5S9zljNjf2eDPW/CPgMbCPZFvmNOT1GQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
+Received: from fangorn.home.surriel.com ([10.0.13.7])
+	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.97.1)
+	(envelope-from <riel@shelob.surriel.com>)
+	id 1uHjxA-000000005r3-0HFy;
+	Wed, 21 May 2025 09:57:52 -0400
+Message-ID: <cb657cabbc3c87e0a821c7c3fcc16e62b7d854f4.camel@surriel.com>
+Subject: Re: [RFC v2 4/9] x86/mm: Introduce X86_FEATURE_RAR
+From: Rik van Riel <riel@surriel.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org, 
+	kernel-team@meta.com, dave.hansen@linux.intel.com, luto@kernel.org, 
+	peterz@infradead.org, tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com, 
+	nadav.amit@gmail.com, Rik van Riel <riel@fb.com>, Yu-cheng Yu
+	 <yu-cheng.yu@intel.com>
+Date: Wed, 21 May 2025 09:57:52 -0400
+In-Reply-To: <20250521115343.GCaC2-x8LsmMApUkjQ@fat_crate.local>
+References: <20250520010350.1740223-1-riel@surriel.com>
+	 <20250520010350.1740223-5-riel@surriel.com>
+	 <20250521115343.GCaC2-x8LsmMApUkjQ@fat_crate.local>
+Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
+ keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
+ eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
+ Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
+ lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
+ dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
+ mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
+ gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
+ r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
+ WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
+ 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
+ Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
+ +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
+ g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
+ KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
+ fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
+ 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
+ G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
+ okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
+ TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
+ cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
+ omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
+ QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
+ c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] pinctrl: mediatek: eint: Fix invalid pointer
- dereference for v1 platforms
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-To: =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>,
- Sean Wang <sean.wang@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- Hao Chang <ot_chhao.chang@mediatek.com>,
- Qingliang Li <qingliang.li@mediatek.com>
-Cc: kernel@collabora.com, linux-mediatek@lists.infradead.org,
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
- Chen-Yu Tsai <wenst@chromium.org>
-References: <20250520-genio-350-eint-null-ptr-deref-fix-v2-1-6a3ca966a7ba@collabora.com>
- <557a5182-4843-4925-953e-09e3b1e41f0c@collabora.com>
-Content-Language: en-US
-In-Reply-To: <557a5182-4843-4925-953e-09e3b1e41f0c@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Sender: riel@surriel.com
 
-Il 21/05/25 15:53, AngeloGioacchino Del Regno ha scritto:
-> Il 20/05/25 23:15, Nícolas F. R. A. Prado ha scritto:
->> Commit 3ef9f710efcb ("pinctrl: mediatek: Add EINT support for multiple
->> addresses") introduced an access to the 'soc' field of struct
->> mtk_pinctrl in mtk_eint_do_init() and for that an include of
->> pinctrl-mtk-common-v2.h.
->>
->> However, pinctrl drivers relying on the v1 common driver include
->> pinctrl-mtk-common.h instead, which provides another definition of
->> struct mtk_pinctrl that does not contain an 'soc' field.
->>
->> Since mtk_eint_do_init() can be called both by v1 and v2 drivers, it
->> will now try to dereference an invalid pointer when called on v1
->> platforms. This has been observed on Genio 350 EVK (MT8365), which
->> crashes very early in boot (the kernel trace can only be seen with
->> earlycon).
->>
->> In order to fix this, since 'struct mtk_pinctrl' was only needed to get
->> a 'struct mtk_eint_pin', make 'struct mtk_eint_pin' a parameter
->> of mtk_eint_do_init() so that callers need to supply it, removing
->> mtk_eint_do_init()'s dependency on any particular 'struct mtk_pinctrl'.
->>
->> Fixes: 3ef9f710efcb ("pinctrl: mediatek: Add EINT support for multiple addresses")
->> Suggested-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
->> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
->> ---
->> Changes in v2:
->> - Completely changed approach to make mtk_eint_pin a parameter of
->>    mtk_eint_do_init() as suggested by Angelo
->> - Link to v1: https://lore.kernel.org/r/20250519-genio-350-eint-null-ptr-deref- 
->> fix-v1-1-07445d6d22c3@collabora.com
->> ---
->>   drivers/pinctrl/mediatek/mtk-eint.c              | 26 ++++++++++--------------
->>   drivers/pinctrl/mediatek/mtk-eint.h              |  5 +++--
->>   drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c |  2 +-
->>   drivers/pinctrl/mediatek/pinctrl-mtk-common.c    |  2 +-
->>   4 files changed, 16 insertions(+), 19 deletions(-)
->>
->> diff --git a/drivers/pinctrl/mediatek/mtk-eint.c b/drivers/pinctrl/mediatek/mtk- 
->> eint.c
->> index 
->> 16af6a47028e67bb53db4041a37ebbbb8b9a1e43..d906a5e4101fb10968035fc48e9cf4a444d063a9 100644
->> --- a/drivers/pinctrl/mediatek/mtk-eint.c
->> +++ b/drivers/pinctrl/mediatek/mtk-eint.c
->> @@ -22,7 +22,6 @@
->>   #include <linux/platform_device.h>
->>   #include "mtk-eint.h"
->> -#include "pinctrl-mtk-common-v2.h"
->>   #define MTK_EINT_EDGE_SENSITIVE           0
->>   #define MTK_EINT_LEVEL_SENSITIVE          1
->> @@ -505,10 +504,9 @@ int mtk_eint_find_irq(struct mtk_eint *eint, unsigned long 
->> eint_n)
->>   }
->>   EXPORT_SYMBOL_GPL(mtk_eint_find_irq);
->> -int mtk_eint_do_init(struct mtk_eint *eint)
->> +int mtk_eint_do_init(struct mtk_eint *eint, struct mtk_eint_pin *eint_pin)
->>   {
->>       unsigned int size, i, port, virq, inst = 0;
->> -    struct mtk_pinctrl *hw = (struct mtk_pinctrl *)eint->pctl;
->>       /* If clients don't assign a specific regs, let's use generic one */
->>       if (!eint->regs)
->> @@ -519,7 +517,15 @@ int mtk_eint_do_init(struct mtk_eint *eint)
->>       if (!eint->base_pin_num)
->>           return -ENOMEM;
->> -    if (eint->nbase == 1) {
-> 
-> Okay, dropping the nbase == 1 is sane, but that statement was actually documenting
-> the fact that *eint_pin is used only for multi-base EINT case, so please add those
-> comments:
-> 
->> +    if (eint_pin) {
-> 
->          /* EINT with multiple bases */
-> 
->> +        eint->pins = eint_pin;
->> +        for (i = 0; i < eint->hw->ap_num; i++) {
->> +            inst = eint->pins[i].instance;
->> +            if (inst >= eint->nbase)
->> +                continue;
->> +            eint->base_pin_num[inst]++;
->> +        }
->> +    } else {
-> 
->          /* Single base EINT */
-> 
-> ...after which:
-> 
-> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> 
-> Thanks for fixing this!
-> 
+On Wed, 2025-05-21 at 13:53 +0200, Borislav Petkov wrote:
+> On Mon, May 19, 2025 at 09:02:29PM -0400, Rik van Riel wrote:
+> > From: Rik van Riel <riel@fb.com>
+> >=20
+> > Introduce X86_FEATURE_RAR and enumeration of the feature.
+> >=20
+> > [riel: moved initialization to intel.c and disabling to
+> > Kconfig.cpufeatures]
+> >=20
+> > Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
+>=20
+> I'm guessing Yu-cheng is the original author - that's expressed
+> differently.
 
-Just acknowledged that Linus already picked this one.
+I will fix that up!
 
-It's fine either way, no worries.
+>=20
+> > @@ -1771,6 +1783,7 @@ static void __init early_identify_cpu(struct
+> > cpuinfo_x86 *c)
+> > =C2=A0		setup_clear_cpu_cap(X86_FEATURE_LA57);
+> > =C2=A0
+> > =C2=A0	detect_nopl();
+> > +	detect_rar(c);
+> > =C2=A0}
+>=20
+> Move all this gunk into early_init_intel().
+>=20
+I had the same thought, and tried that already.
 
-Cheers,
-Angelo
+It didn't work.
+
+--=20
+All Rights Reversed.
