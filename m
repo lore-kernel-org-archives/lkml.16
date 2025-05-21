@@ -1,164 +1,222 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B04C22173C;
-	Wed, 21 May 2025 19:18:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9CC822173C
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 19:20:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747855130; cv=none; b=tDrUpCbfRw0yLd4+2gNa7JrQFUqyNhS4kFMi6kwkOil8JgwF3TL8okzmGcGwNTKnIK1hZR/QvVgypuzVDcbubKxM3NAdhwZeGr4ZMiI75Y82RTuCMUZ4rVqYq2NIXca2X07GeP6qgZsK2+1KjpipRff/tlg/exjhd/y42xdGW4Q=
+	t=1747855207; cv=none; b=fK3KpVvpNqtVWmCo87plyWoD5VX/KhLvSb+NsOQ4DmWAdanypwaGsBv5gND7AWMlPCrSyeS/IL/uD3qZOhv3+bUY6QfkFbKWd/wbiRWyCUNW6buO5NfHmCToL4y2hd4O9WjbBZKUe74BpR0M7RqqJdhD0ezvJfv5L7vtaYUSv7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747855130; c=relaxed/simple;
-	bh=nga7nxK8EKA/8Sj8LjZxZFXgqcvpaPVSZXuNqx5KJE8=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gSCjHUb+5Xf2QRA7DZ1I85qnT8LXdv3vtvBH7RRPBa+Ka5ut/LsI4Q710DR0dOF3abmPwq7pup/zqY+GgN8TAzel1DRvjnVFgu9eROD5V64FYwjYngt8kmqWCcplpsLPAWSP5al/S2m1hTmGhdEfWQOboISAKgyUaS1Ep0KxMRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=h37EErwx; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1747855207; c=relaxed/simple;
+	bh=GnB/O/EVmri7y38J/jByIJMb+SeoeRsKY/K6vIHsCKE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=r2s2zaFl/jKXYNmzi/5e2xymXF8pH4AIKh+kXGyzs26IaPhOxgO32D6hc2czwkXkTZoStzSMWwiscy4xsb5XGRDrNnrCkQIwdfT2HJM5ILhdrrzoWVOwxJ+GvBw3iU5/0FIrHEmEUWoRWllNqK/7HZKj8btQVpWYBkhWRbPZ0/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=B+9Yx/HK; arc=none smtp.client-ip=209.85.166.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="h37EErwx"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54LI8AwO011657;
-	Wed, 21 May 2025 19:18:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=4Iu1V/M0M1Lmpks9xJhPotBm
-	jvTzR7X1AB4T0P1QS+E=; b=h37EErwxoYLH9yBiAruxXL7lhO+tCIf7W3XUtepb
-	9FaiL6/IM7s1AcL7T+7tjljTufGr9jr/EMUNK7PW1Ip1XI1h1oYAJJvIEpVTgF8C
-	i17GODF9noTb1n7cYk2DXIXDIGxNln/dbzJs9KTL9XgLfl+h6M5FBmUHqA/+L4gR
-	0R9D6QbAxOWK86SFUOiW809aZUUW0LbVQR58BPy/lk8AWOFX07uci32NPmFthnVo
-	gJvmXKhVcdLO15DiW3iG9d5ePUSYqhM5GffDwTNW/9kzs3WSmnmD1SloC3mYo8HL
-	A6/plzlfYxFU1j2udI7p0KdfLX8/TorMACUTQIIRfE1SdQ==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwfb3y81-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 19:18:44 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54LJIgQk031649
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 19:18:42 GMT
-Received: from hu-wasimn-hyd.qualcomm.com (10.80.80.8) by
- nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 21 May 2025 12:18:36 -0700
-Date: Thu, 22 May 2025 00:48:23 +0530
-From: Wasim Nazir <quic_wasimn@quicinc.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-CC: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel@quicinc.com>, <kernel@oss.qualcomm.com>
-Subject: Re: [PATCH v7 1/6] dt-bindings: arm: qcom: Add bindings for QCS9075
- SOC based board
-Message-ID: <aC4m/+UAHx5gwLdE@hu-wasimn-hyd.qualcomm.com>
-References: <20250521140807.3837019-1-quic_wasimn@quicinc.com>
- <20250521140807.3837019-2-quic_wasimn@quicinc.com>
- <79eb2b17-06ee-42d4-9954-a78ada1ced29@kernel.org>
- <aC3y0PPA8qrvmobw@hu-wasimn-hyd.qualcomm.com>
- <9df2f9f3-289f-4916-a293-ad5d97d530fe@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B+9Yx/HK"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3d96836c1c2so1023585ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 12:20:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747855205; x=1748460005; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RH9ep65+iIljq49GwNY241t6DbkwIT/99iko/YlYgi4=;
+        b=B+9Yx/HKUh89ktiaXr2A9kMuU9Be+GxdSDzGNhi9EoFPJApW2dbxYfmGSxOfr1Ud1E
+         ZVhQ+Zjt/5slJ3859Q02l7OaVY9NMMTmnZtPJostrw8I4vGolNqGRGaRsfUZC0cWmE8o
+         nLT6u6rhy8I/E/AdKU7YP4lL6bjd90Jfi5exybqtorRPcpIUX1YisgRU3la8kniM6Lq5
+         5wS+ZXVyveNxkKz8w+H/W2P1OHkV5o9PhbOc3eQEmKlc3rG1bM8WU/qrDJdOf1BEqdii
+         DvIthJJpLexNKXOmzFNeXbxjunITOy0dHdI3kIn4CBfl6q4kOJErJYNxpmk7DA0a7cQR
+         7b0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747855205; x=1748460005;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RH9ep65+iIljq49GwNY241t6DbkwIT/99iko/YlYgi4=;
+        b=tuTWKOKCDUi2loHHMMk+KYY0Ot2ypJaflQpCuZzY11yltNJhLqfptB89wiLwAJ8aum
+         qslJOmPP9WXMb/K3FWiYVQvC38e2xMDTxoIFLL2nMuSFqJk0NXbPGTIrWI7RZDC54T3L
+         Dox6gpeAHbc2kG8XNXB54oQKfNemHdF7z0jJXwU8OWRTTFS5iNoAfh0WAk0BugPgLK8k
+         GFKaayLGkjrtyNLkN+f6bzXLtZOOjUId09FMhEUSO5lCiA49CrHX9ycORcmhcUfWbRXo
+         FEClWykcIcquweRFS7ER9T1HkSITXXytp80TG65JYsschUU0c6gLGN+H2jj2PA6Fuo3J
+         jUCA==
+X-Forwarded-Encrypted: i=1; AJvYcCUZC72TcELK1IjdrnRk8pYVjwc3pfRzu1YyIlolmFqrg9p7FSKuTB02O6UZiaJkCZ+BD/gvRxb7D7ppMGw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yygc1f0g3ZX8XVTQyv/hA3z4+o7svBeNRyD5JqN2u9d7K3FPv0k
+	fljUmUfystMvO97Y9ljt4kfTcfDYrQFmVA9txTdz9b6QCEWTtH3XmtxPc4PlYLQZkyW59vq5ioM
+	j4dUBH98EIO+38USxThsbKpwbWbbUSvh8hS9978qd
+X-Gm-Gg: ASbGnctl+RU5hpfgQ/nKPeVpOFMq7XVrmasjpO1PsPR4OUCpJ4LG1LXyn8t31+SYFaX
+	2GjYqW1wH23KO2okYhozAzJqbZSNYO+KBpbg0ovYDhkzBAV2ZNkhrlBdh+qIvGWV0XUvbZQrEd5
+	/Y77xZFXMSCx8oy9KclQSfcQzkWOs/cxgT7+TDeDwSDJDgmsnS/SR2C4Qn37gyKQTw/dracrk=
+X-Google-Smtp-Source: AGHT+IEdThBAtZZFOyQI8ndZvd6+jvPSbtIqyrmJS1pfB4JA/e7fLaaSpaoPZZQa+W07/lnsfHpHN7t7x36UfN9ThKE=
+X-Received: by 2002:a92:c052:0:b0:3dc:8895:4260 with SMTP id
+ e9e14a558f8ab-3dc8895434bmr2451035ab.19.1747855204420; Wed, 21 May 2025
+ 12:20:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <9df2f9f3-289f-4916-a293-ad5d97d530fe@kernel.org>
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: BbFfJDQOK9hHxcjsyODhItIrXNGGVpjL
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDE5MSBTYWx0ZWRfXwwoOAKAuLxy6
- /wqX1FHVtcX/KNQc5LCXwqo8UZAWrfP0Qey25joZzXbEORty1Xst26247ctSCjGajaN0yjpirsb
- GMGvh4svM/p6yBxRNLjOrnviFBbDpE6739uUl1VppcCkbI1Wo5jN9+yLbdTOT73tH8cljGZtWWW
- XL/SjRqaT5zbEemp3fLQGpP3m47vK45LY7P2I3iHwMnAcPokkOzMatx76lcBLlJY1aGtKs/Qo4Y
- cbhJubf3zLPRgLfxMZy+Kms1788KUS5ctr0TpX2PVXZSotPfMcdlwLoMWNidEyujwKsEtj3HXZZ
- F83aADODH5N6+M1eTklpYtvEBx7RK2HZpWaxaHDW4m/P0/zrDoBleuaNJbQpYo0xzjcXchw3IX2
- VbreqHOAPUW6hrCaAkwDyBFHfRVqeTZJyiYIv2AXeC8lBOKjtpajOTcok5LBDviGd0CG1hxy
-X-Proofpoint-GUID: BbFfJDQOK9hHxcjsyODhItIrXNGGVpjL
-X-Authority-Analysis: v=2.4 cv=dLCmmPZb c=1 sm=1 tr=0 ts=682e2714 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8
- a=EUspDBNiAAAA:8 a=COk6AnOGAAAA:8 a=07lBpJVSqj2dUEkWpfEA:9 a=CjuIK1q_8ugA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-21_06,2025-05-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxscore=0 clxscore=1015 adultscore=0 bulkscore=0 phishscore=0 suspectscore=0
- impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=984 spamscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505210191
+References: <20250521135500.677508-1-irogers@google.com> <20250521135500.677508-4-irogers@google.com>
+ <3e8b674e-38f7-4212-923d-f53626de69f2@linux.intel.com> <CAP-5=fX5q7rDgBdB+cMH6fTyHBBPyiac7tuv9WJOMcg9OFdq5g@mail.gmail.com>
+ <9aa2c899-80e0-4626-acb7-5331fbf46a0d@linux.intel.com>
+In-Reply-To: <9aa2c899-80e0-4626-acb7-5331fbf46a0d@linux.intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 21 May 2025 12:19:52 -0700
+X-Gm-Features: AX0GCFu4PPYG7j8QdsCgxl3Fa-IYTZcsame8vgyYD43SyJeG4LuLy-sh2dDPJAA
+Message-ID: <CAP-5=fW4brQZQ-tMDj+N9MnddRVZidi4L5uSw1mvv_9OD_vOSA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] perf sort: Use perf_env to set arch sort keys and header
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Ravi Bangoria <ravi.bangoria@amd.com>, Leo Yan <leo.yan@arm.com>, 
+	Yujie Liu <yujie.liu@intel.com>, Graham Woodward <graham.woodward@arm.com>, 
+	Howard Chu <howardchu95@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>, 
+	Thomas Falcon <thomas.falcon@intel.com>, Matt Fleming <matt@readmodwrite.com>, 
+	Chun-Tse Shao <ctshao@google.com>, Ben Gainey <ben.gainey@arm.com>, Song Liu <song@kernel.org>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 21, 2025 at 06:26:40PM +0200, Krzysztof Kozlowski wrote:
-> On 21/05/2025 17:35, Wasim Nazir wrote:
-> > On Wed, May 21, 2025 at 04:20:53PM +0200, Krzysztof Kozlowski wrote:
-> >> On 21/05/2025 16:08, Wasim Nazir wrote:
-> >>> QCS9075 is compatible Industrial-IOT grade variant of SA8775p SOC.
-> >>> Unlike QCS9100, it doesn't have safety monitoring feature of
-> >>> Safety-Island(SAIL) subsystem, which affects thermal management.
+On Wed, May 21, 2025 at 11:14=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.=
+com> wrote:
+>
+>
+>
+> On 2025-05-21 12:16 p.m., Ian Rogers wrote:
+> >>> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+> >>> index 7b6cde87d2af..13ef0d188a96 100644
+> >>> --- a/tools/perf/builtin-top.c
+> >>> +++ b/tools/perf/builtin-top.c
+> >>> @@ -1747,7 +1747,14 @@ int cmd_top(int argc, const char **argv)
 > >>>
-> >>> qcs9075-iq-9075-evk board is based on QCS9075 SOC.
+> >>>       setup_browser(false);
 > >>>
-> >>> Signed-off-by: Wasim Nazir <quic_wasimn@quicinc.com>
-> >>> ---
-> >>>  Documentation/devicetree/bindings/arm/qcom.yaml | 7 +++++++
-> >>>  1 file changed, 7 insertions(+)
-> >>>
-> >>
-> >> This was already acked twice by two DT maintainers. Apparently we need
-> >> the third one.
-> > 
-> > The previous acknowledgment has been removed due to changes in the code.
-> > Since, here I have removed the som compatible so though of getting it
-> > reviewed again. Som compatible is removed to make it align with other
-> > sa8775p & its derivative targets which we are trying to refactor along with
-> > Ride changes in other series.
-> 
-> Nothing was explained in cover letter and dropping tags needs explicit
-> mentioning. Nothing explained about first tag being dropped, either!
-> Read really carefully submitting patches and your internal guideline
-> before sending patches.
+> >>> -     if (setup_sorting(top.evlist) < 0) {
+> >>> +     top.session =3D perf_session__new(/*data=3D*/NULL, /*tool=3D*/N=
+ULL);
+> >>> +     if (IS_ERR(top.session)) {
+> >>> +             status =3D PTR_ERR(top.session);
+> >>> +             top.session =3D NULL;
+> >>> +             goto out_delete_evlist;
+> >>> +     }
+> >>> +
+> >>> +     if (setup_sorting(top.evlist, &top.session->header.env) < 0) {
+> >> I doubt a valide env can be got in perf_session__new(), since there is
+> >> no perf.data in perf top.
+> >> Maybe just need to invoke the perf_env__raw_arch() instead to fill the
+> >> env->arch.
+> > I think the current code is making things harder than it should be, we
+> > should work away from perf_env__arch and strings, instead using EM_
+> > values which we can default to EM_HOST avoiding any runtime costs.
+> > Looking at perf_env__arch:
+> > ```
+> > const char *perf_env__arch(struct perf_env *env)
+> > {
+> >         char *arch_name;
+> >
+> >         if (!env || !env->arch) { /* Assume local operation */
+> >                 static struct utsname uts =3D { .machine[0] =3D '\0', }=
+;
+> >                 if (uts.machine[0] =3D=3D '\0' && uname(&uts) < 0)
+> >                         return NULL;
+> >                 arch_name =3D uts.machine;
+> >         } else
+> >                 arch_name =3D env->arch;
+> >
+> >         return normalize_arch(arch_name);
+> > }
+> > ```
+> > in this case env->arch =3D=3D NULL and so the uname machine will be use=
+d.
+> > For perf_env__raw_arch the behavior is similar but it populates the
+> > env:
+> > ```
+> > static int perf_env__read_arch(struct perf_env *env)
+> > {
+> >         struct utsname uts;
+> >
+> >         if (env->arch)
+> >                 return 0;
+> >
+> >         if (!uname(&uts))
+> >                 env->arch =3D strdup(uts.machine);
+> >
+> >         return env->arch ? 0 : -ENOMEM;
+> > }
+> >
+> > const char *perf_env__raw_arch(struct perf_env *env)
+> > {
+> >         return env && !perf_env__read_arch(env) ? env->arch : "unknown"=
+;
+> > }
+> > ```
+> > Aside from caching the arch, the main difference is that
+> > normalize_arch isn't called. Not having normalize_arch means the code
+> > in arch_support_sort_key and arch_perf_header_entry would need to
+> > handle strings "ppc" as well as "powerpc", "i386" as well as "x86",
+> > etc. As I'd prefer not handle all those cases I think the way the code
+> > is is best given how the env code is currently structured.
+>
+> Right. The perf_env__raw_arch() doesn't improve anything.
+> But I still don't like &top.session->header.env.
+> Because I don't think you can get any useful information from
+> top.session->header.env. It just brings confusions. (It seems an env is
+> retrieved, but it is actually not.)
 
-I'm sorry about that; it wasn't intentional. I'll make sure to take care
-of it next time. I do try to mention changes in the changelog, but I
-understand now that it's not sufficient.
+Well there's a certain consistency in using the session env to set up
+the sorting, etc. This pre-exists this change with nearly every
+builtin-* file doing `symbol__init(&session->header.env);`. perf top
+does `symbol__init(NULL);`:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/builtin-top.c?h=3Dperf-tools-next#n1811
+but the code now has lazy initialization patterns and handling NULL as
+a special case of meaning host machine:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/util/symbol.c?h=3Dperf-tools-next#n2350
 
-> 
-> But that was not about it. It was about us spending 1 or 5 minutes on
-> your patch every time, because you send something not ready which your
-> company decides to change thus we need to spend time again, and then you
-> change it again, which we need to spend time again... do you get the point?
-> 
+> In the perf top, &perf_env is used for the existing cases. If any env
+> fields are not available, perf_env__read_XXX() is invoked to get the
+> information.
+> I think we may follow the existing usage, e.g.,
+> setup_sorting(top.evlist, &perf_env).
 
-I have made the code changes to align with our discussion in the other
-series [1] of changes for Ride. Let me know if we need further
-discussion on this to conclude on DT structure for sa8775p & IQ9 targets.
+So using the global perf_env rather than NULL feels preferable but I
+think the global perf_env should be deleted. Whenever I see the global
+perf_env in use I think the code has a bug as the perf_env should be
+coming from the session or the machine. The global perf_env can have
+no meaning for cases like `perf diff` where more than one
+file/header/env is open at a time. The global perf_env variable's
+existence encourages bad or broken code, so deleting it should avoid
+errors in code. Another place these issues can occur is with TPEBS
+where we're maintaining multiple sessions for sampling alongside
+counting.
 
-[1]
-https://lore.kernel.org/all/aCdAuTS4pg7arxwC@hu-wasimn-hyd.qualcomm.com/
+> Alternatively, it looks like the perf top doesn't support --weight. The
+> env->arch should never be used. If so, a NULL can be used as well, E.g.,
+> setup_sorting(top.evlist, NULL).
 
-> That is not fair. Your marketing changes should not cause more effort on
-> us. And this is not the first time.
+So I don't like NULL because then we have lazy initialization of host
+data and NULL meaning use host. I don't like the global perf_env
+variable as it has a code smell about it. I think moving the session
+initialization earlier in perf top so its env, although unpopulated,
+can be used is consistent with `perf report` - this is consistent with
+`perf top` being `perf record` glued together with `perf report`. So I
+think the change here is the smallest and most sensible.
 
-I truly appreciate all your efforts. I understand there have been
-mistakes on our end, but we are learning a lot from this process. We are
-noting valuable points to make our internal processes more efficient and
-reduce multiple iterations.
+Longer term let's delete the global perf_env variable,  perf_env__arch
+should be switched to a perf_env__e_machine as then we can avoid uname
+calls just to determine the machine architecture, etc.
 
-> 
-> At least I do not agree on that. Anyway, I explained my point of view to
-> Bjorn and Konrad. I am not going to review this. Maybe you will be lucky
-> with the third DT maintainer.
-> 
-> Best regards,
-> Krzysztof
+Thanks,
+Ian
 
-Regards,
-Wasim
+> Thanks,
+> Kan
+>
