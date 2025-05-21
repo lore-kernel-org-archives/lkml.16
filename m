@@ -1,78 +1,155 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F4E523506D;
-	Wed, 21 May 2025 09:21:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8326F23C4F1;
+	Wed, 21 May 2025 09:22:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747819318; cv=none; b=QV47Y4VPcdOYQiAFWg3ssgvazZmla0Lef4sLLPc6Nvv12UCi778jzRVOfKuxo7R213psh6EUkdu1dLeKumcpHt5nNLKRaUXOzKieG8L/X08qPHtov3L7BUbGQehXBU5dRGtPiR9hCJMeQ1sMgbjpNTXj18A1k3ytn/vYNd/ToHY=
+	t=1747819330; cv=none; b=QhhWfKDJyx9jioVy2Ft9wLE2RkZ3oOLwcN6MutoX7e+Uf1S+KV4jSFoTow48gRvQhWuyUyWXNAMicTTvqyS5BkxQA1PG/KY09JdUcKbc62xmldcV8QKbOIhh6lLRfpc5Wzhfsl8MIP7vIazftZC1DaVR5CnzSO9BpT1FeCAXW2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747819318; c=relaxed/simple;
-	bh=NNP13idsOMoxEThWHCNTUsdIfyVNjNlm15eK1mVBuDc=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eY/Cs8Td+upxTOhEgwBThwwBI6MiThaniHg4qmP5Sx3djBrZ7tzqt0ywEdqo/Xf+OULfqzWnUYTDJjMFqxbORAZpH44aTtBrp5wfIAx3HYK4Zn3FI0ivRtebuBjcSNScGwj1oFiXZO2XTgUjlaU/4dymRYg9WS+QYkzWmorLgJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b2QpD1LGkz6L4rt;
-	Wed, 21 May 2025 17:18:44 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 17A841402C3;
-	Wed, 21 May 2025 17:21:55 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 21 May
- 2025 11:21:54 +0200
-Date: Wed, 21 May 2025 10:21:52 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: <linux-pci@vger.kernel.org>, Jon Pan-Doh <pandoh@google.com>, "Karolina
- Stolarek" <karolina.stolarek@oracle.com>, Weinan Liu <wnliu@google.com>,
-	Martin Petersen <martin.petersen@oracle.com>, Ben Fuller
-	<ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, "Anil
- Agrawal" <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, Ilpo
- =?UTF-8?Q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Sathyanarayanan
- Kuppuswamy" <sathyanarayanan.kuppuswamy@linux.intel.com>, Lukas Wunner
-	<lukas@wunner.de>, Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney"
-	<paulmck@kernel.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, "Oliver
- O'Halloran" <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>, "Keith
- Busch" <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>, Terry Bowman
-	<terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>, Dave Jiang
-	<dave.jiang@intel.com>, <linux-kernel@vger.kernel.org>,
-	<linuxppc-dev@lists.ozlabs.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-Subject: Re: [PATCH v7 05/17] PCI/AER: Extract bus/dev/fn in
- aer_print_port_info() with PCI_BUS_NUM(), etc
-Message-ID: <20250521102152.0000569c@huawei.com>
-In-Reply-To: <20250520215047.1350603-6-helgaas@kernel.org>
-References: <20250520215047.1350603-1-helgaas@kernel.org>
-	<20250520215047.1350603-6-helgaas@kernel.org>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1747819330; c=relaxed/simple;
+	bh=raz7RiesiuNkadk6ewHUZtY7WbCAP8YqWgiA2FXatXw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jZ25Y1FyYy4AuDLcfpTVrml0ZGFCnWznpa3xDZ95uSz3lOxlBT1Wqo9LhsYjoEy3AlfUWO3+PVQGqQMPflKZuRbgBIB9wuZZeOQP3h5GHvRbo26xfOSyvImx4gK9Zi8o97QBaridD2yMdLsm3XsW05kCz3t7Mhs6znj2wDcuA74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tJAKZ5gz; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tJAKZ5gz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96024C4CEE4;
+	Wed, 21 May 2025 09:22:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747819330;
+	bh=raz7RiesiuNkadk6ewHUZtY7WbCAP8YqWgiA2FXatXw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tJAKZ5gzdPYCJrFLBqjV30+qu8TR8JooV4vCY3H3uuJHHBCZm7wWSYbeinUKpobSQ
+	 9wybrqqmEKghJI9bmXOuUaKVAAtOtLCMRHnXq2wSWpfxeQdX9sAWKjPRqeYlcvMmdk
+	 t4obDeSHHAjIoXSvg5pBqdDuaVUnbEn27zbrr4AutsgMZmyc9dfP9YdjuhNiLKorY5
+	 zcqzYUhJZa9zPn/BWtLMW9AL98EcGXTGehqz2CfaKVx5kUFKPSoGKKFCjl7udb6c43
+	 my2LMuMzHYqN+Y7djx5yLGCDp2VLWYDygHjayc8fCDJbHJDtWswhbencdAFmbP9bnI
+	 YCRbV0NLObWww==
+Date: Wed, 21 May 2025 11:22:07 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Michael Hennerich <michael.hennerich@analog.com>, 
+	Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, Trevor Gamblin <tgamblin@baylibre.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] pwm: axi-pwmgen: add support for external clock
+Message-ID: <zdltaexty6pzbqesoluuyluygyt6w7nq7r2wccmtfktppwuw3e@qb36fsu3jq4k>
+References: <20250520-pwm-axi-pwmgen-add-external-clock-v1-0-6cd63cc001c8@baylibre.com>
+ <20250520-pwm-axi-pwmgen-add-external-clock-v1-3-6cd63cc001c8@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="s4tafh3x6o2rwiqf"
+Content-Disposition: inline
+In-Reply-To: <20250520-pwm-axi-pwmgen-add-external-clock-v1-3-6cd63cc001c8@baylibre.com>
+
+
+--s4tafh3x6o2rwiqf
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Subject: Re: [PATCH 3/3] pwm: axi-pwmgen: add support for external clock
+MIME-Version: 1.0
 
-On Tue, 20 May 2025 16:50:22 -0500
-Bjorn Helgaas <helgaas@kernel.org> wrote:
-
-> From: Bjorn Helgaas <bhelgaas@google.com>
+On Tue, May 20, 2025 at 04:00:46PM -0500, David Lechner wrote:
+> Add support for external clock to the AXI PWM generator driver.
 >=20
-> Use PCI_BUS_NUM(), PCI_SLOT(), PCI_FUNC() to extract the bus number,
-> device, and function number directly from the Error Source ID.  There's no
-> need to shift and mask it explicitly.
+> In most cases, there is a separate external clock that drives the PWM
+> output separate from the peripheral clock. This allows enabling both
+> clocks.
 >=20
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> Tested-by: Krzysztof Wilczy=C5=84ski <kwilczynski@kernel.org>
-> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux=
-.intel.com>
-> Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
+> ---
+>  drivers/pwm/pwm-axi-pwmgen.c | 23 ++++++++++++++++++++---
+>  1 file changed, 20 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/pwm/pwm-axi-pwmgen.c b/drivers/pwm/pwm-axi-pwmgen.c
+> index 4337c8f5acf055fc87dc134f2a70b99b0cb5ede6..67992a7561ec0440b1c1fa327=
+f844a0602872771 100644
+> --- a/drivers/pwm/pwm-axi-pwmgen.c
+> +++ b/drivers/pwm/pwm-axi-pwmgen.c
+> @@ -280,9 +280,26 @@ static int axi_pwmgen_probe(struct platform_device *=
+pdev)
+>  	ddata =3D pwmchip_get_drvdata(chip);
+>  	ddata->regmap =3D regmap;
+> =20
+> -	clk =3D devm_clk_get_enabled(dev, NULL);
+> -	if (IS_ERR(clk))
+> -		return dev_err_probe(dev, PTR_ERR(clk), "failed to get clock\n");
+> +	/* When clock-names is present, there is a separate ext clock. */
+> +	if (device_property_present(dev, "clock-names")) {
+> +		struct clk *axi_clk;
+> +
+> +		axi_clk =3D devm_clk_get_enabled(dev, "axi");
+> +		if (IS_ERR(axi_clk))
+> +			return dev_err_probe(dev, PTR_ERR(axi_clk),
+> +					     "failed to get axi clock\n");
+> +
+> +		clk =3D devm_clk_get_enabled(dev, "ext");
+> +		if (IS_ERR(clk))
+> +			return dev_err_probe(dev, PTR_ERR(clk),
+> +					     "failed to get ext clock\n");
+> +	} else {
+> +		/* Otherwise, a single clock does everything. */
+> +		clk =3D devm_clk_get_enabled(dev, NULL);
+> +		if (IS_ERR(clk))
+> +			return dev_err_probe(dev, PTR_ERR(clk),
+> +					     "failed to get clock\n");
+> +	}
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Can you achieve the same effect with the (IMHO slightly nicer but
+hand-crafted) following patch:
+
+ 	ddata =3D pwmchip_get_drvdata(chip);
+ 	ddata->regmap =3D regmap;
+=20
+-	clk =3D devm_clk_get_enabled(dev, NULL);
+-	if (IS_ERR(clk))
+-		return dev_err_probe(dev, PTR_ERR(clk), "failed to get clock\n");
++	axi_clk =3D devm_clk_get_enabled(dev, "axi");
++	if (IS_ERR(axi_clk))
++		return dev_err_probe(dev, PTR_ERR(axi_clk), "failed to get axi clock\n");
+
++	clk =3D devm_clk_get_enabled_optional(dev, "ext");
++	if (IS_ERR(clk))
++		return dev_err_probe(dev, PTR_ERR(clk), "failed to get ext clock\n");
++	}
+
+ 	ret =3D devm_clk_rate_exclusive_get(dev, clk);
+ 	if (ret)
+
+with the only side effect that for machines with a single clk we get
+axi_clk =3D=3D clk and it's enabled twice.
+
+Another upside is that
+
+	clock-names =3D "axi";
+	clocks =3D <...>;
+
+still works.
+
+Best regards
+Uwe
+
+--s4tafh3x6o2rwiqf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmgtmzwACgkQj4D7WH0S
+/k71vQf7BiRb/3LpNcadtaG3ykMxBtOZvUSoxQsHTzQTd2LFGi4FU+4EuiUyOWH0
+QZMnKVThUsN2tr02KffV3dzYZW4g0zXG/9JbEdkS+/WI/rfhnckceixDQNi7EDgq
+1ag6SK9V8lmWdHzp3Qss2+DXxj9MMXzanTGtSnaXR7QzicYSV96DfmI1yDqNEc+e
+FB4Ku97WNJ/JS+0bQnrIgbVhuUq0WnxVuBqfykAXOFmriSGdqUCvMH4ohzH1sS6w
+op7hQqWtp5ywCOY2X/bdveakx4K+Zhf6RykYW2AsUh7G+DPO2yj/GPkNjLn9zzib
+fKut+Lk+A7LyCEsu9uZdRG2cCL/B9w==
+=0kBf
+-----END PGP SIGNATURE-----
+
+--s4tafh3x6o2rwiqf--
