@@ -1,148 +1,192 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2064.outbound.protection.outlook.com [40.107.21.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D8DB1A23AA;
-	Wed, 21 May 2025 17:33:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747848837; cv=none; b=abGElGfST7LtTBJ1FGaa8wdW8Fd5otdkK2GnEf/a5ULXaxs+vI4UiL5bJ33pTTUqfWfWZBipG8M63pZ4wbou9V+Dj/7BqEtTVFvqqUp5S36VFCauZaNZoalpSvJv7jA7EeayrzDLF5srO98j/iURKzwVSHjSCeVcQOrVFk8ISoE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747848837; c=relaxed/simple;
-	bh=M01lQ0KLV7qdlqulYlearcaelRMN+6cMU/PpOs8QG9I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=abJTePLCnL6mmV05QzrvYDD3obe6f1XqlR7XflSvqhdkCj7MDRQtmiiKn+lVo9/m9+eQkJ2k4zhoXFDuoaUmr/eX406CqpoAQ8HlNBE1Q73FbkVVQtw8nhwklhiBFKp24p2V4D1qlNLT5Lw63F7z4DfYQHUHme9+W9BCcw48dEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H43GGbGN; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C7911E3DED;
+	Wed, 21 May 2025 17:34:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.64
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747848890; cv=fail; b=DZstz8B2tpCDC0QGSJWsDYqRYn3l9JBtVxdq0PH4mQVfLB2lItBOL+gmtIrbi0iIoA7srThVdDK1xZq6ELwzdvgd5eqHePgx1F+21dvhp7IS2rcxLgA2eg6/H7bcDFYrPrbGsIybjn3snWJe1RNG8A5Pm35BRLh1QBhc+Z8mvbc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747848890; c=relaxed/simple;
+	bh=YkVjpUKwO1SmRSIm0398Lh2aC1T8GxauuIAIUb6vsaw=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=cLpKMlbCwugX86T+GQCq81Nd9a8BzWjYWljc04KZ0xBzDAaSbOtJxusaIKa4nCOLc4V4prcJJ8UyT+Qe30cfHPbuL/0un3Hq13Mkhz5RtaVjKHLPnFQ/WQdTdjZG6sMlpP57xXLZs00vIUDHINecWVwDFXYzz0CjpFS0s48Gtls=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Okg49uD4; arc=fail smtp.client-ip=40.107.21.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H43GGbGN"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-232059c0b50so41463905ad.2;
-        Wed, 21 May 2025 10:33:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747848835; x=1748453635; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=0PVTFR8laqtLmtyHRR4G3AwCeqV+zpYHl0GhvW63Ymk=;
-        b=H43GGbGNMvcV/gaEnqhC0UMdXQg3g9Rj92W/NdkdZ/HsHcpzfAp8JRd21EXiPG+i9o
-         7+PsnErFySS7cxT9NvNZ/bhRVGaegXsEsDzX1TymT4ohcB58vLE1f2D5kDp52BBAndQb
-         Nd93N9+2AmGUPktlnK3zxZtKtraLZC9xM1hTj0avsgcSjl0NAfiIIBt3NsIVD8hTYRZS
-         UDdxoLTijjSzUNKQ7RAs+rRLQyXp3vTNHC2WZVtHgzbZBhilozUO2HvNiv0RolwvuaZ/
-         PACTq9ks1PykWDDYEDjucEXdZI2cr/tlU0L+XCqGl5khhLygnTPNFVE3JAYPKqGv0i+N
-         lZYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747848835; x=1748453635;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0PVTFR8laqtLmtyHRR4G3AwCeqV+zpYHl0GhvW63Ymk=;
-        b=c+9jS3lX1NxaDUvnDo8RKx1dq9Az0RxK5lHcgq21VRsGDysfAawz9ql/4e2Gl6lMar
-         wGlooRqraaVVZ9hSHV9cKsxtSQ532TOIuudNJCpu5VlZF5vY7BFpjCVIahlMCEjBIwSg
-         CUj2kNVd95L+a9tz6bQJQLytKdosthyjttyLWID/n3AB1tAmeKRj46DCcKzMKNeO1Wf3
-         JWTASCuILAUlj6v+svVE80QNyNoGb8fbT0OEKga2UmDYIp2ZIE7HejkQU0lsrsBDs0+f
-         UW10iZq4XYHE8bYnovtig6ZKYr3HY2M1SijMGICRWJcoB9czxNxHITTW3DJsAJ45IoD0
-         hLoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUbBIO14KK9RePm1kUChS2FGE+Zsbg6FJnmHVvBr2I5M+UgmkiPK7t16SDbhvMDjXYUOaIPjvTa/5IcGtlpT7T9@vger.kernel.org, AJvYcCWVh7tFRQKKVuCoeP/XiF37XD1CBtHPVoMDY2NcKv2Amw0JqQkpfpLITzXwGCuewmLnLvsO+oL4xt8OF50=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKVK04HgaycvtOPp5BTdDAeQrQPa+Cd0dpzBVE1Xeu/cAa/MEF
-	rojhxuK2XqPv2c3eiCMsj6vVxOJ/0bF6GXNew3WAq8WDWxBK6X0AfC8=
-X-Gm-Gg: ASbGncv3QeuA7+CEi6ZD2OugVlimaqYn1PuATIe5v3WiDGz0nIWDv2CqX8HIzFcW+jK
-	lmLLZzDici3yuqMhxKFwDYGJdyEpkdMTLZsUjiF0D+8x0u/WZVtLd6Qhm+GxBXH09X3g4MKgMBR
-	pIj6OQGSmoNi3ZVtmUKx8tuEcMWCNT3ljt/AE0BKUAHIkYnP7oS06lpZlNPcqhqqthIq/fzkDlk
-	NtQ8+rkx8vcuss+5DYhe9OJKgolt9deNUWd1Es1bxNzLhiUzDqQ6RQo+DnxXistOFEgzKS1UAmh
-	ylgmtYZqqWXn420Ze+ilZFB2Q4FBBCWXvuaF8Z+xlVWlO0J0Z4jCiTSInorKONgLy92/jGu6fJG
-	Yv56Dz+0OuuZu
-X-Google-Smtp-Source: AGHT+IHw+VYr6bznIIRkrfuKrJlUDgcu4ufwusbMEGkwdRx0LS2vuiCaLYS1/w82aNXdBryBq7fYwA==
-X-Received: by 2002:a17:902:f551:b0:231:d16c:7f5b with SMTP id d9443c01a7336-231de2e95bamr268420725ad.2.1747848835348;
-        Wed, 21 May 2025 10:33:55 -0700 (PDT)
-Received: from localhost (c-73-158-218-242.hsd1.ca.comcast.net. [73.158.218.242])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-231d4ac944esm95510555ad.49.2025.05.21.10.33.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 10:33:54 -0700 (PDT)
-Date: Wed, 21 May 2025 10:33:54 -0700
-From: Stanislav Fomichev <stfomichev@gmail.com>
-To: Mina Almasry <almasrymina@google.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, viro@zeniv.linux.org.uk,
-	horms@kernel.org, andrew+netdev@lunn.ch, shuah@kernel.org,
-	sagi@grimberg.me, willemb@google.com, asml.silence@gmail.com,
-	jdamato@fastly.com, kaiyuanz@google.com,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH net-next 1/3] net: devmem: support single IOV with sendmsg
-Message-ID: <aC4OgpSHKf51wQS-@mini-arch>
-References: <20250520203044.2689904-1-stfomichev@gmail.com>
- <CAHS8izOTWF9PO9N6ZamJ0xSCTOojXV+LfYm+5B5b8Ad1MA0QpA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Okg49uD4"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=bcBUoDl3Ypb4CP7qBFRy+ISvEir3UJcUASvW584IXDY2/d78LWh0Q9YuYYRNUt97kF741tE26gETIlfNwRupKhan577TjDgxq/7Cj825k3DYo41kfT6f4FbPhNAx7bE/dMIPMq6gb9L6lnHgyCAhJGnOHmyTAHz71k4t+VoaVvjLZJiiB581bcDYobJCNVSPq8/dNCQQrYiMti6RyAHOYhQW9S+i+j1Yy64OuFnSAm4+klvDF+yzOeSoEu4Lfy/dk/eNfJh+M1NkwCfUkxXn8gvVRQcNLXl6zqRBrD+tSLzkACr2OPhIfP4WMCZdE1OZA6IkVdILbMYLUxwpPyNP8A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WhDXn0noAVkZOdZIr0Sb+ty0FyY15kmSIsHK3XgQ7wA=;
+ b=RjmrqVQwQzgT5YR3wnMaFSwRhtLThwLEomdtbrBoopj3fYQ+UyxY2KU1er4Zo+vq23Q1IpheCRHBHBLsslLSigCGv7bc2EnjdhexcGczIYCboeQtRjLs5s6/TOgu66SIvhI2UrGDa46p5ooElQJVO5ZgHFMMOr6sfhtn4JLAtT7bveAnwSSHMjYDCHxjvdOMFMD1FZQTfQyxHdNRPszFcXfPqq7VhvDHIrRDOunEKr6UbZigMBxFSSTRwXhOtdFUDC+XwZYj+CHcZ/hxXac+YqFxzVhy82oxYKTfKhsxpopEBzgq4Zzr0/S2zqwbKDQAjTZiaHOLXWipGuB1f2YqFg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WhDXn0noAVkZOdZIr0Sb+ty0FyY15kmSIsHK3XgQ7wA=;
+ b=Okg49uD4c5wj1mnVz03XiIZMoC/x7ltCi9ASoc2cXLQQWJ61Rz8J5EQUM9PacRcypHxppuxV/9CLD4DrdYiRoXJdhJ/WBeH+0tVRnXPCvbczckhanlExEguxQ0pzz323O5sgxw08V59i+m1YbfaAcAJe53f7ouKhQrXXYi8uNofIP4GHLo8ACot5aTbkeQGkR7AmCi9s5+2B++57v9CWZmbCm5sm0YpkjzSH/R3kKMZRsrkN/ZOCbSAUO9S4HsoL7xM3gwhuZmMrze4FY8nYou3uh16SWc8c2V1OUS3CJ+VkX8kjwroekk0UHFRdc0ka2n+cYRIWIiN4nCsaxlzbfw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by VE1PR04MB7389.eurprd04.prod.outlook.com (2603:10a6:800:1b1::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.31; Wed, 21 May
+ 2025 17:34:44 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.8746.030; Wed, 21 May 2025
+ 17:34:44 +0000
+From: Frank Li <Frank.Li@nxp.com>
+To: mirela.rabulea@nxp.com,
+	mchehab@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com
+Cc: imx@lists.linux.dev,
+	linux-media@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	ming.qian@nxp.com
+Subject: [PATCH RESEND 0/2] media: nxp,imx8-jpeg: Add imx95 support
+Date: Wed, 21 May 2025 13:34:02 -0400
+Message-Id: <20250521-95_jpeg-v1-0-392de5d29672@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Type: text/plain; charset="utf-8"
+X-Mailer: b4 0.13-dev-e586c
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747847392; l=668; i=Frank.Li@nxp.com; s=20240130; h=from:subject:message-id; bh=YkVjpUKwO1SmRSIm0398Lh2aC1T8GxauuIAIUb6vsaw=; b=+LU+CoaU7xn04hkVY0qlQZfbAlSNwz9bAjHgKq1S38YgbOfFASRg3w+qhVXzuCCAfvnV6JnPI zRSRcPywPiQAoqRbEqOx9JPMEhXMPquRjgcl7bZEmZRJzdJ6n4hKACX
+X-Developer-Key: i=Frank.Li@nxp.com; a=ed25519; pk=I0L1sDUfPxpAkRvPKy7MdauTuSENRq+DnA+G4qcS94Q=
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SJ0P220CA0010.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:a03:41b::14) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHS8izOTWF9PO9N6ZamJ0xSCTOojXV+LfYm+5B5b8Ad1MA0QpA@mail.gmail.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|VE1PR04MB7389:EE_
+X-MS-Office365-Filtering-Correlation-Id: 22854c9b-a1ca-4110-feeb-08dd988dc5f1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|52116014|376014|7416014|1800799024|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?OGFzeUUzSWt2d2h6NmpWY01RU0J2K24zaFVBT3JTWDdTb28zcVhQcEx1NUlE?=
+ =?utf-8?B?ZmpDY0dRVlByV1hvQ2U4M3lsSjJaenI2L1MrV2FuM0ZZQngzVURsemlzdUJi?=
+ =?utf-8?B?MkZ1aEdWRUx3b1d5R2pyT3VYVTVkV1ExSjhlT0pMMjBLSGlvbnNzUkhlN1JN?=
+ =?utf-8?B?NDVkUHdCcDFVRi9NV2tlNzR4YlNtR0RPWGJGZlZlZjI0M2xPYUhNQ1JjRm9i?=
+ =?utf-8?B?QmFYN2pYWS9aekRTaHI4K1hLUGpjQy9td01zckNmUHBXZmNCa3VFN2QzTnEz?=
+ =?utf-8?B?Q1N3ZEhqSE4xSzcrWjIzNzNXUWxYK2pINHBlSzZDR1h0clJyZUNzUWRzaUpP?=
+ =?utf-8?B?WXltNHMvd1UxRFRtc0o2dGM3TG5tN3Rjd1RqVk1KSVJKZ2ttbkNZaVRidGV4?=
+ =?utf-8?B?N1dyTnE0eC95MmV2OTcycmovSHdnV2IrMkYzZW1Nc0ZmemZqdVVhdGtuSFAz?=
+ =?utf-8?B?bi9IaEtpREV2MjcrWGlKRy9YNXJXK0tqdWc4RHF3WVVHUFFqRHhoeG5SK1Bm?=
+ =?utf-8?B?bnoveHdNV2VPT0E1OVZmUlk4WUY5TTFHRElleFBISjl4Yk9GZjBDV1NFUm8v?=
+ =?utf-8?B?dEphK2RGMEpRMTFZMTFwdVNVem9sVy80b01QM3VNWHVtTmZHTWE3QWJGUHRp?=
+ =?utf-8?B?ZmZUdEZXWGxlZXh5elNrdlkxVHhhQmZoRXI2WEZCRStZZ04wNFNJWDBVejNi?=
+ =?utf-8?B?bVlHM2RRSnlxSUY0cERzZlJIeGV6bVV5YnVic2VDcVJkWDduUS9SZkdSNlNJ?=
+ =?utf-8?B?Z2NmaTJSSFptcU4xcFJLZkk1L1pMV24zVzJZYVhMSVpWalk1bmJKWWwxTjVQ?=
+ =?utf-8?B?NHlZalUwcDRXUmN1K0FqVUVCMUtGMDdPR2RoOU5PUHFXNjRGYkdjVjNiQ2Z2?=
+ =?utf-8?B?elBFdVZYelRBbDBEWGxTb3BuY1ZFODZLck1paGg3VVZ0NjcycGtnR3pyTmoz?=
+ =?utf-8?B?Um56bUFBem8vajE3ZWh3YjE5RmFqdVB4VFljOVd2dHBsSFhXK2tNT0ovSm9G?=
+ =?utf-8?B?L3lUUkRjOEs1NkNwZEw3Rm45VU03Zk9aUVRIMHZ0aW4wSlJWaHRvSVErUVZF?=
+ =?utf-8?B?K1A1YzRGRmkxeXVBMEJHRzI1Uk5YcSt6Znp0Sndqc2dlSUU3Tm15b0RsenRT?=
+ =?utf-8?B?UWM0MWFRdExZZ2NlVWFwUHZQZ1p1a1diQmhma1QvSEU0S1JBZGRVOHNwQ1or?=
+ =?utf-8?B?WCtPdVozTGcxY0xGSFU5K216blhaNG1EVkc3eVNuaFJkd3h5YmJCNkJBbnV3?=
+ =?utf-8?B?V0JBak0vek1KeXhkYUVCWXFmTTMyL3Bkak9LVlJCKzRxMit0dFZQalc2dVBk?=
+ =?utf-8?B?Ky9SeWFjR2tYR0tOVDNCeERsbTd1QTFRdWxFS0QzV1RvYzJaOEg3aGliQmdr?=
+ =?utf-8?B?L1dvRkRETXRORzFTT2pWQjFsTGNHYXRnSmRld2NxUGVQZWF2Q1pGL2ZRU1Zs?=
+ =?utf-8?B?QkxKaDBkZnAxRlNUZ3IxMUNnL1lBdkdzUGx4R216U3h6cHVRTkhDQ2hjWG5W?=
+ =?utf-8?B?bU5xelFTRE5LbUwzNWt0S1NtTWU5Z3FTbHlmM1A3bVcyRS9xdlZacE4rd3pl?=
+ =?utf-8?B?RjJ1aTVVcFc0QUlNN2QxWExZc3RCUkw0dzJxNng1NVNEUklIOWF3eW5ZSGJU?=
+ =?utf-8?B?QlRibHZaVTBGS0VGVmp0NDV6ZFJYL1RsaURDQyt1N0JweE1hUGFSMUJxMERW?=
+ =?utf-8?B?NmQrWGFUTkpaS3ZuK3JaVUlKN3FTcURUOGU2d2ZtbFZhU2hoalhVQkZESWtl?=
+ =?utf-8?B?S2QyOWFUazlqMno1SStjWUtzelNxZkQvd0pVbks1ZGh5aFRHeUh4UU1YcGhL?=
+ =?utf-8?B?WDRLcGU0M2xHMlFCd0ZQeU5pNTdleGNJQUhtYXM0UTdtZ2paYnRCdFVrWUFY?=
+ =?utf-8?B?Ymw2ZFgwUzVnazg4TGU0aGZlMFN0SlNZVzFkKzJpdlREK2creEk1Mmw2QVlW?=
+ =?utf-8?B?eXhTWnZicUlJeFJqN1oyWDlJVVY1SS9NeWJmMGxSVFgzNis5QlJVY254WjVW?=
+ =?utf-8?B?L3RzbDFYVjBRPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(7416014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?V3pyU0Y5eWN5Y1lobG9hcGlJa095ZUdyMDVZQVVFK1QyMGxZVFUxRTBPTlpr?=
+ =?utf-8?B?UnJyM0MzSmMvZ1N4TG16MmQ2bnkxNTNDOFgyWW91bkNhQ096YjhhcXBXZ3gx?=
+ =?utf-8?B?MmNYbGdWNmFjcFFUQ1lidERHU2ttTzJFbENMUVVJWmtwQ2h1YkRnNmNqY2FV?=
+ =?utf-8?B?ZmdLVTJIWVQ1cUhTY1JXbkJocmJ0OU9YRWRNZHRxdG1RdW9oWVQ2bGZ2SVh6?=
+ =?utf-8?B?dHFzTWN2V05WZkgvZXdLZXZUZlZrV1htbGFlT1FOZXFKY0oxMGZZODhYUm8w?=
+ =?utf-8?B?ZXlTRWlTUitHVmNzT2NhSlg4MjU3cnVqSjhaSTUvME82WlVOZU9tWjBJMWdt?=
+ =?utf-8?B?QlNZZjAyVlAxclBDKzBERHpraGhpNjRWZTJJMjZURzZGdHhSYVNVRmpMajBs?=
+ =?utf-8?B?SmlvdjVQSkM4VEx1djJQaEdqcmlhMmJUR1BaMXVReGsrRGlHMUl2TW1xcjJz?=
+ =?utf-8?B?aWpUU3BtalRHWmJFcUYyNGVQVWozc1A3amdEZ1JuQmhTZmdid21ydzg1Tktk?=
+ =?utf-8?B?eTdoMUFDbjJ4S2lVR05OOEU1bG5sQWFKTU9vT1ZHaVF6WDJySXE5WGpIU0Uw?=
+ =?utf-8?B?U2cwc3AvRXZXaEJtWlZ4LzhQZmsxREVFUVJZZ1dDQlBMQlhiRjlzaGZXYThE?=
+ =?utf-8?B?MktSdHRmZHNDTVM4eE5TZThFK0ZGOGZFaG1jU0w5YlhhTFB6VHBpcGtrbXM0?=
+ =?utf-8?B?UnhHZVNWVjBYc2Z0bEFhUnNUc0FOVzFkSWYzaE9QUXdFVFBZbTYzMW1PQ0hj?=
+ =?utf-8?B?aXIzamJSZFd5blVzZ3lXRmRFVWNSc3k4aG04eGozVjFkeTQzdm01U001Uytq?=
+ =?utf-8?B?NXVNaDBMM08yVTFOZGRpOGhMVFFyZFJsWWcrU0NYSzl5T0FkTlltOXVmdDlx?=
+ =?utf-8?B?L0hvekFHWVdBQjZDWitLaUpVbmhEOEpCeWxMWUpHdkhNOHBCTkc4QUZXaEZ4?=
+ =?utf-8?B?S0FCUEhma2c3QnMvamk1dHdCMU9hL2dXZzBqNVRiRjBaUGkyRG16WXdpQ0N5?=
+ =?utf-8?B?MUZjYVJGZGhkRGtTRFFOZXhGYy9TS0ZYZkxsUVYxZ2JBY05xYVl6TmNOZWVi?=
+ =?utf-8?B?aDM5T1kzVlM4SmdJTlRZRXVpNGFMYjdVeUpUczlRcGY0ZnJCSDFyVVVGQ2l3?=
+ =?utf-8?B?c0IwWTh6QUVlcWd3VUtVYlpLMnhGTFZhbWJtTXlnbGhHSVBwM1M2dEFycmJm?=
+ =?utf-8?B?WlhiUkx4UFo3eHBPM1BBaXdnSUc0V3oxNk1HZVNtVy9zeEdkUHA0SGZwMUxN?=
+ =?utf-8?B?NjZFT1d1NlczUUlaQkVZQjI1OE9OSElYRUxJRWxiZWdFTGpmUnVmdW1OS0x0?=
+ =?utf-8?B?TGs2MnN2NkZpRm9XZlFZWHZsQU1QSzcyR0FReThoTU9YTmRtckc1N3ZrNWs5?=
+ =?utf-8?B?T290aUxvQlRlbGFURjZKYzFBWlRFMXdYc3RlZHZLZXIzWWxqV01KSEdDS1Fn?=
+ =?utf-8?B?UFpONit3MkhSZ0pwQTNpc0VONktsdi9XMnpQTkplSnprVU9kMi9hb0pLSmFH?=
+ =?utf-8?B?VENtTHVRV0Nudlp5bFFhVGMrWUZiTWR4NC90N2NQWjJYQ1RsdlpBTlRENE45?=
+ =?utf-8?B?dlB4NFJyTVRzMjFQRlFIVGJURmtudkFNNno4a0lPL1BNeVFTOVRlUzdJNW41?=
+ =?utf-8?B?bUl4ZEMzdHZuVDhuOHZ1eURlaDFRQTFIU1lzMWU1UEVTa0dLL2JJU2dkdjlQ?=
+ =?utf-8?B?OFJXaEFPVk81QzVjVDJTL3E0Tlp0SExyWUVHbEZtdVZpK29IL2lRQkRkUkpw?=
+ =?utf-8?B?dS9EUHZHSTIzQkFZT1dxZDFBaEt6dHRhZWRqa3N0T0lzbnpQLzFPclo2dFJE?=
+ =?utf-8?B?dTI2TFIvNHJDcmVhaFA4RllnK28xUzhFb0dwT3N2UG5nQUN3K2lFbjhEVW82?=
+ =?utf-8?B?RDlXam42ckd2ODZsUUlaa2pBTUFTQXJNSjJhRlp0YTVCMXBXQ0RpYy95LzBk?=
+ =?utf-8?B?UWZqS21ndXFXUWZPVXFZVEhNeGFCcUFtNUp3eGtCb29ZbjFjTk9kc2VIbnVH?=
+ =?utf-8?B?ZmVNREdScVRhUVFDU3IyT1krcURxcis5VENKOVhoRmsyQmlTVFBseHNaaUJZ?=
+ =?utf-8?B?NG5VemxOZUlpbGZsUC9kVEFERTlGZndXbnVXanZ3ZXR6Q21LMkhXaTc0MkpP?=
+ =?utf-8?Q?6pSGcUU7j0bpRTvte/skHC4Tj?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 22854c9b-a1ca-4110-feeb-08dd988dc5f1
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2025 17:34:43.9687
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: qxJ7xOGnoZ7tc5606Cnqp1JtUYsmih68gCro1aWJ47ugAkqooN+wBKSpbqgIm4rLUBKRacEeNYOrwrMLHpxg/A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB7389
 
-On 05/21, Mina Almasry wrote:
-> On Tue, May 20, 2025 at 1:30 PM Stanislav Fomichev <stfomichev@gmail.com> wrote:
-> >
-> > sendmsg() with a single iov becomes ITER_UBUF, sendmsg() with multiple
-> > iovs becomes ITER_IOVEC. iter_iov_len does not return correct
-> > value for UBUF, so teach to treat UBUF differently.
-> >
-> > Cc: Al Viro <viro@zeniv.linux.org.uk>
-> > Cc: Pavel Begunkov <asml.silence@gmail.com>
-> > Cc: Mina Almasry <almasrymina@google.com>
-> > Fixes: bd61848900bf ("net: devmem: Implement TX path")
-> > Signed-off-by: Stanislav Fomichev <stfomichev@gmail.com>
-> > ---
-> >  include/linux/uio.h | 8 +++++++-
-> >  net/core/datagram.c | 3 ++-
-> >  2 files changed, 9 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/include/linux/uio.h b/include/linux/uio.h
-> > index 49ece9e1888f..393d0622cc28 100644
-> > --- a/include/linux/uio.h
-> > +++ b/include/linux/uio.h
-> > @@ -99,7 +99,13 @@ static inline const struct iovec *iter_iov(const struct iov_iter *iter)
-> >  }
-> >
-> >  #define iter_iov_addr(iter)    (iter_iov(iter)->iov_base + (iter)->iov_offset)
-> > -#define iter_iov_len(iter)     (iter_iov(iter)->iov_len - (iter)->iov_offset)
-> > +
-> > +static inline size_t iter_iov_len(const struct iov_iter *i)
-> > +{
-> > +       if (i->iter_type == ITER_UBUF)
-> > +               return i->count;
-> > +       return iter_iov(i)->iov_len - i->iov_offset;
-> > +}
-> >
-> 
-> This change looks good to me from devmem perspective, but aren't you
-> potentially breaking all these existing callers to iter_iov_len?
-> 
-> ackc -i iter_iov_len
-> fs/read_write.c
-> 846:                                            iter_iov_len(iter), ppos);
-> 849:                                            iter_iov_len(iter), ppos);
-> 858:            if (nr != iter_iov_len(iter))
-> 
-> mm/madvise.c
-> 1808:           size_t len_in = iter_iov_len(iter);
-> 1838:           iov_iter_advance(iter, iter_iov_len(iter));
-> 
-> io_uring/rw.c
-> 710:                    len = iter_iov_len(iter);
-> 
-> Or are you confident this change is compatible with these callers for
-> some reason?
- 
-Pavel did go over all callers, see:
-https://lore.kernel.org/netdev/7f06216e-1e66-433e-a247-2445dac22498@gmail.com/
+Update binding doc for imx95 support.
+Update dts to support imx95
 
-> Maybe better to handle this locally in zerocopy_fill_skb_from_devmem,
-> and then follow up with a more ambitious change that streamlines how
-> all the iters behave.
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+---
+Frank Li (2):
+      media: dt-bindings: nxp,imx8-jpeg: Add compatible strings for IMX95 JPEG
+      arm64: dts: imx95: add jpeg encode and decode nodes
 
-Yes, I can definitely do that, but it seems a bit strange that the
-callers need to distinguish between IOVEC and UBUF (which is a 1-entry
-IOVEC), so having working iter_iov_len seems a bit cleaner.
+ .../devicetree/bindings/media/nxp,imx8-jpeg.yaml   | 28 ++++++++++++--
+ arch/arm64/boot/dts/freescale/imx95.dtsi           | 44 ++++++++++++++++++++++
+ 2 files changed, 69 insertions(+), 3 deletions(-)
+---
+base-commit: f3df6ce76ecb8eb47f0d3198ab4b81df31217fa7
+change-id: 20250221-95_jpeg-a4924523fff2
+
+Best regards,
+---
+Frank Li <Frank.Li@nxp.com>
+-- 
+Frank Li <Frank.Li@nxp.com>
+
