@@ -1,119 +1,139 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3ADA2641E2
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 12:19:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF574242D6C
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 12:19:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747829978; cv=none; b=n933pHDjab71rhw5HAwF4D7R5ZZkt/XVLkZ4VObe7FJ27aZB8dEylszBopILD4Oku9SzWEAJj1Y+aq3h6h+HSIogCpgq0nVY1ag500qOX2zt7qPqKY+5l1VrOATXX5+Ingj6N6M51bky9FdlUxZV8QZ4MWPIAx5noiSnlAXCqr0=
+	t=1747829987; cv=none; b=d1eCIGeY3uW8PkpyjfErtVBhaips/zrWqIFfZtfmDcd5V4R6uU9TYzHyJ7bGL/aGXm2pjAKWGmdBLPEn76UcuODJ+UU+ZvNEiX/3JWqoSvR4LB9GjiWnvfpozOh6c0DHOHPr20LDjvPGeoIHcvfEukPXZY07G2byRgpLtESpAj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747829978; c=relaxed/simple;
-	bh=PqsRjncWRwWFNw1qUcaaiax4mt8Eic1WURWwhwRZF7M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fmAAvaJZI5ScQCajKBcODmFdfHEB4jZnZz5U0jysg9geZzvIE3ScenESCHKVaHTvJRlB0fLHkOYO7YzTioIwrbn4Y9Q0eg0xGZ/XxhybDDRw2fsYVbp3agCFjELM8xOg1fdru/WV4kVhqQ9OZAMN6uRzSSf7FtN64d4gzIM3pgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sw9Xpeu7; arc=none smtp.client-ip=209.85.219.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747829987; c=relaxed/simple;
+	bh=p/zVpu31mk+r7eWDLqqg7usSzxEOdONh7EinauslRlM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aqKp5X6fl8cpGi36KeEtQSzfSh0ULuGmS6DH8PmVL1WemlwxbyQcjtb61s0FUfLgW5mRFKCvY2q+andGz1bSpdMGtl++g9idBvHSzz3zsFEkEoLoGy+H1Un2W0QA76gvxd6Q4oFJEbl04dBOBuqODf4uzAJ21dG41h5DiecPuYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jlhVOriX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sw9Xpeu7"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6f8c2e87757so58585296d6.2
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 05:19:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747829976; x=1748434776; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PqsRjncWRwWFNw1qUcaaiax4mt8Eic1WURWwhwRZF7M=;
-        b=sw9Xpeu7SlczVhYISAbOQMddcVQcET6Aa1Ur/wMcWde/iTaUqv1WB6+Zy0wk0inhZr
-         sXxZA4c18B0owzzoUdE/yMX609Lx0aaqKP/HoPMxjsF1xu4XDpXkWvdfszBiBz/ToYg6
-         nSF4tx8WbXyqzIrySvRFbiWUum2dtb+c5Hb/wMHCDjg9tEkpgT+YDE3emBXev57kjwF1
-         IW5h3HR+gtLP6CsI9kMWWcOSLKlkEJqupVddSVRVeyH4E7YJbK4ygErL55PTqt2+Imxx
-         BJfeA1u9glBsC4jPs8u23frh9zA/4qPtd2aKDCU5YaqUPmVOnZkewA6BxSTNkZNGJJLZ
-         92Vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747829976; x=1748434776;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PqsRjncWRwWFNw1qUcaaiax4mt8Eic1WURWwhwRZF7M=;
-        b=sPFCsRsAcphPlH1jCFcFAew2LTCwzpmazc3kMiVc0sdQbmyLtEf0tCwcRvrER0neEN
-         BO84BbK+llecfbBjYgbMNyjy+iyHSjiYZ51yk/5+pqvDjeAid+BlLKy7BH/PvduX1tgD
-         itADZ+jHQUGlqeUp1FS9O1vgzYIjJQ8ruaVaOpHuY4jthwWCYacnofkAtATHrcj6WJ7N
-         4HKEtSRRp6yg7LQsPBppw+BAsYg1kVV87mTyMeviAKkf5LlKgEYX9CSiqj5NscSqI2qb
-         V4PP/MVZ6Il9ItIoGQntZLp0AC1sjjYskS9Kk/6Whr/5TcTzcJLtXpwFkPmQy0tXcYKi
-         T9qw==
-X-Forwarded-Encrypted: i=1; AJvYcCX7f1hGsnUFyptP2wQNyaYuTLT1tmwYChR9j+CWdfOs1lS+B3dkxxVywNxA7v72sQ40CMI51/7w3jkFZAI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPMahR+0IImArRHbOgRHo6AJptZnEYyYHA9AZoDZTjTH1bddIF
-	RYFAficrIZVSnRNe2HL89F0NaQqlm6ZRl5ox+QH79dXn2eoUYUlWJx/ADf3mVEKYa3XSx57/4ZW
-	LsBpLVpGeprpwF862ztRlyD44VMf5ZFxz0ElLXi3w
-X-Gm-Gg: ASbGncvhQwUuQxiulp5ioEh2NIWZfl0ZYnGGs4i2MjTk+AY6o8UYKNZjiPq9m94pZi4
-	R5l80alO79m6J28Jk9nSFkFBK+xwm3XuPXM9d9WmrHunxyhnZ8CwDMT/P4A5zn6Tjw2Ej7SfNPj
-	rJe3xEBZnUdd6uu2HfgGJRMGK/99Qt00yqGHfWyfaes9sXh+hUt4tS0tA1yHDjkJCWqFLZrUNIx
-	XFDxQ/zSHA=
-X-Google-Smtp-Source: AGHT+IEh94sqRoFtPW34UEiJHtefX2bwYg/7uGcG7u4K2QMbHAGYTVDgHfSbx4vQ7WjqHCTDocNSIhdWSx/lFzAVnHw=
-X-Received: by 2002:a05:6214:1302:b0:6f8:ac7b:c1ab with SMTP id
- 6a1803df08f44-6f8b08bfa84mr332272086d6.34.1747829971584; Wed, 21 May 2025
- 05:19:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jlhVOriX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07060C4CEE4;
+	Wed, 21 May 2025 12:19:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747829987;
+	bh=p/zVpu31mk+r7eWDLqqg7usSzxEOdONh7EinauslRlM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=jlhVOriXQELRu/hsaJd1KHrvTb1JA/mUNaDWI1ggxr1nxgeqXrzyY+a4n/+ptHD6j
+	 IABRdKraAU9ITnfDG/U3iU/I7ZmFv5viY8dJ9uhoLnAATEZKrwAqZNfJtu/DCmxMmP
+	 JfRS5vBCxmWH+GlErvDOU88ZYP+kkzoTDJ+NcAud9NKPgpqJGiqBZVW48RJmjbHW41
+	 5W/8Q/4EnkXwQi+cYbUfu7qRBw5WbVvopmwVAnAfz/3d4nrc7hj6e4U0J1LUzoE39a
+	 XbADJqs6uXuOTRlfWyynj6gui8WMmRHSM6czgBrT8vQ+8HFI1/0xUqaMCE48Fwdftw
+	 MdU6Gd8qFFq4A==
+Message-ID: <a15a54e4-e6f2-4e63-9fc5-141d0e2b010b@kernel.org>
+Date: Wed, 21 May 2025 14:19:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <TYSPR06MB715891CFDFE828006F96F88FF69EA@TYSPR06MB7158.apcprd06.prod.outlook.com>
-In-Reply-To: <TYSPR06MB715891CFDFE828006F96F88FF69EA@TYSPR06MB7158.apcprd06.prod.outlook.com>
-From: Alexander Potapenko <glider@google.com>
-Date: Wed, 21 May 2025 14:18:54 +0200
-X-Gm-Features: AX0GCFsgqonrX_K883qGzYffll4eUVtcw3k87KlWMAkMHF8NKRY9n2umr8_bx9U
-Message-ID: <CAG_fn=UdHtmz+7LAWD59=Y+PavQDc=S7rGfpgjTR75rsjFLPAw@mail.gmail.com>
-Subject: Re: KASAN: slab-out-of-bounds Read in dbAllocBits
-To: "huk23@m.fudan.edu.cn" <huk23@m.fudan.edu.cn>
-Cc: Dave Kleikamp <shaggy@kernel.org>, Jiaji Qin <jjtan24@m.fudan.edu.cn>, 
-	Shuoran Bai <baishuoran@hrbeu.edu.cn>, syzkaller <syzkaller@googlegroups.com>, 
-	linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [GIT PULL] mux drivers improvements for v6.16
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ linux-kernel@vger.kernel.org, Peter Rosin <peda@axentia.se>
+References: <20250513105058.27028-2-krzysztof.kozlowski@linaro.org>
+ <f6f2fa8f-3502-4739-a977-14dd0a63a25a@kernel.org>
+ <2025052102-estimate-algebra-c15c@gregkh>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <2025052102-estimate-algebra-c15c@gregkh>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 21, 2025 at 1:19=E2=80=AFPM 'huk23@m.fudan.edu.cn' via syzkalle=
-r
-<syzkaller@googlegroups.com> wrote:
->
-> Dear Maintainers,
->
->
->
-> When using our customized Syzkaller to fuzz the latest Linux kernel, the =
-following crash (102th)was triggered.
->
->
-> HEAD commit: 6537cfb395f352782918d8ee7b7f10ba2cc3cbf2
-> git tree: upstream
-> Output:https:https://github.com/pghk13/Kernel-Bug/blob/main/0520_6.15-rc6=
-/102_KASAN%3A%20slab-out-of-bounds%20Read%20in%20dbAllocBits/102report.txt
-> Kernel config:https://github.com/pghk13/Kernel-Bug/blob/main/0520_6.15-rc=
-6/config.txt
-> C reproducer:https://github.com/pghk13/Kernel-Bug/blob/main/0520_6.15-rc6=
-/102_KASAN%3A%20slab-out-of-bounds%20Read%20in%20dbAllocBits/102repro.c
-> Syzlang reproducer:https://github.com/pghk13/Kernel-Bug/blob/main/0520_6.=
-15-rc6/102_KASAN%3A%20slab-out-of-bounds%20Read%20in%20dbAllocBits/102repro=
-_bug_title.txt
->
->
->
-> The issue with this bug could be that the JFS file system fails to correc=
-tly synchronize or update its internal block allocation metadata (bmap stru=
-cture) when underlying loop device backend storage is dynamically changed b=
-y LOOP_SET_FD. This leads to the dbAllocBits function using outdated or cor=
-rupted bmap information, specifically the db_l2size field, when trying to a=
-llocate a block, resulting in a wrong, oversized agno value being calculate=
-d, which eventually causes an out-of-bounds read when accessingmp->db_agfre=
-e[agno].
-> We have reproduced this issue several times on 6.15-rc6 again.
->
->
-> This is the URL of the 2024 syzbot report of this bug:https://groups.goog=
-le.com/g/syzkaller-lts-bugs/c/CVD1uqZnFPA/m/P4-Bi8BmAwAJ
+On 21/05/2025 14:14, Greg Kroah-Hartman wrote:
+> On Thu, May 15, 2025 at 03:34:51PM +0200, Krzysztof Kozlowski wrote:
+>> On 13/05/2025 12:50, Krzysztof Kozlowski wrote:
+>>> Hi Greg,
+>>>
+>>
+>>
+>> ...
+>>
+>>>   https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/mux-drv-6.16
+>>>
+>>> for you to fetch changes up to 9761037d28327e0d4ee9586a8210ef6462c2c757:
+>>>
+>>>   mux: adgs1408: fix Wvoid-pointer-to-enum-cast warning (2025-05-08 17:12:08 +0200)
+>>>
+>>> ----------------------------------------------------------------
+>>> Mux drivers for v6.16
+>>>
+>>> Few cleanups and fixes for the mux drivers:
+>>> 1. Simplify with spi_get_device_match_data().
+>>> 2. Fix -Wunused-const-variable and -Wvoid-pointer-to-enum-cast warnings.
+>>> 3. GPIO mux: add optional regulator for Lenovo T14s laptop headset.
+>>> 4. MMIO mux: avoid using syscon's device_node_to_regmap(), due to
+>>>    changes in the syscon code.
+>>>
+>>> ----------------------------------------------------------------
+>>> Andrew Davis (1):
+>>>       mux: mmio: Do not use syscon helper to build regmap
+>> I received LKP build error report for some specific configuration:
+>> https://lore.kernel.org/oe-kbuild-all/202505150312.dYbBqUhG-lkp@intel.com/
+>>
+>> I will send a follow up fix for that and then later updated pull
+>> request, if you do not pull it till that time.
+> 
+> I've taken this now, do you have a fix somewhere?
+Fix is being discussed on the lists, because it exposes Kconfig circular
+dependency:
 
-That's a different one ("use-after-free Write in diWrite"), but syzbot
-indeed knows this bug already:
-https://syzkaller.appspot.com/bug?extid=3D0be47376a6acbcba7f0d
+1. The actual fix which also tries to break circular dependency:
+https://lore.kernel.org/all/20250515140555.325601-2-krzysztof.kozlowski@linaro.org/
+
+2. A better way to break circular dependency:
+https://lore.kernel.org/all/20250516141722.13772-1-afd@ti.com/
+
+Best regards,
+Krzysztof
