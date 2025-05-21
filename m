@@ -1,97 +1,113 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33FA74CB5B;
-	Wed, 21 May 2025 13:24:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C80F4CB5B;
+	Wed, 21 May 2025 13:24:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747833848; cv=none; b=hOgxILDvxMn1m4OwSvoN+GYva74iTj9KdLYNo/WR83R2zKj+24mRo1fl9jJfxy/1eNSvoNKf2e5eSKv9GXNmP43dkNUl1B4H+jkxNryxsIIRMC44CD5f1bBdA7MAQztr9Ekg7mPe4tHgjqpV/qcwpBcBJSHpVeMxUj6RcJ3xLLM=
+	t=1747833873; cv=none; b=K3QMCGPiSqOLQz7tElc1gN83HQDeyTIlWlP7iYFl9CBX++Ivqngx0wvkfVktTbkvV/erl5DapdWpxI3rZmYlwQ5QTZuNqGeJq+bQNClmakwM/HuXEn9+bALMM9jEY2ETbyL4Gq6F7g2mY3tNzEEULD0nw4A9u15aSudwD1j4cio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747833848; c=relaxed/simple;
-	bh=CUGajLlg1XnQmwwrLHHWnGnjQ2xDxF9As14gJBZZZVs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=FWXsrDZmYQEdPlSmCifYFqBu6gZ5jpxdxnp33AqI+2/3VG2OH3zUDP/9cqIxm/820pV7fdd9mliV1QsiQFCqlp8ZOJd/tMZgrQIDeYPUaYjyUDBasoyRtivmiQWZ25Bwl2twyi1mzip2Flaf9xYVBgNTTbTE+CxnNNp33c6sCeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=oKXaKvr8 reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="oKXaKvr8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=a5dNVSXt6TNtSMCQgez6UuCPV4F7hGDEi5COSwRV7AM=; b=o
-	KXaKvr8rsNAkC6uK2CzFIoAoqgTfq48LiP97liQo0wbw6joAqNoOQiu/dIS6FejD
-	dAT4HSnyXjap1c4MuChMhgyueg/8KWdY2aUzczisEvh6vx0AfiT1pB/wchAWP2v+
-	doOJRqIBAfed9G7v07rAfbYipIQn4lxe7tyGOQDLps=
-Received: from 00107082$163.com ( [111.35.189.95] ) by
- ajax-webmail-wmsvr-40-135 (Coremail) ; Wed, 21 May 2025 21:23:45 +0800
- (CST)
-Date: Wed, 21 May 2025 21:23:45 +0800 (CST)
-From: "David Wang" <00107082@163.com>
-To: "Mathias Nyman" <mathias.nyman@intel.com>
-Cc: gregkh@linuxfoundation.org, oneukum@suse.com, stern@rowland.harvard.edu,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] USB: core: add a memory pool to urb caching
- host-controller private data
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <e6f782db-5818-4d6c-99e0-bcf300fc5b4f@intel.com>
-References: <20250517083819.6127-1-00107082@163.com>
- <e6f782db-5818-4d6c-99e0-bcf300fc5b4f@intel.com>
-X-NTES-SC: AL_Qu2fBfSYvEAp4yiYYukZnEYQheY4XMKyuPkg1YJXOp80hiXs5y0de1tdNELQyv2tARCglDysXjJszPZVeZNJZIzyTXUGfkExsDiBt9Uqo4Jx
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+	s=arc-20240116; t=1747833873; c=relaxed/simple;
+	bh=DXRBNohjBKRvMBf7q2uiahg8uAYiKa9riN8m6bUxBBs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UbVPTM/wZ6AtRTDqCkbV81K5ABwV5/B+5FKrVo12BJfvRf/t6XmovUJ+um8d5cUxMTkJrW0YIN2dqx6WQXsWxu5llq4PmKQbZGufBCACrANqMAYErmGM7QR+JBPCM32gj7DhhEi7fU9T1EWq3xH2RgjRtix8Fjew/KwtEKWLVoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [124.16.141.245])
+	by APP-05 (Coremail) with SMTP id zQCowAA3dCb20y1oPaQcAg--.57214S2;
+	Wed, 21 May 2025 21:24:07 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: saeedm@nvidia.com,
+	leon@kernel.org,
+	tariqt@nvidia.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wentao Liang <vulab@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH v3] net/mlx5: Add error handling in mlx5_query_nic_vport_node_guid()
+Date: Wed, 21 May 2025 21:23:43 +0800
+Message-ID: <20250521132343.844-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <49228bf7.a1d1.196f303aa15.Coremail.00107082@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:hygvCgD3fxLi0y1oGPsJAA--.25514W
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/1tbiqBBUqmgtygNpkAAFs2
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowAA3dCb20y1oPaQcAg--.57214S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxJr4rCF1DWr1DGF48uw4xXrb_yoW8Ar4xpF
+	47tr9rCrykGa4rX34jkFWrZrn5u3yjyayUua47tw13Xr4ktr4qyr45Ar9IgrWUuFW0ka9Y
+	yr42y3Z8AFn8C37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9K14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+	n2kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCY02Avz4vE14v_Xr4l42xK82IYc2Ij64vIr4
+	1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
+	67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI
+	8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAv
+	wI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14
+	v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU87KsUUUUU
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCREJA2gtsp4AvwABsF
 
-CkF0IDIwMjUtMDUtMjEgMjA6Mjg6MTcsICJNYXRoaWFzIE55bWFuIiA8bWF0aGlhcy5ueW1hbkBp
-bnRlbC5jb20+IHdyb3RlOgo+T24gMTcuNS4yMDI1IDExLjM4LCBEYXZpZCBXYW5nIHdyb3RlOgo+
-PiAtLS0KPj4gQ2hhbmdlcyBzaW5jZSB2MjoKPj4gMS4gYWN0aXZhdCB0aGUgcG9vbCBvbmx5IHdo
-ZW4gdGhlIHVyYiBvYmplY3QgaXMgY3JlYXRlZCB2aWEKPj4gdXNiX2FsbG9jX3VyYigpCj4+IFRo
-YW5rcyB0byBPbGl2ZXIgTmV1a3VtIDxvbmV1a3VtQHN1c2UuY29tPidzIHJldmlldy4KPj4gLS0t
-Cj4+IFVSQiBvYmplY3RzIGhhdmUgbG9uZyBsaWZlY3ljbGUsIGFuIHVyYiBjYW4gYmUgcmV1c2Vk
-IGJldHdlZW4KPj4gc3VibWl0IGxvb3BzOyBUaGUgcHJpdmF0ZSBkYXRhIG5lZWRlZCBieSBzb21l
-IGhvc3QgY29udHJvbGxlcgo+PiBoYXMgdmVyeSBzaG9ydCBsaWZlY3ljbGUsIHRoZSBtZW1vcnkg
-aXMgYWxsb2NlZCB3aGVuIGVucXVldWUsIGFuZAo+PiByZWxlYXNlZCB3aGVuIGRlcXVldWUuIEZv
-ciBleGFtcGxlLCBvbiBhIHN5c3RlbSB3aXRoIHhoY2ksIGluCj4+IHhoY2lfdXJiX2VucXVldWU6
-Cj4+IFVzaW5nIGEgVVNCIHdlYmNhbSB3b3VsZCBoYXZlIH4yNTAvcyBtZW1vcnkgYWxsb2NhdGlv
-bjsKPj4gVXNpbmcgYSBVU0IgbWljIHdvdWxkIGhhdmUgfjFLL3MgbWVtb3J5IGFsbG9jYXRpb247
-Cj4+IAo+PiBIaWdoIGZyZXF1ZW50IGFsbG9jYXRpb25zIGZvciBob3N0LWNvbnRyb2xsZXIgcHJp
-dmF0ZSBkYXRhIGNhbiBiZQo+PiBhdm9pZGVkIGlmIHVyYiB0YWtlIG92ZXIgdGhlIG93bmVyc2hp
-cCBvZiBtZW1vcnksIHRoZSBtZW1vcnkgdGhlbiBzaGFyZXMKPj4gdGhlIGxvbmdlciBsaWZlY3lj
-bGUgd2l0aCB1cmIgb2JqZWN0cy4KPj4gCj4+IEFkZCBhIG1lbXBvb2wgdG8gdXJiIGZvciBoY3By
-aXYgdXNhZ2UsIHRoZSBtZW1wb29sIG9ubHkgaG9sZHMgb25lIGJsb2NrCj4+IG9mIG1lbW9yeSBh
-bmQgZ3Jvd3Mgd2hlbiBsYXJnZXIgc2l6ZSBpcyByZXF1ZXN0ZWQuCj4+IAo+PiBUaGUgbWVtcG9v
-bCBpcyBhY3RpdmF0ZWQgb25seSB3aGVuIHRoZSBVUkIgb2JqZWN0IGlzIGNyZWF0ZWQgdmlhCj4+
-IHVzYl9hbGxvY191cmIoKSBpbiBjYXNlIHNvbWUgZHJpdmVycyBjcmVhdGUgYSBVUkIgb2JqZWN0
-IGJ5IG90aGVyCj4+IG1lYW5zIGFuZCBtYW5hZ2UgaXQgbGlmZWN5Y2xlIHdpdGhvdXQgY29ycmVz
-cG9uZGluZyB1c2JfZnJlZV91cmIuCj4KPldvbid0IHRoaXMgc3RpbGwgYWxsb2NhdGUgYSBsb3Qg
-b2YgdW5uZWNlc3NhcnkgbWVtb3J5IGZvciB0aGUgcm9vdGh1YiB1cmJzPwo+aS5lLiB0aGUgb25l
-cyBxdWV1ZWQgd2l0aCByaF91cmJfZW5xdWV1ZShoY2QsIHVyYikuCj5UaGUgaG9zdCBkcml2ZXJz
-IGRvbid0IHVzZSB0aGUgdXJiLT5oY3ByaXYgb2YgdGhvc2UgVVJCcy4KPgpUaGUgbWVtcG9vbCBz
-bG90IGlzIGFsbG9jZWQgb24gZGVtYW5kIHdoZW4gaGNkIHJlcXVlc3QgcHJpdmF0ZSBkYXRhIHdp
-dGggaXRzIHVyYi4KSWYgYSB1cmIgaXMgIGV2ZXIgdXNlZCBieSBoY2QgYW5kIHRoZSAgaGNkIHJl
-cXVlc3RzIHByaXZhdGUgZGF0YSB3aXRoIGl0LCBhICBtZW1vcnkgd291bGQgYmUgYWxsb2NlZAph
-bmQgdGhpcyBtZW1vcnkgd2lsbCBub3QgYmUgcmVsZWFzZWQgdW50aWwgdGhlIHVyYiBpcyBkZXN0
-cm95ZWQuCgpJZiB0aG9zZSBVUkIga2VlcHMgYmVpbmcgcmV1c2VkLCB0aGFuIHRoZSBtZW1wb29s
-IHNsb3Qgd2l0aGluIGl0IGNhbiBiZSByZXVzZWQgYnkgaGNkcyB3aGljaCBnZXQgaG9sZCBvbiBp
-dC4KCkFuZCB5ZXMsIGl0IGEgVVJCIGlzIHVzZWQgb25seSBvbmNlIG9yIHVzZWQgdmVyeSB1bmZy
-ZXF1ZW50bHksIGFuZCBoY2QgbmVlZHMgcHJpdmF0ZSBkYXRhIHdpdGggaXQsIHRoZSBtZW1wb29s
-CnNsb3Qgd291bGQgYmUgYWxsb2NlZCB3aXRoIGl0IGFuZCB3b3VsZCBiZSBhIHZlcnkgdXNlbGVz
-cyBtZW1wb29sIHNsb3QsIHdhc3RpbmcgbWVtb3J5LgoKPlRoaXMgd291bGQgYmUgdGhlIHJvb3Ro
-dWIgc3RhdHVzIFVSQiwgYW5kIGV2ZXJ5IGh1YiByZXF1ZXN0IHNlbnQKPmR1cmluZyBkZXZpY2Ug
-ZW51bWVyYXRpb24gZm9yIGRldmljZXMgY29ubmVjdGVkIHRvIHRoZSByb290aHViLgoKPgo+SXMg
-dGhpcyB3aG9sZSBVUkIgaGNwcml2IG1lbXBvb2wgYWRkaXRpb24gYW4gYWN0dWFsIGlzc3VlIHRo
-YXQgbmVlZHMgZml4aW5nPwoKTk8sIG5vdCBhbiBpc3N1ZSwganVzdCBtZWFudCB0byBhdm9pZCBt
-ZW1vcnkgYWxsb2NhdGlvbnMsIGxvdHMgb2YgYWxsb2NhdGlvbiwgdG8gdGhlb3JldGljYWxseSAg
-aW1wcm92ZSB0aGluZ3MuLgoKPgo+SWYgeWVzIHRoZW4gSSBzdGlsbCB0aGluayBpdCdzIGJldHRl
-ciB0byBkbyBpdCBpbiB0aGUgaG9zdCBkcml2ZXIgbGlrZSBJCj5kZXNjcmliZWQgZWFybGllci4g
-SSBkb24ndCB0aGluayBpdCB3aWxsIGJlIHRvbyBjb21wbGV4Cj4KPlRoYW5rcwo+LU1hdGhpYXMK
-Pgo+Cg==
+The function mlx5_query_nic_vport_node_guid() calls the function
+mlx5_query_nic_vport_context() but does not check its return value.
+A proper implementation can be found in mlx5_nic_vport_query_local_lb().
+
+Add error handling for mlx5_query_nic_vport_context(). If it fails, free
+the out buffer via kvfree() and return error code.
+
+Fixes: 9efa75254593 ("net/mlx5_core: Introduce access functions to query vport RoCE fields")
+Cc: stable@vger.kernel.org # v4.5
+Target: net
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+v3: Explicitly mention target branch. Change improper code.
+v2: Remove redundant reassignment. Fix typo error.
+
+ drivers/net/ethernet/mellanox/mlx5/core/vport.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/vport.c b/drivers/net/ethernet/mellanox/mlx5/core/vport.c
+index 0d5f750faa45..66e44905c1f0 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/vport.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/vport.c
+@@ -465,19 +465,22 @@ int mlx5_query_nic_vport_node_guid(struct mlx5_core_dev *mdev, u64 *node_guid)
+ {
+ 	u32 *out;
+ 	int outlen = MLX5_ST_SZ_BYTES(query_nic_vport_context_out);
++	int err;
+ 
+ 	out = kvzalloc(outlen, GFP_KERNEL);
+ 	if (!out)
+ 		return -ENOMEM;
+ 
+-	mlx5_query_nic_vport_context(mdev, 0, out);
++	ret = mlx5_query_nic_vport_context(mdev, 0, out);
++	if (err)
++		goto out;
+ 
+ 	*node_guid = MLX5_GET64(query_nic_vport_context_out, out,
+ 				nic_vport_context.node_guid);
+-
++out:
+ 	kvfree(out);
+ 
+-	return 0;
++	return err;
+ }
+ EXPORT_SYMBOL_GPL(mlx5_query_nic_vport_node_guid);
+ 
+-- 
+2.42.0.windows.2
+
