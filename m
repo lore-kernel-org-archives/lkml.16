@@ -1,236 +1,314 @@
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2045.outbound.protection.outlook.com [40.107.212.45])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B9F6221F1E;
-	Wed, 21 May 2025 15:59:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747843185; cv=fail; b=c5Wzi9IoZ42gwGWKx5QxLea+CX2DKq0X/Je9I4kxvK37MIQWsgnVz/cz/Xuro+wYKMolTa8PgbMok/Gtre1rBhy9d6CcDCtDa7x3/4RwYH8++2raK1OP0O0yZjXfDk9qr7HAOV8QvhQFVihV69qWjuGA076KR51mZYzo3VQ2hms=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747843185; c=relaxed/simple;
-	bh=W8doU9+FyZNstQKbXskyW0YdhwS0oe1jGalnedKdhk8=;
-	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=iNzuTWphA9feE20BtnJWTNWyaCnUbNeuFuq9dr2lb6rEwhVZRZSab3SldpHt3gQA6SQjirBM5QcW5pqD0ezvDNWBFXkTO6jE6eEliTk7eyTxW2M/uUYly9nclteGw/0jxhyT5Avo41P9yI6Wxzr1cJHIt0Hn+liqJaqKnQLeQWs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=iuRSbdjK; arc=fail smtp.client-ip=40.107.212.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A60151F8EFF
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 16:02:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747843341; cv=none; b=qVjWoPCWZaXZUKd2UGxhUyGYwdTukOXNIUjFyBocMhfZPyo5ZLlZLw/3Rm9X+UBxTzcZrj1Vh5MIK3+uiUMgeWYzDU1oWFUNi2QuynOhxisRdoq17V38iwvg3EdRABt/1ZhNd8N4CT5YqxTmH2br0XdDbATlrFGHIboHEaKnopY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747843341; c=relaxed/simple;
+	bh=UREKu6qch+HwsQMt1vlqYyRJDWH9laE5S9pm9bS66hE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=K3JNsZNBpyF84x3syrdFv918WGcJ37BMFDWWG9sYMdCm2ahtqftlE2EvJn3RvefUnDqbAxU6yYKNVnrdUkE0twz3zai+una4Egjj5wR+Q/PwqXtDYFuee0hzBUGfcrDIp3lH0+RY3UOfyGHSdW8H4lGQwJhpaO2W+Zj8kORC5PY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OYLnUG50; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="iuRSbdjK"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=p+YZrVMxoxiF/EpXwcos3x33VQK+tlRQv5p/7vxmK7l9fgOIgkqlL0mwGYXL7I+mVcx6lcL0dyw3+VgmRPq19E+qWbgHwPeiGdxRIkW0TmDhgjQuKGIX8g1itJG0aakGo67UpUk91sSiNt0XIpF1eym8oVyIi9oChIO1r8FNudyEFN3sbHJ0uPofZ3m6s8dburnHafEFEjbcW9HaE10FW2J08O55D4OYvR/8KyQ/RhElg1xQJxIw6O/yn+Y0HH/EksZMBh7GxwNoy6yjyylXY5cZpfgGR44bb097WNWlE8onFnCNK7XXpiMQeuS6VPP31t0fFoel4BO9Ao9X1gYP+A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aFv4WPyJERDJBX4BwTJPbxxOiKfxy7n7tdqAm0Z/PTU=;
- b=Nt6AVIUeWJ1rfIG9EoutF9fsHodlcx/07Rwf2Mtj8t/QINVjhVAbpv5NGs5ZNLPQDo+t2A5cfknR/OjzjVN53YZ5i2Rd9NgWpZtDe/Q9ip6LXHNe9Jp6PPSUr6bsIJ1n6Uci1oECdx6EZr2kFDDTXeWpWuPyBHNV0HExQdLolRf2x8F41/L/8dAVj1m/G7GSdl1mnnGQf57XjnalIEqB0EoQ4DmD8gLznQbpdRzjAgypdEGcbROfUcTDXARJ4Rum9yD5QOVKaPf5Qyznlv/YwemysKecrq1qlLMNIivuZRDTSGXTeZIFj53Ek55gip8Y95ZHVoDN8pIkRVpFZT6wFQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aFv4WPyJERDJBX4BwTJPbxxOiKfxy7n7tdqAm0Z/PTU=;
- b=iuRSbdjKEWqJQgivoD+ri40cEUy/bo8uXY03fDKfp4wwer5d99fesF+nK5BtmOUFfNvqhNEfVxhQhrTE5qP5Evt6fJXzm4lLYpXS00jHMKN59pAxev6UJmnwp63MHgjgkZgiNCpZKeZ8OnPnZxfOqeHvAtz3d5X+t6SLXCM09huRTB4Vi7JpqoHPbcaUv/sr2Vup+mEjJWL9J+rxPkeEzxqB/izNIE2MHlGSM+NbT3d8+36M4YjK4m2hjgKtkDJZamMQPor7Ms7sLhOTJOAT5H0PUrFCf8VI6dcqxtstI32YtcG4G4Ha9+1dANtcD/a1tIQiQSgn3LNZvIV6a09idA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
- by SN7PR12MB7419.namprd12.prod.outlook.com (2603:10b6:806:2a6::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.20; Wed, 21 May
- 2025 15:59:34 +0000
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91%3]) with mapi id 15.20.8746.030; Wed, 21 May 2025
- 15:59:33 +0000
-Message-ID: <ad10ce1c-c3cb-438e-a0e6-37653eb0a37e@nvidia.com>
-Date: Wed, 21 May 2025 11:59:30 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 01/20] rust: dma: expose the count and size of
- CoherentAllocation
-From: Joel Fernandes <joelagnelf@nvidia.com>
-To: Boqun Feng <boqun.feng@gmail.com>, Alexandre Courbot <acourbot@nvidia.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>,
- Timur Tabi <ttabi@nvidia.com>, Alistair Popple <apopple@nvidia.com>,
- linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
- nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-References: <20250521-nova-frts-v4-0-05dfd4f39479@nvidia.com>
- <20250521-nova-frts-v4-1-05dfd4f39479@nvidia.com> <aC3KbKeEVlHggi5l@Mac.home>
- <0d5a71b7-92d4-4052-93a8-ed61bc9ebb67@nvidia.com>
-Content-Language: en-US
-In-Reply-To: <0d5a71b7-92d4-4052-93a8-ed61bc9ebb67@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MN0PR04CA0011.namprd04.prod.outlook.com
- (2603:10b6:208:52d::7) To SN7PR12MB8059.namprd12.prod.outlook.com
- (2603:10b6:806:32b::7)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OYLnUG50"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747843338;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=9fZhY6wHMdAbKA49Jq994SZ/xqO7IR+BBcalbyYYXIM=;
+	b=OYLnUG507WjMIVhuptSi/eg9KkKEalIeTZ0RW6v4fUc7aY3W0hws5Dm7V830FFqu0bWyBr
+	3SH7eZ/TSNaBvj0p1d2laocWhE8GRbx3xZf08iWZ1PH/7vsAW74bIrWTsUvkdKfvNC576i
+	M4LtYXq6fql52j7JvUW/3M3KhOQiouQ=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-548-yJ6lrV1LO_mtiBANqYJ9uQ-1; Wed, 21 May 2025 12:02:15 -0400
+X-MC-Unique: yJ6lrV1LO_mtiBANqYJ9uQ-1
+X-Mimecast-MFC-AGG-ID: yJ6lrV1LO_mtiBANqYJ9uQ_1747843335
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a370309dcbso1722470f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 09:02:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747843334; x=1748448134;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=9fZhY6wHMdAbKA49Jq994SZ/xqO7IR+BBcalbyYYXIM=;
+        b=T9MCjBsguCYc3MaCEwyXcm6TbCF0V5NQ7eIGpxZjkp0ULUBEkD+gbiuLYPjfuc7y+7
+         2nvHsrFUGq7HH8Ryog31+lsBhJdrqY0YY5E/FUWLMISEQocnu8y6YOLqodTIXnhjxMRW
+         HBVxMGxEn+ZMzZRHQIuQ/6wvXwrHrxcoW9sZ0iK85Tv3Cc+0SQMuYNGzGN/HX6UM3MXH
+         mtFCyItDnTP2Xowh39EZnlXgjHRUypa1afeVfF/+/PsHRV71AbeFnI/DUL9LbyD6diWq
+         F/UMtex3YCWogFsjdrp8+WXAbkY3gf+GfAkBmOIVlTY1RMNjEBujO9+/qAksD9zJC0tp
+         3mlg==
+X-Forwarded-Encrypted: i=1; AJvYcCUuOkX9Z+VzLf4z84yNVr8aVqen3TzK7PviHmiOf6aCh0wlMkOClzO170j5iuj3lZgUXaCVSbYYFMJF7Oc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxenUQgvbnQYA1EZUKuSTcsUNZRA4t7GePD+Ta9C92wTsdKXz0d
+	Y4jGwXHFgwrLW4EN3tnBW4+pMk/IAiGlNT6PSmv1+G3o2G+p0sC/9kAtjm4HVVD1j7x/IxzoRA3
+	VHcDpDQIKA2kQx/McKVU017bHj6Ya8EXZf5jpJhvJOTn1oOjMNnB40UBx1YcdO1R+vQ==
+X-Gm-Gg: ASbGncvHEtIUsKeDiWaQqwUGYOc8BLSHKxUQJrGyz9BjBzqJfOcWgiIXadHwxErAsLh
+	KKmHAHJ2ut3DAI86z9NMj/mebvdYllf1sK5IdExyEfEPOZosR5dboyxFZ57n6bGVrl9QxI0PIcZ
+	KVW9sQk8vIAke1cilKxPTqRx5wS4oyKANIuseWrmLOq2Lbs880iLFIUa05+5kV/B2UsQDsEq41R
+	zsRZ+Qtf4T1Z0SsG0Qq1XIczM5yiSmWjOJ9v76nk4/0cRwEaIEdKqsLyiY3xb/ppa3grk4cBv2w
+	oy+Gv+Yxij/Al4LD6R70drUC0Q4LKRRFnFFzhWEpjSEJPFx1fNJMf7ZKs0yldu3wiKxSHEHF/O2
+	lH/bDPtECZD6ZnxQnF8UvZbTEbWf6OoJ5KDO1SXM=
+X-Received: by 2002:a05:6000:180e:b0:3a3:62e1:a7db with SMTP id ffacd0b85a97d-3a362e1a997mr13218485f8f.3.1747843334509;
+        Wed, 21 May 2025 09:02:14 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEVQZhAv284WgoDT4LXe2CAM32OUzc9mP8qdr2b0rFwua5ybh0oAxFZX3kGmiZjGs9lXci0Ng==
+X-Received: by 2002:a05:6000:180e:b0:3a3:62e1:a7db with SMTP id ffacd0b85a97d-3a362e1a997mr13218436f8f.3.1747843333942;
+        Wed, 21 May 2025 09:02:13 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f25:9c00:e2c7:6eb5:8a51:1c60? (p200300d82f259c00e2c76eb58a511c60.dip0.t-ipconnect.de. [2003:d8:2f25:9c00:e2c7:6eb5:8a51:1c60])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca208besm20078586f8f.0.2025.05.21.09.02.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 May 2025 09:02:13 -0700 (PDT)
+Message-ID: <f2c0f4d0-42d5-4255-a1e4-d782cfb6e50c@redhat.com>
+Date: Wed, 21 May 2025 18:02:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|SN7PR12MB7419:EE_
-X-MS-Office365-Filtering-Correlation-Id: a50d56cd-2291-482c-902a-08dd98807a9d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bnQrR3loN2NDQVdMaXFCQzE0UnR6QkYzQk8wUkZPWVdXSC9ORXFjWmlkMjlq?=
- =?utf-8?B?QnBub1lEL2NwVEt3M2VRM3lqczJacHI2M1dkcmdOMkcrTmFlRUxCM08zM2xk?=
- =?utf-8?B?WnFKUkg1QW1oK2lKbmpsMFNrRlBINm1sM2lWNVJ6aWYveXZ5VlBFaEVPWEYy?=
- =?utf-8?B?K2ZYNjVONXZ5a1ZsbkxVclQrTG1vam5iVkl2YnpsU2JsMHBWODZqaEZUTmlL?=
- =?utf-8?B?R3JOMU02a2M3YzVCdm42TUFkMXJ3M25KLzJ2SVBIeFFoNzM0KzhsdklqOEcw?=
- =?utf-8?B?RmF4NVlOMms5TlkzTnl0amhmMmxrVmpCUHRUcnFuanpQdEVtWkQzUks0OE9m?=
- =?utf-8?B?ZmQzQ3RkZDB2M1RwbHNnWjdCLzBkSXNqVGxWMk90V2ZqTkkvQVE5bFQ1TjNU?=
- =?utf-8?B?SW1nMU0wWHhFUTM3bERqTHRCM0RBbVhFSDk0U1E0KzhFb1JJRkJzT3RleHQ5?=
- =?utf-8?B?blRYYWlVSVpyY1B1KzBIZkNaR056c3ByNUZQZjVNRXF0d2xTRG5IOHNaUUps?=
- =?utf-8?B?clpmWGt0SDBJVHFXSDRkckxZLzNuc0RzRUJxS0JxcU9oQlhwQWFOd0pHTXFE?=
- =?utf-8?B?dHJPMUdjOW4zRkZFekoyTUNmcHh4c0p4QnJpclg0c2tRTW1XazB2OTVvZ3Vu?=
- =?utf-8?B?Mk5nRU9Oejk5YW9xZ2daS0pPeldYZXFiSXNvZmxxWGh3UC84aVdzZVRBY0J3?=
- =?utf-8?B?QnBST0svMERoUVJ2bFFWN0t5bzhmblIyZ3VJNUVVU1BrSm5LVTM0Z1Ivenhz?=
- =?utf-8?B?M1UwTUlqK0wxcXg2cXcvRGdUVm9XZzQ2VmIyVUZ2LzA2cS9MYUFnZDhLYWUw?=
- =?utf-8?B?aXlsYm9pUWxLcEt1ejNxN2FsWC9BcHQrTmVyVFd0bVlnWDNHU0FjM3gyMkgx?=
- =?utf-8?B?eVRPcVZ6c1BFWWhyRGsxeWlnenBVKzRrZDJtZitSRjdYTHppNkRneXFCUzZm?=
- =?utf-8?B?Qkk2MEphQlA3d0gwQTZGQ0l3cmtHZ2JRSHRDQmNSbEhDRHcvcHcrM3A1M00x?=
- =?utf-8?B?L255V3VYR21wTHBZQms1Z1hOcWhQS2RvVUFGa1lpYXMvdnBNUVhWK1dQSzE0?=
- =?utf-8?B?c2RiVlcyRGhXVHNOUmJIRTdlS3NZRUlZKzJyR1N4MEQ4S1RUSUd0Q2hLcWFR?=
- =?utf-8?B?SWJNdUlzUkZTVjY2QklKU2dFMkc1Q095cVBZMFFrNlNMQlQvRU1yWTVrZWRO?=
- =?utf-8?B?SUpwbFFLVDRINWUwM2ZjYkJsT3ZkWHc0SllCRWhYWHlSMWFXdEsrL0RFai9a?=
- =?utf-8?B?alNuamJrcTgrSUVwcUcvd1BzV2xwa1VtbVVXbmtpZlNQMjB5eXEzcHhjV0xI?=
- =?utf-8?B?VExmVTFXMDFqczZWcE9CZlpDc05GbEJnbWpRYUhhTllzUzdoaHNoQ1Jyd0t5?=
- =?utf-8?B?Y0Izdk16TGhlSHZxM3h2M09SWFhPUEZQb1RKNHo1Nk9sZ2pvUVJVN3hjREtY?=
- =?utf-8?B?Nll5SCsxcTZYYTRZakdXamI5aW1ObUJTanVLOUE0VlV6cTk0SHFvdUJmZWhC?=
- =?utf-8?B?eEFjMXNOL0R4bHJHQldxblRYNm1HNEQ0cVBPRnR5ODZjTk1IdVVnVnJ3dW03?=
- =?utf-8?B?enJSTmFiQzM3Z0FpbzlPeHorWll3QlJ3d0NaYk4zc0ZHSDhhSDhMa2VOdXhI?=
- =?utf-8?B?Z1ZQbHZWdzBoeE1UQXpsMndxS1g1NTJQOWJkL3ZPb3hkb1pXOXN2MVdmdXEw?=
- =?utf-8?B?bkcwSDBNcXRqTkdwdGszQVk5eGROY1BhRFladExMWUwwRHBDV0RmT1VTYTk1?=
- =?utf-8?B?aXR4aStsMWRDQVQzcG9OUlNPMk1LemZ5YVd4T090OGQwSHhieUZXaWJYSmZ0?=
- =?utf-8?B?c0tBR1NqS3BUOVpDSHJwSGJQV0cwYk9SNkRGbWZ6WTFjZ2RUYnZFNys1OHFx?=
- =?utf-8?B?N3ZyTnVjRXpZV1BRbG5NTExhcVRRZ0NuNnBnY0ZGc0d1MXFRTWtFOUJTZHRu?=
- =?utf-8?Q?nkQ3OdPQMi4=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TUNxcUFhdUpGN3dmTWx2K1pvcy8rUm5LKytYMFo3MHNhOXNKZFlDc1RsQ2hF?=
- =?utf-8?B?K3dGZHBzWXdqNVJDSWZSN3ZzQTEyNHEvMGt1NnNVN2EzeVZWUFo3ajNUMGNR?=
- =?utf-8?B?bUZBRWZvSTh1WExVc0U4cHNKaGxITURBZlFrS1FnYitsaFpKbFZMUG5OZXIz?=
- =?utf-8?B?ZlRpVlk1aHZzVkJxMlVYTFpHejlPdFB3K1dQSm15RTlnR2NEenZmRXQ4WVV5?=
- =?utf-8?B?VUxSTE1Ock1jK3kyQjNGdG85NGFLMnlQa1JqTWR0QVlpVGpLa0FaZlVJMUdX?=
- =?utf-8?B?akNxZzgxT2MvNXZxMXNQSkJlVTZYbXZDelVydm9DYlhDN2t2TE42SGhWeHBa?=
- =?utf-8?B?VUJZUEdndkxtZ1hqSzBBMU5WdXB3TVVFSkZ3L2hzdVYxeHc3NXJ0T3ZuQU53?=
- =?utf-8?B?UFFWKzZzQkd2SGhHTlRpbTRTeXZZMi9VRGh6bHJESm91YXdvYmJjbEh6OGJ3?=
- =?utf-8?B?WGNKQ2ZnOExJQnlSZmgxZXM1bnQ3a1pQM0ppWEJ6cjB4T2JrTVZqaTBXdWtn?=
- =?utf-8?B?ZnRRNkRLQjFrSEZBY1luVDRDVG9TUURGNmV1MWtaZzZhZFBOc0VROTg2SHNo?=
- =?utf-8?B?d1g4bUxQMzdVenV4bFBQS3VIT2F1R3lMcnA0QnJwL2RTSzdMQ202SW9uMUUx?=
- =?utf-8?B?SWQxM0V1c1MyQjIzcmQ2Mk1Ed0RES0x2bjZlSXliUHEwQ2xaZUhkOUErTWFT?=
- =?utf-8?B?bG9Zc2ZZNVpuYlhxNk8yQXZEOExHNXNBbVMrT3daRGhHYkZoSXQ4c2Y1S3JU?=
- =?utf-8?B?bTVnV3FQRGx2STYwMXFncStmcmM3Tm5oTzBxWlZyU3RKZ2NDdVlYajltWmNZ?=
- =?utf-8?B?dEFVVWRhYjVYR2k1VGVmQjh4UTVMSDlmWmFSRnZlb1BUcFJpQnhURURNdXVI?=
- =?utf-8?B?K0NvZXN5NU1WcGFGT1R4d3JMMjEwYWk4Qmh4Z0tLL21wU2thV3RVb28xZzZD?=
- =?utf-8?B?b0dDcUJzUTBGWHA5Yk0rMThNNENQRlZRS0w2OVJYTmxpRDZJQ2FCVTIyMjJk?=
- =?utf-8?B?VzdjaDJUNE9HOHNTNTV6WUl3QUhRU2VQbElZMkNHV3FFUzB1N2MrODFOY0k0?=
- =?utf-8?B?VngweHhZSWtsc0ZVcDA4dHJqNlV6OGRJV3hwYStDd3kwbSsxZ1lxUlZrUG1s?=
- =?utf-8?B?WDFXM0IvTWc2ajJTYVdBRUdYZm8ydmFxUWYxVUdNUWt6NEIzSnd4TkU5QnNZ?=
- =?utf-8?B?ejgwbFFZdSt5dklySy8vUGFTcW9LZ0JtU3dhWUpBSWJXdXV4MU92bnVXVzl0?=
- =?utf-8?B?UVlKTWtWSXFKalJEVWdIcmVlOXFvcDVKdk1MTVRzTGY0MDM2NmJNSnVONm1N?=
- =?utf-8?B?cm9EOS9xcEtNZjBmT3ZRMkVxaU0waTFlSVJEeHZrYnpGcjJ1VnRkK1A3WVUr?=
- =?utf-8?B?b1V4Kzk0SXh0TVhId1lFL0R6aFp2eG51bVNobGhYME5CTG95eHJXMnpPbVc0?=
- =?utf-8?B?RmtDZDR5cnA4SHo2bW1Sajl5cjY2UTdwVG9MTzdGREhhc0o4ZmJvajNMakZG?=
- =?utf-8?B?Vk04NVlZenpOQjkyT3crcmRDREU2Lys5MkhJSVVZZis0N3l0UC84NkdJMEZz?=
- =?utf-8?B?cU5KWVFUSlpEUnY5Wkx3TFZIUEt1NFJKbnZQUlI0N0VST2phU3Z2Tkp4bEho?=
- =?utf-8?B?SHJBVVRXQkh3Q2NNVDBuS1U4Ujk3cXJGeGRVcTdxWkJCZzVyVWpaMGgvZDhY?=
- =?utf-8?B?VWoyaW9zcnRpeEdjMUhocUNzN252dnliUGxadVFzYWFLR1U2Y0xXVjFDb2Zp?=
- =?utf-8?B?bG4vaUpZSjVqRDdBUHBxZGp1U3oyQXBtdzJqM3hPSFpYYkFpZzZJc1dGeHBJ?=
- =?utf-8?B?WVk3RWI3OTd3VXZwSWdNRUZXL0JYdGNERmRCWWFsVkZuU0pmTmtnalJrT1h3?=
- =?utf-8?B?N0pOMmZ3dWVPSzBZYitTajhtbW1SVU1nRTkzeUhFRlJNdklzVkN5MlNXVm5v?=
- =?utf-8?B?M0htN3A1eTlELzFKS1RuTzdkRFVsN0NtSEhBckZaMnRqa0xHYWo1dWtFWFJx?=
- =?utf-8?B?cEIwbFdXNGx6RkwvWGFMdlh3eTFNWWdXRUZBMTU0aHpBWTNvUk9HN1EraTZ4?=
- =?utf-8?B?bmk4UVRlMVFhZTZqTmc3TUZKZlArYU15NVoyWE1NYS9HUXRFN3hmdTBYbm9F?=
- =?utf-8?Q?KGcIWXS4pEkkjUCNHfcnBYIjm?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a50d56cd-2291-482c-902a-08dd98807a9d
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2025 15:59:33.8338
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vAjfImkkcolDBBebN82b7ygEHwxGm+oS/rUpwepsJjdJJ5bLn6I6J9EiYupJCdvMGMonDctb01qJFMDrREOh5w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7419
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] vfio/type1: optimize vfio_pin_pages_remote() for huge
+ folio
+To: Peter Xu <peterx@redhat.com>
+Cc: Alex Williamson <alex.williamson@redhat.com>, lizhe.67@bytedance.com,
+ kvm@vger.kernel.org, linux-kernel@vger.kernel.org, muchun.song@linux.dev
+References: <20250520070020.6181-1-lizhe.67@bytedance.com>
+ <3f51d180-becd-4c0d-a156-7ead8a40975b@redhat.com>
+ <20250520162125.772d003f.alex.williamson@redhat.com>
+ <ff914260-6482-41a5-81f4-9f3069e335da@redhat.com> <aC3z_gUxJbY1_JP7@x1.local>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <aC3z_gUxJbY1_JP7@x1.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-
-
-On 5/21/2025 11:57 AM, Joel Fernandes wrote:
-> 
-> 
-> On 5/21/2025 8:43 AM, Boqun Feng wrote:
->> On Wed, May 21, 2025 at 03:44:56PM +0900, Alexandre Courbot wrote:
->>> These properties are very useful to have and should be accessible.
+On 21.05.25 17:40, Peter Xu wrote:
+> On Wed, May 21, 2025 at 08:35:47AM +0200, David Hildenbrand wrote:
+>> On 21.05.25 00:21, Alex Williamson wrote:
+>>> On Tue, 20 May 2025 19:38:45 +0200
+>>> David Hildenbrand <david@redhat.com> wrote:
 >>>
->>> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
->>> ---
->>>  rust/kernel/dma.rs | 18 ++++++++++++++++++
->>>  1 file changed, 18 insertions(+)
+>>>> On 20.05.25 09:00, lizhe.67@bytedance.com wrote:
+>>>>> From: Li Zhe <lizhe.67@bytedance.com>
+>>>>
+>>>> Subject: "huge folio" -> "large folios"
+>>>>
+>>>>>
+>>>>> When vfio_pin_pages_remote() is called with a range of addresses that
+>>>>> includes huge folios, the function currently performs individual
+>>>>
+>>>> Similar, we call it a "large" f
+>>>>
+>>>>> statistics counting operations for each page. This can lead to significant
+>>>>> performance overheads, especially when dealing with large ranges of pages.
+>>>>>
+>>>>> This patch optimize this process by batching the statistics counting
+>>>>> operations.
+>>>>>
+>>>>> The performance test results for completing the 8G VFIO IOMMU DMA mapping,
+>>>>> obtained through trace-cmd, are as follows. In this case, the 8G virtual
+>>>>> address space has been mapped to physical memory using hugetlbfs with
+>>>>> pagesize=2M.
+>>>>>
+>>>>> Before this patch:
+>>>>> funcgraph_entry:      # 33813.703 us |  vfio_pin_map_dma();
+>>>>>
+>>>>> After this patch:
+>>>>> funcgraph_entry:      # 15635.055 us |  vfio_pin_map_dma();
+>>>>>
+>>>>> Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
+>>>>> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+>>>>> ---
+>>>>> Changelogs:
+>>>>>
+>>>>> v2->v3:
+>>>>> - Code simplification.
+>>>>> - Fix some issues in comments.
+>>>>>
+>>>>> v1->v2:
+>>>>> - Fix some issues in comments and formatting.
+>>>>> - Consolidate vfio_find_vpfn_range() and vfio_find_vpfn().
+>>>>> - Move the processing logic for huge folio into the while(true) loop
+>>>>>      and use a variable with a default value of 1 to indicate the number
+>>>>>      of consecutive pages.
+>>>>>
+>>>>> v2 patch: https://lore.kernel.org/all/20250519070419.25827-1-lizhe.67@bytedance.com/
+>>>>> v1 patch: https://lore.kernel.org/all/20250513035730.96387-1-lizhe.67@bytedance.com/
+>>>>>
+>>>>>     drivers/vfio/vfio_iommu_type1.c | 48 +++++++++++++++++++++++++--------
+>>>>>     1 file changed, 37 insertions(+), 11 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+>>>>> index 0ac56072af9f..48f06ce0e290 100644
+>>>>> --- a/drivers/vfio/vfio_iommu_type1.c
+>>>>> +++ b/drivers/vfio/vfio_iommu_type1.c
+>>>>> @@ -319,15 +319,22 @@ static void vfio_dma_bitmap_free_all(struct vfio_iommu *iommu)
+>>>>>     /*
+>>>>>      * Helper Functions for host iova-pfn list
+>>>>>      */
+>>>>> -static struct vfio_pfn *vfio_find_vpfn(struct vfio_dma *dma, dma_addr_t iova)
+>>>>> +
+>>>>> +/*
+>>>>> + * Find the first vfio_pfn that overlapping the range
+>>>>> + * [iova, iova + PAGE_SIZE * npage) in rb tree.
+>>>>> + */
+>>>>> +static struct vfio_pfn *vfio_find_vpfn_range(struct vfio_dma *dma,
+>>>>> +		dma_addr_t iova, unsigned long npage)
+>>>>>     {
+>>>>>     	struct vfio_pfn *vpfn;
+>>>>>     	struct rb_node *node = dma->pfn_list.rb_node;
+>>>>> +	dma_addr_t end_iova = iova + PAGE_SIZE * npage;
+>>>>>     	while (node) {
+>>>>>     		vpfn = rb_entry(node, struct vfio_pfn, node);
+>>>>> -		if (iova < vpfn->iova)
+>>>>> +		if (end_iova <= vpfn->iova)
+>>>>>     			node = node->rb_left;
+>>>>>     		else if (iova > vpfn->iova)
+>>>>>     			node = node->rb_right;
+>>>>> @@ -337,6 +344,11 @@ static struct vfio_pfn *vfio_find_vpfn(struct vfio_dma *dma, dma_addr_t iova)
+>>>>>     	return NULL;
+>>>>>     }
+>>>>> +static inline struct vfio_pfn *vfio_find_vpfn(struct vfio_dma *dma, dma_addr_t iova)
+>>>>> +{
+>>>>> +	return vfio_find_vpfn_range(dma, iova, 1);
+>>>>> +}
+>>>>> +
+>>>>>     static void vfio_link_pfn(struct vfio_dma *dma,
+>>>>>     			  struct vfio_pfn *new)
+>>>>>     {
+>>>>> @@ -681,32 +693,46 @@ static long vfio_pin_pages_remote(struct vfio_dma *dma, unsigned long vaddr,
+>>>>>     		 * and rsvd here, and therefore continues to use the batch.
+>>>>>     		 */
+>>>>>     		while (true) {
+>>>>> +			struct folio *folio = page_folio(batch->pages[batch->offset]);
+>>>>> +			long nr_pages;
+>>>>> +
+>>>>>     			if (pfn != *pfn_base + pinned ||
+>>>>>     			    rsvd != is_invalid_reserved_pfn(pfn))
+>>>>>     				goto out;
+>>>>> +			/*
+>>>>> +			 * Note: The current nr_pages does not achieve the optimal
+>>>>> +			 * performance in scenarios where folio_nr_pages() exceeds
+>>>>> +			 * batch->capacity. It is anticipated that future enhancements
+>>>>> +			 * will address this limitation.
+>>>>> +			 */
+>>>>> +			nr_pages = min((long)batch->size, folio_nr_pages(folio) -
+>>>>> +						folio_page_idx(folio, batch->pages[batch->offset]));
+>>>>> +			if (nr_pages > 1 && vfio_find_vpfn_range(dma, iova, nr_pages))
+>>>>> +				nr_pages = 1;
+>>>>
+>>>>
+>>>> You seem to assume that the batch really contains the consecutive pages
+>>>> of that folio.
 >>>
->>> diff --git a/rust/kernel/dma.rs b/rust/kernel/dma.rs
->>> index 605e01e35715667f93297fd9ec49d8e7032e0910..2a60eefa47dfc1f836c30ee342e26c6ff3e9b13a 100644
->>> --- a/rust/kernel/dma.rs
->>> +++ b/rust/kernel/dma.rs
->>> @@ -129,6 +129,10 @@ pub mod attrs {
->>>  //
->>>  // Hence, find a way to revoke the device resources of a `CoherentAllocation`, but not the
->>>  // entire `CoherentAllocation` including the allocated memory itself.
->>> +//
->>> +// # Invariants
->>> +//
->>> +// The size in bytes of the allocation is equal to `size_of::<T> * count()`.
->>>  pub struct CoherentAllocation<T: AsBytes + FromBytes> {
->>>      dev: ARef<Device>,
->>>      dma_handle: bindings::dma_addr_t,
->>> @@ -201,6 +205,20 @@ pub fn alloc_coherent(
->>>          CoherentAllocation::alloc_attrs(dev, count, gfp_flags, Attrs(0))
->>>      }
->>>  
->>> +    /// Returns the number of elements `T` in this allocation.
->>> +    ///
->>> +    /// Note that this is not the size of the allocation in bytes, which is provided by
->>> +    /// [`Self::size`].
->>> +    pub fn count(&self) -> usize {
->>> +        self.count
->>> +    }
->>> +
->>> +    /// Returns the size in bytes of this allocation.
->>> +    pub fn size(&self) -> usize {
->>> +        // As per the invariants of `CoherentAllocation`.
->>> +        self.count * core::mem::size_of::<T>()
+>>> I don't think we are.  We're iterating through our batch of pages from
+>>> GUP to find consecutive pfns.  We use the page to get the pfn, the
+>>> folio, and immediately above, the offset into the folio.  batch->size is
+>>> the remaining length of the page array from GUP and batch->offset is our
+>>> current index into that array.
 >>
->> I think we need a comment or even an invariant saying this multiply
->> cannot overflow.
+>> Let me try again using an example below ....
 >>
-> If there is a coding error (say large count passed to alloc_coherent()), then I
-> don't think it can guaranteed. Maybe use
-> self.count.checked_mul(core::mem::size_of::<T>())?
+>>>> This is not the case if we obtained the pages through GUP and we have
+>>>>
+>>>> (a) A MAP_PRIVATE mapping
+>>>>
+>>>> (b) We span multiple different VMAs
+>>>>
+>>>>
+>>>> Are we sure we can rule out (a) and (b)?
+>>>>
+>>>> A more future-proof approach would be at least looking whether the
+>>>> pages/pfns are actually consecutive.
+>>>
+>>> The unmodified (pfn != *pfn_base + pinned) test is where we verify we
+>>> have the next consecutive pfn.  Maybe I'm not catching the dependency
+>>> you're seeing on consecutive pages, I think there isn't one unless
+>>> we're somehow misusing folio_page_idx() to get the offset into the
+>>> folio.
+>>
+>> Assume our page tables look like this (case (a), a partially mapped large
+>> pagecache folio mixed with COW'ed anonymous folios):
+>>
+>>    + page[0] of folio 0
+>>    |              + COWed anonymous folio (folio 1)
+>>    |              |    + page[4] of folio 0
+>>    |              |    |
+>>    v              v    v
+>> F0P0 F0P1 F0P2 F1P0 F0P4 P0P5 F0P6 F0P7
+>>
+>> If we GUP that range, we get exactly these pages, except that the PFNs are
+>> not consecutive, because F0P3 was replaced by another page. The large folio
+>> is partially mapped.
+>>
+>>
+>> Maybe I misunderstand that code, but wouldn't we just "jump" over F1P0
+>> because we assume the batch would contain F1P0, where it really contains
+>> F0P4?
 > 
-Nevermind, we already checking for overflow in alloc_coherent():
+> Looks like a real issue (even if unlikely setup)..
 
-        let size = count
-            .checked_mul(core::mem::size_of::<T>())
-            .ok_or(EOVERFLOW)?;
+There are other ways to achieve that (e.g., simply mapping parts of 
+multiple files etc.).
 
-So maybe just a comment suffices, then.
+Of course, for hugetlb (as you note below) such folios partial mappings 
+are impossible.
 
-thanks,
+-- 
+Cheers,
 
- - Joel
+David / dhildenb
 
