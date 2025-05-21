@@ -1,114 +1,148 @@
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E3818DF8D
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 17:32:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D8DB1A23AA;
+	Wed, 21 May 2025 17:33:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747848728; cv=none; b=p9USsicXr+4t6A21Uu+p1DDT0amQ4YAmpeRmZvJnVVLqZSdQR8P1Yg8Mfddl0KFuk7e7VuliusuuPnclQEWi40Z5i53yVX97nn1LOGy7LzY4ZwvuySFMMfOc4iDcJG3nydfcNhqHibuKJ9q+LJBSVPA3/tW9GxNILUQVuJcmGl4=
+	t=1747848837; cv=none; b=abGElGfST7LtTBJ1FGaa8wdW8Fd5otdkK2GnEf/a5ULXaxs+vI4UiL5bJ33pTTUqfWfWZBipG8M63pZ4wbou9V+Dj/7BqEtTVFvqqUp5S36VFCauZaNZoalpSvJv7jA7EeayrzDLF5srO98j/iURKzwVSHjSCeVcQOrVFk8ISoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747848728; c=relaxed/simple;
-	bh=1HQ9Vk3NQYjK9IEulVHhOScSL+1dpYQJqOo9HGzxIQk=;
+	s=arc-20240116; t=1747848837; c=relaxed/simple;
+	bh=M01lQ0KLV7qdlqulYlearcaelRMN+6cMU/PpOs8QG9I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jFhH/ctTH8gIX5S7L0oQkSamJ1MsStTeH8nJtLjOuaQ/lFfkx/N28PbM3kcqvt50ZoO2h3iO9yR5yZRj7+mOwC2DNVPFbxYnGWfJm+vHZ+s9uQl35hE8rqRzhoTr0whrOIhoJfjBhldTJRR1d0Lx+EsHnV/Cwy/grWIASbXEh94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=1tsEYU7z; arc=none smtp.client-ip=209.85.219.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=abJTePLCnL6mmV05QzrvYDD3obe6f1XqlR7XflSvqhdkCj7MDRQtmiiKn+lVo9/m9+eQkJ2k4zhoXFDuoaUmr/eX406CqpoAQ8HlNBE1Q73FbkVVQtw8nhwklhiBFKp24p2V4D1qlNLT5Lw63F7z4DfYQHUHme9+W9BCcw48dEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H43GGbGN; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="1tsEYU7z"
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6f0c30a1cb6so50888346d6.2
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 10:32:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H43GGbGN"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-232059c0b50so41463905ad.2;
+        Wed, 21 May 2025 10:33:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1747848724; x=1748453524; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=suXlybax90mobQ6FosQJnDKub0BKfCnpHnlxsWJzblg=;
-        b=1tsEYU7z43Dwg+/8xlTeYe3ZG+L6L5okyI6H5oAouwJUzX9ANJJAFZykWDnNYkc6Wi
-         u0yy706A+dW5w+8uZZqHF0ct7IBHgKTRKoNhSgLCIliuxtooiWJBGZ+QYh+WZMUaIYhS
-         ZD3cYcWzukGc+QQZ8ezq88m/RMH5/FnYsfCYJylCgpV4HYbSVcGil6ethZf6uPNvGsvR
-         OCESnuy/d6AUkyXduih+0KdaNGrY/wKp3YwYR1/re7HdS6eqma247SZbEEv7LYUJxMks
-         KQEXfQlOWYxj4cC++25a2bGSz+HBDix1NWmaUCvBcH/8q7R0YPL40bIhNAar9bSfgkJP
-         7llg==
+        d=gmail.com; s=20230601; t=1747848835; x=1748453635; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=0PVTFR8laqtLmtyHRR4G3AwCeqV+zpYHl0GhvW63Ymk=;
+        b=H43GGbGNMvcV/gaEnqhC0UMdXQg3g9Rj92W/NdkdZ/HsHcpzfAp8JRd21EXiPG+i9o
+         7+PsnErFySS7cxT9NvNZ/bhRVGaegXsEsDzX1TymT4ohcB58vLE1f2D5kDp52BBAndQb
+         Nd93N9+2AmGUPktlnK3zxZtKtraLZC9xM1hTj0avsgcSjl0NAfiIIBt3NsIVD8hTYRZS
+         UDdxoLTijjSzUNKQ7RAs+rRLQyXp3vTNHC2WZVtHgzbZBhilozUO2HvNiv0RolwvuaZ/
+         PACTq9ks1PykWDDYEDjucEXdZI2cr/tlU0L+XCqGl5khhLygnTPNFVE3JAYPKqGv0i+N
+         lZYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747848724; x=1748453524;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=suXlybax90mobQ6FosQJnDKub0BKfCnpHnlxsWJzblg=;
-        b=w8OnqcClQeksbKYycRy6dvlan1Q4cLwSS7L/tohv927KIoVgV2sxOFxPpGghA4z/6y
-         XRr52w5xrsPmxs86CTN91YqrCbJlwiFacu/DPrdnLcTt8Y9WUimg3aIEBqUreojVbw3g
-         BYY7qKoJfA1tOJlCUFHBuu+G3TdmCOR/GW+LEnelwaIF/HIi3L7fSL97VMPdIHf5W1t9
-         ACWXp3sAs635m4K1O685VnZSmH/n19UZCvNQdrkEWrfTiMISm1ROm/x1WBVcB148xASy
-         GOcxdFbu85fwQPB7yWKk+aWusTnS8jBaTJyAtGKSuSIR5YYPRkNKPcek8sl9n7O07WEO
-         Gf0g==
-X-Forwarded-Encrypted: i=1; AJvYcCWl3mX+Rq0FOPniFqcXymDTt03R9B652lYCs+up9yOyZj8psd9ARDnfN3MYFdIvhXj73rcGiJnyWVZBiho=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXc/Zm4X3CArGdjv8ifzpxzeIEQsc07mhsoCOn8H8aPllGXtrZ
-	NQx3VQLh+nBYELgI10cytEIJ0GIJ1I/pBG0eTDYHWhnHGtPGOu+cVphAAWirgUNtTBQ=
-X-Gm-Gg: ASbGncuBovP1fh6p8Q9M+jDhA1c8GPv6M1WBp0eY39EiW/B2XLWaK21P0b8my6+JjzY
-	bwE1cuic9AKgMH/gDxb6AlyzT+M89oe6G9JsR2aL9UPS2+SXR+aOZEXgTiouqYofsQ5KEY4PQOc
-	/jezsT6a3dhg2obdGSOk3DIK0EFmZIrDmDNyPP466Qp5+8PhHliPtXxFOwZIKOcCgOzLOnuz/c1
-	kSwUPN2KnS7lVnCh677+09cZyOSnrrjtQ27eRflUMDIJUC+anRpQ6pEsVEhKw0m799/GHVeH6IN
-	x/ZISwS4nk5e047p4NcYrpQS33+E4GYStlRwzdXTDyJzq/xUsw==
-X-Google-Smtp-Source: AGHT+IHk89lrfDbD1tLE6FdDmqd8y2oQPYVuXSrTJcpIGCApzYr4tb3ZCZ1X828zDO3Ual08cgJMXw==
-X-Received: by 2002:ad4:5f0d:0:b0:6e8:ddf6:d136 with SMTP id 6a1803df08f44-6f8b096db83mr339660526d6.45.1747848724463;
-        Wed, 21 May 2025 10:32:04 -0700 (PDT)
-Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6f8b08bf817sm87730646d6.62.2025.05.21.10.32.03
+        d=1e100.net; s=20230601; t=1747848835; x=1748453635;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0PVTFR8laqtLmtyHRR4G3AwCeqV+zpYHl0GhvW63Ymk=;
+        b=c+9jS3lX1NxaDUvnDo8RKx1dq9Az0RxK5lHcgq21VRsGDysfAawz9ql/4e2Gl6lMar
+         wGlooRqraaVVZ9hSHV9cKsxtSQ532TOIuudNJCpu5VlZF5vY7BFpjCVIahlMCEjBIwSg
+         CUj2kNVd95L+a9tz6bQJQLytKdosthyjttyLWID/n3AB1tAmeKRj46DCcKzMKNeO1Wf3
+         JWTASCuILAUlj6v+svVE80QNyNoGb8fbT0OEKga2UmDYIp2ZIE7HejkQU0lsrsBDs0+f
+         UW10iZq4XYHE8bYnovtig6ZKYr3HY2M1SijMGICRWJcoB9czxNxHITTW3DJsAJ45IoD0
+         hLoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUbBIO14KK9RePm1kUChS2FGE+Zsbg6FJnmHVvBr2I5M+UgmkiPK7t16SDbhvMDjXYUOaIPjvTa/5IcGtlpT7T9@vger.kernel.org, AJvYcCWVh7tFRQKKVuCoeP/XiF37XD1CBtHPVoMDY2NcKv2Amw0JqQkpfpLITzXwGCuewmLnLvsO+oL4xt8OF50=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKVK04HgaycvtOPp5BTdDAeQrQPa+Cd0dpzBVE1Xeu/cAa/MEF
+	rojhxuK2XqPv2c3eiCMsj6vVxOJ/0bF6GXNew3WAq8WDWxBK6X0AfC8=
+X-Gm-Gg: ASbGncv3QeuA7+CEi6ZD2OugVlimaqYn1PuATIe5v3WiDGz0nIWDv2CqX8HIzFcW+jK
+	lmLLZzDici3yuqMhxKFwDYGJdyEpkdMTLZsUjiF0D+8x0u/WZVtLd6Qhm+GxBXH09X3g4MKgMBR
+	pIj6OQGSmoNi3ZVtmUKx8tuEcMWCNT3ljt/AE0BKUAHIkYnP7oS06lpZlNPcqhqqthIq/fzkDlk
+	NtQ8+rkx8vcuss+5DYhe9OJKgolt9deNUWd1Es1bxNzLhiUzDqQ6RQo+DnxXistOFEgzKS1UAmh
+	ylgmtYZqqWXn420Ze+ilZFB2Q4FBBCWXvuaF8Z+xlVWlO0J0Z4jCiTSInorKONgLy92/jGu6fJG
+	Yv56Dz+0OuuZu
+X-Google-Smtp-Source: AGHT+IHw+VYr6bznIIRkrfuKrJlUDgcu4ufwusbMEGkwdRx0LS2vuiCaLYS1/w82aNXdBryBq7fYwA==
+X-Received: by 2002:a17:902:f551:b0:231:d16c:7f5b with SMTP id d9443c01a7336-231de2e95bamr268420725ad.2.1747848835348;
+        Wed, 21 May 2025 10:33:55 -0700 (PDT)
+Received: from localhost (c-73-158-218-242.hsd1.ca.comcast.net. [73.158.218.242])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-231d4ac944esm95510555ad.49.2025.05.21.10.33.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 10:32:03 -0700 (PDT)
-Date: Wed, 21 May 2025 13:32:00 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Shakeel Butt <shakeel.butt@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	David Hildenbrand <david@redhat.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Christian Brauner <brauner@kernel.org>, linux-mm@kvack.org,
-	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-	SeongJae Park <sj@kernel.org>, Usama Arif <usamaarif642@gmail.com>
-Subject: Re: [RFC PATCH 0/5] add process_madvise() flags to modify behaviour
-Message-ID: <20250521173200.GA1065351@cmpxchg.org>
-References: <cover.1747686021.git.lorenzo.stoakes@oracle.com>
- <7tzfy4mmbo2utodqr5clk24mcawef5l2gwrgmnp5jmqxmhkpav@jpzaaoys6jro>
- <5604190c-3309-4cb8-b746-2301615d933c@lucifer.local>
- <uxhvhja5igs5cau7tomk56wit65lh7ooq7i5xsdzyqsv5ikavm@kiwe26ioxl3t>
- <e8c459cb-c8b8-4c34-8f94-c8918bef582f@lucifer.local>
- <226owobtknee4iirb7sdm3hs26u4nvytdugxgxtz23kcrx6tzg@nryescaj266u>
- <7a214bee-d184-460f-88d6-2249b9d513ba@lucifer.local>
+        Wed, 21 May 2025 10:33:54 -0700 (PDT)
+Date: Wed, 21 May 2025 10:33:54 -0700
+From: Stanislav Fomichev <stfomichev@gmail.com>
+To: Mina Almasry <almasrymina@google.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, viro@zeniv.linux.org.uk,
+	horms@kernel.org, andrew+netdev@lunn.ch, shuah@kernel.org,
+	sagi@grimberg.me, willemb@google.com, asml.silence@gmail.com,
+	jdamato@fastly.com, kaiyuanz@google.com,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH net-next 1/3] net: devmem: support single IOV with sendmsg
+Message-ID: <aC4OgpSHKf51wQS-@mini-arch>
+References: <20250520203044.2689904-1-stfomichev@gmail.com>
+ <CAHS8izOTWF9PO9N6ZamJ0xSCTOojXV+LfYm+5B5b8Ad1MA0QpA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <7a214bee-d184-460f-88d6-2249b9d513ba@lucifer.local>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHS8izOTWF9PO9N6ZamJ0xSCTOojXV+LfYm+5B5b8Ad1MA0QpA@mail.gmail.com>
 
-On Wed, May 21, 2025 at 05:21:19AM +0100, Lorenzo Stoakes wrote:
-> So, something Liam mentioned off-list was the beautifully named
-> 'mmadvise()'. Idea being that we have a system call _explicitly for_
-> mm-wide modifications.
+On 05/21, Mina Almasry wrote:
+> On Tue, May 20, 2025 at 1:30 PM Stanislav Fomichev <stfomichev@gmail.com> wrote:
+> >
+> > sendmsg() with a single iov becomes ITER_UBUF, sendmsg() with multiple
+> > iovs becomes ITER_IOVEC. iter_iov_len does not return correct
+> > value for UBUF, so teach to treat UBUF differently.
+> >
+> > Cc: Al Viro <viro@zeniv.linux.org.uk>
+> > Cc: Pavel Begunkov <asml.silence@gmail.com>
+> > Cc: Mina Almasry <almasrymina@google.com>
+> > Fixes: bd61848900bf ("net: devmem: Implement TX path")
+> > Signed-off-by: Stanislav Fomichev <stfomichev@gmail.com>
+> > ---
+> >  include/linux/uio.h | 8 +++++++-
+> >  net/core/datagram.c | 3 ++-
+> >  2 files changed, 9 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/include/linux/uio.h b/include/linux/uio.h
+> > index 49ece9e1888f..393d0622cc28 100644
+> > --- a/include/linux/uio.h
+> > +++ b/include/linux/uio.h
+> > @@ -99,7 +99,13 @@ static inline const struct iovec *iter_iov(const struct iov_iter *iter)
+> >  }
+> >
+> >  #define iter_iov_addr(iter)    (iter_iov(iter)->iov_base + (iter)->iov_offset)
+> > -#define iter_iov_len(iter)     (iter_iov(iter)->iov_len - (iter)->iov_offset)
+> > +
+> > +static inline size_t iter_iov_len(const struct iov_iter *i)
+> > +{
+> > +       if (i->iter_type == ITER_UBUF)
+> > +               return i->count;
+> > +       return iter_iov(i)->iov_len - i->iov_offset;
+> > +}
+> >
 > 
-> With Barry's series doing a prctl() for something similar, and a whole host
-> of mm->flags existing for modifying behaviour, it would seem a natural fit.
+> This change looks good to me from devmem perspective, but aren't you
+> potentially breaking all these existing callers to iter_iov_len?
+> 
+> ackc -i iter_iov_len
+> fs/read_write.c
+> 846:                                            iter_iov_len(iter), ppos);
+> 849:                                            iter_iov_len(iter), ppos);
+> 858:            if (nr != iter_iov_len(iter))
+> 
+> mm/madvise.c
+> 1808:           size_t len_in = iter_iov_len(iter);
+> 1838:           iov_iter_advance(iter, iter_iov_len(iter));
+> 
+> io_uring/rw.c
+> 710:                    len = iter_iov_len(iter);
+> 
+> Or are you confident this change is compatible with these callers for
+> some reason?
+ 
+Pavel did go over all callers, see:
+https://lore.kernel.org/netdev/7f06216e-1e66-433e-a247-2445dac22498@gmail.com/
 
-That's an interesting idea.
+> Maybe better to handle this locally in zerocopy_fill_skb_from_devmem,
+> and then follow up with a more ambitious change that streamlines how
+> all the iters behave.
 
-So we'd have THP policies and Barry's FADE_ON_DEATH to start; and it
-might also be a good fit for the coredump stuff and ksm if we wanted
-to incorporate them into that (although it would duplicate the
-existing proc/prctl knobs). The other MMF_s are internal AFAICS.
-
-I think my main concern would be making something very generic and
-versatile without having sufficiently broad/popular usecases for it.
-
-But no strong feelings either way. Like I said, I don't have a strong
-dislike for prctl(), but this idea would obviously be cleaner if we
-think there is enough of a demand for a new syscall.
-
-> I guess let me work that up so we can see how that looks?
-
-I think it's worth exploring!
+Yes, I can definitely do that, but it seems a bit strange that the
+callers need to distinguish between IOVEC and UBUF (which is a 1-entry
+IOVEC), so having working iter_iov_len seems a bit cleaner.
