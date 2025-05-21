@@ -1,109 +1,132 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB16C74040
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 13:35:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D61A74040
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 13:36:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747834541; cv=none; b=SWlBfRuDDwtnn8zZG5tXMH6au7WlaPgWl2EzsoEyr+PWCh7tbMPhyByOl+xGnvQWIeA9J3P37eGjkVTtn95dCkkmFfsm65A080A6r6+Cb/9+ZGq3OSj6H1EzulPLaVc+baviZNrwVQc0uL9YK7KBoG0iri+iTuBFRSKIV3jdPqE=
+	t=1747834583; cv=none; b=Isnor4EqFQnzRZMjktGe9cFhTrJUVh/bPlqcQCokw7bDoggc8GdM5vbseGvLIAHSXGNv3LqoNU4rR7mrRUUNKF6e3zNSQsTHHytI+ilDFV0XMpH4D/7WNVfHQ3vTvfcbu7YF36qV4j4pIoNHFR6WdI7msHfZJDK9CBWPbzMMsMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747834541; c=relaxed/simple;
-	bh=Hz0zcak+SEFe3diMwY9NS2ySs/drqRPLTc1WEtV5nik=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nqkdpyqVVvP+ipwkGJCX/jRautEV09GTFwMFVUbOGpHNP/uMAWp4TvXr93xrX99gTA89rCHFPYFRvFHovXtAEHbX/v6OAdICbY8Wxv6PDOTw2BmNejXcpwIiYDg/G/6ThmYRQ0Q8znx0ltKf130v9aZYest/7ZMNYK4/gEH901M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ciq.com; spf=pass smtp.mailfrom=ciq.com; dkim=pass (2048-bit key) header.d=ciq.com header.i=@ciq.com header.b=pfviqgCN; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ciq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ciq.com
+	s=arc-20240116; t=1747834583; c=relaxed/simple;
+	bh=FVc1lT+6MUgP+aqATKpAccsnoaZ/PgmLo8/TCMrPuuM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ngOcUl9FYTCCRi8WlBJp6yTGsEGZdAzs1oNP1uYiB2kSGWGdy5cSfRNidfVXxH9+C0BQNuZvkpu/KCAH1a+ujZokpB6rEoJPSkpznDsESEROa4gT2z+Pm1/RVQigEFhcd0jKiwq52oVcQR1oBJPqgStrmiClPfFfD0VEaDie/Is=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=jB7m7lEq; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ciq.com header.i=@ciq.com header.b="pfviqgCN"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-477282401b3so73810091cf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 06:35:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ciq.com; s=s1; t=1747834539; x=1748439339; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zHr0Cs4KaT2UvU/qZTlZsSCRg1iopIeIF/2NlDc8tRs=;
-        b=pfviqgCNHCSkJUE6/Z1fEmboC7SIrnVauDCGYaobEHW1kVyQ1J6i62/nXIhnJF2qLk
-         io8q5yMUpckR6vRVYkqttsvXytrFqcwxQwH1rROoxtMAaeu9aBnyAFGml8c1oxOz+hP/
-         D9og3fMnFASSRrZtiZN7UAhV+EaLve4TOfAAKld1ugRGMHD4+bBuClmNbgrTZKCDZP0A
-         fDq9meOt9jbqdLHqjSWtSJq618N2Cvc+MbT1/tYM/zPeRWwrfpwoCXwqVv9LbHDFq27b
-         lYVEg5h97nuIfUii2dqoZbs/+KD5rEKKlS86OqWLdsPCZen9twSzUQiSxm+Dw5Pj07ny
-         QlcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747834539; x=1748439339;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zHr0Cs4KaT2UvU/qZTlZsSCRg1iopIeIF/2NlDc8tRs=;
-        b=oJOuPN7t8wNyiwon1pWEPVqt1YLnVS24JNV5b8MAkyzZm0cuhdjuuvge6ZgeKTtucM
-         6wqbCSxAC4OX2pF01mcPOC9hguK/JAYSo6VqohtAB9AMk8xx1ttaKIm0TPtrsW2emjjZ
-         3RRbx/TFG+PImk9EkHTjlr/LQJ5PdL6KM5HWSVA+TbagflhHDFGE5Ou0k7h/1iHpzc4O
-         XX5aT35pmwSnjy/CWZeRuSkAFI3rhgT74nMyNMmRUKjJTbvPxHAbQQVJU6cxN47ee/TS
-         dITjrDk76AUFQ+7RtwT+sf9IO5qpZIa2Sgrn1CgnHYyB2Zovliups2LGEEd40WeSHKLC
-         woRw==
-X-Forwarded-Encrypted: i=1; AJvYcCU/jbDVepJU6LDl/46p0rwHd/PtgGSKDmv4vBPqzrIoOrtZ4aqaIYs3G6J7OWGVPh6SDFv9LB+difP+VGM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6xnnT6GnIr8bTQUgIgVIlLBWmtFyMW7JW1K0NDaq24f0fz+wh
-	wB59UYsV7s05lDlxwi56ZuKLdsFeHmjCjqhmEIpPv0ihj3vvtYhTiPE7yR4zUtCS2FZqRBT2LP9
-	uJt0dv8ZHd+TB3kv6cmWTJ3uQHXMYvyWNvUGOxfYdcg==
-X-Gm-Gg: ASbGncvc/d7DMV6br0DPF7FwqNrtjMrl/ZZ4XJpeycpl3JxAhu0wESrrhuj9q9h7IUz
-	sSezgMK6B1m29mTi4KP8teOls3cch4DMapG9iq1sF9SNDdUXcFfu3yIS7FG2qC1IObTSz5h3o9B
-	znyjUUbWkE6kW4tVTcgZQI3VG/cIqxBkwgVFgctueOss0=
-X-Google-Smtp-Source: AGHT+IHw0FtBYXqi2ZhMV8XwB3k6d+PXA2qv/4nhtVXTIGl5XoLNBzVEMfmLL//34e3b8tZ7idnmD0eIhKNjVFF8fw0=
-X-Received: by 2002:ac8:5fca:0:b0:494:b1f9:d677 with SMTP id
- d75a77b69052e-494b1f9dbe3mr261499451cf.48.1747834538524; Wed, 21 May 2025
- 06:35:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="jB7m7lEq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=sREZ
+	jNvnTamxNsDE//SKr3Dk4siUClTKDShNmscMEaw=; b=jB7m7lEqubWg8y2Ug7Tu
+	7TqbVefY6Dsmmuv3yRdeBOgG8X+vGTVUS/4AaycBthRjjJ67kzlhB3LHOHXgQaDO
+	9XtZhZux5WxkPmZRF3q/OvXaW1X4GSHByBUkncm/DBqe1v5blNKFcLND1NHUlwn3
+	sic26f0rgGOoAdV1fYKlTY5XbTPeD9ttYPs57hJFXJwUIJlsuVeWufWl+NFQWXUf
+	RTM5rsEJaIrfJ9cdJ+22aQzeJVUMCVv/JTP2P6JJ5DGIDIYIb/yRq/vOadeo1tOv
+	7Gk2LFgzuWIKJ3bXMIZr3XFXJ7TmFraa7CufbEFyuiDlfkz0gwNUIYHA4C41PDvU
+	jA==
+Received: (qmail 3285083 invoked from network); 21 May 2025 15:36:14 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 21 May 2025 15:36:14 +0200
+X-UD-Smtp-Session: l3s3148p1@K3TtcqU1bslehhrc
+Date: Wed, 21 May 2025 15:36:14 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	syzbot+721071c10f3c7e4e5dcb@syzkaller.appspotmail.com,
+	lvc-project@linuxtesting.org,
+	Alan Stern <stern@rowland.harvard.edu>, gregkh@linuxfoundation.org
+Subject: Re: [PATCH v3] media: dvb-usb-v2: disallow 0-length I2C reads
+Message-ID: <aC3WzokLRhxJ1t9M@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	syzbot+721071c10f3c7e4e5dcb@syzkaller.appspotmail.com,
+	lvc-project@linuxtesting.org,
+	Alan Stern <stern@rowland.harvard.edu>, gregkh@linuxfoundation.org
+References: <20250521131752.2566007-1-n.zhandarovich@fintech.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250520125810.036375422@linuxfoundation.org>
-In-Reply-To: <20250520125810.036375422@linuxfoundation.org>
-From: Brett Mastbergen <bmastbergen@ciq.com>
-Date: Wed, 21 May 2025 09:35:27 -0400
-X-Gm-Features: AX0GCFsnnZ61HrxlDsOy0x1qRDaTZbQ_XLe0x5ZFQ7bykkdgBHhdO40e1Ax1qDY
-Message-ID: <CAOBMUvjDCJzGO4kZzRMi0JmzeL-Boj8b92to20AFjtDQWzSN=Q@mail.gmail.com>
-Subject: Re: [PATCH 6.12 000/143] 6.12.30-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="gQiwaaZdNNFghSHu"
+Content-Disposition: inline
+In-Reply-To: <20250521131752.2566007-1-n.zhandarovich@fintech.ru>
+
+
+--gQiwaaZdNNFghSHu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 20, 2025 at 10:07=E2=80=AFAM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 6.12.30 release.
-> There are 143 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 22 May 2025 12:57:37 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
-6.12.30-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-6.12.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Wed, May 21, 2025 at 04:17:49PM +0300, Nikita Zhandarovich wrote:
+> Syzkaller reported via syzbot a warning (see [1]) that occurs
+> when the fuzzer manages to craft a I2C transfer with a 0-length read
+> request. This in turn leads to an attempt at execution of a
+> USB 0-length read (which is forbidden by USB protocol) leading to
+> it being interpreted as a write.
+>=20
+> Enable I2C_AQ_NO_ZERO_LEN_READ adapter quirk for all devices
+> managed by dvb-usb-v2 thus forbidding 0-length read messages
+> altogether.
+>=20
+> [1] Syzbot report
+> usb 2-1: BOGUS control dir, pipe 80000280 doesn't match bRequestType c0
+> WARNING: CPU: 0 PID: 5845 at drivers/usb/core/urb.c:413 usb_submit_urb+0x=
+11dd/0x18c0 drivers/usb/core/urb.c:411
+> ...
+> Call Trace:
+>  <TASK>
+>  usb_start_wait_urb+0x11a/0x530 drivers/usb/core/message.c:59
+>  usb_internal_control_msg drivers/usb/core/message.c:103 [inline]
+>  usb_control_msg+0x2b3/0x4c0 drivers/usb/core/message.c:154
+>  gl861_ctrl_msg+0x332/0x6f0 drivers/media/usb/dvb-usb-v2/gl861.c:58
+>  gl861_i2c_master_xfer+0x3b4/0x650 drivers/media/usb/dvb-usb-v2/gl861.c:1=
+44
+>  __i2c_transfer+0x859/0x2250 drivers/i2c/i2c-core-base.c:-1
+>  i2c_transfer+0x2c2/0x430 drivers/i2c/i2c-core-base.c:2315
+>  i2cdev_ioctl_rdwr+0x488/0x780 drivers/i2c/i2c-dev.c:306
+>  i2cdev_ioctl+0x78a/0xa20 drivers/i2c/i2c-dev.c:467
+>  vfs_ioctl fs/ioctl.c:51 [inline]
+>  __do_sys_ioctl fs/ioctl.c:906 [inline]
+>  __se_sys_ioctl+0xf1/0x160 fs/ioctl.c:892
+>  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+>  do_syscall_64+0xf3/0x210 arch/x86/entry/syscall_64.c:94
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> ...
+>=20
+> Reported-by: syzbot+721071c10f3c7e4e5dcb@syzkaller.appspotmail.com
+> Closes: https://syzkaller.appspot.com/bug?extid=3D721071c10f3c7e4e5dcb
+> Tested-by: syzbot+721071c10f3c7e4e5dcb@syzkaller.appspotmail.com
+> Fixes: 776338e121b9 ("[PATCH] dvb: Add generalized dvb-usb driver")
+> Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
 
-Builds successfully.  Boots and works on qemu and Dell XPS 15 9520 w/
-Intel Core i7-12600H
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-Tested-by: Brett Mastbergen <bmastbergen@ciq.com>
 
-Thanks,
-Brett
+--gQiwaaZdNNFghSHu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmgt1soACgkQFA3kzBSg
+Kbb6CBAAl2NC3Z2B0lqNl3MImsZfKKawyrNKVPf6PhYBaU3KQdhfsdH/7MZhimHH
+hexO3spyem6FGFhWyawF3RxcBTRJTkVDjLB0wQe/GwhyHxWxUKfBtV8JpWIzirkj
+46VSfi8FAKQjSsX83qLg9a06SHYU2TTbXVe8l3F0KZENGsTpEGTULJ/QxSSqz5V6
+OfiF22H/vsrSlQ0xc0pHmQw4VlD/CUmvLvyoN6BlDSM6bligeIfbuYRbX2fI6afT
+ZqEGQfFbVXfJvPw5Ts78i3ri8nT4NIDPbDPwy5xqp3t4Liq3cHjR4/qZMEfkHRYr
+QYoou7jzIRusl22tdWosX+qFXFJuUeGsuuXXpDFn5WXkZCMapW8XeUlzPEYylZzy
+0Ah+r44QG+g60t5gQgZposIfYIoNCw2wChR/do266IrvMFJGjpPRkeoLvKv1FGR7
+vudD8129T3V5+lvYXT+sri8QlaiSHzH9Emxp5zVVWGn/nZtuT9H0ldkzRQubZOrZ
+rngkt8bUS44ELsFXTmxaVRK10kWdyrX+WNTs9G1JWgyQLZSHISymOd2xqWGlB+Xy
+FROg0Kl+gAxYzgTbs3gLg0h8PzbUsLI+Eyqo0PlpdIZkzCqAhr8tZJlN+AutiHT6
+ulMvqQNDMnYYaPkq3yxmGf862O43muBqiJODeGgaTSy7DvgN+Ss=
+=3aKd
+-----END PGP SIGNATURE-----
+
+--gQiwaaZdNNFghSHu--
