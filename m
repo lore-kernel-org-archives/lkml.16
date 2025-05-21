@@ -1,43 +1,45 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F9BC2367D0;
-	Wed, 21 May 2025 08:41:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AA7922DF8C;
+	Wed, 21 May 2025 08:41:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747816863; cv=none; b=FOQ9yirzQa8eprZt1LYfOjzdP+TyUHhknAs1Rdl8tSpF+a9oWYQzGnAGBfQ/cZKI2Bif1696Ah6PCHcx2OOJHuEOlFm9PYzWi5yrXCrh//aljj9oGTzL2nYrUAjsvN1AqmgtWTJfnA6I24xEs31qxr3QrEWluzb6sOCbFTzuw/Q=
+	t=1747816903; cv=none; b=WHeuHYXtDSVDNWuDYJxS6cnGF1NaUoIW3LxmPurf1GHtZsZd696sgh1klzcgTEIPLLJv65iE3iisHQnThUrgOJ1svJyfDiHCDolovFP4GszdjeXZIg4JlGPfKgRF68y8csc7pLlctVbsnSD+oD3ksU5z3x16SOujn0fxtfN6ngI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747816863; c=relaxed/simple;
-	bh=btEHqkWsN5aJUBcONXQ4bLXl+kGdqvwNLtCf2mEbqck=;
+	s=arc-20240116; t=1747816903; c=relaxed/simple;
+	bh=uDw+ZJwPUxdSq79IaOADCgJrAkenZYaEAEllmnA9MDk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U1D+WvnkeVjwcM10M6SkkUXct1+OjVpoNyWLgGfvSO8jM4PiSYT2a4QeKpcEXAzNrlWZMpQlCfCkWlqZ936ojJQr16n+14mywZg8nVg6SU2BladkA4MNqrslksbYAvTEWATiFqJEgyvBMmmOjirCqFO8yww+eO0/kF1dCf2nYgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EOT/Sc8A; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=eA/bmtPtoZroSfbvZRVWjaZdsZtr68irX14ZaUXZDw+xxPzCt+ubn8oQwaMEQ2QyTnZlap/lXM3QsezxqhQvLqqgswZhRLXOBtcPLZkyZtZ4Agp/aA0nZrwSLPfZR3IkGZhYQyC4HE668zmFRncUSOX1Vi7jbfZsNisdgmwY1gI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Te1UzWPM; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EOT/Sc8A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30065C4CEE4;
-	Wed, 21 May 2025 08:41:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747816862;
-	bh=btEHqkWsN5aJUBcONXQ4bLXl+kGdqvwNLtCf2mEbqck=;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Te1UzWPM"
+Received: by linux.microsoft.com (Postfix, from userid 1173)
+	id 85448206832E; Wed, 21 May 2025 01:41:41 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 85448206832E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1747816901;
+	bh=tm3MPeyl5HQEq5tXrQRcuuPXKgXrLcNsWDnrjbtd2j8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EOT/Sc8AwIprEFxNyv5AklrGCuUoaUd80VqElyNmLzCnlfT7STf3KWg2OM7KlSbCx
-	 MU77hzhfv18f0GzsQcjsqgMvt21ErJDrtctClZnH12dmBG3juAy615EexG+pjLg1Uy
-	 FI+gb8VfTvI2Gsv3x9NplyFQuH8nNDzPbXAIS7ezmt6auOUNFo5phxGxwSBPRUbDLV
-	 v+6pAa62I/2M74HGPsumlploL/c+5E4dg7BcHj+FpH/GGCdjv1QYZ7poHifCljZR6q
-	 sNny8S/FwnslQRRBidVrLxaQ/jHGexpr6YB/gpaXOUz9dieU2jzvQOpPGWeN2GDE48
-	 D4r+inlrwlr8A==
-Date: Wed, 21 May 2025 09:40:57 +0100
-From: Will Deacon <will@kernel.org>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>,
-	Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>
-Subject: Re: linux-next: manual merge of the arm64 tree with Linus' tree
-Message-ID: <20250521084057.GA20110@willie-the-truck>
-References: <20250521113426.6752fc3a@canb.auug.org.au>
+	b=Te1UzWPMJbaE7ikWZF5NBSuS4LtcbCPuwnIeM7MGge51yMYKZt47Mv25LGNXiuHwd
+	 fpV0GNyvDTyo6ID/nGVU90BzMl8A1TpX9F8Jd+q1qt5vwCSL5cVH1gpLXPAJHitAru
+	 9pPqZyvMre1TESFttWl5kkfXE1jRtvY5qdCCdYUQ=
+Date: Wed, 21 May 2025 01:41:41 -0700
+From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+To: Saurabh Sengar <ssengar@linux.microsoft.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, pabeni@redhat.com, horms@kernel.org,
+	ast@kernel.org, daniel@iogearbox.net, hawk@kernel.org,
+	john.fastabend@gmail.com, sdf@fomichev.me, kuniyu@amazon.com,
+	ahmed.zaki@intel.com, aleksander.lobakin@intel.com,
+	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	ssengar@microsoft.com, stable@vger.kernel.org
+Subject: Re: [PATCH net] hv_netvsc: fix potential deadlock in
+ netvsc_vf_setxdp()
+Message-ID: <20250521084141.GA10135@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1747540070-11086-1-git-send-email-ssengar@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,32 +48,47 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250521113426.6752fc3a@canb.auug.org.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1747540070-11086-1-git-send-email-ssengar@linux.microsoft.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Wed, May 21, 2025 at 11:34:26AM +1000, Stephen Rothwell wrote:
-> Hi all,
+On Sat, May 17, 2025 at 08:47:50PM -0700, Saurabh Sengar wrote:
+> The MANA driver's probe registers netdevice via the following call chain:
 > 
-> Today's linux-next merge of the arm64 tree got a conflict in:
+> mana_probe()
+>   register_netdev()
+>     register_netdevice()
 > 
->   arch/arm64/kernel/image-vars.h
+> register_netdevice() calls notifier callback for netvsc driver,
+> holding the netdev mutex via netdev_lock_ops().
 > 
-> between commit:
+> Further this netvsc notifier callback end up attempting to acquire the
+> same lock again in dev_xdp_propagate() leading to deadlock.
 > 
->   117c3b21d3c7 ("arm64: Rework checks for broken Cavium HW in the PI code")
+> netvsc_netdev_event()
+>   netvsc_vf_setxdp()
+>     dev_xdp_propagate()
 > 
-> from Linus' tree and commit:
+> This deadlock was not observed so far because net_shaper_ops was never
+> set and this lock in noop in this case. Fix this by using
+> netif_xdp_propagate instead of dev_xdp_propagate to avoid recursive
+> locking in this path.
 > 
->   90530521079e ("arm64/boot: Disallow BSS exports to startup code")
+> This issue has not observed so far because net_shaper_ops was unset,
+> making the lock path effectively a no-op. To prevent recursive locking
+> and avoid this deadlock, replace dev_xdp_propagate() with
+> netif_xdp_propagate(), which does not acquire the lock again.
 > 
-> from the arm64 tree.
+> Also, clean up the unregistration path by removing unnecessary call to
+> netvsc_vf_setxdp(), since unregister_netdevice_many_notify() already
+> performs this cleanup via dev_xdp_uninstall.
+> 
+> Fixes: 97246d6d21c2 ("net: hold netdev instance lock during ndo_bpf")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+> ---
 
-Thanks, Stephen. That looks correct to me. We're basically just
-dropping the Cavium block here:
+Built and booted successfully. 
 
->  -#ifdef CONFIG_CAVIUM_ERRATUM_27456
->  -PI_EXPORT_SYM(cavium_erratum_27456_cpus);
->  -PI_EXPORT_SYM(is_midr_in_range_list);
->  -#endif
+Tested-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com> 
 
-Will
+Thanks!
