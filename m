@@ -1,152 +1,96 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B01825A621
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 10:09:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4B0F253946;
+	Wed, 21 May 2025 10:10:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747822185; cv=none; b=oCfVkj8MrES9zXjQ9lDPlmbbrN8tEmI4fO8Cgq2w6ms2wrdSZcyMtv4RCOx6GpJkRQxVELdEEO68wQiROBLSse149YngKY290q4lIUp9m2QEJSb3D3wQyN+x6SF3neQrOy4kj1IwI3kdg87RUx78jW6Dr//mRtoTfvcXq1jTiTw=
+	t=1747822211; cv=none; b=o8clj6uzxY6qhYc48vZgUG3CIjO1xUwfhNHpAYieyU/xVfRjSfRuXPx+kqSBE0bBFxs4AHpvyxg2P6cs+hLyQ1UyhIdnUa085xL0N8TajPb/AzVYjKZVgHIFnyKQTYmKZIEOTFjO4Rnpyh7tY5FJwAKtg3NtyPfjxaf3as4jSh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747822185; c=relaxed/simple;
-	bh=gZZW7tC/cpV4nKL1Hx4riTsfSqR9HnF1ZneuFND9oco=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cedqYEVRvGQ0cyN2KgFuq3Fto7zP+n5Q8EE5IruZIYO6e17I81Y90DEn77XbwdYTIcJolFOGqT2k8h04fjj5b/5wEJnjGTQKL33LXbD45xN0vmbd0tZ0jzRewEhW3rsXGZLTlQZsIPx4lgUGOVLHa9Xuw3jnFvHaMbiHbP/r8g0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=JlBM26su; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=kjgxIqum; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=JlBM26su; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=kjgxIqum; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1747822211; c=relaxed/simple;
+	bh=swnBOTBW5kgGvMn+NskR73AMAOrDSaeB0gWqSlNKv0o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CYuo19cDegWeJ97MHaZcdd8U1VulaTuXCv8MuPBdPrxTj7zu2yDOvAmv/UDmIx+phHERmIUM1REzrLm8Ea59DuNdxzo76CDAy/Wx7XxKjhsvM+zzV66RPZqjMQtncI/OQZyH5CInBay8b0cDmGnPO5Xrr0Q7QzXO0Zf5bmbRopM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oTMREkfT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="JlBM26su";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="kjgxIqum";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="JlBM26su";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="kjgxIqum"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 865802090F;
-	Wed, 21 May 2025 10:09:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747822181; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ae4dGNDLprnJrk+XcRux67LTnsmy+MgMY5bukERjtzk=;
-	b=JlBM26suErECduo/NiesDgfnWAETytXGdEvIVlC34VVSfaasE9XErF9hZySxdjhmeZMho8
-	w+sNbicoJ/pi3vVy46H+sXvz4T1FjE3f5YOyU921SqqBe8fFMX3s1FikWXjNKfWvRDYTQX
-	9qFJ3Q/YffthB8SI7bPujl8CAVm5Djk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747822181;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ae4dGNDLprnJrk+XcRux67LTnsmy+MgMY5bukERjtzk=;
-	b=kjgxIqumnz+LccUy5yZYNn5hO2wYwCeOQAk2mwbZWehT03u8MaLgCASxuhhZwzumzc6Hj0
-	hBDzGeYTmmfxVJCA==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747822181; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ae4dGNDLprnJrk+XcRux67LTnsmy+MgMY5bukERjtzk=;
-	b=JlBM26suErECduo/NiesDgfnWAETytXGdEvIVlC34VVSfaasE9XErF9hZySxdjhmeZMho8
-	w+sNbicoJ/pi3vVy46H+sXvz4T1FjE3f5YOyU921SqqBe8fFMX3s1FikWXjNKfWvRDYTQX
-	9qFJ3Q/YffthB8SI7bPujl8CAVm5Djk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747822181;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ae4dGNDLprnJrk+XcRux67LTnsmy+MgMY5bukERjtzk=;
-	b=kjgxIqumnz+LccUy5yZYNn5hO2wYwCeOQAk2mwbZWehT03u8MaLgCASxuhhZwzumzc6Hj0
-	hBDzGeYTmmfxVJCA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5388413888;
-	Wed, 21 May 2025 10:09:41 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id HY1XE2WmLWgoSwAAD6G6ig
-	(envelope-from <hare@suse.de>); Wed, 21 May 2025 10:09:41 +0000
-Message-ID: <2f9aef5f-91c5-4501-ae83-0efcf2a79f2f@suse.de>
-Date: Wed, 21 May 2025 12:09:40 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oTMREkfT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA2DEC4CEE4;
+	Wed, 21 May 2025 10:10:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747822209;
+	bh=swnBOTBW5kgGvMn+NskR73AMAOrDSaeB0gWqSlNKv0o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oTMREkfTQOsHFui2XykL0jzMk1dCllCjt/RVy22+sSQT3JQy9St3jU5oWBXDWXmvC
+	 XTiXHEB9BlWcOyYQalfHFRZ/CT2jeyBzQYpND4N/cNRQIqt4qEm8qgHp5mWjMMdi36
+	 pjMuWxItudzD1L+qa9GAW9MutGmC/36SsrA0UrnknSTvVSHaMp28YZ4E7zQ/Q0as1c
+	 BbC+VspzpcXCNP8ZjUBV4/vKDV8Ga69SNb/uN0AJXWDtg6fyLVJFd8BIRQvbdEPiT8
+	 LMUufE1mYxwfmsx6cEkXN3lF2E2KojpMMPen9Rw0DaRH9ZNE+mD1s7NWUh5kL6hn14
+	 But+2YoQkXUyA==
+Date: Wed, 21 May 2025 12:10:06 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Michael Hennerich <michael.hennerich@analog.com>, 
+	Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, Trevor Gamblin <tgamblin@baylibre.com>, 
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] pwm: axi-pwmgen: add support for external clock
+Message-ID: <20250521-nostalgic-pretty-hedgehog-d08a77@kuoka>
+References: <20250520-pwm-axi-pwmgen-add-external-clock-v1-0-6cd63cc001c8@baylibre.com>
+ <20250520-pwm-axi-pwmgen-add-external-clock-v1-3-6cd63cc001c8@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 01/10] net: introduce CONFIG_NET_CRC32C
-To: Eric Biggers <ebiggers@kernel.org>, netdev@vger.kernel.org
-Cc: linux-nvme@lists.infradead.org, linux-sctp@vger.kernel.org,
- linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
- Daniel Borkmann <daniel@iogearbox.net>,
- Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
- Sagi Grimberg <sagi@grimberg.me>, Ard Biesheuvel <ardb@kernel.org>
-References: <20250519175012.36581-1-ebiggers@kernel.org>
- <20250519175012.36581-2-ebiggers@kernel.org>
-Content-Language: en-US
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <20250519175012.36581-2-ebiggers@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	FREEMAIL_CC(0.00)[lists.infradead.org,vger.kernel.org,iogearbox.net,gmail.com,grimberg.me,kernel.org];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	ARC_NA(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Score: -2.80
-X-Spam-Level: 
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250520-pwm-axi-pwmgen-add-external-clock-v1-3-6cd63cc001c8@baylibre.com>
 
-On 5/19/25 19:50, Eric Biggers wrote:
-> From: Eric Biggers <ebiggers@google.com>
+On Tue, May 20, 2025 at 04:00:46PM GMT, David Lechner wrote:
+> Add support for external clock to the AXI PWM generator driver.
 > 
-> Add a hidden kconfig symbol NET_CRC32C that will group together the
-> functions that calculate CRC32C checksums of packets, so that these
-> don't have to be built into NET-enabled kernels that don't need them.
+> In most cases, there is a separate external clock that drives the PWM
+> output separate from the peripheral clock. This allows enabling both
+> clocks.
 > 
-> Make skb_crc32c_csum_help() (which is called only when IP_SCTP is
-> enabled) conditional on this symbol, and make IP_SCTP select it.
-> 
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
 > ---
->   net/Kconfig      | 4 ++++
->   net/core/dev.c   | 2 ++
->   net/sctp/Kconfig | 1 +
->   3 files changed, 7 insertions(+)
+>  drivers/pwm/pwm-axi-pwmgen.c | 23 ++++++++++++++++++++---
+>  1 file changed, 20 insertions(+), 3 deletions(-)
 > 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
+> diff --git a/drivers/pwm/pwm-axi-pwmgen.c b/drivers/pwm/pwm-axi-pwmgen.c
+> index 4337c8f5acf055fc87dc134f2a70b99b0cb5ede6..67992a7561ec0440b1c1fa327f844a0602872771 100644
+> --- a/drivers/pwm/pwm-axi-pwmgen.c
+> +++ b/drivers/pwm/pwm-axi-pwmgen.c
+> @@ -280,9 +280,26 @@ static int axi_pwmgen_probe(struct platform_device *pdev)
+>  	ddata = pwmchip_get_drvdata(chip);
+>  	ddata->regmap = regmap;
+>  
+> -	clk = devm_clk_get_enabled(dev, NULL);
+> -	if (IS_ERR(clk))
+> -		return dev_err_probe(dev, PTR_ERR(clk), "failed to get clock\n");
+> +	/* When clock-names is present, there is a separate ext clock. */
+> +	if (device_property_present(dev, "clock-names")) {
 
-Cheers,
+No. List is ordered, you do not need such dance at all.
 
-Hannes
--- 
-Dr. Hannes Reinecke                  Kernel Storage Architect
-hare@suse.de                                +49 911 74053 688
-SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
-HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
+> +		struct clk *axi_clk;
+> +
+> +		axi_clk = devm_clk_get_enabled(dev, "axi");
+> +		if (IS_ERR(axi_clk))
+> +			return dev_err_probe(dev, PTR_ERR(axi_clk),
+> +					     "failed to get axi clock\n");
+> +
+> +		clk = devm_clk_get_enabled(dev, "ext");
+
+So that's messing the order, which confirms my question from the
+binding.
+
+No. List has a strict order, you cannot change it just because you want
+to add optional clock.
+
+Best regards,
+Krzysztof
+
