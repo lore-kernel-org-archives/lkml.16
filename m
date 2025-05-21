@@ -1,52 +1,30 @@
-Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C72001A83F7
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 01:40:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CB46148827
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 01:41:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747791607; cv=none; b=JTwwQSmm0TGmKNr6oiVacDtATzs6mbXAjr7HCQTbQd1sjKwwYBL7YeY2umeUvlCDs4L1cZiHCMRL1FgbWxPGQQo/yvF5bh/xXrO8+D/3FXnit8BkCBtFl8w5mZb7eYLojhRGkC2anytX1q9Hi9RD0VRdZoiqk6eq+wSUOUPq0oU=
+	t=1747791676; cv=none; b=LEWSJQY51LzzGWup7nz/GiOvO87sXc6V9OXXWogfo6KgRITas2BVC3PFukA2uPp11V7kzIx5G/e9I4Ki5JsnIj/GV5B6buxm37Ax8oWhacKaTyIk0NdpMb3YnonXDRgCsgHdcySvCXSUC3W196Sf5bjUhttg3tz7jf7BnYY2SDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747791607; c=relaxed/simple;
-	bh=OL2Z6Hz1CaJCq+80RIMOXQY9FCZAkCk4tlIi7wMg0Fg=;
+	s=arc-20240116; t=1747791676; c=relaxed/simple;
+	bh=cveGrQKseCu2TLHb1bzEcR1qrs/SVdHkaZ+uLztnK8o=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ows8/+WwzU8IkHyykNCZ7o0BqSdafEd0cj9TaRZpj0u9iF0j8J5CJ3GxCZX3XyXiMarmTYj3IHL17MPzfFO/yETI7pyOqZ+rF932DHFpy47VS+aDBH7acuZTvt4w77cVV1oF2dTRPgPflBwsk82dP0oCnKuL+V1cLu8f5xAY25E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=WtUbrjtJ; arc=none smtp.client-ip=44.202.169.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="WtUbrjtJ"
-Received: from eig-obgw-5005a.ext.cloudfilter.net ([10.0.29.234])
-	by cmsmtp with ESMTPS
-	id HY21um6uDzZPaHYR9uWiTI; Wed, 21 May 2025 01:40:03 +0000
-Received: from box5620.bluehost.com ([162.241.219.59])
-	by cmsmtp with ESMTPS
-	id HYR9uzmqxq3CNHYR9uaOhA; Wed, 21 May 2025 01:40:03 +0000
-X-Authority-Analysis: v=2.4 cv=VpfoAP2n c=1 sm=1 tr=0 ts=682d2ef3
- a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
- a=HaFmDPmJAAAA:8 a=qfBMeBQ8Qh9mIwLNFBIA:9 a=QEXdDO2ut3YA:10
- a=nmWuMzfKamIsx3l42hEX:22 a=Wh1V8bzkS9CpCxOpQUxp:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
-	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=pNkE+xLmOJ+8pVqastSQn4XE5Z1C7CvzZsWtgCcDmOE=; b=WtUbrjtJTeuIdKJ6V3xpSB/dcw
-	ZvWQVLORqSTGU2YjNi7XYgiwDvNkxmuIe59L4kvZKsvVTKPR5zvkmSUNpxv1opOfzyq6gqnrJ3PWn
-	pCdO8rDH0mYyW1sB/VQFF+taamBVZD0VqqQYrAuqxda/LkoUGm6kTzo/+JlYlEIWOTjjbsxRkR362
-	V4lEq/oP24PpelpLPMV6EHASsrSTN2LKb1lfI9EzctLjlZhNRbZ4nNzCsJN4i0FyXgZDuGT4Pgrnk
-	dbISo27dPx0JPz6jJpl/vSSTurapj/97BfneSsxgePZvpiXW83xGAX24n3RqOAIs+RD7fJbV5MaYK
-	gBafoqaA==;
-Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:36408 helo=[10.0.1.116])
-	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <re@w6rz.net>)
-	id 1uHYR6-00000000vSH-3vHD;
-	Tue, 20 May 2025 19:40:00 -0600
-Message-ID: <ed0fbc2b-8383-482e-a4cb-69f2a4356576@w6rz.net>
-Date: Tue, 20 May 2025 18:39:57 -0700
+	 In-Reply-To:Content-Type; b=p52RnDkNOa/1403fzyzbIy5546hQ4V8bCdzruGfy5s0HgWU/QnfFyOhvP6BMakjZLcnRhkABBSPeeJgO80dI3LpAEpbQ7AaeCpqBaCTBoaSNz7hKQUnBe7m+Ocm4lWlYQ/ckVnoY3DVSttMvC4jCd10dGM4+MXZHjFSfV0WYduY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4b2Ddv3Zvpz4f3jv0
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 09:40:51 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id 547331A018D
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 09:41:11 +0800 (CST)
+Received: from [10.67.109.79] (unknown [10.67.109.79])
+	by APP3 (Coremail) with SMTP id _Ch0CgDHG8Y2Ly1o9UFXMw--.54820S2;
+	Wed, 21 May 2025 09:41:10 +0800 (CST)
+Message-ID: <c4a3d58b-c5ae-4d55-9b1a-14812e405eec@huaweicloud.com>
+Date: Wed, 21 May 2025 09:41:09 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,61 +32,100 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.6 000/117] 6.6.92-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250520125803.981048184@linuxfoundation.org>
+Subject: Re: [RFC next v2 0/2] ucounts: turn the atomic rlimit to
+ percpu_counter
+To: Jann Horn <jannh@google.com>
+Cc: akpm@linux-foundation.org, Liam.Howlett@oracle.com,
+ lorenzo.stoakes@oracle.com, vbabka@suse.cz, pfalcato@suse.de,
+ bigeasy@linutronix.de, paulmck@kernel.org, chenridong@huawei.com,
+ roman.gushchin@linux.dev, brauner@kernel.org, pmladek@suse.com,
+ geert@linux-m68k.org, mingo@kernel.org, rrangel@chromium.org,
+ francesco@valla.it, kpsingh@kernel.org, guoweikang.kernel@gmail.com,
+ link@vivo.com, viro@zeniv.linux.org.uk, neil@brown.name, nichen@iscas.ac.cn,
+ tglx@linutronix.de, frederic@kernel.org, peterz@infradead.org,
+ oleg@redhat.com, joel.granados@kernel.org, linux@weissschuh.net,
+ avagin@google.com, legion@kernel.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, lujialin4@huawei.com, "Serge E. Hallyn"
+ <serge@hallyn.com>, David Howells <dhowells@redhat.com>
+References: <20250519131151.988900-1-chenridong@huaweicloud.com>
+ <CAG48ez2bFhYYj2qkJk3j5t=3VwYUH4sSMuohyC=MfrRw-bv22g@mail.gmail.com>
 Content-Language: en-US
-From: Ron Economos <re@w6rz.net>
-In-Reply-To: <20250520125803.981048184@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - box5620.bluehost.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - w6rz.net
-X-BWhitelist: no
-X-Source-IP: 73.223.253.157
-X-Source-L: No
-X-Exim-ID: 1uHYR6-00000000vSH-3vHD
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:36408
-X-Source-Auth: re@w6rz.net
-X-Email-Count: 54
-X-Org: HG=bhshared;ORG=bluehost;
-X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfEueohzS+VR+2u2a/Ahx2p8sZTusYRr+R6gYyBmaBYoGSBH2kHEy7EDV3keCuBRsb0MipP466vemf+ndfVEM+6erxZlkU5mWCIDRpr4XvhQAhQA/t7xR
- PmoddBIqwjvORUEwgtkYldlEDucuIoKDx85BshXVmLOayF+ruViN6VKP4bZ050AcDdB8YuLWHdnlAuEUbOnGMB4HcNEptc9iK5E=
+From: Chen Ridong <chenridong@huaweicloud.com>
+In-Reply-To: <CAG48ez2bFhYYj2qkJk3j5t=3VwYUH4sSMuohyC=MfrRw-bv22g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_Ch0CgDHG8Y2Ly1o9UFXMw--.54820S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7ur48GFWUCw1xAw4UKw17KFg_yoW5JryfpF
+	WSy3Z8KFn5JFnIy392q3yIva45Krs3CrWUJw45Gw4xAan8CFya9F17tw4YvFWDCrZ2ya4j
+	vFWjg3sFkFWDXaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26rWY6Fy7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWrXVW8
+	Jr1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
+	CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AK
+	xVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvj
+	xUsPfHUUUUU
+X-CM-SenderInfo: hfkh02xlgr0w46kxt4xhlfz01xgou0bp/
 
-On 5/20/25 06:49, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.6.92 release.
-> There are 117 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 22 May 2025 12:57:37 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.92-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
 
-Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
 
-Tested-by: Ron Economos <re@w6rz.net>
+On 2025/5/20 3:32, Jann Horn wrote:
+> On Mon, May 19, 2025 at 3:25 PM Chen Ridong <chenridong@huaweicloud.com> wrote:
+>> From: Chen Ridong <chenridong@huawei.com>
+>>
+>> The will-it-scale test case signal1 [1] has been observed. and the test
+>> results reveal that the signal sending system call lacks linearity.
+>> To further investigate this issue, we initiated a series of tests by
+>> launching varying numbers of dockers and closely monitored the throughput
+>> of each individual docker. The detailed test outcomes are presented as
+>> follows:
+>>
+>>         | Dockers     |1      |4      |8      |16     |32     |64     |
+>>         | Throughput  |380068 |353204 |308948 |306453 |180659 |129152 |
+>>
+>> The data clearly demonstrates a discernible trend: as the quantity of
+>> dockers increases, the throughput per container progressively declines.
+> 
+> But is that actually a problem? Do you have real workloads that
+> concurrently send so many signals, or create inotify watches so
+> quickly, that this is has an actual performance impact?
+> 
+
+Thanks Jann,
+Unfortunately, I do not have the specific scenario.
+
+>> In-depth analysis has identified the root cause of this performance
+>> degradation. The ucouts module conducts statistics on rlimit, which
+>> involves a significant number of atomic operations. These atomic
+>> operations, when acting on the same variable, trigger a substantial number
+>> of cache misses or remote accesses, ultimately resulting in a drop in
+>> performance.
+> 
+> You're probably running into the namespace-associated ucounts here? So
+> the issue is probably that Docker creates all your containers with the
+> same owner UID (EUID at namespace creation), causing them all to
+> account towards a single ucount, while normally outside of containers,
+> each RUID has its own ucount instance?
+> 
+
+Yes, every time rlimits change in the containers, they have to change
+the parent's rlimits, which are atomic options, even if these containers
+have their own user_namespace.
+
+Best regards,
+Ridong
+
+> Sharing of rlimits between containers is probably normally undesirable
+> even without the cacheline bouncing, because it means that too much
+> resource usage in one container can cause resource allocations in
+> another container to fail... so I think the real problem here is at a
+> higher level, in the namespace setup code. Maybe root should be able
+> to create a namespace that doesn't inherit ucount limits of its owner
+> UID, or something like that...
 
