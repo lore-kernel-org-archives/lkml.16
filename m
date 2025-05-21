@@ -1,114 +1,168 @@
-Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A345133F3
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 01:33:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0676D146A68;
+	Wed, 21 May 2025 01:35:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747791229; cv=none; b=umfYoiDs4D1cx+kMoz/3QgGhknmlbhvMuMygOz4DM6Pj+v5yrswhO7HCf2eLYE0FyiZ2+o42/eRaXtLS5/iV0UCNsuWuzyJsjISVeBKYxBdzHkfEFf7UF53CU8x9Qgw8mKL7BiAkICWRW7/zaqF2m95Hs+LK6lgs/ZZYnagT/wo=
+	t=1747791308; cv=none; b=k9+r1nSfZ9Welzy/bu1hgq9qa/dQCJZId/RgUYcDA4b4YIEiUG+pkTb8Wcc+6QpR9ADKmGUkd0suHZphJopY7Uo1J4qt1kGS0ahuVud6YZiOv7rYmar0xlDF0ZfHjn27EB6StMgF3S/wIPEHjURDa0WmkO8tPCAVKYTaAlkELt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747791229; c=relaxed/simple;
-	bh=hBh9qLI3K8PS/2/EnhaW+9jUNhOWqX+NYqd4U1aSDfU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qr3n+hReP/+qYAWpTFnQBbg2blUtocxqp2WPzs05/ZAfPkH52pesTMPyZI01dJ0bvgyllCU1ae36uMa1jbvjoy48I3MDwFgBwNXcuXx3adD91hcMfHfJEcrrXo7e/ye5dnjiTVrXWl1LYvhJeushgtzGXdM6UG/La9EWaUEJQNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=t39CQtSl; arc=none smtp.client-ip=35.89.44.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
+	s=arc-20240116; t=1747791308; c=relaxed/simple;
+	bh=zVAtYceEm+TlsIztKdFwdviL7d4BlMWKYmfcPRifO9w=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=tMZBcvbDK4dvhOIExWmu9KeCt3dVTFg/khjG1qFF2BhGDFMuDgvzLgAApqWyQEWgz29jAVPcdKYXi/Oa6+XukoQmgs8A3gYzBGQjzBjjdjaPOq8c1AgCbO8zs4YWY4BIUEVSeLSj4Z8ZsK1oy+tdG63OXhiMy+NoEOJTxn06l0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=EPbYZ3/I; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="t39CQtSl"
-Received: from eig-obgw-6004a.ext.cloudfilter.net ([10.0.30.197])
-	by cmsmtp with ESMTPS
-	id HT4wuvKEVMETlHYL4u2mPv; Wed, 21 May 2025 01:33:46 +0000
-Received: from box5620.bluehost.com ([162.241.219.59])
-	by cmsmtp with ESMTPS
-	id HYL3uVfi9RlrsHYL3un5PK; Wed, 21 May 2025 01:33:46 +0000
-X-Authority-Analysis: v=2.4 cv=Qamtvdbv c=1 sm=1 tr=0 ts=682d2d7a
- a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
- a=HaFmDPmJAAAA:8 a=qfBMeBQ8Qh9mIwLNFBIA:9 a=QEXdDO2ut3YA:10
- a=nmWuMzfKamIsx3l42hEX:22 a=Wh1V8bzkS9CpCxOpQUxp:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
-	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=ZUUl1Q2Ujx1WAESjDQJEJxzYwXq3TlPTKP6mn2oqggo=; b=t39CQtSliwSqW/5xQX/v7XV2Tl
-	yt9OgZCjoDursD+dAh19S6b1FurEP8OLB71uATymHqKO+0UbrzWah6Ij2XqlHTNyWuQY/NzS6+B2V
-	C7T5nsXEgGgOaf4bIrtRidXeap8HSZD/fEA/EeJzB+okB4fQKaccvWxn3rcbW720wXDDzDl508pUC
-	xYQ4+0ybc3bR+uACvybeWNm+vpSdyGmETC1YU2y6c7fJCzBkJ38YBF9XcUWt8OdPaa+I8n8ajkb7H
-	WRjwH/M9pDQ+/qVcmcBe9GWq8QW06TOmJ9pgaJHVaQz8VkFD3o8TwEfEd1sCJHLDwU8U6PDFttlrh
-	QeRP6oeg==;
-Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:38488 helo=[10.0.1.116])
-	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <re@w6rz.net>)
-	id 1uHYL1-00000000tT5-2Vti;
-	Tue, 20 May 2025 19:33:43 -0600
-Message-ID: <d9ba98ca-a37b-4683-b806-d157a7ba3699@w6rz.net>
-Date: Tue, 20 May 2025 18:33:40 -0700
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="EPbYZ3/I"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1747791300;
+	bh=r8JOX4quxvdgvRIefLRNQaexRUjQ/SuVajJCB+RRYZc=;
+	h=Date:From:To:Cc:Subject:From;
+	b=EPbYZ3/IeNiwrqozkOBxhv2odOHoWNyUd5D/8L1zxRjuNO0fpKVGNTuca9Y6WWvmA
+	 U1xMn8o084huX5KdVqPrbUzyb2wFBh6HOw/odEROpud26jaxpMP4Ljxt+2DC5Dorvb
+	 tin1s4WaoR/16X0iDgPKIGH3FZBtG8SNudgwpz9Fpkgzo9Rp8s5R5lRYuQnZzeV8Gz
+	 J/Os+ywKd6nDkIoBDuaxP4r/atMRWfnaFqgHyg4ABg2F5pVmSkR43zsKsycS8ZEMCv
+	 6yX5KVI5oNE0KuIzv07+g4MH9c8d4VhpfT1BYpIk/+7GHHXMnL6zpbU16nVyI0F9st
+	 B7ZuFHNtlMdRA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b2DW73tZhz4x8R;
+	Wed, 21 May 2025 11:34:59 +1000 (AEST)
+Date: Wed, 21 May 2025 11:34:26 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, Marc Zyngier <maz@kernel.org>, Oliver Upton
+ <oliver.upton@linux.dev>
+Subject: linux-next: manual merge of the arm64 tree with Linus' tree
+Message-ID: <20250521113426.6752fc3a@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.12 000/143] 6.12.30-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250520125810.036375422@linuxfoundation.org>
-Content-Language: en-US
-From: Ron Economos <re@w6rz.net>
-In-Reply-To: <20250520125810.036375422@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - box5620.bluehost.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - w6rz.net
-X-BWhitelist: no
-X-Source-IP: 73.223.253.157
-X-Source-L: No
-X-Exim-ID: 1uHYL1-00000000tT5-2Vti
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:38488
-X-Source-Auth: re@w6rz.net
-X-Email-Count: 35
-X-Org: HG=bhshared;ORG=bluehost;
-X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfJrkx2jktbUo86xPxaEuzpxEvdmzB6R+X45wT6Ql5lGm6ej9JYcz4bA9ulZFH9fLh85C7RoIvl4wfkhVGyXsKHcU39nkI0rZz9A0VjSGhPRFz6RmZKrD
- gvo+hLtwf4CkoJTdUQ5dzPLYqHZ4KB8ChpSDa3jeJMsw+nlul5AYLoY01PW0Ukkhm2cagK0Mht2HcwrUuazJvbQMWKVF/ZylJa0=
+Content-Type: multipart/signed; boundary="Sig_/jme2wR+5.0wPPtiOjws_khJ";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On 5/20/25 06:49, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.12.30 release.
-> There are 143 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 22 May 2025 12:57:37 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.30-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+--Sig_/jme2wR+5.0wPPtiOjws_khJ
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
+Hi all,
 
-Tested-by: Ron Economos <re@w6rz.net>
+Today's linux-next merge of the arm64 tree got a conflict in:
 
+  arch/arm64/kernel/image-vars.h
+
+between commit:
+
+  117c3b21d3c7 ("arm64: Rework checks for broken Cavium HW in the PI code")
+
+from Linus' tree and commit:
+
+  90530521079e ("arm64/boot: Disallow BSS exports to startup code")
+
+from the arm64 tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/arm64/kernel/image-vars.h
+index 2004b4f41ade,c5266430284b..000000000000
+--- a/arch/arm64/kernel/image-vars.h
++++ b/arch/arm64/kernel/image-vars.h
+@@@ -36,37 -42,34 +42,30 @@@ PROVIDE(__pi___memcpy			=3D __pi_memcpy)
+  PROVIDE(__pi___memmove			=3D __pi_memmove);
+  PROVIDE(__pi___memset			=3D __pi_memset);
+ =20
+- PROVIDE(__pi_id_aa64isar1_override	=3D id_aa64isar1_override);
+- PROVIDE(__pi_id_aa64isar2_override	=3D id_aa64isar2_override);
+- PROVIDE(__pi_id_aa64mmfr0_override	=3D id_aa64mmfr0_override);
+- PROVIDE(__pi_id_aa64mmfr1_override	=3D id_aa64mmfr1_override);
+- PROVIDE(__pi_id_aa64mmfr2_override	=3D id_aa64mmfr2_override);
+- PROVIDE(__pi_id_aa64pfr0_override	=3D id_aa64pfr0_override);
+- PROVIDE(__pi_id_aa64pfr1_override	=3D id_aa64pfr1_override);
+- PROVIDE(__pi_id_aa64smfr0_override	=3D id_aa64smfr0_override);
+- PROVIDE(__pi_id_aa64zfr0_override	=3D id_aa64zfr0_override);
+- PROVIDE(__pi_arm64_sw_feature_override	=3D arm64_sw_feature_override);
+- PROVIDE(__pi_arm64_use_ng_mappings	=3D arm64_use_ng_mappings);
+- PROVIDE(__pi__ctype			=3D _ctype);
+- PROVIDE(__pi_memstart_offset_seed	=3D memstart_offset_seed);
++ PI_EXPORT_SYM(id_aa64isar1_override);
++ PI_EXPORT_SYM(id_aa64isar2_override);
++ PI_EXPORT_SYM(id_aa64mmfr0_override);
++ PI_EXPORT_SYM(id_aa64mmfr1_override);
++ PI_EXPORT_SYM(id_aa64mmfr2_override);
++ PI_EXPORT_SYM(id_aa64pfr0_override);
++ PI_EXPORT_SYM(id_aa64pfr1_override);
++ PI_EXPORT_SYM(id_aa64smfr0_override);
++ PI_EXPORT_SYM(id_aa64zfr0_override);
++ PI_EXPORT_SYM(arm64_sw_feature_override);
++ PI_EXPORT_SYM(arm64_use_ng_mappings);
+ -#ifdef CONFIG_CAVIUM_ERRATUM_27456
+ -PI_EXPORT_SYM(cavium_erratum_27456_cpus);
+ -PI_EXPORT_SYM(is_midr_in_range_list);
+ -#endif
++ PI_EXPORT_SYM(_ctype);
+ =20
+- PROVIDE(__pi_init_idmap_pg_dir		=3D init_idmap_pg_dir);
+- PROVIDE(__pi_init_idmap_pg_end		=3D init_idmap_pg_end);
+- PROVIDE(__pi_init_pg_dir		=3D init_pg_dir);
+- PROVIDE(__pi_init_pg_end		=3D init_pg_end);
+- PROVIDE(__pi_swapper_pg_dir		=3D swapper_pg_dir);
++ PI_EXPORT_SYM(swapper_pg_dir);
+ =20
+- PROVIDE(__pi__text			=3D _text);
+- PROVIDE(__pi__stext               	=3D _stext);
+- PROVIDE(__pi__etext               	=3D _etext);
+- PROVIDE(__pi___start_rodata       	=3D __start_rodata);
+- PROVIDE(__pi___inittext_begin     	=3D __inittext_begin);
+- PROVIDE(__pi___inittext_end       	=3D __inittext_end);
+- PROVIDE(__pi___initdata_begin     	=3D __initdata_begin);
+- PROVIDE(__pi___initdata_end       	=3D __initdata_end);
+- PROVIDE(__pi__data                	=3D _data);
+- PROVIDE(__pi___bss_start		=3D __bss_start);
+- PROVIDE(__pi__end			=3D _end);
++ PI_EXPORT_SYM(_text);
++ PI_EXPORT_SYM(_stext);
++ PI_EXPORT_SYM(_etext);
++ PI_EXPORT_SYM(__start_rodata);
++ PI_EXPORT_SYM(__inittext_begin);
++ PI_EXPORT_SYM(__inittext_end);
++ PI_EXPORT_SYM(__initdata_begin);
++ PI_EXPORT_SYM(__initdata_end);
++ PI_EXPORT_SYM(_data);
+ =20
+  #ifdef CONFIG_KVM
+ =20
+
+--Sig_/jme2wR+5.0wPPtiOjws_khJ
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgtLaIACgkQAVBC80lX
+0Gzj0ggAlbycZ9wLahvYfFnNV38OLQKlaiGzfo2lgk/Sq1ZC2oCrbOCfEcxnREKR
+CjAIRslQ+Ghdf4Wq00fWchD9AOpL6jBaXOgpBIjPW8uGCxG+U3anTZ9vN5yLp4dl
+POhU4040s8N5aquVHV7Ml3rPwFipD2gh0sStb0GiBm6qQcocoH6X1aWfPNanp1oJ
+DlQsANAFlqbFkCh9S2bH8K/mzLqx1dmXR5rFhCkN5kZNiUBJo7/oAtM7DhMBf3w9
++8qA6Pc1gUx07wdq3ETyGm8w3hZ5ao9RY6qnezzCgMeVJ7G6t/J2u5xaRjFqJNfO
+dc+rfScOG170eokMxf8CRCtMn/hOeA==
+=h2pf
+-----END PGP SIGNATURE-----
+
+--Sig_/jme2wR+5.0wPPtiOjws_khJ--
