@@ -1,339 +1,170 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7D9017C21B;
-	Wed, 21 May 2025 17:10:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D083B134AC
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 17:12:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747847427; cv=none; b=J2JZ8JLrCzk8RJvFRVQO9rU+zK5R1VOwRmkxrck6f+dZoWkkVv+9AmAuczK1UJu4YDUmTjVrie8jKWVkJwUFECXhTWVLcX0+/Rz5NF7k9tM0hifeJuiig9p+JvyZgpkcD3z/VCuhbeInJ+6Sp74Gz3VS2hIAZVnqNGwOFinminA=
+	t=1747847532; cv=none; b=njBPMuGfohiJrqhR3RvV0GXLbYUZPyHw5orvYVNqfNPmVYx83D2U/aR+/PMiTfds5XY9yAo87tUmeruHuRBAfx9GHWY5Nu+JVKX78SJ+QPBBYjoB3k1TThv8QKPvKm+VZyVx5KUzmhqVPrM4T4NRyPxO4Rn6m1/ZVDhTcM9OwlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747847427; c=relaxed/simple;
-	bh=JzsBQNL/kSas69pyIEdtxjJWFx6sQOuU6X5/zpBwG7c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XHa0TKirdeE3rqIpnbshLKhCYbB3N8k09B1Fztyebj77gg2I4rLJn+P8aTiQnk/uYjBgfFOcweeLCh/1QjeeO8DuL8ccR4VGdJCyf+vjIEblJwayXHl3+W/Q3o6fa7d0F4wcQfUn/fLzbcR6veoAa6ehYGsgrEUPeTl5ml8W4Eo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=xAThB+te; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747847532; c=relaxed/simple;
+	bh=d78K/Ch8eyzrP9+AsaFGDE7EsISxi0Ne4K7nZRV1XIw=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=efXWoZjkTYCaa9WdHgehD01KrYeQHWv3DvFie8fDTeiNJkmYK5ksOLMM0U4i1lujzPFUhReTzwVk/dyyPASl+in/pEXIpG9f7jUByYrjGMx+3a/OyYY0FRY7+cC/6OBa+HqPP4f6FhoFCIhf0iqoGR5U4V/cFq+0is+dePOvTwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G80VNuhl; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="xAThB+te"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B98E9C4CEE4;
-	Wed, 21 May 2025 17:10:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1747847426;
-	bh=JzsBQNL/kSas69pyIEdtxjJWFx6sQOuU6X5/zpBwG7c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=xAThB+texwDEhnBwcPS4vOvOwO0PvaFATu0RNJRvJIKArJFk6C2xj7iufCTqpKdF9
-	 YyPGktaopxWTcJmndLfQPSUT+6WcbK6hgzADgHPE1TYPUjS+bCtn233rT46+DILrAt
-	 UfAQqpqEujyDLFwxs66AuUnkPGqANZMlefp18Gak=
-Date: Wed, 21 May 2025 19:10:23 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Eric Naim <dnaim@cachyos.org>
-Cc: Mario Limonciello <mario.limonciello@amd.com>, stable@vger.kernel.org,
-	patches@lists.linux.dev, linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org, akpm@linux-foundation.org,
-	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
-	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
-	hargar@microsoft.com, broonie@kernel.org, David.Wu3@amd.com,
-	alexander.deucher@amd.com
-Subject: Re: [PATCH 6.14 000/145] 6.14.8-rc1 review
-Message-ID: <2025052105-easiest-sulfur-96e2@gregkh>
-References: <20250520125810.535475500@linuxfoundation.org>
- <8db9b7cb-03ff-4aca-aafa-bcab4d1b5d82@cachyos.org>
- <c364e0d7-f3b2-484d-869b-095140e2537b@amd.com>
- <2025052153-bleach-ouch-0e59@gregkh>
- <a5376c47-156d-4841-85ab-615f2c942960@cachyos.org>
- <2025052144-lid-resource-2461@gregkh>
- <b08348c1-701f-4936-9c82-5d6e91cc701b@cachyos.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G80VNuhl"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-22e3b03cd64so55185955ad.3
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 10:12:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747847529; x=1748452329; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/jNOuCCyzTb1XsnW2HWyWlahXwvYtOlPi+YMKNdC9nY=;
+        b=G80VNuhlJpjIMnCZtmZFHxKhE6RYrRJe+IqbLVaeT2BPEEpAj5K7YJ2PXT8cD+dKrM
+         y3f9Rs8IkRfGV7hj/hwN5vN3gdAk5cZiJNo9zwU8AO6dzQz6edW9KYOshIz3I/kR/JUP
+         iahD866WssIAbiIH9umYuh1a7fHrhdo+A6qE67aAr2VVg1DCTx2rCAr/DkPMZdeLn8Xg
+         c1RGXIVEcQ+lk1XQe94tFkHW9czOBOiJojGqnl106Eaj/7Wpk95D8Pf5BLdAswvzKzcn
+         HR2iWnATPNyDQj9y+2DhY4toxB8tid45G7tDbqmrOIWbfFUPVdE+57HPp3efDixhcf3b
+         Hl2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747847529; x=1748452329;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=/jNOuCCyzTb1XsnW2HWyWlahXwvYtOlPi+YMKNdC9nY=;
+        b=aVHxDn1z/l5kPv4p63jGY6LeooLaBTIPW055QQA8j0JvNH31uhhcO1nlpPbHhp4883
+         sqH9CPwLmzIG6aOlqLF+pxu6mX9Rsg7RryUzdf4G85pj1d2NttTi2Cb2yFLaT0z1w7Eh
+         XSrctqcHUDJw4JI/PRhSr5ojvSGnZLfZquc9XNCFl5TLUUy3wzvQGr6DzJknTeifQDrM
+         /8JZz6bN/IN840mPN0opl0AAJqsoaGq3r6jlY+FxW8YB+KrjfEXt+FyXCLn7AIxFQSf0
+         tNXGZxs30/I1+JCYSUDwgb2+ir7uZfc8+52oY3CA5Km6BJj8aQ7gSvqHa0m05oNMHH8K
+         MX4w==
+X-Forwarded-Encrypted: i=1; AJvYcCUG4sE5fmq0zfKu0BZtqgDRj/CfFAUy7ssFX+mxanOYxanaEDVA18UsDx9Mq8U6tXwbbG/JarVYArK32bQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1oDCJGyQFiI5p5uvQcssdIzxGGsSTS7S1BXcn1NuaclJQFgxV
+	Z5N8H0O1FwwFnk9eBrxPz3Ybug7/xOypxsBNA2suf0XUGC4TnhZeDbz0j10TH9AXhVKIcEwTVYh
+	rISfeyA==
+X-Google-Smtp-Source: AGHT+IETbMHTy/wN84eri4+XJ0dfgyM1nswfh9RHqUQIPWwj4IQFkSc004LmUCE4Wu6BrDmB0awj2qSQ5PU=
+X-Received: from ploy13.prod.google.com ([2002:a17:903:1b2d:b0:22e:5728:685d])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:d483:b0:232:17d8:486
+ with SMTP id d9443c01a7336-23217d81153mr249809655ad.22.1747847529062; Wed, 21
+ May 2025 10:12:09 -0700 (PDT)
+Date: Wed, 21 May 2025 10:12:07 -0700
+In-Reply-To: <5546ad0e36f667a6b426ef47f1f40aee8d83efc9.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b08348c1-701f-4936-9c82-5d6e91cc701b@cachyos.org>
+Mime-Version: 1.0
+References: <20250516215422.2550669-1-seanjc@google.com> <20250516215422.2550669-3-seanjc@google.com>
+ <219b6bd5-9afe-4d1c-aaab-03e5c580ce5c@redhat.com> <aCtQlanun-Kaq4NY@google.com>
+ <dca247173aace1269ce8512ae2d3797289bb1718.camel@intel.com>
+ <aC0MIUOTQbb9-a7k@google.com> <5546ad0e36f667a6b426ef47f1f40aee8d83efc9.camel@intel.com>
+Message-ID: <aC4JZ4ztJiFGVMkB@google.com>
+Subject: Re: [PATCH v3 2/3] KVM: x86: Use kvzalloc() to allocate VM struct
+From: Sean Christopherson <seanjc@google.com>
+To: Kai Huang <kai.huang@intel.com>
+Cc: "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
+	"vipinsh@google.com" <vipinsh@google.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 22, 2025 at 12:59:10AM +0800, Eric Naim wrote:
-> On 5/22/25 00:25, Greg Kroah-Hartman wrote:
-> > On Wed, May 21, 2025 at 10:13:45PM +0800, Eric Naim wrote:
-> >> On 5/21/25 13:35, Greg Kroah-Hartman wrote:
-> >>> On Tue, May 20, 2025 at 09:42:13PM -0500, Mario Limonciello wrote:
-> >>>> On 5/20/2025 4:34 PM, Eric Naim wrote:
-> >>>>> Hi Greg,
-> >>>>>
-> >>>>> On 5/20/25 21:49, Greg Kroah-Hartman wrote:
-> >>>>>> This is the start of the stable review cycle for the 6.14.8 release.
-> >>>>>> There are 145 patches in this series, all will be posted as a response
-> >>>>>> to this one.  If anyone has any issues with these being applied, please
-> >>>>>> let me know.
-> >>>>>>
-> >>>>>> Responses should be made by Thu, 22 May 2025 12:57:37 +0000.
-> >>>>>> Anything received after that time might be too late.
-> >>>>>>
-> >>>>>> The whole patch series can be found in one patch at:
-> >>>>>> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.14.8-rc1.gz
-> >>>>>> or in the git tree and branch at:
-> >>>>>> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.14.y
-> >>>>>> and the diffstat can be found below.
-> >>>>>>
-> >>>>>> thanks,
-> >>>>>>
-> >>>>>> greg k-h
-> >>>>>>
-> >>>>>> -------------
-> >>>>>> Pseudo-Shortlog of commits:
-> >>>>>>
-> >>>>>> Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> >>>>>>      Linux 6.14.8-rc1
-> >>>>>>
-> >>>>>> Dan Carpenter <dan.carpenter@linaro.org>
-> >>>>>>      phy: tegra: xusb: remove a stray unlock
-> >>>>>>
-> >>>>>> Tiezhu Yang <yangtiezhu@loongson.cn>
-> >>>>>>      perf tools: Fix build error for LoongArch
-> >>>>>>
-> >>>>>> Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> >>>>>>      mm/page_alloc: fix race condition in unaccepted memory handling
-> >>>>>>
-> >>>>>> Daniele Ceraolo Spurio <daniele.ceraolospurio@intel.com>
-> >>>>>>      drm/xe/gsc: do not flush the GSC worker from the reset path
-> >>>>>>
-> >>>>>> Maciej Falkowski <maciej.falkowski@linux.intel.com>
-> >>>>>>      accel/ivpu: Flush pending jobs of device's workqueues
-> >>>>>>
-> >>>>>> Karol Wachowski <karol.wachowski@intel.com>
-> >>>>>>      accel/ivpu: Fix missing MMU events if file_priv is unbound
-> >>>>>>
-> >>>>>> Karol Wachowski <karol.wachowski@intel.com>
-> >>>>>>      accel/ivpu: Fix missing MMU events from reserved SSID
-> >>>>>>
-> >>>>>> Karol Wachowski <karol.wachowski@intel.com>
-> >>>>>>      accel/ivpu: Move parts of MMU event IRQ handling to thread handler
-> >>>>>>
-> >>>>>> Karol Wachowski <karol.wachowski@intel.com>
-> >>>>>>      accel/ivpu: Dump only first MMU fault from single context
-> >>>>>>
-> >>>>>> Maciej Falkowski <maciej.falkowski@linux.intel.com>
-> >>>>>>      accel/ivpu: Use workqueue for IRQ handling
-> >>>>>>
-> >>>>>> Shuai Xue <xueshuai@linux.alibaba.com>
-> >>>>>>      dmaengine: idxd: Refactor remove call with idxd_cleanup() helper
-> >>>>>>
-> >>>>>> Shuai Xue <xueshuai@linux.alibaba.com>
-> >>>>>>      dmaengine: idxd: fix memory leak in error handling path of idxd_pci_probe
-> >>>>>>
-> >>>>>> Shuai Xue <xueshuai@linux.alibaba.com>
-> >>>>>>      dmaengine: idxd: fix memory leak in error handling path of idxd_alloc
-> >>>>>>
-> >>>>>> Shuai Xue <xueshuai@linux.alibaba.com>
-> >>>>>>      dmaengine: idxd: Add missing idxd cleanup to fix memory leak in remove call
-> >>>>>>
-> >>>>>> Shuai Xue <xueshuai@linux.alibaba.com>
-> >>>>>>      dmaengine: idxd: Add missing cleanups in cleanup internals
-> >>>>>>
-> >>>>>> Shuai Xue <xueshuai@linux.alibaba.com>
-> >>>>>>      dmaengine: idxd: Add missing cleanup for early error out in idxd_setup_internals
-> >>>>>>
-> >>>>>> Shuai Xue <xueshuai@linux.alibaba.com>
-> >>>>>>      dmaengine: idxd: fix memory leak in error handling path of idxd_setup_groups
-> >>>>>>
-> >>>>>> Shuai Xue <xueshuai@linux.alibaba.com>
-> >>>>>>      dmaengine: idxd: fix memory leak in error handling path of idxd_setup_engines
-> >>>>>>
-> >>>>>> Shuai Xue <xueshuai@linux.alibaba.com>
-> >>>>>>      dmaengine: idxd: fix memory leak in error handling path of idxd_setup_wqs
-> >>>>>>
-> >>>>>> Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
-> >>>>>>      dmaengine: ti: k3-udma: Use cap_mask directly from dma_device structure instead of a local copy
-> >>>>>>
-> >>>>>> Ronald Wahl <ronald.wahl@legrand.com>
-> >>>>>>      dmaengine: ti: k3-udma: Add missing locking
-> >>>>>>
-> >>>>>> Barry Song <baohua@kernel.org>
-> >>>>>>      mm: userfaultfd: correct dirty flags set for both present and swap pte
-> >>>>>>
-> >>>>>> Wupeng Ma <mawupeng1@huawei.com>
-> >>>>>>      mm: hugetlb: fix incorrect fallback for subpool
-> >>>>>>
-> >>>>>> hexue <xue01.he@samsung.com>
-> >>>>>>      io_uring/uring_cmd: fix hybrid polling initialization issue
-> >>>>>>
-> >>>>>> Jens Axboe <axboe@kernel.dk>
-> >>>>>>      io_uring/memmap: don't use page_address() on a highmem page
-> >>>>>>
-> >>>>>> Nathan Chancellor <nathan@kernel.org>
-> >>>>>>      net: qede: Initialize qede_ll_ops with designated initializer
-> >>>>>>
-> >>>>>> Steven Rostedt <rostedt@goodmis.org>
-> >>>>>>      ring-buffer: Fix persistent buffer when commit page is the reader page
-> >>>>>>
-> >>>>>> Ming Yen Hsieh <mingyen.hsieh@mediatek.com>
-> >>>>>>      wifi: mt76: mt7925: fix missing hdr_trans_tlv command for broadcast wtbl
-> >>>>>>
-> >>>>>> Fedor Pchelkin <pchelkin@ispras.ru>
-> >>>>>>      wifi: mt76: disable napi on driver removal
-> >>>>>>
-> >>>>>> Jarkko Sakkinen <jarkko@kernel.org>
-> >>>>>>      tpm: Mask TPM RC in tpm2_start_auth_session()
-> >>>>>>
-> >>>>>> Aaron Kling <webgeek1234@gmail.com>
-> >>>>>>      spi: tegra114: Use value to check for invalid delays
-> >>>>>>
-> >>>>>> Jethro Donaldson <devel@jro.nz>
-> >>>>>>      smb: client: fix memory leak during error handling for POSIX mkdir
-> >>>>>>
-> >>>>>> Steve Siwinski <ssiwinski@atto.com>
-> >>>>>>      scsi: sd_zbc: block: Respect bio vector limits for REPORT ZONES buffer
-> >>>>>>
-> >>>>>> Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> >>>>>>      phy: renesas: rcar-gen3-usb2: Set timing registers only once
-> >>>>>>
-> >>>>>> Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> >>>>>>      phy: renesas: rcar-gen3-usb2: Fix role detection on unbind/bind
-> >>>>>>
-> >>>>>> Oleksij Rempel <o.rempel@pengutronix.de>
-> >>>>>>      net: phy: micrel: remove KSZ9477 EEE quirks now handled by phylink
-> >>>>>>
-> >>>>>> Oleksij Rempel <o.rempel@pengutronix.de>
-> >>>>>>      net: dsa: microchip: let phylink manage PHY EEE configuration on KSZ switches
-> >>>>>>
-> >>>>>> Ma Ke <make24@iscas.ac.cn>
-> >>>>>>      phy: Fix error handling in tegra_xusb_port_init
-> >>>>>>
-> >>>>>> Wayne Chang <waynec@nvidia.com>
-> >>>>>>      phy: tegra: xusb: Use a bitmask for UTMI pad power state tracking
-> >>>>>>
-> >>>>>> Steven Rostedt <rostedt@goodmis.org>
-> >>>>>>      tracing: samples: Initialize trace_array_printk() with the correct function
-> >>>>>>
-> >>>>>> Ashish Kalra <ashish.kalra@amd.com>
-> >>>>>>      x86/sev: Make sure pages are not skipped during kdump
-> >>>>>>
-> >>>>>> Ashish Kalra <ashish.kalra@amd.com>
-> >>>>>>      x86/sev: Do not touch VMSA pages during SNP guest memory kdump
-> >>>>>>
-> >>>>>> pengdonglin <pengdonglin@xiaomi.com>
-> >>>>>>      ftrace: Fix preemption accounting for stacktrace filter command
-> >>>>>>
-> >>>>>> pengdonglin <pengdonglin@xiaomi.com>
-> >>>>>>      ftrace: Fix preemption accounting for stacktrace trigger command
-> >>>>>>
-> >>>>>> Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> >>>>>>      i2c: designware: Fix an error handling path in i2c_dw_pci_probe()
-> >>>>>>
-> >>>>>> Nathan Chancellor <nathan@kernel.org>
-> >>>>>>      kbuild: Disable -Wdefault-const-init-unsafe
-> >>>>>>
-> >>>>>> Michael Kelley <mhklinux@outlook.com>
-> >>>>>>      Drivers: hv: vmbus: Remove vmbus_sendpacket_pagebuffer()
-> >>>>>>
-> >>>>>> Michael Kelley <mhklinux@outlook.com>
-> >>>>>>      Drivers: hv: Allow vmbus_sendpacket_mpb_desc() to create multiple ranges
-> >>>>>>
-> >>>>>> Michael Kelley <mhklinux@outlook.com>
-> >>>>>>      hv_netvsc: Remove rmsg_pgcnt
-> >>>>>>
-> >>>>>> Michael Kelley <mhklinux@outlook.com>
-> >>>>>>      hv_netvsc: Preserve contiguous PFN grouping in the page buffer array
-> >>>>>>
-> >>>>>> Michael Kelley <mhklinux@outlook.com>
-> >>>>>>      hv_netvsc: Use vmbus_sendpacket_mpb_desc() to send VMBus messages
-> >>>>>>
-> >>>>>> Dragan Simic <dsimic@manjaro.org>
-> >>>>>>      arm64: dts: rockchip: Remove overdrive-mode OPPs from RK3588J SoC dtsi
-> >>>>>>
-> >>>>>> Sam Edwards <cfsworks@gmail.com>
-> >>>>>>      arm64: dts: rockchip: Allow Turing RK1 cooling fan to spin down
-> >>>>>>
-> >>>>>> Christian Hewitt <christianshewitt@gmail.com>
-> >>>>>>      arm64: dts: amlogic: dreambox: fix missing clkc_audio node
-> >>>>>>
-> >>>>>> Hyejeong Choi <hjeong.choi@samsung.com>
-> >>>>>>      dma-buf: insert memory barrier before updating num_fences
-> >>>>>>
-> >>>>>> Nicolas Chauvet <kwizart@gmail.com>
-> >>>>>>      ALSA: usb-audio: Add sample rate quirk for Microdia JP001 USB Camera
-> >>>>>>
-> >>>>>> Christian Heusel <christian@heusel.eu>
-> >>>>>>      ALSA: usb-audio: Add sample rate quirk for Audioengine D1
-> >>>>>>
-> >>>>>> Wentao Liang <vulab@iscas.ac.cn>
-> >>>>>>      ALSA: es1968: Add error handling for snd_pcm_hw_constraint_pow2()
-> >>>>>>
-> >>>>>> Jeremy Linton <jeremy.linton@arm.com>
-> >>>>>>      ACPI: PPTT: Fix processor subtable walk
-> >>>>>>
-> >>>>>> Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
-> >>>>>>      gpio: pca953x: fix IRQ storm on system wake up
-> >>>>>>
-> >>>>>> Alexey Makhalov <alexey.makhalov@broadcom.com>
-> >>>>>>      MAINTAINERS: Update Alexey Makhalov's email address
-> >>>>>>
-> >>>>>> Wayne Lin <Wayne.Lin@amd.com>
-> >>>>>>      drm/amd/display: Avoid flooding unnecessary info messages
-> >>>>>>
-> >>>>>> Wayne Lin <Wayne.Lin@amd.com>
-> >>>>>>      drm/amd/display: Correct the reply value when AUX write incomplete
-> >>>>>>
-> >>>>>> Philip Yang <Philip.Yang@amd.com>
-> >>>>>>      drm/amdgpu: csa unmap use uninterruptible lock
-> >>>>>>
-> >>>>>> Tim Huang <tim.huang@amd.com>
-> >>>>>>      drm/amdgpu: fix incorrect MALL size for GFX1151
-> >>>>>>
-> >>>>>> David (Ming Qiang) Wu <David.Wu3@amd.com>
-> >>>>>>      drm/amdgpu: read back register after written for VCN v4.0.5
-> >>>>>>
-> >>>>>
-> >>>>> This commit seems to breaking a couple of devices with the Phoenix APU, most notably the Ryzen AI chips. Note that this commit in mainline seems to work as intended, and after doing a little bit of digging, [1] landed in 6.15 and so this cherrypick may not be so trivial after all. Attached is a kernel trace highlighting the breakage caused by this commit, along with [2] for the full log.
-> >>>>>
-> >>>>> Also adding Alex, David and Mario to Ccs.
-> >>>>>
-> >>>>
-> >>>> Just a minor correction - VCN 4.0.5 is on Strix.  So this report is not
-> >>>> likely from a Phoenix APU.
-> >>>>
-> >>>> Nonetheless I agree; I suspect backporting
-> >>>> ecc9ab4e924b7eb9e2c4a668162aaa1d9d60d08c will help the issue.
-> >>>
-> >>> If it is required, someone is going to need to provide a working
-> >>> version, as that does not apply cleanly as-is.
-> >>>
-> >>> thanks,
-> >>>
-> >>> greg k-h
-> >>
-> >> Hi Greg,
-> >>
-> >> I finally got someone to test the mentioned commit, and I (or they) can confirm that ecc9ab4e924b7eb9e2c4a668162aaa1d9d60d08c is indeed the missing commit needed for "drm/amdgpu: read back register after written for VCN v4.0.5".
-> >>
-> >> I don't know if this will help, but I got everything to apply cleanly by first applying ecc9ab4e924b7eb9e2c4a668162aaa1d9d60d08c, then cherry-picking the mainline version of "drm/amdgpu: read back register after written for VCN v4.0.5" [1] since the one in stable-rc seems to have been adjusted for the stable tree and made it conflict.
-> > 
-> > I don't see the conflict that happened here, as I only apply patches
-> > "cleanly".  But I trust you that things are odd here.
-> > 
-> >> -- 
-> >> Regards,
-> >>   Eric
-> >>
-> >> [1] ee7360fc27d6045510f8fe459b5649b2af27811a
-> > 
-> > Ick.  Ok, let me go drop this commit from the tree now, and then can you
-> > resubmit both of these as a tested series for them to be included
-> > properly?
-> > 
-> > I'll do the same for both 6.12.y and 6.14.y now.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> 
-> Hi,
-> 
-> I've sent it over at [1]. I hope I did it correctly as this is the first time I'm formally sending over a patch (even if it's not mine). Please let me know if I did anything wrong and things that I can do to correct them :). I've also opted to add a `Tested-by` tag in response to "a tested series". Reminder that I only built the kernels, and had another user test that build since I don't have an affected device, so feel free to drop it if its wrong.
+On Tue, May 20, 2025, Kai Huang wrote:
+> On Tue, 2025-05-20 at 16:11 -0700, Sean Christopherson wrote:
+> > On Tue, May 20, 2025, Kai Huang wrote:
+> > > On Mon, 2025-05-19 at 08:39 -0700, Sean Christopherson wrote:
+> > > > +static int tdx_sept_remove_private_spte(struct kvm *kvm, gfn_t gfn=
+,
+> > > > +					enum pg_level level, kvm_pfn_t pfn)
+> > > >  {
+> > > >  	struct page *page =3D pfn_to_page(pfn);
+> > > >  	int ret;
+> > > > @@ -3507,10 +3507,14 @@ int __init tdx_bringup(void)
+> > > >  	r =3D __tdx_bringup();
+> > > >  	if (r) {
+> > > >  		/*
+> > > > -		 * Disable TDX only but don't fail to load module if
+> > > > -		 * the TDX module could not be loaded.  No need to print
+> > > > -		 * message saying "module is not loaded" because it was
+> > > > -		 * printed when the first SEAMCALL failed.
+> > > > +		 * Disable TDX only but don't fail to load module if the TDX
+> > > > +		 * module could not be loaded.  No need to print message saying
+> > > > +		 * "module is not loaded" because it was printed when the first
+> > > > +		 * SEAMCALL failed.  Don't bother unwinding the S-EPT hooks or
+> > > > +		 * vm_size, as kvm_x86_ops have already been finalized (and are
+> > > > +		 * intentionally not exported).  The S-EPT code is unreachable,
+> > > > +		 * and allocating a few more bytes per VM in a should-be-rare
+> > > > +		 * failure scenario is a non-issue.
+> > > >  		 */
+> > > >  		if (r =3D=3D -ENODEV)
+> > > >  			goto success_disable_tdx;
+> > > > @@ -3524,3 +3528,19 @@ int __init tdx_bringup(void)
+> > > >  	enable_tdx =3D 0;
+> > > >  	return 0;
+> > > >  }
+> > > > +
+> > > > +
+> > > > +void __init tdx_hardware_setup(void)
+> > > > +{
+> > > > +	/*
+> > > > +	 * Note, if the TDX module can't be loaded, KVM TDX support will =
+be
+> > > > +	 * disabled but KVM will continue loading (see tdx_bringup()).
+> > > > +	 */
+> > >=20
+> > > This comment seems a little bit weird to me.  I think what you meant =
+here is the
+> > > @vm_size and those S-EPT ops are not unwound while TDX cannot be brou=
+ght up but
+> > > KVM is still loaded.
+> >=20
+> > This comment is weird?  Or the one in tdx_bringup() is weird? =C2=A0
+> >=20
+>=20
+> I definitely agree tdx_bringup() is weird :-)
+>=20
+> > The sole intent of _this_ comment is to clarify that KVM could still en=
+d up
+> > running load with TDX disabled. =C2=A0
+> >=20
+>=20
+> But this behaviour itself doesn't mean anything,
 
-Looks good, I'll queue them up after this round of releases goes out,
-thanks!
+I disagree.  The overwhelming majority of code in KVM expects that either t=
+he
+associated feature will be fully enabled, or KVM will abort the overall flo=
+w,
+e.g. refuse to load, fail vCPU/VM creation, etc.
 
-greg k-h
+Continuing on is very exceptional IMO, and warrants a comment.
+
+> e.g., if we export kvm_x86_ops, we could unwind them.
+
+Maaaybe.  I mean, yes, we could fully unwind kvm_x86_ops, but doing so woul=
+d make
+the overall code far more brittle.  E.g. simply updating kvm_x86_ops won't =
+suffice,
+as the static_calls also need to be patched, and we would have to be very c=
+areful
+not to touch anything in kvm_x86_ops that might have been consumed between =
+here
+and the call to tdx_bringup().
+
+> So without mentioning "those are not unwound", it doesn't seem useful to =
+me.
+>=20
+> But it does have "(see tdx_bringup())" at the end, so OK to me.  I guess =
+I just
+> wish it could be more verbose.
+
+Yeah, redirecting to another comment isn't a great experience for readers, =
+but I
+don't want to duplicate the explanation and details because that risks crea=
+ting
+stale and/or contradicting comments in the future, and in general increases=
+ the
+maintenance cost (small though it should be in this case).
