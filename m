@@ -1,62 +1,62 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2CD8221717;
-	Wed, 21 May 2025 01:53:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8898221DB0;
+	Wed, 21 May 2025 01:53:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747792428; cv=none; b=AhTQjTvSX9aIr+V9qfLrgX6ob0AFmyljDhFfrmakJ36Jphh/N9kfVGev7Y22akoJ+zX9vQVeNs5dA4JM/4Lg1kT7Ok3p7lhN9O1fd+OUaog+NomtQkXrLDkufQrVWIOgVLaphOacLrZhRt1gp/Gc3g4H7dfLVfY4L+8k+VrLFPc=
+	t=1747792433; cv=none; b=qQ2lalGpfmuRzAHDO+/vgKkKJsix5pFtLsgsMClAzM5VotKprY5CylltFXDlvqyN8DOVK55j602QsF2655osLVUCddNkflOvXXmDnWvPBnuS3fG0Y4oiaNh6O8f9w0ML/nFRwtFFuNfhcPHyBhaAUmLlva/mqe0hD/qOYlTV+E8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747792428; c=relaxed/simple;
-	bh=C+afvCMn4IIFunrreI/koJIOT0K0utwIdt4vaVSFAZY=;
+	s=arc-20240116; t=1747792433; c=relaxed/simple;
+	bh=Jmqb0qfzmckFPdhbVbqdMz2SzJYxVZTMfB26alyr/T0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PpfFzlOrMwVgrOoenkgFmwDU8oBkT1cdVKR4uBW4SbK2Vp907XyK7uX+VX7jjT/oPvFT2mKofwGcF2LO/048Nf3nrEZZ72k5dlcGeZHkgHacmXJVxjeD3ECYWDFHV9kftImlOT/rb69Z32HmviMWo+CPldlMaaJxKJQ86GMcFqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J6VXUa/e; arc=none smtp.client-ip=209.85.214.174
+	 MIME-Version; b=mfY2YRvgml/2LesAtZZxVBtZKoW4prShLCEGrSOPDiYXvTAgJpVMGDao0xLQdROgUj999YP0iCrTsPGKG+rYqvS0HZ+gb82qt4Liy2LTmoQHxHaUZVtFtzahic9WKbdiDGt3/oP/A27f7A+fpX7/CTn3BXb154X6UwUYhDCDK9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XplQ3WWI; arc=none smtp.client-ip=209.85.215.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J6VXUa/e"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-231e8553248so40197245ad.1;
-        Tue, 20 May 2025 18:53:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XplQ3WWI"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-b0b2d0b2843so4769661a12.2;
+        Tue, 20 May 2025 18:53:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747792426; x=1748397226; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1747792431; x=1748397231; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mmazB8SGFETg58gqzeNKFWu1xciTSNCHPNcLrwlPpjc=;
-        b=J6VXUa/e+Cnma+/wdULh8f4VqO7bzk0QPyh9cfkKavOhui7FDE5X04whc4FcHa22sH
-         socehdXU6idvs4iG40xZKhwKt34//azPrfJxwoOiHGAov/+aurePFYs89Ok+i3zcDY9N
-         p8P44Vn3f0mKBfO7RoY+CbohB0rTXCw7I2IuYFU4O0qUfX+x5aGqxX6+sxJGJeRq2Q5H
-         GnAQYRTwtsWQbY2ncLV4gIXC6AECqhOjEjTijtIRRvvDwvdJ6PlIGGLZTBY8L24hTDot
-         z147Q+feMywS+1G1KJsnTSYp/dC4+ECwFvv4EWxM9mhuV7D3MqLntaWUlw9zpF5cPGmO
-         qH7g==
+        bh=vk7hGdbueTM/XeD7quVK27Y9jexgacMzkbIco6Hgcyk=;
+        b=XplQ3WWIwg5AdiTE6f1/XgVmqtJ7gZYOvuJ9Gs3VhxhS5d1jtd8BcUwKSI2OCOoJsx
+         Kbc1tVuy/dCb+r9f8K/ZZnjXeq00L6Di9llByCDqstjXc+o/BvGBd4wiULjZxXchZvma
+         RcBjJCuqcNeN7ItnVoImJzoxc1n315B2rjU7u0rKPRU2fNUUg9/g8Myft6z441K2M1+Z
+         KUzmei8YGzzls1fp8Jo9Mnj3409ghK3WNLgSV/qWob/DPKo6NJfeMxiBdKQ0d3HD2vuV
+         MG4FIYspRrkX+9NhiDasyr2ee82qbEBS4I5YNiSr1QebE7S1oieeEkFro3PjnzUwHe7A
+         x+jQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747792426; x=1748397226;
+        d=1e100.net; s=20230601; t=1747792431; x=1748397231;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=mmazB8SGFETg58gqzeNKFWu1xciTSNCHPNcLrwlPpjc=;
-        b=XAQTJUAvx42b77HxJ4TTQWwA0/nDNVeBUHsH0UaNBqYulbgtIJ17XKaRxbdCoNe+SL
-         6XT/zQGVax6D/KLaaUNU57mInXdNVdNy1TNo0q0ES1nlhU+RN62GzblEnVeOSC01UGUI
-         wE3VVLtbSKCFufJfNf2tuibYTFPT9F/XmX7QOzOqfHww41IPR9UB0uWOnYO+cVuJ3hTU
-         vt5O6q5oOg3XbKWVhQQ95A/8VPM65udXWV3kDwTDP6Tu7LOslnjXN7wUTLQQb+kQpwXC
-         Bjy9NTi8vpaSGB6ngGSNMtjI8DyNtzIB5we3E+I1CeXDa/tdGeQJn8dTWv1C9K0vrFyr
-         jF6w==
-X-Forwarded-Encrypted: i=1; AJvYcCXJdCT5rk3n5rzkJGJUiQVM4NaSmM/wp6LnfNUzi7A9Z6rTrAdeUVzcGkFbWnuLkIhWqsbMMl8RzDbbpco=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTzQ4jOXlsVJvIfbTmbRsHp//xuICQmpzI1q0IA08U2jvAwSw2
-	8TYl2m9QmL5OyRtQ8p2kaAFvti132ZCW74NP95/WRiruzDW+uxGove805m72VlwsO9o=
-X-Gm-Gg: ASbGncuJy1RIrXW9tR/2MlqQ9fCx7//jEvhsqOc80YKtbozx7U342V+t7cdOUT0eaWf
-	8gu9xHWHAoU7HWWR06/mSFohC3RTHqzWK7gBgVLR0bC+9W2E960KLbIN+6otcx4CpDyk4SzyEEU
-	148smJFxx0s3WGZG4CjnuCDiCjR8TxDlYshaym9yRTdrx0fSc3B2XkFHpwVdM7ggRbl+bA+VXNx
-	Rn3r9YTiThs3k1fNBk8ZbksPHYy/InT2Rz7dMPEpiYQLXY+ipTp0wTaCv6AqXdluq1Q1oYtYgAJ
-	iMXBcz1aOtrR2dU8IOJ9gGkbl00dAbqEPhj4Dv2PnA09
-X-Google-Smtp-Source: AGHT+IG0Zo1HpterVv9+DVON0WlhnzTyegJfE0fnvclWPcmXuPaTn+KyY8eAJ1oi4H7dWAGvVrW8/Q==
-X-Received: by 2002:a17:902:f610:b0:215:9bc2:42ec with SMTP id d9443c01a7336-231de37f1e3mr222057535ad.47.1747792425935;
-        Tue, 20 May 2025 18:53:45 -0700 (PDT)
+        bh=vk7hGdbueTM/XeD7quVK27Y9jexgacMzkbIco6Hgcyk=;
+        b=q52Wy4yP/yPqmgnfq9agMVUSyhO4ahulN6ZmDZSMqEQYtXxFNu6LgFL+9Bq75IA9cS
+         IzPYazWIYtHSSTyTV5ZfJTrCaxDAgFw6uDRukI3d8NfCydTyDZZd+3aA+zaAPEKN5cG8
+         pAk+MrHpFIQ7jTHUx/1R6I6sBmii/GI6o7M6K++4zsKXeK8wMleyF/fn5y+FyUM4+Re0
+         iMlSVsFlYDBDWdaZFXYKtyszjLbWsy8KkunRqlnGKXUacLSAL5Yf9n5Fgxh6CMFeS543
+         hm6AzEi9jnkEk8RUMOQx/vIIB1/cSGplNfl1gKBkqOnbAnkbKx93NdWgZpK3pcwtB/xC
+         nrRw==
+X-Forwarded-Encrypted: i=1; AJvYcCV7MgLZiqpFQw7VazhLO/Bq8bCYhqbk8BOYb7kj6lFlESOxmUjyyIlKy/SY0HhhDjGiaVf16jmqeJpcKQ0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzE6U4vGtEfn7RmFIel8xw+G9r+V6Ou0JRk/Fv1pKgXPcSagl0w
+	TznZ3iSzceKX7o6rHpGlo7nTBXvs0+oEgpFXy1qotMNCd0UiRR3SLGiwIaLywYyToFc=
+X-Gm-Gg: ASbGncsrlokvI+srTTApyKX3PZe7e3QNajC7tYE3XSOy35w2XaqkRyC0GPX4SlZQcq2
+	g6gc8LVVr65oETPEeVyZsa1JsKYqHkQ2aoQPdpWCZ3RcobyrBQfdtsuOVciCq3isuvx7FAvKx+B
+	ZXhVmU3z44P8LtnUeqnDZ3b1AgOL8cRVDMJD1F1oGkMSWbc2Uz7oeNHVZ3hJiT1te9aLwB+pNXA
+	+8cPGN0eAnMzqpqWSOQFc2iTT9pgMVADB1c/QwUb53yGaQR6Q+8lUrOBnASWecPjpxWiEy4S2hj
+	0zca4qu8pjBvZNRw0cxYB9witKMD2Pz1iq4D2rwiIorAhiRJWZuHmDQ=
+X-Google-Smtp-Source: AGHT+IH6lYx4FVOHg5TaGuxx99FiGF29bNGDqe6QIzkNykPL9egSxg4wMfSRAq3/FRMwd9DOOaDIOg==
+X-Received: by 2002:a17:903:1acf:b0:224:255b:c934 with SMTP id d9443c01a7336-231d4583e46mr245108885ad.51.1747792430928;
+        Tue, 20 May 2025 18:53:50 -0700 (PDT)
 Received: from gmail.com ([116.237.135.88])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4eedb59sm82796665ad.257.2025.05.20.18.53.44
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4eedb59sm82796665ad.257.2025.05.20.18.53.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 May 2025 18:53:45 -0700 (PDT)
+        Tue, 20 May 2025 18:53:50 -0700 (PDT)
 From: Qingfang Deng <dqfext@gmail.com>
 To: stable@vger.kernel.org,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -64,9 +64,9 @@ To: stable@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Ian Kent <raven@themaw.net>,
 	Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 5.10 2/5] kernfs: use VFS negative dentry caching
-Date: Wed, 21 May 2025 09:53:32 +0800
-Message-ID: <20250521015336.3450911-3-dqfext@gmail.com>
+Subject: [PATCH 5.10 4/5] kernfs: use i_lock to protect concurrent inode updates
+Date: Wed, 21 May 2025 09:53:34 +0800
+Message-ID: <20250521015336.3450911-5-dqfext@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250521015336.3450911-1-dqfext@gmail.com>
 References: <20250521015336.3450911-1-dqfext@gmail.com>
@@ -80,118 +80,102 @@ Content-Transfer-Encoding: 8bit
 
 From: Ian Kent <raven@themaw.net>
 
-Commit c7e7c04274b13f98f758fb69b03f2ab61976ea80 upstream.
+Commit 47b5c64d0ab5e7136db2b78c6ec710e0d8a5a36b upstream.
 
-If there are many lookups for non-existent paths these negative lookups
-can lead to a lot of overhead during path walks.
+The inode operations .permission() and .getattr() use the kernfs node
+write lock but all that's needed is the read lock to protect against
+partial updates of these kernfs node fields which are all done under
+the write lock.
 
-The VFS allows dentries to be created as negative and hashed, and caches
-them so they can be used to reduce the fairly high overhead alloc/free
-cycle that occurs during these lookups.
+And .permission() is called frequently during path walks and can cause
+quite a bit of contention between kernfs node operations and path
+walks when the number of concurrent walks is high.
 
-Use the kernfs node parent revision to identify if a change has been
-made to the containing directory so that the negative dentry can be
-discarded and the lookup redone.
+To change kernfs_iop_getattr() and kernfs_iop_permission() to take
+the rw sem read lock instead of the write lock an additional lock is
+needed to protect against multiple processes concurrently updating
+the inode attributes and link count in kernfs_refresh_inode().
+
+The inode i_lock seems like the sensible thing to use to protect these
+inode attribute updates so use it in kernfs_refresh_inode().
+
+The last hunk in the patch, applied to kernfs_fill_super(), is possibly
+not needed but taking the lock was present originally. I prefer to
+continue to take it to protect against a partial update of the source
+kernfs fields during the call to kernfs_refresh_inode() made by
+kernfs_get_inode().
 
 Reviewed-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Ian Kent <raven@themaw.net>
-Link: https://lore.kernel.org/r/162642770420.63632.15791924970508867106.stgit@web.messagingengine.com
+Link: https://lore.kernel.org/r/162642771474.63632.16295959115893904470.stgit@web.messagingengine.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/kernfs/dir.c | 55 +++++++++++++++++++++++++++++++------------------
- 1 file changed, 35 insertions(+), 20 deletions(-)
+ fs/kernfs/inode.c | 18 ++++++++++++------
+ fs/kernfs/mount.c |  4 ++--
+ 2 files changed, 14 insertions(+), 8 deletions(-)
 
-diff --git a/fs/kernfs/dir.c b/fs/kernfs/dir.c
-index 9bc73c8b6e3f..1756f7e43aac 100644
---- a/fs/kernfs/dir.c
-+++ b/fs/kernfs/dir.c
-@@ -565,9 +565,31 @@ static int kernfs_dop_revalidate(struct dentry *dentry, unsigned int flags)
- 	if (flags & LOOKUP_RCU)
- 		return -ECHILD;
+diff --git a/fs/kernfs/inode.c b/fs/kernfs/inode.c
+index ddaf18198935..73d7d4a24c51 100644
+--- a/fs/kernfs/inode.c
++++ b/fs/kernfs/inode.c
+@@ -189,11 +189,13 @@ int kernfs_iop_getattr(const struct path *path, struct kstat *stat,
+ 	struct inode *inode = d_inode(path->dentry);
+ 	struct kernfs_node *kn = inode->i_private;
  
--	/* Always perform fresh lookup for negatives */
--	if (d_really_is_negative(dentry))
--		goto out_bad_unlocked;
-+	/* Negative hashed dentry? */
-+	if (d_really_is_negative(dentry)) {
-+		struct kernfs_node *parent;
+-	down_write(&kernfs_rwsem);
++	down_read(&kernfs_rwsem);
++	spin_lock(&inode->i_lock);
+ 	kernfs_refresh_inode(kn, inode);
+-	up_write(&kernfs_rwsem);
+-
+ 	generic_fillattr(inode, stat);
++	spin_unlock(&inode->i_lock);
++	up_read(&kernfs_rwsem);
 +
-+		/* If the kernfs parent node has changed discard and
-+		 * proceed to ->lookup.
-+		 */
-+		mutex_lock(&kernfs_mutex);
-+		spin_lock(&dentry->d_lock);
-+		parent = kernfs_dentry_node(dentry->d_parent);
-+		if (parent) {
-+			if (kernfs_dir_changed(parent, dentry)) {
-+				spin_unlock(&dentry->d_lock);
-+				mutex_unlock(&kernfs_mutex);
-+				return 0;
-+			}
-+		}
-+		spin_unlock(&dentry->d_lock);
-+		mutex_unlock(&kernfs_mutex);
-+
-+		/* The kernfs parent node hasn't changed, leave the
-+		 * dentry negative and return success.
-+		 */
-+		return 1;
-+	}
- 
- 	kn = kernfs_dentry_node(dentry);
- 	mutex_lock(&kernfs_mutex);
-@@ -593,7 +615,6 @@ static int kernfs_dop_revalidate(struct dentry *dentry, unsigned int flags)
- 	return 1;
- out_bad:
- 	mutex_unlock(&kernfs_mutex);
--out_bad_unlocked:
  	return 0;
  }
  
-@@ -1104,33 +1125,27 @@ static struct dentry *kernfs_iop_lookup(struct inode *dir,
- 	struct dentry *ret;
- 	struct kernfs_node *parent = dir->i_private;
+@@ -275,17 +277,21 @@ void kernfs_evict_inode(struct inode *inode)
+ int kernfs_iop_permission(struct inode *inode, int mask)
+ {
  	struct kernfs_node *kn;
--	struct inode *inode;
-+	struct inode *inode = NULL;
- 	const void *ns = NULL;
++	int ret;
  
- 	mutex_lock(&kernfs_mutex);
--
- 	if (kernfs_ns_enabled(parent))
- 		ns = kernfs_info(dir->i_sb)->ns;
+ 	if (mask & MAY_NOT_BLOCK)
+ 		return -ECHILD;
  
- 	kn = kernfs_find_ns(parent, dentry->d_name.name, ns);
--
--	/* no such entry */
--	if (!kn || !kernfs_active(kn)) {
--		ret = NULL;
--		goto out_unlock;
--	}
--
- 	/* attach dentry and inode */
--	inode = kernfs_get_inode(dir->i_sb, kn);
--	if (!inode) {
--		ret = ERR_PTR(-ENOMEM);
--		goto out_unlock;
-+	if (kn && kernfs_active(kn)) {
-+		inode = kernfs_get_inode(dir->i_sb, kn);
-+		if (!inode)
-+			inode = ERR_PTR(-ENOMEM);
- 	}
--
--	/* instantiate and hash dentry */
-+	/* Needed only for negative dentry validation */
-+	if (!inode)
-+		kernfs_set_rev(parent, dentry);
-+	/* instantiate and hash (possibly negative) dentry */
- 	ret = d_splice_alias(inode, dentry);
-- out_unlock:
- 	mutex_unlock(&kernfs_mutex);
-+
- 	return ret;
+ 	kn = inode->i_private;
+ 
+-	down_write(&kernfs_rwsem);
++	down_read(&kernfs_rwsem);
++	spin_lock(&inode->i_lock);
+ 	kernfs_refresh_inode(kn, inode);
+-	up_write(&kernfs_rwsem);
++	ret = generic_permission(inode, mask);
++	spin_unlock(&inode->i_lock);
++	up_read(&kernfs_rwsem);
+ 
+-	return generic_permission(inode, mask);
++	return ret;
  }
  
+ int kernfs_xattr_get(struct kernfs_node *kn, const char *name,
+diff --git a/fs/kernfs/mount.c b/fs/kernfs/mount.c
+index baa4155ba2ed..f2f909d09f52 100644
+--- a/fs/kernfs/mount.c
++++ b/fs/kernfs/mount.c
+@@ -255,9 +255,9 @@ static int kernfs_fill_super(struct super_block *sb, struct kernfs_fs_context *k
+ 	sb->s_shrink.seeks = 0;
+ 
+ 	/* get root inode, initialize and unlock it */
+-	down_write(&kernfs_rwsem);
++	down_read(&kernfs_rwsem);
+ 	inode = kernfs_get_inode(sb, info->root->kn);
+-	up_write(&kernfs_rwsem);
++	up_read(&kernfs_rwsem);
+ 	if (!inode) {
+ 		pr_debug("kernfs: could not get root inode\n");
+ 		return -ENOMEM;
 -- 
 2.43.0
 
