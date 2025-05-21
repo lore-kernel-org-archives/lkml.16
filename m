@@ -1,146 +1,192 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0764B1854
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 01:48:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF5AD1B0437
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 01:49:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747792115; cv=none; b=sTLotxaRqVs+oUJP7YQnDl5AuiCvy0/FGjN4g7Gxzh8zIzjpPYG/WpH9GJXhoSdnVlMA71nizyurmWsd+m2/4O8H/pmpe6GzHkNeapcdzoEs7jVk9+ZBV5h7v2xQrVkBHKwA712WZZkJd2qKjRuDcDEisWZ1HI7kfbCUIXGRoro=
+	t=1747792188; cv=none; b=o3grZSKnprzurbveUoAfuEK2o3xgGjqmlekWSq1SbGqaw+H1ZqbpoRd0d19GCJMNK+IOHHHlObz83VRXUIFlxm8jaLTtIUT+tROUS/lruOd9tF4n7xhTOmsbEwKEGTDoI0zUhPTyNDJDO6HbsYgHKOYaT/Gd+Eafw/W9LYaOciA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747792115; c=relaxed/simple;
-	bh=MbuindGVZT7o6dPEQ+JFFRipSM+B0FXrzF7208oXICM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pS2VTAFe7FsISHm/vyCkykzdUq4n9h/i/sehsSimhhmPoWfqMPjUTdxJW34k6TWYYlCCiMcecx9F1JSzPeZGFYAbsJDBMYxOoXybh6NOVZJw/jtCx9X103u1IatsuTKb4rmZKznJj1X5/oQwGPJnNGDBfi1RTz5+KPsvRiQt7jw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4b2Dp40XMvz4f3lDq
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 09:47:56 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id 8A1421A12CF
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 09:48:22 +0800 (CST)
-Received: from [10.67.109.79] (unknown [10.67.109.79])
-	by APP3 (Coremail) with SMTP id _Ch0CgAHp8HkMC1o7sJXMw--.49119S2;
-	Wed, 21 May 2025 09:48:22 +0800 (CST)
-Message-ID: <eacf9cf7-7c93-4e68-b6f3-cf6b252a802a@huaweicloud.com>
-Date: Wed, 21 May 2025 09:48:19 +0800
+	s=arc-20240116; t=1747792188; c=relaxed/simple;
+	bh=r6660o7TrV9mIX0QiqN4LlypHPU9HIyb4tcU13soERs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dMtQVrxzLWfWiiGfiJPpn4TNCSQCSiiQ/+buJ1s0YKTKQQIkBoV9qpYehJj0yKu1eBDjDD+FORK5OKSg9Nh+C5+8XMRrtL4O9GbXLRjtyGSJFfJF7Z/I5TvhJtce/kCu5DHKqJbQn01v7qXxR+NJUBKtY30iYn3Ovj2jREWWQBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Ymwkwlm0; arc=none smtp.client-ip=91.218.175.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Ymwkwlm0"
+Date: Tue, 20 May 2025 21:49:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747792174;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=l1O+r1kz2S9v4rWK4s64ptW8HHdeRPASy0UUAjHkGbs=;
+	b=Ymwkwlm0QpBL0rQI5k+gMMRe7sS8GUH+8Afwpa4tQvB3TXtItxTmNdgboUuCcijzvJ2ocb
+	QSKvnWCWjc6MFS+F/LN0N9rgd+Ae20myvLl1jn/IT8CuiWYRrA6mhDlmXPRYLNNJ4Jwiou
+	SexVldyCrl+iycUOCwZJcXxyrSERzDY=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: John Stoffel <john@stoffel.org>
+Cc: Amir Goldstein <amir73il@gmail.com>, linux-fsdevel@vger.kernel.org, 
+	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, linux-unionfs@vger.kernel.org, 
+	Miklos Szeredi <miklos@szeredi.hu>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH 0/6] overlayfs + casefolding
+Message-ID: <7b272tdagnkvzt5eo4g4wy47rjwf67nqk26aq27uetc57kzza5@7p5cmikl2fw6>
+References: <20250520051600.1903319-1-kent.overstreet@linux.dev>
+ <CAOQ4uxg8p2Kg0BKrU4NSUzLVVLWcW=vLaw4kJkVR1Q-LyRbRXA@mail.gmail.com>
+ <osbsqlzkc4zttz4gxa25exm5bhqog3tpyirsezcbcdesaucd7g@4sltqny4ybnz>
+ <CAOQ4uxjUC=1MinjDCOfY5t89N3ga6msLmpVXL1p23qdQax6fSg@mail.gmail.com>
+ <gdvg6zswvq4zjzo6vntggoacrgxxh33zmejo72yusp7aqkqzic@kaibexik7lvh>
+ <CAOQ4uxg9sKC_8PLARkN6aB3E_U62_S3kfnBuRbAvho9BNzGAsQ@mail.gmail.com>
+ <rkbkjp7xvefmtutkwtltyd6xch2pbw47x5czx6ctldemus2bvj@2ukfdmtfjjbw>
+ <26668.52908.574606.416955@quad.stoffel.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC next v2 0/2] ucounts: turn the atomic rlimit to
- percpu_counter
-To: Jann Horn <jannh@google.com>, Alexey Gladkov <legion@kernel.org>
-Cc: akpm@linux-foundation.org, Liam.Howlett@oracle.com,
- lorenzo.stoakes@oracle.com, vbabka@suse.cz, pfalcato@suse.de,
- bigeasy@linutronix.de, paulmck@kernel.org, chenridong@huawei.com,
- roman.gushchin@linux.dev, brauner@kernel.org, pmladek@suse.com,
- geert@linux-m68k.org, mingo@kernel.org, rrangel@chromium.org,
- francesco@valla.it, kpsingh@kernel.org, guoweikang.kernel@gmail.com,
- link@vivo.com, viro@zeniv.linux.org.uk, neil@brown.name, nichen@iscas.ac.cn,
- tglx@linutronix.de, frederic@kernel.org, peterz@infradead.org,
- oleg@redhat.com, joel.granados@kernel.org, linux@weissschuh.net,
- avagin@google.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- lujialin4@huawei.com, "Serge E. Hallyn" <serge@hallyn.com>,
- David Howells <dhowells@redhat.com>
-References: <20250519131151.988900-1-chenridong@huaweicloud.com>
- <CAG48ez2bFhYYj2qkJk3j5t=3VwYUH4sSMuohyC=MfrRw-bv22g@mail.gmail.com>
- <aCucJ9731YzaZI5b@example.org>
- <CAG48ez01rRTsB0PcxsrzcbMeVnr2bPjigc15GpFCoKQmdzmGrg@mail.gmail.com>
-Content-Language: en-US
-From: Chen Ridong <chenridong@huaweicloud.com>
-In-Reply-To: <CAG48ez01rRTsB0PcxsrzcbMeVnr2bPjigc15GpFCoKQmdzmGrg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_Ch0CgAHp8HkMC1o7sJXMw--.49119S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxXr4UGr18ur45JryUuF1Dtrb_yoW5Zw45pF
-	W2y3Z8Kan5JFnxAwn2qw18Xa4rKr4fJryUX3W5G3yxA3Z0kFyS9F17t3yYkF9rGr4fK34j
-	vF4jg347AFWDXaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26rWY6Fy7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWrXVW8
-	Jr1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
-	CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AK
-	xVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvj
-	xUsPfHUUUUU
-X-CM-SenderInfo: hfkh02xlgr0w46kxt4xhlfz01xgou0bp/
+In-Reply-To: <26668.52908.574606.416955@quad.stoffel.home>
+X-Migadu-Flow: FLOW_OUT
 
-
-
-On 2025/5/20 5:24, Jann Horn wrote:
-> On Mon, May 19, 2025 at 11:01 PM Alexey Gladkov <legion@kernel.org> wrote:
->> On Mon, May 19, 2025 at 09:32:17PM +0200, Jann Horn wrote:
->>> On Mon, May 19, 2025 at 3:25 PM Chen Ridong <chenridong@huaweicloud.com> wrote:
->>>> From: Chen Ridong <chenridong@huawei.com>
->>>>
->>>> The will-it-scale test case signal1 [1] has been observed. and the test
->>>> results reveal that the signal sending system call lacks linearity.
->>>> To further investigate this issue, we initiated a series of tests by
->>>> launching varying numbers of dockers and closely monitored the throughput
->>>> of each individual docker. The detailed test outcomes are presented as
->>>> follows:
->>>>
->>>>         | Dockers     |1      |4      |8      |16     |32     |64     |
->>>>         | Throughput  |380068 |353204 |308948 |306453 |180659 |129152 |
->>>>
->>>> The data clearly demonstrates a discernible trend: as the quantity of
->>>> dockers increases, the throughput per container progressively declines.
->>>
->>> But is that actually a problem? Do you have real workloads that
->>> concurrently send so many signals, or create inotify watches so
->>> quickly, that this is has an actual performance impact?
->>>
->>>> In-depth analysis has identified the root cause of this performance
->>>> degradation. The ucouts module conducts statistics on rlimit, which
->>>> involves a significant number of atomic operations. These atomic
->>>> operations, when acting on the same variable, trigger a substantial number
->>>> of cache misses or remote accesses, ultimately resulting in a drop in
->>>> performance.
->>>
->>> You're probably running into the namespace-associated ucounts here? So
->>> the issue is probably that Docker creates all your containers with the
->>> same owner UID (EUID at namespace creation), causing them all to
->>> account towards a single ucount, while normally outside of containers,
->>> each RUID has its own ucount instance?
->>>
->>> Sharing of rlimits between containers is probably normally undesirable
->>> even without the cacheline bouncing, because it means that too much
->>> resource usage in one container can cause resource allocations in
->>> another container to fail... so I think the real problem here is at a
->>> higher level, in the namespace setup code. Maybe root should be able
->>> to create a namespace that doesn't inherit ucount limits of its owner
->>> UID, or something like that...
->>
->> If we allow rlimits not to be inherited in the userns being created, the
->> user will be able to bypass their rlimits by running a fork bomb inside
->> the new userns.
->>
->> Or I missed your point ?
+On Tue, May 20, 2025 at 02:49:16PM -0400, John Stoffel wrote:
+> >>>>> "Kent" == Kent Overstreet <kent.overstreet@linux.dev> writes:
 > 
-> You're right, I guess it would actually still be necessary to have one
-> shared limit across the entire container, so rather than not having a
-> namespace-level ucount, maybe it would make more sense to have a
-> private ucount instance for a container...
+> > On Tue, May 20, 2025 at 04:03:27PM +0200, Amir Goldstein wrote:
+> >> On Tue, May 20, 2025 at 2:43 PM Kent Overstreet
+> >> <kent.overstreet@linux.dev> wrote:
+> >> >
+> >> > On Tue, May 20, 2025 at 02:40:07PM +0200, Amir Goldstein wrote:
+> >> > > On Tue, May 20, 2025 at 2:25 PM Kent Overstreet
+> >> > > <kent.overstreet@linux.dev> wrote:
+> >> > > >
+> >> > > > On Tue, May 20, 2025 at 10:05:14AM +0200, Amir Goldstein wrote:
+> >> > > > > On Tue, May 20, 2025 at 7:16 AM Kent Overstreet
+> >> > > > > <kent.overstreet@linux.dev> wrote:
+> >> > > > > >
+> >> > > > > > This series allows overlayfs and casefolding to safely be used on the
+> >> > > > > > same filesystem by providing exclusion to ensure that overlayfs never
+> >> > > > > > has to deal with casefolded directories.
+> >> > > > > >
+> >> > > > > > Currently, overlayfs can't be used _at all_ if a filesystem even
+> >> > > > > > supports casefolding, which is really nasty for users.
+> >> > > > > >
+> >> > > > > > Components:
+> >> > > > > >
+> >> > > > > > - filesystem has to track, for each directory, "does any _descendent_
+> >> > > > > >   have casefolding enabled"
+> >> > > > > >
+> >> > > > > > - new inode flag to pass this to VFS layer
+> >> > > > > >
+> >> > > > > > - new dcache methods for providing refs for overlayfs, and filesystem
+> >> > > > > >   methods for safely clearing this flag
+> >> > > > > >
+> >> > > > > > - new superblock flag for indicating to overlayfs & dcache "filesystem
+> >> > > > > >   supports casefolding, it's safe to use provided new dcache methods are
+> >> > > > > >   used"
+> >> > > > > >
+> >> > > > >
+> >> > > > > I don't think that this is really needed.
+> >> > > > >
+> >> > > > > Too bad you did not ask before going through the trouble of this implementation.
+> >> > > > >
+> >> > > > > I think it is enough for overlayfs to know the THIS directory has no
+> >> > > > > casefolding.
+> >> > > >
+> >> > > > overlayfs works on trees, not directories...
+> >> > >
+> >> > > I know how overlayfs works...
+> >> > >
+> >> > > I've explained why I don't think that sanitizing the entire tree is needed
+> >> > > for creating overlayfs over a filesystem that may enable casefolding
+> >> > > on some of its directories.
+> >> >
+> >> > So, you want to move error checking from mount time, where we _just_
+> >> > did a massive API rework so that we can return errors in a way that
+> >> > users will actually see them - to open/lookup, where all we have are a
+> >> > small fixed set of error codes?
+> >> 
+> >> That's one way of putting it.
+> >> 
+> >> Please explain the use case.
+> >> 
+> >> When is overlayfs created over a subtree that is only partially case folded?
+> >> Is that really so common that a mount time error justifies all the vfs
+> >> infrastructure involved?
 > 
+> > Amir, you've got two widely used filesystem features that conflict and
+> > can't be used on the same filesystem.
+> 
+> Wait, what?  How many people use casefolding, on a per-directory
+> basis?  It's stupid.  Unix/Linux has used case-sensitive filesystems
+> for years.  Yes, linux supports other OSes which did do casefolding,
+> but yikes... per-directory support is just insane.  It should be
+> per-filesystem only at BEST.  
 
-It sounds like the private ucounts were what I was trying to implement
-in version 1? It applies batch counts from the parent for each user
-namespace, but the approach is complex.
+Quite a lot.
 
-Best regards,
-Ridong
+You may not realize this, but Valve has, quietly, behind the scenes,
+been intelligently funding a ton of Linux work with an eye towards not
+just gaming, but improving Linus on the desktop. And they've been
+deploying it too, you can buy a Steam deck today.
 
-> (But to be clear I'm not invested in this suggestion at all, I just
-> looked at that patch and was wondering about alternatives if that is
-> actually a real performance problem...)
+And a significant fraction of desktop users like to play games - we're
+not just all work. Windows ports need casefolding - alternatives have
+been discussed and they're non viable.
 
+(I fondly remember the days when I had time for such things).
+
+Samba fileservers are a thing, too.
+
+And for all us desktop/workstation users, not being able to use the same
+filesystem for wine and docker is the kind of jankiness that makes
+people say "maybe Linux isn't ready for the desktop after all".
+
+Put aside your feelings on casefolding - this is about basic attention
+to detail.
+
+> > That's _broken_.
+> 
+> So?  what about my cross mounting of VMS filesystems with "foo.txt;3"
+> version control so I can go back to previous versions?  Why can't I do
+> that from my Linux systems that's mounting that VMS image?   
+> 
+> Just because it's done doesn't mean it's not dumb.  
+> 
+> > Users hate partitioning just for separate /boot and /home, having to
+> > partition for different applications is horrible. And since overlay
+> > fs is used under the hood by docker, and casefolding is used under
+> > the hood for running Windows applications, this isn't something
+> > people can predict in advance.
+> 
+> Sure I can, I don't run windows applications to screw casefolding.
+> :-)
+> 
+> And I personally LIKE having a seperate /boot and /home, because it
+> gives isolation.  The world is not just single user laptops with
+> everything all on one disk or spread across a couple of disks using
+> LVM or RAID or all of the above.  
+> 
+> I also don't see any updates for the XFS tests, or any other
+> filesystem tests, that actually checks and confirms this decidedly
+> obtuse and dumb to implement idea.  
+
+Well, you certainly are making your personal feelings known :)
+
+But for me, as the engineer designing and implementing this stuff, I
+don't let my personal feelings dictate.
+
+That's not my place.
+
+My job is to write code that works, works reliably, solves real
+problems, and lets users do the things they want with their machines.
+
+All this drama over casefolding has been pure distraction, and I would
+appreciate if you and everyone else could tone it down now.
