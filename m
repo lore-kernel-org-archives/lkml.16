@@ -1,156 +1,100 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FE492472B4
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 10:18:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3B02238140;
+	Wed, 21 May 2025 10:18:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747822689; cv=none; b=jJs5hE0AI15Qdw3c4lrKnL24HuA0sCsh+qtgWNm06GjCje1wVTJyAOZ2IBl9Sj50QqHuDfwuabIATDeZmO1uDSMEP8zBY5lyJECDeOKNisH0qaHh5bqH9+MPtSz8HQbdGSqG/KByyLcSr/7VIVqDyrhfH8C+XAIDxmJR0R93Tb0=
+	t=1747822732; cv=none; b=U1rX3w+C6CfIfYedmfDJ68N5xIvA4ce2VW2oFDQi1OFyebkmnZ0JZDI0pBPKSu8d2Uy5JQHiBOc1B43vhxYr1s4ZffuLOaU0Nm0WxXxkDwanDbCo39dQ7WUHfhUuj8Qb1qijCtCrOo71CW6i05kw+p0uYm6j0f75+3BtjM0CEm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747822689; c=relaxed/simple;
-	bh=gyP7T2gYNDzUnBvgtchq1IV0P0eLd31su3RI2zfImUI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f90/7T/YEBX6mtMpC4QZqp4AAvkFJNRf0amylg/0WulkXU9IoeSTHBRvs9nIFgxszXRcpyHVWqY/LihvEL4ob/At5CbfsWhODJRI29MI8vbY8serFEBfKPIMUBxxFfU2SjzPZgwkVBdLoF+s7K9gD9TkTOlzXxdYCwCsELznowY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ChPHYc9R; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=6OUEUHnu; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ChPHYc9R; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=6OUEUHnu; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ChPHYc9R";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="6OUEUHnu";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ChPHYc9R";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="6OUEUHnu"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 92DCE2091D;
-	Wed, 21 May 2025 10:18:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1747822686; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6zb+gy3OnOeAJiXOJUGuELVv/ERPmXTwFKGQaPp2GxE=;
-	b=ChPHYc9RCAMiBpEJw5PHulyviwNxqbn9Evc8tws245w2c9c1lLq8PDyEKxLS8HUBv76HO9
-	H2IFqiUVhwUawwKsBfYiqSj7vQ3bNOrX65A4j5SYPm6i3ai/jyG5uowJVXrFso+56wNdi4
-	uq1x8dv1+2vKPJ5i385m/68PrgpXfH8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1747822686;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6zb+gy3OnOeAJiXOJUGuELVv/ERPmXTwFKGQaPp2GxE=;
-	b=6OUEUHnuKx8dQIySzKT/WbfyrzBiWOz4Fo/KJXQF+3zEwqpTadZ79Do4AahbffNQchb6so
-	+uY2xxWW4jvdigDw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1747822686; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6zb+gy3OnOeAJiXOJUGuELVv/ERPmXTwFKGQaPp2GxE=;
-	b=ChPHYc9RCAMiBpEJw5PHulyviwNxqbn9Evc8tws245w2c9c1lLq8PDyEKxLS8HUBv76HO9
-	H2IFqiUVhwUawwKsBfYiqSj7vQ3bNOrX65A4j5SYPm6i3ai/jyG5uowJVXrFso+56wNdi4
-	uq1x8dv1+2vKPJ5i385m/68PrgpXfH8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1747822686;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6zb+gy3OnOeAJiXOJUGuELVv/ERPmXTwFKGQaPp2GxE=;
-	b=6OUEUHnuKx8dQIySzKT/WbfyrzBiWOz4Fo/KJXQF+3zEwqpTadZ79Do4AahbffNQchb6so
-	+uY2xxWW4jvdigDw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8994013AA0;
-	Wed, 21 May 2025 10:18:06 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id VgmMIV6oLWilTQAAD6G6ig
-	(envelope-from <jack@suse.cz>); Wed, 21 May 2025 10:18:06 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 3FB5BA09DE; Wed, 21 May 2025 12:18:06 +0200 (CEST)
-Date: Wed, 21 May 2025 12:18:06 +0200
-From: Jan Kara <jack@suse.cz>
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>, 
-	Matthew Bobrowski <repnop@google.com>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] fanotify: wake-up all waiters on release
-Message-ID: <bsji6w5ytunjt5vlgj6t53rrksqc7lp5fukwi2sbettzuzvnmg@fna73sxftrak>
-References: <3p5hvygkgdhrpbhphtjm55vnvprrgguk46gic547jlwdhjonw3@nz54h4fjnjkm>
- <20250520123544.4087208-1-senozhatsky@chromium.org>
+	s=arc-20240116; t=1747822732; c=relaxed/simple;
+	bh=r9CoflAUxYXDUOO2JEUNsB/MUEXt8MfFYuegXB/j8iE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=C/xsMd8vCzmS81qL4cWsyC1t6tBaqNdWkLwc3bzPE9QKc0Wux51dcLoyFofUoFJQVAbyjdaVvZZO1PDlLeU+OmzHGVPsilqJAx1kF8G+99i/cgjPdbCSKDJx3LJhreZWOsCZ+RzIfyJU3nP1Hb/srySO2RcKazXsPV3TakzRXAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-86d6fd581f4so4692857241.1;
+        Wed, 21 May 2025 03:18:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747822729; x=1748427529;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0Ytsy7YtbepdeG6e77NZ/+LuqX7Z5ZuWk/DMa8Qolio=;
+        b=rNE6MR9pf7gbsb3uz1eOSkjYtGSwzWLvydDN1mmlvsZQ+ldzlNDs0rK/HictnXL03V
+         UcUcYqGeYD++TSDQ5MWRwaapGjzyW/OF0D1Cci68pzqIKZYGM61+JfST8dkrtc23RTsM
+         ha6wQUYE9ANWb0gDnWZjQHFzJIac8cLHwKDw9oRHiKCRUod6Imn0aUvRfoLismaZ7FF4
+         fpOE1SulHmGzI6ZmipPBuhoa2yUjK95ZN+8d0asugGcm7hiBDDGpwRbYm+Wa9GhG3wKJ
+         oSN5RN4K50vUPHmH95qaMc9SGWIFsedEBftWmLzVE1/I6CkAtr5Yqt7NviHBpoBjgDWT
+         HstA==
+X-Forwarded-Encrypted: i=1; AJvYcCVA6DoH/E5XCCvi4YKRo0vyW763+KxbAdSHCtrgDKSOtxd2LeDnkBXoYIAjX4pbFCY/Idc3tdrhd8cY@vger.kernel.org, AJvYcCWaEJPYYOwqaarEgE2hoeNYJDu4vamxuiifH16zDhH7n1h5C4AlccDgbil8gyLsBLm9MdFUlJ9Uf4e/pnLK@vger.kernel.org, AJvYcCXwkQJfX80x0rN68pu874zZRxKeBvGBgq2AmYxqqTEnG50ti9jU6z495hgJm90FN0kTShQGK5Z4CljoO/OE5mHa1rw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSHBk+iQafntPDC5Z6ZCtaoYan3ChFtydB4h6eLFv4/KOxJM5S
+	jDY4Ooffuh4cFircTn/bbuqMsdne0cJUwWwzhuyZVE+JPsjgq3zc9ZOszML4+hJq
+X-Gm-Gg: ASbGncsw1rnVX8TgR7dHPUH8A/jJ6710M8ENbMmRjYh2q20OqpyLPmFXRZLj63DKuUO
+	8I+kYACODYmbjNWfWluaFxRfWFxPPIo+kimI9SzRXJkdFJcRl6Wg8HIXbsd1xM8VPHFxZQ5R5ps
+	EKUi/REll/sk2aHicDwRaK9pE0KmLPzfshSa5zlVWOOyI4OZGyMh8Y9WNw2NIidbZcgdd0cAIXi
+	HdwwfnfSWGnTZ3VnGEs1SGKPXx9KdYrGiwLlY5BNeIpnAasaY0lGI4Hx76lMb4Uq5FMhnroGJGY
+	ornoiYsZZbV7TU0C7Gd7lfEXs8jYR6KzMp1RRnI3AYhWfaq0TAuPX96aTU7JqebRv7ArvzoFgBd
+	0yXsJzyW8r8TdzoY8XQ==
+X-Google-Smtp-Source: AGHT+IFdkIuzTbGT5FjT0LAFeisANUAtwLB5nMO9IaKUvdYZvLp2usyCO9bFJhamt4S5V+6UeEYusw==
+X-Received: by 2002:a05:6102:4194:b0:4da:fd05:ab54 with SMTP id ada2fe7eead31-4dfc30f2f59mr21173658137.10.1747822728861;
+        Wed, 21 May 2025 03:18:48 -0700 (PDT)
+Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com. [209.85.221.179])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4dfa669860asm9511245137.2.2025.05.21.03.18.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 May 2025 03:18:48 -0700 (PDT)
+Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-52dbcd398f9so3548747e0c.0;
+        Wed, 21 May 2025 03:18:48 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU7zpQLkgisQ4IQoi6FAwBDvuW6mtQ5/1hbjKYKYKnvCnAEsjTv2xOkh+bTHVuxel5ayQlYBbRWcyiCS6xj8bOfSYs=@vger.kernel.org, AJvYcCUIoaJjinGiQ4UO7mBDWgLmuxWfWC01Hr3rONcoCyBT46eC5H7tI7Iq+5TZFoHqAJ3dyvdH/TSfDmIl@vger.kernel.org, AJvYcCWPHtaVB5WcKkip70VzvBShZIhSXqEMy5F+kD9ciH/wqoipcRftaUOfZe+IUAatVuVaeHhudcfZsBKoxiej@vger.kernel.org
+X-Received: by 2002:a05:6122:208d:b0:52d:f0c2:6cf9 with SMTP id
+ 71dfb90a1353d-52df0c26d50mr8816727e0c.4.1747822728220; Wed, 21 May 2025
+ 03:18:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250520123544.4087208-1-senozhatsky@chromium.org>
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_THREE(0.00)[3];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[suse.cz,gmail.com,google.com,vger.kernel.org];
-	RCPT_COUNT_FIVE(0.00)[6];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Score: -3.80
-X-Spam-Level: 
+References: <20250513131412.253091-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250513131412.253091-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250513131412.253091-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 21 May 2025 12:18:36 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUBOADZHuHR3GNgson4O+ka9YrHVKt=qFgB8uYY5F8f5g@mail.gmail.com>
+X-Gm-Features: AX0GCFvATDOWCVQPAFr4aEdpERXt91V8WqV6B1CA_r4dJ2GLM8NK4g0Oa7Bsf0w
+Message-ID: <CAMuHMdUBOADZHuHR3GNgson4O+ka9YrHVKt=qFgB8uYY5F8f5g@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] arm64: dts: renesas: r9a09g057h44-rzv2h-evk:
+ Enable GBETH
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue 20-05-25 21:35:12, Sergey Senozhatsky wrote:
-> Once reply response is set for all outstanding requests
-> wake_up_all() of the ->access_waitq waiters so that they
-> can finish user-wait.  Otherwise fsnotify_destroy_group()
-> can wait forever for ->user_waits to reach 0 (which it
-> never will.)
-> 
-> Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
-
-We don't use exclusive waits with access_waitq so wake_up() and
-wake_up_all() should do the same thing?
-
-								Honza
-
+On Tue, 13 May 2025 at 15:14, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Enable the GBETH nodes on the RZ/V2H Evaluation Kit.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
->  fs/notify/fanotify/fanotify_user.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/notify/fanotify/fanotify_user.c b/fs/notify/fanotify/fanotify_user.c
-> index 87f861e9004f..95a3b843cbbf 100644
-> --- a/fs/notify/fanotify/fanotify_user.c
-> +++ b/fs/notify/fanotify/fanotify_user.c
-> @@ -1046,8 +1046,8 @@ static int fanotify_release(struct inode *ignored, struct file *file)
->  	}
->  	spin_unlock(&group->notification_lock);
->  
-> -	/* Response for all permission events it set, wakeup waiters */
-> -	wake_up(&group->fanotify_data.access_waitq);
-> +	/* Response for all permission events is set, wakeup waiters */
-> +	wake_up_all(&group->fanotify_data.access_waitq);
->  
->  	/* matches the fanotify_init->fsnotify_alloc_group */
->  	fsnotify_destroy_group(group);
-> -- 
-> 2.49.0.1101.gccaa498523-goog
-> 
+> v2->v3:
+> - Split adding the PHY nodes into the mdio0/1 nodes.
+> - Added Reviewed-by tag from Geert.
+
+Thanks, will queue in renesas-devel for v6.17.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
