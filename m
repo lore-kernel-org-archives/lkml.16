@@ -1,113 +1,104 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C80F4CB5B;
-	Wed, 21 May 2025 13:24:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D75EB25DB0B
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 13:25:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747833873; cv=none; b=K3QMCGPiSqOLQz7tElc1gN83HQDeyTIlWlP7iYFl9CBX++Ivqngx0wvkfVktTbkvV/erl5DapdWpxI3rZmYlwQ5QTZuNqGeJq+bQNClmakwM/HuXEn9+bALMM9jEY2ETbyL4Gq6F7g2mY3tNzEEULD0nw4A9u15aSudwD1j4cio=
+	t=1747833918; cv=none; b=IIzXueFyPLo7emhhhYPMtrFgcyXhTaat82mLOqMA4LE5nf5llX+HqKo9u/bR+3NPEEO4IJO3Nrz7ySU0mDkaD7USLAFVGcsbpwJFoCbxOb5IcbMkjaO/EPI4+vZANP5R93M1sEpcz2FyPml66EHr3/UofbhdMd7XBhb8BqO4iK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747833873; c=relaxed/simple;
-	bh=DXRBNohjBKRvMBf7q2uiahg8uAYiKa9riN8m6bUxBBs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UbVPTM/wZ6AtRTDqCkbV81K5ABwV5/B+5FKrVo12BJfvRf/t6XmovUJ+um8d5cUxMTkJrW0YIN2dqx6WQXsWxu5llq4PmKQbZGufBCACrANqMAYErmGM7QR+JBPCM32gj7DhhEi7fU9T1EWq3xH2RgjRtix8Fjew/KwtEKWLVoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-05 (Coremail) with SMTP id zQCowAA3dCb20y1oPaQcAg--.57214S2;
-	Wed, 21 May 2025 21:24:07 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: saeedm@nvidia.com,
-	leon@kernel.org,
-	tariqt@nvidia.com,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
-Cc: netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH v3] net/mlx5: Add error handling in mlx5_query_nic_vport_node_guid()
-Date: Wed, 21 May 2025 21:23:43 +0800
-Message-ID: <20250521132343.844-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	s=arc-20240116; t=1747833918; c=relaxed/simple;
+	bh=KaE6+o2aGnDCIXUMVFpEenjktipp41SjDhYjR6qnzu4=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=MerJKEOGigoiHQS47jxNZ05jvbMrja+Jtao4yM41PvZK6gZNb8K84AX30CKLhaIkmqTfi3G3HZ50ewq21zfehai/GviBnKAly1ENhVSMBHCEea0Ynpn2mi1BQDxclZkGjVfIZYXE+Coal9ur2qpmFbFjYE1am34Vs5fAyDWCaws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EWWBBgGW; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EWWBBgGW"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-444582310e3so1950495e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 06:25:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747833914; x=1748438714; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=aD94Cyds9PidEz6jUW1CAFksapgbj4DqOx2OqS8w/gA=;
+        b=EWWBBgGWOt4+BI+cUEGk4IxpVs0ULkXNrDRXV4hPnOnPFNCH1y+eYQg1S5tzz5fAyN
+         ajqsk7ECG6LGfw3l/EqUm5HsF+NEwg6KFGEObHdLJP3/XpL9DW3FzJ053taTYlef+DKV
+         23hCQjl/ZpcBNhn7Q7VE5Uz4bTDUS2KO9fn+qBkMASdrap+XqhKjRg5n9Ci3YuRpjKf8
+         iBRI38tnHon23mh4rafi+udjH7YdvOC/z3VpjtqvC3qeJIUHh6S2lbAzzmcIgpnz+Hj2
+         AkCSzM8lGjnGF0ydxLVr6ob+KNYip3+GKPvT3R90G7y3myDs3I7kyvwlz5hQFVMTmgW7
+         3Pog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747833914; x=1748438714;
+        h=content-disposition:mime-version:message-id:subject:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=aD94Cyds9PidEz6jUW1CAFksapgbj4DqOx2OqS8w/gA=;
+        b=OIFrg6CX9qROuwjl4WMU+ZiE9Q7HKLcHM4dywSY4AyyO5H/hHeDA+qe8RTor8Yz5UP
+         hvRB4HAYL/5zRKf1fXwr6DEwlqbBVRrdscmQ1KCV1N6adUAq5bo3nwnlsW3yCgBtETDd
+         ZMh3RIb50wVai7JkTeR3pxEeKW7jdlW6IBwmup2ZeIpgnri3Oci3ZaULYYbluu21VFgk
+         u9AcKUxUKCltyk53NORh9bs/uadLLlU7sK8unC/xe61OAXHn24FrUebHlul1FPc6DeSt
+         rUK2frFJUorMXeiMgDMYNAMDjsBBDWsnuq9qMVaROsSz0Mvm1vky7udhWFscQYKH/eUh
+         kRdw==
+X-Forwarded-Encrypted: i=1; AJvYcCWrQ+m3uUF0aip+kdZ5ZNgA0uRfxSsA4oINRhkToouGDUMr2gfIk+Fz7lehwEd1w2b9+a7KWvyLh6Ymsfg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YylBQhgZIAK44X0P4iftqC0TIET0HHdSm2lqnHXB81xcAz+dIGG
+	ZMIKbsPdt9ML6FBCcpxIYJyI4YSSS4dW0UViEHSpZJrY1YGevbfoU2t2
+X-Gm-Gg: ASbGncsm/TMrWHEnUCuz3H0R6slh0zYsbKZS2U10EKZNJYThPRTQQwmYYYQqWUKuaSr
+	NQjAt1IgCF7VdQCtsitmF7cxhTjv1Sep7CiTQWGpmjStC4Z95MMicvKFwHdhuTFg9ECEnDItyuS
+	xjtSKobrxWI37gn8c9orl88+ik/az4vJZF2f9kRiO63M/drfXsdLVmlgUv9UAyMGuJthYtHn7uR
+	Z/wrrSxyrHfRZIWTe326gbDJv3MA2ZBqIr9dBWDnvF4ctMrV3dxwQkx1qnM6HMG2G2fWVrbQMln
+	lJOm/KVmR2NsoUK9ykb97LRd/fdSziXrooS/oZDQm9xiHLfKTF4Ji8jNXXBY4vrZ9a3KAK7fG7M
+	fa+ehdPOvi6g+wVA3tyMUDvvf3EUma/s=
+X-Google-Smtp-Source: AGHT+IHCJ5eTLFeP2ll8ttDks7kJdJ4nSpWPbjGCtqHqI22EbSubTX0w0gXypEMPHz50PPHd2O6DjQ==
+X-Received: by 2002:a05:600c:a07:b0:442:f97a:fee7 with SMTP id 5b1f17b1804b1-442fd6770e0mr73698685e9.6.1747833913804;
+        Wed, 21 May 2025 06:25:13 -0700 (PDT)
+Received: from milos-ThinkPad-T14-Gen-3 (global-184-11.n-1.net.cam.ac.uk. [131.111.184.11])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f6b29548sm74461595e9.4.2025.05.21.06.25.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 May 2025 06:25:13 -0700 (PDT)
+Date: Wed, 21 May 2025 14:25:12 +0100
+From: Milos Puric <milospuric856@gmail.com>
+To: gregkh@linuxfoundation.org, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org, outreachy@lists.linux.dev
+Subject: [PATCH v2] staging: rtl8723bs: Align next line to open parentheses
+ in core/rtw_xmit.c
+Message-ID: <aC3UOPYv8HmzRvij@milos-ThinkPad-T14-Gen-3>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowAA3dCb20y1oPaQcAg--.57214S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxJr4rCF1DWr1DGF48uw4xXrb_yoW8Ar4xpF
-	47tr9rCrykGa4rX34jkFWrZrn5u3yjyayUua47tw13Xr4ktr4qyr45Ar9IgrWUuFW0ka9Y
-	yr42y3Z8AFn8C37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9K14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-	n2kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCY02Avz4vE14v_Xr4l42xK82IYc2Ij64vIr4
-	1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
-	67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI
-	8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAv
-	wI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14
-	v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU87KsUUUUU
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCREJA2gtsp4AvwABsF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The function mlx5_query_nic_vport_node_guid() calls the function
-mlx5_query_nic_vport_context() but does not check its return value.
-A proper implementation can be found in mlx5_nic_vport_query_local_lb().
+Adhere to Linux kernel coding style.
 
-Add error handling for mlx5_query_nic_vport_context(). If it fails, free
-the out buffer via kvfree() and return error code.
+Reported by checkpatch:
 
-Fixes: 9efa75254593 ("net/mlx5_core: Introduce access functions to query vport RoCE fields")
-Cc: stable@vger.kernel.org # v4.5
-Target: net
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+CHECK: Alignment should match open parentheses
+
+Signed-off-by: Milos Puric <milospuric856@gmail.com>
 ---
-v3: Explicitly mention target branch. Change improper code.
-v2: Remove redundant reassignment. Fix typo error.
+Changes in v2:
+  - Include author full name.
 
- drivers/net/ethernet/mellanox/mlx5/core/vport.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/staging/rtl8723bs/core/rtw_xmit.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/vport.c b/drivers/net/ethernet/mellanox/mlx5/core/vport.c
-index 0d5f750faa45..66e44905c1f0 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/vport.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/vport.c
-@@ -465,19 +465,22 @@ int mlx5_query_nic_vport_node_guid(struct mlx5_core_dev *mdev, u64 *node_guid)
- {
- 	u32 *out;
- 	int outlen = MLX5_ST_SZ_BYTES(query_nic_vport_context_out);
-+	int err;
- 
- 	out = kvzalloc(outlen, GFP_KERNEL);
- 	if (!out)
- 		return -ENOMEM;
- 
--	mlx5_query_nic_vport_context(mdev, 0, out);
-+	ret = mlx5_query_nic_vport_context(mdev, 0, out);
-+	if (err)
-+		goto out;
- 
- 	*node_guid = MLX5_GET64(query_nic_vport_context_out, out,
- 				nic_vport_context.node_guid);
--
-+out:
- 	kvfree(out);
- 
--	return 0;
-+	return err;
- }
- EXPORT_SYMBOL_GPL(mlx5_query_nic_vport_node_guid);
- 
+diff --git a/drivers/staging/rtl8723bs/core/rtw_xmit.c b/drivers/staging/rtl8723bs/core/rtw_xmit.c
+index 026d58b4bd7f..8c6841f078b4 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_xmit.c
++++ b/drivers/staging/rtl8723bs/core/rtw_xmit.c
+@@ -381,7 +381,7 @@ static void update_attrib_vcs_info(struct adapter *padapter, struct xmit_frame *
+ 		while (true) {
+ 			/* IOT action */
+ 			if ((pmlmeinfo->assoc_AP_vendor == HT_IOT_PEER_ATHEROS) && (pattrib->ampdu_en == true) &&
+-				(padapter->securitypriv.dot11PrivacyAlgrthm == _AES_)) {
++			    (padapter->securitypriv.dot11PrivacyAlgrthm == _AES_)) {
+ 				pattrib->vcs_mode = CTS_TO_SELF;
+ 				break;
+ 			}
 -- 
-2.42.0.windows.2
+2.43.0
 
