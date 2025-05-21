@@ -1,138 +1,175 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFB8D189513;
-	Wed, 21 May 2025 15:32:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6C641EA7C6;
+	Wed, 21 May 2025 15:33:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747841580; cv=none; b=Xn9E5JnZjcPQF0WfZXA5Zc7Q9LcLSSfjuSAFvDf0CvqvCyEEyk6zbQhSa5X2fRfMtLTKZ/npA/XOi8mEnrJi6+ZdvvT9m61zlj+U7TBCXI+RDMPogQoqx36JONUTfS3a/e6zS/huYoyKWR8GcdLy63gaMcXFv2iZ8TjY9DNjkm0=
+	t=1747841587; cv=none; b=mny5YhJw4JZoMiNkpyIqSe+Kyg/4mPOqN7gjfE30sTGAyud5M+qHVgo347hf5lR7V+d1Srfh8fGb9U/bkzseMo1b+BCOj/UoLPOAv9xQAbZWQsSohYSw89ZLivYxxAgzx1tp4enL/YgcuePCLxZNWAstCDb7hjMraQ4j1rhfoos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747841580; c=relaxed/simple;
-	bh=oef6HLrlbAgx8WrXcvkKFP3hlsXTMr+e/rWC4/VLf9c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aiyPfq9W3Y5F/lRDoTI9nIxx9iu+8v1eLpLGir7SUxZcXLs7V0NmlzyhmuYwzphZpvcXtspawVz6btAP4XsmFiCMIBd+ShMm0lQKne6tWIt/hQRNPIYvwbrXqWVObbQPrL76tcqYMvmJBSUPFYH5o4imDK4jmRo/97TnLLeQADg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=np4WEJP1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747841587; c=relaxed/simple;
+	bh=GW8fSJtIIcQfrlBHzwFuPMtHkQZy1wmn2vANi12FPSw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nZmAsV+X8XTCDgjF5NbDWF4nHe0ifxI2RonJdIJy0p9jVom8RAljKGfbhfz9btKQi9Iisyq4wRgJN+zL12cjH/Daxx8QpGRBaSmvLyxr0lTloPU0kXbka3fQxo0UpfCHCKgnOgO9s+iV5B2GXOl9kUpVPGJk3LgylW034dgykiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MEQ5S6Ze; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="np4WEJP1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69784C4CEE7;
-	Wed, 21 May 2025 15:32:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747841579;
-	bh=oef6HLrlbAgx8WrXcvkKFP3hlsXTMr+e/rWC4/VLf9c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=np4WEJP1m83ZWB/BspU69JbUCa34WhxzwD73n9Aesyr6EA5MadeMtDALnmavuIlLg
-	 s5r6u26/6/hNiGXra+FH6Yb4lXMhV9iOC7b3G7NX382NXGe7Ie/YOi0EdEiHhZtZQ/
-	 3/zTxwbdig1wNu4ZB6AzhSMxM2ICkwYxcZfM2QUFp6YnYRWd/Vtyv0VblzLbeT8ztV
-	 niM0j3bAj2mhmU8E7vBoFBqOe2BhBoLFVd+kcnZeyRuPcCz4TyMHwSw+Z6/gxaj+M/
-	 pT102jKuc+FU5e6GliT/EpkbZ05EGMRG6IANdl0GRBPWw/q4MC41H/Y2kgA6ZY+hyF
-	 Gc2qzefWD9HaQ==
-From: Lee Jones <lee@kernel.org>
-To: lee@kernel.org,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Jens Axboe <axboe@kernel.dk>,
-	Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>,
-	Sasha Levin <sashal@kernel.org>,
-	Michal Luczaj <mhal@rbox.co>,
-	Rao Shoaib <Rao.Shoaib@oracle.com>,
-	Simon Horman <horms@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Cc: stable@vger.kernel.org
-Subject: [PATCH v6.1 06/27] af_unix: Remove io_uring code for GC.
-Date: Wed, 21 May 2025 16:27:05 +0100
-Message-ID: <20250521152920.1116756-7-lee@kernel.org>
-X-Mailer: git-send-email 2.49.0.1143.g0be31eac6b-goog
-In-Reply-To: <20250521152920.1116756-1-lee@kernel.org>
-References: <20250521152920.1116756-1-lee@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MEQ5S6Ze"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747841586; x=1779377586;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=GW8fSJtIIcQfrlBHzwFuPMtHkQZy1wmn2vANi12FPSw=;
+  b=MEQ5S6ZeVrA9ikBXytNAwjRI/oEFpM61UO9N79vPumUHKs8Fcabc1Tf9
+   8Strvm2ulOuyU8B0+ompKRPTARZkdihw2kWsIahLB80uhG87qB8BPoSGx
+   82REDkb7jqijcieHjl+1fyv+3XeYa9zzUqEI1kf6Rr4UDUPq+C61cOuvy
+   HYT33HSi/D/io1jX/8oTd/3Nto+qP+S8OP/OS6Yd2Zcp7u8rlUX9whMlg
+   0K2vDiIEgAGAZvwKj6gtV4umyVnjWqYLmNT8DRrM/Uoqr4cMKMYE4f1G6
+   qZrkibiaQpc9uzH4G68/4rJmsSVbuGJWK3zcaTy84ae8uCFrPG25qNUYS
+   A==;
+X-CSE-ConnectionGUID: /NlwuTENTMyvUoQTCQk15g==
+X-CSE-MsgGUID: jYIgMtlCTIyhaiPH9tW3Ag==
+X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="72345621"
+X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
+   d="scan'208";a="72345621"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 08:33:04 -0700
+X-CSE-ConnectionGUID: /0j+tz1wRYKNB1/qh7Axyg==
+X-CSE-MsgGUID: osH+72QJRYGme7yAqVUxjw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
+   d="scan'208";a="141046554"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 08:33:00 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uHlRB-00000003fEh-41bz;
+	Wed, 21 May 2025 18:32:57 +0300
+Date: Wed, 21 May 2025 18:32:57 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Kees Cook <kees@kernel.org>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
+	DanieleCleri@aaeon.eu, GaryWang@aaeon.com.tw,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v6 12/12] pinctrl: Add pin controller driver for AAEON UP
+ boards
+Message-ID: <aC3yKaCNZA8H2KPt@smile.fi.intel.com>
+References: <20250520-aaeon-up-board-pinctrl-support-v6-0-dcb3756be3c6@bootlin.com>
+ <20250520-aaeon-up-board-pinctrl-support-v6-12-dcb3756be3c6@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250520-aaeon-up-board-pinctrl-support-v6-12-dcb3756be3c6@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
+On Tue, May 20, 2025 at 03:28:36PM +0200, Thomas Richard wrote:
+> This enables the pin control support of the onboard FPGA on AAEON UP
+> boards.
+> 
+> This FPGA acts as a level shifter between the Intel SoC pins and the pin
+> header, and also as a mux or switch.
+> 
+> +---------+          +--------------+             +---+
+>           |          |              |             |   |
+>           | PWM0     |       \      |             | H |
+>           |----------|------  \-----|-------------| E |
+>           | I2C0_SDA |              |             | A |
+> Intel SoC |----------|------\       |             | D |
+>           | GPIO0    |       \------|-------------| E |
+>           |----------|------        |             | R |
+>           |          |     FPGA     |             |   |
+> ----------+          +--------------+             +---+
+> 
+> For most of the pins, the FPGA opens/closes a switch to enable/disable
+> the access to the SoC pin from a pin header.
+> Each switch, has a direction flag that is set depending the status of the
+> SoC pin.
+> 
+> For some other pins, the FPGA acts as a mux, and routes one pin (or the
+> other one) to the header.
+> 
+> The driver also provides a GPIO chip. It requests SoC pins in GPIO mode,
+> and drives them in tandem with FPGA pins (switch/mux direction).
+> 
+> This commit adds support only for UP Squared board.
 
-[ Upstream commit 11498715f266a3fb4caabba9dd575636cbcaa8f1 ]
+...
 
-Since commit 705318a99a13 ("io_uring/af_unix: disable sending
-io_uring over sockets"), io_uring's unix socket cannot be passed
-via SCM_RIGHTS, so it does not contribute to cyclic reference and
-no longer be candidate for garbage collection.
+> +static int upboard_pinctrl_pin_get_mode(struct pinctrl_dev *pctldev, unsigned int pin)
+> +{
+> +	struct upboard_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
+> +	struct upboard_pin *p = &pctrl->pins[pin];
+> +	unsigned int val;
+> +	int ret;
+> +
+> +	if (p->funcbit) {
+> +		ret = regmap_field_read(p->funcbit, &val);
+> +		if (ret)
+> +			return ret;
+> +		if (val)
+> +			return UPBOARD_PIN_MODE_FUNCTION;
+> +	}
+> +
+> +	ret = regmap_field_read(p->enbit, &val);
+> +	if (ret)
+> +		return ret;
+> +	if (!val)
+> +		return UPBOARD_PIN_MODE_DISABLED;
+> +
+> +	ret = regmap_field_read(p->dirbit, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return val ? UPBOARD_PIN_MODE_GPIO_IN : UPBOARD_PIN_MODE_GPIO_OUT;
+> +}
+> +
+> +static void upboard_pinctrl_dbg_show(struct pinctrl_dev *pctldev, struct seq_file *s,
+> +				     unsigned int offset)
+> +{
+> +	int ret;
+> +
+> +	ret = upboard_pinctrl_pin_get_mode(pctldev, offset);
+> +	if (ret == UPBOARD_PIN_MODE_FUNCTION)
+> +		seq_puts(s, "mode function ");
+> +	else if (ret == UPBOARD_PIN_MODE_DISABLED)
+> +		seq_puts(s, "HIGH-Z ");
 
-Also, commit 6e5e6d274956 ("io_uring: drop any code related to
-SCM_RIGHTS") cleaned up SCM_RIGHTS code in io_uring.
+> +	else
+> +		seq_printf(s, "GPIO (%s) ", str_input_output(ret == UPBOARD_PIN_MODE_GPIO_IN));
 
-Let's do it in AF_UNIX as well by reverting commit 0091bfc81741
-("io_uring/af_unix: defer registered files gc to io_uring release")
-and commit 10369080454d ("net: reclaim skb->scm_io_uring bit").
+Actually this should be
 
-Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
-Acked-by: Jens Axboe <axboe@kernel.dk>
-Link: https://lore.kernel.org/r/20240129190435.57228-3-kuniyu@amazon.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-(cherry picked from commit 11498715f266a3fb4caabba9dd575636cbcaa8f1)
-Signed-off-by: Lee Jones <lee@kernel.org>
----
- net/unix/garbage.c | 25 ++-----------------------
- 1 file changed, 2 insertions(+), 23 deletions(-)
+	else if (ret < 0)
+		seq_printf(s, "N/A "); // or similar text
+	else
+		seq_printf(s, "GPIO (%s) ", str_input_output(ret == UPBOARD_PIN_MODE_GPIO_IN));
 
-diff --git a/net/unix/garbage.c b/net/unix/garbage.c
-index 7eeaac165e85..c04f82489abb 100644
---- a/net/unix/garbage.c
-+++ b/net/unix/garbage.c
-@@ -184,12 +184,10 @@ static bool gc_in_progress;
- 
- static void __unix_gc(struct work_struct *work)
- {
--	struct sk_buff *next_skb, *skb;
--	struct unix_sock *u;
--	struct unix_sock *next;
- 	struct sk_buff_head hitlist;
--	struct list_head cursor;
-+	struct unix_sock *u, *next;
- 	LIST_HEAD(not_cycle_list);
-+	struct list_head cursor;
- 
- 	spin_lock(&unix_gc_lock);
- 
-@@ -293,30 +291,11 @@ static void __unix_gc(struct work_struct *work)
- 
- 	spin_unlock(&unix_gc_lock);
- 
--	/* We need io_uring to clean its registered files, ignore all io_uring
--	 * originated skbs. It's fine as io_uring doesn't keep references to
--	 * other io_uring instances and so killing all other files in the cycle
--	 * will put all io_uring references forcing it to go through normal
--	 * release.path eventually putting registered files.
--	 */
--	skb_queue_walk_safe(&hitlist, skb, next_skb) {
--		if (skb->scm_io_uring) {
--			__skb_unlink(skb, &hitlist);
--			skb_queue_tail(&skb->sk->sk_receive_queue, skb);
--		}
--	}
--
- 	/* Here we are. Hitlist is filled. Die. */
- 	__skb_queue_purge(&hitlist);
- 
- 	spin_lock(&unix_gc_lock);
- 
--	/* There could be io_uring registered files, just push them back to
--	 * the inflight list
--	 */
--	list_for_each_entry_safe(u, next, &gc_candidates, link)
--		list_move_tail(&u->link, &gc_inflight_list);
--
- 	/* All candidates should have been detached by now. */
- 	WARN_ON_ONCE(!list_empty(&gc_candidates));
- 
+as the above may return a negative error code which is not listed here.
+
+> +}
+
+With the above being addressed,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+...
+
+Thanks for doing this driver, eventually we will have it working
+out-of-the-box. Do you have any plans for enabling HSI and SIM card
+slot on UP Squared 7000?
+
 -- 
-2.49.0.1143.g0be31eac6b-goog
+With Best Regards,
+Andy Shevchenko
+
 
