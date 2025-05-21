@@ -1,28 +1,27 @@
-Received: from smtpbguseast2.qq.com (smtpbguseast2.qq.com [54.204.34.130])
+Received: from smtpbgjp3.qq.com (smtpbgjp3.qq.com [54.92.39.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E30725D1FA;
-	Wed, 21 May 2025 13:12:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE3DE264616;
+	Wed, 21 May 2025 13:12:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.92.39.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747833131; cv=none; b=GBVqWlaJYrijeHoqvv/D3TS35WFO4vsjc/p2dWd1aoFrYHO3ApD1RG6Ff69xv+yOS7GfYJJqOMjgstXLuxrBZmLmrht9DWs1uQIDpXSKJBbkBnyi8eAUy4L8qYXDrOZt+g+oUr3PvFHGqXn7KYX6/GqaZsS6h9M0/z2ADPOCLbg=
+	t=1747833131; cv=none; b=bL2SBZFRFSA0IoRU9PO0H8m++0n9jqO1Gtbe6ghIcejpzWiUTMTT0oWlK0pmZ0RS9P2M7KjTNMAsEo7CrKRXXh5+RwxAJ8VZp39nXc0Zg3QjS/YT4b2z4XY/M698H9Fqps0uZ+7NHSOUvgA66ErovviGAky0ZthYPnMQfcfEh/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747833131; c=relaxed/simple;
-	bh=dYhjbV/+rEQ9Mg3Mizvz04VcwRwhCUiqf2+R1uJ0tm8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=a4eQab3QmMGH2otImBC9JYMdC4tC94OPB4XsmvR6BtIrPh7ywPM4dqclW6RKDp7CZK4kiec/1U3ZKz9lssodRiugQ87FG/oC9+V/Iaie3Ffjmm8mlloiG4Ky+7OY38JQgSyefVsnboKIgjfiloP2wUYQpaifp77XOxZiDHhcoA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chainsx.cn; spf=none smtp.mailfrom=chainsx.cn; arc=none smtp.client-ip=54.204.34.130
+	bh=hF+oG7v1AWVhgu9lPf1uizRbLhlMrZBB343LLtoUJhk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ugCwFkyz27hugPR0g/6hsYkMNQYWxXDCayEwFwu7lxxkTH9bVDTItfK5n8okd7CzCadrsFPjkTPtL7EvIr/ji4Ln2mL3vIk3iZYZ6/u8IGcmgI14Bw1jKUBx99sN4jVnrJ/MJ8HXjlLKRGu4xeGxKFeIx3ftMGU4E9JKMHtr7Qs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chainsx.cn; spf=none smtp.mailfrom=chainsx.cn; arc=none smtp.client-ip=54.92.39.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chainsx.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=chainsx.cn
-X-QQ-mid: esmtpgz16t1747833079t1c7928dc
-X-QQ-Originating-IP: gG6HJvN2fXEpEODmJrjE4nv+Yyd6CjGdnbmLoMkfNyw=
+X-QQ-mid: esmtpgz16t1747833073t96ab1b52
+X-QQ-Originating-IP: eJZV5Pq/27UhC6wbS5MVd9IwULhg6bRfY+vB2uhghy0=
 Received: from chainsx-ubuntu-server.lan ( [116.249.112.84])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 21 May 2025 21:11:17 +0800 (CST)
+	id ; Wed, 21 May 2025 21:11:10 +0800 (CST)
 X-QQ-SSF: 0000000000000000000000000000000
 X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 14355936894611199779
-EX-QQ-RecipientCnt: 17
+X-BIZMAIL-ID: 16382578765588849597
+EX-QQ-RecipientCnt: 16
 From: Hsun Lai <i@chainsx.cn>
 To: robh@kernel.org,
 	krzk+dt@kernel.org,
@@ -39,14 +38,11 @@ Cc: i@chainsx.cn,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	krzysztof.kozlowski@linaro.org,
-	linux-rockchip@lists.infradead.org,
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: [PATCH v4 2/3] dt-bindings: arm: rockchip: Add Sakura Pi RK3308B
-Date: Wed, 21 May 2025 21:11:07 +0800
-Message-Id: <20250521131108.5710-3-i@chainsx.cn>
+	linux-rockchip@lists.infradead.org
+Subject: [PATCH v4 0/3] Add support for Sakura Pi RK3308B
+Date: Wed, 21 May 2025 21:11:05 +0800
+Message-Id: <20250521131108.5710-1-i@chainsx.cn>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250521131108.5710-1-i@chainsx.cn>
-References: <20250521131108.5710-1-i@chainsx.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,56 +52,58 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-QQ-SENDSIZE: 520
 Feedback-ID: esmtpgz:chainsx.cn:qybglogicsvrsz:qybglogicsvrsz3a-0
-X-QQ-XMAILINFO: OZsapEVPoiO6pOxc+d1hsRvTEZycjdnMbUMdAxht8nuPD/WMn1ou3LkK
-	l1POvN+hze/a0YMxJvhF5Q1BgtIcofDAn88g7EEiftTdQz6R2wRz1N6JIXGhGBG7Ki/oErm
-	NFpuz7por0eksPZXuY8YAMzW4D4A5ea+RuQD9jxPjQHk6rAgB+aGjvHRVUdkFNrXj4Yx3H9
-	FsKHVeke+rbfUdeOprQCyMNzIgRphGOtXwJKcvXADO4+9WG2MJYoCGlTsKVbwlGPOBn0Kh8
-	u/N/tomGZwu1IALmt2YkKJIZMjDj4s1Gx+aAi4l/lZ6zwP0ouJa5K6rSoiwuW0y2tutqrR1
-	PR5kzrtEpggOXPt1oJhTgY1ZpmPTF7MvGK+yIhZQu/l+sWitgQ7QTIOt+gJqAkQqBSD74K7
-	C2sEbRgEc8PWqXJG+4KCxz4Heri4hiAz7LUTsenYofiVcNGoOGvs7aGXrF8+wfRtRdl+0iB
-	i//Yemn2X+MhK+Co84y1gBUR/uGxzKZ8IySrSYrltrMPA7w6p5SBDtbJ/QUcbggMcPcL4AI
-	ZESEHbmybIFG0yRIcihqGTX0EvSnYq6nfNWxfc4ZtMBQeYqIRsB0numyOF0/69Hvg4E/HjF
-	sC/h3dL1D50PlhQG7XJhOYadEfYodyG/c2+rdrzComrsA7w936nML5mg0yW3KiZOicRNXwR
-	netkytewxmxOtlmJYNF1HcF8SGRtbhHw5wCD7FsWbxqQ4QgQoxO+nUnh5amjEwb+4qpdZyl
-	FtR5AJtXQUBU6DpwbxUZun58YJpfsctnqjH5pNYCDZSEdq4SQTyq0xbhZQQLZKeXm9cRHdO
-	hPksbuQ+iA1O+FOiXtrZ7B2H2DZz4de6OvDB38Scl+jAlSDfTKAtwlzxDLOYYooskwjmMLc
-	Fxssj1pM8WclKUUr8TeZ9iHYQwcXUjKqzGdBaWeSZhFc/XnKRh2VKBfCd9CsO8/JC9recyG
-	jRYpQdU/ex1ZZ4P+CMt+4EcsqqidBgNlf3rpl9lNPFePTfiwMkiK3+cFFNLKDV0JGDU0J2o
-	yFr0uVzCZ80POD4+HyvjjIOjif+lg=
-X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
+X-QQ-XMAILINFO: NbLKFbIf58WKJLsowGlccw++xJ0jWmihH0hHJ2pWLJMAh4lyqgcKpCIW
+	Ux8uRet127EE3Z3XWUQBJOAV+u/5KHv2b2nNalcLINhC6Py2+UPx+Rzv7Ay21A3/rnTFqro
+	GFZo16UCrdfh2+/AZmuSNVVGFIMf0FXSqgIYHjN18agbgMQzLRtpb+nSBIHDby3TCgCcoox
+	XuBIGyPu3zdUddY0sySb72ViiWIEgxdNygwRNbWv7NX1R89ps/0nkBlphiAQBpzp8xaXufJ
+	auLlwuuVV4uGi6WJ4s42dKwZBrMXug7hmzkuGEqdAlusS3HgkrZlzHH75cOZbZFxIfkhJLW
+	9EVjfrJRg/Ea8Lw/X4jOPTUpPx4yhZYwCrda6K9makaqxu9Vnani2Lk2uYBCpGI9Pd7nd5o
+	YYLBs3w9BoRTc6JGutIVhBpB+rJBocngZ8NYmrtAe12xIc/0QqyRw3WGUkMcOYZzTF5yybM
+	r15+kl1uYLoDsUXYVq7qvqGqguwmzLwi9sj6/ob39v5Cm9TaYzF8M591Jirw5GKwN6IiIYg
+	6TU/08iZGpOoK41o2b5zWL07AR8fuGIT/OEQnuICBMdga1uQ4+bYjM0xUbEp1DLS0DICsZ0
+	rukC1sKk38z+TpRHMSNZiLJUto9sRGaaJfFJHsX9x7Ib9zISMXQHONlR3elcs8AH49Gcsl5
+	TCG4RlBsVwR6G3wckMH3+O1sY2uLs/y21lP7EaJeuXVM5Vc7+jnYLFuXUX5/YzxJllhzmLM
+	k4tT43ynl+vrYOFM8KZRwGuNdj+icuuNfbmnu/qLDa44zT0oHS+cJPV8F0Vo/AAgGFYbcaZ
+	AqTpjJb4c9pQZGiTVVWs7B+m/tei4rotQjhd2fIGH7D28p+FfzO/PCvBexOcE9vpWaIcsTi
+	FDY1X61fuosJnw8OmrxARSjgL8TzDJdHFLUKkUBQY2F8tmRkdht3d0dyHnNSl9XUCqv0pnM
+	rlrHfUO5K21C26WTzzKO3xPM0ZwCmyzx47evi6dAk4dvwbXf6S9AP+3QDzEL0GUoJK/ctyO
+	2BCZ++ww==
+X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
 X-QQ-RECHKSPAM: 0
 
-This patch adds device tree binding support for
-Sakura Pi RK3308B, with compatibility for the
-Rockchip RK3308 SoC.
+This series add support for Sakura Pi RK3308B.
 
-Link: https://docs.sakurapi.org/article/sakurapi-rk3308b/introduce
+Info of device can be found at:
+https://docs.sakurapi.org/article/sakurapi-rk3308b/introduce
 
-Signed-off-by: Hsun Lai <i@chainsx.cn>
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
----
+Changes in v4:
+- Fix vendor prefixes error (Krzysztof Kozlowski v2)
 
-(no changes since v1)
+Changes in v3:
+- Remove empty i2c controller (Heiko Stuebner, v1)
+- Remove unused spi nodes (Heiko Stuebner, v1)
+- Sort nodes alphabetically (Heiko Stuebner, v1)
+- Put status as last property (Heiko Stuebner, v1)
 
- Documentation/devicetree/bindings/arm/rockchip.yaml | 5 +++++
- 1 file changed, 5 insertions(+)
+Changes in v2:
+- Update the names of the regulators (Heiko Stuebner, v1)
 
-diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
-index 115c3ca43..c64adc0d0 100644
---- a/Documentation/devicetree/bindings/arm/rockchip.yaml
-+++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
-@@ -1109,6 +1109,11 @@ properties:
-           - const: rockchip,rk3588-toybrick-x0
-           - const: rockchip,rk3588
- 
-+      - description: Sakura Pi RK3308B
-+        items:
-+          - const: sakurapi,rk3308-sakurapi-rk3308b
-+          - const: rockchip,rk3308
-+
-       - description: Sinovoip RK3308 Banana Pi P2 Pro
-         items:
-           - const: sinovoip,rk3308-bpi-p2pro
+Changes in v1:
+- Add support for Sakura Pi RK3308B
+- Patch 2: Acked-by: Conor Dooley <conor.dooley@microchip.com>
+
+Hsun Lai (3):
+  dt-bindings: vendor-prefixes: Add SakuraPi prefix
+  dt-bindings: arm: rockchip: Add Sakura Pi RK3308B
+  arm64: dts: rockchip: add DTs for Sakura Pi RK3308B
+
+ .../devicetree/bindings/arm/rockchip.yaml     |   5 +
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+ .../dts/rockchip/rk3308-sakurapi-rk3308b.dts  | 274 ++++++++++++++++++
+ 4 files changed, 282 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3308-sakurapi-rk3308b.dts
+
 -- 
 2.34.1
 
