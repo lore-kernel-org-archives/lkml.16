@@ -1,145 +1,202 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 393D42798F1;
-	Wed, 21 May 2025 13:37:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 253FE25DB0B
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 13:38:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747834665; cv=none; b=En+ORTHS2f8l/hw0T3MGMwEmjSon6TScVKI8Vp3ol+xY0HViz4avERU/JJmmB0vMRmczIZb/OYHRahdj+xohHl/8g45P9srEcl2s5H7ps/8z1JnzrIn9Cwys21BoMjShB7Yqyh7hS1A7nTdTvLKIeYNKa9/qWTGcLq10r20jalg=
+	t=1747834707; cv=none; b=HWx+NjoRYauPTwidq2iy+lWnl2atM3wX7iQBI5gZ1k9UJOgOjL9+ADaZe2yV4yNRjE2dKeqVBLFnTBLuLLD5DkqGnwJGQRnlD0l43cOsKXabkDW4yg7bjAJ4ouQp2HIWko1yfK+iRtRW4pJ6+DpDB6o4+lHSBaT0MnytvH3sUk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747834665; c=relaxed/simple;
-	bh=Q3vxupo3Dpy/q0eLFgkdBNBH9G50vEGn7yWruuYgOC4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FlxWeZLQtn5g4APi4XMyJ2rPSGMYBo7HRHmj16dfjIgn591fr6pEYJjA8tAbKlX/GMyDTt+ni3ca+wq9bvVHbn6Ty75V19UcHRVLME+T9N7DjL7MQFU3paVN/uTStST362vAdQfqwYmLzIGqLF94IljkwWXsRvZ+0Mp7R8PMpUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SVVgx5wr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747834707; c=relaxed/simple;
+	bh=Gfz45NQ5VPSCUu47fmwJT5RTDENMs4pScjEvknNGDes=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pprU57m+LMgrgf0gfNmrGFxFAHkG01VuxqoFAFvRRZk3qiRo9cUu22AwSLUNj165Iy3WwUgjNmGC1GZgpLgGVyYAxz5jcI9aFrCTkMIqqt9arBp1c/ZJLKLzlRqUxRApjdmitf2KHEKBLBS3keSBbIxLieKZ/SeiLd+Yo/dg8Vg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=feXNF1/T; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=M084V+jA; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=feXNF1/T; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=M084V+jA; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SVVgx5wr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99B61C4CEE7;
-	Wed, 21 May 2025 13:37:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747834664;
-	bh=Q3vxupo3Dpy/q0eLFgkdBNBH9G50vEGn7yWruuYgOC4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=SVVgx5wrku55voQSdFauIP8usiUXUr5MELLxr0pcNBqBflh9V01F7vVT0jOMwgx6u
-	 Y8L8CXrJDKrT28wbvbhRisK28d5iTKU/MT/vDNQzVqqluzjNrJd9aGndHI0Jcaocug
-	 4FidPWcv2jsms/G4tatxEovQy6vdmz8wRiWXYdfdkp+dDUndF3v7wZSsszxyVjgsIu
-	 4uRwLQVm0q0IAbifEdbp2cFm5pVFj2OkiGm5u/0bS3bhX4DvVZm+kQs3+bwTv5QBiX
-	 GIQZNXp205YCjLh427WaaJQCfS2zu2pSk9+39CUfmW6Evb6QRjY0s7iSOLLzMeQ1l5
-	 qrEdhsAGsKpcw==
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-54b10594812so8008321e87.1;
-        Wed, 21 May 2025 06:37:44 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW5expP0WGCUAk1eXS/jjvixggWIgO4cPCj4xzm5uGfTayHWCf3h3jmDkp79MJ0LYODPU7fCjgaqWI=@vger.kernel.org, AJvYcCXlfPPY4Q39Smeo/3VZDg110prUFa0LMGkXcKjk3y/OIWYSe0AR0TQ1lWM3Ye8i8aPLD7rgkdxo2D7M5lVQ@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUpSgOvRj2RceX/Zyw3YGp1kZ3ucUgvkgjKMe8E+RWr29rPjQ1
-	Jz3B9rhTtOq6jfW/KyftPrCAcwZyQTge1JhYalAOJD1OAj35GnIQFtt+qE+JxRfqpAzFtzaPnKq
-	cOO94zfPXisFc8z7l3pYkl8ekx/Qqank=
-X-Google-Smtp-Source: AGHT+IFko07FZvPd74P0BaT3/07hpt0YPXFdNbTcXRR7nkC4AEknVdNNihDaVx9qsxC6R3pVF5cdVeKlVFZ1xKYjWM0=
-X-Received: by 2002:ac2:4c4a:0:b0:545:243e:e2dc with SMTP id
- 2adb3069b0e04-550e7232305mr6204447e87.39.1747834662956; Wed, 21 May 2025
- 06:37:42 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="feXNF1/T";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="M084V+jA";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="feXNF1/T";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="M084V+jA"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 27AE41F8AE;
+	Wed, 21 May 2025 13:38:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747834704; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6Dhfg3H/kMqcAQUy5NiNon0brigmHV98r+/CIaPhl+U=;
+	b=feXNF1/TetZfXPNofNc8bq4KpoSdU0iW6BUKlAMUvZ4kcg5RAJkxVYBEtNIQx061FHlDBP
+	lVxNH+kgk9B10cWODA18n8D0ZHZCrl5tXy30YRzJKyg8HLN6X3FJI7ja9EC7NRkeNsosLe
+	dJIpa8guhtSPTgLrogKS9qHYN5rvIaE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747834704;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6Dhfg3H/kMqcAQUy5NiNon0brigmHV98r+/CIaPhl+U=;
+	b=M084V+jAm0VBZfhv64XyxAANc4FtfGQxsMZUpKI10JOKzUxLryKEEZKuXrqVfQyH4ya8sd
+	2XrgJsMeD+CzZFAQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="feXNF1/T";
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=M084V+jA
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747834704; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6Dhfg3H/kMqcAQUy5NiNon0brigmHV98r+/CIaPhl+U=;
+	b=feXNF1/TetZfXPNofNc8bq4KpoSdU0iW6BUKlAMUvZ4kcg5RAJkxVYBEtNIQx061FHlDBP
+	lVxNH+kgk9B10cWODA18n8D0ZHZCrl5tXy30YRzJKyg8HLN6X3FJI7ja9EC7NRkeNsosLe
+	dJIpa8guhtSPTgLrogKS9qHYN5rvIaE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747834704;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6Dhfg3H/kMqcAQUy5NiNon0brigmHV98r+/CIaPhl+U=;
+	b=M084V+jAm0VBZfhv64XyxAANc4FtfGQxsMZUpKI10JOKzUxLryKEEZKuXrqVfQyH4ya8sd
+	2XrgJsMeD+CzZFAQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D260713888;
+	Wed, 21 May 2025 13:38:23 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id vZxXMk/XLWiGBwAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Wed, 21 May 2025 13:38:23 +0000
+Date: Wed, 21 May 2025 15:38:22 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: Joshua Hahn <joshua.hahnjy@gmail.com>
+Cc: gourry@gourry.net, akpm@linux-foundation.org, harry.yoo@oracle.com,
+	ying.huang@linux.alibaba.com, honggyu.kim@sk.com,
+	yunjeong.mun@sk.com, gregkh@linuxfoundation.org, rakie.kim@sk.com,
+	rafael@kernel.org, lenb@kernel.org, dan.j.williams@intel.com,
+	Jonathan.Cameron@huawei.com, dave.jiang@intel.com,
+	horen.chuang@linux.dev, hannes@cmpxchg.org,
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-mm@kvack.org, kernel-team@meta.com
+Subject: Re: [PATCH v9] mm/mempolicy: Weighted Interleave Auto-tuning
+Message-ID: <aC3XTsCknvx2z-u_@localhost.localdomain>
+References: <20250520141236.2987309-1-joshua.hahnjy@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250513125808.75510-1-vkuznets@redhat.com>
-In-Reply-To: <20250513125808.75510-1-vkuznets@redhat.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Wed, 21 May 2025 15:37:31 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGBgkjEseNTaFewCwM=0h_zOVfnqshOouHPTTkmeiZN1w@mail.gmail.com>
-X-Gm-Features: AX0GCFuY7joIXpf1EEnLZX1Mth4aBM4HKeH5hTeI3S0S81xmI8PHJi0gLhbIlL0
-Message-ID: <CAMj1kXGBgkjEseNTaFewCwM=0h_zOVfnqshOouHPTTkmeiZN1w@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] efi: Add a mechanism for embedding SBAT section
-To: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: x86@kernel.org, linux-efi@vger.kernel.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Peter Jones <pjones@redhat.com>, Daniel Berrange <berrange@redhat.com>, 
-	Emanuele Giuseppe Esposito <eesposit@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>, 
-	Greg KH <gregkh@linuxfoundation.org>, Luca Boccassi <bluca@debian.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, 
-	James Bottomley <James.Bottomley@hansenpartnership.com>, 
-	Eric Snowberg <eric.snowberg@oracle.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250520141236.2987309-1-joshua.hahnjy@gmail.com>
+X-Spam-Level: 
+X-Spamd-Bar: /
+X-Spam-Flag: NO
+X-Spam-Score: -0.01
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: 27AE41F8AE
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-0.01 / 50.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FREEMAIL_TO(0.00)[gmail.com];
+	ARC_NA(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[localhost.localdomain:mid,gourry.net:email,alibaba.com:email,sk.com:email]
 
-On Tue, 13 May 2025 at 14:58, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
->
-> Changes since v2 (Ard):
-> (https://lore.kernel.org/linux-efi/20250505154523.231233-1-vkuznets@redhat.com/)
-> - Use 'textsize' intermediary in arch/x86/boot/header.S to avoid additional
->  '#ifdef CONFIG_EFI_SBAT'.
-> - Fix indentation.
-> - Added R-b tags.
->
-> Original description:
->
-> SBAT is a mechanism which improves SecureBoot revocations of UEFI binaries
-> by introducing a generation-based technique. Compromised or vulnerable UEFI
-> binaries can be prevented from booting by bumping the minimal required
-> generation for the specific component in the bootloader. More information
-> on the SBAT can be obtained here:
->
-> https://github.com/rhboot/shim/blob/main/SBAT.md
->
-> Currently, shim checks .sbat data for itself in self-test and for second
-> stage bootloaders (grub, sd-boot, UKIs with sd-stub, ...) but kernel
-> revocations require cycling signing keys or adding kernel hashes to shim's
-> internal dbx. Adding .sbat to kernel and enforcing it on kernel loading
-> will allow to do the same tracking and revocation distros are already
-> doing with a simplified mechanism, and without having to keep lists of
-> kernels outside of the git repos.
->
-> Previously, an attempt was made to add ".sbat" section to the linux kernel:
->
-> https://lwn.net/Articles/938422/
->
-> The approach was rejected mainly because currently there's no policy on how
-> to update SBAT generation number when a new vulnerability is discovered. In
-> particular, it is unclear what to do with stable kernels which may or may
-> not backport certain patches making it impossible to describe the current
-> state with a simple number.
->
-> This series suggests a different approach: instead of defining SBAT
-> information, provide a mechanism for downstream kernel builders (distros)
-> to include their own SBAT data. This leaves the decision on the policy to
-> the distro vendors. Basically, each distro implementing SecureBoot today,
-> will have an option to inject their own SBAT data during kernel build and
-> before it gets signed by their SecureBoot CA. Different distro do not need
-> to agree on the common SBAT component names or generation numbers as each
-> distro ships its own 'shim' with their own 'vendor_cert'/'vendor_db'. Linux
-> upstream will never, ever need to care about the data unless they choose in
-> the future to participate in that way.
->
-> Vitaly Kuznetsov (2):
->   efi: zboot specific mechanism for embedding SBAT section
+On Tue, May 20, 2025 at 07:12:35AM -0700, Joshua Hahn wrote:
+> On machines with multiple memory nodes, interleaving page allocations
+> across nodes allows for better utilization of each node's bandwidth.
+> Previous work by Gregory Price [1] introduced weighted interleave, which
+> allowed for pages to be allocated across nodes according to user-set ratios.
+> 
+> Ideally, these weights should be proportional to their bandwidth, so
+> that under bandwidth pressure, each node uses its maximal efficient
+> bandwidth and prevents latency from increasing exponentially.
+> 
+> Previously, weighted interleave's default weights were just 1s -- which
+> would be equivalent to the (unweighted) interleave mempolicy, which goes
+> through the nodes in a round-robin fashion, ignoring bandwidth information.
+> 
+> This patch has two main goals:
+> First, it makes weighted interleave easier to use for users who wish to
+> relieve bandwidth pressure when using nodes with varying bandwidth (CXL).
+> By providing a set of "real" default weights that just work out of the
+> box, users who might not have the capability (or wish to) perform
+> experimentation to find the most optimal weights for their system can
+> still take advantage of bandwidth-informed weighted interleave.
+> 
+> Second, it allows for weighted interleave to dynamically adjust to
+> hotplugged memory with new bandwidth information. Instead of manually
+> updating node weights every time new bandwidth information is reported
+> or taken off, weighted interleave adjusts and provides a new set of
+> default weights for weighted interleave to use when there is a change
+> in bandwidth information.
+> 
+> To meet these goals, this patch introduces an auto-configuration mode
+> for the interleave weights that provides a reasonable set of default
+> weights, calculated using bandwidth data reported by the system. In auto
+> mode, weights are dynamically adjusted based on whatever the current
+> bandwidth information reports (and responds to hotplug events).
+> 
+> This patch still supports users manually writing weights into the nodeN
+> sysfs interface by entering into manual mode. When a user enters manual
+> mode, the system stops dynamically updating any of the node weights,
+> even during hotplug events that shift the optimal weight distribution.
+> 
+> A new sysfs interface "auto" is introduced, which allows users to switch
+> between the auto (writing 1 or Y) and manual (writing 0 or N) modes. The
+> system also automatically enters manual mode when a nodeN interface is
+> manually written to.
+> 
+> There is one functional change that this patch makes to the existing
+> weighted_interleave ABI: previously, writing 0 directly to a nodeN
+> interface was said to reset the weight to the system default. Before
+> this patch, the default for all weights were 1, which meant that writing
+> 0 and 1 were functionally equivalent. With this patch, writing 0 is invalid.
+> 
+> [1] https://lore.kernel.org/linux-mm/20240202170238.90004-1-gregory.price@memverge.com/
+> 
+> Suggested-by: Yunjeong Mun <yunjeong.mun@sk.com>
+> Suggested-by: Oscar Salvador <osalvador@suse.de>
+> Suggested-by: Ying Huang <ying.huang@linux.alibaba.com>
+> Suggested-by: Harry Yoo <harry.yoo@oracle.com>
+> Tested-by: Honggyu Kim <honggyu.kim@sk.com>
+> Reviewed-by: Honggyu Kim <honggyu.kim@sk.com>
+> Reviewed-by: Harry Yoo <harry.yoo@oracle.com>
+> Reviewed-by: Huang Ying <ying.huang@linux.alibaba.com>
+> Co-developed-by: Gregory Price <gourry@gourry.net>
+> Signed-off-by: Gregory Price <gourry@gourry.net>
+> Signed-off-by: Joshua Hahn <joshua.hahnjy@gmail.com>
 
-I've picked up the first patch for the next cycle. The second one can
-then go via the -tip tree for v6.17
-
-Or if team-tip is happy to pick it up now, I've created a separate
-efi-sbat branch with only the first patch, so it can be merged into
--tip and the second patch applied on top.
-
-git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git efi-sbat
+Acked-by: Oscar Salvador <osalvador@suse.de>
 
 
->   x86/efi: Implement support for embedding SBAT data for x86
->
->  arch/x86/boot/Makefile                      |  2 +-
->  arch/x86/boot/compressed/Makefile           |  5 ++++
->  arch/x86/boot/compressed/sbat.S             |  7 +++++
->  arch/x86/boot/compressed/vmlinux.lds.S      |  8 ++++++
->  arch/x86/boot/header.S                      | 31 +++++++++++++++------
->  drivers/firmware/efi/Kconfig                | 24 ++++++++++++++++
->  drivers/firmware/efi/libstub/Makefile.zboot |  4 +++
->  drivers/firmware/efi/libstub/zboot-header.S | 22 +++++++++++++--
->  drivers/firmware/efi/libstub/zboot.lds      | 11 ++++++++
->  9 files changed, 102 insertions(+), 12 deletions(-)
->  create mode 100644 arch/x86/boot/compressed/sbat.S
->
-> --
-> 2.49.0
->
+
+-- 
+Oscar Salvador
+SUSE Labs
