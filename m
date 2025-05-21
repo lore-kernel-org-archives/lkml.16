@@ -1,129 +1,203 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A148267AFB;
-	Wed, 21 May 2025 12:58:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9319A26C380;
+	Wed, 21 May 2025 12:59:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747832327; cv=none; b=EUrKFwxarC0Yejp+jzDiLifgvYCONBr5W66o9tOGwDtVi4ly+Hs4ornYIvC2YKEMSYa9l6ZYbz+tPq+jVLdYPh8eYnKZGA2qIERZyxfx0yYLVIMf6HW+fN8yThCAw7RatSl/nBoChOXoyVyQHN1vN5liJyOHzFCSDx9UsbfHhV0=
+	t=1747832346; cv=none; b=Wu16cNC14Jt7t/hQ4zWJ363G4AhQGCtvc8SLvf60eIXpO6nVwnmxsakesc7gaSfYGOx2n4VXWPEfv4CYCKCnsC/BTlS3lJ72zxgkoFehkCW0ACMPhaHcAOhvOUg8xrZIe295gzlCQdjMSMlZp8SDAsBT8AQqPmN2y2KzJbBSNHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747832327; c=relaxed/simple;
-	bh=IeQnLNJstNjynSs1koAm+vW3nzqLzxm3im3la+GCGMU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=knheJfqU9lCl6Cq4OG+knGxpR7O3xBQAkz5DHGgI1MWf3MiiMKM2X1f0Eqc0lvKhbJswzMQ+/Exr5xLOG4BkAzlUz0yspeV7ksHnco7G2VKc6ARoLjvkEhnlBr2bCCkNck6xCzdFQf11lWDz3MTy7DdA0BdxsdWsaBd7UpcFOzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MnoVGq66; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747832346; c=relaxed/simple;
+	bh=bNwOd62uldLrd0Oo1ZUt+cxdvOJNKGn9/3zegQjYUbk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pSRNbWHXJUQzK9Q3/KR+tnJ3pdzpTNpmHOooBfCRf0Fosf3rdyFM6ptVy3Df2sq6FFYjDd+8MapHAvMLKqlfWmShVT+TBtCzlce1z4/2knWN8Zzxc4RNOndtZQNN4ps74uxNAi18D16N3Qs38jUaWQqbRAVPmRm5/ecAHkrMSuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=flMAcnKw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MnoVGq66"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3C3DC4CEE4;
-	Wed, 21 May 2025 12:58:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747832327;
-	bh=IeQnLNJstNjynSs1koAm+vW3nzqLzxm3im3la+GCGMU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=MnoVGq66iFbuFbrV5nf9ftLCWI+aBqdECdHTKaLh0hlPeo6aFLoxw44EjQGFG8A+n
-	 IXkHhB6JJOYgBx8k4c2Sn/2F8kFxhpX/hPFNp4daadLKS09YGJzSSs/CdDybSdUCkW
-	 27lCmgeMSYe9Ce3FeQtA85w7ukVqF4/42r2omGZa7Kc/jVBX3JHzD/w6ZrqwUs8hTE
-	 tkAkGAIkuOq3koHntDsetHtM4NjvcH34nAM48hZxjQGZ/PPJjMect9y0cPbD4a6p6S
-	 AqlQP6iYpH0XIMGzzB/KRaHMs5H+9wCCCePODnR5qdEVwbe270S/Tss4aZfgtJGyGH
-	 LVmWsO/Jdi6aw==
-Message-ID: <bd9ab640-2469-4455-bd69-302dd3898c7b@kernel.org>
-Date: Wed, 21 May 2025 14:58:40 +0200
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="flMAcnKw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA16AC4CEE4;
+	Wed, 21 May 2025 12:59:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1747832345;
+	bh=bNwOd62uldLrd0Oo1ZUt+cxdvOJNKGn9/3zegQjYUbk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=flMAcnKwMJccwzaxfmgqrSXfLtQm/Tylh7IIH4uTzTSwBLEbNTZe7r7MsRikh9irc
+	 dUfgEJb76ZfJyWoZcIH1c88cbDwY4FkPwGWZPRF6HiTEjums3cik6eQ4tI4fMuXIt8
+	 L5cIUym5Or5Mr7IKwwSlDctQ8uVQ3R08TeIpM4xM=
+Date: Wed, 21 May 2025 14:59:02 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: David Wang <00107082@163.com>
+Cc: mathias.nyman@intel.com, oneukum@suse.com, stern@rowland.harvard.edu,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] USB: core: add a memory pool to urb caching
+ host-controller private data
+Message-ID: <2025052132-sloped-strewn-397a@gregkh>
+References: <20250517083819.6127-1-00107082@163.com>
+ <2025052148-cannot-football-74e1@gregkh>
+ <572f1814.9a08.196f2971eea.Coremail.00107082@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] phy: exyons5-usbdrd: support HS phy for
- ExynosAutov920
-To: Neil Armstrong <neil.armstrong@linaro.org>,
- Pritam Manohar Sutar <pritam.sutar@samsung.com>, vkoul@kernel.org,
- kishon@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- alim.akhtar@samsung.com, andre.draszik@linaro.org, peter.griffin@linaro.org,
- kauschluss@disroot.org, m.szyprowski@samsung.com, s.nawrocki@samsung.com
-Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-samsung-soc@vger.kernel.org, rosa.pila@samsung.com,
- dev.tailor@samsung.com, faraz.ata@samsung.com, muhammed.ali@samsung.com,
- selvarasu.g@samsung.com
-References: <20250516102650.2144487-1-pritam.sutar@samsung.com>
- <CGME20250516101803epcas5p2d9403d89d840dcad88a03d437a48aceb@epcas5p2.samsung.com>
- <20250516102650.2144487-3-pritam.sutar@samsung.com>
- <a5c1a064-d760-4140-9e78-d74823b400a8@linaro.org>
- <000101dbca1d$78ca5570$6a5f0050$@samsung.com>
- <42ddb5c6-0f17-41ed-8bd4-ab58880515b1@linaro.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <42ddb5c6-0f17-41ed-8bd4-ab58880515b1@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <572f1814.9a08.196f2971eea.Coremail.00107082@163.com>
 
-On 21/05/2025 14:56, 'Neil Armstrong' wrote:
->>> <snip>
->>>
->>>> +	}, {
->>>> +		.compatible = "samsung,exynosautov920-usb31drd-phy",
->>>> +		.data = &exynosautov920_usb31drd_phy
->>>
->>> All those new ops are only called when matching this compatible, it it really
->>> necessary to check the version ? is there "samsung,exynosautov920-usb31drd-
->>> phy" PHYs with version different from 3 in the wild ?
->>>
->>
->> This SoC has a single USB 3.1 DRD combo phy of version v400 (major : minor versions) and three USB2.0
->> DRD phy v303 (major : minor versions) controllers those only support the UTMI+ interface. Currently,
->> supporting only v303 phys in this patch-set, and planning v400 phy later (soon).
->>
->> Yes, there's v400 phy version that is different from v303 phy. Hence, phy version check is needed to support both the phys for same compatible.
+On Wed, May 21, 2025 at 07:25:12PM +0800, David Wang wrote:
+> At 2025-05-21 18:32:09, "Greg KH" <gregkh@linuxfoundation.org> wrote:
+> >On Sat, May 17, 2025 at 04:38:19PM +0800, David Wang wrote:
+> >> ---
+> >> Changes since v2:
+> >> 1. activat the pool only when the urb object is created via
+> >> usb_alloc_urb()
+> >> Thanks to Oliver Neukum <oneukum@suse.com>'s review.
+> >
+> >Changes go below the bottom --- line, not at the top.  Please read the
+> >documentation for how to do this.
+> >
+> >Also, these are not "threaded" together, making them hard to pick out.
+> >Please when you resend, make them be together using git send-email or
+> >some such tool.
 > 
-> OK so add 2 compatibles, one for the usb31drd and one for the usb2drd since those are 2 difference hardware.
+> >
+> 
+> Roger that~
+> 
+> 
+> >> ---
+> >> URB objects have long lifecycle, an urb can be reused between
+> >> submit loops; The private data needed by some host controller
+> >> has very short lifecycle, the memory is alloced when enqueue, and
+> >> released when dequeue. For example, on a system with xhci, in
+> >> xhci_urb_enqueue:
+> >> Using a USB webcam would have ~250/s memory allocation;
+> >> Using a USB mic would have ~1K/s memory allocation;
+> >> 
+> >> High frequent allocations for host-controller private data can be
+> >> avoided if urb take over the ownership of memory, the memory then shares
+> >> the longer lifecycle with urb objects.
+> >> 
+> >> Add a mempool to urb for hcpriv usage, the mempool only holds one block
+> >> of memory and grows when larger size is requested.
+> >> 
+> >> The mempool is activated only when the URB object is created via
+> >> usb_alloc_urb() in case some drivers create a URB object by other
+> >> means and manage it lifecycle without corresponding usb_free_urb.
+> >> 
+> >> The performance difference with this change is insignificant when
+> >> system is under no memory pressure or under heavy memory pressure.
+> >> There could be a point inbetween where extra 1k/s memory alloction
+> >> would dominate the preformance, but very hard to pinpoint it.
+> >> 
+> >> Signed-off-by: David Wang <00107082@163.com>
+> >> ---
+> >>  drivers/usb/core/urb.c | 45 ++++++++++++++++++++++++++++++++++++++++++
+> >>  include/linux/usb.h    |  5 +++++
+> >>  2 files changed, 50 insertions(+)
+> >> 
+> >> diff --git a/drivers/usb/core/urb.c b/drivers/usb/core/urb.c
+> >> index 5e52a35486af..53117743150f 100644
+> >> --- a/drivers/usb/core/urb.c
+> >> +++ b/drivers/usb/core/urb.c
+> >> @@ -23,6 +23,8 @@ static void urb_destroy(struct kref *kref)
+> >>  
+> >>  	if (urb->transfer_flags & URB_FREE_BUFFER)
+> >>  		kfree(urb->transfer_buffer);
+> >> +	if (urb->hcpriv_mempool_activated)
+> >> +		kfree(urb->hcpriv_mempool);
+> >>  
+> >>  	kfree(urb);
+> >>  }
+> >> @@ -77,6 +79,8 @@ struct urb *usb_alloc_urb(int iso_packets, gfp_t mem_flags)
+> >>  	if (!urb)
+> >>  		return NULL;
+> >>  	usb_init_urb(urb);
+> >> +	/* activate hcpriv mempool when urb is created via usb_alloc_urb */
+> >> +	urb->hcpriv_mempool_activated = true;
+> >>  	return urb;
+> >>  }
+> >>  EXPORT_SYMBOL_GPL(usb_alloc_urb);
+> >> @@ -1037,3 +1041,44 @@ int usb_anchor_empty(struct usb_anchor *anchor)
+> >>  
+> >>  EXPORT_SYMBOL_GPL(usb_anchor_empty);
+> >>  
+> >> +/**
+> >> + * urb_hcpriv_mempool_zalloc - alloc memory from mempool for hcpriv
+> >> + * @urb: pointer to URB being used
+> >> + * @size: memory size requested by current host controller
+> >> + * @mem_flags: the type of memory to allocate
+> >> + *
+> >> + * Return: NULL if out of memory, otherwise memory are zeroed
+> >> + */
+> >> +void *urb_hcpriv_mempool_zalloc(struct urb *urb, size_t size, gfp_t mem_flags)
+> >> +{
+> >> +	if (!urb->hcpriv_mempool_activated)
+> >> +		return kzalloc(size, mem_flags);
+> >> +
+> >> +	if (urb->hcpriv_mempool_size < size) {
+> >> +		kfree(urb->hcpriv_mempool);
+> >> +		urb->hcpriv_mempool_size = size;
+> >> +		urb->hcpriv_mempool = kmalloc(size, mem_flags);
+> >> +	}
+> >> +	if (urb->hcpriv_mempool)
+> >> +		memset(urb->hcpriv_mempool, 0, size);
+> >> +	else
+> >> +		urb->hcpriv_mempool_size = 0;
+> >> +	return urb->hcpriv_mempool;
+> >> +}
+> >> +EXPORT_SYMBOL_GPL(urb_hcpriv_mempool_zalloc);
+> >> +
+> >> +/**
+> >> + * urb_free_hcpriv - free hcpriv data if necessary
+> >> + * @urb: pointer to URB being used
+> >> + *
+> >> + * If mempool is activated, private data's lifecycle
+> >> + * is managed by urb object.
+> >> + */
+> >> +void urb_free_hcpriv(struct urb *urb)
+> >> +{
+> >> +	if (!urb->hcpriv_mempool_activated) {
+> >> +		kfree(urb->hcpriv);
+> >> +		urb->hcpriv = NULL;
+> >
+> >You seem to set this to NULL for no reason, AND check for
+> >hcpriv_mempool_activated.  Only one is going to be needed, you don't
+> 
+> >need to have both, right?  Why not just rely on hcdpriv being set?
+> 
+> I needs to distinguish two situations;
+> 1.  the memory pool is used, then the urb_free_hcpriv should do nothing
+> 2.  the memory was alloced by hcd,  then the memory should be kfreed
+> 
+> Using hcpriv_mempool_activated does look confusing...
+> what about following changes:
+> 
+> +	if (urb->hcpriv != urb->hcpriv_mempool) {
+> +		kfree(urb->hcpriv);
+> +		urb->hcpriv = NULL;
+> +	}
+> 
+> >
+> >And are you sure that the hcd can actually use a kmalloced "mempool"?  I
+> 
+> The patch for xhci is here:  https://lore.kernel.org/lkml/20250517083750.6097-1-00107082@163.com/
+> xhci was kzallocing memory for its private data, and when using USB webcam/mic, I can observe 1k+/s kzallocs
+> And with this patch, during my obs session(with USB webcam/mic), no memory allocation
+> observed for usb sub system;
+> 
+> >don't understand why xhci can't just do this in its driver instead of
+> >this being required in the usb core and adding extra logic and size to
+> >every urb in the system.
+> 
+> Yes, it is possible to make a mempool in hcds. But the lifecycle management would not be an easy one,
+> basically a "mempool" would need to be build up from zero-ground, lots of details need to be addressed,
+> e.g. when should resize the mempool when mempool is too big.
 
-...unless this is fully detectable hardware, then use fallbacks and only
-one compatible in the driver.
+That's up to the HCD to manage, IF they need this.  Otherwise this is a
+burden on all other systems with the increased memory size for no needed
+reason.
 
-Best regards,
-Krzysztof
+thanks,
+
+greg k-h
