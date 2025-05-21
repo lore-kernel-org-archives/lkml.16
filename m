@@ -1,113 +1,117 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A2B112E5B;
-	Wed, 21 May 2025 05:06:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BDB442AA1;
+	Wed, 21 May 2025 05:08:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747804011; cv=none; b=uw4BnfBfnd6PjeyWGgJcRnkInhrMcvRKYdRlIhxdxa74oJBLNmv6IT7PXmmtqPvS37QquFu45hlw6PmCSwxVsiVBm4U+XE2pYidRe3DakDnDGxmM7qQUty2DXFAYVQKWvCQE16QUK4yo9hV1tXs09s+NVDD0yAO8ZN2eVFN7p0o=
+	t=1747804083; cv=none; b=fVZ4VSvdw81pHVUnBLC69ljNE8cVCFE7sxfGHtgtJKY4xgjwaL09Etd6TtUr5zSEso2zjqZ0eG15JF9rCWmiyBhusSyZj4oI3OE9zb/i0J8EN2VUbUdajl8nHFlZrCXuW6ustrlAourTFnmx87NinNyv8m5xef2zJjVK+pJRb+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747804011; c=relaxed/simple;
-	bh=Fye+R7aSAVFkLVJB4LRWCnkoEi6brZy46TD7AWNohgM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uY/KXfjKCHgwyJld/psWfWv9pYsfAtODEwHwzSHZjCoRMbxo2yAcTs7glY6m30wuLzNbAxo1os7H2g8peFbGS3dxpsX+O/FzeFCGWrbDQXiNA7GK4GFk+/w1FFOi0i938FOKjQmtjIl6kgRyKesodi19ct+cMrQ7VfmhnXskSRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=Sy+2dtzf; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1747804083; c=relaxed/simple;
+	bh=Rf0eghCGaFsbU7DUc7aON8zNl77X2c1451dodyfs2+w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rFz+hIRfh5ImehdQZKf8JFjFeyvNiqZmxqyw1xqJUDbsv6pf2WEr+u1dlYLqiWKQw/6sEec5yXmvfZoCkFbFmqPAwA8gNnwumxzSdGJJbAxVGVNFGogGoBHzkt/9RbN4lc3K43shs1DBWfQIC+wLrDOOaveWHXkFUihzwnrw8Ws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KVa9vz7K; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="Sy+2dtzf"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=WUCO060a2/IvAmEmgmEmyLHDKu9iFQRjj/u3vUBQG2Q=; b=Sy+2dtzf4/pcfepLyLVAb4lVTS
-	65paAERZGJY5JNnqsweV54o3BG7vcpD8T9eLYSl1JPFCQla2F3hdBhASxFLzCmb+xYZAdxKkP1VH2
-	yVnNd9O1hs0+rY7eHlwvsrUY6hWox0Cptukt8Qrg80mxFS3Lyz2afyRdy944CYDgDAE5b2eDAxaCD
-	vdsLTeQKCurJl/S0AmeQULtsGexmc8vUb2Ll+GX1Z+XcPdQ5K7A7mw1wJz6B8qIZwzBJuaZL/xFma
-	aS6F+iAWxfEVwtlwJxnEAa+wolO8+Sr/btxWghSnWCLaBTscew8WxVeU0d9jzf2uTGRvKnIStABFr
-	3WzahrZA==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uHbf9-007iP5-2W;
-	Wed, 21 May 2025 13:06:44 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 21 May 2025 13:06:43 +0800
-Date: Wed, 21 May 2025 13:06:43 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc: Klaus Kudielka <klaus.kudielka@gmail.com>,
-	Eric Biggers <ebiggers@kernel.org>, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	Boris Brezillon <bbrezillon@kernel.org>,
-	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
-	Romain Perier <romain.perier@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] crypto: marvell/cesa - Avoid empty transfer descriptor
-Message-ID: <aC1fY6IP-8MzVIbx@gondor.apana.org.au>
-References: <8e9b45bdafe6ac3f12bcbb5fce5bc9949566344f.camel@gmail.com>
- <aCQm0aHYnI6ciyPz@gondor.apana.org.au>
- <20dde00750d803a9a364ded99dab1e3e22daec77.camel@gmail.com>
- <20250515182131.GC1411@quark>
- <f0dc235e3d7bfa1f60cc01fd527da52024af54e0.camel@gmail.com>
- <aCZ3_ZMAFu6gzlyt@gondor.apana.org.au>
- <aCcyXkeBvHQYvf2d@Red>
- <aCczV6MF6xk5rRA3@gondor.apana.org.au>
- <aChx_ODF_hYKL8XO@Red>
- <aCmTQoJw6XG1CkuZ@gondor.apana.org.au>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KVa9vz7K"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-b0db0b6a677so5478550a12.2;
+        Tue, 20 May 2025 22:08:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747804081; x=1748408881; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Egkjcx8dXUY2NPQXCg/DJ7tP6/t8qm4xNMjQ4B2fuhA=;
+        b=KVa9vz7K9cS9ncznucEmLmXjdAUPPP9wjvTWuOcBiNCpCyspuV3Ug0p9AobHhwlVM3
+         O7zseM9/58gZ5GhSEh9l0rK12tNFO0s/K147lrjUisQvFd8CM+y15j4iWsWmYJDTSpPw
+         DxX7IWxRydzhBUOLGKl9KvJnrX0I7KsVLvM2cLi7gAsXi/wvClc9lehbVGFMCgjhEm+f
+         hlLaFVtU1+Qo4lf7Oat20vAhXE1ZOyIpyB7bnBMVcatULC8GtzECZJ3xRqh9e9TKcQi9
+         Yf+Dl8E9T5JnlQa66hIvifcRAwotSsDQ7PestQjRPDVTUUxFqeFCDk0OReUoQ+colyGv
+         TwZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747804081; x=1748408881;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Egkjcx8dXUY2NPQXCg/DJ7tP6/t8qm4xNMjQ4B2fuhA=;
+        b=tqUGovGaKC8l+rrTxm2hhDRvDavcECIUm94STKfdLbFmPAr9LZOijnJuYMcCMnJ5Lv
+         yNHX+DNbI5p952ku/iefT9t8orcz1/Z0ME6wJmWsHTLq7UFPLKeLSl7Arx60q6UHD+0Y
+         VmylmBkkV7Uu8rq1omRckUruQnidclxpL4GOXf6QrbUJM9+IG6Yp2+RfgFChN6kpSu4Q
+         o6e8CMXEIEXEGb7Wito89ms0OfcrtxwvlmmR/tCqx+WQp1KgNETIROiLxgvnuaNBHanh
+         /t1FeMMtFpVTs0AmY0AL8IRd6plDJlFhWZ5/ZkzOwWQbTYRLyy0iUlsH34Lt7VoCodaA
+         oOTA==
+X-Forwarded-Encrypted: i=1; AJvYcCVWQ46CuR4652gHtMkSVhBtxQXrSDea+Z+UQskG9JP8BDhmuQlJHMbss3hCRUyx8R7UC4VEOZfiMEclcf2ACNM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVfA0fhuSKD4Wq1v7DTl+7dT602DIsDN/Y581T6FUhTVylpKon
+	QKGwfzuzJbu3gWJBAAjinnrt7iQZ9bbzT4FwqNookX7YFyMz3NIw+2qp
+X-Gm-Gg: ASbGncvMU0+4LYaQi0wigy424OO80lokNFgm/Rf5XFDPsRRAXkcMgbEYAi1paWvEZtF
+	M4F3eMcdiyXJXBBuy2Uq0IOKMiIa6M73G9nBRrzEk8Z8Vfx3iYSMZnGFlKc4nl32BjXfFdPoAw3
+	68iBfQYLVU5U6N1yJEM8wmBr53JuZ4p4QjxwLXIXLytGmcG3c263teb/yZpBTReEqEO9Iv62Dsp
+	Rl7a+/GxWGN3Q08SO3WrIxeXTOnXGFnYQ4bWMmKJyLIfbT6PaSvm9tpn9mEVf1a+ohIMZTt6n2W
+	Zhpx8ipubzUpd36MC/kMiuRafrCBHKdwd09/y7n+BgWKiNL4dHcWJLvzE3MHH9byZM8ccbWfXwH
+	34t5BAph3077vl8H69+GAEpCyWakN
+X-Google-Smtp-Source: AGHT+IFylaW5+bTuItRsX8rJFA7S4tAjGIy9vgweiuldLotx0JVuvmHj8HP0u1tMSdwz/m6JS9P7Ew==
+X-Received: by 2002:a05:6a20:728e:b0:1f5:6e71:e55 with SMTP id adf61e73a8af0-21621876d2dmr30413194637.6.1747804081253;
+        Tue, 20 May 2025 22:08:01 -0700 (PDT)
+Received: from ipravd-Nitro-AN515-55.hsd1.ca.comcast.net ([2601:646:a000:5fc0:aebf:fcbc:c222:fc3d])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eaf5cae2sm8910798a12.1.2025.05.20.22.08.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 22:08:00 -0700 (PDT)
+From: Ivan Pravdin <ipravdin.official@gmail.com>
+To: brauner@kernel.org,
+	shuah@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	Ivan Pravdin <ipravdin.official@gmail.com>
+Subject: [PATCH] kselftest/pidfd: Fix typos in comments
+Date: Wed, 21 May 2025 01:07:50 -0400
+Message-ID: <20250521050751.629473-1-ipravdin.official@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCmTQoJw6XG1CkuZ@gondor.apana.org.au>
+Content-Transfer-Encoding: 8bit
 
-On Sun, May 18, 2025 at 03:58:58PM +0800, Herbert Xu wrote:
->
-> Hah my debug patch was broken.  It didn't take into account the
-> partial block when recalculating the hash with the fallback.
-> 
-> However, this seems to suggest that my hunch was incorrect.  The
-> partial hash wasn't being corrupted and it's actually the final
-> calculation that was wrong.
-> 
-> This could be good news.  Because if it is a hardware bug causing
-> this, then the final calculation can be easily worked around by
-> turning the final hash into a partial update.
+Fix typos in comments in pidfd_info_test.c
 
-Further investigation shows that it's not so simple.  While one
-hash (md5) was definitely a final hash, the sha ones aren't.
-Indeed the sha256 hash was definitely corrupted at the partial
-stage and correctly identified by my printk.
+Signed-off-by: Ivan Pravdin <ipravdin.official@gmail.com>
+---
+ tools/testing/selftests/pidfd/pidfd_info_test.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-So we'll have to look elsewhere for a solution.
-
-One thing that may or may not be a coincidence is that all the
-failed tests involve a partial block of data somewhere along
-the line.  I might just be grasping at straws but perhaps the
-partial block is the key?
-
-Can you please try this patch to see if it makes a difference?
-
-Thanks,
+diff --git a/tools/testing/selftests/pidfd/pidfd_info_test.c b/tools/testing/selftests/pidfd/pidfd_info_test.c
+index 1758a1b0457b..53cb429f5fa0 100644
+--- a/tools/testing/selftests/pidfd/pidfd_info_test.c
++++ b/tools/testing/selftests/pidfd/pidfd_info_test.c
+@@ -229,7 +229,7 @@ static void *pidfd_info_pause_thread(void *arg)
+ 
+ 	close(ipc_socket);
+ 
+-	/* Sleep untill we're killed. */
++	/* Sleep until we're killed. */
+ 	pause();
+ 	return NULL;
+ }
+@@ -518,7 +518,7 @@ TEST_F(pidfd_info, thread_group_exec)
+ 	EXPECT_EQ(sys_pidfd_send_signal(pidfd_leader, SIGKILL, NULL, 0), 0);
+ 
+ 	/*
+-	 * Afte the exec we're dealing with an empty thread-group so now
++	 * After the exec we're dealing with an empty thread-group so now
+ 	 * we must see an exit notification on the thread-specific pidfd
+ 	 * for the thread-group leader as there's no subthread that can
+ 	 * revive the struct pid.
+@@ -665,7 +665,7 @@ TEST_F(pidfd_info, thread_group_exec_thread)
+ 	EXPECT_EQ(sys_pidfd_send_signal(pidfd_leader, SIGKILL, NULL, 0), 0);
+ 
+ 	/*
+-	 * Afte the exec we're dealing with an empty thread-group so now
++	 * After the exec we're dealing with an empty thread-group so now
+ 	 * we must see an exit notification on the thread-specific pidfd
+ 	 * for the thread-group leader as there's no subthread that can
+ 	 * revive the struct pid.
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
---
-diff --git a/drivers/crypto/marvell/cesa/hash.c b/drivers/crypto/marvell/cesa/hash.c
-index 6815eddc9068..7a50b31d94b3 100644
---- a/drivers/crypto/marvell/cesa/hash.c
-+++ b/drivers/crypto/marvell/cesa/hash.c
-@@ -532,6 +532,7 @@ mv_cesa_ahash_dma_add_cache(struct mv_cesa_tdma_chain *chain,
- 		return ret;
- 
- 	memcpy(ahashdreq->cache, creq->cache, creq->cache_ptr);
-+	wmb();
- 
- 	return mv_cesa_dma_add_data_transfer(chain,
- 					     CESA_SA_DATA_SRAM_OFFSET,
+2.45.2
+
