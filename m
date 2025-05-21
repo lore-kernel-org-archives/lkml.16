@@ -1,200 +1,228 @@
-Received: from mail.tnxip.de (mail.tnxip.de [49.12.77.104])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C5C9262D0B;
-	Wed, 21 May 2025 11:27:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.12.77.104
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63FCB263892;
+	Wed, 21 May 2025 11:27:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747826861; cv=none; b=EOp/F81QzqYxzNp2r0dEj/COwGPmjzcWT8cAw2JJcYnK6uVOh70jTTfRtzdbH8IoriwV8uhw8PJLibFoRWHWXEUS0ksD7f0e3RwOnvW7379NuF9mfHmZzNVLebRmcezLB+balS3EjxMxZ7xdxJLQPxOtINCDRoInfQ9JtK7hWaE=
+	t=1747826863; cv=none; b=XT5wQ8jMsA5r8jxrKAWqYtw5S3u7n9KM3k9XQyQU1UxlUPWPnktKDRR1OD0gfLwVzioJsauEQFdCuDe7QyVt8CDScUDa7U7d0CZJO9h1BF4m+7o8aA2WWZ/ec9cUb1jlvYwJ9SmOhjcJj9cZBOpilXdKfoEjdMh2/b6AyExXDPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747826861; c=relaxed/simple;
-	bh=NdAfIA8c5UffTeN+xyr/5NUbUFTzVArJotrHPChfM1o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NW8S6b/oE7iTeNS8G5h3R/ZmJFDZXqYbWSS/BaKlYDYBQ0yD34vIWjJCvmR4Mwdouw/uwkCfX3WZT5y0zbYNWj/wd28N3AKhC00r5vUpBEnNBTq+X/Vpv1aLstHk+zXWPHsY0jumw/s1VxyIehfcpQYduGBmiDPeLeBo9BjCkr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=tnxip.de; spf=pass smtp.mailfrom=tnxip.de; dkim=pass (1024-bit key) header.d=tnxip.de header.i=@tnxip.de header.b=jdJR2QQt; dkim=permerror (0-bit key) header.d=tnxip.de header.i=@tnxip.de header.b=wjQiK50R; dkim=pass (1024-bit key) header.d=tnxip.de header.i=@tnxip.de header.b=FO6qPxwV; dkim=permerror (0-bit key) header.d=tnxip.de header.i=@tnxip.de header.b=ZTq4eakI; arc=none smtp.client-ip=49.12.77.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=tnxip.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tnxip.de
+	s=arc-20240116; t=1747826863; c=relaxed/simple;
+	bh=aYjz5/seEUrXVor2bEyU7oBZ3j8vrqWOPEqPD8VZzrU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ibRgKo2f11GVQmhUegrmvJkSJ8ywG4pUHGeNK7It4H3HK/X0XekbWHR5JOw25XyBbsrA6URt5kKSpM59yFMR5U2bSInOFO01n2eyVrqmjbUeqUGIw5e3PyYvr8LAFS9ovZ6p1XT5YV7oxNvWrmeJGWYTIuWNuDWKuLUiTD6FFtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fgPWPLGT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tnxip.de header.i=@tnxip.de header.b="jdJR2QQt";
-	dkim=permerror (0-bit key) header.d=tnxip.de header.i=@tnxip.de header.b="wjQiK50R";
-	dkim=pass (1024-bit key) header.d=tnxip.de header.i=@tnxip.de header.b="FO6qPxwV";
-	dkim=permerror (0-bit key) header.d=tnxip.de header.i=@tnxip.de header.b="ZTq4eakI"
-Received: from gw.tnxip.de (unknown [IPv6:fdc7:1cc3:ec03:1:29b1:de58:a155:7218])
-	by mail.tnxip.de (Postfix) with ESMTPS id 81985208AD;
-	Wed, 21 May 2025 13:27:26 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tnxip.de; s=mail-vps;
-	t=1747826846;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/VIJGDlxwIbmjibYidSo8M167MOJT1qbhzOyEC04Qio=;
-	b=jdJR2QQt7qD8GbRip+NUDsjbfpCO3Rx6in9DJmh6BCVyM48miukPsGpLyPbgCneRAlIY2t
-	vaOENVWYMzMkBptMuC6yQb62XD7BsqnJvu6LIMiOs2UBdS4kMCiDvECR4a22b6FNjUqkJZ
-	4e7xOV7DsHll8HTxx598jlxEeLHhzsU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=tnxip.de;
-	s=mail-vps-ed; t=1747826846;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/VIJGDlxwIbmjibYidSo8M167MOJT1qbhzOyEC04Qio=;
-	b=wjQiK50RpxcLvZ2YIqvim4IIUEW27z2k4chbgXgvGOFLomT1yjiyOhVXTIwPRy03Q70/F7
-	9WkO4RiKH5nVJEAA==
-Received: from [IPV6:2a04:4540:8c0e:9000:63db:438f:d7a8:d9e6] (unknown [IPv6:2a04:4540:8c0e:9000:63db:438f:d7a8:d9e6])
-	by gw.tnxip.de (Postfix) with ESMTPSA id CA12430000000000030AE;
-	Wed, 21 May 2025 13:26:55 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tnxip.de; s=mail-gw;
-	t=1747826845;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/VIJGDlxwIbmjibYidSo8M167MOJT1qbhzOyEC04Qio=;
-	b=FO6qPxwVWopYZ2OIDEOeDV7fcrDQBn5+ZvlZqI9zxD0NEpFe8pzZAdy7oy6CtZXi7wsngi
-	UBQDicDFnpURoUs93I5R2xXEG2tb7zgNlVLafHwfl+Pl5pGMFALm1ArXj+0v7xchGpRuRl
-	AVz81WxgDIUvWAvpnaoP6hLd+hOL0I0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=tnxip.de;
-	s=mail-gw-ed; t=1747826845;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/VIJGDlxwIbmjibYidSo8M167MOJT1qbhzOyEC04Qio=;
-	b=ZTq4eakI2zqr9H9DVatLQzVOZWPa9A8qnHr06KwyoLh/4jv1jGEb0aW7XTX0+Bhlh8htsM
-	SX0i1dy4vSIdgdCQ==
-Message-ID: <25234476-2011-4ade-affe-687d45dcbc3c@tnxip.de>
-Date: Wed, 21 May 2025 13:26:55 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fgPWPLGT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 228E9C4CEED;
+	Wed, 21 May 2025 11:27:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747826863;
+	bh=aYjz5/seEUrXVor2bEyU7oBZ3j8vrqWOPEqPD8VZzrU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=fgPWPLGTOvxMGGiLFbLld28sdX79VsNRSkxZdUWDKE1TTR3ynnBKJsvp63tsmp8Mi
+	 ThKWeM9lRIp5U6+yVtY9aAR3jSahN5/B81gujRH1XshBCktYCEMsQtlPS0SU4zwxfW
+	 /bSQxa+9VU2vcxGrppfoy8FoZSyzuUNTUSsK3+gHRNNxlV/ET+dEHI3Rkz1oFvnxW1
+	 R6U30jVCIyhUE6u0CxCf1kcePWddAz9XqFvF7APzuquvPWrPn4EdK2kuC9ZWXc8ShM
+	 XM1tlN1GiBY8AxUh04eUJWW0yyF101d6AfA4MfETfWVDpAGpJvgacCncGU6dhs0hCG
+	 P5iTn/qMOh3kg==
+Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-605fda00c30so3646266eaf.1;
+        Wed, 21 May 2025 04:27:43 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVC7Uy0ASwpUw4UXl9Mpfg21s0LmDycB2jNjHtgvIoGRy09TVYyniBJSnBd/JNCEw6VgXhaKby4cLxW@vger.kernel.org, AJvYcCW0o76d0slzKNVtdlUv/8g8HAHwOeiPKLrTOUJVjYtY3Xd3+Jq26vn7dhxg2Vqn2cYjzRci+gpx2ys=@vger.kernel.org, AJvYcCXQrhyh0tBiFxuShvTmW5hzOpUxPWuYcqRp55v71UyTcNHX2xBs4OA3r+BmE+YomqbPAmPQXhxKT0Dlfbk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyrQ9Ilpfxh+IoyH5qcjqDioou0k34Af70vKqdxruTkiIJW19WL
+	qiDKfE/1qvpgURvTWTUWXMKfhtMkqTClpyrw8OXf/yJO/6DqVbj+ea1k3kDSQ6nP7TTQXYnHt9k
+	kQb+RWUf1uF/enfop9IBwSZtRpIxJ4cc=
+X-Google-Smtp-Source: AGHT+IEf67uWG+s0dmoXckHNwNhvBK96rzdHQHiTzqfpUpRP3+2APLbezdICnHJMQ0kPkt5kRPsd9b22whF+hm5HWKA=
+X-Received: by 2002:a05:6820:1841:b0:602:7078:df55 with SMTP id
+ 006d021491bc7-609f374f802mr12234655eaf.5.1747826862342; Wed, 21 May 2025
+ 04:27:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Linux)
-Subject: Re: [PATCH 0/6] overlayfs + casefolding
-To: John Stoffel <john@stoffel.org>,
- Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Amir Goldstein <amir73il@gmail.com>, linux-fsdevel@vger.kernel.org,
- linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-unionfs@vger.kernel.org, Miklos Szeredi <miklos@szeredi.hu>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
-References: <20250520051600.1903319-1-kent.overstreet@linux.dev>
- <CAOQ4uxg8p2Kg0BKrU4NSUzLVVLWcW=vLaw4kJkVR1Q-LyRbRXA@mail.gmail.com>
- <osbsqlzkc4zttz4gxa25exm5bhqog3tpyirsezcbcdesaucd7g@4sltqny4ybnz>
- <CAOQ4uxjUC=1MinjDCOfY5t89N3ga6msLmpVXL1p23qdQax6fSg@mail.gmail.com>
- <gdvg6zswvq4zjzo6vntggoacrgxxh33zmejo72yusp7aqkqzic@kaibexik7lvh>
- <CAOQ4uxg9sKC_8PLARkN6aB3E_U62_S3kfnBuRbAvho9BNzGAsQ@mail.gmail.com>
- <rkbkjp7xvefmtutkwtltyd6xch2pbw47x5czx6ctldemus2bvj@2ukfdmtfjjbw>
- <26668.52908.574606.416955@quad.stoffel.home>
-Content-Language: en-US, de-DE
-From: =?UTF-8?Q?Malte_Schr=C3=B6der?= <malte.schroeder@tnxip.de>
-In-Reply-To: <26668.52908.574606.416955@quad.stoffel.home>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <aCsK743YSuahPtnH@black.fi.intel.com> <85ed0b91-c84f-4d24-8e19-a8cb3ba02b14@gmail.com>
+ <aCxP6vQ8Ep9LftPv@black.fi.intel.com> <a8c83435-4c91-495c-950c-4d12b955c54c@kernel.org>
+ <aCyj9nbnIRet93O-@black.fi.intel.com> <552d75b2-2736-419f-887e-ce2692616578@kernel.org>
+ <ee1117cf-6367-4e9a-aa85-ccfc6c63125d@gmail.com> <6f23d82c-10cc-4d70-9dce-41978b05ec9a@kernel.org>
+ <aCzNL9uXGbBSdF2S@black.fi.intel.com> <fea86161-2c47-4b0f-ac07-b3f9b0f10a03@kernel.org>
+ <aC2UzG-eycjqYQep@black.fi.intel.com>
+In-Reply-To: <aC2UzG-eycjqYQep@black.fi.intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 21 May 2025 13:27:29 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0gRFwKhq21ima3kT0zzFLk4=47ivvzJqARksV7nYHTJAQ@mail.gmail.com>
+X-Gm-Features: AX0GCFu3-VrwmffBAWxr3tXBf8i8Ncp98wmJM7kURUjcXyWXYba_x7RizRkpotQ
+Message-ID: <CAJZ5v0gRFwKhq21ima3kT0zzFLk4=47ivvzJqARksV7nYHTJAQ@mail.gmail.com>
+Subject: Re: [PATCH v4] PCI: Prevent power state transition of erroneous device
+To: Raag Jadav <raag.jadav@intel.com>, Mario Limonciello <superm1@kernel.org>
+Cc: Denis Benato <benato.denis96@gmail.com>, rafael@kernel.org, mahesh@linux.ibm.com, 
+	oohall@gmail.com, bhelgaas@google.com, linux-pci@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	ilpo.jarvinen@linux.intel.com, lukas@wunner.de, 
+	aravind.iddamsetty@linux.intel.com, 
+	"amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>, Alex Deucher <alexander.deucher@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 20/05/2025 20:49, John Stoffel wrote:
->>>>>> "Kent" == Kent Overstreet <kent.overstreet@linux.dev> writes:
->> On Tue, May 20, 2025 at 04:03:27PM +0200, Amir Goldstein wrote:
->>> On Tue, May 20, 2025 at 2:43 PM Kent Overstreet
->>> <kent.overstreet@linux.dev> wrote:
->>>> On Tue, May 20, 2025 at 02:40:07PM +0200, Amir Goldstein wrote:
->>>>> On Tue, May 20, 2025 at 2:25 PM Kent Overstreet
->>>>> <kent.overstreet@linux.dev> wrote:
->>>>>> On Tue, May 20, 2025 at 10:05:14AM +0200, Amir Goldstein wrote:
->>>>>>> On Tue, May 20, 2025 at 7:16 AM Kent Overstreet
->>>>>>> <kent.overstreet@linux.dev> wrote:
->>>>>>>> This series allows overlayfs and casefolding to safely be used on the
->>>>>>>> same filesystem by providing exclusion to ensure that overlayfs never
->>>>>>>> has to deal with casefolded directories.
->>>>>>>>
->>>>>>>> Currently, overlayfs can't be used _at all_ if a filesystem even
->>>>>>>> supports casefolding, which is really nasty for users.
->>>>>>>>
->>>>>>>> Components:
->>>>>>>>
->>>>>>>> - filesystem has to track, for each directory, "does any _descendent_
->>>>>>>>   have casefolding enabled"
->>>>>>>>
->>>>>>>> - new inode flag to pass this to VFS layer
->>>>>>>>
->>>>>>>> - new dcache methods for providing refs for overlayfs, and filesystem
->>>>>>>>   methods for safely clearing this flag
->>>>>>>>
->>>>>>>> - new superblock flag for indicating to overlayfs & dcache "filesystem
->>>>>>>>   supports casefolding, it's safe to use provided new dcache methods are
->>>>>>>>   used"
->>>>>>>>
->>>>>>> I don't think that this is really needed.
->>>>>>>
->>>>>>> Too bad you did not ask before going through the trouble of this implementation.
->>>>>>>
->>>>>>> I think it is enough for overlayfs to know the THIS directory has no
->>>>>>> casefolding.
->>>>>> overlayfs works on trees, not directories...
->>>>> I know how overlayfs works...
->>>>>
->>>>> I've explained why I don't think that sanitizing the entire tree is needed
->>>>> for creating overlayfs over a filesystem that may enable casefolding
->>>>> on some of its directories.
->>>> So, you want to move error checking from mount time, where we _just_
->>>> did a massive API rework so that we can return errors in a way that
->>>> users will actually see them - to open/lookup, where all we have are a
->>>> small fixed set of error codes?
->>> That's one way of putting it.
->>>
->>> Please explain the use case.
->>>
->>> When is overlayfs created over a subtree that is only partially case folded?
->>> Is that really so common that a mount time error justifies all the vfs
->>> infrastructure involved?
->> Amir, you've got two widely used filesystem features that conflict and
->> can't be used on the same filesystem.
-> Wait, what?  How many people use casefolding, on a per-directory
-> basis?  It's stupid.  Unix/Linux has used case-sensitive filesystems
-> for years.  Yes, linux supports other OSes which did do casefolding,
-> but yikes... per-directory support is just insane.  It should be
-> per-filesystem only at BEST.  
+On Wed, May 21, 2025 at 10:54=E2=80=AFAM Raag Jadav <raag.jadav@intel.com> =
+wrote:
 >
->> That's _broken_.
-> So?  what about my cross mounting of VMS filesystems with "foo.txt;3"
-> version control so I can go back to previous versions?  Why can't I do
-> that from my Linux systems that's mounting that VMS image?   
+> On Tue, May 20, 2025 at 01:56:28PM -0500, Mario Limonciello wrote:
+> > On 5/20/2025 1:42 PM, Raag Jadav wrote:
+> > > On Tue, May 20, 2025 at 12:39:12PM -0500, Mario Limonciello wrote:
+> > > > On 5/20/2025 12:22 PM, Denis Benato wrote:
+> > > > > On 5/20/25 17:49, Mario Limonciello wrote:
+> > > > > > On 5/20/2025 10:47 AM, Raag Jadav wrote:
+> > > > > > > On Tue, May 20, 2025 at 10:23:57AM -0500, Mario Limonciello w=
+rote:
+> > > > > > > > On 5/20/2025 4:48 AM, Raag Jadav wrote:
+> > > > > > > > > On Mon, May 19, 2025 at 11:42:31PM +0200, Denis Benato wr=
+ote:
+> > > > > > > > > > On 5/19/25 12:41, Raag Jadav wrote:
+> > > > > > > > > > > On Mon, May 19, 2025 at 03:58:08PM +0530, Raag Jadav =
+wrote:
+> > > > > > > > > > > > If error status is set on an AER capable device, mo=
+st likely either the
+> > > > > > > > > > > > device recovery is in progress or has already faile=
+d. Neither of the
+> > > > > > > > > > > > cases are well suited for power state transition of=
+ the device, since
+> > > > > > > > > > > > this can lead to unpredictable consequences like re=
+sume failure, or in
+> > > > > > > > > > > > worst case the device is lost because of it. Leave =
+the device in its
+> > > > > > > > > > > > existing power state to avoid such issues.
+> > > > > > > > > > > >
+> > > > > > > > > > > > Signed-off-by: Raag Jadav <raag.jadav@intel.com>
+> > > > > > > > > > > > ---
+> > > > > > > > > > > >
+> > > > > > > > > > > > v2: Synchronize AER handling with PCI PM (Rafael)
+> > > > > > > > > > > > v3: Move pci_aer_in_progress() to pci_set_low_power=
+_state() (Rafael)
+> > > > > > > > > > > >         Elaborate "why" (Bjorn)
+> > > > > > > > > > > > v4: Rely on error status instead of device status
+> > > > > > > > > > > >         Condense comment (Lukas)
+> > > > > > > > > > > Since pci_aer_in_progress() is changed I've not inclu=
+ded Rafael's tag with
+> > > > > > > > > > > my understanding of this needing a revisit. If this w=
+as a mistake, please
+> > > > > > > > > > > let me know.
+> > > > > > > > > > >
+> > > > > > > > > > > Denis, Mario, does this fix your issue?
+> > > > > > > > > > >
+> > > > > > > > > > Hello,
+> > > > > > > > > >
+> > > > > > > > > > Unfortunately no, I have prepared a dmesg but had to re=
+move the bootup process because it was too long of a few kb: https://pasteb=
+in.com/1uBEA1FL
+> > > > > > > > >
+> > > > > > > > > Thanks for the test. It seems there's no hotplug event th=
+is time around
+> > > > > > > > > and endpoint device is still intact without any PCI relat=
+ed failure.
+> > > > > > > > >
+> > > > > > > > > Also,
+> > > > > > > > >
+> > > > > > > > > amdgpu 0000:09:00.0: PCI PM: Suspend power state: D3hot
+> > > > > > > > >
+> > > > > > > > > Which means whatever you're facing is either not related =
+to this patch,
+> > > > > > > > > or at best exposed some nasty side-effect that's not hand=
+led correctly
+> > > > > > > > > by the driver.
+> > > > > > > > >
+> > > > > > > > > I'd say amdgpu folks would be of better help for your cas=
+e.
+> > > > > > > > >
+> > > > > > > > > Raag
+> > > > > > > >
+> > > > > > > > So according to the logs Denis shared with v4
+> > > > > > > > (https://pastebin.com/1uBEA1FL) the GPU should have been go=
+ing to BOCO. This
+> > > > > > > > stands for "Bus off Chip Off"
+> > > > > > > >
+> > > > > > > > amdgpu 0000:09:00.0: amdgpu: Using BOCO for runtime pm
+> > > > > > > >
+> > > > > > > > If it's going to D3hot - that's not going to be BOCO, it sh=
+ould be going to
+> > > > > > > > D3cold.
+> > > > > > >
+> > > > > > > Yes, because upstream port is in D0 for some reason (might be=
+ this patch
+> > > > > > > but not sure) and so will be the root port.
+> > > > > > >
+> > > > > > > pcieport 0000:07:00.0: PCI PM: Suspend power state: D0
+> > > > > > > pcieport 0000:07:00.0: PCI PM: Skipped
+> > > > > > >
+> > > > > > > and my best guess is the driver is not able to cope with the =
+lack of D3cold.
+> > > > > >
+> > > > > > Yes; if the driver is configured to expect BOCO (D3cold) if it =
+doesn't get it, chaos ensues.
+> > > > > >
+> > > > > > I guess let's double check the behavior with CONFIG_PCI_DEBUG t=
+o verify this patch is what is changing that upstream port behavior.
+> > > > >
+> > > > >
+> > > > > This is the very same exact kernel, minus the patch in question: =
+ https://pastebin.com/rwMYgG7C
+> > > > >
+> > > > >
+> > > > > Both previous kernel and this one have CONFIG_PCI_DEBUG=3Dy.
+> > > > >
+> > > > > Removed the initial bootup sequence to be able to use pastebin.
+> > > >
+> > > > Thanks - this confirms that the problem is the root port not going =
+to D3.
+> > > > This new log shows:
+> > > >
+> > > > pcieport 0000:07:00.0: PCI PM: Suspend power state: D3hot
+> > > >
+> > > > So I feel we should fixate on solving that.
+> > >
+> > > Which means what you're looking for is error flag being set somewhere=
+ in
+> > > the hierarchy that is preventing suspend.
+> >
+> > Is the issue perhaps that this is now gated on both correctable and
+> > uncorrectable errors?
+> >
+> > Perhaps should *correctable errors* be emitted with a warning and the
+> > *uncorrectable errors* be fatal?
 >
-> Just because it's done doesn't mean it's not dumb.  
+> That'd be more or less inline with hiding the issue, and it can also race
+> with err_handler callback if driver has registered it.
 >
->> Users hate partitioning just for separate /boot and /home, having to
->> partition for different applications is horrible. And since overlay
->> fs is used under the hood by docker, and casefolding is used under
->> the hood for running Windows applications, this isn't something
->> people can predict in advance.
-> Sure I can, I don't run windows applications to screw casefolding.
-> :-)
+> > > But regardless of it, my understanding is that root port suspend depe=
+nds
+> > > on a lot of factors (now errors flags being one of them with this pat=
+ch)
+> > > and endpoint driver can't possibly enforce or guarantee it - the best=
+ it
+> > > can do is try.
+> > >
+> > > What's probably needed is D3cold failure handling on driver side, but=
+ I'm
+> > > no PCI PM expert and perhaps Rafael can comment on it.
+> > >
+> > > Raag
+> >
+> > From the driver perspective it does have expectations that the parts ou=
+tside
+> > the driver did the right thing.  If the driver was expecting the root p=
+ort
+> > to be powered down at suspend and it wasn't there are hardware componen=
+ts
+> > that didn't power cycle and that's what we're seeing here.
 >
-> And I personally LIKE having a seperate /boot and /home, because it
-> gives isolation.  The world is not just single user laptops with
-> everything all on one disk or spread across a couple of disks using
-> LVM or RAID or all of the above.  
->
-> I also don't see any updates for the XFS tests, or any other
-> filesystem tests, that actually checks and confirms this decidedly
-> obtuse and dumb to implement idea.  
->
->
-> John
->
-Hi there,
+> Which means the expectation set by the driver is the opposite of the
+> purpose of this patch, and it's going to fail if any kind of error is
+> detected under root port during suspend.
 
-would you partition different subdirs of your /home? So there is
-.local/share/containers where users put their container-stuff (at least
-podman does). Then there is .wine where case-folding-craziness lives.
-And then there is the mess that is Steam, which does all kinds of
-containery case-foldy stuff. As much as I would like to keep these
-things apart, it is not feasible. Not for me as a "power user", and
-certainly far out of reach for average Joe user.
+And IMV this driver's expectation is questionable at least.
 
-Just my 2 ct, greets
+There is no promise whatsoever that the device will always be put into
+D3cold during system suspend.
 
-/Malte
-
+Thanks!
