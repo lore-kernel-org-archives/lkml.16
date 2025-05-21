@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E3F8847B;
-	Wed, 21 May 2025 00:46:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AA576FB9;
+	Wed, 21 May 2025 00:47:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747788419; cv=none; b=oSZW+OBB6F4CMdVS3V96dD8ArMkEOjJrKYht0799rjkMS024dlyU03ftxwwZBY1XgH1fQLMSSI1PfjtykF/3req6K5uuChmWk7I7oUgS/NlWYMZ3QoRjuEG/NSpN/rMryUWB3msjrsunPqMIcADGrr2xQnJZVguIzcwULLWNuX4=
+	t=1747788437; cv=none; b=bIO5EV0I6LtTcWVNckNyquMPnJWvlUgl4LpspT7gvr+p3p+5kjV++wignQikk3cvxd8+o2nqm/U52Y15BWtjgHgHZDmyooGIF5AY8bkACe0+Pih377n0DYHufJKytBSPRALTB6iP+DTRe+4zegrnvkPm10EdNmLIK8R4vmUbAf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747788419; c=relaxed/simple;
-	bh=ZGkeggx+ugOwP4YW2xK6vB80PuCAbo+qPxHZFAmkGnQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=afU7NA6vy9GKj885x46UND5UkQAvRUpd8X9Vl86tWpbYpNW8GsxFIgNQy0IG0RkRnqf+y1E7Wzf9GPJPSXdw4I4PufbZ6nZIMwIp2oHRy8/jOAuHT9JjEfGv5OIkIPK21Ev7QP6i1578ngNi863pkbZ8VZRP7vsHsfnnIGBJMks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O9p3iWz0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747788437; c=relaxed/simple;
+	bh=rRDlF1Vf8OaC1qiDKBqVwnNcPdkFg1jUoLmIDsbmKm0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aObzaArZgjeXwYC19RrCUvBzp3EBOoCimOemCCziG232ONPo72tEKA6+304IEhfxdCwM78EUm99Xg2tWvIBcsQxpUJpiqbAz/TxUtplp4pidUbFythZWm8KUvwd4wQyx7qrnUKhB65Hcg+IfDiiIa2qtCaWxUrZjr1hosNP4w/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RrwuZZEM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O9p3iWz0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC634C4CEE9;
-	Wed, 21 May 2025 00:46:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RrwuZZEM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04BB6C4CEE9;
+	Wed, 21 May 2025 00:47:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747788419;
-	bh=ZGkeggx+ugOwP4YW2xK6vB80PuCAbo+qPxHZFAmkGnQ=;
+	s=k20201202; t=1747788437;
+	bh=rRDlF1Vf8OaC1qiDKBqVwnNcPdkFg1jUoLmIDsbmKm0=;
 	h=From:To:Cc:Subject:Date:From;
-	b=O9p3iWz02QphmyFcM704dN+M8vWrcOyRR1Ws5J5LgK9z3H4qVxe/SD3dBjfFNBdov
-	 inyNv9WoBEZCC9q0zUZ72nLGIR45HwJs2IfySQByoe4HgyOkIkjRwu3qjFzLyGhVda
-	 zwEn+M3whTTjObQx5Qh6IhDuoeC/oss81rJOSjJ6KCbPVK14MqLbLeg3iEYhvKaUIW
-	 a/Bu/1LJB4ppA4FYKgXFsyt5x6H3U+kstMziUF/8kWIucN1g4dZBcpLbscZXhckxLW
-	 wUQLWW7A5Cf91ARuNjbAbcu+QWATpvKlouTajBG0IVNeHAake+6NDSm3UwAoz56AL8
-	 WFaXZJ942wFWw==
+	b=RrwuZZEMdV8xlGsPd0P124fARf815Wk1tFm4BZD4dVKNUHiRBlJYNr866hxFi7OWp
+	 9IDEXF/0lmGC9810KxUxwcy5ITWcvPoXqa4dIcHCPE4jsfPodLyrHLTkAoWpCz1+zh
+	 o6XQOaA1Kkii8/ITU2dvamGpzX1hwL35kXMnqLhK5BL8Jv4v/EDfnYoebQvSodtB9D
+	 hwWzVmXsew0BvPPseZlvJ9UFFWt1VpIqfsW750EU2Btowdda26ZpQHamgjZXYJ3yCs
+	 0fV6k0GQzkOTodDUuasdH1WXc3xrO1mE+1StNn/hgnWq/dICNY4Hv/tBobOPqYlgQY
+	 6J2cuKR8n1TVQ==
 From: "Rob Herring (Arm)" <robh@kernel.org>
 To: Michael Turquette <mturquette@baylibre.com>,
 	Stephen Boyd <sboyd@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Khuong Dinh <khuong@os.amperecomputing.com>
+	Oleksij Rempel <linux@rempel-privat.de>
 Cc: linux-clk@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: clock: Convert APM XGene clocks to DT schema
-Date: Tue, 20 May 2025 19:46:54 -0500
-Message-ID: <20250521004655.1792703-1-robh@kernel.org>
+Subject: [PATCH] dt-bindings: clock: Convert alphascale,asm9260-clock-controller to DT schema
+Date: Tue, 20 May 2025 19:47:11 -0500
+Message-ID: <20250521004712.1793193-1-robh@kernel.org>
 X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -46,299 +46,193 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Convert the APM XGene clocks to DT schema. The device clock binding is
-a bit different from the others, so put it in its own schema file.
-Drop the examples.
+Convert the Alphascale Clock Controller binding to DT schema format.
+Add the undocumented 'clocks' property which is used in DTS. Drop the
+clock defines and consumer examples from the old binding.
 
 Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- .../clock/apm,xgene-device-clock.yaml         |  80 +++++++++++
- .../clock/apm,xgene-socpll-clock.yaml         |  50 +++++++
- .../devicetree/bindings/clock/xgene.txt       | 131 ------------------
- 3 files changed, 130 insertions(+), 131 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/apm,xgene-device-clock.yaml
- create mode 100644 Documentation/devicetree/bindings/clock/apm,xgene-socpll-clock.yaml
- delete mode 100644 Documentation/devicetree/bindings/clock/xgene.txt
+ .../bindings/clock/alphascale,acc.txt         | 114 ------------------
+ .../alphascale,asm9260-clock-controller.yaml  |  49 ++++++++
+ 2 files changed, 49 insertions(+), 114 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/alphascale,acc.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/alphascale,asm9260-clock-controller.yaml
 
-diff --git a/Documentation/devicetree/bindings/clock/apm,xgene-device-clock.yaml b/Documentation/devicetree/bindings/clock/apm,xgene-device-clock.yaml
-new file mode 100644
-index 000000000000..b27bcb2a9ee0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/apm,xgene-device-clock.yaml
-@@ -0,0 +1,80 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/apm,xgene-device-clock.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: APM X-Gene SoC device clocks
-+
-+maintainers:
-+  - Khuong Dinh <khuong@os.amperecomputing.com>
-+
-+properties:
-+  compatible:
-+    const: apm,xgene-device-clock
-+
-+  reg:
-+    minItems: 1
-+    maxItems: 2
-+
-+  reg-names:
-+    items:
-+      - enum: [ csr-reg, div-reg ]
-+      - const: div-reg
-+    minItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  "#clock-cells":
-+    const: 1
-+
-+  clock-output-names:
-+    maxItems: 1
-+
-+  clock-names:
-+    maxItems: 1
-+
-+  csr-offset:
-+    description: Offset to the CSR reset register
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    default: 0
-+
-+  csr-mask:
-+    description: CSR reset mask bit
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    default: 0xf
-+
-+  enable-offset:
-+    description: Offset to the enable register
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    default: 8
-+
-+  enable-mask:
-+    description: CSR enable mask bit
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    default: 0xf
-+
-+  divider-offset:
-+    description: Offset to the divider register
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    default: 0
-+
-+  divider-width:
-+    description: Width of the divider register
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    default: 0
-+
-+  divider-shift:
-+    description: Bit shift of the divider register
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    default: 0
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - '#clock-cells'
-+  - clock-output-names
-+
-+additionalProperties: false
-diff --git a/Documentation/devicetree/bindings/clock/apm,xgene-socpll-clock.yaml b/Documentation/devicetree/bindings/clock/apm,xgene-socpll-clock.yaml
-new file mode 100644
-index 000000000000..bdd4a6b92bbd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/apm,xgene-socpll-clock.yaml
-@@ -0,0 +1,50 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/apm,xgene-socpll-clock.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: APM X-Gene SoC PLL, PCPPLL, and PMD clocks
-+
-+maintainers:
-+  - Khuong Dinh <khuong@os.amperecomputing.com>
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - apm,xgene-pcppll-clock
-+          - apm,xgene-pcppll-v2-clock
-+          - apm,xgene-pmd-clock
-+          - apm,xgene-socpll-clock
-+          - apm,xgene-socpll-v2-clock
-+
-+  reg:
-+    maxItems: 1
-+
-+  reg-names:
-+    items:
-+      - enum: [ csr-reg, div-reg ]
-+      - const: div-reg
-+    minItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    enum: [ pcppll, socpll ]
-+
-+  "#clock-cells":
-+    const: 1
-+
-+  clock-output-names:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - '#clock-cells'
-+  - clock-output-names
-+
-+additionalProperties: false
-diff --git a/Documentation/devicetree/bindings/clock/xgene.txt b/Documentation/devicetree/bindings/clock/xgene.txt
+diff --git a/Documentation/devicetree/bindings/clock/alphascale,acc.txt b/Documentation/devicetree/bindings/clock/alphascale,acc.txt
 deleted file mode 100644
-index 8233e771711b..000000000000
---- a/Documentation/devicetree/bindings/clock/xgene.txt
+index c9fb9324c634..000000000000
+--- a/Documentation/devicetree/bindings/clock/alphascale,acc.txt
 +++ /dev/null
-@@ -1,131 +0,0 @@
--Device Tree Clock bindings for APM X-Gene
+@@ -1,114 +0,0 @@
+-Alphascale Clock Controller
 -
--This binding uses the common clock binding[1].
+-The ACC (Alphascale Clock Controller) is responsible for choosing proper
+-clock source, setting dividers and clock gates.
 -
--[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+-Required properties for the ACC node:
+- - compatible: must be "alphascale,asm9260-clock-controller"
+- - reg: must contain the ACC register base and size
+- - #clock-cells : shall be set to 1.
 -
--Required properties:
--- compatible : shall be one of the following:
--	"apm,xgene-socpll-clock" - for a X-Gene SoC PLL clock
--	"apm,xgene-pcppll-clock" - for a X-Gene PCP PLL clock
--	"apm,xgene-pmd-clock" - for a X-Gene PMD clock
--	"apm,xgene-device-clock" - for a X-Gene device clock
--	"apm,xgene-socpll-v2-clock" - for a X-Gene SoC PLL v2 clock
--	"apm,xgene-pcppll-v2-clock" - for a X-Gene PCP PLL v2 clock
+-Simple one-cell clock specifier format is used, where the only cell is used
+-as an index of the clock inside the provider.
+-It is encouraged to use dt-binding for clock index definitions. SoC specific
+-dt-binding should be included to the device tree descriptor. For example
+-Alphascale ASM9260:
+-#include <dt-bindings/clock/alphascale,asm9260.h>
 -
--Required properties for SoC or PCP PLL clocks:
--- reg : shall be the physical PLL register address for the pll clock.
--- clocks : shall be the input parent clock phandle for the clock. This should
--	be the reference clock.
--- #clock-cells : shall be set to 1.
--- clock-output-names : shall be the name of the PLL referenced by derive
--  clock.
--Optional properties for PLL clocks:
--- clock-names : shall be the name of the PLL. If missing, use the device name.
+-This binding contains two types of clock providers:
+- _AHB_ - AHB gate;
+- _SYS_ - adjustable clock source. Not all peripheral have _SYS_ clock provider.
+-All clock specific details can be found in the SoC documentation.
+-CLKID_AHB_ROM		0
+-CLKID_AHB_RAM		1
+-CLKID_AHB_GPIO		2
+-CLKID_AHB_MAC		3
+-CLKID_AHB_EMI		4
+-CLKID_AHB_USB0		5
+-CLKID_AHB_USB1		6
+-CLKID_AHB_DMA0		7
+-CLKID_AHB_DMA1		8
+-CLKID_AHB_UART0		9
+-CLKID_AHB_UART1		10
+-CLKID_AHB_UART2		11
+-CLKID_AHB_UART3		12
+-CLKID_AHB_UART4		13
+-CLKID_AHB_UART5		14
+-CLKID_AHB_UART6		15
+-CLKID_AHB_UART7		16
+-CLKID_AHB_UART8		17
+-CLKID_AHB_UART9		18
+-CLKID_AHB_I2S0		19
+-CLKID_AHB_I2C0		20
+-CLKID_AHB_I2C1		21
+-CLKID_AHB_SSP0		22
+-CLKID_AHB_IOCONFIG	23
+-CLKID_AHB_WDT		24
+-CLKID_AHB_CAN0		25
+-CLKID_AHB_CAN1		26
+-CLKID_AHB_MPWM		27
+-CLKID_AHB_SPI0		28
+-CLKID_AHB_SPI1		29
+-CLKID_AHB_QEI		30
+-CLKID_AHB_QUADSPI0	31
+-CLKID_AHB_CAMIF		32
+-CLKID_AHB_LCDIF		33
+-CLKID_AHB_TIMER0	34
+-CLKID_AHB_TIMER1	35
+-CLKID_AHB_TIMER2	36
+-CLKID_AHB_TIMER3	37
+-CLKID_AHB_IRQ		38
+-CLKID_AHB_RTC		39
+-CLKID_AHB_NAND		40
+-CLKID_AHB_ADC0		41
+-CLKID_AHB_LED		42
+-CLKID_AHB_DAC0		43
+-CLKID_AHB_LCD		44
+-CLKID_AHB_I2S1		45
+-CLKID_AHB_MAC1		46
 -
--Required properties for PMD clocks:
--- reg : shall be the physical register address for the pmd clock.
--- clocks : shall be the input parent clock phandle for the clock.
--- #clock-cells : shall be set to 1.
--- clock-output-names : shall be the name of the clock referenced by derive
--  clock.
--Optional properties for PLL clocks:
--- clock-names : shall be the name of the clock. If missing, use the device name.
+-CLKID_SYS_CPU		47
+-CLKID_SYS_AHB		48
+-CLKID_SYS_I2S0M		49
+-CLKID_SYS_I2S0S		50
+-CLKID_SYS_I2S1M		51
+-CLKID_SYS_I2S1S		52
+-CLKID_SYS_UART0		53
+-CLKID_SYS_UART1		54
+-CLKID_SYS_UART2		55
+-CLKID_SYS_UART3		56
+-CLKID_SYS_UART4		56
+-CLKID_SYS_UART5		57
+-CLKID_SYS_UART6		58
+-CLKID_SYS_UART7		59
+-CLKID_SYS_UART8		60
+-CLKID_SYS_UART9		61
+-CLKID_SYS_SPI0		62
+-CLKID_SYS_SPI1		63
+-CLKID_SYS_QUADSPI	64
+-CLKID_SYS_SSP0		65
+-CLKID_SYS_NAND		66
+-CLKID_SYS_TRACE		67
+-CLKID_SYS_CAMM		68
+-CLKID_SYS_WDT		69
+-CLKID_SYS_CLKOUT	70
+-CLKID_SYS_MAC		71
+-CLKID_SYS_LCD		72
+-CLKID_SYS_ADCANA	73
 -
--Required properties for device clocks:
--- reg : shall be a list of address and length pairs describing the CSR
--         reset and/or the divider. Either may be omitted, but at least
--         one must be present.
-- - reg-names : shall be a string list describing the reg resource. This
--               may include "csr-reg" and/or "div-reg". If this property
--               is not present, the reg property is assumed to describe
--               only "csr-reg".
--- clocks : shall be the input parent clock phandle for the clock.
--- #clock-cells : shall be set to 1.
--- clock-output-names : shall be the name of the device referenced.
--Optional properties for device clocks:
--- clock-names : shall be the name of the device clock. If missing, use the
--                device name.
--- csr-offset : Offset to the CSR reset register from the reset address base.
--               Default is 0.
--- csr-mask : CSR reset mask bit. Default is 0xF.
--- enable-offset : Offset to the enable register from the reset address base.
--                  Default is 0x8.
--- enable-mask : CSR enable mask bit. Default is 0xF.
--- divider-offset : Offset to the divider CSR register from the divider base.
--                   Default is 0x0.
--- divider-width : Width of the divider register. Default is 0.
--- divider-shift : Bit shift of the divider register. Default is 0.
+-Example of clock consumer with _SYS_ and _AHB_ sinks.
+-uart4: serial@80010000 {
+-	compatible = "alphascale,asm9260-uart";
+-	reg = <0x80010000 0x4000>;
+-	clocks = <&acc CLKID_SYS_UART4>, <&acc CLKID_AHB_UART4>;
+-	interrupts = <19>;
+-};
 -
--For example:
+-Clock consumer with only one, _AHB_ sink.
+-timer0: timer@80088000 {
+-	compatible = "alphascale,asm9260-timer";
+-	reg = <0x80088000 0x4000>;
+-	clocks = <&acc CLKID_AHB_TIMER0>;
+-	interrupts = <29>;
+-};
 -
--	pcppll: pcppll@17000100 {
--		compatible = "apm,xgene-pcppll-clock";
--		#clock-cells = <1>;
--		clocks = <&refclk 0>;
--		clock-names = "pcppll";
--		reg = <0x0 0x17000100 0x0 0x1000>;
--		clock-output-names = "pcppll";
--		type = <0>;
--	};
--
--	pmd0clk: pmd0clk@7e200200 {
--		compatible = "apm,xgene-pmd-clock";
--		#clock-cells = <1>;
--		clocks = <&pmdpll 0>;
--		reg = <0x0 0x7e200200 0x0 0x10>;
--		clock-output-names = "pmd0clk";
--	};
--
--	socpll: socpll@17000120 {
--		compatible = "apm,xgene-socpll-clock";
--		#clock-cells = <1>;
--		clocks = <&refclk 0>;
--		clock-names = "socpll";
--		reg = <0x0 0x17000120 0x0 0x1000>;
--		clock-output-names = "socpll";
--		type = <1>;
--	};
--
--	qmlclk: qmlclk {
--		compatible = "apm,xgene-device-clock";
--		#clock-cells = <1>;
--		clocks = <&socplldiv2 0>;
--		clock-names = "qmlclk";
--		reg = <0x0 0x1703C000 0x0 0x1000>;
--		reg-name = "csr-reg";
--		clock-output-names = "qmlclk";
--	};
--
--	ethclk: ethclk {
--		compatible = "apm,xgene-device-clock";
--		#clock-cells = <1>;
--		clocks = <&socplldiv2 0>;
--		clock-names = "ethclk";
--		reg = <0x0 0x17000000 0x0 0x1000>;
--		reg-names = "div-reg";
--		divider-offset = <0x238>;
--		divider-width = <0x9>;
--		divider-shift = <0x0>;
--		clock-output-names = "ethclk";
--	};
--
--	apbclk: apbclk {
--		compatible = "apm,xgene-device-clock";
--		#clock-cells = <1>;
--		clocks = <&ahbclk 0>;
--		clock-names = "apbclk";
--		reg = <0x0 0x1F2AC000 0x0 0x1000
--			0x0 0x1F2AC000 0x0 0x1000>;
--		reg-names = "csr-reg", "div-reg";
--		csr-offset = <0x0>;
--		csr-mask = <0x200>;
--		enable-offset = <0x8>;
--		enable-mask = <0x200>;
--		divider-offset = <0x10>;
--		divider-width = <0x2>;
--		divider-shift = <0x0>;
--		flags = <0x8>;
--		clock-output-names = "apbclk";
--	};
--
+diff --git a/Documentation/devicetree/bindings/clock/alphascale,asm9260-clock-controller.yaml b/Documentation/devicetree/bindings/clock/alphascale,asm9260-clock-controller.yaml
+new file mode 100644
+index 000000000000..1caad419ce9d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/alphascale,asm9260-clock-controller.yaml
+@@ -0,0 +1,49 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/clock/alphascale,asm9260-clock-controller.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Alphascale Clock Controller
++
++maintainers:
++  - Oleksij Rempel <linux@rempel-privat.de>
++
++description: |
++  The ACC (Alphascale Clock Controller) is responsible for choosing proper
++  clock source, setting dividers and clock gates.
++
++  Simple one-cell clock specifier format is used, where the only cell is used
++  as an index of the clock inside the provider.
++  It is encouraged to use dt-binding for clock index definitions. SoC specific
++  dt-binding should be included to the device tree descriptor. For example
++  Alphascale ASM9260:
++
++  #include <dt-bindings/clock/alphascale,asm9260.h>
++
++  This binding contains two types of clock providers:
++
++    _AHB_ - AHB gate;
++    _SYS_ - adjustable clock source. Not all peripheral have _SYS_ clock provider.
++
++  All clock specific details can be found in the SoC documentation.
++
++properties:
++  compatible:
++    const: alphascale,asm9260-clock-controller
++
++  reg:
++    maxItems: 1
++
++  '#clock-cells':
++    const: 1
++
++  clocks:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - '#clock-cells'
++
++additionalProperties: false
 -- 
 2.47.2
 
