@@ -1,224 +1,172 @@
-Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AE7D2609D2
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 10:52:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CD7C2135CB;
+	Wed, 21 May 2025 10:54:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747824756; cv=none; b=d2mtOjeyn9oodLG9rb5TqfC4Q6wYPwYXxU0YdH4mkgd/hkGjgRqE8JOW1fst+lJbt8rxx6jTJybdNPZJXcq+xIGbNT1kpNK69ll1IUk95s30kcxImSv8M3ffF1TX6kQ9szISWOdA9FVEfaa2ZF2Z7HIeBKU8fqHKC1maa4rTQuA=
+	t=1747824852; cv=none; b=gfAgVh+d/9cQdEkMQK688FmzKGhgClP/4pXHedtp7ikh2+RJELTouf/PHAsXDILVPnkSVG7mtUQvkBMvueCIgvAmMvg53NXe43myjW9TE0iukaggDltp6grJ41YYXx9C/MIyD2TkZskyZQqOmHknDcXqrlGPxUunLVxsYa3GbPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747824756; c=relaxed/simple;
-	bh=4BFLWPUAMSInPQdAE9fgzFRSdzO/MJE0QCcVjoTiJko=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=D2w1DIX3+m40PUkSN3CbJzSQbE/mRxfUqthEopV2BMXDHIXBbptuom95ApPryevRNY08rRCFy8rlZ/0rq66DzWzWzoiHthJxq7KDY6M1hyqkVClFNiVF4WfkR5P9maubLy66ntSfFka0IdbK4S9InZFfYC2PQwnTokm6TXK/i60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Au9vurJ5; arc=none smtp.client-ip=209.85.221.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747824852; c=relaxed/simple;
+	bh=yJST4V1p2lT4OlOFqlzq6sJXxC9a/GQw99I+mn99G4c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EjFzxs4NX02179Qzgd68MyP0paxnJuEgwsM40ePPgSTwdLNP9RUgxUVHCl31Fqkk+ouMp2TC2isN5Y3UeLNb6UAl6WjrYSyL887uXtV9J6pohZDcth3PLdnZGW9Vmel2+DhvkeDJuYISXwl9hJOm4X/FzAf+tKV5RRUwf/65EHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OLyyxhSe; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Au9vurJ5"
-Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-5259327a93bso2134234e0c.2
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 03:52:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747824753; x=1748429553; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dZHVJ3+0s5VJ9SAEbzNjGpliuVaCZn6/g9D/MgHcJ80=;
-        b=Au9vurJ5+bsLZI7KBAZ3jbQJVUwB3tFEs1zFiyFUyfWMitAFXtjU2JDZl4OgR2ogUh
-         WWJyWmHfkB/dqcfrJ+fNkXOg+AZUcEzfCvv02W2NIGXHKT3RwcHbAyGJyuUzMpS5bY11
-         iWEuNPOC5Rb2Dzhnv/xPraMMLeKNEln2BlHsKX80HGNSOEHcFVBHrJUiZ9q8k7Wvdnbe
-         G6Mh/SIJ9PigKFajkbJhlKt9MaCtms2P43USHI9o94brNBaTxnfDKyvWk2phrP6CFJlK
-         Vv+vf47AV+vL+cgbp7M9u/4gpyxkOW3qqx6GUVwUDcQCe4n46gD3zz5cxpzXTtzSQGH3
-         Z/Eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747824753; x=1748429553;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dZHVJ3+0s5VJ9SAEbzNjGpliuVaCZn6/g9D/MgHcJ80=;
-        b=SdgcWxG+pnyfiw3ZPAlmqrUE0o1IrhyWqLnAVjw56PI6KLW5OtjwaQL3EbfPXZXs0W
-         iYfyxV98xSMRbNevtzE/CosQHfUJ9C6v326B9TJ2acXYBUad9TG12unB8GdKPm3Hpmyo
-         S9F+HA2/6DxWeBX6VasbrqI+vzkU3XjIIhYprau7U17A7pre8bnPEwVEmuvLdaZAQ036
-         zOTUxFyepMZPqHqyUd1BoXyp+6ak6cFaU3kamANTPxlUJG28O/QE9Bt71GnWRyD6M2aO
-         LQmq/ffUxVqYT8N9a59WuTNG9yKE83ZNBBCWcEeLYv6XXiWWODSsqWmg0wlA6HkNSt3A
-         LVbA==
-X-Forwarded-Encrypted: i=1; AJvYcCUgjSGbs3xNLgxZ6RnnkPj4GnCxlk7kIyEB5Pa19UOiKBsUfBsugChIKIe22iZC4EBRs1XgmvALFCrE+0w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNaFcfWLTR/tX/7q205LcxqpKj+N6nwKbLbzyhAMs2fQNAlE+Y
-	sgGPafDP6IQ+Gc2JIRBrSsUtngB8Yp87CdJNDsVVdO0jxy91AIca5rwe/nIrS63ACFnSt6HPeI4
-	dnm2Vr0+8RnYUq4+CvVa+ze4DsdLTP8f/seDHXHNJ2Q==
-X-Gm-Gg: ASbGncvgqL6pb7QEk0XE5+u9eITAdNKaGHP2zGwLUsCPYYw9Gt4MY0VwhUy46ohJZjj
-	r4YaBjrUjs9PrZ8uG74NJr/4G6O7ivCLfbGpA2soy+kbJd/vTz1nmRnT1oxUf9S7lmXfXOF5Yeh
-	RpvWpjr3aemtwrOxRSe/5GxFzcUBg02a5sdQfJrYn3D3S7NpDtGKr273bik3jU/TCGfQ==
-X-Google-Smtp-Source: AGHT+IGTpet3tvuo4dVQk5bLwsNjz4FVi9021yTbDrQQwYKO6Ii2Esq7EdmHZdrJDV4Fl+4399BvnJRaMflLdZbEFEg=
-X-Received: by 2002:a05:6122:4317:b0:520:6773:e5bf with SMTP id
- 71dfb90a1353d-52dba800001mr15970869e0c.1.1747824753137; Wed, 21 May 2025
- 03:52:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OLyyxhSe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747824851; x=1779360851;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=yJST4V1p2lT4OlOFqlzq6sJXxC9a/GQw99I+mn99G4c=;
+  b=OLyyxhSed/3B/t3HQe4sZ4EC9xPNv1UlHIUMA6T3nJGaXLYr2QhHIfqC
+   +ob9Zv1IGole5+seD9OIRxtTlu8il3ILh1HVbtnA/H8xyKMxjtERKSCxg
+   H9BbXdi/xTbAKw51tvBNDi1QzKKXVEIwVmKpxSy1DsPCrUneDlrP3n1mn
+   BSASD8GgFqLrDnM8ojpI3eseo/gSOXBzU6NGiLo1HY8r/YzuQ/ixg/PU/
+   9L2/GBy2stf2QdoTYASnbBeT/YdMRRqvC0QyoSLp0MUvLoqwdUQXyIe/q
+   Nfk/oIe8WqijlZ/B7mSuzgm6fk/AzudQu5UavEIDGN1BWKZ8WT1i/dv6D
+   Q==;
+X-CSE-ConnectionGUID: 2wnz3wozSfSnll6jtA4OuA==
+X-CSE-MsgGUID: GWJBMqhdQWCSJZKYuORUeA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="75192722"
+X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
+   d="scan'208";a="75192722"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 03:54:10 -0700
+X-CSE-ConnectionGUID: Lz3TQqzKSGi0epEREQ3SxA==
+X-CSE-MsgGUID: ukpyLMYfRqy20TWYNNXk2A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
+   d="scan'208";a="163297816"
+Received: from dalessan-mobl3.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.244.129])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 03:54:07 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id E943F11F746;
+	Wed, 21 May 2025 13:54:04 +0300 (EEST)
+Date: Wed, 21 May 2025 10:54:04 +0000
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mehdi Djait <mehdi.djait@linux.intel.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	tomi.valkeinen@ideasonboard.com, jacopo.mondi@ideasonboard.com,
+	hverkuil@xs4all.nl, kieran.bingham@ideasonboard.com,
+	naush@raspberrypi.com, mchehab@kernel.org,
+	dave.stevenson@raspberrypi.com, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v4] media: v4l2-common: Add a helper for obtaining
+ the clock producer
+Message-ID: <aC2wzFD_bPgESZpR@kekkonen.localdomain>
+References: <20250321130329.342236-1-mehdi.djait@linux.intel.com>
+ <f467e4a8-fcb2-4345-b8f7-7557c1a7552b@redhat.com>
+ <20250515084403.GQ23592@pendragon.ideasonboard.com>
+ <id2ikiio23ahslghpx56niwxrvaqdgmrgk3k647i3u27cptqgz@hwqrkdvljd3b>
+ <20250515124050.GA12492@pendragon.ideasonboard.com>
+ <2egx7hakxleahk5o3ngydrcgtlnpgpdj4kgcijfij2bmss7u4d@2yho4udpzjtm>
+ <aCZTi2odVXVZjJE8@svinhufvud>
+ <20250521105141.GF12514@pendragon.ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250520125803.981048184@linuxfoundation.org>
-In-Reply-To: <20250520125803.981048184@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Wed, 21 May 2025 16:22:20 +0530
-X-Gm-Features: AX0GCFu9JDvT9DPHZ1453In-RQsb-9FyVMa4i9tTQ2pJYOokOVyHxxYrKkbN7O8
-Message-ID: <CA+G9fYvDbn66=pss5UeMtjU5rYTG27nr-s5EV3Z7U3TfxSkhWg@mail.gmail.com>
-Subject: Re: [PATCH 6.6 000/117] 6.6.92-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250521105141.GF12514@pendragon.ideasonboard.com>
 
-On Tue, 20 May 2025 at 19:31, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 6.6.92 release.
-> There are 117 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 22 May 2025 12:57:37 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
-6.6.92-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-6.6.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+Hi Laurent,
 
+On Wed, May 21, 2025 at 12:51:41PM +0200, Laurent Pinchart wrote:
+> On Thu, May 15, 2025 at 11:50:19PM +0300, Sakari Ailus wrote:
+> > On Thu, May 15, 2025 at 03:51:33PM +0200, Mehdi Djait wrote:
+> > > On Thu, May 15, 2025 at 02:40:50PM +0200, Laurent Pinchart wrote:
+> > > > On Thu, May 15, 2025 at 11:17:37AM +0200, Mehdi Djait wrote:
+> > > > > On Thu, May 15, 2025 at 10:44:03AM +0200, Laurent Pinchart wrote:
+> > > > > > On Sat, May 10, 2025 at 04:21:09PM +0200, Hans de Goede wrote:
+> > > > > > > On 21-Mar-25 2:03 PM, Mehdi Djait wrote:
+> > > > > > > > Introduce a helper for v4l2 sensor drivers on both DT- and ACPI-based
+> > > > > > > > platforms to retrieve a reference to the clock producer from firmware.
+> > > > > > > > 
+> > > > > > > > This helper behaves the same as clk_get_optional() except where there is
+> > > > > > > > no clock producer like in ACPI-based platforms.
+> > > > > > > > 
+> > > > > > > > For ACPI-based platforms the function will read the "clock-frequency"
+> > > > > > > > ACPI _DSD property and register a fixed frequency clock with the frequency
+> > > > > > > > indicated in the property.
+> > > > > > > > 
+> > > > > > > > Signed-off-by: Mehdi Djait <mehdi.djait@linux.intel.com>
+> > > > > > > 
+> > > > > > > This certainly looks quite useful, thank you for working
+> > > > > > > on this.
+> > > > > > > 
+> > > > > > > Note on some IPU3 platforms where the clk is provided by
+> > > > > > > a clk-generator which is part of a special sensor-PMIC
+> > > > > > > the situation is a bit more complicated.
+> > > > > > > 
+> > > > > > > Basically if there is both a clk provider and a clock-frequency
+> > > > > > > property then the clock-frequency value should be set as freq
+> > > > > > > to the clk-provider, see:
+> > > > > > > 
+> > > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/media/i2c/ov8865.c#n3020
+> > > > > > > 
+> > > > > > > for an example of a driver which handles this case.
+> > > > > > 
+> > > > > > On a side note, the DT bindings for the OV8865 doesn't specify the
+> > > > > > clock-frequency property...
+> > > > > 
+> > > > > Is this wrong ?
+> > > > > 
+> > > > > The OV8865 driver was introduced for DT-based systems, where you will
+> > > > > get a reference to the "struct clk corresponding to the clock producer"
+> > > > > and then get the clock-rate/frequency with a call to:
+> > > > > 
+> > > > > 	rate = clk_get_rate(sensor->extclk);
+> > > > > 
+> > > > > The patch "73dcffeb2ff9 media: i2c: Support 19.2MHz input clock in ov8865"
+> > > > > adding support for clock-frequency came later to support ACPI-based
+> > > > > systems (IPU3 here)
+> > > > 
+> > > > I'd expect all device properties to be documented in DT bindings. Is
+> > > > that an incorrect assumption ?
+> > > > 
+> > > 
+> > > I am actually genuinely asking, is the clock-frequency a device property
+> > > of the ov8865 camera sensor or the clock source, which is a separate device ?
+> > 
+> > The sensor's.
+> >
+> > Could we document how this is supposed to work on DT and ACPI?
+> 
+> Yes please. Would you like to send a patch ? :-)
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+I'd add this to the helper's documentation. We'll work this out with Mehdi.
 
-Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> 
+> > I think we should also select COMMON_CLK on ACPI systems for sensor
+> > drivers (in a separate patch maybe?), instead of relying on distributions
+> > enabling it.
+> > 
+> > > Example the imx258 with a fixed-clock, which has its own compatible
+> > > and DT bindings under bindings/clock/fixed-clock.yaml
+> > > 
+> > > So when adding support for ACPI-based systems, the DT bindings should
+> > > not be changed because getting the clock-frequency from the ACPI _DSD
+> > > property is a workaround only needed on ACPI-based systems.
+> > 
+> > I wouldn't say it's a workaround, but something that's only needed on ACPI
+> > systems.
+> 
+> Does that mean that the clock-frequency property should be deprecated on
+> DT-based systems, and not used in any new sensor bindings ?
 
-## Build
-* kernel: 6.6.92-rc1
-* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
-rc.git
-* git commit: 18952a1fc4ac790deb4faa116f18310d7010a9fb
-* git describe: v6.6.91-118-g18952a1fc4ac
-* test details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.9=
-1-118-g18952a1fc4ac
+I don't think we've added any "clock-frequency" properties in DT bindings
+for camera sensors since around 2020 or so.
 
-## Test Regressions (compared to v6.6.90-114-g477cfead3566)
+-- 
+Regards,
 
-## Metric Regressions (compared to v6.6.90-114-g477cfead3566)
-
-## Test Fixes (compared to v6.6.90-114-g477cfead3566)
-
-## Metric Fixes (compared to v6.6.90-114-g477cfead3566)
-
-## Test result summary
-total: 236734, pass: 211762, fail: 5845, skip: 18530, xfail: 597
-
-## Build Summary
-* arc: 5 total, 5 passed, 0 failed
-* arm: 129 total, 129 passed, 0 failed
-* arm64: 44 total, 44 passed, 0 failed
-* i386: 23 total, 20 passed, 3 failed
-* mips: 26 total, 22 passed, 4 failed
-* parisc: 4 total, 4 passed, 0 failed
-* powerpc: 32 total, 31 passed, 1 failed
-* riscv: 20 total, 20 passed, 0 failed
-* s390: 14 total, 13 passed, 1 failed
-* sh: 10 total, 10 passed, 0 failed
-* sparc: 7 total, 7 passed, 0 failed
-* x86_64: 37 total, 33 passed, 4 failed
-
-## Test suites summary
-* boot
-* commands
-* kselftest-arm64
-* kselftest-breakpoints
-* kselftest-capabilities
-* kselftest-cgroup
-* kselftest-clone3
-* kselftest-core
-* kselftest-cpu-hotplug
-* kselftest-cpufreq
-* kselftest-efivarfs
-* kselftest-exec
-* kselftest-fpu
-* kselftest-ftrace
-* kselftest-futex
-* kselftest-gpio
-* kselftest-intel_pstate
-* kselftest-ipc
-* kselftest-kcmp
-* kselftest-kvm
-* kselftest-livepatch
-* kselftest-membarrier
-* kselftest-memfd
-* kselftest-mincore
-* kselftest-mm
-* kselftest-mqueue
-* kselftest-net
-* kselftest-net-mptcp
-* kselftest-openat2
-* kselftest-ptrace
-* kselftest-rseq
-* kselftest-rtc
-* kselftest-seccomp
-* kselftest-sigaltstack
-* kselftest-size
-* kselftest-tc-testing
-* kselftest-timers
-* kselftest-tmpfs
-* kselftest-tpm2
-* kselftest-user_events
-* kselftest-vDSO
-* kselftest-x86
-* kunit
-* kvm-unit-tests
-* lava
-* libgpiod
-* libhugetlbfs
-* log-parser-boot
-* log-parser-build-clang
-* log-parser-build-gcc
-* log-parser-test
-* ltp-capability
-* ltp-commands
-* ltp-containers
-* ltp-controllers
-* ltp-cpuhotplug
-* ltp-crypto
-* ltp-cve
-* ltp-dio
-* ltp-fcntl-locktests
-* ltp-fs
-* ltp-fs_bind
-* ltp-fs_perms_simple
-* ltp-hugetlb
-* ltp-ipc
-* ltp-math
-* ltp-mm
-* ltp-nptl
-* ltp-pty
-* ltp-sched
-* ltp-smoke
-* ltp-syscalls
-* ltp-tracing
-* modules
-* perf
-* rcutorture
-
---
-Linaro LKFT
-https://lkft.linaro.org
+Sakari Ailus
