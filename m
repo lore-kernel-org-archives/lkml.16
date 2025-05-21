@@ -1,112 +1,114 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E6E6264A92;
-	Wed, 21 May 2025 12:06:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5CEB264A83;
+	Wed, 21 May 2025 12:06:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747829171; cv=none; b=uKRLv1LeVLvbAcZ/lTSaEYL8ByWe+T//oxLvreDUhzjFX4t2zSqKsI2hK67B/pchuUrvphJU2UpPhAOlvkkTdWCmzVMHji686zZYRMoFrtlyZUy0z1QFouXNTjIS4zQdaTA71QvJXHynCG1rXv6XQR1KR43Xf/FLyK6IGGsv3HY=
+	t=1747829172; cv=none; b=mS7mvNK884J1KV1H0viyOMEnq01g7MZsxC0xFlzoMNCYeWNTa9QGvADCbSMu3wrr70YutKTpMHrqzigPOfDMHeSiNDEIyZ6njRZ+v5LqgKJAqnQiBocJYVswIEn9bYIN3uTW3czLJP1E2VDNCQkmzbZFcxl+M1syheA9U7ewkBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747829171; c=relaxed/simple;
-	bh=J0Z5CM/92zYxMiCiOjIvjio1VdqUB3Ixw5gwWOzOYJM=;
+	s=arc-20240116; t=1747829172; c=relaxed/simple;
+	bh=2Y7h9FLSuwQV4ahko7NokTmxnqt7W/kwNcP7E2GH0yU=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=ZbHf7Ifukrb0/M10hHwr2Q9ZzKhPPUS5qFAjAn3s0uAWPl44ouw5giQ21WIJALn2GO0R9UnT0sYQFmoDpwbXVcYNWW7JDlqpVHm2v+OFqMMPUTEJiEhMQzwRq1BBCh552fujOzXeJtBnGWqv1aXzRCza2GraW4HUQRozC9ksRyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=eukAFENx; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fn1TyqBh; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=JyRvge9+1GjPuHcQDjBZpXd0YGNOlNEXkYGRIN/UJ2Wqz/lQ/itSCmSlc5wvf2vJfL2BBPbVB/f770gp2BJDUs1QuBRX8IBsoCWMhTVU3oTk8EVDmrVgH2tD6A7lqwgdvfKtsfwUFSisWQCbdLUDoODwcWXHnvEWtmGs7m8HBMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=caMkA/00; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=se9BZJN+; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eukAFENx";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fn1TyqBh"
-Date: Wed, 21 May 2025 12:06:06 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="caMkA/00";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="se9BZJN+"
+Date: Wed, 21 May 2025 12:06:08 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747829167;
+	s=2020; t=1747829169;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1WdGXdGPWc2jlOudrRQaLvNRdFXGUIq/mK7OmjCQES0=;
-	b=eukAFENxUwpiUbomRTg1mjEqe/UQ3sMhNOjgFP0hLVSj9Qp9Bu7te1piYzfTetMuJAgFU1
-	YjLDYIbw0k2M5Wqx3ZFNljQBsN/swX6SjMZV6z8NLkXxDjYw1hEvBdFfRCkXST4ZlG1Bas
-	vewGw0i618tYz+OwNhdb8cTQ7QEjLz8+IiYpPZIVr0spkSdXv+fIP8c355I4t7HDM89N0l
-	aVSw3j7Q4o9acVYiBTcb/REbm/ittu6Z6YyMZmO2mY7M8aTUKUbfzRIe9yK/AIw7jeKqz/
-	d7hxocv9nRI5Da55o/iFlAdX/gvcBowOyZfLr94neL2ZYgJORb0QtYEvXmRg2w==
+	bh=ODw2q0VcZh/FUcAyOd0UjhWNr57kbKVG/Xy+qxZzXqo=;
+	b=caMkA/00937bURz5Vk23ine98B7W+Qx3kv7HSOOUT7KqphLr/N1JW/NBGIWTjUP3oLy22h
+	x0QDOu1PL9Vjb3yStqwTVbkStaUXEQyKwG8WDjD8wQu2X5ThaQOOWYA0bSSYpqJkNt+GTI
+	aT4+MZYYz+bakofOf0CJR1jrWU06mBWw0EWCIwGOPZvVBfCMPCf8stS3lbVUvicSHxtsbz
+	nseM4Xi4FWznOqysJdQiJ6oAtmL5h2K7D+Ed1J2Vmx4KjKxm6W/Aw0xLr4VnPd4scmmmlV
+	GjfqHcoYeNV1a9dWjTIQMNVuRyIzHRm6sqmaTnRDEu0RlNcUlq1/nP1A9M+OBA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747829167;
+	s=2020e; t=1747829169;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1WdGXdGPWc2jlOudrRQaLvNRdFXGUIq/mK7OmjCQES0=;
-	b=fn1TyqBhcSJxvil/oKTEFDAj6HH5Xt+8cX4QAnW9wZfCLhXoSCzaPLFRhXIrmO+A7QexUj
-	sdirOD9Rqwa7ErCg==
+	bh=ODw2q0VcZh/FUcAyOd0UjhWNr57kbKVG/Xy+qxZzXqo=;
+	b=se9BZJN+AsfJ3/GVE4fOXc13Gju0XzgsxmoyYzfte8imL7Y6P/fGemexW5BoEwFzD6jtpo
+	gFZfI2/RzH+ColCA==
 From: "tip-bot2 for Sebastian Andrzej Siewior" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/futex] futex: Correct the kernedoc return value for
- futex_wait_setup().
+Subject:
+ [tip: locking/futex] futex: Use RCU_INIT_POINTER() in futex_mm_init().
 Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>, andrealmeid@igalia.com,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250517151455.1065363-6-bigeasy@linutronix.de>
-References: <20250517151455.1065363-6-bigeasy@linutronix.de>
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250517151455.1065363-4-bigeasy@linutronix.de>
+References: <20250517151455.1065363-4-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174782916686.406.18111680517101107267.tip-bot2@tip-bot2>
+Message-ID: <174782916844.406.17946927892328892389.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the locking/futex branch of tip:
 
-Commit-ID:     73c6c02b4febbb2c2761e559f31af8c7b87e81a5
-Gitweb:        https://git.kernel.org/tip/73c6c02b4febbb2c2761e559f31af8c7b87=
-e81a5
+Commit-ID:     279f2c2c8e2169403d01190f042efa6e41731578
+Gitweb:        https://git.kernel.org/tip/279f2c2c8e2169403d01190f042efa6e41731578
 Author:        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-AuthorDate:    Sat, 17 May 2025 17:14:55 +02:00
+AuthorDate:    Sat, 17 May 2025 17:14:53 +02:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
 CommitterDate: Wed, 21 May 2025 13:57:41 +02:00
 
-futex: Correct the kernedoc return value for futex_wait_setup().
+futex: Use RCU_INIT_POINTER() in futex_mm_init().
 
-The kerneldoc for futex_wait_setup() states it can return "0" or "<1".
-This isn't true because the error case is "<0" not less than 1.
+There is no need for an explicit NULL pointer initialisation plus a
+comment why it is okay. RCU_INIT_POINTER() can be used for NULL
+initialisations and it is documented.
 
-Document that <0 is returned on error. Drop the possible return values
-and state possible reasons.
+This has been build tested with gcc version 9.3.0 (Debian 9.3.0-22) on a
+x86-64 defconfig.
 
+Fixes: 094ac8cff7858 ("futex: Relax the rcu_assign_pointer() assignment of mm->futex_phash in futex_mm_init()")
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Andr=C3=A9 Almeida <andrealmeid@igalia.com>
-Link: https://lore.kernel.org/r/20250517151455.1065363-6-bigeasy@linutronix.de
+Link: https://lore.kernel.org/r/20250517151455.1065363-4-bigeasy@linutronix.de
 ---
- kernel/futex/waitwake.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ include/linux/futex.h |  9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
-diff --git a/kernel/futex/waitwake.c b/kernel/futex/waitwake.c
-index b3738fb..e2bbe55 100644
---- a/kernel/futex/waitwake.c
-+++ b/kernel/futex/waitwake.c
-@@ -585,7 +585,8 @@ int futex_wait_multiple(struct futex_vector *vs, unsigned=
- int count,
-  *
-  * Return:
-  *  -  0 - uaddr contains val and hb has been locked;
-- *  - <1 - -EFAULT or -EWOULDBLOCK (uaddr does not contain val) and hb is un=
-locked
-+ *  - <0 - On error and the hb is unlocked. A possible reason: the uaddr can=
- not
-+ *	   be read, does not contain the expected value or is not properly aligne=
-d.
-  */
- int futex_wait_setup(u32 __user *uaddr, u32 val, unsigned int flags,
- 		     struct futex_q *q, union futex_key *key2,
+diff --git a/include/linux/futex.h b/include/linux/futex.h
+index 168ffd5..005b040 100644
+--- a/include/linux/futex.h
++++ b/include/linux/futex.h
+@@ -88,14 +88,7 @@ void futex_hash_free(struct mm_struct *mm);
+ 
+ static inline void futex_mm_init(struct mm_struct *mm)
+ {
+-	/*
+-	 * No need for rcu_assign_pointer() here, as we can rely on
+-	 * tasklist_lock write-ordering in copy_process(), before
+-	 * the task's MM becomes visible and the ->futex_phash
+-	 * becomes externally observable:
+-	 */
+-	mm->futex_phash = NULL;
+-
++	RCU_INIT_POINTER(mm->futex_phash, NULL);
+ 	mutex_init(&mm->futex_hash_lock);
+ }
+ 
