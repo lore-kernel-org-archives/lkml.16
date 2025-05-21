@@ -1,166 +1,122 @@
-Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4F0B12E5D;
-	Wed, 21 May 2025 02:59:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D749933993;
+	Wed, 21 May 2025 02:59:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747796347; cv=none; b=XFEMKB9F1t1EICsxcQAa8jy9stzpE85wuiJR7lWWbowkKbLKiqCY+iOCWWDos4FPRSUXVjGFtZuoOPXfNPNyVmBTXEFQyoyySv0YN4NfrRlOzR+caSPcRYqsrRmbsiIqp1j9RS/WtYEg8ccrfH3GhWCxjaavmizhBGsLtgIoHxA=
+	t=1747796394; cv=none; b=DZIVnem0TlpHOo2wCVuKkwkDDNGfil7D2Gd8oke66VUhfzJLAOT4GqA6SOLzOE2x1QlHfVRr2eZrUazQ/WFb78GPwPRXSN8qaMSYOECnVuvx+P4tEjbKZaagBLKgYh1Gpqm/9AaBlEA8AhBAbKZ3EWrROf9axQWb3EC1WmievVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747796347; c=relaxed/simple;
-	bh=f/Xp+DkIPojq0Dv4wAjMCrLOyVDzuADRaucbFUhvr+w=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=B5q4AkLNYEt8lTSvZWwOV3mSBUkzy63WYpz9vU62tvBjdk0i/sF3X9vxXoKwA82czCupYVsijyzN8kzrukmA9kRkTHCDtV8MZWfXorXZMiJLT+nhsUXV0A4UxDKMYY/O9cRXEa7ubMX+RGksj74RlDoQfaMXZGdMHKd+ai7rTGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 642812005C1;
-	Wed, 21 May 2025 04:50:34 +0200 (CEST)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2B64F2005BF;
-	Wed, 21 May 2025 04:50:34 +0200 (CEST)
-Received: from lsvm11u0000395.swis.ap-northeast-2.aws.nxp.com (lsvm11u0000395.swis.ap-northeast-2.aws.nxp.com [10.52.9.99])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 9BC881800087;
-	Wed, 21 May 2025 10:50:32 +0800 (+08)
-From: Joseph Guo <qijian.guo@nxp.com>
-To: Bastien Nocera <hadess@hadess.net>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	linux-input@vger.kernel.org (open list:GOODIX TOUCHSCREEN),
-	linux-kernel@vger.kernel.org (open list)
-Cc: qijian.guo@nxp.com,
-	haibo.chen@nxp.com,
-	justin.jiang@nxp.com
-Subject: [PATCH] input: goodix: add poll mode for goodix touchscreen
-Date: Wed, 21 May 2025 11:50:11 +0900
-Message-Id: <20250521025011.887562-1-qijian.guo@nxp.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1747796394; c=relaxed/simple;
+	bh=DWnTpUcVS9gEwUqlWPLX5iGaBOT6uUwgAc58sofILkM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=l6eFb1TlOzW23KHWBH897qjDrWpmOtnSFK4djLx8yCY5TDs5qBcz6axHibP4SO1o1Wf5LVTuwA+dCzH89Nj26XEKruESwdRAwC+Wi1thwvh8gIqXwm3dIcw2ddcPor/5F5oc0DvXGm8AsiFCCbShFd0ShjCias4/8i61Bsy/Xws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=bzlaJ2oP; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="bzlaJ2oP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1747796387;
+	bh=B77FrxfdcIdIw47gVoeltLsReyoXVDKLk0E1A7BBxrU=;
+	h=Date:From:To:Cc:Subject:From;
+	b=bzlaJ2oP5BXQ2AfT3b9oXXTRUS/a1OsYPNdJH7mr2TD9YVbxnrn9HFW1uZ0wsrRQw
+	 4rfLmsg+YoUpl1yV6CIlqP02In+wAYQvaZtaZXmN0u5KyoxbUpMUipDATTMHD71YIo
+	 9Y+1DMsmw8ypw2uDzFC09FqAI5ok+8ZLiDGizuSYtWVFTT/A2aPkDZS1ZslsS9dg1/
+	 IUPXrVEKqpuV43SmLhEOCVWa/N/tUga//lB0d6waixmoaHAdE9Gi/EQxNUaTBZ4qWM
+	 jGfD2hc5DD+dNcSnRUL7aSqj3BjbnFVeelBro1wS7Dl4wRFJRHraFmrF3suXOVOSS+
+	 Zs83Vn2fasnCQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b2GNz4t99z4xTx;
+	Wed, 21 May 2025 12:59:47 +1000 (AEST)
+Date: Wed, 21 May 2025 12:59:46 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Viresh Kumar <viresh.kumar@linaro.org>, Andreas Hindborg
+ <a.hindborg@kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: manual merge of the cpufreq-arm tree with the configfs
+ tree
+Message-ID: <20250521125946.664a79c1@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Type: multipart/signed; boundary="Sig_/H48+ronUthA5v_h_EE3BDT2";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-goodix touchscreen only support interrupt mode by default.
-Some panels like waveshare panel which is widely used on raspeberry pi
-don't have interrupt pins and only work on i2c poll mode.
-The waveshare panel 7inch panel use goodix gt911 touchscreen chip.
+--Sig_/H48+ronUthA5v_h_EE3BDT2
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Joseph Guo <qijian.guo@nxp.com>
-Reviewed-by: Haibo Chen <haibo.chen@nxp.com>
----
-Change from v1 to v2
-- Remove unused variable in goodix_ts_data struct
-- Use polling infrastructure
----
- drivers/input/touchscreen/goodix.c | 50 ++++++++++++++++++++++++++----
- 1 file changed, 44 insertions(+), 6 deletions(-)
+Hi all,
 
-diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
-index aaf79ac50004..58e49e5cf148 100644
---- a/drivers/input/touchscreen/goodix.c
-+++ b/drivers/input/touchscreen/goodix.c
-@@ -47,6 +47,7 @@
- #define RESOLUTION_LOC		1
- #define MAX_CONTACTS_LOC	5
- #define TRIGGER_LOC		6
-+#define GOODIX_POLL_INTERVAL_MS		17	/* 17ms = 60fps */
+Today's linux-next merge of the cpufreq-arm tree got a conflict in:
 
- /* Our special handling for GPIO accesses through ACPI is x86 specific */
- #if defined CONFIG_X86 && defined CONFIG_ACPI
-@@ -497,6 +498,14 @@ static void goodix_process_events(struct goodix_ts_data *ts)
- 	input_sync(ts->input_dev);
- }
+  rust/kernel/lib.rs
 
-+static void goodix_ts_work_i2c_poll(struct input_dev *input)
-+{
-+	struct goodix_ts_data *ts = input_get_drvdata(input);
-+
-+	goodix_process_events(ts);
-+	goodix_i2c_write_u8(ts->client, GOODIX_READ_COOR_ADDR, 0);
-+}
-+
- /**
-  * goodix_ts_irq_handler - The IRQ handler
-  *
-@@ -523,16 +532,33 @@ static irqreturn_t goodix_ts_irq_handler(int irq, void *dev_id)
- 	return IRQ_HANDLED;
- }
+between commit:
 
-+static void goodix_enable_irq(struct goodix_ts_data *ts)
-+{
-+	if (ts->client->irq)
-+		enable_irq(ts->client->irq);
-+}
-+
-+static void goodix_disable_irq(struct goodix_ts_data *ts)
-+{
-+	if (ts->client->irq)
-+		disable_irq(ts->client->irq);
-+}
-+
- static void goodix_free_irq(struct goodix_ts_data *ts)
- {
--	devm_free_irq(&ts->client->dev, ts->client->irq, ts);
-+	if (ts->client->irq)
-+		devm_free_irq(&ts->client->dev, ts->client->irq, ts);
- }
+  446cafc295bf ("rust: configfs: introduce rust support for configfs")
 
- static int goodix_request_irq(struct goodix_ts_data *ts)
- {
--	return devm_request_threaded_irq(&ts->client->dev, ts->client->irq,
--					 NULL, goodix_ts_irq_handler,
--					 ts->irq_flags, ts->client->name, ts);
-+	if (ts->client->irq) {
-+		return devm_request_threaded_irq(&ts->client->dev, ts->client->irq,
-+						 NULL, goodix_ts_irq_handler,
-+						 ts->irq_flags, ts->client->name, ts);
-+		}
-+	else
-+		return 0;
- }
+from the configfs tree and commits:
 
- static int goodix_check_cfg_8(struct goodix_ts_data *ts, const u8 *cfg, int len)
-@@ -1229,6 +1255,18 @@ static int goodix_configure_dev(struct goodix_ts_data *ts)
- 		return error;
- 	}
+  8961b8cb3099 ("rust: cpumask: Add initial abstractions")
+  d01d70205601 ("rust: clk: Add initial abstractions")
+  3accb57d56a9 ("rust: cpu: Add from_cpu()")
+  2207856ff0bc ("rust: cpufreq: Add initial abstractions for cpufreq framew=
+ork")
 
-+	input_set_drvdata(ts->input_dev, ts);
-+
-+	if (!ts->client->irq) {
-+		error = input_setup_polling(ts->input_dev, goodix_ts_work_i2c_poll);
-+		if (error) {
-+			dev_err(&ts->client->dev,
-+				 "could not set up polling mode, %d\n", error);
-+			return error;
-+		}
-+		input_set_poll_interval(ts->input_dev, GOODIX_POLL_INTERVAL_MS);
-+	}
-+
- 	error = input_register_device(ts->input_dev);
- 	if (error) {
- 		dev_err(&ts->client->dev,
-@@ -1435,7 +1473,7 @@ static int goodix_suspend(struct device *dev)
+from the cpufreq-arm tree.
 
- 	/* We need gpio pins to suspend/resume */
- 	if (ts->irq_pin_access_method == IRQ_PIN_ACCESS_NONE) {
--		disable_irq(client->irq);
-+		goodix_disable_irq(ts);
- 		return 0;
- 	}
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
 
-@@ -1479,7 +1517,7 @@ static int goodix_resume(struct device *dev)
- 	int error;
+--=20
+Cheers,
+Stephen Rothwell
 
- 	if (ts->irq_pin_access_method == IRQ_PIN_ACCESS_NONE) {
--		enable_irq(client->irq);
-+		goodix_enable_irq(ts);
- 		return 0;
- 	}
+diff --cc rust/kernel/lib.rs
+index 354eb1605194,133ebee4f9d3..000000000000
+--- a/rust/kernel/lib.rs
++++ b/rust/kernel/lib.rs
+@@@ -42,8 -42,11 +42,13 @@@ pub mod alloc
+  pub mod block;
+  #[doc(hidden)]
+  pub mod build_assert;
++ pub mod clk;
+ +#[cfg(CONFIG_CONFIGFS_FS)]
+ +pub mod configfs;
++ pub mod cpu;
++ #[cfg(CONFIG_CPU_FREQ)]
++ pub mod cpufreq;
++ pub mod cpumask;
+  pub mod cred;
+  pub mod device;
+  pub mod device_id;
 
---
-2.34.1
+--Sig_/H48+ronUthA5v_h_EE3BDT2
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgtQaIACgkQAVBC80lX
+0GzHXwf9HJfIeoKogbwE8fPjcKrbYEx7b1n1T5tmQFAHE2S6lLg5klKYiiDzkmBh
+YZJ7/jVFkp66ZjYbJf1LpomoWib/QBbOArD7TAtLx14BfnI9uejKM3p7rKRFpSsp
+WdT51GBJYUPNuWD3Sard1T/8qvybvl7MFK2PJ2MfsVFXKk0pw9GRDJChzSySUEQl
+NFY3CTUdhYyqYqx3eXSiIFMtY/GbuI+Oap+ojN9aobGAeikD7xFWy0Gd2mSCqDXK
+K+M37Bm4T5SX6yPR7nswLeFIUrn0h0YbMvYgwGRAb1mUYR6W5yXbrS4Ogxuk35ll
+FcTe2ZdMbw5YaEVjvYKvJ9QVKet5cQ==
+=7T/M
+-----END PGP SIGNATURE-----
+
+--Sig_/H48+ronUthA5v_h_EE3BDT2--
