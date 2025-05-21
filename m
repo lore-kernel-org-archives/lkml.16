@@ -1,50 +1,66 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8C3E1DF991
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 15:16:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36F4FA92E;
+	Wed, 21 May 2025 15:17:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747840594; cv=none; b=gUrTW26kqnlnDQds8aN/vYrgb3uKsGj8It1kSDbI3Jzc7iO3Rs6cN7X3FRR2W6Bnjs1ewiM5fkO5664oQzJ4fr6UljlYhzYd+5xQ+Gu92CnTlX+Zs+6Ovmr+iViQoIFo4PvQPTmzc8ZxJio78PoND8c0RoGqy9NszKmDwP68+Ko=
+	t=1747840662; cv=none; b=JyY1IN92zoxFodG4c4yJDEsp7JRzEqFSa8I1pmfF8fy96NXjeZCr4TZX9wKy8W+4Y7xI2ZWGtk0SkCAho2MWvwY885A7nFTMKgZmfZv1oagwUqyIEOb1fEpZGm2mHtVzqlvKinJ8DWruQshvpRJW2F3aFvv2NvvlXxm7ozgRSnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747840594; c=relaxed/simple;
-	bh=uIFp6FUN2+rM4RSf61UGlgnH3srvVhm65Sk5NDLSisw=;
+	s=arc-20240116; t=1747840662; c=relaxed/simple;
+	bh=kUCnnPeOSrm8mt4CfbncjKmyFQkFlkZd5zL0vOVsP5U=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MxSaPH+WQfrGrYZWyEF+FpShdKHj3VITzf6/NTLBd/iikq9LycsvF4Iaa2pS+O0l7lWEE9zj8ZdkGzf3q9g0qIUo9h5xcDpYM3f+Qkt8tgRIfYVvB0m/ZiMFFuAgI3litK1MubsIsOo3I7lfXJXLFieihrIMkdHdaLzchy9jmRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L1o2oCft; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 In-Reply-To:Content-Type; b=qaV4ZHdDtDOXehc2TFLPvm5WS5yThU3DISacmcE7dbJTFRtCM2t/GL24YImq6w1kJEjBWYNaz2PR5sHSXm4z8UucoB6GO9zN0Eyux1YPTe8Vqb1OzO0jodOK7hMXv1jQ2pyLUKuuIN2vfng8GlqCZNrr1pO11PXtazgzQyOTiLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H9IUi1tP; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L1o2oCft"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747840592; x=1779376592;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=uIFp6FUN2+rM4RSf61UGlgnH3srvVhm65Sk5NDLSisw=;
-  b=L1o2oCftoCIcV9HwhgV2R1rn0pP9AlGxKTbiwVY2zaSyD1PwC3/N+0My
-   lyRaqJg6dswvS+z+wtzKmzSfjnhjF3I5A0ixsG0FJ0sPhUFddq/XS0zNw
-   7aBdFMmbuNqZXx4/iizWmolwlg+NseUrnx0sMdfMa1CsuF/iEP3jjsnem
-   AaltL2T/YccgODbghWYkAnCoo2ONq1Y4qr4D8zJZYiGGLJCwxRr7oJgTd
-   QsWb335z98wvMiiDt/PTrydB7tNP7NtossH1YG/IJLczukoJor35g5eQb
-   Z7kHRzw2rXlL+E08TmAljJb9zSuo5GVvh7EmTIKX4FZgQhW/8WhtGQ6PV
-   w==;
-X-CSE-ConnectionGUID: 69H6yMVoT5izM/lPCaaZVw==
-X-CSE-MsgGUID: 5RW2a8vYQqqTKsHarl53Rw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="49922238"
-X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
-   d="scan'208";a="49922238"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 08:16:24 -0700
-X-CSE-ConnectionGUID: I2Qw2siATsuCKO+WX6xWcg==
-X-CSE-MsgGUID: 3uzHabndQIS56fuWG+licQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
-   d="scan'208";a="177272047"
-Received: from iherna2-mobl4.amr.corp.intel.com (HELO [10.125.109.100]) ([10.125.109.100])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 08:16:24 -0700
-Message-ID: <79975f50-7a98-4629-9ed8-c32596cab46a@intel.com>
-Date: Wed, 21 May 2025 08:16:23 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H9IUi1tP"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-551efd86048so4599197e87.3;
+        Wed, 21 May 2025 08:17:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747840659; x=1748445459; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bY5S7Wfb5ySyKh5UvVG0WBqudaowOyoDQxB/bdCEle4=;
+        b=H9IUi1tPzJKqwvKYaohBcOFlcuQMlETUyxr5MTkH0C5CHwuwpaepyy51Pph8N4u9M1
+         AGHV2lMsSkXk1nAtGcjRbMIG3mGNZEO9tBEBWltVY0m0IV1Gk60y+X/bAIST0Iuf0SjO
+         pXBLD3uok8acTlahQUA0dX7m3xbWPPu0aiMqaLh7YpO3xnKasymyHGdlcan8v6QNHtHe
+         jhvsyX0fFceNbU7oxRhc+he5nYUnzq/ouTTqZxL5UbGhEq59OxtB7QcpzLHtDScNc5bz
+         5iPH2j/gRXYwZ9CCfljp1rIFFfbx/SxXVHwDVoNxRlNQfCR0/zOcEAmimBhi1ccwnzmR
+         n76Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747840659; x=1748445459;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bY5S7Wfb5ySyKh5UvVG0WBqudaowOyoDQxB/bdCEle4=;
+        b=BxqtTV9mcw3mUDhhR4CQ46/WvmKA1xzxCceAutK0BrPHGF4TWS2yPmZqTmvdp9XRbz
+         ym/bHgWd8QxTN0OxiTC4BIysvv/TYLrg6NjJjO0V1wDhNTB8Zr3VQmRYKOsDcfyhyG0V
+         Sy5nmjMgz6lmjOlV4Hzrd+n44X3qpD1k8LaXrqKeKNvC/K42Ecns37MyQlIdmjR1a+Lu
+         HJapFw7GLwwCln3HmteltRqRdxp7zOIiMGkLBUP7SEZhpIqkQVPScdBrMNlL1AU43E3s
+         LV+t7hQXlltmNw4Y7SxhF2vqDe9AP4T3wUQqd/I7ugg2Ha1BDC4jrP9ArMyrNYCPg2cb
+         K4rw==
+X-Forwarded-Encrypted: i=1; AJvYcCXpdMd7A7CWO+edsGSUyKLucwWLxA4kLesvBkD9ALVfDvNIXM4dbN4Cpl7LpdxOm7mEZUUkhbo26Zvhljw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yww2ZmYBcXH9h5CJDEzf7pIDS8a8f9/LjfR/Dbj/3PDc/FYkKG/
+	Uh+EPHcSNi8acz2vbXAqHS/Cgq79Sm9eLMPYh2HYdukDL6NrOx/dyvWj
+X-Gm-Gg: ASbGncv37MCmb5lfG2bnyY/YSAzds5u+Hosi1E07Hxu8AJLd9/AE7ZrzfM+XgGY34TA
+	LNCtAoWSWimb9ZtxfrjxO23wHd6wCgBJHPA+cHhPoEM5VsIvPgEcFwsxNTsnAPjLNSXOLszaQm0
+	QG1gj62ZIPTI/An45jX5gZ1fYgpjOntAqyh0QnCkJYDfd13aE59365VZR19ygmmvltbAJ+BWRut
+	yVCefb40YeAG1JUDHmMkGoqMwvQYNQdeiwZjYHHjElKH5+J4bw4o6Y/Wln84SLHguHXuzViwTh8
+	YMF/h2f32SWyGSPe9UvEUpWjWU5TQd463j53zaQVVP0CG863Ovg/Qj/OVkpRZAp8kSj2uRvnOc/
+	vqxXbEna41wmOVsZeEDRRkql1lzkkhzwCQ2S0nZgnCdRtRLF6a3WUwGB5n6E39ljed1/2b0MVL7
+	u1MCcudhQGcjGmjx8kmPFDLm0=
+X-Google-Smtp-Source: AGHT+IEpTliLMqbAZ45KCj30NQTnQIbtnS7k2akX1eclggrk0SecoLdw9WewNGAj/w+Zp405OJOV5Q==
+X-Received: by 2002:a05:6512:3d05:b0:54f:c184:9de with SMTP id 2adb3069b0e04-550e98fbfdbmr7135214e87.35.1747840658971;
+        Wed, 21 May 2025 08:17:38 -0700 (PDT)
+Received: from ?IPV6:2001:14ba:53:1500:e8f4:97c2:d311:5b15? (2001-14ba-53-1500-e8f4-97c2-d311-5b15.rev.dnainternet.fi. [2001:14ba:53:1500:e8f4:97c2:d311:5b15])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-551fc0d476esm986067e87.203.2025.05.21.08.17.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 May 2025 08:17:38 -0700 (PDT)
+Message-ID: <b6954169-63d9-4cac-aabd-2df1642f98af@gmail.com>
+Date: Wed, 21 May 2025 18:17:37 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,93 +68,56 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC v2 5/9] x86/mm: Change cpa_flush() to call
- flush_kernel_range() directly
-To: Rik van Riel <riel@surriel.com>, linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org, x86@kernel.org, kernel-team@meta.com,
- dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
- tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
- nadav.amit@gmail.com, Rik van Riel <riel@fb.com>,
- Yu-cheng Yu <yu-cheng.yu@intel.com>
-References: <20250520010350.1740223-1-riel@surriel.com>
- <20250520010350.1740223-6-riel@surriel.com>
-From: Dave Hansen <dave.hansen@intel.com>
+Subject: Re: [PATCH 2/4] docs: Improve grammar, formatting in Video4Linux
+To: Bagas Sanjaya <bagasdotme@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
+ mchehab@kernel.org, ribalda@chromium.org, hverkuil@xs4all.nl,
+ hljunggr@cisco.com, dave.jiang@intel.com, jgg@ziepe.ca, saeedm@nvidia.com,
+ Jonathan.Cameron@huawei.com, ilpo.jarvinen@linux.intel.com,
+ mario.limonciello@amd.com, W_Armin@gmx.de, mpearson-lenovo@squebb.ca
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kernel-mentees@lists.linux.dev
+References: <20250517132711.117618-1-hannelotta@gmail.com>
+ <20250517132711.117618-2-hannelotta@gmail.com>
+ <871psml4t7.fsf@trenco.lwn.net> <aCqIAkoVr2yvDJbN@archie.me>
 Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20250520010350.1740223-6-riel@surriel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: =?UTF-8?B?SGFubmUtTG90dGEgTcOkZW5ww6TDpA==?= <hannelotta@gmail.com>
+In-Reply-To: <aCqIAkoVr2yvDJbN@archie.me>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 5/19/25 18:02, Rik van Riel wrote:
-> The function cpa_flush() calls __flush_tlb_one_kernel() and
-> flush_tlb_all().
+Hello,
+
+On 5/19/25 04:23, Bagas Sanjaya wrote:
+> On Sun, May 18, 2025 at 02:08:04AM -0600, Jonathan Corbet wrote:
+>>>       description of the correct character encoding for Programme Service
+>>>       name strings. Also from RDS specification, PS is usually a single
+>>>       eight character text. However, it is also possible to find receivers
+>>> -    which can scroll strings sized as 8 x N characters. So, this control
+>>> +    which can scroll strings sized as 8 x N characters. Therefore this control
+>>
+>> This kind of change just seems like churn that isn't really improving
+>> the content?
 > 
-> Replacing that with a call to flush_tlb_kernel_range() allows
-> cpa_flush() to make use of INVLPGB or RAR without any additional
-> changes.
+> I prefer the original as both so and therefore have the same meaning.>
+>>>   ``V4L2_CID_RDS_TX_ALT_FREQS (__u32 array)``
+>>>       The alternate frequencies in kHz units. The RDS standard allows for
+>>> -    up to 25 frequencies to be defined. Drivers may support fewer
+>>> -    frequencies so check the array size.
+>>> +    up to 25 frequencies to be defined. Because drivers may support fewer
+>>> +    frequencies, check the array size.
+>>
+>> Here too, I'm not sure I see the value in this kind of change.
+> 
+> Again I'm agree.
+> 
+> Thanks.
+> 
 
-Yeah, the pageattr.c flushing code has gone through some twists and
-turns over the years but it does indeed look like it has converged to be
-awfully close to the other flushing code. It used to do wbinvd() and a
-full flush, but the wbinvd() disappeared at some point.
+Alright, that is two opinions in favor of not changing this. I can send 
+a version 2 of this patch series without these.
 
-I don't immediately see any downsides to doing this. You could probably
-even hoist this up to the top of the series. I think it's a good cleanup
-on its own.
+Thank you for reviewing!
 
-Also, I'd make the point in the subject and changelog that this isn't
-just changing one function to call another, it's removing some
-duplicated functionality and consolidating it to existing common code.
+Best regards,
 
-Maybe this for the subject:
-
-	x86/mm: Have cpa_flush() use common TLB flushing infrastructure
-
-One super nit:
-
-> +	start = fix_addr(__cpa_addr(cpa, 0));
-> +	end = fix_addr(__cpa_addr(cpa, cpa->numpages));
-
-Please vertically align the fix_addr()'s.
+Hanne-Lotta Mäenpää
