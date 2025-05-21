@@ -1,101 +1,240 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5221A2A1BF;
-	Wed, 21 May 2025 14:01:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE5EE14EC60
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 14:02:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747836102; cv=none; b=bSxaojxKhkF4JKZbo9+dtLsqM8wZ14oHOp0cR9ZyrK/aEG8M26CxA/xFd7mIC+VINa/RXb+YDumSq4hRhYc6witEYSHWmdLSRA4Mt53c5sY3Zt9QYFJevhWafijdznW6k9Xm4hi1T6zf+z2O8EuKbQK4znYcbb5uTafgeTS869w=
+	t=1747836123; cv=none; b=r9wOHOJ5/llrXNlNiI06juj5TIibfBlDnl2lvF3X6DB1Shw4NkF+jav43EzMdLNLo07VUzndDl+FCkj2/vwZmxqlk7OYGrQk160wvOb4kWI4o13cKxWrRVVqFJ5MILxOV0AJRvVnkhUuH8KwVl4X1L2tpeRg+gOFCK89BRAyNE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747836102; c=relaxed/simple;
-	bh=8aUOwg7cfjAHrLpnuG3R+zcViomLhaw8dORoW3xOm94=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Z3Gy9nlFmguP1hIswUSNvX1cISZy1GXw160F48SS/d8bhf0rsEUxpxeOB8OugScChx8kKZCOcRllDe/eWRK53DEZypN4WLQVxuw6Dyax44F4/83flWx2KgfMSfACE/Q4fQn8jPJ1NZ6KqSqVx56sqI8w3KcKXWheVjyl5qD95ag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UeV1lkIA; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747836123; c=relaxed/simple;
+	bh=a6q/PZWmc+zPlm1zQM70skfxQwhxsKqszX4R4ML9J3c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mCmLYRX1i4mvx1MrxN2IkMUwgzp+ZIWxCbg/Zw4NVfEPoHNEUyrK5hd04FqEimtmXBUPpj1RKZcHbSS4dwy69HPOuDlT2Bcdcq+NMSAcc+jQ5zCfEhxbuX8/B4LZtTx3VnvAICStVOfesc/xJIrsy93FbM8PlXN2GewzU+2gh6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=y3vvbkJZ; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UeV1lkIA"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-231b7b21535so5048185ad.1;
-        Wed, 21 May 2025 07:01:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y3vvbkJZ"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2320d06b728so34523395ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 07:02:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747836100; x=1748440900; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dMGXupCFm/jDQdH3BwXg85XBgNeRBVeHk/IerHW/LbE=;
-        b=UeV1lkIAt805uhIVM5cPTl8QhTFN4UQHqvrYxOR+whjyUN4Z60VdCIaqpsM8LoQUbc
-         UH/vG7IDyu+k8fKOGSYfXK83alrM6u+1sK2BUcpMni6jGuDm2jrpXCuq0cn3csDGNvEZ
-         t8RmtWiplNJhXrOxzqirYFPY6fMu/UdTb80L4p4VU64nAlarSmiT2fahPrfvtwYl5cGj
-         wFQLOYolLjJUS1XzWCEH0QO6J0+Xl8Dfhjv//rgxVlNkDnE4mQFoL+TSBMa616l84Wxs
-         cLWlI/+V1sMzH8IUtg6bGtxfoF2HShgiXHdbY2qXRVEXKmdUW/pWswVWCmMZ/7Qc5wPI
-         fHtQ==
+        d=linaro.org; s=google; t=1747836121; x=1748440921; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=U8z5zCjsJqPPABNBLHUQv6MTVvI28kl/Vcyk8IPH4kI=;
+        b=y3vvbkJZjf4nmva7ofHqi4lZBbtX4ewZ04Q7XgInZ5Y4P/oCTq/eQKbFMtmYUBzbiA
+         78fexcNTXSPfOFur0mIY5PWjEDeE+pADiJekNPizI8pMcBRfZWibTsWMsgbKZfSLLgyK
+         C274xMnv0UifPRx+ub8/6Q/814oaQtBJtyDQ9S/TjbeRQcwXw/P0SoTyBv1cKUZW4c63
+         NeD/jwLMlfTNJsET9OAdtOiW4lHO8AZeeCCD6oLXdlrgJLgmo9fBjjWqOIkKfhOZ6XA9
+         q00RhquRYSRMAqkKqxEkoW8k+UMXp0GZYBVDytu23YEYyYKAdPLjXSNF8qgX/RnENAub
+         r9KA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747836100; x=1748440900;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dMGXupCFm/jDQdH3BwXg85XBgNeRBVeHk/IerHW/LbE=;
-        b=uhr8y+yx5LHwGZiJIo+ztXK9NqQJ2Z13VSn7jSFc7HraUV95CI5H6dLqk15fcc0O7P
-         eGRBsimtUOLMn5Z/l8KeQ9WPK7bT8X3padCKMziSaGrIeG87JeC5QfK7DMSZp7RkY+4g
-         EWW85F2oW4AudAZZf7pVPs3EpWLHJelSsNqNafmMvptrSR5dWITOhRtmW8Eo60qxq0os
-         D+GtdkXo2Hk/NZ67BoIsI0MOFCH5MIhoJ4d4driqo5s4HqX1BEncGEfgIz+Pi1Fs/2tx
-         d/ggF+IwNGMfXgHbpEYP8eSBbRfYimUrTZGgs+rluD2/T7Nj8KuI29RqleYPuvTk7XNC
-         mTEw==
-X-Forwarded-Encrypted: i=1; AJvYcCUy7OB3PNzlDGwmOG4RvA8Vlut8OTNl4j1UXFyc0VK2ICPfloy3LWBhdyIoIGAsQLtVzNGs9O1vE8LFYbI=@vger.kernel.org, AJvYcCVuQppHYxI3utx/gpRTxe5LY8/uv3gGDYIjyakKN28BOpi15H1fU48NWohGgDQN8LXrMIkah9Qx1mEqQY4bAe4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXO4+x1zb8PzG+uzAuw1jlIZcOCww1rmY5/hucm1d1//9sRnfZ
-	jqY5iaxz6Oj/LnFycd06Udw1ylXa/zh56NxOxqlL/rJEfDw5QZUyFstHy87WS6wkOyeqRPdPuIB
-	65GXntK+Idc9uzxO/+dwCvVA3o+l1elU=
-X-Gm-Gg: ASbGnct7ILb9kySLhMbiXzzq4pFIidONrEmHYnHFlKCZm/QaiKmCEwWlkAr9gN1JtBn
-	VSnevycLor4cHBNpOL4guDy0Iyv7WiuGA+bFSgAOGGkIZY8+gi9860i+O6epSdK9mWXSYnxvCfd
-	o/CMkoiENahGmX1dzUoqo0d8ZffUgTeZDd
-X-Google-Smtp-Source: AGHT+IEf9pI5auX2gp9RvC6XVZIT3qjdAUHxHeINEyS1iniHrOrcET60vaOXe6WxV+Ndo4dwUNM7er6CEi5Ut3dwZOE=
-X-Received: by 2002:a17:903:41d0:b0:216:30f9:93c5 with SMTP id
- d9443c01a7336-231d43b7cb6mr111674645ad.6.1747836100471; Wed, 21 May 2025
- 07:01:40 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747836121; x=1748440921;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=U8z5zCjsJqPPABNBLHUQv6MTVvI28kl/Vcyk8IPH4kI=;
+        b=Km0v63tCVm16qLLRPD9459ulPbbzlsi57c/zQx5ibLRMHRhleuc/YRZJqL/On7Krd0
+         80BbL1aXYis+mAOi6Ve1hfNFoIf8pe0LlftjQgvgJbBFmOyJoGiMrmtyZTF8kVbhEDVm
+         U9mq1d1VqiQtcdiq68EEgywViN8zfG4BTk+3K0RNroAXzj2Mm30z0/g9Z5QHwXImQHIb
+         RWbCj/2VhaJKf0hwOecJb7yA5K6qi0ciY5xhKwvu1i7uyEElInayK77sQzTFzbTdJPf7
+         2eiYaUf8OXpcI0j91TMNY93XqT0EUGwSIbGJ+Bn+H4yFlrNPQ4OFj5jh/7SreYtsu8l+
+         1QVw==
+X-Forwarded-Encrypted: i=1; AJvYcCV7knLM/FRYY+2dWF97XXWus2dwk2MxGJLhRAFuU/0OE4t9TzAS+FBVKTXco9V4os5ucHf4gMo9x6cmfBg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6b82LiYPhrjp3Xc2fnNGhWlzNRfKhFw8wfmPHIklvgstOKmXi
+	8mX9o2BDLpsR8KZugQ+DyOJCR52WPLeHlm/lJGTanF18TCyd6wM82fM4Yv8VtOklpA==
+X-Gm-Gg: ASbGnctrljGRkqmqvqtnXAde9W4qDQyA5YSF+AZyq1h1Y9O8si5SFaIC9IWCVELhKYa
+	f6sNLpbbMSYBagtnPZ9qdgrV3FFlmpCwd/hmu1s2wuORkDQB41ggfPagPJPgFUfNHaJBoLx26u3
+	BI1U0KVmdYAUFl45hwPxPznrFX1tcwRKWeqYJglnILJ+BemXsEly7v3YdhOQyF22NlyDAEdFxdv
+	Mjc4zKsmzOW6BuPSrJdlKSiMGihpctpUBOSHhfcaOO1dq/K2N0ajh9/Apf9c3mwLqzOgm7vJ1qb
+	q3/i/FplZaoDWjZaoTD/t3W+T0h8+DkJyD/eOuKvn0F0DrlI4/Zw6rlHdGQDS2pmInFL6+I=
+X-Google-Smtp-Source: AGHT+IHIKKP2uksl9GvcLkBetglbjC+Wy6dDEa7BT/2+qE2OwFvCRiVTKh+kE7VBMoCdz8xwjqLNFA==
+X-Received: by 2002:a17:902:e5d1:b0:224:b60:3cd3 with SMTP id d9443c01a7336-231d43ada94mr273520735ad.19.1747836120495;
+        Wed, 21 May 2025 07:02:00 -0700 (PDT)
+Received: from thinkpad ([120.60.52.42])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4ed239bsm93587855ad.219.2025.05.21.07.01.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 May 2025 07:01:59 -0700 (PDT)
+Date: Wed, 21 May 2025 15:01:53 +0100
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Nitin Rawat <quic_nitirawa@quicinc.com>
+Cc: vkoul@kernel.org, kishon@kernel.org, 
+	James.Bottomley@hansenpartnership.com, martin.petersen@oracle.com, bvanassche@acm.org, 
+	andersson@kernel.org, neil.armstrong@linaro.org, dmitry.baryshkov@oss.qualcomm.com, 
+	konrad.dybcio@oss.qualcomm.com, quic_rdwivedi@quicinc.com, quic_cang@quicinc.com, 
+	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-scsi@vger.kernel.org
+Subject: Re: [PATCH V5 10/11] scsi: ufs: qcom : Introduce phy_power_on/off
+ wrapper function
+Message-ID: <k37lk3poz6kzrgnby4sikwmz6rg4ysxsticn3opcil4j3njylp@cvmgwiw6nwy5>
+References: <20250515162722.6933-1-quic_nitirawa@quicinc.com>
+ <20250515162722.6933-11-quic_nitirawa@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250324210359.1199574-1-ojeda@kernel.org>
-In-Reply-To: <20250324210359.1199574-1-ojeda@kernel.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Wed, 21 May 2025 16:01:28 +0200
-X-Gm-Features: AX0GCFu9hbn7oACBtc1sC-LprsFwQEelpoqzdJdMS9n5B6L5nTBBjtDwqqKl-gg
-Message-ID: <CANiq72mBHcsCpn1ZJRJ9Qa-Ass1MsoKdKcFpiFF7hNwyOXjAOA@mail.gmail.com>
-Subject: Re: [PATCH 00/10] rust: clean and enable Clippy `doc_markdown` lint
-To: Abdiel Janulgue <abdiel.janulgue@gmail.com>, Danilo Krummrich <dakr@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev, 
-	Miguel Ojeda <ojeda@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250515162722.6933-11-quic_nitirawa@quicinc.com>
 
-On Mon, Mar 24, 2025 at 10:04=E2=80=AFPM Miguel Ojeda <ojeda@kernel.org> wr=
-ote:
->
->   rust: alloc: add missing Markdown code spans
->   rust: alloc: add missing Markdown code span
->   rust: dma: add missing Markdown code span
->   rust: of: add missing Markdown code span
->   rust: pci: fix docs related to missing Markdown code spans
->   rust: platform: fix docs related to missing Markdown code spans
->   rust: task: add missing Markdown code spans and intra-doc links
+On Thu, May 15, 2025 at 09:57:21PM +0530, Nitin Rawat wrote:
 
-Abdiel, Danilo, Rob, Saravana, Greg, Rafael: anything against me
-picking these ones up?
+Subject should mention ufs_qcom_phy_power_{on/off} as phy_power_{on/off} are
+generic APIs.
 
-If you would like to pick them up through your respective trees, then
-that is great too.
+> There can be scenarios where phy_power_on is called when PHY is
+> already on (phy_count=1). For instance, ufs_qcom_power_up_sequence
+> can be called multiple times from ufshcd_link_startup as part of
+> ufshcd_hba_enable call for each link startup retries(max retries =3),
+> causing the PHY reference count to increase and leading to inconsistent
+> phy behavior.
+> 
+> Similarly, there can be scenarios where phy_power_on or phy_power_off
+> might be called directly from the UFS controller driver when the PHY
+> is already powered on or off respectiely, causing similar issues.
+> 
+> To fix this, introduce ufs_qcom_phy_power_on and ufs_qcom_phy_power_off
+> wrappers for phy_power_on and phy_power_off. These wrappers will use an
+> is_phy_pwr_on flag to check if the PHY is already powered on or off,
+> avoiding redundant calls. Protect the is_phy_pwr_on flag with a mutex
+> to ensure safe usage and prevent race conditions.
+> 
 
-Thanks!
+This smells like the phy_power_{on/off} calls are not balanced and you are
+trying to workaround that in the UFS driver.
 
-Cheers,
-Miguel
+- Mani
+
+> Co-developed-by: Can Guo <quic_cang@quicinc.com>
+> Signed-off-by: Can Guo <quic_cang@quicinc.com>
+> Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
+> ---
+>  drivers/ufs/host/ufs-qcom.c | 44 +++++++++++++++++++++++++++++++------
+>  drivers/ufs/host/ufs-qcom.h |  4 ++++
+>  2 files changed, 41 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
+> index 3ee4ab90dfba..583db910efd4 100644
+> --- a/drivers/ufs/host/ufs-qcom.c
+> +++ b/drivers/ufs/host/ufs-qcom.c
+> @@ -479,6 +479,38 @@ static u32 ufs_qcom_get_hs_gear(struct ufs_hba *hba)
+>  	return UFS_HS_G3;
+>  }
+>  
+> +static int ufs_qcom_phy_power_on(struct ufs_hba *hba)
+> +{
+> +	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
+> +	struct phy *phy = host->generic_phy;
+> +	int ret = 0;
+> +
+> +	guard(mutex)(&host->phy_mutex);
+> +	if (!host->is_phy_pwr_on) {
+> +		ret = phy_power_on(phy);
+> +		if (!ret)
+> +			host->is_phy_pwr_on = true;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int ufs_qcom_phy_power_off(struct ufs_hba *hba)
+> +{
+> +	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
+> +	struct phy *phy = host->generic_phy;
+> +	int ret = 0;
+> +
+> +	guard(mutex)(&host->phy_mutex);
+> +	if (host->is_phy_pwr_on) {
+> +		ret = phy_power_off(phy);
+> +		if (!ret)
+> +			host->is_phy_pwr_on = false;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>  static int ufs_qcom_power_up_sequence(struct ufs_hba *hba)
+>  {
+>  	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
+> @@ -507,7 +539,7 @@ static int ufs_qcom_power_up_sequence(struct ufs_hba *hba)
+>  		return ret;
+>  
+>  	if (phy->power_count) {
+> -		phy_power_off(phy);
+> +		ufs_qcom_phy_power_off(hba);
+>  		phy_exit(phy);
+>  	}
+>  
+> @@ -524,7 +556,7 @@ static int ufs_qcom_power_up_sequence(struct ufs_hba *hba)
+>  		goto out_disable_phy;
+>  
+>  	/* power on phy - start serdes and phy's power and clocks */
+> -	ret = phy_power_on(phy);
+> +	ret = ufs_qcom_phy_power_on(hba);
+>  	if (ret) {
+>  		dev_err(hba->dev, "%s: phy power on failed, ret = %d\n",
+>  			__func__, ret);
+> @@ -1121,7 +1153,6 @@ static int ufs_qcom_setup_clocks(struct ufs_hba *hba, bool on,
+>  				 enum ufs_notify_change_status status)
+>  {
+>  	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
+> -	struct phy *phy = host->generic_phy;
+>  	int err;
+>  
+>  	/*
+> @@ -1142,7 +1173,7 @@ static int ufs_qcom_setup_clocks(struct ufs_hba *hba, bool on,
+>  				ufs_qcom_dev_ref_clk_ctrl(host, false);
+>  			}
+>  
+> -			err = phy_power_off(phy);
+> +			err = ufs_qcom_phy_power_off(hba);
+>  			if (err) {
+>  				dev_err(hba->dev, "phy power off failed, ret=%d\n", err);
+>  				return err;
+> @@ -1151,7 +1182,7 @@ static int ufs_qcom_setup_clocks(struct ufs_hba *hba, bool on,
+>  		break;
+>  	case POST_CHANGE:
+>  		if (on) {
+> -			err = phy_power_on(phy);
+> +			err = ufs_qcom_phy_power_on(hba);
+>  			if (err) {
+>  				dev_err(hba->dev, "phy power on failed, ret = %d\n", err);
+>  				return err;
+> @@ -1339,10 +1370,9 @@ static int ufs_qcom_init(struct ufs_hba *hba)
+>  static void ufs_qcom_exit(struct ufs_hba *hba)
+>  {
+>  	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
+> -	struct phy *phy = host->generic_phy;
+>  
+>  	ufs_qcom_disable_lane_clks(host);
+> -	phy_power_off(phy);
+> +	ufs_qcom_phy_power_off(hba);
+>  	phy_exit(host->generic_phy);
+>  }
+>  
+> diff --git a/drivers/ufs/host/ufs-qcom.h b/drivers/ufs/host/ufs-qcom.h
+> index 0a5cfc2dd4f7..f51b774e17be 100644
+> --- a/drivers/ufs/host/ufs-qcom.h
+> +++ b/drivers/ufs/host/ufs-qcom.h
+> @@ -281,6 +281,10 @@ struct ufs_qcom_host {
+>  	u32 phy_gear;
+>  
+>  	bool esi_enabled;
+> +	/* flag to check if phy is powered on */
+> +	bool is_phy_pwr_on;
+> +	/* Protect the usage of is_phy_pwr_on against racing */
+> +	struct mutex phy_mutex;
+>  };
+>  
+>  struct ufs_qcom_drvdata {
+> -- 
+> 2.48.1
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
