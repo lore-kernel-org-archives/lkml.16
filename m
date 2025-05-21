@@ -1,262 +1,152 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 011FC1799F;
-	Wed, 21 May 2025 08:40:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8A8A1799F;
+	Wed, 21 May 2025 08:40:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747816814; cv=none; b=mDlvxcun5POJ+DS7N8P89zJ5pj94oNgQjDpUi9luhY5QljLVCSQSRJctKW715kwfHYnFAUp8jbyIACexBktABtrcYJ3nPOvkwIfJQNmYvdactSvHO4zDofcNKjXe1XyIceSWXvxhf/w1f0/v8mX0QV8t6f8mcT33LUrW6iKky5s=
+	t=1747816824; cv=none; b=lCkxyYly/XcRc3vcH72G5eIPRIv9Rh6nlO2rOTvk7BMyKg+RjCHprWcP265gJXdwPdAlbXsfcq9IQNPh/BaD1yi1i2eRCGi8V0tOHpu4dWYF1BHg53uSjdWkUs0SV2YZ4VwqA65MXAk4gG7j4k7dhlteUZzBWNrSEIvos6w6Ric=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747816814; c=relaxed/simple;
-	bh=prPuohwI+Mx1qO9jheq0v68uTEiCGdKQtjR4A2uzvkU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=B4JWtk7uM+yvJIl6AhkU+0QHZ2pXJ4Zj9okl2jAlY+/vPxT+LFTvWsKy2jm+5ihPX6DIsdbEexsL3d1yHrqgHccS8MknFsKck2VGXAfSysWK7zzwsNEbYSZPlTmYD3DAIBQVSIGYqgOkSgRohdau5NH2/5ZdQuYT4vfQkU6nXys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fTPRg/21; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747816824; c=relaxed/simple;
+	bh=xKrhmqIiWOmOlpaJasryOxvv+AyK40z7gGjfp/7LQO4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NuZTsPRwo4uDIozw0uNzaBfnfAhow+IaYg7t45vxVKRNM81WZFWG5UPSc2dn+qogtIE7x8Yq8HYt4tNgbpKU4O6DTBdO753Ci1YOqZeXtjCU4mjAJOs3aIO5rwgvt/A8EqL7SCAxArQc5VRrZuQ/+1z6ouhZwLc7Dabo7UDE8nI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=d5f9fZPH; arc=none smtp.client-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fTPRg/21"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-231bf5851b7so50700625ad.0;
-        Wed, 21 May 2025 01:40:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747816811; x=1748421611; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6TJUBt0PQT/0MqXl3YQcZJaW2RHiYQHMpm5oG/g8io0=;
-        b=fTPRg/21LMB+lr6TgZ1eXLFl5MBlK8sOnWutM7ycA1cJaMIkoWPKnVzUy6NEaCqu18
-         eHgUlmK3zMz02zUaIaeaDSB40Ee62LCfGHlVex6LJlNwNOu6Mpo+B32bBmOMzA7+D4Ly
-         Sncn9Ga8RBk48d/AkUhPk9XfumgumEA8AvINPZhH7pwDvtzgbriISviego2Q9FXbmWnG
-         gChZJ7gwU4uaI/DS2lUBPDVb/5+VxrpW0Brak0HvgwkUivQWuWtxlEHRhCQBqfjmsYZ7
-         6h124stg6yetStDKOXNshtXqoUOWC/awWHzNuct5O+GRqwMum3t1qowAUBAEBvgGFwlZ
-         hh0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747816811; x=1748421611;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6TJUBt0PQT/0MqXl3YQcZJaW2RHiYQHMpm5oG/g8io0=;
-        b=r7WHIW449B95dhnJ4SyC/nn5gA2qHUsX9u/sOyLLGlgRsEkcDz34NyofRQTX5n3MFm
-         keyTm+nb5eM4hyXC4YfWik3PWSSvOFGI5u6F+I1wt2eEQFA6DIyPkgNYZipEs2H71KFs
-         rhqGX6x8Ebg70M8W7HsHYrTTF6DjgdDVjfS3On0s1y6ECRnwwO9T/cWWvFJppuzpfmYP
-         pyir3s6BI9nCwXIYV0QZ1wyNiEdg87Qw9GwjVP9xjB7zFuppWdeWVsVmx0/foMF+z2jR
-         ZsVwt37qzfsQMk1BukxrKzBx5nSEYBiFxen7hJgH4rAK+msZGSiY2B5zY1z2NPdtKaiu
-         a57g==
-X-Forwarded-Encrypted: i=1; AJvYcCUM8D83JtBswQ/dL/Sk3YC/N1+eGZQ8wxrJZhYg5B0Ka4hIP/dmGYOjyqxPdAjl/9WWfLjPN3A+3JdTkHK8@vger.kernel.org, AJvYcCUW0347vKvM5hfsfHjhsiHrpg+S1GY6b++zK/KODWKzFVZE+QcuRkx4gwnHbbAlYvophrSi+gPdaJa6@vger.kernel.org, AJvYcCXlidaIShYGBs6eJqmEgMVbPrssA5VsP7B7VetwnDS5IhEubBlVBa10b82xzsVu7SevBzK18mBtxPIfO3dtDQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHl/IeeP5DaDBHrfuZNP1LLSRsq1aNpDqeeoOY3l8FjMx4OlQm
-	zlZ9w4UFlZbC5dbeRDZhdDYE1fR3Wl+nwbnLQj//Ytoo4Fnps93gRhNv
-X-Gm-Gg: ASbGncs+pJhcLa+Gi+caNeu9KvZg8zFdPw3LwgQprzu030aeuwIbeWDejwgEiNZ3ILd
-	rbFtAf2qg32BleOdyi99qHNNkc03bWNeNO6frLbuW8lYuFR7NwMZfS9ynmf0iiyIwg8ZAm3mkPK
-	KGimSXVlY6MtN+yxhPmk5i1fOoWb69234+njlq+GFZhFt0fRUqsdHuQ9wWO2JMomTcQn1lpZd/b
-	qe/67Yr/Vf1xTYGtPLCLRr7qe+7GTJC/D+7hHbBHXAAPYjkGMHsVxayJtHXdpGuAiDu2b6dEMhf
-	+CK3GjdStKSwu/01LEuKwN49c+d+igbZYlVSBnVNhVQBeoYKJXXQoB6D5gvo
-X-Google-Smtp-Source: AGHT+IHor/Q3irw/xtS9W76V6U/4pYcQFpOGtCJAgsOcZxnFuGJ0xvRl2F09RuZWoUs+d6mOC9dQFg==
-X-Received: by 2002:a17:903:1b2d:b0:224:1943:c5c with SMTP id d9443c01a7336-231d44e66b1mr262377695ad.15.1747816811014;
-        Wed, 21 May 2025 01:40:11 -0700 (PDT)
-Received: from nuvole.. ([144.202.86.13])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4e97fa6sm87974975ad.135.2025.05.21.01.40.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 01:40:10 -0700 (PDT)
-From: Pengyu Luo <mitltlatltl@gmail.com>
-To: konrad.dybcio@oss.qualcomm.com
-Cc: andersson@kernel.org,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	konradybcio@kernel.org,
-	krzk+dt@kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	mitltlatltl@gmail.com,
-	robh@kernel.org
-Subject: Re: [PATCH 2/2] arm64: dts: qcom: sm8650: Add support for Oneplus Pad Pro (caihong)
-Date: Wed, 21 May 2025 16:37:45 +0800
-Message-ID: <20250521083746.666228-1-mitltlatltl@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <e4d65994-89dd-4068-a8db-050e698f9bb3@oss.qualcomm.com>
-References: <e4d65994-89dd-4068-a8db-050e698f9bb3@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="d5f9fZPH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
+	s=s31663417; t=1747816805; x=1748421605; i=wahrenst@gmx.net;
+	bh=xKrhmqIiWOmOlpaJasryOxvv+AyK40z7gGjfp/7LQO4=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=d5f9fZPHew8XRi21cvmOsB6f1oB/9SWXu/fKQ+cY99+nYm8qavN1WfU7pHhRm9nR
+	 AfbeK0ZPeocADjRKhXNf+/TSu9To6sfULg+MIc8iXE1zC0VA2NJbdj6NGq3F/PlJY
+	 j4K8XjAdGsLoyc/ZQ2KiXpWOeZwRACZYEFr9Opw03kbpP5ab+RQ0ah7j6MXxbxj3k
+	 qWBErawVep0xkk+L0mYhPxVQ9w9CJub4IcS7AvVvZbTvBrXtbRwn0+E1gfZ/idwgu
+	 ZtfPHGEIwPucypbh5WshTJrPj047DXlcN2wiLJ4Lj9zwQbnIT8ZYIRSW2t4Ic7Ae2
+	 0N7Zke3IQwzQBja6CQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.1.105] ([91.41.216.208]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MC34h-1u5KeH3sYn-00CwUd; Wed, 21
+ May 2025 10:40:05 +0200
+Message-ID: <81fd4ffd-5f1d-47fa-a50c-e0643ee2787e@gmx.net>
+Date: Wed, 21 May 2025 10:40:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/3] ARM: dts: add ngpios for vf610 compatible gpio
+ controllers
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Haibo Chen <haibo.chen@nxp.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Stefan Agner <stefan@agner.ch>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, devicetree@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, peng.fan@nxp.com,
+ conor@kernel.org, Frank Li <Frank.Li@nxp.com>
+References: <20250520-gpio-dts-v3-0-04771c6cf325@nxp.com>
+ <20250520-gpio-dts-v3-2-04771c6cf325@nxp.com>
+ <f0017caf-8fd7-4046-ab7c-71c6560b7a95@gmx.net>
+ <CACRpkda1OKXnma11wKTrBsO_AAXrifVK8RDCKmufdHXBMmtMbQ@mail.gmail.com>
+Content-Language: en-US
+From: Stefan Wahren <wahrenst@gmx.net>
+Autocrypt: addr=wahrenst@gmx.net; keydata=
+ xjMEZ1dOJBYJKwYBBAHaRw8BAQdA7H2MMG3q8FV7kAPko5vOAeaa4UA1I0hMgga1j5iYTTvN
+ IFN0ZWZhbiBXYWhyZW4gPHdhaHJlbnN0QGdteC5uZXQ+wo8EExYIADcWIQT3FXg+ApsOhPDN
+ NNFuwvLLwiAwigUCZ1dOJAUJB4TOAAIbAwQLCQgHBRUICQoLBRYCAwEAAAoJEG7C8svCIDCK
+ JQ4BAP4Y9uuHAxbAhHSQf6UZ+hl5BDznsZVBJvH8cZe2dSZ6AQCNgoc1Lxw1tvPscuC1Jd1C
+ TZomrGfQI47OiiJ3vGktBc44BGdXTiQSCisGAQQBl1UBBQEBB0B5M0B2E2XxySUQhU6emMYx
+ f5QR/BrEK0hs3bLT6Hb9WgMBCAfCfgQYFggAJhYhBPcVeD4Cmw6E8M000W7C8svCIDCKBQJn
+ V04kBQkHhM4AAhsMAAoJEG7C8svCIDCKJxoA/i+kqD5bphZEucrJHw77ujnOQbiKY2rLb0pE
+ aHMQoiECAQDVbj827W1Yai/0XEABIr8Ci6a+/qZ8Vz6MZzL5GJosAA==
+In-Reply-To: <CACRpkda1OKXnma11wKTrBsO_AAXrifVK8RDCKmufdHXBMmtMbQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:uFUFDJdhW4swt/TD+jo8LPeuiKlQ8k4OGhLbj4Ydgc9rvkIN7g3
+ fQE6wAxK+PTLtDVHt9zeryR8kMl9GV1wA0vG5PEfDhZJ8DASqrlmd3wD2o7KYJlkPYNu6xo
+ cqqkm9y4WGd09Ixx8CwrjpYgxaN7PST+ZXSqTnZNntOsNEvfCKSfpioTUD8mXfUSWghNmSV
+ 420WAPbyCtYiOs5sqHpLw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:dscK6y2rpac=;PnLHkn4xxCMDPZ3Gw6LtJVSdcf4
+ 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
+ O7TgvjpokwI5o=
 
-On Wed, May 21, 2025 at 5:54 AM Konrad Dybcio <konrad.dybcio@oss.qualcomm.com> wrote:
-> On 5/20/25 6:42 PM, Pengyu Luo wrote:
-> > The OnePlus Pad Pro is an Android tablet based on the Qualcomm SM8650
-> > platform. Its device codename is "caihong". This patch adds an initial
-> > devicetree for basic functionality.
-> >
-> > Currently working components include:
-> > - Backlight
-> > - Bluetooth
-> > - Battery charging (up to 5v 0.5a) & reporting via pmic-glink (There
-> > are many unknown notifications)
-> > - Display panel ([1])
-> > - Keyboard (via BT)
-> > - Power key & volume keys
-> > - Touchscreen & stylus ([2])
-> > - USB Type-c port
-> > - UFS storage
-> > - Wi-Fi
-> >
-> > The following components are currently non-functional:
-> > - Audio
-> > - Cameras
-> > - Charging pump (dual sc8547)
-> > - Keyboard (via pogo pin)
-> > - Stylus wireless charger (cps8601)
-> > - UCSI over GLINK (PPM init fails)
-> >
-> > [1]: The panel is a dual-DSI, dual-DSC display that requires setting
-> >      'slice_per_pkt = 2' in the DPU configuration. The panel driver
-> >      will be submitted separately later.
-> > [2]: Touchscreen/stylus driver available at:
-> >      https://github.com/OnePlusOSS/android_kernel_modules_and_devicetree_oneplus_sm8650/blob/oneplus/sm8650_v_15.0.0_pad_pro/vendor/oplus/kernel/touchpanel/oplus_touchscreen_v2/Novatek/NT36532_noflash/nvt_drivers_nt36532_noflash.c
-> >      The downstream driver has been ported and tested locally, but
-> >      requires cleanup, it may be submitted separately later.
+Am 21.05.25 um 00:14 schrieb Linus Walleij:
+> On Tue, May 20, 2025 at 12:54=E2=80=AFPM Stefan Wahren <wahrenst@gmx.net=
+> wrote:
 >
-> I have a Lenovo Tab P11 with a nt36523w (-23, not -32) for which I have once
-> poked at the driver for.. I see the driver you posted mentions -23 as well,
-> please keep me in the loop if you're going to upstream it
+>> sorry for asking this dumb question: why do we need the redundant ngpio
+>> property in case there is already gpio-ranges defined? AFAIU the last
+>> cell already contains the necessary information. Or do I missed somethi=
+ng?
+> Not all GPIOs on a gpio controller have to be present in
+> a range.
 >
-
-I see. Actually, they share the most part of nt36xxx, but with
-different memory maps. See
-https://github.com/MiCode/Xiaomi_Kernel_OpenSource/blob/elish-r-oss/drivers/input/touchscreen/nt36xxx/nt36xxx_mem_map.h
-
-> [...]
+> The ranges can be multiple and have holes in them.
 >
-> > +             /*
-> > +              * This memory region is required to initialize the backlight
-> > +              * and display for bootloader. Normally, this region is not
-> > +              * needed. However, due to limitations in the current mainline
-> > +              * KTZ8866 driver, dual backlight ICs cannot be properly
-> > +              * initialized.
-> > +              *
-> > +              * A workaround involving secondary registration was proposed,
-> > +              * but rejected by reviewers. This reserved region is kept as
-> > +              * a temporary solution until a proper initialization method
-> > +              * that satisfies upstream requirements is found.
-> > +              */
-> > +             splash_region {
-> > +                     reg = <0 0xd5100000 0 0x2b00000>;
-> > +                     no-map;
-> > +             };
+> The ranges are also optional.
 >
-> I assume this means "if the bootloader sees /reserved-memory/splash_region,
-> it keeps the display online" - let's not do that, as underscores are not
-> allowed in node names (kernel coding style, not dt syntax)
+> The fact that this DTS file, for this SoC and on this controller
+> happens to have a range mapped right over all of the pins
+> is merely a coinicidence and not a general rule of any kind,
+> it just apophenia playing games on us.
+Thanks for clarification
 >
-
-Right, without it, BL won't initialize backlight and display. We need
-it to initialize backlight here since mainline ktz8866 won't program
-partial registers properly. If there is no other workaround, I will
-remove it to keep kernel coding style.
-
-> > +     };
-> > +
-> > +     /* No Modem */
-> > +     smp2p-modem {
-> > +             status = "disabled";
-> > +     };
->
-> There shouldn't be any harm in keeping this node enabled
->
-
-Ack
-
-> [...]
->
-> > +
-> > +     vph_pwr: vph-pwr-regulator {
-> > +             compatible = "regulator-fixed";
-> > +
-> > +             regulator-name = "vph_pwr";
-> > +             regulator-min-microvolt = <3700000>;
-> > +             regulator-max-microvolt = <3700000>;
-> > +
-> > +             regulator-always-on;
-> > +             regulator-boot-on;
-> > +     };
-> > +
-> > +     wcn7850-pmu {
-> > +             compatible = "qcom,wcn7850-pmu";
-> > +
-> > +             pinctrl-names = "default";
-> > +             pinctrl-0 = <&wlan_en>, <&bt_default>;
->
-> property-n
-> property-names
->
-> please
+> Yours,
+> Linus Walleij
 >
 
-Ack
-
-> [...]
->
-> > +&i2c_hub_0 {
-> > +     clock-frequency = <400000>;
-> > +
-> > +     status = "okay";
-> > +
-> > +     /* sc8547-charger-secondary@6F */
-> > +};
-> > +
-> > +&i2c_hub_2 {
-> > +     clock-frequency = <400000>;
-> > +
-> > +     status = "okay";
-> > +
-> > +     /* sc8547-charger-primary@6F */
-> > +};
-> > +
-> > +&i2c_hub_3 {
-> > +     status = "okay";
-> > +
-> > +     /* pencil-wireless-charger-cps8601@41 */
-> > +};
-> > +
-> > +&i2c_hub_4 {
-> > +     clock-frequency = <400000>;
-> > +
-> > +     status = "okay";
-> > +
-> > +     /* awinic,aw88261_smartpa @34,35,37 */
->
-> We have drivers for these!
->
-> sound/soc/codecs/aw88261.c
->
-
-I noticed that. But I have not looked into the sound yet. I may add
-the nodes after test. BTW the mainline one is quite simple compared
-to the downstream, doubting if it is really working
-https://github.com/OnePlusOSS/android_kernel_modules_and_devicetree_oneplus_sm8650/tree/oneplus/sm8650_v_15.0.0_pad_pro/vendor/oplus/kernel/audio/codecs/aw882xx
-
-> > +};
-> > +
-> > +&i2c_hub_7 {
-> > +     clock-frequency = <400000>;
-> > +
-> > +     status = "okay";
-> > +
-> > +     /* awinic,aw88261_smartpa @34,35,37 */
-> > +};
-> > +
-> > +&i2c2 {
-> > +     status = "okay";
-> > +
-> > +     /* secondary kinetic,ktz8866@11 */
->
-> You can describe it, the driver sets some nonzero default brightness
->
-
-But the backlight framework won't index them, which causes sysfs
-collision when the second instance is registering.
-
-Best wishes,
-Pengyu
