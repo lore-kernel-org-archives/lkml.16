@@ -1,327 +1,253 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5508725F795;
-	Wed, 21 May 2025 10:33:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BBC325EFBD;
+	Wed, 21 May 2025 10:35:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747823627; cv=none; b=D/lPaSSsnoqRsQd4kLM1iYPG6IRlBtIcXL7n0TzNftJgaqQKof/YMUfNO/WIw4Ewp+0OT6WDvsPG9PwM53mzqTSN+oXsL98rFJTrZMgj5s5G/hIW89hW86kehZRaBOF+q1dfCwVYem5r5Av5v09Tv9Ph+GO+f7oiMQjBA37Uz50=
+	t=1747823716; cv=none; b=fYwSv/sf8ZrfVL8gIx1pLlAfIupp2ZWsk/I1TVAGMU0AeNxKPZ1jgDCb/niMP6BajUaRrFOVQkdpufnKLPvj33uq+8giqKNnq6cZLY43mqXFXE//qxF6k5J5qx9xCIKrXa9/TE74peRKDJy2hUfMbibJDQvL1BHo6jSwiQRljRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747823627; c=relaxed/simple;
-	bh=2U19slZiU2ALPkhTZXk0jb1oR2jZ9lkTd4kFkjv2rDw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ffj1lD/Xqs5y/Gl3lbLNOX9qSXoxrY2GMVr+40VKmqYblvz16nDfA8xBTosktTXmUctXNUnBYeK6qVChs/+3eqfjkgnJLPWJKHzi5cNWtsdyt3B9rAe0vupTOhfIq7+P8jRnBgbBHEni4dYXM/PQegMK+4xhOVRJdz38e0righc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=o712bBwh; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1747823716; c=relaxed/simple;
+	bh=Bc0tuxh6FuJgjjna2ZA5ICMvztWDekZiHjGH1e4t3aQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kPH5t+xFWw/F+h3IOjqWeLCTzUSP+F3oe0pyYuE6D+9wAWGHhfTFg+nNvQ+/wW+eL94wy73FcEWVcgP2VnOACS3gpAFnXfWuOJavds0T4ElNMAJBGrPit3XJoqM+2vKa9/lr8AjCT1tOdH/ZGJL8kq6tQ/BFEM5BSevJU8ousrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=eDq/77FY; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="o712bBwh"
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54L97Vk2020294;
-	Wed, 21 May 2025 12:33:28 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	saaphKQ0bZ0mL7ccRrOXfxeZajtyiB5V88KyMoAwc+E=; b=o712bBwhh6e8IhY2
-	FozpW+sUcK5R8FTF9/xV4nfjKdZZRVwdO2CliRKm1BqHRNIESAvkO6iQsGYZQFgU
-	fIV/n5uBiTputRD0EY7l4iExwQwxWqB/fYK8Ri43sJzbS67IhBfFEyw9ri9l3gQs
-	nYuFfLcdvyhBHF3nRQAhuRiX06l//yPZ/lhuZKNkopvlLWwHV7sEva/qQgndX3yg
-	Sh4oI5wt39fRCnS9f8Lo+0PnUMLCwD0P9w/D/sf6GIYfS17B8YePjLC+9ALTrhE9
-	/ankL4/IND+LCa67Y1GwBYbMjvVAZWZuR8t7TJhbDzKS5H46JRHYHjovUowwNVQN
-	9/vnKA==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46rwff3hp9-1
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="eDq/77FY"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54L8pd6Z014503;
+	Wed, 21 May 2025 10:35:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=OnL2JX
+	aeHotq86V5UBxO4l5O+IBgRMNGBuvWWVOJgCw=; b=eDq/77FYm2qIZjkTd8ZBSk
+	Z6egjzV6wPflUaml1pHfFzppoS464s17qIPib/LO/VbzBhsq2ZfB8oHoamsj8SXR
+	suieV+YEtyENELG4iv2YvILt5IY6Z7x72vV/dtp16fzrM6oEHUDJcrdCzyj4ICiX
+	FWlnueZSMkFGKc4XRvoij0SOT+MicVGUXRCCrzyJ8ZCME+bl1wkCPyXb6vTY8+mH
+	Y/B4AfIy564zHVpgkTuA6xXqVRVfWZedWP/h6v8D+bsJfBEyAXI+7xUIPL+zaqRG
+	3iAzw3Rr3xwFYl9gHRSxnYfVOuM3QuUm/Xgo/VE+g4AcmzabzUf+1l5BowHIB7OQ
+	==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46sbph0ekd-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 12:33:28 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 358DD40047;
-	Wed, 21 May 2025 12:32:20 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3969FB6001B;
-	Wed, 21 May 2025 12:31:37 +0200 (CEST)
-Received: from [10.252.30.214] (10.252.30.214) by SHFDAG1NODE3.st.com
- (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 21 May
- 2025 12:31:36 +0200
-Message-ID: <8c72fe60-0ad6-450e-bfc3-5c64565c19f1@foss.st.com>
-Date: Wed, 21 May 2025 12:31:35 +0200
+	Wed, 21 May 2025 10:35:05 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54L9u1Qn010595;
+	Wed, 21 May 2025 10:35:03 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46rwnmbqhu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 21 May 2025 10:35:03 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54LAYxgU53018952
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 21 May 2025 10:34:59 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C53042004B;
+	Wed, 21 May 2025 10:34:59 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 34E3E20040;
+	Wed, 21 May 2025 10:34:59 +0000 (GMT)
+Received: from li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com (unknown [9.87.130.155])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed, 21 May 2025 10:34:59 +0000 (GMT)
+Date: Wed, 21 May 2025 12:34:57 +0200
+From: Sumanth Korikkar <sumanthk@linux.ibm.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-mm <linux-mm@kvack.org>, Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH 1/4] mm/memory_hotplug: Add interface for runtime
+ (de)configuration of memory
+Message-ID: <aC2sUdhavboOgS83@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
+References: <20241202082732.3959803-1-sumanthk@linux.ibm.com>
+ <20241202082732.3959803-2-sumanthk@linux.ibm.com>
+ <3151b9a0-3e96-4820-b6af-9f9ec4996ee1@redhat.com>
+ <Z08WpCxt4lsIsjcN@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
+ <1b9285ba-4118-4572-9392-42ec6ba6728c@redhat.com>
+ <aCx-SJdHd-3Z12af@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
+ <fca5fe72-55a8-456c-a179-56776848091d@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Linux-stm32] [PATCH v2 1/8] dt-bindings: pinctrl: stm32:
- Introduce HDP
-To: =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>,
-        Linus
- Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime
- Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20250520-hdp-upstream-v2-0-53f6b8b5ffc8@foss.st.com>
- <20250520-hdp-upstream-v2-1-53f6b8b5ffc8@foss.st.com>
-Content-Language: en-US
-From: Amelie Delaunay <amelie.delaunay@foss.st.com>
-In-Reply-To: <20250520-hdp-upstream-v2-1-53f6b8b5ffc8@foss.st.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE3.st.com
- (10.75.129.71)
+In-Reply-To: <fca5fe72-55a8-456c-a179-56776848091d@redhat.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDA5NCBTYWx0ZWRfX1Ir7nocZ0ZE7 VwLaSFnCBcLO9gRJZ9hYfiAMbU76FNh4iApIpKJXzmSoT4vn8Lg/IQsyfdLK+Zoo+3Lltk+M4dt WLrbH+L/w3uVcn3PaOptjzibwO6gX4snCn68eKGHOUgnSg7AqiEQacJX/TW1NIyLk74DiQa0Kgo
+ 3R7kuIRsH/LnPCinvoUJmCM19GWwY1dJ//Vw3W6duRncWG7Jqh//UHn22WpssalgytAR8cIoag0 Oeb43/6GaKAoiElpSR4dB9sRvAK9zqI4j0huC1qZOk5Op7TdXK7eqC9GNpwOP4c/u0wJCs3cD0R Ra69DlOVVZSqzCex62bUhtmAUEiRT5ul8SfAXwBLSFxpR68pfPZrOBzhsxUEJteLPiOSFg6Skg4
+ lbXbrBX+iK02e+5l/C8DEBK9bgfaBj1C6lfu/yb5kOcWtiQROKDDVPJeIG/baEMajccqj7t3
+X-Proofpoint-ORIG-GUID: n9icrul-5QQRR8-0XybbBDzAXo3tLAj0
+X-Authority-Analysis: v=2.4 cv=L5kdQ/T8 c=1 sm=1 tr=0 ts=682dac59 cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=E8j359MtUMzoLxJxKO8A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: n9icrul-5QQRR8-0XybbBDzAXo3tLAj0
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-21_03,2025-05-20_03,2025-03-28_01
+ definitions=2025-05-21_02,2025-05-20_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ priorityscore=1501 lowpriorityscore=0 spamscore=0 clxscore=1015
+ mlxlogscore=999 suspectscore=0 phishscore=0 impostorscore=0 malwarescore=0
+ mlxscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505210094
 
-
-
-On 5/20/25 17:02, Clément Le Goffic wrote:
-> 'HDP' stands for Hardware Debug Port, it is an hardware block in
-> STMicrolectronics' MPUs that let the user decide which internal SoC's
-> signal to observe.
-> It provides 8 ports and for each port there is up to 16 different
-> signals that can be output.
-> Signals are different for each MPU.
+> > Introduce new interface on s390 with the following attributes:
+> > 
+> > 1) Attribute1:
+> > /sys/firmware/memory/block_size_bytes
 > 
-> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
-> ---
->   .../bindings/pinctrl/st,stm32-pinctrl-hdp.yaml     | 188 +++++++++++++++++++++
->   1 file changed, 188 insertions(+)
+> I assume this will be the storage increment size.
+
+Hi David,
+
+No, this is memory block size.
+
+> > > 2) Attribute2:
+> > /sys/firmware/memory/memoryX/config
+> > echo 0 > /sys/firmware/memory/memoryX/config  -> deconfigure memoryX
+> > echo 1 > /sys/firmware/memory/memoryX/config ->  configure memoryX
 > 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl-hdp.yaml b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl-hdp.yaml
-> new file mode 100644
-> index 000000000000..6251e9c16ced
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl-hdp.yaml
-> @@ -0,0 +1,188 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright (C) STMicroelectronics 2025.
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/st,stm32-pinctrl-hdp.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: STM32 Hardware Debug Port Mux/Config
-> +
-> +maintainers:
-> +  - Clément LE GOFFIC <clement.legoffic@foss.st.com>
-> +
-> +description:
-> +  STMicroelectronics's STM32 MPUs integrate a Hardware Debug Port (HDP).
-> +  It allows to output internal signals on SoC's GPIO.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - st,stm32mp131-hdp
-> +      - st,stm32mp151-hdp
-> +      - st,stm32mp251-hdp
-> +
+> And these would configure individual storage increments, essentially calling
+> add_memory() and (if possible because we could offline the memory)
+> remove_memory().
 
-Hi Rob, Hi Krzyztof,
+configure or deconfigure memory in units of entire memory blocks.
 
-I hope to open Pandora's box one last time on this subject.
+As I understand it, add_memory() operates on memory block granularity,
+and this is enforced by check_hotplug_memory_range(), which ensures the
+requested range aligns with the memory block size.
 
-I've read all reviews of all STM32 bindings.
-
-Very recent STM32 bindings, for STM32MP25, STM32MP23, STM32MP21, are 
-using compatibles like st,stm32mp25-xxx, st,stm32mp23-xxx, 
-st,stm32mp21xx (e.g. st,stm32mp25-omm, st,stm32mp21-rcc, 
-st,stm32mp23-syscon, st,stm32mp25-lptimer, st,stm32mp25-pcie-rc, ...).
-
-If compatible should inconditionnaly match the SoC dtsi, why don't we 
-have st,stm32mp131-hdp, st,stm32mp133-hdp, st,stm32mp135-hdp, ... ?
-
-https://www.st.com/en/microcontrollers-microprocessors/stm32mp1-series.html
-https://www.st.com/en/microcontrollers-microprocessors/stm32mp2-series.html
-"The STM32MP1 series is available in six different lines, which are, on 
-one hand STM32MP15x pin-to-pin compatible, and on the other hand 
-STM32MP13x pin-to-pin compatible."
-"The STM32MP2 series is available in seven different lines, which are 
-pin-to-pin compatible".
-
-For HDP, it means functions will be the same for each lines of 
-STM32MP13x, for each lines of STM32MP15x, ...
-
-So, why not having compatibles like st,stm32mp13-hdp, st,stm32mp15-hdp, 
-st,stm32mp25-hpd?
-
-Thanks,
-Amelie
-
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +patternProperties:
-> +  "^hdp[0-7]-pins$":
-> +    type: object
-> +    $ref: pinmux-node.yaml#
-> +    additionalProperties: false
-> +
-> +    properties:
-> +      pins:
-> +        enum: [ HDP0, HDP1, HDP2, HDP3, HDP4, HDP5, HDP6, HDP7 ]
-> +
-> +      function:
-> +        maxItems: 1
-> +
-> +    required:
-> +      - function
-> +      - pins
-> +
-> +allOf:
-> +  - $ref: pinctrl.yaml#
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: st,stm32mp131-hdp
-> +    then:
-> +      patternProperties:
-> +        "^hdp[0-7]-pins$":
-> +          properties:
-> +            function:
-> +              enum: [ pwr_pwrwake_sys, pwr_stop_forbidden, pwr_stdby_wakeup, pwr_encomp_vddcore,
-> +                      bsec_out_sec_niden, aiec_sys_wakeup, none, ddrctrl_lp_req,
-> +                      pwr_ddr_ret_enable_n, dts_clk_ptat, sram3ctrl_tamp_erase_act, gpoval0,
-> +                      pwr_sel_vth_vddcpu, pwr_mpu_ram_lowspeed, ca7_naxierrirq, pwr_okin_mr,
-> +                      bsec_out_sec_dbgen, aiec_c1_wakeup, rcc_pwrds_mpu, ddrctrl_dfi_ctrlupd_req,
-> +                      ddrctrl_cactive_ddrc_asr, sram3ctrl_hw_erase_act, nic400_s0_bready, gpoval1,
-> +                      pwr_pwrwake_mpu, pwr_mpu_clock_disable_ack, ca7_ndbgreset_i,
-> +                      bsec_in_rstcore_n, bsec_out_sec_bsc_dis, ddrctrl_dfi_init_complete,
-> +                      ddrctrl_perf_op_is_refresh, ddrctrl_gskp_dfi_lp_req, sram3ctrl_sw_erase_act,
-> +                      nic400_s0_bvalid, gpoval2, pwr_sel_vth_vddcore, pwr_mpu_clock_disable_req,
-> +                      ca7_npmuirq0, ca7_nfiqout0, bsec_out_sec_dftlock, bsec_out_sec_jtag_dis,
-> +                      rcc_pwrds_sys, sram3ctrl_tamp_erase_req, ddrctrl_stat_ddrc_reg_selfref_type0,
-> +                      dts_valobus1_0, dts_valobus2_0, tamp_potential_tamp_erfcfg, nic400_s0_wready,
-> +                      nic400_s0_rready, gpoval3, pwr_stop2_active, ca7_nl2reset_i,
-> +                      ca7_npreset_varm_i, bsec_out_sec_dften, bsec_out_sec_dbgswenable,
-> +                      eth1_out_pmt_intr_o, eth2_out_pmt_intr_o, ddrctrl_stat_ddrc_reg_selfref_type1,
-> +                      ddrctrl_cactive_0, dts_valobus1_1, dts_valobus2_1, tamp_nreset_sram_ercfg,
-> +                      nic400_s0_wlast, nic400_s0_rlast, gpoval4, ca7_standbywfil2,
-> +                      pwr_vth_vddcore_ack, ca7_ncorereset_i, ca7_nirqout0, bsec_in_pwrok,
-> +                      bsec_out_sec_deviceen, eth1_out_lpi_intr_o, eth2_out_lpi_intr_o,
-> +                      ddrctrl_cactive_ddrc, ddrctrl_wr_credit_cnt, dts_valobus1_2, dts_valobus2_2,
-> +                      pka_pka_itamp_out, nic400_s0_wvalid, nic400_s0_rvalid, gpoval5,
-> +                      ca7_standbywfe0, pwr_vth_vddcpu_ack, ca7_evento, bsec_in_tamper_det,
-> +                      bsec_out_sec_spniden, eth1_out_mac_speed_o1, eth2_out_mac_speed_o1,
-> +                      ddrctrl_csysack_ddrc, ddrctrl_lpr_credit_cnt, dts_valobus1_3, dts_valobus2_3,
-> +                      saes_tamper_out, nic400_s0_awready, nic400_s0_arready, gpoval6,
-> +                      ca7_standbywfi0, pwr_rcc_vcpu_rdy, ca7_eventi, ca7_dbgack0, bsec_out_fuse_ok,
-> +                      bsec_out_sec_spiden, eth1_out_mac_speed_o0, eth2_out_mac_speed_o0,
-> +                      ddrctrl_csysreq_ddrc, ddrctrl_hpr_credit_cnt, dts_valobus1_4, dts_valobus2_4,
-> +                      rng_tamper_out, nic400_s0_awavalid, nic400_s0_aravalid, gpoval7 ]
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: st,stm32mp151-hdp
-> +    then:
-> +      patternProperties:
-> +        "^hdp[0-7]-pins$":
-> +          properties:
-> +            function:
-> +              enum: [ pwr_pwrwake_sys, cm4_sleepdeep, pwr_stdby_wkup, pwr_encomp_vddcore,
-> +                      bsec_out_sec_niden, none, rcc_cm4_sleepdeep, gpu_dbg7, ddrctrl_lp_req,
-> +                      pwr_ddr_ret_enable_n, dts_clk_ptat, gpoval0, pwr_pwrwake_mcu, cm4_halted,
-> +                      ca7_naxierrirq, pwr_okin_mr, bsec_out_sec_dbgen, exti_sys_wakeup,
-> +                      rcc_pwrds_mpu, gpu_dbg6, ddrctrl_dfi_ctrlupd_req, ddrctrl_cactive_ddrc_asr,
-> +                      gpoval1, pwr_pwrwake_mpu, cm4_rxev, ca7_npmuirq1, ca7_nfiqout1,
-> +                      bsec_in_rstcore_n, exti_c2_wakeup, rcc_pwrds_mcu, gpu_dbg5,
-> +                      ddrctrl_dfi_init_complete, ddrctrl_perf_op_is_refresh,
-> +                      ddrctrl_gskp_dfi_lp_req, gpoval2, pwr_sel_vth_vddcore, cm4_txev, ca7_npmuirq0,
-> +                      ca7_nfiqout0, bsec_out_sec_dftlock, exti_c1_wakeup, rcc_pwrds_sys, gpu_dbg4,
-> +                      ddrctrl_stat_ddrc_reg_selfref_type0, ddrctrl_cactive_1, dts_valobus1_0,
-> +                      dts_valobus2_0, gpoval3, pwr_mpu_pdds_not_cstbydis, cm4_sleeping, ca7_nreset1,
-> +                      ca7_nirqout1, bsec_out_sec_dften, bsec_out_sec_dbgswenable,
-> +                      eth_out_pmt_intr_o, gpu_dbg3, ddrctrl_stat_ddrc_reg_selfref_type1,
-> +                      ddrctrl_cactive_0, dts_valobus1_1, dts_valobus2_1, gpoval4, ca7_standbywfil2,
-> +                      pwr_vth_vddcore_ack, ca7_nreset0, ca7_nirqout0, bsec_in_pwrok,
-> +                      bsec_out_sec_deviceen, eth_out_lpi_intr_o, gpu_dbg2, ddrctrl_cactive_ddrc,
-> +                      ddrctrl_wr_credit_cnt, dts_valobus1_2, dts_valobus2_2, gpoval5,
-> +                      ca7_standbywfi1, ca7_standbywfe1, ca7_evento, ca7_dbgack1,
-> +                      bsec_out_sec_spniden, eth_out_mac_speed_o1, gpu_dbg1, ddrctrl_csysack_ddrc,
-> +                      ddrctrl_lpr_credit_cnt, dts_valobus1_3, dts_valobus2_3, gpoval6,
-> +                      ca7_standbywfi0, ca7_standbywfe0, ca7_dbgack0, bsec_out_fuse_ok,
-> +                      bsec_out_sec_spiden, eth_out_mac_speed_o0, gpu_dbg0, ddrctrl_csysreq_ddrc,
-> +                      ddrctrl_hpr_credit_cnt, dts_valobus1_4, dts_valobus2_4, gpoval7 ]
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: st,stm32mp251-hdp
-> +    then:
-> +      patternProperties:
-> +        "^hdp[0-7]-pins$":
-> +          properties:
-> +            function:
-> +              enum: [ pwr_pwrwake_sys, cpu2_sleep_deep, bsec_out_tst_sdr_unlock_or_disable_scan,
-> +                      bsec_out_nidenm, bsec_out_nidena, cpu2_state_0, rcc_pwrds_sys, gpu_dbg7,
-> +                      ddrss_csysreq_ddrc, ddrss_dfi_phyupd_req, cpu3_sleep_deep,
-> +                      d2_gbl_per_clk_bus_req, pcie_usb_cxpl_debug_info_ei_0,
-> +                      pcie_usb_cxpl_debug_info_ei_8, d3_state_0, gpoval0, pwr_pwrwake_cpu2,
-> +                      cpu2_halted, cpu2_state_1, bsec_out_dbgenm, bsec_out_dbgena, exti1_sys_wakeup,
-> +                      rcc_pwrds_cpu2, gpu_dbg6, ddrss_csysack_ddrc, ddrss_dfi_phymstr_req,
-> +                      cpu3_halted, d2_gbl_per_dma_req, pcie_usb_cxpl_debug_info_ei_1,
-> +                      pcie_usb_cxpl_debug_info_ei_9, d3_state_1, gpoval1, pwr_pwrwake_cpu1,
-> +                      cpu2_rxev, cpu1_npumirq1, cpu1_nfiqout1, bsec_out_shdbgen, exti1_cpu2_wakeup,
-> +                      rcc_pwrds_cpu1, gpu_dbg5, ddrss_cactive_ddrc, ddrss_dfi_lp_req, cpu3_rxev,
-> +                      hpdma1_clk_bus_req, pcie_usb_cxpl_debug_info_ei_2,
-> +                      pcie_usb_cxpl_debug_info_ei_10, d3_state_2, gpoval2, pwr_sel_vth_vddcpu,
-> +                      cpu2_txev, cpu1_npumirq0, cpu1_nfiqout0, bsec_out_ddbgen, exti1_cpu1_wakeup,
-> +                      cpu3_state_0, gpu_dbg4, ddrss_mcdcg_en, ddrss_dfi_freq_0, cpu3_txev,
-> +                      hpdma2_clk_bus_req, pcie_usb_cxpl_debug_info_ei_3,
-> +                      pcie_usb_cxpl_debug_info_ei_11, d1_state_0, gpoval3, pwr_sel_vth_vddcore,
-> +                      cpu2_sleeping, cpu1_evento, cpu1_nirqout1, bsec_out_spnidena, exti2_d3_wakeup,
-> +                      eth1_out_pmt_intr_o, gpu_dbg3, ddrss_dphycg_en, ddrss_obsp0, cpu3_sleeping,
-> +                      hpdma3_clk_bus_req, pcie_usb_cxpl_debug_info_ei_4,
-> +                      pcie_usb_cxpl_debug_info_ei_12, d1_state_1, gpoval4, cpu1_standby_wfil2,
-> +                      none, cpu1_nirqout0, bsec_out_spidena, exti2_cpu3_wakeup, eth1_out_lpi_intr_o,
-> +                      gpu_dbg2, ddrctrl_dfi_init_start, ddrss_obsp1, cpu3_state_1,
-> +                      d3_gbl_per_clk_bus_req, pcie_usb_cxpl_debug_info_ei_5,
-> +                      pcie_usb_cxpl_debug_info_ei_13, d1_state_2, gpoval5, cpu1_standby_wfi1,
-> +                      cpu1_standby_wfe1, cpu1_halted1, cpu1_naxierrirq, bsec_out_spnidenm,
-> +                      exti2_cpu2_wakeup, eth2_out_pmt_intr_o, gpu_dbg1, ddrss_dfi_init_complete,
-> +                      ddrss_obsp2, d2_state_0, d3_gbl_per_dma_req, pcie_usb_cxpl_debug_info_ei_6,
-> +                      pcie_usb_cxpl_debug_info_ei_14, cpu1_state_0, gpoval6, cpu1_standby_wfi0,
-> +                      cpu1_standby_wfe0, cpu1_halted0, bsec_out_spidenm, exti2_cpu1__wakeup,
-> +                      eth2_out_lpi_intr_o, gpu_dbg0, ddrss_dfi_ctrlupd_req, ddrss_obsp3, d2_state_1,
-> +                      lpdma1_clk_bus_req, pcie_usb_cxpl_debug_info_ei_7,
-> +                      pcie_usb_cxpl_debug_info_ei_15, cpu1_state_1, gpoval7 ]
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/stm32mp1-clks.h>
-> +
-> +    pinctrl@54090000 {
-> +      compatible = "st,stm32mp15-hdp";
-> +      reg = <0x54090000 0x400>;
-> +      clocks = <&rcc HDP>;
-> +      pinctrl-names = "default";
-> +      pinctrl-0 = <&hdp2_gpo>;
-> +      hdp2_gpo: hdp2-pins {
-> +        function = "gpoval2";
-> +        pins = "HDP2";
-> +      };
-> +    };
+> > 3) Attribute3:
+> > /sys/firmware/memory/memoryX/altmap_required
+> > echo 0 > /sys/firmware/memory/memoryX/altmap_required -> noaltmap
+> > echo 1 > /sys/firmware/memory/memoryX/altmap_required -> altmap
+> > echo N > /sys/firmware/memory/memoryX/altmap_required -> variable size
+> > 	 altmap grouping (possible future requirements),
+> > 	 where N specifies the number of memory blocks that the current
+> > 	 memory block manages altmap. There are two possibilities here:
+> >          * If the altmap cannot fit entirely within memoryX, it can
+> >            extend into memoryX+1, meaning the altmap metadata will span
+> >            across multiple memory blocks.
+> >          * If the altmap for memory range cannot fit within memoryX,
+> >            then config will return -EINVAL.
 > 
+> Do we really still need this when we can configure/deconfigure?
+> 
+> I mean, on s390x, the most important use case for memmap-on-memory was not
+> wasting memory for offline memory blocks.
+> 
+> But with a configuration interface like this ... the only benefit is being
+> able to more-reliably add memory in low-memory conditions. An unlikely
+> scenario with standby storage IMHO.
+> 
+> Note that I dislike exposing "altmap" to the user :) Dax calls it
+> "memmap_on_memory", and it is a device attrivute.
+> 
+> As soon as we go down that path we have the complexity of having to group
+> memory blocks etc, and if we can just not go down that path right now it
+> will make things a lot simpler.
+> 
+> (especially, as you document above, the semantics become *really* weird)
+> 
+> As yet another point, I am not sure if someone really needs a per-memory
+> block control of the memmap-on-memory feature.
+> 
+> If we could simplify here, that would be great ...
+
+The original motivation for introducing memmap_on_memory on s390 was to
+avoid using online memory to store struct page metadata, particularly
+for standby memory blocks. This became critical in cases where there was
+an imbalance between standby and online memory, potentially leading to
+boot failures due to insufficient memory for metadata allocation.
+
+To address this, memmap_on_memory was utilized on s390. However, in its
+current form, it adds altmap metadata at the start of each memory block
+at the time of addition, and this configuration is static. It cannot be
+changed at runtime.
+
+I was wondering about the following practical scenario:
+
+When online memory is nearly full, the user can add a standby memory
+block with memmap_on_memory enabled. This allows the system to avoid
+consuming already scarce online memory for metadata.
+
+After enabling and bringing that standby memory online, the user now
+has enough free online memory to add additional memory blocks without
+memmap_on_memory. These later blocks can provide physically contiguous
+memory, which is important for workloads or devices requiring continuous
+physical address space.
+
+If my interpretation is correct, I see good potential for this be be
+useful.
+
+As you pointed out, how about having something similar to
+73954d379efd ("dax: add a sysfs knob to control memmap_on_memory behavior")
+
+i.e.
+
+1) To configure/deconfigure a memory block
+/sys/firmware/memory/memoryX/config
+
+1 -> configure
+0 -> deconfigure
+
+2) Determine whether memory block should have memmap_on_memory or not.
+/sys/firmware/memory/memoryX/memmap_on_memory
+1 -> with altmap
+0 -> without altmap
+
+This attribute must be set before the memoryX is configured. Or else, it
+will default to CONFIG_MHP_MEMMAP_ON_MEMORY / memmap_on_memory parameter.
+
+
+> > NOTE: “altmap_required” attribute must be set before setting the block as
+> > configured via “config” attribute. (Dependancy)
+> > 
+> > 4) Additionally add the patch to check if the memory block is configured
+> > with altmap or not. Similar to [RFC PATCH 2/4] mm/memory_hotplug: Add
+> > memory block altmap sysfs attribute.
+> > 
+> > Most of the code changes will be s390 specific with this interface.
+> > 
+> > Request your inputs on the potential interface. Thank you.
+> > 
+> > Other questions:
+> > 1. I’m just wondering how variable-sized altmap grouping will be
+> > structured in the future. Is it organized by grouping the memory blocks
+> > that require altmap, with the first memory block storing the altmap
+> > metadata for all of them? Or is it possible for the altmap metadata to
+> > span across multiple memory blocks?
+> 
+> That exactly is unclear, which is why we should probably avoid doing that
+> for now. Also, with other developments happening (memdesc), and ongoing
+> effort to shrink "struct page", maybe we will not even need most of this in
+> the future?
+> 
+> > 
+> > 2. OR, will dedicated memory blocks be used exclusively for altmap
+> > metadata, which the memory blocks requiring altmap would then consume? (To
+> > prevent fragmentation) ?
+> 
+> One idea I had was that you would do the add_memory() in bigger granularity.
+> 
+> Then, the memory blocks hosting the memmap would have to get onlined first.
+> And offlining of them would fail until all dependent ones were offlined.
+> 
+> That would at least limit the impact.
+> 
+> Then, the question would be, how could you "group" these memory blocks from
+> your interface to do a single add_memory() etc.
+> 
+> But again, maybe we can leave that part out for now ...
+
+Thank you David for the details. I will ignore/leave variable sized
+altmap grouping for now.
