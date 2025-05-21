@@ -1,147 +1,128 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2603E22F745;
-	Wed, 21 May 2025 21:45:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F897184;
+	Wed, 21 May 2025 21:45:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747863910; cv=none; b=plChZW6bo1buyKu44tLDemMIQ4Df/7/2JpJDnQaOodYkLwHIJ2fWoTet8Ne5KkJ0dI106kZvjV0dL3nCSSD/qJOPIl8055cMmtl/pH+qsmkVswWS7QBKr1tmTacAH2WjN6SCH3DJJUZIuPg45rHKDp8gUjgz9hmkvnd3PAvmTt0=
+	t=1747863961; cv=none; b=L/ZNc0YhGdebDszC0faTTjFqXXVjuXjvShs9HeuHwHM0z9s0Rze0xaqjimK934SFBIphGdNFCCkMave3CJuXQ0UrwKqnUT1Pgmqh4ofAVKq2R3WoEr5WnKwHRl/bPuMNMb4CDhhUfHHML1GxP724kaFB+eMWHEBiP1GDBTf8vd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747863910; c=relaxed/simple;
-	bh=5UDoD6uNiAVnwsFbRmC2Sqg/tMItLCEkm2lxo9GT++0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=BB99h0sfyypTJihwL7A38IUbEhH7N89HznHj+EpIC63sL4ch++ypvidWICAKjQkTrWSS/exM7xoXMkGgh2U/KK+xyJpja4tSHrRAtcgacR33jovNaHjvYLaLxFwhNn8vLgvTbf6m0tJ3i2MHsrhhGIEEYS9/iogiBWOWs+WpHfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=TZ58m1Ao; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1747863961; c=relaxed/simple;
+	bh=dSot4tq/1fn2N5PS2olD24aSA77F0AHNMa2LLzKmI+0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fwD4UVSJftcFjlXfkowSaRrTWjSHiphUYV736HxkxJt8OBDQG800p0rEaDW2k7EWcjcon0B3c5zxVplbKY0YlBAZ3090Wk00DZ9Vx6LeaN6NtFV4t11+tlKJ61oycwu4NpFoigYOdayOxB6JSlYPqdAXSveU7pMwyXAfyUKrdRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LdXe1x3C; arc=none smtp.client-ip=209.85.222.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="TZ58m1Ao"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54LHowQQ013436;
-	Wed, 21 May 2025 21:44:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	hbYNi7fzlTGKCVUTa6TmmbhtpKJ4cc+vpIiXEXf5LU0=; b=TZ58m1AoFuk8j2Et
-	ih70mRwnV14LkdG0OlhcQzMGEe4oupwQt2+sCQ7hPOujNzemZxRvDcFbLPhFb7jj
-	n7DVP4BxcAyDsXjXaIqad9qR2TCwXeqZUZKzArjjDhXVE/CtKNZk9XH95zteLO1R
-	KppSn+MGoa7nNPc0Bhxopvh9uv6UWdBq1Rs+FK9waSSCOEBOmeBPpx0ojvuaHx91
-	WLnphvJOt6z1RajtHwcZQwpSdq8YFgdjqakwu1Oj6Q1dEGhpzF+mqQxzqnI5OnEs
-	ZmzXwJWUNABiPxqbuigb1Z1ypcq+ohAM7HObUeCpAI0xcDwrOeaEni5bMndTCUDB
-	W8yZNw==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwh5ccf5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 21:44:49 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54LLimpW015166
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 21:44:48 GMT
-Received: from [10.216.45.12] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 21 May
- 2025 14:44:42 -0700
-Message-ID: <5d63551f-5401-4c4a-981f-1fa71d73387f@quicinc.com>
-Date: Thu, 22 May 2025 03:14:39 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LdXe1x3C"
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7c5f720c717so978261385a.0;
+        Wed, 21 May 2025 14:45:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747863959; x=1748468759; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8RbQ0bw97LqXPRFQbGkmic8OcupiLMtaUApD5+Mskf4=;
+        b=LdXe1x3Ck0SuDrHgRyNJZ9kLG60w0t0J/yqG52PUoDmra11lEPR7rz/AgZgh0Iw809
+         VMGMHqI+r2sPciSjswlzOZ+eQyXIXLqgiEqJbu+eUwgrpb16iaiWgFf+3cHfgEOyA3LF
+         1PvrbgxgBwVPdZb+R2aMeWpKdGA+IVwxq0VngqKx1SSO39lwY41kBXEHe8EHPpfJh3i3
+         fgpSdAz80n2Du/gpjJUYHdsdTuAwJTLmANiRckpd7AdhlReVkSvPy4ThS//YXWTa5out
+         EC/inRxP1yFoDc9J0pe0IHQ/SUIc1Bu7rBHjqycMfqQpw5M8RdW5dnPecLksfEvoXAtq
+         3OuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747863959; x=1748468759;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8RbQ0bw97LqXPRFQbGkmic8OcupiLMtaUApD5+Mskf4=;
+        b=E7z3T1N2woMU+w57+/0g6s9xG+buxKixphRXMfQAOygZIizaWKtrlF9/8GBwxhzDQX
+         CIQjh1UvAyWvm4VW4bSwY42KKfAc6NpVi3TojG18aGZmTtGJ9kJ0zo0O3R3LnyB5id4j
+         2nquFRV7ioJ1C0QK5Ph6Q7GGgdDALhpCzMxV7+4PsxuQxNZt3KTEIGkD0XQ5/YBapBUm
+         j/uVpJDEvvPuYvd/G436XGvg3Pq7bKNLWg2qM0aPnYCsGa/2yayhDwR2ZIgYO/iev9pR
+         7wvJNQYziU0PKV7gexHV6U+sDiTh+6PnC6FqRdl2Hie+JaRqrc/mZxk+Le9nWCcLFS5P
+         jzhw==
+X-Forwarded-Encrypted: i=1; AJvYcCUW53b9S4MBpgb5zndAaX93kQharYwN9xuBw/wU8RPMyfC9S9hZ/0vrklOvB5ZFScluhGxZ44NQHC+TWg==@vger.kernel.org, AJvYcCVPzvGVU6HL+FTYOZ58QoHPeEupK9Jo7WnL4n4Af+8ESrWfWr9NKe6Jra/3REGZilwG91tJrwg6RoD9wiTd@vger.kernel.org
+X-Gm-Message-State: AOJu0YyL0HIyZRN1lJGLq9o8C5RRx5OY5fJAYGyq97WJdGB1Fi23tm9b
+	rhpddyH3k4TT2dI9ciEnS42ifJnFvFWOKTItMQUbPtCcfuBWAirSUzSEjeKFc8yoCqJybwZnf08
+	ZHMTsIwLHNovrbr9aNpeG7v2rxC42HWE=
+X-Gm-Gg: ASbGncvmrAe3inCJ0vFAtkqhsLpUw7XpAJ8sQtE/I6C/BmKIztVw3VsvPN/qqoe2ES8
+	uMMu1ioGr0exuKnRFyEmKugMI4sqRMt16blKNFl4goNaIHzbGvXzWc9kdChcG4o3HaFgM4KkZD+
+	c2+/UekChuUDZvPLHo95115yvRC/syRsHAIg==
+X-Google-Smtp-Source: AGHT+IHKrqvGTp5B3iILNzwWeRXbZ+qaaV2MFonH6ti3dxckN/8BqA70IxxjmFitrdq8qNS0DCGJSV/xOIz4q8nSWhw=
+X-Received: by 2002:a05:620a:2725:b0:7c2:f39d:d0e0 with SMTP id
+ af79cd13be357-7cd39db8db5mr4548423085a.3.1747863958952; Wed, 21 May 2025
+ 14:45:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V5 01/11] scsi: ufs: qcom: add a new phy calibrate API
- call
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-CC: <vkoul@kernel.org>, <kishon@kernel.org>,
-        <James.Bottomley@hansenpartnership.com>, <martin.petersen@oracle.com>,
-        <bvanassche@acm.org>, <andersson@kernel.org>,
-        <neil.armstrong@linaro.org>, <dmitry.baryshkov@oss.qualcomm.com>,
-        <konrad.dybcio@oss.qualcomm.com>, <quic_rdwivedi@quicinc.com>,
-        <quic_cang@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <linux-phy@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>
-References: <20250515162722.6933-1-quic_nitirawa@quicinc.com>
- <20250515162722.6933-2-quic_nitirawa@quicinc.com>
- <jnftkie5c5hi6nqhliktxqbj7gykj53lvm5gibt3fjdcq7dber@bh4fxrp3fezu>
-Content-Language: en-US
-From: Nitin Rawat <quic_nitirawa@quicinc.com>
-In-Reply-To: <jnftkie5c5hi6nqhliktxqbj7gykj53lvm5gibt3fjdcq7dber@bh4fxrp3fezu>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDIxNiBTYWx0ZWRfX4hx3VjyCr3+s
- vQyr/F+UhUzQraJTqeLOAQrKSZnHBoCGw3SG+Ag3HUwW83wyDMyXReC+sZ4ST7egU/OHVWuSizC
- 7SdTZy4IdjXecv2tLGttI5mYhaWSFpdSSVx4V5qt+2AubDVIslHAjGxRpWVCNM1FvUIA2tJKrOy
- LwjRAVZplBAG2AX+osKXdqphirMVYWDj42B8goMmewBc32ORGa0Pv/esAn25Hk0dBxFilCflONw
- IT4Dims7z6GKFRNCaxkSAGeRyey+XvIysBOMieX9VwTW8T7lWs0+R6WhyilApDm8ctZkUZlF5J7
- PJAJnvfibXw+N8T9JDIUbHoF5J10eaqbwlIR8cd/rP6Q69njCW2kGg1RD9h6pcIBcE1mGi2hwSb
- ZXQ3tEQIooGn/V2bTe8GHfl2AZ9Kt3oRQUq5WxsmfGNe6AreFfVZWE3t8IbYyEuriZXWVX63
-X-Authority-Analysis: v=2.4 cv=XeWJzJ55 c=1 sm=1 tr=0 ts=682e4951 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
- a=KKAkSRfTAAAA:8 a=TbsVHaqHX9x0TOAX2_kA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-GUID: SyHNXZD8ln8Oyw6kUtUz_a_vKhIO_Y_a
-X-Proofpoint-ORIG-GUID: SyHNXZD8ln8Oyw6kUtUz_a_vKhIO_Y_a
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-21_07,2025-05-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 clxscore=1015 mlxlogscore=999 mlxscore=0 bulkscore=0 spamscore=0
- suspectscore=0 impostorscore=0 adultscore=0 malwarescore=0 lowpriorityscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505210216
+References: <20250517105045.70998-1-apparle@gmail.com> <naxnt42hmvorqkif3pu4x36tpo44ugo2oiblrbtlrauucm5di2@tr2yobgoywmm>
+ <CAB7A79ysZ2-kxKPyiM1+5keSrsbVwNZti4FzXGUbjx4OONzrDw@mail.gmail.com>
+ <ogmv67n3rdia67ttj6whj4wnr2humhl2fjpo56phghqf67bpjx@bbdmdsmbp4kk>
+ <CAB7A79x5zviCqjO_LY34v53YpDgpc3Lck5n725bn_sYTkL8EEg@mail.gmail.com> <65636077-FB55-4E20-80CA-419EF9A071B8@progandy.de>
+In-Reply-To: <65636077-FB55-4E20-80CA-419EF9A071B8@progandy.de>
+From: Apoorv Parle <apparle@gmail.com>
+Date: Wed, 21 May 2025 14:45:22 -0700
+X-Gm-Features: AX0GCFt9vm5vlsJqjgLhvGreL8zCghUzvhzkPcMdfWJf8GMv1_SL9yH6e4HzIII
+Message-ID: <CAB7A79yzSq0n9cdbQFZfzzZ+J=iub+vo6j3FkRRty-e0vTsvLw@mail.gmail.com>
+Subject: Re: [PATCH 0/1] Input: xpad - add disable_xboxone module parameter
+To: "A. Bosch" <progandy@progandy.de>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, linux-input@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+From what I've read on udev rules so far, I'm not sure if there's a
+clean deterministic way of unbinding one driver and binding it to
+another.
+As I understand, I'll have to write a script to run for either the
+"add" action or the "bind" action. The "add" script runs asynchronous
+to kernel's binding, so it could happen before or after xpad binding
+is done; and even if I unbind it, kernel can re-bind it again while
+scanning the USB bus, which again creates a race with the script. If I
+use the "bind" action instead of "add" action, the script can recurse
+depending on timing of kernel's attempt to rebind. I tried to look for
+similar examples but couldn't find any -- just a few very high cpu
+usage bugs due to similar recursion.
+Other similar scenarios (like graphics drivers) that I tried to find,
+just blacklist whole kernel modules or used some module param.
+
+Though I'll admit, my knowledge of udev rules is somewhat limited.
 
 
-
-On 5/21/2025 6:38 PM, Manivannan Sadhasivam wrote:
-> On Thu, May 15, 2025 at 09:57:12PM +0530, Nitin Rawat wrote:
->> Introduce a new phy calibrate API call in the UFS Qualcomm driver to
->> separate phy calibration from phy power-on. This change is a precursor
->> to the next patchset in this series, which requires these two operations
-> 
-> 'next patchset in the series' wouldn't make sense once this patch gets merged.
-> They all become commits. So you should mention 'successive commits'.
-
-Sure, will address in next patchset.
-
-> 
->> to be distinct.
+On Mon, May 19, 2025 at 11:23=E2=80=AFPM A. Bosch <progandy@progandy.de> wr=
+ote:
+>
+> Hi,
+>
+> could you not create udev rules to perform these actions?
+>
+> - Andreas
+>
+>
+> Am 20. Mai 2025 06:04:36 MESZ schrieb Apoorv Parle <apparle@gmail.com>:
 >>
->> Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
-> 
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> 
-> - Mani
-> 
->> ---
->>   drivers/ufs/host/ufs-qcom.c | 6 ++++++
->>   1 file changed, 6 insertions(+)
+>> Ah, yes, that's possible. But it's too hard to generally use -
+>> requires manual command line intervention each time the xbox dongle is
+>> plugged-in and/or computer reboots.There's no easy way to robustly
+>> automate this especially for layperson linux gamers.
+>> A stripped-down and hand-compiled version of xpad is at least fully
+>> automated, but only until the linux kernel is updated by the distro.
 >>
->> diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
->> index 37887ec68412..23b4fc84dc8c 100644
->> --- a/drivers/ufs/host/ufs-qcom.c
->> +++ b/drivers/ufs/host/ufs-qcom.c
->> @@ -531,6 +531,12 @@ static int ufs_qcom_power_up_sequence(struct ufs_hba *hba)
->>   		goto out_disable_phy;
->>   	}
->>   
->> +	ret = phy_calibrate(phy);
->> +	if (ret) {
->> +		dev_err(hba->dev, "Failed to calibrate PHY: %d\n", ret);
->> +		goto out_disable_phy;
->> +	}
->> +
->>   	ufs_qcom_select_unipro_mode(host);
->>   
->>   	return 0;
->> -- 
->> 2.48.1
+>> On Mon, May 19, 2025 at 2:36=E2=80=AFPM Dmitry Torokhov
+>> <dmitry.torokhov@gmail.com> wrote:
+>>>
+>>>
+>>>  I understand. However you can unbind and bind individual devices to
+>>>  individual drivers via sysfs by writing into
+>>>  /sys/bus/usb/drivers/{xpad|xone}/{un}bind.
+>>>
+>>>  Thanks.
+>>>
+>>>  --
+>>>  Dmitry
 >>
-> 
-
+>>
