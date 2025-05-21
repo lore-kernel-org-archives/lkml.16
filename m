@@ -1,89 +1,92 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DB782BEC5B;
-	Wed, 21 May 2025 20:49:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 641EF2BFC9E;
+	Wed, 21 May 2025 20:50:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747860553; cv=none; b=OAIOi+mimEmF9HDVnasfMh4dwaP2hzI4sBMjfVYDj4xRpOVVXLOelYOQRNd3sjtWebV9ayuPIsY94lYA11d5Pk92XjMFdyYe2SeHh8ThkA0erIifmCAjq4pIZFgTWWpxrKSxXSxnZXgyX+jvjq/RuDJIeP8L71v6idQ+30sz3ns=
+	t=1747860607; cv=none; b=ZZ9Yj/7QoFrDHyNboCZ56OHFWilKnCDOs71+jfWlBbKOtUVgeT0UcmPdXWGVgVY5ZEwSBbL7eJ/4rLmVQaG4ONbBtE+IR9vMfx1++sLE9FM1Xhx/JKrjIl0SV6+05KwQaK2vcBWL8K91KLw4ycC1l+oaRaUkcuJFWDDXsbbr7Nk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747860553; c=relaxed/simple;
-	bh=mrTRctOtUcJ84jXnO+310QFcU1Kwrn6jVHOd5Jr/N04=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eJCiJAFTGnHFDqIFJpXA0Ilx3EiWfP9Gp06i3ghUGK7dQt3GLiCHOc7U1DRjPCatNTnhJcHhhb0seGQ6+eLykQDsO1SJMFNiI1ywmggySC3o5t2pzOOOyhsxmPAIWK//n95Ep8mQNKwZvCJkKvme1u0Sew1umx/WPB9UqgzG/c0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CeCANrss; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747860607; c=relaxed/simple;
+	bh=N37wVWerWd7nPL9xYaWJ8SxgWS4N6DGwmoe0dWApv00=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oHHLCyZ2p3LVvAfKVbBGvzqRiFzdDD1iTyeE/S1jprqGcY40/usz2WRe1TY8DM1EBnRToo2Oin4DFW6ChhFESezzrP4er0crVbsA+EzbX8N8Uh4RC5BKGe4t/VKGAjnj17GsDa4May1iTjBFZftKzzGJ7vS/PEwGHEkeWNbiqu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CKPcSpX/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CeCANrss"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A2B8C4CEEF;
-	Wed, 21 May 2025 20:49:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CKPcSpX/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9632DC4CEE4;
+	Wed, 21 May 2025 20:50:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747860553;
-	bh=mrTRctOtUcJ84jXnO+310QFcU1Kwrn6jVHOd5Jr/N04=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=CeCANrss13lMVCYBd303dahYRRcP3//oNIADAYeh5uCMFUZtTRhayH/Co0HajWv+D
-	 u6iAXUucctnfWL5Hrl1fH0TmHgSt4WGZZhYenvzWRjJcDHtTvnUEG0Hi/CgxiJM3Rt
-	 vno4OZKrpdmnKVQwYINlqMII4GBp/Nm8PWGMp2tHeyUnjoYuQfIFcqe/hPp4LIeG6V
-	 psd8XVvba1B8XaNtK2/C1dzv2+y1/p9FT+pRyAhQOm4SagJAqv6Sz53LVgonXvoNuA
-	 GvWAN/nGbGb01WHJaZCBMHtcVDZxYoaHfMJXc9n3WbWajoGT/HUpe8zG8ej/ReE+IM
-	 1JhWbuYa0YJyg==
-Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-6060167af73so4591752eaf.2;
-        Wed, 21 May 2025 13:49:13 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWtwlr9xGdnwJAn7MeGWZ+wPbriWqWdGbHav3CyWzfxS/ns8OoVL/eD3MxmfS7vEtjCE9pLt46jgM+213Y=@vger.kernel.org, AJvYcCXbaelE+1qFHiew9/NUr119HSJ7hyY0j2V/7C9CyeUFTIlIS1k94tfxlsd134YMsFnWtn//TBakDG8=@vger.kernel.org, AJvYcCXcrUHgrGM7mb7+YNpaesMas4DI2Xf7rghg5xJiI0Juu3Ld+XXiShBcFJ6VCsJY47fnZbk0X+PhW1oqm2Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzR+pJNdTVxc/hfBZ7F1QXmopVj/rPp3yOetdT166IHvixqV6MK
-	qft2qw0s45yd6/0Ow4LeURHOBAAIifcQXKww0y9jXmU3MXXIo6GqTqMsz6zCgchntmPdjyJ+G0X
-	DdbAFxxkgfGyypJexDTs/SGWuch7T25s=
-X-Google-Smtp-Source: AGHT+IEPkrPQfl18bWldZIboDlU0gNEGDMtQpM0dlHeO2zo12vGpxSU7I22tRnNIM6pQuZZbb4xC4aKhvh+4ma/DDkI=
-X-Received: by 2002:a05:6820:1b09:b0:606:9ed9:c38 with SMTP id
- 006d021491bc7-609f3615b68mr14252127eaf.0.1747860552552; Wed, 21 May 2025
- 13:49:12 -0700 (PDT)
+	s=k20201202; t=1747860605;
+	bh=N37wVWerWd7nPL9xYaWJ8SxgWS4N6DGwmoe0dWApv00=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CKPcSpX/yIYRaer7liv4CXUHA7V7Ta7MCATogpw0v9rA0EU9pEj9A7wFMcqD/zGzy
+	 fHvepn9nPxp6sMOCGN+uoriHnD/DBeSKHp+j8rj4t285Lb/bZ0XblGxq1BmqPn4HlU
+	 NE+wJpTYbvVtaql7Q889wccn/fx+wNK4k1B/GD+5Vif1vvjUWqJloVepynyvxWl9lX
+	 woea6R/HBqoctf51eJZq+cOAVEu2sAipNG4MLfMZAFkFTqGMogMeZg5dwM65zYtis1
+	 Bwx1wOJHrzmIoV4d3LxH3/Ag3UR+OZsb2j5mPWNiDdrSSj7ohapxmrwRuQTh3z5lDL
+	 24XEcn5WrMO8Q==
+Date: Wed, 21 May 2025 13:50:04 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ravi Bangoria <ravi.bangoria@amd.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+Subject: Re: IBS perf test failures on 9950x3d
+Message-ID: <aC48fFyR1NN4RPz8@google.com>
+References: <aCfuGXUnNIbnYo_r@x1>
+ <33e86415-c90d-420a-b7a8-6a360769aea4@amd.com>
+ <aColYM3RqE4T5t5c@google.com>
+ <aCt4akGLsuuC4aLP@x1>
+ <804ac0d6-22f7-40c3-9ff5-e5f9d863d37e@amd.com>
+ <aCzqdn3AJji_yPpQ@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250507031941.2812701-1-zhenglifeng1@huawei.com>
- <98c87824-2c77-4ae3-b466-badd8e8187ad@nvidia.com> <20250521104831.6a3qfhzrwf2mcnyu@vireshk-i7>
-In-Reply-To: <20250521104831.6a3qfhzrwf2mcnyu@vireshk-i7>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 21 May 2025 22:49:01 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jtar_refDoYQ0vFm1pWGu-DmFTaoHH-Rv+vGBvuMnL2g@mail.gmail.com>
-X-Gm-Features: AX0GCFtWB6FomTG9jILgelbT-29sCuyvYJpoU4Cz84DNwUvy6rzN3Xu2B_ybQQE
-Message-ID: <CAJZ5v0jtar_refDoYQ0vFm1pWGu-DmFTaoHH-Rv+vGBvuMnL2g@mail.gmail.com>
-Subject: Re: [PATCH] cpufreq: CPPC: Support for autonomous selection in cppc_cpufreq
-To: Viresh Kumar <viresh.kumar@linaro.org>, Lifeng Zheng <zhenglifeng1@huawei.com>
-Cc: Sumit Gupta <sumitg@nvidia.com>, pierre.gondois@arm.com, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linuxarm@huawei.com, mario.limonciello@amd.com, 
-	yumpusamongus@gmail.com, srinivas.pandruvada@linux.intel.com, 
-	jonathan.cameron@huawei.com, zhanjie9@hisilicon.com, lihuisong@huawei.com, 
-	cenxinghai@h-partners.com, yubowen8@huawei.com, hepeng68@huawei.com, 
-	linux-tegra <linux-tegra@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <aCzqdn3AJji_yPpQ@x1>
 
-On Wed, May 21, 2025 at 12:48=E2=80=AFPM Viresh Kumar <viresh.kumar@linaro.=
-org> wrote:
->
-> On 21-05-25, 16:13, Sumit Gupta wrote:
-> >
-> >
-> > On 07/05/25 08:49, Lifeng Zheng wrote:
-> > > External email: Use caution opening links or attachments
-> > >
-> > >
-> > > Add sysfs interfaces for CPPC autonomous selection in the cppc_cpufre=
-q
-> > > driver.
-> > >
-> > > Signed-off-by: Lifeng Zheng <zhenglifeng1@huawei.com>
-> >
-> > Looks good to me.
-> >
-> > Reviewed-by: Sumit Gupta <sumitg@nvidia.com>
->
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
->
-> Rafael, since I have already sent the pull request, can you please
-> take it directly ? Thanks.
+On Tue, May 20, 2025 at 05:47:50PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Tue, May 20, 2025 at 04:31:29PM +0530, Ravi Bangoria wrote:
+> > > Telling that to the user and possibly skipping the test if viable using
+> > > uname to get the version and if less than v6.15-rc1 print "Skip (needs
+> > > v6.15-rc1 or newer)" may be an option.
+>  
+> > > Then if the bug somehow reappears, people running 'perf test' will flag
+> > > it.
+>  
+> > Sure. Attaching a patch at the end.
+> 
+> Thanks, I'm applying it.
+> 
+> But now that I think about it, it may well be the case that, say, RHEL
+> backports the fixes in v6.15 for an enterprise kernel that has an
+> "older" version, so probably the best is for execute the test, if it
+> fails, then do the version check to decide if it is an unexpected
+> failure.
 
-Done, thanks!
+Yeah, that was my concern too.  I'm fine with having it in perf test and
+skip older kernels though.
+
+> 
+> But this can be done on top, lets make progress and apply your patch.
+> 
+> > > And I think having it in 'perf test' as well may make the feature to be
+> > > tested more widely, both by those who run selftests as well as by people
+> > > trying just 'perf test'.
+> > 
+> > Yeah, that was precisely the reason I did it in 'perf test'.
+
++1.
+
+Thanks,
+Namhyung
+
