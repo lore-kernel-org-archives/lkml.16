@@ -1,160 +1,180 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87D4550276
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 18:12:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34F0D1624CE;
+	Wed, 21 May 2025 18:13:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747851132; cv=none; b=p1R7cjAxAWT4dPaJNz8K3CmULBlZW6UE1a/G6I8Fry9T+l3690z/Q87XJyWr8+ni2oqAkGENkTz8rzwAPFGh+e+7L0lCYy+eoSnd2QyGwbhP37RP4cE/WjirsDiTD3Rb+ZgYZ3U0VXe1DInzBf6xPas1wYmvUKvPMVIC/0FGu4o=
+	t=1747851241; cv=none; b=A57zbdUsGih218/w2TywuS0zGkB/3J3FWhBpGd50K4PVkciv4Pi3o7tj57Xtx+OliJ/V3oJJpn5lXm+97L7wrpCUc2NJ/PvdYLfCBwA9RGaHJVzZsl+TZCuS25sSTv5UL+9b8dq5a/CPQFILhnQ2NXYlmZ+LJOHBFArfe6l+BTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747851132; c=relaxed/simple;
-	bh=1/rlbmpip3OHtDCRMmmzJuRrkXmYRrgxBxQTEFo2rDU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ba4TYww8lh5/2O7PAzqrhR+iEdWZXWXo8KbOEZKCb5hDA27Xm4fjqyZaXIYYexCuToQJ1A+0dMlafwx4FBUD33XqozscqzcTZbwPWYNsml3eurzG4fnVq96klv7pK/RlreCZbivW/8qeu05R84t739Ka0bgaQ7MoLIWwXzG7KHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Wk8vhHO5; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1747851241; c=relaxed/simple;
+	bh=IVRrr3bXX1aOFwL4/OoLF2L3j9b8aaTdFDzcimwf2uE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=P5eAc9LZDuw+NR129WqHmQhlu7s4CEge7zkd81wt/nInwKW1jhvxFCD0g1geUB8gqBqrhL7xA4RUIAYHWKefMhFN0Ev6WmamkobQ3VwNIY2nW7PuuRYAqmw4G9ETsnHWrwxPYbUplo1PiPQjvb/L4hhOVPTiSVJKYLLxsINTl20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eJikY25a; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Wk8vhHO5"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id C925440E0163;
-	Wed, 21 May 2025 18:12:05 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id CfNDd266iFzs; Wed, 21 May 2025 18:12:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1747851122; bh=ITlsTaQvJ6NxKw2uAp2SyP2tQEwhuzpdqgKr5uxyeoU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Wk8vhHO5LJg+RvgBQjXrJ3RmKlXr+5HQm2Htdn7AkPjE7j4CepvQ0XSX/lg7+j8/y
-	 2g+bho+pJZ3Mr8hVtVvauOBLhnkEJc7lZGB+VDeqFyd+QhQiYIAG1xzs5gQS4OaMyt
-	 PE0xbks0JH4r2DkPvyHeDIaWak9uF6ue7VmQaYkrg53eIzQvXRK95a711auEK23nJo
-	 zvz3nYuHxQlibD6fcQ/2tnW3XPLDW9kTWFgNzMQF9aQRoCh0ERwk/aYkI3/ikDPwAX
-	 bluv+UHp+G3rqqqEVm2XaSOwaTSgtDGM2FseUqLcmo0U//3IkpSZJCziD/Y2fR3CY9
-	 SJdpv49rIQJ7AU8sFfdvkEiERAJY1b5ro9L8KT7tf2lm+JMLvKE8drvYjZAAA3hkVa
-	 jV4ppegmw0LYuobbwBW0an0Db0qQkryUgO3muHBkdnPin+i/ZRBFTBykqZ/PA2rAo5
-	 Dq3XzHYiXJ/oNUDCBpuYI4Bai0GqYdE9TAvOAFnTySH7mW7Bl8n/4jNvA2dJ1KX6xN
-	 rJumigQ94o+IK1djbrz5wvauE5t0T8my31OpXK7SOe5mOfaNvbHltDzHpFwxkuX4yS
-	 dnVvWj5xQihGMeOF2lyBVXUlRu9NFRXZ23Qyty0Ek2cs4SZImhjEqdRiJSIPqNYLeQ
-	 BEmuu969EAWFOuhBblHc5RE0=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eJikY25a"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747851240; x=1779387240;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=IVRrr3bXX1aOFwL4/OoLF2L3j9b8aaTdFDzcimwf2uE=;
+  b=eJikY25a7SfCYfgFPIK3KmH7lPUJfAb/vb/p+qbSUaHeJi22znoeoX+8
+   tryFYxti8mc0f4r5rFZQuQNwf3ZB4AjMmWRS3BEqLJkbraRaSP2eK09Dn
+   RlOqeESo+JM0lxBzkhl33SI20kW+UsFadwwqGV7y5+omdEdPPFdVVQ3Kp
+   NoKQSMR87sCxo2jzf/zsM9FvdYCsZ6f5Z9+RZ4WCjCrnL8Dknf2vyBc6Q
+   mL9snSfRRoE0pC0YkcAHbyvTHzgn2FakQkhytFw2SiRxTNAsCwCoQjwSA
+   sxrLCq3APKIYBeNAbHnjAkECePLmPgP8qbmlQGw2rSg4PjjCs38w/ey1/
+   w==;
+X-CSE-ConnectionGUID: 8gKRQ71TR9q6bTWHzF9Nqg==
+X-CSE-MsgGUID: AQUxvczcQ9i1WS5UhFcEBg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="49550221"
+X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
+   d="scan'208";a="49550221"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 11:13:59 -0700
+X-CSE-ConnectionGUID: jNk7/eBMTU+K36IIfe3xfA==
+X-CSE-MsgGUID: s6uLh/mXS6yj5C4PU+kURw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
+   d="scan'208";a="145453010"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 11:13:58 -0700
+Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1BD5640E0192;
-	Wed, 21 May 2025 18:11:52 +0000 (UTC)
-Date: Wed, 21 May 2025 20:11:41 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	"Ahmed S. Darwish" <darwi@linutronix.de>,
-	Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
-	x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Brian Gerst <brgerst@gmail.com>,
-	"Kirill A. Shutemov" <kirill@shutemov.name>
-Subject: Re: [PATCH v4 1/6] x86/cpu: Use a new feature flag for 5 level paging
-Message-ID: <20250521181141.GDaC4XXW8BmtvJFy6a@fat_crate.local>
-References: <20250517091639.3807875-8-ardb+git@google.com>
- <20250517091639.3807875-9-ardb+git@google.com>
- <20250519094038.GIaCr8ltHvLBYjk8iI@fat_crate.local>
- <aCstaIBSfcHXpr8D@gmail.com>
- <20250519131944.GCaCsv8A71vn21AB1W@fat_crate.local>
- <874ixernra.ffs@tglx>
+	by linux.intel.com (Postfix) with ESMTPS id 9A5A020B5736;
+	Wed, 21 May 2025 11:13:55 -0700 (PDT)
+Message-ID: <9aa2c899-80e0-4626-acb7-5331fbf46a0d@linux.intel.com>
+Date: Wed, 21 May 2025 14:13:54 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <874ixernra.ffs@tglx>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/3] perf sort: Use perf_env to set arch sort keys and
+ header
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ James Clark <james.clark@linaro.org>,
+ "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ Ravi Bangoria <ravi.bangoria@amd.com>, Leo Yan <leo.yan@arm.com>,
+ Yujie Liu <yujie.liu@intel.com>, Graham Woodward <graham.woodward@arm.com>,
+ Howard Chu <howardchu95@gmail.com>, Weilin Wang <weilin.wang@intel.com>,
+ Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>,
+ Thomas Falcon <thomas.falcon@intel.com>, Matt Fleming
+ <matt@readmodwrite.com>, Chun-Tse Shao <ctshao@google.com>,
+ Ben Gainey <ben.gainey@arm.com>, Song Liu <song@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20250521135500.677508-1-irogers@google.com>
+ <20250521135500.677508-4-irogers@google.com>
+ <3e8b674e-38f7-4212-923d-f53626de69f2@linux.intel.com>
+ <CAP-5=fX5q7rDgBdB+cMH6fTyHBBPyiac7tuv9WJOMcg9OFdq5g@mail.gmail.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <CAP-5=fX5q7rDgBdB+cMH6fTyHBBPyiac7tuv9WJOMcg9OFdq5g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 21, 2025 at 05:23:37PM +0200, Thomas Gleixner wrote:
-> Now what about software defined (artificial) feature bits including BUG
-> bits?
-> 
-> We still need them and there is no reason why we would replace them with
-> something else. But, what we want to do here, is basically the same as
-> we do for the real CPUID information:
-> 
->    Create and document real artifical leafs (there is enough reserved
->    number space in the CPUID numbering scheme) and put those into the
->    CPUID database as well.
 
-I presume here, when the kernel patch is being sent, the accompanying CPUID db
-patch needs to go out too?
 
->    That allows to handle this stuff in the same way as any other CPUID
->    data and the autogeneration of bit offsets and text information for
->    cpuinfo just works the same way.
+On 2025-05-21 12:16 p.m., Ian Rogers wrote:
+>>> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+>>> index 7b6cde87d2af..13ef0d188a96 100644
+>>> --- a/tools/perf/builtin-top.c
+>>> +++ b/tools/perf/builtin-top.c
+>>> @@ -1747,7 +1747,14 @@ int cmd_top(int argc, const char **argv)
+>>>
+>>>       setup_browser(false);
+>>>
+>>> -     if (setup_sorting(top.evlist) < 0) {
+>>> +     top.session = perf_session__new(/*data=*/NULL, /*tool=*/NULL);
+>>> +     if (IS_ERR(top.session)) {
+>>> +             status = PTR_ERR(top.session);
+>>> +             top.session = NULL;
+>>> +             goto out_delete_evlist;
+>>> +     }
+>>> +
+>>> +     if (setup_sorting(top.evlist, &top.session->header.env) < 0) {
+>> I doubt a valide env can be got in perf_session__new(), since there is
+>> no perf.data in perf top.
+>> Maybe just need to invoke the perf_env__raw_arch() instead to fill the
+>> env->arch.
+> I think the current code is making things harder than it should be, we
+> should work away from perf_env__arch and strings, instead using EM_
+> values which we can default to EM_HOST avoiding any runtime costs.
+> Looking at perf_env__arch:
+> ```
+> const char *perf_env__arch(struct perf_env *env)
+> {
+>         char *arch_name;
 > 
-> Coming back to the original question with the example of LA57 and the
-> actual enablement. There is no reason why we can't have the actual CPUID
-> bit and a software defined bit.
+>         if (!env || !env->arch) { /* Assume local operation */
+>                 static struct utsname uts = { .machine[0] = '\0', };
+>                 if (uts.machine[0] == '\0' && uname(&uts) < 0)
+>                         return NULL;
+>                 arch_name = uts.machine;
+>         } else
+>                 arch_name = env->arch;
 > 
-> The way how this should work is:
+>         return normalize_arch(arch_name);
+> }
+> ```
+> in this case env->arch == NULL and so the uname machine will be used.
+> For perf_env__raw_arch the behavior is similar but it populates the
+> env:
+> ```
+> static int perf_env__read_arch(struct perf_env *env)
+> {
+>         struct utsname uts;
 > 
->     1) The CPUID info is in data.leaf_07.la57
+>         if (env->arch)
+>                 return 0;
 > 
->     2) The enablement bit is in data.leaf_linux_N.la57 or such
+>         if (!uname(&uts))
+>                 env->arch = strdup(uts.machine);
 > 
-> The CPUID database contains the entries for those in leaf_07:
+>         return env->arch ? 0 : -ENOMEM;
+> }
 > 
->       <bit16 len="1"  id="la57"                    desc="57-bit linear addresses (five-level paging)">
->         <vendors>
->           <vendor>Intel</vendor>
->           <vendor>AMD</vendor>
->         </vendors>
->         <linux        feature="true"               proc="false" />
->       </bit16>
-> 
-> and leaf_linux_N:
-> 
->       <bit3 len="1"  id="la57"                     desc="57-bit linear addresses (five-level paging)">
->         <vendors>
->           <vendor>Linux</vendor>
->         </vendors>
->         <linux        feature="true"               proc="true" />
->       </bit3>
-> 
-> As the "proc" property of leaf_07.la57 is false, the bit won't be
-> exposed in cpuinfo, but the software defined bit will.
-> 
-> This also means, that we switch to a model where the software defined
-> bits are not longer subject to random introduction and removal. We
-> simply keep them around, mark them as not longer used and introduce new
-> ones with proper documentation. That requires due process, which
-> prevents the adhoc messing around with feature bits, which has us bitten
-> more than once in the past.
+> const char *perf_env__raw_arch(struct perf_env *env)
+> {
+>         return env && !perf_env__read_arch(env) ? env->arch : "unknown";
+> }
+> ```
+> Aside from caching the arch, the main difference is that
+> normalize_arch isn't called. Not having normalize_arch means the code
+> in arch_support_sort_key and arch_perf_header_entry would need to
+> handle strings "ppc" as well as "powerpc", "i386" as well as "x86",
+> etc. As I'd prefer not handle all those cases I think the way the code
+> is is best given how the env code is currently structured.
 
-Right, so in this particular example with la57, the CPUID bit which denotes
-that the hw is capable of doing 5-level paging is needed only during kernel
-init so that we can know whether we should even try to setup 5-level paging.
+Right. The perf_env__raw_arch() doesn't improve anything.
+But I still don't like &top.session->header.env.
+Because I don't think you can get any useful information from
+top.session->header.env. It just brings confusions. (It seems an env is
+retrieved, but it is actually not.)
 
-After that, the rest of the kernel will need to look only at "our" bit which
-means, 5-level is *enabled*.
+In the perf top, &perf_env is used for the existing cases. If any env
+fields are not available, perf_env__read_XXX() is invoked to get the
+information.
+I think we may follow the existing usage, e.g.,
+setup_sorting(top.evlist, &perf_env).
 
-Because that's what the code cares for - whether it is running on 5-level or
-not.
+Alternatively, it looks like the perf top doesn't support --weight. The
+env->arch should never be used. If so, a NULL can be used as well, E.g.,
+setup_sorting(top.evlist, NULL).
 
-And 5-level *enabled* implies 5-level possible. So that first bit is kinda
-redundant and perhaps even confusing. That's why I think merging the two bits
-simplifies things.
+Thanks,
+Kan
 
-You're already basically doing that with proc="false" but it should be even
-less visible. No one besides us cares if the hw is capable - users care if the
-feature is enabled or not.
-
-I'd say...
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
