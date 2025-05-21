@@ -1,72 +1,65 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F20A17A310
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 16:57:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47D24242D66;
+	Wed, 21 May 2025 16:57:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747846631; cv=none; b=gfe0ons13kXLb44YlJbJ68DNz0BlMaPfghW5gj2a0KshkWrgfgB39cMJV3zUUJirHUb378QzbvpkIvZEAKLBrVqU+xVZH966AcyQgCXZL3Ns1/RsLzT24i4j8brdzBewSnf1W9KolmRPFnuIZxKc/1XmH7dUUqAFKaatGoWyt/s=
+	t=1747846673; cv=none; b=XwZgOLiTOO5z9Nl5fc729edObnlMWBD3wqGTXz2kWHA2bIo8tDSZtM5kXgUw6F2R4+zQWCEcqA7FdTxg2yqbDvE6dXmaDKbZNfkLaYM8IvXT+VE8dRoNM6FuaSCvdYo+dx5HrlwUS6mus4xQy6QP5W0+qAjE/vhmb9PPxzGn5lc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747846631; c=relaxed/simple;
-	bh=N+R43E/1GfThpPsMXWgpoPu8TipZoSa08sDYQEh3dXE=;
+	s=arc-20240116; t=1747846673; c=relaxed/simple;
+	bh=/GlespiNmMT4+BqUyJVqesFiv1fxp1eFp6PVyIszOPY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FpJoVx29CGatBTFS7onUZPCZt1IgyiAopqFr1tdh1QDGVHU/JZVU0iYG8Ne5+zU2MDgA4dDwFc19TKZfInIWoYTbCA7G0Y4zlhKYXZuawr4bCGVFBf9z9dyPrZTApnFmtGVV3qUi9AApHQwiITL8LekzAmud7XqQGgxBHgr6PfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=iwHd88Bz; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 In-Reply-To:Content-Type; b=Jh2nBeV+oS5+6b8lt5WTcRmMT9KBtk6/wstiCJzVufK5LRKXhOrRX8N52C3s8MsUDa+4UNxyQdZhpSvZZTqus/qkZqEVOllEy7yG9AuxV7VYIug0IFnit57OPZI2ZNACjFF1h0r+VRNxzOdtRIX9Uha0JJyiOQmSWSHtDrrHL7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X9ea8YYD; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="iwHd88Bz"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54L9XJtn013430
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 16:57:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	RIq+1JAfS5ENiun1dMLKC83h/in6cMIXd2ivDAqCPHk=; b=iwHd88BzSUv0Ldw6
-	N0ARTR496xyfzKwNSgf4I+P9ihsCDM5bjBXoANJZwzmdoCd5+cGl+pJ78cHXPmcX
-	9nrgOJmpaFwrNbnBzyfWrWrqZscQUXvFu7UP1nV45VMpoMgTt/UZ1cTyxmkh2lqM
-	sLP3HnWN/pOjuGXsm+TlLk0TQlqk5mU0eL+4oO2MiGjFgyVfgqwrWXeUI7o4qCvJ
-	dCPP0koacHqJPwbK/x0x44QtrBh3bBNh3sov1SFBqnPCXvWoJgK8P/jDt/iuzHzA
-	sqIMXQ5No9/St+dsSu2ye1al7sPwk1enEHT1WO3bzrDHmQ9gP76rc1sUz6VWUSkl
-	4cTHBg==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwh5bqu4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 16:57:09 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c552802e9fso176595485a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 09:57:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X9ea8YYD"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-601fb2b7884so5621133a12.2;
+        Wed, 21 May 2025 09:57:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747846669; x=1748451469; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BRYUFAK7jSYA/NtgtlJwU68PcUllDyACt8wTHZPGFbo=;
+        b=X9ea8YYD6gpMKdelTo7bkq4hdKBGgOeE3uoSgg6S5SI3YunUvYHIh4uQsld19vzWHN
+         50fgut1ljwBbVG89fKmWmKWsDb2bR18V8K+IAEpiRrB5jAyCngK7Fsbr0Hm7TZYwbccy
+         3NNQwgB5MTzVyiMs1IGdr7AT5VNqd+VhlAcUF9/6CluAZAN9mB0qvn8zhf4eJBL2RMRy
+         glrF0ZArrYfkYVxF/ZLeh/rA0Op+nRj2FZ/KIlk0zDWs7dO8OtqOqK2esJYyooOR8V1v
+         NWxvjtgE4W+KB7cw2bFkWeDZk2IkS6sCmybOl/3sWCAa3bu+RSI1y1VYY0CTG8cjb5Cz
+         Zdvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747846628; x=1748451428;
+        d=1e100.net; s=20230601; t=1747846669; x=1748451469;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RIq+1JAfS5ENiun1dMLKC83h/in6cMIXd2ivDAqCPHk=;
-        b=F+CquSrYJF4KZ8P2S2RFi9cYS0MGiMubKhof+Wr04xDBvEb13CEsSLbtMGsDfCzhGr
-         gFZyb5hiaZyRO2AApbKsZwgAVYSU0J/gCp5ly3dR2kctcI649udw8N1GQCBj0B3Z1/8F
-         RD8102qmpwt2OkAM6ZnBYQgVyfOuGHSdxD/NqIbRz9yJwjvHyvbWZx2AWClkkhqHgf6j
-         /VtUv21TRPARsiIQ2JLS5NP3OAf7xV5AdZUQ3meK0wdiLdQaWOBOG1qFEZERKxKLX+9w
-         iDC+USqDEA9g8eSbtT+pj+PHZ9wgNoeTIpNraL8DE/IHdOanX8pzIh0kwXYC+d/bhX05
-         FbBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVSEVoVOkhIzoQjfHhJE4oKdvRGkwp/5gMgp0AUl83KCQcIeTWMvKUCfM4R8ssnOHWxiLIX8hALakH2mFE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMbQiM1lxcdg4854LNwUCip7pg/BbbWhkIrZU54s9yB7leHoQB
-	//675VkY8G2P6mT/ucizpc1q23ZPPwPVh6JsNv82ILOwE1rHW99+c+7LhhyZNA3loyXPtwBfcOP
-	XGMxtvADD2/oYprixgx4GhBqSy2/q1jkxhoWeD0g9SYqLt6lbV5doAMEbwD7nb4mEBT0=
-X-Gm-Gg: ASbGncvTzv1U0bgHy5VNzAySQlLzLjfHmIVD0kQvnfggfig1o4sqqvfbNfpsVhoR4WJ
-	ZfTDjY6VO94seR7b9XctNjmBlpSbTpI53K53N+6jwUUJ9ZYDAOAg4Ql7gQJpI3lrCsTn1ZYFk0T
-	iiEy8nTUQJ8NDnPeJlRx3iqN203nrV8RM26jW0nDvAuJG7DIQhyVdZLvtwdwYwHzcsHIDzA4p6e
-	V19orlmzqxIDTjKzmVM+DcwcpuOn493XU11yl0rUYkM7Ej3bZYllOlN8151fh3oekirnGhA7crB
-	2yQC0zlZ82Gcr4RCs1BP47jL4yhXxMQEu30Du9fGh3kbgeebSFvDhHaV+A3HGlTPFw==
-X-Received: by 2002:a05:622a:1444:b0:471:ea1a:d9e with SMTP id d75a77b69052e-494ae3f24abmr123174471cf.12.1747846628110;
-        Wed, 21 May 2025 09:57:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFKquZCYn79dWnu6RrKESmOaAIB/1rycWKzBH9n0bP2dka2gnc6zuL4fmyd5kx3cDGfaLk9HA==
-X-Received: by 2002:a05:622a:1444:b0:471:ea1a:d9e with SMTP id d75a77b69052e-494ae3f24abmr123174241cf.12.1747846627791;
-        Wed, 21 May 2025 09:57:07 -0700 (PDT)
-Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d4e8afdsm933402766b.176.2025.05.21.09.57.05
+        bh=BRYUFAK7jSYA/NtgtlJwU68PcUllDyACt8wTHZPGFbo=;
+        b=g2r6RegZa0gqBNGl4B94TvBTY0F2LVYn08v4slypWJGU/PHDa3Bb+VrkDl9VWh47AA
+         uH+TPS9Cs9gPcDkqqQ8a4hsiy575JTWLKBeXbQNrR6mJoIxq2YVItGKD+Ngu4e31b8VF
+         t54XBSI4d/1v1lqOrohL54BAifYRvcbhMGHf6qW8mpGQjZoGZtDb11hFQD3TrOStG74t
+         y2Tq6/jHsFgQe/WOlTupEBSqG73hkaAv6VH/x9v6kcXW1yvP7bgJCdCQckBORqtngWbp
+         //lSUy4FzIEBWb857dfSYFR1sWfN8eiR+JBgN+n/eS1B75dTb5Oe75UGqhB6awa1kcgs
+         Q7fw==
+X-Forwarded-Encrypted: i=1; AJvYcCU2VKYHNmjmJiaTM8V5AwXFCBuoZXqaamgeKB5PFdZtvvJhZZ/ZCHkhefmVTuQQCm06PiA64D4t+ZhlaF1D@vger.kernel.org, AJvYcCXEzJT5/dkjB1uImUN5RVVwl51LjsJXSRbE92QacX0mbM64rJrXn3N3ld+YmH/mdpbNVC4mlKs7GfX1@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+Va+gGbDu+fzSVKsmCG1xUwUio7qxmoqAkct68yfAU/BEKb8P
+	QUuf64VkYU0s5yXYb7o3riZC4yO28cbMyhVC8j0KaQ8x6gPQNgronD8r
+X-Gm-Gg: ASbGnctm7tiulXyykU6+9r08axqBQw9S+aYTFhqT0YIep7PYsX0jeEqXPSOj1g4kO9u
+	QWNBuXUjFcW2S+jsyDOj+IHSTQEYaMAIdVsO/+a8+f+ydiuQi6JZnzONXe4DqcOuMYTvax8W3Vq
+	RgF/EGWpXE8Egrzj//2pAhbOfyRDTLsFrBsbT+SshvGRs4VANKECT4fA4WCG47VdU24b6ij/SLR
+	VehJFoz7SrDRItnOM3x++ww/ydCAStv9g76Kt+CgjOJ+WDTNbeZvKOyjzMj+B7uhi4lxLAwZnGn
+	vrV66t1oLf4AmsrlPsWUQnJ3+WxH0O73BXG44tPvfNQvdObu13oA4JR6Nd6M4SzcQXARD9AZOa9
+	0LyrRdVrpMBNIsb8yMZXVSAhxtCFmEMKXJZDoVQ==
+X-Google-Smtp-Source: AGHT+IHSvbQT6sn4S7mMgkqSNKRdTOlaQgHRPK4MjnFPlaTQGercmFbLQYTx5FF7F5wgccYvySsRbw==
+X-Received: by 2002:a05:6402:1e89:b0:600:9f83:c314 with SMTP id 4fb4d7f45d1cf-60119cc7219mr19075932a12.26.1747846669303;
+        Wed, 21 May 2025 09:57:49 -0700 (PDT)
+Received: from ?IPV6:2620:10d:c096:325:8d0:f08c:4e6a:b32f? ([2620:10d:c092:600::8a7e])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6005ac336d5sm9221196a12.54.2025.05.21.09.57.48
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 May 2025 09:57:07 -0700 (PDT)
-Message-ID: <3f3d8c46-e7f3-42d1-a186-29a034d509be@oss.qualcomm.com>
-Date: Wed, 21 May 2025 18:57:03 +0200
+        Wed, 21 May 2025 09:57:49 -0700 (PDT)
+Message-ID: <b78e0fd8-e6b9-47c6-bec8-a44a8be242f1@gmail.com>
+Date: Wed, 21 May 2025 17:57:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,75 +67,62 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 4/6] arm64: dts: qcom: Add support for qcs9075
- IQ-9075-EVK
-To: Wasim Nazir <quic_wasimn@quicinc.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@quicinc.com,
-        kernel@oss.qualcomm.com
-References: <20250521140807.3837019-1-quic_wasimn@quicinc.com>
- <20250521140807.3837019-5-quic_wasimn@quicinc.com>
+Subject: Re: [RFC PATCH 0/5] add process_madvise() flags to modify behaviour
+To: Shakeel Butt <shakeel.butt@linux.dev>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ David Hildenbrand <david@redhat.com>, Vlastimil Babka <vbabka@suse.cz>,
+ Jann Horn <jannh@google.com>, Arnd Bergmann <arnd@arndb.de>,
+ Christian Brauner <brauner@kernel.org>, linux-mm@kvack.org,
+ linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+ SeongJae Park <sj@kernel.org>
+References: <cover.1747686021.git.lorenzo.stoakes@oracle.com>
+ <7tzfy4mmbo2utodqr5clk24mcawef5l2gwrgmnp5jmqxmhkpav@jpzaaoys6jro>
+ <5604190c-3309-4cb8-b746-2301615d933c@lucifer.local>
+ <uxhvhja5igs5cau7tomk56wit65lh7ooq7i5xsdzyqsv5ikavm@kiwe26ioxl3t>
+ <e8c459cb-c8b8-4c34-8f94-c8918bef582f@lucifer.local>
+ <226owobtknee4iirb7sdm3hs26u4nvytdugxgxtz23kcrx6tzg@nryescaj266u>
+ <7a214bee-d184-460f-88d6-2249b9d513ba@lucifer.local>
+ <djdcvn3flljlbl7pwyurpdplqxikxy6j2obj6cwcjd4znr6hwj@w3lzlvdibi2i>
 Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250521140807.3837019-5-quic_wasimn@quicinc.com>
+From: Usama Arif <usamaarif642@gmail.com>
+In-Reply-To: <djdcvn3flljlbl7pwyurpdplqxikxy6j2obj6cwcjd4znr6hwj@w3lzlvdibi2i>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDE2NiBTYWx0ZWRfX4xlrAnrqcqTX
- JWYnpGwPc1YxDnpDra/XRKJD4CI7z7J/ZAMS3dxP2ero9SvG6UZcBuE3eQSpmduCQ7sFbl1YEQW
- aCPGEKmfhTOjf9vXu8AI8BxgtUNfzj/TI9KpmAVBojX5mzcNHwhO+2LKjZH7RTEn7SWy4XM8B5O
- 6fXLPHqDOnJWfiJJX6O926yNsN6MkIOj8re4OLghiEgu4F3L5xgyVS6nXOisxC1U/mAgg7ecj0m
- s2HHdwB509nNZVUvUZLAd3kmMvC/g3mQ9dKM16nNZyGzpp7wI8Qbs6vIwGn6CzirliVILBV8GOt
- 1xYGImoJHiyQAeuKE+WE5Qc9w5Qk/dHOshV64xDfMl4/ZOA66VlO/t9uGWpEYlNjJIJ9A34CqIO
- 5XWXlzwr40Wa0Ut7jGr205zbTMI8C2FIBKC2VOKCIjRk14ERbZVbDaaAvM99ItGpiYG+ybRA
-X-Authority-Analysis: v=2.4 cv=XeWJzJ55 c=1 sm=1 tr=0 ts=682e05e5 cx=c_pps
- a=50t2pK5VMbmlHzFWWp8p/g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=B19ug8NEUztSQfbU-jQA:9
- a=QEXdDO2ut3YA:10 a=IoWCM6iH3mJn3m4BftBB:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: eku8rKf5GTf_W0djSvHJID4FkC1b3x8Q
-X-Proofpoint-ORIG-GUID: eku8rKf5GTf_W0djSvHJID4FkC1b3x8Q
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-21_05,2025-05-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 clxscore=1015 mlxlogscore=999 mlxscore=0 bulkscore=0 spamscore=0
- suspectscore=0 impostorscore=0 adultscore=0 malwarescore=0 lowpriorityscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505210166
 
-On 5/21/25 4:08 PM, Wasim Nazir wrote:
-> Add initial device tree support for IQ-9075-EVK board,
-> based on Qualcomm's QCS9075 SOC.
+
+
+On 21/05/2025 17:28, Shakeel Butt wrote:
+> On Wed, May 21, 2025 at 05:21:19AM +0100, Lorenzo Stoakes wrote:
+>> On Tue, May 20, 2025 at 03:02:09PM -0700, Shakeel Butt wrote:
+>>
+> [...]
+>>
+>> So, something Liam mentioned off-list was the beautifully named
+>> 'mmadvise()'. Idea being that we have a system call _explicitly for_
+>> mm-wide modifications.
+>>
+>> With Barry's series doing a prctl() for something similar, and a whole host
+>> of mm->flags existing for modifying behaviour, it would seem a natural fit.
+>>
+>> I could do a respin that does something like this instead.
+>>
 > 
-> Implement basic changes to enable boot to shell.
+> Please let's first get consensus on this before starting the work.
 > 
-> Signed-off-by: Wasim Nazir <quic_wasimn@quicinc.com>
-> ---
+> Usama, David, Johannes and others, WDYT?
+> 
 
-[...]
+I would like that. Introducing another method might make the conversation a
+lot more complex than it already is?
 
-two nits:
+I have addressed the feedback from Lorenzo for the prctl series, but am
+holding back sending it as RFC v4.
+The v3 has a NACK on it so I would imagine it would discourage people
+from reviewing it. If we are still progressing with sending patches, would it
+make sense for me to wait a couple of days to see if there are any more comments
+on it and send the RFC v4?
 
-> +&tlmm {
-> +	qup_uart10_default: qup-uart10-state {
-> +		pins = "gpio46", "gpio47";
-> +		function = "qup1_se3";
-> +	};
 
-Feel free to move it over to sa8775p.dtsi
 
-> +};
-> +
-> +&uart10 {
-> +	compatible = "qcom,geni-debug-uart";
-> +	pinctrl-0 = <&qup_uart10_default>;
-> +	pinctrl-names = "default";
-> +	status = "okay";
-
-Please keep a newline before 'status'
-
-Konrad
