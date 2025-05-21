@@ -1,116 +1,87 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEBAB259C8A
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 11:10:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C390E2609DB;
+	Wed, 21 May 2025 11:11:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747825836; cv=none; b=e1DiAlHADfwrRUYhBQm078vurIKRUl0X8NQmsBT2YYXZ7iXwDN/j3N0jk2Vjm9iyliiimMz7s2l3OsEXYK915bbBPs3nj/3Z1npvWwcQzOvlKxwYmX11jUmEeafXbBKjSedXzNFzWTYav7m2sMzu5HlMh978S266+xWsbjTGBtg=
+	t=1747825878; cv=none; b=DFDe8130lZg9JTxJa4XBUgWOTSm0UxU5iPXC5YjWWXmW1fsGBaKB0/e06UeSHIbe3qEuQKzqQXBt6db7sCVR5bcJV+tTP+P7mfzRcdZxSgiOziKbO0m4+wFdxdLFReTSbn58wavvcLIcaXsqEV0CAoQHwAwWx8FIeSAcQ76qilw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747825836; c=relaxed/simple;
-	bh=r0tEDMuNifY4eIhrrGR251bYu9GcL5CYI+Rd/T6ffVk=;
+	s=arc-20240116; t=1747825878; c=relaxed/simple;
+	bh=QKalJhRWAYNTqYRsDY84n12XM0NIIzFxBP9AFKFTh8s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O84wDW6TO+e3KOUkLbFMLfdgLbpvqSQhiQ2/6E3JUlGX24wjz47Hc4ZnYnI+3rr0K2fPaI+1a352T7zLUhs8UrZ9qQNvUKTOxJu6Ss1bPRMTN1XbWWzrXcZxNGoC2OoCx/M8o/jcoTR7xLiWzGyYt1/TrRiUt3rvFJ/4bN808Lg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=RURV/asZ; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=PLs3pq66VxH7wk5bbnw38NS1HS6uUghzQ276A/vSo3g6inUUXoDIbt7vEkUQ3bpgHfJMu0HPjp9DvLty1eJU5O4MqqHUDdMCc2t0d7FWdHyG9UNIoEF4p64+5agVEevV8M4bGODIRJrCQ3IIhalfh1Z/JL2pAHCc1+7rH1BHdjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=C3wGx23I; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="RURV/asZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1747825827;
-	bh=r0tEDMuNifY4eIhrrGR251bYu9GcL5CYI+Rd/T6ffVk=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="C3wGx23I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C88F7C4CEEF;
+	Wed, 21 May 2025 11:11:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1747825877;
+	bh=QKalJhRWAYNTqYRsDY84n12XM0NIIzFxBP9AFKFTh8s=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RURV/asZSRjDbvrCxPcnrturLqWT8NJHQru8KqeKF2ZmZNL7QB3O6Nyp8biUzql3c
-	 4+kNHzaC4gYxosylMCj96ME+giaQWQfYyxHRZxhxuxUec+vFYNw9JQVVTbU4Bs7gla
-	 d3zD3JCO1hRLoH3rOtiViaXaGn+5cMNq3I8Iy1NU=
-Date: Wed, 21 May 2025 13:10:26 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Dmitry Vyukov <dvyukov@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, krisman@collabora.com, 
-	luto@kernel.org, peterz@infradead.org, keescook@chromium.org, 
-	gregory.price@memverge.com, Marco Elver <elver@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] selftests: Fix errno checking in
- syscall_user_dispatch test
-Message-ID: <ac23d886-8b9b-463c-91e4-aa541351976e@t-8ch.de>
-References: <cover.1740386567.git.dvyukov@google.com>
- <d11d91e0c27ef78affcef06e00d1cf4cd8747fcc.1740386567.git.dvyukov@google.com>
- <87v7sj3dlx.ffs@tglx>
- <CACT4Y+a3EPcAS4yB8c2d65+T3zXoTYwN6-G4G0C_JDWBEo6EOA@mail.gmail.com>
+	b=C3wGx23ITn4mc1GJo9GZD65A3xKcMh4aCNG9nBdTFDEEY5A9QHOkFqIjJQ6LOFhTT
+	 YQ/EdwUOrlQcKa5n4xLsZaL1IUz4BUis0BAgWAkLOyu6+hsqO3ZPk610x59kT6oyOB
+	 F5gMHa4iuEa+Z3sRk/xsjIbwKO6oapB7qQazE60w=
+Date: Wed, 21 May 2025 13:11:14 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Linux PM <linux-pm@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Jon Hunter <jonathanh@nvidia.com>,
+	Saravana Kannan <saravanak@google.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	linux-usb@vger.kernel.org
+Subject: Re: [PATCH v1] ucsi_ccg: Disable async suspend in ucsi_ccg_probe()
+Message-ID: <2025052158-venture-bottling-a3f8@gregkh>
+References: <6180608.lOV4Wx5bFT@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACT4Y+a3EPcAS4yB8c2d65+T3zXoTYwN6-G4G0C_JDWBEo6EOA@mail.gmail.com>
+In-Reply-To: <6180608.lOV4Wx5bFT@rjwysocki.net>
 
-On 2025-05-21 12:07:13+0200, Dmitry Vyukov wrote:
-> On Sat, 8 Mar 2025 at 13:34, Thomas Gleixner <tglx@linutronix.de> wrote:
-> >
-> > On Mon, Feb 24 2025 at 09:45, Dmitry Vyukov wrote:
-> > >
-> > > Also use EXPECT/ASSERT consistently. Currently there is an inconsistent mix
-> > > without obvious reasons for usage of one or another.
-> > >
-> > > Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
-> >
-> > As Gregory said, this should be the first patch in the series with a
-> > proper Fixes tag.
-> >
-> > >       /* Invalid op */
-> > >       op = -1;
-> > > -     prctl(PR_SET_SYSCALL_USER_DISPATCH, op, 0, 0, &sel);
-> > > -     ASSERT_EQ(EINVAL, errno);
+On Mon, May 12, 2025 at 03:26:53PM +0200, Rafael J. Wysocki wrote:
+> From: Jon Hunter <jonathanh@nvidia.com>
 > 
-> > > +     EXPECT_EQ(-1, prctl(PR_SET_SYSCALL_USER_DISPATCH, op, 0, 0, &sel));
-> > > +     EXPECT_EQ(EINVAL, errno);
-> >
-> > Seriously?
-> >
-> > Something like:
-> >
-> > static void prctl_invalid(unsigned long op, unsigned long offs, unsigned long len,
-> >                           void *sel, int err)
-> > {
-> >         EXPECT_EQ(-1, prctl(PR_SET_SYSCALL_USER_DISPATCH, op, offs, len, 0, (unsigned long)sel));
-> >         EXPECT_EQ(err, errno);
-> > }
-> >
-> > static void prctl_valid(unsigned long op, unsigned long offs, unsigned long len,
-> >                         void *sel)
-> > {
-> >         EXPECT_EQ(0, prctl(PR_SET_SYSCALL_USER_DISPATCH, op, offs, len, 0, (unsigned long)sel));
-> > }
-> >
-> > ....
-> >         /* Invalid op */
-> >         prctl_invalid(-1, 0, 0, &sel, -EINVAL);
-> >         /* offset != 0 */
-> >         prctl_invalid(PR_SYS_DISPATCH_OFF, 1, 0, NULL, -EINVAL);
-> >         ....
-> >         /* The odd valid test in bad_prctl_param() */
-> >         prctl_valid(PR_SYS_DISPATCH_OFF, 0, 0, NULL);
-> >
-> > But that's not enough macro uglyness sprinkled all over the place and
-> > too readable, right?
+> Commit aa7a9275ab81 ("PM: sleep: Suspend async parents after suspending
+> children") had triggered a suspend issue on Tegra boards because it had
+> reordered the syspend of devices with async suspend enabled with respect
+> to some other devices.  Specifically, the devices with async suspend
+> enabled that have no children are now suspended before any other devices
+> unless there are device links pointing to them as suppliers.
 > 
-> The EXPECT* macros unfortunately can't be used in helper functions,
-> they require some hidden _metadata variable that is present only in
-> TEST/TEST_F functions:
+> The investigation that followed the failure report uncovered that async
+> suspend was enabled for the cypd4226 device that was a Type-C controller
+> with a dependency on USB PHY and it turned out that disabling async
+> suspend for that device made the issue go away.  Since async suspend
+> takes dependencies between parents and children into account as well
+> as other dependencies between devices represented by device links, this
+> means that the cypd4226 has a dependency on another device that is
+> not represented in any form in the kernel (a "hidden" dependency), in
+> which case async suspend should not be enabled for it.
 > 
-> sud_test.c: In function ‘prctl_valid’:
-> ../kselftest_harness.h:107:45: error: ‘_metadata’ undeclared (first
-> use in this function)
->   107 |                         __FILE__, __LINE__, _metadata->name,
-> ##__VA_ARGS__)
+> Accordingly, make ucsi_ccg_probe() disable async suspend for the
+> devices handled by, which covers the cypd4226 device on the Tegra
+> boards as well as other devices likely to have similar "hidden"
+> dependencies.
+> 
+> Fixes: aa7a9275ab81 ("PM: sleep: Suspend async parents after suspending children")
+> Closes: https://lore.kernel.org/linux-pm/c6cd714b-b0eb-42fc-b9b5-4f5f396fb4ec@nvidia.com/
+> Reported-by: Jon Hunter <jonathanh@nvidia.com>
+> Tested-by: Jon Hunter <jonathanh@nvidia.com>
+> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
+> 
+> Commit aa7a9275ab81 is in linux-next and it has not reached the mainline yet.
 
-You can pass the _metadata parameter to your helper functions.
-While it's a bit iffy, many selftests do this.
-Also the upcoming harness selftests will make sure that this pattern
-keeps working.
+I'm guessing that's in your tree, so can you take this through that?
 
+thanks,
 
-Thomas
+greg k-h
