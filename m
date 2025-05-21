@@ -1,94 +1,285 @@
-Received: from mail-wr1-f74.google.com (mail-wr1-f74.google.com [209.85.221.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E664220686
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 23:08:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9ACE23C8A2
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 23:08:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747868893; cv=none; b=U4wAE15lGTVf+hBVoEVw3n17tEAs0WDC+xNlW734dxduqYONlyQxKcb/70K0k5IM5RdmDs4PzR0wvBQ9EPIAw+DnTlEOk+GmWK0Sx+uovaMJVTujQFqQ/bVTPTZ7H83AeZ7IGuKpN+7p1r7wcFR+ETo8YgKT3lvZyoA521HaJo0=
+	t=1747868898; cv=none; b=dO/9Z0DO6RIHYWMEX49A1cx8XspwdxMdSBCe2AbIja5ZGiCcbqclqF4W3E4cqfCFegJFJ8WQcfCTXj+xAw/p61M0lp0dFuFhd3J/Qs3oNXfWfjYBMKQvNjrHvIAvvB9n+MH5g9l8u7jFmNw5LGfK5CT3kH9s57hnvDDU7S0xw4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747868893; c=relaxed/simple;
-	bh=hMM6ZBbu1Z03i6mNXQssFFLvBk0seumlrn1yafMIhGM=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=VhzzUa1ZPIuDIQM4wBFDgqSiiF15DzZBrLzPpxOlqTWaqMQbmcsMWnpAya9q48uGOBK8tatGpw/p4WbsiPC2aCCz6jv0Vjrx5fxX08Ol/xhN02L1EdDT/sg3k5mfzn87ni8JeIVYYFPsjv6taVDv5ZazmjLUjLbzdLxQN2uJHZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ECZVUJKe; arc=none smtp.client-ip=209.85.221.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1747868898; c=relaxed/simple;
+	bh=a61dKM+sOIM0W5tW48Pob5ugW7t7gLWfNmxKzXb3ZUY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BfBWrwW+BleyNdC2wvYt4AT/uKAMiwvUaoVlsQNDIslJgyqdcHw2HNVJgUtm+qMzz7odHnMw8/JyI/3bk9dUCCpxR/afzjtcYtNXFRR71dpWiThjMG5uoRFn8A6aCvdbI7m45hmkHEIMNuyG1EZKfUcZMyL7lObHAaiBxvZasx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=bepJksC9; arc=none smtp.client-ip=44.202.169.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ECZVUJKe"
-Received: by mail-wr1-f74.google.com with SMTP id ffacd0b85a97d-3a363beb5ebso3376262f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 16:08:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747868890; x=1748473690; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Bk7nkRmDcObELLV9MxxzQAakXc5EAbtIqWryuUZfAWw=;
-        b=ECZVUJKe999kjhp1BabGxJNk8wNze3PPeoxzeuHUcrepj/lrff6zhLxcTD0sKsUQFI
-         XV896lGzFSb8Tou7Ze9AGXMZ2gDnWeopgcykR9bxBny+MKmJstNviZLOtquPGdB6nIw1
-         apht+GRCPwRVGZLF9dHKDQkunDbxJhsr+4qJ8IiAChLxBPUEUf8NYlA20qTj+RMTXW9q
-         sYJ9jhVSZVT+YA8nOhRH8JEomhdnLJKW7fpJokZCXvTgaSE8EeDQ7AQlQYxB8EgSTeyl
-         7OVS/zcesw46plVJTII/lHTpjZt4UTW8nUYn/vELrq6Q9iu+SWCEQuOM30eelzFCV48o
-         82aA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747868890; x=1748473690;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Bk7nkRmDcObELLV9MxxzQAakXc5EAbtIqWryuUZfAWw=;
-        b=d3CRzVQvk3elpq5eDGoO5Lwxi0Z7LA8nfo3sQJ5U9cqbk9QyjjO5ba3ZXFwoejPAEO
-         Ab6wyY4+p0fuOvVHLnxDpbJiyOFGnUxgWvsboi3L04d5aLdlLD3HAikPu2EgrPA8jnHB
-         glJehQtZdsdkiyjTs90aTOeoz77jpSC9P6ua0yVfkfLT2WR8LkvLF+jza9WtFQ2m8UFW
-         aIP6rNfT5USyEe2PWKAFpaiEuNbbFoKP6f/pfMAKSHQUdYoUfQP+leuOJJl2j0CwjN39
-         YheQA3Pgqr0jI/gnOc8e443fEGoZ4bNw8msFiyUmelVuJUb3tF0Zb/KPa/lQ00YJGQho
-         cqPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW8ze78WJpReHaLyYhAzcrtERiGlg8szgqwGwPVJw5Aqbh8X4fsrwEDJ46213zw5Ox14CfhO7DgigaSM3U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBwIiMUEthfyWQhVPURU9lWPogFTejjCHAB9QRy8mPagsIx7f+
-	vjJ3oeNZ0PHs8lKMe1pZsoCB7KLrgeiF9/5TtrLpTW9Njyn465GCbtLSyM4VNUhjH3A2ILb8OaU
-	mm/EQWghOuoU466iYsQ==
-X-Google-Smtp-Source: AGHT+IG5Ak+y0NsqThQ0r4o/665aH/C7btSt6+oGGDb7eAP6t0rwrL1Vx0qKYWSkRmlwXLgAu2h86m5nPyQnFjU=
-X-Received: from wrs24.prod.google.com ([2002:a05:6000:658:b0:3a3:6a36:d12])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6000:2288:b0:3a1:f937:6e7c with SMTP id ffacd0b85a97d-3a35fe67a7bmr21858924f8f.22.1747868889839;
- Wed, 21 May 2025 16:08:09 -0700 (PDT)
-Date: Wed, 21 May 2025 23:08:07 +0000
-In-Reply-To: <20250311133357.90322-1-richard120310@gmail.com>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="bepJksC9"
+Received: from eig-obgw-5004a.ext.cloudfilter.net ([10.0.29.221])
+	by cmsmtp with ESMTPS
+	id HogguydCtiuzSHsXiu91BD; Wed, 21 May 2025 23:08:10 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id HsXhuVfkQjrgqHsXiu24D2; Wed, 21 May 2025 23:08:10 +0000
+X-Authority-Analysis: v=2.4 cv=PK7E+uqC c=1 sm=1 tr=0 ts=682e5cda
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=efVMuJ2jJG67FGuSm7J3ww==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
+ a=pGLkceISAAAA:8 a=20KFwNOVAAAA:8 a=J1Y8HTJGAAAA:8 a=1XWaLZrsAAAA:8
+ a=Ikd4Dj_1AAAA:8 a=8AirrxEcAAAA:8 a=Q-fNiiVtAAAA:8 a=P-IC7800AAAA:8
+ a=vggBfdFIAAAA:8 a=kVnt-_iYu5xLd2SthAEA:9 a=QEXdDO2ut3YA:10
+ a=y1Q9-5lHfBjTkpIzbSAN:22 a=ST-jHhOKWsTCqRlWije3:22 a=d3PnA9EDa4IxuAV0gXij:22
+ a=xYX6OU9JNrHFPr8prv8u:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=OOmlzPBtUod15P9R+5e8Nw5tXEBviOvhwK88h6lKd3o=; b=bepJksC97ML9IvPhF7R0GsUE39
+	iDt8KE0iZROL8TgvVT9PzNwW9sKKBRJIhmxUFgGMA4kRLMqCqmH91zI6xfv4az4R0oAueD2N1pUNA
+	bervFDvFSZHb9jsR3chCY5xthPhQ0Cl/+MKfCN4IxcuwZC/eNjc6eJT48KNq7zmhswlELymKhpwJ9
+	IE+aST75QjzkaqovTJCwxM0OOGiP/qFBJJhUXJj2Q+x9IJWsqcd9FDDhPrBZF1ucKo6mywih6j/rj
+	bOl+lJogaVAvYC+9j/8hT2QnS2oen4Ab7a1MoDN1moAJWQOY79Q+3qkhREtWoNHjvcT3rbLY8DX1O
+	KwaRGQqw==;
+Received: from [177.238.17.151] (port=34848 helo=[192.168.0.27])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1uHsXZ-00000000Kdy-1IG9;
+	Wed, 21 May 2025 18:08:01 -0500
+Message-ID: <ebba72b4-9245-4be5-8f0d-87f7b326d468@embeddedor.com>
+Date: Wed, 21 May 2025 17:07:28 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250311133357.90322-1-richard120310@gmail.com>
-Message-ID: <aC5c1-VXoAIctyRI@google.com>
-Subject: Re: [RFC PATCH v2] rust: list: Add examples for linked list
-From: Alice Ryhl <aliceryhl@google.com>
-To: I Hsin Cheng <richard120310@gmail.com>
-Cc: ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, 
-	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me, 
-	a.hindborg@kernel.org, tmgross@umich.edu, dakr@kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev, 
-	jserv@ccns.ncku.edu.tw
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v2 8/8] net: core: Convert
+ dev_set_mac_address_user() to use struct sockaddr_storage
+To: Kees Cook <kees@kernel.org>, Kuniyuki Iwashima <kuniyu@amazon.com>
+Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+ Jason Wang <jasowang@redhat.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+ Cosmin Ratiu <cratiu@nvidia.com>, Vladimir Oltean <vladimir.oltean@nxp.com>,
+ Florian Fainelli <florian.fainelli@broadcom.com>,
+ Kory Maincent <kory.maincent@bootlin.com>, Maxim Georgiev
+ <glipus@gmail.com>, netdev@vger.kernel.org,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+ Chaitanya Kulkarni <kch@nvidia.com>,
+ Mike Christie <michael.christie@oracle.com>,
+ Max Gurtovoy <mgurtovoy@nvidia.com>, Maurizio Lombardi
+ <mlombard@redhat.com>, Dmitry Bogdanov <d.bogdanov@yadro.com>,
+ Mingzhe Zou <mingzhe.zou@easystack.cn>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ "Dr. David Alan Gilbert" <linux@treblig.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, Lei Yang
+ <leiyang@redhat.com>, Ido Schimmel <idosch@nvidia.com>,
+ Samuel Mendoza-Jonas <sam@mendozajonas.com>,
+ Paul Fertser <fercerpav@gmail.com>, Alexander Aring <alex.aring@gmail.com>,
+ Stefan Schmidt <stefan@datenfreihafen.org>,
+ Miquel Raynal <miquel.raynal@bootlin.com>, Hayes Wang
+ <hayeswang@realtek.com>, Douglas Anderson <dianders@chromium.org>,
+ Grant Grundler <grundler@chromium.org>, Jay Vosburgh <jv@jvosburgh.net>,
+ "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, Jiri Pirko <jiri@resnulli.us>,
+ Aleksander Jan Bajkowski <olek2@wp.pl>, Philipp Hahn <phahn-oss@avm.de>,
+ Eric Biggers <ebiggers@google.com>, Ard Biesheuvel <ardb@kernel.org>,
+ Al Viro <viro@zeniv.linux.org.uk>, Ahmed Zaki <ahmed.zaki@intel.com>,
+ Alexander Lobakin <aleksander.lobakin@intel.com>,
+ Xiao Liang <shaw.leon@gmail.com>, linux-kernel@vger.kernel.org,
+ linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+ target-devel@vger.kernel.org, linux-wpan@vger.kernel.org,
+ linux-usb@vger.kernel.org, linux-hyperv@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20250521204310.it.500-kees@kernel.org>
+ <20250521204619.2301870-8-kees@kernel.org>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20250521204619.2301870-8-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 177.238.17.151
+X-Source-L: No
+X-Exim-ID: 1uHsXZ-00000000Kdy-1IG9
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.0.27]) [177.238.17.151]:34848
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 8
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfBaq61h5bGVmOOVFTFPrB7rgT5o7RDu30fliG2aD/lLG8BC1esLUqLIfCJZgyrdV2dkb71TxL/ATjCFoSfsKP2QxM6FwW7XMvBqzphqAHD/kFDKcqKxE
+ 3EntJEdSuGxUFzpV88BdZafJlKGuOTb+QhIIvWUJtVuVAUztcu+jyWXQbjcl4DjmqZ+KnwykP1OwreZjikXOmLoWBtOI+HHRgGUFMNSSkmjjPaM0XiKOexwR
 
-On Tue, Mar 11, 2025 at 09:33:57PM +0800, I Hsin Cheng wrote:
-> Add basic examples for the structure "List", also serve as the unit
-> tests for basic list methods. Including the following manipulations:
-> * List creation
-> * List emptiness check
-> * List insertion through push_front(), push_back()
-> * List item removal through pop_front(), pop_back()
-> * Push one list to another through push_all_back()
+
+
+On 21/05/25 14:46, Kees Cook wrote:
+> Convert callers of dev_set_mac_address_user() to use struct
+> sockaddr_storage. Add sanity checks on dev->addr_len usage.
 > 
-> The method "remove()" doesn't have an example here because insertion
-> with push_front() or push_back() will take the ownership of the item,
-> which means we can't keep any valid reference to the node we want to
-> remove, unless Cursor is used. The remove example through Cursor is
-> already demonstrate with 'commit 52ae96f5187c ("rust: list: make the
-> cursor point between elements")' .
+> Signed-off-by: Kees Cook <kees@kernel.org>
+
+Acked-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+Thanks!
+-Gustavo
+
+> ---
+> Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+> Cc: Jason Wang <jasowang@redhat.com>
+> Cc: Andrew Lunn <andrew+netdev@lunn.ch>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Cc: Simon Horman <horms@kernel.org>
+> Cc: Stanislav Fomichev <sdf@fomichev.me>
+> Cc: Cosmin Ratiu <cratiu@nvidia.com>
+> Cc: Vladimir Oltean <vladimir.oltean@nxp.com>
+> Cc: Florian Fainelli <florian.fainelli@broadcom.com>
+> Cc: Kory Maincent <kory.maincent@bootlin.com>
+> Cc: Maxim Georgiev <glipus@gmail.com>
+> Cc: Kuniyuki Iwashima <kuniyu@amazon.com>
+> Cc: <netdev@vger.kernel.org>
+> ---
+>   include/linux/netdevice.h |  2 +-
+>   drivers/net/tap.c         | 14 +++++++++-----
+>   drivers/net/tun.c         |  8 +++++++-
+>   net/core/dev_api.c        |  5 +++--
+>   net/core/dev_ioctl.c      |  6 ++++--
+>   5 files changed, 24 insertions(+), 11 deletions(-)
 > 
-> Link: https://github.com/Rust-for-Linux/linux/issues/1121
-> Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
+> diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+> index b4242b997373..adb14db25798 100644
+> --- a/include/linux/netdevice.h
+> +++ b/include/linux/netdevice.h
+> @@ -4216,7 +4216,7 @@ int netif_set_mac_address(struct net_device *dev, struct sockaddr_storage *ss,
+>   			  struct netlink_ext_ack *extack);
+>   int dev_set_mac_address(struct net_device *dev, struct sockaddr_storage *ss,
+>   			struct netlink_ext_ack *extack);
+> -int dev_set_mac_address_user(struct net_device *dev, struct sockaddr *sa,
+> +int dev_set_mac_address_user(struct net_device *dev, struct sockaddr_storage *ss,
+>   			     struct netlink_ext_ack *extack);
+>   int dev_get_mac_address(struct sockaddr *sa, struct net *net, char *dev_name);
+>   int dev_get_port_parent_id(struct net_device *dev,
+> diff --git a/drivers/net/tap.c b/drivers/net/tap.c
+> index d4ece538f1b2..bdf0788d8e66 100644
+> --- a/drivers/net/tap.c
+> +++ b/drivers/net/tap.c
+> @@ -923,7 +923,7 @@ static long tap_ioctl(struct file *file, unsigned int cmd,
+>   	unsigned int __user *up = argp;
+>   	unsigned short u;
+>   	int __user *sp = argp;
+> -	struct sockaddr sa;
+> +	struct sockaddr_storage ss;
+>   	int s;
+>   	int ret;
+>   
+> @@ -1000,16 +1000,17 @@ static long tap_ioctl(struct file *file, unsigned int cmd,
+>   			return -ENOLINK;
+>   		}
+>   		ret = 0;
+> -		dev_get_mac_address(&sa, dev_net(tap->dev), tap->dev->name);
+> +		dev_get_mac_address((struct sockaddr *)&ss, dev_net(tap->dev),
+> +				    tap->dev->name);
+>   		if (copy_to_user(&ifr->ifr_name, tap->dev->name, IFNAMSIZ) ||
+> -		    copy_to_user(&ifr->ifr_hwaddr, &sa, sizeof(sa)))
+> +		    copy_to_user(&ifr->ifr_hwaddr, &ss, sizeof(ifr->ifr_hwaddr)))
+>   			ret = -EFAULT;
+>   		tap_put_tap_dev(tap);
+>   		rtnl_unlock();
+>   		return ret;
+>   
+>   	case SIOCSIFHWADDR:
+> -		if (copy_from_user(&sa, &ifr->ifr_hwaddr, sizeof(sa)))
+> +		if (copy_from_user(&ss, &ifr->ifr_hwaddr, sizeof(ifr->ifr_hwaddr)))
+>   			return -EFAULT;
+>   		rtnl_lock();
+>   		tap = tap_get_tap_dev(q);
+> @@ -1017,7 +1018,10 @@ static long tap_ioctl(struct file *file, unsigned int cmd,
+>   			rtnl_unlock();
+>   			return -ENOLINK;
+>   		}
+> -		ret = dev_set_mac_address_user(tap->dev, &sa, NULL);
+> +		if (tap->dev->addr_len > sizeof(ifr->ifr_hwaddr))
+> +			ret = -EINVAL;
+> +		else
+> +			ret = dev_set_mac_address_user(tap->dev, &ss, NULL);
+>   		tap_put_tap_dev(tap);
+>   		rtnl_unlock();
+>   		return ret;
+> diff --git a/drivers/net/tun.c b/drivers/net/tun.c
+> index 7babd1e9a378..1207196cbbed 100644
+> --- a/drivers/net/tun.c
+> +++ b/drivers/net/tun.c
+> @@ -3193,7 +3193,13 @@ static long __tun_chr_ioctl(struct file *file, unsigned int cmd,
+>   
+>   	case SIOCSIFHWADDR:
+>   		/* Set hw address */
+> -		ret = dev_set_mac_address_user(tun->dev, &ifr.ifr_hwaddr, NULL);
+> +		if (tun->dev->addr_len > sizeof(ifr.ifr_hwaddr)) {
+> +			ret = -EINVAL;
+> +			break;
+> +		}
+> +		ret = dev_set_mac_address_user(tun->dev,
+> +					       (struct sockaddr_storage *)&ifr.ifr_hwaddr,
+> +					       NULL);
+>   		break;
+>   
+>   	case TUNGETSNDBUF:
+> diff --git a/net/core/dev_api.c b/net/core/dev_api.c
+> index 6011a5ef649d..1bf0153195f2 100644
+> --- a/net/core/dev_api.c
+> +++ b/net/core/dev_api.c
+> @@ -84,14 +84,15 @@ void dev_set_group(struct net_device *dev, int new_group)
+>   	netdev_unlock_ops(dev);
+>   }
+>   
+> -int dev_set_mac_address_user(struct net_device *dev, struct sockaddr *sa,
+> +int dev_set_mac_address_user(struct net_device *dev,
+> +			     struct sockaddr_storage *ss,
+>   			     struct netlink_ext_ack *extack)
+>   {
+>   	int ret;
+>   
+>   	down_write(&dev_addr_sem);
+>   	netdev_lock_ops(dev);
+> -	ret = netif_set_mac_address(dev, (struct sockaddr_storage *)sa, extack);
+> +	ret = netif_set_mac_address(dev, ss, extack);
+>   	netdev_unlock_ops(dev);
+>   	up_write(&dev_addr_sem);
+>   
+> diff --git a/net/core/dev_ioctl.c b/net/core/dev_ioctl.c
+> index fff13a8b48f1..616479e71466 100644
+> --- a/net/core/dev_ioctl.c
+> +++ b/net/core/dev_ioctl.c
+> @@ -572,9 +572,11 @@ static int dev_ifsioc(struct net *net, struct ifreq *ifr, void __user *data,
+>   		return dev_set_mtu(dev, ifr->ifr_mtu);
+>   
+>   	case SIOCSIFHWADDR:
+> -		if (dev->addr_len > sizeof(struct sockaddr))
+> +		if (dev->addr_len > sizeof(ifr->ifr_hwaddr))
+>   			return -EINVAL;
+> -		return dev_set_mac_address_user(dev, &ifr->ifr_hwaddr, NULL);
+> +		return dev_set_mac_address_user(dev,
+> +						(struct sockaddr_storage *)&ifr->ifr_hwaddr,
+> +						NULL);
+>   
+>   	case SIOCSIFHWBROADCAST:
+>   		if (ifr->ifr_hwaddr.sa_family != dev->type)
 
-LGTM.
-
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
