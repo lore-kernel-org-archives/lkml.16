@@ -1,195 +1,163 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A3AB233701
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 06:09:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D0BA233151
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 06:09:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747807761; cv=none; b=TXlmyPB+zqWDVexnIrvLvErhGprQc8liqT/MUklOFfjFonVRSsampIVzGNe13wfy5GHVUlPIn+3RvpcFRWjld4PD+Uh063v3aJyYDlFoX3aSPbftbhitfjcnm7uoWtFkpUcgw4oXU27eGpJqMoj9rVfWnNxoNGqBvSFEePm+B04=
+	t=1747807761; cv=none; b=U+lemqesAQAJa6UYzJSI0yvVP+LyldOmXjBwVbQHBDYcUw/+JMAE5aISgBwWt6UhK8obQfJNRR7RZbR/Vs9/ftmnag//ctNsiYEKtDGEYuT3xeKKjIZoyYjBOE4I0UG6e1sfTAAq9kK8zPwlPfX/GrUkmcx8WGN66nbR2+xfuNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747807761; c=relaxed/simple;
-	bh=L4OQtarvf/1bJvzk2XlyPF3hgExBeKzDuxc92ewezoQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tXj1LguzT9KHMa81bPgtKlSENMQ7U07XMVtfhilr7PFqII6EnfB3O1+j0nEdYpMvkD8/VUjPdUKwWjTuJlZCP5BRWlspLFIwjMojoAowJYjbB/3qIX+NDMNP0roGcBK8XZB3/FNhkFvCVKvv69LIxSMMFD4bETkcqVjOnwDDTOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=cayQCvX9; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	bh=+o9D6l7atUhFp6Ph2jjwIFt9sMPwYhrUqRy7QRKBFCk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TStKxqLE5QW+OqRa8muKyYKkL1LN06dwol4leYFQTAACbDxT6YGKFGSYAdhx1VUSZ1MvZba0+/gxdyZ63/iveKuAtFn6UKkxaamAXipBGDoCbuk8e9B8qGKnt3VNZjNWNJo6XobGtuMK13FEeNxyM1RoSHjSI6P9kRtCUwXIiG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=buqC9y5Y; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="cayQCvX9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1747807757;
-	bh=L4OQtarvf/1bJvzk2XlyPF3hgExBeKzDuxc92ewezoQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=cayQCvX9UdhV30m49XW8d7V4VpiLD07dq+iHWSLqUJQxxejtSuQxpKpqlAAlKsjBT
-	 L5/LPl9UmpsSLMSVI+izwuqFdHCqJELKumry4Tnm+h0Zgm6icXJ1vE4TfFRe81/VwV
-	 bTGwTrzNv+RcPkBZW22iShrRBnqK91qBCvky3HzETzi+ec2KAE2JDqn5IJnlDKCk7u
-	 RAXDLs7acDPzOmxp/xPoWhNrrHom3AXM5Vkw/awvjZbqy4TDWEocX8J4LvK+uOXmzd
-	 4yDAgjhKS5pkonaz/jHmlNfRWY8mIwOLT8UcKT8aXnKtPUQ4iSOhg/lbjykD2xSGxi
-	 g0hvxnO0/scbA==
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bbrezillon)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id B383917E0FBA;
-	Wed, 21 May 2025 08:09:16 +0200 (CEST)
-Date: Wed, 21 May 2025 08:09:13 +0200
-From: Boris Brezillon <boris.brezillon@collabora.com>
-To: =?UTF-8?B?QWRyacOhbg==?= Larumbe <adrian.larumbe@collabora.com>
-Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
- kernel@collabora.com, Steven Price <steven.price@arm.com>, Rob Herring
- <robh@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann
- <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
- <simona@ffwll.ch>
-Subject: Re: [PATCH v3 1/5] drm/panfrost: Add BO labelling to Panfrost
-Message-ID: <20250521080913.476d8b78@collabora.com>
-In-Reply-To: <20250520174634.353267-2-adrian.larumbe@collabora.com>
-References: <20250520174634.353267-1-adrian.larumbe@collabora.com>
-	<20250520174634.353267-2-adrian.larumbe@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="buqC9y5Y"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a36561d25cso572636f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 23:09:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747807757; x=1748412557; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZEUbi3Q05HXkxlWwhqCkqBQxo/YQlWetyK+KN6/4iB4=;
+        b=buqC9y5Y/6VeB4CEJv1T2x0Kqs02KyIdzNLpitC2v0iX9bxrGKBWp1zrq5Tjelt3gS
+         qyxeto7MgC0iEcLLXD5WXXFTd5dSUsdbyABQlSCUWjmH5h5mF3n22jGfq9biW771BCi/
+         QSy/UvJkntkVzAmRcUQdGHyvSOWcTKCid9NQHc2fZRl/rcVA+Yk/urBZgi36LSLRYCCt
+         iCHZFj+7RL7fbU3WpYHfFthJ3+XSmo6BN2Rm99tDq2ZXoQxDd0KYwlKxT8u1DdL/TZ+2
+         BFu9drJZVKEAZ+EjQ2wpqnljSBa9aVRaFzT/AldigdgHrbW7dpW+Ef3hI/v2q6qgnfLf
+         Ee/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747807757; x=1748412557;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZEUbi3Q05HXkxlWwhqCkqBQxo/YQlWetyK+KN6/4iB4=;
+        b=If00KVk3odvI5OaCHH1QgV7kf2m69uzxwLsjF/iCPR4Xp05yWf+BYS3J2TByOZDqcy
+         edGusXii+w3IcmlaS7Obxk3Ow4MPA6jFKAtxj7LoFfydBVB7ZBZwB0EyffE+RFSWmbEu
+         0qCOquhtepJHDfb+tp1RZo/3RDfg17kJWjadkHESLLmp/J8mfy28kPNsGUnBp098kgVh
+         Z/63D/ShJlDdeoCJUAzchZETwPsBUKdCJEoksp0NwBu1UqFpLux7/kDC6RaW9NzdHH3x
+         jn2XRJUzGfTp9vJBCQTS9DO7e3aA3w+KWks4rlQy4JnIQyQSOFfjrG0JnJv7UJrPmJLa
+         zHmA==
+X-Forwarded-Encrypted: i=1; AJvYcCUIz2y06GUpluGvlhSr5BxseF/r7DyBSUHM/yK8U5KXMhLAu9dqddeEoCgt4PSa0jhe8E8XxpwtPErqhj0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5vEvUlQQVrMD07L5CUlvx80t799znVPKoTSd75pw1epk+B+gU
+	h/DC02xHExRbau3SO/wq7tcaIdbCgyUNb8eB2rCGP9hcRW4W7OivIOi+6Z1fntdG2j0=
+X-Gm-Gg: ASbGncv+cO9NxA37D2Q3sX6mPndNjbgYhPq2jcPm7T59+ZHoMldAIFerKImf3kuo9RR
+	Xg3zEpNmOd5pkbza9U+rzSH/EYKkYGw1AfvOydkn/ZX0C6UHKOEUGsuugJQnvXo2d6zpPF/cGrN
+	x+L1EzrQs+Kmjvrra/SUfKpkEVJ2J8iXHH9hbwCjvHclmhijrX+7KkkgeAY+cHozvPvHG8qZ2vf
+	VVbvIeBv3HJFJwe3HrfLLgY650Hr4aud+XRoChEWm6ad0itUCnsi4HVkyWv+37T+PQ+/6wBR0Z5
+	vplmSO+UEGRZ4DsDQAVKDFt8UPun5kHaif7+pDkIzfS5thQ4HeWRKxiSORRL64PvOIFdNfHepi7
+	v7BFuoQ==
+X-Google-Smtp-Source: AGHT+IF+1B2jv5MQsNyTXXrHvnGqFgZWabS6OWBTZnJ1wkFfzcgIBoXkTS8I6Fg4OWkmktx/hyVW4g==
+X-Received: by 2002:a05:600c:a41:b0:441:c5ee:cdb4 with SMTP id 5b1f17b1804b1-442fd66ded5mr61457855e9.4.1747807756996;
+        Tue, 20 May 2025 23:09:16 -0700 (PDT)
+Received: from [192.168.1.28] ([178.197.223.125])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f1ef01besm55860565e9.10.2025.05.20.23.09.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 May 2025 23:09:16 -0700 (PDT)
+Message-ID: <87af51dd-a35c-460a-af4c-813427cdaf84@linaro.org>
+Date: Wed, 21 May 2025 08:09:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/msm/dsi/dsi_phy_10nm: Fix missing initial VCO rate
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Rob Clark <robdclark@gmail.com>, Abhinav Kumar
+ <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20250520111325.92352-2-krzysztof.kozlowski@linaro.org>
+ <3ywacd4x23zadvwikw4hdprgbgxxdmbcar3lyayy4ezmd5lcyw@3h2oosmbk6yb>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ 2+47PN9NZAOyb771QoVr8A==
+In-Reply-To: <3ywacd4x23zadvwikw4hdprgbgxxdmbcar3lyayy4ezmd5lcyw@3h2oosmbk6yb>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-On Tue, 20 May 2025 18:43:58 +0100
-Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com> wrote:
+On 20/05/2025 22:06, Dmitry Baryshkov wrote:
+> On Tue, May 20, 2025 at 01:13:26PM +0200, Krzysztof Kozlowski wrote:
+>> Driver unconditionally saves current state on first init in
+>> dsi_pll_10nm_init(), but does not save the VCO rate, only some of the
+>> divider registers.  The state is then restored during probe/enable via
+>> msm_dsi_phy_enable() -> msm_dsi_phy_pll_restore_state() ->
+>> dsi_10nm_pll_restore_state().
+>>
+>> Restoring calls dsi_pll_10nm_vco_set_rate() with
+>> pll_10nm->vco_current_rate=0, which basically overwrites existing rate of
+>> VCO and messes with clock hierarchy, by setting frequency to 0 to clock
+>> tree.  This makes anyway little sense - VCO rate was not saved, so
+>> should not be restored.
+>>
+>> If PLL was not configured configure it to minimum rate to avoid glitches
+>> and configuring entire in clock hierarchy to 0 Hz.
+>>
+>> Suggested-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+>> Link: https://lore.kernel.org/r/sz4kbwy5nwsebgf64ia7uq4ee7wbsa5uy3xmlqwcstsbntzcov@ew3dcyjdzmi2/
+>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> 
+> Fixes?
 
-> Functions for labelling UM-exposed an internal BOs are provided. An
-> example of the latter would be the Perfcnt sample buffer.
->=20
-> This commit is done in preparation of a following one that will allow
-> UM to set BO labels through a new ioctl().
->=20
-> Signed-off-by: Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com>
-> Reviewed-by: Steven Price <steven.price@arm.com>
+Probably:
+Fixes: a4ccc37693a2 ("drm/msm/dsi_pll_10nm: restore VCO rate during
+restore_state")
 
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+But CC stable would not be appropriate, since this was never reproduced
+on this PHY/hardware and we only guess a visible issue being fixed here.
 
-> ---
->  drivers/gpu/drm/panfrost/panfrost_gem.c | 42 +++++++++++++++++++++++++
->  drivers/gpu/drm/panfrost/panfrost_gem.h | 17 ++++++++++
->  2 files changed, 59 insertions(+)
->=20
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_gem.c b/drivers/gpu/drm/pa=
-nfrost/panfrost_gem.c
-> index 963f04ba2de6..4c5be7ccc9cc 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_gem.c
-> +++ b/drivers/gpu/drm/panfrost/panfrost_gem.c
-> @@ -1,6 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /* Copyright 2019 Linaro, Ltd, Rob Herring <robh@kernel.org> */
-> =20
-> +#include <linux/cleanup.h>
->  #include <linux/err.h>
->  #include <linux/slab.h>
->  #include <linux/dma-buf.h>
-> @@ -35,6 +36,9 @@ static void panfrost_gem_free_object(struct drm_gem_obj=
-ect *obj)
->  	 */
->  	WARN_ON_ONCE(!list_empty(&bo->mappings.list));
-> =20
-> +	kfree_const(bo->label.str);
-> +	mutex_destroy(&bo->label.lock);
-> +
->  	if (bo->sgts) {
->  		int i;
->  		int n_sgt =3D bo->base.base.size / SZ_2M;
-> @@ -260,6 +264,7 @@ struct drm_gem_object *panfrost_gem_create_object(str=
-uct drm_device *dev, size_t
->  	mutex_init(&obj->mappings.lock);
->  	obj->base.base.funcs =3D &panfrost_gem_funcs;
->  	obj->base.map_wc =3D !pfdev->coherent;
-> +	mutex_init(&obj->label.lock);
-> =20
->  	return &obj->base.base;
->  }
-> @@ -302,3 +307,40 @@ panfrost_gem_prime_import_sg_table(struct drm_device=
- *dev,
-> =20
->  	return obj;
->  }
-> +
-> +void
-> +panfrost_gem_set_label(struct drm_gem_object *obj, const char *label)
-> +{
-> +	struct panfrost_gem_object *bo =3D to_panfrost_bo(obj);
-> +	const char *old_label;
-> +
-> +	scoped_guard(mutex, &bo->label.lock) {
-> +		old_label =3D bo->label.str;
-> +		bo->label.str =3D label;
-> +	}
-> +
-> +	kfree_const(old_label);
-> +}
-> +
-> +void
-> +panfrost_gem_internal_set_label(struct drm_gem_object *obj, const char *=
-label)
-> +{
-> +	struct panfrost_gem_object *bo =3D to_panfrost_bo(obj);
-> +	const char *str;
-> +
-> +	/* We should never attempt labelling a UM-exposed GEM object */
-> +	if (drm_WARN_ON(bo->base.base.dev, bo->base.base.handle_count > 0))
-> +		return;
-> +
-> +	if (!label)
-> +		return;
-> +
-> +	str =3D kstrdup_const(label, GFP_KERNEL);
-> +	if (!str) {
-> +		/* Failing to allocate memory for a label isn't a fatal condition */
-> +		drm_warn(bo->base.base.dev, "Not enough memory to allocate BO label");
-> +		return;
-> +	}
-> +
-> +	panfrost_gem_set_label(obj, str);
-> +}
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_gem.h b/drivers/gpu/drm/pa=
-nfrost/panfrost_gem.h
-> index 7516b7ecf7fe..6c187b9b66fc 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_gem.h
-> +++ b/drivers/gpu/drm/panfrost/panfrost_gem.h
-> @@ -41,6 +41,20 @@ struct panfrost_gem_object {
->  	 */
->  	size_t heap_rss_size;
-> =20
-> +	/**
-> +	 * @label: BO tagging fields. The label can be assigned within the
-> +	 * driver itself or through a specific IOCTL.
-> +	 */
-> +	struct {
-> +		/**
-> +		 * @label.str: Pointer to NULL-terminated string,
-> +		 */
-> +		const char *str;
-> +
-> +		/** @lock.str: Protects access to the @label.str field. */
-> +		struct mutex lock;
-> +	} label;
-> +
->  	bool noexec		:1;
->  	bool is_heap		:1;
->  };
-> @@ -89,4 +103,7 @@ void panfrost_gem_teardown_mappings_locked(struct panf=
-rost_gem_object *bo);
->  int panfrost_gem_shrinker_init(struct drm_device *dev);
->  void panfrost_gem_shrinker_cleanup(struct drm_device *dev);
-> =20
-> +void panfrost_gem_set_label(struct drm_gem_object *obj, const char *labe=
-l);
-> +void panfrost_gem_internal_set_label(struct drm_gem_object *obj, const c=
-har *label);
-> +
->  #endif /* __PANFROST_GEM_H__ */
->=20
-> base-commit: 9ff4fdf4f44b69237c0afc1d3a8dac916ce66f3e
 
+Best regards,
+Krzysztof
