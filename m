@@ -1,93 +1,84 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC3A4635;
-	Wed, 21 May 2025 06:06:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A5CD635
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 06:06:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747807569; cv=none; b=LOMb3U0Pj5lG4ScSG/0Ase6MAos1KXT3/cyBmyCyobqvsExMpG3iTMhLkWd1h1vOZWrGwWN0qUNuf5Xi6R67ThMCp834tFbITHvOGC+Y526j0rpMRxsk8dX7JnO+cmdWH/nGS9dlgDCoEt79KbxgOvUPedEEEAxRFgbg1XLcmWU=
+	t=1747807577; cv=none; b=aCm5VGwYIx7+G6mvsVcxOOrBdA5hnn2MrBLGRIj4C4pOBO6ut/XTdhID7mTH2ESjAlgW3NAVOP+9vMyHDGYDRzfPH6VlWJUIwUeYRH1iTbYK5ox2SSjcaSG05CHQAFDyS3I7nbsAR/9Au2Iy6EhqyeX+7MMPqjOnTx/K7Mzj/NI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747807569; c=relaxed/simple;
-	bh=zDZP7fql9Cjn2XFyjL+oX04PjvDu3cO2MNDmYr4yIR4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pKHCynM5befPl+5hDRHUqMDJGjUlxEi7o4mHjWPLWu427MYU5ZJCTBw1VigS5GsFKAUQpKjVpZ665ocEar56H1/56LF1Q57D4qIefzwN74/KKaQeQ0XO2pTcTQUfaSYfXE9V6FHq33a5kMbdJQvNGkENV8OnjOu06PJcRpxoApI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [223.64.69.3])
-	by gateway (Coremail) with SMTP id _____8AxDGtEbS1oF2T0AA--.1782S3;
-	Wed, 21 May 2025 14:05:56 +0800 (CST)
-Received: from [127.0.0.1] (unknown [223.64.69.3])
-	by front1 (Coremail) with SMTP id qMiowMCxbRtAbS1ombPkAA--.23806S2;
-	Wed, 21 May 2025 14:05:55 +0800 (CST)
-Message-ID: <7fadc893-8d4c-4509-970d-52d4dbe7e51b@loongson.cn>
-Date: Wed, 21 May 2025 14:05:52 +0800
+	s=arc-20240116; t=1747807577; c=relaxed/simple;
+	bh=Sv6ILvaJa+fw9Od09i4qiDcqE8ahmFmFZ7k95KwTEYQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jvPWyqWTMQEWCQ2JCiYc+GQt2wjp5cRIA5zv0pxrlNzphsFPQOfG5SY+iA7BtSMy2j2GSQ/kMgglBwP+cZygxuOebBNLtDSS6wbViHsQvyp0+e6FAO77beZmD29CI1E+5NUmWNgP0ORPUQWqKfsyz8gn8tcmzAvk5QkZPu+XIj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vf/w0K7P; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vf/w0K7P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4C31C4CEE4;
+	Wed, 21 May 2025 06:06:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747807576;
+	bh=Sv6ILvaJa+fw9Od09i4qiDcqE8ahmFmFZ7k95KwTEYQ=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=Vf/w0K7PfAG4fI5mQh+y+HDF6+QaBKQYj0h/Vge8Gq2UUlIHztEiboZgJiMo5ycwX
+	 I1WfFY2rNI+DHDt5UgH+ndcODV8CcCe69DOjGITtuYOr0AxqUKv8RGXtdSrrrdm5yd
+	 h/1DaTVDexdo9y9PJOWhG0ofwsc7Mi19JEZrL17i0sgZ5eWgNSjoWJOGbuMdr+rSlU
+	 IioSlQgYUfN2j3hwT4q4RyVYD+H6pKDj1tfo9N0R/mlq64+3n2YDskGBS5LLwfmdBB
+	 rWOlWWxOgf/Bf+C169T752BbYMWiu5+0xCcob1siizk8v7DVO4jGvhjkX2YT2ycZgM
+	 eRx0EnzrLZbSQ==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 3E78FCE08F4; Tue, 20 May 2025 23:06:16 -0700 (PDT)
+Date: Tue, 20 May 2025 23:06:16 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: John Ogness <john.ogness@linutronix.de>,
+	LKML <linux-kernel@vger.kernel.org>, Petr Mladek <pmladek@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	"senozhatsky@chromium.org" <senozhatsky@chromium.org>
+Subject: Re: printk NMI splat on boot
+Message-ID: <fe455126-7b33-4246-b626-44ef33013765@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <a93e1a96-3685-41c3-8979-472b20dfca14@kernel.dk>
+ <84a577t590.fsf@jogness.linutronix.de>
+ <c99232fa-e861-48ec-8438-028e61d3b744@kernel.dk>
+ <36ccb46d-5041-47ce-b419-f49ccaeece9b@kernel.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next: build failure after merge of the mmc tree
-To: Stephen Rothwell <sfr@canb.auug.org.au>,
- Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Next Mailing List <linux-next@vger.kernel.org>
-References: <20250521154240.4aacf1b0@canb.auug.org.au>
-From: Binbin Zhou <zhoubinbin@loongson.cn>
-In-Reply-To: <20250521154240.4aacf1b0@canb.auug.org.au>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:qMiowMCxbRtAbS1ombPkAA--.23806S2
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7Xry8KF15AF4DJw4fCrWkZrc_yoWfCrg_Xa
-	yUtrnrW3W7Ja95Ja42qFZI9ry0ka1UJrn5KrWFqw1YqFyrXa1kWan7XFn2qr1xXa12vrWx
-	Gw1xt3Wkury2vosvyTuYvTs0mTUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbz8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0
-	oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F4
-	0EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_
-	Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxAIw28IcxkI7VAKI48JMx
-	C20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAF
-	wI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20x
-	vE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v2
-	0xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxV
-	WUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUzZ2-UUUUU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <36ccb46d-5041-47ce-b419-f49ccaeece9b@kernel.dk>
 
-Hi all:
+On Tue, May 20, 2025 at 02:41:40PM -0600, Jens Axboe wrote:
+> On 5/20/25 2:18 PM, Jens Axboe wrote:
+> >> What values are you using for CONFIG_RCU_EXP_CPU_STALL_TIMEOUT and
+> >> CONFIG_RCU_CPU_STALL_TIMEOUT?
+> > 
+> > CONFIG_RCU_CPU_STALL_TIMEOUT=21
+> > CONFIG_RCU_EXP_CPU_STALL_TIMEOUT=2
+> 
+> This was =20 btw, guess it could cut a bit too much...
 
-On 2025/5/21 13:42, Stephen Rothwell wrote:
-> Hi all,
->
-> After merging the mmc tree, today's linux-next build (arm
-> multi_v7_defconfig) failed like this:
->
-> drivers/mmc/host/sunxi-mmc.c: In function 'sunxi_mmc_probe':
-> drivers/mmc/host/sunxi-mmc.c:1391:38: error: stray '`' in program
->   1391 |                                      `"Failed to allocate DMA descriptor mem\n");
->        |                                      ^
->
-> Caused by commit
->
->    15252b7ff0b3 ("mmc: sunxi: Use devm_mmc_alloc_host() helper")
+Just confirming that setting CONFIG_RCU_EXP_CPU_STALL_TIMEOUT to two
+milliseconds is more than a bit on the aggressive side.  ;-)
 
-Sorry for my cheap mistake.
-I found this compilation error earlier as well. When I submitted the 
-patch, it was tested for compilation pass with COMPILE_TEST=y and 
-cross-compile, which the driver happened to exclude.
+Setting it to 20 milliseconds is OK for smartphone-class devices, but
+to the best of my knowledge, setting it less than 21 seconds (as in
+21,000 milliseconds) has not been tested on any other platform.
 
-To Ulf:
+> Changed them to:
+> 
+> CONFIG_RCU_CPU_STALL_TIMEOUT=100
+> CONFIG_RCU_EXP_CPU_STALL_TIMEOUT=0
+> 
+> and complaining is gone.
 
-I'm not sure which way you wish to address this issue.
-Did you just modify the patch, or should I resubmit a fix patch?
+This makes it take the default, which in this case would be the specified
+CONFIG_RCU_CPU_STALL_TIMEOUT value of 100 seconds.  Which is an unusually
+long timeout -- mainline these days is 21 seconds and some distros still
+use the old value of 60 seconds.
 
-Once again, I'm sorry.
-
->
-> I have used the mmc tree from next-20250516 for today.
->
-Thanks.
-Binbin
-
+							Thanx, Paul
