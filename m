@@ -1,57 +1,57 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F19C5236421
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 08:06:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 395DE2367A6
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 08:06:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747814801; cv=none; b=PD3EzHR+a1pW7SKhndi06COF7fGb0Kes7nV88SwtLkoAFZwW2UHICwoZl3EP+R4MpVoIcqqlqYTVz1XZC1bF14zrRCgeIDJe6oCMTYHw9r5qHRGr8J8czKCc4H/zU5NZ6nCbJ3Wk/YjzaWAxYUAtcsNP3G3+JtFcx/gRrY5ZBKg=
+	t=1747814803; cv=none; b=dLKia9yJtCn6dm2Z2e4i7e7f1s2tDU1Ifr8F5CpsAc7v9Q5no/PSu8ZDhSZvJBSXkoNKeC9xondr7aeR2Vl/5tnCz8EN+EIbAZ/uBScVfqHRJJAYaCXnjrfi2iB7k9sGlhD38j7Qr9ajYg/jNSM8OBiX9sZWC3fIPV9TIZ5VWWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747814801; c=relaxed/simple;
-	bh=vZqa7QqgtnSp55HuRvtuDX+8vOfAactf7efmJjZGr04=;
+	s=arc-20240116; t=1747814803; c=relaxed/simple;
+	bh=vmWq8La8V18v88CVLflvXrgvwKzC+y7QtPzqgryZIak=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=j050j55rmO2fUdyz2Ewh0bwbrdhuFmwERkc3vc4WFyVBEL4Jw477vRU995d1M9IptwXwgngf6UGgJqnoWKvNsgbMnChOV14eH6PVT1pFSGJcncL/hCTVDI91Ea8rMwlk1VT6P+gMfCcslcHkjDFadoVnIijnnhJkB1f69oMBLK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=futuring-girl.com; spf=pass smtp.mailfrom=futuring-girl.com; dkim=pass (2048-bit key) header.d=futuring-girl.com header.i=@futuring-girl.com header.b=fEtTnU/7; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=futuring-girl.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=futuring-girl.com
+	 To:Cc:Content-Type; b=Xc0XiR92SZLwnRpbq19d8oYP/2bfaoayNsf1AgZo4ICIZ8xHaaTFaDUMBf0J4wOVrhMdgIx69xLxwSuIE2NZh9VsyyJ65P3VkiahkinaKxTgatDQUYNjVSVzr5Wc5mvJ0lSS5pnNVPXkd44SKvNLKQ/vTIshfcUoxxnASSf99sI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Uth0+NE9; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=futuring-girl.com header.i=@futuring-girl.com header.b="fEtTnU/7"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-231e331baceso49433085ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 01:06:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Uth0+NE9"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5499614d3d2so7974629e87.3
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 01:06:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=futuring-girl.com; s=google; t=1747814799; x=1748419599; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1747814800; x=1748419600; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2pdXlyN7IyvbDBMyrxaqm4MW5jGasMnJapEHCIL2mBk=;
-        b=fEtTnU/7VjidV8wKgo1Sxls6m26yc0gQSxCGw3Kl3oQnaU7X+ZPlQsoV2bj7f+dNtG
-         RhRXLy25stYuhnrhZxmqWdxkHQiA6U4JANbWuAwwf9zLpOxqC/Nj9EBUbkNTDu1AuY+n
-         Y6uO62uXgjGyyu+NOXvDvoK1AZFiHF1ssh0gUSiV92HjmA8r1J767ntHE992z3l/8oF8
-         bZq9bePiNZEYzSTaUkWfI2XCYhEtveVRRQFXks0gss8bzau1AQhsSvA8D44dD7/82WF6
-         8MV+8jy/9uNMP5hqMLQIZgOvwGu2LBAG2/+3gK+izbZqA4sHMbrMW4D003Luaa5XlnbM
-         6Cxg==
+        bh=vmWq8La8V18v88CVLflvXrgvwKzC+y7QtPzqgryZIak=;
+        b=Uth0+NE9eBUqwamGju1GgRHr0bzsFpO98qPb/jkTeobFV1HNRfY2jUlLTWZrzRfWRg
+         9THlUqB928FoOz2EQlucJUUCrvJPjWW0nTOg+ASPX8pO2i5l/Gl6+SCyT5uzz2rdnekR
+         tP/qPW6hmGwNEE4QXqOg9C0skmMAH6gqykibEhvfp54uCYzjYDv0O9b3t8w3mlfvVGJp
+         KRlGpoDq2HKxuhS5DE2tlWKEEFXVoeTv+FyQESGOT+inJMk88IXpEzWr5J+HSumSkWLs
+         Ky6dSTAz2z2WEe82a0/JRgUt9jyb3aOHt0CiasS8rRMiHooyXhSl6zXI0b0vCN274Aga
+         iPeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747814799; x=1748419599;
+        d=1e100.net; s=20230601; t=1747814800; x=1748419600;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=2pdXlyN7IyvbDBMyrxaqm4MW5jGasMnJapEHCIL2mBk=;
-        b=j/u3nN21Uo/7CeqcjHjaEZDGYTooUo0Kan2BOW8+FfIIsAoDRo04n0pMBsFEgsaeHh
-         KVmSrhYIuy8TJSS3de70LNUrnw1IS8FtREZAJQN7FM0qOrggbZqqpObz23EQPU79w9Ti
-         U7dZYF+MkeWIzlYEJFdyMfCEs+VSVWHLMnhr3zYv0aV/OUlvOQLUbW1ek8xSrifSgias
-         v0Ct6k4rQDTco7LEjGahoIFqeLkUHAMaqD0NlbvxywZAEx89CdWFBHAE4wej+/zC0GCL
-         0bh6QmvfP9UZbGPlKXNyjEeNzzGeiAlpJuhMa9a34WjTUAEG7AZyrE8YscvGF82QJiHF
-         RWSw==
-X-Forwarded-Encrypted: i=1; AJvYcCV2i3prrcCK2RvuD2+st+BfIldOMzzvCbh6rpxLDDHE6u2LTFau5zOO5C7cvv/bvhaDcEGA/aJaGBWdOZo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4nPZzyrPjJKl5vRCB8U7yW4FCNLU4lvISQJlIgAQTA/GjgNwy
-	ZWWezLnXcIxW0IqT6lhlZ46TAvCeuYIUXcaeWxwTwyfPd7KaKYhSQAb52t5K0L06DSKHb/jNW7t
-	BTRIC3AmJpPm6SA9yRbFNc5adKW4z2ZAir1ZzjA2PzA==
-X-Gm-Gg: ASbGnctjE7nkK5bsQ9Mud/yCsw04zygJ7QuiS9MnTWNJQEz5xhw75bzJ3/l9uZlb7AX
-	cNfI/1YfTyQgFIwWakK6uVDhNPew4DwN0xHqSOTBf4cYoxEv8MCQuN3Tx0aVwGLo2Of0jsxW1iD
-	ya1GI+/WLMUnQepTTN3ONqI8HFy56GvL80
-X-Google-Smtp-Source: AGHT+IH8DuEEvWdJYePRJFj9EsmVuI3c/VF6QNMD7FNOGA9tqxrDD1VHeHav+B3+xGsZ7taklXBLW/jmBwwiWEj+LHI=
-X-Received: by 2002:a17:902:e54c:b0:224:216e:3342 with SMTP id
- d9443c01a7336-231d45ab600mr292557845ad.43.1747814799030; Wed, 21 May 2025
+        bh=vmWq8La8V18v88CVLflvXrgvwKzC+y7QtPzqgryZIak=;
+        b=KwxlJCjii5s/fovjPB8l7c3S/8mhIOw4R6hQu0PicC/+MOPYur+ju7BSTxRqu4jw05
+         4AyEa6KKu0anuo4U1w0tuBHarD6M4tFjVQv9qhskGSP5y/VOF7Dsl2DjScV2W1FQEKhZ
+         jyum6/WGRFDwvWb5talOjQt8Pc2J7UIwOEuJr1k8c4NQhJ0PFNk3aYCzW4VyskgtLjBu
+         W/R+GYsRPZE4Ex0jBoHU0tvpm0UXdKe9ZBMpk2oIN0W+OneK8YBTZ/9YeZ/OZxOsH/kK
+         LnkQLp2Dk4CbKL5fGgRsZgo1x0V8xggi+vqi5eEZWu20l0NF6/D7yJb9McBByV0MxijQ
+         1Fhw==
+X-Forwarded-Encrypted: i=1; AJvYcCViWBlW2qobgO68V5a2PPTeH1T+MRBvh//iHyLRZMe3pInBUP8XyEktR3/3ZtoRG8x1WFE4WRxtXNbKHkQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJhydxYD63CMs9hC3TUp+UY92bORQino5B39AtB7y5pSFRKYQU
+	eGJUHm9oVPr6eATzj2c0xscAYYdQj+vqYqQLuB4EHBXDoNdPloX8O10WldS5m0tmWC4zwnQYP8k
+	S+/gmjay0aJh9A/voO0389dB6B0Hn20rA07nvocec+A==
+X-Gm-Gg: ASbGncsUiRLNupymyWznJ/xnVuC7BHaSQk6m9luaX+twKX4X86UCfIgRGzLQwsmigSy
+	16rbLlaGuw5/YV96qUhmKasEzA36dxqf6rVyZZZBAm7BkiFNWAxzAgHBWyPW6utXQvcuxgnGJOl
+	DLcvwGE8UduEONIt3Xy5GP/KjCtz4cMU6vStTDiC+MZKXVVFXBJJw90NGPJmJgIvQU
+X-Google-Smtp-Source: AGHT+IFzqL2hMQJgymb+obXIB3oV7RaqIxS2CRTsbDvufBjx7VmWWtuVSiEp0oMSdCOjhxMQP3sb8T2eHn6CyskSx20=
+X-Received: by 2002:a05:6512:159f:b0:54a:cc11:9cc6 with SMTP id
+ 2adb3069b0e04-550e71baf85mr6118076e87.19.1747814799693; Wed, 21 May 2025
  01:06:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,64 +59,51 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250520125810.535475500@linuxfoundation.org>
-In-Reply-To: <20250520125810.535475500@linuxfoundation.org>
-From: Takeshi Ogasawara <takeshi.ogasawara@futuring-girl.com>
-Date: Wed, 21 May 2025 17:06:22 +0900
-X-Gm-Features: AX0GCFuegfYXgvNDF5A7pd3344VsOpt3BHbZs1QL3qKaXeOd37d7EocBJK-bb9Y
-Message-ID: <CAKL4bV4vnUVisBk1OZtJU7LF6h3RzKsTrTkY1pPfExJymC3x6A@mail.gmail.com>
-Subject: Re: [PATCH 6.14 000/145] 6.14.8-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org
+References: <20250521072416.57505-1-brgl@bgdev.pl> <PAXPR04MB8459CE5696113684FF076D12889EA@PAXPR04MB8459.eurprd04.prod.outlook.com>
+ <PAXPR04MB8459EE334B883AAAE22ACDFB889EA@PAXPR04MB8459.eurprd04.prod.outlook.com>
+In-Reply-To: <PAXPR04MB8459EE334B883AAAE22ACDFB889EA@PAXPR04MB8459.eurprd04.prod.outlook.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 21 May 2025 10:06:28 +0200
+X-Gm-Features: AX0GCFtBYjsig3EQjgstBBWqVBnIgRC3Zxx92K7iKXq3_O7ir0Ae2MdLcCivxy0
+Message-ID: <CAMRc=MeqWd0uEM7=mjA0VnPM3VgZU820osTd+r2jGFF1Y8ZVYw@mail.gmail.com>
+Subject: Re: [PATCH] gpio: davinci: select GPIOLIB_IRQCHIP
+To: Peng Fan <peng.fan@nxp.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, kernel test robot <lkp@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Greg
-
-On Tue, May 20, 2025 at 11:24=E2=80=AFPM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+On Wed, May 21, 2025 at 9:50=E2=80=AFAM Peng Fan <peng.fan@nxp.com> wrote:
 >
-> This is the start of the stable review cycle for the 6.14.8 release.
-> There are 145 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+> Hi Bartosz,
 >
-> Responses should be made by Thu, 22 May 2025 12:57:37 +0000.
-> Anything received after that time might be too late.
+> > Subject: RE: [PATCH] gpio: davinci: select GPIOLIB_IRQCHIP
+> >
+> > > Subject: [PATCH] gpio: davinci: select GPIOLIB_IRQCHIP
+> > >
+> >
+> > > ---
+> > > Another one signalled by the build bot. Peng: if you could go through
+> > > the other patches you sent and verify their dependencies are
+> > > satisfied, that would be awesome.
+> >
+> > I tried all configs under arch/arm/configs/, no error with this patch
+> > applied.
+> > I will give a check on other archs.
 >
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
-6.14.8-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-6.14.y
-> and the diffstat can be found below.
+> For other Kconfig entries, would you help add a patch to
+> select GPIOLIB_IRQCHIP for them all to avoid potential issue?
 >
-> thanks,
->
-> greg k-h
+> GPIO_TIMBERDALE: no configs select this entry
+> GPIO_BCM_KONA: multi_v7_defconfig has GPIOLIB_IRQCHIP in .config
+> GPIO_LPC18XX: lpc18xx_defconfig has GPIOLIB_IRQCHIP in .config
+> GPIO_XGENE: arm64 defconfig has GPIOLIB_IRQCHIP in .config
+> GPIO_GRGPIO: no configs select this entry
 >
 
-6.14.8-rc1 tested.
+I think all of them need to select GPIOLIB_IRQCHIP. Defconfig is not
+enough as a randconfig can still break in this case.
 
-Build successfully completed.
-Boot successfully completed.
-No dmesg regressions.
-Video output normal.
-Sound output normal.
-
-Lenovo ThinkPad X1 Carbon Gen10(Intel i7-1260P(x86_64) arch linux)
-
-[    0.000000] Linux version 6.14.8-rc1rv-g75456e272f58
-(takeshi@ThinkPadX1Gen10J0764) (gcc (GCC) 15.1.1 20250425, GNU ld (GNU
-Binutils) 2.44.0) #1 SMP PREEMPT_DYNAMIC Wed May 21 14:31:31 JST 2025
-
-Thanks
-
-Tested-by: Takeshi Ogasawara <takeshi.ogasawara@futuring-girl.com>
+Bart
