@@ -1,88 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93DA321CA04;
-	Wed, 21 May 2025 06:15:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C417A1A83ED;
+	Wed, 21 May 2025 06:17:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747808116; cv=none; b=K2SKVt6x2ofchw3DhWZazyOtin4ydEm/LLDM7OpqrYMEX+GVr9cTmmnasdU8aSJ66CJIDPOzkE5BZG1V2f6o3NZJqu9nkfygRlVgv1h+fL080zy8N0WSKRdKHgvXbX71gi8SFdEhyWtz+QyZE+qcYwzvzx5dyYJ6QCf1S3KfXsg=
+	t=1747808226; cv=none; b=gN8t3GvXevEEFYQ6eU6h1FnrSv3FAq32IZaD+Iwzx7CNdqZxcGiSg9n1Z4oKINZBzv5SsHlg7HCimzU8xuXoaM2m/D/3HydAp6dV9v2XvkfF0od20XOXFM+PnxgTwsb4zDghzQxYeqPT8tWNUM/Co41Zm3mDIwhZ8YgC0PjDlm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747808116; c=relaxed/simple;
-	bh=sJx91BkV28GYjBSa+iSn7l8WuBagAfyq5b55RI7mlqo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=k9sjVUuggjojzmWBRGIYVa5Yo4G4ZWB1qqtTaNmYEuK+4v7ard+oYN9wWFfgFkrNy04qqYMv3a4iXo9L8onz4O8rt30SwKDJ5hx/AAnJlZ3ecZpJ+CJazOueGN+/oghl+R/y6ylks57N8+KK9NvZwzbS0N3swnQ2rc55kJiUKOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IiDZO5sD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747808226; c=relaxed/simple;
+	bh=N8fS/PrdoLfYNjfVcJkFIYiSWo69y3Qai+YU19Ch5VA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=IgmRDuvoJjvbQrE9CUkS+/6rGcF8cqZ6c/3H+eNzI+xxayhWU0gvOmGWg+x7FOxG3cTdahAg51qRHsS6nVcb/oRgjk5UbKb91ldNJ0nImZCYL7d72P1lb135MR4+kJuchGS1LwRHl7/6CTEGmmlQBqF8JVQrG4Mu5srxH/beDZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=sVWrXBC2; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IiDZO5sD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B214C4CEF4;
-	Wed, 21 May 2025 06:15:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747808116;
-	bh=sJx91BkV28GYjBSa+iSn7l8WuBagAfyq5b55RI7mlqo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=IiDZO5sDENptMggY5XyI0I8C8XxozG9r+yNJM2a5KQAxiv4QHS1BnMrBQjAuqpBgJ
-	 Oz8OuiQTETZjal+MzFxwaNJSxBuPhrpUVsROPmSxJa/x79XWlhwHnVg580NRcOee6c
-	 7XiVibWU0e9aXI2t9QT9z4MKMr4H8S+tgJhKDbVEaiB4N8rSoI6pkHhZzXNQOObifB
-	 gRXK/PItFwD/pSA/Ey9qPr8b+ekloEJ1Ml2AW6x7j2tTOEML7A0Zmr7zKQwWwMJO2R
-	 b8E2wL2hxwE0334B3L3U6B7fz4fibjaExApU4ZhkRe22O8mkT4g5XX9mJhI2dBYXM2
-	 IgtWSvUYROowQ==
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-32934448e8bso6259961fa.3;
-        Tue, 20 May 2025 23:15:15 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWpQu19ECnzPvwR6BXoqob3LmDJm9GRhpvhxOvvMU+mk4wl82g5MKYviGF0FiLVzQZzbLBPKno=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywygr97ctmbQ5aiZk4GxnFDvUzcfhsHx/LCIFS8+Bd6e+JU50Bw
-	bt0wp636TflrxfvREUNrFO0StFu2mjv9UJuszJTt71FTWoG4QUpqYEXVEKAUHwedwf/9FxOAAfv
-	r755FuOTUXvuOi54rRXSm6grVb32fadA=
-X-Google-Smtp-Source: AGHT+IHKLowYz8Gj1JZtUk2LFvTmpyzqjMRzUEWGn1mH8p09HeNHaB4zZ9i/q4x2KqjrxIgDbp7asUplQHc85GLQLF8=
-X-Received: by 2002:a2e:b88e:0:b0:30d:e104:b795 with SMTP id
- 38308e7fff4ca-328077d4cf2mr65272041fa.39.1747808114433; Tue, 20 May 2025
- 23:15:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="sVWrXBC2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1747808219;
+	bh=suzT5qmoGe2eGH7zmAVnbRaMOCyy2nfC6Kn9PBY1kSA=;
+	h=Date:From:To:Cc:Subject:From;
+	b=sVWrXBC2k17QWxCnA92lG181eRDLAzb0/LvFsnCJL64bUqAuXZrq9brZdiDMt3ifx
+	 DID4GOBIMrdklZDX6imBofFiNnIdvwgSUk9Ve5I0QlLx5160TmtAoglO4+gak8vt9E
+	 pOvEYD1HLUbXf3d3JXC9SFDde56nrdcMsJIHP6G0U+e/SGrSSTIvTJ3O7dDhh43fcH
+	 b+LFZDEGrMLe3cDMIAcF0nVcCKdReLRsUhmkdoq1Jr86w4a+4cDJ8awl71a5LIgu3M
+	 xPYkCaU9GNQmWs5EiiRXn4fQne1O42js7LvqJBlpWXQK5XKQ1MWsuRYDfRbWLcBghD
+	 VKZFxWKkyMiQg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b2LmT3vnBz4x5k;
+	Wed, 21 May 2025 16:16:57 +1000 (AEST)
+Date: Wed, 21 May 2025 16:16:56 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
+ "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+ Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi
+ <lpieralisi@kernel.org>, Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?=
+ <kwilczynski@kernel.org>
+Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>, Hector Martin
+ <marcan@marcan.st>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, Manivannan Sadhasivam
+ <manivannan.sadhasivam@linaro.org>, Marc Zyngier <maz@kernel.org>
+Subject: linux-next: manual merge of the tip tree with the pci tree
+Message-ID: <20250521161656.429889eb@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250505221419.2672473-1-sashal@kernel.org> <20250505221419.2672473-400-sashal@kernel.org>
- <CAMj1kXF6=t9NoH5Lsh4=RwhUTHtpBt9VmZr3bEVm6=1zGiOf2w@mail.gmail.com> <aCyNnFdhBTOby6It@lappy>
-In-Reply-To: <aCyNnFdhBTOby6It@lappy>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Wed, 21 May 2025 08:15:02 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGtasdqRPn8koNN095VEEU4K409QvieMdgGXNUK0kPgkw@mail.gmail.com>
-X-Gm-Features: AX0GCFvl7zwimDfYOXalOmlQSvkg7hQabYAoQkUZikZA7VlssPaTmLL912vRcT0
-Message-ID: <CAMj1kXGtasdqRPn8koNN095VEEU4K409QvieMdgGXNUK0kPgkw@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 6.14 400/642] x86/relocs: Handle
- R_X86_64_REX_GOTPCRELX relocations
-To: Sasha Levin <sashal@kernel.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-	Brian Gerst <brgerst@gmail.com>, Ingo Molnar <mingo@kernel.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, tglx@linutronix.de, mingo@redhat.com, 
-	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, nathan@kernel.org, 
-	ubizjak@gmail.com, thomas.weissschuh@linutronix.de, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/S4Ljyc=OH0.WN2a0M5Hj_Eq";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Tue, 20 May 2025 at 16:11, Sasha Levin <sashal@kernel.org> wrote:
->
-> On Tue, May 06, 2025 at 12:32:05AM +0200, Ard Biesheuvel wrote:
-> >On Tue, 6 May 2025 at 00:30, Sasha Levin <sashal@kernel.org> wrote:
-> >>
-> >> From: Brian Gerst <brgerst@gmail.com>
-> >>
-> >> [ Upstream commit cb7927fda002ca49ae62e2782c1692acc7b80c67 ]
-> >>
-> >> Clang may produce R_X86_64_REX_GOTPCRELX relocations when redefining the
-> >> stack protector location.  Treat them as another type of PC-relative
-> >> relocation.
-> >>
-> >> Signed-off-by: Brian Gerst <brgerst@gmail.com>
-> >> Signed-off-by: Ingo Molnar <mingo@kernel.org>
-> >> Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
-> >> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> >> Link: https://lore.kernel.org/r/20250123190747.745588-6-brgerst@gmail.com
-> >> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> >
-> >This patch was one of a series of about 20 patches. Did you pick all of them?
->
-> Should we pick them all up?
->
+--Sig_/S4Ljyc=OH0.WN2a0M5Hj_Eq
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-No, we should pick up none of them.
+Hi all,
+
+
+Today's linux-next merge of the tip tree got a conflict in:
+
+  drivers/pci/controller/pcie-apple.c
+
+between commit:
+
+  3f1ccd6e85d7 ("PCI: apple: Abstract register offsets via a SoC-specific s=
+tructure")
+
+from the pci tree and commit:
+
+  5d627a9484ec ("PCI: apple: Convert to MSI parent infrastructure")
+
+from the tip tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/pci/controller/pcie-apple.c
+index c3fb2c1cc103,3d412a931774..000000000000
+--- a/drivers/pci/controller/pcie-apple.c
++++ b/drivers/pci/controller/pcie-apple.c
+@@@ -183,8 -134,6 +184,7 @@@ struct apple_pcie=20
+  	struct mutex		lock;
+  	struct device		*dev;
+  	void __iomem            *base;
+ +	const struct hw_info	*hw;
+- 	struct irq_domain	*domain;
+  	unsigned long		*bitmap;
+  	struct list_head	ports;
+  	struct completion	event;
+
+--Sig_/S4Ljyc=OH0.WN2a0M5Hj_Eq
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgtb9gACgkQAVBC80lX
+0Gy65Af/Y8j+nZb0moCh6IxTVrMyIWt4XBNW72W3j26jUQ5s8FPAK6ophXd/ywOT
+tDIyY+Qyz+WYKPHFD9ZJC/5V8g8HDRdkq+S5eg08vk2vh/N5qAcP5KRaltfXCso/
+QfZZEjhdAj1X9WlhmqThiueoil+AoJC7MllZcyBKEZOPHiJjLcQF3Y+lXrTYvK34
+lqyRXuHJvdga7Oo/IUn+s8iyeedNdKLZhRd1xeyrQTbogrrKVCfeVGmZSYJJKavG
+JD8r+6AgdRb5NNhUuAR2pWGiqnVEq5c42/KlWitkKyWyJskUFv8izUwfxEgB9aij
+SY4zpYIcFwsgV8zsOtO0ISwV4UIpEg==
+=iTLP
+-----END PGP SIGNATURE-----
+
+--Sig_/S4Ljyc=OH0.WN2a0M5Hj_Eq--
