@@ -1,89 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6847264F8B;
-	Wed, 21 May 2025 11:43:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 968F72163BD
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 11:45:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747827808; cv=none; b=b1b/mIj5hol584BHMV8NAaZ/QfqPT1HN/5RPtLqDFDExgB0Ul+fcmZBpw7a25GqJ9zZ1/fDWAkV7fTNC4r2XAcAcwzPUM+ePT/I9DdJOyBMADF3r7a5AvE0HCsp2SMJhhqJT9bqk2eeQLeQdlJr5Mx4cGGjXwbxSwdyY24mgqSY=
+	t=1747827919; cv=none; b=AlpgrEjqzG45TpcAH2OULgsJAW2d8Qm73161S3p3/x8iH/BEad1g2Qotv1n+xUhexpbt1vtM04/eW0bt+Q5I9q1/yIujfFfi+Xr0mtdocP32fshiWGjOHRsjAusUs5Ca5PKvxGs11C21qs7z1Q9mr1BJN2ARLGx1HpdV1qgwGmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747827808; c=relaxed/simple;
-	bh=a3OD2KHaUMd0DW0PzlpA5Il6hgjYFCrpsHk0WHmloZA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RkfasRuSBp/X3p3/Ip7L9h66EyqfzlJe4it2LpLHr2vGRz1pI3vOoHMA+33ZLAPF9Q41C3uHT4JSW/N1zZP861i0Bm0LLk7lNPGO7f6LwB/ir44DDm+fwwUsgtdEG6lUWL5jrvWQIaFX1q1p5z7D3bAsclSXQimKAXZ7IyqJFb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=KdoyZSFs; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="KdoyZSFs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F031DC4CEE4;
-	Wed, 21 May 2025 11:43:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1747827807;
-	bh=a3OD2KHaUMd0DW0PzlpA5Il6hgjYFCrpsHk0WHmloZA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KdoyZSFssVDcmIhZIrpipzT+m3X0T6zoE8lHa3z9Fw6Gesm5BYKrUhAoRqU9bRy+1
-	 HHindnh3NaRU3W046f6RC3aQ72o+BUvqrJ2Xq24YMjlJKWd0ypBWbZ6/vW642JCgBQ
-	 +1siS1Do4VpytJPQoyes0oVQaLfbkQev/Xxx7FeI=
-Date: Wed, 21 May 2025 13:43:24 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Heikki Huttu <heissendo88@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
-	kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] staging: vme_user: add missing includes
-Message-ID: <2025052136-backstab-dork-de2d@gregkh>
-References: <aCZDHXJTyfJRseho@Lappari.v6.elisa-laajakaista.fi>
+	s=arc-20240116; t=1747827919; c=relaxed/simple;
+	bh=td/pyxwNtvx4HW46UhbjzrcmN3XyrFV0b2aBZlY01Dw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cCMdq5Z61zXSugTyvhtYNa/rS2q7ANHmV69rOArUVUdWwto1tdo8/fzt1gX17gw+FuzxWctKXiofslkb2y9BC1OQg120H8D1/1TorkqWhJOXOUw8jDaR6stEPVcz/IZjR4HtppvdqG5Ku8kSK8DXcjJzcsH/ziUUY0fqA3PWNwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
+	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
+	(envelope-from <a.fatoum@pengutronix.de>)
+	id 1uHhsc-00018T-H7; Wed, 21 May 2025 13:45:02 +0200
+Message-ID: <721420c6-5e65-48a4-81c5-b161d0df8cfd@pengutronix.de>
+Date: Wed, 21 May 2025 13:44:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aCZDHXJTyfJRseho@Lappari.v6.elisa-laajakaista.fi>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mmc: sdhci-esdhc-imx: inherit pins_100mhz from
+ pins_200mhz when unconfigured
+To: ziniu.wang_1@nxp.com, haibo.chen@nxp.com, adrian.hunter@intel.com,
+ ulf.hansson@linaro.org, linux-mmc@vger.kernel.org
+Cc: imx@lists.linux.dev, s32@nxp.com, shawnguo@kernel.org,
+ s.hauer@pengutronix.de, linux-kernel@vger.kernel.org, kernel@pengutronix.de,
+ festevam@gmail.com, linux-arm-kernel@lists.infradead.org
+References: <20250521112042.266111-1-ziniu.wang_1@nxp.com>
+Content-Language: en-US
+From: Ahmad Fatoum <a.fatoum@pengutronix.de>
+In-Reply-To: <20250521112042.266111-1-ziniu.wang_1@nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
+X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Thu, May 15, 2025 at 10:40:13PM +0300, Heikki Huttu wrote:
-> Header files use u32, size_t, dma_addr_t, struct device, struct list_head.
-> Add direct includes to make the headers self-contained.
+Hi Luke,
+
+Thanks for your patch.
+
+On 21.05.25 13:20, ziniu.wang_1@nxp.com wrote:
+> From: Luke Wang <ziniu.wang_1@nxp.com>
 > 
-> Signed-off-by: Heikki Huttu <heissendo88@gmail.com>
+> On some new i.MX platforms, hardware guidelines recommend using identical
+> pin configurations for SDR50/DDR50 (100MHz) and SDR104/HS400 (200MHz)
+> modes. But defining two identical pinctrl for 100MHz and 200MHz in dts
+> creates redundancy.
+
+I am not convinced this is an improvement. If 200mhz is missing, it's understood
+that it's not supported. Now if 100mhz is missing, it means something different
+depending on whether state_200mhz exists or not. This is more mental overhead
+than having:
+
+  pinctrl-names = "default", "state_100mhz", "state_200mhz";
+  pinctrl-0 = <&pinctrl_usdhc1>;        
+  pinctrl-1 = <&pinctrl_usdhc1_uhs>;   
+  pinctrl-2 = <&pinctrl_usdhc1_uhs>;
+
+where it's directly evident that you share pinctrl states.
+
+> In this case, omit explicit 100MHz configuration,
+> driver will inherit 100MHz pinctrl from 200MHz.
+> 
+> Preserves existing behavior if 100MHz is configured but 200MHz not (e.g,
+> imx8mp-navq.dts usdhc1 supports SDR50/DDR50 but SDR104/HS400 not).
+
+This conflicts with the binding, which doesn't allow for state_200mhz
+to exist without state_100mhz, so that would need adaptation.
+
+As noted before though, I don't think we really need to change anything
+here though.
+
+Thanks,
+Ahmad
+
+> 
+> Signed-off-by: Luke Wang <ziniu.wang_1@nxp.com>
 > ---
->  drivers/staging/vme_user/vme.h      | 5 +++++
->  drivers/staging/vme_user/vme_user.h | 2 ++
->  2 files changed, 7 insertions(+)
+>  drivers/mmc/host/sdhci-esdhc-imx.c | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> diff --git a/drivers/staging/vme_user/vme.h b/drivers/staging/vme_user/vme.h
-> index 7753e736f9fd..55499b240dc3 100644
-> --- a/drivers/staging/vme_user/vme.h
-> +++ b/drivers/staging/vme_user/vme.h
-> @@ -3,6 +3,11 @@
->  #define _VME_H_
+> diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
+> index f206b562a6e3..dfd8be5000c8 100644
+> --- a/drivers/mmc/host/sdhci-esdhc-imx.c
+> +++ b/drivers/mmc/host/sdhci-esdhc-imx.c
+> @@ -1810,6 +1810,9 @@ sdhci_esdhc_imx_probe_dt(struct platform_device *pdev,
+>  						ESDHC_PINCTRL_STATE_100MHZ);
+>  		imx_data->pins_200mhz = pinctrl_lookup_state(imx_data->pinctrl,
+>  						ESDHC_PINCTRL_STATE_200MHZ);
+> +
+> +		if (IS_ERR_OR_NULL(imx_data->pins_100mhz))
+> +			imx_data->pins_100mhz = imx_data->pins_200mhz;
+>  	}
 >  
->  #include <linux/bitops.h>
-> +#include <linux/types.h>
-> +#include <linux/device.h>
-> +#include <linux/list.h>
-> +#include <linux/mm.h>
-> +#include <linux/dma-mapping.h>
+>  	/* call to generic mmc_of_parse to support additional capabilities */
 
-If you are going to add these, please do so in a sorted way.
 
-But really, why is this needed at all?
-
->  
->  /* Resource Type */
->  enum vme_resource_type {
-> diff --git a/drivers/staging/vme_user/vme_user.h b/drivers/staging/vme_user/vme_user.h
-> index 19ecb05781cc..297b25fab164 100644
-> --- a/drivers/staging/vme_user/vme_user.h
-> +++ b/drivers/staging/vme_user/vme_user.h
-> @@ -2,6 +2,8 @@
->  #ifndef _VME_USER_H_
->  #define _VME_USER_H_
->  
-> +#include <linux/types.h>
-
-Same here, are you sure this is needed?
-
-thanks,
-
-greg k-h
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
