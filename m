@@ -1,178 +1,115 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D62F41C32;
-	Wed, 21 May 2025 21:48:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 428D516F288;
+	Wed, 21 May 2025 21:49:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747864089; cv=none; b=CUuAAgT+P38gAiZcbQMPG5k2+6aAGhBMdGkw6w9bUXm17pCKtAk3XdgfPnHy6N95aceL93Q6tFbE6FuV/ij95fkxT/c1r6w65UJAetFUXt8xOeV+NlaCPzDjY6ClSlAFoTSgAmdt8x/EcpDmH7vm93OdIvPuELBDNlAxdKloHzo=
+	t=1747864143; cv=none; b=umg9/FbwMtJ2QBvRk/a49ZRNxf9wpQt7kdO5OF9TNCyluE+LrRJD/4hygY3kh5Xj7ZHzsP/kd1nXWsIYJTZPPXig8Jz5SPJ3wrh+ENgjkshvUE8PlkXFwQaes3eU4HLpKRbtmQAGyuvy5E+OupcgiubnGZA9TLRP8uScSwXPz88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747864089; c=relaxed/simple;
-	bh=HtvXztOjtrz4ob0V/4qCdHmUkdESu4fsijCLRwf5XKU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=OfAx3ipx4MU3CTDTwg03npIipCMBACKySRcNsdlgPzxqZKanxPzwQklVVM8/XCEbBEakENKjezKzdRwMn56RFslc1U/AuBxVaTLHrkLgTADwUZhKg5S3Rk0vzX7FNqQfhA+NUebZuBKfFhH2dB/ZsYjjs7uvIOO0CNHPEb8BlZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=o1r74McC; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1747864143; c=relaxed/simple;
+	bh=v6oyws5czAbNgfpmZs07oRxCWMBQkASJkZzDQDtqUhM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dof+eTY6XOoItwrPk0Pl161kGCGwri/CRHAqwNmIikiHJjuio5Lm5Ub9V1tuYhjt0EANEKePv06SlYB/clHMG7WC0dFTZDPdBasUOtzL5yjmxSjERN7lZtyycndoR9x3vMvkvpY5BnwjlOoxc+u5WGg2m2cou7GwRJ86LCNdUHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=au0RUgf/; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="o1r74McC"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54LHPDtu016624;
-	Wed, 21 May 2025 21:47:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	wdz9XzN5pJs6FGFMy5umTVMKIyuxhEWQB8gQk5deow8=; b=o1r74McCAevZ3BVe
-	QFBe8Ym0QmBeliVXfuqN0gNtUIQAR1YEYZqU329xjYepTRc32nEzMeXNpMXY5teW
-	BvsMI0crv/+LToQEq8MnPjB2TBib9+4EL6RK7RvkRTUWpvygGraZtPa2Akt+XHKF
-	2dZvQ3IilU6TJj5YumHos+6wlPKFkL8hBt9sKd52xvuDNPjlUK5M7izPSd9+SbEP
-	Jfl1jB4L4CysyrbM7CGslDPZup1cP2KzFuiRfb96t2L880T75/3oKMxq1Hc1KRkd
-	XZSSC3ddpZwALc95Kb8+WsKqKy3KPSohguKzZJWIYMKNt6uIBpR9dxF43Kk/jHwH
-	+GaElQ==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf9va02-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 21:47:45 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54LLliQb020894
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 21:47:44 GMT
-Received: from [10.216.45.12] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 21 May
- 2025 14:47:38 -0700
-Message-ID: <6eafbd2f-e2cf-4d4b-9432-026eb9c7a01a@quicinc.com>
-Date: Thu, 22 May 2025 03:17:33 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="au0RUgf/"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-acae7e7587dso1064803066b.2;
+        Wed, 21 May 2025 14:49:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747864140; x=1748468940; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=E7XZXU0VEJ18cU2BxFX9o9WteQEjbnzJPBFFWBFf2cs=;
+        b=au0RUgf/F6OTb6R6s8IXnJpgzfXRMdTP1GCt0/ZBVumH53GRThSQKnuW8NfuB3AAfB
+         nfVHUMj6sTuCacnFtwn6Cz7Hg3bDn3Iaqd1Ooeln5OZR83oCuY3r0sjMdeFY1l4Hbl9Z
+         ThtmuBuP3ruSrFKpsDRS0tTF8cTyOXBnrtx6it+06IKtBlSSp4XQYX//DZAuRWx/ZGEi
+         us+IoWEQtl7/vN5qrvaZsIeiuqaVmV5RD9w39mAK69Rbv/gwgE9tXWO3XahzPSOBSFyG
+         OMpEZOm8pme4bctrqj4s9uM62g7waLxBa21XFhzSVZhTQkZGvn53acya2DyWAM1AoPAM
+         GAnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747864140; x=1748468940;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=E7XZXU0VEJ18cU2BxFX9o9WteQEjbnzJPBFFWBFf2cs=;
+        b=nwv/J+fXcXL/7+YgS0LhdpWpGx8gLOAGpsUckTjyZU3NL2rLPY1c0aESu9nHJ4MA03
+         SbziRkl8v0iAWvEx2iQAm1NwEufVdbCEIEzd3mFhSQN53keb9FhWj4PYLsAeWhz4dh8j
+         qmiZObGBkDvAJoi5LxOqSukKUM3BgeF8NXvpgXM7UfkZz7f59VEG7irg4i9Z5nT4yEDR
+         I8EWr/wHWSJJ9BA4h7LrDlXhrut7UfEoPdKQdvvhn379ZjMnmpgQQDlpVmTNJ8oSgA6L
+         KqM2bng2c/jq0Q8MzFNSKF3BtVOXjBXFzzFfQcGReHhvojLN5INjUCedsNErJSpUxebT
+         G+dg==
+X-Forwarded-Encrypted: i=1; AJvYcCVQ4qzt+ESy0qnbOMEkcmzyG2aVPptIU6q0/kwtcFSQfcwDOZH8S8/lmg4a36TozbPTbgKgFP1YdKYdsWg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0L3FFgpPcD20uZxqeCX7UNwTKAunElKcrKVALEDl01WFlRMTf
+	nB3MR7J4IZtAj3gf5oVPY9RghLit6xuu02diBPn7NMrkIOIIxRZR/n8=
+X-Gm-Gg: ASbGnctA4twIPWt2DJU2Ntcfc07iGx9qSATNSZUVtW/VO67tdBjk3iniaw8u/I2nU02
+	neDumjr1qLNV5bNOqQNKPTfCywINUBPo6L6aOiYpnHmkN9mQ+oBUiEqmmd1ybYMRPKXVIaa+uXT
+	fkjgP7JwxnDyzat0+EaqRucQFSAc5FKPbBj2f36PFW4wfZzaV+3fRg77q6phGst34WuxvqNy5VV
+	DdBwR7Omzz5Q70pKZwlHA2cVAQKPcHFDR0cen9eHUdU72ByO8nV9EigRvA9bVjejgWVScZIyIwz
+	NKH/+92nd6Iuf0SsdFXjHERj6++3/Czd7E7IIoZkCQxueTrU98LkDSUHRCozbZ7Afzl0k22/yDn
+	y
+X-Google-Smtp-Source: AGHT+IEGpGKyn2SjbG73jckuIvkuAriIecmkA7h43Y5pgW3r7LcfmeLczUiVBIZTzZhCpPXrY3HTfw==
+X-Received: by 2002:a17:907:d06:b0:ad2:1a60:f83b with SMTP id a640c23a62f3a-ad52d443a2amr2108668666b.11.1747864140348;
+        Wed, 21 May 2025 14:49:00 -0700 (PDT)
+Received: from localhost.localdomain ([2a0d:e487:157f:5941:a21f:c1c7:6140:7de5])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d4cc5dbsm957451666b.169.2025.05.21.14.48.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 May 2025 14:48:59 -0700 (PDT)
+From: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
+To: heikki.krogerus@linux.intel.com,
+	gregkh@linuxfoundation.org
+Cc: linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev,
+	skhan@linuxfoundation.org,
+	jihed.chaibi.dev@gmail.com
+Subject: [PATCH 1/1] usb: typec: tipd: fix typo in TPS_STATUS_HIGH_VOLAGE_WARNING macro
+Date: Wed, 21 May 2025 23:48:51 +0200
+Message-Id: <20250521214851.386796-1-jihed.chaibi.dev@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V5 04/11] phy: qcom-qmp-ufs: Refactor UFS PHY reset
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-CC: <vkoul@kernel.org>, <kishon@kernel.org>,
-        <James.Bottomley@hansenpartnership.com>, <martin.petersen@oracle.com>,
-        <bvanassche@acm.org>, <andersson@kernel.org>,
-        <neil.armstrong@linaro.org>, <dmitry.baryshkov@oss.qualcomm.com>,
-        <konrad.dybcio@oss.qualcomm.com>, <quic_rdwivedi@quicinc.com>,
-        <quic_cang@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <linux-phy@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>
-References: <20250515162722.6933-1-quic_nitirawa@quicinc.com>
- <20250515162722.6933-5-quic_nitirawa@quicinc.com>
- <mwcqp3mxuheffc6x7w4w5mykqc57ovmvyrmh3ky5czjf54wnag@fxnxgsoi6y2u>
-Content-Language: en-US
-From: Nitin Rawat <quic_nitirawa@quicinc.com>
-In-Reply-To: <mwcqp3mxuheffc6x7w4w5mykqc57ovmvyrmh3ky5czjf54wnag@fxnxgsoi6y2u>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=V9990fni c=1 sm=1 tr=0 ts=682e4a01 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
- a=EUspDBNiAAAA:8 a=c8vr_DY3ltGut5BFI0sA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: UUjinO3B8ChFEYRBDjMP0nd_uRLtVaXZ
-X-Proofpoint-GUID: UUjinO3B8ChFEYRBDjMP0nd_uRLtVaXZ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDIxNiBTYWx0ZWRfX7daMgzfN39uj
- QjfQZtfv74LamRjrguqu7tS0qjEEQqMZo5J1f5e9ody1U61mRFcH2H2cPny3Xtc6DeC7k39ZArm
- NuDfSWivRuz0SiISEDV8iHmxLqGfKOC1OEyOgn9SgX3s0t4cl/GhK3MkKTGpHIM9FuVA/Av60wv
- uhPK1xIVKrSVmfbwVN1pw63j0j5afnTyoi2XOi7o7PGS05AfI/jzjBsKyKc2J9G52J1puTPav+0
- nJJ8ZuwS1q+7WYt+N5bdnW1tTrrvNCn02czvuHJGSXdd422rkl6CtYdatiWjrAqq/kRK16SAOgk
- 2r/5YCZeMlD3QAhG57d8UJxsA1JRk5ExrSR3opUnvkT0PY0H3auD4apphRxqu30td456gI8CzNI
- 5+M2mbrdDSbbA2g8P3YOlseiMCrwtPE8agXIN/9A+Z1rv7GWHGA7mXPZAj+/XjiXreMRVScf
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-21_07,2025-05-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxlogscore=999 bulkscore=0 impostorscore=0 clxscore=1015 priorityscore=1501
- lowpriorityscore=0 mlxscore=0 spamscore=0 phishscore=0 suspectscore=0
- adultscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505210216
+Content-Transfer-Encoding: 8bit
 
+"VOLAGE" should become "VOLTAGE"
 
+Signed-off-by: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
+---
+ drivers/usb/typec/tipd/tps6598x.h | 2 +-
+ drivers/usb/typec/tipd/trace.h    | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-On 5/21/2025 6:56 PM, Manivannan Sadhasivam wrote:
-> On Thu, May 15, 2025 at 09:57:15PM +0530, Nitin Rawat wrote:
->> Refactor the UFS PHY reset handling to parse the reset logic only once
->> during initialization, instead of every resume.
->>
->> As part of this change, move the UFS PHY reset parsing logic from
->> qmp_phy_power_on to the new qmp_ufs_phy_init function.
->>
-
-Sure. I'll update the commit text in next patchset.
-
-> 
-> More importantly, you are introducing the phy_ops::init callback, which
-> should've been mentioned.
-> 
->> Co-developed-by: Ram Kumar Dwivedi <quic_rdwivedi@quicinc.com>
->> Signed-off-by: Ram Kumar Dwivedi <quic_rdwivedi@quicinc.com>
->> Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
->> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
->> ---
->>   drivers/phy/qualcomm/phy-qcom-qmp-ufs.c | 59 +++++++++++++------------
->>   1 file changed, 31 insertions(+), 28 deletions(-)
->>
->> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
->> index ade8e9c4b9ae..33d238cf49aa 100644
->> --- a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
->> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
->> @@ -1800,38 +1800,11 @@ static int qmp_ufs_com_exit(struct qmp_ufs *qmp)
->>   static int qmp_ufs_power_on(struct phy *phy)
->>   {
->>   	struct qmp_ufs *qmp = phy_get_drvdata(phy);
->> -	const struct qmp_phy_cfg *cfg = qmp->cfg;
->>   	int ret;
->>   	dev_vdbg(qmp->dev, "Initializing QMP phy\n");
->>   
->> -	if (cfg->no_pcs_sw_reset) {
->> -		/*
->> -		 * Get UFS reset, which is delayed until now to avoid a
->> -		 * circular dependency where UFS needs its PHY, but the PHY
->> -		 * needs this UFS reset.
->> -		 */
->> -		if (!qmp->ufs_reset) {
->> -			qmp->ufs_reset =
->> -				devm_reset_control_get_exclusive(qmp->dev,
->> -								 "ufsphy");
->> -
->> -			if (IS_ERR(qmp->ufs_reset)) {
->> -				ret = PTR_ERR(qmp->ufs_reset);
->> -				dev_err(qmp->dev,
->> -					"failed to get UFS reset: %d\n",
->> -					ret);
->> -
->> -				qmp->ufs_reset = NULL;
->> -				return ret;
->> -			}
->> -		}
->> -	}
->> -
->>   	ret = qmp_ufs_com_init(qmp);
->> -	if (ret)
->> -		return ret;
->> -
->> -	return 0;
->> +	return ret;
-> 
-> This can't be:
-> 	return qmp_ufs_com_init; ?
-
-This is already taken care in next patch (#6) of this series.
-
-Thanks,
-Nitin
-
-
-> 
-> - Mani
-> 
+diff --git a/drivers/usb/typec/tipd/tps6598x.h b/drivers/usb/typec/tipd/tps6598x.h
+index 9b23e9017..cecb8d11d 100644
+--- a/drivers/usb/typec/tipd/tps6598x.h
++++ b/drivers/usb/typec/tipd/tps6598x.h
+@@ -27,7 +27,7 @@
+ #define TPS_STATUS_OVERCURRENT		BIT(16)
+ #define TPS_STATUS_GOTO_MIN_ACTIVE	BIT(26)
+ #define TPS_STATUS_BIST			BIT(27)
+-#define TPS_STATUS_HIGH_VOLAGE_WARNING	BIT(28)
++#define TPS_STATUS_HIGH_VOLTAGE_WARNING	BIT(28)
+ #define TPS_STATUS_HIGH_LOW_VOLTAGE_WARNING BIT(29)
+ 
+ #define TPS_STATUS_CONN_STATE_MASK		GENMASK(3, 1)
+diff --git a/drivers/usb/typec/tipd/trace.h b/drivers/usb/typec/tipd/trace.h
+index 0669cca12..bea383f2d 100644
+--- a/drivers/usb/typec/tipd/trace.h
++++ b/drivers/usb/typec/tipd/trace.h
+@@ -153,7 +153,7 @@
+ 		      { TPS_STATUS_OVERCURRENT,		"OVERCURRENT" }, \
+ 		      { TPS_STATUS_GOTO_MIN_ACTIVE,	"GOTO_MIN_ACTIVE" }, \
+ 		      { TPS_STATUS_BIST,		"BIST" }, \
+-		      { TPS_STATUS_HIGH_VOLAGE_WARNING,	"HIGH_VOLAGE_WARNING" }, \
++		      { TPS_STATUS_HIGH_VOLTAGE_WARNING,	"HIGH_VOLTAGE_WARNING" }, \
+ 		      { TPS_STATUS_HIGH_LOW_VOLTAGE_WARNING, "HIGH_LOW_VOLTAGE_WARNING" })
+ 
+ #define show_tps25750_status_flags(flags) \
+-- 
+2.39.5
 
