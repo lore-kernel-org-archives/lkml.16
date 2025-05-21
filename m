@@ -1,55 +1,55 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B088826D4C5
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 12:51:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D72526D4F5
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 12:51:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747831872; cv=none; b=mojfI8L5Jaw18veHlERizRttj1S+lldbcLL66YtcX7VmsZEfN6bG1moUQt24AEEV0lzhnhDT4cC67hQ1v0p/MLYLs5ZFduw6dDhonpTb75CXcI3kHAA6JcEt9p+CgrNd9JeEWsvmxJ0+a+TUhCbXvHAFP0MbYCsSybROOul6yw4=
+	t=1747831874; cv=none; b=lfJ6fOnaQCix3CtTbMGle+50WRGd/e/aJKOddBy1XS0dF/JsQ9anSyitshvi4t/TO8Zj+buIXJUhvg0L9B+Wg+HUhE+bz+NPjYhOIhQnuBZ+MGZy0PEPaMRHQeizpWiVdN+yAOAArKdhhRcmdazW3/IebMXIbsWODNiSK5cxr5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747831872; c=relaxed/simple;
-	bh=JaLT/KjNRBZh9+0850W3wd8IYoUjk5dJsmWjAJvso/w=;
+	s=arc-20240116; t=1747831874; c=relaxed/simple;
+	bh=nwEtT+x1vftzTI0tYmPgfzg+e8CvSr12EldY+2+mMHw=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=I39t03QUkpZgc+edzPIbJ/2H1tOgtAxRjDSlzWPr11qorDN5s/rPsHK0V6o7aLxybps074MxDp46OgZ8+KBZSi4srRQ77AQxaeiXOaXg9y8GAr2QA4z5p/17CssvCO+ZeSxlMIaSHKtCB9xJkS0HGIaxK5fzx3onvTdaJgdLEOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CVa5EjYX; arc=none smtp.client-ip=209.85.128.74
+	 To:Cc:Content-Type; b=oFrYeyq5EJDcDmtVBgUzY66OkTy009wMg1+uzydM4uKtvQJQLuoi2DOEaNP60At2vCWiwhZIUaJMyWIpUmJmGn5imZ2dZahmVduSIYaWTpsHZ7Oxq623lo2fPQ1+rq1jF20yRXemyvX0b1q9BR6aW6eECc8amqISkRkDRF04a+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PalUQcTd; arc=none smtp.client-ip=209.85.221.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CVa5EjYX"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43d209dc2d3so42219335e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 05:51:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PalUQcTd"
+Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-3a1f6c5f4f2so2625063f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 05:51:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747831869; x=1748436669; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747831871; x=1748436671; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7M7SlMUFeV39FEEkrPwE8OC1rT3wLxQcFUOhbBKeO9k=;
-        b=CVa5EjYXWV+qx8AeSnmQzNqQ67agjJ7viOp4CcbvGO2R/n8DpuEb8Bmd1DBkngzKRc
-         WrtOzImxUUvW+JRcdpxJvQ4Cc5ipZqb6vw+qbsRMifrAkv1dBOgRIELhFML8jxde0lng
-         42Gi1p6uWZuesvFzbGa0+jR/6DbwP5YjOgpouqmS4tidKm1ItzlJFHhD+/QXGfHwh9OD
-         243km4TCWhQgLrvBGNarF/gWAoCgvO+JZWyIdOr0lXri8Z8d62bKDJ8WC7uHeznreW3y
-         bHu+nNhP9AedP7EWJD4TWKsZQTprd9kGkt/X0N3y5rC+hJ2KGk0FtLCbLXBbxahES+fW
-         Jt4A==
+        bh=OdCXehb9QOWC9OAAK/XLuCdQBwNqpxkcUy0DKMTcnfY=;
+        b=PalUQcTdDQT5FtVqpBcKkOvh0NwsDQkUyC1EGi3WZsiq5MM/ZbE9kco9f6pDiLWtVr
+         UA8ntv5qgdq6qt9VBfZ4wnhOg66dLu0TNxcqIW70X7BrBK0PW0qSZIyKJ+Fe7pq6LAv9
+         KdM2y6BABGi+XYyVfuwqPTHNBIiMb2XV+IAZV8vhRYjsnMR1fr1r8hdbdiNMdgmiE0dy
+         rjFeyyqLWglFeLuHU10Q2ZIJ2uaE/KjlejhegIpH1tS34CSxcYsIwrY+hUDEmzaabyvM
+         YNXVqAMIjNuBqNnN9XlJ/C1bwtpddhj7YjvqSfgFjY/aECkFhRPHhYJ/LsBJS3iKsTrh
+         xFTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747831869; x=1748436669;
+        d=1e100.net; s=20230601; t=1747831871; x=1748436671;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7M7SlMUFeV39FEEkrPwE8OC1rT3wLxQcFUOhbBKeO9k=;
-        b=LGaTdVPZjys6cFxnvflYdco6eG3yRBEibh1BTBVeEuY7BQVSWUz+Mc1XkvNgB2nQwo
-         OFzYBcw+NrltbVSLtiwrboLItdXvS/UhGEWzP+fc3HuEIOUShkuul6oeeKhJEs41wBB6
-         L8EckwoC30/2aAVxhthM3cl4yRbNjTleK9LL8CuuDFtgH9wTCzih/bdZ9NtzOkfsj2vT
-         7+cNMKVztjJClI695tQP9QTatGBb1ugNnpumkle2s6rUofPdgSgQiz/khZtdv2LY9ga1
-         P0l1gc8kdNnGfrfQKj1k26eBzygM6m/AdRUl7oAoDTHApz1J/DQhS13WzqNGSMqbHwjt
-         Curw==
-X-Forwarded-Encrypted: i=1; AJvYcCXuZQRNgkX/ea6BLj+HJU1arNvfMoPdeH+VajzMd/UrjK+fOhUPQyqO3ydgTR7yjk3bdqYUEZ0Yk60oT8I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGRTvmGQzUsgKAWoo73nbDOtWjcmY40sfcaPYo++PG51YQaAg6
-	xXptmnzpzj8vntKWSV64TXuHo2Pq1j+xQ6bc10ONy7cQUdJ252m+MKbVqSunu6IEipk6ZCVMVje
-	Zy/z6tS1iD+cNa+vxVHIcaQ==
-X-Google-Smtp-Source: AGHT+IGzvZe0qsIMITdMGvOXox9m77g+LizJVljcVxc1w9tT6r24QPzVy99fVozUqNSwp/zxZoBOGxUHRrMqjUb7
-X-Received: from wrs19.prod.google.com ([2002:a05:6000:653:b0:3a3:678b:a096])
+        bh=OdCXehb9QOWC9OAAK/XLuCdQBwNqpxkcUy0DKMTcnfY=;
+        b=NjXW293YzwbaQQbaTIk0PEVi30kIA2LEdQe1HFPyx/3EZx7gpseMfKLHTZf/UfDSQv
+         WBRz71y+qKQczmrMkDiquK46fV3hSRXC4wMr/y+ApY9eKpyjNVDhOI7+mYXER/K4w1nG
+         I3lJqDs5kYmkJPBKbUAcVxFXQIUpIBmqfePqD4fURPKXfApu1NEs+hLHmAZYQKCG9uA5
+         otsFeHchLvk7fEn1k3Ypt9Jn7tCpQs48reBk9T6i4KGZsrPpmW0hv71bY7iATKO4jewc
+         78T5FuOzNEfPQgWwzB/Fjf9xl9eecwIVoR1tuNsDlMJxAl/lWB6ls6Bpa53/wRboLzwg
+         bQSw==
+X-Forwarded-Encrypted: i=1; AJvYcCWCS10/V+e1DJ6sID/WQEXiv+2ka3R3L4dpuqD9PTy3tpxxEdWCBzjc+Yz5T7aFYEi83AIECP5DypbQTs0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5KsN+6E4dAq3Fh+WBQkTlc3DtONRR1DwyigmfztFXVJzDuol5
+	sAiv+XpEXWr1WE4UwMsCK0Ivs41XeRtAmbr5555oWdzXKUVHWnTRNFkr+MwG6D3tYp1VpWbNLD9
+	GHUpMdIs9e+NlDnx3KoJxOg==
+X-Google-Smtp-Source: AGHT+IFOSbvAApsdL0WQw9HC/Z8jMn7H55eEstBUgN1REfYkPF+658GdQUPM6/v2SQsraL42umaM/rNDwNAlKI0U
+X-Received: from wrbee8.prod.google.com ([2002:a05:6000:2108:b0:3a3:6aae:bf2b])
  (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6000:2903:b0:3a3:6e62:d8e8 with SMTP id ffacd0b85a97d-3a36e62db92mr11279266f8f.55.1747831869174;
- Wed, 21 May 2025 05:51:09 -0700 (PDT)
-Date: Wed, 21 May 2025 13:48:27 +0100
+ 2002:a05:6000:2211:b0:3a3:6c48:4703 with SMTP id ffacd0b85a97d-3a36c484c01mr11697103f8f.34.1747831871056;
+ Wed, 21 May 2025 05:51:11 -0700 (PDT)
+Date: Wed, 21 May 2025 13:48:28 +0100
 In-Reply-To: <20250521124834.1070650-1-vdonnefort@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250521124834.1070650-1-vdonnefort@google.com>
 X-Mailer: git-send-email 2.49.0.1112.g889b7c5bd8-goog
-Message-ID: <20250521124834.1070650-4-vdonnefort@google.com>
-Subject: [PATCH v6 03/10] KVM: arm64: Add a range to __pkvm_host_share_guest()
+Message-ID: <20250521124834.1070650-5-vdonnefort@google.com>
+Subject: [PATCH v6 04/10] KVM: arm64: Add a range to __pkvm_host_unshare_guest()
 From: Vincent Donnefort <vdonnefort@google.com>
 To: maz@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, 
 	suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, 
@@ -71,246 +71,217 @@ Cc: qperret@google.com, linux-arm-kernel@lists.infradead.org,
 Content-Type: text/plain; charset="UTF-8"
 
 In preparation for supporting stage-2 huge mappings for np-guest. Add a
-nr_pages argument to the __pkvm_host_share_guest hypercall. This range
+nr_pages argument to the __pkvm_host_unshare_guest hypercall. This range
 supports only two values: 1 or PMD_SIZE / PAGE_SIZE (that is 512 on a
 4K-pages system).
 
 Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
 diff --git a/arch/arm64/kvm/hyp/include/nvhe/mem_protect.h b/arch/arm64/kvm/hyp/include/nvhe/mem_protect.h
-index 26016eb9323f..47aa7b01114f 100644
+index 47aa7b01114f..19671edbe18f 100644
 --- a/arch/arm64/kvm/hyp/include/nvhe/mem_protect.h
 +++ b/arch/arm64/kvm/hyp/include/nvhe/mem_protect.h
-@@ -39,7 +39,7 @@ int __pkvm_host_donate_hyp(u64 pfn, u64 nr_pages);
- int __pkvm_hyp_donate_host(u64 pfn, u64 nr_pages);
- int __pkvm_host_share_ffa(u64 pfn, u64 nr_pages);
+@@ -41,7 +41,7 @@ int __pkvm_host_share_ffa(u64 pfn, u64 nr_pages);
  int __pkvm_host_unshare_ffa(u64 pfn, u64 nr_pages);
--int __pkvm_host_share_guest(u64 pfn, u64 gfn, struct pkvm_hyp_vcpu *vcpu,
-+int __pkvm_host_share_guest(u64 pfn, u64 gfn, u64 nr_pages, struct pkvm_hyp_vcpu *vcpu,
+ int __pkvm_host_share_guest(u64 pfn, u64 gfn, u64 nr_pages, struct pkvm_hyp_vcpu *vcpu,
  			    enum kvm_pgtable_prot prot);
- int __pkvm_host_unshare_guest(u64 gfn, struct pkvm_hyp_vm *hyp_vm);
+-int __pkvm_host_unshare_guest(u64 gfn, struct pkvm_hyp_vm *hyp_vm);
++int __pkvm_host_unshare_guest(u64 gfn, u64 nr_pages, struct pkvm_hyp_vm *hyp_vm);
  int __pkvm_host_relax_perms_guest(u64 gfn, struct pkvm_hyp_vcpu *vcpu, enum kvm_pgtable_prot prot);
+ int __pkvm_host_wrprotect_guest(u64 gfn, struct pkvm_hyp_vm *hyp_vm);
+ int __pkvm_host_test_clear_young_guest(u64 gfn, bool mkold, struct pkvm_hyp_vm *vm);
 diff --git a/arch/arm64/kvm/hyp/nvhe/hyp-main.c b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
-index 59db9606e6e1..4d3d215955c3 100644
+index 4d3d215955c3..5c03bd1db873 100644
 --- a/arch/arm64/kvm/hyp/nvhe/hyp-main.c
 +++ b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
-@@ -245,7 +245,8 @@ static void handle___pkvm_host_share_guest(struct kvm_cpu_context *host_ctxt)
+@@ -270,6 +270,7 @@ static void handle___pkvm_host_unshare_guest(struct kvm_cpu_context *host_ctxt)
  {
- 	DECLARE_REG(u64, pfn, host_ctxt, 1);
+ 	DECLARE_REG(pkvm_handle_t, handle, host_ctxt, 1);
  	DECLARE_REG(u64, gfn, host_ctxt, 2);
--	DECLARE_REG(enum kvm_pgtable_prot, prot, host_ctxt, 3);
 +	DECLARE_REG(u64, nr_pages, host_ctxt, 3);
-+	DECLARE_REG(enum kvm_pgtable_prot, prot, host_ctxt, 4);
- 	struct pkvm_hyp_vcpu *hyp_vcpu;
+ 	struct pkvm_hyp_vm *hyp_vm;
  	int ret = -EINVAL;
  
-@@ -260,7 +261,7 @@ static void handle___pkvm_host_share_guest(struct kvm_cpu_context *host_ctxt)
- 	if (ret)
+@@ -280,7 +281,7 @@ static void handle___pkvm_host_unshare_guest(struct kvm_cpu_context *host_ctxt)
+ 	if (!hyp_vm)
  		goto out;
  
--	ret = __pkvm_host_share_guest(pfn, gfn, hyp_vcpu, prot);
-+	ret = __pkvm_host_share_guest(pfn, gfn, nr_pages, hyp_vcpu, prot);
+-	ret = __pkvm_host_unshare_guest(gfn, hyp_vm);
++	ret = __pkvm_host_unshare_guest(gfn, nr_pages, hyp_vm);
+ 	put_pkvm_hyp_vm(hyp_vm);
  out:
  	cpu_reg(host_ctxt, 1) =  ret;
- }
 diff --git a/arch/arm64/kvm/hyp/nvhe/mem_protect.c b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
-index 53bb029698c8..8051235ea194 100644
+index 8051235ea194..2703bce3b773 100644
 --- a/arch/arm64/kvm/hyp/nvhe/mem_protect.c
 +++ b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
-@@ -695,10 +695,9 @@ static enum pkvm_page_state guest_get_page_state(kvm_pte_t pte, u64 addr)
- 	return pkvm_getstate(kvm_pgtable_stage2_pte_prot(pte));
- }
- 
--static int __guest_check_page_state_range(struct pkvm_hyp_vcpu *vcpu, u64 addr,
-+static int __guest_check_page_state_range(struct pkvm_hyp_vm *vm, u64 addr,
- 					  u64 size, enum pkvm_page_state state)
- {
--	struct pkvm_hyp_vm *vm = pkvm_hyp_vcpu_to_hyp_vm(vcpu);
- 	struct check_walk_data d = {
- 		.desired	= state,
- 		.get_page_state	= guest_get_page_state,
-@@ -907,48 +906,72 @@ int __pkvm_host_unshare_ffa(u64 pfn, u64 nr_pages)
+@@ -980,10 +980,9 @@ int __pkvm_host_share_guest(u64 pfn, u64 gfn, u64 nr_pages, struct pkvm_hyp_vcpu
  	return ret;
  }
  
--int __pkvm_host_share_guest(u64 pfn, u64 gfn, struct pkvm_hyp_vcpu *vcpu,
-+static int __guest_check_transition_size(u64 phys, u64 ipa, u64 nr_pages, u64 *size)
-+{
-+	if (nr_pages == 1) {
-+		*size = PAGE_SIZE;
-+		return 0;
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+int __pkvm_host_share_guest(u64 pfn, u64 gfn, u64 nr_pages, struct pkvm_hyp_vcpu *vcpu,
- 			    enum kvm_pgtable_prot prot)
+-static int __check_host_shared_guest(struct pkvm_hyp_vm *vm, u64 *__phys, u64 ipa)
++static int __check_host_shared_guest(struct pkvm_hyp_vm *vm, u64 *__phys, u64 ipa, u64 size)
  {
- 	struct pkvm_hyp_vm *vm = pkvm_hyp_vcpu_to_hyp_vm(vcpu);
- 	u64 phys = hyp_pfn_to_phys(pfn);
+ 	enum pkvm_page_state state;
+-	struct hyp_page *page;
+ 	kvm_pte_t pte;
+ 	u64 phys;
+ 	s8 level;
+@@ -994,7 +993,7 @@ static int __check_host_shared_guest(struct pkvm_hyp_vm *vm, u64 *__phys, u64 ip
+ 		return ret;
+ 	if (!kvm_pte_valid(pte))
+ 		return -ENOENT;
+-	if (level != KVM_PGTABLE_LAST_LEVEL)
++	if (kvm_granule_size(level) != size)
+ 		return -E2BIG;
+ 
+ 	state = guest_get_page_state(pte, ipa);
+@@ -1002,43 +1001,49 @@ static int __check_host_shared_guest(struct pkvm_hyp_vm *vm, u64 *__phys, u64 ip
+ 		return -EPERM;
+ 
+ 	phys = kvm_pte_to_phys(pte);
+-	ret = check_range_allowed_memory(phys, phys + PAGE_SIZE);
++	ret = check_range_allowed_memory(phys, phys + size);
+ 	if (WARN_ON(ret))
+ 		return ret;
+ 
+-	page = hyp_phys_to_page(phys);
+-	if (get_host_state(page) != PKVM_PAGE_SHARED_OWNED)
+-		return -EPERM;
+-	if (WARN_ON(!page->host_share_guest_count))
+-		return -EINVAL;
++	for_each_hyp_page(page, phys, size) {
++		if (get_host_state(page) != PKVM_PAGE_SHARED_OWNED)
++			return -EPERM;
++		if (WARN_ON(!page->host_share_guest_count))
++			return -EINVAL;
++	}
+ 
+ 	*__phys = phys;
+ 
+ 	return 0;
+ }
+ 
+-int __pkvm_host_unshare_guest(u64 gfn, struct pkvm_hyp_vm *vm)
++int __pkvm_host_unshare_guest(u64 gfn, u64 nr_pages, struct pkvm_hyp_vm *vm)
+ {
  	u64 ipa = hyp_pfn_to_phys(gfn);
 -	struct hyp_page *page;
-+	u64 size;
+-	u64 phys;
++	u64 size, phys;
  	int ret;
  
- 	if (prot & ~KVM_PGTABLE_PROT_RWX)
- 		return -EINVAL;
- 
--	ret = check_range_allowed_memory(phys, phys + PAGE_SIZE);
-+	ret = __guest_check_transition_size(phys, ipa, nr_pages, &size);
++	ret = __guest_check_transition_size(0, ipa, nr_pages, &size);
 +	if (ret)
 +		return ret;
 +
-+	ret = check_range_allowed_memory(phys, phys + size);
- 	if (ret)
- 		return ret;
- 
  	host_lock_component();
  	guest_lock_component(vm);
  
--	ret = __guest_check_page_state_range(vcpu, ipa, PAGE_SIZE, PKVM_NOPAGE);
-+	ret = __guest_check_page_state_range(vm, ipa, size, PKVM_NOPAGE);
+-	ret = __check_host_shared_guest(vm, &phys, ipa);
++	ret = __check_host_shared_guest(vm, &phys, ipa, size);
+ 	if (ret)
+ 		goto unlock;
+ 
+-	ret = kvm_pgtable_stage2_unmap(&vm->pgt, ipa, PAGE_SIZE);
++	ret = kvm_pgtable_stage2_unmap(&vm->pgt, ipa, size);
  	if (ret)
  		goto unlock;
  
 -	page = hyp_phys_to_page(phys);
--	switch (get_host_state(page)) {
--	case PKVM_PAGE_OWNED:
--		WARN_ON(__host_set_page_state_range(phys, PAGE_SIZE, PKVM_PAGE_SHARED_OWNED));
--		break;
--	case PKVM_PAGE_SHARED_OWNED:
--		if (page->host_share_guest_count)
--			break;
--		/* Only host to np-guest multi-sharing is tolerated */
--		fallthrough;
--	default:
--		ret = -EPERM;
--		goto unlock;
+-	page->host_share_guest_count--;
+-	if (!page->host_share_guest_count)
+-		WARN_ON(__host_set_page_state_range(phys, PAGE_SIZE, PKVM_PAGE_OWNED));
 +	for_each_hyp_page(page, phys, size) {
-+		switch (get_host_state(page)) {
-+		case PKVM_PAGE_OWNED:
-+			continue;
-+		case PKVM_PAGE_SHARED_OWNED:
-+			if (page->host_share_guest_count == U32_MAX) {
-+				ret = -EBUSY;
-+				goto unlock;
-+			}
-+
-+			/* Only host to np-guest multi-sharing is tolerated */
-+			if (page->host_share_guest_count)
-+				continue;
-+
-+			fallthrough;
-+		default:
-+			ret = -EPERM;
-+			goto unlock;
-+		}
- 	}
- 
--	WARN_ON(kvm_pgtable_stage2_map(&vm->pgt, ipa, PAGE_SIZE, phys,
-+	for_each_hyp_page(page, phys, size) {
-+		set_host_state(page, PKVM_PAGE_SHARED_OWNED);
-+		page->host_share_guest_count++;
++		/* __check_host_shared_guest() protects against underflow */
++		page->host_share_guest_count--;
++		if (!page->host_share_guest_count)
++			set_host_state(page, PKVM_PAGE_OWNED);
 +	}
-+
-+	WARN_ON(kvm_pgtable_stage2_map(&vm->pgt, ipa, size, phys,
- 				       pkvm_mkstate(prot, PKVM_PAGE_SHARED_BORROWED),
- 				       &vcpu->vcpu.arch.pkvm_memcache, 0));
--	page->host_share_guest_count++;
  
  unlock:
  	guest_unlock_component(vm);
-@@ -1169,6 +1192,9 @@ static void assert_page_state(void)
- 	struct pkvm_hyp_vcpu *vcpu = &selftest_vcpu;
- 	u64 phys = hyp_virt_to_phys(virt);
- 	u64 ipa[2] = { selftest_ipa(), selftest_ipa() + PAGE_SIZE };
-+	struct pkvm_hyp_vm *vm;
-+
-+	vm = pkvm_hyp_vcpu_to_hyp_vm(vcpu);
- 
+@@ -1058,7 +1063,7 @@ static void assert_host_shared_guest(struct pkvm_hyp_vm *vm, u64 ipa)
  	host_lock_component();
- 	WARN_ON(__host_check_page_state_range(phys, size, selftest_state.host));
-@@ -1179,8 +1205,8 @@ static void assert_page_state(void)
- 	hyp_unlock_component();
+ 	guest_lock_component(vm);
  
- 	guest_lock_component(&selftest_vm);
--	WARN_ON(__guest_check_page_state_range(vcpu, ipa[0], size, selftest_state.guest[0]));
--	WARN_ON(__guest_check_page_state_range(vcpu, ipa[1], size, selftest_state.guest[1]));
-+	WARN_ON(__guest_check_page_state_range(vm, ipa[0], size, selftest_state.guest[0]));
-+	WARN_ON(__guest_check_page_state_range(vm, ipa[1], size, selftest_state.guest[1]));
- 	guest_unlock_component(&selftest_vm);
- }
+-	ret = __check_host_shared_guest(vm, &phys, ipa);
++	ret = __check_host_shared_guest(vm, &phys, ipa, PAGE_SIZE);
  
-@@ -1218,7 +1244,7 @@ void pkvm_ownership_selftest(void *base)
- 	assert_transition_res(-EPERM,	__pkvm_host_share_ffa, pfn, 1);
+ 	guest_unlock_component(vm);
+ 	host_unlock_component();
+@@ -1245,7 +1250,7 @@ void pkvm_ownership_selftest(void *base)
  	assert_transition_res(-EPERM,	__pkvm_host_unshare_ffa, pfn, 1);
  	assert_transition_res(-EPERM,	hyp_pin_shared_mem, virt, virt + size);
--	assert_transition_res(-EPERM,	__pkvm_host_share_guest, pfn, gfn, vcpu, prot);
-+	assert_transition_res(-EPERM,	__pkvm_host_share_guest, pfn, gfn, 1, vcpu, prot);
- 	assert_transition_res(-ENOENT,	__pkvm_host_unshare_guest, gfn, vm);
+ 	assert_transition_res(-EPERM,	__pkvm_host_share_guest, pfn, gfn, 1, vcpu, prot);
+-	assert_transition_res(-ENOENT,	__pkvm_host_unshare_guest, gfn, vm);
++	assert_transition_res(-ENOENT,	__pkvm_host_unshare_guest, gfn, 1, vm);
  
  	selftest_state.host = PKVM_PAGE_OWNED;
-@@ -1237,7 +1263,7 @@ void pkvm_ownership_selftest(void *base)
- 	assert_transition_res(-EPERM,	__pkvm_host_donate_hyp, pfn, 1);
- 	assert_transition_res(-EPERM,	__pkvm_host_share_ffa, pfn, 1);
+ 	selftest_state.hyp = PKVM_NOPAGE;
+@@ -1253,7 +1258,7 @@ void pkvm_ownership_selftest(void *base)
  	assert_transition_res(-EPERM,	__pkvm_hyp_donate_host, pfn, 1);
--	assert_transition_res(-EPERM,	__pkvm_host_share_guest, pfn, gfn, vcpu, prot);
-+	assert_transition_res(-EPERM,	__pkvm_host_share_guest, pfn, gfn, 1, vcpu, prot);
- 	assert_transition_res(-ENOENT,	__pkvm_host_unshare_guest, gfn, vm);
- 
- 	assert_transition_res(0,	hyp_pin_shared_mem, virt, virt + size);
-@@ -1249,7 +1275,7 @@ void pkvm_ownership_selftest(void *base)
- 	assert_transition_res(-EPERM,	__pkvm_host_donate_hyp, pfn, 1);
- 	assert_transition_res(-EPERM,	__pkvm_host_share_ffa, pfn, 1);
- 	assert_transition_res(-EPERM,	__pkvm_hyp_donate_host, pfn, 1);
--	assert_transition_res(-EPERM,	__pkvm_host_share_guest, pfn, gfn, vcpu, prot);
-+	assert_transition_res(-EPERM,	__pkvm_host_share_guest, pfn, gfn, 1, vcpu, prot);
- 	assert_transition_res(-ENOENT,	__pkvm_host_unshare_guest, gfn, vm);
- 
- 	hyp_unpin_shared_mem(virt, virt + size);
-@@ -1268,7 +1294,7 @@ void pkvm_ownership_selftest(void *base)
- 	assert_transition_res(-EPERM,	__pkvm_host_share_hyp, pfn);
  	assert_transition_res(-EPERM,	__pkvm_host_unshare_hyp, pfn);
- 	assert_transition_res(-EPERM,	__pkvm_hyp_donate_host, pfn, 1);
--	assert_transition_res(-EPERM,	__pkvm_host_share_guest, pfn, gfn, vcpu, prot);
-+	assert_transition_res(-EPERM,	__pkvm_host_share_guest, pfn, gfn, 1, vcpu, prot);
- 	assert_transition_res(-ENOENT,	__pkvm_host_unshare_guest, gfn, vm);
+ 	assert_transition_res(-EPERM,	__pkvm_host_unshare_ffa, pfn, 1);
+-	assert_transition_res(-ENOENT,	__pkvm_host_unshare_guest, gfn, vm);
++	assert_transition_res(-ENOENT,	__pkvm_host_unshare_guest, gfn, 1, vm);
  	assert_transition_res(-EPERM,	hyp_pin_shared_mem, virt, virt + size);
- 
-@@ -1279,8 +1305,8 @@ void pkvm_ownership_selftest(void *base)
  
  	selftest_state.host = PKVM_PAGE_SHARED_OWNED;
- 	selftest_state.guest[0] = PKVM_PAGE_SHARED_BORROWED;
--	assert_transition_res(0,	__pkvm_host_share_guest, pfn, gfn, vcpu, prot);
--	assert_transition_res(-EPERM,	__pkvm_host_share_guest, pfn, gfn, vcpu, prot);
-+	assert_transition_res(0,	__pkvm_host_share_guest, pfn, gfn, 1, vcpu, prot);
-+	assert_transition_res(-EPERM,	__pkvm_host_share_guest, pfn, gfn, 1, vcpu, prot);
+@@ -1264,7 +1269,7 @@ void pkvm_ownership_selftest(void *base)
  	assert_transition_res(-EPERM,	__pkvm_host_share_ffa, pfn, 1);
- 	assert_transition_res(-EPERM,	__pkvm_host_donate_hyp, pfn, 1);
- 	assert_transition_res(-EPERM,	__pkvm_host_share_hyp, pfn);
-@@ -1289,7 +1315,7 @@ void pkvm_ownership_selftest(void *base)
+ 	assert_transition_res(-EPERM,	__pkvm_hyp_donate_host, pfn, 1);
+ 	assert_transition_res(-EPERM,	__pkvm_host_share_guest, pfn, gfn, 1, vcpu, prot);
+-	assert_transition_res(-ENOENT,	__pkvm_host_unshare_guest, gfn, vm);
++	assert_transition_res(-ENOENT,	__pkvm_host_unshare_guest, gfn, 1, vm);
+ 
+ 	assert_transition_res(0,	hyp_pin_shared_mem, virt, virt + size);
+ 	assert_transition_res(0,	hyp_pin_shared_mem, virt, virt + size);
+@@ -1276,7 +1281,7 @@ void pkvm_ownership_selftest(void *base)
+ 	assert_transition_res(-EPERM,	__pkvm_host_share_ffa, pfn, 1);
+ 	assert_transition_res(-EPERM,	__pkvm_hyp_donate_host, pfn, 1);
+ 	assert_transition_res(-EPERM,	__pkvm_host_share_guest, pfn, gfn, 1, vcpu, prot);
+-	assert_transition_res(-ENOENT,	__pkvm_host_unshare_guest, gfn, vm);
++	assert_transition_res(-ENOENT,	__pkvm_host_unshare_guest, gfn, 1, vm);
+ 
+ 	hyp_unpin_shared_mem(virt, virt + size);
+ 	assert_page_state();
+@@ -1295,7 +1300,7 @@ void pkvm_ownership_selftest(void *base)
+ 	assert_transition_res(-EPERM,	__pkvm_host_unshare_hyp, pfn);
+ 	assert_transition_res(-EPERM,	__pkvm_hyp_donate_host, pfn, 1);
+ 	assert_transition_res(-EPERM,	__pkvm_host_share_guest, pfn, gfn, 1, vcpu, prot);
+-	assert_transition_res(-ENOENT,	__pkvm_host_unshare_guest, gfn, vm);
++	assert_transition_res(-ENOENT,	__pkvm_host_unshare_guest, gfn, 1, vm);
  	assert_transition_res(-EPERM,	hyp_pin_shared_mem, virt, virt + size);
  
- 	selftest_state.guest[1] = PKVM_PAGE_SHARED_BORROWED;
--	assert_transition_res(0,	__pkvm_host_share_guest, pfn, gfn + 1, vcpu, prot);
-+	assert_transition_res(0,	__pkvm_host_share_guest, pfn, gfn + 1, 1, vcpu, prot);
+ 	selftest_state.host = PKVM_PAGE_OWNED;
+@@ -1319,11 +1324,11 @@ void pkvm_ownership_selftest(void *base)
  	WARN_ON(hyp_virt_to_page(virt)->host_share_guest_count != 2);
  
  	selftest_state.guest[0] = PKVM_NOPAGE;
+-	assert_transition_res(0,	__pkvm_host_unshare_guest, gfn, vm);
++	assert_transition_res(0,	__pkvm_host_unshare_guest, gfn, 1, vm);
+ 
+ 	selftest_state.guest[1] = PKVM_NOPAGE;
+ 	selftest_state.host = PKVM_PAGE_OWNED;
+-	assert_transition_res(0,	__pkvm_host_unshare_guest, gfn + 1, vm);
++	assert_transition_res(0,	__pkvm_host_unshare_guest, gfn + 1, 1, vm);
+ 
+ 	selftest_state.host = PKVM_NOPAGE;
+ 	selftest_state.hyp = PKVM_PAGE_OWNED;
 diff --git a/arch/arm64/kvm/pkvm.c b/arch/arm64/kvm/pkvm.c
-index 83a737484046..0285e2cd2e7f 100644
+index 0285e2cd2e7f..f77c5157a8d7 100644
 --- a/arch/arm64/kvm/pkvm.c
 +++ b/arch/arm64/kvm/pkvm.c
-@@ -347,7 +347,7 @@ int pkvm_pgtable_stage2_map(struct kvm_pgtable *pgt, u64 addr, u64 size,
- 		return -EINVAL;
+@@ -371,7 +371,7 @@ int pkvm_pgtable_stage2_unmap(struct kvm_pgtable *pgt, u64 addr, u64 size)
  
  	lockdep_assert_held_write(&kvm->mmu_lock);
--	ret = kvm_call_hyp_nvhe(__pkvm_host_share_guest, pfn, gfn, prot);
-+	ret = kvm_call_hyp_nvhe(__pkvm_host_share_guest, pfn, gfn, 1, prot);
- 	if (ret) {
- 		/* Is the gfn already mapped due to a racing vCPU? */
- 		if (ret == -EPERM)
+ 	for_each_mapping_in_range_safe(pgt, addr, addr + size, mapping) {
+-		ret = kvm_call_hyp_nvhe(__pkvm_host_unshare_guest, handle, mapping->gfn);
++		ret = kvm_call_hyp_nvhe(__pkvm_host_unshare_guest, handle, mapping->gfn, 1);
+ 		if (WARN_ON(ret))
+ 			break;
+ 		rb_erase(&mapping->node, &pgt->pkvm_mappings);
 -- 
 2.49.0.1112.g889b7c5bd8-goog
 
