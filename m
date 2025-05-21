@@ -1,167 +1,127 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D43FF33EA;
-	Wed, 21 May 2025 08:56:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7420123815B
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 08:57:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747817800; cv=none; b=rMt/O5aN4OVWHvq6JVtwd3jvDmzz9qzFKet5k4btIS80F34a1rXNwKQ7QopiND8vB1mnp/x6vAK8BS2z6NjKHVWM0EIzMbyBTsicQcEaeTXn2meGY2udnCwVZSD7/kla+J1p5MPnv0soykpLSQ52wfcur8RT1Q8CP02OrMbA2ss=
+	t=1747817823; cv=none; b=VORTQCk1DtPYaHi+So3NOnL0oihEtDySi/cj0q34SPRwd0iGtsEOVc4/216Y+keWbVKwUcunbovji0Dfg700SJTNxLecvJajf7LX6yGEFSLhVlcyxu4gKj8AnQDy5WmbuhNqh50kqv3AKx0ccoqoflYHaqHvMa4WzgHyMvn16PE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747817800; c=relaxed/simple;
-	bh=rsKPq6xbslj3xkT78HLw6P1t5XKTzvYYoBmzo7wm2AA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=uVXc/RoDkt/86HuVO0iF2KzHFJPhciAAr/kjsbNNGi23Ee7GUQd+vIVdgbVkheVFq9ugzdLy13gapZNgpm+90FoMaPOHzq4vdsCKRJeQ18Exi2dzjVvM0zh3pN3awArZWWNOKEAaAxfHRz8rEbBAl549WA20orCbkxkuu4Z2vVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=GQy0Lnx5; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1747817823; c=relaxed/simple;
+	bh=XSVAWIQJLeLQ+EnAe2fX432Jiet3EaT40S7A2jVLi7Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=phc7RI9aq8YCl2tkoSD5tQI+MnGL0jhpKZehLjjUpEqiMc2Zm135HaRptxFCNsknKuR+jkxUwA7IvQ0ybRBqJ7BojBeo4Q9LyvGoYNykG5z/dEiPhd6BT42btzhgt/gM8P27L0qxvUuGUaqxqBLEc3gh+szTfG+uZ4its0aWtKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=f05Yi26W; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="GQy0Lnx5"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54L5hqva014026;
-	Wed, 21 May 2025 08:56:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	xlZ8fW1X2E4grUCjho7hpFCrOvvv4aVzbCbXbKqAs0w=; b=GQy0Lnx5120Q74kp
-	itJ5vDRCVUDdH4z86wpRVqFPxPC9PdLPMcRgRY4RhqIH5KD1BeAhg907JcHbgG0w
-	ETKq3X7iyh5R/fYgcKkD/KPfjeN2+W5VpgcP1Ho2yd2hBjIBZUT+c7a/n2nq5Y3Q
-	FINEvl5bSdHYLCcA073AnnWaQQhHvCI4HibjgYPuIJczShwzq5r4aZbsCVZwnF+S
-	amrqg6JpDvLEV72VpZ4bFB4y5XfLsZvAWmusKGjpw81CM2I9xHKJOGMpFk9kIlJN
-	rK9IKey/FcSIUAXIaYqropQmeSLySiWTNZX3FC+SWloYaahrauUy/8V6JHrmUp2p
-	ixNBvQ==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwfb29aw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 08:56:10 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54L8u9Vp007121
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 08:56:09 GMT
-Received: from [10.239.155.136] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 21 May
- 2025 01:56:04 -0700
-Message-ID: <b7b0b907-8f5c-481c-9a68-cb3e20b59cb0@quicinc.com>
-Date: Wed, 21 May 2025 16:56:02 +0800
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f05Yi26W"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747817820;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=z5ISw/s/gG2J/o4w18hQ658TJ8AN+hELaWEkOZaX4Ho=;
+	b=f05Yi26We9j/BQYxoHcPfBL4QnY44Kn1ZdxkZJHiowgTTeFxHS76GtNZzgpcA87zG6eemJ
+	u5mY+pEjda+/MV64cXgh8wBl7bcJpPJKl0PLYvTJ2CuOTxR+/5eeikI9kyDtwDW+NPFHhl
+	OWvuG7066wYKAArxj5lmr9Om0UoUjAI=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-208-bEvet-V1NbOyYPWQA6c8wA-1; Wed, 21 May 2025 04:56:59 -0400
+X-MC-Unique: bEvet-V1NbOyYPWQA6c8wA-1
+X-Mimecast-MFC-AGG-ID: bEvet-V1NbOyYPWQA6c8wA_1747817818
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6f8e7b78eebso35157226d6.2
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 01:56:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747817818; x=1748422618;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=z5ISw/s/gG2J/o4w18hQ658TJ8AN+hELaWEkOZaX4Ho=;
+        b=qrQaGBDa+NzNz/jAXbbE7JGFstoL95Ai7LeLRwHsbvpKPmB+SmFJ+BLYe+4bEgN6Lz
+         YX44Ue76LrT9kNVO+S8/PoQPzEnWnT6YadRBDFW+ducKurKXtmh0b4Efx6JZYq9Abmzs
+         1dBjHD/iivBZQcr3hCqFVyAWjU8pVIeotYjMg1NvIp3fG5dBdTELAzdKH3fypDILVZQ7
+         MfRt/TsW0oSdwBaMDKgHxGgjgYs8gwFRL3Mw6pqHj03Ag5294ePez5FtFPw7HtFgx/4r
+         uIhQsLjy0JEQbXcTGznpCL4GfXUdW0VyNE3OiSug7I9HD7YrGv8lVnEOoo9qs5mhL+nc
+         OiDg==
+X-Forwarded-Encrypted: i=1; AJvYcCVkCWsfZtKVeG/YdH7zqCWYYltu5pfRqcg9FSJH7MUcRqKm65QCFj+DZxZpyoygo8/7JB8sPFYEN8NW5tQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/DGnQt34jg8jNEIH0jcu+xfwAWxqT8X4vlxgrE5MPB6AT8D5S
+	5iyDalm2x7/4431uR4RAyd9oDuHRTkx22EFHLU/ojpmuCBb0XsfQwOOSd7a0f2Kr9KxfvUfzuMy
+	l3orZaxLz6HV4gRR+jdUfh4iSvT/2vAayfcBt53f3cy7mvcEbbIO5HmamI0RStNvo7ceMlqfqcP
+	HCmmhlWcWQKFq7CTT5cIZDHzSbEgyvQ2FO5h0XxPrU
+X-Gm-Gg: ASbGncsqPkU6VQgWcQYAbXqqOKXB/5pEOCqRMVsToHVPSaJd7nO7hWL0c8zuAY3Lh/u
+	Vo507fOKw6Z3ETHENCop+UTYr1ZdqKpFo65PBdBlgqH2q5l9aK7v0GLaYRVst5ZSYQKA=
+X-Received: by 2002:a05:6214:2681:b0:6f8:8df1:648 with SMTP id 6a1803df08f44-6f8b2c37a19mr343338736d6.7.1747817818402;
+        Wed, 21 May 2025 01:56:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGaO4WTOV6fJAlmH9DP3inkXOYir+cNPdLYhrMs4mbVZjO2ZBdSoayKvQmU0Z4z5PR9AxBgDQglVFmrFM7Wvjg=
+X-Received: by 2002:a05:6214:2681:b0:6f8:8df1:648 with SMTP id
+ 6a1803df08f44-6f8b2c37a19mr343338606d6.7.1747817818106; Wed, 21 May 2025
+ 01:56:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] scsi: ufs: core: skip UFS clkscale if host
- asynchronous scan in progress
-To: =?UTF-8?B?UGV0ZXIgV2FuZyAo546L5L+h5Y+LKQ==?= <peter.wang@mediatek.com>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "avri.altman@wdc.com"
-	<avri.altman@wdc.com>,
-        "quic_rampraka@quicinc.com"
-	<quic_rampraka@quicinc.com>,
-        "quic_cang@quicinc.com" <quic_cang@quicinc.com>,
-        "quic_nguyenb@quicinc.com" <quic_nguyenb@quicinc.com>,
-        "quic_nitirawa@quicinc.com" <quic_nitirawa@quicinc.com>,
-        "bvanassche@acm.org"
-	<bvanassche@acm.org>,
-        "neil.armstrong@linaro.org"
-	<neil.armstrong@linaro.org>,
-        "luca.weiss@fairphone.com"
-	<luca.weiss@fairphone.com>,
-        "konrad.dybcio@oss.qualcomm.com"
-	<konrad.dybcio@oss.qualcomm.com>,
-        "junwoo80.lee@samsung.com"
-	<junwoo80.lee@samsung.com>,
-        "mani@kernel.org" <mani@kernel.org>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>
-CC: "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
-        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
-        "James.Bottomley@HansenPartnership.com"
-	<James.Bottomley@HansenPartnership.com>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-References: <20250508093854.3281475-1-quic_ziqichen@quicinc.com>
- <fd13e179-f2d8-4085-86da-c6b0fce2de5b@acm.org>
- <5748d0cc-a603-4b44-bbfc-d39d684b2ea6@quicinc.com>
- <c428f074-c010-4225-960e-56aa65a799d8@acm.org>
- <486616b7-9400-4288-b4b4-c56ec628b0f3@quicinc.com>
- <f092c7a563f2f2b70ccb43340b95819adacb2ad6.camel@mediatek.com>
-Content-Language: en-US
-From: Ziqi Chen <quic_ziqichen@quicinc.com>
-In-Reply-To: <f092c7a563f2f2b70ccb43340b95819adacb2ad6.camel@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: bI31KMDxb1HWjN0C3kVdSnvbBOHMoTis
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDA4NyBTYWx0ZWRfX5pltyY9kXZp4
- KYbsb6RtBhwn2naDkSR77wxbyKZC+Hv4uVk34GYsuqAg/CODDyojNPU9OgjJOEdKBneCv+YvPLJ
- di9au+RfvjJgZaqp+SD+fj2sf/ub6pW3bWbK6L1JyN/HK9W7kBOhairy/ijgsKb4/h606o+boVX
- d3t1KoLIQNkhCztOUC2H6TlZpDbOxdjv4kXL7A+U3p04Ded9QK/a36t51aySdaFoDxXDiW1JG2a
- Rn2tZ7/qAjbK2xaYi9CAP47pp/389nprCdaAhK/jpOw0ySY33u52oZiSRx4lFkW16mVfSlS54Xa
- WK2aSWLsyO+vu19X7HRyKiGCp2R1gAS4viFRNsaz/TVrMb2fm9LN0/4xU2cX1EEZrL66eH/AFfW
- bR0lADgoREzgO49Rqizm0EQzk0eUB9UCnPIDuv7W/orrfRpB1/QWoStBQ5A6Q1hWOI7e6C/u
-X-Proofpoint-GUID: bI31KMDxb1HWjN0C3kVdSnvbBOHMoTis
-X-Authority-Analysis: v=2.4 cv=dLCmmPZb c=1 sm=1 tr=0 ts=682d952a cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
- a=D5H_ezefHQ2CrDQh4HgA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-21_02,2025-05-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxscore=0 clxscore=1015 adultscore=0 bulkscore=0 phishscore=0 suspectscore=0
- impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=999 spamscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505210087
+References: <1747253032-663457-1-git-send-email-tariqt@nvidia.com>
+ <CAADnVQLSMvk3uuzTCjqQKXs6hbZH9-_XeYo2Uvu2uHAiYrnkog@mail.gmail.com>
+ <dcb3053f-6588-4c87-be42-a172dacb1828@gmail.com> <09377c1a-dac5-487d-9fc1-d973b20b04dd@kernel.org>
+In-Reply-To: <09377c1a-dac5-487d-9fc1-d973b20b04dd@kernel.org>
+From: Samuel Dobron <sdobron@redhat.com>
+Date: Wed, 21 May 2025 10:56:47 +0200
+X-Gm-Features: AX0GCFu5dfswcCWTTkSyc0z9SXYg_lElASwlqEtz7krxELOPksJgTCJdKDQl7-M
+Message-ID: <CA+h3auNLbmQFXrN1A5Ashek4UiMGa_j+EHaFFp-d74kGZvyjsA@mail.gmail.com>
+Subject: Re: [PATCH net-next] net/mlx5e: Reuse per-RQ XDP buffer to avoid
+ stack zeroing overhead
+To: Jesper Dangaard Brouer <hawk@kernel.org>
+Cc: Tariq Toukan <ttoukan.linux@gmail.com>, 
+	Alexei Starovoitov <alexei.starovoitov@gmail.com>, "David S. Miller" <davem@davemloft.net>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, 
+	Andrew Lunn <andrew+netdev@lunn.ch>, Saeed Mahameed <saeedm@nvidia.com>, 
+	Leon Romanovsky <leon@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	John Fastabend <john.fastabend@gmail.com>, Network Development <netdev@vger.kernel.org>, 
+	linux-rdma@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, 
+	bpf <bpf@vger.kernel.org>, Moshe Shemesh <moshe@nvidia.com>, Mark Bloch <mbloch@nvidia.com>, 
+	Gal Pressman <gal@nvidia.com>, Carolina Jubran <cjubran@nvidia.com>, 
+	Sebastiano Miano <mianosebastiano@gmail.com>, Benjamin Poirier <bpoirier@redhat.com>, 
+	Toke Hoiland Jorgensen <toke@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 
+Hey,
+I ran tests just on stack zeroing kernel.
 
+> The XDP_TX number are actually lower than I expected.
+> Hmm... I wonder if we regressed here(?)
 
-On 5/14/2025 5:05 PM, Peter Wang (王信友) wrote:
-> On Wed, 2025-05-14 at 15:25 +0800, Ziqi Chen wrote:
->>
->> Hi Bart,
->>
->> I tried the scan_mutex, from debugging logs, it seems okay for now.
->> I will provide to our internal test team for stability test.
->> And I will try to collect the extra time spent on clock scaling
->> path with applying scan_mutex.
->> If everything is fine, I will update a new version.
->>
->> BRs,
->> Ziqi
->>
->>
->>
-> 
-> Hi Ziqi,
-> 
-> Could we enable devfreq when checking if hba->luns_avail equals 1
-> in ufshcd_device_configure?
-> I think we can use flow to ensure correctness; it doesn't
-> necessarily need to be protected by a mutex.
-> 
-> Thanks
-> Peter
+The absolute numbers look more or less the same,
+so I would say no. The first results we have for TX is from
+6.13.0-0.rc1.20241202gite70140ba0d2b.14.eln144
+comparing it to 6.15.0-0.rc5.250509g9c69f8884904.47.eln148
+there is actually 1% improvement. But that might be a
+random fluctuation (numbers are based on 1 iteration).
+We don't have data for earlier kernels...
 
-Hi Peter,
+However, for TX I get better results:
 
-Thanks for your suggestion, and sorry for the late response—I was out of
-office last week.
+XDP_TX: DPA, swap macs:
+- baseline: 9.75 Mpps
+- patched 10.78 Mpps (+10%)
 
-It looks like checking hba->luns_avail == 1 in ufshcd_device_configure
-before enabling devfreq can ensure correctness. But I think the
-function name 'ufshcd_device_configure' suggests that enabling devfreq
-inside it is not reasonable. That’s another same reason why we moved
-ufshcd_devfreq_init() out of ufshcd_add_lus() in this patch.
+Maybe just different test configuration? We use xdp-bench
+in dpa mode+swapping macs.
 
-BRs,
-Ziqi
+XDP_DROP:
+> >>> Stack zeroing enabled:
+> >>> - XDP_DROP:
+> >>>      * baseline:                     24.32 Mpps
+> >>>      * baseline + per-RQ allocation: 32.27 Mpps (+32.7%)
 
-> 
-> 
+Same results on my side:
+- baseline 16.6 Mpps
+- patched  24.6 Mpps (+32.5%)
+
+Seems to be fixed :)
+
+Sam.
 
