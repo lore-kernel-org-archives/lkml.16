@@ -1,235 +1,264 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D0651EDA02
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 14:50:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CD091DF72C;
+	Wed, 21 May 2025 14:50:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747839013; cv=none; b=bXw3XZRPqegKf6t6uXrzJvtamH7T0HbnSRP5a+z8GbymzzTnSNPJ8xMLCKpR7dWoOexKWV7UbfTDoT6XZWkAgUS6mrbAV9kaibN/zjyCTWAOlNGbHKFxB3Rc+PQK/MJm7oPimXHf6/7PyVSfV6+EMMKPEA9r0ieMldOJ5+3K6tg=
+	t=1747839019; cv=none; b=QqWx+iv92uIWpCar0CtRB8tNycd0AjyA7Rw9GZUqhVY1kDanNeUo4H+gAsvo7hQ7o3pX1N/h5nRpIbfwCC1E4BRR+YWbh4FRss2tNFJ8pZrnsqoTxj7Cf5DLldPdU4sQBqUQqq+xgjkW+8pYIr8exxkUAjmvBh0i64bF50Rb6H4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747839013; c=relaxed/simple;
-	bh=/sa/iTGfmiqRdvnhquMCQwrbH1y2c4RD535i7oNPve4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=eya5gyeZlytlXNI4I8JgIlfiyv+yhaQAm4tl4apotTCcduJmSblGvTz9SuiY/CDlVq4pA1KSVu2ipq7HwH36WwRgH/7bBZQEvx49pqopFyIae++Ac7Ii9qobm5aJw8ruC+gnhA+lw80ib5IXhlh/6aRbkizSdUFw0KxY8/l+W9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SsjAEio7; arc=none smtp.client-ip=209.85.215.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1747839019; c=relaxed/simple;
+	bh=TOLrDA2eeMqe0vtTBtCmPHLnSNOa4XzbiEXn1PfbsmI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=H8YPc8Vw9YlpWNzL/ElGF7AuryZgqt+GAO7N7Jy1BGBvyQKbrrzf/GcWAtRt6v4R+6EVvwBX7LmRO4sJQTVXfq2kAIEnJKx9wnfqEWO3xCFqeKmX1dLigie4HyoM52348Ar45Miky3zy3X8ImgpQiNft9yFasIj9mpvnCwx1ujQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DGMETCHK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SsjAEio7"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b26e33ae9d5so7235911a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 07:50:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747839011; x=1748443811; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=88I2UWCvrWerlTNXLan8CkMZwVh1yIkpQvjTRWhOtIk=;
-        b=SsjAEio7hPjghYtj8sI3OlbzHtNeOCOrX1e5rHwiIZGTnQDUgmHcUCXadczsjeIsm2
-         eQ8toqcqVPBNZ/yrEKO+OSSFdgT5bvFQwk9GoHFs1Mu5wuLNqmKivFC/iT/EAl9VIz1X
-         +jlCxYAaKsjKIL8O/awQdofGnTHzJcB4LoE2j5ucTH7HfmMhuEnOmfUimwlkiBuVK/M+
-         FvyZLRtdiD0u13SjKoB1ocN2P8yo5e20rTOQEE/92i7sZ/lAi4y3r/wOhMDNtSGVFT7s
-         vecUpsmjmkJpsvilgdwIrT0RUoUjyrCvoe1AdfjPRksl824CoSJwi1uoPAcIyjkFl0HA
-         l/CQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747839011; x=1748443811;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=88I2UWCvrWerlTNXLan8CkMZwVh1yIkpQvjTRWhOtIk=;
-        b=aC6hp0Dcfo6WaxkHtONWFFHfqzMHDKRGbAl7pD1c75jrpVEvN6WX/AUlxw4Ss1e7V0
-         a+lUfBFPtU6gbi+8kr9RII8svxKiPKC7+vWsyaL1XqGEKQ07K4HLB4JhQoGnefRtrxTP
-         X73gnV8UrH1VIWftVhnY9nb51ia2TxnpVObYrSPrpzwi2GpGYQqTfVC3u+qFATHdT7BD
-         Q2+vd4+3C70lz+R9VHwH2FiCjHesaSOSnhmE1YnQ0t989SKvaUtW4tUcGhCxEIFQncym
-         5zjmEkk1Ixg31QgJ3aKNgBshKrAZvepRYmQO/fr0OulpTzQj2iX7RXpQRbxh6E6XMqkg
-         9JCw==
-X-Forwarded-Encrypted: i=1; AJvYcCV8N06S/NSVhpEWacfHh85cb+Tr8/i2oBQbZz3bgmvsow2KBWdTrDc3g1kFzPvlsgY0GgkflavnpL3nFvo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIOCPb9MAhWuFekEP2xCg4R3XGqoBeD9ULVRJFgH95oCkFMSfU
-	XH9VxOQUQUedM0JRe5GkDwymaQPb4m/MkOgqZ9lMv05w6ToH3uSfwjNnwrHDSre0/PPSIgD15mu
-	3pFnP6g==
-X-Google-Smtp-Source: AGHT+IGvTRSPEQy4eaUK3h8Jgk3fg2fW5Wjpte99Q/OzIF+DOtl3A4V2FUnw8IfRYTpXYQZyjWKOE/ZnZi4=
-X-Received: from pjbsb7.prod.google.com ([2002:a17:90b:50c7:b0:30e:6bb2:6855])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:c883:b0:2ff:53a4:74f0
- with SMTP id 98e67ed59e1d1-30e8323cdd7mr31951344a91.29.1747839011481; Wed, 21
- May 2025 07:50:11 -0700 (PDT)
-Date: Wed, 21 May 2025 07:50:10 -0700
-In-Reply-To: <aC0VlENyfE9ewuTF@x1.local>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DGMETCHK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5E9CC4CEE4;
+	Wed, 21 May 2025 14:50:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747839018;
+	bh=TOLrDA2eeMqe0vtTBtCmPHLnSNOa4XzbiEXn1PfbsmI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=DGMETCHKjyHaPOa5wxkCkC/AOqg/az0lIPJnyOVODKa1xqg1SWzWbNLO6zT3WNKsI
+	 27ko9aiFCBK3/zLYNGw68+SiWM+OzTq6q7h6FXbBlq1IoWto4OQCKuUuRllPlxRMEK
+	 103GF/LeohFTIWioFzhBYpCg+sr5K9cRGou2jDIn+0vxu9BZQU3ANyoUjhAmGi1yQP
+	 B5Af6pJNmS/qSavfREQZFCFZhyOb+9oLU/5zwtAoPNj1Jm/7U1AoDVzWAvHCQUWysP
+	 ZUdfuVEtVeQF1AtY4LkPCxHDR71j/6mMvuHu0MdKmgUV0Dm7HS19VujUvp1bVHi3Gu
+	 27Pu8rqQS07dA==
+From: Lee Jones <lee@kernel.org>
+To: lee@kernel.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Jens Axboe <axboe@kernel.dk>,
+	Sasha Levin <sashal@kernel.org>,
+	Michal Luczaj <mhal@rbox.co>,
+	Rao Shoaib <Rao.Shoaib@oracle.com>,
+	Pavel Begunkov <asml.silence@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Cc: stable@vger.kernel.org
+Subject: [PATCH v6.6 07/26] af_unix: Allocate struct unix_vertex for each inflight AF_UNIX fd.
+Date: Wed, 21 May 2025 14:45:15 +0000
+Message-ID: <20250521144803.2050504-8-lee@kernel.org>
+X-Mailer: git-send-email 2.49.0.1112.g889b7c5bd8-goog
+In-Reply-To: <20250521144803.2050504-1-lee@kernel.org>
+References: <20250521144803.2050504-1-lee@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250516213540.2546077-1-seanjc@google.com> <aCzUIsn1ZF2lEOJ-@x1.local>
- <aC0NMJIeqlgvq0yL@google.com> <aC0VlENyfE9ewuTF@x1.local>
-Message-ID: <aC3oIjkivS2KqKZH@google.com>
-Subject: Re: [PATCH v3 0/6]  KVM: Dirty ring fixes and cleanups
-From: Sean Christopherson <seanjc@google.com>
-To: Peter Xu <peterx@redhat.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Yan Zhao <yan.y.zhao@intel.com>, Maxim Levitsky <mlevitsk@redhat.com>, 
-	Binbin Wu <binbin.wu@linux.intel.com>, James Houghton <jthoughton@google.com>, 
-	Pankaj Gupta <pankaj.gupta@amd.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 20, 2025, Peter Xu wrote:
-> On Tue, May 20, 2025 at 04:16:00PM -0700, Sean Christopherson wrote:
-> > On Tue, May 20, 2025, Peter Xu wrote:
-> > > On Fri, May 16, 2025 at 02:35:34PM -0700, Sean Christopherson wrote:
-> > > > Sean Christopherson (6):
-> > > >   KVM: Bound the number of dirty ring entries in a single reset at
-> > > >     INT_MAX
-> > > >   KVM: Bail from the dirty ring reset flow if a signal is pending
-> > > >   KVM: Conditionally reschedule when resetting the dirty ring
-> > > >   KVM: Check for empty mask of harvested dirty ring entries in caller
-> > > >   KVM: Use mask of harvested dirty ring entries to coalesce dirty ring
-> > > >     resets
-> > > >   KVM: Assert that slots_lock is held when resetting per-vCPU dirty
-> > > >     rings
-> > > 
-> > > For the last one, I'd think it's majorly because of the memslot accesses
-> > > (or CONFIG_LOCKDEP=y should yell already on resets?).  
-> > 
-> > No?  If KVM only needed to ensure stable memslot accesses, then SRCU would suffice.
-> > It sounds like holding slots_lock may have been a somewhat unintentional,  but the
-> > reason KVM can't switch to SRCU is that doing so would break ordering, not because
-> > slots_lock is needed to protect the memslot accesses.
-> 
-> Hmm.. isn't what you said exactly means a "yes"? :)
-> 
-> I mean, I would still expect lockdep to report this ioctl if without the
-> slots_lock, please correct me if it's not the case.
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
 
-Yes, one of slots_lock or SRCU needs to be held.
+[ Upstream commit 1fbfdfaa590248c1d86407f578e40e5c65136330 ]
 
-> And if using RCU is not trivial (or not necessary either), so far the
-> slots_lock is still required to make sure the memslot accesses are legal?
+We will replace the garbage collection algorithm for AF_UNIX, where
+we will consider each inflight AF_UNIX socket as a vertex and its file
+descriptor as an edge in a directed graph.
 
-I don't follow this part.  The intent of the comment is to document why slots_lock
-is required, which is exceptional because memslot access for readers are protected
-by kvm->srcu.  The fact that slots_lock also protects memslots is notable only
-because it makes acquiring kvm->srcu superfluous.  But grabbing kvm->srcu is still
-safe/legal/ok:
+This patch introduces a new struct unix_vertex representing a vertex
+in the graph and adds its pointer to struct unix_sock.
 
-diff --git a/virt/kvm/dirty_ring.c b/virt/kvm/dirty_ring.c
-index 1ba02a06378c..6bf4f9e2f291 100644
---- a/virt/kvm/dirty_ring.c
-+++ b/virt/kvm/dirty_ring.c
-@@ -121,18 +121,26 @@ int kvm_dirty_ring_reset(struct kvm *kvm, struct kvm_dirty_ring *ring,
-        u64 cur_offset, next_offset;
-        unsigned long mask = 0;
-        struct kvm_dirty_gfn *entry;
-+       int idx;
+When we send a fd using the SCM_RIGHTS message, we allocate struct
+scm_fp_list to struct scm_cookie in scm_fp_copy().  Then, we bump
+each refcount of the inflight fds' struct file and save them in
+scm_fp_list.fp.
+
+After that, unix_attach_fds() inexplicably clones scm_fp_list of
+scm_cookie and sets it to skb.  (We will remove this part after
+replacing GC.)
+
+Here, we add a new function call in unix_attach_fds() to preallocate
+struct unix_vertex per inflight AF_UNIX fd and link each vertex to
+skb's scm_fp_list.vertices.
+
+When sendmsg() succeeds later, if the socket of the inflight fd is
+still not inflight yet, we will set the preallocated vertex to struct
+unix_sock.vertex and link it to a global list unix_unvisited_vertices
+under spin_lock(&unix_gc_lock).
+
+If the socket is already inflight, we free the preallocated vertex.
+This is to avoid taking the lock unnecessarily when sendmsg() could
+fail later.
+
+In the following patch, we will similarly allocate another struct
+per edge, which will finally be linked to the inflight socket's
+unix_vertex.edges.
+
+And then, we will count the number of edges as unix_vertex.out_degree.
+
+Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+Acked-by: Paolo Abeni <pabeni@redhat.com>
+Link: https://lore.kernel.org/r/20240325202425.60930-2-kuniyu@amazon.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+(cherry picked from commit 1fbfdfaa590248c1d86407f578e40e5c65136330)
+Signed-off-by: Lee Jones <lee@kernel.org>
+---
+ include/net/af_unix.h |  9 +++++++++
+ include/net/scm.h     |  3 +++
+ net/core/scm.c        |  7 +++++++
+ net/unix/af_unix.c    |  6 ++++++
+ net/unix/garbage.c    | 38 ++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 63 insertions(+)
+
+diff --git a/include/net/af_unix.h b/include/net/af_unix.h
+index 3dee0b2721aa4..07f0f698c9490 100644
+--- a/include/net/af_unix.h
++++ b/include/net/af_unix.h
+@@ -22,9 +22,17 @@ extern unsigned int unix_tot_inflight;
  
-        /*
-         * Ensure concurrent calls to KVM_RESET_DIRTY_RINGS are serialized,
-         * e.g. so that KVM fully resets all entries processed by a given call
--        * before returning to userspace.  Holding slots_lock also protects
--        * the various memslot accesses.
-+        * before returning to userspace.
-         */
-        lockdep_assert_held(&kvm->slots_lock);
+ void unix_inflight(struct user_struct *user, struct file *fp);
+ void unix_notinflight(struct user_struct *user, struct file *fp);
++int unix_prepare_fpl(struct scm_fp_list *fpl);
++void unix_destroy_fpl(struct scm_fp_list *fpl);
+ void unix_gc(void);
+ void wait_for_unix_gc(struct scm_fp_list *fpl);
  
-+       /*
-+        * Holding slots_lock also protects the various memslot accesses, but
-+        * acquiring kvm->srcu for read here is still safe, just unnecessary.
-+        */
-+       idx = srcu_read_lock(&kvm->srcu);
++struct unix_vertex {
++	struct list_head edges;
++	struct list_head entry;
++	unsigned long out_degree;
++};
 +
-        while (likely((*nr_entries_reset) < INT_MAX)) {
--               if (signal_pending(current))
-+               if (signal_pending(current)) {
-+                       srcu_read_unlock(&kvm->srcu, idx);
-                        return -EINTR;
-+               }
+ struct sock *unix_peer_get(struct sock *sk);
  
-                entry = &ring->dirty_gfns[ring->reset_index & (ring->size - 1)];
+ #define UNIX_HASH_MOD	(256 - 1)
+@@ -62,6 +70,7 @@ struct unix_sock {
+ 	struct path		path;
+ 	struct mutex		iolock, bindlock;
+ 	struct sock		*peer;
++	struct unix_vertex	*vertex;
+ 	struct list_head	link;
+ 	unsigned long		inflight;
+ 	spinlock_t		lock;
+diff --git a/include/net/scm.h b/include/net/scm.h
+index 1ff6a28550644..11e86e55f332d 100644
+--- a/include/net/scm.h
++++ b/include/net/scm.h
+@@ -26,6 +26,9 @@ struct scm_fp_list {
+ 	short			count;
+ 	short			count_unix;
+ 	short			max;
++#ifdef CONFIG_UNIX
++	struct list_head	vertices;
++#endif
+ 	struct user_struct	*user;
+ 	struct file		*fp[SCM_MAX_FD];
+ };
+diff --git a/net/core/scm.c b/net/core/scm.c
+index 574607b1c2d96..27e5634c958e8 100644
+--- a/net/core/scm.c
++++ b/net/core/scm.c
+@@ -89,6 +89,9 @@ static int scm_fp_copy(struct cmsghdr *cmsg, struct scm_fp_list **fplp)
+ 		fpl->count_unix = 0;
+ 		fpl->max = SCM_MAX_FD;
+ 		fpl->user = NULL;
++#if IS_ENABLED(CONFIG_UNIX)
++		INIT_LIST_HEAD(&fpl->vertices);
++#endif
+ 	}
+ 	fpp = &fpl->fp[fpl->count];
  
-@@ -205,6 +213,8 @@ int kvm_dirty_ring_reset(struct kvm *kvm, struct kvm_dirty_ring *ring,
-        if (mask)
-                kvm_reset_dirty_gfn(kvm, cur_slot, cur_offset, mask);
- 
-+       srcu_read_unlock(&kvm->srcu, idx);
+@@ -376,8 +379,12 @@ struct scm_fp_list *scm_fp_dup(struct scm_fp_list *fpl)
+ 	if (new_fpl) {
+ 		for (i = 0; i < fpl->count; i++)
+ 			get_file(fpl->fp[i]);
 +
-        /*
-         * The request KVM_REQ_DIRTY_RING_SOFT_FULL will be cleared
-         * by the VCPU thread next time when it enters the guest.
---
-
-And unless there are other behaviors that are protected by slots_lock (which is
-entirely possible), serializing the processing of each ring could be done via a
-dedicated (for example only, the dedicated mutex could/should be per-vCPU, not
-global).
-
-This diff in particular shows why I ordered and phrased the comment the way I
-did.  The blurb about protecting memslot accesses is purely a friendly reminder
-to readers.  The sole reason for an assert and comment is to call out the need
-for ordering.
-
-diff --git a/virt/kvm/dirty_ring.c b/virt/kvm/dirty_ring.c
-index 1ba02a06378c..92ac82b535fe 100644
---- a/virt/kvm/dirty_ring.c
-+++ b/virt/kvm/dirty_ring.c
-@@ -102,6 +102,8 @@ static inline bool kvm_dirty_gfn_harvested(struct kvm_dirty_gfn *gfn)
-        return smp_load_acquire(&gfn->flags) & KVM_DIRTY_GFN_F_RESET;
+ 		new_fpl->max = new_fpl->count;
+ 		new_fpl->user = get_uid(fpl->user);
++#if IS_ENABLED(CONFIG_UNIX)
++		INIT_LIST_HEAD(&new_fpl->vertices);
++#endif
+ 	}
+ 	return new_fpl;
+ }
+diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
+index 78758af2c6f38..6d62fa5b0e68d 100644
+--- a/net/unix/af_unix.c
++++ b/net/unix/af_unix.c
+@@ -979,6 +979,7 @@ static struct sock *unix_create1(struct net *net, struct socket *sock, int kern,
+ 	sk->sk_destruct		= unix_sock_destructor;
+ 	u = unix_sk(sk);
+ 	u->inflight = 0;
++	u->vertex = NULL;
+ 	u->path.dentry = NULL;
+ 	u->path.mnt = NULL;
+ 	spin_lock_init(&u->lock);
+@@ -1782,6 +1783,9 @@ static int unix_attach_fds(struct scm_cookie *scm, struct sk_buff *skb)
+ 	for (i = scm->fp->count - 1; i >= 0; i--)
+ 		unix_inflight(scm->fp->user, scm->fp->fp[i]);
+ 
++	if (unix_prepare_fpl(UNIXCB(skb).fp))
++		return -ENOMEM;
++
+ 	return 0;
  }
  
-+static DEFINE_MUTEX(per_ring_lock);
+@@ -1792,6 +1796,8 @@ static void unix_detach_fds(struct scm_cookie *scm, struct sk_buff *skb)
+ 	scm->fp = UNIXCB(skb).fp;
+ 	UNIXCB(skb).fp = NULL;
+ 
++	unix_destroy_fpl(scm->fp);
 +
- int kvm_dirty_ring_reset(struct kvm *kvm, struct kvm_dirty_ring *ring,
-                         int *nr_entries_reset)
- {
-@@ -121,18 +123,22 @@ int kvm_dirty_ring_reset(struct kvm *kvm, struct kvm_dirty_ring *ring,
-        u64 cur_offset, next_offset;
-        unsigned long mask = 0;
-        struct kvm_dirty_gfn *entry;
-+       int idx;
+ 	for (i = scm->fp->count - 1; i >= 0; i--)
+ 		unix_notinflight(scm->fp->user, scm->fp->fp[i]);
+ }
+diff --git a/net/unix/garbage.c b/net/unix/garbage.c
+index 0104be9d47045..8ea7640e032e8 100644
+--- a/net/unix/garbage.c
++++ b/net/unix/garbage.c
+@@ -101,6 +101,44 @@ struct unix_sock *unix_get_socket(struct file *filp)
+ 	return NULL;
+ }
  
-        /*
-         * Ensure concurrent calls to KVM_RESET_DIRTY_RINGS are serialized,
-         * e.g. so that KVM fully resets all entries processed by a given call
--        * before returning to userspace.  Holding slots_lock also protects
--        * the various memslot accesses.
-+        * before returning to userspace.
-         */
--       lockdep_assert_held(&kvm->slots_lock);
-+       guard(mutex)(&per_ring_lock);
++static void unix_free_vertices(struct scm_fp_list *fpl)
++{
++	struct unix_vertex *vertex, *next_vertex;
 +
-+       idx = srcu_read_lock(&kvm->srcu);
- 
-        while (likely((*nr_entries_reset) < INT_MAX)) {
--               if (signal_pending(current))
-+               if (signal_pending(current)) {
-+                       srcu_read_unlock(&kvm->srcu, idx);
-                        return -EINTR;
-+               }
- 
-                entry = &ring->dirty_gfns[ring->reset_index & (ring->size - 1)];
- 
-@@ -205,6 +211,8 @@ int kvm_dirty_ring_reset(struct kvm *kvm, struct kvm_dirty_ring *ring,
-        if (mask)
-                kvm_reset_dirty_gfn(kvm, cur_slot, cur_offset, mask);
- 
-+       srcu_read_unlock(&kvm->srcu, idx);
++	list_for_each_entry_safe(vertex, next_vertex, &fpl->vertices, entry) {
++		list_del(&vertex->entry);
++		kfree(vertex);
++	}
++}
 +
-        /*
-         * The request KVM_REQ_DIRTY_RING_SOFT_FULL will be cleared
-         * by the VCPU thread next time when it enters the guest.
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 571688507204..45729a6f6451 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -4908,16 +4908,12 @@ static int kvm_vm_ioctl_reset_dirty_pages(struct kvm *kvm)
-        if (!kvm->dirty_ring_size)
-                return -EINVAL;
- 
--       mutex_lock(&kvm->slots_lock);
--
-        kvm_for_each_vcpu(i, vcpu, kvm) {
-                r = kvm_dirty_ring_reset(vcpu->kvm, &vcpu->dirty_ring, &cleared);
-                if (r)
-                        break;
-        }
- 
--       mutex_unlock(&kvm->slots_lock);
--
-        if (cleared)
-                kvm_flush_remote_tlbs(kvm);
---
++int unix_prepare_fpl(struct scm_fp_list *fpl)
++{
++	struct unix_vertex *vertex;
++	int i;
++
++	if (!fpl->count_unix)
++		return 0;
++
++	for (i = 0; i < fpl->count_unix; i++) {
++		vertex = kmalloc(sizeof(*vertex), GFP_KERNEL);
++		if (!vertex)
++			goto err;
++
++		list_add(&vertex->entry, &fpl->vertices);
++	}
++
++	return 0;
++
++err:
++	unix_free_vertices(fpl);
++	return -ENOMEM;
++}
++
++void unix_destroy_fpl(struct scm_fp_list *fpl)
++{
++	unix_free_vertices(fpl);
++}
++
+ DEFINE_SPINLOCK(unix_gc_lock);
+ unsigned int unix_tot_inflight;
+ static LIST_HEAD(gc_candidates);
+-- 
+2.49.0.1112.g889b7c5bd8-goog
+
