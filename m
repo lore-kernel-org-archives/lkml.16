@@ -1,139 +1,216 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0989F23D285;
-	Wed, 21 May 2025 10:09:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BC841A9B4C;
+	Wed, 21 May 2025 10:09:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747822146; cv=none; b=Y0/KcQg9UjvpN9h9pUwTKjKFk/nFb/YDvArqAIulpEX6lBiztQoIySkyrp7XdlTdzHPksLd16AmvIXXx58PRamQsNBaQ/eD4+LbP5AdYSwzTAxGoB4QGnFCySlRdfO9reoe3UieISSErkXmZaDmy5kohh+1MHmnHrzXiRcEiYvg=
+	t=1747822162; cv=none; b=LzBfMU4r6OKwt9i30X3FfS23X9Z7dBkyCMFk/V7KNuvcDdQKYas3xyIFzuv8qbtO8cwGEpxGuKbRCNp1vq9P52XPsFAx7ANBIckoLXZnc5RH7mfaf/QiMAAG8YxJ2isuqhvz415q0v8ue7D3Nj7Fl6nuBGBlpMjWMX4rZue1Txg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747822146; c=relaxed/simple;
-	bh=9JoOH2EMuN4WA0lSEFqYdASBKHeA8IOS1B0EtdwpIWM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LZ/qoLbHNlW4RaJ2MyNxlYFoJh47EAMISvvLuyJ4Zk0slThj54zEeYQLvSRE7tt7fcy+oXznWwi4iXsRdPmbn9J72RDt5ss836Fzca9AdiycvX1TRYvZrdneJgypX2mt0Z1L7lKclI+p7JduA2rgS+FMm43C/ipauV+lbyrJiDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=htFnLCJQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747822162; c=relaxed/simple;
+	bh=GJtjHLwbxetCaPY6Nh168eeCsJmjGpcxn+Lhe8fiWAE=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=FpJ2uHdfDD0zahe7DVouZnGYJfOdqxFRgoaje9EnbycBh1PJVePPyfCFkXJNTvbfk4XyHaPjIgoybGQtfXlnKRJJLenJF+gSmrR56OYzJ9BWiYyTGciBSzTQBv9uBBQx5S9FOkBnZyo3Pwp00q5q+JKKfS8tAPzwGjQC0psuLTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OcGfn1pH; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="htFnLCJQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9E23C4CEE4;
-	Wed, 21 May 2025 10:09:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747822145;
-	bh=9JoOH2EMuN4WA0lSEFqYdASBKHeA8IOS1B0EtdwpIWM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=htFnLCJQWg0GhEfrR0igwtUXsaXz5b5U/3Kd8SP6+Zba9X4OaViT9bbGM7G+yCPxT
-	 cE5bDadyeaHMfH/0hIxNPRSQj6Q47fsJlpx5HbCBDgftTzSrICNL/vUM6Wco6WS8rH
-	 vlrL+gJ/kL9EhgSEMVsShjF9em+pyq8mNrU+GPXHa1/b4s279T/n25/VJ8pcaq3E1o
-	 pMWb/Nkl0Ylg0989UUDlitmzPgEfxkoRIFARrWAQhzCSNMcC5CA6rK8DihRl74vmkU
-	 u2Fn6PcJi7nb8P/0C+eouw71OqjgXusaGUuvVUh3ZKvbM+XQ59/zvR+PfZ1EAzLNEr
-	 OX+2IxHCHyTKw==
-Date: Wed, 21 May 2025 12:09:02 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Michael Hennerich <michael.hennerich@analog.com>, 
-	Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, Trevor Gamblin <tgamblin@baylibre.com>, 
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] dt-bindings: pwm: adi,axi-pwmgen: add external clock
-Message-ID: <20250521-tidy-heron-of-genius-4dc9a1@kuoka>
-References: <20250520-pwm-axi-pwmgen-add-external-clock-v1-0-6cd63cc001c8@baylibre.com>
- <20250520-pwm-axi-pwmgen-add-external-clock-v1-2-6cd63cc001c8@baylibre.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OcGfn1pH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747822160; x=1779358160;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=GJtjHLwbxetCaPY6Nh168eeCsJmjGpcxn+Lhe8fiWAE=;
+  b=OcGfn1pHXNHot1vlbmv29CmADiSwF/sLipCyPKcGisrj1kORNU1xjSFC
+   kkPHw4+DRZjUvtxpXCY0Lf4Pw68lwihdz4wWbZio0TOjmo/3r+8DKs+Ep
+   /Op7iE0BVCqRwo5qgQmYMHMs0z9SCoAASp4Ke3BopywIIEs8QNt6lnoCe
+   8vcQNgOk7sJnmcYbHh3MTQc3FQiUIkuMoRA2wS2HSywv7DfGpM7c5Swxo
+   KUFIYED3ZNqFH5WTuoDHD7E7tRv1xXIqdklheSYJA9k/xPm52TmAcmldh
+   av2duxYpmKGHtS6/WAVIltvJreUuYVlH345KfcaR+bO+dE0zmIw89JE7f
+   A==;
+X-CSE-ConnectionGUID: kF4dPLqOS6mIA++2zoQheA==
+X-CSE-MsgGUID: iOoI2siGTXWgQ0nZBJ7OsQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="67206364"
+X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
+   d="scan'208";a="67206364"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 03:09:18 -0700
+X-CSE-ConnectionGUID: Kxou+FeYTkafmcT1p1KDGQ==
+X-CSE-MsgGUID: lFkPEBM2QBigZhWKqGkOsg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
+   d="scan'208";a="143993372"
+Received: from dalessan-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.221])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 03:09:10 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 21 May 2025 13:09:07 +0300 (EEST)
+To: Bjorn Helgaas <helgaas@kernel.org>
+cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>, 
+    Karolina Stolarek <karolina.stolarek@oracle.com>, 
+    Weinan Liu <wnliu@google.com>, 
+    Martin Petersen <martin.petersen@oracle.com>, 
+    Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, 
+    Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, 
+    Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, 
+    Lukas Wunner <lukas@wunner.de>, 
+    Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+    Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney" <paulmck@kernel.org>, 
+    Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
+    Oliver O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>, 
+    Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>, 
+    Terry Bowman <terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>, 
+    Dave Jiang <dave.jiang@intel.com>, LKML <linux-kernel@vger.kernel.org>, 
+    linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>, 
+    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kwilczynski@kernel.org>
+Subject: Re: [PATCH v7 02/17] PCI/DPC: Log Error Source ID only when valid
+In-Reply-To: <20250520215047.1350603-3-helgaas@kernel.org>
+Message-ID: <804a9b61-44dd-0f72-d12f-07cf14ff931b@linux.intel.com>
+References: <20250520215047.1350603-1-helgaas@kernel.org> <20250520215047.1350603-3-helgaas@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250520-pwm-axi-pwmgen-add-external-clock-v1-2-6cd63cc001c8@baylibre.com>
+Content-Type: multipart/mixed; boundary="8323328-1798336978-1747822147=:946"
 
-On Tue, May 20, 2025 at 04:00:45PM GMT, David Lechner wrote:
-> Add external clock to the schema.
-> 
-> The AXI PWMGEN IP block has a compile option ASYNC_CLK_EN that allows
-> the use of an external clock for the PWM output separate from the AXI
-> clock that runs the peripheral.
-> 
-> In these cases, we should specify both clocks in the device tree. The
-> intention here is that if you specify both clocks, then you include the
-> clock-names property and if you don't have an external clock, then you
-> omit the clock-names property.
-> 
-> There can't be more than one allOf: in the top level of the schema, so
-> it is stolen from $ref since it isn't needed there and used for the
-> more typical case of the if statement (even though technically it isn't
-> needed there either at this time).
-> 
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-1798336978-1747822147=:946
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+
+On Tue, 20 May 2025, Bjorn Helgaas wrote:
+
+> From: Bjorn Helgaas <bhelgaas@google.com>
+>=20
+> DPC Error Source ID is only valid when the DPC Trigger Reason indicates
+> that DPC was triggered due to reception of an ERR_NONFATAL or ERR_FATAL
+> Message (PCIe r6.0, sec 7.9.14.5).
+>=20
+> When DPC was triggered by ERR_NONFATAL (PCI_EXP_DPC_STATUS_TRIGGER_RSN_NF=
+E)
+> or ERR_FATAL (PCI_EXP_DPC_STATUS_TRIGGER_RSN_FE) from a downstream device=
+,
+> log the Error Source ID (decoded into domain/bus/device/function).  Don't
+> print the source otherwise, since it's not valid.
+>=20
+> For DPC trigger due to reception of ERR_NONFATAL or ERR_FATAL, the dmesg
+> logging changes:
+>=20
+>   - pci 0000:00:01.0: DPC: containment event, status:0x000d source:0x0200
+>   - pci 0000:00:01.0: DPC: ERR_FATAL detected
+>   + pci 0000:00:01.0: DPC: containment event, status:0x000d, ERR_FATAL re=
+ceived from 0000:02:00.0
+>=20
+> and when DPC triggered for other reasons, where DPC Error Source ID is
+> undefined, e.g., unmasked uncorrectable error:
+>=20
+>   - pci 0000:00:01.0: DPC: containment event, status:0x0009 source:0x0200
+>   - pci 0000:00:01.0: DPC: unmasked uncorrectable error detected
+>   + pci 0000:00:01.0: DPC: containment event, status:0x0009: unmasked unc=
+orrectable error detected
+>=20
+> Previously the "containment event" message was at KERN_INFO and the
+> "%s detected" message was at KERN_WARNING.  Now the single message is at
+> KERN_WARNING.
+>=20
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> Tested-by: Krzysztof Wilczy=C5=84ski <kwilczynski@kernel.org>
+> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux=
+=2Eintel.com>
 > ---
->  .../devicetree/bindings/pwm/adi,axi-pwmgen.yaml    | 26 ++++++++++++++++++----
->  1 file changed, 22 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml b/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml
-> index bc44381692054f647a160a6573dae4cff2ee3f31..90f702a5cd80bd7d62e2436b2eed44314ab4fd53 100644
-> --- a/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml
-> +++ b/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml
-> @@ -16,8 +16,7 @@ description:
->  
->    https://analogdevicesinc.github.io/hdl/library/axi_pwm_gen/index.html
->  
-> -allOf:
-> -  - $ref: pwm.yaml#
-> +$ref: pwm.yaml#
->  
->  properties:
->    compatible:
-> @@ -30,7 +29,13 @@ properties:
->      const: 3
->  
->    clocks:
-> -    maxItems: 1
-> +    minItems: 1
-> +    maxItems: 2
-> +
-> +  clock-names:
-> +    items:
-> +      - const: axi
-> +      - const: ext
->  
->  required:
->    - reg
-> @@ -38,11 +43,24 @@ required:
->  
->  unevaluatedProperties: false
->  
-> +allOf:
-> +  - if:
-> +      required: [clock-names]
+>  drivers/pci/pcie/dpc.c | 64 ++++++++++++++++++++++++------------------
+>  1 file changed, 36 insertions(+), 28 deletions(-)
+>=20
+> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+> index 3daaf61c79c9..9d85f1b3b761 100644
+> --- a/drivers/pci/pcie/dpc.c
+> +++ b/drivers/pci/pcie/dpc.c
+> @@ -261,37 +261,45 @@ void dpc_process_error(struct pci_dev *pdev)
+>  =09struct aer_err_info info =3D {};
+> =20
+>  =09pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
+> -=09pci_read_config_word(pdev, cap + PCI_EXP_DPC_SOURCE_ID, &source);
+> -
+> -=09pci_info(pdev, "containment event, status:%#06x source:%#06x\n",
+> -=09=09 status, source);
+> =20
+>  =09reason =3D status & PCI_EXP_DPC_STATUS_TRIGGER_RSN;
+> -=09ext_reason =3D status & PCI_EXP_DPC_STATUS_TRIGGER_RSN_EXT;
+> -=09pci_warn(pdev, "%s detected\n",
+> -=09=09 (reason =3D=3D PCI_EXP_DPC_STATUS_TRIGGER_RSN_UNCOR) ?
+> -=09=09 "unmasked uncorrectable error" :
+> -=09=09 (reason =3D=3D PCI_EXP_DPC_STATUS_TRIGGER_RSN_NFE) ?
+> -=09=09 "ERR_NONFATAL" :
+> -=09=09 (reason =3D=3D PCI_EXP_DPC_STATUS_TRIGGER_RSN_FE) ?
+> -=09=09 "ERR_FATAL" :
+> -=09=09 (ext_reason =3D=3D PCI_EXP_DPC_STATUS_TRIGGER_RSN_RP_PIO) ?
+> -=09=09 "RP PIO error" :
+> -=09=09 (ext_reason =3D=3D PCI_EXP_DPC_STATUS_TRIGGER_RSN_SW_TRIGGER) ?
+> -=09=09 "software trigger" :
+> -=09=09 "reserved error");
+> =20
+> -=09/* show RP PIO error detail information */
+> -=09if (pdev->dpc_rp_extensions &&
+> -=09    reason =3D=3D PCI_EXP_DPC_STATUS_TRIGGER_RSN_IN_EXT &&
+> -=09    ext_reason =3D=3D PCI_EXP_DPC_STATUS_TRIGGER_RSN_RP_PIO)
+> -=09=09dpc_process_rp_pio_error(pdev);
+> -=09else if (reason =3D=3D PCI_EXP_DPC_STATUS_TRIGGER_RSN_UNCOR &&
+> -=09=09 dpc_get_aer_uncorrect_severity(pdev, &info) &&
+> -=09=09 aer_get_device_error_info(pdev, &info)) {
+> -=09=09aer_print_error(pdev, &info);
+> -=09=09pci_aer_clear_nonfatal_status(pdev);
+> -=09=09pci_aer_clear_fatal_status(pdev);
+> +=09switch (reason) {
+> +=09case PCI_EXP_DPC_STATUS_TRIGGER_RSN_UNCOR:
+> +=09=09pci_warn(pdev, "containment event, status:%#06x: unmasked uncorrec=
+table error detected\n",
+> +=09=09=09 status);
+> +=09=09if (dpc_get_aer_uncorrect_severity(pdev, &info) &&
+> +=09=09    aer_get_device_error_info(pdev, &info)) {
+> +=09=09=09aer_print_error(pdev, &info);
+> +=09=09=09pci_aer_clear_nonfatal_status(pdev);
+> +=09=09=09pci_aer_clear_fatal_status(pdev);
+> +=09=09}
+> +=09=09break;
+> +=09case PCI_EXP_DPC_STATUS_TRIGGER_RSN_NFE:
+> +=09case PCI_EXP_DPC_STATUS_TRIGGER_RSN_FE:
+> +=09=09pci_read_config_word(pdev, cap + PCI_EXP_DPC_SOURCE_ID,
+> +=09=09=09=09     &source);
+> +=09=09pci_warn(pdev, "containment event, status:%#06x, %s received from =
+%04x:%02x:%02x.%d\n",
+> +=09=09=09 status,
+> +=09=09=09 (reason =3D=3D PCI_EXP_DPC_STATUS_TRIGGER_RSN_FE) ?
+> +=09=09=09=09"ERR_FATAL" : "ERR_NONFATAL",
+> +=09=09=09 pci_domain_nr(pdev->bus), PCI_BUS_NUM(source),
+> +=09=09=09 PCI_SLOT(source), PCI_FUNC(source));
+> +=09=09break;
+> +=09case PCI_EXP_DPC_STATUS_TRIGGER_RSN_IN_EXT:
+> +=09=09ext_reason =3D status & PCI_EXP_DPC_STATUS_TRIGGER_RSN_EXT;
+> +=09=09pci_warn(pdev, "containment event, status:%#06x: %s detected\n",
+> +=09=09=09 status,
+> +=09=09=09 (ext_reason =3D=3D PCI_EXP_DPC_STATUS_TRIGGER_RSN_RP_PIO) ?
+> +=09=09=09 "RP PIO error" :
+> +=09=09=09 (ext_reason =3D=3D PCI_EXP_DPC_STATUS_TRIGGER_RSN_SW_TRIGGER) =
+?
+> +=09=09=09 "software trigger" :
+> +=09=09=09 "reserved error");
+> +=09=09/* show RP PIO error detail information */
+> +=09=09if (ext_reason =3D=3D PCI_EXP_DPC_STATUS_TRIGGER_RSN_RP_PIO &&
+> +=09=09    pdev->dpc_rp_extensions)
+> +=09=09=09dpc_process_rp_pio_error(pdev);
+> +=09=09break;
+>  =09}
+>  }
+> =20
+>=20
 
+Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
 
-No, don't do that. If you want clock-names, just add them for both
-cases. Otherwise, just describe items in clocks and no need for
-clock-names.
+--=20
+ i.
 
-
-
-> +    then:
-> +      properties:
-> +        clocks:
-> +          minItems: 2
-> +    else:
-> +      properties:
-> +        clocks:
-> +          maxItems: 1
-> +
->  examples:
->    - |
->      pwm@44b00000 {
->          compatible = "adi,axi-pwmgen-2.00.a";
->          reg = <0x44b00000 0x1000>;
-> -        clocks = <&spi_clk>;
-> +        clocks = <&fpga_clk>, <&spi_clk>;
-
-What was the clock[0] before? Axi, right, so SPI_CLK. Now FPGA is the
-AXI_CLK? This feels like clock order reversed.
-
-Best regards,
-Krzysztof
-
+--8323328-1798336978-1747822147=:946--
