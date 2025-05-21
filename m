@@ -1,206 +1,179 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B27781F869E;
-	Wed, 21 May 2025 10:31:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BCE3253F07
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 10:31:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747823489; cv=none; b=k8JioKK20k1WhaH4oP5EFhxxp4jKN4wCo3kNQVddWyzju5r1o9Zbd8IdMUSVDxZUK9ffbIicAjDcwKgxnGiUi1a4E5rmcTJp+jPUL591WLhtFJpv3tjW3k3vrauVe6VzS686S3NZG8E93+w+/W/UDqV09a7zpt3vm9hgOp3l5pk=
+	t=1747823489; cv=none; b=jEqNS6LLto+1VWJG/q8JZPqpJmVv0FFuGxT+trArogv5fLsYy9QGTH9lHICGRbLSRtCSqwsTwAHNqqeZpU5AO0yKRVKzu3Qmf+R4iNE3ObNeEml1f5ZWWKLG5du778WeUoiz9Cvcsb3PJPuMzyFtg1dyXp2k3KEJOT8GHbHUbT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747823489; c=relaxed/simple;
-	bh=yNefhY0Yb3i3XbOnbCmVwgsteNfUs7PGaKuiRFQbkFQ=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=U0y4evymDIMqwfIYz0AgNDWpnSGGX2Cio5SjnZ5dIy0doYZHUbgleL2jPuVMnqu8li5H10zlxbBvIl98RqQKfHxeusAZKw1P7k02RZuFuTb8GFy14elcYEcyW4dYWwoeGm/6Dug9focpSjuNQzYuKa2dilYO104RVw9yIkJP7Yo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b2SP32hj5z6L54Y;
-	Wed, 21 May 2025 18:30:31 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 2C4961402FC;
-	Wed, 21 May 2025 18:31:24 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 21 May
- 2025 12:31:23 +0200
-Date: Wed, 21 May 2025 11:31:21 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: <linux-pci@vger.kernel.org>, Jon Pan-Doh <pandoh@google.com>, "Karolina
- Stolarek" <karolina.stolarek@oracle.com>, Weinan Liu <wnliu@google.com>,
-	Martin Petersen <martin.petersen@oracle.com>, Ben Fuller
-	<ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, "Anil
- Agrawal" <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, Ilpo
- =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, Sathyanarayanan
- Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Lukas Wunner
-	<lukas@wunner.de>, Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney"
-	<paulmck@kernel.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Oliver
- O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>, Keith
- Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>, "Terry Bowman"
-	<terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>, "Dave Jiang"
-	<dave.jiang@intel.com>, <linux-kernel@vger.kernel.org>,
-	<linuxppc-dev@lists.ozlabs.org>, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v7 15/17] PCI/AER: Ratelimit correctable and non-fatal
- error logging
-Message-ID: <20250521113121.000067ce@huawei.com>
-In-Reply-To: <20250520215047.1350603-16-helgaas@kernel.org>
-References: <20250520215047.1350603-1-helgaas@kernel.org>
-	<20250520215047.1350603-16-helgaas@kernel.org>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	bh=Y7wXlYBKilElGrxPOEAxIoQfkr3dVOykIBsfU9jq/wg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hpQx3IWSTLzgZgcbUK30x1ruyOH5wcWranV/pOi1TN7JihaTCQtkaGQAxWkkZFcqfvknMfwOa9W/t0Dknq8ua1JUbHe4zaY71TCTUKRtEPhm7qEcWpGiEnyC7fiIQEFr8ogFAzH/lU+/oRiKaV5SQNM46i1AMp31DZNKuE9JBHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=UZUp6Q1B; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=88UvvMY6; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=UZUp6Q1B; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=88UvvMY6; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="UZUp6Q1B";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="88UvvMY6";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="UZUp6Q1B";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="88UvvMY6"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 4172D227B7;
+	Wed, 21 May 2025 10:31:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1747823485; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=srn8jSg9ullgOYE/RnvBqPHnTl5WzflJDekRT3jm408=;
+	b=UZUp6Q1BQLkNUzill/lJmwow6+3+1BiWPkXK71uOYYfRhcbR+LdEEdk9QHoeCQoJ6DiABB
+	YAjJeWJ82z5HZxJrHc8lCHliFIxBlcKv2onaCShh3E4uARF3t/npb24Cl8n0tSpzW9Gsys
+	icDH7BE8AcEyC8TDU2iku3m8WNRxhCI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1747823485;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=srn8jSg9ullgOYE/RnvBqPHnTl5WzflJDekRT3jm408=;
+	b=88UvvMY68Zj3/4E4p2tt96dqM7UF13R1CY+bxb4X+e/l1dz8YUFcitpJHsD0cU2dOKXd86
+	2A/QVBE500xW27Bg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=UZUp6Q1B;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=88UvvMY6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1747823485; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=srn8jSg9ullgOYE/RnvBqPHnTl5WzflJDekRT3jm408=;
+	b=UZUp6Q1BQLkNUzill/lJmwow6+3+1BiWPkXK71uOYYfRhcbR+LdEEdk9QHoeCQoJ6DiABB
+	YAjJeWJ82z5HZxJrHc8lCHliFIxBlcKv2onaCShh3E4uARF3t/npb24Cl8n0tSpzW9Gsys
+	icDH7BE8AcEyC8TDU2iku3m8WNRxhCI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1747823485;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=srn8jSg9ullgOYE/RnvBqPHnTl5WzflJDekRT3jm408=;
+	b=88UvvMY68Zj3/4E4p2tt96dqM7UF13R1CY+bxb4X+e/l1dz8YUFcitpJHsD0cU2dOKXd86
+	2A/QVBE500xW27Bg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2FF1313AA0;
+	Wed, 21 May 2025 10:31:25 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 0zBtC32rLWiVUQAAD6G6ig
+	(envelope-from <jack@suse.cz>); Wed, 21 May 2025 10:31:25 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id C16DDA0870; Wed, 21 May 2025 12:31:16 +0200 (CEST)
+Date: Wed, 21 May 2025 12:31:16 +0200
+From: Jan Kara <jack@suse.cz>
+To: Zhang Yi <yi.zhang@huaweicloud.com>
+Cc: Jan Kara <jack@suse.cz>, linux-ext4@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, willy@infradead.org, tytso@mit.edu, 
+	adilger.kernel@dilger.ca, yi.zhang@huawei.com, libaokun1@huawei.com, yukuai3@huawei.com, 
+	yangerkun@huawei.com
+Subject: Re: [PATCH v2 4/8] ext4/jbd2: convert jbd2_journal_blocks_per_page()
+ to support large folio
+Message-ID: <l2sm2sxycp2u2mqve6vx3rdwitsth55z657iw5qlsz2ko2eskr@7nko44yniymo>
+References: <20250512063319.3539411-1-yi.zhang@huaweicloud.com>
+ <20250512063319.3539411-5-yi.zhang@huaweicloud.com>
+ <ht54j6bvjmiqt62xmcveqlo7bmrunqs4ji7wikfteftdjijzek@7tz5gpejaoen>
+ <924cfe2c-318c-493f-89a5-10849bfc7a00@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100009.china.huawei.com (7.191.174.83) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <924cfe2c-318c-493f-89a5-10849bfc7a00@huaweicloud.com>
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.com:email]
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: -4.01
+X-Rspamd-Queue-Id: 4172D227B7
+X-Spam-Level: 
+X-Spam-Flag: NO
 
-On Tue, 20 May 2025 16:50:32 -0500
-Bjorn Helgaas <helgaas@kernel.org> wrote:
-
-> From: Jon Pan-Doh <pandoh@google.com>
+On Tue 20-05-25 20:46:51, Zhang Yi wrote:
+> On 2025/5/20 4:16, Jan Kara wrote:
+> > On Mon 12-05-25 14:33:15, Zhang Yi wrote:
+> >> From: Zhang Yi <yi.zhang@huawei.com>
+> >>
+> >> jbd2_journal_blocks_per_page() returns the number of blocks in a single
+> >> page. Rename it to jbd2_journal_blocks_per_folio() and make it returns
+> >> the number of blocks in the largest folio, preparing for the calculation
+> >> of journal credits blocks when allocating blocks within a large folio in
+> >> the writeback path.
+> >>
+> >> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+> > ...
+> >> @@ -2657,9 +2657,10 @@ void jbd2_journal_ack_err(journal_t *journal)
+> >>  	write_unlock(&journal->j_state_lock);
+> >>  }
+> >>  
+> >> -int jbd2_journal_blocks_per_page(struct inode *inode)
+> >> +int jbd2_journal_blocks_per_folio(struct inode *inode)
+> >>  {
+> >> -	return 1 << (PAGE_SHIFT - inode->i_sb->s_blocksize_bits);
+> >> +	return 1 << (PAGE_SHIFT + mapping_max_folio_order(inode->i_mapping) -
+> >> +		     inode->i_sb->s_blocksize_bits);
+> >>  }
+> > 
+> > FWIW this will result in us reserving some 10k transaction credits for 1k
+> > blocksize with maximum 2M folio size. That is going to create serious
+> > pressure on the journalling machinery. For now I guess we are fine
 > 
-> Spammy devices can flood kernel logs with AER errors and slow/stall
-> execution. Add per-device ratelimits for AER correctable and non-fatal
-> uncorrectable errors that use the kernel defaults (10 per 5s).  Logging of
-> fatal errors is not ratelimited.
-
-See below. I'm not sure that logging of fatal error should affect the rate
-for non fatal errors + the rate limit infrastructure kind of assumes
-that you only call it if you are planning to respect it's decision.
-
-Given overall aim is to restrict rates, maybe we don't care if we sometimes
-throttle earlier that we might expect with a simpler separation of what
-is being limited.
-
-I don't mind strongly either way.
-
+> Oooh, indeed, you are right, thanks a lot for pointing this out. As you
+> mentioned in patch 5, the credits calculation I proposed was incorrect,
+> I thought it wouldn't require too many credits.
 > 
-> There are two AER logging entry points:
+> I believe it is risky to mount a filesystem with a small journal space
+> and a large number of block groups. For example, if we build an image
+> with a 1K block size and a 1MB journal on a 20GB disk (which contains
+> 2,540 groups), it will require 2,263 credits, exceeding the available
+> journal space.
 > 
->   - aer_print_error() is used by DPC and native AER
-> 
->   - pci_print_aer() is used by GHES and CXL
-> 
-> The native AER aer_print_error() case includes a loop that may log details
-> from multiple devices.  This is ratelimited such that we log all the
-> details we find if any of the devices has not hit the ratelimit.  If no
-> such device details are found, we still log the Error Source from the ERR_*
-> Message, ratelimited by the Root Port or RCEC that received it.
-> 
-> The DPC aer_print_error() case is not ratelimited, since this only happens
-> for fatal errors.
-> 
-> The CXL pci_print_aer() case is ratelimited by the Error Source device.
-> 
-> The GHES pci_print_aer() case is via aer_recover_work_func(), which
-> searches for the Error Source device.  If the device is not found, there's
-> no per-device ratelimit, so we use a system-wide ratelimit that covers all
-> error types (correctable, non-fatal, and fatal).
-> 
-> Sargun at Meta reported internally that a flood of AER errors causes RCU
-> CPU stall warnings and CSD-lock warnings.
-> 
-> Tested using aer-inject[1]. Sent 11 AER errors. Observed 10 errors logged
-> while AER stats (cat /sys/bus/pci/devices/<dev>/aer_dev_correctable) show
-> true count of 11.
-> 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/gong.chen/aer-inject.git
-> 
-> [bhelgaas: commit log, factor out trace_aer_event() and aer_print_rp_info()
-> changes to previous patches, collect single aer_err_info.ratelimit as union
-> of ratelimits of all error source devices, don't ratelimit fatal errors,
-> "aer_report" -> "aer_info"]
-> Reported-by: Sargun Dhillon <sargun@meta.com>
-> Signed-off-by: Jon Pan-Doh <pandoh@google.com>
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> ---
->  drivers/pci/pci.h      |  3 +-
->  drivers/pci/pcie/aer.c | 66 ++++++++++++++++++++++++++++++++++++++----
->  drivers/pci/pcie/dpc.c |  1 +
->  3 files changed, 64 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 705f9ef58acc..65c466279ade 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -593,7 +593,8 @@ struct aer_err_info {
->  	unsigned int id:16;
->  
->  	unsigned int severity:2;	/* 0:NONFATAL | 1:FATAL | 2:COR */
-> -	unsigned int __pad1:5;
-> +	unsigned int ratelimit:1;	/* 0=skip, 1=print */
+> For now, I'm going to disable large folio support on the filesystem with
+> limited journal space. i.e., when the return value of
+> ext4_writepage_trans_blocks() is greater than
+> jbd2_max_user_trans_buffers(journal) / 2, ext4_should_enable_large_folio()
+> return false, thoughts?
 
-That naming is less than intuitive.  Maybe expand it to ratelimit_print or
-something like that.
+Yep, looks like a good stopgap solution for now.
 
-> +	unsigned int __pad1:4;
->  	unsigned int multi_error_valid:1;
->  
->  	unsigned int first_error:5;
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 4f1bff0f000f..f9e684ac7878 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-
-> @@ -815,8 +843,19 @@ EXPORT_SYMBOL_NS_GPL(pci_print_aer, "CXL");
->   */
->  static int add_error_device(struct aer_err_info *e_info, struct pci_dev *dev)
->  {
-> +	/*
-> +	 * Ratelimit AER log messages.  "dev" is either the source
-> +	 * identified by the root's Error Source ID or it has an unmasked
-> +	 * error logged in its own AER Capability.  If any of these devices
-> +	 * has not reached its ratelimit, log messages for all of them.
-> +	 * Messages are emitted when "e_info->ratelimit" is non-zero.
-> +	 *
-> +	 * Note that "e_info->ratelimit" was already initialized to 1 for the
-> +	 * ERR_FATAL case.
-> +	 */
->  	if (e_info->error_dev_num < AER_MAX_MULTI_ERR_DEVICES) {
->  		e_info->dev[e_info->error_dev_num] = pci_dev_get(dev);
-> +		e_info->ratelimit |= aer_ratelimit(dev, e_info->severity);
-
-So this is a little odd.  I think it works but there is code inside __ratelimit
-that I think we should not be calling for that ERROR_FATAL case
-(whether we should call lots of times for each device isn't obvious either
- but maybe that is more valid).
-
-In the event of it already being 1 due to ERROR_FATAL you will falsely trigger
-a potential print from inside __ratelimit() if we were rate limited and no
-longer are but only skipped FATAL prints.  My concern is that function
-is kind of assuming it's only called in cases where a rate limit decision
-is being made and the implementation may change in future).
-
-https://elixir.bootlin.com/linux/v6.14.7/source/lib/ratelimit.c#L56
-
-Maybe, 
-		if (!info->ratelimit)
-			e_info->ratelimit = aer_ratelimit(dev, e_info->severity);
-is an alternative option.
-That allows a multiplication factor on the rate as all device count for 1.
- 
-
-
-
->  		e_info->error_dev_num++;
->  		return 0;
->  	}
-> @@ -914,7 +953,7 @@ static int find_device_iter(struct pci_dev *dev, void *data)
->   * e_info->error_dev_num and e_info->dev[], based on the given information.
->   */
->  static bool find_source_device(struct pci_dev *parent,
-> -		struct aer_err_info *e_info)
-> +			       struct aer_err_info *e_info)
-Unrelated change
-
->  {
->  	struct pci_dev *dev = parent;
->  	int result;
-
->  			pci_aer_clear_fatal_status(pdev);
-
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
