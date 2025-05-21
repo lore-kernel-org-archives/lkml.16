@@ -1,146 +1,240 @@
-Received: from fhigh-a4-smtp.messagingengine.com (fhigh-a4-smtp.messagingengine.com [103.168.172.155])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 935CB12E5D;
-	Wed, 21 May 2025 19:52:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4FD112E5D;
+	Wed, 21 May 2025 19:55:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747857153; cv=none; b=XgCgXwyYZMy6kgu5O24PDQILx/oH8GSVhuPFKRnNX3ydtZC1+L0iw2bqENIp0V8PzGHA/t8CkEfYNK7ex1FdVhy+Puc/vHZymUPiz45q7Cw8LchxAFwkoeFtOiBGZRNjNeoC5dMY+th/zDXFjtjAn1cXL8bOjJj7jTe72mqceAU=
+	t=1747857355; cv=none; b=W/rPUStg/sRuoiiYpOeDsoKNufvqyy6K3W1e6i4BGYgcSwNLc2tyu295T70lc6u6hYW10YpKAicnt61xbmwICBt2slTjPjPDcMPDKauWNNBWjsBPvQrl52pShLEXw6ByiXxWDOzXOWocElu2SMqhBMIVd7A9RovRUqzd4Dv4IvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747857153; c=relaxed/simple;
-	bh=dD1AvwBxRdWt10BaspQ28iWmfJwCDQdE/S10cWPvHRk=;
-	h=MIME-Version:Date:From:To:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=ZxD88JC6GF7Yw12K4HCRl/qsQJOH3FXUB2z0zxyiPT2IY1RxA2CmojEawV8tDglOA/jNpL9SrqemwW9OU1iFaXXCvwfOiZ2ROHqjEREr5jizOitBMIWep0Bxe0bKqDIDHtqNg1LfxRX9qHbZv1IG5avO/beTV33h7XaAaK+xtiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=TwXx5gxS; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Ecs8cHPK; arc=none smtp.client-ip=103.168.172.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1747857355; c=relaxed/simple;
+	bh=EGfeKn8ImgtOcV91WNAlk8LMF6NPF0d6Cm6uL14hBLM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=my1/gCpUuPQ+4vJSR/M35ZRMIjsbQLZgkfRwhrsE3gx0ydLmNoYxWOO1SN8845p54HIoizfzWBpcAgA+I2mLjl2UduvK8d/vG6wChi5NVweNKDNO5/Chy9m5LWY1ka3suMhjg7Za6PUvv9cDc4Ld1cVtyOox4rw68HvtxXO9nmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PKzkMDDC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="TwXx5gxS";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Ecs8cHPK"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 5A21C1140138;
-	Wed, 21 May 2025 15:52:29 -0400 (EDT)
-Received: from phl-imap-12 ([10.202.2.86])
-  by phl-compute-05.internal (MEProxy); Wed, 21 May 2025 15:52:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:content-transfer-encoding:content-type:content-type:date:date
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1747857149;
-	 x=1747943549; bh=vrJOBnORlJ76z7DTYBnqd66weSA7jp1DtSP1OwHgLjg=; b=
-	TwXx5gxSvyAwO6Z6Z/FE6xPiGxYRJa6J2jq9/+BntDJJkLDgVtvELNsxf+qac5YA
-	9z4JxfvWP3uECEh10qq7s+sEeX322a5oxAnRy9eot0UjIlDxznKAJHtu92nrC9SO
-	906wxVqqi7g1eaorDCkS+Nm+vCZ6FDHlx3AiNYnSaCnBaG8PcEFshs7E8gMxt1f3
-	Ku53BOPLLi0Lmq4tXziyT/9wvwH1qu2vibt1fIuXJJdpoEETRG27ZQnQq6wIMcEl
-	Qy29fBgr6wJuUD4KrGalndKuHNOScD88DWDkdL4p0xfS0eb7nLGa4bMXOtG2NwMp
-	lwfY9CvlR5Tg4vnQ0YK9Ww==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:content-transfer-encoding:content-type
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm3; t=1747857149; x=1747943549; bh=v
-	rJOBnORlJ76z7DTYBnqd66weSA7jp1DtSP1OwHgLjg=; b=Ecs8cHPKFgGWM2t8O
-	yJnBt9feMXhFKo0IBo3lnpEEIVPC53dqTaH/0zj0mbbzpaPKYTtZV/uSOZ+qrYUs
-	xE544ANMQvRRVMqXksWIqalHxjjGF5k5GgH/KO0UzjMfgrnuKPxbzDSDyRbFOZPm
-	yZIVpTknA7pqybhjcmW1c6/0YV7wpjSxPcgRlU1ueuzlCns/dHhmLquGGcEgZlMU
-	Cta8mIjIqRYfghy7Kam6vvzuf4CwIOFs7a+k/0hwaUTIqoDMblrdqCkp/KFI/kd8
-	C0k5sNR4WspqYj/GtOYP7yaQjv5p3Vkw92VtJx4HwH4pzIOLztZtIeOk00q9FrcN
-	KgFPA==
-X-ME-Sender: <xms:-y4uaGwVAGRQASYTk74tCTz_MVFrVxII3wdsvt9SRZ0sg6xQEP_5KA>
-    <xme:-y4uaCRDzlbB0iS98t2G71oHgk6DZ8H7TNfZO4_uSVjxd97SjjisowKum0miDU0l_
-    tm46_93ZQjdkbyXLkc>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdefleeiucdltddurdegfedvrddttd
-    dmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgf
-    nhhsuhgsshgtrhhisggvpdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttd
-    enucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepofggfffhvffkjghf
-    ufgtgfesthhqredtredtjeenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoe
-    grrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrhhnpedtgeevteeiteelleeh
-    keffteeuffevleethfefvdegheeuteehhfekgeegheeuvdenucffohhmrghinhepsghooh
-    htlhhinhdrtghomhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
-    fhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopeduuddpmhhoug
-    gvpehsmhhtphhouhhtpdhrtghpthhtohepphgrlhhmvghrsegurggssggvlhhtrdgtohhm
-    pdhrtghpthhtoheprghouhesvggvtghsrdgsvghrkhgvlhgvhidrvgguuhdprhgtphhtth
-    hopegrlhgvgiesghhhihhtihdrfhhrpdhrtghpthhtohepshihiihkrghllhgvrhdqsghu
-    ghhssehgohhoghhlvghgrhhouhhpshdrtghomhdprhgtphhtthhopehilhhpohdrjhgrrh
-    hvihhnvghnsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheplhhinhhugidq
-    rhhishgtvheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehprg
-    hulhdrfigrlhhmshhlvgihsehsihhfihhvvgdrtghomhdprhgtphhtthhopehmphgvrghr
-    shhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggrpdhrtghpthhtohepshihiigsohhtod
-    dvtggrvgelvdguvggujeehkedtkeeffhehsgguvgesshihiihkrghllhgvrhdrrghpphhs
-    phhothhmrghilhdrtghomh
-X-ME-Proxy: <xmx:-y4uaIVGtVrYPk8SCNYfsoJQfotrEhR3knHsnHwijsQNQUNeQp_9Lg>
-    <xmx:-y4uaMjwCRpmKYl72u-RxtXw5uPFIePzKTmD0got7NPQI-D17QioRA>
-    <xmx:-y4uaID5MqkIbAEL87qTMRO3FwGY-W0M1vW7dnBL987csBsRHjQ9Vw>
-    <xmx:-y4uaNLXw1mZJPVJ7NJ3b1hD3-6eeU0p8nZOx2IjTLBi0oUaqd0hnw>
-    <xmx:_S4uaPis0yfxq6H4Ug4LlXX8Ruh9g92plOtQx_Ya5JgEV3Dz_myaNKQE>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 89E001060061; Wed, 21 May 2025 15:52:27 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PKzkMDDC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D458C4CEE4;
+	Wed, 21 May 2025 19:55:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747857354;
+	bh=EGfeKn8ImgtOcV91WNAlk8LMF6NPF0d6Cm6uL14hBLM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PKzkMDDCg/CbBiXIjnlD8GC4AfFKaM28aTKVkuk9dQt/EV4YRMwEH64d29cEIQHeY
+	 YZGfSbq0GxPQUKLY3u3cHpKM9emZzvAAJdTbBziLPFxlT5+miWfx6uFkdvt1Lo0JU+
+	 3+ZrfIK1N1Na4gML35jBdqBe0uOowYTDXeAOs4FmA2yw6mSot4s3akUYzncag6wGSt
+	 ciNQWehFIeUlb0/KtuyZLEg8tkomvmISpxKEgIzMWFk/wtmHqg5xPM3lrmryOC09xJ
+	 6JNCAU0zQ8lKWxK3zPm914zzIG2w/EzVbu2KNnmIHgrq0xNFV5NMwqLyxclfc9jm+A
+	 LrLunTVBhM3kw==
+Date: Wed, 21 May 2025 12:55:52 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Mingwei Zhang <mizhang@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com,
+	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	Yongwei Ma <yongwei.ma@intel.com>,
+	Xiong Zhang <xiong.y.zhang@linux.intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Jim Mattson <jmattson@google.com>,
+	Sandipan Das <sandipan.das@amd.com>,
+	Zide Chen <zide.chen@intel.com>,
+	Eranian Stephane <eranian@google.com>,
+	Shukla Manali <Manali.Shukla@amd.com>,
+	Nikunj Dadhania <nikunj.dadhania@amd.com>
+Subject: Re: [PATCH v4 05/38] perf: Add generic exclude_guest support
+Message-ID: <aC4vyIpKk6m2nz8-@google.com>
+References: <20250324173121.1275209-1-mizhang@google.com>
+ <20250324173121.1275209-6-mizhang@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T583c151a77edcc97
-Date: Wed, 21 May 2025 21:51:55 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Alexandre Ghiti" <alex@ghiti.fr>,
- syzbot <syzbot+2cae92ded758083f5bde@syzkaller.appspotmail.com>,
- "Albert Ou" <aou@eecs.berkeley.edu>, linux-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org, "Palmer Dabbelt" <palmer@dabbelt.com>,
- "Paul Walmsley" <paul.walmsley@sifive.com>, syzkaller-bugs@googlegroups.com,
- "Mark Pearson" <mpearson-lenovo@squebb.ca>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- linux-acpi@vger.kernel.org
-Message-Id: <fcbb98be-3a15-4a24-96ab-74d169337983@app.fastmail.com>
-In-Reply-To: <8368aa6d-e5a9-4136-8eb6-c059bc888979@ghiti.fr>
-References: <682b0412.a70a0220.3849cf.00b1.GAE@google.com>
- <8368aa6d-e5a9-4136-8eb6-c059bc888979@ghiti.fr>
-Subject: Re: [syzbot] riscv/fixes test error: can't ssh into the instance (2)
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+In-Reply-To: <20250324173121.1275209-6-mizhang@google.com>
 
-On Mon, May 19, 2025, at 18:35, Alexandre Ghiti wrote:
-> On 5/19/25 12:12, syzbot wrote:
->
-> Because we don't have acpi enabled and then acpi_kobj is null=20
-> (https://elixir.bootlin.com/linux/v6.15-rc6/source/fs/sysfs/group.c#L1=
-31).
->
-> The following patch fixes it, but not sure this is the right way, let =
-me=20
-> know if I should send it, it would be nice to have it in 6.15:
->
+On Mon, Mar 24, 2025 at 05:30:45PM +0000, Mingwei Zhang wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
+> 
+> Only KVM knows the exact time when a guest is entering/exiting. Expose
+> two interfaces to KVM to switch the ownership of the PMU resources.
+> 
+> All the pinned events must be scheduled in first. Extend the
+> perf_event_sched_in() helper to support extra flag, e.g., EVENT_GUEST.
+> 
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> Signed-off-by: Mingwei Zhang <mizhang@google.com>
+> ---
+>  include/linux/perf_event.h |  4 ++
+>  kernel/events/core.c       | 80 ++++++++++++++++++++++++++++++++++----
+>  2 files changed, 77 insertions(+), 7 deletions(-)
+> 
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index 7bda1e20be12..37187ee8e226 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -1822,6 +1822,8 @@ extern int perf_event_period(struct perf_event *event, u64 value);
+>  extern u64 perf_event_pause(struct perf_event *event, bool reset);
+>  int perf_get_mediated_pmu(void);
+>  void perf_put_mediated_pmu(void);
+> +void perf_guest_enter(void);
+> +void perf_guest_exit(void);
+>  #else /* !CONFIG_PERF_EVENTS: */
+>  static inline void *
+>  perf_aux_output_begin(struct perf_output_handle *handle,
+> @@ -1919,6 +1921,8 @@ static inline int perf_get_mediated_pmu(void)
+>  }
+>  
+>  static inline void perf_put_mediated_pmu(void)			{ }
+> +static inline void perf_guest_enter(void)			{ }
+> +static inline void perf_guest_exit(void)			{ }
+>  #endif
+>  
+>  #if defined(CONFIG_PERF_EVENTS) && defined(CONFIG_CPU_SUP_INTEL)
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 7a2115b2c5c1..d05487d465c9 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -2827,14 +2827,15 @@ static void task_ctx_sched_out(struct perf_event_context *ctx,
+>  
+>  static void perf_event_sched_in(struct perf_cpu_context *cpuctx,
+>  				struct perf_event_context *ctx,
+> -				struct pmu *pmu)
+> +				struct pmu *pmu,
+> +				enum event_type_t event_type)
+>  {
+> -	ctx_sched_in(&cpuctx->ctx, pmu, EVENT_PINNED);
+> +	ctx_sched_in(&cpuctx->ctx, pmu, EVENT_PINNED | event_type);
+>  	if (ctx)
+> -		 ctx_sched_in(ctx, pmu, EVENT_PINNED);
+> -	ctx_sched_in(&cpuctx->ctx, pmu, EVENT_FLEXIBLE);
+> +		ctx_sched_in(ctx, pmu, EVENT_PINNED | event_type);
+> +	ctx_sched_in(&cpuctx->ctx, pmu, EVENT_FLEXIBLE | event_type);
+>  	if (ctx)
+> -		 ctx_sched_in(ctx, pmu, EVENT_FLEXIBLE);
+> +		ctx_sched_in(ctx, pmu, EVENT_FLEXIBLE | event_type);
+>  }
+>  
+>  /*
+> @@ -2890,7 +2891,7 @@ static void ctx_resched(struct perf_cpu_context *cpuctx,
+>  	else if (event_type & EVENT_PINNED)
+>  		ctx_sched_out(&cpuctx->ctx, pmu, EVENT_FLEXIBLE);
+>  
+> -	perf_event_sched_in(cpuctx, task_ctx, pmu);
+> +	perf_event_sched_in(cpuctx, task_ctx, pmu, 0);
+>  
+>  	for_each_epc(epc, &cpuctx->ctx, pmu, 0)
+>  		perf_pmu_enable(epc->pmu);
+> @@ -4188,7 +4189,7 @@ static void perf_event_context_sched_in(struct task_struct *task)
+>  		ctx_sched_out(&cpuctx->ctx, NULL, EVENT_FLEXIBLE);
+>  	}
+>  
+> -	perf_event_sched_in(cpuctx, ctx, NULL);
+> +	perf_event_sched_in(cpuctx, ctx, NULL, 0);
+>  
+>  	perf_ctx_sched_task_cb(cpuctx->task_ctx, true);
+>  
+> @@ -6040,6 +6041,71 @@ void perf_put_mediated_pmu(void)
+>  }
+>  EXPORT_SYMBOL_GPL(perf_put_mediated_pmu);
+>  
+> +static inline void perf_host_exit(struct perf_cpu_context *cpuctx)
+> +{
+> +	perf_ctx_disable(&cpuctx->ctx, EVENT_GUEST);
+> +	ctx_sched_out(&cpuctx->ctx, NULL, EVENT_GUEST);
+> +	perf_ctx_enable(&cpuctx->ctx, EVENT_GUEST);
+> +	if (cpuctx->task_ctx) {
+> +		perf_ctx_disable(cpuctx->task_ctx, EVENT_GUEST);
+> +		task_ctx_sched_out(cpuctx->task_ctx, NULL, EVENT_GUEST);
+> +		perf_ctx_enable(cpuctx->task_ctx, EVENT_GUEST);
+> +	}
+> +}
 
-> --- a/drivers/acpi/platform_profile.c
-> +++ b/drivers/acpi/platform_profile.c
-> @@ -688,6 +688,9 @@ static int __init platform_profile_init(void)
->  =C2=A0{
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 int err;
->
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (acpi_disabled)
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 return -ENOTSUPP;
+Cpu context and task context may have events in the same PMU.
+How about this?
+
+	perf_ctx_disable(&cpuctx->ctx, EVENT_GUEST);
+	if (cpuctx->task_ctx)
+		perf_ctx_disable(cpuctx->task_ctx, EVENT_GUEST);
+
+	ctx_sched_out(&cpuctx->ctx, NULL, EVENT_GUEST);
+	if (cpuctx->task_ctx)
+		task_ctx_sched_out(cpuctx->task_ctx, NULL, EVENT_GUEST);
+
+	if (cpuctx->task_ctx)
+		perf_ctx_enable(cpuctx->task_ctx, EVENT_GUEST);
+	perf_ctx_enable(&cpuctx->ctx, EVENT_GUEST);
+
+Thanks,
+Namhyung
+
 > +
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 err =3D class_register(&pl=
-atform_profile_class);
->  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (err)
-
-The change makes sense to me.
-
-I double-checked that returning an error from the initcall
-causes no problems, but it is only used for printing it with trace_initc=
-all_finish_cb().
-
-As far as I can tell, the problem has existed in theory since
-linux-6.14, when the sysfs_create_group() call was moved
-from platform_profile_register() to the module_init call.
-
-Maybe clarify this and add
-
-Fixes: 77be5cacb2c2 ("ACPI: platform_profile: Create class for ACPI plat=
-form profile")
-
-      Arnd
+> +/* When entering a guest, schedule out all exclude_guest events. */
+> +void perf_guest_enter(void)
+> +{
+> +	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
+> +
+> +	lockdep_assert_irqs_disabled();
+> +
+> +	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
+> +
+> +	if (WARN_ON_ONCE(__this_cpu_read(perf_in_guest)))
+> +		goto unlock;
+> +
+> +	perf_host_exit(cpuctx);
+> +
+> +	__this_cpu_write(perf_in_guest, true);
+> +
+> +unlock:
+> +	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
+> +}
+> +EXPORT_SYMBOL_GPL(perf_guest_enter);
+> +
+> +static inline void perf_host_enter(struct perf_cpu_context *cpuctx)
+> +{
+> +	perf_ctx_disable(&cpuctx->ctx, EVENT_GUEST);
+> +	if (cpuctx->task_ctx)
+> +		perf_ctx_disable(cpuctx->task_ctx, EVENT_GUEST);
+> +
+> +	perf_event_sched_in(cpuctx, cpuctx->task_ctx, NULL, EVENT_GUEST);
+> +
+> +	if (cpuctx->task_ctx)
+> +		perf_ctx_enable(cpuctx->task_ctx, EVENT_GUEST);
+> +	perf_ctx_enable(&cpuctx->ctx, EVENT_GUEST);
+> +}
+> +
+> +void perf_guest_exit(void)
+> +{
+> +	struct perf_cpu_context *cpuctx = this_cpu_ptr(&perf_cpu_context);
+> +
+> +	lockdep_assert_irqs_disabled();
+> +
+> +	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
+> +
+> +	if (WARN_ON_ONCE(!__this_cpu_read(perf_in_guest)))
+> +		goto unlock;
+> +
+> +	perf_host_enter(cpuctx);
+> +
+> +	__this_cpu_write(perf_in_guest, false);
+> +unlock:
+> +	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
+> +}
+> +EXPORT_SYMBOL_GPL(perf_guest_exit);
+> +
+>  /*
+>   * Holding the top-level event's child_mutex means that any
+>   * descendant process that has inherited this event will block
+> -- 
+> 2.49.0.395.g12beb8f557-goog
+> 
