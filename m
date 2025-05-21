@@ -1,111 +1,164 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D04CA238C3D;
-	Wed, 21 May 2025 09:14:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91D7735893;
+	Wed, 21 May 2025 09:15:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747818901; cv=none; b=PDJlME1sZAyO+rBkPyPmWdO92UsOujFj95VpvL+wo/yAaCfy37V+/BbO17rZLO8Lw06lXIr34Xvtq9ETFTm9xBdMOWTc+NxLBnnm/pW8C8MgoljkGOCETV0/1cgmDpYm5B5KyANYqPEhufKP2f2PRRBeateL4mrFqrEBJO6J4rk=
+	t=1747818936; cv=none; b=sBt2hNH5IGNbhaKEhViz1LLWvPPZIhtyhtkkkLHsHXFEDz6A+uieEc0QIEmuY7FKPSjbOQ3v/UhEE7NIsfVvX5x/OrmkKxq8YOtUP9nbLSR1B4jiL18RwERFxsdv667vGdcQaP4kJpNiunbGyO1EuOBcq8sD3NVsAwvtK8Arrl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747818901; c=relaxed/simple;
-	bh=YSpDBfKl2V81ILNyL21Nv1m0vSKQGw/nVO0nNErWsyc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=XIFavn359rBBHNdxczn3FwgiKKGJSKmknIAcZzkEPklF0AifDgeNenPyQUee4Uemsaf1AU49Ruu5ufX58MjL4F/s4D0ODCtM+JhI7MOjJqQ62ivAmJdNGh1Qq6/zs6WHB2pOF5o2YyFR9OGMbDXOFk0e+2GpKElGoSAm39yRZLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=KrJSRluA; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="KrJSRluA"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54L3wVbU011053;
-	Wed, 21 May 2025 11:14:36 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	KuHtnSKsW+7Ihg+kQpOB9bOtYG+LujduoGhpLuXqrxs=; b=KrJSRluAke1eFynF
-	YsRSpn4AixLB3VnboO1r/4KySuJbz6jh6HF9bPuPTr5EV1/70xIUQgxGOKw/pMPS
-	UiVo2ky357LFlpVw+LbDpowzzLAOxpBFxPkjDAmnF4B1KIa4hpkhmMZNe7L2ohZH
-	8ooz1eucpgkw9UYlaARcJoHSIh28cPYjEQO2CJOU2nfF9Xl6U32qvtbPtT/yPZfv
-	27NPa1QM8feQ4Hwm1ZCRNOIN+n8+hRBialGHh5DeNIaHEVGS/9nv480F+cbh5dXy
-	MsD6/HIs1k6x3/vLAuWLkjnJ+/SPG+bAXbRzZc+bUgC8vypIHgig5knNR+9o5WE6
-	HebIfw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46rwfab5cx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 11:14:36 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id ECB1640054;
-	Wed, 21 May 2025 11:13:12 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4F64BB2E19D;
-	Wed, 21 May 2025 11:12:18 +0200 (CEST)
-Received: from [10.252.1.130] (10.252.1.130) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 21 May
- 2025 11:12:17 +0200
-Message-ID: <3e855041-3eb2-48c8-88d7-0eb7b9948cc8@foss.st.com>
-Date: Wed, 21 May 2025 11:12:16 +0200
+	s=arc-20240116; t=1747818936; c=relaxed/simple;
+	bh=t1yobnBcqQaDcoFbIHLQ8LdSWAixACdgskTO/gNDpp0=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DZv2YGJGVgoxXTOkFqtnfLQZWQz7gUyTYBsLYfdCChYlVMrszJpexrXi+K8vZy0vS9h4ETE86xVVxwOrPp5ItZUCWu+G78jLJjx3mD2+DpJy7hO9H5ZW+pheFdbGLLYRxd79f2uptcAn1FHq9cFueO97Dr070d5fcbDf0E+NWb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b2Qfq4j1Bz6H7Ps;
+	Wed, 21 May 2025 17:12:19 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 88B57140519;
+	Wed, 21 May 2025 17:15:30 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 21 May
+ 2025 11:15:29 +0200
+Date: Wed, 21 May 2025 10:15:27 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: <linux-pci@vger.kernel.org>, Jon Pan-Doh <pandoh@google.com>, "Karolina
+ Stolarek" <karolina.stolarek@oracle.com>, Weinan Liu <wnliu@google.com>,
+	Martin Petersen <martin.petersen@oracle.com>, Ben Fuller
+	<ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, "Anil
+ Agrawal" <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, Ilpo
+ =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, Sathyanarayanan
+ Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Lukas Wunner
+	<lukas@wunner.de>, Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney"
+	<paulmck@kernel.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Oliver
+ O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>, Keith
+ Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>, "Terry Bowman"
+	<terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>, "Dave Jiang"
+	<dave.jiang@intel.com>, <linux-kernel@vger.kernel.org>,
+	<linuxppc-dev@lists.ozlabs.org>, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v7 03/17] PCI/AER: Factor COR/UNCOR error handling out
+ from aer_isr_one_error()
+Message-ID: <20250521101527.000026b4@huawei.com>
+In-Reply-To: <20250520215047.1350603-4-helgaas@kernel.org>
+References: <20250520215047.1350603-1-helgaas@kernel.org>
+	<20250520215047.1350603-4-helgaas@kernel.org>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dt-bindings: stm32: add STM32MP21 clocks and reset
- bindings
-To: Conor Dooley <conor@kernel.org>
-CC: Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd
-	<sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin
-	<mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>, <linux-clk@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        Nicolas Le Bayon <nicolas.le.bayon@foss.st.com>
-References: <20250520-upstream_rcc_mp21-v2-0-3c776a6e5862@foss.st.com>
- <20250520-upstream_rcc_mp21-v2-1-3c776a6e5862@foss.st.com>
- <20250520-absence-sixtyfold-0fd9bb03a42d@spud>
-Content-Language: en-US
-From: Gabriel FERNANDEZ <gabriel.fernandez@foss.st.com>
-In-Reply-To: <20250520-absence-sixtyfold-0fd9bb03a42d@spud>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-21_02,2025-05-20_03,2025-03-28_01
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
+On Tue, 20 May 2025 16:50:20 -0500
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-On 5/20/25 17:56, Conor Dooley wrote:
-> On Tue, May 20, 2025 at 05:28:37PM +0200, Gabriel Fernandez wrote:
->> +
->> +  access-controllers:
->> +    description: phandle to the rifsc device to check access right.
->> +    items:
->> +      - description: phandle to access controller
->> +
->> +    minItems: 1
->> +    maxItems: 1
-> That's just maxItems: 1, the minItems is redundant.
-> ok
->
->> +    rcc: clock-controller@44200000 {
-> Remove the label, there's no user.
+> From: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> aer_isr_one_error() duplicates the Error Source ID logging and AER error
+> processing for Correctable Errors and Uncorrectable Errors.  Factor out the
+> duplicated code to aer_isr_one_error_type().
+> 
+> aer_isr_one_error() doesn't need the struct aer_rpc pointer, so pass it the
+> Root Port or RCEC pci_dev pointer instead.
+> 
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+One passing comment inside (on neighbouring code)
+Otherwise it is a sensible bit of cleanup.
 
-ok
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Many thanks for the review
+> ---
+>  drivers/pci/pcie/aer.c | 36 +++++++++++++++++++++++-------------
+>  1 file changed, 23 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index a1cf8c7ef628..568229288ca3 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -1273,17 +1273,32 @@ static inline void aer_process_err_devices(struct aer_err_info *e_info)
+>  }
+>  
+>  /**
+> - * aer_isr_one_error - consume an error detected by Root Port
+> - * @rpc: pointer to the Root Port which holds an error
+> + * aer_isr_one_error_type - consume a Correctable or Uncorrectable Error
+> + *			    detected by Root Port or RCEC
+> + * @root: pointer to Root Port or RCEC that signaled AER interrupt
+> + * @info: pointer to AER error info
+> + */
+> +static void aer_isr_one_error_type(struct pci_dev *root,
+> +				   struct aer_err_info *info)
+> +{
+> +	aer_print_port_info(root, info);
+> +
+> +	if (find_source_device(root, info))
+> +		aer_process_err_devices(info);
+> +}
+> +
+> +/**
+> + * aer_isr_one_error - consume error(s) signaled by an AER interrupt from
+> + *		       Root Port or RCEC
+> + * @root: pointer to Root Port or RCEC that signaled AER interrupt
+>   * @e_src: pointer to an error source
+>   */
+> -static void aer_isr_one_error(struct aer_rpc *rpc,
+> +static void aer_isr_one_error(struct pci_dev *root,
+>  		struct aer_err_source *e_src)
+>  {
+> -	struct pci_dev *pdev = rpc->rpd;
+>  	struct aer_err_info e_info;
 
-Best regards,
-
-Gabriel
-
+I wonder if, in the interests of readability this should be
+initialized.  That would allows some conditions to set
+only the valid case (ones) rather than explicit zeros.
+ 
+>  
+> -	pci_rootport_aer_stats_incr(pdev, e_src);
+> +	pci_rootport_aer_stats_incr(root, e_src);
+>  
+>  	/*
+>  	 * There is a possibility that both correctable error and
+> @@ -1297,10 +1312,8 @@ static void aer_isr_one_error(struct aer_rpc *rpc,
+>  			e_info.multi_error_valid = 1;
+>  		else
+>  			e_info.multi_error_valid = 0;
+> -		aer_print_port_info(pdev, &e_info);
+>  
+> -		if (find_source_device(pdev, &e_info))
+> -			aer_process_err_devices(&e_info);
+> +		aer_isr_one_error_type(root, &e_info);
+>  	}
+>  
+>  	if (e_src->status & PCI_ERR_ROOT_UNCOR_RCV) {
+> @@ -1316,10 +1329,7 @@ static void aer_isr_one_error(struct aer_rpc *rpc,
+>  		else
+>  			e_info.multi_error_valid = 0;
+>  
+> -		aer_print_port_info(pdev, &e_info);
+> -
+> -		if (find_source_device(pdev, &e_info))
+> -			aer_process_err_devices(&e_info);
+> +		aer_isr_one_error_type(root, &e_info);
+>  	}
+>  }
+>  
+> @@ -1340,7 +1350,7 @@ static irqreturn_t aer_isr(int irq, void *context)
+>  		return IRQ_NONE;
+>  
+>  	while (kfifo_get(&rpc->aer_fifo, &e_src))
+> -		aer_isr_one_error(rpc, &e_src);
+> +		aer_isr_one_error(rpc->rpd, &e_src);
+>  	return IRQ_HANDLED;
+>  }
+>  
 
