@@ -1,45 +1,41 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29F4F46B5;
-	Wed, 21 May 2025 11:09:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEBAB259C8A
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 11:10:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747825793; cv=none; b=lpxuYaGI4pQiSgxn4uZPzGSKrWgQ58/zXD79f9HNKwx2YE+BnLPaME+kN8DCycHFz/vV3CmABf89kbsyeNNLpYzOU2HW/MzaRABjXuABoVotfm5zAr1JNSRvSo3SGHiCh0q2aG42HqXjAAo0wee8+njcDshqRJkZv3r9FErpGRc=
+	t=1747825836; cv=none; b=e1DiAlHADfwrRUYhBQm078vurIKRUl0X8NQmsBT2YYXZ7iXwDN/j3N0jk2Vjm9iyliiimMz7s2l3OsEXYK915bbBPs3nj/3Z1npvWwcQzOvlKxwYmX11jUmEeafXbBKjSedXzNFzWTYav7m2sMzu5HlMh978S266+xWsbjTGBtg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747825793; c=relaxed/simple;
-	bh=FmqSkLHmVtDEPzk1G+ecbkXZ5kJ7HmbgVarSfVR4pgw=;
+	s=arc-20240116; t=1747825836; c=relaxed/simple;
+	bh=r0tEDMuNifY4eIhrrGR251bYu9GcL5CYI+Rd/T6ffVk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NyGNLbSVWPkuuCkE3I+SzrA0EoazHGWTZWxDP8sRiUbMOOPMAZc8mn3ebZOecAQyOhlSlxT+ejOQD5HNgs9bw5YZjBKjrMLwZ0XII2pBZoxlVdCLbvUw2GcU7BsbUTJhLGYRUCC+gCnWWwGJ1CIxiJk4hsTcWp4ws8DCWjJk5PI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=iSFZeDwC; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=O84wDW6TO+e3KOUkLbFMLfdgLbpvqSQhiQ2/6E3JUlGX24wjz47Hc4ZnYnI+3rr0K2fPaI+1a352T7zLUhs8UrZ9qQNvUKTOxJu6Ss1bPRMTN1XbWWzrXcZxNGoC2OoCx/M8o/jcoTR7xLiWzGyYt1/TrRiUt3rvFJ/4bN808Lg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=RURV/asZ; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="iSFZeDwC"
-Received: from pendragon.ideasonboard.com (179.218-130-109.adsl-dyn.isp.belgacom.be [109.130.218.179])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 1A4346AF;
-	Wed, 21 May 2025 13:09:29 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1747825769;
-	bh=FmqSkLHmVtDEPzk1G+ecbkXZ5kJ7HmbgVarSfVR4pgw=;
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="RURV/asZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1747825827;
+	bh=r0tEDMuNifY4eIhrrGR251bYu9GcL5CYI+Rd/T6ffVk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iSFZeDwCdXXSz7HshnKL/oVl3j97zRV7ocgUmoYOGOx9Ts0pXvLzKCGzk0a4cuALV
-	 0QsizBBTnsAKe3ih36NOr3HGaQWjEFg55RfPYzhQzwZnntVGlUGxA/6VyvYYM0TfbB
-	 GTCfgi//hI3p3FzrRM8PF+wMyeTuKcEHpFJjLT6k=
-Date: Wed, 21 May 2025 13:09:44 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Mehdi Djait <mehdi.djait@linux.intel.com>
-Cc: sakari.ailus@linux.intel.com, tomi.valkeinen@ideasonboard.com,
-	jacopo.mondi@ideasonboard.com, hverkuil@xs4all.nl,
-	kieran.bingham@ideasonboard.com, naush@raspberrypi.com,
-	mchehab@kernel.org, hdegoede@redhat.com,
-	dave.stevenson@raspberrypi.com, arnd@arndb.de,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v5] media: v4l2-common: Add a helper for obtaining
- the clock producer
-Message-ID: <20250521110944.GG12514@pendragon.ideasonboard.com>
-References: <20250521104115.176950-1-mehdi.djait@linux.intel.com>
- <mwh7xx675kulx6tdebuvqtdjfa4ih3ehi2brrcdxfemfnvxsrs@i5nxkvfskfhe>
+	b=RURV/asZSRjDbvrCxPcnrturLqWT8NJHQru8KqeKF2ZmZNL7QB3O6Nyp8biUzql3c
+	 4+kNHzaC4gYxosylMCj96ME+giaQWQfYyxHRZxhxuxUec+vFYNw9JQVVTbU4Bs7gla
+	 d3zD3JCO1hRLoH3rOtiViaXaGn+5cMNq3I8Iy1NU=
+Date: Wed, 21 May 2025 13:10:26 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Dmitry Vyukov <dvyukov@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, krisman@collabora.com, 
+	luto@kernel.org, peterz@infradead.org, keescook@chromium.org, 
+	gregory.price@memverge.com, Marco Elver <elver@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] selftests: Fix errno checking in
+ syscall_user_dispatch test
+Message-ID: <ac23d886-8b9b-463c-91e4-aa541351976e@t-8ch.de>
+References: <cover.1740386567.git.dvyukov@google.com>
+ <d11d91e0c27ef78affcef06e00d1cf4cd8747fcc.1740386567.git.dvyukov@google.com>
+ <87v7sj3dlx.ffs@tglx>
+ <CACT4Y+a3EPcAS4yB8c2d65+T3zXoTYwN6-G4G0C_JDWBEo6EOA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,139 +44,73 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <mwh7xx675kulx6tdebuvqtdjfa4ih3ehi2brrcdxfemfnvxsrs@i5nxkvfskfhe>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACT4Y+a3EPcAS4yB8c2d65+T3zXoTYwN6-G4G0C_JDWBEo6EOA@mail.gmail.com>
 
-On Wed, May 21, 2025 at 12:52:08PM +0200, Mehdi Djait wrote:
-> Hi everyone,
+On 2025-05-21 12:07:13+0200, Dmitry Vyukov wrote:
+> On Sat, 8 Mar 2025 at 13:34, Thomas Gleixner <tglx@linutronix.de> wrote:
+> >
+> > On Mon, Feb 24 2025 at 09:45, Dmitry Vyukov wrote:
+> > >
+> > > Also use EXPECT/ASSERT consistently. Currently there is an inconsistent mix
+> > > without obvious reasons for usage of one or another.
+> > >
+> > > Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
+> >
+> > As Gregory said, this should be the first patch in the series with a
+> > proper Fixes tag.
+> >
+> > >       /* Invalid op */
+> > >       op = -1;
+> > > -     prctl(PR_SET_SYSCALL_USER_DISPATCH, op, 0, 0, &sel);
+> > > -     ASSERT_EQ(EINVAL, errno);
 > 
-> On Wed, May 21, 2025 at 12:41:15PM +0200, Mehdi Djait wrote:
-> >  drivers/media/v4l2-core/v4l2-common.c | 46 +++++++++++++++++++++++++++
-> >  include/media/v4l2-common.h           | 25 +++++++++++++++
-> >  2 files changed, 71 insertions(+)
-> > 
-> > diff --git a/drivers/media/v4l2-core/v4l2-common.c b/drivers/media/v4l2-core/v4l2-common.c
-> > index 4ee4aa19efe6..6099acd339ad 100644
-> > --- a/drivers/media/v4l2-core/v4l2-common.c
-> > +++ b/drivers/media/v4l2-core/v4l2-common.c
-> > @@ -34,6 +34,9 @@
-> >   * Added Gerd Knorrs v4l1 enhancements (Justin Schoeman)
-> >   */
-> >  
-> > +#include <linux/clk.h>
-> > +#include <linux/clkdev.h>
-> > +#include <linux/clk-provider.h>
-> >  #include <linux/module.h>
-> >  #include <linux/types.h>
-> >  #include <linux/kernel.h>
-> > @@ -665,3 +668,46 @@ int v4l2_link_freq_to_bitmap(struct device *dev, const u64 *fw_link_freqs,
-> >  	return 0;
-> >  }
-> >  EXPORT_SYMBOL_GPL(v4l2_link_freq_to_bitmap);
-> > +
-> > +struct clk *devm_v4l2_sensor_clk_get(struct device *dev, const char *id)
-> > +{
-> > +	const char *clk_id __free(kfree) = NULL;
-> > +	struct clk_hw *clk_hw;
-> > +	struct clk *clk;
-> > +	u32 rate;
-> > +	int ret;
-> > +
-> > +	clk = devm_clk_get_optional(dev, id);
-> > +	ret = device_property_read_u32(dev, "clock-frequency", &rate);
-> > +
-> > +	if (clk) {
-> > +		if (!ret) {
-> > +			ret = clk_set_rate(clk, rate);
-> > +			if (ret)
-> > +				dev_warn(dev, "Failed to set clock rate: %u\n",
-> > +					 rate);
-
-I would return ERR_PTR(ret) here.
-
-> > +		}
-> > +
-> > +		return clk;
-> > +	}
-> > +
-> > +	if (ret)
-> > +		return ERR_PTR(ret);
-
-And here, return a fixed error code, maybe -ENOENT, as propagating the
-device_property_read_u32() error could result in strange error code for
-the user.
-
-> > +
-> > +	if (!IS_ENABLED(CONFIG_COMMON_CLK) || !is_acpi_node(dev_fwnode(dev)))
-> > +		return ERR_PTR(-ENOENT);
-> > +
-> > +	if (!id) {
-> > +		clk_id = kasprintf(GFP_KERNEL, "clk-%s", dev_name(dev));
-> > +		if (!clk_id)
-> > +			return ERR_PTR(-ENOMEM);
-> > +		id = clk_id;
-> > +	}
-> > +
-> > +	clk_hw = devm_clk_hw_register_fixed_rate(dev, id, NULL, 0, rate);
-> > +	if (IS_ERR(clk_hw))
-> > +		return ERR_CAST(clk_hw);
-> > +
-> > +	return clk_hw->clk;
-> > +}
-> > +EXPORT_SYMBOL_GPL(devm_v4l2_sensor_clk_get);
+> > > +     EXPECT_EQ(-1, prctl(PR_SET_SYSCALL_USER_DISPATCH, op, 0, 0, &sel));
+> > > +     EXPECT_EQ(EINVAL, errno);
+> >
+> > Seriously?
+> >
+> > Something like:
+> >
+> > static void prctl_invalid(unsigned long op, unsigned long offs, unsigned long len,
+> >                           void *sel, int err)
+> > {
+> >         EXPECT_EQ(-1, prctl(PR_SET_SYSCALL_USER_DISPATCH, op, offs, len, 0, (unsigned long)sel));
+> >         EXPECT_EQ(err, errno);
+> > }
+> >
+> > static void prctl_valid(unsigned long op, unsigned long offs, unsigned long len,
+> >                         void *sel)
+> > {
+> >         EXPECT_EQ(0, prctl(PR_SET_SYSCALL_USER_DISPATCH, op, offs, len, 0, (unsigned long)sel));
+> > }
+> >
+> > ....
+> >         /* Invalid op */
+> >         prctl_invalid(-1, 0, 0, &sel, -EINVAL);
+> >         /* offset != 0 */
+> >         prctl_invalid(PR_SYS_DISPATCH_OFF, 1, 0, NULL, -EINVAL);
+> >         ....
+> >         /* The odd valid test in bad_prctl_param() */
+> >         prctl_valid(PR_SYS_DISPATCH_OFF, 0, 0, NULL);
+> >
+> > But that's not enough macro uglyness sprinkled all over the place and
+> > too readable, right?
 > 
-> I sent this as an RFC because I am still unsure and need comments on two
-> things. After they are addressed, I plan to send a patch, documentation
-> patch (what Sakari proposed in the RFC V4 discussion) and convert the
-> camera sensors using devm_clk_get()
+> The EXPECT* macros unfortunately can't be used in helper functions,
+> they require some hidden _metadata variable that is present only in
+> TEST/TEST_F functions:
 > 
-> 1. Should the case where both the clock and the clock-frequency are
-> present be reserved just for ACPI systems ? In other words if a DT
-> system provides both, should we also attempt to set the provided clock
-> rate ?
+> sud_test.c: In function ‘prctl_valid’:
+> ../kselftest_harness.h:107:45: error: ‘_metadata’ undeclared (first
+> use in this function)
+>   107 |                         __FILE__, __LINE__, _metadata->name,
+> ##__VA_ARGS__)
 
-I would very much like to reserve this case for ACPI, yes.
+You can pass the _metadata parameter to your helper functions.
+While it's a bit iffy, many selftests do this.
+Also the upcoming harness selftests will make sure that this pattern
+keeps working.
 
-> If the former makes more sense, maybe add this:
-> 
-> diff --git a/drivers/media/v4l2-core/v4l2-common.c b/drivers/media/v4l2-core/v4l2-common.c
-> index 6099acd339ad..3dfbbd699c67 100644
-> --- a/drivers/media/v4l2-core/v4l2-common.c
-> +++ b/drivers/media/v4l2-core/v4l2-common.c
-> @@ -674,14 +674,16 @@ struct clk *devm_v4l2_sensor_clk_get(struct device *dev, const char *id)
->         const char *clk_id __free(kfree) = NULL;
->         struct clk_hw *clk_hw;
->         struct clk *clk;
-> +       bool acpi_node;
->         u32 rate;
->         int ret;
->  
->         clk = devm_clk_get_optional(dev, id);
->         ret = device_property_read_u32(dev, "clock-frequency", &rate);
-> +       acpi_node = is_acpi_node(dev_fwnode(dev));
->  
->         if (clk) {
-> -               if (!ret) {
-> +               if (!ret && acpi_node) {
->                         ret = clk_set_rate(clk, rate);
->                         if (ret)
->                                 dev_warn(dev, "Failed to set clock rate: %u\n",
-> @@ -694,7 +696,7 @@ struct clk *devm_v4l2_sensor_clk_get(struct device *dev, const char *id)
->         if (ret)
->                 return ERR_PTR(ret);
->  
-> -       if (!IS_ENABLED(CONFIG_COMMON_CLK) || !is_acpi_node(dev_fwnode(dev)))
-> +       if (!IS_ENABLED(CONFIG_COMMON_CLK) || !acpi_node)
->                 return ERR_PTR(-ENOENT);
 
-Looks good to me.
-
-> 2. Should we just warn when the clk_set_rate() fails or return err code
-> and exit ?
-
-I'd make it a dev_err() and return an error. We can then relax this
-check later if there's a need to.
-
--- 
-Regards,
-
-Laurent Pinchart
+Thomas
