@@ -1,110 +1,164 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2D2221516E
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 11:00:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 635981F1302;
+	Wed, 21 May 2025 11:01:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747825258; cv=none; b=dGn+AYgFoQBpbeC3t82sSFBTWXJofqGsYIFfacnZjpFrbYZ6UVVIG2176XURGndlF4N6kHJEJOTHpXsQXWsk6bDBc/KhlS+3N24wL1dRVl5whPzUPmK6dw3FPg4w582v1gbEhwZvv3uJrf8y2L8v8SslyJIwR8eLafCNV8VE5OY=
+	t=1747825290; cv=none; b=JWJvifIM4sPEw5O2/uIOTi1XNeVvaljrZ4cZLEbNqss4fhrvahpUuLjS7FV6Sx1CUJ87IzR7AT7JsuszgJwML5qP3Rz0VC549Hism9Jzeo38/4f0AXgKroQY7YKspxwP0RpSYpmvcc2QjNM5CCvNBzXSMODt+tu4qcF9Am9Fq9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747825258; c=relaxed/simple;
-	bh=kQeuco4+e5SsARtY3nfrCmGKpElXymN3zNb4E6sJy9I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jrC3FTQNhACgKhHyTeQ7ETvnS5FYTFRkpk+7EhcCa6U48PSs7f8DeIKAzliOkziG8j4s9n/b3bTp7FLw4bMhEHz3dm83oeF3umWrBt9W0CczV7jqhupmcwNoK1TTAs6fUYrw+vx0Uu8FhTmT/psP5Ef1XPKEzbZ230uUIJor77c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=QjI942zD; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1747825290; c=relaxed/simple;
+	bh=zaBsSd8mPSFOHTfY9yBi6h2zBc3yt1iHjwy2YomFPvo=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=X4c4Vs8rKy3SsXZT9BMcDABFlcRcnV4iRrCqb2VTaZb/dKLIGZpFGNRVabVgWKytHMZ3GQj1fgtinRg2t93HQXtk1iAzmxKsdULQVXC6+WThyB2QnlZe4T1IJqeS/rJz4pQCoVQAwguMRUv4pTu81vI/HbrEQgOMQMcJxFkrpuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f4RBRtAS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="QjI942zD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=RM2B
-	44woUcjorhr9JLF9M8YKkzNP8iwLoLPgMAmQoBE=; b=QjI942zDQMU3wXSQKXRZ
-	R4gk1IzYpI5zjowjyt4U6b5trqpvVoelFRw7Xuk3wLlADF9qGgZX9y1uoY5+Fvgh
-	Fyse6BZWQo2cw/6H4MCkzEmTqjTMABMj6LW+kan2njJqiY816apQI7pRZTc3/DO6
-	lJpJ3Jr6h6p6U5xSt+GYkw4Ddr+REaJtQs8OgbCtZF7SjLnWFbVj7t36+iVq2mLs
-	pb3hN70dzGXhrucPn+M42xkCtuDLkYMz1vEs99zsihXcJIZCp3No63yBD2CSl6MP
-	QNkGacs34XVz/qN7+XjK0+Yndf6lDpqKMD3WTArctgvCI18HJhOQAEBjFBzY/Rtr
-	VA==
-Received: (qmail 3232836 invoked from network); 21 May 2025 13:00:48 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 21 May 2025 13:00:48 +0200
-X-UD-Smtp-Session: l3s3148p1@Ea4MR6M1bLlehhrc
-Date: Wed, 21 May 2025 13:00:48 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-Cc: thierry.bultel@linatsea.fr, linux-renesas-soc@vger.kernel.org,
-	geert@linux-m68k.org, paul.barker.ct@bp.renesas.com,
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-Subject: Re: [PATCH v9 06/10] serial: sh-sci: Use private port ID
-Message-ID: <aC2yYDpsv7ef9IVA@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Thierry Bultel <thierry.bultel.yh@bp.renesas.com>,
-	thierry.bultel@linatsea.fr, linux-renesas-soc@vger.kernel.org,
-	geert@linux-m68k.org, paul.barker.ct@bp.renesas.com,
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-References: <20250515141828.43444-1-thierry.bultel.yh@bp.renesas.com>
- <20250515141828.43444-7-thierry.bultel.yh@bp.renesas.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f4RBRtAS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4B5FC4CEEA;
+	Wed, 21 May 2025 11:01:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747825289;
+	bh=zaBsSd8mPSFOHTfY9yBi6h2zBc3yt1iHjwy2YomFPvo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=f4RBRtASQQgroR+gBiVGxYwzyKX+2Z2a/XJYsfTkAtQHULvNOVEA9DfovmNx95Y2Q
+	 vNEuMaMetzT9fP6nhxy3iFh51g7xGiiU6UEnMRyCBIDyM7sAJ5fVSOeGJ9V8vkRZE+
+	 2kfgkjYP+7BuwQ5tfV7JTRpcF206VmTSw/xBdO2GPiYz3beUNMM1LeMXnpu/P5qwLG
+	 1mQRNzWA1Dvv0jL6fbum1URW9C4hueLcAls2JmmpSq4ihv14RvS+tsW4gpsnuG2+Pi
+	 /5J2FVPnM79L7sc/cYIdcD/P91JWRVsqISGIc2DKZkYPe+L2ISU8YgYlRgbYctj5Y4
+	 BrHSMlibZchqg==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uHhCR-00Gu8c-1S;
+	Wed, 21 May 2025 12:01:27 +0100
+Date: Wed, 21 May 2025 12:01:26 +0100
+Message-ID: <86tt5edy7t.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Vincent Donnefort <vdonnefort@google.com>
+Cc: oliver.upton@linux.dev,
+	joey.gouly@arm.com,
+	suzuki.poulose@arm.com,
+	yuzenghui@huawei.com,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	qperret@google.com,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	kernel-team@android.com
+Subject: Re: [PATCH v5 10/10] KVM: arm64: np-guest CMOs with PMD_SIZE fixmap
+In-Reply-To: <20250520085201.3059786-11-vdonnefort@google.com>
+References: <20250520085201.3059786-1-vdonnefort@google.com>
+	<20250520085201.3059786-11-vdonnefort@google.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="/HOrjV2F0H4FDVet"
-Content-Disposition: inline
-In-Reply-To: <20250515141828.43444-7-thierry.bultel.yh@bp.renesas.com>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: vdonnefort@google.com, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, qperret@google.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
+On Tue, 20 May 2025 09:52:01 +0100,
+Vincent Donnefort <vdonnefort@google.com> wrote:
+> 
+> With the introduction of stage-2 huge mappings in the pKVM hypervisor,
+> guest pages CMO is needed for PMD_SIZE size. Fixmap only supports
+> PAGE_SIZE and iterating over the huge-page is time consuming (mostly due
+> to TLBI on hyp_fixmap_unmap) which is a problem for EL2 latency.
+> 
+> Introduce a shared PMD_SIZE fixmap (hyp_fixblock_map/hyp_fixblock_unmap)
+> to improve guest page CMOs when stage-2 huge mappings are installed.
+> 
+> On a Pixel6, the iterative solution resulted in a latency of ~700us,
+> while the PMD_SIZE fixmap reduces it to ~100us.
+> 
+> Because of the horrendous private range allocation that would be
+> necessary, this is disabled for 64KiB pages systems.
+> 
+> Suggested-by: Quentin Perret <qperret@google.com>
+> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+> Signed-off-by: Quentin Perret <qperret@google.com>
+> 
+> diff --git a/arch/arm64/include/asm/kvm_pgtable.h b/arch/arm64/include/asm/kvm_pgtable.h
+> index 1b43bcd2a679..2888b5d03757 100644
+> --- a/arch/arm64/include/asm/kvm_pgtable.h
+> +++ b/arch/arm64/include/asm/kvm_pgtable.h
+> @@ -59,6 +59,11 @@ typedef u64 kvm_pte_t;
+>  
+>  #define KVM_PHYS_INVALID		(-1ULL)
+>  
+> +#define KVM_PTE_TYPE			BIT(1)
+> +#define KVM_PTE_TYPE_BLOCK		0
+> +#define KVM_PTE_TYPE_PAGE		1
+> +#define KVM_PTE_TYPE_TABLE		1
+> +
+>  #define KVM_PTE_LEAF_ATTR_LO		GENMASK(11, 2)
+>  
+>  #define KVM_PTE_LEAF_ATTR_LO_S1_ATTRIDX	GENMASK(4, 2)
+> diff --git a/arch/arm64/kvm/hyp/include/nvhe/mm.h b/arch/arm64/kvm/hyp/include/nvhe/mm.h
+> index 230e4f2527de..6e83ce35c2f2 100644
+> --- a/arch/arm64/kvm/hyp/include/nvhe/mm.h
+> +++ b/arch/arm64/kvm/hyp/include/nvhe/mm.h
+> @@ -13,9 +13,11 @@
+>  extern struct kvm_pgtable pkvm_pgtable;
+>  extern hyp_spinlock_t pkvm_pgd_lock;
+>  
+> -int hyp_create_pcpu_fixmap(void);
+> +int hyp_create_fixmap(void);
+>  void *hyp_fixmap_map(phys_addr_t phys);
+>  void hyp_fixmap_unmap(void);
+> +void *hyp_fixblock_map(phys_addr_t phys, size_t *size);
+> +void hyp_fixblock_unmap(void);
+>  
+>  int hyp_create_idmap(u32 hyp_va_bits);
+>  int hyp_map_vectors(void);
+> diff --git a/arch/arm64/kvm/hyp/nvhe/mem_protect.c b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
+> index 1490820b9ebe..962948534179 100644
+> --- a/arch/arm64/kvm/hyp/nvhe/mem_protect.c
+> +++ b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
+> @@ -216,34 +216,42 @@ static void guest_s2_put_page(void *addr)
+>  	hyp_put_page(&current_vm->pool, addr);
+>  }
+>  
+> -static void clean_dcache_guest_page(void *va, size_t size)
+> +static void __apply_guest_page(void *va, size_t size,
+> +			       void (*func)(void *addr, size_t size))
+>  {
+>  	size += va - PTR_ALIGN_DOWN(va, PAGE_SIZE);
+>  	va = PTR_ALIGN_DOWN(va, PAGE_SIZE);
+>  	size = PAGE_ALIGN(size);
+>  
+>  	while (size) {
+> -		__clean_dcache_guest_page(hyp_fixmap_map(__hyp_pa(va)),
+> -					  PAGE_SIZE);
+> -		hyp_fixmap_unmap();
+> -		va += PAGE_SIZE;
+> -		size -= PAGE_SIZE;
+> +		size_t map_size = PAGE_SIZE;
+> +		void *map;
+> +
+> +		if (size >= PMD_SIZE)
+> +			map = hyp_fixblock_map(__hyp_pa(va), &map_size);
 
---/HOrjV2F0H4FDVet
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+You seem to consider that if size if PMD_SIZE (or more), then va must
+be PMD aligned. I don't think this is correct.
 
-On Thu, May 15, 2025 at 04:18:21PM +0200, Thierry Bultel wrote:
-> New port types cannot be added in serial_core.h, which is shared with
-> userspace.
-> In order to support new port types, the coming new ones will have
-> BIT(7) set in the id value, and in this case, uartport->type is
-> set to PORT_GENERIC.
-> This commit therefore changes all the places where the port type is
-> read, by not relying on uartport->type but on the private
-> value stored in struct sci_port.
+Such an iterator should start by doing PAGE_SIZEd operations until va
+is PMD-aligned. Only at this point can it perform PMD_SIZEd
+operations, until the remaining size is less than PMD_SIZE. And at
+that point, it's PAGE_SIZE all over again until the end.
 
-I quite like this approach to become independent of serial_core.h by
-adding a driver-local type. Because it changes only access to the
-variables but not much the logic of this driver. Two high level comments
-I do have:
+Does that make sense to you?
 
-- I'd go for bit 31 as the flag, though. It is extremly unlikely that we
-  ever need a number in serial_core.h again, but if, it could likely be
-  > 127
+	M.
 
-- whatever bit numer we choose, it should be hidden as a constant. My
-  suggestion:
-
-#define SCI_LOCAL_PORT_FLAG	BIT(x)
-
-?
-
-
---/HOrjV2F0H4FDVet
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmgtslwACgkQFA3kzBSg
-KbY9hw/+KCPfBEqpxSdVAC0NmTxrvYGMxQdLx9nhBGbKTSF65kHMvHbCeB3/VCMX
-EtIonj5Gm+ZLLEUFw7rPOlByOAXn/50pzmLN5Z9h6I++dM4MDMdj24LUMGLU7DbG
-/Eydt4Du2bjmKviosBJnpV/Whz2wfI4FUOHinI8fWvuo4BwLHuYUHj0EtIkrI992
-EbaUg77yTdb0qZF+e322wS2+E+b483MZHmgYzT19jbd9RzfLJ4BbLbw9SXXldpoM
-ljbVN1Jg6T9tZxQjFGJmhTRdW/BHMF+nimu4/uSuIp9ANGDhzahxbm200+TQtNl9
-0De1Bu2rKqanFLWbNZns4xcsj3eQVn719zt30g1GxB3PLJuHazLRzX1ed+yha85C
-KczWWLWECmpY9X7FooNEJjUI8IAx8hupjPo76lFQUrapujwFrbk0ilRbRS7tnB/g
-FeMxPbYgkQB/rPThjTo3lqdFxGSur/HUzGwdddiCEZvYayhbG5wWNXjWiVHJoMen
-cgxyhpFmcQVyE2dT9wNKtSLxApxPgRlfMxpqfcAvWHXHtntk6Swa85Ti1FVg1UhM
-/LU5p0RfsWJoB75ooAiISVN+7cPrtRsnLONK7YyZ1G+UK4A2fnn4EuIzwlE02bjB
-Ul0khEfB+0kv2wZYUqsxmoMTDjT44Q9Sz8gOWKSiRcbNc4uyPPs=
-=vEFG
------END PGP SIGNATURE-----
-
---/HOrjV2F0H4FDVet--
+-- 
+Without deviation from the norm, progress is not possible.
