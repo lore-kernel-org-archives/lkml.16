@@ -1,43 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E52C145FE0;
-	Wed, 21 May 2025 21:08:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81F6F2BCF73;
+	Wed, 21 May 2025 21:08:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747861690; cv=none; b=B3cCZPBfq0h0LcoOh6LWv7+yRWlhAUkLV54b3/R7svY+9psZ7jpxZHeU2W4OHm0Vq0PjnkR9v9ji7ij2u5yoNnKfPsifNwT+VUdjfMNaAcdnTyVLVQDInnWhNSe0R33kDc44h9ND3WcbBkg4UiTRIX+iYUA8t9WrcxEgmR6ohp0=
+	t=1747861696; cv=none; b=O802McgFoOAhHnVtHhBxqAVweYQS0PbmQjdcw9ggdWWByR+vaCD/Fd0gOFoptu70gJSYGHWlU/SCxw9MlNwJEtDcjtUU9NzLmGk3dh6kiDaHExcnGft7kGxHll6rjtjV3Ig8IwHM9XiBv0UQ5yqTPDh9WnNJdsRHuxdRr5tiDC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747861690; c=relaxed/simple;
-	bh=8CysIDEa8RwLMcwgrKv6Uy1ZkhyBK8+TPj0qP6iI/Fs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gtOjcJVRrcamS/a+0QjowxPE5Bteo2dm6yaIOkv5IUBwptP+BUXfhtppmjlBG5wxmLjRkzm2kMY5ldAI3nOtumtJnobwZ7NwwoErpdtbtS14Vd2dnLEc0UlaFopE39i1ftnBUCEDqNWOc0nzp0w5NNwMdZfIcQg0gNZuEsfCUIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lSnKiixX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747861696; c=relaxed/simple;
+	bh=lHrc4CriDuk0r4ZeaHYQ8EhNheg+EuB7wvlbd/z8tvw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=C2yHsRvrGQXpaIyXKbQ2Wf8gx1nxQE56lJr6g6W+9LJdtANkvpI/lLPCtrmDFsnuQLR1N76V6VyuC8vof3VSe+SQguIQPYRR98I9ptDXDQUAGv+qM3WcivXJg/4+IPLKJevGOKDJT6Zc58rp/nF+GM9SsZFRS9N2MpxDBR9M8yE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lWf+YnAM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lSnKiixX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2CB1C4CEE4;
-	Wed, 21 May 2025 21:08:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lWf+YnAM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA582C4CEE4;
+	Wed, 21 May 2025 21:08:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747861689;
-	bh=8CysIDEa8RwLMcwgrKv6Uy1ZkhyBK8+TPj0qP6iI/Fs=;
+	s=k20201202; t=1747861695;
+	bh=lHrc4CriDuk0r4ZeaHYQ8EhNheg+EuB7wvlbd/z8tvw=;
 	h=From:To:Cc:Subject:Date:From;
-	b=lSnKiixX1CGsB3OXK0U8PoEmqhTlXqXQ7gJVTRW4NPlSASliMDKNY29BTz2bZoc3T
-	 qq5Bv66/87zCZV9OWEADCLEc5E7TjawbyMUQPAYT7nKGMig8GJn0VPAupFfvi0zRBi
-	 ucxDkMfSiaXpYorxtZgFlk1ZVc6NkesVE4dOrkVOmmjBA4GyxzMqmULhWf9g1tl9Bo
-	 9c4jCOMavjBB9fBqRu8eu1IYAudnezqo/SX5j6CSHnrH4UNN73+Yq5mvEFTuLdk1vn
-	 tX4014UnREOBd6q3Pm8ruoTDzS1qm9PgdlJ6sw6I5zsL0wIZf0nY1aX/IfoZt5r6S7
-	 kHFikaUKlo0nA==
+	b=lWf+YnAM/BuJZ3H0FD420xX3370XgkfSQbC54GFoHYwJl4BT4rwYxR3Kf843YeuVs
+	 hiFHlxPPi5a1Mj7MJf/UR3cny/fX1gD5VV3nMEbHGqF0/8pJHLxPE/qzJ+gTzfsWLY
+	 hSyRnIQUMSBro69WnLOFjRj0DxPkM2kZyp8pzmzJO/8et4tifcpwKPiNwk1LmThTTE
+	 tLrll6EhwhL37cu0NYId2lsYtDWPHQ7IcXVWhX8DXu7VCFGw+kl4tQ3pLrtYtmWOvq
+	 NmkDi4jqJ3jO0GVronELVoI+JsMmxfky4NBjBEjqKf10A+cvUhxzzPyYHmx1gK3DBE
+	 iEwcMRNJcWMpg==
 From: "Rob Herring (Arm)" <robh@kernel.org>
 To: Michael Turquette <mturquette@baylibre.com>,
 	Stephen Boyd <sboyd@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
+	Richard Cochran <richardcochran@gmail.com>,
 	Andrew Lunn <andrew@lunn.ch>,
 	Gregory Clement <gregory.clement@bootlin.com>
 Cc: linux-clk@vger.kernel.org,
 	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: clock: Convert marvell,armada-xp-cpu-clock to DT schema
-Date: Wed, 21 May 2025 16:08:05 -0500
-Message-ID: <20250521210806.61286-1-robh@kernel.org>
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH] dt-bindings: clock: Convert marvell-armada-370-gating-clock to DT schema
+Date: Wed, 21 May 2025 16:08:11 -0500
+Message-ID: <20250521210813.61484-1-robh@kernel.org>
 X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -47,95 +49,460 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Convert the Marvell Armada XP CPU clock binding to DT schema format.
-It's a straight forward conversion.
+Convert the Marvell gating clock binding to DT schema format. It's a
+straight forward conversion.
 
 Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- .../clock/marvell,armada-xp-cpu-clock.yaml    | 44 +++++++++++++++++++
- .../bindings/clock/mvebu-cpu-clock.txt        | 23 ----------
- 2 files changed, 44 insertions(+), 23 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/marvell,armada-xp-cpu-clock.yaml
- delete mode 100644 Documentation/devicetree/bindings/clock/mvebu-cpu-clock.txt
+ .../marvell-armada-370-gating-clock.yaml      | 227 ++++++++++++++++++
+ .../bindings/clock/mvebu-gated-clock.txt      | 205 ----------------
+ 2 files changed, 227 insertions(+), 205 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/marvell-armada-370-gating-clock.yaml
+ delete mode 100644 Documentation/devicetree/bindings/clock/mvebu-gated-clock.txt
 
-diff --git a/Documentation/devicetree/bindings/clock/marvell,armada-xp-cpu-clock.yaml b/Documentation/devicetree/bindings/clock/marvell,armada-xp-cpu-clock.yaml
+diff --git a/Documentation/devicetree/bindings/clock/marvell-armada-370-gating-clock.yaml b/Documentation/devicetree/bindings/clock/marvell-armada-370-gating-clock.yaml
 new file mode 100644
-index 000000000000..f2ac6741da9a
+index 000000000000..0475360d2b6a
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/marvell,armada-xp-cpu-clock.yaml
-@@ -0,0 +1,44 @@
++++ b/Documentation/devicetree/bindings/clock/marvell-armada-370-gating-clock.yaml
+@@ -0,0 +1,227 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +---
++$id: http://devicetree.org/schemas/clock/marvell-armada-370-gating-clock.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
-+$id: http://devicetree.org/schemas/clock/marvell,armada-xp-cpu-clock.yaml#
 +
-+title: Marvell EBU CPU Clock
++title: Marvell EBU SoC gating-clock
 +
 +maintainers:
 +  - Andrew Lunn <andrew@lunn.ch>
 +  - Gregory Clement <gregory.clement@bootlin.com>
 +
++description: >
++  Marvell Armada 370/375/380/385/39x/XP, Dove and Kirkwood allow some peripheral
++  clocks to be gated to save some power. The clock ID is directly mapped to the
++  corresponding clock gating control bit in HW to ease manual clock lookup in
++  datasheet.
++
++  The following is a list of provided IDs for Armada 370:
++
++    ID    Clock    Peripheral
++    -----------------------------------
++    0     Audio    AC97 Cntrl
++    1     pex0_en  PCIe 0 Clock out
++    2     pex1_en  PCIe 1 Clock out
++    3     ge1      Gigabit Ethernet 1
++    4     ge0      Gigabit Ethernet 0
++    5     pex0     PCIe Cntrl 0
++    9     pex1     PCIe Cntrl 1
++    15    sata0    SATA Host 0
++    17    sdio     SDHCI Host
++    23    crypto   CESA (crypto engine)
++    25    tdm      Time Division Mplx
++    28    ddr      DDR Cntrl
++    30    sata1   SATA Host 0
++
++  The following is a list of provided IDs for Armada 375:
++
++    ID    Clock           Peripheral
++    -----------------------------------
++    2     mu              Management Unit
++    3     pp              Packet Processor
++    4     ptp             PTP
++    5     pex0            PCIe 0 Clock out
++    6     pex1            PCIe 1 Clock out
++    8     audio           Audio Cntrl
++    11    nd_clk          Nand Flash Cntrl
++    14    sata0_link      SATA 0 Link
++    15    sata0_core      SATA 0 Core
++    16    usb3            USB3 Host
++    17    sdio            SDHCI Host
++    18    usb             USB Host
++    19    gop             Gigabit Ethernet MAC
++    20    sata1_link      SATA 1 Link
++    21    sata1_core      SATA 1 Core
++    22    xor0            XOR DMA 0
++    23    xor1            XOR DMA 0
++    24    copro           Coprocessor
++    25    tdm             Time Division Mplx
++    28    crypto0_enc     Cryptographic Unit Port 0 Encryption
++    29    crypto0_core    Cryptographic Unit Port 0 Core
++    30    crypto1_enc     Cryptographic Unit Port 1 Encryption
++    31    crypto1_core    Cryptographic Unit Port 1 Core
++
++  The following is a list of provided IDs for Armada 380/385:
++
++    ID    Clock           Peripheral
++    -----------------------------------
++    0     audio           Audio
++    2     ge2             Gigabit Ethernet 2
++    3     ge1             Gigabit Ethernet 1
++    4     ge0             Gigabit Ethernet 0
++    5     pex1            PCIe 1
++    6     pex2            PCIe 2
++    7     pex3            PCIe 3
++    8     pex0            PCIe 0
++    9     usb3h0          USB3 Host 0
++    10    usb3h1          USB3 Host 1
++    11    usb3d           USB3 Device
++    13    bm              Buffer Management
++    14    crypto0z        Cryptographic 0 Z
++    15    sata0           SATA 0
++    16    crypto1z        Cryptographic 1 Z
++    17    sdio            SDIO
++    18    usb2            USB 2
++    21    crypto1         Cryptographic 1
++    22    xor0            XOR 0
++    23    crypto0         Cryptographic 0
++    25    tdm             Time Division Multiplexing
++    28    xor1            XOR 1
++    30    sata1           SATA 1
++
++  The following is a list of provided IDs for Armada 39x:
++
++    ID    Clock           Peripheral
++    -----------------------------------
++    5     pex1            PCIe 1
++    6     pex2            PCIe 2
++    7     pex3            PCIe 3
++    8     pex0            PCIe 0
++    9     usb3h0          USB3 Host 0
++    10    usb3h1          USB3 Host 1
++    15    sata0           SATA 0
++    17    sdio            SDIO
++    22    xor0            XOR 0
++    28    xor1            XOR 1
++
++  The following is a list of provided IDs for Armada XP:
++
++    ID    Clock           Peripheral
++    -----------------------------------
++    0     audio           Audio Cntrl
++    1     ge3             Gigabit Ethernet 3
++    2     ge2             Gigabit Ethernet 2
++    3     ge1             Gigabit Ethernet 1
++    4     ge0             Gigabit Ethernet 0
++    5     pex0            PCIe Cntrl 0
++    6     pex1            PCIe Cntrl 1
++    7     pex2            PCIe Cntrl 2
++    8     pex3            PCIe Cntrl 3
++    13    bp
++    14    sata0lnk
++    15    sata0           SATA Host 0
++    16    lcd             LCD Cntrl
++    17    sdio            SDHCI Host
++    18    usb0            USB Host 0
++    19    usb1            USB Host 1
++    20    usb2            USB Host 2
++    22    xor0            XOR DMA 0
++    23    crypto          CESA engine
++    25    tdm             Time Division Mplx
++    28    xor1            XOR DMA 1
++    29    sata1lnk
++    30    sata1           SATA Host 1
++
++  The following is a list of provided IDs for 98dx3236:
++
++    ID    Clock           Peripheral
++    -----------------------------------
++    3     ge1             Gigabit Ethernet 1
++    4     ge0             Gigabit Ethernet 0
++    5     pex0            PCIe Cntrl 0
++    17    sdio            SDHCI Host
++    18    usb0            USB Host 0
++    22    xor0            XOR DMA 0
++
++  The following is a list of provided IDs for Dove:
++
++  ID    Clock           Peripheral
++  -----------------------------------
++    0     usb0            USB Host 0
++    1     usb1            USB Host 1
++    2     ge              Gigabit Ethernet
++    3     sata            SATA Host
++    4     pex0            PCIe Cntrl 0
++    5     pex1            PCIe Cntrl 1
++    8     sdio0           SDHCI Host 0
++    9     sdio1           SDHCI Host 1
++    10    nand            NAND Cntrl
++    11    camera          Camera Cntrl
++    12    i2s0            I2S Cntrl 0
++    13    i2s1            I2S Cntrl 1
++    15    crypto          CESA engine
++    21    ac97            AC97 Cntrl
++    22    pdma            Peripheral DMA
++    23    xor0            XOR DMA 0
++    24    xor1            XOR DMA 1
++    30    gephy           Gigabit Ethernet PHY
++    Note: gephy(30) is implemented as a parent clock of ge(2)
++
++  The following is a list of provided IDs for Kirkwood:
++
++    ID    Clock           Peripheral
++    -----------------------------------
++    0     ge0             Gigabit Ethernet 0
++    2     pex0            PCIe Cntrl 0
++    3     usb0            USB Host 0
++    4     sdio            SDIO Cntrl
++    5     tsu             Transp. Stream Unit
++    6     dunit           SDRAM Cntrl
++    7     runit           Runit
++    8     xor0            XOR DMA 0
++    9     audio           I2S Cntrl 0
++    14    sata0           SATA Host 0
++    15    sata1           SATA Host 1
++    16    xor1            XOR DMA 1
++    17    crypto          CESA engine
++    18    pex1            PCIe Cntrl 1
++    19    ge1             Gigabit Ethernet 1
++    20    tdm             Time Division Mplx
++
 +properties:
 +  compatible:
 +    enum:
-+      - marvell,armada-xp-cpu-clock
-+      - marvell,mv98dx3236-cpu-clock
++      - marvell,armada-370-gating-clock
++      - marvell,armada-375-gating-clock
++      - marvell,armada-380-gating-clock
++      - marvell,armada-390-gating-clock
++      - marvell,armada-xp-gating-clock
++      - marvell,mv98dx3236-gating-clock
++      - marvell,dove-gating-clock
++      - marvell,kirkwood-gating-clock
 +
 +  reg:
-+    items:
-+      - description: Clock complex registers
-+      - description: PMU DFS registers
-+
-+  '#clock-cells':
-+    const: 1
++    maxItems: 1
 +
 +  clocks:
 +    maxItems: 1
++
++  '#clock-cells':
++    const: 1
 +
 +required:
 +  - compatible
 +  - reg
 +  - '#clock-cells'
-+  - clocks
 +
 +additionalProperties: false
 +
 +examples:
 +  - |
-+    clock-controller@d0018700 {
++    clock-controller@d0038 {
++        compatible = "marvell,dove-gating-clock";
++        reg = <0xd0038 0x4>;
++        /* default parent clock is tclk */
++        clocks = <&core_clk 0>;
 +        #clock-cells = <1>;
-+        compatible = "marvell,armada-xp-cpu-clock";
-+        reg = <0xd0018700 0xa0>, <0x1c054 0x10>;
-+        clocks = <&coreclk 1>;
 +    };
-diff --git a/Documentation/devicetree/bindings/clock/mvebu-cpu-clock.txt b/Documentation/devicetree/bindings/clock/mvebu-cpu-clock.txt
+diff --git a/Documentation/devicetree/bindings/clock/mvebu-gated-clock.txt b/Documentation/devicetree/bindings/clock/mvebu-gated-clock.txt
 deleted file mode 100644
-index 7f28506eaee7..000000000000
---- a/Documentation/devicetree/bindings/clock/mvebu-cpu-clock.txt
+index de562da2ae77..000000000000
+--- a/Documentation/devicetree/bindings/clock/mvebu-gated-clock.txt
 +++ /dev/null
-@@ -1,23 +0,0 @@
--Device Tree Clock bindings for cpu clock of Marvell EBU platforms
+@@ -1,205 +0,0 @@
+-* Gated Clock bindings for Marvell EBU SoCs
+-
+-Marvell Armada 370/375/380/385/39x/XP, Dove and Kirkwood allow some
+-peripheral clocks to be gated to save some power. The clock consumer
+-should specify the desired clock by having the clock ID in its
+-"clocks" phandle cell. The clock ID is directly mapped to the
+-corresponding clock gating control bit in HW to ease manual clock
+-lookup in datasheet.
+-
+-The following is a list of provided IDs for Armada 370:
+-ID	Clock	Peripheral
+------------------------------------
+-0	Audio	AC97 Cntrl
+-1	pex0_en	PCIe 0 Clock out
+-2	pex1_en	PCIe 1 Clock out
+-3	ge1	Gigabit Ethernet 1
+-4	ge0	Gigabit Ethernet 0
+-5	pex0	PCIe Cntrl 0
+-9	pex1	PCIe Cntrl 1
+-15	sata0	SATA Host 0
+-17	sdio	SDHCI Host
+-23	crypto	CESA (crypto engine)
+-25	tdm	Time Division Mplx
+-28	ddr	DDR Cntrl
+-30	sata1	SATA Host 0
+-
+-The following is a list of provided IDs for Armada 375:
+-ID	Clock		Peripheral
+------------------------------------
+-2	mu		Management Unit
+-3	pp		Packet Processor
+-4	ptp		PTP
+-5	pex0		PCIe 0 Clock out
+-6	pex1		PCIe 1 Clock out
+-8	audio		Audio Cntrl
+-11	nd_clk		Nand Flash Cntrl
+-14	sata0_link	SATA 0 Link
+-15	sata0_core	SATA 0 Core
+-16	usb3		USB3 Host
+-17	sdio		SDHCI Host
+-18	usb		USB Host
+-19	gop		Gigabit Ethernet MAC
+-20	sata1_link	SATA 1 Link
+-21	sata1_core	SATA 1 Core
+-22	xor0		XOR DMA 0
+-23	xor1		XOR DMA 0
+-24	copro		Coprocessor
+-25	tdm		Time Division Mplx
+-28	crypto0_enc	Cryptographic Unit Port 0 Encryption
+-29	crypto0_core	Cryptographic Unit Port 0 Core
+-30	crypto1_enc	Cryptographic Unit Port 1 Encryption
+-31	crypto1_core	Cryptographic Unit Port 1 Core
+-
+-The following is a list of provided IDs for Armada 380/385:
+-ID	Clock		Peripheral
+------------------------------------
+-0	audio		Audio
+-2	ge2		Gigabit Ethernet 2
+-3	ge1		Gigabit Ethernet 1
+-4	ge0		Gigabit Ethernet 0
+-5	pex1		PCIe 1
+-6	pex2		PCIe 2
+-7	pex3		PCIe 3
+-8	pex0		PCIe 0
+-9	usb3h0		USB3 Host 0
+-10	usb3h1		USB3 Host 1
+-11	usb3d		USB3 Device
+-13	bm		Buffer Management
+-14	crypto0z	Cryptographic 0 Z
+-15	sata0		SATA 0
+-16	crypto1z	Cryptographic 1 Z
+-17	sdio		SDIO
+-18	usb2		USB 2
+-21	crypto1		Cryptographic 1
+-22	xor0		XOR 0
+-23	crypto0		Cryptographic 0
+-25	tdm		Time Division Multiplexing
+-28	xor1		XOR 1
+-30	sata1		SATA 1
+-
+-The following is a list of provided IDs for Armada 39x:
+-ID	Clock		Peripheral
+------------------------------------
+-5	pex1		PCIe 1
+-6	pex2		PCIe 2
+-7	pex3		PCIe 3
+-8	pex0		PCIe 0
+-9	usb3h0		USB3 Host 0
+-10	usb3h1		USB3 Host 1
+-15	sata0		SATA 0
+-17	sdio		SDIO
+-22	xor0		XOR 0
+-28	xor1		XOR 1
+-
+-The following is a list of provided IDs for Armada XP:
+-ID	Clock	Peripheral
+------------------------------------
+-0	audio	Audio Cntrl
+-1	ge3	Gigabit Ethernet 3
+-2	ge2	Gigabit Ethernet 2
+-3	ge1	Gigabit Ethernet 1
+-4	ge0	Gigabit Ethernet 0
+-5	pex0	PCIe Cntrl 0
+-6	pex1	PCIe Cntrl 1
+-7	pex2	PCIe Cntrl 2
+-8	pex3	PCIe Cntrl 3
+-13	bp
+-14	sata0lnk
+-15	sata0	SATA Host 0
+-16	lcd	LCD Cntrl
+-17	sdio	SDHCI Host
+-18	usb0	USB Host 0
+-19	usb1	USB Host 1
+-20	usb2	USB Host 2
+-22	xor0	XOR DMA 0
+-23	crypto	CESA engine
+-25	tdm	Time Division Mplx
+-28	xor1	XOR DMA 1
+-29	sata1lnk
+-30	sata1	SATA Host 1
+-
+-The following is a list of provided IDs for 98dx3236:
+-ID	Clock	Peripheral
+------------------------------------
+-3	ge1	Gigabit Ethernet 1
+-4	ge0	Gigabit Ethernet 0
+-5	pex0	PCIe Cntrl 0
+-17	sdio	SDHCI Host
+-18	usb0	USB Host 0
+-22	xor0	XOR DMA 0
+-
+-The following is a list of provided IDs for Dove:
+-ID	Clock	Peripheral
+------------------------------------
+-0	usb0	USB Host 0
+-1	usb1	USB Host 1
+-2	ge	Gigabit Ethernet
+-3	sata	SATA Host
+-4	pex0	PCIe Cntrl 0
+-5	pex1	PCIe Cntrl 1
+-8	sdio0	SDHCI Host 0
+-9	sdio1	SDHCI Host 1
+-10	nand	NAND Cntrl
+-11	camera	Camera Cntrl
+-12	i2s0	I2S Cntrl 0
+-13	i2s1	I2S Cntrl 1
+-15	crypto	CESA engine
+-21	ac97	AC97 Cntrl
+-22	pdma	Peripheral DMA
+-23	xor0	XOR DMA 0
+-24	xor1	XOR DMA 1
+-30	gephy	Gigabit Ethernel PHY
+-Note: gephy(30) is implemented as a parent clock of ge(2)
+-
+-The following is a list of provided IDs for Kirkwood:
+-ID	Clock	Peripheral
+------------------------------------
+-0	ge0	Gigabit Ethernet 0
+-2	pex0	PCIe Cntrl 0
+-3	usb0	USB Host 0
+-4	sdio	SDIO Cntrl
+-5	tsu	Transp. Stream Unit
+-6	dunit	SDRAM Cntrl
+-7	runit	Runit
+-8	xor0	XOR DMA 0
+-9	audio	I2S Cntrl 0
+-14	sata0	SATA Host 0
+-15	sata1	SATA Host 1
+-16	xor1	XOR DMA 1
+-17	crypto	CESA engine
+-18	pex1	PCIe Cntrl 1
+-19	ge1	Gigabit Ethernet 1
+-20	tdm	Time Division Mplx
 -
 -Required properties:
 -- compatible : shall be one of the following:
--	"marvell,armada-xp-cpu-clock" - cpu clocks for Armada XP
--	"marvell,mv98dx3236-cpu-clock" - cpu clocks for 98DX3236 SoC
--- reg : Address and length of the clock complex register set, followed
--        by address and length of the PMU DFS registers
--- #clock-cells : should be set to 1.
--- clocks : shall be the input parent clock phandle for the clock.
+-	"marvell,armada-370-gating-clock" - for Armada 370 SoC clock gating
+-	"marvell,armada-375-gating-clock" - for Armada 375 SoC clock gating
+-	"marvell,armada-380-gating-clock" - for Armada 380/385 SoC clock gating
+-	"marvell,armada-390-gating-clock" - for Armada 39x SoC clock gating
+-	"marvell,armada-xp-gating-clock" - for Armada XP SoC clock gating
+-	"marvell,mv98dx3236-gating-clock" - for 98dx3236 SoC clock gating
+-	"marvell,dove-gating-clock" - for Dove SoC clock gating
+-	"marvell,kirkwood-gating-clock" - for Kirkwood SoC clock gating
+-- reg : shall be the register address of the Clock Gating Control register
+-- #clock-cells : from common clock binding; shall be set to 1
 -
--cpuclk: clock-complex@d0018700 {
+-Optional properties:
+-- clocks : default parent clock phandle (e.g. tclk)
+-
+-Example:
+-
+-gate_clk: clock-gating-control@d0038 {
+-	compatible = "marvell,dove-gating-clock";
+-	reg = <0xd0038 0x4>;
+-	/* default parent clock is tclk */
+-	clocks = <&core_clk 0>;
 -	#clock-cells = <1>;
--	compatible = "marvell,armada-xp-cpu-clock";
--	reg = <0xd0018700 0xA0>, <0x1c054 0x10>;
--	clocks = <&coreclk 1>;
--}
+-};
 -
--cpu@0 {
--	compatible = "marvell,sheeva-v7";
--	reg = <0>;
--	clocks = <&cpuclk 0>;
+-sdio0: sdio@92000 {
+-	compatible = "marvell,dove-sdhci";
+-	/* get clk gate bit 8 (sdio0) */
+-	clocks = <&gate_clk 8>;
 -};
 -- 
 2.47.2
