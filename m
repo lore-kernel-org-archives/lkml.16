@@ -1,243 +1,144 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16EB9234971
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 19:17:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1FB122173C;
+	Wed, 21 May 2025 19:18:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747855041; cv=none; b=Yv4RjeUb/0dF9AyYms4zXQyvQqXZhnD8jCFkVNz95yOaRJpZQPrG5ItrDffj8lCURrxeMZ4d6N3NV72SY9V5Oh8LW3kntSfU+lI3uzjPtebgmB/V5I+TcuMmYJDf4aEZ7PIJzCh8sQELfzP3JOOKP/IvDkHe/NinNDH4Zrzb+4k=
+	t=1747855086; cv=none; b=JKXXam+UgCBWl1h4Bb9OHBn38Ozz2CHwa7xn99EAHfodfzYSVQUVoLkrmq31BAeALiH0hEhGJH2LrBFdrZV3eOiNpfElNpwC8/gYc51xO0QpIFcKCdQPEX3VO0XGKBY40yqBHLZT18XncWtkACxCT5ZXsTIKYbLK90P8dDnyAfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747855041; c=relaxed/simple;
-	bh=9kZv0wB7aYOjgY0M3wV8Agi5BwVU9rPueqNiaXYr230=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NJebyQydlMZorveStamF/4G2kl56KKmeGs0stQp8d6ani6UzghD282VXcftgccZdBAJlwVTXiJFfWPAmcA9HEy9n1H/xYmGTQLxmUT4z1pklEB0VGQLQwoxpSsXVyj+Dk2TSWQL2n1a7QBwBqGSioSvVq2ofLp2Jrwj81x1GAIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cwnmEjUZ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747855086; c=relaxed/simple;
+	bh=11eaAuGJiJiZBtdGomgSvZbqRIL2Y2/cQykWBiFSowo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=mXC4381KVbN8jcTG4Dm6cLzmpf4lYi6MjO8cSMLHWVof25i9hvCXileXWuBZJejdwTgCKvDQtEnmTM5V8aGYZZAdjo5ZS72QxojfuPHOM1n7K17xNfaQfxgY9tAqSjQZjjQDIPJk3QHUZgeDVT4qQrFGhqnos+7grDS37IBLBzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qhvpVny9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cwnmEjUZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747855036;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nJXXXDW4PYAr8Jjvjaer7RTmIfx81VQn47DGQ6gp/X4=;
-	b=cwnmEjUZwY4yoJwThopPL1OSBnuyhcSUDviCGZh+MHWkv2JHpELoULz18ZzVuMPfTY4C5x
-	Tziic956THPxvzviBS0SIdwO1lrI1fNchZTclmYkvCEFnT9QkmIEoDO/mlQHKDx0EJE3nR
-	Qouke4lwvW7nrvL/O/O0Xj34nim+g4o=
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com
- [209.85.166.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-357-TQ374jlPMaupZ3G-hCnAaQ-1; Wed, 21 May 2025 15:17:15 -0400
-X-MC-Unique: TQ374jlPMaupZ3G-hCnAaQ-1
-X-Mimecast-MFC-AGG-ID: TQ374jlPMaupZ3G-hCnAaQ_1747855035
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-85b3e93e052so127672739f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 12:17:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747855034; x=1748459834;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nJXXXDW4PYAr8Jjvjaer7RTmIfx81VQn47DGQ6gp/X4=;
-        b=UsNQfIryBwdXeVofR24iJBrGoxASeDmpH3HOdRh5eR3I+l5wPQULwuC+pCkna7Ogwn
-         8GXSOOndGYe0fAmksJ6ZhFFIHF0/sanaZwZtdD0YS4bvfkXbLml8enK94QotfyKvmkeh
-         7WrN6KfUrn4dfY+zdouQIVBhxehz+jXgGBcJ+fFblCY3L2vapkALLN5rjHR2o9Ts+lgw
-         4bgZqNLrQgnd8C1QV6+JAuDrTYc7urPbl+wIPQw8TvW1fug5fUSctXJqeS3CxkKwEwxn
-         yxHOl8+pZ1PpIiSO62Bt6rzmTHhuLdHT/IjgZ0oti+P42Br10bCmoqvDy8peXuYlij5Z
-         +YJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWSsKeNiD1EPrJ2U73LfieLSti6uUpNUs5Xr9wQLO/91iwIswZ1iUDSwYIyfL/SrULHgg8UB2M6AMfLynw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxyy2qM5OpmWSgS/HxZWO6avi0RHAsLKMR8N42W2fHvjgZeafGZ
-	OFxFYO78JCO86XV9fTPHUKI1efi4e90MbQ+WHqF6LT68q3zvw6D3bw3wNfzicwiVeXe81zVe20Y
-	9DoNOloXgyFBDi/uvqpqT9QnPkmq9lYkl0meYEEda50QxrL11IhE5EttwBs2sUjW5q6HrLzULXw
-	==
-X-Gm-Gg: ASbGnculOEYiezIRbceUys+I0Z2eEb9OdVPkz4dnlYfcFJVgQ+5FpZS2jJBqGHHoz5a
-	6thhLmYO8xy5Y3XNxA6JDi0L94HtFdHZh4EJa3qwqMCE8E/yOulYj27oBG5aHfTAcK5owo79It+
-	kH6+f/uEYWyQGz+WUrdnY6yF569opYgcIHvp1eLuFvFrKV/LahQvFyPVYdAcvxDo+QmWQVxw/DL
-	3F8feJmOdGOf0+WXFDIrWzP2RLo9pAii+t7mN9K/LTuwhcB8FDkDN8MY4qMabqeiq4ffcmUGOCr
-	+l0Y03YG5f9XzG8=
-X-Received: by 2002:a05:6602:2d8d:b0:85d:9738:54ac with SMTP id ca18e2360f4ac-86a2319bcf3mr742131239f.2.1747855034255;
-        Wed, 21 May 2025 12:17:14 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGSvVThNYy1+dND2QTneRwGhWDuKajIiFFHmLrsqDkQp1WNz78tRhTCrOQoZ5e3B+h1U5LwsA==
-X-Received: by 2002:a05:6602:2d8d:b0:85d:9738:54ac with SMTP id ca18e2360f4ac-86a2319bcf3mr742129539f.2.1747855033881;
-        Wed, 21 May 2025 12:17:13 -0700 (PDT)
-Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-86a2360cb1esm266746339f.24.2025.05.21.12.17.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 12:17:13 -0700 (PDT)
-Date: Wed, 21 May 2025 13:17:11 -0600
-From: Alex Williamson <alex.williamson@redhat.com>
-To: lizhe.67@bytedance.com
-Cc: david@redhat.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- muchun.song@linux.dev, peterx@redhat.com
-Subject: Re: [PATCH v4] vfio/type1: optimize vfio_pin_pages_remote() for
- large folios
-Message-ID: <20250521131711.4e0d3f2f.alex.williamson@redhat.com>
-In-Reply-To: <20250521042507.77205-1-lizhe.67@bytedance.com>
-References: <20250521042507.77205-1-lizhe.67@bytedance.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qhvpVny9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A172C4CEE4;
+	Wed, 21 May 2025 19:18:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747855085;
+	bh=11eaAuGJiJiZBtdGomgSvZbqRIL2Y2/cQykWBiFSowo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=qhvpVny9dMzrOx+Mn5azE81/XRNYeXos00YtD6PNA/RC9skrUY3H32mHDPJPIC4mJ
+	 CCCJAhZ7eiBx6xsNuaRWGFWkUu8NzEJEqKqAd481MdKfHpxStiaudPUkeGlS1jqtOj
+	 yhfyrZ0uPL3huDKW7QzjzVJT/8uV2F9KnyXOn1sJIu7HfjTQUAzeSm9LuOb5q5Yua0
+	 jz2nRXACHn4pQxHsCY3Amxm4sUkv+y5QOgbDWhQr+fDZuQAh/BongCCX63wtemuviI
+	 nNvazIe8vbPQWZeVB4AuTzbiHzcU9RNdS4F4I5ExLfhFxLoSm59Ttmn2EZ/MSrG9VP
+	 jDfpVevewM4ag==
+Date: Wed, 21 May 2025 14:18:03 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>,
+	Karolina Stolarek <karolina.stolarek@oracle.com>,
+	Weinan Liu <wnliu@google.com>,
+	Martin Petersen <martin.petersen@oracle.com>,
+	Ben Fuller <ben.fuller@oracle.com>,
+	Drew Walton <drewwalton@microsoft.com>,
+	Anil Agrawal <anilagrawal@meta.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Lukas Wunner <lukas@wunner.de>, Sargun Dhillon <sargun@meta.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Kai-Heng Feng <kaihengf@nvidia.com>,
+	Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
+	Terry Bowman <terry.bowman@amd.com>,
+	Shiju Jose <shiju.jose@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+Subject: Re: [PATCH v7 01/17] PCI/DPC: Initialize aer_err_info before using it
+Message-ID: <20250521191803.GA1426656@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250521095218.0000045d@huawei.com>
 
-On Wed, 21 May 2025 12:25:07 +0800
-lizhe.67@bytedance.com wrote:
+On Wed, May 21, 2025 at 09:52:18AM +0100, Jonathan Cameron wrote:
+> On Tue, 20 May 2025 16:50:18 -0500
+> Bjorn Helgaas <helgaas@kernel.org> wrote:
+> 
+> > From: Bjorn Helgaas <bhelgaas@google.com>
+> > 
+> > Previously the struct aer_err_info "info" was allocated on the stack
+> > without being initialized, so it contained junk except for the fields we
+> > explicitly set later.
+> > 
+> > Initialize "info" at declaration so it starts as all zeros.
+> > 
+> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> > Tested-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
+> > Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> 
+> I chased this through a bit and looks like at least some unset fields would
+> result in garbage prints.  So maybe needs a fixes tag?
+> info->tlp_header_valid is an easy one to follow as only set in some paths.
 
-> From: Li Zhe <lizhe.67@bytedance.com>
-> 
-> When vfio_pin_pages_remote() is called with a range of addresses that
-> includes large folios, the function currently performs individual
-> statistics counting operations for each page. This can lead to significant
-> performance overheads, especially when dealing with large ranges of pages.
-> 
-> This patch optimize this process by batching the statistics counting
-> operations.
-> 
-> The performance test results for completing the 8G VFIO IOMMU DMA mapping,
-> obtained through trace-cmd, are as follows. In this case, the 8G virtual
-> address space has been mapped to physical memory using hugetlbfs with
-> pagesize=2M.
-> 
-> Before this patch:
-> funcgraph_entry:      # 33813.703 us |  vfio_pin_map_dma();
-> 
-> After this patch:
-> funcgraph_entry:      # 16071.378 us |  vfio_pin_map_dma();
-> 
-> Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
-> Co-developed-by: Alex Williamson <alex.williamson@redhat.com>
-> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> ---
+I don't see a current issue related to info->tlp_header_valid because
+it's always cleared in the path from DPC:
 
-Given the discussion on v3, this is currently a Nak.  Follow-up in that
-thread if there are further ideas how to salvage this.  Thanks,
+  dpc_process_error
+    dpc_get_aer_uncorrect_severity
+      info->severity = AER_FATAL or AER_NONFATAL
+    aer_get_device_error_info
+      info->status = 0;
+      info->tlp_header_valid = 0;    # unconditional
+      pci_read_config_dword(PCI_ERR_UNCOR_STATUS, &info->status);
+      pci_read_config_dword(PCI_ERR_UNCOR_MASK, &info->mask);
+      info->first_error = PCI_ERR_CAP_FEP(...);
+    aer_print_error
 
-Alex
+However, only info->{severity,status,tlp_header_valid,mask,
+first_error} are initialized before dpc_process_error() calls
+aer_print_error(), and aer_print_error() uses info->{id,
+error_dev_num}, which haven't been initialized.
 
-> Changelogs:
-> 
-> v3->v4:
-> - Use min_t() to obtain the step size, rather than min().
-> - Fix some issues in commit message and title.
-> 
-> v2->v3:
-> - Code simplification.
-> - Fix some issues in comments.
-> 
-> v1->v2:
-> - Fix some issues in comments and formatting.
-> - Consolidate vfio_find_vpfn_range() and vfio_find_vpfn().
-> - Move the processing logic for hugetlbfs folio into the while(true) loop
->   and use a variable with a default value of 1 to indicate the number of
->   consecutive pages.
-> 
-> v3 patch: https://lore.kernel.org/all/20250520070020.6181-1-lizhe.67@bytedance.com/
-> v2 patch: https://lore.kernel.org/all/20250519070419.25827-1-lizhe.67@bytedance.com/
-> v1 patch: https://lore.kernel.org/all/20250513035730.96387-1-lizhe.67@bytedance.com/
-> 
->  drivers/vfio/vfio_iommu_type1.c | 48 +++++++++++++++++++++++++--------
->  1 file changed, 37 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> index 0ac56072af9f..bd46ed9361fe 100644
-> --- a/drivers/vfio/vfio_iommu_type1.c
-> +++ b/drivers/vfio/vfio_iommu_type1.c
-> @@ -319,15 +319,22 @@ static void vfio_dma_bitmap_free_all(struct vfio_iommu *iommu)
->  /*
->   * Helper Functions for host iova-pfn list
->   */
-> -static struct vfio_pfn *vfio_find_vpfn(struct vfio_dma *dma, dma_addr_t iova)
-> +
-> +/*
-> + * Find the first vfio_pfn that overlapping the range
-> + * [iova, iova + PAGE_SIZE * npage) in rb tree.
-> + */
-> +static struct vfio_pfn *vfio_find_vpfn_range(struct vfio_dma *dma,
-> +		dma_addr_t iova, unsigned long npage)
->  {
->  	struct vfio_pfn *vpfn;
->  	struct rb_node *node = dma->pfn_list.rb_node;
-> +	dma_addr_t end_iova = iova + PAGE_SIZE * npage;
->  
->  	while (node) {
->  		vpfn = rb_entry(node, struct vfio_pfn, node);
->  
-> -		if (iova < vpfn->iova)
-> +		if (end_iova <= vpfn->iova)
->  			node = node->rb_left;
->  		else if (iova > vpfn->iova)
->  			node = node->rb_right;
-> @@ -337,6 +344,11 @@ static struct vfio_pfn *vfio_find_vpfn(struct vfio_dma *dma, dma_addr_t iova)
->  	return NULL;
->  }
->  
-> +static inline struct vfio_pfn *vfio_find_vpfn(struct vfio_dma *dma, dma_addr_t iova)
-> +{
-> +	return vfio_find_vpfn_range(dma, iova, 1);
-> +}
-> +
->  static void vfio_link_pfn(struct vfio_dma *dma,
->  			  struct vfio_pfn *new)
->  {
-> @@ -681,32 +693,46 @@ static long vfio_pin_pages_remote(struct vfio_dma *dma, unsigned long vaddr,
->  		 * and rsvd here, and therefore continues to use the batch.
->  		 */
->  		while (true) {
-> +			struct folio *folio = page_folio(batch->pages[batch->offset]);
-> +			long nr_pages;
-> +
->  			if (pfn != *pfn_base + pinned ||
->  			    rsvd != is_invalid_reserved_pfn(pfn))
->  				goto out;
->  
-> +			/*
-> +			 * Note: The current nr_pages does not achieve the optimal
-> +			 * performance in scenarios where folio_nr_pages() exceeds
-> +			 * batch->capacity. It is anticipated that future enhancements
-> +			 * will address this limitation.
-> +			 */
-> +			nr_pages = min_t(long, batch->size, folio_nr_pages(folio) -
-> +						folio_page_idx(folio, batch->pages[batch->offset]));
-> +			if (nr_pages > 1 && vfio_find_vpfn_range(dma, iova, nr_pages))
-> +				nr_pages = 1;
-> +
->  			/*
->  			 * Reserved pages aren't counted against the user,
->  			 * externally pinned pages are already counted against
->  			 * the user.
->  			 */
-> -			if (!rsvd && !vfio_find_vpfn(dma, iova)) {
-> +			if (!rsvd && (nr_pages > 1 || !vfio_find_vpfn(dma, iova))) {
->  				if (!dma->lock_cap &&
-> -				    mm->locked_vm + lock_acct + 1 > limit) {
-> +				    mm->locked_vm + lock_acct + nr_pages > limit) {
->  					pr_warn("%s: RLIMIT_MEMLOCK (%ld) exceeded\n",
->  						__func__, limit << PAGE_SHIFT);
->  					ret = -ENOMEM;
->  					goto unpin_out;
->  				}
-> -				lock_acct++;
-> +				lock_acct += nr_pages;
->  			}
->  
-> -			pinned++;
-> -			npage--;
-> -			vaddr += PAGE_SIZE;
-> -			iova += PAGE_SIZE;
-> -			batch->offset++;
-> -			batch->size--;
-> +			pinned += nr_pages;
-> +			npage -= nr_pages;
-> +			vaddr += PAGE_SIZE * nr_pages;
-> +			iova += PAGE_SIZE * nr_pages;
-> +			batch->offset += nr_pages;
-> +			batch->size -= nr_pages;
->  
->  			if (!batch->size)
->  				break;
+AFAICT, this has been the case since
+https://git.kernel.org/linus/8aefa9b0d910 ("PCI/DPC: Print AER status
+in DPC event handling")
 
+Here's aer_get_device_error_info() at that time:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/pcie/aer.c?id=8aefa9b0d910#n867
+
+and aer_print_error():
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/pcie/aer.c?id=8aefa9b0d910#n530
+
+At the time of 8aefa9b0d910, info->severity was also used without
+initialization; this was fixed by 9f08a5d896ce ("PCI/DPC: Fix print
+AER status in DPC event handling").
+
+But I think the info->{id,error_dev_num} has been there since.
+
+Anyway, I added:
+
+  Fixes: 8aefa9b0d910 ("PCI/DPC: Print AER status in DPC event handling")
+
+> Otherwise absolutely makes sense.
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > ---
+> >  drivers/pci/pcie/dpc.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+> > index df42f15c9829..3daaf61c79c9 100644
+> > --- a/drivers/pci/pcie/dpc.c
+> > +++ b/drivers/pci/pcie/dpc.c
+> > @@ -258,7 +258,7 @@ static int dpc_get_aer_uncorrect_severity(struct pci_dev *dev,
+> >  void dpc_process_error(struct pci_dev *pdev)
+> >  {
+> >  	u16 cap = pdev->dpc_cap, status, source, reason, ext_reason;
+> > -	struct aer_err_info info;
+> > +	struct aer_err_info info = {};
+> >  
+> >  	pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
+> >  	pci_read_config_word(pdev, cap + PCI_EXP_DPC_SOURCE_ID, &source);
+> 
