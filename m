@@ -1,120 +1,91 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp2-g21.free.fr (smtp2-g21.free.fr [212.27.42.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DC8422B59D;
-	Wed, 21 May 2025 10:04:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D94C25A342
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 10:04:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.27.42.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747821891; cv=none; b=NQFb4GRVQyo08YyPAwyTWj3+pQFxHwtHNI3tGGQUBghb3hYu5vWYf+H0JCfNyUzMjJPrAiz7rk2gGnAtmJhh2XoyKvkaeGzyBhXEP2NTfE/8mN3hvtCdywuaWa6bhpuPc2h/noRDR3uZHrVy6lW33T7p/H67zL7SH7kPzwn7ZfA=
+	t=1747821894; cv=none; b=aplUBk/zRYNU/sVI7k8TNS9oMQ39HXQD5lCofEC5ginU4UcN8RfGZoqWeUMminJsS197uMaRLMxnP3CKQajoLSK9eFScK5qNDR5IJJhu+KHXLqPL7KO5D9zC+zrSrKzwYaGiSYzy3Mms4ufLlDY6rCy5GDTrChUcAl/5z3K7/mI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747821891; c=relaxed/simple;
-	bh=vS/+CTtAxwz4y5synzPvLNW2wyjb4MRW5uQRuO6Y8rk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BKR1L+MTSwQIW+Yp/NnIrcKqbDNnC4AUsPJGkFBqTOVzDWSSp3SBchPoitKCXsowmhQQSjDLqMbyV/bfYh0+CTD+b2wHwfjqNnFoJXgf57Et/8aLXv7D0dxcOxXdNxLvDV3kU9T4fOoifT00i6BYkcr0o1eV7eGyxMSI0g9YcHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EXDFqe+h; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EXDFqe+h"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747821889; x=1779357889;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=vS/+CTtAxwz4y5synzPvLNW2wyjb4MRW5uQRuO6Y8rk=;
-  b=EXDFqe+huKSq3+YzwunSOrBmWjzov53z75CG4jLZ/D42jXDIfg8h70rj
-   oTN/g+L+nSzozocrws/fwrxJPHpDmZm+irqq7N1JtvglZCSpJxhjWHne8
-   m1xUePiETAi3KG4TQfPNGcUWtWjMWcA0baD33uytOUzklNMSRbUWe/ntG
-   pcYMAbMjqdSVEiaKN6Vfi1B3rNUmjRnHgyZqriKEeOAeBTrr98vMMkEvT
-   la7BkRu4iQ+UHF2fP2Ei6fL94nr0JVtOo9OblZ1JKYMJJvEjCpgyrUUdQ
-   5h8IbMBmkl2zEs8zx3SmR7g+l/C4q2HGhrSW0a2YDPDRfVgc6QkIYBr/o
-   g==;
-X-CSE-ConnectionGUID: XFNIBfztRPiCbMHPC1Hv3w==
-X-CSE-MsgGUID: cxDjEG7wS3m35VCEFqBNHQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="72310778"
-X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
-   d="scan'208";a="72310778"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 03:04:48 -0700
-X-CSE-ConnectionGUID: OynbmfR/QG+ZTFFoHm4ydg==
-X-CSE-MsgGUID: nXHpVQeXTpuHGq8bWViLtA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
-   d="scan'208";a="170865893"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 03:04:46 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uHgJX-00000003a8o-1UET;
-	Wed, 21 May 2025 13:04:43 +0300
-Date: Wed, 21 May 2025 13:04:43 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, Akira Yokosawa <akiyks@gmail.com>,
-	linux-doc@vger.kernel.org,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Randy Dunlap <rdunlap@infradead.org>, linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/3] Some kernel-doc fixes
-Message-ID: <aC2lO7g_x6oTLYDA@smile.fi.intel.com>
-References: <cover.1747817887.git.mchehab+huawei@kernel.org>
+	s=arc-20240116; t=1747821894; c=relaxed/simple;
+	bh=g6CYVYXiOTMe5bUJ93aSGwjCppez3IhEMpBu48hcmSs=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K0k1+pEpaFIwx5x/wbloNjPHBBJ+KqsjklJk4F2u2BgAPjJ0F6RNKDqZPbs5bzL9u8KZ3d+YSr224p8WEWV8pWyq3GE8WE9IRRCXBgHj6rKPOeEDVSIr+8XGw5T0J7Y9mK3yDvjwyOfs7K+JmOt1OW4skWFCNdEMC/HXK+SBLic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=free.fr; spf=pass smtp.mailfrom=free.fr; arc=none smtp.client-ip=212.27.42.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=free.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=free.fr
+Received: from localhost (unknown [82.64.135.138])
+	by smtp2-g21.free.fr (Postfix) with ESMTP id 14B2F200401;
+	Wed, 21 May 2025 12:04:35 +0200 (CEST)
+Received: by localhost (Postfix, from userid 1502)
+	id 8BCBDC4D7; Wed, 21 May 2025 10:04:35 +0000 (GMT)
+Date: Wed, 21 May 2025 10:04:35 +0000
+From: Etienne Buira <etienne.buira@free.fr>
+To: Florian Fainelli <florian.fainelli@broadcom.com>,
+	bcm-kernel-feedback-list@broadcom.com,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+	Etienne Buira <etienne.buira@free.fr>,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] firmware/raspberrypi: raise timeout to 3s
+Message-ID: <aC2lM6xXCVK_3oWI@Z926fQmE5jqhFMgp6>
+Mail-Followup-To: Florian Fainelli <florian.fainelli@broadcom.com>,
+	bcm-kernel-feedback-list@broadcom.com,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+	Etienne Buira <etienne.buira@free.fr>,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <e5659e34-511c-4137-9ffe-152bb0777146@gmx.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <cover.1747817887.git.mchehab+huawei@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e5659e34-511c-4137-9ffe-152bb0777146@gmx.net>
 
-On Wed, May 21, 2025 at 11:02:12AM +0200, Mauro Carvalho Chehab wrote:
-> Hi Jon,
-> 
-> That's the third version of the kernel-doc fixup patch series.
-> 
-> It address the root cause why Sphinx logger was not working: there
-> was a call there for logger.verbose(). According with:
-> 
-> 	https://www.sphinx-doc.org/en/master/extdev/logging.html
-> 
-> This is a valid call, but it doesn't verbose messages. Instead, it is
-> crashing with modern Sphinx versions, causing the log to not work.
-> 
-> I got rid of it, replacing by logger.info().  I took the time to also
-> address an issue pointed by Andy: not having the same log message
-> placed everywhere. With such change, we can keep using Sphinx
-> logger (which produces colored messages) inside kernel-doc
-> classes.
-> 
-> With that, we have:
-> 
-> Patch 1:	makes Lore and kernel-doc ML receive patches related
-> 	to kernel-doc.py and get_abi.py.
-> Patch 2:	cleanup try/except logic and get rid of logger.verbose();
-> Patch 3:	fix a KeyError when trying to acess data from non-existing files;
-> 
-> If you test just patch 1 on the top of next-20250516, you'll see the
-> keyerror message (in red):
-> 
-> 	ERROR: Cannot find file ./drivers/gpio/gpiolib-acpi.c
-> 	ERROR: Cannot find file ./drivers/gpio/gpiolib-acpi.c
-> 	WARNING: kernel-doc './scripts/kernel-doc.py -rst -enable-lineno -export ./drivers/gpio/gpiolib-acpi.c' processing failed with: KeyError('./drivers/gpio/gpiolib-acpi.c')
-> 
-> And the script doesn't crash anymore. After patch 2, the try/except
-> warning gets replaced by a proper message:
-> 
-> 	ERROR: Cannot find file ./drivers/gpio/gpiolib-acpi.c
-> 	ERROR: Cannot find file ./drivers/gpio/gpiolib-acpi.c
-> 	WARNING: No kernel-doc for file ./drivers/gpio/gpiolib-acpi.c
+Raspberry firmware driver expected said firmware to answer by 1 second.
+However, some firmware versions are buggy and can take longer with
+RPI_FIRMWARE_NOTIFY_DISPLAY_DONE.
+[    2.861407] ------------[ cut here ]------------
+[    2.865512] Firmware transaction 0x00030066 timeout
 
-Sounds reasonable to me.
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Raising the timeout to 3 seconds (ought to be enough®) doesn't trigger
+timeouts anymore for me and proceeds to the next failure.
 
+Some details about firmware debugging are available here:
+Link: https://github.com/raspberrypi/firmware/issues/1970
+
+Signed-off-by: Etienne Buira <etienne.buira@free.fr>
+
+---
+v2: coding style
+v3: commit message
+
+Stefan, feel free to edit to your liking if needed, or even take
+ownership of such one-liner, that would not be stealing.
+
+ drivers/firmware/raspberrypi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/firmware/raspberrypi.c b/drivers/firmware/raspberrypi.c
+index 7ecde6921a0a..8c45a152e3ba 100644
+--- a/drivers/firmware/raspberrypi.c
++++ b/drivers/firmware/raspberrypi.c
+@@ -58,7 +58,7 @@ rpi_firmware_transaction(struct rpi_firmware *fw, u32 chan, u32 data)
+ 	reinit_completion(&fw->c);
+ 	ret = mbox_send_message(fw->chan, &message);
+ 	if (ret >= 0) {
+-		if (wait_for_completion_timeout(&fw->c, HZ)) {
++		if (wait_for_completion_timeout(&fw->c, 3 * HZ)) {
+ 			ret = 0;
+ 		} else {
+ 			ret = -ETIMEDOUT;
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.48.1
 
