@@ -1,144 +1,103 @@
-Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3E1778C9C
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 08:49:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D70A231852;
+	Wed, 21 May 2025 08:52:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747817364; cv=none; b=rLAbSZWXzMmi1k0UpGkLsYR8MSh/yZJ4Kj8QvC9hVOBXCgzp1bnfBX3EbXbEa9gNamBK6XPsRDH9Xv31OcUmG6jEazWR/Nvlf3ywKt4pj4++BraVv9i0mziPQi0FUH8pbYoWKwAv612A5/+P4iucWHICA62WiDrA0XheSo7ut+Y=
+	t=1747817545; cv=none; b=hD0scyzMfJpYkAbattROZoyTw5X4v7FCF0N1Fwfd+uagqaiRasKl2/ol3SXmgFp6RKtBAozFgO7m50yETJgxi3+OP/p83RRSDsYCCuOXtdzQF3iNlSEwEf91Uvg0rRWmYmPKQBYPGvRFdkDc24Va9cb1T6GJ+qBWXaqu1Hg3Pjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747817364; c=relaxed/simple;
-	bh=djYsEI8JRsXTX9qsb8/KZKWaE2mrKR6PoSxkoBoMKCc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EZgajz729I6ti5/AVb2xgAO99WciUUikbwPh5gN/Uk6cXQ4i9wTNCbwuzz9R+ckyRwqI/xg0+psrJcvA+7FUfWV8eMPAByWdXud+fcKRDmNWwavcMoi9UU1tazNWXy6bzdvo6wWSwyWUrn8uWXgZv0KnVPbbpDuLER1Suamr9+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=rVLO/KoG; arc=none smtp.client-ip=95.215.58.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="rVLO/KoG"
-Message-ID: <90b2e62f-cacc-49b2-acf7-3a33348e2210@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747817359;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lvM3TAtnOSwCpnCUaRauuHYgKEY/9dlWJw7rQvy5oeE=;
-	b=rVLO/KoGHcoJwmvcvlU5hyra8mCT8X7Lkj+eZDzMADglAuAoNGBxt/l/z4v+g75omreJhq
-	v/qINYh72YCX/+YTdC/ZZd3nPY9vd2naa7ZH0CbkjA4MdwukNEKuQJF0afHlTcUEbcikqo
-	AuwJ93jx2qiTF8AvukpniUeVXNRjKtA=
-Date: Wed, 21 May 2025 16:48:44 +0800
+	s=arc-20240116; t=1747817545; c=relaxed/simple;
+	bh=Z152zOcAeFLIEmJ/l13vR9/oYqKHzttST/4DofR9F9s=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=JdXDiTzKFcJW3KrPabQdVVo/TqvnB24C/kthtBcLnrFp+eg2dK4DufI/kI6O/D/DC15IRgHoIMADvW5a9Dm1OYfajIRUqeH6wtqNivNlFuya5bdvuJ0EMOiYmbfg3hgkHP7Et4CpvA8dHkpE5+pxDg+LQ1ikRhc0He1EOF0fLRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b2Q860q9kz6H7mn;
+	Wed, 21 May 2025 16:49:10 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id E8D9C14020A;
+	Wed, 21 May 2025 16:52:20 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 21 May
+ 2025 10:52:19 +0200
+Date: Wed, 21 May 2025 09:52:18 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: <linux-pci@vger.kernel.org>, Jon Pan-Doh <pandoh@google.com>, "Karolina
+ Stolarek" <karolina.stolarek@oracle.com>, Weinan Liu <wnliu@google.com>,
+	Martin Petersen <martin.petersen@oracle.com>, Ben Fuller
+	<ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, "Anil
+ Agrawal" <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, Ilpo
+ =?UTF-8?Q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Sathyanarayanan
+ Kuppuswamy" <sathyanarayanan.kuppuswamy@linux.intel.com>, Lukas Wunner
+	<lukas@wunner.de>, Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney"
+	<paulmck@kernel.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, "Oliver
+ O'Halloran" <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>, "Keith
+ Busch" <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>, Terry Bowman
+	<terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>, Dave Jiang
+	<dave.jiang@intel.com>, <linux-kernel@vger.kernel.org>,
+	<linuxppc-dev@lists.ozlabs.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+Subject: Re: [PATCH v7 01/17] PCI/DPC: Initialize aer_err_info before using
+ it
+Message-ID: <20250521095218.0000045d@huawei.com>
+In-Reply-To: <20250520215047.1350603-2-helgaas@kernel.org>
+References: <20250520215047.1350603-1-helgaas@kernel.org>
+	<20250520215047.1350603-2-helgaas@kernel.org>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 1/7] sched/fair: Add related data structure for task based
- throttle
-To: Aaron Lu <ziqianlu@bytedance.com>,
- Valentin Schneider <vschneid@redhat.com>, Ben Segall <bsegall@google.com>,
- K Prateek Nayak <kprateek.nayak@amd.com>,
- Peter Zijlstra <peterz@infradead.org>, Josh Don <joshdon@google.com>,
- Ingo Molnar <mingo@redhat.com>, Vincent Guittot
- <vincent.guittot@linaro.org>, Xi Wang <xii@google.com>
-Cc: linux-kernel@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>,
- Chuyi Zhou <zhouchuyi@bytedance.com>, Jan Kiszka <jan.kiszka@siemens.com>,
- Florian Bezdeka <florian.bezdeka@siemens.com>
-References: <20250520104110.3673059-1-ziqianlu@bytedance.com>
- <20250520104110.3673059-2-ziqianlu@bytedance.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Chengming Zhou <chengming.zhou@linux.dev>
-In-Reply-To: <20250520104110.3673059-2-ziqianlu@bytedance.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On 2025/5/20 18:41, Aaron Lu wrote:
-> From: Valentin Schneider <vschneid@redhat.com>
-> 
-> Add related data structures for this new throttle functionality.
-> 
-> Signed-off-by: Valentin Schneider <vschneid@redhat.com>
-> Signed-off-by: Aaron Lu <ziqianlu@bytedance.com>
+On Tue, 20 May 2025 16:50:18 -0500
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-Looks good to me.
+> From: Bjorn Helgaas <bhelgaas@google.com>
+>=20
+> Previously the struct aer_err_info "info" was allocated on the stack
+> without being initialized, so it contained junk except for the fields we
+> explicitly set later.
+>=20
+> Initialize "info" at declaration so it starts as all zeros.
+>=20
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> Tested-by: Krzysztof Wilczy=C5=84ski <kwilczynski@kernel.org>
+> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux=
+.intel.com>
 
-Reviewed-by: Chengming Zhou <chengming.zhou@linux.dev>
+I chased this through a bit and looks like at least some unset fields would
+result in garbage prints.  So maybe needs a fixes tag?
+info->tlp_header_valid is an easy one to follow as only set in some paths.
 
-Thanks!
-
+Otherwise absolutely makes sense.
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > ---
->   include/linux/sched.h |  4 ++++
->   kernel/sched/core.c   |  3 +++
->   kernel/sched/fair.c   | 12 ++++++++++++
->   kernel/sched/sched.h  |  2 ++
->   4 files changed, 21 insertions(+)
-> 
-> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> index b98195991031c..055f3782eeaee 100644
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -879,6 +879,10 @@ struct task_struct {
->   
->   #ifdef CONFIG_CGROUP_SCHED
->   	struct task_group		*sched_task_group;
-> +#ifdef CONFIG_CFS_BANDWIDTH
-> +	struct callback_head		sched_throttle_work;
-> +	struct list_head		throttle_node;
-> +#endif
->   #endif
->   
->   
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index bece0ba6f5b3a..b7ca7cefee54e 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -4499,6 +4499,9 @@ static void __sched_fork(unsigned long clone_flags, struct task_struct *p)
->   
->   #ifdef CONFIG_FAIR_GROUP_SCHED
->   	p->se.cfs_rq			= NULL;
-> +#ifdef CONFIG_CFS_BANDWIDTH
-> +	init_cfs_throttle_work(p);
-> +#endif
->   #endif
->   
->   #ifdef CONFIG_SCHEDSTATS
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index eb5a2572b4f8b..75bf6186a5137 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -5825,6 +5825,18 @@ static inline int throttled_lb_pair(struct task_group *tg,
->   	       throttled_hierarchy(dest_cfs_rq);
->   }
->   
-> +static void throttle_cfs_rq_work(struct callback_head *work)
-> +{
-> +}
-> +
-> +void init_cfs_throttle_work(struct task_struct *p)
-> +{
-> +	init_task_work(&p->sched_throttle_work, throttle_cfs_rq_work);
-> +	/* Protect against double add, see throttle_cfs_rq() and throttle_cfs_rq_work() */
-> +	p->sched_throttle_work.next = &p->sched_throttle_work;
-> +	INIT_LIST_HEAD(&p->throttle_node);
-> +}
-> +
->   static int tg_unthrottle_up(struct task_group *tg, void *data)
->   {
->   	struct rq *rq = data;
-> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> index c5a6a503eb6de..921527327f107 100644
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -2703,6 +2703,8 @@ extern bool sched_rt_bandwidth_account(struct rt_rq *rt_rq);
->   
->   extern void init_dl_entity(struct sched_dl_entity *dl_se);
->   
-> +extern void init_cfs_throttle_work(struct task_struct *p);
-> +
->   #define BW_SHIFT		20
->   #define BW_UNIT			(1 << BW_SHIFT)
->   #define RATIO_SHIFT		8
+>  drivers/pci/pcie/dpc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+> index df42f15c9829..3daaf61c79c9 100644
+> --- a/drivers/pci/pcie/dpc.c
+> +++ b/drivers/pci/pcie/dpc.c
+> @@ -258,7 +258,7 @@ static int dpc_get_aer_uncorrect_severity(struct pci_=
+dev *dev,
+>  void dpc_process_error(struct pci_dev *pdev)
+>  {
+>  	u16 cap =3D pdev->dpc_cap, status, source, reason, ext_reason;
+> -	struct aer_err_info info;
+> +	struct aer_err_info info =3D {};
+> =20
+>  	pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
+>  	pci_read_config_word(pdev, cap + PCI_EXP_DPC_SOURCE_ID, &source);
+
