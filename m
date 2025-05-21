@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F37823816F;
-	Wed, 21 May 2025 09:04:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9460B230268;
+	Wed, 21 May 2025 09:05:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747818257; cv=none; b=sFvyePN8GicoJ1JYlcmH9FJ6884NljeVHBRTOd6/p294SQB2P+WT4P+2QnlbQhF1/YWYHqRTh2LV+tMVxkv26XOLOV33hEsbRcMwtFvQQi++BOwaFZ41UMtoGbZ82uCO+hXoAPR9rWH+R7a5Ao5sRuQVGRW1peHgjeem67J0UH8=
+	t=1747818315; cv=none; b=WnC6BKPGwwSWHGULHT8Fq1PbIvxnYn1yuF46IrQkZXXFbyHr/XNLxbz49UJy4QfWbAFUy/Ui0MQ0cqexdmc7LaOs0VnRjDHtV466HnXsIgZTnqqtF/4fS6xVmEjZiXfu2+jM5+Guoer8koLru69jT0KNH5q641M241vGip7jBxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747818257; c=relaxed/simple;
-	bh=/OVUEBvGvRPAZGd3SzU8JAylUHgP7ABuQxE9pS/k7ZY=;
+	s=arc-20240116; t=1747818315; c=relaxed/simple;
+	bh=mmqUXpMc6TlkAa2xMaHSr9ct20LHhndHE4Eb2UUfBzc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NEQkDFcilDybBcb/ZP0boDDfudt8kTprXi0Q6NrK1Glgn/SWDGySCuEK1McDPB9x0+E1cNgD5DM2mF7KX9JY/A0RlXASNlvyuFfuV/oZ9CElubssCd2CFeh+d21G5Q5KV0vP8XwMw0+HYevT+PpHBwPAfe+VV8S1TVwaPlYYADM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iAX9/Ubb; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=jSALmZ3tWHdb8jXO30LCKXypNX1j10mqIPaxHCDkOBhq7GxNbYPPO3eZ+46eyIVOmXVOrQezRb5fwseQjUbunRS1Q0UvABhMHCrTZjOeJR8e+m8Emt4Vt5jerWEtrssuISe0jKofaeLk8HSuYYI52NYkMPyqa6nC4kEbO4atA4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q2+GyFMd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iAX9/Ubb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DDD3C4CEE4;
-	Wed, 21 May 2025 09:04:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q2+GyFMd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A326AC4CEE4;
+	Wed, 21 May 2025 09:05:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747818256;
-	bh=/OVUEBvGvRPAZGd3SzU8JAylUHgP7ABuQxE9pS/k7ZY=;
+	s=k20201202; t=1747818315;
+	bh=mmqUXpMc6TlkAa2xMaHSr9ct20LHhndHE4Eb2UUfBzc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iAX9/Ubb83+qxDDSeFV7H0dd+Xne8eZrKi/rhRD5AO7cU6QO73W+kSVbaO+jsX2kD
-	 S8AOnhpHbgwVppIvj9a5oMTy+M2sTJInqMi2gy1WbxsQJ4eLoVMkyCmjLexnsdLetz
-	 Q5OEdslcsSLXO1lMxNTxMjol3RF4U37NL8v12My3fpexungpEjaXY+eS++BF0BHBj5
-	 igHZskp/HxLAvbF72Yk8qTstafdFX04GTI20vcKOOCo10prH2nv6MHZm0yB8EkQZPY
-	 FGeMq7ov1dxkwDMBLCUUbRkYU4saHCYTPIcOdQPbh2KfkL7AqVg/nbmE4vPjYM657V
-	 APPiGas4xR3+A==
-Date: Wed, 21 May 2025 11:04:14 +0200
+	b=q2+GyFMdiogbhO42/5OOkH40tI5wvQI9T06584b2BHrNgHlQmUkYiLgBZIF7Xiz0M
+	 QJsve4Q10lDnn4j3l8as/pVpQ/E20ULk5JXcrve37azofc+3a2Tczi7o83Qyt2dTQd
+	 71JIsoNoo8Jw1AJ7UgFZj8XGUTWypzyfT4oOCorE4ByJWtRsV3jRtd1YkcclTuZPKH
+	 URhZRdN9UG1N5bjYLbDAcx/iSm7cx+9u97T28G0JR/M7VCewzOj3TJ/dNqLZLMXtZy
+	 zv/k26YX40CeNEBhi7ng7rI2qnJvaor4fiO7Ke0q9KK1hIhBxPMZ1SbbDgTHb0SIbv
+	 hC2weHWwOXQww==
+Date: Wed, 21 May 2025 11:05:12 +0200
 From: Krzysztof Kozlowski <krzk@kernel.org>
 To: Han Gao <rabenda.cn@gmail.com>
 Cc: devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, 
@@ -36,11 +36,11 @@ Cc: devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>,
 	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
 	Thomas Bonnefille <thomas.bonnefille@bootlin.com>, Guo Ren <guoren@kernel.org>, Chao Wei <chao.wei@sophgo.com>, 
 	sophgo@lists.linux.dev, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/4] dt-bindings: riscv: add Sophgo SG2042_EVB_V2.0
- bindings
-Message-ID: <20250521-strange-ammonite-of-domination-b5e4aa@kuoka>
+Subject: Re: [PATCH v2 4/4] riscv: dts: sophgo: add Sophgo SG2042_EVB_V2.0
+ board device tree
+Message-ID: <20250521-cream-pogona-of-awe-b61cf4@kuoka>
 References: <cover.1747231254.git.rabenda.cn@gmail.com>
- <dddabd3bb2c718a506d2b6669a8252cfe3872fa9.1747231254.git.rabenda.cn@gmail.com>
+ <53a9a794641af697be9170e6d0af464a39d862ae.1747231254.git.rabenda.cn@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,29 +49,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <dddabd3bb2c718a506d2b6669a8252cfe3872fa9.1747231254.git.rabenda.cn@gmail.com>
+In-Reply-To: <53a9a794641af697be9170e6d0af464a39d862ae.1747231254.git.rabenda.cn@gmail.com>
 
-On Wed, May 14, 2025 at 10:09:01PM GMT, Han Gao wrote:
-> Add DT binding documentation for the Sophgo SG2042_EVB_V2.0 board [1].
-> 
-> Link: https://github.com/sophgo/sophgo-hardware/tree/master/SG2042/SG2042-x4-EVB [1]
-> 
-> Signed-off-by: Han Gao <rabenda.cn@gmail.com>
-> ---
->  Documentation/devicetree/bindings/riscv/sophgo.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/riscv/sophgo.yaml b/Documentation/devicetree/bindings/riscv/sophgo.yaml
-> index 6c82f89b56ca..cbfd07cc053d 100644
-> --- a/Documentation/devicetree/bindings/riscv/sophgo.yaml
-> +++ b/Documentation/devicetree/bindings/riscv/sophgo.yaml
-> @@ -35,6 +35,7 @@ properties:
->            - enum:
->                - milkv,pioneer
->                - sophgo,sg2042-evb-v1
-> +              - sophgo,sg2042-evb-v2
+On Wed, May 14, 2025 at 10:09:02PM GMT, Han Gao wrote:
+> +&uart0 {
+> +	pinctrl-0 = <&uart0_cfg>;
+> +	pinctrl-names = "default";
+> +	status = "okay";
+> +};
+> +
+> +/ {
 
-Comment from v1 looks ignored. Squash the patch.
+Why do you have two root nodes in a file? That's not the expected
+syntax. Really odd/unusal.
 
 Best regards,
 Krzysztof
