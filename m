@@ -1,140 +1,97 @@
-Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 735D1267B1F
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 13:23:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.175
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33FA74CB5B;
+	Wed, 21 May 2025 13:24:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747833801; cv=none; b=ETyIZxBQinwUOnN+gQh54GG5X83gtE+BQ4oEUzaZkUJsHSf8GTSvAGP+Kk0k41DKRoFH+O162x0n7ShJGCkJdBCHHLN/D+esimfbWYHiHZiUbGYEcuG+VGEim334s+W5waz6Ii3b2hxmljzy4ByuaeVgSEvMo9bzYqReNpo3apo=
+	t=1747833848; cv=none; b=hOgxILDvxMn1m4OwSvoN+GYva74iTj9KdLYNo/WR83R2zKj+24mRo1fl9jJfxy/1eNSvoNKf2e5eSKv9GXNmP43dkNUl1B4H+jkxNryxsIIRMC44CD5f1bBdA7MAQztr9Ekg7mPe4tHgjqpV/qcwpBcBJSHpVeMxUj6RcJ3xLLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747833801; c=relaxed/simple;
-	bh=w73AQw8+g5fBpedRVPUGGRopTEwJA46061csugvI/zo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rQdxme4bbsdSAV3BIRsaXo8EC9FhxIrxcVZtN5Gd4UWB/RpMA05rXkGeYOksS3ai/kIxIcy5d8jIt6LicnqBYvmIDZwrO70ypoZf4wv9VXhEsI5G4EjogoRn/tcfP6aXUoJcv27DiB3JbabP0TXzr313dvETJ+rExigYND+K4iM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=lqS5gWCU; arc=none smtp.client-ip=209.85.167.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1747833848; c=relaxed/simple;
+	bh=CUGajLlg1XnQmwwrLHHWnGnjQ2xDxF9As14gJBZZZVs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=FWXsrDZmYQEdPlSmCifYFqBu6gZ5jpxdxnp33AqI+2/3VG2OH3zUDP/9cqIxm/820pV7fdd9mliV1QsiQFCqlp8ZOJd/tMZgrQIDeYPUaYjyUDBasoyRtivmiQWZ25Bwl2twyi1mzip2Flaf9xYVBgNTTbTE+CxnNNp33c6sCeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=oKXaKvr8 reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="lqS5gWCU"
-Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-3fe83c8cbdbso2458360b6e.3
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 06:23:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747833797; x=1748438597; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=73+Ub5D7zbTT7WbMLp31ncO7kWmhvFAqTPjsH0ZsZhs=;
-        b=lqS5gWCUR4SPY9ewYeFIUWBdlTIFTKDNqHLML7XSuNWvilvicm29/SevLvdA7rPT/v
-         /o2OIM2fTYfIYmqRkhHgICFHkKzk9ho+Hqzbqrcg0+zvx7ws3z/fVY06kfWFqJ4lfEef
-         tyqeGx+qF2u10PgiGo72FzrcubSnhuzw2C9E9xh5XjkNR55z/6+NUMGha8ihdpteGHLB
-         Q6aEj/UTi9mqop2itFHRJt6jMr8GuigOFgHfrGnUimRYB38kP9lhoGyhEm4iksDuC9Ql
-         Bz3H4MxvnYUnpiPCjHyNKJ5uYVhRX55osI+N2whlZLToTW7PNIocZaesSR9h7Ha+9+MX
-         zhBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747833797; x=1748438597;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=73+Ub5D7zbTT7WbMLp31ncO7kWmhvFAqTPjsH0ZsZhs=;
-        b=ZTxP9VNa43Yt2X0EKMtcqmLGnW73H6PlohmuRuUOSqD4cshIxwEySHFtf0KKLCif8Q
-         C1rQFzkkpCQYYJBfUj2btnI8zRGBwdlwDmB1MBejgtzfva/+ZEOlM1HNVmVUHU9isjzl
-         wZUIIBoR9UtHiLH/LDCMTSH3o2P3C5lrAq2Hh4B/io0WcQ+XlcdsYxZPG9/di2gfyNMI
-         VhoBkrokmYlCeCCLstD/XAcgXpiC3FCUe4sw/rQvJkugQ+97HvfoYQDztxM8JXVjt5Uy
-         NhxdaXoadfHvtMhUBzUK0IXiN2Vk3tdrqMQAmAnEQARxQJEQg0YBI8qMAA6aqeTbuLyT
-         mqTw==
-X-Forwarded-Encrypted: i=1; AJvYcCULlLdPS8JTww4RLDohQVyuES5JzwifEU4ezUICWYNljtTKz+5ijAv8ZO0wNbvehcdc/ECWqK+P0KFL9Kg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOB+K+3lo+u1lYoc5Jcw+lmNZZe5DLo8OVWY4BzhZX5jfXAXa3
-	qfNUSPDPaBRY7LsL3/xsobE7Df07027NUj29hXy/4nvJImYzLQbhFztxCnq8Qzl2bLo=
-X-Gm-Gg: ASbGnctz8iO/biu1EPNphRxenzukXQDP5oph35ybyD/UDwPzh8+EHj0PxbggQi9PijW
-	lyIke+YYYGmzT8ghHVSqczTkFYE2EHI376m53k14nUZtLl6dje/98or6u/OKUZjqfdgBikGDpzA
-	Ecb/IKNbpNo3qeScthgC1RHaj+g6ZNP4Jn7EJ60KQkisNhGU4CG/u/RKr3qiY2rVSwdiK5RCGqt
-	WKLzNERFQDIZ0nNm9f1VNPD/tQtndu5D+l9P4OC0KRLGrFPjZ6B6Yy3PkQh422j5oVFAUlaQnCV
-	btOCHJn+3F5L2aC4vFZXBEAjV+lHhbKJcKyQ7hyjiSoFjL4kKhbdi50jRLRocWhD58IYMg+w6UL
-	ZeH05M3IOTxRyyJ34SlyZFBnsww==
-X-Google-Smtp-Source: AGHT+IHvmT2xe5UfsGuH7VhuaUgi4gdIlcSV03RlKzpEU+TwayEelqHe5C4jtIcDiTOXtQ/wc9WNfw==
-X-Received: by 2002:a05:6808:338b:b0:403:3521:2475 with SMTP id 5614622812f47-404da826d65mr13000543b6e.37.1747833797424;
-        Wed, 21 May 2025 06:23:17 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:d77b:6acc:2ad1:8ff? ([2600:8803:e7e4:1d00:d77b:6acc:2ad1:8ff])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-404d98060ecsm2154491b6e.27.2025.05.21.06.23.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 May 2025 06:23:16 -0700 (PDT)
-Message-ID: <dc9c370c-e1e7-4ef9-8738-e6ac8887ee61@baylibre.com>
-Date: Wed, 21 May 2025 08:23:14 -0500
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="oKXaKvr8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=a5dNVSXt6TNtSMCQgez6UuCPV4F7hGDEi5COSwRV7AM=; b=o
+	KXaKvr8rsNAkC6uK2CzFIoAoqgTfq48LiP97liQo0wbw6joAqNoOQiu/dIS6FejD
+	dAT4HSnyXjap1c4MuChMhgyueg/8KWdY2aUzczisEvh6vx0AfiT1pB/wchAWP2v+
+	doOJRqIBAfed9G7v07rAfbYipIQn4lxe7tyGOQDLps=
+Received: from 00107082$163.com ( [111.35.189.95] ) by
+ ajax-webmail-wmsvr-40-135 (Coremail) ; Wed, 21 May 2025 21:23:45 +0800
+ (CST)
+Date: Wed, 21 May 2025 21:23:45 +0800 (CST)
+From: "David Wang" <00107082@163.com>
+To: "Mathias Nyman" <mathias.nyman@intel.com>
+Cc: gregkh@linuxfoundation.org, oneukum@suse.com, stern@rowland.harvard.edu,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] USB: core: add a memory pool to urb caching
+ host-controller private data
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
+ Copyright (c) 2002-2025 www.mailtech.cn 163com
+In-Reply-To: <e6f782db-5818-4d6c-99e0-bcf300fc5b4f@intel.com>
+References: <20250517083819.6127-1-00107082@163.com>
+ <e6f782db-5818-4d6c-99e0-bcf300fc5b4f@intel.com>
+X-NTES-SC: AL_Qu2fBfSYvEAp4yiYYukZnEYQheY4XMKyuPkg1YJXOp80hiXs5y0de1tdNELQyv2tARCglDysXjJszPZVeZNJZIzyTXUGfkExsDiBt9Uqo4Jx
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] pwm: axi-pwmgen: add support for external clock
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Michael Hennerich <michael.hennerich@analog.com>,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Trevor Gamblin <tgamblin@baylibre.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-pwm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250520-pwm-axi-pwmgen-add-external-clock-v1-0-6cd63cc001c8@baylibre.com>
- <20250520-pwm-axi-pwmgen-add-external-clock-v1-3-6cd63cc001c8@baylibre.com>
- <20250521-nostalgic-pretty-hedgehog-d08a77@kuoka>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <20250521-nostalgic-pretty-hedgehog-d08a77@kuoka>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Message-ID: <49228bf7.a1d1.196f303aa15.Coremail.00107082@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:hygvCgD3fxLi0y1oGPsJAA--.25514W
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/1tbiqBBUqmgtygNpkAAFs2
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-On 5/21/25 5:10 AM, Krzysztof Kozlowski wrote:
-> On Tue, May 20, 2025 at 04:00:46PM GMT, David Lechner wrote:
->> Add support for external clock to the AXI PWM generator driver.
->>
->> In most cases, there is a separate external clock that drives the PWM
->> output separate from the peripheral clock. This allows enabling both
->> clocks.
->>
->> Signed-off-by: David Lechner <dlechner@baylibre.com>
->> ---
->>  drivers/pwm/pwm-axi-pwmgen.c | 23 ++++++++++++++++++++---
->>  1 file changed, 20 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/pwm/pwm-axi-pwmgen.c b/drivers/pwm/pwm-axi-pwmgen.c
->> index 4337c8f5acf055fc87dc134f2a70b99b0cb5ede6..67992a7561ec0440b1c1fa327f844a0602872771 100644
->> --- a/drivers/pwm/pwm-axi-pwmgen.c
->> +++ b/drivers/pwm/pwm-axi-pwmgen.c
->> @@ -280,9 +280,26 @@ static int axi_pwmgen_probe(struct platform_device *pdev)
->>  	ddata = pwmchip_get_drvdata(chip);
->>  	ddata->regmap = regmap;
->>  
->> -	clk = devm_clk_get_enabled(dev, NULL);
->> -	if (IS_ERR(clk))
->> -		return dev_err_probe(dev, PTR_ERR(clk), "failed to get clock\n");
->> +	/* When clock-names is present, there is a separate ext clock. */
->> +	if (device_property_present(dev, "clock-names")) {
-> 
-> No. List is ordered, you do not need such dance at all.
-
-I should have added more to the comment here. This is also needed for
-backwards compatibility where only what should be the "ext" clock is
-given as clocks = <&spi_clk>; and the AXI clock was missing.
-
-> 
->> +		struct clk *axi_clk;
->> +
->> +		axi_clk = devm_clk_get_enabled(dev, "axi");
->> +		if (IS_ERR(axi_clk))
->> +			return dev_err_probe(dev, PTR_ERR(axi_clk),
->> +					     "failed to get axi clock\n");
->> +
->> +		clk = devm_clk_get_enabled(dev, "ext");
-> 
-> So that's messing the order, which confirms my question from the
-> binding.
-> 
-> No. List has a strict order, you cannot change it just because you want
-> to add optional clock.
-> 
-> Best regards,
-> Krzysztof
-> 
-
+CkF0IDIwMjUtMDUtMjEgMjA6Mjg6MTcsICJNYXRoaWFzIE55bWFuIiA8bWF0aGlhcy5ueW1hbkBp
+bnRlbC5jb20+IHdyb3RlOgo+T24gMTcuNS4yMDI1IDExLjM4LCBEYXZpZCBXYW5nIHdyb3RlOgo+
+PiAtLS0KPj4gQ2hhbmdlcyBzaW5jZSB2MjoKPj4gMS4gYWN0aXZhdCB0aGUgcG9vbCBvbmx5IHdo
+ZW4gdGhlIHVyYiBvYmplY3QgaXMgY3JlYXRlZCB2aWEKPj4gdXNiX2FsbG9jX3VyYigpCj4+IFRo
+YW5rcyB0byBPbGl2ZXIgTmV1a3VtIDxvbmV1a3VtQHN1c2UuY29tPidzIHJldmlldy4KPj4gLS0t
+Cj4+IFVSQiBvYmplY3RzIGhhdmUgbG9uZyBsaWZlY3ljbGUsIGFuIHVyYiBjYW4gYmUgcmV1c2Vk
+IGJldHdlZW4KPj4gc3VibWl0IGxvb3BzOyBUaGUgcHJpdmF0ZSBkYXRhIG5lZWRlZCBieSBzb21l
+IGhvc3QgY29udHJvbGxlcgo+PiBoYXMgdmVyeSBzaG9ydCBsaWZlY3ljbGUsIHRoZSBtZW1vcnkg
+aXMgYWxsb2NlZCB3aGVuIGVucXVldWUsIGFuZAo+PiByZWxlYXNlZCB3aGVuIGRlcXVldWUuIEZv
+ciBleGFtcGxlLCBvbiBhIHN5c3RlbSB3aXRoIHhoY2ksIGluCj4+IHhoY2lfdXJiX2VucXVldWU6
+Cj4+IFVzaW5nIGEgVVNCIHdlYmNhbSB3b3VsZCBoYXZlIH4yNTAvcyBtZW1vcnkgYWxsb2NhdGlv
+bjsKPj4gVXNpbmcgYSBVU0IgbWljIHdvdWxkIGhhdmUgfjFLL3MgbWVtb3J5IGFsbG9jYXRpb247
+Cj4+IAo+PiBIaWdoIGZyZXF1ZW50IGFsbG9jYXRpb25zIGZvciBob3N0LWNvbnRyb2xsZXIgcHJp
+dmF0ZSBkYXRhIGNhbiBiZQo+PiBhdm9pZGVkIGlmIHVyYiB0YWtlIG92ZXIgdGhlIG93bmVyc2hp
+cCBvZiBtZW1vcnksIHRoZSBtZW1vcnkgdGhlbiBzaGFyZXMKPj4gdGhlIGxvbmdlciBsaWZlY3lj
+bGUgd2l0aCB1cmIgb2JqZWN0cy4KPj4gCj4+IEFkZCBhIG1lbXBvb2wgdG8gdXJiIGZvciBoY3By
+aXYgdXNhZ2UsIHRoZSBtZW1wb29sIG9ubHkgaG9sZHMgb25lIGJsb2NrCj4+IG9mIG1lbW9yeSBh
+bmQgZ3Jvd3Mgd2hlbiBsYXJnZXIgc2l6ZSBpcyByZXF1ZXN0ZWQuCj4+IAo+PiBUaGUgbWVtcG9v
+bCBpcyBhY3RpdmF0ZWQgb25seSB3aGVuIHRoZSBVUkIgb2JqZWN0IGlzIGNyZWF0ZWQgdmlhCj4+
+IHVzYl9hbGxvY191cmIoKSBpbiBjYXNlIHNvbWUgZHJpdmVycyBjcmVhdGUgYSBVUkIgb2JqZWN0
+IGJ5IG90aGVyCj4+IG1lYW5zIGFuZCBtYW5hZ2UgaXQgbGlmZWN5Y2xlIHdpdGhvdXQgY29ycmVz
+cG9uZGluZyB1c2JfZnJlZV91cmIuCj4KPldvbid0IHRoaXMgc3RpbGwgYWxsb2NhdGUgYSBsb3Qg
+b2YgdW5uZWNlc3NhcnkgbWVtb3J5IGZvciB0aGUgcm9vdGh1YiB1cmJzPwo+aS5lLiB0aGUgb25l
+cyBxdWV1ZWQgd2l0aCByaF91cmJfZW5xdWV1ZShoY2QsIHVyYikuCj5UaGUgaG9zdCBkcml2ZXJz
+IGRvbid0IHVzZSB0aGUgdXJiLT5oY3ByaXYgb2YgdGhvc2UgVVJCcy4KPgpUaGUgbWVtcG9vbCBz
+bG90IGlzIGFsbG9jZWQgb24gZGVtYW5kIHdoZW4gaGNkIHJlcXVlc3QgcHJpdmF0ZSBkYXRhIHdp
+dGggaXRzIHVyYi4KSWYgYSB1cmIgaXMgIGV2ZXIgdXNlZCBieSBoY2QgYW5kIHRoZSAgaGNkIHJl
+cXVlc3RzIHByaXZhdGUgZGF0YSB3aXRoIGl0LCBhICBtZW1vcnkgd291bGQgYmUgYWxsb2NlZAph
+bmQgdGhpcyBtZW1vcnkgd2lsbCBub3QgYmUgcmVsZWFzZWQgdW50aWwgdGhlIHVyYiBpcyBkZXN0
+cm95ZWQuCgpJZiB0aG9zZSBVUkIga2VlcHMgYmVpbmcgcmV1c2VkLCB0aGFuIHRoZSBtZW1wb29s
+IHNsb3Qgd2l0aGluIGl0IGNhbiBiZSByZXVzZWQgYnkgaGNkcyB3aGljaCBnZXQgaG9sZCBvbiBp
+dC4KCkFuZCB5ZXMsIGl0IGEgVVJCIGlzIHVzZWQgb25seSBvbmNlIG9yIHVzZWQgdmVyeSB1bmZy
+ZXF1ZW50bHksIGFuZCBoY2QgbmVlZHMgcHJpdmF0ZSBkYXRhIHdpdGggaXQsIHRoZSBtZW1wb29s
+CnNsb3Qgd291bGQgYmUgYWxsb2NlZCB3aXRoIGl0IGFuZCB3b3VsZCBiZSBhIHZlcnkgdXNlbGVz
+cyBtZW1wb29sIHNsb3QsIHdhc3RpbmcgbWVtb3J5LgoKPlRoaXMgd291bGQgYmUgdGhlIHJvb3Ro
+dWIgc3RhdHVzIFVSQiwgYW5kIGV2ZXJ5IGh1YiByZXF1ZXN0IHNlbnQKPmR1cmluZyBkZXZpY2Ug
+ZW51bWVyYXRpb24gZm9yIGRldmljZXMgY29ubmVjdGVkIHRvIHRoZSByb290aHViLgoKPgo+SXMg
+dGhpcyB3aG9sZSBVUkIgaGNwcml2IG1lbXBvb2wgYWRkaXRpb24gYW4gYWN0dWFsIGlzc3VlIHRo
+YXQgbmVlZHMgZml4aW5nPwoKTk8sIG5vdCBhbiBpc3N1ZSwganVzdCBtZWFudCB0byBhdm9pZCBt
+ZW1vcnkgYWxsb2NhdGlvbnMsIGxvdHMgb2YgYWxsb2NhdGlvbiwgdG8gdGhlb3JldGljYWxseSAg
+aW1wcm92ZSB0aGluZ3MuLgoKPgo+SWYgeWVzIHRoZW4gSSBzdGlsbCB0aGluayBpdCdzIGJldHRl
+ciB0byBkbyBpdCBpbiB0aGUgaG9zdCBkcml2ZXIgbGlrZSBJCj5kZXNjcmliZWQgZWFybGllci4g
+SSBkb24ndCB0aGluayBpdCB3aWxsIGJlIHRvbyBjb21wbGV4Cj4KPlRoYW5rcwo+LU1hdGhpYXMK
+Pgo+Cg==
