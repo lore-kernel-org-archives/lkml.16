@@ -1,113 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 399DA1624CE;
-	Wed, 21 May 2025 22:59:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4B2223A9BD;
+	Wed, 21 May 2025 22:59:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747868384; cv=none; b=T3ngtZgNRSbhqxPOdoLz3Qv9vHaVKP8uBEMjmpAylWuDJ9r2XWb9JKNrvPft1HnuEms8oJcaN/d1ZmXYIkgWGZ/iiiM897zAf1DeyWYHkofl+CO2sGr6J3ABSm5sv3yosWD4Kb3m4nRG3hXDSCvyuNC66Qfokm3pzmrSZwqqFYY=
+	t=1747868398; cv=none; b=tx4Sc+0LQn35NY8Qn4us6i8LW3joJtBJVOzCUawRxmWDxjmEvnd9RWIRlG2hKpXLS+rcbTcs4PDrtgzfZBMqnmNhpCxOgtOsF4RJzDwwBMOeViH9OtyLR6sFVYebvrAUnzppvr1YxFQ+P/mt7A1YPwkOCYVQIx25HExPJXj+6u0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747868384; c=relaxed/simple;
-	bh=IbhrjqjCd+IL+OzZrKr4UCUXAEgx35sVZsX2gaP8Cs8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=o0iWlu665pQXpxfxEMxDIg4Mg1cHt1c6e/f/v2d4ZSrk7O6zMNUG9B/5bL5UstfBhmzTpcLKMntMQiRN87KG8QUE3kG6uH2czZs0nGT1lseF2w3aFMc381m8p6DC4JbqQv4uVPf4Lh02Fn6e6bm3j1168drl+g/eA3cFHuJGmI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iazKkXCX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747868398; c=relaxed/simple;
+	bh=1pDOZFHjqohmQvtcZYTUSMLO5Xu1D0EF/otyNwuG2/8=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=iEQoodNk5urCxrJ+AezRODc06WSdraL0d5axy6OXLh2qXx7HOrzYNpWS9fnLRP6usTqH5pEQ/yrDGnslTpP0565zVCpUg5gah6F9INO6HnY379sbMGC5T68ZmNTvjObo0G2L5qJY0lza6L+uYO4KYXgYENxRmbn8a4EknfrBfEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C8hbG8Nd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iazKkXCX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7092BC4CEE4;
-	Wed, 21 May 2025 22:59:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C8hbG8Nd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5389AC4CEE4;
+	Wed, 21 May 2025 22:59:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747868383;
-	bh=IbhrjqjCd+IL+OzZrKr4UCUXAEgx35sVZsX2gaP8Cs8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=iazKkXCXaj/wq12Dr4QVfxGACmZ2mHC0jptz6htAaLWZf9BN+4m5ku+D+0PA8AemS
-	 B9ycUgm/A7JPDBgVLs+RIf3beXTuqVbQrIWcQbNPP2mhgdmXQnsToMEqxmQkLFo4mc
-	 Sxiu/jdiTMhKHTjeRcrzen6HOsu1AdPAri+wB5TPB85CzPopbBUZyT+BQNjaz3LjF5
-	 JD6VLT4AfBZJFQPGJtJwQJuQbx1YlTPUWSEnoTAAhJyX4thfIbsgQGlf92hrqUDcAK
-	 GtmjihJFKjDmOlHGMBPLgKMHKcgemgh9+R0Ihwj/HxQip7+fGb3HKT8BGlWn8EiKWy
-	 igNF5NhEiqbzw==
-Date: Wed, 21 May 2025 17:59:42 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>,
-	Karolina Stolarek <karolina.stolarek@oracle.com>,
-	Weinan Liu <wnliu@google.com>,
-	Martin Petersen <martin.petersen@oracle.com>,
-	Ben Fuller <ben.fuller@oracle.com>,
-	Drew Walton <drewwalton@microsoft.com>,
-	Anil Agrawal <anilagrawal@meta.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Lukas Wunner <lukas@wunner.de>, Sargun Dhillon <sargun@meta.com>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Kai-Heng Feng <kaihengf@nvidia.com>,
-	Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
-	Terry Bowman <terry.bowman@amd.com>,
-	Shiju Jose <shiju.jose@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-Subject: Re: [PATCH v7 17/17] PCI/AER: Add sysfs attributes for log ratelimits
-Message-ID: <20250521225942.GA1452275@bhelgaas>
+	s=k20201202; t=1747868397;
+	bh=1pDOZFHjqohmQvtcZYTUSMLO5Xu1D0EF/otyNwuG2/8=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=C8hbG8NdIYHMaQkhSt+ODkpOS3n2t34w/Noz22f873GYbvJnFARDu74/W9XAZr8ol
+	 xlUB0gT66R1cMZUCYL67+fPgUldaHlsriJoDZ1Xw4VIOJ3FmgvXuoJFz3xG9LDRuJr
+	 iUFBbB3F5VtsiQdTqugShRjoz8DM4udDrbXxFX7191bwijGY9RrRkH6RnV1q9eClBN
+	 0xEsolnfADuTOq625aEj+dKPLxQ8KCUcVkL7vSZadm1R6hzMSXc5Mq3LmwOWyermR7
+	 mYsN9RNZGvFy0quHCyXj7qrFYqKyNchkWY/QFofNJzdM8CkFuy+Vi92Lvz8iR3TjxD
+	 np/teuhwwHhbQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33D0E380CEEF;
+	Wed, 21 May 2025 23:00:34 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250521114600.00007010@huawei.com>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v2 net 0/2] There are some bugfix for hibmcge driver
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174786843300.2308458.2867018455441520141.git-patchwork-notify@kernel.org>
+Date: Wed, 21 May 2025 23:00:33 +0000
+References: <20250517095828.1763126-1-shaojijie@huawei.com>
+In-Reply-To: <20250517095828.1763126-1-shaojijie@huawei.com>
+To: Jijie Shao <shaojijie@huawei.com>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, andrew+netdev@lunn.ch, horms@kernel.org,
+ shenjian15@huawei.com, wangpeiyang1@huawei.com, liuyonglong@huawei.com,
+ chenhao418@huawei.com, jonathan.cameron@huawei.com,
+ shameerali.kolothum.thodi@huawei.com, salil.mehta@huawei.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Wed, May 21, 2025 at 11:46:00AM +0100, Jonathan Cameron wrote:
-> On Tue, 20 May 2025 16:50:34 -0500
-> Bjorn Helgaas <helgaas@kernel.org> wrote:
-> 
-> > From: Jon Pan-Doh <pandoh@google.com>
-> > 
-> > Allow userspace to read/write log ratelimits per device (including
-> > enable/disable). Create aer/ sysfs directory to store them and any
-> > future aer configs.
-> ...
+Hello:
 
-> There is some relatively new SYSFS infra that I think will help
-> make this slightly nicer by getting rid of the extra directory when
-> there is nothing to be done with it.
+This series was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-> > +#define aer_ratelimit_burst_attr(name, ratelimit)			\
-> > +	static ssize_t							\
-> > +	name##_show(struct device *dev, struct device_attribute *attr,	\
-> > +		    char *buf)						\
-> > +{									\
+On Sat, 17 May 2025 17:58:26 +0800 you wrote:
+> There are some bugfix for hibmcge driver
 > 
-> A little odd looking to indent this less than the line above.
+> ---
+> ChangeLog:
+> v1 -> v2:
+>   - Use netif_device_detach() to block netdev callbacks after reset fails, suggested by Jakub.
+>   v1: https://lore.kernel.org/all/20250430093127.2400813-1-shaojijie@huawei.com/
+> 
+> [...]
 
-Yep, fixed.
+Here is the summary with links:
+  - [v2,net,1/2] net: hibmcge: fix incorrect statistics update issue
+    https://git.kernel.org/netdev/net/c/009970506c92
+  - [v2,net,2/2] net: hibmcge: fix wrong ndo.open() after reset fail issue.
+    https://git.kernel.org/netdev/net/c/1b45443b8487
 
-> > +const struct attribute_group aer_attr_group = {
-> > +	.name = "aer",
-> > +	.attrs = aer_attrs,
-> > +	.is_visible = aer_attrs_are_visible,
-> > +};
-> 
-> There are a bunch of macros to simplify cases where
-> a whole group is either enabled or not and make the group
-> itself go away if there is nothing to be shown.
-> 
-> DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE() combined with
-> SYSFS_GROUP_VISIBLE() around the assignment does what we
-> want here I think.
-> 
-> Whilst we can't retrofit that stuff onto existing ABI
-> as someone may be assuming directory presence, we can
-> make sysfs less cluttered for new stuff.
-> 
-> Maybe I'm missing why that doesn't work here though!
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-Is this something we can fix later, or are we locking ourselves into
-user-visible ABI that's hard to change?  I'm kind of against the wall
-relative to the v6.16 merge window and haven't had time to dig into
-this part.
+
