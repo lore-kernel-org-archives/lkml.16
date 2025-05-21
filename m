@@ -1,34 +1,25 @@
-Received: from mail.ptr1337.dev (mail.ptr1337.dev [202.61.224.105])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2EB0153598;
-	Wed, 21 May 2025 14:14:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.61.224.105
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2F5818EFD1
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 14:14:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747836850; cv=none; b=kQjwF/1NB4/+t0yUq7LKru2TY6q2EsnO8fdG2ibX2SnG0kutn3xlHjWui9NuXdGz7PJZS5rm2SBw7fV+cmvbriSvX6sgvsXdlK9dArKzDIdELgmGQRvhfH8Hf9FDHjast5Zj9QPqJB14JpFr09MuPqHOBCyxUEtJ2HGu8MSnf6w=
+	t=1747836868; cv=none; b=MWS3MYAsJKDwuwTVY7ZbIlRMOGlbbzwDSTOGDDG9HKXQIjet/+ld0ogLvGzIjnC/9B9PqPp6sgLcMRyMlcq0HOu4PvMcbdDumcaY4h5WsExs5l6+7hJ6mWb0o6BSPIE07Zw3eL/Fs27F/+rckaTR0qhp/oT+a3X8tDPa15iXLKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747836850; c=relaxed/simple;
-	bh=ZjwFQPaextehVUJa8algcxkTYs/fCeZ5zsUrXYNNweI=;
+	s=arc-20240116; t=1747836868; c=relaxed/simple;
+	bh=IoxOUjr6fXQzKKredPLraY17208/esIaeSVKNDzenVs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gNdTEE1JvBgtsDsj6IAxQG6cwkci4RYNc1Kf2nTIyY+KuLXFROsDtNv/nQuDjkGtZJMWtXz8hMwy5ARXbOvo0GeC9vpfSwEh09KWi/tg/jnea85Ugocs2yRbUaUBDQtenREogJ52xvkBd9bUjZHEDQAyF1DU841iMqxHMNOXdk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cachyos.org; spf=pass smtp.mailfrom=cachyos.org; dkim=pass (2048-bit key) header.d=cachyos.org header.i=@cachyos.org header.b=Lfd7E7Ic; arc=none smtp.client-ip=202.61.224.105
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cachyos.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cachyos.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cachyos.org header.i=@cachyos.org header.b="Lfd7E7Ic"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id C9D142839B1;
-	Wed, 21 May 2025 16:13:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cachyos.org; s=dkim;
-	t=1747836837; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:content-language:in-reply-to:references;
-	bh=oeOsEYQdPbj/2ltGJnkFgbpMDR85asbQPAEC2VyRxhA=;
-	b=Lfd7E7IccmUZ3FQT8psOACA5xxY1yX4USVN8vjvh2hMCbNploGznezGKPSAHA/5RUwxAUD
-	mFhuOxO6c/sXbQJRf+MqkSGEsjuuoDMqKSe9wa2E5JVflGBDeYECbjkPBGZx8eZOo7eate
-	qfWC2Sxc4nkx8qA/89tjiQNRyXWq9cwm9qLajKIGFuLcf6rXUlCVEW6jOg9jrwQGv43n/S
-	0Y0srxlu3AcjhuLb+ZpXGlwU8reC20qpRCAAO5CF5chBenzdUzxrJb3YdmSBs139r61p01
-	XXbp5BmTyRISOvOM2kvWnLN2uu98HyWYvZccQ8dqnNzbDVEUMfRBibXe2bHbAA==
-Message-ID: <a5376c47-156d-4841-85ab-615f2c942960@cachyos.org>
-Date: Wed, 21 May 2025 22:13:45 +0800
+	 In-Reply-To:Content-Type; b=MMiGc79sOgPGHjB6GLLhK6QzwSot8D7U/8oL4tIdoFssQOlYvKaj+eFwbIZhW39DIi3y2nDGs01r1RQlg58SUOfqX+4O8TjORBsu3X/7zzafvSSD4XJHuF3Eeh1nKAio4cCrQmOFCrK7BCrdKSH/Yr5P5cIWQzO0o2zc1J5l15E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 267E11515;
+	Wed, 21 May 2025 07:14:12 -0700 (PDT)
+Received: from [10.57.94.227] (unknown [10.57.94.227])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4C36F3F5A1;
+	Wed, 21 May 2025 07:14:22 -0700 (PDT)
+Message-ID: <eb57601d-abac-492a-8e62-dc1c406af572@arm.com>
+Date: Wed, 21 May 2025 15:14:20 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -36,283 +27,174 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.14 000/145] 6.14.8-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Mario Limonciello <mario.limonciello@amd.com>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
- linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
- akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
- patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
- jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
- srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
- hargar@microsoft.com, broonie@kernel.org, David.Wu3@amd.com,
- alexander.deucher@amd.com
-References: <20250520125810.535475500@linuxfoundation.org>
- <8db9b7cb-03ff-4aca-aafa-bcab4d1b5d82@cachyos.org>
- <c364e0d7-f3b2-484d-869b-095140e2537b@amd.com>
- <2025052153-bleach-ouch-0e59@gregkh>
-Content-Language: en-US
-From: Eric Naim <dnaim@cachyos.org>
-In-Reply-To: <2025052153-bleach-ouch-0e59@gregkh>
+Subject: Re: [PATCH v3 4/5] arm64: Add batched version of
+ ptep_modify_prot_start
+Content-Language: en-GB
+To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org
+Cc: david@redhat.com, willy@infradead.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will@kernel.org,
+ Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, vbabka@suse.cz,
+ jannh@google.com, anshuman.khandual@arm.com, peterx@redhat.com,
+ joey.gouly@arm.com, ioworker0@gmail.com, baohua@kernel.org,
+ kevin.brodsky@arm.com, quic_zhenhuah@quicinc.com,
+ christophe.leroy@csgroup.eu, yangyicong@hisilicon.com,
+ linux-arm-kernel@lists.infradead.org, hughd@google.com,
+ yang@os.amperecomputing.com, ziy@nvidia.com
+References: <20250519074824.42909-1-dev.jain@arm.com>
+ <20250519074824.42909-5-dev.jain@arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20250519074824.42909-5-dev.jain@arm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Last-TLS-Session-Version: TLSv1.3
 
-On 5/21/25 13:35, Greg Kroah-Hartman wrote:
-> On Tue, May 20, 2025 at 09:42:13PM -0500, Mario Limonciello wrote:
->> On 5/20/2025 4:34 PM, Eric Naim wrote:
->>> Hi Greg,
->>>
->>> On 5/20/25 21:49, Greg Kroah-Hartman wrote:
->>>> This is the start of the stable review cycle for the 6.14.8 release.
->>>> There are 145 patches in this series, all will be posted as a response
->>>> to this one.  If anyone has any issues with these being applied, please
->>>> let me know.
->>>>
->>>> Responses should be made by Thu, 22 May 2025 12:57:37 +0000.
->>>> Anything received after that time might be too late.
->>>>
->>>> The whole patch series can be found in one patch at:
->>>> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.14.8-rc1.gz
->>>> or in the git tree and branch at:
->>>> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.14.y
->>>> and the diffstat can be found below.
->>>>
->>>> thanks,
->>>>
->>>> greg k-h
->>>>
->>>> -------------
->>>> Pseudo-Shortlog of commits:
->>>>
->>>> Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>>>      Linux 6.14.8-rc1
->>>>
->>>> Dan Carpenter <dan.carpenter@linaro.org>
->>>>      phy: tegra: xusb: remove a stray unlock
->>>>
->>>> Tiezhu Yang <yangtiezhu@loongson.cn>
->>>>      perf tools: Fix build error for LoongArch
->>>>
->>>> Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
->>>>      mm/page_alloc: fix race condition in unaccepted memory handling
->>>>
->>>> Daniele Ceraolo Spurio <daniele.ceraolospurio@intel.com>
->>>>      drm/xe/gsc: do not flush the GSC worker from the reset path
->>>>
->>>> Maciej Falkowski <maciej.falkowski@linux.intel.com>
->>>>      accel/ivpu: Flush pending jobs of device's workqueues
->>>>
->>>> Karol Wachowski <karol.wachowski@intel.com>
->>>>      accel/ivpu: Fix missing MMU events if file_priv is unbound
->>>>
->>>> Karol Wachowski <karol.wachowski@intel.com>
->>>>      accel/ivpu: Fix missing MMU events from reserved SSID
->>>>
->>>> Karol Wachowski <karol.wachowski@intel.com>
->>>>      accel/ivpu: Move parts of MMU event IRQ handling to thread handler
->>>>
->>>> Karol Wachowski <karol.wachowski@intel.com>
->>>>      accel/ivpu: Dump only first MMU fault from single context
->>>>
->>>> Maciej Falkowski <maciej.falkowski@linux.intel.com>
->>>>      accel/ivpu: Use workqueue for IRQ handling
->>>>
->>>> Shuai Xue <xueshuai@linux.alibaba.com>
->>>>      dmaengine: idxd: Refactor remove call with idxd_cleanup() helper
->>>>
->>>> Shuai Xue <xueshuai@linux.alibaba.com>
->>>>      dmaengine: idxd: fix memory leak in error handling path of idxd_pci_probe
->>>>
->>>> Shuai Xue <xueshuai@linux.alibaba.com>
->>>>      dmaengine: idxd: fix memory leak in error handling path of idxd_alloc
->>>>
->>>> Shuai Xue <xueshuai@linux.alibaba.com>
->>>>      dmaengine: idxd: Add missing idxd cleanup to fix memory leak in remove call
->>>>
->>>> Shuai Xue <xueshuai@linux.alibaba.com>
->>>>      dmaengine: idxd: Add missing cleanups in cleanup internals
->>>>
->>>> Shuai Xue <xueshuai@linux.alibaba.com>
->>>>      dmaengine: idxd: Add missing cleanup for early error out in idxd_setup_internals
->>>>
->>>> Shuai Xue <xueshuai@linux.alibaba.com>
->>>>      dmaengine: idxd: fix memory leak in error handling path of idxd_setup_groups
->>>>
->>>> Shuai Xue <xueshuai@linux.alibaba.com>
->>>>      dmaengine: idxd: fix memory leak in error handling path of idxd_setup_engines
->>>>
->>>> Shuai Xue <xueshuai@linux.alibaba.com>
->>>>      dmaengine: idxd: fix memory leak in error handling path of idxd_setup_wqs
->>>>
->>>> Yemike Abhilash Chandra <y-abhilashchandra@ti.com>
->>>>      dmaengine: ti: k3-udma: Use cap_mask directly from dma_device structure instead of a local copy
->>>>
->>>> Ronald Wahl <ronald.wahl@legrand.com>
->>>>      dmaengine: ti: k3-udma: Add missing locking
->>>>
->>>> Barry Song <baohua@kernel.org>
->>>>      mm: userfaultfd: correct dirty flags set for both present and swap pte
->>>>
->>>> Wupeng Ma <mawupeng1@huawei.com>
->>>>      mm: hugetlb: fix incorrect fallback for subpool
->>>>
->>>> hexue <xue01.he@samsung.com>
->>>>      io_uring/uring_cmd: fix hybrid polling initialization issue
->>>>
->>>> Jens Axboe <axboe@kernel.dk>
->>>>      io_uring/memmap: don't use page_address() on a highmem page
->>>>
->>>> Nathan Chancellor <nathan@kernel.org>
->>>>      net: qede: Initialize qede_ll_ops with designated initializer
->>>>
->>>> Steven Rostedt <rostedt@goodmis.org>
->>>>      ring-buffer: Fix persistent buffer when commit page is the reader page
->>>>
->>>> Ming Yen Hsieh <mingyen.hsieh@mediatek.com>
->>>>      wifi: mt76: mt7925: fix missing hdr_trans_tlv command for broadcast wtbl
->>>>
->>>> Fedor Pchelkin <pchelkin@ispras.ru>
->>>>      wifi: mt76: disable napi on driver removal
->>>>
->>>> Jarkko Sakkinen <jarkko@kernel.org>
->>>>      tpm: Mask TPM RC in tpm2_start_auth_session()
->>>>
->>>> Aaron Kling <webgeek1234@gmail.com>
->>>>      spi: tegra114: Use value to check for invalid delays
->>>>
->>>> Jethro Donaldson <devel@jro.nz>
->>>>      smb: client: fix memory leak during error handling for POSIX mkdir
->>>>
->>>> Steve Siwinski <ssiwinski@atto.com>
->>>>      scsi: sd_zbc: block: Respect bio vector limits for REPORT ZONES buffer
->>>>
->>>> Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->>>>      phy: renesas: rcar-gen3-usb2: Set timing registers only once
->>>>
->>>> Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->>>>      phy: renesas: rcar-gen3-usb2: Fix role detection on unbind/bind
->>>>
->>>> Oleksij Rempel <o.rempel@pengutronix.de>
->>>>      net: phy: micrel: remove KSZ9477 EEE quirks now handled by phylink
->>>>
->>>> Oleksij Rempel <o.rempel@pengutronix.de>
->>>>      net: dsa: microchip: let phylink manage PHY EEE configuration on KSZ switches
->>>>
->>>> Ma Ke <make24@iscas.ac.cn>
->>>>      phy: Fix error handling in tegra_xusb_port_init
->>>>
->>>> Wayne Chang <waynec@nvidia.com>
->>>>      phy: tegra: xusb: Use a bitmask for UTMI pad power state tracking
->>>>
->>>> Steven Rostedt <rostedt@goodmis.org>
->>>>      tracing: samples: Initialize trace_array_printk() with the correct function
->>>>
->>>> Ashish Kalra <ashish.kalra@amd.com>
->>>>      x86/sev: Make sure pages are not skipped during kdump
->>>>
->>>> Ashish Kalra <ashish.kalra@amd.com>
->>>>      x86/sev: Do not touch VMSA pages during SNP guest memory kdump
->>>>
->>>> pengdonglin <pengdonglin@xiaomi.com>
->>>>      ftrace: Fix preemption accounting for stacktrace filter command
->>>>
->>>> pengdonglin <pengdonglin@xiaomi.com>
->>>>      ftrace: Fix preemption accounting for stacktrace trigger command
->>>>
->>>> Christophe JAILLET <christophe.jaillet@wanadoo.fr>
->>>>      i2c: designware: Fix an error handling path in i2c_dw_pci_probe()
->>>>
->>>> Nathan Chancellor <nathan@kernel.org>
->>>>      kbuild: Disable -Wdefault-const-init-unsafe
->>>>
->>>> Michael Kelley <mhklinux@outlook.com>
->>>>      Drivers: hv: vmbus: Remove vmbus_sendpacket_pagebuffer()
->>>>
->>>> Michael Kelley <mhklinux@outlook.com>
->>>>      Drivers: hv: Allow vmbus_sendpacket_mpb_desc() to create multiple ranges
->>>>
->>>> Michael Kelley <mhklinux@outlook.com>
->>>>      hv_netvsc: Remove rmsg_pgcnt
->>>>
->>>> Michael Kelley <mhklinux@outlook.com>
->>>>      hv_netvsc: Preserve contiguous PFN grouping in the page buffer array
->>>>
->>>> Michael Kelley <mhklinux@outlook.com>
->>>>      hv_netvsc: Use vmbus_sendpacket_mpb_desc() to send VMBus messages
->>>>
->>>> Dragan Simic <dsimic@manjaro.org>
->>>>      arm64: dts: rockchip: Remove overdrive-mode OPPs from RK3588J SoC dtsi
->>>>
->>>> Sam Edwards <cfsworks@gmail.com>
->>>>      arm64: dts: rockchip: Allow Turing RK1 cooling fan to spin down
->>>>
->>>> Christian Hewitt <christianshewitt@gmail.com>
->>>>      arm64: dts: amlogic: dreambox: fix missing clkc_audio node
->>>>
->>>> Hyejeong Choi <hjeong.choi@samsung.com>
->>>>      dma-buf: insert memory barrier before updating num_fences
->>>>
->>>> Nicolas Chauvet <kwizart@gmail.com>
->>>>      ALSA: usb-audio: Add sample rate quirk for Microdia JP001 USB Camera
->>>>
->>>> Christian Heusel <christian@heusel.eu>
->>>>      ALSA: usb-audio: Add sample rate quirk for Audioengine D1
->>>>
->>>> Wentao Liang <vulab@iscas.ac.cn>
->>>>      ALSA: es1968: Add error handling for snd_pcm_hw_constraint_pow2()
->>>>
->>>> Jeremy Linton <jeremy.linton@arm.com>
->>>>      ACPI: PPTT: Fix processor subtable walk
->>>>
->>>> Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
->>>>      gpio: pca953x: fix IRQ storm on system wake up
->>>>
->>>> Alexey Makhalov <alexey.makhalov@broadcom.com>
->>>>      MAINTAINERS: Update Alexey Makhalov's email address
->>>>
->>>> Wayne Lin <Wayne.Lin@amd.com>
->>>>      drm/amd/display: Avoid flooding unnecessary info messages
->>>>
->>>> Wayne Lin <Wayne.Lin@amd.com>
->>>>      drm/amd/display: Correct the reply value when AUX write incomplete
->>>>
->>>> Philip Yang <Philip.Yang@amd.com>
->>>>      drm/amdgpu: csa unmap use uninterruptible lock
->>>>
->>>> Tim Huang <tim.huang@amd.com>
->>>>      drm/amdgpu: fix incorrect MALL size for GFX1151
->>>>
->>>> David (Ming Qiang) Wu <David.Wu3@amd.com>
->>>>      drm/amdgpu: read back register after written for VCN v4.0.5
->>>>
->>>
->>> This commit seems to breaking a couple of devices with the Phoenix APU, most notably the Ryzen AI chips. Note that this commit in mainline seems to work as intended, and after doing a little bit of digging, [1] landed in 6.15 and so this cherrypick may not be so trivial after all. Attached is a kernel trace highlighting the breakage caused by this commit, along with [2] for the full log.
->>>
->>> Also adding Alex, David and Mario to Ccs.
->>>
->>
->> Just a minor correction - VCN 4.0.5 is on Strix.  So this report is not
->> likely from a Phoenix APU.
->>
->> Nonetheless I agree; I suspect backporting
->> ecc9ab4e924b7eb9e2c4a668162aaa1d9d60d08c will help the issue.
+On 19/05/2025 08:48, Dev Jain wrote:
+> Override the generic definition to use get_and_clear_full_ptes(). This helper
+> does a TLBI only for the starting and ending contpte block of the range, whereas
+> the current implementation will call ptep_get_and_clear() for every contpte block,
+> thus doing a TLBI on every contpte block. Therefore, we have a performance win.
+> The arm64 definition of pte_accessible() allows us to batch around it in clear_flush_ptes():
+> #define pte_accessible(mm, pte)	\
+> 	(mm_tlb_flush_pending(mm) ? pte_present(pte) : pte_valid(pte))
 > 
-> If it is required, someone is going to need to provide a working
-> version, as that does not apply cleanly as-is.
+> All ptes are obviously present in the folio batch, and they are also valid.
 > 
-> thanks,
+> Signed-off-by: Dev Jain <dev.jain@arm.com>
+
+Please squash this with the 
+
+> ---
+>  arch/arm64/include/asm/pgtable.h |  5 +++++
+>  arch/arm64/mm/mmu.c              | 12 +++++++++---
+>  include/linux/pgtable.h          |  4 ++++
+>  mm/pgtable-generic.c             | 16 +++++++++++-----
+>  4 files changed, 29 insertions(+), 8 deletions(-)
 > 
-> greg k-h
+> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+> index 2a77f11b78d5..8872ea5f0642 100644
+> --- a/arch/arm64/include/asm/pgtable.h
+> +++ b/arch/arm64/include/asm/pgtable.h
+> @@ -1553,6 +1553,11 @@ extern void ptep_modify_prot_commit(struct vm_area_struct *vma,
+>  				    unsigned long addr, pte_t *ptep,
+>  				    pte_t old_pte, pte_t new_pte);
+>  
+> +#define modify_prot_start_ptes modify_prot_start_ptes
+> +extern pte_t modify_prot_start_ptes(struct vm_area_struct *vma,
+> +				    unsigned long addr, pte_t *ptep,
+> +				    unsigned int nr);
+> +
+>  #ifdef CONFIG_ARM64_CONTPTE
+>  
+>  /*
+> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> index 8fcf59ba39db..fe60be8774f4 100644
+> --- a/arch/arm64/mm/mmu.c
+> +++ b/arch/arm64/mm/mmu.c
+> @@ -1523,7 +1523,8 @@ static int __init prevent_bootmem_remove_init(void)
+>  early_initcall(prevent_bootmem_remove_init);
+>  #endif
+>  
+> -pte_t ptep_modify_prot_start(struct vm_area_struct *vma, unsigned long addr, pte_t *ptep)
+> +pte_t modify_prot_start_ptes(struct vm_area_struct *vma, unsigned long addr,
+> +			     pte_t *ptep, unsigned int nr)
+>  {
+>  	if (alternative_has_cap_unlikely(ARM64_WORKAROUND_2645198)) {
+>  		/*
+> @@ -1532,9 +1533,14 @@ pte_t ptep_modify_prot_start(struct vm_area_struct *vma, unsigned long addr, pte
+>  		 * in cases where cpu is affected with errata #2645198.
+>  		 */
+>  		if (pte_user_exec(ptep_get(ptep)))
+> -			return ptep_clear_flush(vma, addr, ptep);
+> +			return clear_flush_ptes(vma, addr, ptep, nr);
+>  	}
+> -	return ptep_get_and_clear(vma->vm_mm, addr, ptep);
+> +	return get_and_clear_full_ptes(vma->vm_mm, addr, ptep, nr, 0);
+> +}
 
-Hi Greg,
+I think we can do this more precisely with respect to tlbis and also without 
+needing to create a new clear_flush_ptes() helper:
 
-I finally got someone to test the mentioned commit, and I (or they) can confirm that ecc9ab4e924b7eb9e2c4a668162aaa1d9d60d08c is indeed the missing commit needed for "drm/amdgpu: read back register after written for VCN v4.0.5".
 
-I don't know if this will help, but I got everything to apply cleanly by first applying ecc9ab4e924b7eb9e2c4a668162aaa1d9d60d08c, then cherry-picking the mainline version of "drm/amdgpu: read back register after written for VCN v4.0.5" [1] since the one in stable-rc seems to have been adjusted for the stable tree and made it conflict.
+pte_t modify_prot_start_ptes(struct vm_area_struct *vma, unsigned long addr,
+			     pte_t *ptep, unsigned int nr)
+{
+	pte_t pte = get_and_clear_full_ptes(vma->vm_mm, addr, ptep, nr, 0);
 
--- 
-Regards,
-  Eric
+	if (alternative_has_cap_unlikely(ARM64_WORKAROUND_2645198)) {
+		/*
+		 * Break-before-make (BBM) is required for all user space mappings
+		 * when the permission changes from executable to non-executable
+		 * in cases where cpu is affected with errata #2645198.
+		 */
+		if (pte_accessible(vma->vm_mm, pte) && pte_user_exec(pte))
+			__flush_tlb_range(vma, addr, nr * PAGE_SIZE,
+					  PAGE_SIZE, true, 3);
+	}
 
-[1] ee7360fc27d6045510f8fe459b5649b2af27811a
+	return pte;
+}
+
+
+> +
+> +pte_t ptep_modify_prot_start(struct vm_area_struct *vma, unsigned long addr, pte_t *ptep)
+> +{
+> +	return modify_prot_start_ptes(vma, addr, ptep, 1);
+>  }
+>  
+>  void ptep_modify_prot_commit(struct vm_area_struct *vma, unsigned long addr, pte_t *ptep,
+> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+> index e40ed57e034d..41f4a8de5c28 100644
+> --- a/include/linux/pgtable.h
+> +++ b/include/linux/pgtable.h
+> @@ -828,6 +828,10 @@ extern pte_t ptep_clear_flush(struct vm_area_struct *vma,
+>  			      pte_t *ptep);
+>  #endif
+>  
+> +extern pte_t clear_flush_ptes(struct vm_area_struct *vma,
+> +			      unsigned long address,
+> +			      pte_t *ptep, unsigned int nr);
+> +
+>  #ifndef __HAVE_ARCH_PMDP_HUGE_CLEAR_FLUSH
+>  extern pmd_t pmdp_huge_clear_flush(struct vm_area_struct *vma,
+>  			      unsigned long address,
+> diff --git a/mm/pgtable-generic.c b/mm/pgtable-generic.c
+> index 5a882f2b10f9..e238f88c3cac 100644
+> --- a/mm/pgtable-generic.c
+> +++ b/mm/pgtable-generic.c
+> @@ -90,17 +90,23 @@ int ptep_clear_flush_young(struct vm_area_struct *vma,
+>  }
+>  #endif
+>  
+> -#ifndef __HAVE_ARCH_PTEP_CLEAR_FLUSH
+> -pte_t ptep_clear_flush(struct vm_area_struct *vma, unsigned long address,
+> -		       pte_t *ptep)
+> +pte_t clear_flush_ptes(struct vm_area_struct *vma, unsigned long address,
+> +		       pte_t *ptep, unsigned int nr)
+>  {
+>  	struct mm_struct *mm = (vma)->vm_mm;
+>  	pte_t pte;
+> -	pte = ptep_get_and_clear(mm, address, ptep);
+> +	pte = get_and_clear_full_ptes(mm, address, ptep, nr, 0);
+>  	if (pte_accessible(mm, pte))
+> -		flush_tlb_page(vma, address);
+> +		flush_tlb_range(vma, address, address + nr * PAGE_SIZE);
+>  	return pte;
+>  }
+
+Let's not create a new generic helper if only arm64 is using it. We would 
+also want to add a doc header to describe this helper. My proposal avoids 
+this.
+
+Thanks,
+Ryan
+
+> +
+> +#ifndef __HAVE_ARCH_PTEP_CLEAR_FLUSH
+> +pte_t ptep_clear_flush(struct vm_area_struct *vma, unsigned long address,
+> +		       pte_t *ptep)
+> +{
+> +	return clear_flush_ptes(vma, address, ptep, 1);
+> +}
+>  #endif
+>  
+>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+
