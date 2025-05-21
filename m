@@ -1,50 +1,69 @@
-Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 958246EB79
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 23:33:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2055A17A2EF;
+	Wed, 21 May 2025 23:41:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747870427; cv=none; b=CR0u5/XkiCqRQPL+gkt3EWZ6bFIuWBCVWQIg3vTMIJ2LHpAVXLz6yRbSAgUARXOzmmxqqXStyw11tl9vc7MRdt5N3okJE3Fw+BratlPkC2U/ttwJaEw58B+RhFnruMmG3AzzZCsMLd3qW7+v7UGxVwoWDliCrWZ9jpXcje6xuC4=
+	t=1747870894; cv=none; b=sv5Mr5kk15PUfYzef/spfr0rg/AeYxaz2Td0uTRkj9R+cUDJ8KiGsoG3KdNExYzEw7mDHgRhxgks7VjT3JNTOr9YKOZYZu8dTGTYEkGlUoFEmnKcW61FHvwzuORGXbAQdbUds5IGEPs95V3OoP1n6ZCGpDVxxGbyVWfqU2lUa7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747870427; c=relaxed/simple;
-	bh=ypGle7kHRl1MnihGO/vMI64ZNjg/4RzE1sAUEi9QX80=;
+	s=arc-20240116; t=1747870894; c=relaxed/simple;
+	bh=C5lRt9o6oozpH1yv7cQ/1mE4W8MldKnxycR94t3ACls=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uivEeUh0Otbw6av/fmCdAn6FD3dIesKW2CdFOTkp+WhClrVu9QzIub8b1DcmeXM76NmtWpdE1NFXQN+nbRqXor32A1HVsxy/vTTOKCmvtm3xPK1aUIA1vpTs3zT8QEpyTEb13I7nKVmAJVVQ/Ge5S1Iga5WWQ6UQnglHOi+OU68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=EH5EUkuE; arc=none smtp.client-ip=95.215.58.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=NP0jDmt8c5KoRNFlSsAi06aaMACbMO/du5pliBO6s6UVvnfuzwXw3Cmc40FPFioMGn/052rHjnc2ddKugqeVI1/nMxN207hMlJWUMwJC3EiOzk2FZVd+xBoP4hI8LnmWmm5mLiaCYR3zZ5GekyHQbCCIHSjOLbRtrxJBqs9f0s4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TV0aBVRS; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="EH5EUkuE"
-Date: Wed, 21 May 2025 16:33:35 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747870423;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DxBHcO2OStLwZGLgLdCMqlriVkxYivQ6RlwIYKIM/tc=;
-	b=EH5EUkuEmwWVmqrUOXyVACQnMwIjko7zqEz8WjuYyHPBRP7gLyO4t5VysG2Tw1KFk0mQyp
-	nGu1pjABkI4+QKpDvhF7jMMXWdZdXv131lPPGi6OLeT9ZgvK4+KVNoiHlZ5ea9o7V6kf81
-	S8DbSMEk8ZfouCXwhwKrn4eDXE9Uef0=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Klara Modin <klarasmodin@gmail.com>
-Cc: Tejun Heo <tj@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Muchun Song <muchun.song@linux.dev>, Yosry Ahmed <yosry.ahmed@linux.dev>, 
-	Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, JP Kobryn <inwardvessel@gmail.com>, bpf@vger.kernel.org, 
-	linux-mm@kvack.org, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Meta kernel team <kernel-team@meta.com>
-Subject: Re: [OFFLIST PATCH 2/2] cgroup: use subsystem-specific rstat locks
- to avoid contention
-Message-ID: <netbpt5aylanmxb6pxdvvkgket7hjbtxyjyceb6h6v2yyr4tcd@rc5zbyhsms2e>
-References: <20250428174943.69803-1-inwardvessel@gmail.com>
- <20250428174943.69803-2-inwardvessel@gmail.com>
- <ad2otaw2zrzql4dch72fal6hlkyu2mt7h2eeg4rxgofzyxsb2f@7cfodklpbexu>
- <gzwa67k6i35jw5h3qfdajuzxa2zgm6ws2x5rjiisont4xiz4bp@kneusjz5bxwb>
- <a6le7a3gzao7acxzo4i2sfnoxffmz2vhd34gzlgsow4uy7lv6k@tigt33bel4fi>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TV0aBVRS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747870893; x=1779406893;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=C5lRt9o6oozpH1yv7cQ/1mE4W8MldKnxycR94t3ACls=;
+  b=TV0aBVRSG0PnvG0TjOkU0iphhmn+kcH3h5dReG5H7uQM+0gPvd6g8wNY
+   uyP5C/quWspSBymFhzVby4V5YRpLYBJNXknX4Go3ktUX+N4HGcbU2x04d
+   wmf5WFG8Yxf8LbcIkeUHfglW2l7W5c47inNjwMhrMnvnEvvbXb/ASyNlT
+   SulX+saCUR+fFB9V5BVJ47dDQsOOD166AufFxx9inpXiWVo/RzTfo+lMH
+   qDLurBok8tenGBpGXJoNx4v2Kk6b/isrvH2pUZsQQfq/ZnnO8ffH3Yse+
+   8AuoMHOC1teqczzmYg0zytID6edGiN5ST4aTg0ldM6WpBeK2nTqFL+Cd/
+   g==;
+X-CSE-ConnectionGUID: cHV1iZKtRvqxBb+3/prGqg==
+X-CSE-MsgGUID: W6xXV6gIRNGVj2BluJ1b0w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="49864377"
+X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
+   d="scan'208";a="49864377"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 16:41:32 -0700
+X-CSE-ConnectionGUID: VZiSyD0eTIKD3pxH059vpQ==
+X-CSE-MsgGUID: lHPW0BhBRTiRyg/+OoZblA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
+   d="scan'208";a="144282397"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa003.fm.intel.com with ESMTP; 21 May 2025 16:41:28 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uHt3u-000Oji-1D;
+	Wed, 21 May 2025 23:41:26 +0000
+Date: Thu, 22 May 2025 07:40:28 +0800
+From: kernel test robot <lkp@intel.com>
+To: Maulik Shah <maulik.shah@oss.qualcomm.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	Doug Anderson <dianders@chromium.org>,
+	Maulik Shah <maulik.shah@oss.qualcomm.com>
+Subject: Re: [PATCH v2 1/3] soc: qcom: qcom_stats: Add support to read DDR
+ statistic
+Message-ID: <202505220739.yseb9RQm-lkp@intel.com>
+References: <20250521-ddr_stats_-v2-1-2c54ea4fc071@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,49 +72,89 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a6le7a3gzao7acxzo4i2sfnoxffmz2vhd34gzlgsow4uy7lv6k@tigt33bel4fi>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20250521-ddr_stats_-v2-1-2c54ea4fc071@oss.qualcomm.com>
 
-On Wed, May 21, 2025 at 04:23:44PM -0700, Shakeel Butt wrote:
-> On Thu, May 22, 2025 at 12:23:44AM +0200, Klara Modin wrote:
-> > Hi,
-> > 
-> > On 2025-04-28 23:15:58 -0700, Shakeel Butt wrote:
-> > > Please ignore this patch as it was sent by mistake.
-> > 
-> > This seems to have made it into next:
-> > 
-> > 748922dcfabd ("cgroup: use subsystem-specific rstat locks to avoid contention")
-> > 
-> > It causes a BUG and eventually a panic on my Raspberry Pi 1:
-> > 
-> > WARNING: CPU: 0 PID: 0 at mm/percpu.c:1766 pcpu_alloc_noprof (mm/percpu.c:1766 (discriminator 2)) 
-> > illegal size (0) or align (4) for percpu allocation
-> 
-> Ok this config is without CONFIG_SMP and on such configs we have:
-> 
-> typedef struct { } arch_spinlock_t;
-> 
-> So, we are doing ss->rstat_ss_cpu_lock = alloc_percpu(0).
-> 
-> Hmm, let me think more on how to fix this.
-> 
+Hi Maulik,
 
-I think following is the simplest fix:
+kernel test robot noticed the following build warnings:
 
-diff --git a/kernel/cgroup/rstat.c b/kernel/cgroup/rstat.c
-index 7dd396ae3c68..aab09495192e 100644
---- a/kernel/cgroup/rstat.c
-+++ b/kernel/cgroup/rstat.c
-@@ -511,7 +511,10 @@ int __init ss_rstat_init(struct cgroup_subsys *ss)
- 	int cpu;
- 
- 	if (ss) {
--		ss->rstat_ss_cpu_lock = alloc_percpu(raw_spinlock_t);
-+		size_t size = sizeof(raw_spinlock_t) ?: 1;
-+
-+		ss->rstat_ss_cpu_lock = __alloc_percpu(size,
-+						__alignof__(raw_spinlock_t));
- 		if (!ss->rstat_ss_cpu_lock)
- 			return -ENOMEM;
- 	}
+[auto build test WARNING on 393d0c54cae31317deaa9043320c5fd9454deabc]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Maulik-Shah/soc-qcom-qcom_stats-Add-support-to-read-DDR-statistic/20250521-163434
+base:   393d0c54cae31317deaa9043320c5fd9454deabc
+patch link:    https://lore.kernel.org/r/20250521-ddr_stats_-v2-1-2c54ea4fc071%40oss.qualcomm.com
+patch subject: [PATCH v2 1/3] soc: qcom: qcom_stats: Add support to read DDR statistic
+config: arc-randconfig-001-20250522 (https://download.01.org/0day-ci/archive/20250522/202505220739.yseb9RQm-lkp@intel.com/config)
+compiler: arc-linux-gcc (GCC) 15.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250522/202505220739.yseb9RQm-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505220739.yseb9RQm-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   drivers/soc/qcom/qcom_stats.c: In function 'qcom_ddr_stats_print':
+>> drivers/soc/qcom/qcom_stats.c:172:53: warning: format '%x' expects argument of type 'unsigned int', but argument 3 has type 'long unsigned int' [-Wformat=]
+     172 |                 seq_printf(s, "DDR LPM Stat Name:0x%x\tcount:%u\tDuration (ticks):%llu\n",
+         |                                                    ~^
+         |                                                     |
+         |                                                     unsigned int
+         |                                                    %lx
+>> drivers/soc/qcom/qcom_stats.c:180:42: warning: format '%u' expects argument of type 'unsigned int', but argument 3 has type 'long unsigned int' [-Wformat=]
+     180 |                 seq_printf(s, "DDR Freq %uMhz:\tCP IDX:%u\tcount:%u\tDuration (ticks):%llu\n",
+         |                                         ~^
+         |                                          |
+         |                                          unsigned int
+         |                                         %lu
+
+
+vim +172 drivers/soc/qcom/qcom_stats.c
+
+   144	
+   145	static void qcom_ddr_stats_print(struct seq_file *s, struct ddr_stats_entry *data)
+   146	{
+   147		u32 cp_idx;
+   148	
+   149		/*
+   150		 * DDR statistic have two different types of details encoded.
+   151		 * (1) DDR LPM Stats
+   152		 * (2) DDR Frequency Stats
+   153		 *
+   154		 * The name field have details like which type of DDR stat (bits 8:15)
+   155		 * along with other details as explained below
+   156		 *
+   157		 * In case of DDR LPM stat, name field will be encoded as,
+   158		 * Bits	 -  Meaning
+   159		 * 0:7	 -  DDR LPM name, can be of 0xd4, 0xd3, 0x11 and 0xd0.
+   160		 * 8:15	 -  0x0 (indicates its a LPM stat)
+   161		 * 16:31 -  Unused
+   162		 *
+   163		 * In case of DDR FREQ stats, name field will be encoded as,
+   164		 * Bits  -  Meaning
+   165		 * 0:4   -  DDR Clock plan index (CP IDX)
+   166		 * 5:7   -  Unused
+   167		 * 8:15  -  0x1 (indicates its Freq stat)
+   168		 * 16:31 -  Frequency value in Mhz
+   169		 */
+   170		switch (DDR_STATS_TYPE(data->name)) {
+   171		case 0:
+ > 172			seq_printf(s, "DDR LPM Stat Name:0x%x\tcount:%u\tDuration (ticks):%llu\n",
+   173				   DDR_STATS_LPM_NAME(data->name), data->count, data->duration);
+   174			break;
+   175		case 1:
+   176			if (!data->count || !DDR_STATS_FREQ(data->name))
+   177				return;
+   178	
+   179			cp_idx = DDR_STATS_CP_IDX(data->name);
+ > 180			seq_printf(s, "DDR Freq %uMhz:\tCP IDX:%u\tcount:%u\tDuration (ticks):%llu\n",
+   181				   DDR_STATS_FREQ(data->name), cp_idx, data->count, data->duration);
+   182			break;
+   183		}
+   184	}
+   185	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
