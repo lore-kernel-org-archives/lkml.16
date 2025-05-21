@@ -1,233 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961F6221713;
-	Wed, 21 May 2025 20:17:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B01E1A317A;
+	Wed, 21 May 2025 20:18:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747858664; cv=none; b=L2lfRqHNo6Xj7WHWx1eMN0xf81Q84io8QYkq3OFyh+T4w17n0SUJ18mx84Xda6CO6HOi7sIRgZRskAPIgh9mOzjT7Z+qPKcyqIWNuJNWEouAlmd3rT4MofRd80HAKy3+QTiE4EjZ98NtMzFFUqVPv8xS62M7dPnMfy/ioRPdygE=
+	t=1747858730; cv=none; b=YUr94JS3OFNO+36gF8byn9jM+CXHGIAeUbLsyRSgSGJkWtGDLb22uBnoz6cnTUgj3T3agrP1DrcOpw2hYvU5RT4l9BAASQiclTqgsQZ0C/hOYhuK/60ABc7uynblNEQk/c+TcYby542uIUWZ4k2ojh1G+Fmte0qJ7T8gUJwEMUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747858664; c=relaxed/simple;
-	bh=OcRrlj7xdaiC5clW99dAz86chXxQeFIdlShKpSfDJoU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Zn4hTwbE9PBmDh0FomrTMlf/JRyfShlBXdp5QFdcgylc9RMUYcpAZ56ikL4u+Se+FlkuZOAX8BqzoG0oSwsLS6urV8/2IUR5z5g82GnxfdtX5JFrqaElew14sIdTZEn69BeeeLpJ/TOYMw9N3WyzkUSeWd8mn3E/0Nz+H7Csq+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f0FpCaxK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747858730; c=relaxed/simple;
+	bh=PElsn5rDHQZoxE2Yff++z2XEPctygMWdSG0eXjkrduU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nDRNyn6MpPK2JSApCMJDXIlFB+CoxFfwdEUYiT6T+9/LlXoN95xAOT+dACr3OSZLSGg45FJbktKXuwz5SDbkUGpFfkEf/F+M6E+z/El3pniHdnytSjkEZbGdPS5rp6pAWOMPIjihG9qgZUQdA4jq9h6U5CSqaB+8b1unXrlrsh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C1msAmiI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f0FpCaxK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02EC5C4CEE4;
-	Wed, 21 May 2025 20:17:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C1msAmiI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72463C4CEE4;
+	Wed, 21 May 2025 20:18:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747858664;
-	bh=OcRrlj7xdaiC5clW99dAz86chXxQeFIdlShKpSfDJoU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=f0FpCaxKfQZTRgXEWzIjCh/Ijb82lawhRKMczr3wkR93kyW8tin1ESpQ0nJ02jt0x
-	 QWk6172yvTZ8Po57OBUMT2rIP8UXcnu0gEqmHvNa3Kz6OAHTNuDnZ/syNqAkFScNO4
-	 noNWwUxLV0QoPXGBw2pRn42jcXI6reaOpG71me74DU0OpSVJerKLg9Ci/xYCLO0RoG
-	 Ied4jf5r6LA+MjS4N9sL73zkboJjKf85ptFl/mPMlJV9OKXMFq+eUmF/+2Yq+0/PQ3
-	 aGkn2CejABhgm0U0eXukwr9afPI37+bMGQtbIv4uYxqb27l3oTpm2WaSvKDYxD526F
-	 i0I/DrztrXaHQ==
-Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-3fbaa18b810so2352900b6e.2;
-        Wed, 21 May 2025 13:17:43 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU1ZG5W9MhV6jo9CXDOwfrtnBnnyze8mpSSbN5Uj+3aSyUf0EoyqFARey313KXohcK8c2ne4Xz7SSfcriL+@vger.kernel.org, AJvYcCX/QjUj6Q6SaEGZPLLgdR6m4ut+TxkALvg5yMQ4MoY0wGinkvsMMAD3fDE0quJTDy136vUVUDL9q1Jc@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRR45YEnXQSGU9RGDXkQTvZ4ob89WAD7h3ziWR+Y3OMe5imOn1
-	8IfrBFKn+gcMYoL/0BLWmYkAWlk+IUoUJjlXbfiLHPW+m7zLmQNCIZFb+cWl45Qj6Lgnz/JkdSN
-	2KbKxwVuCz7socXa18MwyrS/l4YTOctE=
-X-Google-Smtp-Source: AGHT+IEla/7OsBunWSBkZYFCsgl0DpTjBkEnFqnChnn85Xl5ZHXukeaimdJeqpTZUi6sozTY3Kg0ceoNvlrRQueeryk=
-X-Received: by 2002:a05:6808:4447:b0:3f8:93c5:6d85 with SMTP id
- 5614622812f47-404da760a09mr11955098b6e.16.1747858663283; Wed, 21 May 2025
- 13:17:43 -0700 (PDT)
+	s=k20201202; t=1747858730;
+	bh=PElsn5rDHQZoxE2Yff++z2XEPctygMWdSG0eXjkrduU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=C1msAmiIIkDUx6sFNE8U7Ka41fl8Pu+/CY6O4cuHfmbuNcSmFVuLBIWENEs4RasDi
+	 LvmO9x2blQUAArt6ZmJsyv01UKSBpgZpwmwofQ+Kr1hkGBgdNcOYSa6yw2bzWUirDN
+	 Y8dhcWDVPZ3gArBXhHE9GWqOkcrfydhgndQm/G4G7Cdu+6KdSpD5rU2ehw4DPA8txK
+	 9oN+WsFkWBhpvqdt2qQbHakE/4qSDePgdrj5CWj5dcj2WMavIozGJ9zOEXYf0tnf/u
+	 00+kpKYQ3u6qq6XIVvb5dz0m08UrIAExCMzMra4yOmVzL5NlIdZBpBUYVkey2JXAIk
+	 CZGdneqN6TdmQ==
+Message-ID: <40b939d6-9339-444f-a2e4-3e4cd4bcb317@kernel.org>
+Date: Wed, 21 May 2025 15:18:48 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250518185111.3560-1-W_Armin@gmx.de>
-In-Reply-To: <20250518185111.3560-1-W_Armin@gmx.de>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 21 May 2025 22:17:30 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hNmMtR4V0tYqD1dV2BqAKJ2sCOyBadkVtG3sS3V90uvw@mail.gmail.com>
-X-Gm-Features: AX0GCFsebpZ_dmCbnnO_Avxc4XYzYmOYwknKN0mNIyDBQyWOD5ECcbZax0_zh3U
-Message-ID: <CAJZ5v0hNmMtR4V0tYqD1dV2BqAKJ2sCOyBadkVtG3sS3V90uvw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] ACPI: platform_profile: Add support for non-ACPI platforms
-To: Armin Wolf <W_Armin@gmx.de>
-Cc: rafael@kernel.org, lenb@kernel.org, j@jannau.net, 
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/7] firmware: stratix10-svc: Add initial support for
+ asynchronous communication with Stratix 10 service channel
+To: Mahesh Rao <mahesh.rao@altera.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: Matthew Gerlach <matthew.gerlach@altera.com>,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <20250512-sip_svc_upstream-v2-0-fae5c45c059d@altera.com>
+ <20250512-sip_svc_upstream-v2-3-fae5c45c059d@altera.com>
+ <b92f2ad2-7cca-455d-af45-cfd418bf54bc@kernel.org>
+ <0eab3179-645c-41e8-8d21-111b11ba5c6d@altera.com>
+Content-Language: en-US
+From: Dinh Nguyen <dinguyen@kernel.org>
+In-Reply-To: <0eab3179-645c-41e8-8d21-111b11ba5c6d@altera.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sun, May 18, 2025 at 8:51=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wrote:
->
-> Currently the platform profile subsystem assumes that all supported
-> (i.e. ACPI-capable) platforms always run with ACPI being enabled.
-> However some ARM64 notebooks do not support ACPI and are instead
-> using devicetree for booting.
->
-> Do not register the legacy sysfs interface on such devices as it
-> depends on the acpi_kobj (/sys/firmware/acpi/) being present. Users
-> are encouraged to use the new platform-profile class interface
-> instead.
+On 5/21/25 03:42, Mahesh Rao wrote:
+> 
+> 
+> On 19-05-2025 05:28 pm, Dinh Nguyen wrote:
+>> On 5/12/25 06:39, Mahesh Rao via B4 Relay wrote:
+>>> From: Mahesh Rao <mahesh.rao@altera.com>
+>>>
 
-So how does it work in this case?
+<snip>
 
-> Reviewed-by: Janne Grunau <j@jannau.net>
-> Tested-by: Janne Grunau <j@jannau.net>
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> ---
->  drivers/acpi/platform_profile.c | 68 ++++++++++++++++++++++++++-------
->  1 file changed, 55 insertions(+), 13 deletions(-)
->
-> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_prof=
-ile.c
-> index ffbfd32f4cf1..c5a5da7d03f1 100644
-> --- a/drivers/acpi/platform_profile.c
-> +++ b/drivers/acpi/platform_profile.c
-> @@ -190,6 +190,20 @@ static ssize_t profile_show(struct device *dev,
->         return sysfs_emit(buf, "%s\n", profile_names[profile]);
->  }
->
-> +/**
-> + * profile_notify_legacy - Notify the legacy sysfs interface
-> + *
-> + * This wrapper takes care of only notifying the legacy sysfs interface
-> + * if it was registered during module initialization.
-> + */
-> +static void profile_notify_legacy(void)
-> +{
-> +       if (!acpi_kobj)
-> +               return;
-> +
-> +       sysfs_notify(acpi_kobj, NULL, "platform_profile");
-> +}
-> +
->  /**
->   * profile_store - Set the profile for a class device
->   * @dev: The device
-> @@ -215,7 +229,7 @@ static ssize_t profile_store(struct device *dev,
->                         return ret;
->         }
->
-> -       sysfs_notify(acpi_kobj, NULL, "platform_profile");
-> +       profile_notify_legacy();
->
->         return count;
->  }
-> @@ -435,7 +449,7 @@ static ssize_t platform_profile_store(struct kobject =
-*kobj,
->                         return ret;
->         }
->
-> -       sysfs_notify(acpi_kobj, NULL, "platform_profile");
-> +       profile_notify_legacy();
->
->         return count;
->  }
-> @@ -472,6 +486,22 @@ static const struct attribute_group platform_profile=
-_group =3D {
->         .is_visible =3D profile_class_is_visible,
->  };
->
-> +/**
-> + * profile_update_legacy - Update the legacy sysfs interface
-> + *
-> + * This wrapper takes care of only updating the legacy sysfs interface
-> + * if it was registered during module initialization.
-> + *
-> + * Return: 0 on success or error code on failure.
-> + */
-> +static int profile_update_legacy(void)
-> +{
-> +       if (!acpi_kobj)
-> +               return 0;
-> +
-> +       return sysfs_update_group(acpi_kobj, &platform_profile_group);
-> +}
-> +
->  /**
->   * platform_profile_notify - Notify class device and legacy sysfs interf=
-ace
->   * @dev: The class device
-> @@ -481,7 +511,7 @@ void platform_profile_notify(struct device *dev)
->         scoped_cond_guard(mutex_intr, return, &profile_lock) {
->                 _notify_class_profile(dev, NULL);
->         }
-> -       sysfs_notify(acpi_kobj, NULL, "platform_profile");
-> +       profile_notify_legacy();
->  }
->  EXPORT_SYMBOL_GPL(platform_profile_notify);
->
-> @@ -529,7 +559,7 @@ int platform_profile_cycle(void)
->                         return err;
->         }
->
-> -       sysfs_notify(acpi_kobj, NULL, "platform_profile");
-> +       profile_notify_legacy();
->
->         return 0;
->  }
-> @@ -603,9 +633,9 @@ struct device *platform_profile_register(struct devic=
-e *dev, const char *name,
->                 goto cleanup_ida;
->         }
->
-> -       sysfs_notify(acpi_kobj, NULL, "platform_profile");
-> +       profile_notify_legacy();
->
-> -       err =3D sysfs_update_group(acpi_kobj, &platform_profile_group);
-> +       err =3D profile_update_legacy();
->         if (err)
->                 goto cleanup_cur;
->
-> @@ -639,8 +669,8 @@ void platform_profile_remove(struct device *dev)
->         ida_free(&platform_profile_ida, pprof->minor);
->         device_unregister(&pprof->dev);
->
-> -       sysfs_notify(acpi_kobj, NULL, "platform_profile");
-> -       sysfs_update_group(acpi_kobj, &platform_profile_group);
-> +       profile_notify_legacy();
-> +       profile_update_legacy();
->  }
->  EXPORT_SYMBOL_GPL(platform_profile_remove);
->
-> @@ -692,16 +722,28 @@ static int __init platform_profile_init(void)
->         if (err)
->                 return err;
->
-> -       err =3D sysfs_create_group(acpi_kobj, &platform_profile_group);
-> -       if (err)
-> -               class_unregister(&platform_profile_class);
-> +       /*
-> +        * The ACPI kobject can be missing if ACPI was disabled during bo=
-oting.
-> +        * We thus skip the initialization of the legacy sysfs interface =
-in such
-> +        * cases to allow the platform profile class to work on ARM64 not=
-ebooks
-> +        * without ACPI support.
-> +        */
-> +       if (acpi_kobj) {
-> +               err =3D sysfs_create_group(acpi_kobj, &platform_profile_g=
-roup);
-> +               if (err < 0) {
-> +                       class_unregister(&platform_profile_class);
-> +                       return err;
-> +               }
-> +       }
->
-> -       return err;
-> +       return 0;
->  }
->
->  static void __exit platform_profile_exit(void)
->  {
-> -       sysfs_remove_group(acpi_kobj, &platform_profile_group);
-> +       if (acpi_kobj)
-> +               sysfs_remove_group(acpi_kobj, &platform_profile_group);
-> +
->         class_unregister(&platform_profile_class);
->  }
->  module_init(platform_profile_init);
-> --
-> 2.39.5
->
->
+>>> +
+>>> +/**
+>>> + * stratix10_svc_async_prepare_response - Prepare the response data 
+>>> for an asynchronous transaction.
+>>> + * @chan: Pointer to the service channel structure.
+>>> + * @handle: Pointer to the asynchronous handler structure.
+>>> + * @data: Pointer to the callback data structure.
+>>> + *
+>>> + * This function prepares the response data for an asynchronous 
+>>> transaction. It
+>>> + * extracts the response data from the SMC response structure and 
+>>> stores it in
+>>> + * the callback data structure. The function also logs the 
+>>> completion of the
+>>> + * asynchronous transaction.
+>>> + *
+>>> + * Return: 0 on success, -ENOENT if the command is invalid
+>>> + */
+>>> +static int stratix10_svc_async_prepare_response(struct 
+>>> stratix10_svc_chan *chan,
+>>> +                        struct stratix10_svc_async_handler *handle,
+>>> +                        struct stratix10_svc_cb_data *data)
+>>> +{
+>>> +    struct stratix10_svc_client_msg *p_msg =
+>>> +        (struct stratix10_svc_client_msg *)handle->msg;
+>>> +    struct stratix10_svc_controller *ctrl = chan->ctrl;
+>>> +
+>>> +    data->status = STRATIX10_GET_SDM_STATUS_CODE(handle->res.a1);
+>>> +
+>>> +    switch (p_msg->command) {
+>>> +    default:
+>>> +        dev_alert(ctrl->dev, "Invalid command\n ,%d", p_msg->command);
+>>> +        return -ENOENT;
+>>> +    }
+>>
+>> What is the above code doing?
+> 
+> This function prepares the response  for clients after retriving the 
+> response from the Arm Trusted Firmware using the polling call. Currently 
+> only the negative scenario is shown for incvalid command, the last patch 
+> in series adds command for hwmon for the positive scenario.
+> 
+
+Okay, but this is confusing. Please just add this to the last patch then.
+
+
+
