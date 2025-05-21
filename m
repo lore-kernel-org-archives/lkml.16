@@ -1,136 +1,119 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C7722FE17
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 05:41:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C1B4230BC5
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 05:41:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747806099; cv=none; b=NvLS/7PGHIfSu3HfqgG6IsgKHfpswzNSGxc4i6BEioM78kV5bjCuqviE93iOW9mvTnwT2NFPGEg3BsW4Y+zmOBq2uOBCEwabj2NCT57V5g/rjH9yfk12TbLlUWcbMLsdoJZj4GVjouL7SaRvEjh+lrqXJQcwi28+fRIDz1fhejo=
+	t=1747806101; cv=none; b=MKZijWzq9KgKODSERjBibFKE5CQ9+nMpJHRf5dRaZ+jzzt14Ciww1JNT3LwwPdaSkMP8FK/OA0TWXeCZ39G0AjdmtY+11WwtexbKYcuzp4cLhccca2de+ep1P/gxwb8OIn16887Pnb8Ftdcd4nT8+suwSqJ1ZP674j3Jkq0xYvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747806099; c=relaxed/simple;
-	bh=gVMYi2KXFIxkgo1AzUtu6TFWb8Gd28Rl9AtJgWeGwxA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aiAlbJ8w6tBtkJLdBn1gNgceFUt0pvkfPXgYYQMoPTww0GwGFdmNqGWkvn+WwoQpFWjoom9x+JAOs5C0Xxhy30nj4DvdLUvDQdegU/jMxJPUMbZ6zFlwSRmJkJFTMGCyY+LqKaxYKG4TnSuqXCxeRebGoMU1Vt1e1xKBXqMpOO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=JKkEMKAh; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	s=arc-20240116; t=1747806101; c=relaxed/simple;
+	bh=WuKPUIc4ggVixbgxrmfedA4AH8Wix3/q/5/YdGnifww=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YdbdutZsxyCkq/aVFcB5qgydR0Ghbyu2XjNMGA3yh8SXDSfSU8oNgkrRsbftXLmJik6/etV8GVlcUb1MdTDdlOAp+2y+R2PCYZuaCtMfBCcOJFvDMVoVgsiUz2no3LBJoyDDnbGxYcqlKlvGXN9dl8PCe7xnEqbcFc4QwHcmM4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DIx0B2CO; arc=none smtp.client-ip=209.85.128.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="JKkEMKAh"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ad52d9be53cso762605866b.2
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 22:41:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DIx0B2CO"
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-70d70ee042dso21684167b3.2
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 22:41:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1747806096; x=1748410896; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Xfw7r6IjPRXEXEyQv9Fnmp9CqnD74IPvRrDSDuZuNUA=;
-        b=JKkEMKAh5qq6km3th1iaqQdRpQt04GB+8oDFKIvzCm543Ff/bizd63oLYAr4Qg2404
-         bWHPzcqMgzUU9QNnfCvgg6avHuNZ1vMl+YOCHSxivCN700JW3XSGezAVKgd8OLzfD61H
-         FgtHo0CC9C93j8KEC0eWCLcjEHVt0DMmzppCBPhjFTc2AMHK9ksozkPHEmGwLkV81Cy/
-         xBqh/XUWZO2HUY9K2nSE/+OJP1agT0id6zhHVpBhr/eJmouEvqO5gEfpdz3tcWP4hoXW
-         VMOsKa63zORjJzR8NDz696yFYuAYKb6DiGXhJsba7rBXjXsy6PXc4PJZkAotPSgZizFZ
-         ve5g==
+        d=gmail.com; s=20230601; t=1747806098; x=1748410898; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WuKPUIc4ggVixbgxrmfedA4AH8Wix3/q/5/YdGnifww=;
+        b=DIx0B2CO+iAOj6bJFmM6v9lnQGKMMtp90IhVzzly/WVQPTwV2gTXxdOriG0Wwj/8Pe
+         4o2YmrprlyoisspMz4utLMJQMZN/81uq9coGoBkpPCv/IXZDY4RDvS01eRnLVp9pg57f
+         FGHNRdJPkSM4Y6S0HTDvdQ/yv6QCTFgk8eyTrXXStlPU0yONi5MldFiQ3LsSmciiU210
+         o5rKZ63l1mqki6LL3IwT6xlE1PpkBoZAuZNcubv2LMKyEB4xxe6yUU3ClRC0B+DSkVpu
+         Iw5f8ltWIZV1k8EtZTRBgc7g9c2wRlV6D+Tcfykf6OMMogNCuDiLQk64oRSrp1BUZWFL
+         Vsyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747806096; x=1748410896;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xfw7r6IjPRXEXEyQv9Fnmp9CqnD74IPvRrDSDuZuNUA=;
-        b=lqjbyYFix1sxucqJ1h44WQWhdtC8+9bVjL/Qz5uid138On+3SJSSewj7+7F2WjZMx5
-         lv4aQFk3RFSXt+589tVmh+DxYQM+UzlrNnFQGTrQI/ztXbzenRKKt0ILZDVlbZS+GDrp
-         B5YtsB10Mm5YT8p+VvrINKoeczsFKkWAeoZzAMvF8q7i7NLPQuIwvoE3UkVKFsYPvXBL
-         eVaIDRkhSM8HUd+WdhBWVy+7S2bvDLGgScEp5UmD11bB9rW4s1zRuP6btgTE8OHMfHs0
-         fWwtGq4RL6/jNHdpphbwrbxYZkYrsp870n4NLvWs1I9H8hf3g2OojSG1bpaiHInyHy3a
-         wCrg==
-X-Forwarded-Encrypted: i=1; AJvYcCUoAgiacam1qJwxgflEjW5XzQLeCcI9MMd/1/8/Ilpz5YW+/jEHi9DTr6KwhmnCxe0NH8cWO9b+Krom7ZA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwahWYXnuXAMKPbfSOCFxDc6fUKr3EsbNNDC58wN6pVQfrp2cUx
-	u4le4D5kM18qDKMOAqxvPRRbGZT0CSd0BwIlTK+nNxM/YNAhbmwzRPXBinWgD8f6aJg=
-X-Gm-Gg: ASbGncu6ILH5WNmx43OBcHVrx7tzwElh7r/FBhPcKuMBPRVXBa/MrttZDSqkYu9UVQN
-	0nrp2agH2BT7eMXznFap03qCCrNd8nbxFCc1KTUMPbSRlR22J8++r1V5jZoIsTZKN1coOjFWK03
-	rans1+oF34xUzCGI/RjKjGZlFb+Z+pDaqHmZ9YyjTyTiwvGfUQbr98fegGfznMfl82gLaL5LC2A
-	h7xxvM6DjJa1N37rHg51Qxm2F5oc+BaizwU1WYv44Bg0syIAsdt9Jv41B/Smd8G4TX/uO1n0EkK
-	wk8CU30cLktu+CLgrshVC80LgUtGdvK1+Nivfpt3J2+kU+6nOgTvBeM6Clg=
-X-Google-Smtp-Source: AGHT+IEHcpkHL7FVjfhOCs3RSSgST9xKyVYzTeL//ZqimrYsmpvzaIYc2ltC9ry3ZT20xorhYqoUSw==
-X-Received: by 2002:a17:907:7d86:b0:ad5:61fb:265 with SMTP id a640c23a62f3a-ad561fb301dmr1098617466b.47.1747806095547;
-        Tue, 20 May 2025 22:41:35 -0700 (PDT)
-Received: from [192.168.50.4] ([82.78.167.58])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d06d299sm843248766b.48.2025.05.20.22.41.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 May 2025 22:41:35 -0700 (PDT)
-Message-ID: <a20fc6ee-c6c3-4013-b175-4918b9a44380@tuxon.dev>
-Date: Wed, 21 May 2025 08:41:33 +0300
+        d=1e100.net; s=20230601; t=1747806098; x=1748410898;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WuKPUIc4ggVixbgxrmfedA4AH8Wix3/q/5/YdGnifww=;
+        b=b8A5qS8CiKsWqdq1yrHghRceNkFSW4H7LlF9YTUzqnKT42+xUFpTq81JaTvaJSWiC6
+         rR/9LRmhhiKWk4rjppKUk4pS8o9BNJ7fHs7ngtIinEPI8rLEJNcEX8R6c5oF4D47y/bg
+         bXCsZbkKc7XKSNMFfAlVKsaWgbuWoUZTm4ScX7tACHMuvmDC9toNdxuFIIhz5xKh1dw+
+         J7m4yjJXyYk8JJRbrFzZO4KRYRZc9AxyuN0zLzoqESoJ0e/woCe2XhbiJQxIQ5AxskF4
+         aGKGGt2IHqbZw98hKbcr/mRXKbZlBIBls3AnklnnGLPhpx0q5TCKpOB3q4rSfVt8VRKL
+         qVDg==
+X-Forwarded-Encrypted: i=1; AJvYcCUqG+F1L+QNEQqg3EQjFRL7+0/8x6N9cxmUUKvm1UcDv9vnD0wqUREE3m4Ci3EXu8KKwmFXnm50qF4GF70=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJhMRHfhZuXDDpxFG66+gaVoPJvOj8zwnXV41T37AzSz5CUW+P
+	HCsVyP84r0ztwHgNYS5yVy4/m3tBC0+FlMo/1f1NMCh6WQUH41wHkVvEeK6yN6LsSgETD3sJb4k
+	tDAVfmzhRE8dyZYdLdrSL89DuTiEMK1Cnd4tt
+X-Gm-Gg: ASbGncsYFVSzRxTx0QsacwVESkmXgR9CKXgxumHj9rdWEj7SnT/oC6KyziM4DBSNE69
+	x7E03aINNi9sq7YrRNH+AOfXr3R2mj+qxgEAuKx9aZBTk2YucOV7FjajcU72qqObvEGMq2vuaVN
+	Y/wrKtKpTymBCGGVUM5rP4hdoyXPZGAydICHg5U2h9Cb8Y5+qWwHf2vb6t+v25A2L9
+X-Google-Smtp-Source: AGHT+IGdSZe7ylfgOWcxywNa73o7coZc7jyagjAA4TlJYJVRxstnsjYUscSako9JGhA3ho960/y7DVvylMCCgAFPLnM=
+X-Received: by 2002:a05:690c:4981:b0:70c:b882:2e5 with SMTP id
+ 00721157ae682-70cb88204d7mr223289207b3.2.1747806098307; Tue, 20 May 2025
+ 22:41:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] driver core: platform: Use devres group to free driver
- probe resources
-To: Ulf Hansson <ulf.hansson@linaro.org>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>,
- dakr@kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org, geert@linux-m68k.org,
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-iio@vger.kernel.org,
- bhelgaas@google.com
-References: <8d83ea72-bb81-4c63-bf69-28cf5848ae20@tuxon.dev>
- <20250305140309.744866b2@jic23-huawei> <Z8k8lDxA53gUJa0n@google.com>
- <f74085be-7b14-4551-a0a7-779318a5dc70@tuxon.dev>
- <20250330163129.02f24afb@jic23-huawei>
- <5bca6dfd-fe03-4c44-acf4-a51673124338@tuxon.dev>
- <95f5923f-7a8f-4947-b588-419525930bcb@tuxon.dev>
- <CAPDyKFoMqmCFBoO8FwQe2wHh2kqQi4jUZNFyiNckK7QhGVgmvg@mail.gmail.com>
- <c3a2950a-17ff-444a-bee7-af5e7e10e2bf@tuxon.dev>
- <CAPDyKFozR4qDq4mzcZBK-LcoPf=fGyuJTXwdt=Ey+_DcQOAp0g@mail.gmail.com>
- <4o3wo76st7w6qwyye3rrayuo2qx773i6jfzcnbkhdj76ouh7ds@3e2mblehkgwf>
- <CAPDyKFqMB7XutXba73YHx1X4rm6uc3Fz6yMZ8yM=wgduEmgUDg@mail.gmail.com>
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Content-Language: en-US
-In-Reply-To: <CAPDyKFqMB7XutXba73YHx1X4rm6uc3Fz6yMZ8yM=wgduEmgUDg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <CAG+54DZYz-4hW33Py9mihHDauWw55=_rP71s1MbCg-5gxw7J7Q@mail.gmail.com>
+ <2025052116-diaphragm-payback-a3ef@gregkh>
+In-Reply-To: <2025052116-diaphragm-payback-a3ef@gregkh>
+From: rujra <braker.noob.kernel@gmail.com>
+Date: Wed, 21 May 2025 11:11:26 +0530
+X-Gm-Features: AX0GCFvPSzModwUdGmboKsJgQOYx09zLVKlfPKnab7JQIOmFxYmkMhIanR6ZZLk
+Message-ID: <CAG+54Db4k-sMVHUsUWx=oN-AXE5aife=Ugx4f49smGnhq6=-0g@mail.gmail.com>
+Subject: Re: [PATCH RESEND] staging : greybus : Documentation : firmware :
+ Replace deprecated strncpy() with strscpy()
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Johan Hovold <johan@kernel.org>, elder@kernel.org, greybus-dev@lists.linaro.org, 
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi, Ulf,
+Hi greg,
 
-On 20.05.2025 15:09, Ulf Hansson wrote:
-> For example, even if the order is made correctly, suppose a driver's
-> ->remove() callback completes by turning off the resources for its
-> device and leaves runtime PM enabled, as it relies on devres to do it
-> some point later. Beyond this point, nothing would prevent userspace
-> for runtime resuming/suspending the device via sysfs. 
+why is this a RESEND ?:
 
-If I'm not wrong, that can't happen? The driver_sysfs_remove() is called
-before device_remove() (which calls the driver remove) is called, this
-being the call path:
+>> I had sent the same patch 4 days ago and didn't get any reply , hence tr=
+ied to resend the same patch for the same,
+here is earlier mail :
+https://mail.google.com/mail/u/1/?ik=3Df63b03515e&view=3Dom&permmsgid=3Dmsg=
+-a:s:12290863930259651721
+,
 
-device_driver_detach() ->
-  device_release_driver_internal() ->
-    __device_release_driver() ->
-      driver_sysfs_remove()
-      // ...
-      device_remove()
+line does not match this:
+>> sorry , i could not get it what it is exactly ?, if possible can you sha=
+re some insights or example so that from in future i would get it right.
 
-And the driver_sysfs_remove() calls in the end __kernfs_remove() which
-looks to me like the place that actually drops the entries from sysfs, this
-being a call path for it:
+thank you,
+rujra bhatt
 
-driver_sysfs_remove() ->
-  sysfs_remove_link() ->
-    kernfs_remove_by_name() ->
-      kernfs_remove_by_name_ns() ->
-        __kernfs_remove() ->
 
-activating the following line in __kernfs_remove():
 
-pr_debug("kernfs %s: removing\n", kernfs_rcu_name(kn));
-
-leads to the following prints when unbinding the watchdog device from its
-watchdog driver (attached to platform bus) on my board:
-https://p.fr33tux.org/935252
-
-Thank you,
-Claudiu
+On Wed, May 21, 2025 at 11:00=E2=80=AFAM Greg KH <gregkh@linuxfoundation.or=
+g> wrote:
+>
+> On Wed, May 21, 2025 at 10:26:52AM +0530, rujra wrote:
+> > To ensure that the firmware tag is properly null-terminated. When
+> > copying firmware tag strings to prevent buffer overflows and ensure
+> > data integrity.
+> >
+> >
+> > changes has been made in 3 positions:
+> > 1: update firmware tag
+> > 2: backend update firmware tag
+> > 3: backend update firmware tag with unipro
+> >
+> > Signed-off-by: Rujra Bhatt <braker.noob.kernel@gmail.com>
+>
+> Your From: line does not match this :(
+>
+> Also, why is this a "RESEND"?
+>
+> thanks,
+>
+> greg k-h
