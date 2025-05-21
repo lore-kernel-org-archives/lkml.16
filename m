@@ -1,185 +1,237 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB85F1DF75C;
-	Wed, 21 May 2025 15:36:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D21D4221FDD
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 15:36:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747841781; cv=none; b=ZvjX8S4Qc9APwlW8uVQmPm58p3fTMAXwcZ6Iu/214X1Sr8do1/ntzmc8Aj3QHMQMDcuSfyqdHYJQwi5aMzxw19MFdC1ESx36WSMCxUJMHDaX9xJbcsmPADLslbaXrJQHDOqY5ZDuNL+codHK3TrchRayPG393yVoYMrKLaV72AM=
+	t=1747841784; cv=none; b=AwJ+3XUHw419YOqjORwIIBkSWD52iYOG4Yt1QOfIKEuS+9+Fl52QO1IFdjgqftdDWKzfPZzUciSf/72TmH+EBaoIyncaKh2Skr+a7koECQQO3w8kEeUjc2FADvCeKTqPHN9RBDiUGOgq7fSlq7sqijvrFAJqeR32/rujGuEYRwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747841781; c=relaxed/simple;
-	bh=UTL7SiFKKvOirXMWemCxFWYzpc7Z7sQJ6etd7+yLdJk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=c+4rnGHJH8YVu6D61+H2nys5H75ZC08ouKYQ0EhXRYG0qx68i/biDoWL7WkfHa898lYGGanuulgNsB2aDC+ZreEkvJ4Z/j/QXBL6DDzCaP60YAd6HwbF2A4GytU4oiC/oA4sgjc6sOiQIWaHDOX5T9x+7vscwmATvprF1OWTRbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=eANismHF; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1747841784; c=relaxed/simple;
+	bh=a4TO+sh7sgx1Rud1APajtsJjXwfKZgcAOLcv91dEAWc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JdQwmap7nnq2WF0IieqfC3db7zOrzs4scA2VKKoms/6U588Lxv6myQDZa1iAytKUvdVzi0TDVf2yemt7hlm/feL1reXr+lYAEFzG2Wa1ycqQLYA2gQh0U3CLdMKAgpCAO/YHIfo8Ow7ONteGIOJCH8QTA34nOJ4/6Xjl3dmvXJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=F99ZgcoJ; arc=none smtp.client-ip=209.85.166.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="eANismHF"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54L9XOmF031739;
-	Wed, 21 May 2025 15:36:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	IAN7xfkdJsrXYCucX4LVEeFg0XuifoWsEtiNMI5kgDY=; b=eANismHFHFbQ2dTq
-	wG0qJcNzA+Fz1YnQn+YInyJQSvA0A6huiXpkoKt0ehDZ7qe9pxI6lTUwWZeJxcfF
-	EiajszFCy715GZmqv192vkltPMBhil+EeEfTvU/g7xrahV+vKjF3NE2G7Uvyxaz8
-	YipqXrilE2DnPz4ltWTPDcn7Y3ysiFGZsC0FIIqQuRoCaPUikaM7736/9SJeP6Ln
-	ybqFXQeFRodEnzxyVjwoAd2YMX6lCRVEe5uAY6PF3nGGJmyYmfH6Ut6a65rw56hE
-	HaeKndVbIY1OLvU56eJThdrLUOrPGTziRFJNub5kHKP2IDnUq3LMyhXfMB8UNgbZ
-	piba3w==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46s8c21y52-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 15:36:17 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54LFaGa8020603
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 15:36:16 GMT
-Received: from [10.216.4.234] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 21 May
- 2025 08:36:09 -0700
-Message-ID: <ca83b841-aea0-4233-93fe-02a7b5985af4@quicinc.com>
-Date: Wed, 21 May 2025 21:06:06 +0530
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F99ZgcoJ"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3d96836c1c2so984965ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 08:36:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747841782; x=1748446582; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Az3/bLvwhgAccccliRUeu6lJ2uvLaYoVC/qOEZV47ms=;
+        b=F99ZgcoJQj5M+CFdGSAXyFuIOjnCeglvXgtykK73hp1sRhMLj9QucCi8gnZuLA+xa/
+         oZfIQJeaX+suMDi2PoE/SjW0esRV+OJFW/KehENBmV1/6vmgtmaVsXXU+b0qYpSKIup4
+         pBRv34GI1SaFOlCR/m/XA9RfI0yDYiQtjAhnVT8WpWjqfxpUGlF6tVshGxsZ5tKMT9Mn
+         6eB1zbUtR7vfiVEVtSgKFYrNSZsVa1VxK4zzTHGaHSBPV/TqLgxwIxtQOis/38ZJXq/a
+         GmRBRtaNj36JZ1NY+1mk7VMLy/N5aPAl+hmZCnMEu2hmc2ZYfqAbTijxa56Yco0v8SXS
+         /JOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747841782; x=1748446582;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Az3/bLvwhgAccccliRUeu6lJ2uvLaYoVC/qOEZV47ms=;
+        b=nCuqENUF3+znPrma/wjSXrdqSItvC5tH4TEPn22Mn8M8+/gXkd+iH91C4/muS99BNS
+         MIY03kMThhciLdOOhgmwuPTdqAKB0JOs1nJDT2xEKMsrrm5kCE/pnxDGb5uhkaED3AM3
+         9vAe099oftiDQYTPAmiCWT0ZZdm64sXanUwAGd8Szk0ETJc1VNwBM95BBiUXpvS1U/+t
+         szywQLAg0aGRm441xAlKFKBuMWXywBxqy1EaGQiquyVltPFiLaUcGEsonj8c8gixI7j+
+         qvmaK6Z8MBB1I+0+xIeh5AsCWZEFga4/lfVyW5/keY0m//HNI5vQRv1cCavEPIwQhnBz
+         lcBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVo+wllYqCpeJ03IlHcQfuaigfw+m9pENtipQ1QwO2LkjlvLhNB0FTiK21/E44ssprNEoNPvRfxZ1sxRIU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmjCPVnpqODFfdQYmPLRlZhkd837w1cxr7HVhWYUuu2z9lSQdK
+	AFsvYp1iFjV6tNuV3Pr5KD8qx7AZiOvR6G//em4QLAXgt6oOncbyn+oU/aFYw/zAkpadqF0MHD+
+	/W9zD/v5rHIF1RawRhTGUDLMcLW56KDzagsZDGHDZ
+X-Gm-Gg: ASbGncsXSVrLw4JHgJgrlbzr+u8qPUIGJO5JP2Cr1mfF/zOiqj21JXwhyS4DZ1oO4Rr
+	dob0CY7wekbNdStuLv+vHUINc1XyB1RcorIZCrRnHWQt2qGn0yaH+ihllqWqGoOd7mGWmRL5TMm
+	G735lk0hLR9PCkizbNmQvfDKb3ZXpf7seeNUWHwbT6WGd13+Ar81qaJD+9Vw2aZ66VijQkZn81Q
+	5w9weUg2+A=
+X-Google-Smtp-Source: AGHT+IExe/qiDd82F0VPU9OyslSsa74vsznODI2XirW1CU3HzJLOhKrOAhY6hnuLK9U9rc6IjPD+SqI8/2nJKLwhXpk=
+X-Received: by 2002:a05:6e02:1c29:b0:3dc:8116:44a8 with SMTP id
+ e9e14a558f8ab-3dc81164585mr4888995ab.26.1747841781531; Wed, 21 May 2025
+ 08:36:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V1] mmc: sdhci-msm: Enable MMC_CAP_AGGRESSIVE_PM for
- qualcomm controllers
-Content-Language: en-US
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-CC: Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson
-	<ulf.hansson@linaro.org>, <linux-mmc@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_cang@quicinc.com>, <quic_nguyenb@quicinc.com>,
-        <quic_rampraka@quicinc.com>, <quic_pragalla@quicinc.com>,
-        <quic_sayalil@quicinc.com>, <quic_nitirawa@quicinc.com>,
-        <quic_bhaskarv@quicinc.com>, <kernel@quicinc.com>
-References: <20241104060722.10642-1-quic_sartgarg@quicinc.com>
- <konkbi4hvd7qc4rhokwrymzqntroy7gijk3ndwv5rluswdrykp@xsafrtrjzmuq>
- <10c90fee-ce7f-4034-9028-4252f19cb67f@quicinc.com>
- <CAA8EJpoLLDXFQk-ViuaioKrECzMV0aUrcOj4v+Ufs4oHY53mrw@mail.gmail.com>
- <064d3eed-c2ea-4b41-85b2-d2a5a922f8c7@quicinc.com>
- <ehgjdszjr34xppmkrkicb4pnq326nor26tqu2ekop6ew2j3y3h@pm45aiipzuc5>
- <48c73675-a73f-46f1-81a9-f701a2cf00a5@quicinc.com>
- <c1ebdaf1-92bb-4f73-bca9-35246d7c10e1@oss.qualcomm.com>
-From: Sarthak Garg <quic_sartgarg@quicinc.com>
-In-Reply-To: <c1ebdaf1-92bb-4f73-bca9-35246d7c10e1@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDE1MiBTYWx0ZWRfXycaR8XK+Fduw
- +ZgDebDCDvHwGsl6adYwh8XMmlX5X45iGWHs6UmlplNA5nO+cxy1Jsc4NEx2DNAfzHzBuCOpLR8
- rwOzjQJW5nTtdAA9KfgX8P5Dya6IqV1msratNOf2lLDZv4tDe4tEK6EjHaHautgDNHNHjz3Udbo
- SZl7MySiXkXjK+HbN2om0CuMNNq/LnVi6GlOEmFUmmwuYOkM3HjuNszKT150a3ERj0jcYKtz7Vd
- d2pAzMcRU8j5BjNNcKAgFC77SUQPv5tqOU1IV9BNLsyi/iZd+rCYU1+L4YuqsWaesMh/T4Jz9nK
- WABlgmRWNBb7HTGNSnYKfUSteL5Ct/jw5Qq7HTticXuDuxyj7SuCni2dermbUpVBNpDEke6BeTf
- qOq7cR+ixFHlLiNBScUGgqeET8Ab0Zk82N5rbAQtYf5mx783B/hUiGjE4M7nbzstcBKkvECn
-X-Authority-Analysis: v=2.4 cv=RIuzH5i+ c=1 sm=1 tr=0 ts=682df2f1 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8
- a=COk6AnOGAAAA:8 a=3-RhneuVAAAA:8 a=klJr9PZRHvcjy1RyZuwA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22 a=VLVLkjT_5ZicWzSuYqSo:22
-X-Proofpoint-ORIG-GUID: 6Ol0jiJbRU6L-foP8B6koTEcKUMu5vfI
-X-Proofpoint-GUID: 6Ol0jiJbRU6L-foP8B6koTEcKUMu5vfI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-21_05,2025-05-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 phishscore=0 suspectscore=0 malwarescore=0 bulkscore=0
- mlxlogscore=999 spamscore=0 lowpriorityscore=0 mlxscore=0 priorityscore=1501
- adultscore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505210152
+References: <20250116230955.867152-1-rkanwal@rivosinc.com> <20250116230955.867152-2-rkanwal@rivosinc.com>
+ <CAP-5=fU9ovvb-JopPqQfNaj6xtL=u_WZO-b56RdhBmUw4mY0ZA@mail.gmail.com>
+ <CAECbVCvX8St8sXh9pTnyO_94-cJT_DB4MyggtS_-PXqWNtXDXw@mail.gmail.com> <CAECbVCui6ZgHBXBr3LdVGd16ERe0GgAnA1zy_zOQZVTU3bPoWw@mail.gmail.com>
+In-Reply-To: <CAECbVCui6ZgHBXBr3LdVGd16ERe0GgAnA1zy_zOQZVTU3bPoWw@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 21 May 2025 08:36:09 -0700
+X-Gm-Features: AX0GCFutvbsbaRRv95Ix63BFV2gQsIqNkZTt3-Zp5Jf6rbiC2pQQste-OqEaHZw
+Message-ID: <CAP-5=fUy0QfmazuNq1yJzAxsuM7wD3zD=KAVMGHuw0wXvez1ww@mail.gmail.com>
+Subject: Re: [PATCH v2 1/7] perf: Increase the maximum number of samples to 256.
+To: Rajnesh Kanwal <rkanwal@rivosinc.com>
+Cc: ak@linux.intel.com, "Liang, Kan" <kan.liang@linux.intel.com>, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-perf-users@vger.kernel.org, adrian.hunter@intel.com, 
+	alexander.shishkin@linux.intel.com, ajones@ventanamicro.com, 
+	anup@brainfault.org, acme@kernel.org, atishp@rivosinc.com, 
+	beeman@rivosinc.com, brauner@kernel.org, conor@kernel.org, heiko@sntech.de, 
+	mingo@redhat.com, james.clark@arm.com, renyu.zj@linux.alibaba.com, 
+	jolsa@kernel.org, jisheng.teoh@starfivetech.com, palmer@dabbelt.com, 
+	will@kernel.org, kaiwenxue1@gmail.com, vincent.chen@sifive.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, May 21, 2025 at 3:47=E2=80=AFAM Rajnesh Kanwal <rkanwal@rivosinc.co=
+m> wrote:
+>
+> On Thu, Apr 17, 2025 at 1:51=E2=80=AFPM Rajnesh Kanwal <rkanwal@rivosinc.=
+com> wrote:
+> >
+> > + Adding Andi Kleen.
+> >
+> > On Thu, Feb 20, 2025 at 6:51=E2=80=AFPM Ian Rogers <irogers@google.com>=
+ wrote:
+> > >
+> > > On Thu, Jan 16, 2025 at 3:10=E2=80=AFPM Rajnesh Kanwal <rkanwal@rivos=
+inc.com> wrote:
+> > > >
+> > > > RISCV CTR extension support a maximum depth of 256 last branch reco=
+rds.
+> > > > The 127 entries limit results in corrupting CTR entries for RISC-V =
+if
+> > > > configured to be 256 entries. This will not impact any other archit=
+ectures
+> > > > as it is just increasing maximum limit of possible entries.
+> > >
+> > > I wonder if rather than a constant this code should just use the auto
+> > > resizing hashmap code?
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tr=
+ee/tools/perf/util/hashmap.h
+> > >
+> > > I assume the value of 127 comes from perf_event.h's PERF_MAX_STACK_DE=
+PTH:
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tr=
+ee/include/uapi/linux/perf_event.h#n1252
+> > >
+> > > Perhaps these constants shouldn't exist. The perf-record man page men=
+tions:
+> > > sysctl.kernel.perf_event_max_stack
+> > > which I believe gets a value from
+> > > /proc/sys/kernel/perf_event_max_stack, so maybe these should be
+> > > runtime determined constants rather than compile time.
+>
+> While working on this, I came across the following two patches. It
+> looks like what
+> you have suggested, it was tried before but later on Arnaldo reverted the=
+ change
+> from report and script cmds due to reasons mentioned in the second patch.
+>
+> https://lore.kernel.org/lkml/1461767472-8827-31-git-send-email-acme@kerne=
+l.org/
+> https://lore.kernel.org/lkml/1463696493-27528-8-git-send-email-acme@kerne=
+l.org/
 
+Thanks Rajnash, agreed on what you found. I wonder to resolve the
+issue we could add a header feature:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/util/header.h?h=3Dperf-tools-next#n21
+for max stack depth.
 
-On 5/21/2025 8:19 PM, Dmitry Baryshkov wrote:
-> On 21/05/2025 17:35, Sarthak Garg wrote:
->>
->>
->> On 5/21/2025 6:25 PM, Dmitry Baryshkov wrote:
->>> On Wed, May 21, 2025 at 12:46:49PM +0530, Sarthak Garg wrote:
->>>>
->>>>
->>>> On 11/15/2024 6:53 PM, Dmitry Baryshkov wrote:
->>>>> On Fri, 15 Nov 2024 at 12:23, Sarthak Garg 
->>>>> <quic_sartgarg@quicinc.com> wrote:
->>>>>>
->>>>>>
->>>>>>
->>>>>> On 11/4/2024 4:19 PM, Dmitry Baryshkov wrote:
->>>>>>> On Mon, Nov 04, 2024 at 11:37:22AM +0530, Sarthak Garg wrote:
->>>>>>>> Enable MMC_CAP_AGGRESSIVE_PM for qualcomm controllers.
->>>>>>>> This enables runtime PM for eMMC/SD card.
->>>>>>>
->>>>>>> Could you please mention, which platforms were tested with this 
->>>>>>> patch?
->>>>>>> Note, upstream kernel supports a lot of platforms, including 
->>>>>>> MSM8974, I
->>>>>>> think the oldest one, which uses SDHCI.
->>>>>>>
->>>>>>
->>>>>> This was tested with qdu1000 platform.
->>>>>
->>>>> Are you sure that it won't break other platforms?
->>>>>
->>>>
->>>> Thanks for your valuable comment.
->>>> I am not sure about the older platforms so to avoid issues on older
->>>> platforms we can enable this for all SDCC version 5.0 targets ?
->>>
->>> No, there are still a lot of platforms. Either explain why this is
->>> required for all v5 platforms (and won't break those) or find some other
->>> way, e.g. limit the change to QDU1000, explaining why it is _not_
->>> applicable to other platforms.
->>>
->>
->> Thanks for your comment.
-> 
-> No need to.
->  >> I agree with your concern but for me also its not possible to test on
->> all the platforms.
-> 
-> Sure.
-> >> Lets say if I want to enable this caps for QDU1000 for which it has
->> been tested and on any other upcoming target after testing, then how 
->> can I proceed to enable?
-> 
-> Let's start from the beginning: why do you want to enable it on QDU1000?
-> 
+Thanks,
+Ian
 
-QDU1000 is one latest available target where we have enabled this and 
-tested. This has been enabled to save power.
-
->>
->> One option I had thought of was to implement this using compatible 
->> string, then for all the upcoming platforms using this compatible 
->> string as a fallback.
->> But this doesn't look optimal to use compatible string for just one 
->> flag and also this capability is not platform specific and we will be 
->> needing for all the platforms. Please share your opinion on this.
->>
->> Another option that I could have thought of is using device tree based 
->> approach but seems that was not accepted earlier :
->> https://patchwork.kernel.org/project/linux-mmc/ 
->> patch/20230129023630.830764-1-chenhuiz@axis.com/
->>
->> So it would be helpful if you can suggest some approach?
-> 
-> Worst case, just tie it to the SoC-specific compat string that is 
-> already a part of the bindings.
-> 
-> 
-
-Sure will try to explore better solution before going for the worst case.
+> Regards
+> Rajnesh
+>
+>
+> > >
+> >
+> > Thanks Ian for your feedback. I am not sure if it's feasible to use aut=
+o
+> > resizing hashmap here. On each sample of 256 entries we will be doing
+> > 6 callocs and transferring a whole lot of entries in hashmap_grow. We
+> > can't reuse old hashmap as well. On each sample we bear the same cost
+> >
+> > But I do agree this should be more dynamic but the maximum number
+> > of entries remove_loops can process is limited by the type of chash arr=
+ay
+> > here. I can change it and related logic to use uint16_t or higher but w=
+e
+> > will still have a cap on the number of entries.
+> >
+> > PERF_MAX_BRANCH_DEPTH seems to be denoting what remove_loops
+> > can process. This is being used by thread__resolve_callchain_sample to
+> > check if the sample is processable before calling remove_loops. I think
+> > this can't be changed to use perf_event_max_stack. But I can rename
+> > this macro to avoid confusion.
+> >
+> > I didn't notice PERF_MAX_STACK_DEPTH. This seems to be defined in
+> > multiple places and touches bpf as well. I agree that we should avoid
+> > using this macro and use runtime determined value instead. Tbh I don't
+> > have super in-depth perf understanding. I will give this a try and send=
+ a
+> > patch in the next update. It would be helpful if you can review it.
+> >
+> > Thanks
+> > -Rajnesh
+> >
+> > > Thanks,
+> > > Ian
+> > >
+> > > > Signed-off-by: Rajnesh Kanwal <rkanwal@rivosinc.com>
+> > > > ---
+> > > >  tools/perf/util/machine.c | 21 ++++++++++++++-------
+> > > >  1 file changed, 14 insertions(+), 7 deletions(-)
+> > > >
+> > > > diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> > > > index 27d5345d2b30..f2eb3c20274e 100644
+> > > > --- a/tools/perf/util/machine.c
+> > > > +++ b/tools/perf/util/machine.c
+> > > > @@ -2174,25 +2174,32 @@ static void save_iterations(struct iteratio=
+ns *iter,
+> > > >                 iter->cycles +=3D be[i].flags.cycles;
+> > > >  }
+> > > >
+> > > > -#define CHASHSZ 127
+> > > > -#define CHASHBITS 7
+> > > > -#define NO_ENTRY 0xff
+> > > > +#define CHASHBITS 8
+> > > > +#define NO_ENTRY 0xffU
+> > > >
+> > > > -#define PERF_MAX_BRANCH_DEPTH 127
+> > > > +#define PERF_MAX_BRANCH_DEPTH 256
+> > > >
+> > > >  /* Remove loops. */
+> > > > +/* Note: Last entry (i=3D=3Dff) will never be checked against NO_E=
+NTRY
+> > > > + * so it's safe to have an unsigned char array to process 256 entr=
+ies
+> > > > + * without causing clash between last entry and NO_ENTRY value.
+> > > > + */
+> > > >  static int remove_loops(struct branch_entry *l, int nr,
+> > > >                         struct iterations *iter)
+> > > >  {
+> > > >         int i, j, off;
+> > > > -       unsigned char chash[CHASHSZ];
+> > > > +       unsigned char chash[PERF_MAX_BRANCH_DEPTH];
+> > > >
+> > > >         memset(chash, NO_ENTRY, sizeof(chash));
+> > > >
+> > > > -       BUG_ON(PERF_MAX_BRANCH_DEPTH > 255);
+> > > > +       BUG_ON(PERF_MAX_BRANCH_DEPTH > 256);
+> > > >
+> > > >         for (i =3D 0; i < nr; i++) {
+> > > > -               int h =3D hash_64(l[i].from, CHASHBITS) % CHASHSZ;
+> > > > +               /* Remainder division by PERF_MAX_BRANCH_DEPTH is n=
+ot
+> > > > +                * needed as hash_64 will anyway limit the hash
+> > > > +                * to CHASHBITS
+> > > > +                */
+> > > > +               int h =3D hash_64(l[i].from, CHASHBITS);
+> > > >
+> > > >                 /* no collision handling for now */
+> > > >                 if (chash[h] =3D=3D NO_ENTRY) {
+> > > > --
+> > > > 2.34.1
+> > > >
