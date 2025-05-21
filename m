@@ -1,40 +1,41 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from antaris-organics.com (mail.antaris-organics.com [91.227.220.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 960B713212A
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 17:36:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2488A1DF754;
+	Wed, 21 May 2025 17:37:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.227.220.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747848971; cv=none; b=YDlJDt8aAgslNjQuTuq9T5g/frKuUJoSGeHR7eifU/VGGQMbAObAKDTBijfhZZhyIScFuLCo52ibVheYZEkzqTJ37GGzDLZ1NSOVg3qi0ELQBiZ//gIJMp4fZh8hPKfg1ATJ577m5RLXU/mN/sWbyRvgo+Qx3K1HPgvup5VZbjQ=
+	t=1747849047; cv=none; b=dJ59iZUlC5fSWDR5jg1864UIBJz3jUwVPeGnxvlIfSR+diejDs9Rs/N24batcAiGnwrh9kCeqMty0yEC9AvMiKm2Z6fW9BqpxtOGMgwwAFvz0dmUQ4lq15CjOho6AsmPeDdZWTrnlyvpe3wd9tPTGjjoD32nQcX7BcAnhZrGVeY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747848971; c=relaxed/simple;
-	bh=1iBApbOnMwD4s86bJ43Gj3P+hGilvbBdfmvfecQrp48=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hVmmjrZkb6GKcT/axz+zYUtOwKOfWHCQlOc3K7yn6uJ+93CjIhtAtgoIbbDJqQjGnUIRiGOLRnA0KTEfsRG6h2lbRHECCWvz1kojiuI5Di++DQ5aGsIyYfImtDUitjVoFpjCYtIEPOeH9gnmBgqE14gpxZ/1u3mSbAFglJwDwhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uFs612pM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747849047; c=relaxed/simple;
+	bh=6DYtum/yE8yw0XIB5NJUai4hbQwmsNyiPVNlaXG29oo=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j0kYNwTKmc2fTCQNGA2/6FJFySPxi5VcRC0XxRsUccID1UEqhiMIs68yNdxW1S7SKlRrGXTbnFolgu2VwPCOJAq6DTK2AswJRqvduoe8zTr5LoSk8cNEbnCS8/3ejrHi/zh3PLPDlnCjolrxWZn3KiQBm9DzqJLxwfzicLqb1A8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mareichelt.com; spf=pass smtp.mailfrom=mareichelt.com; dkim=pass (2048-bit key) header.d=mareichelt.com header.i=@mareichelt.com header.b=S5JAgwNm; arc=none smtp.client-ip=91.227.220.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mareichelt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mareichelt.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uFs612pM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93FBDC4CEE4;
-	Wed, 21 May 2025 17:36:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747848970;
-	bh=1iBApbOnMwD4s86bJ43Gj3P+hGilvbBdfmvfecQrp48=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uFs612pMJBeSQnOxBf5rsb5e85ZNPhUoWvDapoXtEUzfI1iPC2rQwdyZMpoKqMZGj
-	 HnTecojCZuADgPpdFYTPh9mF/g9DGaEN6PGBWQ2JAJS35KNPxkNMpA6UYrLiJLi96I
-	 VMXcIxHbSgVbznk4NOtRuzF8cJyQgTs9bLIwXglrwBaHwFWdqTsR5fDf/OJgbKOHjD
-	 R+9hGe0trS0474qx8DfzjBnKHr8aOC+xvAq6lj3/JKl/rAnzfCkq7Y3h8gOUSXtMAs
-	 7ihuWWN+124GjPoXY0Jl1dsEbnwc82JwDix1JJoCwlSadkF6NAVe+NDZS/TJDQdEWk
-	 JlN/agJ8GZkHg==
-Date: Wed, 21 May 2025 07:36:08 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Andrea Righi <arighi@nvidia.com>
-Cc: David Vernet <void@manifault.com>, Changwoo Min <changwoo@igalia.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCHSET sched_ext/for-6.16] sched_ext: Unify idle CPU
- selection kfuncs
-Message-ID: <aC4PCPVj-84QGQ2g@slm.duckdns.org>
-References: <20250521073548.140307-1-arighi@nvidia.com>
+	dkim=pass (2048-bit key) header.d=mareichelt.com header.i=@mareichelt.com header.b="S5JAgwNm"
+Date: Wed, 21 May 2025 19:37:23 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mareichelt.com;
+	s=202107; t=1747849044;
+	bh=6DYtum/yE8yw0XIB5NJUai4hbQwmsNyiPVNlaXG29oo=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:In-Reply-To:Cc:Cc:content-type:content-type:date:date:
+	 From:from:in-reply-to:in-reply-to:message-id:mime-version:
+	 mime-version:references:reply-to:Sender:Subject:Subject:To:To;
+	b=S5JAgwNmNEhNASMFkrf9O4xu04ayT8H1GkteUmvTVyIJjmL3z4+OSSWnzYBPooZHX
+	 mVWVMgtwmrmxi4Y70JVxfM5j+aGp9DMVFf39aUyG/FE0DK4vehtwZ3fyEAeu/N0IFm
+	 p7IR8qi2+ycD5sXsAFzgGRpo7+4MVnrJFQhahayB7QCdSNYEqbJOM/NaC0UC94+c2Z
+	 u5FzRzwtcty5NepGUjkemQq5JAb5Al9tpcRe6M+ixKzz72iEHM01C8spCEm54bycFu
+	 c4mhwPCGn/4K3/m71t960YteURf+TzsWzcIWmNJtUNrzeq63Q/kuWejiG0clIKa0kN
+	 3z0e8docU6tJQ==
+From: Markus Reichelt <lkt+2023@mareichelt.com>
+To: stable@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6.12 000/143] 6.12.30-rc1 review
+Message-ID: <20250521173723.GB27779@pc21.mareichelt.com>
+Mail-Followup-To: stable@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250520125810.036375422@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,22 +44,21 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250521073548.140307-1-arighi@nvidia.com>
+In-Reply-To: <20250520125810.036375422@linuxfoundation.org>
 
-On Wed, May 21, 2025 at 09:34:05AM +0200, Andrea Righi wrote:
-> As discussed in [1], consolidate scx_bpf_select_cpu_dfl() and
-> scx_bpf_select_cpu_and(), allowing them to be called from the same contexts
-> and update the corresponding kselftest to reflect this change.
+* Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+
+> This is the start of the stable review cycle for the 6.12.30 release.
+> There are 143 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> [1] https://lore.kernel.org/all/aCl1nq0hUJ7IdtC5@gpd3/
-> 
-> Andrea Righi (2):
->       sched_ext: idle: Consolidate default idle CPU selection kfuncs
->       selftests/sched_ext: Update test enq_select_cpu_fails
+> Responses should be made by Thu, 22 May 2025 12:57:37 +0000.
+> Anything received after that time might be too late.
 
-Applied to sched_ext/for-6.16.
+Hi Greg
 
-Thanks.
+6.12.30-rc1 compiles, boots and runs here on x86_64 (AMD Ryzen 5 7520U,
+Slackware64-current), no regressions observed.
 
--- 
-tejun
+Tested-by: Markus Reichelt <lkt+2023@mareichelt.com>
