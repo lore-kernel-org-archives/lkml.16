@@ -1,155 +1,113 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC5EA2D613;
-	Wed, 21 May 2025 13:03:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75C142D613;
+	Wed, 21 May 2025 13:03:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747832617; cv=none; b=p5DqPP6kfVRMaz+DglgW8KnBMEDPT3aFXhuUVzCdLgk3n0g9cs6KFTQoXNG/CrJu+8+FEyaRa4ONjIG6+ieh9B44VjnHprXcwGaz0BcRF8ZeqSJF/slQWJi01lHr+M5d0YFcVjnKodywT7gB7T3l3UoeJS4OLXyM6qhUXgzdVaQ=
+	t=1747832621; cv=none; b=QdbC4SyJ6gbZ8JJBFVHs32sRKfC7Jgv4YFfasAhl8Oh0gXGAh+pRBo7t7UmLp/aeU1rpNjpEieNfSzdWQcsTm7ZhJaSjUk1p/QzJBYWit01PM4xcDueXRhj/m1/EVl3JKjzYB/CXohIk9fE1PAH3HEgnwWnPxnzjezkIiumYJqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747832617; c=relaxed/simple;
-	bh=vbrIPeAuJ804IDldj8BNXob9QvdNPd4/FN9fztDObZk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LMN5VxIf1M6tIbjzTPFijThrG4MeQqQOwHrGZo0dK4YDAxftxTmVCKCMPF9UTdLdhGMnZdyBb+5QFxCbtPxP/ElJm3BZrtxVVEHGOUCwoiaHvRs3JphR7sYkgSL/GUTFB7JlQ7PZQyGoEInhRpUQKQ4XSvO8z9uzql5nBcjfRd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gMad1plC; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747832621; c=relaxed/simple;
+	bh=Qbn7PRSdI6A1vFXmvZ3FylGRMq8wFbpdqz6uoGJ1KTk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uH1ee7gWaqyljVv2MnMY1R8CsB4L529lL303Y8q9bLak8Da3SfhB0CnWFsNKvv67ZWueGihkyLyAkewtNhc3iJ357/iiNcDm1reqsgYdpC0g2jQiXoeGlm1/aNyyJai/1mdMKt+6sAei0O2y4Kf07ehT3ZR93tpmEEqO3q8ndx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vPTrN2Jp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gMad1plC"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a3673e12c4so2624783f8f.2;
-        Wed, 21 May 2025 06:03:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747832613; x=1748437413; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wxUCNKcIAtTYLrDekvN1ZxlXpxO8icS4vzE5Gw13lAc=;
-        b=gMad1plCFvd4ZXYGkOSKrY16d0owZ8ts2MXbS3koDrru4m9p+o3RUj+pETZfQoNJJY
-         fvUR5oH0M0agHHKHZ+wxgLQANt3NO62IDsYP/KmX+fOg8RJb/ufzObIQdnnIldBaMd51
-         jll9CJHMbz9lAxz0eLyOj8XCsPaT4kvBka6DcqF56awAmZ9XeuSg4a2zpYCORofLSFzm
-         uMKSYmoitIPauo574RuxGMPUG9tPmztPUQmoEdmKHO/Tir41bgfy4N4oq0UGqAW+0Bqs
-         4V6yB3gsR4x8dH9wDhYcPzd1lL2oNi36LKxNsAM9aSindpYGLYjJ2VFv7MPJH6nvr6QL
-         0jPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747832613; x=1748437413;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wxUCNKcIAtTYLrDekvN1ZxlXpxO8icS4vzE5Gw13lAc=;
-        b=tI4xR0vezrTXt5kDkKSw+eKJ+hav/OCht5li6V2v00pVT947CBt6WYw9j5pnanG83W
-         AEjQljvRZZphZMzlU5lSBza8N5CJg5EVDwkSi1f8+kUJ7fPYMRd5OAduVWe2rVHigH7u
-         KknjcTOBrbpEn87ZDFlT7bcAYm0+X7DLQ6AdBTKP1mzCH6530LpxGgoxJ/wDQgQvY4oC
-         Vq4m6EsgreC6I1l80mBNpQa3daHDRcBC4RxQ6AXTGUtbZ73eqJ8iqSCCNbyKJx1XIPux
-         zj//jzYoz2RHRf4DPqfLetgtF88l2oNG9uPDSiXF66NmVkLPp9O5OD5EjpDYFNVTAipE
-         em5A==
-X-Forwarded-Encrypted: i=1; AJvYcCUE5CN4jEZ3VN4LzsdfChT3/v+zczU6jri25CZrvGFYIWwFrygWbw6vYo8xIE3XCRFQiDyGe+Y3n43m@vger.kernel.org, AJvYcCUW+TPT9qvRFVqg8SmjukJvarjIM7sJJd2T317TLAPzis2Jd9eizrNNfQfUfkGd99XMtJ23au/Aww53qVXLEV1Ol8o=@vger.kernel.org, AJvYcCXSij07UWEUiVHXrmE8C6aepBD4MAf4Qa31VtxcLV3MTQpb850XWgHn40JVKp70FVNrWSTfFxFAQw8KoibH@vger.kernel.org
-X-Gm-Message-State: AOJu0YxH5qriXMF3OWCGtW0ljf79lM7dIwegpZXJSpw2V/nxUmWY6dng
-	MVvyWDlgk2LArd4qIDVjZ+x23Wpznv8EdOqk0XRoQBNtp63J11271YQRzDJLlvRYMUWaLPKJsNy
-	vcbTpPcJHA6LkXQdkfmnfk7k1jEt2RUkB/Y/Cx9s=
-X-Gm-Gg: ASbGnctSP9hjpAAksfwKNJNd+Mq05sPZeR1fbaa8T44u7aVht4wkw8o5grv9+h1rpXN
-	j7hJFqNO7PXWwiz9xLQ/uw17e6+wtSLAbBOtXDzeI0Yrmu/VSkjSj5kDKxcMsGwdVXTMLZ6SeTp
-	D4hfA1pyzyl18oeGJun7CFCS35Lr4=
-X-Google-Smtp-Source: AGHT+IF/naWSKz9Iv0UJNgBSgjeRcEZZGj46F7Ju4nJrrYSa1meUmDtFjbIVglIeqEAVFZYHjaKdytI2+lWr5HTtIkE=
-X-Received: by 2002:a05:6000:1a88:b0:3a3:63d3:36a7 with SMTP id
- ffacd0b85a97d-3a363d33916mr16104984f8f.33.1747832612802; Wed, 21 May 2025
- 06:03:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vPTrN2Jp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35C29C4CEE7;
+	Wed, 21 May 2025 13:03:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747832621;
+	bh=Qbn7PRSdI6A1vFXmvZ3FylGRMq8wFbpdqz6uoGJ1KTk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=vPTrN2JpL+5ssHyulU38iilerOyjb74mQlk2LvwX5/ybdDb5OXBd6GjUwBq49NZtI
+	 SRdftiDutw8Zb1SOaGM6Qd9HDSK2dQV1Pv4NE3sTgM7DeL8abyWOw2XekpHKyK7Ey8
+	 7Dkmm5oPcKdZNcG31Ot3biWo9Y/sOrFiGxQHr3tb4vxYnTYVRdl0UQB4JoUzpRtoA5
+	 ZGza6qn7Rl/l2iS3Y7cR/bmVvP8evv92wDse2aM/Y+9zxYEgQWQUJe83iT94tXim89
+	 5tipJx89Jl3SPqSS2H0Af9/Evi3G5geCAx8tppJTpB2nAwlBYlhs+aAQte3c2JW4FD
+	 +uiC6O63YzT7A==
+Date: Wed, 21 May 2025 14:03:37 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc: Willy Tarreau <w@1wt.eu>, Shuah Khan <shuah@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 1/9] tools/nolibc: move ioctl() to sys/ioctl.h
+Message-ID: <eda3af4a-8dfe-4f82-a934-2d0256b754e2@sirena.org.uk>
+References: <20250515-nolibc-sys-v1-0-74f82eea3b59@weissschuh.net>
+ <20250515-nolibc-sys-v1-1-74f82eea3b59@weissschuh.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250512182330.238259-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250512182330.238259-5-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250520140514.GD13321@pendragon.ideasonboard.com>
-In-Reply-To: <20250520140514.GD13321@pendragon.ideasonboard.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Wed, 21 May 2025 14:03:05 +0100
-X-Gm-Features: AX0GCFvSCItvyC7zSPBsFZ7h_B5ndgyUu6UlDl1R2XH7TowgSYTkizcIkSlL3n0
-Message-ID: <CA+V-a8vn46BLWyn0DCp-6h3eZD8ef+r7vLCy6vkfkyehdM8d7g@mail.gmail.com>
-Subject: Re: [PATCH v5 04/12] drm: renesas: rz-du: mipi_dsi: Simplify HSFREQ calculation
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Biju Das <biju.das.jz@bp.renesas.com>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Magnus Damm <magnus.damm@gmail.com>, dri-devel@lists.freedesktop.org, 
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="qmCeH574rrIaZhHB"
+Content-Disposition: inline
+In-Reply-To: <20250515-nolibc-sys-v1-1-74f82eea3b59@weissschuh.net>
+X-Cookie: You need not be present to win.
+
+
+--qmCeH574rrIaZhHB
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi Laurent,
+On Thu, May 15, 2025 at 09:57:47PM +0200, Thomas Wei=DFschuh wrote:
+> This is the location regular userspace expects this definition.
+>=20
+> Signed-off-by: Thomas Wei=DFschuh <linux@weissschuh.net>
 
-Thank you for the review.
+This is in -next as b8c436bbef0f2a and breaks the build of all the arm64
+selftests using nolibc:=20
 
-On Tue, May 20, 2025 at 3:05=E2=80=AFPM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> Hi Prabhakar,
->
-> Thank you for the patch.
->
-> On Mon, May 12, 2025 at 07:23:22PM +0100, Prabhakar wrote:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > Simplify the high-speed clock frequency (HSFREQ) calculation by removin=
-g
-> > the redundant multiplication and division by 8. The updated equation:
-> >
-> >     hsfreq =3D (mode->clock * bpp) / (dsi->lanes);
->
-> You can drop the parentheses around the second factor. You can actuall
-> drop all prentheses.
->
-Agreed, I will drop the parentheses.
+clang --target=3Daarch64-linux-gnu -fintegrated-as -fno-asynchronous-unwind=
+-tables -fno-ident -s -Os -nostdlib \
+	-static -include ../../../../include/nolibc/nolibc.h \
+	-ffreestanding -Wall tpidr2.c -o /home/broonie/git/bisect/tools/testing/se=
+lftests/arm64/abi/tpidr2 -lgcc
+In file included from <built-in>:1:
+In file included from ./../../../../include/nolibc/nolibc.h:100:
+=2E/../../../../include/nolibc/sys/ioctl.h:8:10: fatal error: 'nolibc.h' fi=
+le not found
+    8 | #include "nolibc.h"
+      |          ^~~~~~~~~~
+1 error generated.
 
-> >
-> > produces the same result while improving readability and clarity.
-> >
-> > Additionally, update the comment to clarify the relationship between HS
-> > clock bit frequency, HS byte clock frequency, and HSFREQ.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
-> > ---
-> > v4->v5:
-> > - No changes
-> >
-> > v3->v4:
-> > - No changes
-> >
-> > v2->v3:
-> > - No changes
-> >
-> > v1->v2:
-> > - Added Reviewed-by tag from Biju
-> > ---
-> >  drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c b/drivers/g=
-pu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-> > index ec8baecb9ba5..c5f698cd74f1 100644
-> > --- a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-> > +++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-> > @@ -277,10 +277,10 @@ static int rzg2l_mipi_dsi_startup(struct rzg2l_mi=
-pi_dsi *dsi,
-> >        *       hsclk: DSI HS Byte clock frequency (Hz)
-> >        *       lanes: number of data lanes
-> >        *
-> > -      * hsclk(bit) =3D hsclk(byte) * 8
-> > +      * hsclk(bit) =3D hsclk(byte) * 8 =3D hsfreq
-> >        */
-> >       bpp =3D mipi_dsi_pixel_format_to_bpp(dsi->format);
-> > -     hsfreq =3D (mode->clock * bpp * 8) / (8 * dsi->lanes);
-> > +     hsfreq =3D (mode->clock * bpp) / dsi->lanes;
->
-> You can drop the parentheses here too.
->
-OK, I'll drop the parentheses.
+This happens because:
 
-Cheers,
-Prabhakar
+> +++ b/tools/include/nolibc/sys/ioctl.h
+> @@ -0,0 +1,29 @@
+> +/* SPDX-License-Identifier: LGPL-2.1 OR MIT */
+> +/*
+> + * Ioctl definitions for NOLIBC
+> + * Copyright (C) 2017-2021 Willy Tarreau <w@1wt.eu>
+> + */
+> +
+> +/* make sure to include all global symbols */
+> +#include "nolibc.h"
+
+assumes that the nolibc include directory is in the include path, or
+otherwise set up with a -I path, previously you just had to include
+nolibc.h with the includes that are there working due to being relative
+to nolibc.h.  I'll send a patch for the arm64 tests.
+
+It looks like the RISC-V selftests are also impacted, I didn't spot any
+other users that didn't already have an -I.
+
+--qmCeH574rrIaZhHB
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgtzygACgkQJNaLcl1U
+h9DhQgf+JgacUZkzi23s2F8G/UznZcACYtRmlTDLwYsVcgns91u9TYZ9CvpFHkVb
+B477GNwDzt6lZeEgS26QWH5rnf+j/596lvIOS+FnsYIutEnoyyGxDKySN/9QxTgm
+H+j7MJV5CsOgE5SEJpdPus+jiuFcqesuubgOx1Jx1UlluZLfUOrSL9q4mWkbcIu+
+FD/421e+mtTQqgxS9JNkn9JcGXaZVITc193UGNFNEPeLBK+doMbxUjE2M45UXttC
+ZZg8EZRJ3J0ndGc2YXZ459olXkF+d9SAg4w9ELIfASUlV0DkZHu/3du8fiQngUtK
+daXVnzFHpb93bTyjZoe2Dat4HarlcA==
+=W+G+
+-----END PGP SIGNATURE-----
+
+--qmCeH574rrIaZhHB--
