@@ -1,84 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A5CD635
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 06:06:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6F6512E5B;
+	Wed, 21 May 2025 06:08:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747807577; cv=none; b=aCm5VGwYIx7+G6mvsVcxOOrBdA5hnn2MrBLGRIj4C4pOBO6ut/XTdhID7mTH2ESjAlgW3NAVOP+9vMyHDGYDRzfPH6VlWJUIwUeYRH1iTbYK5ox2SSjcaSG05CHQAFDyS3I7nbsAR/9Au2Iy6EhqyeX+7MMPqjOnTx/K7Mzj/NI=
+	t=1747807733; cv=none; b=fFIeYrZ1wQy0Fm7QfX/vRS7cWpHe8fAWoJxLryMuVNtME0U10/1W47mYjmX82vXNLd7MYOw3cGd98PQ56bJw1cGmqvf/lyQQ4YLv1Gz+0No2xwEOIvrDJchG8TZgeHv0IbxcUxAtJdflyibIcRg4Y0d/3SxZpCfHAs/HR9tcWbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747807577; c=relaxed/simple;
-	bh=Sv6ILvaJa+fw9Od09i4qiDcqE8ahmFmFZ7k95KwTEYQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jvPWyqWTMQEWCQ2JCiYc+GQt2wjp5cRIA5zv0pxrlNzphsFPQOfG5SY+iA7BtSMy2j2GSQ/kMgglBwP+cZygxuOebBNLtDSS6wbViHsQvyp0+e6FAO77beZmD29CI1E+5NUmWNgP0ORPUQWqKfsyz8gn8tcmzAvk5QkZPu+XIj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vf/w0K7P; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747807733; c=relaxed/simple;
+	bh=fqCmeUHx0FwWnh1ReP+MONXpTkX28d/rWGe51x8Qv5I=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RucjwVfkgdHwyZJNVItAyY+bt+pxZCFRH9jMkPIF4UVzTVBf3oPGnBrdcRFChTfmw1LNom5UJenn9P/R+BcqsRGtsOh5YV42/SVsOxZzUGCGMpohn7/O1Tvd0qEOS8TdliVmAyiYRaZak4wBzyeSv1oxJgkppUFSBaTADhFbUkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=evMk45oG; arc=none smtp.client-ip=67.231.148.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vf/w0K7P"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4C31C4CEE4;
-	Wed, 21 May 2025 06:06:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747807576;
-	bh=Sv6ILvaJa+fw9Od09i4qiDcqE8ahmFmFZ7k95KwTEYQ=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=Vf/w0K7PfAG4fI5mQh+y+HDF6+QaBKQYj0h/Vge8Gq2UUlIHztEiboZgJiMo5ycwX
-	 I1WfFY2rNI+DHDt5UgH+ndcODV8CcCe69DOjGITtuYOr0AxqUKv8RGXtdSrrrdm5yd
-	 h/1DaTVDexdo9y9PJOWhG0ofwsc7Mi19JEZrL17i0sgZ5eWgNSjoWJOGbuMdr+rSlU
-	 IioSlQgYUfN2j3hwT4q4RyVYD+H6pKDj1tfo9N0R/mlq64+3n2YDskGBS5LLwfmdBB
-	 rWOlWWxOgf/Bf+C169T752BbYMWiu5+0xCcob1siizk8v7DVO4jGvhjkX2YT2ycZgM
-	 eRx0EnzrLZbSQ==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 3E78FCE08F4; Tue, 20 May 2025 23:06:16 -0700 (PDT)
-Date: Tue, 20 May 2025 23:06:16 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: John Ogness <john.ogness@linutronix.de>,
-	LKML <linux-kernel@vger.kernel.org>, Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	"senozhatsky@chromium.org" <senozhatsky@chromium.org>
-Subject: Re: printk NMI splat on boot
-Message-ID: <fe455126-7b33-4246-b626-44ef33013765@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <a93e1a96-3685-41c3-8979-472b20dfca14@kernel.dk>
- <84a577t590.fsf@jogness.linutronix.de>
- <c99232fa-e861-48ec-8438-028e61d3b744@kernel.dk>
- <36ccb46d-5041-47ce-b419-f49ccaeece9b@kernel.dk>
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="evMk45oG"
+Received: from pps.filterd (m0431384.ppops.net [127.0.0.1])
+	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54KNcfu5031889;
+	Tue, 20 May 2025 23:08:40 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-type:date:from:message-id:mime-version:subject:to; s=
+	pfpt0220; bh=T9eaAaDeNeEfWA5paAwl9kYIyBBzTBWsa+OvJ7s2/tY=; b=evM
+	k45oGlNOINk1aekJMZJ4TLiU3clO0f50HPhYZvuFlj9wVJzBeBkjE231m13VrCDN
+	FJKKXMjRrwMZRrbX7xjWM10E5RSTGlEQTLmcHdEzP5xPh6HT6AARAcsnuqtKPwNk
+	Xa59FDuPMGso/CEuGXeHlg2Q7Rn7OvWnUBZB1NZAzA9HkBi4AMC6tdML2jf81w/D
+	kvNlLPOffTzwxArB/JA/aRLrhHQfku3z9PJIxRWBNh9aWpB7saECz9ZX+sTR4rxY
+	cszCDjGNSfjkEr3AsrkHDr6ahCq006rGoOxSMeyb0uKXroZerra60bwSlbhUoBVh
+	lk6iVXs6QCUyfswhopQ==
+Received: from dc5-exch05.marvell.com ([199.233.59.128])
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 46s3kc8kg7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 20 May 2025 23:08:40 -0700 (PDT)
+Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
+ DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Tue, 20 May 2025 23:08:39 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
+ (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Tue, 20 May 2025 23:08:39 -0700
+Received: from hyd1soter3.marvell.com (unknown [10.29.37.12])
+	by maili.marvell.com (Postfix) with ESMTP id 143343F7077;
+	Tue, 20 May 2025 23:08:35 -0700 (PDT)
+From: Geetha sowjanya <gakula@marvell.com>
+To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <kuba@kernel.org>, <davem@davemloft.net>, <pabeni@redhat.com>,
+        <edumazet@google.com>, <andrew+netdev@lunn.ch>, <sgoutham@marvell.com>,
+        <gakula@marvell.com>, <sbhatta@marvell.com>, <hkelam@marvell.com>
+Subject: [net PATCH 0/2] octeontx2-af: APR Mapping Fixes
+Date: Wed, 21 May 2025 11:38:32 +0530
+Message-ID: <20250521060834.19780-1-gakula@marvell.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <36ccb46d-5041-47ce-b419-f49ccaeece9b@kernel.dk>
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: jjTnz7CYTP4xqzFrfN-YgFACpDyF73L4
+X-Proofpoint-GUID: jjTnz7CYTP4xqzFrfN-YgFACpDyF73L4
+X-Authority-Analysis: v=2.4 cv=TcyWtQQh c=1 sm=1 tr=0 ts=682d6de8 cx=c_pps a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17 a=dt9VzEwgFbYA:10 a=73v077vbolFR-TuZ8xgA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDA1OCBTYWx0ZWRfX9nUJQycffXUd 7fqwUhEaYcbcdC6ot2FrTGGxs2KYfgyhhLWNg25EuJvH9l2DaShgajxl+3IONDK4vSybTWrWzvw V0yZPQufrKwBnmnTNhZWBL01MfhxmIPv6ALiANXc2b8J3cT7cUr6RE2cBZ9Hti1oja8MqO0UL/p
+ 9e9fluizM+V8nGZaKlXm9Dt4u9dL7Gks1qwikZJTsf3IL/WeRhgyPnYe8qj6vpv2V6mf4nrO0fi VV9a0bK6HhiI3KTsSwxW8Btl7UdrCsqfVXPCtDEi0T05d4NCIq3J0JyUbxH+NO258PxzY40L8jv /3EfXGO7SZYsXh+d3OD3CJPmqO6uiSNpHZXy70eZbOhaV50h4FDEH5m0KJQrW9VKIwToR2CfwOl
+ +kk4hp4lF/hIE+r0Mvye+uTMoDVafwkEXUWrplg6WD4A8U+W87ZCXLqpcBZ2SSFga+CsuuuU
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-21_01,2025-05-20_03,2025-03-28_01
 
-On Tue, May 20, 2025 at 02:41:40PM -0600, Jens Axboe wrote:
-> On 5/20/25 2:18 PM, Jens Axboe wrote:
-> >> What values are you using for CONFIG_RCU_EXP_CPU_STALL_TIMEOUT and
-> >> CONFIG_RCU_CPU_STALL_TIMEOUT?
-> > 
-> > CONFIG_RCU_CPU_STALL_TIMEOUT=21
-> > CONFIG_RCU_EXP_CPU_STALL_TIMEOUT=2
-> 
-> This was =20 btw, guess it could cut a bit too much...
+This patch series includes fixes related to APR (LMT)
+mapping and debugfs support.
 
-Just confirming that setting CONFIG_RCU_EXP_CPU_STALL_TIMEOUT to two
-milliseconds is more than a bit on the aggressive side.  ;-)
+Changes include:
 
-Setting it to 20 milliseconds is OK for smartphone-class devices, but
-to the best of my knowledge, setting it less than 21 seconds (as in
-21,000 milliseconds) has not been tested on any other platform.
+Patch 1:Set LMT_ENA bit for APR table entries.
+	Enables the LMT line for each PF/VF by setting
+	the LMT_ENA bit in the APR_LMT_MAP_ENTRY_S
+	structure.
 
-> Changed them to:
-> 
-> CONFIG_RCU_CPU_STALL_TIMEOUT=100
-> CONFIG_RCU_EXP_CPU_STALL_TIMEOUT=0
-> 
-> and complaining is gone.
+Patch-2:Fix APR entry in debugfs
+	The APR table was previously mapped using a fixed size,
+	which could lead to incorrect mappings when the number
+	of PFs and VFs differed from the assumed value.
+	This patch updates the logic to calculate the APR table
+	size dynamically, based on values from the APR_LMT_CFG
+	register, ensuring correct representation in debugfs.
 
-This makes it take the default, which in this case would be the specified
-CONFIG_RCU_CPU_STALL_TIMEOUT value of 100 seconds.  Which is an unusually
-long timeout -- mainline these days is 21 seconds and some distros still
-use the old value of 60 seconds.
+Geetha sowjanya (1):
+   octeontx2-af: Fix APR entry mapping based on APR_LMT_CFG
 
-							Thanx, Paul
+Subbaraya Sundeep (1):
+  octeontx2-af: Set LMT_ENA bit for APR table entries
+
+ .../ethernet/marvell/octeontx2/af/rvu_cn10k.c | 24 +++++++++++++++----
+ .../marvell/octeontx2/af/rvu_debugfs.c        | 11 ++++++---
+ 2 files changed, 27 insertions(+), 8 deletions(-)
+
+-- 
+2.25.1
+
