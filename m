@@ -1,108 +1,188 @@
-Received: from smtpbguseast1.qq.com (smtpbguseast1.qq.com [54.204.34.129])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 902BD267B74;
-	Wed, 21 May 2025 13:12:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.129
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2659E267B74
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 13:13:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747833131; cv=none; b=m9tHgE5w6gCGhXkZV9sxMWfeMoOC3AwHw6ACySqQ8ST3vrynbx/Q4iOUtoTLFtcYNiZ/LnoO3rwKlRrG1FqnO5Vy9IRealrqXSIXl6Bn1Nt7DXcj/cYzk5/fr+NC6kGdI+8IeeSAsIJg5GEYkwtf7fplQtGjx/2RbuQH1qpmr5Y=
+	t=1747833207; cv=none; b=rKG6Iokdvr2wC3+M+wqfvxxTzcYmvIwV2B666VmovMGkLo1tUyBClKH2yhRYwQIZdBPsnAZTPPaKzZAC+B+RIqHrxSgkjrBMi+J9ct3jWQSuRBaZJ1R4WBpxLcZeu3evq3vcquMEGQyJwZ5Ae4lXeZCadVS2QexwuLe/Iv8+Wuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747833131; c=relaxed/simple;
-	bh=UAZyR586T12X8Sqt2X1g6rQPJ0OaKTsV07SFdykI9IQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jDhXduy+0iLVDDv15FLrBSPzNK9vv5SMSNERY01fcOZkLGvrHfGadJJ+e1XUCHnHq0/KOncdMWbVvj0CsY2W+FLiHKfRoqB42D647lQv7G5ZU723Og8UFzsWIEEMUZULblX/kXIauZS+D2/BHR159dwvdpTWQCVvfPikyDsxEdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chainsx.cn; spf=none smtp.mailfrom=chainsx.cn; arc=none smtp.client-ip=54.204.34.129
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chainsx.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=chainsx.cn
-X-QQ-mid: esmtpgz16t1747833076tae521dda
-X-QQ-Originating-IP: NRDtIp6wxGHIj53BWIcJvNUAWwQhM3ael0y7Wl3X1ko=
-Received: from chainsx-ubuntu-server.lan ( [116.249.112.84])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 21 May 2025 21:11:14 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 3315312418809293864
-EX-QQ-RecipientCnt: 16
-From: Hsun Lai <i@chainsx.cn>
-To: robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org
-Cc: i@chainsx.cn,
-	heiko@sntech.de,
-	andrew@lunn.ch,
-	inindev@gmail.com,
-	quentin.schulz@cherry.de,
-	jonas@kwiboo.se,
-	sfr@canb.auug.org.au,
-	nicolas.frattaroli@collabora.com,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	krzysztof.kozlowski@linaro.org,
-	linux-rockchip@lists.infradead.org
-Subject: [PATCH v4 1/3] dt-bindings: vendor-prefixes: Add SakuraPi prefix
-Date: Wed, 21 May 2025 21:11:06 +0800
-Message-Id: <20250521131108.5710-2-i@chainsx.cn>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250521131108.5710-1-i@chainsx.cn>
-References: <20250521131108.5710-1-i@chainsx.cn>
+	s=arc-20240116; t=1747833207; c=relaxed/simple;
+	bh=PEUw8oNToGBQUpdkFgey1gEWtLuJRmRd/HOWRufD8D0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FB1yh9Q4NBvrQlm2YS2h6cR+NezMI3km9y98zscXVkoJYN6dGI2XVtAPGZJ9K6sU+O3UsKKMgNkE5c1qbLUUHjLCoQHL8P9uFWYSVCQo0rhJ7eq8WvXL7ATUaYS4ec4IoDWFYN/Y9tIjDVtIQ0oOEOSwVXLgslI3UuMXezPPrOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fkT7ecYS; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fkT7ecYS"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-742c9563fafso3304217b3a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 06:13:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747833205; x=1748438005; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=DowZvl7qA/uAhVQuHMif7vNt8RT6sHwwCijVL4Xt204=;
+        b=fkT7ecYS4NICRdU9xSXBycNBBO2wEeOv8x98W23bZv5PalpY/RfLCWEWsPN8ASvqIe
+         xWhuWEv7/Maxzuy8dc2VDBKr+unlLE3TXASK6NgmMvrKkzFVNXiKTHZnfV4lmoQqGCkZ
+         kQf71OtCRbnNxQaUeGO7YF7azPIQ7+u4HS1mF6jYGUCAFyTvH76V/bHmpU/g9AcHe4zU
+         46lUJ5a/7Nr1ouwad8XRCiq/L5d3lmnlpBXLONENK/bLoBHRWPJDCfUYOTZgpY8paW9N
+         W7mVKp8DqaPIMSOqy8FVuqxkUSejPxRYtaTIu685/z9qnjRVMB4aLN+oxVXTWb2bAW5S
+         EdrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747833205; x=1748438005;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DowZvl7qA/uAhVQuHMif7vNt8RT6sHwwCijVL4Xt204=;
+        b=fIkgfwKnGLKcSxhmOCGrb/IPlB9rdL8iM67dk4z8+QSp1brICoVxxinI8Zgy4Xv5dG
+         6LtlW/WM2/TISZYncKTih3P7vjs3kFl6LThLhudocxZdp+OXefk/JQBcXM0QWx9IB8os
+         j7YPofOXI2+et9WT8U95sSHnGiANrff1hfS4M/LnD2xP5vMXai/apcFdsQwbVfZhtwJo
+         eQykV8k2wyS9WfAL5LYAq3EULx+ldUesTMbQTGZe1d0yFAb/djvHKoP//vOs6/4ib0da
+         O/brQt1WqSIbBSjGl8lE4WfiSPTCty3SPIK5UfcuKCBoj0YHH0SrvZ8cLrnhdPhJmiuD
+         Zjmg==
+X-Forwarded-Encrypted: i=1; AJvYcCU+iDPv6YcLRc2gJL9dNzW/T+SiOKQXkHrBCK8uAksLs7efs71TDV5tfkcYHyKUFkKINdvGvOckdtrQ3XE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzffrzUg3MjMywty+l5WN+C96IjYAET/bCJHe7jmeLj9mxNgfm2
+	chzN46jnrcYa/ZVGoZ0vNXHz9Jcyqoe4CDS+QASTDAFLmobiMOkjQkO+VlXqF9pJ1w==
+X-Gm-Gg: ASbGncsNgBcIjKGY7f1Mg0lgOE0MgAztQchyIRdW4ZVzLHtw/tKNFX8wYT5gPiRZtt/
+	ojx1Eflg/zQP7SnjaqetUBQymY0p+N/K/E8Ld4yxKuLerF56a0LkuJZXf3JFXPUhtiI7zDotdLa
+	ArDoH8uVDKOMlNNtTITaXLuskd//UWBljh04IrgYod9E/DdUfeKUw7s9LYxKijA/Fno+b5y1rea
+	Uv58XExOOxXwltfXOFbBx2L9pW/TNJllVqODvRQtIH72I/UX3ucfQtjJtW6x0cbD7qQczDbAZWz
+	21YpKpCgmW72u7Razxb6B/f5InUMZAI93VgrYsBxNr4RjZiV/f5QegPrNRK2
+X-Google-Smtp-Source: AGHT+IHiH2b/i4vvEt/AHMBHqqPS0yIzh62+h+3L9fGQ7pUd2qcx4hY61OfXdJ/u8TfPs3p6Vnp3eQ==
+X-Received: by 2002:a17:90b:4b0f:b0:2fe:8a84:e033 with SMTP id 98e67ed59e1d1-30e7d4ebdbcmr32842704a91.2.1747833205356;
+        Wed, 21 May 2025 06:13:25 -0700 (PDT)
+Received: from thinkpad ([120.60.52.42])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f3638710esm3578317a91.20.2025.05.21.06.13.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 May 2025 06:13:24 -0700 (PDT)
+Date: Wed, 21 May 2025 14:13:17 +0100
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Nitin Rawat <quic_nitirawa@quicinc.com>
+Cc: vkoul@kernel.org, kishon@kernel.org, 
+	James.Bottomley@hansenpartnership.com, martin.petersen@oracle.com, bvanassche@acm.org, 
+	andersson@kernel.org, neil.armstrong@linaro.org, dmitry.baryshkov@oss.qualcomm.com, 
+	konrad.dybcio@oss.qualcomm.com, quic_rdwivedi@quicinc.com, quic_cang@quicinc.com, 
+	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-scsi@vger.kernel.org
+Subject: Re: [PATCH V5 03/11] phy: qcom-qmp-ufs: Refactor phy_power_on and
+ phy_calibrate callbacks
+Message-ID: <g6neasajgbbu3iqy3kj6zzizichz5xvrsktepl46ahxepy2nus@whq2j35lc5fe>
+References: <20250515162722.6933-1-quic_nitirawa@quicinc.com>
+ <20250515162722.6933-4-quic_nitirawa@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: esmtpgz:chainsx.cn:qybglogicsvrsz:qybglogicsvrsz3a-0
-X-QQ-XMAILINFO: NULd4DJcKZL/Si+IhAVqJvBoKkZMZOODzr3Yqt9hswfAvOMyqH635xvn
-	3DSmAu+XKPkF1bbqVsizC00n8CQTlZtv4XJsjarkrqmDrsKDyQtw/wGphlXemvkHX+xdSd0
-	KEbrsMp37MhcZl+XTi5mYgJGGLxPiVzjEdaZclZC12voF+h0t4/gHmqGP/iA5XCWkd+PnEB
-	mzxieqa7ctof6y+WopYFP0xHOMAVF/lZ7MgP2Gwqtn4/mdv3Sp67jEwIQMKVTtHX/Oe0kw1
-	xn8Kqqwx1yg1dv57zjUFDOviS6ArTS5JvfwJAlmyjh723pb35ptQ7JYaFrNK/lWwFqtYOEO
-	2SySF4X7oa+xMHLLsOpFvq/7sMHdtET9j4TLc06lIf4OvPh5CCUeIe5LiK9qFG/4qGt+MX4
-	0xEzcoGyAbREPByGiTwA8EfsNyPPJd8DAIMnKf9ulrYEKeSyu9ZCIeQCfr1xfDlqlgPxM+3
-	SsdvorxsjR2780ZvWdIaxKYjPt0earjyWy7dZzQR8FXNA5feVN/BMWJTL6il65T1hh7HlRt
-	lz2OXgwp/kiZMV08ifZEGS/STgRzc34MWAPvn6DWrPLoGvY1XNPxwr182LGYY661nhjChZX
-	UkMioIyIOkL/y35SM5PKpIhxndUDKhwBCSTCUKIhO6P9UOfkvScYzioSHsj7EutpCgOZASC
-	N6O2bQ8BB/HrN0dL4kZd0ikzly2FP3SOVog1UZclLN+e9VyK1Cib0iIgliy0Q+oWCvSEV+j
-	MIcK40U7BU2jNvO6NDpI+dMKCnKV2rhtx9rqwiyO2GQ+4XtAW/TebN+0RTX23zjhr/CA4+h
-	CTOQGD13WE8R/mlE/tTKOngy//CdUX5+BmAni9QDDNwVxm94CxbWJX0V7XOLTIt/Ihyfad1
-	5g2F66hFAha301niwxV+ROjixDHu5iUuJL+IJOP+HqKLT+YRas/adYYTNOLY2TYWgmfshXA
-	elwHkfzoPudC5MqVkbXRhEasUcbQ9AAICvYmPDsQUWY6Idj8daU5erD9ug4AfelU+i2n2/4
-	v37VvYQw==
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-X-QQ-RECHKSPAM: 0
+In-Reply-To: <20250515162722.6933-4-quic_nitirawa@quicinc.com>
 
-Add vendor prefix for SakuraPi.org, which produces
-development boards like the SakuraPi-RK3308B.
+On Thu, May 15, 2025 at 09:57:14PM +0530, Nitin Rawat wrote:
+> Commit 052553af6a31 ("ufs/phy: qcom: Refactor to use phy_init call")
+> puts enabling regulators & clks, calibrating UFS PHY, starting serdes
+> and polling PCS ready status into phy_power_on.
+> 
+> In Current code regulators enable, clks enable, calibrating UFS PHY,
+> start_serdes and polling PCS_ready_status are part of phy_power_on.
+> 
+> UFS PHY registers are retained after power collapse, meaning calibrating
+> UFS PHY, start_serdes and polling PCS_ready_status can be done only when
+> hba is powered_on, and not needed every time when phy_power_on is called
+> during resume. Hence keep the code which enables PHY's regulators & clks
+> in phy_power_on and move the rest steps into phy_calibrate function.
+> 
+> Refactor the code to retain PHY regulators & clks in phy_power_on and
+> move out rest of the code to new phy_calibrate function.
+> 
+> Also move reset_control_assert to qmp_ufs_phy_calibrate to align
+> with Hardware programming guide.
+> 
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> Co-developed-by: Can Guo <quic_cang@quicinc.com>
+> Signed-off-by: Can Guo <quic_cang@quicinc.com>
+> Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
 
-Link: https://docs.sakurapi.org
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Signed-off-by: Hsun Lai <i@chainsx.cn>
+- Mani
 
----
+> ---
+>  drivers/phy/qualcomm/phy-qcom-qmp-ufs.c | 26 ++++++-------------------
+>  1 file changed, 6 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
+> index a67cf0a64f74..ade8e9c4b9ae 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
+> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
+> @@ -1797,7 +1797,7 @@ static int qmp_ufs_com_exit(struct qmp_ufs *qmp)
+>  	return 0;
+>  }
+>  
+> -static int qmp_ufs_init(struct phy *phy)
+> +static int qmp_ufs_power_on(struct phy *phy)
+>  {
+>  	struct qmp_ufs *qmp = phy_get_drvdata(phy);
+>  	const struct qmp_phy_cfg *cfg = qmp->cfg;
+> @@ -1825,10 +1825,6 @@ static int qmp_ufs_init(struct phy *phy)
+>  				return ret;
+>  			}
+>  		}
+> -
+> -		ret = reset_control_assert(qmp->ufs_reset);
+> -		if (ret)
+> -			return ret;
+>  	}
+>  
+>  	ret = qmp_ufs_com_init(qmp);
+> @@ -1847,6 +1843,10 @@ static int qmp_ufs_phy_calibrate(struct phy *phy)
+>  	unsigned int val;
+>  	int ret;
+>  
+> +	ret = reset_control_assert(qmp->ufs_reset);
+> +	if (ret)
+> +		return ret;
+> +
+>  	qmp_ufs_init_registers(qmp, cfg);
+>  
+>  	ret = reset_control_deassert(qmp->ufs_reset);
+> @@ -1899,21 +1899,6 @@ static int qmp_ufs_exit(struct phy *phy)
+>  	return 0;
+>  }
+>  
+> -static int qmp_ufs_power_on(struct phy *phy)
+> -{
+> -	int ret;
+> -
+> -	ret = qmp_ufs_init(phy);
+> -	if (ret)
+> -		return ret;
+> -
+> -	ret = qmp_ufs_phy_calibrate(phy);
+> -	if (ret)
+> -		qmp_ufs_exit(phy);
+> -
+> -	return ret;
+> -}
+> -
+>  static int qmp_ufs_disable(struct phy *phy)
+>  {
+>  	int ret;
+> @@ -1943,6 +1928,7 @@ static int qmp_ufs_set_mode(struct phy *phy, enum phy_mode mode, int submode)
+>  static const struct phy_ops qcom_qmp_ufs_phy_ops = {
+>  	.power_on	= qmp_ufs_power_on,
+>  	.power_off	= qmp_ufs_disable,
+> +	.calibrate	= qmp_ufs_phy_calibrate,
+>  	.set_mode	= qmp_ufs_set_mode,
+>  	.owner		= THIS_MODULE,
+>  };
+> -- 
+> 2.48.1
+> 
 
-Changes in v4:
-- Fix vendor prefixes error (Krzysztof Kozlowski v2)
-
- Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-index 3e7450c3f..7eb2e13ea 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
-@@ -1300,6 +1300,8 @@ patternProperties:
-     description: Recharge Véhicule Électrique (RVE) inc.
-   "^saef,.*":
-     description: Saef Technology Limited
-+  "^sakurapi,.*":
-+    description: SakuraPi.org
-   "^samsung,.*":
-     description: Samsung Semiconductor
-   "^samtec,.*":
 -- 
-2.34.1
-
+மணிவண்ணன் சதாசிவம்
