@@ -1,112 +1,101 @@
-Received: from neil.brown.name (neil.brown.name [103.29.64.221])
+Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10BA323716B;
-	Wed, 21 May 2025 23:32:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 958246EB79
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 23:33:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747870367; cv=none; b=mU1Q2qPmDRb4YTU5eYdoXTaCW9pDqlsnCVmCQ9iV9FR0Qy5ivFZqKDQUshNp1aqvW1rqMcDhszFBVu+oulDz7DZmyPXd8qRtziQBOdXdQAKZk4ADj2KnDPxUv8UcQCBCzALqIiyDnhGcK8Njh1xcQ9sail5acKYN+RNYHiP0obk=
+	t=1747870427; cv=none; b=CR0u5/XkiCqRQPL+gkt3EWZ6bFIuWBCVWQIg3vTMIJ2LHpAVXLz6yRbSAgUARXOzmmxqqXStyw11tl9vc7MRdt5N3okJE3Fw+BratlPkC2U/ttwJaEw58B+RhFnruMmG3AzzZCsMLd3qW7+v7UGxVwoWDliCrWZ9jpXcje6xuC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747870367; c=relaxed/simple;
-	bh=uCqvMDg1KiG4QopSJ9nmufRDSvCKfWNpPjdDCSGY+lQ=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=TUTmdZ8cNkc5QJnrbc525wsd9Yjhd4rfLBREKgrpWQV07qaKoqcUjQL9pOPQI7syIcY4aJYOxa83rzsG+stZ1JXCmdJ9WEnHDgCVIFPturWGBH98/41hbo12JUZNbWqYygEAF6ed/EORK4AzGDi38HeVayQ3Q0t2Vm890bBH+zI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
-Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
-	by neil.brown.name with esmtp (Exim 4.95)
-	(envelope-from <mr@neil.brown.name>)
-	id 1uHsvS-007kbc-9J;
-	Wed, 21 May 2025 23:32:42 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1747870427; c=relaxed/simple;
+	bh=ypGle7kHRl1MnihGO/vMI64ZNjg/4RzE1sAUEi9QX80=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uivEeUh0Otbw6av/fmCdAn6FD3dIesKW2CdFOTkp+WhClrVu9QzIub8b1DcmeXM76NmtWpdE1NFXQN+nbRqXor32A1HVsxy/vTTOKCmvtm3xPK1aUIA1vpTs3zT8QEpyTEb13I7nKVmAJVVQ/Ge5S1Iga5WWQ6UQnglHOi+OU68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=EH5EUkuE; arc=none smtp.client-ip=95.215.58.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="EH5EUkuE"
+Date: Wed, 21 May 2025 16:33:35 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747870423;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DxBHcO2OStLwZGLgLdCMqlriVkxYivQ6RlwIYKIM/tc=;
+	b=EH5EUkuEmwWVmqrUOXyVACQnMwIjko7zqEz8WjuYyHPBRP7gLyO4t5VysG2Tw1KFk0mQyp
+	nGu1pjABkI4+QKpDvhF7jMMXWdZdXv131lPPGi6OLeT9ZgvK4+KVNoiHlZ5ea9o7V6kf81
+	S8DbSMEk8ZfouCXwhwKrn4eDXE9Uef0=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Klara Modin <klarasmodin@gmail.com>
+Cc: Tejun Heo <tj@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Muchun Song <muchun.song@linux.dev>, Yosry Ahmed <yosry.ahmed@linux.dev>, 
+	Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, JP Kobryn <inwardvessel@gmail.com>, bpf@vger.kernel.org, 
+	linux-mm@kvack.org, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Meta kernel team <kernel-team@meta.com>
+Subject: Re: [OFFLIST PATCH 2/2] cgroup: use subsystem-specific rstat locks
+ to avoid contention
+Message-ID: <netbpt5aylanmxb6pxdvvkgket7hjbtxyjyceb6h6v2yyr4tcd@rc5zbyhsms2e>
+References: <20250428174943.69803-1-inwardvessel@gmail.com>
+ <20250428174943.69803-2-inwardvessel@gmail.com>
+ <ad2otaw2zrzql4dch72fal6hlkyu2mt7h2eeg4rxgofzyxsb2f@7cfodklpbexu>
+ <gzwa67k6i35jw5h3qfdajuzxa2zgm6ws2x5rjiisont4xiz4bp@kneusjz5bxwb>
+ <a6le7a3gzao7acxzo4i2sfnoxffmz2vhd34gzlgsow4uy7lv6k@tigt33bel4fi>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neil@brown.name>
-To: "Yan, Haixiao (CN)" <haixiao.yan.cn@windriver.com>
-Cc:
- chuck.lever@oracle.com, stable@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: nfs mount failed with ipv6 addr
-In-reply-to: <6bb8f01e-628d-4353-8ed5-f77939e99df9@windriver.com>
-References: <6bb8f01e-628d-4353-8ed5-f77939e99df9@windriver.com>
-Date: Thu, 22 May 2025 09:32:42 +1000
-Message-id: <174787036205.62796.16633284882232555223@noble.neil.brown.name>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a6le7a3gzao7acxzo4i2sfnoxffmz2vhd34gzlgsow4uy7lv6k@tigt33bel4fi>
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, 22 May 2025, Yan, Haixiao (CN) wrote:
-> On linux-5.10.y, my testcase run failed:
->=20
-> root@intel-x86-64:/opt/wr-test/testcases/userspace/nfs-utils_v6# mount -t n=
-fs [::1]:/mnt/nfs_root /mnt/v6 -o nfsvers=3D3
-> mount.nfs: requested NFS version or transport protocol is not supported
->=20
-> The first bad commit is:
->=20
-> commit 7229200f68662660bb4d55f19247eaf3c79a4217
-> Author: Chuck Lever <chuck.lever@oracle.com>
-> Date: =C2=A0 Mon Jun 3 10:35:02 2024 -0400
->=20
->  =C2=A0 nfsd: don't allow nfsd threads to be signalled.
->=20
->  =C2=A0 [ Upstream commit 3903902401451b1cd9d797a8c79769eb26ac7fe5 ]
->=20
->=20
-> Here is the test log:
->=20
-> root@intel-x86-64:/opt/wr-test/testcases/userspace/nfs-utils_v6# dd if=3D/d=
-ev/zero of=3D/tmp/nfs.img bs=3D1M count=3D100
-> 100+0 records in
-> 100+0 records out
-> 104857600 bytes (105 MB, 100 MiB) copied, 0.0386658 s, 2.7 GB/s
-> root@intel-x86-64:/opt/wr-test/testcases/userspace/nfs-utils_v6# mkfs /tmp/=
-nfs.img
-> mke2fs 1.46.1 (9-Feb-2021)
-> Discarding device blocks:   1024/102400=08=08=08=08=08=08=08=08=08=08=08=08=
-=08             =08=08=08=08=08=08=08=08=08=08=08=08=08done
-> Creating filesystem with 102400 1k blocks and 25688 inodes
-> Filesystem UUID: 77e3bc56-46bb-4e5c-9619-d9a0c0999958
-> Superblock backups stored on blocks:
-> 	8193, 24577, 40961, 57345, 73729
->=20
-> Allocating group tables:  0/13=08=08=08=08=08     =08=08=08=08=08done
-> Writing inode tables:  0/13=08=08=08=08=08     =08=08=08=08=08done
-> Writing superblocks and filesystem accounting information:  0/13=08=08=08=
-=08=08     =08=08=08=08=08done
-> root@intel-x86-64:/opt/wr-test/testcases/userspace/nfs-utils_v6# mount /tmp=
-/nfs.img /mnt
->=20
-> root@intel-x86-64:/opt/wr-test/testcases/userspace/nfs-utils_v6# mkdir /mnt=
-/nfs_root
->=20
-> root@intel-x86-64:/opt/wr-test/testcases/userspace/nfs-utils_v6# touch /etc=
-/exports
->=20
-> root@intel-x86-64:/opt/wr-test/testcases/userspace/nfs-utils_v6# echo '/mnt=
-/nfs_root *(insecure,rw,async,no_root_squash)' >> /etc/exports
->=20
-> root@intel-x86-64:/opt/wr-test/testcases/userspace/nfs-utils_v6# /opt/wr-te=
-st/bin/svcwp.sh nfsserver restart
-> stopping mountd: done
-> stopping nfsd: ..........failed
->   using signal 9:
-> ..........failed
+On Wed, May 21, 2025 at 04:23:44PM -0700, Shakeel Butt wrote:
+> On Thu, May 22, 2025 at 12:23:44AM +0200, Klara Modin wrote:
+> > Hi,
+> > 
+> > On 2025-04-28 23:15:58 -0700, Shakeel Butt wrote:
+> > > Please ignore this patch as it was sent by mistake.
+> > 
+> > This seems to have made it into next:
+> > 
+> > 748922dcfabd ("cgroup: use subsystem-specific rstat locks to avoid contention")
+> > 
+> > It causes a BUG and eventually a panic on my Raspberry Pi 1:
+> > 
+> > WARNING: CPU: 0 PID: 0 at mm/percpu.c:1766 pcpu_alloc_noprof (mm/percpu.c:1766 (discriminator 2)) 
+> > illegal size (0) or align (4) for percpu allocation
+> 
+> Ok this config is without CONFIG_SMP and on such configs we have:
+> 
+> typedef struct { } arch_spinlock_t;
+> 
+> So, we are doing ss->rstat_ss_cpu_lock = alloc_percpu(0).
+> 
+> Hmm, let me think more on how to fix this.
+> 
 
-What does your "nfsserver" script do to try to stop/restart the nfsd?
-For a very long time the approved way to stop nfsd has been to run
-"rpc.nfsd 0".  My guess is that whatever script you are using still
-trying to send a signal to nfsd.  That no longer works.
+I think following is the simplest fix:
 
-Unfortunately the various sysv-init scripts for starting/stopping nfsd
-have never been part of nfs-utils so we were not able to update them.
-nfs-utils *does* contain systemd unit files for sites which use systemd.
-
-If you have a non-systemd way of starting/stopping nfsd, we would be
-happy to make the relevant scripts part of nfs-utils so that we can
-ensure they stay up to date.
-
-Thanks,
-NeilBrown
+diff --git a/kernel/cgroup/rstat.c b/kernel/cgroup/rstat.c
+index 7dd396ae3c68..aab09495192e 100644
+--- a/kernel/cgroup/rstat.c
++++ b/kernel/cgroup/rstat.c
+@@ -511,7 +511,10 @@ int __init ss_rstat_init(struct cgroup_subsys *ss)
+ 	int cpu;
+ 
+ 	if (ss) {
+-		ss->rstat_ss_cpu_lock = alloc_percpu(raw_spinlock_t);
++		size_t size = sizeof(raw_spinlock_t) ?: 1;
++
++		ss->rstat_ss_cpu_lock = __alloc_percpu(size,
++						__alignof__(raw_spinlock_t));
+ 		if (!ss->rstat_ss_cpu_lock)
+ 			return -ENOMEM;
+ 	}
