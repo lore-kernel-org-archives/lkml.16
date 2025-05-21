@@ -1,120 +1,87 @@
-Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDCE62367D8;
-	Wed, 21 May 2025 08:15:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.62.165.209
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E08C6134BD;
+	Wed, 21 May 2025 08:16:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747815304; cv=none; b=AdU7iObUdY2nTg7hQYw0fkwRnuNew8Q5cd6fRmNOnsHstkHuJP7v/9lYRskz8xYfMi52cf22vbozY4NPcTmFJHky/Pso8dUVDbFe3ACbp+slVoSAHEKLIESA1NAM5S4JbuEoIHlGynx2AUzKzPhUIM+fnSDeMIM7A3Us9tjEMu0=
+	t=1747815407; cv=none; b=nRpJ3mkk8lN38OwzTvCRu1IxiFemYc9da9ygHqXBHnOP6kuaQZ9JrkJh9kuPH6OaynZEVq+cC90JXWv9bhQeJG1Z2028+9oltUKjpqjhT1Ua0kamJ1Sat2Vk/PVhBkAf9kiz/6b5un8rRh+jnhj3Gr2KOodWuEcSfyGz7PEu+48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747815304; c=relaxed/simple;
-	bh=hHHDB6awP/r5qt6vmcLclDRBl4ZmahKZOmtC2vgaDQs=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=eQzNmwUYYzpOcCu6sT7nHIX7ZKKZuW/9wz8twU1iqJj1ojzh9HUotExpv+2BrBaEoFDd53wSw7uQ+cL3IoBbftP39nKhzFpFpnJ1LynlCKMKUvvdi925DG/Q2Zf11A5VD4U+orFz2BPm2CC2RVsNEp/aMoUM/R/Od+u09ItJ2cg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=183.62.165.209
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4b2PNc4bTTz4x6Ct;
-	Wed, 21 May 2025 16:14:56 +0800 (CST)
-Received: from njy2app04.zte.com.cn ([10.40.12.64])
-	by mse-fl1.zte.com.cn with SMTP id 54L8ElAk051014;
-	Wed, 21 May 2025 16:14:47 +0800 (+08)
-	(envelope-from long.yunjian@zte.com.cn)
-Received: from mapi (njb2app05[null])
-	by mapi (Zmail) with MAPI id mid201;
-	Wed, 21 May 2025 16:14:49 +0800 (CST)
-Date: Wed, 21 May 2025 16:14:49 +0800 (CST)
-X-Zmail-TransId: 2afd682d8b79ffffffffaab-bd44e
-X-Mailer: Zmail v1.0
-Message-ID: <20250521161449954uFxEsoI6Zg_7wDu6IAfWk@zte.com.cn>
+	s=arc-20240116; t=1747815407; c=relaxed/simple;
+	bh=cMaKD3mmDQWRev0bMklrhXvNe4m3PVlxM8z80KK7dUg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GA6eLCJJiVbZiZelOqPMybGIqqTWzazYpKnj4qWYizpAak3ZEm6rtzLPWa3mrNmdrV5JHR+i6N50gBnlJXkIFJvZ1++VRdgu3eeWvc8vmc/PvdhWNgQO7wDwjlYH+10am04BzZzGYQ1LnKZMtdKyQK/tFZEtzaxGWF9r2ds2ttk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cQbhvR+H; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cQbhvR+H"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747815406; x=1779351406;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=cMaKD3mmDQWRev0bMklrhXvNe4m3PVlxM8z80KK7dUg=;
+  b=cQbhvR+HpzHtwgCWt1icybymuxIAH4ZBBHLh9yz3TjquNxYz7fyVZotD
+   vEO36PH9Vex5n3AWEryB8OQNKJ7wZfZVYjRaHQ1b9uAAOwUvSnJvd2i7o
+   LILo1MIwOj1Sw1mRjQn10jFX9flW1mrWZWOMOKrXoB1OEjaaaqf8W/FQE
+   QSa4vdte0o1HlwPPR/r49Ox/qYFACDchuvnnzE8tFemejL8AfqMLjL+ns
+   jz0jhoZi86SAi6cF73HLm3t8NfhyEyG4ZojwggVfobtlgvM7eMPkJv9Xz
+   NROlB0OunuYIVkZKzfPPJ7PSry3MK6wUQWQWklJCCL4ajs5kO9znZidvd
+   Q==;
+X-CSE-ConnectionGUID: IYkxn1YJTce4hrNe2T4rVA==
+X-CSE-MsgGUID: OVz/Bfg2QXWkAgb2+k5Hvw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="49918170"
+X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
+   d="scan'208";a="49918170"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 01:16:45 -0700
+X-CSE-ConnectionGUID: o8khXraoQd+4yk09d3gF3g==
+X-CSE-MsgGUID: kCi7LireSnCTE1i/eM/pHg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
+   d="scan'208";a="144693286"
+Received: from mjarzebo-mobl1.ger.corp.intel.com (HELO [10.245.246.35]) ([10.245.246.35])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 01:16:41 -0700
+Message-ID: <72b3954d-55d5-45ed-8a51-c0b1edd3783c@linux.intel.com>
+Date: Wed, 21 May 2025 11:17:54 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <long.yunjian@zte.com.cn>
-To: <sudeep.holla@arm.com>
-Cc: <cristian.marussi@arm.com>, <peng.fan@nxp.com>,
-        <florian.fainelli@broadcom.com>, <fang.yumeng@zte.com.cn>,
-        <arm-scmi@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <dan.carpenter@linaro.org>,
-        <christophe.jaillet@wanadoo.fr>, <mou.yi@zte.com.cn>,
-        <ouyang.maochun@zte.com.cn>, <xu.lifeng1@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIIHYyXSBmaXJtd2FyZTogYXJtX3NjbWk6IFVzZSBkZXZfZXJyX3Byb2JlKCkgc2ltcGxpZnkgdGhlIGNvZGU=?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl1.zte.com.cn 54L8ElAk051014
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 682D8B80.000/4b2PNc4bTTz4x6Ct
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2] ASoC: soc-pcm: Optimize hw_params() BE DAI call
+To: "Sheetal ." <sheetal@nvidia.com>, Sameer Pujar <spujar@nvidia.com>,
+ broonie@kernel.org, lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
+ linux-sound@vger.kernel.org, pierre-louis.bossart@linux.intel.com,
+ ranjani.sridharan@linux.intel.com
+Cc: linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+ jonathanh@nvidia.com, thierry.reding@gmail.com, mkumard@nvidia.com
+References: <20250408083022.3671283-1-sheetal@nvidia.com>
+ <9694bc9c-4ad0-46c2-8626-e569734f2e47@nvidia.com>
+ <ed48f3cf-077d-4b42-ba0a-ba35d849d4dd@linux.intel.com>
+ <b9884fbe-bdc7-489b-b4e6-981121333707@nvidia.com>
+Content-Language: en-US
+From: =?UTF-8?Q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@linux.intel.com>
+In-Reply-To: <b9884fbe-bdc7-489b-b4e6-981121333707@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Yumeng Fang <fang.yumeng@zte.com.cn>
 
-In the probe path, dev_err() can be replaced with dev_err_probe()
-which will check if error code is -EPROBE_DEFER and prints the
-error name. It also sets the defer probe reason which can be
-checked later through debugfs.
 
-Signed-off-by: Yumeng Fang <fang.yumeng@zte.com.cn>
----
-v1 -> v2
-(1) Order the includes alphabetically.
-(2) Delete "ret = PTR_ERR(*)", and then replace ret in dev_err_probe with "PTR_ERR(*)".
+On 21/05/2025 08:25, Sheetal . wrote:
+>>
+>> Picked the patch to run it through our CI:
+>> https://github.com/thesofproject/linux/pull/5414
+> 
+> Please share feedback or comments if any.
 
- .../firmware/arm_scmi/transports/mailbox.c    | 20 +++++++------------
- 1 file changed, 7 insertions(+), 13 deletions(-)
+sorry fort he delay, but we have CI maintenance and movement.
 
-diff --git a/drivers/firmware/arm_scmi/transports/mailbox.c b/drivers/firmware/arm_scmi/transports/mailbox.c
-index bd041c99b92b..764cbeac2492 100644
---- a/drivers/firmware/arm_scmi/transports/mailbox.c
-+++ b/drivers/firmware/arm_scmi/transports/mailbox.c
-@@ -8,6 +8,7 @@
+The patch looks good and makes sense, it was just hard to tell from the
+commit message what is the reason for it.
 
- #include <linux/err.h>
- #include <linux/device.h>
-+#include <linux/dev_printk.h>
- #include <linux/mailbox_client.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
-@@ -214,31 +215,24 @@ static int mailbox_chan_setup(struct scmi_chan_info *cinfo, struct device *dev,
+Reviewed-by: Peter Ujfalusi <peter.ujflausi@linux.intel.com>
 
- 	smbox->chan = mbox_request_channel(cl, tx ? 0 : p2a_chan);
- 	if (IS_ERR(smbox->chan)) {
--		ret = PTR_ERR(smbox->chan);
--		if (ret != -EPROBE_DEFER)
--			dev_err(cdev,
--				"failed to request SCMI %s mailbox\n", desc);
--		return ret;
-+		return dev_err_probe(cdev, PTR_ERR(smbox->chan),
-+				     "failed to request SCMI %s mailbox\n", desc);
- 	}
-
- 	/* Additional unidirectional channel for TX if needed */
- 	if (tx && a2p_rx_chan) {
- 		smbox->chan_receiver = mbox_request_channel(cl, a2p_rx_chan);
- 		if (IS_ERR(smbox->chan_receiver)) {
--			ret = PTR_ERR(smbox->chan_receiver);
--			if (ret != -EPROBE_DEFER)
--				dev_err(cdev, "failed to request SCMI Tx Receiver mailbox\n");
--			return ret;
-+			return dev_err_probe(cdev, PTR_ERR(smbox->chan_receiver),
-+					     "failed to request SCMI Tx Receiver mailbox\n");
- 		}
- 	}
-
- 	if (!tx && p2a_rx_chan) {
- 		smbox->chan_platform_receiver = mbox_request_channel(cl, p2a_rx_chan);
- 		if (IS_ERR(smbox->chan_platform_receiver)) {
--			ret = PTR_ERR(smbox->chan_platform_receiver);
--			if (ret != -EPROBE_DEFER)
--				dev_err(cdev, "failed to request SCMI P2A Receiver mailbox\n");
--			return ret;
-+			return dev_err_probe(cdev, PTR_ERR(smbox->chan_platform_receiver),
-+					     "failed to request SCMI P2A Receiver mailbox\n");
- 		}
- 	}
-
--- 
-2.25.1
