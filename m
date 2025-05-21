@@ -1,191 +1,115 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-42ac.mail.infomaniak.ch (smtp-42ac.mail.infomaniak.ch [84.16.66.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C85C4189513
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16FB51E47C7
 	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 15:22:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747840947; cv=none; b=U+9cA06zW7Et0VnqcPGGRPiqlHxDaJy/PTo6wz6bnoMhYahsKOvEF2K2SDFVnv5f0YEZlfxLVAJIRThlwjH9LNl4yukBkMrpjrrNLdh4XrZxvRHy96ZTp6mF9DO12ntGveW70JMwj76RH1baOPI9OCL8AEB0CYL7B23aQ4FR38U=
+	t=1747840950; cv=none; b=GuOc2foy/FVZ2cVGyhd9L9o9gvJFC5TyETcW8QL5AeU695FpJusM453FAvu1bQQu9m846lMU2FSAwsL0g1r4GPkzJN97LStKfN6kcTan45poty5b3kJ/valFsnoFT39WRqzHJTD0ABtvVXve1v0nYowZiJOR7hVsf/+lCxfNg4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747840947; c=relaxed/simple;
-	bh=cyorVbV+bvd3pMFT0Pcn7XPfJZwPAhId89v8L031Ymo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JUaKBKIEtlD6shIjyznEWT03vA/EQWwYlfvViBezm6zo8pKG6no1Ay3pSEll/1GipypoqTpov+W1Uv+/9zJjsy8C0G/A50AZ2sY+DzmoXwzWqraEpiJow+VtBtaJpxBLYLeh9czAJrxrn2afy4G9NEqtMapPiltCs6En6GxKHHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wz/dvelT; arc=none smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wz/dvelT"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-47666573242so1480441cf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 08:22:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747840944; x=1748445744; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cyorVbV+bvd3pMFT0Pcn7XPfJZwPAhId89v8L031Ymo=;
-        b=wz/dvelTbEq7Aiu/k2VyQ2d5GdHjoH0Qv3Suw8HGNvOm89E/ZiNXe5ARoIf6mRR4Zo
-         jRaIKCPBCCJ/quBLD6RvXi+fJkBmOqnY1G75ili4y3YHsgo9Dx1pJsNxydlptHhRjR9P
-         B1wAHk9PQGZXoyYyREL/x/5qf4fK61xdA0mP1Xyw5goEnowds+xa2sh/U43jM/bawv99
-         fL3+moPXP8Y9cNCGy5hvqubX2b3SC9SGZV3xDax6uo1MZNj9+PQB9DX3Hh0DeO3DRVFS
-         nMCj2vYU+pv4t/mnICalk1ChBtUAzx1WjZ7Wi5v/zeNEXtw0ryEblBKRcwcQA1OKJ5FB
-         xfww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747840944; x=1748445744;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cyorVbV+bvd3pMFT0Pcn7XPfJZwPAhId89v8L031Ymo=;
-        b=QFNUADaOdUUcKN4bMNU+48bL3WW3el0FdU1eslOGyDmGAWdhsipQIdb4Ooq5DwXxmR
-         aYedqRUxfwYW14ixEKOsfYIVZ5GY7vOPgkbLfInA1uS48LuiPxUGMWP7kSrdtLtydqWV
-         aVOZP78BRCfOkK4JMUqqHdUema1Er83vp7k6emeUD9Z9rXK6GqYuaOOM8JqotrlDGOrh
-         OGMQJXDmwZ0GUEy+gJEuunAQk9p4xDuPSZxNffQJ6XaULIr0Cbdv/SIRdkdgVkE7D+nI
-         hWF24nPnTjPKz+Xu5yb9hEFvuqWj7tkgKombbZwsNC8wj+lktG0zrKxwE/7ljkVHuTbN
-         Nl8w==
-X-Forwarded-Encrypted: i=1; AJvYcCUfk9gWbmoMvffTfW67vrolu6+e39ByGo8+HlmJdSP8eDNXojfbCoFdmIgfGtwAoIAim41z0sdehF39khc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxogtkFyZUW0V4LuE+VxTB1Vd9AebnkoWmDszIyx7z7WeuOn/AP
-	BqiZnxO0ad4M3e215QDizCV5EJRiFjbsF8pMru9jQ8OoYFtv/BTm0g9mDx7O379zG8O5YGBsEY6
-	77lJxkRWhU66TzBctDSvrSOD6te2qtJdME9WlyQaM
-X-Gm-Gg: ASbGncsXPTqLBjJ8Sli7Ctd03KWrkCHt7Cn5LhnLd8j43in0SWB5O1GW3goevHiQfsE
-	0MTi7IEuaW4TnKeyapI2mHUuxn0QUxGmVS/6KYYcfHrjuM/jfR+sShmDK9HvfovmoKaEyqNcBRL
-	0SU9eO+Iq5DkgA2Lx9Jn8396GAW0T3ktzfqTLMeKg+NHOvlv27ucT3dQ==
-X-Google-Smtp-Source: AGHT+IE9sWx0eO9CaSEERbSlz8WHSAH0nRVx3exSAXfCOfLTtTCtFAKZo3qwXtV1LJJtoEI1TnqjZGTpW4mH4zrZQIM=
-X-Received: by 2002:a05:622a:449:b0:48a:42fa:78fa with SMTP id
- d75a77b69052e-4958cd26812mr16408901cf.2.1747840944231; Wed, 21 May 2025
- 08:22:24 -0700 (PDT)
+	s=arc-20240116; t=1747840950; c=relaxed/simple;
+	bh=US6Qn/YPFfEQVJh/yquwxVsdo6yHequvshtAvfNQRnc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=GXfSI54Z+cMTdA9PgPcruilehk5fl7sYDw8CBwZ1NmTa8qg5RLNomKHF0+wnuX1G/Q48Vtt1KuDIbnzCNAL1DuAbqs2/V7S4lJS1++l+6MUWaM7kyNHylgXPEY2nqiIXJGlYXb1jh8c9Fin5ffZa5gg9UsoGYseuBUiytIucF6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; arc=none smtp.client-ip=84.16.66.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0leil.net
+Received: from smtp-3-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246b])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4b2Zsk0B0Bz3fC;
+	Wed, 21 May 2025 17:22:18 +0200 (CEST)
+Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4b2Zsh2wFGz8KK;
+	Wed, 21 May 2025 17:22:16 +0200 (CEST)
+From: Quentin Schulz <foss+kernel@0leil.net>
+Date: Wed, 21 May 2025 17:21:59 +0200
+Subject: [PATCH net] net: stmmac: platform: guarantee uniqueness of bus_id
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1747264138.git.ackerleytng@google.com> <d3832fd95a03aad562705872cbda5b3d248ca321.1747264138.git.ackerleytng@google.com>
- <CA+EHjTxtHOgichL=UvAzczoqS1608RSUNn5HbmBw2NceO941ng@mail.gmail.com>
- <CAGtprH8eR_S50xDnnMLHNCuXrN2Lv_0mBRzA_pcTtNbnVvdv2A@mail.gmail.com>
- <CA+EHjTwjKVkw2_AK0Y0-eth1dVW7ZW2Sk=73LL9NeQYAPpxPiw@mail.gmail.com>
- <CAGtprH_Evyc7tLhDB0t0fN+BUx5qeqWq8A2yZ5-ijbJ5UJ5f-g@mail.gmail.com>
- <CA+EHjTy7iBNBb9DRdtgq8oYmvgykhSNvZL3FrRV4XF90t3XgBg@mail.gmail.com>
- <CAGtprH_7jSpwF77j1GW8rjSrbtZZ2OW2iGck5=Wk67+VnF9vjQ@mail.gmail.com>
- <CA+EHjTzMhKCoftfJUuL0WUZW4DdqOHgVDcn0Cmf-0r--8rBdbg@mail.gmail.com>
- <diqzecwjnk95.fsf@ackerleytng-ctop.c.googlers.com> <CA+EHjTyY5C1QgkoAqvJ0kHM4nUvKc1e1nQ0Uq+BANtVEnZH90w@mail.gmail.com>
- <CAGtprH-fE=G923ctBAcq5zFna+2WULhmHDSbXUsZKUrin29b4g@mail.gmail.com>
-In-Reply-To: <CAGtprH-fE=G923ctBAcq5zFna+2WULhmHDSbXUsZKUrin29b4g@mail.gmail.com>
-From: Fuad Tabba <tabba@google.com>
-Date: Wed, 21 May 2025 16:21:46 +0100
-X-Gm-Features: AX0GCFunsX4s_S9rg-xVdpk--w8XHiF75FQSZUzqMS7j0X8kX-1qix4ZgGpOcAc
-Message-ID: <CA+EHjTxvufYVA8LQWRKEX7zA0gWLQUHVO2LvwKc5JXVu-XAEEA@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 04/51] KVM: guest_memfd: Introduce
- KVM_GMEM_CONVERT_SHARED/PRIVATE ioctls
-To: Vishal Annapurve <vannapurve@google.com>
-Cc: Ackerley Tng <ackerleytng@google.com>, kvm@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, x86@kernel.org, linux-fsdevel@vger.kernel.org, 
-	aik@amd.com, ajones@ventanamicro.com, akpm@linux-foundation.org, 
-	amoorthy@google.com, anthony.yznaga@oracle.com, anup@brainfault.org, 
-	aou@eecs.berkeley.edu, bfoster@redhat.com, binbin.wu@linux.intel.com, 
-	brauner@kernel.org, catalin.marinas@arm.com, chao.p.peng@intel.com, 
-	chenhuacai@kernel.org, dave.hansen@intel.com, david@redhat.com, 
-	dmatlack@google.com, dwmw@amazon.co.uk, erdemaktas@google.com, 
-	fan.du@intel.com, fvdl@google.com, graf@amazon.com, haibo1.xu@intel.com, 
-	hch@infradead.org, hughd@google.com, ira.weiny@intel.com, 
-	isaku.yamahata@intel.com, jack@suse.cz, james.morse@arm.com, 
-	jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, jhubbard@nvidia.com, 
-	jroedel@suse.de, jthoughton@google.com, jun.miao@intel.com, 
-	kai.huang@intel.com, keirf@google.com, kent.overstreet@linux.dev, 
-	kirill.shutemov@intel.com, liam.merwick@oracle.com, 
-	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, maz@kernel.org, 
-	mic@digikod.net, michael.roth@amd.com, mpe@ellerman.id.au, 
-	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
-	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
-	paul.walmsley@sifive.com, pbonzini@redhat.com, pdurrant@amazon.co.uk, 
-	peterx@redhat.com, pgonda@google.com, pvorel@suse.cz, qperret@google.com, 
-	quic_cvanscha@quicinc.com, quic_eberman@quicinc.com, 
-	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com, quic_pheragu@quicinc.com, 
-	quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com, richard.weiyang@gmail.com, 
-	rick.p.edgecombe@intel.com, rientjes@google.com, roypat@amazon.co.uk, 
-	rppt@kernel.org, seanjc@google.com, shuah@kernel.org, steven.price@arm.com, 
-	steven.sistare@oracle.com, suzuki.poulose@arm.com, thomas.lendacky@amd.com, 
-	usama.arif@bytedance.com, vbabka@suse.cz, viro@zeniv.linux.org.uk, 
-	vkuznets@redhat.com, wei.w.wang@intel.com, will@kernel.org, 
-	willy@infradead.org, xiaoyao.li@intel.com, yan.y.zhao@intel.com, 
-	yilun.xu@intel.com, yuzenghui@huawei.com, zhiquan1.li@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250521-stmmac-mdio-bus_id-v1-1-918a3c11bf2c@cherry.de>
+X-B4-Tracking: v=1; b=H4sIAJbvLWgC/x3MQQqEMAxA0atI1gZsO1L0KiKDtlGzaJWmI4J49
+ yku3+L/G4QSk0Bf3ZDoZOE9Fqi6ArdNcSVkXwy60W3TaoWSQ5gcBs87zj/5skejzGw/ztrOGCj
+ hkWjh650OECnD+Dx/ttnzIGkAAAA=
+X-Change-ID: 20250521-stmmac-mdio-bus_id-313b74c77933
+To: Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+ Alexandre Torgue <alexandre.torgue@foss.st.com>
+Cc: Jakob Unterwurzacher <jakob.unterwurzacher@cherry.de>, 
+ Heiko Stuebner <heiko@sntech.de>, netdev@vger.kernel.org, 
+ linux-stm32@st-md-mailman.stormreply.com, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Quentin Schulz <quentin.schulz@cherry.de>
+X-Mailer: b4 0.14.2
+X-Infomaniak-Routing: alpha
 
-Hi Vishal,
+From: Quentin Schulz <quentin.schulz@cherry.de>
 
-On Wed, 21 May 2025 at 15:42, Vishal Annapurve <vannapurve@google.com> wrot=
-e:
->
-> On Wed, May 21, 2025 at 5:36=E2=80=AFAM Fuad Tabba <tabba@google.com> wro=
-te:
-> > ....
-> > > When rebooting, the memslots may not yet be bound to the guest_memfd,
-> > > but we want to reset the guest_memfd's to private. If we use
-> > > KVM_SET_MEMORY_ATTRIBUTES to convert, we'd be forced to first bind, t=
-hen
-> > > convert. If we had a direct ioctl, we don't have this restriction.
-> > >
-> > > If we do the conversion via vcpu_run() we would be forced to handle
-> > > conversions only with a vcpu_run() and only the guest can initiate a
-> > > conversion.
-> > >
-> > > On a guest boot for TDX, the memory is assumed to be private. If the =
-we
-> > > gave it memory set as shared, we'd just have a bunch of
-> > > KVM_EXIT_MEMORY_FAULTs that slow down boot. Hence on a guest reboot, =
-we
-> > > will want to reset the guest memory to private.
-> > >
-> > > We could say the firmware should reset memory to private on guest
-> > > reboot, but we can't force all guests to update firmware.
-> >
-> > Here is where I disagree. I do think that this is the CoCo guest's
-> > responsibility (and by guest I include its firmware) to fix its own
-> > state after a reboot. How would the host even know that a guest is
-> > rebooting if it's a CoCo guest?
->
-> There are a bunch of complexities here, reboot sequence on x86 can be
-> triggered using multiple ways that I don't fully understand, but few
-> of them include reading/writing to "reset register" in MMIO/PCI config
-> space that are emulated by the host userspace directly. Host has to
-> know when the guest is shutting down to manage it's lifecycle.
+bus_id is currently derived from the ethernetX alias. If one is missing
+for the device, 0 is used. If ethernet0 points to another stmmac device
+or if there are 2+ stmmac devices without an ethernet alias, then bus_id
+will be 0 for all of those.
 
-In that case, I think we need to fully understand these complexities
-before adding new IOCTLs. It could be that once we understand these
-issues, we find that we don't need these IOCTLs. It's hard to justify
-adding an IOCTL for something we don't understand.
+This is an issue because the bus_id is used to generate the mdio bus id
+(new_bus->id in drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
+stmmac_mdio_register) and this needs to be unique.
 
-> x86 CoCo VM firmwares don't support warm/soft reboot and even if it
-> does in future, guest kernel can choose a different reboot mechanism.
-> So guest reboot needs to be emulated by always starting from scratch.
-> This sequence needs initial guest firmware payload to be installed
-> into private ranges of guest_memfd.
->
-> >
-> > Either the host doesn't (or cannot even) know that the guest is
-> > rebooting, in which case I don't see how having an IOCTL would help.
->
-> Host does know that the guest is rebooting.
+This allows to avoid needing to define ethernet aliases for devices with
+multiple stmmac controllers (such as the Rockchip RK3588) for multiple
+stmmac devices to probe properly.
 
-In that case, that (i.e., the host finding out that the guest is
-rebooting) could trigger the conversion back to private. No need for
-an IOCTL.
+Obviously, the bus_id isn't guaranteed to be stable across reboots if no
+alias is set for the device but that is easily fixed by simply adding an
+alias if this is desired.
 
-> > Or somehow the host does know that, i.e., via a hypercall that
-> > indicates that. In which case, we could have it so that for that type
-> > of VM, we would reconvert its pages to private on a reboot.
->
-> This possibly could be solved by resetting the ranges to private when
-> binding with a memslot of certain VM type. But then Google also has a
-> usecase to support intrahost migration where a live VM and associated
-> guest_memfd files are bound to new KVM VM and memslots.
->
-> Otherwise, we need an additional contract between userspace/KVM to
-> intercept/handle guest_memfd range reset.
+Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
+---
+Unsure if I should cc stable since people who encountered that issue for
+sure had to add an ethernet alias to make things work with their DT so
+shouldn't be too much of an actual issue?
+---
+ drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-Then this becomes a migration issue to be solved then, not a huge page
-support issue. If such IOCTLs are needed for migration, it's too early
-to add them now.
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+index c73eff6a56b87a3783c91b2ffbf5807a27df303f..15205a47cafc276442c3759a36d115d8da1fe51d 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+@@ -430,6 +430,7 @@ stmmac_probe_config_dt(struct platform_device *pdev, u8 *mac)
+ 	struct device_node *np = pdev->dev.of_node;
+ 	struct plat_stmmacenet_data *plat;
+ 	struct stmmac_dma_cfg *dma_cfg;
++	static int bus_id = -ENODEV;
+ 	int phy_mode;
+ 	void *ret;
+ 	int rc;
+@@ -465,8 +466,14 @@ stmmac_probe_config_dt(struct platform_device *pdev, u8 *mac)
+ 	of_property_read_u32(np, "max-speed", &plat->max_speed);
+ 
+ 	plat->bus_id = of_alias_get_id(np, "ethernet");
+-	if (plat->bus_id < 0)
+-		plat->bus_id = 0;
++	if (plat->bus_id < 0) {
++		if (bus_id < 0)
++			bus_id = of_alias_get_highest_id("ethernet");
++		/* No ethernet alias found, init at -1 so first bus_id is 0 */
++		if (bus_id < 0)
++			bus_id = -1;
++		plat->bus_id = ++bus_id;
++	}
+ 
+ 	/* Default to phy auto-detection */
+ 	plat->phy_addr = -1;
 
-Cheers,
-/fuad
+---
+base-commit: 4a95bc121ccdaee04c4d72f84dbfa6b880a514b6
+change-id: 20250521-stmmac-mdio-bus_id-313b74c77933
+
+Best regards,
+-- 
+Quentin Schulz <quentin.schulz@cherry.de>
+
