@@ -1,98 +1,262 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E983B2367C0;
-	Wed, 21 May 2025 08:39:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 011FC1799F;
+	Wed, 21 May 2025 08:40:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747816768; cv=none; b=Y/ok+5i+tBx6fWLnY1P66yvQ1j00799DbhqMqqHgcTBnJlUkEsCQTy5lPl7GI5S6K8PWxw4+8lh7+fk0XzfnAEHpClGIa05Af+TIDSIVx5epnSPSXTnhj15MiKppezAejA+8J0SqAVpR/v5o4kSOH69edSUHqQCWUA/MxfrkctY=
+	t=1747816814; cv=none; b=mDlvxcun5POJ+DS7N8P89zJ5pj94oNgQjDpUi9luhY5QljLVCSQSRJctKW715kwfHYnFAUp8jbyIACexBktABtrcYJ3nPOvkwIfJQNmYvdactSvHO4zDofcNKjXe1XyIceSWXvxhf/w1f0/v8mX0QV8t6f8mcT33LUrW6iKky5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747816768; c=relaxed/simple;
-	bh=7zLmzQ7OpMriiPhIS/LNVnD+rTOcckAQUownjGSaiS0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sMaBu76wrO4PXMsW07aXz2xoBTrAUKz4OzeAvKmoWt88xaSAEUPalmmixkeGZJfEHz2rYO4u/TRS4e4yA3FYU+xMvKQdYK1MY2b/uV5FDdh//K1sVgrE+EYhPiT+wG5wI5G6O0HHFiaGzHESQN6D56AOsSz0Jgp1dKOwfGnOUNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost.localdomain (unknown [124.16.141.245])
-	by APP-01 (Coremail) with SMTP id qwCowAAXf74pkS1oZuXmAQ--.4439S2;
-	Wed, 21 May 2025 16:39:11 +0800 (CST)
-From: Wentao Liang <vulab@iscas.ac.cn>
-To: adrian.hunter@intel.com,
-	vigneshr@ti.com,
-	ulf.hansson@linaro.org
-Cc: linux-mmc@vger.kernel.org,
+	s=arc-20240116; t=1747816814; c=relaxed/simple;
+	bh=prPuohwI+Mx1qO9jheq0v68uTEiCGdKQtjR4A2uzvkU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=B4JWtk7uM+yvJIl6AhkU+0QHZ2pXJ4Zj9okl2jAlY+/vPxT+LFTvWsKy2jm+5ihPX6DIsdbEexsL3d1yHrqgHccS8MknFsKck2VGXAfSysWK7zzwsNEbYSZPlTmYD3DAIBQVSIGYqgOkSgRohdau5NH2/5ZdQuYT4vfQkU6nXys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fTPRg/21; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fTPRg/21"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-231bf5851b7so50700625ad.0;
+        Wed, 21 May 2025 01:40:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747816811; x=1748421611; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6TJUBt0PQT/0MqXl3YQcZJaW2RHiYQHMpm5oG/g8io0=;
+        b=fTPRg/21LMB+lr6TgZ1eXLFl5MBlK8sOnWutM7ycA1cJaMIkoWPKnVzUy6NEaCqu18
+         eHgUlmK3zMz02zUaIaeaDSB40Ee62LCfGHlVex6LJlNwNOu6Mpo+B32bBmOMzA7+D4Ly
+         Sncn9Ga8RBk48d/AkUhPk9XfumgumEA8AvINPZhH7pwDvtzgbriISviego2Q9FXbmWnG
+         gChZJ7gwU4uaI/DS2lUBPDVb/5+VxrpW0Brak0HvgwkUivQWuWtxlEHRhCQBqfjmsYZ7
+         6h124stg6yetStDKOXNshtXqoUOWC/awWHzNuct5O+GRqwMum3t1qowAUBAEBvgGFwlZ
+         hh0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747816811; x=1748421611;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6TJUBt0PQT/0MqXl3YQcZJaW2RHiYQHMpm5oG/g8io0=;
+        b=r7WHIW449B95dhnJ4SyC/nn5gA2qHUsX9u/sOyLLGlgRsEkcDz34NyofRQTX5n3MFm
+         keyTm+nb5eM4hyXC4YfWik3PWSSvOFGI5u6F+I1wt2eEQFA6DIyPkgNYZipEs2H71KFs
+         rhqGX6x8Ebg70M8W7HsHYrTTF6DjgdDVjfS3On0s1y6ECRnwwO9T/cWWvFJppuzpfmYP
+         pyir3s6BI9nCwXIYV0QZ1wyNiEdg87Qw9GwjVP9xjB7zFuppWdeWVsVmx0/foMF+z2jR
+         ZsVwt37qzfsQMk1BukxrKzBx5nSEYBiFxen7hJgH4rAK+msZGSiY2B5zY1z2NPdtKaiu
+         a57g==
+X-Forwarded-Encrypted: i=1; AJvYcCUM8D83JtBswQ/dL/Sk3YC/N1+eGZQ8wxrJZhYg5B0Ka4hIP/dmGYOjyqxPdAjl/9WWfLjPN3A+3JdTkHK8@vger.kernel.org, AJvYcCUW0347vKvM5hfsfHjhsiHrpg+S1GY6b++zK/KODWKzFVZE+QcuRkx4gwnHbbAlYvophrSi+gPdaJa6@vger.kernel.org, AJvYcCXlidaIShYGBs6eJqmEgMVbPrssA5VsP7B7VetwnDS5IhEubBlVBa10b82xzsVu7SevBzK18mBtxPIfO3dtDQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHl/IeeP5DaDBHrfuZNP1LLSRsq1aNpDqeeoOY3l8FjMx4OlQm
+	zlZ9w4UFlZbC5dbeRDZhdDYE1fR3Wl+nwbnLQj//Ytoo4Fnps93gRhNv
+X-Gm-Gg: ASbGncs+pJhcLa+Gi+caNeu9KvZg8zFdPw3LwgQprzu030aeuwIbeWDejwgEiNZ3ILd
+	rbFtAf2qg32BleOdyi99qHNNkc03bWNeNO6frLbuW8lYuFR7NwMZfS9ynmf0iiyIwg8ZAm3mkPK
+	KGimSXVlY6MtN+yxhPmk5i1fOoWb69234+njlq+GFZhFt0fRUqsdHuQ9wWO2JMomTcQn1lpZd/b
+	qe/67Yr/Vf1xTYGtPLCLRr7qe+7GTJC/D+7hHbBHXAAPYjkGMHsVxayJtHXdpGuAiDu2b6dEMhf
+	+CK3GjdStKSwu/01LEuKwN49c+d+igbZYlVSBnVNhVQBeoYKJXXQoB6D5gvo
+X-Google-Smtp-Source: AGHT+IHor/Q3irw/xtS9W76V6U/4pYcQFpOGtCJAgsOcZxnFuGJ0xvRl2F09RuZWoUs+d6mOC9dQFg==
+X-Received: by 2002:a17:903:1b2d:b0:224:1943:c5c with SMTP id d9443c01a7336-231d44e66b1mr262377695ad.15.1747816811014;
+        Wed, 21 May 2025 01:40:11 -0700 (PDT)
+Received: from nuvole.. ([144.202.86.13])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4e97fa6sm87974975ad.135.2025.05.21.01.40.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 May 2025 01:40:10 -0700 (PDT)
+From: Pengyu Luo <mitltlatltl@gmail.com>
+To: konrad.dybcio@oss.qualcomm.com
+Cc: andersson@kernel.org,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	konradybcio@kernel.org,
+	krzk+dt@kernel.org,
+	linux-arm-msm@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Wentao Liang <vulab@iscas.ac.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH v2] mmc: sdhci-omap: Add error handling for sdhci_runtime_suspend_host()
-Date: Wed, 21 May 2025 16:38:46 +0800
-Message-ID: <20250521083846.718-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.42.0.windows.2
+	mitltlatltl@gmail.com,
+	robh@kernel.org
+Subject: Re: [PATCH 2/2] arm64: dts: qcom: sm8650: Add support for Oneplus Pad Pro (caihong)
+Date: Wed, 21 May 2025 16:37:45 +0800
+Message-ID: <20250521083746.666228-1-mitltlatltl@gmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <e4d65994-89dd-4068-a8db-050e698f9bb3@oss.qualcomm.com>
+References: <e4d65994-89dd-4068-a8db-050e698f9bb3@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowAAXf74pkS1oZuXmAQ--.4439S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7tryftFy7ZFyDKw47tF4kCrg_yoW8Gw13pa
-	n0grW29r48Ww1FkF4kJan2vryFg345KrWjy3s8Xw1ruw4IkrW5KFsrCFyYvF1UKr13Ganr
-	XF18XayUCFyYyaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvj14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxV
-	WxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
-	Yx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbV
-	WUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AF
-	wI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1D
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8
-	JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUej
-	jgDUUUU
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiDAUJA2gtfVNegQABs2
 
-The sdhci_omap_runtime_suspend() calls sdhci_runtime_suspend_host() but
-does not handle the return value. A proper implementation can be found
-in sdhci_am654_runtime_suspend().
+On Wed, May 21, 2025 at 5:54 AM Konrad Dybcio <konrad.dybcio@oss.qualcomm.com> wrote:
+> On 5/20/25 6:42 PM, Pengyu Luo wrote:
+> > The OnePlus Pad Pro is an Android tablet based on the Qualcomm SM8650
+> > platform. Its device codename is "caihong". This patch adds an initial
+> > devicetree for basic functionality.
+> >
+> > Currently working components include:
+> > - Backlight
+> > - Bluetooth
+> > - Battery charging (up to 5v 0.5a) & reporting via pmic-glink (There
+> > are many unknown notifications)
+> > - Display panel ([1])
+> > - Keyboard (via BT)
+> > - Power key & volume keys
+> > - Touchscreen & stylus ([2])
+> > - USB Type-c port
+> > - UFS storage
+> > - Wi-Fi
+> >
+> > The following components are currently non-functional:
+> > - Audio
+> > - Cameras
+> > - Charging pump (dual sc8547)
+> > - Keyboard (via pogo pin)
+> > - Stylus wireless charger (cps8601)
+> > - UCSI over GLINK (PPM init fails)
+> >
+> > [1]: The panel is a dual-DSI, dual-DSC display that requires setting
+> >      'slice_per_pkt = 2' in the DPU configuration. The panel driver
+> >      will be submitted separately later.
+> > [2]: Touchscreen/stylus driver available at:
+> >      https://github.com/OnePlusOSS/android_kernel_modules_and_devicetree_oneplus_sm8650/blob/oneplus/sm8650_v_15.0.0_pad_pro/vendor/oplus/kernel/touchpanel/oplus_touchscreen_v2/Novatek/NT36532_noflash/nvt_drivers_nt36532_noflash.c
+> >      The downstream driver has been ported and tested locally, but
+> >      requires cleanup, it may be submitted separately later.
+>
+> I have a Lenovo Tab P11 with a nt36523w (-23, not -32) for which I have once
+> poked at the driver for.. I see the driver you posted mentions -23 as well,
+> please keep me in the loop if you're going to upstream it
+>
 
-Add error handling for sdhci_runtime_suspend_host(). Return the error
-code if the suspend fails.
+I see. Actually, they share the most part of nt36xxx, but with
+different memory maps. See
+https://github.com/MiCode/Xiaomi_Kernel_OpenSource/blob/elish-r-oss/drivers/input/touchscreen/nt36xxx/nt36xxx_mem_map.h
 
-Fixes: 51189eb9ddc8 ("mmc: sdhci-omap: Fix a lockdep warning for PM runtime init")
-Cc: stable@vger.kernel.org # 5.19
-Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
----
-v2: Fix code error.
+> [...]
+>
+> > +             /*
+> > +              * This memory region is required to initialize the backlight
+> > +              * and display for bootloader. Normally, this region is not
+> > +              * needed. However, due to limitations in the current mainline
+> > +              * KTZ8866 driver, dual backlight ICs cannot be properly
+> > +              * initialized.
+> > +              *
+> > +              * A workaround involving secondary registration was proposed,
+> > +              * but rejected by reviewers. This reserved region is kept as
+> > +              * a temporary solution until a proper initialization method
+> > +              * that satisfies upstream requirements is found.
+> > +              */
+> > +             splash_region {
+> > +                     reg = <0 0xd5100000 0 0x2b00000>;
+> > +                     no-map;
+> > +             };
+>
+> I assume this means "if the bootloader sees /reserved-memory/splash_region,
+> it keeps the display online" - let's not do that, as underscores are not
+> allowed in node names (kernel coding style, not dt syntax)
+>
 
- drivers/mmc/host/sdhci-omap.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Right, without it, BL won't initialize backlight and display. We need
+it to initialize backlight here since mainline ktz8866 won't program
+partial registers properly. If there is no other workaround, I will
+remove it to keep kernel coding style.
 
-diff --git a/drivers/mmc/host/sdhci-omap.c b/drivers/mmc/host/sdhci-omap.c
-index 54d795205fb4..f09f78cf244d 100644
---- a/drivers/mmc/host/sdhci-omap.c
-+++ b/drivers/mmc/host/sdhci-omap.c
-@@ -1438,12 +1438,16 @@ static int __maybe_unused sdhci_omap_runtime_suspend(struct device *dev)
- 	struct sdhci_host *host = dev_get_drvdata(dev);
- 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
- 	struct sdhci_omap_host *omap_host = sdhci_pltfm_priv(pltfm_host);
-+	int ret;
- 
- 	if (host->tuning_mode != SDHCI_TUNING_MODE_3)
- 		mmc_retune_needed(host->mmc);
- 
--	if (omap_host->con != -EINVAL)
--		sdhci_runtime_suspend_host(host);
-+	if (omap_host->con != -EINVAL) {
-+		ret = sdhci_runtime_suspend_host(host);
-+		if (ret)
-+			return ret;
-+	}
- 
- 	sdhci_omap_context_save(omap_host);
- 
--- 
-2.42.0.windows.2
+> > +     };
+> > +
+> > +     /* No Modem */
+> > +     smp2p-modem {
+> > +             status = "disabled";
+> > +     };
+>
+> There shouldn't be any harm in keeping this node enabled
+>
 
+Ack
+
+> [...]
+>
+> > +
+> > +     vph_pwr: vph-pwr-regulator {
+> > +             compatible = "regulator-fixed";
+> > +
+> > +             regulator-name = "vph_pwr";
+> > +             regulator-min-microvolt = <3700000>;
+> > +             regulator-max-microvolt = <3700000>;
+> > +
+> > +             regulator-always-on;
+> > +             regulator-boot-on;
+> > +     };
+> > +
+> > +     wcn7850-pmu {
+> > +             compatible = "qcom,wcn7850-pmu";
+> > +
+> > +             pinctrl-names = "default";
+> > +             pinctrl-0 = <&wlan_en>, <&bt_default>;
+>
+> property-n
+> property-names
+>
+> please
+>
+
+Ack
+
+> [...]
+>
+> > +&i2c_hub_0 {
+> > +     clock-frequency = <400000>;
+> > +
+> > +     status = "okay";
+> > +
+> > +     /* sc8547-charger-secondary@6F */
+> > +};
+> > +
+> > +&i2c_hub_2 {
+> > +     clock-frequency = <400000>;
+> > +
+> > +     status = "okay";
+> > +
+> > +     /* sc8547-charger-primary@6F */
+> > +};
+> > +
+> > +&i2c_hub_3 {
+> > +     status = "okay";
+> > +
+> > +     /* pencil-wireless-charger-cps8601@41 */
+> > +};
+> > +
+> > +&i2c_hub_4 {
+> > +     clock-frequency = <400000>;
+> > +
+> > +     status = "okay";
+> > +
+> > +     /* awinic,aw88261_smartpa @34,35,37 */
+>
+> We have drivers for these!
+>
+> sound/soc/codecs/aw88261.c
+>
+
+I noticed that. But I have not looked into the sound yet. I may add
+the nodes after test. BTW the mainline one is quite simple compared
+to the downstream, doubting if it is really working
+https://github.com/OnePlusOSS/android_kernel_modules_and_devicetree_oneplus_sm8650/tree/oneplus/sm8650_v_15.0.0_pad_pro/vendor/oplus/kernel/audio/codecs/aw882xx
+
+> > +};
+> > +
+> > +&i2c_hub_7 {
+> > +     clock-frequency = <400000>;
+> > +
+> > +     status = "okay";
+> > +
+> > +     /* awinic,aw88261_smartpa @34,35,37 */
+> > +};
+> > +
+> > +&i2c2 {
+> > +     status = "okay";
+> > +
+> > +     /* secondary kinetic,ktz8866@11 */
+>
+> You can describe it, the driver sets some nonzero default brightness
+>
+
+But the backlight framework won't index them, which causes sysfs
+collision when the second instance is registering.
+
+Best wishes,
+Pengyu
