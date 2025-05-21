@@ -1,111 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EA851F869E;
-	Wed, 21 May 2025 11:24:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10ED923498F;
+	Wed, 21 May 2025 11:25:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747826686; cv=none; b=psCoVUiI8b77cmjwYlJHSambLHZlyjYHqz9BYAtUpJQARgmcnVY/HQpU8h9fdnfo8Pl+HigT192I27Xc9H/xiu9l5MYwl9uUdNKhYeYUDB+f5BrfFzpQ5mju3NRABN44bLZJ81uj8JUPxQqvxDnyQRjJ9pL0gKQqPXa19uYscxM=
+	t=1747826709; cv=none; b=iWTqFTu15knErdIYfzde5BvbbyPNywoJg6GYDoevl2YCdT25Nw2O2j/w8sHcnEQ+Dywd0QVjYy5n7y8DWHv9ITGbNCKIfobKXID2/56kdN4Wg/WZiygbj78Lc4gIZTM0LY1vLROPcoj8iKmpq7M8onmNJoAgcb4QlJb+kotVehM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747826686; c=relaxed/simple;
-	bh=mLNmfdLuIwuQVtiVC4nR0oWRA8XNs6X92h+G1nfsW/4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=I1OuhvyMvXW2Hx4aiwke6ag8byYwugREjg2TmHU2rUIG9h8SKYCKwSBugsyaqwOq6tol/uZAn9mvsgBBToHTYQl6lC4kCQ3XamEAZNEH0LC0ClpKfsp/QAHs9jm5VoExjwTLDC8WDIOopDn/+1Mi0z4cI1zcKhUErre9Oaekso4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YhPlanBI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747826709; c=relaxed/simple;
+	bh=uTd7GhTLIz5+DxHTwAgNehFyUM7n+s0sXNYes37XIuA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HY73H27GDzR85fb9Yh6QsNQ8hbWftxGV/D9LHDn7R80Yad4O7nZ+yTvT/vYfHW9hT6Wz/dZOBAJmpQlqKoxECGUC/cEjkCOCfOSfW0h6jDRNEma3F1h1q9ofiSDcpgd6bNShM4MAc+4yPHirVlO5iZCL0R+adyaRTPY9wrYgPEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YhCqSeWR; arc=none smtp.client-ip=209.85.219.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YhPlanBI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDA8DC4CEF3;
-	Wed, 21 May 2025 11:24:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747826686;
-	bh=mLNmfdLuIwuQVtiVC4nR0oWRA8XNs6X92h+G1nfsW/4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=YhPlanBIpg261hemEQ+5H6SZJ9usP0ai00liNP8klwPpTFaINPvhyt5a2XjFyihgU
-	 CZ3eigaQkVQk8iEUG8NhhEvv4y403FZ5xwUbKObX07F1GvErUlrHsruXK1Rz6IeEfH
-	 zv4bwaJKDpSdxOFFGY6OOO0HMg+DnWtDPQGHJNpMCPfJMvWUubvsurjzqhd9ods24W
-	 FGxE2MDqZorSt+9R8J2sb0HggSo5nIISij/+XWgEoU6BZOiKlRdlyWu0HBSL7gc4AD
-	 Bp4DOvcLZym3SRmAVBjTC0qxoIwpZqstoE/J6ebDFsot0EG1asyn432WSOju0AcKh5
-	 USVuvr9vAy+3g==
-Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-60638c07cabso3805270eaf.3;
-        Wed, 21 May 2025 04:24:45 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWAOMxqKbPka4ycl5Lm2cRvtwHH7+iDk0uiGXkdg28dvYHfZZgoOw5la8jxVW9jXX9aNe5LgvV6OO8F@vger.kernel.org, AJvYcCXPbuaNQ6xpUuJBu02hUbr7ALUslmVsLnotmwoWqaWXjbYsRykKl18Q9I0coZo5IYjwkJb9Eq8GrkYe+FE=@vger.kernel.org, AJvYcCXPmzsdSNNj6cn1LmcrHDuZAdxCqyjBGGW3R1qyyKZ+5VDusPhtra8O+sg+wm+dNSD+525FB/E089Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YziDXs0USUsbB1fKdW0dQIH+hR7qKEVzYFt/cx3eEbu/7ePD85n
-	9/r+pOpYwpqFTvgbe49uMKhIN5ahoG713GS/6OEEie8/G9wKZoLraDU2g/q6mUHCze1j5ai3Co9
-	G8puRIKugL7Gf77gcpTcUNpxJZxkfRkQ=
-X-Google-Smtp-Source: AGHT+IEXE7uqWMn78PfoHPkPyJ0TvFJ8r94/Hhu4v7FXyu5CBcMr7cVPb8NMjy+x+UZr/ig5utvqqPWv+WJcL8+5+Xo=
-X-Received: by 2002:a05:6820:1795:b0:60a:32a:b016 with SMTP id
- 006d021491bc7-60a032ab17emr10304012eaf.6.1747826685293; Wed, 21 May 2025
- 04:24:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YhCqSeWR"
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e740a09eae0so5939602276.1;
+        Wed, 21 May 2025 04:25:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747826707; x=1748431507; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=TXyesZCoIswIbtLJ6qYZr+d21vajyiv4f0JIKWqbSfU=;
+        b=YhCqSeWRHxhlPw/MiYjA1DinJy0/r8ex+I70lMZzbYRTu+pbm5eJEG+Pg+XNBWGOYY
+         8IZRKN0Q8NBbHAmJEBp0F7UetSrj8FldKdpN1yVNLkDaKtYNjcXItlvs+tVnHM2F4xzl
+         GhDrJng4cTjHWJLvRpVsxkZfLWkxs4lcVlZAFIXctUOxE5Ft8rsmzPE8g3lCsS40lynX
+         OunFtoXLwl5Jp8D2Eu7aGMrKXeCN5jF1vSFWP6JEnNUJ+tUGUNfblSh3xKBKdFvWqIXC
+         zEdyPxc9nornLuwC+nGFJv2l5O+5APRfnn9OvSWPp8ddFIld9so8ix6q+QARxI/NMxJX
+         vJMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747826707; x=1748431507;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TXyesZCoIswIbtLJ6qYZr+d21vajyiv4f0JIKWqbSfU=;
+        b=rEl/MnoRPJx9mA8QrelaHFkJIxDXykHrGDmwpujySC1ykeFHsXmaG0e9CEtvazXvjY
+         rU8cxUsyA/1SKzGjpcNedDUam1BIEX/X0bG1KXGHhiLdFqDBHLdlLuEB2K70PcdODGjS
+         tFmKcVpFgiHnO/dAmgcFhk502ZZcyp5rQ0g3DtwvyVUiYxkKlhDrf9lqcN9L+LaGT9J1
+         XOZkbehC7qplHBA24Ff7FpKqXEAQ3XyQtWVVlZYEgaSPrgw9dEzb4Hr+YzqE5iA3jlAS
+         ta0bXySGTwXN1hJXBb/bgmohfnlWcsHJpdm6+b4ydnXtPC5u5hGuucdnT0AE5dVAvA9N
+         3h7w==
+X-Forwarded-Encrypted: i=1; AJvYcCUykLMKtq8Iyh6ZAVJRPCFMRGx49nLjwkIvq+rCSJM3sxKb2wmAWAJ0wlkTtq+V0NYQ32BY4/1ZAGLUoT8a@vger.kernel.org, AJvYcCXKiWvxxcE+DIysIG8JBAk6QfHCxDe+VvKH2Z6OveIgohitHD2ssf+Jz1u0s53pXw8P9ZkvH0Rz3Sea+oE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YysEE1rk/XtqnoXtNek0tpLkdLnVQSrGXnnTu/zBGs5SRkavXjV
+	H0nDJELknnUL2nNhVe967p5QmPlE8rFN8W/BkMQlBnveJNLGGXicKZ1c
+X-Gm-Gg: ASbGnculcRapwZK7rD/44lAMAYQvyfSQtBhvniF4vue4wB/KIYd+54ZpHmQSSiVRSHY
+	j0Sz413LRm4OJkUtHaX8Ptjbq0v0WpBQstpQCv0+6yefMKZsrOhJI9PT8g0YKgnSJMN8k8Ymvwb
+	OiZiOv0Xyxd22XpmpNkmc9kLyV9DeEPD+2qOWgT+8K+zBzwJKNPIO89WO31qs8Q0Yhs3jfTt+Nj
+	u2W0UU/gsHPvhJjcYPFkrtyw3jRTgK/4z/v/Qp+vVps+mnHY+b1AwWyYPOEJA6fYz7BKXss7nPq
+	JjRhY2f7LPVRAoETHFWxdiT6wEkobf14HpaCJZGGZ4aHuAszZXv1e2yx6E6+Mrk=
+X-Google-Smtp-Source: AGHT+IFMhLkFOWNu7fR8zHKCoDWQmlmxOBqQStwfNUxXq2aoXa7CkceTeF+6VU8t8r9+DaLwmRvaDQ==
+X-Received: by 2002:a05:6902:124b:b0:e7b:9763:6673 with SMTP id 3f1490d57ef6-e7b97636a55mr16633916276.13.1747826706681;
+        Wed, 21 May 2025 04:25:06 -0700 (PDT)
+Received: from Gentoo.localdomain ([154.16.192.116])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e7b6adaa721sm3928538276.44.2025.05.21.04.25.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 May 2025 04:25:06 -0700 (PDT)
+From: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To: masahiroy@kernel.org,
+	nathan@kernel.org,
+	nicolas.schier@linux.dev,
+	linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+Subject: [PATCH] scripts: Correct the function name in comment
+Date: Wed, 21 May 2025 16:53:03 +0530
+Message-ID: <20250521112425.20218-1-unixbhaskar@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <6180608.lOV4Wx5bFT@rjwysocki.net> <2025052158-venture-bottling-a3f8@gregkh>
-In-Reply-To: <2025052158-venture-bottling-a3f8@gregkh>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 21 May 2025 13:24:32 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0jR88ZNLFiJ-B_FEi=1--Z5tg2on6xCyLJF_K0ynmF_5A@mail.gmail.com>
-X-Gm-Features: AX0GCFs0RLHS39pyygbfr00TxMqjnMJWIOPWP6863CYgiRxyqZvU5NkS1W5Y_z0
-Message-ID: <CAJZ5v0jR88ZNLFiJ-B_FEi=1--Z5tg2on6xCyLJF_K0ynmF_5A@mail.gmail.com>
-Subject: Re: [PATCH v1] ucsi_ccg: Disable async suspend in ucsi_ccg_probe()
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Jon Hunter <jonathanh@nvidia.com>, 
-	Saravana Kannan <saravanak@google.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
-	linux-usb@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 21, 2025 at 1:11=E2=80=AFPM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Mon, May 12, 2025 at 03:26:53PM +0200, Rafael J. Wysocki wrote:
-> > From: Jon Hunter <jonathanh@nvidia.com>
-> >
-> > Commit aa7a9275ab81 ("PM: sleep: Suspend async parents after suspending
-> > children") had triggered a suspend issue on Tegra boards because it had
-> > reordered the syspend of devices with async suspend enabled with respec=
-t
-> > to some other devices.  Specifically, the devices with async suspend
-> > enabled that have no children are now suspended before any other device=
-s
-> > unless there are device links pointing to them as suppliers.
-> >
-> > The investigation that followed the failure report uncovered that async
-> > suspend was enabled for the cypd4226 device that was a Type-C controlle=
-r
-> > with a dependency on USB PHY and it turned out that disabling async
-> > suspend for that device made the issue go away.  Since async suspend
-> > takes dependencies between parents and children into account as well
-> > as other dependencies between devices represented by device links, this
-> > means that the cypd4226 has a dependency on another device that is
-> > not represented in any form in the kernel (a "hidden" dependency), in
-> > which case async suspend should not be enabled for it.
-> >
-> > Accordingly, make ucsi_ccg_probe() disable async suspend for the
-> > devices handled by, which covers the cypd4226 device on the Tegra
-> > boards as well as other devices likely to have similar "hidden"
-> > dependencies.
-> >
-> > Fixes: aa7a9275ab81 ("PM: sleep: Suspend async parents after suspending=
- children")
-> > Closes: https://lore.kernel.org/linux-pm/c6cd714b-b0eb-42fc-b9b5-4f5f39=
-6fb4ec@nvidia.com/
-> > Reported-by: Jon Hunter <jonathanh@nvidia.com>
-> > Tested-by: Jon Hunter <jonathanh@nvidia.com>
-> > Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > ---
-> >
-> > Commit aa7a9275ab81 is in linux-next and it has not reached the mainlin=
-e yet.
->
-> I'm guessing that's in your tree, so can you take this through that?
+Simple correction about the function name to match in the comment section.
 
-Sure.
+Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+---
+ scripts/link-vmlinux.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Done already.
+diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
+index 51367c2bfc21..6ff23a77bf96 100755
+--- a/scripts/link-vmlinux.sh
++++ b/scripts/link-vmlinux.sh
+@@ -165,7 +165,7 @@ sysmap_and_kallsyms()
+ }
 
-Thanks!
+ # Create map file with all symbols from ${1}
+-# See mksymap for additional details
++# See mksysmap for additional details
+ mksysmap()
+ {
+ 	info NM ${2}
+--
+2.49.0
+
