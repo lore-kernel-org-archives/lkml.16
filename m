@@ -1,128 +1,194 @@
-Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80BDA1547D2;
-	Wed, 21 May 2025 01:21:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.178.238
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B59A9145A18
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 01:22:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747790503; cv=none; b=GQSlYcpTIj19O7TY2llMjQyXrU7Tx9LKdPjBViP68YghixcR3FJBe7UzoT4toY52WZbGIrXeeEQweiuFNkx2vNot1QzTGzyZhinv0noMmKTasvNzqXnOVKsQNvX/FEnPVhYilsYV4AENspY9jQrf79m0nK0Asv7kHYUMLHxv14Q=
+	t=1747790537; cv=none; b=kHhiozkzVjVswUcN2xBazGDv4Z2eMlsbGGKOqHCp0HaQ7LJ/CjPh/mWMJInU2GcoqjXYppSzR3h5PjiBrIipUeQOy1c2oloDFsZe6O9ulF5oXD19TlQr1QfJl8ZRm381jYYfmh6NI3WiI+7QdQiasBMheC7hLCCNxiCVJJNQYhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747790503; c=relaxed/simple;
-	bh=1UfzN0drI/52aA/1kE18PAPZsjm6Wigacdpy3q4D0FY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KHcSVFnI/HaNJlIgThPpL6Dqppcbq5KwOzaIoGzZue7o6PFHg/dSBDKqlAecjzQMkCvDauBv1IxxSQV4SYNYA1g+JpoqpVyf+HYjXyUbzO4aXp0oJN7TduIW+V6LhA0JCHgKaBE2dZXxR/Y1ttuP9VYdXaM0bh0jyCqQGPYiXLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.178.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
-Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54L0VDx9014151;
-	Wed, 21 May 2025 01:21:29 GMT
-Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 46rwfx0ka6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Wed, 21 May 2025 01:21:29 +0000 (GMT)
-Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.43; Tue, 20 May 2025 18:21:10 -0700
-Received: from pek-lpg-core1.wrs.com (147.11.136.210) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server id
- 15.1.2507.43 via Frontend Transport; Tue, 20 May 2025 18:21:05 -0700
-From: <jianqi.ren.cn@windriver.com>
-To: <gregkh@linuxfoundation.org>, <stable@vger.kernel.org>
-CC: <patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-        <jianqi.ren.cn@windriver.com>, <robdclark@gmail.com>,
-        <quic_abhinavk@quicinc.com>, <dmitry.baryshkov@linaro.org>,
-        <sean@poorly.run>, <airlied@gmail.com>, <daniel@ffwll.ch>,
-        <sashal@kernel.org>, <quic_vpolimer@quicinc.com>,
-        <quic_jesszhan@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>,
-        <quic_kalyant@quicinc.com>
-Subject: [PATCH 6.1.y v2 2/2] drm/msm/dpu: move dpu_encoder's connector assignment to atomic_enable()
-Date: Wed, 21 May 2025 09:21:23 +0800
-Message-ID: <20250521012123.1977793-1-jianqi.ren.cn@windriver.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1747790537; c=relaxed/simple;
+	bh=tXaXu8mwXmLabMMDyCeHIceFCAayfLmWjzWE0hVrs28=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oc8E28Viq/zjlBvQ8eo+yCFvOzJb12L4OP64Ls0MYk70bv+6bPvBMqMsCKJPOdSHLVbRYer+kwrrLJ/XwB5u1ASOigyMcsPVMTLasQxTAzN0Mx8jwMKFhVOoCEuugHOjSeWgH5YHQhezhdPxgVanWU/dBzuX6a3GMb6sXRkCGn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gjnuxP3t; arc=none smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gjnuxP3t"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-47e9fea29easo1484181cf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 18:22:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747790534; x=1748395334; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SHzCa2XQRYctkgISU9ssviPmqc9h+JaAqrCbnkEZAFo=;
+        b=gjnuxP3trNX54Sr7njGDbuS94zDgUyCOfYatne++RAt5EzK5qhzmS9jFGq12V1nv5n
+         SLTtn2kgEFx007u0dNLVxxf7xVKUZoYJBJfuYmwBOIOkRjqtW4k8a3Vi7rSh1+2Ju1Mq
+         x5uEehY34+8egT1V5XIgPlCfbcWIN5w9dbl8Xm71KzksXZlXqrAk8XE7gzOEpMFKv+lI
+         FTxrfVDoI199vMmdrNVEeqOmCWWtefNOW5njYDjzZhBqi0KrMIX57aLNsKdJHYtSUXJZ
+         ZMS0kiTo8CQiE++YR94lFOnbJ5l23dFxm5wCvfbixsiyOWzwhGB9kJIlMLEatLZr8hlt
+         8eZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747790534; x=1748395334;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SHzCa2XQRYctkgISU9ssviPmqc9h+JaAqrCbnkEZAFo=;
+        b=q7DjU6wV5NELTYbjMGi0Cc6L7bBIOveVEDWW7rhNRcOLvRQsbuvQg9hf4bHZOJmNAQ
+         +2qNlOEr7r/F1sLbM4TrZOaPDk7DR+T9BKjQ3p3rfUewdL9xb4j5tYi0hVdQD9GNR+YI
+         eN8ZhnCaxKbt9dUtrOX7v50lzUz4q4fZftJNxPMb5J7O8UrLzqBZ627aJrItkbT+4yls
+         YeG1RzwzmwJyzFSmsx1faC95rPOo2xCQGO75lnaEsdmBRZ+9kl2mnn8Cst6Eu/mZu1T8
+         9UKJSksRoFlC8pGhhxHaWpFekhxsiIJ7/ey0fsY852X8hi1T5MC3nMzi+hIlv4BXRol8
+         D8uA==
+X-Forwarded-Encrypted: i=1; AJvYcCVVCN3KJABodzYwZbTwOSqYpjEMyQL94njbW3h143Njr2wLEIc4TUcQOIMarav/E9hyhJfekglrWcArOjs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzx+VkxQga0qyXY0bs/TCxIMcMSDygpdna/IV0d/6OJw4KlA3ya
+	x00zPvcuumDF0EjgNT/4Pp+3zY4fEjmsOS4GTojktQEQCmOCC+biIBukOj15QfOYGd8xvSi+A/+
+	Z1TpYdb0ndA2EyPqNQE9mM8NsKVHzNN6fq8AQt5tAECOgL2NmkcSI8P8LE3c=
+X-Gm-Gg: ASbGncskfMqG3y6vhzEveUsCcqokX4LcdJbj/ivPM/JUhMIwRV9X5jaifdCOAnXh5w5
+	rUzRZXoBaGdSnZai2HTUNXMREV2CjQrpNgfHo6oTcIEVm6dojzcXOrlnmEZQauN6xSE5SSu/DPp
+	F7V+BdEg9xzkOSF6gRhCZMI8ota495zLu0I+Wst69HsEmrNBZlNcuArn/k5GYjytGhdJfeAFA=
+X-Google-Smtp-Source: AGHT+IETk9JsouTomTSfYWPNhg8HW1BBXFdg36hX2MSkaoPaIDDGxmR2D+QNx+kdjYOJPlI/lvzsR89BaSYoRQgZ2X4=
+X-Received: by 2002:ac8:7c52:0:b0:47b:840:7f5b with SMTP id
+ d75a77b69052e-49601269821mr14330491cf.29.1747790534110; Tue, 20 May 2025
+ 18:22:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Authority-Analysis: v=2.4 cv=ObSYDgTY c=1 sm=1 tr=0 ts=682d2a99 cx=c_pps a=/ZJR302f846pc/tyiSlYyQ==:117 a=/ZJR302f846pc/tyiSlYyQ==:17 a=dt9VzEwgFbYA:10 a=e5mUnYsNAAAA:8 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=KKAkSRfTAAAA:8 a=t7CeM3EgAAAA:8
- a=Il65ExNKTjwmHhc7HzsA:9 a=Vxmtnl_E_bksehYqCbjh:22 a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22 a=FdTzh2GWekK77mhwV6Dw:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDAxMSBTYWx0ZWRfX2iVILvKWn5IQ 9jKTYADda3XzJTTlmc5FWJ/utr0h6TWpMbcqM+17kuqrW96sgV4/P/Ayi/p6WZLaA2K6Pf5oAka uMrQF70UoNROIymqV8OM0YND5WLP/4HQyc2DQQpCyUpvlwz8dGU4rL/JEn+lNyIneRpnTtgC9Eg
- 6ill9T8r2agg1n0mcRN+TD5D6lBLzcqB15y91ezU7W7cRa9Pxk9hj1aoQV/6OFhhDmsE8x2hs3D d6MrZoLe1Goy1gJF+cJ36j4hq3V/GjWpE5EY6zbb8WBfgvX6+aniUTN2KK9Z+T9e+Ar2D50EdA0 T5kNWzW3ChgcLoSJaozowM34KsAVdVtNrdn95VM2A7wd4iq2TcgnL2a02cEpychLCQunVpsHBdv
- W+qbODwNgYc0Trc5YfxWDIrtWUy0+uNCfiddCla6qXbI3PusSCgPszrlC9hTgjgnPoAkSniT
-X-Proofpoint-GUID: CvB6XweGdALzlTS_J06AkR2aQF6OlC55
-X-Proofpoint-ORIG-GUID: CvB6XweGdALzlTS_J06AkR2aQF6OlC55
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-21_01,2025-05-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- bulkscore=0 spamscore=0 mlxlogscore=999 phishscore=0 malwarescore=0
- adultscore=0 priorityscore=1501 suspectscore=0 clxscore=1015
- impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.21.0-2505160000
- definitions=main-2505210011
+References: <20250517000739.5930-1-surenb@google.com> <20250520231620.15259-1-cachen@purestorage.com>
+ <CAJuCfpEz2mbVmGJnp0JHKsip2HVkp+=yHOj3oRtDrKzXXG5Xag@mail.gmail.com>
+ <CALCePG1uoNN4vB3HguOi+ZYjwUcTPHmtp4RCZey0r6qCUJMLCg@mail.gmail.com> <CAJuCfpF+YYBEZPmf-+k7N05R+T96MM3nzegcGWOPguX=Xu8ANA@mail.gmail.com>
+In-Reply-To: <CAJuCfpF+YYBEZPmf-+k7N05R+T96MM3nzegcGWOPguX=Xu8ANA@mail.gmail.com>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Wed, 21 May 2025 01:22:03 +0000
+X-Gm-Features: AX0GCFvylRrIG4sSJ_j5oVEsG8ZIbb2QwvzTcJFZ13RR_HWNZPB6irPD3XQ7IRs
+Message-ID: <CAJuCfpEmqtcrvuSxTzkt28Yf+x4mfDKfWCH_25H+4uDHXaie6g@mail.gmail.com>
+Subject: Re: comments on patch "alloc_tag: allocate percpu counters for module
+ tags dynamically"
+To: Casey Chen <cachen@purestorage.com>
+Cc: 00107082@163.com, akpm@linux-foundation.org, cl@gentwo.org, 
+	dennis@kernel.org, kent.overstreet@linux.dev, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, pasha.tatashin@soleen.com, tj@kernel.org, 
+	yzhong@purestorage.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+On Wed, May 21, 2025 at 12:45=E2=80=AFAM Suren Baghdasaryan <surenb@google.=
+com> wrote:
+>
+> On Tue, May 20, 2025 at 11:48=E2=80=AFPM Casey Chen <cachen@purestorage.c=
+om> wrote:
+> >
+> > On Tue, May 20, 2025 at 4:26=E2=80=AFPM Suren Baghdasaryan <surenb@goog=
+le.com> wrote:
+> > >
+> > > On Tue, May 20, 2025 at 4:16=E2=80=AFPM Casey Chen <cachen@purestorag=
+e.com> wrote:
+> > > >
+> > > > Hi Suren,
+> > >
+> > > Hi Casey,
+> > >
+> > > >
+> > > > I have two questions on this patch.
+> > > > 1. If load_module() fails to allocate memory for percpu counters, s=
+hould we call codetag_free_module_sections() to clean up module tags memory=
+ ?
+> > >
+> > > Does this address your question:
+> > > https://lore.kernel.org/all/20250518101212.19930-1-00107082@163.com/
+> > >
+> >
+> > module_deallocate() is called in error handling of load_module(). And
+> > codetag_load_module() is at the very end of load_module(). If counter
+> > allocation fails, it doesn't go to the error path to clean up module
+> > tag memory.
+>
+> Ah, right. I didn't have the code in front of me but now I see what
+> you mean. codetag_load_module() does not return a fault if percpu
+> counters fail to allocate.
+>
+> >
+> > My code base is at a5806cd506af ("Linux 6.15-rc7")
+> > 3250 /*
+> > 3251  * Allocate and load the module: note that size of section 0 is al=
+ways
+> > 3252  * zero, and we rely on this for optional sections.
+> > 3253  */
+> > 3254 static int load_module(struct load_info *info, const char __user *=
+uargs,
+> > 3255                        int flags)
+> > 3256 {
+> > ...
+> > 3403
+> > 3404         codetag_load_module(mod);
+> > 3405
+> > 3406         /* Done! */
+> > 3407         trace_module_load(mod);
+> > 3408
+> > 3409         return do_init_module(mod);
+> > ...
+> > 3445  free_module:
+> > 3446         mod_stat_bump_invalid(info, flags);
+> > 3447         /* Free lock-classes; relies on the preceding sync_rcu() *=
+/
+> > 3448         for_class_mod_mem_type(type, core_data) {
+> > 3449                 lockdep_free_key_range(mod->mem[type].base,
+> > 3450                                        mod->mem[type].size);
+> > 3451         }
+> > 3452
+> > 3453         module_memory_restore_rox(mod);
+> > 3454         module_deallocate(mod, info);
+> >
+> >
+> > > > 2. How about moving percpu counters allocation to move_module() whe=
+re codetag_alloc_module_section() is called ? So they can be cleaned up tog=
+ether.
+> > >
+> > > That would not work because tag->counters are initialized with NULL
+> > > after move_module() executes, so if we allocate there our allocations
+> > > will be overridden. We have to do that at the end of load_module()
+> > > where codetag_load_module() is.
+> >
+> > codetag_alloc_module_section() is called in move_module() to allocate
+> > module tag memory. I mean we can also allocate memory for percpu
+> > counters inside move_module().
+>
+> I thought you were suggesting to allocate percpu counters inside
+> codetag_alloc_module_section(). I guess we could introduce another
+> callback to allocate these counters at the end of the move_module(). I
+> think simpler option is to let codetag_load_module() to fail and
+> handle that failure, OTOH that means that we do more work before
+> failing... Let me think some more on which way is preferable and I'll
+> post a fixup to my earlier patch.
 
-[ Upstream commit aedf02e46eb549dac8db4821a6b9f0c6bf6e3990 ]
+After inspecting the code some more I'm leaning towards a simpler
+solution of letting codetag_load_module() to return failure and
+handling it with codetag_free_module_sections(). This would avoid
+introducing additional hook inside move_module(). I'll wait until
+tomorrow and if no objections received will post a fixup to my
+previous patch.
 
-For cases where the crtc's connectors_changed was set without enable/active
-getting toggled , there is an atomic_enable() call followed by an
-atomic_disable() but without an atomic_mode_set().
-
-This results in a NULL ptr access for the dpu_encoder_get_drm_fmt() call in
-the atomic_enable() as the dpu_encoder's connector was cleared in the
-atomic_disable() but not re-assigned as there was no atomic_mode_set() call.
-
-Fix the NULL ptr access by moving the assignment for atomic_enable() and also
-use drm_atomic_get_new_connector_for_encoder() to get the connector from
-the atomic_state.
-
-Fixes: 25fdd5933e4c ("drm/msm: Add SDM845 DPU support")
-Reported-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Closes: https://gitlab.freedesktop.org/drm/msm/-/issues/59
-Suggested-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Tested-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org> # SM8350-HDK
-Patchwork: https://patchwork.freedesktop.org/patch/606729/
-Link: https://lore.kernel.org/r/20240731191723.3050932-1-quic_abhinavk@quicinc.com
-Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
-[Minor conflict resolved due to code context change.]
-Signed-off-by: Jianqi Ren <jianqi.ren.cn@windriver.com>
-Signed-off-by: He Zhe <zhe.he@windriver.com>
----
-Verified the build test
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-index c7fcd617b48c..94f352253c74 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-@@ -1101,8 +1101,6 @@ static void dpu_encoder_virt_atomic_mode_set(struct drm_encoder *drm_enc,
- 
- 	cstate->num_mixers = num_lm;
- 
--	dpu_enc->connector = conn_state->connector;
--
- 	for (i = 0; i < dpu_enc->num_phys_encs; i++) {
- 		struct dpu_encoder_phys *phys = dpu_enc->phys_encs[i];
- 
-@@ -1192,6 +1190,9 @@ static void dpu_encoder_virt_atomic_enable(struct drm_encoder *drm_enc,
- 	dpu_enc = to_dpu_encoder_virt(drm_enc);
- 
- 	mutex_lock(&dpu_enc->enc_lock);
-+
-+	dpu_enc->connector = drm_atomic_get_new_connector_for_encoder(state, drm_enc);
-+
- 	cur_mode = &dpu_enc->base.crtc->state->adjusted_mode;
- 
- 	trace_dpu_enc_enable(DRMID(drm_enc), cur_mode->hdisplay,
--- 
-2.34.1
-
+>
+> > We have implemented such a thing in our code base and it works fine.
+> > Just do it right after copying ELF sections to memory. If it fails it
+> > goes to the error path and calls codetag_free_module_sections() to
+> > clean up.
+> >
+> > 2650                 if (codetag_needs_module_section(mod, sname,
+> > shdr->sh_size)) {
+> > 2651                         dest =3D codetag_alloc_module_section(mod,
+> > sname, shdr->sh_size,
+> > 2652
+> > arch_mod_section_prepend(mod, i), shdr->sh_addralign);
+> >
+> > > Thanks,
+> > > Suren.
+> > >
+> > > >
+> > > > Thanks,
+> > > > Casey
