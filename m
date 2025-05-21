@@ -1,93 +1,80 @@
-Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
+Received: from sxb1plsmtpa01-02.prod.sxb1.secureserver.net (sxb1plsmtpa01-02.prod.sxb1.secureserver.net [188.121.53.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99BF91EB9E1
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 16:09:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 858901EB9E1
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 16:09:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.121.53.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747843778; cv=none; b=fKK+XJU+E7vlmjVeH2UXDbXDIED5dZwiFTIOlL6coFAfht1H2ROMWJH0IbX3ooNT0TjRP1BtavpOUzz6uGEkFRBTl2TjEA1HytiPg9QO9IfM4RNRmiqxRAxvE32rCrk7R/HIKjJrcZNf4w88q3wdD7VUrhHB2oVSUl/mFF50drY=
+	t=1747843796; cv=none; b=BB8oRhJirFtTOk0RCSr+24hI3ksLOYPCoBchB3efL4i7OQpsf0kz9rpFR/VVLuO/5Ss4K4nac5aNiIfB7tUe0BDuNsWlQxNbnbdY6n7RFX/MV0pgjVtxjhj+yfxpX8Ns9Hr6Yh/rLZSMZWfHk9dXeKJZgVSGcszcJ4pS4d/KrHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747843778; c=relaxed/simple;
-	bh=OQOw5twbXTjvTuw+IQ5PdOn6eO5Xr5Ggn/ieZOTC5Xs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=piZprYvwwKRSxpoMQyP4Pvm9iV5cbTpvfxzXpZfF1bKoDBG+zD7fJC/umiYqldGqqY9qq15jZsjSNwr5REvMBCecuQ7oerATH0yeZSdrNLtDlxlx3E4r280y53wD8/pphsB0azI4vxjO+fCMWaks1SvwtodzPU5aqVapWPSu15I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
-Received: from fangorn.home.surriel.com ([10.0.13.7])
-	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.97.1)
-	(envelope-from <riel@shelob.surriel.com>)
-	id 1uHly7-000000008Ci-0Y6q;
-	Wed, 21 May 2025 12:06:59 -0400
-Message-ID: <bdf83ab6f5149678ba08cfc52ef806ed705aa283.camel@surriel.com>
-Subject: Re: [RFC v2 4/9] x86/mm: Introduce X86_FEATURE_RAR
-From: Rik van Riel <riel@surriel.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org, 
-	kernel-team@meta.com, dave.hansen@linux.intel.com, luto@kernel.org, 
-	peterz@infradead.org, tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com, 
-	nadav.amit@gmail.com, Rik van Riel <riel@fb.com>, Yu-cheng Yu
-	 <yu-cheng.yu@intel.com>
-Date: Wed, 21 May 2025 12:06:59 -0400
-In-Reply-To: <20250521145339.GCaC3o87kpaouLZ_3D@fat_crate.local>
-References: <20250520010350.1740223-1-riel@surriel.com>
-	 <20250520010350.1740223-5-riel@surriel.com>
-	 <20250521115343.GCaC2-x8LsmMApUkjQ@fat_crate.local>
-	 <cb657cabbc3c87e0a821c7c3fcc16e62b7d854f4.camel@surriel.com>
-	 <20250521145339.GCaC3o87kpaouLZ_3D@fat_crate.local>
-Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
- keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
- eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
- Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
- lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
- dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
- mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
- gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
- r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
- WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
- 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
- Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
- +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
- g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
- KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
- fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
- 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
- G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
- okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
- TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
- cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
- omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
- QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
- c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	s=arc-20240116; t=1747843796; c=relaxed/simple;
+	bh=67pFqOn0n4JWDPy3pKhcLEu/WYlSdJPjjueKZ/8Mihg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fSYVQJENJ+MjRXf018dai9ugAylUGFu/d02anBzXhHeVYyXAlyuAS1llP81OyxReUpy4czfUFKtJqSfbggLH8h32BXRcGZ648nVqSRilz3m8yyXu08hRtxaCLGljUUfpqUVe1bw8hLlEMHkkgHMFCG+31bKIwK2jYoCpUEkX6Dc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squashfs.org.uk; spf=pass smtp.mailfrom=squashfs.org.uk; arc=none smtp.client-ip=188.121.53.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squashfs.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squashfs.org.uk
+Received: from [192.168.178.95] ([82.69.79.175])
+	by :SMTPAUTH: with ESMTPSA
+	id HliLuFR8dwQeMHliNu1Eob; Wed, 21 May 2025 08:50:44 -0700
+X-CMAE-Analysis: v=2.4 cv=CdAI5Krl c=1 sm=1 tr=0 ts=682df655
+ a=84ok6UeoqCVsigPHarzEiQ==:117 a=84ok6UeoqCVsigPHarzEiQ==:17
+ a=IkcTkHD0fZMA:10 a=57SyGIRnAAAA:8 a=FXvPX3liAAAA:8 a=K-6_8eHT4SvIFsRQ-g0A:9
+ a=QEXdDO2ut3YA:10 a=UObqyxdv-6Yh2QiB9mM_:22
+X-SECURESERVER-ACCT: phillip@squashfs.org.uk
+Message-ID: <b6dfcc79-f542-474a-bcc6-4e24a1189a07@squashfs.org.uk>
+Date: Wed, 21 May 2025 16:49:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Sender: riel@surriel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] squashfs: Add optional full compressed block caching
+To: Chanho Min <chanho.min@lge.com>, Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, gunho.lee@lge.com
+References: <20250521072559.2389-1-chanho.min@lge.com>
+Content-Language: en-US
+From: Phillip Lougher <phillip@squashfs.org.uk>
+In-Reply-To: <20250521072559.2389-1-chanho.min@lge.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4xfPaFX26XYVN4qUL6D0uwjZzwkZ3eixA4CIKPcc105JPuC2CmI5IrdUHS8Wmo+PHQON+9cbGm6tdd5hsla54tzWc/9mUWBnAyJuanbmoDD7g0ixhK35BH
+ 0SUwWtZENKVzfc81e80FHNKTs0pMzk9t109TcfYh8dfATF/GDPkz13HPyL03pd2z+F7x+kbvSqhTgYlR2kUhy1IZ8sF64iblI08OmLeVa/5bQdQTB0osd+5S
+ QPVhcMYrhqvL1/hbD7R3Z88gHxAbw1o/EQYT7z57YXgpe4btHYm4IpXYNc5LMbpcrgVewvugfg++RZ8QA6BNCw==
 
-On Wed, 2025-05-21 at 16:53 +0200, Borislav Petkov wrote:
-> On Wed, May 21, 2025 at 09:57:52AM -0400, Rik van Riel wrote:
-> > I had the same thought, and tried that already.
-> >=20
-> > It didn't work.
->=20
-> Care to share why?
->=20
-It resulted in RAR not being properly initialized,
-and the system hanging when trying to use RAR to
-flush the TLB.
 
-I don't remember exactly what sequence of events
-was happening here, maybe something with the
-boot CPU per-cpu RAR initialization being called
-(or not, due to X86_FEATURE_RAR not being set)
-before the systemwide initialization?
 
---=20
-All Rights Reversed.
+On 21/05/2025 08:25, Chanho Min wrote:
+> The commit 93e72b3c612adcaca1 ("squashfs: migrate from ll_rw_block usage to
+> BIO") removed caching of compressed blocks in SquashFS, causing fio
+> performance regression in workloads with repeated file reads. Without
+> caching, every read triggers disk I/O, severely impacting performance in
+> tools like fio.
+> 
+> This patch introduces a new CONFIG_SQUASHFS_COMP_CACHE_FULL Kconfig option
+> to enable caching of all compressed blocks, restoring performance to
+> pre-BIO migration levels. When enabled, all pages in a BIO are cached in
+> the page cache, reducing disk I/O for repeated reads. The fio test results
+> with this patch confirm the performance restoration:
+> 
+> For example, fio tests (iodepth=1, numjobs=1,
+> ioengine=psync) show a notable performance restoration:
+> 
+> Disable CONFIG_SQUASHFS_COMP_CACHE_FULL:
+>    IOPS=815, BW=102MiB/s (107MB/s)(6113MiB/60001msec)
+> Enable CONFIG_SQUASHFS_COMP_CACHE_FULL:
+>    IOPS=2223, BW=278MiB/s (291MB/s)(16.3GiB/59999msec)
+> 
+> The trade-off is increased memory usage due to caching all compressed
+> blocks. The CONFIG_SQUASHFS_COMP_CACHE_FULL option allows users to enable
+> this feature selectively, balancing performance and memory usage for
+> workloads with frequent repeated reads.
+> 
+> Signed-off-by: Chanho Min <chanho.min@lge.com>
+
+Patch looks good, and I like the fact it is optional.
+
+Reviewed-by Phillip Lougher <phillip@squashfs.org.uk>
+
