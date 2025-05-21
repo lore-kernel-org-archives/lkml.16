@@ -1,80 +1,120 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from fhigh-a7-smtp.messagingengine.com (fhigh-a7-smtp.messagingengine.com [103.168.172.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C3402405F5;
-	Wed, 21 May 2025 10:20:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D49225C82A;
+	Wed, 21 May 2025 10:20:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747822832; cv=none; b=Nzf+Kxd7SNxIsM3YXWQlWllZTq/EMSENEZnRr/0pmDUMBcZWVqIbA/MMoRXHxE1DH9j0vRTt3O3yQHyopYHxGOvdwlq/UV2wRrQ9a+KHSf0FDTlZHNXxidtzGLP6RR0EXPCpyY6Aa84vUmXYfWpiQ0Os9wKM+nsmwD6qW4OmwtU=
+	t=1747822838; cv=none; b=YG6uComjCJkFAwzCLvYuAWgyWIBtRKJq/maG45S4B0nGW1qY6BU+T8h8Co4QDFcEnA2uX174a7TLOcwbUa+Mh0g6MzUCnJLQafSpTmCfu5pqEgqFGTb+JVyjT3s2WtoFoBTMPU1KcKberYXqKtXxESrej151/Ba90uqk987f47A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747822832; c=relaxed/simple;
-	bh=WkS58Au0FdDS6AKeNRjZwZmOF69mjuuXGMj2tbsRlBo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=gv7vH6sqLAAinH0QaO0i+HpCtX9vlJjfQEp9YxAzS8CKTkEsT6L18PpSYt79BJSiy9S28fuN0EPa9DrioWBbj70+wiMjtnb4Dl9eKm+jNzsaowHrh3LKROIXZ3vL2r9Jr2uiCHeucrrvRn5wONQZ6bcZWvhU2JGHUI+rtoyw8lA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=ex0bH7QS; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1747822838; c=relaxed/simple;
+	bh=hgO/tUb6I/7A3eZ1GUbTujtom76PxW0NEx2daJdEgWE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gX+t8GLzPeMm25dWrXF52AeSdA7icBHitb02+yop7IJsRzDcDU/7Xl552DTyGlp2IvRl4KWF9cW0zo02OYAhUhbMPewr1fUnKKF5J2RH+8wVsO91FzPrrOvZ9a0hyBwDJaUglmaLterWsO0ppYYkiqpJRmJfEJv0MFegA24YqfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=beims.me; spf=pass smtp.mailfrom=beims.me; dkim=pass (2048-bit key) header.d=beims.me header.i=@beims.me header.b=EVT8lniS; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=sC1Gpnwl; arc=none smtp.client-ip=103.168.172.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=beims.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=beims.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="ex0bH7QS"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net BB2D741A9E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1747822830; bh=OBCQ2+DiSFRmOVA09FWKPuM111yHHYZRrK684DrBWMk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=ex0bH7QSsM0DbKe7V/6IHp5GvNRjSiuycEaGVCPLl5X1hMXquoQg7zFZ+PRvzviaN
-	 wLmgSXx/ZOIoAi3EXhAj8qF30MW2GAP1CFaPi05IqgIpNqBlcMFDgdpkzPIhUyguau
-	 6sy4pg9IquOpdYtzFcD41/hqKYi0Vz7EaDL8Fd7atbkSPhnAOUP4R1fL6OkI7y4XgE
-	 cm9hKe2WlAeTnT1Br+fzqmmSiHXpLDJZNVJ+Wjif0xQ/orE7uRSzT84LlUi7EWqR1H
-	 qLZFxlWIC0zRORvhKJJaMyuBO2bX0IyvOlaVBIooail+3/Wjue6/hnh91T/cQyR8AT
-	 wnDx+lQp4+zOA==
-Received: from localhost (unknown [93.187.88.32])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id BB2D741A9E;
-	Wed, 21 May 2025 10:20:29 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Madadi Vineeth Reddy <vineethr@linux.ibm.com>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, Swapnil Sapkal
- <swapnil.sapkal@amd.com>
-Cc: linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Madadi
- Vineeth Reddy <vineethr@linux.ibm.com>
-Subject: Re: [PATCH] Documentation/scheduler: Fix typo in sched-stats domain
- field description
-In-Reply-To: <20250520100752.39921-1-vineethr@linux.ibm.com>
-References: <20250520100752.39921-1-vineethr@linux.ibm.com>
-Date: Wed, 21 May 2025 04:20:26 -0600
-Message-ID: <871psigt91.fsf@trenco.lwn.net>
+	dkim=pass (2048-bit key) header.d=beims.me header.i=@beims.me header.b="EVT8lniS";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="sC1Gpnwl"
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id ED6731140190;
+	Wed, 21 May 2025 06:20:34 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-01.internal (MEProxy); Wed, 21 May 2025 06:20:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=beims.me; h=cc
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=fm3; t=1747822834; x=1747909234; bh=NI0XmhRBWdAqcvMsZeFHc
+	aGIu0yjQa3Cy0NnWsMz3rg=; b=EVT8lniSCPgfDyLQ1Lspm/w/jYrWcwxsH0Xe6
+	8ixtSSbBCu9RIh/usUv+0yDw/nRgtaZxJo192xQFhDtAGhguaIgvuVhs3/QSqZmJ
+	iphgGjNL7k/9Gd25sbQFHPt8zVH3Zyn7wzcCbM7si3oSHXMux80iN8kQUhZVyb9o
+	aEURQlzmAViU2EmqMXB894yKrD1s6XzPsXOHUxiepikin7ssVm7FU885bkoMtD4T
+	54ObH/ur5AGebLLQqv/xpwFdTSz9sqd+Uw2jRlPhqQ4fLduWMr5n+fBIxvkTG3hA
+	G81VkilFCaagqEpvx0u0aXTiz8Rwcej55KLXh/i8uc9ypIhvg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1747822834; x=1747909234; bh=NI0XmhRBWdAqcvMsZeFHcaGIu0yjQa3Cy0N
+	nWsMz3rg=; b=sC1GpnwlXsv+sJmUWcqYB5mQdmopYM9YWyz4RZ88SVrP2NBJuyx
+	KK7URAMsB+iFnI+f1V7U3u5uGTUhsWetMgLChXhmH06AnIBNaaHLhFrRpGK//6Fi
+	LV5mIslWVh4HvE7h3khw7lphJFa9QHUQVPqtCTXwIW6u6BS8ucHTWvqPF7dUIF1e
+	krUMsvbYVmQbpRScXyqKAuSs4jGengUITE7db8TQH2+0e2Zipw8ywU///ZzuYTSy
+	96KB+ayykj79fCZXSsfZndtaM53xO+d0rtrbFP2O/T+FCLUXkpF12nFz/hbPup8B
+	ulLJUg2uIXcPK8z+sUqpu6pNFDP4IHDdMuA==
+X-ME-Sender: <xms:8qgtaILJWD_JFiHGSL8H3qeu7jyX4uM1raZzkPebppDEOp5h1007hQ>
+    <xme:8qgtaIK0poXZPxP4LwpSNwY5q4-Bbz5oGO9N45h8rjyvaCOfzH1qkMfArdUIJJ_Pj
+    X92DW22fOJWCiP5OBQ>
+X-ME-Received: <xmr:8qgtaIv_X8m9g5-774kU2f3p9njcz5D7sfqQv6LYcT0rNWHv4SdUdR-y-6g5xJLZp0E>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvkedvucdltddurdegfedvrddttd
+    dmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgf
+    nhhsuhgsshgtrhhisggvpdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttd
+    enucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgg
+    gfestdekredtredttdenucfhrhhomheprhgrfhgrvghlsegsvghimhhsrdhmvgenucggtf
+    frrghtthgvrhhnpeefkeekgfdvhefhfefgleethfduudeuffejvedvkefhgffhleejgeel
+    keehtddtieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
+    hmpehrrghfrggvlhessggvihhmshdrmhgvpdhnsggprhgtphhtthhopeehpdhmohguvgep
+    shhmthhpohhuthdprhgtphhtthhopegsrhhirghnnhhorhhrihhssegthhhrohhmihhumh
+    drohhrghdprhgtphhtthhopehfrhgrnhgtvghstghoseguohhltghinhhirdhithdprhgt
+    phhtthhopehrrghfrggvlhdrsggvihhmshesthhorhgruggvgidrtghomhdprhgtphhtth
+    hopehlihhnuhigqdifihhrvghlvghsshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgt
+    phhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:8qgtaFYcfmDzKsVfb6NNKlJpCqH3_2zdBaYns1sEyK6wSfFtQL1gOg>
+    <xmx:8qgtaPYYs1LVwecx6sScTahQSi4JCFTz3YzYfq8vHt0PCQW25ZDz0g>
+    <xmx:8qgtaBBBXfa1cpepqC9CTgwrg8_AeS8Z9x7G7dTBFCgQ2bdtoV6eTA>
+    <xmx:8qgtaFalhvtHZCK2cP0PDjKq9ftjw1h0Vad-8FQ4CijvNmZ_KSmuUA>
+    <xmx:8qgtaB0n4Zwsg4SH8nC1jwfN80F83nq7q0W1IKGNPlXLVQbP3XUqdaTm>
+Feedback-ID: idc214666:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 21 May 2025 06:20:33 -0400 (EDT)
+From: rafael@beims.me
+To: Brian Norris <briannorris@chromium.org>,
+	Francesco Dolcini <francesco@dolcini.it>
+Cc: Rafael Beims <rafael.beims@toradex.com>,
+	linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] wifi: mwifiex: enable host mlme on sdio W8997 chipsets
+Date: Wed, 21 May 2025 07:19:34 -0300
+Message-ID: <20250521101950.1220793-1-rafael@beims.me>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-Madadi Vineeth Reddy <vineethr@linux.ibm.com> writes:
+From: Rafael Beims <rafael.beims@toradex.com>
 
-> Fixes a typo in the description of the 23rd field of the scheduling
-> domain statistics, which was missing the word "cpu".
->
-> Fixes: 7c8cd569ff66 ("docs: Update Schedstat version to 17")
-> Signed-off-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-> ---
->  Documentation/scheduler/sched-stats.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/Documentation/scheduler/sched-stats.rst b/Documentation/scheduler/sched-stats.rst
-> index 08b6bc9a315c..d82e7d2b54f0 100644
-> --- a/Documentation/scheduler/sched-stats.rst
-> +++ b/Documentation/scheduler/sched-stats.rst
-> @@ -135,7 +135,7 @@ of idleness (busy, idle and newly idle):
->          cpu was idle but no busier group was found
->  
->      23) # of times in this domain sched_balance_rq() was called when the
-> -        was just becoming idle
-> +        cpu was just becoming idle
->      24) # of times in this domain sched_balance_rq() checked but found the
+Enable the host mlme flag for W8997 chipsets so WPA3 can be used.
+This feature depends on firmware support (V2 API key), which may not be
+available in all available firmwares.
 
-Applied, thanks.
+Signed-off-by: Rafael Beims <rafael.beims@toradex.com>
+---
+Tested on a Verdin iMX8MP (SDIO-UART) and Verdin iMX8MM (SDIO-SDIO):
+    - created AP's requiring WPA2 and WPA3 authentication and successfully
+      connected clients to them.
+    - connected as a client to AP's requiring WPA2 and WPA3 authentication
+---
+ drivers/net/wireless/marvell/mwifiex/sdio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-jon
+diff --git a/drivers/net/wireless/marvell/mwifiex/sdio.c b/drivers/net/wireless/marvell/mwifiex/sdio.c
+index c1fe48448839..f039d6f19183 100644
+--- a/drivers/net/wireless/marvell/mwifiex/sdio.c
++++ b/drivers/net/wireless/marvell/mwifiex/sdio.c
+@@ -438,7 +438,7 @@ static const struct mwifiex_sdio_device mwifiex_sdio_sd8997 = {
+ 	.can_auto_tdls = false,
+ 	.can_ext_scan = true,
+ 	.fw_ready_extra_delay = false,
+-	.host_mlme = false,
++	.host_mlme = true,
+ };
+ 
+ static const struct mwifiex_sdio_device mwifiex_sdio_sd8887 = {
+-- 
+2.47.2
+
