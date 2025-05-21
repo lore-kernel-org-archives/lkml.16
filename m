@@ -1,146 +1,164 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6A1B1C32;
-	Wed, 21 May 2025 21:49:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28A4E1FFC48;
+	Wed, 21 May 2025 21:49:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747864183; cv=none; b=S1Gt5TvNLTQFe/+PzDddiaKUVGV70cpXsvKIjDDLA4ypkjSI9gjdBZvEj/k6dqhoXNr7AC7xabJGp41tXKXP2OjxIUs28Cw+CfYywT/aa6FkmeCGuUXHqy4ZHYwLM/M9hAJlcA8LQIzJrmhkk7aWo0uTTIa6iQY3hxtB4CUs7yY=
+	t=1747864197; cv=none; b=mxQjXsPDQBQ2dNq6UKaoPU1Q3QjfBwDAqnd+0fGD0LmQ9FKLCGhdW9fG5rXX6MPwu5fs8harCltTQdLsI5DoydLmBFjAK6cBdkudLONUL2G9z+VHMkMJzOgfPOGbFeLhUmV4SZZUlL2gGCyijaY4qidHZrXNoSEeBK0rtpErIso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747864183; c=relaxed/simple;
-	bh=U9os5TII6LxXLLkJL9Ue1hk9ekAMkSZKxP2BFf8ugUk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ezWPbSlooPEoEKLwboMp3FuRv5165VtrHZ/EsKk4HntOCYJ3TKqg3+pdwUD1FA97KkL3ae31i7RqQD0XWSJItzhMGJa5g0N9hgO6KGZgggOJAciJK/T0lIJM5SDl3FrXPgYpS83ZhptvCFI4guHjSwnWxEyDHXI42zkhflcUasU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=N9iu+Zqc; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1747864197; c=relaxed/simple;
+	bh=hQl0V1vrdc7PWua430JVY2fZWhqC8wv91/WeOSCvsqw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=unKziZ30hYDtP0PRCXox2ghRySKryBA47F3DlxeuF3xZuEVkM+ntfeW34gZZMyrj1Jg7mYIWqdpYXafgDBFWmqi3shcj+O3qRxFJC8Ah2XxIdayUhuyIeNUtAWjb3UuGWOAJzBHjhGlcnscDqWnxTM1xx0toAbwlxj8cKSTFM5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=AjhLocex; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="N9iu+Zqc"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A537E43280;
-	Wed, 21 May 2025 21:49:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1747864177;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=72uLjnDwYtf0i/HOFO/K1hGBe6ZH7TCozYNfsiGSliY=;
-	b=N9iu+ZqcXOgFyFT5sCwjl4yjWJAJBEHTItv2qfLgvMYzqDgI+fLT084NW7lVteM5VIEn4r
-	hXJuYsgFVHOycPKj9ztDjD9MdEOC4OWRAQ8BtYeTPE7S4siNbzW1M+/a2lc15DGMSbfolQ
-	1JG2LrdbLOoGhylsGM/+9dJDQjhFJ7z/COWly7xMtkY3RLSiIZsjsFtWgU/rC6d/hGdgbW
-	wVYc0h5OTbYL1swadFnQJ5OV7XvrJkAQe6WwCsbNatk6ojOhQqhnm2xOR4MjwrIzPK4ZAM
-	ptiuI1hdXkzMWU5OBZ8MSzXwffzddk74wQ3G583xMivuzC/P7AkRqxzyLUa5Zw==
-Date: Wed, 21 May 2025 23:49:35 +0200
-From: Kory Maincent <kory.maincent@bootlin.com>
-To: Piotr Kubik <piotr.kubik@adtran.com>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>, Andrew Lunn
- <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next v3 2/2] net: pse-pd: Add Si3474 PSE controller
- driver
-Message-ID: <20250521234935.7dad7f72@kmaincent-XPS-13-7390>
-In-Reply-To: <e036f7e2-5e5d-40bc-b22c-6dbd6a34eb15@adtran.com>
-References: <f975f23e-84a7-48e6-a2b2-18ceb9148675@adtran.com>
-	<584b7975-1544-4833-8f8a-00a8769a80c2@adtran.com>
-	<20250519115439.35382771@kmaincent-XPS-13-7390>
-	<e036f7e2-5e5d-40bc-b22c-6dbd6a34eb15@adtran.com>
-Organization: bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="AjhLocex"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54LHTfn9029063;
+	Wed, 21 May 2025 21:49:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	VQH2hT32qpZU6n0PWsnZJ27lotDiMIcabhSfeBHSQS4=; b=AjhLocex+ztnofVI
+	v+utnvkSNXwwxSqhs+0D1CyD0joL6qbZmVu0xLmA9Ki4m840qM2OZvp9IOB1AEeJ
+	Gf6h7QGPMqhcjZjBdjv6MujqyHdQBaoj95EVsoS7yio2ZwE7kuUAKBa3DPdX6mxm
+	c0PxKEkzEpOAAkBgKoww4YFyMBirucadVLvHAVy+l+V2XDL3qtUysgXduFhM+sg/
+	M+pBq5D2SeqwNNisTJghYigYdmAvwl2qZWadcL41/Sm1Cwr8qtYHJIApZZWu/ggT
+	J3OuShUdr+y+kAJ+FxAET7+yIR58vvSpVSiwdkqGkM91zqWT10cJkCQp2N6AOk1b
+	AfNQHA==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf44c5q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 21 May 2025 21:49:35 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54LLnYZX028039
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 21 May 2025 21:49:34 GMT
+Received: from [10.216.45.12] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 21 May
+ 2025 14:49:28 -0700
+Message-ID: <86fe457b-7071-4e22-9c93-982854be442b@quicinc.com>
+Date: Thu, 22 May 2025 03:19:24 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdegvddtucdltddurdegfedvrddttddmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhephfduveekuedtvdeiffduleetvdegteetveetvdelteehhfeuhfegvdeuuedtleegnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgduleemkeehkeejmeejuddttdemjegtvghfmegvjegtugemieejrgdvmegutdelheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekheekjeemjedutddtmeejtggvfhemvgejtggumeeijegrvdemugdtleehpdhhvghlohepkhhmrghinhgtvghnthdqigfrufdqudefqdejfeeltddpmhgrihhlfhhrohhmpehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedugedprhgtphhtthhopehpihhothhrrdhkuhgsihhksegrughtrhgrnhdrtghomhdprhgtphhtthhopehordhrvghmp
- hgvlhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtoheprghnughrvgifodhnvghtuggvvheslhhunhhnrdgthhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhg
-X-GND-Sasl: kory.maincent@bootlin.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V5 05/11] phy: qcom-qmp-ufs: Remove qmp_ufs_com_init()
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+CC: <vkoul@kernel.org>, <kishon@kernel.org>,
+        <James.Bottomley@hansenpartnership.com>, <martin.petersen@oracle.com>,
+        <bvanassche@acm.org>, <andersson@kernel.org>,
+        <neil.armstrong@linaro.org>, <dmitry.baryshkov@oss.qualcomm.com>,
+        <konrad.dybcio@oss.qualcomm.com>, <quic_rdwivedi@quicinc.com>,
+        <quic_cang@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <linux-phy@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-scsi@vger.kernel.org>
+References: <20250515162722.6933-1-quic_nitirawa@quicinc.com>
+ <20250515162722.6933-6-quic_nitirawa@quicinc.com>
+ <z3yfou4oolymsgb72dpakwcsmq6v3gnx64mdals7krnxdhpc2a@lsepak4kc2mg>
+Content-Language: en-US
+From: Nitin Rawat <quic_nitirawa@quicinc.com>
+In-Reply-To: <z3yfou4oolymsgb72dpakwcsmq6v3gnx64mdals7krnxdhpc2a@lsepak4kc2mg>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDIxNyBTYWx0ZWRfX61AKLr55rbSB
+ OKKotKp5QkpB3EtrN3x84nm5NnBQhk5/qTZnOJ0XNcL91bf6HFnIQqkZY7wqSqF3+Wi2rB48ugp
+ /ACyKY21zkicOuc8L9e8/bpNH6UOqUxQCVuQhyfaBZipvAmGf0IHbdiqBrhFjBdf2Mtqdoy8F2R
+ T+o14dMfaIsOlO0JyH+L4bIoc/PYcTexPiqXy9pWjyF6IZYWq/lrhDkGfS5eYvfn+PXSeyac8eH
+ WRKa+KYpo8fgP2jsj09lA3Yrff4CmDyMFLn6++rATJrFqucF3ve8/9bClRJQCM3H2Yj9gGSzatU
+ qBVSp/RAUYKVO5QFxzb3wFN9dRiFDLNeYso2A5ZB0c8vUCPmL1UfHySkiT93NMtjhXacgsWdCRg
+ INByh5T51U+a+QH/XyN4OxOg8xvfTgPU1aLmkuRV9f52q2vBXhcMlLNEymK2R6lIc85tMpsf
+X-Proofpoint-GUID: 4SpGuZVcs5HkYdWtQJ7gByQxJFBXbR_s
+X-Authority-Analysis: v=2.4 cv=Ws8rMcfv c=1 sm=1 tr=0 ts=682e4a6f cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8
+ a=COk6AnOGAAAA:8 a=XLgfHQIRnCPKqbsVxRkA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: 4SpGuZVcs5HkYdWtQJ7gByQxJFBXbR_s
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-21_07,2025-05-20_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 malwarescore=0 clxscore=1015 suspectscore=0 mlxscore=0
+ bulkscore=0 phishscore=0 priorityscore=1501 impostorscore=0
+ lowpriorityscore=0 mlxlogscore=999 adultscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505160000 definitions=main-2505210217
 
-On Wed, 21 May 2025 08:04:23 +0000
-Piotr Kubik <piotr.kubik@adtran.com> wrote:
 
-> On 5/19/25 11:54, Kory Maincent wrote:
-> > On Fri, 16 May 2025 13:07:18 +0000
-> > Piotr Kubik <piotr.kubik@adtran.com> wrote:
-> >  =20
-> >> From: Piotr Kubik <piotr.kubik@adtran.com>
-> >>
-> >> Add a driver for the Skyworks Si3474 I2C Power Sourcing Equipment
-> >> controller.
-> >>
-> >> Based on the TPS23881 driver code.
-> >>
-> >> Driver supports basic features of Si3474 IC:
-> >> - get port status,
-> >> - get port power,
-> >> - get port voltage,
-> >> - enable/disable port power.
-> >>
-> >> Only 4p configurations are supported at this moment. =20
 
-...
+On 5/21/2025 7:00 PM, Manivannan Sadhasivam wrote:
+> On Thu, May 15, 2025 at 09:57:16PM +0530, Nitin Rawat wrote:
+>> The qmp_ufs_power_on() function acts as a wrapper, solely invoking
+>> qmp_ufs_com_init(). Additionally, the code within qmp_ufs_com_init()
+>> does not correspond well with its name.
+>>
+>> Therefore, to enhance the readability and eliminate unnecessary
+>> function call inline qmp_ufs_com_init() into qmp_ufs_power_on().
+>>
+>> There is no change to the functionality.
+>>
+>> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+>> Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
+>> ---
+>>   drivers/phy/qualcomm/phy-qcom-qmp-ufs.c | 43 ++++++++++---------------
+>>   1 file changed, 17 insertions(+), 26 deletions(-)
+>>
+>> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
+>> index 33d238cf49aa..d3f9ee490a32 100644
+>> --- a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
+>> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
+>> @@ -1758,12 +1758,28 @@ static void qmp_ufs_init_registers(struct qmp_ufs *qmp, const struct qmp_phy_cfg
+>>   		qmp_ufs_init_all(qmp, &cfg->tbls_hs_b);
+>>   }
+>>   
+>> -static int qmp_ufs_com_init(struct qmp_ufs *qmp)
+>> +static int qmp_ufs_com_exit(struct qmp_ufs *qmp)
+> 
+> Since there is no qmp_ufs_com_init() now, qmp_ufs_com_exit() lacks symmetry.
+> Maybe you should rename it too.
 
-> >> +
-> >> +	ret =3D i2c_smbus_write_byte_data(client, PORT_MODE_REG, val);
-> >> +	if (ret)
-> >> +		return ret;
-> >> +
-> >> +	/* Give time for transition to complete */
-> >> +	ssleep(1); =20
-> >=20
-> > 1s sleep?! It is a lot. Why do you need this? Does it comes from the
-> > datasheet?=20
->=20
-> This comes from my experience. I didn't find it in a datasheet.
-> I agree this seems a lot, but for 500ms sometimes ports were not powered =
-up.=20
-> I think I'll give a try to another register and instead PB_POWER_ENABLE=20
-> I will try to use PB_RESET in combination with PORT_MODE as this seems
-> promising.
->=20
-> btw. Regarding power enable/disable, I think you may have same issue in
-> tps23881 as I had here as tps looks very similar to si3474.
-> For Si3474 POWER_STATUS register cannot be used as an admin state registe=
-r as
-> it holds actual power interface status (powered/not powered) instead of i=
-ts
-> administrative state (enabled/disabled).=20
-> Ethtool in this approach was showing for both Admin state and Detection
-> status always the same state - actual status.
-> PB_POWER_ENABLE register cannot be used for this purpose as well as it is=
- a
-> write-only register. That's why I used PORT_MODE register, it acts like an
-> admin state holder in my implementation.
 
-Indeed I figured that the power status of the tps23881 can not be really
-considered as an admin_state as described in the standard. For example, it
-doesn't automatically power off in case of PD unplugged.
-That's why I fixed it in the current budget evaluation strategy patch serie=
-s.
-The admin_state is now managed by software and the the PSE core will power =
-on
-the port if it catches a classification interrupt event or if a PD was alre=
-ady
-plugged and classify.
-https://lore.kernel.org/netdev/20250520-feature_poe_port_prio-v11-12-bbaf44=
-7e1b28@bootlin.com/
+Yes this is already taken care in differnt patch of this series.
 
-If the Si3474 behaves the same maybe you should rebase your patch on my ser=
-ies.
+> 
+>>   {
+>>   	const struct qmp_phy_cfg *cfg = qmp->cfg;
+>> +
+>> +	reset_control_assert(qmp->ufs_reset);
+>> +
+>> +	clk_bulk_disable_unprepare(qmp->num_clks, qmp->clks);
+>> +
+>> +	regulator_bulk_disable(cfg->num_vregs, qmp->vregs);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int qmp_ufs_power_on(struct phy *phy)
+>> +{
+>> +	struct qmp_ufs *qmp = phy_get_drvdata(phy);
+>> +	const struct qmp_phy_cfg *cfg = qmp->cfg;
+>>   	void __iomem *pcs = qmp->pcs;
+>>   	int ret;
+>>   
+>> +	dev_vdbg(qmp->dev, "Initializing QMP phy\n");
+> 
+> Now, this debug print doesn't make sense. You can drop it.
 
-But waiting this long won't be ok, as we have rtnl lock acquired here.
+Sure, wil remove.
 
-Regards,
---=20
-K=C3=B6ry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+> 
+> - Mani
+> 
+
