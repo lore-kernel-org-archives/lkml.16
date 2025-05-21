@@ -1,124 +1,68 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05C0914EC60;
-	Wed, 21 May 2025 14:02:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0053B14EC60
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 14:02:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747836159; cv=none; b=ZvIUnhXSsZNL747C5yfKD7Ew/YDBjbEe/lKyTq3WmhWTttzSz3f7HF0/h2FWrM+YZIdiI1hEllRMbmMRppF7VtDh1VGuJHJdhSkY/lLy2q65xxXGP4d5lAK93BW9imErG+m+9+wY8/zDmBem1lADAC3SvVpSVuYWCVNNkWvA1Fw=
+	t=1747836171; cv=none; b=iStDejIDFs0YAA29rULiX8np27XNoUmoV2sdu2uPeFtVhGQOaI0zyDxHK47cPWlq6gjdNLrL6OqlJqg496mKPzS7zjiAKbtL8qzxshaFzhmRuMbkF1DM8VHLG8up9Ytx6CgDXfWhBXBGmzotxGXqqFh5otwgumFbClB5Vz0yBVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747836159; c=relaxed/simple;
-	bh=XzBNibcp7iKkeEFDUAzJdibe/Jo7NOOf5PX3W+wxgD0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mVoNPW/8h8D5A1ZVIHUikLgf550p2RT8gjypiqVVm253W18VizrHa0Xi6yRDAMat3+GUzeEwzNykWvQKmzWMGXBG87992ZgHEDEN/gVQ4zOFhg+1qvSlPk11BzIg3oOoEN6uHI1AJlDc5q6xpzJYYgNy4sELsrVt61F6Fn61+vs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qqYnON9t; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qqYnON9t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE7C4C4CEE4;
-	Wed, 21 May 2025 14:02:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747836158;
-	bh=XzBNibcp7iKkeEFDUAzJdibe/Jo7NOOf5PX3W+wxgD0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qqYnON9tKaNxbz622vXY3a5h7IsI/+xBDvDXZa2hyvFfYeSmdv8EYSNVWOsAZRhSo
-	 4VMLh5AP7aPS0z++jYbK1J81HUMEYW+CVwNZdITNgGWHALlo5mUgQmM/RdLr7T3519
-	 hxt1g0F01btuw74hzw9xKDzXf+AD45KPhCbMVqrLqbSl8DsTCbgkA2h+D252WseKg9
-	 2dvz6JNAm0Qa4qcC3jd8so/+1qjD3zKHrJ8i3FR4DkeDngUckkbLaBezxLC5nECWQn
-	 eUBfkvyTuzMsNPtIsfzIyZRbnbqeuOgf7IptoXwQurBKBjODWatfRl3vkhFI3d9ZDC
-	 gqIOVPi1xYw5A==
-Date: Wed, 21 May 2025 15:02:31 +0100
-From: Simon Horman <horms@kernel.org>
-To: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-	decui@microsoft.com, stephen@networkplumber.org, kys@microsoft.com,
-	paulros@microsoft.com, olaf@aepfle.de, vkuznets@redhat.com,
-	davem@davemloft.net, wei.liu@kernel.org, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, leon@kernel.org,
-	longli@microsoft.com, ssengar@linux.microsoft.com,
-	linux-rdma@vger.kernel.org, daniel@iogearbox.net,
-	john.fastabend@gmail.com, bpf@vger.kernel.org, ast@kernel.org,
-	hawk@kernel.org, tglx@linutronix.de,
-	shradhagupta@linux.microsoft.com, andrew+netdev@lunn.ch,
-	kotaranov@microsoft.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next,v2] net: mana: Add support for Multi Vports on
- Bare metal
-Message-ID: <20250521140231.GW365796@horms.kernel.org>
-References: <1747671636-5810-1-git-send-email-haiyangz@microsoft.com>
+	s=arc-20240116; t=1747836171; c=relaxed/simple;
+	bh=YLIIV+2IuLeIQhiYkHV9+inQgFqNA+OvViMDglYKshU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qhUpRqPSyXQPMCEdebXKJRtlJAtrhQjEhaD/i4uQnAR+k0AUleCQXIOkHTvCERdt8Bfw5gAvCfmPTc7FXcPzAmli1RD7ZkdjrzEzQ/kgxjALxVRYifTD2YkGU/hg66b7C6BONOJwmmAXZbooOzmGqQYFA3DN9dHo6LxWyLgkXTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 70BB71515;
+	Wed, 21 May 2025 07:02:35 -0700 (PDT)
+Received: from [192.168.178.6] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 348563F5A1;
+	Wed, 21 May 2025 07:02:48 -0700 (PDT)
+Message-ID: <5cf1790a-3eed-4c0a-8a31-b3802c5d9b35@arm.com>
+Date: Wed, 21 May 2025 16:02:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1747671636-5810-1-git-send-email-haiyangz@microsoft.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: scheduler performance regression since v6.11
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Chris Mason <clm@meta.com>, linux-kernel@vger.kernel.org,
+ Ingo Molnar <mingo@kernel.org>, vschneid@redhat.com,
+ Juri Lelli <juri.lelli@gmail.com>, Thomas Gleixner <tglx@linutronix.de>
+References: <1e3c711f-8c96-4c39-bbe2-7742940d1d31@meta.com>
+ <20250509194955.GA25798@noisy.programming.kicks-ass.net>
+ <20250512180846.GA25891@noisy.programming.kicks-ass.net>
+ <2f394a01-1cd9-4719-9394-647d8731cf3f@meta.com>
+ <d3c8527f-ffaf-4463-a305-17ca21a06ce8@meta.com>
+ <20250516101822.GC16434@noisy.programming.kicks-ass.net>
+ <2084b7d9-bb4f-4a5e-aaec-98e07b3edc2e@arm.com>
+ <20250520193831.GB39944@noisy.programming.kicks-ass.net>
+From: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Content-Language: en-US
+In-Reply-To: <20250520193831.GB39944@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, May 19, 2025 at 09:20:36AM -0700, Haiyang Zhang wrote:
-> To support Multi Vports on Bare metal, increase the device config response
-> version. And, skip the register HW vport, and register filter steps, when
-> the Bare metal hostmode is set.
+On 20/05/2025 21:38, Peter Zijlstra wrote:
+> On Tue, May 20, 2025 at 04:38:09PM +0200, Dietmar Eggemann wrote:
 > 
-> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-> ---
-> v2:
->   Updated comments as suggested by ALOK TIWARI.
->   Fixed the version check.
+>> 3840cbe24cf0 - sched: psi: fix bogus pressure spikes from aggregation race
+>>
+>> With CONFIG_PSI enabled we call cpu_clock(cpu) now multiple times (up to
+>> 4 times per task switch in my setup) in:
+>>
+>> __schedule() -> psi_sched_switch() -> psi_task_switch() ->
+>> psi_group_change().
+>>
+>> There seems to be another/other v6.12 related patch(es) later which
+>> cause(s) another 4% regression I yet have to discover.
 > 
-> ---
->  drivers/net/ethernet/microsoft/mana/mana_en.c | 24 ++++++++++++-------
->  include/net/mana/mana.h                       |  4 +++-
->  2 files changed, 19 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> index 2bac6be8f6a0..9c58d9e0bbb5 100644
-> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> @@ -921,7 +921,7 @@ static void mana_pf_deregister_filter(struct mana_port_context *apc)
->  
->  static int mana_query_device_cfg(struct mana_context *ac, u32 proto_major_ver,
->  				 u32 proto_minor_ver, u32 proto_micro_ver,
-> -				 u16 *max_num_vports)
-> +				 u16 *max_num_vports, u8 *bm_hostmode)
->  {
->  	struct gdma_context *gc = ac->gdma_dev->gdma_context;
->  	struct mana_query_device_cfg_resp resp = {};
-> @@ -932,7 +932,7 @@ static int mana_query_device_cfg(struct mana_context *ac, u32 proto_major_ver,
->  	mana_gd_init_req_hdr(&req.hdr, MANA_QUERY_DEV_CONFIG,
->  			     sizeof(req), sizeof(resp));
->  
-> -	req.hdr.resp.msg_version = GDMA_MESSAGE_V2;
-> +	req.hdr.resp.msg_version = GDMA_MESSAGE_V3;
->  
->  	req.proto_major_ver = proto_major_ver;
->  	req.proto_minor_ver = proto_minor_ver;
+> Urgh, let me add this to the pile to look at. Thanks!
 
-> @@ -956,11 +956,16 @@ static int mana_query_device_cfg(struct mana_context *ac, u32 proto_major_ver,
->  
->  	*max_num_vports = resp.max_num_vports;
->  
-> -	if (resp.hdr.response.msg_version == GDMA_MESSAGE_V2)
-> +	if (resp.hdr.response.msg_version >= GDMA_MESSAGE_V2)
->  		gc->adapter_mtu = resp.adapter_mtu;
->  	else
->  		gc->adapter_mtu = ETH_FRAME_LEN;
->  
-> +	if (resp.hdr.response.msg_version >= GDMA_MESSAGE_V3)
-> +		*bm_hostmode = resp.bm_hostmode;
-> +	else
-> +		*bm_hostmode = 0;
+Not sure how expensive 'cpu_clock(cpu)' is on bare-metal.
 
-Hi,
-
-Perhaps not strictly related to this patch, but I see
-that mana_verify_resp_hdr() is called a few lines above.
-And that verifies a minimum msg_version. But I do not see
-any verification of the maximum msg_version supported by the code.
-
-I am concerned about a hypothetical scenario where, say the as yet unknown
-version 5 is sent as the version, and the above behaviour is used, while
-not being correct.
-
-Could you shed some light on this?
-
-...
+But I also don't get why PSI needs per group 'now' values when we
+iterate over cgroup levels?
