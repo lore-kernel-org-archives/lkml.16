@@ -1,251 +1,201 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B3DD236A70;
-	Wed, 21 May 2025 08:57:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4BAA23817A;
+	Wed, 21 May 2025 08:58:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747817879; cv=none; b=Zx2oRhOFjdkm1WZGcKYTrImhNx3eO5s9eYomUctUnMjp3BIRPlh9KT66CZGVMlJca0QD0eHNasfnxedMx1VzlllOHawEmO0io20DKIPM2GSdzdc31NezIFw2nGgiXw+96/KrTaGL0sAR0wTf7QX64P6vIeJ+63cLMVQK9XMDkNg=
+	t=1747817897; cv=none; b=cQZ/vZzFuLJabmvlwrZRgpXnz4ll+3j9kd8k4YUOjfkzOWRnZ43xOMKMKpu8aUV6fDItFQ6usrvvtCCbNTtChoZFl46IhNAA8PyHd+iKqsR/kQkNXas//wrPeG5l9cjjw/JyHsSiar4umCFkUtsVmwL9PYHxbOQeRUGlWiFIbMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747817879; c=relaxed/simple;
-	bh=ua7q+H1WgOWVcLV6yULMClYrx7Bnz34PuVBhzv5mcnM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XMWQ0nnNLUl2tXWxxezcvkGxAculrzVAP0rdwu4M0paH6rFzelprgtEtjfLLOPfHLRc9xCAVPWYQVZqixo822JtHDy67B5fOLbW0qCIkqutYUoWN2uKlcPtF8zU0wHykBCRijJakSMWsfv4o4VW0hTXucNmx/OkVcvikkj1FYMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qnbh/9kI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747817897; c=relaxed/simple;
+	bh=7zdquYhGr6LzhY4noloqWyYU2N3b4LAAmGk3pA3luw4=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=GIh95X6esA64yX23kl5s5AoIzHPgyS/g56GpPvm53/FT8+foWoAI2QBfko3GiD9aIxvnIWsP1HO9qKB1gYF8AXUVbcP4GrgjhMB45RJ+tGgtPiML9aKqpA+Krs5tAmZlboAqqtebJ9yVtHWV1bH01IhEAnIOiene9jzhiWrdX+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=POJGl1WU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qnbh/9kI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BA2CC4CEE4;
-	Wed, 21 May 2025 08:57:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="POJGl1WU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CAE4C4CEE4;
+	Wed, 21 May 2025 08:58:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747817878;
-	bh=ua7q+H1WgOWVcLV6yULMClYrx7Bnz34PuVBhzv5mcnM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Qnbh/9kIwlewmeCrHEnn70KkQc7O6ES+h8TW8j/oXsWNJ8+b91k9gp3+D3oZZAEac
-	 35c3sk+4H9+LrdhVh3+BRIaFwTuEgCY/r5l2yO92nXgCMQy61/k0yoNjWKeGc2V/Si
-	 NY9oILnzoc9TzjFhgfrBKetfvo6MC0PZqBtDlnbkaS/ubj3EVJQy1dj6E+ibksH16G
-	 rJDUt+ooLqAAhB6VGuaiYtoqpd4RD5k+dgbtaPRgKAslON+3YvDyq2wtTcroGVVnt0
-	 sLcgQKTGtDmhr5cPTHPpW0YoTRs0xFSaPqveGoMro01wO/uvx2kF19riNOx4IWeT06
-	 9A24umMO5i9CA==
-Received: by pali.im (Postfix)
-	id 61EBE723; Wed, 21 May 2025 10:57:55 +0200 (CEST)
-Date: Wed, 21 May 2025 10:57:55 +0200
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To: Andrey Albershteyn <aalbersh@redhat.com>
-Cc: Dave Chinner <david@fromorbit.com>, Amir Goldstein <amir73il@gmail.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Matt Turner <mattst88@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Michal Simek <monstr@monstr.eu>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Helge Deller <deller@gmx.de>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	"David S . Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>,
-	Max Filippov <jcmvbkbc@gmail.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
-	=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
-	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	Stephen Smalley <stephen.smalley.work@gmail.com>,
-	Ondrej Mosnacek <omosnace@redhat.com>,
-	Tyler Hicks <code@tyhicks.com>, Miklos Szeredi <miklos@szeredi.hu>,
-	linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-	sparclinux@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-security-module@vger.kernel.org, linux-api@vger.kernel.org,
-	Linux-Arch <linux-arch@vger.kernel.org>, selinux@vger.kernel.org,
-	ecryptfs@vger.kernel.org, linux-unionfs@vger.kernel.org,
-	linux-xfs@vger.kernel.org, Andrey Albershteyn <aalbersh@kernel.org>
-Subject: Re: [PATCH v5 0/7] fs: introduce file_getattr and file_setattr
- syscalls
-Message-ID: <20250521085755.4bucg7vq2kb3mbfk@pali>
-References: <20250513-xattrat-syscall-v5-0-22bb9c6c767f@kernel.org>
- <399fdabb-74d3-4dd6-9eee-7884a986dab1@app.fastmail.com>
- <20250515-bedarf-absagen-464773be3e72@brauner>
- <CAOQ4uxicuEkOas2UR4mqfus9Q2RAeKKYTwbE2XrkcE_zp8oScQ@mail.gmail.com>
- <aCsX4LTpAnGfFjHg@dread.disaster.area>
- <sfmrojifgnrpeilqxtixyqrdjj5uvvpbvirxmlju5yce7z72vi@ondnx7qbie4y>
+	s=k20201202; t=1747817896;
+	bh=7zdquYhGr6LzhY4noloqWyYU2N3b4LAAmGk3pA3luw4=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=POJGl1WUlleOUfa/aBNeuLj3rZDB3WODOo5cPFU1z7qGUfZ4vIw2K1w014pzhXkHk
+	 2n1wNAWE8/7q11uDTw/Vo/IsFBvvAjVVIHctku5Vi6b3CotGBpn4oHV/DjrAi1O6PF
+	 lsTYD3smJfVmI6fawDB1V8QQZRxR8ouZmGNBcgIRWYiYupGQ9qLn6MqtILE92gPFBW
+	 sJ1DTIuX2Hpa4snLmHtcQGDwOhzZ7CmM1/L5UxP57EbxHPjhWS0p6mKrhamMCNMfsL
+	 N5hcG0YoyPKPcWT/FK6FZ6upCVNzDhz9uIgfISjMZW1zAG0wnAL8FOVCMHpHGEKizY
+	 1B+pyiMCh6B0Q==
+Message-ID: <6f8599e2-2bce-4b66-84a9-03d8799b4a8a@kernel.org>
+Date: Wed, 21 May 2025 10:58:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <sfmrojifgnrpeilqxtixyqrdjj5uvvpbvirxmlju5yce7z72vi@ondnx7qbie4y>
-User-Agent: NeoMutt/20180716
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] phy: exyons5-usbdrd: support HS phy for
+ ExynosAutov920
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Pritam Manohar Sutar <pritam.sutar@samsung.com>,
+ 'Neil Armstrong' <neil.armstrong@linaro.org>, vkoul@kernel.org,
+ kishon@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ alim.akhtar@samsung.com, andre.draszik@linaro.org, peter.griffin@linaro.org,
+ kauschluss@disroot.org, m.szyprowski@samsung.com, s.nawrocki@samsung.com
+Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-samsung-soc@vger.kernel.org, rosa.pila@samsung.com,
+ dev.tailor@samsung.com, faraz.ata@samsung.com, muhammed.ali@samsung.com,
+ selvarasu.g@samsung.com
+References: <20250516102650.2144487-1-pritam.sutar@samsung.com>
+ <CGME20250516101803epcas5p2d9403d89d840dcad88a03d437a48aceb@epcas5p2.samsung.com>
+ <20250516102650.2144487-3-pritam.sutar@samsung.com>
+ <a5c1a064-d760-4140-9e78-d74823b400a8@linaro.org>
+ <1f63af35-7d10-434b-b802-115611ce2ed6@kernel.org>
+ <000201dbca1f$737647d0$5a62d770$@samsung.com>
+ <7fec4945-eec5-4247-9979-a6ee2229626d@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <7fec4945-eec5-4247-9979-a6ee2229626d@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wednesday 21 May 2025 10:48:26 Andrey Albershteyn wrote:
-> On 2025-05-19 21:37:04, Dave Chinner wrote:
-> > On Thu, May 15, 2025 at 12:33:31PM +0200, Amir Goldstein wrote:
-> > > On Thu, May 15, 2025 at 11:02 AM Christian Brauner <brauner@kernel.org> wrote:
-> > > >
-> > > > On Tue, May 13, 2025 at 11:53:23AM +0200, Arnd Bergmann wrote:
-> > > > > On Tue, May 13, 2025, at 11:17, Andrey Albershteyn wrote:
-> > > > >
-> > > > > >
-> > > > > >     long syscall(SYS_file_getattr, int dirfd, const char *pathname,
-> > > > > >             struct fsxattr *fsx, size_t size, unsigned int at_flags);
-> > > > > >     long syscall(SYS_file_setattr, int dirfd, const char *pathname,
-> > > > > >             struct fsxattr *fsx, size_t size, unsigned int at_flags);
-> > > > >
-> > > > > I don't think we can have both the "struct fsxattr" from the uapi
-> > > > > headers, and a variable size as an additional argument. I would
-> > > > > still prefer not having the extensible structure at all and just
-> > > >
-> > > > We're not going to add new interfaces that are fixed size unless for the
-> > > > very basic cases. I don't care if we're doing that somewhere else in the
-> > > > kernel but we're not doing that for vfs apis.
-> > > >
-> > > > > use fsxattr, but if you want to make it extensible in this way,
-> > > > > it should use a different structure (name). Otherwise adding
-> > > > > fields after fsx_pad[] would break the ioctl interface.
-> > > >
-> > > > Would that really be a problem? Just along the syscall simply add
-> > > > something like:
-> > > >
-> > > > diff --git a/fs/ioctl.c b/fs/ioctl.c
-> > > > index c91fd2b46a77..d3943805c4be 100644
-> > > > --- a/fs/ioctl.c
-> > > > +++ b/fs/ioctl.c
-> > > > @@ -868,12 +868,6 @@ static int do_vfs_ioctl(struct file *filp, unsigned int fd,
-> > > >         case FS_IOC_SETFLAGS:
-> > > >                 return ioctl_setflags(filp, argp);
-> > > >
-> > > > -       case FS_IOC_FSGETXATTR:
-> > > > -               return ioctl_fsgetxattr(filp, argp);
-> > > > -
-> > > > -       case FS_IOC_FSSETXATTR:
-> > > > -               return ioctl_fssetxattr(filp, argp);
-> > > > -
-> > > >         case FS_IOC_GETFSUUID:
-> > > >                 return ioctl_getfsuuid(filp, argp);
-> > > >
-> > > > @@ -886,6 +880,20 @@ static int do_vfs_ioctl(struct file *filp, unsigned int fd,
-> > > >                 break;
-> > > >         }
-> > > >
-> > > > +       switch (_IOC_NR(cmd)) {
-> > > > +       case _IOC_NR(FS_IOC_FSGETXATTR):
-> > > > +               if (WARN_ON_ONCE(_IOC_TYPE(cmd) != _IOC_TYPE(FS_IOC_FSGETXATTR)))
-> > > > +                       return SOMETHING_SOMETHING;
-> > > > +               /* Only handle original size. */
-> > > > +               return ioctl_fsgetxattr(filp, argp);
-> > > > +
-> > > > +       case _IOC_NR(FFS_IOC_FSSETXATTR):
-> > > > +               if (WARN_ON_ONCE(_IOC_TYPE(cmd) != _IOC_TYPE(FFS_IOC_FSSETXATTR)))
-> > > > +                       return SOMETHING_SOMETHING;
-> > > > +               /* Only handle original size. */
-> > > > +               return ioctl_fssetxattr(filp, argp);
-> > > > +       }
-> > > > +
-> > > 
-> > > I think what Arnd means is that we will not be able to change struct
-> > > sfxattr in uapi
-> > > going forward, because we are not going to deprecate the ioctls and
-> > 
-> > There's no need to deprecate anything to rev an ioctl API.  We have
-> > had to solve this "changing struct size" problem previously in XFS
-> > ioctls. See XFS_IOC_FSGEOMETRY and the older XFS_IOC_FSGEOMETRY_V4
-> > and XFS_IOC_FSGEOMETRY_V1 versions of the API/ABI.
-> > 
-> > If we need to increase the structure size, we can rename the existing
-> > ioctl and struct to fix the version in the API, then use the
-> > original name for the new ioctl and structure definition.
-> > 
-> > The only thing we have to make sure of is that the old and new
-> > structures have exactly the same overlapping structure. i.e.
-> > extension must always be done by appending new varibles, they can't
-> > be put in the middle of the structure.
-> > 
-> > This way applications being rebuild will pick up the new definition
-> > automatically when the system asserts that it is suppored, whilst
-> > existing binaries will always still be supported by the kernel.
-> > 
-> > If the application wants/needs to support all possible kernels, then
-> > if XFS_IOC_FSGEOMETRY is not supported, call XFS_IOC_FSGEOMETRY_V4,
-> > and if that fails (only on really old irix!) or you only need
-> > something in that original subset, call XFS_IOC_FSGEOMETRY_V1 which
-> > will always succeed....
-> > 
-> > > Should we will need to depart from this struct definition and we might
-> > > as well do it for the initial release of the syscall rather than later on, e.g.:
-> > > 
-> > > --- a/include/uapi/linux/fs.h
-> > > +++ b/include/uapi/linux/fs.h
-> > > @@ -148,6 +148,17 @@ struct fsxattr {
-> > >         unsigned char   fsx_pad[8];
-> > >  };
-> > > 
-> > > +/*
-> > > + * Variable size structure for file_[sg]et_attr().
-> > > + */
-> > > +struct fsx_fileattr {
-> > > +       __u32           fsx_xflags;     /* xflags field value (get/set) */
-> > > +       __u32           fsx_extsize;    /* extsize field value (get/set)*/
-> > > +       __u32           fsx_nextents;   /* nextents field value (get)   */
-> > > +       __u32           fsx_projid;     /* project identifier (get/set) */
-> > > +       __u32           fsx_cowextsize; /* CoW extsize field value (get/set)*/
-> > > +};
-> > > +
-> > > +#define FSXATTR_SIZE_VER0 20
-> > > +#define FSXATTR_SIZE_LATEST FSXATTR_SIZE_VER0
-> > 
-> > If all the structures overlap the same, all that is needed in the
-> > code is to define the structure size that should be copied in and
-> > parsed. i.e:
-> > 
-> > 	case FSXATTR..._V1:
-> > 		return ioctl_fsxattr...(args, sizeof(fsx_fileattr_v1));
-> > 	case FSXATTR..._V2:
-> > 		return ioctl_fsxattr...(args, sizeof(fsx_fileattr_v2));
-> > 	case FSXATTR...:
-> > 		return ioctl_fsxattr...(args, sizeof(fsx_fileattr));
-> > 
-> > -Dave.
-> > -- 
-> > Dave Chinner
-> > david@fromorbit.com
-> > 
+On 21/05/2025 10:47, Krzysztof Kozlowski wrote:
+> On 21/05/2025 09:10, Pritam Manohar Sutar wrote:
+>> Hi Krzysztof,
+>>
+>>> -----Original Message-----
+>>> From: Krzysztof Kozlowski <krzk@kernel.org>
+>>> Sent: 20 May 2025 01:13 PM
+>>> To: Neil Armstrong <neil.armstrong@linaro.org>; Pritam Manohar Sutar
+>>> <pritam.sutar@samsung.com>; vkoul@kernel.org; kishon@kernel.org;
+>>> robh@kernel.org; krzk+dt@kernel.org; conor+dt@kernel.org;
+>>> alim.akhtar@samsung.com; andre.draszik@linaro.org; peter.griffin@linaro.org;
+>>> kauschluss@disroot.org; m.szyprowski@samsung.com;
+>>> s.nawrocki@samsung.com
+>>> Cc: linux-phy@lists.infradead.org; devicetree@vger.kernel.org; linux-
+>>> kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-samsung-
+>>> soc@vger.kernel.org; rosa.pila@samsung.com; dev.tailor@samsung.com;
+>>> faraz.ata@samsung.com; muhammed.ali@samsung.com;
+>>> selvarasu.g@samsung.com
+>>> Subject: Re: [PATCH v2 2/2] phy: exyons5-usbdrd: support HS phy for
+>>> ExynosAutov920
+>>>
+>>> On 20/05/2025 09:39, neil.armstrong@linaro.org wrote:
+>>>>> diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c
+>>>>> b/drivers/phy/samsung/phy-exynos5-usbdrd.c
+>>>>> index 634c4310c660..b440b56c6595 100644
+>>>>> --- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
+>>>>> +++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
+>>>>> @@ -177,6 +177,9 @@
+>>>>>   #define HSPHYPLLTUNE_PLL_P_TUNE			GENMASK(3,
+>>> 0)
+>>>>>
+>>>>>   /* Exynos850: USB DRD PHY registers */
+>>>>> +#define EXYNOSAUTOv920_DRD_CTRL_VER		0x00
+>>>>> +#define CTRL_VER_MAJOR_VERSION			GENMASK(31,
+>>> 24)
+>>>>> +
+>>>>>   #define EXYNOS850_DRD_LINKCTRL			0x04
+>>>>>   #define LINKCTRL_FORCE_RXELECIDLE		BIT(18)
+>>>>>   #define LINKCTRL_FORCE_PHYSTATUS		BIT(17)
+>>>>> @@ -1772,6 +1775,10 @@ static const char * const
+>>> exynos5_regulator_names[] = {
+>>>>>   	"vbus", "vbus-boost",
+>>>>>   };
+>>>>>
+>>>>> +static const char * const exynosautov920_clk_names[] = {
+>>>>> +	"ext_xtal",
+>>>>> +};
+>>>>> +
+>>>>>   static const struct exynos5_usbdrd_phy_drvdata exynos5420_usbdrd_phy =
+>>> {
+>>>>>   	.phy_cfg		= phy_cfg_exynos5,
+>>>>>   	.phy_ops		= &exynos5_usbdrd_phy_ops,
+>>>>> @@ -1847,6 +1854,81 @@ static const struct exynos5_usbdrd_phy_drvdata
+>>> exynos850_usbdrd_phy = {
+>>>>>   	.n_regulators		= ARRAY_SIZE(exynos5_regulator_names),
+>>>>>   };
+>>>>>
+>>>>> +static void exynosautov920_usbdrd_utmi_init(struct
+>>>>> +exynos5_usbdrd_phy *phy_drd) {
+>>>>> +	u32 version;
+>>>>> +
+>>>>> +	version = readl(phy_drd->reg_phy +
+>>> EXYNOSAUTOv920_DRD_CTRL_VER);
+>>>>> +	dev_info(phy_drd->dev, "usbphy: version:0x%x\n", version);
+>>>>
+>>>> Please do not add mode info to boot log, use dev_dbg instead.
+>>>
+>>> Just drop entirely, not even worth dbg (see coding style, driver development
+>>> debugging guide). It is fixed per given compatible, isn't it? If not, there is entire
+>>> commit msg to explain unusual things.
+>>
+>> This SoC has a single USB 3.1 DRD combo v400 phy and three USB2.0 DRD phy v303
 > 
-> So, looks like there's at least two solutions to this concern.
-> Considering also that we have a bit of space in fsxattr,
-> 'fsx_pad[8]', I think it's fine to stick with the current fsxattr
-> for now.
 > 
-> -- 
-> - Andrey
+> That's a different device, no? Look at the compatible here - it says
+> usb31drd.
 > 
+> What does 31 stand for?
+> 
+>> controllers those only support the UTMI+ interface. Currently, supporting only 
+>> v303 phy in this patch-set, and planning v400 phy later (soon). Same may be 
+>> also updated in commit  message. 
+>>
+>> If there's any issue in phy init, dbg print is needed to debug which phy caused it. 
+> No, rethink rather this makes sense at all. Please read carefully
+> writing bindings, which will tell you that you cannot have different
+> devices under the same compatible. Unless you say these are the same
+> devices and it differs by other phy? But this is a phy... so many questions.
 
-It is planned to extend this structure for new windows attributes as was
-discussed. And seem that the current free space would not be enough for
-everything.
+Hm, unless you want to say devices are fully compatible, the version is
+fully detectable and the driver will make use of that. That would be
+fine, but should be expressed in commit msg and actually we should see
+the second phy variant already in the patchset.
+
+Best regards,
+Krzysztof
