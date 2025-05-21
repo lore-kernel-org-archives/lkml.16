@@ -1,200 +1,217 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C28A2475CB;
-	Wed, 21 May 2025 10:46:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEF3623BCF7
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 10:47:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747824370; cv=none; b=BWWTH0QW+fPB5kr8wndb3NpnRxV0Ug3/I0rHNev7liiP39P2T48oc9kgdQK7yk3jnzbCsZKP7Bcr5YsvpDB5AvchEMvfqCV151/7zE3mAYBKGKD/iAMCABPbelI6lo38+38HDYkByWpG/ICWYeA06eRP8vD1V1WQD/EVWos31D8=
+	t=1747824453; cv=none; b=ODAicBTDot6pQrOJYJPtmEHNlcKUjl/ijgA54F7e7CnJGAnjWNpiE01HjgjKvEMTPAGuuJrDcrMPk+eSGydvTHSFH2tCuamC9hdQ5uzRHOKhbUuyZWbYntD6TFZcTj1gOppNSTifV8HTlCgL39V5uAsT016Zza6pzXwUINj69vY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747824370; c=relaxed/simple;
-	bh=rEvUozxxdaEuEWlzXp16SOduM0EZF7o0ZHcUsL7chcY=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mrJJCEBjOA68dYpZN2bLpTx9xt79xIIU0Z7pRWxhr1QI/xCo1W6AuustvPVoHsdObAyoQ73jHSpKOI9583UBU4YbqyNceDyASLA/2iwJK+FzsVTrJ6Y3yfZMVFrezu+TCn7siUKK86Z2k3+MZ0ZKSiIIcKyQ2LflcMt56El7yyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b2SgJ6CcTz6L4sp;
-	Wed, 21 May 2025 18:42:52 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id EB4871404FC;
-	Wed, 21 May 2025 18:46:03 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 21 May
- 2025 12:46:02 +0200
-Date: Wed, 21 May 2025 11:46:00 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: <linux-pci@vger.kernel.org>, Jon Pan-Doh <pandoh@google.com>, "Karolina
- Stolarek" <karolina.stolarek@oracle.com>, Weinan Liu <wnliu@google.com>,
-	Martin Petersen <martin.petersen@oracle.com>, Ben Fuller
-	<ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, "Anil
- Agrawal" <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, Ilpo
- =?UTF-8?Q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Sathyanarayanan
- Kuppuswamy" <sathyanarayanan.kuppuswamy@linux.intel.com>, Lukas Wunner
-	<lukas@wunner.de>, Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney"
-	<paulmck@kernel.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, "Oliver
- O'Halloran" <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>, "Keith
- Busch" <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>, Terry Bowman
-	<terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>, Dave Jiang
-	<dave.jiang@intel.com>, <linux-kernel@vger.kernel.org>,
-	<linuxppc-dev@lists.ozlabs.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-Subject: Re: [PATCH v7 17/17] PCI/AER: Add sysfs attributes for log
- ratelimits
-Message-ID: <20250521114600.00007010@huawei.com>
-In-Reply-To: <20250520215047.1350603-18-helgaas@kernel.org>
-References: <20250520215047.1350603-1-helgaas@kernel.org>
-	<20250520215047.1350603-18-helgaas@kernel.org>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1747824453; c=relaxed/simple;
+	bh=BbxlfG89R+9CWGmNVrpafcf2XFd18slMK57tLjE9zkY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kcDKq8KiuBVhsOCiXGvTCdN460QIOyupXREyJ0Cy0L4YAmj59tFb2QMJWh3QLe/BnC6Hq+qxxQ/+caABjHBYvLiuWuMGhsxY4SbL0+2YBbjoL/lvh5yD9vosfoyyZ9jKXXYg9WVkDt0AwiIBOhTw3I6hr29I0VXW0+3Jy7dj9Yg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=kFl3WIKn; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="kFl3WIKn"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a3681aedf8so3475160f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 03:47:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1747824449; x=1748429249; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GuPh8lUlczaY3BGjlWUSLoXDI89Tgqqt75TgaRLFcUw=;
+        b=kFl3WIKn1BluDXChLwDtpVdJDjEr2NVYZTTiwy+EAMMGaeSh7uzY0vCHTadnIEl36p
+         7Rvq21tp4hukHNQpVg60gcTDMf8Pvu41SLI0aTiNa4bRCofLfa4kyJMhPmU3KqXTvi7g
+         SCO40AMUGvhkgK5SOtr8EqJ8DTF2v7ySMAaLtq2dLh7zGqLZZoj8H9XWi/ljrY9IesDn
+         MAn/Y1d5+niGKzEYuD2t9MjzCYG4GY9MiARGcGgMf4LSspkYRE4zktoyb2hUyH5N9cFU
+         v1JbRFyAJXHr580CT71VwGX4fUc4VfVRh0jjmhrQx5f+OZSLfqINnqgPUC04RVQJ+MiZ
+         QB9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747824449; x=1748429249;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GuPh8lUlczaY3BGjlWUSLoXDI89Tgqqt75TgaRLFcUw=;
+        b=mbDm+5Hf9C1BylMn2UTAu8j7ewBuqnfLjPJBLPJ4eSn/B5R+kdG9lhB80BFmCOmTmF
+         7QuhtKMJjE/Ra/JtP4GdkPQVww8525W8JG6wsK4K4mDyHmeeQMRHKL5GVoGdxdrr9wcA
+         y2GiXSIOeeHbXW0TuxVTgk0Vy+tEQYksFrPVQCydWj9L9R73R5HJz/h8m83AclRlTiLv
+         YZC9IwhrUvRYQ1hrXi9hA/nmFqs2Keoqpwdzn/wNwbP2j30VLWOzi1VDRBhbkujgb5E+
+         +n/i43oGhgPQpwlQlJOk9lv66A/ENbmkgcyWkX7rncK+VW+4q14T9IunbVTid8yeobkl
+         u5Xw==
+X-Forwarded-Encrypted: i=1; AJvYcCV5w5Y08sFzyE4Tyq5A3AsuXqWorFsCzSe8GptmEJi1wbzeuoVxmbVH6jhoKHpIt9P83ZTtgwCDaIEag+E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5YAAPFu14yCBty5ZJLosj6qC0/VFNATuGnDC+14EuO6mkHBSG
+	iwfjs4tBHYO39uLR4OzFQfCAfMiU4ZBMLhVzUwoJEOtY3J45e+OhXyel4FZDueCvr8ch0/+aLbq
+	B1VY0Ag5t9QbMsjhYBN+j5RsC+Xvpnh3LUXZ1DZ9bfw==
+X-Gm-Gg: ASbGncvQkl6wKOI/2lXjk0fy1yCi/RIXMVvGz5R5qGxYG7FDvm7SDX26yn9MdFzsWh4
+	JLGnsoirXWCsuANGGNwGWO8U2IRggVOjrubiLRdZ8tnP3Sxam4oVWvoZQT0hZlxJJBebyEceENO
+	YfjED4Oi98UarYo7oHn37Dw9FOabYbzYvxZn76FAdE4dc9oJA4zrnbCRfk9F3fWWHLFA==
+X-Google-Smtp-Source: AGHT+IGWLqIKvXp7uTTelzRMHmTQzbuuwrui/N/uxywbrLDDyPwY7Oe/OpLTj407ZB5WzuCvFYwjCBz9VDD0W0w8LJM=
+X-Received: by 2002:a05:6000:420c:b0:3a3:7709:3038 with SMTP id
+ ffacd0b85a97d-3a3770931fdmr7245809f8f.38.1747824449047; Wed, 21 May 2025
+ 03:47:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250116230955.867152-1-rkanwal@rivosinc.com> <20250116230955.867152-2-rkanwal@rivosinc.com>
+ <CAP-5=fU9ovvb-JopPqQfNaj6xtL=u_WZO-b56RdhBmUw4mY0ZA@mail.gmail.com> <CAECbVCvX8St8sXh9pTnyO_94-cJT_DB4MyggtS_-PXqWNtXDXw@mail.gmail.com>
+In-Reply-To: <CAECbVCvX8St8sXh9pTnyO_94-cJT_DB4MyggtS_-PXqWNtXDXw@mail.gmail.com>
+From: Rajnesh Kanwal <rkanwal@rivosinc.com>
+Date: Wed, 21 May 2025 11:47:18 +0100
+X-Gm-Features: AX0GCFuAJ7CTZOCLEIx1J9F8NwWg5BFa7WW9XLKJsd7oIYnChaTtfUeId9q8_es
+Message-ID: <CAECbVCui6ZgHBXBr3LdVGd16ERe0GgAnA1zy_zOQZVTU3bPoWw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/7] perf: Increase the maximum number of samples to 256.
+To: Ian Rogers <irogers@google.com>, ak@linux.intel.com
+Cc: "Liang, Kan" <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+	adrian.hunter@intel.com, alexander.shishkin@linux.intel.com, 
+	ajones@ventanamicro.com, anup@brainfault.org, acme@kernel.org, 
+	atishp@rivosinc.com, beeman@rivosinc.com, brauner@kernel.org, 
+	conor@kernel.org, heiko@sntech.de, mingo@redhat.com, james.clark@arm.com, 
+	renyu.zj@linux.alibaba.com, jolsa@kernel.org, jisheng.teoh@starfivetech.com, 
+	palmer@dabbelt.com, will@kernel.org, kaiwenxue1@gmail.com, 
+	vincent.chen@sifive.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
- frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue, 20 May 2025 16:50:34 -0500
-Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Thu, Apr 17, 2025 at 1:51=E2=80=AFPM Rajnesh Kanwal <rkanwal@rivosinc.co=
+m> wrote:
+>
+> + Adding Andi Kleen.
+>
+> On Thu, Feb 20, 2025 at 6:51=E2=80=AFPM Ian Rogers <irogers@google.com> w=
+rote:
+> >
+> > On Thu, Jan 16, 2025 at 3:10=E2=80=AFPM Rajnesh Kanwal <rkanwal@rivosin=
+c.com> wrote:
+> > >
+> > > RISCV CTR extension support a maximum depth of 256 last branch record=
+s.
+> > > The 127 entries limit results in corrupting CTR entries for RISC-V if
+> > > configured to be 256 entries. This will not impact any other architec=
+tures
+> > > as it is just increasing maximum limit of possible entries.
+> >
+> > I wonder if rather than a constant this code should just use the auto
+> > resizing hashmap code?
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
+/tools/perf/util/hashmap.h
+> >
+> > I assume the value of 127 comes from perf_event.h's PERF_MAX_STACK_DEPT=
+H:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
+/include/uapi/linux/perf_event.h#n1252
+> >
+> > Perhaps these constants shouldn't exist. The perf-record man page menti=
+ons:
+> > sysctl.kernel.perf_event_max_stack
+> > which I believe gets a value from
+> > /proc/sys/kernel/perf_event_max_stack, so maybe these should be
+> > runtime determined constants rather than compile time.
 
-> From: Jon Pan-Doh <pandoh@google.com>
->=20
-> Allow userspace to read/write log ratelimits per device (including
-> enable/disable). Create aer/ sysfs directory to store them and any
-> future aer configs.
->=20
-> Update AER sysfs ABI filename to reflect the broader scope of AER sysfs
-> attributes (e.g. stats and ratelimits).
->=20
->   Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats ->
->     sysfs-bus-pci-devices-aer
->=20
-> Tested using aer-inject[1]. Configured correctable log ratelimit to 5.
-> Sent 6 AER errors. Observed 5 errors logged while AER stats
-> (cat /sys/bus/pci/devices/<dev>/aer_dev_correctable) shows 6.
->=20
-> Disabled ratelimiting and sent 6 more AER errors. Observed all 6 errors
-> logged and accounted in AER stats (12 total errors).
->=20
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/gong.chen/aer-inject.=
-git
->=20
-> [bhelgaas: note fatal errors are not ratelimited, "aer_report" -> "aer_in=
-fo"]
-> Signed-off-by: Karolina Stolarek <karolina.stolarek@oracle.com>
-> Signed-off-by: Jon Pan-Doh <pandoh@google.com>
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> Tested-by: Krzysztof Wilczy=C5=84ski <kwilczynski@kernel.org>
+While working on this, I came across the following two patches. It
+looks like what
+you have suggested, it was tried before but later on Arnaldo reverted the c=
+hange
+from report and script cmds due to reasons mentioned in the second patch.
 
-There is some relatively new SYSFS infra that I think will help
-make this slightly nicer by getting rid of the extra directory when
-there is nothing to be done with it.
+https://lore.kernel.org/lkml/1461767472-8827-31-git-send-email-acme@kernel.=
+org/
+https://lore.kernel.org/lkml/1463696493-27528-8-git-send-email-acme@kernel.=
+org/
 
-> ---
->  ...es-aer_stats =3D> sysfs-bus-pci-devices-aer} | 34 +++++++
->  Documentation/PCI/pcieaer-howto.rst           |  5 +-
->  drivers/pci/pci-sysfs.c                       |  1 +
->  drivers/pci/pci.h                             |  1 +
->  drivers/pci/pcie/aer.c                        | 99 +++++++++++++++++++
->  5 files changed, 139 insertions(+), 1 deletion(-)
->  rename Documentation/ABI/testing/{sysfs-bus-pci-devices-aer_stats =3D> s=
-ysfs-bus-pci-devices-aer} (77%)
+Regards
+Rajnesh
 
 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index f9e684ac7878..9b8dea317a79 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -627,6 +627,105 @@ const struct attribute_group aer_stats_attr_group =
-=3D {
->  	.is_visible =3D aer_stats_attrs_are_visible,
->  };
-
-> +#define aer_ratelimit_burst_attr(name, ratelimit)			\
-> +	static ssize_t							\
-> +	name##_show(struct device *dev, struct device_attribute *attr,	\
-> +		    char *buf)						\
-> +{									\
-
-A little odd looking to indent this less than the line above.
-
-> +	struct pci_dev *pdev =3D to_pci_dev(dev);				\
-> +									\
-> +	return sysfs_emit(buf, "%d\n",					\
-> +			  pdev->aer_info->ratelimit.burst);		\
-> +}									\
-> +									\
-> +	static ssize_t							\
-> +	name##_store(struct device *dev, struct device_attribute *attr,	\
-> +		     const char *buf, size_t count)			\
-> +{									\
-> +	struct pci_dev *pdev =3D to_pci_dev(dev);				\
-> +	int burst;							\
-> +									\
-> +	if (!capable(CAP_SYS_ADMIN))					\
-> +		return -EPERM;						\
-> +									\
-> +	if (kstrtoint(buf, 0, &burst) < 0)				\
-> +		return -EINVAL;						\
-> +									\
-> +	pdev->aer_info->ratelimit.burst =3D burst;			\
-> +									\
-> +	return count;							\
-> +}									\
-> +static DEVICE_ATTR_RW(name)
-> +
-> +aer_ratelimit_burst_attr(ratelimit_burst_cor_log, cor_log_ratelimit);
-> +aer_ratelimit_burst_attr(ratelimit_burst_uncor_log, uncor_log_ratelimit);
-> +
-> +static struct attribute *aer_attrs[] =3D {
-> +	&dev_attr_ratelimit_log_enable.attr,
-> +	&dev_attr_ratelimit_burst_cor_log.attr,
-> +	&dev_attr_ratelimit_burst_uncor_log.attr,
-> +	NULL
-> +};
-> +
-> +static umode_t aer_attrs_are_visible(struct kobject *kobj,
-> +				     struct attribute *a, int n)
-> +{
-> +	struct device *dev =3D kobj_to_dev(kobj);
-> +	struct pci_dev *pdev =3D to_pci_dev(dev);
-> +
-> +	if (!pdev->aer_info)
-> +		return 0;
-> +
-> +	return a->mode;
-> +}
-> +
-> +const struct attribute_group aer_attr_group =3D {
-> +	.name =3D "aer",
-> +	.attrs =3D aer_attrs,
-> +	.is_visible =3D aer_attrs_are_visible,
-> +};
-
-There are a bunch of macros to simplify cases where
-a whole group is either enabled or not and make the group
-itself go away if there is nothing to be shown.
-
-DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE() combined with
-SYSFS_GROUP_VISIBLE() around the assignment does what we
-want here I think.
-
-Whilst we can't retrofit that stuff onto existing ABI
-as someone may be assuming directory presence, we can
-make sysfs less cluttered for new stuff.
-
-Maybe I'm missing why that doesn't work here though!
-
-J
-
-> +
->  static void pci_dev_aer_stats_incr(struct pci_dev *pdev,
->  				   struct aer_err_info *info)
->  {
-
+> >
+>
+> Thanks Ian for your feedback. I am not sure if it's feasible to use auto
+> resizing hashmap here. On each sample of 256 entries we will be doing
+> 6 callocs and transferring a whole lot of entries in hashmap_grow. We
+> can't reuse old hashmap as well. On each sample we bear the same cost
+>
+> But I do agree this should be more dynamic but the maximum number
+> of entries remove_loops can process is limited by the type of chash array
+> here. I can change it and related logic to use uint16_t or higher but we
+> will still have a cap on the number of entries.
+>
+> PERF_MAX_BRANCH_DEPTH seems to be denoting what remove_loops
+> can process. This is being used by thread__resolve_callchain_sample to
+> check if the sample is processable before calling remove_loops. I think
+> this can't be changed to use perf_event_max_stack. But I can rename
+> this macro to avoid confusion.
+>
+> I didn't notice PERF_MAX_STACK_DEPTH. This seems to be defined in
+> multiple places and touches bpf as well. I agree that we should avoid
+> using this macro and use runtime determined value instead. Tbh I don't
+> have super in-depth perf understanding. I will give this a try and send a
+> patch in the next update. It would be helpful if you can review it.
+>
+> Thanks
+> -Rajnesh
+>
+> > Thanks,
+> > Ian
+> >
+> > > Signed-off-by: Rajnesh Kanwal <rkanwal@rivosinc.com>
+> > > ---
+> > >  tools/perf/util/machine.c | 21 ++++++++++++++-------
+> > >  1 file changed, 14 insertions(+), 7 deletions(-)
+> > >
+> > > diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> > > index 27d5345d2b30..f2eb3c20274e 100644
+> > > --- a/tools/perf/util/machine.c
+> > > +++ b/tools/perf/util/machine.c
+> > > @@ -2174,25 +2174,32 @@ static void save_iterations(struct iterations=
+ *iter,
+> > >                 iter->cycles +=3D be[i].flags.cycles;
+> > >  }
+> > >
+> > > -#define CHASHSZ 127
+> > > -#define CHASHBITS 7
+> > > -#define NO_ENTRY 0xff
+> > > +#define CHASHBITS 8
+> > > +#define NO_ENTRY 0xffU
+> > >
+> > > -#define PERF_MAX_BRANCH_DEPTH 127
+> > > +#define PERF_MAX_BRANCH_DEPTH 256
+> > >
+> > >  /* Remove loops. */
+> > > +/* Note: Last entry (i=3D=3Dff) will never be checked against NO_ENT=
+RY
+> > > + * so it's safe to have an unsigned char array to process 256 entrie=
+s
+> > > + * without causing clash between last entry and NO_ENTRY value.
+> > > + */
+> > >  static int remove_loops(struct branch_entry *l, int nr,
+> > >                         struct iterations *iter)
+> > >  {
+> > >         int i, j, off;
+> > > -       unsigned char chash[CHASHSZ];
+> > > +       unsigned char chash[PERF_MAX_BRANCH_DEPTH];
+> > >
+> > >         memset(chash, NO_ENTRY, sizeof(chash));
+> > >
+> > > -       BUG_ON(PERF_MAX_BRANCH_DEPTH > 255);
+> > > +       BUG_ON(PERF_MAX_BRANCH_DEPTH > 256);
+> > >
+> > >         for (i =3D 0; i < nr; i++) {
+> > > -               int h =3D hash_64(l[i].from, CHASHBITS) % CHASHSZ;
+> > > +               /* Remainder division by PERF_MAX_BRANCH_DEPTH is not
+> > > +                * needed as hash_64 will anyway limit the hash
+> > > +                * to CHASHBITS
+> > > +                */
+> > > +               int h =3D hash_64(l[i].from, CHASHBITS);
+> > >
+> > >                 /* no collision handling for now */
+> > >                 if (chash[h] =3D=3D NO_ENTRY) {
+> > > --
+> > > 2.34.1
+> > >
