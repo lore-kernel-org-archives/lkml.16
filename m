@@ -1,186 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3917E21E0A2;
-	Wed, 21 May 2025 23:11:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83D731A5BAD;
+	Wed, 21 May 2025 23:12:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747869061; cv=none; b=PYvsEq/efWzt4Mcj0YlR+F30rDCqx1EcEvHaHTyHQphifGzNWOZyGlduH6BBDRvBIHSrwDBX5B0Y+2prkYaF77puWrhdyVscEdnqJRVg2IVVwRAKkaSrNwvSDWyYkgmZA2Ay7MaBKz7Mci3U6kOeqXNqJg73xtKzHfjukgNTsRo=
+	t=1747869170; cv=none; b=HKeREFkBVve9WeY+dobx8H7D90/fpcoluSh7ibmWZTPmfXkkbGbYAuYmz6rtPTi83LZxghSHcxX2wdjTkWn4EF4sislAxIIWz1MDBZuRdlewZQF63+HgjbhmGi0/7CWabfS+63sZUW8hX5KNcUHNYnJHblpzaMHqMpz3GOKkE00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747869061; c=relaxed/simple;
-	bh=uB61s4rZaPOkIL5YPmArkTV9W9vtOhnDgtZFo0cjj28=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D93/fm8yoXMxZG9xaZ4cyN7Cibbogtu4uiN7mtrp9JLzEU5giqU2ubBSCg5q3eDvg5k/r5fXn8bAYfgI/kyAMyXnpUhcUNkuJrHGoCwwBk9aO9Xk3AiYk86pson8HvKnx9EutWbg0cYzAccTnYr5Zl/23LuZjrnb/PnsAzZWSwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MoxN0R+R; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747869170; c=relaxed/simple;
+	bh=SzseE/GOp9/4sPYk2ZOvtO1euTONkwHI48EPU5s5EgA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ivV3bmJYQZNH/lWrHhXFd9RDFJlIg8hasbFwkBeqyZTMr+UxTCicSlvEQYIGyvNJwrbU4nu2zFS4KsrgCAc49bC1pCP+Ror44IGD1c0kTcS3vHUShwCZTaiS8qiX6muugHKxHaFQZY1dxQ5KiYU2/JtTSSWYMZIP1wK+bBlHCpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CmAzq0gY; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MoxN0R+R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3AA8C4CEE4;
-	Wed, 21 May 2025 23:11:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747869061;
-	bh=uB61s4rZaPOkIL5YPmArkTV9W9vtOhnDgtZFo0cjj28=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MoxN0R+RKY/RIXjOVTHnHlCrf0QrrSIdhoARdmUczwhflQBCjM3WbiPEK1R7eBYU9
-	 +M5VLXcemnpdU8q9b9VuFSzqL2iGoVdhbGrCqSdH+T98MB8yj7DoTfjypgCRbBChuP
-	 Wu6do25sAqYs3AxFBc1Kk1bt/dPwx2p3OGLpI4QOw8wvPR1AGck6c02odf6hIQVzIm
-	 w0B+qlE3ljcfDU5oBeOj3OG3hnmLJHIX83S+Sl9TU1NUSMIAqTqTHKU4/qjcXgrvqS
-	 sd+eePa7r8hjVZQwhlBrZz7yM5xTFBVXzrW9dmc48Irw5ZKxemxp1NlawWrJTx0TF3
-	 QbJC5EqV2IUzg==
-Date: Wed, 21 May 2025 16:11:00 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: John Groves <John@groves.net>
-Cc: Dan Williams <dan.j.williams@intel.com>,
-	Miklos Szeredi <miklos@szeredi.hu>,
-	Bernd Schubert <bschubert@ddn.com>,
-	John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Luis Henriques <luis@igalia.com>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Petr Vorel <pvorel@suse.cz>, Brian Foster <bfoster@redhat.com>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Stefan Hajnoczi <shajnocz@redhat.com>,
-	Joanne Koong <joannelkoong@gmail.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	Aravind Ramesh <arramesh@micron.com>,
-	Ajay Joshi <ajayjoshi@micron.com>,
-	Alistair Popple <apopple@nvidia.com>
-Subject: Re: [RFC PATCH 00/19] famfs: port into fuse
-Message-ID: <20250521231100.GA9688@frogsfrogsfrogs>
-References: <20250421013346.32530-1-john@groves.net>
- <hobxhwsn5ruaw42z4xuhc2prqnwmfnbouui44lru7lnwimmytj@fwga2crw2ych>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CmAzq0gY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747869168; x=1779405168;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=SzseE/GOp9/4sPYk2ZOvtO1euTONkwHI48EPU5s5EgA=;
+  b=CmAzq0gYrTfv6FtfojLi+n3myzK62v6Bb0F9+QQWBJM7oeF+/1mqo9ra
+   5feoGf28WHHursjtuzIJqwDwU9WVTkWTDQhSPoLVHBLkbd26wBHknRBm7
+   6YRHY+O1Xo8VJKci0LLbF7Du9NO5ZhP1g1QQhLuTD0JuUEm4Ofdofspz/
+   tLxVIT//+J+Zr9jeQlM96CUh9CkYruOfdc+a708WEpmc9SHyH7jWpfsMd
+   2WFD1+asdj9ldOpMCWrPFhIxmScVGZ8iZoUmY1m33nCJW83wlGzLQmfa7
+   jHvr2v/rwX+v5w7+ucTckp+5naYUC93kPglg5hpFJ9U4jvOSvdus0Lroz
+   Q==;
+X-CSE-ConnectionGUID: hJM1UmFgRxCGi9Hic3aICw==
+X-CSE-MsgGUID: IFS2tFKuQrOyfw9y7Dr5Dg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="49973431"
+X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
+   d="scan'208";a="49973431"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 16:12:47 -0700
+X-CSE-ConnectionGUID: WoYKJzgbQ+SqtSywhYGDig==
+X-CSE-MsgGUID: 5JensFr+TOuPHAbR1T+tXg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
+   d="scan'208";a="145024119"
+Received: from dev.sc.intel.com ([172.25.103.134])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 16:12:47 -0700
+From: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
+To: dave.jiang@intel.com,
+	vinicius.gomes@intel.com,
+	fenghuay@nvidia.com,
+	vkoul@kernel.org
+Cc: anil.s.keshavamurthy@intel.com,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] dmaengine: idxd: Fix warning for deadcode.deadstore
+Date: Wed, 21 May 2025 19:13:31 -0400
+Message-ID: <20250521231331.889204-1-anil.s.keshavamurthy@intel.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <hobxhwsn5ruaw42z4xuhc2prqnwmfnbouui44lru7lnwimmytj@fwga2crw2ych>
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 21, 2025 at 05:30:12PM -0500, John Groves wrote:
-> On 25/04/20 08:33PM, John Groves wrote:
-> > Subject: famfs: port into fuse
-> >
-> > <snip>
-> 
-> I'm planning to apply the review comments and send v2 of
-> this patch series soon - hopefully next week.
+Deletes the  second initialization as the value stored to 'dev' during
+its initialization (struct device *dev = &idxd->pdev->dev;) is
+sufficient.
 
-Heh, I'm just about to push go on an RFC patchbomb for the entirety of
-fuse + iomap + ext4-fuse2fs.
+../drivers/dma/idxd/init.c:988:17: warning: Value stored to 'dev' during
+its initialization is never read [deadcode.DeadStores]
+  988 |         struct device *dev = &idxd->pdev->dev;
+      |                        ^~~   ~~~~~~~~~~~~~~~~
 
-> I asked a couple of specific questions for Miklos and
-> Amir at [1] that I hope they will answer in the next few
-> days. Do you object to zeroing fuse_inodes when they're
-> allocated, and do I really need an xchg() to set the
-> fi->famfs_meta pointer during fuse_alloc_inode()? cmpxchg
-> would be good for avoiding stepping on an "already set"
-> pointer, but not useful if fi->famfs_meta has random
-> contents (which it does when allocated).
+Signed-off-by: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
+---
+ drivers/dma/idxd/init.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-I guess you could always null it out in fuse_inode_init_once and again
-when you free the inode...
+diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+index fca1d2924999..b7664136fc67 100644
+--- a/drivers/dma/idxd/init.c
++++ b/drivers/dma/idxd/init.c
+@@ -989,7 +989,6 @@ static void idxd_reset_prepare(struct pci_dev *pdev)
+ 	const char *idxd_name;
+ 	int rc;
+ 
+-	dev = &idxd->pdev->dev;
+ 	idxd_name = dev_name(idxd_confdev(idxd));
+ 
+ 	struct idxd_saved_states *idxd_saved __free(kfree) =
+-- 
+2.47.1
 
-> I plan to move the GET_FMAP message to OPEN time rather than
-> LOOKUP - unless that leads to problems that I don't
-> currently foresee. The GET_FMAP response will also get a
-> variable-sized payload.
-> 
-> Darrick and I have met and discussed commonality between our
-> use cases, and the only thing from famfs that he will be able
-> to directly use is the GET_FMAP message/response - but likely
-> with a different response payload. The file operations in
-> famfs.c are not applicable for Darrick, as they only handle
-> mapping file offsets to devdax offsets (i.e. fs-dax over
-> devdax).
-> 
-> Darrick is primarily exploring adapting block-backed file
-> systems to use fuse. These are conventional page-cache-backed
-> files that will primarily be read and written between
-> blockdev and page cache.
-
-Yeah, I really do need to get moving on sending out the RFC.
-
-Everyone: patchbomb incoming!
-
-> (Darrick, correct me if I got anything important wrong there.)
-> 
-> In prep for Darrick, I'll add an offset and length to the
-> GET_FMAP message, to specify what range of the file map is
-> being requested. I'll also add a new "first header" struct
-> in the GET_FMAP response that can accommodate additional fmap
-> types, and will specify the file size as well as the offset
-> and length of the fmap portion described in the response
-> (allowing for GET_FMAP responses that contain an incomplete
-> file map).
-
-Hrrmrmrmm.  I don't think there's much use in trying to share a fuse
-command but then have to parse through the size of the response to
-figure out what the server actually sent back.  It's less confusing to
-have just one response type per fuse command.
-
-I also don't think that FUSE_IOMAP_BEGIN is all that good of an
-interface for what John is trying to do.  A regular filesystem creates
-whatever mappings it likes in response to the far too many file IO APIs
-in Linux, and needs to throw them at the kernel.  OTOH, famfs'
-management daemon creates a static mapping with repeating elements and
-that gets uploaded in one go via FUSE_GET_FMAP.  Yes, we could mash them
-into a single uncohesive mess of an interface, but why would we torture
-ourselves so?
-
-(For me it's the "repeating sequences" aspect of GET_FMAP that makes me
-think it should be a separate interface.  OTOH I haven't thought much
-about how to support filesystems that implement RAID.)
-
-> If there is desire to give GET_FMAP a different name, like
-> GET_IOMAP, I don't much care - although the term "iomap" may
-> be a bit overloaded already (e.g. the dax_iomap_rw()/
-> dax_iomap_fault() functions debatably didn't need "iomap"
-> in their names since they're about converting a file offset
-> range to daxdev ranges, and they don't handle anything
-> specifically iomap-related). At least "FMAP" is more narrowly
-> descriptive of what it is.
-> 
-> I don't think Darrick needs GET_DAXDEV (or anything
-> analogous), because passing in the backing dev at mount time
-> seems entirely sufficient - so I assume that at least for now
-> GET_DAXDEV won't be shared. But famfs definitely needs
-> GET_DAXDEV, because files must be able to interleave across
-> memory devices.
-
-I actually /did/ add a notification so that the fuse server can tell the
-kernel that they'd like to use a particular fd with iomap.  It doesn't
-support dax devices by virtue of gatekeeping on S_ISBLK, but it wouldn't
-be hard to do that.
-
-> The one issue that I will kick down the road until v3 is
-> fixing the "poisoned page|folio" problem. Because of that,
-> v2 of this series will still be against a 6.14 kernel. Not
-> solving that problem means this series won't be merge-able
-> until v3.
-> 
-> I hope this is all clear and obvious. Let me know if not (or
-> if so).
-
-Hee hee.
-
---D
-
-> 
-> Thanks,
-> John
-> 
-> 
-> [1] https://lore.kernel.org/linux-fsdevel/20250421013346.32530-1-john@groves.net/T/#me47467b781d6c637899a38b898c27afb619206e0
-> 
-> 
