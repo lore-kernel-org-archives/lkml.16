@@ -1,269 +1,132 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0471828982F
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 17:40:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7757528A1E1
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 17:40:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747849239; cv=none; b=rOktkImhbEQ+Ros23BnqPPy+7XPSkvx2WmtdIvlzAfKEpX6o350myRLmJl1KInGSUdt9C/BEPSI7gM+yQTg+M2FaIOQATY0qsQ1eb4URSxUznEj/TyRAdWHwBf+NU3FpMK+JHW+jQ0NfRbMM4/JkSPE+M0wvwsN8iv5DpI78DWk=
+	t=1747849244; cv=none; b=VhuNDH3yqcyHxWI/A4FQiWD2L3O3X0+uPxGqn50uYeIKSlS8mugF1e7+Sv/xZZGFYDrNoJuklVAEjOhKlE1uVtAA9gHjRSipQl+/6KeLUqqw5Dfikj8j3pPaduUxi6jrAJjnzOP2wo2+NOOwb473EkcdJIljYj2yj0KavFyyXSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747849239; c=relaxed/simple;
-	bh=PTXGIeTnGMX3g14xDrtXMvbBpa+Qj89XVKtEUS0m+gI=;
+	s=arc-20240116; t=1747849244; c=relaxed/simple;
+	bh=+03xei7P5IfU8Zakp+0n1c6eszQ2Bn3al0pubZ7JuiY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G1KA10adPuhpWFaU7Pt1FFtfoBbDABF2akJOyUmEcS1Tkb9/kSkIP+5PqjYr9fI4ZWBNA8ANI4Vl6r0iNyc+98kehO48Dvjm/UDy46Y/mKT4k1iXx1AqkziucjxtpQnnHZJSGuAPfNiDKvrb5081mwjL8Sgw3Y7/8KabhHkC3AA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=iPFubfBF; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	 To:Cc:Content-Type; b=g2pw8yFwpRd0q9KJqtvDpDccmX9a6NINqrNy5ek/5RTF/D+O6kq0tvTUw23q+1ZcjGg3AFR9yPuqHyTjOEQL0KVrkic7CNbihZFX0zvqQS3e9ZYo7EIf1ETEDCa3FKa58aO1848kxXzIDiUwd8frb7C3UZVFqZmRBVWtrAFr6bE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ALOGHFJX; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="iPFubfBF"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43d04dc73b7so78478085e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 10:40:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1747849235; x=1748454035; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S1jGbAJIfAmBuq60m9cLcCzR1qg6oy8JqAOHCwyna+M=;
-        b=iPFubfBFq1U7+lyjpkYEKj1r+LqVAb7glIITTdRy35gmwA2px1XD43X0lpxFzg81fw
-         0RIZqf7oF8U+XkUtHIENECUt+EOcXS4k61apboclbgcGX8boybD+cUY/Yn1K+7vGzTuT
-         ri5fbAVmuUkPdKLAybvIaLJrt7wAH+tOOajtWPQtRn7hH4oZe/qsEvPiPdJ4wSIdZNwx
-         rWTdosydmbQ/0Hzu/qEH8b5g1qjUC8E2MlqslBYh4QgD6eHzAAfvQZIdYyELd6+xKD07
-         jqoNoWKbYLTav3a0LzH9gWotqtVRRcsyjA/KqEc3Ix6Odz9z/KbPRs3iefqpgPnTX6PF
-         x9VQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ALOGHFJX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747849241;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qs6bNNC1yflKUpZTQQs7QHuv3FqzIeOQq3NsY0HzBHo=;
+	b=ALOGHFJXYNORbCy9yzwE2E9ULr5seTwaPytojKHGlQCnDRt4s0HwQAcS1UZKIgdip1+649
+	opE4cRw5NyqWp+IhfgM22Jkbt5TtTchdPQDUOtcnBsCscmiWzXaedNu667WBddznrP3tJ8
+	vbj/4WViGuaHN3G4o6kOZFpL/uMu1o8=
+Received: from mail-yw1-f199.google.com (mail-yw1-f199.google.com
+ [209.85.128.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-365-IO-A7lcBNLOn2-QngUUUhw-1; Wed, 21 May 2025 13:40:39 -0400
+X-MC-Unique: IO-A7lcBNLOn2-QngUUUhw-1
+X-Mimecast-MFC-AGG-ID: IO-A7lcBNLOn2-QngUUUhw_1747849239
+Received: by mail-yw1-f199.google.com with SMTP id 00721157ae682-70dda56af0cso43192967b3.2
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 10:40:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747849235; x=1748454035;
+        d=1e100.net; s=20230601; t=1747849239; x=1748454039;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=S1jGbAJIfAmBuq60m9cLcCzR1qg6oy8JqAOHCwyna+M=;
-        b=rp3uo69kIbEhqE6TOTo4XjKlDX0+G+aGIQze1JuspKD2mSk72baARRHCaOn/DpQSWt
-         uihvUMnfuP0Sq533fs9griXNSyZfaV3quMrIkgUq4Pjzc665dIhw80ScAFx6JiFcY0xG
-         huBNsfaYQvyjMmK8xuRwrRMGFWFNwxWPyed4w6bEzQq1sDRJe4xknE7Gl8UJNEvgk7Ty
-         j1JOf306yO5+9MyU1igAJRPXbLniJRBl11Q4EbYYRhQ5BNpCpKaLRWCh08NHihYpLfS9
-         51vjiWf1hPtQJgWCCxLcyhz9Yw/1angLGZl1HnTnedESG4Lk8+8vxut57fpT63WBTGxa
-         bmmA==
-X-Forwarded-Encrypted: i=1; AJvYcCW92TUbPmIpQWwAYd+c8INQqpXJWBbFMBeHY/sW4LVuHSL/mNUy7FLtLnk1M6WszgjbbEkkT2jHDmDgwJ0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTOhM+T+TAVwyaPw1cBJ2pxeu/2vF/QxkFJLEqi1qYRa25afQA
-	PFP0U1Zg1duJo78IMY6FRaO+EVFZzmWxwv5+KcuhwdxB53GPSlvrLdIeYEDO4ow1JIZa/WEi1i2
-	dcfYnN08cwTPiufZWccKdnwN0vw9j+Cvf8mVFT/rBBg==
-X-Gm-Gg: ASbGncsjVWtiQzqgcIeX69OYfukHkXPoITYzNoQ671D5AFFjGXmssLIYJZXX3ZE3W7X
-	ytjdnd2JwxbXrUD0CYQ0v0gYOwk6hFmmxRaZ7sm8+ZPLc8EOpm09QYFYG5DZnVpeIyZWAa6PQFb
-	VNhKgAedi8r5Zn8/5pj/yoUKpYm5+zk5LGPwKQ+Wy+2xFwyctkjOxVgnY7ufggd6Fd+w==
-X-Google-Smtp-Source: AGHT+IF7t556SFgYKCEZNLGSlvhLTbE8zyePAWqPOGCGeXQD0OKNEoiW7nBffL6Xodz6FR//5os8RUXoFUs57s9QzV4=
-X-Received: by 2002:a05:600c:154f:b0:43c:eeee:b713 with SMTP id
- 5b1f17b1804b1-442fd664a29mr161787315e9.20.1747849235122; Wed, 21 May 2025
- 10:40:35 -0700 (PDT)
+        bh=qs6bNNC1yflKUpZTQQs7QHuv3FqzIeOQq3NsY0HzBHo=;
+        b=MpGzYJszsEKF8ZLJZzWS3LWzEeqXTjyvjY7XPnffdrQhcTBsUcG/7J+qcVFCMkMDuq
+         6N3Fiw69MbRZ+tJxLa20BDldnC5vrUxnzoyEEuI6M5SuLKhnVrposuI8wAJMsQ7/DDHH
+         LmID0JBYZcEpgsT/75dMLvvTa/KyogUvAFhk90pbA1RUh7pEMeVPfsT6aN8VLYI6WIF9
+         haxOKBWY3q67B+2FGgXuMX71NhmohuqfVdgZyJZQKua6rApLLCC9dKIVgPRBxUKGVzri
+         +8RFsnX0tq3ewPl1RQQfkHgh9A1Ey+5s/PCO2hOfHwMmNp1eTMmhGmqx0WKSZhOsxjEa
+         VR8A==
+X-Forwarded-Encrypted: i=1; AJvYcCU/W4TZb/C8YTzPVRn61vkJocezwupxL2VRQRVZDfUMykTw1OzjbPMihltezlIZ/Bv7c4qoRJ74ongjcXs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+R2lISEwMNBHLpFlPAcyzvY2K8dhls4IhxtjmyhVX8RVow+np
+	9TyoQr+n13aTLTN+f6toMYjd3zJiEqek6JduWTgjHHD+d/R2/nx9gkbRPmXqTpAmF/Joppjw2P/
+	wmaUyaftVprN8yM34kdxq7YG1Plkw7XAKzwLxbhyWD5Ne9VZJt2GsU3OwQnxBhzLyIUuxQ40C74
+	7NW6QKazC1wHLAOACNnL0kN3tJ3VHUZTOIdoYlu/2D
+X-Gm-Gg: ASbGnctVDOn1z2V1FZstqpv4DPoB6Vp1sYSo+1XzV9JQeaXTs8H0SFi8J9F++6a9KNu
+	UnKhqOvT7fYmyp6OVBW+aGlcPp7tFh6js6/izGMg98vx5s+0VMKEPkmNKAXoirmhAKLmsDfdR9S
+	y3UdJrUBjKnnBfN6Mx+dAtWc/3
+X-Received: by 2002:a05:690c:600c:b0:70d:ffaf:48df with SMTP id 00721157ae682-70dffaf5174mr24393737b3.3.1747849238835;
+        Wed, 21 May 2025 10:40:38 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG4kTZ68Nrq3UVQM/px/4Nm80aiKUGlAwD5oJOQSyBpW19i1eQmEsBY8jJT9ohD+wVH0pgounpIjLLNnDqhjzQ=
+X-Received: by 2002:a05:690c:600c:b0:70d:ffaf:48df with SMTP id
+ 00721157ae682-70dffaf5174mr24393437b3.3.1747849238495; Wed, 21 May 2025
+ 10:40:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250116230955.867152-1-rkanwal@rivosinc.com> <20250116230955.867152-2-rkanwal@rivosinc.com>
- <CAP-5=fU9ovvb-JopPqQfNaj6xtL=u_WZO-b56RdhBmUw4mY0ZA@mail.gmail.com>
- <CAECbVCvX8St8sXh9pTnyO_94-cJT_DB4MyggtS_-PXqWNtXDXw@mail.gmail.com>
- <CAECbVCui6ZgHBXBr3LdVGd16ERe0GgAnA1zy_zOQZVTU3bPoWw@mail.gmail.com> <CAP-5=fUy0QfmazuNq1yJzAxsuM7wD3zD=KAVMGHuw0wXvez1ww@mail.gmail.com>
-In-Reply-To: <CAP-5=fUy0QfmazuNq1yJzAxsuM7wD3zD=KAVMGHuw0wXvez1ww@mail.gmail.com>
-From: Rajnesh Kanwal <rkanwal@rivosinc.com>
-Date: Wed, 21 May 2025 18:40:24 +0100
-X-Gm-Features: AX0GCFuGfEgMYyqBQoNOMkZCo0wBsBMY3yB9bZY3USVl_oy_pisRJUdYTWzGPgk
-Message-ID: <CAECbVCtCDrXu4w5s=3o85GVKRb9o566W-v04wWMO=VgjOOpRHQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/7] perf: Increase the maximum number of samples to 256.
-To: Ian Rogers <irogers@google.com>
-Cc: ak@linux.intel.com, "Liang, Kan" <kan.liang@linux.intel.com>, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-perf-users@vger.kernel.org, adrian.hunter@intel.com, 
-	alexander.shishkin@linux.intel.com, ajones@ventanamicro.com, 
-	anup@brainfault.org, acme@kernel.org, atishp@rivosinc.com, 
-	beeman@rivosinc.com, brauner@kernel.org, conor@kernel.org, heiko@sntech.de, 
-	mingo@redhat.com, james.clark@arm.com, renyu.zj@linux.alibaba.com, 
-	jolsa@kernel.org, jisheng.teoh@starfivetech.com, palmer@dabbelt.com, 
-	will@kernel.org, kaiwenxue1@gmail.com, vincent.chen@sifive.com
+References: <20250505170244.253170-1-leobras@redhat.com> <20250512104115.KcF7Ct_u@linutronix.de>
+In-Reply-To: <20250512104115.KcF7Ct_u@linutronix.de>
+From: Leonardo Bras Soares Passos <leobras@redhat.com>
+Date: Wed, 21 May 2025 14:40:27 -0300
+X-Gm-Features: AX0GCFsAM8KXUNP0PhKbzjsJyXXVtOmUjqzbsICPAWI1fF2GPZEn7_S5ztqGlzY
+Message-ID: <CAJ6HWG7Dtw=UpKbvyRh=SjE0X6Bj9zHGd15crbRH8bybGrUEow@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] local_lock: Minor improvements of local_trylock*() documentation
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Jakub Kicinski <kuba@kernel.org>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Vlastimil Babka <vbabka@suse.cz>, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-I am not sure tbh. I have never worked with this part of perf tool before.
-I think someone else with a deeper understanding of perf can answer
-this better. I will also try to go through it to build some understanding.
+Hi Sebastian,
 
-Also, I think this can be done as a new work item/series. Currently I am
-just trying to increase the number of entries the remove_loops function
-can process. Going through the commit description now, I feel like
-I have not done a good job of describing the change.
-
-Basically when I use --branch-history option on report cmd to
-add the branches to callstack, the remove_loops logic complains
-about the size of the sample and discards the sample as
-corrupted sample because it's been hardcoded to process
-maximum of 127 entries.
-
-Here is the patch that added this option:
-https://lore.kernel.org/all/1415844328-4884-3-git-send-email-andi@firstfloo=
-r.org/T/#u
-
-Thanks
-Rajnesh
-
-On Wed, May 21, 2025 at 4:36=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
+On Mon, May 12, 2025 at 7:43=E2=80=AFAM Sebastian Andrzej Siewior
+<bigeasy@linutronix.de> wrote:
 >
-> On Wed, May 21, 2025 at 3:47=E2=80=AFAM Rajnesh Kanwal <rkanwal@rivosinc.=
-com> wrote:
+> On 2025-05-05 14:02:44 [-0300], Leonardo Bras wrote:
+> > Fix local_trylock_init() documentation, as it was mentioning the non-tr=
+y
+> > helper instead, and use the opportunity to make clear the try_lock*() n=
+eeds
+> > to receive a local_trylock_t variable as parameter.
 > >
-> > On Thu, Apr 17, 2025 at 1:51=E2=80=AFPM Rajnesh Kanwal <rkanwal@rivosin=
-c.com> wrote:
-> > >
-> > > + Adding Andi Kleen.
-> > >
-> > > On Thu, Feb 20, 2025 at 6:51=E2=80=AFPM Ian Rogers <irogers@google.co=
-m> wrote:
-> > > >
-> > > > On Thu, Jan 16, 2025 at 3:10=E2=80=AFPM Rajnesh Kanwal <rkanwal@riv=
-osinc.com> wrote:
-> > > > >
-> > > > > RISCV CTR extension support a maximum depth of 256 last branch re=
-cords.
-> > > > > The 127 entries limit results in corrupting CTR entries for RISC-=
-V if
-> > > > > configured to be 256 entries. This will not impact any other arch=
-itectures
-> > > > > as it is just increasing maximum limit of possible entries.
-> > > >
-> > > > I wonder if rather than a constant this code should just use the au=
-to
-> > > > resizing hashmap code?
-> > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/=
-tree/tools/perf/util/hashmap.h
-> > > >
-> > > > I assume the value of 127 comes from perf_event.h's PERF_MAX_STACK_=
-DEPTH:
-> > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/=
-tree/include/uapi/linux/perf_event.h#n1252
-> > > >
-> > > > Perhaps these constants shouldn't exist. The perf-record man page m=
-entions:
-> > > > sysctl.kernel.perf_event_max_stack
-> > > > which I believe gets a value from
-> > > > /proc/sys/kernel/perf_event_max_stack, so maybe these should be
-> > > > runtime determined constants rather than compile time.
+> > Signed-off-by: Leonardo Bras <leobras@redhat.com>
+> =E2=80=A6
+> > --- a/include/linux/local_lock.h
+> > +++ b/include/linux/local_lock.h
+> > @@ -45,38 +45,38 @@
+> >  /**
+> >   * local_unlock_irqrestore - Release a per CPU local lock and restore
+> >   *                         interrupt flags
+> >   * @lock:    The lock variable
+> >   * @flags:      Interrupt flags to restore
+> >   */
+> >  #define local_unlock_irqrestore(lock, flags)                 \
+> >       __local_unlock_irqrestore(lock, flags)
 > >
-> > While working on this, I came across the following two patches. It
-> > looks like what
-> > you have suggested, it was tried before but later on Arnaldo reverted t=
-he change
-> > from report and script cmds due to reasons mentioned in the second patc=
-h.
-> >
-> > https://lore.kernel.org/lkml/1461767472-8827-31-git-send-email-acme@ker=
-nel.org/
-> > https://lore.kernel.org/lkml/1463696493-27528-8-git-send-email-acme@ker=
-nel.org/
+> >  /**
+> > - * local_lock_init - Runtime initialize a lock instance
+> > + * local_trylock_init - Runtime initialize a local_trylock instance
 >
-> Thanks Rajnash, agreed on what you found. I wonder to resolve the
-> issue we could add a header feature:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.=
-git/tree/tools/perf/util/header.h?h=3Dperf-tools-next#n21
-> for max stack depth.
+> If you replace "lock instance" please use local_trylock_t instead
+> "local_trylock"
+
+Will do
+
 >
-> Thanks,
-> Ian
+> Other than that,
+> Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+
+Thanks!
+Leo
+
 >
-> > Regards
-> > Rajnesh
-> >
-> >
-> > > >
-> > >
-> > > Thanks Ian for your feedback. I am not sure if it's feasible to use a=
-uto
-> > > resizing hashmap here. On each sample of 256 entries we will be doing
-> > > 6 callocs and transferring a whole lot of entries in hashmap_grow. We
-> > > can't reuse old hashmap as well. On each sample we bear the same cost
-> > >
-> > > But I do agree this should be more dynamic but the maximum number
-> > > of entries remove_loops can process is limited by the type of chash a=
-rray
-> > > here. I can change it and related logic to use uint16_t or higher but=
- we
-> > > will still have a cap on the number of entries.
-> > >
-> > > PERF_MAX_BRANCH_DEPTH seems to be denoting what remove_loops
-> > > can process. This is being used by thread__resolve_callchain_sample t=
-o
-> > > check if the sample is processable before calling remove_loops. I thi=
-nk
-> > > this can't be changed to use perf_event_max_stack. But I can rename
-> > > this macro to avoid confusion.
-> > >
-> > > I didn't notice PERF_MAX_STACK_DEPTH. This seems to be defined in
-> > > multiple places and touches bpf as well. I agree that we should avoid
-> > > using this macro and use runtime determined value instead. Tbh I don'=
-t
-> > > have super in-depth perf understanding. I will give this a try and se=
-nd a
-> > > patch in the next update. It would be helpful if you can review it.
-> > >
-> > > Thanks
-> > > -Rajnesh
-> > >
-> > > > Thanks,
-> > > > Ian
-> > > >
-> > > > > Signed-off-by: Rajnesh Kanwal <rkanwal@rivosinc.com>
-> > > > > ---
-> > > > >  tools/perf/util/machine.c | 21 ++++++++++++++-------
-> > > > >  1 file changed, 14 insertions(+), 7 deletions(-)
-> > > > >
-> > > > > diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.=
-c
-> > > > > index 27d5345d2b30..f2eb3c20274e 100644
-> > > > > --- a/tools/perf/util/machine.c
-> > > > > +++ b/tools/perf/util/machine.c
-> > > > > @@ -2174,25 +2174,32 @@ static void save_iterations(struct iterat=
-ions *iter,
-> > > > >                 iter->cycles +=3D be[i].flags.cycles;
-> > > > >  }
-> > > > >
-> > > > > -#define CHASHSZ 127
-> > > > > -#define CHASHBITS 7
-> > > > > -#define NO_ENTRY 0xff
-> > > > > +#define CHASHBITS 8
-> > > > > +#define NO_ENTRY 0xffU
-> > > > >
-> > > > > -#define PERF_MAX_BRANCH_DEPTH 127
-> > > > > +#define PERF_MAX_BRANCH_DEPTH 256
-> > > > >
-> > > > >  /* Remove loops. */
-> > > > > +/* Note: Last entry (i=3D=3Dff) will never be checked against NO=
-_ENTRY
-> > > > > + * so it's safe to have an unsigned char array to process 256 en=
-tries
-> > > > > + * without causing clash between last entry and NO_ENTRY value.
-> > > > > + */
-> > > > >  static int remove_loops(struct branch_entry *l, int nr,
-> > > > >                         struct iterations *iter)
-> > > > >  {
-> > > > >         int i, j, off;
-> > > > > -       unsigned char chash[CHASHSZ];
-> > > > > +       unsigned char chash[PERF_MAX_BRANCH_DEPTH];
-> > > > >
-> > > > >         memset(chash, NO_ENTRY, sizeof(chash));
-> > > > >
-> > > > > -       BUG_ON(PERF_MAX_BRANCH_DEPTH > 255);
-> > > > > +       BUG_ON(PERF_MAX_BRANCH_DEPTH > 256);
-> > > > >
-> > > > >         for (i =3D 0; i < nr; i++) {
-> > > > > -               int h =3D hash_64(l[i].from, CHASHBITS) % CHASHSZ=
-;
-> > > > > +               /* Remainder division by PERF_MAX_BRANCH_DEPTH is=
- not
-> > > > > +                * needed as hash_64 will anyway limit the hash
-> > > > > +                * to CHASHBITS
-> > > > > +                */
-> > > > > +               int h =3D hash_64(l[i].from, CHASHBITS);
-> > > > >
-> > > > >                 /* no collision handling for now */
-> > > > >                 if (chash[h] =3D=3D NO_ENTRY) {
-> > > > > --
-> > > > > 2.34.1
-> > > > >
+> >   */
+> >  #define local_trylock_init(lock)     __local_trylock_init(lock)
+>
+> =E2=80=A6
+>
+> Sebastian
+>
+
