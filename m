@@ -1,52 +1,53 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4B4F2C17A3
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 20:47:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60B7D233D85
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 20:48:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747860470; cv=none; b=i6kSz8Gfiq6BcAODTSzP1xB7ABJUIaZ3GA+tPKpWP3qWJ2u6wbQcyl5mGPLNQ2yHqF+NErVMlZpyB+uk95gGikOvub72JGrnbqYnBB2uli8SEGd29D2o60Vnh6dkyOqQgwsK5IBsxrNGs6sKXBDTJRivm8JutiVm02Y8JoTiQ34=
+	t=1747860483; cv=none; b=fipjmNLvJUdgcNM3JUo5yAkRSIhexTFx7JLB+dejN9v1ZysoDIwK5h9TVSjZZMkO3enWB6iURPob93d5NEg5OX2NMZEmYX/aBSY98q9sm9ymLVsorM036gDs7OmHjEf8aBZO9HpKHRxlqROF2yn5Cr+J4FoTCn4tEdHcAq4utJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747860470; c=relaxed/simple;
-	bh=fK1MynsL225wWo3dHGnSbcLRkU5iw/wknAYv04lLgS8=;
+	s=arc-20240116; t=1747860483; c=relaxed/simple;
+	bh=DuvypMr/sE/KpBVknOlgRGkISCm1LawO64dkNdpNx3o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AZusfTxSVKQfUEoEMLDEg6knG5VAsR7stJMF/RB++9wvMxCieEL8AKLo15uxS0cLcAb/yE8U8h0EgT//V/kW7e4xDX23yhovLmKsYVOWreCt5V/yT84mPMKarM4kFXz6wJH9CzcfyB7XSbCFafPwbMUVKVqsnZnHXkEWpjwywus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MBLaDBtU; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=UXjB1aNSOHRMGEepXzhlSLTXqemfavQWN3ur1DFtqpbBqWCYIEIXxC5lkIxQY51OuUgR90D1t06qxUyokwR+uE3efxsVmHvRSEn5JPgepDvCr/TrkSR7dqjG2Vn0VgnUZroQDAdsgPMSWjhEcOsMXytJYQQULKXfte+r7efB/hE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CdPNkAE+; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MBLaDBtU"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CdPNkAE+"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747860467;
+	s=mimecast20190719; t=1747860480;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=T5V2okoaOmmH00na+R0WqQ3AiEj1bd5ShKvbaofJb94=;
-	b=MBLaDBtUpOIf9cKsqP+4gsoWhiARPogI42Jc9mzwXDj2EXsKcLeyUKPErpgkQ1L6REUNpr
-	LmBOpt4im40onJvy+oq6cRHK/5xo9h+83m1E8IuMScGaU5mXPGmdgsSPE2hbHMveJBZYDP
-	jQ8nil9aHF0uhJvdyTgd1T3p+QJF6Yo=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=RgwTalUkkAEy4l2DBxsf/Vl1dLrGg/xqBOQv/M/fvO0=;
+	b=CdPNkAE+cAnZpfmSmgF0II/BYQ9f8CpsaVebQPqvNZFNMX1XL74VdxrMBgLDw75Cag1yTf
+	5DFd4nh4g6a7rRtK/k0ZFzbutY1teR7Nh8netpg9K/yb8jfSubUxZQxJNYlZ4X/xlEf9yr
+	ylsmAvD9pwq0IR5qONJR2T7YOUyuSXw=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-562-jZQT4f8POSOyI2WeOE0xgw-1; Wed,
- 21 May 2025 16:47:44 -0400
-X-MC-Unique: jZQT4f8POSOyI2WeOE0xgw-1
-X-Mimecast-MFC-AGG-ID: jZQT4f8POSOyI2WeOE0xgw_1747860461
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-302-FkNUIldNNVeR8qfxLEVciQ-1; Wed,
+ 21 May 2025 16:47:56 -0400
+X-MC-Unique: FkNUIldNNVeR8qfxLEVciQ-1
+X-Mimecast-MFC-AGG-ID: FkNUIldNNVeR8qfxLEVciQ_1747860469
 Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 723D1180034A;
-	Wed, 21 May 2025 20:47:41 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3C2E3195608E;
+	Wed, 21 May 2025 20:47:49 +0000 (UTC)
 Received: from chopper.redhat.com (unknown [10.22.80.100])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E441819560B7;
-	Wed, 21 May 2025 20:47:36 +0000 (UTC)
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 82E8B19560B7;
+	Wed, 21 May 2025 20:47:44 +0000 (UTC)
 From: Lyude Paul <lyude@redhat.com>
 To: dri-devel@lists.freedesktop.org,
 	rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+Cc: Danilo Krummrich <dakr@kernel.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
 	Maxime Ripard <mripard@kernel.org>,
 	Thomas Zimmermann <tzimmermann@suse.de>,
 	David Airlie <airlied@gmail.com>,
@@ -60,10 +61,13 @@ Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
 	Andreas Hindborg <a.hindborg@kernel.org>,
 	Alice Ryhl <aliceryhl@google.com>,
 	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH v2 04/12] drm/gem/shmem: Extract drm_gem_shmem_release() from drm_gem_shmem_free()
-Date: Wed, 21 May 2025 16:29:11 -0400
-Message-ID: <20250521204654.1610607-5-lyude@redhat.com>
+	Daniel Almeida <daniel.almeida@collabora.com>,
+	Asahi Lina <lina@asahilina.net>,
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	nouveau@lists.freedesktop.org (open list:DRM DRIVER FOR NVIDIA GPUS [RUST])
+Subject: [PATCH v2 05/12] rust: gem: Introduce BaseDriverObject::Args
+Date: Wed, 21 May 2025 16:29:12 -0400
+Message-ID: <20250521204654.1610607-6-lyude@redhat.com>
 In-Reply-To: <20250521204654.1610607-1-lyude@redhat.com>
 References: <20250521204654.1610607-1-lyude@redhat.com>
 Precedence: bulk
@@ -75,83 +79,79 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-At the moment the way that freeing gem shmem objects is not ideal for rust
-bindings. drm_gem_shmem_free() releases all of the associated memory with a
-gem shmem object with kfree(), which means that for us to correctly release
-a gem shmem object in rust we have to manually drop all of the contents of
-our gem object structure in-place by hand before finally calling
-drm_gem_shmem_free() to release the shmem resources and the allocation for
-the gem object.
-
-Since the only reason this is an issue is because of drm_gem_shmem_free()
-calling kfree(), we can fix this by splitting drm_gem_shmem_free() out into
-itself and drm_gem_shmem_release(), where drm_gem_shmem_release() releases
-the various gem shmem resources without freeing the structure itself. With
-this, we can safely re-acquire the KBox for the gem object's memory
-allocation and let rust handle cleaning up all of the other struct members
-automatically.
+This is an associated type that may be used in order to specify a data-type
+to pass to gem objects when construction them, allowing for drivers to more
+easily initialize their private-data for gem objects.
 
 Signed-off-by: Lyude Paul <lyude@redhat.com>
 ---
- drivers/gpu/drm/drm_gem_shmem_helper.c | 23 ++++++++++++++++++-----
- include/drm/drm_gem_shmem_helper.h     |  1 +
- 2 files changed, 19 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/nova/gem.rs |  5 +++--
+ rust/kernel/drm/gem/mod.rs  | 17 ++++++++++++++---
+ 2 files changed, 17 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm_gem_shmem_helper.c
-index f3e88fb579b52..42652be37ba77 100644
---- a/drivers/gpu/drm/drm_gem_shmem_helper.c
-+++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
-@@ -175,13 +175,13 @@ struct drm_gem_shmem_object *drm_gem_shmem_create_with_mnt(struct drm_device *de
- EXPORT_SYMBOL_GPL(drm_gem_shmem_create_with_mnt);
+diff --git a/drivers/gpu/drm/nova/gem.rs b/drivers/gpu/drm/nova/gem.rs
+index a3024922f0d90..f2f23320110dd 100644
+--- a/drivers/gpu/drm/nova/gem.rs
++++ b/drivers/gpu/drm/nova/gem.rs
+@@ -19,8 +19,9 @@ pub(crate) struct NovaObject {}
+ impl gem::BaseDriverObject for NovaObject {
+     type Driver = NovaDriver;
+     type Object = gem::Object<Self>;
++    type Args = ();
  
- /**
-- * drm_gem_shmem_free - Free resources associated with a shmem GEM object
-- * @shmem: shmem GEM object to free
-+ * drm_gem_shmem_release - Release resources associated with a shmem GEM object.
-+ * @shmem: shmem GEM object
-  *
-- * This function cleans up the GEM object state and frees the memory used to
-- * store the object itself.
-+ * This function cleans up the GEM object state, but does not free the memory used to store the
-+ * object itself. This function is meant to be a dedicated helper for the Rust GEM bindings.
-  */
--void drm_gem_shmem_free(struct drm_gem_shmem_object *shmem)
-+void drm_gem_shmem_release(struct drm_gem_shmem_object *shmem)
- {
- 	struct drm_gem_object *obj = &shmem->base;
- 
-@@ -207,6 +207,19 @@ void drm_gem_shmem_free(struct drm_gem_shmem_object *shmem)
- 	}
- 
- 	drm_gem_object_release(obj);
-+}
-+EXPORT_SYMBOL_GPL(drm_gem_shmem_release);
-+
-+/**
-+ * drm_gem_shmem_free - Free resources associated with a shmem GEM object
-+ * @shmem: shmem GEM object to free
-+ *
-+ * This function cleans up the GEM object state and frees the memory used to
-+ * store the object itself.
-+ */
-+void drm_gem_shmem_free(struct drm_gem_shmem_object *shmem)
-+{
-+	drm_gem_shmem_release(shmem);
- 	kfree(shmem);
+-    fn new(_dev: &NovaDevice, _size: usize) -> impl PinInit<Self, Error> {
++    fn new(_dev: &NovaDevice, _size: usize, _args: Self::Args) -> impl PinInit<Self, Error> {
+         try_pin_init!(NovaObject {})
+     }
  }
- EXPORT_SYMBOL_GPL(drm_gem_shmem_free);
-diff --git a/include/drm/drm_gem_shmem_helper.h b/include/drm/drm_gem_shmem_helper.h
-index ea0785d1700a5..e009022b0bb48 100644
---- a/include/drm/drm_gem_shmem_helper.h
-+++ b/include/drm/drm_gem_shmem_helper.h
-@@ -101,6 +101,7 @@ struct drm_gem_shmem_object *drm_gem_shmem_create(struct drm_device *dev, size_t
- struct drm_gem_shmem_object *drm_gem_shmem_create_with_mnt(struct drm_device *dev,
- 							   size_t size,
- 							   struct vfsmount *gemfs);
-+void drm_gem_shmem_release(struct drm_gem_shmem_object *shmem);
- void drm_gem_shmem_free(struct drm_gem_shmem_object *shmem);
+@@ -34,7 +35,7 @@ pub(crate) fn new(dev: &NovaDevice, size: usize) -> Result<ARef<gem::Object<Self
+             return Err(EINVAL);
+         }
  
- void drm_gem_shmem_put_pages(struct drm_gem_shmem_object *shmem);
+-        gem::Object::new(dev, aligned_size)
++        gem::Object::new(dev, aligned_size, ())
+     }
+ 
+     /// Look up a GEM object handle for a `File` and return an `ObjectRef` for it.
+diff --git a/rust/kernel/drm/gem/mod.rs b/rust/kernel/drm/gem/mod.rs
+index 1165417b22df6..f0029e6989ed6 100644
+--- a/rust/kernel/drm/gem/mod.rs
++++ b/rust/kernel/drm/gem/mod.rs
+@@ -29,8 +29,15 @@ pub trait BaseDriverObject: Sync + Send + Sized {
+     /// The GEM object type that will be passed to various callbacks.
+     type Object: AllocImpl;
+ 
++    /// The data type to use for passing arguments to [`BaseDriverObject::new`].
++    type Args;
++
+     /// Create a new driver data object for a GEM object of a given size.
+-    fn new(dev: &drm::Device<Self::Driver>, size: usize) -> impl PinInit<Self, Error>;
++    fn new(
++        dev: &drm::Device<Self::Driver>,
++        size: usize,
++        args: Self::Args,
++    ) -> impl PinInit<Self, Error>;
+ 
+     /// Open a new handle to an existing object, associated with a File.
+     fn open(_obj: &Self::Object, _file: &DriverFile<Self>) -> Result {
+@@ -232,11 +239,15 @@ impl<T: BaseDriverObject> Object<T> {
+     };
+ 
+     /// Create a new GEM object.
+-    pub fn new(dev: &drm::Device<T::Driver>, size: usize) -> Result<ARef<Self>> {
++    pub fn new(
++        dev: &drm::Device<T::Driver>,
++        size: usize,
++        args: T::Args,
++    ) -> Result<ARef<Self>> {
+         let obj: Pin<KBox<Self>> = KBox::pin_init(
+             try_pin_init!(Self {
+                 obj: Opaque::new(bindings::drm_gem_object::default()),
+-                data <- T::new(dev, size),
++                data <- T::new(dev, size, args),
+                 // INVARIANT: The drm subsystem guarantees that the `struct drm_device` will live
+                 // as long as the GEM object lives.
+                 dev: dev.into(),
 -- 
 2.49.0
 
