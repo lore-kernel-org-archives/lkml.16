@@ -1,130 +1,122 @@
-Received: from out.smtpout.orange.fr (out-66.smtpout.orange.fr [193.252.22.66])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F342221D8D;
-	Wed, 21 May 2025 12:14:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 710C4191F66
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 12:14:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747829678; cv=none; b=IH/DURN40t3/MoowjpMS4JBOKsqn0wk1A+vhJKPIoLUbjQ7dnivnSusLIkhm6O8/YKC3RGI1c86Qrb/7tYrxEH+NwVwmROkpgH20cgFi1C9f/snGQvSrVYtU2zRUloL1lHJ6voPUxgm1tl6JqZ83JmgV3q5OKSfthD1vGxeiWsA=
+	t=1747829694; cv=none; b=TAoaNb9PQjoxGjZzMYi+zHvGGEOsor0ejUpPAqPjR0MDHD9WM2XBjAmdY1Z7V/lZndLePPioYUj5NhZSFvKYrvPumXlav4hRDhNTdYFbfjEBHFGlaVapELlpT60mfa1BiVPjqoKR5yHridDkAiW4x5TkV+koHCuilAgHZHrPjIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747829678; c=relaxed/simple;
-	bh=jYHxqaFVXTDmKACrAKeH0s0kCrj27dHQEfoqXdtAXUY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Nu85Oy9unGygR7qKAJ3TA27MLCi0mcamiameOTYC+93LyF9MIe1rYUIaDqHm0uR+VVNqc2Kb/qNH1h5Qt+5CT3fgb+x5GcT9H4EEVOSEPC145IxGKZMubaCTS1T4KStFXN6WKdOyV0tp3i7hjwwlERdLQhi0/hRURsK8ieU/0hI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=nZQf6y2D; arc=none smtp.client-ip=193.252.22.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1747829694; c=relaxed/simple;
+	bh=BdhtNrvIIR1Xpfw5qOBVBR2RXJfcMOf1eiADP+2GF9Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rWnUqgaEqtnyMHwLQ/Q018+CGGEY6E6zgib/SSYaphTBPQKbzHqFRayIPmJANV+bE/hekdOy+6f/vp81gqpq9BJ+QMBu6veNhQ+TYKD1Jb8qz975ZUxWqZEiiyPYdIM9tTI0SlBVTgLRLTm7ZDh8w2+wo4Zaoiajq5y1Wux1qY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oe5GKIVS; arc=none smtp.client-ip=209.85.219.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="nZQf6y2D"
-Received: from [172.16.82.72] ([124.33.176.97])
-	by smtp.orange.fr with ESMTPA
-	id HiL5upFGFAiZ4HiL6uxpGd; Wed, 21 May 2025 14:14:30 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1747829670;
-	bh=h4DcQovfptu9scaQr7PaHj5iQU+exolK1M2m9CxTu/g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=nZQf6y2D9LdRMhuRpaHzIUT7eBzs+pTIxOEETKcmQB+IM1cjnUGtTGG31Us9qS2CE
-	 iNjAuwvHpRBx2qxuT4BcIF8zFGAityzIKUtCGyFATHuaETYQABqCBAIpwhFeAPWctx
-	 C/ZpE5w1g6eCAG3VUXxGLI0GPRgZ5MxmAENNw+vQEG9ebaFwdbpAdkkevqNajfx+x9
-	 T0KmS3eJgGcmF9CXh486kOtvPxIVJFX5O7hAlbHSiG7YLuhOpRNvAqqXCEf+KA3fv7
-	 v+SlST8nbqr70CS6MDbM44NMqqnr/+vWAIBYhUFuHIm+v46292/SmMOsw6bMWJ8WMK
-	 2ulIavhb5cUZA==
-X-ME-Helo: [172.16.82.72]
-X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
-X-ME-Date: Wed, 21 May 2025 14:14:30 +0200
-X-ME-IP: 124.33.176.97
-Message-ID: <4b5e3351-9435-4d4c-9553-98b7d0112fd8@wanadoo.fr>
-Date: Wed, 21 May 2025 21:14:26 +0900
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oe5GKIVS"
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6f8b2682d61so55212316d6.0
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 05:14:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747829691; x=1748434491; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BdhtNrvIIR1Xpfw5qOBVBR2RXJfcMOf1eiADP+2GF9Y=;
+        b=oe5GKIVS2XJXZdKHs7xLmeXIb6AyEGrC/pU9ESr4GvZT+6r3vu09nXDroqfbevRi1v
+         rJeDeG+42pHnpORmzjbI++SatnE8o0F+lE2Pb48ir4WKme6mWASPa8p1HGFTH3cKEbIF
+         /9ryM1wTkbWfaRdnkSCJZgHwAiAQy9VMxl9ZjFvEzfRDDP7pvL9emaBw5vN6CsWOK5/s
+         K1pEJNZ7/pqqg9usaLDAowjisCK57UigbcXTvMOxb3GgIF2uXCt9OG5B7UkwOcU16cko
+         OrnksIU+Vwz/VLtiRxjvLPHBhSQmGs5/M7BdE5Ne/V/2FjBkFtgOHyw5xL+euyJXtWBQ
+         730g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747829691; x=1748434491;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BdhtNrvIIR1Xpfw5qOBVBR2RXJfcMOf1eiADP+2GF9Y=;
+        b=KMYRUDUW4fvnyneKwixsxSYJaGe6rw/nosEmXzXxM4WNzOCn7eoABRbyTTv4vEMFCq
+         thG/S5Vyy9RFFYxd09bc0jln76wW++YMriNEKkGx+uX1lCIWUrpHDH4Q/qrlZHPjdqmA
+         T0/ActooDSUAg1xqsw9xTgLy4NoBvQVNMFJkahvbCT8RvvD6tOjabS9biRmW4gkpjrJM
+         t1IURr2whrcAk8nXnmn5lRbLb2Slim5y1DNi0PvW4v5MzBC9pCTclz4nxL9GU28+svjQ
+         OcGCPIcU45RVCG7d4aDKgwLv1G6YlslhHfO/Ud9HieErgQqv3QS4vz6ethdMHCOcAF5n
+         coiA==
+X-Forwarded-Encrypted: i=1; AJvYcCX1tJMqICiVIvooVANZ/wvzY7DEFaZB4Gcq2HFblDzc94TiKashtdFoHvrPD0VhoCuI8kt+OMVvs4QpkVY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTB55r4Z2eYevR+rFR0n7KY7nq3veJ1/M8m1cnIp2qqWk7alFy
+	ryWxXHqOPufdok0anQ9GPsrHB2DhoXpFDbD38Ej4+JBHrESPDJcxSa3dnxqVhJZ1ihWm7C5b/5r
+	+2lGTHWyUZMpcAu7zOt71xaykwmOQ4hIOwKIbP6J3
+X-Gm-Gg: ASbGnctREVrs/35N1zSNbbCMZlRSiOKDIxvZPJFphPpm416+rcQrL0hr0NiqCPf8h8E
+	d8TiLLIeZQC4j9REcCK1MLY5wDMvd/Nkq3OFKjTyo8kH/oiXp+varT4Cm+o1ivBOBacC3/pORaI
+	dXhz9Ii+nM4NbutQ9dIZv+WzCTNWLzjhPdsmBX2fVBAN5cDLZCbb0VT3qQnNQh9RGf6B2UKEAC8
+	mGhPaaGNew=
+X-Google-Smtp-Source: AGHT+IEXiWjVWeop/NA6z5yuHpe3/MseMO8D8a1wSQhNEjBsJTCyvpPUj5CHc9RROg8Yfw/OkqJZuauWe6K6Ho1zkN4=
+X-Received: by 2002:a05:6214:1c8a:b0:6e6:5b8e:7604 with SMTP id
+ 6a1803df08f44-6f8b125afffmr336152846d6.12.1747829690691; Wed, 21 May 2025
+ 05:14:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] can: dev: add struct data_bittiming_params to group FD
- parameters
-To: Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: Oliver Hartkopp <socketcan@hartkopp.net>, linux-can@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250501171213.2161572-2-mailhol.vincent@wanadoo.fr>
- <20250502-scrupulous-sunfish-of-attack-ca0160-mkl@pengutronix.de>
-Content-Language: en-US
-From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Autocrypt: addr=mailhol.vincent@wanadoo.fr; keydata=
- xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
- LFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI+wrIEExYKAFoC
- GwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQTtj3AFdOZ/IOV06OKrX+uI
- bbuZwgUCZx41XhgYaGtwczovL2tleXMub3BlbnBncC5vcmcACgkQq1/riG27mcIYiwEAkgKK
- BJ+ANKwhTAAvL1XeApQ+2NNNEwFWzipVAGvTRigA+wUeyB3UQwZrwb7jsQuBXxhk3lL45HF5
- 8+y4bQCUCqYGzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrbYZzu0JG5w8gxE6EtQe6LmxKMqP6E
- yR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDldOjiq1/riG27mcIFAmceMvMCGwwF
- CQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8VzsZwr/S44HCzcz5+jkxnVVQ5LZ4B
- ANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
-In-Reply-To: <20250502-scrupulous-sunfish-of-attack-ca0160-mkl@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <TYSPR06MB71585D5693970E3C090A1DA5F69EA@TYSPR06MB7158.apcprd06.prod.outlook.com>
+In-Reply-To: <TYSPR06MB71585D5693970E3C090A1DA5F69EA@TYSPR06MB7158.apcprd06.prod.outlook.com>
+From: Alexander Potapenko <glider@google.com>
+Date: Wed, 21 May 2025 14:14:14 +0200
+X-Gm-Features: AX0GCFtEeG8v-71iddYaXA_4cRfmrKHgShl_UAokmhXXjryKvZi_7DXf7ZWAHS4
+Message-ID: <CAG_fn=VT5=PcD5-bFY5LQ7SHhGg+epUAM5HGLBEFEaM55UVi2A@mail.gmail.com>
+Subject: Re: KASAN: slab-use-after-free Read in bch2_btree_node_read_done
+To: "huk23@m.fudan.edu.cn" <huk23@m.fudan.edu.cn>
+Cc: Kent Overstreet <kent.overstreet@linux.dev>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"syzkaller@googlegroups.com" <syzkaller@googlegroups.com>, =?UTF-8?B?55m954OB5YaJ?= <baishuoran@hrbeu.edu.cn>, 
+	"jjtan24@m.fudan.edu.cn" <jjtan24@m.fudan.edu.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Marc,
+On Wed, May 21, 2025 at 1:50=E2=80=AFPM 'huk23@m.fudan.edu.cn' via syzkalle=
+r
+<syzkaller@googlegroups.com> wrote:
+>
+> Dear Maintainers,
+>
+>
+>
+> When using our customized Syzkaller to fuzz the latest Linux kernel, the =
+following crash (104th)was triggered.
+>
+>
+> HEAD commit: 6537cfb395f352782918d8ee7b7f10ba2cc3cbf2
+> git tree: upstream
+> Output:https:https:https://github.com/pghk13/Kernel-Bug/blob/main/0520_6.=
+15-rc6/104_KASAN%3A%20slab-use-after-free%20Read%20in%20bch2_btree_node_rea=
+d_done/104report.txt
+> Kernel config:https://github.com/pghk13/Kernel-Bug/blob/main/0520_6.15-rc=
+6/config.txt
+> C reproducer:https:https://github.com/pghk13/Kernel-Bug/blob/main/0520_6.=
+15-rc6/104_KASAN%3A%20slab-use-after-free%20Read%20in%20bch2_btree_node_rea=
+d_done/104repro.c
+> Syzlang reproducer:https://github.com/pghk13/Kernel-Bug/blob/main/0520_6.=
+15-rc6/104_KASAN%3A%20slab-use-after-free%20Read%20in%20bch2_btree_node_rea=
+d_done/104repro.txt
+>
+>
+>
+> The bug is a use-after-free error in the btree handling code of the bcach=
+efs filesystem. It most likely occurs in the bch_btree_node_read_done funct=
+ion (defined around line 193), when processing a btree node and validating =
+its contents, the code attempts to a radix tree node that has already been =
+released by the RCU mechanism. The root cause of the error could be a memor=
+y management or reference counting issue, especially in the complex of oper=
+ations during the filesystem recovery. It could also be in the btree_io.c f=
+ile, around lines 300-350, which handles btree validation and reading.Espec=
+ially in the call or implementation of validate_bset, validate_bset_keys or=
+ bch2_drop_whiteouts
 
-On 02/05/2025 at 21:34, Marc Kleine-Budde wrote:
-> On 02.05.2025 02:12:10, Vincent Mailhol wrote:
->> This is a preparation patch for the introduction of CAN XL.
->>
->> CAN FD and CAN XL uses similar bittiming parameters. Add one level of
->> nesting for all the CAN FD parameters. Typically:
->>
->>   priv->can.data_bittiming;
->>
->> becomes:
->>
->>   priv->can.fd.data_bittiming;
->>
->> This way, the CAN XL equivalent (to be introduced later) would be:
->>
->>   priv->can.xl.data_bittiming;
->>
->> Add the new struct data_bittiming_params which contains all the data
->> bittiming parameters, including the TDC and the callback functions.
->>
->> This done, update all the CAN FD drivers to make use of the new
->> layout.
-> 
-> Thanks for the series!
-> 
->> Acked-by: Oliver Hartkopp <socketcan@hartkopp.net>
->> Signed-off-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
->> ---
->> The CAN XL series is still blocked because of lack of information on
->> the PWMS and PWML calculations, c.f.:
->>
->>   https://lore.kernel.org/linux-can/68e8c449-a6ab-4958-af3c-852ece2694c2@wanadoo.fr/
->>
->> Regardless, the above patch will be needed at some time. And instead
->> of constantly rebasing it, I would rather have it merged early.
->>
->> The other CAN XL preparation patches target a smaller subset of the
->> tree and rebasing those is not an issue.
->>
->> ** Changelog **
->>
->> v1 -> v2:
->>
->>   - add Oliver's Acked-by tag
->>   - rebase on top of:
->>
->>       [PATCH v5] can: mcp251xfd: fix TDC setting for low data bit rates
->>       Link: https://lore.kernel.org/linux-can/20250430161501.79370-1-kelsey@vpprocess.com/T/#u
->>
->>   Link: https://lore.kernel.org/linux-can/20250320144154.56611-2-mailhol.vincent@wanadoo.fr/
-> 
-> As "mcp251xfd: fix TDC setting for low data bit rates" will go through
-> the "can" and "net" tree, we have to wait until "net" is merged back to
-> "net-next".
-
-That commit now reached the net tree. Do you think that my patch can now be applied?
-
-
-Yours sincerely,
-Vincent Mailhol
-
+This is a known bug reported by syzkaller at
+https://groups.google.com/g/syzkaller-bugs/c/Q4Vjvpe9ab8/m/e8jpti-MAQAJ
+(dashboard: https://syzkaller.appspot.com/bug?extid=3D92e65e9b7a42d379f92e)
+If the goal of your research is to provide AI-generated explanations
+of kernel bugs, you can probably take the existing bugs instead of
+duplicating syzbot's work.
