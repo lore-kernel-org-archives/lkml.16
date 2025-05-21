@@ -1,56 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ED1E2192E1;
-	Wed, 21 May 2025 22:29:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1EF81D5151;
+	Wed, 21 May 2025 22:30:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747866570; cv=none; b=syMLPEPhP5mbVbAbKLI6nwOMyc8HgjzN6p5z93oLc70ExuAgjie6FH2GHcNy82NkRL5d3waxToa8HKjVwQwLoSSDtsn26G6gOyv58qXpI8tFYooXnLO2oVb4ZHamyt2eOmASWf8350pz7JpQ6HmFCG/eZUYrk4/LoSIoieex+a4=
+	t=1747866619; cv=none; b=L4SCd3fFWw7Lw8Z2fb3cPDTq8veJiRNB2LeqZFf7rNoK77bXRmvqEFZ+az6EsjU+l1Lyyt+24XzsuxVKMRVLDg564/3xtY+GaUXryrOcseqhcgkEyD8O9PVrky+jyxF8xOdDfej3orjKUQqaj7wN5UgGe9Oz2nioknjg4mHcQqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747866570; c=relaxed/simple;
-	bh=irtON5WVDbBr8vPwyUpf52o7P4PNK2U+tXDUgO9fTeI=;
+	s=arc-20240116; t=1747866619; c=relaxed/simple;
+	bh=nb9O4TtCOuppud69ug4IkU6bS5EpzMCb96C4mzfPqcs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=If3jqZwHnEgWALtyeuBp+DgRJRPoVlOGHugF3njI+dDxE2T8SLA4Pc4COCB8YJNrcJW1o7XzvXkrINhTieFN8f9eFVl0fdgX1WGeBIYjvxOiwb3xGTagiQgFku2kJbQOKIV76rn7so+R+P47mR5cvi32vRXvKNkSBB/xzzIvfGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Us1NdNuG; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=jJc0C2yCLsusDJaXZF1BxodW5ROmB9p6vhAkGwwoe3KjYJZIK24dyygm2JdxUF+qRMcrvQwCXqTsiNaUP1CxYTehrApkAJK5zJLXrBel0L7Yz3R0SnMdODBtbJkRLv4aUNP9znwg1btAXXI7h6o/nA1xEkav0+m8L0dnE0vvXgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zt6P5Amh; arc=none smtp.client-ip=209.85.167.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Us1NdNuG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7901C4CEE4;
-	Wed, 21 May 2025 22:29:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747866569;
-	bh=irtON5WVDbBr8vPwyUpf52o7P4PNK2U+tXDUgO9fTeI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Us1NdNuGllr1erLQCBtBkuiCS/5KRytN1mL91L27ybi0x6d2g4ZbP7AVldzrVqPbV
-	 vZZzBVk+ovgqODZudOn+uG800PKGUnjMvgPVVBB5RibrMVZSSg0Xyz/XqiFPXq6HsO
-	 59t9IuyqVXfg5fJTwGM7iZJxjyHKjmNinDFeIcSfekp5JSOBTZb/TS2yogmVtLQOzg
-	 kO+yBt6U1duXCa+DdjsDVtIGV7B3hFyx15TPAHxFlNxrT93yAvZTw1VUPyZ8FdY5SP
-	 5OX/gF+C7nsolxkrdEJ7sbZz2oQZ+RzOxmVDq0/vT2AWMoFlWcrNUEr4PvGRQV6PZb
-	 sEyc8ZU+FOC1Q==
-Date: Wed, 21 May 2025 12:29:28 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Klara Modin <klarasmodin@gmail.com>
-Cc: Shakeel Butt <shakeel.butt@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Yosry Ahmed <yosry.ahmed@linux.dev>,
-	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	JP Kobryn <inwardvessel@gmail.com>, bpf@vger.kernel.org,
-	linux-mm@kvack.org, cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Meta kernel team <kernel-team@meta.com>
-Subject: Re: [OFFLIST PATCH 2/2] cgroup: use subsystem-specific rstat locks
- to avoid contention
-Message-ID: <aC5TyFvjdLCSosaG@slm.duckdns.org>
-References: <20250428174943.69803-1-inwardvessel@gmail.com>
- <20250428174943.69803-2-inwardvessel@gmail.com>
- <ad2otaw2zrzql4dch72fal6hlkyu2mt7h2eeg4rxgofzyxsb2f@7cfodklpbexu>
- <gzwa67k6i35jw5h3qfdajuzxa2zgm6ws2x5rjiisont4xiz4bp@kneusjz5bxwb>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zt6P5Amh"
+Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-404a5f4cdedso1930703b6e.0;
+        Wed, 21 May 2025 15:30:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747866616; x=1748471416; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nb9O4TtCOuppud69ug4IkU6bS5EpzMCb96C4mzfPqcs=;
+        b=Zt6P5Amh5rIldEFh4iEbcqods8og4Qf1BbPcNY2ZLIqzzSfeOo+Yp36TjzuAyWChAB
+         AqjWocatQ+ARc3RQ3QBzUm7HlcL6+D3AfUvG4peebDN/Neh4A+/KS6gncG3shn/pTW3j
+         6G6UN4v7cl1zl5xt297RVwTblj403yrTwH3gpjMobeT6oKA0vT9wLFz08tdmywBlAt8j
+         ngrdCAAhQ3aCZO9xOqN7t0hvcPpRWZJpG70eUr3xNbZ92r//MkfCgmD6JEmLRpCE5jbn
+         ukwEv/T413GR6dGIRPcdXlXqqzDtotIj6GRCtlt+/PEK5ranA8SZ71LIigMOs9WtQO4r
+         H9Lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747866616; x=1748471416;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nb9O4TtCOuppud69ug4IkU6bS5EpzMCb96C4mzfPqcs=;
+        b=Co0Y7iBi+mgWRYJrmt9/HZLGAgxzL/AUEczJrI8eeHGSIC4FaAA9YhLe/KEtw4ZXK3
+         r++3SOzWywfhDV5qbxynNM3NXbr4npixOb6MiF2WZUR3NJkd44m1C/9roDO/ihUez+25
+         z/1H1JPZYAia8ka1E4JSuxCUd6g7QH3tgZEPb7dYTAHz19Iv7869LFDM2tffjJ4pzV/L
+         cYZppDQKPvPEkTJo9fAyLaVOo2bNJJ4ao9+jmLs0oJwbf59tTw84Pc0Ehi19dEbIt2tH
+         bQhm+aE8oNB1x4PvnT4RzpO+WQYIJfjPd9ANJsHHP9h+Q+3XX8yRLpUqaX3HYK4+0Z/K
+         bduw==
+X-Forwarded-Encrypted: i=1; AJvYcCUJLZ4ORGUHw/ZyTGGhYvMKRuIOq7XJ3h+fn+PR9Djh39+mUT62PGFTG1pjuC2ulnwoJnavLls4GnWe@vger.kernel.org, AJvYcCUKw/IVsaO5Fhq4GNqsG0R3EO+LUOkMBUtrBD67T0XD0s/breRFFyUcvEFXoVxJJKgukyxbwCsbdwU=@vger.kernel.org, AJvYcCWVWdol9rc9EfVgvnGRp4h9nf4244poxSqebsbSn3LVsrYvdt8W5KSsEHg13s4AwJyr5wGwUF004lDxnz+ing==@vger.kernel.org, AJvYcCX/rYEcd8Cp1AXt9mk+K2UkJdm/qPsGczroQrkf1rZqQqM1pmMmfmDS236gmqgXz27ylu3pR2aq8WLkv479@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGSmQStp25bHIYJlQPjteZB6sfnrW7js7QwTdRUbkyghJ4YbGn
+	xNfkfePvcQwGbGuY6zxnSalHsiDtgkKOvw8pxisZXAsEe9gv/k0LqPYB
+X-Gm-Gg: ASbGncs/gkuOx1z/qmZnSxYFOC2w7qZr0zYitI4vpSBCidd8Op7nxooyeUh3fpIWx5J
+	7+OhE9skCZR2j6zBefnfpmCbNVYnh/tnC6K/fGh+r4SSnAMeprpFnN/LTd3+tSbdEBZ9oUufK8d
+	k6hHV4zdjh5utz3C6auU55UJgnEWplOEhLv8QXHnQYI9ZkuT+23dw9N1b6vGAD3i+WflSSYfIZn
+	1cE+QhA+iaWjVbBM8wh7y7r5n029zIOMRH8+ykpjbVbw4DBJ4Nzh9DjB760isHQ434GU/FkDpUT
+	QTeumovuiQmDtyXDM5MXHTQGYXdOniqo7+jfBWdSnPgRBnN2KIqYRaYnZwhIIy7wfvvVFxA=
+X-Google-Smtp-Source: AGHT+IFRVrKFlC0xucIoI6A+MH0Ub4hMMxnTf/HTOcSeOiiFXD7vWW4zpucHXKEWzpbcRbmwqIHzEQ==
+X-Received: by 2002:a05:6808:6c8b:b0:403:37dd:e26f with SMTP id 5614622812f47-404da82bb8dmr14303754b6e.33.1747866615474;
+        Wed, 21 May 2025 15:30:15 -0700 (PDT)
+Received: from groves.net ([2603:8080:1500:3d89:b8ec:6599:4c13:ce82])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-404e303ffcasm2023067b6e.4.2025.05.21.15.30.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 May 2025 15:30:14 -0700 (PDT)
+Sender: John Groves <grovesaustin@gmail.com>
+Date: Wed, 21 May 2025 17:30:12 -0500
+From: John Groves <John@groves.net>
+To: Dan Williams <dan.j.williams@intel.com>, 
+	Miklos Szeredi <miklos@szeredi.hu>, Bernd Schubert <bschubert@ddn.com>
+Cc: John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
+	"Darrick J . Wong" <djwong@kernel.org>, Luis Henriques <luis@igalia.com>, 
+	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
+	Kent Overstreet <kent.overstreet@linux.dev>, Petr Vorel <pvorel@suse.cz>, Brian Foster <bfoster@redhat.com>, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
+	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	Amir Goldstein <amir73il@gmail.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+	Stefan Hajnoczi <shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>, 
+	Josef Bacik <josef@toxicpanda.com>, Aravind Ramesh <arramesh@micron.com>, 
+	Ajay Joshi <ajayjoshi@micron.com>, Alistair Popple <apopple@nvidia.com>, john@groves.net
+Subject: Re: [RFC PATCH 00/19] famfs: port into fuse
+Message-ID: <hobxhwsn5ruaw42z4xuhc2prqnwmfnbouui44lru7lnwimmytj@fwga2crw2ych>
+References: <20250421013346.32530-1-john@groves.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,46 +86,82 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <gzwa67k6i35jw5h3qfdajuzxa2zgm6ws2x5rjiisont4xiz4bp@kneusjz5bxwb>
+In-Reply-To: <20250421013346.32530-1-john@groves.net>
 
-On Thu, May 22, 2025 at 12:23:44AM +0200, Klara Modin wrote:
-> Hi,
-> 
-> On 2025-04-28 23:15:58 -0700, Shakeel Butt wrote:
-> > Please ignore this patch as it was sent by mistake.
-> 
-> This seems to have made it into next:
-> 
-> 748922dcfabd ("cgroup: use subsystem-specific rstat locks to avoid contention")
-> 
-> It causes a BUG and eventually a panic on my Raspberry Pi 1:
-> 
-> WARNING: CPU: 0 PID: 0 at mm/percpu.c:1766 pcpu_alloc_noprof (mm/percpu.c:1766 (discriminator 2)) 
-> illegal size (0) or align (4) for percpu allocation
-> CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.15.0-rc7-next-20250521-00086-ga9fb18e56aad #263 NONE
-> Hardware name: BCM2835
-> Call trace:
-> unwind_backtrace from show_stack (arch/arm/kernel/traps.c:259) 
-> show_stack from dump_stack_lvl (lib/dump_stack.c:122) 
-> dump_stack_lvl from __warn (kernel/panic.c:729 kernel/panic.c:784) 
-> __warn from warn_slowpath_fmt (kernel/panic.c:815) 
-> warn_slowpath_fmt from pcpu_alloc_noprof (mm/percpu.c:1766 (discriminator 2)) 
-> pcpu_alloc_noprof from ss_rstat_init (kernel/cgroup/rstat.c:515) 
-> ss_rstat_init from cgroup_init_subsys (kernel/cgroup/cgroup.c:6134 (discriminator 2)) 
-> cgroup_init_subsys from cgroup_init (kernel/cgroup/cgroup.c:6240) 
-> cgroup_init from start_kernel (init/main.c:1093) 
->  start_kernel from 0x0
-> ...
-> kernel BUG at kernel/cgroup/cgroup.c:6134!
-> Internal error: Oops - BUG: 0 [#1] ARM
-> 
-> Reverting resolved it for me.
+On 25/04/20 08:33PM, John Groves wrote:
+> Subject: famfs: port into fuse
+>
+> <snip>
 
-This posting was a mistake but direct postings from JP weren't. This being
-pretty close to the merge window, unless the problem is trivial, the right
-thing to do probalby is reverting the series. JP, what do you think?
+I'm planning to apply the review comments and send v2 of
+this patch series soon - hopefully next week.
 
-Thanks.
+I asked a couple of specific questions for Miklos and
+Amir at [1] that I hope they will answer in the next few
+days. Do you object to zeroing fuse_inodes when they're
+allocated, and do I really need an xchg() to set the
+fi->famfs_meta pointer during fuse_alloc_inode()? cmpxchg
+would be good for avoiding stepping on an "already set"
+pointer, but not useful if fi->famfs_meta has random
+contents (which it does when allocated).
 
--- 
-tejun
+I plan to move the GET_FMAP message to OPEN time rather than
+LOOKUP - unless that leads to problems that I don't
+currently foresee. The GET_FMAP response will also get a
+variable-sized payload.
+
+Darrick and I have met and discussed commonality between our
+use cases, and the only thing from famfs that he will be able
+to directly use is the GET_FMAP message/response - but likely
+with a different response payload. The file operations in
+famfs.c are not applicable for Darrick, as they only handle
+mapping file offsets to devdax offsets (i.e. fs-dax over
+devdax).
+
+Darrick is primarily exploring adapting block-backed file
+systems to use fuse. These are conventional page-cache-backed
+files that will primarily be read and written between
+blockdev and page cache.
+
+(Darrick, correct me if I got anything important wrong there.)
+
+In prep for Darrick, I'll add an offset and length to the
+GET_FMAP message, to specify what range of the file map is
+being requested. I'll also add a new "first header" struct
+in the GET_FMAP response that can accommodate additional fmap
+types, and will specify the file size as well as the offset
+and length of the fmap portion described in the response
+(allowing for GET_FMAP responses that contain an incomplete
+file map).
+
+If there is desire to give GET_FMAP a different name, like
+GET_IOMAP, I don't much care - although the term "iomap" may
+be a bit overloaded already (e.g. the dax_iomap_rw()/
+dax_iomap_fault() functions debatably didn't need "iomap"
+in their names since they're about converting a file offset
+range to daxdev ranges, and they don't handle anything
+specifically iomap-related). At least "FMAP" is more narrowly
+descriptive of what it is.
+
+I don't think Darrick needs GET_DAXDEV (or anything
+analogous), because passing in the backing dev at mount time
+seems entirely sufficient - so I assume that at least for now
+GET_DAXDEV won't be shared. But famfs definitely needs
+GET_DAXDEV, because files must be able to interleave across
+memory devices.
+
+The one issue that I will kick down the road until v3 is
+fixing the "poisoned page|folio" problem. Because of that,
+v2 of this series will still be against a 6.14 kernel. Not
+solving that problem means this series won't be merge-able
+until v3.
+
+I hope this is all clear and obvious. Let me know if not (or
+if so).
+
+Thanks,
+John
+
+
+[1] https://lore.kernel.org/linux-fsdevel/20250421013346.32530-1-john@groves.net/T/#me47467b781d6c637899a38b898c27afb619206e0
+
