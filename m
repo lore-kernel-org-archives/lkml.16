@@ -1,110 +1,107 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51CF717BB0D;
-	Wed, 21 May 2025 15:42:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B59441E22E6
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 15:43:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747842142; cv=none; b=I5olOYJSc4/gdgN+wnn2mMIJZTPYgkDU5eAxuZRQIapUHS3W4f6o8+T88+TOCMkZiru0sLNu0BmfxzPVMCBzirnFaxEdRlMaJgNS/ocieccgAaoCREVBPZDn/LHQhqC+WMEN4y2OMuHE7kDROkMftHNtc/o0liBu2u+fts4YCVk=
+	t=1747842189; cv=none; b=qo3nLiE1l3Zgn2J/Cpkaox/4iLgk0cxy+8MGBt32jIt/fLaarf88+AJWZk8c875A30a1TEtxrncaReeGyHZa++VHAYFzbsxIj70YtpAcBw9MtkMma5NL2cDo3g0O89ER+o57VaI7DhKz9CTHrhzcD5exXuJienrP0eCvVaiQG4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747842142; c=relaxed/simple;
-	bh=Z5WeOOl2RIE30hEUvrxYKZYWbf+BAy4cCx9ZqHmPJOE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tZljJM6Tfb7OY85BtlwPezohaGQ6dcUDQIbn42rnIoHzpi5DZ15ZQD6KiWeDTbC+AQZ+l/uBGPVXjaXE1iCk0rK6s+m3yGRtpxiRYYALma8DtE5dIJxqe5kds2TPtyLIIcc3kXWo07zEIu7jHMcvf232jcCWjiTCSVwLw/xcK5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=h+rWzec0; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1747842189; c=relaxed/simple;
+	bh=ub6EBjOX/x+g4JEYt9PJ8xuK1jnmJgK5m8DaA8cx6Tw=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=HCqVSzXFXWgTg2zYZgA6CoE3SAc7mxCbkJWX1QzaThWjodKM64gg8pniIifnPSDIVkWeaG6bgW4NLN/uIXUbuoKDAYpJJzKYZhN2OOTxv07jKGUU2Qm+klu9KNk/emuq/vVqy51IrrSBazbPDMYauKTNpC+2sVZlPmQJi38jTkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SK44UjCt; arc=none smtp.client-ip=209.85.208.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="h+rWzec0"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54L6IP5T001349;
-	Wed, 21 May 2025 15:42:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=Z5WeOO
-	l2RIE30hEUvrxYKZYWbf+BAy4cCx9ZqHmPJOE=; b=h+rWzec017r6GaBX7NgK4d
-	YKa3xMZ07nU+KaKC5Vkk8gCGd1o8TVW+YOHomDFsAHmsxp9KFRL/hey4fUmjenxz
-	ZMu0d8L1uiklV5mz9ciE2E5wOjTwgxOszExjLZ78c/fsvHLug5rBp3PRTEIqAweu
-	U6M3Lwu+OlQYzl+5xgcsVmZ/ElaiGhCMn0UaVPuODTdVSUYeTkZAHwpDD1Lif6cK
-	zqTWwzhYzpcdfOwRPeBPkLSd24YIUJgPKCmozmQ5kyOHTPbTY3+wN27AHkssihZo
-	n6+z+somnMaUVsjHdMKfyEILAxmWbjYegQlL+GHJ0TA29uhEU9c5ilykOAK/Pbkg
-	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46s9estp58-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 15:42:18 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54LDlwaD032087;
-	Wed, 21 May 2025 15:42:17 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 46rwnmcufg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 15:42:17 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54LFgEev32702726
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 21 May 2025 15:42:14 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1D1F02004B;
-	Wed, 21 May 2025 15:42:14 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AB36E20040;
-	Wed, 21 May 2025 15:42:13 +0000 (GMT)
-Received: from li-978a334c-2cba-11b2-a85c-a0743a31b510.ibm.com (unknown [9.152.224.80])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 21 May 2025 15:42:13 +0000 (GMT)
-Message-ID: <61cd1d044935523ea443634f656ba47f00024a39.camel@linux.ibm.com>
-Subject: Re: [PATCH v1 5/5] KVM: s390: simplify and move pv code
-From: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
-To: Claudio Imbrenda <imbrenda@linux.ibm.com>, linux-kernel@vger.kernel.org
-Cc: kvm@vger.kernel.org, linux-s390@vger.kernel.org, frankja@linux.ibm.com,
-        borntraeger@de.ibm.com, seiden@linux.ibm.com, nrb@linux.ibm.com,
-        david@redhat.com, hca@linux.ibm.com, agordeev@linux.ibm.com,
-        svens@linux.ibm.com, gor@linux.ibm.com
-Date: Wed, 21 May 2025 17:42:14 +0200
-In-Reply-To: <20250514163855.124471-6-imbrenda@linux.ibm.com>
-References: <20250514163855.124471-1-imbrenda@linux.ibm.com>
-	 <20250514163855.124471-6-imbrenda@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SK44UjCt"
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-30db1bd3bebso65404361fa.2
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 08:43:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747842185; x=1748446985; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ub6EBjOX/x+g4JEYt9PJ8xuK1jnmJgK5m8DaA8cx6Tw=;
+        b=SK44UjCtNCDU61Fb95vBKqOY1zwopGdykohtHCJya7+uXLq5lRCk8YDdqo9btZExkn
+         EfqLZd6P7bHJXjxahS4XbxiHtX0KMLArAXQJmWJVKBmLp2KwSJ6Y5mA7JhHKMmlStj3d
+         fn75mjaJzmXLeJGrjwglcFlhVpkGz6YKgQVk2JQ1I78rWdazWUbEPLPTczkvW5nOG4V1
+         ZGJqKlIUnxmlJh5/mL4FUzg3aEnr++CUW9riKoeLNxeWKT3hQPHo4WpmdWENitwxSSpY
+         2Og0fU+DnLtJQfXfesl/TvWrn6nQ1tmFpH0sOAQleV9qhTaonovZyR8f8SSCQcv0rjK1
+         gS3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747842185; x=1748446985;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ub6EBjOX/x+g4JEYt9PJ8xuK1jnmJgK5m8DaA8cx6Tw=;
+        b=bUeF8B/se6yVcYDg97P9mYOpWU3o51TH9qbRWx+lYjibqjnLSQfP1+NXyqAFuUNTLU
+         hGSdqf7BXBl2hBf5iqAdPKnNE/jceKIYCE+G8S2AD+2Nju7JcuApiP1sdklcAUC2aUg9
+         SX59YI6C99JGofNd25mehUCUN0IJmRLqESI26SLofH3snC3LaaPkIcoMqj4Vzjy9cXzn
+         8DQusmxWJzUKiwSDMalCDv2ssAQX/JXbESG6i5AHAZQo6ETLPrlNggKbrcBcEnXo2WgC
+         cQTqEihVZOsAWhc9Sx2ea+LKHlzPaBiABpbADLuLeDcJ/b0HPH9DVGaEvkKuiVdeNhm4
+         YryQ==
+X-Gm-Message-State: AOJu0YyY5zgbh1TmAzl17MlYuAukMASd00emcts8kgpMv4FAtpqMNIoG
+	lLi65axM0ZyCun0Ea68hdhfHMFe25FhSTKF5PkvkhujOl2FejstJR5ylB6/fywOi1LQYRVr2YOo
+	QZz7clXDgBi3RrGTw0x/UOTqn7zP6r3hHSrmjIA==
+X-Gm-Gg: ASbGnct4XycBqtjj1wRE/FJJtzFq+rkzVOglmVj9JnXf1AvafmzuKdTZMbUY+yb7hqz
+	aLC2g0eWfL7twTIv7dS6l1EyD1h68e84bVTBRl1AAaZfkecSFYQaAAAlrioQbxaWHrS+5jGv3a9
+	pLBxdG4ZS9VaXIatl1r9FIThgV25B1+fEw2H0uomMOhRPacPGbsL+xiA==
+X-Google-Smtp-Source: AGHT+IGVZb5hn2QbRv6nwQRgi4kKwnT+oUI36zscHQFKXXAjeUxlahe0jxvBuartDax7LQgeWTa0bCJq1TWB1lj06mI=
+X-Received: by 2002:a05:651c:f09:b0:30b:ed5a:6f3c with SMTP id
+ 38308e7fff4ca-328096b5d72mr54804511fa.10.1747842184452; Wed, 21 May 2025
+ 08:43:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDE1MyBTYWx0ZWRfX4URnpU0LPJDt 8SbMEbcMD6mDB0VNojoS7rZRBZmSs6mB2G+xnHA+ajQ4LBuZW8rg13BwcS1q6AdLcRQzhenC4gI vuilAdTagdz753tDwK0uQY5otIJYogWCztlW7qJ4rGjKEXfk+pnNgzdbGP2894oDLJ3nU5az440
- 8XVIewBfJ6VK0/QgzWhdEbfXkqPN2sgsmH114299Gs2rG6JpOrLP6e9yMOa4/tazjkZoDlg+FbY EinsRllUBVN6CfYQiBU2SYDLYDGo4V2oIKrDEEk1mvzWhrktW46q0edXVKWjwZ2mVyibFD5Sx9H aPaYmvshB4CqX24C7QFuHJRwhDS6LM3z7u3pNfUlTvDNCWQepkn9d4477VSmV0GXUcLWCx/iWjk
- luHelxQdtrWjnCYuaDcx56pslTSyGKm1DwUh7/rE0xW091herFn9UwC76YuDD4DDHDkN4DKp
-X-Proofpoint-ORIG-GUID: RR74rUPTd1j84C1CGHxjf2GUMCuMZYzh
-X-Proofpoint-GUID: RR74rUPTd1j84C1CGHxjf2GUMCuMZYzh
-X-Authority-Analysis: v=2.4 cv=PsWTbxM3 c=1 sm=1 tr=0 ts=682df45a cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=HVa9FsKFN9bTpKEVuYAA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-21_05,2025-05-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxlogscore=996
- impostorscore=0 adultscore=0 malwarescore=0 lowpriorityscore=0
- suspectscore=0 bulkscore=0 mlxscore=0 priorityscore=1501 phishscore=0
- clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505210153
+From: John <john.cs.hey@gmail.com>
+Date: Wed, 21 May 2025 23:42:51 +0800
+X-Gm-Features: AX0GCFv4ykq7_C2kdkkSXUlaFmyciwyiuFbZddHkDdRCPwUNZJToA1BKM4qVv9U
+Message-ID: <CAP=Rh=M3f8uNL0G=dwEALH2AQxV8tznsMjMdXJ9TWcgNhHooGg@mail.gmail.com>
+Subject: [Bug] soft lockup in cleanup_mnt in Linux kernel v6.15-rc5
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 2025-05-14 at 18:38 +0200, Claudio Imbrenda wrote:
-> All functions in kvm/gmap.c fit better in kvm/pv.c instead.
-> Move and rename them appropriately, then delete the now empty
-> kvm/gmap.c and kvm/gmap.h.
->=20
-> Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+Dear Linux Kernel Maintainers,
 
-Reviewed-by: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
+I hope this message finds you well.
 
-[...]
+I am writing to report a potential vulnerability I encountered during
+testing of the Linux Kernel version v6.15-rc5.
 
---=20
-IBM Deutschland Research & Development GmbH
-Vorsitzender des Aufsichtsrats: Wolfgang Wendt
-Gesch=C3=A4ftsf=C3=BChrung: David Faller
-Sitz der Gesellschaft: B=C3=B6blingen / Registergericht: Amtsgericht Stuttg=
-art, HRB 243294
+Git Commit: 92a09c47464d040866cf2b4cd052bc60555185fb (tag: v6.15-rc5)
+
+Bug Location: 0010:stack_depot_save_flags+0x133/0xa00 lib/stackdepot.c:619
+
+Bug report: https://hastebin.com/share/jemayogixe.yaml
+
+Complete log: https://hastebin.com/share/judumibuhe.perl
+
+Entire kernel config: https://hastebin.com/share/padecilimo.ini
+
+Root Cause Analysis:
+
+A soft lockup was detected on CPU#0 during kernel execution, with the
+testing process triggering the hang.
+The issue occurred in the function stack_depot_save_flags() in
+lib/stackdepot.c, which was invoked as part of the KASAN (Kernel
+Address Sanitizer) infrastructure during a kfree() operation.
+The failure originates from a pathological condition within
+stack_depot_save_flags() where the kernel attempts to store a stack
+trace associated with a memory deallocation event.
+Specifically, the function enters a long-running or potentially
+infinite loop while performing a linear search through the hash bucket
+used for stack trace deduplication.
+
+At present, I have not yet obtained a minimal reproducer for this
+issue. However, I am actively working on reproducing it, and I will
+promptly share any additional findings or a working reproducer as soon
+as it becomes available.
+
+Thank you very much for your time and attention to this matter. I
+truly appreciate the efforts of the Linux kernel community.
+
+Best regards,
+John
