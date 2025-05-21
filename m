@@ -1,299 +1,203 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2201323D2AD
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 22:54:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FBCF23BCFF;
+	Wed, 21 May 2025 22:54:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747868060; cv=none; b=kaA9vgoTLhZsI/DamKD5DDkqr4SsY+i4FGLlJJfP2JDgcMxKtlrJq6gjCrv+JEmpQBCs0DTsMyH/mE3j1EaaWVHu4i42FlS21gGVqylXIbjEQiMmQPaCMrJsdfmUIvBbezXA+yQfWLGXIvsaSK3rqcUQz7FFS3DGMI+ObPik8eM=
+	t=1747868072; cv=none; b=WCXhwJMaNHIfU+hCIp+iuoMbWLb5718XgGpvG+F1US0Yu1QNdKzBnA/mUNZs2Rjw1hrq8sE8HjkQeoe5KoznvWS0EwrGuGJ2jztb7ClSSBlqmgu1t+0rsdx9urCP4umcoT1GdedlBUeSRx6k4ERQCEos1HPq4CiPs7jFzOLBtXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747868060; c=relaxed/simple;
-	bh=/IZuOYb6jOm8wv3pZnvemwOfZFQ2a3K5E2hJWe/msQk=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=T94P4jKlvinvJw/uXpY/w6t5IEx/a4U/qRarXTxq6M33IWDzTzI2DKIjQDNIonVJchhY7vUoTwyfcWe4RPah3PvAsKusoa6kB01ZENSazgBMxWhlo3PFf6ZFNpy1TxRD2eyQDv16amrE+wxDofqQv9j1S0C86wzryvGc3Ury5bI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yuzhuo.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tI2qyITC; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yuzhuo.bounces.google.com
+	s=arc-20240116; t=1747868072; c=relaxed/simple;
+	bh=I6Z5U5lSAJhlhHvi273xITXuZaKvKIuYyjYt6JGuJv0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=qwMyj8WptIpmsgYD7cJoxjmh51W/KgRIIPSN4CDqaMFNQwnLF/4tCLFq+gEIj4XQ94reg5N8M6h5l1AIENRe57mmZkDrIE6TbYMOjEt3LoPiGG7H679ZVeWF1Lw7Jq1YomBilJGLzxk2IqMxCWq+mpJwP7vFOYKBwzmKOBxOzGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JFomEtSR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tI2qyITC"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7377139d8b1so6290281b3a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 15:54:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747868057; x=1748472857; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0ihLi7PZYZBdDuLpPbH4KRd+Os7j6d6WLAwKlSBj2Ys=;
-        b=tI2qyITC95EBNOVTBYH1sqPs40H7U+DB7SkxuVQ9Nlb4p2MfH9zDu175S9L82AKMrR
-         uxHt69BOr1rXKXMjrsYg2/vLq0NC6TYjZ/NvMDkjgATQUkahYM8vCHogRH44DnD1FGeB
-         lMCZJrFTJZ+ceDCGBz1yigJYsgoC4ceWlgs4OnRp0DA1H7Wk/8L3jTd8gvgi6uVwpkzI
-         KLGh04LojMmejKIXVs9cNpB8lRHP63PuS32MiyJzIHFfD0rpwCq+RIGR3fJoyRo12VKS
-         ILNT2M9UQ5hMYOSXonbb2/F1055HCfE6WDHyk8rRScfQgqkWlbTYRyP6eSlnZoszheaZ
-         x9yQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747868057; x=1748472857;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0ihLi7PZYZBdDuLpPbH4KRd+Os7j6d6WLAwKlSBj2Ys=;
-        b=i1IfyQXXh21yYdSJnehZsU0OiFnhw8qz23tXrt08/Ud+tYAh72zO6ZUHyCOTKED2SX
-         xsR2QI5epy5xHRI2Xm0hiRL+2c1dgXIqstgOox9HwyBKE1eXaekJWQA/Y9MkkvoA79Vv
-         hL5YFPMxdWydGwk028pOAM6YhTvia8RXKCH2+r/9GmLx4pyaFTNKVZiih2rM1sNjwc99
-         UA/pYBDMqPyYFEFH4kiC3aX+uri4hlnZ4hAt7K9DrlLlNRviB60duM/QbtqVWbx/+R+b
-         +4+VS/oHZHRpTrE4thbE4TnnPpp5unXVPlvBcg6og0cyEF4MnlSSJ10Zpo/x5hBdZZXW
-         WQKw==
-X-Forwarded-Encrypted: i=1; AJvYcCXoGzZGuAQL4cSwraEw0pqK+9LZa5Oq7TaSckHBHPQmLr1AlVHkm6OncLnVJ3+VCCaRknIhGr0HA2R445U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdObFpMy4FuBELHar7aDE2cGbsWvKGtCJ//E0Fc+rwk/jxtRw2
-	KtH7oDQCVuTA2zN5TcOHVCjPR0VAorB07mTxH0RLwNWD2Ti4h0q+LDT2WTROIi3eDCdM73eeEnm
-	MdSoaqQ==
-X-Google-Smtp-Source: AGHT+IFlqvDhagDgmm0am0QLyt1D9KzRRnWhzPMiMPi+OaIJxmlzZsP5oeZWd2bbp+CX0XipedfHv+KHA/o=
-X-Received: from pfqz29.prod.google.com ([2002:aa7:9e5d:0:b0:740:6f6:7346])
- (user=yuzhuo job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:c8d:b0:740:aa31:fe66
- with SMTP id d2e1a72fcca58-742a97768f0mr32694402b3a.4.1747868057262; Wed, 21
- May 2025 15:54:17 -0700 (PDT)
-Date: Wed, 21 May 2025 15:53:07 -0700
-In-Reply-To: <20250521225307.743726-1-yuzhuo@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JFomEtSR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEB0DC4CEE4;
+	Wed, 21 May 2025 22:54:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747868071;
+	bh=I6Z5U5lSAJhlhHvi273xITXuZaKvKIuYyjYt6JGuJv0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=JFomEtSRx29eJvJlGSNZulJOZmily2bMweU6UfOd3orZFeC8sQGMGclabfwMbISKc
+	 y7CNTyYRBRFs7UFrJuLCNHJfnw7Ep/9tU5h0v3iXMAe4591zPXZmKpQ3GVmy/cDiSD
+	 fXA2f2VQasXQFySdZS7/qFYTcXHse4dsrC1RJHZIB7iEsKTUByioE6VjfldkHTY3R8
+	 PrqbPQpyzz4iUC96TVUR2rACv2jUkPMCRiZEk5SeJmArlWrYptAM002ycWui/lOvm2
+	 FODi1NHio73ZlBez22BM0THaKlmeIoEj07HsOQNE7tmc1vIvidY30dQVHuukNM8+Ki
+	 JzVa0qondhbhQ==
+Date: Wed, 21 May 2025 17:54:30 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>,
+	Karolina Stolarek <karolina.stolarek@oracle.com>,
+	Weinan Liu <wnliu@google.com>,
+	Martin Petersen <martin.petersen@oracle.com>,
+	Ben Fuller <ben.fuller@oracle.com>,
+	Drew Walton <drewwalton@microsoft.com>,
+	Anil Agrawal <anilagrawal@meta.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Lukas Wunner <lukas@wunner.de>, Sargun Dhillon <sargun@meta.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Kai-Heng Feng <kaihengf@nvidia.com>,
+	Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
+	Terry Bowman <terry.bowman@amd.com>,
+	Shiju Jose <shiju.jose@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v7 15/17] PCI/AER: Ratelimit correctable and non-fatal
+ error logging
+Message-ID: <20250521225430.GA1442014@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250521225307.743726-1-yuzhuo@google.com>
-X-Mailer: git-send-email 2.49.0.1164.gab81da1b16-goog
-Message-ID: <20250521225307.743726-5-yuzhuo@google.com>
-Subject: [PATCH v1 4/4] tools: Remove libcrypto dependency
-From: Yuzhuo Jing <yuzhuo@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Liang Kan <kan.liang@linux.intel.com>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, "Steven Rostedt (Google)" <rostedt@goodmis.org>, 
-	James Clark <james.clark@linaro.org>, Tomas Glozar <tglozar@redhat.com>, Leo Yan <leo.yan@arm.com>, 
-	Guilherme Amadio <amadio@gentoo.org>, Yuzhuo Jing <yuzhuo@google.com>, 
-	Yang Jihong <yangjihong@bytedance.com>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Adhemerval Zanella <adhemerval.zanella@linaro.org>, 
-	Wei Yang <richard.weiyang@gmail.com>, Ard Biesheuvel <ardb@kernel.org>, 
-	"Mike Rapoport (Microsoft)" <rppt@kernel.org>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Kajol Jain <kjain@linux.ibm.com>, Aditya Gupta <adityag@linux.ibm.com>, 
-	Charlie Jenkins <charlie@rivosinc.com>, "Steinar H. Gunderson" <sesse@google.com>, 
-	"Dr. David Alan Gilbert" <linux@treblig.org>, Herbert Xu <herbert@gondor.apana.org.au>, 
-	Jeff Johnson <jeff.johnson@oss.qualcomm.com>, Al Viro <viro@zeniv.linux.org.uk>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250521113121.000067ce@huawei.com>
 
-Remove all occurrence of libcrypto in the build system.
+On Wed, May 21, 2025 at 11:31:21AM +0100, Jonathan Cameron wrote:
+> On Tue, 20 May 2025 16:50:32 -0500
+> Bjorn Helgaas <helgaas@kernel.org> wrote:
+> 
+> > From: Jon Pan-Doh <pandoh@google.com>
+> > 
+> > Spammy devices can flood kernel logs with AER errors and slow/stall
+> > execution. Add per-device ratelimits for AER correctable and non-fatal
+> > uncorrectable errors that use the kernel defaults (10 per 5s).  Logging of
+> > fatal errors is not ratelimited.
+> 
+> See below. I'm not sure that logging of fatal error should affect the rate
+> for non fatal errors + the rate limit infrastructure kind of assumes
+> that you only call it if you are planning to respect it's decision.
+> 
+> Given overall aim is to restrict rates, maybe we don't care if we sometimes
+> throttle earlier that we might expect with a simpler separation of what
+> is being limited.
+> 
+> I don't mind strongly either way.
 
-Signed-off-by: Yuzhuo Jing <yuzhuo@google.com>
----
- tools/build/Makefile.feature            |  2 --
- tools/build/feature/Makefile            |  4 ----
- tools/build/feature/test-all.c          |  5 -----
- tools/build/feature/test-libcrypto.c    | 25 -------------------------
- tools/perf/Documentation/perf-check.txt |  1 -
- tools/perf/Makefile.config              | 13 -------------
- tools/perf/Makefile.perf                |  3 ---
- tools/perf/builtin-check.c              |  1 -
- tools/perf/tests/make                   |  4 +---
- 9 files changed, 1 insertion(+), 57 deletions(-)
- delete mode 100644 tools/build/feature/test-libcrypto.c
+> > @@ -593,7 +593,8 @@ struct aer_err_info {
+> >  	unsigned int id:16;
+> >  
+> >  	unsigned int severity:2;	/* 0:NONFATAL | 1:FATAL | 2:COR */
+> > -	unsigned int __pad1:5;
+> > +	unsigned int ratelimit:1;	/* 0=skip, 1=print */
+> 
+> That naming is less than intuitive.  Maybe expand it to ratelimit_print or
+> something like that.
 
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index 57bd995ce6af..bbadfb5568eb 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -86,7 +86,6 @@ FEATURE_TESTS_BASIC :=                  \
-         libtraceevent                   \
-         libtracefs                      \
-         libcpupower                     \
--        libcrypto                       \
-         pthread-attr-setaffinity-np     \
-         pthread-barrier     		\
-         reallocarray                    \
-@@ -152,7 +151,6 @@ FEATURE_DISPLAY ?=              \
-          numa_num_possible_cpus \
-          libperl                \
-          libpython              \
--         libcrypto              \
-          libcapstone            \
-          llvm-perf              \
-          zlib                   \
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index b8b5fb183dd4..04a4aa0341aa 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -38,7 +38,6 @@ FILES=                                          \
-          test-libtraceevent.bin                 \
-          test-libcpupower.bin                   \
-          test-libtracefs.bin                    \
--         test-libcrypto.bin                     \
-          test-libunwind.bin                     \
-          test-libunwind-debug-frame.bin         \
-          test-libunwind-x86.bin                 \
-@@ -246,9 +245,6 @@ $(OUTPUT)test-libcpupower.bin:
- $(OUTPUT)test-libtracefs.bin:
- 	 $(BUILD) $(shell $(PKG_CONFIG) --cflags libtracefs 2>/dev/null) -ltracefs
- 
--$(OUTPUT)test-libcrypto.bin:
--	$(BUILD) -lcrypto
--
- $(OUTPUT)test-gtk2.bin:
- 	$(BUILD) $(shell $(PKG_CONFIG) --libs --cflags gtk+-2.0 2>/dev/null) -Wno-deprecated-declarations
- 
-diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
-index 03ddaac6f4c4..ce72e2061ac0 100644
---- a/tools/build/feature/test-all.c
-+++ b/tools/build/feature/test-all.c
-@@ -138,10 +138,6 @@
- # include "test-bpf.c"
- #undef main
- 
--#define main main_test_libcrypto
--# include "test-libcrypto.c"
--#undef main
--
- #define main main_test_sdt
- # include "test-sdt.c"
- #undef main
-@@ -206,7 +202,6 @@ int main(int argc, char *argv[])
- 	main_test_lzma();
- 	main_test_get_cpuid();
- 	main_test_bpf();
--	main_test_libcrypto();
- 	main_test_scandirat();
- 	main_test_sched_getcpu();
- 	main_test_sdt();
-diff --git a/tools/build/feature/test-libcrypto.c b/tools/build/feature/test-libcrypto.c
-deleted file mode 100644
-index bc34a5bbb504..000000000000
---- a/tools/build/feature/test-libcrypto.c
-+++ /dev/null
-@@ -1,25 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--#include <openssl/evp.h>
--#include <openssl/sha.h>
--#include <openssl/md5.h>
--
--int main(void)
--{
--	EVP_MD_CTX *mdctx;
--	unsigned char md[MD5_DIGEST_LENGTH + SHA_DIGEST_LENGTH];
--	unsigned char dat[] = "12345";
--	unsigned int digest_len;
--
--	mdctx = EVP_MD_CTX_new();
--	if (!mdctx)
--		return 0;
--
--	EVP_DigestInit_ex(mdctx, EVP_md5(), NULL);
--	EVP_DigestUpdate(mdctx, &dat[0], sizeof(dat));
--	EVP_DigestFinal_ex(mdctx, &md[0], &digest_len);
--	EVP_MD_CTX_free(mdctx);
--
--	SHA1(&dat[0], sizeof(dat), &md[0]);
--
--	return 0;
--}
-diff --git a/tools/perf/Documentation/perf-check.txt b/tools/perf/Documentation/perf-check.txt
-index a764a4629220..2b96cb578658 100644
---- a/tools/perf/Documentation/perf-check.txt
-+++ b/tools/perf/Documentation/perf-check.txt
-@@ -53,7 +53,6 @@ feature::
-                 auxtrace                /  HAVE_AUXTRACE_SUPPORT
-                 libbfd                  /  HAVE_LIBBFD_SUPPORT
-                 libcapstone             /  HAVE_LIBCAPSTONE_SUPPORT
--                libcrypto               /  HAVE_LIBCRYPTO_SUPPORT
-                 libdw-dwarf-unwind      /  HAVE_LIBDW_SUPPORT
-                 libelf                  /  HAVE_LIBELF_SUPPORT
-                 libnuma                 /  HAVE_LIBNUMA_SUPPORT
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index d1ea7bf44964..d19d1f132726 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -130,8 +130,6 @@ ifndef NO_LIBUNWIND
-   FEATURE_CHECK_LDFLAGS-libunwind-x86_64 += -lunwind -llzma -lunwind-x86_64
- endif
- 
--FEATURE_CHECK_LDFLAGS-libcrypto = -lcrypto
--
- ifdef CSINCLUDES
-   LIBOPENCSD_CFLAGS := -I$(CSINCLUDES)
- endif
-@@ -772,17 +770,6 @@ ifneq ($(NO_LIBTRACEEVENT),1)
-   $(call detected,CONFIG_TRACE)
- endif
- 
--ifndef NO_LIBCRYPTO
--  ifneq ($(feature-libcrypto), 1)
--    $(warning No libcrypto.h found, disables jitted code injection, please install openssl-devel or libssl-dev)
--    NO_LIBCRYPTO := 1
--  else
--    CFLAGS += -DHAVE_LIBCRYPTO_SUPPORT
--    EXTLIBS += -lcrypto
--    $(call detected,CONFIG_CRYPTO)
--  endif
--endif
--
- ifndef NO_SLANG
-   ifneq ($(feature-libslang), 1)
-     ifneq ($(feature-libslang-include-subdir), 1)
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index d4c7031b01a7..9246c94656e0 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -61,9 +61,6 @@ include ../scripts/utilities.mak
- #
- # Define NO_LIBBIONIC if you do not want bionic support
- #
--# Define NO_LIBCRYPTO if you do not want libcrypto (openssl) support
--# used for generating build-ids for ELFs generated by jitdump.
--#
- # Define NO_LIBDW_DWARF_UNWIND if you do not want libdw support
- # for dwarf backtrace post unwind.
- #
-diff --git a/tools/perf/builtin-check.c b/tools/perf/builtin-check.c
-index 9a509cb3bb9a..ad49f2564aae 100644
---- a/tools/perf/builtin-check.c
-+++ b/tools/perf/builtin-check.c
-@@ -44,7 +44,6 @@ struct feature_status supported_features[] = {
- 	FEATURE_STATUS("auxtrace", HAVE_AUXTRACE_SUPPORT),
- 	FEATURE_STATUS_TIP("libbfd", HAVE_LIBBFD_SUPPORT, "Deprecated, license incompatibility, use BUILD_NONDISTRO=1 and install binutils-dev[el]"),
- 	FEATURE_STATUS("libcapstone", HAVE_LIBCAPSTONE_SUPPORT),
--	FEATURE_STATUS("libcrypto", HAVE_LIBCRYPTO_SUPPORT),
- 	FEATURE_STATUS("libdw-dwarf-unwind", HAVE_LIBDW_SUPPORT),
- 	FEATURE_STATUS("libelf", HAVE_LIBELF_SUPPORT),
- 	FEATURE_STATUS("libnuma", HAVE_LIBNUMA_SUPPORT),
-diff --git a/tools/perf/tests/make b/tools/perf/tests/make
-index 0ee94caf9ec1..e3651e5b195a 100644
---- a/tools/perf/tests/make
-+++ b/tools/perf/tests/make
-@@ -91,7 +91,6 @@ make_no_auxtrace    := NO_AUXTRACE=1
- make_no_libbpf	    := NO_LIBBPF=1
- make_libbpf_dynamic := LIBBPF_DYNAMIC=1
- make_no_libbpf_DEBUG := NO_LIBBPF=1 DEBUG=1
--make_no_libcrypto   := NO_LIBCRYPTO=1
- make_no_libllvm     := NO_LIBLLVM=1
- make_with_babeltrace:= LIBBABELTRACE=1
- make_with_coresight := CORESIGHT=1
-@@ -122,7 +121,7 @@ make_minimal        := NO_LIBPERL=1 NO_LIBPYTHON=1 NO_GTK2=1
- make_minimal        += NO_DEMANGLE=1 NO_LIBELF=1 NO_BACKTRACE=1
- make_minimal        += NO_LIBNUMA=1 NO_LIBBIONIC=1
- make_minimal        += NO_LIBDW_DWARF_UNWIND=1 NO_AUXTRACE=1 NO_LIBBPF=1
--make_minimal        += NO_LIBCRYPTO=1 NO_SDT=1 NO_JVMTI=1 NO_LIBZSTD=1
-+make_minimal        += NO_SDT=1 NO_JVMTI=1 NO_LIBZSTD=1
- make_minimal        += NO_LIBCAP=1 NO_CAPSTONE=1
- 
- # $(run) contains all available tests
-@@ -160,7 +159,6 @@ run += make_no_libbionic
- run += make_no_auxtrace
- run += make_no_libbpf
- run += make_no_libbpf_DEBUG
--run += make_no_libcrypto
- run += make_no_libllvm
- run += make_no_sdt
- run += make_no_syscall_tbl
--- 
-2.49.0.1164.gab81da1b16-goog
+True, although it does match uses like "if (aer_ratelimit(...))"
 
+I'll try ratelimit_print and see how you like it :)
+
+> > +	unsigned int __pad1:4;
+> >  	unsigned int multi_error_valid:1;
+> >  
+> >  	unsigned int first_error:5;
+> > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> > index 4f1bff0f000f..f9e684ac7878 100644
+> > --- a/drivers/pci/pcie/aer.c
+> > +++ b/drivers/pci/pcie/aer.c
+> 
+> > @@ -815,8 +843,19 @@ EXPORT_SYMBOL_NS_GPL(pci_print_aer, "CXL");
+> >   */
+> >  static int add_error_device(struct aer_err_info *e_info, struct pci_dev *dev)
+> >  {
+> > +	/*
+> > +	 * Ratelimit AER log messages.  "dev" is either the source
+> > +	 * identified by the root's Error Source ID or it has an unmasked
+> > +	 * error logged in its own AER Capability.  If any of these devices
+> > +	 * has not reached its ratelimit, log messages for all of them.
+> > +	 * Messages are emitted when "e_info->ratelimit" is non-zero.
+> > +	 *
+> > +	 * Note that "e_info->ratelimit" was already initialized to 1 for the
+> > +	 * ERR_FATAL case.
+> > +	 */
+> >  	if (e_info->error_dev_num < AER_MAX_MULTI_ERR_DEVICES) {
+> >  		e_info->dev[e_info->error_dev_num] = pci_dev_get(dev);
+> > +		e_info->ratelimit |= aer_ratelimit(dev, e_info->severity);
+> 
+> So this is a little odd.  I think it works but there is code inside
+> __ratelimit that I think we should not be calling for that
+> ERROR_FATAL case (whether we should call lots of times for each
+> device isn't obvious either but maybe that is more valid).
+> 
+> In the event of it already being 1 due to ERROR_FATAL you will
+> falsely trigger a potential print from inside __ratelimit() if we
+> were rate limited and no longer are but only skipped FATAL prints.
+> My concern is that function is kind of assuming it's only called in
+> cases where a rate limit decision is being made and the
+> implementation may change in future).
+
+Hmmm.  That's pretty subtle, thanks for catching this.
+
+In the light of day, ".ratelimit = fatal ? 1 : 0" looks a bit sketchy.
+If we want to avoid ratelimiting AER_FATAL, maybe aer_ratelimit()
+should just return 1 ("print") unconditionally in that case, without
+calling __ratelimit():
+
+  static int aer_ratelimit(struct pci_dev *dev, unsigned int severity)
+  {
+    struct ratelimit_state *ratelimit;
+
+    if (severity == AER_FATAL)
+      return 1;       /* AER_FATAL not ratelimited */
+
+    if (severity == AER_CORRECTABLE)
+      ratelimit = &dev->aer_info->cor_log_ratelimit;
+    else
+      ratelimit = &dev->aer_info->uncor_log_ratelimit;
+
+    return __ratelimit(ratelimit);
+  }
+
+That still leaves this question of how to deal with info->dev[] when
+there's more than one entry, which is kind of an annoying case that
+only happens for the native AER path.
+
+I think it's because for a single AER interrupt from an RP/RCEC, we
+collect the root info in one struct aer_err_info and scrape all the
+downstream devices for anything interesting.  We visit each downstream
+device and is_error_source() reads its status register, but we only
+keep the pci_dev pointer, so aer_get_device_error_info() has to read
+the status registers *again*.  This all seems kind of obtuse.
+
+The point of the OR above in add_error_device() was to try to match up
+RP/RCEC logging with downstream device logging so they're ratelimited
+the same.  If we ratelimit the Error Source ID based on the RP/RCEC
+and the details based on the downstream devices individually, they'll
+get out of sync, so sometimes we'll print an Error Source ID and elide
+the details and vice versa.
+
+I wanted to make it so that if we log downstream details, we also log
+the Error Source ID.  But maybe we should ratelimit downstream devices
+individually (instead of doing this weird union) and make the RP/RCEC
+part more explicit, e.g.,
+
+  add_error_device(...)
+  {
+    int i = e_info->error_dev_num;
+
+    e_info->dev[i] = pci_dev_get(dev);
+    e_info->error_dev_num++;
+
+    if (aer_ratelimit(dev, e_info->severity)) {
+      e_info->root_ratelimit_print = 1;
+      e_info->ratelimit_print[i] = 1;
+    }
+  }
+
+> https://elixir.bootlin.com/linux/v6.14.7/source/lib/ratelimit.c#L56
+> 
+> Maybe, 
+> 		if (!info->ratelimit)
+> 			e_info->ratelimit = aer_ratelimit(dev, e_info->severity);
+> is an alternative option.
+> That allows a multiplication factor on the rate as all device count for 1.
