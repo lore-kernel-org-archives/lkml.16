@@ -1,179 +1,257 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2075.outbound.protection.outlook.com [40.107.21.75])
+Received: from smtpbg154.qq.com (smtpbg154.qq.com [15.184.224.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5444D25A2C5;
-	Wed, 21 May 2025 11:19:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.75
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747826369; cv=fail; b=d80trtDtJfXefMjY6jIICE9VmlSPpo1qgyCYYFUSrFPuK/ZJv9lkxWLC164JqN1qnIYfdFbDe2/AhquTo03Dp6oWgYHply/n4pYPfnsANZlkzfu7kpc2u4pjdcl99ytsEXCWUfWqfCSSCCvsuZiOm4v1CcDJTryTzdZRLkqHjJM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747826369; c=relaxed/simple;
-	bh=Kdoq/LbIKySvsRFgRWOTXgfW9nLMErQ6TxpdUE6SbFI=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=SOjXpREnVJX45aIJ66KHxducCqlPm4A7quzvYpI2UN39XtzIyQySGD+AN1TPCyt22+clTI8KMhlUC+kFjGazQzg4DXh2Y+yVAZi/FdyJSnx3+DBdr9/ALooagh8J2JI267KrpPZtkqKTxKBOtqttxTHqjZ5keYBIRrh59LpncsI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=S9ESdQ0+; arc=fail smtp.client-ip=40.107.21.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F9C525A2C5
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 11:19:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=15.184.224.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747826406; cv=none; b=JioiAYhLWCfEau2rRsT0/XjdC3DSPnlDnysOMiNIezOFqZq4PfVQQeTBJV1CAIhoCPCZIEyOGQ0neWLns9WSyO0qMGgACO7XeHd2oPvk04ARgmRw9NyBsv/7RJErtj6D7EWlUB9/FGunzqaKtziTqKIgY/RQWs9E9tGU+mA0GEc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747826406; c=relaxed/simple;
+	bh=g6A67r3lx5NE4Cf7U6BOeLu0hAWS9J0OX6bfKgwgxPM=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=uchvFJNm82x6OyNIHAbi4IXA9i4KrXPxHzxza6ZyUjOgPcQjJRLUk40LNmbmGT7eDi2vIHzp7PKfzETkOu5MSOSvHNtTHPis73fsK6269vOc31bBL8HCP6m50RCI3f2ZlcTDCV8b39rcqaDPyVUQ1hJNIzhvbO92n7XYPa/ua6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=m.fudan.edu.cn; spf=pass smtp.mailfrom=m.fudan.edu.cn; dkim=pass (1024-bit key) header.d=m.fudan.edu.cn header.i=@m.fudan.edu.cn header.b=mo/j6lU5; arc=none smtp.client-ip=15.184.224.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=m.fudan.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=m.fudan.edu.cn
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="S9ESdQ0+"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=UdQVoSGeeaWD5EjHjE5apFBNe/0h5ZI5SVyiS6njN+ccfyBpBvR5ols0hZJcbycop1IN66L1KXgd9qEKHkjhX16tJBft5UJo5SWLh+HIxTxc6/PpJe0wB7yqzISSMPdlpozht7GgvNGDtcDO8p+R/ZCcTV5+ROw+7vQ34DEE8eBhvqdqMPJa2eBinVVG3tCBwK2F1lOWY4Qq5+HnT47BQIqhyzM7NCvN2Zfr+F1G+eKS3HJsXbP0edDRP1/CmxoMSjnPj84fvI6KDKW3jVA7dlVkFyESkCEOce7zNrKNbYnNYDS1q6ZYVYuqcakCq8T3KVXshTimZPit5xebIAF9ig==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=docwtRrkJh2FF47a5H7t9L+ufhsx5WjribxeOoiGRiI=;
- b=G9LL9Cw9lsUVEGVbwHF64jSs2SnNz4AtlRaTPhCRpW8vO6BslDRZNUSC6ohyS3R348vRjKoOSad7s7GgqnCi0GYS2NSkVND2N+13qNilHMBh9/wE28xWDcDMA1fXwaSfL9jr7BFp242EB3zP5EzAXEd1fHTkhfJS8HFdY6jX9iicz4aeigu64oK/iSakerMFUGJmFVFOVkpX4MRVc5TTYQJAVRZZTsKFfp7EHRvfxaUg8fAjgApmhtAg+p88oM2dle+KFljfryKPdIrXDQEsZFdMAFzYwiivZG0XpH/J/5UJP6fx7V8YlMJS9OOU1i5TveVAif7FMuyyraH6t+JoNQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=docwtRrkJh2FF47a5H7t9L+ufhsx5WjribxeOoiGRiI=;
- b=S9ESdQ0+AZElpUUy98TrYXlNuciCVPdR+gk3xppSbJ46xAzzWwbcAoGhIOLOCY+cT7ft9vnHtiZB6pmV5jtlTq5GYClCDI0bq4Pj0CMIQJzwbbtyGJYGCtPDKv0RJyV9QFUx3JkILS0+isdwK8DuRmYOcyAevwAfnP+KA4M2Sxz41cdNVexB5YNz5s4MAnFXxJVJZ9nY8AIbHSBn7uv0OxfopBThpiXcp9PT1qh9o8YNtPXhawTNVTYFbcT6NO6EN0L5HHUtIN6w9AFXl3qiZZKaM7K8apGy55CQ9FjaRM3gJQMO8mp+cgNkH5CTltxqZyQ4HVsMSahtgT9bZ/gcLA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DU2PR04MB8567.eurprd04.prod.outlook.com (2603:10a6:10:2d6::21)
- by GVXPR04MB10048.eurprd04.prod.outlook.com (2603:10a6:150:118::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.30; Wed, 21 May
- 2025 11:19:23 +0000
-Received: from DU2PR04MB8567.eurprd04.prod.outlook.com
- ([fe80::4db:3dc0:c292:493a]) by DU2PR04MB8567.eurprd04.prod.outlook.com
- ([fe80::4db:3dc0:c292:493a%3]) with mapi id 15.20.8769.019; Wed, 21 May 2025
- 11:19:23 +0000
-From: ziniu.wang_1@nxp.com
-To: haibo.chen@nxp.com,
-	adrian.hunter@intel.com,
-	ulf.hansson@linaro.org,
-	linux-mmc@vger.kernel.org
-Cc: shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	imx@lists.linux.dev,
-	s32@nxp.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] mmc: sdhci-esdhc-imx: inherit pins_100mhz from pins_200mhz when unconfigured
-Date: Wed, 21 May 2025 19:20:42 +0800
-Message-Id: <20250521112042.266111-1-ziniu.wang_1@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI2PR04CA0005.apcprd04.prod.outlook.com
- (2603:1096:4:197::16) To DU2PR04MB8567.eurprd04.prod.outlook.com
- (2603:10a6:10:2d6::21)
+	dkim=pass (1024-bit key) header.d=m.fudan.edu.cn header.i=@m.fudan.edu.cn header.b="mo/j6lU5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=m.fudan.edu.cn;
+	s=sorc2401; t=1747826376;
+	bh=vNb6nPyrHCd1zE6lS97OOCE/KROw2RLPReFEDtFNmZc=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=mo/j6lU5um6wx6aor3zzYpVrCuTHS3ve7nz7eEMo0PozgAseeROm+XmnAicc5Wnxd
+	 Vsu6M5fpAUl32PJaUEl6JcMrVGPSvM3ILzNWSgIj9yQjUXNqo6ZyWrAs2GBVv5IJ3l
+	 +yjUj9gUsBdx6mI4z+O6bDq3LS65jymPLkziirwM=
+X-QQ-mid: zesmtpip4t1747826371t1a2cabd3
+X-QQ-Originating-IP: T0a8iiM67sjqmGsIz5JEpp58qo1b9U2bDXOJSfCxubg=
+Received: from TYSPR06MB7158.apcprd06.prod.out ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 21 May 2025 19:19:30 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 9234854677814978668
+EX-QQ-RecipientCnt: 5
+From: "huk23@m.fudan.edu.cn" <huk23@m.fudan.edu.cn>
+To: Dave Kleikamp <shaggy@kernel.org>
+CC: Jiaji Qin <jjtan24@m.fudan.edu.cn>, Shuoran Bai <baishuoran@hrbeu.edu.cn>,
+	syzkaller <syzkaller@googlegroups.com>, linux-kernel
+	<linux-kernel@vger.kernel.org>
+Subject: KASAN: slab-out-of-bounds Read in dbAllocBits
+Thread-Topic: KASAN: slab-out-of-bounds Read in dbAllocBits
+Thread-Index: AQHbyjq01DJqSgbzGkGdgzUDrtQ/lQ==
+X-MS-Exchange-MessageSentRepresentingType: 1
+Date: Wed, 21 May 2025 11:19:29 +0000
+Message-ID:
+	<TYSPR06MB715891CFDFE828006F96F88FF69EA@TYSPR06MB7158.apcprd06.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-Exchange-Organization-SCL: -1
+X-MS-TNEF-Correlator:
+X-MS-Exchange-Organization-RecordReviewCfmType: 0
+msip_labels:
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU2PR04MB8567:EE_|GVXPR04MB10048:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5cb1c269-caf3-4bdb-a58b-08dd9859569c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|52116014|7416014|376014|1800799024|366016|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?y/X5OcM1ugaOgZfhkD3I9JwOpjZykYSTrod3UrHKMHzAFh55GbnbS98RhhYH?=
- =?us-ascii?Q?JUPOroPWFdTQ36m2jbthaA/BN/JsYgC+adQZ8MN63PkFES29D+PfXzxv9A1I?=
- =?us-ascii?Q?qmGFWdX05Cc2nmWwjYB5dVkBH5gl8mYkk+DYoJoueT1+pdkI7MjXdAc3lu7J?=
- =?us-ascii?Q?7aMaYGxSfL9YxBAwdm8R8aZeeA/2UKxkaFVBylwVvv58c2eI/tUv/Oq4AbRO?=
- =?us-ascii?Q?J66KFOy4MKXx9mK2vhfPumSrKKftrWiTmNlv+baYAFVS0YsS1oj7RHKOP1bW?=
- =?us-ascii?Q?HWTCGFwARgu3JAQadu7LPgo4wjsGGfDzKa8QcJfJSFmZu29MinsOXeTSJQb9?=
- =?us-ascii?Q?quzCcDepnK/nQcTc1yKRw5oZdyDqwC6pCBTwNVND9A3xHU/twrUlWVp0SRbj?=
- =?us-ascii?Q?6UfxUwt9ElDdc5yeFnvisMxqAqoVW1S/3LJaYdmz1++PEchzxqIS36cXDxkI?=
- =?us-ascii?Q?jlqSmW7fkMMSN0xV3wZ25uYmDynOjP1FVD+IoDvwAm2kFoNYC2p7z/RhUx3r?=
- =?us-ascii?Q?bfEBvBwJqE79Rn3YZ2AuK/CWG2hI550LUGwrnsq41tZSgFa8c4SG8A4F1uoo?=
- =?us-ascii?Q?tgXXcEjx4zwNlWTWc9uZwAVNNVGWhs3+Hcy/Xneqki2+p6rmQQ+hdUf4yQcp?=
- =?us-ascii?Q?XbOgwPC0qmBIBTZDIUvS9LNBNS28YKByhSTBdNNz82D17Ujp7XDfbiJEfngi?=
- =?us-ascii?Q?eBNNMTHpcNgeGDoeGs7GQSbUUCLMpENwDXazP4gCrrKtzPCq4u2fJJmAzYtD?=
- =?us-ascii?Q?jQ85/HlGpgwMJNLddYG4v7YvzcDwBJLuvhqxrmmAUS2MzYO76AFclZUXUifM?=
- =?us-ascii?Q?L/tawdet8bW+WgUyCvBCzjkKn8XOwwfgaak9igLVi1Z6N8LUHhdvdFMty3/a?=
- =?us-ascii?Q?qbYoqonz7nJudvLAN09jW36hJpn3aynD4bopqjggd9yrMDI3ZBKFnMwUpBW9?=
- =?us-ascii?Q?J1dhidHwl8+JrDn/fjvoBsf1PLrMoXYRRoCu28bQU3hB2nSLvSAvP3CptS3B?=
- =?us-ascii?Q?LRsqQrb1DxHP8jdKOoYQC55/66RLhxMnjuAhbI0Wgqs2fM4Tqr2h7MKiecvj?=
- =?us-ascii?Q?nZWZcsNXYqA2/BBelXRr+7CNULwivO3DqeULEAK5Zy6wojxzb4E45nW0hnqM?=
- =?us-ascii?Q?+/NloPrJDdzdwb3L3XAqkAmbc4J5rrp1kuv4Wzw7amhk/59Ty0bM6fLiM52I?=
- =?us-ascii?Q?fygTeaxCre84oDwy69vcMFo2f8HOatxKUzkXg+zSHBgS+Dn4Zb2/ke7dl+Id?=
- =?us-ascii?Q?twAziN12rum1naPnpMFHGru+DRqrs0OBpZ2FnR/5G+nCooXRBjzkrfKL0cgS?=
- =?us-ascii?Q?CVjqcDteIv/gTthsTpk4BI05EMWktjQmM3nrrMic/ttSTmwIcfILyghBBByO?=
- =?us-ascii?Q?BPxaQUrMYTA/VWaWahvD0dbYXvfTHM7KLoNc17moPGlWG7jmZKOthit4ntWB?=
- =?us-ascii?Q?vYzmQUKfOiCRiDN4q85x769QcoApmm+nBvGgc3wNXfk/D70pLdJFKQ=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8567.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(7416014)(376014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?A7JKBziagTv2MGyNO+jHJZAPjJxmX6pkb8jJcGupuK3VqAIGE2pRsTfIHfAK?=
- =?us-ascii?Q?jAU39SGw4a0WWpozmsFGPfA3bIhbj3aIVwed0e/gsuVFBdP6FP4sY11E9R1Y?=
- =?us-ascii?Q?hV98HJJGfOVDir4d3fEBFRjrSxfaniTBBBNhBaDyXmRFxLeqXZrtYhgVCfAY?=
- =?us-ascii?Q?coHE6T2vPOWYTCqcuNUInH8+R1bOr+zcOAzE7KrR4IDyXHA5FAXLEXrXL7wG?=
- =?us-ascii?Q?YgGtwB3i+f6pwYtgqHjfH+5zR8McC5pYvegXmHVAhQdKxVfHl3anWcwKL72/?=
- =?us-ascii?Q?6uVbCzHX3QQMSgJV5HpIKLmEb4ZgwXr9Iy42gn5mzp2pU48mlE1Xqwva7za8?=
- =?us-ascii?Q?EAWKv8k2pk/ge7clqiSe+eJW4C/j74yucKT9hahGbBSrb7TFRrolsfx7nRwL?=
- =?us-ascii?Q?Lbov4VQsScX4E5kiyiI8b4jrUK0JFmjGYF9jLGYjkLFEtTGwcdLk+I6TXDmV?=
- =?us-ascii?Q?I/aDLuh5GEtdit5DfQ4L93w6U7n07KZcoQbBEp8seUMxRiFdQzbDxrn7Onip?=
- =?us-ascii?Q?yDf0Fe32ZrBgvcnXgelx2IKBoKSE86i+d29BPE+H/V0/0+c8kFF5fTlnfji6?=
- =?us-ascii?Q?NSwGcbYQHS7+SOAGonulUAqIFfBoueWt86ia9ncA94C8NqS7CeG0D64EbGd6?=
- =?us-ascii?Q?GXq57PBieP936z3ZsVfWphFWRLoqg9nlZ9JBgJMAcUHgBOcFE7IYa7MFSg7o?=
- =?us-ascii?Q?XH2Iv2MLVU45iaMvNZa6Nf2hhSErpzQaIJtPkIHAXR2Tv7CE7clN/aK+ubaK?=
- =?us-ascii?Q?Mu3bVTlEGzbKKRDZP8Q47d7sfnQlLi2zhPxiaTESrfTnRvwGmLg0+Z8yDTz4?=
- =?us-ascii?Q?yurJrY1KWA8n61W6xc4NGzH3o7DoJTT0vh9OSDRw4cnxv/vcbPosmf/qx86K?=
- =?us-ascii?Q?/OCC3/cHomGU2uAdh4tBmOGMnKGp3bdu5D1oJEF8VgAbMkY5cs+i9KLN73sE?=
- =?us-ascii?Q?W9rc5rD23mZe/RgUBfHqr3Y6hWHp6qjZsdzjU+R5FbGjszNAyXbNHJj4ducD?=
- =?us-ascii?Q?wjnpHL3u9JES4YY4r2nNyhs6AD2iKSpEJmrCBCXyBnCYWwip9fBWUCT+fieL?=
- =?us-ascii?Q?+NEAg+QRMcTIg5jk8JVZVQx9eCtm9RyXCKjYJhi+cxQhZXhDspucZuu9GgZN?=
- =?us-ascii?Q?lMlX7aE3HCe+4xWESfnW7WjWSJ1YYgGjHXo8na/Ixh6LtUdz9QWgPXHscm/L?=
- =?us-ascii?Q?/LDcUZfVfAvKlFNh2Gh3G89b1LC4w+tWber9ynN92T2RzgRBBqONEeWua9NH?=
- =?us-ascii?Q?T7uteBPUzQtf9+iHWxd1ILYvbKDAH9CQY0Hz8vbyQcdfCP63+54JCPsTbPQ7?=
- =?us-ascii?Q?4nxkoqhq1kMmJKkZ5hLlhRwe4FRLkOSghaFbgvE53lo5JGeBCFIL7vL4PTPn?=
- =?us-ascii?Q?GNtW9rILqERq0hOiAlTEVlFoonjKjY5lbko/Mdg8dFHVkDz5XjEVvpONG0ff?=
- =?us-ascii?Q?MdyMZ54hPY1FivPtah6P4KbjVaL0x7DyAbO4Xpj3K8taaWmXtXVGXsJFV2fX?=
- =?us-ascii?Q?b8o8FEm5yMwRJFmfiOgeTunwocvd4xkC4qEnou+ppAOg3lnfaacc056T5Jk7?=
- =?us-ascii?Q?yHumhfjab+EAaFOmJ52wFQ/IhJyymTE0HjQLxG4G?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5cb1c269-caf3-4bdb-a58b-08dd9859569c
-X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8567.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2025 11:19:23.3062
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dNTjCSgN325RpjHkZhv+FjtJvXgwNajqQw98ZtSbJj7A5dHX61u7dpvcTSLp0D9LVLdUluiv5c96DrtSqR3kRw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR04MB10048
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpip:m.fudan.edu.cn:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: MkpNHbQT2yp/RDztyKQecDNpGs6C2vpPQRhsmtptx2xNcITpwA9cEkbv
+	piEvfaMIlx+JuanKYc7nrd5lYzSk9k6jnbPwqWWe+uw+uo0jDtp+YBdcTesaXlL93Gvbc2z
+	tDaohav8e03R5XZp2UlSVnLmbFoBDQXMe7L7bUXmvjO1ntVM/r3yzyp4b7uDZR3o/uPff0k
+	oklcThTFLlmbeARoMdp4nXnKJR2eWtHkP6RqaswBu06H8qMUEfBCCUGs5SgdL7f57fwa8KA
+	6XlZNj+Oz2L+/3RWsnKA+2xdqJV6jXZYkmVT6LPsheJL+lPIt5E53bOar2Kqe0uVgLEwUnY
+	p90Bai18/Yf/WaoBumVREjvGEPOpQiO1TM2PPOCp8xr590kTnGivAyBgynAbYPom3uVLWYN
+	MDoVG6dWI7fJiSQp4EN48nmSRqeOalIqB6qHXA9VJmIOw6t7LSFw2/OhJqh2PCvaakPrMch
+	XnbbKulR3UFVRzMuc294P7SldIgg7bQH8McdB91b4gNplbpBkNScD5tXzSjMSpgvQdYu/yL
+	q4FSm/bpo/phdgDNO59Pi/hDAZ/kIbSk2fJ+FahqPG61lfuCW9h2RonMuPBBOSdHXKf32hW
+	wx7LaK4xyUPp8GDGwXjPx8inOR/lk9VRyqqaGMqTZhaMdWXJkVUg/A+kG2R0pHCW2YPRSRx
+	BH0MKBo5h4+QwiYSknCIGTOLtI1hdRixptTKBxPMlJ8thJ7XEt9+hj4R5dbNis9ryW5sOkJ
+	n0/ACjkZdGisHBjnj63SMOCGFKt4Psja5mipxtGPfO2M1Pj7GStqRbHIcQQo9MqiOrsR6rp
+	+joNG53YcAybfe9cDuqQCgq46O78NA2Ie8QAZWin4VwHx2LJvzABHKHI0HYZOIZsV1N8aUy
+	uFw1axxqNzuUyank8MM7m54SSvkC14AYEHATq60A/Q7Fe48jElzvcNPzkRh3UdJzgDalyYJ
+	uUza85bJqhaK67kpDFKuTEwQdFYKeU4vQWZDxFOCklpFbMQ2vWH96lQPfjlBP1C+sL+C81l
+	DVAtpaonYYlyJDAdVDpTQjtN9op+22kDsQfsjmNQ==
+X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
+X-QQ-RECHKSPAM: 0
 
-From: Luke Wang <ziniu.wang_1@nxp.com>
-
-On some new i.MX platforms, hardware guidelines recommend using identical
-pin configurations for SDR50/DDR50 (100MHz) and SDR104/HS400 (200MHz)
-modes. But defining two identical pinctrl for 100MHz and 200MHz in dts
-creates redundancy. In this case, omit explicit 100MHz configuration,
-driver will inherit 100MHz pinctrl from 200MHz.
-
-Preserves existing behavior if 100MHz is configured but 200MHz not (e.g,
-imx8mp-navq.dts usdhc1 supports SDR50/DDR50 but SDR104/HS400 not).
-
-Signed-off-by: Luke Wang <ziniu.wang_1@nxp.com>
----
- drivers/mmc/host/sdhci-esdhc-imx.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
-index f206b562a6e3..dfd8be5000c8 100644
---- a/drivers/mmc/host/sdhci-esdhc-imx.c
-+++ b/drivers/mmc/host/sdhci-esdhc-imx.c
-@@ -1810,6 +1810,9 @@ sdhci_esdhc_imx_probe_dt(struct platform_device *pdev,
- 						ESDHC_PINCTRL_STATE_100MHZ);
- 		imx_data->pins_200mhz = pinctrl_lookup_state(imx_data->pinctrl,
- 						ESDHC_PINCTRL_STATE_200MHZ);
-+
-+		if (IS_ERR_OR_NULL(imx_data->pins_100mhz))
-+			imx_data->pins_100mhz = imx_data->pins_200mhz;
- 	}
- 
- 	/* call to generic mmc_of_parse to support additional capabilities */
--- 
-2.34.1
-
+Dear Maintainers,=0A=
+=0A=
+=0A=
+=0A=
+When using our customized Syzkaller to fuzz the latest Linux kernel, the fo=
+llowing crash (102th)was triggered.=0A=
+=0A=
+=0A=
+HEAD commit: 6537cfb395f352782918d8ee7b7f10ba2cc3cbf2=0A=
+git=A0tree: upstream=0A=
+Output:https:https://github.com/pghk13/Kernel-Bug/blob/main/0520_6.15-rc6/1=
+02_KASAN%3A%20slab-out-of-bounds%20Read%20in%20dbAllocBits/102report.txt=0A=
+Kernel config:https://github.com/pghk13/Kernel-Bug/blob/main/0520_6.15-rc6/=
+config.txt=0A=
+C reproducer:https://github.com/pghk13/Kernel-Bug/blob/main/0520_6.15-rc6/1=
+02_KASAN%3A%20slab-out-of-bounds%20Read%20in%20dbAllocBits/102repro.c=0A=
+Syzlang reproducer:https://github.com/pghk13/Kernel-Bug/blob/main/0520_6.15=
+-rc6/102_KASAN%3A%20slab-out-of-bounds%20Read%20in%20dbAllocBits/102repro_b=
+ug_title.txt=0A=
+=0A=
+=0A=
+=0A=
+The issue with this bug could be that the JFS file system fails to correctl=
+y synchronize or update its internal block allocation metadata (bmap struct=
+ure) when underlying loop device backend storage is dynamically changed by =
+LOOP_SET_FD. This leads to the dbAllocBits function using outdated or corru=
+pted bmap information, specifically the db_l2size field, when trying to all=
+ocate a block, resulting in a wrong, oversized agno value being calculated,=
+ which eventually causes an out-of-bounds read when accessingmp->db_agfree[=
+agno].=0A=
+We have reproduced this issue several times on 6.15-rc6 again.=0A=
+=0A=
+=0A=
+This is the URL of the 2024 syzbot report of this bug:https://groups.google=
+.com/g/syzkaller-lts-bugs/c/CVD1uqZnFPA/m/P4-Bi8BmAwAJ=0A=
+=0A=
+If you fix this issue, please add the following tag to the commit:=0A=
+Reported-by: Kun Hu <huk23@m.fudan.edu.cn>, Jiaji Qin <jjtan24@m.fudan.edu.=
+cn>, Shuoran Bai <baishuoran@hrbeu.edu.cn>=0A=
+=0A=
+=0A=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=0A=
+BUG: KASAN: slab-out-of-bounds in dbAllocBits+0x629/0x640=0A=
+Read of size 8 at addr ffff888000efbeb8 by task syz.4.23/14569=0A=
+=0A=
+CPU: 2 UID: 0 PID: 14569 Comm: syz.4.23 Not tainted 6.15.0-rc6 #1 PREEMPT(f=
+ull) =0A=
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1=
+.1 04/01/2014=0A=
+Call Trace:=0A=
+ <TASK>=0A=
+ dump_stack_lvl+0x116/0x1b0=0A=
+ print_report+0xc1/0x630=0A=
+ kasan_report+0x96/0xd0=0A=
+ dbAllocBits+0x629/0x640=0A=
+ dbAllocDmap+0x61/0x120=0A=
+ dbAlloc+0x7a1/0xac0=0A=
+ ea_get+0xc8e/0x1380=0A=
+ __jfs_setxattr+0x1af/0xfa0=0A=
+ __jfs_set_acl+0x119/0x1b0=0A=
+ jfs_set_acl+0x1e9/0x350=0A=
+ set_posix_acl+0x261/0x330=0A=
+ vfs_set_acl+0x5ad/0x920=0A=
+ do_set_acl+0xd9/0x1a0=0A=
+ do_setxattr+0xc2/0x190=0A=
+ filename_setxattr+0x159/0x1c0=0A=
+ path_setxattrat+0x1cc/0x290=0A=
+ __x64_sys_lsetxattr+0xc9/0x140=0A=
+ do_syscall_64+0xcf/0x260=0A=
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f=0A=
+RIP: 0033:0x7fd8b7bacadd=0A=
+Code: 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa 48 89 f8 48 89 f7 =
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff f=
+f 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48=0A=
+RSP: 002b:00007fd8b89f2ba8 EFLAGS: 00000246 ORIG_RAX: 00000000000000bd=0A=
+RAX: ffffffffffffffda RBX: 00007fd8b7da5fa0 RCX: 00007fd8b7bacadd=0A=
+RDX: 0000000020000180 RSI: 0000000020000040 RDI: 0000000020000000=0A=
+RBP: 00007fd8b7c2ab8f R08: 0000000000000000 R09: 0000000000000000=0A=
+R10: 0000000000000024 R11: 0000000000000246 R12: 0000000000000000=0A=
+R13: 00007fd8b7da5fac R14: 00007fd8b7da6038 R15: 00007fd8b89f2d40=0A=
+ </TASK>=0A=
+=0A=
+Allocated by task 9812:=0A=
+ kasan_save_stack+0x24/0x50=0A=
+ kasan_save_track+0x14/0x30=0A=
+ __kasan_kmalloc+0xaa/0xb0=0A=
+ __kmalloc_noprof+0x214/0x600=0A=
+ sk_prot_alloc+0x192/0x280=0A=
+ sk_alloc+0x3a/0x1380=0A=
+ __netlink_create+0x5d/0x2c0=0A=
+ __netlink_kernel_create+0xea/0x770=0A=
+ genl_pernet_init+0xbe/0x170=0A=
+ ops_init+0x1e1/0x640=0A=
+ setup_net+0x21e/0x880=0A=
+ copy_net_ns+0x2e3/0x640=0A=
+ create_new_namespaces+0x3f6/0xaf0=0A=
+ unshare_nsproxy_namespaces+0xc0/0x200=0A=
+ ksys_unshare+0x40e/0x940=0A=
+ __x64_sys_unshare+0x31/0x40=0A=
+ do_syscall_64+0xcf/0x260=0A=
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f=0A=
+=0A=
+The buggy address belongs to the object at ffff888000efb000=0A=
+ which belongs to the cache kmalloc-2k of size 2048=0A=
+The buggy address is located 1920 bytes to the right of=0A=
+ allocated 1848-byte region [ffff888000efb000, ffff888000efb738)=0A=
+=0A=
+The buggy address belongs to the physical page:=0A=
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0xef8=0A=
+head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0=0A=
+anon flags: 0x7ff00000000040(head|node=3D0|zone=3D0|lastcpupid=3D0x7ff)=0A=
+page_type: f5(slab)=0A=
+raw: 007ff00000000040 ffff88801b442f00 0000000000000000 dead000000000001=0A=
+raw: 0000000000000000 0000000000080008 00000000f5000000 0000000000000000=0A=
+head: 007ff00000000040 ffff88801b442f00 0000000000000000 dead000000000001=
+=0A=
+head: 0000000000000000 0000000000080008 00000000f5000000 0000000000000000=
+=0A=
+head: 007ff00000000003 ffffea000003be01 00000000ffffffff 00000000ffffffff=
+=0A=
+head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008=
+=0A=
+page dumped because: kasan: bad access detected=0A=
+page_owner tracks the page as allocated=0A=
+page last allocated via order 3, migratetype Unmovable, gfp_mask 0xd2040(__=
+GFP_IO|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 9700, t=
+gid 9700 (dhclient-script), ts 110050809934, free_ts 90102811247=0A=
+ prep_new_page+0x1b0/0x1e0=0A=
+ get_page_from_freelist+0x1c80/0x3a40=0A=
+ __alloc_frozen_pages_noprof+0x2fd/0x6d0=0A=
+ alloc_pages_mpol+0x209/0x550=0A=
+ new_slab+0x254/0x350=0A=
+ ___slab_alloc+0xf0c/0x17c0=0A=
+ __slab_alloc.isra.0+0x56/0xb0=0A=
+ __kmalloc_noprof+0x2d3/0x600=0A=
+ tomoyo_init_log+0x1204/0x1e20=0A=
+ tomoyo_supervisor+0x2e6/0x1320=0A=
+ tomoyo_env_perm+0x185/0x200=0A=
+ tomoyo_find_next_domain+0x154c/0x20a0=0A=
+ tomoyo_bprm_check_security+0x13a/0x1d0=0A=
+ security_bprm_check+0x8b/0x210=0A=
+ bprm_execve+0x832/0x1630=0A=
+ do_execveat_common.isra.0+0x4ce/0x630=0A=
+page last free pid 7296 tgid 7296 stack trace:=0A=
+ __free_frozen_pages+0x7cd/0x1320=0A=
+ __put_partials+0x14c/0x170=0A=
+ qlist_free_all+0x50/0x130=0A=
+ kasan_quarantine_reduce+0x168/0x1c0=0A=
+ __kasan_slab_alloc+0x67/0x90=0A=
+ kmem_cache_alloc_noprof+0x166/0x4a0=0A=
+ security_inode_alloc+0x3e/0x2c0=0A=
+ inode_init_always_gfp+0xd15/0x1090=0A=
+ alloc_inode+0x8d/0x1f0=0A=
+ new_inode+0x16/0x40=0A=
+ shmem_get_inode+0x1ba/0xaa0=0A=
+ shmem_mknod+0x1a8/0x450=0A=
+ lookup_open+0x11ba/0x15f0=0A=
+ path_openat+0xed3/0x2980=0A=
+ do_filp_open+0x1f9/0x2f0=0A=
+ do_sys_openat2+0x4e3/0x710=0A=
+=0A=
+Memory state around the buggy address:=0A=
+ ffff888000efbd80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc=0A=
+ ffff888000efbe00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc=0A=
+>ffff888000efbe80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc=0A=
+                                        ^=0A=
+ ffff888000efbf00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc=0A=
+ ffff888000efbf80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc=0A=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=0A=
+=0A=
+thanks,=0A=
+Kun Hu=0A=
