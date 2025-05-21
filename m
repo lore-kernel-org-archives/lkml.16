@@ -1,175 +1,222 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD94823535E;
-	Wed, 21 May 2025 07:57:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD261199EAF;
+	Wed, 21 May 2025 07:59:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.62.165.209
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747814273; cv=none; b=Rmv4Upmg2o/Th0NIZxMSWw/OgeuDVbpuW2tueLwn3J5qB7UErhs0ROUv2eZChaXNjf/HBg4JzES5DhlFl8OXONYigGkjFTpGxQKuqTyiJ+/7xpJQ1qAq7rjGOEeTiFHNAJWfSyH7KIEA5zZfdb7Ok7mkcRQ2yRb/JeXZ+Dcd9IA=
+	t=1747814382; cv=none; b=MCeVbHw0krxwSSXJhLnm66GWlA4T5kU90rjj9ypHzKOO1wGk4NtY1KqA5NuCsELcnXCz2pkg5/IwISm29AaLXUeHtd59cwfGO/6sIF9qWUuuNoX0x697ExGaGErL6Wx5XQ/M4ybJhifgHvmMmbyYsnBbRTBhWnLqzQbNTO05yl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747814273; c=relaxed/simple;
-	bh=IkN/O4TGbrROkbGFdbKNrefNPLwlrHybl144qIJHI1U=;
-	h=From:To:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=g1iMyyZ681O8AnwBScASQOcMfsLpzyEc5JTEAiW0Ymo6+hTCA4JOQyhB4JceAGQp2246uUnLHvI7TMBegIcdil48n5adGbHjV+9t/vDKZUahzO9O583DZuF150CjdMLaxTFJyHwdaP69J27Po/u42OoEqWe1Ldwz7IH0kchDfYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Po5wFrEX; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EBFNUbdD; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Po5wFrEX";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EBFNUbdD"
-From: John Ogness <john.ogness@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747814264;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zdKNTsArdAs2c1TuTWwCMLwtQeBcXAgqSq0GvPwmk9E=;
-	b=Po5wFrEXlEgeg7HOuGajJzCMtJv7DJ5osizJSotIaUDbHtXW7Ke5g4kbSNo/S5YceNXv+8
-	cN3+ZrHTEJp7Z/wqOsieYhzE5Uwqyu/q7EQiQV7n0Yp4zpwr2Gnm05zvprJsnRb4/FeJaQ
-	eVvymZUf0aJYEbl7VcKHdM61kscCQheDggMdACd5sj7L7QnQLnAZ/rTgYachuiZl5Clfey
-	36TEUJOgkud2XV75Eje6bsvkJJwwr6FD4fBDRrQA9UDQ/0fD7S2sKYX32hZ9FLCiJU6aGQ
-	3jdVLdrIye7dwvpqYeRKDe+2fHXi7fESWM/Q/GIUtvlTJIqhh6dHfCvwp3CHag==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747814264;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zdKNTsArdAs2c1TuTWwCMLwtQeBcXAgqSq0GvPwmk9E=;
-	b=EBFNUbdDO8eBEXvOQ52dWB0FUTcDW5Z9RK+cMP9n4twiIHeZ69ei35cIr/0GFGegT2gWHB
-	n48b6wIuv9lrMFBA==
-To: Yunhui Cui <cuiyunhui@bytedance.com>, arnd@arndb.de,
- andriy.shevchenko@linux.intel.com, benjamin.larsson@genexis.eu,
- cuiyunhui@bytedance.com, gregkh@linuxfoundation.org,
- heikki.krogerus@linux.intel.com, ilpo.jarvinen@linux.intel.com,
- jirislaby@kernel.org, jkeeping@inmusicbrands.com,
- linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
- markus.mayer@linaro.org, matt.porter@linaro.org, namcao@linutronix.de,
- paulmck@kernel.org, pmladek@suse.com, schnelle@linux.ibm.com,
- sunilvl@ventanamicro.com, tim.kryger@linaro.org
-Subject: Re: [PATCH v6 2/4] serial: 8250: avoid potential PSLVERR issue
-In-Reply-To: <20250513024212.74658-2-cuiyunhui@bytedance.com>
-References: <20250513024212.74658-1-cuiyunhui@bytedance.com>
- <20250513024212.74658-2-cuiyunhui@bytedance.com>
-Date: Wed, 21 May 2025 10:03:43 +0206
-Message-ID: <84y0uq9z0o.fsf@jogness.linutronix.de>
+	s=arc-20240116; t=1747814382; c=relaxed/simple;
+	bh=q0MYXjYvjOE04gqmO4XaSD8Y5pEGPUj4OuusRDg8o3s=;
+	h=Date:Message-ID:In-Reply-To:References:Mime-Version:From:To:Cc:
+	 Subject:Content-Type; b=jZVkrtL7evRtI1NBHUFP0VEcYhlf1gPLWlFMLK3JLIE5VrBV9t17TGBa/mNRRqKsSCGh5Og7kcoIriuoHRz4QE4SSKIwxWXSrlInT5K8TEsiZVnESIT/p3fwajcI5GGb2Qc/KmOcN9rPuyxMBwZ8VeOgi3hh1QjAgVgxxZXWNQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=183.62.165.209
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxct.zte.com.cn (FangMail) with ESMTPS id 4b2P2r41Y0z4x6DP;
+	Wed, 21 May 2025 15:59:32 +0800 (CST)
+Received: from njy2app08.zte.com.cn ([10.40.13.206])
+	by mse-fl2.zte.com.cn with SMTP id 54L7wmZv094717;
+	Wed, 21 May 2025 15:59:08 +0800 (+08)
+	(envelope-from long.yunjian@zte.com.cn)
+Received: from mapi (njy2app03[null])
+	by mapi (Zmail) with MAPI id mid201;
+	Wed, 21 May 2025 15:59:10 +0800 (CST)
+Date: Wed, 21 May 2025 15:59:10 +0800 (CST)
+X-Zmail-TransId: 2afb682d87ce225-b2bd2
+X-Mailer: Zmail v1.0
+Message-ID: <2025052115591093831MdOvruWdMiauIhA8-r3@zte.com.cn>
+In-Reply-To: <eb0b9f89-8c34-4d30-87bd-c4e631f5b1b7@wanadoo.fr>
+References: 20250515203855146Sn9x-Uw9Teur35mOjn41C@zte.com.cn,eb0b9f89-8c34-4d30-87bd-c4e631f5b1b7@wanadoo.fr
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
+Mime-Version: 1.0
+From: <long.yunjian@zte.com.cn>
+To: <christophe.jaillet@wanadoo.fr>, <sudeep.holla@arm.com>,
+        <dan.carpenter@linaro.org>
+Cc: <cristian.marussi@arm.com>, <peng.fan@nxp.com>, <justin.chen@broadcom.com>,
+        <florian.fainelli@broadcom.com>, <arm-scmi@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <fang.yumeng@zte.com.cn>, <mou.yi@zte.com.cn>,
+        <ouyang.maochun@zte.com.cn>, <xu.lifeng1@zte.com.cn>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSF0gZmlybXdhcmU6IGFybV9zY21pOiBVc2UgZGV2X2Vycl9wcm9iZSgpIHNpbXBsaWZ5IHRoZSBjb2Rl?=
+Content-Type: multipart/mixed;
+	boundary="=====_001_next====="
+X-MAIL:mse-fl2.zte.com.cn 54L7wmZv094717
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 682D87E4.000/4b2P2r41Y0z4x6DP
 
-On 2025-05-13, Yunhui Cui <cuiyunhui@bytedance.com> wrote:
-> diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
-> index 07fe818dffa34..9a04f24b0c762 100644
-> --- a/drivers/tty/serial/8250/8250_port.c
-> +++ b/drivers/tty/serial/8250/8250_port.c
-> @@ -2133,25 +2132,22 @@ static void wait_for_xmitr(struct uart_8250_port *up, int bits)
->  static int serial8250_get_poll_char(struct uart_port *port)
->  {
->  	struct uart_8250_port *up = up_to_u8250p(port);
-> -	int status;
-> +	int status = NO_POLL_CHAR;
->  	u16 lsr;
-> +	unsigned long flags;
->  
->  	serial8250_rpm_get(up);
->  
-> +	uart_port_lock_irqsave(port, &flags);
->  	lsr = serial_port_in(port, UART_LSR);
-> +	if (lsr & UART_LSR_DR)
-> +		status = serial_port_in(port, UART_RX);
-> +	uart_port_unlock_irqrestore(port, flags);
 
-I realize I previously made a comment saying it was OK to add the spin
-locking here. But I have changed my mind. Please remove this spin
-locking. It is not necessary because with kgdb all the other CPUs are
-quiesced, so there is no need to synchronize with the console. Also, it
-will deadlock if kgdb took over while the port was locked.
 
-> @@ -2513,7 +2514,6 @@ void serial8250_do_shutdown(struct uart_port *port)
->  		port->mctrl &= ~TIOCM_OUT2;
->  
->  	serial8250_set_mctrl(port, port->mctrl);
-> -	uart_port_unlock_irqrestore(port, flags);
->  
->  	/*
->  	 * Disable break condition and FIFOs
-> @@ -2521,6 +2521,14 @@ void serial8250_do_shutdown(struct uart_port *port)
->  	serial_port_out(port, UART_LCR,
->  			serial_port_in(port, UART_LCR) & ~UART_LCR_SBC);
->  	serial8250_clear_fifos(up);
-> +	/*
-> +	 * Read data port to reset things, and then unlink from
-> +	 * the IRQ chain.
-> +	 * Since reading UART_RX clears interrupts, doing so with
-> +	 * FIFO disabled won't trigger PSLVERR.
-> +	 */
-> +	serial_port_in(port, UART_RX);
-> +	uart_port_unlock_irqrestore(port, flags);
->  
->  #ifdef CONFIG_SERIAL_8250_RSA
->  	/*
-> @@ -2529,11 +2537,6 @@ void serial8250_do_shutdown(struct uart_port *port)
->  	disable_rsa(up);
->  #endif
->  
-> -	/*
-> -	 * Read data port to reset things, and then unlink from
-> -	 * the IRQ chain.
-> -	 */
-> -	serial_port_in(port, UART_RX);
+--=====_001_next=====
+Content-Type: multipart/related;
+	boundary="=====_002_next====="
 
-I am thinking you should keep the read here and instead move the unlock
-below the read. This would mean the lock/unlock in disable_rsa() need to
-be removed. (The function comments for disable_rsa() aready say that the
-caller needs to hold the port lock.)
 
-I am thinking something like the below (untested) diff instead of the
-above 2 hunks.
+--=====_002_next=====
+Content-Type: multipart/alternative;
+	boundary="=====_003_next====="
 
-John Ogness
 
-diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
-index 22b3f7a193070..51467383aaf5a 100644
---- a/drivers/tty/serial/8250/8250_port.c
-+++ b/drivers/tty/serial/8250/8250_port.c
-@@ -781,8 +781,6 @@ static void disable_rsa(struct uart_8250_port *up)
- 
- 	if (up->port.type == PORT_RSA &&
- 	    up->port.uartclk == SERIAL_RSA_BAUD_BASE * 16) {
--		uart_port_lock_irq(&up->port);
--
- 		mode = serial_in(up, UART_RSA_MSR);
- 		result = !(mode & UART_RSA_MSR_FIFO);
- 
-@@ -794,7 +792,6 @@ static void disable_rsa(struct uart_8250_port *up)
- 
- 		if (result)
- 			up->port.uartclk = SERIAL_RSA_BAUD_BASE_LO * 16;
--		uart_port_unlock_irq(&up->port);
- 	}
- }
- #endif /* CONFIG_SERIAL_8250_RSA */
-@@ -2536,7 +2533,6 @@ void serial8250_do_shutdown(struct uart_port *port)
- 		port->mctrl &= ~TIOCM_OUT2;
- 
- 	serial8250_set_mctrl(port, port->mctrl);
--	uart_port_unlock_irqrestore(port, flags);
- 
- 	/*
- 	 * Disable break condition and FIFOs
-@@ -2555,8 +2551,12 @@ void serial8250_do_shutdown(struct uart_port *port)
- 	/*
- 	 * Read data port to reset things, and then unlink from
- 	 * the IRQ chain.
-+	 *
-+	 * Since reading UART_RX clears interrupts, doing so with
-+	 * FIFO disabled won't trigger PSLVERR.
- 	 */
- 	serial_port_in(port, UART_RX);
-+	uart_port_unlock_irqrestore(port, flags);
- 	serial8250_rpm_put(up);
- 
- 	up->ops->release_irq(up);
+--=====_003_next=====
+Content-Type: text/plain;
+	charset="UTF-8"
+Content-Transfer-Encoding: base64
+
+PiBEYW4gQ2FycGVudGVyOg0KPiBJdCdzIHByb2JhYmx5IGJldHRlciB0byBnZXQgcmlkIG9mIHRo
+ZSAicmV0ID0gUFRSX0VSUihzbWJveC0+Y2hhbik7Ig0KPiBhc3NpZ25tZW50IGFzIHdlbGwuICBU
+aGVuIGl0J3MgYSBvbmUgbGluZXI6DQo+DQo+ICAgICAgIGlmIChJU19FUlIoc21ib3gtPmNoYW4p
+KQ0KPiAgICAgICAgIHJldHVybiBkZXZfZXJyX3Byb2JlKGNkZXYsIFBUUl9FUlIoc21ib3gtPmNo
+YW4pLA0KPiAgICAgICAgICAgICAgICAgICAgICAiZmFpbGVkIHRvIHJlcXVlc3QgU0NNSSAlcyBt
+YWlsYm94XG4iLCBkZXNjKTsNCj4NCj4gQ2hyaXN0b3BoZSBKYWlsbGV0Og0KPj4gICNpbmNsdWRl
+IDxsaW51eC9vZl9hZGRyZXNzLmg+DQo+PiAgI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2Rldmlj
+ZS5oPg0KPj4gICNpbmNsdWRlIDxsaW51eC9zbGFiLmg+DQo+PiArI2luY2x1ZGUgPGxpbnV4L2Rl
+dl9wcmludGsuaD4NCj4NCj4gaW5jbHVkZXMgYXJlIChtb3N0bHkpIGFscGhhYmV0aWNhbGx5IG9y
+ZGVyZWQgcmlnaHQtbm93Lg0KPiBTbywgSXQgd291bGQgYmUgYmV0dGVyIHRvIGtlZXAgdGhpcyBs
+b2dpYywgSU1ITy4NCg0KDQpEZWFyIERhbiBDYXJwZW50ZXIgYW5kIENocmlzdG9waGUgSmFpbGxl
+dCwNClRoYW5rIHlvdSBib3RoIGZvciB5b3VyIGludmFsdWFibGUgc3VnZ2VzdGlvbnMhIA0KSSBo
+YXZlIHRob3JvdWdobHkgcmV2aXNlZCB0aGUgY29kZSBiYXNlZCBvbiB5b3VyIGZlZWRiYWNrLg0K
+SSB3aWxsIHNlbmQgdGhlIFBBVENIIFYyIGFuZCBsb29rIGZvcndhcmQgdG8geW91ciBmdXJ0aGVy
+IHJldmlldy4NCg0KDQpCZXN0IHJlZ2FyZHMsDQpGYW5nIFl1bWVuZw0KDQpPcmlnaW5hbA0KDQoN
+CkZyb206IGNocmlzdG9waGUuamFpbGxldCA8Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI+
+DQpUbzogTG9uZyBZdW5qaWFuMTAxNzE2OTk7c3VkZWVwLmhvbGxhIDxzdWRlZXAuaG9sbGFAYXJt
+LmNvbT47DQpDYzogY3Jpc3RpYW4ubWFydXNzaSA8Y3Jpc3RpYW4ubWFydXNzaUBhcm0uY29tPjtw
+ZW5nLmZhbiA8cGVuZy5mYW5AbnhwLmNvbT47anVzdGluLmNoZW4gPGp1c3Rpbi5jaGVuQGJyb2Fk
+Y29tLmNvbT47Zmxvcmlhbi5mYWluZWxsaSA8Zmxvcmlhbi5mYWluZWxsaUBicm9hZGNvbS5jb20+
+O2FybS1zY21pIDxhcm0tc2NtaUB2Z2VyLmtlcm5lbC5vcmc+O2xpbnV4LWFybS1rZXJuZWwgPGxp
+bnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZz47bGludXgta2VybmVsIDxsaW51eC1r
+ZXJuZWxAdmdlci5rZXJuZWwub3JnPjtGYW5nIFl1bWVuZzAwMzM2NDM4O01vdSBZaTEwMjA1NTA4
+O091eWFuZyBNYW9jaHVuMTAwOTA1MDQ7WHUgTGlmZW5nMTAwMTM0NjU7DQpEYXRlOiAyMDI1LzA1
+LzE2IDIzOjI2DQpTdWJqZWN0OiBSZTogW1BBVENIXSBmaXJtd2FyZTogYXJtX3NjbWk6IFVzZSBk
+ZXZfZXJyX3Byb2JlKCkgc2ltcGxpZnkgdGhlIGNvZGUNCg0KTGUgMTUvMDUvMjAyNSDDoCAxNDoz
+OCwgbG9uZy55dW5qaWFuQHp0ZS5jb20uY24gYSDDqWNyaXQgOg0KPiBGcm9tOiBZdW1lbmcgRmFu
+ZyA8ZmFuZy55dW1lbmdAenRlLmNvbS5jbj4gDQo+ICANCj4gSW4gdGhlIHByb2JlIHBhdGgsIGRl
+dl9lcnIoKSBjYW4gYmUgcmVwbGFjZWQgd2l0aCBkZXZfZXJyX3Byb2JlKCkNCj4gd2hpY2ggd2ls
+bCBjaGVjayBpZiBlcnJvciBjb2RlIGlzIC1FUFJPQkVfREVGRVIgYW5kIHByaW50cyB0aGUNCj4g
+ZXJyb3IgbmFtZS4gSXQgYWxzbyBzZXRzIHRoZSBkZWZlciBwcm9iZSByZWFzb24gd2hpY2ggY2Fu
+IGJlDQo+IGNoZWNrZWQgbGF0ZXIgdGhyb3VnaCBkZWJ1Z2ZzLg0KPiAgDQo+IFNpZ25lZC1vZmYt
+Ynk6IFl1bWVuZyBGYW5nIDxmYW5nLnl1bWVuZ0B6dGUuY29tLmNuPiANCj4gLS0tDQo+ICAgZHJp
+dmVycy9maXJtd2FyZS9hcm1fc2NtaS90cmFuc3BvcnRzL21haWxib3guYyB8IDE3ICsrKysrKyst
+LS0tLS0tLS0tDQo+ICAgMSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygrKSwgMTAgZGVsZXRp
+b25zKC0pDQo+ICANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZmlybXdhcmUvYXJtX3NjbWkvdHJh
+bnNwb3J0cy9tYWlsYm94LmMgYi9kcml2ZXJzL2Zpcm13YXJlL2FybV9zY21pL3RyYW5zcG9ydHMv
+bWFpbGJveC5jDQo+IGluZGV4IGJkMDQxYzk5YjkyYi4uODE2ZTc5NTM3OTM1IDEwMDY0NA0KPiAt
+LS0gYS9kcml2ZXJzL2Zpcm13YXJlL2FybV9zY21pL3RyYW5zcG9ydHMvbWFpbGJveC5jDQo+ICsr
+KyBiL2RyaXZlcnMvZmlybXdhcmUvYXJtX3NjbWkvdHJhbnNwb3J0cy9tYWlsYm94LmMNCj4gQEAg
+LTEzLDYgKzEzLDcgQEANCj4gICAjaW5jbHVkZSA8bGludXgvb2ZfYWRkcmVzcy5oPiANCj4gICAj
+aW5jbHVkZSA8bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+IA0KPiAgICNpbmNsdWRlIDxsaW51eC9z
+bGFiLmg+IA0KPiArI2luY2x1ZGUgPGxpbnV4L2Rldl9wcmludGsuaD4gDQo+ICANCiANCmluY2x1
+ZGVzIGFyZSAobW9zdGx5KSBhbHBoYWJldGljYWxseSBvcmRlcmVkIHJpZ2h0LW5vdy4NClNvLCBJ
+dCB3b3VsZCBiZSBiZXR0ZXIgdG8ga2VlcCB0aGlzIGxvZ2ljLCBJTUhPLg0KIA0KQ0o=
+
+
+--=====_003_next=====
+Content-Type: text/html ;
+	charset="UTF-8"
+Content-Transfer-Encoding: base64
+
+PGRpdiBjbGFzcz0iemNvbnRlbnRSb3ciPjxwPiZndDsgRGFuIENhcnBlbnRlcjo8L3A+PHA+Jmd0
+OyBJdCdzIHByb2JhYmx5IGJldHRlciB0byBnZXQgcmlkIG9mIHRoZSAicmV0ID0gUFRSX0VSUihz
+bWJveC0mZ3Q7Y2hhbik7IjwvcD48cD4mZ3Q7IGFzc2lnbm1lbnQgYXMgd2VsbC4mbmJzcDsgVGhl
+biBpdCdzIGEgb25lIGxpbmVyOjwvcD48cD4mZ3Q7PC9wPjxwPiZndDsmbmJzcDsgJm5ic3A7ICZu
+YnNwOyAmbmJzcDtpZiAoSVNfRVJSKHNtYm94LSZndDtjaGFuKSk8L3A+PHA+Jmd0OyZuYnNwOyAm
+bmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDtyZXR1cm4gZGV2X2Vycl9wcm9iZShjZGV2LCBQVFJf
+RVJSKHNtYm94LSZndDtjaGFuKSw8L3A+PHA+Jmd0OyZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNw
+OyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgImZhaWxl
+ZCB0byByZXF1ZXN0IFNDTUkgJXMgbWFpbGJveFxuIiwgZGVzYyk7PC9wPjxwPiZndDs8L3A+PHA+
+Jmd0OyBDaHJpc3RvcGhlIEphaWxsZXQ6PC9wPjxwPiZndDsmZ3Q7Jm5ic3A7ICNpbmNsdWRlICZs
+dDtsaW51eC9vZl9hZGRyZXNzLmgmZ3Q7PC9wPjxwPiZndDsmZ3Q7Jm5ic3A7ICNpbmNsdWRlICZs
+dDtsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaCZndDs8L3A+PHA+Jmd0OyZndDsmbmJzcDsgI2luY2x1
+ZGUgJmx0O2xpbnV4L3NsYWIuaCZndDs8L3A+PHA+Jmd0OyZndDsgKyNpbmNsdWRlICZsdDtsaW51
+eC9kZXZfcHJpbnRrLmgmZ3Q7PC9wPjxwPiZndDs8L3A+PHA+Jmd0OyBpbmNsdWRlcyBhcmUgKG1v
+c3RseSkgYWxwaGFiZXRpY2FsbHkgb3JkZXJlZCByaWdodC1ub3cuPC9wPjxwPiZndDsgU28sIEl0
+IHdvdWxkIGJlIGJldHRlciB0byBrZWVwIHRoaXMgbG9naWMsIElNSE8uPC9wPjxwPjxicj48L3A+
+PHA+PGJyPjwvcD48cD5EZWFyIERhbiBDYXJwZW50ZXIgYW5kIENocmlzdG9waGUgSmFpbGxldCw8
+L3A+PHA+VGhhbmsgeW91IGJvdGggZm9yIHlvdXIgaW52YWx1YWJsZSBzdWdnZXN0aW9ucyEmbmJz
+cDs8L3A+PHA+SSBoYXZlIHRob3JvdWdobHkgcmV2aXNlZCB0aGUgY29kZSBiYXNlZCBvbiB5b3Vy
+IGZlZWRiYWNrLjwvcD48cD5JIHdpbGwgc2VuZCB0aGUgUEFUQ0ggVjIgYW5kIGxvb2sgZm9yd2Fy
+ZCB0byB5b3VyIGZ1cnRoZXIgcmV2aWV3LjwvcD48cD48YnI+PC9wPjxwPjxicj48L3A+PHA+QmVz
+dCByZWdhcmRzLDwvcD48cD5GYW5nIFl1bWVuZzwvcD48ZGl2IGNsYXNzPSJ6aGlzdG9yeVJvdyIg
+c3R5bGU9ImRpc3BsYXk6YmxvY2siPjxkaXYgY2xhc3M9InpoaXN0b3J5RGVzIiBzdHlsZT0id2lk
+dGg6IDEwMCU7IGhlaWdodDogMjhweDsgbGluZS1oZWlnaHQ6IDI4cHg7IGJhY2tncm91bmQtY29s
+b3I6ICNFMEU1RTk7IGNvbG9yOiAjMTM4OEZGOyB0ZXh0LWFsaWduOiBjZW50ZXI7Ij5PcmlnaW5h
+bDwvZGl2PjxkaXYgaWQ9Inp3cml0ZUhpc3RvcnlDb250YWluZXIiPjxkaXYgY2xhc3M9ImNvbnRy
+b2wtZ3JvdXAgemhpc3RvcnlQYW5lbCI+PGRpdiBjbGFzcz0iemhpc3RvcnlIZWFkZXIiIHN0eWxl
+PSJwYWRkaW5nOiA4cHg7IGJhY2tncm91bmQtY29sb3I6ICNGNUY2Rjg7Ij48ZGl2PjxzdHJvbmc+
+RnJvbTombmJzcDs8L3N0cm9uZz48c3BhbiBjbGFzcz0ienJlYWRVc2VyTmFtZSI+Y2hyaXN0b3Bo
+ZS5qYWlsbGV0ICZsdDtjaHJpc3RvcGhlLmphaWxsZXRAd2FuYWRvby5mciZndDs8L3NwYW4+PC9k
+aXY+PGRpdj48c3Ryb25nPlRvOiZuYnNwOzwvc3Ryb25nPjxzcGFuIGNsYXNzPSJ6cmVhZFVzZXJO
+YW1lIiBzdHlsZT0iZGlzcGxheTogaW5saW5lOyI+TG9uZyBZdW5qaWFuMTAxNzE2OTk7PC9zcGFu
+PjxzcGFuIGNsYXNzPSJ6cmVhZFVzZXJOYW1lIiBzdHlsZT0iZGlzcGxheTogaW5saW5lOyI+c3Vk
+ZWVwLmhvbGxhICZsdDtzdWRlZXAuaG9sbGFAYXJtLmNvbSZndDs7PC9zcGFuPjwvZGl2PjxkaXY+
+PHN0cm9uZz5DYzombmJzcDs8L3N0cm9uZz48c3BhbiBjbGFzcz0ienJlYWRVc2VyTmFtZSIgc3R5
+bGU9ImRpc3BsYXk6IGlubGluZTsiPmNyaXN0aWFuLm1hcnVzc2kgJmx0O2NyaXN0aWFuLm1hcnVz
+c2lAYXJtLmNvbSZndDs7PC9zcGFuPjxzcGFuIGNsYXNzPSJ6cmVhZFVzZXJOYW1lIiBzdHlsZT0i
+ZGlzcGxheTogaW5saW5lOyI+cGVuZy5mYW4gJmx0O3BlbmcuZmFuQG54cC5jb20mZ3Q7Ozwvc3Bh
+bj48c3BhbiBjbGFzcz0ienJlYWRVc2VyTmFtZSIgc3R5bGU9ImRpc3BsYXk6IGlubGluZTsiPmp1
+c3Rpbi5jaGVuICZsdDtqdXN0aW4uY2hlbkBicm9hZGNvbS5jb20mZ3Q7Ozwvc3Bhbj48c3BhbiBj
+bGFzcz0ienJlYWRVc2VyTmFtZSIgc3R5bGU9ImRpc3BsYXk6IGlubGluZTsiPmZsb3JpYW4uZmFp
+bmVsbGkgJmx0O2Zsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tJmd0Ozs8L3NwYW4+PHNwYW4g
+Y2xhc3M9InpyZWFkVXNlck5hbWUiIHN0eWxlPSJkaXNwbGF5OiBpbmxpbmU7Ij5hcm0tc2NtaSAm
+bHQ7YXJtLXNjbWlAdmdlci5rZXJuZWwub3JnJmd0Ozs8L3NwYW4+PHNwYW4gY2xhc3M9InpyZWFk
+VXNlck5hbWUiIHN0eWxlPSJkaXNwbGF5OiBpbmxpbmU7Ij5saW51eC1hcm0ta2VybmVsICZsdDts
+aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcmZ3Q7Ozwvc3Bhbj48c3BhbiBjbGFz
+cz0ienJlYWRVc2VyTmFtZSIgc3R5bGU9ImRpc3BsYXk6IGlubGluZTsiPmxpbnV4LWtlcm5lbCAm
+bHQ7bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZyZndDs7PC9zcGFuPjxzcGFuIGNsYXNzPSJ6
+cmVhZFVzZXJOYW1lIiBzdHlsZT0iZGlzcGxheTogaW5saW5lOyI+RmFuZyBZdW1lbmcwMDMzNjQz
+ODs8L3NwYW4+PHNwYW4gY2xhc3M9InpyZWFkVXNlck5hbWUiIHN0eWxlPSJkaXNwbGF5OiBpbmxp
+bmU7Ij5Nb3UgWWkxMDIwNTUwODs8L3NwYW4+PHNwYW4gY2xhc3M9InpyZWFkVXNlck5hbWUiIHN0
+eWxlPSJkaXNwbGF5OiBpbmxpbmU7Ij5PdXlhbmcgTWFvY2h1bjEwMDkwNTA0Ozwvc3Bhbj48c3Bh
+biBjbGFzcz0ienJlYWRVc2VyTmFtZSIgc3R5bGU9ImRpc3BsYXk6IGlubGluZTsiPlh1IExpZmVu
+ZzEwMDEzNDY1Ozwvc3Bhbj48L2Rpdj48ZGl2PjxzdHJvbmc+RGF0ZTombmJzcDs8L3N0cm9uZz48
+c3BhbiBjbGFzcz0iIj4yMDI1LzA1LzE2IDIzOjI2PC9zcGFuPjwvZGl2PjxkaXY+PHN0cm9uZz5T
+dWJqZWN0OiZuYnNwOzwvc3Ryb25nPjxzcGFuIGNsYXNzPSJ6cmVhZFRpdGxlIj48c3Ryb25nPlJl
+OiBbUEFUQ0hdIGZpcm13YXJlOiBhcm1fc2NtaTogVXNlIGRldl9lcnJfcHJvYmUoKSBzaW1wbGlm
+eSB0aGUgY29kZTwvc3Ryb25nPjwvc3Bhbj48L2Rpdj48L2Rpdj48ZGl2IGNsYXNzPSJ6aGlzdG9y
+eUNvbnRlbnQiPkxlJm5ic3A7MTUvMDUvMjAyNSZuYnNwO8OgJm5ic3A7MTQ6MzgsJm5ic3A7bG9u
+Zy55dW5qaWFuQHp0ZS5jb20uY24mbmJzcDthJm5ic3A7w6ljcml0Jm5ic3A7Ojxicj4mZ3Q7Jm5i
+c3A7RnJvbTombmJzcDtZdW1lbmcmbmJzcDtGYW5nJm5ic3A7Jmx0O2ZhbmcueXVtZW5nQHp0ZS5j
+b20uY24mZ3Q7IDxicj4mZ3Q7Jm5ic3A7IDxicj4mZ3Q7Jm5ic3A7SW4mbmJzcDt0aGUmbmJzcDtw
+cm9iZSZuYnNwO3BhdGgsJm5ic3A7ZGV2X2VycigpJm5ic3A7Y2FuJm5ic3A7YmUmbmJzcDtyZXBs
+YWNlZCZuYnNwO3dpdGgmbmJzcDtkZXZfZXJyX3Byb2JlKCk8YnI+Jmd0OyZuYnNwO3doaWNoJm5i
+c3A7d2lsbCZuYnNwO2NoZWNrJm5ic3A7aWYmbmJzcDtlcnJvciZuYnNwO2NvZGUmbmJzcDtpcyZu
+YnNwOy1FUFJPQkVfREVGRVImbmJzcDthbmQmbmJzcDtwcmludHMmbmJzcDt0aGU8YnI+Jmd0OyZu
+YnNwO2Vycm9yJm5ic3A7bmFtZS4mbmJzcDtJdCZuYnNwO2Fsc28mbmJzcDtzZXRzJm5ic3A7dGhl
+Jm5ic3A7ZGVmZXImbmJzcDtwcm9iZSZuYnNwO3JlYXNvbiZuYnNwO3doaWNoJm5ic3A7Y2FuJm5i
+c3A7YmU8YnI+Jmd0OyZuYnNwO2NoZWNrZWQmbmJzcDtsYXRlciZuYnNwO3Rocm91Z2gmbmJzcDtk
+ZWJ1Z2ZzLjxicj4mZ3Q7Jm5ic3A7IDxicj4mZ3Q7Jm5ic3A7U2lnbmVkLW9mZi1ieTombmJzcDtZ
+dW1lbmcmbmJzcDtGYW5nJm5ic3A7Jmx0O2ZhbmcueXVtZW5nQHp0ZS5jb20uY24mZ3Q7IDxicj4m
+Z3Q7Jm5ic3A7LS0tPGJyPiZndDsmbmJzcDsmbmJzcDsmbmJzcDtkcml2ZXJzL2Zpcm13YXJlL2Fy
+bV9zY21pL3RyYW5zcG9ydHMvbWFpbGJveC5jJm5ic3A7fCZuYnNwOzE3Jm5ic3A7KysrKysrKy0t
+LS0tLS0tLS08YnI+Jmd0OyZuYnNwOyZuYnNwOyZuYnNwOzEmbmJzcDtmaWxlJm5ic3A7Y2hhbmdl
+ZCwmbmJzcDs3Jm5ic3A7aW5zZXJ0aW9ucygrKSwmbmJzcDsxMCZuYnNwO2RlbGV0aW9ucygtKTxi
+cj4mZ3Q7Jm5ic3A7IDxicj4mZ3Q7Jm5ic3A7ZGlmZiZuYnNwOy0tZ2l0Jm5ic3A7YS9kcml2ZXJz
+L2Zpcm13YXJlL2FybV9zY21pL3RyYW5zcG9ydHMvbWFpbGJveC5jJm5ic3A7Yi9kcml2ZXJzL2Zp
+cm13YXJlL2FybV9zY21pL3RyYW5zcG9ydHMvbWFpbGJveC5jPGJyPiZndDsmbmJzcDtpbmRleCZu
+YnNwO2JkMDQxYzk5YjkyYi4uODE2ZTc5NTM3OTM1Jm5ic3A7MTAwNjQ0PGJyPiZndDsmbmJzcDst
+LS0mbmJzcDthL2RyaXZlcnMvZmlybXdhcmUvYXJtX3NjbWkvdHJhbnNwb3J0cy9tYWlsYm94LmM8
+YnI+Jmd0OyZuYnNwOysrKyZuYnNwO2IvZHJpdmVycy9maXJtd2FyZS9hcm1fc2NtaS90cmFuc3Bv
+cnRzL21haWxib3guYzxicj4mZ3Q7Jm5ic3A7QEAmbmJzcDstMTMsNiZuYnNwOysxMyw3Jm5ic3A7
+QEA8YnI+Jmd0OyZuYnNwOyZuYnNwOyZuYnNwOyNpbmNsdWRlJm5ic3A7Jmx0O2xpbnV4L29mX2Fk
+ZHJlc3MuaCZndDsgPGJyPiZndDsmbmJzcDsmbmJzcDsmbmJzcDsjaW5jbHVkZSZuYnNwOyZsdDts
+aW51eC9wbGF0Zm9ybV9kZXZpY2UuaCZndDsgPGJyPiZndDsmbmJzcDsmbmJzcDsmbmJzcDsjaW5j
+bHVkZSZuYnNwOyZsdDtsaW51eC9zbGFiLmgmZ3Q7IDxicj4mZ3Q7Jm5ic3A7KyNpbmNsdWRlJm5i
+c3A7Jmx0O2xpbnV4L2Rldl9wcmludGsuaCZndDsgPGJyPiZndDsmbmJzcDsgPGJyPiA8YnI+aW5j
+bHVkZXMmbmJzcDthcmUmbmJzcDsobW9zdGx5KSZuYnNwO2FscGhhYmV0aWNhbGx5Jm5ic3A7b3Jk
+ZXJlZCZuYnNwO3JpZ2h0LW5vdy48YnI+U28sJm5ic3A7SXQmbmJzcDt3b3VsZCZuYnNwO2JlJm5i
+c3A7YmV0dGVyJm5ic3A7dG8mbmJzcDtrZWVwJm5ic3A7dGhpcyZuYnNwO2xvZ2ljLCZuYnNwO0lN
+SE8uPGJyPiA8YnI+Q0o8L2Rpdj48L2Rpdj48L2Rpdj48L2Rpdj48cD48YnI+PC9wPjwvZGl2Pg==
+
+--=====_003_next=====--
+
+--=====_002_next=====--
+
+--=====_001_next=====--
+
