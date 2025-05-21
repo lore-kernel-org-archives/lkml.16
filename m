@@ -1,436 +1,308 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 795EB219EB
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 06:35:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21540219EB
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 06:35:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747809341; cv=none; b=Sbsq511KhtNRsqiHWDv9BejwpJt0BsZy2PvPYmqmr/vs+PLb69NMry/eHMjLNP+UMYjrtJryv/pXa291uT1XGwcItq3aS0oiQhp/BqEEMr30w9iHm54oCydHQ/pPGG0sZZNBoO8Xqs9v1Qs7NBvEktl7UADGhqISZbxly4NyB94=
+	t=1747809356; cv=none; b=H+Uxi5dDUC3wBy/fGt5xW5lMG1MV6024Z9OET31bfKhIV78vDblzaSNGCwbbRBlrui9EhTLn29c5wAz0vkWecjgjT2fXU5FjKrwPidemr9PavpkO1l5f4X9XkdHSkjRvpRiXc8g8JyFVzs0Kv45F2MOfHZJj+Zn8qRLdrvF7OsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747809341; c=relaxed/simple;
-	bh=TFqvisHZf3CA3VoI4wvKrURXilJZGOHs5xSikL5EnuY=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ugNl88QRpguqFNFfyAQ8S4q5hSsQXxtrRpg8Rev/fNdhUX5n/W/Id49S8deOjeRPQV+HvAllYVbKvaQ0Ez1z/VCkpjiSryhs+pJzVkiylyF31LJyW3YcOTRp8RZjgcjElkdw1XO0TIRwDpM/elLVB2rHNIjnv7M+w2i8YP+SaUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3dc879a9d68so2473395ab.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 23:35:39 -0700 (PDT)
+	s=arc-20240116; t=1747809356; c=relaxed/simple;
+	bh=zeJrz2cIGvQYNCid0RPshhKyPwK6msxaigm9y8ugIYU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=r4d6X1avpPDbtHRnisCCNXQZyM8DofbIGURPIRJEIka1QQBloTB6oXBvB9N6bP1z5vMvmNqzAORxdlvxDabw9Km15zuwLYM3BdfGPNlA5DbND4fUrBpMmjfpL+51pnJen9lHGFckPeY2PSOG6csABTvx7r76NcM8reIk1sqNT4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DJh3i5Uj; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DJh3i5Uj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747809353;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=UoOgK3uc82K1fFte9dw2t4sOUO1PXKamiT5dfb2kKR4=;
+	b=DJh3i5UjDo+Tw8jMb9KtfGfVgkQgF4A28AZw/Prq7jiay10TfOeRGWrpH6jzZuyVnxbxz6
+	5Zlo+JinQ6NBgtePFKkioGFb4nUj6i05Lr1WAdrJ8pe6A+bljI+vpdF0S0314+1cR725Oj
+	SCey/eARpsAT/nGWw20gk7EP8cp3Rjw=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-117-f1mYm7pcOSivH8EbzmBQ2w-1; Wed, 21 May 2025 02:35:51 -0400
+X-MC-Unique: f1mYm7pcOSivH8EbzmBQ2w-1
+X-Mimecast-MFC-AGG-ID: f1mYm7pcOSivH8EbzmBQ2w_1747809350
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43ea256f039so50718775e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 23:35:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747809338; x=1748414138;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OrmvUOhBw5T/0ZsffU+wUyrwVOsl0UmePiswaflQtYE=;
-        b=ieu4r1GUJj+nJonQ/R5ZdBq7VVlkHas8lREdzgw2otQs8hnMMLDijX2bGIW/1vIg5T
-         XtEbE106DV7MiBnECU5sJkZFJs3WUQGjO6/YyYgH2qA5oqxCyFHsFo+uUf7fUuPNQ+tm
-         AX5AO/HJAQLDAMQsjJiKkaxVasJPgqYFdkpmNjafrJutU2Aan6S7jFji3stKizhi8erc
-         fdqLzr3Hy/gJIT55kx94pOFDRS341Hu3uE5UYwr9KsWyxQgSUgYeBbCDu/w3KGNvXsrv
-         UOi7y6ZdnHRl/TdxYenVQu6TG0V2mcaIr5gkPkwaVE2fNgKNQ3pbXM/gKheSpKWrqXnA
-         0dtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUPyay/TdQsTOK8IXNN1cGWEzkMYDiFer1L3RbyT6hcgxUa/gfxRRf6kpO3fZP0nqKufwmQkYm/RcS12mo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxxOClJoO8lwurLRJ+wr9rf53rLr/W8rojnLgEW0fKBSyGUlqgD
-	asZRNIWSk0uqg7HOtQ25F3Hpf6ZadcIT1hfi3hWcqIhRi6bTN93nflTNolrDk1TWJMT1zybC4FH
-	gHEihGafqx71cZayITjlS/5aEIAqqG9vsa94n2gxEG8Upou8UmzQRZfWff34=
-X-Google-Smtp-Source: AGHT+IF8y7xTMt0Au/GlUnoxVWxORbYZ8feoTneEwUTiP7KlZsqaYVjku59U2j9nkAOk6ydfK7MLGpvOcbRCkATjPCQIwpRR95g+
+        d=1e100.net; s=20230601; t=1747809350; x=1748414150;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=UoOgK3uc82K1fFte9dw2t4sOUO1PXKamiT5dfb2kKR4=;
+        b=EHAIT6Le8UnCrlM6fYsVLiiRdJ+l7utJ5WSbKLxA0Bxb4iUfCwrjicGSyXhNFtC85Z
+         j7UFh0U6YTQFaRA+56dV8zeLveLtbQbGGck81o9uDvSeiZyGmZ0RCE5l3QMb7v195+tL
+         9m3vng37Zs/wNuF0wWnyIgSRr/ulzKruNq0o7tedq/lytAvz/XquN5f/2a65GObIwv48
+         GTbSjz3uTx63qwp4BAEKnhPcq6r/6mRSX8svMBnnlDHndmIW+wwRULuNl06G1himDFel
+         y29i8uxrlxq8ylNcD/rD+jz88e1JG8hW10/rl8fgw5i34ZO6gR68kWVZmIn4uLaxGhMH
+         JFsA==
+X-Forwarded-Encrypted: i=1; AJvYcCVn7uhnzGp7gCsRelM9WZD4GtdDNZHszn3ng4J57u/Zboj+OCdQDu4eUJdbxzPKdAWuP1ie+ezm5/VyJ4o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzThF/SQiyA56T23oq0PDWTxPqlthLkqzgoZSDNA+gt5OFw6GaA
+	13s+LzaiDgR0N+Bc5Zz7HJiW86Bi+AclcG8wpLZvMiJFVF4LyjMIv8zXgPeEQlIvfgbpvSOkxK3
+	NEX/gacHq6ovD51AAJBKwhB9udPhjiB46fRtG83VlKOKFKh1v498ZfK3GucsQY0OGxg==
+X-Gm-Gg: ASbGncuYf0nX84ixDJ9kCSb9qlUjbfPFnAjXHXBKKG7DEPIoEO7SfTj30kGKtDcuG9L
+	p0kHlUDVILHzWFzUTjIPKCT/cCBa6cxhMmOfa8YS+AfLTfJqpIiDfnCMP6NcsNt0v5ZwVZqiP3o
+	vcCR1gqvnUGlIUNUXro9PN3QLymd/ZjRKSoBxhvgZzSOPOC13vTsy5fIr+S+XGngJXjDjXceDuq
+	NY2moQLchfF0C3p6bn63IoOWAod6G+z1+JVfRb52w6w5XiJ8eemRlTT5PTSm1PxGZig9ZO0KssW
+	GNvVauh9rsN2eT0z9ZLfC9hoSK+qwnwkpwRWBHD5u5VcvqqKiO9p/7xy9+kikCKgRIUhTuMwDMj
+	LjGQDV83NmxC8Wu/b98OVBLEuI53JvtPh/QVL5Ak=
+X-Received: by 2002:a05:600c:3c9b:b0:439:643a:c8d5 with SMTP id 5b1f17b1804b1-442fd5a1e4cmr189209715e9.0.1747809349929;
+        Tue, 20 May 2025 23:35:49 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGNlbbUx1fIRTCQGIse82izgmuHH0DoTwCEEz3iQgnfsVdiiEf7DtCXYUXAAxR29/Euu8K7Rg==
+X-Received: by 2002:a05:600c:3c9b:b0:439:643a:c8d5 with SMTP id 5b1f17b1804b1-442fd5a1e4cmr189209525e9.0.1747809349440;
+        Tue, 20 May 2025 23:35:49 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f25:9c00:e2c7:6eb5:8a51:1c60? (p200300d82f259c00e2c76eb58a511c60.dip0.t-ipconnect.de. [2003:d8:2f25:9c00:e2c7:6eb5:8a51:1c60])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442ebd8b9absm141773845e9.1.2025.05.20.23.35.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 May 2025 23:35:49 -0700 (PDT)
+Message-ID: <ff914260-6482-41a5-81f4-9f3069e335da@redhat.com>
+Date: Wed, 21 May 2025 08:35:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3b89:b0:3ce:8ed9:ca94 with SMTP id
- e9e14a558f8ab-3db84321c68mr205137185ab.14.1747809338514; Tue, 20 May 2025
- 23:35:38 -0700 (PDT)
-Date: Tue, 20 May 2025 23:35:38 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <682d743a.a00a0220.29bc26.0289.GAE@google.com>
-Subject: [syzbot] [f2fs?] INFO: task hung in freeze_super (6)
-From: syzbot <syzbot+aa5bb5f6860e08a60450@syzkaller.appspotmail.com>
-To: bp@alien8.de, chao@kernel.org, dave.hansen@linux.intel.com, hanqi@vivo.com, 
-	hpa@zytor.com, jaegeuk@kernel.org, linux-f2fs-devel@lists.sourceforge.net, 
-	linux-kernel@vger.kernel.org, mingo@redhat.com, 
-	syzkaller-bugs@googlegroups.com, tglx@linutronix.de, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] vfio/type1: optimize vfio_pin_pages_remote() for huge
+ folio
+To: Alex Williamson <alex.williamson@redhat.com>
+Cc: lizhe.67@bytedance.com, kvm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, muchun.song@linux.dev
+References: <20250520070020.6181-1-lizhe.67@bytedance.com>
+ <3f51d180-becd-4c0d-a156-7ead8a40975b@redhat.com>
+ <20250520162125.772d003f.alex.williamson@redhat.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
+ AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
+ 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
+ rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
+ wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
+ 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
+ pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
+ KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
+ BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
+ 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
+ 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
+ M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
+ AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
+ boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
+ 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
+ XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
+ a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
+ Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
+ 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
+ kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
+ th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
+ jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250520162125.772d003f.alex.williamson@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On 21.05.25 00:21, Alex Williamson wrote:
+> On Tue, 20 May 2025 19:38:45 +0200
+> David Hildenbrand <david@redhat.com> wrote:
+> 
+>> On 20.05.25 09:00, lizhe.67@bytedance.com wrote:
+>>> From: Li Zhe <lizhe.67@bytedance.com>
+>>
+>> Subject: "huge folio" -> "large folios"
+>>
+>>>
+>>> When vfio_pin_pages_remote() is called with a range of addresses that
+>>> includes huge folios, the function currently performs individual
+>>
+>> Similar, we call it a "large" f
+>>
+>>> statistics counting operations for each page. This can lead to significant
+>>> performance overheads, especially when dealing with large ranges of pages.
+>>>
+>>> This patch optimize this process by batching the statistics counting
+>>> operations.
+>>>
+>>> The performance test results for completing the 8G VFIO IOMMU DMA mapping,
+>>> obtained through trace-cmd, are as follows. In this case, the 8G virtual
+>>> address space has been mapped to physical memory using hugetlbfs with
+>>> pagesize=2M.
+>>>
+>>> Before this patch:
+>>> funcgraph_entry:      # 33813.703 us |  vfio_pin_map_dma();
+>>>
+>>> After this patch:
+>>> funcgraph_entry:      # 15635.055 us |  vfio_pin_map_dma();
+>>>
+>>> Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
+>>> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+>>> ---
+>>> Changelogs:
+>>>
+>>> v2->v3:
+>>> - Code simplification.
+>>> - Fix some issues in comments.
+>>>
+>>> v1->v2:
+>>> - Fix some issues in comments and formatting.
+>>> - Consolidate vfio_find_vpfn_range() and vfio_find_vpfn().
+>>> - Move the processing logic for huge folio into the while(true) loop
+>>>     and use a variable with a default value of 1 to indicate the number
+>>>     of consecutive pages.
+>>>
+>>> v2 patch: https://lore.kernel.org/all/20250519070419.25827-1-lizhe.67@bytedance.com/
+>>> v1 patch: https://lore.kernel.org/all/20250513035730.96387-1-lizhe.67@bytedance.com/
+>>>
+>>>    drivers/vfio/vfio_iommu_type1.c | 48 +++++++++++++++++++++++++--------
+>>>    1 file changed, 37 insertions(+), 11 deletions(-)
+>>>
+>>> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+>>> index 0ac56072af9f..48f06ce0e290 100644
+>>> --- a/drivers/vfio/vfio_iommu_type1.c
+>>> +++ b/drivers/vfio/vfio_iommu_type1.c
+>>> @@ -319,15 +319,22 @@ static void vfio_dma_bitmap_free_all(struct vfio_iommu *iommu)
+>>>    /*
+>>>     * Helper Functions for host iova-pfn list
+>>>     */
+>>> -static struct vfio_pfn *vfio_find_vpfn(struct vfio_dma *dma, dma_addr_t iova)
+>>> +
+>>> +/*
+>>> + * Find the first vfio_pfn that overlapping the range
+>>> + * [iova, iova + PAGE_SIZE * npage) in rb tree.
+>>> + */
+>>> +static struct vfio_pfn *vfio_find_vpfn_range(struct vfio_dma *dma,
+>>> +		dma_addr_t iova, unsigned long npage)
+>>>    {
+>>>    	struct vfio_pfn *vpfn;
+>>>    	struct rb_node *node = dma->pfn_list.rb_node;
+>>> +	dma_addr_t end_iova = iova + PAGE_SIZE * npage;
+>>>    
+>>>    	while (node) {
+>>>    		vpfn = rb_entry(node, struct vfio_pfn, node);
+>>>    
+>>> -		if (iova < vpfn->iova)
+>>> +		if (end_iova <= vpfn->iova)
+>>>    			node = node->rb_left;
+>>>    		else if (iova > vpfn->iova)
+>>>    			node = node->rb_right;
+>>> @@ -337,6 +344,11 @@ static struct vfio_pfn *vfio_find_vpfn(struct vfio_dma *dma, dma_addr_t iova)
+>>>    	return NULL;
+>>>    }
+>>>    
+>>> +static inline struct vfio_pfn *vfio_find_vpfn(struct vfio_dma *dma, dma_addr_t iova)
+>>> +{
+>>> +	return vfio_find_vpfn_range(dma, iova, 1);
+>>> +}
+>>> +
+>>>    static void vfio_link_pfn(struct vfio_dma *dma,
+>>>    			  struct vfio_pfn *new)
+>>>    {
+>>> @@ -681,32 +693,46 @@ static long vfio_pin_pages_remote(struct vfio_dma *dma, unsigned long vaddr,
+>>>    		 * and rsvd here, and therefore continues to use the batch.
+>>>    		 */
+>>>    		while (true) {
+>>> +			struct folio *folio = page_folio(batch->pages[batch->offset]);
+>>> +			long nr_pages;
+>>> +
+>>>    			if (pfn != *pfn_base + pinned ||
+>>>    			    rsvd != is_invalid_reserved_pfn(pfn))
+>>>    				goto out;
+>>>    
+>>> +			/*
+>>> +			 * Note: The current nr_pages does not achieve the optimal
+>>> +			 * performance in scenarios where folio_nr_pages() exceeds
+>>> +			 * batch->capacity. It is anticipated that future enhancements
+>>> +			 * will address this limitation.
+>>> +			 */
+>>> +			nr_pages = min((long)batch->size, folio_nr_pages(folio) -
+>>> +						folio_page_idx(folio, batch->pages[batch->offset]));
+>>> +			if (nr_pages > 1 && vfio_find_vpfn_range(dma, iova, nr_pages))
+>>> +				nr_pages = 1;
+>>
+>>
+>> You seem to assume that the batch really contains the consecutive pages
+>> of that folio.
+> 
+> I don't think we are.  We're iterating through our batch of pages from
+> GUP to find consecutive pfns.  We use the page to get the pfn, the
+> folio, and immediately above, the offset into the folio.  batch->size is
+> the remaining length of the page array from GUP and batch->offset is our
+> current index into that array.
 
-syzbot found the following issue on:
+Let me try again using an example below ....
 
-HEAD commit:    3c21441eeffc Merge tag 'acpi-6.15-rc7' of git://git.kernel..
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=176b22d4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ea35e429f965296e
-dashboard link: https://syzkaller.appspot.com/bug?extid=aa5bb5f6860e08a60450
-compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=167d2ef4580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13a81f68580000
+>   
+>> This is not the case if we obtained the pages through GUP and we have
+>>
+>> (a) A MAP_PRIVATE mapping
+>>
+>> (b) We span multiple different VMAs
+>>
+>>
+>> Are we sure we can rule out (a) and (b)?
+>>
+>> A more future-proof approach would be at least looking whether the
+>> pages/pfns are actually consecutive.
+> 
+> The unmodified (pfn != *pfn_base + pinned) test is where we verify we
+> have the next consecutive pfn.  Maybe I'm not catching the dependency
+> you're seeing on consecutive pages, I think there isn't one unless
+> we're somehow misusing folio_page_idx() to get the offset into the
+> folio.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/57d40aff8cb0/disk-3c21441e.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/9f367fd8bfd5/vmlinux-3c21441e.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/4e70f31a61dc/bzImage-3c21441e.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/9e197e7beb8c/mount_0.gz
-  fsck result: failed (log: https://syzkaller.appspot.com/x/fsck.log?x=11108ef4580000)
+Assume our page tables look like this (case (a), a partially mapped 
+large pagecache folio mixed with COW'ed anonymous folios):
 
-The issue was bisected to:
+   + page[0] of folio 0
+   |              + COWed anonymous folio (folio 1)
+   |              |    + page[4] of folio 0
+   |              |    |
+   v              v    v
+F0P0 F0P1 F0P2 F1P0 F0P4 P0P5 F0P6 F0P7
 
-commit 84b5bb8bf0f6a78c232a20c2eecdbb8112ac2703
-Author: Qi Han <hanqi@vivo.com>
-Date:   Fri Oct 25 09:18:23 2024 +0000
-
-    f2fs: modify f2fs_is_checkpoint_ready logic to allow more data to be written with the CP disable
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10f45ef4580000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=12f45ef4580000
-console output: https://syzkaller.appspot.com/x/log.txt?x=14f45ef4580000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+aa5bb5f6860e08a60450@syzkaller.appspotmail.com
-Fixes: 84b5bb8bf0f6 ("f2fs: modify f2fs_is_checkpoint_ready logic to allow more data to be written with the CP disable")
-
-INFO: task syz-executor328:5836 blocked for more than 143 seconds.
-      Not tainted 6.15.0-rc6-syzkaller-00208-g3c21441eeffc #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:syz-executor328 state:D stack:23432 pid:5836  tgid:5832  ppid:5826   task_flags:0x400140 flags:0x00004006
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5382 [inline]
- __schedule+0x168f/0x4c70 kernel/sched/core.c:6767
- __schedule_loop kernel/sched/core.c:6845 [inline]
- schedule+0x165/0x360 kernel/sched/core.c:6860
- percpu_down_write+0x28e/0x330 kernel/locking/percpu-rwsem.c:253
- sb_wait_write fs/super.c:1855 [inline]
- freeze_super+0x4c2/0xeb0 fs/super.c:2044
- fs_bdev_freeze+0x19f/0x310 fs/super.c:1484
- bdev_freeze+0xd8/0x220 block/bdev.c:298
- f2fs_do_shutdown+0x23d/0x5c0 fs/f2fs/file.c:2367
- f2fs_ioc_shutdown fs/f2fs/file.c:2459 [inline]
- __f2fs_ioctl+0x3de9/0xae80 fs/f2fs/file.c:4558
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:906 [inline]
- __se_sys_ioctl+0xf9/0x170 fs/ioctl.c:892
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f836b5ab109
-RSP: 002b:00007f836b55f218 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007f836b6386c8 RCX: 00007f836b5ab109
-RDX: 0000200000000080 RSI: 000000008004587d RDI: 0000000000000005
-RBP: 00007f836b6386c0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f836b604668
-R13: 00002000000000c0 R14: 0000200000000180 R15: 00002000000000e0
- </TASK>
-INFO: task syz-executor328:5856 blocked for more than 144 seconds.
-      Not tainted 6.15.0-rc6-syzkaller-00208-g3c21441eeffc #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:syz-executor328 state:D stack:24392 pid:5856  tgid:5832  ppid:5826   task_flags:0x400040 flags:0x00004006
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5382 [inline]
- __schedule+0x168f/0x4c70 kernel/sched/core.c:6767
- __schedule_loop kernel/sched/core.c:6845 [inline]
- schedule+0x165/0x360 kernel/sched/core.c:6860
- io_schedule+0x81/0xe0 kernel/sched/core.c:7742
- f2fs_balance_fs+0x4b4/0x780 fs/f2fs/segment.c:444
- f2fs_map_blocks+0x3af1/0x43b0 fs/f2fs/data.c:1791
- f2fs_expand_inode_data+0x653/0xaf0 fs/f2fs/file.c:1872
- f2fs_fallocate+0x4f5/0x990 fs/f2fs/file.c:1975
- vfs_fallocate+0x6a0/0x830 fs/open.c:338
- ioctl_preallocate fs/ioctl.c:290 [inline]
- file_ioctl fs/ioctl.c:-1 [inline]
- do_vfs_ioctl+0x1b8f/0x1eb0 fs/ioctl.c:885
- __do_sys_ioctl fs/ioctl.c:904 [inline]
- __se_sys_ioctl+0x82/0x170 fs/ioctl.c:892
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f836b5ab109
-RSP: 002b:00007f836b53e218 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007f836b6386d8 RCX: 00007f836b5ab109
-RDX: 00002000000000c0 RSI: 0000000040305828 RDI: 0000000000000004
-RBP: 00007f836b6386d0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f836b604668
-R13: 00002000000000c0 R14: 0000200000000180 R15: 00002000000000e0
- </TASK>
-INFO: task syz-executor328:5894 blocked for more than 145 seconds.
-      Not tainted 6.15.0-rc6-syzkaller-00208-g3c21441eeffc #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:syz-executor328 state:D stack:24152 pid:5894  tgid:5892  ppid:5825   task_flags:0x400140 flags:0x00004006
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5382 [inline]
- __schedule+0x168f/0x4c70 kernel/sched/core.c:6767
- __schedule_loop kernel/sched/core.c:6845 [inline]
- schedule+0x165/0x360 kernel/sched/core.c:6860
- percpu_down_write+0x28e/0x330 kernel/locking/percpu-rwsem.c:253
- sb_wait_write fs/super.c:1855 [inline]
- freeze_super+0x4c2/0xeb0 fs/super.c:2044
- fs_bdev_freeze+0x19f/0x310 fs/super.c:1484
- bdev_freeze+0xd8/0x220 block/bdev.c:298
- f2fs_do_shutdown+0x23d/0x5c0 fs/f2fs/file.c:2367
- f2fs_ioc_shutdown fs/f2fs/file.c:2459 [inline]
- __f2fs_ioctl+0x3de9/0xae80 fs/f2fs/file.c:4558
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:906 [inline]
- __se_sys_ioctl+0xf9/0x170 fs/ioctl.c:892
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f836b5ab109
-RSP: 002b:00007f836b55f218 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007f836b6386c8 RCX: 00007f836b5ab109
-RDX: 0000200000000080 RSI: 000000008004587d RDI: 0000000000000005
-RBP: 00007f836b6386c0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f836b604668
-R13: 00002000000000c0 R14: 0000200000000180 R15: 00002000000000e0
- </TASK>
-INFO: task syz-executor328:5907 blocked for more than 145 seconds.
-      Not tainted 6.15.0-rc6-syzkaller-00208-g3c21441eeffc #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:syz-executor328 state:D stack:25432 pid:5907  tgid:5892  ppid:5825   task_flags:0x400040 flags:0x00004006
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5382 [inline]
- __schedule+0x168f/0x4c70 kernel/sched/core.c:6767
- __schedule_loop kernel/sched/core.c:6845 [inline]
- schedule+0x165/0x360 kernel/sched/core.c:6860
- io_schedule+0x81/0xe0 kernel/sched/core.c:7742
- f2fs_balance_fs+0x4b4/0x780 fs/f2fs/segment.c:444
- f2fs_map_blocks+0x3af1/0x43b0 fs/f2fs/data.c:1791
- f2fs_expand_inode_data+0x653/0xaf0 fs/f2fs/file.c:1872
- f2fs_fallocate+0x4f5/0x990 fs/f2fs/file.c:1975
- vfs_fallocate+0x6a0/0x830 fs/open.c:338
- ioctl_preallocate fs/ioctl.c:290 [inline]
- file_ioctl fs/ioctl.c:-1 [inline]
- do_vfs_ioctl+0x1b8f/0x1eb0 fs/ioctl.c:885
- __do_sys_ioctl fs/ioctl.c:904 [inline]
- __se_sys_ioctl+0x82/0x170 fs/ioctl.c:892
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f836b5ab109
-RSP: 002b:00007f836b53e218 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007f836b6386d8 RCX: 00007f836b5ab109
-RDX: 00002000000000c0 RSI: 0000000040305828 RDI: 0000000000000004
-RBP: 00007f836b6386d0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f836b604668
-R13: 00002000000000c0 R14: 0000200000000180 R15: 00002000000000e0
- </TASK>
-INFO: task syz-executor328:5896 blocked for more than 147 seconds.
-      Not tainted 6.15.0-rc6-syzkaller-00208-g3c21441eeffc #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:syz-executor328 state:D stack:25144 pid:5896  tgid:5893  ppid:5827   task_flags:0x400140 flags:0x00004006
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5382 [inline]
- __schedule+0x168f/0x4c70 kernel/sched/core.c:6767
- __schedule_loop kernel/sched/core.c:6845 [inline]
- schedule+0x165/0x360 kernel/sched/core.c:6860
- percpu_down_write+0x28e/0x330 kernel/locking/percpu-rwsem.c:253
- sb_wait_write fs/super.c:1855 [inline]
- freeze_super+0x4c2/0xeb0 fs/super.c:2044
- fs_bdev_freeze+0x19f/0x310 fs/super.c:1484
- bdev_freeze+0xd8/0x220 block/bdev.c:298
- f2fs_do_shutdown+0x23d/0x5c0 fs/f2fs/file.c:2367
- f2fs_ioc_shutdown fs/f2fs/file.c:2459 [inline]
- __f2fs_ioctl+0x3de9/0xae80 fs/f2fs/file.c:4558
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:906 [inline]
- __se_sys_ioctl+0xf9/0x170 fs/ioctl.c:892
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f836b5ab109
-RSP: 002b:00007f836b55f218 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007f836b6386c8 RCX: 00007f836b5ab109
-RDX: 0000200000000080 RSI: 000000008004587d RDI: 0000000000000005
-RBP: 00007f836b6386c0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f836b604668
-R13: 00002000000000c0 R14: 0000200000000180 R15: 00002000000000e0
- </TASK>
-INFO: task syz-executor328:5908 blocked for more than 147 seconds.
-      Not tainted 6.15.0-rc6-syzkaller-00208-g3c21441eeffc #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:syz-executor328 state:D stack:24984 pid:5908  tgid:5893  ppid:5827   task_flags:0x400040 flags:0x00004006
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5382 [inline]
- __schedule+0x168f/0x4c70 kernel/sched/core.c:6767
- __schedule_loop kernel/sched/core.c:6845 [inline]
- schedule+0x165/0x360 kernel/sched/core.c:6860
- io_schedule+0x81/0xe0 kernel/sched/core.c:7742
- f2fs_balance_fs+0x4b4/0x780 fs/f2fs/segment.c:444
- f2fs_map_blocks+0x3af1/0x43b0 fs/f2fs/data.c:1791
- f2fs_expand_inode_data+0x653/0xaf0 fs/f2fs/file.c:1872
- f2fs_fallocate+0x4f5/0x990 fs/f2fs/file.c:1975
- vfs_fallocate+0x6a0/0x830 fs/open.c:338
- ioctl_preallocate fs/ioctl.c:290 [inline]
- file_ioctl fs/ioctl.c:-1 [inline]
- do_vfs_ioctl+0x1b8f/0x1eb0 fs/ioctl.c:885
- __do_sys_ioctl fs/ioctl.c:904 [inline]
- __se_sys_ioctl+0x82/0x170 fs/ioctl.c:892
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f836b5ab109
-RSP: 002b:00007f836b53e218 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007f836b6386d8 RCX: 00007f836b5ab109
-RDX: 00002000000000c0 RSI: 0000000040305828 RDI: 0000000000000004
-RBP: 00007f836b6386d0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f836b604668
-R13: 00002000000000c0 R14: 0000200000000180 R15: 00002000000000e0
- </TASK>
-
-Showing all locks held in the system:
-3 locks held by kworker/u8:1/13:
- #0: ffff888143ad3148 ((wq_completion)writeback){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3213 [inline]
- #0: ffff888143ad3148 ((wq_completion)writeback){+.+.}-{0:0}, at: process_scheduled_works+0x9b1/0x17a0 kernel/workqueue.c:3319
- #1: ffffc90000127c60 ((work_completion)(&(&wb->dwork)->work)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3214 [inline]
- #1: ffffc90000127c60 ((work_completion)(&(&wb->dwork)->work)){+.+.}-{0:0}, at: process_scheduled_works+0x9ec/0x17a0 kernel/workqueue.c:3319
- #2: ffff888079b0a0e0 (&type->s_umount_key#43){++++}-{4:4}, at: super_trylock_shared+0x20/0xf0 fs/super.c:562
-1 lock held by khungtaskd/31:
- #0: ffffffff8df3dce0 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
- #0: ffffffff8df3dce0 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:841 [inline]
- #0: ffffffff8df3dce0 (rcu_read_lock){....}-{1:3}, at: debug_show_all_locks+0x2e/0x180 kernel/locking/lockdep.c:6764
-5 locks held by kworker/u8:2/36:
-3 locks held by kworker/u8:3/53:
- #0: ffff888143ad3148 ((wq_completion)writeback){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3213 [inline]
- #0: ffff888143ad3148 ((wq_completion)writeback){+.+.}-{0:0}, at: process_scheduled_works+0x9b1/0x17a0 kernel/workqueue.c:3319
- #1: ffffc90000be7c60 ((work_completion)(&(&wb->dwork)->work)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3214 [inline]
- #1: ffffc90000be7c60 ((work_completion)(&(&wb->dwork)->work)){+.+.}-{0:0}, at: process_scheduled_works+0x9ec/0x17a0 kernel/workqueue.c:3319
- #2: ffff8880240c40e0 (&type->s_umount_key#43){++++}-{4:4}, at: super_trylock_shared+0x20/0xf0 fs/super.c:562
-3 locks held by kworker/u8:5/969:
- #0: ffff888143ad3148 ((wq_completion)writeback){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3213 [inline]
- #0: ffff888143ad3148 ((wq_completion)writeback){+.+.}-{0:0}, at: process_scheduled_works+0x9b1/0x17a0 kernel/workqueue.c:3319
- #1: ffffc90003787c60 ((work_completion)(&(&wb->dwork)->work)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3214 [inline]
- #1: ffffc90003787c60 ((work_completion)(&(&wb->dwork)->work)){+.+.}-{0:0}, at: process_scheduled_works+0x9ec/0x17a0 kernel/workqueue.c:3319
- #2: ffff8880230a20e0 (&type->s_umount_key#43){++++}-{4:4}, at: super_trylock_shared+0x20/0xf0 fs/super.c:562
-2 locks held by getty/5576:
- #0: ffff888030c370a0 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:243
- #1: ffffc900036e32f0 (&ldata->atomic_read_lock){+.+.}-{4:4}, at: n_tty_read+0x43e/0x1400 drivers/tty/n_tty.c:2222
-2 locks held by syz-executor328/5836:
- #0: ffff888022856930 (&bdev->bd_fsfreeze_mutex){+.+.}-{4:4}, at: bdev_freeze+0x2a/0x220 block/bdev.c:289
- #1: ffff8880230a2420 (sb_writers#9){++++}-{0:0}, at: sb_wait_write fs/super.c:1855 [inline]
- #1: ffff8880230a2420 (sb_writers#9){++++}-{0:0}, at: freeze_super+0x4c2/0xeb0 fs/super.c:2044
-3 locks held by syz-executor328/5856:
- #0: ffff8880230a2420 (sb_writers#9){++++}-{0:0}, at: file_start_write include/linux/fs.h:3041 [inline]
- #0: ffff8880230a2420 (sb_writers#9){++++}-{0:0}, at: vfs_fallocate+0x62a/0x830 fs/open.c:337
- #1: ffff888078bcbfd8 (&sb->s_type->i_mutex_key#14){+.+.}-{4:4}, at: inode_lock include/linux/fs.h:867 [inline]
- #1: ffff888078bcbfd8 (&sb->s_type->i_mutex_key#14){+.+.}-{4:4}, at: f2fs_fallocate+0x24e/0x990 fs/f2fs/file.c:1940
- #2: ffff888033c5d4f8 (&sbi->pin_sem){+.+.}-{4:4}, at: f2fs_down_write fs/f2fs/f2fs.h:2213 [inline]
- #2: ffff888033c5d4f8 (&sbi->pin_sem){+.+.}-{4:4}, at: f2fs_expand_inode_data+0x430/0xaf0 fs/f2fs/file.c:1839
-2 locks held by syz-executor328/5894:
- #0: ffff888022855db0 (&bdev->bd_fsfreeze_mutex){+.+.}-{4:4}, at: bdev_freeze+0x2a/0x220 block/bdev.c:289
- #1: ffff888079b0a420 (sb_writers#9){++++}-{0:0}, at: sb_wait_write fs/super.c:1855 [inline]
- #1: ffff888079b0a420 (sb_writers#9){++++}-{0:0}, at: freeze_super+0x4c2/0xeb0 fs/super.c:2044
-3 locks held by syz-executor328/5907:
- #0: ffff888079b0a420 (sb_writers#9){++++}-{0:0}, at: file_start_write include/linux/fs.h:3041 [inline]
- #0: ffff888079b0a420 (sb_writers#9){++++}-{0:0}, at: vfs_fallocate+0x62a/0x830 fs/open.c:337
- #1: ffff888074156398 (&sb->s_type->i_mutex_key#14){+.+.}-{4:4}, at: inode_lock include/linux/fs.h:867 [inline]
- #1: ffff888074156398 (&sb->s_type->i_mutex_key#14){+.+.}-{4:4}, at: f2fs_fallocate+0x24e/0x990 fs/f2fs/file.c:1940
- #2: ffff888079f554f8 (&sbi->pin_sem){+.+.}-{4:4}, at: f2fs_down_write fs/f2fs/f2fs.h:2213 [inline]
- #2: ffff888079f554f8 (&sbi->pin_sem){+.+.}-{4:4}, at: f2fs_expand_inode_data+0x430/0xaf0 fs/f2fs/file.c:1839
-2 locks held by syz-executor328/5896:
- #0: ffff8880228574b0 (&bdev->bd_fsfreeze_mutex){+.+.}-{4:4}, at: bdev_freeze+0x2a/0x220 block/bdev.c:289
- #1: ffff8880240c4420 (sb_writers#9){++++}-{0:0}, at: sb_wait_write fs/super.c:1855 [inline]
- #1: ffff8880240c4420 (sb_writers#9){++++}-{0:0}, at: freeze_super+0x4c2/0xeb0 fs/super.c:2044
-3 locks held by syz-executor328/5908:
- #0: ffff8880240c4420 (sb_writers#9){++++}-{0:0}, at: file_start_write include/linux/fs.h:3041 [inline]
- #0: ffff8880240c4420 (sb_writers#9){++++}-{0:0}, at: vfs_fallocate+0x62a/0x830 fs/open.c:337
- #1: ffff888074157578 (&sb->s_type->i_mutex_key#14){+.+.}-{4:4}, at: inode_lock include/linux/fs.h:867 [inline]
- #1: ffff888074157578 (&sb->s_type->i_mutex_key#14){+.+.}-{4:4}, at: f2fs_fallocate+0x24e/0x990 fs/f2fs/file.c:1940
- #2: ffff88807f9ad4f8 (&sbi->pin_sem){+.+.}-{4:4}, at: f2fs_down_write fs/f2fs/f2fs.h:2213 [inline]
- #2: ffff88807f9ad4f8 (&sbi->pin_sem){+.+.}-{4:4}, at: f2fs_expand_inode_data+0x430/0xaf0 fs/f2fs/file.c:1839
-2 locks held by syz-executor328/6364:
- #0: ffff8880228546b0 (&bdev->bd_fsfreeze_mutex){+.+.}-{4:4}, at: bdev_freeze+0x2a/0x220 block/bdev.c:289
- #1: ffff88807dedc420 (sb_writers#9){++++}-{0:0}, at: sb_wait_write fs/super.c:1855 [inline]
- #1: ffff88807dedc420 (sb_writers#9){++++}-{0:0}, at: freeze_super+0x4c2/0xeb0 fs/super.c:2044
-3 locks held by syz-executor328/6374:
- #0: ffff88807dedc420 (sb_writers#9){++++}-{0:0}, at: file_start_write include/linux/fs.h:3041 [inline]
- #0: ffff88807dedc420 (sb_writers#9){++++}-{0:0}, at: vfs_fallocate+0x62a/0x830 fs/open.c:337
- #1: ffff88806d35a508 (&sb->s_type->i_mutex_key#14){+.+.}-{4:4}, at: inode_lock include/linux/fs.h:867 [inline]
- #1: ffff88806d35a508 (&sb->s_type->i_mutex_key#14){+.+.}-{4:4}, at: f2fs_fallocate+0x24e/0x990 fs/f2fs/file.c:1940
- #2: ffff888079e4d4f8 (&sbi->pin_sem){+.+.}-{4:4}, at: f2fs_down_write fs/f2fs/f2fs.h:2213 [inline]
- #2: ffff888079e4d4f8 (&sbi->pin_sem){+.+.}-{4:4}, at: f2fs_expand_inode_data+0x430/0xaf0 fs/f2fs/file.c:1839
-2 locks held by syz-executor328/6379:
- #0: ffff888022855230 (&bdev->bd_fsfreeze_mutex){+.+.}-{4:4}, at: bdev_freeze+0x2a/0x220 block/bdev.c:289
- #1: ffff888033604420 (sb_writers#9){++++}-{0:0}, at: sb_wait_write fs/super.c:1855 [inline]
- #1: ffff888033604420 (sb_writers#9){++++}-{0:0}, at: freeze_super+0x4c2/0xeb0 fs/super.c:2044
-3 locks held by syz-executor328/6382:
- #0: ffff888033604420 (sb_writers#9){++++}-{0:0}, at: file_start_write include/linux/fs.h:3041 [inline]
- #0: ffff888033604420 (sb_writers#9){++++}-{0:0}, at: vfs_fallocate+0x62a/0x830 fs/open.c:337
- #1: ffff88806d037578 (&sb->s_type->i_mutex_key#14){+.+.}-{4:4}, at: inode_lock include/linux/fs.h:867 [inline]
- #1: ffff88806d037578 (&sb->s_type->i_mutex_key#14){+.+.}-{4:4}, at: f2fs_fallocate+0x24e/0x990 fs/f2fs/file.c:1940
- #2: ffff8880286b14f8 (&sbi->pin_sem){+.+.}-{4:4}, at: f2fs_down_write fs/f2fs/f2fs.h:2213 [inline]
- #2: ffff8880286b14f8 (&sbi->pin_sem){+.+.}-{4:4}, at: f2fs_expand_inode_data+0x430/0xaf0 fs/f2fs/file.c:1839
-
-=============================================
-
-NMI backtrace for cpu 0
-CPU: 0 UID: 0 PID: 31 Comm: khungtaskd Not tainted 6.15.0-rc6-syzkaller-00208-g3c21441eeffc #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-Call Trace:
- <TASK>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- nmi_cpu_backtrace+0x39e/0x3d0 lib/nmi_backtrace.c:113
- nmi_trigger_cpumask_backtrace+0x17a/0x300 lib/nmi_backtrace.c:62
- trigger_all_cpu_backtrace include/linux/nmi.h:158 [inline]
- check_hung_uninterruptible_tasks kernel/hung_task.c:274 [inline]
- watchdog+0xfee/0x1030 kernel/hung_task.c:437
- kthread+0x70e/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-Sending NMI from CPU 0 to CPUs 1:
-NMI backtrace for cpu 1
-CPU: 1 UID: 0 PID: 5905 Comm: f2fs_gc-7:4 Not tainted 6.15.0-rc6-syzkaller-00208-g3c21441eeffc #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-RIP: 0010:__sanitizer_cov_trace_pc+0x0/0x70 kernel/kcov.c:210
-Code: 89 fb e8 23 00 00 00 48 8b 3d 5c c3 d5 0b 48 89 de 5b e9 33 41 55 00 cc cc cc 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 <f3> 0f 1e fa 48 8b 04 24 65 48 8b 0c 25 08 70 72 92 65 8b 15 18 7f
-RSP: 0018:ffffc90004697b90 EFLAGS: 00000206
-RAX: ffffffff818dcd2c RBX: ffff88802fa49e00 RCX: 0000000000000000
-RDX: ffff88802fa49e00 RSI: 0000000000200000 RDI: 0000000000000000
-RBP: 0000000000200000 R08: ffff88803342a007 R09: 1ffff11006685400
-R10: dffffc0000000000 R11: ffffed1006685401 R12: ffff88807f9ac000
-R13: dffffc0000000000 R14: ffff88802fa49e2c R15: dffffc0000000000
-FS:  0000000000000000(0000) GS:ffff8881261f9000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f836b5fec18 CR3: 000000000dd38000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- to_kthread kernel/kthread.c:84 [inline]
- kthread_should_stop+0x59/0xf0 kernel/kthread.c:169
- gc_thread_func+0x344/0x2b30 fs/f2fs/gc.c:49
- kthread+0x70e/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
+If we GUP that range, we get exactly these pages, except that the PFNs 
+are not consecutive, because F0P3 was replaced by another page. The 
+large folio is partially mapped.
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Maybe I misunderstand that code, but wouldn't we just "jump" over F1P0
+because we assume the batch would contain F1P0, where it really contains 
+F0P4?
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+-- 
+Cheers,
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+David / dhildenb
 
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
