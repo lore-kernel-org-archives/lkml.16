@@ -1,114 +1,194 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5CEB264A83;
-	Wed, 21 May 2025 12:06:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 413B8264FB1;
+	Wed, 21 May 2025 12:06:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747829172; cv=none; b=mS7mvNK884J1KV1H0viyOMEnq01g7MZsxC0xFlzoMNCYeWNTa9QGvADCbSMu3wrr70YutKTpMHrqzigPOfDMHeSiNDEIyZ6njRZ+v5LqgKJAqnQiBocJYVswIEn9bYIN3uTW3czLJP1E2VDNCQkmzbZFcxl+M1syheA9U7ewkBs=
+	t=1747829172; cv=none; b=EQGKCF3q8HMTEE7ycLOnsifFZFZYcqXCN+nizkdGb8AmTJqeJtuwRHe5ijLVZpUrf9Lc3pXYDnuoomqmux7JUZUgeeNGptHmtuPXKJcXXidKxGsgraIhigew/ldjTIP0ohMvnXWLkX+PhvZtZEYRkJMu7lAXhR8FJGDXonlg/n8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747829172; c=relaxed/simple;
-	bh=2Y7h9FLSuwQV4ahko7NokTmxnqt7W/kwNcP7E2GH0yU=;
+	bh=ttKx6+bVMj0R8Bu4g6AdibEZcp2w04mL41S35h67d5w=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=JyRvge9+1GjPuHcQDjBZpXd0YGNOlNEXkYGRIN/UJ2Wqz/lQ/itSCmSlc5wvf2vJfL2BBPbVB/f770gp2BJDUs1QuBRX8IBsoCWMhTVU3oTk8EVDmrVgH2tD6A7lqwgdvfKtsfwUFSisWQCbdLUDoODwcWXHnvEWtmGs7m8HBMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=caMkA/00; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=se9BZJN+; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=RJLifLFe0rHzl2PA53fVh2hQzwuxoA8/pRJ816y7KZs+liN5OvtqaYQ6iC8d7o/KZK8uW8HDpgGcwIwwcats0Abj0Y5M3Cj/Z3LACal2ugYmR++ilR7z7a9PDRbZBAgVHN8HXL6Z71pBMiDyQPw7y51+7U6lWaRsFtopQrmqfTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xxfqlFjU; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ng86QKxz; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="caMkA/00";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="se9BZJN+"
-Date: Wed, 21 May 2025 12:06:08 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xxfqlFjU";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ng86QKxz"
+Date: Wed, 21 May 2025 12:06:07 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747829169;
+	s=2020; t=1747829168;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ODw2q0VcZh/FUcAyOd0UjhWNr57kbKVG/Xy+qxZzXqo=;
-	b=caMkA/00937bURz5Vk23ine98B7W+Qx3kv7HSOOUT7KqphLr/N1JW/NBGIWTjUP3oLy22h
-	x0QDOu1PL9Vjb3yStqwTVbkStaUXEQyKwG8WDjD8wQu2X5ThaQOOWYA0bSSYpqJkNt+GTI
-	aT4+MZYYz+bakofOf0CJR1jrWU06mBWw0EWCIwGOPZvVBfCMPCf8stS3lbVUvicSHxtsbz
-	nseM4Xi4FWznOqysJdQiJ6oAtmL5h2K7D+Ed1J2Vmx4KjKxm6W/Aw0xLr4VnPd4scmmmlV
-	GjfqHcoYeNV1a9dWjTIQMNVuRyIzHRm6sqmaTnRDEu0RlNcUlq1/nP1A9M+OBA==
+	bh=fD+WYY2rjZZT9UbJGCcCs7XoD2E72rJcnJAMtwHSnW4=;
+	b=xxfqlFjU1wXqGvm6nztdra4pEDWPt290U38SmRa01pYm90w7m+K4jXSKukGZWBlaNtL0Mi
+	U8ZTDAxAD/6hzC+FIZnqBffeKu8i7337j8GjWRTmr8RQzptZfr1D3eYQ+0epvbaGqwgZGf
+	Vm96zi4WfeX5OeszE2lKNwgiF79IqknzdpJfbpxPnSxn6Q1ZmLccwLXnQ0loF2erhOe+rR
+	q6M4+gJzC61NzLPJ79hHisUkAwzZMEcipHo11dHOGdg6EUj+mkreYN56v8gfHVnzXlxRXX
+	rv0eEPL6H6GY7vCyIF7PytpV+RwdJHH1Qh6UnMiR00HERyiEd/1ewZCIDf7D8g==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747829169;
+	s=2020e; t=1747829168;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ODw2q0VcZh/FUcAyOd0UjhWNr57kbKVG/Xy+qxZzXqo=;
-	b=se9BZJN+AsfJ3/GVE4fOXc13Gju0XzgsxmoyYzfte8imL7Y6P/fGemexW5BoEwFzD6jtpo
-	gFZfI2/RzH+ColCA==
+	bh=fD+WYY2rjZZT9UbJGCcCs7XoD2E72rJcnJAMtwHSnW4=;
+	b=Ng86QKxz851ZMw1YmcS/OhXxfTHU0Opxi002hfTjRmcLks/wnYFcW31R9xbf3nopGejBjb
+	CvPcn0fkwSOLs5Cw==
 From: "tip-bot2 for Sebastian Andrzej Siewior" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: locking/futex] futex: Use RCU_INIT_POINTER() in futex_mm_init().
+Subject: [tip: locking/futex] tools headers: Synchronize prctl.h ABI header
 Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250517151455.1065363-4-bigeasy@linutronix.de>
-References: <20250517151455.1065363-4-bigeasy@linutronix.de>
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>, andrealmeid@igalia.com,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250517151455.1065363-5-bigeasy@linutronix.de>
+References: <20250517151455.1065363-5-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174782916844.406.17946927892328892389.tip-bot2@tip-bot2>
+Message-ID: <174782916767.406.1898016885752796804.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
 The following commit has been merged into the locking/futex branch of tip:
 
-Commit-ID:     279f2c2c8e2169403d01190f042efa6e41731578
-Gitweb:        https://git.kernel.org/tip/279f2c2c8e2169403d01190f042efa6e41731578
+Commit-ID:     4140e2b31bedd87bfc53362441165979aa4fc5d8
+Gitweb:        https://git.kernel.org/tip/4140e2b31bedd87bfc53362441165979aa4=
+fc5d8
 Author:        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-AuthorDate:    Sat, 17 May 2025 17:14:53 +02:00
+AuthorDate:    Sat, 17 May 2025 17:14:54 +02:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
 CommitterDate: Wed, 21 May 2025 13:57:41 +02:00
 
-futex: Use RCU_INIT_POINTER() in futex_mm_init().
+tools headers: Synchronize prctl.h ABI header
 
-There is no need for an explicit NULL pointer initialisation plus a
-comment why it is okay. RCU_INIT_POINTER() can be used for NULL
-initialisations and it is documented.
+The prctl.h ABI header was slightly updated during the development of
+the interface. In particular the "immutable" parameter became a bit in
+the option argument.
 
-This has been build tested with gcc version 9.3.0 (Debian 9.3.0-22) on a
-x86-64 defconfig.
+Synchronize prctl.h ABI header again and make use of the definition in
+the testsuite and "perf bench futex".
 
-Fixes: 094ac8cff7858 ("futex: Relax the rcu_assign_pointer() assignment of mm->futex_phash in futex_mm_init()")
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20250517151455.1065363-4-bigeasy@linutronix.de
+Reviewed-by: Andr=C3=A9 Almeida <andrealmeid@igalia.com>
+Link: https://lore.kernel.org/r/20250517151455.1065363-5-bigeasy@linutronix.de
 ---
- include/linux/futex.h |  9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+ tools/include/uapi/linux/prctl.h                           |  1 +-
+ tools/perf/bench/futex.c                                   |  4 +-
+ tools/testing/selftests/futex/functional/futex_priv_hash.c | 21 +++----
+ 3 files changed, 15 insertions(+), 11 deletions(-)
 
-diff --git a/include/linux/futex.h b/include/linux/futex.h
-index 168ffd5..005b040 100644
---- a/include/linux/futex.h
-+++ b/include/linux/futex.h
-@@ -88,14 +88,7 @@ void futex_hash_free(struct mm_struct *mm);
- 
- static inline void futex_mm_init(struct mm_struct *mm)
+diff --git a/tools/include/uapi/linux/prctl.h b/tools/include/uapi/linux/prct=
+l.h
+index 21f30b3..43dec6e 100644
+--- a/tools/include/uapi/linux/prctl.h
++++ b/tools/include/uapi/linux/prctl.h
+@@ -367,6 +367,7 @@ struct prctl_mm_map {
+ /* FUTEX hash management */
+ #define PR_FUTEX_HASH			78
+ # define PR_FUTEX_HASH_SET_SLOTS	1
++# define FH_FLAG_IMMUTABLE		(1ULL << 0)
+ # define PR_FUTEX_HASH_GET_SLOTS	2
+ # define PR_FUTEX_HASH_GET_IMMUTABLE	3
+=20
+diff --git a/tools/perf/bench/futex.c b/tools/perf/bench/futex.c
+index 02ae6c5..26382e4 100644
+--- a/tools/perf/bench/futex.c
++++ b/tools/perf/bench/futex.c
+@@ -9,12 +9,14 @@
+=20
+ void futex_set_nbuckets_param(struct bench_futex_parameters *params)
  {
--	/*
--	 * No need for rcu_assign_pointer() here, as we can rely on
--	 * tasklist_lock write-ordering in copy_process(), before
--	 * the task's MM becomes visible and the ->futex_phash
--	 * becomes externally observable:
--	 */
--	mm->futex_phash = NULL;
--
-+	RCU_INIT_POINTER(mm->futex_phash, NULL);
- 	mutex_init(&mm->futex_hash_lock);
++	unsigned long flags;
+ 	int ret;
+=20
+ 	if (params->nbuckets < 0)
+ 		return;
+=20
+-	ret =3D prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_SET_SLOTS, params->nbuckets, par=
+ams->buckets_immutable);
++	flags =3D params->buckets_immutable ? FH_FLAG_IMMUTABLE : 0;
++	ret =3D prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_SET_SLOTS, params->nbuckets, fla=
+gs);
+ 	if (ret) {
+ 		printf("Requesting %d hash buckets failed: %d/%m\n",
+ 		       params->nbuckets, ret);
+diff --git a/tools/testing/selftests/futex/functional/futex_priv_hash.c b/too=
+ls/testing/selftests/futex/functional/futex_priv_hash.c
+index 72a621d..2dca18f 100644
+--- a/tools/testing/selftests/futex/functional/futex_priv_hash.c
++++ b/tools/testing/selftests/futex/functional/futex_priv_hash.c
+@@ -26,13 +26,14 @@ static int counter;
+ #ifndef PR_FUTEX_HASH
+ #define PR_FUTEX_HASH			78
+ # define PR_FUTEX_HASH_SET_SLOTS	1
++# define FH_FLAG_IMMUTABLE		(1ULL << 0)
+ # define PR_FUTEX_HASH_GET_SLOTS	2
+ # define PR_FUTEX_HASH_GET_IMMUTABLE	3
+ #endif
+=20
+-static int futex_hash_slots_set(unsigned int slots, int immutable)
++static int futex_hash_slots_set(unsigned int slots, int flags)
+ {
+-	return prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_SET_SLOTS, slots, immutable);
++	return prctl(PR_FUTEX_HASH, PR_FUTEX_HASH_SET_SLOTS, slots, flags);
  }
- 
+=20
+ static int futex_hash_slots_get(void)
+@@ -63,13 +64,13 @@ static void futex_hash_slots_set_verify(int slots)
+ 	ksft_test_result_pass("SET and GET slots %d passed\n", slots);
+ }
+=20
+-static void futex_hash_slots_set_must_fail(int slots, int immutable)
++static void futex_hash_slots_set_must_fail(int slots, int flags)
+ {
+ 	int ret;
+=20
+-	ret =3D futex_hash_slots_set(slots, immutable);
++	ret =3D futex_hash_slots_set(slots, flags);
+ 	ksft_test_result(ret < 0, "futex_hash_slots_set(%d, %d)\n",
+-			 slots, immutable);
++			 slots, flags);
+ }
+=20
+ static void *thread_return_fn(void *arg)
+@@ -254,18 +255,18 @@ int main(int argc, char *argv[])
+ 		ret =3D futex_hash_slots_set(0, 0);
+ 		ksft_test_result(ret =3D=3D 0, "Global hash request\n");
+ 	} else {
+-		ret =3D futex_hash_slots_set(4, 1);
++		ret =3D futex_hash_slots_set(4, FH_FLAG_IMMUTABLE);
+ 		ksft_test_result(ret =3D=3D 0, "Immutable resize to 4\n");
+ 	}
+ 	if (ret !=3D 0)
+ 		goto out;
+=20
+ 	futex_hash_slots_set_must_fail(4, 0);
+-	futex_hash_slots_set_must_fail(4, 1);
++	futex_hash_slots_set_must_fail(4, FH_FLAG_IMMUTABLE);
+ 	futex_hash_slots_set_must_fail(8, 0);
+-	futex_hash_slots_set_must_fail(8, 1);
+-	futex_hash_slots_set_must_fail(0, 1);
+-	futex_hash_slots_set_must_fail(6, 1);
++	futex_hash_slots_set_must_fail(8, FH_FLAG_IMMUTABLE);
++	futex_hash_slots_set_must_fail(0, FH_FLAG_IMMUTABLE);
++	futex_hash_slots_set_must_fail(6, FH_FLAG_IMMUTABLE);
+=20
+ 	ret =3D pthread_barrier_init(&barrier_main, NULL, MAX_THREADS);
+ 	if (ret !=3D 0) {
