@@ -1,36 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C68F0D27E
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 12:33:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 880672343AB;
+	Wed, 21 May 2025 12:33:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747830787; cv=none; b=Nm++zfweanQ8tThjOUx6c/UyMwUHh3W/rbw0PPs57jjwT74315ljMBQqXmbcr6jRtKjLj8Gg04VTTkUiJ4NUSfrL8JGbNweTauh61BG3oiSqITw3lYkUhpJTW9T/j2X2AkXiskigH6tTtvqb9H9xMCF7CvWwDHXJklkP92Xk4n8=
+	t=1747830809; cv=none; b=MFXslEQ25mvaBozN6h4HOp0tjMHvq0dHpyLXh8cewludJkyDSbw9tPFmyYKvdI6gAziTywGqwojayqpvpgCEDR6emq9gPyoDZSnUuqIOhJC4+lnqByKy04RXqh9ICbAX6SYR2nluZ686zhvz8bmM9ZH0POK6f7YguHQWCCh6UfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747830787; c=relaxed/simple;
-	bh=PSdKIoLDxJFEKOG0Ms2J+9+RYh3NwJ96dxgAicrqC8s=;
+	s=arc-20240116; t=1747830809; c=relaxed/simple;
+	bh=dyO5fdTx5NCb2R6azE7xax0dALx/DbNJB6hfly4aQ8A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ITlvM1jwG5ub4Qjmd16KYZ+zyUnigNBXCAoBpB81ik5QaNu3IUgr7bptQ82lta/xPux4bKZS4OFaM3kgU4FZ+T90nTw6wUZUDVHqykQEJtJDm67RLKmq5kpCVu2F9PuVtclEVzxZmg5LOhIkf6aeBypeH43o559DjvM9jZfzG4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=kUn58I3p; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=P5LeEK+RgKJTE1UyBp4Icq/x5V29TT5eit3GL99R7+ufVpwuWt7BIL3eMVEeosbVTB4wiAaQsUvsSLhX8qSj/1ElRm9KocthkWZz3GytpdfwZT/n92kfbCt3t+1Mmm/jusdUoVNKvXtKPPRtzboKQMxJq/buVa2ZN+5dcr0eG7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ZzGOFs+2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="kUn58I3p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3FBDC4CEE4;
-	Wed, 21 May 2025 12:33:06 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ZzGOFs+2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C2E9C4CEE4;
+	Wed, 21 May 2025 12:33:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1747830787;
-	bh=PSdKIoLDxJFEKOG0Ms2J+9+RYh3NwJ96dxgAicrqC8s=;
+	s=korg; t=1747830809;
+	bh=dyO5fdTx5NCb2R6azE7xax0dALx/DbNJB6hfly4aQ8A=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kUn58I3p9MnW4XfHfUk6JlJHdwn0YI8lM4krQhOP9YWuKQn5A13p1tnPrjkoSJ3dl
-	 ZuOIUTu1lKQ0sBM0AdGwA2i+0v4KBTFxVa6g6IOsAwqV5Grwt9jBely641LLwadp4J
-	 imLU0u6mM8GYV8EsxAEROCKbFLoSZZudfdmpm0pw=
-Date: Wed, 21 May 2025 14:33:04 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Changhang Luo <luochanghang_nudt@163.com>
-Cc: rafael@kernel.org, dakr@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] driver:fix a bug of function remove_nodes in
- "drivers/base/devres.c"
-Message-ID: <2025052143-rubble-scalded-b04e@gregkh>
-References: <20250503080454.3667-1-luochanghang_nudt@163.com>
+	b=ZzGOFs+2Qfp3Sw33gEQG1e/eQXAZ1+14i3yCmwMK4nGl9hE0Q3vbVHhAn/fxTQ/CV
+	 P9aA0FI7yGO9L1hTCDB8jnNLRs2V6JXTdT9DLjNCkLNl4EofJulTWn3fPWLEkiR+Y4
+	 ugsrAHqfBRB0BgMpNA9zKpU6X/LGdD277RCPUhMg=
+Date: Wed, 21 May 2025 14:33:24 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Arnd Bergmann <arnd@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Wesley Cheng <quic_wcheng@quicinc.com>, linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ALSA: usb-audio: qcom: fix USB_XHCI dependency
+Message-ID: <2025052115-flagman-parmesan-9f9f@gregkh>
+References: <20250505052032.1811576-1-arnd@kernel.org>
+ <a60b3290-a535-4666-9f0e-18a3621e70dd@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,62 +42,24 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250503080454.3667-1-luochanghang_nudt@163.com>
+In-Reply-To: <a60b3290-a535-4666-9f0e-18a3621e70dd@app.fastmail.com>
 
-On Sat, May 03, 2025 at 04:04:54PM +0800, Changhang Luo wrote:
-> The resource management mechanism in Linux divides resources 
-> into different groups for easier management. Each closed group
-> has a start and an close resource node to represent the scope
-> of the resource group. The function "remove_nodes" is try to move
-> the nodes in the same group into the todo list. Fisrt the function
-> moves the normal nodes into the todo list, then scan the left node
-> and color the group value of two if the start and close resource
-> nodes contained in [current node, end).
+On Mon, May 05, 2025 at 07:59:21AM +0200, Arnd Bergmann wrote:
+> On Mon, May 5, 2025, at 07:20, Arnd Bergmann wrote:
+> >  config SND_USB_AUDIO_QMI
+> >  	tristate "Qualcomm Audio Offload driver"
+> > -	depends on QCOM_QMI_HELPERS && SND_USB_AUDIO && USB_XHCI_SIDEBAND && 
+> > SND_SOC_USB
+> > +	depends on QCOM_QMI_HELPERS && SND_USB_AUDIO && SND_SOC_USB
+> > +	depends on USB_XHCI && USB_XHCI_SIDEBAND
 > 
-> While, in the second pass section here is:
->   if (list_empty(&grp->node[1].entry))
->      grp->color++;
-> which means that the color is set to 2 when the grp_node[1] is not
-> in the list.This situation is inconsistent with the original design
-> intention that color value is set to 2 if the start and close nodes
->  both contained in [current node, end).
 > 
-> So it should be
->   if (!list_empty(&grp->node[1].entry))
->     grep->color++;
-> that the grep->node[1] is verified to be contained 
-> [current node, end) and then color is increased to 2.
-> 
-> Finally,
->   if(grp->color ==2){
->     list_move_tail(&grp->node[0].entry,tode);
->     list_del_init(&grp->node[1].entry);
->   }
-> the closed group can be removed currectly.
-> 
-> then
->   list_del_init(grep->node[1].entry);
-> while
-> 
-> Signed-off-by: Changhang Luo <luochanghang_nudt@163.com>
-> ---
->  drivers/base/devres.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/base/devres.c b/drivers/base/devres.c
-> index d8a733ea5..68f64256a 100644
-> --- a/drivers/base/devres.c
-> +++ b/drivers/base/devres.c
-> @@ -477,7 +477,7 @@ static int remove_nodes(struct device *dev,
->  		BUG_ON(!grp || list_empty(&grp->node[0].entry));
->  
->  		grp->color++;
-> -		if (list_empty(&grp->node[1].entry))
-> +		if (!list_empty(&grp->node[1].entry))
->  			grp->color++;
+> Sorry, this should have been USB_XHCI_HCD, not USB_XHCI. I have some
+> more patches for this driver that I'm still testing I'll include
+> a fixed version when I send the rest, or you can fix it up yourself
+> when applying this one.
 
-Are you sure about this?  How was this tested?  Why hasn't it shown up
-before?  And what commit id does this "fix"?
+Can you send a fixed up one?
 
 thanks,
 
