@@ -1,216 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04CB623C51E;
-	Wed, 21 May 2025 13:28:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69F2327C14E;
+	Wed, 21 May 2025 13:28:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747834125; cv=none; b=HRBj20t1oN+oa0/KO2+8LztvGA570QeNr5PYciXanx/c63X/vdHfEs6Wiwb+3hJzquvVmImJgVWfKno7z5f7JRTPDEB8titBONn6LsF75VB+3VPYcWY2OhL16tO+R2L8MPWqEiu0gSY7GelSxYFui3ygOS4hmPyNuC6E5c0GAag=
+	t=1747834127; cv=none; b=Bu+B3o0MdtJbc0sNqZcEtjgTm4pqUET5F3gu3a39PfdhazPRk5V+1zPe/r8u4JtHvjYDltuHymt27/DLXpBoAju4LmL0Urocb768lR2ZJqRsSkKgf6fNku6OVQa8LpcOFZJLWdJdH3GkfXVJeMZnng0N18hUE4Jx1tf7ECHAE9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747834125; c=relaxed/simple;
-	bh=bJ89VqRXyIKcA7dmHXxP3puOM3fMxjcRRauLe32PJ9k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iyy0Gney81ypw7pGy9uBZxHjw5TiYTxKAfQkVuvxgW/6J6oFSYwSe41UgEpGWEWh/Ai/H796CL0vJEiyBt5kmD5ZozYnvwRqSR/lV7Ez0eh12ThwP0kk/UWjTSzK6/JWT8LZAs29CnOdM5zVj2fYA1gZ2JvLk8GWh3NhCCX3ADM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BU1DDpcZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747834127; c=relaxed/simple;
+	bh=9jjkqdyYw49qjSuk0tVdxsGTONi8xGs2N9wC5Gwi2KY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=g5TVt9JQIOJSdhvpKKqO1hhGLCRyb1opBtpAGZBu3ktyUWIEuZA0Lh+/PUWgpq6awUchZIs4m8tPDYCtkAU5eSh01ur0haG6I7wyyIIjiAShg6/8tgjvBgmkn1/PadcfcBAx6+1XSb+UUJoG79XXPYjVJRP4yYJfQvUu67HGZk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TkXfhZnS; arc=none smtp.client-ip=209.85.161.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BU1DDpcZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D439AC4CEE4;
-	Wed, 21 May 2025 13:28:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747834123;
-	bh=bJ89VqRXyIKcA7dmHXxP3puOM3fMxjcRRauLe32PJ9k=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=BU1DDpcZV1QLIMxJ/w+9FxYCBWcON4QN3j0lfb7MBePKWGU8Aqt2yHfYBBD7PDMce
-	 vV13dBkyYBviRiwW3kMV6gSRSKPMhO5F/Zu54KnoBodaYIZ0Vc3I5phEpqQNd9sl0l
-	 rGAUwREyOR2b9l5dYAGLs8abnd9+b4n9DVhUxR/dpbi03gnZDqKLoWRGyVlx983GZA
-	 dq/TpCgvJmfnBs3hxUZmMSrlsZV6/ZfDElCyblA+ptl7UnTHitG+U4Wh/7GjoCwcj7
-	 8laqffoDSR+Ki/T4ib8mwzf0E3Ma7KTQfErqxYBHcwyMbeuGlUnH5f42zwYzIJ4RWp
-	 yI9XdSaCgjKHg==
-Message-ID: <499207c7-aa40-470c-801f-a8154a253276@kernel.org>
-Date: Wed, 21 May 2025 15:28:38 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TkXfhZnS"
+Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-6049acb776bso3557958eaf.3;
+        Wed, 21 May 2025 06:28:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747834123; x=1748438923; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vp47jDk9EdbNa/22Vb4r2YNTMUCPmM+xIbcDxwo1z94=;
+        b=TkXfhZnSB6WGjC50wA6J7SvbztNX5WKbrsxIV0LcAgMobwThAyQYyycc5zEG6zNUAy
+         1O+G+3eyFmAYOP0ZGiHJh/fcRQvWuS1croqZtNpFBUTt7367AdTz5I+ULlzF3mTHqyeG
+         nIOLY/hJVW1mKIdLQODUf5nC63BvZ01yQA2KcVtd38ROmzPoM3v9Xcfti11lVX70fgSD
+         D8UmwCsnYqvyt1+TPGX1j8HbH/N0QSOR7eCtEGZRmYSlg6oMZk+nmvMpqmysA1iJMEe5
+         x/aaOIIteTcx1nHC8lfs4xrm/m/9IRf+lyY55rw56l+DcI72tfMMryxyxMPAcBDwjmLu
+         NBfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747834123; x=1748438923;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vp47jDk9EdbNa/22Vb4r2YNTMUCPmM+xIbcDxwo1z94=;
+        b=T2E3KrGzbpNwV4iYqtWwWGIGQ5GppZM5wSZBDwEUOvvqpizsYd8oEAbzcQ68iOEUgm
+         AB23oIaBM/S7Df8QudOas52YpjpMTkb1+N9v9aO9LLzccmQN+Eh+DwFP1syv68YwzMG7
+         +yUfcrka1jXP4F4OEn4oheP15NBg65+sHZp4fS08XNzwwhchoJMGz3X2p9C/fvMZUynD
+         tob/UodbjuZkvVenfYdp/OY7ioJrCh08DDUkst7hW7OOZnD72zVh16glqzfxlUWJb8Sn
+         3ZR1lRZrDjuKUar//PPqS5zy/hxtUMGe0wDKqhpNDJd/knMD4cjix/OUn3jOBBrwh5H1
+         b6sA==
+X-Forwarded-Encrypted: i=1; AJvYcCX76MB3qZK3n4Wtr2GbXf/i7b5epCm8WuocTOrR+D7hXqino8zxbTSmnrPR1TZF1vx4e0QucljhpICP@vger.kernel.org, AJvYcCXIPwvKXkoMqyk3b1BbByzw+qrxX9Y3r9ccMHksOd/PLaLV/QhCj91p83jf+9MaTSghHlLAuMz/0ZqaXKC1@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXw41xedYcTvs3b2amKNHJgiI1EnVCS+4AKfczvP+jPNUZaNrK
+	w52Vf/27Hl+MCAo5VC6BtvrDoOw+VV0+o/q7EAMF5ToELrfAOxMWgIJxxsPW6rGhCg8FcS2eKJd
+	Ais2Mw/+KrsfmtnpK33vVSEgw/syWjYp/2WW8qwg=
+X-Gm-Gg: ASbGncsgaIeB/8+EjwiGUbv0YnMwDzn9cjgKpf5g7b8WhL911ULg37KXBBq7ScOVACx
+	Vkiy8e3YOpm/o9MaDD6fMR7UIkEIYb00BT5NOiN14ygYIRZlS5jV7A2oPS8YCEjrUO2tVLJ3smw
+	frLfhOodfd4re+iNdljFrWoh5aV9bIaykLFGwfVTelgwUTuGPLYJAsc0caI4aoEUgYqQ==
+X-Google-Smtp-Source: AGHT+IHOaVukk0EM+lTVkJgI5fCyJJvCmSaqJ4uFqjPApedUD3Wu7UNEtmyfEUE/FiwATDeJm2wxlMine+dMoW6oFSY=
+X-Received: by 2002:a05:622a:1c10:b0:494:a4b4:a21f with SMTP id
+ d75a77b69052e-494ae366aacmr379074121cf.1.1747834111964; Wed, 21 May 2025
+ 06:28:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] dt-bindings: pwm: adi,axi-pwmgen: add external clock
-To: David Lechner <dlechner@baylibre.com>
-Cc: Michael Hennerich <michael.hennerich@analog.com>,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Trevor Gamblin <tgamblin@baylibre.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-pwm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250520-pwm-axi-pwmgen-add-external-clock-v1-0-6cd63cc001c8@baylibre.com>
- <20250520-pwm-axi-pwmgen-add-external-clock-v1-2-6cd63cc001c8@baylibre.com>
- <20250521-tidy-heron-of-genius-4dc9a1@kuoka>
- <be02b9cd-803c-4aae-9420-ff3bf445efc1@baylibre.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <be02b9cd-803c-4aae-9420-ff3bf445efc1@baylibre.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250515-wmt-dts-updates-v2-0-246937484cc8@gmail.com>
+In-Reply-To: <20250515-wmt-dts-updates-v2-0-246937484cc8@gmail.com>
+From: Alexey Charkov <alchark@gmail.com>
+Date: Wed, 21 May 2025 17:28:29 +0400
+X-Gm-Features: AX0GCFs4gqRQCEacR_P5jWt1HkYYVLmoLMkcLsui-cKWWqCoZfVHFoasVDeMjPM
+Message-ID: <CABjd4YwoVRpJEMss8UN6xT9x4hf6GSjm34GtTHmmnHi8Q42DAQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] ARM: dts: vt8500: Minor fixups and L2 cache on WM8850
+To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 21/05/2025 15:14, David Lechner wrote:
-> On 5/21/25 5:09 AM, Krzysztof Kozlowski wrote:
->> On Tue, May 20, 2025 at 04:00:45PM GMT, David Lechner wrote:
->>> Add external clock to the schema.
->>>
->>> The AXI PWMGEN IP block has a compile option ASYNC_CLK_EN that allows
->>> the use of an external clock for the PWM output separate from the AXI
->>> clock that runs the peripheral.
->>>
->>> In these cases, we should specify both clocks in the device tree. The
->>> intention here is that if you specify both clocks, then you include the
->>> clock-names property and if you don't have an external clock, then you
->>> omit the clock-names property.
->>>
->>> There can't be more than one allOf: in the top level of the schema, so
->>> it is stolen from $ref since it isn't needed there and used for the
->>> more typical case of the if statement (even though technically it isn't
->>> needed there either at this time).
->>>
->>> Signed-off-by: David Lechner <dlechner@baylibre.com>
->>> ---
->>>  .../devicetree/bindings/pwm/adi,axi-pwmgen.yaml    | 26 ++++++++++++++++++----
->>>  1 file changed, 22 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml b/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml
->>> index bc44381692054f647a160a6573dae4cff2ee3f31..90f702a5cd80bd7d62e2436b2eed44314ab4fd53 100644
->>> --- a/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml
->>> +++ b/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml
->>> @@ -16,8 +16,7 @@ description:
->>>  
->>>    https://analogdevicesinc.github.io/hdl/library/axi_pwm_gen/index.html
->>>  
->>> -allOf:
->>> -  - $ref: pwm.yaml#
->>> +$ref: pwm.yaml#
->>>  
->>>  properties:
->>>    compatible:
->>> @@ -30,7 +29,13 @@ properties:
->>>      const: 3
->>>  
->>>    clocks:
->>> -    maxItems: 1
->>> +    minItems: 1
->>> +    maxItems: 2
->>> +
->>> +  clock-names:
->>> +    items:
->>> +      - const: axi
->>> +      - const: ext
->>>  
->>>  required:
->>>    - reg
->>> @@ -38,11 +43,24 @@ required:
->>>  
->>>  unevaluatedProperties: false
->>>  
->>> +allOf:
->>> +  - if:
->>> +      required: [clock-names]
->>
->>
->> No, don't do that. If you want clock-names, just add them for both
->> cases. Otherwise, just describe items in clocks and no need for
->> clock-names.
-> 
-> Would it be OK then to make clock-names required and just let the
-> driver still handle one clocks, no clock-names for backwards compatibility?
+On Thu, May 15, 2025 at 11:39=E2=80=AFPM Alexey Charkov <alchark@gmail.com>=
+ wrote:
+>
+> Small fixups for VT8500 related device trees to improve correctness in
+> light of current guidelines.
+>
+> While at that, also include a DT node for the PL310 cache controller
+> present in WM8850/WM8950.
+>
+> Signed-off-by: Alexey Charkov <alchark@gmail.com>
+> ---
+> Alexey Charkov (5):
+>       ARM: dts: vt8500: Add node address and reg in CPU nodes
+>       ARM: dts: vt8500: Move memory nodes to board dts and fix addr/size
+>       ARM: dts: vt8500: Use generic node name for the SD/MMC controller
+>       ARM: dts: vt8500: Fix the unit address of the VT8500 LCD controller
+>       ARM: dts: vt8500: Add L2 cache controller on WM8850/WM8950
 
-So just don't make it required.
+Krzysztof, could you please pick these up for 6.16?
 
-> 
->>
->>
->>
->>> +    then:
->>> +      properties:
->>> +        clocks:
->>> +          minItems: 2
->>> +    else:
->>> +      properties:
->>> +        clocks:
->>> +          maxItems: 1
->>> +
->>>  examples:
->>>    - |
->>>      pwm@44b00000 {
->>>          compatible = "adi,axi-pwmgen-2.00.a";
->>>          reg = <0x44b00000 0x1000>;
->>> -        clocks = <&spi_clk>;
->>> +        clocks = <&fpga_clk>, <&spi_clk>;
->>
->> What was the clock[0] before? Axi, right, so SPI_CLK. Now FPGA is the
->> AXI_CLK? This feels like clock order reversed.
-> 
-> The problem being fixed here is that since there was only one clock in
-> the binding, existing .dts files have either have the spi_clock or
-> the FPGA/AXI clock. So the one clock could be either and there are
-> existing .dtbs out in the world with both cases.
+No big deal here, but W=3D1 builds and DTBS_CHECK become somewhat happier.
 
-No problem like that was explained in commit msg. Nevertheless driver
-assumed the first clock is the SPI, didn't it? So that's your ABI, even
-if binding was not conclusive here.
-
-
-> 
-> But we could consider reversing this so that if someone uses the new
-> bindings with an old kernel, then it would still work.
-
-You cannot use new bindings with old kernel. How would that work? Put
-YAML file there? Nothing would change.
-
-Binding is supposed to be complete for exactly this reason. You cannot
-change it afterwards without breaking users.
-
-Best regards,
-Krzysztof
+Thanks a lot,
+Alexey
