@@ -1,108 +1,170 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5157C264637
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 16:59:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96D5B25D548
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 17:01:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747846794; cv=none; b=iWZVqtBNSPVeBMI35rYSliqusgxinG6Sfh0nU9ZA/YJESW3v/o4gau1ue4oVwqve+RUfItrGY7oSGalNOBFjw90OIWRbVFeU4ken22ei8BZS8xlAQ32+o2l40sFUydkMIxSM5RtvhVKd1kKvJWKtfgHD5m9DNCvtvzxXDh8e7Y8=
+	t=1747846873; cv=none; b=QvjzuodOFFWh5dMhBHEwYXrqO5UqVHesz3fwFl2ryIy+W22/RFH6T7eddhIt0nTN5ssnSqnp+gDJXR4dnIEIpjJfbeUvG6qkZKQEBoZpQ3ttpsnvdLQzFmv57+FQVNTODLHFehx0Nk+cl6dWr/xKgM5uzg3A8P+9unTiiNVttNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747846794; c=relaxed/simple;
-	bh=y0v3mpA4u0yZ8hVDzPt7b0GP7skmvPxgwdsGFyF72PA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=t35FxCs11EYnPU7l/qoisyRm7zs7BbiCwRUS+F1xlhk8ucyYIWDi+Z5QDF54yEbuCap15mP3LR9azsH46+EcRlbh/BxZOffKOVm8UC7uFz+fLdhiMuc/UL9XAVjNKvPA2DFdhqRP8HIm1Wc7It5uutwff4TB4Y1rIPGDlbtT2kc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PrDXzSNx; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1747846873; c=relaxed/simple;
+	bh=W2xFQ+2/E/Rk+8ShlLetpjcpac5haLT7J5spEwuRII0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bZCxGF843skXtBV1sCoownDuuCfw4iieABIzwGqW6mxSe5zFcsGmKo7gUJeQs7w96pxJJXPeidsQQqcjKui85W4wXWzbB74cy+9bbsWAzUjbhJ47dDRPEY3CVEs77ZWwhf8IHc60723bvg1yXCpXHMmXVNF8CakgvQQ39ebbXNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=VcafkNJn; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PrDXzSNx"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-310a0668968so728531a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 09:59:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747846792; x=1748451592; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nn5fm8k2Ml1brz+kg+Xc6EKFqD1WyZfu8AZFfGZAdFU=;
-        b=PrDXzSNxPBQ2P0BVCmg25kUgoAJQ9K3vJ4AkgHzl99eMXAZzbPSamcxgoguTmzZ+Bw
-         9/ygqaI4MGQERA6AkbgV7vmrgu6YEfwRp+8Xvbi2OYv7tsk3jq5IESyZd8kB9Vk8CLIQ
-         Ik2VtHG/v9/yQG9Fc/ZQz3vvcoN0GEKWEfT/criEP15AwhyQzvOcCW54W7DAXsLY5ka4
-         lV0uyGDueX6BVTSgDUBIyBY4J4l6IQovTp90aV92s8PUnBeo6sQQSAo/ZQZ0Ed6RU7/O
-         45yWARheb/dCMuWjkMqEP7pcDcNTquL2VjmK3Tf9gU8iSM+9Hla6UqIoCUaKfnBwIbZG
-         WfEQ==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="VcafkNJn"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54L9XNRs027639
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 17:01:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	s9XUDoddwcOnxMajTIY/aI4OKKGbnFz3720ytXGqLnk=; b=VcafkNJnIJdLeHra
+	mA/ut3LSw+pWUfJEbhgJxz3wzhfyT8Z/wZSSgScYVmBxkqo2RrvomknvlR73bW3J
+	edmJcwK//rVNKYBD6oxM8lGHy1w+vaaRhDH+au9aSt2apXz59GkU9/4gDd5CqbtC
+	Yf0VxKfk1AkkmH++hF6E65AZREcXyYOGLoCXSwRhrsEWUWXV0FVV1CZiM0xMwcrS
+	+nDAcCE1FqCYb2QMVvuK4THDEKcmVneM2Z54TrovsspgtPVkHIZP3kMom/UDn9if
+	JFtm0kUBWQP7bAW/1yAS4rpC1m/Ax2FSJhsIPbCfk9VJc/PsHFM0N2uo2Mr3RiNI
+	MnfKTA==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf9bmgh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 17:01:10 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c552802e9fso176713985a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 10:01:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747846792; x=1748451592;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nn5fm8k2Ml1brz+kg+Xc6EKFqD1WyZfu8AZFfGZAdFU=;
-        b=h25dfZujlaL3V0obV8DI2C7vyIRS5vjzMe9MpOylYIZGC4wHyZnZNgQeOZdG+AnTIj
-         YE/lk8y/jBLRex7wCxqMRwAbdSsZFFwEHv6vJK+GAdo9eqhBuSDI//dzCfMSpCDE02Ek
-         9ky6wn303kXBAV3JsqCGyOXB54+Bu7aJCREp4VoMohPcjtXSInk9hGOlL+nqMD5ZHm9W
-         vRpLdbp32XHuRpLzdcSeoNulephVQW66WVbY76zL7pW+oX3tZaDZia4fHjXpuPPFbtIz
-         iftpjlSoX/nQGTsM41gG55qObPyxvZvK5Rz6yFbWWw7LDjfQoyAkU35vGE9JOUlxX9dV
-         iS+g==
-X-Forwarded-Encrypted: i=1; AJvYcCVfzEuu+di2RaVUqw8Nx+4L5PXBk8CWFx1r2kb4I1VEUc+q7AJ6vtDQcQwvo2Hv6Ri9tIBclemY3NSXMCg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXiM43hlHR0oKoG51jkkntF5DdJP9Sn3Es1H2QBBEHysT7NEu9
-	PNuoG+hKy1fnq5l4pCh5QpXRPqfbcf6CqTSOuVaQm6ejo9Kq91e1ZBWqKaSZJ2dnRSDpUDs7606
-	do/P8Mw==
-X-Google-Smtp-Source: AGHT+IG6dBlWQxswmpzRlpBNWMeMsVzFwgqg9N/lMiD/6PEBD2Bv2fiNQRCTifMOfGMxFV8XX1aGvjOU8lY=
-X-Received: from pjbsn4.prod.google.com ([2002:a17:90b:2e84:b0:2fc:aac:e580])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1dd1:b0:2ff:784b:ffe
- with SMTP id 98e67ed59e1d1-30e7d522171mr38492906a91.11.1747846792524; Wed, 21
- May 2025 09:59:52 -0700 (PDT)
-Date: Wed, 21 May 2025 09:59:51 -0700
-In-Reply-To: <aC0c4U6tsVif+M4H@intel.com>
+        d=1e100.net; s=20230601; t=1747846869; x=1748451669;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=s9XUDoddwcOnxMajTIY/aI4OKKGbnFz3720ytXGqLnk=;
+        b=enKXrjhQrvJspc24X9HeEPd5wjm6cgjtROG+oBsspQIN9LrNsX1eJYoQu5rypPRFZv
+         0INAk/RaOQw5Ysl9KQm6R1rnU1HIzyrMFN3Ym7nRIvtyJQuCADjP+fxr5JyInK+6OVRz
+         Al9fGj88/Mx0V4gOvyBGGqz4CQXwV4/u9OceGpsCX1wPR5H14PgWDIqB1JNoZPm7DzgS
+         iZWByCCpb3Rigk50hBuhXZaohqNW/pUPw7IlBp7/6+WtQHwTWwakXH1L9uBPlsZEewEh
+         mGCYQPs15ZaeZpjpneqYg/aRgb7WmcsydSQ4I14YF8FtqtlIGjQbAvAAzuJdwSsmZZV+
+         iGlA==
+X-Forwarded-Encrypted: i=1; AJvYcCVBa3qOSJRUwTi+yhIYUWhJiDQpi5OFnDw7ZyvHtuc4b07WUSDxSreQ2erSxUWggOmAHHo0H8A/ppv9SlQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxsw4HK4VeoYmd2QNekEhcz7V4IZuB9tXGsMcZVrRP5C4xVpvev
+	kefSnxhD/8Ygc/jZlxxSWsPLZalChSMIcAeEqMby6iRXXwYUdoXxKloTpMfGnmvdKvDaarrLnHJ
+	vx0JowctX+E61LF9gEZKgkolQ4KItWhJ259HoFga1Z3B3aPYQS0vUyZPAg9a/O7eRNVo=
+X-Gm-Gg: ASbGncsnwe0l+ZSjomgXyM2XuOvUOj2L1GfwGT+KB+NXFsuYSBSCg8oWGizMRIwKtBX
+	jdgpW0sz5q/sP8Tgl8T6Y+4/bbJsIfMCuTxWZZTNzTn/JHdzDLO8MLcG8MNHtBkdm7fSddeiPTy
+	7qRGAIAfdrA/LDBLFUgWNVolH+7QHivbl5t2Vh/tDeqGUEksvL1/2UIGGjiFkjD5v/6et7HJM/C
+	kb+2vXUNWEwo/Vuow/r5qmhmXED2kLB60SwcDaVi/AxMBjrqwr5gbitKt9bqH7RhZ1bIgAOhxTi
+	YPvew+bnLvMt+uN3b1UN0CnR9a4UjWt1XygeIlp+l2rQx4QZg++iNLN7WI084MV6dA==
+X-Received: by 2002:a05:620a:2693:b0:7c7:a574:c6d2 with SMTP id af79cd13be357-7cd467334f1mr1333948785a.9.1747846869447;
+        Wed, 21 May 2025 10:01:09 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHNHS1lDDeDBQUllE4zZV5CnCSt8BLX//4DkjdEKYf+qhDNZ7uIRPICPWLey3JSoexL/h+InQ==
+X-Received: by 2002:a05:620a:2693:b0:7c7:a574:c6d2 with SMTP id af79cd13be357-7cd467334f1mr1333944685a.9.1747846868906;
+        Wed, 21 May 2025 10:01:08 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d498b4bsm941652966b.148.2025.05.21.10.01.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 May 2025 10:01:08 -0700 (PDT)
+Message-ID: <c4442c3b-4f05-4031-8b1c-243e3028fc78@oss.qualcomm.com>
+Date: Wed, 21 May 2025 19:01:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250512085735.564475-1-chao.gao@intel.com> <aCYLMY00dKbiIfsB@gmail.com>
- <ed3adddc-50a9-4538-9928-22dea0583e24@intel.com> <aC0c4U6tsVif+M4H@intel.com>
-Message-ID: <aC4Gh0YMxFzNVws1@google.com>
-Subject: Re: [PATCH v7 0/6] Introduce CET supervisor state support
-From: Sean Christopherson <seanjc@google.com>
-To: Chao Gao <chao.gao@intel.com>
-Cc: Dave Hansen <dave.hansen@intel.com>, Ingo Molnar <mingo@kernel.org>, x86@kernel.org, 
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org, tglx@linutronix.de, 
-	pbonzini@redhat.com, peterz@infradead.org, rick.p.edgecombe@intel.com, 
-	weijiang.yang@intel.com, john.allen@amd.com, bp@alien8.de, 
-	chang.seok.bae@intel.com, xin3.li@intel.com, 
-	Aruna Ramakrishna <aruna.ramakrishna@oracle.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Eric Biggers <ebiggers@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, 
-	Kees Cook <kees@kernel.org>, Maxim Levitsky <mlevitsk@redhat.com>, 
-	Mitchell Levy <levymitchell0@gmail.com>, Nikolay Borisov <nik.borisov@suse.com>, 
-	Oleg Nesterov <oleg@redhat.com>, Samuel Holland <samuel.holland@sifive.com>, 
-	Sohil Mehta <sohil.mehta@intel.com>, Stanislav Spassov <stanspas@amazon.de>, 
-	Uros Bizjak <ubizjak@gmail.com>, Vignesh Balasubramanian <vigbalas@amd.com>, Zhao Liu <zhao1.liu@intel.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] soc: qcom: qcom_stats: Add support to read DDR
+ statistic
+To: Maulik Shah <maulik.shah@oss.qualcomm.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        Doug Anderson <dianders@chromium.org>
+References: <20250521-ddr_stats_-v2-0-2c54ea4fc071@oss.qualcomm.com>
+ <20250521-ddr_stats_-v2-1-2c54ea4fc071@oss.qualcomm.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250521-ddr_stats_-v2-1-2c54ea4fc071@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: ueQAwgBDC2CSbDjmOS29Aq5IWk1teM4O
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDE2NyBTYWx0ZWRfX0H12KPatjURN
+ HOu2QSCS+ms0qncz6pFsBrb/pWcBdDV08v67kuY6uIZ0yB8u1A5cNf7xDTWu9LUyS1gY1mOoORY
+ LCd7qraazMRb2C6MOD3MMreOyZs1YjsVpAIW4t2xNWCrG2KjZC5D1OFdZdq3Gq6TqXr0uojCZHU
+ b3lCh98f5gNaCVHLj175AdNe8eq12e2rhpyeqoncecKCLTWionJAizAaZBHhipiNLB1vXluxY6n
+ VribLT/9KZVHiPdgmPlBQsMqCWpXXXi5uZ1c7R2i/221FuO+yIhkj0fy98OLeDb8jfdxhg55Eww
+ PbMzujqWoT/LltjlEeN2HQy5+QKEsog6PboitXwMTxsx9CJadJbwzfY5rSHvJkbttbZ7EmZsIHL
+ gVzy6sZKSC5bowDkFqdvO6WQhFYY24HtVbcKqQJ0SZ2dfhi8w/ktmEhrs1JTbIu2sZ7oGyIp
+X-Authority-Analysis: v=2.4 cv=GawXnRXL c=1 sm=1 tr=0 ts=682e06d6 cx=c_pps
+ a=qKBjSQ1v91RyAK45QCPf5w==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=px1QxGzWThjcCEIoTy4A:9
+ a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22
+X-Proofpoint-GUID: ueQAwgBDC2CSbDjmOS29Aq5IWk1teM4O
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-21_05,2025-05-20_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0
+ priorityscore=1501 clxscore=1015 malwarescore=0 phishscore=0 bulkscore=0
+ spamscore=0 suspectscore=0 adultscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505160000 definitions=main-2505210167
 
-On Wed, May 21, 2025, Chao Gao wrote:
-> On Fri, May 16, 2025 at 08:20:54AM -0700, Dave Hansen wrote:
-> >On 5/15/25 08:41, Ingo Molnar wrote:
-> >> * Chao Gao <chao.gao@intel.com> wrote:
-> >>> I kindly request your consideration for merging this series. Most of 
-> >>> patches have received Reviewed-by/Acked-by tags.
-> >> I don't see anything objectionable in this series.
-> >> 
-> >> The upcoming v6.16 merge window is already quite crowded in terms of 
-> >> FPU changes, so I think at this point we are looking at a v6.17 merge, 
-> >> done shortly after v6.16-rc1 if everything goes well. Dave, what do you 
-> >> think?
-> >
-> >It's getting into shape, but it has a slight shortage of reviews. For
-> >now, it's an all-Intel patch even though I _thought_ AMD had this
-> >feature too. It's also purely for KVM and has some suggested-by's from
-> >Sean, but no KVM acks on it.
-> >
-> >Sean is not exactly the quiet type about things, but it always warms me
-> >heart to see an acked-by accompanying a suggested-by because it
-> >indicates that the suggestion was heard and implemented properly.
+On 5/21/25 10:32 AM, Maulik Shah wrote:
+> DDR statistic provide different DDR LPM and DDR frequency statistic.
+> Add support to read from MSGRAM and display via debugfs.
 > 
-> Hi Sean, John,
-> 
-> Based on Dave's feedback, could you please review this series and provide your
-> reviewed-by/acked-by if appropriate?
+> Signed-off-by: Maulik Shah <maulik.shah@oss.qualcomm.com>
+> ---
 
-The initialization of default features is a bit gnarly and I think can be improved
-without too much fuss, but otherwise this looks good.
+[...]
+
+> +	case 0:
+> +		seq_printf(s, "DDR LPM Stat Name:0x%x\tcount:%u\tDuration (ticks):%llu\n",
+> +			   DDR_STATS_LPM_NAME(data->name), data->count, data->duration);
+> +		break;
+> +	case 1:
+> +		if (!data->count || !DDR_STATS_FREQ(data->name))
+> +			return;
+> +
+> +		cp_idx = DDR_STATS_CP_IDX(data->name);
+> +		seq_printf(s, "DDR Freq %uMhz:\tCP IDX:%u\tcount:%u\tDuration (ticks):%llu\n",
+> +			   DDR_STATS_FREQ(data->name), cp_idx, data->count, data->duration);
+
+clang complains about both prints:
+
+drivers/soc/qcom/qcom_stats.c:173:7: warning: format specifies type 'unsigned int' but the argument has type 'unsigned long' [-Wformat]
+  172 |                 seq_printf(s, "DDR LPM Stat Name:0x%x\tcount:%u\tDuration (ticks):%llu\n",
+      |                                                    ~~
+      |                                                    %lx
+  173 |                            DDR_STATS_LPM_NAME(data->name), data->count, data->duration);
+      |                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+drivers/soc/qcom/qcom_stats.c:181:7: warning: format specifies type 'unsigned int' but the argument has type 'unsigned long' [-Wformat]
+  180 |                 seq_printf(s, "DDR Freq %uMhz:\tCP IDX:%u\tcount:%u\tDuration (ticks):%llu\n",
+      |                                         ~~
+      |                                         %lu
+  181 |                            DDR_STATS_FREQ(data->name), cp_idx, data->count, data->duration);
+      |                            ^~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
+> +
+> +	key = readl_relaxed(reg + config->ddr_stats_offset + DDR_STATS_MAGIC_KEY_ADDR);
+> +	if (key == DDR_STATS_MAGIC_KEY)
+> +		debugfs_create_file("ddr_stats", 0400, root,
+> +				    (__force void *)reg + config->ddr_stats_offset,
+> +				    &qcom_ddr_stats_fops);
+
+else
+	pr_err("Found invalid DDR stats magic\n");
+
+(because through the compatible, we much expect it to be present)
+
+Konrad
