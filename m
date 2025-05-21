@@ -1,245 +1,190 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 515EF2139C8;
-	Wed, 21 May 2025 15:32:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10C8B218EBF;
+	Wed, 21 May 2025 15:32:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747841548; cv=none; b=CcIJTKwAe5L+kCNkZHpBnyaw9vcO0j3/ZlRIU8ig1nahkwMsrbCR9N24RiL9P2NhrL4Va4tIK4F4SDOJ8X+NS59O6d/erct4VPhMu8KbZlyYra5fcDqL0HV2FLryNshz8ZDE91Wn77sJwj9bwAiwG7fpj3aW1AD1ceGDbsrq448=
+	t=1747841552; cv=none; b=RjmNATmiDkgvgE9C4cLnMJVJ/C6AiGbQlGXVn1VhpmtUluMLTad69JibX7zdNS13Hf7Rp7KKJLqSqtmV6bVGRZJemfiM3/icupgQ5ry6jjoIyufe6BSdukWxLm6L2hsfLAGT+GCPZFthg5NcWk/GqXmSH1Hq+lD/WWW+IjV5svY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747841548; c=relaxed/simple;
-	bh=g2alB9EP+7/n8yI8/NZcOxnPHOBIM0vK+TbEcQARBt0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=e72nzrVR6aL3B4wuTFvYt13/OKsgePmzo/8tSKTsp+FGjTYHkeiGgskaFIVcLh+8910aLJUHVwIwaHasbvirWzOsm4Q6R7goGkP5rhlBYPdVm0GIF4DiDz9cIF368mjr+KhMEF/z06kCzweOmT386l/zgqfeLY6qEsqbH6N+boQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=BPj1a56S; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1747841552; c=relaxed/simple;
+	bh=dl4/jVpEjwuOyn5OIckbpyVPjbDVzVffI1XGjQPselI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=QtIS4qXhLhYKi5OHNcytaeomZcSdA6G9uKJPytIRe71hRjJXluQ0bAk1Jeu38CTYUAE+wH1zxP+1N9Mnm4xmjCXJpnq65zpRdAUn4DoQql1AIiR75A9BO39v7IyUUdebdryOwppt7dWB+vHVQpLNSK1rr/4l37tuVrdb9qz1ryA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vAfo93rf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BPj1a56S"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54L9XJY0013424;
-	Wed, 21 May 2025 15:32:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	qzqnhQBFsflY3nmZG8TNLCp1PRo7RCDvGRrlihPo6kA=; b=BPj1a56Se3UzYLRx
-	pQgo8D5VG/GtvrdgT08YXfknx06/+rH8Aj6xzkHaJbfbs2N+BLjXtmJ1uHMfGp+w
-	XMSBr5e4bKmW+UFQFwv1Urpv1lmcqGTBnOcV1vzrPTAidIPlkuGWJcBsZt7NAvKM
-	6Nw4mzmJmNvFXear0tpnHhW29T7rLEqrj+fddXj9MvvC4hNcsAFcgM1gd1zBxhHU
-	XI+SkUg9xvDGmrC55vZJuIcUnxQEabStEl+QuUS1TWB92BXvtre7zQGQQOf31pTG
-	4hIesmO3FlPAUeflfbqr+I+YmcmRm/YLsY7WLnYXBJG1YwH5TWCFitsLtl4p8soy
-	JhUfPg==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwh5bfsp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 15:32:07 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54LFW6r7026909
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 15:32:06 GMT
-Received: from [10.226.59.182] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 21 May
- 2025 08:32:05 -0700
-Message-ID: <2c0b4220-d92c-4dba-9364-33d713f26dbe@quicinc.com>
-Date: Wed, 21 May 2025 09:32:04 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vAfo93rf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D567C4AF0C;
+	Wed, 21 May 2025 15:32:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747841551;
+	bh=dl4/jVpEjwuOyn5OIckbpyVPjbDVzVffI1XGjQPselI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=vAfo93rfwi8tR5zMMbkAXxRq/O/qSPaWusN2ajbt3w2cPBmjq16hrYyybnUIklsUP
+	 xk5uByeilYrZE3S6GZc9c5Dl4FTykaiLs082mQG6iddGQUV4qDbOEm9TWU7gOkm18l
+	 PGQDXF08nZyYqZt3o0UFQMIH+8Qxt1zgS/YmxQ/pVAZHeuXJHpUAIVEOr8K70W3X+t
+	 PK8ZULVDYLHeQq5b57XW4CCRNv3c9X4brN1wCmvZqisl3AQ/CGJQNFXQgk/mQXrndS
+	 6j0X1U5Vvb7M2HtRFM9ECN/qJOXlCPTWqELgMzPKBk4LOp+Yxjsu5Pl0/r0cxzb/wK
+	 +weNqO5upSi/A==
+From: Lee Jones <lee@kernel.org>
+To: lee@kernel.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>,
+	Jens Axboe <axboe@kernel.dk>,
+	Sasha Levin <sashal@kernel.org>,
+	Michal Luczaj <mhal@rbox.co>,
+	Rao Shoaib <Rao.Shoaib@oracle.com>,
+	Pavel Begunkov <asml.silence@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Cc: stable@vger.kernel.org,
+	Simon Horman <horms@kernel.org>
+Subject: [PATCH v6.1 02/27] af_unix: Return struct unix_sock from unix_get_socket().
+Date: Wed, 21 May 2025 16:27:01 +0100
+Message-ID: <20250521152920.1116756-3-lee@kernel.org>
+X-Mailer: git-send-email 2.49.0.1143.g0be31eac6b-goog
+In-Reply-To: <20250521152920.1116756-1-lee@kernel.org>
+References: <20250521152920.1116756-1-lee@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 07/11] bus: mhi: host: Add support to read MHI
- capabilities
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-        "Bjorn
- Helgaas" <bhelgaas@google.com>,
-        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
-	<ilpo.jarvinen@linux.intel.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Lorenzo Pieralisi
-	<lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
-	<kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Johannes Berg
-	<johannes@sipsolutions.net>,
-        Jeff Johnson <jjohnson@kernel.org>,
-        "Bartosz
- Golaszewski" <brgl@bgdev.pl>
-CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <mhi@lists.linux.dev>,
-        <linux-wireless@vger.kernel.org>, <ath11k@lists.infradead.org>,
-        <qiang.yu@oss.qualcomm.com>, <quic_vbadigan@quicinc.com>,
-        <quic_vpernami@quicinc.com>, <quic_mrana@quicinc.com>,
-        Jeff Johnson
-	<jeff.johnson@oss.qualcomm.com>
-References: <20250519-mhi_bw_up-v3-0-3acd4a17bbb5@oss.qualcomm.com>
- <20250519-mhi_bw_up-v3-7-3acd4a17bbb5@oss.qualcomm.com>
- <aa45ff83-bc8f-4cef-a82c-9a868396d19d@quicinc.com>
- <8bb9acff-b2cf-edb0-bd55-251cf4a93f5b@oss.qualcomm.com>
-Content-Language: en-US
-From: Jeffrey Hugo <quic_jhugo@quicinc.com>
-In-Reply-To: <8bb9acff-b2cf-edb0-bd55-251cf4a93f5b@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDE1MSBTYWx0ZWRfXxnaJb7V1VaIh
- DEkdqiEY9/kGm2Eg4dD3TRPistrrO10PK8DA+eodCpj/WUuQoqzge0Pw6DNzvBiYjzmoPBJ4itd
- yuWpfmX6RjRobZiUqJvMdnJMqGrCp/Y8kknzMAZ+3ykw+5Fp/1AY3cudPYH+B0Cowf80dSgGrqq
- 8eYoYKs9ov7H/tf+pDLxOHxEnTDssU8Jm0Iu5e2Rtb+7n/LoVsIEJ6qIhiwDeZrqHpQY9iyc/Yv
- I/GXfGepp5u1Eicz11jhO3Y2QeAKB7moc3+PVJl6OyPyhbZh2f2d6dTMCkcrx+Ohk4z6a/+qOHH
- 6da4AHdjO99ei2hYMVunmYpbtDpPUqHLDQ2XELVZPiLRd+eDWGKVA122MakxwLgFy/X1wMiNTTg
- 5oA6ZCcSET2EwRjCVyQsPwOJ71zg98jO0O0PLZDmqmtK443G2Ay7pMMnMOxdgq4luM6S3dYJ
-X-Authority-Analysis: v=2.4 cv=XeWJzJ55 c=1 sm=1 tr=0 ts=682df1f7 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
- a=EUspDBNiAAAA:8 a=Af02sFNo4fdZPFbs5mEA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: qqsNyME4ffCDkvLPzdtCBRAJtOscHoSf
-X-Proofpoint-ORIG-GUID: qqsNyME4ffCDkvLPzdtCBRAJtOscHoSf
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-21_04,2025-05-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 clxscore=1015 mlxlogscore=999 mlxscore=0 bulkscore=0 spamscore=0
- suspectscore=0 impostorscore=0 adultscore=0 malwarescore=0 lowpriorityscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505210151
 
-On 5/21/2025 9:06 AM, Krishna Chaitanya Chundru wrote:
-> 
-> 
-> On 5/21/2025 8:22 PM, Jeffrey Hugo wrote:
->> On 5/19/2025 3:42 AM, Krishna Chaitanya Chundru wrote:
->>> From: Vivek Pernamitta <quic_vpernami@quicinc.com>
->>>
->>> As per MHI spec v1.2,sec 6.6, MHI has capability registers which are
->>> located after the ERDB array. The location of this group of registers is
->>> indicated by the MISCOFF register. Each capability has a capability 
->>> ID to
->>> determine which functionality is supported and each capability will 
->>> point
->>> to the next capability supported.
->>>
->>> Add a basic function to read those capabilities offsets.
->>>
->>> Signed-off-by: Vivek Pernamitta <quic_vpernami@quicinc.com>
->>> Signed-off-by: Krishna Chaitanya Chundru 
->>> <krishna.chundru@oss.qualcomm.com>
->>> ---
->>>   drivers/bus/mhi/common.h    |  4 ++++
->>>   drivers/bus/mhi/host/init.c | 29 +++++++++++++++++++++++++++++
->>>   2 files changed, 33 insertions(+)
->>>
->>> diff --git a/drivers/bus/mhi/common.h b/drivers/bus/mhi/common.h
->>> index 
->>> dda340aaed95a5573a2ec776ca712e11a1ed0b52..eedac801b80021e44f7c65d33cd50760e06c02f2 100644
->>> --- a/drivers/bus/mhi/common.h
->>> +++ b/drivers/bus/mhi/common.h
->>> @@ -16,6 +16,7 @@
->>>   #define MHICFG                0x10
->>>   #define CHDBOFF                0x18
->>>   #define ERDBOFF                0x20
->>> +#define MISCOFF                0x24
->>>   #define BHIOFF                0x28
->>>   #define BHIEOFF                0x2c
->>>   #define DEBUGOFF            0x30
->>> @@ -113,6 +114,9 @@
->>>   #define MHISTATUS_MHISTATE_MASK        GENMASK(15, 8)
->>>   #define MHISTATUS_SYSERR_MASK        BIT(2)
->>>   #define MHISTATUS_READY_MASK        BIT(0)
->>> +#define MISC_CAP_MASK            GENMASK(31, 0)
->>> +#define CAP_CAPID_MASK            GENMASK(31, 24)
->>> +#define CAP_NEXT_CAP_MASK        GENMASK(23, 12)
->>>   /* Command Ring Element macros */
->>>   /* No operation command */
->>> diff --git a/drivers/bus/mhi/host/init.c b/drivers/bus/mhi/host/init.c
->>> index 
->>> 13e7a55f54ff45b83b3f18b97e2cdd83d4836fe3..a7137a040bdce1c58c98fe9c2340aae4cc4387d1 100644
->>> --- a/drivers/bus/mhi/host/init.c
->>> +++ b/drivers/bus/mhi/host/init.c
->>> @@ -467,6 +467,35 @@ int mhi_init_dev_ctxt(struct mhi_controller 
->>> *mhi_cntrl)
->>>       return ret;
->>>   }
->>> +static int mhi_find_capability(struct mhi_controller *mhi_cntrl, u32 
->>> capability, u32 *offset)
->>> +{
->>> +    u32 val, cur_cap, next_offset;
->>> +    int ret;
->>> +
->>> +    /* Get the 1st supported capability offset */
->>
->> "first"?  Does not seem like you are short on space here.
->>
-> Misc register will have the offest of the 1st capability register
-> from there capabilities will have linked list format.
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
 
-No, I'm saying don't have "1st" in the comment, but have "first" 
-instead. I think that will read better.
+[ Upstream commit 5b17307bd0789edea0675d524a2b277b93bbde62 ]
 
-"Get the first supported capability offset"
+Currently, unix_get_socket() returns struct sock, but after calling
+it, we always cast it to unix_sk().
 
->>> +    ret = mhi_read_reg_field(mhi_cntrl, mhi_cntrl->regs, MISCOFF,
->>> +                 MISC_CAP_MASK, offset);
->>
->> This fits on one line.
->>
->>> +    if (ret)
->>> +        return ret;
->>
->> Blank line here would be nice.
->>
->>> +    do {
->>> +        if (*offset >= mhi_cntrl->reg_len)
->>> +            return -ENXIO;
->>> +
->>> +        ret = mhi_read_reg(mhi_cntrl, mhi_cntrl->regs, *offset, &val);
->>> +        if (ret)
->>> +            return ret;
->>
->>
->> There is no sanity checking we can do on val?  We've had plenty of 
->> issues blindly trusting the device.  I would like to avoid having more.
->>
-> we can check if val is not all F's as sanity other than that we can't
-> check any other things as we don't know if the value is valid or not.
-> Let me know if you have any taught on this.
+Let's return struct unix_sock from unix_get_socket().
 
-mhi_read_reg() should handle the PCIe link error case. You can check to 
-see that the value is within the MHI space before using it.
+Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+Acked-by: Pavel Begunkov <asml.silence@gmail.com>
+Reviewed-by: Simon Horman <horms@kernel.org>
+Link: https://lore.kernel.org/r/20240123170856.41348-4-kuniyu@amazon.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+(cherry picked from commit 5b17307bd0789edea0675d524a2b277b93bbde62)
+Signed-off-by: Lee Jones <lee@kernel.org>
+---
+ include/net/af_unix.h |  2 +-
+ net/unix/garbage.c    | 19 +++++++------------
+ net/unix/scm.c        | 19 +++++++------------
+ 3 files changed, 15 insertions(+), 25 deletions(-)
 
-Also, shouldn't the value be transformed from le32 to cpu and back?
-
->> Also looks like if we find the capability we are looking for, we 
->> return the offset without validating it.
->>
-> For offset I can have a check to make sure the offset is not crossing
-> mhi reg len like above.
-> 
-> - Krishna Chaitanya.
->>> +
->>> +        cur_cap = FIELD_GET(CAP_CAPID_MASK, val);
->>> +        next_offset = FIELD_GET(CAP_NEXT_CAP_MASK, val);
->>> +        if (cur_cap == capability)
->>> +            return 0;
->>> +
->>> +        *offset = next_offset;
->>> +    } while (next_offset);
->>> +
->>> +    return -ENXIO;
->>> +}
->>> +
->>>   int mhi_init_mmio(struct mhi_controller *mhi_cntrl)
->>>   {
->>>       u32 val;
->>>
->>
+diff --git a/include/net/af_unix.h b/include/net/af_unix.h
+index e7d71a516bd4..52ae023c3e93 100644
+--- a/include/net/af_unix.h
++++ b/include/net/af_unix.h
+@@ -13,7 +13,7 @@ void unix_notinflight(struct user_struct *user, struct file *fp);
+ void unix_destruct_scm(struct sk_buff *skb);
+ void unix_gc(void);
+ void wait_for_unix_gc(void);
+-struct sock *unix_get_socket(struct file *filp);
++struct unix_sock *unix_get_socket(struct file *filp);
+ struct sock *unix_peer_get(struct sock *sk);
+ 
+ #define UNIX_HASH_MOD	(256 - 1)
+diff --git a/net/unix/garbage.c b/net/unix/garbage.c
+index d2fc795394a5..438f5d9b9173 100644
+--- a/net/unix/garbage.c
++++ b/net/unix/garbage.c
+@@ -105,20 +105,15 @@ static void scan_inflight(struct sock *x, void (*func)(struct unix_sock *),
+ 
+ 			while (nfd--) {
+ 				/* Get the socket the fd matches if it indeed does so */
+-				struct sock *sk = unix_get_socket(*fp++);
++				struct unix_sock *u = unix_get_socket(*fp++);
+ 
+-				if (sk) {
+-					struct unix_sock *u = unix_sk(sk);
++				/* Ignore non-candidates, they could have been added
++				 * to the queues after starting the garbage collection
++				 */
++				if (u && test_bit(UNIX_GC_CANDIDATE, &u->gc_flags)) {
++					hit = true;
+ 
+-					/* Ignore non-candidates, they could
+-					 * have been added to the queues after
+-					 * starting the garbage collection
+-					 */
+-					if (test_bit(UNIX_GC_CANDIDATE, &u->gc_flags)) {
+-						hit = true;
+-
+-						func(u);
+-					}
++					func(u);
+ 				}
+ 			}
+ 			if (hit && hitlist != NULL) {
+diff --git a/net/unix/scm.c b/net/unix/scm.c
+index 4eff7da9f6f9..693817a31ad8 100644
+--- a/net/unix/scm.c
++++ b/net/unix/scm.c
+@@ -21,9 +21,8 @@ EXPORT_SYMBOL(gc_inflight_list);
+ DEFINE_SPINLOCK(unix_gc_lock);
+ EXPORT_SYMBOL(unix_gc_lock);
+ 
+-struct sock *unix_get_socket(struct file *filp)
++struct unix_sock *unix_get_socket(struct file *filp)
+ {
+-	struct sock *u_sock = NULL;
+ 	struct inode *inode = file_inode(filp);
+ 
+ 	/* Socket ? */
+@@ -33,10 +32,10 @@ struct sock *unix_get_socket(struct file *filp)
+ 
+ 		/* PF_UNIX ? */
+ 		if (s && sock->ops && sock->ops->family == PF_UNIX)
+-			u_sock = s;
++			return unix_sk(s);
+ 	}
+ 
+-	return u_sock;
++	return NULL;
+ }
+ EXPORT_SYMBOL(unix_get_socket);
+ 
+@@ -45,13 +44,11 @@ EXPORT_SYMBOL(unix_get_socket);
+  */
+ void unix_inflight(struct user_struct *user, struct file *fp)
+ {
+-	struct sock *s = unix_get_socket(fp);
++	struct unix_sock *u = unix_get_socket(fp);
+ 
+ 	spin_lock(&unix_gc_lock);
+ 
+-	if (s) {
+-		struct unix_sock *u = unix_sk(s);
+-
++	if (u) {
+ 		if (!u->inflight) {
+ 			BUG_ON(!list_empty(&u->link));
+ 			list_add_tail(&u->link, &gc_inflight_list);
+@@ -68,13 +65,11 @@ void unix_inflight(struct user_struct *user, struct file *fp)
+ 
+ void unix_notinflight(struct user_struct *user, struct file *fp)
+ {
+-	struct sock *s = unix_get_socket(fp);
++	struct unix_sock *u = unix_get_socket(fp);
+ 
+ 	spin_lock(&unix_gc_lock);
+ 
+-	if (s) {
+-		struct unix_sock *u = unix_sk(s);
+-
++	if (u) {
+ 		BUG_ON(!u->inflight);
+ 		BUG_ON(list_empty(&u->link));
+ 
+-- 
+2.49.0.1143.g0be31eac6b-goog
 
