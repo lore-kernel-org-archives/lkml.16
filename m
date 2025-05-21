@@ -1,129 +1,146 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AA6320CCE5
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 15:37:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CA9E21579C;
+	Wed, 21 May 2025 15:38:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747841881; cv=none; b=F/Dj3Lka1vtnNVtQknBXf8GCMSyxDKd9+vyLNkA+CKuZTShdP3Yu1Hp4ydFaGf441AK/Es9rGQa19mAim4TYa2kGdFWb3LmtaBYzj/s++rUjJ8wU5zIPqBqlBSdWXZyhJBh6+ifIHlKeIjOp8OWqAkwj9tfTlw7ZT1Iplx7RQkQ=
+	t=1747841895; cv=none; b=aiJTQq5mx7je0l9+XHh1SM7EtRpFaniWTh8WlKUJMTrEnX9VAFtWO9znrY3iLgyr1/jIZZ/NuduaYAJFa6csUIQkIb2UtEVVQne2F46Yklf7Q7+iw7jCJ2MlyJgPpvoaEWCLC5AqIyfhtU1cDPbQkLyuooEAegz4xgZF2cKcmqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747841881; c=relaxed/simple;
-	bh=mOFwZi8uF/Vd7QR19RQnmQPwENX+UWRgxsy3kizbkWA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=k2ODKSdx1wj/EKYZAff3O3cYIPDVhWMFUUvMzz06OAXYWkWubvNO6pXTmXMgP362y43l1ofiPSigEOeTeeCDVM5yMC+tSiqy1zLeTFaLFaqdQ0N0W7HYtNRJS8GdZu18E7qCUvGxt4MpWarDIiddkFNOYurC5t2yW1fpb3UyKw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CCNipJKN; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747841895; c=relaxed/simple;
+	bh=j7sDhLAJG1NCqa/6sMKvVWjsSSAhvNNZC8wGEuMPu5o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TsohMNCNsz5oVGdJcGgbgoBVJhESRwt1QC/1VB2Atkss3XbgnEbE4weBbJkvkCYHtVrWn9e2Bn8j8mqKx2bK9GHEbWc3dEbmS8pgBLYVlVMVLGWhkCvkwHpf9FCynZDyeU46GY/N3q0VQTEU/jjdsjdtuS3BQDLiRixXq33CLUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bEhNxhO4; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CCNipJKN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747841878;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4OYI585nduQE5fAKYci/xXzRDgiHeBkKRLTnL/6NwgA=;
-	b=CCNipJKN/k89nGBdgOdnknhJqmjAbb19znfU7J5gycbbcHoCdB7M3AdQqb19hYxCrfp+s0
-	QjMlb9CMTMqt2eot22VUOonI6eDEuJwZmjoVD8pEcKJ72paR3kCpFirjYTPgrxzzqFudgG
-	G1wWXuQd5wNdK4MEDvq5FQzXj7E5c0c=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-614-FoouQ4NoMHisH0oP0zKggw-1; Wed, 21 May 2025 11:37:57 -0400
-X-MC-Unique: FoouQ4NoMHisH0oP0zKggw-1
-X-Mimecast-MFC-AGG-ID: FoouQ4NoMHisH0oP0zKggw_1747841876
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43e9b0fd00cso35686075e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 08:37:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bEhNxhO4"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5499614d3d2so8542565e87.3;
+        Wed, 21 May 2025 08:38:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747841891; x=1748446691; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xX1GdWOhUQkZGneOEdWqA8kdYMe8hW7mvNhj+I9O+wM=;
+        b=bEhNxhO4X8MG8eEB8Qfrr7VJ6sBLkhdoUDXGQiYYQQEMYG/jZQk1EfQw3jLRg45A2F
+         ZccldgAhyIB+yOrwkgoxr/8j3c4u48+Ai9z8OE5nNpkt2E9ZUyAEEhOyCGJfbIH4cBBC
+         0Iupb4zP810Xbb1vai3ysljislp6nA7qegoV8Ba/ZNLMmrT35+J0mSQvkUHG/qOc+gUQ
+         RGTD24ZbU3sPGT8pvNgeUzQijub5yekvb/clBfWQmVtOCAKsBDzvs9XbJg9thuJktzuq
+         ZZ5O5AmneLduMUoWClaozYBs7DtEcspRKG2x5dwZ28vzZ3AJkYAb6BtzKOUAvRuGPbGU
+         pMAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747841876; x=1748446676;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4OYI585nduQE5fAKYci/xXzRDgiHeBkKRLTnL/6NwgA=;
-        b=gqhTCK9kHYPWJm9P3kgZxtMeUyUi3SLS5OVlSlLctjFhNE7c5JOcvRe4spFuq3brnD
-         kB4jxbzydyJfyC8PoRq7EsPNY8v4YPIm4CGaCxCYKQIDzsjSvYJULiDDQdg6HBGPDHX2
-         YMrqeH4FGFhA80u+l4sTytnhrLM8pS+yPP7auFtPhT8uFJK9DiId1GUcNQRlKlqJUqx3
-         qnllhR7O9lJVWwPfNNg7Idnbgyg3SkopuoRns7QRBNceJwDrACh61/5tTe/4uk28LG6N
-         HNIzFxnK+zKBo2/OFSkZlVMh+Pwl8B2D9LF9S01mJkHYG6RiTSWrlDm9soU5JjSthgDL
-         RkYg==
-X-Forwarded-Encrypted: i=1; AJvYcCU0JpMcz5PulL1/5eV91Ioe5aqq6AbBev6ovqlkz6SjjutibEHj+aUOJm6LGQxKsCVFlxmAxLVrX9qXZtU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkPOx++D6JS4Ohq6LRVG17T/yCIEI/wGYzwsuyL0UIi3EUB/WF
-	OZo9ANgTSBTCDv8SgnnXyHVlESs3LVuEbyglbXmKuLIswYnyp7CgeHOUnbwIsVQiHIKZqn87o03
-	ZWnQc98suxkd5m6JdNJh8IsoGcodBUvw8vitacqywRE98YPYBoMcyMcUNHa8eyvWru5gzvGCUgT
-	wu
-X-Gm-Gg: ASbGncvzThY/Ubpb/UT7VGKdt9qdNEhnHGvU65661AneuyW0GsTzG/22xC67oZq/ghw
-	vlyqyUWiZykChs4yOeHsq5Yggltu2yFrtof+aGFu1SG2fisLjYNPh7LU7o3ijMW1qZ54eMNvybV
-	FMqP9Cd9R3zShiGvUgh2M9f+L8nPf9r/jMziXoJ20cif9U6UqrcxUw+WgiBeoZMDKlX3ch39TPs
-	XsaA11PdbyYI3joFc9rjOoD06xD3zN7vCXmCfpPbuvDWEL3+EfcWP0ykuEXNf6/z3XH4PGcUC9O
-	Sg0AStGPKEuPcsJXfpbtVbvMk96SziLPcIauDHvI091y2vxn64hwT3MGSiCUX9mZPnnOR5ZR
-X-Received: by 2002:a05:600c:8889:10b0:442:f4a3:a2c0 with SMTP id 5b1f17b1804b1-443024b8820mr116363065e9.13.1747841875804;
-        Wed, 21 May 2025 08:37:55 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHcHFJCDU0kERgNNpbSG5LzwmKXYOVL8DXbNu1j1znxGmyPxiSylKOJBGAP3Ew47kasRlgLlA==
-X-Received: by 2002:a05:600c:8889:10b0:442:f4a3:a2c0 with SMTP id 5b1f17b1804b1-443024b8820mr116362885e9.13.1747841875376;
-        Wed, 21 May 2025 08:37:55 -0700 (PDT)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-135-146.abo.bbox.fr. [213.44.135.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f73d3defsm71546225e9.18.2025.05.21.08.37.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 08:37:54 -0700 (PDT)
-From: Valentin Schneider <vschneid@redhat.com>
-To: Nam Cao <namcao@linutronix.de>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner
- <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Sebastian Andrzej Siewior
- <bigeasy@linutronix.de>, John Ogness <john.ogness@linutronix.de>, Clark
- Williams <clrkwllms@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-rt-devel@lists.linux.dev, linux-rt-users@vger.kernel.org, Joe Damato
- <jdamato@fastly.com>, Martin Karsten <mkarsten@uwaterloo.ca>, Jens Axboe
- <axboe@kernel.dk>, Frederic Weisbecker <frederic@kernel.org>
-Subject: Re: [PATCH] eventpoll: Fix priority inversion problem
-In-Reply-To: <20250521145320.oqUIOaRG@linutronix.de>
-References: <20250519074016.3337326-1-namcao@linutronix.de>
- <xhsmh8qmq9h37.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
- <20250521145320.oqUIOaRG@linutronix.de>
-Date: Wed, 21 May 2025 17:37:54 +0200
-Message-ID: <xhsmh5xhu9dpp.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+        d=1e100.net; s=20230601; t=1747841891; x=1748446691;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xX1GdWOhUQkZGneOEdWqA8kdYMe8hW7mvNhj+I9O+wM=;
+        b=wSe8xqJKqfzok3CJugvOkd878S2Khjgfq94SI7dDhU5XCS7VF5oqjVo6fWn01CqdLq
+         /l7zHKlKlT8ph/GaZLBA3z89oZ3MJF9UxKCAKZy0k+LT2VDkqpZhXwt4HwIi4SHmNldZ
+         UrzkANdYKRkZfry9k43zR7iEdraP+jJmExlyNrOM1QvQCvLi5+4V55YZ4M3SYxsJk4yv
+         eG3OvUO4Fo1JR/UFcruy6RU8tQhWfnF8pJiqjYbmzfmVuvbE17E2m6UaQqh+ZP+MSXTU
+         TluPPUdtBOlIaAxp3hi2ELHtMci1wp+O+BUQWsMjjA8bEfazTe1QLEE8NfW3lv23sXMJ
+         uz1w==
+X-Forwarded-Encrypted: i=1; AJvYcCXn+XL1v/fEWtAV+WqHyXFtk7DPOgqfgKGnfnAjTojncgTUgUqqqUHzWCn3se2ZVwjRmHVq8PGiKx4zG2E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpCX47nlBWgMtgBswb+GVFaRR05MhRoaSuUwKwiih7loAp+QVQ
+	KDAhHBgGs+xZ+EHkzlyD3BvxApbTcfxEEM0rVF1s+J4dH3FDbto6hZYZ
+X-Gm-Gg: ASbGncug614nQ9hLn+dIb0kKGMunGkCpkjOydrcAv+k7PZgYo53bbrybnbQwEt2p15/
+	Vaf7wYB4azE2JPg5MLAFvV7DSYtSM+FxGXlfpA9BnEBkZhv0ObT2etLVRyz6VkFrZki6n71s7hh
+	9c9GMDGdixqGH4o8zAezQmtT/ZpT18HATDd3Mi9TOpQyc5WsN86VZEW8MHFO6Dwi3O2nTZcpKot
+	Kqu2/Zy6nBP8kz9lRC7uWqd1YxSvb4JXfswX6GAQ7wlrqOtYBidqiidHJei3i/aLDR2oub98EE6
+	/5CQCD2mltrskqLdjsdKR1CwDRh1paBeY93iTmqJxdPV9xuwuoQNgf5DRrp/HdkQzKJISiB+OgC
+	jzinoT7pGMpAp9q+ZD3Q6FMJsY2GyRBeDFYoyZMX2Lk+BcRPfeaPav0SNnxZpJjSVMmUhPgrOlc
+	KsjNOSscalo+Bp
+X-Google-Smtp-Source: AGHT+IGJk/QA3hPb0+7+lQT4VfmFwPDxyEv47UVCzN+pVXLWlFipTvOAW7WEP1E09sDDyJ2Vmg3EGw==
+X-Received: by 2002:a05:6512:1049:b0:549:55df:8af6 with SMTP id 2adb3069b0e04-550e726a158mr5906365e87.53.1747841891225;
+        Wed, 21 May 2025 08:38:11 -0700 (PDT)
+Received: from ?IPV6:2001:14ba:53:1500:e8f4:97c2:d311:5b15? (2001-14ba-53-1500-e8f4-97c2-d311-5b15.rev.dnainternet.fi. [2001:14ba:53:1500:e8f4:97c2:d311:5b15])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e9cb4d69sm2793218e87.21.2025.05.21.08.38.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 May 2025 08:38:10 -0700 (PDT)
+Message-ID: <8bd31e5e-9f0a-48cc-9727-d2e6475ce046@gmail.com>
+Date: Wed, 21 May 2025 18:38:10 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/4] docs: Improve grammar in Userspace API/fwctl
+To: Bagas Sanjaya <bagasdotme@gmail.com>, mchehab@kernel.org,
+ ribalda@chromium.org, hverkuil@xs4all.nl, hljunggr@cisco.com,
+ dave.jiang@intel.com, jgg@ziepe.ca, saeedm@nvidia.com,
+ Jonathan.Cameron@huawei.com, corbet@lwn.net, ilpo.jarvinen@linux.intel.com,
+ mario.limonciello@amd.com, W_Armin@gmx.de, mpearson-lenovo@squebb.ca
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kernel-mentees@lists.linux.dev
+References: <20250517132711.117618-1-hannelotta@gmail.com>
+ <20250517132711.117618-3-hannelotta@gmail.com> <aCqKNg3p_VlGbce_@archie.me>
+Content-Language: en-US
+From: =?UTF-8?B?SGFubmUtTG90dGEgTcOkZW5ww6TDpA==?= <hannelotta@gmail.com>
+In-Reply-To: <aCqKNg3p_VlGbce_@archie.me>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 21/05/25 16:53, Nam Cao wrote:
-> On Wed, May 21, 2025 at 04:25:00PM +0200, Valentin Schneider wrote:
->> > +	llist_for_each_entry_safe(epi, tmp, txlist.first, rdllink) {
->> > +		/*
->> > +		 * We are done iterating. Allow the items we took to be added back to the ready
->> > +		 * list.
->> > +		 */
->> > +		xchg(&epi->link_locked, false);
->> > +
->> > +		/*
->> > +		 * In the loop above, we may mark some items ready, and they should be added back.
->> > +		 *
->> > +		 * Additionally, someone else may also attempt to add the item to the ready list,
->> > +		 * but got blocked by us. Add those blocked items now.
->> > +		 */
->> > +		if (smp_load_acquire(&epi->ready)) {
->> >                       ep_pm_stay_awake(epi);
->> > +			epitem_ready(epi);
->> >               }
->>
->> Isn't this missing a:
->>
->>                 list_del_init(&epi->rdllink);
->>
->> AFAICT we're always going to overwrite that link when next marking the item
->> as ready, but I'd say it's best to exit this with a clean state. That would
->> have to be before the clearing of link_locked so it doesn't race with a
->> concurrent epitem_ready() call.
->
-> To confirm I understand you: there is no functional problem, and your
-> comment is more of a "just to be safe"?
->
+Hello,
 
-Yup, even if they're not accessed it's good to not have stray references to
-stack addresses.
+On 5/19/25 04:32, Bagas Sanjaya wrote:
+> On Sat, May 17, 2025 at 04:27:10PM +0300, Hanne-Lotta Mäenpää wrote:
+>> Fix typos and improve grammar in the documentation for
+>> fwctl subsystem.
+>>
+>> Use the word user space consistently, instead of having
+>> two variants (user space vs. userspace).
+>>
+>> Change wording of denied behaviour to be disallowed
+>> behaviour when describing the interface.
+>>
+>> Signed-off-by: Hanne-Lotta Mäenpää <hannelotta@gmail.com>
+>> ---
+>>   Documentation/userspace-api/fwctl/fwctl.rst | 30 ++++++++++-----------
+>>   1 file changed, 15 insertions(+), 15 deletions(-)
+>>
+>> diff --git a/Documentation/userspace-api/fwctl/fwctl.rst b/Documentation/userspace-api/fwctl/fwctl.rst
+>> index fdcfe418a83f..a74eab8d14c6 100644
+>> --- a/Documentation/userspace-api/fwctl/fwctl.rst
+>> +++ b/Documentation/userspace-api/fwctl/fwctl.rst
+>> @@ -54,7 +54,7 @@ operated by the block layer but also comes with a set of RPCs to administer the
+>>   construction of drives within the HW RAID.
+>>   
+>>   In the past when devices were more single function, individual subsystems would
+> 
+> Do you mean that devices used to be singleton in its functionality? Or having
+> multiple functions?
 
-> Thanks so much for the review,
-> Nam
+On this line I did not include any changes. On the next line I have 
+added a comma. To answer your question though, the original author may 
+have meant that devices had less functionality earlier, which resulted 
+in multiple implementations of the common functions, and now with a lot 
+more functionality it makes sense to have a common interface for those.
+
+> 
+>> -grow different approaches to solving some of these common problems. For instance
+>> +grow different approaches to solving some of these common problems. For instance,
+>>   monitoring device health, manipulating its FLASH, debugging the FW,
+>>   provisioning, all have various unique interfaces across the kernel.
+>>   
+>> <snipped>...
+>>    3. Write access to function & child debug information strictly compatible with
+>>       the principles of kernel lockdown and kernel integrity protection. Triggers
+>> -    a kernel Taint.
+>> +    a kernel taint.
+> 
+> Improving grammar includes s/Taint/taint/?
+> 
+> Confused...
+> 
+
+Here the capitalized word is not in the beginning of a sentence or a 
+name, which is why lowercase would be correct.
+
+Best regards,
+
+Hanne-Lotta Mäenpää
 
