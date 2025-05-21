@@ -1,26 +1,27 @@
-Received: from smtpbgjp3.qq.com (smtpbgjp3.qq.com [54.92.39.34])
+Received: from smtpbguseast1.qq.com (smtpbguseast1.qq.com [54.204.34.129])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE3DE264616;
-	Wed, 21 May 2025 13:12:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.92.39.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 902BD267B74;
+	Wed, 21 May 2025 13:12:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.129
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747833131; cv=none; b=bL2SBZFRFSA0IoRU9PO0H8m++0n9jqO1Gtbe6ghIcejpzWiUTMTT0oWlK0pmZ0RS9P2M7KjTNMAsEo7CrKRXXh5+RwxAJ8VZp39nXc0Zg3QjS/YT4b2z4XY/M698H9Fqps0uZ+7NHSOUvgA66ErovviGAky0ZthYPnMQfcfEh/A=
+	t=1747833131; cv=none; b=m9tHgE5w6gCGhXkZV9sxMWfeMoOC3AwHw6ACySqQ8ST3vrynbx/Q4iOUtoTLFtcYNiZ/LnoO3rwKlRrG1FqnO5Vy9IRealrqXSIXl6Bn1Nt7DXcj/cYzk5/fr+NC6kGdI+8IeeSAsIJg5GEYkwtf7fplQtGjx/2RbuQH1qpmr5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747833131; c=relaxed/simple;
-	bh=hF+oG7v1AWVhgu9lPf1uizRbLhlMrZBB343LLtoUJhk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ugCwFkyz27hugPR0g/6hsYkMNQYWxXDCayEwFwu7lxxkTH9bVDTItfK5n8okd7CzCadrsFPjkTPtL7EvIr/ji4Ln2mL3vIk3iZYZ6/u8IGcmgI14Bw1jKUBx99sN4jVnrJ/MJ8HXjlLKRGu4xeGxKFeIx3ftMGU4E9JKMHtr7Qs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chainsx.cn; spf=none smtp.mailfrom=chainsx.cn; arc=none smtp.client-ip=54.92.39.34
+	bh=UAZyR586T12X8Sqt2X1g6rQPJ0OaKTsV07SFdykI9IQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jDhXduy+0iLVDDv15FLrBSPzNK9vv5SMSNERY01fcOZkLGvrHfGadJJ+e1XUCHnHq0/KOncdMWbVvj0CsY2W+FLiHKfRoqB42D647lQv7G5ZU723Og8UFzsWIEEMUZULblX/kXIauZS+D2/BHR159dwvdpTWQCVvfPikyDsxEdo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chainsx.cn; spf=none smtp.mailfrom=chainsx.cn; arc=none smtp.client-ip=54.204.34.129
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chainsx.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=chainsx.cn
-X-QQ-mid: esmtpgz16t1747833073t96ab1b52
-X-QQ-Originating-IP: eJZV5Pq/27UhC6wbS5MVd9IwULhg6bRfY+vB2uhghy0=
+X-QQ-mid: esmtpgz16t1747833076tae521dda
+X-QQ-Originating-IP: NRDtIp6wxGHIj53BWIcJvNUAWwQhM3ael0y7Wl3X1ko=
 Received: from chainsx-ubuntu-server.lan ( [116.249.112.84])
 	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 21 May 2025 21:11:10 +0800 (CST)
+	id ; Wed, 21 May 2025 21:11:14 +0800 (CST)
 X-QQ-SSF: 0000000000000000000000000000000
 X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 16382578765588849597
+X-BIZMAIL-ID: 3315312418809293864
 EX-QQ-RecipientCnt: 16
 From: Hsun Lai <i@chainsx.cn>
 To: robh@kernel.org,
@@ -39,71 +40,69 @@ Cc: i@chainsx.cn,
 	linux-kernel@vger.kernel.org,
 	krzysztof.kozlowski@linaro.org,
 	linux-rockchip@lists.infradead.org
-Subject: [PATCH v4 0/3] Add support for Sakura Pi RK3308B
-Date: Wed, 21 May 2025 21:11:05 +0800
-Message-Id: <20250521131108.5710-1-i@chainsx.cn>
+Subject: [PATCH v4 1/3] dt-bindings: vendor-prefixes: Add SakuraPi prefix
+Date: Wed, 21 May 2025 21:11:06 +0800
+Message-Id: <20250521131108.5710-2-i@chainsx.cn>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250521131108.5710-1-i@chainsx.cn>
+References: <20250521131108.5710-1-i@chainsx.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-QQ-SENDSIZE: 520
 Feedback-ID: esmtpgz:chainsx.cn:qybglogicsvrsz:qybglogicsvrsz3a-0
-X-QQ-XMAILINFO: NbLKFbIf58WKJLsowGlccw++xJ0jWmihH0hHJ2pWLJMAh4lyqgcKpCIW
-	Ux8uRet127EE3Z3XWUQBJOAV+u/5KHv2b2nNalcLINhC6Py2+UPx+Rzv7Ay21A3/rnTFqro
-	GFZo16UCrdfh2+/AZmuSNVVGFIMf0FXSqgIYHjN18agbgMQzLRtpb+nSBIHDby3TCgCcoox
-	XuBIGyPu3zdUddY0sySb72ViiWIEgxdNygwRNbWv7NX1R89ps/0nkBlphiAQBpzp8xaXufJ
-	auLlwuuVV4uGi6WJ4s42dKwZBrMXug7hmzkuGEqdAlusS3HgkrZlzHH75cOZbZFxIfkhJLW
-	9EVjfrJRg/Ea8Lw/X4jOPTUpPx4yhZYwCrda6K9makaqxu9Vnani2Lk2uYBCpGI9Pd7nd5o
-	YYLBs3w9BoRTc6JGutIVhBpB+rJBocngZ8NYmrtAe12xIc/0QqyRw3WGUkMcOYZzTF5yybM
-	r15+kl1uYLoDsUXYVq7qvqGqguwmzLwi9sj6/ob39v5Cm9TaYzF8M591Jirw5GKwN6IiIYg
-	6TU/08iZGpOoK41o2b5zWL07AR8fuGIT/OEQnuICBMdga1uQ4+bYjM0xUbEp1DLS0DICsZ0
-	rukC1sKk38z+TpRHMSNZiLJUto9sRGaaJfFJHsX9x7Ib9zISMXQHONlR3elcs8AH49Gcsl5
-	TCG4RlBsVwR6G3wckMH3+O1sY2uLs/y21lP7EaJeuXVM5Vc7+jnYLFuXUX5/YzxJllhzmLM
-	k4tT43ynl+vrYOFM8KZRwGuNdj+icuuNfbmnu/qLDa44zT0oHS+cJPV8F0Vo/AAgGFYbcaZ
-	AqTpjJb4c9pQZGiTVVWs7B+m/tei4rotQjhd2fIGH7D28p+FfzO/PCvBexOcE9vpWaIcsTi
-	FDY1X61fuosJnw8OmrxARSjgL8TzDJdHFLUKkUBQY2F8tmRkdht3d0dyHnNSl9XUCqv0pnM
-	rlrHfUO5K21C26WTzzKO3xPM0ZwCmyzx47evi6dAk4dvwbXf6S9AP+3QDzEL0GUoJK/ctyO
-	2BCZ++ww==
-X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+X-QQ-XMAILINFO: NULd4DJcKZL/Si+IhAVqJvBoKkZMZOODzr3Yqt9hswfAvOMyqH635xvn
+	3DSmAu+XKPkF1bbqVsizC00n8CQTlZtv4XJsjarkrqmDrsKDyQtw/wGphlXemvkHX+xdSd0
+	KEbrsMp37MhcZl+XTi5mYgJGGLxPiVzjEdaZclZC12voF+h0t4/gHmqGP/iA5XCWkd+PnEB
+	mzxieqa7ctof6y+WopYFP0xHOMAVF/lZ7MgP2Gwqtn4/mdv3Sp67jEwIQMKVTtHX/Oe0kw1
+	xn8Kqqwx1yg1dv57zjUFDOviS6ArTS5JvfwJAlmyjh723pb35ptQ7JYaFrNK/lWwFqtYOEO
+	2SySF4X7oa+xMHLLsOpFvq/7sMHdtET9j4TLc06lIf4OvPh5CCUeIe5LiK9qFG/4qGt+MX4
+	0xEzcoGyAbREPByGiTwA8EfsNyPPJd8DAIMnKf9ulrYEKeSyu9ZCIeQCfr1xfDlqlgPxM+3
+	SsdvorxsjR2780ZvWdIaxKYjPt0earjyWy7dZzQR8FXNA5feVN/BMWJTL6il65T1hh7HlRt
+	lz2OXgwp/kiZMV08ifZEGS/STgRzc34MWAPvn6DWrPLoGvY1XNPxwr182LGYY661nhjChZX
+	UkMioIyIOkL/y35SM5PKpIhxndUDKhwBCSTCUKIhO6P9UOfkvScYzioSHsj7EutpCgOZASC
+	N6O2bQ8BB/HrN0dL4kZd0ikzly2FP3SOVog1UZclLN+e9VyK1Cib0iIgliy0Q+oWCvSEV+j
+	MIcK40U7BU2jNvO6NDpI+dMKCnKV2rhtx9rqwiyO2GQ+4XtAW/TebN+0RTX23zjhr/CA4+h
+	CTOQGD13WE8R/mlE/tTKOngy//CdUX5+BmAni9QDDNwVxm94CxbWJX0V7XOLTIt/Ihyfad1
+	5g2F66hFAha301niwxV+ROjixDHu5iUuJL+IJOP+HqKLT+YRas/adYYTNOLY2TYWgmfshXA
+	elwHkfzoPudC5MqVkbXRhEasUcbQ9AAICvYmPDsQUWY6Idj8daU5erD9ug4AfelU+i2n2/4
+	v37VvYQw==
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
 X-QQ-RECHKSPAM: 0
 
-This series add support for Sakura Pi RK3308B.
+Add vendor prefix for SakuraPi.org, which produces
+development boards like the SakuraPi-RK3308B.
 
-Info of device can be found at:
-https://docs.sakurapi.org/article/sakurapi-rk3308b/introduce
+Link: https://docs.sakurapi.org
+
+Signed-off-by: Hsun Lai <i@chainsx.cn>
+
+---
 
 Changes in v4:
 - Fix vendor prefixes error (Krzysztof Kozlowski v2)
 
-Changes in v3:
-- Remove empty i2c controller (Heiko Stuebner, v1)
-- Remove unused spi nodes (Heiko Stuebner, v1)
-- Sort nodes alphabetically (Heiko Stuebner, v1)
-- Put status as last property (Heiko Stuebner, v1)
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Changes in v2:
-- Update the names of the regulators (Heiko Stuebner, v1)
-
-Changes in v1:
-- Add support for Sakura Pi RK3308B
-- Patch 2: Acked-by: Conor Dooley <conor.dooley@microchip.com>
-
-Hsun Lai (3):
-  dt-bindings: vendor-prefixes: Add SakuraPi prefix
-  dt-bindings: arm: rockchip: Add Sakura Pi RK3308B
-  arm64: dts: rockchip: add DTs for Sakura Pi RK3308B
-
- .../devicetree/bindings/arm/rockchip.yaml     |   5 +
- .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
- arch/arm64/boot/dts/rockchip/Makefile         |   1 +
- .../dts/rockchip/rk3308-sakurapi-rk3308b.dts  | 274 ++++++++++++++++++
- 4 files changed, 282 insertions(+)
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3308-sakurapi-rk3308b.dts
-
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 3e7450c3f..7eb2e13ea 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -1300,6 +1300,8 @@ patternProperties:
+     description: Recharge Véhicule Électrique (RVE) inc.
+   "^saef,.*":
+     description: Saef Technology Limited
++  "^sakurapi,.*":
++    description: SakuraPi.org
+   "^samsung,.*":
+     description: Samsung Semiconductor
+   "^samtec,.*":
 -- 
 2.34.1
 
