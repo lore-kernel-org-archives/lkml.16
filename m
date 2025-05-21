@@ -1,95 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6740E18AE2
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 14:16:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C21A197A7A
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 14:17:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747836992; cv=none; b=Yitel6wOtRAFuFVW908KgvyNDx5TIeiujLQ5KcB37ij24LKN+s5HB6C8i0Br/fzEO2lSRUOutPAbvQuI8OpQc562ZVJxGjAT1kyLxZSa7wxonpTXO5FKyOQAJeQ1cJ8htOcSU1ePGmVUGDQfKyaDazAmXUmn6QKO0RM/cyh/bOs=
+	t=1747837034; cv=none; b=HMyHvvBecrkZsAYYvDH4dFn9DESlj/9+B6qkyPUnXLu0NOecZLN64pe3FkIuSkXlys39uo50PCM1Q/3meayyZeIl4DVeUauYhJlCWIzBE8ivqVVFvbtMlsQf9vzappqEbbx98ru+A+AHW3l9cVTWoNCV+MtShW5+D3lOGv9fmRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747836992; c=relaxed/simple;
-	bh=7dW7bMxejC9fB0BkuZU3QQiwmvn7F1Rq/zjZChCyBD4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kTsvKudb80P6zODiqp/yLE3ukecdOuzoua8nU6tR1DxZxAmFqDvIkaD3FhNRbKue580J5SCgznVWivKO61gumnLqERydWXYtnEvhiEshhPjd6Y9T+lReC5JFN1vqJsLyiTvQNCK/Fdgxa2alUMEmd6TpcjMsSkKcWMrFOTYdm6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=LA4qj+JM; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="LA4qj+JM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48201C4CEE7;
-	Wed, 21 May 2025 14:16:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1747836991;
-	bh=7dW7bMxejC9fB0BkuZU3QQiwmvn7F1Rq/zjZChCyBD4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=LA4qj+JMceB7yt+9d0A1Xw+Ayyj39ImLDhIRmUJ7UUTl+bJQyeex22M3Jh/cNs3Lx
-	 mc16FVWfE1/HmZIGdoPyZ8iLbFR0lttMjcIH60Qzh6Umqtlu86u9gQmZ+cpsG7KbO4
-	 o0R5JLUE2WL9sM4imvT+zjtpRQu00JjXGbmlBcTc=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Subject: [PATCH] drivers: misc: sram: fix up some const issues with recent attribute changes
-Date: Wed, 21 May 2025 16:16:26 +0200
-Message-ID: <2025052125-squid-sandstorm-a418@gregkh>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1747837034; c=relaxed/simple;
+	bh=OP/UNUf70Mz3dEPbGV42js0+j4b27Y7896TP6X8MsKU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=V8xz2+e1tDnUzZTHXO9P3QFpXIDX2JWDmMtvngxgIAU253t1gLHvVZMuanwyF4i2iPgIN5C57eNR/LgxjKlKGuRrYcXfwG+jAOJD/sv+dqBvEnGX3SU8b8w5xBdHwuVvskSNW1NvnUq2DOewwZ0wSof4ftmaj3v5W3SxSV9+2Mg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DBD9F1515;
+	Wed, 21 May 2025 07:16:58 -0700 (PDT)
+Received: from [10.57.94.227] (unknown [10.57.94.227])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0A7823F5A1;
+	Wed, 21 May 2025 07:17:08 -0700 (PDT)
+Message-ID: <4d4b7d91-8ed9-4fc2-9079-267ffcbebb12@arm.com>
+Date: Wed, 21 May 2025 15:17:07 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 5/5] arm64: Add batched version of
+ ptep_modify_prot_commit
+Content-Language: en-GB
+To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org
+Cc: david@redhat.com, willy@infradead.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will@kernel.org,
+ Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, vbabka@suse.cz,
+ jannh@google.com, anshuman.khandual@arm.com, peterx@redhat.com,
+ joey.gouly@arm.com, ioworker0@gmail.com, baohua@kernel.org,
+ kevin.brodsky@arm.com, quic_zhenhuah@quicinc.com,
+ christophe.leroy@csgroup.eu, yangyicong@hisilicon.com,
+ linux-arm-kernel@lists.infradead.org, hughd@google.com,
+ yang@os.amperecomputing.com, ziy@nvidia.com
+References: <20250519074824.42909-1-dev.jain@arm.com>
+ <20250519074824.42909-6-dev.jain@arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20250519074824.42909-6-dev.jain@arm.com>
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2126; i=gregkh@linuxfoundation.org; h=from:subject:message-id; bh=7dW7bMxejC9fB0BkuZU3QQiwmvn7F1Rq/zjZChCyBD4=; b=owGbwMvMwCRo6H6F97bub03G02pJDBm6D6zkJmx5+vbhkmB3tW9XlorN2OSSH96e99kw9Pmh3 gVdSn/qO2JZGASZGGTFFFm+bOM5ur/ikKKXoe1pmDmsTCBDGLg4BWAiNcsZFlw5+P+u44XK3DmR 5W25wULelrd7ahjm5z2ZalC3W5DzL5fxC4849XclB25uBwA=
-X-Developer-Key: i=gregkh@linuxfoundation.org; a=openpgp; fpr=F4B60CC5BF78C2214A313DCB3147D40DDB2DFB29
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-The binary attribute const changes recently for the sram driver were
-made in a way that hid the fact that we would be casting a const pointer
-to a non-const one.  So explicitly make the cast so that it is obvious
-and preserve the const pointer in the sram_reserve_cmp() function.
+On 19/05/2025 08:48, Dev Jain wrote:
+> Override the generic definition to simply use set_ptes() to map the new
+> ptes into the pagetable.
+> 
+> Signed-off-by: Dev Jain <dev.jain@arm.com>
 
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Thomas Weißschuh <linux@weissschuh.net>
-Fixes: c3b8c358c4f3 ("misc: sram: constify 'struct bin_attribute'")
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/misc/sram.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+Let's squash this into the previous patch; it doesn't make sense for an arch to
+implement one without the other. Otherwise, LGTM.
 
-diff --git a/drivers/misc/sram.c b/drivers/misc/sram.c
-index e5069882457e..c69644be4176 100644
---- a/drivers/misc/sram.c
-+++ b/drivers/misc/sram.c
-@@ -28,7 +28,8 @@ static ssize_t sram_read(struct file *filp, struct kobject *kobj,
- {
- 	struct sram_partition *part;
- 
--	part = container_of(attr, struct sram_partition, battr);
-+	/* Cast away the const as the attribute is part of a larger structure */
-+	part = (struct sram_partition *)container_of(attr, struct sram_partition, battr);
- 
- 	mutex_lock(&part->lock);
- 	memcpy_fromio(buf, part->base + pos, count);
-@@ -43,7 +44,8 @@ static ssize_t sram_write(struct file *filp, struct kobject *kobj,
- {
- 	struct sram_partition *part;
- 
--	part = container_of(attr, struct sram_partition, battr);
-+	/* Cast away the const as the attribute is part of a larger structure */
-+	part = (struct sram_partition *)container_of(attr, struct sram_partition, battr);
- 
- 	mutex_lock(&part->lock);
- 	memcpy_toio(part->base + pos, buf, count);
-@@ -164,8 +166,8 @@ static void sram_free_partitions(struct sram_dev *sram)
- static int sram_reserve_cmp(void *priv, const struct list_head *a,
- 					const struct list_head *b)
- {
--	struct sram_reserve *ra = list_entry(a, struct sram_reserve, list);
--	struct sram_reserve *rb = list_entry(b, struct sram_reserve, list);
-+	const struct sram_reserve *ra = list_entry(a, struct sram_reserve, list);
-+	const struct sram_reserve *rb = list_entry(b, struct sram_reserve, list);
- 
- 	return ra->start - rb->start;
- }
--- 
-2.49.0
+Thanks,
+Ryan
+
+> ---
+>  arch/arm64/include/asm/pgtable.h | 5 +++++
+>  arch/arm64/mm/mmu.c              | 9 ++++++++-
+>  2 files changed, 13 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+> index 8872ea5f0642..0b13ca38f80c 100644
+> --- a/arch/arm64/include/asm/pgtable.h
+> +++ b/arch/arm64/include/asm/pgtable.h
+> @@ -1558,6 +1558,11 @@ extern pte_t modify_prot_start_ptes(struct vm_area_struct *vma,
+>  				    unsigned long addr, pte_t *ptep,
+>  				    unsigned int nr);
+>  
+> +#define modify_prot_commit_ptes modify_prot_commit_ptes
+> +extern void modify_prot_commit_ptes(struct vm_area_struct *vma, unsigned long addr,
+> +				    pte_t *ptep, pte_t old_pte, pte_t pte,
+> +				    unsigned int nr);
+> +
+>  #ifdef CONFIG_ARM64_CONTPTE
+>  
+>  /*
+> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> index fe60be8774f4..5f04bcdcd946 100644
+> --- a/arch/arm64/mm/mmu.c
+> +++ b/arch/arm64/mm/mmu.c
+> @@ -1543,10 +1543,17 @@ pte_t ptep_modify_prot_start(struct vm_area_struct *vma, unsigned long addr, pte
+>  	return modify_prot_start_ptes(vma, addr, ptep, 1);
+>  }
+>  
+> +void modify_prot_commit_ptes(struct vm_area_struct *vma, unsigned long addr,
+> +			     pte_t *ptep, pte_t old_pte, pte_t pte,
+> +			     unsigned int nr)
+> +{
+> +	set_ptes(vma->vm_mm, addr, ptep, pte, nr);
+> +}
+> +
+>  void ptep_modify_prot_commit(struct vm_area_struct *vma, unsigned long addr, pte_t *ptep,
+>  			     pte_t old_pte, pte_t pte)
+>  {
+> -	set_pte_at(vma->vm_mm, addr, ptep, pte);
+> +	modify_prot_commit_ptes(vma, addr, ptep, old_pte, pte, 1);
+>  }
+>  
+>  /*
 
