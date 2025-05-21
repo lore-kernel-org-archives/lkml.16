@@ -1,200 +1,197 @@
-Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE5F01B4121
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 12:07:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.243.244.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B8E979CF;
+	Wed, 21 May 2025 12:09:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747829255; cv=none; b=gdCAk0UKW1BEKofW5MEOV0ziNMus2F+09RFX9t1ieNyoCJg3dpUh3dvHU5D2UMUeBw1Zf/+RTa6snrK+l+wReWeiLQ7iaolpWxJI9jfmLP7CBiUf71yqP3C/mxkO+A1S4jYGSgBe/jhpj6BE1M1cLVed7aT1gbiyuJCNPCViRWI=
+	t=1747829376; cv=none; b=PsnV9ffIxpG05oYGOYwCDy5d6+ZhX2w+ziw0L3tBS1YoRj605GSeTvfajuHtJbwTyVLVu8SEZVgTF5EQmq6NMNIB40wUatPi3CiHyfth5ismfKSNTdRPtJtg7WR2LtqH+wdE7XABKXb1usr8j0TmWTEAkyVLve3Hg19Xd7WsVtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747829255; c=relaxed/simple;
-	bh=iHE1rx9pKNA3yS7AO8/GGqI2u5yXHHrzdzsIw2zPEl4=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=WZmPRgoKI7wcw3bGLptG+0/AIrDH+cQ94YCZwP+QU7bva0N6+P+ikOsnrO09sSkqX9CY28GV5GpzU9ybvfrX77WpvRoTewWG9CUO3wYk5cEJZNFpnoCwbabfYjacyuzAzICUN8JzlfApYt8enXcuFq60zVq3B2VR4a23wJdohX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=m.fudan.edu.cn; spf=pass smtp.mailfrom=m.fudan.edu.cn; dkim=pass (1024-bit key) header.d=m.fudan.edu.cn header.i=@m.fudan.edu.cn header.b=mP/HYPyK; arc=none smtp.client-ip=54.243.244.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=m.fudan.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=m.fudan.edu.cn
+	s=arc-20240116; t=1747829376; c=relaxed/simple;
+	bh=QbBFInRhrTN4KDhywq/vnOvp9a2LY9RftYFum+CHSXo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qw39G8edN4xcyulSUpQTs8BiASWo+HidWAf1v5536j02Y+CKpuYXtEj7+mKvttd4plTk6vf8rrrbnpfyLnLTLyegystQUxwpnDdmId5Qm7jKtuEO/rhsbvEOU17rUZRRKcxBzeeyGsLe9CMVZ7i3jOr192wc59o8Qr9ftFgu9Ow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iKUN5jzZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=m.fudan.edu.cn header.i=@m.fudan.edu.cn header.b="mP/HYPyK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=m.fudan.edu.cn;
-	s=sorc2401; t=1747829224;
-	bh=iHE1rx9pKNA3yS7AO8/GGqI2u5yXHHrzdzsIw2zPEl4=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=mP/HYPyKnP4SzYZz+CwEPcCBjJiysYwBsLRB+wkJhkXUk39bS9RLiusRTdl+tve6A
-	 8et8WCrWbOjqaIHC2/wKey3Yq9UHG/KvthROwiLOlHdRQXyaMYo+sf3r5aRl3IlPI6
-	 Bc9d1G7rtk5L1I1Se+gKgnm1vYGq1ECiSAwP0/sE=
-X-QQ-mid: zesmtpip2t1747829220t5a0fbb7a
-X-QQ-Originating-IP: aHaUtuZnGZbyw4ycVOVBgV9sQsu/rt/nOmgAysmDB8Q=
-Received: from TYSPR06MB7158.apcprd06.prod.out ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 21 May 2025 20:06:58 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 4736692606139951787
-EX-QQ-RecipientCnt: 6
-From: "huk23@m.fudan.edu.cn" <huk23@m.fudan.edu.cn>
-To: Parthiban Veerasooran <parthiban.veerasooran@microchip.com>, Christian
- Gromm <christian.gromm@microchip.com>
-CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"syzkaller@googlegroups.com" <syzkaller@googlegroups.com>,
-	=?gb2312?B?sNfLuMi9?= <baishuoran@hrbeu.edu.cn>, "jjtan24@m.fudan.edu.cn"
-	<jjtan24@m.fudan.edu.cn>
-Subject: KASAN: slab-use-after-free Read in hdm_disconnect
-Thread-Topic: KASAN: slab-use-after-free Read in hdm_disconnect
-Thread-Index: AQHbykbvT+dcgAqjL0mzc9pIIbqv5A==
-X-MS-Exchange-MessageSentRepresentingType: 1
-Date: Wed, 21 May 2025 12:06:57 +0000
-Message-ID:
-	<TYSPR06MB7158E3C203DA0F66E0278046F69EA@TYSPR06MB7158.apcprd06.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-Exchange-Organization-SCL: -1
-X-MS-TNEF-Correlator:
-X-MS-Exchange-Organization-RecordReviewCfmType: 0
-msip_labels:
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iKUN5jzZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D81B7C4CEED;
+	Wed, 21 May 2025 12:09:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747829374;
+	bh=QbBFInRhrTN4KDhywq/vnOvp9a2LY9RftYFum+CHSXo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=iKUN5jzZGfOcKcKOcno8V02aRoH7HXn1QFnaVJFs3HguUCiSIACY7NR8jt7kyveSC
+	 iwS+f2tNANhyKN4RUWDqvgM89rbbUr0HyxhMf6Zq6yWF8RBty05Qlkqn27FEgTC1l4
+	 DrSStlQWHXBsu3jAHTwfECOMxEGxlZ/dpDmxKV7goCl/s7zmdGJSqVM8Tb9oW+fJd/
+	 vP7nwfVQMt/EIpGf2HagnLfXQlPRj9NhzCxZgoMhFxeLhaey35atEFz5CtxMafoMfq
+	 kKju2brWElM06F9gEOzJzeySwRGiBusub1U+yqS1CwLMT8b0+/AJrpmksUGgY+oVsq
+	 b6j3ymnL7JUWw==
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-551f14dc30dso3417123e87.1;
+        Wed, 21 May 2025 05:09:34 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWGSJSl/ouN8leWQP00iKPMVSRT8rGZx+a2XIJPTCNh7odsA+FzMABScAgkbWjQxGgJC0db+wKSaNAD2ftKtA==@vger.kernel.org, AJvYcCX+SMutUj0Qx4A/s/SXZSXiNjwQBpltWcCFHFMMCZYKjPF089trzsQyLe/liA7hJvVhaQGnVn5ymxUwy2o=@vger.kernel.org, AJvYcCXW3A/YZ6zQHsw1eyoom9qXj1GmGK+ho5Osmpqz+Eu0XzTl1LtXqlNrKONhZT6LsPl60eewE1oWtnBl7OPw@vger.kernel.org
+X-Gm-Message-State: AOJu0YwfquQnZpmFa/ZOGVoTzgL0D2IcB7s11+3A/iyEsgeR6C/7QZ/z
+	jPycJe3Pm9tQOGi8onZa7a52tX0vo/RUjkB7sKmxFYCVWsyNH+kgj9XXH1ouxqhJAxu6ZNRZdq+
+	p76dsxJGNBHNGbs9hYnX1raB0VnGEjfc=
+X-Google-Smtp-Source: AGHT+IE4K6APqfjUeSvRb94BF0tZHVC6iMoFKV3E8RE2KbgSVe5eWa5g7ZmD5QlzTBATnVWBmwAss+FAt4XJMLgvLBE=
+X-Received: by 2002:a05:6512:6703:b0:550:ecb4:94e with SMTP id
+ 2adb3069b0e04-550ecb409b5mr4393437e87.9.1747829373491; Wed, 21 May 2025
+ 05:09:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpip:m.fudan.edu.cn:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: Mey4nVXkipeLbUcOu1XHhCmUgbw9JghvaDKYzyCM+8uH8Se6NMze0ml1
-	zRd20fGxxk2CGk5TzC70IEoRAlRmur8Wp2qOHj8OsMnw+bbk+JpxUIzKRk6WwyMsfCisHQk
-	8gjhEBa1mw0PmJBYIlVmPad7++x4iospKOdX23Eq0z+w6n6HYVeJVmpsbP/4WUMhuEmQxeb
-	ZnXscZmZD5H8Q+PXS6yJqYa7X9TZgiSZ6V5c4S66CPrRnK/UgHSM83nWSIaAx+QozR6msEJ
-	IV8TLvxnVicmxygYQL4OPZ7kQi6bd6cuzh68S23IpujVVHZEtb088qdORhxhPkuJUxpd9EM
-	XsAvnISDlKqgKWURa4HTWbwI7Sm1e8O91so/IjB4I9gESGgQgaGFyZxaP8+HjB9ZijJIaRz
-	7YnJ216k5lLSjKm27/wzNjeEiPeX9B6+2ucurUL6OcdjJvIlFGU+OLHFs2+xZo+v7yoTE75
-	2Ta5gVo2uRv/9wUnQaa9NTUom0BaIsKs4NSBbncPhR6SyhaG1p8T2Czx2VirNwU4/UK5wZY
-	0t4EU1oQH0fJZowsUwbPJHtdiNQp+9oRH4aWu6fM0+zksSxnXDOYPydnqTmYn0Emb7gxKrw
-	l2btXqVZWsVcjSO6jydk3Gxa2WTyNJbc+zF62f2wz/ZRRw9xnKe2oLSmr6iHwZBBQFGzL55
-	IFocYQPLkCVW9t5+pzdtrZkszh2RSDEjYFAlN8yLO0Xhr7R5kpIl4OidNvU6QHZqYib9YKB
-	1tN/QAlNMa40nxqPVW7UKQUR9mCRsp3UqBo0EfoJVtLzu3TJz2Dm8D2RhksrmJGRh3wUQPK
-	khEiLx0/0fpMhSUXWvp4gi/9ozdCcDTZ4sezY9upl1EdQemc6onOf5m00PQwF+sdDymTi/r
-	2I43MxcGkf/ZqXzv5/pv/Nb9vEshs1aDR6x+7w9BFziv1b63iyVXxxSOePhOQJ83gTPcoXn
-	w8z2IWxjsqAbkDXoPpKVn8K4oE/PPR4+R0d8VyHy0bgmXt8+GtFakQIGqKVhVwieP7RovKN
-	0nYszEbQU8ybc2/QD67eJXBb/onFFQ45UdxkAVkDpqu1mK/H/RlSsFpT9YRXg=
-X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
-X-QQ-RECHKSPAM: 0
+References: <20250502141204.500293812@infradead.org> <20250502141844.154517322@infradead.org>
+In-Reply-To: <20250502141844.154517322@infradead.org>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Wed, 21 May 2025 21:08:56 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATHQ2b3mA0rYM2vX0-6BwOEj4tU_MBQ9FNa_uZ9_q17zg@mail.gmail.com>
+X-Gm-Features: AX0GCFv4CD8KhcOlwIlISwOo4tF1S6w4DNWVSb1VvqJGD_aVV0MK1weAJdbqQUE
+Message-ID: <CAK7LNATHQ2b3mA0rYM2vX0-6BwOEj4tU_MBQ9FNa_uZ9_q17zg@mail.gmail.com>
+Subject: Re: [PATCH v3 3/5] module: Extend the MODULE_ namespace parsing
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: mcgrof@kernel.org, x86@kernel.org, hpa@zytor.com, petr.pavlu@suse.com, 
+	samitolvanen@google.com, da.gomez@samsung.com, nathan@kernel.org, 
+	nicolas@fjasle.eu, linux-kernel@vger.kernel.org, 
+	linux-modules@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	hch@infradead.org, gregkh@linuxfoundation.org, roypat@amazon.co.uk
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-RGVhciBNYWludGFpbmVycywKCgoKV2hlbiB1c2luZyBvdXIgY3VzdG9taXplZCBTeXprYWxsZXIg
-dG8gZnV6eiB0aGUgbGF0ZXN0IExpbnV4IGtlcm5lbCwgdGhlIGZvbGxvd2luZyBjcmFzaCAoMTA1
-dGgpd2FzIHRyaWdnZXJlZC4KCgpIRUFEIGNvbW1pdDogNjUzN2NmYjM5NWYzNTI3ODI5MThkOGVl
-N2I3ZjEwYmEyY2MzY2JmMgpnaXQgdHJlZTogdXBzdHJlYW0KT3V0cHV0Omh0dHBzOi8vZ2l0aHVi
-LmNvbS9wZ2hrMTMvS2VybmVsLUJ1Zy9ibG9iL21haW4vMDUyMF82LjE1LXJjNi8xMDVfS0FTQU4l
-M0ElMjBzbGFiLXVzZS1hZnRlci1mcmVlJTIwUmVhZCUyMGluJTIwaGRtX2Rpc2Nvbm5lY3QvMTA1
-cmVwb3J0LnR4dApLZXJuZWwgY29uZmlnOmh0dHBzOi8vZ2l0aHViLmNvbS9wZ2hrMTMvS2VybmVs
-LUJ1Zy9ibG9iL21haW4vMDUyMF82LjE1LXJjNi9jb25maWcudHh0CkMgcmVwcm9kdWNlcjpodHRw
-czovL2dpdGh1Yi5jb20vcGdoazEzL0tlcm5lbC1CdWcvYmxvYi9tYWluLzA1MjBfNi4xNS1yYzYv
-MTA1X0tBU0FOJTNBJTIwc2xhYi11c2UtYWZ0ZXItZnJlZSUyMFJlYWQlMjBpbiUyMGhkbV9kaXNj
-b25uZWN0LzEwNXJlcHJvLmMKU3l6bGFuZyByZXByb2R1Y2VyOmh0dHBzOi8vZ2l0aHViLmNvbS9w
-Z2hrMTMvS2VybmVsLUJ1Zy9ibG9iL21haW4vMDUyMF82LjE1LXJjNi8xMDVfS0FTQU4lM0ElMjBz
-bGFiLXVzZS1hZnRlci1mcmVlJTIwUmVhZCUyMGluJTIwaGRtX2Rpc2Nvbm5lY3QvMTA1cmVwcm8u
-dHh0CgoKCkR1cmluZyB0aGUgVVNCIGRldmljZSBpbml0aWFsaXphdGlvbiwgaGRtX3Byb2JlKCkg
-YWxsb2NhdGVzIG1lbW9yeSBmb3IgdGhlIGRldmljZSwgYW5kIHdoZW4gdGhlIGRldmljZSBpcyBk
-aXNjb25uZWN0ZWQsIGhkbV9kaXNjb25uZWN0IGlzIGNhbGxlZCB0byBjbGVhbiB1cCB0aGUgcmVz
-b3VyY2VzLCBhbmQgdGhlIG1lbW9yeSBpcyByZWxlYXNlZCB2aWEgZGV2aWNlX3JlbGVhc2UoKS4g
-VGhlbiwgaW5zaWRlIHRoZSBzYW1lIGhkbV9kaXNjb25uZWN0KCkgZnVuY3Rpb24gKGF0IG9mZnNl
-dCAgMDIyNyksIHRoZSBjb2RlIHRyaWVzIHRvIGFjY2VzcyB0aGlzIGFscmVhZHkgZnJlZWQgbWVt
-b3J5LgpUaGUgbWFpbiBpc3N1ZSBoZXJlIGlzIHRoYXQgaGRtX2Rpc2Nvbm5lY3QoKSBpcyBhY2Nl
-c3NpbmcgbWVtb3J5IHRoYXQgd2FzIHByZXZpb3VzbHkgZnJlZWQgaW4gc2FtZSBmdW5jdGlvbi4g
-VGhpcyBpbmRpY2F0ZXMgYSBtZW1vcnkgbWFuYWdlbWVudCBpc3N1ZSAtIHBvc3NpYmx5IHRoZSBm
-dW5jdGlvbiByZWxlYXNlZCB0aGUgcmVzb3VyY2UgYnV0IHRoZW4gY29udGludWVkIHRvIHVzZSBp
-dC4KVGhlIGVycm9yIHNwZWNpZmljYWxseSBvY2N1cnMgYXQgb2Zmc2V0ICAweDIyNyB0aGUgaGRt
-X2Rpc2Nvbm5lY3QoKSBmdW5jdGlvbiwgaS5lLiwgMHgyMjcgYnl0ZXMgYWZ0ZXIgdGhlIGZ1bmN0
-aW9uIGJlZ2lucy4gVGhlIGZ1bmN0aW9uIGJlZ2lucyBieSByZWxlYXNpbmcgdGhlIHJlc291cmNl
-IHZpYSB0aGUgZm9sbG93aW5nOiBkZXZpY2VfcmVsZWFzZSgpIC0+IGtvYmplY3RfcHV0KCkgLT4g
-YW5kIHRoZW4gaXQgdHJpZXMgdG8gYWNjZXNzIHRoZSBtZW1vcnkgdGhhdCB3YXMganVzdCBmcmVl
-ZAoKV2UgaGF2ZSByZXByb2R1Y2VkIHRoaXMgaXNzdWUgc2V2ZXJhbCB0aW1lcyBvbiA2LjE1LXJj
-NiBhZ2Fpbi4KCgoKSWYgeW91IGZpeCB0aGlzIGlzc3VlLCBwbGVhc2UgYWRkIHRoZSBmb2xsb3dp
-bmcgdGFnIHRvIHRoZSBjb21taXQ6ClJlcG9ydGVkLWJ5OiBLdW4gSHUgPGh1azIzQG0uZnVkYW4u
-ZWR1LmNuPiwgSmlhamkgUWluIDxqanRhbjI0QG0uZnVkYW4uZWR1LmNuPiwgU2h1b3JhbiBCYWkg
-PGJhaXNodW9yYW5AaHJiZXUuZWR1LmNuPgoKCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQpCVUc6IEtBU0FOOiBzbGFiLXVz
-ZS1hZnRlci1mcmVlIGluIGhkbV9kaXNjb25uZWN0KzB4MjI3LzB4MjUwClJlYWQgb2Ygc2l6ZSA4
-IGF0IGFkZHIgZmZmZjg4ODA3YzNmNTg5OCBieSB0YXNrIGt3b3JrZXIvMDoxLzEwCgpDUFU6IDAg
-VUlEOiAwIFBJRDogMTAgQ29tbToga3dvcmtlci8wOjEgTm90IHRhaW50ZWQgNi4xNS4wLXJjNiAj
-MSBQUkVFTVBUKGZ1bGwpIApIYXJkd2FyZSBuYW1lOiBRRU1VIFN0YW5kYXJkIFBDIChpNDQwRlgg
-KyBQSUlYLCAxOTk2KSwgQklPUyAxLjEzLjAtMXVidW50dTEuMSAwNC8wMS8yMDE0CldvcmtxdWV1
-ZTogdXNiX2h1Yl93cSBodWJfZXZlbnQKQ2FsbCBUcmFjZToKIDxUQVNLPgogZHVtcF9zdGFja19s
-dmwrMHgxMTYvMHgxYjAKIHByaW50X3JlcG9ydCsweGMxLzB4NjMwCiBrYXNhbl9yZXBvcnQrMHg5
-Ni8weGQwCiBoZG1fZGlzY29ubmVjdCsweDIyNy8weDI1MAogdXNiX3VuYmluZF9pbnRlcmZhY2Ur
-MHgxZTUvMHg5ODAKIGRldmljZV9yZW1vdmUrMHgxMjUvMHgxNzAKIGRldmljZV9yZWxlYXNlX2Ry
-aXZlcl9pbnRlcm5hbCsweDE0OS8weDI4MAogYnVzX3JlbW92ZV9kZXZpY2UrMHgyMmUvMHg0MjAK
-IGRldmljZV9kZWwrMHg0NmEvMHhiMzAKIHVzYl9kaXNhYmxlX2RldmljZSsweDIxYi8weDYwMAog
-dXNiX2Rpc2Nvbm5lY3QrMHgyODAvMHg4ZDAKIGh1Yl9ldmVudCsweDE4YmMvMHg0ODAwCiBwcm9j
-ZXNzX3NjaGVkdWxlZF93b3JrcysweDVkZS8weDFiZDAKIHdvcmtlcl90aHJlYWQrMHg1YTkvMHhk
-MTAKIGt0aHJlYWQrMHg0NDcvMHg4YTAKIHJldF9mcm9tX2ZvcmsrMHg0OC8weDgwCiByZXRfZnJv
-bV9mb3JrX2FzbSsweDFhLzB4MzAKIDwvVEFTSz4KCkFsbG9jYXRlZCBieSB0YXNrIDI0Ogoga2Fz
-YW5fc2F2ZV9zdGFjaysweDI0LzB4NTAKIGthc2FuX3NhdmVfdHJhY2srMHgxNC8weDMwCiBfX2th
-c2FuX2ttYWxsb2MrMHhhYS8weGIwCiBfX2ttYWxsb2NfY2FjaGVfbm9wcm9mKzB4MWUxLzB4NGIw
-CiBoZG1fcHJvYmUrMHhiMy8weDE5YTAKIHVzYl9wcm9iZV9pbnRlcmZhY2UrMHgzMDkvMHhhMTAK
-IHJlYWxseV9wcm9iZSsweDI1My8weDk5MAogX19kcml2ZXJfcHJvYmVfZGV2aWNlKzB4MWRmLzB4
-NDUwCiBkcml2ZXJfcHJvYmVfZGV2aWNlKzB4NGMvMHgxYTAKIF9fZGV2aWNlX2F0dGFjaF9kcml2
-ZXIrMHgxZTQvMHgyZDAKIGJ1c19mb3JfZWFjaF9kcnYrMHgxNGIvMHgxZDAKIF9fZGV2aWNlX2F0
-dGFjaCsweDI4NS8weDQ4MAogYnVzX3Byb2JlX2RldmljZSsweDE3ZS8weDFjMAogZGV2aWNlX2Fk
-ZCsweDExMmQvMHgxODcwCiB1c2Jfc2V0X2NvbmZpZ3VyYXRpb24rMHgxMWEyLzB4MWJlMAogdXNi
-X2dlbmVyaWNfZHJpdmVyX3Byb2JlKzB4YjcvMHgxMTAKIHVzYl9wcm9iZV9kZXZpY2UrMHhlYy8w
-eDNlMAogcmVhbGx5X3Byb2JlKzB4MjUzLzB4OTkwCiBfX2RyaXZlcl9wcm9iZV9kZXZpY2UrMHgx
-ZGYvMHg0NTAKIGRyaXZlcl9wcm9iZV9kZXZpY2UrMHg0Yy8weDFhMAogX19kZXZpY2VfYXR0YWNo
-X2RyaXZlcisweDFlNC8weDJkMAogYnVzX2Zvcl9lYWNoX2RydisweDE0Yi8weDFkMAogX19kZXZp
-Y2VfYXR0YWNoKzB4Mjg1LzB4NDgwCiBidXNfcHJvYmVfZGV2aWNlKzB4MTdlLzB4MWMwCiBkZXZp
-Y2VfYWRkKzB4MTEyZC8weDE4NzAKIHVzYl9uZXdfZGV2aWNlKzB4ZDNlLzB4MWEyMAogaHViX2V2
-ZW50KzB4MmEzOC8weDQ4MDAKIHByb2Nlc3Nfc2NoZWR1bGVkX3dvcmtzKzB4NWRlLzB4MWJkMAog
-d29ya2VyX3RocmVhZCsweDVhOS8weGQxMAoga3RocmVhZCsweDQ0Ny8weDhhMAogcmV0X2Zyb21f
-Zm9yaysweDQ4LzB4ODAKIHJldF9mcm9tX2ZvcmtfYXNtKzB4MWEvMHgzMAoKRnJlZWQgYnkgdGFz
-ayAxMDoKIGthc2FuX3NhdmVfc3RhY2srMHgyNC8weDUwCiBrYXNhbl9zYXZlX3RyYWNrKzB4MTQv
-MHgzMAoga2FzYW5fc2F2ZV9mcmVlX2luZm8rMHgzYS8weDYwCiBfX2thc2FuX3NsYWJfZnJlZSsw
-eDU0LzB4NzAKIGtmcmVlKzB4MTQ3LzB4NDQwCiBkZXZpY2VfcmVsZWFzZSsweGE2LzB4MjQwCiBr
-b2JqZWN0X3B1dCsweDFiMi8weDRjMAogZGV2aWNlX3VucmVnaXN0ZXIrMHgzMC8weGMwCiBoZG1f
-ZGlzY29ubmVjdCsweDEwYi8weDI1MAogdXNiX3VuYmluZF9pbnRlcmZhY2UrMHgxZTUvMHg5ODAK
-IGRldmljZV9yZW1vdmUrMHgxMjUvMHgxNzAKIGRldmljZV9yZWxlYXNlX2RyaXZlcl9pbnRlcm5h
-bCsweDE0OS8weDI4MAogYnVzX3JlbW92ZV9kZXZpY2UrMHgyMmUvMHg0MjAKIGRldmljZV9kZWwr
-MHg0NmEvMHhiMzAKIHVzYl9kaXNhYmxlX2RldmljZSsweDIxYi8weDYwMAogdXNiX2Rpc2Nvbm5l
-Y3QrMHgyODAvMHg4ZDAKIGh1Yl9ldmVudCsweDE4YmMvMHg0ODAwCiBwcm9jZXNzX3NjaGVkdWxl
-ZF93b3JrcysweDVkZS8weDFiZDAKIHdvcmtlcl90aHJlYWQrMHg1YTkvMHhkMTAKIGt0aHJlYWQr
-MHg0NDcvMHg4YTAKIHJldF9mcm9tX2ZvcmsrMHg0OC8weDgwCiByZXRfZnJvbV9mb3JrX2FzbSsw
-eDFhLzB4MzAKClRoZSBidWdneSBhZGRyZXNzIGJlbG9uZ3MgdG8gdGhlIG9iamVjdCBhdCBmZmZm
-ODg4MDdjM2Y0MDAwCiB3aGljaCBiZWxvbmdzIHRvIHRoZSBjYWNoZSBrbWFsbG9jLThrIG9mIHNp
-emUgODE5MgpUaGUgYnVnZ3kgYWRkcmVzcyBpcyBsb2NhdGVkIDYyOTYgYnl0ZXMgaW5zaWRlIG9m
-CiBmcmVlZCA4MTkyLWJ5dGUgcmVnaW9uIFtmZmZmODg4MDdjM2Y0MDAwLCBmZmZmODg4MDdjM2Y2
-MDAwKQoKVGhlIGJ1Z2d5IGFkZHJlc3MgYmVsb25ncyB0byB0aGUgcGh5c2ljYWwgcGFnZToKcGFn
-ZTogcmVmY291bnQ6MCBtYXBjb3VudDowIG1hcHBpbmc6MDAwMDAwMDAwMDAwMDAwMCBpbmRleDow
-eDAgcGZuOjB4N2MzZjAKaGVhZDogb3JkZXI6MyBtYXBjb3VudDowIGVudGlyZV9tYXBjb3VudDow
-IG5yX3BhZ2VzX21hcHBlZDowIHBpbmNvdW50OjAKZmxhZ3M6IDB4NGZmZjAwMDAwMDAwMDQwKGhl
-YWR8bm9kZT0xfHpvbmU9MXxsYXN0Y3B1cGlkPTB4N2ZmKQpwYWdlX3R5cGU6IGY1KHNsYWIpCnJh
-dzogMDRmZmYwMDAwMDAwMDA0MCBmZmZmODg4MDFiNDQzMTgwIGRlYWQwMDAwMDAwMDAxMjIgMDAw
-MDAwMDAwMDAwMDAwMApyYXc6IDAwMDAwMDAwMDAwMDAwMDAgMDAwMDAwMDA4MDAyMDAwMiAwMDAw
-MDAwMGY1MDAwMDAwIDAwMDAwMDAwMDAwMDAwMDAKaGVhZDogMDRmZmYwMDAwMDAwMDA0MCBmZmZm
-ODg4MDFiNDQzMTgwIGRlYWQwMDAwMDAwMDAxMjIgMDAwMDAwMDAwMDAwMDAwMApoZWFkOiAwMDAw
-MDAwMDAwMDAwMDAwIDAwMDAwMDAwODAwMjAwMDIgMDAwMDAwMDBmNTAwMDAwMCAwMDAwMDAwMDAw
-MDAwMDAwCmhlYWQ6IDA0ZmZmMDAwMDAwMDAwMDMgZmZmZmVhMDAwMWYwZmMwMSAwMDAwMDAwMGZm
-ZmZmZmZmIDAwMDAwMDAwZmZmZmZmZmYKaGVhZDogZmZmZmZmZmZmZmZmZmZmZiAwMDAwMDAwMDAw
-MDAwMDAwIDAwMDAwMDAwZmZmZmZmZmYgMDAwMDAwMDAwMDAwMDAwOApwYWdlIGR1bXBlZCBiZWNh
-dXNlOiBrYXNhbjogYmFkIGFjY2VzcyBkZXRlY3RlZApwYWdlX293bmVyIHRyYWNrcyB0aGUgcGFn
-ZSBhcyBhbGxvY2F0ZWQKcGFnZSBsYXN0IGFsbG9jYXRlZCB2aWEgb3JkZXIgMywgbWlncmF0ZXR5
-cGUgVW5tb3ZhYmxlLCBnZnBfbWFzayAweGQyOGMwKEdGUF9OT1dBSVR8X19HRlBfSU98X19HRlBf
-RlN8X19HRlBfTk9SRVRSWXxfX0dGUF9DT01QfF9fR0ZQX05PTUVNQUxMT0MpLCBwaWQgMTQ0NzAs
-IHRnaWQgMTQ0NzAgKGlmcXVlcnkpLCB0cyAxNTY0NzcwOTgwNDksIGZyZWVfdHMgMAogcHJlcF9u
-ZXdfcGFnZSsweDFiMC8weDFlMAogZ2V0X3BhZ2VfZnJvbV9mcmVlbGlzdCsweDFjODAvMHgzYTQw
-CiBfX2FsbG9jX2Zyb3plbl9wYWdlc19ub3Byb2YrMHgyZmQvMHg2ZDAKIGFsbG9jX3BhZ2VzX21w
-b2wrMHgyMDkvMHg1NTAKIG5ld19zbGFiKzB4MjU0LzB4MzUwCiBfX19zbGFiX2FsbG9jKzB4ZjBj
-LzB4MTdjMAogX19zbGFiX2FsbG9jLmlzcmEuMCsweDU2LzB4YjAKIF9fa21hbGxvY19ub2RlX3Ry
-YWNrX2NhbGxlcl9ub3Byb2YrMHgyZDQvMHg2MDAKIGttYWxsb2NfcmVzZXJ2ZSsweGVkLzB4MmIw
-CiBfX2FsbG9jX3NrYisweDE2MS8weDM3MAogbmV0bGlua19kdW1wKzB4MmJhLzB4YzgwCiBuZXRs
-aW5rX3JlY3Ztc2crMHhhZTkvMHhmMDAKIHNvY2tfcmVjdm1zZysweDIxYi8weDI5MAogX19fX3N5
-c19yZWN2bXNnKzB4MjBmLzB4NmUwCiBfX19zeXNfcmVjdm1zZysweGZlLzB4MTkwCiBfX3N5c19y
-ZWN2bXNnKzB4MTRkLzB4MjAwCnBhZ2Vfb3duZXIgZnJlZSBzdGFjayB0cmFjZSBtaXNzaW5nCgpN
-ZW1vcnkgc3RhdGUgYXJvdW5kIHRoZSBidWdneSBhZGRyZXNzOgogZmZmZjg4ODA3YzNmNTc4MDog
-ZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmIKIGZmZmY4ODgw
-N2MzZjU4MDA6IGZiIGZiIGZiIGZiIGZiIGZiIGZiIGZiIGZiIGZiIGZiIGZiIGZiIGZiIGZiIGZi
-Cj5mZmZmODg4MDdjM2Y1ODgwOiBmYiBmYiBmYiBmYiBmYiBmYiBmYiBmYiBmYiBmYiBmYiBmYiBm
-YiBmYiBmYiBmYgogICAgICAgICAgICAgICAgICAgICAgICAgICAgXgogZmZmZjg4ODA3YzNmNTkw
-MDogZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmIKIGZmZmY4
-ODgwN2MzZjU5ODA6IGZiIGZiIGZiIGZiIGZiIGZiIGZiIGZiIGZiIGZiIGZiIGZiIGZiIGZiIGZi
-IGZiCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PQp0aGFua3MsCkt1biBIdQ==
+I think the patch subject is stale.
+
+MODULE_ was the prefix in the previous v2 series.
+
+Now, the prefix part is module:
+
+
+On Fri, May 2, 2025 at 11:25=E2=80=AFPM Peter Zijlstra <peterz@infradead.or=
+g> wrote:
+>
+> Instead of only accepting "module:${name}", extend it with a comma
+> separated list of module names and add tail glob support.
+>
+> That is, something like: "module:foo-*,bar" is now possible.
+>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  kernel/module/main.c  |   36 ++++++++++++++++++++++++++++++++++--
+>  scripts/mod/modpost.c |   36 ++++++++++++++++++++++++++++++++++--
+>  2 files changed, 68 insertions(+), 4 deletions(-)
+>
+> --- a/kernel/module/main.c
+> +++ b/kernel/module/main.c
+> @@ -1083,12 +1083,44 @@ static char *get_modinfo(const struct lo
+>         return get_next_modinfo(info, tag, NULL);
+>  }
+>
+> +/**
+> + * verify_module_namespace() - does @modname have access to this symbol'=
+s @namespace
+> + * @namespace: export symbol namespace
+> + * @modname: module name
+> + *
+> + * If @namespace is prefixed with "module:" to indicate it is a module n=
+amespace
+> + * then test if @modname matches any of the comma separated patterns.
+> + *
+> + * The patterns only support tail-glob.
+> + */
+>  static bool verify_module_namespace(const char *namespace, const char *m=
+odname)
+>  {
+> +       size_t len, modlen =3D strlen(modname);
+>         const char *prefix =3D "module:";
+> +       const char *sep;
+> +       bool glob;
+>
+> -       return strstarts(namespace, prefix) &&
+> -              !strsmp(namespace + strlen(prefix), modname);
+> +       if (!strstarts(namespace, prefix))
+> +               return false;
+> +
+> +       for (namespace +=3D strlen(prefix); *namespace; namespace =3D sep=
+) {
+> +               sep =3D strchrnul(namespace, ',');
+> +               len =3D sep - namespace;
+> +
+> +               glob =3D false;
+> +               if (sep[-1] =3D=3D '*') {
+> +                       len--;
+> +                       glob =3D true;
+> +               }
+> +
+> +               if (*sep)
+> +                       sep++;
+> +
+> +               if (strncmp(namespace, modname, len) =3D=3D 0 && (glob ||=
+ len =3D=3D modlen))
+> +                       return true;
+> +       }
+> +
+> +       return false;
+>  }
+>
+>  static int verify_namespace_is_imported(const struct load_info *info,
+> --- a/scripts/mod/modpost.c
+> +++ b/scripts/mod/modpost.c
+> @@ -1682,12 +1682,44 @@ void buf_write(struct buffer *buf, const
+>         buf->pos +=3D len;
+>  }
+>
+> +/**
+> + * verify_module_namespace() - does @modname have access to this symbol'=
+s @namespace
+> + * @namespace: export symbol namespace
+> + * @modname: module name
+> + *
+> + * If @namespace is prefixed with "module:" to indicate it is a module n=
+amespace
+> + * then test if @modname matches any of the comma separated patterns.
+> + *
+> + * The patterns only support tail-glob.
+> + */
+>  static bool verify_module_namespace(const char *namespace, const char *m=
+odname)
+>  {
+> +       size_t len, modlen =3D strlen(modname);
+>         const char *prefix =3D "module:";
+> +       const char *sep;
+> +       bool glob;
+>
+> -       return strstarts(namespace, prefix) &&
+> -              !strcmp(namespace + strlen(prefix), modname);
+> +       if (!strstarts(namespace, prefix))
+> +               return false;
+> +
+> +       for (namespace +=3D strlen(prefix); *namespace; namespace =3D sep=
+) {
+> +               sep =3D strchrnul(namespace, ',');
+> +               len =3D sep - namespace;
+> +
+> +               glob =3D false;
+> +               if (sep[-1] =3D=3D '*') {
+> +                       len--;
+> +                       glob =3D true;
+> +               }
+> +
+> +               if (*sep)
+> +                       sep++;
+> +
+> +               if (strncmp(namespace, modname, len) =3D=3D 0 && (glob ||=
+ len =3D=3D modlen))
+> +                       return true;
+> +       }
+> +
+> +       return false;
+>  }
+>
+>  static void check_exports(struct module *mod)
+>
+>
+
+
+--=20
+Best Regards
+Masahiro Yamada
