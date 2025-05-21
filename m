@@ -1,104 +1,389 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D75EB25DB0B
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 13:25:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 552D523C51E
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 13:26:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747833918; cv=none; b=IIzXueFyPLo7emhhhYPMtrFgcyXhTaat82mLOqMA4LE5nf5llX+HqKo9u/bR+3NPEEO4IJO3Nrz7ySU0mDkaD7USLAFVGcsbpwJFoCbxOb5IcbMkjaO/EPI4+vZANP5R93M1sEpcz2FyPml66EHr3/UofbhdMd7XBhb8BqO4iK0=
+	t=1747834001; cv=none; b=iSNVwUXZffaUYe2AMaaCRywXnIQ4wXODMcAj7sxTmcy9TNXgS+Q85M9Zjfu/6WY2k2R4P7pnAVmy2i3eKmGf6adIiP5gHb1zkMr/vOL+lM+1g/DNobteP8zDb/iCyGF23WMjLxq3ekT+llWcNxAVrSUrAB7o0F40Pjh29Uxc+T8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747833918; c=relaxed/simple;
-	bh=KaE6+o2aGnDCIXUMVFpEenjktipp41SjDhYjR6qnzu4=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=MerJKEOGigoiHQS47jxNZ05jvbMrja+Jtao4yM41PvZK6gZNb8K84AX30CKLhaIkmqTfi3G3HZ50ewq21zfehai/GviBnKAly1ENhVSMBHCEea0Ynpn2mi1BQDxclZkGjVfIZYXE+Coal9ur2qpmFbFjYE1am34Vs5fAyDWCaws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EWWBBgGW; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EWWBBgGW"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-444582310e3so1950495e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 06:25:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747833914; x=1748438714; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=aD94Cyds9PidEz6jUW1CAFksapgbj4DqOx2OqS8w/gA=;
-        b=EWWBBgGWOt4+BI+cUEGk4IxpVs0ULkXNrDRXV4hPnOnPFNCH1y+eYQg1S5tzz5fAyN
-         ajqsk7ECG6LGfw3l/EqUm5HsF+NEwg6KFGEObHdLJP3/XpL9DW3FzJ053taTYlef+DKV
-         23hCQjl/ZpcBNhn7Q7VE5Uz4bTDUS2KO9fn+qBkMASdrap+XqhKjRg5n9Ci3YuRpjKf8
-         iBRI38tnHon23mh4rafi+udjH7YdvOC/z3VpjtqvC3qeJIUHh6S2lbAzzmcIgpnz+Hj2
-         AkCSzM8lGjnGF0ydxLVr6ob+KNYip3+GKPvT3R90G7y3myDs3I7kyvwlz5hQFVMTmgW7
-         3Pog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747833914; x=1748438714;
-        h=content-disposition:mime-version:message-id:subject:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aD94Cyds9PidEz6jUW1CAFksapgbj4DqOx2OqS8w/gA=;
-        b=OIFrg6CX9qROuwjl4WMU+ZiE9Q7HKLcHM4dywSY4AyyO5H/hHeDA+qe8RTor8Yz5UP
-         hvRB4HAYL/5zRKf1fXwr6DEwlqbBVRrdscmQ1KCV1N6adUAq5bo3nwnlsW3yCgBtETDd
-         ZMh3RIb50wVai7JkTeR3pxEeKW7jdlW6IBwmup2ZeIpgnri3Oci3ZaULYYbluu21VFgk
-         u9AcKUxUKCltyk53NORh9bs/uadLLlU7sK8unC/xe61OAXHn24FrUebHlul1FPc6DeSt
-         rUK2frFJUorMXeiMgDMYNAMDjsBBDWsnuq9qMVaROsSz0Mvm1vky7udhWFscQYKH/eUh
-         kRdw==
-X-Forwarded-Encrypted: i=1; AJvYcCWrQ+m3uUF0aip+kdZ5ZNgA0uRfxSsA4oINRhkToouGDUMr2gfIk+Fz7lehwEd1w2b9+a7KWvyLh6Ymsfg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YylBQhgZIAK44X0P4iftqC0TIET0HHdSm2lqnHXB81xcAz+dIGG
-	ZMIKbsPdt9ML6FBCcpxIYJyI4YSSS4dW0UViEHSpZJrY1YGevbfoU2t2
-X-Gm-Gg: ASbGncsm/TMrWHEnUCuz3H0R6slh0zYsbKZS2U10EKZNJYThPRTQQwmYYYQqWUKuaSr
-	NQjAt1IgCF7VdQCtsitmF7cxhTjv1Sep7CiTQWGpmjStC4Z95MMicvKFwHdhuTFg9ECEnDItyuS
-	xjtSKobrxWI37gn8c9orl88+ik/az4vJZF2f9kRiO63M/drfXsdLVmlgUv9UAyMGuJthYtHn7uR
-	Z/wrrSxyrHfRZIWTe326gbDJv3MA2ZBqIr9dBWDnvF4ctMrV3dxwQkx1qnM6HMG2G2fWVrbQMln
-	lJOm/KVmR2NsoUK9ykb97LRd/fdSziXrooS/oZDQm9xiHLfKTF4Ji8jNXXBY4vrZ9a3KAK7fG7M
-	fa+ehdPOvi6g+wVA3tyMUDvvf3EUma/s=
-X-Google-Smtp-Source: AGHT+IHCJ5eTLFeP2ll8ttDks7kJdJ4nSpWPbjGCtqHqI22EbSubTX0w0gXypEMPHz50PPHd2O6DjQ==
-X-Received: by 2002:a05:600c:a07:b0:442:f97a:fee7 with SMTP id 5b1f17b1804b1-442fd6770e0mr73698685e9.6.1747833913804;
-        Wed, 21 May 2025 06:25:13 -0700 (PDT)
-Received: from milos-ThinkPad-T14-Gen-3 (global-184-11.n-1.net.cam.ac.uk. [131.111.184.11])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f6b29548sm74461595e9.4.2025.05.21.06.25.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 06:25:13 -0700 (PDT)
-Date: Wed, 21 May 2025 14:25:12 +0100
-From: Milos Puric <milospuric856@gmail.com>
-To: gregkh@linuxfoundation.org, linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org, outreachy@lists.linux.dev
-Subject: [PATCH v2] staging: rtl8723bs: Align next line to open parentheses
- in core/rtw_xmit.c
-Message-ID: <aC3UOPYv8HmzRvij@milos-ThinkPad-T14-Gen-3>
+	s=arc-20240116; t=1747834001; c=relaxed/simple;
+	bh=pxe+KSylDXYywY4D/hg4cTjXIkAtLSV0sYlD5wTnk0U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jIHc2JAbAI4TJlThN3HfeMJ5IxJiRRjQsoX89DkqE4b+6fjYLklQL8cWGKovqjxhG3wweV46/Lm+NpvJSCfkbopWMD8rMel+CDV39vXE30a7tLUWa+6YRiDIudFN2GLlmMlwM6d6Yck/MwG/OZDFzI+I5OIWZ655nw7i9B51qNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 779981515;
+	Wed, 21 May 2025 06:26:24 -0700 (PDT)
+Received: from [10.57.94.227] (unknown [10.57.94.227])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7897E3F5A1;
+	Wed, 21 May 2025 06:26:34 -0700 (PDT)
+Message-ID: <b3064b82-dcea-4b88-940b-9419d869a39a@arm.com>
+Date: Wed, 21 May 2025 14:26:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/5] mm: Optimize mprotect() by PTE batching
+Content-Language: en-GB
+To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org
+Cc: david@redhat.com, willy@infradead.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will@kernel.org,
+ Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, vbabka@suse.cz,
+ jannh@google.com, anshuman.khandual@arm.com, peterx@redhat.com,
+ joey.gouly@arm.com, ioworker0@gmail.com, baohua@kernel.org,
+ kevin.brodsky@arm.com, quic_zhenhuah@quicinc.com,
+ christophe.leroy@csgroup.eu, yangyicong@hisilicon.com,
+ linux-arm-kernel@lists.infradead.org, hughd@google.com,
+ yang@os.amperecomputing.com, ziy@nvidia.com
+References: <20250519074824.42909-1-dev.jain@arm.com>
+ <20250519074824.42909-4-dev.jain@arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20250519074824.42909-4-dev.jain@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Adhere to Linux kernel coding style.
+On 19/05/2025 08:48, Dev Jain wrote:
+> Use folio_pte_batch to batch process a large folio. Reuse the folio from prot_numa
+> case if possible. Since modify_prot_start_ptes() gathers access/dirty bits,
+> it lets us batch around pte_needs_flush() (for parisc, the definition includes
+> the access bit).
 
-Reported by checkpatch:
+parisc's pte_needs_flush() is a different (static) function, just coincidentally 
+named - it takes different arguments.
 
-CHECK: Alignment should match open parentheses
+But powerpc and x86 both specialize it and they consider the dirty bit. Both 
+implementations look to me like they will function correctly but it is a bit 
+ugly. They both conclude that if there is no change or if dirty has gone from 
+clear to set, then no flush is needed. (flush only needed when dirty goes from 
+set to clear). Given after your change, oldpte may have dirty set when it wasn't 
+really set for the pte in question that means the function could detect no 
+change when really its a clear -> set change; it gives the same answer in both 
+cases so it's safe. Perhaps a bit fragile though...
 
-Signed-off-by: Milos Puric <milospuric856@gmail.com>
----
-Changes in v2:
-  - Include author full name.
+> For all cases other than the PageAnonExclusive case, if the case holds true
+> for one pte in the batch, one can confirm that that case will hold true for
+> other ptes in the batch too; for pte_needs_soft_dirty_wp(), we do not pass
+> FPB_IGNORE_SOFT_DIRTY. modify_prot_start_ptes() collects the dirty and access bits
+> across the batch, therefore batching across pte_dirty(): this is correct since
+> the dirty bit on the PTE really is just an indication that the folio got written
+> to, so even if the PTE is not actually dirty (but one of the PTEs in the batch is),
+> the wp-fault optimization can be made.
+> The crux now is how to batch around the PageAnonExclusive case; we must check
+> the corresponding condition for every single page. Therefore, from the large
+> folio batch, we process sub batches of ptes mapping pages with the same PageAnonExclusive
+> condition, and process that sub batch, then determine and process the next sub batch,
+> and so on. Note that this does not cause any extra overhead; if suppose the size of
+> the folio batch is 512, then the sub batch processing in total will take 512 iterations,
+> which is the same as what we would have done before.
 
- drivers/staging/rtl8723bs/core/rtw_xmit.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This commit log could do with some reformatting; blank lines between paragraphs 
+and break at whatever the usual git commit log char limit is (72 chars?).
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_xmit.c b/drivers/staging/rtl8723bs/core/rtw_xmit.c
-index 026d58b4bd7f..8c6841f078b4 100644
---- a/drivers/staging/rtl8723bs/core/rtw_xmit.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_xmit.c
-@@ -381,7 +381,7 @@ static void update_attrib_vcs_info(struct adapter *padapter, struct xmit_frame *
- 		while (true) {
- 			/* IOT action */
- 			if ((pmlmeinfo->assoc_AP_vendor == HT_IOT_PEER_ATHEROS) && (pattrib->ampdu_en == true) &&
--				(padapter->securitypriv.dot11PrivacyAlgrthm == _AES_)) {
-+			    (padapter->securitypriv.dot11PrivacyAlgrthm == _AES_)) {
- 				pattrib->vcs_mode = CTS_TO_SELF;
- 				break;
- 			}
--- 
-2.43.0
+> 
+> Signed-off-by: Dev Jain <dev.jain@arm.com>
+> ---
+>  include/linux/mm.h |   7 ++-
+>  mm/mprotect.c      | 126 +++++++++++++++++++++++++++++++++++----------
+>  2 files changed, 104 insertions(+), 29 deletions(-)
+> 
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 43748c8f3454..7d5b96f005dc 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -2542,8 +2542,11 @@ int get_cmdline(struct task_struct *task, char *buffer, int buflen);
+>  #define  MM_CP_UFFD_WP_ALL                 (MM_CP_UFFD_WP | \
+>  					    MM_CP_UFFD_WP_RESOLVE)
+>  
+> -bool can_change_pte_writable(struct vm_area_struct *vma, unsigned long addr,
+> -			     pte_t pte);
+> +bool can_change_ptes_writable(struct vm_area_struct *vma, unsigned long addr,
+> +			     pte_t pte, int max_len, int *len);
+> +#define can_change_pte_writable(vma, addr, pte)	\
+> +	can_change_ptes_writable(vma, addr, pte, 1, NULL)
+
+nit: add an extra tab for readability:
+
+#define can_change_pte_writable(vma, addr, pte)	\
+		can_change_ptes_writable(vma, addr, pte, 1, NULL)
+
+> +
+>  extern long change_protection(struct mmu_gather *tlb,
+>  			      struct vm_area_struct *vma, unsigned long start,
+>  			      unsigned long end, unsigned long cp_flags);
+> diff --git a/mm/mprotect.c b/mm/mprotect.c
+> index 124612ce3d24..6cd8cdc168fa 100644
+> --- a/mm/mprotect.c
+> +++ b/mm/mprotect.c
+> @@ -40,25 +40,36 @@
+>  
+>  #include "internal.h"
+>  
+> -bool can_change_pte_writable(struct vm_area_struct *vma, unsigned long addr,
+> -			     pte_t pte)
+> +bool can_change_ptes_writable(struct vm_area_struct *vma, unsigned long addr,
+> +			     pte_t pte, int max_len, int *len)
+>  {
+>  	struct page *page;
+> +	bool temp_ret;
+> +	bool ret;
+> +	int i;
+>  
+> -	if (WARN_ON_ONCE(!(vma->vm_flags & VM_WRITE)))
+> -		return false;
+> +	if (WARN_ON_ONCE(!(vma->vm_flags & VM_WRITE))) {
+> +		ret = false;
+> +		goto out;
+> +	}
+>  
+>  	/* Don't touch entries that are not even readable. */
+> -	if (pte_protnone(pte))
+> -		return false;
+> +	if (pte_protnone(pte)) {
+> +		ret = false;
+> +		goto out;
+> +	}
+>  
+>  	/* Do we need write faults for softdirty tracking? */
+> -	if (pte_needs_soft_dirty_wp(vma, pte))
+> -		return false;
+> +	if (pte_needs_soft_dirty_wp(vma, pte)) {
+> +		ret = false;
+> +		goto out;
+> +	}
+>  
+>  	/* Do we need write faults for uffd-wp tracking? */
+> -	if (userfaultfd_pte_wp(vma, pte))
+> -		return false;
+> +	if (userfaultfd_pte_wp(vma, pte)) {
+> +		ret = false;
+> +		goto out;
+> +	}
+>  
+>  	if (!(vma->vm_flags & VM_SHARED)) {
+>  		/*
+> @@ -68,7 +79,19 @@ bool can_change_pte_writable(struct vm_area_struct *vma, unsigned long addr,
+>  		 * any additional checks while holding the PT lock.
+>  		 */
+>  		page = vm_normal_page(vma, addr, pte);
+> -		return page && PageAnon(page) && PageAnonExclusive(page);
+> +		ret = (page && PageAnon(page) && PageAnonExclusive(page));
+> +		if (!len)
+> +			return ret;
+> +
+> +		/* Check how many consecutive pages are AnonExclusive or not */
+> +		for (i = 1; i < max_len; ++i) {
+> +			++page;
+> +			temp_ret = (page && PageAnon(page) && PageAnonExclusive(page));
+> +			if (temp_ret != ret)
+> +				break;
+> +		}
+> +		*len = i;
+> +		return ret;
+>  	}
+>  
+>  	VM_WARN_ON_ONCE(is_zero_pfn(pte_pfn(pte)) && pte_dirty(pte));
+> @@ -80,21 +103,55 @@ bool can_change_pte_writable(struct vm_area_struct *vma, unsigned long addr,
+>  	 * FS was already notified and we can simply mark the PTE writable
+>  	 * just like the write-fault handler would do.
+>  	 */
+> -	return pte_dirty(pte);
+> +	ret = pte_dirty(pte);
+> +
+> +out:
+> +	/* The entire batch is guaranteed to have the same return value */
+> +	if (len)
+> +		*len = max_len;
+> +	return ret;
+>  }
+>  
+>  static int mprotect_batch(struct folio *folio, unsigned long addr, pte_t *ptep,
+> -		pte_t pte, int max_nr_ptes)
+> +		pte_t pte, int max_nr_ptes, bool ignore_soft_dirty)
+
+We'll almost certainly want more flags here in future. I wonder if it's cleaner 
+just to pass "fpb_t extra_flags" here instead of the bool, then OR them in. You 
+can pass 0 or FPB_IGNORE_SOFT_DIRTY at your 2 callsites. No strong opinion 
+though.
+
+>  {
+> -	const fpb_t flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
+> +	fpb_t flags = FPB_IGNORE_DIRTY;
+>  
+> -	if (!folio_test_large(folio) || (max_nr_ptes == 1))
+> +	if (ignore_soft_dirty)
+> +		flags |= FPB_IGNORE_SOFT_DIRTY;
+> +
+> +	if (!folio || !folio_test_large(folio) || (max_nr_ptes == 1))
+>  		return 1;
+>  
+>  	return folio_pte_batch(folio, addr, ptep, pte, max_nr_ptes, flags,
+>  			       NULL, NULL, NULL);
+>  }
+>  
+> +/**
+> + * modify_sub_batch - Identifies a sub-batch which has the same return value
+> + * of can_change_pte_writable(), from within a folio batch. max_len is the
+> + * max length of the possible sub-batch. sub_batch_idx is the offset from
+> + * the start of the original folio batch.
+> + */
+> +static int modify_sub_batch(struct vm_area_struct *vma, struct mmu_gather *tlb,
+> +		unsigned long addr, pte_t *ptep, pte_t oldpte, pte_t ptent,
+> +		int max_len, int sub_batch_idx)
+> +{
+> +	unsigned long new_addr = addr + sub_batch_idx * PAGE_SIZE;
+> +	pte_t new_oldpte = pte_advance_pfn(oldpte, sub_batch_idx);
+> +	pte_t new_ptent = pte_advance_pfn(ptent, sub_batch_idx);
+> +	pte_t *new_ptep = ptep + sub_batch_idx;
+> +	int len = 1;
+> +
+> +	if (can_change_ptes_writable(vma, new_addr, new_ptent, max_len, &len))
+> +		new_ptent = pte_mkwrite(new_ptent, vma);
+> +
+> +	modify_prot_commit_ptes(vma, new_addr, new_ptep, new_oldpte, new_ptent, len);
+> +	if (pte_needs_flush(new_oldpte, new_ptent))
+> +		tlb_flush_pte_range(tlb, new_addr, len * PAGE_SIZE);
+> +	return len;
+> +}
+> +
+>  static long change_pte_range(struct mmu_gather *tlb,
+>  		struct vm_area_struct *vma, pmd_t *pmd, unsigned long addr,
+>  		unsigned long end, pgprot_t newprot, unsigned long cp_flags)
+> @@ -106,7 +163,7 @@ static long change_pte_range(struct mmu_gather *tlb,
+>  	bool prot_numa = cp_flags & MM_CP_PROT_NUMA;
+>  	bool uffd_wp = cp_flags & MM_CP_UFFD_WP;
+>  	bool uffd_wp_resolve = cp_flags & MM_CP_UFFD_WP_RESOLVE;
+> -	int nr_ptes;
+> +	int sub_batch_idx, max_len, len, nr_ptes;
+>  
+>  	tlb_change_page_size(tlb, PAGE_SIZE);
+>  	pte = pte_offset_map_lock(vma->vm_mm, pmd, addr, &ptl);
+> @@ -121,10 +178,12 @@ static long change_pte_range(struct mmu_gather *tlb,
+>  	flush_tlb_batched_pending(vma->vm_mm);
+>  	arch_enter_lazy_mmu_mode();
+>  	do {
+> +		sub_batch_idx = 0;
+>  		nr_ptes = 1;
+>  		oldpte = ptep_get(pte);
+>  		if (pte_present(oldpte)) {
+>  			int max_nr_ptes = (end - addr) >> PAGE_SHIFT;
+> +			struct folio *folio = NULL;
+>  			pte_t ptent;
+>  
+>  			/*
+> @@ -132,7 +191,6 @@ static long change_pte_range(struct mmu_gather *tlb,
+>  			 * pages. See similar comment in change_huge_pmd.
+>  			 */
+>  			if (prot_numa) {
+> -				struct folio *folio;
+>  				int nid;
+>  				bool toptier;
+>  
+> @@ -180,7 +238,8 @@ static long change_pte_range(struct mmu_gather *tlb,
+>  				    toptier) {
+>  skip_batch:
+>  					nr_ptes = mprotect_batch(folio, addr, pte,
+> -								 oldpte, max_nr_ptes);
+> +								 oldpte, max_nr_ptes,
+> +								 true);
+>  					continue;
+>  				}
+>  				if (folio_use_access_time(folio))
+> @@ -188,6 +247,11 @@ static long change_pte_range(struct mmu_gather *tlb,
+>  						jiffies_to_msecs(jiffies));
+>  			}
+>  
+> +			if (!folio)
+> +				folio = vm_normal_folio(vma, addr, oldpte);
+> +
+> +			nr_ptes = mprotect_batch(folio, addr, pte, oldpte,
+> +						 max_nr_ptes, false);
+>  			oldpte = modify_prot_start_ptes(vma, addr, pte, nr_ptes);
+>  			ptent = pte_modify(oldpte, newprot);
+>  
+> @@ -209,15 +273,23 @@ static long change_pte_range(struct mmu_gather *tlb,
+>  			 * example, if a PTE is already dirty and no other
+>  			 * COW or special handling is required.
+>  			 */
+> -			if ((cp_flags & MM_CP_TRY_CHANGE_WRITABLE) &&
+> -			    !pte_write(ptent) &&
+
+Don't you need to keep the !pte_write(ptent) condition here? No need to sub-
+batch if write is already set.
+
+> -			    can_change_pte_writable(vma, addr, ptent))
+> -				ptent = pte_mkwrite(ptent, vma);
+> -
+> -			modify_prot_commit_ptes(vma, addr, pte, oldpte, ptent, nr_ptes);
+> -			if (pte_needs_flush(oldpte, ptent))
+> -				tlb_flush_pte_range(tlb, addr, PAGE_SIZE);
+> -			pages++;
+> +			if (cp_flags & MM_CP_TRY_CHANGE_WRITABLE) {
+> +				max_len = nr_ptes;
+> +				while (sub_batch_idx < nr_ptes) {
+> +
+> +					/* Get length of sub batch */
+> +					len = modify_sub_batch(vma, tlb, addr, pte,
+> +							       oldpte, ptent, max_len,
+> +							       sub_batch_idx);
+> +					sub_batch_idx += len;
+> +					max_len -= len;
+> +				}
+> +			} else {
+> +				modify_prot_commit_ptes(vma, addr, pte, oldpte, ptent, nr_ptes);
+> +				if (pte_needs_flush(oldpte, ptent))
+> +					tlb_flush_pte_range(tlb, addr, nr_ptes * PAGE_SIZE);
+> +			}
+
+This if/else block and modify_sub_block() is all pretty ugly. I wonder if 
+something like this would be neater:
+
+			use_sub_batch = (cp_flags & MM_CP_TRY_CHANGE_WRITABLE) && 
+					!pte_write(ptent) && 
+					LIKE_can_change_pte_writable(vma, addr, ptent, folio);
+
+			while (nr_ptes) {
+				if (use_sub_batch)
+					sub_nr_ptes = sub_batch(...);
+				else
+					sub_nr_ptes = nr_ptes;
+
+				modify_prot_commit_ptes(vma, addr, pte, oldpte, 
+							ptent, sub_nr_ptes);
+				if (pte_needs_flush(oldpte, ptent))
+					tlb_flush_pte_range(tlb, addr,
+						sub_nr_ptes * PAGE_SIZE);
+
+				addr += sub_nr_ptes * PAGE_SIZE;
+				pte += sub_nr_ptes;
+				oldpte = pte_advance_pfn(oldpte, sub_nr_ptes);
+				ptent = pte_advance_pfn(ptent, sub_nr_ptes);
+				nr_ptes -= sub_nr_ptes;
+				pages += sub_nr_ptes;
+			}
+
+Where:
+
+ - LIKE_can_change_pte_writable() is similar to can_change_pte_writable() but
+   does everything except checking the per-page exclusive flag. Note that we
+   already have the folio so can pass that rather than calling vm_normal_page()
+   again.
+
+ - sub_batch() can be passed the folio and the index of the first page within
+   the folio and the max number of pages to check (nr_ptes). Then returns the
+   number of pages where exclusive flag is the same.
+
+Obviously they both need better names...
+
+Thanks,
+Ryan
+
+
+> +			pages += nr_ptes;
+>  		} else if (is_swap_pte(oldpte)) {
+>  			swp_entry_t entry = pte_to_swp_entry(oldpte);
+>  			pte_t newpte;
 
