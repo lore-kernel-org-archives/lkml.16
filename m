@@ -1,106 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F35E2A1BF;
-	Wed, 21 May 2025 14:00:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5F1570830;
+	Wed, 21 May 2025 14:01:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747836043; cv=none; b=kdTCENC7AzR9+1/SJ8h8YRCOkXp95G0Q0YxkcwLG7XtpLlmZ4MnUDDUoIRcOlufGHmh1kOjkbL9wM3+TILaMZG+ufaHjaP5LDEYsX0jT7z/Q5j0Ko0diQ2japa4y0ADUTbNcgfcx0RG7hXuTOevPDRkVjsF9d+KX0mAGKvyVaTM=
+	t=1747836069; cv=none; b=MTwYCUkqI6TEWUulNTnHM2Q1QmWUSJV14yafkWLV3yN06JuDM/WSp5VS72enhsOnI1lOs+HGKkJXDyHksoFYh5MmOz90dKEVwDwppGWu2jm3w6aA9qCIDMiN1tA6tLNhKyVu7yULibA53tazoyDeNXGv/NPcnDzU9kRalAU05j4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747836043; c=relaxed/simple;
-	bh=TG7KGt9Z8KkHwG8PtZech7PK1ytDELh9NZgI+4R2pzI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fPqi0J9ceAmpT0mOvAbu4fwL2Jem9KmiCiwjTRtUfcWP4jC5oV6O0lJmYW78nXLDiRYlqyZPS+b5eD4U8gtxonifwKnU+8h2IPkygRZP7ePlFXiAtJ3yS4YBp9OIVZgEZLZ2f5ZjxhbTPKVxqiOmR1ulUFIuq6S7lq/c5aUr+bk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KbALZD/d; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747836069; c=relaxed/simple;
+	bh=ONFUsLHSa7vkUiHilg2/DdNQnH53B+UdBapmF3QMSKQ=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=bpXjmGqSiMrbNPo++aRdLEdMdhK5n7MWY8qnbOePElknGJMfAmu1dRbyrHVdS90g6hrlGqbb5cpb91Qv/0tGrB8vGA5YGg4ARheO8hL+zV8bO3AApighg/5orlWnou3/UBzDKYi7Dutka0wTXB9nAO8xDsqDmcY1IGO1Aev+3Iw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a0tLzMuZ; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KbALZD/d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7F81C4CEE4;
-	Wed, 21 May 2025 14:00:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747836043;
-	bh=TG7KGt9Z8KkHwG8PtZech7PK1ytDELh9NZgI+4R2pzI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KbALZD/dEscVsNoTk46Tney3bpr9YBapbD6kPiCrP6jYQVYeU1B+lRBw0hGJnMIxA
-	 fxhEojnMsplG0brkRHU0kGSzA5rdSej0MtquM4ljjzCMg9FPzyYqsj6CWuJ/qtqwNZ
-	 Fxb8yRoc6SMYtWQIldMJI9Zxjot0qbS9IkvzCHwhM3q4XLQ5WEcKQCHFerrp3fdCfc
-	 dqxQN6LjTj71cn1owXAGH822pLzILvFd4FnLld/oIDJrS/AXKscTyAjPwLxBMi4rER
-	 bDKJdtaZftPXqHhCUJEqVAWvWy2P/P3VNs41LeT1kV9IV/+5Ic94ygZ6pgDCKo4vnM
-	 RoY6vcigApi+w==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uHjzs-00Gxn5-Mt;
-	Wed, 21 May 2025 15:00:40 +0100
-From: Marc Zyngier <maz@kernel.org>
-To: oliver.upton@linux.dev,
-	joey.gouly@arm.com,
-	suzuki.poulose@arm.com,
-	yuzenghui@huawei.com,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	Vincent Donnefort <vdonnefort@google.com>
-Cc: qperret@google.com,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	kernel-team@android.com
-Subject: Re: [PATCH v6 00/10] Stage-2 huge mappings for pKVM np-guests
-Date: Wed, 21 May 2025 15:00:36 +0100
-Message-Id: <174783602755.119525.10800483609741009182.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20250521124834.1070650-1-vdonnefort@google.com>
-References: <20250521124834.1070650-1-vdonnefort@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a0tLzMuZ"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54b166fa41bso10378267e87.0;
+        Wed, 21 May 2025 07:01:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747836066; x=1748440866; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ONFUsLHSa7vkUiHilg2/DdNQnH53B+UdBapmF3QMSKQ=;
+        b=a0tLzMuZsbyE/+k46F8THn/mzR3N+053i8tm/hmRRENvGvDHz/O6jvGRB87eoWKLLs
+         qRf7kkQ35ab6ScZdmUgXIRzirciUYTfPWFaa+aU9C8Gjr6nvoHnWoWnSBNmrNl3yBUNq
+         IqzQAqSPOWHRAsGkfPv6oMKd+a8Yi4Pxlj4oQIe5k1Ce+6QcQf6WJYx3gFQoA17+6zjR
+         hVf7NnmPJPlqmOYOC/Kq0RKscLxyrygIGvcCdPWNw2aebrHnnNvExtol1r+8iOFL3uO/
+         Ju2yQs1Qd2lnbnj//GJYwZ7xU/q+AsoHsY6mqSFKp/3Ps5BdECGf3SW4ANgrJyRzxX/N
+         CvRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747836066; x=1748440866;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ONFUsLHSa7vkUiHilg2/DdNQnH53B+UdBapmF3QMSKQ=;
+        b=hQf2Qjo2V8KIvx7KPUgeSqki/Q41zt2y21lK7bEj1r4o7rX7uJGWcwDrSf/sogXs1G
+         olmhyjOfdb2z34odtKoyF7AmJlyalFnCCSK7AWqe834sYHnnT/2F8tzox0hEFc/bVPD6
+         4sJU6l4qcja5Qq3YG4qGwO1UZkclR+eo+wdBVHTLx4pNoUYzfm6I82Xo/hXb/utqgLoP
+         d/qZmdBgb0jyVbPBLYJl8Zyu2LJ3YoQzcz2oYpb/MwrQ4qEMUzEBMKYPaabxgBwLFrB0
+         d8hr3AsFogsQj8WJbEVqnqpADnsuDhWFb0H4w8d+Pn6+TZ09u8UAoE7xODOOH7Dyk5wc
+         +I3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXVFZFxXHB2HFp2lbSV0VH4UWNoorms3Dw4KLpusWuymUD7XWduNEYbjNvTTVV8GAQpKdEeqp3lwidI/v0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6Kx7hu7MUpwSDxS4LZW5PZDkKe94pI4kQ3/wBi7xw8cKisEaK
+	GLt3P6ePLApVbo712ryf786lKZTLHVSYctHjUgs7HkHwVzxGnElWcN5PN77nUGl9CyeBKyduplb
+	7S+Z+/SVO6izVIvuF/SOXGHO+9SD8xA==
+X-Gm-Gg: ASbGncsZNGeIg2MQcYpPYEwMVM0Q3t/V3+/Z3etW+fDxFqa2o9Xm/uPMaY/GaBWXq+w
+	ER1Itj+0w16FO5MQzMajXGT8Yk+52KlOOamsnaUo48UAIT/zJJDXbk3R0lL+VN82xC5+MHsxELg
+	/o/vbAPPUzzr8JhnZqpiZRjwJlVKHsPUuNERPVydfXlHaxzyTDg2M+CA==
+X-Google-Smtp-Source: AGHT+IEErQUumcNlrERVRbwPeQbo8ThcwdLSPgoMWXN/7EPZuI0HoopGUnJGS+ztTTTB0ldhhXIhU/86Feukltp2+jI=
+X-Received: by 2002:a2e:be0f:0:b0:329:14df:5c3b with SMTP id
+ 38308e7fff4ca-32914df5d0amr55710461fa.33.1747836065607; Wed, 21 May 2025
+ 07:01:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, vdonnefort@google.com, qperret@google.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, kernel-team@android.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+From: John <john.cs.hey@gmail.com>
+Date: Wed, 21 May 2025 22:00:51 +0800
+X-Gm-Features: AX0GCFvrUSYfmVFmYHPWPUqbKUBjeps2254KYsjRGu5U2TziEdJnEhvhO2IgNAA
+Message-ID: <CAP=Rh=P0vsd4FVn+FUWpAM6v72CuD8tX27X9zzr6BhkKNDDjLg@mail.gmail.com>
+Subject: [Bug] "kernel BUG in corrupted" in Linux kernel v6.14
+To: Andreas Dilger <adilger.kernel@dilger.ca>, "Theodore Ts'o" <tytso@mit.edu>
+Cc: linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 21 May 2025 13:48:24 +0100, Vincent Donnefort wrote:
-> This series adds support for stage-2 huge mappings (PMD_SIZE) to pKVM
-> np-guests, that is installing PMD-level mappings in the stage-2,
-> whenever the stage-1 is backed by either Hugetlbfs or THPs.
-> 
-> The last patch of that series is an optimization for CMOs using a shared
-> PMD_SIZE fixmap.
-> 
-> [...]
+Dear Linux Kernel Maintainers,
 
-Applied to next, thanks!
+I hope this message finds you well.
 
-[01/10] KVM: arm64: Handle huge mappings for np-guest CMOs
-        commit: 944a1ed8cc3ea6c5b16b6aca11475ced0daf68a9
-[02/10] KVM: arm64: Introduce for_each_hyp_page
-        commit: 3db771fa23ed6aecdf28ce4b806309198eea84e2
-[03/10] KVM: arm64: Add a range to __pkvm_host_share_guest()
-        commit: 4274385ebf090461b46b9bddb0f7c526182ba3c0
-[04/10] KVM: arm64: Add a range to __pkvm_host_unshare_guest()
-        commit: f28f1d02f4eaac05c2ad6bf7264a8696dc21d011
-[05/10] KVM: arm64: Add a range to __pkvm_host_wrprotect_guest()
-        commit: 0eb802b3b4ecfb10046bc325f47e7fd741c72ffe
-[06/10] KVM: arm64: Add a range to __pkvm_host_test_clear_young_guest()
-        commit: c4d99a833d34d8041a568f0c076379ae53c47896
-[07/10] KVM: arm64: Convert pkvm_mappings to interval tree
-        commit: b38c9775f73941ee59aebc0a489aa5c22e632def
-[08/10] KVM: arm64: Add a range to pkvm_mappings
-        commit: 3669ddd8fa8b5a46d96b9c54a6fa519a17e4a4fa
-[09/10] KVM: arm64: Stage-2 huge mappings for np-guests
-        commit: db14091d8f75852d960b18834c7bdb1b7c2bb74f
-[10/10] KVM: arm64: np-guest CMOs with PMD_SIZE fixmap
-        commit: c353fde17d8f7e710884532da50393cd22ddbfbe
+I am writing to report a potential vulnerability I encountered during
+testing of the Linux Kernel version v6.14.
 
-Cheers,
+Git Commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557 (tag: v6.14)
 
-	M.
--- 
-Without deviation from the norm, progress is not possible.
+Bug Location: 0010:ext4_do_writepages+0x273d/0x32b0 fs/ext4/inode.c:2619
 
+Bug report: https://pastebin.com/WwMypbdm
 
+Complete log:https://pastebin.com/WvhAuSgQ
+
+Entire kernel config: https://pastebin.com/MRWGr3nv
+
+Root Cause Analysis:
+The crash was caused by a fatal metadata inconsistency in an ext4
+filesystem mounted from loop3.
+The function ext4_mb_generate_buddy() detected a mismatch between the
+block bitmap and group descriptor free cluster count (25 vs.
+150994969), which indicates filesystem corruption.
+This led to a forced kernel BUG() in ext4_do_writepages(), which was
+invoked by the background writeback kernel worker.
+The subsequent attempt to exit via do_exit() triggered another warning
+due to an invalid instruction pointer, suggesting that the kernel
+entered a corrupt execution state.
+This bug is indicative of either a malformed or fuzzed ext4 image, or
+a logic flaw in metadata accounting in ext4=E2=80=99s delayed allocation an=
+d
+writeback path.
+
+At present, I have not yet obtained a minimal reproducer for this
+issue. However, I am actively working on reproducing it, and I will
+promptly share any additional findings or a working reproducer as soon
+as it becomes available.
+
+Thank you very much for your time and attention to this matter. I
+truly appreciate the efforts of the Linux kernel community.
+
+Best regards,
+John
