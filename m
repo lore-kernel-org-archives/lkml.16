@@ -1,191 +1,123 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5214922173C
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 19:22:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8217280311;
+	Wed, 21 May 2025 19:23:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747855330; cv=none; b=pwjFZ5mKJW/32FcqC/G/BUmWtTmEPUD1mh/gf1hiW7dgei69FC232VROkeDpSVid1DNT9xvPx3Egz9Df0f4Vc3+jl+v8smwmKZ4Z/I3ENrl559tPuoVoKLsybFdRnfqTPcuP6hmOcWYaAnPVPr2iRuxRRqwz6xA5XnZvZmqxZZo=
+	t=1747855435; cv=none; b=AjS6PYhgMQtoMKyewhoiZLV1pZmhi28ms8BVWe2C3g+XMihfZ09iLsMDM3sgdMCG8metSTJayO+2V9x5g1bTHeAWSi6jTf+A6O+EnQKcBdMiDXIf1LjwY9OFk/WuehK1S3RxnGvP1MG+behPaSA5Cpe94JHbopKZ7eR100HJCzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747855330; c=relaxed/simple;
-	bh=7oINp/6tHsS+Axhm3mAmmJmrnhDgIHOQCrIEoAdt2mY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZmPCLM8WTLEG489T8cmzuwmOkiwnPyla2A68RQtg5izYeI+eu322u+v05NzG9NB0Gl/eqgKbDytw+MAetTHKcIxAV7vmHUWZf/skhzfns07P9MD02tniQb58+jaHzIbT10K5BCe9CLUMByevbrOt7V2WHwyXzCP3TD55B1gwajw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LpwI6Rrw; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747855435; c=relaxed/simple;
+	bh=x7SU6M9EiUqm3oCZdiOBIeMXoijnsJiejNFd+jPSSMc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=uXiEfSxT9pvjx0l/c+aNoMBZNYIS8aayxfx1CtiQ9ETfa92u9dM7Qj6k48g16cvS8riGt/Gq3JFxnxT1mKB75pVeh2V93htxm3dXx6peC3QbXAgG68dE057C0Dcjb07HN6bnTZ/nTgAirv0ihZAjsBsolwGrWcUij6LuzrHV9qM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ix0Hjd6V; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LpwI6Rrw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747855328; x=1779391328;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=7oINp/6tHsS+Axhm3mAmmJmrnhDgIHOQCrIEoAdt2mY=;
-  b=LpwI6RrwmCbuPFlhgwBjvmVsUVmbFNfG6tQzcxiGwnIGmMzrhXwOh8FZ
-   jHwKtU14bsjla72xZ+4kIUt5vvTUQdclLR0byz/brLKIQNXCArh+P+zJ4
-   1my3EbUAygtA4yv0QvWp4ka1MNtMTQn9NFOx4PCgj/swkV86LS//U41cW
-   +bGcoF/P+9ZCYKGBFgL9E04qTVcoFjF4NsfGbBxhdyVsKMOQTMQi9NluL
-   CnCB5vWiN94k2EmgV3SPHfrTYAStGQ6SX6TDiL0FKSKoIWRrr9SwB9+2+
-   8h7S/B6ZCXlF79/+SYykpVWuz8gyf0UgSeKV0R50PutH1KXx25ft+8QYn
-   A==;
-X-CSE-ConnectionGUID: pMYGveXQRPKvarfoCsbYXA==
-X-CSE-MsgGUID: EVLZAMBHSEW4V+T14+mEfQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="60092157"
-X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
-   d="scan'208";a="60092157"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 12:22:07 -0700
-X-CSE-ConnectionGUID: VuzLRn53SMG60lEBk1yKzQ==
-X-CSE-MsgGUID: jd/0HpCWTOqh08tUL6f1jw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
-   d="scan'208";a="141118044"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 21 May 2025 12:22:07 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uHp0t-000OY0-2p;
-	Wed, 21 May 2025 19:22:03 +0000
-Date: Thu, 22 May 2025 03:21:12 +0800
-From: kernel test robot <lkp@intel.com>
-To: Donny-Dev <donnyturizo13@gmail.com>, gregkh@linuxfoundation.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Donny-Dev <donnyturizo13@gmail.com>
-Subject: Re: [PATCH] drivers/staging/rtl8723bs: Fix camelCase to snake_case
- style in core files
-Message-ID: <202505220306.OiXLGnOS-lkp@intel.com>
-References: <20250521000150.11659-1-donnyturizo13@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ix0Hjd6V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29530C4CEE4;
+	Wed, 21 May 2025 19:23:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747855434;
+	bh=x7SU6M9EiUqm3oCZdiOBIeMXoijnsJiejNFd+jPSSMc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=Ix0Hjd6V1tx7KT5m6va1h0PDbofHGDHqXg8V7tyNqlwUs2SN7+1SUzlq6WqxYUK3n
+	 Y0tNStRGPFzn3dbbIvkfZmgdo5Z/7NRBsMJdIZ/wYzDnjbYWG8hwysgv1lxLMgk+sK
+	 9EQxQy1UMIy9XBxaKH5/0Hf7GAFkxpUO3uvXiAd7AcpuY10uxrfkHafU7YUaZTN137
+	 5Z8caXYvQebeBl/TVEU5w0gRMrBIqDeFamINoGn4dvFv+ZUUj0A+Lq3BIjoPC1VOwA
+	 fgG5xBra7M6bxg1bZ3l5deHZpQCYIFhjHBQe02WK++ej1oZ2WqvKuG7we9YLRBctWv
+	 KTCJJzLwrJ5JA==
+Date: Wed, 21 May 2025 14:23:52 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>,
+	Karolina Stolarek <karolina.stolarek@oracle.com>,
+	Weinan Liu <wnliu@google.com>,
+	Martin Petersen <martin.petersen@oracle.com>,
+	Ben Fuller <ben.fuller@oracle.com>,
+	Drew Walton <drewwalton@microsoft.com>,
+	Anil Agrawal <anilagrawal@meta.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Lukas Wunner <lukas@wunner.de>, Sargun Dhillon <sargun@meta.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Kai-Heng Feng <kaihengf@nvidia.com>,
+	Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
+	Terry Bowman <terry.bowman@amd.com>,
+	Shiju Jose <shiju.jose@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+Subject: Re: [PATCH v7 02/17] PCI/DPC: Log Error Source ID only when valid
+Message-ID: <20250521192352.GA1430719@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250521000150.11659-1-donnyturizo13@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250521100035.0000544e@huawei.com>
 
-Hi Donny-Dev,
+On Wed, May 21, 2025 at 10:00:35AM +0100, Jonathan Cameron wrote:
+> On Tue, 20 May 2025 16:50:19 -0500
+> Bjorn Helgaas <helgaas@kernel.org> wrote:
+> 
+> > From: Bjorn Helgaas <bhelgaas@google.com>
+> > 
+> > DPC Error Source ID is only valid when the DPC Trigger Reason indicates
+> > that DPC was triggered due to reception of an ERR_NONFATAL or ERR_FATAL
+> > Message (PCIe r6.0, sec 7.9.14.5).
+> > 
+> > When DPC was triggered by ERR_NONFATAL (PCI_EXP_DPC_STATUS_TRIGGER_RSN_NFE)
+> > or ERR_FATAL (PCI_EXP_DPC_STATUS_TRIGGER_RSN_FE) from a downstream device,
+> > log the Error Source ID (decoded into domain/bus/device/function).  Don't
+> > print the source otherwise, since it's not valid.
+> > 
+> > For DPC trigger due to reception of ERR_NONFATAL or ERR_FATAL, the dmesg
+> > logging changes:
+> > 
+> >   - pci 0000:00:01.0: DPC: containment event, status:0x000d source:0x0200
+> >   - pci 0000:00:01.0: DPC: ERR_FATAL detected
+> >   + pci 0000:00:01.0: DPC: containment event, status:0x000d, ERR_FATAL received from 0000:02:00.0
+> > 
+> > and when DPC triggered for other reasons, where DPC Error Source ID is
+> > undefined, e.g., unmasked uncorrectable error:
+> > 
+> >   - pci 0000:00:01.0: DPC: containment event, status:0x0009 source:0x0200
+> >   - pci 0000:00:01.0: DPC: unmasked uncorrectable error detected
+> >   + pci 0000:00:01.0: DPC: containment event, status:0x0009: unmasked uncorrectable error detected
+> > 
+> > Previously the "containment event" message was at KERN_INFO and the
+> > "%s detected" message was at KERN_WARNING.  Now the single message is at
+> > KERN_WARNING.
+> > 
+> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> > Tested-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
+> > Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> Matches the spec conditions as far as I can tell.
+> 
+> I guess interesting debate on whether providing extra garbage info is
+> a bug or not. Maybe a fixes tag for this one as well?
 
-kernel test robot noticed the following build errors:
+I added:
 
-[auto build test ERROR on staging/staging-testing]
-[also build test ERROR on staging/staging-next staging/staging-linus linus/master v6.15-rc7 next-20250521]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+  Fixes: 26e515713342 ("PCI: Add Downstream Port Containment driver")
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Donny-Dev/drivers-staging-rtl8723bs-Fix-camelCase-to-snake_case-style-in-core-files/20250521-080425
-base:   staging/staging-testing
-patch link:    https://lore.kernel.org/r/20250521000150.11659-1-donnyturizo13%40gmail.com
-patch subject: [PATCH] drivers/staging/rtl8723bs: Fix camelCase to snake_case style in core files
-config: sparc-allmodconfig (https://download.01.org/0day-ci/archive/20250522/202505220306.OiXLGnOS-lkp@intel.com/config)
-compiler: sparc64-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250522/202505220306.OiXLGnOS-lkp@intel.com/reproduce)
+since it looks like we've printed the source unconditionally since the
+addition of DPC:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/pcie/pcie-dpc.c?id=26e515713342#n69
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505220306.OiXLGnOS-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from drivers/staging/rtl8723bs/include/drv_types.h:29,
-                    from drivers/staging/rtl8723bs/core/rtw_cmd.c:7:
->> drivers/staging/rtl8723bs/core/rtw_cmd.c:12:23: error: '_read_macreg_CMD_' undeclared here (not in a function); did you mean '_Read_MACREG_CMD_'?
-      12 |         {GEN_CMD_CODE(_read_macreg), NULL}, /*0*/
-         |                       ^~~~~~~~~~~~
-   drivers/staging/rtl8723bs/include/rtw_cmd.h:554:33: note: in definition of macro 'GEN_CMD_CODE'
-     554 | #define GEN_CMD_CODE(cmd)       cmd ## _CMD_
-         |                                 ^~~
->> drivers/staging/rtl8723bs/core/rtw_cmd.c:13:23: error: '_write_macreg_CMD_' undeclared here (not in a function); did you mean '_Write_MACREG_CMD_'?
-      13 |         {GEN_CMD_CODE(_write_macreg), NULL},
-         |                       ^~~~~~~~~~~~~
-   drivers/staging/rtl8723bs/include/rtw_cmd.h:554:33: note: in definition of macro 'GEN_CMD_CODE'
-     554 | #define GEN_CMD_CODE(cmd)       cmd ## _CMD_
-         |                                 ^~~
-
-
-vim +12 drivers/staging/rtl8723bs/core/rtw_cmd.c
-
-    10	
-    11	static struct _cmd_callback rtw_cmd_callback[] = {
-  > 12		{GEN_CMD_CODE(_read_macreg), NULL}, /*0*/
-  > 13		{GEN_CMD_CODE(_write_macreg), NULL},
-    14		{GEN_CMD_CODE(_Read_BBREG), &rtw_getbbrfreg_cmdrsp_callback},
-    15		{GEN_CMD_CODE(_Write_BBREG), NULL},
-    16		{GEN_CMD_CODE(_Read_RFREG), &rtw_getbbrfreg_cmdrsp_callback},
-    17		{GEN_CMD_CODE(_Write_RFREG), NULL}, /*5*/
-    18		{GEN_CMD_CODE(_Read_EEPROM), NULL},
-    19		{GEN_CMD_CODE(_Write_EEPROM), NULL},
-    20		{GEN_CMD_CODE(_Read_EFUSE), NULL},
-    21		{GEN_CMD_CODE(_Write_EFUSE), NULL},
-    22	
-    23		{GEN_CMD_CODE(_Read_CAM),	NULL},	/*10*/
-    24		{GEN_CMD_CODE(_Write_CAM),	 NULL},
-    25		{GEN_CMD_CODE(_setBCNITV), NULL},
-    26		{GEN_CMD_CODE(_setMBIDCFG), NULL},
-    27		{GEN_CMD_CODE(_JoinBss), &rtw_joinbss_cmd_callback},  /*14*/
-    28		{GEN_CMD_CODE(_DisConnect), &rtw_disassoc_cmd_callback}, /*15*/
-    29		{GEN_CMD_CODE(_CreateBss), &rtw_createbss_cmd_callback},
-    30		{GEN_CMD_CODE(_SetOpMode), NULL},
-    31		{GEN_CMD_CODE(_SiteSurvey), &rtw_survey_cmd_callback}, /*18*/
-    32		{GEN_CMD_CODE(_SetAuth), NULL},
-    33	
-    34		{GEN_CMD_CODE(_SetKey), NULL},	/*20*/
-    35		{GEN_CMD_CODE(_SetStaKey), &rtw_setstaKey_cmdrsp_callback},
-    36		{GEN_CMD_CODE(_SetAssocSta), &rtw_setassocsta_cmdrsp_callback},
-    37		{GEN_CMD_CODE(_DelAssocSta), NULL},
-    38		{GEN_CMD_CODE(_SetStaPwrState), NULL},
-    39		{GEN_CMD_CODE(_SetBasicRate), NULL}, /*25*/
-    40		{GEN_CMD_CODE(_GetBasicRate), NULL},
-    41		{GEN_CMD_CODE(_SetDataRate), NULL},
-    42		{GEN_CMD_CODE(_GetDataRate), NULL},
-    43		{GEN_CMD_CODE(_SetPhyInfo), NULL},
-    44	
-    45		{GEN_CMD_CODE(_GetPhyInfo), NULL}, /*30*/
-    46		{GEN_CMD_CODE(_SetPhy), NULL},
-    47		{GEN_CMD_CODE(_GetPhy), NULL},
-    48		{GEN_CMD_CODE(_readRssi), NULL},
-    49		{GEN_CMD_CODE(_readGain), NULL},
-    50		{GEN_CMD_CODE(_SetAtim), NULL}, /*35*/
-    51		{GEN_CMD_CODE(_SetPwrMode), NULL},
-    52		{GEN_CMD_CODE(_JoinbssRpt), NULL},
-    53		{GEN_CMD_CODE(_SetRaTable), NULL},
-    54		{GEN_CMD_CODE(_GetRaTable), NULL},
-    55	
-    56		{GEN_CMD_CODE(_GetCCXReport), NULL}, /*40*/
-    57		{GEN_CMD_CODE(_GetDTMReport),	NULL},
-    58		{GEN_CMD_CODE(_GetTXRateStatistics), NULL},
-    59		{GEN_CMD_CODE(_SetUsbSuspend), NULL},
-    60		{GEN_CMD_CODE(_SetH2cLbk), NULL},
-    61		{GEN_CMD_CODE(_AddBAReq), NULL}, /*45*/
-    62		{GEN_CMD_CODE(_SetChannel), NULL},		/*46*/
-    63		{GEN_CMD_CODE(_SetTxPower), NULL},
-    64		{GEN_CMD_CODE(_SwitchAntenna), NULL},
-    65		{GEN_CMD_CODE(_SetCrystalCap), NULL},
-    66		{GEN_CMD_CODE(_SetSingleCarrierTx), NULL},	/*50*/
-    67	
-    68		{GEN_CMD_CODE(_SetSingleToneTx), NULL}, /*51*/
-    69		{GEN_CMD_CODE(_SetCarrierSuppressionTx), NULL},
-    70		{GEN_CMD_CODE(_SetContinuousTx), NULL},
-    71		{GEN_CMD_CODE(_SwitchBandwidth), NULL},		/*54*/
-    72		{GEN_CMD_CODE(_TX_Beacon), NULL},/*55*/
-    73	
-    74		{GEN_CMD_CODE(_Set_MLME_EVT), NULL},/*56*/
-    75		{GEN_CMD_CODE(_Set_Drv_Extra), NULL},/*57*/
-    76		{GEN_CMD_CODE(_Set_H2C_MSG), NULL},/*58*/
-    77		{GEN_CMD_CODE(_SetChannelPlan), NULL},/*59*/
-    78	
-    79		{GEN_CMD_CODE(_SetChannelSwitch), NULL},/*60*/
-    80		{GEN_CMD_CODE(_TDLS), NULL},/*61*/
-    81		{GEN_CMD_CODE(_ChkBMCSleepq), NULL}, /*62*/
-    82	
-    83		{GEN_CMD_CODE(_RunInThreadCMD), NULL},/*63*/
-    84	};
-    85	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
+> I briefly wondered if it makes sense to have a prefix string initialized
+> outside the switch with "containment event, status:%#06x:"
+> made sense but it's probably not worth the effort and maybe makes it
+> harder to grep for the error messages.  So in the end
+> I think your code here is the best option.
+> 
+> Jonathan
