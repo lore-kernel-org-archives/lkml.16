@@ -1,82 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C66D724B29;
-	Wed, 21 May 2025 18:17:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A0402236FF
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 18:19:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747851429; cv=none; b=GQvyCYeh1tLlWnC8Z7PdcOb+oQCEBOWlteYMYwYBD4tm4Z6gPKpIVG/I5V6jGeuP6rP3ELTfRZlKNOAyTTD3/Bj5CmCqdHnqDM69z4f6wAguSKCKO0P5anPwGDUImA4bsx1JMWFIBLk5XPjbKmZqDgSq2c+TcyBLFqhqxqQghvA=
+	t=1747851563; cv=none; b=JdOBH9zX+g7TDTosqcTaIykdxqWIJeCBMjYTG8zu0pz8juNwMF2bJk3AdoRp+uGw0ZYQxrUu7loSclSEmN0Tqq/R/bmLhj6fojtrq7j6PVqKzODcpR69ivaI2UyKGxJn7gqZUNhPEjmJxwODxnAqGdoy2kfzoMicj9aSaN0+rmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747851429; c=relaxed/simple;
-	bh=QPOD/k7ZGgTLcCX7nbf2iUvEVEml167I/zYkRLJHbdI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PMav7wXfRXYFp2+gpGjEGD7gxWoQy7mD6aGJPKSAjKfLzxmZ3DNyUqYOojbFk57RQ0K+tsqfptl6xL0GTMq3LVx9gYnr6t5TJwYLqJZuIBe4n3VowG9dwwPbd7N44L/1QnxTm5/YuvLeJSjLbzt35rdMv9E1cdtr4OD6TNPd2AM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O1LUyO5f; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747851563; c=relaxed/simple;
+	bh=hNOCCsT7WfpiM1b/accfoXI44kJhoT550SBK2E3F0tM=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Sge2ZYPxmbM4UKtxq+TJKV/tYXt/1n6O6P/yPPtq8/Vp0jHm+zehOEMDCJrYE3hyczU8QX8WUui6drqaT9hrOk0EQMzDy/eGjOi8qnYFHr6vSw+7wKJSPOqdFu9ZQZHhhsWM4znO983JUy3RK+ypM6iws84Uy5LKg9ajkpd3GOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ei3xO6w+; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O1LUyO5f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0359C4CEE4;
-	Wed, 21 May 2025 18:17:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747851429;
-	bh=QPOD/k7ZGgTLcCX7nbf2iUvEVEml167I/zYkRLJHbdI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=O1LUyO5fedC90ekI/gOFp8bV70LDdvAUI78cjU2EqEc6iCQgH7OcO+ta3UCbfmjc6
-	 cvRLsjjMIwSISnqmLKb6E9aApvBzLcFtgnsc26v8ac9kLhWGgIMyRpahk8Mm1HUJas
-	 +tUoprnCekhmWMy9/QkBFhdUvG/vNcHPB7rPCwa/Bz1ekMMflD9dqf6tpk4NA2xjwR
-	 RlHmV3GvK0ROLrLW4P7uwgdXHeC8i4HjiuVf4KSqYaHDRVTM6WZsPE14b8KTqyJ/ef
-	 dewoJTl0fxCQQ9SgaOj/aCoHbgmfT1UZLcZ2edQDrBaCl1slQqc341AL2dYokxub6r
-	 L46ggwR4ghrMw==
-Date: Wed, 21 May 2025 19:17:02 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com
-Subject: Re: [PATCH 6.12 000/143] 6.12.30-rc1 review
-Message-ID: <92c895fe-3b87-44b7-b971-94798902d6c2@sirena.org.uk>
-References: <20250520125810.036375422@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ei3xO6w+"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-231c326fe2bso62344575ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 11:19:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747851561; x=1748456361; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=EpmXi2p97nfKGtbYPsKrqYABLynLWTxDiX5+ukiqgG4=;
+        b=Ei3xO6w+KBdY1VJlYqibocHC+FO477mHl8m86z1QQWmWf2/OQjvrktvHdX0YrA/kQU
+         w3tKexUyTeg0rwk1qBHLD8ZCvWuWMl692b0xVOdX8wKTJlDhG1HG9781NiXn+nyXG3dc
+         R/mBgjKnicelO5NgDT+pGpFUnoUoIDxcgkHbnUJbwZd0iaY4kJHQkJJ8tCxUE/kQ/2k9
+         RxkE2YAuWGf1JEkEpOCKR9Zc0liCGy/KVZ7Xs2KNlB9pmBepGRuuNINNauruUHSm3N51
+         1soSl4WdCLB50Pm/kt7C5jjxxepx+z6jh6nmPSRTsIclAIB0H7uQir1UUwrsCv+D+ThD
+         C8UQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747851561; x=1748456361;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EpmXi2p97nfKGtbYPsKrqYABLynLWTxDiX5+ukiqgG4=;
+        b=SeyZ2tiOLw9dKK7kMd//OmT44l9AQ0KViUUJcTLZCts4CyLdLahWEvwQ6mTi4xHfqz
+         95SN4+DFGMMHFLtAboIuWfjZNpdEBjjY8E1W2fzG9FV2izUyFnC6RUhGn+vIPBOyeUij
+         r5+WA3UsABXRsmod8WMonHqNmINGxdfTmUasrwuHHA3pyNA6O4VxBpnuPu9sQVaMgrfr
+         sN31+BBZwotAWUQeNl5wo13pp0dyMSzzvP9A6tMtsY6Q/dTldnWMPQu/HYpvXja+Jedx
+         BdW4lmJILD8gujmZuSpqovJ5Vjz4e2y2glgUJqYzUVSF0z4fnhv/Ql7Tkb+LXp5v4V8f
+         n7ag==
+X-Forwarded-Encrypted: i=1; AJvYcCVJbcmp+GBo9hRd14G6L/RDUL9pxctDM6yMLIkB6MXd5od4ui/uaJQMBJTO6pe0sjp5GYWdLovyzLT2k8o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzsbS/C1rIpEKrhwi7elzZdYIQgFPMcCCKBrBeyfoTLqn0KpFWo
+	QfX72UKiffnVORwYCBpY4hIatjpbv5O9P2mNu2YphAL24Fnip1XNDvzsADfnwKITN1p7e57xjcS
+	iVC24/g==
+X-Google-Smtp-Source: AGHT+IEVAnp3aJri/4G8yCbjAGvCZIIAYw69WH0s/hXr+QEcz+tLscv1MFZEYlYAAbnwEEtRsZruxVuyc5E=
+X-Received: from plkv11.prod.google.com ([2002:a17:903:1a2b:b0:22e:17e6:898f])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1aec:b0:21f:1202:f2f5
+ with SMTP id d9443c01a7336-231de351473mr239997055ad.8.1747851561301; Wed, 21
+ May 2025 11:19:21 -0700 (PDT)
+Date: Wed, 21 May 2025 11:19:19 -0700
+In-Reply-To: <CAAH4kHai8JStj+=HUiPVxbH9P79GorviG2GykEP7jQ=NB2MbUQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="YSBd01xVWeKxFraD"
-Content-Disposition: inline
-In-Reply-To: <20250520125810.036375422@linuxfoundation.org>
-X-Cookie: 42
+Mime-Version: 1.0
+References: <20250515220400.1096945-1-dionnaglaze@google.com>
+ <20250515220400.1096945-2-dionnaglaze@google.com> <aCZtdN0LhkRqm1Vn@google.com>
+ <CAAH4kHai8JStj+=HUiPVxbH9P79GorviG2GykEP7jQ=NB2MbUQ@mail.gmail.com>
+Message-ID: <aC4ZJyRPpX6eLKsC@google.com>
+Subject: Re: [PATCH v5 1/2] kvm: sev: Add SEV-SNP guest request throttling
+From: Sean Christopherson <seanjc@google.com>
+To: Dionna Amalie Glaze <dionnaglaze@google.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-coco@lists.linux.dev, Thomas Lendacky <Thomas.Lendacky@amd.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Joerg Roedel <jroedel@suse.de>, Peter Gonda <pgonda@google.com>, 
+	Borislav Petkov <bp@alien8.de>
+Content-Type: text/plain; charset="us-ascii"
 
+On Fri, May 16, 2025, Dionna Amalie Glaze wrote:
+> > > @@ -4015,6 +4042,12 @@ static int snp_handle_guest_req(struct vcpu_svm *svm, gpa_t req_gpa, gpa_t resp_
+> > >
+> > >       mutex_lock(&sev->guest_req_mutex);
+> > >
+> > > +     if (!__ratelimit(&sev->snp_guest_msg_rs)) {
+> > > +             svm_vmgexit_no_action(svm, SNP_GUEST_ERR(SNP_GUEST_VMM_ERR_BUSY, 0));
+> > > +             ret = 1;
+> > > +             goto out_unlock;
+> >
+> > Can you (or anyone) explain what a well-behaved guest will do in in response to
+> > BUSY?  And/or explain why KVM injecting an error into the guest is better than
+> > exiting to userspace.
+> 
+> Ah, I missed this question. The guest is meant to back off and try again
+> after waiting a bit.  This is the behavior added in
+> https://lore.kernel.org/all/20230214164638.1189804-2-dionnaglaze@google.com/
 
---YSBd01xVWeKxFraD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Nice, it's already landed and considered legal VMM behavior.
 
-On Tue, May 20, 2025 at 03:49:15PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.12.30 release.
-> There are 143 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+> If KVM returns to userspace with an exit type that the guest request was
+> throttled, then what is user space supposed to do with that?
 
-Tested-by: Mark Brown <broonie@kernel.org>
+The userspace exit doesn't have to notify userspace that the guest was throttled,
+e.g. KVM could exit on _every_ request and let userspace do its own throttling.
 
---YSBd01xVWeKxFraD
-Content-Type: application/pgp-signature; name="signature.asc"
+I have no idea whether or not that's sane/useful, which is why I'm asking.  The
+cover letter, changelog, and documentation are all painfully sparse with respect
+to explaining why *this* uAPI is the right uAPI.
 
------BEGIN PGP SIGNATURE-----
+> It could wait a bit before trying KVM_RUN again, but with the enlightened
+> method, the guest could at least work on other kernel tasks while it waits
+> for its turn to get an attestation report.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmguGJ4ACgkQJNaLcl1U
-h9A2tQf+Pm0sj5N70nmhaVhJ0Zaq8Jq1Xquusz8zQDv6C4yU/Z/Xo+F/kjiQwFHB
-LdvTqnzgCF/McE35GoGxQqyQm256HWPEUmaQp/lLE7C2ww1jvsEioxK+ZeQYOS5r
-OhlpH1IzGgTNIVLGokgscrQxnpvsojTtdCPAEOEK/NLmS/LWaHNu0hoeYDuPNGQw
-p7uzPazYbPOjx63GXfQCjGxprEMhzDhMo+GlbgqR40IzUEifOS9kMJGx39T+RA2J
-2tZxBDNmwm/Zbdn52ZBmRFtmPUzyJrTjLFW+ruN3kfpIs7tH/YtK5NpWR2DcwiTi
-v8ZRPnfraNxiVYgIeYSAtIue7X8fKg==
-=iadD
------END PGP SIGNATURE-----
+Nothing prevents KVM from providing userspace a way to communicate VMM_ERR_BUSY,
+e.g. as done for KVM_EXIT_SNP_REQ_CERTS:
 
---YSBd01xVWeKxFraD--
+https://lore.kernel.org/all/20250428195113.392303-2-michael.roth@amd.com
+
+> Perhaps this is me not understanding the preferred KVM way of doing things.
+
+The only real preference at play is to not end up with uAPI and ABI that doesn't
+fit "everyone's" needs.  It's impossible to fully future-proof KVM's ABI, but we
+can at least perform due diligence to ensure we didn't simply pick the the path
+of least resistance.
+
+The bar gets lowered a tiny bit if we go with a module param (which I think we
+should do), but I'd still like an explanation of why a fairly simple ratelimiting
+mechanism is the best overall approach.
