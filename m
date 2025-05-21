@@ -1,79 +1,68 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFC2F19F42F
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 17:47:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11E9E482EB;
+	Wed, 21 May 2025 17:52:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747849669; cv=none; b=Lwp8I5hKAQo0Llw0XBPdWt/aIduZvSJEO1BjMsQBbddoi7Bfq6mkhvloylw/v2Z62GML6oT1vsofW47wA2nlvEIJwbreG9TSVZjbQUyFSjySBvUOHsFt0sA6N9OzsAHcJ/yMqn3AULPf3VkejpvYfo4MX9snPUp4wzvJUrZm4kg=
+	t=1747849979; cv=none; b=QZk3KGG8zer+EJVbh3+tv/ynjy3Ruj3JHfQQdmlP9pAb5iQYxMkT0IIEgszn8K9iNA2EJK4LQUT1jMc8EsizgDuJ4uC28IgTSXhQc0nEupOyhKyNv5PoxuB28bpmI95qY0+IUl3aZYXMg2+r0w1YMA+AXozxoemduYSz+j/LAU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747849669; c=relaxed/simple;
-	bh=TgOo6A5A/c/4vmi6glL9bU93L3dWBs4RhVGWgQMINTM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t6idWGNI2H6/UdHLWF6TQaGGf5MNG58aVUX6NfJ0DPU3PrK2WcVW9Sl2KVSm3eFk/cezZMzp4dzDkGKMfzd+BWs1EvOxYMvhc8g/xgRiva/cC4WXsF7NF51C0YVv1MuWRnMXcso4mZSOb3T8FvVgnXrcTtNshOgqOW+MdAvSTUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=T3CRG98C; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747849979; c=relaxed/simple;
+	bh=ck7QO7Tkzrcu8Mua4xD9wFeA2GEWKuWofSfQBv1C58E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VgHrP5DY+Z2VNtagqs8eXv+N5QZojQBk4elobSooZjAZEvF7ID1aXSkExku4OPTyVo06QEszERyhBs8nuY5J8bc47rj0/wZW9Ia++qGlvbZns47AX2y2uE2SZeWc4jqIPgnokAEbn9IUulrHHxVaM/9MxTyJXv/eBL9jQe2xcRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LG5x+gZy; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T3CRG98C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747849666;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=oGeZ4/qscFDpgQW4r4FF8qcWixZjDJP3cGgKS2Y7uN4=;
-	b=T3CRG98C/EPHLWDDtBsyMw7fg/e7wenI0jAaoAvTvzOfQ9KzpQlOS/Uzw/ncJ68xEFDJqe
-	uS04FTi7TO96zJBhtJEZ+ZoH0giYJ8ZoOwYaNP0Of9sBCEgU9VPgtQaT5oybn6pAORLtKG
-	nPkj41t0Vi897oa2aJwsVx3ZgmzNJyg=
-Received: from mail-vs1-f69.google.com (mail-vs1-f69.google.com
- [209.85.217.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-659-DiQh0M0nO8-JzvW15O7_zQ-1; Wed, 21 May 2025 13:47:44 -0400
-X-MC-Unique: DiQh0M0nO8-JzvW15O7_zQ-1
-X-Mimecast-MFC-AGG-ID: DiQh0M0nO8-JzvW15O7_zQ_1747849663
-Received: by mail-vs1-f69.google.com with SMTP id ada2fe7eead31-4e28ed5cbe1so505892137.1
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 10:47:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747849663; x=1748454463;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=oGeZ4/qscFDpgQW4r4FF8qcWixZjDJP3cGgKS2Y7uN4=;
-        b=AViRBOg9pWopR7gfDr0ePl3CrR6x9yKZAEZ2uPtgd6xjvLvKWKrGPz0hlSHtFhOKMB
-         FodCtQhHQzp4EhfJ0vjd/O9NBFOty5oxeOcQUFHjw2Fb4wi1g8AlW8DQ2osF6BtoRcQb
-         v/cB3LKcQGqEa1wSgsy6koBFrMbfca6BBwJfplOxGGFuUSV90IIucn1UEWaUTdLj8DGl
-         DNK5wzKMRIYY33a8AoUyPpFMvODNTMVBTDdIC2AOnVYaVCMZWuHnMJF2TJlf8zVVoEvD
-         U+j43kqrYNMjLLYdqVyJsPKlBTofWRevYcLqNvIGQv6obBZlwjuz2T4EuXM2DA3nGaz6
-         37Nw==
-X-Gm-Message-State: AOJu0YzUCdxtmPn5SMATmUx94c/CeXjvaij2IKxC6TsJdQG+UZlQ4z3z
-	igvHZabYMUdfS7+eslyr6msOrB4G78CYFY2w9ZC9U4A+uVYDfNLABPJdkcxl3z0u2MTHZkXmxa6
-	TmL/55vxTKCC4tbKevGt77THvQ1fHCWAApQYGTgZLt1j/g6Q9JB8WpNEknqyOCNhb1g==
-X-Gm-Gg: ASbGncvZAMNWySgJ0FibX9mysvEtGNONIg95jxvp9A3vBuWf2HK6k2asXCzkadicMg/
-	WuEYNj84Xop6DwiOcJ+xdrmMMj//jf/Vq8mgoh5m7000fkpZNdw6bJWrwA70Mx9zawdyxJTtG/w
-	jcw29/h5tdKDLP/vdQzP1x3Em1had5e+rrxpUz0ygAy2Tcss0fu1rILN6zi46ErLuLnUmLpHuFF
-	a6Keb12z2MIO58KDbujoVs32lWOEItxSNbzNZE+CFFI7YkICk3Ph8y+JK8MhSUXqQDqrcZXxSD2
-	isfY8NIOdrMVnJsH6gmwfQE=
-X-Received: by 2002:a05:6102:2088:b0:4e2:86e6:3785 with SMTP id ada2fe7eead31-4e286e63831mr8631160137.5.1747849663596;
-        Wed, 21 May 2025 10:47:43 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFcgJMgOdIuV2JgSyNykYGAESv4TB7nALlmfCg5UZX+HHAGsDtiwbsJqHw7g+R8vvMr49hdzw==
-X-Received: by 2002:a05:6102:2088:b0:4e2:86e6:3785 with SMTP id ada2fe7eead31-4e286e63831mr8631149137.5.1747849663281;
-        Wed, 21 May 2025 10:47:43 -0700 (PDT)
-Received: from localhost.localdomain ([2804:1b3:a801:1fb:3066:58ce:cfdd:85bd])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87bec22768fsm9242464241.30.2025.05.21.10.47.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 10:47:42 -0700 (PDT)
-From: Leonardo Bras <leobras@redhat.com>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LG5x+gZy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747849978; x=1779385978;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ck7QO7Tkzrcu8Mua4xD9wFeA2GEWKuWofSfQBv1C58E=;
+  b=LG5x+gZyfPAoc5OEY1tn4XrtHZ99xK+2d6rvEUnj8jFgwzWeBOcO6asG
+   tYeOkD6F3F1Fo1NrnjqjxdJOnH2aNKO/6/c7W6s+ynWO2jyejcHHNGE3j
+   +YLpkca2Wfdt368jgx7FGcxh/VNkRoqFZsfvyfoUnmkYXIcU6avpoZwF9
+   kuNmUVB+3ELJouEO8w+IQe7nLkmVLweS56A6rUDjbVgGNZNhki/+uv9//
+   rw8WkjqRehzao8WzIcqL0dDrqzzmgGarNUYt7srlCQncinKozToE/jdvF
+   6fQm//+quBd6Ij6AnRMs7XzjsLzaeHwW2qmCcF4fIYIulXFnM11NKu70l
+   g==;
+X-CSE-ConnectionGUID: JSEXTBHKSYqsfnWFtGk3ew==
+X-CSE-MsgGUID: UmkPSB3MR22cGrbuPMPk0Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="53511758"
+X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
+   d="scan'208";a="53511758"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 10:52:57 -0700
+X-CSE-ConnectionGUID: lrlcPFBWQKmmWfCcdpzpSQ==
+X-CSE-MsgGUID: jy1ohMqXTrWggEDhB6C8Sw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
+   d="scan'208";a="140029698"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa010.jf.intel.com with ESMTP; 21 May 2025 10:52:54 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 9CF50368; Wed, 21 May 2025 20:52:52 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-parisc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org
+Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	Helge Deller <deller@gmx.de>,
 	Thomas Gleixner <tglx@linutronix.de>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Leonardo Bras <leobras@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/1] local_lock: Minor improvements of local_trylock*() documentation
-Date: Wed, 21 May 2025 14:47:26 -0300
-Message-ID: <20250521174726.578303-1-leobras@redhat.com>
-X-Mailer: git-send-email 2.49.0
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Denis Efremov <efremov@linux.com>,
+	Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH v1 1/1] floppy: Replace custom SZ_64K constant
+Date: Wed, 21 May 2025 20:50:56 +0300
+Message-ID: <20250521175246.1351596-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,65 +71,83 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Fix local_trylock_init() documentation, as it was mentioning the non-try
-helper instead, and use the opportunity to make clear the try_lock*() needs
-to receive a local_trylock_t variable as parameter.
+There are only two headers using the K_64 custom constant. Moreover,
+its usage tangles a code because the constant is defined in the C
+file, while users are in the headers. Replace it with well defined
+SZ_64K from sizes.h.
 
-Signed-off-by: Leonardo Bras <leobras@redhat.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
-v1: https://lore.kernel.org/all/20250505170244.253170-1-leobras@redhat.com/
-RFC: https://lore.kernel.org/all/20250430073610.163846-1-leobras@redhat.com/
 
+This should be placed on top of
+https://lore.kernel.org/r/20250521174152.1339379-1-andriy.shevchenko@linux.intel.com
+for the dependency reason. In case some changes are needed there,
+this one may be attached to v2 of the series.
 
- include/linux/local_lock.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/parisc/include/asm/floppy.h | 5 +++--
+ arch/x86/include/asm/floppy.h    | 3 ++-
+ drivers/block/floppy.c           | 2 --
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/local_lock.h b/include/linux/local_lock.h
-index 16a2ee4f8310b..d8d5e6cfa1151 100644
---- a/include/linux/local_lock.h
-+++ b/include/linux/local_lock.h
-@@ -45,38 +45,38 @@
- /**
-  * local_unlock_irqrestore - Release a per CPU local lock and restore
-  *			      interrupt flags
-  * @lock:	The lock variable
-  * @flags:      Interrupt flags to restore
-  */
- #define local_unlock_irqrestore(lock, flags)			\
- 	__local_unlock_irqrestore(lock, flags)
+diff --git a/arch/parisc/include/asm/floppy.h b/arch/parisc/include/asm/floppy.h
+index df20dbef3ada..f15b69fea901 100644
+--- a/arch/parisc/include/asm/floppy.h
++++ b/arch/parisc/include/asm/floppy.h
+@@ -8,9 +8,9 @@
+ #ifndef __ASM_PARISC_FLOPPY_H
+ #define __ASM_PARISC_FLOPPY_H
  
- /**
-- * local_lock_init - Runtime initialize a lock instance
-+ * local_trylock_init - Runtime initialize a local_trylock_t instance
-  */
- #define local_trylock_init(lock)	__local_trylock_init(lock)
++#include <linux/sizes.h>
+ #include <linux/vmalloc.h>
  
- /**
-  * local_trylock - Try to acquire a per CPU local lock
-- * @lock:	The lock variable
-+ * @lock:	The local_trylock_t variable
-  *
-  * The function can be used in any context such as NMI or HARDIRQ. Due to
-  * locking constrains it will _always_ fail to acquire the lock in NMI or
-  * HARDIRQ context on PREEMPT_RT.
+-
+ /*
+  * The DMA channel used by the floppy controller cannot access data at
+  * addresses >= 16MB
+@@ -20,7 +20,8 @@
+  * floppy accesses go through the track buffer.
   */
- #define local_trylock(lock)		__local_trylock(lock)
+ #define _CROSS_64KB(a,s,vdma) \
+-(!(vdma) && ((unsigned long)(a)/K_64 != ((unsigned long)(a) + (s) - 1) / K_64))
++	(!(vdma) && \
++	 ((unsigned long)(a) / SZ_64K != ((unsigned long)(a) + (s) - 1) / SZ_64K))
  
- /**
-  * local_trylock_irqsave - Try to acquire a per CPU local lock, save and disable
-  *			   interrupts if acquired
-- * @lock:	The lock variable
-+ * @lock:	The local_trylock_t variable
-  * @flags:	Storage for interrupt flags
-  *
-  * The function can be used in any context such as NMI or HARDIRQ. Due to
-  * locking constrains it will _always_ fail to acquire the lock in NMI or
-  * HARDIRQ context on PREEMPT_RT.
+ #define SW fd_routine[use_virtual_dma&1]
+ #define CSW fd_routine[can_use_virtual_dma & 1]
+diff --git a/arch/x86/include/asm/floppy.h b/arch/x86/include/asm/floppy.h
+index e76cb74bbed2..e7a244051c62 100644
+--- a/arch/x86/include/asm/floppy.h
++++ b/arch/x86/include/asm/floppy.h
+@@ -10,6 +10,7 @@
+ #ifndef _ASM_X86_FLOPPY_H
+ #define _ASM_X86_FLOPPY_H
+ 
++#include <linux/sizes.h>
+ #include <linux/vmalloc.h>
+ 
+ /*
+@@ -22,7 +23,7 @@
   */
- #define local_trylock_irqsave(lock, flags)			\
- 	__local_trylock_irqsave(lock, flags)
+ #define _CROSS_64KB(a, s, vdma)						\
+ 	(!(vdma) &&							\
+-	 ((unsigned long)(a)/K_64 != ((unsigned long)(a) + (s) - 1) / K_64))
++	 ((unsigned long)(a) / SZ_64K != ((unsigned long)(a) + (s) - 1) / SZ_64K))
  
- DEFINE_GUARD(local_lock, local_lock_t __percpu*,
+ #define SW fd_routine[use_virtual_dma & 1]
+ #define CSW fd_routine[can_use_virtual_dma & 1]
+diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
+index e97432032f01..f4dc46fd25ea 100644
+--- a/drivers/block/floppy.c
++++ b/drivers/block/floppy.c
+@@ -233,8 +233,6 @@ static unsigned short virtual_dma_port = 0x3f0;
+ irqreturn_t floppy_interrupt(int irq, void *dev_id);
+ static int set_dor(int fdc, char mask, char data);
+ 
+-#define K_64	0x10000		/* 64KB */
+-
+ /* the following is the mask of allowed drives. By default units 2 and
+  * 3 of both floppy controllers are disabled, because switching on the
+  * motor of these drives causes system hangs on some PCI computers. drive
 -- 
-2.49.0
+2.47.2
 
