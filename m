@@ -1,131 +1,226 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E89C414EC62;
-	Wed, 21 May 2025 17:45:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCA9227AC43
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 17:47:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747849515; cv=none; b=OqBGQ1Ey/OxcHdKaWtz9R8gPUfuo4QmOXFNqBJzJ8JtmPd80SJhOKBkLK3vQ+l/gW7zkoQdkYUdnozPVqLSBWnoTHfTRr6eAGLLMsSP2WjwBNtRqfOPu0FsQ+a+sJK5DpqXnlkg5pA0Wo5J51QBgdYYd5hvADCQFEgm0lcGz6A4=
+	t=1747849652; cv=none; b=gI9t9Y1TApPoa7dwSFqYePALOLF3yq0D5VmPCVbxudfWe53/enLC9ZphGbYAhiOgGTH5SyfZwHZvUKrFh38nGYk5DumABvCZUM+97WtKpHq5wsf/blevikDRJ62iL6YuJHOHg8UvcxdEB2c7wtL+jb9SEP3YdjlMkl2yil/0F0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747849515; c=relaxed/simple;
-	bh=V2RuI4M0Yg8yY4cQ1BGXlcPOPaGhDVK1o5Gd0zRxX6s=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Z7irmZa1236L9ez0JIw9FIbl6ItLAObycPrI2/Yh87OUNJK8t30aLYIvObAfizNrTZlvscm71Visa3BxNpaA9SLKy/oYM8sgfdqBOgsxUJmmaAgX3e2bP1xk51vIYv6wMDjp5NMeYoVIpR8ZVy/IiW+5iJG/rq7s7s21+a0KolM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RljfERsi; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RljfERsi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11E58C4CEE4;
-	Wed, 21 May 2025 17:45:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747849514;
-	bh=V2RuI4M0Yg8yY4cQ1BGXlcPOPaGhDVK1o5Gd0zRxX6s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=RljfERsiU7aFbLVKDq5ROTWlQtAUt3TSPdC13pCW+KAEi1HcbnZfIzw3wwGSzwIvd
-	 8P43hHIJ/fnuTagraQu1Md6zU6v4R6GHObnrJZFUN6dtwfTb04gdxf/91M/Hn0UAwv
-	 /du5mpef0IdqcKAfnJGQjBjx/Qfh3gyesyx9hjbLF6Hdfnnw0BWbkms44iLj/6VOYr
-	 VGeS1y4vsazQv4eVJFlNX0uQ2dbPGEWJvQwhaDS/NUbWRVk7XMMUHgnYliFWtqhh+o
-	 mkqtpf7voixiQLX/jAX3LS99ryQQoJ3LmPT0vHDX5P6pliW2+H16bQbFLIIeDuRUKh
-	 LA0173jC5vRdQ==
-Date: Wed, 21 May 2025 12:45:12 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>,
-	Karolina Stolarek <karolina.stolarek@oracle.com>,
-	Weinan Liu <wnliu@google.com>,
-	Martin Petersen <martin.petersen@oracle.com>,
-	Ben Fuller <ben.fuller@oracle.com>,
-	Drew Walton <drewwalton@microsoft.com>,
-	Anil Agrawal <anilagrawal@meta.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Lukas Wunner <lukas@wunner.de>, Sargun Dhillon <sargun@meta.com>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Kai-Heng Feng <kaihengf@nvidia.com>,
-	Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
-	Terry Bowman <terry.bowman@amd.com>,
-	Shiju Jose <shiju.jose@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-Subject: Re: [PATCH v7 13/17] PCI/AER: Make all pci_print_aer() log levels
- depend on error type
-Message-ID: <20250521174512.GA1426306@bhelgaas>
+	s=arc-20240116; t=1747849652; c=relaxed/simple;
+	bh=miR8lyLraFkbpXwdmCbNKFQvHvtAU72aRD8h6kj2LRI=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=mJ48SweOhqeraoZ9jWgSCRyHcLFZ9GRbSxtcuIFb8VrfyZ4FtFI+MSlkVucl8WGxqxeCFMetqEETTHMtszVh/ASC/ChOgoEbaeYVRtVcUzvr6YXqBs0M67nn5jJsoUhKwT43txb0d8OZ/yluscc2q2Rr94Tfw9zZh8aW48aj02g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3dc880e5fa1so10573255ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 10:47:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747849650; x=1748454450;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=GFRlxxr5q/oFiqmYoyxlbBF5QhEAtZh2WG5O57V5aw8=;
+        b=j1fV77ud0wQqVw9lbvySf9GJYdfBwtkzmq+GBx/ZYyRmLydcGjIz/yXuHsT4hZCYpe
+         GvztwvvqCS8zxv9HbR/lhsvfiqOdoXATn3D19tVUvd0cf4Kmc/vmcslc/bXEmUiUVNdr
+         fI3ZZqXDQcLAPdHm5raz18Ace8yFmpNA9godyflNIlZd/e/CbO6iiS68SHLTC4ffvUT2
+         RPCWBm3aAwOGsJ1Ttx5NnWdFn0VBjBtUldPQWt9QyHLcH64t2p13QqobvFR3vlaJqojB
+         KE8ngQpgCn9LMfTGgSadmus136n5V9HkgfjKPepCfPd6LpZxBaawPsI9yc0MSeLLWS2x
+         ur+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXoLAiQgKLmxPhMjfiIQ3+uL9w0gsEOgXpMcPpPGJJy9vLMwIW3Hv5ai4IZww1QaB5N4zN6Y+QaTcPq2XQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzeuZA0VZg1NNgWRZngZSwOZEkppPJ3/57jH/pEPleEWj7NsP4N
+	OPedzMGgk2RfPqt+cCg+CYWJEVVT/Aon+NiTWMra++3erMLZigOjXv8+pohMWPOadbNLSwSC8pV
+	1tZe4UydKmxdr99lxYKlOhNz+T5RPXbJp/AsXCDSF7ZGtdR45jYPzhmUJLNU=
+X-Google-Smtp-Source: AGHT+IHgAaPQ0lG4Qb3DlcMMS8TnBYFKFtvsykayCG6Bt+L/0n3F80q+nU1nO17Pm6I0dP6ygR87LyenQ3hXLXUX714DlADdD654
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250521105659.000064bd@huawei.com>
+X-Received: by 2002:a05:6e02:1745:b0:3d9:36a8:3d98 with SMTP id
+ e9e14a558f8ab-3db84296deemr261924655ab.2.1747849649857; Wed, 21 May 2025
+ 10:47:29 -0700 (PDT)
+Date: Wed, 21 May 2025 10:47:29 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <682e11b1.050a0220.ade60.09e5.GAE@google.com>
+Subject: [syzbot] [integrity?] [lsm?] INFO: task hung in process_measurement (3)
+From: syzbot <syzbot+cb9e66807bcb882cd0c5@syzkaller.appspotmail.com>
+To: bfoster@redhat.com, dmitry.kasatkin@gmail.com, eric.snowberg@oracle.com, 
+	jmorris@namei.org, kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
+	linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, paul@paul-moore.com, 
+	roberto.sassu@huawei.com, serge@hallyn.com, syzkaller-bugs@googlegroups.com, 
+	zohar@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, May 21, 2025 at 10:56:59AM +0100, Jonathan Cameron wrote:
-> On Tue, 20 May 2025 16:50:30 -0500
-> Bjorn Helgaas <helgaas@kernel.org> wrote:
-> 
-> > From: Karolina Stolarek <karolina.stolarek@oracle.com>
-> > 
-> > Some existing logs in pci_print_aer() log with error severity by default.
-> > Convert them to depend on error type (consistent with rest of AER logging).
-> > 
-> > Signed-off-by: Karolina Stolarek <karolina.stolarek@oracle.com>
-> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> > Tested-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
-> > Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> > Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> 
-> One comment inline. It is painful to have a non trivial comment
-> that says we didn't pass a parameter for 'reason X' when maybe
-> it would be simpler to just pass it and not care that it always
-> takes the same value?
+Hello,
 
-I agree.  I added a patch to pass the level to pcie_print_tlp_log().
+syzbot found the following issue on:
 
-> Either way this is fine.
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> 
-> > ---
-> >  drivers/pci/pcie/aer.c | 16 +++++++++++-----
-> >  1 file changed, 11 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> > index f5e9961d2c63..4cdcf0ebd86d 100644
-> > --- a/drivers/pci/pcie/aer.c
-> > +++ b/drivers/pci/pcie/aer.c
-> > @@ -788,15 +788,21 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
-> >  	layer = AER_GET_LAYER_ERROR(aer_severity, status);
-> >  	agent = AER_GET_AGENT(aer_severity, status);
-> >  
-> > -	pci_err(dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n", status, mask);
-> > +	aer_printk(info.level, dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n",
-> > +		   status, mask);
-> >  	__aer_print_error(dev, &info);
-> > -	pci_err(dev, "aer_layer=%s, aer_agent=%s\n",
-> > -		aer_error_layer[layer], aer_agent_string[agent]);
-> > +	aer_printk(info.level, dev, "aer_layer=%s, aer_agent=%s\n",
-> > +		   aer_error_layer[layer], aer_agent_string[agent]);
-> >  
-> >  	if (aer_severity != AER_CORRECTABLE)
-> > -		pci_err(dev, "aer_uncor_severity: 0x%08x\n",
-> > -			aer->uncor_severity);
-> > +		aer_printk(info.level, dev, "aer_uncor_severity: 0x%08x\n",
-> > +			   aer->uncor_severity);
-> >  
-> > +	/*
-> > +	 * pcie_print_tlp_log() uses KERN_ERR, but we only call it when
-> > +	 * tlp_header_valid is set, and info.level is always KERN_ERR in
-> > +	 * that case.
-> 
-> I wonder if it's easier to just pass the level in than have the
-> comment?
-> 
-> > +	 */
-> >  	if (tlp_header_valid)
-> >  		pcie_print_tlp_log(dev, &aer->header_log, dev_fmt("  "));
-> >  }
-> 
+HEAD commit:    172a9d94339c Merge tag '6.15-rc6-smb3-client-fixes' of git..
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=142a5ef4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ea35e429f965296e
+dashboard link: https://syzkaller.appspot.com/bug?extid=cb9e66807bcb882cd0c5
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16836e70580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1617a2d4580000
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/c7d5b496fd25/disk-172a9d94.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/965a0ad50b10/vmlinux-172a9d94.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/62675d801af8/bzImage-172a9d94.xz
+mounted in repro #1: https://storage.googleapis.com/syzbot-assets/a11594a5d459/mount_0.gz
+mounted in repro #2: https://storage.googleapis.com/syzbot-assets/84492c682353/mount_4.gz
+
+The issue was bisected to:
+
+commit 1d16c605cc55ef26f0c65b362665a6c99080ccbc
+Author: Kent Overstreet <kent.overstreet@linux.dev>
+Date:   Thu Nov 9 19:22:46 2023 +0000
+
+    bcachefs: Disk space accounting rewrite
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13f61e70580000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=100e1e70580000
+console output: https://syzkaller.appspot.com/x/log.txt?x=17f61e70580000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+cb9e66807bcb882cd0c5@syzkaller.appspotmail.com
+Fixes: 1d16c605cc55 ("bcachefs: Disk space accounting rewrite")
+
+INFO: task syz-executor236:5862 blocked for more than 143 seconds.
+      Not tainted 6.15.0-rc6-syzkaller-00278-g172a9d94339c #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:syz-executor236 state:D stack:26936 pid:5862  tgid:5849  ppid:5845   task_flags:0x400140 flags:0x00004006
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5382 [inline]
+ __schedule+0x168f/0x4c70 kernel/sched/core.c:6767
+ __schedule_loop kernel/sched/core.c:6845 [inline]
+ schedule+0x165/0x360 kernel/sched/core.c:6860
+ schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6917
+ rwsem_down_write_slowpath+0xbec/0x1030 kernel/locking/rwsem.c:1176
+ __down_write_common kernel/locking/rwsem.c:1304 [inline]
+ __down_write kernel/locking/rwsem.c:1313 [inline]
+ down_write+0x1ab/0x1f0 kernel/locking/rwsem.c:1578
+ inode_lock include/linux/fs.h:867 [inline]
+ process_measurement+0x3d8/0x1a40 security/integrity/ima/ima_main.c:260
+ ima_file_check+0xd7/0x120 security/integrity/ima/ima_main.c:613
+ security_file_post_open+0xbb/0x290 security/security.c:3130
+ do_open fs/namei.c:3882 [inline]
+ path_openat+0x2f26/0x3830 fs/namei.c:4039
+ do_filp_open+0x1fa/0x410 fs/namei.c:4066
+ do_sys_openat2+0x121/0x1c0 fs/open.c:1429
+ do_sys_open fs/open.c:1444 [inline]
+ __do_sys_creat fs/open.c:1522 [inline]
+ __se_sys_creat fs/open.c:1516 [inline]
+ __x64_sys_creat+0x8f/0xc0 fs/open.c:1516
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fd31f9f4ef9
+RSP: 002b:00007fd31f95f218 EFLAGS: 00000246 ORIG_RAX: 0000000000000055
+RAX: ffffffffffffffda RBX: 00007fd31fa9b6e8 RCX: 00007fd31f9f4ef9
+RDX: ffffffffffffffb0 RSI: c9028ba210c11e9b RDI: 00002000000000c0
+RBP: 00007fd31fa9b6e0 R08: 0000000000000000 R09: 0000000000000000
+R10: 00007ffcb62f60c7 R11: 0000000000000246 R12: 00007fd31fa67314
+R13: 00002000000000c0 R14: 0030656c69662f2e R15: 00007ffcb62f60c8
+ </TASK>
+
+Showing all locks held in the system:
+1 lock held by khungtaskd/31:
+ #0: ffffffff8df3dce0 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
+ #0: ffffffff8df3dce0 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:841 [inline]
+ #0: ffffffff8df3dce0 (rcu_read_lock){....}-{1:3}, at: debug_show_all_locks+0x2e/0x180 kernel/locking/lockdep.c:6764
+1 lock held by kworker/u8:3/53:
+ #0: ffff8880b88399d8 (&rq->__lock){-.-.}-{2:2}, at: raw_spin_rq_lock_nested+0x2a/0x140 kernel/sched/core.c:605
+1 lock held by klogd/5178:
+ #0: ffff8880b88399d8 (&rq->__lock){-.-.}-{2:2}, at: raw_spin_rq_lock_nested+0x2a/0x140 kernel/sched/core.c:605
+2 locks held by getty/5577:
+ #0: ffff8880340120a0 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:243
+ #1: ffffc900036ec2f0 (&ldata->atomic_read_lock){+.+.}-{4:4}, at: n_tty_read+0x43e/0x1400 drivers/tty/n_tty.c:2222
+3 locks held by syz-executor236/5850:
+ #0: ffff888078b629b8 (&f->f_pos_lock){+.+.}-{4:4}, at: fdget_pos+0x247/0x320 fs/file.c:1213
+ #1: ffff88823bfbe420 (sb_writers#9){.+.+}-{0:0}, at: file_start_write include/linux/fs.h:3041 [inline]
+ #1: ffff88823bfbe420 (sb_writers#9){.+.+}-{0:0}, at: vfs_write+0x211/0xa90 fs/read_write.c:680
+ #2: ffff8880761b08e0 (&sb->s_type->i_mutex_key#14){+.+.}-{4:4}, at: inode_lock include/linux/fs.h:867 [inline]
+ #2: ffff8880761b08e0 (&sb->s_type->i_mutex_key#14){+.+.}-{4:4}, at: bch2_direct_write+0x267/0x2d50 fs/bcachefs/fs-io-direct.c:612
+2 locks held by syz-executor236/5862:
+ #0: ffff88823bfbe420 (sb_writers#9){.+.+}-{0:0}, at: mnt_want_write+0x41/0x90 fs/namespace.c:556
+ #1: ffff8880761b08e0 (&sb->s_type->i_mutex_key#14){+.+.}-{4:4}, at: inode_lock include/linux/fs.h:867 [inline]
+ #1: ffff8880761b08e0 (&sb->s_type->i_mutex_key#14){+.+.}-{4:4}, at: process_measurement+0x3d8/0x1a40 security/integrity/ima/ima_main.c:260
+
+=============================================
+
+NMI backtrace for cpu 0
+CPU: 0 UID: 0 PID: 31 Comm: khungtaskd Not tainted 6.15.0-rc6-syzkaller-00278-g172a9d94339c #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
+ nmi_cpu_backtrace+0x39e/0x3d0 lib/nmi_backtrace.c:113
+ nmi_trigger_cpumask_backtrace+0x17a/0x300 lib/nmi_backtrace.c:62
+ trigger_all_cpu_backtrace include/linux/nmi.h:158 [inline]
+ check_hung_uninterruptible_tasks kernel/hung_task.c:274 [inline]
+ watchdog+0xfee/0x1030 kernel/hung_task.c:437
+ kthread+0x70e/0x8a0 kernel/kthread.c:464
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+Sending NMI from CPU 0 to CPUs 1:
+NMI backtrace for cpu 1
+CPU: 1 UID: 0 PID: 0 Comm: swapper/1 Not tainted 6.15.0-rc6-syzkaller-00278-g172a9d94339c #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+RIP: 0010:pv_native_safe_halt+0x13/0x20 arch/x86/kernel/paravirt.c:81
+Code: 43 d4 02 00 cc cc cc 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 66 90 0f 00 2d a3 9f 18 00 f3 0f 1e fa fb f4 <e9> 18 d4 02 00 cc cc cc cc cc cc cc cc 90 90 90 90 90 90 90 90 90
+RSP: 0018:ffffc90000197de0 EFLAGS: 000002c6
+RAX: a55f7e0638390b00 RBX: ffffffff81977048 RCX: a55f7e0638390b00
+RDX: 0000000000000001 RSI: ffffffff8d73a84c RDI: ffffffff8bc12000
+RBP: ffffc90000197f20 R08: ffff8880b8932b5b R09: 1ffff1101712656b
+R10: dffffc0000000000 R11: ffffed101712656c R12: ffffffff8f7e0670
+R13: 0000000000000001 R14: 0000000000000001 R15: 1ffff110038dcb40
+FS:  0000000000000000(0000) GS:ffff8881261f6000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000055b5f126d168 CR3: 000000000dd38000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ arch_safe_halt arch/x86/include/asm/paravirt.h:107 [inline]
+ default_idle+0x13/0x20 arch/x86/kernel/process.c:748
+ default_idle_call+0x74/0xb0 kernel/sched/idle.c:117
+ cpuidle_idle_call kernel/sched/idle.c:185 [inline]
+ do_idle+0x1e8/0x510 kernel/sched/idle.c:325
+ cpu_startup_entry+0x44/0x60 kernel/sched/idle.c:423
+ start_secondary+0x101/0x110 arch/x86/kernel/smpboot.c:315
+ common_startup_64+0x13e/0x147
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
