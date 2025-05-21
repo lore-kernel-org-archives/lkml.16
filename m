@@ -1,297 +1,165 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C4011EDA11
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 15:05:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B92B18B492
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 15:05:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747839902; cv=none; b=NpA8WemjtdN9UwFNlSf/oChx66w/iBPAXIszpCMlDbpVSRTghf0RRy3F8nttrLpDsd4fb+ERQs5qglnFrPzT/BBhflZxNYi9HFNO1eWw+qk9guWpaj9h4eMD/YSxKh1MJc7yCcegh1L7WGmz4JiOptkZcYCCnp8i51Z1uCJnhNk=
+	t=1747839912; cv=none; b=GI4UkjEi+YH+FsN7AACZZmqv45BfbXQcbAYsKpaF0D36cdY6o0X1O8Zskq5MHpOO5ISe6q3wa4LZa4AUiyroZ1Ct5f8TMSpHl8HMWFbXiGFIEPJczlJqA5hWpHnFXOBi/uV9ac3gd90MVv8/Az6fzgYvwdagw5fDq0SoIO9NB5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747839902; c=relaxed/simple;
-	bh=ywESkurKr0yXlByOEVgWxFEfUZ2zhLZgUAYNni6pUTA=;
+	s=arc-20240116; t=1747839912; c=relaxed/simple;
+	bh=RKB2z0hQP/qo6VCyUDMpywyny5OcLY+qjiNZEUbDqQ4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=jLCyjyDI0chbGpma6BJJrs0CY5c5dNtei8SJ2To8rqZhIiTLOovQ4oWRTmPcCUi/cvXDsup5amL4P92cU0ve/08ChRACNwRnDiqcikYxkwmUQzucHIVZPvnGvlG/opICH763EFj2gbQLRz3B4oHMXlXh4qXzL8vsGE84Nhu5a1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rEtCAQyJ; arc=none smtp.client-ip=209.85.128.74
+	 To:Cc:Content-Type; b=KbN9u2OdJvD/VXqXJw/9tvDM0HCrnuXAQpDryGoBQc3u/NVg2on814s5MIlekYeagnPTWcY5fe9cucAx5v18IW/BMinUoGRDaec/S21DPK8bbCpgvhgUUvzChXCTHDQOe6V4zsc7sj57WZKp8OION6kkF8dku8WeyzLEzCCjFDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jLvQsI+a; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rEtCAQyJ"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43d209dc2d3so43252835e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 08:05:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jLvQsI+a"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b16b35ea570so6722285a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 08:05:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747839899; x=1748444699; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747839910; x=1748444710; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=PrgSgdosYNgER99wbA+p3mQJNyiihN5ynwjskXOpwxQ=;
-        b=rEtCAQyJP5cWGl1KNxQD5f1vlPrY6Jt+eWQviNc7NR7ARuIHvw5RcaqINNSlRc1Dre
-         bJaFfPfY3bKawE8mZkRukhtTwuH0LC9ptU2N8p5WlXSOCtVTWCrqV3xrlACXtPBgdzsX
-         e0+uhHysZIqRtpklMCXBzkhO1/C/HiIbPhdarsgo50ReAdqaJ4SN1zGQkrPEIj4u7nZE
-         AN7KBm6AWROGiQp4pLsFJ3Q/BxG2MWAXwfeF1Bi3gpKpjUfVeTVQQof6IaKFfdHkcO6H
-         KgOc4/URcTDnjoEvqpgFGY5zQrM/HF0gDPG0H6QKjHr85VjGBm05NEj/BgFu4J5jDnfj
-         Ki5Q==
+        bh=zVleagUiVHw/5vhkBi8LDSAfw55ruRJcasWRJK+un3M=;
+        b=jLvQsI+awZL+vflIDEkAZoFJ95fpqQfmyhhnMJuB2Gj0kGhVPa8Vlasz6SLmH4wirU
+         DFHQVjTBm+6L8UyJDD756Cvgz0kSPr6xuXBGcOHIKPXn7+e+kg0BMDDFGde2IKeBMa1U
+         drn/MfNbuDc02al4Wx4SXGi5gYVpv6MkeE0fjA8Q5x6cPd++0HfXp+gyWQtM5gRODF4q
+         gBP7YNeDam1K+TYQcS1TMiTLpGEHbLjU2w9XzqQBfRJ2TYk8a4JS6EkSP0jkl/nXE/Yy
+         i68WNdmToSOmxGVPFApl4yOanbbz6wvy5oIAtR058o87ugq54IFWpxt7teOHIzN4BDLi
+         +vmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747839899; x=1748444699;
+        d=1e100.net; s=20230601; t=1747839910; x=1748444710;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PrgSgdosYNgER99wbA+p3mQJNyiihN5ynwjskXOpwxQ=;
-        b=gdIC3HBk53SuQzR7HBFFyIhpI0rvSYI3er443MUfZvkYyuKDFG9RwyityXB6suN+t4
-         PSHIqvyb7ZIt9hAy+xcXTJWTwmKJigyq2iDPEJjEmpyws3zdfgMA5WwC64FjSZrrzLHN
-         o1cCgjC8ZMZxq4ePlQuIFqzAYYQI5Jj3gRFSoRJByj52Zzt/wZR3qqEE+xAbvdxbog0E
-         2IenrHyB4gQTm5HH752ZjHY1fo6Yo5eX+NgGjfQxxWF8loN2sIQbzm0mr4vkE6Ff43Xc
-         puWYQr4q7zyubbOtlnrBw/qlYWEe2xabaebGCUcMeG7RrovX59bRGm2ZYVFAysQ2jhV9
-         1KoA==
-X-Forwarded-Encrypted: i=1; AJvYcCWst1Zk9i+eP7vg7XpYvaSOLiY119GmuviPUvsUI3cMA7jdvt1mRPfXA/IQazP+ZlWAqz2qvKbx32CRwfY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhRyn6wuFKdCAxyMoyz+z62vClNMu8AJAm0NmLa/kmkjl/bTvh
-	IN32pfLfBHyIJKhHTGwxy5OFe/QoALoLwJw7jHLvC1j403+y/gZLSyl2fabolmo2a2IqS/UOqQx
-	uVNiJoouf+g==
-X-Google-Smtp-Source: AGHT+IFCk6Cdl+XpwT5/8fDVsK/FiGkeFImvLe+eJVfYABO4MP2OYT1Q5b8KkphKSAyYoP+T+WtvwdUSE5oD
-X-Received: from wmbem23.prod.google.com ([2002:a05:600c:8217:b0:442:e19a:2ac9])
- (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:4449:b0:441:ac58:ead5
- with SMTP id 5b1f17b1804b1-442fd67591fmr229849425e9.31.1747839898773; Wed, 21
- May 2025 08:04:58 -0700 (PDT)
-Date: Wed, 21 May 2025 17:04:30 +0200
-In-Reply-To: <cover.1747839857.git.dvyukov@google.com>
+        bh=zVleagUiVHw/5vhkBi8LDSAfw55ruRJcasWRJK+un3M=;
+        b=DcYa+6bXrqA7RVQYAQkZfmXmWHbTrHBmQQl5fNh1hdn76pi3aKh6eV56LAeKRSfmFb
+         s+tGrBAb8v3CZ4iup6zGvq0ITDWTikkXrRpcfpdk0LgkYAFDkhrLFLawBltJqmlGlZZ/
+         X6US8QVkTOSjxTaNXRZhfkcjGP028GM0eIKYaz1Rntp89nqHJsfQ79ges1NXA8xNa1+A
+         glbcDGfM4vYSc4ByzccAq1mXXCPxZvnV7ydLZ4mNdt2sNa65Ntn6IZWcStAlAMprpiwr
+         ZdeUlR0YOhtHP1KCjYoEpxqf91/DRBWPtjC3Ahioy5VuxpfbXcw110mwj4CtDgahNskJ
+         8GxA==
+X-Forwarded-Encrypted: i=1; AJvYcCU1dvjD/auT0gSKStGbC4Gv31+ZfYVLrZQM0Mzu3p2/mwOxKLGdt6851rnezyUVHxQEyDb5EubuuCCHd7s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwO0FKwNKgiUKIfO9i5JdqsfaTmvwETe199XCYCFurTpNub87YD
+	mWVxEhwn4rLZIzKyjXh7mVJttQMEJXVQfcCMyA3DKOKKz951HXFe2ApFmEUvzdnwMbnrEltbMfB
+	1ByPxOA==
+X-Google-Smtp-Source: AGHT+IHGSpJmNv8SAS14hmKKh6ZIg5876VKcdbgoWSZxr3DEmUJT2DSMLR2M8INJy/4FyAqIRr98hcZr/w0=
+X-Received: from pgbfe5.prod.google.com ([2002:a05:6a02:2885:b0:b26:eac3:3979])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:103:b0:1fe:90c5:7d00
+ with SMTP id adf61e73a8af0-216219c82fcmr35252646637.28.1747839910386; Wed, 21
+ May 2025 08:05:10 -0700 (PDT)
+Date: Wed, 21 May 2025 08:05:09 -0700
+In-Reply-To: <BN7PR02MB4148503E1599C1310F408863D49EA@BN7PR02MB4148.namprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <cover.1747839857.git.dvyukov@google.com>
-X-Mailer: git-send-email 2.49.0.1143.g0be31eac6b-goog
-Message-ID: <8df4b50b176b073550bab5b3f3faff752c5f8e17.1747839857.git.dvyukov@google.com>
-Subject: [PATCH v3 3/3] selftests: Add tests for PR_SYS_DISPATCH_INCLUSIVE_ON
-From: Dmitry Vyukov <dvyukov@google.com>
-To: krisman@collabora.com, tglx@linutronix.de, luto@kernel.org, 
-	peterz@infradead.org, keescook@chromium.org, gregory.price@memverge.com
-Cc: Dmitry Vyukov <dvyukov@google.com>, Marco Elver <elver@google.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+References: <20250519185514.2678456-1-seanjc@google.com> <20250519185514.2678456-9-seanjc@google.com>
+ <20250520191816.GJ16434@noisy.programming.kicks-ass.net> <aC0AEJX0FIMl9lDy@google.com>
+ <20250521114233.GC39944@noisy.programming.kicks-ass.net> <BN7PR02MB4148503E1599C1310F408863D49EA@BN7PR02MB4148.namprd02.prod.outlook.com>
+Message-ID: <aC3rpZChhtw4NODS@google.com>
+Subject: Re: [PATCH v2 08/12] sched/wait: Drop WQ_FLAG_EXCLUSIVE from add_wait_queue_priority()
+From: Sean Christopherson <seanjc@google.com>
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Nuno Das Neves <nunodasneves@linux.microsoft.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Ingo Molnar <mingo@redhat.com>, 
+	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
+	Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
+	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>, K Prateek Nayak <kprateek.nayak@amd.com>, 
+	David Matlack <dmatlack@google.com>, Juergen Gross <jgross@suse.com>, 
+	Stefano Stabellini <sstabellini@kernel.org>, 
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+Content-Type: text/plain; charset="us-ascii"
 
-Add tests for PR_SYS_DISPATCH_INCLUSIVE_ON correct/incorrect args,
-and a test that ensures that the specified range is respected
-by both PR_SYS_DISPATCH_EXCLUSIVE_ON and PR_SYS_DISPATCH_INCLUSIVE_ON.
+On Wed, May 21, 2025, Michael Kelley wrote:
+> From: Peter Zijlstra <peterz@infradead.org> Sent: Wednesday, May 21, 2025 4:43 AM
+> > 
+> > On Tue, May 20, 2025 at 03:20:00PM -0700, Sean Christopherson wrote:
+> > > On Tue, May 20, 2025, Peter Zijlstra wrote:
+> > > > On Mon, May 19, 2025 at 11:55:10AM -0700, Sean Christopherson wrote:
+> > > > > Drop the setting of WQ_FLAG_EXCLUSIVE from add_wait_queue_priority() to
+> > > > > differentiate it from add_wait_queue_priority_exclusive().  The one and
+> > > > > only user add_wait_queue_priority(), Xen privcmd's irqfd_wakeup(),
+> > > > > unconditionally returns '0', i.e. doesn't actually operate in exclusive
+> > > > > mode.
+> > > >
+> > > > I find:
+> > > >
+> > > > drivers/hv/mshv_eventfd.c:      add_wait_queue_priority(wqh, &irqfd->irqfd_wait);
+> > > > drivers/xen/privcmd.c:  add_wait_queue_priority(wqh, &kirqfd->wait);
+> > > >
+> > > > I mean, it might still be true and all, but hyperv seems to also use
+> > > > this now.
+> > >
+> > > Oh FFS, another "heavily inspired by KVM".  I should have bribed someone to take
+> > > this series when I had the chance.  *sigh*
+> > >
+> > > Unfortunately, the Hyper-V code does actually operate in exclusive mode.  Unless
+> > > you have a better idea, I'll tweak the series to:
+> > >
+> > >   1. Drop WQ_FLAG_EXCLUSIVE from add_wait_queue_priority() and have the callers
+> > >      explicitly set the flag,
+> > >   2. Add a patch to drop WQ_FLAG_EXCLUSIVE from Xen privcmd entirely.
+> > >   3. Introduce add_wait_queue_priority_exclusive() and switch KVM to use it.
+> > >
+> > > That has an added bonus of introducing the Xen change in a dedicated patch, i.e.
+> > > is probably a sequence anyways.
+> > >
+> > > Alternatively, I could rewrite the Hyper-V code a la the KVM changes, but I'm not
+> > > feeling very charitable at the moment (the complete lack of documentation for
+> > > their ioctl doesn't help).
+> > 
+> > Works for me. Michael is typically very responsive wrt hyperv (but you
+> > probably know this).
+> 
+> I can't be much help on this issue. This Hyper-V code is for Linux running in
+> the root partition (i.e., "dom0") and I don't have a setup where I can run and
+> test that configuration.
+> 
+> Adding Nuno Das Neves from Microsoft for his thoughts.
 
-Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
-Cc: Gabriel Krisman Bertazi <krisman@collabora.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Gregory Price <gregory.price@memverge.com>
-Cc: Marco Elver <elver@google.com>
-Cc: linux-kernel@vger.kernel.org
+A slightly more helpful, less ranty explanation of what's going on:
 
----
-Changes in v3:
- - rework tests for the new PR_SYS_DISPATCH_INCLUSIVE_ON
+KVM's irqfd code, which was pretty copied verbatim for Hyper-V partitions, disallows
+binding an eventfd to a single VM multiple times, but doesn't handle the scenario
+where an eventfd is bound to multiple VMs, i.e. to multiple partitions.  What's
+particular "fun" about such a scenario is that WQ_FLAG_EXCLUSIVE+WQ_FLAG_PRIORITY
+means only the first VM/partition that bound the eventfd will be notified.
 
-Changes in v2:
- - add tests for 0-sized range
- - change range setup in the test to be fatal
----
- .../syscall_user_dispatch/sud_test.c          | 94 +++++++++++++++----
- 1 file changed, 74 insertions(+), 20 deletions(-)
+For KVM-based setups, this is a legitimate concern because KVM supports intra-host
+migration.  E.g. to upgrade the userspace VMM, a guest can be "migrated" from the
+old VMM's "struct kvm" instance to the new VMM's "struct kvm".  If userspace mucks
+up the migration, e.g. doesn't *unbind* the eventfd from the old VM(M) before
+resuming the guest in the new VM(M), KVM will effectively drop virtual IRQs.
 
-diff --git a/tools/testing/selftests/syscall_user_dispatch/sud_test.c b/tools/testing/selftests/syscall_user_dispatch/sud_test.c
-index 48cf01aeec3e7..2eb2c06303f2a 100644
---- a/tools/testing/selftests/syscall_user_dispatch/sud_test.c
-+++ b/tools/testing/selftests/syscall_user_dispatch/sud_test.c
-@@ -10,6 +10,8 @@
- #include <sys/sysinfo.h>
- #include <sys/syscall.h>
- #include <signal.h>
-+#include <stdbool.h>
-+#include <stdlib.h>
+This is purely a hardening exercise, i.e. isn't required for correctness, assuming
+userspace userspace is bug-free.  The KVM patches surrounding this patch show how
+I am planning on ensuring a 1:1 eventfd:VM binding.
+
+To not block the KVM hardening on Hyper-V's eventfd usage, I am planning on making
+this change in the next version of the series:
+
+diff --git a/drivers/hv/mshv_eventfd.c b/drivers/hv/mshv_eventfd.c
+index 8dd22be2ca0b..b348928871c2 100644
+--- a/drivers/hv/mshv_eventfd.c
++++ b/drivers/hv/mshv_eventfd.c
+@@ -368,6 +368,14 @@ static void mshv_irqfd_queue_proc(struct file *file, wait_queue_head_t *wqh,
+                        container_of(polltbl, struct mshv_irqfd, irqfd_polltbl);
  
- #include <asm/unistd.h>
- #include "../kselftest_harness.h"
-@@ -17,11 +19,15 @@
- #ifndef PR_SET_SYSCALL_USER_DISPATCH
- # define PR_SET_SYSCALL_USER_DISPATCH	59
- # define PR_SYS_DISPATCH_OFF	0
--# define PR_SYS_DISPATCH_ON	1
- # define SYSCALL_DISPATCH_FILTER_ALLOW	0
- # define SYSCALL_DISPATCH_FILTER_BLOCK	1
- #endif
- 
-+#ifndef PR_SYS_DISPATCH_EXCLUSIVE_ON
-+# define PR_SYS_DISPATCH_EXCLUSIVE_ON	1
-+# define PR_SYS_DISPATCH_INCLUSIVE_ON	2
-+#endif
+        irqfd->irqfd_wqh = wqh;
 +
- #ifndef SYS_USER_DISPATCH
- # define SYS_USER_DISPATCH	2
- #endif
-@@ -65,7 +71,7 @@ TEST_SIGNAL(dispatch_trigger_sigsys, SIGSYS)
- 	ret = sysinfo(&info);
- 	ASSERT_EQ(0, ret);
- 
--	ret = prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_ON, 0, 0, &sel);
-+	ret = prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_EXCLUSIVE_ON, 0, 0, &sel);
- 	ASSERT_EQ(0, ret) {
- 		TH_LOG("Kernel does not support CONFIG_SYSCALL_USER_DISPATCH");
- 	}
-@@ -118,8 +124,8 @@ TEST(bad_prctl_param)
- 	/* Valid parameter */
- 	prctl_valid(_metadata, op, 0x0, 0x0, 0x0);
- 
--	/* PR_SYS_DISPATCH_ON */
--	op = PR_SYS_DISPATCH_ON;
-+	/* PR_SYS_DISPATCH_EXCLUSIVE_ON */
-+	op = PR_SYS_DISPATCH_EXCLUSIVE_ON;
- 
- 	/* Dispatcher region is bad (offset > 0 && len == 0) */
- 	prctl_invalid(_metadata, op, 0x1, 0x0, &sel, EINVAL);
-@@ -131,12 +137,24 @@ TEST(bad_prctl_param)
- 	/*
- 	 * Dispatcher range overflows unsigned long
- 	 */
--	prctl_invalid(_metadata, PR_SYS_DISPATCH_ON, 1, -1L, &sel, EINVAL);
-+	prctl_invalid(_metadata, PR_SYS_DISPATCH_EXCLUSIVE_ON, 1, -1L, &sel, EINVAL);
- 
- 	/*
- 	 * Allowed range overflows usigned long
- 	 */
--	prctl_invalid(_metadata, PR_SYS_DISPATCH_ON, -1L, 0x1, &sel, EINVAL);
-+	prctl_invalid(_metadata, PR_SYS_DISPATCH_EXCLUSIVE_ON, -1L, 0x1, &sel, EINVAL);
-+
-+	/* 0 len should fail for PR_SYS_DISPATCH_INCLUSIVE_ON */
-+	prctl_invalid(_metadata, PR_SYS_DISPATCH_INCLUSIVE_ON, 1, 0, 0, EINVAL);
-+
-+	/* Range wrap-around should fail */
-+	prctl_invalid(_metadata, PR_SYS_DISPATCH_INCLUSIVE_ON, -1L, 2, 0, EINVAL);
-+
-+	/* Normal range shouldn't fail */
-+	prctl_valid(_metadata, PR_SYS_DISPATCH_INCLUSIVE_ON, 2, 3, 0);
-+
-+	/* Invalid selector */
-+	prctl_invalid(_metadata, PR_SYS_DISPATCH_INCLUSIVE_ON, 2, 3, (void *) -1, EFAULT);
++       /*
++        * TODO: Ensure there isn't already an exclusive, priority waiter, e.g.
++        * that the irqfd isn't already bound to another partition.  Only the
++        * first exclusive waiter encountered will be notified, and
++        * add_wait_queue_priority() doesn't enforce exclusivity.
++        */
++       irqfd->irqfd_wait.flags |= WQ_FLAG_EXCLUSIVE;
+        add_wait_queue_priority(wqh, &irqfd->irqfd_wait);
  }
- 
- /*
-@@ -147,11 +165,13 @@ char glob_sel;
- int nr_syscalls_emulated;
- int si_code;
- int si_errno;
-+unsigned long syscall_addr;
- 
- static void handle_sigsys(int sig, siginfo_t *info, void *ucontext)
- {
- 	si_code = info->si_code;
- 	si_errno = info->si_errno;
-+	syscall_addr = (unsigned long)info->si_call_addr;
- 
- 	if (info->si_syscall == MAGIC_SYSCALL_1)
- 		nr_syscalls_emulated++;
-@@ -174,31 +194,34 @@ static void handle_sigsys(int sig, siginfo_t *info, void *ucontext)
- #endif
- }
- 
--TEST(dispatch_and_return)
-+int setup_sigsys_handler(void)
- {
--	long ret;
- 	struct sigaction act;
- 	sigset_t mask;
- 
--	glob_sel = 0;
--	nr_syscalls_emulated = 0;
--	si_code = 0;
--	si_errno = 0;
--
- 	memset(&act, 0, sizeof(act));
- 	sigemptyset(&mask);
--
- 	act.sa_sigaction = handle_sigsys;
- 	act.sa_flags = SA_SIGINFO;
- 	act.sa_mask = mask;
-+	return sigaction(SIGSYS, &act, NULL);
-+}
- 
--	ret = sigaction(SIGSYS, &act, NULL);
--	ASSERT_EQ(0, ret);
-+TEST(dispatch_and_return)
-+{
-+	long ret;
-+
-+	glob_sel = 0;
-+	nr_syscalls_emulated = 0;
-+	si_code = 0;
-+	si_errno = 0;
-+
-+	ASSERT_EQ(0, setup_sigsys_handler());
- 
- 	/* Make sure selector is good prior to prctl. */
- 	SYSCALL_DISPATCH_OFF(glob_sel);
- 
--	ret = prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_ON, 0, 0, &glob_sel);
-+	ret = prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_EXCLUSIVE_ON, 0, 0, &glob_sel);
- 	ASSERT_EQ(0, ret) {
- 		TH_LOG("Kernel does not support CONFIG_SYSCALL_USER_DISPATCH");
- 	}
-@@ -254,7 +277,7 @@ TEST_SIGNAL(bad_selector, SIGSYS)
- 	/* Make sure selector is good prior to prctl. */
- 	SYSCALL_DISPATCH_OFF(glob_sel);
- 
--	ret = prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_ON, 0, 0, &glob_sel);
-+	ret = prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_EXCLUSIVE_ON, 0, 0, &glob_sel);
- 	ASSERT_EQ(0, ret) {
- 		TH_LOG("Kernel does not support CONFIG_SYSCALL_USER_DISPATCH");
- 	}
-@@ -278,7 +301,7 @@ TEST(disable_dispatch)
- 	struct sysinfo info;
- 	char sel = 0;
- 
--	ret = prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_ON, 0, 0, &sel);
-+	ret = prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_EXCLUSIVE_ON, 0, 0, &sel);
- 	ASSERT_EQ(0, ret) {
- 		TH_LOG("Kernel does not support CONFIG_SYSCALL_USER_DISPATCH");
- 	}
-@@ -310,7 +333,7 @@ TEST(direct_dispatch_range)
- 	 * Instead of calculating libc addresses; allow the entire
- 	 * memory map and lock the selector.
- 	 */
--	ret = prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_ON, 0, -1L, &sel);
-+	ret = prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_EXCLUSIVE_ON, 0, -1L, &sel);
- 	ASSERT_EQ(0, ret) {
- 		TH_LOG("Kernel does not support CONFIG_SYSCALL_USER_DISPATCH");
- 	}
-@@ -323,4 +346,35 @@ TEST(direct_dispatch_range)
- 	}
- }
- 
-+static void test_range(struct __test_metadata *_metadata,
-+		       unsigned long op, unsigned long off,
-+		       unsigned long size, bool dispatch)
-+{
-+	nr_syscalls_emulated = 0;
-+	SYSCALL_DISPATCH_OFF(glob_sel);
-+	EXPECT_EQ(0, prctl(PR_SET_SYSCALL_USER_DISPATCH, op, off, size, &glob_sel));
-+	SYSCALL_DISPATCH_ON(glob_sel);
-+	if (dispatch) {
-+		EXPECT_EQ(syscall(MAGIC_SYSCALL_1), MAGIC_SYSCALL_1);
-+		EXPECT_EQ(nr_syscalls_emulated, 1);
-+	} else {
-+		EXPECT_EQ(syscall(MAGIC_SYSCALL_1), -1);
-+		EXPECT_EQ(nr_syscalls_emulated, 0);
-+	}
-+}
-+
-+TEST(dispatch_range)
-+{
-+	ASSERT_EQ(0, setup_sigsys_handler());
-+	test_range(_metadata, PR_SYS_DISPATCH_EXCLUSIVE_ON, 0, 0, true);
-+	test_range(_metadata, PR_SYS_DISPATCH_EXCLUSIVE_ON, syscall_addr, 1, false);
-+	test_range(_metadata, PR_SYS_DISPATCH_EXCLUSIVE_ON, syscall_addr-100, 200, false);
-+	test_range(_metadata, PR_SYS_DISPATCH_EXCLUSIVE_ON, syscall_addr+1, 100, true);
-+	test_range(_metadata, PR_SYS_DISPATCH_EXCLUSIVE_ON, syscall_addr-100, 100, true);
-+	test_range(_metadata, PR_SYS_DISPATCH_INCLUSIVE_ON, syscall_addr, 1, true);
-+	test_range(_metadata, PR_SYS_DISPATCH_INCLUSIVE_ON, syscall_addr-1, 1, false);
-+	test_range(_metadata, PR_SYS_DISPATCH_INCLUSIVE_ON, syscall_addr+1, 1, false);
-+	SYSCALL_DISPATCH_OFF(glob_sel);
-+}
-+
- TEST_HARNESS_MAIN
--- 
-2.49.0.1143.g0be31eac6b-goog
-
