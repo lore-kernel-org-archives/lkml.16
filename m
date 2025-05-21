@@ -1,253 +1,206 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BBC325EFBD;
-	Wed, 21 May 2025 10:35:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C95CA2367D4;
+	Wed, 21 May 2025 10:36:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747823716; cv=none; b=fYwSv/sf8ZrfVL8gIx1pLlAfIupp2ZWsk/I1TVAGMU0AeNxKPZ1jgDCb/niMP6BajUaRrFOVQkdpufnKLPvj33uq+8giqKNnq6cZLY43mqXFXE//qxF6k5J5qx9xCIKrXa9/TE74peRKDJy2hUfMbibJDQvL1BHo6jSwiQRljRg=
+	t=1747823773; cv=none; b=siKkfYL1UKqfZjcqZW3EXxCIfEapuK+bBlde0mbY4dxXEYOEns8KglLl/ztLMUOPotU6u1wJSUPb82CR5bl84+2h1YHX5es3FLzkVVSLe46kl4oGLGlHOGk0dnotBUSpMOZnDu5fa6F90HJF/mPmREZs8YBFXbsZ706pemINU4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747823716; c=relaxed/simple;
-	bh=Bc0tuxh6FuJgjjna2ZA5ICMvztWDekZiHjGH1e4t3aQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kPH5t+xFWw/F+h3IOjqWeLCTzUSP+F3oe0pyYuE6D+9wAWGHhfTFg+nNvQ+/wW+eL94wy73FcEWVcgP2VnOACS3gpAFnXfWuOJavds0T4ElNMAJBGrPit3XJoqM+2vKa9/lr8AjCT1tOdH/ZGJL8kq6tQ/BFEM5BSevJU8ousrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=eDq/77FY; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1747823773; c=relaxed/simple;
+	bh=jaHDgJmILJuG+Pf3sJLP9RGWHh9WdqjMsaqcFjHPDTE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QIY1mbpMuTHBdNuZfWVNXsz2q76BKuVp0dXZyYbgYy6e10n4U7RftvXKgHflRm2eaPDjhHjrc+9ZRXLgUqj4RtQd59TEfbLWiqFxJR0NxF0miDdQ848mr0UtcFw4yxJdJfO726cn9VZu/bxfb/hiOHvSRC7+oEQcuNhlzrAyXuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aHC4igIB; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="eDq/77FY"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54L8pd6Z014503;
-	Wed, 21 May 2025 10:35:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=OnL2JX
-	aeHotq86V5UBxO4l5O+IBgRMNGBuvWWVOJgCw=; b=eDq/77FYm2qIZjkTd8ZBSk
-	Z6egjzV6wPflUaml1pHfFzppoS464s17qIPib/LO/VbzBhsq2ZfB8oHoamsj8SXR
-	suieV+YEtyENELG4iv2YvILt5IY6Z7x72vV/dtp16fzrM6oEHUDJcrdCzyj4ICiX
-	FWlnueZSMkFGKc4XRvoij0SOT+MicVGUXRCCrzyJ8ZCME+bl1wkCPyXb6vTY8+mH
-	Y/B4AfIy564zHVpgkTuA6xXqVRVfWZedWP/h6v8D+bsJfBEyAXI+7xUIPL+zaqRG
-	3iAzw3Rr3xwFYl9gHRSxnYfVOuM3QuUm/Xgo/VE+g4AcmzabzUf+1l5BowHIB7OQ
-	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46sbph0ekd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 10:35:05 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54L9u1Qn010595;
-	Wed, 21 May 2025 10:35:03 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46rwnmbqhu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 10:35:03 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54LAYxgU53018952
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 21 May 2025 10:34:59 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C53042004B;
-	Wed, 21 May 2025 10:34:59 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 34E3E20040;
-	Wed, 21 May 2025 10:34:59 +0000 (GMT)
-Received: from li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com (unknown [9.87.130.155])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 21 May 2025 10:34:59 +0000 (GMT)
-Date: Wed, 21 May 2025 12:34:57 +0200
-From: Sumanth Korikkar <sumanthk@linux.ibm.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-mm <linux-mm@kvack.org>, Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 1/4] mm/memory_hotplug: Add interface for runtime
- (de)configuration of memory
-Message-ID: <aC2sUdhavboOgS83@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
-References: <20241202082732.3959803-1-sumanthk@linux.ibm.com>
- <20241202082732.3959803-2-sumanthk@linux.ibm.com>
- <3151b9a0-3e96-4820-b6af-9f9ec4996ee1@redhat.com>
- <Z08WpCxt4lsIsjcN@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
- <1b9285ba-4118-4572-9392-42ec6ba6728c@redhat.com>
- <aCx-SJdHd-3Z12af@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
- <fca5fe72-55a8-456c-a179-56776848091d@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aHC4igIB"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-601aa0cb92eso5065401a12.0;
+        Wed, 21 May 2025 03:36:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747823769; x=1748428569; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1zgXc6wASgYobl6ZoqSP5/L4jin8cfV9FbA1sERsoBQ=;
+        b=aHC4igIB8P6v/NefHpWFbeu6UU7EWu/3Li4p1KiUspgggFFwXrcAEjWfG7D9we33UH
+         AX0v6WP8n6OR4O/sBAn7M+dZHz5ZTmb5CN2MzTjRF404KFiEcQslirku9iAaXNQitZ8t
+         lsjdYu6mTYn9RExUGzh0dEEgpC9IZeWB4hwGD8X4WEa31tEbrCvOXJleiqDtU/OouOS0
+         9CzYZ9FUa5jvQBCsyooVl5pmhaF0sLA8AALL7s+OqPrHcP8E+9dVucEoh8TvSLWkNh7k
+         VUyncuqem5fKmWnTUpV2NDVEUNMmiVM14uZ7yYWW7YeHRrr5OTGbAngCpOJsciCvmyYI
+         XDtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747823769; x=1748428569;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1zgXc6wASgYobl6ZoqSP5/L4jin8cfV9FbA1sERsoBQ=;
+        b=mO7wuNfn5MmhtdrTqQvXDfrzwHG21yJB/ks/cYxsJvo+rUsxahu2My6zLJlmsaud+k
+         vRUaZtdXN1B2FRcn1QeDLC4aieKtnEUHACcsMePjYuQKs5//+WSjcMraubfc/uyZE/uy
+         vtAQpC2KaGVBqi7ivE1x0nKqPOFpHXI/crwQIwwKnkV52ow+m8HU+9p02CtGUWtW2zmp
+         sT2uVyfuISxgtqYroNDNGc7X6aGQ1iF9TJaAwUR7Vt2deJNz4AhnnK7Zx5Yz819kOBv3
+         1UbEjJr/Jau4fQx1bN3AemfEtA2xjfi9csrw5PcpGqLj+MeWSusnmLOkgIxFusPtLYhs
+         XfNw==
+X-Forwarded-Encrypted: i=1; AJvYcCUSa4q7HC2ys0iLo8xAFTDpHZQmZzQeFdM0MsrHxEQv+aQe8SQSszzI2qL7ZHwlJgKuxxiiqL9w5ByBRloB@vger.kernel.org, AJvYcCWbzzw657+zBbxlsL0oU6uuAazLKtbke96jsyzCk/9QRupCP84YRGb05dvLEmgliMyORg3Qv5CEYFtrIMDi@vger.kernel.org, AJvYcCXo+/B9X/54ebiwtpWw59mn+4KT1q82bzSiLvE/3N8kEtSGpwQj2EdVYp9pDsQKhpXCU3CPRmEAj14N/KKBGA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwtIpVn1fs7xo+tlog0qFDauMxj16/6qz5N89aIY6yNqHYVg1m9
+	VonIlUCkaO7Exj2nVoM+cqnbZHBOIWosWNafjyF7R6R+5VT4dSoqVDAQRi8jBIew8gprdxV1cvQ
+	YzoGSfXrQF+beYtng+QrN2XWkWFHfGWs=
+X-Gm-Gg: ASbGncuxY7lQ3VkBiEvvn4MWRLzMBeeuYEkIFihQEWQCFzoPazGxFQgKZXRevDr+M0q
+	+quNmP1LpDo4YYRSkvrUxpsCV3kCYS1dkDmhPig7OYJF5Y8xNo0/81hPUCNSbAVA9+KuyUOYJz0
+	b8jVbn3auf60r+qPZwbFOalx9R5uEiuTJ3
+X-Google-Smtp-Source: AGHT+IFwe1NHoe6RpoNzGj5yF8UoZtXY1oenfF30QD/04DM+NIgSerwL4sx8Bn0TPf8jkNGPio46scbLLegs0kgsNGQ=
+X-Received: by 2002:a17:906:c14d:b0:ad2:4fa0:88d1 with SMTP id
+ a640c23a62f3a-ad536b5731amr1645827466b.9.1747823768649; Wed, 21 May 2025
+ 03:36:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <fca5fe72-55a8-456c-a179-56776848091d@redhat.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDA5NCBTYWx0ZWRfX1Ir7nocZ0ZE7 VwLaSFnCBcLO9gRJZ9hYfiAMbU76FNh4iApIpKJXzmSoT4vn8Lg/IQsyfdLK+Zoo+3Lltk+M4dt WLrbH+L/w3uVcn3PaOptjzibwO6gX4snCn68eKGHOUgnSg7AqiEQacJX/TW1NIyLk74DiQa0Kgo
- 3R7kuIRsH/LnPCinvoUJmCM19GWwY1dJ//Vw3W6duRncWG7Jqh//UHn22WpssalgytAR8cIoag0 Oeb43/6GaKAoiElpSR4dB9sRvAK9zqI4j0huC1qZOk5Op7TdXK7eqC9GNpwOP4c/u0wJCs3cD0R Ra69DlOVVZSqzCex62bUhtmAUEiRT5ul8SfAXwBLSFxpR68pfPZrOBzhsxUEJteLPiOSFg6Skg4
- lbXbrBX+iK02e+5l/C8DEBK9bgfaBj1C6lfu/yb5kOcWtiQROKDDVPJeIG/baEMajccqj7t3
-X-Proofpoint-ORIG-GUID: n9icrul-5QQRR8-0XybbBDzAXo3tLAj0
-X-Authority-Analysis: v=2.4 cv=L5kdQ/T8 c=1 sm=1 tr=0 ts=682dac59 cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=E8j359MtUMzoLxJxKO8A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: n9icrul-5QQRR8-0XybbBDzAXo3tLAj0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-21_02,2025-05-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- priorityscore=1501 lowpriorityscore=0 spamscore=0 clxscore=1015
- mlxlogscore=999 suspectscore=0 phishscore=0 impostorscore=0 malwarescore=0
- mlxscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505210094
+References: <20250521-ovl_ro-v1-1-2350b1493d94@igalia.com>
+In-Reply-To: <20250521-ovl_ro-v1-1-2350b1493d94@igalia.com>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Wed, 21 May 2025 12:35:57 +0200
+X-Gm-Features: AX0GCFsp8gIxaeGVp_TI6VZ9CUo85mJmg9MpuNDq_Ao3xGMrKbOErTCd9jOCAFc
+Message-ID: <CAOQ4uxgXP8WrgLvtR6ar+OncP6Fh0JLVO0+K+NtDX1tGa2TVxA@mail.gmail.com>
+Subject: Re: [PATCH] ovl: Allow mount options to be parsed on remount
+To: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
+Cc: Miklos Szeredi <miklos@szeredi.hu>, Christian Brauner <brauner@kernel.org>, linux-unionfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, kernel-dev@igalia.com, 
+	linux-fsdevel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> > Introduce new interface on s390 with the following attributes:
-> > 
-> > 1) Attribute1:
-> > /sys/firmware/memory/block_size_bytes
-> 
-> I assume this will be the storage increment size.
+On Wed, May 21, 2025 at 8:45=E2=80=AFAM Andr=C3=A9 Almeida <andrealmeid@iga=
+lia.com> wrote:
+>
+> Allow mount options to be parsed on remount when using the new mount(8)
+> API. This allows to give a precise error code to userspace when the
+> remount is using wrong arguments instead of a generic -EINVAL error.
+>
+> Signed-off-by: Andr=C3=A9 Almeida <andrealmeid@igalia.com>
+> ---
+> Hi folks,
+>
+> I was playing with xfstest with overlayfs and I got those fails:
+>
+> $ sudo TEST_DIR=3D/tmp/dir1 TEST_DEV=3D/dev/vdb SCRATCH_DEV=3D/dev/vdc SC=
+RATCH_MNT=3D/tmp/dir2 ./check -overlay
 
-Hi David,
+I advise you to set the base FSTYP as README.overlay suggests
+Some tests may require it to run properly or to run at all.
+Probably related to failures you are seeing though...
 
-No, this is memory block size.
+> ...
+> Failures: generic/294 generic/306 generic/452 generic/599 generic/623 ove=
+rlay/035
+> Failed 6 of 859 tests
+>
+> 5 of those 6 fails were related to the same issue, where fsconfig
+> syscall returns EINVAL instead of EROFS:
+>
 
-> > > 2) Attribute2:
-> > /sys/firmware/memory/memoryX/config
-> > echo 0 > /sys/firmware/memory/memoryX/config  -> deconfigure memoryX
-> > echo 1 > /sys/firmware/memory/memoryX/config ->  configure memoryX
-> 
-> And these would configure individual storage increments, essentially calling
-> add_memory() and (if possible because we could offline the memory)
-> remove_memory().
+I see the test generic/623 failure - this test needs to be fixed for overla=
+y
+or not run on overlayfs.
 
-configure or deconfigure memory in units of entire memory blocks.
+I do not see those other 5 failures although before running the test I did:
+export LIBMOUNT_FORCE_MOUNT2=3Dalways
 
-As I understand it, add_memory() operates on memory block granularity,
-and this is enforced by check_hotplug_memory_range(), which ensures the
-requested range aligns with the memory block size.
+Not sure what I am doing differently.
 
-> > 3) Attribute3:
-> > /sys/firmware/memory/memoryX/altmap_required
-> > echo 0 > /sys/firmware/memory/memoryX/altmap_required -> noaltmap
-> > echo 1 > /sys/firmware/memory/memoryX/altmap_required -> altmap
-> > echo N > /sys/firmware/memory/memoryX/altmap_required -> variable size
-> > 	 altmap grouping (possible future requirements),
-> > 	 where N specifies the number of memory blocks that the current
-> > 	 memory block manages altmap. There are two possibilities here:
-> >          * If the altmap cannot fit entirely within memoryX, it can
-> >            extend into memoryX+1, meaning the altmap metadata will span
-> >            across multiple memory blocks.
-> >          * If the altmap for memory range cannot fit within memoryX,
-> >            then config will return -EINVAL.
-> 
-> Do we really still need this when we can configure/deconfigure?
-> 
-> I mean, on s390x, the most important use case for memmap-on-memory was not
-> wasting memory for offline memory blocks.
-> 
-> But with a configuration interface like this ... the only benefit is being
-> able to more-reliably add memory in low-memory conditions. An unlikely
-> scenario with standby storage IMHO.
-> 
-> Note that I dislike exposing "altmap" to the user :) Dax calls it
-> "memmap_on_memory", and it is a device attrivute.
-> 
-> As soon as we go down that path we have the complexity of having to group
-> memory blocks etc, and if we can just not go down that path right now it
-> will make things a lot simpler.
-> 
-> (especially, as you document above, the semantics become *really* weird)
-> 
-> As yet another point, I am not sure if someone really needs a per-memory
-> block control of the memmap-on-memory feature.
-> 
-> If we could simplify here, that would be great ...
+> -mount: cannot remount device read-write, is write-protected
+> +mount: /tmp/dir2/ovl-mnt: fsconfig() failed: overlay: No changes allowed=
+ in reconfigure
+>
+> I tracked down the origin of this issue being commit ceecc2d87f00 ("ovl:
+> reserve ability to reconfigure mount options with new mount api"), where
+> ovl_parse_param() was modified to reject any reconfiguration when using
+> the new mount API, returning -EINVAL. This was done to avoid non-sense
+> parameters being accepted by the new API, as exemplified in the commit
+> message:
+>
+>         mount -t overlay overlay -o lowerdir=3D/mnt/a:/mnt/b,upperdir=3D/=
+mnt/upper,workdir=3D/mnt/work /mnt/merged
+>
+>     and then issue a remount via:
+>
+>             # force mount(8) to use mount(2)
+>             export LIBMOUNT_FORCE_MOUNT2=3Dalways
+>             mount -t overlay overlay -o remount,WOOTWOOT,lowerdir=3D/DOES=
+NT-EXIST /mnt/merged
+>
+>     with completely nonsensical mount options whatsoever it will succeed
+>     nonetheless.
+>
+> However, after manually reverting such commit, I found out that
+> currently those nonsensical mount options are being reject by the
+> kernel:
+>
+> $ mount -t overlay overlay -o remount,WOOTWOOT,lowerdir=3D/DOESNT-EXIST /=
+mnt/merged
+> mount: /mnt/merged: fsconfig() failed: overlay: Unknown parameter 'WOOTWO=
+OT'.
+>
+> $ mount -t overlay overlay -o remount,lowerdir=3D/DOESNT-EXIST /mnt/merge=
+d
+> mount: /mnt/merged: special device overlay does not exist.
+>        dmesg(1) may have more information after failed mount system call
+>
+> And now 5 tests are passing because the code can now returns EROFS:
+> Failures: generic/623
+> Failed 1 of 1 tests
+>
+> So this patch basically allows for the parameters to be parsed and to
+> return an appropriated error message instead of a generic EINVAL one.
+>
+> Please let me know if this looks like going in the right direction.
 
-The original motivation for introducing memmap_on_memory on s390 was to
-avoid using online memory to store struct page metadata, particularly
-for standby memory blocks. This became critical in cases where there was
-an imbalance between standby and online memory, potentially leading to
-boot failures due to insufficient memory for metadata allocation.
+The purpose of the code that you reverted was not to disallow
+nonsensical arguments.
+The purpose was to not allow using mount arguments that
+overlayfs cannot reconfigure.
 
-To address this, memmap_on_memory was utilized on s390. However, in its
-current form, it adds altmap metadata at the start of each memory block
-at the time of addition, and this configuration is static. It cannot be
-changed at runtime.
+Changing rw->ro should be allowed if no other arguments are
+changed, but I cannot tell you for sure if and how this was implemented.
+Christian?
 
-I was wondering about the following practical scenario:
+>
+> Thanks!
+> ---
+>  fs/overlayfs/params.c | 9 ---------
+>  1 file changed, 9 deletions(-)
+>
+> diff --git a/fs/overlayfs/params.c b/fs/overlayfs/params.c
+> index f42488c019572479d8fdcfc1efd62b21d2995875..f6b7acc0fee6174c48fcc8b87=
+481fbcb60e6d421 100644
+> --- a/fs/overlayfs/params.c
+> +++ b/fs/overlayfs/params.c
+> @@ -600,15 +600,6 @@ static int ovl_parse_param(struct fs_context *fc, st=
+ruct fs_parameter *param)
+>                  */
+>                 if (fc->oldapi)
+>                         return 0;
+> -
+> -               /*
+> -                * Give us the freedom to allow changing mount options
+> -                * with the new mount api in the future. So instead of
+> -                * silently ignoring everything we report a proper
+> -                * error. This is only visible for users of the new
+> -                * mount api.
+> -                */
+> -               return invalfc(fc, "No changes allowed in reconfigure");
+>         }
+>
+>         opt =3D fs_parse(fc, ovl_parameter_spec, param, &result);
+>
 
-When online memory is nearly full, the user can add a standby memory
-block with memmap_on_memory enabled. This allows the system to avoid
-consuming already scarce online memory for metadata.
+NACK on this as it is.
 
-After enabling and bringing that standby memory online, the user now
-has enough free online memory to add additional memory blocks without
-memmap_on_memory. These later blocks can provide physically contiguous
-memory, which is important for workloads or devices requiring continuous
-physical address space.
+Possibly, we need to identify the "only change RDONLY" case
+and allow only that.
 
-If my interpretation is correct, I see good potential for this be be
-useful.
-
-As you pointed out, how about having something similar to
-73954d379efd ("dax: add a sysfs knob to control memmap_on_memory behavior")
-
-i.e.
-
-1) To configure/deconfigure a memory block
-/sys/firmware/memory/memoryX/config
-
-1 -> configure
-0 -> deconfigure
-
-2) Determine whether memory block should have memmap_on_memory or not.
-/sys/firmware/memory/memoryX/memmap_on_memory
-1 -> with altmap
-0 -> without altmap
-
-This attribute must be set before the memoryX is configured. Or else, it
-will default to CONFIG_MHP_MEMMAP_ON_MEMORY / memmap_on_memory parameter.
-
-
-> > NOTE: “altmap_required” attribute must be set before setting the block as
-> > configured via “config” attribute. (Dependancy)
-> > 
-> > 4) Additionally add the patch to check if the memory block is configured
-> > with altmap or not. Similar to [RFC PATCH 2/4] mm/memory_hotplug: Add
-> > memory block altmap sysfs attribute.
-> > 
-> > Most of the code changes will be s390 specific with this interface.
-> > 
-> > Request your inputs on the potential interface. Thank you.
-> > 
-> > Other questions:
-> > 1. I’m just wondering how variable-sized altmap grouping will be
-> > structured in the future. Is it organized by grouping the memory blocks
-> > that require altmap, with the first memory block storing the altmap
-> > metadata for all of them? Or is it possible for the altmap metadata to
-> > span across multiple memory blocks?
-> 
-> That exactly is unclear, which is why we should probably avoid doing that
-> for now. Also, with other developments happening (memdesc), and ongoing
-> effort to shrink "struct page", maybe we will not even need most of this in
-> the future?
-> 
-> > 
-> > 2. OR, will dedicated memory blocks be used exclusively for altmap
-> > metadata, which the memory blocks requiring altmap would then consume? (To
-> > prevent fragmentation) ?
-> 
-> One idea I had was that you would do the add_memory() in bigger granularity.
-> 
-> Then, the memory blocks hosting the memmap would have to get onlined first.
-> And offlining of them would fail until all dependent ones were offlined.
-> 
-> That would at least limit the impact.
-> 
-> Then, the question would be, how could you "group" these memory blocks from
-> your interface to do a single add_memory() etc.
-> 
-> But again, maybe we can leave that part out for now ...
-
-Thank you David for the details. I will ignore/leave variable sized
-altmap grouping for now.
+Thanks,
+Amir.
