@@ -1,161 +1,93 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE4D24B1E4B
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 10:15:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D35374B1E4B;
+	Wed, 21 May 2025 10:15:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747822534; cv=none; b=FX7x7xcHZtbgosJAvXhHXFxlrcOGfFTaVgpF11VJjLXvX5ZdTJ2t//WvEEcTpizAuQqgdMBa1GDP2XSx5RK4nyYvEEmSYz9S8jc6YCBPZCi4X3kYC/PSJddnEsYxL8DL+JOOaljbWq0+DH77CArcvwuiB0Df/g6t5/3E/zM/xQ4=
+	t=1747822559; cv=none; b=gYErn16eaF5O6yd1zWGCsU6ie5wCxN8qFg4mafw8oRzAKiZJzg+o2+eGuqngAB+Qx0FZ4rmOptD9dy277BckhnJaK00DboNk6VQakeF3A9vUUpIw19150SEi4D5J2nA+nHl5LjgdsM4Lj8jDqfivvbOMcWwoE6JGdREDfb07ADc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747822534; c=relaxed/simple;
-	bh=7VWBwnJB42oFEs0jILgSLBIhI5XSf9/Ya23n6GOLo1g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lxo7xZ2hBnv2MH++lSvvMkCyqPmSfX4ovdjRoQk59pnLwgmycVL59PtBMCUZPz2N/LzDIBU7iD2GCjLgSYHx5JQFCMoVznRWEErLNhFiLwzfQXB23JmXd+eTFry53cwyjICcIbKTTO9VfbZye+SdcGuH1FU/O4SmK9atfhjXLgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=V1sI/aGv; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=wEruPZB/; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=z720WXok; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=WU1UFD43; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1747822559; c=relaxed/simple;
+	bh=WhNcDNdcCMFkjyOz5BitAckHGsx6PxeBfTOFhl9JO2g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tzIHWChvujn6oF7Df0VhaZDOeXl05LQlp/ijKSRBmjotLzUYSN49iBjH+mf9BcGPMIlHDQoV1E/uJqA/6DxVisdl+ubevgU7Y4iLwL5sweTLvD2oep8sssHL4IxFAKf37wi15cXGF6yTAhFfsIMI5D2lIc9JbMTyJD8ogbKzREc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=KfjlYKLM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="V1sI/aGv";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="wEruPZB/";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="z720WXok";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="WU1UFD43"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id DA5FE22683;
-	Wed, 21 May 2025 10:15:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747822531; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XJTkULtf9UqfX8az0n+gCs96zFx7/STVs41naO7OIe8=;
-	b=V1sI/aGvUPo1HIn80ZMKIClyVJWkbobLfqFrf3t2OrovFInqhbOXr0eFXRLdrDRXLtYFo2
-	o/9kYxVnQeMLDs0K6pWx7P1ezSEgXONcKza474lUIlMlZEFF8AHtEiXXWvAHnRRR7VKWMi
-	/t7VulTTVd63v58NtsYkOIBJ1gJAiLQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747822531;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XJTkULtf9UqfX8az0n+gCs96zFx7/STVs41naO7OIe8=;
-	b=wEruPZB//g7CAbiGQLXfynku7QZFqSY01/z7EcYnQLurJcDLuCdz26Jm/+ZmXQ3EFYCFDx
-	ZDs0XwLcTzMrIKAA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=z720WXok;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=WU1UFD43
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747822530; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XJTkULtf9UqfX8az0n+gCs96zFx7/STVs41naO7OIe8=;
-	b=z720WXoksmPtG5xasEzDG6XoMWvL+9vWPY6YRO8lmEsVRR1jQDt1emL7gEIDlnkyRDLmBk
-	56+ncXmvM4HSPqK1/EUx1SYLZG8BLeBv3OxDU6VoRqXH6Bao5FULlyS45kEoDSl+8ifg7k
-	QaHZk3IVWilOGOGribLci6YdWqRenM8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747822530;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XJTkULtf9UqfX8az0n+gCs96zFx7/STVs41naO7OIe8=;
-	b=WU1UFD43mBvCvS0s5WseoFTadVOW+Ztjd7WJx8LpNS7HOpHN3epGIiO5ZW9R6EJJImDyes
-	hCRu9l1taKh0qMBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A42F513AA0;
-	Wed, 21 May 2025 10:15:30 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id ZGCnJsKnLWjqTAAAD6G6ig
-	(envelope-from <hare@suse.de>); Wed, 21 May 2025 10:15:30 +0000
-Message-ID: <95c26a3d-edeb-4def-9068-b05e90157ef1@suse.de>
-Date: Wed, 21 May 2025 12:15:22 +0200
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="KfjlYKLM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F076C4CEEA;
+	Wed, 21 May 2025 10:15:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1747822558;
+	bh=WhNcDNdcCMFkjyOz5BitAckHGsx6PxeBfTOFhl9JO2g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KfjlYKLMxSUbkITeMe8nQ7FBxzw/VlsLZcQJ9FKcvN0BOTnfT3Qk17dOQu/YaorxE
+	 oNbYDyesaSdDpWNrIhIWF+HfOIE+YaVB1Gc9UxezSgABde3dH9h0oqY3wCirK1Cq9m
+	 1HVsHlNTxXh4AJJONpXvAgMEtDENLOFevoFMUsxk=
+Date: Wed, 21 May 2025 12:15:49 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Rujra Bhatt <braker.noob.kernel@gmail.com>
+Cc: johan@kernel.org, elder@kernel.org, greybus-dev@lists.linaro.org,
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V1] staging : greybus : Documentation : firmware :
+ Replace deprecated strncpy() with strscpy()
+Message-ID: <2025052128-patronage-drowsily-8e2c@gregkh>
+References: <aC2dO1QKTVMOJQ8K@brak3r-Ubuntu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 07/10] lib/crc32: remove unused support for CRC32C
- combination
-To: Eric Biggers <ebiggers@kernel.org>, netdev@vger.kernel.org
-Cc: linux-nvme@lists.infradead.org, linux-sctp@vger.kernel.org,
- linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
- Daniel Borkmann <daniel@iogearbox.net>,
- Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
- Sagi Grimberg <sagi@grimberg.me>, Ard Biesheuvel <ardb@kernel.org>
-References: <20250519175012.36581-1-ebiggers@kernel.org>
- <20250519175012.36581-8-ebiggers@kernel.org>
-Content-Language: en-US
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <20250519175012.36581-8-ebiggers@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FREEMAIL_CC(0.00)[lists.infradead.org,vger.kernel.org,iogearbox.net,gmail.com,grimberg.me,kernel.org];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:email,suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: -3.01
-X-Rspamd-Queue-Id: DA5FE22683
-X-Spam-Level: 
-X-Spam-Flag: NO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aC2dO1QKTVMOJQ8K@brak3r-Ubuntu>
 
-On 5/19/25 19:50, Eric Biggers wrote:
-> From: Eric Biggers <ebiggers@google.com>
+On Wed, May 21, 2025 at 03:00:35PM +0530, Rujra Bhatt wrote:
+> ----------------------------------------------------------
+> This is the new Patch for the earlier Patch hence made V1. 
 > 
-> crc32c_combine() and crc32c_shift() are no longer used (except by the
-> KUnit test that tests them), and their current implementation is very
-> slow.  Remove them.
+> [Note: there will be no significant changes.]
+> ----------------------------------------------------------
 > 
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
+> Changes: 
+> 
+> To ensuring that the firmware tag is properly null-terminated. When copying firmware tag strings to prevent buffer overflows and ensure data integrity.
+> 
+> 
+> Changes has been made in 3 positions:
+> 1: update firmware tag
+> 2: backend update firmware tag
+> 3: backend update firmware tag with unipro
+> 
+> Signed-off-by: Rujra Bhatt <braker.noob.kernel@gmail.com>
 > ---
->   include/linux/crc32.h | 23 -----------------------
->   lib/crc32.c           |  6 ------
->   lib/tests/crc_kunit.c |  6 ------
->   3 files changed, 35 deletions(-)
-> 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
+>  drivers/staging/greybus/Documentation/firmware/firmware.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 
-Cheers,
+Hi,
 
-Hannes
--- 
-Dr. Hannes Reinecke                  Kernel Storage Architect
-hare@suse.de                                +49 911 74053 688
-SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
-HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
+
+You are receiving this message because of the following common error(s)
+as indicated below:
+
+- This looks like a new version of a previously submitted patch, but you
+  did not list below the --- line any changes from the previous version.
+  Please read the section entitled "The canonical patch format" in the
+  kernel file, Documentation/process/submitting-patches.rst for what
+  needs to be done here to properly describe this.
+
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
+
+thanks,
+
+greg k-h's patch email bot
