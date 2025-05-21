@@ -1,192 +1,78 @@
-Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF5AD1B0437
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 01:49:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAD051D5CE5;
+	Wed, 21 May 2025 01:49:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747792188; cv=none; b=o3grZSKnprzurbveUoAfuEK2o3xgGjqmlekWSq1SbGqaw+H1ZqbpoRd0d19GCJMNK+IOHHHlObz83VRXUIFlxm8jaLTtIUT+tROUS/lruOd9tF4n7xhTOmsbEwKEGTDoI0zUhPTyNDJDO6HbsYgHKOYaT/Gd+Eafw/W9LYaOciA=
+	t=1747792192; cv=none; b=hwtoB7DLJ4CwMc+wIsMjdetbImcw1mPX5jQ31jZojsE3xFJb7xZzleesgqD6i2qHw+GnJmBICjzPd6Xf57e+ji6E5JL58uaSERASYI2KwbXttR+wZJxUDSTk/i8o8e1O3uodOqFWFgXZPzXzGTMP+Vzorbl1134AhGCHNL7CN7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747792188; c=relaxed/simple;
-	bh=r6660o7TrV9mIX0QiqN4LlypHPU9HIyb4tcU13soERs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dMtQVrxzLWfWiiGfiJPpn4TNCSQCSiiQ/+buJ1s0YKTKQQIkBoV9qpYehJj0yKu1eBDjDD+FORK5OKSg9Nh+C5+8XMRrtL4O9GbXLRjtyGSJFfJF7Z/I5TvhJtce/kCu5DHKqJbQn01v7qXxR+NJUBKtY30iYn3Ovj2jREWWQBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Ymwkwlm0; arc=none smtp.client-ip=91.218.175.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1747792192; c=relaxed/simple;
+	bh=XWa4ueLt22rZ4t9UOEKW1yv2gOymIJ9GFKCfz0SUiYU=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=Kn0lWPJaLvzsP2+ejzx68YY+Ee5Fpz2/oYo8FjvotDz9Lh4iz1ZJXf5DdG2R4SoCaYLnmkV82LR8m3nEJSVbSlwq9g/+8cAbXO/kiwtApkLC6kfCT6MK3tpH1yHqMbKqNHWLX3Q2UqeBARIlKUg1F+pYzrtXc7B8nCxa2jR8twc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mlMSMh1t; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Ymwkwlm0"
-Date: Tue, 20 May 2025 21:49:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747792174;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=l1O+r1kz2S9v4rWK4s64ptW8HHdeRPASy0UUAjHkGbs=;
-	b=Ymwkwlm0QpBL0rQI5k+gMMRe7sS8GUH+8Afwpa4tQvB3TXtItxTmNdgboUuCcijzvJ2ocb
-	QSKvnWCWjc6MFS+F/LN0N9rgd+Ae20myvLl1jn/IT8CuiWYRrA6mhDlmXPRYLNNJ4Jwiou
-	SexVldyCrl+iycUOCwZJcXxyrSERzDY=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: John Stoffel <john@stoffel.org>
-Cc: Amir Goldstein <amir73il@gmail.com>, linux-fsdevel@vger.kernel.org, 
-	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, linux-unionfs@vger.kernel.org, 
-	Miklos Szeredi <miklos@szeredi.hu>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH 0/6] overlayfs + casefolding
-Message-ID: <7b272tdagnkvzt5eo4g4wy47rjwf67nqk26aq27uetc57kzza5@7p5cmikl2fw6>
-References: <20250520051600.1903319-1-kent.overstreet@linux.dev>
- <CAOQ4uxg8p2Kg0BKrU4NSUzLVVLWcW=vLaw4kJkVR1Q-LyRbRXA@mail.gmail.com>
- <osbsqlzkc4zttz4gxa25exm5bhqog3tpyirsezcbcdesaucd7g@4sltqny4ybnz>
- <CAOQ4uxjUC=1MinjDCOfY5t89N3ga6msLmpVXL1p23qdQax6fSg@mail.gmail.com>
- <gdvg6zswvq4zjzo6vntggoacrgxxh33zmejo72yusp7aqkqzic@kaibexik7lvh>
- <CAOQ4uxg9sKC_8PLARkN6aB3E_U62_S3kfnBuRbAvho9BNzGAsQ@mail.gmail.com>
- <rkbkjp7xvefmtutkwtltyd6xch2pbw47x5czx6ctldemus2bvj@2ukfdmtfjjbw>
- <26668.52908.574606.416955@quad.stoffel.home>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mlMSMh1t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22A4CC4CEF0;
+	Wed, 21 May 2025 01:49:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747792192;
+	bh=XWa4ueLt22rZ4t9UOEKW1yv2gOymIJ9GFKCfz0SUiYU=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=mlMSMh1tTOH91lR/9YjQfa4PWnz/CglIDwtTHJT6tkwZgV0wmsuJWl5UtX924MI5H
+	 AhYwjtqvtRsQYW7mWMbYNwtiClNipFZjt/iDU5xlo4/vCOjxMmkkuTDti8SekynAa6
+	 FrtFqNcziYnkntAhDQnHzU3C/YJJ8PvDcYKKpIvOgHDW16BFE8SChHx6wONcXC7iKS
+	 wqhM47Le7Z48TqKihbQ+/Pa0TX1yZBphJ4Z3oYzPUIWal45Gymw64ES8+cRFkOELR+
+	 GM4eVDfhnznMH7iSgqFP30b93FLlUXZwG1nD8GKDLZVj+y62AKlqwGWL+gh9AGVZwO
+	 fPhPRyqg32Ogw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33BD1380AAD0;
+	Wed, 21 May 2025 01:50:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <26668.52908.574606.416955@quad.stoffel.home>
-X-Migadu-Flow: FLOW_OUT
+Subject: Re: [PATCH] MAINTAINERS: Drop myself to reviewer for ravb driver
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174779222800.1533629.8746907397008314305.git-patchwork-notify@kernel.org>
+Date: Wed, 21 May 2025 01:50:28 +0000
+References: <20250519133354.6564-1-paul.barker.ct@bp.renesas.com>
+In-Reply-To: <20250519133354.6564-1-paul.barker.ct@bp.renesas.com>
+To: Paul Barker <paul.barker.ct@bp.renesas.com>
+Cc: niklas.soderlund@ragnatech.se, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ geert+renesas@glider.be, s.shtylyov@omp.ru, paul@pbarker.dev,
+ netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
 
-On Tue, May 20, 2025 at 02:49:16PM -0400, John Stoffel wrote:
-> >>>>> "Kent" == Kent Overstreet <kent.overstreet@linux.dev> writes:
+Hello:
+
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Mon, 19 May 2025 13:33:51 +0000 you wrote:
+> Maintenance of the ravb driver will be handled by Niklas for now. I
+> still intend to review patches, and will be using my own email address
+> going forward.
 > 
-> > On Tue, May 20, 2025 at 04:03:27PM +0200, Amir Goldstein wrote:
-> >> On Tue, May 20, 2025 at 2:43 PM Kent Overstreet
-> >> <kent.overstreet@linux.dev> wrote:
-> >> >
-> >> > On Tue, May 20, 2025 at 02:40:07PM +0200, Amir Goldstein wrote:
-> >> > > On Tue, May 20, 2025 at 2:25 PM Kent Overstreet
-> >> > > <kent.overstreet@linux.dev> wrote:
-> >> > > >
-> >> > > > On Tue, May 20, 2025 at 10:05:14AM +0200, Amir Goldstein wrote:
-> >> > > > > On Tue, May 20, 2025 at 7:16 AM Kent Overstreet
-> >> > > > > <kent.overstreet@linux.dev> wrote:
-> >> > > > > >
-> >> > > > > > This series allows overlayfs and casefolding to safely be used on the
-> >> > > > > > same filesystem by providing exclusion to ensure that overlayfs never
-> >> > > > > > has to deal with casefolded directories.
-> >> > > > > >
-> >> > > > > > Currently, overlayfs can't be used _at all_ if a filesystem even
-> >> > > > > > supports casefolding, which is really nasty for users.
-> >> > > > > >
-> >> > > > > > Components:
-> >> > > > > >
-> >> > > > > > - filesystem has to track, for each directory, "does any _descendent_
-> >> > > > > >   have casefolding enabled"
-> >> > > > > >
-> >> > > > > > - new inode flag to pass this to VFS layer
-> >> > > > > >
-> >> > > > > > - new dcache methods for providing refs for overlayfs, and filesystem
-> >> > > > > >   methods for safely clearing this flag
-> >> > > > > >
-> >> > > > > > - new superblock flag for indicating to overlayfs & dcache "filesystem
-> >> > > > > >   supports casefolding, it's safe to use provided new dcache methods are
-> >> > > > > >   used"
-> >> > > > > >
-> >> > > > >
-> >> > > > > I don't think that this is really needed.
-> >> > > > >
-> >> > > > > Too bad you did not ask before going through the trouble of this implementation.
-> >> > > > >
-> >> > > > > I think it is enough for overlayfs to know the THIS directory has no
-> >> > > > > casefolding.
-> >> > > >
-> >> > > > overlayfs works on trees, not directories...
-> >> > >
-> >> > > I know how overlayfs works...
-> >> > >
-> >> > > I've explained why I don't think that sanitizing the entire tree is needed
-> >> > > for creating overlayfs over a filesystem that may enable casefolding
-> >> > > on some of its directories.
-> >> >
-> >> > So, you want to move error checking from mount time, where we _just_
-> >> > did a massive API rework so that we can return errors in a way that
-> >> > users will actually see them - to open/lookup, where all we have are a
-> >> > small fixed set of error codes?
-> >> 
-> >> That's one way of putting it.
-> >> 
-> >> Please explain the use case.
-> >> 
-> >> When is overlayfs created over a subtree that is only partially case folded?
-> >> Is that really so common that a mount time error justifies all the vfs
-> >> infrastructure involved?
-> 
-> > Amir, you've got two widely used filesystem features that conflict and
-> > can't be used on the same filesystem.
-> 
-> Wait, what?  How many people use casefolding, on a per-directory
-> basis?  It's stupid.  Unix/Linux has used case-sensitive filesystems
-> for years.  Yes, linux supports other OSes which did do casefolding,
-> but yikes... per-directory support is just insane.  It should be
-> per-filesystem only at BEST.  
+> Signed-off-by: Paul Barker <paul.barker.ct@bp.renesas.com>
+> ---
+>  MAINTAINERS | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Quite a lot.
+Here is the summary with links:
+  - MAINTAINERS: Drop myself to reviewer for ravb driver
+    https://git.kernel.org/netdev/net/c/48a62855073b
 
-You may not realize this, but Valve has, quietly, behind the scenes,
-been intelligently funding a ton of Linux work with an eye towards not
-just gaming, but improving Linus on the desktop. And they've been
-deploying it too, you can buy a Steam deck today.
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-And a significant fraction of desktop users like to play games - we're
-not just all work. Windows ports need casefolding - alternatives have
-been discussed and they're non viable.
 
-(I fondly remember the days when I had time for such things).
-
-Samba fileservers are a thing, too.
-
-And for all us desktop/workstation users, not being able to use the same
-filesystem for wine and docker is the kind of jankiness that makes
-people say "maybe Linux isn't ready for the desktop after all".
-
-Put aside your feelings on casefolding - this is about basic attention
-to detail.
-
-> > That's _broken_.
-> 
-> So?  what about my cross mounting of VMS filesystems with "foo.txt;3"
-> version control so I can go back to previous versions?  Why can't I do
-> that from my Linux systems that's mounting that VMS image?   
-> 
-> Just because it's done doesn't mean it's not dumb.  
-> 
-> > Users hate partitioning just for separate /boot and /home, having to
-> > partition for different applications is horrible. And since overlay
-> > fs is used under the hood by docker, and casefolding is used under
-> > the hood for running Windows applications, this isn't something
-> > people can predict in advance.
-> 
-> Sure I can, I don't run windows applications to screw casefolding.
-> :-)
-> 
-> And I personally LIKE having a seperate /boot and /home, because it
-> gives isolation.  The world is not just single user laptops with
-> everything all on one disk or spread across a couple of disks using
-> LVM or RAID or all of the above.  
-> 
-> I also don't see any updates for the XFS tests, or any other
-> filesystem tests, that actually checks and confirms this decidedly
-> obtuse and dumb to implement idea.  
-
-Well, you certainly are making your personal feelings known :)
-
-But for me, as the engineer designing and implementing this stuff, I
-don't let my personal feelings dictate.
-
-That's not my place.
-
-My job is to write code that works, works reliably, solves real
-problems, and lets users do the things they want with their machines.
-
-All this drama over casefolding has been pure distraction, and I would
-appreciate if you and everyone else could tone it down now.
