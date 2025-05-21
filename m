@@ -1,81 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E364A1C5F09;
-	Wed, 21 May 2025 16:30:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDAF31E2307;
+	Wed, 21 May 2025 16:32:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747845021; cv=none; b=sVkeKsinY1y3OQV10NUjq+QReArBqUwbxaw8caCDgEhrBW0DQxk1iC1nvYqAuooRFlHUTw9pN44mpD4uauW6G05GFRTmt4c25AtZ+E09EXF3rs7twc4V9YVtb4aB0h01AMYpuGFVJ75MKyWlRFi4RLuv//6jnrPbl1/Hc3rggYo=
+	t=1747845159; cv=none; b=ieECE/UH0CC8XjRBz+Cw3UOEDx/mcOHiph+TkfYf7HqEhfUarffLnp0g6378zgjtdlmIMKKyDXUyOS/NPL3C34zmn5eHDM09hy0uQGsLCIKvHNpO96OhxReIbkBkt+EBwzkB5BMliI+NS9NTn71TZOgisvq9UeHGIdI//57fRqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747845021; c=relaxed/simple;
-	bh=TBKT53j1ZzWAdU9ZNkIj6bRV4r88F4Q4v6goyOVmE40=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pgnlV8jjhzd8449RR8dtHW/Ig1O2cNOx8mqMLopFrQLzcYTwN/LJloNUptT9UjA6ABk3tbS5RqKGhMG/r0QuhKgtkT7dgcuVyRWk9T5Mn5PdqwQIxsLWPaOdg1Vwi64iJfQo5d9XUuL4nOrJX/QR6gNwEX/eJwmcECUq4ipmVnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SRICNdHn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747845159; c=relaxed/simple;
+	bh=CxFBtbqE6O8KFdWC7PNN6oTL6F/r39hQAYdVnyawXk8=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=IB5ga2S4cpkkto0kDB0jswczXuSfujJRBmePFznOK5jYcFB41mV8fIV5NCJ5NRkIq19mZjiQp8Lk2HnZb5WTocw4SAV4vs+LZsiKy608tyad/M7uNHePJjhPo05pSCGJn9ZONbzyGvzW+eaWn6W3t50ea46RNbI/mWEdhxDviS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z7u8I4zG; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SRICNdHn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39A0BC4CEE4;
-	Wed, 21 May 2025 16:30:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747845019;
-	bh=TBKT53j1ZzWAdU9ZNkIj6bRV4r88F4Q4v6goyOVmE40=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SRICNdHnk5ZfQ4BZ12LbWKVqwbmkQvECkH6aACSqU73mdY74isIny/u2rhKTpcu1N
-	 AdquhS23K+yjXMvElYq4Ej+EUzi2WKVVzuvZLWpZMhvmOjtrclHYrftgNEq2Cy1bne
-	 0SNBF2VxZtbWaxmvzbQuDL4BVCVvLsma1RAGRnSsEb56tpIhsPZB29F8+9v+9M5d1+
-	 vQ2bxlZciEahwGjz43tpRhH9h4Yn0c5m0SqQl8/D+fkRkOhZpBOPGreJaHJCS/QH26
-	 QtyiCXvmrpunlXy5r75hhpplw7OrQ8Whum5rrHpmjliyEJSPHAtOhAWqPpfrvdU3Ou
-	 xVF3FSG6Zv4YA==
-Date: Wed, 21 May 2025 06:30:18 -1000
-From: Tejun Heo <tj@kernel.org>
-To: "Shashank.Mahadasyam@sony.com" <Shashank.Mahadasyam@sony.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>,
-	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	"cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"Shinya.Takumi@sony.com" <Shinya.Takumi@sony.com>
-Subject: Re: [PATCH v2 1/3] cgroup, docs: be specific about bandwidth control
- of rt processes
-Message-ID: <aC3_moeLiTc4x85y@slm.duckdns.org>
-References: <20250520-rt-and-cpu-controller-doc-v2-0-70a2b6a1b703@sony.com>
- <20250520-rt-and-cpu-controller-doc-v2-1-70a2b6a1b703@sony.com>
- <aCziA1tUAnnGId6_@slm.duckdns.org>
- <OSZPR01MB67115CCC104221C27EE63709939EA@OSZPR01MB6711.jpnprd01.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z7u8I4zG"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-54b09cb06b0so8287726e87.1;
+        Wed, 21 May 2025 09:32:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747845156; x=1748449956; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=wqw2BMQBJjCL136c8REdV1FyhKLQ5JB4jzpcVqXwLKQ=;
+        b=Z7u8I4zGGDC3NkRg2IjRr9scKgP4GwseSASti9vVXyr8w//gsheFVNu7mAw5FIBcME
+         sZ1Gr8kvQ5JW3HXoWyfitgi8nQZU9hFbzLpZKYbp87bG0nDCXmwvsu2DS8eheEr2pzFC
+         rU+5KwtXoHQmc/GeO4cUhvKzCUtlvlyTvfLkUXjbmsIIJPW+8G4f64kaDNdkkdi1/aFC
+         yLx3aTiRfSTAhaABXL+zQKeNGgGH/OHFMwiHm8wzDQKXYVE3O3ScVgCj/5DXzcrSgPUo
+         cSseMje82SeAqrRkpJYUoe+cY/8AQdofGurW4fcaGqUBQ6MnFvKxURvTIV9139EP3pEi
+         9Tgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747845156; x=1748449956;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wqw2BMQBJjCL136c8REdV1FyhKLQ5JB4jzpcVqXwLKQ=;
+        b=iR+RrO7LPjqsEtGAScrOSyFxdVPMHmWYC3MFnVs6/+frRyPgG+wuVABVBSyqcmig8D
+         Ykt/o25V6uQxtpLvEiJBw3+7IJChDJ4o2fx/JOuwFZcy/sSou5igiO3i+z9dq4S0InCB
+         0iyeV6zEMjjhbGHlhQlpa3koATBGOwcl772XAaLkJUiSXpkrj//+H81rcOKI55Qq08pC
+         SzD99T3nd97o5u2KVROQ8SppAcG+Gh2rics9hBscn1wyz2Qise+/HueBnfp/JNkS2062
+         kiDC6QS3LT8Ni91JtyriW3UV/N7iXH83NwkLQ7IvxUnLdSEhbY/zp6YauAA4H9SU2ja1
+         i4QA==
+X-Forwarded-Encrypted: i=1; AJvYcCUlmiB+Xj5Hdm0J/eBOWXgPPCpW54r4iey5+2cESMD3qg8FBJy561HET4Ir7NSiLmgnTxaYUWgSbyFC8oA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyARfqfwHeDLrO/rvPFsZEB76obym1iYpJkXi0tKmENaXYIAkwM
+	H5DVjWgRxP8+ndOOR2nZRqNjLQOraDixlvgY+hT+k4xpCcMMfEINI8A0bfK4WDqO2Rv4K2+B9T9
+	M2CSv9JKmmx2aPn11i1HnOHqaKUY5VSPWNfeynQ==
+X-Gm-Gg: ASbGnct4jPTy16oA5huUpOEBdwSzZEmPt9GXwJTQhOL/mqR/9pOLBosoVl3Hicbp28t
+	Oq5JMn/BDfdiL4vTep1wzkSOAS/8lKK+HFRc2Iiuowp40PvwLpLAGLov6YtUBs5le3ZPGgZiF/W
+	VcFDbrn0M6Y3FTurCNMi5bUdX54nfgTF96yavMhOkHdJrr3saTCSLBlA==
+X-Google-Smtp-Source: AGHT+IEBYlQoA7n8N3tMPtS3LuJtZhx9PZrKBPTf8VglWh1jOBclQbJc1jjvLkgeXdFEZvLPKb+wOVtU0YDeoKmGxNk=
+X-Received: by 2002:a05:651c:552:b0:30a:2a8a:e4b5 with SMTP id
+ 38308e7fff4ca-328077917e1mr73943941fa.27.1747845155623; Wed, 21 May 2025
+ 09:32:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <OSZPR01MB67115CCC104221C27EE63709939EA@OSZPR01MB6711.jpnprd01.prod.outlook.com>
+From: John <john.cs.hey@gmail.com>
+Date: Thu, 22 May 2025 00:32:23 +0800
+X-Gm-Features: AX0GCFvTRuIskle9KxRKlV8qOJd1z7EdYacQGs2qwbi4rDWWZARTsS7O6gQ7GXQ
+Message-ID: <CAP=Rh=PV2nqPkBV8rALZRHLO4n58XwKTYRGYkS5snNc0Zo0YuQ@mail.gmail.com>
+Subject: [Bug] soft lockup in ieee80211_handle_queued_frames in Linux kernel v6.15-rc5
+To: Johannes Berg <johannes@sipsolutions.net>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+Dear Linux Kernel Maintainers,
 
-On Wed, May 21, 2025 at 01:14:53AM +0000, Shashank.Mahadasyam@sony.com wrote:
-> Hi Tejun,
-> 
-> On 21 May 2025 5:11, Tejun Heo wrote:
-> > > -WARNING: cgroup2 cpu controller doesn't yet fully support the control of
-> > > +WARNING: cgroup2 cpu controller doesn't yet support the (bandwidth) control of
-> >
-> > This reads weird to me. Without the () part, it becomes "doesn't yet support
-> > the control of". Maybe rephrase it a bit more?
-> 
-> I'm not sure how to rephrase it. It sounds fine to me 😅 Moreover, "doesn't
-> yet support the control of" was the wording when the warning paragraph on
-> RT_GROUP_SCHED was added in commit c2f31b79 (cgroup: add warning about RT
-> not being supported on cgroup2). Would removing the parentheses, making it
-> "doesn't yet support the bandwidth control of", sound better?
+I hope this message finds you well.
 
-You're right. I was thinking about sched_ext not RT. Lemme apply the patch
-as-is.
+I am writing to report a potential vulnerability I encountered during
+testing of the Linux Kernel version v6.15-rc5.
 
-Thanks.
+Git Commit: 92a09c47464d040866cf2b4cd052bc60555185fb (tag: v6.15-rc5)
 
--- 
-tejun
+Bug Location: ieee80211_handle_queued_frames+0xd9/0x130 net/mac80211/main.c
+
+Bug report: https://hastebin.com/share/itequxofas.yaml
+
+Complete log: https://hastebin.com/share/opasimohab.perl
+
+Entire kernel config:  https://hastebin.com/share/padecilimo.ini
+
+Root Cause Analysis:
+This entire chain is triggered indirectly by
+cfg80211_update_known_bss() from the wireless networking stack, as it
+tries to update BSS (Basic Service Set) entries for scanned wireless
+networks.
+This function uses kvfree_rcu() to deallocate stale BSS data, which in
+turn invokes kasan_record_aux_stack() and then stack_trace_save() for
+KASAN quarantine bookkeeping. That leads to complex locking and
+backtrace operations, especially involving lockdep.
+The deeper root causes include:
+Lockdep recursion while handling RCU-related memory free paths
+(kvfree_rcu) in cfg80211_update_known_bss().
+Excessive softirq processing time in tasklet_action_common() and
+handle_softirqs() due to high BSS update rate or malformed wireless
+frame processing in a fuzzing context.
+Potential deadlock or pathological behavior in lock_acquire() due to
+corrupted lock dependency chains or misused locks in the wireless
+networking stack.
+This loop fails to yield CPU time or reschedule, triggering the
+watchdog soft lockup detector.
+
+At present, I have not yet obtained a minimal reproducer for this
+issue. However, I am actively working on reproducing it, and I will
+promptly share any additional findings or a working reproducer as soon
+as it becomes available.
+
+Thank you very much for your time and attention to this matter. I
+truly appreciate the efforts of the Linux kernel community.
+
+Best regards,
+John
