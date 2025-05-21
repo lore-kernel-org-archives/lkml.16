@@ -1,118 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4AE71D88D0;
-	Wed, 21 May 2025 14:34:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7074F17E;
+	Wed, 21 May 2025 14:35:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747838044; cv=none; b=gM3uB8fTi6L1FtQhfugaXcZ6Db8cM0USaeav8oM51ctjqy2M0nanoSgI0AsjW90YwnsdoOmgXInxywo8PgH/m/tmVNV8Z7srbjKrRG159f8kowyt7Jpk4BIJF8jqPBiuNCLJJw7dXfTu5a1NNmVKFHHIGoxAEGYG3f8LVj2dHNg=
+	t=1747838118; cv=none; b=bI4zqDPhBSeq4DSgQppvbaCiIwoSKeYgNX0iHuljXc0Dm5sn8zZXY+iOWlyXmq/ZUrrwTqJoHs6TCmIuzdw1NSJZfz9cXxwik11hbtPv+Rd5SrHDWHUpw1Btwj5kSwlV8OC+2sho3iRwDmhlPbGyW5eZPtDK5JfoCh/MDggh1Hg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747838044; c=relaxed/simple;
-	bh=6P7mIPj7B7sJ/vEA58VPqJNIo45jgikPcikO/uSzLsk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uq+Nf31uK72j6Kks/LWHRq8rJ0HQSZr8ds29Joi7ZirSFAaVH2gHXxQrZvYanHIbai1l6XDOXCxC9neysWPDquABSvtBtQOiCXeNHJ3emdumjyHU7dslfqGOV8WC97mBIBUAEkG7jo+4umXxJJtkApgI9BJnXCL1hTJStdC1uPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ROoqVqcZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747838118; c=relaxed/simple;
+	bh=veu47vSPRuMY3BFKfaW2HjMgYFi0qq1J7X2WA7W9MVU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=dTIP3lZls0fC1DVRQhhT2Pygp3Xc3o0cmz1BBTOip56mrOLnK7h9PkfpaVa7IwVaaDeFObp8Wrvc2oqSZ6IIuAGV5irOPp/kTW/iBPDNmqA3TX4Cl0AiHereMEf4oKRF+RY1joE54WAffk2LKjDHxACLN7Yv3Z/EooCwn1zROSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=lhSNXCaZ; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ROoqVqcZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 844E2C4CEE4;
-	Wed, 21 May 2025 14:34:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747838043;
-	bh=6P7mIPj7B7sJ/vEA58VPqJNIo45jgikPcikO/uSzLsk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ROoqVqcZH42CiPfobRxDgWMXSJf4HEuZ6B1czaH2zeQkFIBOACu3jK8u2NIUfuT6v
-	 cYl6uDa7GJEkHJsvzeCIYZcttLv4QoAEOf41rqvjb5Fi38bWgvQWJhiY0AT/e8LBp9
-	 Ac1NNbYgfSr6KOmglkrkgrTWucmupgDw+Cuh51tJnNGZgvSPRMUi2sTjnL0i4TGEhe
-	 xz78vjUlWFWZ09t83r11c+9EqGCDiQq4psW8ZeLppzE9UZohwQ42LIckZ9attzA8m+
-	 q+RLSpOQAhFx+hLxVAW3lVIvpDO79xY6PzqU2fXrwFGMN5nFPnW7Hz2Zl1D6e3X2pF
-	 yLD8HBwBPJVkQ==
-Date: Wed, 21 May 2025 07:34:01 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Stanislav Fomichev <stfomichev@gmail.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
- pabeni@redhat.com, skalluru@marvell.com, manishc@marvell.com,
- andrew+netdev@lunn.ch, michael.chan@broadcom.com,
- pavan.chebbi@broadcom.com, ajit.khaparde@broadcom.com,
- sriharsha.basavapatna@broadcom.com, somnath.kotur@broadcom.com,
- anthony.l.nguyen@intel.com, przemyslaw.kitszel@intel.com,
- tariqt@nvidia.com, saeedm@nvidia.com, louis.peens@corigine.com,
- shshaikh@marvell.com, GR-Linux-NIC-Dev@marvell.com, ecree.xilinx@gmail.com,
- horms@kernel.org, dsahern@kernel.org, ruanjinjie@huawei.com,
- mheib@redhat.com, linux-kernel@vger.kernel.org,
- intel-wired-lan@lists.osuosl.org, linux-rdma@vger.kernel.org,
- oss-drivers@corigine.com, linux-net-drivers@amd.com, leon@kernel.org
-Subject: Re: [PATCH net-next 2/3] udp_tunnel: remove rtnl_lock dependency
-Message-ID: <20250521073401.67fbd1bc@kernel.org>
-In-Reply-To: <20250520203614.2693870-3-stfomichev@gmail.com>
-References: <20250520203614.2693870-1-stfomichev@gmail.com>
-	<20250520203614.2693870-3-stfomichev@gmail.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lhSNXCaZ"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54L9XQ9l024842;
+	Wed, 21 May 2025 14:35:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	hSelJosRQQr6P145Vz3bihOWQkyaaUABGHRyIAFvLx0=; b=lhSNXCaZ07R+iEsF
+	YSdyF/AYo2YrKtxDmzCEPd5EIRPX4R6xLMJaofi2/kYE4dg6BT7RkNMUpylEG+P1
+	ezDlY6QS7HzUSEnAErdAjq6ZwKyhIoAIqzqJCmV4VpStfKm2fuubHFOQHV1NdPdD
+	GhSLWhIOETQzSmaN8zZrcpOIxcQ99aw4afe24+soHri9aGy+TaJw3R+CfCGjOmoP
+	HbHqPyRrrlc2pZimlM8ZcnNI/T+A/bQ1uz2CUuz6/AUZHBEOGWV/L1yka86BlOkG
+	jlfgs6WZqpVTqD6BwIbjDNrgbx5mfwbXg5nr9RTZkHvzdYIdN0kNaQdkBdSmiNuq
+	m2gp4Q==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf4u7ju-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 21 May 2025 14:35:11 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54LEZAxc019764
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 21 May 2025 14:35:10 GMT
+Received: from [10.216.4.234] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 21 May
+ 2025 07:35:03 -0700
+Message-ID: <48c73675-a73f-46f1-81a9-f701a2cf00a5@quicinc.com>
+Date: Wed, 21 May 2025 20:05:00 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V1] mmc: sdhci-msm: Enable MMC_CAP_AGGRESSIVE_PM for
+ qualcomm controllers
+Content-Language: en-US
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+CC: Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson
+	<ulf.hansson@linaro.org>, <linux-mmc@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <quic_cang@quicinc.com>, <quic_nguyenb@quicinc.com>,
+        <quic_rampraka@quicinc.com>, <quic_pragalla@quicinc.com>,
+        <quic_sayalil@quicinc.com>, <quic_nitirawa@quicinc.com>,
+        <quic_bhaskarv@quicinc.com>, <kernel@quicinc.com>
+References: <20241104060722.10642-1-quic_sartgarg@quicinc.com>
+ <konkbi4hvd7qc4rhokwrymzqntroy7gijk3ndwv5rluswdrykp@xsafrtrjzmuq>
+ <10c90fee-ce7f-4034-9028-4252f19cb67f@quicinc.com>
+ <CAA8EJpoLLDXFQk-ViuaioKrECzMV0aUrcOj4v+Ufs4oHY53mrw@mail.gmail.com>
+ <064d3eed-c2ea-4b41-85b2-d2a5a922f8c7@quicinc.com>
+ <ehgjdszjr34xppmkrkicb4pnq326nor26tqu2ekop6ew2j3y3h@pm45aiipzuc5>
+From: Sarthak Garg <quic_sartgarg@quicinc.com>
+In-Reply-To: <ehgjdszjr34xppmkrkicb4pnq326nor26tqu2ekop6ew2j3y3h@pm45aiipzuc5>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 7CEKsOQPB3P7aNcKQ2kkcL2rUL4K9zzp
+X-Proofpoint-ORIG-GUID: 7CEKsOQPB3P7aNcKQ2kkcL2rUL4K9zzp
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDE0MiBTYWx0ZWRfX76p9aUikeDAS
+ LqPs3t7nnszkgsBMbRWPj2+YQHUTt/PcKvllBijvRhGaPp2/hRM32kfee+CJLR7rAgtY/7yZWT6
+ Hc8vgThhkCSjS9MMQmvVv3nDYxjNYi9lo3b71fbcn8i+6EifGR6/dqURx2nrKyChjc5Y7mJ7ga5
+ NjePNO70oN+mWmRwTZintCwR7Yt0ibcaTi4WA3xAcjvOo1srhF6ILw32RsYhbVbWOXrg6NBfDzN
+ DdBT28DDK+J8G6RYsklXOckkmSYIvPso7bNz8na5quRDp1LZRm9suu50r6pUMaElx7DeWfozPIt
+ V2lkC+/nZhHlq6tThHoRpKtsWof+x9LbqszG6P8FZpsyNkQW/e73HzCftvsNRwfeYvvhVLxYAJk
+ HLImRnXSl5QP6iJx2e6XzA1Cbn3mfwcnquhLdVUj4DRWTxA57NTFnpeN86Kr77A9wt1Jd+CC
+X-Authority-Analysis: v=2.4 cv=R7UDGcRX c=1 sm=1 tr=0 ts=682de49f cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8
+ a=3-RhneuVAAAA:8 a=COk6AnOGAAAA:8 a=E96v1nl-JPjVRj45kqQA:9 a=QEXdDO2ut3YA:10
+ a=VLVLkjT_5ZicWzSuYqSo:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-21_04,2025-05-20_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 clxscore=1015 mlxlogscore=999 priorityscore=1501 spamscore=0
+ bulkscore=0 lowpriorityscore=0 malwarescore=0 suspectscore=0 mlxscore=0
+ impostorscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505210142
 
-On Tue, 20 May 2025 13:36:13 -0700 Stanislav Fomichev wrote:
-> Drivers that are using ops lock and don't depend on RTNL lock
-> still need to manage it because udp_tunnel's RTNL dependency.
-> Introduce new udp_tunnel_nic_lock and use it instead of
-> rtnl_lock. Drop non-UDP_TUNNEL_NIC_INFO_MAY_SLEEP mode from
-> udp_tunnel infra (udp_tunnel_nic_device_sync_work needs to
-> grab udp_tunnel_nic_lock mutex and might sleep).
 
-There is a netdevsim-based test for this that needs to be fixed up.
 
-> diff --git a/include/net/udp_tunnel.h b/include/net/udp_tunnel.h
-> index 2df3b8344eb5..7f5537fdf2c9 100644
-> --- a/include/net/udp_tunnel.h
-> +++ b/include/net/udp_tunnel.h
-> @@ -221,19 +221,17 @@ static inline void udp_tunnel_encap_enable(struct sock *sk)
->  #define UDP_TUNNEL_NIC_MAX_TABLES	4
->  
->  enum udp_tunnel_nic_info_flags {
-> -	/* Device callbacks may sleep */
-> -	UDP_TUNNEL_NIC_INFO_MAY_SLEEP	= BIT(0),
+On 5/21/2025 6:25 PM, Dmitry Baryshkov wrote:
+> On Wed, May 21, 2025 at 12:46:49PM +0530, Sarthak Garg wrote:
+>>
+>>
+>> On 11/15/2024 6:53 PM, Dmitry Baryshkov wrote:
+>>> On Fri, 15 Nov 2024 at 12:23, Sarthak Garg <quic_sartgarg@quicinc.com> wrote:
+>>>>
+>>>>
+>>>>
+>>>> On 11/4/2024 4:19 PM, Dmitry Baryshkov wrote:
+>>>>> On Mon, Nov 04, 2024 at 11:37:22AM +0530, Sarthak Garg wrote:
+>>>>>> Enable MMC_CAP_AGGRESSIVE_PM for qualcomm controllers.
+>>>>>> This enables runtime PM for eMMC/SD card.
+>>>>>
+>>>>> Could you please mention, which platforms were tested with this patch?
+>>>>> Note, upstream kernel supports a lot of platforms, including MSM8974, I
+>>>>> think the oldest one, which uses SDHCI.
+>>>>>
+>>>>
+>>>> This was tested with qdu1000 platform.
+>>>
+>>> Are you sure that it won't break other platforms?
+>>>
+>>
+>> Thanks for your valuable comment.
+>> I am not sure about the older platforms so to avoid issues on older
+>> platforms we can enable this for all SDCC version 5.0 targets ?
+> 
+> No, there are still a lot of platforms. Either explain why this is
+> required for all v5 platforms (and won't break those) or find some other
+> way, e.g. limit the change to QDU1000, explaining why it is _not_
+> applicable to other platforms.
+> 
 
-Could we use a different lock for sleeping and non-sleeping drivers?
+Thanks for your comment.
+I agree with your concern but for me also its not possible to test on 
+all the platforms.
+Lets say if I want to enable this caps for QDU1000 for which it has been 
+tested and on any other upcoming target after testing, then how can I 
+proceed to enable?
 
-> @@ -554,11 +543,11 @@ static void __udp_tunnel_nic_reset_ntf(struct net_device *dev)
->  	struct udp_tunnel_nic *utn;
->  	unsigned int i, j;
->  
-> -	ASSERT_RTNL();
-> +	mutex_lock(&udp_tunnel_nic_lock);
->  
->  	utn = dev->udp_tunnel_nic;
+One option I had thought of was to implement this using compatible 
+string, then for all the upcoming platforms using this compatible string 
+as a fallback.
+But this doesn't look optimal to use compatible string for just one flag 
+and also this capability is not platform specific and we will be needing 
+for all the platforms. Please share your opinion on this.
 
-utn and info's lifetimes are tied to the lifetime of the device
-I think their existence can remain protected by the external locks
+Another option that I could have thought of is using device tree based 
+approach but seems that was not accepted earlier :
+https://patchwork.kernel.org/project/linux-mmc/patch/20230129023630.830764-1-chenhuiz@axis.com/
 
->  	if (!utn)
-> -		return;
-> +		goto unlock;
->  
->  	utn->need_sync = false;
->  	for (i = 0; i < utn->n_tables; i++)
-
-> -	rtnl_lock();
-> +	mutex_lock(&udp_tunnel_nic_lock);
->  	utn->work_pending = 0;
->  	__udp_tunnel_nic_device_sync(utn->dev, utn);
->  
-> -	if (utn->need_replay)
-> +	if (utn->need_replay) {
-> +		rtnl_lock();
->  		udp_tunnel_nic_replay(utn->dev, utn);
-> -	rtnl_unlock();
-> +		rtnl_unlock();
-> +	}
-> +	mutex_unlock(&udp_tunnel_nic_lock);
->  }
-
-What's the lock ordering between the new lock and rtnl lock?
-
-BTW the lock could live in utn, right? We can't use the instance
-lock because of sharing, but we could put the lock in utn?
+So it would be helpful if you can suggest some approach?
