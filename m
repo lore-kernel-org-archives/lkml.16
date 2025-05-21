@@ -1,128 +1,148 @@
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AA2279CF;
-	Wed, 21 May 2025 05:37:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5828679CF;
+	Wed, 21 May 2025 05:38:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747805877; cv=none; b=gfqx+0HDfGR/Msi43F7RLaGce4F6W43jY+l11ujSxMznya60BnlzhKsJkF6RpdWa9OGku+TXrmjDQvPZP9ecuTBEMOj392gf3lG65RYMPXtNCsD7nbV1Vl2qDEqyWdbwhYRvs13zmbkeXq2p18GR7GlGnvC+0WsPq+BKqYT2rO0=
+	t=1747805919; cv=none; b=EfkiiPMHVs/sJCxf3i7eAtZ02kL5h3suZZuHORCIBIXbAGcTJvyxqzJ7rYX2YXsNcQ5F7M5w+APECNZGqgmnA6RGxe5tk7236stYnsJf+On3FRquC6mHYQ9dWjaQczSFum7Ixq8IxFjQYT0wDXeIsBkiDF1erWE2y08B3JTpmaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747805877; c=relaxed/simple;
-	bh=3lw/6ZmeRXC/eWpLMtwZ364acTLZd+iqqodrLc9oIss=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XBc3rxIIHSD1D/xXHqV3fwCGMEVzrmCJFYkyvUiR9+5JtSEPQf1K05q1c1SNMkmj18aRRSpjfbcYuovuZVBmUbkyEZN6YZEyuodn0+D+MEH9+kHJl75i6WVTfENU1XqZHwHV2t0k8xw3wM8YP2QLO7kGfSRnZC8hQiavFGZfW1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VcENZlUn; arc=none smtp.client-ip=209.85.219.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747805919; c=relaxed/simple;
+	bh=WNvqHXW/Xhth82LmBEiT1VEhzAKX6LRM8ItCgjIPwGE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=FVx9v9oTmKDzIkXkz6/fTGDPWibmwyZm9JqXuJ1tSCrukXETcijxJ7dHgWNaAtAQs/BKKe3XWMMn/ZvPSQnj09uTLNca3W5jMSlVqAi4eeqaOoov32RbnycndXkZCW82JABUM++W0LJdnJ+IE1L5tQl/Ifr2SVuaNaaNCG5qVLQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=WoGqUnhT; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VcENZlUn"
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e7d5ca0b71fso277900276.1;
-        Tue, 20 May 2025 22:37:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747805875; x=1748410675; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wJi8Uhh+lzqIKZME4Ze4Y4J96yIckW6rCj2gYlAVdq8=;
-        b=VcENZlUnY7LepxYG9b+VOSLwqJxC1US1Kf0Nq/7WxY6r6tBS6/sPAUYjSxzb0JgCRC
-         Ba8N33Oa/+YM91ST9iUEq34IcqHEnXlJEFJ1aUMEPjnCBz85gd8rMq4XssHWlHZLeL1B
-         jUiVUgumBVs+Fm8b3U+lCP+BTaGYzEpVjMuI9jqO9HJ/YjMMIyJXb9Hx78jEBLEm6Tt6
-         rjf6PZd7MvvjVCpp8sOwXvqU/Lqli3csCRLkh6GNcn1se4NQOdLojgyMVgPqNXyuwknt
-         abZKysXegmBAsW17hk8QzI/HGwITEZkPoBxe+bVIk6mEkRqbBuDvyxA/I5omYLUwnqmU
-         Rzvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747805875; x=1748410675;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wJi8Uhh+lzqIKZME4Ze4Y4J96yIckW6rCj2gYlAVdq8=;
-        b=N8YrQqykmz5/eKNdYzM7sIeLeUdXHCszEK52fq9blnvOjwFCssZ1mLa8dnmflWJoi8
-         yxdM6JIhJeZ5bezoox1yfGLsofcTYmSEaur4XybqgQEomvdv1mAG+etpM1PU/yKQlQC+
-         TS5z49R0cg+rzbLZVtZzeA+cLyMVDtkDm4Uh3z6GgcTFCXg4F/ajy7boTCjX3dweC1sa
-         V1C4nOOoSH5Az5sLP67j9TFr++6aBnc5D83gmVCz8mk0ZIGX6BU/4ttPf4uWxRyPsbJR
-         hEEWhIBTBqD8BxPgazjSTckLoAoXkBquZerm5iwXAJ8dxY+6MhyZ7Ue/VUppoA3ZOmOj
-         VdMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUPE2r5Kasp0UjgTVxd7T8aB+MTzkGL1Q0R6/4XhooQR4s9msktQGwfC1J8wEVUYPdZk7dkZ4KAM6ZUaPI=@vger.kernel.org, AJvYcCWGSDdUgsTXugNlSu72ZDgCpRivKh1Gqgiq8ekOSKTfdLeX5cg/gW7zmrbc6yFNtQrhalTayAEsHfl2E1Nx@vger.kernel.org, AJvYcCXRCHv593sEPq2TyysdrCvq75zLQq/JyM3Glr4pfVAM4rO41EXX99S9oBtyundxd2obs7E3fE2U@vger.kernel.org
-X-Gm-Message-State: AOJu0YxeJNs+hflOJRidRAA7wSb2PUIQ3Oi15+A6YZw6d8Ke9D4OTXXd
-	x6PRD3WUobSdjBZFknuU9ge0pFzSCgtOxfDnRVgSyaVOX7mZpnolDNOy1UcxIJA5gaXqtD8pvT0
-	4FxMb81oLaKWr1TDFi7U8MDHtZyxZBXE=
-X-Gm-Gg: ASbGncvOQJaLzUrvq+LQcoPmrkNO2IKUSVREB71w8IRTcpoSQC9uHHMKl9bKpl68odc
-	VgElD8EE2CSo07edlAl6NpPB6HBZYyZjNT3jkgUXJJBQSPmG+DPMWWq1VKoTf/bq8CS1a6dodGB
-	cVVDIqGC/FNKQWIk6tM7ED5a4vbdhpRlU=
-X-Google-Smtp-Source: AGHT+IHG8nFmbbF5KqGD4r2dcJJXRBEpvP+aXS118vaPP+FX3tYHjvwmTsTPVWi+b7ZaeTKA9e4NtgZeCQBpPrtRMfE=
-X-Received: by 2002:a05:6902:120b:b0:e7b:8256:ec80 with SMTP id
- 3f1490d57ef6-e7b8256ed38mr21558528276.20.1747805875077; Tue, 20 May 2025
- 22:37:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="WoGqUnhT"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54L5JAia019165;
+	Wed, 21 May 2025 05:38:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	1rIXHTD4csw6kw4kJQD3SUf479s6VR/JxiTwReVlOHY=; b=WoGqUnhTryWGHLFf
+	7RC/X9H8XXL09zf+tY5lcWWfS5qEo2Jcj0fSPz+wbzryEc4yflTWeGXqCg5omNfm
+	B4S5Gni0I2vy4GtnaQU9n7+URF+Ae9Rep5/SP6aXsLKqc/QF+TpOGXs9leyuBY40
+	YfvDOTCPg5RQk8Vy9/HQMfZ4NyyLEC96A+2C+QyTLO2HNmkU5l1PrxRCU4Kz/M4M
+	dgkWK/G+70BIWq6zjMvD7/ybCRla3HLM2YDRbQFW6Ud4JAssdU0aw7A8/Bgz0B25
+	CZizA6dq4OD7RtZ5nposlOGOmi2pJVb/7JHfc3289JccKt2BMTjQbpba5ko40QNd
+	+i2WuQ==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwh59mj6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 21 May 2025 05:38:17 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54L5cGTs020104
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 21 May 2025 05:38:16 GMT
+Received: from [10.50.1.151] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 20 May
+ 2025 22:38:13 -0700
+Message-ID: <e9f460c3-a575-1014-cca7-27f1d79024e2@quicinc.com>
+Date: Wed, 21 May 2025 11:08:02 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250520130737.4181994-1-bbhushan2@marvell.com>
- <20250520130737.4181994-3-bbhushan2@marvell.com> <aC0J8g6UYxSw_7zZ@gondor.apana.org.au>
-In-Reply-To: <aC0J8g6UYxSw_7zZ@gondor.apana.org.au>
-From: Bharat Bhushan <bharatb.linux@gmail.com>
-Date: Wed, 21 May 2025 11:07:43 +0530
-X-Gm-Features: AX0GCFvMCLodwcWAvmyb1AykHvfajITUZiZwSFFDvaTBZi1hS56YuDL_ebWQ5pg
-Message-ID: <CAAeCc_nj1Sk_dAkasYNvwtJtUc1et3cveoTETh25RSojStqNDQ@mail.gmail.com>
-Subject: Re: [PATCH 2/4 v2] crypto: octeontx2: Fix address alignment issue on
- ucode loading
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Bharat Bhushan <bbhushan2@marvell.com>, bbrezillon@kernel.org, schalla@marvell.com, 
-	davem@davemloft.net, giovanni.cabiddu@intel.com, linux@treblig.org, 
-	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH next 2/2] spi: spi-qpic-snand: add support for 8 bits ECC
+ strength
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+CC: Gabor Juhos <j4g8y7@gmail.com>, Mark Brown <broonie@kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Richard Weinberger
+	<richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        "Varadarajan
+ Narayanan" <quic_varada@quicinc.com>,
+        Sricharan Ramabadhran
+	<quic_srichara@quicinc.com>,
+        <linux-spi@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20250502-qpic-snand-8bit-ecc-v1-0-95f3cd08bbc5@gmail.com>
+ <20250502-qpic-snand-8bit-ecc-v1-2-95f3cd08bbc5@gmail.com>
+ <8aa3d4da-da3e-2af4-e0f9-cd56d6259d8f@quicinc.com>
+ <c1729d39-9f7f-4c6d-b8a4-72dfee4bfca5@gmail.com> <878qn2nsa0.fsf@bootlin.com>
+ <16195524-1f31-4968-a3fd-f3d24f1c4223@gmail.com> <87msbhezjf.fsf@bootlin.com>
+ <007881c9-e03c-1473-d8eb-53fbad8c6a8e@quicinc.com>
+ <87frh4ej87.fsf@bootlin.com>
+Content-Language: en-US
+From: Md Sadre Alam <quic_mdalam@quicinc.com>
+In-Reply-To: <87frh4ej87.fsf@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDA1MyBTYWx0ZWRfX/2G/PLeDfvwU
+ AKDm/VEWgRmm5Je2fSjPQEqzqALTfgMTpAntgbAb9Qil9EbPOZPB47MqPUfSBwIyjOw402nNeoC
+ JN5/jJIMo0OI4Y2R5CS8FDIgk4pOf45DCzfaPbByPMQGQVKKaOte9lq8CuvaycC3XH0h7VFXMAX
+ oKXiGtDnVtRGenKiI9wj1RyO7kOMfdQ7kEPsV89z2kmWv0upEbiNXjYoQty9iJeTgQVq6+J2Ggl
+ w5M6FcozbEN8U1gEs7stzj3axjfhzbKd2E2Z51tIVtsIpWFy8r4IJErsCEowo5+XVp141BfEYvJ
+ WaH0pWvY2nO70BQOEYEHfS0pszW30XjFQFh3M5GSs4DT6KbPJk1l0/tteABD1GCLXTDDnOwEHKZ
+ XqJXCd8Z1RWT3zZ2Hf7YN4LupesNQC+y7VvsPNFvdIbT6SVaDA5C3naxxzqZXa2YIIDlL4MD
+X-Authority-Analysis: v=2.4 cv=XeWJzJ55 c=1 sm=1 tr=0 ts=682d66c9 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
+ a=1P9lDc0nu8lX0kGsQioA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: lX6Lf87Bh5Z_R65mhOqeVWWz-ecQjf5h
+X-Proofpoint-ORIG-GUID: lX6Lf87Bh5Z_R65mhOqeVWWz-ecQjf5h
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-21_01,2025-05-20_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 clxscore=1015 mlxlogscore=831 mlxscore=0 bulkscore=0 spamscore=0
+ suspectscore=0 impostorscore=0 adultscore=0 malwarescore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505210053
 
-On Wed, May 21, 2025 at 4:32=E2=80=AFAM Herbert Xu <herbert@gondor.apana.or=
-g.au> wrote:
->
-> On Tue, May 20, 2025 at 06:37:35PM +0530, Bharat Bhushan wrote:
-> >
-> > @@ -1519,22 +1520,27 @@ int otx2_cpt_discover_eng_capabilities(struct o=
-tx2_cptpf_dev *cptpf)
-> >       if (ret)
-> >               goto delete_grps;
-> >
-> > -     compl_rlen =3D ALIGN(sizeof(union otx2_cpt_res_s), OTX2_CPT_DMA_M=
-INALIGN);
-> > -     len =3D compl_rlen + LOADFVC_RLEN;
-> > +     len =3D LOADFVC_RLEN + sizeof(union otx2_cpt_res_s) +
-> > +            OTX2_CPT_RES_ADDR_ALIGN;
-> >
-> > -     result =3D kzalloc(len, GFP_KERNEL);
-> > -     if (!result) {
-> > +     rptr =3D kzalloc(len, GFP_KERNEL);
-> > +     if (!rptr) {
-> >               ret =3D -ENOMEM;
-> >               goto lf_cleanup;
-> >       }
-> > -     rptr_baddr =3D dma_map_single(&pdev->dev, (void *)result, len,
-> > +
-> > +     rptr_baddr =3D dma_map_single(&pdev->dev, rptr, len,
-> >                                   DMA_BIDIRECTIONAL);
->
-> After this change rptr is still unaligned.  However, you appear
-> to be doing bidirectional DMA to rptr, so it should be aligned
-> to ARCH_DMA_MINALIGN or you risk corrupting the surrounding
-> memory.
+Hi,
 
-Yes, rptr was not aligned as ARCH_KMALLOC_MINALIGN and rptr alignment are s=
-ame.
-But as per the second part of the comment, rptr must be aligned to
-ARCH_DMA_MINALIGN.
-So will change total memory allocation and rptr and result_address
-alignment accordingly.
+On 5/16/2025 7:44 PM, Miquel Raynal wrote:
+> 
+>>>> Interestingly enough, it reports the correct number of bit errors now.
+>>>> For me it seems, that the hardware reports the number of the corrected
+>>>> *bytes* instead of the corrected *bits*.
+>>> I doubt that, nobody counts bytes of errors.
+>>> You results are surprising. I initially though in favour of a software
+>>> bug, but then it looks even weirder than that. Alam?
+>> I have checked with HW team , the QPIC ECC HW engine reports the bit
+>> error byte wise not bit wise.
+>>
+>> e.g
+>>      Byte0 --> 2-bitflips --> QPIC ECC counts 1 only
+>>      Byte1 --> 3-bitflips --> QPIC ECC counts 1 only
+>>      Byte2 --> 1-bitflips --> QPIC ECC counts 1 only
+>>      Byte3 --> 4-bitflips --> QPIC ECC counts 1 only (in 8-bit ecc)
+>>      Byte4 --> 6-bitflips --> QPIC ECC counts 1 only (in 8-bit ecc)
+>>
+>> Hope this can clearify the things now.
+> 
+> o_O ????
+> 
+> How is that even useful? This basically means UBI will never refresh the
+> data because we will constantly underestimate the number of bitflips! We
+> need to know the actual number, this averaging does not make any sense
+> for Linux. Is there another way to get the raw number of bitflips?
+I have re-checked with HW team, unfortunately currently there is no 
+register fields available to get the raw number of bit flips. But
+for newer chipset they have fixed this issue. But currently the QPIC
+QPIC_NANDC_BUFFER_STATUS | 0x79B0018 register bit-8 will get set if 
+there is uncorrectable bitflips happened.
 
-Thanks
--Bharat
->
-> Only TO_DEVICE DMA addresses can be unaligned.
->
-> Cheers,
-> --
-> Email: Herbert Xu <herbert@gondor.apana.org.au>
-> Home Page: http://gondor.apana.org.au/~herbert/
-> PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+For 4-bit ECC if 5-bit raw bit flips happened then bit-8 will get set in
+QPIC_NANDC_BUFFER_STATUS.
+
+similar for 8-bit ECC if 9-bit raw bit flips happened then bit-8 will 
+get set in QPIC_NANDC_BUFFER_STATUS.
+
+Thanks,
+Alam.
