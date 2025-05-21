@@ -1,61 +1,75 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70C0E233D88;
-	Wed, 21 May 2025 06:34:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41DE0219EB;
+	Wed, 21 May 2025 06:34:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747809244; cv=none; b=HydxCi6Vxs27adXDkP7F39D+ia30yk9GYQkUCJqCxRoyQsChKfW+WiuwkaEhbpdPFIOkvW99pZtKa8ViKzEmwKtWWqdPOX+O+2HOxYvALU6xHScaNXnLlVgYJ0r1cSv8Ehjj3etc5DBhYnBt1UEvJF8AgT7Y9z/BWo52k3WjeUw=
+	t=1747809286; cv=none; b=IJhWslnn5TULtaeD5ZU4i3hwXpF/Rn8No6DuqW/okUzE6EdKcYP6vQYE5+oKUUAfq2DtQ1i1OZI6fWeNCTcfqkmEw8irATPUKfGUItZtaUPofFTcaMplIw6FkILysAknX06O0mtqHRkrFBDO/saF7P1qTbNxIVPasJGCyvJEH0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747809244; c=relaxed/simple;
-	bh=kROxZMu/nh6HWdn2287ETRvS/NrNq1Dh6NlPCnmP4ck=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OphsT5sOYmgjjNrJ/922P2HR+rUtBgTt4VGs6S1rc+qA6K6qgXnWcatkzGmI55T4NHBQ8Vs8QIL/NGQeUMFojt5X7m78JHh0FWGxBsPT8iKQSNVszPq9czorCjD//cflV6+m4TdWBAc7AvFHTWHCcjX86Qgh+EJFbtYkMZb+Yr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=lfySYCtq; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1747809286; c=relaxed/simple;
+	bh=PXVta0mCTYq6yt9jSQRdHzSV6a2PJ/jUqh30SUGtbZc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oWkNYG0x0AgcChU1RVFQl1FVK2j5WkiOSTc/xljrQ52kuQfGDHqagDf8V//nC80uP2SOZobMqQwyu50aHnw6Vtod0jGbNAhXflLKNWV7xt2v4dP8rPE+VWEQCE1nEtddVkFjgyUSI5SJ/x8j0QaBvIqTFGqo6ibxq4fWmIjUXZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nCCxO5sR; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="lfySYCtq"
-X-UUID: 8f72bad6360d11f0813e4fe1310efc19-20250521
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=/h4DXeSlHBOHr57ehL6D/b100MsQndsK0xj/jOkD2Ew=;
-	b=lfySYCtqZ525CdCtqNeKUjBQ2icdqIb5HVx+6hP1hjvSB9W5i12b0mHV5FpJqMEc/VpBEVqIUFnAHxGK3fljp0iW6EYMeyyAnZKXLQ7EzpFcXuLuT41vmoMM/9Fxjxu9gE8MFnay2j/PlpBCbzOOb+Pq+XRAhY1FYWlyINJn9OI=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:d65b8953-4de1-40f7-9088-9d8711477c3b,IP:0,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:0
-X-CID-META: VersionHash:0ef645f,CLOUDID:b8958e47-ee4f-4716-aedb-66601021a588,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
-	l,URL:99|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,
-	LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULS
-X-UUID: 8f72bad6360d11f0813e4fe1310efc19-20250521
-Received: from mtkmbs14n2.mediatek.inc [(172.21.101.76)] by mailgw01.mediatek.com
-	(envelope-from <friday.yang@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1630861245; Wed, 21 May 2025 14:33:51 +0800
-Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
- mtkmbs11n1.mediatek.inc (172.21.101.185) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Wed, 21 May 2025 14:33:50 +0800
-Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
- mtkmbs13n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Wed, 21 May 2025 14:33:48 +0800
-From: Friday Yang <friday.yang@mediatek.com>
-To: Yong Wu <yong.wu@mediatek.com>, Krzysztof Kozlowski <krzk@kernel.org>, Rob
- Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Matthias
- Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, Philipp Zabel
-	<p.zabel@pengutronix.de>
-CC: Friday Yang <friday.yang@mediatek.com>,
-	<linux-mediatek@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>
-Subject: [PATCH v8 0/2] Add SMI reset and clamp for MediaTek MT8188 SoC
-Date: Wed, 21 May 2025 14:33:34 +0800
-Message-ID: <20250521063347.31578-1-friday.yang@mediatek.com>
-X-Mailer: git-send-email 2.46.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nCCxO5sR"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-54298ec925bso9879939e87.3;
+        Tue, 20 May 2025 23:34:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747809282; x=1748414082; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CzYuom+zI5De3oMnCByXzViMDJT8mx4FU1edPifGipU=;
+        b=nCCxO5sRFIMB1Q1UbCmRnBCpA1Z3BlVQZtNWEDAlu71EsbjVO8bh1mvtOB4UvfuUAF
+         A5uFXRy9983XDu7WtJomT6azSGrrOGxn5Kl2fMSuIsqQ/lMNr6aNwrtSLhs3MwijR2gx
+         H69hDBAZz+o7iBAwDvXwOz9Dd5YD9n0AKgNoXkFzpBz/g8DgGYeO9Bt5RF7/RSV68Lm+
+         wmJlKoV6j4kEElf4FbNB9FxaM/is5yq8E2Io3pkklJfMcC7AHVxxEFc+V4CGd1AyPVT/
+         Cj/aWk19PoHJQGY8euQtanOPQcVLcQb/91IIIMhfLLj4KdojhC2w+Zh0wRdxTMQVlSzh
+         LnrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747809282; x=1748414082;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CzYuom+zI5De3oMnCByXzViMDJT8mx4FU1edPifGipU=;
+        b=B2mwju6nji/auTjQMa6SVEEuxJ6MFOumbdkHSC6JJXXWkyFscdEbuT/c8V5GjJSGnW
+         t8viK3+jEw21y1eiDI0xsMCPcds7GnpAnSTLJAxfnUnPHVpwSMkxrNGSH0NRGCM0kfZW
+         TNBJ2yOGRwTIbYcHWR6P1pQMRdDulwbMSdA28M+TtkpAA6Rz9jn5HZecM6WzmrsOEpzy
+         tqaADzanoiU5UNhB9I76dze89jOKbeDZstsOuRaDoF34d26eh4LPK7vGdBSHvqBf+6u+
+         VvGfO6yDbCcdohABSa+bn/3ILRXn3+H1nPazfHf3dfznkhyl9Llfx8tjsfTpYT786COf
+         vt3w==
+X-Forwarded-Encrypted: i=1; AJvYcCW838OXmO9WJ2HuA+s5zdFGbAFy0srPt4mHX1BVQ17+ngDnReECZ3sEbpzNlv/4PaREV/19qXIp@vger.kernel.org, AJvYcCXVY/HWffbh71W4YWLDTBEP5CnkCLzlX1XsbrSoMMVouNa/xfdJ290aZmL/PEdoWiSRdUNJAdsdjcSJjzA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxq7HCAAKe1rd6C7N/deCUfLIFLS9PvT8SqMiMBCy7LJTdUiEkr
+	Dx2oLFMRkJcDuwg64Mc+f3iQA8DNZuvtJ95JczgNDq6qHBybHC5MrjMB
+X-Gm-Gg: ASbGncvmqCnk7tKWllrr2hE7cMGm9zuxU8U0YbF1fkvfAMF3yYKi7yJ795I8Q8HzZip
+	fESaO6zjlgrYO4xPeINYgQ/GvbP6pajmSnuzWg2fkFk4pKKlqLts0jZ8PVdwVoATn01WrYojW/8
+	YmGodDUEOBw9un7UDJCA1xNiV/b1e/Ux7bs1WFBnyziCQfkpYjKdT1WzsJStp9MOrQolU9cQk6/
+	mQfS0oinwG4MWSlZM7ALyTbo3mrbEgnXTJnI6QN2GsusbgvqYZc7wimZE30R/drO9xOw/NmttmN
+	rCjcVVoqEedcUyJNwKKszc86on/Fykivqc81hlp4RrCmNyIL0IZedDT6GNFB2fp1bG2boQpU7FW
+	XEVm8jGGD/Eg=
+X-Google-Smtp-Source: AGHT+IFXHe4PWXlcmE49bZfwmBLGRPRzztLBYCczKRWtpTZGGJTw5C4nvUmzzCCub+1cMSMYYFoMmw==
+X-Received: by 2002:a05:6512:461b:b0:547:6733:b5a3 with SMTP id 2adb3069b0e04-550e71d6b1fmr5100149e87.28.1747809281807;
+        Tue, 20 May 2025 23:34:41 -0700 (PDT)
+Received: from localhost.localdomain ([91.197.2.199])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e702f462sm2690508e87.209.2025.05.20.23.34.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 23:34:41 -0700 (PDT)
+From: Andrey Kriulin <kitotavrik.s@gmail.com>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Andrey Kriulin <kitotavrik.s@gmail.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Josef Bacik <josef@toxicpanda.com>,
+	NeilBrown <neilb@suse.de>,
+	Jan Kara <jack@suse.cz>,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org,
+	stable@vger.kernel.org
+Subject: [PATCH v4] fs: minix: Fix handling of corrupted directories
+Date: Wed, 21 May 2025 09:34:31 +0300
+Message-ID: <20250521063435.3217-1-kitotavrik.s@gmail.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,47 +77,60 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 
-Based on tag: next-20250521, linux-next/master
+If the directory is corrupted and the number of nlinks is less than 2
+(valid nlinks have at least 2), then when the directory is deleted, the
+minix_rmdir will try to reduce the nlinks(unsigned int) to a negative
+value.
 
-On the MediaTek MT8188 SoC platform, we encountered power-off failures
-and SMI bus hang issues during camera stress tests. The issue arises
-because bus glitches are sometimes produced when MTCMOS powers on or
-off. While this is fairly normal, the software must handle these
-glitches to avoid mistaking them for transaction signals. What's
-more, this issue emerged only after the initial upstreaming of SMI
-driver.
+Make nlinks validity check for directories.
 
-The software solutions can be summarized as follows:
+Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
 
-1. Use CLAMP to disable the SMI sub-common port after turning off the
-   LARB CG and before turning off the LARB MTCMOS.
-2. Use CLAMP to disable/enable the SMI sub-common port.
-3. Implement an AXI reset for SMI LARBs.
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Cc: stable@vger.kernel.org
+Signed-off-by: Andrey Kriulin <kitotavrik.s@gmail.com>
+---
+v4: Add nlinks check for parent dirictory to minix_rmdir per Jan
+Kara <jack@suse.cz> request.
+v3: Move nlinks validaty check to minix_rmdir and minix_rename per Jan
+Kara <jack@suse.cz> request.
+v2: Move nlinks validaty check to V[12]_minix_iget() per Jan Kara
+<jack@suse.cz> request. Change return error code to EUCLEAN. Don't block
+directory in r/o mode per Al Viro <viro@zeniv.linux.org.uk> request.
 
-Changes v8:
-- We replaced 'pm_runtime_enable' with 'devm_pm_runtime_enable' in the
-  v6 patch. This changed the order of cleanup, and reviewers expressed
-  concerns that it could introduce unexpected issues. So I discard this
-  change and continue using 'pm_runtime_enable'. We need to conduct
-  further investigation to determine if there are any issues related
-  to the cleanup order. This might be resolved in the future, but for
-  now, we just maintain the current status.
+ fs/minix/namei.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-v7:
-https://lore.kernel.org/lkml/20250430094545.23932-2-friday.yang@mediatek.com/
-https://lore.kernel.org/lkml/20250430094545.23932-3-friday.yang@mediatek.com/
-
-friday.yang (2):
-  dt-bindings: memory: mediatek: Add SMI reset and clamp for MT8188
-  memory: mtk-smi: mt8188: Add SMI reset and clamp for MT8188
-
- .../mediatek,smi-common.yaml                  |   2 +
- .../memory-controllers/mediatek,smi-larb.yaml |  19 +++
- drivers/memory/mtk-smi.c                      | 133 ++++++++++++++++++
- 3 files changed, 154 insertions(+)
-
---
-2.46.0
+diff --git a/fs/minix/namei.c b/fs/minix/namei.c
+index 8938536d8d3c..ab86fd16e548 100644
+--- a/fs/minix/namei.c
++++ b/fs/minix/namei.c
+@@ -161,8 +161,12 @@ static int minix_unlink(struct inode * dir, struct dentry *dentry)
+ static int minix_rmdir(struct inode * dir, struct dentry *dentry)
+ {
+ 	struct inode * inode = d_inode(dentry);
+-	int err = -ENOTEMPTY;
++	int err = -EUCLEAN;
+ 
++	if (inode->i_nlink < 2 || dir->i_nlink <= 2)
++		return err;
++
++	err = -ENOTEMPTY;
+ 	if (minix_empty_dir(inode)) {
+ 		err = minix_unlink(dir, dentry);
+ 		if (!err) {
+@@ -235,6 +239,10 @@ static int minix_rename(struct mnt_idmap *idmap,
+ 	mark_inode_dirty(old_inode);
+ 
+ 	if (dir_de) {
++		if (old_dir->i_nlink <= 2) {
++			err = -EUCLEAN;
++			goto out_dir;
++		}
+ 		err = minix_set_link(dir_de, dir_folio, new_dir);
+ 		if (!err)
+ 			inode_dec_link_count(old_dir);
+-- 
+2.47.2
 
