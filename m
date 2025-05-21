@@ -1,152 +1,183 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F1B253F3A
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 10:14:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D021E25B66E;
+	Wed, 21 May 2025 10:14:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747822492; cv=none; b=udl6Qwsg2Pt0F9hltHwaykRNHhtrZWd5LVl603B3vdUWtkJaXHVc8beJ/Ne1/KTH6Rz1vwodfrRofVTcL9/wlirzj/k8mMQPNfAzOgb2ae0y/R5MQy7GDBCB+p++YaO+MYpdWo9sWMiDtGUuBQfVd2O5Pw+SltzDVVJWxXR+jV8=
+	t=1747822493; cv=none; b=g+VkFGaPWL0raCDOajrxYKOwQlolGid8qZqDZwaZoNES2l1FYcmDC/Tc/0Ug87wcZuaIXpjQHqjNIdEjVuU6h+axWxW4SVIXw3Z12o9NhlfOFYSy1X6iYSNQ6bMe5oolITReeX4YlBMCx4beXdfBODExgSRhj1pLXkV0l/tTCWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747822492; c=relaxed/simple;
-	bh=q1hjdgEO6DoBqSlAA5Wybk0eimeQHVfJXZnujDsW5tw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=APScqSoMfwukF+bNwehgMxHuAY/PrgG+TIqcra6Q7tusA/g8lqZrKdiGmlk+0G37vY2Q0ibSRbYgsRXHWk+GZ9+bEtkW3wPw490xon/tbWFBWt40GUn0BhRPht13GtdI6rSqSBD0gDhl7co5nqbOaBEARjCVjF86zg4wb5akTCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=QLRiqsff; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=7Tcs6OFN; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=UcOSS4V/; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Wvag8WbD; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1747822493; c=relaxed/simple;
+	bh=uekFzqz99LLjLHspdti1ivZB7yPyONTYgHYGnDu/3bU=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=FpdMDmV1GFDRKk5L/TgcVr7XUoHuGYbss5U3NYkIp+NfpxH+9cx6yhgWttVqiUH0C6QGCfha/66kGrCBKJylUSeQgGKQ+nVJLmOaHQEnT3gnxU73mLGB95K2S1wKf2F0MPvsSazO+8PgqgaX5BZc63Gl1z2z9w8V15Blp6iVfY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Mb5N++UC; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="QLRiqsff";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="7Tcs6OFN";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="UcOSS4V/";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Wvag8WbD"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id E15102091C;
-	Wed, 21 May 2025 10:14:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747822488; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=L36lwljlqMD0aYeNn5rHtteD0CmLa5fppTcwExjJASI=;
-	b=QLRiqsff1PXVC4ebs47iVDAj9bjOQIt1c0CnHRTEMseXBG+fkje2ZRSMjdqD+YSs5jOsCl
-	o4jQrtV7w8jgoqwXj40WdbJ44PHdjOWpQcW1sKLDBqkTTL0nubcMWysCziZcQGpZED8fcK
-	FTcNoCJUocsQIO58pNf84ixZcjfcRd8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747822488;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=L36lwljlqMD0aYeNn5rHtteD0CmLa5fppTcwExjJASI=;
-	b=7Tcs6OFNkrhdUZr5DXGs+h4wuBJXJS/duVQn3F403sruvpVYIiH3maFj8l7hdvg1LHXH9e
-	azFddiKUWVlLDLDg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747822487; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=L36lwljlqMD0aYeNn5rHtteD0CmLa5fppTcwExjJASI=;
-	b=UcOSS4V/CIYcsAFikTmh8Lnd+u2+Rz4F5QpXvq2Q/uUzZ2MAXdoUhzLrTkf1i0JlacDit7
-	4pe8TJf6gRdKS2K5WtGX3NkA7DGbR2t8hPH7/56y3SSsAIt0ZTZ0iZEUv6kqNc79FbVhFA
-	9UPOvmBE7ojbVx8BF3/AWxVhyErPcCc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747822487;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=L36lwljlqMD0aYeNn5rHtteD0CmLa5fppTcwExjJASI=;
-	b=Wvag8WbDuD/UYUAsBDOpPwvRjKhLe1BQsFtT5zquE0FcLHyrLIQGXR5CxcNfPOInIyeGkG
-	cb+Th4UTTIjwvVCA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B8BCD13AA0;
-	Wed, 21 May 2025 10:14:47 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id kKxWLJenLWiqTAAAD6G6ig
-	(envelope-from <hare@suse.de>); Wed, 21 May 2025 10:14:47 +0000
-Message-ID: <c46209ce-3e28-4a18-83c2-3ff6d442cf8d@suse.de>
-Date: Wed, 21 May 2025 12:14:47 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Mb5N++UC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747822492; x=1779358492;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=uekFzqz99LLjLHspdti1ivZB7yPyONTYgHYGnDu/3bU=;
+  b=Mb5N++UC1gkRKkAVEyQSYphHI8lQDjVx6P+0UNmCLXysPiK4mtzvXweb
+   ko+i/eNRIOiwC5zoHIkfktaDa6+2uo/x1/O3BI7K7DQt58wTdOwHaP92P
+   7O1KqxNiMSquvjpneRkJX05G8VTnQQmNps5aBjd1rtyMzYuU3fpXDz27y
+   o6fWsOZE6jdru/mP50++F/yh/j12SxmYWsNCyaXu+szPwtRWS+S6Gyqr1
+   wY3M3KWL8V1b/3t+37f8CpVt53PmqCc40B4jkvXRXIpoc2e88wQZyWfsj
+   A4sPl9LU4dzVgVdEVZH1eSZNp72RyoPqxk7/IK8lpIkVUueNkTe6kLSEz
+   g==;
+X-CSE-ConnectionGUID: VAC3pOd8RN6r9OJ2QUOafw==
+X-CSE-MsgGUID: SJ9djBikR7eEiu5IUxA/dg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="53457026"
+X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
+   d="scan'208";a="53457026"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 03:14:51 -0700
+X-CSE-ConnectionGUID: Sryv4vM8T8e2lM82CkAKLw==
+X-CSE-MsgGUID: Lc+DeZb6Rtq4K8oH+oXTTg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
+   d="scan'208";a="144735805"
+Received: from dalessan-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.221])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 03:14:42 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 21 May 2025 13:14:38 +0300 (EEST)
+To: Bjorn Helgaas <helgaas@kernel.org>
+cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>, 
+    Karolina Stolarek <karolina.stolarek@oracle.com>, 
+    Weinan Liu <wnliu@google.com>, 
+    Martin Petersen <martin.petersen@oracle.com>, 
+    Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, 
+    Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, 
+    Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, 
+    Lukas Wunner <lukas@wunner.de>, 
+    Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+    Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney" <paulmck@kernel.org>, 
+    Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
+    Oliver O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>, 
+    Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>, 
+    Terry Bowman <terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>, 
+    Dave Jiang <dave.jiang@intel.com>, LKML <linux-kernel@vger.kernel.org>, 
+    linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v7 04/17] PCI/AER: Consolidate Error Source ID logging
+ in aer_isr_one_error_type()
+In-Reply-To: <20250520215047.1350603-5-helgaas@kernel.org>
+Message-ID: <e2e1c971-b85d-bef9-7d9b-e4126a9a9e77@linux.intel.com>
+References: <20250520215047.1350603-1-helgaas@kernel.org> <20250520215047.1350603-5-helgaas@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 06/10] net: fold __skb_checksum() into skb_checksum()
-To: Eric Biggers <ebiggers@kernel.org>, netdev@vger.kernel.org
-Cc: linux-nvme@lists.infradead.org, linux-sctp@vger.kernel.org,
- linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
- Daniel Borkmann <daniel@iogearbox.net>,
- Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
- Sagi Grimberg <sagi@grimberg.me>, Ard Biesheuvel <ardb@kernel.org>
-References: <20250519175012.36581-1-ebiggers@kernel.org>
- <20250519175012.36581-7-ebiggers@kernel.org>
-Content-Language: en-US
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <20250519175012.36581-7-ebiggers@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: 0.20
-X-Spamd-Result: default: False [0.20 / 50.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	URIBL_BLOCKED(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:email,suse.de:mid];
-	FREEMAIL_CC(0.00)[lists.infradead.org,vger.kernel.org,iogearbox.net,gmail.com,grimberg.me,kernel.org];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:email,suse.de:mid]
+Content-Type: multipart/mixed; boundary="8323328-520110086-1747822478=:946"
 
-On 5/19/25 19:50, Eric Biggers wrote:
-> From: Eric Biggers <ebiggers@google.com>
-> 
-> Now that the only remaining caller of __skb_checksum() is
-> skb_checksum(), fold __skb_checksum() into skb_checksum().  This makes
-> struct skb_checksum_ops unnecessary, so remove that too and simply do
-> the "regular" net checksum.  It also makes the wrapper functions
-> csum_partial_ext() and csum_block_add_ext() unnecessary, so remove those
-> too and just use the underlying functions.
-> 
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-520110086-1747822478=:946
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+
+On Tue, 20 May 2025, Bjorn Helgaas wrote:
+
+> From: Bjorn Helgaas <bhelgaas@google.com>
+>=20
+> Previously we decoded the AER Error Source ID in aer_isr_one_error_type()=
+,
+> then again in find_source_device() if we didn't find any devices with
+> errors logged in their AER Capabilities.
+>=20
+> Consolidate this so we only decode and log the Error Source ID once in
+> aer_isr_one_error_type().  Add a "details" parameter so we can add a note
+> when we didn't find any downstream devices with errors logged in their AE=
+R
+> Capability.
+>=20
+> This changes the dmesg logging when we found no devices with errors logge=
+d:
+>=20
+>   - pci 0000:00:01.0: AER: Correctable error message received from 0000:0=
+2:00.0
+>   - pci 0000:00:01.0: AER: found no error details for 0000:02:00.0
+>   + pci 0000:00:01.0: AER: Correctable error message received from 0000:0=
+2:00.0 (no details found)
+>=20
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 > ---
->   include/linux/skbuff.h |  9 -------
->   include/net/checksum.h | 12 ---------
->   net/core/skbuff.c      | 59 +++++-------------------------------------
->   3 files changed, 7 insertions(+), 73 deletions(-)
-> 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
+>  drivers/pci/pcie/aer.c | 22 +++++++++-------------
+>  1 file changed, 9 insertions(+), 13 deletions(-)
+>=20
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 568229288ca3..488a6408c7a8 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -733,16 +733,17 @@ void aer_print_error(struct pci_dev *dev, struct ae=
+r_err_info *info)
+>  =09=09=09info->severity, info->tlp_header_valid, &info->tlp);
+>  }
+> =20
+> -static void aer_print_port_info(struct pci_dev *dev, struct aer_err_info=
+ *info)
+> +static void aer_print_port_info(struct pci_dev *dev, struct aer_err_info=
+ *info,
+> +=09=09=09=09const char *details)
+>  {
+>  =09u8 bus =3D info->id >> 8;
+>  =09u8 devfn =3D info->id & 0xff;
+> =20
+> -=09pci_info(dev, "%s%s error message received from %04x:%02x:%02x.%d\n",
+> +=09pci_info(dev, "%s%s error message received from %04x:%02x:%02x.%d%s\n=
+",
+>  =09=09 info->multi_error_valid ? "Multiple " : "",
+>  =09=09 aer_error_severity_string[info->severity],
+>  =09=09 pci_domain_nr(dev->bus), bus, PCI_SLOT(devfn),
+> -=09=09 PCI_FUNC(devfn));
+> +=09=09 PCI_FUNC(devfn), details);
+>  }
+> =20
+>  #ifdef CONFIG_ACPI_APEI_PCIEAER
+> @@ -926,15 +927,8 @@ static bool find_source_device(struct pci_dev *paren=
+t,
+>  =09else
+>  =09=09pci_walk_bus(parent->subordinate, find_device_iter, e_info);
+> =20
+> -=09if (!e_info->error_dev_num) {
+> -=09=09u8 bus =3D e_info->id >> 8;
+> -=09=09u8 devfn =3D e_info->id & 0xff;
+> -
+> -=09=09pci_info(parent, "found no error details for %04x:%02x:%02x.%d\n",
+> -=09=09=09 pci_domain_nr(parent->bus), bus, PCI_SLOT(devfn),
+> -=09=09=09 PCI_FUNC(devfn));
+> +=09if (!e_info->error_dev_num)
+>  =09=09return false;
+> -=09}
+>  =09return true;
+>  }
+> =20
+> @@ -1281,9 +1275,11 @@ static inline void aer_process_err_devices(struct =
+aer_err_info *e_info)
+>  static void aer_isr_one_error_type(struct pci_dev *root,
+>  =09=09=09=09   struct aer_err_info *info)
+>  {
+> -=09aer_print_port_info(root, info);
+> +=09bool found;
+> =20
+> -=09if (find_source_device(root, info))
+> +=09found =3D find_source_device(root, info);
+> +=09aer_print_port_info(root, info, found ? "" : " (no details found");
+> +=09if (found)
+>  =09=09aer_process_err_devices(info);
+>  }
+> =20
+>=20
 
-Cheers,
+Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
 
-Hannes
--- 
-Dr. Hannes Reinecke                  Kernel Storage Architect
-hare@suse.de                                +49 911 74053 688
-SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
-HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
+--=20
+ i.
+
+--8323328-520110086-1747822478=:946--
