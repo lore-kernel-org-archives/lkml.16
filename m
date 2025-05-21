@@ -1,69 +1,58 @@
-Received: from sonic314-21.consmr.mail.sg3.yahoo.com (sonic314-21.consmr.mail.sg3.yahoo.com [106.10.240.145])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A47F31A9B23
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 05:43:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=106.10.240.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A869E1A9B23;
+	Wed, 21 May 2025 05:43:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747806228; cv=none; b=AV6arKLTWmxu2+Al/dJiogjfD0OHpF3Ea5QGtocwvarAngYzPNIStmPjIK9R+Ta5Wlw6keXi0uZas/VYpexeVCnEYVHZcTb8ARaRCwnLb4n37LJArUxe1pIVlzVMDY5Vk3FnEEgAPcwYyXJd5v1p5oXu7WBMrJVB+yHfJVkjjVQ=
+	t=1747806235; cv=none; b=p8zBLRf5nS/Mune+5bEfpnMrSf66fUGNPQ90OsqmQC8uVdoMcF9q3gRv8ZKXS8Q3P4v2KFa9Q5Inxz0J+/8N/P5rrTX02g5S6ZBdm3GnnZOEfX1ISkksdwJj1d678ek5HkA3J3gUEeS8AXPutz6ME1vsn9ckECH5bKEIFHqLfSY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747806228; c=relaxed/simple;
-	bh=hlNI3m4WG/MlpI1xk52yYu+AhqXOd7Uzdbb2Zi9rfEg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:References; b=O1kwHsunbm4b+mx19CE5wl3pBnf+fxX9+NbnHZklhA0XzURvV9l2LW1tchQ/fQcL9ZnoDb8AjLmQU2i7dTtC/+28t+HaxZl/J9i43Fy6hxtDBY1NU4mbtLJKw8yTveJPcjmXnnfroTlNp6tl7RRGYpQQMBxKhhIzIvm0RlqLHPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com; spf=pass smtp.mailfrom=yahoo.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=VXMB3zEI; arc=none smtp.client-ip=106.10.240.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
+	s=arc-20240116; t=1747806235; c=relaxed/simple;
+	bh=EC21TXP6G5n52bTvnTrND4/c9M0afwyTeFu0AcKsBrw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KrZoixtMOHxqdQvYETSTTjot89DwYPyl8Xd7gtq7a9gQiF2wh8E9q7PtKmVHhZUoi5pdWqern98YiYoL/8iNMlq6gx2EbpJKcpo5hcpehhfldv/M8364mfZJjfiDMXYItzt6Zs3vBWzBFUpMZgb6SSjhiDKWnt8PE6yBDf3ohP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=2SJEumx8; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="VXMB3zEI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1747806218; bh=S/9bzua98W0ZPTSxA6M4c7Gw98gk98XoFj7668MMUpQ=; h=From:To:Cc:Subject:Date:References:From:Subject:Reply-To; b=VXMB3zEIMIiz9frw9Mye5EXhQzsYEL3nlwYQuFP67pZFyf4UC43q9YtxWlSwU8UFjoq3YKOzNrDYar0Aia8Gjw4BFRWoElAbMIXqNU1L0CGVh9Rtu5JXL2HXwuEeEDz5qf12MMT+pyU61MKGa37jGvaGeg5MEd8FW4lHekfviKUYs7MyXeKDa91+tb5HUTHqwJup1VbrHJ9qz5DuL7yZFt7roqaiaw54PoPp+74swBvooWejj5LFnSvFel0d5E+q8eWTaX9xnUw2ZZKM2KAdowvnqTjxAcTimOdIzlhlHAnzaPPLdP1f/oT/ZjujgD2GB1CA1f6ITkWkBLj1pPIPvw==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1747806218; bh=9zSb0Rm+fDZ+dKI9N5d3qAKGccxG0jWdD9EB2uBgPzt=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=LFrlhjIbA7keG8GROvNQlMMsN8WS44Wdpl0pqSlHt2MTRyFsyXagMt3qmFQt3yDwhUf8QYC3VLX3vzLusu7J6TT1DJbpg1J37JTC3BnjN0C4QjBVgOenrfX3mKClmw+PoozfxrjO/ctBPB3X2zI/1bBKAjne/P7g2lpNMJn11H3IZYr2E2aMVWsRgKhqfUYNp8bFkDTUJjLkcigrjwpp2Qc4ncnQ6umlYzSRIYakWF6Uaa8+f6/yn4RSYqjPoXWx7wk6WvviwiKAn2lfr8J/TvIoABl/kgFZXqdNISeNmI6jLSp/Mw9EkuedJOGI0+NTHi/QzoArU+WclTOGcAWF/g==
-X-YMail-OSG: A1v7uHAVM1moqNmZoGzV4CWMKtFAcHVVWC_yNO4yv_UYsNCXKpUmzaqqT2foRAu
- 7gzMvIOSmRvzv4g5qV0kpC5IkP7dT8.JkGbFV1533rPcHFTUXwg1V2yJi6pUB_uvT.q5cASRR_eT
- 9cR806Oou2w7yMTSiQs7FtjgQuelyNPiGNrIshuzLP.8TTMG0JLTKPKu71PLRNPZQkqKqIhG04pa
- SWMak.RB4X2gzyn.rf_1xO8tkM9ekfgi.Pm1i7OoBeSRdj8X4AHLCHAEkFQuZtLX2bIYHC_GdKit
- rmBx2Z03duYF60CpLFWRcBm0i8V29UuaWZ8EQA3GS198KsEVPGjfj.ags2S30as38afwc1EJnbUn
- qMUaYkPWLuOn9CqLmA.yLUKg_KbDllHgTydNCADU4R.tVf57Pr3zKmL1M7iJKoqSIosV0UmRAfpd
- v6rylxJrpDp8_VJkrw4DDcz.KHlMK.7EiBNTCRrzmtVZ8PPo54dFOesRR.h2LP4iDqtjhQ9m_mau
- c2dHS8hYkt0i5P0lEiF3Hk7c_toXbvGrmFJ9gn7NOndWrMuoMTBxC6vifiR0tiQObzf1xGyyVnae
- wbL7hUpgKHiBAN1fR7uf7RXcUKVXMtwnlHv2jS85Az_8kAzjcqM5gwz1262riWCXL0PTD6bFfdoF
- Y3RGGN_8xjPXX8SlOCyCiDv68bjVZ5MQA3tAx6O5KvTn8Kk0sjf_JdlIKYqM.HftivdqMVR696Ej
- agkTRXpS_szS5OUhSe45XeVzebnyJrTnglRKxhBu4zGQzgzCrGNx9t1L7ajmpfZAFOOU1q4dh3ek
- EbbreAzJB0jhDPUu_gp5YTpV0SldSM4SZnYFQDMiPvpRd5zIuqHJKf.8PdHh4DQILkdGJOlbJ9Ot
- ry7XzMEiG1EB_RCJKhAw6zunEZpFxVimd8UCs3uN9jl_AwrvIcaPDbeis85XD1Ibq_mESsNZR0bc
- T._YwVzz8vMh0H9S.vMjXkVfLzXKtD6Yu6kaJ0r_bSThR6LGkN48tAzmnckDvCfO4kyxs92nq1fN
- ORC3p.GJDXGOM5S0WVXGqNG864rx.YI1tCJA_kwPguiSWq1_EU.ZrhPmkRycTDhCW8l6zfdI1x29
- M0n0Y1j1SDDb_dQULYsWapW3FeKoA2FSDJSYbosww4Hj2BeAjRHZ.I64viBapxSZKQ4CuWVxPmh7
- sb1GFJls5pFnJVPljv6Nngce0alOtY4dQ.mDVEr0aSboxoMLGpFaOJRjz1_s_gIh_1R6LQYv5d_8
- .WKiGjPV.zyC.2VfvF9xbPMjNCiaYUVB95539WoHZo8pRcecGthtoeCjTV5H_vDgw8DO9ujWNuE2
- r2bV18dmmgYpVAwixIAqa8y1rdA_v2ym5Mh6lIx2qWMpZJaaxxd7HNOubl3p4vubTMW8B4iOwRYk
- DH4rd470khT6n5z.LOl_zGb4_WuBdrXQ6NNyAcDBInKHraHQ3RlwP9cJW_bhcaaVZIdlPjmVuUya
- v6j0v3DvkTVOEN1AUZuNO0An_TnwODpfDdpu3qFwrTYpMdBJ1rQn5zgXhzEZ.nn4P3dn6Pn5lx2c
- KwiKbYmp_xPlMb.GvyjB4osLID50R_JPQxEJDVWWmb8XLPScPza_KGDGOUpG4MfFExy6firVt2dh
- 90Oyu5Hz6F3SgY_QcuqHU9Vw0oUS8BHHUv049HG_qXBJrSpRSVB6cfw4pZgSF0lYpJBygyOp.2gf
- nkDprAWyjMFBzsq.3Pw.y7JtkLHxMPjam.n5rF4ScZj3r1lD7JQMewxmxQcgQ9xgUUxMFxEbJbKp
- PpGqTXzJ57W7Qgapx8kOFffX0kSgrVnKseL8K8nb2GPrPVA0lKJ8kQdW4.RBfU66pL2pCKqFdflY
- P7ClsWLc3o403iHAmjbEKBez2xgLuiOQ6saVw9rEBZnDUdWUXFY6RUJw3BmSqK4.uR_UPQka1c29
- L3zHPRhsRyvng3DsM3WMAnLo9K2hoEI5UWtav.cARlrh0h2Ytn9TKHf9BQqqWvyLS2hZCWao6v6I
- Tg9gI_LSWq7xV_OIhwx6OQLE1_vIlJbIqfuzf8t5MBdOQ0Y0.qxkkIgvKt3z7c9XN4ezE6pcAbRn
- FHs.IQ0GajwV18nhYP0fZIfqXw5p1qK2cxzJ5KCqMNSUlxiyPrxhSDITKBq3qK_fkbv0sGJrjNJr
- J8fjRj43bKnHruW4PJzNQPJK2w60Alkz24K7AniECjcQUJu49yZ493YEX30FJD.F1A6MehLIlYOP
- zEJF8E4orLcvOq_315VXPrZWglS0ARrcp.8lPMMO_zyoGlJFeKAf81VGwnH4DFJLsO9_DFf8D.3m
- anuTDVkCRNWq_wuH4PzQIMDSIlvht_BtcPwISCKB2.Q--
-X-Sonic-MF: <sumanth.gavini@yahoo.com>
-X-Sonic-ID: 405d001a-5678-4405-96ab-7f6466e42883
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic314.consmr.mail.sg3.yahoo.com with HTTP; Wed, 21 May 2025 05:43:38 +0000
-Received: by hermes--production-gq1-74d64bb7d7-s6s6l (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID fa4de8c44664aa8fb2260df0a5c9ab6a;
-          Wed, 21 May 2025 05:33:26 +0000 (UTC)
-From: Sumanth Gavini <sumanth.gavini@yahoo.com>
-To: tglx@linutronix.de,
-	mingo@kernel.org,
-	sumanth.gavini@yahoo.com
-Cc: linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] wifi: wil6210: wmi: Fix spellings reported by codespell
-Date: Tue, 20 May 2025 22:33:21 -0700
-Message-ID: <20250521053323.284845-1-sumanth.gavini@yahoo.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="2SJEumx8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1747806233; x=1779342233;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=EC21TXP6G5n52bTvnTrND4/c9M0afwyTeFu0AcKsBrw=;
+  b=2SJEumx8AeVJJI6UAeYxaH6fxwzr765ESHBg5oKS3JdHWz6SH7ESy0FT
+   b5WmqURS/OySNO/AYUvjpIM1Dc6I3yGDR5VyDK3uZjRG/3m1MPy/o9gwf
+   0AMtjrUPQaasi7JJQYF3luf3zlmurzg1RindxJvbN4kHU8rAUSsGiM2Hn
+   5anS8Yl7lz1KRbsxnlRHTNaBKVovlFPXOh7cloJaQ28RQsiOs/SEgKLpg
+   cqPkqCS4BDf6xd/060KMvVJaVEW0v3wWL6ux2kzKErhIIwwJiSouITUZu
+   m6+cPbImybpseh+T9WXpGX/Os2WNHp5rfCHywiEat3LS9kFRk420YGBZm
+   g==;
+X-CSE-ConnectionGUID: k0o2CMOdRGO0OGeppoCe8w==
+X-CSE-MsgGUID: lw/LZ2bVSAGWY62L5J/plA==
+X-IronPort-AV: E=Sophos;i="6.15,303,1739862000"; 
+   d="scan'208";a="41428745"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 20 May 2025 22:43:46 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Tue, 20 May 2025 22:43:21 -0700
+Received: from che-lt-i67131.microchip.com (10.10.85.11) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.2507.44 via Frontend Transport; Tue, 20 May 2025 22:43:17 -0700
+From: Manikandan Muralidharan <manikandan.m@microchip.com>
+To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+	<claudiu.beznea@tuxon.dev>, <tudor.ambarus@linaro.org>,
+	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>
+CC: Manikandan Muralidharan <manikandan.m@microchip.com>
+Subject: [PATCH v2 1/4] ARM: dts: microchip: sam9x60ek: rename spi-cs-setup-ns property to spi-cs-setup-delay-ns
+Date: Wed, 21 May 2025 11:13:06 +0530
+Message-ID: <20250521054309.361894-1-manikandan.m@microchip.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,52 +60,33 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-References: <20250521053323.284845-1-sumanth.gavini.ref@yahoo.com>
+Content-Type: text/plain
 
-Fix "busses" to "buses"
-Fix "Measurments" to "Measurements"
+The naming scheme for delay properties includes "delay" in the name,
+so renaming spi-cs-setup-ns property to spi-cs-setup-delay-ns.
 
-Signed-off-by: Sumanth Gavini <sumanth.gavini@yahoo.com>
+Fixes: 2c0a1faa4da5 ("ARM: dts: at91: sam9x60ek: Set sst26vf064b SPI NOR flash at its maximum frequency")
+Signed-off-by: Manikandan Muralidharan <manikandan.m@microchip.com>
 ---
- drivers/net/wireless/ath/wil6210/wmi.c | 2 +-
- drivers/net/wireless/ath/wil6210/wmi.h | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+changes in v2:
+- add fixes tag
+---
+ arch/arm/boot/dts/microchip/at91-sam9x60ek.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/wil6210/wmi.c b/drivers/net/wireless/ath/wil6210/wmi.c
-index 74edd007cd8d..6d376f85fbde 100644
---- a/drivers/net/wireless/ath/wil6210/wmi.c
-+++ b/drivers/net/wireless/ath/wil6210/wmi.c
-@@ -53,7 +53,7 @@ MODULE_PARM_DESC(led_id,
-  *
-  * There are several buses present on the WIL6210 card.
-  * Same memory areas are visible at different address on
-- * the different busses. There are 3 main bus masters:
-+ * the different buses. There are 3 main bus masters:
-  *  - MAC CPU (ucode)
-  *  - User CPU (firmware)
-  *  - AHB (host)
-diff --git a/drivers/net/wireless/ath/wil6210/wmi.h b/drivers/net/wireless/ath/wil6210/wmi.h
-index 38f64524019e..a6761a1e9d7d 100644
---- a/drivers/net/wireless/ath/wil6210/wmi.h
-+++ b/drivers/net/wireless/ath/wil6210/wmi.h
-@@ -3495,7 +3495,7 @@ struct wmi_aoa_meas_event {
- 	u8 channel;
- 	/* enum wmi_aoa_meas_type */
- 	u8 aoa_meas_type;
--	/* Measurments are from RFs, defined by the mask */
-+	/* Measurements are from RFs, defined by the mask */
- 	__le32 meas_rf_mask;
- 	/* enum wmi_aoa_meas_status */
- 	u8 meas_status;
-@@ -3634,7 +3634,7 @@ struct wmi_tof_ftm_per_dest_res_event {
- 	__le32 tsf_sync;
- 	/* actual received ftm per burst */
- 	u8 actual_ftm_per_burst;
--	/* Measurments are from RFs, defined by the mask */
-+	/* Measurements are from RFs, defined by the mask */
- 	__le32 meas_rf_mask;
- 	u8 reserved0[3];
- 	struct wmi_responder_ftm_res responder_ftm_res[];
+diff --git a/arch/arm/boot/dts/microchip/at91-sam9x60ek.dts b/arch/arm/boot/dts/microchip/at91-sam9x60ek.dts
+index cdc56b53299d..c1ff3248bd8f 100644
+--- a/arch/arm/boot/dts/microchip/at91-sam9x60ek.dts
++++ b/arch/arm/boot/dts/microchip/at91-sam9x60ek.dts
+@@ -609,7 +609,7 @@ flash@0 {
+ 		compatible = "jedec,spi-nor";
+ 		reg = <0>;
+ 		spi-max-frequency = <104000000>;
+-		spi-cs-setup-ns = <7>;
++		spi-cs-setup-delay-ns = <7>;
+ 		spi-tx-bus-width = <4>;
+ 		spi-rx-bus-width = <4>;
+ 		m25p,fast-read;
 -- 
-2.43.0
+2.25.1
 
