@@ -1,133 +1,118 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C37C050276
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 19:41:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4995250276
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 19:41:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747856465; cv=none; b=WIP2PMRwDgZ4PvmUL0RIGgs2+wYdLQdNaaYsEbzaPVctbCUoYI8jaadRFMwNpYXhX+b9m8pr0iElJOalYQATYnHh1qu+AYKkTALuD+HkoaLRMjUdPUCHS1cLNqeIpEhmboJjsryA2AD618IeI0HWk7zWCtYYn/L1XSA4BmMTjw4=
+	t=1747856469; cv=none; b=hR6iIKXyb5UBF6OGOBhq+G2ZQg04xk1hriocSTpRdhkCur8I/3rv6msR7VB0Px0ROnlDhPZt5KHFztD2WP06UZ5NYcZFVgF5TuoLXBoBqYCPXCabDiRar5avbP2qXaGuAIVeuQw/ZoO74o0MVF5aGDmDzX4x7735p091lVawMoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747856465; c=relaxed/simple;
-	bh=pBHC3Mjak2KciklMuFvJO1Y8WFtbtGJPLznHS4ZlJSQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=bXM1KxlfNSAjMlnJCeq0AS2U4VCHZF0zq+NsYCnq7dG2p8KlCdwbwa4AEdqmwvFzXFtNEHI9tH7q0DJ3o2UEH0CJGUYT0EaMORMElf3rjT2Qc4p8MonRSU3oPh2h21EGQCV1WGvTzK9/K1AxdeJldOaVJ42TsFwqrj4jWsdoYes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=e52uj3nq; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FyW2LI5p; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1747856469; c=relaxed/simple;
+	bh=dTz8Pl6rNpP6x+a81PzMdYafrwNbKhlcB/XNCRDHoX0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CITgrnkMP5KJL4+Sidpv2OOt5ReqxhbokrAjZl/HqYfFNGHwDTYkEWneC3WHEpwi5CTunUHNTOchpGpgTF1BNHu/z6XCICdm+g7dP1mWzPdMYI524Ji480BbfSu86OzTTqPKWjvvGL29KWhbRJTNgwNMoMZ5/6VfBeiGphv8ofw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HNBSDqnV; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="e52uj3nq";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FyW2LI5p"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747856461;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=apPcKnQasEGx/KZ5HwaleHwcwQsOKyGCUy9B7CyfDDQ=;
-	b=e52uj3nqxG0SS8UC8m94TypDN1iU5u2l/Rj96E7C1QqhDYBq55oxiOoqus71j3BcCePSRt
-	GamnlDQhqoTnzGAWksJ8q0cIsqR8dMr9HmOAAIAl3MyI4g3WOgX2XAvL63EvwE+aUyls0+
-	bh6iYBjrZy3OkGdzNV6BQYBLnVq9oQ41+bb6Z88A80Q68SpaGesQbC39SYhzmA2NGQfD/Q
-	WqCfVGfvzgfalFGpGj3nDbtia8RaCVe+yL3CLsiMsOVPqxrfIvqO3LKJ+Qz+BnkRHrUbvj
-	huOXjsEMridM4Z9JeyJi0+zm+6ty+S7KXPkyy+lXAEVK67pO6jGujo9Rzn2H4w==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747856461;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=apPcKnQasEGx/KZ5HwaleHwcwQsOKyGCUy9B7CyfDDQ=;
-	b=FyW2LI5pFIQNM2Z7iLUgKH1kcgBF5gm8fCJJ4unM8EV/K02kVXX7i2vhjf66sml/2uVljL
-	OEEoAIVxAq36daAw==
-To: Borislav Petkov <bp@alien8.de>
-Cc: Ingo Molnar <mingo@kernel.org>, "Ahmed S. Darwish"
- <darwi@linutronix.de>, Ard Biesheuvel <ardb+git@google.com>,
- linux-kernel@vger.kernel.org, x86@kernel.org, Ard Biesheuvel
- <ardb@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, Brian
- Gerst <brgerst@gmail.com>, "Kirill A. Shutemov" <kirill@shutemov.name>
-Subject: Re: [PATCH v4 1/6] x86/cpu: Use a new feature flag for 5 level paging
-In-Reply-To: <20250521192930.GEaC4pmmpuktvClDxj@fat_crate.local>
-References: <20250517091639.3807875-8-ardb+git@google.com>
- <20250517091639.3807875-9-ardb+git@google.com>
- <20250519094038.GIaCr8ltHvLBYjk8iI@fat_crate.local>
- <aCstaIBSfcHXpr8D@gmail.com>
- <20250519131944.GCaCsv8A71vn21AB1W@fat_crate.local> <874ixernra.ffs@tglx>
- <20250521181141.GDaC4XXW8BmtvJFy6a@fat_crate.local> <87sekxrdws.ffs@tglx>
- <20250521192930.GEaC4pmmpuktvClDxj@fat_crate.local>
-Date: Wed, 21 May 2025 21:41:00 +0200
-Message-ID: <87msb5rbub.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HNBSDqnV"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-736c277331eso7123823b3a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 12:41:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747856467; x=1748461267; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4xoEcX9Glc+doxMDVDNuceQpM6MovW7t4DTCzMcR2Xs=;
+        b=HNBSDqnVkE7blsClsWmgaZaDcpzbHl8fXu+zZYH7O0V+2mkz3rg9gigKr4cU7QcVrr
+         Xl6rMKoUIqc0pwf024VTsYllOSv3xqpiJJEACWXyPm5lp6wB54y2IvA6zZUWv5dGJMxf
+         TxN2FL+llKlCmTD0OIzD1iVL2AzZEy+/ne79DT5SUCjjHVm4a1v/Yc6fDyo0+3APsbeE
+         F0DBixGrOkmJPqQkQuOQgGn3wkeFySuVu35bqojiiJnGaGJIbYwURuBQY0QiQ+J0Uj1r
+         9e7b2L4BOCPLw8erIDJ1B0HH5KrTH8Tq+HIjoVlUqObk8S9SU0CyDAl2Uu78EX91tV7U
+         6sJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747856467; x=1748461267;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4xoEcX9Glc+doxMDVDNuceQpM6MovW7t4DTCzMcR2Xs=;
+        b=dqgSv9es+3cerSzkxs+lPxtA3FwP5I9WjpO5iUmgiN0wBEsFqVFwEZKpm45TsptOFa
+         a9GDpxXDOo7/iMjbBIsajd01py2vniNjyUufvFTgBZJ8Fjj1HNwfIvzJoI6UGW+6S5kS
+         q0MiHwKaUkp9YSNObe68etykZBwipqtjBMnrzjvQ10KDOd0SxNBr9bsEzrgqDG1QMInA
+         EyV85ew6MBXA7f7epzWRF9z5dU6g/CVTGytC1vUU5J+qSGMKprZdys56ItKvHJ1PBSA+
+         ihZ9aDKRCGhpfw9Gv1yV2kLdVBxrfSLSd/+fLvM7QYwAsetQeg5dwhPSR81cmlwFAznH
+         CRZw==
+X-Gm-Message-State: AOJu0YyyrtuDkMGPaClPT3QP8e4ZCH4FGcGbhOUOMnQQzuwhCVgE+k9U
+	YwGDs4bVLziN3LA31lnD1mjUpaS7uZqHgxbFonkqpFpcef3qw1liQELKQbjsXQ==
+X-Gm-Gg: ASbGncvJ2lk+4olijxrqXkCXUcPH00ab2UJupPNsnjaYzOcmaf2MwO8FlBtJ+o6gZEU
+	BtVbNTUzz+pk4XNl26feCiM+jancvSJpOCVCUvZrznZiAI4CWXsl0KNlsIy4P8hKtVd13YOvyAm
+	Zazg2OisK93E2osoulOwBOPIPuhK73NqRyIzPO8Us2Zm6OJr4qUpUlHg6myHuFeo0zFhxjJwxB8
+	e/ZVuPqZ6z0e5eOBjt6mKHCkKn/UYI55l69ygMrBZUk7OBL9Rnci1+uSSdR0Rc4DlWKJlPz40rI
+	Xw/rJ30Jy2sP6iM5Vff1fDzOmVFtEkIr7bbstyce0gJS7fH0r49yix65xg4up/YHe6eLUjbWbxC
+	gLs8bAtnHtOI2hPpj8PIT/OnojOlSIMY3Ym+nJJOVo/o=
+X-Google-Smtp-Source: AGHT+IFhMRxZV8JlSsA11qtEApD30y4j3LsC1f3X7v7BlDfnc7+l1GBtGmlbSKVghVRBzOcQBIaQ7Q==
+X-Received: by 2002:a05:6a21:168c:b0:1f0:e6db:b382 with SMTP id adf61e73a8af0-2160d5f2f0dmr38020648637.8.1747856467169;
+        Wed, 21 May 2025 12:41:07 -0700 (PDT)
+Received: from daehojeong-desktop.mtv.corp.google.com ([2a00:79e0:2e14:7:a588:8662:c254:867b])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eb084650sm9977857a12.61.2025.05.21.12.41.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 May 2025 12:41:06 -0700 (PDT)
+From: Daeho Jeong <daeho43@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net,
+	kernel-team@android.com
+Cc: Daeho Jeong <daehojeong@google.com>
+Subject: [PATCH] fsck.f2fs: fix null buffer error with dev_fill
+Date: Wed, 21 May 2025 12:41:00 -0700
+Message-ID: <20250521194100.1407220-1-daeho43@gmail.com>
+X-Mailer: git-send-email 2.49.0.1143.g0be31eac6b-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 21 2025 at 21:29, Borislav Petkov wrote:
-> On Wed, May 21, 2025 at 08:56:19PM +0200, Thomas Gleixner wrote:
->> But in fact, "clearing" the hardware view is the wrong thing to do from
->> a conceptual point of view. The hardware view is "cast in stone" no
->> matter what and having a clear distinction of a separate software view
->> will make things way more clear and understandable.
->
-> Right, if I had a time machine, I would fly back and define this thing in
-> a whole different way: X86_FEATURE would be what the kernel has enabled and if
-> the bits completely or partially overlap with the definition of a respective
-> CPUID bit, so be it. But they would not parrot CPUID.
->
-> IOW, I would completely decouple X86_FEATURE_ bits from CPUID and have all
-> in-kernel users check X86_FEATURE flags and not touch CPUID at all.
->
-> But ok, in another life...
+From: Daeho Jeong <daehojeong@google.com>
 
-We can do that now.
+Make fsck use dev_fill_block() with zeroed buffer instead of dev_fill().
 
->> I've stared at code for hours just to figure out that there was some
->> obscure way to end up with a disabled feature bit.
->> 
->> Having a software view in the first place makes it clear that this is
->> subject to a logical operation of 'hardware capable' _and_ 'software
->> willing' instead of some hidden and obscure 'pretend that the hardware
->> is not capable' magic.
->> 
->> Clear conceptual seperation is the only way to keep sanity in this ever
->> increasing complexity nightmare.
->
-> As long as we all agree and follow this, I'm a happy camper. Ofc, there will
-> be confusion where: "hey, I'm checking the CPUID bit but the kernel has
-> disabled it and marked this in the synthetic bit, blabla..." but once we know
-> and agree to what goes where, it should work.
+Signed-off-by: Daeho Jeong <daehojeong@google.com>
+---
+ fsck/fsck.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-The fact that user space can check CPUID and make uninformed assumptions
-about the kernel's view was a design fail in the first place. Of course
-everyone assumed that nothing needs the kernel to be involved and all of
-this will magically support itself, but that was delusional as we all
-know.
+diff --git a/fsck/fsck.c b/fsck/fsck.c
+index 893eea7..4d05e1b 100644
+--- a/fsck/fsck.c
++++ b/fsck/fsck.c
+@@ -3526,15 +3526,22 @@ static int chk_and_fix_wp_with_sit(int UNUSED(i), void *blkzone, void *opaque)
+ 
+ 	ret = f2fs_finish_zone(wpd->dev_index, blkz);
+ 	if (ret) {
++		u8 buffer[F2FS_BLKSIZE] = {};
++		u64 blk_addr = wp_block;
+ 		u64 fill_sects = blk_zone_length(blkz) -
+ 			(blk_zone_wp_sector(blkz) - blk_zone_sector(blkz));
++		size_t len = fill_sects >> log_sectors_per_block;
+ 		struct seg_entry *se = get_seg_entry(sbi, wp_segno);
++		enum rw_hint whint = f2fs_io_type_to_rw_hint(se->type);
++
+ 		printf("[FSCK] Finishing zone failed: %s\n", dev->path);
+-		ret = dev_fill(NULL, wp_block * F2FS_BLKSIZE,
+-			(fill_sects >> log_sectors_per_block) * F2FS_BLKSIZE,
+-			f2fs_io_type_to_rw_hint(se->type));
+-		if (ret)
+-			printf("[FSCK] Fill up zone failed: %s\n", dev->path);
++		while (len--) {
++			ret = dev_fill_block(buffer, blk_addr++, whint);
++			if (ret) {
++				printf("[FSCK] Fill up zone failed: %s\n", dev->path);
++				break;
++			}
++		}
+ 	}
+ 
+ 	if (!ret)
+-- 
+2.49.0.1143.g0be31eac6b-goog
 
-In the long run we really want to disable user space CPUID and emulate
-it when the hardware supports CPUID faulting, which should be made an
-architectural feature IMO.
-
->> Claiming that saving 5 bits of extra memory is a brilliant idea was
->> even wrong 30 years ago when all of this madness started.
->> 
->> I freely admit that I was thinking the same way back then, because I was
->> coming from really memory constraint microcontroller systems. But in the
->> context of Linux and contemporary hardware complexity we really need to
->> shift the focus to comprehensible concepts and strict abstractions
->> between the hardware and software point of view.
->
-> Right.
->
-> And as said, arch/x86/ should be solely looking at the hw view and
-> representing to the rest what is enabled or not. But I'm preaching to the
-> choir here.
-
-Let me restrict this further:
-
-    arch/x86/kernel/cpu/cpuid_eval.c::cpuid_eval() (or whatever name the
-    bikeshed painting debate agrees on) should be the only place which
-    can use the actual CPUID instruction.
-
-Thanks,
-
-        tglx
