@@ -1,127 +1,267 @@
-Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25F6A26E176
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 13:05:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9D4C267B84;
+	Wed, 21 May 2025 13:05:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747832716; cv=none; b=M9HOlNe7ecOVhFF0pDgbqwm7SJdYVH+G7LXzWDhOmf7+7Zm5IDTDFeF87A3bk6Hse2m5KfOhleyqAjCOfp+dfBTrKxb33VLd6my6bnnHiem7d0MFcoedxR8bCdYUlzRHlFtLxlkXYVr9yFsSO4h/TCX+zj+0aW+9p1nays8lSEA=
+	t=1747832749; cv=none; b=G+TH3gSqbrBr2SyqMR6q2FIWvN+bZMaWvAdeJJK/yt19A5Y5JGLCOjzhncsTpg9iir3L9UM/QvCaUhgU7Cua8gg31JBp3k6oqgC4I+DGC11N4V7/QrixBsTaqMpNLUSd1YMHYYOfzOBo6VRYZlI8LiAXB1uTngTi2ZyFpz06SWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747832716; c=relaxed/simple;
-	bh=Lfpf9KYeMfA5ceSYrwIBAnFuALvnl9+DKzgJ8mT4MWM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Um+cfWGU3kNoinOSq1DGnu/jU3cH1bIDJOJrakdSv+MmbWf4Wl9w75bQQtfc6kud6tzriT6ti9YjlFmKZAtvf9sYR+r20EWmL7sBLd1MXfqv8SC9yGLFzDipikLw7W7//A0hONx6SFAF5ghzab41r+oi0hbBRc4UmGuPlxapvwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=lJv3nP45; arc=none smtp.client-ip=209.85.166.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1747832749; c=relaxed/simple;
+	bh=TtJpXun4Jo/LoNJ0VLuUH4w1WA45/MB8aeWt8D+NtD4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=i0sBQ6QsjkfA/QgnjaKjJngUWU4d6fGc1PIzPfHSeVv0PkVOFcjMgLLOfP0g9ydZJa7XsQLHfm7hrpYw5OeVQeXSJJvt0YScsQM18lcbuOhP8MUEmzgoANoTZxy/OPAScA03TsKe+/6LLmmdDhgZdFtc4Wb7h+7Yi3xEwCi88I4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ANkhRhma; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="lJv3nP45"
-Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3dc82baf4eeso3641135ab.3
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 06:05:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ANkhRhma"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cf257158fso51214435e9.2;
+        Wed, 21 May 2025 06:05:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1747832711; x=1748437511; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=35BrxOOcfaPPTAO1IzcPRUrzrlbknsK0t0CSqi8oBRE=;
-        b=lJv3nP451V3brqjdYQ0sNtrSdPfHwZaX14mdboLjHnmztxy0e3mGdA/C+Uw7jiI86n
-         6iz5v9aTds9+13OxdG3bxORraVKewI9IogE4r1yCTatxT9sznTqwRjt+THlxduAtuw2s
-         Fb1VQx9EEkk2UNRw/J52NBRnY5MGGmnNANX/0MMqig2uOFOpSO+Bq2PwWQp5/yQkaAYj
-         EG7rEQEnjgFTYg3CrPELga/DznRE6HS/cqXdQNW46R9WStFKaoZqnwGx5vJkgyIsQsxQ
-         c2imLcg+n9S5ht8A8VLGCRLthb2hdvvq1ZtjD/GrrN7qPHN3XvUXFUKIPPyb/QfVX5Dw
-         fX6A==
+        d=gmail.com; s=20230601; t=1747832746; x=1748437546; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kq2QYelvGUau3xiMyKB8CSK2D94ZYBdUfldDB6qPuP4=;
+        b=ANkhRhma/GXEQHONRz3ljz0tQ5PoX4KUdbwLDoydlvlTymO5MzUwJJ5laXAsWxJlc2
+         UKIjtuX0k5d/JFv68mdSIjJ34p8H+/wydCuqthaYvYBuhh4Q0IqBrJHbfxR5C5yyu/Bd
+         3KKTE0m5LFcezpCOfTioG8uAJIf1H4l1mYj60HS/8fd+tJGCb0kEzfBzK7TEyZBWR+Vt
+         7mYifxAW9QFfgdiK1iBOGN2lVWjSZ3yS+3gMNYzq0RaQtNnia5961430/8JnOvB9kaoY
+         O9d1CPewdrOD+3etQLg2/uZo6NMxcyHXODq9ylG0X/rS6qljUtZyfRVKmHH9h0GG+yGH
+         6FvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747832711; x=1748437511;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=35BrxOOcfaPPTAO1IzcPRUrzrlbknsK0t0CSqi8oBRE=;
-        b=Fc080S1zbpzd7pD8UOW6/OvRjc7sBr7jnwznu4iHvwJyD5w3V4DAu+J4WPPWwyYwrp
-         zwYXL7UnacrGgvVKbFIYIrRM3y78PE3TpjWEmhxSLY6EE2wISjLtYEU3uRaT1JrhJR3J
-         A1GJc3bdx95RIcV4zyv09OSyP5pYnlnPuQwzJvt/0sSsbmYISWJLyYQ6VQFIrPv6H36A
-         RdHdHyxAY/V4PDZiVFapW30QIs8w+aZuuIFstaYZmUjqHPEWusfvu8xhdWzXAhwJU8pn
-         9M7LLdEKESTe4QQYUdqyNJu4y8WR9XLBAfCWyz8mihRUlhhjpUH9rLP1/rbVL3ht2V3s
-         RgFA==
-X-Forwarded-Encrypted: i=1; AJvYcCVZBhuio+1TwFB94HeDyueTRPlT7VqdzFhEXwgi3qnRbELOMLwI54mK42lb+XIJNM/BZp9wsyLx0XriZsE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywjpgixx593HPAbexA0q2TH0Pavkgw41w48VGE805rHt7SK8YiT
-	Q4zwEhw/Guydp0XjCuMhIG0oOcQbZVltnvThsl71yHTUdgXsEFwNxlzJ6SqhyyH+Az0=
-X-Gm-Gg: ASbGncubccpmzTXn8D/Ql6BMGK3rW3kigNvqHwL5OUqP84sid1lZ8/pr4Ih1YetozVw
-	u8vIBA4EnyJwcIQMgzraiK8X/OyWTkyUig2snvJuOCLPEcAyteJ1HtCgeuSdi+ttlxPBHJBtaHF
-	IzOXt5XCU/4RuN0DGpOTBbGif3rJQrl9iZpblEOTCOB/I2I3HVkVzkEzvITLNf/nDBeQVyaUPQV
-	ueMeunmxLtaoRFLHZbIEiVfilYgn4EZWsml+k+EnBd7dErpY0WdPMoQXCehIuOQ6+W2cMI6+Gcs
-	Q+Hb+WVdITQQ4hNTXHifHFqSOSnCnTnqMt57AV4O96g1XK0=
-X-Google-Smtp-Source: AGHT+IGcH4WluxWWC65gYTzjzjjMrU1aL2mLMIRkk+Pdgbz31x5IxzPpCwTODkjM4dvMG/o0xVSNlg==
-X-Received: by 2002:a05:6e02:3309:b0:3dc:7cc1:b74b with SMTP id e9e14a558f8ab-3dc7cc1b9e8mr62729035ab.1.1747832711001;
-        Wed, 21 May 2025 06:05:11 -0700 (PDT)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3db8443a37dsm28496795ab.53.2025.05.21.06.05.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 May 2025 06:05:10 -0700 (PDT)
-Message-ID: <0779b400-b99e-4fa2-8b18-de06fb4e77cc@kernel.dk>
-Date: Wed, 21 May 2025 07:05:09 -0600
+        d=1e100.net; s=20230601; t=1747832746; x=1748437546;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kq2QYelvGUau3xiMyKB8CSK2D94ZYBdUfldDB6qPuP4=;
+        b=OUYCVvzMPIVac7TdxtJaQGzxiCq6xpBsYA7vVLJiVo/MIzV37ge5qOiumKYicQ/DVu
+         xboyhZtEOlHquFT0ub0YLdp33olpOZEIgZpmgK5Qz7M0JsqX+NoTPTmm/+hCJITVNJSi
+         dnd36iBzM/zL2qMzO6poLdOTmXkEro+Inf8pD3wu5M8IUxIdWBfYdu6bKFpBxG3YXx6d
+         myQGreZXkQxlKQfRADNIx1+yu8VfTjYO+rkVkSSPmuuqBOdPkzEfPBz0roDSheZI+TKS
+         O8F7NBW23KsN9AIqUQoaKa4tcxLeKsO/65/QrcFf84hCiCkOFsg13f7ylYz/UuayoHDE
+         aXeg==
+X-Forwarded-Encrypted: i=1; AJvYcCUMeLzxs2ug3R9h/ZE6P5zX6e06vNUBWJrnuxHNCKqhEEZVBgVWAOTPX2/2Lr8DLnH9NK6Az9BFpNXs@vger.kernel.org, AJvYcCV+DsAueT79zrtS2cmDsZri1EoxN+H7mleZQAaLfmrhvLQDZFhvmSV/9yuqcODLh/LjMsDdCkHSiVQmwTVO@vger.kernel.org, AJvYcCXew014m1UB/g7Xl77Sk4SkugTeetWBq0pJXF287vpAspFSbhrQSvMuLJTCPCSOF8tZz9ggGVTisyqMLUyTwWsP67s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTJMqHkGH3QF1XC5SdnEiV8ZtE7qBSkF8r0ofwgUG00dHK4ox8
+	pT0f49bUD43bYsHpteknEW7fQw8tFYoQb8k7oHIT1iko+9OLFHFpOIbCJA7IrF734kLHV2JgV5R
+	epX+DggK0x0xgP/Av1rXBVBt4CwkrdoQ=
+X-Gm-Gg: ASbGncvJpNzM2cMVFUP+X6qXksGGwzpZ2fHMYznFborRxLBh1zfhXHbFQXr7afTpcRG
+	H9L+0M0JuOO838qR1k/UuaM5QXRLvG1F385d+tMgHV7wAT7PiiOlDXlqL2xQXCwjSMIIpNmuUgy
+	maoP++gyeOGkuP3knzR77eS2rfVlI=
+X-Google-Smtp-Source: AGHT+IGzS8pfQi7/dEbDdomy3hkC6k+0NgcpCjRsfjoA9Qd7+Ky5V/M+iNzbPe2SPdzvMWVOmv6VmO08Wn3ieAZwt5I=
+X-Received: by 2002:a05:6000:40e0:b0:3a0:b733:f264 with SMTP id
+ ffacd0b85a97d-3a35fe5ba7amr17805296f8f.11.1747832745550; Wed, 21 May 2025
+ 06:05:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: printk NMI splat on boot
-To: paulmck@kernel.org
-Cc: John Ogness <john.ogness@linutronix.de>,
- LKML <linux-kernel@vger.kernel.org>, Petr Mladek <pmladek@suse.com>,
- Steven Rostedt <rostedt@goodmis.org>,
- "senozhatsky@chromium.org" <senozhatsky@chromium.org>
-References: <a93e1a96-3685-41c3-8979-472b20dfca14@kernel.dk>
- <84a577t590.fsf@jogness.linutronix.de>
- <c99232fa-e861-48ec-8438-028e61d3b744@kernel.dk>
- <36ccb46d-5041-47ce-b419-f49ccaeece9b@kernel.dk>
- <fe455126-7b33-4246-b626-44ef33013765@paulmck-laptop>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <fe455126-7b33-4246-b626-44ef33013765@paulmck-laptop>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250512182330.238259-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250512182330.238259-6-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250520141645.GE13321@pendragon.ideasonboard.com>
+In-Reply-To: <20250520141645.GE13321@pendragon.ideasonboard.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Wed, 21 May 2025 14:05:19 +0100
+X-Gm-Features: AX0GCFtZ4ZN7SPwiR4G15YWl5KOoD357yy9hFAPfXBDbSCglSfFCpeL2eSTQ_IE
+Message-ID: <CA+V-a8uG_5U_1XHJLQKRn3wgK4VBDJwV9_7uHtGC2j76pEbJ5g@mail.gmail.com>
+Subject: Re: [PATCH v5 05/12] drm: renesas: rz-du: mipi_dsi: Use VCLK for
+ HSFREQ calculation
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+	Biju Das <biju.das.jz@bp.renesas.com>
+Cc: David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Magnus Damm <magnus.damm@gmail.com>, dri-devel@lists.freedesktop.org, 
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 5/21/25 12:06 AM, Paul E. McKenney wrote:
-> On Tue, May 20, 2025 at 02:41:40PM -0600, Jens Axboe wrote:
->> On 5/20/25 2:18 PM, Jens Axboe wrote:
->>>> What values are you using for CONFIG_RCU_EXP_CPU_STALL_TIMEOUT and
->>>> CONFIG_RCU_CPU_STALL_TIMEOUT?
->>>
->>> CONFIG_RCU_CPU_STALL_TIMEOUT=21
->>> CONFIG_RCU_EXP_CPU_STALL_TIMEOUT=2
->>
->> This was =20 btw, guess it could cut a bit too much...
-> 
-> Just confirming that setting CONFIG_RCU_EXP_CPU_STALL_TIMEOUT to two
-> milliseconds is more than a bit on the aggressive side.  ;-)
+Hi Laurent,
 
-Sorry guess I wasn't clear - I had pasted in =2, but the setting in my
-config was =20.
+Thank you for the review.
 
-> Setting it to 20 milliseconds is OK for smartphone-class devices, but
-> to the best of my knowledge, setting it less than 21 seconds (as in
-> 21,000 milliseconds) has not been tested on any other platform.
-> 
->> Changed them to:
->>
->> CONFIG_RCU_CPU_STALL_TIMEOUT=100
->> CONFIG_RCU_EXP_CPU_STALL_TIMEOUT=0
->>
->> and complaining is gone.
-> 
-> This makes it take the default, which in this case would be the specified
-> CONFIG_RCU_CPU_STALL_TIMEOUT value of 100 seconds.  Which is an unusually
-> long timeout -- mainline these days is 21 seconds and some distros still
-> use the old value of 60 seconds.
+On Tue, May 20, 2025 at 3:16=E2=80=AFPM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> Hi Prabhakar,
+>
+> On Mon, May 12, 2025 at 07:23:23PM +0100, Prabhakar wrote:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > Update the RZ/G2L MIPI DSI driver to calculate HSFREQ using the actual
+> > VCLK rate instead of the mode clock. The relationship between HSCLK and
+> > VCLK is:
+> >
+> >     vclk * bpp <=3D hsclk * 8 * lanes
+> >
+> > Retrieve the VCLK rate using `clk_get_rate(dsi->vclk)`, ensuring that
+> > HSFREQ accurately reflects the clock rate set in hardware, leading to
+> > better precision in data transmission.
+> >
+> > Additionally, use `DIV_ROUND_CLOSEST_ULL` for a more precise division
+> > when computing `hsfreq`. Also, update unit conversions to use correct
+> > scaling factors for better clarity and correctness.
+> >
+> > Since `clk_get_rate()` returns the clock rate in Hz, update the HSFREQ
+> > threshold comparisons to use Hz instead of kHz to ensure correct behavi=
+or.
+> >
+> > Co-developed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> > Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+> > ---
+> > v4->v5:
+> > - Added dev_info() to print the VCLK rate if it doesn't match the
+> >   requested rate.
+> > - Added Reviewed-by tag from Biju
+> >
+> > v3->v4:
+> > - Used MILLI instead of KILO
+> >
+> > v2->v3:
+> > - No changes
+> >
+> > v1->v2:
+> > - No changes
+> > ---
+> >  .../gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c    | 30 +++++++++++--------
+> >  1 file changed, 18 insertions(+), 12 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c b/drivers/g=
+pu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
+> > index c5f698cd74f1..3f6988303e63 100644
+> > --- a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
+> > +++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
+> > @@ -8,6 +8,7 @@
+> >  #include <linux/delay.h>
+> >  #include <linux/io.h>
+> >  #include <linux/iopoll.h>
+> > +#include <linux/math.h>
+> >  #include <linux/module.h>
+> >  #include <linux/of.h>
+> >  #include <linux/of_graph.h>
+> > @@ -15,6 +16,7 @@
+> >  #include <linux/pm_runtime.h>
+> >  #include <linux/reset.h>
+> >  #include <linux/slab.h>
+> > +#include <linux/units.h>
+> >
+> >  #include <drm/drm_atomic.h>
+> >  #include <drm/drm_atomic_helper.h>
+> > @@ -199,7 +201,7 @@ static int rzg2l_mipi_dsi_dphy_init(struct rzg2l_mi=
+pi_dsi *dsi,
+> >       /* All DSI global operation timings are set with recommended sett=
+ing */
+> >       for (i =3D 0; i < ARRAY_SIZE(rzg2l_mipi_dsi_global_timings); ++i)=
+ {
+> >               dphy_timings =3D &rzg2l_mipi_dsi_global_timings[i];
+> > -             if (hsfreq <=3D dphy_timings->hsfreq_max)
+> > +             if (hsfreq <=3D (dphy_timings->hsfreq_max * MILLI))
+>
+> No need for the inner parentheses.
+>
+Agreed, I will drop it.
 
-IMHO the settings for these are very odd. Which I guess is fine for
-debugging kind of infrastructure, but fairly nonsensical in any case.
-But not really that important - looks like RCU_EXP_CPU_STALL_TIMEOUT has
-a default of '0' so not sure how on earth I ended up with 20 in that
-one. Most likely from not reading the help entry and hence setting it
-similarly to RCU_CPU_STALL_TIMEOUT.
+> >                       break;
+> >       }
+> >
+> > @@ -258,7 +260,7 @@ static void rzg2l_mipi_dsi_dphy_exit(struct rzg2l_m=
+ipi_dsi *dsi)
+> >  static int rzg2l_mipi_dsi_startup(struct rzg2l_mipi_dsi *dsi,
+> >                                 const struct drm_display_mode *mode)
+> >  {
+> > -     unsigned long hsfreq;
+> > +     unsigned long hsfreq, vclk_rate;
+> >       unsigned int bpp;
+> >       u32 txsetr;
+> >       u32 clstptsetr;
+> > @@ -269,6 +271,12 @@ static int rzg2l_mipi_dsi_startup(struct rzg2l_mip=
+i_dsi *dsi,
+> >       u32 golpbkt;
+> >       int ret;
+> >
+> > +     ret =3D pm_runtime_resume_and_get(dsi->dev);
+> > +     if (ret < 0)
+> > +             return ret;
+> > +
+> > +     clk_set_rate(dsi->vclk, mode->clock * MILLI);
+> > +
+> >       /*
+> >        * Relationship between hsclk and vclk must follow
+> >        * vclk * bpp =3D hsclk * 8 * lanes
+> > @@ -280,13 +288,11 @@ static int rzg2l_mipi_dsi_startup(struct rzg2l_mi=
+pi_dsi *dsi,
+> >        * hsclk(bit) =3D hsclk(byte) * 8 =3D hsfreq
+> >        */
+> >       bpp =3D mipi_dsi_pixel_format_to_bpp(dsi->format);
+> > -     hsfreq =3D (mode->clock * bpp) / dsi->lanes;
+> > -
+> > -     ret =3D pm_runtime_resume_and_get(dsi->dev);
+> > -     if (ret < 0)
+> > -             return ret;
+> > -
+> > -     clk_set_rate(dsi->vclk, mode->clock * 1000);
+> > +     vclk_rate =3D clk_get_rate(dsi->vclk);
+> > +     if (vclk_rate !=3D mode->clock * MILLI)
+> > +             dev_info(dsi->dev, "Requested vclk rate %lu, actual %lu m=
+ismatch\n",
+> > +                      mode->clock * MILLI, vclk_rate);
+>
+> There's a high risk that the requested rate won't be achieved exactly.
+> Do we really want to print a non-debug message to the kernel log every
+> time ?
+>
+Actually Biju requested the above.
 
--- 
-Jens Axboe
+> > +     hsfreq =3D DIV_ROUND_CLOSEST_ULL(vclk_rate * bpp, dsi->lanes);
+>
+> I doubt DIV_ROUND_CLOSEST_ULL() will make any difference in practice
+> given that you can't have more than 4 lanes, but that's fine.
+>
+Thanks, I'll check on it.
+
+Cheers,
+Prabhakar
+> >
+> >       ret =3D rzg2l_mipi_dsi_dphy_init(dsi, hsfreq);
+> >       if (ret < 0)
+> > @@ -304,12 +310,12 @@ static int rzg2l_mipi_dsi_startup(struct rzg2l_mi=
+pi_dsi *dsi,
+> >        * - data lanes: maximum 4 lanes
+> >        * Therefore maximum hsclk will be 891 Mbps.
+> >        */
+> > -     if (hsfreq > 445500) {
+> > +     if (hsfreq > 445500000) {
+> >               clkkpt =3D 12;
+> >               clkbfht =3D 15;
+> >               clkstpt =3D 48;
+> >               golpbkt =3D 75;
+> > -     } else if (hsfreq > 250000) {
+> > +     } else if (hsfreq > 250000000) {
+> >               clkkpt =3D 7;
+> >               clkbfht =3D 8;
+> >               clkstpt =3D 27;
+> > @@ -753,7 +759,7 @@ static int rzg2l_mipi_dsi_probe(struct platform_dev=
+ice *pdev)
+> >        * mode->clock and format are not available. So initialize DPHY w=
+ith
+> >        * timing parameters for 80Mbps.
+> >        */
+> > -     ret =3D rzg2l_mipi_dsi_dphy_init(dsi, 80000);
+> > +     ret =3D rzg2l_mipi_dsi_dphy_init(dsi, 80000000);
+> >       if (ret < 0)
+> >               goto err_phy;
+> >
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
