@@ -1,96 +1,91 @@
-Received: from smtp-fw-2101.amazon.com (smtp-fw-2101.amazon.com [72.21.196.25])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F21F4184;
-	Wed, 21 May 2025 00:05:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=72.21.196.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA2CA847B;
+	Wed, 21 May 2025 00:07:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747785915; cv=none; b=JvWGmmpjrESU3b6axe/sHUe9eFGmnDb14hg6Z6FSlYyLhsbr1gHb2Ip2puVGV35mc8ComlG2DP58xxGRZ5UWX+40vkbRwV3b5plz9odo6EzU9zwmZ8vZNAAtZBSo7R8AzDzf6XKt1/R5xinjOGIV7v9Fz3QVBW/OixyKDoCM/j0=
+	t=1747786042; cv=none; b=SC6CF8L9MK1hIg5Q+19VxCi+x7VXKhFMnSKAyCX02rGD+ghWYfWqhPzFuxZOrR2KuX3xMxtQ1OEwBuyj0JDrQcxo6c69TSCb9vPYqKwyQApnFCNanvDVQ/0r9ZPD8bktUkWvrjb5MYVUWzOjoE4f5eE78ovl4/PmL/8dpoZT7Uw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747785915; c=relaxed/simple;
-	bh=5ZFwxb9nBkCINXBwK7WDelH3c0zwh3C4EzMiPPUMgiw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hwWKz5CejUmTbxj3zRBmNX45L/v1ZdxK6E1A+0MPVAu8WqiVZrY010ycuZye7sp0dh+M9nIQmUPi/+zhp9wZpd0qjhQpp5bZ5PJglhKAc7RgtdfYKBcNeInXsJqhhH+KJEHTLVmM/It04Pv+GOckav+y+MqkGCtB+aoqzZlWiWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=mByMJzwT; arc=none smtp.client-ip=72.21.196.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1747786042; c=relaxed/simple;
+	bh=nuI7nCD6s2QZI/lx6bCkb3rF7h0cqcyUh/uMkCCXYb4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DEBvgU0BYWzzeP6RlAmQ+66KZ4usbkxI9ki2KuMRGJdL9i/gd+plSFJlBu3Nl3uFwFACdADUTeS9zje2721P4cZHHn5j1LoJP+PGIwNW79n1XL+2skjH4MXdMVHxhIgfc6frOPQAACnoOU8HTmJthcNWNBaXT2Q+/tOWLKeTjcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VXQToYPH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="mByMJzwT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
-  t=1747785914; x=1779321914;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=AjC+PxuyUMb05WxAtrT+CDSka3468z6AHpnQ9tN4+4Q=;
-  b=mByMJzwTnqVmFCchLuTdJU+DXokHl4wO8vOiQNSk1bjjHgtRkjZEhi7R
-   jDs/ov/YzH2DJ2Mk/A9gxH3OpsEUkxTv8t9PyeOgkB3HzIQ4mLWBbeNb6
-   delyC2RasjEvwVx+NB4ajJqXLiHqi+6mVzZzdZrq9tlM0vaiYsP8Guw1F
-   drcq1GpnYVLeDPlAAiD5QjIL605xF3ibxbtlDBIwT+3/AGUWIrds/rchv
-   ekOdhupqmyYApLaATspkz7XuviOePpaPidZXIZ1zkTIybpFJn0AGhgouW
-   nXEqd6cexnW19+CnTuK/SE3tBxSt1zBCb1jDVQXSYmhouvBBgmQQmlry9
-   g==;
-X-IronPort-AV: E=Sophos;i="6.15,303,1739836800"; 
-   d="scan'208";a="494410687"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-2101.iad2.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 00:05:06 +0000
-Received: from EX19MTAUWA002.ant.amazon.com [10.0.21.151:63604]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.29.53:2525] with esmtp (Farcaster)
- id 22b1456d-ef53-4eeb-baaf-b9aea32cf8a2; Wed, 21 May 2025 00:05:05 +0000 (UTC)
-X-Farcaster-Flow-ID: 22b1456d-ef53-4eeb-baaf-b9aea32cf8a2
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Wed, 21 May 2025 00:05:05 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.187.171.41) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Wed, 21 May 2025 00:04:57 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <kees@kernel.org>
-CC: <ahmed.zaki@intel.com>, <aleksander.lobakin@intel.com>,
-	<alex.aring@gmail.com>, <andrew+netdev@lunn.ch>, <ardb@kernel.org>,
-	<christophe.leroy@csgroup.eu>, <cratiu@nvidia.com>, <d.bogdanov@yadro.com>,
-	<davem@davemloft.net>, <decui@microsoft.com>, <dianders@chromium.org>,
-	<ebiggers@google.com>, <edumazet@google.com>, <fercerpav@gmail.com>,
-	<gmazyland@gmail.com>, <grundler@chromium.org>, <gustavoars@kernel.org>,
-	<haiyangz@microsoft.com>, <hayeswang@realtek.com>, <hch@lst.de>,
-	<horms@kernel.org>, <idosch@nvidia.com>, <jiri@resnulli.us>,
-	<jv@jvosburgh.net>, <kch@nvidia.com>, <kuba@kernel.org>, <kuniyu@amazon.com>,
-	<kys@microsoft.com>, <leiyang@redhat.com>, <linux-hardening@vger.kernel.org>,
-	<linux-hyperv@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-nvme@lists.infradead.org>, <linux-scsi@vger.kernel.org>,
-	<linux-usb@vger.kernel.org>, <linux-wpan@vger.kernel.org>,
-	<linux@treblig.org>, <martin.petersen@oracle.com>, <mgurtovoy@nvidia.com>,
-	<michael.christie@oracle.com>, <mingzhe.zou@easystack.cn>,
-	<miquel.raynal@bootlin.com>, <mlombard@redhat.com>, <netdev@vger.kernel.org>,
-	<pabeni@redhat.com>, <phahn-oss@avm.de>, <sagi@grimberg.me>,
-	<sam@mendozajonas.com>, <sdf@fomichev.me>, <shaw.leon@gmail.com>,
-	<stefan@datenfreihafen.org>, <target-devel@vger.kernel.org>,
-	<viro@zeniv.linux.org.uk>, <wei.liu@kernel.org>
-Subject: Re: [PATCH 1/7] net: core: Convert inet_addr_is_any() to sockaddr_storage
-Date: Tue, 20 May 2025 17:04:46 -0700
-Message-ID: <20250521000449.6279-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250520223108.2672023-1-kees@kernel.org>
-References: <20250520223108.2672023-1-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VXQToYPH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5704DC4CEE9;
+	Wed, 21 May 2025 00:07:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747786041;
+	bh=nuI7nCD6s2QZI/lx6bCkb3rF7h0cqcyUh/uMkCCXYb4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=VXQToYPH4zx2TsuyCUWvmyqrWHPSMvF6sEgqIkhjCjybiQuXVC8OEFmFIJbGEkgsN
+	 rJrTYE4j/PFPzKwR7U3Uorp3Rw/HE78eijoCEsa/ttOZ8eB1FQX6nksdDIQHcf5O0W
+	 LZ6et52qp88wmrjvLJixpRmGxkPm0etyYrgk4OP8RL32WitCeaTCQ7GeqedTDu9CsF
+	 x7ECnbRVyN8iDl/5IiAVZqwwKpYyjLai3ZkTlS2CWa7QSnu8CIpNuQCMX0JGUPIXHL
+	 +wrFZUkN/ercQqRVaFD0SijyeDd7cCWbBTD6D8MS0JEQ+GpL9w2UoV9CQQSKP6TEy5
+	 CxQezEZWtDWVg==
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-600210e4219so9516620a12.0;
+        Tue, 20 May 2025 17:07:21 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWoDMuLNZmxEWFDVfdFrHQeQWIGWMYBCZ/njtH/N4pPqUJB+g0pvBcrgBXl8BdJ0SOjpwmxQGtQEucP6Q==@vger.kernel.org, AJvYcCXGbXKUsg+hNGZaFOa58HM91X7DbrZPnt3kIbp/3Dt/HcpaGS3geJqbNcZtHqVNGC7Ztn+b1ua9p6pmee83@vger.kernel.org, AJvYcCXd7NhSCUiYOvkLvUba0IAIONJQ8XqMHdl4hGDP3pxmQ3xpROAjS+4yENt8TgUc8JrjTihLiI5W7aX1@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzE/na0q7/JbONfteqfC6160sY3Lrp4DDJYtgsgKmxrdP8k2WP
+	Jv0cyxQx2halXYlWEfIl0q1FCL5J90aQ7bu6wDAI/HYpSTbrnzJ3LL5Bl5SvL9xHnNWXVnYwe3X
+	E30ltMPlvQ08FkJhlf41mWfix4BW/UA==
+X-Google-Smtp-Source: AGHT+IHFvYJlKA4oO/f0c0L0Jj1Dy/t64PAkHGKF1Am7+zYsk7n1Sfn20y2q2iD6Fraf8txCJgHFb8ycHrTHuh6vtvk=
+X-Received: by 2002:a17:907:960a:b0:ad3:e742:69ea with SMTP id
+ a640c23a62f3a-ad52f86c635mr1490088866b.14.1747786039972; Tue, 20 May 2025
+ 17:07:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D045UWC004.ant.amazon.com (10.13.139.203) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+References: <1747353973-4749-1-git-send-email-vijayb@linux.microsoft.com>
+ <1747353973-4749-3-git-send-email-vijayb@linux.microsoft.com> <20250519090253.GGaCrzvRFC75JnFN1S@fat_crate.local>
+In-Reply-To: <20250519090253.GGaCrzvRFC75JnFN1S@fat_crate.local>
+From: Rob Herring <robh@kernel.org>
+Date: Tue, 20 May 2025 19:07:07 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+T=ARcSe9NByMyiFDN9pns=0f2c=hFEK=o6668MARz8g@mail.gmail.com>
+X-Gm-Features: AX0GCFtlnvI1PQSuyNa0d7YyMKxiKCpdtjlyJKhL_scKQa0BWfpEF_tveD7Gea4
+Message-ID: <CAL_Jsq+T=ARcSe9NByMyiFDN9pns=0f2c=hFEK=o6668MARz8g@mail.gmail.com>
+Subject: Re: [PATCH 2/3] dt-bindings: arm: cpus: Add edac-enabled property
+To: Borislav Petkov <bp@alien8.de>, Vijay Balakrishna <vijayb@linux.microsoft.com>
+Cc: Tony Luck <tony.luck@intel.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, James Morse <james.morse@arm.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Robert Richter <rric@kernel.org>, linux-edac@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Tyler Hicks <code@tyhicks.com>, 
+	Marc Zyngier <maz@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Kees Cook <kees@kernel.org>
-Date: Tue, 20 May 2025 15:31:00 -0700
-> All the callers of inet_addr_is_any() have a sockaddr_storage-backed
-> sockaddr. Avoid casts and switch prototype to the actual object being
-> used.
-> 
-> Acked-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> Signed-off-by: Kees Cook <kees@kernel.org>
+On Mon, May 19, 2025 at 4:03=E2=80=AFAM Borislav Petkov <bp@alien8.de> wrot=
+e:
+>
+> On Thu, May 15, 2025 at 05:06:12PM -0700, Vijay Balakrishna wrote:
+> > From: Sascha Hauer <s.hauer@pengutronix.de>
+> >
+> > Some ARM Cortex CPUs including A72 have Error Detection And
+> > Correction (EDAC) support on their L1 and L2 caches. This is implemente=
+d
+> > in implementation defined registers, so usage of this functionality is
+> > not safe in virtualized environments or when EL3 already uses these
+> > registers. This patch adds a edac-enabled flag which can be explicitly
+> > set when EDAC can be used.
+> >
+> > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> > [vijayb: Limit A72 in the commit message]
+> > Signed-off-by: Vijay Balakrishna <vijayb@linux.microsoft.com>
+> > ---
+> >  Documentation/devicetree/bindings/arm/cpus.yaml | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+>
+> This needs an Ack from DT maintainers.
 
-Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+That will happen when my review comments are implemented. Those were
+on v1. Not this v1, but the prior v1. Version your patches correctly
+please.
+
+Rob
