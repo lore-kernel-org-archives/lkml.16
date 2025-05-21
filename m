@@ -1,82 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DEF82D613;
-	Wed, 21 May 2025 14:04:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF3FB139B;
+	Wed, 21 May 2025 14:04:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747836253; cv=none; b=mtwAQpjJYKwDMrG7ORqivM5U8UqRdFOGlPvQvFDv0DOheYlCTN6RXkcadMum3yT9EV8SIrLT6ToQ5JUoYbSh9CfymH6/+ba0i1kEEhvyHTQkTzLowgzhCTV082zWsOPNx/HLNrJUVWx0XR1OcJh5f24Q0o+fvgbKYvBw+D1h3mg=
+	t=1747836276; cv=none; b=Uzxt/uTz/nzXZ5qLJ0K+aBAG5Q3LS8ZExn+hendpbJ9aCfcVuAbOLnSkw+vbAhm2AjA1X5Irej78yKPg8lUsG8QpZZIDx0jGpKTyyzsk6Z2OMMNhChshwKOKP87mXYmTPUATxjsbtzGmqtRbi3nMTvo40yqq+S1e7n15aA5Zx+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747836253; c=relaxed/simple;
-	bh=6AKjMOjmScgj0MR5KrRqNeLWQ4oWfHaLl1pCMRWSQ28=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Zd5kUhKZ230aNeRdtyFKm4up8LfLDqe7n+ewpb3K1Qt/gPnapmNLkIjkSvFrBUViiqNJfKkaYf6NRs9KsWME7GM3C/+oUGKiIGthKSHMck+Q2A5w/jrWpNmeO3aMhCpm59H6mkZ/u++8ekxwC1A/5jlMZNgzdGIcmCiYaMXYy9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K0u5njHG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747836276; c=relaxed/simple;
+	bh=xnA+wwMbOQ7MC6W8afuzy4z9/c0vOHbk1GRUJbtdhSo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=j1Ywh/rm+w+qg96s3QzDa0faJ6BbNsTNdH03yMw9ds4SdGHuCwjNNEKzzfTYvrCXvOaecIkc7MWwWarv79HAeEdq/BD9Sa5CIb1S6QSw0pCjxaMLi8ODXB2ctqb/3Fouggha6OxirLKUb7Ax40jtiG25zPg+7zUdMZ2RbFEctq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AMM+3a5m; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K0u5njHG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D417C4CEE4;
-	Wed, 21 May 2025 14:04:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747836252;
-	bh=6AKjMOjmScgj0MR5KrRqNeLWQ4oWfHaLl1pCMRWSQ28=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=K0u5njHGINmRPOp1PuuOxAMelcAEE10xMPdKA8y4YkfKqxBZkF0EVIGkFc+9XjGuC
-	 kr2O20GX+4/IzCpuKoVVDrbeSSCqAuw7I8f5/jwjNFmNqI0oxJaXQfjb1HVCn+EDIj
-	 fjhDSGT9SXni4XMp3le+3TOwdcdrGNR5f6VVlVQ3Qk8wYurs2Y7iB3u1wiq8j87VDV
-	 C2QIYzORjtHVP6OmWNmBVCOKLuCJg+A4EePBPOId/eENOaMAHqqIyxCk2y90syt6i+
-	 lrIfA0Hyp3SymQ3Uvha6oj63WjNHJWRQp1V7uZHuFpYKHuF+eX+I0LczEbJG8rdaKu
-	 JDdb8psCrcXgw==
-Date: Wed, 21 May 2025 15:04:06 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com
-Subject: Re: [PATCH 6.6 000/117] 6.6.92-rc1 review
-Message-ID: <c961b54c-2e30-46e7-b66f-4989a77a69e6@sirena.org.uk>
-References: <20250520125803.981048184@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AMM+3a5m"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4766631a6a4so70239961cf.2;
+        Wed, 21 May 2025 07:04:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747836273; x=1748441073; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FnMSEARNlVgPRWKeN5p+uHnOxtjldaYnJP4wZN+8kzk=;
+        b=AMM+3a5mAvbcbiSg/zRkAndjiUbuOlo0PBysGDm1l0v+/KTC437LiztUahindqSuvn
+         9FU0mP2KXAI8K5LMlm/bvzUk5nA6Jht14RpMBfX8NYQRyQ4y9MDPneDWPFz0vYEnqncE
+         xNG/fZx9TyKGj7C+v80vRW23kTWVTikMNpI3ZNlt5wmzUQ7sbdPac7knvO2Sc4OcvpO5
+         O48YZGkTQDfWpemYzl3xwHnWe9ky0vxqV5Lmgm9jxoXHKY8rbXoU6l5sP1YcWweBGS1N
+         so1D2L0GfokCtNiqlauIElclzEQ1Np1xypgELyDknbxxSZT+sE4eAw2+GhWls99DUJjs
+         Gv5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747836273; x=1748441073;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FnMSEARNlVgPRWKeN5p+uHnOxtjldaYnJP4wZN+8kzk=;
+        b=uwrK7lUBATJvp9XAn9bMhJTOMI/0WrOCqiTwNGBblATyrULEkGEkwBXBUPUERADG9c
+         NdM3YX2Z5QagV+ZfAfY5XxTRvtJyQQXKYJNeP+6HO378Gu1IkIJCe+QtJhtPHGg/u8kn
+         Up1d/Pc8rW9fndORaV+Jt6f0PHhkY8zOfJIIYY6+7xh45BXQ0D0lxV9w+a6QqAkTK8bO
+         f2NJnB4kviUgzp2IQ0Ph69gE1h7jBEb9gDntPxOJ4at+y6JW7m5Hfu1voqZG67KFob4j
+         uazHNYd1KUr6LZ29vRGmIht8BPuDQzySw9+fbqpLL1xCn7sw33+Nw/xH1+j1QzJNSCZ7
+         +lYA==
+X-Forwarded-Encrypted: i=1; AJvYcCUdOoNav7LtqWnAds96JreeKYlldtSLlPoMJKY0sQdSDrN/6vgJv3y9/dm2N/Tq6R0jpvBos3csSlts@vger.kernel.org, AJvYcCWb1Dk4I8D86EbUmCbSYdelaHr/nl813+JPCblenRxQ1ZNeKxJwaokbeN8QViA67EUpU1sc3e2frYDH9kHR@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzcw9nECvCh+GMpboBWo4YVjwJB5mKaHBjdyfdHBXQ9VSk+fCn9
+	ICwfWAh7peygZeBK8TE1iXvsvIGFizPhmwZG1Lt6U6qDeJB6OteJIYA8HRhq0sOjcv3llF8lPiU
+	cmUN9jTT9YZHdEdm9MzdS70+dR4g8e1j3sEmmQF8=
+X-Gm-Gg: ASbGncvHYPFFAiuaSlU/Vuq9tePeWKU8Ss9+RC4dOy6Q8pDhYsHgyoW1xVXMlOEMFj0
+	+OocInT8PuSwVXBwSQVk+BCeI4IIjXI6J43eu9DDj3JjueIg4pXYyi4f2mq2Yaf9SB9mxLIsoaP
+	LNOp26vslN1T27qyXwij1JBe9fYJevK2RoZZlOOEESbspageTppbdTx0e+S7XNanLv/g==
+X-Google-Smtp-Source: AGHT+IG5fKyWSQijXdok293wDNISKRz4c0c0mL1AgaXBBaBchJGfRjQeSJYGuKTki4pnTMQy9k4rmKwSVvXk0HgISaU=
+X-Received: by 2002:a05:622a:5589:b0:476:8288:9558 with SMTP id
+ d75a77b69052e-494ae434787mr345964801cf.46.1747836273231; Wed, 21 May 2025
+ 07:04:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="fXGRbk4OoPxVlYMb"
-Content-Disposition: inline
-In-Reply-To: <20250520125803.981048184@linuxfoundation.org>
-X-Cookie: 42
+References: <20250515-wmt-dts-updates-v2-0-246937484cc8@gmail.com>
+ <CABjd4YwoVRpJEMss8UN6xT9x4hf6GSjm34GtTHmmnHi8Q42DAQ@mail.gmail.com> <c33a23c6-9883-4f3e-b2e3-6442ca90a7b8@kernel.org>
+In-Reply-To: <c33a23c6-9883-4f3e-b2e3-6442ca90a7b8@kernel.org>
+From: Alexey Charkov <alchark@gmail.com>
+Date: Wed, 21 May 2025 18:04:30 +0400
+X-Gm-Features: AX0GCFt4BEGM6IPuCHg8AhY1gdu5ORHuOAa78BDG1xqhEo7D1jh3oHrYQqoxZ6w
+Message-ID: <CABjd4YwGM0=k4Jk07O=Z7oAzk2DNLP8HHmGR8QbWJOiMVuxLUQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] ARM: dts: vt8500: Minor fixups and L2 cache on WM8850
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, May 21, 2025 at 5:32=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.or=
+g> wrote:
+>
+> On 21/05/2025 15:28, Alexey Charkov wrote:
+> > On Thu, May 15, 2025 at 11:39=E2=80=AFPM Alexey Charkov <alchark@gmail.=
+com> wrote:
+> >>
+> >> Small fixups for VT8500 related device trees to improve correctness in
+> >> light of current guidelines.
+> >>
+> >> While at that, also include a DT node for the PL310 cache controller
+> >> present in WM8850/WM8950.
+> >>
+> >> Signed-off-by: Alexey Charkov <alchark@gmail.com>
+> >> ---
+> >> Alexey Charkov (5):
+> >>       ARM: dts: vt8500: Add node address and reg in CPU nodes
+> >>       ARM: dts: vt8500: Move memory nodes to board dts and fix addr/si=
+ze
+> >>       ARM: dts: vt8500: Use generic node name for the SD/MMC controlle=
+r
+> >>       ARM: dts: vt8500: Fix the unit address of the VT8500 LCD control=
+ler
+> >>       ARM: dts: vt8500: Add L2 cache controller on WM8850/WM8950
+> >
+> > Krzysztof, could you please pick these up for 6.16?
+>
+> No, we are at RC7. I closed my tree two weeks ago and sent pull requests
+> already way too late - a week ago.
 
---fXGRbk4OoPxVlYMb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Got it, thank you. Note taken on the expected cut-off time.
 
-On Tue, May 20, 2025 at 03:49:25PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.6.92 release.
-> There are 117 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-
-Tested-by: Mark Brown <broonie@kernel.org>
-
---fXGRbk4OoPxVlYMb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgt3VUACgkQJNaLcl1U
-h9BkpAf+KTRiy8i0SsOJWzPLQG5HOnjl1u/hbEtu0GFkk6sJcJf0P8r3matAOE1v
-KZkGwkYK5cG0q1eRiNlcKvPu54/JDAxYnhuJv0SpvWihopiVMw9CfLA3Fnit16O7
-mj96nQ1/z3auAYcf7/ZcWA13qHD4aVjrb3wjCMonRRqYJMyh9hR1oZfSUkemz7TE
-Zn5NSJzguAso8FvbgiJh4iUDIiG3CUAyAOEEbaOrCemhlecFFOU3A8mt3RDlSkcw
-Lf6vBNXBgx04Oup6sxwTtBW3IB+FQPxu8c6Q8SPYe9Pq5FC6Mxz9cWPymD6/LpZr
-jtli4iHRLLhGU/oI+EGR1tCbfdV1Jg==
-=sqab
------END PGP SIGNATURE-----
-
---fXGRbk4OoPxVlYMb--
+Best regards,
+Alexey
