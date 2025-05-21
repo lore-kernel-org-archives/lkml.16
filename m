@@ -1,170 +1,113 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D083B134AC
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 17:12:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C944E134AC;
+	Wed, 21 May 2025 17:12:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747847532; cv=none; b=njBPMuGfohiJrqhR3RvV0GXLbYUZPyHw5orvYVNqfNPmVYx83D2U/aR+/PMiTfds5XY9yAo87tUmeruHuRBAfx9GHWY5Nu+JVKX78SJ+QPBBYjoB3k1TThv8QKPvKm+VZyVx5KUzmhqVPrM4T4NRyPxO4Rn6m1/ZVDhTcM9OwlM=
+	t=1747847538; cv=none; b=AIRfXR7vYB38vcJthhTfdPOEbHzU0uhFso1JHNMTWOBi5rNMHdksuPweXoP3/lxq+w57zGQQSr1xe56/O2yz5utIzgOyIz8aiT4ghQxozuK9WUE47TtC5eP4EBC16OvQLKqm0YfuQRqxA8CR0aDHdKrtqTr8nwATQtyZQ9z9Gy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747847532; c=relaxed/simple;
-	bh=d78K/Ch8eyzrP9+AsaFGDE7EsISxi0Ne4K7nZRV1XIw=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=efXWoZjkTYCaa9WdHgehD01KrYeQHWv3DvFie8fDTeiNJkmYK5ksOLMM0U4i1lujzPFUhReTzwVk/dyyPASl+in/pEXIpG9f7jUByYrjGMx+3a/OyYY0FRY7+cC/6OBa+HqPP4f6FhoFCIhf0iqoGR5U4V/cFq+0is+dePOvTwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G80VNuhl; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1747847538; c=relaxed/simple;
+	bh=1dN4hypelxyk1rZ8sC/y4l5vwCFStdVU/YluIIrrUYM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=IkDB4jF14IkqJydLsY8hkkY4br95ifKocFUF6BrZFSPZ/a3Uj0evWHh3u4hOEJ/zUbjCayEsCYWljuRnjCjmKxvV4kSW6xwwfQu3M7b4fJn9ZZZyNECXurwhzDDbkci4QRaQt2qCouVpiACXmqc05ZVkPXS+JGJ7JwOPfm2ZMi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jmtHGiAl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G80VNuhl"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-22e3b03cd64so55185955ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 10:12:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747847529; x=1748452329; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/jNOuCCyzTb1XsnW2HWyWlahXwvYtOlPi+YMKNdC9nY=;
-        b=G80VNuhlJpjIMnCZtmZFHxKhE6RYrRJe+IqbLVaeT2BPEEpAj5K7YJ2PXT8cD+dKrM
-         y3f9Rs8IkRfGV7hj/hwN5vN3gdAk5cZiJNo9zwU8AO6dzQz6edW9KYOshIz3I/kR/JUP
-         iahD866WssIAbiIH9umYuh1a7fHrhdo+A6qE67aAr2VVg1DCTx2rCAr/DkPMZdeLn8Xg
-         c1RGXIVEcQ+lk1XQe94tFkHW9czOBOiJojGqnl106Eaj/7Wpk95D8Pf5BLdAswvzKzcn
-         HR2iWnATPNyDQj9y+2DhY4toxB8tid45G7tDbqmrOIWbfFUPVdE+57HPp3efDixhcf3b
-         Hl2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747847529; x=1748452329;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=/jNOuCCyzTb1XsnW2HWyWlahXwvYtOlPi+YMKNdC9nY=;
-        b=aVHxDn1z/l5kPv4p63jGY6LeooLaBTIPW055QQA8j0JvNH31uhhcO1nlpPbHhp4883
-         sqH9CPwLmzIG6aOlqLF+pxu6mX9Rsg7RryUzdf4G85pj1d2NttTi2Cb2yFLaT0z1w7Eh
-         XSrctqcHUDJw4JI/PRhSr5ojvSGnZLfZquc9XNCFl5TLUUy3wzvQGr6DzJknTeifQDrM
-         /8JZz6bN/IN840mPN0opl0AAJqsoaGq3r6jlY+FxW8YB+KrjfEXt+FyXCLn7AIxFQSf0
-         tNXGZxs30/I1+JCYSUDwgb2+ir7uZfc8+52oY3CA5Km6BJj8aQ7gSvqHa0m05oNMHH8K
-         MX4w==
-X-Forwarded-Encrypted: i=1; AJvYcCUG4sE5fmq0zfKu0BZtqgDRj/CfFAUy7ssFX+mxanOYxanaEDVA18UsDx9Mq8U6tXwbbG/JarVYArK32bQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1oDCJGyQFiI5p5uvQcssdIzxGGsSTS7S1BXcn1NuaclJQFgxV
-	Z5N8H0O1FwwFnk9eBrxPz3Ybug7/xOypxsBNA2suf0XUGC4TnhZeDbz0j10TH9AXhVKIcEwTVYh
-	rISfeyA==
-X-Google-Smtp-Source: AGHT+IETbMHTy/wN84eri4+XJ0dfgyM1nswfh9RHqUQIPWwj4IQFkSc004LmUCE4Wu6BrDmB0awj2qSQ5PU=
-X-Received: from ploy13.prod.google.com ([2002:a17:903:1b2d:b0:22e:5728:685d])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:d483:b0:232:17d8:486
- with SMTP id d9443c01a7336-23217d81153mr249809655ad.22.1747847529062; Wed, 21
- May 2025 10:12:09 -0700 (PDT)
-Date: Wed, 21 May 2025 10:12:07 -0700
-In-Reply-To: <5546ad0e36f667a6b426ef47f1f40aee8d83efc9.camel@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jmtHGiAl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDD4CC4CEE4;
+	Wed, 21 May 2025 17:12:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747847537;
+	bh=1dN4hypelxyk1rZ8sC/y4l5vwCFStdVU/YluIIrrUYM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=jmtHGiAlnJ73/jaSZK1r37Jx1N0d7k8PF5KCtu1Hy4V820AyYSTWjAg0yoFA0tFCA
+	 6lLq4B9BFBkUKktlmQ2INKiieLHhVCRp4rMdvSTf4p80Q8oLEeqFxjV1jT7YywOtkt
+	 ZoGok5vhnZV6AbGYI2iSvQ+2k0kP8YaySIJYl4GJBA/OLmYrg/XLQpaYJgGOzLJ7K4
+	 WbUJhqS0e9qb/uxKJGW4KI+qZCSoikzrQ5ikfl0LhBFTZ7M1+ER61IqMUtcNNQ8WaY
+	 Q1FvvrHA8y2Gw8Rx6ZNXI65pOWQZohuoG3l68HI4xP3IhLiTHxTtKp7hqzFc8MXeJc
+	 x+IRMvchmNwaw==
+Date: Wed, 21 May 2025 12:12:15 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>,
+	Karolina Stolarek <karolina.stolarek@oracle.com>,
+	Weinan Liu <wnliu@google.com>,
+	Martin Petersen <martin.petersen@oracle.com>,
+	Ben Fuller <ben.fuller@oracle.com>,
+	Drew Walton <drewwalton@microsoft.com>,
+	Anil Agrawal <anilagrawal@meta.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Lukas Wunner <lukas@wunner.de>, Sargun Dhillon <sargun@meta.com>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	Oliver O'Halloran <oohall@gmail.com>,
+	Kai-Heng Feng <kaihengf@nvidia.com>,
+	Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
+	Terry Bowman <terry.bowman@amd.com>,
+	Shiju Jose <shiju.jose@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+Subject: Re: [PATCH v7 11/17] PCI/AER: Combine trace_aer_event() with
+ statistics updates
+Message-ID: <20250521171215.GA1421937@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250516215422.2550669-1-seanjc@google.com> <20250516215422.2550669-3-seanjc@google.com>
- <219b6bd5-9afe-4d1c-aaab-03e5c580ce5c@redhat.com> <aCtQlanun-Kaq4NY@google.com>
- <dca247173aace1269ce8512ae2d3797289bb1718.camel@intel.com>
- <aC0MIUOTQbb9-a7k@google.com> <5546ad0e36f667a6b426ef47f1f40aee8d83efc9.camel@intel.com>
-Message-ID: <aC4JZ4ztJiFGVMkB@google.com>
-Subject: Re: [PATCH v3 2/3] KVM: x86: Use kvzalloc() to allocate VM struct
-From: Sean Christopherson <seanjc@google.com>
-To: Kai Huang <kai.huang@intel.com>
-Cc: "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
-	"vipinsh@google.com" <vipinsh@google.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250521104642.00003648@huawei.com>
 
-On Tue, May 20, 2025, Kai Huang wrote:
-> On Tue, 2025-05-20 at 16:11 -0700, Sean Christopherson wrote:
-> > On Tue, May 20, 2025, Kai Huang wrote:
-> > > On Mon, 2025-05-19 at 08:39 -0700, Sean Christopherson wrote:
-> > > > +static int tdx_sept_remove_private_spte(struct kvm *kvm, gfn_t gfn=
-,
-> > > > +					enum pg_level level, kvm_pfn_t pfn)
-> > > >  {
-> > > >  	struct page *page =3D pfn_to_page(pfn);
-> > > >  	int ret;
-> > > > @@ -3507,10 +3507,14 @@ int __init tdx_bringup(void)
-> > > >  	r =3D __tdx_bringup();
-> > > >  	if (r) {
-> > > >  		/*
-> > > > -		 * Disable TDX only but don't fail to load module if
-> > > > -		 * the TDX module could not be loaded.  No need to print
-> > > > -		 * message saying "module is not loaded" because it was
-> > > > -		 * printed when the first SEAMCALL failed.
-> > > > +		 * Disable TDX only but don't fail to load module if the TDX
-> > > > +		 * module could not be loaded.  No need to print message saying
-> > > > +		 * "module is not loaded" because it was printed when the first
-> > > > +		 * SEAMCALL failed.  Don't bother unwinding the S-EPT hooks or
-> > > > +		 * vm_size, as kvm_x86_ops have already been finalized (and are
-> > > > +		 * intentionally not exported).  The S-EPT code is unreachable,
-> > > > +		 * and allocating a few more bytes per VM in a should-be-rare
-> > > > +		 * failure scenario is a non-issue.
-> > > >  		 */
-> > > >  		if (r =3D=3D -ENODEV)
-> > > >  			goto success_disable_tdx;
-> > > > @@ -3524,3 +3528,19 @@ int __init tdx_bringup(void)
-> > > >  	enable_tdx =3D 0;
-> > > >  	return 0;
-> > > >  }
-> > > > +
-> > > > +
-> > > > +void __init tdx_hardware_setup(void)
-> > > > +{
-> > > > +	/*
-> > > > +	 * Note, if the TDX module can't be loaded, KVM TDX support will =
-be
-> > > > +	 * disabled but KVM will continue loading (see tdx_bringup()).
-> > > > +	 */
-> > >=20
-> > > This comment seems a little bit weird to me.  I think what you meant =
-here is the
-> > > @vm_size and those S-EPT ops are not unwound while TDX cannot be brou=
-ght up but
-> > > KVM is still loaded.
-> >=20
-> > This comment is weird?  Or the one in tdx_bringup() is weird? =C2=A0
-> >=20
->=20
-> I definitely agree tdx_bringup() is weird :-)
->=20
-> > The sole intent of _this_ comment is to clarify that KVM could still en=
-d up
-> > running load with TDX disabled. =C2=A0
-> >=20
->=20
-> But this behaviour itself doesn't mean anything,
+On Wed, May 21, 2025 at 10:46:42AM +0100, Jonathan Cameron wrote:
+> On Tue, 20 May 2025 16:50:28 -0500
+> Bjorn Helgaas <helgaas@kernel.org> wrote:
+> 
+> > From: Bjorn Helgaas <bhelgaas@google.com>
+> > 
+> > As with the AER statistics, we always want to emit trace events, even if
+> > the actual dmesg logging is rate limited.
+> > 
+> > Call trace_aer_event() directly from pci_dev_aer_stats_incr(), where we
+> > update the statistics.
+> > 
+> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> > Tested-by: Krzysztof Wilczyński <kwilczynski@kernel.org>
+> > Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> > Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> 
+> Hmm. This runs a bit counter to what I liked in previous patch.
+> Whilst convenient to issue trace points in the stats update function
+> it's not obvious behavior given naming.  Maybe just duplicate the call
+> and call it immediately after the pci_dev_aer_stats_incr() calls?
 
-I disagree.  The overwhelming majority of code in KVM expects that either t=
-he
-associated feature will be fully enabled, or KVM will abort the overall flo=
-w,
-e.g. refuse to load, fail vCPU/VM creation, etc.
+Good point, thanks.  I made this change, which also means we don't
+need to copy the header log into "info" because we can just use
+aer->header_log as before:
 
-Continuing on is very exceptional IMO, and warrants a comment.
-
-> e.g., if we export kvm_x86_ops, we could unwind them.
-
-Maaaybe.  I mean, yes, we could fully unwind kvm_x86_ops, but doing so woul=
-d make
-the overall code far more brittle.  E.g. simply updating kvm_x86_ops won't =
-suffice,
-as the static_calls also need to be patched, and we would have to be very c=
-areful
-not to touch anything in kvm_x86_ops that might have been consumed between =
-here
-and the call to tdx_bringup().
-
-> So without mentioning "those are not unwound", it doesn't seem useful to =
-me.
->=20
-> But it does have "(see tdx_bringup())" at the end, so OK to me.  I guess =
-I just
-> wish it could be more verbose.
-
-Yeah, redirecting to another comment isn't a great experience for readers, =
-but I
-don't want to duplicate the explanation and details because that risks crea=
-ting
-stale and/or contradicting comments in the future, and in general increases=
- the
-maintenance cost (small though it should be in this case).
+> > @@ -782,6 +782,9 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
+> >  
+> >  	info.status = status;
+> >  	info.mask = mask;
+> > +	info.tlp_header_valid = tlp_header_valid;
+> > +	if (tlp_header_valid)
+> > +		info.tlp = aer->header_log;
+> >  
+> >  	pci_dev_aer_stats_incr(dev, &info);
+> >  
+> > @@ -799,9 +802,6 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
+> >  
+> >  	if (tlp_header_valid)
+> >  		pcie_print_tlp_log(dev, &aer->header_log, dev_fmt("  "));
+> > -
+> > -	trace_aer_event(pci_name(dev), (status & ~mask),
+> > -			aer_severity, tlp_header_valid, &aer->header_log);
+> >  }
+> >  EXPORT_SYMBOL_NS_GPL(pci_print_aer, "CXL");
+> >  
+> 
