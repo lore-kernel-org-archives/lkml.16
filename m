@@ -1,102 +1,141 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 571BE22B8B1;
-	Wed, 21 May 2025 11:42:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93BDD3CF58;
+	Wed, 21 May 2025 11:43:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747827763; cv=none; b=HImsbcJVselinqpCoTyUrGKtbvQf59aSEZMKju42YQ8HilnZ54WQEbmiwDaF1TLZF7pAH/OWeVGh/2u+N+zBjG44EbzUIQokSq2MyF/tS4SHUXyGXDqTRXbJHJSFCAh8huowD5356njkIoNXSXUzIpCzHoMTWTCVnB+5Kwdh9Lw=
+	t=1747827795; cv=none; b=KjzKQja/p9+EF81fz8VvM+pX7qUbQYIGbrRnfmKJ9RMM6pRSgJsVwMdNxsMdcbF/ySSgYwvzbu22wgP5CTpA3fcvM7s5VTT02Sh11yRGFSbqb7WQ+J7XgtVW3iLcawPYU3Fms6kNJRT3fzBwDRPrFN/ysM+VjheOF0WJZYLxlvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747827763; c=relaxed/simple;
-	bh=BBLaqALTYPrcSvGY4FSvdax+qvgZN3k55RMHh1U2OpI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BHY56iR6eTMoTOE3qRu2+2HVhTHl6YX2c1eZDgrJUpBA2/ftcf9WcI5xFuJwYnySV6uaQE2xdSow6LE0dafQ+ZUH30ErhC1VfVDKDYd37ZdMwD+WuEA34LHiJZxhvt0PrIWlB4zNCXEKuceKyV2nLuCgHxUiJBQJqYUCGEjasaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=J+ZA1LkN; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1747827795; c=relaxed/simple;
+	bh=W/bPkfvADUgk8O4OLcSsZG1491vPUJrgmc7+gkEeuwg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=T8E4Ok3a3JP+wskpbL+8bU/8myM+d/J67mX+1cHnG0pwgfElAFFDU5be7B/eB8FW1OEl1QuqAxXuyYpEBNXkXrEvYP/fZkpvP4KuJWqSArMYcIdiYN3eZZAsrQWDr6BKmlslBzLSTzwCsz94mJlCVjg68kNplxXdjU4Sfo6zj9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ROcCu93n; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="J+ZA1LkN"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=+KOoH+QcbNIcFt9a+edbvuTeUreK6auzBcTQsLb2atU=; b=J+ZA1LkNIZvB2wt5zV0IUe5eaO
-	GhuaqpVSmOn9urMlfTUl+99lOTpOO+f/pKPDMPFnU/NqePPiHuAxDYGupA+8qh8qXhRmbs6tX5hE8
-	u6dkqBqpoh9TKIkQUILB0b5bVr+1imyLQj2jeTKmC7U4WmTqUpYnlhopptqDp7qC8cUMr6p90Zm69
-	nettF2xLWVUEiEI+dsK0hKGlo+GYUn+gXM7kr0szlrZOAI+qdeOvSb5knGoIDiA2s70Jaf8XMvICI
-	XanMgNn2dhRd352C3mtDH/+o4D/POcJxcolPn7egKhWx163FR8YjlkoLPFs9VpXbLQOF2bZ3QVm88
-	+pS+1Drg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1uHhqE-00000000vno-2rKA;
-	Wed, 21 May 2025 11:42:34 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id C9BC1300348; Wed, 21 May 2025 13:42:33 +0200 (CEST)
-Date: Wed, 21 May 2025 13:42:33 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sean Christopherson <seanjc@google.com>, mhklinux@outlook.com
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev, K Prateek Nayak <kprateek.nayak@amd.com>,
-	David Matlack <dmatlack@google.com>,
-	Juergen Gross <jgross@suse.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-Subject: Re: [PATCH v2 08/12] sched/wait: Drop WQ_FLAG_EXCLUSIVE from
- add_wait_queue_priority()
-Message-ID: <20250521114233.GC39944@noisy.programming.kicks-ass.net>
-References: <20250519185514.2678456-1-seanjc@google.com>
- <20250519185514.2678456-9-seanjc@google.com>
- <20250520191816.GJ16434@noisy.programming.kicks-ass.net>
- <aC0AEJX0FIMl9lDy@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ROcCu93n"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-60179d8e65fso2495033a12.0;
+        Wed, 21 May 2025 04:43:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747827792; x=1748432592; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=qvXnpzfFDmYTCvRMWCiccKER6AnXrDuq79CLzj26e9w=;
+        b=ROcCu93neFJ0bMiXAxikXh5BIo/27UhI+4yNXQzU5ZwDAJ6lh2dFWXJbkDy0lNjFpE
+         t1htk47bWYewIRZ64/aRA0m8R4m0U2B441mgNkUmtMapftFcVBJaFt4FXNHHdzsNxHsM
+         Q+iZOyhaBe2kNHoC/62bRBK5Le0DR+9xFPgs4JDBIwVRMuX9wFIfHdKj81e5fDs2vK8a
+         JrbQ7UfyPDXW1a3GYpqt/pBqH2tx1Xxpzwd4Wp5vPRRuOgm+1RiCPgkd9ZrTQnngUeGJ
+         8flRztqL+sdJi99LRvQtMYQ04W1UxUtdWBPpP+LlFtqTIw+0e+WanY7uJZV+afQICIlA
+         pxhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747827792; x=1748432592;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qvXnpzfFDmYTCvRMWCiccKER6AnXrDuq79CLzj26e9w=;
+        b=VKD65vdqcoTQFjVpebnEXjYMcKK0QWcISziLRcEygZCAtWmIIj7W3icyQeFuQcv/BK
+         Zt5Aa7k3QCeGVrUtGEZnAR2fgsKvsWmGZhYvcXY98H2c+jb6Rsg1xbeNYZYFSfFKNR8j
+         auYDll6MTieFQRorzQrWxLhooqUD6S8GzjZTV6Unjg1IgbKfB5ah3dREh5ZWLJM/Dv5c
+         sfz7Deus0Y/5EenZeEQJMcfZD7N3CgVfL4iZRhS3ZUPnK9gh0NbjaaLh0HPViTIznPx9
+         mZOwuC9bdqaqRO2sK6b6wZz3qY2YTJZMt1VCgebVoKd9Vb6HsNevWdBMKm+D+PDfv5xB
+         v0WQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUpmTi0g0W2Qoew9ilYUqo4MPyMJ8IJvkNYp8SmCLOXnZf+8rgIMA3dLeMIhou7pLLh/yX+rLq9wTDq@vger.kernel.org, AJvYcCWJt9p5dx6tSf3Q8whfRDQV66KXhlcGVkb5TNGAOJ6NaKlyCLRY2imErhXbZJZm4AwlI0opoRWlWu/K8doe@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywk3RC4RAKGTP+G/RFR/QsFjTDziO9ExYlFhQof1lD35ba612f5
+	S/jYMt3QU18fcwENURm7L8sbHgZp6w9wW/2MP0FVOuOTaIYiCqWBjuDzD0KrJTL9iM+VjiBKV0t
+	eBn5ZMbDg9q0M4SAKSqqBEF5GCv0YUy8=
+X-Gm-Gg: ASbGncugwvih0rFoG8AxcmtLPPxqOXagZZ0yfyYk8XML8QRf5KPpC7WOBhBU+d8lKht
+	7ONbi9rbIb0d6lTR6PFEGIyiXaHnU2uGAU8YkldsWIPznz1YOZReOuHI8MMlJkHZF7vV3A5O3mJ
+	Lp8ZO0lVGMdzTrMuNy0jsZT2k0IGgliVg=
+X-Google-Smtp-Source: AGHT+IFDzNtI/CaK3q6Z0HD2sju7OyWLGycbvanWFVrufRUMz+SMpJuYify2HixyuAXGL6NwA/JUeCrr/7SUp+Trlwg=
+X-Received: by 2002:a17:907:9344:b0:ad5:23e3:48b6 with SMTP id
+ a640c23a62f3a-ad52d5ba623mr1989900566b.45.1747827791526; Wed, 21 May 2025
+ 04:43:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aC0AEJX0FIMl9lDy@google.com>
+References: <20250521074535.16488-1-linux.amoon@gmail.com>
+In-Reply-To: <20250521074535.16488-1-linux.amoon@gmail.com>
+From: Anand Moon <linux.amoon@gmail.com>
+Date: Wed, 21 May 2025 17:12:54 +0530
+X-Gm-Features: AX0GCFuRNEz_g2JELBFe7G_6vR4egqHEh4dmZX-9WFiiMW0PYC4vW84aMd81Mo8
+Message-ID: <CANAwSgTk3R6SMqsNcT7c2AVzQRAdk8Z2Rs0bK3VCsgivR6nLmA@mail.gmail.com>
+Subject: Re: [PATCH v2] arm64: dts: amlogic: Update USB hub power and reset properties
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, 
+	"moderated list:ARM/Amlogic Meson SoC support" <linux-arm-kernel@lists.infradead.org>, 
+	"open list:ARM/Amlogic Meson SoC support" <linux-amlogic@lists.infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>
+Cc: Wayne Schroeder <raz@chewies.net>
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, May 20, 2025 at 03:20:00PM -0700, Sean Christopherson wrote:
-> On Tue, May 20, 2025, Peter Zijlstra wrote:
-> > On Mon, May 19, 2025 at 11:55:10AM -0700, Sean Christopherson wrote:
-> > > Drop the setting of WQ_FLAG_EXCLUSIVE from add_wait_queue_priority() to
-> > > differentiate it from add_wait_queue_priority_exclusive().  The one and
-> > > only user add_wait_queue_priority(), Xen privcmd's irqfd_wakeup(),
-> > > unconditionally returns '0', i.e. doesn't actually operate in exclusive
-> > > mode.
-> > 
-> > I find:
-> > 
-> > drivers/hv/mshv_eventfd.c:      add_wait_queue_priority(wqh, &irqfd->irqfd_wait);
-> > drivers/xen/privcmd.c:  add_wait_queue_priority(wqh, &kirqfd->wait);
-> > 
-> > I mean, it might still be true and all, but hyperv seems to also use
-> > this now.
-> 
-> Oh FFS, another "heavily inspired by KVM".  I should have bribed someone to take
-> this series when I had the chance.  *sigh*
-> 
-> Unfortunately, the Hyper-V code does actually operate in exclusive mode.  Unless
-> you have a better idea, I'll tweak the series to:
-> 
->   1. Drop WQ_FLAG_EXCLUSIVE from add_wait_queue_priority() and have the callers
->      explicitly set the flag, 
->   2. Add a patch to drop WQ_FLAG_EXCLUSIVE from Xen privcmd entirely.
->   3. Introduce add_wait_queue_priority_exclusive() and switch KVM to use it.
-> 
-> That has an added bonus of introducing the Xen change in a dedicated patch, i.e.
-> is probably a sequence anyways.
-> 
-> Alternatively, I could rewrite the Hyper-V code a la the KVM changes, but I'm not
-> feeling very charitable at the moment (the complete lack of documentation for
-> their ioctl doesn't help).
+Hi Neil,
 
-Works for me. Michael is typically very responsive wrt hyperv (but you
-probably know this).
+On Wed, 21 May 2025 at 13:15, Anand Moon <linux.amoon@gmail.com> wrote:
+>
+> Add missing reset-gpios property to the USB 2.0 hub node to
+> ensure proper reset handling. Also update the vdd-supply for
+> both USB 2.0 and 3.0 hubs to use the shared hub_5v regulator
+> for consistent power management. Remove usb2_phy1 phy-supply
+> since now it's managed by the hub reset control.
+>
+> Fixes: ccff36934137 ("arm64: dts: amlogic: Used onboard usb hub reset on odroid n2")
+> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> ---
+> v2: remove usb2_phy1 phy-supply since now it's managed by
+> the hub reset control.
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dtsi | 10 +++-------
+>  1 file changed, 3 insertions(+), 7 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dtsi
+> index 3bca8023638d..d46b6aaef8fa 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dtsi
+> @@ -42,7 +42,8 @@ hub_2_0: hub@1 {
+>                         compatible = "usb5e3,610";
+>                         reg = <1>;
+>                         peer-hub = <&hub_3_0>;
+> -                       vdd-supply = <&usb_pwr_en>;
+> +                       reset-gpios = <&gpio GPIOH_4 GPIO_ACTIVE_LOW>;
+> +                       vdd-supply = <&hub_5v>;
+>                 };
+>
+>                 /* 3.0 hub on port 4 */
+> @@ -51,7 +52,7 @@ hub_3_0: hub@2 {
+>                         reg = <2>;
+>                         peer-hub = <&hub_2_0>;
+>                         reset-gpios = <&gpio GPIOH_4 GPIO_ACTIVE_LOW>;
+> -                       vdd-supply = <&vcc_5v>;
+> +                       vdd-supply = <&hub_5v>;
+>                 };
+>         };
+>
+> @@ -311,8 +312,3 @@ &toacodec {
+>  &usb {
+>         vbus-supply = <&usb_pwr_en>;
+>  };
+> -
+> -&usb2_phy1 {
+> -       /* Enable the hub which is connected to this port */
+> -       phy-supply = <&hub_5v>;
+> -};
+
+This is breaking the bring-up of dwc2 in u-boot
+so could you consider V1 of the patch?
+
+Thanks
+-Anand
+>
+> base-commit: 4a95bc121ccdaee04c4d72f84dbfa6b880a514b6
+> --
+> 2.49.0
+>
