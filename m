@@ -1,170 +1,111 @@
-Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BAA71DE8A6
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 15:05:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89764143C69
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 15:06:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747839961; cv=none; b=Sjgq2t9BNN6C7s7F5JJ7g5smh3ZY8h1lFtmCtVGHr605pgned3Z2zW9jzev690LRga99rNCnam9JveXOEST/Ly2v4TWxlLfeI6fmPfnVEiB8RTs3f1EPEKYcnzW1y7A/+hDI9GNIcgWRI7l9/II9KBZLyTWmv5KMIfi2BCecdh0=
+	t=1747839984; cv=none; b=iFmSLRhTlDXZiLXf1d+IzG6+aVYls5QF9Y2/U4VFG2FXrWH31pBkDPvhaUAvid3zQz8dCyYn2Ra12c/q1jNMLjyQ2Z7oRa4qBCBbXzaFdVfZgfQEtRp6F4w7qfnYRJj+4i5jBE5NfzUp0yNBxr0jw7dHFPxmtlI7VPEJ4uKuf0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747839961; c=relaxed/simple;
-	bh=Ir2MVdbmo/b4UDviWzXQ71fWGSN2ZSG7Gn5CR39TeO8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lrwfwSgYg1iAsWfU6Y6DD78vpqQNEftyLzxuPg5oQqa2osEfRT+5wUS8V4b86X03WNLmbH/3ysGAER1HpFd9mf0++Y7xE2TO155joL5/LuqJwSjwLVmUqG3Jj33mvVucn5EQvPyf1o7nzoiN6ywXoITbKC8BNKJgrvUBudzZIIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Sv/YSHew; arc=none smtp.client-ip=209.85.160.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1747839984; c=relaxed/simple;
+	bh=rGXcnoZpVSuS2ShN8BMqK/q3oENti/BbAzaKdrf+o1c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=upU1pO64sEeJ0fboO1i3FxNj8rG2mY7B4+1N+1AflwggbL/VpZv9RCIf5dk/yJi/h7h1VWbtu+8PlW9hNn75D1kT4GTEoslcciU9p3I3OrhaCE9hay355C47n2dQRGSku5tNQeTetmm3dYud4CwrxGeRJPOZ9FGwgKyrDPxHp3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BaYXP2+B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Sv/YSHew"
-Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-2cc82edcf49so1505600fac.1
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 08:05:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747839958; x=1748444758; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=FNM4AdBa+GtBGS+Rm/l5dOnnE3L33VAp4Mn0qr/3Iw0=;
-        b=Sv/YSHewOXOWpnSaPD3aVcnWkykaJjnsls86+P3izQxFiI2QX4N1+WKgWLi6Okf9K0
-         Ee9Ek7CDFeH5rkqqmDMzpiX/+W1GlVnlEu3BIGIwJWMWaPPHizBPCRqrYqtmpNX0a2Sy
-         IbbzM7O1XKwrTWXLPR8YbOCRkY62S6KPGtLlr6SlkwY6sYhNUkubdwiXzAH/ILUpZ39u
-         UTTQ6eXNFgQ1P/klefde944nzeYdvQIJSkIt/xkpiC5OeiI14V6/ofNQVMXj2+4wtP+R
-         2cHkiFpn/bOhLaMbopy/4xjgsiPCwhcs9ntLo1fcmP7V/LNTJeSS4wTDksX6p//gVmI+
-         5Wig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747839958; x=1748444758;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FNM4AdBa+GtBGS+Rm/l5dOnnE3L33VAp4Mn0qr/3Iw0=;
-        b=GrvmLgdKGgKNLhsbqekLV17Ib/ZFl3fS138cPbSscKhNW27R/0cu7OP8PC7PqQj4ku
-         XuaYvf7Bd6ewX4eJAM8TQwjDBtwAPZRpy0FVdy2B6XOmfJ5P+5piftgWcAsPUAOXWK4A
-         KjXvtxrnxI9vFCl+jZgcLfjVsQlDw/vSNBUKLSt0GXHgpy0E2gfuI99b/lbANpps6Q5G
-         Hf5WOOdT0SzDLzKOj/RrKloAeGmxwbiFNiDit8LtzsW9F/51a3L821hYUXFrdPsOo+uR
-         NZDqeu0wnFlkeE6LqaeG7CjYF9cbwAWM+QBy3Xr2dMZ8M5r8yl0wUpM5lrfqRJgUsz3F
-         dwiA==
-X-Forwarded-Encrypted: i=1; AJvYcCWaq9j6qA7LseSA3M2CRO4lE0a7sNnh5AZTzmdzP/Lqr2nOkBfOsUX57Ovtk4p5vEjSwgid1JOIyPguZw8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz45yl0u+tQ7QCsf572QUDn7Wi9NgFlwbJB3WAHeqg33JtjxHU4
-	M5kCNVNMi8zVVi8N9oqvooP5uSvMkRLQG+fgig2mk2RUJE5vsIgX/RL+m8yOdEgVibQ=
-X-Gm-Gg: ASbGncsYXFRVxdcIaJ3WbMAL1yuF1zta69mW7Wh5gYjxVOqNLcHq+Voy82jARN0+7Kx
-	GRABnQEvdSwabCat0AE7uPb8W9PyZ6QhueVnXhjPcbTicphns2lBJTNEWiRJJJoUUiHE5wQSDXB
-	gFg4V8RoPgcaZjtVi+l8kXUrGZHSI+47SM/YcJ5035+FtHGED/7Nk6OUbFqWXKqe8b48ubVRoYu
-	H4OW1JDETjxz+j/WNTzrAWLBKxz34nZLDdWqhKq3eSPTaizEvCnKnJxDDeCDiHkAAZxvQo3O1D/
-	9iFCyOdsQMPUj6M32WahxmuQDoWD/c7I0hun+1WjKwJhKJdQqWcIUyD50XkmlrBsMX95gOGGvUu
-	mObYS9RPnbq9pzxjpcgTbJdRPJA==
-X-Google-Smtp-Source: AGHT+IFnZRH+Hh5lq3DEVSL/82U18YO7cHWK19WHaRYgQFCSmEQepHDCKm6lJxK/KahPr8I4MbpEwQ==
-X-Received: by 2002:a05:6870:fe81:b0:29e:6f32:6d91 with SMTP id 586e51a60fabf-2e3c8566451mr12486245fac.33.1747839957682;
-        Wed, 21 May 2025 08:05:57 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:d77b:6acc:2ad1:8ff? ([2600:8803:e7e4:1d00:d77b:6acc:2ad1:8ff])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2e3c0b2c853sm2681647fac.50.2025.05.21.08.05.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 May 2025 08:05:57 -0700 (PDT)
-Message-ID: <d2803c4a-d4ee-47e6-9bba-2d042051f980@baylibre.com>
-Date: Wed, 21 May 2025 10:05:56 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BaYXP2+B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC820C4CEE4;
+	Wed, 21 May 2025 15:06:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747839984;
+	bh=rGXcnoZpVSuS2ShN8BMqK/q3oENti/BbAzaKdrf+o1c=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=BaYXP2+B7pvOSPDtpEMBU3Q/5W7exzbc4xBO68gGPOlxyfT1PhpTPHuFSVBs7kYH7
+	 sP5RVdjHaDC8LNvrumrfvG3YwQaBwRdaKs3dLHlayIJmUgBUPe10Gq9SE4CotB+8kr
+	 41qy1O+hrMkz4P0M3UnvPA4hpifH1FV3JKgZNmWh7bhv/5Ev/0ckr2mNts5QbdwPxK
+	 SYO8NnP1L2cS/nmgflfGIkCgpNV0uI4XU5Cvx7hCTUgyCAZQ6u5G/8shEIij54DjCM
+	 H/irSymF7p1ZesVs5NFiyblyAHIlNUe8e0pO3n1Z+8cvsADIXDUCz1Aq4WActnf2lR
+	 vEwbUf5+7R66g==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 911E7CE083F; Wed, 21 May 2025 08:06:23 -0700 (PDT)
+Date: Wed, 21 May 2025 08:06:23 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: John Ogness <john.ogness@linutronix.de>,
+	LKML <linux-kernel@vger.kernel.org>, Petr Mladek <pmladek@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	"senozhatsky@chromium.org" <senozhatsky@chromium.org>
+Subject: Re: printk NMI splat on boot
+Message-ID: <734c6c65-b9f4-40a9-b6a8-abcb08ee83f5@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <a93e1a96-3685-41c3-8979-472b20dfca14@kernel.dk>
+ <84a577t590.fsf@jogness.linutronix.de>
+ <c99232fa-e861-48ec-8438-028e61d3b744@kernel.dk>
+ <36ccb46d-5041-47ce-b419-f49ccaeece9b@kernel.dk>
+ <fe455126-7b33-4246-b626-44ef33013765@paulmck-laptop>
+ <0779b400-b99e-4fa2-8b18-de06fb4e77cc@kernel.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] pwm: axi-pwmgen: add support for external clock
-To: =?UTF-8?Q?Nuno_S=C3=A1?= <noname.nuno@gmail.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: Michael Hennerich <michael.hennerich@analog.com>,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Trevor Gamblin <tgamblin@baylibre.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, linux-pwm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250520-pwm-axi-pwmgen-add-external-clock-v1-0-6cd63cc001c8@baylibre.com>
- <20250520-pwm-axi-pwmgen-add-external-clock-v1-3-6cd63cc001c8@baylibre.com>
- <zdltaexty6pzbqesoluuyluygyt6w7nq7r2wccmtfktppwuw3e@qb36fsu3jq4k>
- <0dd1a97e-ff7c-4d09-b18e-5df9944488c6@baylibre.com>
- <p3ejuwktdxcjwv43nnap5tin33ziimgxfan2xoghtaaubsxgy7@tjmwjpwy6yy5>
- <6b72e9dc9d574aa1f025c0f5d317dcec1d729ba9.camel@gmail.com>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <6b72e9dc9d574aa1f025c0f5d317dcec1d729ba9.camel@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0779b400-b99e-4fa2-8b18-de06fb4e77cc@kernel.dk>
 
-On 5/21/25 9:22 AM, Nuno Sá wrote:
-> On Wed, 2025-05-21 at 15:54 +0200, Uwe Kleine-König wrote:
->> Hello David,
->>
->> On Wed, May 21, 2025 at 08:19:51AM -0500, David Lechner wrote:
->>> On 5/21/25 4:22 AM, Uwe Kleine-König wrote:
->>>> Can you achieve the same effect with the (IMHO slightly nicer but
->>>> hand-crafted) following patch:
->>>>
->>>>  	ddata = pwmchip_get_drvdata(chip);
->>>>  	ddata->regmap = regmap;
->>>>  
->>>> -	clk = devm_clk_get_enabled(dev, NULL);
->>>> -	if (IS_ERR(clk))
->>>> -		return dev_err_probe(dev, PTR_ERR(clk), "failed to get
->>>> clock\n");
->>>> +	axi_clk = devm_clk_get_enabled(dev, "axi");
->>>> +	if (IS_ERR(axi_clk))
->>>> +		return dev_err_probe(dev, PTR_ERR(axi_clk), "failed to
->>>> get axi clock\n");
->>>>
->>>> +	clk = devm_clk_get_enabled_optional(dev, "ext");
->>>> +	if (IS_ERR(clk))
->>>> +		return dev_err_probe(dev, PTR_ERR(clk), "failed to get
->>>> ext clock\n");
->>>> +	}
->>>
->>> The trouble with this is that it would not work with existing .dtbs
->>> that don't have clock-names set. I think it would need to be more like this:
->>>
->>>
->>> 	axi_clk = devm_clk_get_enabled(dev, NULL);
->>> 	if (IS_ERR(axi_clk))
->>> 		return dev_err_probe(dev, PTR_ERR(axi_clk), "failed to get
->>> axi clock\n");
->>>
->>> 	clk = devm_clk_get_enabled_optional(dev, "ext");
->>> 	if (IS_ERR(clk))
->>> 		return dev_err_probe(dev, PTR_ERR(clk), "failed to get ext
->>> clock\n");
->>>
->>> 	if (!clk)
->>> 		clk = axi_clk
->>>
->>
->> If there are no clock-names, the parameter is ignored. (I didn't test,
->> only quickly checked the code.) So passing "axi" instead of NULL should
->> work and yield a more robust solution.
->>
->>
+On Wed, May 21, 2025 at 07:05:09AM -0600, Jens Axboe wrote:
+> On 5/21/25 12:06 AM, Paul E. McKenney wrote:
+> > On Tue, May 20, 2025 at 02:41:40PM -0600, Jens Axboe wrote:
+> >> On 5/20/25 2:18 PM, Jens Axboe wrote:
+> >>>> What values are you using for CONFIG_RCU_EXP_CPU_STALL_TIMEOUT and
+> >>>> CONFIG_RCU_CPU_STALL_TIMEOUT?
+> >>>
+> >>> CONFIG_RCU_CPU_STALL_TIMEOUT=21
+> >>> CONFIG_RCU_EXP_CPU_STALL_TIMEOUT=2
+> >>
+> >> This was =20 btw, guess it could cut a bit too much...
+> > 
+> > Just confirming that setting CONFIG_RCU_EXP_CPU_STALL_TIMEOUT to two
+> > milliseconds is more than a bit on the aggressive side.  ;-)
 > 
-> Are you sure? If there are no clock-names and you pass an id, you should get an
-> error back:
+> Sorry guess I wasn't clear - I had pasted in =2, but the setting in my
+> config was =20.
+
+Ah, got it!  Less aggressive, but not recommended for other than small
+devices, such as Android smartphones.
+
+> > Setting it to 20 milliseconds is OK for smartphone-class devices, but
+> > to the best of my knowledge, setting it less than 21 seconds (as in
+> > 21,000 milliseconds) has not been tested on any other platform.
+> > 
+> >> Changed them to:
+> >>
+> >> CONFIG_RCU_CPU_STALL_TIMEOUT=100
+> >> CONFIG_RCU_EXP_CPU_STALL_TIMEOUT=0
+> >>
+> >> and complaining is gone.
+> > 
+> > This makes it take the default, which in this case would be the specified
+> > CONFIG_RCU_CPU_STALL_TIMEOUT value of 100 seconds.  Which is an unusually
+> > long timeout -- mainline these days is 21 seconds and some distros still
+> > use the old value of 60 seconds.
 > 
-> https://elixir.bootlin.com/linux/v6.14.7/source/drivers/clk/clk.c#L5198
-> 
-> 
-> I know it's not exactly the same we're discussing but of_property_match_string()
-> return -EINVAL if the property is not found which leads to an index < 0 and thus
-> of_parse_phandle_with_args() also returns an error back.
-> 
-> I think I'm not missing anything but it's always a possibility.
-> 
-> - Nuno Sá
+> IMHO the settings for these are very odd. Which I guess is fine for
+> debugging kind of infrastructure, but fairly nonsensical in any case.
+> But not really that important - looks like RCU_EXP_CPU_STALL_TIMEOUT has
+> a default of '0' so not sure how on earth I ended up with 20 in that
+> one. Most likely from not reading the help entry and hence setting it
+> similarly to RCU_CPU_STALL_TIMEOUT.
 
-Testing agrees:
+Agreed, it would be better if both had the same units.  But back 20 years
+ago, milliseconds would have seemed insane for RCU_CPU_STALL_TIMEOUT,
+in fact, many would have argued that the current setting of "only"
+21 seconds would be insane.  And then a few years ago, people really
+needed milliseconds for RCU_EXP_CPU_STALL_TIMEOUT, so here we are...
 
-Given:
+Me, I should have seen it coming.  After all, the equivalent to
+RCU_CPU_STALL_TIMEOUT in DYNIX/ptx was 1.5 seconds.  But, again, here
+we are...
 
-	clocks = <&some_clock>;
-	/delete-property/clock-names;
-
-And:
-
-	axi_clk = devm_clk_get_enabled(dev, "axi");
-
-We get:
-
-[    1.190040] axi-pwmgen 44b00000.pwm: error -ENOENT: failed to get axi clock
-
+							Thanx, Paul
