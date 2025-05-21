@@ -1,460 +1,185 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2050.outbound.protection.outlook.com [40.107.237.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AB116EB79
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 18:41:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747852865; cv=fail; b=ClHaRunE6kx4qz1hweNLK6KOSROTNgxLDsOiRsoA25TqX96MBygUaEQhYeSDdw9M6i5i2zM2nX6xRLmuI8ZdGlEcxpPWFsslCjjIf36/r+5fQJm29iVQWPv9MQewsAuMrEbSCZ+CKfvnzkNrpjudgrnmutLBmzqqQfn4VtyEezY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747852865; c=relaxed/simple;
-	bh=OhRXsdPzxHJ4E0+Si2vEHHj9Q7zrT6gJuq4L9AavdU0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=uY1fmz/rIuxkUwxnVulX0lini1shaS7P96lydvl8UGHpZytdrZOBljGwepoRGfUdMlyN8zT9MbG1snp0O6UADKnJN2KNNS4pPKI7bFzq88WbRdcJJlf7TX85H3k/mcF+pfI7MWSRRful7eVgcctEPILYW8oZvQOPmwt2FAyRiuE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=jmfpVhbY; arc=fail smtp.client-ip=40.107.237.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17D731D7999
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 18:43:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747853009; cv=none; b=JWF8UhuXAqsMrHKh6b4g0a3ogPrjNa3Enms4olr3Z5He8KoS3CH4W1+Q82bY/2W5yyxVHLwN6NCTtQPeOFw7nnQ7vTRLiOXlep4oSlGEExYa/ib1gg/u4di4AR8uWGYq1RvrIJF/SaT6Q2j3vZVJMAwSy3cmVslyGm392gj59xw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747853009; c=relaxed/simple;
+	bh=l9hm75yhfpKOgU+9IKCqQB1osT3ELi9nMlq987rTA8Q=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=LJb562CnZJ1kqJqTarla2gw2sOqFBLuxOeJ6d7qOVAt9Dqdlj5nMRpqjxNgcDak4GyunLii6MuazeE644jCw86rNOoF2yD6oP2uckFsqLlBnN5SXIk+LA0Z7mG7/WBoPnojHNjEReZ+q/5uOYgCaq2yeeEYKbqucsaR6HFw/2hM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NRYOmvSS; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="jmfpVhbY"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=M3HHnWxuI4SBMBc9iu0sWSpHDVIxNRWdienR+ZIrx3bu+VNfPX4DZwkLHvbYYBQnZFH3lM3U3VDFHRP8XT/ut3AgCd+lTd2Y9JAX0kD+9tFHCBNhXXu9GWFDR5dnFIahcfQ5wADzNYdc8LSmoqoQeCv3TWkiuQm5D8bednXV7WjhHTBnv4ir+li1hB+6GyYoH8G/iksj3afPAa9FKjfbgr+093zZLgcmGnHg/nSMeWgkg74KnoHKVo8pW068c9cEzooLMDb54cBepMseXeRSRSbH8m1A+MWMpqkFPIw9gve0mzIdIE8w/MS8iHF1Mk/QORZmP5Bc4p8WuihYd6jp8w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dSYZiyDWHoqEfMAXRXrs25TBGvmRnIsxgPbtVUo3t6M=;
- b=Wt52oRbSrXfPc1mL15PD8/+otX6WGg71X4GXow+S/12tEjqbRTQJ6Jzt6LdoIk0vaEJVv6uxAZHaA2imMASaLZqn5/geNy03gxNMiZ7WyWO7Wln7SohYBLv82EYQilVOykWI8aexS6Vknvhec2Ju6Um1mvsMtpN/Gpih8It13Q7HItJ9dcA1cBSR+r27Wk4P+aIcOVzZBH7aluB0z1Z9DwwSDuCKRdLR/9FuCApoqt2fycGb/qiXolZR22Nr2MERdQXSySGKhRm7DXR5CR/h3riN5kmRRKEMw+sJvBlKZGggSDmMqrgbNpgm4nad6LQkYVcpHefDOLuww7NZZcfLgg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dSYZiyDWHoqEfMAXRXrs25TBGvmRnIsxgPbtVUo3t6M=;
- b=jmfpVhbY7m872l6WH5Sb3C1RS22dYxnC2KSUEczTQZ9Z4IMnEAouw3oDFmKLtOSR2e+jOOqU/Tww6gIrBg+tRTV5OJ8lKisk45D/7UaLsxFn8CNlhsDl+quePUtmRuhchFfl2RwHh6pCmTCcY75fpcPleT5K7K81fYm6MkdI93f2Eb5fY7XuI0KhNYaKPuWl7kuY1PH/pJewHe4FyrMHiUz9sL2aRq4bMhMSXBROcm1DGshJpTGbRgl7KmZtQUOzokN8Z28H1WTUGrXrReFN7U4/lIzHVIoMl9AxBEHK6ReBi6qKCHe2pH50xjxUUL2zKvpan3GGW7bZx9BS1GbouQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
- SN7PR12MB7154.namprd12.prod.outlook.com (2603:10b6:806:2a5::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.28; Wed, 21 May
- 2025 18:40:57 +0000
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.8746.030; Wed, 21 May 2025
- 18:40:56 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: Bharata B Rao <bharata@amd.com>
-Cc: Donet Tom <donettom@linux.ibm.com>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, Jonathan.Cameron@huawei.com, dave.hansen@intel.com,
- gourry@gourry.net, hannes@cmpxchg.org, mgorman@techsingularity.net,
- mingo@redhat.com, peterz@infradead.org, raghavendra.kt@amd.com,
- riel@surriel.com, rientjes@google.com, sj@kernel.org, weixugc@google.com,
- willy@infradead.org, ying.huang@linux.alibaba.com, dave@stgolabs.net,
- nifan.cxl@gmail.com, joshua.hahnjy@gmail.com, xuezhengchu@huawei.com,
- yiannis@zptcorp.com, akpm@linux-foundation.org, david@redhat.com
-Subject: Re: [RFC PATCH v0 2/2] mm: sched: Batch-migrate misplaced pages
-Date: Wed, 21 May 2025 14:40:53 -0400
-X-Mailer: MailMate (2.0r6255)
-Message-ID: <6795B38D-7858-4ADE-BB3B-71A1950A284D@nvidia.com>
-In-Reply-To: <a6c42783-baf6-4463-a2f5-9a6d3e380865@linux.ibm.com>
-References: <20250521080238.209678-1-bharata@amd.com>
- <20250521080238.209678-3-bharata@amd.com>
- <a6c42783-baf6-4463-a2f5-9a6d3e380865@linux.ibm.com>
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: BL1PR13CA0396.namprd13.prod.outlook.com
- (2603:10b6:208:2c2::11) To DS7PR12MB9473.namprd12.prod.outlook.com
- (2603:10b6:8:252::5)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NRYOmvSS"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30e8aec4689so6051686a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 11:43:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747853007; x=1748457807; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1uvnzAtGqqihUzW/r4zpFQWHLi2txWfCNzgNR6sDzto=;
+        b=NRYOmvSStwUW2BHH+mDk5SgLEjhPit5UPdgYXm3djeBThxgRPjxyJQQ+QnjYtKhTu1
+         j2yjE4xkpjSYoUrL83vNn+p4l7givh5wjSt9dqkQXbJqq/BficW0Iof7nDtvUgp7kixP
+         ZMjyj/EzuTlWbmAzq8yk3ut9V4SdB5tI/Zxb3vLzKGscRtrjA3HpyMjYDr9f2X2+xVc0
+         eemrUYPX+eWmOF7fG4lxRe+q4uYelo35Bc7Xze/NOLrF0EUzpFtS8JL/Djm57vKKUXqL
+         zMuySh+cUo6hmhjPKuuGJOqppRj4yR85H4ZUdtTi5d9F6wwY7bUBa7f2NlWCQVMlEung
+         n9IQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747853007; x=1748457807;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=1uvnzAtGqqihUzW/r4zpFQWHLi2txWfCNzgNR6sDzto=;
+        b=aoMKVm2mQr+Ns1CbpJWM21si3IkXqweJwiXQIev7Rw1UxM6YeLibN+5hiEmEfNUACY
+         raHwbDb5KBoM/NVXOg58WaITB+72wHQE4Ng5aU68j2yweEc+HW0oCdn/iymeLmOXakn1
+         qvEFx90wMpB1nyaAkM3/ZW80x+oqUJBBZaSre7/jMfSorRl6DOG7DgjpCecxxlMGMX83
+         GRRCWxA6sbawI5FuNdyjeT6Nhu7QjotYIdYBP/FeAy4lLXD8WXbKykS4DAfk0l6N8Jgs
+         sBJ/Jmgp2v1BKUTTSWZLka4Wcg4l+WIZ3SSZy1npL2iEbvllXb+uSrnwJgIx/O/M6HNL
+         w7SA==
+X-Forwarded-Encrypted: i=1; AJvYcCV2aKBfPgWos0R8RepBAhgN8IKX0TDXmGEsIcTKI6ukhBv2J4Q3xKGeEjAvZ2EijCDaQsMECwMH8q+lxeY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNuIm4FW1iRyMMjzjN8EQTWVlMccWuxUpt2IsW8fyHALVFQJ8g
+	0q5Pxo0sI70E6n4YCu2KfABBzVyyOxpd/+Y9z01NMqCjIbtriVm/CF4WQii0BBtE9D/HBROK8iK
+	mbPEJ4A==
+X-Google-Smtp-Source: AGHT+IGncHV/5i3Y3ABZHLp8TXbERrxZ+ADd5PUtj9jxbItkw8Bb/dtD2z+ZUy9jx9X+TqnA9jiY57WslHY=
+X-Received: from pjtu7.prod.google.com ([2002:a17:90a:c887:b0:2ea:29de:af10])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1c09:b0:310:8d9a:95b6
+ with SMTP id 98e67ed59e1d1-3108d9ae7eemr5602447a91.25.1747853007278; Wed, 21
+ May 2025 11:43:27 -0700 (PDT)
+Date: Wed, 21 May 2025 11:43:25 -0700
+In-Reply-To: <1d024d71-0b02-4481-a0d4-f1786313c1e7@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|SN7PR12MB7154:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9f966a05-41dc-48bf-e644-08dd989705c4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|7416014|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?DzuO6LmPFhSgoRSuRrJJEqjdjX3v5m5Cl5KZnqO6dttvBxEXNzZ7/eCy5Xdd?=
- =?us-ascii?Q?N2awH/FS7BDRFxoTtILyEGydpqecrNW+p7lMq/nLH9SZ3BWoAJJidlM7evXA?=
- =?us-ascii?Q?vsNn4RzEUOgEUpj/zDBS+aYATipwUuTTPomebhargz7NL1RumseeoItYiPhe?=
- =?us-ascii?Q?qVXhAS1IbHwwcCDbBckU6X61XvrQEPNalQPimF0ENnIgERnXjpQf9+i5uTie?=
- =?us-ascii?Q?isbKAfxS/3+M3lCaJKjK9dEZDl1hzmA4Vyw79I8KMo7bEKCFnLIIkMzv92OT?=
- =?us-ascii?Q?hlXN6MilZxVOGKzYOx7KY7gruu+8wyxv/DtOwfGbhQkYxkftSfmcp+3/6+LB?=
- =?us-ascii?Q?honu4vmhP2ZpY3P7WgjLfUm5rhe/zg1z6+JhF75E966JUqjJyg3Y/4MOIt7U?=
- =?us-ascii?Q?TwuEjNUGPeqwH9OpXCs9NjsDHtMCkZ/KvqA2qG9RjHMT4zGysOsao9xq2+Lq?=
- =?us-ascii?Q?bX0L6vpfTHcPCyAfTF/m3RI4K2smayFmrIRGaMNi3cagxuCpKJRdeoMHbHx3?=
- =?us-ascii?Q?Q8pmwcDxt1B0jWNRVUPZS1vpb0LdUkzewTv26xpZ8Ffoet6lleak1jnzdNsu?=
- =?us-ascii?Q?CVB6S+DVt33hhAQECVXiVt5M6EhzX6MZVCMSPVlxABwIow7ZCi7RZGHlYJ/u?=
- =?us-ascii?Q?BNDjMAWYBZdroi/xeLFQY/nvjXraQxw3r5K+DbAxD68hM3nxGzdVKCpuR5JE?=
- =?us-ascii?Q?bvDro3XVR2EIf88fphc1kb3HkwZKM26tNr8VKMU/VZMcFA/q+ogc+wqPXy4K?=
- =?us-ascii?Q?XNV2YGHPikyvvbLrH2mRwsVHf/R5Rkt1MEeVLDlSkakGjAwRublNjPDZo/e+?=
- =?us-ascii?Q?3cKM0oCl5vwUqV4EBA9bdlTjNw5Ltg9XtUs0mMBh6wEO0B9cI0M2W7G9a2cn?=
- =?us-ascii?Q?UpfYiP/xIsQQ2GO57hRtlSTsHWP+PA/TrLjcjY8+Cwx/t6ovuNVlUmL5xLTS?=
- =?us-ascii?Q?k/l21Js7Kx79ZGh0eRL0vHV/ntDzmR/ux3rtFxxrLh1NF6gA2aei92x+pCiN?=
- =?us-ascii?Q?Q3MvlVWGZ25r9ZYqW+Q+rcdVy5dtN95KW+DUGq/5ahLawMaT6BL9topfuPkG?=
- =?us-ascii?Q?Y52qEvY1mGLDXFpWHcVOl06+XmGakkI2vX2P6F9CQVtdShAGS1V0NAg/AfWW?=
- =?us-ascii?Q?OTcCIgyLdEcmjSSxoKmtBL0r1Kl8j1iM+OnQ9SLjzr91Z/EKJsy2VQ6FZech?=
- =?us-ascii?Q?e891/HfMEG67to1WOI1zHi8VYDqKTyInueX8Q1OPq2/egmIUv4UTe+48Af+o?=
- =?us-ascii?Q?Ux3JDkqUbzQlKeHMyq6mOZNp0Q0XmK8OSwmMhnNszXIAm/oOPKG9fI9nhG1r?=
- =?us-ascii?Q?NuyLS1kZArnF6oy4v74E035Eo4MpxjkqkFXhdDur+5Y7B01tpZu3ef3BnJy8?=
- =?us-ascii?Q?kMkNgrp1Pw3jTkiRKPk3diO0SaGkqmPXcbrkySwgfT9kuSuYdg=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?SOZjOv3q1dUNVHB49a/CsL7K3V6F68YFS1cspmpCGc3wc4Kjbu/T6fVzTHZM?=
- =?us-ascii?Q?turbIrntu9ClrULQW8qDYyoc9RJT5DO15qBrJa/NnzCxXSQ5JvQgZxhkeXCS?=
- =?us-ascii?Q?+78aQReP29V5Ze7huwRh7FS1zseta2QhN7dKEU3GOmcFoYw1hHrVfhN1VigV?=
- =?us-ascii?Q?FaROqnyBVSVqMeVRTnz9MQWD6vLpFLgD6FdXUWOsg/iGEdFLtfDrmHrp4jBv?=
- =?us-ascii?Q?+bPy3KxUdo7fUP+TMRpVbkl/PPXKATBfbPqyX207cf6wTtH18oEVOjBRi7cN?=
- =?us-ascii?Q?gWomElLecK8ZUjn8WSlc4GY6ezPBCtvtRI0svs9AIiGsgJerazBVBNsm8lvG?=
- =?us-ascii?Q?E/KrGPU+/i//S+tHpaS7dZuqkVKBYk5H5fv3mm2F5PQm38vBxO2YFEpi0N41?=
- =?us-ascii?Q?a5zZJ3Lw6XvN7rZ/I3JxoFWhGieJaX74U+6i3T8ME5uKKKrHgtQTqTdYUhBm?=
- =?us-ascii?Q?p/W67c83gJhNu1JWjsarAKY3CW1i838TAZU2MkUcYzi+m1zrnnjPxflwggiA?=
- =?us-ascii?Q?lxBjFtVJbJZq6jyDl1YoJFunWhP8r86V8ZXCwY1h9dv4Qg583p3gKZgfZW07?=
- =?us-ascii?Q?AaLPq2hd+KOaIk35vNcswYOK8CEuE4dDvOJ9AY01vOFhzDLBUYihrUf+fW0R?=
- =?us-ascii?Q?14lhk+C0kinWn1wYao/g1PRs5meidHRNiZaplmzX5AG8Nq078zPoOjaMKKlU?=
- =?us-ascii?Q?5bcGSaiSfRIAsKVxXmq+UyGr8rAO6rqIWpo/eXrRuk2p3X4RvYUj6o/Q9RG+?=
- =?us-ascii?Q?fqDwar0iDJgPIgMeWaWCu036V2wnO89JAKciJrAl5yLU0aDNKdbRLzX+n3ge?=
- =?us-ascii?Q?HZplCCYpWYvwFWijFKNMHJ4sJzFQz2l3Jyu/wKDr4Shl4Tzg6Z9r6lCUsB3k?=
- =?us-ascii?Q?k2WAcKDaAQ6zJASVQNNtn8VDn5fgnSW+nfBFFkAomhC3koonSCaEAkRgRmTH?=
- =?us-ascii?Q?VfmebyoQCntwbW2q2UzccgOwRJiAzyrERtKiAb4fpnAjY91n03TPopdr29qk?=
- =?us-ascii?Q?e+VhvZkKE2SlUqJ/Fy9LLVMmeSf28PyOUArn9wAAPj3TPD5sUeiTt9kOrQlo?=
- =?us-ascii?Q?bmyKeSf6hM2MHRmAY83Qf/o8cSf/M7sNxuq69Ck9+NlKnqCRJEAsf5pWpddJ?=
- =?us-ascii?Q?GLuS83AnxuAHiF5Dzx3khosO2z/welN11yDlucaAVVvkEmwq87GrAzq6Ilg+?=
- =?us-ascii?Q?Zrj55a+TqEIQv6ceSUUF3j0NnFp6YqTNf/VnB7zmNPaoFssEOZ4O14LBQXoa?=
- =?us-ascii?Q?wPtn3D9llm/0+oqUn2FhA9REqs0CYBpC9Hw4/RLOXVLWMxjJpqyRlkt+U2+V?=
- =?us-ascii?Q?d3ZtFVrMjEStxOMi6ulUZhxI3s/1ivaJTAAb+1i6dZAjTUbWpbxkphRY2TMm?=
- =?us-ascii?Q?3xNMH+umEaqI9qwp8yDm53yA8UWAakWPfJboXL/EIJRrq/eRtA2Gif+JKIqN?=
- =?us-ascii?Q?ToHG+SdN0IZMsx9TA+eZr7DNJBzuKQEXAFc2bZWqT9oPSsOVrrzb9Im+5uDF?=
- =?us-ascii?Q?yi0iXRoAqiKhoc/EUVdEuI7cBk3guPA7K7N28155/COoAXjzjOIQnesmMiOU?=
- =?us-ascii?Q?/Z19YB8wFYWS98AVmh7Qb+hxJ//xaROA7TZFNEUB?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9f966a05-41dc-48bf-e644-08dd989705c4
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2025 18:40:56.1925
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xqSWlrWE8pKhXB/B2ZoOkFejYzMqKOvMmVxUwVzVx8BARlWhZ1byqyUIsYb38DM/
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7154
+Mime-Version: 1.0
+References: <20250324173121.1275209-1-mizhang@google.com> <20250324173121.1275209-15-mizhang@google.com>
+ <aCUwvXPKD0ANKFb7@google.com> <1d024d71-0b02-4481-a0d4-f1786313c1e7@linux.intel.com>
+Message-ID: <aC4ezRH8msD6yUhC@google.com>
+Subject: Re: [PATCH v4 14/38] KVM: x86/pmu: Introduce enable_mediated_pmu
+ global parameter
+From: Sean Christopherson <seanjc@google.com>
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: Mingwei Zhang <mizhang@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
+	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	Yongwei Ma <yongwei.ma@intel.com>, Xiong Zhang <xiong.y.zhang@linux.intel.com>, 
+	Jim Mattson <jmattson@google.com>, Sandipan Das <sandipan.das@amd.com>, 
+	Zide Chen <zide.chen@intel.com>, Eranian Stephane <eranian@google.com>, 
+	Shukla Manali <Manali.Shukla@amd.com>, Nikunj Dadhania <nikunj.dadhania@amd.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 21 May 2025, at 14:25, Donet Tom wrote:
+On Thu, May 15, 2025, Dapeng Mi wrote:
+> On 5/15/2025 8:09 AM, Sean Christopherson wrote:
+> > On Mon, Mar 24, 2025, Mingwei Zhang wrote:
+> >> +	return vcpu->kvm->arch.enable_pmu &&
+> > This is superfluous, pmu->version should never be non-zero without the =
+PMU being
+> > enabled at the VM level.
+>=20
+> Strictly speaking, "arch.enable_pmu" and pmu->version doesn't indicates
+> fully same thing.=C2=A0 "arch.enable_pmu" indicates whether PMU function =
+is
+> enabled in KVM, but the "pmu->version" comes from user space configuratio=
+n.
+> In theory user space could configure a "0"=C2=A0 PMU version just like
+> pmu_counters_test does. Currently I'm not sure if the check for
+> "pmu->version" can be removed, let me have a double check.
 
-> On 5/21/25 1:32 PM, Bharata B Rao wrote:
->> Currently the folios identified as misplaced by the NUMA
->> balancing sub-system are migrated one by one from the NUMA
->> hint fault handler as and when they are identified as
->> misplaced.
->>
->> Instead of such singe folio migrations, batch them and
->> migrate them at once.
->>
->> Identified misplaced folios are isolated and stored in
->> a per-task list. A new task_work is queued from task tick
->> handler to migrate them in batches. Migration is done
->> periodically or if pending number of isolated foios exceeds
->> a threshold.
->>
->> The PTEs for the isolated folios are restored to PRESENT
->> state right after isolation.
->>
->> The last_cpupid field of isolated folios is used to store
->> the target_nid to which the folios need to be migrated to.
->> This needs changes to (at least) a couple of places where
->> last_cpupid field is updated/reset which now should happen
->> conditionally. The updation in folio_migrate_flags() isn't
->> handled yet but the reset in write page fault case is
->> handled.
->>
->> The failed migration count isn't fed back to the scan period
->> update heuristics currently.
->>
->> Signed-off-by: Bharata B Rao <bharata@amd.com>
->> ---
->>   include/linux/sched.h |  4 +++
->>   init/init_task.c      |  2 ++
->>   kernel/sched/fair.c   | 64 +++++++++++++++++++++++++++++++++++++++++=
-++
->>   mm/memory.c           | 44 +++++++++++++++--------------
->>   4 files changed, 93 insertions(+), 21 deletions(-)
->>
->> diff --git a/include/linux/sched.h b/include/linux/sched.h
->> index f96ac1982893..4177ecf53633 100644
->> --- a/include/linux/sched.h
->> +++ b/include/linux/sched.h
->> @@ -1360,6 +1360,8 @@ struct task_struct {
->>   	u64				last_task_numa_placement;
->>   	u64				last_sum_exec_runtime;
->>   	struct callback_head		numa_work;
->> +	struct callback_head		numa_mig_work;
->> +	unsigned long			numa_mig_interval;
->>    	/*
->>   	 * This pointer is only modified for current in syscall and
->> @@ -1397,6 +1399,8 @@ struct task_struct {
->>   	unsigned long			numa_faults_locality[3];
->>    	unsigned long			numa_pages_migrated;
->> +	struct list_head		migrate_list;
->> +	unsigned long			migrate_count;
->>   #endif /* CONFIG_NUMA_BALANCING */
->>    #ifdef CONFIG_RSEQ
->> diff --git a/init/init_task.c b/init/init_task.c
->> index e557f622bd90..997af6ab67a7 100644
->> --- a/init/init_task.c
->> +++ b/init/init_task.c
->> @@ -187,6 +187,8 @@ struct task_struct init_task __aligned(L1_CACHE_BY=
-TES) =3D {
->>   	.numa_preferred_nid =3D NUMA_NO_NODE,
->>   	.numa_group	=3D NULL,
->>   	.numa_faults	=3D NULL,
->> +	.migrate_count	=3D 0,
->> +	.migrate_list	=3D LIST_HEAD_INIT(init_task.migrate_list),
->>   #endif
->>   #if defined(CONFIG_KASAN_GENERIC) || defined(CONFIG_KASAN_SW_TAGS)
->>   	.kasan_depth	=3D 1,
->> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
->> index 0fb9bf995a47..d6cbf8be76e1 100644
->> --- a/kernel/sched/fair.c
->> +++ b/kernel/sched/fair.c
->> @@ -49,6 +49,7 @@
->>   #include <linux/ratelimit.h>
->>   #include <linux/task_work.h>
->>   #include <linux/rbtree_augmented.h>
->> +#include <linux/migrate.h>
->>    #include <asm/switch_to.h>
->>  @@ -1463,6 +1464,8 @@ unsigned int sysctl_numa_balancing_scan_delay =3D=
- 1000;
->>   /* The page with hint page fault latency < threshold in ms is consid=
-ered hot */
->>   unsigned int sysctl_numa_balancing_hot_threshold =3D MSEC_PER_SEC;
->>  +#define NUMAB_BATCH_MIGRATION_THRESHOLD	512
->> +
->>   struct numa_group {
->>   	refcount_t refcount;
->>  @@ -3297,6 +3300,46 @@ static bool vma_is_accessed(struct mm_struct *=
-mm, struct vm_area_struct *vma)
->>    #define VMA_PID_RESET_PERIOD (4 * sysctl_numa_balancing_scan_delay)=
+Gah, sorry, my comment was vague and confusing.  What I was trying to say i=
+s that
+the vcpu->kvm->arch.enable_pmu check is superfluous and can be dropped.
 
->>  +/*
->> + * TODO: Feed failed migration count back to scan period update
->> + * mechanism.
->> + */
->> +static void migrate_queued_pages(struct list_head *migrate_list)
->> +{
->> +	int cur_nid, nid;
->> +	struct folio *folio, *tmp;
->> +	LIST_HEAD(nid_list);
->> +
->> +	folio =3D list_entry(migrate_list, struct folio, lru);
->> +	cur_nid =3D folio_last_cpupid(folio);
->
-> Hi Bharatha,
->
-> This is target node ID right?
+> >> +	kvm->arch.enable_pmu =3D enable_pmu && !enable_mediated_pmu;
+> > So I tried to run a QEMU with this and it failed, because QEMU expected=
+ the PMU
+> > to be enabled and tried to write to PMU MSRs.  I haven't dug through th=
+e QEMU
+> > code, but I assume that QEMU rightly expects that passing in PMU in CPU=
+ID when
+> > KVM_GET_SUPPORTED_CPUID says its supported will result in the VM having=
+ a PMU.
+>=20
+> As long as the module parameter "enable_mediated_pmu" is enabled, qemu
+> needs below extra code to enable mediated vPMU, otherwise PMU is disabled
+> in KVM.
+>=20
+> https://lore.kernel.org/all/20250324123712.34096-1-dapeng1.mi@linux.intel=
+.com/
+>=20
+> > I.e. by trying to get cute with backwards compatibility, I think we bro=
+ke backwards
+> > compatiblity.  At this point, I'm leaning toward making the module para=
+m off-by-default,
+> > but otherwise not messing with the behavior of kvm->arch.enable_pmu.  N=
+ot sure if
+> > that has implications for KVM_PMU_CAP_DISABLE though.
+>=20
+> I'm not sure if it's a kind of break for backwards compatibility.=C2=A0 A=
+s long
+> as "enable_mediated_pmu" is not enabled, the qemu doesn't need any change=
+s,
+> the legacy vPMU can still be enabled by old qemu version. But if user wan=
+t
+> to enable mediated vPMU, so they should use the new version qemu which ha=
+s
+> the capability to enable mediated vPMU, it sounds reasonable for me.
 
-In memory tiering mode, folio_last_cpupid() gives page access time
-for slow memory folios. In !folio_use_access_time() case,
-folio_last_cpupid() gives last cpupid. Now it is reused for node
-id. It is too confusing. At least, a new function like folio_get_target_n=
-id()
-should be added to return a nid only if folio is isolated.
+I agree it's reasonable to require a userspace update to take advantage of =
+new
+features, what I don't like is what happens if userspace _hasn't_ been upda=
+ted.
+I also don't love that forcing a userspace update in this case is more than=
+ a bit
+contrived.  It's very doable to let existing userspace utilize the mediated=
+ PMU,
+forcing KVM_CAP_PMU_CAPABILITY is essentially KVM punting a problem to user=
+space.
 
->
->
->> +
->> +	list_for_each_entry_safe(folio, tmp, migrate_list, lru) {
->> +		nid =3D folio_xchg_last_cpupid(folio, -1);
->
-> Just one doubt: to get the last CPU ID (target node ID) here, folio_xch=
-g_last_cpupid()
->
-> is used, whereas earlier folio_last_cpupid() was used. Is there a speci=
-fic reason for
->
-> using different functions?
->
->
-> Thanks
-> Donet
->
->> +
->> +		if (cur_nid !=3D nid) {
->> +			migrate_misplaced_folio_batch(&nid_list, cur_nid);
->> +			cur_nid =3D nid;
->> +		}
->> +		list_move(&folio->lru, &nid_list);
->> +	}
->> +	migrate_misplaced_folio_batch(&nid_list, cur_nid);
->> +}
->> +
->> +static void task_migration_work(struct callback_head *work)
->> +{
->> +	struct task_struct *p =3D current;
->> +
->> +	WARN_ON_ONCE(p !=3D container_of(work, struct task_struct, numa_mig_=
-work));
->> +
->> +	work->next =3D work;
->> +
->> +	if (list_empty(&p->migrate_list))
->> +		return;
->> +
->> +	migrate_queued_pages(&p->migrate_list);
->> +	p->migrate_count =3D 0;
->> +}
->> +
->>   /*
->>    * The expensive part of numa migration is done from task_work conte=
-xt.
->>    * Triggered from task_tick_numa().
->> @@ -3567,14 +3610,19 @@ void init_numa_balancing(unsigned long clone_f=
-lags, struct task_struct *p)
->>   	p->numa_migrate_retry		=3D 0;
->>   	/* Protect against double add, see task_tick_numa and task_numa_wor=
-k */
->>   	p->numa_work.next		=3D &p->numa_work;
->> +	p->numa_mig_work.next		=3D &p->numa_mig_work;
->> +	p->numa_mig_interval			=3D 0;
->>   	p->numa_faults			=3D NULL;
->>   	p->numa_pages_migrated		=3D 0;
->>   	p->total_numa_faults		=3D 0;
->>   	RCU_INIT_POINTER(p->numa_group, NULL);
->>   	p->last_task_numa_placement	=3D 0;
->>   	p->last_sum_exec_runtime	=3D 0;
->> +	p->migrate_count		=3D 0;
->> +	INIT_LIST_HEAD(&p->migrate_list);
->>    	init_task_work(&p->numa_work, task_numa_work);
->> +	init_task_work(&p->numa_mig_work, task_migration_work);
->>    	/* New address space, reset the preferred nid */
->>   	if (!(clone_flags & CLONE_VM)) {
->> @@ -3596,6 +3644,20 @@ void init_numa_balancing(unsigned long clone_fl=
-ags, struct task_struct *p)
->>   	}
->>   }
->>  +static void task_check_pending_migrations(struct task_struct *curr)
->> +{
->> +	struct callback_head *work =3D &curr->numa_mig_work;
->> +
->> +	if (work->next !=3D work)
->> +		return;
->> +
->> +	if (time_after(jiffies, curr->numa_mig_interval) ||
->> +	    (curr->migrate_count > NUMAB_BATCH_MIGRATION_THRESHOLD)) {
->> +		curr->numa_mig_interval =3D jiffies + HZ;
->> +		task_work_add(curr, work, TWA_RESUME);
->> +	}
->> +}
->> +
->>   /*
->>    * Drive the periodic memory faults..
->>    */
->> @@ -3610,6 +3672,8 @@ static void task_tick_numa(struct rq *rq, struct=
- task_struct *curr)
->>   	if (!curr->mm || (curr->flags & (PF_EXITING | PF_KTHREAD)) || work-=
->next !=3D work)
->>   		return;
->>  +	task_check_pending_migrations(curr);
->> +
->>   	/*
->>   	 * Using runtime rather than walltime has the dual advantage that
->>   	 * we (mostly) drive the selection from busy threads and that the
->> diff --git a/mm/memory.c b/mm/memory.c
->> index 49199410805c..11d07004cb04 100644
->> --- a/mm/memory.c
->> +++ b/mm/memory.c
->> @@ -3375,8 +3375,13 @@ static inline void wp_page_reuse(struct vm_faul=
-t *vmf, struct folio *folio)
->>   		 * Clear the folio's cpupid information as the existing
->>   		 * information potentially belongs to a now completely
->>   		 * unrelated process.
->> +		 *
->> +		 * If the page is found to be isolated pending migration,
->> +		 * then don't reset as last_cpupid will be holding the
->> +		 * target_nid information.
->>   		 */
->> -		folio_xchg_last_cpupid(folio, (1 << LAST_CPUPID_SHIFT) - 1);
->> +		if (folio_test_lru(folio))
->> +			folio_xchg_last_cpupid(folio, (1 << LAST_CPUPID_SHIFT) - 1);
->>   	}
->>    	flush_cache_page(vma, vmf->address, pte_pfn(vmf->orig_pte));
->> @@ -5766,12 +5771,13 @@ static void numa_rebuild_large_mapping(struct =
-vm_fault *vmf, struct vm_area_stru
->>    static vm_fault_t do_numa_page(struct vm_fault *vmf)
->>   {
->> +	struct task_struct *task =3D current;
->>   	struct vm_area_struct *vma =3D vmf->vma;
->>   	struct folio *folio =3D NULL;
->>   	int nid =3D NUMA_NO_NODE;
->>   	bool writable =3D false, ignore_writable =3D false;
->>   	bool pte_write_upgrade =3D vma_wants_manual_pte_write_upgrade(vma);=
+And the complications with the mediated PMU don't really have anything to d=
+o with
+the VMM, they're more about all the other tasks and daemons running on the =
+system,
+e.g. that might be using perf.
 
->> -	int last_cpupid;
->> +	int last_cpupid =3D (-1 & LAST_CPUPID_MASK);
->>   	int target_nid;
->>   	pte_t pte, old_pte;
->>   	int flags =3D 0, nr_pages;
->> @@ -5807,6 +5813,13 @@ static vm_fault_t do_numa_page(struct vm_fault =
-*vmf)
->>   	nid =3D folio_nid(folio);
->>   	nr_pages =3D folio_nr_pages(folio);
->>  +	/*
->> +	 * If it is a non-LRU folio, it has been already
->> +	 * isolated and is in migration list.
->> +	 */
->> +	if (!folio_test_lru(folio))
->> +		goto out_map;
->> +
->>   	target_nid =3D numa_migrate_check(folio, vmf, vmf->address, &flags,=
+Thinking more about this, the problem isn't so much that enabling mediated =
+PMUs
+by default is undesirable, it's that giving userspace a binary choise doesn=
+'t
+provide enough flexibility.  E.g. for single-user QEMU-based use cases (inc=
+luding
+my use of QEMU), requiring a new QEMU is painful and annoying, and so havin=
+g an
+on-by-default option would be nice.
 
->>   					writable, &last_cpupid);
->>   	if (target_nid =3D=3D NUMA_NO_NODE)
->> @@ -5815,28 +5828,17 @@ static vm_fault_t do_numa_page(struct vm_fault=
- *vmf)
->>   		flags |=3D TNF_MIGRATE_FAIL;
->>   		goto out_map;
->>   	}
->> -	/* The folio is isolated and isolation code holds a folio reference.=
- */
->> -	pte_unmap_unlock(vmf->pte, vmf->ptl);
->>   	writable =3D false;
->>   	ignore_writable =3D true;
->> +	nid =3D target_nid;
->>  -	/* Migrate to the requested node */
->> -	if (!migrate_misplaced_folio(folio, target_nid)) {
->> -		nid =3D target_nid;
->> -		flags |=3D TNF_MIGRATED;
->> -		task_numa_fault(last_cpupid, nid, nr_pages, flags);
->> -		return 0;
->> -	}
->> -
->> -	flags |=3D TNF_MIGRATE_FAIL;
->> -	vmf->pte =3D pte_offset_map_lock(vma->vm_mm, vmf->pmd,
->> -				       vmf->address, &vmf->ptl);
->> -	if (unlikely(!vmf->pte))
->> -		return 0;
->> -	if (unlikely(!pte_same(ptep_get(vmf->pte), vmf->orig_pte))) {
->> -		pte_unmap_unlock(vmf->pte, vmf->ptl);
->> -		return 0;
->> -	}
->> +	/*
->> +	 * Store target_nid in last_cpupid field for the isolated
->> +	 * folios.
->> +	 */
->> +	folio_xchg_last_cpupid(folio, target_nid);
->> +	list_add_tail(&folio->lru, &task->migrate_list);
->> +	task->migrate_count +=3D nr_pages;
->>   out_map:
->>   	/*
->>   	 * Make it present again, depending on how arch implements
+But for use cases that already utilize KVM_CAP_PMU_CAPABILITY, e.g. to expl=
+icitly
+disable PMUs for a subset of VMs, on-by-default is very undesirable, e.g. w=
+ould
+require KVM to support KVM_PMU_CAP_DISABLE, and would generate unnecessary =
+noise
+and contention in perf.
 
+So, what if we simply make enable_mediated_pmu a tri-state of sorts?
 
---
-Best Regards,
-Yan, Zi
+  0   =3D=3D disabled
+  > 0 =3D=3D enabled for all VMs (no opt-in or opt-out supported)
+  < 0 =3D=3D enabled, but off by default (requires opt-in)
+
+Then use cases like my personal usage of QEMU can run with enable_mediated_=
+pmu=3D1,
+while use cases like Google Cloud can run with enable_mediated_pmu=3D-1, an=
+d everyone
+is happy (hopefully), without too much added complexity in KVM.
