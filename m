@@ -1,89 +1,143 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E6B32686A2;
-	Wed, 21 May 2025 12:45:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37163265607
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 12:45:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747831517; cv=none; b=hy/cdC7AvjF0hGp9Li/sApY9vyrDyjfmQEUiuy4vZxkUdHskm3ht+9esJqXxqmgSDFQDUzeHPUBQT+rbztryVe6x7u+sxz8iGZhMwEKkQfGzvHh7/FEvJVEQmh5rLyziw6HRgI2CV8KUSEivzjy5rM4+oBquQR2+7XOS2m4DOVg=
+	t=1747831536; cv=none; b=NiVVPcdM3XmKU1PQEbrLMZ23PKQCgOaUire6tuC89OgEekxP1U+q5IzOnacZIFtAHk9AeYN8X8GLkslknPtOfwaZdjErJ/QXdMB09NfOD+MJg0wbvuVwOP3mpFtw1Pd2KQCWwzeI9YMe7eVMyKmKKc66+XOpL56/rRR5SK6JOqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747831517; c=relaxed/simple;
-	bh=Gr8c9KBWDVaRJC+tyPor+w/fd8erzTw+z40GTSLgH6Y=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=W7vsH8nWYyGMchlmtiZ/+RjNCqfkLk4kUiE+/IN4Q4uFEYoEI0XYGcxxRZG03cWkiT6Mv5vhYmTSrE8anuZY34aw76gUmqYt/A3v7OpNFaAIz14uGD5BLccRhxbl3J43MFYgtpJrshowjY9K6mUBqfGP4ncOPfWb15yeHqShe8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buenzli.dev
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4b2WNR3znkz9sRc;
-	Wed, 21 May 2025 14:45:11 +0200 (CEST)
+	s=arc-20240116; t=1747831536; c=relaxed/simple;
+	bh=n6rPJCx9/rJo0cLsi6xMccKyA/Zz3SsJyR7Z4cGd+a0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=P9/uVfq5KpqsgyAs0WP7UIRlK9vT60eZTNhVchtUlZcZt9KhULrTpJ8l1Fd6RJuiqk8/lbn+VsL1iT2S5hlw7hs/Q8gdnGwgTlti+oiZxA87id6Q190gl4+Ee5xI9zNswORqjnnJxTI3Bq46NV/Na9xFgJtppxKav8ZouULJmSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YZx/UHjF; arc=none smtp.client-ip=209.85.219.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YZx/UHjF"
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-e7311e66a8eso5957952276.2
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 05:45:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747831534; x=1748436334; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BTGEEcDJ4Rf44o/m0iYLH1IvvxWp6S4La78m9u7l9Dk=;
+        b=YZx/UHjFwVO5rOU9UXwOJSAPsreG8JzSLus3yRDPteIOIFiy+W67QaC3Vasdh08t7V
+         FkO/62TkvqBiXXAY5koYLZEPTCA0H4gVVlm86mXGUxzhnhhR/cyY6FZnYHYHrJwYipGO
+         sYHbP8MRteQ/WHmQFHS4oHY2U0Noc1CWBF9usMTocSZs/k/OhwC8DBN49unrQc2NkJVB
+         LskJCu9Yov9M6NTmOWj9DymiAPzIPT2vJEc94/MqzcnjLnTifsXCtpLb5kp3FiW66GMv
+         WsW/QORveau1b+jV4qKZb8YEmTFwES7gwBLuUKmD+Gr37E3Ky+bXV8M7veZVW1mqZUvN
+         j1Nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747831534; x=1748436334;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BTGEEcDJ4Rf44o/m0iYLH1IvvxWp6S4La78m9u7l9Dk=;
+        b=e66I3tX77Rk35VzNnrMycomd0xe06tD8M++3IA9VlZagWKpjH1xDf6DMRtUVYi4OZS
+         fCTINsFCU2RCYgT+C+tKYLVSasZk9pccpj5cpRPSyEpZA5WEe8PeXhCRyppMycecY/dc
+         9D6mslRpPjM27vZFXvcZ+NUyDCA1x+UUrQIns0Yqkoll2Y1nfMxKDguRh1/mDWFfZJD3
+         Lej3MnsjMRcAc5jur7eGpHNRvSPe3ADRk4X5UzcubLr5XNgTfyy6Z4oStMptXgQis/dO
+         YhsS89TvYL5NqcpntmkuNsKosVuA9MfJcFeqOPd7n70TYaTUYMnYV1FYqNqikq10aeqC
+         gtjg==
+X-Forwarded-Encrypted: i=1; AJvYcCVFXFpyFpVLuKewk94imxHC2rBMqb9RMdyWhXARhvvyIB56GcrPA0wlWGWpS2zzQR0i5t+7othHwvrH4R4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxgerbQ4bCgs5OmlEd936d4D0vcuHGAUnpBZlCSLWdTGFtw88Xl
+	legJKexErNjQ9pJFT9aQQu3xjC4ytAkrh3zeZ43Pk5veFgb+8v0VMKCEVHmxdtBsAr5cbn0VcqO
+	xVEN+LUL/2vUFTJeiRBBJLo5hIedAMtRbJElcVbomJA==
+X-Gm-Gg: ASbGncuZZUQ8ZIstgOWUqQz+tmOonILpDLCqRpu5QMgZj0KsLauOS6M46Kw5nBn4vn7
+	nT4+1K7dX7ZDsiCe8bY6ZEQq7fA4dgf8biy4PfcAC5Uqao9btByJYwNvUfHRkrWGKaiydbmKB2z
+	R0VMWRs/C3t0ZD4+ZFI+v1k+wKwM7qdGSYvA==
+X-Google-Smtp-Source: AGHT+IFdZAN7WRv6VPS5cGJ3gLPs22mEKo408MqP93yw+t5BEIMPcUMP1HhYDPUHVSuVMpda74VHpQZ4hE6QblI0FRQ=
+X-Received: by 2002:a05:6902:120c:b0:e7d:6717:b4f with SMTP id
+ 3f1490d57ef6-e7d67171335mr718291276.20.1747831534201; Wed, 21 May 2025
+ 05:45:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20250516092716.3918-1-victorshihgli@gmail.com>
+ <20250516092716.3918-3-victorshihgli@gmail.com> <CAPDyKFqCo2-9fYYAoNpmJf7XOiTvLM07hQks1io-S0MvmbAjCQ@mail.gmail.com>
+ <CAK00qKAEN9+aA_7_YEGjjgovNG78du7+wmMyB4D0jZjzzcFNbA@mail.gmail.com>
+In-Reply-To: <CAK00qKAEN9+aA_7_YEGjjgovNG78du7+wmMyB4D0jZjzzcFNbA@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Wed, 21 May 2025 14:44:58 +0200
+X-Gm-Features: AX0GCFvdjxqAmgbrTOzHHBpAjrwEOM3dIarU_X-Ow71DNc9AeVmuEv_ZWGrofdM
+Message-ID: <CAPDyKFqsKqw2Oy2_JCK9ts1DytkMo86snWw9-OdxYwJfNWbnqw@mail.gmail.com>
+Subject: Re: [PATCH V1 2/2] mmc: sdhci-uhs2: Adjust some error messages and
+ register dump for SD UHS-II card
+To: Victor Shih <victorshihgli@gmail.com>
+Cc: adrian.hunter@intel.com, linux-mmc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, benchuanggli@gmail.com, 
+	HL.Liu@genesyslogic.com.tw, Greg.tu@genesyslogic.com.tw, 
+	Ben Chuang <ben.chuang@genesyslogic.com.tw>, 
+	Victor Shih <victor.shih@genesyslogic.com.tw>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 21 May 2025 14:45:06 +0200
-Message-Id: <DA1UK58JZWCM.CXSOPB8BN4H7@buenzli.dev>
-Cc: "Rob Herring" <robh@kernel.org>, "Saravana Kannan"
- <saravanak@google.com>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
- <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
- "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
- <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Danilo
- Krummrich" <dakr@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- "Dirk Behme" <dirk.behme@de.bosch.com>, <linux-kernel@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH v5 2/9] rust: device: Enable accessing the FwNode of a
- Device
-From: "Remo Senekowitsch" <remo@buenzli.dev>
-To: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-References: <20250520200024.268655-1-remo@buenzli.dev>
- <20250520200024.268655-3-remo@buenzli.dev>
- <2025052143-ergonomic-ongoing-36e5@gregkh>
-In-Reply-To: <2025052143-ergonomic-ongoing-36e5@gregkh>
-X-Rspamd-Queue-Id: 4b2WNR3znkz9sRc
 
-On Wed May 21, 2025 at 1:59 PM CEST, Greg Kroah-Hartman wrote:
-> On Tue, May 20, 2025 at 10:00:17PM +0200, Remo Senekowitsch wrote:
->> Subsequent patches will add methods for reading properties to FwNode.
->> The first step to accessing these methods will be to access the "root"
->> FwNode of a Device.
->>=20
->> Add the method `fwnode` to `Device`.
->>=20
->> Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
->> ---
->>  rust/kernel/device.rs | 15 +++++++++++++++
->>  1 file changed, 15 insertions(+)
->>=20
->> diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
->> index d8619d4485fb4..b4b7056eb80f8 100644
->> --- a/rust/kernel/device.rs
->> +++ b/rust/kernel/device.rs
->> @@ -186,6 +186,21 @@ unsafe fn printk(&self, klevel: &[u8], msg: fmt::Ar=
-guments<'_>) {
->>          };
->>      }
->> =20
->> +    /// Obtain the [`FwNode`](property::FwNode) corresponding to the de=
-vice.
->> +    pub fn fwnode(&self) -> Option<&property::FwNode> {
->> +        // SAFETY: `self` is valid.
->> +        let fwnode_handle =3D unsafe { bindings::__dev_fwnode(self.as_r=
-aw()) };
+On Wed, 21 May 2025 at 12:45, Victor Shih <victorshihgli@gmail.com> wrote:
 >
-> Why isn't this calling __dev_fwnode_const()?  And there's no way to just
-> use dev_fwnode() directly?  Ugh, it's a macro...
+> On Mon, May 19, 2025 at 8:25=E2=80=AFPM Ulf Hansson <ulf.hansson@linaro.o=
+rg> wrote:
+> >
+> > On Fri, 16 May 2025 at 11:27, Victor Shih <victorshihgli@gmail.com> wro=
+te:
+> > >
+> > > From: Victor Shih <victor.shih@genesyslogic.com.tw>
+> > >
+> > > Adjust some error messages to debug mode and register dump to dynamic
+> > > debug mode to avoid causing misunderstanding it is an error.
+> >
+> > Dumping the register may be useful for the debug level, I am not sure.
+> > Maybe Adrian has an opinion?
+> >
+> > >
+> > > Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
+> > > Signed-off-by: Victor Shih <victor.shih@genesyslogic.com.tw>
+> > > ---
+> > >  drivers/mmc/host/sdhci-uhs2.c | 18 +++++++++---------
+> > >  drivers/mmc/host/sdhci.h      | 16 ++++++++++++++++
+> > >  2 files changed, 25 insertions(+), 9 deletions(-)
+> > >
+> > > diff --git a/drivers/mmc/host/sdhci-uhs2.c b/drivers/mmc/host/sdhci-u=
+hs2.c
+> > > index c53b64d50c0d..9ff867aee985 100644
+> > > --- a/drivers/mmc/host/sdhci-uhs2.c
+> > > +++ b/drivers/mmc/host/sdhci-uhs2.c
+> > > @@ -99,8 +99,8 @@ void sdhci_uhs2_reset(struct sdhci_host *host, u16 =
+mask)
+> > >         /* hw clears the bit when it's done */
+> > >         if (read_poll_timeout_atomic(sdhci_readw, val, !(val & mask),=
+ 10,
+> > >                                      UHS2_RESET_TIMEOUT_100MS, true, =
+host, SDHCI_UHS2_SW_RESET)) {
+> > > -               pr_warn("%s: %s: Reset 0x%x never completed. %s: clea=
+n reset bit.\n", __func__,
+> > > -                       mmc_hostname(host->mmc), (int)mask, mmc_hostn=
+ame(host->mmc));
+> > > +               DBG("%s: %s: Reset 0x%x never completed. %s: clean re=
+set bit.\n", __func__,
+> > > +                   mmc_hostname(host->mmc), (int)mask, mmc_hostname(=
+host->mmc));
+> >
+> > As I said on patch1, please use pr_debug() and drop the macro.
+> >
+>
+> Hi, Ulf
+>
+> This macro has been defined in previous patches not the first time it
+> has appeared here,
+> are we still going to drop this macro?
 
-I think I had that in earlier versions of the patch series. There was
-a helper to call the macro from Rust. It was pointed out that this is
-not clearly expressing the intent - whether fwnode is mutated or not.
-And I think someone said the fwnode can be mutated so __dev_fwnode() is
-semantically correct.
+Yes, please.
+
+We don't have macros for other log-prints, so let's not use a macro
+for debug prints either.
+
+[...]
+
+Kind regards
+Uffe
