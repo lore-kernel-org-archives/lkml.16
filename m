@@ -1,89 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FA7023D29A;
-	Wed, 21 May 2025 09:27:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBF6123FC66
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 09:28:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747819649; cv=none; b=A4QjpdLDSjL3CF1677ZXietfZKfTSgF3H6mV5jK72/7Gk72b7f5Lg+BG5SRR6pYz+RxePoiWLv+CtV78yAiV2gdDBKo1GNQZRTsjmOS3xJRfDvd4lyub7uBnSz+X0KmLR+FCH/HQVTz5tDAtg+DgNILekierpGkaVHq0kUlU2kE=
+	t=1747819713; cv=none; b=KOJsGgUnOXQBm4FUC+3z456ebGWB4ZnJvclGuCfcw97E+rXidSRY1hJsKT6S4zPrNQTlgTrj+AKtGj4njdqULC5YMsFRXZRJRMIDMCEvD4sG5z7bjDl2oUV0wp+0p2/+2ieA8dbTNSTW499b4yQ4ajSXEE6k/KzLcfPKFy3Q/+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747819649; c=relaxed/simple;
-	bh=jpIOQ71B8uL6kn1/azTQ+K9S3vdBIXwX0L0/UC4eifU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QpYN1KsmZGUtz406RrvquHOOt2nDDKzEnpHHfvGVlFK8i3nJewECT8TeJKniiWK921sutF5rOCYrFXa9OGLjkJRv1NQ9yMNjPf83dGQUitHRUpEw+QRXtP6h8U1HqBI13J62fTQKNmeEvcdhDsRPLdOajNhedLyDVJYXQqHuFvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cje40TS+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747819713; c=relaxed/simple;
+	bh=+tdvos/UqVi6pMAhZ0/80FmoEyTCrLTd9vhGypQS3jk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=O9zUnk76ECJG911i3Ci7NA/pRpnwrXPkyiXF3LdWNx/5PpPD3SdjLITMSZPsStXICYkEeKoyLiCG6Kf/I27hNt1vNp1jMYWOq5Hl7g6BOipXHA477fiLsSOStVKcoLSfw8H64qJRSAQUWtpn7TlsOzxCaWMEQQ1CYlHhd50RlX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=RgeWHUTJ; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cje40TS+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07CD9C4CEE4;
-	Wed, 21 May 2025 09:27:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747819648;
-	bh=jpIOQ71B8uL6kn1/azTQ+K9S3vdBIXwX0L0/UC4eifU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cje40TS+YMTlJJTFCJ5bQLFmAyakrEDBxVUYKSwb+ohK4Xu5k8yHUYBZ2vKf40mwW
-	 EE65JdJj72iAmbpGkyYfS2x3No4yiOgJ6Wv4Zf1wsBi2ZnIhClsFjohW9lLS4WYleI
-	 bqnpBHozKHrYPYjYNyr8Lnvmc4U2wKT0D1Nf2Anpjuuvz6Nmr9idpiUQ+z9L3bbqXs
-	 z9PnO/na4cX/uRqdD8K/775pPxVU4eMkZyspz9eXwBiBZKinAmEkMbxFVKSA6K++0C
-	 RbhQ2EhXfCFb43I3NtNbYaIWqmDTr/7kq8AZjXQDk1629VdXto1eQLUB/6PWJAcyBI
-	 1i5JT5rsp+ydw==
-Date: Wed, 21 May 2025 11:27:25 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Alejandro Enrique <alejandroe1@geotab.com>
-Cc: Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: gnss: u-blox: add "safeboot-gpios"
- binding
-Message-ID: <20250521-qualified-smart-myna-bddfc8@kuoka>
-References: <20250514-ubx-safeboot-v1-0-1ae771335356@geotab.com>
- <20250514-ubx-safeboot-v1-1-1ae771335356@geotab.com>
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="RgeWHUTJ"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-601ed5e97e9so5574579a12.2
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 02:28:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google; t=1747819710; x=1748424510; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9Br03zaPymWOmp5DzQkScr+PbTLXI2KHvIOqgBOpOx4=;
+        b=RgeWHUTJTnaSEG9BS5ltx/NwZhoG3abU9z4h8HMUK8KQ+8g9YINqml6CGuJb0B5IPb
+         Jq6LZRDblzNRlAvAiGQGrdpwyVxYJOQzbiYAOl0a6TZF1/AEydcQ/nf1Fg8rEkH/B2wZ
+         Bzj26ENbXlJ3tFHUwgwzJjAcaDJvO5hoFobHQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747819710; x=1748424510;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9Br03zaPymWOmp5DzQkScr+PbTLXI2KHvIOqgBOpOx4=;
+        b=ndXZFP5To70jaAybT74c2BNsbETgE/a1yWE2KvDUHvkvpVO4wDjk13vjskAy87kk7z
+         s2rRmtd1QZLCHTHWGjoispnbexFEqsZ0mbXWvTMayGrBoIscyHOhbZGfP/NTMhPtK3ZC
+         4KCaH5wNyiYn+V6Flbr8YOCGLlsvUNdrL4430RVVwmf1RTEMf+VBgnhx90PSYlp3dujs
+         gg/YjMllZpKsZ0Rc4ZifDN2T4M7T1CqeAefsExMvNNAyOwEg2V3UuGYN79i9z9NX/Q3y
+         +w0Cuyq2OcjdxWllLUN2cQpp8Lx7cb6R/+t3BoF2hXdDB5v0m4dn4UWtk5f3bUr92d8p
+         2u8w==
+X-Gm-Message-State: AOJu0YyJ5Pj/zeZXpty5cUTaqzWUwQF2Yg0Se2B3RswJVC7TQ9fzgCrE
+	BtRdGVOGg1JHjGw6I8Fuhj8Z7K2Q/EhE4ts37QewS8NdMpuxBbu6HjG86TMQj3+hlbv7+CqgTwe
+	7LQ8d
+X-Gm-Gg: ASbGncu0+1mWzQPknz2j1KRERqNCsaD6Iwvqo+ZNs1z1RX74oNty4r7E7aJduc3CD77
+	/28EkdczUcJyQvaEVqWB+zeXndvMx2Fh+/efPEHxQ8Q3vThlFxlBDGEd2PI3WeaobCr9pBTiW5T
+	vABz+2GonbN/T70HYiqdBkMkH02F3hb7YYJFfv2O3E+F8gVeSe1cmzDkCpoUPKhf4PuxulIrqKK
+	AcmOrpmscrpy/eoF8q0HZBa7Rq9hLq93I4IZdfe+1EmiO9lNXs00+EEg8ilA/hQL3WvxiT5VejY
+	IeTQ6mGW+ABR+LNW6vO3ZSyu8oKUyvx0Fe6YkAkFYZ0voMtC0tU0pHX9O7khbYC7urNVqh8dCAH
+	mChcfRciYksjo
+X-Google-Smtp-Source: AGHT+IE9Rsd+fMS6VUFvdncItJY6md4j6oNw2IpDZyEuTisqE10/bRSVI7wzKmHIESJJG3Xl38x7OA==
+X-Received: by 2002:a17:906:dc94:b0:ad2:3723:6bf5 with SMTP id a640c23a62f3a-ad536b81a94mr1643951266b.22.1747819709868;
+        Wed, 21 May 2025 02:28:29 -0700 (PDT)
+Received: from localhost.localdomain ([2001:b07:6474:ebbf:cfc5:5070:d6f4:1d86])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d275d9fsm867442466b.74.2025.05.21.02.28.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 May 2025 02:28:29 -0700 (PDT)
+From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-amarula@amarulasolutions.com,
+	michael@amarulasolutions.com,
+	Dario Binacchi <dario.binacchi@amarulasolutions.com>,
+	Alexander Stein <alexander.stein@ew.tq-group.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Fabio Estevam <festevam@denx.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Francesco Dolcini <francesco.dolcini@toradex.com>,
+	Frieder Schrempf <frieder.schrempf@kontron.de>,
+	Heiko Schocher <hs@denx.de>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Marek Vasut <marex@denx.de>,
+	Max Merchel <Max.Merchel@ew.tq-group.com>,
+	Michael Walle <mwalle@kernel.org>,
+	Peng Fan <peng.fan@nxp.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Tim Harvey <tharvey@gateworks.com>,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 0/3] Support i.MX28 Amarula rmm board
+Date: Wed, 21 May 2025 11:28:19 +0200
+Message-ID: <20250521092826.1035448-1-dario.binacchi@amarulasolutions.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250514-ubx-safeboot-v1-1-1ae771335356@geotab.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 14, 2025 at 03:54:41PM GMT, Alejandro Enrique wrote:
-> U-Blox M8/M9 chip have a pin to start it in safeboot mode, to be used
-> to recover from situations where the flash content has become
-> corrupted and needs to be restored. Introduce a binding to support
-> this safeboot pin.
-> 
-> Signed-off-by: Alejandro Enrique <alejandroe1@geotab.com>
-> ---
->  Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml b/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml
-> index 7d4b6d49e5eea2201ac05ba6d54b1c1721172f26..16d922279def99257c194520a7ac820f2a26e9c7 100644
-> --- a/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml
-> +++ b/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml
-> @@ -32,6 +32,9 @@ properties:
->    reset-gpios:
->      maxItems: 1
->  
-> +  safeboot-gpios:
-> +    maxItems: 1
-> +
+The series adds support for i.MX28 Amarula rmm board.
 
-You need if:then: disallowing (:false) this for 6m and 8. Move entire allOf down
-and add there new if: clause. (see example schema)
+The board includes the following resources:
+ - 256 Mbytes NAND Flash
+ - 256 Mbytes SRAM
+ - LCD-TFT controller
+ - CAN
+ - USB 2.0 high-speed/full-speed
+ - Ethernet MAC
 
->    vcc-supply:
->      description: >
->        Main voltage regulator
-> @@ -61,5 +64,6 @@ examples:
->              v-bckp-supply = <&gnss_v_bckp_reg>;
->              vcc-supply = <&gnss_vcc_reg>;
->              reset-gpios = <&gpio 1 GPIO_ACTIVE_LOW>;
-> +            safeboot-gpios = <&gpio 2 GPIO_ACTIVE_LOW>;
 
-Thats 8, not 8m?
+Dario Binacchi (3):
+  ARM: dts: imx28: add pwm7 muxing options
+  dt-bindings: arm: fsl: add i.MX28 Amarula rmm board
+  ARM: dts: mxs: support i.MX28 Amarula rmm board
 
-Best regards,
-Krzysztof
+ .../devicetree/bindings/arm/fsl.yaml          |   1 +
+ arch/arm/boot/dts/nxp/mxs/Makefile            |   1 +
+ .../boot/dts/nxp/mxs/imx28-amarula-rmm.dts    | 302 ++++++++++++++++++
+ arch/arm/boot/dts/nxp/mxs/imx28.dtsi          |  10 +
+ 4 files changed, 314 insertions(+)
+ create mode 100644 arch/arm/boot/dts/nxp/mxs/imx28-amarula-rmm.dts
 
+-- 
+2.43.0
+
+base-commit: 4a95bc121ccdaee04c4d72f84dbfa6b880a514b6
+branch: imx28-amarula-rmm
