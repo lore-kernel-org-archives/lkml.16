@@ -1,118 +1,137 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4995250276
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 19:41:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50D281624CE
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 19:44:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747856469; cv=none; b=hR6iIKXyb5UBF6OGOBhq+G2ZQg04xk1hriocSTpRdhkCur8I/3rv6msR7VB0Px0ROnlDhPZt5KHFztD2WP06UZ5NYcZFVgF5TuoLXBoBqYCPXCabDiRar5avbP2qXaGuAIVeuQw/ZoO74o0MVF5aGDmDzX4x7735p091lVawMoU=
+	t=1747856666; cv=none; b=fNwBKnFCvPjO6VT39lokNUXVYRiZBUSy4X1jImqNf40OiO3KnB6XQ6ZkvkK9fRKiGRiTqTuYDotRivWiqVN5qja+8rjX7bA2OTzwSPyi4NdbROa7SZ35YnszR6SA5WrXsfBc6kg6a0waESlEfWx8W1UyAiJE7L7bywbcWaa7W7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747856469; c=relaxed/simple;
-	bh=dTz8Pl6rNpP6x+a81PzMdYafrwNbKhlcB/XNCRDHoX0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CITgrnkMP5KJL4+Sidpv2OOt5ReqxhbokrAjZl/HqYfFNGHwDTYkEWneC3WHEpwi5CTunUHNTOchpGpgTF1BNHu/z6XCICdm+g7dP1mWzPdMYI524Ji480BbfSu86OzTTqPKWjvvGL29KWhbRJTNgwNMoMZ5/6VfBeiGphv8ofw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HNBSDqnV; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747856666; c=relaxed/simple;
+	bh=bpJbsMuWTrnO8zYhG/yRzb0a8X7S8LKO8Io3Q+P/At0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jzgeCjtDFY12cb/84am6v25LeTAXmBBNFoYO9DwdqMdSUI5/bbERdZeOAxhGuo/mPHTDYJyYl7lrMY0Rdriu5u/MsXxPfvw4LJZXz1lhCiOYtuPVpumt/BdrP7fy0KN6kgZLazgqOSlAXCfbNxoSWHBt7MyP6ndkVYHwIvTD0og=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=nlxRa7k0; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=68iGYbBh; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=nlxRa7k0; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=68iGYbBh; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HNBSDqnV"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-736c277331eso7123823b3a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 12:41:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747856467; x=1748461267; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4xoEcX9Glc+doxMDVDNuceQpM6MovW7t4DTCzMcR2Xs=;
-        b=HNBSDqnVkE7blsClsWmgaZaDcpzbHl8fXu+zZYH7O0V+2mkz3rg9gigKr4cU7QcVrr
-         Xl6rMKoUIqc0pwf024VTsYllOSv3xqpiJJEACWXyPm5lp6wB54y2IvA6zZUWv5dGJMxf
-         TxN2FL+llKlCmTD0OIzD1iVL2AzZEy+/ne79DT5SUCjjHVm4a1v/Yc6fDyo0+3APsbeE
-         F0DBixGrOkmJPqQkQuOQgGn3wkeFySuVu35bqojiiJnGaGJIbYwURuBQY0QiQ+J0Uj1r
-         9e7b2L4BOCPLw8erIDJ1B0HH5KrTH8Tq+HIjoVlUqObk8S9SU0CyDAl2Uu78EX91tV7U
-         6sJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747856467; x=1748461267;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4xoEcX9Glc+doxMDVDNuceQpM6MovW7t4DTCzMcR2Xs=;
-        b=dqgSv9es+3cerSzkxs+lPxtA3FwP5I9WjpO5iUmgiN0wBEsFqVFwEZKpm45TsptOFa
-         a9GDpxXDOo7/iMjbBIsajd01py2vniNjyUufvFTgBZJ8Fjj1HNwfIvzJoI6UGW+6S5kS
-         q0MiHwKaUkp9YSNObe68etykZBwipqtjBMnrzjvQ10KDOd0SxNBr9bsEzrgqDG1QMInA
-         EyV85ew6MBXA7f7epzWRF9z5dU6g/CVTGytC1vUU5J+qSGMKprZdys56ItKvHJ1PBSA+
-         ihZ9aDKRCGhpfw9Gv1yV2kLdVBxrfSLSd/+fLvM7QYwAsetQeg5dwhPSR81cmlwFAznH
-         CRZw==
-X-Gm-Message-State: AOJu0YyyrtuDkMGPaClPT3QP8e4ZCH4FGcGbhOUOMnQQzuwhCVgE+k9U
-	YwGDs4bVLziN3LA31lnD1mjUpaS7uZqHgxbFonkqpFpcef3qw1liQELKQbjsXQ==
-X-Gm-Gg: ASbGncvJ2lk+4olijxrqXkCXUcPH00ab2UJupPNsnjaYzOcmaf2MwO8FlBtJ+o6gZEU
-	BtVbNTUzz+pk4XNl26feCiM+jancvSJpOCVCUvZrznZiAI4CWXsl0KNlsIy4P8hKtVd13YOvyAm
-	Zazg2OisK93E2osoulOwBOPIPuhK73NqRyIzPO8Us2Zm6OJr4qUpUlHg6myHuFeo0zFhxjJwxB8
-	e/ZVuPqZ6z0e5eOBjt6mKHCkKn/UYI55l69ygMrBZUk7OBL9Rnci1+uSSdR0Rc4DlWKJlPz40rI
-	Xw/rJ30Jy2sP6iM5Vff1fDzOmVFtEkIr7bbstyce0gJS7fH0r49yix65xg4up/YHe6eLUjbWbxC
-	gLs8bAtnHtOI2hPpj8PIT/OnojOlSIMY3Ym+nJJOVo/o=
-X-Google-Smtp-Source: AGHT+IFhMRxZV8JlSsA11qtEApD30y4j3LsC1f3X7v7BlDfnc7+l1GBtGmlbSKVghVRBzOcQBIaQ7Q==
-X-Received: by 2002:a05:6a21:168c:b0:1f0:e6db:b382 with SMTP id adf61e73a8af0-2160d5f2f0dmr38020648637.8.1747856467169;
-        Wed, 21 May 2025 12:41:07 -0700 (PDT)
-Received: from daehojeong-desktop.mtv.corp.google.com ([2a00:79e0:2e14:7:a588:8662:c254:867b])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eb084650sm9977857a12.61.2025.05.21.12.41.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 12:41:06 -0700 (PDT)
-From: Daeho Jeong <daeho43@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net,
-	kernel-team@android.com
-Cc: Daeho Jeong <daehojeong@google.com>
-Subject: [PATCH] fsck.f2fs: fix null buffer error with dev_fill
-Date: Wed, 21 May 2025 12:41:00 -0700
-Message-ID: <20250521194100.1407220-1-daeho43@gmail.com>
-X-Mailer: git-send-email 2.49.0.1143.g0be31eac6b-goog
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="nlxRa7k0";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="68iGYbBh";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="nlxRa7k0";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="68iGYbBh"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 1FDAC338F6;
+	Wed, 21 May 2025 19:44:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747856663; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2TrMZ/8HB7EhYJqBEvRvkIrJcHzaSX/uXuZlZjBJy94=;
+	b=nlxRa7k0ivhQJGuJtSnhTZo4pFXKjmNASdK1ZY2XD6QmLwbykV8AIe7VvWuWRn028wGKQr
+	ue9xB4HQTDDq++JvT2/uTmHysa/XdRYUT223N4GXrlsiK5/3vRK3er0vo5jSm3DxOb/JVr
+	+JwlUGZnJD8bMKTwAuZvFLY8BkX+EEc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747856663;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2TrMZ/8HB7EhYJqBEvRvkIrJcHzaSX/uXuZlZjBJy94=;
+	b=68iGYbBhAHvxM+cN74wZmURlmADFTVshScHdThA5OnnJwno1ZjyhnMvOqqf3vDIfXZEBgl
+	dlj6XI8xFX8DusDA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=nlxRa7k0;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=68iGYbBh
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747856663; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2TrMZ/8HB7EhYJqBEvRvkIrJcHzaSX/uXuZlZjBJy94=;
+	b=nlxRa7k0ivhQJGuJtSnhTZo4pFXKjmNASdK1ZY2XD6QmLwbykV8AIe7VvWuWRn028wGKQr
+	ue9xB4HQTDDq++JvT2/uTmHysa/XdRYUT223N4GXrlsiK5/3vRK3er0vo5jSm3DxOb/JVr
+	+JwlUGZnJD8bMKTwAuZvFLY8BkX+EEc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747856663;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2TrMZ/8HB7EhYJqBEvRvkIrJcHzaSX/uXuZlZjBJy94=;
+	b=68iGYbBhAHvxM+cN74wZmURlmADFTVshScHdThA5OnnJwno1ZjyhnMvOqqf3vDIfXZEBgl
+	dlj6XI8xFX8DusDA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E91A913888;
+	Wed, 21 May 2025 19:44:22 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id IyYqOBYtLmi9YgAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Wed, 21 May 2025 19:44:22 +0000
+Date: Wed, 21 May 2025 21:44:21 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: Hugh Dickins <hughd@google.com>
+Cc: Gavin Guo <gavinguo@igalia.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, muchun.song@linux.dev,
+	akpm@linux-foundation.org, kernel-dev@igalia.com,
+	stable@vger.kernel.org, Florent Revest <revest@google.com>,
+	Gavin Shan <gshan@redhat.com>
+Subject: Re: [PATCH v2] mm/hugetlb: fix a deadlock with pagecache_folio and
+ hugetlb_fault_mutex_table
+Message-ID: <aC4tFWSclf40KJ_J@localhost.localdomain>
+References: <20250521115727.2202284-1-gavinguo@igalia.com>
+ <30681817-6820-6b43-1f39-065c5f1b3596@google.com>
+ <aC33A65HFJOSO1_R@localhost.localdomain>
+ <54bd3d6c-d763-ae09-6ee2-7ef192a97ca9@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <54bd3d6c-d763-ae09-6ee2-7ef192a97ca9@google.com>
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	RCVD_TLS_ALL(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: -4.51
+X-Rspamd-Queue-Id: 1FDAC338F6
+X-Spam-Level: 
+X-Spam-Flag: NO
 
-From: Daeho Jeong <daehojeong@google.com>
+On Wed, May 21, 2025 at 08:58:32AM -0700, Hugh Dickins wrote:
+> If we unlocked it, anyone else could have taken it immediately after.
 
-Make fsck use dev_fill_block() with zeroed buffer instead of dev_fill().
+Sorry Hugh, I was being dumb, of course you are right.
 
-Signed-off-by: Daeho Jeong <daehojeong@google.com>
----
- fsck/fsck.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+Then, maybe v1 was not really a bad idea, but we might need to think of
+a better idea overall.
 
-diff --git a/fsck/fsck.c b/fsck/fsck.c
-index 893eea7..4d05e1b 100644
---- a/fsck/fsck.c
-+++ b/fsck/fsck.c
-@@ -3526,15 +3526,22 @@ static int chk_and_fix_wp_with_sit(int UNUSED(i), void *blkzone, void *opaque)
- 
- 	ret = f2fs_finish_zone(wpd->dev_index, blkz);
- 	if (ret) {
-+		u8 buffer[F2FS_BLKSIZE] = {};
-+		u64 blk_addr = wp_block;
- 		u64 fill_sects = blk_zone_length(blkz) -
- 			(blk_zone_wp_sector(blkz) - blk_zone_sector(blkz));
-+		size_t len = fill_sects >> log_sectors_per_block;
- 		struct seg_entry *se = get_seg_entry(sbi, wp_segno);
-+		enum rw_hint whint = f2fs_io_type_to_rw_hint(se->type);
-+
- 		printf("[FSCK] Finishing zone failed: %s\n", dev->path);
--		ret = dev_fill(NULL, wp_block * F2FS_BLKSIZE,
--			(fill_sects >> log_sectors_per_block) * F2FS_BLKSIZE,
--			f2fs_io_type_to_rw_hint(se->type));
--		if (ret)
--			printf("[FSCK] Fill up zone failed: %s\n", dev->path);
-+		while (len--) {
-+			ret = dev_fill_block(buffer, blk_addr++, whint);
-+			if (ret) {
-+				printf("[FSCK] Fill up zone failed: %s\n", dev->path);
-+				break;
-+			}
-+		}
- 	}
- 
- 	if (!ret)
 -- 
-2.49.0.1143.g0be31eac6b-goog
-
+Oscar Salvador
+SUSE Labs
