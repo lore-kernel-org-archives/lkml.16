@@ -1,64 +1,64 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F16E221710;
-	Wed, 21 May 2025 15:49:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80E21221D99;
+	Wed, 21 May 2025 15:49:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747842570; cv=none; b=q2eNdjnUUXUJ8Zp2Xed0wIpTRLgGfzw994dB145SdnwKLsIap4x25zN8u559sq0tYS6ugtcpLyk7t6wvK8p0V5J3KV43LbtUEyuQRCCCyOSx9EG55ZDGH/a7UJnorkQpSQ8VuTSQeSB6fleMkzYAUZclDEtMSmPqwxuuFmeLfO4=
+	t=1747842571; cv=none; b=dcf58CepbsXLFNeBPAPZ1Yb0Ax2NbCuyZsjssPn7oCrL8ecxIZzVAnu77nphk9ii+5EaPPZ4kbPyGlj7RSlIgUsNHt+ipnmT/sfLwC3fCqreL+BVkG/G2I8BCW1gxAmYCv1e0x5A2EzcKlcLqn2Ls89f9lTVIST3RV/5iyk9H9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747842570; c=relaxed/simple;
-	bh=e23HZXreHhOW/CNkKQDeouI2EAz4g144UTHtL2Jo7tE=;
+	s=arc-20240116; t=1747842571; c=relaxed/simple;
+	bh=6p5b3Ln2HJ0pFMusYwZbnivPTVKQXgvoc9rYGT5WKy8=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=M4410hQkZxKpUcarX+2c/wrfOc4NbiK0EC1vpaBPF9Cs/UgZ6P8SMZfCaFdO91zmsXqXCflNp7x77R40X2lvpWCDt6vE0XpZhQY80er5glsw25qCF+/Ip76k1VyyKGczaoeaP23wDQdfWrVnLrd9qpN2xCOSZGr4T+PZxQUa874=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aX/iIFvc; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Eq2Ilt/y; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=O5APTNJsXxB0VX6RI6jo848pyVs3umXTFVwDEKEKv0rc/DSS/4udW2lrtRK2bre07iDFKgmRBTw8w7cD9ePJJW5jK2ZoEYrSgQj8f7+Fu2ixqIl5HaKhiQL8NdDyYbhxXjsxDaabbM6E8j2toD50VVHghwtbpOFN71clyZpGcys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UkpFAkg1; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=5Gw9KV0s; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aX/iIFvc";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Eq2Ilt/y"
-Date: Wed, 21 May 2025 15:49:25 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UkpFAkg1";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="5Gw9KV0s"
+Date: Wed, 21 May 2025 15:49:27 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747842566;
+	s=2020; t=1747842568;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=9/0Kj6sNhl3VFQ9X4mXxaMQbWBCVUUrC/KiLDzhjFcI=;
-	b=aX/iIFvc9mOdVyy38TzrlKKSCXorAelxAhaVzaP9rF4YKFMS4cVvI49PeJinmwt8SztLzF
-	jm56jiLRsmFPOiFQOd3TMf4746zBCzNSKaOK2Wl90ro2SdXD1qcjYMpH8aZXu2XUPK+p18
-	ullxH7V5L+g7Vw68kLuWbBqngRLtnbT8UBOl2Tb9kfYvFnCBnRqyLauV7bRypcQ6dDMcFz
-	uTLelU3XWDZnOM5QEYfCjcxYJ0+JxROL89RIh/Pw/1kScr2K3gvNlUgDt7gXtRPAWVjVtA
-	aElH5ESpSVSnCbDhZrVhrVDuFEIULj34jhtFn6pQ/nnwZ7VtyLBNugrzux+OAA==
+	bh=mW/5DG8BBo62ZUBpNGGJbPAFG3+wfO6D3SCgKrEtsWc=;
+	b=UkpFAkg1vielpi3B5Sfe31Bkd2g5UsTs7ZgoSfUbK/DyhqKthqFJsDfc3XwaEwURkD/m/w
+	8rGalN9/tx4orVF4GCuQsBLl2w+2G3ylL+QQqofeuAkRIhpmjXwy6XYLpyN47xNhHz+E4L
+	JgoiZAtE2kzNaEa91vlMufNTq1HDmFFMdDGMp36wwor34dyLGsKqhaQPijPDyisv6vsVuS
+	3nuzqUGkvJzA/hQs7EeiO/dBZvE1xOE0zuw0RGJ794cRADX6Yl6T3qUV15T4kkd0QvW2hp
+	9fcYuiW/9x4/+3qlV+aUMOGqFAD1RHEGNjrz/iB61a3GiQxGIz/YyC7zcETJ4w==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747842566;
+	s=2020e; t=1747842568;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=9/0Kj6sNhl3VFQ9X4mXxaMQbWBCVUUrC/KiLDzhjFcI=;
-	b=Eq2Ilt/yp1YEalNLqGrDcsZ5o+s/g+eSW/jsaegPx+bL3hZKzMB6jnlYudjkfrAQFSOltA
-	OotDsjLjWgf3e5Ag==
+	bh=mW/5DG8BBo62ZUBpNGGJbPAFG3+wfO6D3SCgKrEtsWc=;
+	b=5Gw9KV0sGZSKmh3ZMDNzkQA36FALMcqs5KRyUDa1VTSC3Rzl4kGKbvDKT05ABKZKAHFb3a
+	KhW6U6XvDi07V0Dw==
 From: "tip-bot2 for Rob Herring (Arm)" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/clocksource] dt-bindings: timer: Convert
- socionext,milbeaut-timer to DT schema
+Subject: [tip: timers/clocksource] dt-bindings: timer: Convert snps,archs-rtc
+ to DT schema
 Cc: "Rob Herring (Arm)" <robh@kernel.org>,
  Daniel Lezcano <daniel.lezcano@linaro.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250506022322.2589193-1-robh@kernel.org>
-References: <20250506022322.2589193-1-robh@kernel.org>
+In-Reply-To: <20250506022313.2588796-1-robh@kernel.org>
+References: <20250506022313.2588796-1-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174784256564.406.4520983223831021935.tip-bot2@tip-bot2>
+Message-ID: <174784256723.406.1361577587606316271.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,94 +68,81 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the timers/clocksource branch of tip:
 
-Commit-ID:     7e5ce1944d0f4543e233e7c3011f37d59c4bbf85
-Gitweb:        https://git.kernel.org/tip/7e5ce1944d0f4543e233e7c3011f37d59c4bbf85
+Commit-ID:     58ac7dc3ca92cba2238f9af71d018af177439938
+Gitweb:        https://git.kernel.org/tip/58ac7dc3ca92cba2238f9af71d018af177439938
 Author:        Rob Herring (Arm) <robh@kernel.org>
-AuthorDate:    Mon, 05 May 2025 21:23:20 -05:00
+AuthorDate:    Mon, 05 May 2025 21:23:12 -05:00
 Committer:     Daniel Lezcano <daniel.lezcano@linaro.org>
-CommitterDate: Fri, 16 May 2025 11:10:34 +02:00
+CommitterDate: Fri, 16 May 2025 11:10:33 +02:00
 
-dt-bindings: timer: Convert socionext,milbeaut-timer to DT schema
+dt-bindings: timer: Convert snps,archs-rtc to DT schema
 
-Convert the Socionext Milbeaut Timer binding to DT schema format.
+Convert the Synopsys ARC HS RTC Timer binding to DT schema format.
 It's a straight-forward conversion.
 
 Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-Link: https://lore.kernel.org/r/20250506022322.2589193-1-robh@kernel.org
+Link: https://lore.kernel.org/r/20250506022313.2588796-1-robh@kernel.org
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- Documentation/devicetree/bindings/timer/socionext,milbeaut-timer.txt  | 17 -----------------
- Documentation/devicetree/bindings/timer/socionext,milbeaut-timer.yaml | 40 ++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 40 insertions(+), 17 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/timer/socionext,milbeaut-timer.txt
- create mode 100644 Documentation/devicetree/bindings/timer/socionext,milbeaut-timer.yaml
+ Documentation/devicetree/bindings/timer/snps,archs-rtc.txt  | 14 +---
+ Documentation/devicetree/bindings/timer/snps,archs-rtc.yaml | 30 +++++++-
+ 2 files changed, 30 insertions(+), 14 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/timer/snps,archs-rtc.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/snps,archs-rtc.yaml
 
-diff --git a/Documentation/devicetree/bindings/timer/socionext,milbeaut-timer.txt b/Documentation/devicetree/bindings/timer/socionext,milbeaut-timer.txt
+diff --git a/Documentation/devicetree/bindings/timer/snps,archs-rtc.txt b/Documentation/devicetree/bindings/timer/snps,archs-rtc.txt
 deleted file mode 100644
-index ac44c4b..0000000
---- a/Documentation/devicetree/bindings/timer/socionext,milbeaut-timer.txt
+index 47bd7a7..0000000
+--- a/Documentation/devicetree/bindings/timer/snps,archs-rtc.txt
 +++ /dev/null
-@@ -1,17 +0,0 @@
--Milbeaut SoCs Timer Controller
+@@ -1,14 +0,0 @@
+-Synopsys ARC Free Running 64-bit Local Timer for ARC HS CPUs
+-- clocksource provider for UP SoC
 -
 -Required properties:
 -
--- compatible : should be "socionext,milbeaut-timer".
--- reg : Specifies base physical address and size of the registers.
--- interrupts : The interrupt of the first timer.
--- clocks: phandle to the input clk.
+-- compatible : should be "snps,archs-rtc"
+-- clocks     : phandle to the source clock
 -
 -Example:
 -
--timer {
--	compatible = "socionext,milbeaut-timer";
--	reg = <0x1e000050 0x20>
--	interrupts = <0 91 4>;
--	clocks = <&clk 4>;
--};
-diff --git a/Documentation/devicetree/bindings/timer/socionext,milbeaut-timer.yaml b/Documentation/devicetree/bindings/timer/socionext,milbeaut-timer.yaml
+-	rtc {
+-		compatible = "snps,arc-rtc";
+-		clocks = <&core_clk>;
+-	};
+diff --git a/Documentation/devicetree/bindings/timer/snps,archs-rtc.yaml b/Documentation/devicetree/bindings/timer/snps,archs-rtc.yaml
 new file mode 100644
-index 0000000..9ab72b7
+index 0000000..7478810
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/socionext,milbeaut-timer.yaml
-@@ -0,0 +1,40 @@
++++ b/Documentation/devicetree/bindings/timer/snps,archs-rtc.yaml
+@@ -0,0 +1,30 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/socionext,milbeaut-timer.yaml#
++$id: http://devicetree.org/schemas/snps,archs-rtc.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Milbeaut SoCs Timer Controller
++title: Synopsys ARC Free Running 64-bit Local Timer for ARC HS CPUs
 +
 +maintainers:
-+  - Sugaya Taichi <sugaya.taichi@socionext.com>
++  - Vineet Gupta <vgupta@synopsys.com>
 +
 +properties:
 +  compatible:
-+    const: socionext,milbeaut-timer
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
++    const: snps,archs-rtc
 +
 +  clocks:
 +    maxItems: 1
 +
 +required:
 +  - compatible
-+  - reg
-+  - interrupts
 +  - clocks
 +
 +additionalProperties: false
 +
 +examples:
 +  - |
-+    timer@1e000050 {
-+        compatible = "socionext,milbeaut-timer";
-+        reg = <0x1e000050 0x20>;
-+        interrupts = <0 91 4>;
-+        clocks = <&clk 4>;
++    rtc {
++      compatible = "snps,archs-rtc";
++      clocks = <&core_clk>;
 +    };
