@@ -1,98 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24CFF86331;
-	Wed, 21 May 2025 13:58:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CA9686331;
+	Wed, 21 May 2025 13:58:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747835901; cv=none; b=Q/psWx86sRo2EvVI6rYDnzakElR/60zfuyCeCsjuyPZqTbCD49qKia9/dAHb1VSF1kgp6tAZ1ITB2lOkwHjNkeydA7gMRH3sNcH2Nbudzu8M1WLarQijAzLEPhN9PUc5dX6//Wsc+bcPiXm5GWQ2Ylr2rmRj9V6tpEkEph5/alw=
+	t=1747835907; cv=none; b=RGbl5z+lwsCpmLE+RmDYtxrFcEKrpuuYNobCdFD46IsBjaQBQHk9DCDczpBhbmDjRC09QXttaiy7TPpYcyea+ZPMH8byua6E/ELGKpZlVsGTtEaWYWwlfhPZ3wJM0iaVVQI1cTNVyTTo4NMLOgsyiYBhIOcWCj3nKayI2MtNv3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747835901; c=relaxed/simple;
-	bh=TV5Um3wEwSm9Yw2CbWgV1hqPi3iVOdmeNBmDMsMJJus=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qSeF2URdAEdWQANI1vNMYdFu1meSiKS1GDL+3Gwvm9mSFqUbjLv75pAI+Hh5p+TS5q7NtTCC/T34a+m5/gOm/xv4AiCBOjjFwrf0JF9lWSGbQ2rOOKTnh/5Kds+vtMjI3eXwsP/aPFxr1GaQH95NL9u56Gz2PayUMtF6VsnVM5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kMxNZFK/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747835907; c=relaxed/simple;
+	bh=8dVODYeuf0JOeF7x0WZGBk7gNGDfNr61/nf0PMQDsyQ=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=WIV3EwE79ZOeDr0rZ9wfwnWc4wkSmFf8nrueY8d7pnirzaVmOgNxjFlPGIenmo4s3a7Ec/KXYG9kK/r2newe9Am//7ShVMiiFWrUeNJG9JGcFSqJQLf1lsLp7e+UafsKNgCr+q/GsNqB5+8GC9McUXObi4qbwIAtFsf+WUImMu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=mQsU4tIf; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kMxNZFK/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60E2EC4CEE4;
-	Wed, 21 May 2025 13:58:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747835900;
-	bh=TV5Um3wEwSm9Yw2CbWgV1hqPi3iVOdmeNBmDMsMJJus=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kMxNZFK/lgC4ZaEQYoSnJ5VGx6lIKQCL0sODzOUx5mwG4ZPRe5i/T8aw8Nq06ZHQb
-	 9b4Xdw3EV2a2gE0zwB9Xmgqv+lIIEf4Qi46mntSlWQTNNIxqPzhp9djxkXftPNE9Vm
-	 J6k2ZqM+dofAr3L6hoBk5tJk8zt5+f/Fom/HogY3ngdlxV1PAXLXS5JCre12D9p+Hu
-	 vNGSYqzy/hMa6Uz7O3TW36/H/OSFr5C3MZYYAK7r8aKY1gl8i2U8fEqvQ6gM7SALhM
-	 YQNL3z8rlMgv0E5rd7f+Hw+ZLVAVGWb4S5E6RN6LyysgrWxA0o6onC6W8swidmOaov
-	 xSwn+Ig7M1T9g==
-Date: Wed, 21 May 2025 14:58:16 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Cc: Willy Tarreau <w@1wt.eu>, Shuah Khan <shuah@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 1/9] tools/nolibc: move ioctl() to sys/ioctl.h
-Message-ID: <5ca9d57f-b711-4929-89ca-79e6966bf3be@sirena.org.uk>
-References: <20250515-nolibc-sys-v1-0-74f82eea3b59@weissschuh.net>
- <20250515-nolibc-sys-v1-1-74f82eea3b59@weissschuh.net>
- <eda3af4a-8dfe-4f82-a934-2d0256b754e2@sirena.org.uk>
- <89bb5a3e-dd6c-475d-9c5d-0bd1595be735@t-8ch.de>
- <744a1aa8-1efc-4c20-b45e-070fc038f6e8@sirena.org.uk>
- <198bf1a8-98d0-4693-a4cf-234cad728c9b@t-8ch.de>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="mQsU4tIf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1747835903;
+	bh=8dVODYeuf0JOeF7x0WZGBk7gNGDfNr61/nf0PMQDsyQ=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=mQsU4tIfyxyX2460FiActuCd5ik325aT9ILI51Sgq4jtabuNvcShq0l8VuP6qM3CO
+	 itELbzCwkkpjq/L3a4xV7R4EFne4lDmxi8hTZaM2Y086lp/fh7z9K+I4Q9AEinpQbJ
+	 wQXrC7UC0M8dIqqk+nXKUJwaoG+T8N/ynxBzmKKASKCI9zpevJingKjOKcy7kG9x4s
+	 5aVd/utQJV+VnnIomwHu9BYnz/jfgWfTT4ABIwGMJKIwLm9cfKbP0tBb4c/LSUhPY3
+	 slfp395MQXywIEkhDEaTHRzKuwmlxJ4PQ1heuizHMc4DVLfhFNMXZKCeH8ae0E7f8s
+	 GtwLidslq3gSw==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 625FE17E02BE;
+	Wed, 21 May 2025 15:58:22 +0200 (CEST)
+Message-ID: <5e237878-bc8c-4c88-ad9d-469ce4389274@collabora.com>
+Date: Wed, 21 May 2025 15:58:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="o1EjMuOZVPaPj0Gi"
-Content-Disposition: inline
-In-Reply-To: <198bf1a8-98d0-4693-a4cf-234cad728c9b@t-8ch.de>
-X-Cookie: 42
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] pinctrl: mediatek: eint: Fix invalid pointer
+ dereference for v1 platforms
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+To: =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>,
+ Sean Wang <sean.wang@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ Hao Chang <ot_chhao.chang@mediatek.com>,
+ Qingliang Li <qingliang.li@mediatek.com>
+Cc: kernel@collabora.com, linux-mediatek@lists.infradead.org,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+ Chen-Yu Tsai <wenst@chromium.org>
+References: <20250520-genio-350-eint-null-ptr-deref-fix-v2-1-6a3ca966a7ba@collabora.com>
+ <557a5182-4843-4925-953e-09e3b1e41f0c@collabora.com>
+Content-Language: en-US
+In-Reply-To: <557a5182-4843-4925-953e-09e3b1e41f0c@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
+Il 21/05/25 15:53, AngeloGioacchino Del Regno ha scritto:
+> Il 20/05/25 23:15, Nícolas F. R. A. Prado ha scritto:
+>> Commit 3ef9f710efcb ("pinctrl: mediatek: Add EINT support for multiple
+>> addresses") introduced an access to the 'soc' field of struct
+>> mtk_pinctrl in mtk_eint_do_init() and for that an include of
+>> pinctrl-mtk-common-v2.h.
+>>
+>> However, pinctrl drivers relying on the v1 common driver include
+>> pinctrl-mtk-common.h instead, which provides another definition of
+>> struct mtk_pinctrl that does not contain an 'soc' field.
+>>
+>> Since mtk_eint_do_init() can be called both by v1 and v2 drivers, it
+>> will now try to dereference an invalid pointer when called on v1
+>> platforms. This has been observed on Genio 350 EVK (MT8365), which
+>> crashes very early in boot (the kernel trace can only be seen with
+>> earlycon).
+>>
+>> In order to fix this, since 'struct mtk_pinctrl' was only needed to get
+>> a 'struct mtk_eint_pin', make 'struct mtk_eint_pin' a parameter
+>> of mtk_eint_do_init() so that callers need to supply it, removing
+>> mtk_eint_do_init()'s dependency on any particular 'struct mtk_pinctrl'.
+>>
+>> Fixes: 3ef9f710efcb ("pinctrl: mediatek: Add EINT support for multiple addresses")
+>> Suggested-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+>> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+>> ---
+>> Changes in v2:
+>> - Completely changed approach to make mtk_eint_pin a parameter of
+>>    mtk_eint_do_init() as suggested by Angelo
+>> - Link to v1: https://lore.kernel.org/r/20250519-genio-350-eint-null-ptr-deref- 
+>> fix-v1-1-07445d6d22c3@collabora.com
+>> ---
+>>   drivers/pinctrl/mediatek/mtk-eint.c              | 26 ++++++++++--------------
+>>   drivers/pinctrl/mediatek/mtk-eint.h              |  5 +++--
+>>   drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c |  2 +-
+>>   drivers/pinctrl/mediatek/pinctrl-mtk-common.c    |  2 +-
+>>   4 files changed, 16 insertions(+), 19 deletions(-)
+>>
+>> diff --git a/drivers/pinctrl/mediatek/mtk-eint.c b/drivers/pinctrl/mediatek/mtk- 
+>> eint.c
+>> index 
+>> 16af6a47028e67bb53db4041a37ebbbb8b9a1e43..d906a5e4101fb10968035fc48e9cf4a444d063a9 100644
+>> --- a/drivers/pinctrl/mediatek/mtk-eint.c
+>> +++ b/drivers/pinctrl/mediatek/mtk-eint.c
+>> @@ -22,7 +22,6 @@
+>>   #include <linux/platform_device.h>
+>>   #include "mtk-eint.h"
+>> -#include "pinctrl-mtk-common-v2.h"
+>>   #define MTK_EINT_EDGE_SENSITIVE           0
+>>   #define MTK_EINT_LEVEL_SENSITIVE          1
+>> @@ -505,10 +504,9 @@ int mtk_eint_find_irq(struct mtk_eint *eint, unsigned long 
+>> eint_n)
+>>   }
+>>   EXPORT_SYMBOL_GPL(mtk_eint_find_irq);
+>> -int mtk_eint_do_init(struct mtk_eint *eint)
+>> +int mtk_eint_do_init(struct mtk_eint *eint, struct mtk_eint_pin *eint_pin)
+>>   {
+>>       unsigned int size, i, port, virq, inst = 0;
+>> -    struct mtk_pinctrl *hw = (struct mtk_pinctrl *)eint->pctl;
+>>       /* If clients don't assign a specific regs, let's use generic one */
+>>       if (!eint->regs)
+>> @@ -519,7 +517,15 @@ int mtk_eint_do_init(struct mtk_eint *eint)
+>>       if (!eint->base_pin_num)
+>>           return -ENOMEM;
+>> -    if (eint->nbase == 1) {
+> 
+> Okay, dropping the nbase == 1 is sane, but that statement was actually documenting
+> the fact that *eint_pin is used only for multi-base EINT case, so please add those
+> comments:
+> 
+>> +    if (eint_pin) {
+> 
+>          /* EINT with multiple bases */
+> 
+>> +        eint->pins = eint_pin;
+>> +        for (i = 0; i < eint->hw->ap_num; i++) {
+>> +            inst = eint->pins[i].instance;
+>> +            if (inst >= eint->nbase)
+>> +                continue;
+>> +            eint->base_pin_num[inst]++;
+>> +        }
+>> +    } else {
+> 
+>          /* Single base EINT */
+> 
+> ...after which:
+> 
+> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> 
+> Thanks for fixing this!
+> 
 
---o1EjMuOZVPaPj0Gi
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Just acknowledged that Linus already picked this one.
 
-On Wed, May 21, 2025 at 03:45:42PM +0200, Thomas Wei=DFschuh wrote:
-> On 2025-05-21 14:22:30+0100, Mark Brown wrote:
+It's fine either way, no worries.
 
-> > Ah, you expect what's currently there to work - good.  I noticed that
-> > the vDSO tests had a -I for the nolibc directory which made me think it
-> > was expected that it be there, it's the only user on most arches.
-
-> The -I is useful to compile applications without guarding the system
-> includes with #ifndef NOLIBC.
-
-These tests are all nolibc specific and so don't reference the system
-headers, the whole point is to not use a real libc.
-
-> What do I have to do to cross-compile these selftests?
-> I get various compiler errors.
-
-Any specific errors?  It's just a standard selftest build, eg:
-
-   make -C tools/testing/selftests LLVM=3D1 ARCH=3Darm64 TARGETS=3Darm64
-
-Unless you've got very current userspace headers you'll probably need
-a headers_install too (that's generally needed for the selftests).
-
---o1EjMuOZVPaPj0Gi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgt2/cACgkQJNaLcl1U
-h9ARDwf7BozdrB4Bcr6jM/YF1p6VqVRrJ0CeeWvtqJRfjrYx1kAx8w2sVJXMrHhb
-yq0/tQ5Nbms6IAM4evFvplCaqGsxSkjc3rsruqHstlyzQKzGRqEjrqAa9gnuWdHF
-ubgamRun3Ff0/xjVppOSdU8oxMPECjlLfQWgc4MDYNzyg0/B9ALeIOAsb3mjYk1U
-LirAWbSvbWzMqi8lL9gOwFtUyQn0j2+xhYN0pMuAt+g09tFc1+B6j8aPJq/pGbkk
-eko4YyzFx9eB18yUl4NWuv48oUZ46dMokY5K/lBFVo774BYHjFf4SRgATZ+mPkPw
-/BiHFCRIYPs+abzjfSbP6VZpw04SxA==
-=zzfQ
------END PGP SIGNATURE-----
-
---o1EjMuOZVPaPj0Gi--
+Cheers,
+Angelo
