@@ -1,187 +1,147 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0FF9253F3A;
-	Wed, 21 May 2025 10:12:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD94223D285
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 10:13:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747822352; cv=none; b=KVDqEZr9T6w9hbDXf/N25ordnOss8HIJ4etTHpYx76/wPS1KAogE3hRJe4LJVzS50SyFCxDOe7etHkcNfX/aT/tdjVyX1RIlhOfvRSvkZcaPDGJgoXvGbR4yYyDfyBHL3jOf/UmSAMgoz5s81nBT6qAmHs6sQ6nAcAdF51vpNXs=
+	t=1747822388; cv=none; b=l/29YTHLP5vbp8L0XpD3VK4gORH+F1bINH59/UsejPB/SLrsWrq143w2WpLAAjuzA7H+de1eFknf5WNTEcpzsC/MvY8y2vGa2nuCgLu8T1z1CFZMdbmOQ6mgALfMlwLMT+Lkz4Qz5az4Wtf3jCor6lCoQnBktc+/AGwyW/GRXWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747822352; c=relaxed/simple;
-	bh=GnBe3IeIQt6OC2JsK7/U8UeTims0vuSmq1ePGQQjad4=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Dpj1cBY2kQQJ1E4Kr+eMF/f54rQ6TZIY4QB3GgGwnt5HDgW+G6Yi4MmvodQsQo/8ntZOzyI5R9RqZj7oEOKnzuWJTgeolPZ+lwejhIaVDPZDBXdcrrQVEyVD94B+EfUb0m+FftDNLkGtrzeHgGqzVyVxkYNoEWbqctiOS3RZ6q4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AwH8a/60; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747822388; c=relaxed/simple;
+	bh=RByzAZMOLQNZEFtHbsKpgp1amQTVNJDbBgHinyMlwSU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VCYHER1GftwPeADk3Re5Dz2HaLpE82K3pde3cqrdSPnkkVuFhUEsnH5V36VM1ioa9lvd1UEiH9lyvaOVxjvQsyFTDbM9JrygxojtgRuXbPw0EctuV9a/HC5cxGD3axLQpGkSNJa5IuNQP5k+wqJWCobQn6NWtIXOKSqnxHS5SJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Cmi+n+YB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=vrAuruo2; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Cmi+n+YB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=vrAuruo2; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AwH8a/60"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747822351; x=1779358351;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=GnBe3IeIQt6OC2JsK7/U8UeTims0vuSmq1ePGQQjad4=;
-  b=AwH8a/60LuM7c3dZvnYD5PPwqhZ0ENrOF2AIlrOgsbhiENIIQpSA7rSf
-   GS7K1PettOLDe5nsGkJGynJtZuy6WdmDhzL2ljOwx5iMph/a9Pq1UdgJF
-   rfhUrPiFhgVes8PszkjiqN8OqyB5J8WpQccDeF0bZTYYlQT2NrUnnMy5N
-   wYhK0AZ1GG50I9qF+g3VbezFe0dEVEyl1Gl3N6Iom65TWXBQuhXfLl5b6
-   Io39rD8RtpFox5oOx2rX99gJuFZhZWWLNi3e/Q+PtsbysLof78iu7WB7Q
-   cgrUl1aXR0wbl1I/z9KSch6twtXZbUucwqh1NaryFmYnQxE+7UJ6ElGQ7
-   A==;
-X-CSE-ConnectionGUID: iYHyzqdpT0ioS77VcWwBKw==
-X-CSE-MsgGUID: PwD72KSHRQWIz1NyqoS/iA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="67206817"
-X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
-   d="scan'208";a="67206817"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 03:12:30 -0700
-X-CSE-ConnectionGUID: zsQQroisTUWpPsUBeoW8Dw==
-X-CSE-MsgGUID: 8fg1fRZIRPitzdV3wAFxcA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
-   d="scan'208";a="140068274"
-Received: from dalessan-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.221])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 03:12:22 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 21 May 2025 13:12:19 +0300 (EEST)
-To: Bjorn Helgaas <helgaas@kernel.org>
-cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>, 
-    Karolina Stolarek <karolina.stolarek@oracle.com>, 
-    Weinan Liu <wnliu@google.com>, 
-    Martin Petersen <martin.petersen@oracle.com>, 
-    Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, 
-    Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, 
-    Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, 
-    Lukas Wunner <lukas@wunner.de>, 
-    Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-    Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney" <paulmck@kernel.org>, 
-    Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
-    Oliver O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>, 
-    Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>, 
-    Terry Bowman <terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>, 
-    Dave Jiang <dave.jiang@intel.com>, LKML <linux-kernel@vger.kernel.org>, 
-    linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v7 03/17] PCI/AER: Factor COR/UNCOR error handling out
- from aer_isr_one_error()
-In-Reply-To: <20250520215047.1350603-4-helgaas@kernel.org>
-Message-ID: <95fbe3a9-fa77-c4ef-1396-618fd6944d41@linux.intel.com>
-References: <20250520215047.1350603-1-helgaas@kernel.org> <20250520215047.1350603-4-helgaas@kernel.org>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Cmi+n+YB";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="vrAuruo2";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Cmi+n+YB";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="vrAuruo2"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 2709F20922;
+	Wed, 21 May 2025 10:13:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747822385; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CLYsdgB3uf5e5BJCk5J+2wDtYUN+97pTdoUS/ZfGn7c=;
+	b=Cmi+n+YBZA+ZZOwbg22YbtkbpAvJkjXoXQGRfTxHu6cMDhQ/X3gEGiRavHs4gQe7ZwxxmF
+	K9Y2u5jD3UXRzNIXLDOpfHXO+IsXVd08vs8ywrRrxBWfsPokerRmW4LcU67NLbDLiyyJcQ
+	tsNG/z5NZGZMyWssyz8GnZK5iTvKyYo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747822385;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CLYsdgB3uf5e5BJCk5J+2wDtYUN+97pTdoUS/ZfGn7c=;
+	b=vrAuruo2cIf9bjUYr46d33GAeCYFFd+6NfNcwBLii7Ci+VFyxwAZaYa9vEnCzQu4Ka9Sog
+	vWxtJFA3aLdqu2Cg==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747822385; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CLYsdgB3uf5e5BJCk5J+2wDtYUN+97pTdoUS/ZfGn7c=;
+	b=Cmi+n+YBZA+ZZOwbg22YbtkbpAvJkjXoXQGRfTxHu6cMDhQ/X3gEGiRavHs4gQe7ZwxxmF
+	K9Y2u5jD3UXRzNIXLDOpfHXO+IsXVd08vs8ywrRrxBWfsPokerRmW4LcU67NLbDLiyyJcQ
+	tsNG/z5NZGZMyWssyz8GnZK5iTvKyYo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747822385;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CLYsdgB3uf5e5BJCk5J+2wDtYUN+97pTdoUS/ZfGn7c=;
+	b=vrAuruo2cIf9bjUYr46d33GAeCYFFd+6NfNcwBLii7Ci+VFyxwAZaYa9vEnCzQu4Ka9Sog
+	vWxtJFA3aLdqu2Cg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E835C13AA0;
+	Wed, 21 May 2025 10:13:04 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id fJLFNzCnLWguTAAAD6G6ig
+	(envelope-from <hare@suse.de>); Wed, 21 May 2025 10:13:04 +0000
+Message-ID: <c5807d92-3820-4d82-8937-06cd2ecd3d1d@suse.de>
+Date: Wed, 21 May 2025 12:13:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1330325227-1747822339=:946"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 03/10] net: use skb_crc32c() in skb_crc32c_csum_help()
+To: Eric Biggers <ebiggers@kernel.org>, netdev@vger.kernel.org
+Cc: linux-nvme@lists.infradead.org, linux-sctp@vger.kernel.org,
+ linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+ Sagi Grimberg <sagi@grimberg.me>, Ard Biesheuvel <ardb@kernel.org>
+References: <20250519175012.36581-1-ebiggers@kernel.org>
+ <20250519175012.36581-4-ebiggers@kernel.org>
+Content-Language: en-US
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <20250519175012.36581-4-ebiggers@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	RCVD_TLS_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[lists.infradead.org,vger.kernel.org,iogearbox.net,gmail.com,grimberg.me,kernel.org];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Flag: NO
+X-Spam-Score: -2.80
+X-Spam-Level: 
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-1330325227-1747822339=:946
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-
-On Tue, 20 May 2025, Bjorn Helgaas wrote:
-
-> From: Bjorn Helgaas <bhelgaas@google.com>
->=20
-> aer_isr_one_error() duplicates the Error Source ID logging and AER error
-> processing for Correctable Errors and Uncorrectable Errors.  Factor out t=
-he
-> duplicated code to aer_isr_one_error_type().
->=20
-> aer_isr_one_error() doesn't need the struct aer_rpc pointer, so pass it t=
-he
-> Root Port or RCEC pci_dev pointer instead.
->=20
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+On 5/19/25 19:50, Eric Biggers wrote:
+> From: Eric Biggers <ebiggers@google.com>
+> 
+> Instead of calling __skb_checksum() with a skb_checksum_ops struct that
+> does CRC32C, just call the new function skb_crc32c().  This is faster
+> and simpler.
+> 
+> Signed-off-by: Eric Biggers <ebiggers@google.com>
 > ---
->  drivers/pci/pcie/aer.c | 36 +++++++++++++++++++++++-------------
->  1 file changed, 23 insertions(+), 13 deletions(-)
->=20
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index a1cf8c7ef628..568229288ca3 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -1273,17 +1273,32 @@ static inline void aer_process_err_devices(struct=
- aer_err_info *e_info)
->  }
-> =20
->  /**
-> - * aer_isr_one_error - consume an error detected by Root Port
-> - * @rpc: pointer to the Root Port which holds an error
-> + * aer_isr_one_error_type - consume a Correctable or Uncorrectable Error
-> + *=09=09=09    detected by Root Port or RCEC
-> + * @root: pointer to Root Port or RCEC that signaled AER interrupt
-> + * @info: pointer to AER error info
-> + */
-> +static void aer_isr_one_error_type(struct pci_dev *root,
-> +=09=09=09=09   struct aer_err_info *info)
-> +{
-> +=09aer_print_port_info(root, info);
-> +
-> +=09if (find_source_device(root, info))
-> +=09=09aer_process_err_devices(info);
-> +}
-> +
-> +/**
-> + * aer_isr_one_error - consume error(s) signaled by an AER interrupt fro=
-m
-> + *=09=09       Root Port or RCEC
-> + * @root: pointer to Root Port or RCEC that signaled AER interrupt
->   * @e_src: pointer to an error source
->   */
-> -static void aer_isr_one_error(struct aer_rpc *rpc,
-> +static void aer_isr_one_error(struct pci_dev *root,
->  =09=09struct aer_err_source *e_src)
->  {
-> -=09struct pci_dev *pdev =3D rpc->rpd;
->  =09struct aer_err_info e_info;
-> =20
-> -=09pci_rootport_aer_stats_incr(pdev, e_src);
-> +=09pci_rootport_aer_stats_incr(root, e_src);
-> =20
->  =09/*
->  =09 * There is a possibility that both correctable error and
-> @@ -1297,10 +1312,8 @@ static void aer_isr_one_error(struct aer_rpc *rpc,
->  =09=09=09e_info.multi_error_valid =3D 1;
->  =09=09else
->  =09=09=09e_info.multi_error_valid =3D 0;
-> -=09=09aer_print_port_info(pdev, &e_info);
-> =20
-> -=09=09if (find_source_device(pdev, &e_info))
-> -=09=09=09aer_process_err_devices(&e_info);
-> +=09=09aer_isr_one_error_type(root, &e_info);
->  =09}
-> =20
->  =09if (e_src->status & PCI_ERR_ROOT_UNCOR_RCV) {
-> @@ -1316,10 +1329,7 @@ static void aer_isr_one_error(struct aer_rpc *rpc,
->  =09=09else
->  =09=09=09e_info.multi_error_valid =3D 0;
-> =20
-> -=09=09aer_print_port_info(pdev, &e_info);
-> -
-> -=09=09if (find_source_device(pdev, &e_info))
-> -=09=09=09aer_process_err_devices(&e_info);
-> +=09=09aer_isr_one_error_type(root, &e_info);
->  =09}
->  }
-> =20
-> @@ -1340,7 +1350,7 @@ static irqreturn_t aer_isr(int irq, void *context)
->  =09=09return IRQ_NONE;
-> =20
->  =09while (kfifo_get(&rpc->aer_fifo, &e_src))
-> -=09=09aer_isr_one_error(rpc, &e_src);
-> +=09=09aer_isr_one_error(rpc->rpd, &e_src);
->  =09return IRQ_HANDLED;
->  }
-> =20
->=20
+>   net/core/dev.c | 8 +++-----
+>   1 file changed, 3 insertions(+), 5 deletions(-)
+> 
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+Cheers,
 
---=20
- i.
-
---8323328-1330325227-1747822339=:946--
+Hannes
+-- 
+Dr. Hannes Reinecke                  Kernel Storage Architect
+hare@suse.de                                +49 911 74053 688
+SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
