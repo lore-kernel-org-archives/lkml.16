@@ -1,104 +1,156 @@
-Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82D3726AE4
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 13:58:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.67.55.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFE6211185;
+	Wed, 21 May 2025 13:58:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747835909; cv=none; b=W6AIVmr09TrshStiBqFIUGpQwmW0sO5V9+5MP6NvEriOVunEpFGkKxxg3xFrRMirkV70/q6XKdFJEiup6yHQj6zDEqFhcLNOQSQlm43aBiLtxbVXmdfNIQvLGctEqIpuS2KT8toyhL6uyR1N5sUl+9Vl9ZZLfEllbjhEfx6lLE4=
+	t=1747835933; cv=none; b=jhiW0tKbEYHGapgvkAiiTHkCDDPysqns3BPkzrqEd+LgvmOIfBtYsiNOn/DaJn+FnvOtFmnHfiGZMHkxsjs/Z8V889KIDTuoG8xnfq7WZHgKxwtnXNzOEzjhItDnhMUwsn2sW2OIR0cXxt7gulKUU1vuaNYj0tWDMieT+QC6NOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747835909; c=relaxed/simple;
-	bh=uW9wgugdRaKgW7y55mEAnWqEGwNvDrKOKUgyTrcxlN0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=LzL18IOCoYXK8jqaQbwrytwYaZZWBpUzxnBe4cWTyDPTeo0nVc9pa2HE2gvvP1iXPitIC+r7SiW6e9e7BbSeE93+4BujmoKQspVmR/WcMQXMKacdtL+ObmdklStSg8drjKOaDhZQvZ5S9zljNjf2eDPW/CPgMbCPZFvmNOT1GQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com; spf=pass smtp.mailfrom=shelob.surriel.com; arc=none smtp.client-ip=96.67.55.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=surriel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shelob.surriel.com
-Received: from fangorn.home.surriel.com ([10.0.13.7])
-	by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.97.1)
-	(envelope-from <riel@shelob.surriel.com>)
-	id 1uHjxA-000000005r3-0HFy;
-	Wed, 21 May 2025 09:57:52 -0400
-Message-ID: <cb657cabbc3c87e0a821c7c3fcc16e62b7d854f4.camel@surriel.com>
-Subject: Re: [RFC v2 4/9] x86/mm: Introduce X86_FEATURE_RAR
-From: Rik van Riel <riel@surriel.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org, 
-	kernel-team@meta.com, dave.hansen@linux.intel.com, luto@kernel.org, 
-	peterz@infradead.org, tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com, 
-	nadav.amit@gmail.com, Rik van Riel <riel@fb.com>, Yu-cheng Yu
-	 <yu-cheng.yu@intel.com>
-Date: Wed, 21 May 2025 09:57:52 -0400
-In-Reply-To: <20250521115343.GCaC2-x8LsmMApUkjQ@fat_crate.local>
-References: <20250520010350.1740223-1-riel@surriel.com>
-	 <20250520010350.1740223-5-riel@surriel.com>
-	 <20250521115343.GCaC2-x8LsmMApUkjQ@fat_crate.local>
-Autocrypt: addr=riel@surriel.com; prefer-encrypt=mutual;
- keydata=mQENBFIt3aUBCADCK0LicyCYyMa0E1lodCDUBf6G+6C5UXKG1jEYwQu49cc/gUBTTk33A
- eo2hjn4JinVaPF3zfZprnKMEGGv4dHvEOCPWiNhlz5RtqH3SKJllq2dpeMS9RqbMvDA36rlJIIo47
- Z/nl6IA8MDhSqyqdnTY8z7LnQHqq16jAqwo7Ll9qALXz4yG1ZdSCmo80VPetBZZPw7WMjo+1hByv/
- lvdFnLfiQ52tayuuC1r9x2qZ/SYWd2M4p/f5CLmvG9UcnkbYFsKWz8bwOBWKg1PQcaYHLx06sHGdY
- dIDaeVvkIfMFwAprSo5EFU+aes2VB2ZjugOTbkkW2aPSWTRsBhPHhV6dABEBAAG0HlJpayB2YW4gU
- mllbCA8cmllbEByZWRoYXQuY29tPokBHwQwAQIACQUCW5LcVgIdIAAKCRDOed6ShMTeg05SB/986o
- gEgdq4byrtaBQKFg5LWfd8e+h+QzLOg/T8mSS3dJzFXe5JBOfvYg7Bj47xXi9I5sM+I9Lu9+1XVb/
- r2rGJrU1DwA09TnmyFtK76bgMF0sBEh1ECILYNQTEIemzNFwOWLZZlEhZFRJsZyX+mtEp/WQIygHV
- WjwuP69VJw+fPQvLOGn4j8W9QXuvhha7u1QJ7mYx4dLGHrZlHdwDsqpvWsW+3rsIqs1BBe5/Itz9o
- 6y9gLNtQzwmSDioV8KhF85VmYInslhv5tUtMEppfdTLyX4SUKh8ftNIVmH9mXyRCZclSoa6IMd635
- Jq1Pj2/Lp64tOzSvN5Y9zaiCc5FucXtB9SaWsgdmFuIFJpZWwgPHJpZWxAc3VycmllbC5jb20+iQE
- +BBMBAgAoBQJSLd2lAhsjBQkSzAMABgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRDOed6ShMTe
- g4PpB/0ZivKYFt0LaB22ssWUrBoeNWCP1NY/lkq2QbPhR3agLB7ZXI97PF2z/5QD9Fuy/FD/jddPx
- KRTvFCtHcEzTOcFjBmf52uqgt3U40H9GM++0IM0yHusd9EzlaWsbp09vsAV2DwdqS69x9RPbvE/Ne
- fO5subhocH76okcF/aQiQ+oj2j6LJZGBJBVigOHg+4zyzdDgKM+jp0bvDI51KQ4XfxV593OhvkS3z
- 3FPx0CE7l62WhWrieHyBblqvkTYgJ6dq4bsYpqxxGJOkQ47WpEUx6onH+rImWmPJbSYGhwBzTo0Mm
- G1Nb1qGPG+mTrSmJjDRxrwf1zjmYqQreWVSFEt26tBpSaWsgdmFuIFJpZWwgPHJpZWxAZmIuY29tP
- okBPgQTAQIAKAUCW5LbiAIbIwUJEswDAAYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQznneko
- TE3oOUEQgAsrGxjTC1bGtZyuvyQPcXclap11Ogib6rQywGYu6/Mnkbd6hbyY3wpdyQii/cas2S44N
- cQj8HkGv91JLVE24/Wt0gITPCH3rLVJJDGQxprHTVDs1t1RAbsbp0XTksZPCNWDGYIBo2aHDwErhI
- omYQ0Xluo1WBtH/UmHgirHvclsou1Ks9jyTxiPyUKRfae7GNOFiX99+ZlB27P3t8CjtSO831Ij0Ip
- QrfooZ21YVlUKw0Wy6Ll8EyefyrEYSh8KTm8dQj4O7xxvdg865TLeLpho5PwDRF+/mR3qi8CdGbkE
- c4pYZQO8UDXUN4S+pe0aTeTqlYw8rRHWF9TnvtpcNzZw==
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	s=arc-20240116; t=1747835933; c=relaxed/simple;
+	bh=82+Fcv7k8/WK3IJaQrZQreUiL7oH7xl2lRQLtCA+3+E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M8o92nlmh0peugWgxqkRv2yGZNySN6w+HKhdsLu2obIMMBteF4hzZXdE2z/A7soWqELQUkD9TdIqOh6x6Oo/FXpk9YLAqL7MgssQoYhDfGCZLg5WmIRY7GAxTH/Ab2oISL62/rrKTx3kaxd6glWc3HjSSJRdbNKbT+8Vnc+dy0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JN0NYKMy; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JN0NYKMy"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a375d758a0so2288150f8f.0;
+        Wed, 21 May 2025 06:58:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747835930; x=1748440730; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=EcJ9QyF6XxTHP1+onmIFipuIbPi5hIUZeY2LzEWe7kg=;
+        b=JN0NYKMyzZaoM+wYVyg+X13qW+AXEi/ZS2lDTL2adjtjoXKg74AWLKS3mJsLlmXmWr
+         x+5/olMbNepo5TNpAwE177Z+5PPHYTtvLEQZG7Kz1LmwTsO1h1Up3FkuE5raMvJBI+cX
+         XD5K0PHLlExt0VivZ9BL3p+4qq6KzTU9iE6lapOx0JGCTcQhRWizjQf6f5DMsMb3tSC/
+         8KZkMK56Tu9/I1Xt4QOvul7eAHB304IQn2BtSvW6B/0JXSGik9+tG27xk+zxu1/kks/m
+         e11dw4MdoPaZ14X/9UzCGMfB5THSuIjG1cXvr2GOmmPgasW2ewO1oKfhRENBQzc44N9B
+         sK7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747835930; x=1748440730;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EcJ9QyF6XxTHP1+onmIFipuIbPi5hIUZeY2LzEWe7kg=;
+        b=kP1zaZSbh8/xsaKPUFLIuB5jyhzEBjYod+PSQz3HfiO3IAAlHboGjpSHo6h74HZPbj
+         VW1QCT0/XKbQsTZAxfA5XuAqnjFXT016AOHQnWsbWGyLHuoXvk5JRz4/Q0tLHwDqgjdt
+         57RWqYd4l3e1KuibzPzYcfm585F5r1yTdJN6v/Qd7nkKYfZaaOk2laWkm34yrFmrdmH4
+         B9D1GqERd8nzhCHHZzbdt5vomfmI8duFzKjEXi9kZCIJ1KtYaqE6p1qnD9HGZ1xH/oGR
+         h/JD6spyx5WfYkq0UU2UtHwBcHx7PgNiTn8/GA1e6e7qA18+G1k28RE3IdKJOC+EqPms
+         G0MQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUdyB2i8dNQiN2ZtMmfZ6fIfGvrfuT7lFwnXxidKZGbc6FSXkK5oNmalrA/myy8r/wJdMBMnAcWrKc/WnIK@vger.kernel.org, AJvYcCWd6vqLnAklxzgeTWKY2bTSklUMj1YpPEaPL+5AJ9q+PRZ6zJXqfQzMql+A9dCbhSUrqVBQCLYbPKwOcMA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzn914lCVtw+5DgQGbDlM8W7TAhk+Pgcd3gkArjt5bTmOYCBOlB
+	HON0dZrVbNwetAeYIidNMmCnBXwxU2vOmGB1whM4+PLvovRrD8bo2gCr
+X-Gm-Gg: ASbGnctW7P80ZZnh7iOHX41fMSC7Crdu6S8niTt4iPfmPj1gfhyjvUPUVMqkLJQLFpk
+	bEyDKujS269f/BdiGiyuKHUtlH74dCI4A703i4/BG8nZU7Wh6wYMEkLEl898Ra2KD8p6OaE2XQj
+	xmzOr/DTOuU24Vn52Ln2pXFtz4F14eN62fqNEVPX3ne+2CbrT1qx3vwCqUOj9OA5YesaWYd5Pyr
+	rkITBnMimMqIfPDXjqu2CWnJUB6OhOh19fuKs4mMYYxqrTwkQr1eM3aYkaVwbElIKki1N/4Su4G
+	w6R31t8CpsJZWdhwNbICHhHDMxnUk48kgkJexvvTnGy+CE7B+Xd3ApKo/+oWy2g=
+X-Google-Smtp-Source: AGHT+IEKmJou6eKOZdh3bNkiAFAL1JQdTSpaHxtOtuWtj38tVZqXysBlJAZWbsx+Pa1hxmp1Ms9f+w==
+X-Received: by 2002:a05:6000:178f:b0:3a3:7435:9a30 with SMTP id ffacd0b85a97d-3a374359b6fmr8525817f8f.47.1747835929784;
+        Wed, 21 May 2025 06:58:49 -0700 (PDT)
+Received: from Red ([2a01:cb1d:897:7800:4a02:2aff:fe07:1efc])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a35ca8899bsm19700296f8f.62.2025.05.21.06.58.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 May 2025 06:58:49 -0700 (PDT)
+Date: Wed, 21 May 2025 15:58:47 +0200
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Klaus Kudielka <klaus.kudielka@gmail.com>,
+	Eric Biggers <ebiggers@kernel.org>, regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+	Boris Brezillon <bbrezillon@kernel.org>,
+	EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>,
+	Romain Perier <romain.perier@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] crypto: marvell/cesa - Avoid empty transfer descriptor
+Message-ID: <aC3cF0-bWb-Jiz4i@Red>
+References: <f0dc235e3d7bfa1f60cc01fd527da52024af54e0.camel@gmail.com>
+ <aCZ3_ZMAFu6gzlyt@gondor.apana.org.au>
+ <aCcyXkeBvHQYvf2d@Red>
+ <aCczV6MF6xk5rRA3@gondor.apana.org.au>
+ <aChx_ODF_hYKL8XO@Red>
+ <aCmTQoJw6XG1CkuZ@gondor.apana.org.au>
+ <aC1fY6IP-8MzVIbx@gondor.apana.org.au>
+ <aC2aAvX07Aaho08d@gondor.apana.org.au>
+ <aC2uvvzlR89iVFGW@Red>
+ <aC2xTI1ZuXoZjgjX@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Sender: riel@surriel.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aC2xTI1ZuXoZjgjX@gondor.apana.org.au>
 
-On Wed, 2025-05-21 at 13:53 +0200, Borislav Petkov wrote:
-> On Mon, May 19, 2025 at 09:02:29PM -0400, Rik van Riel wrote:
-> > From: Rik van Riel <riel@fb.com>
-> >=20
-> > Introduce X86_FEATURE_RAR and enumeration of the feature.
-> >=20
-> > [riel: moved initialization to intel.c and disabling to
-> > Kconfig.cpufeatures]
-> >=20
-> > Signed-off-by: Yu-cheng Yu <yu-cheng.yu@intel.com>
->=20
-> I'm guessing Yu-cheng is the original author - that's expressed
-> differently.
+Le Wed, May 21, 2025 at 06:56:12PM +0800, Herbert Xu a écrit :
+> On Wed, May 21, 2025 at 12:45:18PM +0200, Corentin Labbe wrote:
+> >
+> > It fails to build with:
+> > ERROR: modpost: "arch_sync_dma_for_device" [drivers/crypto/marvell/cesa/marvell-cesa.ko] undefined!
+> 
+> OK, what about this patch?
+> 
+> Thanks,
+> -- 
+> Email: Herbert Xu <herbert@gondor.apana.org.au>
+> Home Page: http://gondor.apana.org.au/~herbert/
+> PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+> --
+> diff --git a/drivers/crypto/marvell/cesa/hash.c b/drivers/crypto/marvell/cesa/hash.c
+> index 6815eddc9068..5c46cd267789 100644
+> --- a/drivers/crypto/marvell/cesa/hash.c
+> +++ b/drivers/crypto/marvell/cesa/hash.c
+> @@ -49,8 +49,7 @@ mv_cesa_ahash_req_iter_next_op(struct mv_cesa_ahash_dma_iter *iter)
+>  static inline int
+>  mv_cesa_ahash_dma_alloc_cache(struct mv_cesa_ahash_dma_req *req, gfp_t flags)
+>  {
+> -	req->cache = dma_pool_alloc(cesa_dev->dma->cache_pool, flags,
+> -				    &req->cache_dma);
+> +	req->cache = kmalloc(CESA_MAX_HASH_BLOCK_SIZE, flags);
+>  	if (!req->cache)
+>  		return -ENOMEM;
+>  
+> @@ -63,8 +62,8 @@ mv_cesa_ahash_dma_free_cache(struct mv_cesa_ahash_dma_req *req)
+>  	if (!req->cache)
+>  		return;
+>  
+> -	dma_pool_free(cesa_dev->dma->cache_pool, req->cache,
+> -		      req->cache_dma);
+> +	dma_unmap_single(cesa_dev->dev, req->cache_dma, CESA_MAX_HASH_BLOCK_SIZE, DMA_TO_DEVICE);
+> +	kfree(req->cache);
+>  }
+>  
+>  static int mv_cesa_ahash_dma_alloc_padding(struct mv_cesa_ahash_dma_req *req,
+> @@ -533,6 +532,13 @@ mv_cesa_ahash_dma_add_cache(struct mv_cesa_tdma_chain *chain,
+>  
+>  	memcpy(ahashdreq->cache, creq->cache, creq->cache_ptr);
+>  
+> +	ahashdreq->cache_dma = dma_map_single(cesa_dev->dev, ahashdreq->cache, CESA_MAX_HASH_BLOCK_SIZE, DMA_TO_DEVICE);
+> +	if (dma_mapping_error(cesa_dev->dev, ahashdreq->cache_dma)) {
+> +		dev_err(cesa_dev->dev, "dma_map_single failed\n");
+> +		kfree(ahashdreq->cache);
+> +		return -ENOMEM;
+> +	}
+> +
+>  	return mv_cesa_dma_add_data_transfer(chain,
+>  					     CESA_SA_DATA_SRAM_OFFSET,
+>  					     ahashdreq->cache_dma,
 
-I will fix that up!
+Hello
 
->=20
-> > @@ -1771,6 +1783,7 @@ static void __init early_identify_cpu(struct
-> > cpuinfo_x86 *c)
-> > =C2=A0		setup_clear_cpu_cap(X86_FEATURE_LA57);
-> > =C2=A0
-> > =C2=A0	detect_nopl();
-> > +	detect_rar(c);
-> > =C2=A0}
->=20
-> Move all this gunk into early_init_intel().
->=20
-I had the same thought, and tried that already.
+It still fail:
+http://kernel.montjoie.ovh/479319.log
 
-It didn't work.
+but I have still all old patch of you stacked, perhaps could you do a branch somewhere to be sure ?
+current state is: http://kernel.montjoie.ovh/cesa.diff
 
---=20
-All Rights Reversed.
+Regards
