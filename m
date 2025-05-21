@@ -1,177 +1,100 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FCFE202F7C;
-	Wed, 21 May 2025 15:52:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAFB821C19F
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 15:52:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747842744; cv=none; b=MQ201BBVE9KZH4rFOZAeWJXGnVGznCWHCy1yVtD/XVCH4fOs9g3fJwwoYIzq0XPTqYgzrhBS9UX1EXjRoFNUh5F3mu33w/89HvJA9rEJt4IL8MnaRv1vuLcpH89KIoA6r/B+yvj/+BgygysMAESo7bOE7hs8WEnd1qBvjfjW4xE=
+	t=1747842765; cv=none; b=RxyFXmiR68z4y5oeso5v6NVX54Zj8yRpWNBcuzdgCyDceaMABdiXbfawvYR8eOGJQ86Mwtqxs0pLVs0GvahfE2kHq93mvFulFNtFDmDLeUoT2pLGMAQYbLud8jHPakqk95piOBGQxxc1miDppCFT0oLatOUCF/uwVxaOFgUvELo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747842744; c=relaxed/simple;
-	bh=G3q19HiN669ttmrnizWZ+QjhZHbzZgAeZ5tO1aNwb8M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hjUr+C/epiqXT6jV09mQ2Gfc05OG/DDt5IhBaB/FmOnua3iYW4Z9GcyKkV+E8FW0eA7biN9BQzBXNH9htNLXAX6qPTzUYxOKUyE9DbZ26wZt3/6yRj1dS6OqlzmL/QLDSA5H0mE+F8mOCuyHAmuZew/Jcvb+BVLcu7Q4afu44V0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=IA294N4V; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="IA294N4V"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54LAmYob030456;
-	Wed, 21 May 2025 15:52:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=gDHHhtfQbx1ibmUx3WjgdrsAL3LQpt
-	CHzJzATlXUBLk=; b=IA294N4VIYz7Xl9khOmSndHrrcCfrEEriWXkB4zsnxTCsz
-	e7fUQm8MrpzHcCH3xwZvbvFHKLjrUWBl3oJX6Uay3oO/igoOPCE597YI6IogQcu7
-	fpffqH44RXhag6eHpqJLb8KttVugdQzBJmf+sonKyUMfZBu3d5HLMAYKGCayaJna
-	5TQ3/tKs0UbCPYP6PZo5YhZzPH7tlmLucg5jDI5EVzIP7LHSsNsM31gPK1NZT0iZ
-	SqCl/p93HKtxXSRFG3MGvoo03bZnQZlI0WgUO9C9FULibcAaD0nm7EGKUkpfArqo
-	ln8cvbnxkE2Jq1pyAgwjmfbpLypc3WVgcEdK8LpQ==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46s3d5m54n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 15:52:20 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54LDfsI8010640;
-	Wed, 21 May 2025 15:52:19 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46rwnmcvv1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 15:52:19 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54LFqFfn42009004
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 21 May 2025 15:52:15 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id ED7F220043;
-	Wed, 21 May 2025 15:52:14 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4A57A20040;
-	Wed, 21 May 2025 15:52:14 +0000 (GMT)
-Received: from osiris (unknown [9.87.128.135])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 21 May 2025 15:52:14 +0000 (GMT)
-Date: Wed, 21 May 2025 17:52:12 +0200
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, frankja@linux.ibm.com,
-        borntraeger@de.ibm.com, seiden@linux.ibm.com, nsg@linux.ibm.com,
-        nrb@linux.ibm.com, david@redhat.com, agordeev@linux.ibm.com,
-        svens@linux.ibm.com, gor@linux.ibm.com, schlameuss@linux.ibm.com
-Subject: Re: [PATCH v2 3/5] KVM: s390: refactor some functions in priv.c
-Message-ID: <20250521155212.11483Da8-hca@linux.ibm.com>
-References: <20250520182639.80013-1-imbrenda@linux.ibm.com>
- <20250520182639.80013-4-imbrenda@linux.ibm.com>
+	s=arc-20240116; t=1747842765; c=relaxed/simple;
+	bh=62QbmXK0GwsKDw4Ad5OcPzH+bRvRp41PR9RE8v8QHD0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Hb26eCB/alHV6Nyn79weKFDbqq56DOe3LUs5Lo8GQW+KllRb9l15UF8xsyfFBeS7Wyirp4X1Js3f7heJPQ09T88IP2UjJxJS01tLsxN76XbggTqkWhkrHoeBGNGtxtb7fKhazDDsUC+mtfxKMj/Be6JNi/Yu1XnQZw22Blb2LLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EA7E91515;
+	Wed, 21 May 2025 08:52:26 -0700 (PDT)
+Received: from [10.57.23.70] (unknown [10.57.23.70])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 143A73F6A8;
+	Wed, 21 May 2025 08:52:37 -0700 (PDT)
+Message-ID: <41515a2d-75c0-4537-888a-8d27c2050a80@arm.com>
+Date: Wed, 21 May 2025 16:52:36 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250520182639.80013-4-imbrenda@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: S7fu4XbAOMOOqfUWSoTbebCrKoHHOhPb
-X-Proofpoint-ORIG-GUID: S7fu4XbAOMOOqfUWSoTbebCrKoHHOhPb
-X-Authority-Analysis: v=2.4 cv=cM/gskeN c=1 sm=1 tr=0 ts=682df6b4 cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=5jWV00l8V3tV8VPG5IkA:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDE1MyBTYWx0ZWRfXww4dJDpaXsUr Nv2v0WaTNoS9cvU+oe7AewTWCw9nQWwXBZEC1Xeuw6dOSvfcpcHPpLBO8XGuXzVgTAuOZ/kJTfW EqsfgDYx+o/xkmPLblFaFPm7mk7FeknU3ynulPoCY5Q6ZyEmP22H89lp8FHbsxy7QH0uWDtgeAr
- 6e+fhCH0fSnimr3L4Dd1E2qi2CbSzXCX1dVwtw4y0EGJopG5kAcLb8A6O8M2nc/WTSyJvVnxt3A 05NU0/Xlh+mUW9XzCgARJKq6QylW8hD9YJq92xQ01Mfl4SRLk1EsRJfEZV2J1Ot7l/MnvtxdzTm xgWp8es4ERV32cVDvHXligaY7NrcQF9F/FZIzpuFQ/ElGB0WELZa9+wbpTqPLpRqQYi2yd3o+Fq
- aHt7EmuLOOsXKKm7Zu7TRvwLU44bV/sf9WaZ5fFheX1WGU6ofcynL2ijcLkRN6HgmNLjXRnA
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-21_05,2025-05-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- lowpriorityscore=0 phishscore=0 adultscore=0 malwarescore=0
- impostorscore=0 bulkscore=0 clxscore=1015 spamscore=0 mlxscore=0
- priorityscore=1501 mlxlogscore=647 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505160000 definitions=main-2505210153
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/5] drm/panfrost: Internally label some BOs
+To: =?UTF-8?Q?Adri=C3=A1n_Larumbe?= <adrian.larumbe@collabora.com>,
+ linux-kernel@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org,
+ Boris Brezillon <boris.brezillon@collabora.com>, kernel@collabora.com,
+ Rob Herring <robh@kernel.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+References: <20250520174634.353267-1-adrian.larumbe@collabora.com>
+ <20250520174634.353267-3-adrian.larumbe@collabora.com>
+From: Steven Price <steven.price@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20250520174634.353267-3-adrian.larumbe@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 20, 2025 at 08:26:37PM +0200, Claudio Imbrenda wrote:
-> Refactor some functions in priv.c to make them more readable.
+On 20/05/2025 18:43, Adrián Larumbe wrote:
+> Perfcnt samples buffer is not exposed to UM, but we would like to keep
+> a tag on it as a potential debug aid.
 > 
-> handle_{iske,rrbe,sske}: move duplicated checks into a single function.
-> handle{pfmf,epsw}: improve readability.
-> handle_lpswe{,y}: merge implementations since they are almost the same.
+> PRIME imported GEM buffers are UM exposed, but since the usual Panfrost
+> UM driver code path is not followed in their creation, they might remain
+> unlabelled for their entire lifetime, so a generic tag was deemed
+> preferable. The tag is assigned before a UM handle is created so it
+> doesn't contradict the logic about labelling internal BOs.
 > 
-> Use a helper function to replace open-coded bit twiddling operations.
+> Signed-off-by: Adrián Larumbe <adrian.larumbe@collabora.com>
+
+Reviewed-by: Steven Price <steven.price@arm.com>
+
+> ---
+>  drivers/gpu/drm/panfrost/panfrost_gem.c     | 10 ++++++++++
+>  drivers/gpu/drm/panfrost/panfrost_perfcnt.c |  2 ++
+>  2 files changed, 12 insertions(+)
 > 
-> Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-
-...since you asked me to look into this... :)
-
-For the sake of reviewability: I guess this really should be split
-into separate patches which address one function each.
-
-> +static inline void replace_selected_bits(u64 *w, unsigned long mask, unsigned long val)
-> +{
-> +	*w = (*w & ~mask) | (val & mask);
-> +}
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_gem.c b/drivers/gpu/drm/panfrost/panfrost_gem.c
+> index 4c5be7ccc9cc..04483d5fb45d 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_gem.c
+> +++ b/drivers/gpu/drm/panfrost/panfrost_gem.c
+> @@ -305,6 +305,16 @@ panfrost_gem_prime_import_sg_table(struct drm_device *dev,
+>  	bo = to_panfrost_bo(obj);
+>  	bo->noexec = true;
+>  
+> +	/*
+> +	 * We assign this generic label because this function cannot
+> +	 * be reached through any of the Panfrost UM driver-specific
+> +	 * code paths, unless one is given by explicitly calling the
+> +	 * SET_LABEL_BO ioctl. It is therefore preferable to have a
+> +	 * blanket BO tag that tells us the object was imported from
+> +	 * another driver than nothing at all.
+> +	 */
+> +	panfrost_gem_internal_set_label(obj, "GEM PRIME buffer");
 > +
-> +struct skeys_ops_state {
-> +	int reg1;
-> +	int reg2;
-> +	u64 *r1;
-> +	u64 *r2;
-> +	unsigned long effective;
-> +	unsigned long absolute;
-> +};
+>  	return obj;
+>  }
+>  
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_perfcnt.c b/drivers/gpu/drm/panfrost/panfrost_perfcnt.c
+> index 52befead08c6..563f16bae543 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_perfcnt.c
+> +++ b/drivers/gpu/drm/panfrost/panfrost_perfcnt.c
+> @@ -111,6 +111,8 @@ static int panfrost_perfcnt_enable_locked(struct panfrost_device *pfdev,
+>  		goto err_put_mapping;
+>  	perfcnt->buf = map.vaddr;
+>  
+> +	panfrost_gem_internal_set_label(&bo->base, "Perfcnt sample buffer");
 > +
-> +static void get_regs_rre_ptr(struct kvm_vcpu *vcpu, int *reg1, int *reg2, u64 **r1, u64 **r2)
-> +{
-> +	kvm_s390_get_regs_rre(vcpu, reg1, reg2);
-> +	*r1 = vcpu->run->s.regs.gprs + *reg1;
-> +	*r2 = vcpu->run->s.regs.gprs + *reg2;
-> +}
+>  	/*
+>  	 * Invalidate the cache and clear the counters to start from a fresh
+>  	 * state.
 
-Ewww...
-
-> +static int skeys_common_checks(struct kvm_vcpu *vcpu, struct skeys_ops_state *state)
-> +{
-> +	int rc;
-> +
-> +	if (vcpu->arch.sie_block->gpsw.mask & PSW_MASK_PSTATE) {
-> +		rc = kvm_s390_inject_program_int(vcpu, PGM_PRIVILEGED_OP);
-> +		return rc ? rc : -EAGAIN;
-> +	}
-
-Hm.. first you introduce helper functions which use psw_bits() and now
-this is open-coded again?
-
-> +	rc = try_handle_skey(vcpu);
-> +	if (rc)
-> +		return rc;
-> +
-> +	get_regs_rre_ptr(vcpu, &state->reg1, &state->reg2, &state->r1, &state->r2);
-> +
-> +	state->effective = vcpu->run->s.regs.gprs[state->reg2] & PAGE_MASK;
-> +	state->effective = kvm_s390_logical_to_effective(vcpu, state->effective);
-> +	state->absolute = kvm_s390_real_to_abs(vcpu, state->effective);
-> +
-> +	return 0;
-> +}
-
-So a function which is called "*common_checks" actually may or may not
-set up a state which is later used. This is anything but obvious.
-
->  static int handle_iske(struct kvm_vcpu *vcpu)
->  {
-
-...
-
-> -	vcpu->run->s.regs.gprs[reg1] &= ~0xff;
-> -	vcpu->run->s.regs.gprs[reg1] |= key;
-> +	replace_selected_bits(state.r1, 0xff, key);
-
-Who is supposed to understand that this replace_selected_bits() call
-actually changes vcpu->run->s.regs.gprs[reg1]? To me this obfuscates
-the code and makes it much less understandable.
-
-From my point of view this state structure and passing it back and
-forth is a mistake, since it hides way too much what is actually going
-on.
-
-Anyway, just my 0.02. :)
