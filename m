@@ -1,187 +1,152 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 317531D7995
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 14:41:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 851921DE4D3;
+	Wed, 21 May 2025 14:41:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747838505; cv=none; b=uXgUOOV0Te1bmLrnYQt31tK3DYOLvcOLIcpDTYvmOxk1ExPK/CWPRCc/nZVsnMxbTcnbheQbFV7u29OEav/ngLXsgthN72MGhDxDcpmH+bEZ4zLlnDCSfM0bQBp4F/OpDM7Bs52W5MuDZS8gwfQ6BcI3RZQFnxQ2zleU3nMAHdc=
+	t=1747838508; cv=none; b=iyCMrr9u2cTe0RaLLmQIGiyHhAwpT9Bw+vjECgcL462z5pSyDo9xOQ7+dDLtBhyUoRMbDkhdO2wOBkZKFCAZrv498WCbTeq4PzJ5/cv4ZFey9Y4OIPuSmZ92ANJ/YN1KhpJSTHWo4PKMCOxYHqVeseiXoO/X2o4HFPKn94u67Jc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747838505; c=relaxed/simple;
-	bh=fJrz4e1Ti/Jt27bWzNcWF73I0K+Q9z0Ka+LDgDGAiMg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A6onmz/fosdBU/v2e+XnW68JuP0XJx+W5iefD4HdtQAeCpINjM8rmqV81XDSwJ91lvTUmKcRUo6lADuzkxOUUBQLcTWRXFqsx21bLYzLF5I8y2hLZrZHz0rzkdRLi0DZcvBfwxRpH+GSzGktLq18tIRszSYAhx7/ChVV/yWfunQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cEd/FJqj; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747838508; c=relaxed/simple;
+	bh=xGwv8zOnBEuC2KXKMvwIoAf5LhaujZS6kwKCDX9Q3Q8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SPw8oGPPcAJzrEbhad8tnIZnmjRp6esZjzoE8PKukRJbWDlKgtOQ2Cekn4hR4BBzyfgWVmuRNBtirWNEKinzjqtHw8X3jEmS8LiNV+dkihQhu4qBa+pv8OHEq47bfsNNH4QtytEQXwtNMtO41EUZulMdQ8W100eArYwITHXABcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XB/w+SSE; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cEd/FJqj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747838503;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mDesXKTayHxGjIGY1j8G0o6g9UGYHXMrYuHHOq5gQRI=;
-	b=cEd/FJqjuEwN+FiBB+vAgcFNTKcrRa7ndIC45HqR0iO+wN0X2OJcC2U4HgAdIOsTSBgTF1
-	jWIsZytTPHvrJJ0Q+v8b1MmoDwndSkAmWY07tJJpssOfKltofYXEwvAJ6/1lN65X2a/rom
-	TnypONEuRrap9YkOyNGHDc4exmq1jdA=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-308-LoVALLGbPjm0eiSwFDIaAQ-1; Wed, 21 May 2025 10:41:41 -0400
-X-MC-Unique: LoVALLGbPjm0eiSwFDIaAQ-1
-X-Mimecast-MFC-AGG-ID: LoVALLGbPjm0eiSwFDIaAQ_1747838501
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-ad55e9a80acso307070266b.3
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 07:41:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XB/w+SSE"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-acbb85ce788so1342966766b.3;
+        Wed, 21 May 2025 07:41:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747838505; x=1748443305; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=C1UUJjI6uVedXhjrW1TR558sVBfrP4UvOSPCt6T5RL8=;
+        b=XB/w+SSEFYmJW62fhRDvvFvlZCbvFunWoXiiYmEvPkcCkScnmF7LrDHPKYLnZIYUJf
+         glDpPc+iVlJU+Aies0Zbld1/rPvYnXxUIah84XGzLHZPRfdwDsysWAa79pWA53/bGc3e
+         rh+QXDhyLYR6SlQhr2M/E7bFXxdEi/18bxVn2wNzDmU1rMK/8Veg3SPQtHc3NUCxMBKA
+         QbEIdFPPPq1zkOdVxTQNarYTuY+9kYAjuptsLiVZV3h28sva5OrYWv4JmXaqdzJBK648
+         z7+OzBYGzeHYio/t+siPcANEJubEsYaTzD9QHw1W5EUMrpUrKogJdgieQVja6LY4Lm7O
+         qTdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747838500; x=1748443300;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mDesXKTayHxGjIGY1j8G0o6g9UGYHXMrYuHHOq5gQRI=;
-        b=X4Qr2x3Wykn2+uUWtSrhEAlNXtBczLJTFSh56H3cacolpXcD3obr2PxrHRrnVImLj2
-         P5cMq/QT88AH5SGDsPPpsk3yUY4QNMy7BAe5t1T80er3Ot4nR4yx+d6iPBMidaAivg7U
-         Tq1oyhlxsAG7sYVBcs7PbIuBoIfsMQai6KhQMPMgUd0gj9OkTVFR4xl2rPC+NqIXs0BR
-         70WCDkzOnfnMhOHlAP9F11UeMZsO1grXDXu+T+OROk1vmMWdx2TQolfjcdgEXx5okmYr
-         3nSWUPrljZqw5QhmMJ2Juv0Y/WNILQXrW45rh7tsH98y6M9t/Nlza3NaIXmS5vFnpRc1
-         /shA==
-X-Forwarded-Encrypted: i=1; AJvYcCXxrmEgJVf3WWpmYJnEIAvITr0Yp/ZoGst3g94dmY4tXYxiqb0Azy/D6W0XZfXKAvv6rzgVL4A636nX4Bo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywpx/nX7vHhumhB9B583udvdIJpsYIPWhwQqGNj0iB056MMS5Rs
-	Kjp6bPPyiwuSdKDnhAGD0kyC6ZiE5HUkz6qSiTt+yse3quy47Bh0yJJWH5AeoscikhLWwJKe0HB
-	nW+wxCxOCIFlegqPtJw4IToGMzjJCVpadYvU4n5eV94l15y6dkn3Ag7F1AsQIpUqnyw==
-X-Gm-Gg: ASbGncso+FCKjaWY8lgC7tiVgTYjUfnaIvcyHLYaYYX2otrPkv5dvzettCpo4TwvXl5
-	lIbqnuEtEw/tdK61IORnzb9b53XQGCeTIXBfYJ0p4Rfi0zMgoAYW9SftWg+Z2Ei/H7n+aAVAsBf
-	G/4AVFnXhoiVucsPKh2B8kISbNIlFMVON2G0YRWv0ZAKdaYvUMUOBaRyOEq+hhNr3a4Fs32vDvr
-	NXj9zakoUQggyKVtL0wP9vK3LbT3i2Le+gh6AMygIQZcSNUMFPTsO3wuWrexpJ6aWaxktOVa0HC
-	L0UAUE55ceemh7pZST076HhnHhGRmOkT3hl0YWTz5EAlSEOuNL5jZHQb3N9Y
-X-Received: by 2002:a17:907:e916:b0:ace:c59c:1b00 with SMTP id a640c23a62f3a-ad52d42dc34mr1768466066b.5.1747838500574;
-        Wed, 21 May 2025 07:41:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE66RxXKL2W6d/q5voawNHWMt+eYxa0BkwW3PNFANgomMqz2eIeLzBYh2MlVa3aFRZzUSRf1g==
-X-Received: by 2002:a17:907:e916:b0:ace:c59c:1b00 with SMTP id a640c23a62f3a-ad52d42dc34mr1768463566b.5.1747838499992;
-        Wed, 21 May 2025 07:41:39 -0700 (PDT)
-Received: from sgarzare-redhat (host-82-53-134-35.retail.telecomitalia.it. [82.53.134.35])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d06dfa4sm914996266b.57.2025.05.21.07.41.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 07:41:39 -0700 (PDT)
-Date: Wed, 21 May 2025 16:41:34 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Michal Luczaj <mhal@rbox.co>
-Cc: "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	"Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, 
-	Stefan Hajnoczi <stefanha@redhat.com>, virtualization@lists.linux.dev, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH net-next v5 4/5] vsock/test: Introduce enable_so_linger()
- helper
-Message-ID: <3uci6mlihjdst7iksimvsabnjggwpgskbhxz2262pmwdnrq3lx@v2dz7lsvpxew>
-References: <20250521-vsock-linger-v5-0-94827860d1d6@rbox.co>
- <20250521-vsock-linger-v5-4-94827860d1d6@rbox.co>
+        d=1e100.net; s=20230601; t=1747838505; x=1748443305;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=C1UUJjI6uVedXhjrW1TR558sVBfrP4UvOSPCt6T5RL8=;
+        b=c61khu4I/JRfdO6mRXVuD2i0kthplJXRQnoW0tzYsZB+jm+NiVGz/uj2E3lDYlyRR9
+         R0I0sZrbjt3dFZJke3R6Sol8hqPXWFXufgVum7Y/YF8ot167RiIEXoSk/1ZtATMX+QXK
+         0Cp7AYhjjV35Pej6JWggqkap158aKiWbrGKkDwCxR7TLJheOkcE9zQRQd+851npXt4Sh
+         33H/mkJedovc0DX3VYsMGOG3YhY55nZ10Zn2X9caocVXFl26UNOi7tof5qajtbbVDhuc
+         bgBypdVCbUvyZHMtLjFq0+QhuEZM3zx6bCkeM9r9WMOE4OthNNa523AX6kl2XN+YwVzI
+         XKzw==
+X-Forwarded-Encrypted: i=1; AJvYcCWMyOnp7F1F/5IrkJMtuOIdfsP3VZBa2IkS6+kcWQuAxjB2E5wyQbpx6TJnNpZM+wzSXRj84ixVEEG/Lok=@vger.kernel.org, AJvYcCWtJcUlEFMcD5qOxacG49FBuMfKseSLJwQcqUAmSwjUyuV5PX3miXPLkbJ6rszFDavOk4VbA8L7OL4jv7Uyfwc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzculH+YXphrXpQkmt3JkyYnKcXmvxTDiYG0NZ7osALuVkjNMJW
+	H0IQnTfm9o4zOsSAoXWGx9iQxArdXGmSIXyyKz3u7TRMmdy0QioHTmpt
+X-Gm-Gg: ASbGncvrYQ8yYfjPFUwPxTCLqzyGqtRWAYeBIo49NRrcwyyqXJlc1IuLNgyIV3lJztL
+	mm9VVN057uJ8qUmX4xLJ1F2KptdDh8coGlp1sD6Yv3ABFuMHL74mjW+XQS+1yxdNgmjzb4r38lg
+	dRjrQD0LUP0KoiN1f+YxBdTJ0kHHNd4V/HxpNvo/BmVxAtZ5VXQFtC9UPVk54j3diaMQz1dzqiU
+	gxXjNgByFXv58YPjaY15uFPV0zmP4C1Ii5ebIg71TXTfGknhLBuCl/5sZFdS/zAPnEImFbNBJZM
+	iqdTKtoS0SImb82SRfdpITc6zdU3zfU4OGs+pjicywCtbkdiTNVDTlVsRGfw
+X-Google-Smtp-Source: AGHT+IHdWUcyjR/eAqavzD2juSux585KrfO0BAvXyaiLmoTl1xqZVtMRB8htIIkLjTQGAHmv4MaEgw==
+X-Received: by 2002:a17:907:7fac:b0:aca:c4a6:cd90 with SMTP id a640c23a62f3a-ad52d45accemr1998919366b.5.1747838504367;
+        Wed, 21 May 2025 07:41:44 -0700 (PDT)
+Received: from [10.5.1.156] ([193.170.134.247])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d490794sm915439866b.131.2025.05.21.07.41.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 May 2025 07:41:44 -0700 (PDT)
+Message-ID: <7a6852e9-54f7-4fc1-b052-f673f9eddd97@gmail.com>
+Date: Wed, 21 May 2025 16:41:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250521-vsock-linger-v5-4-94827860d1d6@rbox.co>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] rust: miscdevice: add additional data to
+ MiscDeviceRegistration
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>, Arnd Bergmann <arnd@arndb.de>,
+ Lee Jones <lee@kernel.org>, Daniel Almeida <daniel.almeida@collabora.com>,
+ =?UTF-8?Q?Gerald_Wisb=C3=B6ck?= <gerald.wisboeck@feather.ink>,
+ rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250517-b4-rust_miscdevice_registrationdata-v3-0-cdb33e228d37@gmail.com>
+ <20250517-b4-rust_miscdevice_registrationdata-v3-1-cdb33e228d37@gmail.com>
+ <aCiSRZjOETsD8MhX@pollux> <2025052107-awhile-drainer-38d0@gregkh>
+ <aC3fYyvPvTB1DkeR@cassiopeiae>
+Content-Language: en-US, de-DE
+From: Christian Schrefl <chrisi.schrefl@gmail.com>
+In-Reply-To: <aC3fYyvPvTB1DkeR@cassiopeiae>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 21, 2025 at 12:55:22AM +0200, Michal Luczaj wrote:
->Add a helper function that sets SO_LINGER. Adapt the caller.
->
->Signed-off-by: Michal Luczaj <mhal@rbox.co>
->---
-> tools/testing/vsock/util.c       | 13 +++++++++++++
-> tools/testing/vsock/util.h       |  4 ++++
-> tools/testing/vsock/vsock_test.c | 10 +---------
-> 3 files changed, 18 insertions(+), 9 deletions(-)
->
->diff --git a/tools/testing/vsock/util.c b/tools/testing/vsock/util.c
->index 120277be14ab2f58e0350adcdd56fc18861399c9..41b47f7deadcda68fddc2b22a6d9bb7847cc0a14 100644
->--- a/tools/testing/vsock/util.c
->+++ b/tools/testing/vsock/util.c
->@@ -823,3 +823,16 @@ void enable_so_zerocopy_check(int fd)
-> 	setsockopt_int_check(fd, SOL_SOCKET, SO_ZEROCOPY, 1,
-> 			     "setsockopt SO_ZEROCOPY");
-> }
->+
->+void enable_so_linger(int fd)
->+{
->+	struct linger optval = {
->+		.l_onoff = 1,
->+		.l_linger = LINGER_TIMEOUT
->+	};
->+
->+	if (setsockopt(fd, SOL_SOCKET, SO_LINGER, &optval, sizeof(optval))) {
->+		perror("setsockopt(SO_LINGER)");
->+		exit(EXIT_FAILURE);
->+	}
->+}
->diff --git a/tools/testing/vsock/util.h b/tools/testing/vsock/util.h
->index e307f0d4f6940e984b84a95fd0d57598e7c4e35f..1b3d8eb2c4b3c41c9007584177455c4fa442334c 100644
->--- a/tools/testing/vsock/util.h
->+++ b/tools/testing/vsock/util.h
->@@ -14,6 +14,9 @@ enum test_mode {
->
-> #define DEFAULT_PEER_PORT	1234
->
->+/* Half of the default to not risk timing out the control channel */
->+#define LINGER_TIMEOUT		(TIMEOUT / 2)
->+
-> /* Test runner options */
-> struct test_opts {
-> 	enum test_mode mode;
->@@ -80,4 +83,5 @@ void setsockopt_int_check(int fd, int level, int optname, int val,
-> void setsockopt_timeval_check(int fd, int level, int optname,
-> 			      struct timeval val, char const *errmsg);
-> void enable_so_zerocopy_check(int fd);
->+void enable_so_linger(int fd);
-> #endif /* UTIL_H */
->diff --git a/tools/testing/vsock/vsock_test.c b/tools/testing/vsock/vsock_test.c
->index 4c2c94151070d54d1ed6e6af5a6de0b262a0206e..f401c6a79495bc7fda97012e5bfeabec7dbfb60a 100644
->--- a/tools/testing/vsock/vsock_test.c
->+++ b/tools/testing/vsock/vsock_test.c
->@@ -1813,10 +1813,6 @@ static void test_stream_connect_retry_server(const struct test_opts *opts)
->
-> static void test_stream_linger_client(const struct test_opts *opts)
-> {
->-	struct linger optval = {
->-		.l_onoff = 1,
->-		.l_linger = 1
+Hi Danilo
 
-So, we are changing the timeout from 1 to 5, right?
-Should we mention in the commit description?
+On 21.05.25 4:12 PM, Danilo Krummrich wrote:
+> On Wed, May 21, 2025 at 01:55:36PM +0200, Greg Kroah-Hartman wrote:
+>> On Sat, May 17, 2025 at 03:42:29PM +0200, Danilo Krummrich wrote:
+>>> On Sat, May 17, 2025 at 01:33:49PM +0200, Christian Schrefl wrote:
+>>>> +pub struct MiscDeviceRegistration<T: MiscDevice> {
+>>>>      #[pin]
+>>>>      inner: Opaque<bindings::miscdevice>,
+>>>> +    #[pin]
+>>>> +    data: UnsafePinned<T::RegistrationData>,
+>>>>      _t: PhantomData<T>,
+>>>>  }
+>>>
+>>> I recommend not to store data within a Registration type itself.
+>>>
+>>> I know that this is designed with the focus on using misc device directly from
+>>> the module scope; and in this context it works great.
+>>>
+>>> However, it becomes quite suboptimal when used from a driver scope. For
+>>> instance, if the misc device is registered within a platform driver's probe()
+>>> function.
+>>>
+>>> I know this probably isn't supported yet. At least, I assume it isn't supported
+>>> "officially", given that the abstraction does not provide an option to set a
+>>> parent device. Yet I think we should consider it.
+>>
+>> It's going to be a requirement to properly set the parent device, and
+>> as you point out, this really should be in some sort of scope, not just
+>> a module.
+>>
+>> But, we have two types of users of a misc device, one like this is
+>> written, for a module-scope, and one for the "normal" device scope.  The
+>> device scope is going to be tricker as it can, and will, get
+>> disconnected from the device separately from the misc device lifespan,
+>> so when that logic is added, it's going to be tricky as you point out.
+>>
+>> So I'll take this now, but in the future this is going to have to be
+>> cleaned up and modified.
+> 
+> I'm about to sketch up something based on this patch that works properly for
+> both cases, i.e. module-scope and driver-scope.
 
->-	};
-> 	int fd;
->
-> 	fd = vsock_stream_connect(opts->peer_cid, opts->peer_port);
->@@ -1825,11 +1821,7 @@ static void test_stream_linger_client(const struct test_opts *opts)
-> 		exit(EXIT_FAILURE);
-> 	}
->
->-	if (setsockopt(fd, SOL_SOCKET, SO_LINGER, &optval, sizeof(optval))) {
->-		perror("setsockopt(SO_LINGER)");
->-		exit(EXIT_FAILURE);
->-	}
->-
->+	enable_so_linger(fd);
+Let me know if you have any questions for me (if you want also privately 
+or on Zulip).
 
-If you need to resend, I'd pass the timeout as parameter, so the test
-can use whatever they want.
+I currently don't have the time to work on this myself. I'm not that
+familiar with the C side and the Devres abstraction and would need to look
+into these before getting much work done here.
 
-The rest LGTM.
+> I think it would also be good for the misc device abstraction to demonstrate
+> how to properly make class device abstractions (such as misc device, DRM device,
+> input device etc.) go along with bus devices in the context of a driver.
+> 
+> misc device isn't *the* perfect example, given that it doesn't have the typical
+> create and register split and another complication is that we also have to deal
+> with the module-scope case, but it's still a very good candidate given that it
+> is very simple compared to other class devices.
 
-Thanks,
-Stefano
-
-> 	close(fd);
-> }
->
->
->-- 
->2.49.0
->
-
+Cheers
+Christian
