@@ -1,97 +1,242 @@
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7F9019DF4C
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 14:55:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6651421CC71;
+	Wed, 21 May 2025 14:55:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747839337; cv=none; b=MAtHX0ESDHZsZGiCsvJOd9Eqtd117uK1wzaPpP4R7MWA7Ts0S283jk5lrrpRpBl1b2pN/6xL4e8mf+CR/BL8I+4bSkWIfdpyo0SPdrADIsCEHTQjDWPE1VN6zXzVXTEOuFw9oPgWy5BKGKxJv9waRjaI3sEGBKf3O62Z0mLvc1c=
+	t=1747839359; cv=none; b=KN1yV4JzPF9vpqpKBDK/DsLbYG6yp0g27jO50hqzMXAfMGrJ1PFauzluT3Y+yraZZyBpX3I2LofhLuOFBNJrsvU1tYkkugDvAmP7LCtmktwSGvU8HA6BUVTnBHRYIs1JmdrXTLJbla1wjYbnU9oJPH9KL0cc2gvb/61e1sUol7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747839337; c=relaxed/simple;
-	bh=9AEiv1p+JnCpiMVQaOtvwKh1gqZikLJzllz0fnjn9MI=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=V7ArKqyoc8jmA6r6glBpnfYYdXQzo3u4CzzOil5h8IIUSb/xOUq2t01U1QKYJwjN9uBBYvOQNJ0/rTytgBdB8n8h0islJO7I3MnZzFPqD3o9PrrgcGPcf4KTmHiO8GdnKQx9iMuRljx9TLiD7LQe/S948zfJsh0x2X/8ilIjUoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-86184fa3d00so558652839f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 07:55:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747839333; x=1748444133;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=sCZgjW/j9aAWJx3erWl58ieO4bI+d7BltCXalbr0GH0=;
-        b=OuVb2jMyx+VFIUoGJX2fVCYI480lzqMywlEcd760RFkWZk83SXo97S31IIZFo3nnLU
-         yQlzGLKDSng2AIQCgOWwBToDp91lF+FiNHJUGP/kYvFAyuGg86G1/h0zRkWyJNoGfAVD
-         rQBx1yvMFU0zvSc27wdzDLgxWl6H9/C3pUY76Bcprz45WsLQHAigS2SUM1DlvvnztiMH
-         /98/JIDKlP2QYmKBqhRGGZpA135K+7wxoJscm825cDoUeDMDWwOBDwuoPiiPZe5PuDh9
-         KQb4oRPgsnWNkDGWn9J1QVB0aH4RpgkuHdoYw7nZAF5S9hcF8FvnF2kIAQ9BM9xznP6U
-         1JdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWPc3i83rmIYVNIjR4mM0RhYEjUga2vn8JC7nxtYll6XSbcQwRxLUQKhGmEam62E1TIG0PX406CpCGmIqk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz49G9dGkuxDArpHYrSWAOKKRdFoSJQXczEaubeUsykaqlj1JGQ
-	pfk6+HeYUthIriJikPER3aoHKRbkH6Ba+VgGGi7TbmYiAbDevTzX35qsSZzIuz8CgYz7P7xvJcA
-	wdOcTfv+9F38mRIY8rMNAMgoWdUNRq8FnLHVDYKJP8jnmJKOJPhaxeGM5nNE=
-X-Google-Smtp-Source: AGHT+IHJpSduBq3ks0nOe6I3AMuP5rRmrtNRZTzHWLuDKTdP9J49/R51NWCFqYydwmoKHZwhTOixaMKxTOKNhCAF0Mn9NhExXv3r
+	s=arc-20240116; t=1747839359; c=relaxed/simple;
+	bh=LkusQmqOpI75o2Q1VxnAhBjBHjhBv81PTj17PfR973Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EDz5D6YHMTOWKFnPLIQKZ+TaCofmnVy1UIbcT9siSaHroZHXQOWF+7a160lDjcaBaRbAt/XDtYaiz0iQjP33OfxI7E7+6jpXAwtMtFM+uD2CsAxj6lFw8FaSaL0usBWA2oDAcW/NPlaiz2dYmJBTs05kgYNOe9TTMZ6CmhOMN1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=bEG+QU3s; arc=none smtp.client-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="bEG+QU3s"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
+	Content-Type; bh=nhOxlgQ7+nfY4fwX45DJfisexcraDE8HthO3m6cUSD8=;
+	b=bEG+QU3sKSN/NuvpbocLmTAFjn3OMDEwDPaUnaC4kS0C3iK4mzIwaEF4HmcXVO
+	ZnavcnhanmaTbXJVe895+oOvXpEvoByrtyGULwfs5LbkZZWGHlKzzDNA9uV/SDpM
+	sPf/8zRaFqw9/a8dXV2ei6j7Fyqo0BTA7lfmWG7yDChVg=
+Received: from [192.168.71.93] (unknown [])
+	by gzga-smtp-mtada-g0-4 (Coremail) with SMTP id _____wDX_2cp6S1oyxI2DA--.34395S2;
+	Wed, 21 May 2025 22:54:34 +0800 (CST)
+Message-ID: <1c21ec0b-ca89-4f7e-85f2-bdb48edb8055@163.com>
+Date: Wed, 21 May 2025 22:54:33 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:3887:b0:861:c744:5a4a with SMTP id
- ca18e2360f4ac-86a231983c6mr2556518139f.5.1747839333555; Wed, 21 May 2025
- 07:55:33 -0700 (PDT)
-Date: Wed, 21 May 2025 07:55:33 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <682de965.a00a0220.29bc26.0291.GAE@google.com>
-Subject: [syzbot] Monthly kernfs report (May 2025)
-From: syzbot <syzbot+list4ae572b679a79e7a5c6b@syzkaller.appspotmail.com>
-To: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com, tj@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/4] pci: implement "pci=aer_panic"
+To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
+ bhelgaas@google.com, tglx@linutronix.de, kw@linux.com,
+ manivannan.sadhasivam@linaro.org, mahesh@linux.ibm.com
+Cc: oohall@gmail.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <20250516165518.125495-1-18255117159@163.com>
+ <a1fdd6e1-8cd9-46b0-bd27-526729a1199d@linux.intel.com>
+ <8434dc81-5d2d-4ce1-ab73-ca1cf16cb550@163.com>
+ <e6ad7ef5-de9c-49bc-9882-5e97bd549168@163.com>
+ <3dd17a45-2305-4ac4-a195-4c54ce357ddc@linux.intel.com>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <3dd17a45-2305-4ac4-a195-4c54ce357ddc@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDX_2cp6S1oyxI2DA--.34395S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3GFy3GrW7tF1fZF13XF1DKFg_yoWxAw1rpa
+	yrAa1jkr4DJFyxAFn2yw1xXryYyasrJwn8Wrn5Jr1agrn0vryUXr4SvF45CF98WrnrWw1U
+	ZF40v3srWr15ZFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U1rWwUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOg5Uo2gt4OzfkwAAsG
 
-Hello kernfs maintainers/developers,
 
-This is a 31-day syzbot report for the kernfs subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/kernfs
 
-During the period, 1 new issues were detected and 0 were fixed.
-In total, 24 issues are still open and 23 have already been fixed.
+On 2025/5/21 00:09, Sathyanarayanan Kuppuswamy wrote:
+> 
+> On 5/19/25 7:41 AM, Hans Zhang wrote:
+>>
+>>
+>> On 2025/5/19 22:21, Hans Zhang wrote:
+>>>
+>>>
+>>> On 2025/5/17 02:10, Sathyanarayanan Kuppuswamy wrote:
+>>>>
+>>>> On 5/16/25 9:55 AM, Hans Zhang wrote:
+>>>>> The following series introduces a new kernel command-line option 
+>>>>> aer_panic
+>>>>> to enhance error handling for PCIe Advanced Error Reporting (AER) in
+>>>>> mission-critical environments. This feature ensures deterministic 
+>>>>> recover
+>>>>> from fatal PCIe errors by triggering a controlled kernel panic when 
+>>>>> device
+>>>>> recovery fails, avoiding indefinite system hangs.
+>>>>
+>>>> Why would a device recovery failure lead to a system hang? Worst case
+>>>> that device may not be accessible, right?  Any real use case?
+>>>>
+>>>
+>>>
+>>> Dear Sathyanarayanan,
+>>>
+>>> Due to Synopsys and Cadence PCIe IP, their AER interrupts are usually 
+>>> SPI interrupts, not INTx/MSI/MSIx interrupts.  (Some customers will 
+>>> design it as an MSI/MSIx interrupt, e.g.: RK3588, but not all 
+>>> customers have designed it this way.)  For example, when many mobile 
+>>> phone SoCs of Qualcomm handle AER interrupts and there is a link 
+>>> down, that is, a fatal problem occurs in the current PCIe physical 
+>>> link, the system cannot recover.  At this point, a system restart is 
+>>> needed to solve the problem.
+>>>
+>>> And our company design of SOC: http://radxa.com/products/orion/o6/, 
+>>> it has 5 road PCIe port.
+>>> There is also the same problem.  If there is a problem with one of 
+>>> the PCIe ports, it will cause the entire system to hang.  So I hope 
+>>> linux OS can offer an option that enables SOC manufacturers to choose 
+>>> to restart the system in case of fatal hardware errors occurring in 
+>>> PCIe.
+>>>
+>>> There are also products such as mobile phones and tablets.  We don't 
+>>> want to wait until the battery is completely used up before 
+>>> restarting them.
+>>>
+>>> For the specific code of Qualcomm, please refer to the email I sent.
+>>>
+>>
+>>
+>> Dear Sathyanarayanan,
+>>
+>> Supplementary reasons:
+>>
+>> drivers/pci/controller/cadence/pcie-cadence-host.c
+>> cdns_pci_map_bus
+>>     /* Clear AXI link-down status */
+>>     cdns_pcie_writel(pcie, CDNS_PCIE_AT_LINKDOWN, 0x0);
+>>
+>> https://elixir.bootlin.com/linux/v6.15-rc6/source/drivers/pci/controller/cadence/pcie-cadence-host.c#L52
+>>
+>> If there has been a link down in this PCIe port, the register 
+>> CDNS_PCIE_AT_LINKDOWN must be set to 0 for the AXI transmission to 
+>> continue.  This is different from Synopsys.
+>>
+>> If CPU Core0 runs to code L52 and CPU Core1 is executing NVMe SSD 
+>> saving files, since the CDNS_PCIE_AT_LINKDOWN register is still 1, it 
+>> causes CPU Core1 to be unable to send TLP transfers and hang. This is 
+>> a very extreme situation.
+>> (The current Cadence code is Legacy PCIe IP, and the HPA IP is still 
+>> in the upstream process at present.)
+>>
+>> Radxa O6 uses Cadence's PCIe HPA IP.
+>> http://radxa.com/products/orion/o6/
+>>
+> 
+> It sounds like a system level issue to me. Why not they rely on watchdog 
+> to reboot for
+> this case ?
 
-Some of the still happening issues:
+Dear Sathyanarayanan,
 
-Ref  Crashes Repro Title
-<1>  391     Yes   WARNING in kernfs_remove_by_name_ns (3)
-                   https://syzkaller.appspot.com/bug?extid=93cbdd0ab421adc5275d
-<2>  344     No    possible deadlock in lookup_slow (3)
-                   https://syzkaller.appspot.com/bug?extid=65459fd3b61877d717a3
-<3>  342     Yes   WARNING in kernfs_get (5)
-                   https://syzkaller.appspot.com/bug?extid=2f44671e54488d20f0e6
-<4>  103     Yes   INFO: task hung in kernfs_dop_revalidate (4)
-                   https://syzkaller.appspot.com/bug?extid=da20d108162166514db6
-<5>  65      Yes   INFO: task hung in kernfs_add_one
-                   https://syzkaller.appspot.com/bug?extid=e4804edf2708e8b7d2a5
-<6>  50      No    possible deadlock in kernfs_fop_write_iter (2)
-                   https://syzkaller.appspot.com/bug?extid=1cfd86253864f61b533e
-<7>  38      Yes   possible deadlock in kernfs_iop_getattr
-                   https://syzkaller.appspot.com/bug?extid=4bb2305559463e8f6a2a
-<8>  22      Yes   possible deadlock in walk_component (4)
-                   https://syzkaller.appspot.com/bug?extid=b4567a8b2d2ad5f9dd06
-<9>  19      Yes   INFO: task hung in kernfs_remove_by_name_ns (2)
-                   https://syzkaller.appspot.com/bug?extid=6d5664213a6db9a5a72c
-<10> 10      Yes   INFO: task hung in pipe_write (6)
-                   https://syzkaller.appspot.com/bug?extid=5984e31a805252b3b40a
+Thank you for your reply. Yes, personally, I think it's also a problem 
+at the system level. I conducted a local test. When I directly unplugged 
+the EP device on the slot, the system would hang. It has been tested 
+many times. Since we don't have a bus timeout response mechanism for 
+PCIe, it hangs easily.
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> Even if you want to add this support, I think it is more appropriate to 
+> add this to your
+> specific PCIe controller driver.  I don't see why you want to add it 
+> part of generic
+> AER driver.
+> 
+Because we want to use the processing logic of the general AER driver. 
+If the recovery is successful, there will be no problem. If the recovery 
+fails, my original intention was to restart the system.
 
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
+If added to the specific PCIe controller driver, a lot of repetitive AER 
+processing logic will be written. So I was thinking whether the AER 
+driver could be changed to be compiled as a KO module.
 
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
 
-You may send multiple commands in a single email message.
+If this series is not reasonable, I'll drop it.
+
+
+Best regards,
+Hans
+
+>>>
+>>>>>
+>>>>> Problem Statement
+>>>>> In systems where unresolved PCIe errors (e.g., bus hangs) occur,
+>>>>> traditional error recovery mechanisms may leave the system 
+>>>>> unresponsive
+>>>>> indefinitely. This is unacceptable for high-availability environment
+>>>>> requiring prompt recovery via reboot.
+>>>>>
+>>>>> Solution
+>>>>> The aer_panic option forces a kernel panic on unrecoverable AER 
+>>>>> errors.
+>>>>> This bypasses prolonged recovery attempts and ensures immediate 
+>>>>> reboot.
+>>>>>
+>>>>> Patch Summary:
+>>>>> Documentation Update: Adds aer_panic to kernel-parameters.txt, 
+>>>>> explaining
+>>>>> its purpose and usage.
+>>>>>
+>>>>> Command-Line Handling: Implements pci=aer_panic parsing and state
+>>>>> management in PCI core.
+>>>>>
+>>>>> State Exposure: Introduces pci_aer_panic_enabled() to check if the 
+>>>>> panic
+>>>>> mode is active.
+>>>>>
+>>>>> Panic Trigger: Modifies recovery logic to panic the system when 
+>>>>> recovery
+>>>>> fails and aer_panic is enabled.
+>>>>>
+>>>>> Impact
+>>>>> Controlled Recovery: Reduces downtime by replacing hangs with 
+>>>>> immediate
+>>>>> reboots.
+>>>>>
+>>>>> Optional: Enabled via pci=aer_panic; no default behavior change.
+>>>>>
+>>>>> Dependency: Requires CONFIG_PCIEAER.
+>>>>>
+>>>>> For example, in mobile phones and tablets, when there is a problem 
+>>>>> with
+>>>>> the PCIe link and it cannot be restored, it is expected to provide an
+>>>>> alternative method to make the system panic without waiting for the
+>>>>> battery power to be completely exhausted before restarting the system.
+>>>>>
+>>>>> ---
+>>>>> For example, the sm8250 and sm8350 of qcom will panic and restart the
+>>>>> system when they are linked down.
+>>>>>
+>>>>> https://github.com/DOITfit/xiaomi_kernel_sm8250/blob/d42aa408e8cef14f4ec006554fac67ef80b86d0d/drivers/pci/controller/pci-msm.c#L5440
+>>>>>
+>>>>> https://github.com/OnePlusOSS/android_kernel_oneplus_sm8350/blob/13ca08fdf0979fdd61d5e8991661874bb2d19150/drivers/net/wireless/cnss2/pci.c#L950
+>>>>>
+>>>>>
+>>>>> Since the design schemes of each SOC manufacturer are different, 
+>>>>> the AXI
+>>>>> and other buses connected by PCIe do not have a design to prevent 
+>>>>> hanging.
+>>>>> Once a FATAL error occurs in the PCIe link and cannot be restored, the
+>>>>> system needs to be restarted.
+>>>>>
+>>>>>
+>>>>> Dear Mani,
+>>>>>
+>>>>> I wonder if you know how other SoCs of qcom handle FATAL errors 
+>>>>> that occur
+>>>>> in PCIe link.
+>>>>> ---
+>>>>>
+
