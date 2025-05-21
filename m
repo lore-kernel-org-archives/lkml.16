@@ -1,253 +1,194 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5490262FCD
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 11:34:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACCF825EF8B;
+	Wed, 21 May 2025 11:34:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747827253; cv=none; b=G2LllCP52IHrPTcNYqpAhXZai0c9jHqc4YqzMTgrmgoA7NPXz9tmYBrraHlgwtJf2527VrZb1faviWOJdZHubBwoA0qoySHEcT1/KgAlQnsmPKHsYEHMUMg3DKBL8WZFnbD9HpXtmXiiSDTOAAEv7tAI25Mf8kcmbHB2cc6RSZU=
+	t=1747827277; cv=none; b=XHR/RQK3keeeuECAB9SyqZcqPm9mczeQ/pGj3hOeUBx3FCs4GSdQVG2NJ9j2KAsIU6VN4Ks31yD2EjsMVNA0BRJc7uBLZm4LgwmdKN/AtxQS7DR7Ncd+kK457jCNSudD3nKdn/XrNa7eWlL7h2SJz6VIgjy3yF0dgOPLF1J8FHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747827253; c=relaxed/simple;
-	bh=YmK9jUVMjyM4XGpiOToRK6zoyZKLYlRbYzUIMY0DNzk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PWNDwerY8XzpE5O9kb1dI6PdTi1k4Y3iQISzkSvcOub2nETmE0ha0HSRzVZg1i/68Kt3k7I9jZmOSh+xsFRB2P/miSYs0vQKYz2vxS8IMN1Af0UOmd+hHFBHw2w5uI+5g4jCGvTblEcsbv5950FK23YNF1mchSvyEIResdi0MTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Yh2ga3l6; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747827277; c=relaxed/simple;
+	bh=Mh1HSkD+W+jD0xGkcpOKJianUrmXNdpN6De05zeNjGE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Azf/njxxQyWpq5rNj+1vcWaVPWdva7BDovTxcBtuv9Y3zfbsl/EOudHALxQyZfuB4LhVhvQfk108V6vGcriSN05RU5DTjp5onby+za+G/oUk1gv9iZIpw3jNTcI4P4ZNteB+9U+zdpWXiUPNCNQ0g0V4fKnsdkRb7l/lCNyM2jk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BxWo9dp5; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Yh2ga3l6"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-30e7bfef27dso4437832a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 04:34:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747827249; x=1748432049; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=0+4xzIECcnulitki27nkBn5Q23UYHsSRhtXD1c9rOoA=;
-        b=Yh2ga3l6Lsu2/jgp1CpVJJvczB3VIby0X5ka6PPgL3GO58Wp0k+KV4q/M166bY6DNk
-         JwHO8M1LgSAi9atE1y+4G9gwW4ecFKDOiI6kDk95zOMMXZ05iI0q4rSAl4ciwzsdFQDV
-         ht2dgVD8XFVSOrJN+ObJ/4fZCD/RlVzD9+hdHBJDxXdTNwLzVOGoTLJb76tDa9xGjMp7
-         cNPAbfAO8/rnZttRqW5bKkOlQGkcEM37xtpw0CsvAeUfh5phqrbcBPn+fGBrKsqQMqgd
-         iiHOr50k3B5WPPyZ/FXdth8P9HPnEY3OCG0IZhwFAqvu4aKVxbvxWDkmjcUjK7kdN9aZ
-         wOJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747827249; x=1748432049;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0+4xzIECcnulitki27nkBn5Q23UYHsSRhtXD1c9rOoA=;
-        b=KTycKVgYHzj5jZTczWxrj145f3s1szDYNE91M+OHiv8lBtVkh5xVj8mfgbkGWa7cJo
-         VhgNtSZq3NGYJ8Xmeq/K6DtAhNSQqeM5K+69TgG4scbz+acT/UD8qkgK7/+XLpGrja/z
-         O0lwWB+1aKBuYFPrS7fCj86LLjv5MRi4+/jawpUCvNq5j4N1pcZA75Sf1wZbIIxuuDkN
-         jULH5n/NmkRvJq33TuHRYdsf8J+7BoX4yXGIUPYwVE41vmsO8yAP8SaUBjhHBRUbx3vF
-         Wq21gPPBOORtqo/w0oQPw2Lwb19UFF4ahpckMjUKrvU1t260qUAYkT8XS7Kr6VTQeIaR
-         hHEg==
-X-Forwarded-Encrypted: i=1; AJvYcCVUrGRNTQAsoveHWBFg+Vogb7guWGVH4itZrEokrHp7J+4r4Y/1U2aHPaavvPFDIqA7GHdKfqEbcx3bJxY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8BSFr+jnwIdz1oNReEhzOMdX31KglsSKDwDURET9+iOEKBMPq
-	hDiIOKNYeN1jymDWXsW99/vehpBCryXU/Q/VLg3wMR0OZmyQdDnAH9rPMLuN/jnjndQ=
-X-Gm-Gg: ASbGnctCAohK3CgvoKZ9XncwUcjTSG1rJ/ainShbOZIHleSarVIOsM5jNA5rHgnnJTm
-	ygxhPXTrjmJk4WlbXdJxG0/faPkQ7G1XjUEADBSxsF72xKl2JOOjTIH8UlyuFLJU5cXiCfPt2rV
-	r4N03BxY/aYWcIaNRIYJifhIrhgHZvanuBWXDsQaaGzo2Gs/5Ib2qIWefe3n9wXb8j1kV9k2I2m
-	2H0tuEg34VabRdlbkFyuF1E1BkmPq7l2hJLhEVWUJFnFPbJwn7NfDq9Pikqtw6bCGM7dWMKKcWS
-	v4IFJVeSbtOn9UYIthltWAjJbkOCBfCJbSDCAMSyW4kjSOqpO+8g
-X-Google-Smtp-Source: AGHT+IHEP4cY4L10ow0JzAIxRCHqZRLKI4tTfPyWgXFzxw0d78MaqKPCU0DzphedaKmdHEozMC86Eg==
-X-Received: by 2002:a17:90b:55cc:b0:2ee:d63f:d73 with SMTP id 98e67ed59e1d1-30e830ebe05mr35629396a91.11.1747827249017;
-        Wed, 21 May 2025 04:34:09 -0700 (PDT)
-Received: from localhost ([122.172.81.72])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f36385b68sm3437381a91.11.2025.05.21.04.34.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 04:34:08 -0700 (PDT)
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: "Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	=?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
-	Bill Mills <bill.mills@linaro.org>,
-	virtualization@lists.linux.dev,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BxWo9dp5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747827276; x=1779363276;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=Mh1HSkD+W+jD0xGkcpOKJianUrmXNdpN6De05zeNjGE=;
+  b=BxWo9dp5vufIYadaLtU+zfSFBMtIPVaEf7Nm9aU5Ahtn2JWzDr0HaV+g
+   jjM9DjwXcXLOyWGXbIrKgYAV4bc1Pa+NxCbUQ4KkZfUf1Hpf00KZFWzXQ
+   aNpA3FlCy5UvahXXJInhI4P5QXYSOBUxvWRv1ERsA3cCAJ2SxovVHsMpN
+   gC7lvobGjyET/AbrXrTdnsjh9NOWigM+Zu7ZLERiTBchwEav1HfIGw6tx
+   jgDs4bAwqPMxiX6BdMzuGSPz4nfW7BQwDXVae8usSM6K9Lg5lbbL2SfJH
+   Fs/fZ51xyECLw52oWpblFi6YFkNLadDHJXm5TEpOvsu/tJQSn7/9iSLtH
+   A==;
+X-CSE-ConnectionGUID: XtLAlc9eSFu+YqEtuvD7bw==
+X-CSE-MsgGUID: di3FqTajR26jAE/ZcB1fDg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="67215376"
+X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
+   d="scan'208";a="67215376"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 04:34:35 -0700
+X-CSE-ConnectionGUID: IB9wprPNTiy/FqIHQkPLmQ==
+X-CSE-MsgGUID: EUVSTCmPS06OMST+BICqBQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
+   d="scan'208";a="140550405"
+Received: from dalessan-mobl3.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.244.129])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 04:34:32 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with ESMTP id 2721F1201BE;
+	Wed, 21 May 2025 14:34:29 +0300 (EEST)
+Date: Wed, 21 May 2025 11:34:29 +0000
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mehdi Djait <mehdi.djait@linux.intel.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	tomi.valkeinen@ideasonboard.com, jacopo.mondi@ideasonboard.com,
+	hverkuil@xs4all.nl, kieran.bingham@ideasonboard.com,
+	naush@raspberrypi.com, mchehab@kernel.org,
+	dave.stevenson@raspberrypi.com, linux-media@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] virtio-mmio: Remove virtqueue list from mmio device
-Date: Wed, 21 May 2025 17:03:46 +0530
-Message-Id: <3e56c6f74002987e22f364d883cbad177cd9ad9c.1747827066.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
+Subject: Re: [RFC PATCH v4] media: v4l2-common: Add a helper for obtaining
+ the clock producer
+Message-ID: <aC26RUhpevSVXudw@kekkonen.localdomain>
+References: <20250321130329.342236-1-mehdi.djait@linux.intel.com>
+ <f467e4a8-fcb2-4345-b8f7-7557c1a7552b@redhat.com>
+ <20250515084403.GQ23592@pendragon.ideasonboard.com>
+ <id2ikiio23ahslghpx56niwxrvaqdgmrgk3k647i3u27cptqgz@hwqrkdvljd3b>
+ <20250515124050.GA12492@pendragon.ideasonboard.com>
+ <2egx7hakxleahk5o3ngydrcgtlnpgpdj4kgcijfij2bmss7u4d@2yho4udpzjtm>
+ <aCZTi2odVXVZjJE8@svinhufvud>
+ <20250521105141.GF12514@pendragon.ideasonboard.com>
+ <aC2wzFD_bPgESZpR@kekkonen.localdomain>
+ <20250521110817.GA4116@pendragon.ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250521110817.GA4116@pendragon.ideasonboard.com>
 
-The MMIO transport implementation creates a list of virtqueues for a
-virtio device, while the same is already available in the struct
-virtio_device.
+On Wed, May 21, 2025 at 01:08:17PM +0200, Laurent Pinchart wrote:
+> On Wed, May 21, 2025 at 10:54:04AM +0000, Sakari Ailus wrote:
+> > Hi Laurent,
+> > 
+> > On Wed, May 21, 2025 at 12:51:41PM +0200, Laurent Pinchart wrote:
+> > > On Thu, May 15, 2025 at 11:50:19PM +0300, Sakari Ailus wrote:
+> > > > On Thu, May 15, 2025 at 03:51:33PM +0200, Mehdi Djait wrote:
+> > > > > On Thu, May 15, 2025 at 02:40:50PM +0200, Laurent Pinchart wrote:
+> > > > > > On Thu, May 15, 2025 at 11:17:37AM +0200, Mehdi Djait wrote:
+> > > > > > > On Thu, May 15, 2025 at 10:44:03AM +0200, Laurent Pinchart wrote:
+> > > > > > > > On Sat, May 10, 2025 at 04:21:09PM +0200, Hans de Goede wrote:
+> > > > > > > > > On 21-Mar-25 2:03 PM, Mehdi Djait wrote:
+> > > > > > > > > > Introduce a helper for v4l2 sensor drivers on both DT- and ACPI-based
+> > > > > > > > > > platforms to retrieve a reference to the clock producer from firmware.
+> > > > > > > > > > 
+> > > > > > > > > > This helper behaves the same as clk_get_optional() except where there is
+> > > > > > > > > > no clock producer like in ACPI-based platforms.
+> > > > > > > > > > 
+> > > > > > > > > > For ACPI-based platforms the function will read the "clock-frequency"
+> > > > > > > > > > ACPI _DSD property and register a fixed frequency clock with the frequency
+> > > > > > > > > > indicated in the property.
+> > > > > > > > > > 
+> > > > > > > > > > Signed-off-by: Mehdi Djait <mehdi.djait@linux.intel.com>
+> > > > > > > > > 
+> > > > > > > > > This certainly looks quite useful, thank you for working
+> > > > > > > > > on this.
+> > > > > > > > > 
+> > > > > > > > > Note on some IPU3 platforms where the clk is provided by
+> > > > > > > > > a clk-generator which is part of a special sensor-PMIC
+> > > > > > > > > the situation is a bit more complicated.
+> > > > > > > > > 
+> > > > > > > > > Basically if there is both a clk provider and a clock-frequency
+> > > > > > > > > property then the clock-frequency value should be set as freq
+> > > > > > > > > to the clk-provider, see:
+> > > > > > > > > 
+> > > > > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/media/i2c/ov8865.c#n3020
+> > > > > > > > > 
+> > > > > > > > > for an example of a driver which handles this case.
+> > > > > > > > 
+> > > > > > > > On a side note, the DT bindings for the OV8865 doesn't specify the
+> > > > > > > > clock-frequency property...
+> > > > > > > 
+> > > > > > > Is this wrong ?
+> > > > > > > 
+> > > > > > > The OV8865 driver was introduced for DT-based systems, where you will
+> > > > > > > get a reference to the "struct clk corresponding to the clock producer"
+> > > > > > > and then get the clock-rate/frequency with a call to:
+> > > > > > > 
+> > > > > > > 	rate = clk_get_rate(sensor->extclk);
+> > > > > > > 
+> > > > > > > The patch "73dcffeb2ff9 media: i2c: Support 19.2MHz input clock in ov8865"
+> > > > > > > adding support for clock-frequency came later to support ACPI-based
+> > > > > > > systems (IPU3 here)
+> > > > > > 
+> > > > > > I'd expect all device properties to be documented in DT bindings. Is
+> > > > > > that an incorrect assumption ?
+> > > > > > 
+> > > > > 
+> > > > > I am actually genuinely asking, is the clock-frequency a device property
+> > > > > of the ov8865 camera sensor or the clock source, which is a separate device ?
+> > > > 
+> > > > The sensor's.
+> > > >
+> > > > Could we document how this is supposed to work on DT and ACPI?
+> > > 
+> > > Yes please. Would you like to send a patch ? :-)
+> > 
+> > I'd add this to the helper's documentation. We'll work this out with Mehdi.
+> > 
+> > > > I think we should also select COMMON_CLK on ACPI systems for sensor
+> > > > drivers (in a separate patch maybe?), instead of relying on distributions
+> > > > enabling it.
+> > > > 
+> > > > > Example the imx258 with a fixed-clock, which has its own compatible
+> > > > > and DT bindings under bindings/clock/fixed-clock.yaml
+> > > > > 
+> > > > > So when adding support for ACPI-based systems, the DT bindings should
+> > > > > not be changed because getting the clock-frequency from the ACPI _DSD
+> > > > > property is a workaround only needed on ACPI-based systems.
+> > > > 
+> > > > I wouldn't say it's a workaround, but something that's only needed on ACPI
+> > > > systems.
+> > > 
+> > > Does that mean that the clock-frequency property should be deprecated on
+> > > DT-based systems, and not used in any new sensor bindings ?
+> > 
+> > I don't think we've added any "clock-frequency" properties in DT bindings
+> > for camera sensors since around 2020 or so.
+> 
+> That's good news, but I'm not sure it's well known or well documented.
+> 
+> On a side note, should we try to make the existing clock-frequency
+> properties optional (or even deprecate them and drop them from bindings)
+> when they are currently mandatory ? The following five YAML bindings
+> require the property:
+> 
+> - mipi-ccs.yaml
+> - ovti,ov02a10.yaml
+> - ovti,ov8856.yaml
+> - sony,imx214.yaml
+> - sony,imx290.yaml
+> 
+> The CCS driver treats the property as optional, the imx214 driver
+> doesn't use it at all, and the other drivers require it. There are other
+> drivers that require the property, in particular ACPI-only drivers.
 
-Don't create a duplicate list, and use the other one instead.
+Given the discussion in the context of the André's imx214 patches, I think
+we can drop them all, both in drivers and DT.
 
-While at it, fix the virtio_device_for_each_vq() macro to accept an
-argument like "&vm_dev->vdev" (which currently fails to build).
-
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
-I have tested this with a Xen/Qemu based setup to test guest to host virtio-i2c
-communication. Works fine, not sure why this code was added in the first place.
-
- drivers/virtio/virtio_mmio.c | 52 +++---------------------------------
- include/linux/virtio.h       |  2 +-
- 2 files changed, 4 insertions(+), 50 deletions(-)
-
-diff --git a/drivers/virtio/virtio_mmio.c b/drivers/virtio/virtio_mmio.c
-index 5d78c2d572ab..b152a1eca05a 100644
---- a/drivers/virtio/virtio_mmio.c
-+++ b/drivers/virtio/virtio_mmio.c
-@@ -65,7 +65,6 @@
- #include <linux/platform_device.h>
- #include <linux/pm.h>
- #include <linux/slab.h>
--#include <linux/spinlock.h>
- #include <linux/virtio.h>
- #include <linux/virtio_config.h>
- #include <uapi/linux/virtio_mmio.h>
-@@ -88,22 +87,8 @@ struct virtio_mmio_device {
- 
- 	void __iomem *base;
- 	unsigned long version;
--
--	/* a list of queues so we can dispatch IRQs */
--	spinlock_t lock;
--	struct list_head virtqueues;
--};
--
--struct virtio_mmio_vq_info {
--	/* the actual virtqueue */
--	struct virtqueue *vq;
--
--	/* the list node for the virtqueues list */
--	struct list_head node;
- };
- 
--
--
- /* Configuration interface */
- 
- static u64 vm_get_features(struct virtio_device *vdev)
-@@ -300,9 +285,8 @@ static bool vm_notify_with_data(struct virtqueue *vq)
- static irqreturn_t vm_interrupt(int irq, void *opaque)
- {
- 	struct virtio_mmio_device *vm_dev = opaque;
--	struct virtio_mmio_vq_info *info;
-+	struct virtqueue *vq;
- 	unsigned long status;
--	unsigned long flags;
- 	irqreturn_t ret = IRQ_NONE;
- 
- 	/* Read and acknowledge interrupts */
-@@ -315,10 +299,8 @@ static irqreturn_t vm_interrupt(int irq, void *opaque)
- 	}
- 
- 	if (likely(status & VIRTIO_MMIO_INT_VRING)) {
--		spin_lock_irqsave(&vm_dev->lock, flags);
--		list_for_each_entry(info, &vm_dev->virtqueues, node)
--			ret |= vring_interrupt(irq, info->vq);
--		spin_unlock_irqrestore(&vm_dev->lock, flags);
-+		virtio_device_for_each_vq(&vm_dev->vdev, vq)
-+			ret |= vring_interrupt(irq, vq);
- 	}
- 
- 	return ret;
-@@ -329,14 +311,8 @@ static irqreturn_t vm_interrupt(int irq, void *opaque)
- static void vm_del_vq(struct virtqueue *vq)
- {
- 	struct virtio_mmio_device *vm_dev = to_virtio_mmio_device(vq->vdev);
--	struct virtio_mmio_vq_info *info = vq->priv;
--	unsigned long flags;
- 	unsigned int index = vq->index;
- 
--	spin_lock_irqsave(&vm_dev->lock, flags);
--	list_del(&info->node);
--	spin_unlock_irqrestore(&vm_dev->lock, flags);
--
- 	/* Select and deactivate the queue */
- 	writel(index, vm_dev->base + VIRTIO_MMIO_QUEUE_SEL);
- 	if (vm_dev->version == 1) {
-@@ -347,8 +323,6 @@ static void vm_del_vq(struct virtqueue *vq)
- 	}
- 
- 	vring_del_virtqueue(vq);
--
--	kfree(info);
- }
- 
- static void vm_del_vqs(struct virtio_device *vdev)
-@@ -375,9 +349,7 @@ static struct virtqueue *vm_setup_vq(struct virtio_device *vdev, unsigned int in
- {
- 	struct virtio_mmio_device *vm_dev = to_virtio_mmio_device(vdev);
- 	bool (*notify)(struct virtqueue *vq);
--	struct virtio_mmio_vq_info *info;
- 	struct virtqueue *vq;
--	unsigned long flags;
- 	unsigned int num;
- 	int err;
- 
-@@ -399,13 +371,6 @@ static struct virtqueue *vm_setup_vq(struct virtio_device *vdev, unsigned int in
- 		goto error_available;
- 	}
- 
--	/* Allocate and fill out our active queue description */
--	info = kmalloc(sizeof(*info), GFP_KERNEL);
--	if (!info) {
--		err = -ENOMEM;
--		goto error_kmalloc;
--	}
--
- 	num = readl(vm_dev->base + VIRTIO_MMIO_QUEUE_NUM_MAX);
- 	if (num == 0) {
- 		err = -ENOENT;
-@@ -463,13 +428,6 @@ static struct virtqueue *vm_setup_vq(struct virtio_device *vdev, unsigned int in
- 		writel(1, vm_dev->base + VIRTIO_MMIO_QUEUE_READY);
- 	}
- 
--	vq->priv = info;
--	info->vq = vq;
--
--	spin_lock_irqsave(&vm_dev->lock, flags);
--	list_add(&info->node, &vm_dev->virtqueues);
--	spin_unlock_irqrestore(&vm_dev->lock, flags);
--
- 	return vq;
- 
- error_bad_pfn:
-@@ -481,8 +439,6 @@ static struct virtqueue *vm_setup_vq(struct virtio_device *vdev, unsigned int in
- 		writel(0, vm_dev->base + VIRTIO_MMIO_QUEUE_READY);
- 		WARN_ON(readl(vm_dev->base + VIRTIO_MMIO_QUEUE_READY));
- 	}
--	kfree(info);
--error_kmalloc:
- error_available:
- 	return ERR_PTR(err);
- }
-@@ -627,8 +583,6 @@ static int virtio_mmio_probe(struct platform_device *pdev)
- 	vm_dev->vdev.dev.release = virtio_mmio_release_dev;
- 	vm_dev->vdev.config = &virtio_mmio_config_ops;
- 	vm_dev->pdev = pdev;
--	INIT_LIST_HEAD(&vm_dev->virtqueues);
--	spin_lock_init(&vm_dev->lock);
- 
- 	vm_dev->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(vm_dev->base)) {
-diff --git a/include/linux/virtio.h b/include/linux/virtio.h
-index 64cb4b04be7a..8b745ce0cf5f 100644
---- a/include/linux/virtio.h
-+++ b/include/linux/virtio.h
-@@ -196,7 +196,7 @@ int virtio_device_reset_done(struct virtio_device *dev);
- size_t virtio_max_dma_size(const struct virtio_device *vdev);
- 
- #define virtio_device_for_each_vq(vdev, vq) \
--	list_for_each_entry(vq, &vdev->vqs, list)
-+	list_for_each_entry(vq, &(vdev)->vqs, list)
- 
- /**
-  * struct virtio_driver - operations for a virtio I/O driver
 -- 
-2.31.1.272.g89b43f80a514
-
+Sakari Ailus
