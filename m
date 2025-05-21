@@ -1,205 +1,267 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 021E02356B8;
-	Wed, 21 May 2025 13:20:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A466627A47F
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 13:22:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747833655; cv=none; b=r+PLZ3oQ5Giscmv7GhTbePYO49JpU4cgzmYo1Y7G+DeShkLLqcDxe4F3Lz5KJa4SZyAsJjyBWAQN2Flgzkm5JColRZGX0gU1OsT8v8NC05NL3nQjcXv/Mtzqc3bC4j/DuCxoNFq47u7ZUmpqlo+LQF93mLQR94KsPyBxDA5DIXs=
+	t=1747833727; cv=none; b=GacNGIInnvPRg+l/jUuabllf9ynq2hw/uSEgNmI5wy7aOKC9BwVF29/+erD3BOYPO/kGr3RbvzV1upB1w3VZtji/aHb9RpALjQNgI40VbZ9dMMkw0WX7rYMXbOc6+BXgwPyDbZrn+7JDfvvV8+La43TBeeoGf9wOs2Yt8ceLwLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747833655; c=relaxed/simple;
-	bh=QV4yK2hdnVnPbG4+FrwDEmlzNcQ54yHXdjN0E1nJArg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nBvWEjbzSD3ZlezFCjtqHeiKy47moaKeAKbMBydj4j4cfhD9F5VgQi2Ot1b5q9l8JTIcqr0e3/N6Cso9DdR5CReN14c7zcLTNIcyqc+bnv5uao1nRCJZ6ASZI/4d7WMGYV0Zys1UfHlPdGFPWWbpn3jVcu+OQex5TYNpW03hFEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mz1xdeY/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747833727; c=relaxed/simple;
+	bh=MZn66zt6b+O/DmEtYUoFeKJJpojbXHf5RpVJ5ngWf5Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TSCQfjMhjGmqrxQUWti++Ja3Js/lNrocULWDYiszhRHVDYe2l3yY7ApnUxkFej1an+Q2chQeHpJT5fCcDdSzNM26S7Ctth5Pqh9zeP+Kf5fV18qhKAVsDz5n4T4ct44MORmYvid6rapJJe6X7eJMOxt5RWfJltrqCwXRIcFSPE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=OyY4eEcE; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mz1xdeY/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24134C4CEE4;
-	Wed, 21 May 2025 13:20:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747833653;
-	bh=QV4yK2hdnVnPbG4+FrwDEmlzNcQ54yHXdjN0E1nJArg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mz1xdeY/QPHCQbpqW9YLMXj3bxMFPssdJH0C0K4GT/BUMmGTR93G0dgcis8DMBozs
-	 YP/b8B2bWkXH60z94+TQqwmsGm8EGUJWwqHuZAkdGKzGvKAyjteKhGt6wRYNV8FO1e
-	 D9jHd2m+QL7iRIVq5PlMru57TVJOvDsQWpaWxpfJsN1DOMBImxx1XNCjWyDCJZW7ZC
-	 qXtl8M49PS/HmPEyyZa+ak/8H+1qaASVYLxEAcvWa2SuSxP3hdX6RuCgCtz/JlU0cs
-	 qePwY7H6A8GENPHxze8c1fs3U32wvtz+q79I1SiiV7eXXKYtTdbgXg6CQQr0uIZt83
-	 S8G/9xtNsJtPQ==
-Date: Wed, 21 May 2025 10:20:50 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Gautam Menghani <gautam@linux.ibm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, maddy@linux.ibm.com
-Subject: Re: [PATCH v3 4/7] perf python: Add support for perf_counts_values
- to return counter data
-Message-ID: <aC3TMl2MJL1_BASE@x1>
-References: <20250519195148.1708988-1-irogers@google.com>
- <20250519195148.1708988-5-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="OyY4eEcE"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-acacb8743a7so1142067766b.1
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 06:22:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1747833724; x=1748438524; darn=vger.kernel.org;
+        h=in-reply-to:autocrypt:from:content-language:references:cc:to
+         :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=MZn66zt6b+O/DmEtYUoFeKJJpojbXHf5RpVJ5ngWf5Q=;
+        b=OyY4eEcEuCeJJpkWmE1jqokj4z5CrA7mjO4Q1KyLUxPyhKeFAQ5XSRp4Y6mt+wEyCP
+         lJDDEvKdIDqN+pYHrL1ZV34EWSPTVWkwvjgJN97VTXIOwHynTffK1TfD2gA0I8DMKxIo
+         +qy0l1O4VEPCCUfPDSkpMsZf21ve3JL5/r1iTpZI04oJSU9sCV1IKK0YmS6F3UpTYZqr
+         gsxhW0192rwhRrDegKLu8fiXsm+rwus2kClWJLL2WiSpGV4tfOU/0jFIyFna6B1mb9MM
+         6KZW/sHsD3fSlPPYMD/9oVQKBAQrfR51MEK7TSBRjLxHjZ2nqw2TBUPGP3w5lxwJtfOO
+         vKUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747833724; x=1748438524;
+        h=in-reply-to:autocrypt:from:content-language:references:cc:to
+         :subject:user-agent:mime-version:date:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MZn66zt6b+O/DmEtYUoFeKJJpojbXHf5RpVJ5ngWf5Q=;
+        b=CXwt6QxqZHMvuvyAjFGBV286hgnUYpHoYLyJT9zh4V6SwUtvkLyuVwRoXYM8z3ptaz
+         vl5JGE6Eiq8zWK8R7biOaj0HbfwKS9zpadkXh8Dnj3G1VFTFqN9HTEPzyKQ0McBOzZC/
+         8idr6pqXIMWqyGfz9822rU22HpAPzsm39akX4MAo6rUwRkZ2oimOtNAyazYZNGsLkUPC
+         xX0o/A8HnHRbwjZxx4ne4kOj+cvMg7Xru3ug2atYpBF5iyQXcDi2sP6nO4kdsLGYRE/p
+         k9e85WUJm+H4DOFf0OOh3BX/OKELKb6mf09y7Ui9KXr4ZG20LpHVh2x6yLxIB6k8k43M
+         njSg==
+X-Forwarded-Encrypted: i=1; AJvYcCXBQgQQ9PZWSTerUqs9FQLO9rZVOOm46Pgbxuz1XMW9NbJJS94FBz5Bl6gmR9acJta0n6AUEMHKmIyDoas=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzj83Dp2LbpjPhfgbEb0In6OGng2LmJduD62ZOZHla9IjD+9C7T
+	UBfxoen1ejXoPyq0LakZIQ+UfMn+m/VKs20Kksrk4HfNKjhyT+9TOKEBwFaSFiX3GR/9Cg+MUFU
+	xVs09
+X-Gm-Gg: ASbGncvkU6vT9CnT+ayJxhMSagWHudfDZdpagwhmetlOMETdhGVy4DMI6Pi9c7PFt4F
+	k899l0e7MiA/7IkYF4NmcLrS/d6l3d6e7VY6eZPt7lUPTaz79l0Vfc4GlohpQqVVoSk0K5PVUzP
+	IUGtPFSxob1Pos9l8UXWlsEBiSaENniXtHnKq/dPubNzjCr0i3gidLqbq3kFZJNslnFIx6J+y+g
+	/BnKw4h1uvW3ONh+kha0oQ5mK2umT+j7u/ix3V2pFEwCVPUyOQ2NnEG/pgJ7Ft/d0X9tHIq+B4w
+	WQSroZiE5rKMWnxPfm7MvsnTcz7fDhunYCsG0MCIoJ8MXZQ08Is09nnPH5mE9/CjIuolRsCJ
+X-Google-Smtp-Source: AGHT+IHt+dgduV/hBym4KkA1LBbxXWQM2ER2oN53h/LH6idBpPbFln4IbInqwE+1bELqjceK1zV7XA==
+X-Received: by 2002:a17:907:60d2:b0:ad5:54ec:6b3c with SMTP id a640c23a62f3a-ad554ec711bmr1419813766b.27.1747833723850;
+        Wed, 21 May 2025 06:22:03 -0700 (PDT)
+Received: from [192.168.62.38] (server.hotelpassage.eu. [88.146.207.194])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d278adcsm893295666b.84.2025.05.21.06.22.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 May 2025 06:22:03 -0700 (PDT)
+Message-ID: <c7064b0c-5a86-4138-b8d4-a90bd7e6751c@suse.com>
+Date: Wed, 21 May 2025 15:22:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250519195148.1708988-5-irogers@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 08/12] sched/wait: Drop WQ_FLAG_EXCLUSIVE from
+ add_wait_queue_priority()
+To: Sean Christopherson <seanjc@google.com>,
+ Peter Zijlstra <peterz@infradead.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Ingo Molnar <mingo@redhat.com>,
+ Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>, Marc Zyngier <maz@kernel.org>,
+ Oliver Upton <oliver.upton@linux.dev>, kvm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ kvmarm@lists.linux.dev, K Prateek Nayak <kprateek.nayak@amd.com>,
+ David Matlack <dmatlack@google.com>,
+ Stefano Stabellini <sstabellini@kernel.org>,
+ Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+References: <20250519185514.2678456-1-seanjc@google.com>
+ <20250519185514.2678456-9-seanjc@google.com>
+ <20250520191816.GJ16434@noisy.programming.kicks-ass.net>
+ <aC0AEJX0FIMl9lDy@google.com>
+Content-Language: en-US
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Autocrypt: addr=jgross@suse.com; keydata=
+ xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
+ ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
+ dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
+ NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
+ XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
+ AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
+ CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
+ mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
+ G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
+ kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
+ Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
+ RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
+ vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
+ sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
+ aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
+ w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
+ auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
+ 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
+ fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
+ HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
+ QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
+ ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
+In-Reply-To: <aC0AEJX0FIMl9lDy@google.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------idgL64wWd0XJbGhVIRhfCOsT"
 
-On Mon, May 19, 2025 at 12:51:41PM -0700, Ian Rogers wrote:
-> From: Gautam Menghani <gautam@linux.ibm.com>
-> 
-> Add support for perf_counts_values struct to enable the python
-> bindings to read and return the counter data.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------idgL64wWd0XJbGhVIRhfCOsT
+Content-Type: multipart/mixed; boundary="------------DjGcuZBWqEwJAq0pbLlY034h";
+ protected-headers="v1"
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+To: Sean Christopherson <seanjc@google.com>,
+ Peter Zijlstra <peterz@infradead.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Ingo Molnar <mingo@redhat.com>,
+ Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>, Marc Zyngier <maz@kernel.org>,
+ Oliver Upton <oliver.upton@linux.dev>, kvm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ kvmarm@lists.linux.dev, K Prateek Nayak <kprateek.nayak@amd.com>,
+ David Matlack <dmatlack@google.com>,
+ Stefano Stabellini <sstabellini@kernel.org>,
+ Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+Message-ID: <c7064b0c-5a86-4138-b8d4-a90bd7e6751c@suse.com>
+Subject: Re: [PATCH v2 08/12] sched/wait: Drop WQ_FLAG_EXCLUSIVE from
+ add_wait_queue_priority()
+References: <20250519185514.2678456-1-seanjc@google.com>
+ <20250519185514.2678456-9-seanjc@google.com>
+ <20250520191816.GJ16434@noisy.programming.kicks-ass.net>
+ <aC0AEJX0FIMl9lDy@google.com>
+In-Reply-To: <aC0AEJX0FIMl9lDy@google.com>
 
-This (and another one in this series) are coming from Ian, that didn't
-modify them, so we need a Signed-off-by: Ian, as per:
+--------------DjGcuZBWqEwJAq0pbLlY034h
+Content-Type: multipart/mixed; boundary="------------am4Ts5qW4sbdeEquBHmBBqW7"
 
-Documentation/process/submitting-patches.rst
+--------------am4Ts5qW4sbdeEquBHmBBqW7
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
----
-Any further SoBs (Signed-off-by:'s) following the author's SoB are from
-people handling and transporting the patch, but were not involved in its
-development. SoB chains should reflect the **real** route a patch took
-as it was propagated to the maintainers and ultimately to Linus, with
-the first SoB entry signalling primary authorship of a single author.
----
+T24gMjEuMDUuMjUgMDA6MjAsIFNlYW4gQ2hyaXN0b3BoZXJzb24gd3JvdGU6DQo+IE9uIFR1
+ZSwgTWF5IDIwLCAyMDI1LCBQZXRlciBaaWpsc3RyYSB3cm90ZToNCj4+IE9uIE1vbiwgTWF5
+IDE5LCAyMDI1IGF0IDExOjU1OjEwQU0gLTA3MDAsIFNlYW4gQ2hyaXN0b3BoZXJzb24gd3Jv
+dGU6DQo+Pj4gRHJvcCB0aGUgc2V0dGluZyBvZiBXUV9GTEFHX0VYQ0xVU0lWRSBmcm9tIGFk
+ZF93YWl0X3F1ZXVlX3ByaW9yaXR5KCkgdG8NCj4+PiBkaWZmZXJlbnRpYXRlIGl0IGZyb20g
+YWRkX3dhaXRfcXVldWVfcHJpb3JpdHlfZXhjbHVzaXZlKCkuICBUaGUgb25lIGFuZA0KPj4+
+IG9ubHkgdXNlciBhZGRfd2FpdF9xdWV1ZV9wcmlvcml0eSgpLCBYZW4gcHJpdmNtZCdzIGly
+cWZkX3dha2V1cCgpLA0KPj4+IHVuY29uZGl0aW9uYWxseSByZXR1cm5zICcwJywgaS5lLiBk
+b2Vzbid0IGFjdHVhbGx5IG9wZXJhdGUgaW4gZXhjbHVzaXZlDQo+Pj4gbW9kZS4NCj4+DQo+
+PiBJIGZpbmQ6DQo+Pg0KPj4gZHJpdmVycy9odi9tc2h2X2V2ZW50ZmQuYzogICAgICBhZGRf
+d2FpdF9xdWV1ZV9wcmlvcml0eSh3cWgsICZpcnFmZC0+aXJxZmRfd2FpdCk7DQo+PiBkcml2
+ZXJzL3hlbi9wcml2Y21kLmM6ICBhZGRfd2FpdF9xdWV1ZV9wcmlvcml0eSh3cWgsICZraXJx
+ZmQtPndhaXQpOw0KPj4NCj4+IEkgbWVhbiwgaXQgbWlnaHQgc3RpbGwgYmUgdHJ1ZSBhbmQg
+YWxsLCBidXQgaHlwZXJ2IHNlZW1zIHRvIGFsc28gdXNlDQo+PiB0aGlzIG5vdy4NCj4gDQo+
+IE9oIEZGUywgYW5vdGhlciAiaGVhdmlseSBpbnNwaXJlZCBieSBLVk0iLiAgSSBzaG91bGQg
+aGF2ZSBicmliZWQgc29tZW9uZSB0byB0YWtlDQo+IHRoaXMgc2VyaWVzIHdoZW4gSSBoYWQg
+dGhlIGNoYW5jZS4gICpzaWdoKg0KPiANCj4gVW5mb3J0dW5hdGVseSwgdGhlIEh5cGVyLVYg
+Y29kZSBkb2VzIGFjdHVhbGx5IG9wZXJhdGUgaW4gZXhjbHVzaXZlIG1vZGUuICBVbmxlc3MN
+Cj4geW91IGhhdmUgYSBiZXR0ZXIgaWRlYSwgSSdsbCB0d2VhayB0aGUgc2VyaWVzIHRvOg0K
+PiANCj4gICAgMS4gRHJvcCBXUV9GTEFHX0VYQ0xVU0lWRSBmcm9tIGFkZF93YWl0X3F1ZXVl
+X3ByaW9yaXR5KCkgYW5kIGhhdmUgdGhlIGNhbGxlcnMNCj4gICAgICAgZXhwbGljaXRseSBz
+ZXQgdGhlIGZsYWcsDQo+ICAgIDIuIEFkZCBhIHBhdGNoIHRvIGRyb3AgV1FfRkxBR19FWENM
+VVNJVkUgZnJvbSBYZW4gcHJpdmNtZCBlbnRpcmVseS4NCj4gICAgMy4gSW50cm9kdWNlIGFk
+ZF93YWl0X3F1ZXVlX3ByaW9yaXR5X2V4Y2x1c2l2ZSgpIGFuZCBzd2l0Y2ggS1ZNIHRvIHVz
+ZSBpdC4NCj4gDQo+IFRoYXQgaGFzIGFuIGFkZGVkIGJvbnVzIG9mIGludHJvZHVjaW5nIHRo
+ZSBYZW4gY2hhbmdlIGluIGEgZGVkaWNhdGVkIHBhdGNoLCBpLmUuDQo+IGlzIHByb2JhYmx5
+IGEgc2VxdWVuY2UgYW55d2F5cy4NCg0KV29ya3MgZm9yIG1lLg0KDQoNCkp1ZXJnZW4NCg0K
+PiANCj4gQWx0ZXJuYXRpdmVseSwgSSBjb3VsZCByZXdyaXRlIHRoZSBIeXBlci1WIGNvZGUg
+YSBsYSB0aGUgS1ZNIGNoYW5nZXMsIGJ1dCBJJ20gbm90DQo+IGZlZWxpbmcgdmVyeSBjaGFy
+aXRhYmxlIGF0IHRoZSBtb21lbnQgKHRoZSBjb21wbGV0ZSBsYWNrIG9mIGRvY3VtZW50YXRp
+b24gZm9yDQo+IHRoZWlyIGlvY3RsIGRvZXNuJ3QgaGVscCkuDQoNCg==
+--------------am4Ts5qW4sbdeEquBHmBBqW7
+Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
 
-I'm adding them to my local branch, please ack this,
+-----BEGIN PGP PUBLIC KEY BLOCK-----
 
-Thanks,
+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
+kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
+=3DeeAB
+-----END PGP PUBLIC KEY BLOCK-----
 
-- Arnaldo
- 
-> Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
-> ---
->  tools/perf/util/python.c | 92 +++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 91 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> index ead3afd2d996..1cbddfe77c7c 100644
-> --- a/tools/perf/util/python.c
-> +++ b/tools/perf/util/python.c
-> @@ -626,6 +626,92 @@ static int pyrf_thread_map__setup_types(void)
->  	return PyType_Ready(&pyrf_thread_map__type);
->  }
->  
-> +struct pyrf_counts_values {
-> +	PyObject_HEAD
-> +
-> +	struct perf_counts_values values;
-> +};
-> +
-> +static const char pyrf_counts_values__doc[] = PyDoc_STR("perf counts values object.");
-> +
-> +static void pyrf_counts_values__delete(struct pyrf_counts_values *pcounts_values)
-> +{
-> +	Py_TYPE(pcounts_values)->tp_free((PyObject *)pcounts_values);
-> +}
-> +
-> +#define counts_values_member_def(member, ptype, help) \
-> +	{ #member, ptype, \
-> +	  offsetof(struct pyrf_counts_values, values.member), \
-> +	  0, help }
-> +
-> +static PyMemberDef pyrf_counts_values_members[] = {
-> +	counts_values_member_def(val, Py_T_ULONG, "Value of event"),
-> +	counts_values_member_def(ena, Py_T_ULONG, "Time for which enabled"),
-> +	counts_values_member_def(run, Py_T_ULONG, "Time for which running"),
-> +	counts_values_member_def(id, Py_T_ULONG, "Unique ID for an event"),
-> +	counts_values_member_def(lost, Py_T_ULONG, "Num of lost samples"),
-> +	{NULL}
-> +};
-> +
-> +static PyObject *pyrf_counts_values_get_values(struct pyrf_counts_values *self, void *closure)
-> +{
-> +	PyObject *vals = PyList_New(5);
-> +
-> +	if (!vals)
-> +		return NULL;
-> +	for (int i = 0; i < 5; i++)
-> +		PyList_SetItem(vals, i, PyLong_FromLong(self->values.values[i]));
-> +
-> +	return vals;
-> +}
-> +
-> +static int pyrf_counts_values_set_values(struct pyrf_counts_values *self, PyObject *list,
-> +					 void *closure)
-> +{
-> +	Py_ssize_t size;
-> +	PyObject *item = NULL;
-> +
-> +	if (!PyList_Check(list)) {
-> +		PyErr_SetString(PyExc_TypeError, "Value assigned must be a list");
-> +		return -1;
-> +	}
-> +
-> +	size = PyList_Size(list);
-> +	for (Py_ssize_t i = 0; i < size; i++) {
-> +		item = PyList_GetItem(list, i);
-> +		if (!PyLong_Check(item)) {
-> +			PyErr_SetString(PyExc_TypeError, "List members should be numbers");
-> +			return -1;
-> +		}
-> +		self->values.values[i] = PyLong_AsLong(item);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static PyGetSetDef pyrf_counts_values_getset[] = {
-> +	{"values", (getter)pyrf_counts_values_get_values, (setter)pyrf_counts_values_set_values,
-> +		"Name field", NULL},
-> +	{NULL}
-> +};
-> +
-> +static PyTypeObject pyrf_counts_values__type = {
-> +	PyVarObject_HEAD_INIT(NULL, 0)
-> +	.tp_name	= "perf.counts_values",
-> +	.tp_basicsize	= sizeof(struct pyrf_counts_values),
-> +	.tp_dealloc	= (destructor)pyrf_counts_values__delete,
-> +	.tp_flags	= Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,
-> +	.tp_doc		= pyrf_counts_values__doc,
-> +	.tp_members	= pyrf_counts_values_members,
-> +	.tp_getset	= pyrf_counts_values_getset,
-> +};
-> +
-> +static int pyrf_counts_values__setup_types(void)
-> +{
-> +	pyrf_counts_values__type.tp_new = PyType_GenericNew;
-> +	return PyType_Ready(&pyrf_counts_values__type);
-> +}
-> +
->  struct pyrf_evsel {
->  	PyObject_HEAD
->  
-> @@ -1475,7 +1561,8 @@ PyMODINIT_FUNC PyInit_perf(void)
->  	    pyrf_evlist__setup_types() < 0 ||
->  	    pyrf_evsel__setup_types() < 0 ||
->  	    pyrf_thread_map__setup_types() < 0 ||
-> -	    pyrf_cpu_map__setup_types() < 0)
-> +	    pyrf_cpu_map__setup_types() < 0 ||
-> +	    pyrf_counts_values__setup_types() < 0)
->  		return module;
->  
->  	/* The page_size is placed in util object. */
-> @@ -1520,6 +1607,9 @@ PyMODINIT_FUNC PyInit_perf(void)
->  	Py_INCREF(&pyrf_cpu_map__type);
->  	PyModule_AddObject(module, "cpu_map", (PyObject*)&pyrf_cpu_map__type);
->  
-> +	Py_INCREF(&pyrf_counts_values__type);
-> +	PyModule_AddObject(module, "counts_values", (PyObject *)&pyrf_counts_values__type);
-> +
->  	dict = PyModule_GetDict(module);
->  	if (dict == NULL)
->  		goto error;
-> -- 
-> 2.49.0.1101.gccaa498523-goog
+--------------am4Ts5qW4sbdeEquBHmBBqW7--
+
+--------------DjGcuZBWqEwJAq0pbLlY034h--
+
+--------------idgL64wWd0XJbGhVIRhfCOsT
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmgt03oFAwAAAAAACgkQsN6d1ii/Ey81
+SQf/WrMJHiQA+0WvcB1rsWU19kFdz1C19eu6rnXWCIB2DM+jaYcem+Q63W3ya0OD2yb3bO+7LMBE
+ojSbEBlZjAAB3nGa5GoQ/yC+BXhKMPRpWc/hOFFjV4AqbT901xzIW0WnCr2xkwpwEr9WXy+VHl4R
+cfTQJwPuBRj0ELt7dOwh5P+DqplenzjFFkmTMqQvNVwT6uR1PHaLWvsUBbotVczyDwrpJHb2B9Kd
+N6M2V2djjnZpK/7zLp9zEwvlAB3sLNZ91OnkmS2jYlHEi6PJFaRuNH77+vpamVMmMqUxZm7d//GN
++BZ21KN8L2ERiecqjgehAu6Lc6D0OWuIiY3rHDmJ9w==
+=4n1T
+-----END PGP SIGNATURE-----
+
+--------------idgL64wWd0XJbGhVIRhfCOsT--
