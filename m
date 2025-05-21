@@ -1,112 +1,276 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD04B2673B7;
-	Wed, 21 May 2025 12:48:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 820B0267B10
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 12:48:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747831713; cv=none; b=IUl9KmHpXI2Qwn33mkwGvKAY2Fdjf/jgyWOuiCEEG1MvIUeg2bR7hMApTm1mIYnwdJp49B2bNbzvJWtp5zXA1cMipXUDjT3VwnyIda1ncIKHn2ywIFHBV9/Ol202pS/p/E8TpLLt8oTTbab2+F7VvkQ5AhmgfgnypS8BU7S3gso=
+	t=1747831726; cv=none; b=ipX93L399zXVv6YelPjuNSbQ7XOoC3berfF5MTLlE2WOnYzrHbUBBtvY25bIgjOUlzOwLSCadm5zBPWhxiY4aoAodoMouedJHDaIXOLSWqSjyB+4hrUHZnGEP81Pne7tbaoAGoqNUNMdKGB6lPGvJ9BiSCpQqG7ZkGANeyW82u0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747831713; c=relaxed/simple;
-	bh=6dpl5+hKXsjxHXJtgK+FmCRGvqugBoM7cVl8IOfANAo=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Content-Type; b=tqpDFRx8DpFsrSZPqC+yzdb8EHk+4VP/GwxpGnaG6zqTe2xe0+yeG5anzJKaZRCU3Pjgq5UeZBUC3mFV/r0OrLn11tT4B618ddvYBOlhLEqQyUpUc2kiHnXY7cCG2noke2EZPiBHpHlgdv3r7+e5TQoLZv7uQSMv5WrXr7QFhp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dOZgprLV; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747831726; c=relaxed/simple;
+	bh=eiukvXR/ytNIZoerhQAQuvgv7H3SOBv2zF1m1EwSLsA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RW+IwbsIAOW3nOycq5LRlcKH4w9qXYnnePBQGn5WVgqDNXijU91KUoRuF7fdxWTXckNeswuoBNeNAmXKzyRxjQWc6CUrYKUylgcUkf/JYa35zbwAtq4552Ti20Shnuc41ouJG03HRQaEWiFepfp4R3rktZt8Cm7vGht6a9ELQjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=imivBgXw; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dOZgprLV"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-30f0d8628c8so2297665a91.0;
-        Wed, 21 May 2025 05:48:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747831711; x=1748436511; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:from:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/OlELLQdFDyxnorv2U2UyUYcCRMoCws2HjAojfez5Us=;
-        b=dOZgprLVPpeVrxVno988z0M6OqReXamXePP/bv/nTfLwKRINAfW2NQ1MiE9+kOf4bs
-         cfr5/tQtIi8XcP3uyBtGu26x47iqDwHS+AEi953IeVBNgUzLUdqGy8FjINre2UYk+/Oj
-         0CVnGVwD3sJYwCoKBYLPm6qAGcP5r7ZJ5qVndtl78mSwXZchrTIuwjc5Og9/3inOraFp
-         hD/Ja3FC63zD4OUIq91GSBhx/YImf42j+GL6sTmsomPsr0abl96k3y6qqT4GosEnA1eS
-         mVBUh97ZxQEHhu1QklPjTjx6nwuaPH/stj5V5W/KbuDW+hVk+sVruVJY3k2MkUkTfgBb
-         qV6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747831711; x=1748436511;
-        h=content-transfer-encoding:to:subject:from:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=/OlELLQdFDyxnorv2U2UyUYcCRMoCws2HjAojfez5Us=;
-        b=Ok/LR6pGtX2Q0eVv3c5jn8/f36+ZiElk+SDGO2oVzZOrouIyOtfw1dmHZjyP10dh5i
-         NFl0452vltYMwP1UwK1PU7c0iC7x2iR6QrjsIJiFPO73E80SbHrcVjJKwIx+HW+eYI/E
-         6/7GXl69emFPB6XsFzcUEE8LyzooAwS+gGCh7epKnkAK4Zs5ZA1tiEzHkOUrwKIIH79S
-         iYDBCTVCc8OnAX812VWy1TihqMavSMzd5hhyI3cnyaw0fL/7h9AiMKf3MSWS1+Tnb1e/
-         /Wkd0gQYsGJ2Pm7kZNAg7kUrIEiRGFM4Yovyu3QieZA+tCG6gkgoZ17Lvms4zJ4T+S2j
-         mSXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWD6z1hWuP9MZKrpRa/XZuz05qONyIXhDEE3uUNhNsmqpkXCBMytVLK4/1+1wwKvn8sXCICabjEoLmOIwA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyah86/RRsWuiswyF+Ta3aACyjWfCykNpj5awkzmILDNsl6xi+c
-	CjPxqMQ5ibX75poo6sG7fAG54Y8kj6Ws9qrTZV4Ckfezl2hnUWcDGxLb24GZhswb
-X-Gm-Gg: ASbGncsfw3rVrnlWnMDQABxPO08G74Dy0XCqVufsOIGXX4wQy797E9IypCg89qFZOOr
-	0zIY7JS9jUXIqe0rJDWw5QfcrSCdzPHfTSmukyvYQam3zSnGo/lyY3K0OZI4IRiMDRphOskf9oT
-	a4y6vdj1TQICAUQmA+QFp6qXONHrA7f1yjG5Ca0OehKyUffPG80jXeyWv/ZxisicjG1x8Pko1gE
-	FDF/lx2Gc6457OXTecq2eg7GZOICou2rM2mOy8wt+JJ1+ZBtCnf3yA3o3XnodvtINyflwac0toZ
-	/kGa0w2pfeI5ZBJaH3QbxVgMMJCKe+GLR6f7Qyoav3xKmUgAxVWnubQcLltfoBQi1IHucm8bTn+
-	4PxCHL+7cFTodupM3i32NPublJajf+Rp4/5oz2w==
-X-Google-Smtp-Source: AGHT+IHLCkETVF9IpoaNAmpLh2aR9pR6si9XDzVi377NoVdogivwd38lRxIY5SMd0CmaMqVs7afjzA==
-X-Received: by 2002:a17:90a:e710:b0:306:b593:455e with SMTP id 98e67ed59e1d1-30e7dc1f4a8mr33747981a91.1.1747831710723;
-        Wed, 21 May 2025 05:48:30 -0700 (PDT)
-Received: from [192.168.11.2] (FL1-119-244-79-106.tky.mesh.ad.jp. [119.244.79.106])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f365e5b91sm3543183a91.39.2025.05.21.05.48.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 May 2025 05:48:30 -0700 (PDT)
-Message-ID: <3e8f343f-7d66-4f7a-9f08-3910623e322f@gmail.com>
-Date: Wed, 21 May 2025 21:48:27 +0900
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="imivBgXw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747831723;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=c8a8Yw3t1BooLuhPEHoxGkD+ZXKtgxmE4Tce93zXGi8=;
+	b=imivBgXwtxcD0WekvZG2hqUPy+iLfLkcqNC5waMQPeg+w8S6PsXvl9wwCvfKjaeVVLROsl
+	ogZm5v1cmy3Zk7Ww9UFrPERwBGApai5G+HJ0ZTuZ1qT3qbvMSuiMDfdh+XdvMjseOwlfVX
+	KeT7xqpdtZM/v+Q0d3kwLHl4A9ItdJI=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-332-i8QQFZfXOFGSelbQnPgC2A-1; Wed,
+ 21 May 2025 08:48:40 -0400
+X-MC-Unique: i8QQFZfXOFGSelbQnPgC2A-1
+X-Mimecast-MFC-AGG-ID: i8QQFZfXOFGSelbQnPgC2A_1747831718
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AF1901800877;
+	Wed, 21 May 2025 12:48:38 +0000 (UTC)
+Received: from fedora.. (unknown [10.44.22.27])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 17D9219560AB;
+	Wed, 21 May 2025 12:48:35 +0000 (UTC)
+From: Gabriele Paoloni <gpaoloni@redhat.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: Gabriele Paoloni <gpaoloni@redhat.com>
+Subject: [RFC PATCH] tracing: add kernel documentation for trace_array_set_clr_event, trace_set_clr_event and supporting functions
+Date: Wed, 21 May 2025 14:48:29 +0200
+Message-ID: <20250521124829.123720-1-gpaoloni@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-From: Daisuke Matsuda <dskmtsd@gmail.com>
-Subject: [bug report] [rdma] RXE ODP test hangs with new DMA map API
-To: linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
- leon@kernel.org, jgg@ziepe.ca, zyjzyj2000@gmail.com
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-Hi,
+As per Linux Kernel documentation guidelines
+(https://docs.kernel.org/doc-guide/kernel-doc.html),
+<<Every function that is exported to loadable modules using
+EXPORT_SYMBOL or EXPORT_SYMBOL_GPL should have a kernel-doc
+comment>>; hence this patch adds detailed kernel-doc headers
+documentation for trace_array_set_clr_event, trace_set_clr_event
+and the main functions in the respective call-trees that support
+their functionalities.
+For each of the documented functions, as part of the extensive
+description, a set of "Function's expectations" are described in
+a way that facilitate:
+1) evaluating the current code and any proposed modification
+   to behave as described;
+2) writing kernel tests to verify the code to behave as described.
 
-After these two patches are merged to the for-next tree, RXE ODP test always hangs:
-   RDMA/core: Convert UMEM ODP DMA mapping to caching IOVA and page linkage
-   RDMA/umem: Store ODP access mask information in PFN
-cf. https://lore.kernel.org/linux-rdma/cover.1745831017.git.leon@kernel.org/
+Signed-off-by: Gabriele Paoloni <gpaoloni@redhat.com>
+---
+While working on the documentation of __ftrace_event_enable_disable,
+I realized that the EVENT_FILE_FL_SOFT_MODE flag is mainly used
+internally in the function itself, whereas it is EVENT_FILE_FL_SOFT_DISABLED
+that prevents tracing the event.
+In this perspective I see that, starting from the initial state, if for
+a specific event we invoke __ftrace_event_enable_disable with enable=1
+and soft_disable=0, the EVENT_FILE_FL_ENABLED is set whereas
+EVENT_FILE_FL_SOFT_MODE and EVENT_FILE_FL_SOFT_DISABLED are not.
+Now if for that event we invoke __ftrace_event_enable_disable again with
+enable=1 and soft_disable=1, EVENT_FILE_FL_ENABLED stays set,
+EVENT_FILE_FL_SOFT_MODE is set, while EVENT_FILE_FL_SOFT_DISABLED
+remains not set. Instead if from the initial state we directly invoke
+__ftrace_event_enable_disable with enable=1 and soft_disable=1, all
+the status flag mentioned above are all set (EVENT_FILE_FL_ENABLED,
+EVENT_FILE_FL_SOFT_MODE and EVENT_FILE_FL_SOFT_DISABLED).
+Now I wonder if:
+a) such a behaviour is consistent with the code expectation;
+b) if it would make sense to have a standard enable invocation followed
+   by a soft enable invocation to end up in the same state as a single
+   invocation of soft enable;
+c) eventually if we could get rid of the soft_mode flag and simplify
+   the code to only use the soft_disabled flag.
 
-Here is the console log:
-```
-$ ./build/bin/run_tests.py -v -k odp
-test_odp_dc_traffic (tests.test_mlx5_dc.DCTest.test_odp_dc_traffic) ... skipped 'Can not run the test over non MLX5 device'
-test_devx_rc_qp_odp_traffic (tests.test_mlx5_devx.Mlx5DevxRcTrafficTest.test_devx_rc_qp_odp_traffic) ... skipped 'Can not run the test over non MLX5 device'
-test_odp_mkey_list_new_api (tests.test_mlx5_mkey.Mlx5MkeyTest.test_odp_mkey_list_new_api)
-Create Mkeys above ODP MR, configure it with memory layout using the new API and ... skipped 'Could not open mlx5 context (This is not an MLX5 device)'
-test_odp_async_prefetch_rc_traffic (tests.test_odp.OdpTestCase.test_odp_async_prefetch_rc_traffic) ...
+Probably there are aspects that I am missing and I really appreciate
+your inputs/views
 
+Thanks
+Gab
+---
+ kernel/trace/trace_events.c | 125 +++++++++++++++++++++++++++++++-----
+ 1 file changed, 109 insertions(+), 16 deletions(-)
 
-```
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 069e92856bda..25e44586a985 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -752,6 +752,54 @@ void trace_event_enable_tgid_record(bool enable)
+ 	} while_for_each_event_file();
+ }
+ 
++/*
++ * __ftrace_event_enable_disable - enable or disable a trace event
++ * @file: trace event file associated with the event.
++ * @enable: 0 or 1 respectively to disable/enable the event (any other value is
++ * invalid).
++ * @soft_disable: 1 or 0 respectively to mark if the enable parameter IS or
++ * IS NOT a soft enable/disable.
++ *
++ * Function Expectations:
++ * - If soft_disable is 1 a reference counter associated with the trace
++ * event shall be increased or decreased according to the enable parameter
++ * being 1 (enable) or 0 (disable) respectively.
++ * If the reference counter is > 0 before the increase or after the decrease,
++ * no other actions shall be taken.
++ *
++ * - if soft_disable is 1 and the trace event reference counter is 0 before
++ * the increase or after the decrease, an enable value set to 0 or 1 shall set
++ * or clear the soft mode flag respectively; this is characterized by disabling
++ * or enabling the use of trace_buffered_event respectively.
++ *
++ * - If soft_disable is 1 and enable is 0 and the reference counter reaches
++ * zero and if the soft disabled flag is set (i.e. if the event was previously
++ * enabled with soft_disable = 1), tracing for the trace point event shall be
++ * disabled and the soft disabled flag shall be cleared.
++ *
++ * - If soft_disable is 0 and enable is 0, tracing for the trace point event
++ * shall be disabled only if the soft mode flag is clear (i.e. event previously
++ * enabled with soft_disable = 0). Additionally the soft disabled flag shall be
++ * set or cleared according to the soft mode flag being set or clear
++ * respectively.
++ *
++ * - If enable is 1, tracing for the trace point event shall be enabled (if
++ * previously disabled); in addition if soft_disable is 1 and the reference
++ * counter is 0 before the increase, the soft disabled flag shall be set.
++ *
++ * - When enabling or disabling tracing for the trace point event
++ * the flags associated with comms and tgids shall be checked and, if set,
++ * respectively tracing of comms and tgdis at sched_switch shall be
++ * enabled/disabled.
++ *
++ * Returns 0 on success, or any error returned by the event register or
++ * unregister callbacks.
++ *
++ * NOTE: in order to invoke this code in a thread-safe way, event_mutex shall
++ * be locked before calling it.
++ * NOTE: the validity of the input pointer file shall be checked by the caller
++ *
++ */
+ static int __ftrace_event_enable_disable(struct trace_event_file *file,
+ 					 int enable, int soft_disable)
+ {
+@@ -1285,7 +1333,37 @@ static void remove_event_file_dir(struct trace_event_file *file)
+ }
+ 
+ /*
+- * __ftrace_set_clr_event(NULL, NULL, NULL, set) will set/unset all events.
++ * __ftrace_set_clr_event_nolock - enable or disable an event within a system
++ * (thread-unsafe).
++ * @tr: target trace_array containing the events list (shall be a non-NULL
++ * valid pointer).
++ * @match: target system or event name (NULL for any).
++ * @sub: target system name (NULL for any).
++ * @event: target event name (NULL for any).
++ * @set: 1 to enable, 0 to disable (any other value is invalid).
++ * @mod: target module name (NULL for any).
++ *
++ * Function's Expectations:
++ * - If mod is set, the mod name shall be sanitized by replacing all '-' with
++ *   '_' to match the modules' naming convention used in the Kernel.
++ * - From the events' list in the input tr, the ensemble of events to be enabled
++ *   or disabled shall be selected according to the input match, sub, event and
++ *   mod parameters. Each of these parameters, if set, shall restrict the events
++ *   ensemble to those with a matching parameter's name.
++ * - For each of the selected events the IGNORE_ENABLE flag shall be checked,
++ *   and, if not set, ftrace_event_enable_disable shall be invoked passing the
++ *   input set parameter to either enable or disable the event.
++ *
++ * Returns 0 on success, -EINVAL if the parameters do not match any registered
++ * events, -ENOMEM if memory allocation fails for the module pointer or the
++ * error condition returned by the first call to ftrace_event_enable_disable
++ * that returned an error.
++ *
++ * NOTE: in order to invoke this code in a thread-safe way, event_mutex shall
++ * be locked before calling it.
++ * NOTE: the validity of the input pointer tr shall be checked by the caller.
++ * NOTE: __ftrace_set_clr_event_nolock(NULL, NULL, NULL, set, NULL) will
++ * set/unset all events.
+  */
+ static int
+ __ftrace_set_clr_event_nolock(struct trace_array *tr, const char *match,
+@@ -1428,16 +1506,24 @@ int ftrace_set_clr_event(struct trace_array *tr, char *buf, int set)
+ }
+ 
+ /**
+- * trace_set_clr_event - enable or disable an event
+- * @system: system name to match (NULL for any system)
+- * @event: event name to match (NULL for all events, within system)
+- * @set: 1 to enable, 0 to disable
++ * trace_set_clr_event - enable or disable an event within a system.
++ * @system: system name (NULL for any system).
++ * @event: event name (NULL for all events, within system).
++ * @set: 1 to enable, 0 to disable (any other value is invalid).
+  *
+  * This is a way for other parts of the kernel to enable or disable
+  * event recording.
+  *
+- * Returns 0 on success, -EINVAL if the parameters do not match any
+- * registered events.
++ * Function's expectations:
++ * - This function shall retrieve the pointer of the global trace array (global
++ *   tracer) and pass it, along the rest of input parameters, to
++ *   __ftrace_set_clr_event_nolock.
++ * - This function shall properly lock/unlock the global event_mutex
++ *   before/after invoking ftrace_set_clr_event_nolock.
++ *
++ * Returns 0 on success, -ENODEV if the global tracer cannot be retrieved,
++ * -EINVAL if the parameters do not match any registered events, any other
++ * error condition returned by __ftrace_set_clr_event_nolock.
+  */
+ int trace_set_clr_event(const char *system, const char *event, int set)
+ {
+@@ -1451,17 +1537,24 @@ int trace_set_clr_event(const char *system, const char *event, int set)
+ EXPORT_SYMBOL_GPL(trace_set_clr_event);
+ 
+ /**
+- * trace_array_set_clr_event - enable or disable an event for a trace array.
+- * @tr: concerned trace array.
+- * @system: system name to match (NULL for any system)
+- * @event: event name to match (NULL for all events, within system)
+- * @enable: true to enable, false to disable
++ * trace_array_set_clr_event - enable or disable an event within a system for
++ * a trace array.
++ * @tr: input trace array.
++ * @system: system name (NULL for any system).
++ * @event: event name (NULL for all events, within system).
++ * @enable: true to enable, false to disable.
+  *
+- * This is a way for other parts of the kernel to enable or disable
+- * event recording.
++ * This is a way for other parts of the kernel to enable or disable event
++ * recording.
++ *
++ * Fumction's expectations:
++ * - This function shall properly lock/unlock the global event_mutex
++ *   before/after invoking ftrace_set_clr_event_nolock passing along the same
++ *   input parameters.
+  *
+- * Returns 0 on success, -EINVAL if the parameters do not match any
+- * registered events.
++ * Returns 0 on success, -ENOENT if the input tr is NULL, -EINVAL if the
++ * parameters do not match any registered events, any other error condition
++ * returned by __ftrace_set_clr_event_nolock.
+  */
+ int trace_array_set_clr_event(struct trace_array *tr, const char *system,
+ 		const char *event, bool enable)
+-- 
+2.48.1
 
-It looks that the python process is somehow stuck in uverbs_destroy_ufile_hw():
-```
-$ sudo cat /proc/1845/task/1845/stack
-[<0>] uverbs_destroy_ufile_hw+0x24/0x100 [ib_uverbs]
-[<0>] ib_uverbs_close+0x1b/0xc0 [ib_uverbs]
-[<0>] __fput+0xea/0x2d0
-[<0>] ____fput+0x15/0x20
-[<0>] task_work_run+0x5d/0xa0
-[<0>] do_exit+0x316/0xa50
-[<0>] make_task_dead+0x81/0x160
-[<0>] rewind_stack_and_make_dead+0x16/0x20
-```
-
-I am not sure about the root cause but hope we can fix this before the next merge window.
-
-Thanks,
-Daisuke
