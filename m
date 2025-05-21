@@ -1,127 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 592C2137930
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 13:51:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18B9014658D;
+	Wed, 21 May 2025 13:53:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747835518; cv=none; b=P4COUeeEbW44HUz5KoJuouwmzUoSCrPJUz7Wsxk5pOVBpJoDHEAEKTzDwAr6gh8dkpH3mle/gJrI6NBHF46zZXnmZvJQXUDFYVEVTQP/d92eOBGaKkFjkVMv1EY84lU6fTuYKjaVXTiaCzP2dorOmOvtNaD/jEDXG8uCey7882Q=
+	t=1747835603; cv=none; b=g65PDSo118E2Kya5zQ1h05dHPiqiGu1anm/P28d45qLktQgsv2KVedQ4YZkekducmqjPJd/nFa3h7XqhL+jl4FN2sfQiXErohMnA879Pin2w2yoY6no6qaseyy65wVkLwfMiCG8LSCNudJ5546Z+VMGt7nHkAmAxvuxK9tMBHYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747835518; c=relaxed/simple;
-	bh=mO9IVOnPUHtfhpYi4gvGK2KPnNYPPNEyzUYzQ6e1dyw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ihBo0kXZNMWWb0H0bgwRTv2tLpu8bT1VM+defRmCuzHc9XxJFz5/mvhNqo0ZYRZyWfgto1FNyWZxWNH6EqYh7veGeT2G2uofICMUgldbmvTPMv70STrt812tF9xDDqlokwWgpIMb92v+t0Om1aVxYGSGBYzZJXNfXYucFNY6zo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99A9DC4CEE4;
-	Wed, 21 May 2025 13:51:56 +0000 (UTC)
-Date: Wed, 21 May 2025 09:52:39 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: fengtian guo <fengtian_guo@hotmail.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
- <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sebastian
- Andrzej Siewior <bigeasy@linutronix.de>
-Subject: Re: [PATCH RT] Possible spinlock deadlock in kernel/sched/rt.c
- under high load
-Message-ID: <20250521095239.0b254e36@gandalf.local.home>
-In-Reply-To: <OSAPR01MB4675D865C73A00D744FC4AA7F59EA@OSAPR01MB4675.jpnprd01.prod.outlook.com>
-References: <OSAPR01MB4675AD3FE11ED9C21055DE5AF59FA@OSAPR01MB4675.jpnprd01.prod.outlook.com>
-	<OSAPR01MB4675D865C73A00D744FC4AA7F59EA@OSAPR01MB4675.jpnprd01.prod.outlook.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1747835603; c=relaxed/simple;
+	bh=hutYu+1ngX5Dt7IvfZMnK5eZXB31NtkXbIx/qn2SlPc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ECMomfSiu7T7yZgUK1Iq/HRNaGj1ZK0+zHFkEZYkYAN+TYLK1UkvcmTphMu9fJAImtIp5m3bst0AGkgv8VP4IUla+ifcmIELkcF95gzcAUZ9qh9IYcjO/jf+gFvuXAA2aB9hpX1Lq2C6RxgocuEYd8RaXhqYb+OwVYcPCRRTH3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=R62vDqmr; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="R62vDqmr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1747835592;
+	bh=hutYu+1ngX5Dt7IvfZMnK5eZXB31NtkXbIx/qn2SlPc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=R62vDqmrOkMKkmZxrNQeM1WnDBjhH9iGq2aBoELIjuvSW21xQwdOdspMpv9vY2XBn
+	 xMlTG2M8DraIIaaBwmThC672MJYyytmXLcyGxoikKpfi0QhJ/6rui18W1vJblW50FZ
+	 Qvugdm/jtNygoUE6njUoSB8FUMkXPHGwlo2TY0LUCgIxbFvz9g5QuTVcnZyxqjizJK
+	 jSYBMy1xNX5g3uVv+p32u8fn2hGZ+fEy2YM9se/iUTd310tASWUhD8cbWjw9qYoTI9
+	 r55n5ABClwoAHRSHB6p/swieW20LjJDQrxiXAsTc9Hnq5o7h2YeNtuoKIq0aVigBQc
+	 207PIFL9zBhrg==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 2AD2E17E02BE;
+	Wed, 21 May 2025 15:53:12 +0200 (CEST)
+Message-ID: <557a5182-4843-4925-953e-09e3b1e41f0c@collabora.com>
+Date: Wed, 21 May 2025 15:53:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] pinctrl: mediatek: eint: Fix invalid pointer
+ dereference for v1 platforms
+To: =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>,
+ Sean Wang <sean.wang@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ Hao Chang <ot_chhao.chang@mediatek.com>,
+ Qingliang Li <qingliang.li@mediatek.com>
+Cc: kernel@collabora.com, linux-mediatek@lists.infradead.org,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+ Chen-Yu Tsai <wenst@chromium.org>
+References: <20250520-genio-350-eint-null-ptr-deref-fix-v2-1-6a3ca966a7ba@collabora.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20250520-genio-350-eint-null-ptr-deref-fix-v2-1-6a3ca966a7ba@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, 21 May 2025 10:35:53 +0000
-fengtian guo <fengtian_guo@hotmail.com> wrote:
-
-> hardward: On arm64 with 32 cores
->=20
-> First Deadlock Root Cause Analysis
-> The initial deadlock occurs due to
-> unprotected spinlock access between
-> an IRQ work thread and a hardware interrupt on the same CPU
-> Here is the critical path:
-> Deadlock Sequence
-> IRQ Work Thread Context (RT priority):
->=20
-> irq_work =E2=86=92 rto_push_irq_work_func =E2=86=92 raw_spin_lock(&rq->lo=
-ck) =E2=86=92 push_rt_task
-> The rto_push_irq_work_func thread acquires rq->lock without disabling int=
-errupts
-
-rto_push_irq_work_func() must be called with interrupts disabled. If it is
-not, then that's a bug in the implementation of irq_work!
-
->=20
-> Hardware Interrupt Context (Clock timer):
-> hrtimer_interrupt =E2=86=92 __hrtimer_run_queues =E2=86=92 _run_hrtimer =
-=E2=86=92 hrtimer_wakeup =E2=86=92
-> try_to_wake_up =E2=86=92 ttwu_queue =E2=86=92 raw_spin_lock(&rq->lock)
->=20
-> The clock interrupt preempts the IRQ work thread while it holds rq->lock.
-> The interrupt handler attempts to acquire the same rq->lock via ttwu_queue
-> , causing a double-lock deadlock.
-
-
-
-> Signed-off-by: Fengtian Guo <fengtian_guo@hotmail.com>
+Il 20/05/25 23:15, Nícolas F. R. A. Prado ha scritto:
+> Commit 3ef9f710efcb ("pinctrl: mediatek: Add EINT support for multiple
+> addresses") introduced an access to the 'soc' field of struct
+> mtk_pinctrl in mtk_eint_do_init() and for that an include of
+> pinctrl-mtk-common-v2.h.
+> 
+> However, pinctrl drivers relying on the v1 common driver include
+> pinctrl-mtk-common.h instead, which provides another definition of
+> struct mtk_pinctrl that does not contain an 'soc' field.
+> 
+> Since mtk_eint_do_init() can be called both by v1 and v2 drivers, it
+> will now try to dereference an invalid pointer when called on v1
+> platforms. This has been observed on Genio 350 EVK (MT8365), which
+> crashes very early in boot (the kernel trace can only be seen with
+> earlycon).
+> 
+> In order to fix this, since 'struct mtk_pinctrl' was only needed to get
+> a 'struct mtk_eint_pin', make 'struct mtk_eint_pin' a parameter
+> of mtk_eint_do_init() so that callers need to supply it, removing
+> mtk_eint_do_init()'s dependency on any particular 'struct mtk_pinctrl'.
+> 
+> Fixes: 3ef9f710efcb ("pinctrl: mediatek: Add EINT support for multiple addresses")
+> Suggested-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
 > ---
->  kernel/sched/rt.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->=20
-> diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-> index 5dc1ee8dc..52a2e7bce 100644
-> --- a/kernel/sched/rt.c
-> +++ b/kernel/sched/rt.c
-> @@ -2131,6 +2131,7 @@ void rto_push_irq_work_func(struct irq_work *work)
->                 container_of(work, struct root_domain, rto_push_work);
->         struct rq *rq;
->         int cpu;
-> +       unsigned long flags;
->=20
->         rq =3D this_rq();
->=20
-> @@ -2139,10 +2140,10 @@ void rto_push_irq_work_func(struct irq_work *work)
->          * When it gets updated, a check is made if a push is possible.
->          */
->         if (has_pushable_tasks(rq)) {
-> -               raw_spin_lock(&rq->lock);
-> +               raw_spin_lock_irqsave(&rq->lock, flags);
->                 while (push_rt_task(rq, true))
->                         ;
-> -               raw_spin_unlock(&rq->lock);
-> +               raw_spin_unlock_irqrestore(&rq->lock, flags);
+> Changes in v2:
+> - Completely changed approach to make mtk_eint_pin a parameter of
+>    mtk_eint_do_init() as suggested by Angelo
+> - Link to v1: https://lore.kernel.org/r/20250519-genio-350-eint-null-ptr-deref-fix-v1-1-07445d6d22c3@collabora.com
+> ---
+>   drivers/pinctrl/mediatek/mtk-eint.c              | 26 ++++++++++--------------
+>   drivers/pinctrl/mediatek/mtk-eint.h              |  5 +++--
+>   drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c |  2 +-
+>   drivers/pinctrl/mediatek/pinctrl-mtk-common.c    |  2 +-
+>   4 files changed, 16 insertions(+), 19 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/mediatek/mtk-eint.c b/drivers/pinctrl/mediatek/mtk-eint.c
+> index 16af6a47028e67bb53db4041a37ebbbb8b9a1e43..d906a5e4101fb10968035fc48e9cf4a444d063a9 100644
+> --- a/drivers/pinctrl/mediatek/mtk-eint.c
+> +++ b/drivers/pinctrl/mediatek/mtk-eint.c
+> @@ -22,7 +22,6 @@
+>   #include <linux/platform_device.h>
+>   
+>   #include "mtk-eint.h"
+> -#include "pinctrl-mtk-common-v2.h"
+>   
+>   #define MTK_EINT_EDGE_SENSITIVE           0
+>   #define MTK_EINT_LEVEL_SENSITIVE          1
+> @@ -505,10 +504,9 @@ int mtk_eint_find_irq(struct mtk_eint *eint, unsigned long eint_n)
+>   }
+>   EXPORT_SYMBOL_GPL(mtk_eint_find_irq);
+>   
+> -int mtk_eint_do_init(struct mtk_eint *eint)
+> +int mtk_eint_do_init(struct mtk_eint *eint, struct mtk_eint_pin *eint_pin)
+>   {
+>   	unsigned int size, i, port, virq, inst = 0;
+> -	struct mtk_pinctrl *hw = (struct mtk_pinctrl *)eint->pctl;
+>   
+>   	/* If clients don't assign a specific regs, let's use generic one */
+>   	if (!eint->regs)
+> @@ -519,7 +517,15 @@ int mtk_eint_do_init(struct mtk_eint *eint)
+>   	if (!eint->base_pin_num)
+>   		return -ENOMEM;
+>   
+> -	if (eint->nbase == 1) {
 
-interrupts should *NEVER* be enabled here!
+Okay, dropping the nbase == 1 is sane, but that statement was actually documenting
+the fact that *eint_pin is used only for multi-base EINT case, so please add those
+comments:
 
->         }
->=20
->         raw_spin_lock(&rd->rto_lock);
-> --
+> +	if (eint_pin) {
 
-In kernel/sched/topology.c we have:
+		/* EINT with multiple bases */
 
-	rd->rto_push_work =3D IRQ_WORK_INIT_HARD(rto_push_irq_work_func);
+> +		eint->pins = eint_pin;
+> +		for (i = 0; i < eint->hw->ap_num; i++) {
+> +			inst = eint->pins[i].instance;
+> +			if (inst >= eint->nbase)
+> +				continue;
+> +			eint->base_pin_num[inst]++;
+> +		}
+> +	} else {
 
-That IRQ_WORK_INIT_HARD() means that this function must always be called
-from hard interrupt context (or interrupts disabled). Even when PREEMPT_RT
-is enabled.
+		/* Single base EINT */
 
-If the irq_work is being called without interrupts disabled, there's a bug
-somewhere else.
+...after which:
 
-NACK on this patch, because its fixing a symptom of the bug and not the bug
-itself.
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-The question is, how did this get called as a normal irq_work and not one
-that was marked as "HARD"?
+Thanks for fixing this!
 
--- Steve
