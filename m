@@ -1,118 +1,112 @@
-Received: from jpms-ob02.noc.sony.co.jp (jpms-ob02.noc.sony.co.jp [211.125.140.165])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEB4E235BF4;
-	Wed, 21 May 2025 08:00:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.125.140.165
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 434871DC9A3;
+	Wed, 21 May 2025 08:00:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747814410; cv=none; b=cQrAEVH8TOgzV+OE+d2DGNQCDWe9lrXPMoAvfj5y95zDFYFey7WBx+RaKRAtGma7SIQrhMkA/kcj1fIGnVS38S9NcYUk6rR6WiffT60EGirxinsObcLlaXKEAyCzVUfnZn8ebPj7TWtc9tFR9olj2GikBGpmy695qTubdhkRS0M=
+	t=1747814435; cv=none; b=UF+gwo7vt40di+yDXkStR3nF7RRlK3x+dvNGmMa9goNtCdPV+BzFRBZmRssbvTOq9oH2d5nhIo+GpPfEjRnBXwtkFC/waakzIrafOgQlhXAAthkHbSmX/outFg1fMuHGYRSttsliQXD7hcJloRrOdL9/otP+9yHPEUK7KGplCyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747814410; c=relaxed/simple;
-	bh=O18BluLzd0V6rN+4d/OuPHmQZQMOEKQe/u9KiGlBwCo=;
+	s=arc-20240116; t=1747814435; c=relaxed/simple;
+	bh=NXbCTTtiVf1hxjNTRc1GM2RzoMelIfvrZhBNyZ0cQJs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AIqgDVZ8hyrGdahrj4PNBz+LEUVqxAZHtHjtLdD8lmLiFAiCBJ59osza80BfaCgQGCSNjmJp24BAG+Iqu6edmV5pHzoRpSTKe8Tlik2FJHco8xeSrAAZj+jsLJkrvXVsYMC3v530OcK/1XUcZ5GTxX2QKyPblzIAz/Sykh6YKW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com; spf=pass smtp.mailfrom=sony.com; dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b=BVjkU+Om; arc=none smtp.client-ip=211.125.140.165
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sony.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sony.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=tezvQDPv/iRw5dtmRKYa3j4SrxQDKRq4ELMX3+qSBdxUsR5ccoY3IK2XSyrleBldZfiUZy7GxJqqk24Ve3muqpkwxz5+2w25HWZMLxbveyR13jSdENS/OV43f/w/6K0QPsa1RVrnEZIu1WrK8sMoCgvDUznU4NfWdFbNvrzSF4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m2/9uM/U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sony.com header.i=@sony.com header.b="BVjkU+Om"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=sony.com; s=s1jp; t=1747814407; x=1779350407;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=SRSeRZLTM88Xmp2dMNkQnEEMrTwWD8k4Sd+UM3+C5T0=;
-  b=BVjkU+OmQDYbgjKbm0KtZV8q14tEUZa/tcvDSQ9+94qn99Q0UY5AWoKy
-   jz4Lbb1an94t7v0ZtAfi9HwY0hyEh2L7SBW2oOMHnvClTjCFbA12jp/5T
-   dO5WiYtVaT21V80mGo3mN/bBfqUMEfi7qeeRF1oL9ArJR8EZpkpu1mn1G
-   HAXLOpllGwvcwTXQNnqflQQGmppX8LGj2+9kTu9N0rK1toCHeajZJCpFf
-   UwbXlDC++rNcZljGlvGGaYKs3zBLEsK3eldKAGdTCEVnrK4+rmwO5Hlec
-   IRC78VDRDDB3AWzcAezAGkZv0yud4ZaRjcEpm/9TCDBK/7KX2qfL5eXo9
-   g==;
-Received: from unknown (HELO jpmta-ob02.noc.sony.co.jp) ([IPv6:2001:cf8:0:6e7::7])
-  by jpms-ob02.noc.sony.co.jp with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 16:49:56 +0900
-X-IronPort-AV: E=Sophos;i="6.15,303,1739804400"; 
-   d="scan'208";a="532312397"
-Received: from unknown (HELO JPC00244420) ([IPv6:2001:cf8:1:573:0:dddd:6b3e:119e])
-  by jpmta-ob02.noc.sony.co.jp with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 16:49:56 +0900
-Date: Wed, 21 May 2025 16:49:43 +0900
-From: Shashank Balaji <shashank.mahadasyam@sony.com>
-To: Tejun Heo <tj@kernel.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>,
-	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-	Jonathan Corbet <corbet@lwn.net>, cgroups@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Shinya Takumi <shinya.takumi@sony.com>,
-	shashank.mahadasyam@sony.com
-Subject: Re: [PATCH v2 3/3] cgroup, docs: cpu controller interaction with
- various scheduling policies
-Message-ID: <aC2Fl4DVRbn6bS8H@JPC00244420>
-References: <20250520-rt-and-cpu-controller-doc-v2-0-70a2b6a1b703@sony.com>
- <20250520-rt-and-cpu-controller-doc-v2-3-70a2b6a1b703@sony.com>
- <aCzjJp1ovS6kCqHj@slm.duckdns.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m2/9uM/U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 149D9C4CEE4;
+	Wed, 21 May 2025 08:00:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747814434;
+	bh=NXbCTTtiVf1hxjNTRc1GM2RzoMelIfvrZhBNyZ0cQJs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=m2/9uM/UEfrYjyZRB5+ZA8Cs/2Hmzow+6pqeB30HS4fYP9dE/0yDvbAta6DX0hKcW
+	 CdgvE2HGDxvB86ylvjwlpAQ5UlZ4FF2laz60QCYmYwsos8qZEvzO3e1hi84Yw8u8BA
+	 DrrnFuSjhGIQm7wGHSLQ6OYQUUb1p1BrhVK33smEnGBJK5BS2Pn/Dm+JZ59cH5UXlB
+	 uX1S5xdpjDt0HVVsA2hkx9HZdS2hwH+jsMeNXLRPxUu9VvQYzlhAzklsccQ2PKfVHQ
+	 UFFTZj3xOBMhocKbIJO49SEeXDGfWr0b/lDVE6GUSfsfGSJI3fMRxLFuvBUr68wz7o
+	 cZRSU6h8DYctw==
+Date: Wed, 21 May 2025 10:00:27 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Alexandre Courbot <acourbot@nvidia.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Timur Tabi <ttabi@nvidia.com>, Alistair Popple <apopple@nvidia.com>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v4 01/20] rust: dma: expose the count and size of
+ CoherentAllocation
+Message-ID: <aC2IG7amsKLk6G0a@pollux>
+References: <20250521-nova-frts-v4-0-05dfd4f39479@nvidia.com>
+ <20250521-nova-frts-v4-1-05dfd4f39479@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aCzjJp1ovS6kCqHj@slm.duckdns.org>
+In-Reply-To: <20250521-nova-frts-v4-1-05dfd4f39479@nvidia.com>
 
-Hi Tejun,
-
-On Tue, May 20, 2025 at 10:16:38AM -1000, Tejun Heo wrote:
-> Hello,
+On Wed, May 21, 2025 at 03:44:56PM +0900, Alexandre Courbot wrote:
+> These properties are very useful to have and should be accessible.
 > 
-> On Tue, May 20, 2025 at 11:07:47PM +0900, Shashank Balaji via B4 Relay wrote:
-> ...
-> > +The interaction of a process with the cpu controller depends on its scheduling
-> > +policy. We have the following scheduling policies: ``SCHED_IDLE``, ``SCHED_BATCH``,
-> > +``SCHED_OTHER``, ``SCHED_EXT`` (if ``CONFIG_SCHED_CLASS_EXT`` is enabled), ``SCHED_FIFO``,
-> > +``SCHED_RR``, and ``SCHED_DEADLINE``. ``SCHED_{IDLE,BATCH,OTHER,EXT}`` can be scheduled
-> > +either by the fair-class scheduler or by a BPF scheduler::
-> > +
-> > +    CONFIG_SCHED_CLASS_EXT
-> > +    ├─ Disabled
-> > +    |   └─ SCHED_{IDLE,BATCH,OTHER} -> fair-class scheduler
-> > +    └─ Enabled
-> > +        ├─ BPF scheduler disabled
-> > +        |   └─ SCHED_{IDLE,BATCH,OTHER,EXT} -> fair-class scheduler
-> > +        ├─ BPF scheduler without SCX_OPS_SWITCH_PARTIAL enabled
-> > +        |   └─ SCHED_{IDLE,BATCH,OTHER,EXT} -> BPF scheduler
-> > +        └─ BPF scheduler with SCX_OPS_SWITCH_PARTIAL enabled
-> > +            ├─ SCHED_{IDLE,BATCH,OTHER} -> fair-class scheduler
-> > +            └─ SCHED_EXT -> BPF scheduler
-> > +
-> > +For more details on ``SCHED_EXT``, check out :ref:`Documentation/scheduler/sched-ext.rst. <sched-ext>`
-> > +From the point of view of the cpu controller, processes can be categorized as
-> > +follows:
-> > +
-> > +* Processes under the fair-class scheduler
-> > +* Processes under a BPF scheduler with the ``cgroup_set_weight`` callback
-> > +* Everything else: ``SCHED_{FIFO,RR,DEADLINE}`` and processes under a BPF scheduler
-> > +  without the ``cgroup_set_weight`` callback
-> > +
-> > +Note that the ``cgroup_*`` family of callbacks require ``CONFIG_EXT_GROUP_SCHED``
-> > +to be enabled. For each of the following interface files, the above categories
-> > +will be referred to. All time durations are in microseconds.
+> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
+> ---
+>  rust/kernel/dma.rs | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
 > 
-> Can we document the above in sched_ext documentation and point to it from
-> here? Documenting sched_ext details here seems a bit out of place and prone
-> to becoming stale over time.
+> diff --git a/rust/kernel/dma.rs b/rust/kernel/dma.rs
+> index 605e01e35715667f93297fd9ec49d8e7032e0910..2a60eefa47dfc1f836c30ee342e26c6ff3e9b13a 100644
+> --- a/rust/kernel/dma.rs
+> +++ b/rust/kernel/dma.rs
+> @@ -129,6 +129,10 @@ pub mod attrs {
+>  //
+>  // Hence, find a way to revoke the device resources of a `CoherentAllocation`, but not the
+>  // entire `CoherentAllocation` including the allocated memory itself.
+> +//
+> +// # Invariants
+> +//
+> +// The size in bytes of the allocation is equal to `size_of::<T> * count()`.
 
-Got it. Apart from that, is the content alright? 
+I think this also needs an invariant comment whenever self.count is set.
 
-> Can you please separate out indentation changes to a separate patch? These
-> usually make reviewing tricky.
-
-Got it.
-
-Thank you
-
-Regards,
-Shashank
-
-PS: Apologies for any malformed emails. I finally managed to switch from Outlook
-to mutt.
+>  pub struct CoherentAllocation<T: AsBytes + FromBytes> {
+>      dev: ARef<Device>,
+>      dma_handle: bindings::dma_addr_t,
+> @@ -201,6 +205,20 @@ pub fn alloc_coherent(
+>          CoherentAllocation::alloc_attrs(dev, count, gfp_flags, Attrs(0))
+>      }
+>  
+> +    /// Returns the number of elements `T` in this allocation.
+> +    ///
+> +    /// Note that this is not the size of the allocation in bytes, which is provided by
+> +    /// [`Self::size`].
+> +    pub fn count(&self) -> usize {
+> +        self.count
+> +    }
+> +
+> +    /// Returns the size in bytes of this allocation.
+> +    pub fn size(&self) -> usize {
+> +        // As per the invariants of `CoherentAllocation`.
+> +        self.count * core::mem::size_of::<T>()
+> +    }
+> +
+>      /// Returns the base address to the allocated region in the CPU's virtual address space.
+>      pub fn start_ptr(&self) -> *const T {
+>          self.cpu_addr
+> 
+> -- 
+> 2.49.0
+> 
