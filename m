@@ -1,123 +1,78 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4BEF230268;
-	Wed, 21 May 2025 09:03:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F37823816F;
+	Wed, 21 May 2025 09:04:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747818228; cv=none; b=Nnxj6BK+rrBBhOgKmoI9y4mAAdCtmk3Ubf9DiL4aouKfbVJ2fqIWDvhEtT2JLBuCcAHjloppXglry2g6Tm6E2mz1vDuqhtAhcwOaE72NRv84fKNqkOqLNTx30Nez44LTMaWHBHDqCifCiCMc3DoueDD+4rE/PHa0hNNGo7Q9U/4=
+	t=1747818257; cv=none; b=sFvyePN8GicoJ1JYlcmH9FJ6884NljeVHBRTOd6/p294SQB2P+WT4P+2QnlbQhF1/YWYHqRTh2LV+tMVxkv26XOLOV33hEsbRcMwtFvQQi++BOwaFZ41UMtoGbZ82uCO+hXoAPR9rWH+R7a5Ao5sRuQVGRW1peHgjeem67J0UH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747818228; c=relaxed/simple;
-	bh=PCE6LSVt1T9swMpEpefnmPyR908xT/dzCXHH6xdDWVc=;
+	s=arc-20240116; t=1747818257; c=relaxed/simple;
+	bh=/OVUEBvGvRPAZGd3SzU8JAylUHgP7ABuQxE9pS/k7ZY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hA7eWHCzGTIizceL8D3tIgAMs14KiKgkrDPIpfFff3uBI56QwOj2VieDa77CU95FqAvXm7Q7MgCD6EC1Fh8fD33LaRMGH66KsGRWMpYUfiKHKfn5Q3yoDo70syWo0DW7zNY85xSoINzh/4G3N9DRTn5E38nJ7xeA/MefsVyduIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=W9Sb2eKA; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uUy0QVaz; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=NEQkDFcilDybBcb/ZP0boDDfudt8kTprXi0Q6NrK1Glgn/SWDGySCuEK1McDPB9x0+E1cNgD5DM2mF7KX9JY/A0RlXASNlvyuFfuV/oZ9CElubssCd2CFeh+d21G5Q5KV0vP8XwMw0+HYevT+PpHBwPAfe+VV8S1TVwaPlYYADM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iAX9/Ubb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="W9Sb2eKA";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uUy0QVaz"
-Date: Wed, 21 May 2025 11:03:43 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747818224;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=E7WKk454nZ5z7mTMr0u//RgRu0zeGFgAgehInroqNVQ=;
-	b=W9Sb2eKAX9r4Z9mVFdvQbOc/uyRHh5TATQuw+oJkimDjXi77IQO67txtyOxV5Z1mb0xNkK
-	tl0KAI7a27OFNb78JT2QUzs/DUAbBIUdpV2LqfZFOTkx3MJM2vacRlpFl7t0xtd4/Ph/Q2
-	Z5XCmMBHLYhpZupS5NXKincovE0ucYQYNXPzD4Ho6VbcdeoEaSJZEvLeXfNrxwfnow4foR
-	tyg+tSXIXvvlmKGYUMO01Uky9d8Unz0Z3ZbQ6G0Pq74Fopof23ZiE9/1p0+7eT3XR4SCj/
-	ScAxPPNJiCHlBOWmPzDqQ6yPgWWrtyZEKTwc6Nc+xAjE9tlwJzIsRX5l7Hznqg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747818224;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=E7WKk454nZ5z7mTMr0u//RgRu0zeGFgAgehInroqNVQ=;
-	b=uUy0QVaz9/+cz0oViaHoaQ8XiptZDPfm2VwHMg5MQ9S3pbr8+LNpPxiXyV3SVee3Fn3Too
-	Hde/GQ/TmCT91EAQ==
-From: Nam Cao <namcao@linutronix.de>
-To: Catalin Marinas <catalin.marinas@arm.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Gabriele Monaco <gmonaco@redhat.com>,
-	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	john.ogness@linutronix.de, Will Deacon <will@kernel.org>,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v8 17/22] arm64: mm: Add page fault trace points
-Message-ID: <20250521090343.TKXXN2x0@linutronix.de>
-References: <cover.1747046848.git.namcao@linutronix.de>
- <f5fccde2326a896e5c568ef06a4dbd9aa7465f6a.1747046848.git.namcao@linutronix.de>
- <aCtE-RvyN6XJQjTo@arm.com>
- <20250520122548.lkvaylSB@linutronix.de>
- <aCyOZVVioijWpEPY@arm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iAX9/Ubb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DDD3C4CEE4;
+	Wed, 21 May 2025 09:04:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747818256;
+	bh=/OVUEBvGvRPAZGd3SzU8JAylUHgP7ABuQxE9pS/k7ZY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iAX9/Ubb83+qxDDSeFV7H0dd+Xne8eZrKi/rhRD5AO7cU6QO73W+kSVbaO+jsX2kD
+	 S8AOnhpHbgwVppIvj9a5oMTy+M2sTJInqMi2gy1WbxsQJ4eLoVMkyCmjLexnsdLetz
+	 Q5OEdslcsSLXO1lMxNTxMjol3RF4U37NL8v12My3fpexungpEjaXY+eS++BF0BHBj5
+	 igHZskp/HxLAvbF72Yk8qTstafdFX04GTI20vcKOOCo10prH2nv6MHZm0yB8EkQZPY
+	 FGeMq7ov1dxkwDMBLCUUbRkYU4saHCYTPIcOdQPbh2KfkL7AqVg/nbmE4vPjYM657V
+	 APPiGas4xR3+A==
+Date: Wed, 21 May 2025 11:04:14 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Han Gao <rabenda.cn@gmail.com>
+Cc: devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Chen Wang <unicorn_wang@outlook.com>, Inochi Amaoto <inochiama@gmail.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
+	Thomas Bonnefille <thomas.bonnefille@bootlin.com>, Guo Ren <guoren@kernel.org>, Chao Wei <chao.wei@sophgo.com>, 
+	sophgo@lists.linux.dev, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/4] dt-bindings: riscv: add Sophgo SG2042_EVB_V2.0
+ bindings
+Message-ID: <20250521-strange-ammonite-of-domination-b5e4aa@kuoka>
+References: <cover.1747231254.git.rabenda.cn@gmail.com>
+ <dddabd3bb2c718a506d2b6669a8252cfe3872fa9.1747231254.git.rabenda.cn@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aCyOZVVioijWpEPY@arm.com>
+In-Reply-To: <dddabd3bb2c718a506d2b6669a8252cfe3872fa9.1747231254.git.rabenda.cn@gmail.com>
 
-On Tue, May 20, 2025 at 03:15:01PM +0100, Catalin Marinas wrote:
-> On Tue, May 20, 2025 at 02:25:48PM +0200, Nam Cao wrote:
-> > On Mon, May 19, 2025 at 03:49:29PM +0100, Catalin Marinas wrote:
-> > > On Mon, May 12, 2025 at 12:51:00PM +0200, Nam Cao wrote:
-> > > > diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
-> > > > index ec0a337891dd..55094030e377 100644
-> > > > --- a/arch/arm64/mm/fault.c
-> > > > +++ b/arch/arm64/mm/fault.c
-> > > > @@ -44,6 +44,9 @@
-> > > >  #include <asm/tlbflush.h>
-> > > >  #include <asm/traps.h>
-> > > >  
-> > > > +#define CREATE_TRACE_POINTS
-> > > > +#include <trace/events/exceptions.h>
-> > > > +
-> > > >  struct fault_info {
-> > > >  	int	(*fn)(unsigned long far, unsigned long esr,
-> > > >  		      struct pt_regs *regs);
-> > > > @@ -559,6 +562,11 @@ static int __kprobes do_page_fault(unsigned long far, unsigned long esr,
-> > > >  	if (kprobe_page_fault(regs, esr))
-> > > >  		return 0;
-> > > >  
-> > > > +	if (user_mode(regs))
-> > > > +		trace_page_fault_user(addr, regs, esr);
-> > > > +	else
-> > > > +		trace_page_fault_kernel(addr, regs, esr);
-> > > 
-> > > What are the semantics for these tracepoints? When are they supposed to
-> > > be called? In the RV context context I guess you only care about the
-> > > benign, recoverable faults that would affect timing. These tracepoints
-> > > were generalised from the x86 code but I don't know enough about it to
-> > > tell when they would be invoked.
-> > > 
-> > > For arm64, we also have the do_translation_fault() path for example that
-> > > may or may not need to log such trace events.
-> > 
-> > These tracepoints are invoked for x86 page fault exceptions. Are arm64's
-> > translation faults considered equivalent to x86 page faults?
+On Wed, May 14, 2025 at 10:09:01PM GMT, Han Gao wrote:
+> Add DT binding documentation for the Sophgo SG2042_EVB_V2.0 board [1].
 > 
-> Probably. We route permission or access flag faults via do_page_fault()
-> directly while missing page table entries via do_translation_fault().
-> The latter end up in do_page_fault() only if the faulting address is in
-> the user address range.
+> Link: https://github.com/sophgo/sophgo-hardware/tree/master/SG2042/SG2042-x4-EVB [1]
 > 
-> My point was that we may not always invoke the trace callbacks if, for
-> example, the user tries to access the kernel space (and results in a
-> SIGSEGV). While that's fine for RV, I wanted to know what is expected of
-> these trace points in general. Do we need to log such SIGSEGV-generating
-> events? We do log them if there's a permission fault.
+> Signed-off-by: Han Gao <rabenda.cn@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/riscv/sophgo.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/riscv/sophgo.yaml b/Documentation/devicetree/bindings/riscv/sophgo.yaml
+> index 6c82f89b56ca..cbfd07cc053d 100644
+> --- a/Documentation/devicetree/bindings/riscv/sophgo.yaml
+> +++ b/Documentation/devicetree/bindings/riscv/sophgo.yaml
+> @@ -35,6 +35,7 @@ properties:
+>            - enum:
+>                - milkv,pioneer
+>                - sophgo,sg2042-evb-v1
+> +              - sophgo,sg2042-evb-v2
 
-I'm not sure. Digging into history, these tracepoints were added for LTTng.
-So maybe LTTng's developer could answer this.
-
-Added to the conversation: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Can you please give some insight to the above question?
+Comment from v1 looks ignored. Squash the patch.
 
 Best regards,
-Nam
+Krzysztof
 
