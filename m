@@ -1,244 +1,179 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2076.outbound.protection.outlook.com [40.107.21.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8D12222B2;
-	Wed, 21 May 2025 16:40:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.76
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747845651; cv=fail; b=q8eTxT8SHa5bw8z4jxss8dFbHfLVPLjAS10ukTtoayoJLVqzz2e3R8PApjvEw49WGG+RqwLemkpz4h1bGxnsMOhrEWsSVlYfoyNngwx+jOza1RyU1gjrh5p6h+anlh+ZUckQPJE6DKpeHAK80N2LRSTdOHc22BFoZpK7K9m7nIk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747845651; c=relaxed/simple;
-	bh=MuGr1zmXQMCYYP6ppY8625TpIwEoTJ9A6LSd4GIcz64=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=TzHL+KOYZPfBpr2QZu5aSwbDL9L0uZInym1zo9dQqE75ppQmJagLLLwG6lHra4c1Y7flercfoBUrzrl6sOjeZ03XAuRpVaTQuHPO65Go1k0WoOcxHDvuOWItc5T8/Y8kvCMoNSjsMwID+PQbcbMXhU5Z/ILjyrOVtHvqnprfxnc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=bJDWTNu1; arc=fail smtp.client-ip=40.107.21.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A645322CBD9
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 16:41:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747845670; cv=none; b=tfxY8WIM+Mi5+gP94bHAA9Sz1VrxaSuaM5dXOJhb+ERRF6S+tOY1LjTtp9MXanyeZ4t6dfI8vUGZjzuFzm7KvCatl5Q/W2NYfgD2ybUpLcvv0h4rskKqlZxhSdJPeT94tramMxg6mMPllduZR6AsZhZGEnT8OxeOhruqCp9x1zs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747845670; c=relaxed/simple;
+	bh=4IT32OVrKITGqe5rTVivhBsOg16hcGoFrXbNER9Mti0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=flFTvsRbc5NW3KXMxs6FE1lS/i9fQJvo+VFcwg/SFNrYejCooh6VJ0aWGciGTo3NFJhwATJPDzInoowFezp3FwLcdHg1TGyVOdBuofBqb5EuNaVk6buoTT8Yz+Tp1zdpXe1Olaapskzkvfmo1w8OEOK9lltQsP6AIAOz23qvbxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2/cwRNdw; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="bJDWTNu1"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=VDt1ruIJfdhdZs4f+QYbFYxUhldWQnv/vhDkq8j0SlkHCM3PeW8O1Wy35LUdz/6/2up3y2k0keYr372LJoHIWioDW8fKJLbN5/rIQd/l805lPXrndEFGO+qJQ5XmJf4a87N84Juz7aII2TgTJmwZSZMtpqxG5RDAGeMa43XQ2sgvQxyyZ2/uijgzCqOJHZfRPZNFy2udmgflMXs+Rjft5ZzdSrvw83nsqEHqH8NOvuNcznPVFiqGZE3zZezKCoNzVqY8HigksfFnR0DvuRshuH/EtjMjerhl87KFG+O1Aaf5WN7EdfHCPuuCG4K+nWLh5vJ+D4Gwf8bwiayWj4ht8w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=x2wWrteotAFJoryxVzG+gfcDhs09SR871M70tKvV0w4=;
- b=cGo19qlq9XNMnOE/SulC8SAYeJ3wCL4SKSSJUg1cIRvJ38nrOXIkyvBd/ERB7d5YkQdXco/05UEWKejuv2Nsg4AGxAx8jPIcZ5MfHfI0KKBGKJYiZvtHWtToSydkpR6jFSiurz+XqDWr1QZr79LIqH/sJQRX/zxlPs65D0U2LpWrEiG/xspwKBdO7d7NugfxcSonrGmsvF/E8Qjb9C6Fm3v/nUfeZpnMwzMMLwKegqS7H4Vg4vZbK/3nRDUvPpgD4WXmP7sguqjqy7o5BuZ55/SVGOL1nZgfvTxgbUrEBvjzM3i+sG7npO0usA0wUKuRgR5G4iUElRyJ3VUBzRiitQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=x2wWrteotAFJoryxVzG+gfcDhs09SR871M70tKvV0w4=;
- b=bJDWTNu1lo1rxg6a+zdbU2NUD71L1FzhmqUmnqt2IXKDqza18mQhDSUJ911EC3/Q2S8UyVbdlwQGPbp/eYtWkGYKgu1tcYMVFOwOjaS07cs5tIiWPcv/xcls77+YH+KkC/L7Ker2L4LCki556OGtmXCL8YzQAOT3YuDuIX0+HmraR0wf+XqlDVAulGYToPiaGXp1RJSptrBeDMZ2S+lQb9mE03/BOUFPLNOcGEYDBzZTDNTVs/MbZwDqQ3l1hCzeQz8PuJj4NVcPCSCtjLoBk0hEMear5uYjmFZeCB9K7jTb9kRYGim4fiQOpU0eO30sqOpCCPIlT9v4a9uohTVVhg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by PA1PR04MB10295.eurprd04.prod.outlook.com (2603:10a6:102:447::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.30; Wed, 21 May
- 2025 16:40:46 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.8746.030; Wed, 21 May 2025
- 16:40:46 +0000
-From: Frank Li <Frank.Li@nxp.com>
-To: Srinivas Kandagatla <srini@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
-	linux-kernel@vger.kernel.org (open list)
-Cc: imx@lists.linux.dev
-Subject: [PATCH v2 1/1] dt-bindings: nvmem: convert vf610-ocotp.txt to yaml format
-Date: Wed, 21 May 2025 12:40:30 -0400
-Message-Id: <20250521164031.306481-1-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: PH7P221CA0035.NAMP221.PROD.OUTLOOK.COM
- (2603:10b6:510:33c::15) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2/cwRNdw"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-601a67c6e61so35457a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 09:41:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747845667; x=1748450467; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=28LSrmY4bmUMzW4e3w5CBgUDdWI2jouT2ZOQHs4Iras=;
+        b=2/cwRNdwlO6eZN5agosFXAFSGq1evbRN8G5+/boHktYsyzXCRxuR/EjXgipoTDR91w
+         p04aHhoLrPwZDjRGbIXcMD2z1woESLn+TJ4y8CzMpszYj3BzisZE1IZNTcwu7NQevffM
+         5YDCiQOEQiiVVydk8DmGNFD8DD6j/ydkIZgB2OEIv9Cq9RAhPUhfg9HCkNu6jMxnVg/8
+         2G3aMA9cc3ynBiiemgTI8aKw0nXWPWxZTfb++wfBrvw2CpM11ctume6S1ySJYd9FgpVg
+         5gpWWGUXBhaYDsQrLDGtliXPu9SBGjXgpbPVwu8RN/dun/ce4ADmTs/0HG6/R4IjHmnr
+         BQEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747845667; x=1748450467;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=28LSrmY4bmUMzW4e3w5CBgUDdWI2jouT2ZOQHs4Iras=;
+        b=iQddgdPO1b7HRUgXfnbh9q9szzeHTqrav6AwFCNUV8gaGMNzs2r7IJRvNQYCIe3dAG
+         kWoJzxYJ9GRTf2w04FGUPv50DG/rYdCc/pXoz8Rk5ssWgqlZ5iUQBKJ1Vf0Sd6LEc7py
+         O0EseGeGz6ORFt4uv/G4VHYY3nkrg9XUlXEh9NKKlkrHEW8iA75NsTC1GjWT5Ul4r5NB
+         7Dd1ROzDj8LB4SUXTyNcD2IV6ebl53HpjdN62TRI4H3RRMlFdoeYXwIAKxRzHufWGC6w
+         ZsQpku4bRlpkONnK72W22tJEFJTXeXiAc372ES5f3s0LGYdoARSfKGkVWd8xZ38AgD4z
+         XjcA==
+X-Forwarded-Encrypted: i=1; AJvYcCUUTW8HT/5nH9qtdUxWQ1+uSz3r8y/JoyXt6MsVm156pCVXgF7WE1LXHE4WyXXYp46MsKCHp2sihx13NtU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwzE5cmNc6jDZZ/RMSju3ZhwosZGD6KU74Kf/LfGOhI6C18uaKQ
+	/o0uHs53qabZEwl5omBJhwhD7pW/mo/evypYZkp/y61ikDJ3Z5FBFaVDV2f/ZAF9sc5BwCpHZ0z
+	IU1MSvLksGc/Ow9ntZP/m5HvAvJLoJA/gCUwZQF8R
+X-Gm-Gg: ASbGncuyUz/ymVWWcX3m4dy1H6T6FNiDAN+Af6jgjjywGgG4OfmTJ57WX4CaVNOB14r
+	g8pYiTYTQemqyNSeO76FL2sdqOP7tCRCHPI3k2fBKnL/0yzV73DW0g4lVnRVr/oynlRPs0F+NwW
+	ifQfsLzAtu5d5azVELim6b2DyPdZtcvVZwiZkj0gaB68Cqh2q1XYlJFTpDJtsGSLTwg6qwXdqxM
+	A==
+X-Google-Smtp-Source: AGHT+IEQSnz2RwyqgvP8XMisVzsZTIriZuG2rpgT9J6iBVUQ7VVWWNAT028oEgLF0bKIGdrVsVZaKBrc8htYPxH1CeQ=
+X-Received: by 2002:a50:8749:0:b0:601:8e4f:2eb3 with SMTP id
+ 4fb4d7f45d1cf-6019bebb767mr407192a12.0.1747845666702; Wed, 21 May 2025
+ 09:41:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PA1PR04MB10295:EE_
-X-MS-Office365-Filtering-Correlation-Id: 04d861f3-2a58-4356-8ad0-08dd98863c84
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|52116014|366016|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?q6g3Df2ONxtKQJPh8fKyEWC2cYw3stQ0nL/0ocFUcKylwdDpkWRxZUbyh4Pt?=
- =?us-ascii?Q?3kpTozu0Ho4snMfVnEvIakmRu5z45aOcWjWejfjl7StySbTl+Y7Som393e6Y?=
- =?us-ascii?Q?6EV+fIDBJasTYDJKYFTrWkedyHPzOG3wZ/DkHkcC070kdlX39/zKQLQU5A0W?=
- =?us-ascii?Q?goDOS6jhWYqV+xXqnF86PINjfiL3wXowfxmYO1GInDchOwrsp1dAbiQHYj0r?=
- =?us-ascii?Q?11hbxLIzbIdbTHzEDZBrGCfYAZbpSzr9KA/MbMGh0ZDHBkpAPZTMXDdE/euJ?=
- =?us-ascii?Q?w7m1d3afTKQRRNy5guJv7b2UnGiepLGdRBN1R/qLpyPtqjj+kIIV1H9odVrv?=
- =?us-ascii?Q?3QQwTKf/oN20y4dDmgLSI4NtaOYV7ljJW7Xk8yGrfZxF7po5Z+j80ThKMw0N?=
- =?us-ascii?Q?Mwz5iw3rAiLKukljnw0koVbniQ9/RTr1+6vlxVQTxiTFAaRhB9v3m69Pmi5n?=
- =?us-ascii?Q?HqMrBAH7o0qlcVg/o/hkHPCB2kzLHZI9QtwlH6B5+ZNhn9mbuFA+UvS/w0Lg?=
- =?us-ascii?Q?fNdKiFQvJJ6O8XKaeXEPC8WfgSrgT5l5JKcdaGrsGyPNUkEpIC+ZNYE4syjP?=
- =?us-ascii?Q?ndqz0LsWQ2+HM92Mtckc36LaNN0/RWYzby/Ku2PVcF/ffnFJO9ln89r+Zyez?=
- =?us-ascii?Q?fZ+7bLrMpS0wz1WTCbLag5smQ2LxuQPOYm/QKk6W4HYhc635JS7KR7Ndu5Df?=
- =?us-ascii?Q?XV5Y9f9sE2/mLg+17bwvlZ1kEnsBQnSI1urtwqGecU9dQplHx99rxtGY/vr7?=
- =?us-ascii?Q?WvX3NJj8iOB7OdIVsZ/uUpLzrH1Mg+KY5o0JqX3iq19Abc9RBaB5poO31ebC?=
- =?us-ascii?Q?UyhUyaCt8b8ffTg3sb9WxxRwilksWF5Zq4AuyfPkXnbh7Bn1fFqR3pq8winB?=
- =?us-ascii?Q?hcI1dEzmD63CfnI4Z3masj+4CIph0lEJi/ziMdjNd88BdTE+J5NFO6kT52XQ?=
- =?us-ascii?Q?t0DjD6Wz4K5TKv/leKkmJQKabl7YuX0oFlQ0WIaNVimcs5oDOd2PSuncgZkF?=
- =?us-ascii?Q?F8442u38M6YSu8vqeAQI839njWC4kVMlLDPthEKt3e4qHTT/pvdjqpd4Z/5Y?=
- =?us-ascii?Q?AdbhmE2BHehZoV5gIY6Zrg9sEY2QCy+NC+khXeSYRJ8l/Np2qEc65saRlzNv?=
- =?us-ascii?Q?G2oLB9MAmtera9pb7eN4pyPwJWXr1uDZ3EDh0+W0uSRwfI+lk/3HiE+J9CbX?=
- =?us-ascii?Q?9B7BoUHmpHPSleVZ7LCd2NgrDWO7Np9dbe3ZHP1A9truIpFolEEHCUIzhxrf?=
- =?us-ascii?Q?WupuwHbRAMWtUsdR7k2vQzqnq9QwZzXzMMDDgyDpy7PThXDFk7EiKJu+x6Ny?=
- =?us-ascii?Q?YGf/Rk/tK+N6kWZlVFjs8bYkp75p4QdtBG2OyD7SHYDfqmJf64oL5G9+6YWn?=
- =?us-ascii?Q?dyGjuEa4PBF34oEnfqCGlQYn+uGtuXsKGXtqXeIADjNTWaxCPIxDRc6A9Sku?=
- =?us-ascii?Q?0ul1Yam7oM5jdos7tCeaUShPd+NVk2Jo?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(52116014)(366016)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?q32IaHrKhNTUUV0VIONYX1UIznSLLBH2gZk8RXKPCVgE8XgytSEJRWwEtHe8?=
- =?us-ascii?Q?g0wOV8PA5gSIsXXZltXHr6c89qxF4+Vam5v0y4gE2fR5jmkpZgbMXJxfkkmV?=
- =?us-ascii?Q?qd4Z/gSSVPbSCOTPS2tXNscn/EgReAaIVnNAyiVmPwk+aHPaKSJFTPPHYLaX?=
- =?us-ascii?Q?rlj84rTIvGLR8y4ZY7J8sA1BPO6Wt4QfwlUBG8xaXxkHNtR0CdpcdD8jHRXP?=
- =?us-ascii?Q?xLl1+stol0pFJGsDWea5ZmmgaAPZRyg1ic6qUVg+cv4xALxNnl7GCtWHlC3h?=
- =?us-ascii?Q?oRcGxfV73zI0g/IgRxnCHf2ma1wptbkvjCZr7CiSEvvgYJkYm3XU9QgUjnfw?=
- =?us-ascii?Q?CoL2LKH5vvUqTk+UMTK2C0Ix6osAv7DhNWxfas5GGTX+N1apmDPZhFVML7M2?=
- =?us-ascii?Q?/NGWb4ueyAVYM/uYd/LS4m69WPwmdae93SC/QcuL9rtAKgfHnZN18F6yCsHs?=
- =?us-ascii?Q?61/AEuUGs0v+MIb5U3EGadnFMAASzA1XZwyi+s1DgJr83CJ/ezrYaH8cJCKk?=
- =?us-ascii?Q?IQdakEGSnRFkqHaKUEHRciKZapKWr4UStXeTgu97tUsyyvvE7tUzFlIAHS7L?=
- =?us-ascii?Q?8TL5Y9xso7qRzSONw8Ymy2iPTaxtfEeOZ9SuQ+RWzKG4br830p5X+x4hpET5?=
- =?us-ascii?Q?inO7DIFTnUDMvhgl2LZBOl4yI0YZ+KpQIC4QCQypLg0F5aPJsgTjLKgG4Ga2?=
- =?us-ascii?Q?egZebwgBvKutOn6u8NH85tVFsM2uQLRBS29OCH5M01typ6asfiEIdtFEJJqX?=
- =?us-ascii?Q?Kwy+WBS5n5AQ1+UyTBn+YifU+bAudZ/Y7ryNqZ9fbHa6M6CYduISN800wccv?=
- =?us-ascii?Q?ecfUUpCLod8WTEANdzFJjJV8n0eSYJ2zD+2QWIDiw/5XHau61aYWxfWJxllZ?=
- =?us-ascii?Q?41KgW6yzS+ivJzk3UgnMCnmDa1DI96chTxwaU/d6CFmAB9omDMQhJS2CvWCu?=
- =?us-ascii?Q?PhcRtH9TJD6nXTl+UmOxajhIt5TGb1dCVVEMLkvREmvgL/3W7KGeozeJqJ2T?=
- =?us-ascii?Q?PnzjC0Dim69UhAeV5AsBLy8aO9UZx+d4eB8VUBKK2Qut9lhDgncPeePthk4r?=
- =?us-ascii?Q?xz4HmwKwJnTAItfzjy1GEQ3v9n5+r23Gs2f32is/sk0JB7QHyJvLOM8REPf0?=
- =?us-ascii?Q?InC46X0LxjYhPG4eUnsub27UXPAW8vgfpvhvry51FrjJrugzmyd+vLCIkawX?=
- =?us-ascii?Q?vcwxCUULJNcI+hY1OVRxg+yg8vZnUUaoxAhiYjtr1pxdZdeRXC2Qxa2c/wEG?=
- =?us-ascii?Q?vzNmwsnWroPUKDunecYSHOevrKn6NxaD3OXl/y/dOR94+lnO6GpIOQ89zl7u?=
- =?us-ascii?Q?em+kk5ymtDbM74sQUS543f6lxXvO4XuFIfTFDjF8nStysJSe0bEwETLXuFSW?=
- =?us-ascii?Q?xNtWhysnlp9FfJlECUwuu4ad15IwjRoDVKjUsKKfkN6a6u23jtio/RBebofx?=
- =?us-ascii?Q?UcXXKFHN/BHLDKSAbHSGG/Fg0ycQ0hVROFTj8PCSs4zk62DX4LZONZ/He48P?=
- =?us-ascii?Q?wNcqzeq9U9+IzPpoti/Q6pyB22SOP6nlyiU2gNQkMUdW8O5QxkhbunfJ7ugV?=
- =?us-ascii?Q?KYBWmiyTzuATP+C+QF8=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 04d861f3-2a58-4356-8ad0-08dd98863c84
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2025 16:40:46.6362
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1L3iIpOsO4tIwHADVi+DiyMaLlmDK5iovK0hLch546hc7xdy2HHG1q9HXWshXVjnwgl7M/Xm61r7yPXZwJnIrg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB10295
+References: <20250507205504.2017028-1-xur@google.com> <a2db22a3-6d66-481d-9432-b38b83e17183@cachyos.org>
+In-Reply-To: <a2db22a3-6d66-481d-9432-b38b83e17183@cachyos.org>
+From: Rong Xu <xur@google.com>
+Date: Wed, 21 May 2025 09:40:53 -0700
+X-Gm-Features: AX0GCFuSCRCyKyLGGFjAnkBxRWb0nZ4cr5-Pq8OFHgzoxBDDb79Rb1Uuvd_gMZI
+Message-ID: <CAF1bQ=Sh+N1ifCHK-15zeqt1tyzFtr-+nEJmSjEJOgfXgK9ufg@mail.gmail.com>
+Subject: Re: [PATCH v2] kbuild: distributed build support for Clang ThinLTO
+To: Eric Naim <dnaim@cachyos.org>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas.schier@linux.dev>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Alice Ryhl <aliceryhl@google.com>, 
+	Sami Tolvanen <samitolvanen@google.com>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>, 
+	Rafael Aquini <aquini@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Stafford Horne <shorne@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	Teresa Johnson <tejohnson@google.com>, linux-kernel@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Convert vf610-ocotp.txt to yaml format.
+On Mon, May 19, 2025 at 10:22=E2=80=AFPM Eric Naim <dnaim@cachyos.org> wrot=
+e:
+>
+> Hi Rong Xu,
+>
+> On 5/8/25 04:55, xur@google.com wrote:
+> > From: Rong Xu <xur@google.com>
+> >
+> > Add distributed ThinLTO build support for the Linux kernel.
+> > This new mode offers several advantages: (1) Increased
+> > flexibility in handling user-specified build options.
+> > (2) Improved user-friendliness for developers. (3) Greater
+> > convenience for integrating with objtool and livepatch.
+> >
+> > Note that "distributed" in this context refers to a term
+> > that differentiates in-process ThinLTO builds by invoking
+> > backend compilation through the linker, not necessarily
+> > building in distributed environments.
+> >
+> > Distributed ThinLTO is enabled via the
+> > `CONFIG_LTO_CLANG_THIN_DIST` Kconfig option. For example:
+> >  > make LLVM=3D1 defconfig
+> >  > scripts/config -e LTO_CLANG_THIN_DIST
+> >  > make LLVM=3D1 oldconfig
+> >  > make LLVM=3D1 vmlinux -j <..>
+> >
+> > The implementation changes the top-level Makefile with a
+> > macro for generating `vmlinux.o` for distributed ThinLTO
+> > builds. It uses the existing Kbuild infrastructure to
+> > perform two recursive passes through the subdirectories.
+> > The first pass generates LLVM IR object files, similar to
+> > in-process ThinLTO. Following the thin-link stage, a second
+> > pass compiles these IR files into the final native object
+> > files. The build rules and actions for this two-pass process
+> > are primarily implemented in `scripts/Makefile.build`.
+> >
+> > Currently, this patch focuses on building the main kernel
+> > image (`vmlinux`) only. Support for building kernel modules
+> > using this method is planned for a subsequent patch.
+> >
+> > Tested on the following arch: x86, arm64, loongarch, and
+> > riscv.
+> >
+> > Some implementation details can be found here:
+> > https://discourse.llvm.org/t/rfc-distributed-thinlto-build-for-kernel/8=
+5934
+> >
+> > Signed-off-by: Rong Xu <xur@google.com>
+> > ---
+> > Changelog since v1:
+> > - Updated the description in arch/Kconfig based on feedback
+> >   from Nathan Chancellor
+> > - Revised file suffixes: .final_o -> .o.thinlto.native, and
+> >   .final_a -> .a.thinlto.native
+> > - Updated list of ignored files in .gitignore
+> > ---
+> >  .gitignore                        |  2 ++
+> >  MAINTAINERS                       |  5 +++
+> >  Makefile                          | 40 ++++++++++++++++++++---
+> >  arch/Kconfig                      | 19 +++++++++++
+> >  scripts/Makefile.build            | 52 +++++++++++++++++++++++++++---
+> >  scripts/Makefile.lib              |  7 +++-
+> >  scripts/Makefile.vmlinux_o        | 16 +++++++---
+> >  scripts/Makefile.vmlinux_thinlink | 53 +++++++++++++++++++++++++++++++
+> >  scripts/head-object-list.txt      |  1 +
+> >  9 files changed, 180 insertions(+), 15 deletions(-)
+> >  create mode 100644 scripts/Makefile.vmlinux_thinlink
+> >
+>
+> I noticed that both Makefile.autofdo and Makefile.propeller add extra lin=
+ker flags when building with ThinLTO. Did you miss updating that or is the =
+omission there intentional?
 
-Additional changes:
-- Remove label in examples.
-- Add include file in examples.
-- Move reg just after compatible in examples.
-- Add ref: nvmem.yaml and nvmem-deprecated-cells.yaml
-- Remove #address-cells and #size-cells from required list to match existed
-dts file.
+Thanks for catching this! One good aspect of distributed build mode is
+that we no longer need the extra linker flags -- most of them are just
+to pass the options to the BE compilation.
+So this patch does not need these linker options.  But for the
+Propeller build, we still need to pass one of the two profiles to the
+final link, and I'll be sure to incorporate that into the patch.
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
-Change from v1 to v2
-- remove address-cells and size-cells.
-- add clocks to requires
----
- .../bindings/nvmem/fsl,vf610-ocotp.yaml       | 47 +++++++++++++++++++
- .../devicetree/bindings/nvmem/vf610-ocotp.txt | 19 --------
- 2 files changed, 47 insertions(+), 19 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/nvmem/fsl,vf610-ocotp.yaml
- delete mode 100644 Documentation/devicetree/bindings/nvmem/vf610-ocotp.txt
+However, I do need to make a change regarding file suffixes. The
+is_kernel_obj macro in the Makefile.build uses the basename command.
+The issue is that basename extracts everything before the last period
+in a filename. So, for a file named "foo.o.thinlto.native", basename
+returns "foo.o.thinlto", but kbuild expects it to return "foo".
 
-diff --git a/Documentation/devicetree/bindings/nvmem/fsl,vf610-ocotp.yaml b/Documentation/devicetree/bindings/nvmem/fsl,vf610-ocotp.yaml
-new file mode 100644
-index 0000000000000..5aef86a752a6d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/nvmem/fsl,vf610-ocotp.yaml
-@@ -0,0 +1,47 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/nvmem/fsl,vf610-ocotp.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: On-Chip OTP Memory for Freescale Vybrid
-+
-+maintainers:
-+  - Frank Li <Frank.Li@nxp.com>
-+
-+allOf:
-+  - $ref: nvmem.yaml#
-+  - $ref: nvmem-deprecated-cells.yaml
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - fsl,vf610-ocotp
-+      - const: syscon
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: ipg clock we associate with the OCOTP peripheral
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/vf610-clock.h>
-+
-+    ocotp@400a5000 {
-+        compatible = "fsl,vf610-ocotp", "syscon";
-+        reg = <0x400a5000 0xcf0>;
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+        clocks = <&clks VF610_CLK_OCOTP>;
-+    };
-diff --git a/Documentation/devicetree/bindings/nvmem/vf610-ocotp.txt b/Documentation/devicetree/bindings/nvmem/vf610-ocotp.txt
-deleted file mode 100644
-index 72ba628f6d0b0..0000000000000
---- a/Documentation/devicetree/bindings/nvmem/vf610-ocotp.txt
-+++ /dev/null
-@@ -1,19 +0,0 @@
--On-Chip OTP Memory for Freescale Vybrid
--
--Required Properties:
--  compatible:
--  - "fsl,vf610-ocotp", "syscon" for VF5xx/VF6xx
--  #address-cells : Should be 1
--  #size-cells : Should be 1
--  reg : Address and length of OTP controller and fuse map registers
--  clocks : ipg clock we associate with the OCOTP peripheral
--
--Example for Vybrid VF5xx/VF6xx:
--
--	ocotp: ocotp@400a5000 {
--		compatible = "fsl,vf610-ocotp", "syscon";
--		#address-cells = <1>;
--		#size-cells = <1>;
--		reg = <0x400a5000 0xCF0>;
--		clocks = <&clks VF610_CLK_OCOTP>;
--	};
--- 
-2.34.1
+To fix this, I'll adjust the suffixes to ".a_thinlto_native" and
+".o_thinlto_native". I'll send the patch v3 shortly.
 
+Thanks,
+
+-Rong
+>
+> --
+> Regards,
+>   Eric
