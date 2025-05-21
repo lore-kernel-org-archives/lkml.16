@@ -1,186 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC8E3248F52;
-	Wed, 21 May 2025 09:37:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 759E323504D;
+	Wed, 21 May 2025 09:37:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747820223; cv=none; b=IkBWFSRcOeUPviCKCj/rKl5xURlCyBK2kVG8WoaAdADRFDC99L/GicUVRZzmksE2r8kjmfu0FubozzCjTli27tbIFBb0bk+6MaVrcJkXXfGpQzbMAOEN4HqmNi2noDe++saVOUPNOpei0baysk+BrUqDhBmSxwuHp6JC84WYju0=
+	t=1747820253; cv=none; b=fC7kobb9WAC4h6aNN7D9MZGmOTMpQ3qwTs9E5OWD4vBPzOGNWKIOYGN1UiBYAjSXpRotGHEq9YDKdW0mKDXihMHAtvCU3ZLZCmlrtS+1L6SR7N05DEbbu0vPkeo7OE0kqWJeqznQx8QpsIEZ2I0Cs69IVjip8u+uLYNH3jwxGP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747820223; c=relaxed/simple;
-	bh=R1smjQqKCqBD+gWdTB65+uxqJBq+XDVIA1HiFl2BUto=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L/X0N6hEeVDX7dBRdydBa/csF1wwZyToDmpp6sRUBg/f3dvzgX6GAIQgYfZeK2DppVc5y9i3kXsJSqT8N7qbUY0kw6J4aX0FCrmy4rPuD7HqOPDIAeKodrkkqKYDxsmbngsVSXzbFNXzvOgsmxZZplD2K+QzTa6AhEAj4agmyO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DiQX2a/y; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DiQX2a/y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C83BC4CEEA;
-	Wed, 21 May 2025 09:37:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747820223;
-	bh=R1smjQqKCqBD+gWdTB65+uxqJBq+XDVIA1HiFl2BUto=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DiQX2a/yEYtLcOsrcqsA8mt3vW5BKfAft3rqhXBG1vP+4EHTTVxJy+pWhT00oXw1D
-	 3gtkj/T+tQI/0ac2x+yHV7vIM/2L53bgqpUdDnh9tzN/i1RqrF2dwFx4UVlkcB9V5N
-	 VGmzEFk2uV24NwbJ282OLOUMY8QYqfxZcaR2NliOFW1RvA1qszcVlMOTWLtIILI5mR
-	 pMF86sqaKqqxGDzz9AiHawlngTscobwL0bMO4+C1Bv5SVwW9fz8/iGaes/R6filcuc
-	 iTuLyTvv2ub99UqOZ++0ZVLi8rb8ec396YKF5A9tzQGNx+epBTBMBkOoLzqY1YcyQ8
-	 vlvfdeQ5dgI2g==
-Date: Wed, 21 May 2025 11:37:00 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Shradha Todi <shradha.t@samsung.com>
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.or, linux-kernel@vger.kernel.org, 
-	linux-phy@lists.infradead.org, manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org, 
-	kw@linux.com, robh@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, alim.akhtar@samsung.com, vkoul@kernel.org, 
-	kishon@kernel.org, arnd@arndb.de, m.szyprowski@samsung.com, jh80.chung@samsung.com
-Subject: Re: [PATCH 06/10] dt-bindings: PCI: Add bindings support for Tesla
- FSD SoC
-Message-ID: <20250521-capable-affable-numbat-b0ce84@kuoka>
-References: <20250518193152.63476-1-shradha.t@samsung.com>
- <CGME20250518193248epcas5p2543146c715eb249ea6c2ce3c78d03b34@epcas5p2.samsung.com>
- <20250518193152.63476-7-shradha.t@samsung.com>
+	s=arc-20240116; t=1747820253; c=relaxed/simple;
+	bh=N8yWSW5tYLd4q2UM0vWpfUGoZ8tTE6cCS0D8RWw2pbY=;
+	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=JtV2DWMtDwXv9hkUV3QYyiR1uGiYSonxlVZN2dy73J4uE7VBFWeK2SVw4qUQ2rdcikieagZw532jDxfg157Fx5R5w5oRlY0cPq47x7UL7/dXt+nbNHftuTs8RamjPoNZgkKPHGvFwQR9dI9NjlemRfACpLiOIqCHvibYZrsuPu8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8AxaeDWni1oNJv0AA--.3899S3;
+	Wed, 21 May 2025 17:37:26 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowMAxzxvRni1o0QnlAA--.10296S3;
+	Wed, 21 May 2025 17:37:21 +0800 (CST)
+Subject: Re: [PATCH] dcache: Define DNAME_INLINE_LEN as a number directly
+To: Yonghong Song <yonghong.song@linux.dev>,
+ Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+ Al Viro <viro@zeniv.linux.org.uk>
+References: <20250520064707.31135-1-yangtiezhu@loongson.cn>
+ <20250520082258.GC2023217@ZenIV>
+ <CAADnVQJW+qyq9wPD6RdoaZ8nLYX8N2+4Bhxyd19h6pdqNRMc3A@mail.gmail.com>
+ <b932c4b8-a45d-4da3-8ef9-f45055830609@linux.dev>
+Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ Linux-Fsdevel <linux-fsdevel@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+ loongarch@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <9750057e-2efa-58e1-8739-290f1b2a9104@loongson.cn>
+Date: Wed, 21 May 2025 17:37:20 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250518193152.63476-7-shradha.t@samsung.com>
+In-Reply-To: <b932c4b8-a45d-4da3-8ef9-f45055830609@linux.dev>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMAxzxvRni1o0QnlAA--.10296S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7uFy7ZF1xKFWDWw1rXw17XFc_yoW8Zr48pa
+	45KanFkr4DKFWrAr9F9wsYvFyftws3tayYgas5Xr10y3s0vF1fGF4Ig3y5uF93Cw48Cw4j
+	9w1jqFy3Zr18AagCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU9Eb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2
+	x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1D
+	McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7
+	I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8
+	JwCFI7km07C267AKxVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14
+	v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY
+	67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2
+	IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_
+	Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8q2NtUUUUU==
 
-On Mon, May 19, 2025 at 01:01:48AM GMT, Shradha Todi wrote:
-> Document the PCIe controller device tree bindings for Tesla FSD
-> SoC for both RC and EP.
-> 
-> Signed-off-by: Shradha Todi <shradha.t@samsung.com>
-> ---
->  .../bindings/pci/samsung,exynos-pcie-ep.yaml  |  66 ++++++
->  .../bindings/pci/samsung,exynos-pcie.yaml     | 199 ++++++++++++------
->  2 files changed, 198 insertions(+), 67 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pci/samsung,exynos-pcie-ep.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/samsung,exynos-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/samsung,exynos-pcie-ep.yaml
-> new file mode 100644
-> index 000000000000..5d4a9067f727
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/samsung,exynos-pcie-ep.yaml
+On 05/21/2025 02:26 AM, Yonghong Song wrote:
+>
+>
+> On 5/20/25 1:04 AM, Alexei Starovoitov wrote:
+>> On Tue, May 20, 2025 at 1:23 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>>> On Tue, May 20, 2025 at 02:47:07PM +0800, Tiezhu Yang wrote:
+>>>> When executing the bcc script, there exists the following error
+>>>> on LoongArch and x86_64:
+>>> NOTABUG.  You can't require array sizes to contain no arithmetics,
+>>> including sizeof().  Well, you can, but don't expect your requests
+>>> to be satisfied.
+>>>
+>>>> How to reproduce:
+>>>>
+>>>> git clone https://github.com/iovisor/bcc.git
+>>>> mkdir bcc/build; cd bcc/build
+>>>> cmake ..
+>>>> make
+>>>> sudo make install
+>>>> sudo /usr/share/bcc/tools/filetop
+>>> So fix the script.  Or report it to whoever wrote it, if it's
+>>> not yours.
+>> +1
+>>
+>>> I'm sorry, but we are NOT going to accomodate random parsers
+>>> poking inside the kernel-internal headers and failing to
+>>> actually parse the language they are written in.
+>>>
+>>> If you want to exfiltrate a constant, do what e.g. asm-offsets is
+>>> doing.  Take a look at e.g.  arch/loongarch/kernel/asm-offsets.c
+>>> and check what ends up in include/generated/asm-offsets.h - the
+>>> latter is entirely produced out of the former.
+>>>
+>>> The trick is to have inline asm that would spew a recognizable
+>>> line when compiled into assembler, with the value(s) you want
+>>> substituted into it.  See include/linux/kbuild.h for the macros.
+>>>
+>>> Then you pick these lines out of generated your_file.s - no need
+>>> to use python, sed(1) will do just fine.  See filechk_offsets in
+>>> scripts/Makefile.lib for that part.
+>> None of it is necessary.
+>>
+>> Tiezhu,
+>>
+>> bcc's tools/filetop.py is really old and obsolete.
+>> It's not worth fixing. I'd delete it.
+>> Use bcc's libbpf-tools/filetop instead.
+>
+> Tiezhu, please check whether libbpf-tools/filetop satisfied your need or
+> not. Thanks!
 
-Filename matching compatible.
-
-> @@ -0,0 +1,66 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/samsung,exynos-pcie-ep.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Samsung SoC series PCIe Endpoint Controller
-> +
-> +maintainers:
-> +  - Shradha Todi <shradha.t@samsung.co>
-> +
-> +description: |+
-> +  Samsung SoCs PCIe endpoint controller is based on the Synopsys DesignWare
-> +  PCIe IP and thus inherits all the common properties defined in
-> +  snps,dw-pcie-ep.yaml.
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-
-Drop
-
-> +      - enum:
-> +          - tesla,fsd-pcie-ep
-> +
-> +allOf:
-> +  - $ref: /schemas/pci/snps,dw-pcie-ep.yaml#
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - tesla,fsd-pcie-ep
-
-What is the point of this if:? There are no other variants.
-
-Also, missing constraints for all the properties. This is really
-incomplete.
-
-> +    then:
-> +      properties:
-> +        samsung,syscon-pcie:
-> +          description: phandle for system control registers, used to
-> +                       control signals at system level
-
-Where is the type defined? Look how such properties are described -
-there are plenty of examples.
-
-> +
-> +      required:
-> +        - samsung,syscon-pcie
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/fsd-clk.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    bus {
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +        pcieep0: pcie-ep@16a00000 {
-> +            compatible = "tesla,fsd-pcie-ep";
-> +            reg = <0x0 0x168b0000 0x0 0x1000>,
-> +                  <0x0 0x16a00000 0x0 0x2000>,
-> +                  <0x0 0x16a01000 0x0 0x80>,
-> +                  <0x0 0x17000000 0x0 0xff0000>;
-> +            reg-names = "elbi", "dbi", "dbi2", "addr_space";
-> +            clocks = <&clock_fsys1 PCIE_LINK0_IPCLKPORT_AUX_ACLK>,
-> +                     <&clock_fsys1 PCIE_LINK0_IPCLKPORT_DBI_ACLK>,
-> +                     <&clock_fsys1 PCIE_LINK0_IPCLKPORT_MSTR_ACLK>,
-> +                     <&clock_fsys1 PCIE_LINK0_IPCLKPORT_SLV_ACLK>;
-> +            clock-names = "aux", "dbi", "mstr", "slv";
-> +            num-lanes = <4>;
-> +            samsung,syscon-pcie = <&sysreg_fsys1 0x50c>;
-> +            phys = <&pciephy1>;
-> +        };
-> +    };
-> +...
-> diff --git a/Documentation/devicetree/bindings/pci/samsung,exynos-pcie.yaml b/Documentation/devicetree/bindings/pci/samsung,exynos-pcie.yaml
-> index f20ed7e709f7..a3803bf0ef84 100644
-> --- a/Documentation/devicetree/bindings/pci/samsung,exynos-pcie.yaml
-> +++ b/Documentation/devicetree/bindings/pci/samsung,exynos-pcie.yaml
-> @@ -11,78 +11,113 @@ maintainers:
->    - Jaehoon Chung <jh80.chung@samsung.com>
->  
->  description: |+
-> -  Exynos5433 SoC PCIe host controller is based on the Synopsys DesignWare
-> +  Samsung SoCs PCIe host controller is based on the Synopsys DesignWare
->    PCIe IP and thus inherits all the common properties defined in
->    snps,dw-pcie.yaml.
->  
-> -allOf:
-> -  - $ref: /schemas/pci/snps,dw-pcie.yaml#
-> -
->  properties:
->    compatible:
-> -    const: samsung,exynos5433-pcie
-> -
-> -  reg:
-> -    items:
-> -      - description: Data Bus Interface (DBI) registers.
-> -      - description: External Local Bus interface (ELBI) registers.
-> -      - description: PCIe configuration space region.
-> -
-
-No, I do not understand any of this change. Properties are defined in
-top-level. Why all this is being removed?
-
-
-Best regards,
-Krzysztof
+Yes, it works well for me.
 
