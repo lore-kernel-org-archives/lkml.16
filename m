@@ -1,98 +1,80 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5951259C8B;
-	Wed, 21 May 2025 09:51:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34CCD235BFB;
+	Wed, 21 May 2025 09:52:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747821122; cv=none; b=KBFJ+xeF87q8uz6G8G/7V9PWj4WJPIdV7yRmtB14/N6ZdpRNYRqNVDzlD+5pVDauuhQXJD3Exahu2tNMhVWtXhHmmHbmmFzgWRDtK02ywy4K0K5H1bnoqnTEQS4vzbFKCLph96lGrdfH+pQJOzjrEu8OGRlf2VzaKNEzoT2L2no=
+	t=1747821168; cv=none; b=alCY3zh4R2IvengY2ojFzk3eSYYyeVOmmpDmQp3fOK5GdME9tRSsxdD3PmcjG2AvMY3gDWs345qB6shyh+mFEzX0fPB4XlcuK+c0OajFUwV9ZlpFSlq7IKqdlFFhHOEv3LnXA2gGCqdxYftyCMEzaQAEJ/0QFtZTFtAxPBN5hvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747821122; c=relaxed/simple;
-	bh=LpXCQ/B/3LRSzVl5sAv4IFoyYafIpCfcQtXKvLccu+I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qB5DvZljFGqDPrOEiv/ZfCRiMnr2J4j6mP8bVo56bX4zHME67jrqLtAIliCSNJ4llQPYk4lUO2w8076agpE3yWSLB3/QahgULuA4D+Q3VmgwW3gXcJSq1U4Ep9Rh/f22dn+MhBnUSmPosJE/b/0tIa7Q2OPcXakcN2vaN1yFDkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 364E61515;
-	Wed, 21 May 2025 02:51:45 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8E2003F6A8;
-	Wed, 21 May 2025 02:51:58 -0700 (PDT)
-Date: Wed, 21 May 2025 10:51:54 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: James Clark <james.clark@linaro.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
-	kvmarm@lists.linux.dev
-Subject: Re: [PATCH 07/10] perf: arm_spe: Add support for filtering on data
- source
-Message-ID: <20250521095154.GV412060@e132581.arm.com>
-References: <20250506-james-perf-feat_spe_eft-v1-0-dd480e8e4851@linaro.org>
- <20250506-james-perf-feat_spe_eft-v1-7-dd480e8e4851@linaro.org>
- <20250520134632.GR412060@e132581.arm.com>
- <443141db-6950-4a15-83be-ad9e9c0e03a0@linaro.org>
- <20250520161003.GT412060@e132581.arm.com>
- <20250520162243.GU412060@e132581.arm.com>
- <5752f039-51c1-4452-b5df-03ff06da7be3@linaro.org>
+	s=arc-20240116; t=1747821168; c=relaxed/simple;
+	bh=GcPYFTL8JSDRKl+sCR+HiupBT7i2RDpba44+j5oe9VQ=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=i0iWEH4N7oIipwm3QeKkxuByRz57DMinBHJ1ynL/7E5LRWnp6YjHoUvRPvJ4tffhGg57FmHqzAiUvFByd4MXpAJ7VI3PtlSNyVcBsV3FFH2/VBeYBNCPf5rtjmk+IpQ3Ekv+qd8ovtMz0Ui9iBRhsMyUstdM22879yZy8XSKA9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b2RRr4sDdz6D9cm;
+	Wed, 21 May 2025 17:47:52 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id E52981402FC;
+	Wed, 21 May 2025 17:52:43 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 21 May
+ 2025 11:52:42 +0200
+Date: Wed, 21 May 2025 10:52:40 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: <linux-pci@vger.kernel.org>, Jon Pan-Doh <pandoh@google.com>, "Karolina
+ Stolarek" <karolina.stolarek@oracle.com>, Weinan Liu <wnliu@google.com>,
+	Martin Petersen <martin.petersen@oracle.com>, Ben Fuller
+	<ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, "Anil
+ Agrawal" <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, Ilpo
+ =?UTF-8?Q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Sathyanarayanan
+ Kuppuswamy" <sathyanarayanan.kuppuswamy@linux.intel.com>, Lukas Wunner
+	<lukas@wunner.de>, Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney"
+	<paulmck@kernel.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, "Oliver
+ O'Halloran" <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>, "Keith
+ Busch" <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>, Terry Bowman
+	<terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>, Dave Jiang
+	<dave.jiang@intel.com>, <linux-kernel@vger.kernel.org>,
+	<linuxppc-dev@lists.ozlabs.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
+Subject: Re: [PATCH v7 12/17] PCI/AER: Check log level once and remember it
+Message-ID: <20250521105240.000016c8@huawei.com>
+In-Reply-To: <20250520215047.1350603-13-helgaas@kernel.org>
+References: <20250520215047.1350603-1-helgaas@kernel.org>
+	<20250520215047.1350603-13-helgaas@kernel.org>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5752f039-51c1-4452-b5df-03ff06da7be3@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Wed, May 21, 2025 at 09:54:48AM +0100, James Clark wrote:
-> On 20/05/2025 5:22 pm, Leo Yan wrote:
+On Tue, 20 May 2025 16:50:29 -0500
+Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-[...]
-
-> I'm thinking I'd rather leave it consistent with PMSFCR_EL1.FT and
-> automatically enable PMSFCR_EL1.FDS for any non zero data-source filter.
-
-This is fine for me.
-
-Just a minor thing, for the case PMSDSFR_EL1 = 0xFFFF,FFFF,FFFF,FFFF,
-we might consider to clear the PMSFCR_EL1.FDS bit.  This would be a bit
-performance benefit for disabling data source filter rather than
-enabling the filter with unaffecting all data sources.
-
-> This means we don't need a tool change to set some other flag when a filter
-> is provided (even if it's zero) and it's much simpler. It also doesn't
-> prevent the possibility of adding the enable flag in the future if someone
-> comes out with a need for it, but I don't think it needs to be done now.
-
-The question comes down to the complexity in user-space tools.
-
-Perf initializes the attribute configs to zeros. If we want to set all
-bits in config4 as a default value, we would need additional change
-in the perf tool. Also initializing config4 to all ones is likely to
-cause confusion if other tools want to enable the feature.
-
-I agree that a cleaner way would be to use an enable flag + mask, we can
-defer to add flag if needed.
-
-> TBH I can't imagine a case where someone would want to filter out any samples
-> that have any data source. Surely you'd only be looking for a selected set
-> of data sources, or no filtering at all.
-
-Agreed this is a rare case.
-
-Thanks,
-Leo
+> From: Karolina Stolarek <karolina.stolarek@oracle.com>
+>=20
+> When reporting an AER error, we check its type multiple times to determine
+> the log level for each message. Do this check only in the top-level
+> functions (aer_isr_one_error(), pci_print_aer()) and save the level in
+> struct aer_err_info.
+>=20
+> [bhelgaas: save log level in struct aer_err_info instead of passing it
+> as a parameter]
+> Signed-off-by: Karolina Stolarek <karolina.stolarek@oracle.com>
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> Tested-by: Krzysztof Wilczy=C5=84ski <kwilczynski@kernel.org>
+> Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux=
+.intel.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
