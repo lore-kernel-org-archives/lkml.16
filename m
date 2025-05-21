@@ -1,115 +1,146 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 428D516F288;
-	Wed, 21 May 2025 21:49:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6A1B1C32;
+	Wed, 21 May 2025 21:49:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747864143; cv=none; b=umg9/FbwMtJ2QBvRk/a49ZRNxf9wpQt7kdO5OF9TNCyluE+LrRJD/4hygY3kh5Xj7ZHzsP/kd1nXWsIYJTZPPXig8Jz5SPJ3wrh+ENgjkshvUE8PlkXFwQaes3eU4HLpKRbtmQAGyuvy5E+OupcgiubnGZA9TLRP8uScSwXPz88=
+	t=1747864183; cv=none; b=S1Gt5TvNLTQFe/+PzDddiaKUVGV70cpXsvKIjDDLA4ypkjSI9gjdBZvEj/k6dqhoXNr7AC7xabJGp41tXKXP2OjxIUs28Cw+CfYywT/aa6FkmeCGuUXHqy4ZHYwLM/M9hAJlcA8LQIzJrmhkk7aWo0uTTIa6iQY3hxtB4CUs7yY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747864143; c=relaxed/simple;
-	bh=v6oyws5czAbNgfpmZs07oRxCWMBQkASJkZzDQDtqUhM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dof+eTY6XOoItwrPk0Pl161kGCGwri/CRHAqwNmIikiHJjuio5Lm5Ub9V1tuYhjt0EANEKePv06SlYB/clHMG7WC0dFTZDPdBasUOtzL5yjmxSjERN7lZtyycndoR9x3vMvkvpY5BnwjlOoxc+u5WGg2m2cou7GwRJ86LCNdUHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=au0RUgf/; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747864183; c=relaxed/simple;
+	bh=U9os5TII6LxXLLkJL9Ue1hk9ekAMkSZKxP2BFf8ugUk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ezWPbSlooPEoEKLwboMp3FuRv5165VtrHZ/EsKk4HntOCYJ3TKqg3+pdwUD1FA97KkL3ae31i7RqQD0XWSJItzhMGJa5g0N9hgO6KGZgggOJAciJK/T0lIJM5SDl3FrXPgYpS83ZhptvCFI4guHjSwnWxEyDHXI42zkhflcUasU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=N9iu+Zqc; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="au0RUgf/"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-acae7e7587dso1064803066b.2;
-        Wed, 21 May 2025 14:49:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747864140; x=1748468940; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=E7XZXU0VEJ18cU2BxFX9o9WteQEjbnzJPBFFWBFf2cs=;
-        b=au0RUgf/F6OTb6R6s8IXnJpgzfXRMdTP1GCt0/ZBVumH53GRThSQKnuW8NfuB3AAfB
-         nfVHUMj6sTuCacnFtwn6Cz7Hg3bDn3Iaqd1Ooeln5OZR83oCuY3r0sjMdeFY1l4Hbl9Z
-         ThtmuBuP3ruSrFKpsDRS0tTF8cTyOXBnrtx6it+06IKtBlSSp4XQYX//DZAuRWx/ZGEi
-         us+IoWEQtl7/vN5qrvaZsIeiuqaVmV5RD9w39mAK69Rbv/gwgE9tXWO3XahzPSOBSFyG
-         OMpEZOm8pme4bctrqj4s9uM62g7waLxBa21XFhzSVZhTQkZGvn53acya2DyWAM1AoPAM
-         GAnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747864140; x=1748468940;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=E7XZXU0VEJ18cU2BxFX9o9WteQEjbnzJPBFFWBFf2cs=;
-        b=nwv/J+fXcXL/7+YgS0LhdpWpGx8gLOAGpsUckTjyZU3NL2rLPY1c0aESu9nHJ4MA03
-         SbziRkl8v0iAWvEx2iQAm1NwEufVdbCEIEzd3mFhSQN53keb9FhWj4PYLsAeWhz4dh8j
-         qmiZObGBkDvAJoi5LxOqSukKUM3BgeF8NXvpgXM7UfkZz7f59VEG7irg4i9Z5nT4yEDR
-         I8EWr/wHWSJJ9BA4h7LrDlXhrut7UfEoPdKQdvvhn379ZjMnmpgQQDlpVmTNJ8oSgA6L
-         KqM2bng2c/jq0Q8MzFNSKF3BtVOXjBXFzzFfQcGReHhvojLN5INjUCedsNErJSpUxebT
-         G+dg==
-X-Forwarded-Encrypted: i=1; AJvYcCVQ4qzt+ESy0qnbOMEkcmzyG2aVPptIU6q0/kwtcFSQfcwDOZH8S8/lmg4a36TozbPTbgKgFP1YdKYdsWg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0L3FFgpPcD20uZxqeCX7UNwTKAunElKcrKVALEDl01WFlRMTf
-	nB3MR7J4IZtAj3gf5oVPY9RghLit6xuu02diBPn7NMrkIOIIxRZR/n8=
-X-Gm-Gg: ASbGnctA4twIPWt2DJU2Ntcfc07iGx9qSATNSZUVtW/VO67tdBjk3iniaw8u/I2nU02
-	neDumjr1qLNV5bNOqQNKPTfCywINUBPo6L6aOiYpnHmkN9mQ+oBUiEqmmd1ybYMRPKXVIaa+uXT
-	fkjgP7JwxnDyzat0+EaqRucQFSAc5FKPbBj2f36PFW4wfZzaV+3fRg77q6phGst34WuxvqNy5VV
-	DdBwR7Omzz5Q70pKZwlHA2cVAQKPcHFDR0cen9eHUdU72ByO8nV9EigRvA9bVjejgWVScZIyIwz
-	NKH/+92nd6Iuf0SsdFXjHERj6++3/Czd7E7IIoZkCQxueTrU98LkDSUHRCozbZ7Afzl0k22/yDn
-	y
-X-Google-Smtp-Source: AGHT+IEGpGKyn2SjbG73jckuIvkuAriIecmkA7h43Y5pgW3r7LcfmeLczUiVBIZTzZhCpPXrY3HTfw==
-X-Received: by 2002:a17:907:d06:b0:ad2:1a60:f83b with SMTP id a640c23a62f3a-ad52d443a2amr2108668666b.11.1747864140348;
-        Wed, 21 May 2025 14:49:00 -0700 (PDT)
-Received: from localhost.localdomain ([2a0d:e487:157f:5941:a21f:c1c7:6140:7de5])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d4cc5dbsm957451666b.169.2025.05.21.14.48.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 14:48:59 -0700 (PDT)
-From: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
-To: heikki.krogerus@linux.intel.com,
-	gregkh@linuxfoundation.org
-Cc: linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kernel-mentees@lists.linux.dev,
-	skhan@linuxfoundation.org,
-	jihed.chaibi.dev@gmail.com
-Subject: [PATCH 1/1] usb: typec: tipd: fix typo in TPS_STATUS_HIGH_VOLAGE_WARNING macro
-Date: Wed, 21 May 2025 23:48:51 +0200
-Message-Id: <20250521214851.386796-1-jihed.chaibi.dev@gmail.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="N9iu+Zqc"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A537E43280;
+	Wed, 21 May 2025 21:49:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1747864177;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=72uLjnDwYtf0i/HOFO/K1hGBe6ZH7TCozYNfsiGSliY=;
+	b=N9iu+ZqcXOgFyFT5sCwjl4yjWJAJBEHTItv2qfLgvMYzqDgI+fLT084NW7lVteM5VIEn4r
+	hXJuYsgFVHOycPKj9ztDjD9MdEOC4OWRAQ8BtYeTPE7S4siNbzW1M+/a2lc15DGMSbfolQ
+	1JG2LrdbLOoGhylsGM/+9dJDQjhFJ7z/COWly7xMtkY3RLSiIZsjsFtWgU/rC6d/hGdgbW
+	wVYc0h5OTbYL1swadFnQJ5OV7XvrJkAQe6WwCsbNatk6ojOhQqhnm2xOR4MjwrIzPK4ZAM
+	ptiuI1hdXkzMWU5OBZ8MSzXwffzddk74wQ3G583xMivuzC/P7AkRqxzyLUa5Zw==
+Date: Wed, 21 May 2025 23:49:35 +0200
+From: Kory Maincent <kory.maincent@bootlin.com>
+To: Piotr Kubik <piotr.kubik@adtran.com>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>, Andrew Lunn
+ <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next v3 2/2] net: pse-pd: Add Si3474 PSE controller
+ driver
+Message-ID: <20250521234935.7dad7f72@kmaincent-XPS-13-7390>
+In-Reply-To: <e036f7e2-5e5d-40bc-b22c-6dbd6a34eb15@adtran.com>
+References: <f975f23e-84a7-48e6-a2b2-18ceb9148675@adtran.com>
+	<584b7975-1544-4833-8f8a-00a8769a80c2@adtran.com>
+	<20250519115439.35382771@kmaincent-XPS-13-7390>
+	<e036f7e2-5e5d-40bc-b22c-6dbd6a34eb15@adtran.com>
+Organization: bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdegvddtucdltddurdegfedvrddttddmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhephfduveekuedtvdeiffduleetvdegteetveetvdelteehhfeuhfegvdeuuedtleegnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgduleemkeehkeejmeejuddttdemjegtvghfmegvjegtugemieejrgdvmegutdelheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekheekjeemjedutddtmeejtggvfhemvgejtggumeeijegrvdemugdtleehpdhhvghlohepkhhmrghinhgtvghnthdqigfrufdqudefqdejfeeltddpmhgrihhlfhhrohhmpehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedugedprhgtphhtthhopehpihhothhrrdhkuhgsihhksegrughtrhgrnhdrtghomhdprhgtphhtthhopehordhrvghmp
+ hgvlhesphgvnhhguhhtrhhonhhigidruggvpdhrtghpthhtoheprghnughrvgifodhnvghtuggvvheslhhunhhnrdgthhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: kory.maincent@bootlin.com
 
-"VOLAGE" should become "VOLTAGE"
+On Wed, 21 May 2025 08:04:23 +0000
+Piotr Kubik <piotr.kubik@adtran.com> wrote:
 
-Signed-off-by: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
----
- drivers/usb/typec/tipd/tps6598x.h | 2 +-
- drivers/usb/typec/tipd/trace.h    | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+> On 5/19/25 11:54, Kory Maincent wrote:
+> > On Fri, 16 May 2025 13:07:18 +0000
+> > Piotr Kubik <piotr.kubik@adtran.com> wrote:
+> >  =20
+> >> From: Piotr Kubik <piotr.kubik@adtran.com>
+> >>
+> >> Add a driver for the Skyworks Si3474 I2C Power Sourcing Equipment
+> >> controller.
+> >>
+> >> Based on the TPS23881 driver code.
+> >>
+> >> Driver supports basic features of Si3474 IC:
+> >> - get port status,
+> >> - get port power,
+> >> - get port voltage,
+> >> - enable/disable port power.
+> >>
+> >> Only 4p configurations are supported at this moment. =20
 
-diff --git a/drivers/usb/typec/tipd/tps6598x.h b/drivers/usb/typec/tipd/tps6598x.h
-index 9b23e9017..cecb8d11d 100644
---- a/drivers/usb/typec/tipd/tps6598x.h
-+++ b/drivers/usb/typec/tipd/tps6598x.h
-@@ -27,7 +27,7 @@
- #define TPS_STATUS_OVERCURRENT		BIT(16)
- #define TPS_STATUS_GOTO_MIN_ACTIVE	BIT(26)
- #define TPS_STATUS_BIST			BIT(27)
--#define TPS_STATUS_HIGH_VOLAGE_WARNING	BIT(28)
-+#define TPS_STATUS_HIGH_VOLTAGE_WARNING	BIT(28)
- #define TPS_STATUS_HIGH_LOW_VOLTAGE_WARNING BIT(29)
- 
- #define TPS_STATUS_CONN_STATE_MASK		GENMASK(3, 1)
-diff --git a/drivers/usb/typec/tipd/trace.h b/drivers/usb/typec/tipd/trace.h
-index 0669cca12..bea383f2d 100644
---- a/drivers/usb/typec/tipd/trace.h
-+++ b/drivers/usb/typec/tipd/trace.h
-@@ -153,7 +153,7 @@
- 		      { TPS_STATUS_OVERCURRENT,		"OVERCURRENT" }, \
- 		      { TPS_STATUS_GOTO_MIN_ACTIVE,	"GOTO_MIN_ACTIVE" }, \
- 		      { TPS_STATUS_BIST,		"BIST" }, \
--		      { TPS_STATUS_HIGH_VOLAGE_WARNING,	"HIGH_VOLAGE_WARNING" }, \
-+		      { TPS_STATUS_HIGH_VOLTAGE_WARNING,	"HIGH_VOLTAGE_WARNING" }, \
- 		      { TPS_STATUS_HIGH_LOW_VOLTAGE_WARNING, "HIGH_LOW_VOLTAGE_WARNING" })
- 
- #define show_tps25750_status_flags(flags) \
--- 
-2.39.5
+...
 
+> >> +
+> >> +	ret =3D i2c_smbus_write_byte_data(client, PORT_MODE_REG, val);
+> >> +	if (ret)
+> >> +		return ret;
+> >> +
+> >> +	/* Give time for transition to complete */
+> >> +	ssleep(1); =20
+> >=20
+> > 1s sleep?! It is a lot. Why do you need this? Does it comes from the
+> > datasheet?=20
+>=20
+> This comes from my experience. I didn't find it in a datasheet.
+> I agree this seems a lot, but for 500ms sometimes ports were not powered =
+up.=20
+> I think I'll give a try to another register and instead PB_POWER_ENABLE=20
+> I will try to use PB_RESET in combination with PORT_MODE as this seems
+> promising.
+>=20
+> btw. Regarding power enable/disable, I think you may have same issue in
+> tps23881 as I had here as tps looks very similar to si3474.
+> For Si3474 POWER_STATUS register cannot be used as an admin state registe=
+r as
+> it holds actual power interface status (powered/not powered) instead of i=
+ts
+> administrative state (enabled/disabled).=20
+> Ethtool in this approach was showing for both Admin state and Detection
+> status always the same state - actual status.
+> PB_POWER_ENABLE register cannot be used for this purpose as well as it is=
+ a
+> write-only register. That's why I used PORT_MODE register, it acts like an
+> admin state holder in my implementation.
+
+Indeed I figured that the power status of the tps23881 can not be really
+considered as an admin_state as described in the standard. For example, it
+doesn't automatically power off in case of PD unplugged.
+That's why I fixed it in the current budget evaluation strategy patch serie=
+s.
+The admin_state is now managed by software and the the PSE core will power =
+on
+the port if it catches a classification interrupt event or if a PD was alre=
+ady
+plugged and classify.
+https://lore.kernel.org/netdev/20250520-feature_poe_port_prio-v11-12-bbaf44=
+7e1b28@bootlin.com/
+
+If the Si3474 behaves the same maybe you should rebase your patch on my ser=
+ies.
+
+But waiting this long won't be ok, as we have rtnl lock acquired here.
+
+Regards,
+--=20
+K=C3=B6ry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
