@@ -1,193 +1,140 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 543842D613;
-	Wed, 21 May 2025 13:06:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D1BF270546
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 13:07:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747832819; cv=none; b=TiYDgftZjLCOlSxcgYvkFDmaxwDt0cHtEqBChixIh5Wj2CR30El6a2M/kFv0hOQbMf0sUDVq0comBbpYdwU7E/Z+p3JcCtFlcWRUwDHniwkY887kTVW3bT9RpZbf0XyMjFn9R4LBPH+zPlyQWPwkpZ6M6IH8Fqim6dKsHtNMoS4=
+	t=1747832847; cv=none; b=ak3/RdZimYYJeycruG5VWicduJP824h+kHNvuQpzRMFhZLcsr33/xvj83Jb0zS7bpVJf/DMJ4VESytOKVzAIbidlfw4FarjzvPmIHT2Cyy7OAQ8f9X5pms9Yqg0tb08JXbS/qEBeTGycEIP5nbxKwOpedWvqnOU+nEmPSlpiUhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747832819; c=relaxed/simple;
-	bh=paVjfK+XRxRxA5/2pk+uNnNieSeINZNGJzqULLjhvhI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jdWfXyMButuYGgL1Z9HYSpNWUqULryABqu4GgBICV+9joqBw25hBGJz3LJGWnk13rirkRd5YMUzTCBEWMTLJNXjVvjM+BJ2QsJTIeitTEtmpVPLHBxocqrYGDTjXwuB8LRvASh0zSDet/kbZsrwTjwmapuuvkZsdwfUiH7jEIcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=chCvoH7d; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747832847; c=relaxed/simple;
+	bh=/p8hi4Fb9JbhcU9eXGccjakCQbbweGLDyTOE826eGz8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HRR2Z7OcqnrjPuZLU01IjA+JBuoap8PnLfZDeMVKrk5DtyRH48HHuhoRYlOtCMn0mwmqW6bxGqQhESsq1WtMYnWVtjNtBbU/LuIH7BSBAPorZO/Wa+ppWEvgtucCM18GBRcFIY5gCG7Hwmhn57VEHNWQSq1SI+Bd35/RL2ylvvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=n8uP9/0P; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="chCvoH7d"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a36e950e41so2267232f8f.0;
-        Wed, 21 May 2025 06:06:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n8uP9/0P"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a3681aedf8so3607430f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 06:07:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747832815; x=1748437615; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1ImUjq0fgDHWqAteIZbQKYhLq5pbNfhy8eeFHxGuhiY=;
-        b=chCvoH7dorQvuX4EYXZDgdTEbDjlZoVTTzs8VZZmEBA1/tioteAxCqPgIFHeDnEz2p
-         Ti+xkNiQfNbM9u7ZidfEMJ6N2E7cKEqEaR0/hxzsVXBmEBgZyCDV2vOWMa2oWjYbRBZe
-         H4T+PQulwcLSgEYHVuG2m4s4XON3vh2QRWkJXeAtxhnpp7el2pxD7+4YkGcBmJzrzIHv
-         16l91dpAzekEFZatB+skYJfoqGS/LNzQfR5RDH3yzJk9bi+swyONHLtbJPeC+7ucfa/m
-         /SlogOQehNIC0O9AsQ3PV7iuUCaQNKN5mfDrqC4ZnQqf6+/qQX0iDD/hD+lKdGi0rWRy
-         s5YQ==
+        d=linaro.org; s=google; t=1747832843; x=1748437643; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=RpkuJlQUblTuXdXBYUHLsMDpcSWTTsmgm+ZR7X9N/YY=;
+        b=n8uP9/0PXmH07oBxwjujbqu3lrb93tHq14FgXaRA5qH7C+Lm2XflNrUkq+MLLm2Mbi
+         PrxJUPc7zbxgA89n8m6XgjDl+eXiHojeItuP9tcZGu3YhKT+wncTtOuXt0VkRRMIHfM7
+         NHsYLbGhblbwZNicF5hLTcD6JAMlyncCpQ+u+GUd2VfYlaXvvBTp0yVZibkfHFFc1Xy4
+         fKOvGLkrBydex7LbvAiJBe2f8gQzq9dOF/kTWjYCATzcLASHaDulxhDcLG1mLDehZoM7
+         iyPuP3qwP/KNQvmg3GGHAn12If5lDYweZGvkkLAtyaWO1iBTWT2VO+kOcFBGxy4hwsLJ
+         wQQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747832815; x=1748437615;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1ImUjq0fgDHWqAteIZbQKYhLq5pbNfhy8eeFHxGuhiY=;
-        b=PjzTg5xjr2VkB0oyISNXIb9lBvfkhbqopBe4c1DKVvC1Zm2BXbLzQ/eDcRcZ4XKX3J
-         uz2wIe2X9OgWIlleIaaEP/jLdrBwa8JNoVJ43opAw/MHY3jAgasynQNNP6D7oDBwb/IY
-         gO6u3K2obxk1lre7kf8MVussjKjjWfCrfjL5rExhaSK2yoOhKsfpsuubPg/mY12K91u9
-         cH90+q0+iaII5CuL0kt7p6JI/fTeayeSpmJyGRJ+ZRXF9KKqjORjGUhW2Q+cNsA2a3EF
-         jta28YUe9DpKaOSrH/AaD4DeTqGzlesXRJp1SQYiUQAY/Dhp9Zu4Fg1UXHJ84Su462CN
-         MBEg==
-X-Forwarded-Encrypted: i=1; AJvYcCU8t2iA/4yuBBoYhK0fL1GDR9BXRMEc1XdKSUQQDVT03BWaLYx4GKT4jFkVBX5A6kSbz+a3lHjaXe4Ide1h@vger.kernel.org, AJvYcCXFcQSGcASGCMnaAgQ5oebYDnzx1Ji/jmiS0AQ3dNPXDwc9ArBa2EqM1tMQ1d8W3422YolBfjz3+BhG@vger.kernel.org, AJvYcCXzryvyKBLa8VCKpyet0NLVJ3eTCxyRWPc+EFz3wVuQt8iVfr8B/5LyXyXzor974F8DUrueyOdukna3TM7QP2WJzAw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzeDhL9U9832di88ypojPwccgvg8JIIetVe8Mpw/BWWB/EB3jTJ
-	B8opkidhBXmdLRtmorVQ1Ddmpu2FXWA3bkYlu3zCLc3+oNaMc9nSkwg6iXH9xuiMoht3OPIbqlq
-	kX5zVbLCzg86GlO/vUEHMzD4qiZFaUE8=
-X-Gm-Gg: ASbGnctgzwV+vC6FS/vV4uGv/WvAYmS/lfWBjX6TL2Hd2gmCC8QnZQ+Cq0GZsHapEtc
-	j7mI5Qh+RS20PXyr8gisTzC3zCArfYx9hXSLFSS9wwyNkvPxyObuCeBkGCTo/KD9Dqjqqetxo3c
-	xRPKdTx8OcdrMpi9H2xIt5MiSwiBg=
-X-Google-Smtp-Source: AGHT+IGw/flPUocN2KAZQ9vdKAbWbAcRjHYnIoWXNE7b6MhiAbmAH3CS1FTYcoZqP32a1zcOAnKla60J/JLjfbNq4SI=
-X-Received: by 2002:a05:6000:1883:b0:3a3:5c05:d98b with SMTP id
- ffacd0b85a97d-3a35c8220bemr16554008f8f.5.1747832815212; Wed, 21 May 2025
- 06:06:55 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747832843; x=1748437643;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RpkuJlQUblTuXdXBYUHLsMDpcSWTTsmgm+ZR7X9N/YY=;
+        b=Y3vTy8Q0WVw23yooKnuAeaqO691cUPsKEqbibFuhTo39UKvBKB+nXIvzaCTSNdORgO
+         5NjN1DOzCF9mpZ/h849r+D6/IV5vLjG1h1zkmi5stU5Bd8A49Fe6XKIVatkj+a5XNGpB
+         9GZ8vtCmZc2EumLPp6nx/LbUOyh7jwvnCLpenloU7Ch/bMAHcoOCZm8FIBXaHqYZYWuA
+         SyxDPS8dPySlbZbmf/8w8bKLRe/gc6cBkgqbt2thpIhEDQ1vxqVpDXQVZrsbjAkQ2dbz
+         MdA6fL67GpqciEdWdLoU7EIaGnFoOsYXQ/2QK6sfIACqaQ3UjhrIQiu3LGRx9biwMZOC
+         UzoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWsRQgM9GrrJOnLtWM7FOhKCankQ7V6EKV5uec9dP6aJ76GRZO1XNVp8O7IQjbPPJDJIVPswFMy5LzOhRE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIaevzJ9R44nW53w3WPJ4abzgAyTCbAHXoHQSUkrD922hVbWmS
+	7wd+4MmHtXbwPiNbdjM0TCvHOW4PETZPBGAIWYfIkNXvb13OlptwYR//Lf3VjJ8vE94=
+X-Gm-Gg: ASbGnctXkjNndkHgpK6r/POfNcSaveJmuCmbeW/LO5CcAXYOBGBAWg4EreGb2KkYMOP
+	8Qv5PgryScoF971p56b/MsTL0q3trEgxx1uaGiVRGc28Fl5L8gGRwp1wePBz4lmTbypM0ghxrWL
+	6FY3afA1FPubthM5bh2Yg+qn3yrO9LzsVUdWg7dJZHGb8Uj/wJWl5XmzT8Z4nOQ6ItKMDqYOvuJ
+	FfO8TH9ugX0SGTsw5zkboLHiu9s7GZAWgq8MPdxr4/4/jjnGuggmIAhzw8HXQLeMPYKDkGDeqNY
+	ihZ2y1niYi/J79V1GB2srNnCALltEsEO6pD1Ci8zozRNrnfJHgcr1LItcKmv4Km+leXpUx8kIB8
+	uLojDKRopQh6eVOT8
+X-Google-Smtp-Source: AGHT+IE+t/PYCXMw3FrDdML6YsWV5MqKEMrz7cLzul08Pv1j9GQdjSaGfDFVw2hwDw8YQywVgAFYbw==
+X-Received: by 2002:a5d:5f56:0:b0:3a3:6595:9209 with SMTP id ffacd0b85a97d-3a365959288mr13967995f8f.36.1747832843294;
+        Wed, 21 May 2025 06:07:23 -0700 (PDT)
+Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca4d1basm20036403f8f.15.2025.05.21.06.07.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 May 2025 06:07:22 -0700 (PDT)
+Message-ID: <b2cf41af-756d-4e78-8df0-0350198d357d@linaro.org>
+Date: Wed, 21 May 2025 14:07:21 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250512182330.238259-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250512182330.238259-6-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdVEgTo7V-gzzpVVNqxnDMSdTC1ew70gbJ=Sb5Qr4asryA@mail.gmail.com>
-In-Reply-To: <CAMuHMdVEgTo7V-gzzpVVNqxnDMSdTC1ew70gbJ=Sb5Qr4asryA@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Wed, 21 May 2025 14:06:28 +0100
-X-Gm-Features: AX0GCFsiM19rEOpmPdSQtniDQCiDvqMUju95_u3EML6LED_KnTgo4KZJyu9-l4U
-Message-ID: <CA+V-a8vjjY94KX-oWY5gKqNsWRvmxs2gzc1hDFjqCxbg+Y8c4g@mail.gmail.com>
-Subject: Re: [PATCH v5 05/12] drm: renesas: rz-du: mipi_dsi: Use VCLK for
- HSFREQ calculation
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Biju Das <biju.das.jz@bp.renesas.com>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Magnus Damm <magnus.damm@gmail.com>, 
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, dri-devel@lists.freedesktop.org, 
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] arm64: dts: qcom: qcs615: Enable camss for
+ qcs615-adp-air
+To: Wenmeng Liu <quic_wenmliu@quicinc.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, todor.too@gmail.com, rfoss@kernel.org
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
+References: <20250520-qcs615-adp-air-camss-v1-0-ac25ca137d34@quicinc.com>
+ <20250520-qcs615-adp-air-camss-v1-2-ac25ca137d34@quicinc.com>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20250520-qcs615-adp-air-camss-v1-2-ac25ca137d34@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Geert,
+On 20/05/2025 09:56, Wenmeng Liu wrote:
+> This change enables camera driver for QCS615 ADP AIR board.
+> 
+> Signed-off-by: Wenmeng Liu <quic_wenmliu@quicinc.com>
+> ---
+>   arch/arm64/boot/dts/qcom/qcs615-ride.dts | 7 +++++++
+>   1 file changed, 7 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/qcs615-ride.dts b/arch/arm64/boot/dts/qcom/qcs615-ride.dts
+> index 2b5aa3c66867676bda59ff82b902b6e4974126f8..be8b829ec508d7de7a4cd6be6d1d4e83b09734bb 100644
+> --- a/arch/arm64/boot/dts/qcom/qcs615-ride.dts
+> +++ b/arch/arm64/boot/dts/qcom/qcs615-ride.dts
+> @@ -211,6 +211,13 @@ vreg_l17a: ldo17 {
+>   	};
+>   };
+>   
+> +&camss {
+> +	vdda-phy-supply = <&vreg_l5a>;
+> +	vdda-pll-supply = <&vreg_l12a>;
+> +
+> +	status = "ok";
+> +};
+> +
+>   &gcc {
+>   	clocks = <&rpmhcc RPMH_CXO_CLK>,
+>   		 <&rpmhcc RPMH_CXO_CLK_A>,
+> 
 
-Thank you for the review.
+I think there's some confusion.
 
-On Tue, May 20, 2025 at 3:55=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Mon, 12 May 2025 at 20:23, Prabhakar <prabhakar.csengg@gmail.com> wrot=
-e:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > Update the RZ/G2L MIPI DSI driver to calculate HSFREQ using the actual
-> > VCLK rate instead of the mode clock. The relationship between HSCLK and
-> > VCLK is:
-> >
-> >     vclk * bpp <=3D hsclk * 8 * lanes
-> >
-> > Retrieve the VCLK rate using `clk_get_rate(dsi->vclk)`, ensuring that
-> > HSFREQ accurately reflects the clock rate set in hardware, leading to
-> > better precision in data transmission.
-> >
-> > Additionally, use `DIV_ROUND_CLOSEST_ULL` for a more precise division
-> > when computing `hsfreq`. Also, update unit conversions to use correct
-> > scaling factors for better clarity and correctness.
-> >
-> > Since `clk_get_rate()` returns the clock rate in Hz, update the HSFREQ
-> > threshold comparisons to use Hz instead of kHz to ensure correct behavi=
-or.
-> >
-> > Co-developed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> > Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
-> > ---
-> > v4->v5:
-> > - Added dev_info() to print the VCLK rate if it doesn't match the
-> >   requested rate.
-> > - Added Reviewed-by tag from Biju
-> >
-> > v3->v4:
-> > - Used MILLI instead of KILO
->
-> Thanks for the update!
->
-> > --- a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-> > +++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
->
-> > @@ -269,6 +271,12 @@ static int rzg2l_mipi_dsi_startup(struct rzg2l_mip=
-i_dsi *dsi,
-> >         u32 golpbkt;
-> >         int ret;
-> >
-> > +       ret =3D pm_runtime_resume_and_get(dsi->dev);
-> > +       if (ret < 0)
-> > +               return ret;
-> > +
-> > +       clk_set_rate(dsi->vclk, mode->clock * MILLI);
->
-> drm_display_mode.clock is in kHz, so s/MILLI/KILO/
->
-Agreed, I will update it to use KILO (and below).
+I'm willing to accept CSID and VFE changes with the minimum proof of TPG 
+driving it.
 
-Cheers,
-Prabhakar
+But - CSIPHY in CAMSS which is only proven by TPG is obviously not a 
+proof and again I agree with the consensus here - there's little value 
+to an end-user in just having the TPG for a camera.
 
-> > +
-> >         /*
-> >          * Relationship between hsclk and vclk must follow
-> >          * vclk * bpp =3D hsclk * 8 * lanes
-> > @@ -280,13 +288,11 @@ static int rzg2l_mipi_dsi_startup(struct rzg2l_mi=
-pi_dsi *dsi,
-> >          * hsclk(bit) =3D hsclk(byte) * 8 =3D hsfreq
-> >          */
-> >         bpp =3D mipi_dsi_pixel_format_to_bpp(dsi->format);
-> > -       hsfreq =3D (mode->clock * bpp) / dsi->lanes;
-> > -
-> > -       ret =3D pm_runtime_resume_and_get(dsi->dev);
-> > -       if (ret < 0)
-> > -               return ret;
-> > -
-> > -       clk_set_rate(dsi->vclk, mode->clock * 1000);
-> > +       vclk_rate =3D clk_get_rate(dsi->vclk);
-> > +       if (vclk_rate !=3D mode->clock * MILLI)
-> > +               dev_info(dsi->dev, "Requested vclk rate %lu, actual %lu=
- mismatch\n",
-> > +                        mode->clock * MILLI, vclk_rate);
->
-> Likewise.
->
-> > +       hsfreq =3D DIV_ROUND_CLOSEST_ULL(vclk_rate * bpp, dsi->lanes);
-> >
-> >         ret =3D rzg2l_mipi_dsi_dphy_init(dsi, hsfreq);
-> >         if (ret < 0)
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
-8k.org
->
-> In personal conversations with technical people, I call myself a hacker. =
-But
-> when I'm talking to journalists I just say "programmer" or something like=
- that.
->                                 -- Linus Torvalds
+No sensor:
+CAMSS::CSID
+CAMSS::VFE
+
+Just about acceptable
+
+No sensor:
+CAMSS::CSIPHY
+DTS::CAMSS enable
+
+Is too much of an ask.
+
+Just publish your sensor code ! We need more sensor enablement upstream 
+anyway.
+
+---
+bod
