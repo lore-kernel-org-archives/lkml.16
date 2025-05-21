@@ -1,76 +1,74 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD6607DA6D
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 03:45:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 163B121147B
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 03:45:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747799136; cv=none; b=Uf4D0CMVgtM9Xfdy83z7mMEem5p4O2u3OgabT2GRDZAehk9KEhzDQRI5GpbMxF0G1RBPFlNz/i4r6cPELdFdsoYAr5gMqbXkyxuuJQ1f4mK2qjxFza3V60iCKBN5+t7m7SJM2eTpZWGcADKkA1Y2IahgQdY0yP4Yq8hoZ8ZHGC4=
+	t=1747799137; cv=none; b=nKJZcwH5FMzgs92lCB0rKWP/pP6vqFowSnTCI8G73BkI94+RWTIAvzPy2geNkQ5rYMHHWrzvU1nLm2AS6UoUQwtNGHGS4vFQy1H3V2PGzW7nDon19+WcLQn7+XvOHD5IJq15GRadROuTc2/pVHepoYlBP1d0o7IM3jqoV5+mXuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747799136; c=relaxed/simple;
-	bh=O1nUeuyf60caQs4YipXkwwtXoVtAAWz1hiZeNTf7u8Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YSX9d9TuBQ3cIJr1NI/SYmDOC+vGDr4/snyOekWvjceRNknO5+Sk/QETMgggyQ4Up/AFTLSs7YaazuCnnWNbgif8y8wtwo4Xgn/+hfNDztPPBBlGDM1urClNpfg3uqpR5QjjQA03z0tDdxhKajA/9p/kakUwBDNXAPBcA+S/3ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=esXC/s7o; arc=none smtp.client-ip=209.85.210.180
+	s=arc-20240116; t=1747799137; c=relaxed/simple;
+	bh=PEn7/p/2ID7VX5alpq6i8B6TuYpR+cleLVIeijpUp1Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CxQV37lDZgMqSh1ztxZtYaXtxs52SZRbct7khTdd6YmtmlCcaN502/0bu18EiUgEBDMRd5rw6QJF0dEZHD0TMT5I/NDL8iecGQduYlvQ9goYkIwROFRPIQzFC7RQEB1GbGZHNBZlvoDx5dveKvVFECE1kowRvgcExMeosVwrUyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=P7v13+kA; arc=none smtp.client-ip=209.85.214.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="esXC/s7o"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-742b614581dso4896747b3a.3
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 20:45:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="P7v13+kA"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-231ecd4f2a5so39375925ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 20:45:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1747799134; x=1748403934; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=o7hEoH+zcw9qfhoA2RR7ZUMoaHFS8IYXKKvYv1G1J4U=;
-        b=esXC/s7oDNaC4Lb9sctnmNwZ/lp43kX5EFSj4WTJkS1yCHDIH9vUR3NHBgord6BcC2
-         tm7ul5//vRCrevpgSPI7PANY5GGCNaVGYuOjkWz8h9NrIhUlaRiJvSuPr4h6Qol3tWjr
-         5dAuAaNJeYrtCMdc6EIRng1eh4RUs+j3ktTnsVCayZDIxokWXCF+O9j8u50rFMRmVo1I
-         OpcauIaBoLhFbWyH/QTC0V7Xub5zx85qs1DVLwHoxhIW72nlFwW5n5+pkcHXWxR7xPxg
-         yAP3FUuDtsF4MFuU4zkR+i8Ss2RtTk34XaHU1iwgo3gb1SS2yFO+VBnurmCy67SqGCUD
-         XPLg==
+        d=bytedance.com; s=google; t=1747799135; x=1748403935; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=GSYSGk10lQFipJHdwa6GaputkvUrU/XWqX4rq4bUxCg=;
+        b=P7v13+kAk/9Dgf8x0IjYZThuGo9XAaYF8QvF4bY2kGeOoDmTrNlI9JVzx4qoI4hyYw
+         R8wzQN0me1KSUhe7idlsIcNZzXNaEheZ/Y28ofvICy9uovxC/Vc4Lx/fsMO07C8tm9zV
+         7YGjeRwerwlIi5vRofSG2oazWblZOSYwh94ap0IabkGkK+NL3Qkmj6cdPlDFZSs8VvLb
+         U4uaQVDSePqP7oitkf+mGHJqUXTNj243cU8cKoxshNQDRpP5GuR6HDoWSmYwloJKPm3V
+         LW377YlFKJsJJCZhy6Q60cGBntjCbXt9XcO9qUtWQz5vYyeAERuXT1sXo8hazo6DwjEZ
+         VZ6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747799134; x=1748403934;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=o7hEoH+zcw9qfhoA2RR7ZUMoaHFS8IYXKKvYv1G1J4U=;
-        b=nwGM3w69VMSj0i4QQcQEU7wYAcjPtEZKR//hfy45R+/arCDKGz/EBJFqI1YQeH/t34
-         zkoRHywjOq+KKcZwFN1vwa+NJjeCTftu0AU6iYJvPnfcrSliermazP5NScPoeFZp299t
-         159cERwMciwLdGqKQGqauuoqjK7oY9hGN3O2XriqUuaeY+QkSAQQGmXl+D5ouX5ArkLm
-         qjopzD8LymsCihHq7WGy640zKa1eyaiFjhGGIfEdgEdm9LOvBBUko10uUv/CMG/2KQSd
-         Cf+VlxFhvXjCmgFOw/dY5CWH+5wUNYORexA5gWNSaFO0UsnRqBa8MP9RrVxWpeGiJoIP
-         lL/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWsygfySiUTZK+2dt1Cb9+p5M9ZwTROBXBVK2NLFepWEWqTxYc6gYgeIKEQFtw+jbEBO+r726XfiiPtAqI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxerLHNzRuY8WdaP9BTeNffFcKHBUHZ1wbDd0ed/hhIRxmBPZwF
-	BSsdv7nUMot+4r3SEd37eDBZP2lwxt4Dqf1/YLrocqpEP4u5JG1sZQDOfWU7CGeB/GA=
-X-Gm-Gg: ASbGncu0kkgyrqXJD8KDMp6wnrjrNGMEWqsopLWkd1+MPKLKupgUIMHYyEBzM80aVSr
-	S4latyME/TJcOrfXoc55bv2aKT5QHnkaWki/On0DIt4qWpWNz4rPVnrgjANan/d53rYVPBHFuSE
-	EwDZOOBJk8T64I9kc3aitRE6/YALPJQSP5LqnSMVmY2zT9Jpl8VDeF5ygFYgpSDMFwV/396R7al
-	L9hNfdrKjpMDgy2GaRTF0oKlnTpRDdtuvirRwGZ0vqHCJcX9l8pR/zd4ENiLdarVqRlSgzjv0Hu
-	OppXw/8TkYPDlQVneLTNecdkOXl8bGXmKQ6Xmlrv4gwRn7LLO4Uq91GJ2eqD0uABa6b34I/S6ip
-	+jw==
-X-Google-Smtp-Source: AGHT+IHVAeIGc5tGCopyE1Gs/q/I9hs3854vPW79q21Hs67M9n3WZLDyg+LCqQHMBAq0cvQEEuAojw==
-X-Received: by 2002:a05:6a21:6f83:b0:215:de13:e212 with SMTP id adf61e73a8af0-2170cb325a4mr29600337637.15.1747799133868;
-        Tue, 20 May 2025 20:45:33 -0700 (PDT)
-Received: from localhost.localdomain ([203.208.189.9])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eb0843d1sm8845883a12.49.2025.05.20.20.45.31
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 20 May 2025 20:45:33 -0700 (PDT)
-From: lizhe.67@bytedance.com
-To: david@redhat.com
-Cc: alex.williamson@redhat.com,
-	kvm@vger.kernel.org,
+        d=1e100.net; s=20230601; t=1747799135; x=1748403935;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GSYSGk10lQFipJHdwa6GaputkvUrU/XWqX4rq4bUxCg=;
+        b=MklQoMbKDcW1KLikx/OpfSK3rwh873hFU2wUPsdMWEH5p0EkAtn8dOTPkeocigyJAz
+         ZISpP8qS/t7mpELxwsyOT/Me+BbNNTkFkhLK7SmMK1AKBYjbHSWH729PoGu98i+EE5LJ
+         FWaAQ07VPGMe4LZQ7cL0pshKcbE2239D1LuMjAXZalJJYu/gBfiuR6zg/7BqI1jmiP9C
+         ga2rFuvvhe/1GF0NDUrWCx1nbyf8exItmIuxTW1FpAO8jivlYCBvX4WVFwwtPZcPNFrS
+         EgrFfbTbCdtlMBIugGQm1xmK3N+0anB+wREw+11HMNAyqvCN2CD1hUSD+OSJSuzzn2nn
+         7vqw==
+X-Forwarded-Encrypted: i=1; AJvYcCXqpiBnu6zabKMar7ZnnB3efOqcfJGOT3devUWO1Kx7rxvwYV2pMV9cR0pSxGtpf+9N5CNGox+HEQHk2fc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQtcJbrozsrll0c3Unrx5tZ2J52nOIE15kZ4hrvOucEvS++y0b
+	Qw1kLdVE0LktZC2CUapaXdQv3HwxGY/Edunco4qIyxJkbKteOfeZ2Ng6g3kl5n9n7764qzC2eE4
+	B8Scp
+X-Gm-Gg: ASbGncstQNQPdgKMusQYgAnAZyal7PmBix6xRBAmHiKs3lkjSS4XS8C2PYUi/YDclUz
+	EsFVvxUin8JgNpSYV6Rigu9AGcHDjBYBvDADApwqP52trE0LM4mQ0fJG6wt3LC1C/QEOqYk2QDn
+	Ib8dzrlqOZf8pwz659A+4MTgf//JL/7s0cPfdtsE4AfjskjpVCrx4FxNUVNlOw6e+V1T4L8sD0k
+	/HN8t4mqsSWthimD8kNg3opH1eHYZ7acQyhIFZt9hseDH61QWDhHjxI163bHKgOy7ZimT1XhhY1
+	W5w8flhseFJQgrkzBEHr5OsSRmm04ns59W+Ps6t+nGCFsoOwhMkbyOEMgUEFrj3xJSKO8hnIJXu
+	Y7g+306xCd8g=
+X-Google-Smtp-Source: AGHT+IGEDPGW19IeB4THURy4MB0k11h80ID7APMtvrmYBJx9IjRj12iA8ft3N/+V2XCppbFXcMPXaA==
+X-Received: by 2002:a17:903:230b:b0:224:10a2:cae7 with SMTP id d9443c01a7336-231de370f6bmr291221015ad.40.1747799135190;
+        Tue, 20 May 2025 20:45:35 -0700 (PDT)
+Received: from n37-069-081.byted.org ([115.190.40.10])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4b04a52sm84268125ad.91.2025.05.20.20.45.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 20:45:34 -0700 (PDT)
+From: Zhongkun He <hezhongkun.hzk@bytedance.com>
+To: tj@kernel.org,
+	hannes@cmpxchg.org,
+	longman@redhat.com
+Cc: cgroups@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	lizhe.67@bytedance.com,
-	muchun.song@linux.dev
-Subject: Re: [PATCH v3] vfio/type1: optimize vfio_pin_pages_remote() for huge folio
+	muchun.song@linux.dev,
+	Zhongkun He <hezhongkun.hzk@bytedance.com>
+Subject: [PATCH] cpuset: introduce non-blocking cpuset.mems setting option
 Date: Wed, 21 May 2025 11:45:27 +0800
-Message-ID: <20250521034527.74170-1-lizhe.67@bytedance.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <3f51d180-becd-4c0d-a156-7ead8a40975b@redhat.com>
-References: <3f51d180-becd-4c0d-a156-7ead8a40975b@redhat.com>
+Message-Id: <20250521034527.3476332-1-hezhongkun.hzk@bytedance.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,18 +77,90 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Tue, 20 May 2025 19:38:45 +0200, david@redhat.com wrote:
+Setting the cpuset.mems in cgroup v2 can trigger memory
+migrate in cpuset. This behavior is fine for newly created
+cgroups but it can cause issues for the existing cgroups.
+In our scenario, modifying the cpuset.mems setting during
+peak times frequently leads to noticeable service latency
+or stuttering.
 
->Subject: "huge folio" -> "large folios"
->
->> 
->> When vfio_pin_pages_remote() is called with a range of addresses that
->> includes huge folios, the function currently performs individual
->
->Similar, we call it a "large" f
+It is important to have a consistent set of behavior for
+both cpus and memory. But it does cause issues at times,
+so we would like to have a flexible option.
 
-Thank you for the reminder. I will correct this error in the
-next version.
+This idea is from the non-blocking limit setting option in
+memory control.
 
-Thanks,
-Zhe
+https://lore.kernel.org/all/20250506232833.3109790-1-shakeel.butt@linux.dev/
+
+Signed-off-by: Zhongkun He <hezhongkun.hzk@bytedance.com>
+---
+ Documentation/admin-guide/cgroup-v2.rst | 7 +++++++
+ kernel/cgroup/cpuset-internal.h         | 6 ++++++
+ kernel/cgroup/cpuset.c                  | 7 +++++++
+ 3 files changed, 20 insertions(+)
+
+diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
+index 1a16ce68a4d7..d9e8e2a770af 100644
+--- a/Documentation/admin-guide/cgroup-v2.rst
++++ b/Documentation/admin-guide/cgroup-v2.rst
+@@ -2408,6 +2408,13 @@ Cpuset Interface Files
+ 	a need to change "cpuset.mems" with active tasks, it shouldn't
+ 	be done frequently.
+ 
++	If cpuset.mems is opened with O_NONBLOCK then the migration is
++	bypassed. This is useful for admin processes that need to adjust
++	the cpuset.mems dynamically without blocking. However, there is
++	a risk that previously allocated pages are not within the new
++	cpuset.mems range, which may be altered by move_pages syscall or
++	numa_balance.
++
+   cpuset.mems.effective
+ 	A read-only multiple values file which exists on all
+ 	cpuset-enabled cgroups.
+diff --git a/kernel/cgroup/cpuset-internal.h b/kernel/cgroup/cpuset-internal.h
+index 383963e28ac6..5686bb08c4fe 100644
+--- a/kernel/cgroup/cpuset-internal.h
++++ b/kernel/cgroup/cpuset-internal.h
+@@ -162,6 +162,9 @@ struct cpuset {
+ 	/* partition root state */
+ 	int partition_root_state;
+ 
++	/* Do not migrate memory when modifying cpuset.mems this time */
++	bool skip_migration_once;
++
+ 	/*
+ 	 * number of SCHED_DEADLINE tasks attached to this cpuset, so that we
+ 	 * know when to rebuild associated root domain bandwidth information.
+@@ -227,6 +230,9 @@ static inline int is_sched_load_balance(const struct cpuset *cs)
+ 
+ static inline int is_memory_migrate(const struct cpuset *cs)
+ {
++	if (cs->skip_migration_once)
++		return 0;
++
+ 	return test_bit(CS_MEMORY_MIGRATE, &cs->flags);
+ }
+ 
+diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+index 24b70ea3e6ce..f43d7b291cde 100644
+--- a/kernel/cgroup/cpuset.c
++++ b/kernel/cgroup/cpuset.c
+@@ -3208,7 +3208,14 @@ ssize_t cpuset_write_resmask(struct kernfs_open_file *of,
+ 		retval = update_exclusive_cpumask(cs, trialcs, buf);
+ 		break;
+ 	case FILE_MEMLIST:
++		if (of->file->f_flags & O_NONBLOCK)
++			cs->skip_migration_once = true;
++
+ 		retval = update_nodemask(cs, trialcs, buf);
++
++		/* Restore skip_migration */
++		if (cs->skip_migration_once)
++			cs->skip_migration_once = false;
+ 		break;
+ 	default:
+ 		retval = -EINVAL;
+-- 
+2.39.5
+
