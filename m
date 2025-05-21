@@ -1,289 +1,197 @@
-Received: from smtpbgau2.qq.com (smtpbgau2.qq.com [54.206.34.216])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D72A6238178
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 10:25:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.34.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D58425C802
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 10:25:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747823131; cv=none; b=TQIpm5xUJe7viYU6kQDC87bJEgrwi/e6meJsjJrIzCmhxjX/ebqNH+g3KT+yJ/Ljq8XBsl+KFlV+L3Occms3enDFB8/2mNyPkeYU7yJAZFTfkvFenq5kbUK8roCignl7s9P66pRO9G6Z2UniYOEV6RYet7UZoXMHyBbJccELiAI=
+	t=1747823132; cv=none; b=sRbyDffkFsmR9lNhnckLeyLZ764mGSFN6yoWiV/unZ2BfsTKc5cvj70L3v9JZN2sRF1t+BjpJWotuIzr0D8Wss2CVNBXO3TyeUKQzShF/07WmbrA1/5mQQQ5h7ltkB25fXAn8UXnBu8gV6mIldZFFBPiKSotakg4VoXGaCsNlg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747823131; c=relaxed/simple;
-	bh=bPtxSIHeXfRk2fFD9GTyvSolmpVtk1AfISyWbSNBcOg=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=DuO7g/JHx459U23AFY3PQZ4w8Itn1tMmlhdyFdd4QR/rmLSeBbDimu24oPeNkLmrGPcO2oeso3Z2ZcqC/3oj4eLExN3rQj4ynlRrvnPmFiDOiV/lYfqBAD82YdfcopGtugg70m+rZoncGdzEd9s7WMDW5ZEUYk/m7BEc2bqMtGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=m.fudan.edu.cn; spf=pass smtp.mailfrom=m.fudan.edu.cn; dkim=pass (1024-bit key) header.d=m.fudan.edu.cn header.i=@m.fudan.edu.cn header.b=PNDC6i+0; arc=none smtp.client-ip=54.206.34.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=m.fudan.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=m.fudan.edu.cn
+	s=arc-20240116; t=1747823132; c=relaxed/simple;
+	bh=aNMA5GpZzY60QkMy/p2/ETXnXrwPpW/JHm5faOWS6ho=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ePf2C84G1A1P4Up5b9Eq+cHrTBu3o5EYiUrg/qoNSNLwh4qDNxkEI47uGEPhOi3jnTCUPiXwwPQ5PRIqLQVmilEDvK9sJaKg2SCL+BhtZbRkuMZdqhqFNBtUMaWeTP3MxvczOAScBLJDMhuSqUNq3bNA8Rbs5vCYJlq8nbAjlsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Go9oNXwe; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=m.fudan.edu.cn header.i=@m.fudan.edu.cn header.b="PNDC6i+0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=m.fudan.edu.cn;
-	s=sorc2401; t=1747823091;
-	bh=bPtxSIHeXfRk2fFD9GTyvSolmpVtk1AfISyWbSNBcOg=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=PNDC6i+0RylxEcvq1qMSwSJ5aIJF6n3JWUtcs+rTbknVuXhg80GnhKVD3DWixJ1pg
-	 VbwOjL+aPTFdEWXQQQU415EfK/lvwQZV8K6YlIcK2yALLmlWg6F9ycUGJSzk1eyXBI
-	 P5noGwuThGoD0BbsT30d+3GRjXpN099QtsxpBt+I=
-X-QQ-mid: zesmtpip4t1747823086tf86c74fb
-X-QQ-Originating-IP: xhMogJyyTM+AczKW6FdC/7gER0+gTloj2scbaK7J81o=
-Received: from TYSPR06MB7158.apcprd06.prod.out ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 21 May 2025 18:24:45 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 6044898470580206771
-EX-QQ-RecipientCnt: 5
-From: "huk23@m.fudan.edu.cn" <huk23@m.fudan.edu.cn>
-To: Dave Kleikamp <shaggy@kernel.org>
-CC: syzkaller <syzkaller@googlegroups.com>, linux-kernel
-	<linux-kernel@vger.kernel.org>, Jiaji Qin <jjtan24@m.fudan.edu.cn>, Shuoran
- Bai <baishuoran@hrbeu.edu.cn>
-Subject: KASAN: slab-use-after-free Write in diWrite
-Thread-Topic: KASAN: slab-use-after-free Write in diWrite
-Thread-Index: AQHbyjTSTHHQxhWWQUa+tyf0H7Puhg==
-X-MS-Exchange-MessageSentRepresentingType: 1
-Date: Wed, 21 May 2025 10:24:43 +0000
-Message-ID:
-	<TYSPR06MB7158089CBC192CADDD09D323F69EA@TYSPR06MB7158.apcprd06.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-Exchange-Organization-SCL: -1
-X-MS-TNEF-Correlator:
-X-MS-Exchange-Organization-RecordReviewCfmType: 0
-msip_labels:
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Go9oNXwe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747823129;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=OmRNDn9pMz2kvSgpRMSd6bVT5frXfvGrBhompz0Lfnw=;
+	b=Go9oNXweidOYu+EIyHhIE1I2bmc2tqFZd3sv/KGo0yJh4UxbtHOQU3kbXgQnn2IYoF78fZ
+	XAMbJkslxuwzYUveBFUdzOn6nhktB1S3yXN0MrXd7m0rKQCAgKuFLYDVFD1u2xwwu3paXb
+	s3s1pdaMZTn/QD8zhfT3L+O2nCCOlds=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-172-8bBdDSyVN4eeWZ-O1Lhjaw-1; Wed, 21 May 2025 06:25:28 -0400
+X-MC-Unique: 8bBdDSyVN4eeWZ-O1Lhjaw-1
+X-Mimecast-MFC-AGG-ID: 8bBdDSyVN4eeWZ-O1Lhjaw_1747823127
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-442e0e6eb84so41614155e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 03:25:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747823127; x=1748427927;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=OmRNDn9pMz2kvSgpRMSd6bVT5frXfvGrBhompz0Lfnw=;
+        b=q/vXcibsItP0TKMBmjR5nRByITMyOyDK6RV159vKiAnn7MEYqy8EiBSifGUO3292tA
+         NITKHMUs09wgOo3v07QHOW/54UavzIf2dzaZaYebl0VZv5LBsy4btv95fNCNlksr9Yt4
+         xPU3dQF10VXHaZEYkRFlZxKGcZS7LJrtWwIE42sX7Ig77Wy5Q+C/mtx6tI21AfYB8mzx
+         HODzW5+KHh/bwnBeIrbBHUYI/xP44aGMiAYKuWCiqxz+ow6of4nB8fbNebOQTvcqmVPC
+         dJ+4vQ7ivabzp9VuadvBIlHEiOpw+qXohDziahhXD240ZoY0onoTOJhm52oysgmnS+YF
+         jEVg==
+X-Forwarded-Encrypted: i=1; AJvYcCW8NKZqKBM/SrkVqDNkXqn8HkbTtkUIxxNc669A3aZ67pxmXJgFdS+KHwF/uNAB7AmXqQg/E4gI2KVZBdI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw79E+bQ9JWATjXcQ8AmIzIHP/tH7y4KQ6DpQLHwyta8yf/VUK5
+	f4+iNVgy4o3UGX0Cn0SwtfF0vLzR1aVUrnyqXieTi0zKng1j8vWnDWuBxAYYQrQOYKVTcI3RytG
+	ryy+34P3zBN+5NxQlQJakNzGhhkJHSikuPVKKNAk13dLgb8K6LXsCz2XNFYoKmN5W3w==
+X-Gm-Gg: ASbGnctaCphkp9oe9CQU4Jm513jxu5sv6QSXjMRWo1ytmc5/EezqnbQ+hcI/1kWgbNY
+	yxp71692M3FOxnm/YX4XcvEJ3X7jNJ9MyYvo5NgVHpddSU7I/tHuXxePz1c8VlwMbvpd4is7goK
+	7MeJtiITikf7X8KKZ/C2cSrmc9URkkrYq2XTUMGHpH9R5Bsizg9E4NMhIZJEjtMWoEXVR2ND5Il
+	md5JjwIGURwt9sw2SMX4X9Gb9NtEdhq5ro99DC6DfobIG5cT3uzQsI2/FEj8LFs+1M8d5KxAEtM
+	D4gfxnGZkejHTduMoiNPuLjNj4YvUtYTUICfD5923hhty0oI+CoMyN0fQiWHe8ylKbbqGOEWplG
+	awyvIFiXNCFmYAV8HOX9Xbn1qplboP6WhnSF/mMw=
+X-Received: by 2002:a05:600d:19:b0:442:f97f:8174 with SMTP id 5b1f17b1804b1-442fd6313f4mr138654595e9.18.1747823127364;
+        Wed, 21 May 2025 03:25:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFK31hCOI4AspdeyWTmUBM6tm6OjfoTLQ56G1e4yH46eK8Cne2OwOfr7oe4xsHWdMwN9VP/Ig==
+X-Received: by 2002:a05:600d:19:b0:442:f97f:8174 with SMTP id 5b1f17b1804b1-442fd6313f4mr138654385e9.18.1747823126926;
+        Wed, 21 May 2025 03:25:26 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f25:9c00:e2c7:6eb5:8a51:1c60? (p200300d82f259c00e2c76eb58a511c60.dip0.t-ipconnect.de. [2003:d8:2f25:9c00:e2c7:6eb5:8a51:1c60])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f6f0552esm63045705e9.11.2025.05.21.03.25.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 May 2025 03:25:26 -0700 (PDT)
+Message-ID: <62b5ccf5-f1cd-43c2-b0bc-f542f40c5bdf@redhat.com>
+Date: Wed, 21 May 2025 12:25:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpip:m.fudan.edu.cn:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: OeCnONXpg9q8R1iL928v/538343OaxHilJaQn/UwhoiyDJxIOj4RFLdO
-	I0nrtdM76aaCgQbLu3BCXZZH0SHTVW/15P+5qhYP1W5ub0A6kb7C5KQ0FeztZufPHl4XPtW
-	W0LGVnPJ9WfGOmUTJcnssVrKdsHiU/XuIhtfTaN23L0bZcRC7x28oDfPxF6JfuUEnKibWO8
-	fhE0xt29l+wChuOGmHXiLMnDD4tOijkrtVsYmK0/q4MvBvaQzstdaj3FVuoZoM4Alzpn9t1
-	vHxsn23B2RuTyZV1iXTURNQo2J1J8ABsNp1bqZeY9Xe3tZTS8jcnhiRXDi3hO2VIMPqJD+Y
-	WQFSDAMtz7TYPkUjU8lcwLZHK4z1f8b6BPSZFxm46rOovXnWeilByJMX/nb05DcRvGAQyaj
-	RwGjVSXroE5RA1JOWJBqfsUdAlSBPVs7eQmLqM9pGZVYGpTnKlsf4aHHofEJYaXELASlsvb
-	Ft1wTk0yo76jzzsJYveDYcFeEUfr4rjSQErfXnHYBHApNPrLNiC7J3SjgmFp8FERajIk6kb
-	ZzS/IRpydS8D+ATxVXpECZH2g7BGslKkh6wWrhoTqwfEv6dFXiNOq0J9hsPk/HOOyz8T6sV
-	gnkHme69IAOx4W2L0riJviMleVIRl08YfD2Iau/iNB1yR42HSw1oXKnc2sLArTZC/7Mw3uk
-	vwGPZbZQ7jFC1u0Pleavp7mmIY+hVMoYVuKc83IVoC0RCduDAXJpgiowyNLAsnn0S5Q8khK
-	mL/M+X24fX0Vy6NCRpvQwZV92jVPE+pBpkeQpMyPk0s5IUzU/Psh3n1PmDioovy+F8cpwDF
-	uyVz6YyylW4/jJoWP4nlOeUt7nzk7I4u6VkA7jEW712UPwp6TRQx097zZWDeWSlNri2rHyg
-	9ANA3G3o9KuPL71pJD6k5bc128cn5BGmGP92TDtuEBcNPrEVmUyzKsu3O3PK3ao1BIZFRfY
-	KyqSZL8E9mBZUzqZ2yz46eumJ1QUkUUtM17b+S90mvtbY/SLqgf0BQIoJkHfboz4rTqQRVj
-	BpJNECIECk6OycHQBEy29QKN2X2G/gbnKWqUOqgmWtqvgZNpz2SqLeHNmywlFaCjVJG3CgL
-	Q==
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
-X-QQ-RECHKSPAM: 0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] mm/mmap: Fix uprobe anon page be overwritten when
+ expanding vma during mremap
+To: Pu Lehui <pulehui@huaweicloud.com>, mhiramat@kernel.org, oleg@redhat.com,
+ peterz@infradead.org, akpm@linux-foundation.org, Liam.Howlett@oracle.com,
+ lorenzo.stoakes@oracle.com, vbabka@suse.cz, jannh@google.com,
+ pfalcato@suse.de
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, pulehui@huawei.com
+References: <20250521092503.3116340-1-pulehui@huaweicloud.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250521092503.3116340-1-pulehui@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Dear Maintainers,=0A=
-=0A=
-=0A=
-=0A=
-When using our customized Syzkaller to fuzz the latest Linux kernel, the fo=
-llowing crash (101th)was triggered.=0A=
-=0A=
-=0A=
-HEAD commit: 6537cfb395f352782918d8ee7b7f10ba2cc3cbf2=0A=
-git tree: upstream=0A=
-Output:https:https://github.com/pghk13/Kernel-Bug/blob/main/0520_6.15-rc6/1=
-01_KASAN%3A%20slab-use-after-free%20Write%20in%20diWrite/101report.txt=0A=
-Kernel config:https://github.com/pghk13/Kernel-Bug/blob/main/0520_6.15-rc6/=
-config.txt=0A=
-C reproducer:https://github.com/pghk13/Kernel-Bug/blob/main/0520_6.15-rc6/1=
-01_KASAN%3A%20slab-use-after-free%20Write%20in%20diWrite/101repro.c=0A=
-Syzlang reproducer:https://github.com/pghk13/Kernel-Bug/blob/main/0520_6.15=
--rc6/101_KASAN%3A%20slab-use-after-free%20Write%20in%20diWrite/101repro.txt=
-=0A=
-=0A=
-=0A=
-=0A=
-This is a slab-use-after-free bug in the JFS filesystem driver, inside the =
-diWrite function. When JFS is mounted over loop device and the backend stor=
-age of that loop device is changed via the LOOP_SET_FD ioctl, JFS may not c=
-orrectly invalidate its internal cache.=0A=
-triggering procedure: JFS filesystem is mounted over a loop device. The bac=
-kend file of that loop device is changed and operations (such as jfs_readdi=
-r triggered by the getents64 system call here, which further calls txCommit=
- and diWrite) on the JFS filesystem try to write back inode data. The diWri=
-te function tries to write a memory address that it thinks is still valid, =
-but that address belongs to a slab object that has been freed (by some ext4=
- related operations) and possibly reallocated.=0A=
-=0A=
-=0A=
-We have reproduced this issue several times on 6.15-rc6 again.=0A=
-=0A=
-=0A=
-This is the URL of the 2024 syzbot report of this bug:https://groups.google=
-.com/g/syzkaller-lts-bugs/c/CVD1uqZnFPA/m/P4-Bi8BmAwAJ=0A=
-=0A=
-If you fix this issue, please add the following tag to the commit:=0A=
-Reported-by: Kun Hu <huk23@m.fudan.edu.cn>, Jiaji Qin <jjtan24@m.fudan.edu.=
-cn>, Shuoran Bai <baishuoran@hrbeu.edu.cn>=0A=
-=0A=
-=0A=
-loop4: detected capacity change from 0 to 32768=0A=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=0A=
-BUG: KASAN: slab-use-after-free in diWrite+0xeb0/0x1930=0A=
-Write of size 32 at addr ffff888052f700c0 by task syz.4.12/14401=0A=
-=0A=
-CPU: 2 UID: 0 PID: 14401 Comm: syz.4.12 Not tainted 6.15.0-rc6 #1 PREEMPT(f=
-ull)=0A=
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1=
-.1 04/01/2014=0A=
-Call Trace:=0A=
-=A0<TASK>=0A=
-=A0dump_stack_lvl+0x116/0x1b0=0A=
-=A0print_report+0xc1/0x630=0A=
-=A0kasan_report+0x96/0xd0=0A=
-=A0kasan_check_range+0xed/0x1a0=0A=
-=A0__asan_memcpy+0x3d/0x60=0A=
-=A0diWrite+0xeb0/0x1930=0A=
-=A0txCommit+0x6c2/0x4720=0A=
-=A0jfs_readdir+0x2afa/0x44a0=0A=
-=A0wrap_directory_iterator+0xa1/0xe0=0A=
-=A0iterate_dir+0x2a5/0xab0=0A=
-=A0__x64_sys_getdents64+0x153/0x2e0=0A=
-=A0do_syscall_64+0xcf/0x260=0A=
-=A0entry_SYSCALL_64_after_hwframe+0x77/0x7f=0A=
-RIP: 0033:0x7fb8ca9acadd=0A=
-Code: 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa 48 89 f8 48 89 f7 =
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff f=
-f 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48=0A=
-RSP: 002b:00007fb8c87f5ba8 EFLAGS: 00000246 ORIG_RAX: 00000000000000d9=0A=
-RAX: ffffffffffffffda RBX: 00007fb8caba5fa0 RCX: 00007fb8ca9acadd=0A=
-RDX: 000000000000009e RSI: 0000000020000280 RDI: 0000000000000005=0A=
-RBP: 00007fb8caa2ab8f R08: 0000000000000000 R09: 0000000000000000=0A=
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000=0A=
-R13: 00007fb8caba5fac R14: 00007fb8caba6038 R15: 00007fb8c87f5d40=0A=
-=A0</TASK>=0A=
-=0A=
-Allocated by task 84:=0A=
-=A0kasan_save_stack+0x24/0x50=0A=
-=A0kasan_save_track+0x14/0x30=0A=
-=A0__kasan_slab_alloc+0x87/0x90=0A=
-=A0kmem_cache_alloc_noprof+0x166/0x4a0=0A=
-=A0mempool_alloc_noprof+0x159/0x360=0A=
-=A0bvec_alloc+0x171/0x1e0=0A=
-=A0bio_alloc_bioset+0x4aa/0x920=0A=
-=A0ext4_bio_write_folio+0xcb6/0x1a90=0A=
-=A0mpage_submit_folio+0x1bf/0x350=0A=
-=A0mpage_process_page_bufs+0x6cc/0x870=0A=
-=A0mpage_prepare_extent_to_map+0x75c/0x1360=0A=
-=A0ext4_do_writepages+0xc96/0x35c0=0A=
-=A0ext4_writepages+0x371/0x7b0=0A=
-=A0do_writepages+0x1ac/0x810=0A=
-=A0__writeback_single_inode+0x12e/0xf50=0A=
-=A0writeback_sb_inodes+0x5f5/0xee0=0A=
-=A0__writeback_inodes_wb+0xbe/0x270=0A=
-=A0wb_writeback+0x728/0xb50=0A=
-=A0wb_workfn+0x96e/0xe90=0A=
-=A0process_scheduled_works+0x5de/0x1bd0=0A=
-=A0worker_thread+0x5a9/0xd10=0A=
-=A0kthread+0x447/0x8a0=0A=
-=A0ret_from_fork+0x48/0x80=0A=
-=A0ret_from_fork_asm+0x1a/0x30=0A=
-=0A=
-Freed by task 0:=0A=
-=A0kasan_save_stack+0x24/0x50=0A=
-=A0kasan_save_track+0x14/0x30=0A=
-=A0kasan_save_free_info+0x3a/0x60=0A=
-=A0__kasan_slab_free+0x54/0x70=0A=
-=A0kmem_cache_free+0x14d/0x550=0A=
-=A0mempool_free+0xe9/0x3a0=0A=
-=A0bvec_free+0xbd/0xf0=0A=
-=A0bio_free+0xaa/0x130=0A=
-=A0bio_put+0x35c/0x590=0A=
-=A0ext4_end_bio+0x45b/0x6e0=0A=
-=A0bio_endio+0x795/0xab0=0A=
-=A0blk_update_request+0x5b6/0x17a0=0A=
-=A0scsi_end_request+0x7a/0x7c0=0A=
-=A0scsi_io_completion+0x17b/0x1560=0A=
-=A0scsi_complete+0x12a/0x260=0A=
-=A0blk_complete_reqs+0xb2/0xf0=0A=
-=A0handle_softirqs+0x1be/0x850=0A=
-=A0irq_exit_rcu+0xfd/0x150=0A=
-=A0sysvec_call_function_single+0xde/0x100=0A=
-=A0asm_sysvec_call_function_single+0x1a/0x20=0A=
-=0A=
-The buggy address belongs to the object at ffff888052f70000=0A=
-=A0which belongs to the cache biovec-max of size 4096=0A=
-The buggy address is located 192 bytes inside of=0A=
-=A0freed 4096-byte region [ffff888052f70000, ffff888052f71000)=0A=
-=0A=
-The buggy address belongs to the physical page:=0A=
-page: refcount:0 mapcount:0 mapping:0000000000000000 index:0xffff888052f700=
-00 pfn:0x52f70=0A=
-head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0=0A=
-flags: 0x4fff00000000240(workingset|head|node=3D1|zone=3D1|lastcpupid=3D0x7=
-ff)=0A=
-page_type: f5(slab)=0A=
-raw: 04fff00000000240 ffff888041346a00 ffffea0001197810 ffffea00011c6010=0A=
-raw: ffff888052f70000 0000000000070000 00000000f5000000 0000000000000000=0A=
-head: 04fff00000000240 ffff888041346a00 ffffea0001197810 ffffea00011c6010=
-=0A=
-head: ffff888052f70000 0000000000070000 00000000f5000000 0000000000000000=
-=0A=
-head: 04fff00000000003 ffffea00014bdc01 00000000ffffffff 00000000ffffffff=
-=0A=
-head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000008=
-=0A=
-page dumped because: kasan: bad access detected=0A=
-page_owner tracks the page as allocated=0A=
-page last allocated via order 3, migratetype Unmovable, gfp_mask 0xd2800(GF=
-P_NOWAIT|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 92, tgid 92 (kwork=
-er/u19:1), ts 99474904265, free_ts 99384964285=0A=
-=A0prep_new_page+0x1b0/0x1e0=0A=
-=A0get_page_from_freelist+0x1c80/0x3a40=0A=
-=A0__alloc_frozen_pages_noprof+0x2fd/0x6d0=0A=
-=A0alloc_pages_mpol+0x209/0x550=0A=
-=A0new_slab+0x254/0x350=0A=
-=A0___slab_alloc+0xf0c/0x17c0=0A=
-=A0__slab_alloc.isra.0+0x56/0xb0=0A=
-=A0kmem_cache_alloc_noprof+0x273/0x4a0=0A=
-=A0mempool_alloc_noprof+0x159/0x360=0A=
-=A0bvec_alloc+0x171/0x1e0=0A=
-=A0bio_alloc_bioset+0x4aa/0x920=0A=
-=A0ext4_bio_write_folio+0xcb6/0x1a90=0A=
-=A0mpage_submit_folio+0x1bf/0x350=0A=
-=A0mpage_process_page_bufs+0x6cc/0x870=0A=
-=A0mpage_prepare_extent_to_map+0x75c/0x1360=0A=
-=A0ext4_do_writepages+0xc96/0x35c0=0A=
-page last free pid 9470 tgid 9470 stack trace:=0A=
-=A0__free_frozen_pages+0x7cd/0x1320=0A=
-=A0__put_partials+0x14c/0x170=0A=
-=A0qlist_free_all+0x50/0x130=0A=
-=A0kasan_quarantine_reduce+0x168/0x1c0=0A=
-=A0__kasan_slab_alloc+0x67/0x90=0A=
-=A0kmem_cache_alloc_noprof+0x166/0x4a0=0A=
-=A0vm_area_alloc+0x20/0x170=0A=
-=A0do_brk_flags+0x293/0x13a0=0A=
-=A0vm_brk_flags+0x3a8/0x5f0=0A=
-=A0elf_load+0x3eb/0x760=0A=
-=A0load_elf_binary+0x34ed/0x50c0=0A=
-=A0bprm_execve+0x8df/0x1630=0A=
-=A0do_execveat_common.isra.0+0x4ce/0x630=0A=
-=A0__x64_sys_execve+0x8e/0xb0=0A=
-=A0do_syscall_64+0xcf/0x260=0A=
-=A0entry_SYSCALL_64_after_hwframe+0x77/0x7f=0A=
-=0A=
-Memory state around the buggy address:=0A=
-=A0ffff888052f6ff80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00=0A=
-=A0ffff888052f70000: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb=0A=
->ffff888052f70080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb=0A=
-=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 =A0^=0A=
-=A0ffff888052f70100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb=0A=
-=A0ffff888052f70180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb=0A=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=0A=
-thanks,=0A=
-Kun Hu=0A=
-=0A=
+On 21.05.25 11:25, Pu Lehui wrote:
+> From: Pu Lehui <pulehui@huawei.com>
+> 
+> We encountered a BUG alert triggered by Syzkaller as follows:
+>     BUG: Bad rss-counter state mm:00000000b4a60fca type:MM_ANONPAGES val:1
+> 
+> And we can reproduce it with the following steps:
+> 1. register uprobe on file at zero offset
+> 2. mmap the file at zero offset:
+>     addr1 = mmap(NULL, 2 * 4096, PROT_NONE, MAP_PRIVATE, fd, 0);
+
+So, here we will install a uprobe.
+
+> 3. mremap part of vma1 to new vma2:
+>     addr2 = mremap(addr1, 4096, 2 * 4096, MREMAP_MAYMOVE);
+
+Okay, so we'll essentially move the uprobe as we mremap.
+
+
+> 4. mremap back to orig addr1:
+>     mremap(addr2, 4096, 4096, MREMAP_MAYMOVE | MREMAP_FIXED, addr1);
+
+And here, we would expect to move the uprobe again.
+
+> 
+> In the step 3, the vma1 range [addr1, addr1 + 4096] will be remap to new
+> vma2 with range [addr2, addr2 + 8192], and remap uprobe anon page from
+> the vma1 to vma2, then unmap the vma1 range [addr1, addr1 + 4096].
+> In tht step 4, the vma2 range [addr2, addr2 + 4096] will be remap back
+> to the addr range [addr1, addr1 + 4096]. Since the addr range [addr1 +
+> 4096, addr1 + 8192] still maps the file, it will take
+> vma_merge_new_range to merge these two addr ranges, and then do
+> uprobe_mmap in vma_complete. Since the merged vma pgoff is also zero
+> offset, it will install uprobe anon page to the merged vma.
+
+Oh, so we're installing the uprobe into the extended VMA before moving 
+the page tables.
+
+Gah.
+
+> However, the
+> upcomming move_page_tables step, which use set_pte_at to remap the vma2
+> uprobe anon page to the merged vma, will over map the old uprobe anon
+> page in the merged vma, and lead the old uprobe anon page to be orphan.
+
+Right, when moving page tables we don't expect there to already be 
+something from the uprobe code.
+
+> 
+> Since the uprobe anon page will be remapped to the merged vma, we can
+> remove the unnecessary uprobe_mmap at merged vma, that is, do not
+> perform uprobe_mmap when there is no vma in the addr range to be
+> expaned.
+
+Hmmm, I'll have to think about other corner cases ....
+
+-- 
+Cheers,
+
+David / dhildenb
+
