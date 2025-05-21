@@ -1,131 +1,137 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3174E1A3BD7;
-	Wed, 21 May 2025 09:43:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34E6023506E;
+	Wed, 21 May 2025 09:43:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747820626; cv=none; b=tYrB4uq5ibzYIoPHcQSyV/hT4+kRHbFscS/0fl4/vSC/Fv2OlKR9HZEdixUU90wNPvSxwXp1xwhGiDcJ8tqhjnxuiKFiHPUGd1/RX6pj8CuRfFzp36Zr+veDYsXBRZ0DrnXSVt2zIz7M65k6lrQTGoWEBTOVMxoGAo7fcEYltUc=
+	t=1747820639; cv=none; b=EivzCTP+oqtDyZrGi3MhGjFcPPGhzhxyLrX+k/42LwKpGSkq6zHyTiZbwI6oxnS3APiREntYuQCEV/3mtBk+4vdMjFHb9yiPa134al8oMDlZc6oVaphFEa91mo6BJwLA30qW4zE/8uLqI6aW8GVTCDl3XGwQj025V8BjXM9QiVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747820626; c=relaxed/simple;
-	bh=EpMirKs3V4vscdqhbkz9OdoZWXChfs/1azyGpZR/Es4=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=U4L9CFPO54IHSxekJXLPQa3s4CfnooSYga/6NVbz0d54iZX7WQl0U1TlVxFL3c21LACcGAsigksEvvU+6LZNBANjuAIa4Nqasmfw2lvklsTyP44QImw/kI7xkW8t3SiMa95r3gXfgjbCarg4iA2up4VUPe9nIDcR8W3GoN+Z05Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b2RHD2zfWz6L55h;
-	Wed, 21 May 2025 17:40:24 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5AF3614020A;
-	Wed, 21 May 2025 17:43:35 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 21 May
- 2025 11:43:34 +0200
-Date: Wed, 21 May 2025 10:43:31 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: <linux-pci@vger.kernel.org>, Jon Pan-Doh <pandoh@google.com>, "Karolina
- Stolarek" <karolina.stolarek@oracle.com>, Weinan Liu <wnliu@google.com>,
-	Martin Petersen <martin.petersen@oracle.com>, Ben Fuller
-	<ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, "Anil
- Agrawal" <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, Ilpo
- =?UTF-8?Q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Sathyanarayanan
- Kuppuswamy" <sathyanarayanan.kuppuswamy@linux.intel.com>, Lukas Wunner
-	<lukas@wunner.de>, Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney"
-	<paulmck@kernel.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, "Oliver
- O'Halloran" <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>, "Keith
- Busch" <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>, Terry Bowman
-	<terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>, Dave Jiang
-	<dave.jiang@intel.com>, <linux-kernel@vger.kernel.org>,
-	<linuxppc-dev@lists.ozlabs.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-Subject: Re: [PATCH v7 10/17] PCI/AER: Update statistics early in logging
-Message-ID: <20250521104331.00001a6a@huawei.com>
-In-Reply-To: <20250520215047.1350603-11-helgaas@kernel.org>
-References: <20250520215047.1350603-1-helgaas@kernel.org>
-	<20250520215047.1350603-11-helgaas@kernel.org>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1747820639; c=relaxed/simple;
+	bh=tuHl5t4vJ4EbREWl6S4WyqZhn/Kf5J3AvUUP9S78vfc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=dX642U2Z/wPLxvzURaxmRPh+sR67ArozDydeWCUZr8RsD4t7MJgc1ZR6v5FlKYLrJ4SHLYd6GIkZYChu4BRnV4kO8hwWgxNyg2l6ioU4KXPWkx/SbPZIiDzH+H0dOdtAOOwegrKsmeZhApUNqXWxI70muVhMdV34wuH174pwTpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ESC9Cv4K; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ESC9Cv4K"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54L9XncD016898;
+	Wed, 21 May 2025 09:43:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	ocjMu4gZswK+gWTtxB60YVC7ABbXC38czOqSiJwXE0s=; b=ESC9Cv4KP47kRPKU
+	w5YbjzEsX2BnBtoyDvANVvXIfL5lHTTazzwYWEEoncZ2VGA+TTUBexr+o+8qvaBX
+	ASwK/9MzT8MZ3UB+9HT/ceM7C0/HStQCqpS3YGrpXjIUsRTmyECVb9p2uRPwQRnX
+	fP9rPS04F8HmNfqUixvOFSY+VTx1aIyOGi4DzeWZhNsffz17IR2ojG+x0MUncSIE
+	CEx3FW+h6JQ+hM6wNrKQKZUayw3ldsI8UJ1+TncYAIoYJOpFkPI1CEgB8bR/3lCo
+	IZKrbAF13Jw3z3rimEomEqbG3399Q+5YH00sR+kVrQCW3JVSx5ZXT2/rzWfM19kd
+	FDpoZQ==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf9tehc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 21 May 2025 09:43:48 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54L9hbGn003603
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 21 May 2025 09:43:37 GMT
+Received: from [10.217.216.47] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 21 May
+ 2025 02:43:31 -0700
+Message-ID: <25bcfc38-8753-4d7b-a530-a7d0dd69e488@quicinc.com>
+Date: Wed, 21 May 2025 15:13:28 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 06/18] clk: qcom: common: Add support to configure clk
+ regs in qcom_cc_really_probe
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        "Stephen
+ Boyd" <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>,
+        Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
+        Dmitry Baryshkov <lumag@kernel.org>
+CC: Ajit Pandey <quic_ajipan@quicinc.com>,
+        Imran Shaik
+	<quic_imrashai@quicinc.com>,
+        Taniya Das <quic_tdas@quicinc.com>,
+        "Satya Priya
+ Kakitapalli" <quic_skakitap@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>
+References: <20250515-videocc-pll-multi-pd-voting-v4-0-571c63297d01@quicinc.com>
+ <20250515-videocc-pll-multi-pd-voting-v4-6-571c63297d01@quicinc.com>
+ <37aeea50-e149-44bc-87a8-9095afe29d42@linaro.org>
+Content-Language: en-US
+From: Jagadeesh Kona <quic_jkona@quicinc.com>
+In-Reply-To: <37aeea50-e149-44bc-87a8-9095afe29d42@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=V9990fni c=1 sm=1 tr=0 ts=682da054 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8
+ a=gLr6p6iD9n7nESwY9tkA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-ORIG-GUID: uXrPZITWTe0OVykO1Qc5nU5DOjWmHF8k
+X-Proofpoint-GUID: uXrPZITWTe0OVykO1Qc5nU5DOjWmHF8k
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDA5NiBTYWx0ZWRfX5g2V/OEESkIN
+ DbqoeHRLu7GlUAzv/PJ3ZjAhDlgMCupYP/SMEn4xh2ak8XgYiI1GYBS3xy4D05/L0NoHrok2kjl
+ zoavICqgA+0yV80xGEPWIjfSYXgsEQQg0lr/FWAddr26mv8jZiAT+sdwVckFbhkjRrYBCW+m34Q
+ Kn7u+zo+TC3TFATGtCvKSNOAXS+BU+XI6wXaWKcQNhdq169gtd2JwkTMqDxs/luGU7mz1pPDUmJ
+ 3ED94Iwwe6VTMhvfd2bEu9fUfDniijVXeSPNZOmn2X572DIG15eLS1rh1R+ZPvJ19ZLiwel6m6m
+ zGTngTuoIkARaAPdweslLPqxcYMAfMJMR+IRxDgZ4YXZqrN051JNFD90TU3psOyW4qJ5uoSOmKn
+ 2RkAlBM/4fGJrnUHmOQ3siQK3xX1iYGRy+2KFIpxFDZWUNyQRz8QVR7CTjSl1g3X+qWXfP40
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-21_02,2025-05-20_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxlogscore=999 bulkscore=0 impostorscore=0 clxscore=1015 priorityscore=1501
+ lowpriorityscore=0 mlxscore=0 spamscore=0 phishscore=0 suspectscore=0
+ adultscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505210096
 
-On Tue, 20 May 2025 16:50:27 -0500
-Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-> From: Bjorn Helgaas <bhelgaas@google.com>
->=20
-> There are two AER logging entry points:
->=20
->   - aer_print_error() is used by DPC (dpc_process_error()) and native AER
->     handling (aer_process_err_devices()).
->=20
->   - pci_print_aer() is used by GHES (aer_recover_work_func()) and CXL
->     (cxl_handle_rdport_errors())
->=20
-> Both use __aer_print_error() to print the AER error bits.  Previously
-> __aer_print_error() also incremented the AER statistics via
-> pci_dev_aer_stats_incr().
->=20
-> Call pci_dev_aer_stats_incr() early in the entry points instead of in
-> __aer_print_error() so we update the statistics even if the actual printi=
-ng
-> of error bits is rate limited by a future change.
->=20
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> Tested-by: Krzysztof Wilczy=C5=84ski <kwilczynski@kernel.org>
-> Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux=
-.intel.com>
-Always felt odd that a stat got updated in a _print_ function
-so even without the other reasoning this is a good change.
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-> ---
->  drivers/pci/pcie/aer.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index d845079429f0..53b7559564a9 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -693,7 +693,6 @@ static void __aer_print_error(struct pci_dev *dev,
->  		aer_printk(level, dev, "   [%2d] %-22s%s\n", i, errmsg,
->  				info->first_error =3D=3D i ? " (First)" : "");
->  	}
-> -	pci_dev_aer_stats_incr(dev, info);
->  }
-> =20
->  static void aer_print_source(struct pci_dev *dev, struct aer_err_info *i=
-nfo,
-> @@ -714,6 +713,8 @@ void aer_print_error(struct pci_dev *dev, struct aer_=
-err_info *info)
->  	int id =3D pci_dev_id(dev);
->  	const char *level;
-> =20
-> +	pci_dev_aer_stats_incr(dev, info);
-> +
->  	if (!info->status) {
->  		pci_err(dev, "PCIe Bus Error: severity=3D%s, type=3DInaccessible, (Unr=
-egistered Agent ID)\n",
->  			aer_error_severity_string[info->severity]);
-> @@ -782,6 +783,8 @@ void pci_print_aer(struct pci_dev *dev, int aer_sever=
-ity,
->  	info.status =3D status;
->  	info.mask =3D mask;
-> =20
-> +	pci_dev_aer_stats_incr(dev, &info);
-> +
->  	layer =3D AER_GET_LAYER_ERROR(aer_severity, status);
->  	agent =3D AER_GET_AGENT(aer_severity, status);
-> =20
+On 5/15/2025 12:04 PM, Bryan O'Donoghue wrote:
+> On 14/05/2025 20:08, Jagadeesh Kona wrote:
+>> +        if (!pll->config || !pll->regs) {
+>> +            pr_err("%s: missing pll config or regs\n", init->name);
+>> +            continue;
+>> +        }
+> 
+> If you are printing error, why aren't you returning error ?
+> 
+> I understand that it probably makes platform bringup easier if we print instead of error here.
+> 
+> I think this should be a failure case with a -EINVAL or some other indicator you prefer.
+> 
+> Assuming you amend to return an error you may add my
+> 
+> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 
+
+Sure, will check and return error in case of failure in next series
+
+Thanks,
+Jagadeesh
