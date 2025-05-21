@@ -1,148 +1,102 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5828679CF;
-	Wed, 21 May 2025 05:38:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BC4722FDEA;
+	Wed, 21 May 2025 05:39:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747805919; cv=none; b=EfkiiPMHVs/sJCxf3i7eAtZ02kL5h3suZZuHORCIBIXbAGcTJvyxqzJ7rYX2YXsNcQ5F7M5w+APECNZGqgmnA6RGxe5tk7236stYnsJf+On3FRquC6mHYQ9dWjaQczSFum7Ixq8IxFjQYT0wDXeIsBkiDF1erWE2y08B3JTpmaQ=
+	t=1747805948; cv=none; b=YS+oWeWbOJAnCogrrKOH+4UpeDjylSvymX6XWLJJctBPtpTC58pYpT8NYCwNV844+xFVepY4d6gfLTmo6J4wU/YARJ+GElo3NkXpnBDUyPanchM+mDEE6HNyDF7+nL8nCnDh7I+NEOvj4SU7hLNL/rNW9c9Mk1Eo6tImslemF2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747805919; c=relaxed/simple;
-	bh=WNvqHXW/Xhth82LmBEiT1VEhzAKX6LRM8ItCgjIPwGE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=FVx9v9oTmKDzIkXkz6/fTGDPWibmwyZm9JqXuJ1tSCrukXETcijxJ7dHgWNaAtAQs/BKKe3XWMMn/ZvPSQnj09uTLNca3W5jMSlVqAi4eeqaOoov32RbnycndXkZCW82JABUM++W0LJdnJ+IE1L5tQl/Ifr2SVuaNaaNCG5qVLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=WoGqUnhT; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1747805948; c=relaxed/simple;
+	bh=rJoHwVdmu70bBttowc9ovSLMST2TXYUrOme1AYIzTw4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=amL53zLacZAD2gPTcQ0r5kmvhs51ZJQIRnLtFLd2o2V7kYHIuzRzZ6n/3jsU0PSA8SHrSei9ANRc3S/wktGu2er6xUSOMjN/SB+Yvlxr7OrIemvOIMVTx1uEBoOyD3WGZsuQJClIU3x3ko4TXbLkCOLZv0hsyraE3jA3n1LOtJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZEPVcKp7; arc=none smtp.client-ip=209.85.219.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="WoGqUnhT"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54L5JAia019165;
-	Wed, 21 May 2025 05:38:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	1rIXHTD4csw6kw4kJQD3SUf479s6VR/JxiTwReVlOHY=; b=WoGqUnhTryWGHLFf
-	7RC/X9H8XXL09zf+tY5lcWWfS5qEo2Jcj0fSPz+wbzryEc4yflTWeGXqCg5omNfm
-	B4S5Gni0I2vy4GtnaQU9n7+URF+Ae9Rep5/SP6aXsLKqc/QF+TpOGXs9leyuBY40
-	YfvDOTCPg5RQk8Vy9/HQMfZ4NyyLEC96A+2C+QyTLO2HNmkU5l1PrxRCU4Kz/M4M
-	dgkWK/G+70BIWq6zjMvD7/ybCRla3HLM2YDRbQFW6Ud4JAssdU0aw7A8/Bgz0B25
-	CZizA6dq4OD7RtZ5nposlOGOmi2pJVb/7JHfc3289JccKt2BMTjQbpba5ko40QNd
-	+i2WuQ==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwh59mj6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 05:38:17 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54L5cGTs020104
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 05:38:16 GMT
-Received: from [10.50.1.151] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 20 May
- 2025 22:38:13 -0700
-Message-ID: <e9f460c3-a575-1014-cca7-27f1d79024e2@quicinc.com>
-Date: Wed, 21 May 2025 11:08:02 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZEPVcKp7"
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-e7b9a3d85b9so2793595276.0;
+        Tue, 20 May 2025 22:39:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747805945; x=1748410745; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Cwi1TKu0MzTX9DMGvQifU91RHt6vK7DQSE6M6IhUvCs=;
+        b=ZEPVcKp7QSVT2NqCVDO8zAwfpfJHoYnLMJAXB+gG2ZY/tAHzdQQBSyW+PZ4nVTKkJJ
+         rUfdMrb/MUuJoShxXYOm6xyh8IFr0KSjubv62/Ll9HypsskWL8J9Dy9uJWnBxHkPjGm4
+         DYUDNByYh0EzMOCFeLtaxkItWtAVQFlJ6mpPQo2tBDV4qwApVWF2v7ll8tENjyHBMxvJ
+         fSgWPmCzysya4ncKQN1cF1d4Y3A1v5jdfWyfnz2VM21AXkWGsAJZNVJLV3mSVK8/Txsw
+         16K0joc2C8cO8uP6iH450SvD3PFMohTZjIeSw84uA6nBwGSzFBuFGCP6ChDvAKvb/xlA
+         x9PQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747805945; x=1748410745;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Cwi1TKu0MzTX9DMGvQifU91RHt6vK7DQSE6M6IhUvCs=;
+        b=GVUvz0nMPE2KKLq68/brIeg/T5WxvMj5k3GdhUWltU9gB+xbr4+OqKKxFmxExMvCc9
+         R4XkPoIaP07uX8tiCmzfX1mk/pB8szevRT2EUc6LTvNANLCgABNdxm2Ojo3Uch55rpdN
+         02VPtqLoxGx+s0x3YsU6+5fwbSEsWtFr5Ob0xBwoojzIH2LL87q1ifiHUlo28u7niX7p
+         OusgyjKuO6/rnDcWEmPOoemo81/e6f1o3q6oiXoL93j4NkiaQvDvpJIfQJNskjsLdVS4
+         U/o8U9kvwi09fjLH8iomFm8hvWhZim+GAVYtCKmtiphBepY6mVBoSis+W8YoWdgHU3Gp
+         r+rw==
+X-Forwarded-Encrypted: i=1; AJvYcCVMDDU2gyIQHHlYtZhlPuG9lFW8mwcOXtuxUlmGJMjd60Bs1xELtmcRUWm4pZmpjaTtjkGNcHRz@vger.kernel.org, AJvYcCVN/NySxsUb6Cw/vN63B8GaRB3VLQl/sVZQNSU1VdHnbtowfON+eTh+taiLHXrgfLwMg3LDvr/ka+MZfqI=@vger.kernel.org, AJvYcCWqF2U+zH18C9BHetwDWZSV7uZZPk1kX4k4wBuKJWFd5HCc3ASCVXz8TD7sDG3YlXJLDpCV7Lffeggkeuie@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+VNzydA/Kq9mSw3j1J+1zmUQOwhzMT/9Ha5RcyIJ9DEZLTqKs
+	dgShDX3/7LCH7q86jhtzti8jp0Gva298RLgM5sj2UsELR3ojy99QOASwEQXAFBETEpdAfoi55+i
+	5/OPeZ5M3O8M0WtkTeXo9mC6Ic/EesmumrA==
+X-Gm-Gg: ASbGnculXsTubnf/SiLaCvqYLwgj5m/RZ3SKBZvZNPsVSXDQtBzr3z9hFxcYYQqg8w9
+	yEsYyVRLvqee4g8xfFUO1nX/8WsRp3/oN/L3lLZ0vlKjxSWN4+D9DelZ9XDOrtu4jyLmrJr7yg6
+	7aSHzV49h2/jlRhtFOMGV6Z0uzfxWNZ0c=
+X-Google-Smtp-Source: AGHT+IGgzD7CKFw8OUIVR1AtCawdPAvyoq5kif11vGmUaW6UgrO2N7MmgFJ6Es69Q3ma9sPvy1SwqBIMn6DqYvI7LUk=
+X-Received: by 2002:a05:6902:2181:b0:e6d:f4c8:7fab with SMTP id
+ 3f1490d57ef6-e7b6d554875mr20507447276.37.1747805945382; Tue, 20 May 2025
+ 22:39:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH next 2/2] spi: spi-qpic-snand: add support for 8 bits ECC
- strength
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-CC: Gabor Juhos <j4g8y7@gmail.com>, Mark Brown <broonie@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Richard Weinberger
-	<richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        "Varadarajan
- Narayanan" <quic_varada@quicinc.com>,
-        Sricharan Ramabadhran
-	<quic_srichara@quicinc.com>,
-        <linux-spi@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250502-qpic-snand-8bit-ecc-v1-0-95f3cd08bbc5@gmail.com>
- <20250502-qpic-snand-8bit-ecc-v1-2-95f3cd08bbc5@gmail.com>
- <8aa3d4da-da3e-2af4-e0f9-cd56d6259d8f@quicinc.com>
- <c1729d39-9f7f-4c6d-b8a4-72dfee4bfca5@gmail.com> <878qn2nsa0.fsf@bootlin.com>
- <16195524-1f31-4968-a3fd-f3d24f1c4223@gmail.com> <87msbhezjf.fsf@bootlin.com>
- <007881c9-e03c-1473-d8eb-53fbad8c6a8e@quicinc.com>
- <87frh4ej87.fsf@bootlin.com>
-Content-Language: en-US
-From: Md Sadre Alam <quic_mdalam@quicinc.com>
-In-Reply-To: <87frh4ej87.fsf@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDA1MyBTYWx0ZWRfX/2G/PLeDfvwU
- AKDm/VEWgRmm5Je2fSjPQEqzqALTfgMTpAntgbAb9Qil9EbPOZPB47MqPUfSBwIyjOw402nNeoC
- JN5/jJIMo0OI4Y2R5CS8FDIgk4pOf45DCzfaPbByPMQGQVKKaOte9lq8CuvaycC3XH0h7VFXMAX
- oKXiGtDnVtRGenKiI9wj1RyO7kOMfdQ7kEPsV89z2kmWv0upEbiNXjYoQty9iJeTgQVq6+J2Ggl
- w5M6FcozbEN8U1gEs7stzj3axjfhzbKd2E2Z51tIVtsIpWFy8r4IJErsCEowo5+XVp141BfEYvJ
- WaH0pWvY2nO70BQOEYEHfS0pszW30XjFQFh3M5GSs4DT6KbPJk1l0/tteABD1GCLXTDDnOwEHKZ
- XqJXCd8Z1RWT3zZ2Hf7YN4LupesNQC+y7VvsPNFvdIbT6SVaDA5C3naxxzqZXa2YIIDlL4MD
-X-Authority-Analysis: v=2.4 cv=XeWJzJ55 c=1 sm=1 tr=0 ts=682d66c9 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
- a=1P9lDc0nu8lX0kGsQioA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: lX6Lf87Bh5Z_R65mhOqeVWWz-ecQjf5h
-X-Proofpoint-ORIG-GUID: lX6Lf87Bh5Z_R65mhOqeVWWz-ecQjf5h
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-21_01,2025-05-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 clxscore=1015 mlxlogscore=831 mlxscore=0 bulkscore=0 spamscore=0
- suspectscore=0 impostorscore=0 adultscore=0 malwarescore=0 lowpriorityscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505210053
+References: <20250520130737.4181994-1-bbhushan2@marvell.com>
+ <20250520130737.4181994-4-bbhushan2@marvell.com> <aC0KdBdslZM8m2Ox@gondor.apana.org.au>
+In-Reply-To: <aC0KdBdslZM8m2Ox@gondor.apana.org.au>
+From: Bharat Bhushan <bharatb.linux@gmail.com>
+Date: Wed, 21 May 2025 11:08:53 +0530
+X-Gm-Features: AX0GCFuhNlG-J3vC3RuGk-CuapO2lbxSI7JUvkzX_hl9f90ZXIHLJZrJZKDtIOs
+Message-ID: <CAAeCc_nLSuDrHTPNt39mK4Ea_PD6fO4a=x21kgQoMVWWPNvbPg@mail.gmail.com>
+Subject: Re: [PATCH 3/4 v2] crypto: octeontx2: Fix address alignment on CN10K
+ A0/A1 and OcteonTX2
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Bharat Bhushan <bbhushan2@marvell.com>, bbrezillon@kernel.org, schalla@marvell.com, 
+	davem@davemloft.net, giovanni.cabiddu@intel.com, linux@treblig.org, 
+	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Wed, May 21, 2025 at 4:34=E2=80=AFAM Herbert Xu <herbert@gondor.apana.or=
+g.au> wrote:
+>
+> On Tue, May 20, 2025 at 06:37:36PM +0530, Bharat Bhushan wrote:
+> >
+> > +     info->in_buffer =3D PTR_ALIGN((u8 *)info + info_len,
+> > +                                 OTX2_CPT_DPTR_RPTR_ALIGN);
+>
+> Any address that's used for bidirectional or from-device DMA
+> needs to be aligned to ARCH_DMA_MINALIGN.
+>
+> Sorry I missed this during the first round.
 
-On 5/16/2025 7:44 PM, Miquel Raynal wrote:
-> 
->>>> Interestingly enough, it reports the correct number of bit errors now.
->>>> For me it seems, that the hardware reports the number of the corrected
->>>> *bytes* instead of the corrected *bits*.
->>> I doubt that, nobody counts bytes of errors.
->>> You results are surprising. I initially though in favour of a software
->>> bug, but then it looks even weirder than that. Alam?
->> I have checked with HW team , the QPIC ECC HW engine reports the bit
->> error byte wise not bit wise.
->>
->> e.g
->>      Byte0 --> 2-bitflips --> QPIC ECC counts 1 only
->>      Byte1 --> 3-bitflips --> QPIC ECC counts 1 only
->>      Byte2 --> 1-bitflips --> QPIC ECC counts 1 only
->>      Byte3 --> 4-bitflips --> QPIC ECC counts 1 only (in 8-bit ecc)
->>      Byte4 --> 6-bitflips --> QPIC ECC counts 1 only (in 8-bit ecc)
->>
->> Hope this can clearify the things now.
-> 
-> o_O ????
-> 
-> How is that even useful? This basically means UBI will never refresh the
-> data because we will constantly underestimate the number of bitflips! We
-> need to know the actual number, this averaging does not make any sense
-> for Linux. Is there another way to get the raw number of bitflips?
-I have re-checked with HW team, unfortunately currently there is no 
-register fields available to get the raw number of bit flips. But
-for newer chipset they have fixed this issue. But currently the QPIC
-QPIC_NANDC_BUFFER_STATUS | 0x79B0018 register bit-8 will get set if 
-there is uncorrectable bitflips happened.
+Will change in the next version.
 
-For 4-bit ECC if 5-bit raw bit flips happened then bit-8 will get set in
-QPIC_NANDC_BUFFER_STATUS.
+Thanks
+-Bharat
 
-similar for 8-bit ECC if 9-bit raw bit flips happened then bit-8 will 
-get set in QPIC_NANDC_BUFFER_STATUS.
-
-Thanks,
-Alam.
+>
+> Cheers,
+> --
+> Email: Herbert Xu <herbert@gondor.apana.org.au>
+> Home Page: http://gondor.apana.org.au/~herbert/
+> PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
