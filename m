@@ -1,90 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02E47482EB;
-	Wed, 21 May 2025 17:56:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C643622CBF8;
+	Wed, 21 May 2025 18:00:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747850166; cv=none; b=nOtq4bKHOVITXuzNA/4aMcKNXWUrYbj/GjHDZPwZwzVSbn7bEDgjBZbqHk1wfX0w9QNWhbbPOppkZyzmJQGtUUG6DqoMB6DIkYm7ez66rProBRjMgBewrZGplnAsJm4yfMM9rYayUgoKIKuLsirfr94oXON7NT9y3JawX039Df8=
+	t=1747850435; cv=none; b=Z2PBwGeM1wm+JTx5t8dzWl4QIc5KND/qBP5X5auMLFNAqe333E97tpMWy7PNeebcg0AVueOE+VzWZFIikzdCryTUfViixUNOlWFFl2lB04Q7ilVmvxr+NzkKgXQbKFp/DR97dWPTWm0s8NY7bc5o2MTtslwsyZN3hj57omrKkCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747850166; c=relaxed/simple;
-	bh=SH3v7r/YeP+ILksXxAq4H6i/5FdXirbGQTMwOfTFny0=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=COIOsr0K/hQJPzLhxyGOqlCS6ow8aDhMWVroXdSl7Vn8qn/iXRqqPwynG2avEBW2Ycnmb6c73TJGwcEjoCtjPeY4OIryWE0AASQj4nwZyCfc11aA94vEeGpaQS0TFP6l6rR68+HOi7GqnGxNzDr3mLv42ZqxiLp7d8jl1bKABrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pbnxd02T; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747850435; c=relaxed/simple;
+	bh=hSEhiDzqSaiyLOhzjpCcXuTR0mgkbVOtc0ok6q5hkyo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=etw7yyv1SmMwDRtmg5mWPQIp46sXxV0HYjlwpRoLeIh1+xqkQthlLwjmlqPZEvqmbkSIKUxbSYVk4Hm2iyhKWKm94X/ESy9FNweNNLc7i+c9A/d6CZ2gWx5vqsT8CKDaeHQ4MjNIDLT+EfahNEt20PD8CzgwwuSfp9Av/LcDrx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=N0hjILO5; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pbnxd02T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35D6CC4CEE4;
-	Wed, 21 May 2025 17:56:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747850164;
-	bh=SH3v7r/YeP+ILksXxAq4H6i/5FdXirbGQTMwOfTFny0=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=pbnxd02T3gFqUPMywHByGWNqP4yHJv049nk0XpF8GLIt6EkzkEVJp3Mq0lDhrCpLV
-	 nDe3S5GGj1AbfQcnTfI6EhFgN8zEI+yeXzhI6EYBQdTOKU1aICAOrvBl1fPsp4yDzw
-	 26GdpAQisHmuBYM/aItT8RbInXIZVISglDGWrWtd4RAZ51y5hH5FuFQjJNCOqg2QAi
-	 u8MvnleyLUJh2SvrJjSG8WbHUCre3t+6aCKOCdsrsMJFop0RnD92g0cms9fyvKxGs3
-	 XXGOb70FeRtmlnuDMOw16h0nv6xnQGhti9PhX8rLu/8aGcnmzAEClsa6jrjP4qfdxa
-	 pTer5+zRybQQg==
-From: Mark Brown <broonie@kernel.org>
-To: Heiko Stuebner <heiko@sntech.de>, Chukun Pan <amadeus@jmu.edu.cn>
-Cc: Yao Zi <ziyao@disroot.org>, Rob Herring <robh@kernel.org>, 
- Jonas Karlman <jonas@kwiboo.se>, Conor Dooley <conor+dt@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-spi@vger.kernel.org
-In-Reply-To: <20250520100102.1226725-1-amadeus@jmu.edu.cn>
-References: <20250520100102.1226725-1-amadeus@jmu.edu.cn>
-Subject: Re: (subset) [PATCH 0/2] arm64: dts: rockchip: Add spi nodes for
- RK3528
-Message-Id: <174785016195.188147.3036453631222636236.b4-ty@kernel.org>
-Date: Wed, 21 May 2025 18:56:01 +0100
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="N0hjILO5"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a375888297so2328017f8f.1;
+        Wed, 21 May 2025 11:00:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20230601; t=1747850432; x=1748455232; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=v8AA4IZsofQYOTdeu/xMopNAhMxBwcxpcA9eFx+l8xc=;
+        b=N0hjILO5NjCW4J0r7fsAH6pizhm4l/Kt4Pr1O/ebp1KfIQeAazeECNtN+Z9FegsdL4
+         M8kJn7V4U8KkfM8InXOEqU8em5n4t9rwOykmrMfKhZifdcs/Qj+tae2g/ED+/JrBVwcr
+         VJYYORfjxYI3PBsUeETwelhz+8nD1MlJhunRW4XIt/qC/y+I62rH8m3FIKrVKMrry27C
+         ivgdO1mbz2f0rowDyxMLo215Dr1Hv2Q2xr5cVZUsVAYlDaCXyH5PGObwyGLATONa+oRl
+         WGL0eygcbYZCmK51DzEJFwFwZc+V/vafbiddL6akWYCPNR3SS8VYSCalYGU8YVRMi06S
+         R0tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747850432; x=1748455232;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=v8AA4IZsofQYOTdeu/xMopNAhMxBwcxpcA9eFx+l8xc=;
+        b=VkSudBczItkcpHGBJHxK/0H4YT4/MCL+PqU6cj+8K75ZEaownRIDnPe+S3Z2zsC82I
+         f2Ba4uDHkHAnEo9VriIcSwVio1MqO6lEKy7tWL7pZ95XRJMfl82ApimBqpXBZ4Uj0l1X
+         VNR1xqem02fQr1zVHosmP6XeAkfeUTucAn3p+wLxOE2SfN+URpYPFus9b88WHBOwJexG
+         HfVzkF84wO6ibKZ0SA5ENo0lwlx5eAoJEhkEh7P8wxnjFYSmgtXEIQ7QRg5AyLLLr4XR
+         OCkujAfqD7Y2lfXE/hwjy7a2W0uSzlbk9gEW8juyZy68YSPoBMSAdJ88iXH32d5HA5dE
+         rwrA==
+X-Forwarded-Encrypted: i=1; AJvYcCVJVrVqNjg+c/UMa3UoyzfrkukuDpCEzQQeInjEexfUCA0A3Q9DLCvJrVF1DU8MGZv4hCE6lIfb@vger.kernel.org, AJvYcCWgYDJCpmsyDV1rmni7sLm4DlvHuR3ruSRmmCHWE/3gZKT4NLEapkUgxPTpCUrev0KtyGPmtO5Q1NsceKc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUKAR96k4iwE+luh9HLCDkmfmwyhIbbS3NYQlmx+dYkl7wrfwe
+	Wh5TcZCfKImc/cj53TUPvQ3LhJf2+QrfaelUuWoo3vCej7ClX/5K/hA=
+X-Gm-Gg: ASbGnctsDvhDwLvFyRpyPQ7K5Uo+8/XHFsGmrAYPRWx7gpodaxOcl9tCpyyMu2/jdI8
+	bYUvUMN/d8XeIjEc1ibw5FtCdYkWasvxYPeHHGLeiBNInj3+cYK4pK+WW8LuUh2knbc5qecJKGE
+	18N5zx62WI5F8X2vl9LCJbcyWVX4uOyzv7ZY1H7mM9FECWGI6FbHNV66tnTv/0PN7MlyiEo2j3d
+	t8riULlXSXfWIpmAMenI/dQ0fSzo5Q6W0KelEW+P29AJKvkT+6EraPcq9lCSstBXZF8UmpsYmbm
+	cCSy1KKCeX098E8YEucjTMYf8h8oWG1EZZavDnJkF3UxGj0sQAJG8cI9MX9DSMqbe3QQBTZ0Q4U
+	nA+z6x0/pLdGkHMVD0T+RNKnfVE0=
+X-Google-Smtp-Source: AGHT+IFh2AGmng+VALdHnj2jbzj3BcBZ4blsY4cvN/b9ldp9O+4JHoVbg40HkfWme/bgODBOdOKQyg==
+X-Received: by 2002:a05:6000:420d:b0:3a3:760c:81a4 with SMTP id ffacd0b85a97d-3a3760c835fmr9803335f8f.24.1747850431771;
+        Wed, 21 May 2025 11:00:31 -0700 (PDT)
+Received: from [192.168.1.3] (p5b2ac604.dip0.t-ipconnect.de. [91.42.198.4])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f73d4a3csm79716415e9.22.2025.05.21.11.00.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 May 2025 11:00:31 -0700 (PDT)
+Message-ID: <66f9ad91-99b1-4791-8cab-22b01eefeeec@googlemail.com>
+Date: Wed, 21 May 2025 20:00:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c25d1
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH 6.14 000/145] 6.14.8-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250520125810.535475500@linuxfoundation.org>
+Content-Language: de-DE
+From: Peter Schneider <pschneider1968@googlemail.com>
+In-Reply-To: <20250520125810.535475500@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, 20 May 2025 18:01:00 +0800, Chukun Pan wrote:
-> There are 2 SPI controllers on the RK3528 SoC, describe it.
-> Tested using st7789v chip with spi-cpha and spi-cpol properties.
-> 
-> [   10.831306] fb_st7789v spi0.0: fbtft_property_value: buswidth = 8
-> [   11.042915] graphics fb0: fb_st7789v frame buffer, 240x320, 150 KiB
->  video memory, 4 KiB buffer memory, fps=20, spi0.0 at 15 MHz
-> 
-> [...]
+Am 20.05.2025 um 15:49 schrieb Greg Kroah-Hartman:
+> This is the start of the stable review cycle for the 6.14.8 release.
+> There are 145 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-Applied to
+Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
+oddities or regressions found.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+Tested-by: Peter Schneider <pschneider1968@googlemail.com>
 
-Thanks!
 
-[1/2] spi: dt-bindings: Add rk3528-spi compatible
-      commit: 70e5f38e734572ca5a56cff48cf01a0f31917099
+Beste Grüße,
+Peter Schneider
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+-- 
+Climb the mountain not to plant your flag, but to embrace the challenge,
+enjoy the air and behold the view. Climb it so you can see the world,
+not so the world can see you.                    -- David McCullough Jr.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
+Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
