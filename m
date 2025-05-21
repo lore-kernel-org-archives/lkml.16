@@ -1,266 +1,265 @@
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C917265CBD
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 12:11:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 528A026560B
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 12:11:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747829501; cv=none; b=BgVxd+JDOFLDU+BbPAxPk3XNDrOgzeVHLaAu595iJiOU4oiOvAbXEZSA8if+oH+Marlh+NecZ3Bnib4VRXOKhL6ivVE1qLW/uKiOcSl7/2y9MBn+TI7C1uzbjHl2FwZdNZ7RMvRTJgGGLsj0AB+mRikrXvSzFAYJBXSLB/Ba3i0=
+	t=1747829514; cv=none; b=Hx7XkAKeHEeg+jwxFLNyeTaCMyByjriGSmy+aYqVtJYiVnHiHrkgq4VB5tmeGKGYtztvt+ENpLjvSXDRVi5fFha6Ihd5nTZb+lC8M8Tw/TD5iJyUSn0UJaSSQllO7iAL/4F7Szwz5Z8J98eaqDDfHLQmQjQYVTag6bEKOuE42M4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747829501; c=relaxed/simple;
-	bh=VqSxZbHBNqv79Xze1igbciYOMZRnsmnIMjQTjRZltsA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WRC6DjBSCVxei9k4I4NpphHc+I8EAk65aoIVX0aF7CAH1+ulIdo3A42/7uO7WqxNgiopF/tSSqzO8LzNOVfoAuT48AHi3pvrbSjSBmLcDai1srntJeu8JHQYR3EifNwgc3cbn60/fAuBx0bHkbzEqssTerNFY62zW/gfbpaFYmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gCcdPsaX; arc=none smtp.client-ip=209.85.219.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747829514; c=relaxed/simple;
+	bh=5ruHYJOYd9Gjxi3WpKqv9bMULzZwoM4egO7CGu+G9wA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NnbX9TGY48NKW9dUDjNsZBUG7cpfLZ3YqVzZ42UNevTgxWJYeOMI0w/JGIretd8K+GYJ8iI7C+TXduoYaas+8GlGOVLsfRq0zEz/P033/tXA+dFCAQyytC+bh1ZAjRXGQPBNunDJs6FopJiPU8jR0q/GB/K5b9QEQVwS6I6hk0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=O3QVX8Az; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gCcdPsaX"
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e7b9a3d85b9so3068060276.0
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 05:11:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747829498; x=1748434298; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=leH2Hwtpn8bKj0gxFlEX3tMtghWEWhWZN+JSBgnuZRk=;
-        b=gCcdPsaXGcvhRYIGqVy18Jc9wjdi3XtXjSxB18dB2qlAnolXwr4Qde6blLzWz+n3G8
-         8B6FpRmVgEcrUn/O7KGDe0Fg3x99hToL3UdqsQOripwzY4CbynwR0l39bGNstu9sc56C
-         Od95ROn21oI0tGWHpnIWqtP1u8bZKEKovUS9BsolvIf+n1D2wJDWNiJ58sa5PFwWg5CT
-         yPqFIoMvTasX8fZVLabDhttrB91vZjJ3YOMeDO9OpMGkTDtBn++aDB+WkjPimi2a2Lxp
-         Qn8Cq7feE3jPhNUXL+KBbDU1Qpp/mQS0Pvwe39xxHdYRM9JHV5vKpoXmWsrR20iV2TeW
-         0Ggg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O3QVX8Az"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747829511;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Qtu6GUo320eRV2cAmSsW0wFq6T2qjgs2wh7OnZ36KOY=;
+	b=O3QVX8AzGes254ezpXVunKDq33LtO/y+X7Smf3A86ldg3DQ86Nrndc00KQdv6CiC4/q0vm
+	ey+qOhImZJZb4DgRdG0KV184lz81Jc3CyP//RhtEq02ps/QJGx+S1S7wrKU6w7Blvg+zFk
+	MuwYPu02xHFtBxPn8DAxEQQ9UOUdS/c=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-187-jDnDgjXNMnavmC3lhALvAQ-1; Wed, 21 May 2025 08:11:49 -0400
+X-MC-Unique: jDnDgjXNMnavmC3lhALvAQ-1
+X-Mimecast-MFC-AGG-ID: jDnDgjXNMnavmC3lhALvAQ_1747829509
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43ce8f82e66so35786215e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 05:11:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747829498; x=1748434298;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=leH2Hwtpn8bKj0gxFlEX3tMtghWEWhWZN+JSBgnuZRk=;
-        b=UXSyURODh/RVNTMuM3GjjSJyobcU0jQPlWyyB5zicYP9m0TYvcSnVCiBIVDKLfd7je
-         b0P/IYmwnZYp+f/jQBhtPRhJxgNgV17/pilGic7j8e+re8VtfOy9bqlEOBCJsSdg81Vm
-         wwy82Qc8YAN5bBrGerMjZE6+4g1iAXX3Es6ZnrVVbHunVYeJe6iEWmjKPGqiwHYQ/6nG
-         pYxY/0Cy51b98Q6808ymO8uwyNzuvwV5ttg9lLgZL7jl/8L4y0NNZ6YWDP8YDUI3Or6Z
-         Gc3mXkFpRjxTGa9f5kY6KL0xNaNuLx+i1s/X1TQzZ4fsotEhx3J2nM3wzA2gSVW2K5OX
-         dyCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWml/8bOIAbUrXUSlj6KuGiEY8AZmkCEluDGUnYv0Sxerrs7h8FjOHCS2ZbjjW3TFHk/4NtpHe09mBlrKE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzhe/g13cnTrCMJMD9acX6lW/H1DhOqVu2S5UPVltpOyoHI/qa3
-	AuQDpX6lHDFlU3HW4bti/j1p9Wd7HgphPLvGtdyGlPnxU6sPk7LQF08UiI/DoyvxVln4A40axDm
-	wHuAs58p9C4UpjbKPDlelgzJohdG/9ULedDv1RJyGkA==
-X-Gm-Gg: ASbGncvH748J1BiPymXY2Hh1niPs175Il+Rac6qy51FdRmg/e2izGs5i6wjtGn/x7E+
-	u88DDbHylPTxrewIYe3d6iqUs8KfRwtT3YMKHXhbh60orsZRMgQFCoHUItXRURWjlnWzFlZfa5H
-	s8bHCPpg8DmqFPlnLcgzEAezKt3YsLXpFrUQ==
-X-Google-Smtp-Source: AGHT+IFK1U1VhHvGbw7ni7gmxP6cQYNFW+g9T99BOXkJgTIb2HoHmfYe7OdY+kneqLkjitX0ZrvP8e97mCZilZjwnvM=
-X-Received: by 2002:a05:6902:228e:b0:e72:85a8:cd14 with SMTP id
- 3f1490d57ef6-e7b6d55485fmr25867282276.34.1747829498391; Wed, 21 May 2025
- 05:11:38 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747829509; x=1748434309;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Qtu6GUo320eRV2cAmSsW0wFq6T2qjgs2wh7OnZ36KOY=;
+        b=Ao1C5rBPVfdN838Lj8e1cRoW2Cn4fTeE/N7O0Fl7NCBORf19kadrReLU9iwhJDgZ/I
+         7ghyOOskCBNAr0phK8kwP73tNuzGBQw4v1GE7eAD2IAcyc43Ot+psGbfn3u45pQrSduj
+         FOFM7iQCQwZtvvMu/pplitB7kevae2JOmzWJrenQDDWVacimzYrO6puFbyKi3AqsSxBK
+         +yYQlt6h4+DiCWdo41B75rV12ogf7euenjzS6Z/ZW2A5XvfmCmi0Yjy3doDfX4+ngQpQ
+         dh95vt2wp+L63TEu6IYPN9o4QVN4uYHHZ+0T8NieHZyR3mfaXkvVESqeySblG6j8mydP
+         W+wQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXrcNaNVYlOi4MDOvWCY6j6gDvCpT713xp0uAVCCUuaKBuVEOi2JBWl6buaVUcVoQa3vJRwV99BX4IpmKo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwBmlI0aUEmO6HVRzuGqF655XlPUnAi+HnhYavcyDyO5wJBPCF4
+	vquZ5sGTZlXYviLotCAgeChHhHhdCVs8oPelG3P+UCZjb8ijDy8pCzbqw/pOdz89//tNGOCCGL4
+	EhgvP/1tl0pEJw2bF27mmwpzfj0xYdS8x9VsvSRNo+Arp5tHllRfwROGWUZpvpOBW6w==
+X-Gm-Gg: ASbGncshYs8ibunaH4nQKrEGYXd/C+bykbn5OpDYKpBUpCgQVY+zeugZaI9jgq0iSe9
+	+Rm2m/BGcaVgfz6AZiMwoKNv9KJ75L8Z92Ab/XUcz8T3S+ZhWfEKEnYaQaBOj8FiivGcJ08RmXO
+	zhH2q98fi9851kUcNKRnaWIOFxU+VoR6Yu+C5U8OQlM7XmRBNHZnLaQuy+fds813i95PRvxZzui
+	5GTG7JanlhdlE2hJD8pL73UeI8sFXOAf4/Zx8cZ0N+LC6J159WLvoapPV9APVM+w3f1A8N71PEY
+	KyI1ejENSvP+S6A8u8HshknN02UTrfXqHkxiwPR5qjGWtGBmKvFNMCC9WaRcwTWdcEUhEW+bF7B
+	wFTmngkLWxmmadORIsDcgZs2JHa/g9yhlyuagsW0=
+X-Received: by 2002:a05:6000:2012:b0:3a1:f68b:60a8 with SMTP id ffacd0b85a97d-3a35c834d65mr19052428f8f.10.1747829508639;
+        Wed, 21 May 2025 05:11:48 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG+ZKeGiYGqyqeDF1EYsM8B1nfBMl2gn9cmf015VaeDSfD4MFj90rpEUX9BD5N9Z+M+QVCd2w==
+X-Received: by 2002:a05:6000:2012:b0:3a1:f68b:60a8 with SMTP id ffacd0b85a97d-3a35c834d65mr19052394f8f.10.1747829508173;
+        Wed, 21 May 2025 05:11:48 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f25:9c00:e2c7:6eb5:8a51:1c60? (p200300d82f259c00e2c76eb58a511c60.dip0.t-ipconnect.de. [2003:d8:2f25:9c00:e2c7:6eb5:8a51:1c60])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f6b29619sm72162355e9.7.2025.05.21.05.11.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 May 2025 05:11:47 -0700 (PDT)
+Message-ID: <e9b85836-b4d9-4678-a59b-dbaf916fa1c5@redhat.com>
+Date: Wed, 21 May 2025 14:11:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250507160056.11876-1-hiagofranco@gmail.com> <20250507160056.11876-4-hiagofranco@gmail.com>
- <CAPDyKFrHD1hVCfOK-JV5FJM+Cd9DoKKZGKcC94fxx6_9Bsri1g@mail.gmail.com>
- <20250508202826.33bke6atcvqdkfa4@hiago-nb> <CAPDyKFr3yF=yYZ=Xo5FicvSbDPOTx7+fMwc8dMCLYKPBMEtCKA@mail.gmail.com>
- <20250509191308.6i3ydftzork3sv5c@hiago-nb> <CAPDyKFpnLzk5YR3piksGhdB8ZoGNCzmweBTxm_rDX5=vjLFxqQ@mail.gmail.com>
- <20250519172357.vfnwehrbkk24vkge@hiago-nb> <CAPDyKFpGcgMzOUHf-JTRTLBviFdLdbjZKrMm8yd37ZqJ1nfkHw@mail.gmail.com>
- <20250521041306.GA28017@nxa18884-linux> <20250521041840.GB28017@nxa18884-linux>
-In-Reply-To: <20250521041840.GB28017@nxa18884-linux>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Wed, 21 May 2025 14:11:02 +0200
-X-Gm-Features: AX0GCFs2ejlkWlTvzumqCZeACImuwbiSBdhWlDwwv02fTo8PCrix65GSFR6kMCo
-Message-ID: <CAPDyKFpSb+KsfDr1-=uk4TF4Op1dUQ9rDwPP5sSpMfxDRDhnZA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] remoteproc: imx_rproc: add power mode check for
- remote core attachment
-To: Peng Fan <peng.fan@oss.nxp.com>
-Cc: Hiago De Franco <hiagofranco@gmail.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, 
-	linux-pm@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Bjorn Andersson <andersson@kernel.org>, Hiago De Franco <hiago.franco@toradex.com>, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	daniel.baluta@nxp.com, iuliana.prodan@oss.nxp.com, 
-	Fabio Estevam <festevam@gmail.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Peng Fan <peng.fan@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/4] mm/page_isolation: make page isolation a
+ standalone bit.
+To: Zi Yan <ziy@nvidia.com>
+Cc: Oscar Salvador <osalvador@suse.de>, Johannes Weiner <hannes@cmpxchg.org>,
+ linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+ Vlastimil Babka <vbabka@suse.cz>, Baolin Wang
+ <baolin.wang@linux.alibaba.com>,
+ "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+ Mel Gorman <mgorman@techsingularity.net>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ Brendan Jackman <jackmanb@google.com>, Richard Chang
+ <richardycc@google.com>, linux-kernel@vger.kernel.org
+References: <20250509200111.3372279-1-ziy@nvidia.com>
+ <20250509200111.3372279-2-ziy@nvidia.com>
+ <506798aa-0280-4f63-9c0e-d5f2f5d58c3c@redhat.com>
+ <166E73A3-02CE-4023-AE0E-022C9C618C33@nvidia.com>
+ <a8dbfbf6-97e3-4a69-a1f5-a32693e46730@redhat.com>
+ <CA27CAF4-DD4B-4350-90A6-AE9A808F05C0@nvidia.com>
+ <c8265d22-5cbb-4211-b91d-87965b8505e2@redhat.com>
+ <B21E6F5D-C824-4BB8-974D-A1BA313880EB@nvidia.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <B21E6F5D-C824-4BB8-974D-A1BA313880EB@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, 21 May 2025 at 05:09, Peng Fan <peng.fan@oss.nxp.com> wrote:
->
-> On Wed, May 21, 2025 at 12:13:06PM +0800, Peng Fan wrote:
-> >Hi Ulf,
-> >
-> >On Tue, May 20, 2025 at 02:21:49PM +0200, Ulf Hansson wrote:
-> >>On Mon, 19 May 2025 at 19:24, Hiago De Franco <hiagofranco@gmail.com> wrote:
-> >>>
-> >>> Hi Ulf,
-> >>>
-> >>> On Mon, May 19, 2025 at 04:33:30PM +0200, Ulf Hansson wrote:
-> >>> > On Fri, 9 May 2025 at 21:13, Hiago De Franco <hiagofranco@gmail.com> wrote:
-> >>> > >
-> >>> > > On Fri, May 09, 2025 at 12:37:02PM +0200, Ulf Hansson wrote:
-> >>> > > > On Thu, 8 May 2025 at 22:28, Hiago De Franco <hiagofranco@gmail.com> wrote:
-> >>> > > > >
-> >>> > > > > Hello,
-> >>> > > > >
-> >>> > > > > On Thu, May 08, 2025 at 12:03:33PM +0200, Ulf Hansson wrote:
-> >>> > > > > > On Wed, 7 May 2025 at 18:02, Hiago De Franco <hiagofranco@gmail.com> wrote:
-> >>> > > > > > >
-> >>> > > > > > > From: Hiago De Franco <hiago.franco@toradex.com>
-> >>> > > > > > >
-> >>> > > > > > > When the remote core is started before Linux boots (e.g., by the
-> >>> > > > > > > bootloader), the driver currently is not able to attach because it only
-> >>> > > > > > > checks for cores running in different partitions. If the core was kicked
-> >>> > > > > > > by the bootloader, it is in the same partition as Linux and it is
-> >>> > > > > > > already up and running.
-> >>> > > > > > >
-> >>> > > > > > > This adds power mode verification through the SCU interface, enabling
-> >>> > > > > > > the driver to detect when the remote core is already running and
-> >>> > > > > > > properly attach to it.
-> >>> > > > > > >
-> >>> > > > > > > Signed-off-by: Hiago De Franco <hiago.franco@toradex.com>
-> >>> > > > > > > Suggested-by: Peng Fan <peng.fan@nxp.com>
-> >>> > > > > > > ---
-> >>> > > > > > > v2: Dropped unecessary include. Removed the imx_rproc_is_on function, as
-> >>> > > > > > > suggested.
-> >>> > > > > > > ---
-> >>> > > > > > >  drivers/remoteproc/imx_rproc.c | 13 +++++++++++++
-> >>> > > > > > >  1 file changed, 13 insertions(+)
-> >>> > > > > > >
-> >>> > > > > > > diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
-> >>> > > > > > > index 627e57a88db2..9b6e9e41b7fc 100644
-> >>> > > > > > > --- a/drivers/remoteproc/imx_rproc.c
-> >>> > > > > > > +++ b/drivers/remoteproc/imx_rproc.c
-> >>> > > > > > > @@ -949,6 +949,19 @@ static int imx_rproc_detect_mode(struct imx_rproc *priv)
-> >>> > > > > > >                         if (of_property_read_u32(dev->of_node, "fsl,entry-address", &priv->entry))
-> >>> > > > > > >                                 return -EINVAL;
-> >>> > > > > > >
-> >>> > > > > > > +                       /*
-> >>> > > > > > > +                        * If remote core is already running (e.g. kicked by
-> >>> > > > > > > +                        * the bootloader), attach to it.
-> >>> > > > > > > +                        */
-> >>> > > > > > > +                       ret = imx_sc_pm_get_resource_power_mode(priv->ipc_handle,
-> >>> > > > > > > +                                                               priv->rsrc_id);
-> >>> > > > > > > +                       if (ret < 0)
-> >>> > > > > > > +                               dev_err(dev, "failed to get power resource %d mode, ret %d\n",
-> >>> > > > > > > +                                       priv->rsrc_id, ret);
-> >>> > > > > > > +
-> >>> > > > > > > +                       if (ret == IMX_SC_PM_PW_MODE_ON)
-> >>> > > > > > > +                               priv->rproc->state = RPROC_DETACHED;
-> >>> > > > > > > +
-> >>> > > > > > >                         return imx_rproc_attach_pd(priv);
-> >>> > > > > >
-> >>> > > > > > Why is it important to potentially set "priv->rproc->state =
-> >>> > > > > > RPROC_DETACHED" before calling imx_rproc_attach_pd()?
-> >>> > > > > >
-> >>> > > > > > Would it be possible to do it the other way around? First calling
-> >>> > > > > > imx_rproc_attach_pd() then get the power-mode to know if
-> >>> > > > > > RPROC_DETACHED should be set or not?
-> >>> > > > > >
-> >>> > > > > > The main reason why I ask, is because of how we handle the single PM
-> >>> > > > > > domain case. In that case, the PM domain has already been attached
-> >>> > > > > > (and powered-on) before we reach this point.
-> >>> > > > >
-> >>> > > > > I am not sure if I understood correcly, let me know if I missed
-> >>> > > > > something. From my understanding in this case it does not matter, since
-> >>> > > > > the RPROC_DETACHED will only be a flag to trigger the attach callback
-> >>> > > > > from rproc_validate(), when rproc_add() is called inside
-> >>> > > > > remoteproc_core.c.
-> >>> > > >
-> >>> > > > Okay, I see.
-> >>> > > >
-> >>> > > > To me, it sounds like we should introduce a new genpd helper function
-> >>> > > > instead. Something along the lines of this (drivers/pmdomain/core.c)
-> >>> > > >
-> >>> > > > bool dev_pm_genpd_is_on(struct device *dev)
-> >>> > > > {
-> >>> > > >         struct generic_pm_domain *genpd;
-> >>> > > >         bool is_on;
-> >>> > > >
-> >>> > > >         genpd = dev_to_genpd_safe(dev);
-> >>> > > >         if (!genpd)
-> >>> > > >                 return false;
-> >>> > > >
-> >>> > > >         genpd_lock(genpd);
-> >>> > > >         is_on = genpd_status_on(genpd);
-> >>> > > >         genpd_unlock(genpd);
-> >>> > > >
-> >>> > > >         return is_on;
-> >>> > > > }
-> >>> > > >
-> >>> > > > After imx_rproc_attach_pd() has run, we have the devices that
-> >>> > > > correspond to the genpd(s). Those can then be passed as in-parameters
-> >>> > > > to the above function to get the power-state of their PM domains
-> >>> > > > (genpds). Based on that, we can decide if priv->rproc->state should be
-> >>> > > > to RPROC_DETACHED or not. Right?
-> >>> > >
-> >>> > > Got your idea, I think it should work yes, I am not so sure how. From
-> >>> > > what I can see these power domains are managed by
-> >>> > > drivers/pmdomain/imx/scu-pd.c and by enabling the debug messages I can
-> >>> > > see the power mode is correct when the remote core is powered on:
-> >>> > >
-> >>> > > [    0.317369] imx-scu-pd system-controller:power-controller: cm40-pid0 : IMX_SC_PM_PW_MODE_ON
-> >>> > >
-> >>> > > and powered off:
-> >>> > >
-> >>> > > [    0.314953] imx-scu-pd system-controller:power-controller: cm40-pid0 : IMX_SC_PM_PW_MODE_OFF
-> >>> > >
-> >>> > > But I cannot see how to integrate this into the dev_pm_genpd_is_on() you
-> >>> > > proposed. For a quick check, I added this function and it always return
-> >>> > > NULL at dev_to_genpd_safe(). Can you help me to understand this part?
-> >>> >
-> >>> > As your device has multiple PM domains and those gets attached with
-> >>> > dev_pm_domain_attach_list(), the device(s) that you should use with
-> >>> > dev_pm_genpd_is_on() are in imx_rproc->pd_list->pd_devs[n].
-> >>>
-> >>> Ok got it, thanks for sharing.
-> >>>
-> >>> I just send the v3 with the changes Peng proposed (here
-> >>> https://lore.kernel.org/lkml/20250519171514.61974-1-hiagofranco@gmail.com/T/#t),
-> >>> but I am a bit confused which path we should take, the initial approach
-> >>> proposed or using these PD functions. Maybe we can discuss this in the
-> >>> new v3 patch series?
-> >>
-> >>I think it would be better if we can avoid sharing low-level firmware
-> >>functions for PM domains. I am worried that they may become abused for
-> >>other future use-cases.
-> >>
-> >>So, if possible, I would rather make us try to use
-> >>dev_pm_genpd_is_on() (or something along those lines), but let's see
-> >>what Peng thinks about it before we make the decision.
-> >
-> >There are two power domains for this m4:
-> >power-domains = <&pd IMX_SC_R_M4_0_PID0>, <&pd IMX_SC_R_M4_0_MU_1A>;
-> >
-> >So before attach the pd, dev_pm_genpd_is_on should also return false
-> >per my understanding. If run dev_pm_genpd_is_on after attaching the pd,
-> >the pd will be powered on. So we are not able to know whether M4 is started
-> >by bootloader or not.
->
->
-> Could we use PD_FLAG_NO_DEV_LINK when attach the PD, then
-> use dev_pm_genpd_is_on to detect the status of genpd?
->
-> we set is_off as true when pm_genpd_init if the PD is physical ON.
->
+On 21.05.25 14:00, Zi Yan wrote:
+> On 21 May 2025, at 7:57, David Hildenbrand wrote:
+> 
+>> On 21.05.25 13:16, Zi Yan wrote:
+>>> On 19 May 2025, at 12:42, David Hildenbrand wrote:
+>>>
+>>>>>>> +#ifdef CONFIG_MEMORY_ISOLATION
+>>>>>>> +	if (flags & PB_migrate_isolate_bit)
+>>>>>>> +		return MIGRATE_ISOLATE;
+>>>>>>> +#endif
+>>>>>>
+>>>>>> If you call get_pfnblock_flags_mask() with MIGRATETYPE_MASK, how could you ever get PB_migrate_isolate_bit?
+>>>>>
+>>>>> MIGRATETYPE_MASK is ((BIT(PB_migratetype_bits) - 1) | PB_migrate_isolate_bit),
+>>>>> so it gets PB_migrate_isolate_bit.
+>>>>>
+>>>>
+>>>> Oh ... that's confusing.
+>>>>
+>>>>>>
+>>>>>>
+>>>>>> I think what we should do is
+>>>>>>
+>>>>>> 1) Rename get_pfnblock_flags_mask() to get_pfnblock_flags()
+>>>>>>
+>>>>>> 2) Remove the mask parameter
+>>>>>>
+>>>>>> 3) Perform the masking in all callers.
+>>>>>
+>>>>> get_pfnblock_flags_mask() is also used by get_pageblock_skip() to
+>>>>> get PB_migrate_skip. I do not think we want to include PB_migrate_skip
+>>>>> in the mask to confuse readers.
+>>>>
+>>>> The masking will be handled in the caller.
+>>>>
+>>>> So get_pageblock_skip() would essentially do a
+>>>>
+>>>> return get_pfnblock_flags() & PB_migrate_skip_bit;
+>>>>
+>>>> etc.
+>>>>
+>>>>>
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> Maybe, we should convert set_pfnblock_flags_mask() to
+>>>>>>
+>>>>>> void set_clear_pfnblock_flags(struct page *page, unsigned long
+>>>>>> 			      set_flags, unsigned long clear_flags);
+>>>>>>
+>>>>>> And better, splitting it up (or providing helpers)
+>>>>>>
+>>>>>> set_pfnblock_flags(struct page *page, unsigned long flags);
+>>>>>> clear_pfnblock_flags(struct page *page, unsigned long flags);
+>>>>>>
+>>>>>>
+>>>>>> This implies some more code cleanups first that make the code easier to extend.
+>>>>>>
+>>>>>
+>>>>> The same due to PB_migrate_skip.
+>>>>>
+>>>>> Based on your suggestion, we could make {set,get}_pfnblock_flags_mask()
+>>>>> internal APIs by prepending "__". They are only used by the new
+>>>>> {get, set, clear}_pfnblock_flags() and {get, set, clear}_pageblock_{skip, isolate}().
+>>>>> Then use {get, set, clear}_pfnblock_flags() for all migratetype operations.
+>>>>>
+>>>>> WDYT?
+>>>>
+>>>> In general, lgtm. I just hope we can avoid the "_mask" part and just handle it in these functions directly?
+>>>
+>>> After implementing {get, set, clear}_pfnblock_flags(), I find that
+>>> get_pfnblock_flags() is easy like you wrote above, but set and clear are not,
+>>> since migratetype and skip/isolate bits are in the same word, meaning
+>>> I will need to first read them out, change the field, then write them back.
+>>
+>> Like existing set_pfnblock_flags_mask() I guess, with the try_cmpxchg() loop.
+> 
+> Are you saying I duplicate the code in set_pfnblock_flags_mask() to implement
+> set_pfnblock_flags()? Or just replace set_pfnblock_flags_mask() entirely?
 
-You should not provide any flag (or attach_data to
-dev_pm_domain_attach_list()) at all. In other words just call
-dev_pm_domain_attach_list(dev, NULL, &priv->pd_list), similar to how
-drivers/remoteproc/imx_dsp_rproc.c does it.
+The latter as possible.
 
-In this way, the device_link is created by making the platform->dev
-the consumer and by keeping the supplier-devices (corresponding to the
-genpds) in RPM_SUSPENDED state.
+> 
+>>
+>>> But it will cause inconsistency if there is a parallel writer to the same
+>>> word. So for set and clear, mask is required.
+>>>
+>>> I can try to implement {get, set, clear}_pfnblock_bits(page,pfn, bits) to
+>>> only handle standalone bits by using the given @bits as the mask and
+>>> {set,get}_pageblock_migratetype() still use the mask.
+>>
+>> We'd still have to do the try_cmpxchg() when dealing with multiple bits, right?
+>>
+>> For single bits, we could just use set_bit() etc.
+> 
+> Mel moved from set_bit() to try_cmpxchg() a word for performance reason. I am
+> not sure we want to move back.
 
-The PM domains (genpds) are then left in their current state, which
-should allow us to call dev_pm_genpd_is_on() for the corresponding
-supplier-devices, to figure out whether the bootloader turned them on
-or not, I think.
+In e58469bafd05 we moved from multiple set_bit etc to a cmpxchange.
 
-Moreover, to make sure the genpds are turned on when needed, we also
-need to call pm_runtime_enable(platform->dev) and
-pm_runtime_get_sync(platform->dev). The easiest approach is probably
-to do that during ->probe() - and then as an improvement on top you
-may want to implement more fine-grained support for runtime PM.
+-       for (; start_bitidx <= end_bitidx; start_bitidx++, value <<= 1)
+-               if (flags & value)
+-                       __set_bit(bitidx + start_bitidx, bitmap);
+-               else
+-                       __clear_bit(bitidx + start_bitidx, bitmap);
 
-[...]
 
-Kind regards
-Uffe
+However, when only setting/clearing a single bit (e.g., isolated), 
+set_bit etc should be much cheaper.
+
+For multiple bits, the existing try_cmpxchg should be kept IMHO.
+
+-- 
+Cheers,
+
+David / dhildenb
+
