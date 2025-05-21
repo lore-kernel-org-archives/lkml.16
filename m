@@ -1,86 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.netfilter.org (mail.netfilter.org [217.70.190.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9C125A62E
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 10:07:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E482525B688;
+	Wed, 21 May 2025 10:07:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.190.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747822029; cv=none; b=sgxPAXjTzNSEHz08DaB39hpoScD1ek3xq17gUBU34vtaoP0HZeEZBlPvIfr4N0djElpGgWYTmNs+E1BvkUQIWRqNGmhS/KMRocpdtyay52Iq+vMMsC1mCkaJs6bJHZrMY8m3RWEjzkVh9GAvImq0e7zrjVkFuLpkakD3MIDDnb0=
+	t=1747822036; cv=none; b=Rd6kGuZI0YOaKhhP7Efua1EUse23TJpSXLBj6fzCLdOqcnLJBr4cBRxe7TUW3mv/UuF19MfMjStAiJaSsVLQCZ0aok2QpurCR3GHyybOtQuMZo4/OA9TXFhpKdWveptzSf1ym5Xr0raV2Xe2a1h+jdMiQ0AbMTFDCPq+mXETSPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747822029; c=relaxed/simple;
-	bh=TzaC5F/34ze80jqx91fjVtxmtYeM5S4kzBik7NxwHhc=;
+	s=arc-20240116; t=1747822036; c=relaxed/simple;
+	bh=S5Z4lpB+PVEMLATY/9LtfcmptgY13HExZPi6ZL1tZ9I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tXRQRagL0Gac1nFxIlITv2GcSy/DftKya2BEPChAYRaTAHu1wT2XcDALbi1Guo9kfQP/VBLIvSEr5OhLro67hcnbAPLKyv6LYBwep6EhpYV27ZHbpSYQFhJVt8s130hY8Hk87S5xZpzpjh4ckBdNxPQ9T3/Dwrb6j6xTEQpeMpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fgUAiugH; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=WOIc/X3aCGBguGv3Jsc5pN09rg8no+GAnDAgrJZJ172suYWVyoHjUttJfQlN+jNpsZQTeciGBVKva4pf+FOSPit7ISaf9oNcUjTjn9M8bYo851icOEkyfFJo4Lh4mvsErmBFZZA45RgfeJcT7LwndJn8bwZLMmT2hUVmBAw9SVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org; spf=pass smtp.mailfrom=netfilter.org; dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b=m55KzAKi; dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b=RYAiDCX2; arc=none smtp.client-ip=217.70.190.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netfilter.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fgUAiugH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2E59C4CEE4;
-	Wed, 21 May 2025 10:07:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747822029;
-	bh=TzaC5F/34ze80jqx91fjVtxmtYeM5S4kzBik7NxwHhc=;
+	dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b="m55KzAKi";
+	dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b="RYAiDCX2"
+Received: by mail.netfilter.org (Postfix, from userid 109)
+	id BB40C60724; Wed, 21 May 2025 12:07:11 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=netfilter.org;
+	s=2025; t=1747822031;
+	bh=FCKLw1/BI8fQGqiFzPRPzkBL4jrZBBv292m0Eoh2Ad8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fgUAiugHXphRBD17o3cAucyoZXqmQMZ6vEwqtoKg7FVvAFK0MezPSsQi0o+ML31vc
-	 UZwOFhqf/6Sl9e+7uF+k8tDWR3J7Qzj4abb7Q3vMQ8pA4740tBXsNLYzx2923v5V05
-	 W54sP3bX6rCYqIYneAZ2MGYxJbDu5/sPZdKh+5QBhaPC6m/kxIKmLIVd/rrwMog0hC
-	 qVbpx0aGvKd2bvizlXr8BUZXiDKh/DslhJMuOePaACKCKaBBJamULraB37Cj6r4KKU
-	 ghSku52QwjoPCSpQvlAP+g+Zyi3K2e4i6fvpwBstgkF6gAIWian+LQHRTyzZ+OK1Cb
-	 G4UlnfrIk9GPQ==
-Date: Wed, 21 May 2025 11:07:05 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Romain Gantois <romain.gantois@bootlin.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] regulator: core: do not ignore repeated requests on
- stepped regulators
-Message-ID: <65ea2969-b528-4a7d-b6ae-21376fe2e517@sirena.org.uk>
-References: <20250521-regulator-stepping-v1-1-b681ad012c0f@bootlin.com>
+	b=m55KzAKirQEN2JgIW0IxRi4qNm2RpFBITJ4UCGcsunYkwREFnWb+2PcC4GfTTg5hg
+	 rBcCYGyaj5YTUHtDNnH4Ok0YHtPVBcYnlv1eFMSRJBnaIth86s74tnYNn9YOhmDLCZ
+	 Xhn4OHGggu2skk2uj4DGu1lN65iHe/obg5jXNWCrAkkbNICmbHUA1fYHK/XlkWglSe
+	 ufLjV3nagZdS7+P/5hEX/bhIFMNN+DEQ+B0p+b+DLENyy2eGvPlK7qGcl0n9/pYU6T
+	 gsJyfBUzTVly5HW1xOjLRNCRzSljJ9VFPbtw/jWGqcqYZgprZOkCyVoHkGP2jLWFjh
+	 kjwznBXzIZ9AQ==
+X-Spam-Level: 
+Received: from netfilter.org (mail-agni [217.70.190.124])
+	by mail.netfilter.org (Postfix) with ESMTPSA id 4537C606ED;
+	Wed, 21 May 2025 12:07:08 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=netfilter.org;
+	s=2025; t=1747822028;
+	bh=FCKLw1/BI8fQGqiFzPRPzkBL4jrZBBv292m0Eoh2Ad8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RYAiDCX2OcSSzxyuBAls8SzlhXb1m5VY+qAabqz3ZwGb/StUlrOsNnyyX77Wq4ldu
+	 MZBPnqMfeqh0+e605adkl6cUWwc2+741hOBZAQNufbNrOXKAVoW7bhs3+tS2md3Ryn
+	 c3Z6QT6hVzl60hyMNn3gj/nQEBXFSFq3C3RInYGK/YeQbAl5mRXq9J/v/UOpbYdz0T
+	 MVi0BHncJsV3I9OCUFyNRWjlZw1z/29HCUbWMKB+wcjJuhZCTBH/V+wOUYjSjzVv6f
+	 sVAF4wxT14R2Zpehp6356fc6156xag3KpLpHUmrqt/22y2dcQbO4a44yyOem5cKHAZ
+	 u4lVeki4xC0IQ==
+Date: Wed, 21 May 2025 12:07:05 +0200
+From: Pablo Neira Ayuso <pablo@netfilter.org>
+To: Lance Yang <ioworker0@gmail.com>
+Cc: kadlec@netfilter.org, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+	coreteam@netfilter.org, linux-kernel@vger.kernel.org,
+	netfilter-devel@vger.kernel.org, Zi Li <zi.li@linux.dev>,
+	Lance Yang <lance.yang@linux.dev>, fw@strlen.de
+Subject: Re: [RESEND PATCH 1/1] netfilter: load nf_log_syslog on enabling
+ nf_conntrack_log_invalid
+Message-ID: <aC2lyYN72raND8S0@calendula>
+References: <20250514053751.2271-1-lance.yang@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="k5qcTD3KBFY121W5"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250521-regulator-stepping-v1-1-b681ad012c0f@bootlin.com>
-X-Cookie: 42
+In-Reply-To: <20250514053751.2271-1-lance.yang@linux.dev>
 
+Hi,
 
---k5qcTD3KBFY121W5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Cc: Florian Westphal.
 
-On Wed, May 21, 2025 at 10:47:24AM +0200, Romain Gantois wrote:
-> Currently, the regulator_set_voltage() function will assume a noop if a
-> consumer requests the same voltage range twice in a row.
->=20
-> This can lead to unexpected behavior if the target regulator has a maximum
-> voltage step constraint. With such constraints, the regulator core may
-> clamp the requested voltage to a lesser value, to ensure that the voltage
-> delta stays under the specified limit.
+On Wed, May 14, 2025 at 01:37:51PM +0800, Lance Yang wrote:
+> From: Lance Yang <lance.yang@linux.dev>
+> 
+> When nf_log_syslog is not loaded, nf_conntrack_log_invalid fails to log
+> invalid packets, leaving users unaware of actual invalid traffic. Improve
+> this by loading nf_log_syslog, similar to how 'iptables -I FORWARD 1 -m
+> conntrack --ctstate INVALID -j LOG' triggers it.
 
-No, if there's an issue here we should handle it the first time we set
-the voltage by doing multiple steps in one set_voltage() call.  Having
-individual client drivers all having to repeatedly call set_voltage() is
-obviously not a good API.
+I have been beaten by this usability issue in the past, it happens
+since conntrack is loaded on demand.
 
---k5qcTD3KBFY121W5
-Content-Type: application/pgp-signature; name="signature.asc"
+Maybe add an inconditionally soft dependency? This is a oneliner patch.
 
------BEGIN PGP SIGNATURE-----
+        MODULE_SOFTDEP("pre: nf_log_syslog");
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgtpcgACgkQJNaLcl1U
-h9A78Qf9GOQYlI0H5HoY6sia+l8Gdmup2wk8FQdCBbzHmfp9SR2uDd65F0Fg0dkL
-KN4j4unzaogew1puE9Zvy8lYzDnYoIOJ4i327nuRolqfo+F4YhyRXOsw4Yl7qk7j
-KEvR1v+f+RLWCuuq9zMbOO0ZQVWu5e8yaBkza7IGWC1JTS0BN86lWd0z15XKtulT
-+9fHANtunmZX+KBzTCYuTXb6LNGdjfyYSNGDasShsZjSgL5iPdiFGXtM/yp/UYsN
-qrf2vP8wlTftTYbfSbZEBj8s9YKtfa48h+ImNU1ZbUO4ZokjUlgG8xWiJSscXFZV
-gAzWwPhF4JcYTB1HoEFcz1pKBfvdFg==
-=p6w4
------END PGP SIGNATURE-----
+Florian, do you prefer this patch (on-demand) or a oneliner to load
+this module when conntrack gets loaded too?
 
---k5qcTD3KBFY121W5--
+It is a bit more memory to make it inconditional, but better to expose
+to users this soft dependency via lsmod.
+
+Thanks.
+
+> Signed-off-by: Zi Li <zi.li@linux.dev>
+> Signed-off-by: Lance Yang <lance.yang@linux.dev>
+> ---
+>  net/netfilter/nf_conntrack_standalone.c | 20 +++++++++++++++++++-
+>  1 file changed, 19 insertions(+), 1 deletion(-)
+> 
+> diff --git a/net/netfilter/nf_conntrack_standalone.c b/net/netfilter/nf_conntrack_standalone.c
+> index 2f666751c7e7..b4acff01088f 100644
+> --- a/net/netfilter/nf_conntrack_standalone.c
+> +++ b/net/netfilter/nf_conntrack_standalone.c
+> @@ -543,6 +543,24 @@ nf_conntrack_hash_sysctl(const struct ctl_table *table, int write,
+>  	return ret;
+>  }
+>  
+> +static int
+> +nf_conntrack_log_invalid_sysctl(const struct ctl_table *table, int write,
+> +				void *buffer, size_t *lenp, loff_t *ppos)
+> +{
+> +	int ret;
+> +
+> +	ret = proc_dou8vec_minmax(table, write, buffer, lenp, ppos);
+> +	if (ret < 0 || !write)
+> +		return ret;
+> +
+> +	if (*(u8 *)table->data == 0)
+> +		return ret;
+> +
+> +	request_module("%s", "nf_log_syslog");
+> +
+> +	return ret;
+> +}
+> +
+>  static struct ctl_table_header *nf_ct_netfilter_header;
+>  
+>  enum nf_ct_sysctl_index {
+> @@ -649,7 +667,7 @@ static struct ctl_table nf_ct_sysctl_table[] = {
+>  		.data		= &init_net.ct.sysctl_log_invalid,
+>  		.maxlen		= sizeof(u8),
+>  		.mode		= 0644,
+> -		.proc_handler	= proc_dou8vec_minmax,
+> +		.proc_handler	= nf_conntrack_log_invalid_sysctl,
+>  	},
+>  	[NF_SYSCTL_CT_EXPECT_MAX] = {
+>  		.procname	= "nf_conntrack_expect_max",
+> -- 
+> 2.49.0
+> 
