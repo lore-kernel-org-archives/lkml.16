@@ -1,175 +1,206 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E53DC2397A4
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 10:30:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B27781F869E;
+	Wed, 21 May 2025 10:31:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747823427; cv=none; b=V8yTwrUusyDhXxKEEtFi7v8up/q50i/uAkilAZ2UFDPkGMCkLGeuS3NIj89hniwvewLJBbAkedkpK9tEUP+GV5d9rYVvd+PlN1vrtf7DFnlmq64z0hRCXmKeNdNX0Ci132G3FSoN09KnMjJFjtwcOSjZzcKFrQ9zlLHdpbimOMg=
+	t=1747823489; cv=none; b=k8JioKK20k1WhaH4oP5EFhxxp4jKN4wCo3kNQVddWyzju5r1o9Zbd8IdMUSVDxZUK9ffbIicAjDcwKgxnGiUi1a4E5rmcTJp+jPUL591WLhtFJpv3tjW3k3vrauVe6VzS686S3NZG8E93+w+/W/UDqV09a7zpt3vm9hgOp3l5pk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747823427; c=relaxed/simple;
-	bh=e2XPQk0I2811W+ihEnVudE3Jmc1xmDI54ZHJJTUbTdQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LJeWvDW+Vd57e4emnPc/tMw43iLWJZfW38RglaEDGchf8borcixOeO9g53q8QFJYW1ylSZj54e3sF+wY/bm/9i6lgPczkzC6d7fueP/Rh7hsJIHYJqVPo/BoIHzmQuHOJXjJSMKIL4tn3G2j7XL6kT/R8EQ9u78txUWMsucl+5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BNR82wSc; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BNR82wSc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747823424;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b//tAtpqR3EMFEEGzwUIttSzLXmrWZQCdWQOg6sR/1Y=;
-	b=BNR82wScvg3HlbgfP1q2uQl+hEtHj3MsUvmiwNbYrdKPexPJ6h+l07PYz4t00jZ7CkcoEj
-	Gtwge/b4H25xB2aNfJsQ8mKdjKdAFhS7nLXl/fSK82w+orvIoti1MZCC8mrORPwUttHns2
-	Bp8Er5vvZKbuj+L/tBTnO26wQfQHLVk=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-80-btUfwaYUMESeBfS1WcEr9A-1; Wed,
- 21 May 2025 06:30:21 -0400
-X-MC-Unique: btUfwaYUMESeBfS1WcEr9A-1
-X-Mimecast-MFC-AGG-ID: btUfwaYUMESeBfS1WcEr9A_1747823420
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C0C59195608A;
-	Wed, 21 May 2025 10:30:19 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.14])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8755530001AA;
-	Wed, 21 May 2025 10:30:17 +0000 (UTC)
-Date: Wed, 21 May 2025 18:30:14 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Zhongkun He <hezhongkun.hzk@bytedance.com>
-Cc: Alexander Graf <graf@amazon.com>, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	nh-open-source@amazon.com
-Subject: Re: [External] [PATCH v3] kexec: Enable CMA based contiguous
- allocation
-Message-ID: <aC2rNv49pzy1Wh3D@MiWiFi-R3L-srv>
-References: <20250513180229.7494-1-graf@amazon.com>
- <CACSyD1OU1zjvc2YdQpi-F_qZ0EWyb6jLNODJkRDPQa6m1eObJg@mail.gmail.com>
+	s=arc-20240116; t=1747823489; c=relaxed/simple;
+	bh=yNefhY0Yb3i3XbOnbCmVwgsteNfUs7PGaKuiRFQbkFQ=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=U0y4evymDIMqwfIYz0AgNDWpnSGGX2Cio5SjnZ5dIy0doYZHUbgleL2jPuVMnqu8li5H10zlxbBvIl98RqQKfHxeusAZKw1P7k02RZuFuTb8GFy14elcYEcyW4dYWwoeGm/6Dug9focpSjuNQzYuKa2dilYO104RVw9yIkJP7Yo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b2SP32hj5z6L54Y;
+	Wed, 21 May 2025 18:30:31 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 2C4961402FC;
+	Wed, 21 May 2025 18:31:24 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 21 May
+ 2025 12:31:23 +0200
+Date: Wed, 21 May 2025 11:31:21 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: <linux-pci@vger.kernel.org>, Jon Pan-Doh <pandoh@google.com>, "Karolina
+ Stolarek" <karolina.stolarek@oracle.com>, Weinan Liu <wnliu@google.com>,
+	Martin Petersen <martin.petersen@oracle.com>, Ben Fuller
+	<ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, "Anil
+ Agrawal" <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, Ilpo
+ =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, Sathyanarayanan
+ Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Lukas Wunner
+	<lukas@wunner.de>, Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney"
+	<paulmck@kernel.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Oliver
+ O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>, Keith
+ Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>, "Terry Bowman"
+	<terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>, "Dave Jiang"
+	<dave.jiang@intel.com>, <linux-kernel@vger.kernel.org>,
+	<linuxppc-dev@lists.ozlabs.org>, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v7 15/17] PCI/AER: Ratelimit correctable and non-fatal
+ error logging
+Message-ID: <20250521113121.000067ce@huawei.com>
+In-Reply-To: <20250520215047.1350603-16-helgaas@kernel.org>
+References: <20250520215047.1350603-1-helgaas@kernel.org>
+	<20250520215047.1350603-16-helgaas@kernel.org>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACSyD1OU1zjvc2YdQpi-F_qZ0EWyb6jLNODJkRDPQa6m1eObJg@mail.gmail.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100009.china.huawei.com (7.191.174.83) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On 05/21/25 at 03:47pm, Zhongkun He wrote:
-> On Wed, May 14, 2025 at 2:40 AM Alexander Graf <graf@amazon.com> wrote:
-......
-> >  /**
-> >   * kexec_locate_mem_hole - find free memory for the purgatory or the next kernel
-> >   * @kbuf:      Parameters for the memory search.
-> > @@ -648,6 +684,13 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
-> >         if (kbuf->mem != KEXEC_BUF_MEM_UNKNOWN)
-> >                 return 0;
-> >
-> > +       /*
-> > +        * Try to find a free physically contiguous block of memory first. With that, we
-> > +        * can avoid any copying at kexec time.
-> > +        */
-> > +       if (!kexec_alloc_contig(kbuf))
-> > +               return 0;
+On Tue, 20 May 2025 16:50:32 -0500
+Bjorn Helgaas <helgaas@kernel.org> wrote:
+
+> From: Jon Pan-Doh <pandoh@google.com>
 > 
-> IIUC, The kexec_locate_mem_hole() function is also used in
-> the KEXEC_TYPE_CRASH kimage, but kexec_alloc_contig() does not skip it.
-> This can cause kdump to fail and lead to CMA memory leakage.
+> Spammy devices can flood kernel logs with AER errors and slow/stall
+> execution. Add per-device ratelimits for AER correctable and non-fatal
+> uncorrectable errors that use the kernel defaults (10 per 5s).  Logging of
+> fatal errors is not ratelimited.
 
-That is true and good catch, and fix is needed to skip cma alloc for
-kdump.
+See below. I'm not sure that logging of fatal error should affect the rate
+for non fatal errors + the rate limit infrastructure kind of assumes
+that you only call it if you are planning to respect it's decision.
+
+Given overall aim is to restrict rates, maybe we don't care if we sometimes
+throttle earlier that we might expect with a simpler separation of what
+is being limited.
+
+I don't mind strongly either way.
 
 > 
-> So I ran some tests, as listed below:
-> The CMA memory decreases with each execution of the kdump-config
-> reload operation.
+> There are two AER logging entry points:
 > 
-> /home/hezhongkun.hzk# kdump-config reload
-> unloaded kdump kernel.
-> Creating symlink /var/lib/kdump/vmlinuz.
-> Creating symlink /var/lib/kdump/initrd.img.
-> kexec_file_load failed: Cannot assign requested address
-> failed to load kdump kernel ... failed!
+>   - aer_print_error() is used by DPC and native AER
 > 
-> [ 1387.536346] kexec_file: allocated 1817 DMA pages at 0x11b16e
-> [ 1399.147677] kexec_file: allocated 113 DMA pages at 0x119087
-> [ 1399.148915] kexec_file: allocated 5 DMA pages at 0x1140f8
-> [ 1399.150266] kexec_file: allocated 2 DMA pages at 0x1118fd
-> [ 1399.151474] kexec_file: allocated 8302 DMA pages at 0x11b900
+>   - pci_print_aer() is used by GHES and CXL
 > 
-> /home/hezhongkun.hzk# cat /proc/meminfo | grep Cma
-> CmaTotal:        1048576 kB
-> CmaFree:          679972 kB
-> /home/hezhongkun.hzk# cat /proc/meminfo | grep Cma
-> CmaTotal:        1048576 kB
-> CmaFree:          639016 kB
-> /home/hezhongkun.hzk# cat /proc/meminfo | grep Cma
-> CmaTotal:        1048576 kB
-> CmaFree:          557104 kB
+> The native AER aer_print_error() case includes a loop that may log details
+> from multiple devices.  This is ratelimited such that we log all the
+> details we find if any of the devices has not hit the ratelimit.  If no
+> such device details are found, we still log the Error Source from the ERR_*
+> Message, ratelimited by the Root Port or RCEC that received it.
 > 
-> cat /proc/meminfo | grep Cma
-> CmaTotal:        1048576 kB
-> CmaFree:          557104 kB
+> The DPC aer_print_error() case is not ratelimited, since this only happens
+> for fatal errors.
 > 
-> > +
-> >         if (!IS_ENABLED(CONFIG_ARCH_KEEP_MEMBLOCK))
-> >                 ret = kexec_walk_resources(kbuf, locate_mem_hole_callback);
-> >         else
-> > @@ -693,6 +736,7 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
-> >         /* Ensure minimum alignment needed for segments. */
-> >         kbuf->memsz = ALIGN(kbuf->memsz, PAGE_SIZE);
-> >         kbuf->buf_align = max(kbuf->buf_align, PAGE_SIZE);
-> > +       kbuf->cma = NULL;
-> >
-> >         /* Walk the RAM ranges and allocate a suitable range for the buffer */
-> >         ret = arch_kexec_locate_mem_hole(kbuf);
-> > @@ -705,6 +749,7 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
-> >         ksegment->bufsz = kbuf->bufsz;
-> >         ksegment->mem = kbuf->mem;
-> >         ksegment->memsz = kbuf->memsz;
-> > +       kbuf->image->segment_cma[kbuf->image->nr_segments] = kbuf->cma;
-> >         kbuf->image->nr_segments++;
-> >         return 0;
-> >  }
-> > diff --git a/kernel/kexec_internal.h b/kernel/kexec_internal.h
-> > index d35d9792402d..29e6cebe0c43 100644
-> > --- a/kernel/kexec_internal.h
-> > +++ b/kernel/kexec_internal.h
-> > @@ -10,7 +10,7 @@ struct kimage *do_kimage_alloc_init(void);
-> >  int sanity_check_segment_list(struct kimage *image);
-> >  void kimage_free_page_list(struct list_head *list);
-> >  void kimage_free(struct kimage *image);
-> > -int kimage_load_segment(struct kimage *image, struct kexec_segment *segment);
-> > +int kimage_load_segment(struct kimage *image, int idx);
-> >  void kimage_terminate(struct kimage *image);
-> >  int kimage_is_destination_range(struct kimage *image,
-> >                                 unsigned long start, unsigned long end);
-> > --
-> > 2.34.1
-> >
-> >
-> >
-> >
-> > Amazon Web Services Development Center Germany GmbH
-> > Tamara-Danz-Str. 13
-> > 10243 Berlin
-> > Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-> > Eingetragen am Amtsgericht Charlottenburg unter HRB 257764 B
-> > Sitz: Berlin
-> > Ust-ID: DE 365 538 597
-> >
-> >
+> The CXL pci_print_aer() case is ratelimited by the Error Source device.
 > 
+> The GHES pci_print_aer() case is via aer_recover_work_func(), which
+> searches for the Error Source device.  If the device is not found, there's
+> no per-device ratelimit, so we use a system-wide ratelimit that covers all
+> error types (correctable, non-fatal, and fatal).
+> 
+> Sargun at Meta reported internally that a flood of AER errors causes RCU
+> CPU stall warnings and CSD-lock warnings.
+> 
+> Tested using aer-inject[1]. Sent 11 AER errors. Observed 10 errors logged
+> while AER stats (cat /sys/bus/pci/devices/<dev>/aer_dev_correctable) show
+> true count of 11.
+> 
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/gong.chen/aer-inject.git
+> 
+> [bhelgaas: commit log, factor out trace_aer_event() and aer_print_rp_info()
+> changes to previous patches, collect single aer_err_info.ratelimit as union
+> of ratelimits of all error source devices, don't ratelimit fatal errors,
+> "aer_report" -> "aer_info"]
+> Reported-by: Sargun Dhillon <sargun@meta.com>
+> Signed-off-by: Jon Pan-Doh <pandoh@google.com>
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> ---
+>  drivers/pci/pci.h      |  3 +-
+>  drivers/pci/pcie/aer.c | 66 ++++++++++++++++++++++++++++++++++++++----
+>  drivers/pci/pcie/dpc.c |  1 +
+>  3 files changed, 64 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 705f9ef58acc..65c466279ade 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -593,7 +593,8 @@ struct aer_err_info {
+>  	unsigned int id:16;
+>  
+>  	unsigned int severity:2;	/* 0:NONFATAL | 1:FATAL | 2:COR */
+> -	unsigned int __pad1:5;
+> +	unsigned int ratelimit:1;	/* 0=skip, 1=print */
+
+That naming is less than intuitive.  Maybe expand it to ratelimit_print or
+something like that.
+
+> +	unsigned int __pad1:4;
+>  	unsigned int multi_error_valid:1;
+>  
+>  	unsigned int first_error:5;
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 4f1bff0f000f..f9e684ac7878 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+
+> @@ -815,8 +843,19 @@ EXPORT_SYMBOL_NS_GPL(pci_print_aer, "CXL");
+>   */
+>  static int add_error_device(struct aer_err_info *e_info, struct pci_dev *dev)
+>  {
+> +	/*
+> +	 * Ratelimit AER log messages.  "dev" is either the source
+> +	 * identified by the root's Error Source ID or it has an unmasked
+> +	 * error logged in its own AER Capability.  If any of these devices
+> +	 * has not reached its ratelimit, log messages for all of them.
+> +	 * Messages are emitted when "e_info->ratelimit" is non-zero.
+> +	 *
+> +	 * Note that "e_info->ratelimit" was already initialized to 1 for the
+> +	 * ERR_FATAL case.
+> +	 */
+>  	if (e_info->error_dev_num < AER_MAX_MULTI_ERR_DEVICES) {
+>  		e_info->dev[e_info->error_dev_num] = pci_dev_get(dev);
+> +		e_info->ratelimit |= aer_ratelimit(dev, e_info->severity);
+
+So this is a little odd.  I think it works but there is code inside __ratelimit
+that I think we should not be calling for that ERROR_FATAL case
+(whether we should call lots of times for each device isn't obvious either
+ but maybe that is more valid).
+
+In the event of it already being 1 due to ERROR_FATAL you will falsely trigger
+a potential print from inside __ratelimit() if we were rate limited and no
+longer are but only skipped FATAL prints.  My concern is that function
+is kind of assuming it's only called in cases where a rate limit decision
+is being made and the implementation may change in future).
+
+https://elixir.bootlin.com/linux/v6.14.7/source/lib/ratelimit.c#L56
+
+Maybe, 
+		if (!info->ratelimit)
+			e_info->ratelimit = aer_ratelimit(dev, e_info->severity);
+is an alternative option.
+That allows a multiplication factor on the rate as all device count for 1.
+ 
+
+
+
+>  		e_info->error_dev_num++;
+>  		return 0;
+>  	}
+> @@ -914,7 +953,7 @@ static int find_device_iter(struct pci_dev *dev, void *data)
+>   * e_info->error_dev_num and e_info->dev[], based on the given information.
+>   */
+>  static bool find_source_device(struct pci_dev *parent,
+> -		struct aer_err_info *e_info)
+> +			       struct aer_err_info *e_info)
+Unrelated change
+
+>  {
+>  	struct pci_dev *dev = parent;
+>  	int result;
+
+>  			pci_aer_clear_fatal_status(pdev);
 
