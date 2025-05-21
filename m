@@ -1,206 +1,227 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7734617A310
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 16:17:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ED3D22B8B8;
+	Wed, 21 May 2025 16:17:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747844229; cv=none; b=qpLCSF+yR4ROLBUKiov6wals/2yvAtwq0RadoJ6clRbSx+bZeluC37CWdj8Au/74BTAuIHLtC7PV2IasV0fHZurkYV400954qaSXijzOc5LYjPFLIOlCybihL3kjruSpm7cxVtQ/oPbIO9lUo+ocsozxOzZXcaalbmHyBqS1Wlc=
+	t=1747844238; cv=none; b=ldz23W5kD8Gq81QxejZmv6StWkjA+i6/hoNAR2Vp6g3foxJ4bNUFpSeiYbGBRTbhv/h84rkCyyua/Eml3EnpQUTr8g/lX19GVYr8MoBv1K9jOE6atPZ56/KEXWXb7VarpQfwUVSvP4v4pkavXLGugeYiN2evOLebVTfwWAqYxY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747844229; c=relaxed/simple;
-	bh=IOvjsG0sugglptp4PGCfbQ+YKLHnzj68iHSyQ277vXk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nf24MCrefMI86pH6z5AUmJ0Eb15iKmasNNjTtZyqOY8xt/reSAA+5b9nsh1lVNP+e6F/TxMJ/s34GszS9eHcdkUy7sjILb3ll5UZIAIfUsbpEq2ywNgEhKZfu2vZUrlUMx3cWJHTVn1yc7BnE1eATdOW3zocvEcL6XXslzTBjmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zU8fPcB9; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747844238; c=relaxed/simple;
+	bh=MJMgl0cpH/CO2ZHP/LrJdO1YCs6BR4prjVQ6FDWn0Q0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EWw5r/imd51auXi4kocce72q33J3myZ9Ia7obKN4H5qwaXiBYKFujQCqTmqvhO/dhwLzBQYehw17sq7Gug1rQk8/yH93LsVZDTxgDIJx2oySk5/5DsEgtHyElnUr8MLkpowZmhToNPuw07J11Wp2m6GN8aDeqJEvUnH/3bQgJzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IvN+RUUe; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zU8fPcB9"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-47e9fea29easo1782491cf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 09:17:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747844224; x=1748449024; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2su35M/1woi88PA/W3LYgGvlRpYxMTPNv9iFOVqohJU=;
-        b=zU8fPcB9JYAEl5q3lEZQTuSaeAGYEPuhzYVtoxdS+442yeHl+WbK9CihtCU2a5Z3MJ
-         oNxuR/v2fSdjJvUGz/vaEYjXOnhUOchS3EFegUUmynshkfQ5huNNzB/NHnR6/thhoRQ4
-         5Hn7d6oa6RWqR9jHZzcApD/KBj9JDa7KfsLSVRW4GKRsWbxoVLaRG/zTlu5JZtVzZjB2
-         dM22L4eDM9QhLTMmNd6OjKwZaZPd071u5w4w3pes3ihIJN/3Smyt3upfi4my7KF2oouT
-         mSM8zMg2esmmZu/dm5LlsWkkKzN8EF3WXc59TEyXqdLhao1cXUI8Lhj2JPiMgCr3eSG4
-         EoYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747844224; x=1748449024;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2su35M/1woi88PA/W3LYgGvlRpYxMTPNv9iFOVqohJU=;
-        b=SznurucjvAmWZTnMkVSpuWha0fmvZ7vhk7qoMWoUXs5eqAb107SxNGc9Rahy50iJLg
-         ijVKgZMJI3xrW0qGGEB/gC6M6zaMDfSd3mZweUZjhwJ4FCl8ntVqWKqZD5KO8w4oz5Em
-         sFCZvmG85m8VVnSrsZnF226LihwigoPLVPIVlGgqfdtOXyulIzTe8mO26c+mrXXcTu/y
-         7UTzi44206RhqE2Nd7d3TDLYps1N1USc10lW7AX6Dqxd4Odmtc03juAQsPgCEMm9IVeY
-         uZR8eSNo26+9z8pBUx+28bZjAMe1bub4Ipu4Aac9gVsQf2yULBkhlNVd6ISLkh2pNorW
-         Jurg==
-X-Forwarded-Encrypted: i=1; AJvYcCUvQ2qeDj+U8N2ECf8OUOOVqndw9cGzC/+mkJ+qjHjpTeV78TjYcd7/+q3btAkUiqu7v2dZTRnKWZj5fxM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywc3zFfAfN2b2bgRBMRd/ibzrmKExe+YiRj+cAFbTnhQFsfen+g
-	AOdJ1WWwntqQSI7og69QgjXdpDqYVsN9auABtTYh8/6EJ8X37XkdR5f78RYpUpEIPslY6g7qNGR
-	VtSFXU2RwDxHrumuBMDVvRdYwCcGT6i2y8h8rOlPu
-X-Gm-Gg: ASbGncsoXJpbFogbTlCOv9PQH1sAj801Y18qR81zTXrNyxHOqaxxwM+Ge39Tzyx6s0E
-	ZaIWKDLGSo+MfYBbVDVZ/4mk3HTQBAzuvNIj02/XShlWDaak1LSRJVow4Zkcj+OJBKeoJAcY2Vm
-	00c4zRgMwZMg4ahwB2RnEMeEZJjqnJqycPwHUtlAfrE51GDJC7N1kaWtW4PN3hswVaL7LYZtz3C
-	A==
-X-Google-Smtp-Source: AGHT+IEuQqqcPpxUbfAIyCjihAWxW6OtiHWuZOiPIv9/nbxruNyxnYM8BWux4MlQrcGYdr4v2ORrHqQZzS9xhb9/zhE=
-X-Received: by 2002:a05:622a:449:b0:494:4aa0:ad5b with SMTP id
- d75a77b69052e-4958cc22bc1mr16836641cf.2.1747844223803; Wed, 21 May 2025
- 09:17:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IvN+RUUe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747844236; x=1779380236;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=MJMgl0cpH/CO2ZHP/LrJdO1YCs6BR4prjVQ6FDWn0Q0=;
+  b=IvN+RUUeIA1ClkR+mzTWpFugbKJ8Hfj5BSE8JnsIN2dja48XNHO2LWhj
+   rWYBv6+61AnmzcXHSozscM9bAd7iMcSR2sFmypw6eDV0ZW9KoATP8p58i
+   5XbJTQ068RDVT9g1BnOL1Q+L5+lUe0Ji4jCjcb7N98rLtoP+4O5Dio/kb
+   CRomWUmQiBKwTthXEFlZxDJZ40PQqbKJSQ6+4NkOIBVJIhowoBgXIVyKN
+   pQKX2TK6eildE8G/SMW44rLO0inv1Qr72q8r8W6TcoiuFnCNhNnpgpszZ
+   aTfBHv+RiXkyamJd7HUKWjO2OX3nUA1XpYOPQK9VF1lnfXpXmURWBV1kZ
+   A==;
+X-CSE-ConnectionGUID: uwS3aFILSxqEM0O06TbWeg==
+X-CSE-MsgGUID: 9KYmA0aBT5ybN7aLw8Svng==
+X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="49739796"
+X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
+   d="scan'208";a="49739796"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 09:17:14 -0700
+X-CSE-ConnectionGUID: h6Nu3m6eTC2tplUDmu7l+g==
+X-CSE-MsgGUID: a4rvH2odTPWcKBeTNRi63Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
+   d="scan'208";a="141206018"
+Received: from rfrazer-mobl3.amr.corp.intel.com (HELO [10.124.222.247]) ([10.124.222.247])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 09:17:13 -0700
+Message-ID: <97e9850f-8a74-425f-93ab-5017599c98b5@linux.intel.com>
+Date: Wed, 21 May 2025 09:17:13 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250517000739.5930-1-surenb@google.com> <20250520231620.15259-1-cachen@purestorage.com>
- <CAJuCfpEz2mbVmGJnp0JHKsip2HVkp+=yHOj3oRtDrKzXXG5Xag@mail.gmail.com>
- <CALCePG1uoNN4vB3HguOi+ZYjwUcTPHmtp4RCZey0r6qCUJMLCg@mail.gmail.com>
- <CAJuCfpF+YYBEZPmf-+k7N05R+T96MM3nzegcGWOPguX=Xu8ANA@mail.gmail.com> <CAJuCfpEmqtcrvuSxTzkt28Yf+x4mfDKfWCH_25H+4uDHXaie6g@mail.gmail.com>
-In-Reply-To: <CAJuCfpEmqtcrvuSxTzkt28Yf+x4mfDKfWCH_25H+4uDHXaie6g@mail.gmail.com>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Wed, 21 May 2025 09:16:52 -0700
-X-Gm-Features: AX0GCFu09bEI8eb2_SwUKuimcpX9e4GHOBrkheslsnz0f2SFy9hm_tjUlV8oiaA
-Message-ID: <CAJuCfpEyX-2Uh=nAW3w8VyOMKKTQejbn1hq4BpH2d=rDZ-beSQ@mail.gmail.com>
-Subject: Re: comments on patch "alloc_tag: allocate percpu counters for module
- tags dynamically"
-To: Casey Chen <cachen@purestorage.com>
-Cc: 00107082@163.com, akpm@linux-foundation.org, cl@gentwo.org, 
-	dennis@kernel.org, kent.overstreet@linux.dev, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, pasha.tatashin@soleen.com, tj@kernel.org, 
-	yzhong@purestorage.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/4] pci: implement "pci=aer_panic"
+To: Hans Zhang <18255117159@163.com>, bhelgaas@google.com,
+ tglx@linutronix.de, kw@linux.com, manivannan.sadhasivam@linaro.org,
+ mahesh@linux.ibm.com
+Cc: oohall@gmail.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <20250516165518.125495-1-18255117159@163.com>
+ <a1fdd6e1-8cd9-46b0-bd27-526729a1199d@linux.intel.com>
+ <8434dc81-5d2d-4ce1-ab73-ca1cf16cb550@163.com>
+ <e6ad7ef5-de9c-49bc-9882-5e97bd549168@163.com>
+ <3dd17a45-2305-4ac4-a195-4c54ce357ddc@linux.intel.com>
+ <1c21ec0b-ca89-4f7e-85f2-bdb48edb8055@163.com>
+Content-Language: en-US
+From: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <1c21ec0b-ca89-4f7e-85f2-bdb48edb8055@163.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 20, 2025 at 6:22=E2=80=AFPM Suren Baghdasaryan <surenb@google.c=
-om> wrote:
->
-> On Wed, May 21, 2025 at 12:45=E2=80=AFAM Suren Baghdasaryan <surenb@googl=
-e.com> wrote:
-> >
-> > On Tue, May 20, 2025 at 11:48=E2=80=AFPM Casey Chen <cachen@purestorage=
-.com> wrote:
-> > >
-> > > On Tue, May 20, 2025 at 4:26=E2=80=AFPM Suren Baghdasaryan <surenb@go=
-ogle.com> wrote:
-> > > >
-> > > > On Tue, May 20, 2025 at 4:16=E2=80=AFPM Casey Chen <cachen@purestor=
-age.com> wrote:
-> > > > >
-> > > > > Hi Suren,
-> > > >
-> > > > Hi Casey,
-> > > >
-> > > > >
-> > > > > I have two questions on this patch.
-> > > > > 1. If load_module() fails to allocate memory for percpu counters,=
- should we call codetag_free_module_sections() to clean up module tags memo=
-ry ?
-> > > >
-> > > > Does this address your question:
-> > > > https://lore.kernel.org/all/20250518101212.19930-1-00107082@163.com=
-/
-> > > >
-> > >
-> > > module_deallocate() is called in error handling of load_module(). And
-> > > codetag_load_module() is at the very end of load_module(). If counter
-> > > allocation fails, it doesn't go to the error path to clean up module
-> > > tag memory.
-> >
-> > Ah, right. I didn't have the code in front of me but now I see what
-> > you mean. codetag_load_module() does not return a fault if percpu
-> > counters fail to allocate.
-> >
-> > >
-> > > My code base is at a5806cd506af ("Linux 6.15-rc7")
-> > > 3250 /*
-> > > 3251  * Allocate and load the module: note that size of section 0 is =
-always
-> > > 3252  * zero, and we rely on this for optional sections.
-> > > 3253  */
-> > > 3254 static int load_module(struct load_info *info, const char __user=
- *uargs,
-> > > 3255                        int flags)
-> > > 3256 {
-> > > ...
-> > > 3403
-> > > 3404         codetag_load_module(mod);
-> > > 3405
-> > > 3406         /* Done! */
-> > > 3407         trace_module_load(mod);
-> > > 3408
-> > > 3409         return do_init_module(mod);
-> > > ...
-> > > 3445  free_module:
-> > > 3446         mod_stat_bump_invalid(info, flags);
-> > > 3447         /* Free lock-classes; relies on the preceding sync_rcu()=
- */
-> > > 3448         for_class_mod_mem_type(type, core_data) {
-> > > 3449                 lockdep_free_key_range(mod->mem[type].base,
-> > > 3450                                        mod->mem[type].size);
-> > > 3451         }
-> > > 3452
-> > > 3453         module_memory_restore_rox(mod);
-> > > 3454         module_deallocate(mod, info);
-> > >
-> > >
-> > > > > 2. How about moving percpu counters allocation to move_module() w=
-here codetag_alloc_module_section() is called ? So they can be cleaned up t=
-ogether.
-> > > >
-> > > > That would not work because tag->counters are initialized with NULL
-> > > > after move_module() executes, so if we allocate there our allocatio=
-ns
-> > > > will be overridden. We have to do that at the end of load_module()
-> > > > where codetag_load_module() is.
-> > >
-> > > codetag_alloc_module_section() is called in move_module() to allocate
-> > > module tag memory. I mean we can also allocate memory for percpu
-> > > counters inside move_module().
-> >
-> > I thought you were suggesting to allocate percpu counters inside
-> > codetag_alloc_module_section(). I guess we could introduce another
-> > callback to allocate these counters at the end of the move_module(). I
-> > think simpler option is to let codetag_load_module() to fail and
-> > handle that failure, OTOH that means that we do more work before
-> > failing... Let me think some more on which way is preferable and I'll
-> > post a fixup to my earlier patch.
->
-> After inspecting the code some more I'm leaning towards a simpler
-> solution of letting codetag_load_module() to return failure and
-> handling it with codetag_free_module_sections(). This would avoid
-> introducing additional hook inside move_module(). I'll wait until
-> tomorrow and if no objections received will post a fixup to my
-> previous patch.
 
-Posted the fix at
-https://lore.kernel.org/all/20250521160602.1940771-1-surenb@google.com/
+On 5/21/25 7:54 AM, Hans Zhang wrote:
+>
+>
+> On 2025/5/21 00:09, Sathyanarayanan Kuppuswamy wrote:
+>>
+>> On 5/19/25 7:41 AM, Hans Zhang wrote:
+>>>
+>>>
+>>> On 2025/5/19 22:21, Hans Zhang wrote:
+>>>>
+>>>>
+>>>> On 2025/5/17 02:10, Sathyanarayanan Kuppuswamy wrote:
+>>>>>
+>>>>> On 5/16/25 9:55 AM, Hans Zhang wrote:
+>>>>>> The following series introduces a new kernel command-line option aer_panic
+>>>>>> to enhance error handling for PCIe Advanced Error Reporting (AER) in
+>>>>>> mission-critical environments. This feature ensures deterministic recover
+>>>>>> from fatal PCIe errors by triggering a controlled kernel panic when device
+>>>>>> recovery fails, avoiding indefinite system hangs.
+>>>>>
+>>>>> Why would a device recovery failure lead to a system hang? Worst case
+>>>>> that device may not be accessible, right?  Any real use case?
+>>>>>
+>>>>
+>>>>
+>>>> Dear Sathyanarayanan,
+>>>>
+>>>> Due to Synopsys and Cadence PCIe IP, their AER interrupts are usually SPI interrupts, not INTx/MSI/MSIx interrupts. (Some customers will design it as an MSI/MSIx interrupt, e.g.: RK3588, but not all customers have designed it this way.)  For example, when many mobile phone SoCs of Qualcomm handle AER interrupts and there is a link down, that is, a fatal problem occurs in the current PCIe physical link, the system cannot recover.  At this point, a system restart is needed to solve the problem.
+>>>>
+>>>> And our company design of SOC: http://radxa.com/products/orion/o6/, it has 5 road PCIe port.
+>>>> There is also the same problem.  If there is a problem with one of the PCIe ports, it will cause the entire system to hang.  So I hope linux OS can offer an option that enables SOC manufacturers to choose to restart the system in case of fatal hardware errors occurring in PCIe.
+>>>>
+>>>> There are also products such as mobile phones and tablets. We don't want to wait until the battery is completely used up before restarting them.
+>>>>
+>>>> For the specific code of Qualcomm, please refer to the email I sent.
+>>>>
+>>>
+>>>
+>>> Dear Sathyanarayanan,
+>>>
+>>> Supplementary reasons:
+>>>
+>>> drivers/pci/controller/cadence/pcie-cadence-host.c
+>>> cdns_pci_map_bus
+>>>     /* Clear AXI link-down status */
+>>>     cdns_pcie_writel(pcie, CDNS_PCIE_AT_LINKDOWN, 0x0);
+>>>
+>>> https://elixir.bootlin.com/linux/v6.15-rc6/source/drivers/pci/controller/cadence/pcie-cadence-host.c#L52
+>>>
+>>> If there has been a link down in this PCIe port, the register CDNS_PCIE_AT_LINKDOWN must be set to 0 for the AXI transmission to continue.  This is different from Synopsys.
+>>>
+>>> If CPU Core0 runs to code L52 and CPU Core1 is executing NVMe SSD saving files, since the CDNS_PCIE_AT_LINKDOWN register is still 1, it causes CPU Core1 to be unable to send TLP transfers and hang. This is a very extreme situation.
+>>> (The current Cadence code is Legacy PCIe IP, and the HPA IP is still in the upstream process at present.)
+>>>
+>>> Radxa O6 uses Cadence's PCIe HPA IP.
+>>> http://radxa.com/products/orion/o6/
+>>>
+>>
+>> It sounds like a system level issue to me. Why not they rely on watchdog to reboot for
+>> this case ?
+>
+> Dear Sathyanarayanan,
+>
+> Thank you for your reply. Yes, personally, I think it's also a problem at the system level. I conducted a local test. When I directly unplugged the EP device on the slot, the system would hang. It has been tested many times. Since we don't have a bus timeout response mechanism for PCIe, it hangs easily.
+
+Any comment on why watchdog is not used to reboot the unresponsive system?
 
 >
-> >
-> > > We have implemented such a thing in our code base and it works fine.
-> > > Just do it right after copying ELF sections to memory. If it fails it
-> > > goes to the error path and calls codetag_free_module_sections() to
-> > > clean up.
-> > >
-> > > 2650                 if (codetag_needs_module_section(mod, sname,
-> > > shdr->sh_size)) {
-> > > 2651                         dest =3D codetag_alloc_module_section(mo=
-d,
-> > > sname, shdr->sh_size,
-> > > 2652
-> > > arch_mod_section_prepend(mod, i), shdr->sh_addralign);
-> > >
-> > > > Thanks,
-> > > > Suren.
-> > > >
-> > > > >
-> > > > > Thanks,
-> > > > > Casey
+>>
+>> Even if you want to add this support, I think it is more appropriate to add this to your
+>> specific PCIe controller driver.  I don't see why you want to add it part of generic
+>> AER driver.
+>>
+> Because we want to use the processing logic of the general AER driver. If the recovery is successful, there will be no problem. If the recovery fails, my original intention was to restart the system.
+>
+> If added to the specific PCIe controller driver, a lot of repetitive AER processing logic will be written. So I was thinking whether the AER driver could be changed to be compiled as a KO module.
+
+May be you can rely on err handler callbacks to get notification on fatal errors or you can even use uevent handler to detect the disconnected device event and handle it there.
+
+>
+>
+> If this series is not reasonable, I'll drop it.
+
+Adding new kernel param to solve a specific system issue is not recommended. Try to find some custom solution for your chip/controller.
+
+>
+>
+> Best regards,
+> Hans
+>
+>>>>
+>>>>>>
+>>>>>> Problem Statement
+>>>>>> In systems where unresolved PCIe errors (e.g., bus hangs) occur,
+>>>>>> traditional error recovery mechanisms may leave the system unresponsive
+>>>>>> indefinitely. This is unacceptable for high-availability environment
+>>>>>> requiring prompt recovery via reboot.
+>>>>>>
+>>>>>> Solution
+>>>>>> The aer_panic option forces a kernel panic on unrecoverable AER errors.
+>>>>>> This bypasses prolonged recovery attempts and ensures immediate reboot.
+>>>>>>
+>>>>>> Patch Summary:
+>>>>>> Documentation Update: Adds aer_panic to kernel-parameters.txt, explaining
+>>>>>> its purpose and usage.
+>>>>>>
+>>>>>> Command-Line Handling: Implements pci=aer_panic parsing and state
+>>>>>> management in PCI core.
+>>>>>>
+>>>>>> State Exposure: Introduces pci_aer_panic_enabled() to check if the panic
+>>>>>> mode is active.
+>>>>>>
+>>>>>> Panic Trigger: Modifies recovery logic to panic the system when recovery
+>>>>>> fails and aer_panic is enabled.
+>>>>>>
+>>>>>> Impact
+>>>>>> Controlled Recovery: Reduces downtime by replacing hangs with immediate
+>>>>>> reboots.
+>>>>>>
+>>>>>> Optional: Enabled via pci=aer_panic; no default behavior change.
+>>>>>>
+>>>>>> Dependency: Requires CONFIG_PCIEAER.
+>>>>>>
+>>>>>> For example, in mobile phones and tablets, when there is a problem with
+>>>>>> the PCIe link and it cannot be restored, it is expected to provide an
+>>>>>> alternative method to make the system panic without waiting for the
+>>>>>> battery power to be completely exhausted before restarting the system.
+>>>>>>
+>>>>>> ---
+>>>>>> For example, the sm8250 and sm8350 of qcom will panic and restart the
+>>>>>> system when they are linked down.
+>>>>>>
+>>>>>> https://github.com/DOITfit/xiaomi_kernel_sm8250/blob/d42aa408e8cef14f4ec006554fac67ef80b86d0d/drivers/pci/controller/pci-msm.c#L5440
+>>>>>>
+>>>>>> https://github.com/OnePlusOSS/android_kernel_oneplus_sm8350/blob/13ca08fdf0979fdd61d5e8991661874bb2d19150/drivers/net/wireless/cnss2/pci.c#L950
+>>>>>>
+>>>>>>
+>>>>>> Since the design schemes of each SOC manufacturer are different, the AXI
+>>>>>> and other buses connected by PCIe do not have a design to prevent hanging.
+>>>>>> Once a FATAL error occurs in the PCIe link and cannot be restored, the
+>>>>>> system needs to be restarted.
+>>>>>>
+>>>>>>
+>>>>>> Dear Mani,
+>>>>>>
+>>>>>> I wonder if you know how other SoCs of qcom handle FATAL errors that occur
+>>>>>> in PCIe link.
+>>>>>> ---
+>>>>>>
+>
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
+
