@@ -1,35 +1,34 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [91.216.245.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D046F191F66;
-	Wed, 21 May 2025 11:22:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67D5A191F66;
+	Wed, 21 May 2025 11:22:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.216.245.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747826539; cv=none; b=PbCefzmNzd1c57oEmW1vhJ6Msr7tOaA26yeQXAiu0awPfs2vQEJqXhp+cVcwNMtrtafb1CN5g0HjvhzxgO1/qBq+KcoEdtVl2wvzTz0mlV8wMIjKK+bw57rUyOTCQLYlCAm9HeSaN8Kud94XiW/+5HdKta7Oy9xWNuBRgA1K1YE=
+	t=1747826568; cv=none; b=QdPq0sfhgmnbWfwyBTiKs0QkBTJd7hSewEG6mlKpU9XsJkttHU05NJgNgLuf2mTT2puXp/5kok6KfVT30DYBH7znbf8Lg9PvF3O/DENqsgi2ySU6PveOCV/GLgokfCbEDv+xjjiRzLXqXMZKDrROJ4mLez6zPNgNmfeU2ZKQaxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747826539; c=relaxed/simple;
-	bh=wt5bJSx3Ver+TcIWgNB6hhR7VLPHQlm4CpqvXAyZ2yc=;
+	s=arc-20240116; t=1747826568; c=relaxed/simple;
+	bh=cLCCirV9GPkFMi7h2wcC+PoguTJJ/VUPlFEcuFDnzNA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NGg8EKHGSQA+PHKuZU4hC/73+dR7e2BdjGmmAO9Cco/Ns/LUsduvWlzjXOqLyQz148T3w3H5Z2i9JP9On5SN8QqEk3vmIdn6ern7H7GzqTicWR+6rdewj4iDQyuDHcB5oisy00tcSSTZMdYcBZR2uyH8XtsDXGDGN3zNZWb+YcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=EDI2Wyzd; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="EDI2Wyzd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF17FC4CEE4;
-	Wed, 21 May 2025 11:22:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1747826538;
-	bh=wt5bJSx3Ver+TcIWgNB6hhR7VLPHQlm4CpqvXAyZ2yc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EDI2Wyzdib6Zhs0IgjZ87Bn3kjkApK6EMzwkTcsVbGRecSKREmf2jEUDj515AXL7w
-	 tbAnT5vDNu4wS/z3J5zEfqCajPA45lGV+lvZB2v8DnCG7tc+Kg9Rfm17IFxRWSPrPS
-	 pfm6goJWavKqzEjSXZZ5Zk44vptxMPx5bvvkT994=
-Date: Wed, 21 May 2025 13:22:15 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Sunghun Son <thswpvm1111@gmail.com>
-Cc: linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] staging: octeon: remove typedef declaration
-Message-ID: <2025052101-exposable-deceiver-16da@gregkh>
-References: <aCwUd0JNdav9BH6h@debian>
+	 Content-Type:Content-Disposition:In-Reply-To; b=n5Qs8VhgNkA4dnhZKQUvJeu5nEhgWuZP5+7QnaPeCn3umk6y4K4DVKpj/PdcpcnRAZW8hfWVFLXNfWzA0tWoL7dSaW4NCqxn99Qu07hX/NqolhKTzrA3CAEZb2gGRXL++OTAMIaXh8HFDCvbIV/Eo2btYhvJoKQm1YeRbgnCzmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strlen.de; spf=pass smtp.mailfrom=strlen.de; arc=none smtp.client-ip=91.216.245.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=strlen.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=strlen.de
+Received: by Chamillionaire.breakpoint.cc (Postfix, from userid 1003)
+	id 0B90A60167; Wed, 21 May 2025 13:22:42 +0200 (CEST)
+Date: Wed, 21 May 2025 13:21:49 +0200
+From: Florian Westphal <fw@strlen.de>
+To: Pablo Neira Ayuso <pablo@netfilter.org>
+Cc: Lance Yang <ioworker0@gmail.com>, kadlec@netfilter.org,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, horms@kernel.org, coreteam@netfilter.org,
+	linux-kernel@vger.kernel.org, netfilter-devel@vger.kernel.org,
+	Zi Li <zi.li@linux.dev>, Lance Yang <lance.yang@linux.dev>
+Subject: Re: [RESEND PATCH 1/1] netfilter: load nf_log_syslog on enabling
+ nf_conntrack_log_invalid
+Message-ID: <aC23TW08pieLxpsf@strlen.de>
+References: <20250514053751.2271-1-lance.yang@linux.dev>
+ <aC2lyYN72raND8S0@calendula>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,45 +37,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aCwUd0JNdav9BH6h@debian>
+In-Reply-To: <aC2lyYN72raND8S0@calendula>
 
-On Mon, May 19, 2025 at 10:34:47PM -0700, Sunghun Son wrote:
-> Remove typedef declaration from several structs.
-> Also replace related function signatures to reflect these changes.
-> Issue found by checkpatch.pl
+Pablo Neira Ayuso <pablo@netfilter.org> wrote:
+> I have been beaten by this usability issue in the past, it happens
+> since conntrack is loaded on demand.
 > 
-> Signed-off-by: Sunghun Son <thswpvm1111@gmail.com>
-> ---
-> This is my first time contributing to the kernel.
-> I now understand how to enable modules through menuconfig.
-> The reason why 'my previous build' is not working is because I didn't enable the module in menuconfig.
-> Please let me know if there are any issues.
-> Thank you.
+> Maybe add an inconditionally soft dependency? This is a oneliner patch.
+> 
+>         MODULE_SOFTDEP("pre: nf_log_syslog");
+> 
+> Florian, do you prefer this patch (on-demand) or a oneliner to load
+> this module when conntrack gets loaded too?
+> 
+> It is a bit more memory to make it inconditional, but better to expose
+> to users this soft dependency via lsmod.
+> 
+> Thanks.
 
-Hi,
+I don't like this patch or the above because we do have two log
+backends, syslog + nflog.
 
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
+There is no need for 'syslog' to be active for 'log_invalid' to be
+useful as long as the system in question has e.g. ulogd running
+and listening to nflog messages.
 
-You are receiving this message because of the following common error(s)
-as indicated below:
-
-- This looks like a new version of a previously submitted patch, but you
-  did not list below the --- line any changes from the previous version.
-  Please read the section entitled "The canonical patch format" in the
-  kernel file, Documentation/process/submitting-patches.rst for what
-  needs to be done here to properly describe this.
-
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
-
-thanks,
-
-greg k-h's patch email bot
+If anything, the modprobe should be done only when no logger
+is registered.
