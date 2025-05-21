@@ -1,126 +1,142 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E9D21E3769;
-	Wed, 21 May 2025 16:26:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 230EA19D06B;
+	Wed, 21 May 2025 16:26:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747844784; cv=none; b=fCV3ElM4IEgPZWzQ9BY27W1XqPp2rYuf2MKLQw68nZI3lKquvDjkeSOZa8rLETHhSZBp1QAGAvfmPPd8kdumhxnSe0Aeyj2evC2r08Pv3p/o8qIL0Zo3d4NJ+ITpIgvOcROyHXloLactJ+djXbSOiatCTNbn2RtAAQ0AVJch/c8=
+	t=1747844807; cv=none; b=qFUCjLs3H5MU8zuPYPncSCu8AqdJSvcc9sIzyUBall1XyTjOINPV2FqNOoI/3iKPP9s563ZOj6QEWKJp6RAj4qdnlfmYzTymRqqcKqd1o0EfbMN27xKuQmlUsegUCnL48uoW4vUD6HNh5yiaw00VSimfCMRNzGRZe/6IpEfvoDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747844784; c=relaxed/simple;
-	bh=hJjThYydaCbJ7sV83f5nKFkvwJhkaPeXGcV4fO8cxq4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h+/53PPFbUjLFCrf3pJf94wWEGoBiqCHA/KDbeqI7PakbpesRJfWILBEgsUZveV/VCS1vmUd5tMm2GNzWHE7HkvGewww41iZPckzry36SEblDptcbFaarArJX8rWUbcDlyh/fjh0pEjGEECR9sQzvGhyIwlvg6V9kH/t+PEZl3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ByYw0sTw; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1747844807; c=relaxed/simple;
+	bh=e8B7QaaNHQIZrf/7IajtCOXeAnmNGd6fcL/DqQeHJkw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RCw8InjPJZD1gWjV2I5FILZ4c8Tb/+ucUNb7SwCV+YLT8h7To3JzhYvmIFOGpn7vNRn2KzFTbcCFYKl8y5N4stDc559DyBnhVdjdxcVAGw1mHYlnXuGpsgtx+Am8jnafrSKuDTcMXBMnaT1hnzayD96jfhRhe2kJOGDQ9u5LaZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=INlfdw+E; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ByYw0sTw"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54LGK2Ua001532;
-	Wed, 21 May 2025 16:26:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=2kosc1Hmo6Ti93DyTQXntsRImPFT4o
-	qQzpEN6IuwiJo=; b=ByYw0sTwEf5CADp2X/fsU/DyssxXoxZ8OR6hhBBBg6bGOq
-	LN+WVGiPm6JDx+0ZMTC8ztnrBslrZpwZHXn/LHQ0QxpfGGJ5GIsOgxMA3WOCMopp
-	wxtgxk5ruP6rR2Yj8gWo2bvbqV7+Mmg8qDm5Z+14AvwHj9eOspdonQqzuCaNTeCj
-	oWIEsaO8DAUwlNGfcLjJKl5ht0XGFeDl314cnmnRYtcsPBJTtH67pzqd4Llf2VpF
-	uJOUalZ2NibxffmYa563s/xo2tkJiq2VB/JAHvgTSG0/Tsl28mcUUVDwmPsGARIp
-	7EKu7e597Vf3Kov9vVc8/oFi/0spAYpYqj2HeI8g==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46s9estvc9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 16:26:20 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54LDpXVq015487;
-	Wed, 21 May 2025 16:26:19 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 46rwnnd0rf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 16:26:19 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54LGQFXS35390202
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 21 May 2025 16:26:16 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D47812004E;
-	Wed, 21 May 2025 16:26:15 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3B8C020043;
-	Wed, 21 May 2025 16:26:15 +0000 (GMT)
-Received: from osiris (unknown [9.87.128.135])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 21 May 2025 16:26:15 +0000 (GMT)
-Date: Wed, 21 May 2025 18:26:13 +0200
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, frankja@linux.ibm.com,
-        borntraeger@de.ibm.com, seiden@linux.ibm.com, nsg@linux.ibm.com,
-        nrb@linux.ibm.com, david@redhat.com, agordeev@linux.ibm.com,
-        svens@linux.ibm.com, gor@linux.ibm.com, schlameuss@linux.ibm.com
-Subject: Re: [PATCH v2 4/5] KVM: s390: refactor and split some gmap helpers
-Message-ID: <20250521162613.11483E44-hca@linux.ibm.com>
-References: <20250520182639.80013-1-imbrenda@linux.ibm.com>
- <20250520182639.80013-5-imbrenda@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="INlfdw+E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6E65C4CEE4;
+	Wed, 21 May 2025 16:26:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747844805;
+	bh=e8B7QaaNHQIZrf/7IajtCOXeAnmNGd6fcL/DqQeHJkw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=INlfdw+ECjfX5UG+Q2U4RmEQmWTks+4xs6WtL3jU/LjLUpa7WsKJCRMw7/Vi62w5U
+	 stiqXxXIX0Tu5zZj6myhqCmwwRbjtsSq1Z2QQN4GV+HO9wDkwDMIHkxvz4R7dcEFL+
+	 B2ZJSRhwRW6Jc33zwY/F4bVuOHXwFqETIk9OSe3M3GthBUHwFkfhr6jKcKsWr8ZEl9
+	 4UKSKr+KrQ1BKPiimXHRbgaxOmi1JiEn6iplpj1k495H4BO2nAp8yGHLNCSkMD1arM
+	 gKLXB5N9yeSQCbOAx5XNt4xllwwjIwvzkxDQxxP3ovIxNhAXV3o9wIL8vsDedKavv6
+	 8yJXJdw27nbKA==
+Message-ID: <9df2f9f3-289f-4916-a293-ad5d97d530fe@kernel.org>
+Date: Wed, 21 May 2025 18:26:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250520182639.80013-5-imbrenda@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDE1OCBTYWx0ZWRfX7JC2r/fkkVEN h0WtDtFfRn/tOciv2j9Z5FdoEOHxNQmMrSbrwk9fsGaEIS+kUrofuX7a9I0DImzOo52aiPPmoLn 1t3jD+Ek1m9+nX4T6HUv5VNm5n+QHf500kLXYdbwG8zJlNl768HO0JEQ5EtfxIPc/2pKhxLTE1A
- pMpj2orX7I70nI24vLTm0Rl4htukIYudpGNLpWyfB5wJ7t/kcaQNzD38Uj5QtbUTVfJyyB+VEiX yx6tDKnnaj1HUpr+1ZylaHtkiDXWiuIjULoAXwyh97NsCD5n2Nnj60lrebSMs1i1H/vbw77I8Om 2T0OkmM3vQasqncwTkclXQ4sfavB40JRLtr8OyKZProSiu4kG8gvf7tlkbhcF2Kj2Ba4bwdvnck
- JVhLCptH7fUCyovktVO9xX4OqzBqLkMbs/CTlPFRoiuitqMfjIM5/ajC1fmatkEBu5bn0UqX
-X-Proofpoint-ORIG-GUID: CVUCeWibiMU-q77Y6f54Lm89Hq3EQfZV
-X-Proofpoint-GUID: CVUCeWibiMU-q77Y6f54Lm89Hq3EQfZV
-X-Authority-Analysis: v=2.4 cv=PsWTbxM3 c=1 sm=1 tr=0 ts=682dfeac cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=hFxyhTWOyB1buIFPRroA:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-21_05,2025-05-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxlogscore=636
- impostorscore=0 adultscore=0 malwarescore=0 lowpriorityscore=0
- suspectscore=0 bulkscore=0 mlxscore=0 priorityscore=1501 phishscore=0
- clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505210158
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 1/6] dt-bindings: arm: qcom: Add bindings for QCS9075
+ SOC based board
+To: Wasim Nazir <quic_wasimn@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kernel@quicinc.com, kernel@oss.qualcomm.com
+References: <20250521140807.3837019-1-quic_wasimn@quicinc.com>
+ <20250521140807.3837019-2-quic_wasimn@quicinc.com>
+ <79eb2b17-06ee-42d4-9954-a78ada1ced29@kernel.org>
+ <aC3y0PPA8qrvmobw@hu-wasimn-hyd.qualcomm.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <aC3y0PPA8qrvmobw@hu-wasimn-hyd.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 20, 2025 at 08:26:38PM +0200, Claudio Imbrenda wrote:
-> +void __gmap_helper_set_unused(struct mm_struct *mm, unsigned long vmaddr)
-> +{
-> +	spinlock_t *ptl;
-> +	pmd_t *pmdp;
-> +	pte_t *ptep;
-> +
-> +	mmap_assert_locked(mm);
-> +
-> +	if (pmd_lookup(mm, vmaddr, &pmdp))
-> +		return;
-> +	ptl = pmd_lock(mm, pmdp);
-> +	if (!pmd_present(*pmdp) || pmd_leaf(*pmdp)) {
-> +		spin_unlock(ptl);
-> +		return;
-> +	}
-> +	spin_unlock(ptl);
-> +
-> +	ptep = pte_offset_map_lock(mm, pmdp, vmaddr, &ptl);
-> +	if (!ptep)
-> +		return;
-> +	/* The last byte of a pte can be changed freely without ipte */
-> +	__atomic64_or(_PAGE_UNUSED, (long *)ptep);
-> +	pte_unmap_unlock(ptep, ptl);
-> +}
-> +EXPORT_SYMBOL_GPL(__gmap_helper_set_unused);
+On 21/05/2025 17:35, Wasim Nazir wrote:
+> On Wed, May 21, 2025 at 04:20:53PM +0200, Krzysztof Kozlowski wrote:
+>> On 21/05/2025 16:08, Wasim Nazir wrote:
+>>> QCS9075 is compatible Industrial-IOT grade variant of SA8775p SOC.
+>>> Unlike QCS9100, it doesn't have safety monitoring feature of
+>>> Safety-Island(SAIL) subsystem, which affects thermal management.
+>>>
+>>> qcs9075-iq-9075-evk board is based on QCS9075 SOC.
+>>>
+>>> Signed-off-by: Wasim Nazir <quic_wasimn@quicinc.com>
+>>> ---
+>>>  Documentation/devicetree/bindings/arm/qcom.yaml | 7 +++++++
+>>>  1 file changed, 7 insertions(+)
+>>>
+>>
+>> This was already acked twice by two DT maintainers. Apparently we need
+>> the third one.
+> 
+> The previous acknowledgment has been removed due to changes in the code.
+> Since, here I have removed the som compatible so though of getting it
+> reviewed again. Som compatible is removed to make it align with other
+> sa8775p & its derivative targets which we are trying to refactor along with
+> Ride changes in other series.
 
-This is unused, as far as I can tell. I'm not sure if it is a good approach to
-do all this code movements / refactorings now. Especially if you also add
-(now?) dead code. I guess that e.g. this function is required for your rework
-that will come later?
+Nothing was explained in cover letter and dropping tags needs explicit
+mentioning. Nothing explained about first tag being dropped, either!
+Read really carefully submitting patches and your internal guideline
+before sending patches.
 
-Imho this series causes quite a bit confusion and is not about "cleanups and
-small fixes" like advertised.
+But that was not about it. It was about us spending 1 or 5 minutes on
+your patch every time, because you send something not ready which your
+company decides to change thus we need to spend time again, and then you
+change it again, which we need to spend time again... do you get the point?
+
+That is not fair. Your marketing changes should not cause more effort on
+us. And this is not the first time.
+
+At least I do not agree on that. Anyway, I explained my point of view to
+Bjorn and Konrad. I am not going to review this. Maybe you will be lucky
+with the third DT maintainer.
+
+Best regards,
+Krzysztof
