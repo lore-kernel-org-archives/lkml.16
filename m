@@ -1,123 +1,83 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36F4FA92E;
-	Wed, 21 May 2025 15:17:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E4EF194C75;
+	Wed, 21 May 2025 15:18:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747840662; cv=none; b=JyY1IN92zoxFodG4c4yJDEsp7JRzEqFSa8I1pmfF8fy96NXjeZCr4TZX9wKy8W+4Y7xI2ZWGtk0SkCAho2MWvwY885A7nFTMKgZmfZv1oagwUqyIEOb1fEpZGm2mHtVzqlvKinJ8DWruQshvpRJW2F3aFvv2NvvlXxm7ozgRSnU=
+	t=1747840689; cv=none; b=q5Fw0uIZOJ6Xb1ik5MaN8TOST/cvPiCtbzEN336pbusAJ5xPsdfTsTNoos6cAeH4mKYg0948XN5Op3OUE3jfBdHAhffd6oVa7I0sR8/eG1BlonmBWqH2RzQi5nZhSjJa3wzJnutiFux4ljc0Sv3Xz53lj+7aNzumS5Dj3kjLkgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747840662; c=relaxed/simple;
-	bh=kUCnnPeOSrm8mt4CfbncjKmyFQkFlkZd5zL0vOVsP5U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qaV4ZHdDtDOXehc2TFLPvm5WS5yThU3DISacmcE7dbJTFRtCM2t/GL24YImq6w1kJEjBWYNaz2PR5sHSXm4z8UucoB6GO9zN0Eyux1YPTe8Vqb1OzO0jodOK7hMXv1jQ2pyLUKuuIN2vfng8GlqCZNrr1pO11PXtazgzQyOTiLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H9IUi1tP; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747840689; c=relaxed/simple;
+	bh=KwDd2EMlZr9hfaN3cZIU/a2g/xgt/yNMRfTpdvkoNFw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MwS1FYoXItG3qna1D4G+tkU6a+gdPz6kUlmSbYFCktpz3GPTmOJ7H+dMwhEjO+y9PtEeHk+3KQERsuBXfCxq3uu6mKjSgnqtqDYb/HMuoMnuI0ih5J6A22L8MuwhwziP43GyPUwILpabL4GyE8DTkt7vHaYCNauCVEg7usrSmXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KKYwt/eT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H9IUi1tP"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-551efd86048so4599197e87.3;
-        Wed, 21 May 2025 08:17:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747840659; x=1748445459; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bY5S7Wfb5ySyKh5UvVG0WBqudaowOyoDQxB/bdCEle4=;
-        b=H9IUi1tPzJKqwvKYaohBcOFlcuQMlETUyxr5MTkH0C5CHwuwpaepyy51Pph8N4u9M1
-         AGHV2lMsSkXk1nAtGcjRbMIG3mGNZEO9tBEBWltVY0m0IV1Gk60y+X/bAIST0Iuf0SjO
-         pXBLD3uok8acTlahQUA0dX7m3xbWPPu0aiMqaLh7YpO3xnKasymyHGdlcan8v6QNHtHe
-         jhvsyX0fFceNbU7oxRhc+he5nYUnzq/ouTTqZxL5UbGhEq59OxtB7QcpzLHtDScNc5bz
-         5iPH2j/gRXYwZ9CCfljp1rIFFfbx/SxXVHwDVoNxRlNQfCR0/zOcEAmimBhi1ccwnzmR
-         n76Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747840659; x=1748445459;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bY5S7Wfb5ySyKh5UvVG0WBqudaowOyoDQxB/bdCEle4=;
-        b=BxqtTV9mcw3mUDhhR4CQ46/WvmKA1xzxCceAutK0BrPHGF4TWS2yPmZqTmvdp9XRbz
-         ym/bHgWd8QxTN0OxiTC4BIysvv/TYLrg6NjJjO0V1wDhNTB8Zr3VQmRYKOsDcfyhyG0V
-         Sy5nmjMgz6lmjOlV4Hzrd+n44X3qpD1k8LaXrqKeKNvC/K42Ecns37MyQlIdmjR1a+Lu
-         HJapFw7GLwwCln3HmteltRqRdxp7zOIiMGkLBUP7SEZhpIqkQVPScdBrMNlL1AU43E3s
-         LV+t7hQXlltmNw4Y7SxhF2vqDe9AP4T3wUQqd/I7ugg2Ha1BDC4jrP9ArMyrNYCPg2cb
-         K4rw==
-X-Forwarded-Encrypted: i=1; AJvYcCXpdMd7A7CWO+edsGSUyKLucwWLxA4kLesvBkD9ALVfDvNIXM4dbN4Cpl7LpdxOm7mEZUUkhbo26Zvhljw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yww2ZmYBcXH9h5CJDEzf7pIDS8a8f9/LjfR/Dbj/3PDc/FYkKG/
-	Uh+EPHcSNi8acz2vbXAqHS/Cgq79Sm9eLMPYh2HYdukDL6NrOx/dyvWj
-X-Gm-Gg: ASbGncv37MCmb5lfG2bnyY/YSAzds5u+Hosi1E07Hxu8AJLd9/AE7ZrzfM+XgGY34TA
-	LNCtAoWSWimb9ZtxfrjxO23wHd6wCgBJHPA+cHhPoEM5VsIvPgEcFwsxNTsnAPjLNSXOLszaQm0
-	QG1gj62ZIPTI/An45jX5gZ1fYgpjOntAqyh0QnCkJYDfd13aE59365VZR19ygmmvltbAJ+BWRut
-	yVCefb40YeAG1JUDHmMkGoqMwvQYNQdeiwZjYHHjElKH5+J4bw4o6Y/Wln84SLHguHXuzViwTh8
-	YMF/h2f32SWyGSPe9UvEUpWjWU5TQd463j53zaQVVP0CG863Ovg/Qj/OVkpRZAp8kSj2uRvnOc/
-	vqxXbEna41wmOVsZeEDRRkql1lzkkhzwCQ2S0nZgnCdRtRLF6a3WUwGB5n6E39ljed1/2b0MVL7
-	u1MCcudhQGcjGmjx8kmPFDLm0=
-X-Google-Smtp-Source: AGHT+IEpTliLMqbAZ45KCj30NQTnQIbtnS7k2akX1eclggrk0SecoLdw9WewNGAj/w+Zp405OJOV5Q==
-X-Received: by 2002:a05:6512:3d05:b0:54f:c184:9de with SMTP id 2adb3069b0e04-550e98fbfdbmr7135214e87.35.1747840658971;
-        Wed, 21 May 2025 08:17:38 -0700 (PDT)
-Received: from ?IPV6:2001:14ba:53:1500:e8f4:97c2:d311:5b15? (2001-14ba-53-1500-e8f4-97c2-d311-5b15.rev.dnainternet.fi. [2001:14ba:53:1500:e8f4:97c2:d311:5b15])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-551fc0d476esm986067e87.203.2025.05.21.08.17.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 May 2025 08:17:38 -0700 (PDT)
-Message-ID: <b6954169-63d9-4cac-aabd-2df1642f98af@gmail.com>
-Date: Wed, 21 May 2025 18:17:37 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KKYwt/eT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41EC4C4CEE4;
+	Wed, 21 May 2025 15:18:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747840688;
+	bh=KwDd2EMlZr9hfaN3cZIU/a2g/xgt/yNMRfTpdvkoNFw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KKYwt/eTjs7jcUmygYh73NgjqTryFfhuIcg4HAKdZOIqrbxom5z4j4CrQfDMdMWft
+	 HIsFoBLJnjWp7FPctJZvgVBlkYx1++dvYYJWnz5nRu39NsRJ4l0vQ/GQGnmc62L3i1
+	 NcaCwCzj+++0fTq3iAenS6rI4dU+POgxpb6L7pJI10YTZnZgL6vM/4eKIt5EcpN+Px
+	 9kTtF+mpbSdjGfyGU8ijsXaQpj8sEWy8FZUMfSN0q0LlffhaKJwLIacSBBKAnST6OX
+	 1ATG/6DX0ExKwvxuN8F9jva2nmcTzz+q+lh2GT65rdVNbw4S5sdNVhLvIW2J+Q7mvv
+	 EGJRoMxDU4Pcw==
+Date: Wed, 21 May 2025 16:18:02 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Haibo Chen <haibo.chen@nxp.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, Stefan Agner <stefan@agner.ch>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, devicetree@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	peng.fan@nxp.com, wahrenst@gmx.net, Frank Li <Frank.Li@nxp.com>
+Subject: Re: [PATCH v3 1/3] dt-bindings: gpio: vf610: add ngpios and
+ gpio-reserved-ranges
+Message-ID: <20250521-monetize-variety-0f5860c56c11@spud>
+References: <20250520-gpio-dts-v3-0-04771c6cf325@nxp.com>
+ <20250520-gpio-dts-v3-1-04771c6cf325@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] docs: Improve grammar, formatting in Video4Linux
-To: Bagas Sanjaya <bagasdotme@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
- mchehab@kernel.org, ribalda@chromium.org, hverkuil@xs4all.nl,
- hljunggr@cisco.com, dave.jiang@intel.com, jgg@ziepe.ca, saeedm@nvidia.com,
- Jonathan.Cameron@huawei.com, ilpo.jarvinen@linux.intel.com,
- mario.limonciello@amd.com, W_Armin@gmx.de, mpearson-lenovo@squebb.ca
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kernel-mentees@lists.linux.dev
-References: <20250517132711.117618-1-hannelotta@gmail.com>
- <20250517132711.117618-2-hannelotta@gmail.com>
- <871psml4t7.fsf@trenco.lwn.net> <aCqIAkoVr2yvDJbN@archie.me>
-Content-Language: en-US
-From: =?UTF-8?B?SGFubmUtTG90dGEgTcOkZW5ww6TDpA==?= <hannelotta@gmail.com>
-In-Reply-To: <aCqIAkoVr2yvDJbN@archie.me>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="yNwNt4S7GEmEqYEF"
+Content-Disposition: inline
+In-Reply-To: <20250520-gpio-dts-v3-1-04771c6cf325@nxp.com>
 
-Hello,
 
-On 5/19/25 04:23, Bagas Sanjaya wrote:
-> On Sun, May 18, 2025 at 02:08:04AM -0600, Jonathan Corbet wrote:
->>>       description of the correct character encoding for Programme Service
->>>       name strings. Also from RDS specification, PS is usually a single
->>>       eight character text. However, it is also possible to find receivers
->>> -    which can scroll strings sized as 8 x N characters. So, this control
->>> +    which can scroll strings sized as 8 x N characters. Therefore this control
->>
->> This kind of change just seems like churn that isn't really improving
->> the content?
-> 
-> I prefer the original as both so and therefore have the same meaning.>
->>>   ``V4L2_CID_RDS_TX_ALT_FREQS (__u32 array)``
->>>       The alternate frequencies in kHz units. The RDS standard allows for
->>> -    up to 25 frequencies to be defined. Drivers may support fewer
->>> -    frequencies so check the array size.
->>> +    up to 25 frequencies to be defined. Because drivers may support fewer
->>> +    frequencies, check the array size.
->>
->> Here too, I'm not sure I see the value in this kind of change.
-> 
-> Again I'm agree.
-> 
-> Thanks.
-> 
+--yNwNt4S7GEmEqYEF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Alright, that is two opinions in favor of not changing this. I can send 
-a version 2 of this patch series without these.
+On Tue, May 20, 2025 at 11:46:12AM +0800, Haibo Chen wrote:
+> Add optional ngpios and gpio-reserved-ranges property.
+>=20
+> Reviewed-by: Frank Li <Frank.Li@nxp.com>
+> Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
 
-Thank you for reviewing!
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-Best regards,
+--yNwNt4S7GEmEqYEF
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Hanne-Lotta Mäenpää
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaC3uqgAKCRB4tDGHoIJi
+0jGlAP9TnTdse6ZU06tanpS6TQTiGGVwpZ8Bh6rNtLQi10BkkQEAinMkR1LeNCP0
+wO5kSg63BuWyDoTNoR4N0z+zJSsZ5gE=
+=jwcd
+-----END PGP SIGNATURE-----
+
+--yNwNt4S7GEmEqYEF--
