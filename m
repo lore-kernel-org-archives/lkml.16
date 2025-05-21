@@ -1,59 +1,77 @@
-Received: from outbound.mr.icloud.com (p-west2-cluster6-host2-snip4-10.eps.apple.com [57.103.70.83])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f227.google.com (mail-pg1-f227.google.com [209.85.215.227])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B16E1804A
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 16:06:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.70.83
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E24FC1804A
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 16:07:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.227
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747843583; cv=none; b=JLfclzYTKurwLhq7BI0Sc2NLGPrRKJv+ZfskUjd3VDMBlu/T8sC7XB4mz4c982RJ2sPvl+qHYgQhzNOV86JDNGwuukqAMke8tzUAOsc4yDbgvezW/XKnH0A+f4WGC2tGcOMjUbhaXnW199EFgDJ0t6M62c8UAv4fz1t5DgL+65Q=
+	t=1747843644; cv=none; b=B2H4rGzKjYjdW82vVTjEzPT8s+mWoNhHbEtvuZAPyMV7eNUZc2dtIrLIIa8vnjdBAMOmr5bk39Swon8u+3i2Kz+3voQskEvgu4F/nHLvb1UpM2hBoqLoeHAYvKg+xDzUJ2Kj5mWG+9np/+Hs+pIFLkDIma9Jsk/AY6SZecN1SVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747843583; c=relaxed/simple;
-	bh=E6OOXxE5/OOt+LA14hsb/VnyvJ7pKX+dyBkj1A/DHDg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XQJxlFzgKHMJfVaGCk24kRY//JzGQA2iQQR5C+GfzxssX6Q0rC1cxHZ5P7hXM78x63EhFUGwkSP6pz9fcvHnsNYIpOcVIuL+pFnZgorcaMnGJywbF4/t035m2qMYnSkXxYiZ89NcnnIJmCtkaHlqJCzcanAH2ppmoGmFZXbtRSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=etehtsea.me; spf=pass smtp.mailfrom=etehtsea.me; dkim=pass (2048-bit key) header.d=etehtsea.me header.i=@etehtsea.me header.b=bygdaMO+; arc=none smtp.client-ip=57.103.70.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=etehtsea.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=etehtsea.me
+	s=arc-20240116; t=1747843644; c=relaxed/simple;
+	bh=3ThejoLiMkpabs5CE1WBPTbZj0YfkJafUiYWBh0n+rk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BofQeoUCerNsRlzG+78xQBxmTc/bxdTbNCeOs2DbwMgDo/t9IfuR+sBgC/JyPPqHD8PmGca44SbvXYmMnxJLA0XyBmPth3vIRK5RU+V46Ld3Uu7/g4VhBTcoHYhTSwUmMYqxPRUOi4u08WNYnoEKxHrEarmD5GLUD+Ln7YU3QVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=ROM1aknv; arc=none smtp.client-ip=209.85.215.227
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=etehtsea.me header.i=@etehtsea.me header.b="bygdaMO+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=etehtsea.me; s=sig1;
-	bh=ViGRzst8PRFAp1WtMCQF+6FUrUPaBvnWi6sBdgUbNg0=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:x-icloud-hme;
-	b=bygdaMO+llfLATI70XIiXllBBYfBr0gwymLEN2Ze8kLXsTOG84gZf5/4GfglECd5u
-	 zF6tv1rxmXBJYv1In6/WmXaG4fpvHQL+n/MBNb35qg/g4Ko84CzL+txhgDSd5q/Yxy
-	 EN1S3k/vxDOuO9tEIDN/pXE86nbwp3ImpgWBXAsjz/U1ShUW1QGxiuV+SkAI1fVL9J
-	 J8d73/f0EKdeN1s4OM4hIBNQ69Ind+RQdDi7L5FwVXcQY09meKfURyJYxLxtqIWbDk
-	 IxwCGOAUdDGiY7k3nb95MIYb6En6nypwNSiMtni2fx9J8CHZgU50rzuf2LGg6Jj3F/
-	 Ce74x93ua327Q==
-Received: from outbound.mr.icloud.com (localhost [127.0.0.1])
-	by outbound.mr.icloud.com (Postfix) with ESMTPS id 81E09180048F;
-	Wed, 21 May 2025 16:06:11 +0000 (UTC)
-Received: from localhost (unknown [17.57.152.38])
-	by outbound.mr.icloud.com (Postfix) with ESMTPSA id 3A4A1180084D;
-	Wed, 21 May 2025 16:06:09 +0000 (UTC)
-From: Konstantin Shabanov <mail@etehtsea.me>
-To: Sandy Huang <hjc@rock-chips.com>,
-	=?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
-	Andy Yan <andy.yan@rock-chips.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>
-Cc: Konstantin Shabanov <mail@etehtsea.me>,
-	Daniel Stone <daniel@fooishbar.org>,
-	Andy Yan <andyshrk@163.com>,
-	Dan Callaghan <djc@djc.id.au>,
-	dri-devel@lists.freedesktop.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="ROM1aknv"
+Received: by mail-pg1-f227.google.com with SMTP id 41be03b00d2f7-b26e6c551f8so673231a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 09:07:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1747843642; x=1748448442; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=FGAacLh9ZKO/sc4ZekzKsbI6RbRxPuIDS876rsFYht0=;
+        b=ROM1aknvM+SaYX+c5n6KqNQm79ZNACIqE2fApnudDZOEvewj4ZvQ6dWdCsndFLHQMr
+         7E7V+oJlw2NYqGbpSGuNh6AtGyHNhsdsE4yK8trq/NygGpsXUfTcn+Pp8WW6Z3XoPXt/
+         09cKmNfvNZQKkWHMBQLEdjTGdW+6sGBbut6EudT4iAJ/pg9MelqpmDJJXIhjJXP/evEr
+         e9tk7UZ5MgfZsfYDXlwZCk6fyoV2KL4Ms1x3uOPUNOAMKLm6yWteAGntJcnnT/916mEt
+         n4CsQ+6/4obLv7OW3gJ1ObnOqGyly0rSFq22gwS99cy5BsvGL4CSCgVRBSlKf+VkVJVV
+         u48A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747843642; x=1748448442;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FGAacLh9ZKO/sc4ZekzKsbI6RbRxPuIDS876rsFYht0=;
+        b=JODcHGK0HM2GgMaA4qtK7HrBYW6d9n24hfQC2vd0PZVHKKW1uwmxX3ZiVd2tB7KZ3Y
+         qEkMUYtpotO+r6zmZYBCURbRpAk+Gk2tTbErCBvjI8OdeRsQhfC0ryFaZB/70bN7IwlQ
+         Tb/EjIM8bt/CoqyxoQ1EAZ+aGtse/FkcBuga+X9aTzbdvdMXaoSbhVQcdk8LG9NymYPw
+         izhVAwros1q0+1/iP35TNVwOQFZEB18nmfioNEj2MQb0SB58Xa6fwP9fkBqSs/3987b2
+         ehiDoIDoxO1lHjm8z1A3ToDbQoc3Sindnlk8BIt0nruQElfT/9EkK5wDFxCQ60dH8e4v
+         LSFA==
+X-Forwarded-Encrypted: i=1; AJvYcCVrWjUKKFRitX9qVjavwTWcikdbLE98CnCnjVmGDizoll5OFVg2YuVC/TIAY/7QrA9tnCecjSM2+ifMkdc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUQCFDsIQFYl1FNAThp7SSaMqonx3vlHQzVN13cYffvE3FoldR
+	+IuFbZcPklcbEc7PWdD78KXtvu+8gfuerTJv+0VI/RerCGh/SPxm9ITQB9yWCycfbvkYdtFV3/0
+	ZQa5Myll2jxYGlRydELbttrD7PooaUtuk/FjCipBw9fyZ6cyQxT+3
+X-Gm-Gg: ASbGncvSWqnM+7TgNTkfbSRy/UiPtfMeneP7nsTbUsSE/jNp0lSZR2ZSzeVUZVWVZgB
+	mud+ZaSiHekzaPbHnm/K7bVeZ9Z6CaNz7vstXNyjJ7NJqPfzMNARSA2e4JD34aRBmTBTE/3v5MG
+	NDBTJWBmO16xlEOBixwrnveBr7FpKeKsW8pjGwQcJq05+TkW96SU/+2WEC7NjPDsytRqsEfZuFA
+	+Evap8i93KrvDLQ1Nl27Z0d54wgyQoAURlVc24mKfoHZlLrq2azl9Rn1aQWi53ZnSAR1YWVkLkN
+	B4Z+0ZfjEFzAftfkGHGP9Luovso8WQ==
+X-Google-Smtp-Source: AGHT+IF2kF1m9LkkoJKrZ/FEcg38Fj39w2AzGUaOy5/vh7l4c0L6fk/PMc5E0B4+fMIoji+2MmlqVClPh6k8
+X-Received: by 2002:a17:902:ea0d:b0:224:1579:b347 with SMTP id d9443c01a7336-231d43c6220mr113533045ad.7.1747843642133;
+        Wed, 21 May 2025 09:07:22 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
+        by smtp-relay.gmail.com with ESMTPS id d9443c01a7336-231d4ecf61bsm6804655ad.123.2025.05.21.09.07.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 May 2025 09:07:22 -0700 (PDT)
+X-Relaying-Domain: purestorage.com
+Received: from dev-csander.dev.purestorage.com (unknown [IPv6:2620:125:9007:640:ffff::418a])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 87F6E3400E9;
+	Wed, 21 May 2025 10:07:21 -0600 (MDT)
+Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
+	id 81A95E41D24; Wed, 21 May 2025 10:07:21 -0600 (MDT)
+From: Caleb Sander Mateos <csander@purestorage.com>
+To: Ming Lei <ming.lei@redhat.com>,
+	Jens Axboe <axboe@kernel.dk>
+Cc: Caleb Sander Mateos <csander@purestorage.com>,
+	linux-block@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v5] drm/rockchip: Reject AFBC for res >2560 on rk3399
-Date: Wed, 21 May 2025 16:05:55 +0000
-Message-ID: <20250521160556.14346-2-mail@etehtsea.me>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250417065759.5948-1-mail@etehtsea.me>
-References: <20250417065759.5948-1-mail@etehtsea.me>
+Subject: [PATCH] ublk: remove io argument from ublk_auto_buf_reg_fallback()
+Date: Wed, 21 May 2025 10:07:19 -0600
+Message-ID: <20250521160720.1893326-1-csander@purestorage.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,105 +79,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: SM59gz_tD3cOB4yA3XtYIu0OZTPHHxxY
-X-Proofpoint-ORIG-GUID: SM59gz_tD3cOB4yA3XtYIu0OZTPHHxxY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-21_05,2025-05-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0
- clxscore=1030 spamscore=0 mlxlogscore=999 phishscore=0 mlxscore=0 bulkscore=0
- suspectscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.22.0-2503310001 definitions=main-2505210158
 
-As it isn't supported by rk3399. From the datasheet[1]
-("1.2.10 Video IN/OUT", "Display Interface", p. 17):
+The argument has been unused since the function was added, so remove it.
 
-  Support AFBC function co-operation with GPU
-    * support 2560x1600 UI
-
-Signed-off-by: Konstantin Shabanov <mail@etehtsea.me>
-Cc: Daniel Stone <daniel@fooishbar.org>
-Cc: Andy Yan <andyshrk@163.com>
-Reported-by: Dan Callaghan <djc@djc.id.au>
-Closes: https://gitlab.freedesktop.org/mesa/mesa/-/issues/7968
-
-[1]: https://opensource.rock-chips.com/images/d/d7/Rockchip_RK3399_Datasheet_V2.1-20200323.pdf
+Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
 ---
- V4 -> V5: Extract AFBC support check into drv
- V3 -> V4: Correct redundant header inclusion
- V2 -> V3: Run check only on rk3399
- V1 -> V2: Move the check to the fb_create callback
+ drivers/block/ublk_drv.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
- AFBC check is implemented in a similar manner as in the malidp driver.
- 
- drivers/gpu/drm/rockchip/rockchip_drm_drv.c | 16 ++++++++++++++++
- drivers/gpu/drm/rockchip/rockchip_drm_drv.h |  2 ++
- drivers/gpu/drm/rockchip/rockchip_drm_fb.c  |  3 +++
- 3 files changed, 21 insertions(+)
-
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_drv.c b/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
-index 180fad5d49ad..9fb04022b2f3 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_drv.c
-@@ -42,6 +42,8 @@
- #define DRIVER_MAJOR	1
- #define DRIVER_MINOR	0
- 
-+#define RK3399_AFBC_MAX_WIDTH		2560
-+
- static const struct drm_driver rockchip_drm_driver;
- 
- /*
-@@ -350,6 +352,20 @@ int rockchip_drm_endpoint_is_subdriver(struct device_node *ep)
- 	return false;
+diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
+index 1800cb14677e..7dffddd3fc7a 100644
+--- a/drivers/block/ublk_drv.c
++++ b/drivers/block/ublk_drv.c
+@@ -1181,11 +1181,11 @@ static inline void __ublk_abort_rq(struct ublk_queue *ubq,
+ 		blk_mq_requeue_request(rq, false);
+ 	else
+ 		blk_mq_end_request(rq, BLK_STS_IOERR);
  }
  
-+bool rockchip_verify_afbc_framebuffer_size(struct drm_device *dev,
-+					   const struct drm_mode_fb_cmd2 *mode_cmd)
-+{
-+	if (of_machine_is_compatible("rockchip,rk3399") &&
-+	    mode_cmd->width > RK3399_AFBC_MAX_WIDTH) {
-+		DRM_DEBUG_KMS("AFBC is not supported for the width %d (max %d)\n",
-+			      mode_cmd->width,
-+			      RK3399_AFBC_MAX_WIDTH);
-+		return false;
-+	}
-+
-+	return true;
-+}
-+
- static void rockchip_drm_match_remove(struct device *dev)
+-static void ublk_auto_buf_reg_fallback(struct request *req, struct ublk_io *io)
++static void ublk_auto_buf_reg_fallback(struct request *req)
  {
- 	struct device_link *link;
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_drv.h b/drivers/gpu/drm/rockchip/rockchip_drm_drv.h
-index c183e82a42a5..5dabceaa4fd6 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_drv.h
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_drv.h
-@@ -86,6 +86,8 @@ int rockchip_drm_wait_vact_end(struct drm_crtc *crtc, unsigned int mstimeout);
- int rockchip_drm_encoder_set_crtc_endpoint_id(struct rockchip_encoder *rencoder,
- 					      struct device_node *np, int port, int reg);
- int rockchip_drm_endpoint_is_subdriver(struct device_node *ep);
-+bool rockchip_verify_afbc_framebuffer_size(struct drm_device *dev,
-+					   const struct drm_mode_fb_cmd2 *mode_cmd);
- extern struct platform_driver cdn_dp_driver;
- extern struct platform_driver dw_hdmi_rockchip_pltfm_driver;
- extern struct platform_driver dw_hdmi_qp_rockchip_pltfm_driver;
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
-index 5829ee061c61..f0527f12f568 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
-@@ -52,6 +52,9 @@ rockchip_fb_create(struct drm_device *dev, struct drm_file *file,
- 	}
+ 	const struct ublk_queue *ubq = req->mq_hctx->driver_data;
+ 	struct ublksrv_io_desc *iod = ublk_get_iod(ubq, req->tag);
+ 	struct ublk_rq_data *data = blk_mq_rq_to_pdu(req);
  
- 	if (drm_is_afbc(mode_cmd->modifier[0])) {
-+		if (!rockchip_verify_afbc_framebuffer_size(dev, mode_cmd))
-+			return ERR_PTR(-EINVAL);
-+
- 		ret = drm_gem_fb_afbc_init(dev, mode_cmd, afbc_fb);
- 		if (ret) {
- 			drm_framebuffer_put(&afbc_fb->base);
-
-base-commit: 6ad88bf9e74dae83c992d8a16683360117b7e2d8
+@@ -1207,11 +1207,11 @@ static bool ublk_auto_buf_reg(struct request *req, struct ublk_io *io,
+ 
+ 	ret = io_buffer_register_bvec(io->cmd, req, ublk_io_release,
+ 				      pdu->buf.index, issue_flags);
+ 	if (ret) {
+ 		if (pdu->buf.flags & UBLK_AUTO_BUF_REG_FALLBACK) {
+-			ublk_auto_buf_reg_fallback(req, io);
++			ublk_auto_buf_reg_fallback(req);
+ 			return true;
+ 		}
+ 		blk_mq_end_request(req, BLK_STS_IOERR);
+ 		return false;
+ 	}
 -- 
-2.49.0
+2.45.2
 
