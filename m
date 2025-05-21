@@ -1,91 +1,37 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BCE3253F07
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 10:31:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D690C25A326;
+	Wed, 21 May 2025 10:32:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747823489; cv=none; b=jEqNS6LLto+1VWJG/q8JZPqpJmVv0FFuGxT+trArogv5fLsYy9QGTH9lHICGRbLSRtCSqwsTwAHNqqeZpU5AO0yKRVKzu3Qmf+R4iNE3ObNeEml1f5ZWWKLG5du778WeUoiz9Cvcsb3PJPuMzyFtg1dyXp2k3KEJOT8GHbHUbT0=
+	t=1747823533; cv=none; b=o0V3TZtlkgUnOmBzgBJ/hmFbPsXXZN4yFSL4H6JNbgMKLolUB79E1jrvCWpHhKQBSgH4GXEJgHy+AmxOQW3i9cTdCnl349XjhAZEyQcmoTbRTkGhsyIHqexjFzJ82SttXOkSbksuE1b3p1PkzkEn6rT4CiMYP93lAuOK/DFJonA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747823489; c=relaxed/simple;
-	bh=Y7wXlYBKilElGrxPOEAxIoQfkr3dVOykIBsfU9jq/wg=;
+	s=arc-20240116; t=1747823533; c=relaxed/simple;
+	bh=7L99yt1gugpvwhYiMmt3ZZK42PIRijia6HyKCSi3NPc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hpQx3IWSTLzgZgcbUK30x1ruyOH5wcWranV/pOi1TN7JihaTCQtkaGQAxWkkZFcqfvknMfwOa9W/t0Dknq8ua1JUbHe4zaY71TCTUKRtEPhm7qEcWpGiEnyC7fiIQEFr8ogFAzH/lU+/oRiKaV5SQNM46i1AMp31DZNKuE9JBHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=UZUp6Q1B; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=88UvvMY6; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=UZUp6Q1B; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=88UvvMY6; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=K7eBoa/lDqFJB+beNwaoIDm3knZe1BxvfwSp3T48SgTrgq1M+jQl2sSlT3HfQ+Ko+5LUaPh9CZGavM3aJ9S245tZp2DnppzkpifnBj4d+Yug/fa2ZvRmqox7qpGsLh5h6n1VsJjpue005ZoHXz0rf+yYpsxzfbTtaAuCuockWgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=BWOBJMM+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="UZUp6Q1B";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="88UvvMY6";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="UZUp6Q1B";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="88UvvMY6"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 4172D227B7;
-	Wed, 21 May 2025 10:31:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1747823485; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=srn8jSg9ullgOYE/RnvBqPHnTl5WzflJDekRT3jm408=;
-	b=UZUp6Q1BQLkNUzill/lJmwow6+3+1BiWPkXK71uOYYfRhcbR+LdEEdk9QHoeCQoJ6DiABB
-	YAjJeWJ82z5HZxJrHc8lCHliFIxBlcKv2onaCShh3E4uARF3t/npb24Cl8n0tSpzW9Gsys
-	icDH7BE8AcEyC8TDU2iku3m8WNRxhCI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1747823485;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=srn8jSg9ullgOYE/RnvBqPHnTl5WzflJDekRT3jm408=;
-	b=88UvvMY68Zj3/4E4p2tt96dqM7UF13R1CY+bxb4X+e/l1dz8YUFcitpJHsD0cU2dOKXd86
-	2A/QVBE500xW27Bg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=UZUp6Q1B;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=88UvvMY6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1747823485; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=srn8jSg9ullgOYE/RnvBqPHnTl5WzflJDekRT3jm408=;
-	b=UZUp6Q1BQLkNUzill/lJmwow6+3+1BiWPkXK71uOYYfRhcbR+LdEEdk9QHoeCQoJ6DiABB
-	YAjJeWJ82z5HZxJrHc8lCHliFIxBlcKv2onaCShh3E4uARF3t/npb24Cl8n0tSpzW9Gsys
-	icDH7BE8AcEyC8TDU2iku3m8WNRxhCI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1747823485;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=srn8jSg9ullgOYE/RnvBqPHnTl5WzflJDekRT3jm408=;
-	b=88UvvMY68Zj3/4E4p2tt96dqM7UF13R1CY+bxb4X+e/l1dz8YUFcitpJHsD0cU2dOKXd86
-	2A/QVBE500xW27Bg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2FF1313AA0;
-	Wed, 21 May 2025 10:31:25 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 0zBtC32rLWiVUQAAD6G6ig
-	(envelope-from <jack@suse.cz>); Wed, 21 May 2025 10:31:25 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id C16DDA0870; Wed, 21 May 2025 12:31:16 +0200 (CEST)
-Date: Wed, 21 May 2025 12:31:16 +0200
-From: Jan Kara <jack@suse.cz>
-To: Zhang Yi <yi.zhang@huaweicloud.com>
-Cc: Jan Kara <jack@suse.cz>, linux-ext4@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, willy@infradead.org, tytso@mit.edu, 
-	adilger.kernel@dilger.ca, yi.zhang@huawei.com, libaokun1@huawei.com, yukuai3@huawei.com, 
-	yangerkun@huawei.com
-Subject: Re: [PATCH v2 4/8] ext4/jbd2: convert jbd2_journal_blocks_per_page()
- to support large folio
-Message-ID: <l2sm2sxycp2u2mqve6vx3rdwitsth55z657iw5qlsz2ko2eskr@7nko44yniymo>
-References: <20250512063319.3539411-1-yi.zhang@huaweicloud.com>
- <20250512063319.3539411-5-yi.zhang@huaweicloud.com>
- <ht54j6bvjmiqt62xmcveqlo7bmrunqs4ji7wikfteftdjijzek@7tz5gpejaoen>
- <924cfe2c-318c-493f-89a5-10849bfc7a00@huaweicloud.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="BWOBJMM+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99BC1C4CEE4;
+	Wed, 21 May 2025 10:32:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1747823533;
+	bh=7L99yt1gugpvwhYiMmt3ZZK42PIRijia6HyKCSi3NPc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BWOBJMM+K/22XkIz9N2UbKVsPoZTUgPx8F2u1XQKpFAICfX4ue5F9qjXKysDFnnXf
+	 gZ4eg51ESTpVNnFDKfgDIK+KDH4+lnpYVfh40IabD/D1asArF1HOLEG+1YfHW0mZdu
+	 Aqy0+VdOJAmQJk9YoatjpvhBr+F2tMXqMnib9UVA=
+Date: Wed, 21 May 2025 12:32:09 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: David Wang <00107082@163.com>
+Cc: mathias.nyman@intel.com, oneukum@suse.com, stern@rowland.harvard.edu,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] USB: core: add a memory pool to urb caching
+ host-controller private data
+Message-ID: <2025052148-cannot-football-74e1@gregkh>
+References: <20250517083819.6127-1-00107082@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -94,86 +40,127 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <924cfe2c-318c-493f-89a5-10849bfc7a00@huaweicloud.com>
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.com:email]
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: -4.01
-X-Rspamd-Queue-Id: 4172D227B7
-X-Spam-Level: 
-X-Spam-Flag: NO
+In-Reply-To: <20250517083819.6127-1-00107082@163.com>
 
-On Tue 20-05-25 20:46:51, Zhang Yi wrote:
-> On 2025/5/20 4:16, Jan Kara wrote:
-> > On Mon 12-05-25 14:33:15, Zhang Yi wrote:
-> >> From: Zhang Yi <yi.zhang@huawei.com>
-> >>
-> >> jbd2_journal_blocks_per_page() returns the number of blocks in a single
-> >> page. Rename it to jbd2_journal_blocks_per_folio() and make it returns
-> >> the number of blocks in the largest folio, preparing for the calculation
-> >> of journal credits blocks when allocating blocks within a large folio in
-> >> the writeback path.
-> >>
-> >> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
-> > ...
-> >> @@ -2657,9 +2657,10 @@ void jbd2_journal_ack_err(journal_t *journal)
-> >>  	write_unlock(&journal->j_state_lock);
-> >>  }
-> >>  
-> >> -int jbd2_journal_blocks_per_page(struct inode *inode)
-> >> +int jbd2_journal_blocks_per_folio(struct inode *inode)
-> >>  {
-> >> -	return 1 << (PAGE_SHIFT - inode->i_sb->s_blocksize_bits);
-> >> +	return 1 << (PAGE_SHIFT + mapping_max_folio_order(inode->i_mapping) -
-> >> +		     inode->i_sb->s_blocksize_bits);
-> >>  }
-> > 
-> > FWIW this will result in us reserving some 10k transaction credits for 1k
-> > blocksize with maximum 2M folio size. That is going to create serious
-> > pressure on the journalling machinery. For now I guess we are fine
-> 
-> Oooh, indeed, you are right, thanks a lot for pointing this out. As you
-> mentioned in patch 5, the credits calculation I proposed was incorrect,
-> I thought it wouldn't require too many credits.
-> 
-> I believe it is risky to mount a filesystem with a small journal space
-> and a large number of block groups. For example, if we build an image
-> with a 1K block size and a 1MB journal on a 20GB disk (which contains
-> 2,540 groups), it will require 2,263 credits, exceeding the available
-> journal space.
-> 
-> For now, I'm going to disable large folio support on the filesystem with
-> limited journal space. i.e., when the return value of
-> ext4_writepage_trans_blocks() is greater than
-> jbd2_max_user_trans_buffers(journal) / 2, ext4_should_enable_large_folio()
-> return false, thoughts?
+On Sat, May 17, 2025 at 04:38:19PM +0800, David Wang wrote:
+> ---
+> Changes since v2:
+> 1. activat the pool only when the urb object is created via
+> usb_alloc_urb()
+> Thanks to Oliver Neukum <oneukum@suse.com>'s review.
 
-Yep, looks like a good stopgap solution for now.
+Changes go below the bottom --- line, not at the top.  Please read the
+documentation for how to do this.
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Also, these are not "threaded" together, making them hard to pick out.
+Please when you resend, make them be together using git send-email or
+some such tool.
+
+> ---
+> URB objects have long lifecycle, an urb can be reused between
+> submit loops; The private data needed by some host controller
+> has very short lifecycle, the memory is alloced when enqueue, and
+> released when dequeue. For example, on a system with xhci, in
+> xhci_urb_enqueue:
+> Using a USB webcam would have ~250/s memory allocation;
+> Using a USB mic would have ~1K/s memory allocation;
+> 
+> High frequent allocations for host-controller private data can be
+> avoided if urb take over the ownership of memory, the memory then shares
+> the longer lifecycle with urb objects.
+> 
+> Add a mempool to urb for hcpriv usage, the mempool only holds one block
+> of memory and grows when larger size is requested.
+> 
+> The mempool is activated only when the URB object is created via
+> usb_alloc_urb() in case some drivers create a URB object by other
+> means and manage it lifecycle without corresponding usb_free_urb.
+> 
+> The performance difference with this change is insignificant when
+> system is under no memory pressure or under heavy memory pressure.
+> There could be a point inbetween where extra 1k/s memory alloction
+> would dominate the preformance, but very hard to pinpoint it.
+> 
+> Signed-off-by: David Wang <00107082@163.com>
+> ---
+>  drivers/usb/core/urb.c | 45 ++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/usb.h    |  5 +++++
+>  2 files changed, 50 insertions(+)
+> 
+> diff --git a/drivers/usb/core/urb.c b/drivers/usb/core/urb.c
+> index 5e52a35486af..53117743150f 100644
+> --- a/drivers/usb/core/urb.c
+> +++ b/drivers/usb/core/urb.c
+> @@ -23,6 +23,8 @@ static void urb_destroy(struct kref *kref)
+>  
+>  	if (urb->transfer_flags & URB_FREE_BUFFER)
+>  		kfree(urb->transfer_buffer);
+> +	if (urb->hcpriv_mempool_activated)
+> +		kfree(urb->hcpriv_mempool);
+>  
+>  	kfree(urb);
+>  }
+> @@ -77,6 +79,8 @@ struct urb *usb_alloc_urb(int iso_packets, gfp_t mem_flags)
+>  	if (!urb)
+>  		return NULL;
+>  	usb_init_urb(urb);
+> +	/* activate hcpriv mempool when urb is created via usb_alloc_urb */
+> +	urb->hcpriv_mempool_activated = true;
+>  	return urb;
+>  }
+>  EXPORT_SYMBOL_GPL(usb_alloc_urb);
+> @@ -1037,3 +1041,44 @@ int usb_anchor_empty(struct usb_anchor *anchor)
+>  
+>  EXPORT_SYMBOL_GPL(usb_anchor_empty);
+>  
+> +/**
+> + * urb_hcpriv_mempool_zalloc - alloc memory from mempool for hcpriv
+> + * @urb: pointer to URB being used
+> + * @size: memory size requested by current host controller
+> + * @mem_flags: the type of memory to allocate
+> + *
+> + * Return: NULL if out of memory, otherwise memory are zeroed
+> + */
+> +void *urb_hcpriv_mempool_zalloc(struct urb *urb, size_t size, gfp_t mem_flags)
+> +{
+> +	if (!urb->hcpriv_mempool_activated)
+> +		return kzalloc(size, mem_flags);
+> +
+> +	if (urb->hcpriv_mempool_size < size) {
+> +		kfree(urb->hcpriv_mempool);
+> +		urb->hcpriv_mempool_size = size;
+> +		urb->hcpriv_mempool = kmalloc(size, mem_flags);
+> +	}
+> +	if (urb->hcpriv_mempool)
+> +		memset(urb->hcpriv_mempool, 0, size);
+> +	else
+> +		urb->hcpriv_mempool_size = 0;
+> +	return urb->hcpriv_mempool;
+> +}
+> +EXPORT_SYMBOL_GPL(urb_hcpriv_mempool_zalloc);
+> +
+> +/**
+> + * urb_free_hcpriv - free hcpriv data if necessary
+> + * @urb: pointer to URB being used
+> + *
+> + * If mempool is activated, private data's lifecycle
+> + * is managed by urb object.
+> + */
+> +void urb_free_hcpriv(struct urb *urb)
+> +{
+> +	if (!urb->hcpriv_mempool_activated) {
+> +		kfree(urb->hcpriv);
+> +		urb->hcpriv = NULL;
+
+You seem to set this to NULL for no reason, AND check for
+hcpriv_mempool_activated.  Only one is going to be needed, you don't
+need to have both, right?  Why not just rely on hcdpriv being set?
+
+And are you sure that the hcd can actually use a kmalloced "mempool"?  I
+don't understand why xhci can't just do this in its driver instead of
+this being required in the usb core and adding extra logic and size to
+every urb in the system.
+
+thanks,
+
+greg k-h
