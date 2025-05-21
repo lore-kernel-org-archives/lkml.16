@@ -1,199 +1,179 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2058.outbound.protection.outlook.com [40.107.94.58])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 863C41172A
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 00:50:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.58
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747788609; cv=fail; b=j5Iv+LlzC0p3pOD+OTfqQ6BnFdwvHq4k/WGFLoqwMIje5odaTY9LyP3nmlQQL3UKWl603EPsFIbYPaFxf020VZMfL/PTUUwucltxzks8e7VlN4Qg9WFC+NBE1PiNIx7sv54Mzhecn+boDOcmOP6+UTBdtTQbaqBTK5GJRk94Y6U=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747788609; c=relaxed/simple;
-	bh=jJd3nYd8E64J6agrPCdlacxjnCh9G6XBv3vT4HVuXbo=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=V07tJrIG5T23BHduA1S+MlYKAydx+WPUD7ybmIN8mpVDOMH0dhlXCmLVgM1yUVzdDO0QflOog5woy3WLzcTKTn2o1E33GYkvQ5hxqYfA//ZbBDb+ItZfkZhZ5G+8UqqsQkWlZhL1gc1ia0ceP3bwtqhGaleAkqxR2zTie3tJN58=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ea9/KcBO; arc=fail smtp.client-ip=40.107.94.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F5FF2AE90
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 00:55:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747788938; cv=none; b=akwMAB5blOk9RQPoKmMxcVA+6v2KjSgNlnJFuZPH0rdhCwpMM9q7/EhkpFmmm6IjOlzWWAe2H9c5NHiuY3XJgyPpM/SJPF0EXhWtTMuVrXlUH7Iq8Ql/rsdfcv49zE2dCNh0l4/YJP/oc+1Mt0WwNUek8gB8VYeaoww1mEUU3vg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747788938; c=relaxed/simple;
+	bh=3Y0eI2D8cnedVznYRle7TnjGhJ3X2g6z0d4K3WJthKc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pvxJRT0rFZOnfPuKgAGoeg7syJx/7KsMxZZrnFtxvn8VujPiDxcJjLPAK8LsHIKua2CWnmmDfjXl6XPZzHyK4mwBu4D3KJK+OHe7R7v4MxGQ1VM1fp50DEOedvQF3N3P7kmUrecDHmLAdhK+i+jXcedY6BQQt/l7BTo7o6RKKmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=t6iYY0S8; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ea9/KcBO"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Yw0z0xq216vWn/Q2QF+genEXLFqjtCj0ImSbFEcW+sd18SJUOseE88uh8QfOFxNQxtNdnz0qeGbvXYW1N5j4RhcJ5QGMacObjT50/yjE/NC85zrS5SCYzUBi4i9bPrStmTarGDFkPiVHaf1II7I28qu0p/lOhN0dsNOVVjh6mQ0HNACIGHYDFqnpQMztB6WYmfMuRItTDLPYKa3oIHF5rvYPnikkK+0vWgoah1QWf+fptSJZraEG4NUrRziWPi0BTgo8Vjoh8icCkTotXCW7n4liku/vhLWTlydb1aQHAggus06ZRzcaG0nvM4FpOj4pSALq1ssZ/zCJjezWqj5yWg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jJd3nYd8E64J6agrPCdlacxjnCh9G6XBv3vT4HVuXbo=;
- b=vCFyCW1UYlntbTHzN0f8P38bYnacTxkMC4Zs4IpnXw85uDrTTjLtYyNgLFT0HVfldpOzUqLKSPCHz1R1aiQjsD1frUmsyjPXmOPHmHXSROTeJ/rm/eDgooTk020XuNHHtlLirtMutimNie3mA3vLGU3VUJdyngwqdlDd+1Lvf2Q5g5++Adwg39A2CppYzry1btAXQNh2LE9fPMJw+Nlo6YENy20i/mop5AN//czrDOom36ofu6AbGJgVNX3xHI0KIqAOZEeMkyqDOuoZISgB9pObgrhQU0FWhL5jijk01iG0wP8PrkbDC+t4YPRbb+N9gYcJKe8miVPgtOmWsjzEbw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jJd3nYd8E64J6agrPCdlacxjnCh9G6XBv3vT4HVuXbo=;
- b=ea9/KcBOJ+SLU3LiwnLUzxD/2C1JdNRkqYFuWgsIE06nKRtvBePPql4reRjPSaN29jmYHCd/+igL653GSl2wVijBy9nC+vPvlD7iVYnMWsV1uExhFuw8ZLU4914Uh1EZlveLUp7b2S0ATUKR2GiN2kBf77zKifrmo+p8vOLPfX+rd5ibFP9kKlgwl5LyS/UIFk5hN82/MzvxFya40mQQCgsIOYtkkt5TcDnadNpMNmO6VlhRXjqobGTF1HaT2KVxbwJDgru27DKEDrzH/9tUmFk6D0jhuPFGHE2o9qBEmfjebG9HkYqovuULhg5zYw3HVKqibZci010WQDFpv74PgQ==
-Received: from SA1PR12MB7199.namprd12.prod.outlook.com (2603:10b6:806:2bc::21)
- by BN7PPF34483F4BA.namprd12.prod.outlook.com (2603:10b6:40f:fc02::6cb) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.33; Wed, 21 May
- 2025 00:50:04 +0000
-Received: from SA1PR12MB7199.namprd12.prod.outlook.com
- ([fe80::ae1b:d89a:dfb6:37c2]) by SA1PR12MB7199.namprd12.prod.outlook.com
- ([fe80::ae1b:d89a:dfb6:37c2%3]) with mapi id 15.20.8699.026; Wed, 21 May 2025
- 00:50:04 +0000
-From: Ankit Agrawal <ankita@nvidia.com>
-To: Oliver Upton <oliver.upton@linux.dev>
-CC: Jason Gunthorpe <jgg@nvidia.com>, "maz@kernel.org" <maz@kernel.org>,
-	"joey.gouly@arm.com" <joey.gouly@arm.com>, "suzuki.poulose@arm.com"
-	<suzuki.poulose@arm.com>, "yuzenghui@huawei.com" <yuzenghui@huawei.com>,
-	"catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will@kernel.org"
-	<will@kernel.org>, "ryan.roberts@arm.com" <ryan.roberts@arm.com>,
-	"shahuang@redhat.com" <shahuang@redhat.com>, "lpieralisi@kernel.org"
-	<lpieralisi@kernel.org>, "david@redhat.com" <david@redhat.com>, Aniket Agashe
-	<aniketa@nvidia.com>, Neo Jia <cjia@nvidia.com>, Kirti Wankhede
-	<kwankhede@nvidia.com>, Krishnakant Jaju <kjaju@nvidia.com>, "Tarun Gupta
- (SW-GPU)" <targupta@nvidia.com>, Vikram Sethi <vsethi@nvidia.com>, Andy
- Currid <acurrid@nvidia.com>, Alistair Popple <apopple@nvidia.com>, John
- Hubbard <jhubbard@nvidia.com>, Dan Williams <danw@nvidia.com>, Zhi Wang
-	<zhiw@nvidia.com>, Matt Ochs <mochs@nvidia.com>, Uday Dhoke
-	<udhoke@nvidia.com>, Dheeraj Nigam <dnigam@nvidia.com>,
-	"alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-	"sebastianene@google.com" <sebastianene@google.com>, "coltonlewis@google.com"
-	<coltonlewis@google.com>, "kevin.tian@intel.com" <kevin.tian@intel.com>,
-	"yi.l.liu@intel.com" <yi.l.liu@intel.com>, "ardb@kernel.org"
-	<ardb@kernel.org>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"gshan@redhat.com" <gshan@redhat.com>, "linux-mm@kvack.org"
-	<linux-mm@kvack.org>, "ddutile@redhat.com" <ddutile@redhat.com>,
-	"tabba@google.com" <tabba@google.com>, "qperret@google.com"
-	<qperret@google.com>, "seanjc@google.com" <seanjc@google.com>,
-	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "maobibo@loongson.cn"
-	<maobibo@loongson.cn>
-Subject: Re: [PATCH v4 2/5] KVM: arm64: Make stage2_has_fwb global scope
-Thread-Topic: [PATCH v4 2/5] KVM: arm64: Make stage2_has_fwb global scope
-Thread-Index: AQHbx7hvOdgz+9+13kGMQ9RdIeZ6vbPbnvsAgAClaTE=
-Date: Wed, 21 May 2025 00:50:04 +0000
-Message-ID:
- <SA1PR12MB71996C0BCE42A80D60D9384CB09EA@SA1PR12MB7199.namprd12.prod.outlook.com>
-References: <20250518054754.5345-1-ankita@nvidia.com>
- <20250518054754.5345-3-ankita@nvidia.com> <aCyX2nJzBXmQarAJ@linux.dev>
-In-Reply-To: <aCyX2nJzBXmQarAJ@linux.dev>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA1PR12MB7199:EE_|BN7PPF34483F4BA:EE_
-x-ms-office365-filtering-correlation-id: 59779cf8-68ea-4255-1e31-08dd98016cc7
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|7416014|376014|1800799024|366016|38070700018;
-x-microsoft-antispam-message-info:
- =?iso-8859-1?Q?Zw0gODNTNIDW5OEuEj3UIqT6GkVZqXvd4bPkRFJUBG8ZA9XIMGJMQzpIpu?=
- =?iso-8859-1?Q?yj/pia0MCHwg5jlCOP6nTYBgHlZRjUMzYj/GJK4xS9UKtjPh6zr8uDFVVb?=
- =?iso-8859-1?Q?XYxJLgiQoOO3/sNpUnOdKhVdD0os3c/gARO4ZujncHRi7I/X90PljthpZq?=
- =?iso-8859-1?Q?+rbsnSyiyHHGEYHdhFWvAwLHlCJLZeWbAa3+/T8UgVGd8Iw+qZHQqEG9uq?=
- =?iso-8859-1?Q?CG7VBL9/VK8jgaSW15WzJmjgWWD/32BcFuekyAcOO+4KRUHu+TpBRqMph6?=
- =?iso-8859-1?Q?sGXg7TIMsH7j0UmF68HCPLGhKL0rqQgE1HHoNpIcwxOsuDllY0RTeqFjMV?=
- =?iso-8859-1?Q?4F2UhHlNVcglMHzxznPTW/EwI18maBd/OnzqSJOgXDpc7q/DxdxCO5GG++?=
- =?iso-8859-1?Q?VVt5hncfIh4Xr4KeXgWehfpESgIpkfQDicGdjTsgp57MZsDFRwx3c/O/43?=
- =?iso-8859-1?Q?vetoOnGDlLeVHN7j2QgFC5UuqdbtURVDMHhhXyt24g3AbeTR0BaPskY8ZN?=
- =?iso-8859-1?Q?dTIJXh9DBcYAW9m35v7nRxIF5Sbj+du+GJ2embIPtIGJkzopzDzM5sD+4V?=
- =?iso-8859-1?Q?j+Eym0OIzOtUHCVMj3z93F0ubl234t/wzw3C8LuNcSusPwQ/5hmZlkHtqW?=
- =?iso-8859-1?Q?mm8BexIYeTFlTgLZj8enYZiVdk489V08cKJ7CkwEHssJNtIYruHsWWim0R?=
- =?iso-8859-1?Q?M4aLQtjtLmL2sulHjscwD0f79hWxJq/snc4wH1Mkol5v43TZAmpTGZm0Mz?=
- =?iso-8859-1?Q?XDiKe5Q8BGyAXJK7OARIgnGgo76v3gEZG6lnrdKqf3q36VHkkEFkXvo7UL?=
- =?iso-8859-1?Q?TJCtP7jFCmojDYmoN/ftM84u5xxr4A58K+CEbJFlxMid36YHZuk2N1Dqpl?=
- =?iso-8859-1?Q?NBsdIxNctLASnD28db5Gi9ah14G40LE2d28RCEDzjEXwdSpjbd7v57biC6?=
- =?iso-8859-1?Q?4HHTeB8yTxVSIK8qqvtmWek/btKfuzlutSBFGCLJWf5MkyNWQ14QukDjtO?=
- =?iso-8859-1?Q?xeafp1hfq85T+u/AdNP0ZCOq2+k/8KYd/Jlv0TJ3657fTpSe/UReOiheCB?=
- =?iso-8859-1?Q?F7TrdzSR0aoQQCeZZUOoOf6M4675Op8LpkhJWL/BhEs/LHPhqpTlUzMheG?=
- =?iso-8859-1?Q?ov9WeamOgGWgMGv/VZM8OpGNPK2W1wcCTJGXL0X5/4jHsS8G2RzkXE36B3?=
- =?iso-8859-1?Q?eRKn/Y9NOu2pzSxeVso22NkRKNNWpSLixvNIhCQ+yfMt/NUaI+Ss+xlLcX?=
- =?iso-8859-1?Q?dz5JtSqrV8Uhc9vLaV+AxJk22FQIcSm5jX091ZMC06y+MuJXxSYXiLeBHz?=
- =?iso-8859-1?Q?wpBOUJYfH7ptFCrwRLMUiA3F61d4cnlnx2nvTeTqvwpmoMsW9YEsVjOo7U?=
- =?iso-8859-1?Q?2wTOo440CXHwbrueH2uU67vAex7TxDUdUHQiYhQlbXfEtss+V3JbR4Z2+n?=
- =?iso-8859-1?Q?a1YaFgvl0FRbWNLN5qGPS2w6/EBFljOgnxzosCuYggufdBnMCJwTNpG+MD?=
- =?iso-8859-1?Q?cARG+AafPoUVpSvD+nJOnsYQx2orMb9Q302rSrBBcxeqtspUXkGJsZV0wH?=
- =?iso-8859-1?Q?zeCCmZI=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR12MB7199.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?Z4GdNVJDByORACkYCHu4MbqomAkuvC0S/iln8EfsuqRD2GGwB5JcBVQqES?=
- =?iso-8859-1?Q?Dd103rnbJKsnd1pG15u9o490IOuPNZ5eDQ+dSKmZYlBLKZV+7GSkQhLInF?=
- =?iso-8859-1?Q?P9hQkwRgcmYpdjX8UZWwg9wLetFLdH09A93DZv5tVD1Wkxr5dv1F2MdoGy?=
- =?iso-8859-1?Q?BPQTgCn6nC8KMeSAE3GXWIQfwbpa0tqUqMn/q4KX0C2w/r07SQM/u4Bp95?=
- =?iso-8859-1?Q?zBR4/XldVVBc8E9XS0MGWpVH1Lt4VE3uSVN9LDkvY2n/ciSyu3Y8NTvquZ?=
- =?iso-8859-1?Q?ShqsprfEN8YnOyXKDmObs2b/A0CFyzb6IUyWRbVpdwM/Iqfm+l5SLJD0+F?=
- =?iso-8859-1?Q?/+igRO5v9G1qbRbbUGFHMou1dSnEXHIRf1F/tnIf3weN/CVOIc7uB0kfh+?=
- =?iso-8859-1?Q?uqQtlfpv/h8O9l9ZG2H9AANJG89oDenpX2odHm484lleM+9jjO3/Zc1y/7?=
- =?iso-8859-1?Q?N6bTN1pki8DrsjeGGiaBRNEKjK6AHPUTLzLpj7kI4ooCjiw6W31JnHpTGn?=
- =?iso-8859-1?Q?Q3gKfLeF1Qpx1P/KXa1BQJaEcyffWOqR2WvzV3UwCKF5JirVqE4lEzJSiL?=
- =?iso-8859-1?Q?gNm1YdIXxR/vItNE1uqWw3EgQOn/XS9JOob59SVdkeaj10TYCb1x1ViZ45?=
- =?iso-8859-1?Q?uCj86Q6WkXQ23TRYPdwtnNUPUaoqaqrXem1n+2Mz86kB8xM99ueKAUhqfE?=
- =?iso-8859-1?Q?9x0EwP5AkYAcuRz/ojJgRiki2sudNpzRaAc5xiwB+RhHqVQsimxKZbOI+E?=
- =?iso-8859-1?Q?fTt2aJfy31uYtpdBm4fsbkVF0M8nspajxoUTiNtpRwdJRFd+NQlYvh6byU?=
- =?iso-8859-1?Q?fyXtIsjcEnXO0+BCnyNd86dk0fSkWhzrbb2/E9/Pss7O66InsN/7hOGXYT?=
- =?iso-8859-1?Q?/Dk+/qoJ3d7ocQN2Y25QXWDb0mG60/iGogDsNPpxv/5yXgB68yrTHBWkdu?=
- =?iso-8859-1?Q?FoKkpMTT8BPwtRh/kl0WpuN5kSe2ZfEtUgjJDM+/+bDYh0GT+OyUDC0iLt?=
- =?iso-8859-1?Q?zto43oWul9yi8namhG6+vsKxS3X4JK+iWhx4gXmVZqR8+cjg7AbycJAO8R?=
- =?iso-8859-1?Q?S1tJoh89X25U+BReXyYgYos/eE7TtPyTqg6WwdNzJMC0s6l2oYnkcb5vjC?=
- =?iso-8859-1?Q?vGGzn8gn2esn+WCx0Rh4Ef+xodCKykGwlGZBT+Q8eFphaVymot9cNUIDGO?=
- =?iso-8859-1?Q?DZT5xYD57rcJhgTLJhje3s8DFAsuvOZScvklbZDF2OKu1a0MrqGcFWnRvB?=
- =?iso-8859-1?Q?6HsWQtAreAFbX87nOLA9LbYHiw3uNvM4OzXx0En4VYIeXtMPYQYsXn8DiZ?=
- =?iso-8859-1?Q?K31ivPRD3UQZ9J+OAPMpYeiqDFaQUOvjLjiWbiJ5UAexgpqDfkZ04U0WwM?=
- =?iso-8859-1?Q?tOxxqVUpdj0Ho2Q4/mJPnNJrd8OGo5gz0iL10tDwHT5YY9fi+8JHVoqGz1?=
- =?iso-8859-1?Q?1y2vYz2dfHaEHpGdwCOS4etNyBjo0zV6/Sgbm6iTGxJoM12V6yBFbdPhX4?=
- =?iso-8859-1?Q?1WazpgCqc8b95iQ9CypoVIQv8a1Y/+AD/PxCPRPf3aWkEttcSd1Z3REIr/?=
- =?iso-8859-1?Q?BthXfKKWCOJ8i+18Xh7yD0TPyE0HCleDiTGLg6ePL/Z+wImg6asKUzI5Ea?=
- =?iso-8859-1?Q?Ntn+SOIJQl7To=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t6iYY0S8"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-601a67c6e61so26766a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 17:55:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747788935; x=1748393735; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ncdPurYh5hOloTnF5wYlf3UcK9wRpi+Q0GSN2FGpFac=;
+        b=t6iYY0S8F9uuz9aTdTGzVi/0cVIoOe4P+CoySV6Esk6I3hSqPnSlxEmZhR2u8jyazn
+         laZVf6RcIc8ELzwaMXmGfjzYQ8SAbIjv4IFXfTyBXM/E2W9nI/tqpf0c0HJx+zg9X3sz
+         MrOKJYrk8wCe3/BhQA8zA8uJZgW8q7sbB3N8j9nihnoyI+ojilBL6Z254QfkP518+Apm
+         RInyo800CxqXW7BcYy9iFqfufCYmQIQopHLq7I/jexZVzzUpOgT/QeaOq4HuXYfFUAj/
+         onx4WCI5hOEMWO5M/hYPiQC7vlPQlLNsr6vNaGwalY60y67tv0cTfeeC46JBlAtkvmy/
+         q+hA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747788935; x=1748393735;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ncdPurYh5hOloTnF5wYlf3UcK9wRpi+Q0GSN2FGpFac=;
+        b=YxMfwJ/m5ka3Xw/ZqXWZGeuHDJkhWq8QDCcImDKy9SWELtWAN1K85RmN4nS5X2J9M9
+         GnwAAWtvZY3s5pMrx5Vg/CGxqTasklJ1cCyrYSI4cAvW7yIi9W5JXiTvkJZ67ENwPlaf
+         rh8eQPl//ofs1z9SW6Tnnok0oWTwVtmigW7TInPPuSAHyIxNDxogPlkqhs+vo6pUgWp/
+         VE63BmP66Qi+L5WQ67Mh0PZyxeH/IFhQSgkN9p4TjSMnqux4IYUmLz2Iw/DJn+9i562/
+         2SQlW6kxiCAOyPo9zV6sRkU383Ml+/s95gTGQ5fqrzH3HageMJUAwtgXhQSkxUPHFXXU
+         m3iA==
+X-Forwarded-Encrypted: i=1; AJvYcCVNRNoglK9PspAodI+Ajr0Z1R1zmJpuoQmGOmuMLzeo6icZyXoIPqe+T6Xm74RQILcO5z5UlPtmV3UwY90=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjVPvBLs/diJu25zl1gm+cVpvrMy8PARyXfuZt4GKYJbgItX+C
+	zF/wU9mb7wPFl6lpCAdo0qD4yfFPAQaxTu+GboBh+aQ5uIyfLOCdcsDklvPnnJbURh4PPHwhEJm
+	JglPWTBjHtyJVANZVu1JUx/RI6FObHq49dJTI+F+k
+X-Gm-Gg: ASbGncuLsN5drt/vrGUtmwzsgxCUQmX8UpmDYjV4lfDbn9WgSbOZ0KiSASlvpPyeizN
+	zfPqbVM3iSzbVjbvNqfxeluLysBuOR8VSqBoV8gFdzbwDGfR5qBvWhDHVdhh83f9kigbEn6lM7N
+	KZoeWJ0B0kfafOgUSC/T/GXKLVKSvBEfxqDQOd0DTR4fL5DOeoL330u1RIK38zyXal1ITHoKpN
+X-Google-Smtp-Source: AGHT+IG1IjnHi54Q+N8idfo93JIC1frTSBUwH3gzuDMjjhBz9G/MzDcANwRogNTzPUUfNYSoKlZHrVja9CDjA4RXL78=
+X-Received: by 2002:a05:6402:14d5:b0:601:233a:4f4d with SMTP id
+ 4fb4d7f45d1cf-6019bf2f776mr370366a12.2.1747788934322; Tue, 20 May 2025
+ 17:55:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR12MB7199.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 59779cf8-68ea-4255-1e31-08dd98016cc7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 May 2025 00:50:04.3422
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: X5wmu7lj7j6CBlm8Y4aNwiF0MrnLTsGWJbyVHKBr5b0sZZ5rkHB7Ln6QCH0IURC3ZoLOnbbyygZ3vR4UV4HCyA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PPF34483F4BA
+References: <20250520122838.29131f04@hermes.local> <20250521004207.10514-1-kuniyu@amazon.com>
+In-Reply-To: <20250521004207.10514-1-kuniyu@amazon.com>
+From: Jann Horn <jannh@google.com>
+Date: Wed, 21 May 2025 02:54:58 +0200
+X-Gm-Features: AX0GCFtQXlIu9odOXoeE-q7wbNaaPaAzIzGo4QIICbt2W9dOwceP8yBMza1qmTI
+Message-ID: <CAG48ez0r4A7iMXzBBdPiHWycYSAGSm7VFWULCqKQPXoBKFWpEw@mail.gmail.com>
+Subject: Re: [PATCH v8 0/9] coredump: add coredump socket
+To: Kuniyuki Iwashima <kuniyu@amazon.com>
+Cc: stephen@networkplumber.org, alexander@mihalicyn.com, brauner@kernel.org, 
+	daan.j.demeyer@gmail.com, daniel@iogearbox.net, davem@davemloft.net, 
+	david@readahead.eu, edumazet@google.com, horms@kernel.org, jack@suse.cz, 
+	kuba@kernel.org, lennart@poettering.net, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	luca.boccassi@gmail.com, me@yhndnzj.com, netdev@vger.kernel.org, 
+	oleg@redhat.com, pabeni@redhat.com, serge@hallyn.com, viro@zeniv.linux.org.uk, 
+	zbyszek@in.waw.pl
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
->>=0A=
->> Change the scope of stage2_has_fwb as it will be used in=0A=
->> broader KVM code to determine whether the FWB feature is=0A=
->> supported by the hardware.=0A=
->=0A=
-> Please just use the cpucap directly outside of the page table code. The=
-=0A=
-> only non-FWB stage-2 that KVM maintains on a FEAT_S2FWB machine is for=0A=
-> the host when using protected mode. I don't anticipate that changing any=
-=0A=
-> time soon.=0A=
-=0A=
-Thanks Oliver for reviewing the change.=0A=
-=0A=
-I'll remove this patch and make the change to use=0A=
-cpus_have_final_cap(ARM64_HAS_STAGE2_FWB) instead of stage2_has_fwb()=0A=
-in the next version.=0A=
-=0A=
-> Thanks,=0A=
-> Oliver=0A=
-=0A=
-=0A=
-=0A=
-=0A=
+On Wed, May 21, 2025 at 2:42=E2=80=AFAM Kuniyuki Iwashima <kuniyu@amazon.co=
+m> wrote:
+> From: Stephen Hemminger <stephen@networkplumber.org>
+> Date: Tue, 20 May 2025 12:28:38 -0700
+> > On Fri, 16 May 2025 13:25:27 +0200
+> > Christian Brauner <brauner@kernel.org> wrote:
+> >
+> > > Coredumping currently supports two modes:
+> > >
+> > > (1) Dumping directly into a file somewhere on the filesystem.
+> > > (2) Dumping into a pipe connected to a usermode helper process
+> > >     spawned as a child of the system_unbound_wq or kthreadd.
+> > >
+> > > For simplicity I'm mostly ignoring (1). There's probably still some
+> > > users of (1) out there but processing coredumps in this way can be
+> > > considered adventurous especially in the face of set*id binaries.
+> > >
+> > > The most common option should be (2) by now. It works by allowing
+> > > userspace to put a string into /proc/sys/kernel/core_pattern like:
+> > >
+> > >         |/usr/lib/systemd/systemd-coredump %P %u %g %s %t %c %h
+> > >
+> > > The "|" at the beginning indicates to the kernel that a pipe must be
+> > > used. The path following the pipe indicator is a path to a binary tha=
+t
+> > > will be spawned as a usermode helper process. Any additional paramete=
+rs
+> > > pass information about the task that is generating the coredump to th=
+e
+> > > binary that processes the coredump.
+> > >
+> > > In the example core_pattern shown above systemd-coredump is spawned a=
+s a
+> > > usermode helper. There's various conceptual consequences of this
+> > > (non-exhaustive list):
+> > >
+> > > - systemd-coredump is spawned with file descriptor number 0 (stdin)
+> > >   connected to the read-end of the pipe. All other file descriptors a=
+re
+> > >   closed. That specifically includes 1 (stdout) and 2 (stderr). This =
+has
+> > >   already caused bugs because userspace assumed that this cannot happ=
+en
+> > >   (Whether or not this is a sane assumption is irrelevant.).
+> > >
+> > > - systemd-coredump will be spawned as a child of system_unbound_wq. S=
+o
+> > >   it is not a child of any userspace process and specifically not a
+> > >   child of PID 1. It cannot be waited upon and is in a weird hybrid
+> > >   upcall which are difficult for userspace to control correctly.
+> > >
+> > > - systemd-coredump is spawned with full kernel privileges. This
+> > >   necessitates all kinds of weird privilege dropping excercises in
+> > >   userspace to make this safe.
+> > >
+> > > - A new usermode helper has to be spawned for each crashing process.
+> > >
+> > > This series adds a new mode:
+> > >
+> > > (3) Dumping into an AF_UNIX socket.
+> > >
+> > > Userspace can set /proc/sys/kernel/core_pattern to:
+> > >
+> > >         @/path/to/coredump.socket
+> > >
+> > > The "@" at the beginning indicates to the kernel that an AF_UNIX
+> > > coredump socket will be used to process coredumps.
+> > >
+> > > The coredump socket must be located in the initial mount namespace.
+> > > When a task coredumps it opens a client socket in the initial network
+> > > namespace and connects to the coredump socket.
+> >
+> >
+> > There is a problem with using @ as naming convention.
+> > The starting character of @ is already used to indicate abstract
+> > unix domain sockets in some programs like ss.
+> > And will the new coredump socekt allow use of abstrace unix
+> > domain sockets?
+>
+> The coredump only works with the pathname socket, so ideally
+> the prefix should be '/', but it's same with the direct-file
+> coredump.  We can distinguish the socket by S_ISSOCK() though.
+
+The path lookups work very differently between COREDUMP_SOCK and
+COREDUMP_FILE - they are interpreted relative to different namespaces,
+and they run with different privileges, and they do different format
+string interpretation. I think trying to determine dynamically whether
+the path refers to a socket or to a nonexistent location at which we
+should create a file (or a preexisting file we should clobber) would
+not be practical, partly for these reasons.
+
+Also, fundamentally, if we have the choice between letting userspace
+be explicit about what it wants, or trying to guess userspace's intent
+from the kernel, I think we should always go for being explicit.
+
+So I guess it could be reasonable to bikeshed the prefix letter and
+turn '@' into some other character that is not overloaded with another
+meaning in this context, like '>'; but I don't think we should be
+changing the overall approach because of this.
