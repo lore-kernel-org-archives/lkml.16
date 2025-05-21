@@ -1,269 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8325725A359;
-	Wed, 21 May 2025 10:05:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DB9423BCF4;
+	Wed, 21 May 2025 10:06:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747821938; cv=none; b=K0evr6MBYkZ90a6XhijCUiixuIWADnjRi9MoCw/QyjJOtMA4GnTa/9ro62J98ZNJkC4GmBPPd5SgX7LGRS8ttWa545nAuM7Pk9Kb5DPf1Hg6554KEEsg+d8OQyoSeHDPzQdwdlkw/J7fsx2vOEWMV3ETAjTvscM51DT+S68iQTA=
+	t=1747822000; cv=none; b=bTdovuO3qGdPQ9phe6XgEQNahHMA7mEs5H805Pd3xYUghhqoFrBXO7Viza2L9DenDUvKmIXEaXQSPgEu9YWc3tHkAtaAQXUsGFg7XloJuCBTDYJRvT6u622wdm3aFcADw0uTrcDthZDk5tHzgJg3BU3dl0aVdOVXyM9EqTiRtjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747821938; c=relaxed/simple;
-	bh=qF0sf5/kYu9pbScNuapYhsVL4yTaC3+FjQYRqrPusGo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N6ZP/x0kdMLDyveixAo8QcdsgmAeKOlSfFSwdA2kNW5J6JI30C35A+xrCC82fTtyMQrlWcP3xFRoJa0Wc7TIUNGlhoZZYwaENf5WccBiGK5NEQjgcDTMx60htuROOjZ/asc5039x+5Czh2VSdH5qlmrurpNqCbgYrUCbaa4YRHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nG2P98iy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747822000; c=relaxed/simple;
+	bh=/66uzKbD2Pt/moi6vCnG0yTy0xxQ1qdjvrWSrTVybq4=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=ToZ7HqL48KnArwhlE4j8yTx0x8JrNPOJgTnNzhH0PAKrT9X20fhOgit0fXcBuPrLRQDbMGEcCJJ0Mw82N3soG4MxmKyQfVcVorGCVKse+8gPJ0d/Qgh4R29cS6m5zcpKIZNnZMfvYQbxeHcrua4PqhD9ALfcnu1EboBRVXFfQ5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Nwufn/BP; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nG2P98iy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FC05C4CEE4;
-	Wed, 21 May 2025 10:05:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747821938;
-	bh=qF0sf5/kYu9pbScNuapYhsVL4yTaC3+FjQYRqrPusGo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nG2P98iy6mzm1RGqRoKNSrIcJ6NUHosfIAAMZguURxwk4ihFikJ9pRmolg77CeLo9
-	 1jlJ5tyoRWCx9wtLcnl/QMX1tif71pFpbSnaGcv9DawvPB1rwReJQetx37AD7x6QsG
-	 U73RsqMqXX59Q/fIhsvqxfncnXf1NsU0CVK8dyI027QReAXg784/oWM4VLkzZMzA4r
-	 K20iNB74v3CZY7KOtHsdD7kaWGvNyVpwW+QeNnEAEM916BtkeVqGk+6WKa89aYk+gY
-	 uXQGL3pRtiF98xqxfIaTulxxGgC2+tPKY+JW19xajIs3m3DKq/haJqG5QtRRrx9vob
-	 UrY9YNNsaxbOA==
-Date: Wed, 21 May 2025 12:05:35 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Vincent Knecht <vincent.knecht@mailoo.org>
-Cc: Robert Foss <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>, 
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	=?utf-8?B?QW5kcsOp?= Apitzsch <git@apitzsch.eu>, phone-devel@vger.kernel.org, 
-	~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH 3/4] media: dt-bindings: Add qcom,msm8939-camss
-Message-ID: <20250521-fast-almond-chihuahua-3e0a62@kuoka>
-References: <20250520-camss-8x39-vbif-v1-0-a12cd6006af9@mailoo.org>
- <20250520-camss-8x39-vbif-v1-3-a12cd6006af9@mailoo.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Nwufn/BP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747821998; x=1779357998;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=/66uzKbD2Pt/moi6vCnG0yTy0xxQ1qdjvrWSrTVybq4=;
+  b=Nwufn/BPDXbNEbXnQiGIZPrxL6URobbQNYNirNV2ioxDoFm7GiWc0UbF
+   7BM7+ke9ppBBDXjtkex04c/4mqlCv6Rw/nTOumz2NiPUhxeJSa48ERve1
+   wGnpGSxpv8z0m1VJwV0VriXmBUUVLCy8FQ0+V8TNgiClOU3i8ygHmiJyD
+   P0PyBWW+POoF7TxQzOOxFDaGkmkiXgQlu5RZOsNSm8XIR7f/kyfWrpjJo
+   H7ZBOkW/BPvXgrFZckOM581P9xjpmoVp4E1iDcmZ99awsLSslIluYqAOc
+   /x3m2Q4e8214GJA5MbzsJSiPKb0dGI7JcIZhHEV4tw2uzqhyEikCFuQyO
+   g==;
+X-CSE-ConnectionGUID: ooyqN10rRXWW+9/pr2G/Cw==
+X-CSE-MsgGUID: kM8hmALHQRiAzXZhBNGiiA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="49851703"
+X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
+   d="scan'208";a="49851703"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 03:06:37 -0700
+X-CSE-ConnectionGUID: F28VW0UoT6e7arA1XbwwQg==
+X-CSE-MsgGUID: yzbKDZP+SmGyofNmWssABQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
+   d="scan'208";a="141053400"
+Received: from dalessan-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.244.221])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 03:06:29 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 21 May 2025 13:06:25 +0300 (EEST)
+To: Bjorn Helgaas <helgaas@kernel.org>
+cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>, 
+    Karolina Stolarek <karolina.stolarek@oracle.com>, 
+    Weinan Liu <wnliu@google.com>, 
+    Martin Petersen <martin.petersen@oracle.com>, 
+    Ben Fuller <ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, 
+    Anil Agrawal <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, 
+    Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, 
+    Lukas Wunner <lukas@wunner.de>, 
+    Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+    Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney" <paulmck@kernel.org>, 
+    Mahesh J Salgaonkar <mahesh@linux.ibm.com>, 
+    Oliver O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>, 
+    Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>, 
+    Terry Bowman <terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>, 
+    Dave Jiang <dave.jiang@intel.com>, LKML <linux-kernel@vger.kernel.org>, 
+    linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>, 
+    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kwilczynski@kernel.org>
+Subject: Re: [PATCH v7 01/17] PCI/DPC: Initialize aer_err_info before using
+ it
+In-Reply-To: <20250520215047.1350603-2-helgaas@kernel.org>
+Message-ID: <b74260bc-9991-1590-91e1-97e77ae0fa41@linux.intel.com>
+References: <20250520215047.1350603-1-helgaas@kernel.org> <20250520215047.1350603-2-helgaas@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250520-camss-8x39-vbif-v1-3-a12cd6006af9@mailoo.org>
+Content-Type: multipart/mixed; boundary="8323328-302389236-1747821985=:946"
 
-On Tue, May 20, 2025 at 08:39:08PM GMT, Vincent Knecht wrote:
-> Add bindings for qcom,msm8939-camss in order to support the camera
-> subsystem for MSM8939.
-> 
-> Signed-off-by: Vincent Knecht <vincent.knecht@mailoo.org>
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323328-302389236-1747821985=:946
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+
+On Tue, 20 May 2025, Bjorn Helgaas wrote:
+
+> From: Bjorn Helgaas <bhelgaas@google.com>
+>=20
+> Previously the struct aer_err_info "info" was allocated on the stack
+> without being initialized, so it contained junk except for the fields we
+> explicitly set later.
+>=20
+> Initialize "info" at declaration so it starts as all zeros.
+>=20
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> Tested-by: Krzysztof Wilczy=C5=84ski <kwilczynski@kernel.org>
+> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux=
+=2Eintel.com>
 > ---
->  .../bindings/media/qcom,msm8939-camss.yaml         | 269 +++++++++++++++++++++
->  1 file changed, 269 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/qcom,msm8939-camss.yaml b/Documentation/devicetree/bindings/media/qcom,msm8939-camss.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..e300b2c84971a45cca43366817a5ed70f9bae630
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/qcom,msm8939-camss.yaml
-> @@ -0,0 +1,269 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/media/qcom,msm8939-camss.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm MSM8939 Camera Subsystem (CAMSS)
-> +
-> +maintainers:
-> +  - Vincent Knecht <vincent.knecht@mailoo.org>
-> +
-> +description:
-> +  The CAMSS IP is a CSI decoder and ISP present on Qualcomm platforms
-> +
-> +properties:
-> +  compatible:
-> +    const: qcom,msm8939-camss
-> +
+>  drivers/pci/pcie/dpc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+> index df42f15c9829..3daaf61c79c9 100644
+> --- a/drivers/pci/pcie/dpc.c
+> +++ b/drivers/pci/pcie/dpc.c
+> @@ -258,7 +258,7 @@ static int dpc_get_aer_uncorrect_severity(struct pci_=
+dev *dev,
+>  void dpc_process_error(struct pci_dev *pdev)
+>  {
+>  =09u16 cap =3D pdev->dpc_cap, status, source, reason, ext_reason;
+> -=09struct aer_err_info info;
+> +=09struct aer_err_info info =3D {};
+> =20
+>  =09pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
+>  =09pci_read_config_word(pdev, cap + PCI_EXP_DPC_SOURCE_ID, &source);
+>=20
 
-No reg? No reg-names?
+Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
 
-> +  clocks:
-> +    minItems: 24
-> +    maxItems: 24
-> +
-> +  clock-names:
-> +    items:
-> +      - const: top_ahb
-> +      - const: ispif_ahb
-> +      - const: csiphy0_timer
-> +      - const: csiphy1_timer
-> +      - const: csi0_ahb
-> +      - const: csi0
-> +      - const: csi0_phy
-> +      - const: csi0_pix
-> +      - const: csi0_rdi
-> +      - const: csi1_ahb
-> +      - const: csi1
-> +      - const: csi1_phy
-> +      - const: csi1_pix
-> +      - const: csi1_rdi
-> +      - const: csi2_ahb
-> +      - const: csi2
-> +      - const: csi2_phy
-> +      - const: csi2_pix
-> +      - const: csi2_rdi
-> +      - const: ahb
-> +      - const: vfe0
-> +      - const: csi_vfe0
-> +      - const: vfe_ahb
-> +      - const: vfe_axi
-> +
-> +  interrupts:
-> +    minItems: 7
-> +    maxItems: 7
-> +
-> +  interrupt-names:
-> +    items:
-> +      - const: csiphy0
-> +      - const: csiphy1
-> +      - const: csid0
-> +      - const: csid1
-> +      - const: csid2
-> +      - const: ispif
-> +      - const: vfe0
-> +
-> +  iommus:
-> +    maxItems: 1
-> +
-> +  power-domains:
-> +    items:
-> +      - description: VFE GDSC - Video Front End, Global Distributed Switch Controller.
-> +
-> +  ports:
-> +    $ref: /schemas/graph.yaml#/properties/ports
-> +
-> +    description:
-> +      CSI input ports.
-> +
-> +    properties:
-> +      port@0:
-> +        $ref: /schemas/graph.yaml#/$defs/port-base
-> +        unevaluatedProperties: false
-> +        description:
-> +          Input port for receiving CSI data.
-> +
-> +        properties:
-> +          endpoint:
-> +            $ref: video-interfaces.yaml#
-> +            unevaluatedProperties: false
-> +
-> +            properties:
-> +              data-lanes:
-> +                minItems: 1
-> +                maxItems: 4
-> +
-> +              bus-type:
-> +                enum:
-> +                  - 4 # MEDIA_BUS_TYPE_CSI2_DPHY
-> +
-> +            required:
-> +              - data-lanes
-> +
-> +      port@1:
-> +        $ref: /schemas/graph.yaml#/$defs/port-base
-> +        unevaluatedProperties: false
-> +        description:
-> +          Input port for receiving CSI data.
-> +
-> +        properties:
-> +          endpoint:
-> +            $ref: video-interfaces.yaml#
-> +            unevaluatedProperties: false
-> +
-> +            properties:
-> +              data-lanes:
-> +                minItems: 1
-> +                maxItems: 4
-> +
-> +              bus-type:
-> +                enum:
-> +                  - 4 # MEDIA_BUS_TYPE_CSI2_DPHY
-> +
-> +            required:
-> +              - data-lanes
-> +
-> +  reg:
-> +    minItems: 11
-> +    maxItems: 11
+--=20
+ i.
 
-OK, here they are. reg should follow compatible.
-
-> +
-> +  reg-names:
-> +    items:
-> +      - const: csiphy0
-> +      - const: csiphy0_clk_mux
-> +      - const: csiphy1
-> +      - const: csiphy1_clk_mux
-> +      - const: csid0
-> +      - const: csid1
-> +      - const: csid2
-> +      - const: ispif
-> +      - const: csi_clk_mux
-> +      - const: vfe0
-> +      - const: vfe0_vbif
-> +
-> +  vdda-supply:
-> +    description:
-> +      Definition of the regulator used as analog power supply.
-> +
-> +required:
-> +  - clock-names
-> +  - clocks
-> +  - compatible
-
-Totally messed order. Keep the same order as in properties. See also DTS
-coding style.
-
-> +  - interrupt-names
-> +  - interrupts
-> +  - iommus
-> +  - power-domains
-> +  - reg
-> +  - reg-names
-> +  - vdda-supply
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/clock/qcom,gcc-msm8939.h>
-> +
-> +    camss: camss@1b0ac00 {
-
-Drop unused label
-
-> +      compatible = "qcom,msm8939-camss";
-> +
-
-Follow DTS coding style.
-
-...
-
-> +      vdda-supply = <&reg_2v8>;
-> +
-> +      ports {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-
-Incomplete example.
-
-> +      };
-> +
-
-Drop redundant blank line.
-
-Best regards,
-Krzysztof
-
+--8323328-302389236-1747821985=:946--
