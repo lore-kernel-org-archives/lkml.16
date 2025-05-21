@@ -1,273 +1,206 @@
-Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11021094.outbound.protection.outlook.com [52.101.62.94])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA00C1A5B86;
-	Wed, 21 May 2025 17:28:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.62.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747848527; cv=fail; b=DXIPr3SYlL1qI8ntyOMRMI7YzSGhuW69mu4pvNpzEBWiobB6NFkyuJ4TomUJ+C1pfow87ajLhNNwk/RYyYkR9DYA3InoHotTm5BixH41XszICXbkwFU0z97DdDk7PaRALG4aDQJexJx2kMcJlHtzDNDJfzoabJ1J3l7XmMbY1xY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747848527; c=relaxed/simple;
-	bh=AiRwuqE7g+2fbtYrfWBrOvhl7gAcT5DX8soNvUIiLCk=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=a8PT59QuK5nUlDz58BqgEfF4Z3RVxZQFYxhQ4eXSKmYiJGvGPxX17yG9MREmVNh88pT2G0eFHOAlLIDqrDwdysr6nDWiPsY8eLYLX5J45W2IhU2GQFSyTeOgaed+NZSUqEmm7YuTacHEWzhdv5cgRVq7JFYzFt9FntxaP/DxNFo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=FB8F5eCs; arc=fail smtp.client-ip=52.101.62.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B560289824;
+	Wed, 21 May 2025 17:28:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747848528; cv=none; b=fsvQ+7arIli5+lliw1voKeIKh7LvU/fIkDiWFbNxmJbVE4LOVtAQGK9vIzXhqmHqdaaOJ6lMVDKdwqxr6UP2tiUjlYRKLSu4U46YNK5rDjkTN3TAnlfkVP04OIX+py7JSqInsDqvz4KJsMG0KY2MuhApzNqpjzBBc7ttN3ekR+4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747848528; c=relaxed/simple;
+	bh=HK/f2OC27kw7E2aDKCk4nq2rlgz3dZYbc65P0dIeI8g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=B0uGs4oaPvXKBvFFihdeWCrT2EgMfapiJCxhISjNQVd88dY/AyeanugOXBx97BVHTZzsk/+qJ3r6LqAVWCPMT3akVv0QCOofp7UsbGAuYqudSzhqPxdz+Qs2IHvKZT3n5wl8rRTwYSQCVJ23OaoJpv7hskvaqvA+DAMP1OS2d7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NAiz5sXK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="FB8F5eCs"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=pOLvTR3tnCqngn7y0tYaouFbOHgXe2S5G3/d9yUWFQXzrZERCFN2QbLvuhNXxMRBeHzeIwTnqjXbsFV0mzSo7qPTWiGkRYwecb8CqeEE6uwIc7YYxCKiQzqpN5SHSXgOB25u6cN+fu3Po9wVl6Z426Z5NcA+Z+A8AwLwfgBXJokO9/RNz4k1FHJrMYgepOMzMtoj/1+obIHMPkT+W+ucrG5Shb6KBhi9CnquiPMc/8DMgQD/7EQNFOUJv3leaZYMPZ0TwphVPTkrnm0ZPXSy0hIZX6H9BzzJ+89uTmjWWGnlDjkJp95UxwRvExinqApRmQrTu5BLDRikEdA1HGaDRw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=20EhX3nT1OakEECAAAaFF1f4Roh44luGRXPWndMq+Ho=;
- b=e/ZjnArho5rLZNxBcMrZWQbBtU1c09MrL9eup6AmpdPVCFxRLK1YaiG5wunVs3ZFrLmhFDiVolAbrBTqxaJQu4stVQrf7kdaDfLeKjTOj3+sMvXV1xQ4odmH+2xxlRpIs9GcAhL4V9wGJz13ZyjQxosGKbGFZnYB4HDRn7HIo5pbySuqU30utgjERhEcaqoyYaQYx0QHHq6B92lD/DXrFDcLWv2gSXHk0fd+uJVDA2ipeFO8B02uH1pqZ8aey4AwNiWz32apjHbznks9SXNC7siQiRrUS0mvUvbQlgBCPuHMOeJK7flFQsXnOPsyPA/3W1EgraLXBCu2QdItUyQCLA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=20EhX3nT1OakEECAAAaFF1f4Roh44luGRXPWndMq+Ho=;
- b=FB8F5eCskK4D7HyDNndzig0mF2tJdohuN2JyOG8dZHWk+g71DRLZ7nDPv+stPixdcX88m331AY+JCT5x11JzUvXwHQ40t+KBWdl+r1XMELzgpENLdDarghLVZefdWsopOo6PdwBv9ZjaICvMTp+Wr4/G3o05qrb415fL+7BwG18=
-Received: from MN0PR21MB3437.namprd21.prod.outlook.com (2603:10b6:208:3d2::17)
- by BL1PR21MB3139.namprd21.prod.outlook.com (2603:10b6:208:397::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.18; Wed, 21 May
- 2025 17:28:40 +0000
-Received: from MN0PR21MB3437.namprd21.prod.outlook.com
- ([fe80::5125:461:1c07:1a97]) by MN0PR21MB3437.namprd21.prod.outlook.com
- ([fe80::5125:461:1c07:1a97%4]) with mapi id 15.20.8769.019; Wed, 21 May 2025
- 17:28:34 +0000
-From: Haiyang Zhang <haiyangz@microsoft.com>
-To: Simon Horman <horms@kernel.org>
-CC: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, Dexuan Cui
-	<decui@microsoft.com>, "stephen@networkplumber.org"
-	<stephen@networkplumber.org>, KY Srinivasan <kys@microsoft.com>, Paul
- Rosswurm <paulros@microsoft.com>, "olaf@aepfle.de" <olaf@aepfle.de>,
-	"vkuznets@redhat.com" <vkuznets@redhat.com>, "davem@davemloft.net"
-	<davem@davemloft.net>, "wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"edumazet@google.com" <edumazet@google.com>, "kuba@kernel.org"
-	<kuba@kernel.org>, "pabeni@redhat.com" <pabeni@redhat.com>, "leon@kernel.org"
-	<leon@kernel.org>, Long Li <longli@microsoft.com>,
-	"ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
-	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-	"daniel@iogearbox.net" <daniel@iogearbox.net>, "john.fastabend@gmail.com"
-	<john.fastabend@gmail.com>, "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-	"ast@kernel.org" <ast@kernel.org>, "hawk@kernel.org" <hawk@kernel.org>,
-	"tglx@linutronix.de" <tglx@linutronix.de>, "shradhagupta@linux.microsoft.com"
-	<shradhagupta@linux.microsoft.com>, "andrew+netdev@lunn.ch"
-	<andrew+netdev@lunn.ch>, Konstantin Taranov <kotaranov@microsoft.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [EXTERNAL] Re: [PATCH net-next,v2] net: mana: Add support for
- Multi Vports on Bare metal
-Thread-Topic: [EXTERNAL] Re: [PATCH net-next,v2] net: mana: Add support for
- Multi Vports on Bare metal
-Thread-Index: AQHbyNn8vVCGUyGze06AyBI1ln70urPdIEiAgAAzRTA=
-Date: Wed, 21 May 2025 17:28:33 +0000
-Message-ID:
- <MN0PR21MB34373B1A0162D8452018ABAACA9EA@MN0PR21MB3437.namprd21.prod.outlook.com>
-References: <1747671636-5810-1-git-send-email-haiyangz@microsoft.com>
- <20250521140231.GW365796@horms.kernel.org>
-In-Reply-To: <20250521140231.GW365796@horms.kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=6a708164-7a8e-410d-8122-0ca75553fb8f;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2025-05-21T17:06:01Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
- 3, 0, 1;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MN0PR21MB3437:EE_|BL1PR21MB3139:EE_
-x-ms-office365-filtering-correlation-id: 2888f9b5-c129-43cd-6d23-08dd988ce9b0
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|366016|7416014|376014|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?69AivwsuQZevk0AlvIJGVRGU+2s8e+/Jk3qhv+UYzjIHhDkOo1MMrwNT7rzk?=
- =?us-ascii?Q?Cjcb1ZsaaWCBVJOBItGXFhKnD6mkxkamhR6c76c3xsAcXeVeq6vJNecRDfAe?=
- =?us-ascii?Q?pTaM/0I7uqS7q91wiVciJ3usUAo+mLJmQZf+dMgQkYQMJ4b65fevJbVWhrXa?=
- =?us-ascii?Q?Qx3E3MHeCk3p2rVSEimWhOLWogKkz6wVn4HggV2rpB+WsefOzfDE9069o5z5?=
- =?us-ascii?Q?XQBeRBptnOKkB+Qgb6uMMPxFDAjYPpfQ0SiQZgbgEdG7lzcCJbURe/uQfOWZ?=
- =?us-ascii?Q?VaS0rzg32QFzILEr3pA9eFEhH9f5aa9rdboha6SpV4o4/xWHYkbdqhsKCpiX?=
- =?us-ascii?Q?CXpTr84UbMnjcmw/sBrNfcycLPszuA8r4lumtEv+krgQ7GNzx24gJekpLi/A?=
- =?us-ascii?Q?lEsvQt4LZDGQq5ow2EAlfEl86SZy0Ac6i0bb5KYE9abuGpvrzVGC4jyBKQCu?=
- =?us-ascii?Q?qYaqk3oHiuUqXtTfqNlssMrGkJFkDrNnN3a+r8G7Y150w00XwL5uraR1rGJv?=
- =?us-ascii?Q?FV/taV/hzh3kVbMl7i29+PPQXE/rG/O9LyiYk25LqcLp1U/5Bcdhv8tkKRzo?=
- =?us-ascii?Q?jFn8LwKgpy19tceF80Tu6DmWRD0iAuOstuxeL3rothYMdSvQSpVFOErrUemo?=
- =?us-ascii?Q?00W5WMaG4I9enU0bmgaroKbKRHGgrgGfH+sKfDzzhqWSCUIPjZkvEUv2+wPO?=
- =?us-ascii?Q?q0h/SHiE6BuGO6+e2CJ3dRIO5LYGlq3ZZou9jBX0cZiLS3Dx/JehJdRywUi6?=
- =?us-ascii?Q?kNJ7q5I5axseSqGoNM7FH6Ahv2qSiOmy26GtAYpbFTv0ILKl2hQap5cnh2mB?=
- =?us-ascii?Q?M7zLL59rH0o/cqdOwhbNMbIdxe8920uEFsAcfWd9+Wg8RgqM+EwT1twXqn6p?=
- =?us-ascii?Q?D6AiXW88eU9DHkEx+CfMF9FvZPdI0IyETbGnLeUxgdNmWDw5fF8J52Ox85To?=
- =?us-ascii?Q?l4HF+lsgs9RY/rgdaGYmggY/2K2yOjVMT6zrqSlysLXdlvpWnXeVWn0cZiBb?=
- =?us-ascii?Q?qIWZ6dZkT2iPTFUm0j0071KOxrNnyJK94+mlIKkW4WN1BYNavy3qnZj0Qktq?=
- =?us-ascii?Q?B2/RaoenD3cM8ZvQkLl4flZLaAEmPwnKS/t3egubO134OBK9u1AtlONlsNSQ?=
- =?us-ascii?Q?+8ArF+9oeILrZoC/OSsdKTF4+VtGRjtJ5N8apO+gRq5SKjCaMUmutQzoKRXY?=
- =?us-ascii?Q?YaLHTBIv4GKgv8jPtaxNRSCM+uaD3Ud8wmVSDofyKIiAj4dt/6hMZjvzYq7b?=
- =?us-ascii?Q?Kkm8qVocyQQcKIXGhV7LJ7peC/1Exmappji1AA6qwymfoZVhYJFuUMwfTrGP?=
- =?us-ascii?Q?Zy6yJUUPgCRoKC25lVXD8EzlxCYSL+q+QwAbxb955nulnYchS52ww/+/j5qi?=
- =?us-ascii?Q?LxZv6xWF6jSVpGb/D55TtDiTNXeTJRFt8Xo/QtatWaZP4zGtoRv9NKUBSJZ/?=
- =?us-ascii?Q?MujBkywwgnRL3OTqzbni4P2baIxV9YEVrvRbBY04Nx9hEQI8RMJIkw=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR21MB3437.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(38070700018);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?Y6/UDguKWEtih6W/vuye9L87hfXTXYQWy1pP8RblMq/w0CbUGTTyYYWvMy3k?=
- =?us-ascii?Q?qboDF6vZ3nkDBMWt9K+cl0WcggNuyQGHIOSzh4LHJ/Nkzf4LHox1aQRsJSyy?=
- =?us-ascii?Q?RXjYx8dMSS/7SjL8u7DKli+huD6OrKbrHMmKZcjpyiBSUZko2FW2ehrETK5p?=
- =?us-ascii?Q?/Z0+KyepbfBnIuukeNvKTXCdZ8tq9j21t1HxVvJmhdptfOfx7G3iFaigyYmI?=
- =?us-ascii?Q?OVgyvHf+/QSax/WDOJqMqEzboGTpCUt+aY5Xz5JO7aSkNBIE9iDR8YvoDP8c?=
- =?us-ascii?Q?/wMGEIvN+1jhAqB0J58Mo981kBjQgB+veTm49YX9E4GDM2wVzNm2M51TZx/h?=
- =?us-ascii?Q?7lrfqb8vXfMESZUUI6lG/2IyHAG45OtNAUQV5HYhkS9pLVIJ762NtsZx+6f7?=
- =?us-ascii?Q?JswWOwUcDQ0W9oKE//emoop4rI9vHQSVAYjGzmvtE+mX1NfIh3E+uiawoU12?=
- =?us-ascii?Q?rErM5YSmLfCu6OIWTrnyINWwIMrVI7PUcHI0Tk1ZGjTjW32w5Y8gelEvDTjH?=
- =?us-ascii?Q?TICL22thGwlR2RQvjehWxQwz/uD3sheUmskyuIFTrQZpEZMVRGCyTdN1s70B?=
- =?us-ascii?Q?dw54VUOyQbqw194mV3eHFLeJPNz1DHiC+0hczivUbUVz0EgBnaLz1GhZ8B4Q?=
- =?us-ascii?Q?GZ22TMl8x71mhrmMWzdcUGT+ei9eaCT0ctkWvl7O+s+bwEZR/ZAm7suhNP3/?=
- =?us-ascii?Q?dygONRq7EICor1ggvXFsNGh+tM2yU/vq0bSqzknp+yK32Tqx9GABTcdnIkJR?=
- =?us-ascii?Q?MUn1vRofKAktxh3FnLhsxUVbdqcRp7kUCw3WVbO7MuZx6OtzCAoGDwWsN47J?=
- =?us-ascii?Q?oBu3O0/zCv/FQG0SSSsQ9olpkFVxabsnDTR4HaU+YdwkFmAfIFVXTYQygixz?=
- =?us-ascii?Q?I9VEDhqeUHxwvSxjSjjFn11Ury4p4vBU+H4ocjsK27tIX9dwFMv6Csr2hd64?=
- =?us-ascii?Q?7VovVK2I0bujD32HMeS26hX0Av8gdo5RjCsPsVfYFhIR2FodCxPPXIpjr9Rf?=
- =?us-ascii?Q?+CnLw5S9P7sMCCL+qNPb61+g77N0LHs8ekbtlrcOwpb0UlGUtlKyZ+xVRESS?=
- =?us-ascii?Q?fTkROttSZBGjcduIxxVMVPOnQGF+yxS9Z032iVuTX+5E38H6VQUkaOVLB/Wq?=
- =?us-ascii?Q?4RAedHgQNaQ2Ck9wEVVnmMT8Fz0vReYQiw7WCKtPtbibt3o6bP2D+rEaRIaB?=
- =?us-ascii?Q?onDjBP6Vn1rVsdvW/ivE9OvSeHRUPi+M4R3L7Adnj0OKFe/saR5ZoUoK8nG5?=
- =?us-ascii?Q?OxUFnv0D4D4Xlk7bp5+q11pJMCU54zlU4EHuNWzwNlgI7uWpwhMjespcll1B?=
- =?us-ascii?Q?VXiRJc7D7qUDgNyX0tbN6nS3VWJavL2JckkklYibOoF8LS80MniE2mYjCWTQ?=
- =?us-ascii?Q?we+IcKdp7hCZ1xXAcO5/CmWuvi6FA6eQ7zfzE5xNfnNpGL/pQ/sGZMaipcDB?=
- =?us-ascii?Q?H951/xyT2RX9qe5xspS3pMWbqVa8/skqBXOkFcLrvjZxJfA0N3gH0o1I1z4O?=
- =?us-ascii?Q?yuPtPN2RSYD3pm7W9T2SHiXxq6JZGVF9FvqI4Fldgg7cMA5WhLOIVHdBpTdV?=
- =?us-ascii?Q?NIKg4tqY83hdjRdGVFyf9m5+Y0K6BostJeu+iDv5?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NAiz5sXK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3218C4CEED;
+	Wed, 21 May 2025 17:28:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747848527;
+	bh=HK/f2OC27kw7E2aDKCk4nq2rlgz3dZYbc65P0dIeI8g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=NAiz5sXKNgZ+c0/iaEixDGFzVzruxX16Qc+eAi4IvjNCcp7qOQFYB4aH8AUxjy2UA
+	 XE2gR0hG307xua48iHqYps6FT4DmrMAUPMYqvQb6e8QlZ4wS3SmrQlEwFjURyxtncg
+	 H0/sm2zccIoh1qkUXXO0XgpgNeW67ZtKf2t+V87czNZ1PTpL4+8AZZHQ3dxjCe/jUX
+	 y/N0yL0xUAXNrSBNLZjor6d284iKVof+HfghtSagl7NIC9/XTQV7paBl/DALLrBfKA
+	 gHzuZI1ehMUevP/u0ZjK/JGIaRH6ymFHw/SLHpZMe7ftn4rSfRJPuDEzixL5X2TC1m
+	 AAjk67Ub9s3Rw==
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-54b09cb06b0so8354808e87.1;
+        Wed, 21 May 2025 10:28:47 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUAg+5duOt9wRM6+bJLinTbn7OnLba1ODZY0yoYlKgoUCYtXphOlACfRf/2QdHPCJhTQx7qncEv7GkzZtM6@vger.kernel.org, AJvYcCVwqzaEtzylXF43O6gi2gvZqqMqPQhFNTzSh6MMAHWm1gF5TguqSy3jbRn3jgT4feWGpY4HSkULeiw=@vger.kernel.org, AJvYcCXPvEVGZxoR3poGo1T5okptscEkhfx5r7YW0kLl9OMf0Hs1PUXX8iPZ4B3SmjxKaBrKylsfqtd5bEeMYcCf/g==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/rfMk2jbJgwZlMMwohzO4UqvCIiABEv7Nqx/Iu04BC/QY/Kur
+	ci7JyHPHx8QJsxg/WXg6uiOnKa7fI495ujsTjb1VXWYyqZQiu8fQbdi49gnEshjSlB3Lt5BMVik
+	S2QU6ij1mU/qRq3A8+wPZgi1HiAGNDJE=
+X-Google-Smtp-Source: AGHT+IED7hvEqvRCCLir6jjUlL9xucAtYBb9f1l0NIqbApbevbcHb1vS7VmHxi6m3+G9Dil82JpRAU6w7+u6lw79G9c=
+X-Received: by 2002:ac2:4e07:0:b0:54f:c6b0:4c71 with SMTP id
+ 2adb3069b0e04-550e71983e4mr7313533e87.10.1747848526113; Wed, 21 May 2025
+ 10:28:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR21MB3437.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2888f9b5-c129-43cd-6d23-08dd988ce9b0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 May 2025 17:28:33.9610
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Hy/yac3T411UDT3T9Y+fzNDgJwib/bhQK94S1SF4LyPVnivj/j63anC0VVh/RhSUMlFS76H4Fwn4azqNTgja/Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR21MB3139
+References: <6820e1f6.050a0220.f2294.003c.GAE@google.com>
+In-Reply-To: <6820e1f6.050a0220.f2294.003c.GAE@google.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Wed, 21 May 2025 19:28:34 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXEg88Q5GCV+YW13UT4eDEzMpnKW8ReJNDjLqX7xeXaw=w@mail.gmail.com>
+X-Gm-Features: AX0GCFsyajLOL0aLII2QTgKTT2Po4pG1OJqA5lR8WKR5gk16iSvrfBCxXYID3RQ
+Message-ID: <CAMj1kXEg88Q5GCV+YW13UT4eDEzMpnKW8ReJNDjLqX7xeXaw=w@mail.gmail.com>
+Subject: Re: [syzbot] [fs?] [efi?] BUG: unable to handle kernel paging request
+ in alloc_fs_context
+To: syzbot <syzbot+52cd651546d11d2af06b@syzkaller.appspotmail.com>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Al Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>
+Cc: jk@ozlabs.org, linux-efi@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
+(cc James, Al, Christian)
 
+Please see the splat below.
 
-> -----Original Message-----
-> From: Simon Horman <horms@kernel.org>
-> Sent: Wednesday, May 21, 2025 10:03 AM
-> To: Haiyang Zhang <haiyangz@microsoft.com>
-> Cc: linux-hyperv@vger.kernel.org; netdev@vger.kernel.org; Dexuan Cui
-> <decui@microsoft.com>; stephen@networkplumber.org; KY Srinivasan
-> <kys@microsoft.com>; Paul Rosswurm <paulros@microsoft.com>;
-> olaf@aepfle.de; vkuznets@redhat.com; davem@davemloft.net;
-> wei.liu@kernel.org; edumazet@google.com; kuba@kernel.org;
-> pabeni@redhat.com; leon@kernel.org; Long Li <longli@microsoft.com>;
-> ssengar@linux.microsoft.com; linux-rdma@vger.kernel.org;
-> daniel@iogearbox.net; john.fastabend@gmail.com; bpf@vger.kernel.org;
-> ast@kernel.org; hawk@kernel.org; tglx@linutronix.de;
-> shradhagupta@linux.microsoft.com; andrew+netdev@lunn.ch; Konstantin
-> Taranov <kotaranov@microsoft.com>; linux-kernel@vger.kernel.org
-> Subject: [EXTERNAL] Re: [PATCH net-next,v2] net: mana: Add support for
-> Multi Vports on Bare metal
->=20
-> On Mon, May 19, 2025 at 09:20:36AM -0700, Haiyang Zhang wrote:
-> > To support Multi Vports on Bare metal, increase the device config
-> response
-> > version. And, skip the register HW vport, and register filter steps,
-> when
-> > the Bare metal hostmode is set.
-> >
-> > Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-> > ---
-> > v2:
-> >   Updated comments as suggested by ALOK TIWARI.
-> >   Fixed the version check.
-> >
-> > ---
-> >  drivers/net/ethernet/microsoft/mana/mana_en.c | 24 ++++++++++++-------
-> >  include/net/mana/mana.h                       |  4 +++-
-> >  2 files changed, 19 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c
-> b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> > index 2bac6be8f6a0..9c58d9e0bbb5 100644
-> > --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
-> > +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
-> > @@ -921,7 +921,7 @@ static void mana_pf_deregister_filter(struct
-> mana_port_context *apc)
-> >
-> >  static int mana_query_device_cfg(struct mana_context *ac, u32
-> proto_major_ver,
-> >  				 u32 proto_minor_ver, u32 proto_micro_ver,
-> > -				 u16 *max_num_vports)
-> > +				 u16 *max_num_vports, u8 *bm_hostmode)
-> >  {
-> >  	struct gdma_context *gc =3D ac->gdma_dev->gdma_context;
-> >  	struct mana_query_device_cfg_resp resp =3D {};
-> > @@ -932,7 +932,7 @@ static int mana_query_device_cfg(struct mana_contex=
-t
-> *ac, u32 proto_major_ver,
-> >  	mana_gd_init_req_hdr(&req.hdr, MANA_QUERY_DEV_CONFIG,
-> >  			     sizeof(req), sizeof(resp));
-> >
-> > -	req.hdr.resp.msg_version =3D GDMA_MESSAGE_V2;
-> > +	req.hdr.resp.msg_version =3D GDMA_MESSAGE_V3;
-> >
-> >  	req.proto_major_ver =3D proto_major_ver;
-> >  	req.proto_minor_ver =3D proto_minor_ver;
->=20
-> > @@ -956,11 +956,16 @@ static int mana_query_device_cfg(struct
-> mana_context *ac, u32 proto_major_ver,
-> >
-> >  	*max_num_vports =3D resp.max_num_vports;
-> >
-> > -	if (resp.hdr.response.msg_version =3D=3D GDMA_MESSAGE_V2)
-> > +	if (resp.hdr.response.msg_version >=3D GDMA_MESSAGE_V2)
-> >  		gc->adapter_mtu =3D resp.adapter_mtu;
-> >  	else
-> >  		gc->adapter_mtu =3D ETH_FRAME_LEN;
-> >
-> > +	if (resp.hdr.response.msg_version >=3D GDMA_MESSAGE_V3)
-> > +		*bm_hostmode =3D resp.bm_hostmode;
-> > +	else
-> > +		*bm_hostmode =3D 0;
->=20
-> Hi,
->=20
-> Perhaps not strictly related to this patch, but I see
-> that mana_verify_resp_hdr() is called a few lines above.
-> And that verifies a minimum msg_version. But I do not see
-> any verification of the maximum msg_version supported by the code.
->=20
-> I am concerned about a hypothetical scenario where, say the as yet unknow=
-n
-> version 5 is sent as the version, and the above behaviour is used, while
-> not being correct.
->=20
-> Could you shed some light on this?
->=20
+The NULL dereference is due to get_cred() in alloc_fs_context()
+attempting to increment current->cred->usage while current->cred ==
+NULL, and this is a result of the fact that PM notifier call chain is
+called while the task is exiting.
 
-In driver, we specify the expected reply msg version is v3 here:
-req.hdr.resp.msg_version =3D GDMA_MESSAGE_V3;
+IIRC, the intent was for commit
 
-If the HW side is upgraded, it won't send reply msg version higher
-than expected, which may break the driver.
+  11092db5b573 efivarfs: fix NULL dereference on resume
+
+to be replaced at some point with something more robust; might that
+address this issue as well?
 
 Thanks,
-- Haiyang
+Ard.
 
+
+
+
+On Sun, 11 May 2025 at 19:44, syzbot
+<syzbot+52cd651546d11d2af06b@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following issue on:
+>
+> HEAD commit:    c32f8dc5aaf9 Merge branch 'for-next/core' into for-kernelci
+> git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1762d670580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=ea4635ffd6ad5b4a
+> dashboard link: https://syzkaller.appspot.com/bug?extid=52cd651546d11d2af06b
+> compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+> userspace arch: arm64
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=165c0cd4580000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16f49cf4580000
+>
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/b921498959d4/disk-c32f8dc5.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/04e6ad946c4b/vmlinux-c32f8dc5.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/d4f0d8db50ee/Image-c32f8dc5.gz.xz
+>
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+52cd651546d11d2af06b@syzkaller.appspotmail.com
+>
+> efivarfs: resyncing variable state
+> Unable to handle kernel paging request at virtual address dfff800000000005
+> KASAN: null-ptr-deref in range [0x0000000000000028-0x000000000000002f]
+> Mem abort info:
+>   ESR = 0x0000000096000005
+>   EC = 0x25: DABT (current EL), IL = 32 bits
+>   SET = 0, FnV = 0
+>   EA = 0, S1PTW = 0
+>   FSC = 0x05: level 1 translation fault
+> Data abort info:
+>   ISV = 0, ISS = 0x00000005, ISS2 = 0x00000000
+>   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+>   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+> [dfff800000000005] address between user and kernel address ranges
+> Internal error: Oops: 0000000096000005 [#1]  SMP
+> Modules linked in:
+> CPU: 1 UID: 0 PID: 6487 Comm: syz-executor120 Not tainted 6.15.0-rc5-syzkaller-gc32f8dc5aaf9 #0 PREEMPT
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+> pstate: 80400005 (Nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> pc : alloc_fs_context+0x1b4/0x76c fs/fs_context.c:294
+> lr : __lse_atomic64_add arch/arm64/include/asm/atomic_lse.h:134 [inline]
+> lr : arch_atomic64_add arch/arm64/include/asm/atomic.h:67 [inline]
+> lr : raw_atomic64_add include/linux/atomic/atomic-arch-fallback.h:2672 [inline]
+> lr : raw_atomic_long_add include/linux/atomic/atomic-long.h:121 [inline]
+> lr : atomic_long_add include/linux/atomic/atomic-instrumented.h:3261 [inline]
+> lr : get_cred_many include/linux/cred.h:203 [inline]
+> lr : get_cred include/linux/cred.h:218 [inline]
+> lr : alloc_fs_context+0x150/0x76c fs/fs_context.c:293
+> sp : ffff8000a31b7760
+> x29: ffff8000a31b7790 x28: dfff800000000000 x27: ffff0000c8ef88d8
+> x26: 0000000000000028 x25: ffff0000c7e6f4c8 x24: ffff80008fb953e0
+> x23: 0000000000000000 x22: ffff0000c7e6f498 x21: ffff0000c8ef8000
+> x20: 0000000000000000 x19: ffff0000c7e6f400 x18: 00000000ffffffff
+> x17: ffff800092f27000 x16: ffff80008adb31c0 x15: 0000000000000001
+> x14: 1fffe0001a05b0e0 x13: 0000000000000000 x12: 0000000000000000
+> x11: ffff60001a05b0e1 x10: 0000000000ff0100 x9 : 0000000000000000
+> x8 : 0000000000000005 x7 : ffff80008022b2b8 x6 : ffff80008022b4b4
+> x5 : ffff0000dabc9c90 x4 : ffff8000a31b7520 x3 : ffff800080dfa950
+> x2 : 0000000000000001 x1 : 0000000000000008 x0 : 0000000000000001
+> Call trace:
+>  alloc_fs_context+0x1b4/0x76c fs/fs_context.c:294 (P)
+>  fs_context_for_mount+0x34/0x44 fs/fs_context.c:332
+>  vfs_kern_mount+0x38/0x178 fs/namespace.c:1313
+>  efivarfs_pm_notify+0x1c4/0x4b4 fs/efivarfs/super.c:529
+>  notifier_call_chain+0x1b8/0x4e4 kernel/notifier.c:85
+>  blocking_notifier_call_chain+0x70/0xa0 kernel/notifier.c:380
+>  pm_notifier_call_chain+0x2c/0x3c kernel/power/main.c:109
+>  snapshot_release+0x104/0x1c4 kernel/power/user.c:125
+>  __fput+0x340/0x75c fs/file_table.c:465
+>  ____fput+0x20/0x58 fs/file_table.c:493
+>  task_work_run+0x1dc/0x260 kernel/task_work.c:227
+>  exit_task_work include/linux/task_work.h:40 [inline]
+>  do_exit+0x4e8/0x1998 kernel/exit.c:953
+>  do_group_exit+0x194/0x22c kernel/exit.c:1102
+>  __do_sys_exit_group kernel/exit.c:1113 [inline]
+>  __se_sys_exit_group kernel/exit.c:1111 [inline]
+>  pid_child_should_wake+0x0/0x1dc kernel/exit.c:1111
+>  __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
+>  invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
+>  el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
+>  do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
+>  el0_svc+0x58/0x17c arch/arm64/kernel/entry-common.c:767
+>  el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
+>  el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
+> Code: 97f8a879 f9400368 9100a11a d343ff48 (387c6908)
+> ---[ end trace 0000000000000000 ]---
+> ----------------
+> Code disassembly (best guess):
+>    0:   97f8a879        bl      0xffffffffffe2a1e4
+>    4:   f9400368        ldr     x8, [x27]
+>    8:   9100a11a        add     x26, x8, #0x28
+>    c:   d343ff48        lsr     x8, x26, #3
+> * 10:   387c6908        ldrb    w8, [x8, x28] <-- trapping instruction
+>
+>
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>
+> If the report is already addressed, let syzbot know by replying with:
+> #syz fix: exact-commit-title
+>
+> If you want syzbot to run the reproducer, reply with:
+> #syz test: git://repo/address.git branch-or-commit-hash
+> If you attach or paste a git patch, syzbot will apply it before testing.
+>
+> If you want to overwrite report's subsystems, reply with:
+> #syz set subsystems: new-subsystem
+> (See the list of subsystem names on the web dashboard)
+>
+> If the report is a duplicate of another one, reply with:
+> #syz dup: exact-subject-of-another-report
+>
+> If you want to undo deduplication, reply with:
+> #syz undup
