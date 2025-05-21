@@ -1,156 +1,74 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95ED218DF8D;
-	Wed, 21 May 2025 17:30:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F7A618DF8D;
+	Wed, 21 May 2025 17:31:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747848655; cv=none; b=n8LmQP3Zk0ri8tPBAtYLNZ9I+wEkpkSRTaqmaWEsxOIhZ/Inuvsfp63740AZbbJ5HAXBpSV9e9xqJcft4LK350HHo2SxPjekMGZ/iB1RZfnMUQZB/6hQPUS6PRZlKaBAppSQmKni32DFX7JFhyl6yPGaavArEzbl+zfw5RLa4k0=
+	t=1747848697; cv=none; b=p22MoRrjZJXCEXceF4O5sbEsZT8N5vLrapikzfjBdMD9Rk8tMElarCK5haW4F4Tw/GxjXqn3Fx2FR+fLYMcdAB5efCWzno6FogLt30e+0oMz18pUu4mz3kt+6pKfFrpItER2oRJXCHfsbrRDeD6Eg8OvMXQFdcYU+ZajrnxEc4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747848655; c=relaxed/simple;
-	bh=3j1dEns/ysP04rHFNrID0DSREkdArRli7uOeEBQIntI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=G4lj3Hdit3NBvoArY5ejAUL7mXEiMpjPrmYDVgWMVa9KNplLdrgpvMf0fJoJI2gx1NKC1HUrhKdS9oHiqkJFnsBlNCHxuPqc/wj+y6EbtCF3doNlJUyOUGJIfep34IgdDnpQvxB4Evs4V6oKzCR9rIColl81b+0YY1+YWphawCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69940C4CEE4;
-	Wed, 21 May 2025 17:30:54 +0000 (UTC)
-Date: Wed, 21 May 2025 13:31:37 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: John <john.cs.hey@gmail.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [Bug] soft lockup in syscall_exit_to_user_mode in Linux kernel
- v6.15-rc5
-Message-ID: <20250521133137.1b2f2cac@gandalf.local.home>
-In-Reply-To: <CAP=Rh=OFdom8bL-KiWf88AyVZkJWnAJ+HBO7rE_74sOFzK=apQ@mail.gmail.com>
-References: <CAP=Rh=OFdom8bL-KiWf88AyVZkJWnAJ+HBO7rE_74sOFzK=apQ@mail.gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1747848697; c=relaxed/simple;
+	bh=klDb4xzzppN0ISLP1qGT6akbTZrEeBnZCIlZ4sISv4w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ks07S/LxVkX6lAfRcS2cPnS5odKIRV5wWYxa4Y2WSMb7TF4vmVktX5Za2h8zNhm2FSsNPKtjcOrIAQ7pE4u4ep8TxEl3nZ0WZSIyKnwblJ3EFQkwVAEFnNjc/RD3JiaGuHAUXm1Pm3ZL8zAYIgWkiQK7ZHC34KGBavKJH3d6aw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e60mdWsx; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e60mdWsx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61D50C4CEE4;
+	Wed, 21 May 2025 17:31:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747848696;
+	bh=klDb4xzzppN0ISLP1qGT6akbTZrEeBnZCIlZ4sISv4w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=e60mdWsxutEbi7taRxN+FERft6Kpe7Oi4N3LQzlg/yjuxmYmqNTkBFRery2qgStse
+	 0ykwGJGCdrfxYc/HDUlsmLkINSsukdRAcmRFrRSKUSNMEHzPxU2pLEcul0C252Vpyj
+	 68ya0p0c9256GHXaDrtLboxD5uXELqbX8JHjhoOBAaV34pvCwzI7FZpwgw37uvtOJL
+	 0nTHT+Se5QpxHwdTSg/y4trQR+MMAXbrl5O6m6NUlg9iKe31kJ1qoVZzK0H5vSqnQC
+	 1/qljKE4ei4IqcyulgXWtbrLROayq/3NjnVo0i1aJBI8cflAyZyFq6ZH4Xt8G9lt8A
+	 SYhXt40dJUbxA==
+Date: Wed, 21 May 2025 07:31:35 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Shashank Balaji <shashank.mahadasyam@sony.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>,
+	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+	Jonathan Corbet <corbet@lwn.net>, cgroups@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Shinya Takumi <shinya.takumi@sony.com>
+Subject: Re: [PATCH v2 3/3] cgroup, docs: cpu controller interaction with
+ various scheduling policies
+Message-ID: <aC4N9z0MuTLC2lf0@slm.duckdns.org>
+References: <20250520-rt-and-cpu-controller-doc-v2-0-70a2b6a1b703@sony.com>
+ <20250520-rt-and-cpu-controller-doc-v2-3-70a2b6a1b703@sony.com>
+ <aCzjJp1ovS6kCqHj@slm.duckdns.org>
+ <aC2Fl4DVRbn6bS8H@JPC00244420>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aC2Fl4DVRbn6bS8H@JPC00244420>
 
-On Thu, 22 May 2025 00:40:29 +0800
-John <john.cs.hey@gmail.com> wrote:
+On Wed, May 21, 2025 at 04:49:43PM +0900, Shashank Balaji wrote:
+> > > +Note that the ``cgroup_*`` family of callbacks require ``CONFIG_EXT_GROUP_SCHED``
 
-> Root Cause Analysis:
-> The root cause is unbounded recursion or excessive iteration in
-> lock_acquire() initiated via perf tracepoints that fire during slab
-> allocations and trace buffer updates. Specifically:
-> tracing_gen_ctx_irq_test() is invoked while tracing kernel contexts
-> (e.g., IRQ/softirq nesting).
-> This tracepoint triggers perf_trace_lock_acquire() and further invokes
-> lock_acquire() from lockdep.
+CONFIG_EXT_GROUP_SCHED is auto-enabled if CONFIG_SCHED_CLASS_EXT and
+CONFIG_CGROUP_SCHED are enabled, so no need to mention it explicitly.
 
-tracing_gen_ctx_irq_test() is not a tracepoint. It's a simple routine to
-find out how to fill the "common_flags" part of a trace event.
-
-Here's the entire function:
-
-unsigned int tracing_gen_ctx_irq_test(unsigned int irqs_status)
-{
-	unsigned int trace_flags = irqs_status;
-	unsigned int pc;
-
-	pc = preempt_count();
-
-	if (pc & NMI_MASK)
-		trace_flags |= TRACE_FLAG_NMI;
-	if (pc & HARDIRQ_MASK)
-		trace_flags |= TRACE_FLAG_HARDIRQ;
-	if (in_serving_softirq())
-		trace_flags |= TRACE_FLAG_SOFTIRQ;
-	if (softirq_count() >> (SOFTIRQ_SHIFT + 1))
-		trace_flags |= TRACE_FLAG_BH_OFF;
-
-	if (tif_need_resched())
-		trace_flags |= TRACE_FLAG_NEED_RESCHED;
-	if (test_preempt_need_resched())
-		trace_flags |= TRACE_FLAG_PREEMPT_RESCHED;
-	if (IS_ENABLED(CONFIG_ARCH_HAS_PREEMPT_LAZY) && tif_test_bit(TIF_NEED_RESCHED_LAZY))
-		trace_flags |= TRACE_FLAG_NEED_RESCHED_LAZY;
-	return (trace_flags << 16) | (min_t(unsigned int, pc & 0xff, 0xf)) |
-		(min_t(unsigned int, migration_disable_value(), 0xf)) << 4;
-}
-
-The functions it calls are:
-
-static __always_inline int preempt_count(void)
-{
-	return raw_cpu_read_4(__preempt_count) & ~PREEMPT_NEED_RESCHED;
-}
-
-# define softirq_count()	(preempt_count() & SOFTIRQ_MASK)
-#define in_serving_softirq()	(softirq_count() & SOFTIRQ_OFFSET)
-
-static __always_inline bool tif_need_resched(void)
-{
-	return tif_test_bit(TIF_NEED_RESCHED);
-}
-
-static __always_inline bool test_preempt_need_resched(void)
-{
-	return !(raw_cpu_read_4(__preempt_count) & PREEMPT_NEED_RESCHED);
-}
-
-static unsigned short migration_disable_value(void)
-{
-#if defined(CONFIG_SMP)
-	return current->migration_disabled;
-#else
-	return 0;
-#endif
-}
-
-Nothing there should cause any recursion or issue. It's basically testing
-various states and then returns a flags value.
-
-It does not call lock_acquire().
-
-
-> Inside lock_acquire(), the kernel attempts to inspect instruction
-> addresses via __kernel_text_address(), which cascades into
-> unwind_get_return_address() and stack_trace_save().
-> However, these introspection functions are not expected to run in
-> real-time-sensitive softirq context and they do not contain preemption
-> or rescheduling points. With sufficient recursion or stress (e.g.,
-> slab allocation with tracepoints and lockdep active), CPU#0 gets
-> trapped and triggers the watchdog.
+> > > +to be enabled. For each of the following interface files, the above categories
+> > > +will be referred to. All time durations are in microseconds.
+> > 
+> > Can we document the above in sched_ext documentation and point to it from
+> > here? Documenting sched_ext details here seems a bit out of place and prone
+> > to becoming stale over time.
 > 
-> At present, I have not yet obtained a minimal reproducer for this
-> issue. However, I am actively working on reproducing it, and I will
-> promptly share any additional findings or a working reproducer as soon
-> as it becomes available.
-> 
-> Thank you very much for your time and attention to this matter. I
-> truly appreciate the efforts of the Linux kernel community.
-> 
+> Got it. Apart from that, is the content alright? 
 
-Looking at the backtrace you have:
+Other than the above, yeah, looks correct to me.
 
-kernel_text_address+0x35/0xc0 kernel/extable.c:94
- __kernel_text_address+0xd/0x40 kernel/extable.c:79
- unwind_get_return_address arch/x86/kernel/unwind_orc.c:369 [inline]
- unwind_get_return_address+0x59/0xa0 arch/x86/kernel/unwind_orc.c:364
- arch_stack_walk+0x9c/0xf0 arch/x86/kernel/stacktrace.c:26
- stack_trace_save+0x8e/0xc0 kernel/stacktrace.c:122
- kasan_save_stack+0x24/0x50 mm/kasan/common.c:47
- kasan_save_track+0x14/0x30 mm/kasan/common.c:68
- unpoison_slab_object mm/kasan/common.c:319 [inline]
- __kasan_slab_alloc+0x59/0x70 mm/kasan/common.c:345
- kasan_slab_alloc include/linux/kasan.h:250 [inline]
- slab_post_alloc_hook mm/slub.c:4147 [inline]
+Thanks.
 
-KASAN is a very intrusive debugging utility that often causes soft lockups
-and such when used with other debugging utilities.
-
-If you can reproduce a softlockup without KASAN enabled, I'd then be more
-worried about this. Usually when I trigger a softlockup and have KASAN
-enabled, I just disable KASAN.
-
--- Steve
+-- 
+tejun
