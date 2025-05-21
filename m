@@ -1,138 +1,254 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC711221265
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 16:04:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 559FA1E04AC
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 16:06:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747843466; cv=none; b=cVbWGBlGSxdfY5SVhTwyCsK62usGtAYHycTCHARTLC02QkDtAm+sr1KDZF8RXQJ49wQ4gG1fRwSlX47SEwS/610WaJ4v8IfCiKhiMMFtmICiCfKXoKdPsSmv0J3w1g3KTllf0jo6L2FyCtipRJI7WdMDw9HJL1k9/+gqHWCW6DE=
+	t=1747843569; cv=none; b=ubGp2AzvufdEsanypCOMMgbCJpuCCxo43mtYJEk62mcYPcdTSSsh+3x5j9EjXHFDMLg/hWbKCQPIkBAIp9zGBktraXIT4LxPxvVnXzuPDFSFw3q1AxB9pK5p4xAEfIwR1JyG8vlUzYHnSPAGsyb0qvJdkbYTU6NLAMfmMVJK+xg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747843466; c=relaxed/simple;
-	bh=rywf19OsznyC+v7V4zAzSM3BjlccRhSLtmaCmitX/Dg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KR6/TJOzD5tr5+AQzotGrRKZDYWjsoN7uZUExuWKF1fGEXJPD30Mg+Mp2t2OJ+Hz+gisyAy+WWFTGdrRs9XH7rYLjvRaCmaO9Rg3j8/4XgFzZzlz8UX8g/FBS+0lFOWwSqv7G0n8dU1CEadNe8g27aMrUK8gd0D1L1Tdf2+vgZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a1wREfmJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747843569; c=relaxed/simple;
+	bh=PCifrGMaHBClbKvmZWajsTE53B2GxDcUEm+7czXcSdM=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=j7YhpwhrE8bw7NqPALfIQsFOrISlxpeKrb3w0yXrcIgGsv8EZyBn9HY7swjULMbx1U8jAfV45A8nKhDyogryozuYVWR+Sx7UzcSHZxGiBoelNxaWGsrNhN4mXMU8CQYqAu2cQip8TxisU7ARxt6SosjLvIEdzyC5MZmB9N/C1Yo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=a6QPRHob; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a1wREfmJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08EBBC4CEE4;
-	Wed, 21 May 2025 16:04:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747843466;
-	bh=rywf19OsznyC+v7V4zAzSM3BjlccRhSLtmaCmitX/Dg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=a1wREfmJir1pOx2iCobdRb1DIDyAgPtTxED+OvaqDLjW5q3YhHJQckxBzMQKdiQwP
-	 Zkd5Knn9olzOSxC6xFLTPpwyhk8/6ERckuXflpOHJjUOCox7RXmP72dFF3rbIJfLkD
-	 IvJVidp8XUhAnqzESMBqUkBcRdYcvwDdcyuHNzvneVG0IS3HwsNnP1eUGvpfPu1ULQ
-	 MgW0h19jYnsDwJz/ISoUL4Di29k41KlDWAr0nyofe+Ic+GzvB/HL3B/7f0i7xAvtKJ
-	 6YsD6CP1hgjeW2vjq9ZWevHuo1ccJmJr7kaKgzUcGwNcK/xJvpDPfmEK/bfvDbvhvi
-	 eG3TeW84AJnSA==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Coiby Xu <coxu@redhat.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Christoph Hellwig <hch@lst.de>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Breno Leitao <leitao@debian.org>,
-	Jens Axboe <axboe@kernel.dk>,
-	linux-nvme@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] crash_dump, nvme: select CONFIGFS_FS as built-in
-Date: Wed, 21 May 2025 18:03:19 +0200
-Message-Id: <20250521160359.2132363-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a6QPRHob"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-232340ba283so32379945ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 09:06:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747843565; x=1748448365; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Ql9Z9xm5K7XH9O9hnF7qelsAjP39T8fR3nTvKKw0nvo=;
+        b=a6QPRHobOh2SxPmxrkGIaySJwcLM+IGdX1QMnwYQaGACd+tGXBXcyFT6Me9M17p0bR
+         CJJszXfgOg3glD+XAEkNpaFxh/NXwyk2WMVYZGytCrxvnkkpA+4H8pNRfOUz0LYHA4sh
+         SEhNuso2NqWKRCe/fId6Sq3rLm5h4efMEXIJ/txp7LEi74oNWuX4U7KN+W8G68zSBdG+
+         GzVQYUe3c0WTS16eDhRjA+U4Leb95j1QWpu73ZQ4CdT1StiSLJrAN63qq7tU72FNs6v5
+         sri2Fx80sqYGukPruwaF+dlrUD0zfDkiyN9b6poQNZRIaYb/X6b+FlnqCQxtFgSmDVa0
+         GXWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747843565; x=1748448365;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Ql9Z9xm5K7XH9O9hnF7qelsAjP39T8fR3nTvKKw0nvo=;
+        b=qz6AK3Y/M6eMoxVRZWlRJ9+iCIyZOzQQ+RIstC0Qb97v87M8zC08I7igiRbvv+aL/D
+         zN788L9RKsSs46jCmLfkYQUPDoNFD/n1aoPtdPKhgKVKU39gSYvmh5oMEAXDtn/DBLRX
+         BxhwuwZD6IEXTIpK5QHOrXa8EeL24IwoD9Fqgsir3Xi/evYuSHxa+huBQrK+4LOGNHCG
+         3CIbaCHSi15AsPpMvr8F5NMwi9erKJCHTv0TZZjefehWUnF8hUGCEbqPHb98Kl/j9HYq
+         vzQDcJ+wpSOpb2tO4mlxt35EoFmJAMKez5V+9R5ec7phHXNKOrVV78RBCENO/ZgXV5IW
+         LErw==
+X-Forwarded-Encrypted: i=1; AJvYcCUbF7+DfUGtnPt5scD6FC4JhjmcbBg5S0muPHqZClOi7AHbkSnYuf6/axd0tlYdxyp1diqLbaB0hVQH7Hg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEfy2otfT2A+9u9+/iJ06F8SyRDSDghAUFt0Yd7N8G+iGub4BC
+	4+aqvbNaNABOUXrzycjcboWvXPZ31I5oqATEMoLv26vkkrcjXwS43PLsf+ZOoo0eyxwoC0o1vwy
+	mNUlY6A==
+X-Google-Smtp-Source: AGHT+IFNeaIVQ685CZL/ir/FqHiM6qg4cufw1xi0AGG2BDj+FgfngqEqs+kjHu3RZknxYhNp6O6Iptv6chk=
+X-Received: from plke8.prod.google.com ([2002:a17:903:1948:b0:232:afa:7ca1])
+ (user=surenb job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ce91:b0:232:219c:2a4f
+ with SMTP id d9443c01a7336-232219c2f99mr194334555ad.1.1747843565544; Wed, 21
+ May 2025 09:06:05 -0700 (PDT)
+Date: Wed, 21 May 2025 09:06:02 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.1112.g889b7c5bd8-goog
+Message-ID: <20250521160602.1940771-1-surenb@google.com>
+Subject: [PATCH 1/1] alloc_tag: handle module codetag load errors as module
+ load failures
+From: Suren Baghdasaryan <surenb@google.com>
+To: akpm@linux-foundation.org
+Cc: kent.overstreet@linux.dev, mcgrof@kernel.org, petr.pavlu@suse.com, 
+	samitolvanen@google.com, da.gomez@samsung.com, 00107082@163.com, 
+	cachen@purestorage.com, linux-kernel@vger.kernel.org, 
+	linux-modules@vger.kernel.org, linux-mm@kvack.org, stable@vger.kernel.org, 
+	surenb@google.com
+Content-Type: text/plain; charset="UTF-8"
 
-From: Arnd Bergmann <arnd@arndb.de>
+Failures inside codetag_load_module() are currently ignored. As a
+result an error there would not cause a module load failure and freeing
+of the associated resources. Correct this behavior by propagating the
+error code to the caller and handling possible errors. With this change,
+error to allocate percpu counters, which happens at this stage, will not
+be ignored and will cause a module load failure and freeing of resources.
+With this change we also do not need to disable memory allocation
+profiling when this error happens, instead we fail to load the module.
 
-Configfs can be configured as a loadable module, which causes a link-time
-failure for dm-crypt crash dump support:
-
-crash_dump_dm_crypt.c:(.text+0x3a4): undefined reference to `config_item_init_type_name'
-aarch64-linux-ld: kernel/crash_dump_dm_crypt.o: in function `configfs_dmcrypt_keys_init':
-crash_dump_dm_crypt.c:(.init.text+0x90): undefined reference to `config_group_init'
-aarch64-linux-ld: crash_dump_dm_crypt.c:(.init.text+0xb4): undefined reference to `configfs_register_subsystem'
-aarch64-linux-ld: crash_dump_dm_crypt.c:(.init.text+0xd8): undefined reference to `configfs_unregister_subsystem'
-
-This could be avoided with a dependency on CONFIGFS_FS=y, but the dependency has
-an additional problem of causing Kconfig dependency loops since most other uses
-select the symbol.
-
-Using a simple 'select CONFIGFS_FS' here in turn fails with CONFIG_DM_CRYPT=m,
-because that still only causes configfs to be a loadable module.
-
-The only version I found that fixes this reliably uses an additional Kconfig
-symbol to ensure the 'select' actually turns on configfs as builtin, with
-two additional changes to avoid dependency loops with nvme and sysfs.
-
-There is no compile-time dependency between configfs and sysfs, so selecting
-configfs from a driver with sysfs disabled does not cause link failures, only
-the default /sys/kernel/config mount point will not be created.
-
-Fixes: 6b23858fd63b ("crash_dump: make dm crypt keys persist for the kdump kernel")
-Fixes: 1fb470408497 ("nvme-loop: add configfs dependency")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Fixes: 10075262888b ("alloc_tag: allocate percpu counters for module tags dynamically")
+Reported-by: Casey Chen <cachen@purestorage.com>
+Closes: https://lore.kernel.org/all/20250520231620.15259-1-cachen@purestorage.com/
+Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+Cc: stable@vger.kernel.org
 ---
- drivers/nvme/target/Kconfig | 2 +-
- fs/configfs/Kconfig         | 1 -
- kernel/Kconfig.kexec        | 8 +++++++-
- 3 files changed, 8 insertions(+), 3 deletions(-)
+ include/linux/codetag.h |  8 ++++----
+ kernel/module/main.c    |  5 +++--
+ lib/alloc_tag.c         | 12 +++++++-----
+ lib/codetag.c           | 34 +++++++++++++++++++++++++---------
+ 4 files changed, 39 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/nvme/target/Kconfig b/drivers/nvme/target/Kconfig
-index 4c253b433bf7..4904097dfd49 100644
---- a/drivers/nvme/target/Kconfig
-+++ b/drivers/nvme/target/Kconfig
-@@ -3,7 +3,7 @@
- config NVME_TARGET
- 	tristate "NVMe Target support"
- 	depends on BLOCK
--	depends on CONFIGFS_FS
-+	select CONFIGFS_FS
- 	select NVME_KEYRING if NVME_TARGET_TCP_TLS
- 	select KEYS if NVME_TARGET_TCP_TLS
- 	select SGL_ALLOC
-diff --git a/fs/configfs/Kconfig b/fs/configfs/Kconfig
-index 272b64456999..1fcd761fe7be 100644
---- a/fs/configfs/Kconfig
-+++ b/fs/configfs/Kconfig
-@@ -1,7 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0-only
- config CONFIGFS_FS
- 	tristate "Userspace-driven configuration filesystem"
--	select SYSFS
- 	help
- 	  configfs is a RAM-based filesystem that provides the converse
- 	  of sysfs's functionality. Where sysfs is a filesystem-based
-diff --git a/kernel/Kconfig.kexec b/kernel/Kconfig.kexec
-index 4e7cee4e4ffc..e64ce21f9a80 100644
---- a/kernel/Kconfig.kexec
-+++ b/kernel/Kconfig.kexec
-@@ -134,12 +134,18 @@ config CRASH_DM_CRYPT
- 	depends on KEXEC_FILE
- 	depends on CRASH_DUMP
- 	depends on DM_CRYPT
--	depends on CONFIGFS_FS
- 	help
- 	  With this option enabled, user space can intereact with
- 	  /sys/kernel/config/crash_dm_crypt_keys to make the dm crypt keys
- 	  persistent for the dump-capture kernel.
+diff --git a/include/linux/codetag.h b/include/linux/codetag.h
+index 0ee4c21c6dbc..5f2b9a1f722c 100644
+--- a/include/linux/codetag.h
++++ b/include/linux/codetag.h
+@@ -36,8 +36,8 @@ union codetag_ref {
+ struct codetag_type_desc {
+ 	const char *section;
+ 	size_t tag_size;
+-	void (*module_load)(struct module *mod,
+-			    struct codetag *start, struct codetag *end);
++	int (*module_load)(struct module *mod,
++			   struct codetag *start, struct codetag *end);
+ 	void (*module_unload)(struct module *mod,
+ 			      struct codetag *start, struct codetag *end);
+ #ifdef CONFIG_MODULES
+@@ -89,7 +89,7 @@ void *codetag_alloc_module_section(struct module *mod, const char *name,
+ 				   unsigned long align);
+ void codetag_free_module_sections(struct module *mod);
+ void codetag_module_replaced(struct module *mod, struct module *new_mod);
+-void codetag_load_module(struct module *mod);
++int codetag_load_module(struct module *mod);
+ void codetag_unload_module(struct module *mod);
  
-+config CRASH_DM_CRYPT_CONFIGS
-+	def_tristate CRASH_DM_CRYPT
-+	select CONFIGFS_FS
-+	help
-+	  CRASH_DM_CRYPT cannot directly select CONFIGFS_FS, because that
-+	  is required to be built-in.
+ #else /* defined(CONFIG_CODE_TAGGING) && defined(CONFIG_MODULES) */
+@@ -103,7 +103,7 @@ codetag_alloc_module_section(struct module *mod, const char *name,
+ 			     unsigned long align) { return NULL; }
+ static inline void codetag_free_module_sections(struct module *mod) {}
+ static inline void codetag_module_replaced(struct module *mod, struct module *new_mod) {}
+-static inline void codetag_load_module(struct module *mod) {}
++static inline int codetag_load_module(struct module *mod) { return 0; }
+ static inline void codetag_unload_module(struct module *mod) {}
+ 
+ #endif /* defined(CONFIG_CODE_TAGGING) && defined(CONFIG_MODULES) */
+diff --git a/kernel/module/main.c b/kernel/module/main.c
+index 5c6ab20240a6..9861c2ac5fd5 100644
+--- a/kernel/module/main.c
++++ b/kernel/module/main.c
+@@ -3399,11 +3399,12 @@ static int load_module(struct load_info *info, const char __user *uargs,
+ 			goto sysfs_cleanup;
+ 	}
+ 
++	if (codetag_load_module(mod))
++		goto sysfs_cleanup;
 +
- config CRASH_HOTPLUG
- 	bool "Update the crash elfcorehdr on system configuration changes"
- 	default y
+ 	/* Get rid of temporary copy. */
+ 	free_copy(info, flags);
+ 
+-	codetag_load_module(mod);
+-
+ 	/* Done! */
+ 	trace_module_load(mod);
+ 
+diff --git a/lib/alloc_tag.c b/lib/alloc_tag.c
+index 45dae7da70e1..d48b80f3f007 100644
+--- a/lib/alloc_tag.c
++++ b/lib/alloc_tag.c
+@@ -607,15 +607,16 @@ static void release_module_tags(struct module *mod, bool used)
+ 	mas_unlock(&mas);
+ }
+ 
+-static void load_module(struct module *mod, struct codetag *start, struct codetag *stop)
++static int load_module(struct module *mod, struct codetag *start, struct codetag *stop)
+ {
+ 	/* Allocate module alloc_tag percpu counters */
+ 	struct alloc_tag *start_tag;
+ 	struct alloc_tag *stop_tag;
+ 	struct alloc_tag *tag;
+ 
++	/* percpu counters for core allocations are already statically allocated */
+ 	if (!mod)
+-		return;
++		return 0;
+ 
+ 	start_tag = ct_to_alloc_tag(start);
+ 	stop_tag = ct_to_alloc_tag(stop);
+@@ -627,12 +628,13 @@ static void load_module(struct module *mod, struct codetag *start, struct codeta
+ 				free_percpu(tag->counters);
+ 				tag->counters = NULL;
+ 			}
+-			shutdown_mem_profiling(true);
+-			pr_err("Failed to allocate memory for allocation tag percpu counters in the module %s. Memory allocation profiling is disabled!\n",
++			pr_err("Failed to allocate memory for allocation tag percpu counters in the module %s\n",
+ 			       mod->name);
+-			break;
++			return -ENOMEM;
+ 		}
+ 	}
++
++	return 0;
+ }
+ 
+ static void replace_module(struct module *mod, struct module *new_mod)
+diff --git a/lib/codetag.c b/lib/codetag.c
+index de332e98d6f5..650d54d7e14d 100644
+--- a/lib/codetag.c
++++ b/lib/codetag.c
+@@ -167,6 +167,7 @@ static int codetag_module_init(struct codetag_type *cttype, struct module *mod)
+ {
+ 	struct codetag_range range;
+ 	struct codetag_module *cmod;
++	int mod_id;
+ 	int err;
+ 
+ 	range = get_section_range(mod, cttype->desc.section);
+@@ -190,11 +191,20 @@ static int codetag_module_init(struct codetag_type *cttype, struct module *mod)
+ 	cmod->range = range;
+ 
+ 	down_write(&cttype->mod_lock);
+-	err = idr_alloc(&cttype->mod_idr, cmod, 0, 0, GFP_KERNEL);
+-	if (err >= 0) {
+-		cttype->count += range_size(cttype, &range);
+-		if (cttype->desc.module_load)
+-			cttype->desc.module_load(mod, range.start, range.stop);
++	mod_id = idr_alloc(&cttype->mod_idr, cmod, 0, 0, GFP_KERNEL);
++	if (mod_id >= 0) {
++		if (cttype->desc.module_load) {
++			err = cttype->desc.module_load(mod, range.start, range.stop);
++			if (!err)
++				cttype->count += range_size(cttype, &range);
++			else
++				idr_remove(&cttype->mod_idr, mod_id);
++		} else {
++			cttype->count += range_size(cttype, &range);
++			err = 0;
++		}
++	} else {
++		err = mod_id;
+ 	}
+ 	up_write(&cttype->mod_lock);
+ 
+@@ -295,17 +305,23 @@ void codetag_module_replaced(struct module *mod, struct module *new_mod)
+ 	mutex_unlock(&codetag_lock);
+ }
+ 
+-void codetag_load_module(struct module *mod)
++int codetag_load_module(struct module *mod)
+ {
+ 	struct codetag_type *cttype;
++	int ret = 0;
+ 
+ 	if (!mod)
+-		return;
++		return 0;
+ 
+ 	mutex_lock(&codetag_lock);
+-	list_for_each_entry(cttype, &codetag_types, link)
+-		codetag_module_init(cttype, mod);
++	list_for_each_entry(cttype, &codetag_types, link) {
++		ret = codetag_module_init(cttype, mod);
++		if (ret)
++			break;
++	}
+ 	mutex_unlock(&codetag_lock);
++
++	return ret;
+ }
+ 
+ void codetag_unload_module(struct module *mod)
+
+base-commit: 9f3e87f6c8d4b28b96eb8bddb22d3ba4b846e10b
 -- 
-2.39.5
+2.49.0.1112.g889b7c5bd8-goog
 
