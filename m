@@ -1,164 +1,71 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91D7735893;
-	Wed, 21 May 2025 09:15:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CE5C239E74;
+	Wed, 21 May 2025 09:15:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747818936; cv=none; b=sBt2hNH5IGNbhaKEhViz1LLWvPPZIhtyhtkkkLHsHXFEDz6A+uieEc0QIEmuY7FKPSjbOQ3v/UhEE7NIsfVvX5x/OrmkKxq8YOtUP9nbLSR1B4jiL18RwERFxsdv667vGdcQaP4kJpNiunbGyO1EuOBcq8sD3NVsAwvtK8Arrl8=
+	t=1747818937; cv=none; b=poibooXJ70pNsNfG+tqhiGe5LohMiD9JoF7Y3F8SCEzSudo6sK8J6sJ6uyMaRn7p10GIPYd0Y51EjkbNAKiuZO79YtBKBSe6ZXDJ6oAItu5HWhjcaF9+2YlMrgD5y2uDO5yvQgxeEhU5/VHnPpBeKTCSwdGXNm+pCnX8B8Qmh3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747818936; c=relaxed/simple;
-	bh=t1yobnBcqQaDcoFbIHLQ8LdSWAixACdgskTO/gNDpp0=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DZv2YGJGVgoxXTOkFqtnfLQZWQz7gUyTYBsLYfdCChYlVMrszJpexrXi+K8vZy0vS9h4ETE86xVVxwOrPp5ItZUCWu+G78jLJjx3mD2+DpJy7hO9H5ZW+pheFdbGLLYRxd79f2uptcAn1FHq9cFueO97Dr070d5fcbDf0E+NWb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b2Qfq4j1Bz6H7Ps;
-	Wed, 21 May 2025 17:12:19 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 88B57140519;
-	Wed, 21 May 2025 17:15:30 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 21 May
- 2025 11:15:29 +0200
-Date: Wed, 21 May 2025 10:15:27 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: <linux-pci@vger.kernel.org>, Jon Pan-Doh <pandoh@google.com>, "Karolina
- Stolarek" <karolina.stolarek@oracle.com>, Weinan Liu <wnliu@google.com>,
-	Martin Petersen <martin.petersen@oracle.com>, Ben Fuller
-	<ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, "Anil
- Agrawal" <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, Ilpo
- =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, Sathyanarayanan
- Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Lukas Wunner
-	<lukas@wunner.de>, Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney"
-	<paulmck@kernel.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Oliver
- O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>, Keith
- Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>, "Terry Bowman"
-	<terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>, "Dave Jiang"
-	<dave.jiang@intel.com>, <linux-kernel@vger.kernel.org>,
-	<linuxppc-dev@lists.ozlabs.org>, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v7 03/17] PCI/AER: Factor COR/UNCOR error handling out
- from aer_isr_one_error()
-Message-ID: <20250521101527.000026b4@huawei.com>
-In-Reply-To: <20250520215047.1350603-4-helgaas@kernel.org>
-References: <20250520215047.1350603-1-helgaas@kernel.org>
-	<20250520215047.1350603-4-helgaas@kernel.org>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1747818937; c=relaxed/simple;
+	bh=Ac1qjRLgENN/x/3NhLFz+/OEtJ22b5k//0P8ES5W7vI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qg+m/Ti3SPNKqq7AWewNavZfL8ilAdFyENAYFVkXvduuHEa7HYmtk2u18cKbSIg7AjTWVDNZNQCuMMQksrK6wZsSRIrjFuAGHelIADjnL9n3OUe01wlZRtCcTCwQ3QIM/4CYfseHTuR10h6o6qOcog/a0OHfy99eY7SNEmQE9rU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=axkvbxKJ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="axkvbxKJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 094A5C4CEEA;
+	Wed, 21 May 2025 09:15:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747818936;
+	bh=Ac1qjRLgENN/x/3NhLFz+/OEtJ22b5k//0P8ES5W7vI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=axkvbxKJYTwsYQU8tUXkUbC3fZodTNzKKfMfzDHrAYOsyJ5U9Wzijd2s2SmuA7joT
+	 h/8QhCOthYBrGUuQEw2aZY/6Fbe0tM7Srlr0pdmgODd/uK91IMV/Y285oqnCY51HQk
+	 zCdTYsjqdPI781iUP53706ytYhJfql0bwfG/NpAZ8UGuJqA0c2gcHPh6w7fuEKfN1k
+	 uFPEQftaSUuC+q7XzglHLoTzHxff7SRhU4Ysw5PNmWa+P/1nFRBe6ZHp4TGfG7XXTP
+	 /OzQap1HUhcJE1tweOTL3vKQBfOghkOTcZpNfSRno9TAJgxBabbGnX5bDJZMFUJOId
+	 mcVkpR0mbQcug==
+Date: Wed, 21 May 2025 11:15:33 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Xianwei Zhao <xianwei.zhao@amlogic.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 2/8] dt-bindings: pinctl: amlogic,pinctrl-a4: Add
+ compatible string for S7D
+Message-ID: <20250521-azure-cougar-of-modernism-f35481@kuoka>
+References: <20250521-s6-s7-pinctrl-v2-0-0ce5e3728404@amlogic.com>
+ <20250521-s6-s7-pinctrl-v2-2-0ce5e3728404@amlogic.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250521-s6-s7-pinctrl-v2-2-0ce5e3728404@amlogic.com>
 
-On Tue, 20 May 2025 16:50:20 -0500
-Bjorn Helgaas <helgaas@kernel.org> wrote:
-
-> From: Bjorn Helgaas <bhelgaas@google.com>
+On Wed, May 21, 2025 at 11:19:56AM GMT, Xianwei Zhao wrote:
+> Update dt-binding document for pinctrl of Amlogic S7D SoC.
 > 
-> aer_isr_one_error() duplicates the Error Source ID logging and AER error
-> processing for Correctable Errors and Uncorrectable Errors.  Factor out the
-> duplicated code to aer_isr_one_error_type().
+> Amlogic S7D SoCs uses the same pintrl controller as S7 SoCs. There is
+> no need for an extra compatible line in the driver, but add S7D
+> compatible line for documentation.
 > 
-> aer_isr_one_error() doesn't need the struct aer_rpc pointer, so pass it the
-> Root Port or RCEC pci_dev pointer instead.
-> 
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-One passing comment inside (on neighbouring code)
-Otherwise it is a sensible bit of cleanup.
-
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
+> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
 > ---
->  drivers/pci/pcie/aer.c | 36 +++++++++++++++++++++++-------------
->  1 file changed, 23 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index a1cf8c7ef628..568229288ca3 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -1273,17 +1273,32 @@ static inline void aer_process_err_devices(struct aer_err_info *e_info)
->  }
->  
->  /**
-> - * aer_isr_one_error - consume an error detected by Root Port
-> - * @rpc: pointer to the Root Port which holds an error
-> + * aer_isr_one_error_type - consume a Correctable or Uncorrectable Error
-> + *			    detected by Root Port or RCEC
-> + * @root: pointer to Root Port or RCEC that signaled AER interrupt
-> + * @info: pointer to AER error info
-> + */
-> +static void aer_isr_one_error_type(struct pci_dev *root,
-> +				   struct aer_err_info *info)
-> +{
-> +	aer_print_port_info(root, info);
-> +
-> +	if (find_source_device(root, info))
-> +		aer_process_err_devices(info);
-> +}
-> +
-> +/**
-> + * aer_isr_one_error - consume error(s) signaled by an AER interrupt from
-> + *		       Root Port or RCEC
-> + * @root: pointer to Root Port or RCEC that signaled AER interrupt
->   * @e_src: pointer to an error source
->   */
-> -static void aer_isr_one_error(struct aer_rpc *rpc,
-> +static void aer_isr_one_error(struct pci_dev *root,
->  		struct aer_err_source *e_src)
->  {
-> -	struct pci_dev *pdev = rpc->rpd;
->  	struct aer_err_info e_info;
+>  Documentation/devicetree/bindings/pinctrl/amlogic,pinctrl-a4.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
 
-I wonder if, in the interests of readability this should be
-initialized.  That would allows some conditions to set
-only the valid case (ones) rather than explicit zeros.
- 
->  
-> -	pci_rootport_aer_stats_incr(pdev, e_src);
-> +	pci_rootport_aer_stats_incr(root, e_src);
->  
->  	/*
->  	 * There is a possibility that both correctable error and
-> @@ -1297,10 +1312,8 @@ static void aer_isr_one_error(struct aer_rpc *rpc,
->  			e_info.multi_error_valid = 1;
->  		else
->  			e_info.multi_error_valid = 0;
-> -		aer_print_port_info(pdev, &e_info);
->  
-> -		if (find_source_device(pdev, &e_info))
-> -			aer_process_err_devices(&e_info);
-> +		aer_isr_one_error_type(root, &e_info);
->  	}
->  
->  	if (e_src->status & PCI_ERR_ROOT_UNCOR_RCV) {
-> @@ -1316,10 +1329,7 @@ static void aer_isr_one_error(struct aer_rpc *rpc,
->  		else
->  			e_info.multi_error_valid = 0;
->  
-> -		aer_print_port_info(pdev, &e_info);
-> -
-> -		if (find_source_device(pdev, &e_info))
-> -			aer_process_err_devices(&e_info);
-> +		aer_isr_one_error_type(root, &e_info);
->  	}
->  }
->  
-> @@ -1340,7 +1350,7 @@ static irqreturn_t aer_isr(int irq, void *context)
->  		return IRQ_NONE;
->  
->  	while (kfifo_get(&rpc->aer_fifo, &e_src))
-> -		aer_isr_one_error(rpc, &e_src);
-> +		aer_isr_one_error(rpc->rpd, &e_src);
->  	return IRQ_HANDLED;
->  }
->  
+Squash it with the previous patch, so it will be obvious that s7 is
+documented.
+
+Best regards,
+Krzysztof
 
