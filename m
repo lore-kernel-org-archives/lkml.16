@@ -1,156 +1,66 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B152235067;
-	Wed, 21 May 2025 07:04:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49A9D23370A;
+	Wed, 21 May 2025 07:04:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747811072; cv=none; b=YXkspipymkCUkZw6rtdE5Wq/udY5vbhUtE8EiozDNC2U4t6TZahShtUo4GVNLplkRfyGfmYuVBKzZIdWTbiIQRW5svxc//lA10DeS2ZMrdewya+5GxKo0KJb4zXiM+2LJR4SCdC6eaXevBX3zqFmj0QVvtT2L4uhxvcM8S0duhM=
+	t=1747811085; cv=none; b=W0GvXL9dVqKWw4VD8/VYG9uaQ/sCMdJCedW4BXHQM/bRfxEVVoDjOsDwYERhoXMaMIeeJp1jvgK4H/ak3JW7YjHX69rYkYnvJpBC2jzlq9zrQoITEWqI8ucobA5aJ2vGkbPRafqVowri5xGtNC9UsxuByNBsvp04RtUDmlBj7qQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747811072; c=relaxed/simple;
-	bh=2DeoV9NVpmkJFiAHnImpl+I7mTrck3WLp13yWezHkLk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ie/HViboX5N+355PZXqw35yyG8fdlz2QSIZ4WXL3vhMRQfta8/9QNx/ydyhWFY5bBqvZ5Uqe0JtvBD3GS7GWA6OV0PS8OFgVdwoGi7f/E1XkW6NS8XjWHdecD2EaGc0eA8djG8U2AoWi8ONa4sLv+451KFRcPRKUoqlNfIkp0WM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=gieykq6l; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1747811085; c=relaxed/simple;
+	bh=rRJzzQvmbbQ9PvIlEeUG2481e8flDDWUv05t0aPKC40=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Zl9Fq5Vv+ENhrERXeRlOl9c0MbNJHB11vSupNvvuINcTHEZvt2TWADo8AiySG+FyUaAIrPoy+QfQvCM/4ehDmJj8PW54QvmONz+zF272fGPw/4TcAvy7PDH7FUhIg/nSUDRde4EWvcFoE/Bhg6jRnyRPLIuA/Saw1YR5ODiUo1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iDMspO6P; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="gieykq6l"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1747811070; x=1779347070;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=2DeoV9NVpmkJFiAHnImpl+I7mTrck3WLp13yWezHkLk=;
-  b=gieykq6lw9OpeJxXT2XQEfu8PgL1Z3ecAXeKjXpLq2dI5YK4vJHV0LPn
-   9tx2mk6NG/E+ctCnFqel7CM4BTWo0viqpFf+bf3KIi7zdGzZmJ5e7Z1/t
-   lU1sa2N+owhbEocE57U0e5g4pVWfcalVKQolCYYi9xw+UkQKzn2KFKMDZ
-   TJs3mYP/fTyvTA4slBQK2Z8JVLPexAa2Uk3YsQpXYsWIb2LfwaOFV7E6O
-   7HcZ92pljZDu6LbRUG8ijCYKLSgRYhxOQsfWx0mtq+Vi9h9hLmwx0ajMy
-   akvSo+KlEoYOIbt24QvfZgcRACkPKnpQigifmEiJJDc7q50ClmLpS/jl4
-   Q==;
-X-CSE-ConnectionGUID: 3KNJWgZeSmKF61v88cWcwA==
-X-CSE-MsgGUID: QpdtkuDUR3aPep0UaKoi9w==
-X-IronPort-AV: E=Sophos;i="6.15,303,1739862000"; 
-   d="scan'208";a="42432076"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 21 May 2025 00:04:29 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Wed, 21 May 2025 00:04:09 -0700
-Received: from che-lt-i67131.microchip.com (10.10.85.11) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.2507.44 via Frontend Transport; Wed, 21 May 2025 00:04:02 -0700
-From: Manikandan Muralidharan <manikandan.m@microchip.com>
-To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-	<claudiu.beznea@tuxon.dev>, <tudor.ambarus@linaro.org>,
-	<pratyush@kernel.org>, <mwalle@kernel.org>, <miquel.raynal@bootlin.com>,
-	<richard@nod.at>, <vigneshr@ti.com>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<linux-mtd@lists.infradead.org>
-CC: Manikandan Muralidharan <manikandan.m@microchip.com>
-Subject: [PATCH v3 2/3] ARM: dts: microchip: sama5d27_wlsom1: update the QSPI partitions using "fixed-partition" binding
-Date: Wed, 21 May 2025 12:33:35 +0530
-Message-ID: <20250521070336.402202-3-manikandan.m@microchip.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250521070336.402202-1-manikandan.m@microchip.com>
-References: <20250521070336.402202-1-manikandan.m@microchip.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iDMspO6P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 315C9C4CEE4;
+	Wed, 21 May 2025 07:04:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747811084;
+	bh=rRJzzQvmbbQ9PvIlEeUG2481e8flDDWUv05t0aPKC40=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iDMspO6P8f9Sw2an17DiUgOTUW9EcIUq5t8wwx8mq/5Tt0dG740WLlPoWArBFo5HF
+	 0/DdkmKBBn2T6jAZWLYWpjPNp+VJWFZWAu8DnGN0hJlxROWP0w7Tp2Sq038cRb1H63
+	 pjs/Fo2ChUITXsmvgc+yjTwlCukG+6T4JBz367MY/bwhPvxqy3Z0M0LTyrpHjYwGnc
+	 cnoK3n8ckTgAHfM865pOh+icHa1LwTcP5lUtpdxWzzf6YVvdQfDVukWooOEqvVZbyv
+	 FOFG4pc5Mlo/rkAF8kHH2jgo2gMcu/G3eMfkmsUKUgc1NChmkLpNlzQYA31dxZxtsf
+	 w7JLWUARMxemg==
+Date: Wed, 21 May 2025 09:04:42 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Kyrie Wu <kyrie.wu@mediatek.com>
+Cc: Hans Verkuil <hverkuil-cisco@xs4all.nl>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v4 01/12] media: dt-bindings: mediatek,jpeg: Add
+ mediatek, mt8196-jpgdec compatible
+Message-ID: <20250521-friendly-hissing-tuna-a534d6@kuoka>
+References: <20250521022322.27576-1-kyrie.wu@mediatek.com>
+ <20250521022322.27576-2-kyrie.wu@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250521022322.27576-2-kyrie.wu@mediatek.com>
 
-update the QSPI partitions using "fixed-partition" binding
+On Wed, May 21, 2025 at 10:23:11AM GMT, Kyrie Wu wrote:
+> Compared to the previous generation IC, the MT8196 uses SMMU
+> instead of IOMMU and supports features such as dynamic voltage
+> and frequency scaling. Therefore, add "mediatek,mt8196-jpgdec"
+> compatible to the binding document.
+> 
+> Signed-off-by: Kyrie Wu <kyrie.wu@mediatek.com>
 
-Signed-off-by: Manikandan Muralidharan <manikandan.m@microchip.com>
----
- .../dts/microchip/at91-sama5d27_wlsom1.dtsi   | 54 ++++++++++---------
- 1 file changed, 29 insertions(+), 25 deletions(-)
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-diff --git a/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi b/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi
-index 9543214adc9f..b34c5072425a 100644
---- a/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi
-+++ b/arch/arm/boot/dts/microchip/at91-sama5d27_wlsom1.dtsi
-@@ -229,8 +229,6 @@ &qspi1 {
- 	status = "disabled";
- 
- 	qspi1_flash: flash@0 {
--		#address-cells = <1>;
--		#size-cells = <1>;
- 		compatible = "jedec,spi-nor";
- 		reg = <0>;
- 		spi-max-frequency = <104000000>;
-@@ -240,34 +238,40 @@ qspi1_flash: flash@0 {
- 		m25p,fast-read;
- 		status = "disabled";
- 
--		at91bootstrap@0 {
--			label = "at91bootstrap";
--			reg = <0x0 0x40000>;
--		};
-+		partitions {
-+			compatible = "fixed-partitions";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
- 
--		bootloader@40000 {
--			label = "bootloader";
--			reg = <0x40000 0xc0000>;
--		};
-+			at91bootstrap@0 {
-+				label = "at91bootstrap";
-+				reg = <0x0 0x40000>;
-+			};
- 
--		bootloaderenvred@100000 {
--			label = "bootloader env redundant";
--			reg = <0x100000 0x40000>;
--		};
-+			bootloader@40000 {
-+				label = "bootloader";
-+				reg = <0x40000 0xc0000>;
-+			};
- 
--		bootloaderenv@140000 {
--			label = "bootloader env";
--			reg = <0x140000 0x40000>;
--		};
-+			bootloaderenvred@100000 {
-+				label = "bootloader env redundant";
-+				reg = <0x100000 0x40000>;
-+			};
- 
--		dtb@180000 {
--			label = "device tree";
--			reg = <0x180000 0x80000>;
--		};
-+			bootloaderenv@140000 {
-+				label = "bootloader env";
-+				reg = <0x140000 0x40000>;
-+			};
- 
--		kernel@200000 {
--			label = "kernel";
--			reg = <0x200000 0x600000>;
-+			dtb@180000 {
-+				label = "device tree";
-+				reg = <0x180000 0x80000>;
-+			};
-+
-+			kernel@200000 {
-+				label = "kernel";
-+				reg = <0x200000 0x600000>;
-+			};
- 		};
- 	};
- };
--- 
-2.25.1
+Best regards,
+Krzysztof
 
