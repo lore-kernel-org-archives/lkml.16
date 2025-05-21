@@ -1,157 +1,217 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7074F17E;
-	Wed, 21 May 2025 14:35:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 303E01D5ACF
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 14:37:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747838118; cv=none; b=bI4zqDPhBSeq4DSgQppvbaCiIwoSKeYgNX0iHuljXc0Dm5sn8zZXY+iOWlyXmq/ZUrrwTqJoHs6TCmIuzdw1NSJZfz9cXxwik11hbtPv+Rd5SrHDWHUpw1Btwj5kSwlV8OC+2sho3iRwDmhlPbGyW5eZPtDK5JfoCh/MDggh1Hg=
+	t=1747838278; cv=none; b=VfEMRkVRr1y+kZ+TXNW+QiFARlM9SQH5OZpGInGiIvrO0lSQa4abAmmG6Qb1ydPONIUTKMJcEC4ujiVh1Rd2uCEv2PqdmGKnzL6AQP+obO+MCOe02kEIh5Gzgoe26dnzcgt278Kw8dRmRYoZZjjbACZiiIUC7v/fr0fZLMwK0fU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747838118; c=relaxed/simple;
-	bh=veu47vSPRuMY3BFKfaW2HjMgYFi0qq1J7X2WA7W9MVU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=dTIP3lZls0fC1DVRQhhT2Pygp3Xc3o0cmz1BBTOip56mrOLnK7h9PkfpaVa7IwVaaDeFObp8Wrvc2oqSZ6IIuAGV5irOPp/kTW/iBPDNmqA3TX4Cl0AiHereMEf4oKRF+RY1joE54WAffk2LKjDHxACLN7Yv3Z/EooCwn1zROSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=lhSNXCaZ; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1747838278; c=relaxed/simple;
+	bh=GFUbTHLvPIWpijBbnDKGJjSbviGkpIHpV+2P6Mrxv6Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bYRvz2D9+hfPqVDgB71yNq1deWgdOJVbod8GZe0QGRZqA/R6kJFFAoPHCbcnWdYDJGyj31jOSQFfTC5YPC+0n9bLQePBzkQMf2VXQxZID1HXm3/EaxeiYvSYm0zf5jl48lILodyfH9cnrzWbbSWbOU8Z69OiWCW3Ic4SfL+PDP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fpvYP0KK; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lhSNXCaZ"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54L9XQ9l024842;
-	Wed, 21 May 2025 14:35:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	hSelJosRQQr6P145Vz3bihOWQkyaaUABGHRyIAFvLx0=; b=lhSNXCaZ07R+iEsF
-	YSdyF/AYo2YrKtxDmzCEPd5EIRPX4R6xLMJaofi2/kYE4dg6BT7RkNMUpylEG+P1
-	ezDlY6QS7HzUSEnAErdAjq6ZwKyhIoAIqzqJCmV4VpStfKm2fuubHFOQHV1NdPdD
-	GhSLWhIOETQzSmaN8zZrcpOIxcQ99aw4afe24+soHri9aGy+TaJw3R+CfCGjOmoP
-	HbHqPyRrrlc2pZimlM8ZcnNI/T+A/bQ1uz2CUuz6/AUZHBEOGWV/L1yka86BlOkG
-	jlfgs6WZqpVTqD6BwIbjDNrgbx5mfwbXg5nr9RTZkHvzdYIdN0kNaQdkBdSmiNuq
-	m2gp4Q==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf4u7ju-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 14:35:11 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54LEZAxc019764
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 14:35:10 GMT
-Received: from [10.216.4.234] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 21 May
- 2025 07:35:03 -0700
-Message-ID: <48c73675-a73f-46f1-81a9-f701a2cf00a5@quicinc.com>
-Date: Wed, 21 May 2025 20:05:00 +0530
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fpvYP0KK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747838275;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=i+9bOe+sk+QP6ubHHUgYc4TBiMH2pb9AHt05w4STzZg=;
+	b=fpvYP0KK6BnnB9CZsbQd+0j7ryAARJPDxKpvY8ULSvEq4OzQ1XHFjFFEwf1nOPmge7sqsy
+	ZSzG3ATGbuU/aTkC8VIyIrTOai0OZSfWXfUYmO9iBSRaPFwf7j4vl/xZBk2ziKrgl8/MY0
+	M8aFahoxWxFVdO8gHAay1qDfhsBAJJc=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-537-SuNywTQoOOmiLCpArnsUlA-1; Wed, 21 May 2025 10:37:54 -0400
+X-MC-Unique: SuNywTQoOOmiLCpArnsUlA-1
+X-Mimecast-MFC-AGG-ID: SuNywTQoOOmiLCpArnsUlA_1747838273
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-ad56c5412f2so284514966b.1
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 07:37:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747838273; x=1748443073;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=i+9bOe+sk+QP6ubHHUgYc4TBiMH2pb9AHt05w4STzZg=;
+        b=uIdv4gyDzkywmVGPFq/Su/hX6Zsd397vNPkpQyN/uNa8crm4kcxgutYDXnxR4uDD/x
+         Lkh/hE2469nl3xACKdXWzEv11zKTLK+wirTEiu9SJcf4jj4RoJpB9a2YBCdIRcj1gOI8
+         XzCIsVhK0Is/N+FgH9epcEzYTLJuq0pUbEzd2sO63ZY1EHUspXtpSPBlZgDijYVuhvfS
+         XuOMmi+Sj4fyTSotQe1CrOMrBn11hjyYuidEgvZ5LB2jGc2YlI2eCJ2TYP7YH0kaBECQ
+         0LQsGXcPzXwpXh3KEZRU2BkPGbUBMxFZmm12A+BhiXz5t04T0U7vltlch+y17mMCdd1B
+         E7QA==
+X-Forwarded-Encrypted: i=1; AJvYcCUc08eG+//5Oy19JAt7Cmc8kcKxfeEbkSWHx54+5iJv1SrzzIPXlKmYmlt99i/eFsAgmVLhs+St64uPGzc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyB5Iixw4A7vCP+3q7RvHSuQHz/y/E7MSKhioYpd7TUjgTePzeD
+	HAueB4Lg9iIgBv8S3UI1hgi036UTeJIjQhiQ54OB8ipeY6WjYe3uppd9t6w/d3ymY21wxL9xyMo
+	bkkh+UoA0jwvWkVrCtPjT0F8wp7oQEnPUieBoRmr8Ca1uPR9rzaFoWbSzDEdr/PpIdw==
+X-Gm-Gg: ASbGncsN0uU1gLCtC1vYmQKCKieDhIZfu653dyxxi4/T/TFa7cuarwdBRvQKJrvuGUb
+	PnmVhpeGQQ0OsiX31wfzxuRnJRyC1xLeyOHYLq+EB2dow1Ua44tftOzDn+m4wHyhMTadDWj0INQ
+	40LtPOqy2eYs7dpCY/QIEb4g+B6DKR0awGTPXGWkTKr55PNfh+grtXq3x5HPeRluG3nnMC6m/VZ
+	t32BzdepOPLr4aclYl4mZ2kuPrqJxvKJHnBVIZjeKrqtW6yeoiRXX1TJtPgAamO/V9QbCAsACdT
+	EChflZIEA+TXh898vc4MFOxk2tZkaBMzozRIxnImmomGl+61g++C1aX8ZTu8
+X-Received: by 2002:a17:907:928e:b0:ad3:f3dc:e36d with SMTP id a640c23a62f3a-ad536f28227mr1817059766b.50.1747838272769;
+        Wed, 21 May 2025 07:37:52 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFmBHIw8ATBsd2tGBCezkRlBguAVth09UuV27A0TTDuqx7nQd0qtkGTs7YUjEcenVWi3uB5IA==
+X-Received: by 2002:a17:907:928e:b0:ad3:f3dc:e36d with SMTP id a640c23a62f3a-ad536f28227mr1817056266b.50.1747838272225;
+        Wed, 21 May 2025 07:37:52 -0700 (PDT)
+Received: from sgarzare-redhat (host-82-53-134-35.retail.telecomitalia.it. [82.53.134.35])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d4967c9sm908215766b.129.2025.05.21.07.37.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 May 2025 07:37:51 -0700 (PDT)
+Date: Wed, 21 May 2025 16:37:49 +0200
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Michal Luczaj <mhal@rbox.co>
+Cc: "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	"Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, 
+	Stefan Hajnoczi <stefanha@redhat.com>, virtualization@lists.linux.dev, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH net-next v5 2/5] vsock: Move lingering logic to af_vsock
+ core
+Message-ID: <iotcme6uict3ny5eztqmrkp2odewv35vtbv2x5hmpyd3rjjrlc@tcv5gf5motsm>
+References: <20250521-vsock-linger-v5-0-94827860d1d6@rbox.co>
+ <20250521-vsock-linger-v5-2-94827860d1d6@rbox.co>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V1] mmc: sdhci-msm: Enable MMC_CAP_AGGRESSIVE_PM for
- qualcomm controllers
-Content-Language: en-US
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-CC: Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson
-	<ulf.hansson@linaro.org>, <linux-mmc@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_cang@quicinc.com>, <quic_nguyenb@quicinc.com>,
-        <quic_rampraka@quicinc.com>, <quic_pragalla@quicinc.com>,
-        <quic_sayalil@quicinc.com>, <quic_nitirawa@quicinc.com>,
-        <quic_bhaskarv@quicinc.com>, <kernel@quicinc.com>
-References: <20241104060722.10642-1-quic_sartgarg@quicinc.com>
- <konkbi4hvd7qc4rhokwrymzqntroy7gijk3ndwv5rluswdrykp@xsafrtrjzmuq>
- <10c90fee-ce7f-4034-9028-4252f19cb67f@quicinc.com>
- <CAA8EJpoLLDXFQk-ViuaioKrECzMV0aUrcOj4v+Ufs4oHY53mrw@mail.gmail.com>
- <064d3eed-c2ea-4b41-85b2-d2a5a922f8c7@quicinc.com>
- <ehgjdszjr34xppmkrkicb4pnq326nor26tqu2ekop6ew2j3y3h@pm45aiipzuc5>
-From: Sarthak Garg <quic_sartgarg@quicinc.com>
-In-Reply-To: <ehgjdszjr34xppmkrkicb4pnq326nor26tqu2ekop6ew2j3y3h@pm45aiipzuc5>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 7CEKsOQPB3P7aNcKQ2kkcL2rUL4K9zzp
-X-Proofpoint-ORIG-GUID: 7CEKsOQPB3P7aNcKQ2kkcL2rUL4K9zzp
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDE0MiBTYWx0ZWRfX76p9aUikeDAS
- LqPs3t7nnszkgsBMbRWPj2+YQHUTt/PcKvllBijvRhGaPp2/hRM32kfee+CJLR7rAgtY/7yZWT6
- Hc8vgThhkCSjS9MMQmvVv3nDYxjNYi9lo3b71fbcn8i+6EifGR6/dqURx2nrKyChjc5Y7mJ7ga5
- NjePNO70oN+mWmRwTZintCwR7Yt0ibcaTi4WA3xAcjvOo1srhF6ILw32RsYhbVbWOXrg6NBfDzN
- DdBT28DDK+J8G6RYsklXOckkmSYIvPso7bNz8na5quRDp1LZRm9suu50r6pUMaElx7DeWfozPIt
- V2lkC+/nZhHlq6tThHoRpKtsWof+x9LbqszG6P8FZpsyNkQW/e73HzCftvsNRwfeYvvhVLxYAJk
- HLImRnXSl5QP6iJx2e6XzA1Cbn3mfwcnquhLdVUj4DRWTxA57NTFnpeN86Kr77A9wt1Jd+CC
-X-Authority-Analysis: v=2.4 cv=R7UDGcRX c=1 sm=1 tr=0 ts=682de49f cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8
- a=3-RhneuVAAAA:8 a=COk6AnOGAAAA:8 a=E96v1nl-JPjVRj45kqQA:9 a=QEXdDO2ut3YA:10
- a=VLVLkjT_5ZicWzSuYqSo:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-21_04,2025-05-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 clxscore=1015 mlxlogscore=999 priorityscore=1501 spamscore=0
- bulkscore=0 lowpriorityscore=0 malwarescore=0 suspectscore=0 mlxscore=0
- impostorscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505210142
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250521-vsock-linger-v5-2-94827860d1d6@rbox.co>
 
+On Wed, May 21, 2025 at 12:55:20AM +0200, Michal Luczaj wrote:
+>Lingering should be transport-independent in the long run. In preparation
+>for supporting other transports, as well as the linger on shutdown(), move
+>code to core.
+>
+>Generalize by querying vsock_transport::unsent_bytes(), guard against the
+>callback being unimplemented. Do not pass sk_lingertime explicitly. Pull
+>SOCK_LINGER check into vsock_linger().
+>
+>Flatten the function. Remove the nested block by inverting the condition:
+>return early on !timeout.
+>
+>Suggested-by: Stefano Garzarella <sgarzare@redhat.com>
+>Signed-off-by: Michal Luczaj <mhal@rbox.co>
+>---
+> include/net/af_vsock.h                  |  1 +
+> net/vmw_vsock/af_vsock.c                | 33 +++++++++++++++++++++++++++++++++
+> net/vmw_vsock/virtio_transport_common.c | 23 ++---------------------
+> 3 files changed, 36 insertions(+), 21 deletions(-)
 
+LGTM!
 
-On 5/21/2025 6:25 PM, Dmitry Baryshkov wrote:
-> On Wed, May 21, 2025 at 12:46:49PM +0530, Sarthak Garg wrote:
->>
->>
->> On 11/15/2024 6:53 PM, Dmitry Baryshkov wrote:
->>> On Fri, 15 Nov 2024 at 12:23, Sarthak Garg <quic_sartgarg@quicinc.com> wrote:
->>>>
->>>>
->>>>
->>>> On 11/4/2024 4:19 PM, Dmitry Baryshkov wrote:
->>>>> On Mon, Nov 04, 2024 at 11:37:22AM +0530, Sarthak Garg wrote:
->>>>>> Enable MMC_CAP_AGGRESSIVE_PM for qualcomm controllers.
->>>>>> This enables runtime PM for eMMC/SD card.
->>>>>
->>>>> Could you please mention, which platforms were tested with this patch?
->>>>> Note, upstream kernel supports a lot of platforms, including MSM8974, I
->>>>> think the oldest one, which uses SDHCI.
->>>>>
->>>>
->>>> This was tested with qdu1000 platform.
->>>
->>> Are you sure that it won't break other platforms?
->>>
->>
->> Thanks for your valuable comment.
->> I am not sure about the older platforms so to avoid issues on older
->> platforms we can enable this for all SDCC version 5.0 targets ?
-> 
-> No, there are still a lot of platforms. Either explain why this is
-> required for all v5 platforms (and won't break those) or find some other
-> way, e.g. limit the change to QDU1000, explaining why it is _not_
-> applicable to other platforms.
-> 
+Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
 
-Thanks for your comment.
-I agree with your concern but for me also its not possible to test on 
-all the platforms.
-Lets say if I want to enable this caps for QDU1000 for which it has been 
-tested and on any other upcoming target after testing, then how can I 
-proceed to enable?
+>
+>diff --git a/include/net/af_vsock.h b/include/net/af_vsock.h
+>index 9e85424c834353d016a527070dd62e15ff3bfce1..d56e6e135158939087d060dfcf65d3fdaea53bf3 100644
+>--- a/include/net/af_vsock.h
+>+++ b/include/net/af_vsock.h
+>@@ -221,6 +221,7 @@ void vsock_for_each_connected_socket(struct vsock_transport *transport,
+> 				     void (*fn)(struct sock *sk));
+> int vsock_assign_transport(struct vsock_sock *vsk, struct vsock_sock *psk);
+> bool vsock_find_cid(unsigned int cid);
+>+void vsock_linger(struct sock *sk);
+>
+> /**** TAP ****/
+>
+>diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+>index fc6afbc8d6806a4d98c66abc3af4bd139c583b08..2e7a3034e965db30b6ee295370d866e6d8b1c341 100644
+>--- a/net/vmw_vsock/af_vsock.c
+>+++ b/net/vmw_vsock/af_vsock.c
+>@@ -1013,6 +1013,39 @@ static int vsock_getname(struct socket *sock,
+> 	return err;
+> }
+>
+>+void vsock_linger(struct sock *sk)
+>+{
+>+	DEFINE_WAIT_FUNC(wait, woken_wake_function);
+>+	ssize_t (*unsent)(struct vsock_sock *vsk);
+>+	struct vsock_sock *vsk = vsock_sk(sk);
+>+	long timeout;
+>+
+>+	if (!sock_flag(sk, SOCK_LINGER))
+>+		return;
+>+
+>+	timeout = sk->sk_lingertime;
+>+	if (!timeout)
+>+		return;
+>+
+>+	/* Transports must implement `unsent_bytes` if they want to support
+>+	 * SOCK_LINGER through `vsock_linger()` since we use it to check when
+>+	 * the socket can be closed.
+>+	 */
+>+	unsent = vsk->transport->unsent_bytes;
+>+	if (!unsent)
+>+		return;
+>+
+>+	add_wait_queue(sk_sleep(sk), &wait);
+>+
+>+	do {
+>+		if (sk_wait_event(sk, &timeout, unsent(vsk) == 0, &wait))
+>+			break;
+>+	} while (!signal_pending(current) && timeout);
+>+
+>+	remove_wait_queue(sk_sleep(sk), &wait);
+>+}
+>+EXPORT_SYMBOL_GPL(vsock_linger);
+>+
+> static int vsock_shutdown(struct socket *sock, int mode)
+> {
+> 	int err;
+>diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
+>index f2f1b166731b1bf2baa3db2854de19aa331128ea..7897fd970dd867bd2c97a2147e3a5c853fb514af 100644
+>--- a/net/vmw_vsock/virtio_transport_common.c
+>+++ b/net/vmw_vsock/virtio_transport_common.c
+>@@ -1191,25 +1191,6 @@ static void virtio_transport_remove_sock(struct vsock_sock *vsk)
+> 	vsock_remove_sock(vsk);
+> }
+>
+>-static void virtio_transport_wait_close(struct sock *sk, long timeout)
+>-{
+>-	if (timeout) {
+>-		DEFINE_WAIT_FUNC(wait, woken_wake_function);
+>-		struct vsock_sock *vsk = vsock_sk(sk);
+>-
+>-		add_wait_queue(sk_sleep(sk), &wait);
+>-
+>-		do {
+>-			if (sk_wait_event(sk, &timeout,
+>-					  virtio_transport_unsent_bytes(vsk) == 0,
+>-					  &wait))
+>-				break;
+>-		} while (!signal_pending(current) && timeout);
+>-
+>-		remove_wait_queue(sk_sleep(sk), &wait);
+>-	}
+>-}
+>-
+> static void virtio_transport_cancel_close_work(struct vsock_sock *vsk,
+> 					       bool cancel_timeout)
+> {
+>@@ -1279,8 +1260,8 @@ static bool virtio_transport_close(struct vsock_sock *vsk)
+> 	if ((sk->sk_shutdown & SHUTDOWN_MASK) != SHUTDOWN_MASK)
+> 		(void)virtio_transport_shutdown(vsk, SHUTDOWN_MASK);
+>
+>-	if (sock_flag(sk, SOCK_LINGER) && !(current->flags & PF_EXITING))
+>-		virtio_transport_wait_close(sk, sk->sk_lingertime);
+>+	if (!(current->flags & PF_EXITING))
+>+		vsock_linger(sk);
+>
+> 	if (sock_flag(sk, SOCK_DONE)) {
+> 		return true;
+>
+>-- 
+>2.49.0
+>
 
-One option I had thought of was to implement this using compatible 
-string, then for all the upcoming platforms using this compatible string 
-as a fallback.
-But this doesn't look optimal to use compatible string for just one flag 
-and also this capability is not platform specific and we will be needing 
-for all the platforms. Please share your opinion on this.
-
-Another option that I could have thought of is using device tree based 
-approach but seems that was not accepted earlier :
-https://patchwork.kernel.org/project/linux-mmc/patch/20230129023630.830764-1-chenhuiz@axis.com/
-
-So it would be helpful if you can suggest some approach?
