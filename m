@@ -1,101 +1,88 @@
-Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAF7019D06B;
-	Wed, 21 May 2025 16:16:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=208.88.110.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BB2422B5AC;
+	Wed, 21 May 2025 16:16:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747844212; cv=none; b=CUVAeEYDwN85KNIpGStBjzoadPjWrGtp63m0FaN7I1k4MZSNfpbg7PDY2e1mfS6X8KcIM05yA/2ZuIMe1Ro/c3AYLAIqvWQqoT4mhXUeanJRPbNys7RmllE15qdLwnfOmgDOeDhrvQtb8X7uyfDLbX76kANjELhFYm1mHpUXRmE=
+	t=1747844219; cv=none; b=IEbQbr8L0FJGf+FMSN50QEpmwj9DKv3OyJPhYswBTWa+pX4mEq9jPAX3KCYRsjuzscHWSp+LJ7IPV64DgLmbUH2RyaIk3PWlEuHmPCLn5M8bqDxhe0u/jYpwrtXWFhgPYJBnvFtSuOT3Y2K66UqaBUuLU4K3DxcE2VpxZWUZhGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747844212; c=relaxed/simple;
-	bh=1Hb/fV8vynL/WHoPFJUB7JwW6gI+j7HC1dneNvZqHD4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RvpduXRTZE6Ty/u/A4anFveCv2U+7yzCuoV3WLTJcsCyx1pmbptj4okTCgHzgKVGyC25K+hPAtZLAncde2N8HhmmuJGoEgSPV8JWiblUhWi2Mgm3tXd7+bGS0hrMGTF8PURB2rR4oqb3YhDbYrfZZCliSMQm4grz9xZbrULGXCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com; spf=pass smtp.mailfrom=savoirfairelinux.com; dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b=oDFVypqv; arc=none smtp.client-ip=208.88.110.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=savoirfairelinux.com
+	s=arc-20240116; t=1747844219; c=relaxed/simple;
+	bh=B4oxhPJUpgNUrajc83IjrVqK7rHcKNJCKJyvLqXmphM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JjD8EGOvKulPwVTmuoMb0XqHlVArmNUFpoZ2DaPl1JjcafSYSg944t71UoSbw1bxKDLCNUyRXm/Ea66ZSFlOKGb/N95VAakNyT52Ov3nywyWmWBaIj+1YaEZ2KTpBw9HMvYBNgVQNbA71ozvJSYeHyGZ/HS7Je4tfTDruS7VPC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R0+i3DkI; arc=none smtp.client-ip=209.85.210.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b="oDFVypqv"
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 3363F9C84F4;
-	Wed, 21 May 2025 12:16:46 -0400 (EDT)
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id 1XEZUwglflx3; Wed, 21 May 2025 12:16:45 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 7D7AD9C349D;
-	Wed, 21 May 2025 12:16:45 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 7D7AD9C349D
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R0+i3DkI"
+Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-72ecb4d9a10so7705825a34.3;
+        Wed, 21 May 2025 09:16:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
-	t=1747844205; bh=CNJLqa+6SVTv26hUSJn7PR+xYiguC9onV8d3jIXIGeQ=;
-	h=Date:From:To:Message-ID:MIME-Version;
-	b=oDFVypqvHIQ0SK+3G0UEBnx+4IfmmoXmcyHgScMJPoIk9/DInIK4fsjxFAhKwh+2y
-	 3mVLMdU+H7JWzpgmqpi34iu7Sfh55cf5NJjTeeBxTykMj9UNNJqvYUDP1AGoMXrXp4
-	 btWAE56KhHfpc98Le1+KhYSPL/IoyG4WB564nRIFdHLOTwUyteL+mOIF29OHOAcaal
-	 weT6sRIFQwr2CssbtPFtYf+7LqiNeqixGBh7H2DMOtDN8mEodJtDNRvcyT1EuD9Jmf
-	 KfIQbFLBs9InI+3Al6ImGE2bK0mQCYyYAG4SFjZMkZtW5+2cYdnccBZNGwAoa1NL68
-	 imPui4ptq954A==
-X-Virus-Scanned: amavis at mail.savoirfairelinux.com
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id x0Yn-fXdqO84; Wed, 21 May 2025 12:16:45 -0400 (EDT)
-Received: from fedora (unknown [192.168.51.254])
-	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id 2D8AC9C1464;
-	Wed, 21 May 2025 12:16:45 -0400 (EDT)
-Date: Wed, 21 May 2025 12:16:43 -0400
-From: Samuel Kayode <samuel.kayode@savoirfairelinux.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Lee Jones <lee@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Sebastian Reichel <sre@kernel.org>, Robin Gong <yibin.gong@nxp.com>,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-imx@nxp.com, linux-input@vger.kernel.org,
-	Abel Vesa <abelvesa@linux.com>, Abel Vesa <abel.vesa@nxp.com>,
-	Robin Gong <b38343@freescale.com>,
-	Enric Balletbo Serra <eballetbo@gmail.com>,
-	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
-	Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 4/9] dt-bindings: mfd: add pf1550
-Message-ID: <aC38a4hbxPqsUpXS@fedora>
-References: <cover.1747409892.git.samuel.kayode@savoirfairelinux.com>
- <8be1626f970c9fab8b50ae9ad45e0ddd88fa36bf.1747409892.git.samuel.kayode@savoirfairelinux.com>
- <31542315-5ea1-4849-b2f9-686cabce914a@kernel.org>
+        d=gmail.com; s=20230601; t=1747844217; x=1748449017; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=cgPZCOhzfhKQa7GH/ctMaTjQORCrQoSP/fn/OFIVK2M=;
+        b=R0+i3DkIGPdVR46e/qHXFHdVYBinBluFFejexasZfySUm9zVMndefegZa0x0bkj9p4
+         A9CqD9+mU+ix1APbtElteDaKS8LeIBxA2+iy5IrNbrCR93MC57YQ3vb1yw5W3cGyImmn
+         F6wlq+M8zisPqxyjn53VocjFQbvXBBwnBl7AM7i4c6UKE/Ha4YPyYd+GvvAQJ4pUWO1K
+         YuAiDpGEHxpxkiYlIz3UlnmrpGce23Tkm69Bx9eoxTPJuxKOEZWkBAirBN9rs6Mg8DyQ
+         M33losC+tUalI7PC4OLHyx8sdz2eh2QtHAvO1ei4NimfmRn9zNjrE1I/4Fs8Yml8lLua
+         hP3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747844217; x=1748449017;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cgPZCOhzfhKQa7GH/ctMaTjQORCrQoSP/fn/OFIVK2M=;
+        b=X4PuARIjUM+u2b1rzdCTJA1WH3Tl258tXaG8HYHig8/1snYeSJG0an1sD0C+wrMu8m
+         QhS4m1krtO2W/hft+y3bwdh/N6SePPUPTrGaHoH7is1hBNkcyS4P7g4A0BgdOBBoXrc6
+         pjupKxMTNJiLhae3EFX8uO1BGNTXtTM+freNdx12UUSu2VpTsCqa96UhdLeyJTG3tQEt
+         ZHHG05bPdNEkkxitjg0Jui5sZ10p2HLTYX0cDAFQoI6MIXeac8nv7HX2ZKJdig1Ch+EA
+         Ity+yP1pCFN1F5YVpbGfraDe+OlDotWJzY21elxknwqw2wrFsEeImMhkIg5k2dVfYWK9
+         gJ5g==
+X-Forwarded-Encrypted: i=1; AJvYcCUHeTAC7X8lQS3xARUAVucbc9yWj8+I3Nz5J9XK51HKuDc0LNV0XYCJJRkju0j2DbsJdhMbH1WUMJmSvJ+NrIn+eMCo@vger.kernel.org
+X-Gm-Message-State: AOJu0YzfHyVLYM6C/IBQIZ3mqbxLiLRegEkirsxQIskW7NzNdKqPhPgd
+	ot/Tu+xPiWY5CO4xE0G1QcDkirgHd193TwpKnRS5tm48c48DPD7yGzlq6NMOsA==
+X-Gm-Gg: ASbGncthY98xKFhtqXuVD+uFk0IWITPL51XiJ4D0uwNsT6fpzaGj1ddR/l861spT9lz
+	TOpuDub2HeV6+KNIBLvMvKOCVOMjEx4eQeRJPtwJpC4p1sp7cb4XRNxGZ8vOtqMwu9YEBzJ55FE
+	8eZVm7vn+00+fFGB2CwDvVUBnREGzPRzdIe5uOsY4PFx6icd4HPG/Pk3F2O+geXXRXpo1kWO7UQ
+	ou0e5t5bIEzvZ88RTB7ZKdU2CEengOr9XQIhTlG/UgU6qdJtyKBSAIlUCeEmGFAi+9+0qb01K16
+	KGM32S3grTQOgsNGWHGZeCmXfj3KITKXW2OTngXCioYuZvimMjgf41IBrC4kEJENmb+S2pBl2o/
+	xxpNUoYxAyQsLftiIkQ==
+X-Google-Smtp-Source: AGHT+IGSn7GVDNSw/kusSE7SZE44OAVnLLkF5o4VvRJj5c/XTRAdLquJcNGJ7fhtKrCXZzJ8/NAI+g==
+X-Received: by 2002:a05:6808:2289:b0:3f8:498c:9ef4 with SMTP id 5614622812f47-404d87fe3b9mr13894993b6e.24.1747844216704;
+        Wed, 21 May 2025 09:16:56 -0700 (PDT)
+Received: from localhost.localdomain.adc.delllabs.net ([143.166.81.254])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-404d9809bccsm2180129b6e.29.2025.05.21.09.16.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 May 2025 09:16:56 -0700 (PDT)
+From: Stuart Hayes <stuart.w.hayes@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	platform-driver-x86@vger.kernel.org
+Cc: Stuart Hayes <stuart.w.hayes@gmail.com>
+Subject: [PATCH 0/2] platform/x86: dell_rbu: Packet data fixes
+Date: Wed, 21 May 2025 11:16:37 -0500
+Message-ID: <20250521161639.47357-1-stuart.w.hayes@gmail.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <31542315-5ea1-4849-b2f9-686cabce914a@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Sat, May 17, 2025 at 01:16:38PM +0200, Krzysztof Kozlowski wrote:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  regulators:
-> > +    $ref: /schemas/regulator/pf1550.yaml
-> > +
-> > +  charger:
-> > +    $ref: /schemas/power/supply/pf1550_charger.yaml
-> > +
-> > +  onkey:
-> > +    $ref: /schemas/input/pf1550_onkey.yaml
-> 
-> This makes merging via separate trees not possible...
-> 
-> Just fold everything here, drop compatibles and then put binding in the
-> regulator. Unless children are re-usable which would justify
-> compatibles, but then please provide arguments for that.
+Two fixes related to packet data.
 
-Yes, compatibles are not needed for the children. For adding binding to the
-regulator, did you mean for all children: charger and onkey included? So,
-replacing the separate yaml for all children with bindings in the mfd yaml?
+Stuart Hayes (2):
+  platform/x86: dell_rbu: Fix list usage
+  platform/x86: dell_rbu: Stop overwriting data buffer
 
-Thanks,
-Sam
+ drivers/platform/x86/dell/dell_rbu.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+-- 
+2.47.1
+
