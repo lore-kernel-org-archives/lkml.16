@@ -1,105 +1,319 @@
-Received: from mail.savoirfairelinux.com (mail.savoirfairelinux.com [208.88.110.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A327145FE0;
-	Wed, 21 May 2025 21:00:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=208.88.110.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6824D22B8D0
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 21:04:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747861237; cv=none; b=fsHXXRoYqmsPWXLCPqe3OnmI3cQOZXPxArv83JvNFXf5iDVoijlXvhQuecTiSdEjd9BHTLxj7VDU49qa/bj6W6wk70VGZt2yah+U8fhoUGLbsIgM7sclEUiCscJtkKHERBdmWmLQAu4uhbIFxHohPTJsNqUirEvIYY7hsen3fz0=
+	t=1747861461; cv=none; b=ZZWjIccYgU29gLxnyGLrxT2hHVSa8O+FGcBCA4kv4wg+j9uVdsk86DpmiIvM07aD22+lBS1hCzqCUOVpiw5DC2DPWnR5abq5S5xm41i4qkR71+VosQbu9kf44QT9aBWzbO8+3zAZkKZm9rNLjnbHop/FxQu8BCcHiHB6OjPnSpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747861237; c=relaxed/simple;
-	bh=0oYjCXjS4sH9UQwXXGgifJus/SXfuN9+9VoHkC7p0dY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Nsq+YeJrWulo6f0EHT23ZSJ06aBKwTbCiHT1i5vGeHBwYI2ikAWk0/JdxJeLOktDN8laf4Wd++ibzUKlXcmez/ZGM9bi8nfIqw2LNMdX7NAu+BvMo7WIcxX70DSkiSTzDoUjJOnxBz9oOikB3Ohtdt3eOh/vKndniTKVnM7wSwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com; spf=pass smtp.mailfrom=savoirfairelinux.com; dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b=CIjmP3oc; arc=none smtp.client-ip=208.88.110.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=savoirfairelinux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=savoirfairelinux.com
+	s=arc-20240116; t=1747861461; c=relaxed/simple;
+	bh=JzJvkSy83wbjXuXRYHa0uZFurnD/wkEJrnn5mEpke7s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SvTWmgOjCd2IRBjpUe5BRsb1e3mo26izDN7+JhJ9Yjj2PuKR0BXGvE1FbTUf50vzARMtbTWmhuZENQe7wK5kgoHEuX8ev0EQRLk+WDyZQMppklaeuwofcPT45v0kK48Skn9gD+k01tRuFDM9PA1sxyB6/qix78iUzDd6Ez1VgQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=G90upe9/; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=savoirfairelinux.com header.i=@savoirfairelinux.com header.b="CIjmP3oc"
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 8EBDE9C11E3;
-	Wed, 21 May 2025 17:00:32 -0400 (EDT)
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10032)
- with ESMTP id qbZlAlv4cQFW; Wed, 21 May 2025 17:00:32 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.savoirfairelinux.com (Postfix) with ESMTP id 211739C349D;
-	Wed, 21 May 2025 17:00:32 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.savoirfairelinux.com 211739C349D
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="G90upe9/"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-3108652400cso247543a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 14:04:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=savoirfairelinux.com; s=DFC430D2-D198-11EC-948E-34200CB392D2;
-	t=1747861232; bh=VSYCrUr2jQIFVHQA14LqoWAe4hyMiMmPDg22XFPGbLo=;
-	h=Date:From:To:Message-ID:MIME-Version;
-	b=CIjmP3ocacJryrBlWDhDAtaS8OiO4p0fuHF7dOuNYaoLTQvwUTUaUPlpflOM0azCq
-	 c1RiBg+Y67LQpI4DS3xT5TDb0qUaD4x1U1aNYu30IjDw5ZX5ERXY0N0tbRRYPNT1Ny
-	 msbWllEy2Ck3gqEl6eAMRJlVdOujWcRsfUGeJoBJKlTWYHn2NxEpOs3Nk+mPHlg1/N
-	 1amI991f2hB7thbXenYwooN6myQZ2svMV6MN+QwLsWS1vyRT8G/p2cVOYRaBQyoIJt
-	 YU3YzQGqEEZBAOwo086pFm9UnPA/8F5a1sZj8q/iEGnCjr+1cvxcnwzzkl3/UBzP55
-	 HS0JkDyKUKMuA==
-X-Virus-Scanned: amavis at mail.savoirfairelinux.com
-Received: from mail.savoirfairelinux.com ([127.0.0.1])
- by localhost (mail.savoirfairelinux.com [127.0.0.1]) (amavis, port 10026)
- with ESMTP id 8pC_bwiUjZXw; Wed, 21 May 2025 17:00:32 -0400 (EDT)
-Received: from fedora (unknown [192.168.51.254])
-	by mail.savoirfairelinux.com (Postfix) with ESMTPSA id D2F619C11E3;
-	Wed, 21 May 2025 17:00:31 -0400 (EDT)
-Date: Wed, 21 May 2025 17:00:30 -0400
-From: Samuel Kayode <samuel.kayode@savoirfairelinux.com>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Lee Jones <lee@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Sebastian Reichel <sre@kernel.org>,
-	Robin Gong <yibin.gong@nxp.com>, linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org, linux-imx@nxp.com,
-	linux-input@vger.kernel.org, Abel Vesa <abelvesa@linux.com>,
-	Abel Vesa <abel.vesa@nxp.com>, Robin Gong <b38343@freescale.com>,
-	Enric Balletbo Serra <eballetbo@gmail.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 7/9] input: pf1550: add onkey support
-Message-ID: <aC4-7pNAFn9jN-DI@fedora>
-References: <cover.1747409892.git.samuel.kayode@savoirfairelinux.com>
- <7d80afedf1ad9e98c9739163751bcb2785009e74.1747409892.git.samuel.kayode@savoirfairelinux.com>
- <pnfj4tyj3hovtu5ttnecmgozdq7hm2clxhl4xpuzrahlrzqmdm@qpdr4z2y5ylg>
+        d=purestorage.com; s=google2022; t=1747861459; x=1748466259; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=a8E8wJ2KkrPpB4/N0ejd9jMNIZBIK2MiFknrDOo+EPg=;
+        b=G90upe9/oAIDS/7Oinivr+q4+aY9GvoAtFBv+1EA49A9uGIXPNyq6XJwKRIAj1ZQls
+         X13a6x8C6WvzrJQH3byvUMeedA0KPA2SQhGu38NxMFmfMfRHXdQphvHCKukAwFsWLi3e
+         cKyBqDiHmrcxb4lb/z6LIv/B4L295eYOqamElhclqj4/jUPaCdKXhWd/bdoAmd5cROYA
+         lBUe5JtEkZNpd8xKBkKorn/eIL58IvrjO32HtNFvDMMcAjbKA9vdCz3uJ/PnzU24Eqou
+         JQrYccMy+6WAK+L+3DwvuTYmjOI44+mpsDCoMepc+BBFs2IzO/8MgIOJb+ks+6qkl6ks
+         Inpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747861459; x=1748466259;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=a8E8wJ2KkrPpB4/N0ejd9jMNIZBIK2MiFknrDOo+EPg=;
+        b=NQRZ24ohYyi18F3qP/X2ySI9o+7SyXRk1JsmgWjdGNG4jpcjA3SI00+RRMtw5ylUPt
+         NwZaPTxO/Qs0KdMMOuFD7iey7I16EgagujGVQ6APKQ8kc0w4YTVqpUi7UBoImKZXUvIh
+         Zw59o4vprM1YbXTCXd2xtaKHrG1hfNw4HY1Qqkvg1t+JuLUzYOEwteZZC1guCYW8oyed
+         JcsRRCFC1+sfwiPd7NrsBJqE8wMqIR4IkV0qRiM++CZS40Ded9yVFUfqRkULGjLUXnDd
+         6f7Y7wn8jsX6CJJlI/ba6PreiFe4oDONcyRLtTZmL3OUa7rhsg5h/BkQ3r6PmDtUT4oi
+         Y1ng==
+X-Forwarded-Encrypted: i=1; AJvYcCURzaVAby+1tK1oKgUkj1pTmsq0u6HMvSmnuvlvXUkKvoPJ1yV7on4nAFvi1GW7OW/dO1kHxbno3kuHlu4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJooGHH/4c3GJPcPGSkYqxABsYyQeTyz8+31AsTvkO5HyFKilc
+	v8/YL4P/2CwE5ZCgU3AqPYopNT1vlqx5a3h5lyA+hfDBYw6PsZpHkscS9B46idNpQ73IfUbPM3v
+	zX1vPFCWDh/iMqb/Ql2fMmETaC2m738lEbMCNp50+lg==
+X-Gm-Gg: ASbGnctXwXx4UerUyhKBWYhWHQ3D87w0DKmxMq7H0QJlEDGZHMOinZ3NPTD9tb66016
+	KrvlcYfNfMzbDxfhx4GYYRpg4d198MLhNK+Q6u+ESenAqyGGvHP8JO1qopGUomMTbxW9sIUu82a
+	9oq3W5sjkL8DBs8cea7NL/O9AIT6FF77Kx
+X-Google-Smtp-Source: AGHT+IFrKr2jOATSh5phGB7JDX3d0p2qTLIwC0enPg9MgjlANV5ZNeu2VZnogm+JbvBPSdfOD03MBfWftCNR0tBRptM=
+X-Received: by 2002:a17:90b:3142:b0:30e:6ac1:372a with SMTP id
+ 98e67ed59e1d1-30e7d691099mr12156692a91.7.1747861458366; Wed, 21 May 2025
+ 14:04:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <pnfj4tyj3hovtu5ttnecmgozdq7hm2clxhl4xpuzrahlrzqmdm@qpdr4z2y5ylg>
+References: <20250521160602.1940771-1-surenb@google.com>
+In-Reply-To: <20250521160602.1940771-1-surenb@google.com>
+From: Casey Chen <cachen@purestorage.com>
+Date: Wed, 21 May 2025 14:04:07 -0700
+X-Gm-Features: AX0GCFvHkqtUFc-QqB9enzcf-M5GCvbCgMbexO38pxocJAzfC9FE27WWxlR2Ro8
+Message-ID: <CALCePG2f+aXvabQiJ-=jYL1c4Z-RZW-=Rkj3LLxXDW+WFXwuBA@mail.gmail.com>
+Subject: Re: [PATCH 1/1] alloc_tag: handle module codetag load errors as
+ module load failures
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: akpm@linux-foundation.org, kent.overstreet@linux.dev, mcgrof@kernel.org, 
+	petr.pavlu@suse.com, samitolvanen@google.com, da.gomez@samsung.com, 
+	00107082@163.com, linux-kernel@vger.kernel.org, linux-modules@vger.kernel.org, 
+	linux-mm@kvack.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 16, 2025 at 03:55:02PM -0700, Dmitry Torokhov wrote:
-> > +	input->name = pdev->name;
-> > +	input->phys = "pf1550-onkey/input0";
-> > +	input->id.bustype = BUS_HOST;
-> > +
-> > +	input_set_capability(input, EV_KEY, onkey->keycode);
-> > +
-> > +	for (i = 0; i < ARRAY_SIZE(pf1550_onkey_irqs); i++) {
-> > +		struct pf1550_irq_info *onkey_irq =
-> > +						&pf1550_onkey_irqs[i];
-> > +		unsigned int virq = 0;
-> > +
-> > +		virq = regmap_irq_get_virq(pf1550->irq_data_onkey,
-> > +					   onkey_irq->irq);
-> > +		if (!virq)
-> > +			return -EINVAL;
-> > +
-> > +		onkey_irq->virq = virq;
-> 
-> I think this kind of mapping needs to be done in the core part of your
-> driver.
+On Wed, May 21, 2025 at 9:06=E2=80=AFAM Suren Baghdasaryan <surenb@google.c=
+om> wrote:
 >
-Without doing the mapping in the MFD children, a list of all virqs for the PMIC
-would have to be maintained in addition to the (regmap_irq) irqs. Perhaps,
-there is a better way to implement this?
-> > +
-> > +		error = devm_request_threaded_irq(&pdev->dev, virq, NULL,
-> > +						  pf1550_onkey_irq_handler,
-> > +					IRQF_NO_SUSPEND,
-> > +					onkey_irq->name, onkey);
-Thanks,
-Sam
+> Failures inside codetag_load_module() are currently ignored. As a
+> result an error there would not cause a module load failure and freeing
+> of the associated resources. Correct this behavior by propagating the
+> error code to the caller and handling possible errors. With this change,
+> error to allocate percpu counters, which happens at this stage, will not
+> be ignored and will cause a module load failure and freeing of resources.
+> With this change we also do not need to disable memory allocation
+> profiling when this error happens, instead we fail to load the module.
+>
+> Fixes: 10075262888b ("alloc_tag: allocate percpu counters for module tags=
+ dynamically")
+> Reported-by: Casey Chen <cachen@purestorage.com>
+> Closes: https://lore.kernel.org/all/20250520231620.15259-1-cachen@puresto=
+rage.com/
+> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+> Cc: stable@vger.kernel.org
+> ---
+>  include/linux/codetag.h |  8 ++++----
+>  kernel/module/main.c    |  5 +++--
+>  lib/alloc_tag.c         | 12 +++++++-----
+>  lib/codetag.c           | 34 +++++++++++++++++++++++++---------
+>  4 files changed, 39 insertions(+), 20 deletions(-)
+>
+> diff --git a/include/linux/codetag.h b/include/linux/codetag.h
+> index 0ee4c21c6dbc..5f2b9a1f722c 100644
+> --- a/include/linux/codetag.h
+> +++ b/include/linux/codetag.h
+> @@ -36,8 +36,8 @@ union codetag_ref {
+>  struct codetag_type_desc {
+>         const char *section;
+>         size_t tag_size;
+> -       void (*module_load)(struct module *mod,
+> -                           struct codetag *start, struct codetag *end);
+> +       int (*module_load)(struct module *mod,
+> +                          struct codetag *start, struct codetag *end);
+>         void (*module_unload)(struct module *mod,
+>                               struct codetag *start, struct codetag *end)=
+;
+>  #ifdef CONFIG_MODULES
+> @@ -89,7 +89,7 @@ void *codetag_alloc_module_section(struct module *mod, =
+const char *name,
+>                                    unsigned long align);
+>  void codetag_free_module_sections(struct module *mod);
+>  void codetag_module_replaced(struct module *mod, struct module *new_mod)=
+;
+> -void codetag_load_module(struct module *mod);
+> +int codetag_load_module(struct module *mod);
+>  void codetag_unload_module(struct module *mod);
+>
+>  #else /* defined(CONFIG_CODE_TAGGING) && defined(CONFIG_MODULES) */
+> @@ -103,7 +103,7 @@ codetag_alloc_module_section(struct module *mod, cons=
+t char *name,
+>                              unsigned long align) { return NULL; }
+>  static inline void codetag_free_module_sections(struct module *mod) {}
+>  static inline void codetag_module_replaced(struct module *mod, struct mo=
+dule *new_mod) {}
+> -static inline void codetag_load_module(struct module *mod) {}
+> +static inline int codetag_load_module(struct module *mod) { return 0; }
+>  static inline void codetag_unload_module(struct module *mod) {}
+>
+>  #endif /* defined(CONFIG_CODE_TAGGING) && defined(CONFIG_MODULES) */
+> diff --git a/kernel/module/main.c b/kernel/module/main.c
+> index 5c6ab20240a6..9861c2ac5fd5 100644
+> --- a/kernel/module/main.c
+> +++ b/kernel/module/main.c
+> @@ -3399,11 +3399,12 @@ static int load_module(struct load_info *info, co=
+nst char __user *uargs,
+>                         goto sysfs_cleanup;
+>         }
+>
+> +       if (codetag_load_module(mod))
+> +               goto sysfs_cleanup;
+> +
+>         /* Get rid of temporary copy. */
+>         free_copy(info, flags);
+>
+> -       codetag_load_module(mod);
+> -
+>         /* Done! */
+>         trace_module_load(mod);
+>
+> diff --git a/lib/alloc_tag.c b/lib/alloc_tag.c
+> index 45dae7da70e1..d48b80f3f007 100644
+> --- a/lib/alloc_tag.c
+> +++ b/lib/alloc_tag.c
+> @@ -607,15 +607,16 @@ static void release_module_tags(struct module *mod,=
+ bool used)
+>         mas_unlock(&mas);
+>  }
+>
+> -static void load_module(struct module *mod, struct codetag *start, struc=
+t codetag *stop)
+> +static int load_module(struct module *mod, struct codetag *start, struct=
+ codetag *stop)
+>  {
+>         /* Allocate module alloc_tag percpu counters */
+>         struct alloc_tag *start_tag;
+>         struct alloc_tag *stop_tag;
+>         struct alloc_tag *tag;
+>
+> +       /* percpu counters for core allocations are already statically al=
+located */
+>         if (!mod)
+> -               return;
+> +               return 0;
+>
+>         start_tag =3D ct_to_alloc_tag(start);
+>         stop_tag =3D ct_to_alloc_tag(stop);
+> @@ -627,12 +628,13 @@ static void load_module(struct module *mod, struct =
+codetag *start, struct codeta
+>                                 free_percpu(tag->counters);
+>                                 tag->counters =3D NULL;
+>                         }
+> -                       shutdown_mem_profiling(true);
+> -                       pr_err("Failed to allocate memory for allocation =
+tag percpu counters in the module %s. Memory allocation profiling is disabl=
+ed!\n",
+> +                       pr_err("Failed to allocate memory for allocation =
+tag percpu counters in the module %s\n",
+>                                mod->name);
+> -                       break;
+> +                       return -ENOMEM;
+>                 }
+>         }
+> +
+> +       return 0;
+>  }
+>
+>  static void replace_module(struct module *mod, struct module *new_mod)
+> diff --git a/lib/codetag.c b/lib/codetag.c
+> index de332e98d6f5..650d54d7e14d 100644
+> --- a/lib/codetag.c
+> +++ b/lib/codetag.c
+> @@ -167,6 +167,7 @@ static int codetag_module_init(struct codetag_type *c=
+ttype, struct module *mod)
+>  {
+>         struct codetag_range range;
+>         struct codetag_module *cmod;
+> +       int mod_id;
+>         int err;
+>
+>         range =3D get_section_range(mod, cttype->desc.section);
+> @@ -190,11 +191,20 @@ static int codetag_module_init(struct codetag_type =
+*cttype, struct module *mod)
+>         cmod->range =3D range;
+>
+>         down_write(&cttype->mod_lock);
+> -       err =3D idr_alloc(&cttype->mod_idr, cmod, 0, 0, GFP_KERNEL);
+> -       if (err >=3D 0) {
+> -               cttype->count +=3D range_size(cttype, &range);
+> -               if (cttype->desc.module_load)
+> -                       cttype->desc.module_load(mod, range.start, range.=
+stop);
+> +       mod_id =3D idr_alloc(&cttype->mod_idr, cmod, 0, 0, GFP_KERNEL);
+> +       if (mod_id >=3D 0) {
+> +               if (cttype->desc.module_load) {
+> +                       err =3D cttype->desc.module_load(mod, range.start=
+, range.stop);
+> +                       if (!err)
+> +                               cttype->count +=3D range_size(cttype, &ra=
+nge);
+> +                       else
+> +                               idr_remove(&cttype->mod_idr, mod_id);
+> +               } else {
+> +                       cttype->count +=3D range_size(cttype, &range);
+> +                       err =3D 0;
+> +               }
+> +       } else {
+> +               err =3D mod_id;
+>         }
+>         up_write(&cttype->mod_lock);
+>
+
+Overall looks good, just one small nit: should we not increase
+cttype->count if there is no module_load callback ?
+Personally I prefer having tag allocation and counter allocation at
+the same place in move_module() by calling something like
+codetag_alloc_module_tag_counter(). But your approach looks more
+modular. I don't have a strong preference, you can choose what you
+want. Thanks!
+
+int codetag_alloc_module_tag_counter(struct module *mod, void *start_addr,
+                                        unsigned long size)
+{
+        struct codetag_type *cttype;
+        int ret =3D -ENODEV;
+
+        mutex_lock(&codetag_lock);
+        list_for_each_entry(cttype, &codetag_types, link) {
+                if (WARN_ON(!cttype->desc.alloc_counter_mem))
+                        break;
+
+                down_write(&cttype->mod_lock);
+                ret =3D cttype->desc.alloc_counter_mem(mod, start_addr, siz=
+e);
+                up_write(&cttype->mod_lock);
+                break;
+        }
+        mutex_unlock(&codetag_lock);
+
+        return ret;
+}
+
+Casey
+
+> @@ -295,17 +305,23 @@ void codetag_module_replaced(struct module *mod, st=
+ruct module *new_mod)
+>         mutex_unlock(&codetag_lock);
+>  }
+>
+> -void codetag_load_module(struct module *mod)
+> +int codetag_load_module(struct module *mod)
+>  {
+>         struct codetag_type *cttype;
+> +       int ret =3D 0;
+>
+>         if (!mod)
+> -               return;
+> +               return 0;
+>
+>         mutex_lock(&codetag_lock);
+> -       list_for_each_entry(cttype, &codetag_types, link)
+> -               codetag_module_init(cttype, mod);
+> +       list_for_each_entry(cttype, &codetag_types, link) {
+> +               ret =3D codetag_module_init(cttype, mod);
+> +               if (ret)
+> +                       break;
+> +       }
+>         mutex_unlock(&codetag_lock);
+> +
+> +       return ret;
+>  }
+>
+>  void codetag_unload_module(struct module *mod)
+>
+> base-commit: 9f3e87f6c8d4b28b96eb8bddb22d3ba4b846e10b
+> --
+> 2.49.0.1112.g889b7c5bd8-goog
+>
