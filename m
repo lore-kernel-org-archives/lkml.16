@@ -1,94 +1,245 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AA7922DF8C;
-	Wed, 21 May 2025 08:41:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7110B2367D0;
+	Wed, 21 May 2025 08:41:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747816903; cv=none; b=WHeuHYXtDSVDNWuDYJxS6cnGF1NaUoIW3LxmPurf1GHtZsZd696sgh1klzcgTEIPLLJv65iE3iisHQnThUrgOJ1svJyfDiHCDolovFP4GszdjeXZIg4JlGPfKgRF68y8csc7pLlctVbsnSD+oD3ksU5z3x16SOujn0fxtfN6ngI=
+	t=1747816912; cv=none; b=DPerqz45XL0aYtJ6j+THVJcvHa8zIUoOM0k8PRvVzqlgujgAAfsr5YMo8vBAkQmbvGipeBoAjCiPGtwzlwzB8UhNeob/tUUOsxGcQb9DvuISso444wv9fg8mZu5j0lmCa4ekpTIQFal1HZDU5phyZozM18E1W1NV/SNKpqNpEhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747816903; c=relaxed/simple;
-	bh=uDw+ZJwPUxdSq79IaOADCgJrAkenZYaEAEllmnA9MDk=;
+	s=arc-20240116; t=1747816912; c=relaxed/simple;
+	bh=4jfGSis9Qh/pxYay/aAdFNfBiH3s1mplkibIkIRMd1c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eA/bmtPtoZroSfbvZRVWjaZdsZtr68irX14ZaUXZDw+xxPzCt+ubn8oQwaMEQ2QyTnZlap/lXM3QsezxqhQvLqqgswZhRLXOBtcPLZkyZtZ4Agp/aA0nZrwSLPfZR3IkGZhYQyC4HE668zmFRncUSOX1Vi7jbfZsNisdgmwY1gI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Te1UzWPM; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=AoDvjuRICB/v0uYhySWRzjNT7FNUwBc0yZVH7MCs5gT+qjT706hwrN9B7U3OJ0ok/FQigzc/xSD4YPG2bmO1ocDczOZz0c77spwioy+Rbb3M9KA3Lr/X+ZxCp6YldmP/V0cq65sfFOd9C9GqEmdoMJnhb7gtFfLeARaJ4gJmaIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vqn5gZTv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Te1UzWPM"
-Received: by linux.microsoft.com (Postfix, from userid 1173)
-	id 85448206832E; Wed, 21 May 2025 01:41:41 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 85448206832E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1747816901;
-	bh=tm3MPeyl5HQEq5tXrQRcuuPXKgXrLcNsWDnrjbtd2j8=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vqn5gZTv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C5CBC4CEE4;
+	Wed, 21 May 2025 08:41:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747816911;
+	bh=4jfGSis9Qh/pxYay/aAdFNfBiH3s1mplkibIkIRMd1c=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Te1UzWPMJbaE7ikWZF5NBSuS4LtcbCPuwnIeM7MGge51yMYKZt47Mv25LGNXiuHwd
-	 fpV0GNyvDTyo6ID/nGVU90BzMl8A1TpX9F8Jd+q1qt5vwCSL5cVH1gpLXPAJHitAru
-	 9pPqZyvMre1TESFttWl5kkfXE1jRtvY5qdCCdYUQ=
-Date: Wed, 21 May 2025 01:41:41 -0700
-From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-To: Saurabh Sengar <ssengar@linux.microsoft.com>
-Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
-	edumazet@google.com, pabeni@redhat.com, horms@kernel.org,
-	ast@kernel.org, daniel@iogearbox.net, hawk@kernel.org,
-	john.fastabend@gmail.com, sdf@fomichev.me, kuniyu@amazon.com,
-	ahmed.zaki@intel.com, aleksander.lobakin@intel.com,
-	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	ssengar@microsoft.com, stable@vger.kernel.org
-Subject: Re: [PATCH net] hv_netvsc: fix potential deadlock in
- netvsc_vf_setxdp()
-Message-ID: <20250521084141.GA10135@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <1747540070-11086-1-git-send-email-ssengar@linux.microsoft.com>
+	b=Vqn5gZTvVevHaKK5ZJvIR+LOTmkVd20thr9JrgkG/VKyHCMNHEkxBoHuyjkGdLoXQ
+	 7qQ4VJjeqcpTbGEsKyCd0wL3r+dBmTGIyhLbXvZywUcH7pU8KGL5xSaJ2aOBBj4z4b
+	 /l9L5b3h1BCKTPNT/7QCf8cxXuf4NCXuck7g1aNJoTc9Fz0Yy0iIyD9iIGzNfKCaJx
+	 S8SKoLP8NnWeljmivclytsa/2qQk3fCiO3KlqrjE7wgzrd25CSemN1vIYjr2Fn05NS
+	 Dg78bPrhuIfFrCIWWtqjPQDq3+Lmm6aiOwHOjhUEsiF0FJr4SgiEiO8oJTZGk0/k1M
+	 d8dJ+iBnUJIVg==
+Date: Wed, 21 May 2025 10:41:49 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Marcelo Schmitt <marcelo.schmitt@analog.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, jic23@kernel.org, lars@metafoo.de, 
+	Michael.Hennerich@analog.com, dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org, 
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	linus.walleij@linaro.org, brgl@bgdev.pl, marcelo.schmitt1@gmail.com
+Subject: Re: [PATCH v3 01/10] dt-bindings: iio: adc: Add AD4170
+Message-ID: <20250521-colorful-paper-coot-ce9ffb@kuoka>
+References: <cover.1747083143.git.marcelo.schmitt@analog.com>
+ <5fa867cff437c0c6d3f0122af823e1677a12d189.1747083143.git.marcelo.schmitt@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1747540070-11086-1-git-send-email-ssengar@linux.microsoft.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <5fa867cff437c0c6d3f0122af823e1677a12d189.1747083143.git.marcelo.schmitt@analog.com>
 
-On Sat, May 17, 2025 at 08:47:50PM -0700, Saurabh Sengar wrote:
-> The MANA driver's probe registers netdevice via the following call chain:
-> 
-> mana_probe()
->   register_netdev()
->     register_netdevice()
-> 
-> register_netdevice() calls notifier callback for netvsc driver,
-> holding the netdev mutex via netdev_lock_ops().
-> 
-> Further this netvsc notifier callback end up attempting to acquire the
-> same lock again in dev_xdp_propagate() leading to deadlock.
-> 
-> netvsc_netdev_event()
->   netvsc_vf_setxdp()
->     dev_xdp_propagate()
-> 
-> This deadlock was not observed so far because net_shaper_ops was never
-> set and this lock in noop in this case. Fix this by using
-> netif_xdp_propagate instead of dev_xdp_propagate to avoid recursive
-> locking in this path.
-> 
-> This issue has not observed so far because net_shaper_ops was unset,
-> making the lock path effectively a no-op. To prevent recursive locking
-> and avoid this deadlock, replace dev_xdp_propagate() with
-> netif_xdp_propagate(), which does not acquire the lock again.
-> 
-> Also, clean up the unregistration path by removing unnecessary call to
-> netvsc_vf_setxdp(), since unregister_netdevice_many_notify() already
-> performs this cleanup via dev_xdp_uninstall.
-> 
-> Fixes: 97246d6d21c2 ("net: hold netdev instance lock during ndo_bpf")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Saurabh Sengar <ssengar@linux.microsoft.com>
+On Tue, May 13, 2025 at 09:33:40AM GMT, Marcelo Schmitt wrote:
+> Add device tree documentation for AD4170 and similar sigma-delta ADCs.
+> The AD4170 is a 24-bit, multichannel, sigma-delta ADC.
+>=20
+> Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
 > ---
+> Change log v2 -> v3
+>=20
+> [device tree changes]
+> - Removed unneeded allOf.
+> - Removed occurences of adi,sensor-type type re-declaration.
+> - Created type for the AD4170 channels, allowing to avoid dt doc repetiti=
+on.
+>=20
+>  .../bindings/iio/adc/adi,ad4170.yaml          | 544 ++++++++++++++++++
+>  MAINTAINERS                                   |   7 +
+>  2 files changed, 551 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad4170.=
+yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad4170.yaml b/=
+Documentation/devicetree/bindings/iio/adc/adi,ad4170.yaml
+> new file mode 100644
+> index 000000000000..0a06258b6631
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad4170.yaml
+> @@ -0,0 +1,544 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/adc/adi,ad4170.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices AD4170 and similar Analog to Digital Converters
+> +
+> +maintainers:
+> +  - Marcelo Schmitt <marcelo.schmitt@analog.com>
+> +
+> +description: |
+> +  Analog Devices AD4170 series of Sigma-delta Analog to Digital Converte=
+rs.
+> +  Specifications can be found at:
+> +    https://www.analog.com/media/en/technical-documentation/data-sheets/=
+ad4170-4.pdf
+> +    https://www.analog.com/media/en/technical-documentation/data-sheets/=
+ad4190-4.pdf
+> +    https://www.analog.com/media/en/technical-documentation/data-sheets/=
+ad4195-4.pdf
+> +
+> +$ref: /schemas/spi/spi-peripheral-props.yaml#
+> +
+> +$defs:
+> +  ad4170-channel:
+> +    type: object
+> +    $ref: /schemas/iio/adc/adc.yaml#
+> +    description:
+> +      Common properties for configuring AD4170 channels.
+> +
+> +    properties:
+> +      adi,reference-select:
+> +        description: |
+> +          Selects the reference source to use when converting on the spe=
+cific
+> +          channel. Valid values are:
+> +          0: Differential reference voltage REFIN+ - REFIN=E2=88=92.
+> +          1: Differential reference voltage REFIN2+ - REFIN2=E2=88=92.
+> +          2: Internal 2.5V referece (REFOUT) relative to AVSS.
+> +          3: Analog supply voltage (AVDD) relative AVSS.
+> +        $ref: /schemas/types.yaml#/definitions/uint8
+> +        enum: [0, 1, 2, 3]
+> +
+> +
 
-Built and booted successfully. 
+Remove excessive lines, also in other places.
 
-Tested-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com> 
+> +  sensor-node:
+> +    type: object
+> +    $ref: '#/$defs/ad4170-channel'
 
-Thanks!
+I do not understand this binding. channel@ node is a channel and sensors
+like rtd@ is also channel but also sensor. What is the point of channel@
+which is not a sensor?
+
+
+> +    description:
+> +      The AD4170 and similar designs have features to aid interfacing wi=
+th weigh
+> +      scale, RTD, and thermocouple sensors. Each of those sensor types r=
+equires
+> +      either distinct wiring configuration or external circuitry for pro=
+per
+> +      sensor operation and can use different AD4170 functionality on the=
+ir
+> +      setups. A key characteristic of those external sensors is that the=
+y must
+> +      be excited either by voltage supply or by AD4170 excitation signal=
+s. The
+> +      sensor can then be read through a pair of analog inputs. These pro=
+perties
+> +      describe external sensor circuitry connected to the ADC.
+> +
+> +    properties:
+> +      reg:
+> +        description:
+> +          Channel number. Connects the sensor to the channel with this n=
+umber
+> +          of the device.
+> +        minimum: 1
+> +        maximum: 16
+
+=2E..
+
+> > +patternProperties:
+> +  "^channel@[0-9a-f]$":
+> +    $ref: '#/$defs/ad4170-channel'
+> +    unevaluatedProperties: false
+> +    description:
+> +      Represents the external channels which are connected to the ADC.
+> +
+> +    properties:
+> +      reg:
+> +        description:
+> +          The channel number.
+> +        minimum: 0
+> +        maximum: 15
+> +
+> +      diff-channels:
+> +        description: |
+> +          This property is used for defining the inputs of a differential
+> +          voltage channel. The first value is the positive input and the=
+ second
+> +          value is the negative input of the channel.
+> +
+> +          Besides the analog input pins AIN0 to AIN8, there are special =
+inputs
+> +          that can be selected with the following values:
+> +          17: Internal temperature sensor
+> +          18: (AVDD-AVSS)/5
+> +          19: (IOVDD-DGND)/5
+> +          20: DAC output
+> +          21: ALDO
+> +          22: DLDO
+> +          23: AVSS
+> +          24: DGND
+> +          25: REFIN+
+> +          26: REFIN-
+> +          27: REFIN2+
+> +          28: REFIN2-
+> +          29: REFOUT
+> +          For the internal temperature sensor, use the input number for =
+both
+> +          inputs (i.e. diff-channels =3D <17 17>).
+> +        items:
+> +          enum: [0, 1, 2, 3, 4, 5, 6, 7, 8, 17, 18, 19, 20, 21, 22, 23, =
+24, 25,
+> +                 26, 27, 28, 29]
+> +
+> +      single-channel: true
+> +
+> +      common-mode-channel: true
+> +
+> +      bipolar: true
+
+Why all these 'true' are needed here and everywhere else?
+
+> +
+> +      adi,buffered-positive:
+> +        description: |
+> +          Enable precharge buffer, full buffer, or skip reference buffer=
+ing of
+> +          the positive voltage reference. Because the output impedance o=
+f the
+> +          source driving the voltage reference inputs may be dynamic, RC
+> +          combinations of those inputs can cause DC gain errors if the r=
+eference
+> +          inputs go unbuffered into the ADC. Enable reference buffering =
+if the
+> +          provided reference source has dynamic high impedance output. N=
+ote the
+> +          absolute voltage allowed on positive reference inputs (REFIN+,
+> +          REFIN2+) is from AVSS =E2=88=92 50 mV to AVDD + 50 mV when the=
+ reference
+> +          buffers are disabled but narrows to AVSS to AVDD when reference
+> +          buffering is enabled or in precharge mode.
+> +          0: Reference precharge buffer.
+> +          1: Full Buffer.
+> +          2: Bypass reference buffers (buffering disabled).
+> +        $ref: /schemas/types.yaml#/definitions/uint8
+> +        enum: [0, 1, 2]
+> +        default: 1
+
+Best regards,
+Krzysztof
+
