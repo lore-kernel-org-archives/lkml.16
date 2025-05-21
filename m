@@ -1,152 +1,100 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F10E1264627;
-	Wed, 21 May 2025 13:02:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE61326560D;
+	Wed, 21 May 2025 13:03:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747832528; cv=none; b=TC606iyYZSMCFOCYnnFxnFUV6835M3CTAB45k4qrNm6+iLT/NkkaS1qTZ4vTJs1mZiPSyXrFgpR6BP5zNCRe8qJRE+jjwFbqOaxqYMn6GOn8CS1+BUMfj53wqfJHgTKpcgl0AnAxHRUmzg3Gm3hgnAqLy8f2KUZ5yZxm/JAGQRA=
+	t=1747832603; cv=none; b=RqAw99kDi/FTXHpRU+YBBGt2UxEZfo0h0M8XS6bES9EkQzp27bq5Ulc7Zv2qOwBmo4eQT0hvqvP+goWBT92m6FybcEdLUfUIyiB7O3KZ604LF+3zheWYpQGTxuohGp0AxRVajSi3sZr3SnU2j8Nj9Ew4Rl1ajoD2KZYl2YlcbGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747832528; c=relaxed/simple;
-	bh=ZD3FvnIkp4Hy7XHvNTpGCTGWO5g+5SXyPjLloT8M85w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gUyyjB6UfHDec3ID30mezwDucB4jec5a2eFBPzFpjFGDGlkOBXEzMkmUR+viSrg5ZMYc8OV9ncJPQTFly7x425q4NpUD9SjrkuhN6KmHrofIdQ+qySgyjKvyZmaty+qVDHjEqU3C+tdBPP+aHAHAMhb830V5JiOaFbS/EDGSrpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NQ+OohuU; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NQ+OohuU"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so76501895e9.2;
-        Wed, 21 May 2025 06:02:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747832524; x=1748437324; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bmXU8KBDB233JjIK1ODnuLy3coNih7UFHZ8VsOcgN+0=;
-        b=NQ+OohuUXyAoGuKmyO2zM8jxV0dsndYuc5ZWv6wtYFH8B8o0R+QjduMJP5Ffd3o2Qm
-         86VOY+IlSP1UDGw0E0D8EAvGbnhje7cosn5sr+0rHWD81UmehlxGB4Yr5FjFApF21Rhg
-         +AJPAqfo2NttjN7WAL7w1F0SPeoKpx2CNsVqHzXEIPIIIohlia/gJh4+nvdv3Pk5S83Q
-         IO+tNlCXFLCNpx16kag++TryElapMlS5zyApjqkDY8l0DL5Z1drLz6DhWYszr8A01MpY
-         vei/+JiLrOAEduHK+llDLDj8nuRxpTZE531M28y5Cll9Xbm8h5u63St9utT0EYuY8EnK
-         qGpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747832524; x=1748437324;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bmXU8KBDB233JjIK1ODnuLy3coNih7UFHZ8VsOcgN+0=;
-        b=ZGvAgln+WJy2Y1A4PgXFyC7K8G3AhPTIzapNB23fTlaHJaooejMbgf8KoFgquilct1
-         Kbw3YO12zUYlFU9xjp9lQpiWEmdgrjpjlDQzc5zGLmeV6RvRuO7da6qKS5ffyLN4JyNf
-         WuawAogRzWcmvyZx2tJS2Avki+LgW2WhtzDWNtIttGlYU1q65Xs6iM6rLsD6rvnZ5arn
-         fjI6mwblbcSVpiHjBQF7XjTpAbZAxSYNf/5H3GrSsnItb+WnVJb0dX00RDsmIyCMT5D3
-         NzsEitSffoLWMtd4+5kD3RTgVcO6rajrugUi3ZfOus7Dnr/FSsIz/CnApvvZBJAV0tUY
-         0Dkg==
-X-Forwarded-Encrypted: i=1; AJvYcCUcloMViPh3nSDdwGMopi/P7H/+M/xFl/G5TPThlx3DBTJlkMuP2kHdq1ihcuKmlK7Q3SuLMgQj40GpHBBD@vger.kernel.org, AJvYcCWbMLqoqnlnwcqrotwgMKxcx4TKUdRijYBfx9jWNFZ6TtUZgP4gj4cZhW8o42wLzvYpLRY+MzP047iiZM5SSQ+/+Wo=@vger.kernel.org, AJvYcCX5fTzfePGz20AfnVW0kMpfpwQmHE8yfd3Va4UqI/fwylVhNW6NnGSrdrV+qh5xoFqZwRfrDEQdsIOQ@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkJgboeyFAU0b3I4lLXPyUGLGOL6TyOzNbK0nFixtbQg8UKpW8
-	qXuV0ImHzzpkr6Zk2DM0o7N9mQkvbQcSzdeoIfXQuiRX3AzGr+9V0RTg2RS6VkbqgRxonYiDYHG
-	POqXMC8r9CSnflEvzjItZJ5/1Q+JUxVo=
-X-Gm-Gg: ASbGncvMtbnwkKZI/5xra+zouzdqUxmpULMUOspRgG2ET2QM4t2QCbgbGhaccmQ8qTL
-	ym4vAav5+bCLiD9G1OFsOM1lua5k56mOev/9gS9bdRMlRxEygwvmaNxq5z020Mk2HVAVAt7tvoB
-	IeuIs23Bq5yDbftM3RskRUN11I560OJQPPqOpW8Q==
-X-Google-Smtp-Source: AGHT+IFoWwKL0JlRqJiqoNHNvz66aPp7wIa51xRehBMoBO1ScvekUMbPVG/LKrbcj5M69N6ry5MNkYl3/sR/JqNxWuE=
-X-Received: by 2002:a05:600c:6487:b0:43c:fe15:41c9 with SMTP id
- 5b1f17b1804b1-442fd622e97mr179727585e9.9.1747832523172; Wed, 21 May 2025
- 06:02:03 -0700 (PDT)
+	s=arc-20240116; t=1747832603; c=relaxed/simple;
+	bh=dwIYOE3htI9GbHZbf78nxBK6FjqrDFIKmLnz0i4XDIw=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=S5DMd8rS6esVeyiIlH9z6aD/7t0ob7bqQ0tvFL8YO7RrGba7VipK3jjsmhJY1NRsSY8dM5ep2e536bjO9F94ONwkEOrBkFNd4KrHYoDumW2+aiK6AsYO5yeMAB2fyhH9yOtcSQqapfKYivd3wTAEANvp/4FGlBkgB+fzd7JC2h8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buenzli.dev
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4b2WnD0Hhyz9vJ0;
+	Wed, 21 May 2025 15:03:12 +0200 (CEST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250512182330.238259-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250512182330.238259-4-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250520135820.GC13321@pendragon.ideasonboard.com>
-In-Reply-To: <20250520135820.GC13321@pendragon.ideasonboard.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Wed, 21 May 2025 14:01:35 +0100
-X-Gm-Features: AX0GCFt7GSGvdoA8i47pvJvno_4NO5uT_BXI_Lak85lev8oBUTuihwtydPWscd8
-Message-ID: <CA+V-a8swf=LeUxmEFkMCOK-rJ8w+yZK_ALG=GvFRq7VRF_NW+Q@mail.gmail.com>
-Subject: Re: [PATCH v5 03/12] drm: renesas: rz-du: mipi_dsi: Add min check for
- VCLK range
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Biju Das <biju.das.jz@bp.renesas.com>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Magnus Damm <magnus.damm@gmail.com>, dri-devel@lists.freedesktop.org, 
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 21 May 2025 15:03:07 +0200
+Message-Id: <DA1UXY2O47Y2.1ND9MC6L01217@buenzli.dev>
+To: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+Cc: "Rob Herring" <robh@kernel.org>, "Saravana Kannan"
+ <saravanak@google.com>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
+ "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
+ <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Danilo
+ Krummrich" <dakr@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ "Dirk Behme" <dirk.behme@de.bosch.com>, <linux-kernel@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
+Subject: Re: [PATCH v5 4/9] rust: device: Enable printing fwnode name and
+ path
+From: "Remo Senekowitsch" <remo@buenzli.dev>
+References: <20250520200024.268655-1-remo@buenzli.dev>
+ <20250520200024.268655-5-remo@buenzli.dev>
+ <2025052153-steadier-bargraph-e81a@gregkh>
+In-Reply-To: <2025052153-steadier-bargraph-e81a@gregkh>
+X-Rspamd-Queue-Id: 4b2WnD0Hhyz9vJ0
 
-Hi Laurent,
+On Wed May 21, 2025 at 2:02 PM CEST, Greg Kroah-Hartman wrote:
+> On Tue, May 20, 2025 at 10:00:19PM +0200, Remo Senekowitsch wrote:
+>> Add two new public methods `display_name` and `display_path` to
+>> `FwNode`. They can be used by driver authors for logging purposes. In
+>> addition, they will be used by core property abstractions for automatic
+>> logging, for example when a driver attempts to read a required but
+>> missing property.
+>>=20
+>> Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
+>> ---
+>>  rust/kernel/device/property.rs | 72 ++++++++++++++++++++++++++++++++++
+>>  1 file changed, 72 insertions(+)
+>>=20
+>> diff --git a/rust/kernel/device/property.rs b/rust/kernel/device/propert=
+y.rs
+>> index 70593343bd811..6ccc7947f9c31 100644
+>> --- a/rust/kernel/device/property.rs
+>> +++ b/rust/kernel/device/property.rs
+>> @@ -32,6 +32,78 @@ pub(crate) fn as_raw(&self) -> *mut bindings::fwnode_=
+handle {
+>>          self.0.get()
+>>      }
+>> =20
+>> +    /// Returns an object that implements [`Display`](core::fmt::Displa=
+y) for
+>> +    /// printing the name of a node.
+>> +    pub fn display_name(&self) -> impl core::fmt::Display + '_ {
+>> +        struct FwNodeDisplayName<'a>(&'a FwNode);
+>> +
+>> +        impl core::fmt::Display for FwNodeDisplayName<'_> {
+>> +            fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fm=
+t::Result {
+>> +                // SAFETY: self is valid by its type invariant
+>> +                let name =3D unsafe { bindings::fwnode_get_name(self.0.=
+as_raw()) };
+>> +                if name.is_null() {
+>> +                    return Ok(());
+>
+> So if there is no name, you are returning Ok()?  Are you sure that's ok
+> to do?  What will the result of the string look like then?
 
-Thank you for the review.
+In that case we're not writing anything to the formatter, which is
+equivalent to an empty string. `Ok(())` means that writing succeeded.
 
-On Tue, May 20, 2025 at 2:58=E2=80=AFPM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> Hi Prabhakar,
->
-> On Mon, May 12, 2025 at 07:23:21PM +0100, Prabhakar wrote:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > The VCLK range for Renesas RZ/G2L SoC is 148.5 MHz to 5.803 MHz. Add a
->
-> I would write "5.803 MHz to 148.5 MHz" as ranges are usually expressed
-> in increasing order.
->
-Ok, I will update the commit message as above.
-
-Cheers,
-Prabhakar
-
-> Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
->
-> > minimum clock check in the mode_valid callback to ensure that the clock
-> > value does not fall below the valid range.
-> >
-> > Co-developed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> > Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
-> > ---
-> > v4->v5:
-> > - No changes
-> >
-> > v3->v4:
-> > - No changes
-> >
-> > v2->v3:
-> > - No changes
-> >
-> > v1->v2:
-> > - Added reviewed tag from Biju
-> > ---
-> >  drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >
-> > diff --git a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c b/drivers/g=
-pu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-> > index 4550c6d84796..ec8baecb9ba5 100644
-> > --- a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-> > +++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-> > @@ -584,6 +584,9 @@ rzg2l_mipi_dsi_bridge_mode_valid(struct drm_bridge =
-*bridge,
-> >       if (mode->clock > 148500)
-> >               return MODE_CLOCK_HIGH;
-> >
-> > +     if (mode->clock < 5803)
-> > +             return MODE_CLOCK_LOW;
-> > +
-> >       return MODE_OK;
-> >  }
-> >
->
-> --
-> Regards,
->
-> Laurent Pinchart
+I assumed that a valid node would always have a name. And we're
+guaranteed to have a valid node. So I assumed this case would never
+happen and didn't think too hard about it. But even if a valid node has
+not name, empty string is probably the correct thing, right?
