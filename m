@@ -1,159 +1,200 @@
-Received: from out01.mta.xmission.com (out01.mta.xmission.com [166.70.13.231])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FA561C84BC;
-	Wed, 21 May 2025 15:27:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.70.13.231
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C1E21AAA1B
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 15:28:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747841266; cv=none; b=ZrFk6CYwPDksEtyyD7YxK7FUIrgbObLJ4Cf5c/5RlMgRCsDSmE+HmY890T5NKZNLdfT9UTZJ2ZPBTdeaCkAJv5j23kpPebS3JoIuVVH0gGKnskBCwwirB3aj/rq0MkVlvi8DzmM/pwqoHlVqkOOFgLbJ87zg99IC/VsPEfVrsXg=
+	t=1747841306; cv=none; b=g0EzeE87vcEfx8ZLYyTSqCSf/FcIMbM1oBa0sQqtoDBlJdePZHH2ZVEuBVq/YU1Fx+Lqkhlj7Cljzf01S17ajwT43o9+kfmF83era2xF6Fxvcnr1iMt/whZGUMUKkNoAKWzZC7dhpgY5GU04L4ZR7iPXYtT2tLbiAh8ReRIWmKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747841266; c=relaxed/simple;
-	bh=oi+Q5ewj5nvjv2ZTao8kqiOb+iBzQ0KR23F9dW4V2H0=;
-	h=From:To:Cc:References:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type:Subject; b=fiqeu0wGHqipaRG54EGYzXE6A34WfZEEOZK+Cz9alIKen+ZGvwKL284Gwoui9FAvpycAPUXDF/2N76RrfEYyTS0o7EMCFwqhtmkl2+VPsWwb4hmQxAFKZ63AXK9lF57Fuub3SeAmbk4TZM6hrArxjlcjMafQLu2Je/N1Bhh9evg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com; spf=pass smtp.mailfrom=xmission.com; arc=none smtp.client-ip=166.70.13.231
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xmission.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xmission.com
-Received: from in02.mta.xmission.com ([166.70.13.52]:51378)
-	by out01.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <ebiederm@xmission.com>)
-	id 1uHlM5-006wE8-MP; Wed, 21 May 2025 09:27:41 -0600
-Received: from ip72-198-198-28.om.om.cox.net ([72.198.198.28]:41852 helo=email.froward.int.ebiederm.org.xmission.com)
-	by in02.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <ebiederm@xmission.com>)
-	id 1uHlM4-00F9XJ-7J; Wed, 21 May 2025 09:27:41 -0600
-From: "Eric W. Biederman" <ebiederm@xmission.com>
-To: Jann Horn <jannh@google.com>
-Cc: Richard Guy Briggs <rgb@redhat.com>,  "Serge E. Hallyn"
- <serge@hallyn.com>,  Kees Cook <kees@kernel.org>,  Max Kellermann
- <max.kellermann@ionos.com>,  paul@paul-moore.com,  jmorris@namei.org,
-  Andy Lutomirski <luto@kernel.org>,  morgan@kernel.org,  Christian Brauner
- <christian@brauner.io>,  linux-security-module@vger.kernel.org,
-  linux-kernel@vger.kernel.org
-References: <20250306082615.174777-1-max.kellermann@ionos.com>
-	<878qmxsuy8.fsf@email.froward.int.ebiederm.org>
-	<202505151451.638C22B@keescook>
-	<87ecwopofp.fsf@email.froward.int.ebiederm.org>
-	<CAG48ez1VpuTR9_cvLrJEMmjOxTCYpYFswXVPmN6fE3NcSmPPVA@mail.gmail.com>
-	<87wmagnnhq.fsf@email.froward.int.ebiederm.org>
-	<202505201319.D57FDCB2A@keescook>
-	<87frgznd74.fsf_-_@email.froward.int.ebiederm.org>
-	<CAG48ez0N_1CEKyMHdjnvwsxUkCenmzsLe7dkUL=a6OmU4tPa6Q@mail.gmail.com>
-Date: Wed, 21 May 2025 10:27:32 -0500
-In-Reply-To: <CAG48ez0N_1CEKyMHdjnvwsxUkCenmzsLe7dkUL=a6OmU4tPa6Q@mail.gmail.com>
-	(Jann Horn's message of "Wed, 21 May 2025 01:53:29 +0200")
-Message-ID: <87zff6gf17.fsf@email.froward.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	s=arc-20240116; t=1747841306; c=relaxed/simple;
+	bh=+z86RSDec0qYkezODUVlCk6BWpT4zU4CzST6s1ksFbE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rD2ORsW84YASxkKZqlbhI4TTwVuxCdoaMhHJPtYovoVGK1SuujLaJvGO+UQuODHVSNWOZAusBCEMwGlpe4V8Btq37plgO7DVJQWCXX86NRE/qFtIr8Ffn6+IL6UoxDh+jLhPopleGduXQ+BhAe5yCdyHF6b/F0NLlqTsygQ99mU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cdJmZnX0; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cdJmZnX0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747841305; x=1779377305;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=+z86RSDec0qYkezODUVlCk6BWpT4zU4CzST6s1ksFbE=;
+  b=cdJmZnX0HWKQS1ARYqqqlvp7cjsdiqodNRAm45nbCmiuN1eKQkI9chBb
+   G4v3GO2Vw+x8WY1ylMSZuxTLZgl2caMFQZuDYmMVe1RsvZpCpXoi0P5TR
+   qkBt9tC9NZ2+2ri19vXAke0xQS3wHJb7ChIsDFnIzfS1Bv9USIz3Ou2a5
+   0D8q1WjfwAnDI7ynXe1dPRVFHXMSnywUl9vX0R5Xeh4uPTZRzO3ZOLHOa
+   tFX+zMEQzQxOz3W8smpSn9lIc47tOWiVScXv4yCH4sj74KVAzngTmFIek
+   DQnJm6skNM4SkmKb5E6+HSQ1/LB67uC+nr1bFVAFlNPULX+LuKqX+5QTC
+   g==;
+X-CSE-ConnectionGUID: NS9yZuNQSa2qmoynYm4ArA==
+X-CSE-MsgGUID: ILZQc9NCSWaXJ9eutWVcaQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="72344816"
+X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
+   d="scan'208";a="72344816"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 08:28:24 -0700
+X-CSE-ConnectionGUID: 2ks/NKwoQEGj5bXuyKEKqA==
+X-CSE-MsgGUID: y5+U2LApQFqPaXGjMmzNgQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
+   d="scan'208";a="141044428"
+Received: from iherna2-mobl4.amr.corp.intel.com (HELO [10.125.109.100]) ([10.125.109.100])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 08:28:23 -0700
+Message-ID: <036f8679-485a-4c99-92e7-f271a972fbf8@intel.com>
+Date: Wed, 21 May 2025 08:28:23 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-XM-SPF: eid=1uHlM4-00F9XJ-7J;;;mid=<87zff6gf17.fsf@email.froward.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=72.198.198.28;;;frm=ebiederm@xmission.com;;;spf=pass
-X-XM-AID: U2FsdGVkX19L44tg4Qm5VYcQSeGWBEThcmHH/PASd9k=
-X-Spam-Level: 
-X-Spam-Report: 
-	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
-	* -0.0 BAYES_40 BODY: Bayes spam probability is 20 to 40%
-	*      [score: 0.2757]
-	*  0.7 XMSubLong Long Subject
-	*  0.0 XM_B_Unicode BODY: Testing for specific types of unicode
-	*  0.0 T_TM2_M_HEADER_IN_MSG BODY: No description available.
-	* -0.0 DCC_CHECK_NEGATIVE Not listed in DCC
-	*      [sa04 1397; Body=1 Fuz1=1 Fuz2=1]
-	*  1.0 XMGenDplmaNmb Diploma spam phrases+possible phone number
-X-Spam-DCC: XMission; sa04 1397; Body=1 Fuz1=1 Fuz2=1 
-X-Spam-Combo: ;Jann Horn <jannh@google.com>
-X-Spam-Relay-Country: 
-X-Spam-Timing: total 891 ms - load_scoreonly_sql: 0.10 (0.0%),
-	signal_user_changed: 10 (1.1%), b_tie_ro: 9 (1.0%), parse: 1.21 (0.1%),
-	 extract_message_metadata: 13 (1.5%), get_uri_detail_list: 2.1 (0.2%),
-	tests_pri_-2000: 24 (2.7%), tests_pri_-1000: 6 (0.7%), tests_pri_-950:
-	2.7 (0.3%), tests_pri_-900: 2.1 (0.2%), tests_pri_-90: 198 (22.2%),
-	check_bayes: 196 (22.0%), b_tokenize: 10 (1.1%), b_tok_get_all: 9
-	(1.0%), b_comp_prob: 3.5 (0.4%), b_tok_touch_all: 169 (18.9%),
-	b_finish: 1.16 (0.1%), tests_pri_0: 607 (68.1%), check_dkim_signature:
-	1.43 (0.2%), check_dkim_adsp: 4.5 (0.5%), poll_dns_idle: 0.64 (0.1%),
-	tests_pri_10: 2.9 (0.3%), tests_pri_500: 19 (2.2%), rewrite_mail: 0.00
-	(0.0%)
-Subject: Re: [PATCH v2] exec: Correct the permission check for unsafe exec
-X-SA-Exim-Connect-IP: 166.70.13.52
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, christian@brauner.io, morgan@kernel.org, luto@kernel.org, jmorris@namei.org, paul@paul-moore.com, max.kellermann@ionos.com, kees@kernel.org, serge@hallyn.com, rgb@redhat.com, jannh@google.com
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-X-SA-Exim-Scanned: No (on out01.mta.xmission.com); SAEximRunCond expanded to false
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC v2 6/9] x86/apic: Introduce Remote Action Request Operations
+To: Rik van Riel <riel@surriel.com>, linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org, x86@kernel.org, kernel-team@meta.com,
+ dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+ tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+ nadav.amit@gmail.com, Rik van Riel <riel@fb.com>,
+ Yu-cheng Yu <yu-cheng.yu@intel.com>
+References: <20250520010350.1740223-1-riel@surriel.com>
+ <20250520010350.1740223-7-riel@surriel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20250520010350.1740223-7-riel@surriel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Jann Horn <jannh@google.com> writes:
+> diff --git a/arch/x86/include/asm/smp.h b/arch/x86/include/asm/smp.h
+> index 0c1c68039d6f..1ab9f5fcac8a 100644
+> --- a/arch/x86/include/asm/smp.h
+> +++ b/arch/x86/include/asm/smp.h
+> @@ -40,6 +40,9 @@ struct smp_ops {
+>  
+>  	void (*send_call_func_ipi)(const struct cpumask *mask);
+>  	void (*send_call_func_single_ipi)(int cpu);
+> +
+> +	void (*send_rar_ipi)(const struct cpumask *mask);
+> +	void (*send_rar_single_ipi)(int cpu);
+>  };
 
-> On Wed, May 21, 2025 at 12:13=E2=80=AFAM Eric W. Biederman
-> <ebiederm@xmission.com> wrote:
+I assume Yu-cheng did it this way.
 
-> Looks good to me overall, thanks for figuring out the history of this
-> not-particularly-easy-to-understand code and figuring out the right
-> fix.
->
-> Reviewed-by: Jann Horn <jannh@google.com>
->
->> @@ -917,7 +911,7 @@ int cap_bprm_creds_from_file(struct linux_binprm *bp=
-rm, const struct file *file)
->>         /* Process setpcap binaries and capabilities for uid 0 */
->>         const struct cred *old =3D current_cred();
->>         struct cred *new =3D bprm->cred;
->> -       bool effective =3D false, has_fcap =3D false, is_setid;
->> +       bool effective =3D false, has_fcap =3D false, id_changed;
->>         int ret;
->>         kuid_t root_uid;
->>
->> @@ -941,9 +935,9 @@ int cap_bprm_creds_from_file(struct linux_binprm *bp=
-rm, const struct file *file)
->>          *
->>          * In addition, if NO_NEW_PRIVS, then ensure we get no new privs.
->>          */
->> -       is_setid =3D __is_setuid(new, old) || __is_setgid(new, old);
->> +       id_changed =3D !uid_eq(new->euid, old->euid) || !in_group_p(new-=
->egid);
->
-> Hm, so when we change from one EGID to another EGID which was already
-> in our groups list, we don't treat it as a privileged exec? Which is
-> okay because, while an unprivileged user would not just be allowed to
-> change their EGID to a GID from their groups list themselves through
-> __sys_setregid(), they would be allowed to create a new setgid binary
-> owned by a group from their groups list and then execute that?
->
-> That's fine with me, though it seems a little weird to me. setgid exec
-> is changing our creds and yet we're not treating it as a "real" setgid
-> execution because the execution is only granting privileges that
-> userspace could have gotten anyway.
+I'm curios why new smp_ops are needed for this, though. It's not like
+there are a bunch of different implementations to pick between.
 
-More than could have gotten.  From permission checking point of view
-permission that the application already had.  In general group based
-permission checks just check in_group_p, which looks at cred->fsgid and
-the group.
 
-The logic is since the effective permissions of the running executable
-have not changed, there is nothing to special case.
+> -void native_send_call_func_ipi(const struct cpumask *mask)
+> +static void do_native_send_ipi(const struct cpumask *mask, int vector)
+>  {
+>  	if (static_branch_likely(&apic_use_ipi_shorthand)) {
+>  		unsigned int cpu = smp_processor_id();
+> @@ -88,14 +88,19 @@ void native_send_call_func_ipi(const struct cpumask *mask)
+>  			goto sendmask;
+>  
+>  		if (cpumask_test_cpu(cpu, mask))
+> -			__apic_send_IPI_all(CALL_FUNCTION_VECTOR);
+> +			__apic_send_IPI_all(vector);
+>  		else if (num_online_cpus() > 1)
+> -			__apic_send_IPI_allbutself(CALL_FUNCTION_VECTOR);
+> +			__apic_send_IPI_allbutself(vector);
+>  		return;
+>  	}
+>  
+>  sendmask:
+> -	__apic_send_IPI_mask(mask, CALL_FUNCTION_VECTOR);
+> +	__apic_send_IPI_mask(mask, vector);
+> +}
+> +
+> +void native_send_call_func_ipi(const struct cpumask *mask)
+> +{
+> +	do_native_send_ipi(mask, CALL_FUNCTION_VECTOR);
+>  }
 
-Arguably a setgid exec can drop what was egid, and if people have
-configured their permissions to deny people access based upon a group
-they are in that could change the result of the permission checks.  If
-changing egid winds up dropping a group from the list of the process's
-groups, the process could also have dropped that group with setresgid.
-So I don't think we need to be concerned about the combination of
-dropping egid and brpm->unsafe.
+This refactoring probably belongs in a separate patch.
 
-If anyone sees a hole in that logic I am happy to change the check
-to !gid_eq(new->egid, old->egid), but I just can't see a way changing
-egid/fsgid to a group the process already has is a problem.
+>  void apic_send_nmi_to_offline_cpu(unsigned int cpu)
+> @@ -106,6 +111,16 @@ void apic_send_nmi_to_offline_cpu(unsigned int cpu)
+>  		return;
+>  	apic->send_IPI(cpu, NMI_VECTOR);
+>  }
+> +
+> +void native_send_rar_single_ipi(int cpu)
+> +{
+> +	apic->send_IPI_mask(cpumask_of(cpu), RAR_VECTOR);
+> +}
+> +
+> +void native_send_rar_ipi(const struct cpumask *mask)
+> +{
+> +	do_native_send_ipi(mask, RAR_VECTOR);
+> +}
+>  #endif /* CONFIG_SMP */
+>  
+>  static inline int __prepare_ICR2(unsigned int mask)
+> diff --git a/arch/x86/kernel/apic/local.h b/arch/x86/kernel/apic/local.h
+> index bdcf609eb283..833669174267 100644
+> --- a/arch/x86/kernel/apic/local.h
+> +++ b/arch/x86/kernel/apic/local.h
+> @@ -38,6 +38,9 @@ static inline unsigned int __prepare_ICR(unsigned int shortcut, int vector,
+>  	case NMI_VECTOR:
+>  		icr |= APIC_DM_NMI;
+>  		break;
+> +	case RAR_VECTOR:
+> +		icr |= APIC_DM_RAR;
+> +		break;
+>  	}
+>  	return icr;
+>  }
+I feel like this patch is doing three separate things:
 
->> -       if ((is_setid || __cap_gained(permitted, new, old)) &&
->> +       if ((id_changed || __cap_gained(permitted, new, old)) &&
->>             ((bprm->unsafe & ~LSM_UNSAFE_PTRACE) ||
->>              !ptracer_capable(current, new->user_ns))) {
->>                 /* downgrade; they get no more than they had, and maybe =
-less */
+1. Adds smp_ops
+2. Refactors native_send_call_func_ipi()
+3. Adds RAR support
 
-Eric
+None of those are huge, but it would make a lot more sense to break
+those out. I'm also still not sure of the point of the smp_ops.
