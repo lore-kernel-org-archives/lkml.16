@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E2323D2BD
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 22:51:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2064E23ED68
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 22:51:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747867867; cv=none; b=B56cEzPnxfwurwEFQbE1zQ3hi8cMapgElpBFGMaMtzrtoOglU/v/I9e6JCLjTdSPzThNusDZBmi1tEWoL0MsSrJ7HUqGTUMzUciyRwu9M/x5Ht+IXND39HE24avlWtfNLPB43Nb4X5/zDgeXl33UNDkYVQozOevs3t8K5EG9Dco=
+	t=1747867869; cv=none; b=XZ2FcC5zS7aQ4whK86cFbk898tzxqMZUourJJFzSROAy9a3zPR82SSREG+n0UijM3IDBiDIFJ1y562Wni0I7YZYlNSLhCbLKfqTbd4OePjQOLD3MxsGr7EuRRnF4gASX2OorCU/hodW7DyBFCBy7b2p+M5f83cSnfKF20bhwu9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747867867; c=relaxed/simple;
-	bh=RHtFrgfRLs7QN22cgd5bl7QEOXwgCvO4cbIQoDsFohU=;
+	s=arc-20240116; t=1747867869; c=relaxed/simple;
+	bh=5gTvtBqwCiz3yA1qAMmHe8YRGbU+roL/wG25p3KREaY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LbsajmSBcb4dp7nG6yrd0t6nzterDJIATSNcFYF2sPHKmGviCMPIQ+9NcWH8wmk7aTsowaxnB0iL2XGjoPVMbKACGOwRGaYglmqfslwu5f9pQyeNLsmUAZVvWSIo44/ToMfTh0qnPIQ1S99KOtaQMFlEQMC+QcwPDZmyz6iRepI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hexeCfGY; arc=none smtp.client-ip=198.175.65.14
+	 MIME-Version; b=GZMalLVmOmxcoEtc+iZ7KhP7hQ177qZH7t/WbZYg9bAOBv8FjQ3TaZmkfSpGCEDRRyn6Ofk3eOAgXSIqtiJAeVNkp+yZW0LEezSk6AIt5MTB3aDQ54NsPUxOsEwPpd0RaYApkWNOx4LAk30tYmSmK1lTJG6GyxgV7NTUFrQ4e78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NJDWBfNg; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hexeCfGY"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NJDWBfNg"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747867866; x=1779403866;
+  t=1747867867; x=1779403867;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=RHtFrgfRLs7QN22cgd5bl7QEOXwgCvO4cbIQoDsFohU=;
-  b=hexeCfGYShobmIL0i81uoDEN9IHinlkpNWn45Ul+N6CPbQEOMFDV/Bpy
-   vWHWaZK5tsT15PXAH3xUZ3dy+vgThaFzZGvphNbCTMRqaVhQrrm994rmh
-   IzkFhjrp05wnYE5icP02jvvBDPU4cgVl9kxuegSqv2ZwUyLZ+GnWa1KwY
-   dsxFfSp8OiEfaJl5MGzUWr3tS7H07swC7sIdZ1tasaTnA0PHUC9iYfpkG
-   rvYZB1JLSFwmD/xenyTdIBm8vxr8FzrKrIx5mLTUaKme5GSSa9fG5NaLg
-   PGsoKAWgajSF0lqAUd+4me6tbNSvfVLxTIhVM4z9Kc+PaHlrK9nQusB46
-   Q==;
-X-CSE-ConnectionGUID: h8dHBZPqTLexCj2+a6TJEw==
-X-CSE-MsgGUID: sclb3KtwSKKdwEVKjvGwTg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="53677710"
+  bh=5gTvtBqwCiz3yA1qAMmHe8YRGbU+roL/wG25p3KREaY=;
+  b=NJDWBfNg7LL1lASBzRuZDJCq58Hau+RmhR1QXIgYaslPnVDOhk6hOxOi
+   F3z0LYFGGt6jQnMRb4qY/9si5rOK34/Zx5vSmifc9RgMuZSRMIGITJQ+6
+   uTHo6AAgN32u2iy9IjQXtbU+zt+YvCgJuBZ/uGWFSGSPr9a+GqH8iUsQO
+   XJcNlYvbOxMBpAgHpfgBjIcnHhyAMROwRnWOeTpJGMIp79aLoB5Nri0eW
+   L3sDDsUcN8Zv5V346xvsEcP+A6bZmaoKM5gQkouLy8bkLHAJuDzoX5++H
+   duiwBrbkwFJT2ES02UF7Mc+Bc3nsL5Y3qnp4FugvfbZMg4OKKMnD67XCP
+   g==;
+X-CSE-ConnectionGUID: JLfsFts1SDSHVrh++6OqXA==
+X-CSE-MsgGUID: +oT6ZQTPQGys3z59C1BCzw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="53677748"
 X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
-   d="scan'208";a="53677710"
+   d="scan'208";a="53677748"
 Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 15:50:58 -0700
-X-CSE-ConnectionGUID: 9dHqkLrHSkqYZHdaeQJkYQ==
-X-CSE-MsgGUID: Z9rqHpDhSFuEMmkdpeV6UQ==
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 15:50:59 -0700
+X-CSE-ConnectionGUID: VNWoHoMIQA+WSFuxGpzYVg==
+X-CSE-MsgGUID: wUTivwGkTjOI0RJAbTWDQA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
-   d="scan'208";a="141352157"
+   d="scan'208";a="141352163"
 Received: from agluck-desk3.sc.intel.com ([172.25.103.51])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 15:50:57 -0700
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 15:50:58 -0700
 From: Tony Luck <tony.luck@intel.com>
 To: Fenghua Yu <fenghuay@nvidia.com>,
 	Reinette Chatre <reinette.chatre@intel.com>,
@@ -58,9 +58,9 @@ Cc: x86@kernel.org,
 	linux-kernel@vger.kernel.org,
 	patches@lists.linux.dev,
 	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v5 12/29] fs/resctrl: Make event details accessible to functions when reading events
-Date: Wed, 21 May 2025 15:50:30 -0700
-Message-ID: <20250521225049.132551-13-tony.luck@intel.com>
+Subject: [PATCH v5 14/29] x86,fs/resctrl: Support binary fixed point event counters
+Date: Wed, 21 May 2025 15:50:32 -0700
+Message-ID: <20250521225049.132551-15-tony.luck@intel.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250521225049.132551-1-tony.luck@intel.com>
 References: <20250521225049.132551-1-tony.luck@intel.com>
@@ -72,249 +72,205 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-All details about a monitor event are kept in the mon_evt structure.
-Upper levels of code only provide the event id to lower levels.
-This will become a problem when new attributes are added to the
-mon_evt structure.
+Resctrl was written with the assumption that all monitor events
+can be displayed as unsigned decimal integers.
 
-Change the mon_data and rmid_read structures to hold a pointer
-to the mon_evt structure instead of just taking a copy of the
-event id.
+Hardware architecture counters may provide some telemetry events with
+greater precision where the event is not a simple count, but is a
+measurement of some sort (e.g. Joules for energy consumed).
 
-No functional change.
+Add a new argument to resctrl_enable_mon_event() for architecture
+code to inform the file system that the value for a counter is
+a fixed-point value with a specific number of binary places.
+
+Fixed point values are displayed with values rounded to an
+appropriate number of decimal places.
 
 Signed-off-by: Tony Luck <tony.luck@intel.com>
 ---
- fs/resctrl/internal.h    | 10 +++++-----
- fs/resctrl/ctrlmondata.c | 16 ++++++++--------
- fs/resctrl/monitor.c     | 17 +++++++++--------
- fs/resctrl/rdtgroup.c    |  6 +++---
- 4 files changed, 25 insertions(+), 24 deletions(-)
+ include/linux/resctrl.h            |  4 +-
+ fs/resctrl/internal.h              |  2 +
+ arch/x86/kernel/cpu/resctrl/core.c |  6 +--
+ fs/resctrl/ctrlmondata.c           | 75 +++++++++++++++++++++++++++++-
+ fs/resctrl/monitor.c               |  5 +-
+ 5 files changed, 85 insertions(+), 7 deletions(-)
 
+diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
+index 9aab3d78005a..46ba62ee94a1 100644
+--- a/include/linux/resctrl.h
++++ b/include/linux/resctrl.h
+@@ -377,7 +377,9 @@ u32 resctrl_arch_get_num_closid(struct rdt_resource *r);
+ u32 resctrl_arch_system_num_rmid_idx(void);
+ int resctrl_arch_update_domains(struct rdt_resource *r, u32 closid);
+ 
+-void resctrl_enable_mon_event(enum resctrl_event_id evtid, bool any_cpu);
++#define MAX_BINARY_BITS	27
++
++void resctrl_enable_mon_event(enum resctrl_event_id evtid, bool any_cpu, u32 binary_bits);
+ 
+ bool resctrl_is_mon_event_enabled(enum resctrl_event_id evt);
+ 
 diff --git a/fs/resctrl/internal.h b/fs/resctrl/internal.h
-index 8659ee33b76f..085a2ee1922f 100644
+index eb6e92d1ab15..d5045491790e 100644
 --- a/fs/resctrl/internal.h
 +++ b/fs/resctrl/internal.h
-@@ -73,7 +73,7 @@ extern struct mon_evt mon_event_all[QOS_NUM_EVENTS];
-  * struct mon_data - Monitoring details for each event file.
-  * @list:            Member of the global @mon_data_kn_priv_list list.
-  * @rid:             Resource id associated with the event file.
-- * @evtid:           Event id associated with the event file.
-+ * @evt:             Event associated with the event file.
-  * @sum:             Set when event must be summed across multiple
-  *                   domains.
-  * @domid:           When @sum is zero this is the domain to which
-@@ -87,7 +87,7 @@ extern struct mon_evt mon_event_all[QOS_NUM_EVENTS];
- struct mon_data {
- 	struct list_head	list;
- 	enum resctrl_res_level	rid;
--	enum resctrl_event_id	evtid;
-+	struct mon_evt		*evt;
- 	int			domid;
- 	bool			sum;
+@@ -58,6 +58,7 @@ static inline struct rdt_fs_context *rdt_fc2context(struct fs_context *fc)
+  * @name:		name of the event
+  * @configurable:	true if the event is configurable
+  * @any_cpu:		true if the event can be read from any CPU
++ * @binary_bits:	number of fixed-point binary bits from architecture
+  * @enabled:		true if the event is enabled
+  */
+ struct mon_evt {
+@@ -66,6 +67,7 @@ struct mon_evt {
+ 	char			*name;
+ 	bool			configurable;
+ 	bool			any_cpu;
++	int			binary_bits;
+ 	bool			enabled;
  };
-@@ -100,7 +100,7 @@ struct mon_data {
-  * @r:	   Resource describing the properties of the event being read.
-  * @d:	   Domain that the counter should be read from. If NULL then sum all
-  *	   domains in @r sharing L3 @ci.id
-- * @evtid: Which monitor event to read.
-+ * @evt:   Which monitor event to read.
-  * @first: Initialize MBM counter when true.
-  * @ci:    Cacheinfo for L3. Only set when @d is NULL. Used when summing domains.
-  * @err:   Error encountered when reading counter.
-@@ -114,7 +114,7 @@ struct rmid_read {
- 	struct rdtgroup			*rgrp;
- 	struct rdt_resource		*r;
- 	struct rdt_l3_mon_domain	*d;
--	enum resctrl_event_id		evtid;
-+	struct mon_evt			*evt;
- 	bool				first;
- 	struct cacheinfo		*ci;
- 	int				err;
-@@ -350,7 +350,7 @@ int rdtgroup_mondata_show(struct seq_file *m, void *arg);
  
- void mon_event_read(struct rmid_read *rr, struct rdt_resource *r,
- 		    struct rdt_l3_mon_domain *d, struct rdtgroup *rdtgrp,
--		    cpumask_t *cpumask, int evtid, int first);
-+		    cpumask_t *cpumask, struct mon_evt *evt, int first);
+diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
+index 5d9a024ce4b0..306afb50fd37 100644
+--- a/arch/x86/kernel/cpu/resctrl/core.c
++++ b/arch/x86/kernel/cpu/resctrl/core.c
+@@ -880,15 +880,15 @@ static __init bool get_rdt_mon_resources(void)
+ 	bool ret = false;
  
- int resctrl_mon_resource_init(void);
+ 	if (rdt_cpu_has(X86_FEATURE_CQM_OCCUP_LLC)) {
+-		resctrl_enable_mon_event(QOS_L3_OCCUP_EVENT_ID, false);
++		resctrl_enable_mon_event(QOS_L3_OCCUP_EVENT_ID, false, 0);
+ 		ret = true;
+ 	}
+ 	if (rdt_cpu_has(X86_FEATURE_CQM_MBM_TOTAL)) {
+-		resctrl_enable_mon_event(QOS_L3_MBM_TOTAL_EVENT_ID, false);
++		resctrl_enable_mon_event(QOS_L3_MBM_TOTAL_EVENT_ID, false, 0);
+ 		ret = true;
+ 	}
+ 	if (rdt_cpu_has(X86_FEATURE_CQM_MBM_LOCAL)) {
+-		resctrl_enable_mon_event(QOS_L3_MBM_LOCAL_EVENT_ID, false);
++		resctrl_enable_mon_event(QOS_L3_MBM_LOCAL_EVENT_ID, false, 0);
+ 		ret = true;
+ 	}
  
 diff --git a/fs/resctrl/ctrlmondata.c b/fs/resctrl/ctrlmondata.c
-index 6db24f7a3de5..dcde27f6f2ec 100644
+index 1337716f59c8..07bf44834a46 100644
 --- a/fs/resctrl/ctrlmondata.c
 +++ b/fs/resctrl/ctrlmondata.c
-@@ -548,7 +548,7 @@ struct rdt_domain_hdr *resctrl_find_domain(struct list_head *h, int id,
- 
- void mon_event_read(struct rmid_read *rr, struct rdt_resource *r,
- 		    struct rdt_l3_mon_domain *d, struct rdtgroup *rdtgrp,
--		    cpumask_t *cpumask, int evtid, int first)
-+		    cpumask_t *cpumask, struct mon_evt *evt, int first)
- {
- 	int cpu;
- 
-@@ -559,11 +559,11 @@ void mon_event_read(struct rmid_read *rr, struct rdt_resource *r,
- 	 * Setup the parameters to pass to mon_event_count() to read the data.
- 	 */
- 	rr->rgrp = rdtgrp;
--	rr->evtid = evtid;
-+	rr->evt = evt;
- 	rr->r = r;
- 	rr->d = d;
- 	rr->first = first;
--	rr->arch_mon_ctx = resctrl_arch_mon_ctx_alloc(r, evtid);
-+	rr->arch_mon_ctx = resctrl_arch_mon_ctx_alloc(r, evt->evtid);
- 	if (IS_ERR(rr->arch_mon_ctx)) {
- 		rr->err = -EINVAL;
- 		return;
-@@ -582,20 +582,20 @@ void mon_event_read(struct rmid_read *rr, struct rdt_resource *r,
- 	else
- 		smp_call_on_cpu(cpu, smp_mon_event_count, rr, false);
- 
--	resctrl_arch_mon_ctx_free(r, evtid, rr->arch_mon_ctx);
-+	resctrl_arch_mon_ctx_free(r, evt->evtid, rr->arch_mon_ctx);
+@@ -590,6 +590,77 @@ void mon_event_read(struct rmid_read *rr, struct rdt_resource *r,
+ 	resctrl_arch_mon_ctx_free(r, evt->evtid, rr->arch_mon_ctx);
  }
  
++/**
++ * struct fixed_params - parameters to decode a binary fixed point value
++ * @mask:	Mask for fractional part of value.
++ * @lshift:	Shift to round-up binary places.
++ * @pow10:	Multiplier (10 ^ decimal places).
++ * @round:	Add to round up to nearest decimal representation.
++ * @rshift:	Shift back for final answer.
++ * @decplaces:	Number of decimal places for this number of binary places.
++ */
++struct fixed_params {
++	u64	mask;
++	int	lshift;
++	int	pow10;
++	u64	round;
++	int	rshift;
++	int	decplaces;
++};
++
++static struct fixed_params fixed_params[MAX_BINARY_BITS + 1] = {
++	[1]  = { GENMASK_ULL(1, 0),  0,         10, 0x00000000,  1,  1 },
++	[2]  = { GENMASK_ULL(2, 0),  0,        100, 0x00000000,  2,  2 },
++	[3]  = { GENMASK_ULL(3, 0),  0,       1000, 0x00000000,  3,  3 },
++	[4]  = { GENMASK_ULL(4, 0),  2,       1000, 0x00000020,  6,  3 },
++	[5]  = { GENMASK_ULL(5, 0),  1,       1000, 0x00000020,  6,  3 },
++	[6]  = { GENMASK_ULL(6, 0),  0,       1000, 0x00000020,  6,  3 },
++	[7]  = { GENMASK_ULL(7, 0),  2,       1000, 0x00000100,  9,  3 },
++	[8]  = { GENMASK_ULL(8, 0),  1,       1000, 0x00000100,  9,  3 },
++	[9]  = { GENMASK_ULL(9, 0),  0,       1000, 0x00000100,  9,  3 },
++	[10] = { GENMASK_ULL(10, 0), 2,      10000, 0x00000800, 12,  4 },
++	[11] = { GENMASK_ULL(11, 0), 1,      10000, 0x00000800, 12,  4 },
++	[12] = { GENMASK_ULL(12, 0), 0,      10000, 0x00000800, 12,  4 },
++	[13] = { GENMASK_ULL(13, 0), 2,     100000, 0x00004000, 15,  5 },
++	[14] = { GENMASK_ULL(14, 0), 1,     100000, 0x00004000, 15,  5 },
++	[15] = { GENMASK_ULL(15, 0), 0,     100000, 0x00004000, 15,  5 },
++	[16] = { GENMASK_ULL(16, 0), 2,    1000000, 0x00020000, 18,  6 },
++	[17] = { GENMASK_ULL(17, 0), 1,    1000000, 0x00020000, 18,  6 },
++	[18] = { GENMASK_ULL(18, 0), 0,    1000000, 0x00020000, 18,  6 },
++	[19] = { GENMASK_ULL(19, 0), 2,   10000000, 0x00100000, 21,  7 },
++	[20] = { GENMASK_ULL(20, 0), 1,   10000000, 0x00100000, 21,  7 },
++	[21] = { GENMASK_ULL(21, 0), 0,   10000000, 0x00100000, 21,  7 },
++	[22] = { GENMASK_ULL(22, 0), 2,  100000000, 0x00800000, 24,  8 },
++	[23] = { GENMASK_ULL(23, 0), 1,  100000000, 0x00800000, 24,  8 },
++	[24] = { GENMASK_ULL(24, 0), 0,  100000000, 0x00800000, 24,  8 },
++	[25] = { GENMASK_ULL(25, 0), 2, 1000000000, 0x04000000, 27,  9 },
++	[26] = { GENMASK_ULL(26, 0), 1, 1000000000, 0x04000000, 27,  9 },
++	[27] = { GENMASK_ULL(27, 0), 0, 1000000000, 0x04000000, 27,  9 }
++};
++
++static void print_event_value(struct seq_file *m, int binary_bits, u64 val)
++{
++	struct fixed_params *fp = &fixed_params[binary_bits];
++	unsigned long long frac;
++	char buf[10];
++
++	frac = val & fp->mask;
++	frac <<= fp->lshift;
++	frac *= fp->pow10;
++	frac += fp->round;
++	frac >>= fp->rshift;
++
++	sprintf(buf, "%0*llu", fp->decplaces, frac);
++
++	/* Trim trailing zeroes */
++	for (int i = fp->decplaces - 1; i > 0; i--) {
++		if (buf[i] != '0')
++			break;
++		buf[i] = '\0';
++	}
++	seq_printf(m, "%llu.%s\n", val >> binary_bits, buf);
++}
++
  int rdtgroup_mondata_show(struct seq_file *m, void *arg)
  {
  	struct kernfs_open_file *of = m->private;
- 	enum resctrl_res_level resid;
--	enum resctrl_event_id evtid;
- 	struct rdt_l3_mon_domain *d;
- 	struct rdt_domain_hdr *hdr;
- 	struct rmid_read rr = {0};
- 	struct rdtgroup *rdtgrp;
- 	struct rdt_resource *r;
- 	struct mon_data *md;
-+	struct mon_evt *evt;
- 	int domid, ret = 0;
+@@ -657,8 +728,10 @@ int rdtgroup_mondata_show(struct seq_file *m, void *arg)
+ 		seq_puts(m, "Error\n");
+ 	else if (rr.err == -EINVAL)
+ 		seq_puts(m, "Unavailable\n");
+-	else
++	else if (evt->binary_bits == 0)
+ 		seq_printf(m, "%llu\n", rr.val);
++	else
++		print_event_value(m, evt->binary_bits, rr.val);
  
- 	rdtgrp = rdtgroup_kn_lock_live(of->kn);
-@@ -612,7 +612,7 @@ int rdtgroup_mondata_show(struct seq_file *m, void *arg)
- 
- 	resid = md->rid;
- 	domid = md->domid;
--	evtid = md->evtid;
-+	evt = md->evt;
- 	r = resctrl_arch_get_resource(resid);
- 
- 	if (md->sum) {
-@@ -626,7 +626,7 @@ int rdtgroup_mondata_show(struct seq_file *m, void *arg)
- 			if (d->ci->id == domid) {
- 				rr.ci = d->ci;
- 				mon_event_read(&rr, r, NULL, rdtgrp,
--					       &d->ci->shared_cpu_map, evtid, false);
-+					       &d->ci->shared_cpu_map, evt, false);
- 				goto checkresult;
- 			}
- 		}
-@@ -643,7 +643,7 @@ int rdtgroup_mondata_show(struct seq_file *m, void *arg)
- 			goto out;
- 		}
- 		d = container_of(hdr, struct rdt_l3_mon_domain, hdr);
--		mon_event_read(&rr, r, d, rdtgrp, &d->hdr.cpu_mask, evtid, false);
-+		mon_event_read(&rr, r, d, rdtgrp, &d->hdr.cpu_mask, evt, false);
- 	}
- 
- checkresult:
+ out:
+ 	rdtgroup_kn_unlock(of->kn);
 diff --git a/fs/resctrl/monitor.c b/fs/resctrl/monitor.c
-index c1d248a7fdbc..3cfd1bf1845e 100644
+index e6e3be990638..f554d7933739 100644
 --- a/fs/resctrl/monitor.c
 +++ b/fs/resctrl/monitor.c
-@@ -365,8 +365,8 @@ static int __mon_event_count(u32 closid, u32 rmid, struct rmid_read *rr)
- 	u64 tval = 0;
+@@ -878,9 +878,9 @@ struct mon_evt mon_event_all[QOS_NUM_EVENTS] = {
+ 	},
+ };
  
- 	if (rr->first) {
--		resctrl_arch_reset_rmid(rr->r, rr->d, closid, rmid, rr->evtid);
--		m = get_mbm_state(rr->d, closid, rmid, rr->evtid);
-+		resctrl_arch_reset_rmid(rr->r, rr->d, closid, rmid, rr->evt->evtid);
-+		m = get_mbm_state(rr->d, closid, rmid, rr->evt->evtid);
- 		if (m)
- 			memset(m, 0, sizeof(struct mbm_state));
- 		return 0;
-@@ -377,7 +377,7 @@ static int __mon_event_count(u32 closid, u32 rmid, struct rmid_read *rr)
- 		if (!cpumask_test_cpu(cpu, &rr->d->hdr.cpu_mask))
- 			return -EINVAL;
- 		rr->err = resctrl_arch_rmid_read(rr->r, rr->d, closid, rmid,
--						 rr->evtid, &tval, rr->arch_mon_ctx);
-+						 rr->evt->evtid, &tval, rr->arch_mon_ctx);
- 		if (rr->err)
- 			return rr->err;
- 
-@@ -402,7 +402,7 @@ static int __mon_event_count(u32 closid, u32 rmid, struct rmid_read *rr)
- 		if (d->ci->id != rr->ci->id)
- 			continue;
- 		err = resctrl_arch_rmid_read(rr->r, d, closid, rmid,
--					     rr->evtid, &tval, rr->arch_mon_ctx);
-+					     rr->evt->evtid, &tval, rr->arch_mon_ctx);
- 		if (!err) {
- 			rr->val += tval;
- 			ret = 0;
-@@ -432,7 +432,7 @@ static void mbm_bw_count(u32 closid, u32 rmid, struct rmid_read *rr)
- 	u64 cur_bw, bytes, cur_bytes;
- 	struct mbm_state *m;
- 
--	m = get_mbm_state(rr->d, closid, rmid, rr->evtid);
-+	m = get_mbm_state(rr->d, closid, rmid, rr->evt->evtid);
- 	if (WARN_ON_ONCE(!m))
- 		return;
- 
-@@ -603,12 +603,13 @@ static void update_mba_bw(struct rdtgroup *rgrp, struct rdt_l3_mon_domain *dom_m
- static void mbm_update_one_event(struct rdt_resource *r, struct rdt_l3_mon_domain *d,
- 				 u32 closid, u32 rmid, enum resctrl_event_id evtid)
+-void resctrl_enable_mon_event(enum resctrl_event_id evtid, bool any_cpu)
++void resctrl_enable_mon_event(enum resctrl_event_id evtid, bool any_cpu, u32 binary_bits)
  {
-+	struct mon_evt *evt = &mon_event_all[evtid];
- 	struct rmid_read rr = {0};
+-	if (WARN_ON_ONCE(evtid >= QOS_NUM_EVENTS))
++	if (WARN_ON_ONCE(evtid >= QOS_NUM_EVENTS) || binary_bits > MAX_BINARY_BITS)
+ 		return;
+ 	if (mon_event_all[evtid].enabled) {
+ 		pr_warn("Duplicate enable for event %d\n", evtid);
+@@ -888,6 +888,7 @@ void resctrl_enable_mon_event(enum resctrl_event_id evtid, bool any_cpu)
+ 	}
  
- 	rr.r = r;
- 	rr.d = d;
--	rr.evtid = evtid;
--	rr.arch_mon_ctx = resctrl_arch_mon_ctx_alloc(rr.r, rr.evtid);
-+	rr.evt = evt;
-+	rr.arch_mon_ctx = resctrl_arch_mon_ctx_alloc(rr.r, evt->evtid);
- 	if (IS_ERR(rr.arch_mon_ctx)) {
- 		pr_warn_ratelimited("Failed to allocate monitor context: %ld",
- 				    PTR_ERR(rr.arch_mon_ctx));
-@@ -624,7 +625,7 @@ static void mbm_update_one_event(struct rdt_resource *r, struct rdt_l3_mon_domai
- 	if (is_mba_sc(NULL))
- 		mbm_bw_count(closid, rmid, &rr);
- 
--	resctrl_arch_mon_ctx_free(rr.r, rr.evtid, rr.arch_mon_ctx);
-+	resctrl_arch_mon_ctx_free(rr.r, evt->evtid, rr.arch_mon_ctx);
+ 	mon_event_all[evtid].any_cpu = any_cpu;
++	mon_event_all[evtid].binary_bits = binary_bits;
+ 	mon_event_all[evtid].enabled = true;
  }
  
- static void mbm_update(struct rdt_resource *r, struct rdt_l3_mon_domain *d,
-diff --git a/fs/resctrl/rdtgroup.c b/fs/resctrl/rdtgroup.c
-index 39e046fba60a..67482f1110b3 100644
---- a/fs/resctrl/rdtgroup.c
-+++ b/fs/resctrl/rdtgroup.c
-@@ -2897,7 +2897,7 @@ static struct mon_data *mon_get_kn_priv(enum resctrl_res_level rid, int domid,
- 
- 	list_for_each_entry(priv, &mon_data_kn_priv_list, list) {
- 		if (priv->rid == rid && priv->domid == domid &&
--		    priv->sum == do_sum && priv->evtid == mevt->evtid)
-+		    priv->sum == do_sum && priv->evt == mevt)
- 			return priv;
- 	}
- 
-@@ -2908,7 +2908,7 @@ static struct mon_data *mon_get_kn_priv(enum resctrl_res_level rid, int domid,
- 	priv->rid = rid;
- 	priv->domid = domid;
- 	priv->sum = do_sum;
--	priv->evtid = mevt->evtid;
-+	priv->evt = mevt;
- 	list_add_tail(&priv->list, &mon_data_kn_priv_list);
- 
- 	return priv;
-@@ -3080,7 +3080,7 @@ static int mon_add_all_files(struct kernfs_node *kn, struct rdt_domain_hdr *hdr,
- 			return ret;
- 
- 		if (r->rid == RDT_RESOURCE_L3 && !do_sum && resctrl_is_mbm_event(mevt->evtid))
--			mon_event_read(&rr, r, d, prgrp, &hdr->cpu_mask, mevt->evtid, true);
-+			mon_event_read(&rr, r, d, prgrp, &hdr->cpu_mask, mevt, true);
- 	}
- 
- 	return 0;
 -- 
 2.49.0
 
