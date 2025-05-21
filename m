@@ -1,32 +1,65 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA64B4430;
-	Wed, 21 May 2025 05:56:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7037A22C322;
+	Wed, 21 May 2025 05:59:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747806989; cv=none; b=TaoM+9/DCuaY3CoIpWPBjMwI7MkRaORJHIdZfsnGQrbzbkMhYTGcv/tDUduQRunS8UFd1ZNUswofT8AJWInHNVAt9Xe4V1MHlpMBNv3ynVgh0ibLq7jsjWmZ+Xz1OX2aSQ9Kuk8WB0PyUKLQsaAxpl2YgijRtwlQwK/0prhIXQU=
+	t=1747807152; cv=none; b=SPurpHV9KcVFSc4gxgx8sRxR8CoqZY+W0ehAlTKj35+17HidkzcKmQExztVumoCaeoDlWeE9tR0KrVd9Cae7I/9OVOT7FWFaNTRlCnhQGVdTsGHOyDg3oUKO4LNLZoH3dBLQeaDn5VdiosPzkJ/1vdRjMGnoQnueHPdsCPtkmZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747806989; c=relaxed/simple;
-	bh=CPFCDaA/lcqIvz6K9DFQHewK6uAUu2NeTEsAovPkLTM=;
+	s=arc-20240116; t=1747807152; c=relaxed/simple;
+	bh=LVhrHR1tMcLhhW2UavkcaIXMLFZu0WczRHk5PM8pUj8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GznzGrZhEC37JomLItfS18vXdkpqhp3RVEnVp05JF9N2DvpTMo2s+XGCftdp1WkGCgBn8sNpcQowAYBErjwLJbhn/DBV5qheZ5kfnsnjq/9Y5CrXSK7I1zWoyuy8kFcrNxgcD2iflcGJkawMCmdOjRqIpQGvIWsG/cNhlKGT0/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=FdVGozbe; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	 In-Reply-To:Content-Type; b=laZAhLkHW0glHOQ5rHJV1SXXSPQMWCYXhA9Hys66ZtG4aHkls2Yzg0vljkOdYURi5O955UtheX7e7t8n1bZGGhVr0WeG062cHaR51btTSOGiaxivQ4N85K8LI6Wam18wRiBwxmuVmKcqIDq8qBDQFzhGMVWfH1gun1Loh/KEjJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e10tuhm3; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="FdVGozbe"
-Received: from [100.75.200.30] (unknown [40.78.12.133])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 2C4AC20277E4;
-	Tue, 20 May 2025 22:56:26 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2C4AC20277E4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1747806987;
-	bh=JrahNYN1nFgLqUBmUeNiVpHK9mLr48HhRMyMudWE2KU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FdVGozbedOPB1110KM0NVzyPf+kgAQwutNFqwohpLsygI1YszWVY5/jta4IkALQoZ
-	 jPdmqSZV4ZKnoaQL9V3PfeYdvo/EaS5rdTbVMeJF53MR5/7dPjQLRAuC8hXa3cAjOc
-	 kKZqcz67I4rtMj4ajsnCb0kBKI2KN6cmJsUR1IJI=
-Message-ID: <3d000c56-6cc9-4bf3-aa76-39becd05cfcd@linux.microsoft.com>
-Date: Tue, 20 May 2025 22:56:33 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e10tuhm3"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-231bf5851b7so49623365ad.0;
+        Tue, 20 May 2025 22:59:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747807151; x=1748411951; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3SEan474ZhQBei+HXcPzrBD5hupQQ2unpzXgj0fBG4Q=;
+        b=e10tuhm3MMu+XWGVYaVjN+TP9UHSCVRJPg65MJWFeXCJcIjYHtO+h2U5eao8mny05o
+         6ezziL3IL+seRpG33JOejXWxOb1xP4Mn3ljxMIuZXA3fRIS06NvMUX4oIy+HcOB5CeDe
+         ufRaSeI5ChveNUQkwdw4UkWQ7L7wqjMG1Tbg2jdLzYJym2QfhctzPyMzpMfh36Kz+Myf
+         8FYrwzaRPlTrp0xe92Gwn7NfmWmT/ifMeUO/NwYAfCLSG7eopJtEAAOPb2Co93sWEtyX
+         IEJhfdFDcx+7wCKvu0MRuPggJpQ+e3wk7XgPqBKEEb0G6FiI/ysoWU28QyYbv1svSxT8
+         63lQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747807151; x=1748411951;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3SEan474ZhQBei+HXcPzrBD5hupQQ2unpzXgj0fBG4Q=;
+        b=lsHihya6SIwsSXhzO3JLMmRJBxyKnHkIAnXdzB5KGCq7Gv1EK9bsFliZ5IEZubsFuF
+         X8qgIzf9JIBPnq1iTHxs3/qJuz2NIm0310FQT3JjKuM++ZDmhZE7jk26XlLB2hHxwMRr
+         q3vZw94CyviJ6AVDlxkywwS0lZUrQ2RlcitoMkyZOqZbiDXKDaU0CumFWdUzc+7Lb4NR
+         LclnNNoKEyrDuqKwxwKlYnOjhg0uSI7qgy/pWEH02mHk1aYf+cO3HDJRayTLSgiAyv27
+         ZV5LboknZ8OIovsFo4Hdr2j+48BYg93C0x/JTAiM2T47TCbvNV5PhD9ccxFD6H/tQiMi
+         +t0A==
+X-Forwarded-Encrypted: i=1; AJvYcCXC1HOPJpkQQjE2cLg58bG0aATEGX7rZlp5TDvNp8qMenkbSQ7HXApTOQbcVemAExvv0JnLQNcoHG5yloy/@vger.kernel.org, AJvYcCXo4UfnlG8ZrQH/4OHnplfeJYJ9pTJyPEp8TIQ0kNknRz+hLB9QfIF1sem8eKzI7jxRf0QEnERL6quv@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGxezjMKQbtrNXMNnH0IpwbHiTJRYcSIA2qMzXlHWqky5p4KrF
+	4uNb/q9hP6enJzevTi8fziNa0lJj50q8bdpo09cIcrRG/z9Hql0Knw/UogG4eA==
+X-Gm-Gg: ASbGncucU44JWOuIhuT50H/XexwfM3g9YnUN7mUx97KZQEBFKIDvA3jZzPt/Wj8GSvM
+	w8xLl3Oq/yAewcXZZ/HDIMJ6I3H2dC727tyrmbV773deJ9aVgKSgyrMWvG5C5PH97P1wPgf+rJf
+	Zmahitev3quF/DpIGdo5qmUlAMMQ07BaK9/d3MqxEWIUQGjIsTZrc3zk+N8jdaicRFq+lWsiqWH
+	cdWHzOCkC43qfbovnADdQpuCHLDlSW7cKQOctiGx3ddvLmeCRiRhFfCc+lP9m4SqxkyvB9S2ZnE
+	vRrz4spSNnqz6k0m21XKsfh6O4bTIKVwcLPXru3QC49fnHysIp5gyGqqYmszvB1+O8Ek5SjBL06
+	67g==
+X-Google-Smtp-Source: AGHT+IG35nUtpeW7NuqC9GunoFabQ0VrXDY+Uf8O8KYSnhJwYUYJ040n6Z3Fc2zkgCvgBJKQouvNCg==
+X-Received: by 2002:a17:903:428d:b0:231:e3f9:dd53 with SMTP id d9443c01a7336-231e3f9de00mr223599395ad.53.1747807150541;
+        Tue, 20 May 2025 22:59:10 -0700 (PDT)
+Received: from [192.168.1.6] ([110.227.160.208])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4ed25a9sm86211035ad.223.2025.05.20.22.59.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 May 2025 22:59:10 -0700 (PDT)
+Message-ID: <ac396bdd-fc7b-4322-9eb0-7c361914c35c@gmail.com>
+Date: Wed, 21 May 2025 11:29:05 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,54 +67,93 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] dt-bindings: arm: cpus: Add edac-enabled property
-To: Rob Herring <robh@kernel.org>, Borislav Petkov <bp@alien8.de>
-Cc: Tony Luck <tony.luck@intel.com>, Krzysztof Kozlowski
- <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- James Morse <james.morse@arm.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>, Robert Richter <rric@kernel.org>,
- linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
- Tyler Hicks <code@tyhicks.com>, Marc Zyngier <maz@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>, devicetree@vger.kernel.org
-References: <1747353973-4749-1-git-send-email-vijayb@linux.microsoft.com>
- <1747353973-4749-3-git-send-email-vijayb@linux.microsoft.com>
- <20250519090253.GGaCrzvRFC75JnFN1S@fat_crate.local>
- <CAL_Jsq+T=ARcSe9NByMyiFDN9pns=0f2c=hFEK=o6668MARz8g@mail.gmail.com>
+Subject: Re: [PATCH v3] dt-bindings: mmc: ti-omap2420-mmc: convert text based
+ binding to json schema
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+ Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Tony Lindgren <tony@atomide.com>
+Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250520-ti-omap-v3-1-aa845b301c4c@gmail.com>
+ <f0ae042a-7c38-4e9d-9664-157afd861c3c@kernel.org>
 Content-Language: en-US
-From: Vijay Balakrishna <vijayb@linux.microsoft.com>
-In-Reply-To: <CAL_Jsq+T=ARcSe9NByMyiFDN9pns=0f2c=hFEK=o6668MARz8g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Charan Pedumuru <charan.pedumuru@gmail.com>
+In-Reply-To: <f0ae042a-7c38-4e9d-9664-157afd861c3c@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 5/20/2025 5:07 PM, Rob Herring wrote:
-> On Mon, May 19, 2025 at 4:03 AM Borislav Petkov <bp@alien8.de> wrote:
->>
->> On Thu, May 15, 2025 at 05:06:12PM -0700, Vijay Balakrishna wrote:
->>> From: Sascha Hauer <s.hauer@pengutronix.de>
->>>
->>> Some ARM Cortex CPUs including A72 have Error Detection And
->>> Correction (EDAC) support on their L1 and L2 caches. This is implemented
->>> in implementation defined registers, so usage of this functionality is
->>> not safe in virtualized environments or when EL3 already uses these
->>> registers. This patch adds a edac-enabled flag which can be explicitly
->>> set when EDAC can be used.
->>>
->>> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
->>> [vijayb: Limit A72 in the commit message]
->>> Signed-off-by: Vijay Balakrishna <vijayb@linux.microsoft.com>
->>> ---
->>>   Documentation/devicetree/bindings/arm/cpus.yaml | 6 ++++++
->>>   1 file changed, 6 insertions(+)
->>
->> This needs an Ack from DT maintainers.
+
+
+On 20-05-2025 19:39, Krzysztof Kozlowski wrote:
+> On 20/05/2025 15:12, Charan Pedumuru wrote:
+>> Convert TI MMC host controller binding to YAML format.
+>> Changes during Conversion:
+>> - Add new properties 'dma', 'dma-names' under required.
 > 
-> That will happen when my review comments are implemented. Those were
-> on v1. Not this v1, but the prior v1. Version your patches correctly
-> please.
+> Why?
 
-Sorry, I will include in my next patch series.
+Actually, dma and dma-names can be removed from required, so there is no need to add any new properties to required. I will remove them.
 
-Vijay
+> 
+>> - Define two separate phandles for 'dmas' in the examples.
+>> - Include appropriate header file for interrupts and use
+>>   it in the examples.
+> 
+> Examples are not the binding, so you can drop last two items.
+> 
+>>
+>> Signed-off-by: Charan Pedumuru <charan.pedumuru@gmail.com>
+>> ---
+>> Changes in v3:
+> 
+> 
+> ...
+> 
+>> +  dmas:
+>> +    maxItems: 2
+>> +
+>> +  dma-names:
+>> +    items:
+>> +      - const: tx
+>> +      - const: rx
+>> +
+>> +  ti,hwmods:
+>> +    $ref: /schemas/types.yaml#/definitions/string
+>> +    description:
+>> +      List of hwmod names (ascii strings), that comes from the OMAP
+>> +      HW documentation, attached to a device. Must contain at least
+>> +      one hwmod.
+> 
+> Description does not match the property. It is not a list and where the
+> hwmod below:
 
+
+Sure, will change the description.
+
+> 
+>> +    pattern: "^msdi[0-9]+$"
+> 
+> I see msdi - is it something different?
+> 
+> There was no such description in original binding, so maybe you are
+> changing something but anyway it should be correct.
+
+Normally, it should be mmc, but for this particular binding it is msdi or do we need to change it to mmc for ti,hwmods property in dts and redefine the pattern here?
+
+> 
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - interrupts
+>> +  - dmas
+>> +  - dma-names
+>> +  - ti,hwmods
+> Best regards,
+> Krzysztof
+
+-- 
+Best Regards,
+Charan.
 
