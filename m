@@ -1,375 +1,128 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05FCF201266;
-	Wed, 21 May 2025 06:56:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 236A41DC1AB;
+	Wed, 21 May 2025 06:58:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747810605; cv=none; b=NxnpDPqNILiS0t1JAk78MrzJqVbrNR+CHs2nDomhvtUKhHGVTcxXbPRfP22tckWH6q4bBJHy0Lrt8Hxn0gsuC0frn85CAFYaODpFO5r07PWAqNsjSUchVMWtFDzhV7EV9Hpijoin1EIsKIco3CphPzRSYUetzSB32S0uvPB6NEI=
+	t=1747810688; cv=none; b=OweYaojzfVySZaKLeCqTsmeC3/6pVYqPmRnKVx+noxcndF9L9T5l2xB96ehCm7c6EuKL3YKhPnizMVX3y/OwACzKQWh9GZ0QxLKG/ID78d9xcewTHbr9KC23ZtQNzKFqQsu10XpV0uwt+XG/Lv8aG0aN5NW1rwwXzcGcXbSVxqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747810605; c=relaxed/simple;
-	bh=tqdtDhnlzy6YdOODtMk30ooPSibNXswrxTGYE7byeW4=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=DaVQb+8zVAMrKDuhxNCYwodOO7PNhAc+hCdQ2ssRfIxJdI1VPbR/tw012mGTBDOGypKawf0+naH+WYYgboRtZIl+mS+TTrI8NIy6nXN+/exW5LCNFPwmeGPsH/echypWSA6JHTYyWAlCqsOtA0am5CHSvf3x3fGjzsZba6L5Od8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1NyJNoqC; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gAZyev3B; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1747810688; c=relaxed/simple;
+	bh=IWz6Yy/BcLz6PFo1jEHDIlrywfsNwNmZ069v+JGYxUY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IJlvCpLZK9Kaw/EsckaRNr5kCCxC4tic2mLZ1dXGe/qMJmwTOqFyXxHZVtvwJkX6BAk8m+qTlnksX2E0A6lnW4Ad1oHmGmgbVTrxtDRayl+ErUSKSSjEo6VHRfzDsRtpqelHpBNeJRYhgpH71ZAKaxPY7jg6qUS8E5QonVD1w10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Edpjpf68; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=7IOWTLCV; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1NyJNoqC";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gAZyev3B"
-Date: Wed, 21 May 2025 06:56:39 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Edpjpf68";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="7IOWTLCV"
+Date: Wed, 21 May 2025 08:58:00 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747810600;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	s=2020; t=1747810685;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=VXoXAo4wUxw50VKFS3FaNdh2gtY10JcNGm0jTgyjPG8=;
-	b=1NyJNoqCVuYjrYQmAxYJ2jdnhq4K/tGMUzeHDmE+TOfKKr82s5TvwPE8QEJaFoyxXaPKQu
-	2v6K9UPPvBwgQ5qZzvg8XPxOykz9C9XACerBGDehUMw7HiUZ6oeLU9bvYbLZfGZcx5vNZE
-	c/Fug5iVxNwztinUdSvcA3TjyDJ326w26a9oBS5KTi1K8s0sdY+XK9kvE9GHD2Drjeasr0
-	OgZ9rzbE8qn3loxMavf5Wf/ga81VhZp0Tgu9qRaJCtp/yYAmBQDn6Y3K3dBVN4U71gF0qf
-	utVxmjtjgYYDt9QR/VQl+ReDuAyjhwS4ZZENTVcVJYEuKBgYZikrDpfSbUOtCQ==
+	bh=gdBcXY08SFR0xzfgVF5rY3+1lWSMx/XtZ80Wkh6Zt5Q=;
+	b=Edpjpf68A1uKzaP0QrwzhV1XWzGzmtCqSbPMr84wq8Z4mxdOcdWoAfU3ugeZbqHPag4wAo
+	CsBDDfsDq7rMLSxIZLcjvPVZoSHcgfaplwBo1ObxGGb+WFkVUt4I71qKCDsTmXyRimPxaj
+	QpPKj3cCzDNi7y7hKtoBIki51hbNsgxI36KFUYzKpiOeNBIdWZ2j3lsF8C/v6GdkfILxGh
+	n3OIx4qf3N27eAkXMi42uO40CljN32kg5rOhhlVwxu48v72FGqqv6ICIU7bIh5Zv6w3z1d
+	6AziKRVZitnc+snBXA9QbD/QXZKG6kfDT5AeIxvfCG7l5v0aAAuGLctDAz+AIQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747810600;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	s=2020e; t=1747810685;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=VXoXAo4wUxw50VKFS3FaNdh2gtY10JcNGm0jTgyjPG8=;
-	b=gAZyev3BpmnJUOQp2/y8msQWA4lF6vGlgrFl4gEMYyko/0/aXXH+JBlQNAaGGcYe9hVy1b
-	zpBvb1+u+uwzRGDw==
-From: "tip-bot2 for David Kaplan" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/core] x86/bugs: Restructure ITS mitigation
-Cc: David Kaplan <david.kaplan@amd.com>,
- "Borislav Petkov (AMD)" <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250516193212.128782-1-david.kaplan@amd.com>
-References: <20250516193212.128782-1-david.kaplan@amd.com>
+	bh=gdBcXY08SFR0xzfgVF5rY3+1lWSMx/XtZ80Wkh6Zt5Q=;
+	b=7IOWTLCV94pErTphukCDvEfRUUt+2wfK7tjAEX3KdEcL7Ln508RjKfuP+sHHSecZHIk7bX
+	eRHBHnqpczRasHDA==
+From: Nam Cao <namcao@linutronix.de>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+	linux-trace-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>
+Subject: Re: [RFC PATCH v2 10/12] rv: Retry when da monitor detects race
+ conditions
+Message-ID: <20250521065800.jgtPyWd7@linutronix.de>
+References: <20250514084314.57976-1-gmonaco@redhat.com>
+ <20250514084314.57976-11-gmonaco@redhat.com>
+ <20250519090626.zjiYgUGW@linutronix.de>
+ <5f1365f2cd84597fd3547544fcceab5c79682624.camel@redhat.com>
+ <20250519103809.nuEUQbVl@linutronix.de>
+ <cdcab46480cbfe2c3320e060ea9603adbd04956c.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174781059941.406.2237870351760542190.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cdcab46480cbfe2c3320e060ea9603adbd04956c.camel@redhat.com>
 
-The following commit has been merged into the x86/core branch of tip:
+On Mon, May 19, 2025 at 01:13:01PM +0200, Gabriele Monaco wrote:
+> 
+> 
+> On Mon, 2025-05-19 at 12:38 +0200, Nam Cao wrote:
+> > On Mon, May 19, 2025 at 12:28:12PM +0200, Gabriele Monaco wrote:
+> > > Mmh, although definitely unlikely, I'm thinking of a case in which
+> > > the
+> > > event starts on one CPU and at the same time we see events in IRQ
+> > > and 
+> > > on another CPU, let's say continuously. Nothing forbids that
+> > > between
+> > > any two consecutive try_cmpxchg another CPU/context changes the
+> > > next
+> > > state (making the local try_cmpxchg fail).
+> > > In practice I've never seen it going on the second iteration, as
+> > > the
+> > > critical section is really tiny, but I'm not sure we can guarantee
+> > > this
+> > > never happens.
+> > > Or am I missing something?
+> > 
+> > I have a feeling that you missed my point. I agree that the retrying
+> > is
+> > needed, because we may race with another.
+> > 
+> > What I am proposing is that we drop the MAX_DA_RETRY_RACING_EVENTS,
+> > and
+> > just keep retrying until we succeed.
+> > 
+> > And that's safe to do, because the maximum number of retries is the
+> > number
+> > of tasks contending with us to set the monitor's state. So we know we
+> > won't
+> > be retrying for long.
+> 
+> I get this point, what I mean is: can we really guarantee the number of
+> contending tasks (or contexts) is finite?
+> In other words, the try_cmpxchg guarantees 1 and only 1 actor wins
+> every time, but cannot guarantee all actors will eventually win, an
+> actor /could/ be hanging there forever.
+> 
+> This handler is running for each event in the monitor and tracepoint
+> handlers can be interrupted as well as run in interrupt context (where
+> of course they cannot be interrupted). I don't think the number of
+> actors is bounded by the number of CPUs.
+> I see this situation is extremely unlikely, but in an exotic scenario
+> where a CPU is sufficiently slower than others (e.g. in a VM) I believe
+> we can see this critical section large enough for this to potentially
+> happen.
+> 
+> I'm not quite afraid of infinite loops, but rather RV introducing
+> unbounded latency very hard to track and without any reporting.
+> Chances are, since tracepoints and actual traced events are not atomic,
+> that by the time this delayed context /wins/ the RV event is no longer
+> current, so we may see an error already.
+> 
+> Does it make sense to you or am I making it more complex than it should
+> be?
 
-Commit-ID:     61ab72c2c6bf24f28b3dbfd3126e984d5afa8424
-Gitweb:        https://git.kernel.org/tip/61ab72c2c6bf24f28b3dbfd3126e984d5afa8424
-Author:        David Kaplan <david.kaplan@amd.com>
-AuthorDate:    Fri, 16 May 2025 14:32:11 -05:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 21 May 2025 08:45:27 +02:00
+Right, I can see that being a problem. But I don't know enough about it to
+comment further, so do as you think best, maybe someone else can help.
 
-x86/bugs: Restructure ITS mitigation
-
-Restructure the ITS mitigation to use select/update/apply functions like
-the other mitigations.
-
-There is a particularly complex interaction between ITS and Retbleed as CDT
-(Call Depth Tracking) is a mitigation for both, and either its=stuff or
-retbleed=stuff will attempt to enable CDT.
-
-retbleed_update_mitigation() runs first and will check the necessary
-pre-conditions for CDT if either ITS or Retbleed stuffing is selected.  If
-checks pass and ITS stuffing is selected, it will select stuffing for
-Retbleed as well.
-
-its_update_mitigation() runs after and will either select stuffing if
-retbleed stuffing was enabled, or fall back to the default (aligned thunks)
-if stuffing could not be enabled.
-
-Enablement of CDT is done exclusively in retbleed_apply_mitigation().
-its_apply_mitigation() is only used to enable aligned thunks.
-
-Signed-off-by: David Kaplan <david.kaplan@amd.com>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/20250516193212.128782-1-david.kaplan@amd.com
----
- arch/x86/kernel/cpu/bugs.c | 167 +++++++++++++++++++-----------------
- 1 file changed, 90 insertions(+), 77 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index d1a03ff..3d5796d 100644
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -92,6 +92,8 @@ static void __init bhi_select_mitigation(void);
- static void __init bhi_update_mitigation(void);
- static void __init bhi_apply_mitigation(void);
- static void __init its_select_mitigation(void);
-+static void __init its_update_mitigation(void);
-+static void __init its_apply_mitigation(void);
- 
- /* The base value of the SPEC_CTRL MSR without task-specific bits set */
- u64 x86_spec_ctrl_base;
-@@ -235,6 +237,11 @@ void __init cpu_select_mitigations(void)
- 	 * spectre_v2=ibrs.
- 	 */
- 	retbleed_update_mitigation();
-+	/*
-+	 * its_update_mitigation() depends on spectre_v2_update_mitigation()
-+	 * and retbleed_update_mitigation().
-+	 */
-+	its_update_mitigation();
- 
- 	/*
- 	 * spectre_v2_user_update_mitigation() depends on
-@@ -263,6 +270,7 @@ void __init cpu_select_mitigations(void)
- 	srbds_apply_mitigation();
- 	srso_apply_mitigation();
- 	gds_apply_mitigation();
-+	its_apply_mitigation();
- 	bhi_apply_mitigation();
- }
- 
-@@ -1115,6 +1123,17 @@ enum spectre_v2_mitigation spectre_v2_enabled __ro_after_init = SPECTRE_V2_NONE;
- #undef pr_fmt
- #define pr_fmt(fmt)     "RETBleed: " fmt
- 
-+enum its_mitigation {
-+	ITS_MITIGATION_OFF,
-+	ITS_MITIGATION_AUTO,
-+	ITS_MITIGATION_VMEXIT_ONLY,
-+	ITS_MITIGATION_ALIGNED_THUNKS,
-+	ITS_MITIGATION_RETPOLINE_STUFF,
-+};
-+
-+static enum its_mitigation its_mitigation __ro_after_init =
-+	IS_ENABLED(CONFIG_MITIGATION_ITS) ? ITS_MITIGATION_AUTO : ITS_MITIGATION_OFF;
-+
- enum retbleed_mitigation {
- 	RETBLEED_MITIGATION_NONE,
- 	RETBLEED_MITIGATION_AUTO,
-@@ -1242,11 +1261,19 @@ static void __init retbleed_update_mitigation(void)
- 	/*
- 	 * retbleed=stuff is only allowed on Intel.  If stuffing can't be used
- 	 * then a different mitigation will be selected below.
-+	 *
-+	 * its=stuff will also attempt to enable stuffing.
- 	 */
--	if (retbleed_mitigation == RETBLEED_MITIGATION_STUFF) {
-+	if (retbleed_mitigation == RETBLEED_MITIGATION_STUFF ||
-+	    its_mitigation == ITS_MITIGATION_RETPOLINE_STUFF) {
- 		if (spectre_v2_enabled != SPECTRE_V2_RETPOLINE) {
- 			pr_err("WARNING: retbleed=stuff depends on spectre_v2=retpoline\n");
- 			retbleed_mitigation = RETBLEED_MITIGATION_AUTO;
-+		} else {
-+			if (retbleed_mitigation != RETBLEED_MITIGATION_STUFF)
-+				pr_info("Retbleed mitigation updated to stuffing\n");
-+
-+			retbleed_mitigation = RETBLEED_MITIGATION_STUFF;
- 		}
- 	}
- 	/*
-@@ -1338,20 +1365,6 @@ static void __init retbleed_apply_mitigation(void)
- #undef pr_fmt
- #define pr_fmt(fmt)     "ITS: " fmt
- 
--enum its_mitigation_cmd {
--	ITS_CMD_OFF,
--	ITS_CMD_ON,
--	ITS_CMD_VMEXIT,
--	ITS_CMD_RSB_STUFF,
--};
--
--enum its_mitigation {
--	ITS_MITIGATION_OFF,
--	ITS_MITIGATION_VMEXIT_ONLY,
--	ITS_MITIGATION_ALIGNED_THUNKS,
--	ITS_MITIGATION_RETPOLINE_STUFF,
--};
--
- static const char * const its_strings[] = {
- 	[ITS_MITIGATION_OFF]			= "Vulnerable",
- 	[ITS_MITIGATION_VMEXIT_ONLY]		= "Mitigation: Vulnerable, KVM: Not affected",
-@@ -1359,11 +1372,6 @@ static const char * const its_strings[] = {
- 	[ITS_MITIGATION_RETPOLINE_STUFF]	= "Mitigation: Retpolines, Stuffing RSB",
- };
- 
--static enum its_mitigation its_mitigation __ro_after_init = ITS_MITIGATION_ALIGNED_THUNKS;
--
--static enum its_mitigation_cmd its_cmd __ro_after_init =
--	IS_ENABLED(CONFIG_MITIGATION_ITS) ? ITS_CMD_ON : ITS_CMD_OFF;
--
- static int __init its_parse_cmdline(char *str)
- {
- 	if (!str)
-@@ -1375,16 +1383,16 @@ static int __init its_parse_cmdline(char *str)
- 	}
- 
- 	if (!strcmp(str, "off")) {
--		its_cmd = ITS_CMD_OFF;
-+		its_mitigation = ITS_MITIGATION_OFF;
- 	} else if (!strcmp(str, "on")) {
--		its_cmd = ITS_CMD_ON;
-+		its_mitigation = ITS_MITIGATION_ALIGNED_THUNKS;
- 	} else if (!strcmp(str, "force")) {
--		its_cmd = ITS_CMD_ON;
-+		its_mitigation = ITS_MITIGATION_ALIGNED_THUNKS;
- 		setup_force_cpu_bug(X86_BUG_ITS);
- 	} else if (!strcmp(str, "vmexit")) {
--		its_cmd = ITS_CMD_VMEXIT;
-+		its_mitigation = ITS_MITIGATION_VMEXIT_ONLY;
- 	} else if (!strcmp(str, "stuff")) {
--		its_cmd = ITS_CMD_RSB_STUFF;
-+		its_mitigation = ITS_MITIGATION_RETPOLINE_STUFF;
- 	} else {
- 		pr_err("Ignoring unknown indirect_target_selection option (%s).", str);
- 	}
-@@ -1395,85 +1403,90 @@ early_param("indirect_target_selection", its_parse_cmdline);
- 
- static void __init its_select_mitigation(void)
- {
--	enum its_mitigation_cmd cmd = its_cmd;
--
- 	if (!boot_cpu_has_bug(X86_BUG_ITS) || cpu_mitigations_off()) {
- 		its_mitigation = ITS_MITIGATION_OFF;
- 		return;
- 	}
- 
--	/* Retpoline+CDT mitigates ITS, bail out */
--	if (boot_cpu_has(X86_FEATURE_RETPOLINE) &&
--	    boot_cpu_has(X86_FEATURE_CALL_DEPTH)) {
--		its_mitigation = ITS_MITIGATION_RETPOLINE_STUFF;
--		goto out;
--	}
-+	if (its_mitigation == ITS_MITIGATION_AUTO)
-+		its_mitigation = ITS_MITIGATION_ALIGNED_THUNKS;
-+
-+	if (its_mitigation == ITS_MITIGATION_OFF)
-+		return;
- 
--	/* Exit early to avoid irrelevant warnings */
--	if (cmd == ITS_CMD_OFF) {
--		its_mitigation = ITS_MITIGATION_OFF;
--		goto out;
--	}
--	if (spectre_v2_enabled == SPECTRE_V2_NONE) {
--		pr_err("WARNING: Spectre-v2 mitigation is off, disabling ITS\n");
--		its_mitigation = ITS_MITIGATION_OFF;
--		goto out;
--	}
- 	if (!IS_ENABLED(CONFIG_MITIGATION_RETPOLINE) ||
- 	    !IS_ENABLED(CONFIG_MITIGATION_RETHUNK)) {
- 		pr_err("WARNING: ITS mitigation depends on retpoline and rethunk support\n");
- 		its_mitigation = ITS_MITIGATION_OFF;
--		goto out;
-+		return;
- 	}
-+
- 	if (IS_ENABLED(CONFIG_DEBUG_FORCE_FUNCTION_ALIGN_64B)) {
- 		pr_err("WARNING: ITS mitigation is not compatible with CONFIG_DEBUG_FORCE_FUNCTION_ALIGN_64B\n");
- 		its_mitigation = ITS_MITIGATION_OFF;
--		goto out;
--	}
--	if (boot_cpu_has(X86_FEATURE_RETPOLINE_LFENCE)) {
--		pr_err("WARNING: ITS mitigation is not compatible with lfence mitigation\n");
--		its_mitigation = ITS_MITIGATION_OFF;
--		goto out;
-+		return;
- 	}
- 
--	if (cmd == ITS_CMD_RSB_STUFF &&
--	    (!boot_cpu_has(X86_FEATURE_RETPOLINE) || !IS_ENABLED(CONFIG_MITIGATION_CALL_DEPTH_TRACKING))) {
-+	if (its_mitigation == ITS_MITIGATION_RETPOLINE_STUFF &&
-+	    !IS_ENABLED(CONFIG_MITIGATION_CALL_DEPTH_TRACKING)) {
- 		pr_err("RSB stuff mitigation not supported, using default\n");
--		cmd = ITS_CMD_ON;
-+		its_mitigation = ITS_MITIGATION_ALIGNED_THUNKS;
- 	}
- 
--	switch (cmd) {
--	case ITS_CMD_OFF:
-+	if (its_mitigation == ITS_MITIGATION_VMEXIT_ONLY &&
-+	    !boot_cpu_has_bug(X86_BUG_ITS_NATIVE_ONLY))
-+		its_mitigation = ITS_MITIGATION_ALIGNED_THUNKS;
-+}
-+
-+static void __init its_update_mitigation(void)
-+{
-+	if (!boot_cpu_has_bug(X86_BUG_ITS) || cpu_mitigations_off())
-+		return;
-+
-+	switch (spectre_v2_enabled) {
-+	case SPECTRE_V2_NONE:
-+		pr_err("WARNING: Spectre-v2 mitigation is off, disabling ITS\n");
- 		its_mitigation = ITS_MITIGATION_OFF;
- 		break;
--	case ITS_CMD_VMEXIT:
--		if (boot_cpu_has_bug(X86_BUG_ITS_NATIVE_ONLY)) {
--			its_mitigation = ITS_MITIGATION_VMEXIT_ONLY;
--			goto out;
--		}
--		fallthrough;
--	case ITS_CMD_ON:
--		its_mitigation = ITS_MITIGATION_ALIGNED_THUNKS;
--		if (!boot_cpu_has(X86_FEATURE_RETPOLINE))
--			setup_force_cpu_cap(X86_FEATURE_INDIRECT_THUNK_ITS);
--		setup_force_cpu_cap(X86_FEATURE_RETHUNK);
--		set_return_thunk(its_return_thunk);
-+	case SPECTRE_V2_RETPOLINE:
-+		/* Retpoline+CDT mitigates ITS */
-+		if (retbleed_mitigation == RETBLEED_MITIGATION_STUFF)
-+			its_mitigation = ITS_MITIGATION_RETPOLINE_STUFF;
- 		break;
--	case ITS_CMD_RSB_STUFF:
--		its_mitigation = ITS_MITIGATION_RETPOLINE_STUFF;
--		setup_force_cpu_cap(X86_FEATURE_RETHUNK);
--		setup_force_cpu_cap(X86_FEATURE_CALL_DEPTH);
--		set_return_thunk(call_depth_return_thunk);
--		if (retbleed_mitigation == RETBLEED_MITIGATION_NONE) {
--			retbleed_mitigation = RETBLEED_MITIGATION_STUFF;
--			pr_info("Retbleed mitigation updated to stuffing\n");
--		}
-+	case SPECTRE_V2_LFENCE:
-+	case SPECTRE_V2_EIBRS_LFENCE:
-+		pr_err("WARNING: ITS mitigation is not compatible with lfence mitigation\n");
-+		its_mitigation = ITS_MITIGATION_OFF;
-+		break;
-+	default:
- 		break;
- 	}
--out:
-+
-+	/*
-+	 * retbleed_update_mitigation() will try to do stuffing if its=stuff.
-+	 * If it can't, such as if spectre_v2!=retpoline, then fall back to
-+	 * aligned thunks.
-+	 */
-+	if (its_mitigation == ITS_MITIGATION_RETPOLINE_STUFF &&
-+	    retbleed_mitigation != RETBLEED_MITIGATION_STUFF)
-+		its_mitigation = ITS_MITIGATION_ALIGNED_THUNKS;
-+
- 	pr_info("%s\n", its_strings[its_mitigation]);
- }
- 
-+static void __init its_apply_mitigation(void)
-+{
-+	/* its=stuff forces retbleed stuffing and is enabled there. */
-+	if (its_mitigation != ITS_MITIGATION_ALIGNED_THUNKS)
-+		return;
-+
-+	if (!boot_cpu_has(X86_FEATURE_RETPOLINE))
-+		setup_force_cpu_cap(X86_FEATURE_INDIRECT_THUNK_ITS);
-+
-+	setup_force_cpu_cap(X86_FEATURE_RETHUNK);
-+	set_return_thunk(its_return_thunk);
-+}
-+
- #undef pr_fmt
- #define pr_fmt(fmt)     "Spectre V2 : " fmt
- 
+Best regards,
+Nam
