@@ -1,93 +1,81 @@
-Received: from sender4-of-o55.zoho.com (sender4-of-o55.zoho.com [136.143.188.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9424A250BED;
-	Wed, 21 May 2025 09:41:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747820483; cv=pass; b=Wb7bMzC0Bbuu/WOwOOkvo8F20aHpg0mQddHI8LE6sMx3bA67kTOnbEOcEwgA5WOO8QXb8GtJkJO4e6RP/PBaENAyIDuqTRSxnqJl/PN5zUeFKnbWyCSX5PVVbNI05/KwW5dlYLbUbwgY5XjHRP4Ldqtt2Xb19PuRpb9tS/uqMcc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747820483; c=relaxed/simple;
-	bh=HBGeSWhlI0uxxSho24nYevRne57eTZnoS1c8gCFYqn8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nngdl4smx+NnoXNO60tc/8dplARViX+Y420anmsWSsETMzRO+yZVz+MkQw+ioqS1jsFfiNQYHGUgdex76cPC2wOABJ0IW+uDbz0tD0CYPp9qcR3j/XLw2JaYUNxKO6euScWn6NG2/KXEoqF05Ze2lgQe1crt8l+f5n09VyypBxw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com; spf=pass smtp.mailfrom=anirudhrb.com; dkim=fail (0-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b=KUiYpN7i reason="key not found in DNS"; arc=pass smtp.client-ip=136.143.188.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=anirudhrb.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=anirudhrb.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81194250BED;
+	Wed, 21 May 2025 09:41:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747820487; cv=none; b=SsfjfvVoGueote0eHN06a3jyXeEXtpy751tP0xo9dh58yvrw8VtkhV/AmtQQFieM+K0Yioh5Zg7tydqsw9WkLCQ58gMoGf5zKTHh77bkpv4RX86JIO63qnxEeTiR5rDx7NQGcK2FLj2KWTB7NLURVY4x9HDrUPeLMM9pCgR2tmw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747820487; c=relaxed/simple;
+	bh=+2ACf2EVUznzds3MDpxXdhMN6A2gN/hs5eEw4sfUYDc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j226va1jP1b/fre8PcKLm00MsAfrgqDQPIgzi+y61JOyOpJeU38ucxhwdevi+aQRzoSnipV4T265FvlooqxLY4fAhmNhrmHBWoQfYnlDjdh18a10Rjw0QUp9VdR3yd962NiTOs2FBk3Z2iFzy4f6rhEaXoJHIdGhRuYNr/K/3KI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lcfS6tBa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=anirudhrb.com header.i=anirudh@anirudhrb.com header.b="KUiYpN7i"
-ARC-Seal: i=1; a=rsa-sha256; t=1747820471; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=agGqAnt3Bc9RFcPTZ0KKHJHUmsmpZfMgKqzqAUcrECb5obxwgVb4Eg8EABux6BLm3kt52wE0XntHtQDdU1iSzogSSCeYjhpKOkRBzUx66aH6pUBQPHvesJOPoxIs+rvwg8Nrzt6LM3FDyKnwInsr6Jq/UJJUxTZRpWQCZURHUGo=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1747820471; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=DTWiBkBhS2QuL+xSXWqqij2r9yFJ6qW2raK9TVRAI7Q=; 
-	b=NA+0SSKzhL9H0xgLq7m+ZKOSusHuzXi2EB7JslWSlK36AsgggbtPNTD25HiigbM63Ez6gLXU9DSv9zcTYPUchGwrmIpQpOcWyyxUsQ0CtR0eLryZI/T43yXf0m9sKupKxEqUaFGgcPbG5R27/+3sx4+U44Ps38whkT2amcz5FcQ=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=anirudhrb.com;
-	spf=pass  smtp.mailfrom=anirudh@anirudhrb.com;
-	dmarc=pass header.from=<anirudh@anirudhrb.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1747820471;
-	s=zoho; d=anirudhrb.com; i=anirudh@anirudhrb.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Reply-To;
-	bh=DTWiBkBhS2QuL+xSXWqqij2r9yFJ6qW2raK9TVRAI7Q=;
-	b=KUiYpN7i0A9FIjwGvhL8E7tX6SSRdDxx2GwrqhIEkpVVvT113SBHU/KC81lxu7Cf
-	ABLN4oRMA1v8jKXMi5RhjNFU4vhWmW4Y9mX5dcuji9S3pde8taQSeCdkBXm5C8jenie
-	j0sodbh9w1XMZm/1e96MJJ8TOLn/fWN+W/gR41P0=
-Received: by mx.zohomail.com with SMTPS id 1747820468781754.4226643973292;
-	Wed, 21 May 2025 02:41:08 -0700 (PDT)
-From: Anirudh Rayabharam <anirudh@anirudhrb.com>
-To: Mark Rutland <mark.rutland@arm.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Sudeep Holla <sudeep.holla@arm.com>
-Cc: anirudh@anirudhrb.com,
-	linux-hyperv@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] firmware: smccc: support both conduits for getting hyp UUID
-Date: Wed, 21 May 2025 09:40:48 +0000
-Message-Id: <20250521094049.960056-1-anirudh@anirudhrb.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lcfS6tBa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C36BC4CEEA;
+	Wed, 21 May 2025 09:41:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747820487;
+	bh=+2ACf2EVUznzds3MDpxXdhMN6A2gN/hs5eEw4sfUYDc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lcfS6tBaeh1ph8fLFgw+Mz//8rf1DUFHHXN3rXWNj51CElqQ6DP+LG/MepdP7wJUO
+	 /7jVlQ1uejYjHZBfKkXwNcnohWb+bVw+rcmaDQiQWaLltKAyORjspTh2oLV3j8MQjk
+	 Mi68gOYvOXxPZamX6GKA0DcKY5nC0ye/v1eadSFN7+y+O64FrrOTfy96J7gytVB8Oo
+	 ZzCF+vARlOq9p6isPWAcn9r4dxIe3I/qTp9/eYYrIabXF2pfmKg+e2yO/LcWL2WQIt
+	 Gfox0cdL72JffPforo3G681RVmJcjMzlhKUBMEwFbe/lv1BfZrZhKnNAfB9tPTawxR
+	 9ipeqIDz4iRGQ==
+Date: Wed, 21 May 2025 11:41:24 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Shradha Todi <shradha.t@samsung.com>
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.or, linux-kernel@vger.kernel.org, 
+	linux-phy@lists.infradead.org, manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org, 
+	kw@linux.com, robh@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, alim.akhtar@samsung.com, vkoul@kernel.org, 
+	kishon@kernel.org, arnd@arndb.de, m.szyprowski@samsung.com, jh80.chung@samsung.com, 
+	Hrishikesh Dileep <hrishikesh.d@samsung.com>
+Subject: Re: [PATCH 02/10] PCI: exynos: Remove unused MACROs in exynos PCI
+ file
+Message-ID: <20250521-succinct-roadrunner-from-avalon-f1fa4c@kuoka>
+References: <20250518193152.63476-1-shradha.t@samsung.com>
+ <CGME20250518193230epcas5p3dfb178a6528556c55e9b694ca8f8ad6c@epcas5p3.samsung.com>
+ <20250518193152.63476-3-shradha.t@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250518193152.63476-3-shradha.t@samsung.com>
 
-From: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
+On Mon, May 19, 2025 at 01:01:44AM GMT, Shradha Todi wrote:
+> Some MACROs are defined in the exynos PCI file but are
+> not used anywhere within the file. Remove such unused
+> MACROs.
+> 
+> Suggested-by: Hrishikesh Dileep <hrishikesh.d@samsung.com>
+> Signed-off-by: Shradha Todi <shradha.t@samsung.com>
+> ---
+>  drivers/pci/controller/dwc/pci-exynos.c | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-exynos.c b/drivers/pci/controller/dwc/pci-exynos.c
+> index 1c70b036376d..990aaa16b132 100644
+> --- a/drivers/pci/controller/dwc/pci-exynos.c
+> +++ b/drivers/pci/controller/dwc/pci-exynos.c
+> @@ -31,8 +31,6 @@
+>  #define EXYNOS_IRQ_INTB_ASSERT			BIT(2)
+>  #define EXYNOS_IRQ_INTC_ASSERT			BIT(4)
+>  #define EXYNOS_IRQ_INTD_ASSERT			BIT(6)
+> -#define EXYNOS_PCIE_IRQ_LEVEL			0x004
 
-When Linux is running as the root partition under Microsoft Hypervisor
-(MSHV) a.k.a Hyper-V, smc is used as the conduit for smc calls.
+Fix order of patches. Why renaming something just to remove it? No
+point.
 
-Extend arm_smccc_hypervisor_has_uuid() to support this usecase. Use
-arm_smccc_1_1_invoke to retrieve and use the appropriate conduit instead
-of supporting only hvc.
-
-Boot tested on MSHV guest, MSHV root & KVM guest.
-
-Signed-off-by: Anirudh Rayabharam (Microsoft) <anirudh@anirudhrb.com>
----
- drivers/firmware/smccc/smccc.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
-
-diff --git a/drivers/firmware/smccc/smccc.c b/drivers/firmware/smccc/smccc.c
-index cd65b434dc6e..bdee057db2fd 100644
---- a/drivers/firmware/smccc/smccc.c
-+++ b/drivers/firmware/smccc/smccc.c
-@@ -72,10 +72,7 @@ bool arm_smccc_hypervisor_has_uuid(const uuid_t *hyp_uuid)
- 	struct arm_smccc_res res = {};
- 	uuid_t uuid;
- 
--	if (arm_smccc_1_1_get_conduit() != SMCCC_CONDUIT_HVC)
--		return false;
--
--	arm_smccc_1_1_hvc(ARM_SMCCC_VENDOR_HYP_CALL_UID_FUNC_ID, &res);
-+	arm_smccc_1_1_invoke(ARM_SMCCC_VENDOR_HYP_CALL_UID_FUNC_ID, &res);
- 	if (res.a0 == SMCCC_RET_NOT_SUPPORTED)
- 		return false;
- 
--- 
-2.34.1
+Best regards,
+Krzysztof
 
