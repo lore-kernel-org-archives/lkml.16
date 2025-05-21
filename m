@@ -1,55 +1,55 @@
-Received: from mail-wr1-f74.google.com (mail-wr1-f74.google.com [209.85.221.74])
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F5B213D8A0
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 15:04:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8851D63DF
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 15:04:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747839897; cv=none; b=l3MLAYguDFbbpf0RphDtMGflVdPwMSA5ZpqxGMdjUo29MKnPlZQ541xbkCrEBeEJsXyPz1PI+wM9dj9EVU7RBJtdBgX8a/AYYn525g4ehuo60XTGXPZ9buGzEnEsnVMbOoGqaSAO5gS9gxlI2VRyMQWdn59TemHhDlHUFIvA7PU=
+	t=1747839900; cv=none; b=mSyrWqEfY90LXqmTs0jf3KRdyzb3sGl4cywC/PIOxGAPuEBW5Rr0lhpuVBY0VfvV9hssy4zXv8Y8zluteXelbGLUDriqGv8TvWLoJsEpJheN4hVZW0r5HkhyEFquSrXY8s6lnAtUsM5O4y0Tzq7DTxAJWGNcjK5nPtJvKohR2KM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747839897; c=relaxed/simple;
-	bh=H9Ob5n9wa5J+FXlx/0WvGSCNT12tZXNb1lB59H/PKlc=;
+	s=arc-20240116; t=1747839900; c=relaxed/simple;
+	bh=xjQw6jSKQp9URqi4C246dUlBO6uJS7bp2ad5W8wkdj8=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=NB5JuPlXMi/OD7JoCiScUF0eXD9P40xa36vy7MTw5YhB6yTXWl6X9XFC2mJLEikoKCcyjvmMYIxcU151laBmDPNXADLhvwtarwsEYF5RSySIZEfv3ZQ92ReQfaoywTEVT0MhzYhIu+NRvqn6ncwnHA+fWRvafbSDr4HuqJV8jOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oxRYK6mw; arc=none smtp.client-ip=209.85.221.74
+	 To:Cc:Content-Type; b=mlIYdtlu5bsWc8waxMY0u5rhgLKc18fZnN6IX9MLaWFUZ6to2JC9XB0xkBdAvvSQb7dZaHfcIYKNY/VrN1TOFz5rw809onei/nBUUvQk1nucCkCI6BC0EvmbZuNDIvJZsZWF9ABsLV30rvY6BJMcq/S1EbxjGk4i/mKYekM/V7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BRMOR0lX; arc=none smtp.client-ip=209.85.128.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oxRYK6mw"
-Received: by mail-wr1-f74.google.com with SMTP id ffacd0b85a97d-3a3660a9096so1939632f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 08:04:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BRMOR0lX"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-440667e7f92so36154885e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 08:04:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747839894; x=1748444694; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747839896; x=1748444696; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TdExpXOBdyQxHRSYTke1g1qR7XOSapka6sbXRQuHZII=;
-        b=oxRYK6mwGbIq88NlmkefTPjH4SR0veeZDaMBNSErTRt0NQ0ZNJGM244s2pqGqYFG48
-         cE/F3nBs/hqYyFNUwM886qYmKawtx4hPoZqiG9YvxQ02JA8rbfXS9q0+4oLLDgwc/DEh
-         lU2tEQf2cYd4nub9BfmyV0zDLn9w/rdncPSBfTFIm+hxlj/larXsmuOqhAp6p7EroNvE
-         gi4jcVA6pu5v1VPQ6nxe1Qbjp1rhBZMZso/9AUM3VyJPvkdmo7h5vM/PBaYyKlChubSm
-         lt8U115911QLGMq9T8ykN5xTrQTzoT3jA3RpmQxsnx5whMmqlqX4prdk4WbZtN/sNcXX
-         TzRw==
+        bh=DwAlbsdp8Pq3hojVBpIUtQJnr1hiT6SyKypwl7KjCd0=;
+        b=BRMOR0lXMFEkEpnNZEZeuOuzHHq7ctcN/Z6ACV2rWgLScISleo85nrUIlSrXHHHIcM
+         RSJGJZIATSi5mirKfCpG9p5dtvaj0riPjdEBJkMPf3sNjo7QwpBpZruEz3cNy84DeUOE
+         Y9BOrtkMSXCE21qLlxqdzePKLjLTLniRx7YVLvs//04qjemBSLM3WoLQLd4IZ19lkqg3
+         i5tgDkcY1fscEj279tkcFNmggHyYuNFI4rovvomPKmBj0dqJIz1vh/jaJosKd6AbNGm2
+         BILWLrDet1Ez7q09j2p+G+c300OZRW8x5J1fKkq+l5I8p4AhD4XEb4aGkEg27jcVGyyv
+         1hWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747839894; x=1748444694;
+        d=1e100.net; s=20230601; t=1747839896; x=1748444696;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TdExpXOBdyQxHRSYTke1g1qR7XOSapka6sbXRQuHZII=;
-        b=BQC7Nwc5gQCMLfAXtUXhzn02Rk2U9qo25Tmx82nfxFBC8d4HleMf+WGg9/cyJVTWeB
-         sFGceYEx0V9kdoPH2gtCTOpPETBvrG0Q6NuUkhgxWe5H7F+6fHFbxsyhF5pkEnsyuXHj
-         h5J8Qk4FM+e6q5GbaNV8OSw36dlyr0FcjEbP9ACNkAYjWJ9TgPZd/ZNSboqpGWzcUm4d
-         4B6wtrAbr1kmTpZVsNs4j8llBTADcDxlE3Z5N2hNZyEsolR5JfOLN1QLIiFtgjdzgDcN
-         mmZeHVpEojIIc3VsCwYTdyaA0/SGXuxeGSH19daNCl0yg6e4eufuvYDOck1aJbSxgkGT
-         upPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU+KjUX/AKhPVtoma20K2KDg9xCjuMlw46q9NQrbyxUTbWTVou8EW7Chc+gKlcbZvX1NI6QP9VmI5eheEE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDzwdPiswbUH+KGUfxSsoHw7nAXjUtczP8GA1jAj/PoEF+xQGX
-	pB5DHDGzYQF4r5S0k58AaBqOty45b5XyLQUNWOrS/AVkrhQNqFRI3gHkmdlBvzXnE83PnSciCX6
-	2V8Q+nISHLQ==
-X-Google-Smtp-Source: AGHT+IG5iq1L7A5fViI6aeJ06pNTiiwfp+a9KlNvOLCOF5r39BCHJQThJWh3w3IPT/NsLc3iqwvLiqg0SXNM
-X-Received: from wrs19.prod.google.com ([2002:a05:6000:653:b0:3a3:678b:a096])
- (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6000:1445:b0:3a3:7be3:cb81
- with SMTP id ffacd0b85a97d-3a37be3cde9mr5536563f8f.39.1747839893966; Wed, 21
- May 2025 08:04:53 -0700 (PDT)
-Date: Wed, 21 May 2025 17:04:28 +0200
+        bh=DwAlbsdp8Pq3hojVBpIUtQJnr1hiT6SyKypwl7KjCd0=;
+        b=CU49+0AFrv/TkxgHgQWM145qvWq54cqEWd52wJHo8Gn1vzF7T7YwvBCTKcxP6xOg6b
+         9uobmEkqA8snUeVYsg9SqkML8VM1Cpy7GYIX/jqdNgsc8CwPAqvaa4EKBtt4IPf1Kd2A
+         NYfmw7qbuUjNMmOSuLFhB9ePvD+T2nKy27rny7WVVybdzG7MHcLd0sB7SKIpP9n3OFlJ
+         hji4gsD52MPGZdPXciq8UHv4l1g5FApx7UFkI1tN7P6Nu3UsAxoDod0/qIVevha7y4bh
+         Kaq7TcaYeKtW5yECb/4zCcUxcmIo6PObY1ZFcPWprem9ljcDFtV8sEVrVlWrzhLGxHVk
+         u4lg==
+X-Forwarded-Encrypted: i=1; AJvYcCX+CmcEzaxAjVi5MOXs1z9H2smJWI7WwX6/mVqler1uCTk4K7Tf1uen7WUSHCjCNrzlSGTqE2FyJJJs7IE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZqCG/zneHMYCdQ7EJvZkeJCyseBXrL2uh5ww2sTI9pkAVrjIJ
+	h10w5JLDnBIDA9E1JaTQENBmaZUXbFPWJcvf9XgalM23PYoRvXebfMFpJzPRM9dNZrV9GDckqcK
+	iA3Gwreb7+Q==
+X-Google-Smtp-Source: AGHT+IFHepmVs2MSdhPgR5Oldj0rNLjrGcpLT6idVGvnIJxv0l7ZoCLm98UUtS8rwQah08SYfKWBaAfO7Giv
+X-Received: from wrf20-n2.prod.google.com ([2002:a05:6000:43d4:20b0:3a3:709b:2ce3])
+ (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6000:c0b:b0:3a3:5c64:c60
+ with SMTP id ffacd0b85a97d-3a35c84beacmr13474911f8f.59.1747839896585; Wed, 21
+ May 2025 08:04:56 -0700 (PDT)
+Date: Wed, 21 May 2025 17:04:29 +0200
 In-Reply-To: <cover.1747839857.git.dvyukov@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,33 +59,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1747839857.git.dvyukov@google.com>
 X-Mailer: git-send-email 2.49.0.1143.g0be31eac6b-goog
-Message-ID: <af6a04dbfef9af8570f5bab43e3ef1416b62699a.1747839857.git.dvyukov@google.com>
-Subject: [PATCH v3 1/3] selftests: Fix errno checking in syscall_user_dispatch test
+Message-ID: <97947cc8e205ff49675826d7b0327ef2e2c66eea.1747839857.git.dvyukov@google.com>
+Subject: [PATCH v3 2/3] syscall_user_dispatch: Add PR_SYS_DISPATCH_INCLUSIVE_ON
 From: Dmitry Vyukov <dvyukov@google.com>
 To: krisman@collabora.com, tglx@linutronix.de, luto@kernel.org, 
 	peterz@infradead.org, keescook@chromium.org, gregory.price@memverge.com
 Cc: Dmitry Vyukov <dvyukov@google.com>, Marco Elver <elver@google.com>, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Successful syscalls don't change errno, so checking errno is wrong
-to ensure that a syscall has failed. For example for the following
-sequence:
+There are two possible scenarios for syscall filtering:
+ - having a trusted/allowed range of PCs, and intercepting everything else
+ - or the opposite: a single untrusted/intercepted range and allowing
+   everything else (this is relevant for any kind of sandboxing scenario,
+   or monitoring behavior of a single library)
 
-	prctl(PR_SET_SYSCALL_USER_DISPATCH, op, 0x0, 0xff, 0);
-	EXPECT_EQ(EINVAL, errno);
-	prctl(PR_SET_SYSCALL_USER_DISPATCH, op, 0x0, 0x0, &sel);
-	EXPECT_EQ(EINVAL, errno);
+The current API only allows the former use case due to allowed
+range wrap-around check. Add PR_SYS_DISPATCH_INCLUSIVE_ON that
+enables the second use case.
 
-only the first syscall may fail and set errno, but the second may succeed
-and keep errno intact, and the check will falsely pass.
-Or if errno happened to be EINVAL before, even the first check may falsely
-pass.
-
-Also use EXPECT/ASSERT consistently. Currently there is an inconsistent mix
-without obvious reasons for usage of one or another.
+Add PR_SYS_DISPATCH_EXCLUSIVE_ON alias for PR_SYS_DISPATCH_ON
+to make it clear how it's different from the new
+PR_SYS_DISPATCH_INCLUSIVE_ON.
 
 Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
-Fixes: 179ef035992e ("selftests: Add kselftest for syscall user dispatch")
 Cc: Gabriel Krisman Bertazi <krisman@collabora.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Andy Lutomirski <luto@kernel.org>
@@ -96,109 +92,157 @@ Cc: Marco Elver <elver@google.com>
 Cc: linux-kernel@vger.kernel.org
 
 ---
-
 Changes in v3:
- - Added Fixes tag
- - Moved this patch as the first in the series
- - Added prctl_valid/invalid helpers
+ - Add new PR_SYS_DISPATCH_INCLUSIVE_ON mode
+   instead of extending behavior of the old mode
 ---
- .../syscall_user_dispatch/sud_test.c          | 50 +++++++++----------
- 1 file changed, 25 insertions(+), 25 deletions(-)
+ .../admin-guide/syscall-user-dispatch.rst     | 23 +++++++-----
+ include/uapi/linux/prctl.h                    |  7 +++-
+ kernel/entry/syscall_user_dispatch.c          | 36 ++++++++++++-------
+ tools/include/uapi/linux/prctl.h              |  7 +++-
+ 4 files changed, 49 insertions(+), 24 deletions(-)
 
-diff --git a/tools/testing/selftests/syscall_user_dispatch/sud_test.c b/tools/testing/selftests/syscall_user_dispatch/sud_test.c
-index d975a67673299..48cf01aeec3e7 100644
---- a/tools/testing/selftests/syscall_user_dispatch/sud_test.c
-+++ b/tools/testing/selftests/syscall_user_dispatch/sud_test.c
-@@ -79,6 +79,21 @@ TEST_SIGNAL(dispatch_trigger_sigsys, SIGSYS)
+diff --git a/Documentation/admin-guide/syscall-user-dispatch.rst b/Documentation/admin-guide/syscall-user-dispatch.rst
+index e3cfffef5a633..c1768d9e80fa2 100644
+--- a/Documentation/admin-guide/syscall-user-dispatch.rst
++++ b/Documentation/admin-guide/syscall-user-dispatch.rst
+@@ -53,20 +53,25 @@ following prctl:
+ 
+   prctl(PR_SET_SYSCALL_USER_DISPATCH, <op>, <offset>, <length>, [selector])
+ 
+-<op> is either PR_SYS_DISPATCH_ON or PR_SYS_DISPATCH_OFF, to enable and
+-disable the mechanism globally for that thread.  When
+-PR_SYS_DISPATCH_OFF is used, the other fields must be zero.
+-
+-[<offset>, <offset>+<length>) delimit a memory region interval
+-from which syscalls are always executed directly, regardless of the
+-userspace selector.  This provides a fast path for the C library, which
+-includes the most common syscall dispatchers in the native code
+-applications, and also provides a way for the signal handler to return
++<op> is either PR_SYS_DISPATCH_EXCLUSIVE_ON/PR_SYS_DISPATCH_INCLUSIVE_ON
++or PR_SYS_DISPATCH_OFF, to enable and disable the mechanism globally for
++that thread.  When PR_SYS_DISPATCH_OFF is used, the other fields must be zero.
++
++For PR_SYS_DISPATCH_EXCLUSIVE_ON [<offset>, <offset>+<length>) delimit
++a memory region interval from which syscalls are always executed directly,
++regardless of the userspace selector.  This provides a fast path for the
++C library, which includes the most common syscall dispatchers in the native
++code applications, and also provides a way for the signal handler to return
+ without triggering a nested SIGSYS on (rt\_)sigreturn.  Users of this
+ interface should make sure that at least the signal trampoline code is
+ included in this region. In addition, for syscalls that implement the
+ trampoline code on the vDSO, that trampoline is never intercepted.
+ 
++For PR_SYS_DISPATCH_INCLUSIVE_ON [<offset>, <offset>+<length>) delimit
++a memory region interval from which syscalls are dispatched based on
++the userspace selector. Syscalls from outside of the range are always
++executed directly.
++
+ [selector] is a pointer to a char-sized region in the process memory
+ region, that provides a quick way to enable disable syscall redirection
+ thread-wide, without the need to invoke the kernel directly.  selector
+diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
+index 15c18ef4eb11a..11d9c7c853a53 100644
+--- a/include/uapi/linux/prctl.h
++++ b/include/uapi/linux/prctl.h
+@@ -255,7 +255,12 @@ struct prctl_mm_map {
+ /* Dispatch syscalls to a userspace handler */
+ #define PR_SET_SYSCALL_USER_DISPATCH	59
+ # define PR_SYS_DISPATCH_OFF		0
+-# define PR_SYS_DISPATCH_ON		1
++/* Enable dispatch except for the specified range */
++# define PR_SYS_DISPATCH_EXCLUSIVE_ON	1
++/* Enable dispatch for the specified range */
++# define PR_SYS_DISPATCH_INCLUSIVE_ON	2
++/* Legacy name for backwards compatibility */
++# define PR_SYS_DISPATCH_ON		PR_SYS_DISPATCH_EXCLUSIVE_ON
+ /* The control values for the user space selector when dispatch is enabled */
+ # define SYSCALL_DISPATCH_FILTER_ALLOW	0
+ # define SYSCALL_DISPATCH_FILTER_BLOCK	1
+diff --git a/kernel/entry/syscall_user_dispatch.c b/kernel/entry/syscall_user_dispatch.c
+index 5340c5aa89e7d..300b6c1bf07da 100644
+--- a/kernel/entry/syscall_user_dispatch.c
++++ b/kernel/entry/syscall_user_dispatch.c
+@@ -78,7 +78,7 @@ static int task_set_syscall_user_dispatch(struct task_struct *task, unsigned lon
+ 		if (offset || len || selector)
+ 			return -EINVAL;
+ 		break;
+-	case PR_SYS_DISPATCH_ON:
++	case PR_SYS_DISPATCH_EXCLUSIVE_ON:
+ 		/*
+ 		 * Validate the direct dispatcher region just for basic
+ 		 * sanity against overflow and a 0-sized dispatcher
+@@ -87,30 +87,40 @@ static int task_set_syscall_user_dispatch(struct task_struct *task, unsigned lon
+ 		 */
+ 		if (offset && offset + len <= offset)
+ 			return -EINVAL;
+-
++		break;
++	case PR_SYS_DISPATCH_INCLUSIVE_ON:
++		if (len == 0 || offset + len <= offset)
++			return -EINVAL;
+ 		/*
+-		 * access_ok() will clear memory tags for tagged addresses
+-		 * if current has memory tagging enabled.
+-
+-		 * To enable a tracer to set a tracees selector the
+-		 * selector address must be untagged for access_ok(),
+-		 * otherwise an untagged tracer will always fail to set a
+-		 * tagged tracees selector.
++		 * Invert the range, the check in syscall_user_dispatch()
++		 * supports wrap-around.
+ 		 */
+-		if (selector && !access_ok(untagged_addr(selector), sizeof(*selector)))
+-			return -EFAULT;
+-
++		offset = offset + len;
++		len = -len;
+ 		break;
+ 	default:
+ 		return -EINVAL;
  	}
- }
  
-+static void prctl_valid(struct __test_metadata *_metadata,
-+			unsigned long op, unsigned long off,
-+			unsigned long size, void *sel)
-+{
-+	EXPECT_EQ(0, prctl(PR_SET_SYSCALL_USER_DISPATCH, op, off, size, sel));
-+}
++	/*
++	 * access_ok() will clear memory tags for tagged addresses
++	 * if current has memory tagging enabled.
 +
-+static void prctl_invalid(struct __test_metadata *_metadata,
-+			  unsigned long op, unsigned long off,
-+			  unsigned long size, void *sel, int err)
-+{
-+	EXPECT_EQ(-1, prctl(PR_SET_SYSCALL_USER_DISPATCH, op, off, size, sel));
-+	EXPECT_EQ(err, errno);
-+}
++	 * To enable a tracer to set a tracees selector the
++	 * selector address must be untagged for access_ok(),
++	 * otherwise an untagged tracer will always fail to set a
++	 * tagged tracees selector.
++	 */
++	if (mode != PR_SYS_DISPATCH_OFF && selector &&
++		!access_ok(untagged_addr(selector), sizeof(*selector)))
++		return -EFAULT;
 +
- TEST(bad_prctl_param)
- {
- 	char sel = SYSCALL_DISPATCH_FILTER_ALLOW;
-@@ -86,57 +101,42 @@ TEST(bad_prctl_param)
+ 	task->syscall_dispatch.selector = selector;
+ 	task->syscall_dispatch.offset = offset;
+ 	task->syscall_dispatch.len = len;
+ 	task->syscall_dispatch.on_dispatch = false;
  
- 	/* Invalid op */
- 	op = -1;
--	prctl(PR_SET_SYSCALL_USER_DISPATCH, op, 0, 0, &sel);
--	ASSERT_EQ(EINVAL, errno);
-+	prctl_invalid(_metadata, op, 0, 0, &sel, EINVAL);
- 
- 	/* PR_SYS_DISPATCH_OFF */
- 	op = PR_SYS_DISPATCH_OFF;
- 
- 	/* offset != 0 */
--	prctl(PR_SET_SYSCALL_USER_DISPATCH, op, 0x1, 0x0, 0);
--	EXPECT_EQ(EINVAL, errno);
-+	prctl_invalid(_metadata, op, 0x1, 0x0, 0, EINVAL);
- 
- 	/* len != 0 */
--	prctl(PR_SET_SYSCALL_USER_DISPATCH, op, 0x0, 0xff, 0);
--	EXPECT_EQ(EINVAL, errno);
-+	prctl_invalid(_metadata, op, 0x0, 0xff, 0, EINVAL);
- 
- 	/* sel != NULL */
--	prctl(PR_SET_SYSCALL_USER_DISPATCH, op, 0x0, 0x0, &sel);
--	EXPECT_EQ(EINVAL, errno);
-+	prctl_invalid(_metadata, op, 0x0, 0x0, &sel, EINVAL);
- 
- 	/* Valid parameter */
--	errno = 0;
--	prctl(PR_SET_SYSCALL_USER_DISPATCH, op, 0x0, 0x0, 0x0);
--	EXPECT_EQ(0, errno);
-+	prctl_valid(_metadata, op, 0x0, 0x0, 0x0);
- 
- 	/* PR_SYS_DISPATCH_ON */
- 	op = PR_SYS_DISPATCH_ON;
- 
- 	/* Dispatcher region is bad (offset > 0 && len == 0) */
--	prctl(PR_SET_SYSCALL_USER_DISPATCH, op, 0x1, 0x0, &sel);
--	EXPECT_EQ(EINVAL, errno);
--	prctl(PR_SET_SYSCALL_USER_DISPATCH, op, -1L, 0x0, &sel);
--	EXPECT_EQ(EINVAL, errno);
-+	prctl_invalid(_metadata, op, 0x1, 0x0, &sel, EINVAL);
-+	prctl_invalid(_metadata, op, -1L, 0x0, &sel, EINVAL);
- 
- 	/* Invalid selector */
--	prctl(PR_SET_SYSCALL_USER_DISPATCH, op, 0x0, 0x1, (void *) -1);
--	ASSERT_EQ(EFAULT, errno);
-+	prctl_invalid(_metadata, op, 0x0, 0x1, (void *) -1, EFAULT);
- 
- 	/*
- 	 * Dispatcher range overflows unsigned long
- 	 */
--	prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_ON, 1, -1L, &sel);
--	ASSERT_EQ(EINVAL, errno) {
--		TH_LOG("Should reject bad syscall range");
--	}
-+	prctl_invalid(_metadata, PR_SYS_DISPATCH_ON, 1, -1L, &sel, EINVAL);
- 
- 	/*
- 	 * Allowed range overflows usigned long
- 	 */
--	prctl(PR_SET_SYSCALL_USER_DISPATCH, PR_SYS_DISPATCH_ON, -1L, 0x1, &sel);
--	ASSERT_EQ(EINVAL, errno) {
--		TH_LOG("Should reject bad syscall range");
--	}
-+	prctl_invalid(_metadata, PR_SYS_DISPATCH_ON, -1L, 0x1, &sel, EINVAL);
- }
- 
- /*
+-	if (mode == PR_SYS_DISPATCH_ON)
++	if (mode != PR_SYS_DISPATCH_OFF)
+ 		set_task_syscall_work(task, SYSCALL_USER_DISPATCH);
+ 	else
+ 		clear_task_syscall_work(task, SYSCALL_USER_DISPATCH);
+diff --git a/tools/include/uapi/linux/prctl.h b/tools/include/uapi/linux/prctl.h
+index 35791791a879b..5cbd56e5672a8 100644
+--- a/tools/include/uapi/linux/prctl.h
++++ b/tools/include/uapi/linux/prctl.h
+@@ -252,7 +252,12 @@ struct prctl_mm_map {
+ /* Dispatch syscalls to a userspace handler */
+ #define PR_SET_SYSCALL_USER_DISPATCH	59
+ # define PR_SYS_DISPATCH_OFF		0
+-# define PR_SYS_DISPATCH_ON		1
++/* Enable dispatch except for the specified range */
++# define PR_SYS_DISPATCH_EXCLUSIVE_ON	1
++/* Enable dispatch for the specified range */
++# define PR_SYS_DISPATCH_INCLUSIVE_ON	2
++/* Legacy name for backwards compatibility */
++# define PR_SYS_DISPATCH_ON		PR_SYS_DISPATCH_EXCLUSIVE_ON
+ /* The control values for the user space selector when dispatch is enabled */
+ # define SYSCALL_DISPATCH_FILTER_ALLOW	0
+ # define SYSCALL_DISPATCH_FILTER_BLOCK	1
 -- 
 2.49.0.1143.g0be31eac6b-goog
 
