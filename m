@@ -1,104 +1,77 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D3B927C151
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 13:39:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1E7D27C17F;
+	Wed, 21 May 2025 13:39:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=176.9.242.62
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747834764; cv=none; b=aaEX13TbPWSK+eMVoGryu5MhOzahnCffLNG1yppucO5mrutb+ybgCs5CcpJTBLxywaMzsP+L40yQ2LIkiiskqfC66WzUo0YXMujKyopHbgx0+7QLsBcUOJri1t9zNhkD4eSmVqLBhEFwmMFm6ROritDY834tjWfDMWGvjcr2JbE=
+	t=1747834767; cv=none; b=ubPf7/BrxDhoZfiDQtLY03jiY8kZ067rObDALVJFpMw5oBt9j0CTWSA1r/K82rz87ZQ3jaLCydq+3C0vFy6qOj8Snjk777rBY6nbK7rYL0ZjRhNEKbDICRXalADxPKfhJqyt6nQL8zNvQn9u/mI4g9XBnNsVU0wuWo7TIU2LyJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747834764; c=relaxed/simple;
-	bh=pzxSFKxJQXg481Jmg4tJCFE5y6jCZnD7TayCy0V8X6o=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=JcsyEI1WzEXjf67fHAukNArS4R3I5sV/2mmfE6rCyqkJwj3MjD5bhjnLWK9azmg5NN+anl/0nOoMMEGmj8oK+dpgK4ItUngbZJiBD8ASA8H5T0y2dWDzQTBiBqtAyzPEuFvGQdFtc8yeefqOP02y5olOLs0KgSZIqU57Kg7K3mU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m4dAB+7U; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m4dAB+7U"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-32805275e90so38512741fa.1
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 06:39:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747834761; x=1748439561; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=pzxSFKxJQXg481Jmg4tJCFE5y6jCZnD7TayCy0V8X6o=;
-        b=m4dAB+7U/Y9mx0oiZo+k8clXVHpV3SnxdQV47iKBtZtrqPSsmilqU3y1ehYBOHf4l1
-         ece8F8brgq5T1jzjCCK99txaybsH66kqaoZRCi2/8QXOMHMA5QqUKmh5+vtHQNG0h79W
-         zhlK0mkJfXyzNIZ+E77KbsWDHcuzoWozscBCxte8qjhm9pu/VvPsTCOoX1Iu8xSLQp47
-         H2oXLuCxRI8+pG+oUISRk9BDUiisUX8JhtcKbPJhOb6axPn1xxV02F45wyIO8SuJfs4v
-         GTOqB0jy/XhS73to7G49Z6XzjziP50EW9MVkoAfb6HkW6Aht0STtoIzgY4JhkQQELJCI
-         7ckg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747834761; x=1748439561;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pzxSFKxJQXg481Jmg4tJCFE5y6jCZnD7TayCy0V8X6o=;
-        b=DWH1rmd6LSDMQ2iFESkNCuu8c5JsEXewsBbrT8mS0yHSnqkEosNDzi29obK0JG/r43
-         MrGkUpJbOhNRehniyl+wk8yZA22XBjdKCAIwQPdZReox4os4j6PP4Vy9Pesg7IFKf45/
-         xOo3szfUp0Zz2HbrIcF46vvil/ur2jweX9shYl0RlIB6/MGOE8zZ7ClFB6STbY0JE/KW
-         h+gxf2YoD6OQ8soOp5gGK7hP6qITcMB5yGFtwzGlXFk8d41y+D84Gq9zs8kDBxJVb0VT
-         OuTNKAqdpSHy6gcmof95TNzzFKP4LcHOGt4Fjz0cauy4lV0W1GGwKBstH4NFOmScN5p2
-         e8tg==
-X-Forwarded-Encrypted: i=1; AJvYcCUmspd0ECtROPvh1LUuFvqNlzS//UZ/BAx1M3LmakXXIuvUm7zqIYUs91JwG49Sn8JXyj3yXTsm15JfI9o=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxt18FKYf9y/C4SxvIodWU4qJte7QeLSD9Px4SlTfaYw8kazv8/
-	BPPEonTct4GvYnPqOME9Ua+mL4BsKgZoTXJIfa/nlQoVXfJkSMMTQbP/GuzMJSHidmBdIOWksE0
-	ldXG3yakyH064fSbT0VsXQ9C3kSdzdQ==
-X-Gm-Gg: ASbGncu5NCoc3uLViRYkY171abpje7fCO9rI3hzJzdFbESn0IA13dtj+l3Pd5A3prZ9
-	2SM5gFCvZ2T1XyYwNypceuWBCwZio+rTRP5JX2TYcsNzs/PTf5yH7v1FnLr4zTmpaSUjQJUlU/s
-	++IlJIP+XYaCB/vQY2WrJ4NErpJesuUuliGPDs/i+X5AnOHJqAYsljfA==
-X-Google-Smtp-Source: AGHT+IGhQe5Kt7joBvkTPBETSOjiV3ZY0TYmn9PJEk8UPTkkhdpPa0pl7NMSIXqKKi9I7OhELJFcauglzqSBLxzAYWU=
-X-Received: by 2002:a05:651c:400c:b0:30b:f42b:72f6 with SMTP id
- 38308e7fff4ca-3280977f153mr53456091fa.32.1747834760313; Wed, 21 May 2025
- 06:39:20 -0700 (PDT)
+	s=arc-20240116; t=1747834767; c=relaxed/simple;
+	bh=ZNCQrlgbIpQW0vNrYiX2HSmQduvs48RcI5Q8Cd3eeqI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HcUbtON78Ey4fY6uQbCMSgrWhy51f0B+J24+oq0jNWLzmZTF26AFOigIv5yo9uRjuaG10gEGGnV/rrnv2mJReV07ThDoyEiWi+7hqOooOFd2JxN3xVQeu3SH3lKN3FgJPUnZZ9r7oychrhu3UCWkvMn+QCqweDHOwMUazd40zt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=176.9.242.62
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 9F5372C06E7F;
+	Wed, 21 May 2025 15:39:22 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id 66B091B829F; Wed, 21 May 2025 15:39:22 +0200 (CEST)
+Date: Wed, 21 May 2025 15:39:22 +0200
+From: Lukas Wunner <lukas@wunner.de>
+To: Denis Benato <benato.denis96@gmail.com>
+Cc: Mario Limonciello <superm1@kernel.org>,
+	Raag Jadav <raag.jadav@intel.com>, rafael@kernel.org,
+	mahesh@linux.ibm.com, oohall@gmail.com, bhelgaas@google.com,
+	linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
+	aravind.iddamsetty@linux.intel.com
+Subject: Re: [PATCH v4] PCI: Prevent power state transition of erroneous
+ device
+Message-ID: <aC3XiuOPVYB2EX18@wunner.de>
+References: <20250519102808.4130271-1-raag.jadav@intel.com>
+ <aCsK743YSuahPtnH@black.fi.intel.com>
+ <85ed0b91-c84f-4d24-8e19-a8cb3ba02b14@gmail.com>
+ <aCxP6vQ8Ep9LftPv@black.fi.intel.com>
+ <a8c83435-4c91-495c-950c-4d12b955c54c@kernel.org>
+ <aCyj9nbnIRet93O-@black.fi.intel.com>
+ <552d75b2-2736-419f-887e-ce2692616578@kernel.org>
+ <ee1117cf-6367-4e9a-aa85-ccfc6c63125d@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: John <john.cs.hey@gmail.com>
-Date: Wed, 21 May 2025 21:39:06 +0800
-X-Gm-Features: AX0GCFsyYlABwIGknBhQjEdn9AyHwOFmcZsqDvNarxyio6i7-xnJpWR2_c8qF2c
-Message-ID: <CAP=Rh=Oo1KdREOq8=B6wCBOcQ6H=uwELS8MFaMtvr-a28LAxGA@mail.gmail.com>
-Subject: [Bug] "BUG: soft lockup in ip_list_rcv" in Linux kernel v6.14
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Will Deacon <will@kernel.org>, Boqun Feng <boqun.feng@gmail.com>
-Cc: Waiman Long <longman@redhat.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ee1117cf-6367-4e9a-aa85-ccfc6c63125d@gmail.com>
 
-Dear Linux Kernel Maintainers,
+On Tue, May 20, 2025 at 07:22:04PM +0200, Denis Benato wrote:
+> This is the very same exact kernel, minus the patch in question:
+> https://pastebin.com/rwMYgG7C
+> 
+> Both previous kernel and this one have CONFIG_PCI_DEBUG=y.
 
-I hope this message finds you well.
+This log excerpt shows that the ASMedia Thunderbolt controller
+below the Intel Thunderbolt controller couldn't be enumerated
+on boot:
 
-I am writing to report a potential vulnerability I encountered during
-testing of the Linux Kernel version v6.14.
+mag 20 18:42:20 denis-pc kernel: pci 0000:03:01.0: broken device, retraining non-functional downstream link at 2.5GT/s
+mag 20 18:42:20 denis-pc kernel: pci 0000:03:01.0: retraining failed
 
-Git Commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557 (tag: v6.14)
+However, the Thunderbolt tunnel goes up and the devices are
+enumerated 24 seconds later:
 
-Bug Location: __raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:152
+mag 20 18:42:44 denis-pc kernel: pcieport 0000:03:01.0: pciehp: Slot(1-1): Card present
+mag 20 18:42:44 denis-pc kernel: pcieport 0000:03:01.0: pciehp: Slot(1-1): Link Up
 
-Bug report: https://pastebin.com/t6jtEzp1
+Thanks,
 
-Complete log: https://pastebin.com/g096W4xD
-
-Entire kernel config: https://pastebin.com/MRWGr3nv
-
-Root Cause Analysis:
-A soft lockup occurred on CPU#0 for 22 seconds during execution of
-avc_alloc_node() inside an IRQ context. The lockup is rooted in
-spinlock contention within SELinux AVC (Access Vector Cache) node
-allocation,
-possibly triggered by a storm of SELinux permission checks
-(avc_has_perm() calls), while audit is in permissive=1 mode, leading
-to continuous allocation and reclamation of avc_node objects.
-
-At present, I have not yet obtained a minimal reproducer for this
-issue. However, I am actively working on reproducing it, and I will
-promptly share any additional findings or a working reproducer as soon
-as it becomes available.
-
-Thank you very much for your time and attention to this matter. I
-truly appreciate the efforts of the Linux kernel community.
-
-Best regards,
-John
+Lukas
