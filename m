@@ -1,152 +1,156 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06A3F238179;
-	Wed, 21 May 2025 09:24:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FCA123C8BE
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 09:24:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747819493; cv=none; b=fsel0H8vOP9uU+JkmvHMiGmuSwuX3jAdiPQpcD6OaL4CVfHMrlk751FDZLOYyip+Ds9yp5WF19AxNgaW3m8z0c/3bog+PCaeO+NpXU1Xo14+0QTf9OqJFBVXY24pEn1xvCMCM6G6x+ba8MjHe3WNvymxcABBH0EzRYQB3NHcDUg=
+	t=1747819498; cv=none; b=SGRMmmJwpbX53ATEn6AMLKC89jVTIWR6H5GZn1njaH2qzgAmpmlj3g7JRyYCKOuD9BaGJMG7WdQnBdBhBnPk+OYV6iCY6Wz90kp0DP5BWY37m1GcbBuJU/yBOPQJmL1pPGcEu7ZiHaagLcO4car7uEg1LTLV/+vahZDmgTAeAns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747819493; c=relaxed/simple;
-	bh=d4E9NcLUt5nUR2bDBbyKqvn4SH6yypzOCVjKSJQlzVU=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W0sAt/M8RFLOBdB3ukn5dG/9jZVoqHMRypO1lY/sFkPPzm3j1Pcgr6D3BdmGCm4Yyz21uliJB8ULDTbzfBRYWf8jGOTi/4BBNdy1iFRrYF40cWoYTp24wnQnSE7aq5T3yMFxqyOPjbi8WQwqNraREwCtgZWTTpntxJ4PY4syerk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b2Qqf6C55z6D92Z;
-	Wed, 21 May 2025 17:19:58 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1867E1402FC;
-	Wed, 21 May 2025 17:24:50 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 21 May
- 2025 11:24:49 +0200
-Date: Wed, 21 May 2025 10:24:47 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: <linux-pci@vger.kernel.org>, Jon Pan-Doh <pandoh@google.com>, "Karolina
- Stolarek" <karolina.stolarek@oracle.com>, Weinan Liu <wnliu@google.com>,
-	Martin Petersen <martin.petersen@oracle.com>, Ben Fuller
-	<ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, "Anil
- Agrawal" <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, Ilpo
- =?UTF-8?Q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Sathyanarayanan
- Kuppuswamy" <sathyanarayanan.kuppuswamy@linux.intel.com>, Lukas Wunner
-	<lukas@wunner.de>, Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney"
-	<paulmck@kernel.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, "Oliver
- O'Halloran" <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>, "Keith
- Busch" <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>, Terry Bowman
-	<terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>, Dave Jiang
-	<dave.jiang@intel.com>, <linux-kernel@vger.kernel.org>,
-	<linuxppc-dev@lists.ozlabs.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-Subject: Re: [PATCH v7 08/17] PCI/AER: Initialize aer_err_info before using
- it
-Message-ID: <20250521102447.00000d94@huawei.com>
-In-Reply-To: <20250520215047.1350603-9-helgaas@kernel.org>
-References: <20250520215047.1350603-1-helgaas@kernel.org>
-	<20250520215047.1350603-9-helgaas@kernel.org>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1747819498; c=relaxed/simple;
+	bh=iakdG6KwvobkuhvDfUF9aRMKbAPkd6Vs3yyXNEpAwTs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B5Mrq3Xda4n8D2+pTAHJRhOP2uqmmRjb90p22vcfmH6dFz/9QaEw4xQ04Ywdd4ZZ9mb5Q5PouM136uG3Q5STHfnTSDL126cI+AR0TiXY6++AgQpslzj7yUk50pLQgvYrGoKMLCaKmakHU0+Y0I5kQaBS7dB+LnWlZZlA7rnv+D4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=F99ebRGE; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="F99ebRGE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=91Dh
+	YZDxbU9FzEXqQj0AuCBK5CtwWDt8E4H7Iw+sYog=; b=F99ebRGEHYIkHGc+fATJ
+	Svu6LRNqI5Z7/Mi/HKWRBynQlemRGVyn2bN2NrTGnrqR0FqsnEynV25o2+3di3/e
+	ghFzqu5Pz3AsQgcbnFHLp/Otu4S5wujsEuSRlAVXOKa7yQwOHC9hJoMGZ1kL8Drz
+	wSXCa1KamjNwTtf1cJnPW2mz3JRwQ8tM+jD4kT5NnEgCgYOykGzJ1Cr0bGZVmjJ8
+	bSjXe3q2DXqeZkA+sYCqQ4MCacsElEEw1Lq8FwavVZ3r7XwFjU1g+HKGAWzjpY4Z
+	J9BqEmJYpTmK8PhvM38+yO4rH+eh5L2nFsx/53H9NO/++Gl+vX9wTeznsrRHwC2U
+	rw==
+Received: (qmail 3203021 invoked from network); 21 May 2025 11:24:44 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 21 May 2025 11:24:44 +0200
+X-UD-Smtp-Session: l3s3148p1@HwaB76E1rrVehhrc
+Date: Wed, 21 May 2025 11:24:44 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	syzbot+721071c10f3c7e4e5dcb@syzkaller.appspotmail.com,
+	lvc-project@linuxtesting.org,
+	Alan Stern <stern@rowland.harvard.edu>, gregkh@linuxfoundation.org
+Subject: Re: [PATCH v2] media: dvb-usb-v2: disallow 0-length I2C reads
+Message-ID: <aC2b3MWNOtLyzIIr@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	syzbot+721071c10f3c7e4e5dcb@syzkaller.appspotmail.com,
+	lvc-project@linuxtesting.org,
+	Alan Stern <stern@rowland.harvard.edu>, gregkh@linuxfoundation.org
+References: <20250520135216.2509505-1-n.zhandarovich@fintech.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="n7dBzWG5Q4QWs8Xi"
+Content-Disposition: inline
+In-Reply-To: <20250520135216.2509505-1-n.zhandarovich@fintech.ru>
+
+
+--n7dBzWG5Q4QWs8Xi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue, 20 May 2025 16:50:25 -0500
-Bjorn Helgaas <helgaas@kernel.org> wrote:
+Hi Nikita,
 
-> From: Bjorn Helgaas <bhelgaas@google.com>
+thanks for your patch!
+
+On Tue, May 20, 2025 at 04:52:15PM +0300, Nikita Zhandarovich wrote:
+> Syzkaller reported via syzbot a warning (see [1]) that occurs
+> when the fuzzer manages to craft a I2C transfer with a 0-length read
+> request. This in turn leads to an attempt at execution of a
+> USB 0-length read (which is forbidden by USB protocol) leading to
+> it being interpreted as a write.
 >=20
-> Previously the struct aer_err_info "e_info" was allocated on the stack
-> without being initialized, so it contained junk except for the fields we
-> explicitly set later.
+> Enable I2C_AQ_NO_ZERO_LEN_READ adapter quirk for all devices
+> managed by dvb-usb-v2 thus forbidding 0-length read messages
+> altogether.
 >=20
-> Initialize "e_info" at declaration with a designated initializer list,
-> which initializes the other members to zero.
+> [1] Syzbot report
+> usb 2-1: BOGUS control dir, pipe 80000280 doesn't match bRequestType c0
+> WARNING: CPU: 0 PID: 5845 at drivers/usb/core/urb.c:413 usb_submit_urb+0x=
+11dd/0x18c0 drivers/usb/core/urb.c:411
+> ...
+> Call Trace:
+>  <TASK>
+>  usb_start_wait_urb+0x11a/0x530 drivers/usb/core/message.c:59
+>  usb_internal_control_msg drivers/usb/core/message.c:103 [inline]
+>  usb_control_msg+0x2b3/0x4c0 drivers/usb/core/message.c:154
+>  gl861_ctrl_msg+0x332/0x6f0 drivers/media/usb/dvb-usb-v2/gl861.c:58
+>  gl861_i2c_master_xfer+0x3b4/0x650 drivers/media/usb/dvb-usb-v2/gl861.c:1=
+44
+>  __i2c_transfer+0x859/0x2250 drivers/i2c/i2c-core-base.c:-1
+>  i2c_transfer+0x2c2/0x430 drivers/i2c/i2c-core-base.c:2315
+>  i2cdev_ioctl_rdwr+0x488/0x780 drivers/i2c/i2c-dev.c:306
+>  i2cdev_ioctl+0x78a/0xa20 drivers/i2c/i2c-dev.c:467
+>  vfs_ioctl fs/ioctl.c:51 [inline]
+>  __do_sys_ioctl fs/ioctl.c:906 [inline]
+>  __se_sys_ioctl+0xf1/0x160 fs/ioctl.c:892
+>  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+>  do_syscall_64+0xf3/0x210 arch/x86/entry/syscall_64.c:94
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> ...
 >=20
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> Tested-by: Krzysztof Wilczy=C5=84ski <kwilczynski@kernel.org>
-> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux=
-.intel.com>
-> Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com
-Ah. Here it is :)  Ignore earlier comment.
+> Reported-by: syzbot+721071c10f3c7e4e5dcb@syzkaller.appspotmail.com
+> Closes: https://syzkaller.appspot.com/bug?extid=3D721071c10f3c7e4e5dcb
+> Tested-by: syzbot+721071c10f3c7e4e5dcb@syzkaller.appspotmail.com
+> Fixes: 776338e121b9 ("[PATCH] dvb: Add generalized dvb-usb driver")
+> Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+
+> driver, see [2]. Alan suggested a solution which hasn't been committed
+> yet in [3]. Mine is essentialy a copy of his, only for dvb-usb-v2
+
+Oh, it is not upstream yet? Pity!
+
+> devices. As far as I know, no I2C core level protection against
+> such issues has been implemented either.
+
+Per the discussion with Alan, there can't be an I2C core protection,
+sadly. Only drivers using ctrl msgs with no internal header added to the
+msg need this quirk. The core can't know this.
+
+> P.P.S. While this driver seems to be orphaned, I decided to
+> send a patch anyway, perhaps someone will deem it worthy...
+
+I agree. I once found 4 other drivers needing the same treatment. I
+should fix them right now.
+
+Thanks for fixing this one!
 
 
->  drivers/pci/pcie/aer.c | 39 +++++++++++++++++----------------------
->  1 file changed, 17 insertions(+), 22 deletions(-)
->=20
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 520c21ed4ba9..e6693f910a23 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -1289,9 +1289,9 @@ static void aer_isr_one_error_type(struct pci_dev *=
-root,
->   * @e_src: pointer to an error source
->   */
->  static void aer_isr_one_error(struct pci_dev *root,
-> -		struct aer_err_source *e_src)
-> +			      struct aer_err_source *e_src)
->  {
-> -	struct aer_err_info e_info;
-> +	u32 status =3D e_src->status;
-> =20
->  	pci_rootport_aer_stats_incr(root, e_src);
-> =20
-> @@ -1299,30 +1299,25 @@ static void aer_isr_one_error(struct pci_dev *roo=
-t,
->  	 * There is a possibility that both correctable error and
->  	 * uncorrectable error being logged. Report correctable error first.
->  	 */
-> -	if (e_src->status & PCI_ERR_ROOT_COR_RCV) {
-> -		e_info.id =3D ERR_COR_ID(e_src->id);
-> -		e_info.severity =3D AER_CORRECTABLE;
-> -
-> -		if (e_src->status & PCI_ERR_ROOT_MULTI_COR_RCV)
-> -			e_info.multi_error_valid =3D 1;
-> -		else
-> -			e_info.multi_error_valid =3D 0;
-> +	if (status & PCI_ERR_ROOT_COR_RCV) {
-> +		int multi =3D status & PCI_ERR_ROOT_MULTI_COR_RCV;
-> +		struct aer_err_info e_info =3D {
-> +			.id =3D ERR_COR_ID(e_src->id),
-> +			.severity =3D AER_CORRECTABLE,
-> +			.multi_error_valid =3D multi ? 1 : 0,
-> +		};
-> =20
->  		aer_isr_one_error_type(root, &e_info);
->  	}
-> =20
-> -	if (e_src->status & PCI_ERR_ROOT_UNCOR_RCV) {
-> -		e_info.id =3D ERR_UNCOR_ID(e_src->id);
-> -
-> -		if (e_src->status & PCI_ERR_ROOT_FATAL_RCV)
-> -			e_info.severity =3D AER_FATAL;
-> -		else
-> -			e_info.severity =3D AER_NONFATAL;
-> -
-> -		if (e_src->status & PCI_ERR_ROOT_MULTI_UNCOR_RCV)
-> -			e_info.multi_error_valid =3D 1;
-> -		else
-> -			e_info.multi_error_valid =3D 0;
-> +	if (status & PCI_ERR_ROOT_UNCOR_RCV) {
-> +		int fatal =3D status & PCI_ERR_ROOT_FATAL_RCV;
-> +		int multi =3D status & PCI_ERR_ROOT_MULTI_UNCOR_RCV;
-> +		struct aer_err_info e_info =3D {
-> +			.id =3D ERR_UNCOR_ID(e_src->id),
-> +			.severity =3D fatal ? AER_FATAL : AER_NONFATAL,
-> +			.multi_error_valid =3D multi ? 1 : 0,
-> +		};
-> =20
->  		aer_isr_one_error_type(root, &e_info);
->  	}
+--n7dBzWG5Q4QWs8Xi
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmgtm9gACgkQFA3kzBSg
+KbZeQxAAscTLbcLkDLle+24Mu+0d35ZkVymgQrMSUP4SqqYpy8+Ue0UPpGEhK0u0
+thZdxftmPqgkws9CzTtzz9WUB9QoInkgcw4AmxxeJws/2v/Ho5gPghsm5Gq+3W1f
+SNAejs43uxH0OAwBWqC6XyYLnhzkIxGE5j11ouHiw0QGALXmJYok0cD1Dkp407nR
+EwUAMMC8KRvZwiS0cRKKht/gAc8Ox0pKKPpvWGYIYaifjLa9hOzbrRIi4jlYQ2+5
+LZCt4I9oN8oksltYsR59Dmskc/3DIDjaSj3eRyzAZBVJtDS9R0MmwtH+5delaFTe
+BDhFoid7P8fnEtz9qa90crh8vdcyurErdT7pUs3N+gmXyayQPoLLVn9vN5sjHDN/
+lrmDpF7t0XME73RG/1iPAWRh5XOi3g3yh16rxBObyY3u9f3oabDKB0CR9H0hPjve
+S90mSLj210JSRrLt/lhjD8Vc7d5XMegIHhGawySxpe3KhiCtUke4/4GjaAanPV4Z
+MzYD1bET8Q7g+lhojefGCYcPipw7Px7RBdzyEMKa6yszolKn7gNEA+80mfmhuKOc
+mmnh6lNxa8HAE3pgk4N/LX1Wrxw37tr8FFFCQmcbasQEvXjXrWd3ieDQ77JRBBbT
+YxH0hxVeNOmp6vu+bOOndsOumuj5/IGsQtO5AihVhKG7mtcvN+U=
+=Vszy
+-----END PGP SIGNATURE-----
+
+--n7dBzWG5Q4QWs8Xi--
