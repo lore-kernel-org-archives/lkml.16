@@ -1,87 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01EC725EF8E;
-	Wed, 21 May 2025 10:25:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8472E25B67E;
+	Wed, 21 May 2025 10:26:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747823145; cv=none; b=eCm/HHluTY6QyWUwZnzW8Rw9AazaR/4n4GCB6bI7vh8BX2BsG1qhzjpQf+ylQhSnPNjsC4EWCPaP6HZNGVQF2/WDu7/5B3ogS4aObZXUu8cPAMB5R3U+OhWr4ZTHI2EEUe9xNxB+qFvA3/YhGQprCjhPKvKfGn2fQHJm0B2Mwww=
+	t=1747823210; cv=none; b=TV/HkCFhEuqbUcQbTqT6t1pvNe8O9XBiOh3tWIpWu6b4vwc+4bZEsDzdNQ/3JLXTmD81bdgDjO56WwgOa2s19lAtQWI26PS+AtdfbBlpRrBy2gjeuiILJWuO5XSMNVHB7ImoqGv+6gvg1Zr6OiRe/K4ioYZXP3P4j6A+L1iShnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747823145; c=relaxed/simple;
-	bh=2rnn78Rg+0MJvcpNO0QmApgpbowTQNaRIFKgkHlV634=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U2tUQ3bRPGfzVS6HaksC7C1nnlA9iUl6BgI3BghFES+SkBOUGZAfBO7Iy5VkJQulIyMpxxSZUoI8cQlRSISv3TOKjMFAmsJZNQ+yAjzsV0xpHxuL7ncu8r+R2H4TCXx2FJkvWT1XcPzZ7LHG8oEq28BbZ2105T5uSQ0uTq9ZWEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HmBQZUyh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747823210; c=relaxed/simple;
+	bh=Hs6qdEKelj3z4mpZde9psEVGMz6cGM+tvSkLFEKJBNs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=FSt90/EWNlnBrZubY56rCOH40EnnJYZVhkNaWDIvIyjg7ffLFiZ4bBWxrcTxsynySA0fc1revRLGfeNbs29KbzAsxToU3Cv7KS0F5kiLrk2x79qyVHwGQK4MTnVOpHVxx6ROp5sdJa6MLc81MOohaGaQCvsgpAyyWDoYmdk/44I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=G2WFQgDd; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HmBQZUyh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64C87C4CEE4;
-	Wed, 21 May 2025 10:25:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747823143;
-	bh=2rnn78Rg+0MJvcpNO0QmApgpbowTQNaRIFKgkHlV634=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HmBQZUyhvpsh3EvDn3MzLqKaHntr0CCNTEDv7alMsao7no5ZyKQi2ZZNaO92GzaqE
-	 mSiMYAn6JjPfyMcvVuf0KAlwYfV7oeCklVCdqZzLh2XLH5w77I/dPvKIqrbCF4W0QH
-	 dWn0Y+OxNRuq+BJ3xzO7VyvUaBXonXl5ZJ8gigkaUlJ4PBdzLRlTPbvjHRLwM8jOTy
-	 aX2TT04tGejpPcx48bblp314iCgjs8Df7RjonT2su4TcB5cxJ1t8dj6bQDAkvZuOlB
-	 gx+8zihzIni8NPXS/dFAOkgOYOwVpaB8Hx3sFBuqTNMRQQOtJglesXM9aQhNaIi/er
-	 6Y6NTigmcHtjw==
-Date: Wed, 21 May 2025 11:25:37 +0100
-From: Will Deacon <will@kernel.org>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	James Clark <james.clark@linaro.org>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Leo Yan <leo.yan@arm.com>, linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, kvmarm@lists.linux.dev,
-	Dave Martin <Dave.Martin@arm.com>
-Subject: Re: [PATCH v22 2/5] arm64: el2_setup.h: Make __init_el2_fgt labels
- consistent, again
-Message-ID: <20250521102536.GB20245@willie-the-truck>
-References: <20250520-arm-brbe-v19-v22-0-c1ddde38e7f8@kernel.org>
- <20250520-arm-brbe-v19-v22-2-c1ddde38e7f8@kernel.org>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="G2WFQgDd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1747823202;
+	bh=4E8tJ+zW5WhcyHadKqtGYVqBSRgkH3XD3TfPB8AabDA=;
+	h=Date:From:To:Cc:Subject:From;
+	b=G2WFQgDdjl5xJjr+L0i7Cz8msV8qd6srlDsE4O4ybhexHzJ3Zs/Y28yIHcIKZPaSt
+	 b7x6uG2UllrNmsXCIyRkwuZphxoTAq0oiB6ON7Rxe/t1yWjMSVud3nM4Xm/mu4hg7P
+	 3/5mKCJSSyp0z+pAFucJ4fr5TJjcR492RVaJ6Kn17pMmVVMsisUoR3SErD5hbXi8bP
+	 rPZzyfl9K3pwvZL58ClUEN1jAvAqMTnSC5NlrtIyN4qODcaa1jhJ8fuNExXnhKOqhW
+	 K2+bbWp6ECQ2BkO63rNgfUJmFVt8l3DEisillaqEGZDMs+EvfrkL5Tjnn01sLLUchp
+	 CEJc1vpbjtHlw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b2SJd4pKTz4x8Z;
+	Wed, 21 May 2025 20:26:41 +1000 (AEST)
+Date: Wed, 21 May 2025 20:26:40 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi
+ <lpieralisi@kernel.org>, Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?=
+ <kwilczynski@kernel.org>
+Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Linux Kernel
+ Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build warning after merge of the pci tree
+Message-ID: <20250521202640.53a4fc3d@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250520-arm-brbe-v19-v22-2-c1ddde38e7f8@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="Sig_/G=Dq+zjUKC44yE1qGMJvGPS";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Tue, May 20, 2025 at 05:27:37PM -0500, Rob Herring (Arm) wrote:
-> From: Anshuman Khandual <anshuman.khandual@arm.com>
-> 
-> Commit 5b39db6037e7 ("arm64: el2_setup.h: Rename some labels to be more
-> diff-friendly") reworked the labels in __init_el2_fgt to say what's
-> skipped rather than what the target location is. The exception was
-> "set_fgt_" which is where registers are written. In reviewing the BRBE
-> additions, Will suggested "set_debug_fgt_" where HDFGxTR_EL2 are
-> written. Doing that would partially revert commit 5b39db6037e7 undoing
-> the goal of minimizing additions here, but it would follow the
-> convention for labels where registers are written.
-> 
-> So let's do both. Branches that skip something go to a "skip" label and
-> places that set registers have a "set" label. This results in some
-> double labels, but it makes things entirely consistent.
-> 
-> While we're here, the SME skip label was incorrectly named, so fix it.
-> 
-> Reported-by: Will Deacon <will@kernel.org>
-> Cc: Dave Martin <Dave.Martin@arm.com>
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
-> This one can be applied even if the rest of the series is not.
+--Sig_/G=Dq+zjUKC44yE1qGMJvGPS
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Cheers, Rob. I'll grab this one.
+Hi all,
 
-Will
+After merging the pci tree, today's linux-next build (htmldocs) produced
+this warning:
+
+Documentation/PCI/rcar-pcie-firmware.rst: WARNING: document isn't included =
+in any toctree
+
+Introduced by commit
+
+  2bdf6ffe9f66 ("PCI: rcar-gen4: Document how to obtain platform firmware")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/G=Dq+zjUKC44yE1qGMJvGPS
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgtqmAACgkQAVBC80lX
+0Gw4NAf5AblevEkhGowA6I82ZGqUuW/cI3ovR1Zh1Oi6sUKfZDhz2zbrHXQih/Yz
+DILHiJVrWW4nHvxZJ2r+CxG0X4cB/TOVeayjVOfGY5h02/D4Kw/QOsthft+CP37K
+mjq+E7deRa6ILTmPgBKuH5bRho3Ev9tWGio9glkUCKSKI4Pf/1qpTOJeIM9jnnB2
+gCvDfXkCiSRd9SXJmHtzRuQ0MuB1hv4pX8qEd3VaKEuQmRI2rOso3kcNd/9YUxBg
+u9Po1JSNn5bbm4De8eDqq8cR4BLDmDGBei4QwQuFfR1sMBWcWRTSAKl2R5tfP4vR
+xTbP/xGUnvfBqCkqHVmt6PxtKd3jxw==
+=wiRt
+-----END PGP SIGNATURE-----
+
+--Sig_/G=Dq+zjUKC44yE1qGMJvGPS--
