@@ -1,210 +1,180 @@
-Received: from smtpbg154.qq.com (smtpbg154.qq.com [15.184.224.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 760C22620F5
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 11:50:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=15.184.224.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6335D264A95;
+	Wed, 21 May 2025 11:50:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747828252; cv=none; b=kQ2RDjqORTGmFMg4TpgGT4PveFisuyIT7TKESy9MGOdMJyg2aA6MCj3OvNsa7DzsWD1PP5NKJfND00lPTgQHppc/IMb+tKsdL2Lzxm5g7CnItWtOs2cWOApgp2zsGLAhpcDMo8gtBP7mXgdCA+DtoFLv6SF3fBfvJ+yO+BKbvww=
+	t=1747828257; cv=none; b=PAXHonbQ0yRuIz3Zb8iTmOq14tfeLbOG0IRqfAvtS8glqhImwdDLh1j9yzBtWghAbRuQ1ntqBQjeVSQ8kHfFRUOkCE+XjmpWWfDcgWqaT3n4AxSS5ugUV9Bz5X8LQZiPwD+EjdlbEm3jPCa4xpPuUJxueR2R1ScbL8tf3MYXs2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747828252; c=relaxed/simple;
-	bh=XBy3ZwUzCrosV+e/R5lkTDcG7JvsweouphG44HG3EzE=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=D/Vm20eq0b4RUAwNYrrTnWVG+K+SMK4uRm2ABIgi4ql+IHIoycaL4qY62Miaq4DlCIN7alfL7bG5fSnPhJeGnrat7URS3QKXBmN5HB9pO/2KWFRcYGZY+nMFPvpfIBZxWiUwW2+0SF8nV3G7TqGgcyzZTxc41f3893tbrNlkL4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=m.fudan.edu.cn; spf=pass smtp.mailfrom=m.fudan.edu.cn; dkim=pass (1024-bit key) header.d=m.fudan.edu.cn header.i=@m.fudan.edu.cn header.b=SRHjxWWI; arc=none smtp.client-ip=15.184.224.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=m.fudan.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=m.fudan.edu.cn
+	s=arc-20240116; t=1747828257; c=relaxed/simple;
+	bh=hPxGyl0WCZ5+c5WHm1nrakYwWi2mBp464NPv8RSJ640=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=E80nEToJxLCtnG8YXACBauW6HsBYOiFsPbDKqk/5kwiIwm6wPZNA1bhOpHzpXghvr896tcCl82Nj40RdB+AMRxsq4wYduyEJb3aQEla5VRVqgaYgOa8KrW97M//Y6pV/UT9HBKj7cRcRVQ3VqokM4/YKKoQKHd/07cmq1N38qe4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LN6OGKx3; arc=none smtp.client-ip=209.85.128.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=m.fudan.edu.cn header.i=@m.fudan.edu.cn header.b="SRHjxWWI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=m.fudan.edu.cn;
-	s=sorc2401; t=1747828223;
-	bh=XBy3ZwUzCrosV+e/R5lkTDcG7JvsweouphG44HG3EzE=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=SRHjxWWIqKgK4KRQ+9fpWtSO/WlskYOHBJq9uuDKylcVdCfpoGZgeEZ1wwUKikXB2
-	 Yk0Gnegko2wpeuvIv4Z2pxds1qxkIcJA4BXggBJW823LsRO2WEUwY1fAN6YImCbZ0A
-	 EL1HkNeGPaB4Dh7xLM4CEMqJVQ0ckkp0YgvpDJR0=
-X-QQ-mid: zesmtpip3t1747828222t03c09460
-X-QQ-Originating-IP: z5nPJvLq62Vg4cbeTbaknul2P4h9gRf5fBSy7LoNzx0=
-Received: from TYSPR06MB7158.apcprd06.prod.out ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 21 May 2025 19:50:20 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 13241025917331084559
-EX-QQ-RecipientCnt: 5
-From: "huk23@m.fudan.edu.cn" <huk23@m.fudan.edu.cn>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"syzkaller@googlegroups.com" <syzkaller@googlegroups.com>,
-	=?gb2312?B?sNfLuMi9?= <baishuoran@hrbeu.edu.cn>, "jjtan24@m.fudan.edu.cn"
-	<jjtan24@m.fudan.edu.cn>
-Subject: KASAN: slab-use-after-free Read in bch2_btree_node_read_done
-Thread-Topic: KASAN: slab-use-after-free Read in bch2_btree_node_read_done
-Thread-Index: AQHbykSyfi0w+7RGcU2KpOKpguUBmQ==
-X-MS-Exchange-MessageSentRepresentingType: 1
-Date: Wed, 21 May 2025 11:50:20 +0000
-Message-ID:
-	<TYSPR06MB71585D5693970E3C090A1DA5F69EA@TYSPR06MB7158.apcprd06.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-Exchange-Organization-SCL: -1
-X-MS-TNEF-Correlator:
-X-MS-Exchange-Organization-RecordReviewCfmType: 0
-msip_labels:
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LN6OGKx3"
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-70dfa1aef36so2293017b3.0;
+        Wed, 21 May 2025 04:50:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747828254; x=1748433054; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wxH6blyBdkBLi+2regCSKNvizDAsAw0qoMZ/7Yx153o=;
+        b=LN6OGKx3OxJD3knrRPK3raSSD2hr7OGks+UwDQBd8TYnn5YnycAWzJv4woCFi+JlXQ
+         4bpWb5hrH/vP6t58DHz6vuCGJkJdYGkwfm1QcqKf9kKOO1f54t34P2creuzJ/+FNea6z
+         XzvrzejptI/BF31o4FQB91xUl3AoWlurtY51r6HjVdFsD3lFjop8M6txUeiuqpkEU19q
+         31UAMkT76FzvD1SbdIKdnOCWVFWwfu1zMkkzLJnIVhtmjS8Kupmp4iP3sZjJJ2jlgnVF
+         KZgM1gr4prcFXAeFYVBPQmTeXgX0XGr4mO1FpP/huVR0+b+JNWAT/F4JOPHYxoGeKhhb
+         1yKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747828254; x=1748433054;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wxH6blyBdkBLi+2regCSKNvizDAsAw0qoMZ/7Yx153o=;
+        b=PQiOoQrrjLPSuk3l0dqG4B0rxxXxsxYAQsvIUvqgXhNpAkEYIFTTS+mOaP8RLTK5T7
+         47Ocd9A67lrzkZqqMs5fYuawyDDWa/288QUyl9DUKKUWHLaJHYBzokEvsWw2SvRfQdjb
+         ys2LF2AloEARsj3VSFMJiEteAfNBh/2Jva/KxHREeizR58rA82par8lNwsAmgPlOB3Bt
+         EJj1VYtyh8HSshm9U0/xf5vgXtZdaF7Prs3D6GBYI7ZiE4E7UHjqvkxuXfzceTcih/td
+         FMqq9nXrHAhsBdaCXQR3sg4ooa3sV2dytadGQcU9lv3QKgoXZS/DDYqztUeOpCp6NREM
+         2VPg==
+X-Forwarded-Encrypted: i=1; AJvYcCUf1alQhYVVxGoLSJW4+kB3GqSdGeffPFI3ry/iu1BJlFDF8NnF+BInG2JVQbm6j+rzMVEVs6JhhWNJUKQ=@vger.kernel.org, AJvYcCX0CYgU81neByUynIo2E1U4vE6pfPYRolwbYzNr7lXgS2+I+SpbGJhSUkmMvoR8ePQhvsV+caq3KF4SFI0rkORAvKVw@vger.kernel.org
+X-Gm-Message-State: AOJu0YyuHbcSJoJ5pyRb8wf+NldHIMGZ/tzMW3kt2Ri4bQ6on6C/IkWA
+	+Gp4vD45DC/qeMRl0HurHnUQpXLAtLpl5o9eSzpHm5yHb7QXI3Cr60kn
+X-Gm-Gg: ASbGncsg4DpQpB1Mhme/hOYLdtzBP6CT7oHRSUfX1vxspY6TVh5eqlOvrHVuhm5fbwN
+	uiH1z3cHyarV70e+XP13ze2HBAwjzJHuXxDveckU53Oc04iyhpKObFDwlVabrr6aTf/pPwnYIMZ
+	jYN/b32huGZe1wJHV1+yv0t1S15mhdnYaHOcil0nIApXsC8LLxqnRcfLBROBA4a1s0OVwmbioIl
+	Zx2S7MqajtjtsYjTAiWlWCTPa4ej3DkbKe69twv2MORPSu+VpKNXWn4bB5kbbugpzRl9gBn5GSM
+	moJppKan96lFFyZ3g9m4k/Og7jGEwXxVx0jUGSdm8jqGsiYO47GiLuZOt6wRd0Y=
+X-Google-Smtp-Source: AGHT+IEZ8zu6Le2G1Gry70fS49+4L4N6IQkrIreprtywefvjnoN17yGjl2y69Sh6wqZ/+UngdIcOcw==
+X-Received: by 2002:a05:690c:7341:b0:70d:ed5d:b4de with SMTP id 00721157ae682-70ded5db78emr61451947b3.19.1747828254257;
+        Wed, 21 May 2025 04:50:54 -0700 (PDT)
+Received: from Gentoo.localdomain ([154.16.192.116])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-70ca83222ddsm26090297b3.42.2025.05.21.04.50.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 May 2025 04:50:53 -0700 (PDT)
+From: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To: mhiramat@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+Subject: [PATCH] tools:bootconfig:scripts: Put back the comments where they should be
+Date: Wed, 21 May 2025 17:16:51 +0530
+Message-ID: <20250521115018.32392-1-unixbhaskar@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpip:m.fudan.edu.cn:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: OMnP0zidhno0nqZmo/oPuBnKwb36JXhuwg4PWLeoPldHBd9VQtxRF/uO
-	i21dIpUN+Rpfp237Lj7SqNHe0X7Tm20YSstPObo8B6O/aeNY8idxeS7Vmv6nVBmBan4N+TS
-	dZo77W3C5lb8eOviETgQobGOY+mHHHpZN/9WPScgEiAEl+k8M8Xzy4vWNNk5J6XD13GXPMo
-	qDGbtPpj60xK2rBKqF7dlrBboPG/tsTpzYIN0ctgS7IyRnFRraWGmq05qUMJzRXWyjXwqMd
-	uYUD7HrqmtCeC7076l+IfiRz4kxQ8X94IljHaZGWE4KqAlH0aN3IV0hBmjTiqFJZkzroUya
-	/s0iTtd0M33BlrgzjAG36b/qo+GF3tJ4G56J8dP14QXOcjeYR+8iYBfEclVITcYLw9WT56y
-	c/TCaOZB3UCkJTw5kmyJMadKpkQuYdiqIvqPLtXnmvkPmdVoUwbF+eTSVak+iis9OVWNp2k
-	ELju16pP9WobPSgKun2ySpL6qLqm70fNXEumX7kQO7+lknf74LWKQ6H/2nky1kbzjdo7pBW
-	x+5afSeubNyyGMaZOxacCJiYUKWl5W2NCQOW28XM0Hs7fbyGoxXnKnPg+6Nl63hAsJ4rjmA
-	GnVmg0Xp2nT1c0OHp2pGmBQ7hHzcCKXse5jwSa1zvZt4q2qOyexIa7ZOLkqOXO31/SnPGbf
-	bT5FXEnzpH0EPfdDtKobRVamnZljkbdJCjdnFZ6wNCAckhxR3GAw8Li8ShSoXqKuM9AF0qS
-	Bu6TrXMxfZxFBejM6TaFKqZ78TzkGHWJgCNEXke5n3gXBQs16aeVznKirARgaaRiWyGE1Kq
-	rNCOzjeANKyuxW4NEWMqHzGUOxDK+v7jjUNyx4lMYhnhYBk6fD7BnpaV7tUOEiVL641Atxp
-	iaJ9uPozX6fXy4d4XwGM0IafNGe4bU/whvrtRO41f1Y4xCFlIxzIsaJYAYpYCCVA6ry+805
-	UqnrKDjvwOjcpiMIWIUykGfK90c3JFG1RQ8YIJ631mPKduc0Nhg2GMJ/H4irZ4GtuSeffMX
-	DgQsk27r8KlZTKAj4caBxa+ClbfMwwy23fhNQuyTzr6PGzwZ1bV26IkuA3EZlpqx6JB8l/x
-	g==
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
-X-QQ-RECHKSPAM: 0
+Content-Transfer-Encoding: 8bit
 
-RGVhciBNYWludGFpbmVycywKCgoKV2hlbiB1c2luZyBvdXIgY3VzdG9taXplZCBTeXprYWxsZXIg
-dG8gZnV6eiB0aGUgbGF0ZXN0IExpbnV4IGtlcm5lbCwgdGhlIGZvbGxvd2luZyBjcmFzaCAoMTA0
-dGgpd2FzIHRyaWdnZXJlZC4KCgpIRUFEIGNvbW1pdDogNjUzN2NmYjM5NWYzNTI3ODI5MThkOGVl
-N2I3ZjEwYmEyY2MzY2JmMgpnaXQgdHJlZTogdXBzdHJlYW0KT3V0cHV0Omh0dHBzOmh0dHBzOmh0
-dHBzOi8vZ2l0aHViLmNvbS9wZ2hrMTMvS2VybmVsLUJ1Zy9ibG9iL21haW4vMDUyMF82LjE1LXJj
-Ni8xMDRfS0FTQU4lM0ElMjBzbGFiLXVzZS1hZnRlci1mcmVlJTIwUmVhZCUyMGluJTIwYmNoMl9i
-dHJlZV9ub2RlX3JlYWRfZG9uZS8xMDRyZXBvcnQudHh0Cktlcm5lbCBjb25maWc6aHR0cHM6Ly9n
-aXRodWIuY29tL3BnaGsxMy9LZXJuZWwtQnVnL2Jsb2IvbWFpbi8wNTIwXzYuMTUtcmM2L2NvbmZp
-Zy50eHQKQyByZXByb2R1Y2VyOmh0dHBzOmh0dHBzOi8vZ2l0aHViLmNvbS9wZ2hrMTMvS2VybmVs
-LUJ1Zy9ibG9iL21haW4vMDUyMF82LjE1LXJjNi8xMDRfS0FTQU4lM0ElMjBzbGFiLXVzZS1hZnRl
-ci1mcmVlJTIwUmVhZCUyMGluJTIwYmNoMl9idHJlZV9ub2RlX3JlYWRfZG9uZS8xMDRyZXByby5j
-ClN5emxhbmcgcmVwcm9kdWNlcjpodHRwczovL2dpdGh1Yi5jb20vcGdoazEzL0tlcm5lbC1CdWcv
-YmxvYi9tYWluLzA1MjBfNi4xNS1yYzYvMTA0X0tBU0FOJTNBJTIwc2xhYi11c2UtYWZ0ZXItZnJl
-ZSUyMFJlYWQlMjBpbiUyMGJjaDJfYnRyZWVfbm9kZV9yZWFkX2RvbmUvMTA0cmVwcm8udHh0CgoK
-ClRoZSBidWcgaXMgYSB1c2UtYWZ0ZXItZnJlZSBlcnJvciBpbiB0aGUgYnRyZWUgaGFuZGxpbmcg
-Y29kZSBvZiB0aGUgYmNhY2hlZnMgZmlsZXN5c3RlbS4gSXQgbW9zdCBsaWtlbHkgb2NjdXJzIGlu
-IHRoZSBiY2hfYnRyZWVfbm9kZV9yZWFkX2RvbmUgZnVuY3Rpb24gKGRlZmluZWQgYXJvdW5kIGxp
-bmUgMTkzKSwgd2hlbiBwcm9jZXNzaW5nIGEgYnRyZWUgbm9kZSBhbmQgdmFsaWRhdGluZyBpdHMg
-Y29udGVudHMsIHRoZSBjb2RlIGF0dGVtcHRzIHRvIGEgcmFkaXggdHJlZSBub2RlIHRoYXQgaGFz
-IGFscmVhZHkgYmVlbiByZWxlYXNlZCBieSB0aGUgUkNVIG1lY2hhbmlzbS4gVGhlIHJvb3QgY2F1
-c2Ugb2YgdGhlIGVycm9yIGNvdWxkIGJlIGEgbWVtb3J5IG1hbmFnZW1lbnQgb3IgcmVmZXJlbmNl
-IGNvdW50aW5nIGlzc3VlLCBlc3BlY2lhbGx5IGluIHRoZSBjb21wbGV4IG9mIG9wZXJhdGlvbnMg
-ZHVyaW5nIHRoZSBmaWxlc3lzdGVtIHJlY292ZXJ5LiBJdCBjb3VsZCBhbHNvIGJlIGluIHRoZSBi
-dHJlZV9pby5jIGZpbGUsIGFyb3VuZCBsaW5lcyAzMDAtMzUwLCB3aGljaCBoYW5kbGVzIGJ0cmVl
-IHZhbGlkYXRpb24gYW5kIHJlYWRpbmcuRXNwZWNpYWxseSBpbiB0aGUgY2FsbCBvciBpbXBsZW1l
-bnRhdGlvbiBvZiB2YWxpZGF0ZV9ic2V0LCB2YWxpZGF0ZV9ic2V0X2tleXMgb3IgYmNoMl9kcm9w
-X3doaXRlb3V0cwoKCldlIGhhdmUgcmVwcm9kdWNlZCB0aGlzIGlzc3VlIHNldmVyYWwgdGltZXMg
-b24gNi4xNS1yYzYgYWdhaW4uCgoKCklmIHlvdSBmaXggdGhpcyBpc3N1ZSwgcGxlYXNlIGFkZCB0
-aGUgZm9sbG93aW5nIHRhZyB0byB0aGUgY29tbWl0OgpSZXBvcnRlZC1ieTogS3VuIEh1IDxodWsy
-M0BtLmZ1ZGFuLmVkdS5jbj4sIEppYWppIFFpbiA8amp0YW4yNEBtLmZ1ZGFuLmVkdS5jbj4sIFNo
-dW9yYW4gQmFpIDxiYWlzaHVvcmFuQGhyYmV1LmVkdS5jbj4KCgpidHJlZT1hbGxvYyBsZXZlbD0w
-IHU2NHMgMTEgdHlwZSBidHJlZV9wdHJfdjIgU1BPU19NQVggbGVuIDAgdmVyIDA6IHNlcSBhYzYy
-MTQxZjhkYzdlMjYxIHdyaXR0ZW4gMjQgbWluX2tleSBQT1NfTUlOIGR1cmFiaWxpdHk6IDEgcHRy
-OiAwOjI2OjAgZ2VuIDAKPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09CkJVRzogS0FTQU46IHNsYWItdXNlLWFmdGVyLWZyZWUg
-aW4gYmNoMl9idHJlZV9ub2RlX3JlYWRfZG9uZSsweDQ3MzcvMHg1MzMwClJlYWQgb2Ygc2l6ZSA4
-IGF0IGFkZHIgZmZmZjg4ODA2ZDcyMDAxMCBieSB0YXNrIHN5ei42LjcvMTQzNTkKCkNQVTogMiBV
-SUQ6IDAgUElEOiAxNDM1OSBDb21tOiBzeXouNi43IE5vdCB0YWludGVkIDYuMTUuMC1yYzYgIzEg
-UFJFRU1QVChmdWxsKSAKSGFyZHdhcmUgbmFtZTogUUVNVSBTdGFuZGFyZCBQQyAoaTQ0MEZYICsg
-UElJWCwgMTk5NiksIEJJT1MgMS4xMy4wLTF1YnVudHUxLjEgMDQvMDEvMjAxNApDYWxsIFRyYWNl
-OgogPFRBU0s+CiBkdW1wX3N0YWNrX2x2bCsweDExNi8weDFiMAogcHJpbnRfcmVwb3J0KzB4YzEv
-MHg2MzAKIGthc2FuX3JlcG9ydCsweDk2LzB4ZDAKIGJjaDJfYnRyZWVfbm9kZV9yZWFkX2RvbmUr
-MHg0NzM3LzB4NTMzMAogYnRyZWVfbm9kZV9yZWFkX3dvcmsrMHhiMzQvMHgxZTEwCiBiY2gyX2J0
-cmVlX25vZGVfcmVhZCsweDdjOC8weDEwMjAKIGJjaDJfYnRyZWVfcm9vdF9yZWFkKzB4MmMzLzB4
-NDYwCiBiY2gyX2ZzX3JlY292ZXJ5KzB4Mjk0ZS8weDU5YTAKIGJjaDJfZnNfc3RhcnQrMHg2ZTAv
-MHhkMjAKIGJjaDJfZnNfZ2V0X3RyZWUrMHg0YzYvMHgyMTQwCiB2ZnNfZ2V0X3RyZWUrMHg5My8w
-eDM0MAogcGF0aF9tb3VudCsweDEyNzAvMHgxYjkwCiBkb19tb3VudCsweGIzLzB4MTEwCiBfX3g2
-NF9zeXNfbW91bnQrMHgxOTMvMHgyMzAKIGRvX3N5c2NhbGxfNjQrMHhjZi8weDI2MAogZW50cnlf
-U1lTQ0FMTF82NF9hZnRlcl9od2ZyYW1lKzB4NzcvMHg3ZgpSSVA6IDAwMzM6MHg3ZjlkNmYzYWY1
-MWUKQ29kZTogZmYgZmYgZmYgNjQgYzcgMDAgMTYgMDAgMDAgMDAgYjggZmYgZmYgZmYgZmYgYzMg
-NjYgMmUgMGYgMWYgODQgMDAgMDAgMDAgMDAgMDAgNjYgOTAgZjMgMGYgMWUgZmEgNDkgODkgY2Eg
-YjggYTUgMDAgMDAgMDAgMGYgMDUgPDQ4PiAzZCAwMSBmMCBmZiBmZiA3MyAwMSBjMyA0OCBjNyBj
-MSBiMCBmZiBmZiBmZiBmNyBkOCA2NCA4OSAwMSA0OApSU1A6IDAwMmI6MDAwMDdmOWQ3MDE3MDli
-OCBFRkxBR1M6IDAwMDAwMjAyIE9SSUdfUkFYOiAwMDAwMDAwMDAwMDAwMGE1ClJBWDogZmZmZmZm
-ZmZmZmZmZmZkYSBSQlg6IDAwMDAwMDAwMDAwMDU5NDMgUkNYOiAwMDAwN2Y5ZDZmM2FmNTFlClJE
-WDogMDAwMDAwMDAyMDAwMDBjMCBSU0k6IDAwMDAwMDAwMjAwMDAxODAgUkRJOiAwMDAwN2Y5ZDcw
-MTcwYTEwClJCUDogMDAwMDdmOWQ3MDE3MGE1MCBSMDg6IDAwMDA3ZjlkNzAxNzBhNTAgUjA5OiAw
-MDAwMDAwMDAwMDAwMDEwClIxMDogMDAwMDAwMDAwMDAwMDAxMCBSMTE6IDAwMDAwMDAwMDAwMDAy
-MDIgUjEyOiAwMDAwMDAwMDIwMDAwMGMwClIxMzogMDAwMDAwMDAyMDAwMDE4MCBSMTQ6IDAwMDA3
-ZjlkNzAxNzBhMTAgUjE1OiAwMDAwMDAwMDIwMDAwNDgwCiA8L1RBU0s+CgpBbGxvY2F0ZWQgYnkg
-dGFzayAxNDMzNDoKIGthc2FuX3NhdmVfc3RhY2srMHgyNC8weDUwCiBrYXNhbl9zYXZlX3RyYWNr
-KzB4MTQvMHgzMAogX19rYXNhbl9zbGFiX2FsbG9jKzB4ODcvMHg5MAoga21lbV9jYWNoZV9hbGxv
-Y19scnVfbm9wcm9mKzB4MTY1LzB4NGEwCiB4YXNfYWxsb2MrMHgzNjEvMHg0ODAKIHhhc19jcmVh
-dGUrMHgzZDcvMHgxNTMwCiB4YXNfc3RvcmUrMHg5Mi8weDE4NDAKIHNobWVtX2FkZF90b19wYWdl
-X2NhY2hlKzB4NjYzLzB4YTMwCiBzaG1lbV9hbGxvY19hbmRfYWRkX2ZvbGlvKzB4NDU0LzB4YmIw
-CiBzaG1lbV9nZXRfZm9saW9fZ2ZwKzB4NWEyLzB4MTUzMAogc2htZW1fd3JpdGVfYmVnaW4rMHgx
-NTYvMHgzMTAKIGdlbmVyaWNfcGVyZm9ybV93cml0ZSsweDNkZi8weDhjMAogc2htZW1fZmlsZV93
-cml0ZV9pdGVyKzB4MTExLzB4MTQwCiB2ZnNfd3JpdGUrMHhiYTAvMHgxMTAwCiBrc3lzX3dyaXRl
-KzB4MTIxLzB4MjQwCiBkb19zeXNjYWxsXzY0KzB4Y2YvMHgyNjAKIGVudHJ5X1NZU0NBTExfNjRf
-YWZ0ZXJfaHdmcmFtZSsweDc3LzB4N2YKCkZyZWVkIGJ5IHRhc2sgMjg6CiBrYXNhbl9zYXZlX3N0
-YWNrKzB4MjQvMHg1MAoga2FzYW5fc2F2ZV90cmFjaysweDE0LzB4MzAKIGthc2FuX3NhdmVfZnJl
-ZV9pbmZvKzB4M2EvMHg2MAogX19rYXNhbl9zbGFiX2ZyZWUrMHg1NC8weDcwCiBrbWVtX2NhY2hl
-X2ZyZWUrMHgxNGQvMHg1NTAKIHJjdV9jb3JlKzB4N2E0LzB4MTY2MAogaGFuZGxlX3NvZnRpcnFz
-KzB4MWJlLzB4ODUwCiBydW5fa3NvZnRpcnFkKzB4M2EvMHg2MAogc21wYm9vdF90aHJlYWRfZm4r
-MHgzZDIvMHhhYTAKIGt0aHJlYWQrMHg0NDcvMHg4YTAKIHJldF9mcm9tX2ZvcmsrMHg0OC8weDgw
-CiByZXRfZnJvbV9mb3JrX2FzbSsweDFhLzB4MzAKCkxhc3QgcG90ZW50aWFsbHkgcmVsYXRlZCB3
-b3JrIGNyZWF0aW9uOgoga2FzYW5fc2F2ZV9zdGFjaysweDI0LzB4NTAKIGthc2FuX3JlY29yZF9h
-dXhfc3RhY2srMHhiMC8weGMwCiBfX2NhbGxfcmN1X2NvbW1vbi5jb25zdHByb3AuMCsweDk5LzB4
-ODIwCiB4YXNfc3RvcmUrMHhhZjkvMHgxODQwCiBfX2ZpbGVtYXBfcmVtb3ZlX2ZvbGlvKzB4NDE3
-LzB4NzgwCiBmaWxlbWFwX3JlbW92ZV9mb2xpbysweGM3LzB4MjEwCiB0cnVuY2F0ZV9pbm9kZV9m
-b2xpbysweDRjLzB4NzAKIHNobWVtX3VuZG9fcmFuZ2UrMHgzNTcvMHgxMWIwCiBzaG1lbV90cnVu
-Y2F0ZV9yYW5nZSsweDMwLzB4ZDAKIHNobWVtX2V2aWN0X2lub2RlKzB4MmVhLzB4YTAwCiBldmlj
-dCsweDNkYi8weDgzMAogaXB1dCsweDUxMy8weDgyMAogZGVudHJ5X3VubGlua19pbm9kZSsweDJj
-ZC8weDRjMAogX19kZW50cnlfa2lsbCsweDE4Ni8weDViMAogZHB1dC5wYXJ0LjArMHg0OWUvMHg5
-OTAKIGRwdXQrMHgxZi8weDMwCiBfX2ZwdXQrMHg1MTUvMHhiNDAKIGZwdXRfY2xvc2Vfc3luYysw
-eDEwZi8weDIxMAogX194NjRfc3lzX2Nsb3NlKzB4OGYvMHgxMjAKIGRvX3N5c2NhbGxfNjQrMHhj
-Zi8weDI2MAogZW50cnlfU1lTQ0FMTF82NF9hZnRlcl9od2ZyYW1lKzB4NzcvMHg3ZgoKVGhlIGJ1
-Z2d5IGFkZHJlc3MgYmVsb25ncyB0byB0aGUgb2JqZWN0IGF0IGZmZmY4ODgwNmQ3MjAwMDAKIHdo
-aWNoIGJlbG9uZ3MgdG8gdGhlIGNhY2hlIHJhZGl4X3RyZWVfbm9kZSBvZiBzaXplIDU3NgpUaGUg
-YnVnZ3kgYWRkcmVzcyBpcyBsb2NhdGVkIDE2IGJ5dGVzIGluc2lkZSBvZgogZnJlZWQgNTc2LWJ5
-dGUgcmVnaW9uIFtmZmZmODg4MDZkNzIwMDAwLCBmZmZmODg4MDZkNzIwMjQwKQoKVGhlIGJ1Z2d5
-IGFkZHJlc3MgYmVsb25ncyB0byB0aGUgcGh5c2ljYWwgcGFnZToKcGFnZTogcmVmY291bnQ6MCBt
-YXBjb3VudDowIG1hcHBpbmc6MDAwMDAwMDAwMDAwMDAwMCBpbmRleDoweDAgcGZuOjB4NmQ3MjAK
-aGVhZDogb3JkZXI6MiBtYXBjb3VudDowIGVudGlyZV9tYXBjb3VudDowIG5yX3BhZ2VzX21hcHBl
-ZDowIHBpbmNvdW50OjAKbWVtY2c6ZmZmZjg4ODA3NTZjOGIwMQpmbGFnczogMHg0ZmZmMDAwMDAw
-MDAwNDAoaGVhZHxub2RlPTF8em9uZT0xfGxhc3RjcHVwaWQ9MHg3ZmYpCnBhZ2VfdHlwZTogZjUo
-c2xhYikKcmF3OiAwNGZmZjAwMDAwMDAwMDQwIGZmZmY4ODgwMWI0NGNiNDAgZGVhZDAwMDAwMDAw
-MDEwMCBkZWFkMDAwMDAwMDAwMTIyCnJhdzogMDAwMDAwMDAwMDAwMDAwMCAwMDAwMDAwMDAwMTcw
-MDE3IDAwMDAwMDAwZjUwMDAwMDAgZmZmZjg4ODA3NTZjOGIwMQpoZWFkOiAwNGZmZjAwMDAwMDAw
-MDQwIGZmZmY4ODgwMWI0NGNiNDAgZGVhZDAwMDAwMDAwMDEwMCBkZWFkMDAwMDAwMDAwMTIyCmhl
-YWQ6IDAwMDAwMDAwMDAwMDAwMDAgMDAwMDAwMDAwMDE3MDAxNyAwMDAwMDAwMGY1MDAwMDAwIGZm
-ZmY4ODgwNzU2YzhiMDEKaGVhZDogMDRmZmYwMDAwMDAwMDAwMiBmZmZmZWEwMDAxYjVjODAxIDAw
-MDAwMDAwZmZmZmZmZmYgMDAwMDAwMDBmZmZmZmZmZgpoZWFkOiBmZmZmZmZmZmZmZmZmZmZmIDAw
-MDAwMDAwMDAwMDAwMDAgMDAwMDAwMDBmZmZmZmZmZiAwMDAwMDAwMDAwMDAwMDA0CnBhZ2UgZHVt
-cGVkIGJlY2F1c2U6IGthc2FuOiBiYWQgYWNjZXNzIGRldGVjdGVkCnBhZ2Vfb3duZXIgdHJhY2tz
-IHRoZSBwYWdlIGFzIGFsbG9jYXRlZApwYWdlIGxhc3QgYWxsb2NhdGVkIHZpYSBvcmRlciAyLCBt
-aWdyYXRldHlwZSBSZWNsYWltYWJsZSwgZ2ZwX21hc2sgMHg1MjgzMChHRlBfQVRPTUlDfF9fR0ZQ
-X1JFQ0xBSU1BQkxFfF9fR0ZQX05PV0FSTnxfX0dGUF9OT1JFVFJZfF9fR0ZQX0NPTVApLCBwaWQg
-ODYsIHRnaWQgODYgKGt3b3JrZXIvdTE5OjIpLCB0cyAxNDQ0NTgwNDIzMzgsIGZyZWVfdHMgMAog
-cHJlcF9uZXdfcGFnZSsweDFiMC8weDFlMAogZ2V0X3BhZ2VfZnJvbV9mcmVlbGlzdCsweDFjODAv
-MHgzYTQwCiBfX2FsbG9jX2Zyb3plbl9wYWdlc19ub3Byb2YrMHgyZmQvMHg2ZDAKIGFsbG9jX3Bh
-Z2VzX21wb2wrMHgyMDkvMHg1NTAKIG5ld19zbGFiKzB4MjU0LzB4MzUwCiBfX19zbGFiX2FsbG9j
-KzB4ZjBjLzB4MTdjMAogX19zbGFiX2FsbG9jLmlzcmEuMCsweDU2LzB4YjAKIGttZW1fY2FjaGVf
-YWxsb2Nfbm9wcm9mKzB4MjczLzB4NGEwCiByYWRpeF90cmVlX25vZGVfYWxsb2MuY29uc3Rwcm9w
-LjArMHgxZTgvMHgzNTAKIGlkcl9nZXRfZnJlZSsweDU2OC8weGFiMAogaWRyX2FsbG9jX3UzMisw
-eDE3My8weDJkMAogaWRyX2FsbG9jX2N5Y2xpYysweDEwNS8weDIzMAogYWxsb2NfcGlkKzB4NTZj
-LzB4MTIwMAogY29weV9wcm9jZXNzKzB4Mjk1ZC8weDc3ZjAKIGtlcm5lbF9jbG9uZSsweGVhLzB4
-ZWUwCiB1c2VyX21vZGVfdGhyZWFkKzB4YzUvMHgxMTAKcGFnZV9vd25lciBmcmVlIHN0YWNrIHRy
-YWNlIG1pc3NpbmcKCk1lbW9yeSBzdGF0ZSBhcm91bmQgdGhlIGJ1Z2d5IGFkZHJlc3M6CiBmZmZm
-ODg4MDZkNzFmZjAwOiAwMCAwMCAwMCAwMCAwMCAwMCAwMCAwMCAwMCAwMCAwMCAwMCAwMCAwMCAw
-MCAwMAogZmZmZjg4ODA2ZDcxZmY4MDogMDAgMDAgMDAgMDAgMDAgMDAgMDAgMDAgMDAgMDAgMDAg
-MDAgMDAgMDAgMDAgMDAKPmZmZmY4ODgwNmQ3MjAwMDA6IGZhIGZiIGZiIGZiIGZiIGZiIGZiIGZi
-IGZiIGZiIGZiIGZiIGZiIGZiIGZiIGZiCiAgICAgICAgICAgICAgICAgICAgICAgICBeCiBmZmZm
-ODg4MDZkNzIwMDgwOiBmYiBmYiBmYiBmYiBmYiBmYiBmYiBmYiBmYiBmYiBmYiBmYiBmYiBmYiBm
-YiBmYgogZmZmZjg4ODA2ZDcyMDEwMDogZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmIgZmIg
-ZmIgZmIgZmIgZmIgZmIKPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09CnRoYW5rcywKS3VuIEh1Cgo=
+Mundane adjustment to the comments, where they should belong.
+
+Does it change the functionality? NO
+
+Does it improve the readability? Probably and that is why.
+
+Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+---
+ tools/bootconfig/scripts/ftrace.sh | 35 ++++++++++++++++++++----------
+ 1 file changed, 24 insertions(+), 11 deletions(-)
+
+diff --git a/tools/bootconfig/scripts/ftrace.sh b/tools/bootconfig/scripts/ftrace.sh
+index 186eed923041..e2a075879db4 100644
+--- a/tools/bootconfig/scripts/ftrace.sh
++++ b/tools/bootconfig/scripts/ftrace.sh
+@@ -1,23 +1,28 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+
+-clear_trace() { # reset trace output
+-    echo > trace
++ # reset trace output
++clear_trace() {
++
++	 echo > trace
+ }
+
+-disable_tracing() { # stop trace recording
++# stop trace recording
++disable_tracing() {
+     echo 0 > tracing_on
+ }
+
+-enable_tracing() { # start trace recording
++# start trace recording
++enable_tracing() {
+     echo 1 > tracing_on
+ }
+
+-reset_tracer() { # reset the current tracer
++# reset the current tracer
++reset_tracer() {
+     echo nop > current_tracer
+ }
+
++# remove action triggers first
+ reset_trigger_file() {
+-    # remove action triggers first
+     grep -H ':on[^:]*(' $@ |
+     while read line; do
+         cmd=`echo $line | cut -f2- -d: | cut -f1 -d"["`
+@@ -32,21 +37,25 @@ reset_trigger_file() {
+     done
+ }
+
+-reset_trigger() { # reset all current setting triggers
++# reset all current setting triggers
++reset_trigger() {
+     if [ -d events/synthetic ]; then
+         reset_trigger_file events/synthetic/*/trigger
+     fi
+     reset_trigger_file events/*/*/trigger
+ }
+
+-reset_events_filter() { # reset all current setting filters
++# reset all current setting filters
++reset_events_filter() {
+     grep -v ^none events/*/*/filter |
+     while read line; do
+ 	echo 0 > `echo $line | cut -f1 -d:`
+     done
+ }
+
+-reset_ftrace_filter() { # reset all triggers in set_ftrace_filter
++# reset all triggers in set_ftrace_filter
++
++reset_ftrace_filter() {
+     if [ ! -f set_ftrace_filter ]; then
+       return 0
+     fi
+@@ -78,17 +87,21 @@ disable_events() {
+     echo 0 > events/enable
+ }
+
+-clear_synthetic_events() { # reset all current synthetic events
++# reset all current synthetic events
++
++ clear_synthetic_events() {
+     grep -v ^# synthetic_events |
+     while read line; do
+         echo "!$line" >> synthetic_events
+     done
+ }
+
+-initialize_ftrace() { # Reset ftrace to initial-state
++# Reset ftrace to initial-state
+ # As the initial state, ftrace will be set to nop tracer,
+ # no events, no triggers, no filters, no function filters,
+ # no probes, and tracing on.
++
++initialize_ftrace() {
+     disable_tracing
+     reset_tracer
+     reset_trigger
+--
+2.49.0
+
