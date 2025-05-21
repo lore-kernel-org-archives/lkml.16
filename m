@@ -1,128 +1,112 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47D24242D66;
-	Wed, 21 May 2025 16:57:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99CA71CEEB2;
+	Wed, 21 May 2025 16:58:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747846673; cv=none; b=XwZgOLiTOO5z9Nl5fc729edObnlMWBD3wqGTXz2kWHA2bIo8tDSZtM5kXgUw6F2R4+zQWCEcqA7FdTxg2yqbDvE6dXmaDKbZNfkLaYM8IvXT+VE8dRoNM6FuaSCvdYo+dx5HrlwUS6mus4xQy6QP5W0+qAjE/vhmb9PPxzGn5lc=
+	t=1747846728; cv=none; b=tEbkGt7/6OGr6EBv7p7NgUyt6Z36tFBpzulfKsuTCHnxuO2jg4D/QLliC6Ke7P5+rMx26/YOSXN/GnZ3V8+IZx1s2/NEuqZWQT8VZP51Vfd6/2LnegHhrESgUEgp+uclQO/SfBWriYJEIYdbHLplpESXH+7eLnpl+e6GvnQ56CA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747846673; c=relaxed/simple;
-	bh=/GlespiNmMT4+BqUyJVqesFiv1fxp1eFp6PVyIszOPY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Jh2nBeV+oS5+6b8lt5WTcRmMT9KBtk6/wstiCJzVufK5LRKXhOrRX8N52C3s8MsUDa+4UNxyQdZhpSvZZTqus/qkZqEVOllEy7yG9AuxV7VYIug0IFnit57OPZI2ZNACjFF1h0r+VRNxzOdtRIX9Uha0JJyiOQmSWSHtDrrHL7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X9ea8YYD; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747846728; c=relaxed/simple;
+	bh=59oAJcTJpmR8OLFJ0gR8UPLguvkoStgGoffZseDex2g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CdA4isKl49KyCq693+7uLkH4Kvk29L+b6xrtLYfhXJPPZ3wwyuQfSDCLUcMs8eD9tk+5TXqqrWtEA1ezqUy2U1yE4zbw7WecL3WyVO2MQFDPL8HL6ASBbPJvWfvABOP1aYu8xGQPzlm55ig4A6MwW9d29s2IZKCMr8YYf5h2FDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=hEcWuyg8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X9ea8YYD"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-601fb2b7884so5621133a12.2;
-        Wed, 21 May 2025 09:57:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747846669; x=1748451469; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BRYUFAK7jSYA/NtgtlJwU68PcUllDyACt8wTHZPGFbo=;
-        b=X9ea8YYD6gpMKdelTo7bkq4hdKBGgOeE3uoSgg6S5SI3YunUvYHIh4uQsld19vzWHN
-         50fgut1ljwBbVG89fKmWmKWsDb2bR18V8K+IAEpiRrB5jAyCngK7Fsbr0Hm7TZYwbccy
-         3NNQwgB5MTzVyiMs1IGdr7AT5VNqd+VhlAcUF9/6CluAZAN9mB0qvn8zhf4eJBL2RMRy
-         glrF0ZArrYfkYVxF/ZLeh/rA0Op+nRj2FZ/KIlk0zDWs7dO8OtqOqK2esJYyooOR8V1v
-         NWxvjtgE4W+KB7cw2bFkWeDZk2IkS6sCmybOl/3sWCAa3bu+RSI1y1VYY0CTG8cjb5Cz
-         Zdvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747846669; x=1748451469;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BRYUFAK7jSYA/NtgtlJwU68PcUllDyACt8wTHZPGFbo=;
-        b=g2r6RegZa0gqBNGl4B94TvBTY0F2LVYn08v4slypWJGU/PHDa3Bb+VrkDl9VWh47AA
-         uH+TPS9Cs9gPcDkqqQ8a4hsiy575JTWLKBeXbQNrR6mJoIxq2YVItGKD+Ngu4e31b8VF
-         t54XBSI4d/1v1lqOrohL54BAifYRvcbhMGHf6qW8mpGQjZoGZtDb11hFQD3TrOStG74t
-         y2Tq6/jHsFgQe/WOlTupEBSqG73hkaAv6VH/x9v6kcXW1yvP7bgJCdCQckBORqtngWbp
-         //lSUy4FzIEBWb857dfSYFR1sWfN8eiR+JBgN+n/eS1B75dTb5Oe75UGqhB6awa1kcgs
-         Q7fw==
-X-Forwarded-Encrypted: i=1; AJvYcCU2VKYHNmjmJiaTM8V5AwXFCBuoZXqaamgeKB5PFdZtvvJhZZ/ZCHkhefmVTuQQCm06PiA64D4t+ZhlaF1D@vger.kernel.org, AJvYcCXEzJT5/dkjB1uImUN5RVVwl51LjsJXSRbE92QacX0mbM64rJrXn3N3ld+YmH/mdpbNVC4mlKs7GfX1@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+Va+gGbDu+fzSVKsmCG1xUwUio7qxmoqAkct68yfAU/BEKb8P
-	QUuf64VkYU0s5yXYb7o3riZC4yO28cbMyhVC8j0KaQ8x6gPQNgronD8r
-X-Gm-Gg: ASbGnctm7tiulXyykU6+9r08axqBQw9S+aYTFhqT0YIep7PYsX0jeEqXPSOj1g4kO9u
-	QWNBuXUjFcW2S+jsyDOj+IHSTQEYaMAIdVsO/+a8+f+ydiuQi6JZnzONXe4DqcOuMYTvax8W3Vq
-	RgF/EGWpXE8Egrzj//2pAhbOfyRDTLsFrBsbT+SshvGRs4VANKECT4fA4WCG47VdU24b6ij/SLR
-	VehJFoz7SrDRItnOM3x++ww/ydCAStv9g76Kt+CgjOJ+WDTNbeZvKOyjzMj+B7uhi4lxLAwZnGn
-	vrV66t1oLf4AmsrlPsWUQnJ3+WxH0O73BXG44tPvfNQvdObu13oA4JR6Nd6M4SzcQXARD9AZOa9
-	0LyrRdVrpMBNIsb8yMZXVSAhxtCFmEMKXJZDoVQ==
-X-Google-Smtp-Source: AGHT+IHSvbQT6sn4S7mMgkqSNKRdTOlaQgHRPK4MjnFPlaTQGercmFbLQYTx5FF7F5wgccYvySsRbw==
-X-Received: by 2002:a05:6402:1e89:b0:600:9f83:c314 with SMTP id 4fb4d7f45d1cf-60119cc7219mr19075932a12.26.1747846669303;
-        Wed, 21 May 2025 09:57:49 -0700 (PDT)
-Received: from ?IPV6:2620:10d:c096:325:8d0:f08c:4e6a:b32f? ([2620:10d:c092:600::8a7e])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6005ac336d5sm9221196a12.54.2025.05.21.09.57.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 May 2025 09:57:49 -0700 (PDT)
-Message-ID: <b78e0fd8-e6b9-47c6-bec8-a44a8be242f1@gmail.com>
-Date: Wed, 21 May 2025 17:57:48 +0100
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="hEcWuyg8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CCC2C4CEE4;
+	Wed, 21 May 2025 16:58:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1747846728;
+	bh=59oAJcTJpmR8OLFJ0gR8UPLguvkoStgGoffZseDex2g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hEcWuyg8NDZHwjwFdz1hKQdHeyloCDmxGf4ySMcqClZTIFYnrGv6Z9k/7vxobndeY
+	 Md28uGshRkdCxLeXocEiFhcg6/0elgPtySg9cy6VIV/5+F5+2LUCmiCXqnjZVjABcP
+	 C6+723bA/Ct345PLSLtIS7Zl2V/BSKfJ2MrU2n7A=
+Date: Wed, 21 May 2025 18:58:45 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Remo Senekowitsch <remo@buenzli.dev>
+Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Dirk Behme <dirk.behme@de.bosch.com>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v5 4/9] rust: device: Enable printing fwnode name and path
+Message-ID: <2025052116-gem-blend-2585@gregkh>
+References: <20250520200024.268655-1-remo@buenzli.dev>
+ <20250520200024.268655-5-remo@buenzli.dev>
+ <2025052153-steadier-bargraph-e81a@gregkh>
+ <DA1UXY2O47Y2.1ND9MC6L01217@buenzli.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 0/5] add process_madvise() flags to modify behaviour
-To: Shakeel Butt <shakeel.butt@linux.dev>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>,
- David Hildenbrand <david@redhat.com>, Vlastimil Babka <vbabka@suse.cz>,
- Jann Horn <jannh@google.com>, Arnd Bergmann <arnd@arndb.de>,
- Christian Brauner <brauner@kernel.org>, linux-mm@kvack.org,
- linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
- SeongJae Park <sj@kernel.org>
-References: <cover.1747686021.git.lorenzo.stoakes@oracle.com>
- <7tzfy4mmbo2utodqr5clk24mcawef5l2gwrgmnp5jmqxmhkpav@jpzaaoys6jro>
- <5604190c-3309-4cb8-b746-2301615d933c@lucifer.local>
- <uxhvhja5igs5cau7tomk56wit65lh7ooq7i5xsdzyqsv5ikavm@kiwe26ioxl3t>
- <e8c459cb-c8b8-4c34-8f94-c8918bef582f@lucifer.local>
- <226owobtknee4iirb7sdm3hs26u4nvytdugxgxtz23kcrx6tzg@nryescaj266u>
- <7a214bee-d184-460f-88d6-2249b9d513ba@lucifer.local>
- <djdcvn3flljlbl7pwyurpdplqxikxy6j2obj6cwcjd4znr6hwj@w3lzlvdibi2i>
-Content-Language: en-US
-From: Usama Arif <usamaarif642@gmail.com>
-In-Reply-To: <djdcvn3flljlbl7pwyurpdplqxikxy6j2obj6cwcjd4znr6hwj@w3lzlvdibi2i>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DA1UXY2O47Y2.1ND9MC6L01217@buenzli.dev>
 
-
-
-On 21/05/2025 17:28, Shakeel Butt wrote:
-> On Wed, May 21, 2025 at 05:21:19AM +0100, Lorenzo Stoakes wrote:
->> On Tue, May 20, 2025 at 03:02:09PM -0700, Shakeel Butt wrote:
->>
-> [...]
->>
->> So, something Liam mentioned off-list was the beautifully named
->> 'mmadvise()'. Idea being that we have a system call _explicitly for_
->> mm-wide modifications.
->>
->> With Barry's series doing a prctl() for something similar, and a whole host
->> of mm->flags existing for modifying behaviour, it would seem a natural fit.
->>
->> I could do a respin that does something like this instead.
->>
+On Wed, May 21, 2025 at 03:03:07PM +0200, Remo Senekowitsch wrote:
+> On Wed May 21, 2025 at 2:02 PM CEST, Greg Kroah-Hartman wrote:
+> > On Tue, May 20, 2025 at 10:00:19PM +0200, Remo Senekowitsch wrote:
+> >> Add two new public methods `display_name` and `display_path` to
+> >> `FwNode`. They can be used by driver authors for logging purposes. In
+> >> addition, they will be used by core property abstractions for automatic
+> >> logging, for example when a driver attempts to read a required but
+> >> missing property.
+> >> 
+> >> Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
+> >> ---
+> >>  rust/kernel/device/property.rs | 72 ++++++++++++++++++++++++++++++++++
+> >>  1 file changed, 72 insertions(+)
+> >> 
+> >> diff --git a/rust/kernel/device/property.rs b/rust/kernel/device/property.rs
+> >> index 70593343bd811..6ccc7947f9c31 100644
+> >> --- a/rust/kernel/device/property.rs
+> >> +++ b/rust/kernel/device/property.rs
+> >> @@ -32,6 +32,78 @@ pub(crate) fn as_raw(&self) -> *mut bindings::fwnode_handle {
+> >>          self.0.get()
+> >>      }
+> >>  
+> >> +    /// Returns an object that implements [`Display`](core::fmt::Display) for
+> >> +    /// printing the name of a node.
+> >> +    pub fn display_name(&self) -> impl core::fmt::Display + '_ {
+> >> +        struct FwNodeDisplayName<'a>(&'a FwNode);
+> >> +
+> >> +        impl core::fmt::Display for FwNodeDisplayName<'_> {
+> >> +            fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+> >> +                // SAFETY: self is valid by its type invariant
+> >> +                let name = unsafe { bindings::fwnode_get_name(self.0.as_raw()) };
+> >> +                if name.is_null() {
+> >> +                    return Ok(());
+> >
+> > So if there is no name, you are returning Ok()?  Are you sure that's ok
+> > to do?  What will the result of the string look like then?
 > 
-> Please let's first get consensus on this before starting the work.
+> In that case we're not writing anything to the formatter, which is
+> equivalent to an empty string. `Ok(())` means that writing succeeded.
 > 
-> Usama, David, Johannes and others, WDYT?
-> 
+> I assumed that a valid node would always have a name. And we're
+> guaranteed to have a valid node. So I assumed this case would never
+> happen and didn't think too hard about it. But even if a valid node has
+> not name, empty string is probably the correct thing, right?
 
-I would like that. Introducing another method might make the conversation a
-lot more complex than it already is?
+I don't know what this "name" is used for.  An empty string might not be
+what you want to use here, given that you could be naming something
+based on it, right?  fwnode_get_name() is used for many things,
+including the detection if a name is not present at all, and if not,
+then the code needs to clean up and abort.
 
-I have addressed the feedback from Lorenzo for the prctl series, but am
-holding back sending it as RFC v4.
-The v3 has a NACK on it so I would imagine it would discourage people
-from reviewing it. If we are still progressing with sending patches, would it
-make sense for me to wait a couple of days to see if there are any more comments
-on it and send the RFC v4?
+So what exactly are you going to be using this for?
 
+thanks,
 
-
+greg k-h
