@@ -1,190 +1,205 @@
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EBDB2798ED
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 13:20:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 021E02356B8;
+	Wed, 21 May 2025 13:20:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747833603; cv=none; b=RhMcze39bjQ27vLHxtx79rz6sarYsL4FZuVk64bVQ5do+c0cpH5TdxPaS7vMhPyZ42BM+RyJaLSrYbljqnqHuNwLfxkN0UyKFr0DK1YBjmWDVZ5jNLkvxAEmfdCCcCyUmn2xIPG2eF/eDrhWxzXQZLPyLtWplMuzsz9YkmZ0PwI=
+	t=1747833655; cv=none; b=r+PLZ3oQ5Giscmv7GhTbePYO49JpU4cgzmYo1Y7G+DeShkLLqcDxe4F3Lz5KJa4SZyAsJjyBWAQN2Flgzkm5JColRZGX0gU1OsT8v8NC05NL3nQjcXv/Mtzqc3bC4j/DuCxoNFq47u7ZUmpqlo+LQF93mLQR94KsPyBxDA5DIXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747833603; c=relaxed/simple;
-	bh=Mp5KvBUD4ru+9Ndh/QthP4GfWu7ALeMm0VnKwSS6DW0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RfpySvJeX/TSAeEpPfHvyNt6WZdbYd8vvazjnXahFPAVOFVkYPrPIi7KRjvKJlOapIgjKeagVgd0cW+JiPl96b4sVshCDWGHF1SD0ytxKIt3gyZmRFRFqdSiSV1BebMS/feAElsUs0f8P6J+7Cs4L3w69VFhytKf3YHA+uUuD/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=ryYyLwfo; arc=none smtp.client-ip=209.85.128.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
+	s=arc-20240116; t=1747833655; c=relaxed/simple;
+	bh=QV4yK2hdnVnPbG4+FrwDEmlzNcQ54yHXdjN0E1nJArg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nBvWEjbzSD3ZlezFCjtqHeiKy47moaKeAKbMBydj4j4cfhD9F5VgQi2Ot1b5q9l8JTIcqr0e3/N6Cso9DdR5CReN14c7zcLTNIcyqc+bnv5uao1nRCJZ6ASZI/4d7WMGYV0Zys1UfHlPdGFPWWbpn3jVcu+OQex5TYNpW03hFEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mz1xdeY/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="ryYyLwfo"
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-70de8897628so12658527b3.1
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 06:20:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google; t=1747833600; x=1748438400; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MdEgWSJxe9FJMYKcuUExk/aYWYfMksc/H/dM1vOfbdc=;
-        b=ryYyLwfoNXPJaY2MvqnNyIXudBs4OG+v50J2Xe6wcqlenDchiZN/pzO0I2X80w1orF
-         FcQqG0O3Rbs34fHiSmDC21K2f7XHGOvrDKEemgJBh5xL+5SrCyp4XX9LdwgkwJl0pTaG
-         VduKyZMxLFKTQoWrNlyircZo84gxp8Og7seFA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747833600; x=1748438400;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MdEgWSJxe9FJMYKcuUExk/aYWYfMksc/H/dM1vOfbdc=;
-        b=wCC6rqc/I5FBJNA3Xa4jcW3qC1lbz3SxLBURb8HG6KcUflMd95m5IB2IawktOBPXxi
-         S/IUSJ7NHKt2cNG3WN4Hs+mPVR9RmzpG8LYYHlFG3TefddvYjAXUDt1Xz/TDDv1pwd7p
-         bjU0kP3EXab16lmliYyzmL6UEQZD7WAjjLd9jRG7t2vT3zgeTX24z8GTGGLH/mCKb3Wx
-         kROMsuKUluzN3LWt0DDCHQLeJ8UUeXF+p7z58A1IxMhQrb06zHnfjHYWdg+H6AeVo/Ep
-         t6KHiBn2poWSbgFVnFnZYIqgm+/ckTMnRW1sXCMHA7jkTdRPCqtwCkjP+Z604Uy8G7Hj
-         DNbw==
-X-Gm-Message-State: AOJu0YyEeOt98LtpCxwYEmDG1Cx/b1YRtNqwwusGS9aIJYGTgOYOUUVQ
-	vKD0d2erJGyaHZnF8sTofGrIN1ZRXa7aoo4tJIPQVn8iKyIdOuZEPXcqpwbfLrZStvokCvI62a+
-	XJhPLGWLBw4epX3qUxq0EsY1bXBHlk838JVGv0Z6YvA==
-X-Gm-Gg: ASbGncvKrblZWpVA20YUxMcbEfg3RKZCHaboSHLHot3rAw9DoetpeMNPHiCSSx6uoYg
-	K/mGhZTFH1kqIcrCYcXd0I2+PrceGQ0MGdobFJY3OGSZSXCpIToeHhN3HAaJsQPR4+c4c/DaV/i
-	Twd6fxj8pQnh//gQVOg2ia1/6sDCjnUtlcD0dVcxGQ0S4NoughBAjURpENPBUQnZlAtA==
-X-Google-Smtp-Source: AGHT+IFJuZAiihHxJLr6M/kE3uYbWzRfUS/uPkbXXA+1qG7+nEsPeLqVDoAYPRojiT4pNkEEDqIrXTdm4/tlPfieZDg=
-X-Received: by 2002:a05:690c:750e:b0:70c:b90a:5c88 with SMTP id
- 00721157ae682-70cb90a5f24mr213677417b3.31.1747833600229; Wed, 21 May 2025
- 06:20:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mz1xdeY/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24134C4CEE4;
+	Wed, 21 May 2025 13:20:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747833653;
+	bh=QV4yK2hdnVnPbG4+FrwDEmlzNcQ54yHXdjN0E1nJArg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mz1xdeY/QPHCQbpqW9YLMXj3bxMFPssdJH0C0K4GT/BUMmGTR93G0dgcis8DMBozs
+	 YP/b8B2bWkXH60z94+TQqwmsGm8EGUJWwqHuZAkdGKzGvKAyjteKhGt6wRYNV8FO1e
+	 D9jHd2m+QL7iRIVq5PlMru57TVJOvDsQWpaWxpfJsN1DOMBImxx1XNCjWyDCJZW7ZC
+	 qXtl8M49PS/HmPEyyZa+ak/8H+1qaASVYLxEAcvWa2SuSxP3hdX6RuCgCtz/JlU0cs
+	 qePwY7H6A8GENPHxze8c1fs3U32wvtz+q79I1SiiV7eXXKYtTdbgXg6CQQr0uIZt83
+	 S8G/9xtNsJtPQ==
+Date: Wed, 21 May 2025 10:20:50 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Gautam Menghani <gautam@linux.ibm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, maddy@linux.ibm.com
+Subject: Re: [PATCH v3 4/7] perf python: Add support for perf_counts_values
+ to return counter data
+Message-ID: <aC3TMl2MJL1_BASE@x1>
+References: <20250519195148.1708988-1-irogers@google.com>
+ <20250519195148.1708988-5-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250521092826.1035448-1-dario.binacchi@amarulasolutions.com>
- <20250521092826.1035448-4-dario.binacchi@amarulasolutions.com> <CAOMZO5D-d7bmBfXKe936W5QjmsukRRX3y0ge+xtizqFx0HPE8A@mail.gmail.com>
-In-Reply-To: <CAOMZO5D-d7bmBfXKe936W5QjmsukRRX3y0ge+xtizqFx0HPE8A@mail.gmail.com>
-From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-Date: Wed, 21 May 2025 15:19:48 +0200
-X-Gm-Features: AX0GCFtbBN2xKHFMu-Zp69Kj64qn-x6_0NKQbUd_en3T7Wa4I2aai6e9qO1zzuQ
-Message-ID: <CABGWkvpPMry26DP4Wo8WEGhokdkf5GdLd=+O5SqRdh-8JBqt_w@mail.gmail.com>
-Subject: Re: [PATCH 3/3] ARM: dts: mxs: support i.MX28 Amarula rmm board
-To: Fabio Estevam <festevam@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com, 
-	michael@amarulasolutions.com, Conor Dooley <conor+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Rob Herring <robh@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250519195148.1708988-5-irogers@google.com>
 
-Hi Fabio,
+On Mon, May 19, 2025 at 12:51:41PM -0700, Ian Rogers wrote:
+> From: Gautam Menghani <gautam@linux.ibm.com>
+> 
+> Add support for perf_counts_values struct to enable the python
+> bindings to read and return the counter data.
 
-On Wed, May 21, 2025 at 1:40=E2=80=AFPM Fabio Estevam <festevam@gmail.com> =
-wrote:
->
-> Hi Dario,
->
-> On Wed, May 21, 2025 at 6:28=E2=80=AFAM Dario Binacchi
-> <dario.binacchi@amarulasolutions.com> wrote:
-> >
-> > The board includes the following resources:
-> >  - 256 Mbytes NAND Flash
-> >  - 256 Mbytes SRAM
->
-> SRAM or DDR?
+This (and another one in this series) are coming from Ian, that didn't
+modify them, so we need a Signed-off-by: Ian, as per:
 
-Sorry, DRAM DDR2
+Documentation/process/submitting-patches.rst
 
->
-> >  - LCD-TFT controller
->
-> The LCD support is not described in the dts.
+---
+Any further SoBs (Signed-off-by:'s) following the author's SoB are from
+people handling and transporting the patch, but were not involved in its
+development. SoB chains should reflect the **real** route a patch took
+as it was propagated to the maintainers and ultimately to Linus, with
+the first SoB entry signalling primary authorship of a single author.
+---
 
-Yes, you're right.
-The board has been in use for a long time with a 4.19 kernel. We recently b=
-umped
-it to the LTS version 6.6.69. However, for now we've had to revert commit
-f225f1393f034 ("video: fbdev: mxsfb: Remove driver") along with other
-custom changes
-to reproduce the correct display behavior in the field. That's why we
-haven't described
-the LCD panel yet.
-We'd like to add it only after we get it working without needing to
-apply non-mainline patches.
+I'm adding them to my local branch, please ack this,
 
-The same goes for the sound, which is neither mentioned in the commit
-description nor in the DTS.
+Thanks,
 
-So if you're okay with it, I will remove all references to the LCD
-display =E2=80=94 both from the commit
-message and from the DTS, such as the reset pin, for example.
-
->
-> > +/ {
-> > +       model =3D "Amarula i.MX28 rmm";
-> > +       compatible =3D "amarula,imx28-rmm", "fsl,imx28";
-> > +
-> > +       memory@40000000 {
-> > +               device_type =3D "memory";
-> > +               reg =3D <0x40000000 0x08000000>;
->
-> In the commit log, you say 256 MB, but here we have 128 MB.
-
-We have two models, one with 128MB and one with 256MB of RAM.
-What's the recommended way to handle both cases?
-Should I define a new DTS file named imx28-amarula-rmm-256mb.dts
-that includes imx28-amarula-rmm.dts and override the reg property of
-the memory node?
-
->
-> > +&i2c0 {
-> > +       pinctrl-names =3D "default";
-> > +       pinctrl-0 =3D <&i2c0_pins_a>;
-> > +       status =3D "okay";
-> > +
-> > +       polytouch: edt-ft5x06@38 {
->
-> Node names should be generic: touchscreen@38
-
-Ok
-
->
-> > +
-> > +&pinctrl {
-> > +       pinctrl-names =3D "default";
-> > +       pinctrl-0 =3D <&hog_pins_a>;
-> > +
-> > +       hog_pins_a: hog-0 {
-> > +               reg =3D <0>;
-> > +               fsl,pinmux-ids =3D <
-> > +                       MX28_PAD_LCD_RESET__GPIO_3_30 /* LCD reset */
-> > +                       MX28_PAD_SSP2_SS1__GPIO_2_20  /* External power=
- */
->
-> Proper panel bindings should better describe these pins than hog pins.
-
-I will drop the LCD reset pin.
-
-Thanks and regards,
-Dario
-
->
-> Do you plan to add display support?
-
-
-
---=20
-
-Dario Binacchi
-
-Senior Embedded Linux Developer
-
-dario.binacchi@amarulasolutions.com
-
-__________________________________
-
-
-Amarula Solutions SRL
-
-Via Le Canevare 30, 31100 Treviso, Veneto, IT
-
-T. +39 042 243 5310
-info@amarulasolutions.com
-
-www.amarulasolutions.com
+- Arnaldo
+ 
+> Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
+> ---
+>  tools/perf/util/python.c | 92 +++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 91 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> index ead3afd2d996..1cbddfe77c7c 100644
+> --- a/tools/perf/util/python.c
+> +++ b/tools/perf/util/python.c
+> @@ -626,6 +626,92 @@ static int pyrf_thread_map__setup_types(void)
+>  	return PyType_Ready(&pyrf_thread_map__type);
+>  }
+>  
+> +struct pyrf_counts_values {
+> +	PyObject_HEAD
+> +
+> +	struct perf_counts_values values;
+> +};
+> +
+> +static const char pyrf_counts_values__doc[] = PyDoc_STR("perf counts values object.");
+> +
+> +static void pyrf_counts_values__delete(struct pyrf_counts_values *pcounts_values)
+> +{
+> +	Py_TYPE(pcounts_values)->tp_free((PyObject *)pcounts_values);
+> +}
+> +
+> +#define counts_values_member_def(member, ptype, help) \
+> +	{ #member, ptype, \
+> +	  offsetof(struct pyrf_counts_values, values.member), \
+> +	  0, help }
+> +
+> +static PyMemberDef pyrf_counts_values_members[] = {
+> +	counts_values_member_def(val, Py_T_ULONG, "Value of event"),
+> +	counts_values_member_def(ena, Py_T_ULONG, "Time for which enabled"),
+> +	counts_values_member_def(run, Py_T_ULONG, "Time for which running"),
+> +	counts_values_member_def(id, Py_T_ULONG, "Unique ID for an event"),
+> +	counts_values_member_def(lost, Py_T_ULONG, "Num of lost samples"),
+> +	{NULL}
+> +};
+> +
+> +static PyObject *pyrf_counts_values_get_values(struct pyrf_counts_values *self, void *closure)
+> +{
+> +	PyObject *vals = PyList_New(5);
+> +
+> +	if (!vals)
+> +		return NULL;
+> +	for (int i = 0; i < 5; i++)
+> +		PyList_SetItem(vals, i, PyLong_FromLong(self->values.values[i]));
+> +
+> +	return vals;
+> +}
+> +
+> +static int pyrf_counts_values_set_values(struct pyrf_counts_values *self, PyObject *list,
+> +					 void *closure)
+> +{
+> +	Py_ssize_t size;
+> +	PyObject *item = NULL;
+> +
+> +	if (!PyList_Check(list)) {
+> +		PyErr_SetString(PyExc_TypeError, "Value assigned must be a list");
+> +		return -1;
+> +	}
+> +
+> +	size = PyList_Size(list);
+> +	for (Py_ssize_t i = 0; i < size; i++) {
+> +		item = PyList_GetItem(list, i);
+> +		if (!PyLong_Check(item)) {
+> +			PyErr_SetString(PyExc_TypeError, "List members should be numbers");
+> +			return -1;
+> +		}
+> +		self->values.values[i] = PyLong_AsLong(item);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static PyGetSetDef pyrf_counts_values_getset[] = {
+> +	{"values", (getter)pyrf_counts_values_get_values, (setter)pyrf_counts_values_set_values,
+> +		"Name field", NULL},
+> +	{NULL}
+> +};
+> +
+> +static PyTypeObject pyrf_counts_values__type = {
+> +	PyVarObject_HEAD_INIT(NULL, 0)
+> +	.tp_name	= "perf.counts_values",
+> +	.tp_basicsize	= sizeof(struct pyrf_counts_values),
+> +	.tp_dealloc	= (destructor)pyrf_counts_values__delete,
+> +	.tp_flags	= Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,
+> +	.tp_doc		= pyrf_counts_values__doc,
+> +	.tp_members	= pyrf_counts_values_members,
+> +	.tp_getset	= pyrf_counts_values_getset,
+> +};
+> +
+> +static int pyrf_counts_values__setup_types(void)
+> +{
+> +	pyrf_counts_values__type.tp_new = PyType_GenericNew;
+> +	return PyType_Ready(&pyrf_counts_values__type);
+> +}
+> +
+>  struct pyrf_evsel {
+>  	PyObject_HEAD
+>  
+> @@ -1475,7 +1561,8 @@ PyMODINIT_FUNC PyInit_perf(void)
+>  	    pyrf_evlist__setup_types() < 0 ||
+>  	    pyrf_evsel__setup_types() < 0 ||
+>  	    pyrf_thread_map__setup_types() < 0 ||
+> -	    pyrf_cpu_map__setup_types() < 0)
+> +	    pyrf_cpu_map__setup_types() < 0 ||
+> +	    pyrf_counts_values__setup_types() < 0)
+>  		return module;
+>  
+>  	/* The page_size is placed in util object. */
+> @@ -1520,6 +1607,9 @@ PyMODINIT_FUNC PyInit_perf(void)
+>  	Py_INCREF(&pyrf_cpu_map__type);
+>  	PyModule_AddObject(module, "cpu_map", (PyObject*)&pyrf_cpu_map__type);
+>  
+> +	Py_INCREF(&pyrf_counts_values__type);
+> +	PyModule_AddObject(module, "counts_values", (PyObject *)&pyrf_counts_values__type);
+> +
+>  	dict = PyModule_GetDict(module);
+>  	if (dict == NULL)
+>  		goto error;
+> -- 
+> 2.49.0.1101.gccaa498523-goog
