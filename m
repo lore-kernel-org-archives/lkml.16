@@ -1,119 +1,250 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B73F5143736;
-	Wed, 21 May 2025 13:32:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ED9027C863
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 13:32:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747834325; cv=none; b=AUWguNIiVdDaoeE0NwnneT/cAF9tzsKRnJSZFd/KFXYBaYviJV2lBjK/QgcMvFHV0+AZ7Jbgku2JZmC5QBj+Mp4g6FLVaPIFvMZMQGmdHG9f7+TgNrVFxobdnCE8jT0/952NEF5fk6cCyXMtF2R5S+zb8z7vusVazZ+9jGGlJt8=
+	t=1747834332; cv=none; b=QG3oe+UQfM1n1YzoLuurOxdRhG9GWzg4rVhcPM+MkENaOQnWTx61RG5nklHlbWDV9tBlPbK95DeYt5dFff7blwrQV5mB1qozcjdM4v1hzzUJd//T34LAc/JlnSJPYYNuAHuV2YlsiMDed8+Hkj6vX7mrnvFN17SJStpxIB1Kb+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747834325; c=relaxed/simple;
-	bh=/FsSlEZy/VBCUtb/31R15GrZDGOqgK8m6NqUVCZ20Lk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RNMkWJHuf+Hy8BFF60Ho8xBijHa6KBx2CcXwgmv0XH1cM67ghP40oAQKz168iv4GSXV3qPCCpyH7j0KhjJpths2NlwZAEoaSfrPLp7PjBbr/4z/fvaqw8KzneEfA8CsZbhUh2vNpujfUvxebPHIYHCTJCr9lLAJiqOycHWe+qGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YLGH/6iw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747834332; c=relaxed/simple;
+	bh=NsgWVYIVCZt03Z+/FjuPKG0apM0JOgVnAzS+yvOjUo4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h3tNa/a6FagHXvetaCCu6oxVQjdkJA4YFuDL47FZSYI/q/cr2A6+Z1za3R7EqTDIzMOlu2n92kct7VKBQFNbdjA/MCWIipNkj8daJBQ9fqzB99NdihjKXTPLih+/KTSYVDQbiMS8BVNw+e+Cm5CKdHODFF7vXHUNeAbt41xxhH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=lNBfg775; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=jE/36a9A; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=V/XrrZNn; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Nz8vuZpn; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YLGH/6iw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DCC9C4CEE7;
-	Wed, 21 May 2025 13:32:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747834325;
-	bh=/FsSlEZy/VBCUtb/31R15GrZDGOqgK8m6NqUVCZ20Lk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=YLGH/6iwjwlIKo874qFI/O84bg3L6HViI3AJTQS4Yrlt4iBrZEjrvLc7483lGqxH8
-	 zeF4iC9PReqCfIbS8yub44JWF7VmCTMi3lQsJ+DdDprn8EjZZ1pEkRtpV7OItwu9u1
-	 UffThRo3D16xjDL1uIH6KzcR7g/5q62LUVqN2jdM7JKKSxXj9L7hK+cFLfaHDu8C9f
-	 f+wikRs+KgiJ91DiTZl+nJEPqNtvTQ6gs3C8Exii9SOfDjuennUdIErvaw/6g6JCA+
-	 qz6pihEks38sAG7AsQKGEdqLd27jdDn8pvFJBmhxrPlUvrXfjL60uCAABPe8hTqIL4
-	 2+nf8Asn5ECZA==
-Message-ID: <c33a23c6-9883-4f3e-b2e3-6442ca90a7b8@kernel.org>
-Date: Wed, 21 May 2025 15:32:01 +0200
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="lNBfg775";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="jE/36a9A";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="V/XrrZNn";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Nz8vuZpn"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 36507337F6;
+	Wed, 21 May 2025 13:32:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747834328; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nJNiWFvwBFXo0EFgpeAs+JtNoelOy/ITO4unDPZL+PA=;
+	b=lNBfg775/t9gNMm5eTRzzTW+sNb7tz7wp7yW0g0+8vqYxIGpP5uzlYcDYe+EGtO/65iGp9
+	kKBwMQda0hoeUNOgWGwfH7goYzVhe6H33d93aJE622DgddU6VA6rQt1DJrmURm4zjc026d
+	j1djAVUFx7yggtTOkivvRs0GmQOrJPg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747834328;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nJNiWFvwBFXo0EFgpeAs+JtNoelOy/ITO4unDPZL+PA=;
+	b=jE/36a9AfJT+XI34M073LiBW6Wr36u0PLwAPrb1XWDevJuGzjWRH6rtPs9SUnLUSlzhBaX
+	VAWeRJYRSKAXwTDg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="V/XrrZNn";
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=Nz8vuZpn
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747834327; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nJNiWFvwBFXo0EFgpeAs+JtNoelOy/ITO4unDPZL+PA=;
+	b=V/XrrZNnxUQRLPH4davKNb79TiSS68XnxISaOTfSAJu4XuXpZKXYlIR1N9FtqlRgXCDrAV
+	wWabWoF/kG86xTsV0fO6y/pF5goyoV/mtGMJB/rBNXil2Jz7VGMf6UtGnYhOUW7Obo9qQA
+	t1Bg5q2X9ognBjdvmLtUc3LQj6wOWFg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747834327;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nJNiWFvwBFXo0EFgpeAs+JtNoelOy/ITO4unDPZL+PA=;
+	b=Nz8vuZpnKjOZxTTrwd6Y4POPElKu5cEifobVkDd5d92Za41tHQVUloJOcimO7bSWmtIYF3
+	L9hQ3GMPfIcTyfAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E634013888;
+	Wed, 21 May 2025 13:32:06 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id xy1hN9bVLWi2BQAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Wed, 21 May 2025 13:32:06 +0000
+Date: Wed, 21 May 2025 15:32:05 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	virtualization@lists.linux.dev,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Brendan Jackman <jackmanb@google.com>,
+	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>
+Subject: Re: [PATCH v2 1/1] mm/memory_hotplug: PG_offline_skippable for
+ offlining memory blocks with PageOffline pages
+Message-ID: <aC3V1Sr7rGqqgLzW@localhost.localdomain>
+References: <20250520164216.866543-1-david@redhat.com>
+ <20250520164216.866543-2-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/5] ARM: dts: vt8500: Minor fixups and L2 cache on
- WM8850
-To: Alexey Charkov <alchark@gmail.com>, Rob Herring <robh@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250515-wmt-dts-updates-v2-0-246937484cc8@gmail.com>
- <CABjd4YwoVRpJEMss8UN6xT9x4hf6GSjm34GtTHmmnHi8Q42DAQ@mail.gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <CABjd4YwoVRpJEMss8UN6xT9x4hf6GSjm34GtTHmmnHi8Q42DAQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250520164216.866543-2-david@redhat.com>
+X-Spamd-Result: default: False [-6.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	DWL_DNSWL_MED(-2.00)[suse.de:dkim];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim]
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: -6.51
+X-Rspamd-Queue-Id: 36507337F6
+X-Spam-Level: 
+X-Spam-Flag: NO
 
-On 21/05/2025 15:28, Alexey Charkov wrote:
-> On Thu, May 15, 2025 at 11:39 PM Alexey Charkov <alchark@gmail.com> wrote:
->>
->> Small fixups for VT8500 related device trees to improve correctness in
->> light of current guidelines.
->>
->> While at that, also include a DT node for the PL310 cache controller
->> present in WM8850/WM8950.
->>
->> Signed-off-by: Alexey Charkov <alchark@gmail.com>
->> ---
->> Alexey Charkov (5):
->>       ARM: dts: vt8500: Add node address and reg in CPU nodes
->>       ARM: dts: vt8500: Move memory nodes to board dts and fix addr/size
->>       ARM: dts: vt8500: Use generic node name for the SD/MMC controller
->>       ARM: dts: vt8500: Fix the unit address of the VT8500 LCD controller
->>       ARM: dts: vt8500: Add L2 cache controller on WM8850/WM8950
+On Tue, May 20, 2025 at 06:42:11PM +0200, David Hildenbrand wrote:
+> A long-term goal is supporting frozen PageOffline pages, and later
+> PageOffline pages that don't have a refcount at all. Some more work for
+> that is needed -- in particular around non-folio page migration and
+> memory ballooning drivers -- but let's start by handling PageOffline pages
+> that can be skipped during memory offlining differently.
 > 
-> Krzysztof, could you please pick these up for 6.16?
+> Note that PageOffline is used to mark pages that are logically offline
+> in an otherwise online memory block (e.g., 128 MiB). If a memory
+> block is offline, the memmap is considered compeltely uninitialized
+> and stale (see pfn_to_online_page()).
+> 
+> Let's introduce a PageOffline specific page flag (PG_offline_skippable)
+> that for now reuses PG_owner_2. In the memdesc future, it will be one of
+> a small number of per-memdesc flags stored alongside the type.
+> 
+> By setting PG_offline_skippable, a driver indicates that it can
+> restore the PageOffline state of these specific pages when re-onlining a
+> memory block: it knows that these pages are supposed to be PageOffline()
+> without the information in the vmemmap, so it can filter them out and
+> not expose them to the buddy -> they stay PageOffline().
+> 
+> While PG_offline_offlineable might be clearer, it is also super
+> confusing. Alternatives (PG_offline_sticky?) also don't quite feel right.
+> So let's use "skippable" for now.
+> 
+> The flag is not supposed to be used for movable PageOffline pages as
+> used for balloon compaction; movable PageOffline() pages can simply be
+> migrated during the memory offlining stage, turning the migration
+> destination page PageOffline() and turning the migration source page
+> into a free buddy page.
+> 
+> Let's convert the single user from our MEM_GOING_OFFLINE approach
+> to the new PG_offline_skippable approach: virtio-mem. Fortunately,
+> this simplifies the code quite a lot. The only corner case we have to
+> take care of is when force-unloading the virtio-mem driver: we have to
+> prevent partially-plugged memory blocks from getting offlined by
+> clearing PG_offline_skippable again.
+> 
+> What if someone decides to grab a reference on these pages although they
+> really shouldn't? After all, we'll now keep the refcount at 1 (until we
+> can properly stop using the refcount completely).
+> 
+> Well, less worse things will happen than would currently: currently,
+> if someone would grab a reference to these pages, in MEM_GOING_OFFLINE
+> we would run into the
+> 		if (WARN_ON(!page_ref_dec_and_test(page)))
+> 			dump_page(page, "fake-offline page referenced");
+> 
+> And once that unexpected reference would get dropped, we would end up
+> freeing that page to the buddy: ouch.
+> 
+> Now, we'll allow for offlining that memory, and when that unexpected
+> reference would get dropped, we would not end up freeing that page to
+> the buddy. Once we have frozen PageOffline() pages, it will all get a
+> lot cleaner.
+> 
+> Note that we didn't see the existing WARN_ON so far, because nobody
+> should ever be referencing such pages.
+> 
+> An alternative might be to have another callback chain from memory hotplug
+> code, where a driver that owns that page could agree to skip the
+> PageOffline() page. However, we would have to repeatedly issue these
+> callbacks for individual PageOffline() pages, which does not sound
+> compelling. As we have spare bits, let's use this simpler approach for
+> now.
+> 
+> Acked-by: Zi Yan <ziy@nvidia.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-No, we are at RC7. I closed my tree two weeks ago and sent pull requests
-already way too late - a week ago.
+Hi David, sorry for jumping in late
 
-Best regards,
-Krzysztof
+> @@ -1157,6 +1083,7 @@ static void virtio_mem_set_fake_offline(unsigned long pfn,
+>  			SetPageDirty(page);
+>  		else
+>  			__SetPageOffline(page);
+> +		__SetPageOfflineSkippable(page);
+>  		VM_WARN_ON_ONCE(!PageOffline(page));
+
+I think I am having some issues understanding this, let me see if I get
+it.
+
+- virtio-mem defines PageOffline pages, which are logically-offlined
+  pages within an onlined memory-block
+- PageOffline pages have a refcount of '0' once they are properly
+  initialized, meaning that refcount > 0 implies somebody is holding
+  a refcount and that should not really happen
+- logically-offline pages belonging to onlined memory-blocks are marked PageDirty,
+  while logically-offlined pages we allocated via alloc_contig_range are marked
+  PageOffline (I am getting a bit lost between fake-online, fake-offline, my fault)
+- If we want to release logically-offline pages belonging to an onlined memory-block,
+  we ClearDirty them and be done
+- If we want to release logically-offlined pages belonging we allocated
+  via alloc_contig_range, we clear PageOffline and be done
+- PageOfflineSkipabble are unmovable PageOffline pages, which cannot be
+  migrated? 
+- So for a PageOffline to be able to be migrated away must be Movable or
+  marked PageOfflineSkipabble, making do_migrate_range ignore it
+- PageOfflineSkipabble will be marked PageOffline upon re-onlining? Will
+  still be marked as PageOfflineSkipabble?
+
+> +
+> +		/*
+> +		 * Only PageOffline() pages that are marked "skippable" cannot
+> +		 * be migrated but can be skipped when offlining. See
+
+It is probably me, and nevermind the comment but I somehow find
+"PageOfflineSkipabble are not migrated but skipped when offlining" a bit
+easier.
+
+ 
+
+-- 
+Oscar Salvador
+SUSE Labs
