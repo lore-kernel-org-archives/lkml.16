@@ -1,118 +1,118 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 573A11D8E07
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 08:46:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A1922367B2
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 08:47:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747817204; cv=none; b=YCDgbabeZgRCgjuTmaRKaUcBVXngVvMxDyASnN06RnIkT7kWocYE4SdI7r8+cNw0nypHPyt9wZk5EU925TdK6u3HOKEHnF0GC8oLUb4bzNNxxAfR2cHzYxW7V36Po2STybASPykFzx3z8PjMqsHp8Hg0dp/splnqNy9GtOvu+RA=
+	t=1747817254; cv=none; b=el1wNXX3pIwp1abcXl/jjLMenYQx205jyQ5+rOjtYmxQFHoVe3q7MIhLb/gcByV6j/qGVDVuxuMiDvdAbRDO30tMmjdrrkl4so5SX4xYCgUx60beB/DE8LN+FKnv+rkrDQNrYEXVVjFM+fMAt0ClT6aJcvC65VrzXkUvncsgjbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747817204; c=relaxed/simple;
-	bh=WnhL7uoBNqMZ3Cbebs3yyWF/yxiYNx9JjYSDc3RKJZs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
-	 References; b=QWYtbwRCTP7aMQYGjRcdCLjdHZSRqQ4+cMMw4ciACPUjj/r/8y3d/rV2Oovo6ybMvwWAMGKjCxnnN6V+q7MReqNZvkK0x93gWbLVQwJRywz0xMYc/e2VCEFC9A397Fe/UcZb/CtvMw7VxbJnjdhRu7uFf7guIvY6Jct2mB66XdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=GCwY3wbF; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1747817254; c=relaxed/simple;
+	bh=Vum0oqAC+JTXMo2IPeqOsM3O2/5b5k4lLi0I4ejYeUE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=DVrkY2qoMhJjt5ixCmCfa8EShwV1jHzUP01OLKwGLNCooPO/JDsFHTiUehE+EfADP4S10KO7Owtudk2o1N4FrUraianWUy15X849JwM+Lhiz8ueGfRvGvtIK/J2S4DXJlhgvs+Mh/IgmADngiAuVYOq5lL8Y7Aove7qeZXCMHjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=O0wWe6xu; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="GCwY3wbF"
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250521084639epoutp02ec0de7adb51f5f8bcebae9a42df3d89a~BfnuJUXI12633426334epoutp026
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 08:46:39 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250521084639epoutp02ec0de7adb51f5f8bcebae9a42df3d89a~BfnuJUXI12633426334epoutp026
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1747817199;
-	bh=shbECNWSz86NpuLRg7p7TU1AfWaNOBZLxT9Qlix0Iyw=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=GCwY3wbFiUvS5MlwKmYAu0tp1ZNdGfc87EuGYRJHtZlkST5CnseL2oNkdSq4+QN97
-	 oKeMm+4LNou75HPrEmdOAixUL7t+tBXZLLDQY6IMksv4yHwyO7PpIZszpOdFK+N9+U
-	 XTVW+Ym4mUPFt0oVkHEg2Y2R8iGkC2V3+OsDVq6g=
-Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
-	20250521084638epcas5p3c250d169b4a59ed73f9af721159bd62c~BfntdVWms0169101691epcas5p3Q;
-	Wed, 21 May 2025 08:46:38 +0000 (GMT)
-Received: from epcas5p2.samsung.com (unknown [182.195.38.183]) by
-	epsnrtp01.localdomain (Postfix) with ESMTP id 4b2Q572nhDz6B9mH; Wed, 21 May
-	2025 08:46:35 +0000 (GMT)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250521083341epcas5p243dac11e4c5f2221473b8df8c3d7f060~BfcZpYq3P0049100491epcas5p2Q;
-	Wed, 21 May 2025 08:33:41 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250521083341epsmtrp15d2cf9fc5d29a621b7b9c91d2dda336e~BfcZffJTZ0709607096epsmtrp1L;
-	Wed, 21 May 2025 08:33:41 +0000 (GMT)
-X-AuditID: b6c32a52-f0cb424000004c16-ba-682d8fe55e25
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	5C.15.19478.5EF8D286; Wed, 21 May 2025 17:33:41 +0900 (KST)
-Received: from bose.samsungds.net (unknown [107.108.83.9]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250521083339epsmtip19122db928827b44efd1a728582b64fef~BfcXjjrho0917109171epsmtip1M;
-	Wed, 21 May 2025 08:33:39 +0000 (GMT)
-From: Faraz Ata <faraz.ata@samsung.com>
-To: andi.shyti@kernel.org, tudor.ambarus@linaro.org, broonie@kernel.org,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org
-Cc: linux-spi@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	alim.akhtar@samsung.com, rosa.pila@samsung.com, dev.tailor@samsung.com,
-	faraz.ata@samsung.com
-Subject: [PATCH v1] dt-bindings: spi: samsung: add exynosautov920-spi
- compatible
-Date: Wed, 21 May 2025 14:13:24 +0530
-Message-Id: <20250521084324.2759530-1-faraz.ata@samsung.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="O0wWe6xu"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id D652243212;
+	Wed, 21 May 2025 08:47:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1747817250;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=dbNkpN9tvCI3cQTDcf6zqNVW0pUx2ezrzHjvqif17ck=;
+	b=O0wWe6xuQyx8V44slil22KruQ1AZuaM03OtCG0w9Nw+wUYXTyxAsdjqjEuVCJky/yoWXso
+	3UGcfxY+HnAO6IM4zpx2inLesVRXZIUO7hR16fWM/1jyfNRpmUqCcJ1mAE+/YRkRp3VHd8
+	rlssfx2ieLcLYravSiWw3Z4k/S/zATKkDeoyAJjg5KjnoIn714p6Egubolk3X6JcDycQRB
+	/HiQHkPHzGzi/d1P7UpoEARjq8FzJ8SZtmo8KC8HsXKoR7QMvruTzjwy6bjDOWi7FDezSQ
+	kFEVvWHr5C4/WHYp2qn5PORaKo0C6x0fU4N28XvNsWtLHzuRIwuwTYWGBgcrtA==
+From: Romain Gantois <romain.gantois@bootlin.com>
+Date: Wed, 21 May 2025 10:47:24 +0200
+Subject: [PATCH] regulator: core: do not ignore repeated requests on
+ stepped regulators
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrBLMWRmVeSWpSXmKPExsWy7bCSnO7Tft0Mg5nbBS0ezNvGZnH/awej
-	xdSHT9gs1uw9x2Rxb8cydov5R86xWly7sZDd4uWse2wWl3fNYbOYcX4fk0Xjx5vsFv/37GC3
-	+PLzAbPFp1txDnwem1Z1snncubaHzaNvyypGj8+b5AJYorhsUlJzMstSi/TtErgy5q7cz1iw
-	nq2icc5elgbGPtYuRk4OCQETiW+nHrF0MXJxCAlsZ5Q4tXonC0RCUuLw07tQRcISK/89Zwex
-	hQTeMko0HY8GsdkE1CVm3jgC1iwi0M0o0T/jEDOIwyzwnFHi+KY/TCBVwgIBErubfgNVcXCw
-	CKhKnJ8dChLmFbCRuLSthR1igbzE/oNnmSHighInZz4BO4IZKN68dTbzBEa+WUhSs5CkFjAy
-	rWIUTS0ozk3PTS4w1CtOzC0uzUvXS87P3cQIDmytoB2My9b/1TvEyMTBeIhRgoNZSYQ3doVO
-	hhBvSmJlVWpRfnxRaU5q8SFGaQ4WJXFe5ZzOFCGB9MSS1OzU1ILUIpgsEwenVANTp5GChMFE
-	PRsu8f3Nkzh1L946LZd4Pz/8zJtMxSI/8zihlN9K7V+/5J76Oi942s+ShU5iqSqhws/ZzDaX
-	pXl4ekTGeNlU2cpEd0+NS/xj9LvFYdKmPyuf+h3lOpthuzTszPEfx3tLU8wC8u6vvW7L+6mZ
-	x5Kj3DrzQUNgybPFRwV5LQVluWKMWTgPhbMyhRy4+iPxto2wQYn6I283kSAlBY77T26wX7m6
-	hs3L7sJ3GQuO140FJ/8fi9+5yvuYRsLBt2U84fqLtWbPPT3XfmVtbfLyg/9MjAvWfGb2F5+3
-	0KI0OZaFyb9auDxPbXkx8/H2TEaz7b6N30+5v7HujS5ptVutvr/hs3fb3h+nlViKMxINtZiL
-	ihMBSxZgnNsCAAA=
-X-CMS-MailID: 20250521083341epcas5p243dac11e4c5f2221473b8df8c3d7f060
-X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-cpgsPolicy: CPGSC10-542,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250521083341epcas5p243dac11e4c5f2221473b8df8c3d7f060
-References: <CGME20250521083341epcas5p243dac11e4c5f2221473b8df8c3d7f060@epcas5p2.samsung.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250521-regulator-stepping-v1-1-b681ad012c0f@bootlin.com>
+X-B4-Tracking: v=1; b=H4sIAByTLWgC/x3MQQqAIBBA0avErBtQy0VdJVpYTjYQJmNFEN09a
+ fkW/z+QSZgy9NUDQhdn3mOBriuYVxcDIftiMMpYZY1GoXBu7tgF80EpcQyop8XPTUtWNR2UMAk
+ tfP/TYXzfD049+pRkAAAA
+X-Change-ID: 20250521-regulator-stepping-1bfdc34e5039
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ linux-kernel@vger.kernel.org, Romain Gantois <romain.gantois@bootlin.com>
+X-Mailer: b4 0.14.2
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvieegucdltddurdegfedvrddttddmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkvfevofesthejredtredtjeenucfhrhhomheptfhomhgrihhnucfirghnthhoihhsuceorhhomhgrihhnrdhgrghnthhoihhssegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeefkeduiefhhfefieffvddtudfhgeduheeivdfgueevkeegkeejuddvleejudetieenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduledvrdduieekrddtrddufegnpdhmrghilhhfrhhomheprhhomhgrihhnrdhgrghnthhoihhssegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeehpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtoheprhhomhgrihhnrdhgrghnthhoihhssegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhgihhrugifohhougesghhmrghilhdrtghomhdpr
+ hgtphhtthhopegsrhhoohhnihgvsehkvghrnhgvlhdrohhrgh
+X-GND-Sasl: romain.gantois@bootlin.com
 
-Add "samsung,exynosautov920-spi" dedicated compatible for
-SPI found in ExynosAutov920 SoC.
+Currently, the regulator_set_voltage() function will assume a noop if a
+consumer requests the same voltage range twice in a row.
 
-Signed-off-by: Faraz Ata <faraz.ata@samsung.com>
+This can lead to unexpected behavior if the target regulator has a maximum
+voltage step constraint. With such constraints, the regulator core may
+clamp the requested voltage to a lesser value, to ensure that the voltage
+delta stays under the specified limit.
+
+This means that the resulting regulator voltage depends on the current
+voltage, as well as the requested range, which invalidates the assumption
+that a repeated request for a specific voltage range will amount to a noop.
+
+Considering the case of a regulator with a maximum voltage step constraint
+of 1V:
+
+initial voltage: 2.5V
+
+consumer requests 4V
+expected result: 3.5V
+resulting voltage: 3.5V
+
+consumer requests 4V again
+expected result: 4V
+actual result: 3.5V
+
+Do not ignore repeated calls to regulator_set_voltage() if the regulator
+has a voltage step constraint.
+
+Signed-off-by: Romain Gantois <romain.gantois@bootlin.com>
 ---
- Documentation/devicetree/bindings/spi/samsung,spi.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/regulator/core.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/spi/samsung,spi.yaml b/Documentation/devicetree/bindings/spi/samsung,spi.yaml
-index 3c206a64d60a..fe298d47b1a9 100644
---- a/Documentation/devicetree/bindings/spi/samsung,spi.yaml
-+++ b/Documentation/devicetree/bindings/spi/samsung,spi.yaml
-@@ -29,6 +29,7 @@ properties:
-       - items:
-           - enum:
-               - samsung,exynos8895-spi
-+              - samsung,exynosautov920-spi
-           - const: samsung,exynos850-spi
-       - const: samsung,exynos7-spi
-         deprecated: true
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index 7a248dc8d2e2ffd21e7daf729de9b33a5efc1937..4196b1d79fd53bfdd2d8e780272f5037d5ddab0e 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -3810,8 +3810,13 @@ static int regulator_set_voltage_unlocked(struct regulator *regulator,
+ 	/* If we're setting the same range as last time the change
+ 	 * should be a noop (some cpufreq implementations use the same
+ 	 * voltage for multiple frequencies, for example).
++	 *
++	 * This isn't true for regulator devices with a "max_uV_step"
++	 * constraint, as they can progressively step their voltage with each
++	 * subsequent request.
+ 	 */
+-	if (voltage->min_uV == min_uV && voltage->max_uV == max_uV)
++	if (voltage->min_uV == min_uV && voltage->max_uV == max_uV &&
++	    !rdev->constraints->max_uV_step)
+ 		goto out;
+ 
+ 	/* If we're trying to set a range that overlaps the current voltage,
+
+---
+base-commit: a02c7665c216471413ed5442637a34364221e91c
+change-id: 20250521-regulator-stepping-1bfdc34e5039
+
+Best regards,
 -- 
-2.34.1
+Romain Gantois <romain.gantois@bootlin.com>
 
