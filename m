@@ -1,93 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B4421ABB9;
-	Wed, 21 May 2025 08:37:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47990199EAF
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 08:39:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747816640; cv=none; b=IfkkpYNBaWveK2P04ZWiq99nVPHf5SyvXHGLV5pjvW4LZyBM+UZuIgkZz2ZMOi+1DZMLRXBx7Pz1C3KrbqCzASe6D9UnFGVLYIyLyNqdl5fan12S5yn9WFKtl+Z8LBfZ+Wn1TCU1DqQsoFB2xzABlwTjGqq/JgmYXav8N232xIQ=
+	t=1747816745; cv=none; b=R0FnGpcT6zdAI1zUiBHNSGU4P82rBK4KYAtFJvOAhWX47iFALGwopDGd44tfH0OK/TMHtd6Y2opBbruJWDGCPhsoUcBv+21wuE3NTsPQTHTrJQy4COR73qttknUduoHaUjYDz9Kn+uo7TCUGSX1m+Ft2jATm+S/F3DyN2O/EkX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747816640; c=relaxed/simple;
-	bh=vHs0uFXE4QDWJyTB2uO5NgtTvDkhWOmq0wYfhjspCDU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=finzXXiKNyFPA3XMYJH2tfnHQp+RE9/o5aQTMSysQPa9nzXdxxAyFYd9Ki3GS3ZhRWocoMGErTm1iWjbEwr91t/PHGHnEABHSqZeH3BZV61kfzignJyNhCYpjhoM+F3s178OpTelGUrXiMDRVPCQyrHKaKeWm4Kwzo04q1GDqa8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JOF9PUkn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747816745; c=relaxed/simple;
+	bh=ZrHnJ8tLnjK5oeQd5nHc+q9YJwBlpF7SD3M/7pIX/7I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=L4ZGYuHotmSIwURu5OT0n471oXVOBxJSrD9A/So8vGuoyIUiArjS+dxAY/tMhfWr2I92oGgDSbTtNH6vl7JWbhyW2kRX9tsGrkvNB2gExRfw/LVU5e9i7NH+G8OBDRGRihCGFWtic8XH3x31sDNvz7a2/qJ7b4owCCTbUU+Kda4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F6+zkbI1; arc=none smtp.client-ip=209.85.128.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JOF9PUkn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00873C4CEE4;
-	Wed, 21 May 2025 08:37:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747816640;
-	bh=vHs0uFXE4QDWJyTB2uO5NgtTvDkhWOmq0wYfhjspCDU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JOF9PUknCG3XoxV5ePcPOdk+//R8CCQdYie0iZpzXV9MI8mwqXJiisyPEfgZ5UbxN
-	 GyG/z+L6of5ZHzq4P9yJCLudMmVhuzFD8DHgXnixz5aJ0KyNYlhZt+EZAXTkHj76o1
-	 o1pDTYiv8VAAkd+OclJ2Mqidu/qzBW7p6cDSGegP6wvun74nrcTJhqSwegsF098jvU
-	 yvOzCfxkO6bZCTSoFVbCl7ngiZr+jzN9sIej5xoYo7974GCsTZ/mVs8SPYJpQsCvMv
-	 yBdxP7RLYSfPnTPmhXnIe0aYj3/mRM9ZaxzvdnpXgGXCti8TrDXaovXCEpEy1P4qdg
-	 uvwm6TjHcdDlw==
-Date: Wed, 21 May 2025 10:37:13 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Timur Tabi <ttabi@nvidia.com>, Alistair Popple <apopple@nvidia.com>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v4 08/20] gpu: nova-core: allow register aliases
-Message-ID: <aC2Quag3HYN70D8p@pollux>
-References: <20250521-nova-frts-v4-0-05dfd4f39479@nvidia.com>
- <20250521-nova-frts-v4-8-05dfd4f39479@nvidia.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F6+zkbI1"
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-7086dcab64bso60939637b3.1
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 01:39:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747816743; x=1748421543; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nlxLaOezJ54RMifNGPJT90Ch1a3hAKhBD04YGfXVM6I=;
+        b=F6+zkbI1W1lzvf/5n29Wq9oM16ByxdkcQYGuyYgEHvnyopL36zZCNnwn7E//FNLvCA
+         yHXYXfAyHb3M2V+Gw+djxVDluqnPCtt4oSqKpQ+Ge9xpzigx3w3FgyoEow7NOgW5vPiM
+         CyClDXJNPqgM6uEFhSi9/ugxGBE04FhS+5A3nFpf8vqbuUKrQPDysgEjCfs/FZ82yrzr
+         hkSjqXmWRbw/9X9caOL8ORrRSScbEFrlbdYTHiXkbRlPGK++EwPdFr50eZXxeJ54moGp
+         ob4kUh3kKdaSPw7mZfBSCdXkSHGeY75bCBFK+mkQFXB5STGD+Xd9dXtbkNtuTrt3jwOj
+         twxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747816743; x=1748421543;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nlxLaOezJ54RMifNGPJT90Ch1a3hAKhBD04YGfXVM6I=;
+        b=fbQtLfO0ttmD9hwUWw0i+d7ZwtVoPfRyvC48F2W098rPkGlzyCKRVgj9JMPUvI4b3Q
+         7gaJSiH9T4rMrKNN7qj1dUTLGlnOJhkeM7nzJX3yEZpFhz1dZADSnPSNsWWGrS9W/QEQ
+         eRTe0faugSPxc4KjKhW84Ft8VRTG5vepqpYPGvQvC42wImmpAyBBySf5Mabxt27voEeY
+         wNTsDf1WTYY9rvYjv5E5BYU6bienDV7QwPz7VyHTBe9n/GuYFTEuKXOa5doePecpuhuV
+         Bnzb0GgC052WF/OpyMxlO36IDgTm998+ZMv6r8FuGpSPZc3wP420YXv/Ont6LM708lKd
+         4iSA==
+X-Forwarded-Encrypted: i=1; AJvYcCU25ZEdVdmudJVYg7pge1Xv6Lj1ZcdgWGL1LG3ETpgJ41QTyQrU8LGELqx5oJNtEnBc7odGJ2TotQBm9L8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8XvXyd3RU5JQu1+bcgvyPvBSKQeXeJD5YREn5TKwU9rx2Yn5z
+	B02NylGsdAnrx0/NGzu2zCcPp0t6eukftlFKKqc8jgICzae04yNFFNuCEk+QhCVZLzVRji9SggB
+	b0Tri4OphOG2+4bGQl4jMwJTfN/0ophg=
+X-Gm-Gg: ASbGncvQmnTxqBb22fy7JEjsLFs0Zr0imFfUyo3Q0asoEw62Ka1AniHcUWgyfZJZD4b
+	q2pNEcGluisCzxnC157+FbfBIudLc/FogoQlJY7LSPlntmUrQOvcbWFV4/QGwyDBpL3pxi09M7W
+	jnFIYDcM7GtkN8yuIug3N7A6Y8P8A2NT7zOs+SPRp6xnVO5yf+c5FfMdpK+LkKr/ovYA==
+X-Google-Smtp-Source: AGHT+IGn1ic8/qU3MsjWAq3GBfIPqaxt/z4IAGrqjkiBpwB9quqh6qpru5pVvB2n0NZEUTIDlvgIJbb6/9KsnN95NN4=
+X-Received: by 2002:a05:690c:3610:b0:70d:fd2a:1457 with SMTP id
+ 00721157ae682-70dfd2a14dbmr3227307b3.1.1747816743190; Wed, 21 May 2025
+ 01:39:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250521-nova-frts-v4-8-05dfd4f39479@nvidia.com>
+References: <aC2ILNV6xgt11KuN@brak3r-Ubuntu> <2025052142-maturing-earthworm-cb31@gregkh>
+In-Reply-To: <2025052142-maturing-earthworm-cb31@gregkh>
+From: Rujra Bhatt <braker.noob.kernel@gmail.com>
+Date: Wed, 21 May 2025 14:08:52 +0530
+X-Gm-Features: AX0GCFt73yT51gJAn-US9CzR9fBeYpCj9Uj81PJZLSTvmlHCr2-bT7uYTz3V5X0
+Message-ID: <CAG+54DZWjN3ii-JCOME8XdA1B+5yCmRSo0-wqTv+zt5w6UcEVA@mail.gmail.com>
+Subject: Re: [PATCH RESEND] staging : greybus : Documentation : firmware :
+ Replace deprecated strncpy() with strscpy()
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Johan Hovold <johan@kernel.org>, elder@kernel.org, greybus-dev@lists.linaro.org, 
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 21, 2025 at 03:45:03PM +0900, Alexandre Courbot wrote:
-> Some registers (notably scratch registers) don't have a definitive
-> purpose, but need to be interpreted differently depending on context.
-> 
-> Expand the register!() macro to support a syntax indicating that a
-> register type should be at the same offset as another one, but under a
-> different name, and with different fields and documentation.
-> 
-> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
-> ---
->  drivers/gpu/nova-core/regs/macros.rs | 40 ++++++++++++++++++++++++++++++++++--
->  1 file changed, 38 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/nova-core/regs/macros.rs b/drivers/gpu/nova-core/regs/macros.rs
-> index 7cd013f3c90bbd8ca437d4072cae8f11d7946fcd..64dda1d4d93d3c7022ef02b6f6fb81b58e90dd44 100644
-> --- a/drivers/gpu/nova-core/regs/macros.rs
-> +++ b/drivers/gpu/nova-core/regs/macros.rs
-> @@ -71,6 +71,20 @@
->  /// pr_info!("CPU CTL: {:#x}", cpuctl);
->  /// cpuctl.set_start(true).write(&bar, CPU_BASE);
->  /// ```
-> +///
-> +/// It is also possible to create a alias register by using the `=> PARENT` syntax. This is useful
-> +/// for cases where a register's interpretation depends on the context:
-> +///
-> +/// ```no_run
-> +/// register!(SCRATCH_0 @ 0x0000100, "Scratch register 0" {
-> +///    31:0     value as u32, "Raw value";
-> +///
-> +/// register!(SCRATCH_0_BOOT_STATUS => SCRATCH_0, "Boot status of the firmware" {
+On Wed, May 21, 2025 at 09:06:00AM +0200, Greg KH wrote:
+> A: http://en.wikipedia.org/wiki/Top_post
+> Q: Were do I find info about this thing called top-posting?
+> A: Because it messes up the order in which people normally read text.
+> Q: Why is top-posting such a bad thing?
+> A: Top-posting.
+> Q: What is the most annoying thing in e-mail?
+>
+> A: No.
+> Q: Should I include quotations after my reply?
+>
+>
+> http://daringfireball.net/2007/07/on_top
+>
+> On Wed, May 21, 2025 at 11:11:26AM +0530, rujra wrote:
+> > Hi greg,
+> >
+> > why is this a RESEND ?:
+> >
+> > >> I had sent the same patch 4 days ago and didn't get any reply , henc=
+e tried to resend the same patch for the same,
+> > here is earlier mail :
+> > https://mail.google.com/mail/u/1/?ik=3Df63b03515e&view=3Dom&permmsgid=
+=3Dmsg-a:s:12290863930259651721
+>
+> That is a link to _your_ account, not a public record of your email :(
+>
+> > ,
+> >
+> > line does not match this:
+> > >> sorry , i could not get it what it is exactly ?, if possible can you=
+ share some insights or example so that from in future i would get it right=
+.
+>
+> Your "From:" line in your email does not match with the signed-off-by
+> line.
 
-NIT: I'd put the arrow the other way around, i.e. SCRATCH_0_BOOT_STATUS is
-derived from SCRATCH_0, not the other way around.
+This has been addressed successfully, Kindly preview it.
+
+is this the way correct about the reply email ? , kindly let me know as I
+have tried to get more and more answers and solved issues, and thank you
+so much for your guidance and will be keep in mind about the process and wi=
+ll
+not fail next time onwards.
+
+thank you,
+regards,
+Rujra Bhatt
+
+On Wed, May 21, 2025 at 2:02=E2=80=AFPM Greg KH <gregkh@linuxfoundation.org=
+> wrote:
+>
+> On Wed, May 21, 2025 at 01:30:44PM +0530, Rujra Bhatt wrote:
+>
+> <snip>
+>
+> For some reason you sent this only to me, which is a bit rude to
+> everyone else on the mailing list.  I'll be glad to respond if you
+> resend it to everyone.
+>
+> thanks,
+>
+> greg k-h
