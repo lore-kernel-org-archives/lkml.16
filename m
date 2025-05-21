@@ -1,187 +1,200 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from mail.tnxip.de (mail.tnxip.de [49.12.77.104])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1D2025FA3F
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 11:27:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C5C9262D0B;
+	Wed, 21 May 2025 11:27:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.12.77.104
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747826850; cv=none; b=JzEXAROPb6LYtALnFRFpeZ1z3A+fHTeuNWLP9zR0WOUMOTnmGUPNzz5EJmMamn9GgipvWzm482qkCx5oIFq6LAldEb5mxiH2MvfT/gGj5/iUoZhaSWy3ab4Kosz/9Sm3ahRvayc8GmOGeTn9qhJpYho44AISfCIhb6dUb4oLYiA=
+	t=1747826861; cv=none; b=EOp/F81QzqYxzNp2r0dEj/COwGPmjzcWT8cAw2JJcYnK6uVOh70jTTfRtzdbH8IoriwV8uhw8PJLibFoRWHWXEUS0ksD7f0e3RwOnvW7379NuF9mfHmZzNVLebRmcezLB+balS3EjxMxZ7xdxJLQPxOtINCDRoInfQ9JtK7hWaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747826850; c=relaxed/simple;
-	bh=+dz8MEJzeWy8hPhlya/3ZUY2mAMkUHkjyJF33DfG/34=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=DXoYor6J6fs8ZCcmjayPj3WK0k05p6B3Qio1tHRcKI1Vzo5FijsS0Aq/mpzgMk9MZVxNiJb418nn0lfwpkoytZXBJudAezeg89MtS8fcoQBtPHtwetDbhb87/lz3oKcaD+Xxb2ij57zc0DE7m7VY8uczA8PrgLsIa6/JbOMggrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=l9PZQdT5; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1747826861; c=relaxed/simple;
+	bh=NdAfIA8c5UffTeN+xyr/5NUbUFTzVArJotrHPChfM1o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NW8S6b/oE7iTeNS8G5h3R/ZmJFDZXqYbWSS/BaKlYDYBQ0yD34vIWjJCvmR4Mwdouw/uwkCfX3WZT5y0zbYNWj/wd28N3AKhC00r5vUpBEnNBTq+X/Vpv1aLstHk+zXWPHsY0jumw/s1VxyIehfcpQYduGBmiDPeLeBo9BjCkr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=tnxip.de; spf=pass smtp.mailfrom=tnxip.de; dkim=pass (1024-bit key) header.d=tnxip.de header.i=@tnxip.de header.b=jdJR2QQt; dkim=permerror (0-bit key) header.d=tnxip.de header.i=@tnxip.de header.b=wjQiK50R; dkim=pass (1024-bit key) header.d=tnxip.de header.i=@tnxip.de header.b=FO6qPxwV; dkim=permerror (0-bit key) header.d=tnxip.de header.i=@tnxip.de header.b=ZTq4eakI; arc=none smtp.client-ip=49.12.77.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=tnxip.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tnxip.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="l9PZQdT5"
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250521112726epoutp04cc29b8f5496df9560ad4ea0ceec74a3d~Bh0G403tl1389013890epoutp04Y
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 11:27:26 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250521112726epoutp04cc29b8f5496df9560ad4ea0ceec74a3d~Bh0G403tl1389013890epoutp04Y
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1747826846;
-	bh=vl3yajlFYJh19ijyGDpwJVcyHBKNanD49IYs8BuF3mE=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=l9PZQdT5FM400JC8c1gUdoezGUib72npsaCt+GnoAgm4Sopw/ZL0rAWeQp5culZ5S
-	 2iniP4tVUOrpd8bQvWKmdckShWro4dOJoQ18DfIRQUklh1YHiXU24gN6B1w7R3/efv
-	 mh6wdfXLkZ0hnLaRYkfkNn2KDReFGgeCaHllW01o=
-Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPS id
-	20250521112725epcas5p4aa1fbca701d58e50cf676d50e8611e7d~Bh0FwC1IV0397603976epcas5p4L;
-	Wed, 21 May 2025 11:27:25 +0000 (GMT)
-Received: from epcas5p3.samsung.com (unknown [182.195.38.174]) by
-	epsnrtp04.localdomain (Postfix) with ESMTP id 4b2Tfg5BcKz6B9m7; Wed, 21 May
-	2025 11:27:23 +0000 (GMT)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250521110904epcas5p2ff2e2297e977703bf1ab672cedcb862c~BhkEH5SSR2735727357epcas5p2S;
-	Wed, 21 May 2025 11:09:04 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250521110904epsmtrp2f1fd152e9f172e0305985651e5538eae~BhkEG8BO11051310513epsmtrp29;
-	Wed, 21 May 2025 11:09:04 +0000 (GMT)
-X-AuditID: b6c32a28-46cef70000001e8a-2f-682db44f77f5
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	28.19.07818.F44BD286; Wed, 21 May 2025 20:09:04 +0900 (KST)
-Received: from INBRO001840 (unknown [107.122.3.105]) by epsmtip2.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250521110901epsmtip2898271c09d575a746038f8201ac54627~BhkBKexXM2298622986epsmtip2N;
-	Wed, 21 May 2025 11:09:00 +0000 (GMT)
-From: "Pritam Manohar Sutar" <pritam.sutar@samsung.com>
-To: "'Krzysztof Kozlowski'" <krzk@kernel.org>, <vkoul@kernel.org>,
-	<kishon@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-	<conor+dt@kernel.org>, <alim.akhtar@samsung.com>,
-	<andre.draszik@linaro.org>, <peter.griffin@linaro.org>,
-	<kauschluss@disroot.org>, <m.szyprowski@samsung.com>,
-	<s.nawrocki@samsung.com>
-Cc: <linux-phy@lists.infradead.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-samsung-soc@vger.kernel.org>, <rosa.pila@samsung.com>,
-	<dev.tailor@samsung.com>, <faraz.ata@samsung.com>,
-	<muhammed.ali@samsung.com>, <selvarasu.g@samsung.com>
-In-Reply-To: <a584146d-df86-4e40-8a0f-c3b7558fd066@kernel.org>
-Subject: RE: [PATCH v2 1/2] dt-bindings: phy: samsung,usb3-drd-phy: add
- dt-schema for ExynosAutov920
-Date: Wed, 21 May 2025 16:38:59 +0530
-Message-ID: <000101dbca40$c32aee90$4980cbb0$@samsung.com>
+	dkim=pass (1024-bit key) header.d=tnxip.de header.i=@tnxip.de header.b="jdJR2QQt";
+	dkim=permerror (0-bit key) header.d=tnxip.de header.i=@tnxip.de header.b="wjQiK50R";
+	dkim=pass (1024-bit key) header.d=tnxip.de header.i=@tnxip.de header.b="FO6qPxwV";
+	dkim=permerror (0-bit key) header.d=tnxip.de header.i=@tnxip.de header.b="ZTq4eakI"
+Received: from gw.tnxip.de (unknown [IPv6:fdc7:1cc3:ec03:1:29b1:de58:a155:7218])
+	by mail.tnxip.de (Postfix) with ESMTPS id 81985208AD;
+	Wed, 21 May 2025 13:27:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tnxip.de; s=mail-vps;
+	t=1747826846;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/VIJGDlxwIbmjibYidSo8M167MOJT1qbhzOyEC04Qio=;
+	b=jdJR2QQt7qD8GbRip+NUDsjbfpCO3Rx6in9DJmh6BCVyM48miukPsGpLyPbgCneRAlIY2t
+	vaOENVWYMzMkBptMuC6yQb62XD7BsqnJvu6LIMiOs2UBdS4kMCiDvECR4a22b6FNjUqkJZ
+	4e7xOV7DsHll8HTxx598jlxEeLHhzsU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=tnxip.de;
+	s=mail-vps-ed; t=1747826846;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/VIJGDlxwIbmjibYidSo8M167MOJT1qbhzOyEC04Qio=;
+	b=wjQiK50RpxcLvZ2YIqvim4IIUEW27z2k4chbgXgvGOFLomT1yjiyOhVXTIwPRy03Q70/F7
+	9WkO4RiKH5nVJEAA==
+Received: from [IPV6:2a04:4540:8c0e:9000:63db:438f:d7a8:d9e6] (unknown [IPv6:2a04:4540:8c0e:9000:63db:438f:d7a8:d9e6])
+	by gw.tnxip.de (Postfix) with ESMTPSA id CA12430000000000030AE;
+	Wed, 21 May 2025 13:26:55 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tnxip.de; s=mail-gw;
+	t=1747826845;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/VIJGDlxwIbmjibYidSo8M167MOJT1qbhzOyEC04Qio=;
+	b=FO6qPxwVWopYZ2OIDEOeDV7fcrDQBn5+ZvlZqI9zxD0NEpFe8pzZAdy7oy6CtZXi7wsngi
+	UBQDicDFnpURoUs93I5R2xXEG2tb7zgNlVLafHwfl+Pl5pGMFALm1ArXj+0v7xchGpRuRl
+	AVz81WxgDIUvWAvpnaoP6hLd+hOL0I0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=tnxip.de;
+	s=mail-gw-ed; t=1747826845;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/VIJGDlxwIbmjibYidSo8M167MOJT1qbhzOyEC04Qio=;
+	b=ZTq4eakI2zqr9H9DVatLQzVOZWPa9A8qnHr06KwyoLh/4jv1jGEb0aW7XTX0+Bhlh8htsM
+	SX0i1dy4vSIdgdCQ==
+Message-ID: <25234476-2011-4ade-affe-687d45dcbc3c@tnxip.de>
+Date: Wed, 21 May 2025 13:26:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQIiRnTfgkV106HBI/lpdza94uXQvgBQmjeRAP0KzpUC9NC6EwLLG322Am4GW9KzBBFtYA==
-Content-Language: en-in
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Re0hTcRTH+917d3ddjG6b6E8trdFLs9kg8FeY2YMYUVCQUdHKpdcpOV2b
-	W09Qe2tRVlruVpo9pi6zmsPWG7ZZWuYobZboEHNYqzTTjPXQmKPwv+853/P9nAOHwgWviVAq
-	PTObUWfKM0Qkj6iziSLmrTXPS5t/0IOjrtI6Epk9tQSqftSMIZfFwEVl9mYOcr4t56LfIw4S
-	1R8exdFH1kUih+M2F5neOzmo5f5FEhUahwlU4niMoZv2Ti5yfCjgoNslIwQafWjhoiFvF45s
-	n49ykL1iAEP3OhrwhCBpY00tJjUZ80lph/MhKa29liM9aTYC6aApfC25mReXwmSk6xh1THwS
-	L+1pnlZlFe7+/icPzwXPJxWAAArSC2CvwQsKAI8S0A8AfH+vkOs3psDuc3c4fi2EVSO9XP9Q
-	L4D9+T+IAkBRJB0LL9XM9vUDaQcGu0u6cV+B0zYMfitiCX+iDYN6kwvzoQLoeNjAesdWCOkU
-	2PKtAvORCHomtHpW+dp8eiHML/tK+vVk2KjvIXwap+dC9zv3f20o/4T7r5sGvW7D2KWB9AZY
-	d8jL8c8Ew3rvCbwQCNlxKHYcih2HYsdFLgPCCEIYlUapUCZLVJJMZpdYI1dqtJkKcXKW0gTG
-	3h41xwL6hg/EWAFGASuAFC4K5Msqo9ME/BT5nr2MOmubWpvBaKwgjCJEwfwqyUaFgFbIs5kd
-	DKNi1P9cjAoIzcXOJcv6Na5j2zw/J4gtAr1sDQ2DhpjVWlx3bOGTvW26DRe+SkeA7E2nvnpJ
-	1fQDETW/7oIOm51VylqCirc09enbW9kyuLjCuWV5+OiwKn297MzK4ESiK/LorGUk5wltmZRY
-	33Pw+W94Xh/yQnG6NWndAgneVGT/bjxx64jcsOv6zrP840LFxITU9EU3rDPk7erOyOimvP0R
-	ceW2XHdSlwHFl4rttCq0/2rxxMfRDWHiL84Vup7q2LCt8CI3p+VwUCUeNTc8I2Tf9cnItXF7
-	75VXA42e00WFwamDKTv6XkamfkhK3VSsM283q+8+PeXurPxpnzY89UcCED2LXcrTighNmlwS
-	has18r+DrKQ8ZQMAAA==
-X-CMS-MailID: 20250521110904epcas5p2ff2e2297e977703bf1ab672cedcb862c
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-cpgsPolicy: CPGSC10-542,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250516101800epcas5p49fdae57cdf1fbec0427720ee38b0f925
-References: <20250516102650.2144487-1-pritam.sutar@samsung.com>
-	<CGME20250516101800epcas5p49fdae57cdf1fbec0427720ee38b0f925@epcas5p4.samsung.com>
-	<20250516102650.2144487-2-pritam.sutar@samsung.com>
-	<0615877e-247a-419b-b4d6-de377cb40914@kernel.org>
-	<000001dbca1c$636ca080$2a45e180$@samsung.com>
-	<a584146d-df86-4e40-8a0f-c3b7558fd066@kernel.org>
+User-Agent: Betterbird (Linux)
+Subject: Re: [PATCH 0/6] overlayfs + casefolding
+To: John Stoffel <john@stoffel.org>,
+ Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Amir Goldstein <amir73il@gmail.com>, linux-fsdevel@vger.kernel.org,
+ linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-unionfs@vger.kernel.org, Miklos Szeredi <miklos@szeredi.hu>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
+References: <20250520051600.1903319-1-kent.overstreet@linux.dev>
+ <CAOQ4uxg8p2Kg0BKrU4NSUzLVVLWcW=vLaw4kJkVR1Q-LyRbRXA@mail.gmail.com>
+ <osbsqlzkc4zttz4gxa25exm5bhqog3tpyirsezcbcdesaucd7g@4sltqny4ybnz>
+ <CAOQ4uxjUC=1MinjDCOfY5t89N3ga6msLmpVXL1p23qdQax6fSg@mail.gmail.com>
+ <gdvg6zswvq4zjzo6vntggoacrgxxh33zmejo72yusp7aqkqzic@kaibexik7lvh>
+ <CAOQ4uxg9sKC_8PLARkN6aB3E_U62_S3kfnBuRbAvho9BNzGAsQ@mail.gmail.com>
+ <rkbkjp7xvefmtutkwtltyd6xch2pbw47x5czx6ctldemus2bvj@2ukfdmtfjjbw>
+ <26668.52908.574606.416955@quad.stoffel.home>
+Content-Language: en-US, de-DE
+From: =?UTF-8?Q?Malte_Schr=C3=B6der?= <malte.schroeder@tnxip.de>
+In-Reply-To: <26668.52908.574606.416955@quad.stoffel.home>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Krzysztof,=20
+On 20/05/2025 20:49, John Stoffel wrote:
+>>>>>> "Kent" == Kent Overstreet <kent.overstreet@linux.dev> writes:
+>> On Tue, May 20, 2025 at 04:03:27PM +0200, Amir Goldstein wrote:
+>>> On Tue, May 20, 2025 at 2:43 PM Kent Overstreet
+>>> <kent.overstreet@linux.dev> wrote:
+>>>> On Tue, May 20, 2025 at 02:40:07PM +0200, Amir Goldstein wrote:
+>>>>> On Tue, May 20, 2025 at 2:25 PM Kent Overstreet
+>>>>> <kent.overstreet@linux.dev> wrote:
+>>>>>> On Tue, May 20, 2025 at 10:05:14AM +0200, Amir Goldstein wrote:
+>>>>>>> On Tue, May 20, 2025 at 7:16 AM Kent Overstreet
+>>>>>>> <kent.overstreet@linux.dev> wrote:
+>>>>>>>> This series allows overlayfs and casefolding to safely be used on the
+>>>>>>>> same filesystem by providing exclusion to ensure that overlayfs never
+>>>>>>>> has to deal with casefolded directories.
+>>>>>>>>
+>>>>>>>> Currently, overlayfs can't be used _at all_ if a filesystem even
+>>>>>>>> supports casefolding, which is really nasty for users.
+>>>>>>>>
+>>>>>>>> Components:
+>>>>>>>>
+>>>>>>>> - filesystem has to track, for each directory, "does any _descendent_
+>>>>>>>>   have casefolding enabled"
+>>>>>>>>
+>>>>>>>> - new inode flag to pass this to VFS layer
+>>>>>>>>
+>>>>>>>> - new dcache methods for providing refs for overlayfs, and filesystem
+>>>>>>>>   methods for safely clearing this flag
+>>>>>>>>
+>>>>>>>> - new superblock flag for indicating to overlayfs & dcache "filesystem
+>>>>>>>>   supports casefolding, it's safe to use provided new dcache methods are
+>>>>>>>>   used"
+>>>>>>>>
+>>>>>>> I don't think that this is really needed.
+>>>>>>>
+>>>>>>> Too bad you did not ask before going through the trouble of this implementation.
+>>>>>>>
+>>>>>>> I think it is enough for overlayfs to know the THIS directory has no
+>>>>>>> casefolding.
+>>>>>> overlayfs works on trees, not directories...
+>>>>> I know how overlayfs works...
+>>>>>
+>>>>> I've explained why I don't think that sanitizing the entire tree is needed
+>>>>> for creating overlayfs over a filesystem that may enable casefolding
+>>>>> on some of its directories.
+>>>> So, you want to move error checking from mount time, where we _just_
+>>>> did a massive API rework so that we can return errors in a way that
+>>>> users will actually see them - to open/lookup, where all we have are a
+>>>> small fixed set of error codes?
+>>> That's one way of putting it.
+>>>
+>>> Please explain the use case.
+>>>
+>>> When is overlayfs created over a subtree that is only partially case folded?
+>>> Is that really so common that a mount time error justifies all the vfs
+>>> infrastructure involved?
+>> Amir, you've got two widely used filesystem features that conflict and
+>> can't be used on the same filesystem.
+> Wait, what?  How many people use casefolding, on a per-directory
+> basis?  It's stupid.  Unix/Linux has used case-sensitive filesystems
+> for years.  Yes, linux supports other OSes which did do casefolding,
+> but yikes... per-directory support is just insane.  It should be
+> per-filesystem only at BEST.  
+>
+>> That's _broken_.
+> So?  what about my cross mounting of VMS filesystems with "foo.txt;3"
+> version control so I can go back to previous versions?  Why can't I do
+> that from my Linux systems that's mounting that VMS image?   
+>
+> Just because it's done doesn't mean it's not dumb.  
+>
+>> Users hate partitioning just for separate /boot and /home, having to
+>> partition for different applications is horrible. And since overlay
+>> fs is used under the hood by docker, and casefolding is used under
+>> the hood for running Windows applications, this isn't something
+>> people can predict in advance.
+> Sure I can, I don't run windows applications to screw casefolding.
+> :-)
+>
+> And I personally LIKE having a seperate /boot and /home, because it
+> gives isolation.  The world is not just single user laptops with
+> everything all on one disk or spread across a couple of disks using
+> LVM or RAID or all of the above.  
+>
+> I also don't see any updates for the XFS tests, or any other
+> filesystem tests, that actually checks and confirms this decidedly
+> obtuse and dumb to implement idea.  
+>
+>
+> John
+>
+Hi there,
 
-> -----Original Message-----
-> From: Krzysztof Kozlowski <krzk=40kernel.org>
-> Sent: 21 May 2025 02:15 PM
-> To: Pritam Manohar Sutar <pritam.sutar=40samsung.com>; vkoul=40kernel.org=
-;
-> kishon=40kernel.org; robh=40kernel.org; krzk+dt=40kernel.org;
-> conor+dt=40kernel.org; alim.akhtar=40samsung.com; andre.draszik=40linaro.=
-org;
-> peter.griffin=40linaro.org; kauschluss=40disroot.org;
-> m.szyprowski=40samsung.com; s.nawrocki=40samsung.com
-> Cc: linux-phy=40lists.infradead.org; devicetree=40vger.kernel.org; linux-
-> kernel=40vger.kernel.org; linux-arm-kernel=40lists.infradead.org; linux-s=
-amsung-
-> soc=40vger.kernel.org; rosa.pila=40samsung.com; dev.tailor=40samsung.com;
-> faraz.ata=40samsung.com; muhammed.ali=40samsung.com;
-> selvarasu.g=40samsung.com
-> Subject: Re: =5BPATCH v2 1/2=5D dt-bindings: phy: samsung,usb3-drd-phy: a=
-dd dt-
-> schema for ExynosAutov920
->=20
-> On 21/05/2025 08:48, Pritam Manohar Sutar wrote:
-> >>> diff --git
-> >>> a/Documentation/devicetree/bindings/phy/samsung,usb3-drd-phy.yaml
-> >>> b/Documentation/devicetree/bindings/phy/samsung,usb3-drd-phy.yaml
-> >>> index fdddddc7d611..c50f4218ded9 100644
-> >>> ---
-> >>> a/Documentation/devicetree/bindings/phy/samsung,usb3-drd-phy.yaml
-> >>> +++ b/Documentation/devicetree/bindings/phy/samsung,usb3-drd-phy.yam
-> >>> +++ l
-> >>> =40=40 -32,6 +32,7 =40=40 properties:
-> >>>        - samsung,exynos7-usbdrd-phy
-> >>>        - samsung,exynos7870-usbdrd-phy
-> >>>        - samsung,exynos850-usbdrd-phy
-> >>> +      - samsung,exynosautov920-usb31drd-phy
-> >>>
-> >>>    clocks:
-> >>>      minItems: 2
-> >>> =40=40 -204,6 +205,32 =40=40 allOf:
-> >>>          reg-names:
-> >>>            maxItems: 1
-> >>>
-> >>> +  - if:
-> >>> +      properties:
-> >>> +        compatible:
-> >>> +          contains:
-> >>> +            const: samsung,exynosautov920-usb31drd-phy
-> >>> +    then:
-> >>> +      =24ref: /schemas/usb/usb-switch.yaml=23
-> >>> +
-> >>> +      properties:
-> >>> +        clocks:
-> >>> +          items:
-> >>
-> >> Why there is no main PHY clock?
-> >
-> > external crystal clk (ext_xtal) is used as main phy clk.
->=20
-> So this is the main phy clock? This describes the clock input, not what y=
-ou have
-> on your board. If you change external crystal to internal clock in one de=
-sign, you
-> change the binding? No, this makes no sense.
->=20
->=20
+would you partition different subdirs of your /home? So there is
+.local/share/containers where users put their container-stuff (at least
+podman does). Then there is .wine where case-folding-craziness lives.
+And then there is the mess that is Steam, which does all kinds of
+containery case-foldy stuff. As much as I would like to keep these
+things apart, it is not feasible. Not for me as a "power user", and
+certainly far out of reach for average Joe user.
 
-Yes, this is the main phy clock. Will revisit the binding and try reusing e=
-xisting one.
+Just my 2 ct, greets
 
->=20
-> Best regards,
-> Krzysztof
-
-Thank you,
-Pritam
+/Malte
 
