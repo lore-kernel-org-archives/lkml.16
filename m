@@ -1,97 +1,105 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07B5828FA96;
-	Wed, 21 May 2025 21:26:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92AE428FA96;
+	Wed, 21 May 2025 21:26:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747862768; cv=none; b=fyO9uPvLzM23wtzacgB+KTx8fFdzEtBmbTFJkeJtbeiUuvasvVHMhI5NvHbn+v/Q8sSuBxmWCQroMY43lh1k66jFlpEl/rh29IeXyW4zbooWyop7mKrosSk1hQybR/gdNr7tV7S8IQk6C1IYimAwnQg0UNGgQu4JxDImUV9K3CE=
+	t=1747862774; cv=none; b=T2N7HPL/WAlSWwgdEScJ2lOXSvx0ABoKW14/AUAVu0SFptR//gq/W1vi9bN3VXFsjl1W8J7TlAhSGZ2eSuXzDsOoN6I+DxN7ChH6tUxTUpE8VXBjFcZm0RcZTHvnDB1q1nfTAdZBPFkOsHACswP7TrJ3Gtc4hNT2cNTTTHkqwhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747862768; c=relaxed/simple;
-	bh=bcXmaaPzQjxXCtKv8uM2pdouSD5ZCy58z4JthWLzheA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ez4+crCFEICFgmQ9M+fyuI2IETsM9a6EviaE4h6Jvy7qsGj2FW7XCjHEqOi/ol+XDF/3TugY1V+wRLTofMQt/BuOatXLg3KjdiF8d5/xwoXyS/SZlnIMHoILHzppO7b3k7o1dcEk89eUCSrgpugvzcwLZm9EH9Xi5ecwjF8TLks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hvJgU9TE; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747862774; c=relaxed/simple;
+	bh=br5Vfyk6fgSmRQvH+xT+5ilO1OWquD2vmMM89wJ8pC4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=b2G7Mdq/nD0lhJ+HVMXuW5Hn3RkYB3LboCri6ZtD0JvOX8kWE9eJJoL5PEtF2Hi42wNLYDEhPFU+cF24UEuvZjh1sgV9SwVKGy1GWjCQvlkl+uVJoUcH3jbbwSmYndbB05WXOKxHaIXCHtsRajpaovyxynQozH9eaHcDTealyVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O9v4LVQS; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hvJgU9TE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747862766; x=1779398766;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=bcXmaaPzQjxXCtKv8uM2pdouSD5ZCy58z4JthWLzheA=;
-  b=hvJgU9TEe1M4r/oLiZYojSjadIx7n0n2Nj4VT0NA7n0iCHWgJeBqXmJe
-   OQMGxzUKCdz3zgX0PuI4CvItRfF4eRcZnsuErlqjIoAxmf2o0G9QJ5vN9
-   OyAYSnFguMTtPUulNwcG/IWhaHPkLmZCL0AeN16q3M4ZGoSGGwjBLN2f4
-   UbvDsCni6jMXQTU6Eor4jLH6Tb6iCsgl6Mko7sRBxCkYvAyW97SBCiVdb
-   xSaCEvLnnfOg1uuz6wapTmp2QzbS1Gh9yAmS4i8KLe6d/V3QLYo06dTk1
-   XQwRYOqk+loH4inIKkC0/O/GMyGaF/THIYee9AIWBEqmWaxlcmjW2Bf00
-   A==;
-X-CSE-ConnectionGUID: tUykYRcIT/at6wqM00yT7w==
-X-CSE-MsgGUID: wuhg6ZUvQFihpEWSs+9u7w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="61207328"
-X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
-   d="scan'208";a="61207328"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 14:26:05 -0700
-X-CSE-ConnectionGUID: z+3VBKYXQ5KkKqOJj9HalQ==
-X-CSE-MsgGUID: pPhP+5HhSbezxQOijYiolg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
-   d="scan'208";a="145390862"
-Received: from ssuvarig-mobl.amr.corp.intel.com (HELO desk) ([10.125.146.23])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 14:26:05 -0700
-Date: Wed, 21 May 2025 14:25:56 -0700
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: Alexandre Chartre <alexandre.chartre@oracle.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org,
-	patches@lists.linux.dev, linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org, akpm@linux-foundation.org,
-	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
-	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
-	hargar@microsoft.com, broonie@kernel.org,
-	Salvatore Bonaccorso <carnil@debian.org>,
-	Moritz =?utf-8?Q?M=C3=BChlenhoff?= <mmuhlenhoff@wikimedia.org>
-Subject: Re: [PATCH 5.15 00/59] 5.15.184-rc1 review
-Message-ID: <20250521212103.gpdkplv77acgsdsb@desk>
-References: <20250520125753.836407405@linuxfoundation.org>
- <81cd1d38-8856-4b27-921d-839d9e385942@oracle.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O9v4LVQS"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-601f278369bso7415285a12.1;
+        Wed, 21 May 2025 14:26:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747862771; x=1748467571; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=caARzHi0zB8eOtLXrI95nu9sdt9ECbBkYwSpL8u4tlw=;
+        b=O9v4LVQSMDKEQkq3+X3SAv4TObwuyfDxylvHK0kQ8WbHrkQF0/NaoVJlFJ2aFb9c7L
+         MVaHz0hkpo3z00mDJWkAZ5oBwGFJ6qnkFn+i+cDLAZAD1Id4xm96rxn13pseCUqJS3Oi
+         Hx7PobcjFGhRsxSYg1G81zBRHdUg08DtjLo/3eQ2dsY4DdqgnvpQHur+kZs+h9yPAXnK
+         l7LumlhIBAXmkIOAC/LqaDn8RODczytu2bWK7OBRNFWg1MKj3qsdLv0PxKUmzLelRkay
+         ecsBP5LtFrRy1e2He8XQoIXerPrF4CSKZmhCPeit7T5Zqx/ooZoi7lNPDC4jLK8luzeU
+         T5Mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747862771; x=1748467571;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=caARzHi0zB8eOtLXrI95nu9sdt9ECbBkYwSpL8u4tlw=;
+        b=qYKzoLseoe0ujabulHFlCCTaW9dCO9wkaUG++96s363rTdTqG42GlAOqaTVSBcdNX2
+         vq9PcMwo8AgrMqcW4LXUEf8QqlSD3KFRTYoO/5GiEzT0M5g5MhYE3iOs0R+YoELFaYPo
+         Vd6Gv7gkO3wEAznyilX0uUSvXaYCtxySP/VyaZirIh3lT+ukflMK86kiIZmVWif+fvy7
+         eNsKv+qXaaBWJGqXMqM/6HFpJ8f0y4YSHEHiyZt8mGMO0jnV1EbImRjAYep0wxlxxe6L
+         hHJo/XJtB/Bh7gfnyXo9oH7rs9YspRW97dA2TiFuS1HMHJ+a8F7bsmlnkv/a3XXhXZ/I
+         R6Pw==
+X-Forwarded-Encrypted: i=1; AJvYcCUWODRwWp6n3qEO/uYyVoZhd8Fv/IjkDHfvm8j0hTRW4ERCVHhG8gZfLB3jyQrfIYAx71F+W/EwJF6njA==@vger.kernel.org, AJvYcCXjXa5KVAibz8A8iOprmLms1zg1yXXSRHr5sjYqR/BpG/rjVElS9FLgdqFT9fvoPocBnRdEuMYxorScrZk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwoshrksqxFiwsgz7A5XWmn03jp0bcfSSJyve5jjHcXOBSETX+V
+	3HXuYV+f92lQaaMZBxJQyGkDLULvLz1zKExf9ndqP17v6cqczwgSqaP1
+X-Gm-Gg: ASbGncvaywofR+T3Vk5je0SbxW1E+BXnF7IwwjYkoUoiFFE2W57WrUmRgeD5Tk67YCE
+	rkCfFXsOWczy5GQo/YYrJCnd80bnIvrnk0nuVZ8XIkZhDphX/0GnUQWeoeUO/ZRdgMf4rl+gx9M
+	Vi9uNcUqHjwkaT3GTGhWgBvUfKqRR5wsFG3Lnj2A+HVt+YB8UtFZ4Se3SFgRVi+nH0IrUGqLklM
+	8sOMcn9rr7ekl9RqEz3ngjEkCQG+BiolTeDwQfuWC3HDazY3ccohk24VWeucjIeuIQA3oH2b6h6
+	P4IQjB6HEymNmXTRxChZAL+P4eyPmJgJpTogbkBrrAUHJ85O1tJVpw4oaKsOYx13
+X-Google-Smtp-Source: AGHT+IFqGD2rOUea2XYHp5W8fZ3l0vO85xKCFLQCaIOhlw30kND9mJreNy3hTfm/s4vI959SQ7fafg==
+X-Received: by 2002:a05:6402:4309:b0:602:1061:5ebb with SMTP id 4fb4d7f45d1cf-6021061615emr7414712a12.32.1747862770603;
+        Wed, 21 May 2025 14:26:10 -0700 (PDT)
+Received: from [192.168.0.131] ([194.183.54.57])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6005a6e6371sm9623534a12.40.2025.05.21.14.26.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 May 2025 14:26:09 -0700 (PDT)
+Message-ID: <e88b295d-eb52-4d42-ae33-232c27f2e1e8@gmail.com>
+Date: Wed, 21 May 2025 23:26:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <81cd1d38-8856-4b27-921d-839d9e385942@oracle.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/5] leds: KUnit registration tests pertaining to
+ init_data
+To: Lee Jones <lee@kernel.org>
+Cc: Pavel Machek <pavel@kernel.org>, linux-leds@vger.kernel.org,
+ linux-kernel@vger.kernel.org, bettyzhou@google.com, ynaffit@google.com,
+ tkjos@google.com
+References: <20250515082830.800798-1-lee@kernel.org>
+ <7c5a8768-2d19-40b9-a965-966a8900e703@gmail.com>
+ <20250519133300.GA8794@google.com>
+Content-Language: en-US
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+In-Reply-To: <20250519133300.GA8794@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 21, 2025 at 09:10:58PM +0200, Alexandre Chartre wrote:
-> It looks the problem comes from pages allocated for dynamic thunks for modules, and
-> this patch appears to fix the problem:
+On 5/19/25 15:33, Lee Jones wrote:
+> On Sun, 18 May 2025, Jacek Anaszewski wrote:
 > 
-> diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-> index 43ec73da66d8b..9ca6973e56547 100644
-> --- a/arch/x86/kernel/alternative.c
-> +++ b/arch/x86/kernel/alternative.c
-> @@ -460,6 +460,8 @@ void its_free_mod(struct module *mod)
->         for (i = 0; i < mod->its_num_pages; i++) {
->                 void *page = mod->its_page_array[i];
-> +               set_memory_nx((unsigned long)page, 1);
-> +               set_memory_rw((unsigned long)page, 1);
->                 module_memfree(page);
->         }
->         kfree(mod->its_page_array);
+>> Hi Lee,
+>>
+>> On 5/15/25 10:27, Lee Jones wrote:
+>>> Lots of drivers still register with the LED Class using init_data. Let's
+>>
+>> What do you mean by "still"? Actually init_data is the new approach,
+>> that turns the LED core DT parser on, and is predestined for use with
+>> {devm_}led_classdev_register_ext() API.
 > 
-> I don't know the exact underlying issue but I suspect that the kernel doesn't
-> correctly handle pages freed without the write permission, and restoring page
-> permissions to rw (instead of rox) before freeing prevent the problem.
+> Thanks for the information.  I'll update the wording.
 
-Your analysis aligns with the proposed fix to backport below patch as well:
+Other than that, for the whole series:
 
-x86/modules: Set VM_FLUSH_RESET_PERMS in module_alloc()
-https://lore.kernel.org/stable/20250521171635.848656-1-pchelkin@ispras.ru/
+Reviewed-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+
+-- 
+Best regards,
+Jacek Anaszewski
+
