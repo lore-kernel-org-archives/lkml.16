@@ -1,213 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65FAD1DF75C;
-	Wed, 21 May 2025 15:33:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E3531DF991
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 15:33:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747841622; cv=none; b=UU+qQdLcL5A7kgoy9qQPSHTkCEyEcZCmG/pB6eb2Mt1p3bVR9We2g0nF19J+QoCTT/LDezSYC6Iy8euW03hYuBZer52p/wr9cqSz7086C1GWSsP0sfWG054NMf4r3TsHblDWL8gVviHFz+V7ADTYGpYdpjNqM3vYPFGXW2UhW5U=
+	t=1747841626; cv=none; b=Pe6Wemsr2linYxK1dB7PCNG98IWSFFd3i9kM2u2GmWQJDIXVUhmkcxWm+sNOjN5QyLDyseJkGELCE67/nVfCgQ5aSmNHWGsQjY7ZtpKicW1KC15QCNCjRcWHQCmCUtsH+v6XWuNHkKGbZkA/7IyYEW0F3E1teRAhQbHuqu3D02g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747841622; c=relaxed/simple;
-	bh=pivfaqLbjvxiTmCHNmYRHM0reWtCukqUacXbd9qDv+w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MREQuh+A5aNBbu3F16X5LdrDZDv8VHemaJv+IvfHCeAr1T8ujyzKtu6cqnea/+qSrD9fQ5d98CIxp4tly3vQ6uB3zDkhapGOh5SDos6jpehBjjo1Hvt3aZUs6FvYvFcLhGc+i2EtQtwgkWS+CabjoH+XzMSlT1phe2wnxcIhQx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FLQ7LHh6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747841626; c=relaxed/simple;
+	bh=5Ylwxsagy9BcuU2JAYZnrJJd1vvmF0pXj6e9cT0jGr4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=eqPld2YkAel1NRZSxBwOb53LPoOFM0OGrMWqKJ5DUAExh4HCoC/GkQQjczPkJVdyh8si9m4kFA83NEkboQqXGCLZer2u4ToVLpdnvLtCurA7ra7FqggZU/5K3lRyRmnecLvCalvSkyxKJFQQkAmrpTeNd2VC3ks32CF7IvPlgxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=lb2CmwKn; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FLQ7LHh6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5197DC4CEE7;
-	Wed, 21 May 2025 15:33:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747841622;
-	bh=pivfaqLbjvxiTmCHNmYRHM0reWtCukqUacXbd9qDv+w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=FLQ7LHh6i6jOmYwzj14pa1emwXPUxmSvd8I35OwFuLcAfzbFvYQjPrNBe9G89WI0F
-	 XO5AznfmHLxYmTdoVsXrNluH+LSt2fcrvMKbIPbTgasnViPi5L4ZC5lGA2mn5WX0Tq
-	 8ksQj/7FExqUOiZY7K5TBSRiWn4i7DGPi8s7dir0KraApLJvZD167BLnQb2vvEzIEe
-	 9cF+YHAOOUfdcQS3hRVkqdkPzOp/ghOi1YwjXkFex98vAaAVjto5MgUfC2wqzKJNIM
-	 IhWh9xGX/tEpfDoNZYsKq3fgs5qzJJVC9r3f12EznE4uVnWcFXBPpbneszeEf6pp9P
-	 u2nTTET6oht7A==
-From: Lee Jones <lee@kernel.org>
-To: lee@kernel.org,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Jens Axboe <axboe@kernel.dk>,
-	Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>,
-	Sasha Levin <sashal@kernel.org>,
-	Michal Luczaj <mhal@rbox.co>,
-	Rao Shoaib <Rao.Shoaib@oracle.com>,
-	Simon Horman <horms@kernel.org>,
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="lb2CmwKn"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:
+	Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=abrAL0/TmomWhVV9asJAZc8JhxAb/961Ch2hqbhx6As=; b=lb2CmwKnx2eS2jnhcYoUWprObj
+	/urVEMzdjsaeYE0J4u7cpE/vcd6kZ4Gn0axKBkUJn78LqVGrtu46HKlZmWqWBsnfBpmW3SnvVlTgH
+	8wJDyHAKWOBupWN4AZwOkG6P1+I6sGtgUHRJ8bSCN1jDUyNVHO4C0nl5p+QBAAdJMVVnZny1xbf2e
+	vRba0UBRRLOedcYmlJFyXsZZrTycmQ882Wtk45Epbxfs13H9H3mqc2kUuQiiA4ndVk1wxsmhggqi+
+	2gz3IrvEaL5H8yg/9Ku5Ths4DBhxycoMCHgeI1kMvUrOigndmcjcrhQD3vfsWdCjT5Y0bbzo/8rR3
+	qJSfs0fQ==;
+Received: from [191.204.192.64] (helo=localhost.localdomain)
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1uHlRi-00BGxd-E8; Wed, 21 May 2025 17:33:30 +0200
+From: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
+To: "Alex Deucher" <alexander.deucher@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	siqueira@igalia.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	"Raag Jadav" <raag.jadav@intel.com>,
+	rodrigo.vivi@intel.com,
+	jani.nikula@linux.intel.com,
+	Xaver Hugl <xaver.hugl@gmail.com>,
+	Krzysztof Karas <krzysztof.karas@intel.com>
+Cc: dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Cc: stable@vger.kernel.org
-Subject: [PATCH v6.1 12/27] af_unix: Iterate all vertices by DFS.
-Date: Wed, 21 May 2025 16:27:11 +0100
-Message-ID: <20250521152920.1116756-13-lee@kernel.org>
-X-Mailer: git-send-email 2.49.0.1143.g0be31eac6b-goog
-In-Reply-To: <20250521152920.1116756-1-lee@kernel.org>
-References: <20250521152920.1116756-1-lee@kernel.org>
+	kernel-dev@igalia.com,
+	amd-gfx@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org,
+	intel-gfx@lists.freedesktop.org,
+	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
+Subject: [PATCH v6 0/3] drm: Create a task info option for wedge events
+Date: Wed, 21 May 2025 12:33:20 -0300
+Message-ID: <20250521153323.935974-1-andrealmeid@igalia.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
+This patchset implements a request made by Xaver Hugl about wedge events:
 
-[ Upstream commit 6ba76fd2848e107594ea4f03b737230f74bc23ea ]
+"I'd really like to have the PID of the client that triggered the GPU
+reset, so that we can kill it if multiple resets are triggered in a
+row (or switch to software rendering if it's KWin itself) and show a
+user-friendly notification about why their app(s) crashed, but that
+can be added later."
 
-The new GC will use a depth first search graph algorithm to find
-cyclic references.  The algorithm visits every vertex exactly once.
+>From https://lore.kernel.org/dri-devel/CAFZQkGwJ4qgHV8WTp2=svJ_VXhb-+Y8_VNtKB=jLsk6DqMYp9w@mail.gmail.com/
 
-Here, we implement the DFS part without recursion so that no one
-can abuse it.
+For testing, I've used amdgpu's debug_mask options debug_disable_soft_recovery
+and debug_disable_gpu_ring_reset to test both wedge event paths in the driver.
+To trigger a ring timeout, I've used this app:
+https://gitlab.freedesktop.org/andrealmeid/gpu-timeout
 
-unix_walk_scc() marks every vertex unvisited by initialising index
-as UNIX_VERTEX_INDEX_UNVISITED and iterates inflight vertices in
-unix_unvisited_vertices and call __unix_walk_scc() to start DFS from
-an arbitrary vertex.
+Thanks!
 
-__unix_walk_scc() iterates all edges starting from the vertex and
-explores the neighbour vertices with DFS using edge_stack.
+Changelog:
 
-After visiting all neighbours, __unix_walk_scc() moves the visited
-vertex to unix_visited_vertices so that unix_walk_scc() will not
-restart DFS from the visited vertex.
+v6:
+ - Check if PID >= 0 for displaying the task info
+ - s/app/task in a comment
 
-Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
-Acked-by: Paolo Abeni <pabeni@redhat.com>
-Link: https://lore.kernel.org/r/20240325202425.60930-6-kuniyu@amazon.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-(cherry picked from commit 6ba76fd2848e107594ea4f03b737230f74bc23ea)
-Signed-off-by: Lee Jones <lee@kernel.org>
----
- include/net/af_unix.h |  2 ++
- net/unix/garbage.c    | 74 +++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 76 insertions(+)
+v5:
+ - Change from app to task also in structs, commit message and docs
+ - Add a check for NULL or empty task name string
 
-diff --git a/include/net/af_unix.h b/include/net/af_unix.h
-index 08cc90348043..9d51d675cc9f 100644
---- a/include/net/af_unix.h
-+++ b/include/net/af_unix.h
-@@ -33,12 +33,14 @@ struct unix_vertex {
- 	struct list_head edges;
- 	struct list_head entry;
- 	unsigned long out_degree;
-+	unsigned long index;
- };
- 
- struct unix_edge {
- 	struct unix_sock *predecessor;
- 	struct unix_sock *successor;
- 	struct list_head vertex_entry;
-+	struct list_head stack_entry;
- };
- 
- struct sock *unix_peer_get(struct sock *sk);
-diff --git a/net/unix/garbage.c b/net/unix/garbage.c
-index f7041fc23000..295dd1a7b8e0 100644
---- a/net/unix/garbage.c
-+++ b/net/unix/garbage.c
-@@ -103,6 +103,11 @@ struct unix_sock *unix_get_socket(struct file *filp)
- 
- static LIST_HEAD(unix_unvisited_vertices);
- 
-+enum unix_vertex_index {
-+	UNIX_VERTEX_INDEX_UNVISITED,
-+	UNIX_VERTEX_INDEX_START,
-+};
-+
- static void unix_add_edge(struct scm_fp_list *fpl, struct unix_edge *edge)
- {
- 	struct unix_vertex *vertex = edge->predecessor->vertex;
-@@ -241,6 +246,73 @@ void unix_destroy_fpl(struct scm_fp_list *fpl)
- 	unix_free_vertices(fpl);
- }
- 
-+static LIST_HEAD(unix_visited_vertices);
-+
-+static void __unix_walk_scc(struct unix_vertex *vertex)
-+{
-+	unsigned long index = UNIX_VERTEX_INDEX_START;
-+	struct unix_edge *edge;
-+	LIST_HEAD(edge_stack);
-+
-+next_vertex:
-+	vertex->index = index;
-+	index++;
-+
-+	/* Explore neighbour vertices (receivers of the current vertex's fd). */
-+	list_for_each_entry(edge, &vertex->edges, vertex_entry) {
-+		struct unix_vertex *next_vertex = edge->successor->vertex;
-+
-+		if (!next_vertex)
-+			continue;
-+
-+		if (next_vertex->index == UNIX_VERTEX_INDEX_UNVISITED) {
-+			/* Iterative deepening depth first search
-+			 *
-+			 *   1. Push a forward edge to edge_stack and set
-+			 *      the successor to vertex for the next iteration.
-+			 */
-+			list_add(&edge->stack_entry, &edge_stack);
-+
-+			vertex = next_vertex;
-+			goto next_vertex;
-+
-+			/*   2. Pop the edge directed to the current vertex
-+			 *      and restore the ancestor for backtracking.
-+			 */
-+prev_vertex:
-+			edge = list_first_entry(&edge_stack, typeof(*edge), stack_entry);
-+			list_del_init(&edge->stack_entry);
-+
-+			vertex = edge->predecessor->vertex;
-+		}
-+	}
-+
-+	/* Don't restart DFS from this vertex in unix_walk_scc(). */
-+	list_move_tail(&vertex->entry, &unix_visited_vertices);
-+
-+	/* Need backtracking ? */
-+	if (!list_empty(&edge_stack))
-+		goto prev_vertex;
-+}
-+
-+static void unix_walk_scc(void)
-+{
-+	struct unix_vertex *vertex;
-+
-+	list_for_each_entry(vertex, &unix_unvisited_vertices, entry)
-+		vertex->index = UNIX_VERTEX_INDEX_UNVISITED;
-+
-+	/* Visit every vertex exactly once.
-+	 * __unix_walk_scc() moves visited vertices to unix_visited_vertices.
-+	 */
-+	while (!list_empty(&unix_unvisited_vertices)) {
-+		vertex = list_first_entry(&unix_unvisited_vertices, typeof(*vertex), entry);
-+		__unix_walk_scc(vertex);
-+	}
-+
-+	list_replace_init(&unix_visited_vertices, &unix_unvisited_vertices);
-+}
-+
- static LIST_HEAD(gc_candidates);
- static LIST_HEAD(gc_inflight_list);
- 
-@@ -388,6 +460,8 @@ static void __unix_gc(struct work_struct *work)
- 
- 	spin_lock(&unix_gc_lock);
- 
-+	unix_walk_scc();
-+
- 	/* First, select candidates for garbage collection.  Only
- 	 * in-flight sockets are considered, and from those only ones
- 	 * which don't have any external reference.
+v4:
+ - Change from APP to TASK
+ - Add defines for event_string and pid_string length
+
+v3:
+ - Make comm_string and pid_string empty when there's no app info
+ - Change "app that caused ..." to "app involved ..."
+ - Clarify that devcoredump have more information about what happened
+
+v2:
+  - Rebased on top of drm/drm-next
+  - Added new patch for documentation
+
+André Almeida (3):
+  drm: Create a task info option for wedge events
+  drm/doc: Add a section about "Task information" for the wedge API
+  drm/amdgpu: Make use of drm_wedge_task_info
+
+ Documentation/gpu/drm-uapi.rst             | 17 +++++++++++++++++
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 19 +++++++++++++++++--
+ drivers/gpu/drm/amd/amdgpu/amdgpu_job.c    |  6 +++++-
+ drivers/gpu/drm/drm_drv.c                  | 19 +++++++++++++++----
+ drivers/gpu/drm/i915/gt/intel_reset.c      |  3 ++-
+ drivers/gpu/drm/xe/xe_device.c             |  3 ++-
+ include/drm/drm_device.h                   |  8 ++++++++
+ include/drm/drm_drv.h                      |  3 ++-
+ 8 files changed, 68 insertions(+), 10 deletions(-)
+
 -- 
-2.49.0.1143.g0be31eac6b-goog
+2.49.0
 
