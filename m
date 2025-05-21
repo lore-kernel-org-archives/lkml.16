@@ -1,222 +1,191 @@
-Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9CC822173C
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 19:20:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5214922173C
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 19:22:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747855207; cv=none; b=fK3KpVvpNqtVWmCo87plyWoD5VX/KhLvSb+NsOQ4DmWAdanypwaGsBv5gND7AWMlPCrSyeS/IL/uD3qZOhv3+bUY6QfkFbKWd/wbiRWyCUNW6buO5NfHmCToL4y2hd4O9WjbBZKUe74BpR0M7RqqJdhD0ezvJfv5L7vtaYUSv7k=
+	t=1747855330; cv=none; b=pwjFZ5mKJW/32FcqC/G/BUmWtTmEPUD1mh/gf1hiW7dgei69FC232VROkeDpSVid1DNT9xvPx3Egz9Df0f4Vc3+jl+v8smwmKZ4Z/I3ENrl559tPuoVoKLsybFdRnfqTPcuP6hmOcWYaAnPVPr2iRuxRRqwz6xA5XnZvZmqxZZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747855207; c=relaxed/simple;
-	bh=GnB/O/EVmri7y38J/jByIJMb+SeoeRsKY/K6vIHsCKE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=r2s2zaFl/jKXYNmzi/5e2xymXF8pH4AIKh+kXGyzs26IaPhOxgO32D6hc2czwkXkTZoStzSMWwiscy4xsb5XGRDrNnrCkQIwdfT2HJM5ILhdrrzoWVOwxJ+GvBw3iU5/0FIrHEmEUWoRWllNqK/7HZKj8btQVpWYBkhWRbPZ0/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=B+9Yx/HK; arc=none smtp.client-ip=209.85.166.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747855330; c=relaxed/simple;
+	bh=7oINp/6tHsS+Axhm3mAmmJmrnhDgIHOQCrIEoAdt2mY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZmPCLM8WTLEG489T8cmzuwmOkiwnPyla2A68RQtg5izYeI+eu322u+v05NzG9NB0Gl/eqgKbDytw+MAetTHKcIxAV7vmHUWZf/skhzfns07P9MD02tniQb58+jaHzIbT10K5BCe9CLUMByevbrOt7V2WHwyXzCP3TD55B1gwajw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LpwI6Rrw; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B+9Yx/HK"
-Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3d96836c1c2so1023585ab.0
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 12:20:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747855205; x=1748460005; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RH9ep65+iIljq49GwNY241t6DbkwIT/99iko/YlYgi4=;
-        b=B+9Yx/HKUh89ktiaXr2A9kMuU9Be+GxdSDzGNhi9EoFPJApW2dbxYfmGSxOfr1Ud1E
-         ZVhQ+Zjt/5slJ3859Q02l7OaVY9NMMTmnZtPJostrw8I4vGolNqGRGaRsfUZC0cWmE8o
-         nLT6u6rhy8I/E/AdKU7YP4lL6bjd90Jfi5exybqtorRPcpIUX1YisgRU3la8kniM6Lq5
-         5wS+ZXVyveNxkKz8w+H/W2P1OHkV5o9PhbOc3eQEmKlc3rG1bM8WU/qrDJdOf1BEqdii
-         DvIthJJpLexNKXOmzFNeXbxjunITOy0dHdI3kIn4CBfl6q4kOJErJYNxpmk7DA0a7cQR
-         7b0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747855205; x=1748460005;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RH9ep65+iIljq49GwNY241t6DbkwIT/99iko/YlYgi4=;
-        b=tuTWKOKCDUi2loHHMMk+KYY0Ot2ypJaflQpCuZzY11yltNJhLqfptB89wiLwAJ8aum
-         qslJOmPP9WXMb/K3FWiYVQvC38e2xMDTxoIFLL2nMuSFqJk0NXbPGTIrWI7RZDC54T3L
-         Dox6gpeAHbc2kG8XNXB54oQKfNemHdF7z0jJXwU8OWRTTFS5iNoAfh0WAk0BugPgLK8k
-         GFKaayLGkjrtyNLkN+f6bzXLtZOOjUId09FMhEUSO5lCiA49CrHX9ycORcmhcUfWbRXo
-         FEClWykcIcquweRFS7ER9T1HkSITXXytp80TG65JYsschUU0c6gLGN+H2jj2PA6Fuo3J
-         jUCA==
-X-Forwarded-Encrypted: i=1; AJvYcCUZC72TcELK1IjdrnRk8pYVjwc3pfRzu1YyIlolmFqrg9p7FSKuTB02O6UZiaJkCZ+BD/gvRxb7D7ppMGw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yygc1f0g3ZX8XVTQyv/hA3z4+o7svBeNRyD5JqN2u9d7K3FPv0k
-	fljUmUfystMvO97Y9ljt4kfTcfDYrQFmVA9txTdz9b6QCEWTtH3XmtxPc4PlYLQZkyW59vq5ioM
-	j4dUBH98EIO+38USxThsbKpwbWbbUSvh8hS9978qd
-X-Gm-Gg: ASbGnctl+RU5hpfgQ/nKPeVpOFMq7XVrmasjpO1PsPR4OUCpJ4LG1LXyn8t31+SYFaX
-	2GjYqW1wH23KO2okYhozAzJqbZSNYO+KBpbg0ovYDhkzBAV2ZNkhrlBdh+qIvGWV0XUvbZQrEd5
-	/Y77xZFXMSCx8oy9KclQSfcQzkWOs/cxgT7+TDeDwSDJDgmsnS/SR2C4Qn37gyKQTw/dracrk=
-X-Google-Smtp-Source: AGHT+IEdThBAtZZFOyQI8ndZvd6+jvPSbtIqyrmJS1pfB4JA/e7fLaaSpaoPZZQa+W07/lnsfHpHN7t7x36UfN9ThKE=
-X-Received: by 2002:a92:c052:0:b0:3dc:8895:4260 with SMTP id
- e9e14a558f8ab-3dc8895434bmr2451035ab.19.1747855204420; Wed, 21 May 2025
- 12:20:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LpwI6Rrw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747855328; x=1779391328;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=7oINp/6tHsS+Axhm3mAmmJmrnhDgIHOQCrIEoAdt2mY=;
+  b=LpwI6RrwmCbuPFlhgwBjvmVsUVmbFNfG6tQzcxiGwnIGmMzrhXwOh8FZ
+   jHwKtU14bsjla72xZ+4kIUt5vvTUQdclLR0byz/brLKIQNXCArh+P+zJ4
+   1my3EbUAygtA4yv0QvWp4ka1MNtMTQn9NFOx4PCgj/swkV86LS//U41cW
+   +bGcoF/P+9ZCYKGBFgL9E04qTVcoFjF4NsfGbBxhdyVsKMOQTMQi9NluL
+   CnCB5vWiN94k2EmgV3SPHfrTYAStGQ6SX6TDiL0FKSKoIWRrr9SwB9+2+
+   8h7S/B6ZCXlF79/+SYykpVWuz8gyf0UgSeKV0R50PutH1KXx25ft+8QYn
+   A==;
+X-CSE-ConnectionGUID: pMYGveXQRPKvarfoCsbYXA==
+X-CSE-MsgGUID: EVLZAMBHSEW4V+T14+mEfQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="60092157"
+X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
+   d="scan'208";a="60092157"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 12:22:07 -0700
+X-CSE-ConnectionGUID: VuzLRn53SMG60lEBk1yKzQ==
+X-CSE-MsgGUID: jd/0HpCWTOqh08tUL6f1jw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
+   d="scan'208";a="141118044"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa008.jf.intel.com with ESMTP; 21 May 2025 12:22:07 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uHp0t-000OY0-2p;
+	Wed, 21 May 2025 19:22:03 +0000
+Date: Thu, 22 May 2025 03:21:12 +0800
+From: kernel test robot <lkp@intel.com>
+To: Donny-Dev <donnyturizo13@gmail.com>, gregkh@linuxfoundation.org
+Cc: oe-kbuild-all@lists.linux.dev, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org, Donny-Dev <donnyturizo13@gmail.com>
+Subject: Re: [PATCH] drivers/staging/rtl8723bs: Fix camelCase to snake_case
+ style in core files
+Message-ID: <202505220306.OiXLGnOS-lkp@intel.com>
+References: <20250521000150.11659-1-donnyturizo13@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250521135500.677508-1-irogers@google.com> <20250521135500.677508-4-irogers@google.com>
- <3e8b674e-38f7-4212-923d-f53626de69f2@linux.intel.com> <CAP-5=fX5q7rDgBdB+cMH6fTyHBBPyiac7tuv9WJOMcg9OFdq5g@mail.gmail.com>
- <9aa2c899-80e0-4626-acb7-5331fbf46a0d@linux.intel.com>
-In-Reply-To: <9aa2c899-80e0-4626-acb7-5331fbf46a0d@linux.intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 21 May 2025 12:19:52 -0700
-X-Gm-Features: AX0GCFu4PPYG7j8QdsCgxl3Fa-IYTZcsame8vgyYD43SyJeG4LuLy-sh2dDPJAA
-Message-ID: <CAP-5=fW4brQZQ-tMDj+N9MnddRVZidi4L5uSw1mvv_9OD_vOSA@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] perf sort: Use perf_env to set arch sort keys and header
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, Ravi Bangoria <ravi.bangoria@amd.com>, Leo Yan <leo.yan@arm.com>, 
-	Yujie Liu <yujie.liu@intel.com>, Graham Woodward <graham.woodward@arm.com>, 
-	Howard Chu <howardchu95@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>, 
-	Thomas Falcon <thomas.falcon@intel.com>, Matt Fleming <matt@readmodwrite.com>, 
-	Chun-Tse Shao <ctshao@google.com>, Ben Gainey <ben.gainey@arm.com>, Song Liu <song@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250521000150.11659-1-donnyturizo13@gmail.com>
 
-On Wed, May 21, 2025 at 11:14=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.=
-com> wrote:
->
->
->
-> On 2025-05-21 12:16 p.m., Ian Rogers wrote:
-> >>> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-> >>> index 7b6cde87d2af..13ef0d188a96 100644
-> >>> --- a/tools/perf/builtin-top.c
-> >>> +++ b/tools/perf/builtin-top.c
-> >>> @@ -1747,7 +1747,14 @@ int cmd_top(int argc, const char **argv)
-> >>>
-> >>>       setup_browser(false);
-> >>>
-> >>> -     if (setup_sorting(top.evlist) < 0) {
-> >>> +     top.session =3D perf_session__new(/*data=3D*/NULL, /*tool=3D*/N=
-ULL);
-> >>> +     if (IS_ERR(top.session)) {
-> >>> +             status =3D PTR_ERR(top.session);
-> >>> +             top.session =3D NULL;
-> >>> +             goto out_delete_evlist;
-> >>> +     }
-> >>> +
-> >>> +     if (setup_sorting(top.evlist, &top.session->header.env) < 0) {
-> >> I doubt a valide env can be got in perf_session__new(), since there is
-> >> no perf.data in perf top.
-> >> Maybe just need to invoke the perf_env__raw_arch() instead to fill the
-> >> env->arch.
-> > I think the current code is making things harder than it should be, we
-> > should work away from perf_env__arch and strings, instead using EM_
-> > values which we can default to EM_HOST avoiding any runtime costs.
-> > Looking at perf_env__arch:
-> > ```
-> > const char *perf_env__arch(struct perf_env *env)
-> > {
-> >         char *arch_name;
-> >
-> >         if (!env || !env->arch) { /* Assume local operation */
-> >                 static struct utsname uts =3D { .machine[0] =3D '\0', }=
-;
-> >                 if (uts.machine[0] =3D=3D '\0' && uname(&uts) < 0)
-> >                         return NULL;
-> >                 arch_name =3D uts.machine;
-> >         } else
-> >                 arch_name =3D env->arch;
-> >
-> >         return normalize_arch(arch_name);
-> > }
-> > ```
-> > in this case env->arch =3D=3D NULL and so the uname machine will be use=
-d.
-> > For perf_env__raw_arch the behavior is similar but it populates the
-> > env:
-> > ```
-> > static int perf_env__read_arch(struct perf_env *env)
-> > {
-> >         struct utsname uts;
-> >
-> >         if (env->arch)
-> >                 return 0;
-> >
-> >         if (!uname(&uts))
-> >                 env->arch =3D strdup(uts.machine);
-> >
-> >         return env->arch ? 0 : -ENOMEM;
-> > }
-> >
-> > const char *perf_env__raw_arch(struct perf_env *env)
-> > {
-> >         return env && !perf_env__read_arch(env) ? env->arch : "unknown"=
-;
-> > }
-> > ```
-> > Aside from caching the arch, the main difference is that
-> > normalize_arch isn't called. Not having normalize_arch means the code
-> > in arch_support_sort_key and arch_perf_header_entry would need to
-> > handle strings "ppc" as well as "powerpc", "i386" as well as "x86",
-> > etc. As I'd prefer not handle all those cases I think the way the code
-> > is is best given how the env code is currently structured.
->
-> Right. The perf_env__raw_arch() doesn't improve anything.
-> But I still don't like &top.session->header.env.
-> Because I don't think you can get any useful information from
-> top.session->header.env. It just brings confusions. (It seems an env is
-> retrieved, but it is actually not.)
+Hi Donny-Dev,
 
-Well there's a certain consistency in using the session env to set up
-the sorting, etc. This pre-exists this change with nearly every
-builtin-* file doing `symbol__init(&session->header.env);`. perf top
-does `symbol__init(NULL);`:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/builtin-top.c?h=3Dperf-tools-next#n1811
-but the code now has lazy initialization patterns and handling NULL as
-a special case of meaning host machine:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/util/symbol.c?h=3Dperf-tools-next#n2350
+kernel test robot noticed the following build errors:
 
-> In the perf top, &perf_env is used for the existing cases. If any env
-> fields are not available, perf_env__read_XXX() is invoked to get the
-> information.
-> I think we may follow the existing usage, e.g.,
-> setup_sorting(top.evlist, &perf_env).
+[auto build test ERROR on staging/staging-testing]
+[also build test ERROR on staging/staging-next staging/staging-linus linus/master v6.15-rc7 next-20250521]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-So using the global perf_env rather than NULL feels preferable but I
-think the global perf_env should be deleted. Whenever I see the global
-perf_env in use I think the code has a bug as the perf_env should be
-coming from the session or the machine. The global perf_env can have
-no meaning for cases like `perf diff` where more than one
-file/header/env is open at a time. The global perf_env variable's
-existence encourages bad or broken code, so deleting it should avoid
-errors in code. Another place these issues can occur is with TPEBS
-where we're maintaining multiple sessions for sampling alongside
-counting.
+url:    https://github.com/intel-lab-lkp/linux/commits/Donny-Dev/drivers-staging-rtl8723bs-Fix-camelCase-to-snake_case-style-in-core-files/20250521-080425
+base:   staging/staging-testing
+patch link:    https://lore.kernel.org/r/20250521000150.11659-1-donnyturizo13%40gmail.com
+patch subject: [PATCH] drivers/staging/rtl8723bs: Fix camelCase to snake_case style in core files
+config: sparc-allmodconfig (https://download.01.org/0day-ci/archive/20250522/202505220306.OiXLGnOS-lkp@intel.com/config)
+compiler: sparc64-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250522/202505220306.OiXLGnOS-lkp@intel.com/reproduce)
 
-> Alternatively, it looks like the perf top doesn't support --weight. The
-> env->arch should never be used. If so, a NULL can be used as well, E.g.,
-> setup_sorting(top.evlist, NULL).
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505220306.OiXLGnOS-lkp@intel.com/
 
-So I don't like NULL because then we have lazy initialization of host
-data and NULL meaning use host. I don't like the global perf_env
-variable as it has a code smell about it. I think moving the session
-initialization earlier in perf top so its env, although unpopulated,
-can be used is consistent with `perf report` - this is consistent with
-`perf top` being `perf record` glued together with `perf report`. So I
-think the change here is the smallest and most sensible.
+All errors (new ones prefixed by >>):
 
-Longer term let's delete the global perf_env variable,  perf_env__arch
-should be switched to a perf_env__e_machine as then we can avoid uname
-calls just to determine the machine architecture, etc.
+   In file included from drivers/staging/rtl8723bs/include/drv_types.h:29,
+                    from drivers/staging/rtl8723bs/core/rtw_cmd.c:7:
+>> drivers/staging/rtl8723bs/core/rtw_cmd.c:12:23: error: '_read_macreg_CMD_' undeclared here (not in a function); did you mean '_Read_MACREG_CMD_'?
+      12 |         {GEN_CMD_CODE(_read_macreg), NULL}, /*0*/
+         |                       ^~~~~~~~~~~~
+   drivers/staging/rtl8723bs/include/rtw_cmd.h:554:33: note: in definition of macro 'GEN_CMD_CODE'
+     554 | #define GEN_CMD_CODE(cmd)       cmd ## _CMD_
+         |                                 ^~~
+>> drivers/staging/rtl8723bs/core/rtw_cmd.c:13:23: error: '_write_macreg_CMD_' undeclared here (not in a function); did you mean '_Write_MACREG_CMD_'?
+      13 |         {GEN_CMD_CODE(_write_macreg), NULL},
+         |                       ^~~~~~~~~~~~~
+   drivers/staging/rtl8723bs/include/rtw_cmd.h:554:33: note: in definition of macro 'GEN_CMD_CODE'
+     554 | #define GEN_CMD_CODE(cmd)       cmd ## _CMD_
+         |                                 ^~~
 
-Thanks,
-Ian
 
-> Thanks,
-> Kan
->
+vim +12 drivers/staging/rtl8723bs/core/rtw_cmd.c
+
+    10	
+    11	static struct _cmd_callback rtw_cmd_callback[] = {
+  > 12		{GEN_CMD_CODE(_read_macreg), NULL}, /*0*/
+  > 13		{GEN_CMD_CODE(_write_macreg), NULL},
+    14		{GEN_CMD_CODE(_Read_BBREG), &rtw_getbbrfreg_cmdrsp_callback},
+    15		{GEN_CMD_CODE(_Write_BBREG), NULL},
+    16		{GEN_CMD_CODE(_Read_RFREG), &rtw_getbbrfreg_cmdrsp_callback},
+    17		{GEN_CMD_CODE(_Write_RFREG), NULL}, /*5*/
+    18		{GEN_CMD_CODE(_Read_EEPROM), NULL},
+    19		{GEN_CMD_CODE(_Write_EEPROM), NULL},
+    20		{GEN_CMD_CODE(_Read_EFUSE), NULL},
+    21		{GEN_CMD_CODE(_Write_EFUSE), NULL},
+    22	
+    23		{GEN_CMD_CODE(_Read_CAM),	NULL},	/*10*/
+    24		{GEN_CMD_CODE(_Write_CAM),	 NULL},
+    25		{GEN_CMD_CODE(_setBCNITV), NULL},
+    26		{GEN_CMD_CODE(_setMBIDCFG), NULL},
+    27		{GEN_CMD_CODE(_JoinBss), &rtw_joinbss_cmd_callback},  /*14*/
+    28		{GEN_CMD_CODE(_DisConnect), &rtw_disassoc_cmd_callback}, /*15*/
+    29		{GEN_CMD_CODE(_CreateBss), &rtw_createbss_cmd_callback},
+    30		{GEN_CMD_CODE(_SetOpMode), NULL},
+    31		{GEN_CMD_CODE(_SiteSurvey), &rtw_survey_cmd_callback}, /*18*/
+    32		{GEN_CMD_CODE(_SetAuth), NULL},
+    33	
+    34		{GEN_CMD_CODE(_SetKey), NULL},	/*20*/
+    35		{GEN_CMD_CODE(_SetStaKey), &rtw_setstaKey_cmdrsp_callback},
+    36		{GEN_CMD_CODE(_SetAssocSta), &rtw_setassocsta_cmdrsp_callback},
+    37		{GEN_CMD_CODE(_DelAssocSta), NULL},
+    38		{GEN_CMD_CODE(_SetStaPwrState), NULL},
+    39		{GEN_CMD_CODE(_SetBasicRate), NULL}, /*25*/
+    40		{GEN_CMD_CODE(_GetBasicRate), NULL},
+    41		{GEN_CMD_CODE(_SetDataRate), NULL},
+    42		{GEN_CMD_CODE(_GetDataRate), NULL},
+    43		{GEN_CMD_CODE(_SetPhyInfo), NULL},
+    44	
+    45		{GEN_CMD_CODE(_GetPhyInfo), NULL}, /*30*/
+    46		{GEN_CMD_CODE(_SetPhy), NULL},
+    47		{GEN_CMD_CODE(_GetPhy), NULL},
+    48		{GEN_CMD_CODE(_readRssi), NULL},
+    49		{GEN_CMD_CODE(_readGain), NULL},
+    50		{GEN_CMD_CODE(_SetAtim), NULL}, /*35*/
+    51		{GEN_CMD_CODE(_SetPwrMode), NULL},
+    52		{GEN_CMD_CODE(_JoinbssRpt), NULL},
+    53		{GEN_CMD_CODE(_SetRaTable), NULL},
+    54		{GEN_CMD_CODE(_GetRaTable), NULL},
+    55	
+    56		{GEN_CMD_CODE(_GetCCXReport), NULL}, /*40*/
+    57		{GEN_CMD_CODE(_GetDTMReport),	NULL},
+    58		{GEN_CMD_CODE(_GetTXRateStatistics), NULL},
+    59		{GEN_CMD_CODE(_SetUsbSuspend), NULL},
+    60		{GEN_CMD_CODE(_SetH2cLbk), NULL},
+    61		{GEN_CMD_CODE(_AddBAReq), NULL}, /*45*/
+    62		{GEN_CMD_CODE(_SetChannel), NULL},		/*46*/
+    63		{GEN_CMD_CODE(_SetTxPower), NULL},
+    64		{GEN_CMD_CODE(_SwitchAntenna), NULL},
+    65		{GEN_CMD_CODE(_SetCrystalCap), NULL},
+    66		{GEN_CMD_CODE(_SetSingleCarrierTx), NULL},	/*50*/
+    67	
+    68		{GEN_CMD_CODE(_SetSingleToneTx), NULL}, /*51*/
+    69		{GEN_CMD_CODE(_SetCarrierSuppressionTx), NULL},
+    70		{GEN_CMD_CODE(_SetContinuousTx), NULL},
+    71		{GEN_CMD_CODE(_SwitchBandwidth), NULL},		/*54*/
+    72		{GEN_CMD_CODE(_TX_Beacon), NULL},/*55*/
+    73	
+    74		{GEN_CMD_CODE(_Set_MLME_EVT), NULL},/*56*/
+    75		{GEN_CMD_CODE(_Set_Drv_Extra), NULL},/*57*/
+    76		{GEN_CMD_CODE(_Set_H2C_MSG), NULL},/*58*/
+    77		{GEN_CMD_CODE(_SetChannelPlan), NULL},/*59*/
+    78	
+    79		{GEN_CMD_CODE(_SetChannelSwitch), NULL},/*60*/
+    80		{GEN_CMD_CODE(_TDLS), NULL},/*61*/
+    81		{GEN_CMD_CODE(_ChkBMCSleepq), NULL}, /*62*/
+    82	
+    83		{GEN_CMD_CODE(_RunInThreadCMD), NULL},/*63*/
+    84	};
+    85	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
