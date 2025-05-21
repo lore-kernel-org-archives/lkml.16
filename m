@@ -1,128 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD66D1A23AF;
-	Wed, 21 May 2025 14:23:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C62919E97C;
+	Wed, 21 May 2025 14:23:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747837388; cv=none; b=kkOZpZoeGVB7W0TruKLynwHR9CAcXhK7JbphYBPm25EWtbIypPHxXAMmtIefjaI9pkoKtvBkybUN13hq6jJbKZN8F+Aj8ol6bxrufhLr1WbsIsExxNmqXsKEUlmoXFygSGUpoL+qkrKZuHUIop3QdQ3iG146ghx6gIy+n3zafsc=
+	t=1747837394; cv=none; b=jQed4QGwtElFNgpuBv2L3sU3a/M5sUaVRXlhYCFUfBv2KdMxGAbA6yXEz4o8C7f7RTl0h6N5e9ibEkf5BIcCkXGGE7sd/rqPLTm3YA17z6n5sUqax9k6jbXDANynKH2hnlZbP+5R/FNk9slTcsga/sB3zeGNhNRCufiC2cMYuyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747837388; c=relaxed/simple;
-	bh=HHrkAKSgBLAE5OqobAazfne3rtyAd1HiqnCJ01Pv87c=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=SLn1JiaVhcghIlvNxFpLrI2q/Ss+ykxRbNPRnqZ0ZD//XYG5F6jNtTALwjzcKHKkdVwsuunY5yR9NT4E0ROfyQIIlREfkvlgnTJICsHmnL662k/nnXRhSM6e14ZuVOTn2hZyCNUNHT6W2JV2mdT/hLG0/0hFgY8q1tpwJgR4k6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FNeHV5CX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747837394; c=relaxed/simple;
+	bh=iHhskWt3REXPFQt3U4rsyEt/YNK9o488HeapSlwvdTA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HN0m+11Qm55bsz4am2VGeYNE9Edg/YYnFw6s5xpEyo+bMk99lIdPJc5mn/2UI1k8El51jzdefgZTZwR/vDvplXh4nXFNY+/j8Tyf6ZyjwgaNGx5tn+hjrztBmRM4g9v5oyXtdASZEZ+pDggyzKcmz+Avy8fJOT9d3bYvNmClAWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=PPGbrU2n; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FNeHV5CX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6062FC4CEE4;
-	Wed, 21 May 2025 14:23:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747837387;
-	bh=HHrkAKSgBLAE5OqobAazfne3rtyAd1HiqnCJ01Pv87c=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=FNeHV5CXUnu59+b/KAQEZZmFq+Ou7//mrZPfqJ3iNQay+ppwSylYEtM8854KJtkVE
-	 +wSYLVMXPBuqRDP7Okjol7xGQspcm43gqyd3RuKMP6HINRso6wNPatrYl0NbMGobrM
-	 Sm+dEt2ZUSXb3VDsVFETo5tYooX47om7If4wsai7+mvn2ZfjY8qEkyS7HFDYyW6FCq
-	 uFHvrJias9Z+eq5QnFk3ufSnmAWyJ1PYsXucdfMB07WgadtAdnuNg5ppWYrk6l7ZsP
-	 AXiHBfbyQApD2RG1EtpgETv9H5ohKxwkGhFjXDiXLFLtU7Tnspn9KGAO2utiBo6rQ/
-	 7yvj7aslqLWyA==
-Message-ID: <585d1751-a909-442d-986e-88721a093ec8@kernel.org>
-Date: Wed, 21 May 2025 16:23:02 +0200
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="PPGbrU2n"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43edecbfb94so74354705e9.1;
+        Wed, 21 May 2025 07:23:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20230601; t=1747837391; x=1748442191; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hJdrh3L1t2pXOV+bbYlaC+xr2LBJsGiRXUAwh3/gxE0=;
+        b=PPGbrU2n4PEYb4T7Kf9dCzMFqtMg1J8qPHnzhk0O+XG/ANGXBa3DMLduCa28cbEsYZ
+         lBIgiWBQz6oymU46lpeIkv+zOC5awETTDT9bUCYAkgNqJ8/pVdg/jO2tUpK5AoWD9J0f
+         f6clK4nVZjbytrQ1BYlBlvkZY6ygeFI2RJ8B8vDbd/W0qo4bIG5iS5nf9I9Ezz+QS0GB
+         0AXwO40j+YYe9zmbvE6vkrS3Iiwpb94SOX4zToxYKX2wjPJSMS0Q9G/jebRHF4tIA1Nb
+         8rWbUuaT+XXeCOQidPwO6uaIRlNehJ4QYVuypXNtdcslYSRf96SP876vZnxW9L/ewguq
+         haQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747837391; x=1748442191;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hJdrh3L1t2pXOV+bbYlaC+xr2LBJsGiRXUAwh3/gxE0=;
+        b=vzgGJmGZhG0DGr0Z3hvPqlCIs+4NquEVIK4KAAkICr4FuNvv9eDKNuVA/eCjRmydsK
+         SyhVDRZrIsGSBZ/OeVv5ztX1ro0MG9K94qGhrU3X4TZ+dvgIdZn+o1+tZp2updBWb/z0
+         YrLptN0ajkv3WGfMHUURHgA/qwKwaoA995bho9PnjRm6vGEuYY5h4ZOX2/+xrCZWkzsx
+         VMka26m2U0KYLyyHzKdfhIYSXmcYb571MGbtqWiZwyqHZYxZRYCtP39bDCmJO+1GoChE
+         BNycr+/LEwFvVCgHBUudiUR7NhiZ9TMBGvcSAFj/IgdpuS9w9w4TrJrYuvDMBoFn/+Ow
+         Fd3w==
+X-Forwarded-Encrypted: i=1; AJvYcCWIGiHLYuXMBCZfLko6RWm8dOw/VmaIlwdFPDr9+/Qqnrf8eTVpZvLw9GxWgmZMsekoyOtvJZ2mjdQ5eis=@vger.kernel.org, AJvYcCWOna0JGKjvhElHIa+kYAELnBRkUYZmq5opYCOThqr07lVnZuWF+85N7IrjE9XGCoufDK+26rhp@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7axxW1iAjI2BFzKxEsYptiIccdw2nEAH0bgSqgJfmt5qMEx39
+	V445Au0HYbYffSWaOt4GEFj9BnZ9Zp/mH1xL4IDwDg2ST9mgU967BEY=
+X-Gm-Gg: ASbGnctajh+GRcsv/aZouUKYRApBrKPRKJByu5SmLAMcZvf3xGqDyP0ePl6D+MfSMPD
+	x2lc+YjAbEwRY0pr4dHlL4ZXkqMsaVM9CMq/ndSGVSZpVdZla3YiSxQLelqI8HYbdCjYTj8pjrI
+	OjUlPHIQ/OF9ggeg6hX2U/U+nNZHzLJzQtm62hUTGuzAQyEePeP8KUtpwPaw3zapuhQ1KxHZShZ
+	tvJtHJksq1T9VxoptronHXJ+bJh3pAHQdC4E+nuCdUrUI33ney9df3qEqE0uQ58czIhQMHI/i1d
+	wcmg0NVVfE25IUoxGMnr7nvpWvOHwo5xGNNRlRymJiiIldVx8sPV6mJGu7YKPv4r+k78M4h28kT
+	opk+A+iJfEq5GHFDPcEsZ0v25qzw=
+X-Google-Smtp-Source: AGHT+IGtE5oKab5YMYXOizL8Nkh3l5Qve9bCmylWGg2p1Wz9sS6jb3o/Zpy/DJdRh4lj5xxkad2bCw==
+X-Received: by 2002:a05:600c:6806:b0:43c:fb95:c76f with SMTP id 5b1f17b1804b1-442fd618ee7mr185274145e9.9.1747837391193;
+        Wed, 21 May 2025 07:23:11 -0700 (PDT)
+Received: from [192.168.1.3] (p5b2ac604.dip0.t-ipconnect.de. [91.42.198.4])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f6b297easm75430375e9.6.2025.05.21.07.23.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 May 2025 07:23:10 -0700 (PDT)
+Message-ID: <0b7de680-f624-493e-a7d8-072ebe68dce3@googlemail.com>
+Date: Wed, 21 May 2025 16:23:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 6/6] arm64: dts: qcom: Add UFS support for qcs9075
- IQ-9075-EVK
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Wasim Nazir <quic_wasimn@quicinc.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, kernel@quicinc.com, kernel@oss.qualcomm.com,
- Sayali Lokhande <quic_sayalil@quicinc.com>
-References: <20250521140807.3837019-1-quic_wasimn@quicinc.com>
- <20250521140807.3837019-7-quic_wasimn@quicinc.com>
- <b9ecd0c9-c8fd-45e6-b2ff-6ccb72bdfd49@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <b9ecd0c9-c8fd-45e6-b2ff-6ccb72bdfd49@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH 6.1 00/97] 6.1.140-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250520125800.653047540@linuxfoundation.org>
+Content-Language: de-DE
+From: Peter Schneider <pschneider1968@googlemail.com>
+In-Reply-To: <20250520125800.653047540@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 21/05/2025 16:21, Krzysztof Kozlowski wrote:
-> On 21/05/2025 16:08, Wasim Nazir wrote:
->> From: Sayali Lokhande <quic_sayalil@quicinc.com>
->>
->> Add UFS support for qcs9075 IQ-9075-EVK board.
->>
->> Signed-off-by: Sayali Lokhande <quic_sayalil@quicinc.com>
->> Signed-off-by: Wasim Nazir <quic_wasimn@quicinc.com>
->> ---
->>  .../arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts | 17 +++++++++++++++++
->>  1 file changed, 17 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts b/arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts
->> index 30a36ffa40be..ba8a359d8fee 100644
->> --- a/arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts
->> +++ b/arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts
->> @@ -276,3 +276,20 @@ &uart10 {
->>  &xo_board_clk {
->>  	clock-frequency = <38400000>;
->>  };
->> +
->> +&ufs_mem_hc {
-> 
-> Please follow DTS coding style.
+Am 20.05.2025 um 15:49 schrieb Greg Kroah-Hartman:
+> This is the start of the stable review cycle for the 6.1.140 release.
+> There are 97 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-And you just added this file. Squash the patches so you will see the
-mishap in ordering.
+Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
+oddities or regressions found.
 
-Best regards,
-Krzysztof
+Tested-by: Peter Schneider <pschneider1968@googlemail.com>
+
+
+Beste Grüße,
+Peter Schneider
+
+-- 
+Climb the mountain not to plant your flag, but to embrace the challenge,
+enjoy the air and behold the view. Climb it so you can see the world,
+not so the world can see you.                    -- David McCullough Jr.
+
+OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
+Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
