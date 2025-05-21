@@ -1,112 +1,113 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from exchange.fintech.ru (exchange.fintech.ru [195.54.195.159])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5F1570830;
-	Wed, 21 May 2025 14:01:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E5FA2A1BF;
+	Wed, 21 May 2025 14:01:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.54.195.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747836069; cv=none; b=MTwYCUkqI6TEWUulNTnHM2Q1QmWUSJV14yafkWLV3yN06JuDM/WSp5VS72enhsOnI1lOs+HGKkJXDyHksoFYh5MmOz90dKEVwDwppGWu2jm3w6aA9qCIDMiN1tA6tLNhKyVu7yULibA53tazoyDeNXGv/NPcnDzU9kRalAU05j4=
+	t=1747836086; cv=none; b=o/0ZcW9IahCgbImuU8X21LWPydSkKj26+RLHlnUfxftr1KbdfzxK+/frca2z/wcwLhSAqC8LUdZU4Q4Jjn3Xj5t2TWEUxTbDdJzDcinjkY3b2lVYpz9Gh3iWUbXYEyp0iIRoDD/p5fgNyqB9isWLrnYnqNPEgIwOnrKECjH29ys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747836069; c=relaxed/simple;
-	bh=ONFUsLHSa7vkUiHilg2/DdNQnH53B+UdBapmF3QMSKQ=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=bpXjmGqSiMrbNPo++aRdLEdMdhK5n7MWY8qnbOePElknGJMfAmu1dRbyrHVdS90g6hrlGqbb5cpb91Qv/0tGrB8vGA5YGg4ARheO8hL+zV8bO3AApighg/5orlWnou3/UBzDKYi7Dutka0wTXB9nAO8xDsqDmcY1IGO1Aev+3Iw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a0tLzMuZ; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a0tLzMuZ"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54b166fa41bso10378267e87.0;
-        Wed, 21 May 2025 07:01:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747836066; x=1748440866; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ONFUsLHSa7vkUiHilg2/DdNQnH53B+UdBapmF3QMSKQ=;
-        b=a0tLzMuZsbyE/+k46F8THn/mzR3N+053i8tm/hmRRENvGvDHz/O6jvGRB87eoWKLLs
-         qRf7kkQ35ab6ScZdmUgXIRzirciUYTfPWFaa+aU9C8Gjr6nvoHnWoWnSBNmrNl3yBUNq
-         IqzQAqSPOWHRAsGkfPv6oMKd+a8Yi4Pxlj4oQIe5k1Ce+6QcQf6WJYx3gFQoA17+6zjR
-         hVf7NnmPJPlqmOYOC/Kq0RKscLxyrygIGvcCdPWNw2aebrHnnNvExtol1r+8iOFL3uO/
-         Ju2yQs1Qd2lnbnj//GJYwZ7xU/q+AsoHsY6mqSFKp/3Ps5BdECGf3SW4ANgrJyRzxX/N
-         CvRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747836066; x=1748440866;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ONFUsLHSa7vkUiHilg2/DdNQnH53B+UdBapmF3QMSKQ=;
-        b=hQf2Qjo2V8KIvx7KPUgeSqki/Q41zt2y21lK7bEj1r4o7rX7uJGWcwDrSf/sogXs1G
-         olmhyjOfdb2z34odtKoyF7AmJlyalFnCCSK7AWqe834sYHnnT/2F8tzox0hEFc/bVPD6
-         4sJU6l4qcja5Qq3YG4qGwO1UZkclR+eo+wdBVHTLx4pNoUYzfm6I82Xo/hXb/utqgLoP
-         d/qZmdBgb0jyVbPBLYJl8Zyu2LJ3YoQzcz2oYpb/MwrQ4qEMUzEBMKYPaabxgBwLFrB0
-         d8hr3AsFogsQj8WJbEVqnqpADnsuDhWFb0H4w8d+Pn6+TZ09u8UAoE7xODOOH7Dyk5wc
-         +I3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXVFZFxXHB2HFp2lbSV0VH4UWNoorms3Dw4KLpusWuymUD7XWduNEYbjNvTTVV8GAQpKdEeqp3lwidI/v0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6Kx7hu7MUpwSDxS4LZW5PZDkKe94pI4kQ3/wBi7xw8cKisEaK
-	GLt3P6ePLApVbo712ryf786lKZTLHVSYctHjUgs7HkHwVzxGnElWcN5PN77nUGl9CyeBKyduplb
-	7S+Z+/SVO6izVIvuF/SOXGHO+9SD8xA==
-X-Gm-Gg: ASbGncsZNGeIg2MQcYpPYEwMVM0Q3t/V3+/Z3etW+fDxFqa2o9Xm/uPMaY/GaBWXq+w
-	ER1Itj+0w16FO5MQzMajXGT8Yk+52KlOOamsnaUo48UAIT/zJJDXbk3R0lL+VN82xC5+MHsxELg
-	/o/vbAPPUzzr8JhnZqpiZRjwJlVKHsPUuNERPVydfXlHaxzyTDg2M+CA==
-X-Google-Smtp-Source: AGHT+IEErQUumcNlrERVRbwPeQbo8ThcwdLSPgoMWXN/7EPZuI0HoopGUnJGS+ztTTTB0ldhhXIhU/86Feukltp2+jI=
-X-Received: by 2002:a2e:be0f:0:b0:329:14df:5c3b with SMTP id
- 38308e7fff4ca-32914df5d0amr55710461fa.33.1747836065607; Wed, 21 May 2025
- 07:01:05 -0700 (PDT)
+	s=arc-20240116; t=1747836086; c=relaxed/simple;
+	bh=rHiSEnPQVxe41kOxSNdhkkzgEtOJynN2Wt0zY8D+RV8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=RSW6zQh2llhwMuecQfwh3P2rJ4RjiqiZv9Rffm2Id9V3/p7W4sDJpdbr7gdZbJgnLpv6PgvXbd/J/U++sSO4uA90dDwKm8UFmfzLjry0JnVeRQezy0AJIReACpBay3ENqwI3GaX8GOMKpEHCtGtFoj8B9wDX9WcCyH+vEkzzbfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru; spf=pass smtp.mailfrom=fintech.ru; arc=none smtp.client-ip=195.54.195.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fintech.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fintech.ru
+Received: from Ex16-01.fintech.ru (10.0.10.18) by exchange.fintech.ru
+ (195.54.195.159) with Microsoft SMTP Server (TLS) id 14.3.498.0; Wed, 21 May
+ 2025 17:01:15 +0300
+Received: from [192.168.211.132] (10.0.253.138) by Ex16-01.fintech.ru
+ (10.0.10.18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2242.4; Wed, 21 May
+ 2025 17:01:15 +0300
+Message-ID: <4b007a74-3399-41ba-8953-d7767fcad4f9@fintech.ru>
+Date: Wed, 21 May 2025 17:01:12 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: John <john.cs.hey@gmail.com>
-Date: Wed, 21 May 2025 22:00:51 +0800
-X-Gm-Features: AX0GCFvrUSYfmVFmYHPWPUqbKUBjeps2254KYsjRGu5U2TziEdJnEhvhO2IgNAA
-Message-ID: <CAP=Rh=P0vsd4FVn+FUWpAM6v72CuD8tX27X9zzr6BhkKNDDjLg@mail.gmail.com>
-Subject: [Bug] "kernel BUG in corrupted" in Linux kernel v6.14
-To: Andreas Dilger <adilger.kernel@dilger.ca>, "Theodore Ts'o" <tytso@mit.edu>
-Cc: linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next] net: usb: aqc111: fix error handling of usbnet
+ read calls
+To: Andrew Lunn <andrew@lunn.ch>
+CC: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	<linux-usb@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>,
+	<syzbot+3b6b9ff7b80430020c7b@syzkaller.appspotmail.com>,
+	<lvc-project@linuxtesting.org>
+References: <20250520113240.2369438-1-n.zhandarovich@fintech.ru>
+ <39e2951b-6e57-4003-b1c7-c68947f579be@lunn.ch>
+From: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+Content-Language: en-US
+In-Reply-To: <39e2951b-6e57-4003-b1c7-c68947f579be@lunn.ch>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: Ex16-02.fintech.ru (10.0.10.19) To Ex16-01.fintech.ru
+ (10.0.10.18)
 
-Dear Linux Kernel Maintainers,
+Hello,
 
-I hope this message finds you well.
+On 5/21/25 15:34, Andrew Lunn wrote:
+> On Tue, May 20, 2025 at 02:32:39PM +0300, Nikita Zhandarovich wrote:
+>> Syzkaller, courtesy of syzbot, identified an error (see report [1]) in
+>> aqc111 driver, caused by incomplete sanitation of usb read calls'
+>> results. This problem is quite similar to the one fixed in commit
+>> 920a9fa27e78 ("net: asix: add proper error handling of usb read errors").
+>>
+>> For instance, usbnet_read_cmd() may read fewer than 'size' bytes,
+>> even if the caller expected the full amount, and aqc111_read_cmd()
+>> will not check its result properly. As [1] shows, this may lead
+>> to MAC address in aqc111_bind() being only partly initialized,
+>> triggering KMSAN warnings.
+> 
+> It looks like __ax88179_read_cmd() has the same issue? Please could
+> you have a look around and see if more of the same problem exists.
+> 
 
-I am writing to report a potential vulnerability I encountered during
-testing of the Linux Kernel version v6.14.
+Yes, you are correct, similar issue with ax88179. There was once an
+attempt to enable similar sanity checks there, see
+https://lore.kernel.org/all/20220514133234.33796-1-k.kahurani@gmail.com/,
+but for some reason it did not pan out.
 
-Git Commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557 (tag: v6.14)
+As for other places with the same issue, after a quick glance I see these:
 
-Bug Location: 0010:ext4_do_writepages+0x273d/0x32b0 fs/ext4/inode.c:2619
+__ax88179_read_cmd - drivers/net/usb/ax88179_178a.c
+cdc_ncm_init - drivers/net/usb/cdc_ncm.c
+nc_vendor_read - drivers/net/usb/net1080.c
+pla_read_word - drivers/net/usb/r8153_ecm.c
+pla_write_word - drivers/net/usb/r8153_ecm.c
+sierra_net_get_fw_attr - drivers/net/usb/sierra_net.c
 
-Bug report: https://pastebin.com/WwMypbdm
+This covers all instances usbnet_read_cmd[_nopm] that do not check for
+full 'size' reads, only for straightforward errors. Roughly half of all
+usbnet_read_cmd() calls kernel-wide.
 
-Complete log:https://pastebin.com/WvhAuSgQ
+> Are there any use cases where usbnet_read_cmd() can actually return
+> less than size and it not being an error? Maybe this check for ret !=
+> size can be moved inside usbnet_read_cmd()?
 
-Entire kernel config: https://pastebin.com/MRWGr3nv
+I can't reliably state how normal it is when usbnet_read_cmd() ends up
+reading less than size. Both aqc111 and syzkaller with its repros (and
+ax88179/asix as well) tell us it does happen when it shouldn't.
 
-Root Cause Analysis:
-The crash was caused by a fatal metadata inconsistency in an ext4
-filesystem mounted from loop3.
-The function ext4_mb_generate_buddy() detected a mismatch between the
-block bitmap and group descriptor free cluster count (25 vs.
-150994969), which indicates filesystem corruption.
-This led to a forced kernel BUG() in ext4_do_writepages(), which was
-invoked by the background writeback kernel worker.
-The subsequent attempt to exit via do_exit() triggered another warning
-due to an invalid instruction pointer, suggesting that the kernel
-entered a corrupt execution state.
-This bug is indicative of either a malformed or fuzzed ext4 image, or
-a logic flaw in metadata accounting in ext4=E2=80=99s delayed allocation an=
-d
-writeback path.
+Personally, while I see logic of moving this fix into
+usbnet_read_cmd(), I am wary for the very reason you stated in your
+question - sometimes it may be expected. Also, more often than not
+functions that envelop usbnet_read_cmd() (like ax88179_read_cmd()) seem
+to be deliberately ignoring return values, but even an early warning
+may be helpful in such cases.
 
-At present, I have not yet obtained a minimal reproducer for this
-issue. However, I am actively working on reproducing it, and I will
-promptly share any additional findings or a working reproducer as soon
-as it becomes available.
+In other words, I'd rather leave the decision up to the maintainers. I
+don't mind doing either option.
 
-Thank you very much for your time and attention to this matter. I
-truly appreciate the efforts of the Linux kernel community.
+Regards,
+Nikita
 
-Best regards,
-John
+> 
+> 	Andrew
+
