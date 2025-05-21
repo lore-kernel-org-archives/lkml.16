@@ -1,84 +1,100 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94586DDD2
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 20:19:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 145FC1C8633;
+	Wed, 21 May 2025 20:19:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747858768; cv=none; b=QjN6h005PE7dxHzqFqpj0wuYVSBsN2QQB8Ml+CTVkXWOo8jjlfzcRU9n8vdKH9cM5wFhHcjxKmlR4G3ShRA7dGhgd+V/Itb6KG1/hJ+Fvmeck3+xfqNtmslO9AuY6rn851c5CACHFfnc8xWtJbvq6y0LFDOioqPUWSHxT6DCsIE=
+	t=1747858780; cv=none; b=NdKbw0WYgXpyM1YBKir0akvEzVJqdM7VIBTv9qlOJKcRy0VqfPaojTSL4W6+52T1yIy3CyFrAab+Yr0Z3NXp5vqjwuXX0/lF8+lU2Up5o4QotH8WKoQTz3+MBTmPRq53U22jt+3jJgfQBJYCPDWbbhEMFf9ht55gmcHlK8WAmc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747858768; c=relaxed/simple;
-	bh=M19M230TFlt4DvnhBidnNVu1WXHQfjiIcPnvdlCOUSs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DjLsnAMKBWanwSJrVtSoIygCRMnTfNPFW5DukrxB+2DnD8Xys31nYmB7Q6+pF5lj7q0naVPzN0SvVs/wtMwGCniYt3AxQtWmJSxyyFQYqRiw6MDVGIyxGpHb66EyDU+KUWOaiGq/RZHKV7fLlMlL4Idr/kTHcBjHVVeqcl8eKHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=Ea78dVTW; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
+	s=arc-20240116; t=1747858780; c=relaxed/simple;
+	bh=tjhYjW7L4FFFPrubQbwH1r1XPujrrt0fp4n3hhJMc1Y=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=NLqQqIPQFs4z0R9dfUN8+ctxTS38n53xUtrCKMYyZozwX/HEJ1MALNoUvqK0ax/QHhh3P/FRTM7d9eEu4Ih5tj+nkk5zg1snlNKCxkF/vyKkn4nZxN4gM/UdQ16644CqjRB6plLiwed9xX6QNB6XwOpVgOd+5RmiDF85soOofUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W6S68Oa/; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="Ea78dVTW"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-601ab204085so7516204a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 13:19:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W6S68Oa/"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-23211e62204so34848485ad.3;
+        Wed, 21 May 2025 13:19:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1747858765; x=1748463565; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=M19M230TFlt4DvnhBidnNVu1WXHQfjiIcPnvdlCOUSs=;
-        b=Ea78dVTWsU6hwvMZcw3wFuURdifyPBATkswhGwuvDSO15oWFK+pS2955YqKmwb9/sa
-         UY8U0gi2w0p5v5nwFFMMHfsdnQYVnHyYJpark6KOGkCecTzFY0QFdrzLD7tUjBNHwNIK
-         s2ImjVy8n55+oluJd6srMa/qBO6lx2rTLtZcSGTf7LaDLRf3c1EG4iXMf1frnvw/bYwD
-         ajW31WFGjz7Dj5MfASA0QZflr7Ehdu/U3Pe8R6UgVE5E2A0obX1Rj7SQaduTxPye37qf
-         nHiEtK35GJHENMfJ+UHitTbROSf9iqm9dJ9KxdyPE1nBbbLPmjXMCV9wuHTKNrSMNTmf
-         Iplw==
+        d=gmail.com; s=20230601; t=1747858778; x=1748463578; darn=vger.kernel.org;
+        h=mime-version:user-agent:message-id:date:references:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HSnh0EqJ0VKkWF+UpGyT7j1E38rWKeg6E0XzeWHYX4E=;
+        b=W6S68Oa/XLkHa2fePunblMEHlYCCwuCA9GTs46HaBwH+BbpzkDAwkfX/Zp2G4koONo
+         59GzmuiTUjbwdl8RPlaZsXxq5XecM7r7zBGwQ+Lnozt88elysIPYHW+lmwBwqLS/ouEM
+         QArmFpyBLUKUHL2+Tku7MXxU5Rz4cVgGIsVeY6EYbr95P8MU3fBZRaYUWmKq3pSsf/CA
+         rwbjBvPx2EhRJilx6xUdQKLJmi1WelSaY31EOQt+4G2fGJL72x5KZEd/3cnoUKnkQF7y
+         L5JD6LpRcN0C2rXW+Gn0yLQlNwfnTegaP4sHmtzcv2Hu1NsMcbFH7ZqkU3jXyPE9I1Ti
+         rr7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747858765; x=1748463565;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=M19M230TFlt4DvnhBidnNVu1WXHQfjiIcPnvdlCOUSs=;
-        b=Woe5RjIOyeo38shpMWSVzrtnPQr4B8my3UReo6IHtOfv0KpwiJyKAZP4uba9AqE752
-         x+orBhcNqfv7AaB3lebv8K6/It1/GJwqc8WRqjh0cH1guq/s1iezGe9UI8McKYZUcpx7
-         Eh7klWtDLMflf1G5hjH36vUObc1gklvQXR74FNZKB8SsGKdWpvojgx4DUR0cEkheBKB+
-         Dpl9Vxm6Wu0CdRc1v5EQRcOvjrK5A8fW31+h1++uPvxOiqv8fNIAXI+F/FZhu4OnlNbn
-         6nG7jEKw6oaC1YFPvTVWYomuVyPkhS6wERcYAORRFtWLkC63wHAoiv9GNh5H18xGX59g
-         ILoA==
-X-Forwarded-Encrypted: i=1; AJvYcCV29wFl60KK9NbN7uIIpqIl2UgrDhBAHt357A0/aYq1rJFNlu8JF9Ioq2NJpxxLaukSp/VbpascrxjIfwQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyoOQ6USGklNBTrJB/A0V9i/OjaKV/TpepIPyvNJ797TT9hmPBA
-	2084QHzUGdvKvwr6OJQqEp8ah5RdoxNWnMztqExlNvUMVBrqhsS9lCveVzEE81R4zAz0dygwwlD
-	hyLzPvHvq8tpinHYkSMBgJHZF0+mmg1XKrvm6YEsYPA==
-X-Gm-Gg: ASbGncvAwJoSCleN6+3FjFVthXekntSLPqSBcVMPPkU03w92hQ8UnVbTITuYqt2B84H
-	3LLSKSdIvejwVKeNeiZjclHrpBlKfW1E2aIcNYjF0fJExwF/OF+XKXhnBlnSNLqeKFy2i23Dqzx
-	6l+b7E2+TOjrD2G9m5En86MfBP++hCqavKXLKT4mlOnokTlYfeBxKouYBbi72S/g==
-X-Google-Smtp-Source: AGHT+IFES+Uw/4IkmBvFNIwKxHyHNqcbdDrbZ7cdZydgGpn49/fAVs+dGNE9523zoXkv7jwVNNvVTsANRAf8OBGfeWI=
-X-Received: by 2002:a17:906:c403:b0:ad5:3199:e5e4 with SMTP id
- a640c23a62f3a-ad53199e7e9mr1658559466b.3.1747858764859; Wed, 21 May 2025
- 13:19:24 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747858778; x=1748463578;
+        h=mime-version:user-agent:message-id:date:references:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HSnh0EqJ0VKkWF+UpGyT7j1E38rWKeg6E0XzeWHYX4E=;
+        b=tgU95PFlNx7S0k8Bl+C0wig95C8vkn9Eja8Oz7UzcWp7rV6JLtjhUGWhcvQAcBbtxy
+         Nch9q1lfluD7nLGrLCIn7Xc3HhQB4Boj5UhlrB8y87Ho/7zCfMiWS0NaeGZ9xMccyIR/
+         an5FEloXlxiY61E9FxL9za68mAsQ9nlY4/QnyJWojI/Io5ZGm5Of2MJeX7gQEFU0K/gJ
+         b2Ss0Qg9m+OzqJpUbA6qI19HDaOCgGWZVs75bl5E9Ouw6r8QG3YQLLUUE9Uk4JL2zgCs
+         milKrA3xWOc+04lmKmNo7CGUPnj5bh091kwqdx/pxDw+PS/Mv6jqsdKCjqtF4tSVIGaI
+         IGvA==
+X-Forwarded-Encrypted: i=1; AJvYcCXd1ye6KSWiGviavQXVTMusYI+zJ4mTsjwYPOS9e9P+qiSRBca9L42C2aE3FqsUoqDZMnOZeA7Vf9o3VQqL@vger.kernel.org, AJvYcCXna/C8TQIeymeeC6ATXj5h/6lMLoLjG212Jz3SKXQ3YxhsKdD6ncya7LyBMNuW21HAEf8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSkHEaRUETW9SPst6+/GdZxWbcZuT+WszMqLrMsHM+bUlawWSn
+	83F1wjKEXCScZtTECe+ny/1rN0kN3hXx6pZBwvZyijvS+G0ZqAg3TussIQ73ESCm
+X-Gm-Gg: ASbGncsgnEgEASkhr13koO4otAtoBII5zVGt5Bf5YltQ+uyIYbqfTeuBOHk9sycqn3O
+	YQIZQamC5G2tsowzBZiX6MLeF/ZvYt+59rKp7oo8z7AGkMluWecvLcNnxZEJnOskiv6iBORvgug
+	EadLOCF9xawfDeLMK8aV59ks0nAfkaqJ7M4lsQRlOTnxbt6iih3dbYYnsmApOujUtgfauiRhaJz
+	4bFk4IzJeZYGEUaPWQCLNz+RydsIBI7BXCYm0a/JwhJfqaTXc9svObeA2Dhtk6ppuAnXs42G9SD
+	ILpnNbNAgcnIulSan6tSahwtYXFe1M1ei0l8FGwODqEwOpSoSrFnK8j7xQVSEUEgSg==
+X-Google-Smtp-Source: AGHT+IGuzyAubJs8rThsSBUlBsdu9PutsXbGiWaYozgupNOPTNoCAuzoUgu3d3pUg+n5akbiBL9tNA==
+X-Received: by 2002:a17:903:2404:b0:232:7741:95a7 with SMTP id d9443c01a7336-232774195cfmr103058175ad.43.1747858778014;
+        Wed, 21 May 2025 13:19:38 -0700 (PDT)
+Received: from ezingerman-mba ([2620:10d:c090:500::6:8d1a])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4ac959esm97045435ad.33.2025.05.21.13.19.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 May 2025 13:19:37 -0700 (PDT)
+From: Eduard Zingerman <eddyz87@gmail.com>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Peilin Ye <yepeilin@google.com>,  Puranjay Mohan <puranjay@kernel.org>,
+  Alexei Starovoitov <ast@kernel.org>,  Daniel Borkmann
+ <daniel@iogearbox.net>,  John Fastabend <john.fastabend@gmail.com>,
+  Andrii Nakryiko <andrii@kernel.org>,  Martin KaFai Lau
+ <martin.lau@linux.dev>,  Song Liu <song@kernel.org>,  Yonghong Song
+ <yonghong.song@linux.dev>,  KP Singh <kpsingh@kernel.org>,  Stanislav
+ Fomichev <sdf@google.com>,  Hao Luo <haoluo@google.com>,  Jiri Olsa
+ <jolsa@kernel.org>,  bpf <bpf@vger.kernel.org>,  LKML
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH bpf] bpf: verifier: support BPF_LOAD_ACQ in
+ insn_def_regno()
+In-Reply-To: <CAADnVQLgPBcRAqKfCXQwZae2jKDfp=xSFZCgzHgg-jcBTYp-yw@mail.gmail.com>
+	(Alexei Starovoitov's message of "Wed, 21 May 2025 13:04:47 -0700")
+References: <20250521183911.21781-1-puranjay@kernel.org>
+	<80ef5e2e-c2d9-45b7-9a48-f8c1a4767eae@gmail.com>
+	<CAADnVQLgPBcRAqKfCXQwZae2jKDfp=xSFZCgzHgg-jcBTYp-yw@mail.gmail.com>
+Date: Wed, 21 May 2025 13:19:35 -0700
+Message-ID: <m2v7ptd8dk.fsf@gmail.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250506164017.249149-1-max.kellermann@ionos.com>
- <2025050600-economist-display-2d25@gregkh> <CAKPOu+8c4Z_Biie3R6LP3pz6u-bpzBZjfoWv4XAQ5AreziDccg@mail.gmail.com>
- <2025052100-depravity-founder-6332@gregkh> <aC386_UJaBxf5WTE@slm.duckdns.org>
-In-Reply-To: <aC386_UJaBxf5WTE@slm.duckdns.org>
-From: Max Kellermann <max.kellermann@ionos.com>
-Date: Wed, 21 May 2025 22:19:13 +0200
-X-Gm-Features: AX0GCFs5lgQSFBgQhfwMO7ef4O99CWbOI2Z8yypES3XQaWyFlu-wPDkTO9Oua5o
-Message-ID: <CAKPOu+9cPJ_BCctyTEOgS7ghtiL4CV3EANuEZOtsX48XQqWBLA@mail.gmail.com>
-Subject: Re: [PATCH] fs/kernfs: implement STATX_BTIME
-To: Tejun Heo <tj@kernel.org>
-Cc: Greg KH <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Wed, May 21, 2025 at 6:18=E2=80=AFPM Tejun Heo <tj@kernel.org> wrote:
-> Isn't this trivially trackable from userspace with udev?
+Alexei Starovoitov <alexei.starovoitov@gmail.com> writes:
 
-udev doesn't track the birth time of arbitrary cgroups, and I wouldn't
-call udev "trivial". How many lines of C code would you need to talk
-to udev to find something out and how many CPU cycles does that take?
-One statx() is trivial and cheap, and the btime field is exactly meant
-for this. It's the dedicated API for exactly this. (I'm going to use
-it, even if the rest of the world doesn't.)
+[...]
+
+> I suspect it was already fixed by commit
+> fce7bd8e385a ("bpf/verifier: Handle BPF_LOAD_ACQ instructions in
+> insn_def_regno()")
+
+I see, series [1] is not a part of the tag [2] tested by syzbot, thank you.
+
+[1] "bpf, riscv64: Support load-acquire and store-release instructions"
+    https://lore.kernel.org/all/cover.1746588351.git.yepeilin@google.com/
+[2] 172a9d94339c ("Merge tag '6.15-rc6-smb3-client-fixes'")
