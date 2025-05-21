@@ -1,212 +1,210 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DB7722126A;
-	Wed, 21 May 2025 14:52:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDEC520FA98;
+	Wed, 21 May 2025 14:53:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747839174; cv=none; b=DbYCadLu6d76HP0BDn1lMv3bjCYzjLyWOvaw6tEDJs0oB9tEd5xEL039P/ZTOVcd1kQIhaqJXYHiWU8aRkidiqJqD2QeTjiZ4P/uNpsjC16NQAIPMoXv10/9GsIyItDxf/cxrVePhvP1Sm0AqTIkbU2jcXAfKafUAhDQO7SKkA4=
+	t=1747839205; cv=none; b=QthTmGid/Gkecah5j/7GSiXd0CrflgvDYArTsYqeDerVB9XogzSnIRRx85Tp5V1VrChoObnG2LRTUUjnk+iHyyPVv/Gyw1lEnGj3QNmPaP53CgprM54UBukVyadp1Hgxwb2uJ6mXMPcL+8W4daVINIhd15snxwLizS4HuhqQBXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747839174; c=relaxed/simple;
-	bh=WLDWeiD6ADAKu53SIAClrIwXxM68N8o3/ZFh0r242jU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Xwc2iEgHcbjFqLSn6E09Vcb5iK1v2iYYX3tPxm6an4coceiHV/bsuNpyFwnzMVcklPqfmS7ir7xt/Kg85hCWPt4CKa6Nx6ltSrvkQVJlH1KBvc99jEDgg/kxKdszQtGWxS1SOPSTsVL2ja5Tbq4mwpz99WIvO3oUiTeAHUICMaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=pFk1IfYN; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1747839205; c=relaxed/simple;
+	bh=HdHZ+GZxvRQ8ukrgIxElrOk6u+xpJOILJEbe3C7fOtQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jYeBfwXynndcCh6R8z9OOSTJO9Mgu73MdLlQidu6U1KuGZlawkXKcCcf1oYDFxqDmOfPNzl1KJ4y75sHfSrufkuF+RpI7yD4FOsKtMYfke+qgTgnTxN3DFuTr34lKtQP+wTOVWBRKlFZyE8k37nHF/n3pOWeGsrWxzw5TBvY7ME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FaWZvNGI; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=v5NoVv3J; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="pFk1IfYN"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54L9XMXe024816;
-	Wed, 21 May 2025 14:52:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	SdsgstMIdU3g6wwrbjZnLWpwKvICMJd1ZoQalcYim8s=; b=pFk1IfYNBTOt7iUr
-	PRqbzChNk4400R51z7u3OyjLRVTjlhSnRbySXZTk2U6DFGOuyxzj5vCqDqyv4/h7
-	pKY4Mvzh2icgfeaB+5aq9LT2yqtTMrGMbjsPO6ntL6u+QnxDzMeEBo/nZLEDsx7Q
-	DDBdApL1wL1DcO+l6/WgF7RnkCDLQ74lEm0g9GD2FXb1A1dRQi2Xp2wtprIy7Sa1
-	9gYoJTiyunOlSaxhxzjghhN4V+2jVxxSYjYJ6ydfM/4Cl16Cr8ztiw2F7/blBEJA
-	6CAErPaDPMAbL+MrRkJnxVSS/GTJwTn+uidXLPPDHIaxaeZu9KHWtDfjLZmu86bx
-	Tx6Bcg==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf4u9m8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 14:52:33 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54LEqWYo007457
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 14:52:32 GMT
-Received: from [10.226.59.182] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 21 May
- 2025 07:52:30 -0700
-Message-ID: <aa45ff83-bc8f-4cef-a82c-9a868396d19d@quicinc.com>
-Date: Wed, 21 May 2025 08:52:29 -0600
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FaWZvNGI";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="v5NoVv3J"
+Date: Wed, 21 May 2025 16:53:20 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747839201;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=D86Wz2y6QUxOmJHz72oCX5H2kzf71CnW/bwyrbGaFDk=;
+	b=FaWZvNGIv1or7u8xnJbhu5qwENB/o38MU3LLx+maV/xJRYZbHj+pVsm+J0IfjK4wG7pjaE
+	/XZakmIoWiU2Y49oDr+vWpR4Hp0u8h/9gAiE6LNrHPjaTiF0Gka68ww449sDGAGrHLlVnc
+	8sSXrChrI8ETBcmWuFVYpUKK3Hxq5StzLFO5q3Z1GXnQky22gFsqhfaL8HDKkpkxktvM8x
+	qwgHG4ej4uG8Gp44N67jYj2hRRTOHzcdj+pysc1unfg2+MVzIvmxqVWu0/owhiw7nL37Qg
+	O+3ChZ4AwmIBzCqaNN8tgF8R/86rXDImNVVOokFcfKWThGSgtPDUr9qoywXd1Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747839201;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=D86Wz2y6QUxOmJHz72oCX5H2kzf71CnW/bwyrbGaFDk=;
+	b=v5NoVv3J3aBrPArsCIRill2BVfiTV3wWC/KlMvAlGXX36r9WA4OPXDoV/cH4HHQmGNJiIW
+	MRb6+y1IHg3cPNAQ==
+From: Nam Cao <namcao@linutronix.de>
+To: Valentin Schneider <vschneid@redhat.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	John Ogness <john.ogness@linutronix.de>,
+	Clark Williams <clrkwllms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+	linux-rt-users@vger.kernel.org, Joe Damato <jdamato@fastly.com>,
+	Martin Karsten <mkarsten@uwaterloo.ca>,
+	Jens Axboe <axboe@kernel.dk>,
+	Frederic Weisbecker <frederic@kernel.org>
+Subject: Re: [PATCH] eventpoll: Fix priority inversion problem
+Message-ID: <20250521145320.oqUIOaRG@linutronix.de>
+References: <20250519074016.3337326-1-namcao@linutronix.de>
+ <xhsmh8qmq9h37.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 07/11] bus: mhi: host: Add support to read MHI
- capabilities
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-        "Bjorn
- Helgaas" <bhelgaas@google.com>,
-        =?UTF-8?Q?Ilpo_J=C3=A4rvinen?=
-	<ilpo.jarvinen@linux.intel.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Lorenzo Pieralisi
-	<lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?=
-	<kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Johannes Berg
-	<johannes@sipsolutions.net>,
-        Jeff Johnson <jjohnson@kernel.org>,
-        "Bartosz
- Golaszewski" <brgl@bgdev.pl>
-CC: <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <mhi@lists.linux.dev>,
-        <linux-wireless@vger.kernel.org>, <ath11k@lists.infradead.org>,
-        <qiang.yu@oss.qualcomm.com>, <quic_vbadigan@quicinc.com>,
-        <quic_vpernami@quicinc.com>, <quic_mrana@quicinc.com>,
-        Jeff Johnson
-	<jeff.johnson@oss.qualcomm.com>
-References: <20250519-mhi_bw_up-v3-0-3acd4a17bbb5@oss.qualcomm.com>
- <20250519-mhi_bw_up-v3-7-3acd4a17bbb5@oss.qualcomm.com>
-Content-Language: en-US
-From: Jeffrey Hugo <quic_jhugo@quicinc.com>
-In-Reply-To: <20250519-mhi_bw_up-v3-7-3acd4a17bbb5@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: fxrs8dZ9kRawyfjjg5wdyvwEH6rkQL3M
-X-Proofpoint-ORIG-GUID: fxrs8dZ9kRawyfjjg5wdyvwEH6rkQL3M
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDE0NCBTYWx0ZWRfX9SjuTT+ee+g+
- /GASVjVY2ENXk1MSVLLkTtSk5izXs6pLdPGNjQaczlIX2BA5X88Rcx70K7Q8fuPfsrEy2YFW1Og
- 64EFiwReGlkcMYqO2FPvSIh+M+7AnrAbzQkzwhN5xvemAYSCh4FtMLo1AtZSQ8FefWmWgKRd6ir
- SgZBeLaHUh1y1cR3VMtcdyLDkrOKcS7n0066kRJ2BEkJSn1D8MKCxKj6pMJiYx+ZOiM1RZv+HRE
- Qx15ksBQB6qG9uvbOD7cY0uLZEEKIz+KMuNddUjUQOwUd4jKOkSFev4zYIvsl4AOyzzIiyWOaX7
- cPdhNidRI91ikTpzfM3UozbwX5k1on9FXnByw1yPHBVfy6ZpcqLpdMX4foffmYoA6w1rRfIi6YL
- JwwZfa+nLvwKZqOIsk30y3xhjGNVgPtQDS7iB4NzESbMmgYwn8gXndQriUplyikd3XHI0adD
-X-Authority-Analysis: v=2.4 cv=R7UDGcRX c=1 sm=1 tr=0 ts=682de8b1 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
- a=EUspDBNiAAAA:8 a=3N43v1ldxO06oT20SBYA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-21_04,2025-05-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 clxscore=1011 mlxlogscore=999 priorityscore=1501 spamscore=0
- bulkscore=0 lowpriorityscore=0 malwarescore=0 suspectscore=0 mlxscore=0
- impostorscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505210144
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <xhsmh8qmq9h37.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 
-On 5/19/2025 3:42 AM, Krishna Chaitanya Chundru wrote:
-> From: Vivek Pernamitta <quic_vpernami@quicinc.com>
+On Wed, May 21, 2025 at 04:25:00PM +0200, Valentin Schneider wrote:
+> On 19/05/25 09:40, Nam Cao wrote:
+> > @@ -136,14 +136,28 @@ struct epitem {
+> >               struct rcu_head rcu;
+> >       };
+> >
+> > -	/* List header used to link this structure to the eventpoll ready list */
+> > -	struct list_head rdllink;
+> > +	/*
+> > +	 * Whether this item can be added to the eventpoll ready list. Adding to the list can be
+> > +	 * blocked for two reasons:
+> > +	 *
+> > +	 *  1. This item is already on the list.
+> > +	 *  2. A waiter is consuming the ready list and has consumed this item. The waiter therefore
+> > +	 *     is blocking this item from being added again, preventing seeing the same item twice.
+> > +	 *     If adding is blocked due to this reason, the waiter will add this item to the list
+> > +	 *     once consuming is done.
+> > +	 */
+> > +	bool link_locked;
 > 
-> As per MHI spec v1.2,sec 6.6, MHI has capability registers which are
-> located after the ERDB array. The location of this group of registers is
-> indicated by the MISCOFF register. Each capability has a capability ID to
-> determine which functionality is supported and each capability will point
-> to the next capability supported.
+> Nit: IIUC it's not just the readylist, it's anytime the link is used
+> (e.g. to punt it on a txlist), so how about:
 > 
-> Add a basic function to read those capabilities offsets.
+>         /*
+>          * Whether epitem.rdllink is currently used in a list. When used, it
+>          * cannot be detached or inserted elsewhere.
+>          *
+>          * It may be in use for two reasons:
+>          *
+>          * 1. This item is on the eventpoll ready list
+>          * 2. This item is being consumed by a waiter and stashed on a temporary
+>          *    list. If adding is blocked due to this reason, the waiter will add
+>          *    this item to the list once consuming is done.
+>          */
+>          bool link_used;
+
+Acked.
+
+> >
+> >       /*
+> > -	 * Works together "struct eventpoll"->ovflist in keeping the
+> > -	 * single linked chain of items.
+> > +	 * Indicate whether this item is ready for consumption. All items on the ready list has this
+> > +	 * flag set. Item that should be on the ready list, but cannot be added because of
+> > +	 * link_locked (in other words, a waiter is consuming the ready list), also has this flag
+> > +	 * set. When a waiter is done consuming, the waiter will add ready items to the ready list.
+> >        */
+> > -	struct epitem *next;
+> > +	bool ready;
+> > +
+> > +	/* List header used to link this structure to the eventpoll ready list */
+> > +	struct llist_node rdllink;
+> >
+> >       /* The file descriptor information this item refers to */
+> >       struct epoll_filefd ffd;
 > 
-> Signed-off-by: Vivek Pernamitta <quic_vpernami@quicinc.com>
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> ---
->   drivers/bus/mhi/common.h    |  4 ++++
->   drivers/bus/mhi/host/init.c | 29 +++++++++++++++++++++++++++++
->   2 files changed, 33 insertions(+)
+> > @@ -361,10 +368,27 @@ static inline int ep_cmp_ffd(struct epoll_filefd *p1,
+> >               (p1->file < p2->file ? -1 : p1->fd - p2->fd));
+> >  }
+> >
+> > -/* Tells us if the item is currently linked */
+> > -static inline int ep_is_linked(struct epitem *epi)
+> > +static void epitem_ready(struct epitem *epi)
+> >  {
+> > -	return !list_empty(&epi->rdllink);
+> > +	/*
+> > +	 * Mark it ready, just in case a waiter is blocking this item from going into the ready
+> > +	 * list. This will tell the waiter to add this item to the ready list, after the waiter is
+> > +	 * finished.
+> > +	 */
+> > +	xchg(&epi->ready, true);
 > 
-> diff --git a/drivers/bus/mhi/common.h b/drivers/bus/mhi/common.h
-> index dda340aaed95a5573a2ec776ca712e11a1ed0b52..eedac801b80021e44f7c65d33cd50760e06c02f2 100644
-> --- a/drivers/bus/mhi/common.h
-> +++ b/drivers/bus/mhi/common.h
-> @@ -16,6 +16,7 @@
->   #define MHICFG				0x10
->   #define CHDBOFF				0x18
->   #define ERDBOFF				0x20
-> +#define MISCOFF				0x24
->   #define BHIOFF				0x28
->   #define BHIEOFF				0x2c
->   #define DEBUGOFF			0x30
-> @@ -113,6 +114,9 @@
->   #define MHISTATUS_MHISTATE_MASK		GENMASK(15, 8)
->   #define MHISTATUS_SYSERR_MASK		BIT(2)
->   #define MHISTATUS_READY_MASK		BIT(0)
-> +#define MISC_CAP_MASK			GENMASK(31, 0)
-> +#define CAP_CAPID_MASK			GENMASK(31, 24)
-> +#define CAP_NEXT_CAP_MASK		GENMASK(23, 12)
->   
->   /* Command Ring Element macros */
->   /* No operation command */
-> diff --git a/drivers/bus/mhi/host/init.c b/drivers/bus/mhi/host/init.c
-> index 13e7a55f54ff45b83b3f18b97e2cdd83d4836fe3..a7137a040bdce1c58c98fe9c2340aae4cc4387d1 100644
-> --- a/drivers/bus/mhi/host/init.c
-> +++ b/drivers/bus/mhi/host/init.c
-> @@ -467,6 +467,35 @@ int mhi_init_dev_ctxt(struct mhi_controller *mhi_cntrl)
->   	return ret;
->   }
->   
-> +static int mhi_find_capability(struct mhi_controller *mhi_cntrl, u32 capability, u32 *offset)
-> +{
-> +	u32 val, cur_cap, next_offset;
-> +	int ret;
-> +
-> +	/* Get the 1st supported capability offset */
+> Perhaps a stupid question, why use an xchg() for .ready and .link_locked
+> (excepted for that epitem_ready() cmpxchg()) writes when the return value
+> is always discarded? Wouldn't e.g. smp_store_release() suffice, considering
+> the reads are smp_load_acquire()?
 
-"first"?  Does not seem like you are short on space here.
+That's me being stupid, smp_store_release() is good enough.
 
-> +	ret = mhi_read_reg_field(mhi_cntrl, mhi_cntrl->regs, MISCOFF,
-> +				 MISC_CAP_MASK, offset);
-
-This fits on one line.
-
-> +	if (ret)
-> +		return ret;
-
-Blank line here would be nice.
-
-> +	do {
-> +		if (*offset >= mhi_cntrl->reg_len)
-> +			return -ENXIO;
-> +
-> +		ret = mhi_read_reg(mhi_cntrl, mhi_cntrl->regs, *offset, &val);
-> +		if (ret)
-> +			return ret;
-
-
-There is no sanity checking we can do on val?  We've had plenty of 
-issues blindly trusting the device.  I would like to avoid having more.
-
-Also looks like if we find the capability we are looking for, we return 
-the offset without validating it.
-
-> +
-> +		cur_cap = FIELD_GET(CAP_CAPID_MASK, val);
-> +		next_offset = FIELD_GET(CAP_NEXT_CAP_MASK, val);
-> +		if (cur_cap == capability)
-> +			return 0;
-> +
-> +		*offset = next_offset;
-> +	} while (next_offset);
-> +
-> +	return -ENXIO;
-> +}
-> +
->   int mhi_init_mmio(struct mhi_controller *mhi_cntrl)
->   {
->   	u32 val;
+> > +
+> > +	/*
+> > +	 * If this item is not blocked, add it to the ready list. This item could be blocked for two
+> > +	 * reasons:
+> > +	 *
+> > +	 * 1. It is already on the ready list. Then nothing further is required.
+> > +	 * 2. A waiter is consuming the ready list, and has consumed this item. The waiter is now
+> > +	 *    blocking this item, so that this item won't be seen twice. In this case, the waiter
+> > +	 *    will add this item to the ready list after the waiter is finished.
+> > +	 */
+> > +	if (!cmpxchg(&epi->link_locked, false, true))
+> > +		llist_add(&epi->rdllink, &epi->ep->rdllist);
+> > +
+> >  }
+> >
+> >  static inline struct eppoll_entry *ep_pwq_from_wait(wait_queue_entry_t *p)
 > 
+> > @@ -1924,19 +1874,39 @@ static int ep_send_events(struct eventpoll *ep,
+> >                        * Trigger mode, we need to insert back inside
+> >                        * the ready list, so that the next call to
+> >                        * epoll_wait() will check again the events
+> > -			 * availability. At this point, no one can insert
+> > -			 * into ep->rdllist besides us. The epoll_ctl()
+> > -			 * callers are locked out by
+> > -			 * ep_send_events() holding "mtx" and the
+> > -			 * poll callback will queue them in ep->ovflist.
+> > +			 * availability.
+> >                        */
+> > -			list_add_tail(&epi->rdllink, &ep->rdllist);
+> > +			xchg(&epi->ready, true);
+> > +		}
+> > +	}
+> > +
+> > +	llist_for_each_entry_safe(epi, tmp, txlist.first, rdllink) {
+> > +		/*
+> > +		 * We are done iterating. Allow the items we took to be added back to the ready
+> > +		 * list.
+> > +		 */
+> > +		xchg(&epi->link_locked, false);
+> > +
+> > +		/*
+> > +		 * In the loop above, we may mark some items ready, and they should be added back.
+> > +		 *
+> > +		 * Additionally, someone else may also attempt to add the item to the ready list,
+> > +		 * but got blocked by us. Add those blocked items now.
+> > +		 */
+> > +		if (smp_load_acquire(&epi->ready)) {
+> >                       ep_pm_stay_awake(epi);
+> > +			epitem_ready(epi);
+> >               }
+> 
+> Isn't this missing a:
+> 
+>                 list_del_init(&epi->rdllink);
+> 
+> AFAICT we're always going to overwrite that link when next marking the item
+> as ready, but I'd say it's best to exit this with a clean state. That would
+> have to be before the clearing of link_locked so it doesn't race with a
+> concurrent epitem_ready() call.
 
+To confirm I understand you: there is no functional problem, and your
+comment is more of a "just to be safe"?
+
+Thanks so much for the review,
+Nam
