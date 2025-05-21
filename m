@@ -1,115 +1,205 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04olkn2018.outbound.protection.outlook.com [40.92.46.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8D2A1D7989
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 14:43:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747838591; cv=none; b=O/2k5jp1m910BOnCe4erb4HD3/bWk+LZ46V/tLHAp82R9oo7gauu+khnMmRUKND3TVzkX4eelqe6iT6NdnxzXqCUXqg/QAlnejdXxfPKS3eqZLIi+IbN0zBSICIQk929x3rDGqJsPEubkXo317AEa1J671FwQWKkVpbLkYVqBes=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747838591; c=relaxed/simple;
-	bh=gUwcBOVwmBGZbnpTFEi7ITrisKjfwLPwG8rK08nVLas=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=VEs1gQn7UVqJgSUvQasb7Zd9SzNP1c2rPUOWSgT58VPejaB05za2fslQQS11shypR09016nii/EV9cIgHP/q8/MwrAS8r0JvgYX8dkq4pgpDQY62XtlkxwPOh8KICdOvrmgqvBcraRKGHi3Sy/yLJ5gM5dUr8PgLImnR7/FeqsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=nfR0bkhN; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E89311185;
+	Wed, 21 May 2025 14:44:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.46.18
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747838649; cv=fail; b=VE+73EcSiSrrrjtjzJ3n+n2SB09AmaMy5NcSeAch8GwcVohz5NBWRdd1TlxP5u3MGiXtAYEBClynPgRhtoo4UPxyMRJT45i7ib0D42lDzs+izB5uZkJ/OsXtq942I/qNvFrPemc+CchnkvYebPxapEVLQh11wspoMBzITkMdPEs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747838649; c=relaxed/simple;
+	bh=pm5wRmLzHggTXRXtZ6bwxsbgWGQJQBW0pH0YNsAJHS4=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Hfo04ScRh0bVKlRas41X4ly3CoY5XwEpsY/VBEVJyvO2I62LwFDg/Czm2akqbiWg2DyhgG0AN70KPi1L4zCa5m777jjin/hYqXcHoDkdiAzQvEV6JhdnXaP7Paxb49Okodr57+bI6qPBJ7D56mjFfKeq6sG97JrdasTCqmDTHvA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=q+LYHson; arc=fail smtp.client-ip=40.92.46.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="nfR0bkhN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1747838586;
-	bh=gUwcBOVwmBGZbnpTFEi7ITrisKjfwLPwG8rK08nVLas=;
-	h=From:Date:Subject:To:Cc:From;
-	b=nfR0bkhN3TaQAwjWNn0Y0L1KqbrdI+dzuV8Ceze9Ry7rOe25APRx1grpuoLF67oDD
-	 2JUFwPG/zSX70ts6/wc87a92XLHbek4ifUvwrvPKwBTQRVLbv2xcwhCXtUH5aDhANL
-	 6OkW1ixts8CVkFuuenAQWsmJGtkvF1D+vNHnWNi0=
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-Date: Wed, 21 May 2025 16:42:51 +0200
-Subject: [PATCH] mfd: cros_ec: Separate charge-control probing from USB-PD
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="q+LYHson"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=a2KqJ8cDD47TlIeIOpkLya++RiVASD63mW0AVsNNg5e6HO8AjTXWYYvf+y+ciDj8MKgSwPsEdwpDQMZJ4o168eXJo7K8j/YxbX20sEe0o52gQF0rLfGwS+qfnt/sXHWBhU42w8MRVGJX2VtBMI0wdiTRvkMf9YEwHQeOUDnsbV4mZgHebSMJYs3MEc/ntKvYZ9uq9DpYHfupmigu/UkSlfWau82WN/4cTdfhhIuqLg7h3ToSNjLak50S8qsbsNWOIBuwxT8UX7bkFO9tCG3AvqK9ei0cjncgHIrEuOX5PLjBDT2Kg0NjetRknRMRYmyNI5YDUzNfMi1oRI3RqpD8HA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KTAG9DlCiu852RhH2SB+zmVVSOyAKmkh3iagedbB5tU=;
+ b=jVeWwFXKz5Am6F3HdAT9GrBZIyNx7EQI3JjknVjDHonGcrSdp4AIHMLfbylyCyUOXGhrVdL/LAnXU17XH1yqQ42pQhJF9JuAnmVjBYUn9T/UkTvlrMda1YhynlHV4GEsIJOwkXkbN4ze0VEDLxTgw7DRN6c40+uhkWpt5xgklKeW0BTd52KFs1Qwa0ucJ2Xh+RuwKL+CPl1O3vHkIjSW3UH/6hlMkqrcy8ZMvJJMeNrSclzaiticd4dZEzUMLNlNo5CnA1LOaqrbFyqnH6KY4Fo+TfN3oWi+9iOJxqSPE6JME2XUPqLTTzzJBZSEmAka+M8z0jvSOK8MvYh8s0ECmA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KTAG9DlCiu852RhH2SB+zmVVSOyAKmkh3iagedbB5tU=;
+ b=q+LYHsonf0OktJGcyOMBUkPyGonFLrU1CudsFhMkfmHvFpK3cLD0A/baYyMJUYOb3whM3UWtb09M7vumJAcAImWWOZuH/lVffTkkjdAF1aNwrBQK+PBcvxZ6zqmzhHcVR/aUG24Qq3UP2YDHjBZ0mJFkZnh6fdO00hXm4JbSxHeZsMRQEeS4JqqS4Tapsgjag4r8RNeNChljEG5piSiny0YIFQ7zba9uz+bGv/jSHZvtkp4RIK6oMQQlzzfigbOt4sb8dTrbiVTtF/zt/cT2q+lBn//OIx236oRsCgbV/fThmc+skbFMYlTnpbgNzddEjsn74TaGu2VfrWCjAwwcsQ==
+Received: from BN7PR02MB4148.namprd02.prod.outlook.com (2603:10b6:406:f6::17)
+ by CO6PR02MB8722.namprd02.prod.outlook.com (2603:10b6:303:135::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.28; Wed, 21 May
+ 2025 14:44:04 +0000
+Received: from BN7PR02MB4148.namprd02.prod.outlook.com
+ ([fe80::1c3a:f677:7a85:4911]) by BN7PR02MB4148.namprd02.prod.outlook.com
+ ([fe80::1c3a:f677:7a85:4911%6]) with mapi id 15.20.8746.021; Wed, 21 May 2025
+ 14:44:04 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Peter Zijlstra <peterz@infradead.org>, Sean Christopherson
+	<seanjc@google.com>, Nuno Das Neves <nunodasneves@linux.microsoft.com>
+CC: Paolo Bonzini <pbonzini@redhat.com>, Ingo Molnar <mingo@redhat.com>, Juri
+ Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>,
+	Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "kvmarm@lists.linux.dev"
+	<kvmarm@lists.linux.dev>, K Prateek Nayak <kprateek.nayak@amd.com>, David
+ Matlack <dmatlack@google.com>, Juergen Gross <jgross@suse.com>, Stefano
+ Stabellini <sstabellini@kernel.org>, Oleksandr Tyshchenko
+	<oleksandr_tyshchenko@epam.com>
+Subject: RE: [PATCH v2 08/12] sched/wait: Drop WQ_FLAG_EXCLUSIVE from
+ add_wait_queue_priority()
+Thread-Topic: [PATCH v2 08/12] sched/wait: Drop WQ_FLAG_EXCLUSIVE from
+ add_wait_queue_priority()
+Thread-Index: AQHbyO/u4dGyNPKAQkyMYO6LuyJ7vLPb5gAAgAAyxgCAAOA7gIAAMB+A
+Date: Wed, 21 May 2025 14:44:04 +0000
+Message-ID:
+ <BN7PR02MB4148503E1599C1310F408863D49EA@BN7PR02MB4148.namprd02.prod.outlook.com>
+References: <20250519185514.2678456-1-seanjc@google.com>
+ <20250519185514.2678456-9-seanjc@google.com>
+ <20250520191816.GJ16434@noisy.programming.kicks-ass.net>
+ <aC0AEJX0FIMl9lDy@google.com>
+ <20250521114233.GC39944@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250521114233.GC39944@noisy.programming.kicks-ass.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN7PR02MB4148:EE_|CO6PR02MB8722:EE_
+x-ms-office365-filtering-correlation-id: cc0e37c0-73b4-4829-6a24-08dd9875ef15
+x-ms-exchange-slblob-mailprops:
+ 7J/vb0KDx3hRy7lV+CYJkolW21Iq60BX6PUWK5vDQoybldZ+522gbMQwlIyxBn0ibYkxOXso5Ekmqtp7vqNbJZE7xjBoNjoQUGj20xKZFGOs08mS6F0A7qjf/ychbTKBJ5FWs80udI53ou+lIk+ZIvnM/aB3cELdAdeFKM+wx8uwK8Jf5L5hn8g97HBhcF2TM6eGjeeSZV81K19tQqsY7/s8uyR5ewfairvfs0Gd5LNrJHXv2Q6yut55cLDVaMP4+C9GncN9Xx5uaMA9FWHeLgsKrP5yw2DjqW7jCwVNo93kOvTaLcCRWlUOq3GKa+wSLvePr6GIInSXHyqktYJWRvUQRqT1p9QOwE0HrMJkAMPZHPfLpN6/npgIcjNVH1rx1NPi0fqa1jYfnzqQ7Iuk3a6TyVQ9QIVdubcSfawXsxsO0L7nsJhKhhZbnVpTc0e3UfPd3G8VjoDyoqBVivQhA5CXPMllCl7icdvI5aXlHzmPY4wJAp9O+j2IMZ9n5weInBhG3G8UpmQCNN8jOXyGzO2b3X1rJaHcrhHPptHs7s2FaLr0KDTJ4XXQXn2Hyo7sHazv39Z8DlM/zL5rSc2XF88RBJm1zznt1yNjOjL8JXgEtQTlvt8gS5q/y3e66N95asAcUCRRfghZOSDwDuvLna+j9isOVFHqRXHd45dsUn/+9yM4hES5SYaDcoop9yg1LFjeGDu6jWZyGqoCGNy3jcJ3FmoJOob8BynJ4uxe90Kj1dwzcBF8nFjFaNz8JyxOS+T8YszG36hHNnlYXEp0/5KWyMEKbgXgAtLsd0nLM+Q=
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|19110799006|15080799009|8060799009|8062599006|461199028|3412199025|440099028|11031999003|12091999003|102099032;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?mJs26c8eFNMqG5Ruo44qmZ0iTnncdG7SXn+nG5NJAbYN/YqU1pOoFpJk/spy?=
+ =?us-ascii?Q?OQr7xPO2cP9I0ZZYuOoUyAhEBu3xLVkZkWy7IV0JWWu5ilkkDxOTUhlOBWqY?=
+ =?us-ascii?Q?iyljKUeSKGaOVH1uHV5pw/ndTFgSY8diNhXpdMd+9aFr0MgO5wr0pEUCMPCy?=
+ =?us-ascii?Q?2M22KPMcWBvbQgK4nsXPa/dhab4Kl/fB1yLOBuI568cCgT2eetjlaDaAC0DE?=
+ =?us-ascii?Q?mP8LmvhPLq741EGXL3VXsf2uRz8Fpt/xHtdNclqEwpda3z8HQ++vfTJh4NMU?=
+ =?us-ascii?Q?F1iK6Fv8wkyJQCob0LtM1w9KcosFoaeB74SnEcbI96/0+YvwiLTIzLJBYJVF?=
+ =?us-ascii?Q?hLs10jDYS/gQHl8EizhGX3hWngjFL5Ucd94+5GuGo0owi5OIrrk0ZVwN1Cgg?=
+ =?us-ascii?Q?OUO/sjxL3Cj+N8slJAn1vo9dSPlI2hN1paNhQrIo8QnCc5wW1c6DJ9TU1PQa?=
+ =?us-ascii?Q?FeOhRFuNHxm66IUd+yF/fRKot/SNwcnTowQJJYQRh1YEIIdDvhd4xBeZdqf6?=
+ =?us-ascii?Q?a/MxDT52PedjC5Tuf4gwZMl1OhyJpiatweVRg+O6PIjehCUQLBOAx3jMETyE?=
+ =?us-ascii?Q?GTgu6xxpo+4MSmS2f7RSgu7zmaV3vTDpBjyDnD/dPRMkLphmpUlSat6hW1aj?=
+ =?us-ascii?Q?Q0N7Z6dpEWjGhQrY9phjijY9bI0Rc+UyjSl9x0Xn7l6pIVIzN8ijV6qAbLYk?=
+ =?us-ascii?Q?IKHRZ4i7BIvGzcj7E0b19weG8bOYGgbxGB5fS31KBZwBxxtoDhB5qXRRw8vR?=
+ =?us-ascii?Q?Xcs3TGyHAO4QDuivcAy5AnY9Q0iR0iQ1blWaVmKvyCG+n/WGX3QUBSr83Yvx?=
+ =?us-ascii?Q?JUqrvz+xAOe5EfqoL2jjyIYIFkwpuPde57QFdAaiORlacSIaV6LB6lBbzKkG?=
+ =?us-ascii?Q?uEw+gpkdL4VmAHzynRe/jPmEpPA2ROK392izUWN2JyhmTMHZAfQ+NheptsMs?=
+ =?us-ascii?Q?ZAeIJntW94jbpKfzf/oKKp/ICuIWC0KIQ2ube1+HX/19wVDvir/vHfOwwDrm?=
+ =?us-ascii?Q?Le0acbVggqjrWj1wQIgNeP1jYHalTffSQieGlCUe/d2nvbE7IOJe1A/nnvQq?=
+ =?us-ascii?Q?mgD56U1jVQqwKKLjnBdTSWi4UMiwh+Opm63qWnN5+XJkL7bweB6emJXn5mzp?=
+ =?us-ascii?Q?ZPLsxVJ39/fLQMn4t5FX1avsFfyOBj/IfQ=3D=3D?=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?fwC879NcSwQeuRZcem3YXJS1jQDgFanjUTz1wvne4eSBrq8L8B/CaJpwdIXr?=
+ =?us-ascii?Q?JoG/I1d0IRi1Q/r5qAMoY4S4HbkCvzaMbIMTSHKTiNGi2gvrMqMe4xzPYpCO?=
+ =?us-ascii?Q?WP1jPbHwJW13ccxYzozxuHBI3xYL0csW32zkvlqj/GS8X1qoqrvtFDVT0bJ0?=
+ =?us-ascii?Q?p69U7afkCWMi/V0sTuXP0wwo9bDxjrevBNCI2XhxpBCAbn/d5qB5e3n9T7Jp?=
+ =?us-ascii?Q?7z5QN70AxPtXuFadBrYsRtXg7i0nUg5pfH//iyA/XmFCd48XXEo77A8uwjhx?=
+ =?us-ascii?Q?dy+NmcYMmxkzAT19JtSgLfMFJopatCI7aJx8mQmF9xbcyVxsLd/vJBUGrFi5?=
+ =?us-ascii?Q?Kn7d5UnroKgDZ4MZFVO+URqNYMox9kBHcYct9hXxj/d1EKL/ZpecgJ9N/EXX?=
+ =?us-ascii?Q?2XNT+eHM8bVHwQZjhX/MQt4VtqXpCBJNNSqHSLwndbpg1eaiNMTbq8SROngb?=
+ =?us-ascii?Q?2iWe/fTZsi5uke1oNpsHpOlQawlLYsThY4AI9pXA8OYh+2lcZ8Tv9MEPP+6Q?=
+ =?us-ascii?Q?e/42+n7aPVtaAh+9+TO6LxyvSjtQcdEOlX1gCPRf4StVX4aTYnWraEBgp8u1?=
+ =?us-ascii?Q?c9THv556f8QXWU4x3+5z5io/wthwvg9lkn4KL3m5we3wL9zlkrfbjxA5QGJA?=
+ =?us-ascii?Q?Iix8td8Mmb5BgA+VEyGpPnRnDZiCz4VZORv4wSAZfMVsAXdCwY1QzMOO6ASf?=
+ =?us-ascii?Q?T1ffqGBLGIGXjDCjTRJEwREl6HrgXLwZrZl0Tfygxxk0UjW5byGTPxCTCyB7?=
+ =?us-ascii?Q?Hv2/8XQSk9T1wlkyGeFYs4SrwZk5qn1ILPOECgYixqdwQ/MHQAMMSiJM2b3U?=
+ =?us-ascii?Q?Tn0ZwL5IM0sqzS3uWM/MMDeCYv9Ox2MwyBT88u6VtUO+dj8Kox16j+VfRX4s?=
+ =?us-ascii?Q?lJshEw0f+xgaPO3IdsaYT+smE7GGJujdsSn7pcXh9loVqE4CSE/k52whHWNB?=
+ =?us-ascii?Q?KkX1ovCodS0aWfe3XAweClMK8iCYEMm3dYpUFaoCvYGmyopEFPYHhRWEjLSO?=
+ =?us-ascii?Q?tZ4wXPvBmllaN4o1m4sZRlj1UJGhiLE8mLi2FYdG8mS88zHqGV+FADBvMc7q?=
+ =?us-ascii?Q?Z9AlS/WZmdgnaYwyCWMbQn0lAMtj0P1Wt59GoSFHPvD6AXP5PNCvU8NxVwRm?=
+ =?us-ascii?Q?9XHctv2CPaGbhBcySka7y3CwIywvfH5m7UQsCKu0WjpoDPdFAdG86hO6u8gs?=
+ =?us-ascii?Q?niIJse/H7S8M3XDPA/QHE/joyLphIXLbkInVkGxGx8TDiNJTPrqVR/scwwQ?=
+ =?us-ascii?Q?=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250521-cros-ec-mfd-chctl-probe-v1-1-6ebfe3a6efa7@weissschuh.net>
-X-B4-Tracking: v=1; b=H4sIAGrmLWgC/x3MQQqEMAxA0atI1hNoqxbGq8gsaowacKykIkLx7
- haXb/F/hsQqnKCrMiifkiRuBfZTAS1hmxllLAZnXGtaZ5E0JmTC/zQiLXSsuGscGH0TfB3oS9Y
- bKPWuPMn1nvvffT+HnZElaQAAAA==
-X-Change-ID: 20250521-cros-ec-mfd-chctl-probe-64a63ac9c160
-To: Lee Jones <lee@kernel.org>, Benson Leung <bleung@chromium.org>, 
- Guenter Roeck <groeck@chromium.org>
-Cc: chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747838586; l=2260;
- i=linux@weissschuh.net; s=20221212; h=from:subject:message-id;
- bh=gUwcBOVwmBGZbnpTFEi7ITrisKjfwLPwG8rK08nVLas=;
- b=oF45TE5BS13P0F875i6zxfjLXbgVS3Tk6qOm+yjtDC6PfrXYgz/c/OTDUhvQmcrYLHb/V5Rx2
- BC1ujxXXzkDCBKQhPtYVv5DaPjzMeLYdPnO1SVXCyLOLTZM4VUVQqeL
-X-Developer-Key: i=linux@weissschuh.net; a=ed25519;
- pk=KcycQgFPX2wGR5azS7RhpBqedglOZVgRPfdFSPB1LNw=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN7PR02MB4148.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: cc0e37c0-73b4-4829-6a24-08dd9875ef15
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 May 2025 14:44:04.5791
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR02MB8722
 
-The charge-control subsystem in the ChromeOS EC is not strictly tied to
-its USB-PD subsystem.
-Since commit 7613bc0d116a ("mfd: cros_ec: Don't load charger with UCSI")
-the presence of EC_FEATURE_UCSI_PPM would inhibit the probing of the
-charge-control driver.
-Furthermore recent versions of the EC firmware in Framework laptops
-hard-disable EC_FEATURE_USB_PD to avoid probing cros-usbpd-charger,
-which then also breaks cros-charge-control.
+From: Peter Zijlstra <peterz@infradead.org> Sent: Wednesday, May 21, 2025 4=
+:43 AM
+>=20
+> On Tue, May 20, 2025 at 03:20:00PM -0700, Sean Christopherson wrote:
+> > On Tue, May 20, 2025, Peter Zijlstra wrote:
+> > > On Mon, May 19, 2025 at 11:55:10AM -0700, Sean Christopherson wrote:
+> > > > Drop the setting of WQ_FLAG_EXCLUSIVE from add_wait_queue_priority(=
+) to
+> > > > differentiate it from add_wait_queue_priority_exclusive().  The one=
+ and
+> > > > only user add_wait_queue_priority(), Xen privcmd's irqfd_wakeup(),
+> > > > unconditionally returns '0', i.e. doesn't actually operate in exclu=
+sive
+> > > > mode.
+> > >
+> > > I find:
+> > >
+> > > drivers/hv/mshv_eventfd.c:      add_wait_queue_priority(wqh, &irqfd->=
+irqfd_wait);
+> > > drivers/xen/privcmd.c:  add_wait_queue_priority(wqh, &kirqfd->wait);
+> > >
+> > > I mean, it might still be true and all, but hyperv seems to also use
+> > > this now.
+> >
+> > Oh FFS, another "heavily inspired by KVM".  I should have bribed someon=
+e to take
+> > this series when I had the chance.  *sigh*
+> >
+> > Unfortunately, the Hyper-V code does actually operate in exclusive mode=
+.  Unless
+> > you have a better idea, I'll tweak the series to:
+> >
+> >   1. Drop WQ_FLAG_EXCLUSIVE from add_wait_queue_priority() and have the=
+ callers
+> >      explicitly set the flag,
+> >   2. Add a patch to drop WQ_FLAG_EXCLUSIVE from Xen privcmd entirely.
+> >   3. Introduce add_wait_queue_priority_exclusive() and switch KVM to us=
+e it.
+> >
+> > That has an added bonus of introducing the Xen change in a dedicated pa=
+tch, i.e.
+> > is probably a sequence anyways.
+> >
+> > Alternatively, I could rewrite the Hyper-V code a la the KVM changes, b=
+ut I'm not
+> > feeling very charitable at the moment (the complete lack of documentati=
+on for
+> > their ioctl doesn't help).
+>=20
+> Works for me. Michael is typically very responsive wrt hyperv (but you
+> probably know this).
 
-Instead use the dedicated EC_FEATURE_CHARGER.
+I can't be much help on this issue. This Hyper-V code is for Linux running =
+in
+the root partition (i.e., "dom0") and I don't have a setup where I can run =
+and
+test that configuration.
 
-Link: https://github.com/FrameworkComputer/EmbeddedController/commit/1d7bcf1d50137c8c01969eb65880bc83e424597e
-Fixes: 555b5fcdb844 ("mfd: cros_ec: Register charge control subdevice")
-Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
----
- drivers/mfd/cros_ec_dev.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+Adding Nuno Das Neves from Microsoft for his thoughts.
 
-diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
-index 9f84a52b48d6a8994d23edba999398684303ee64..dc80a272726bb16b58253418999021cd56dfd975 100644
---- a/drivers/mfd/cros_ec_dev.c
-+++ b/drivers/mfd/cros_ec_dev.c
-@@ -87,7 +87,6 @@ static const struct mfd_cell cros_ec_sensorhub_cells[] = {
- };
- 
- static const struct mfd_cell cros_usbpd_charger_cells[] = {
--	{ .name = "cros-charge-control", },
- 	{ .name = "cros-usbpd-charger", },
- 	{ .name = "cros-usbpd-logger", },
- };
-@@ -112,6 +111,10 @@ static const struct mfd_cell cros_ec_ucsi_cells[] = {
- 	{ .name = "cros_ec_ucsi", },
- };
- 
-+static const struct mfd_cell cros_ec_charge_control_cells[] = {
-+	{ .name = "cros-charge-control", },
-+};
-+
- static const struct cros_feature_to_cells cros_subdevices[] = {
- 	{
- 		.id		= EC_FEATURE_CEC,
-@@ -148,6 +151,11 @@ static const struct cros_feature_to_cells cros_subdevices[] = {
- 		.mfd_cells	= cros_ec_keyboard_leds_cells,
- 		.num_cells	= ARRAY_SIZE(cros_ec_keyboard_leds_cells),
- 	},
-+	{
-+		.id		= EC_FEATURE_CHARGER,
-+		.mfd_cells	= cros_ec_charge_control_cells,
-+		.num_cells	= ARRAY_SIZE(cros_ec_charge_control_cells),
-+	},
- };
- 
- static const struct mfd_cell cros_ec_platform_cells[] = {
-
----
-base-commit: 4a95bc121ccdaee04c4d72f84dbfa6b880a514b6
-change-id: 20250521-cros-ec-mfd-chctl-probe-64a63ac9c160
-
-Best regards,
--- 
-Thomas Weißschuh <linux@weissschuh.net>
-
+Michael
