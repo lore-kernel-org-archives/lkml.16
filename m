@@ -1,215 +1,233 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97859221FB3;
-	Wed, 21 May 2025 20:12:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961F6221713;
+	Wed, 21 May 2025 20:17:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747858342; cv=none; b=dFPJOcbzwrKNhxH5MiZI6P1jIcAH2Hi0Gb8ckeflDirN6vnry1kUrWcAFaXF75Pl+NbMWA4o5GTHqeHApho6XGZhS8G4TzbwFnEJoywKrJfVGiftXCpHY0plMoBbevsBg8/Yhw6wdvv2////2hB9VN/BGBYKA66lkZDtpy6edqc=
+	t=1747858664; cv=none; b=L2lfRqHNo6Xj7WHWx1eMN0xf81Q84io8QYkq3OFyh+T4w17n0SUJ18mx84Xda6CO6HOi7sIRgZRskAPIgh9mOzjT7Z+qPKcyqIWNuJNWEouAlmd3rT4MofRd80HAKy3+QTiE4EjZ98NtMzFFUqVPv8xS62M7dPnMfy/ioRPdygE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747858342; c=relaxed/simple;
-	bh=Ti/jGpIFtUi/Ap6FZTb/37u6XnIEqTk/wXTVcbJXyF0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UOzYNl1DI7wOjFgHFkpoP2LRXzd71iTuqtTqjuhPvyIGxIycF5hiBzfvy/WPbZjy95qaNwharae3w63ymY1mKeouSUwfG5de9Esc4yGOd/K/xKBbKzfKdOwtWNjWNQsgJIJCCdH0B9hU1EIlGsBvbyGVlsNH+EUjrKAkpVWOAzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NthqHSec; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747858664; c=relaxed/simple;
+	bh=OcRrlj7xdaiC5clW99dAz86chXxQeFIdlShKpSfDJoU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Zn4hTwbE9PBmDh0FomrTMlf/JRyfShlBXdp5QFdcgylc9RMUYcpAZ56ikL4u+Se+FlkuZOAX8BqzoG0oSwsLS6urV8/2IUR5z5g82GnxfdtX5JFrqaElew14sIdTZEn69BeeeLpJ/TOYMw9N3WyzkUSeWd8mn3E/0Nz+H7Csq+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f0FpCaxK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NthqHSec"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747858341; x=1779394341;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Ti/jGpIFtUi/Ap6FZTb/37u6XnIEqTk/wXTVcbJXyF0=;
-  b=NthqHSec6BrAqmPNf8f0VYMpd5UbHjcl1bPTIe8CIUnP0v7yOxexbujG
-   ekffz12UBi3XqqGDpbKqz2ByzbxUQvY9AGT4SYYssRFx5q3XW/6gh41gi
-   qheMj3IvC+nT2QQfNAg8cb9joRIgH72+wC+8U8cRdqh1rcJp9JkE2Kdlz
-   T64iwnTxNQAoWPlaXiYJUbrRFEOmAKGhEPY8nuFYh6EWYuZNGNXzV5WX2
-   madXj2rNVwd8dXtnWBpD9Gc/3Pjxgty3JyM5NbA8RDwarX72J5fMIJU8R
-   QJuEr0Ja+Q3+FWk5MfWhJygu0JYe4ERstuYAB86DH7X3kjw98gWBmaBKK
-   g==;
-X-CSE-ConnectionGUID: vOCerZ0xS1qpcsS+w9DwgQ==
-X-CSE-MsgGUID: TuZ6HsbRQpqCm4blGBkAJQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="49844469"
-X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
-   d="scan'208";a="49844469"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 13:12:20 -0700
-X-CSE-ConnectionGUID: iBZeE0jgTUi2pFpSYutiDA==
-X-CSE-MsgGUID: mLWseC/HRF2HgQ3nC46w+Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
-   d="scan'208";a="140078715"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 13:12:19 -0700
-Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 19EBE20B5736;
-	Wed, 21 May 2025 13:12:17 -0700 (PDT)
-Message-ID: <1513350b-7de3-405a-b6c5-fcaf9efebf3b@linux.intel.com>
-Date: Wed, 21 May 2025 16:12:15 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f0FpCaxK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02EC5C4CEE4;
+	Wed, 21 May 2025 20:17:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747858664;
+	bh=OcRrlj7xdaiC5clW99dAz86chXxQeFIdlShKpSfDJoU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=f0FpCaxKfQZTRgXEWzIjCh/Ijb82lawhRKMczr3wkR93kyW8tin1ESpQ0nJ02jt0x
+	 QWk6172yvTZ8Po57OBUMT2rIP8UXcnu0gEqmHvNa3Kz6OAHTNuDnZ/syNqAkFScNO4
+	 noNWwUxLV0QoPXGBw2pRn42jcXI6reaOpG71me74DU0OpSVJerKLg9Ci/xYCLO0RoG
+	 Ied4jf5r6LA+MjS4N9sL73zkboJjKf85ptFl/mPMlJV9OKXMFq+eUmF/+2Yq+0/PQ3
+	 aGkn2CejABhgm0U0eXukwr9afPI37+bMGQtbIv4uYxqb27l3oTpm2WaSvKDYxD526F
+	 i0I/DrztrXaHQ==
+Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-3fbaa18b810so2352900b6e.2;
+        Wed, 21 May 2025 13:17:43 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU1ZG5W9MhV6jo9CXDOwfrtnBnnyze8mpSSbN5Uj+3aSyUf0EoyqFARey313KXohcK8c2ne4Xz7SSfcriL+@vger.kernel.org, AJvYcCX/QjUj6Q6SaEGZPLLgdR6m4ut+TxkALvg5yMQ4MoY0wGinkvsMMAD3fDE0quJTDy136vUVUDL9q1Jc@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRR45YEnXQSGU9RGDXkQTvZ4ob89WAD7h3ziWR+Y3OMe5imOn1
+	8IfrBFKn+gcMYoL/0BLWmYkAWlk+IUoUJjlXbfiLHPW+m7zLmQNCIZFb+cWl45Qj6Lgnz/JkdSN
+	2KbKxwVuCz7socXa18MwyrS/l4YTOctE=
+X-Google-Smtp-Source: AGHT+IEla/7OsBunWSBkZYFCsgl0DpTjBkEnFqnChnn85Xl5ZHXukeaimdJeqpTZUi6sozTY3Kg0ceoNvlrRQueeryk=
+X-Received: by 2002:a05:6808:4447:b0:3f8:93c5:6d85 with SMTP id
+ 5614622812f47-404da760a09mr11955098b6e.16.1747858663283; Wed, 21 May 2025
+ 13:17:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 05/38] perf: Add generic exclude_guest support
-To: Namhyung Kim <namhyung@kernel.org>, Mingwei Zhang <mizhang@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Sean Christopherson <seanjc@google.com>, Paolo Bonzini
- <pbonzini@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com,
- "H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
- linux-kselftest@vger.kernel.org, Yongwei Ma <yongwei.ma@intel.com>,
- Xiong Zhang <xiong.y.zhang@linux.intel.com>,
- Dapeng Mi <dapeng1.mi@linux.intel.com>, Jim Mattson <jmattson@google.com>,
- Sandipan Das <sandipan.das@amd.com>, Zide Chen <zide.chen@intel.com>,
- Eranian Stephane <eranian@google.com>, Shukla Manali
- <Manali.Shukla@amd.com>, Nikunj Dadhania <nikunj.dadhania@amd.com>
-References: <20250324173121.1275209-1-mizhang@google.com>
- <20250324173121.1275209-6-mizhang@google.com> <aC4vyIpKk6m2nz8-@google.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <aC4vyIpKk6m2nz8-@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250518185111.3560-1-W_Armin@gmx.de>
+In-Reply-To: <20250518185111.3560-1-W_Armin@gmx.de>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 21 May 2025 22:17:30 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hNmMtR4V0tYqD1dV2BqAKJ2sCOyBadkVtG3sS3V90uvw@mail.gmail.com>
+X-Gm-Features: AX0GCFsebpZ_dmCbnnO_Avxc4XYzYmOYwknKN0mNIyDBQyWOD5ECcbZax0_zh3U
+Message-ID: <CAJZ5v0hNmMtR4V0tYqD1dV2BqAKJ2sCOyBadkVtG3sS3V90uvw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] ACPI: platform_profile: Add support for non-ACPI platforms
+To: Armin Wolf <W_Armin@gmx.de>
+Cc: rafael@kernel.org, lenb@kernel.org, j@jannau.net, 
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Sun, May 18, 2025 at 8:51=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wrote:
+>
+> Currently the platform profile subsystem assumes that all supported
+> (i.e. ACPI-capable) platforms always run with ACPI being enabled.
+> However some ARM64 notebooks do not support ACPI and are instead
+> using devicetree for booting.
+>
+> Do not register the legacy sysfs interface on such devices as it
+> depends on the acpi_kobj (/sys/firmware/acpi/) being present. Users
+> are encouraged to use the new platform-profile class interface
+> instead.
 
+So how does it work in this case?
 
-On 2025-05-21 3:55 p.m., Namhyung Kim wrote:
-> On Mon, Mar 24, 2025 at 05:30:45PM +0000, Mingwei Zhang wrote:
->> From: Kan Liang <kan.liang@linux.intel.com>
->>
->> Only KVM knows the exact time when a guest is entering/exiting. Expose
->> two interfaces to KVM to switch the ownership of the PMU resources.
->>
->> All the pinned events must be scheduled in first. Extend the
->> perf_event_sched_in() helper to support extra flag, e.g., EVENT_GUEST.
->>
->> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
->> Signed-off-by: Mingwei Zhang <mizhang@google.com>
->> ---
->>  include/linux/perf_event.h |  4 ++
->>  kernel/events/core.c       | 80 ++++++++++++++++++++++++++++++++++----
->>  2 files changed, 77 insertions(+), 7 deletions(-)
->>
->> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
->> index 7bda1e20be12..37187ee8e226 100644
->> --- a/include/linux/perf_event.h
->> +++ b/include/linux/perf_event.h
->> @@ -1822,6 +1822,8 @@ extern int perf_event_period(struct perf_event *event, u64 value);
->>  extern u64 perf_event_pause(struct perf_event *event, bool reset);
->>  int perf_get_mediated_pmu(void);
->>  void perf_put_mediated_pmu(void);
->> +void perf_guest_enter(void);
->> +void perf_guest_exit(void);
->>  #else /* !CONFIG_PERF_EVENTS: */
->>  static inline void *
->>  perf_aux_output_begin(struct perf_output_handle *handle,
->> @@ -1919,6 +1921,8 @@ static inline int perf_get_mediated_pmu(void)
->>  }
->>  
->>  static inline void perf_put_mediated_pmu(void)			{ }
->> +static inline void perf_guest_enter(void)			{ }
->> +static inline void perf_guest_exit(void)			{ }
->>  #endif
->>  
->>  #if defined(CONFIG_PERF_EVENTS) && defined(CONFIG_CPU_SUP_INTEL)
->> diff --git a/kernel/events/core.c b/kernel/events/core.c
->> index 7a2115b2c5c1..d05487d465c9 100644
->> --- a/kernel/events/core.c
->> +++ b/kernel/events/core.c
->> @@ -2827,14 +2827,15 @@ static void task_ctx_sched_out(struct perf_event_context *ctx,
->>  
->>  static void perf_event_sched_in(struct perf_cpu_context *cpuctx,
->>  				struct perf_event_context *ctx,
->> -				struct pmu *pmu)
->> +				struct pmu *pmu,
->> +				enum event_type_t event_type)
->>  {
->> -	ctx_sched_in(&cpuctx->ctx, pmu, EVENT_PINNED);
->> +	ctx_sched_in(&cpuctx->ctx, pmu, EVENT_PINNED | event_type);
->>  	if (ctx)
->> -		 ctx_sched_in(ctx, pmu, EVENT_PINNED);
->> -	ctx_sched_in(&cpuctx->ctx, pmu, EVENT_FLEXIBLE);
->> +		ctx_sched_in(ctx, pmu, EVENT_PINNED | event_type);
->> +	ctx_sched_in(&cpuctx->ctx, pmu, EVENT_FLEXIBLE | event_type);
->>  	if (ctx)
->> -		 ctx_sched_in(ctx, pmu, EVENT_FLEXIBLE);
->> +		ctx_sched_in(ctx, pmu, EVENT_FLEXIBLE | event_type);
->>  }
->>  
->>  /*
->> @@ -2890,7 +2891,7 @@ static void ctx_resched(struct perf_cpu_context *cpuctx,
->>  	else if (event_type & EVENT_PINNED)
->>  		ctx_sched_out(&cpuctx->ctx, pmu, EVENT_FLEXIBLE);
->>  
->> -	perf_event_sched_in(cpuctx, task_ctx, pmu);
->> +	perf_event_sched_in(cpuctx, task_ctx, pmu, 0);
->>  
->>  	for_each_epc(epc, &cpuctx->ctx, pmu, 0)
->>  		perf_pmu_enable(epc->pmu);
->> @@ -4188,7 +4189,7 @@ static void perf_event_context_sched_in(struct task_struct *task)
->>  		ctx_sched_out(&cpuctx->ctx, NULL, EVENT_FLEXIBLE);
->>  	}
->>  
->> -	perf_event_sched_in(cpuctx, ctx, NULL);
->> +	perf_event_sched_in(cpuctx, ctx, NULL, 0);
->>  
->>  	perf_ctx_sched_task_cb(cpuctx->task_ctx, true);
->>  
->> @@ -6040,6 +6041,71 @@ void perf_put_mediated_pmu(void)
->>  }
->>  EXPORT_SYMBOL_GPL(perf_put_mediated_pmu);
->>  
->> +static inline void perf_host_exit(struct perf_cpu_context *cpuctx)
->> +{
->> +	perf_ctx_disable(&cpuctx->ctx, EVENT_GUEST);
->> +	ctx_sched_out(&cpuctx->ctx, NULL, EVENT_GUEST);
->> +	perf_ctx_enable(&cpuctx->ctx, EVENT_GUEST);
->> +	if (cpuctx->task_ctx) {
->> +		perf_ctx_disable(cpuctx->task_ctx, EVENT_GUEST);
->> +		task_ctx_sched_out(cpuctx->task_ctx, NULL, EVENT_GUEST);
->> +		perf_ctx_enable(cpuctx->task_ctx, EVENT_GUEST);
->> +	}
->> +}
-> 
-> Cpu context and task context may have events in the same PMU.
-> How about this?
-> 
-> 	perf_ctx_disable(&cpuctx->ctx, EVENT_GUEST);
-> 	if (cpuctx->task_ctx)
-> 		perf_ctx_disable(cpuctx->task_ctx, EVENT_GUEST);
-> 
-> 	ctx_sched_out(&cpuctx->ctx, NULL, EVENT_GUEST);
-> 	if (cpuctx->task_ctx)
-> 		task_ctx_sched_out(cpuctx->task_ctx, NULL, EVENT_GUEST);
-> 
-> 	if (cpuctx->task_ctx)
-> 		perf_ctx_enable(cpuctx->task_ctx, EVENT_GUEST);
-> 	perf_ctx_enable(&cpuctx->ctx, EVENT_GUEST);
-> 
-
-Yes, this is what has to be fixed in V4.
-
-No matter for load context or put context, I think the below steps have
-to be followed.
-- Disable both cpuctx->ctx and cpuctx->task_ctx
-- schedule in/out host counters and load/put guest countext
-- Enable both cpuctx->ctx and cpuctx->task_ctx
-
-A similar proposed can be found at
-https://lore.kernel.org/lkml/4aaf67ab-aa5c-41e6-bced-3cb000172c52@linux.intel.com/
-
-Thanks,
-Kan
-
+> Reviewed-by: Janne Grunau <j@jannau.net>
+> Tested-by: Janne Grunau <j@jannau.net>
+> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+> ---
+>  drivers/acpi/platform_profile.c | 68 ++++++++++++++++++++++++++-------
+>  1 file changed, 55 insertions(+), 13 deletions(-)
+>
+> diff --git a/drivers/acpi/platform_profile.c b/drivers/acpi/platform_prof=
+ile.c
+> index ffbfd32f4cf1..c5a5da7d03f1 100644
+> --- a/drivers/acpi/platform_profile.c
+> +++ b/drivers/acpi/platform_profile.c
+> @@ -190,6 +190,20 @@ static ssize_t profile_show(struct device *dev,
+>         return sysfs_emit(buf, "%s\n", profile_names[profile]);
+>  }
+>
+> +/**
+> + * profile_notify_legacy - Notify the legacy sysfs interface
+> + *
+> + * This wrapper takes care of only notifying the legacy sysfs interface
+> + * if it was registered during module initialization.
+> + */
+> +static void profile_notify_legacy(void)
+> +{
+> +       if (!acpi_kobj)
+> +               return;
+> +
+> +       sysfs_notify(acpi_kobj, NULL, "platform_profile");
+> +}
+> +
+>  /**
+>   * profile_store - Set the profile for a class device
+>   * @dev: The device
+> @@ -215,7 +229,7 @@ static ssize_t profile_store(struct device *dev,
+>                         return ret;
+>         }
+>
+> -       sysfs_notify(acpi_kobj, NULL, "platform_profile");
+> +       profile_notify_legacy();
+>
+>         return count;
+>  }
+> @@ -435,7 +449,7 @@ static ssize_t platform_profile_store(struct kobject =
+*kobj,
+>                         return ret;
+>         }
+>
+> -       sysfs_notify(acpi_kobj, NULL, "platform_profile");
+> +       profile_notify_legacy();
+>
+>         return count;
+>  }
+> @@ -472,6 +486,22 @@ static const struct attribute_group platform_profile=
+_group =3D {
+>         .is_visible =3D profile_class_is_visible,
+>  };
+>
+> +/**
+> + * profile_update_legacy - Update the legacy sysfs interface
+> + *
+> + * This wrapper takes care of only updating the legacy sysfs interface
+> + * if it was registered during module initialization.
+> + *
+> + * Return: 0 on success or error code on failure.
+> + */
+> +static int profile_update_legacy(void)
+> +{
+> +       if (!acpi_kobj)
+> +               return 0;
+> +
+> +       return sysfs_update_group(acpi_kobj, &platform_profile_group);
+> +}
+> +
+>  /**
+>   * platform_profile_notify - Notify class device and legacy sysfs interf=
+ace
+>   * @dev: The class device
+> @@ -481,7 +511,7 @@ void platform_profile_notify(struct device *dev)
+>         scoped_cond_guard(mutex_intr, return, &profile_lock) {
+>                 _notify_class_profile(dev, NULL);
+>         }
+> -       sysfs_notify(acpi_kobj, NULL, "platform_profile");
+> +       profile_notify_legacy();
+>  }
+>  EXPORT_SYMBOL_GPL(platform_profile_notify);
+>
+> @@ -529,7 +559,7 @@ int platform_profile_cycle(void)
+>                         return err;
+>         }
+>
+> -       sysfs_notify(acpi_kobj, NULL, "platform_profile");
+> +       profile_notify_legacy();
+>
+>         return 0;
+>  }
+> @@ -603,9 +633,9 @@ struct device *platform_profile_register(struct devic=
+e *dev, const char *name,
+>                 goto cleanup_ida;
+>         }
+>
+> -       sysfs_notify(acpi_kobj, NULL, "platform_profile");
+> +       profile_notify_legacy();
+>
+> -       err =3D sysfs_update_group(acpi_kobj, &platform_profile_group);
+> +       err =3D profile_update_legacy();
+>         if (err)
+>                 goto cleanup_cur;
+>
+> @@ -639,8 +669,8 @@ void platform_profile_remove(struct device *dev)
+>         ida_free(&platform_profile_ida, pprof->minor);
+>         device_unregister(&pprof->dev);
+>
+> -       sysfs_notify(acpi_kobj, NULL, "platform_profile");
+> -       sysfs_update_group(acpi_kobj, &platform_profile_group);
+> +       profile_notify_legacy();
+> +       profile_update_legacy();
+>  }
+>  EXPORT_SYMBOL_GPL(platform_profile_remove);
+>
+> @@ -692,16 +722,28 @@ static int __init platform_profile_init(void)
+>         if (err)
+>                 return err;
+>
+> -       err =3D sysfs_create_group(acpi_kobj, &platform_profile_group);
+> -       if (err)
+> -               class_unregister(&platform_profile_class);
+> +       /*
+> +        * The ACPI kobject can be missing if ACPI was disabled during bo=
+oting.
+> +        * We thus skip the initialization of the legacy sysfs interface =
+in such
+> +        * cases to allow the platform profile class to work on ARM64 not=
+ebooks
+> +        * without ACPI support.
+> +        */
+> +       if (acpi_kobj) {
+> +               err =3D sysfs_create_group(acpi_kobj, &platform_profile_g=
+roup);
+> +               if (err < 0) {
+> +                       class_unregister(&platform_profile_class);
+> +                       return err;
+> +               }
+> +       }
+>
+> -       return err;
+> +       return 0;
+>  }
+>
+>  static void __exit platform_profile_exit(void)
+>  {
+> -       sysfs_remove_group(acpi_kobj, &platform_profile_group);
+> +       if (acpi_kobj)
+> +               sysfs_remove_group(acpi_kobj, &platform_profile_group);
+> +
+>         class_unregister(&platform_profile_class);
+>  }
+>  module_init(platform_profile_init);
+> --
+> 2.39.5
+>
+>
