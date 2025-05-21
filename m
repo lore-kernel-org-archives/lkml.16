@@ -1,143 +1,337 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D802E264A95
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 13:00:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F4FB264FAC;
+	Wed, 21 May 2025 13:00:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747832451; cv=none; b=YW4vT1Lmqrqhc7ZoVcEu8SPkJcj+kS+QR69lx7GA/71V1xaieLFqmptaZZdTwdtQOUCZCsAzJ9APyZNsxUMW9+ZPzaRlHQtdghguwRCoS6EZyq6R2eE+2IXPxyS+uj63KFWxJh3ZArXPfgnaIXhhcNkjSvcM5BuSq/lf9vYaQJE=
+	t=1747832460; cv=none; b=Qe2498P6CJ8WAqu1sYuOoEHGc8KsnLtp33/0ZysQjryNHURsIFB+/A3afqg+F+Ks2o6gZpwR30pJdRPW6s4voZ0gDDxCK76GfLNGUoUOvij1N20Drmh78TqMGwZwtWPVjGBT5JV93kHy4kDBt0Wl7i+Bt+J1hgaNLy/mRvt+jpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747832451; c=relaxed/simple;
-	bh=lYzq7FnKukIi50yWRCJdbpDI7oekzUVqld5ufIZMPro=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MnnAO85tBMT69PEDj2CO7Y25a5oxwITW9NCgSauOOszWKSSrLmdFRAbnZYEH9aoygCvpM1UUXnf23fh2Le2j7bYOj67etw7T6SHfDPht6nwRkmyMd3nQDGL0eJv1BRbH8tmWIhWrzNPqw4ZWuLd4Kw9HFX+KXtsUiDpu9awoeIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=bxWJOdko; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1747832460; c=relaxed/simple;
+	bh=rg55iyiBHKG2wUOvJ00x2/JyRj3YceESEI11ZlcTUbI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=nP1gOzX1YQpDW6jRbQZYRLR94Fv8CbJF2XXpA+toP/7c4vq6T7U3NPUVa0O6ylw0Y1HFmS86qas6cHUDpLFNxes5vnqizu6E0035k3Yrtrr0w95rYsRHngwRrVoOQCRXPaRXJgthIOMC3i3LKU2vYPGDxu7onJbEPFt6mGPdQNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PLoCBqbE; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="bxWJOdko"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54L9Xmig016872
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 13:00:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=Yns8J8yDIbLcf0BsCQyO2F82
-	y37jhFFOk2oNKiqIfAc=; b=bxWJOdkoC1gAaaHmK+d9NwpVqkp4DDu7jdw+LyEq
-	lWXmq49tw8TF9IZsk2bS5abm8AClZa5zbNH9H82tOOC0deLKxyg+zhKvHeNDaIGs
-	sWLhW4XIBCv/KcnoHt4OP2wt3ltV8cmHoxFyPqhrJJLv8hlPJ7lVEz0vst/y8uA0
-	wV9JiZ2hWxyY2XjFPxEG1bSCNiGhpA1GAfXCI9OFp+FhyWBPwo4ciI5O9nwTcT6h
-	1zQmqTwq/oIvGAzhm7iaH0WihntDXhYbznHKZLyBee3+yhXrRFhDJPOHAPqf1nrM
-	38ZCUhrSe3vAV4uEnAeUAZMVUh+977njzitVyOlX9cGNHg==
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf9u0vb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 13:00:48 +0000 (GMT)
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6f0e2d30ab4so112152436d6.1
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 06:00:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PLoCBqbE"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-233b1e4376fso11017595ad.0;
+        Wed, 21 May 2025 06:00:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747832458; x=1748437258; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pQKGhwbmZ43ciINYKTiP6sq8CUZKw6oXNW6FzpaC7Fk=;
+        b=PLoCBqbE+XKrTYNq9qbOmgJbwftMBBrAlcwmkLR3xqPfvhphBIQbnwyN+Ay+kcGJjG
+         MNB+b6vZNs2zEELQLjKVaZFUyh5M2i7ae5+zxNgakN+MjG6mRQajBGFekRjJZAYTzXoR
+         6QpWVJZns4yztBwr1hf0GiW5IXp+Lm9vwt38P6ysUC3bbNi0fjh25z6Emd6civnkRzNB
+         vILE9eFb10w97N/JPNOWXqNC4Ifm6zdj6vd3faNQ5E2C6yqjNvmD7VLtuRfzB+oifZAa
+         yjRvYFSLPkb1SMgTViLFsaBKr9ulb2mpq5wUSQfL5BawHORx3yOweGPo6oVVv2XZFl7p
+         nPzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747832447; x=1748437247;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Yns8J8yDIbLcf0BsCQyO2F82y37jhFFOk2oNKiqIfAc=;
-        b=AvAi0Q0iZEG4PNvMdGIiMJQe2KF5MIUcienh4UYaS7TTBBYq2iqXyomMVsQkc3eutR
-         9sXw194WfTriX8UIS+5gB7BeFc84ydjU5+4KQg312Ymnu6cJWbshJOIQ0mo+O+usK8v1
-         Tg7HMihJ5qf7lxEcy0jirJcEJkNfbe5VIMRs+DEKef7FdF8xhPidy3IGfwfgw3XT6p2O
-         YOPpiW17PM9bFQqB4QnwxcS78HhoVnIy20wV0IrvjkAlL8jGSEVYtrjxmKEum0H9yQSp
-         VjV3syBsH88/gzw4I3T46snP7tBTtPnJqgVpgG9rbaifFi8I6DTJ0XWhK7wPpbAQzADK
-         NFUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXH0iB7yUxeQY+7lA9bgiQ8qGtlzofxOL/BoQt0by1WJE6yLJaTcRWZUREz0M9IULt2g8AjYLXXtgdUfGw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCh/gDQtE0EDi76yvg7WGgpO2Gb2dxviocdMLyIKjaNrpqGVPN
-	gYKLI6nI4MnzoW5W93wzEM5piuAjLK3+/7y9TMe/wSjEaO2pVkHCGGfcdwChHl1ogdE0mzNTFCf
-	20USF4zjYOSOd1ZaCk4h6+RT0+Yd/TFYnUrpwOdvte9q8d+Ioonz9mzDtfJw+8GJxBq9r6nC/62
-	k2WA==
-X-Gm-Gg: ASbGnct1f3FBt3ZhTyIk8pySyS/nnvXyPtbuusQQ2ffG3zymfuXlSgiO8PAaaF0eChk
-	pD0r9jrUdHToJamVAlLybu9XSLK60hHGNehByyE/eOCwTjsE3jIDHiha79OnO67+lzrz4yq6ARM
-	QBChDZAzQpucNjCFLaTpXl+GwyCkuKMAucgfBi7N1HzBGC1LJt3bdK9sen4zPRKoMEWiqLzIjEo
-	tTzwRh9a1BpIBf67asX5mZFzswF/0zYrBaJkKH4b+MMlK/GvZJPA0+4WbZ1fRMT8wTQ7e7QIPc+
-	fLPGyo37t4U+5p70DqrSDSejDoDV1771RRrog/uMkTS3mKU+YVM79Fq37268t7+OX3nClh6uEwY
-	=
-X-Received: by 2002:ad4:5cca:0:b0:6e8:f940:50af with SMTP id 6a1803df08f44-6f8b08f3c7amr305253146d6.44.1747832441422;
-        Wed, 21 May 2025 06:00:41 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFYl5pptmjhlEarjw0/xJJoxQp/LNVGwVPm9hkPN2JKLgqOynQ02b10fOufgyOCowuR//KNMQ==
-X-Received: by 2002:a05:620a:390e:b0:7cd:1f0f:f61d with SMTP id af79cd13be357-7cd467aada1mr3619274285a.54.1747832427545;
-        Wed, 21 May 2025 06:00:27 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550ed3e3b84sm2577007e87.192.2025.05.21.06.00.26
+        d=1e100.net; s=20230601; t=1747832458; x=1748437258;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pQKGhwbmZ43ciINYKTiP6sq8CUZKw6oXNW6FzpaC7Fk=;
+        b=RK8JC7FWS5LUkZK33bRIJLpacMI5th0vk21fYMvjPDRM87ikz8oGp0sBEgZkoy2Zj8
+         1nlYDoxFXb6UYCd1gUmOA0T2hLd37fCyiwf/t5k+GtCIX/pVT6VeIC43AcUIrvm48P1g
+         iN9zx0idI9Pu3Sx8vjR40xE7kveetAlPcCw5ZevQ8ZXQhxAQzZ9fIAOC38FNbOAUO6LN
+         033C4+s2127jdzQe1YMgeHZpvFDw9nDwHV5oa8c/4z09JbE/1NyCVOnTJ4lqDLNRwrm7
+         suxneNCKuNY8mgvPvUP68GEXHnF4NOC07dhXfDTW/ah7Fanld9G1lWKXJL/cF1QmYWTK
+         09IA==
+X-Forwarded-Encrypted: i=1; AJvYcCV7pxaIJJ28vSGNf94BbTbziFH0HbAxuLgi1biDiTp+cZ6UV2p1K1XbFmZ19OAZdTi7A9Jy9PYzhkKFHXBC@vger.kernel.org, AJvYcCXKCTczlX+zsWJ3qGk6W90sLiWLQonaJrtCYuq3/TQ2saVKLiBcq/c7uvCTMI7tJVRGGaNlOHzCgwVO@vger.kernel.org, AJvYcCXNDCmhF0Z9hS+M16Ya+E55xJFp7QwsOS1UXNUCHCEqFOlURB+l682+hdNRzImy/rJTWmOakzODJWKKjQJLNxM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzn0w+8GbHJFunxllR4V2wU2RRdedP/pu26nm39s11iqX2IjW5t
+	h625x97XGwjE/LF7eeG0Ea3BW0gXKcyls0yOjN1Qw/Lmu8dbXl4RRjc3
+X-Gm-Gg: ASbGncurHkt2qur7C0mWTSjAw/OJx99B1LAEjFe78u6jKgF27ECGRv4hR0vBw+Eh15z
+	W9ADnz8skjyxjFYeRIkUqBz+zTOY2/SziYoX1ZJSPvqbKtTa7Dqk6J+Sro1yhOwWhqQ7vA0DUb5
+	JTIntleLKtCc9SAJwTW8mjuyoj57i8Jna3mEx08zKLrOUfxT3GSsNCHmm5A8Ejpz0H3LUCcfidj
+	4vcVi0EKyGoF94fAVx6VOSM56uFB3hEJR5ViYStjF0x5UkkUGz20zi1UZO0mjoKvBH1cCB7b/8I
+	EOgkf9rAGRGTi525wDwUie9cYr0zA5MSRsfxIyqHZBATDZgDlu1LfV3BX19VxhY=
+X-Google-Smtp-Source: AGHT+IE/CI59rniEOzJnILrKuwYM2BM+raG05jALn5qCLJ55FzqnbuzIf/xag3o9vCcPeD0ND4rCbg==
+X-Received: by 2002:a17:903:2303:b0:223:52fc:a15a with SMTP id d9443c01a7336-231d452d4ddmr288148495ad.33.1747832457370;
+        Wed, 21 May 2025 06:00:57 -0700 (PDT)
+Received: from NB-GIGA003.letovo.school ([5.194.95.139])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4adb017sm92691165ad.53.2025.05.21.06.00.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 06:00:26 -0700 (PDT)
-Date: Wed, 21 May 2025 16:00:25 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
-        Wenmeng Liu <quic_wenmliu@quicinc.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, bryan.odonoghue@linaro.org,
-        todor.too@gmail.com, rfoss@kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH 2/2] arm64: dts: qcom: qcs615: Enable camss for
- qcs615-adp-air
-Message-ID: <6mlnju3b5ecynlmlsmqot2i2y5fkeg7zl7nbzklmq3gcbp24dy@74sht2d4w2uo>
-References: <20250520-qcs615-adp-air-camss-v1-0-ac25ca137d34@quicinc.com>
- <20250520-qcs615-adp-air-camss-v1-2-ac25ca137d34@quicinc.com>
- <748f96f7-d690-4823-845f-67642db97a06@linaro.org>
- <dabed183-6907-4483-8c79-616aafaf2851@quicinc.com>
- <76052af9-96c2-46d6-85c6-65998c389554@linaro.org>
- <9babbddc-5c45-4ef4-8fbc-0da64ce99a42@kernel.org>
+        Wed, 21 May 2025 06:00:56 -0700 (PDT)
+From: Alexey Charkov <alchark@gmail.com>
+Date: Wed, 21 May 2025 17:00:11 +0400
+Subject: [PATCH v5 3/4] clocksource/drivers/timer-vt8500: Prepare for
+ watchdog functionality
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9babbddc-5c45-4ef4-8fbc-0da64ce99a42@kernel.org>
-X-Authority-Analysis: v=2.4 cv=V9990fni c=1 sm=1 tr=0 ts=682dce80 cx=c_pps
- a=wEM5vcRIz55oU/E2lInRtA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=dt9VzEwgFbYA:10 a=gFR2S-RVxxBBcq25oecA:9 a=CjuIK1q_8ugA:10
- a=OIgjcC2v60KrkQgK7BGD:22
-X-Proofpoint-ORIG-GUID: 7Bro0FpAKZLV2NvyAZQsbOCrSsv4Y-lE
-X-Proofpoint-GUID: 7Bro0FpAKZLV2NvyAZQsbOCrSsv4Y-lE
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDEyNiBTYWx0ZWRfXyB8ljPU4Q1Pq
- F+4Vk+HXj2XT9g3fSyuXbYGu4nDjYpGE9WfsA7bwKdyUpyJU2Af38dAN5GappJM1n8U22lSZ0Ho
- BueY9LX6zUp/JDfQDy7N3C6cX1b9ZxA1e8xFvZqEWDN3AGiGV4maSxkGxvr8k0nw8AIiQw/x3b9
- 2/FmuWQOZM0yeXoxS36i3MKeAKnTeaT+6jZQ43vYa/HgL6dvaIp0LrjWpuRlPw1G+9YpOwNgp3A
- HbPtveBPrfqBRXZfrTFum91OBSUNXL84KRWYn8quLm18neke1qUgL1sIfAv6W7fWC1UFBN1ZCLH
- LmniSv7MdkFyOjRiUPxkNmzV2samdVHdaqZfOnmyPuGIstxfZhu9xIpOOR8HwuHuCfFErgQxQ7z
- 2bdkOd/AEtqTyh3s2V05pPM2CBAmMOhla0ysnn3NzJoM1ABaSvaJ2drmOQvBfVjEt1KDCI98
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-21_04,2025-05-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxlogscore=767 bulkscore=0 impostorscore=0 clxscore=1015 priorityscore=1501
- lowpriorityscore=0 mlxscore=0 spamscore=0 phishscore=0 suspectscore=0
- adultscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505210126
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250521-vt8500-timer-updates-v5-3-7e4bd11df72e@gmail.com>
+References: <20250521-vt8500-timer-updates-v5-0-7e4bd11df72e@gmail.com>
+In-Reply-To: <20250521-vt8500-timer-updates-v5-0-7e4bd11df72e@gmail.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>, 
+ Daniel Lezcano <daniel.lezcano@linaro.org>, 
+ Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Wim Van Sebroeck <wim@linux-watchdog.org>, 
+ Guenter Roeck <linux@roeck-us.net>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, 
+ Alexey Charkov <alchark@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747832426; l=7757;
+ i=alchark@gmail.com; s=20250416; h=from:subject:message-id;
+ bh=rg55iyiBHKG2wUOvJ00x2/JyRj3YceESEI11ZlcTUbI=;
+ b=cF6O+EGvJNIViW1p29lPWRaARr1A37alZOAWvCWsjQtQxmtkizxbGxYHHLADItD2WV24cAPU/
+ LNBkbPi2/HuDaFbo9u9sEIjP9z9Dk1fkxCXHVP7cQEiFUOfQm159gRj
+X-Developer-Key: i=alchark@gmail.com; a=ed25519;
+ pk=ltKbQzKLTJPiDgPtcHxdo+dzFthCCMtC3V9qf7+0rkc=
 
-On Wed, May 21, 2025 at 08:04:10AM +0200, Krzysztof Kozlowski wrote:
-> On 21/05/2025 07:52, Vladimir Zapolskiy wrote:
-> >> We can perform validation through the CSID TPG(Test Pattern Generator),
-> >> so I enabled CAMSS.
-> >>
-> > 
-> > Since this is just a test of CAMSS without any sensors/CSIPHY, then
-> > 
-> > 1. camss-csiphy-3ph-1-0.c changes from the series have never been tested
-> >     and added as dead code, it shall be removed from the series,
-> > 2. adding voltage regulators to the board dts is void and shall be removed.
-> > 
-> > Not to substitute but in addition to the above it's still doubtful, if just
-> > a hardware/driver test configuration deserves to be added into the dts.
-> No, it does not deserve to be added. It's useless code in upstream. They
-> just want to push whatever they had downstream and drop their patch count.
+VIA/WonderMedia system timer can generate a watchdog reset when its
+clocksource counter matches the value in the match register 0 and
+watchdog function is enabled. For this to work, obvously the clock event
+device must use a different match register (1~3) and respective interrupt.
 
-I doubt that they had camss downstream.
+Check if at least two interrupts are provided by the device tree, then use
+match register 1 for system clock events and reserve match register 0 for
+the watchdog. Instantiate an auxiliary device for the watchdog
+
+Signed-off-by: Alexey Charkov <alchark@gmail.com>
+---
+ MAINTAINERS                        |   1 +
+ drivers/clocksource/Kconfig        |   1 +
+ drivers/clocksource/timer-vt8500.c | 111 ++++++++++++++++++++++++++++++++++---
+ include/linux/vt8500-timer.h       |  18 ++++++
+ 4 files changed, 122 insertions(+), 9 deletions(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 783e5ee6854b69cca87b6f0763844d28b4b2213f..5362095240627f613638197fda275db6edc16cf7 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3447,6 +3447,7 @@ F:	drivers/tty/serial/vt8500_serial.c
+ F:	drivers/video/fbdev/vt8500lcdfb.*
+ F:	drivers/video/fbdev/wm8505fb*
+ F:	drivers/video/fbdev/wmt_ge_rops.*
++F:	include/linux/vt8500-timer.h
+ 
+ ARM/ZYNQ ARCHITECTURE
+ M:	Michal Simek <michal.simek@amd.com>
+diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+index 487c8525996724fbf9c6e9726dabb478d86513b9..92f071aade10b7c0f0bba4b47dc6228a5e50360f 100644
+--- a/drivers/clocksource/Kconfig
++++ b/drivers/clocksource/Kconfig
+@@ -178,6 +178,7 @@ config TEGRA186_TIMER
+ config VT8500_TIMER
+ 	bool "VT8500 timer driver" if COMPILE_TEST
+ 	depends on HAS_IOMEM
++	select AUXILIARY_BUS
+ 	help
+ 	  Enables support for the VT8500 driver.
+ 
+diff --git a/drivers/clocksource/timer-vt8500.c b/drivers/clocksource/timer-vt8500.c
+index 9f28f30dcaf83ab4e9c89952175b0d4c75bd6b40..cdea5245f8e41d65b8b9bebad3fe3a55f43a18fa 100644
+--- a/drivers/clocksource/timer-vt8500.c
++++ b/drivers/clocksource/timer-vt8500.c
+@@ -11,6 +11,7 @@
+  * Alexey Charkov. Minor changes have been made for Device Tree Support.
+  */
+ 
++#include <linux/auxiliary_bus.h>
+ #include <linux/io.h>
+ #include <linux/irq.h>
+ #include <linux/interrupt.h>
+@@ -22,9 +23,6 @@
+ #include <linux/of_address.h>
+ #include <linux/of_irq.h>
+ 
+-#define VT8500_TIMER_OFFSET	0x0100
+-#define VT8500_TIMER_HZ		3000000
+-
+ #define TIMER_MATCH_REG(x)	(4 * (x))
+ #define TIMER_COUNT_REG		0x0010	 /* clocksource counter */
+ 
+@@ -53,8 +51,14 @@
+ #define msecs_to_loops(t) (loops_per_jiffy / 1000 * HZ * t)
+ 
+ #define MIN_OSCR_DELTA		16
++#include <linux/of_platform.h>
++#include <linux/platform_device.h>
++#include <linux/vt8500-timer.h>
+ 
+ static void __iomem *regbase;
++static unsigned int sys_timer_ch;	 /* which match register to use
++					  * for the system timer
++					  */
+ 
+ static u64 vt8500_timer_read(struct clocksource *cs)
+ {
+@@ -75,21 +79,26 @@ static struct clocksource clocksource = {
+ 	.flags          = CLOCK_SOURCE_IS_CONTINUOUS,
+ };
+ 
++static u64 vt8500_timer_next(u64 cycles)
++{
++	return clocksource.read(&clocksource) + cycles;
++}
++
+ static int vt8500_timer_set_next_event(unsigned long cycles,
+ 				    struct clock_event_device *evt)
+ {
+ 	int loops = msecs_to_loops(10);
+-	u64 alarm = clocksource.read(&clocksource) + cycles;
++	u64 alarm = vt8500_timer_next(cycles);
+ 
+-	while (readl(regbase + TIMER_ACC_STS_REG) & TIMER_ACC_WR_MATCH(0)
++	while (readl(regbase + TIMER_ACC_STS_REG) & TIMER_ACC_WR_MATCH(sys_timer_ch)
+ 	       && --loops)
+ 		cpu_relax();
+-	writel((unsigned long)alarm, regbase + TIMER_MATCH_REG(0));
++	writel((unsigned long)alarm, regbase + TIMER_MATCH_REG(sys_timer_ch));
+ 
+ 	if ((signed)(alarm - clocksource.read(&clocksource)) <= MIN_OSCR_DELTA)
+ 		return -ETIME;
+ 
+-	writel(TIMER_INT_EN_MATCH(0), regbase + TIMER_INT_EN_REG);
++	writel(TIMER_INT_EN_MATCH(sys_timer_ch), regbase + TIMER_INT_EN_REG);
+ 
+ 	return 0;
+ }
+@@ -131,7 +140,9 @@ static int __init vt8500_timer_init(struct device_node *np)
+ 		return -ENXIO;
+ 	}
+ 
+-	timer_irq = irq_of_parse_and_map(np, 0);
++	sys_timer_ch = of_irq_count(np) > 1 ? 1 : 0;
++
++	timer_irq = irq_of_parse_and_map(np, sys_timer_ch);
+ 	if (!timer_irq) {
+ 		pr_err("%s: Missing irq description in Device Tree\n",
+ 								__func__);
+@@ -140,7 +151,7 @@ static int __init vt8500_timer_init(struct device_node *np)
+ 
+ 	writel(TIMER_CTRL_ENABLE, regbase + TIMER_CTRL_REG);
+ 	writel(TIMER_STATUS_CLEARALL, regbase + TIMER_STATUS_REG);
+-	writel(~0, regbase + TIMER_MATCH_REG(0));
++	writel(~0, regbase + TIMER_MATCH_REG(sys_timer_ch));
+ 
+ 	ret = clocksource_register_hz(&clocksource, VT8500_TIMER_HZ);
+ 	if (ret) {
+@@ -166,4 +177,86 @@ static int __init vt8500_timer_init(struct device_node *np)
+ 	return 0;
+ }
+ 
++static void vt8500_timer_aux_uninit(void *data)
++{
++	auxiliary_device_uninit(data);
++}
++
++static void vt8500_timer_aux_delete(void *data)
++{
++	auxiliary_device_delete(data);
++}
++
++static void vt8500_timer_aux_release(struct device *dev)
++{
++	struct auxiliary_device *aux;
++
++	aux = container_of(dev, struct auxiliary_device, dev);
++	kfree(aux);
++}
++
++/*
++ * This probe gets called after the timer is already up and running. This will
++ * create the watchdog device as a child since the registers are shared.
++ */
++static int vt8500_timer_probe(struct platform_device *pdev)
++{
++	struct vt8500_wdt_info *wdt_info;
++	struct device *dev = &pdev->dev;
++	int ret;
++
++	if (!sys_timer_ch) {
++		dev_info(dev, "Not enabling watchdog: only one irq was given");
++		return 0;
++	}
++
++	if (!regbase)
++		return dev_err_probe(dev, -ENOMEM,
++			"Timer not initialized, cannot create watchdog");
++
++	wdt_info = kzalloc(sizeof(*wdt_info), GFP_KERNEL);
++	if (!wdt_info)
++		return dev_err_probe(dev, -ENOMEM,
++			"Failed to allocate vt8500-wdt info");
++
++	wdt_info->timer_next = &vt8500_timer_next;
++	wdt_info->wdt_en = regbase + TIMER_WATCHDOG_EN_REG;
++	wdt_info->wdt_match = regbase + TIMER_MATCH_REG(0);
++	wdt_info->auxdev.name = "vt8500-wdt";
++	wdt_info->auxdev.dev.parent = dev;
++	wdt_info->auxdev.dev.release = &vt8500_timer_aux_release;
++
++	ret = auxiliary_device_init(&wdt_info->auxdev);
++	if (ret) {
++		kfree(wdt_info);
++		return ret;
++	}
++	ret = devm_add_action_or_reset(dev, vt8500_timer_aux_uninit,
++				       &wdt_info->auxdev);
++	if (ret)
++		return ret;
++
++	ret = auxiliary_device_add(&wdt_info->auxdev);
++	if (ret)
++		return ret;
++	return devm_add_action_or_reset(dev, vt8500_timer_aux_delete,
++					&wdt_info->auxdev);
++}
++
++static const struct of_device_id vt8500_timer_of_match[] = {
++	{ .compatible = "via,vt8500-timer", },
++	{},
++};
++
++static struct platform_driver vt8500_timer_driver = {
++	.probe  = vt8500_timer_probe,
++	.driver = {
++		.name = "vt8500-timer",
++		.of_match_table = vt8500_timer_of_match,
++		.suppress_bind_attrs = true,
++	},
++};
++
++builtin_platform_driver(vt8500_timer_driver);
++
+ TIMER_OF_DECLARE(vt8500, "via,vt8500-timer", vt8500_timer_init);
+diff --git a/include/linux/vt8500-timer.h b/include/linux/vt8500-timer.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..b8e9000495c509e9c8e8f4098d6bd33de27b3ec4
+--- /dev/null
++++ b/include/linux/vt8500-timer.h
+@@ -0,0 +1,18 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef LINUX_VT8500_TIMER_H_
++#define LINUX_VT8500_TIMER_H_
++
++#include <linux/auxiliary_bus.h>
++#include <linux/io.h>
++#include <linux/types.h>
++
++#define VT8500_TIMER_HZ		3000000
++
++struct vt8500_wdt_info {
++	struct auxiliary_device auxdev;
++	u64 (*timer_next)(u64 cycles);
++	void __iomem *wdt_en;
++	void __iomem *wdt_match;
++};
++
++#endif /* LINUX_VT8500_TIMER_H_ */
 
 -- 
-With best wishes
-Dmitry
+2.49.0
+
