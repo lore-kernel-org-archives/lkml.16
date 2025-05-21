@@ -1,179 +1,144 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F5FF2AE90
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 00:55:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5780D1EB3D
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 01:00:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747788938; cv=none; b=akwMAB5blOk9RQPoKmMxcVA+6v2KjSgNlnJFuZPH0rdhCwpMM9q7/EhkpFmmm6IjOlzWWAe2H9c5NHiuY3XJgyPpM/SJPF0EXhWtTMuVrXlUH7Iq8Ql/rsdfcv49zE2dCNh0l4/YJP/oc+1Mt0WwNUek8gB8VYeaoww1mEUU3vg=
+	t=1747789252; cv=none; b=q/ELU82d3BKtZU4mrFDsRDmcjGngAAlXFj8rlLZMkrDIO8T8hsPzjtzq4ImxtFzTShCIbG6cYukl+e0laT7vNFKZbYZJ1YbNGaqcmCX00YpI8T56jonmSX/mNMjihb+tRSYLLIVaioCO1RfPu+gSc3IFWXFPgGkqlfZJTy01EBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747788938; c=relaxed/simple;
-	bh=3Y0eI2D8cnedVznYRle7TnjGhJ3X2g6z0d4K3WJthKc=;
+	s=arc-20240116; t=1747789252; c=relaxed/simple;
+	bh=UwyvllrCJPVWC5ocFz+1hBFct3kBz9xuj8wxTC0pGPI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pvxJRT0rFZOnfPuKgAGoeg7syJx/7KsMxZZrnFtxvn8VujPiDxcJjLPAK8LsHIKua2CWnmmDfjXl6XPZzHyK4mwBu4D3KJK+OHe7R7v4MxGQ1VM1fp50DEOedvQF3N3P7kmUrecDHmLAdhK+i+jXcedY6BQQt/l7BTo7o6RKKmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=t6iYY0S8; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=RRhYcrkx1SCkhIw5CnEdGaacNZieWi1fp0zy2EUxo1FgXaQN+QfG/K0YLGCzmL83MyJ468cMSCFlep6KkgA+WmjXOZOPAftpl/AAJld0MS1kyyXIgQHcYki/RVrkfdmZPkRxK5y3F5Cx/1qI75uLUCPCHQGh8hUxtNUiBx/d2os=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=K8byYcHh; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t6iYY0S8"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-601a67c6e61so26766a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 17:55:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747788935; x=1748393735; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ncdPurYh5hOloTnF5wYlf3UcK9wRpi+Q0GSN2FGpFac=;
-        b=t6iYY0S8F9uuz9aTdTGzVi/0cVIoOe4P+CoySV6Esk6I3hSqPnSlxEmZhR2u8jyazn
-         laZVf6RcIc8ELzwaMXmGfjzYQ8SAbIjv4IFXfTyBXM/E2W9nI/tqpf0c0HJx+zg9X3sz
-         MrOKJYrk8wCe3/BhQA8zA8uJZgW8q7sbB3N8j9nihnoyI+ojilBL6Z254QfkP518+Apm
-         RInyo800CxqXW7BcYy9iFqfufCYmQIQopHLq7I/jexZVzzUpOgT/QeaOq4HuXYfFUAj/
-         onx4WCI5hOEMWO5M/hYPiQC7vlPQlLNsr6vNaGwalY60y67tv0cTfeeC46JBlAtkvmy/
-         q+hA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K8byYcHh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747789249;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=M5UU96bQp+9c05rasuJ8OHXH1EUH9d+HdLZb9k7tA/A=;
+	b=K8byYcHhCiNIkmg5I7dhYcI117KPimeS2k1CPJ5wPeOpox8vvapN5q/OTJkwFwD6Ug8D1a
+	W2RHzMzkButGBDGmOek/7w0M8rUxckb98Lc8A2nrEn//UpEz4ULc+GV7YKljbDRBpKHmNk
+	bBJ365+xIqsV4GWxiRQhfUjqXiMpXxk=
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
+ [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-610-dH2xdVvsM9qonRwOe8NThA-1; Tue, 20 May 2025 21:00:47 -0400
+X-MC-Unique: dH2xdVvsM9qonRwOe8NThA-1
+X-Mimecast-MFC-AGG-ID: dH2xdVvsM9qonRwOe8NThA_1747789246
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-3108d5538c0so183176a91.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 18:00:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747788935; x=1748393735;
+        d=1e100.net; s=20230601; t=1747789246; x=1748394046;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ncdPurYh5hOloTnF5wYlf3UcK9wRpi+Q0GSN2FGpFac=;
-        b=YxMfwJ/m5ka3Xw/ZqXWZGeuHDJkhWq8QDCcImDKy9SWELtWAN1K85RmN4nS5X2J9M9
-         GnwAAWtvZY3s5pMrx5Vg/CGxqTasklJ1cCyrYSI4cAvW7yIi9W5JXiTvkJZ67ENwPlaf
-         rh8eQPl//ofs1z9SW6Tnnok0oWTwVtmigW7TInPPuSAHyIxNDxogPlkqhs+vo6pUgWp/
-         VE63BmP66Qi+L5WQ67Mh0PZyxeH/IFhQSgkN9p4TjSMnqux4IYUmLz2Iw/DJn+9i562/
-         2SQlW6kxiCAOyPo9zV6sRkU383Ml+/s95gTGQ5fqrzH3HageMJUAwtgXhQSkxUPHFXXU
-         m3iA==
-X-Forwarded-Encrypted: i=1; AJvYcCVNRNoglK9PspAodI+Ajr0Z1R1zmJpuoQmGOmuMLzeo6icZyXoIPqe+T6Xm74RQILcO5z5UlPtmV3UwY90=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzjVPvBLs/diJu25zl1gm+cVpvrMy8PARyXfuZt4GKYJbgItX+C
-	zF/wU9mb7wPFl6lpCAdo0qD4yfFPAQaxTu+GboBh+aQ5uIyfLOCdcsDklvPnnJbURh4PPHwhEJm
-	JglPWTBjHtyJVANZVu1JUx/RI6FObHq49dJTI+F+k
-X-Gm-Gg: ASbGncuLsN5drt/vrGUtmwzsgxCUQmX8UpmDYjV4lfDbn9WgSbOZ0KiSASlvpPyeizN
-	zfPqbVM3iSzbVjbvNqfxeluLysBuOR8VSqBoV8gFdzbwDGfR5qBvWhDHVdhh83f9kigbEn6lM7N
-	KZoeWJ0B0kfafOgUSC/T/GXKLVKSvBEfxqDQOd0DTR4fL5DOeoL330u1RIK38zyXal1ITHoKpN
-X-Google-Smtp-Source: AGHT+IG1IjnHi54Q+N8idfo93JIC1frTSBUwH3gzuDMjjhBz9G/MzDcANwRogNTzPUUfNYSoKlZHrVja9CDjA4RXL78=
-X-Received: by 2002:a05:6402:14d5:b0:601:233a:4f4d with SMTP id
- 4fb4d7f45d1cf-6019bf2f776mr370366a12.2.1747788934322; Tue, 20 May 2025
- 17:55:34 -0700 (PDT)
+        bh=M5UU96bQp+9c05rasuJ8OHXH1EUH9d+HdLZb9k7tA/A=;
+        b=L+EYrduZTelHH8EDtyCyn649TBBMnl68gxLY9qUCE1RduHZs8dBbJbf06NUXMTn+ju
+         odvhPHTj4O5w01kR/yx2RwPcc63I8cLYGwL36lIkfkQLcRK8Jat7lAXnBFmhfNv+lOjR
+         OhQrniY2InsZpETwCkZEoFEB+TLBMeoRpk4fQpX3apxw8PVSFbpanhpL+VXcAiGe+GKl
+         B6eHU2LK9djo0S7xhOl0HeDjmYFi6DgN0J5a6iYOdRqqhe6/G213rPaEo9dc4XSpnNK1
+         aOMvwPjQlyORaDdL9z6NjRZkMaYqwEC1CUurJ2DPya909FKUnzqpY+8BRN9KreB10v7M
+         cnbQ==
+X-Gm-Message-State: AOJu0Ywzkq+hdSHs2zXDJojGZwytYhysnJKCGZ3MbAoeuQZOIDshtuLz
+	2kZNHUbibLjF1CioXxRav2/CW0Ln+RlarJE09m2BCzjtvGEs+HUxlIWgP4GLrIEFkd9/8ySAb8a
+	gjYCxeep9L/8HE0Sg2eDgFuWUx1Q1ftc2y/xaEx4H/4C90cgmHPdIE3gw+fkNG34CrJYH5ighRM
+	ajQf/VJ4h4chXbCBR8z8w4/voxTwiN0eIrnXOVY8kJ7yTGnqJoPOofGHiF
+X-Gm-Gg: ASbGnct/oKBoLTxjqYd4WVOJdW4U3P/n78wg80WkCh0P+3EECM25kttFOpv7ElCJYvB
+	AQFIZBrpKHBwNVvg0RY4gl81+Y2dcYl2rNW9ti6QF49o9kzuHoThFV5BFa6zW0az7PBbC2A==
+X-Received: by 2002:a17:90b:48ce:b0:2ee:d371:3227 with SMTP id 98e67ed59e1d1-30e7d53fedcmr34181860a91.17.1747789245666;
+        Tue, 20 May 2025 18:00:45 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHwcEKoM8Rbsn/a4WndKnzdXbjNGmiuWmbI2Y5I8bxlXXtoVUQyT+CI3h7RbvzZ1zmkJYmKWfeUsMGX5k4wCxw=
+X-Received: by 2002:a17:90b:48ce:b0:2ee:d371:3227 with SMTP id
+ 98e67ed59e1d1-30e7d53fedcmr34181821a91.17.1747789245236; Tue, 20 May 2025
+ 18:00:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250520122838.29131f04@hermes.local> <20250521004207.10514-1-kuniyu@amazon.com>
-In-Reply-To: <20250521004207.10514-1-kuniyu@amazon.com>
-From: Jann Horn <jannh@google.com>
-Date: Wed, 21 May 2025 02:54:58 +0200
-X-Gm-Features: AX0GCFtQXlIu9odOXoeE-q7wbNaaPaAzIzGo4QIICbt2W9dOwceP8yBMza1qmTI
-Message-ID: <CAG48ez0r4A7iMXzBBdPiHWycYSAGSm7VFWULCqKQPXoBKFWpEw@mail.gmail.com>
-Subject: Re: [PATCH v8 0/9] coredump: add coredump socket
-To: Kuniyuki Iwashima <kuniyu@amazon.com>
-Cc: stephen@networkplumber.org, alexander@mihalicyn.com, brauner@kernel.org, 
-	daan.j.demeyer@gmail.com, daniel@iogearbox.net, davem@davemloft.net, 
-	david@readahead.eu, edumazet@google.com, horms@kernel.org, jack@suse.cz, 
-	kuba@kernel.org, lennart@poettering.net, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	luca.boccassi@gmail.com, me@yhndnzj.com, netdev@vger.kernel.org, 
-	oleg@redhat.com, pabeni@redhat.com, serge@hallyn.com, viro@zeniv.linux.org.uk, 
-	zbyszek@in.waw.pl
+References: <20250520110526.635507-1-lvivier@redhat.com> <20250520110526.635507-2-lvivier@redhat.com>
+In-Reply-To: <20250520110526.635507-2-lvivier@redhat.com>
+From: Jason Wang <jasowang@redhat.com>
+Date: Wed, 21 May 2025 09:00:33 +0800
+X-Gm-Features: AX0GCFss55bkUwZRoC8YeL_R-ecnSY7xZLVonSottICbFZGTPlnRjiGhH-GAQn0
+Message-ID: <CACGkMEsO2XFFmJm4Y__9ELo5YQOve1DgE2TVOO2FgB1rmZh58g@mail.gmail.com>
+Subject: Re: [PATCH 1/2] virtio_ring: Fix error reporting in virtqueue_resize
+To: Laurent Vivier <lvivier@redhat.com>
+Cc: linux-kernel@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>, netdev@vger.kernel.org, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 21, 2025 at 2:42=E2=80=AFAM Kuniyuki Iwashima <kuniyu@amazon.co=
-m> wrote:
-> From: Stephen Hemminger <stephen@networkplumber.org>
-> Date: Tue, 20 May 2025 12:28:38 -0700
-> > On Fri, 16 May 2025 13:25:27 +0200
-> > Christian Brauner <brauner@kernel.org> wrote:
-> >
-> > > Coredumping currently supports two modes:
-> > >
-> > > (1) Dumping directly into a file somewhere on the filesystem.
-> > > (2) Dumping into a pipe connected to a usermode helper process
-> > >     spawned as a child of the system_unbound_wq or kthreadd.
-> > >
-> > > For simplicity I'm mostly ignoring (1). There's probably still some
-> > > users of (1) out there but processing coredumps in this way can be
-> > > considered adventurous especially in the face of set*id binaries.
-> > >
-> > > The most common option should be (2) by now. It works by allowing
-> > > userspace to put a string into /proc/sys/kernel/core_pattern like:
-> > >
-> > >         |/usr/lib/systemd/systemd-coredump %P %u %g %s %t %c %h
-> > >
-> > > The "|" at the beginning indicates to the kernel that a pipe must be
-> > > used. The path following the pipe indicator is a path to a binary tha=
-t
-> > > will be spawned as a usermode helper process. Any additional paramete=
-rs
-> > > pass information about the task that is generating the coredump to th=
-e
-> > > binary that processes the coredump.
-> > >
-> > > In the example core_pattern shown above systemd-coredump is spawned a=
-s a
-> > > usermode helper. There's various conceptual consequences of this
-> > > (non-exhaustive list):
-> > >
-> > > - systemd-coredump is spawned with file descriptor number 0 (stdin)
-> > >   connected to the read-end of the pipe. All other file descriptors a=
-re
-> > >   closed. That specifically includes 1 (stdout) and 2 (stderr). This =
-has
-> > >   already caused bugs because userspace assumed that this cannot happ=
-en
-> > >   (Whether or not this is a sane assumption is irrelevant.).
-> > >
-> > > - systemd-coredump will be spawned as a child of system_unbound_wq. S=
-o
-> > >   it is not a child of any userspace process and specifically not a
-> > >   child of PID 1. It cannot be waited upon and is in a weird hybrid
-> > >   upcall which are difficult for userspace to control correctly.
-> > >
-> > > - systemd-coredump is spawned with full kernel privileges. This
-> > >   necessitates all kinds of weird privilege dropping excercises in
-> > >   userspace to make this safe.
-> > >
-> > > - A new usermode helper has to be spawned for each crashing process.
-> > >
-> > > This series adds a new mode:
-> > >
-> > > (3) Dumping into an AF_UNIX socket.
-> > >
-> > > Userspace can set /proc/sys/kernel/core_pattern to:
-> > >
-> > >         @/path/to/coredump.socket
-> > >
-> > > The "@" at the beginning indicates to the kernel that an AF_UNIX
-> > > coredump socket will be used to process coredumps.
-> > >
-> > > The coredump socket must be located in the initial mount namespace.
-> > > When a task coredumps it opens a client socket in the initial network
-> > > namespace and connects to the coredump socket.
-> >
-> >
-> > There is a problem with using @ as naming convention.
-> > The starting character of @ is already used to indicate abstract
-> > unix domain sockets in some programs like ss.
-> > And will the new coredump socekt allow use of abstrace unix
-> > domain sockets?
+On Tue, May 20, 2025 at 7:05=E2=80=AFPM Laurent Vivier <lvivier@redhat.com>=
+ wrote:
 >
-> The coredump only works with the pathname socket, so ideally
-> the prefix should be '/', but it's same with the direct-file
-> coredump.  We can distinguish the socket by S_ISSOCK() though.
+> The virtqueue_resize() function was not correctly propagating error codes
+> from its internal resize helper functions, specifically
+> virtqueue_resize_packet() and virtqueue_resize_split(). If these helpers
+> returned an error, but the subsequent call to virtqueue_enable_after_rese=
+t()
+> succeeded, the original error from the resize operation would be masked.
+> Consequently, virtqueue_resize() could incorrectly report success to its
+> caller despite an underlying resize failure.
+>
+> This change restores the original code behavior:
+>
+>        if (vdev->config->enable_vq_after_reset(_vq))
+>                return -EBUSY;
+>
+>        return err;
+>
+> Fix: commit ad48d53b5b3f ("virtio_ring: separate the logic of reset/enabl=
+e from virtqueue_resize")
+> Cc: xuanzhuo@linux.alibaba.com
+> Signed-off-by: Laurent Vivier <lvivier@redhat.com>
+> ---
+>  drivers/virtio/virtio_ring.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+> index b784aab66867..4397392bfef0 100644
+> --- a/drivers/virtio/virtio_ring.c
+> +++ b/drivers/virtio/virtio_ring.c
+> @@ -2797,7 +2797,7 @@ int virtqueue_resize(struct virtqueue *_vq, u32 num=
+,
+>                      void (*recycle_done)(struct virtqueue *vq))
+>  {
+>         struct vring_virtqueue *vq =3D to_vvq(_vq);
+> -       int err;
+> +       int err, err_reset;
+>
+>         if (num > vq->vq.num_max)
+>                 return -E2BIG;
+> @@ -2819,7 +2819,11 @@ int virtqueue_resize(struct virtqueue *_vq, u32 nu=
+m,
+>         else
+>                 err =3D virtqueue_resize_split(_vq, num);
+>
+> -       return virtqueue_enable_after_reset(_vq);
+> +       err_reset =3D virtqueue_enable_after_reset(_vq);
 
-The path lookups work very differently between COREDUMP_SOCK and
-COREDUMP_FILE - they are interpreted relative to different namespaces,
-and they run with different privileges, and they do different format
-string interpretation. I think trying to determine dynamically whether
-the path refers to a socket or to a nonexistent location at which we
-should create a file (or a preexisting file we should clobber) would
-not be practical, partly for these reasons.
+I wonder if we should call virtqueue_enable_after_reset() when
+virtqueue_resize_xxx() fail.
 
-Also, fundamentally, if we have the choice between letting userspace
-be explicit about what it wants, or trying to guess userspace's intent
-from the kernel, I think we should always go for being explicit.
+Thanks
 
-So I guess it could be reasonable to bikeshed the prefix letter and
-turn '@' into some other character that is not overloaded with another
-meaning in this context, like '>'; but I don't think we should be
-changing the overall approach because of this.
+> +       if (err_reset)
+> +               return err_reset;
+> +
+> +       return err;
+>  }
+>  EXPORT_SYMBOL_GPL(virtqueue_resize);
+>
+> --
+> 2.49.0
+>
+
