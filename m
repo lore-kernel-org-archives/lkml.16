@@ -1,57 +1,52 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 243F02BFC67
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 20:48:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 730AA2BFC89
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 20:49:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747860538; cv=none; b=f8pAwP3GMa3Uiw1v9HGtunnCYocmRtompQYrsKgHhvI0qJNeXmSJYaNfGvNgZ28qyq/CIKmoblVscY2a2rl7eow2bqe0Klho3kuAgDf4Egr59yw01MhEjPYKUDrDlYpn19lKdwRM8FGtEm/x/6zYH0yrr2LO3P4uJHPG0veo6F4=
+	t=1747860544; cv=none; b=bMmchGWuiW3ez2NWQ/pACNHNqOhU3bKfi8ziJiO52YXNRSnN1gBJAWskeaqdOTICWCoN4CQ7adaktJ3YGFfSNAjHMpFzpT1v8N4Glp1NsKdZnuX3KrPHerXOo9mRJLYS+of5kjiAcmxtp/wm/F5fYUSmAcc1cAtwXE/v3iW1DIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747860538; c=relaxed/simple;
-	bh=NIe2Yj+2RnlxILb9wuK1MskpjvacdpCE0rjM8oanpyw=;
+	s=arc-20240116; t=1747860544; c=relaxed/simple;
+	bh=3xouPFq+QfUA7590BKH5N+mHnFY8gUh31jE6jRZaJS4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rL+q+vLhd0ttfwvzzyzVpereCu3db8JMBbYCOchFe+gqsnW/X5+2hEfY3iUn3wQVPH5JkIUZ+2xFFGRU40H8RguMu6tyV2H8rDQ9cPMjK/7eyjH0Ew1wmnqyPxTzHiAOBl6fdhFS0XkBOHnL7ftM+xI7Ge6uyxK5mbnVm0IeAg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XU85uqUm; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=TliFY5z+OoT86FVFisPyMPB3TFggv5GIDxquHSKgh3gTsKLIPTx9zBObUYbipm4aJIyjGG+H2RX8Xtu+s8ZdhhNVFsyBV2ghDUe2Cq+orucSYTl2LYJ1fNXg7GlMfVzDnkZFQJHnk87GA1GqBOvPtrS1gfPX0bXbjuCXeUgbzuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=W/NmyVCp; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XU85uqUm"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W/NmyVCp"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747860536;
+	s=mimecast20190719; t=1747860541;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=YfYUdTNb5Gc7ulEphuHVddFPp9Ry0HXZjmcMzmLE0DM=;
-	b=XU85uqUma8eNs79PAKDi+xy6PuesvAuW5sbt5BahfDmKwE4y697fRYOPAl/GP+3FFZ3T5n
-	9F8UPZEiz3HqHe8FO3IKK1lBYx4BTAmlxZMNAENnXD8zeG0fYCyD5eLxY1PzvpVAhdY6U7
-	326Lv7tYSeigw84h3U48Lq9knCYtagc=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=mD23raNQ8ZbMrMICq/gFGTjyDRhqWnP+hWWFLjdKFbY=;
+	b=W/NmyVCp6JEBWh7ROzlBcjm28f56wrqVXsDXVosGFXIs/y68fHMJPhd7nogl8vSb1+uoMH
+	trg49vqNq6zVfYwKYEClRD1cdsrH13Dvp7AMoIcJlNIbcLuRusjVBHgsLlXl09lpuO9K2m
+	kTJfD9eYd8RrgfWxkZP4kAaIpUS1R/8=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-634-A5lh2k0lPK6iSSvRo02qvg-1; Wed,
- 21 May 2025 16:48:51 -0400
-X-MC-Unique: A5lh2k0lPK6iSSvRo02qvg-1
-X-Mimecast-MFC-AGG-ID: A5lh2k0lPK6iSSvRo02qvg_1747860528
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-587-WCuYGeHcPVG1goaQZEv7DA-1; Wed,
+ 21 May 2025 16:48:32 -0400
+X-MC-Unique: WCuYGeHcPVG1goaQZEv7DA-1
+X-Mimecast-MFC-AGG-ID: WCuYGeHcPVG1goaQZEv7DA_1747860510
 Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 92A671800368;
-	Wed, 21 May 2025 20:48:48 +0000 (UTC)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E94E91955DAB;
+	Wed, 21 May 2025 20:48:29 +0000 (UTC)
 Received: from chopper.redhat.com (unknown [10.22.80.100])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id F37131956066;
-	Wed, 21 May 2025 20:48:43 +0000 (UTC)
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id F141F19560B7;
+	Wed, 21 May 2025 20:48:25 +0000 (UTC)
 From: Lyude Paul <lyude@redhat.com>
 To: dri-devel@lists.freedesktop.org,
 	rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Miguel Ojeda <ojeda@kernel.org>,
+Cc: Miguel Ojeda <ojeda@kernel.org>,
 	Alex Gaynor <alex.gaynor@gmail.com>,
 	Boqun Feng <boqun.feng@gmail.com>,
 	Gary Guo <gary@garyguo.net>,
@@ -63,14 +58,14 @@ Cc: David Airlie <airlied@gmail.com>,
 	Danilo Krummrich <dakr@kernel.org>,
 	Sumit Semwal <sumit.semwal@linaro.org>,
 	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Asahi Lina <lina@asahilina.net>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Xiangfei Ding <dingxiangfei2009@gmail.com>,
 	linux-media@vger.kernel.org (open list:DMA BUFFER SHARING FRAMEWORK:Keyword:\bdma_(?:buf|fence|resv)\b),
 	linaro-mm-sig@lists.linaro.org (moderated list:DMA BUFFER SHARING FRAMEWORK:Keyword:\bdma_(?:buf|fence|resv)\b)
-Subject: [PATCH v2 12/12] rust: drm: gem: Add BaseObject::prime_export()
-Date: Wed, 21 May 2025 16:29:19 -0400
-Message-ID: <20250521204654.1610607-13-lyude@redhat.com>
+Subject: [PATCH v2 10/12] rust: Add dma_buf stub bindings
+Date: Wed, 21 May 2025 16:29:17 -0400
+Message-ID: <20250521204654.1610607-11-lyude@redhat.com>
 In-Reply-To: <20250521204654.1610607-1-lyude@redhat.com>
 References: <20250521204654.1610607-1-lyude@redhat.com>
 Precedence: bulk
@@ -82,49 +77,75 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-We just added an export() callback that GEM objects can implement, but
-without any way of actually exporting a DmaBuf<T>. So let's add one by
-introducing bindings for drm_gem_prime_export().
+In order to implement the gem export callback, we need a type to represent
+struct dma_buf. So - this commit introduces a set of stub bindings for
+dma_buf. These bindings provide a ref-counted DmaBuf object, but don't
+currently implement any functionality for using the DmaBuf.
 
 Signed-off-by: Lyude Paul <lyude@redhat.com>
 ---
- rust/kernel/drm/gem/mod.rs | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ rust/kernel/dma_buf.rs | 39 +++++++++++++++++++++++++++++++++++++++
+ rust/kernel/lib.rs     |  1 +
+ 2 files changed, 40 insertions(+)
+ create mode 100644 rust/kernel/dma_buf.rs
 
-diff --git a/rust/kernel/drm/gem/mod.rs b/rust/kernel/drm/gem/mod.rs
-index ef697f323e52c..ee74b9bdb7a1f 100644
---- a/rust/kernel/drm/gem/mod.rs
-+++ b/rust/kernel/drm/gem/mod.rs
-@@ -225,6 +225,29 @@ fn lookup_handle<D, F, O>(file: &drm::File<F>, handle: u32) -> Result<ARef<Self>
-         Ok(unsafe { ARef::from_raw(obj.into()) })
-     }
- 
-+    /// Export a [`DmaBuf`] for this GEM object using the DRM prime helper library.
+diff --git a/rust/kernel/dma_buf.rs b/rust/kernel/dma_buf.rs
+new file mode 100644
+index 0000000000000..318518ff0b28f
+--- /dev/null
++++ b/rust/kernel/dma_buf.rs
+@@ -0,0 +1,39 @@
++// SPDX-License-Identifier: GPL-2.0
++
++//! DMA buffer API
++//!
++//! C header: [`include/linux/dma-buf.h`](srctree/include/linux/dma-buf.h)
++
++use bindings;
++use kernel::types::*;
++
++/// A DMA buffer object.
++///
++/// # Invariants
++///
++/// The data layout of this type is equivalent to that of `struct dma_buf`.
++#[repr(transparent)]
++pub struct DmaBuf(Opaque<bindings::dma_buf>);
++
++// SAFETY: `struct dma_buf` is thread-safe
++unsafe impl Send for DmaBuf {}
++// SAFETY: `struct dma_buf` is thread-safe
++unsafe impl Sync for DmaBuf {}
++
++impl DmaBuf {
++    /// Convert from a `*mut bindings::dma_buf` to a [`DmaBuf`].
 +    ///
-+    /// `flags` should be a set of flags from [`fs::file::flags`](kernel::fs::file::flags).
-+    fn prime_export(&self, flags: u32) -> Result<DmaBuf<Self>> {
-+        // SAFETY:
-+        // - `as_raw()` always returns a valid pointer to a `drm_gem_object`.
-+        // - `drm_gem_prime_export()` returns either an error pointer, or a valid pointer to an
-+        //   initialized `dma_buf` on success.
-+        let dma_ptr = from_err_ptr(unsafe {
-+            bindings::drm_gem_prime_export(self.as_raw(), flags as _)
-+        })?;
-+
-+        // SAFETY:
-+        // - We checked that dma_ptr is not an error, so it must point to an initialized dma_buf
-+        // - We used drm_gem_prime_export(), so `dma_ptr` will remain valid until a call to
-+        //   `drm_gem_prime_release()` which we don't call here.
-+        let dma_buf = unsafe { dma_buf::DmaBuf::as_ref(dma_ptr) };
-+
-+        // INVARIANT: We used drm_gem_prime_export() to create this dma_buf, fulfilling the
-+        // invariant that this dma_buf came from a GEM object of type `Self`.
-+        Ok(DmaBuf(dma_buf.into(), PhantomData))
++    /// # Safety
++    ///
++    /// The caller guarantees that `self_ptr` points to a valid initialized `struct dma_buf` for the
++    /// duration of the lifetime of `'a`, and promises to not violate rust's data aliasing rules
++    /// using the reference provided by this function.
++    pub(crate) unsafe fn as_ref<'a>(self_ptr: *mut bindings::dma_buf) -> &'a Self {
++        // SAFETY: Our data layout is equivalent to `dma_buf` .
++        unsafe { &*self_ptr.cast() }
 +    }
 +
-     /// Creates an mmap offset to map the object from userspace.
-     fn create_mmap_offset(&self) -> Result<u64> {
-         // SAFETY: The arguments are valid per the type invariant.
++    pub(crate) fn as_raw(&self) -> *mut bindings::dma_buf {
++        self.0.get()
++    }
++}
+diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+index cbacedfe54434..02d4311bb080c 100644
+--- a/rust/kernel/lib.rs
++++ b/rust/kernel/lib.rs
+@@ -49,6 +49,7 @@
+ pub mod device_id;
+ pub mod devres;
+ pub mod dma;
++pub mod dma_buf;
+ pub mod driver;
+ #[cfg(CONFIG_DRM = "y")]
+ pub mod drm;
 -- 
 2.49.0
 
