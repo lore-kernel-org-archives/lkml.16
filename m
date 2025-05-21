@@ -1,132 +1,114 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D61A74040
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 13:36:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A63774040;
+	Wed, 21 May 2025 13:36:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747834583; cv=none; b=Isnor4EqFQnzRZMjktGe9cFhTrJUVh/bPlqcQCokw7bDoggc8GdM5vbseGvLIAHSXGNv3LqoNU4rR7mrRUUNKF6e3zNSQsTHHytI+ilDFV0XMpH4D/7WNVfHQ3vTvfcbu7YF36qV4j4pIoNHFR6WdI7msHfZJDK9CBWPbzMMsMA=
+	t=1747834612; cv=none; b=QQz65yC8pxGuSbsybodX01s9AFk6g0uaufcrD62eQPfeLnAnnwaqlfx2rvSb+AZjw3LTTmDKHKvDGx+aaAbQCk3IK1b3VVAOCOv+WOUG5sGQv/gVfwsxu8gBNKoKwhpZoaMdO2tW/UTImC4fQvws6GwUrW4lh2n/mIzxYanthiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747834583; c=relaxed/simple;
-	bh=FVc1lT+6MUgP+aqATKpAccsnoaZ/PgmLo8/TCMrPuuM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ngOcUl9FYTCCRi8WlBJp6yTGsEGZdAzs1oNP1uYiB2kSGWGdy5cSfRNidfVXxH9+C0BQNuZvkpu/KCAH1a+ujZokpB6rEoJPSkpznDsESEROa4gT2z+Pm1/RVQigEFhcd0jKiwq52oVcQR1oBJPqgStrmiClPfFfD0VEaDie/Is=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=jB7m7lEq; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="jB7m7lEq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=sREZ
-	jNvnTamxNsDE//SKr3Dk4siUClTKDShNmscMEaw=; b=jB7m7lEqubWg8y2Ug7Tu
-	7TqbVefY6Dsmmuv3yRdeBOgG8X+vGTVUS/4AaycBthRjjJ67kzlhB3LHOHXgQaDO
-	9XtZhZux5WxkPmZRF3q/OvXaW1X4GSHByBUkncm/DBqe1v5blNKFcLND1NHUlwn3
-	sic26f0rgGOoAdV1fYKlTY5XbTPeD9ttYPs57hJFXJwUIJlsuVeWufWl+NFQWXUf
-	RTM5rsEJaIrfJ9cdJ+22aQzeJVUMCVv/JTP2P6JJ5DGIDIYIb/yRq/vOadeo1tOv
-	7Gk2LFgzuWIKJ3bXMIZr3XFXJ7TmFraa7CufbEFyuiDlfkz0gwNUIYHA4C41PDvU
-	jA==
-Received: (qmail 3285083 invoked from network); 21 May 2025 15:36:14 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 21 May 2025 15:36:14 +0200
-X-UD-Smtp-Session: l3s3148p1@K3TtcqU1bslehhrc
-Date: Wed, 21 May 2025 15:36:14 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org,
+	s=arc-20240116; t=1747834612; c=relaxed/simple;
+	bh=YiyyForGuheKosxXUamDSECCLyk4mgZKtF8u/JT1kQs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=epqbWr2TQkko0VKhqnQixKY5iLZScsQVm1aQoXENVZpgMKZakp8acVhwJVw2WiBFRCYWity9g45I4/FS6JJQCpgdzjAlUpjOA80h/p/j/Wreu//AbNCaOZxrBpwwOB4YMdv18c5Bc+ZPGKjGhCP+EjfhPZb2Tsfm8iBnOQgKrPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [124.16.141.245])
+	by APP-05 (Coremail) with SMTP id zQCowAD3OSzk1i1o4V4dAg--.57274S2;
+	Wed, 21 May 2025 21:36:38 +0800 (CST)
+From: Wentao Liang <vulab@iscas.ac.cn>
+To: saeedm@nvidia.com,
+	leon@kernel.org,
+	tariqt@nvidia.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	syzbot+721071c10f3c7e4e5dcb@syzkaller.appspotmail.com,
-	lvc-project@linuxtesting.org,
-	Alan Stern <stern@rowland.harvard.edu>, gregkh@linuxfoundation.org
-Subject: Re: [PATCH v3] media: dvb-usb-v2: disallow 0-length I2C reads
-Message-ID: <aC3WzokLRhxJ1t9M@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-	syzbot+721071c10f3c7e4e5dcb@syzkaller.appspotmail.com,
-	lvc-project@linuxtesting.org,
-	Alan Stern <stern@rowland.harvard.edu>, gregkh@linuxfoundation.org
-References: <20250521131752.2566007-1-n.zhandarovich@fintech.ru>
+	Wentao Liang <vulab@iscas.ac.cn>,
+	stable@vger.kernel.org
+Subject: [PATCH v3] net/mlx5_core: Add error handling inmlx5_query_nic_vport_qkey_viol_cntr()
+Date: Wed, 21 May 2025 21:36:20 +0800
+Message-ID: <20250521133620.912-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.42.0.windows.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="gQiwaaZdNNFghSHu"
-Content-Disposition: inline
-In-Reply-To: <20250521131752.2566007-1-n.zhandarovich@fintech.ru>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowAD3OSzk1i1o4V4dAg--.57274S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxJr4rJw13Cr4rXFyDAry3XFb_yoW8AFW7pF
+	47tr97XrWkJa4Fv3Wj9rWrZr1ruay8ua409a4xt343Xr4vyr4DAr4YyryagrWUuFWUKrZY
+	yrsFy3ZxCFn8C37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9K14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+	n2kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCY02Avz4vE14v_Xr4l42xK82IYc2Ij64vIr4
+	1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
+	67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI
+	8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAv
+	wI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14
+	v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUn2NKUUUUU
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiBwwJA2gtsp90PQAAsg
 
+The function mlx5_query_nic_vport_qkey_viol_cntr() calls the function
+mlx5_query_nic_vport_context() but does not check its return value. This
+could lead to undefined behavior if the query fails. A proper
+implementation can be found in mlx5_nic_vport_query_local_lb().
 
---gQiwaaZdNNFghSHu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Add error handling for mlx5_query_nic_vport_context(). If it fails, free
+the out buffer via kvfree() and return error code.
 
-On Wed, May 21, 2025 at 04:17:49PM +0300, Nikita Zhandarovich wrote:
-> Syzkaller reported via syzbot a warning (see [1]) that occurs
-> when the fuzzer manages to craft a I2C transfer with a 0-length read
-> request. This in turn leads to an attempt at execution of a
-> USB 0-length read (which is forbidden by USB protocol) leading to
-> it being interpreted as a write.
->=20
-> Enable I2C_AQ_NO_ZERO_LEN_READ adapter quirk for all devices
-> managed by dvb-usb-v2 thus forbidding 0-length read messages
-> altogether.
->=20
-> [1] Syzbot report
-> usb 2-1: BOGUS control dir, pipe 80000280 doesn't match bRequestType c0
-> WARNING: CPU: 0 PID: 5845 at drivers/usb/core/urb.c:413 usb_submit_urb+0x=
-11dd/0x18c0 drivers/usb/core/urb.c:411
-> ...
-> Call Trace:
->  <TASK>
->  usb_start_wait_urb+0x11a/0x530 drivers/usb/core/message.c:59
->  usb_internal_control_msg drivers/usb/core/message.c:103 [inline]
->  usb_control_msg+0x2b3/0x4c0 drivers/usb/core/message.c:154
->  gl861_ctrl_msg+0x332/0x6f0 drivers/media/usb/dvb-usb-v2/gl861.c:58
->  gl861_i2c_master_xfer+0x3b4/0x650 drivers/media/usb/dvb-usb-v2/gl861.c:1=
-44
->  __i2c_transfer+0x859/0x2250 drivers/i2c/i2c-core-base.c:-1
->  i2c_transfer+0x2c2/0x430 drivers/i2c/i2c-core-base.c:2315
->  i2cdev_ioctl_rdwr+0x488/0x780 drivers/i2c/i2c-dev.c:306
->  i2cdev_ioctl+0x78a/0xa20 drivers/i2c/i2c-dev.c:467
->  vfs_ioctl fs/ioctl.c:51 [inline]
->  __do_sys_ioctl fs/ioctl.c:906 [inline]
->  __se_sys_ioctl+0xf1/0x160 fs/ioctl.c:892
->  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
->  do_syscall_64+0xf3/0x210 arch/x86/entry/syscall_64.c:94
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> ...
->=20
-> Reported-by: syzbot+721071c10f3c7e4e5dcb@syzkaller.appspotmail.com
-> Closes: https://syzkaller.appspot.com/bug?extid=3D721071c10f3c7e4e5dcb
-> Tested-by: syzbot+721071c10f3c7e4e5dcb@syzkaller.appspotmail.com
-> Fixes: 776338e121b9 ("[PATCH] dvb: Add generalized dvb-usb driver")
-> Signed-off-by: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
+Fixes: 9efa75254593 ("net/mlx5_core: Introduce access functions to query vport RoCE fields")
+Cc: stable@vger.kernel.org # v4.5
+Target: net
+Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+---
+v3: Explicitly mention target branch. Change improper code.
+v2: Remove redundant reassignment. Fix RCT.
 
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+ drivers/net/ethernet/mellanox/mlx5/core/vport.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/vport.c b/drivers/net/ethernet/mellanox/mlx5/core/vport.c
+index 66e44905c1f0..e4b86633d2fe 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/vport.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/vport.c
+@@ -522,19 +522,22 @@ int mlx5_query_nic_vport_qkey_viol_cntr(struct mlx5_core_dev *mdev,
+ {
+ 	u32 *out;
+ 	int outlen = MLX5_ST_SZ_BYTES(query_nic_vport_context_out);
++	int err;
+ 
+ 	out = kvzalloc(outlen, GFP_KERNEL);
+ 	if (!out)
+ 		return -ENOMEM;
+ 
+-	mlx5_query_nic_vport_context(mdev, 0, out);
++	err = mlx5_query_nic_vport_context(mdev, 0, out);
++	if (err)
++		goto out;
+ 
+ 	*qkey_viol_cntr = MLX5_GET(query_nic_vport_context_out, out,
+ 				   nic_vport_context.qkey_violation_counter);
+-
++out:
+ 	kvfree(out);
+ 
+-	return 0;
++	return err;
+ }
+ EXPORT_SYMBOL_GPL(mlx5_query_nic_vport_qkey_viol_cntr);
+ 
+-- 
+2.42.0.windows.2
 
---gQiwaaZdNNFghSHu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmgt1soACgkQFA3kzBSg
-Kbb6CBAAl2NC3Z2B0lqNl3MImsZfKKawyrNKVPf6PhYBaU3KQdhfsdH/7MZhimHH
-hexO3spyem6FGFhWyawF3RxcBTRJTkVDjLB0wQe/GwhyHxWxUKfBtV8JpWIzirkj
-46VSfi8FAKQjSsX83qLg9a06SHYU2TTbXVe8l3F0KZENGsTpEGTULJ/QxSSqz5V6
-OfiF22H/vsrSlQ0xc0pHmQw4VlD/CUmvLvyoN6BlDSM6bligeIfbuYRbX2fI6afT
-ZqEGQfFbVXfJvPw5Ts78i3ri8nT4NIDPbDPwy5xqp3t4Liq3cHjR4/qZMEfkHRYr
-QYoou7jzIRusl22tdWosX+qFXFJuUeGsuuXXpDFn5WXkZCMapW8XeUlzPEYylZzy
-0Ah+r44QG+g60t5gQgZposIfYIoNCw2wChR/do266IrvMFJGjpPRkeoLvKv1FGR7
-vudD8129T3V5+lvYXT+sri8QlaiSHzH9Emxp5zVVWGn/nZtuT9H0ldkzRQubZOrZ
-rngkt8bUS44ELsFXTmxaVRK10kWdyrX+WNTs9G1JWgyQLZSHISymOd2xqWGlB+Xy
-FROg0Kl+gAxYzgTbs3gLg0h8PzbUsLI+Eyqo0PlpdIZkzCqAhr8tZJlN+AutiHT6
-ulMvqQNDMnYYaPkq3yxmGf862O43muBqiJODeGgaTSy7DvgN+Ss=
-=3aKd
------END PGP SIGNATURE-----
-
---gQiwaaZdNNFghSHu--
