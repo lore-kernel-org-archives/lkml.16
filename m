@@ -1,108 +1,109 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C643622CBF8;
-	Wed, 21 May 2025 18:00:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16C6C231833
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 18:05:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747850435; cv=none; b=Z2PBwGeM1wm+JTx5t8dzWl4QIc5KND/qBP5X5auMLFNAqe333E97tpMWy7PNeebcg0AVueOE+VzWZFIikzdCryTUfViixUNOlWFFl2lB04Q7ilVmvxr+NzkKgXQbKFp/DR97dWPTWm0s8NY7bc5o2MTtslwsyZN3hj57omrKkCg=
+	t=1747850722; cv=none; b=cvWWGxhMV1eIhseS4pe6bXaSejBeYzkcFX+itMkTLH6Eh3ZVBDN61r0I/f2Kx+sYNa5PqQteDBXPNW/1pC5a45ryrycQU38iSvseYYva49MSUvyaxHCh5i3awVcECnzHJToLVIFTyS3Im9oYiw75o9Qwkbft8dG7RYSa0UBFlXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747850435; c=relaxed/simple;
-	bh=hSEhiDzqSaiyLOhzjpCcXuTR0mgkbVOtc0ok6q5hkyo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=etw7yyv1SmMwDRtmg5mWPQIp46sXxV0HYjlwpRoLeIh1+xqkQthlLwjmlqPZEvqmbkSIKUxbSYVk4Hm2iyhKWKm94X/ESy9FNweNNLc7i+c9A/d6CZ2gWx5vqsT8CKDaeHQ4MjNIDLT+EfahNEt20PD8CzgwwuSfp9Av/LcDrx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=N0hjILO5; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	s=arc-20240116; t=1747850722; c=relaxed/simple;
+	bh=wJ+IBS6nix+cKkSYMVxMMyIXbbth2l3uCRPqwBw5UiA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Cej5Y7WFd8T/e6h8GqcZ6n+Bzu25ZlYj+wRopOby1Ej3wSjEPUjQxXCmnX+p7Jn5Jy8hrwh5LwaRISnQns3PJn9NUA/cR69WjoQAicwD5M0w5CjluYd8SENtx+GncDIp1r+KLJHvAwnsZtRlz1CFvbF1a0d4xyro6M6K/Xu4Llg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SV7idZWs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="N0hjILO5"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a375888297so2328017f8f.1;
-        Wed, 21 May 2025 11:00:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1747850432; x=1748455232; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=v8AA4IZsofQYOTdeu/xMopNAhMxBwcxpcA9eFx+l8xc=;
-        b=N0hjILO5NjCW4J0r7fsAH6pizhm4l/Kt4Pr1O/ebp1KfIQeAazeECNtN+Z9FegsdL4
-         M8kJn7V4U8KkfM8InXOEqU8em5n4t9rwOykmrMfKhZifdcs/Qj+tae2g/ED+/JrBVwcr
-         VJYYORfjxYI3PBsUeETwelhz+8nD1MlJhunRW4XIt/qC/y+I62rH8m3FIKrVKMrry27C
-         ivgdO1mbz2f0rowDyxMLo215Dr1Hv2Q2xr5cVZUsVAYlDaCXyH5PGObwyGLATONa+oRl
-         WGL0eygcbYZCmK51DzEJFwFwZc+V/vafbiddL6akWYCPNR3SS8VYSCalYGU8YVRMi06S
-         R0tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747850432; x=1748455232;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=v8AA4IZsofQYOTdeu/xMopNAhMxBwcxpcA9eFx+l8xc=;
-        b=VkSudBczItkcpHGBJHxK/0H4YT4/MCL+PqU6cj+8K75ZEaownRIDnPe+S3Z2zsC82I
-         f2Ba4uDHkHAnEo9VriIcSwVio1MqO6lEKy7tWL7pZ95XRJMfl82ApimBqpXBZ4Uj0l1X
-         VNR1xqem02fQr1zVHosmP6XeAkfeUTucAn3p+wLxOE2SfN+URpYPFus9b88WHBOwJexG
-         HfVzkF84wO6ibKZ0SA5ENo0lwlx5eAoJEhkEh7P8wxnjFYSmgtXEIQ7QRg5AyLLLr4XR
-         OCkujAfqD7Y2lfXE/hwjy7a2W0uSzlbk9gEW8juyZy68YSPoBMSAdJ88iXH32d5HA5dE
-         rwrA==
-X-Forwarded-Encrypted: i=1; AJvYcCVJVrVqNjg+c/UMa3UoyzfrkukuDpCEzQQeInjEexfUCA0A3Q9DLCvJrVF1DU8MGZv4hCE6lIfb@vger.kernel.org, AJvYcCWgYDJCpmsyDV1rmni7sLm4DlvHuR3ruSRmmCHWE/3gZKT4NLEapkUgxPTpCUrev0KtyGPmtO5Q1NsceKc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUKAR96k4iwE+luh9HLCDkmfmwyhIbbS3NYQlmx+dYkl7wrfwe
-	Wh5TcZCfKImc/cj53TUPvQ3LhJf2+QrfaelUuWoo3vCej7ClX/5K/hA=
-X-Gm-Gg: ASbGnctsDvhDwLvFyRpyPQ7K5Uo+8/XHFsGmrAYPRWx7gpodaxOcl9tCpyyMu2/jdI8
-	bYUvUMN/d8XeIjEc1ibw5FtCdYkWasvxYPeHHGLeiBNInj3+cYK4pK+WW8LuUh2knbc5qecJKGE
-	18N5zx62WI5F8X2vl9LCJbcyWVX4uOyzv7ZY1H7mM9FECWGI6FbHNV66tnTv/0PN7MlyiEo2j3d
-	t8riULlXSXfWIpmAMenI/dQ0fSzo5Q6W0KelEW+P29AJKvkT+6EraPcq9lCSstBXZF8UmpsYmbm
-	cCSy1KKCeX098E8YEucjTMYf8h8oWG1EZZavDnJkF3UxGj0sQAJG8cI9MX9DSMqbe3QQBTZ0Q4U
-	nA+z6x0/pLdGkHMVD0T+RNKnfVE0=
-X-Google-Smtp-Source: AGHT+IFh2AGmng+VALdHnj2jbzj3BcBZ4blsY4cvN/b9ldp9O+4JHoVbg40HkfWme/bgODBOdOKQyg==
-X-Received: by 2002:a05:6000:420d:b0:3a3:760c:81a4 with SMTP id ffacd0b85a97d-3a3760c835fmr9803335f8f.24.1747850431771;
-        Wed, 21 May 2025 11:00:31 -0700 (PDT)
-Received: from [192.168.1.3] (p5b2ac604.dip0.t-ipconnect.de. [91.42.198.4])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f73d4a3csm79716415e9.22.2025.05.21.11.00.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 May 2025 11:00:31 -0700 (PDT)
-Message-ID: <66f9ad91-99b1-4791-8cab-22b01eefeeec@googlemail.com>
-Date: Wed, 21 May 2025 20:00:30 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SV7idZWs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC31FC4CEEB;
+	Wed, 21 May 2025 18:05:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747850720;
+	bh=wJ+IBS6nix+cKkSYMVxMMyIXbbth2l3uCRPqwBw5UiA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SV7idZWs/xKJKbWDxXKMBzFBNn/F3JlGR3/0DZmIW6pznmuBhs5IiQ0qSev2KqEG7
+	 D0yjjlusB+FOAm8HklhSscofb4YEJtLyojfChftZA1/lF3bpuYmyyFmfqVkYqZBhIB
+	 1Ly0A+98OYevE3eyxVx3MmIwCX2xpVEt4MF9IspGFX1WWGEVaGJRi/PKJ/nqdETc9q
+	 qlygSOUqvOI6Xp+zqooewHbpEifmHg7tfhkWEqA7KDssYu+zEOPxWD9cpF3AChvy7u
+	 BX4pbtecEDBnTZhgPvaIzs9F/wPdoGxP9OIsS2O3p102yBuWL02dk65zBuduBsyvlH
+	 Aey0DH7yMHbKw==
+Date: Wed, 21 May 2025 15:05:17 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Fei Lang <langfei@huawei.com>, peterz@infradead.org, mingo@redhat.com,
+	namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	adrian.hunter@intel.com, kan.liang@linux.intel.com,
+	james.clark@linaro.org, linux-kernel@vger.kernel.org,
+	hewenliang4@huawei.com, liuchao173@huawei.com,
+	laihangliang1@huawei.com
+Subject: Re: [PATCH] perf comm str: Fix perf top coredump due to concurrent
+ read and write
+Message-ID: <aC4V3fgxT7YIsWu-@x1>
+References: <20250519114836.611110-1-langfei@huawei.com>
+ <CAP-5=fW3UcqwnwDPye=+LxG1vPGZEaATH-ggbR73yZQnWkA03Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH 6.14 000/145] 6.14.8-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250520125810.535475500@linuxfoundation.org>
-Content-Language: de-DE
-From: Peter Schneider <pschneider1968@googlemail.com>
-In-Reply-To: <20250520125810.535475500@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fW3UcqwnwDPye=+LxG1vPGZEaATH-ggbR73yZQnWkA03Q@mail.gmail.com>
 
-Am 20.05.2025 um 15:49 schrieb Greg Kroah-Hartman:
-> This is the start of the stable review cycle for the 6.14.8 release.
-> There are 145 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Mon, May 19, 2025 at 03:48:37PM -0700, Ian Rogers wrote:
+> On Mon, May 19, 2025 at 4:56 AM Fei Lang <langfei@huawei.com> wrote:
+> >
+> > (gdb) bt
+> >     __strcmp_evex () at ../sysdeps/x86_64/multiarch/strcmp-evex.S:314
+> >     sort.comm_collapse () at util/sort.c:202
+> >     hist_entry__collapse at util/hist.c:1312
+> >     hists__collapse_insert_entry at util/hist.c:1620
+> >     hists__collapse_resort at util/hist.c:1704
+> >     perf_top__resort_hists at builtin-top.c:303
+> >     perf_top__print_sym_table at builtin-top.c:350
+> >     display_thread at builtin-top.c:700
+> >
+> > Link:https://bugzilla.kernel.org/show_bug.cgi?id=220096
+> >
+> > Fixes: <3178f58b9894> ("perf comm str: Avoid sort during insert")
+> > Signed-off-by: Fei Lang <langfei@huawei.com>
+> > ---
+> >  tools/perf/util/comm.c | 16 +++++++++++++++-
+> >  1 file changed, 15 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/util/comm.c b/tools/perf/util/comm.c
+> > index 8aa456d7c2cd..0438870d31d2 100644
+> > --- a/tools/perf/util/comm.c
+> > +++ b/tools/perf/util/comm.c
+> > @@ -209,13 +209,16 @@ struct comm *comm__new(const char *str, u64 timestamp, bool exec)
+> >  int comm__override(struct comm *comm, const char *str, u64 timestamp, bool exec)
+> >  {
+> >         struct comm_str *new, *old = comm->comm_str;
+> > +       struct comm_strs *comm_strs = comm_strs__get();
+> >
+> >         new = comm_strs__findnew(str);
+> >         if (!new)
+> >                 return -ENOMEM;
+> >
+> > +       down_write(&comm_strs->lock);
+> 
+> comm_strs are a uniq-ified set of strs to avoid memory overhead from
+> comm events. A comm_str is reference counted and immutable. Using the
+> comm_str lock on the comm struct isn't something I agree with as we
+> already have thread__comm_lock.
+> 
+> >From the bug report $rdi is non-zero but comm_strs are immutable and
+> reference counted, perhaps address sanitizer and reference count
+> checking can point to the problem (add -fsanitize=address to your
+> cflags). I put together some thread safety patches to see if the
+> problem can be caught, but nothing that looks particularly likely:
+> https://lore.kernel.org/lkml/20250519224645.1810891-1-irogers@google.com/
+> I couldn't repro the problem locally.
 
-Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
-oddities or regressions found.
+I couldn't repro it here as well, and without your thread safety
+patches, that I have applied on my notebook and I'm merging with this
+workstation repo to push out.
 
-Tested-by: Peter Schneider <pschneider1968@googlemail.com>
-
-
-Beste Grüße,
-Peter Schneider
-
--- 
-Climb the mountain not to plant your flag, but to embrace the challenge,
-enjoy the air and behold the view. Climb it so you can see the world,
-not so the world can see you.                    -- David McCullough Jr.
-
-OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
-Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
+- Arnaldo
