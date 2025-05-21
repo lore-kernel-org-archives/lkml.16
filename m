@@ -1,85 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3267158A09
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 15:27:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E835B1607A4;
+	Wed, 21 May 2025 15:27:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747841233; cv=none; b=hxsQ+GiWNSpnKL3unTzUqnhsd4DKJocNgJTaqC4scAO7HPWPoXpHYfaRy1bPnea3KYwX/InAd1mtbp9KN/7P80U1WayxQ5ldFA0eEoWuqBMwtLjHVePfHvwCqanUpCrBXF9jDkBo8fFBvX31D55aCspzntA256ESyPaJDnOUJUI=
+	t=1747841245; cv=none; b=h4ZS2MgiF8ZAcsTkR9DpPieB903BWGiMGXHtyCW2B0JDAVespUEFHDGLRzMdAMu7Ntc9p0rpgYtO2eJGRDtaCjHomIJ5v3Vj1lTu21/TwLroZoYjLWc9lqYGr81HssZIs+g16NpQ+G60iYV/vlAWadwfR8VrX8a7dyIPS+//fdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747841233; c=relaxed/simple;
-	bh=OREQHZGYo3NvKNR+PKTA7t1MGjIJnrFFdGtkjwEU9qU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QCmLzpfsqp71Sud9Cu/QIM8WaD/85XyBo2YCYIknb+uNgqm0Ih3/kfM0nFix715Kb/J38VfY+J2BtUvelROwDOyzzXemL8RIoBJxIb2J9+gJTFJADYIX5rTfMsZRt9jG+gB67Q/psml4Zd/gfrpZMlRy4ogK6s21CHlv5RYzzkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k7XUweCK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747841245; c=relaxed/simple;
+	bh=1Ss0ZBRaHEV8F3rUqaE1lwJOphYa1YfsxLlCy/ljJ/s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=dsFrIM7OvT7M551lYa1t+3eV1jEAPVJgxWuCJTohQ2YFH6OmC/muCYaH5UJVtAY4yNrnma/9xcya9ELl9oCSPy1uBObmKOD7XedPUDsd8Q/PQuwX8srMeSrxeMha6Rfsy8skD7mbRBPZs8hQM+jFbbGBTd/DcEQJtUysRNcgk+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NDihUauO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k7XUweCK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB653C4CEE4;
-	Wed, 21 May 2025 15:27:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NDihUauO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C06D7C4CEE4;
+	Wed, 21 May 2025 15:27:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747841233;
-	bh=OREQHZGYo3NvKNR+PKTA7t1MGjIJnrFFdGtkjwEU9qU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=k7XUweCKpFKWJICYq76TfDISsYXAaRG/WO7DIzj+Cd0xOXyA60iZLJ0nhdVjPAlly
-	 DHAxo+naXWo5rjJKLYvRjYRNIuFlNWx6Np0Bjk/QmmBGn3fIBYGOGaN2nqb6J9rEFS
-	 j1ig1OlpBj19WT6pGkVxfX/ulXl1n+DGlfkYUIyv29inAlFODqP4QixgOauwg2sgR2
-	 2zDkroPW/xH/d0oH02ugkePbiLo3nZ2vd2AkDkHSA18F21NR00eHQhzq1DBhwbH+3W
-	 m81rhzkUK57nHLPAUmDn53ZolxhVNtIxFC9E+Nl234NAw8PG3veRASeFl77u4YBOJK
-	 tkUG3kF0BMtKg==
-Date: Wed, 21 May 2025 18:27:03 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Oscar Salvador <osalvador@suse.de>
-Cc: Changyuan Lyu <changyuanl@google.com>, akpm@linux-foundation.org,
-	bhe@redhat.com, chrisl@kernel.org, graf@amazon.com,
-	jasonmiu@google.com, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	pasha.tatashin@soleen.com
-Subject: Re: [PATCH 1/2] memblock: show a warning if allocation in KHO
- scratch fails
-Message-ID: <aC3wx5erybg00SaQ@kernel.org>
-References: <aCoFphqeZAMkhq51@kernel.org>
- <20250521070310.2478491-1-changyuanl@google.com>
- <aC2EE1pg9ktQdstI@kernel.org>
- <aC2TdzP1AwYrQdcW@localhost.localdomain>
+	s=k20201202; t=1747841244;
+	bh=1Ss0ZBRaHEV8F3rUqaE1lwJOphYa1YfsxLlCy/ljJ/s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=NDihUauOCxLT+TOKx/cv9W6c4iEgwOc7tKgC4GKSbNeqJ7Hg8jHz7cYO5U7llA9Y9
+	 6hlluj+bY+QwKq2rHZuxtCiXV0fbeCpqYuF51piLngZ9s2ZUaL4Uh8B8XRunKZ3XtH
+	 oNHBMJh9NK5lZfTssdqJiRfhk2n5PolNyeddJCkqDCaonPpLNxZjKsyFFUHxEZ5OhE
+	 /OSOH/OqYcKAgkfCUGZxWVK95kHII+yliC6/93sFRT0Kokk2PqtOiZRik6/QJZ0ZDa
+	 gp+lC11w+Ct8cFyzufRMM9UqjesNMHD3YLgZhL/LIoxaP3VCE9D8BLWrxv+00gEvgp
+	 f06UgpMA7xawQ==
+From: Miguel Ojeda <ojeda@kernel.org>
+To: richard120310@gmail.com
+Cc: a.hindborg@kernel.org,
+	alex.gaynor@gmail.com,
+	aliceryhl@google.com,
+	benno.lossin@proton.me,
+	bjorn3_gh@protonmail.com,
+	boqun.feng@gmail.com,
+	dakr@kernel.org,
+	gary@garyguo.net,
+	jserv@ccns.ncku.edu.tw,
+	linux-kernel-mentees@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	ojeda@kernel.org,
+	rust-for-linux@vger.kernel.org,
+	skhan@linuxfoundation.org,
+	tmgross@umich.edu
+Subject: Re: [RFC PATCH v2] rust: list: Add examples for linked list
+Date: Wed, 21 May 2025 17:27:05 +0200
+Message-ID: <20250521152705.1056252-1-ojeda@kernel.org>
+In-Reply-To: <20250311133357.90322-1-richard120310@gmail.com>
+References: <20250311133357.90322-1-richard120310@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aC2TdzP1AwYrQdcW@localhost.localdomain>
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 21, 2025 at 10:48:55AM +0200, Oscar Salvador wrote:
-> On Wed, May 21, 2025 at 10:43:15AM +0300, Mike Rapoport wrote:
-> > I think we should just make sparse_init_nid() panic or at least change 
-> > "sparse_init_nid: node[0] memory map backing failed. Some memory will not be available."
-> > to something more visible and clear. 
-> 
-> Panicking the system seems a bit too harsh.
-> Those sections will not be initialized, and sure you will lose some memory,
-> but still.
-> 
-> I think that making sure that subsection_map_init() does not access
-> non-initialized values is enough.
+On Tue, 11 Mar 2025 21:33:57 +0800 I Hsin Cheng <richard120310@gmail.com> wrote:
+>
+> Add basic examples for the structure "List", also serve as the unit
+> tests for basic list methods. Including the following manipulations:
+> * List creation
+> * List emptiness check
+> * List insertion through push_front(), push_back()
+> * List item removal through pop_front(), pop_back()
+> * Push one list to another through push_all_back()
+>
+> The method "remove()" doesn't have an example here because insertion
+> with push_front() or push_back() will take the ownership of the item,
+> which means we can't keep any valid reference to the node we want to
+> remove, unless Cursor is used. The remove example through Cursor is
+> already demonstrate with 'commit 52ae96f5187c ("rust: list: make the
+> cursor point between elements")' .
+>
+> Link: https://github.com/Rust-for-Linux/linux/issues/1121
+> Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
 
-It's not only subsection_map_init(), next failing one is
-memmap_init_range() and maybe there's more, but we can audit and fix them.
-I believe all those accesses are at init time because after system is
-booted we are careful to avoid accessing absent sections.
+It would be nice to pick this one up, even if it is similar to the
+cursor one -- some methods shown here are not in the other example.
 
-> Because wrt. error message, I am not sure it can get more clear that we
-> failed we allocate memory to back the section and so that section will
-> not be activated :-)
+Any reviews Reviewed-bys/Tested-bys, anyone? (I can clean a few nits on
+my side when applying).
 
-Add a dump_stack()? ;-)
+By the way, similarly to the other one, your email did not reach my
+inbox for some reason.
 
-> -- 
-> Oscar Salvador
-> SUSE Labs
-> 
+Thanks!
 
--- 
-Sincerely yours,
-Mike.
+Cheers,
+Miguel
