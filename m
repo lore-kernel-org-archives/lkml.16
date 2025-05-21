@@ -1,142 +1,118 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EADC21E082
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 19:29:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C94725A321;
+	Wed, 21 May 2025 19:35:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747855795; cv=none; b=bFLepTcXfVnRdS+p55goKi4g23H2SJq74oeafcbhZD0i5euFUeWJre8lvKydrgtdgQQv5UHgYi2W/3USn8Rc0HQxLiLhu9UuX1cVMOXp5g59SzHq1wXJX0jtkYIrXYihpNNJ0Vt9hBhXWQ8LsXyErEQb12+aPPF6MFA6c1mpYtY=
+	t=1747856151; cv=none; b=pp+2FJKEcOddwRawX7YNp72hNNhCqf/1rNxBWqoUPsnNDMi+MrJnfDBYf/rVKmbKRtHi482QDe+PTAnbFCx8TXkkoBV8zkLtmSWn1oZwhMDYFXdZY/GhMYWydTVzAgN6E5mzLJqgYZa2wF5z0+8sbzQOY9nushyX5GhfMmdvUlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747855795; c=relaxed/simple;
-	bh=h6XilRWuBp7+PgmTU9jiMKkkq4FnFRWE5CVr1eHQsDI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IbXNve2aIGxZeYhmS6+OQ/QW25Vp2N1O0U6FN41lDWet7NszhbbTVYscP5lrEPg5c7nMcsoiblNaalG05BWSeLlNCZN8oE0IiRX91ZMl5INFrxUREIdJVHeoPPTsGjtHueq3SsZHDtN81pVh0RmFxmZsGuxJjcnFs8vOI9Z5FQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=MUfJAHxS; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1747856151; c=relaxed/simple;
+	bh=8a8vQY24kpOTOSPqYHfBqqeVHZ2y0yNa9wTnorDnezo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=OpDA8cq91zySFAwsBEblgxUYfOgC+Mmec7nK4bs1hl8W4hrwptCuehL1OiGjNETVRqqB7fI5Tixqu8UQ4hZMc2YBgfeRS2TOISXkYTtq1+oB9SD/WSWoK3hTr9hK5MNsi/d7nbTZGNXfb8uKUQrtjE+4Ub1q15lsppvtUH8dLFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gPixCLIT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="MUfJAHxS"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 02A6440E0238;
-	Wed, 21 May 2025 19:29:50 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id TbjGMxBQ_vK4; Wed, 21 May 2025 19:29:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1747855786; bh=F6H3aHv8gh5alAtFsD2d4Wn0ntmMSpzzynBU1+ZZ9p4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MUfJAHxSDEdo94bVwdODqkU4+bO+QCQIws1/C+y7kJo/YIaAvQzDb/uB4QDNnkAAW
-	 nZllglYwrv1z5rTmB8ckklVJgN3vZNnD7xZXKbbUq8U5+xwCr8GXULw+qerQaIErbu
-	 SqO0hHodsRg02GvYpIJfqEvitPTff8yzydnK8co7ligYEDm9JvBJ6X4Tudj4NmAKrW
-	 XPNQF59xM3TMF8Wh5F84uXGqCNM9Coqxp4Dhhvv0cH7rTrfFxkvvJjk+Ixg5ra59hn
-	 nXn8Key4oRA84LWVMxXJEeKF8Ysy9f6xhsDBmpMd0yHyWo//cQGNi7lLASG4hA7fvY
-	 G8geDy8CYixsqiWA/e7LL+Bq+Q5RA+Yl/qSUmizg24pSxn6kyz+AH/WnDQFcBAfMMR
-	 k6uavfdSGcMilHk/GL9+1vQ18KfmFysFS+tIeBgXhRqleJnVFmBrFEI8elZVKRLcA6
-	 +d2EY4pJIpy2NNwzmQo6oAq1P/PqEb6jvql6eoOqzWnAJd5+LY9Q/dtn4TIjwlzktO
-	 wdp20o5Rtke5j+Y6AihvH/vcVUcAIqFR4iTY7B/t/jQMcTzTlu4MUCbY0+Blsqg9qr
-	 c4ZaAwxQy+2/ZITb7E3Jdj0uXEBR7PU5xDmuO3WFJsHcs5XWjX8el4lTNgDHTFJPvy
-	 9mCBbqiss1Tn57UHvghimMU4=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E02C940E01FA;
-	Wed, 21 May 2025 19:29:35 +0000 (UTC)
-Date: Wed, 21 May 2025 21:29:30 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	"Ahmed S. Darwish" <darwi@linutronix.de>,
-	Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
-	x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Brian Gerst <brgerst@gmail.com>,
-	"Kirill A. Shutemov" <kirill@shutemov.name>
-Subject: Re: [PATCH v4 1/6] x86/cpu: Use a new feature flag for 5 level paging
-Message-ID: <20250521192930.GEaC4pmmpuktvClDxj@fat_crate.local>
-References: <20250517091639.3807875-8-ardb+git@google.com>
- <20250517091639.3807875-9-ardb+git@google.com>
- <20250519094038.GIaCr8ltHvLBYjk8iI@fat_crate.local>
- <aCstaIBSfcHXpr8D@gmail.com>
- <20250519131944.GCaCsv8A71vn21AB1W@fat_crate.local>
- <874ixernra.ffs@tglx>
- <20250521181141.GDaC4XXW8BmtvJFy6a@fat_crate.local>
- <87sekxrdws.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gPixCLIT"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 0F7AEC4CEEA;
+	Wed, 21 May 2025 19:35:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747856151;
+	bh=8a8vQY24kpOTOSPqYHfBqqeVHZ2y0yNa9wTnorDnezo=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=gPixCLITPfzRV8uPt7V2t9f6V9qhU2M2YG+Mc3CWFguXc0Bsj5xok3L0UCMq1cGo2
+	 pckvkX7/20Y2Rp6+Puhb3XO/dEycnFDSJZ7Dal9HBGiSiTxXRUG5HeNudBYfqZ3/tI
+	 xC0P+19Hw8KHRkanrGaae7ppIcicQmWcXJXrSBWj6Kjmi1RXn3VasF0F0X2ws6JCd8
+	 HncP052XNRzgj5hVZkv4RnxyW77O0aNh9vwb0cKbfjRD95kTiUlnVNf3XusS/lAgT0
+	 ZgdAFy4gZKP0veZCXJ3aXtatqDDDtdDj/GHoRQehc9He44+8XifXZLO1rB5dNiYI4N
+	 pBE2JhRXoDQVA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0533C54E65;
+	Wed, 21 May 2025 19:35:50 +0000 (UTC)
+From: =?utf-8?q?Andr=C3=A9_Apitzsch_via_B4_Relay?= <devnull+git.apitzsch.eu@kernel.org>
+Date: Wed, 21 May 2025 21:34:24 +0200
+Subject: [PATCH v3 1/5] media: i2c: imx214: Reorder imx214_parse_fwnode
+ call
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <87sekxrdws.ffs@tglx>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250521-imx214_ccs_pll-v3-1-bfb4a2b53d14@apitzsch.eu>
+References: <20250521-imx214_ccs_pll-v3-0-bfb4a2b53d14@apitzsch.eu>
+In-Reply-To: <20250521-imx214_ccs_pll-v3-0-bfb4a2b53d14@apitzsch.eu>
+To: Ricardo Ribalda <ribalda@kernel.org>, 
+ Sakari Ailus <sakari.ailus@linux.intel.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+ linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ devicetree@vger.kernel.org, imx@lists.linux.dev, 
+ linux-arm-kernel@lists.infradead.org, 
+ =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>, 
+ Ricardo Ribalda <ribalda@chromium.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747856148; l=1201;
+ i=git@apitzsch.eu; s=20240325; h=from:subject:message-id;
+ bh=JSOcAgvTpyrSY1gtujk/NN7HrGG2Tbe4hfXbnAXabfw=;
+ b=cTQcAJeyjcHdCIB0CKYBFarIoEIQzEvH4tse6dqUe0Kr4oM9poMtr0ShJH2LQBm/nX4vg6mQZ
+ dUqisuK/dOPApTwt5EGLeYXIPjbI1DoU/UFdNy0b08rFtHEn1K/PyiT
+X-Developer-Key: i=git@apitzsch.eu; a=ed25519;
+ pk=wxovcZRfvNYBMcTw4QFFtNEP4qv39gnBfnfyImXZxiU=
+X-Endpoint-Received: by B4 Relay for git@apitzsch.eu/20240325 with
+ auth_id=142
+X-Original-From: =?utf-8?q?Andr=C3=A9_Apitzsch?= <git@apitzsch.eu>
+Reply-To: git@apitzsch.eu
 
-On Wed, May 21, 2025 at 08:56:19PM +0200, Thomas Gleixner wrote:
-> Yes, and the process is that the leaf/bit needs to be in the data base so
-> that the headers containing the new leaf/bit can be auto generated.
+From: André Apitzsch <git@apitzsch.eu>
 
-Ack.
+Reorder imx214_parse_fwnode call to reduce goto paths in upcoming
+patches.
 
-> Kinda, but you're conflating things here. leaf_7.la57 is a hardware
-> property and leaf_linux_$N.la57 is a software property.
-> 
-> Of course you might say, that clearing leaf_7.la57 is sufficient to achieve
-> this.
-> 
-> But in fact, "clearing" the hardware view is the wrong thing to do from
-> a conceptual point of view. The hardware view is "cast in stone" no
-> matter what and having a clear distinction of a separate software view
-> will make things way more clear and understandable.
+No functional change intended.
 
-Right, if I had a time machine, I would fly back and define this thing in
-a whole different way: X86_FEATURE would be what the kernel has enabled and if
-the bits completely or partially overlap with the definition of a respective
-CPUID bit, so be it. But they would not parrot CPUID.
+Acked-by: Ricardo Ribalda <ribalda@chromium.org>
+Signed-off-by: André Apitzsch <git@apitzsch.eu>
+---
+ drivers/media/i2c/imx214.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-IOW, I would completely decouple X86_FEATURE_ bits from CPUID and have all
-in-kernel users check X86_FEATURE flags and not touch CPUID at all.
-
-But ok, in another life...
-
-> I've stared at code for hours just to figure out that there was some
-> obscure way to end up with a disabled feature bit.
-> 
-> Having a software view in the first place makes it clear that this is
-> subject to a logical operation of 'hardware capable' _and_ 'software
-> willing' instead of some hidden and obscure 'pretend that the hardware
-> is not capable' magic.
-> 
-> Clear conceptual seperation is the only way to keep sanity in this ever
-> increasing complexity nightmare.
-
-As long as we all agree and follow this, I'm a happy camper. Ofc, there will
-be confusion where: "hey, I'm checking the CPUID bit but the kernel has
-disabled it and marked this in the synthetic bit, blabla..." but once we know
-and agree to what goes where, it should work.
-
-> Claiming that saving 5 bits of extra memory is a brilliant idea was
-> even wrong 30 years ago when all of this madness started.
-> 
-> I freely admit that I was thinking the same way back then, because I was
-> coming from really memory constraint microcontroller systems. But in the
-> context of Linux and contemporary hardware complexity we really need to
-> shift the focus to comprehensible concepts and strict abstractions
-> between the hardware and software point of view.
-
-Right.
-
-And as said, arch/x86/ should be solely looking at the hw view and
-representing to the rest what is enabled or not. But I'm preaching to the
-choir here.
-
-Thx.
+diff --git a/drivers/media/i2c/imx214.c b/drivers/media/i2c/imx214.c
+index dd7bc45523d8b5fcb3ec95728a6d32c4fddede72..0199195dcb7d12dc2ff253fe3eb77ddbcd0812a9 100644
+--- a/drivers/media/i2c/imx214.c
++++ b/drivers/media/i2c/imx214.c
+@@ -1261,10 +1261,6 @@ static int imx214_probe(struct i2c_client *client)
+ 	struct imx214 *imx214;
+ 	int ret;
+ 
+-	ret = imx214_parse_fwnode(dev);
+-	if (ret)
+-		return ret;
+-
+ 	imx214 = devm_kzalloc(dev, sizeof(*imx214), GFP_KERNEL);
+ 	if (!imx214)
+ 		return -ENOMEM;
+@@ -1295,6 +1291,10 @@ static int imx214_probe(struct i2c_client *client)
+ 		return dev_err_probe(dev, PTR_ERR(imx214->regmap),
+ 				     "failed to initialize CCI\n");
+ 
++	ret = imx214_parse_fwnode(dev);
++	if (ret)
++		return ret;
++
+ 	v4l2_i2c_subdev_init(&imx214->sd, client, &imx214_subdev_ops);
+ 	imx214->sd.internal_ops = &imx214_internal_ops;
+ 
 
 -- 
-Regards/Gruss,
-    Boris.
+2.49.0
 
-https://people.kernel.org/tglx/notes-about-netiquette
+
