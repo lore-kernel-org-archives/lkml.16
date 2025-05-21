@@ -1,47 +1,69 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9AF222AE41;
-	Wed, 21 May 2025 16:25:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E9D21E3769;
+	Wed, 21 May 2025 16:26:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747844758; cv=none; b=IIMSEs6pxzQajhFeP+CZ0Xt8I8Txi8pMu2qsGILSN+yxDVCASOKTwtKoGoNiHcDFGOfC3UnM2Pf76Ju7gd0WyUV6F49oTt5aS6ovMF7VUrmvGqFNOgrf1Q2AYs+rV5/XN1QntfWz5CVUdul1+YBAcvPlfcDNtj5CTXE7aGksVoU=
+	t=1747844784; cv=none; b=fCV3ElM4IEgPZWzQ9BY27W1XqPp2rYuf2MKLQw68nZI3lKquvDjkeSOZa8rLETHhSZBp1QAGAvfmPPd8kdumhxnSe0Aeyj2evC2r08Pv3p/o8qIL0Zo3d4NJ+ITpIgvOcROyHXloLactJ+djXbSOiatCTNbn2RtAAQ0AVJch/c8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747844758; c=relaxed/simple;
-	bh=TebvNaMaU18pQ6UYGJjAoei8ZaawpkQCHdRpR8HAQJc=;
+	s=arc-20240116; t=1747844784; c=relaxed/simple;
+	bh=hJjThYydaCbJ7sV83f5nKFkvwJhkaPeXGcV4fO8cxq4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L0WGg9aZNRzA/I+QbxGmraVVxkW63gNzUqhZMLGk2hO9KTK7q+k7zHwxE6q5Ih5FkPXVoRO7RAW4r8suB8AuRdh4SFj5qppYLZmjuKWtUokXTbPcnDmPn1qc9+L077B02hcsADs28AHsM6aedXlEPOULT1H6+7HIcLBzs6BDmXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=0QceTirr; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=h+/53PPFbUjLFCrf3pJf94wWEGoBiqCHA/KDbeqI7PakbpesRJfWILBEgsUZveV/VCS1vmUd5tMm2GNzWHE7HkvGewww41iZPckzry36SEblDptcbFaarArJX8rWUbcDlyh/fjh0pEjGEECR9sQzvGhyIwlvg6V9kH/t+PEZl3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ByYw0sTw; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="0QceTirr"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=3g+CVDtzdZuER6lgO4bsBUK1VAcbEEFUD1kAdD51SmY=; b=0QceTirrCVNAGS9NMWkA8dWXud
-	0Ijic96VpnfzbUaQU8WJs5bQ73IwhTxqB43HicBwXfhvTmqdOadYRKNSzRumKnoBPVDo/7llJYeqz
-	dGI/DJAJ00kGGqHhjvBCjIK6VuSsPV/jCXtT+Pftb7iM+fYbYKWek5nWH7/IqjQB+Qds=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uHmGM-00DKBr-7Y; Wed, 21 May 2025 18:25:50 +0200
-Date: Wed, 21 May 2025 18:25:50 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Quentin Schulz <foss+kernel@0leil.net>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Jakob Unterwurzacher <jakob.unterwurzacher@cherry.de>,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Quentin Schulz <quentin.schulz@cherry.de>
-Subject: Re: [PATCH 2/2] arm64: dts: rockchip: support Ethernet Switch
- adapter for RK3588 Jaguar
-Message-ID: <657a085c-4214-4096-8a68-047d57a40d60@lunn.ch>
-References: <20250521-jaguar-mezz-eth-switch-v1-0-9b5c48ebb867@cherry.de>
- <20250521-jaguar-mezz-eth-switch-v1-2-9b5c48ebb867@cherry.de>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ByYw0sTw"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54LGK2Ua001532;
+	Wed, 21 May 2025 16:26:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=2kosc1Hmo6Ti93DyTQXntsRImPFT4o
+	qQzpEN6IuwiJo=; b=ByYw0sTwEf5CADp2X/fsU/DyssxXoxZ8OR6hhBBBg6bGOq
+	LN+WVGiPm6JDx+0ZMTC8ztnrBslrZpwZHXn/LHQ0QxpfGGJ5GIsOgxMA3WOCMopp
+	wxtgxk5ruP6rR2Yj8gWo2bvbqV7+Mmg8qDm5Z+14AvwHj9eOspdonQqzuCaNTeCj
+	oWIEsaO8DAUwlNGfcLjJKl5ht0XGFeDl314cnmnRYtcsPBJTtH67pzqd4Llf2VpF
+	uJOUalZ2NibxffmYa563s/xo2tkJiq2VB/JAHvgTSG0/Tsl28mcUUVDwmPsGARIp
+	7EKu7e597Vf3Kov9vVc8/oFi/0spAYpYqj2HeI8g==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46s9estvc9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 21 May 2025 16:26:20 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54LDpXVq015487;
+	Wed, 21 May 2025 16:26:19 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 46rwnnd0rf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 21 May 2025 16:26:19 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54LGQFXS35390202
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 21 May 2025 16:26:16 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D47812004E;
+	Wed, 21 May 2025 16:26:15 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3B8C020043;
+	Wed, 21 May 2025 16:26:15 +0000 (GMT)
+Received: from osiris (unknown [9.87.128.135])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed, 21 May 2025 16:26:15 +0000 (GMT)
+Date: Wed, 21 May 2025 18:26:13 +0200
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Claudio Imbrenda <imbrenda@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, frankja@linux.ibm.com,
+        borntraeger@de.ibm.com, seiden@linux.ibm.com, nsg@linux.ibm.com,
+        nrb@linux.ibm.com, david@redhat.com, agordeev@linux.ibm.com,
+        svens@linux.ibm.com, gor@linux.ibm.com, schlameuss@linux.ibm.com
+Subject: Re: [PATCH v2 4/5] KVM: s390: refactor and split some gmap helpers
+Message-ID: <20250521162613.11483E44-hca@linux.ibm.com>
+References: <20250520182639.80013-1-imbrenda@linux.ibm.com>
+ <20250520182639.80013-5-imbrenda@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,38 +72,55 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250521-jaguar-mezz-eth-switch-v1-2-9b5c48ebb867@cherry.de>
+In-Reply-To: <20250520182639.80013-5-imbrenda@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDE1OCBTYWx0ZWRfX7JC2r/fkkVEN h0WtDtFfRn/tOciv2j9Z5FdoEOHxNQmMrSbrwk9fsGaEIS+kUrofuX7a9I0DImzOo52aiPPmoLn 1t3jD+Ek1m9+nX4T6HUv5VNm5n+QHf500kLXYdbwG8zJlNl768HO0JEQ5EtfxIPc/2pKhxLTE1A
+ pMpj2orX7I70nI24vLTm0Rl4htukIYudpGNLpWyfB5wJ7t/kcaQNzD38Uj5QtbUTVfJyyB+VEiX yx6tDKnnaj1HUpr+1ZylaHtkiDXWiuIjULoAXwyh97NsCD5n2Nnj60lrebSMs1i1H/vbw77I8Om 2T0OkmM3vQasqncwTkclXQ4sfavB40JRLtr8OyKZProSiu4kG8gvf7tlkbhcF2Kj2Ba4bwdvnck
+ JVhLCptH7fUCyovktVO9xX4OqzBqLkMbs/CTlPFRoiuitqMfjIM5/ajC1fmatkEBu5bn0UqX
+X-Proofpoint-ORIG-GUID: CVUCeWibiMU-q77Y6f54Lm89Hq3EQfZV
+X-Proofpoint-GUID: CVUCeWibiMU-q77Y6f54Lm89Hq3EQfZV
+X-Authority-Analysis: v=2.4 cv=PsWTbxM3 c=1 sm=1 tr=0 ts=682dfeac cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=hFxyhTWOyB1buIFPRroA:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-21_05,2025-05-20_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxlogscore=636
+ impostorscore=0 adultscore=0 malwarescore=0 lowpriorityscore=0
+ suspectscore=0 bulkscore=0 mlxscore=0 priorityscore=1501 phishscore=0
+ clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505210158
 
-> +&gmac1 {
-> +	clock_in_out = "output";
-> +	phy-mode = "rgmii";
+On Tue, May 20, 2025 at 08:26:38PM +0200, Claudio Imbrenda wrote:
+> +void __gmap_helper_set_unused(struct mm_struct *mm, unsigned long vmaddr)
+> +{
+> +	spinlock_t *ptl;
+> +	pmd_t *pmdp;
+> +	pte_t *ptep;
+> +
+> +	mmap_assert_locked(mm);
+> +
+> +	if (pmd_lookup(mm, vmaddr, &pmdp))
+> +		return;
+> +	ptl = pmd_lock(mm, pmdp);
+> +	if (!pmd_present(*pmdp) || pmd_leaf(*pmdp)) {
+> +		spin_unlock(ptl);
+> +		return;
+> +	}
+> +	spin_unlock(ptl);
+> +
+> +	ptep = pte_offset_map_lock(mm, pmdp, vmaddr, &ptl);
+> +	if (!ptep)
+> +		return;
+> +	/* The last byte of a pte can be changed freely without ipte */
+> +	__atomic64_or(_PAGE_UNUSED, (long *)ptep);
+> +	pte_unmap_unlock(ptep, ptl);
+> +}
+> +EXPORT_SYMBOL_GPL(__gmap_helper_set_unused);
 
-Does the PCB have extra long clock lines to implement the 2ns delays?
+This is unused, as far as I can tell. I'm not sure if it is a good approach to
+do all this code movements / refactorings now. Especially if you also add
+(now?) dead code. I guess that e.g. this function is required for your rework
+that will come later?
 
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&gmac1_rx_bus2
-> +		     &gmac1_tx_bus2
-> +		     &gmac1_rgmii_clk
-> +		     &gmac1_rgmii_bus
-> +		     &eth1_pins>;
-> +	rx_delay = <0x30>;
-> +	tx_delay = <0x30>;
-
-Since this has a switch on the other end, its a bit more complicated
-with RGMII delays. Normally, the MAC does nothing and passed rgmii-id
-to the PHY, and the PHY then does the delays. However, here you don't
-have a PHY. So you have the MAC add the delays. This looks O.K. I
-would prefer that the driver used the standardized
-rx-internal-delay-ps & tx-internal-delay-ps rather than these vendor
-properties. But that is probably out of scope for this patchset.
-
-> +			port@5 {
-> +				reg = <5>;
-> +				ethernet = <&gmac1>;
-> +				label = "CPU";
-> +				phy-mode = "rgmii";
-
-Again, this probably should be rgmii-id to correctly describe the PCB,
-but i don't know if the switch takes any notice of it.
-
-	Andrew
+Imho this series causes quite a bit confusion and is not about "cleanups and
+small fixes" like advertised.
