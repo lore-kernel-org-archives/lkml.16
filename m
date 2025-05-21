@@ -1,180 +1,82 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34F0D1624CE;
-	Wed, 21 May 2025 18:13:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A75DD19DF4C;
+	Wed, 21 May 2025 18:16:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747851241; cv=none; b=A57zbdUsGih218/w2TywuS0zGkB/3J3FWhBpGd50K4PVkciv4Pi3o7tj57Xtx+OliJ/V3oJJpn5lXm+97L7wrpCUc2NJ/PvdYLfCBwA9RGaHJVzZsl+TZCuS25sSTv5UL+9b8dq5a/CPQFILhnQ2NXYlmZ+LJOHBFArfe6l+BTQ=
+	t=1747851407; cv=none; b=H0H4m0eOAthroq0t1kTeyGpNRzfZKUKiJo0VQBJx2FolQRpZcB3CBhFKR4iORWJ23zFp9V4ldkuGeSXpop5CNryfxIgFNcogsfdEVuruy5wTe3zmi6yMt5kbP2Vh7GUSCsS1q+xNJCPQTWPn7h+9QZaJA1Q6fE1TTg3SkBNznjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747851241; c=relaxed/simple;
-	bh=IVRrr3bXX1aOFwL4/OoLF2L3j9b8aaTdFDzcimwf2uE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P5eAc9LZDuw+NR129WqHmQhlu7s4CEge7zkd81wt/nInwKW1jhvxFCD0g1geUB8gqBqrhL7xA4RUIAYHWKefMhFN0Ev6WmamkobQ3VwNIY2nW7PuuRYAqmw4G9ETsnHWrwxPYbUplo1PiPQjvb/L4hhOVPTiSVJKYLLxsINTl20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eJikY25a; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747851407; c=relaxed/simple;
+	bh=9tmrg5RQZaCazyfwqN15ZQHkA/yKEelqV06wye+ZD3k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JnM9LgRwJ1+5RxOcVKG50OS9+xmWv6Bh+bB8bawpMq57QyKPQZZdY1I5yogUZs9NDi85VoRMuM95rM1iCqMCR/PtvEDGCh0DUXwVyiUTkFY2//+7+bpNMPcdJTdpSdCwyk9ICWRCyiuILZORt3xldm54p28qenX+jCcVgMhpAF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gBsNmyDu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eJikY25a"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747851240; x=1779387240;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=IVRrr3bXX1aOFwL4/OoLF2L3j9b8aaTdFDzcimwf2uE=;
-  b=eJikY25a7SfCYfgFPIK3KmH7lPUJfAb/vb/p+qbSUaHeJi22znoeoX+8
-   tryFYxti8mc0f4r5rFZQuQNwf3ZB4AjMmWRS3BEqLJkbraRaSP2eK09Dn
-   RlOqeESo+JM0lxBzkhl33SI20kW+UsFadwwqGV7y5+omdEdPPFdVVQ3Kp
-   NoKQSMR87sCxo2jzf/zsM9FvdYCsZ6f5Z9+RZ4WCjCrnL8Dknf2vyBc6Q
-   mL9snSfRRoE0pC0YkcAHbyvTHzgn2FakQkhytFw2SiRxTNAsCwCoQjwSA
-   sxrLCq3APKIYBeNAbHnjAkECePLmPgP8qbmlQGw2rSg4PjjCs38w/ey1/
-   w==;
-X-CSE-ConnectionGUID: 8gKRQ71TR9q6bTWHzF9Nqg==
-X-CSE-MsgGUID: AQUxvczcQ9i1WS5UhFcEBg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="49550221"
-X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
-   d="scan'208";a="49550221"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 11:13:59 -0700
-X-CSE-ConnectionGUID: jNk7/eBMTU+K36IIfe3xfA==
-X-CSE-MsgGUID: s6uLh/mXS6yj5C4PU+kURw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
-   d="scan'208";a="145453010"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 11:13:58 -0700
-Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 9A5A020B5736;
-	Wed, 21 May 2025 11:13:55 -0700 (PDT)
-Message-ID: <9aa2c899-80e0-4626-acb7-5331fbf46a0d@linux.intel.com>
-Date: Wed, 21 May 2025 14:13:54 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gBsNmyDu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D03BBC4CEE4;
+	Wed, 21 May 2025 18:16:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747851405;
+	bh=9tmrg5RQZaCazyfwqN15ZQHkA/yKEelqV06wye+ZD3k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gBsNmyDuiDSA/VGDCMr/u7TVrKFTqEYHP/LkDhx0Xpc/X7hp0qugI+gxC7z/99cJn
+	 CMTytOBJnaiiKihV9OSDVkgmRDxzh4XMCpnfLWcEZPA1GivRwzqJ+ohLcaIWQtIBVP
+	 dEAZWY8zc1jgDvIFE4mRLesdyLoehoXdLZdukeHoE0u9hyWUIxcsB/LyIC5m8zo5yD
+	 EmfWNkGnjN3tjilXdJ4vX9L97L2HohDaYugiIe/gxCj2hpBxWgi6XO/pP4l91VgWoy
+	 sezgVHied9Vl8+siDZeAGaTApvoT0tVJ6v9/bwEZEJKdUgLsNWdu3pc2K+TJHm+cJO
+	 CEBPaavsAiM3w==
+Date: Wed, 21 May 2025 19:16:39 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com
+Subject: Re: [PATCH 6.14 000/145] 6.14.8-rc1 review
+Message-ID: <8162ecef-8343-4b68-93b3-b949cf12fd16@sirena.org.uk>
+References: <20250520125810.535475500@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] perf sort: Use perf_env to set arch sort keys and
- header
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- James Clark <james.clark@linaro.org>,
- "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- Ravi Bangoria <ravi.bangoria@amd.com>, Leo Yan <leo.yan@arm.com>,
- Yujie Liu <yujie.liu@intel.com>, Graham Woodward <graham.woodward@arm.com>,
- Howard Chu <howardchu95@gmail.com>, Weilin Wang <weilin.wang@intel.com>,
- Dmitry Vyukov <dvyukov@google.com>, Andi Kleen <ak@linux.intel.com>,
- Thomas Falcon <thomas.falcon@intel.com>, Matt Fleming
- <matt@readmodwrite.com>, Chun-Tse Shao <ctshao@google.com>,
- Ben Gainey <ben.gainey@arm.com>, Song Liu <song@kernel.org>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20250521135500.677508-1-irogers@google.com>
- <20250521135500.677508-4-irogers@google.com>
- <3e8b674e-38f7-4212-923d-f53626de69f2@linux.intel.com>
- <CAP-5=fX5q7rDgBdB+cMH6fTyHBBPyiac7tuv9WJOMcg9OFdq5g@mail.gmail.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAP-5=fX5q7rDgBdB+cMH6fTyHBBPyiac7tuv9WJOMcg9OFdq5g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="4jHBzb1L9C6kFbAC"
+Content-Disposition: inline
+In-Reply-To: <20250520125810.535475500@linuxfoundation.org>
+X-Cookie: 42
 
 
+--4jHBzb1L9C6kFbAC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 2025-05-21 12:16 p.m., Ian Rogers wrote:
->>> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
->>> index 7b6cde87d2af..13ef0d188a96 100644
->>> --- a/tools/perf/builtin-top.c
->>> +++ b/tools/perf/builtin-top.c
->>> @@ -1747,7 +1747,14 @@ int cmd_top(int argc, const char **argv)
->>>
->>>       setup_browser(false);
->>>
->>> -     if (setup_sorting(top.evlist) < 0) {
->>> +     top.session = perf_session__new(/*data=*/NULL, /*tool=*/NULL);
->>> +     if (IS_ERR(top.session)) {
->>> +             status = PTR_ERR(top.session);
->>> +             top.session = NULL;
->>> +             goto out_delete_evlist;
->>> +     }
->>> +
->>> +     if (setup_sorting(top.evlist, &top.session->header.env) < 0) {
->> I doubt a valide env can be got in perf_session__new(), since there is
->> no perf.data in perf top.
->> Maybe just need to invoke the perf_env__raw_arch() instead to fill the
->> env->arch.
-> I think the current code is making things harder than it should be, we
-> should work away from perf_env__arch and strings, instead using EM_
-> values which we can default to EM_HOST avoiding any runtime costs.
-> Looking at perf_env__arch:
-> ```
-> const char *perf_env__arch(struct perf_env *env)
-> {
->         char *arch_name;
-> 
->         if (!env || !env->arch) { /* Assume local operation */
->                 static struct utsname uts = { .machine[0] = '\0', };
->                 if (uts.machine[0] == '\0' && uname(&uts) < 0)
->                         return NULL;
->                 arch_name = uts.machine;
->         } else
->                 arch_name = env->arch;
-> 
->         return normalize_arch(arch_name);
-> }
-> ```
-> in this case env->arch == NULL and so the uname machine will be used.
-> For perf_env__raw_arch the behavior is similar but it populates the
-> env:
-> ```
-> static int perf_env__read_arch(struct perf_env *env)
-> {
->         struct utsname uts;
-> 
->         if (env->arch)
->                 return 0;
-> 
->         if (!uname(&uts))
->                 env->arch = strdup(uts.machine);
-> 
->         return env->arch ? 0 : -ENOMEM;
-> }
-> 
-> const char *perf_env__raw_arch(struct perf_env *env)
-> {
->         return env && !perf_env__read_arch(env) ? env->arch : "unknown";
-> }
-> ```
-> Aside from caching the arch, the main difference is that
-> normalize_arch isn't called. Not having normalize_arch means the code
-> in arch_support_sort_key and arch_perf_header_entry would need to
-> handle strings "ppc" as well as "powerpc", "i386" as well as "x86",
-> etc. As I'd prefer not handle all those cases I think the way the code
-> is is best given how the env code is currently structured.
+On Tue, May 20, 2025 at 03:49:30PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.14.8 release.
+> There are 145 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-Right. The perf_env__raw_arch() doesn't improve anything.
-But I still don't like &top.session->header.env.
-Because I don't think you can get any useful information from
-top.session->header.env. It just brings confusions. (It seems an env is
-retrieved, but it is actually not.)
+Tested-by: Mark Brown <broonie@kernel.org>
 
-In the perf top, &perf_env is used for the existing cases. If any env
-fields are not available, perf_env__read_XXX() is invoked to get the
-information.
-I think we may follow the existing usage, e.g.,
-setup_sorting(top.evlist, &perf_env).
+--4jHBzb1L9C6kFbAC
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Alternatively, it looks like the perf top doesn't support --weight. The
-env->arch should never be used. If so, a NULL can be used as well, E.g.,
-setup_sorting(top.evlist, NULL).
+-----BEGIN PGP SIGNATURE-----
 
-Thanks,
-Kan
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmguGIYACgkQJNaLcl1U
+h9BGpgf/Zi1PFtP4xhcABmRWe3A0t5MDrGJENv818yyzWee9Me2AonoNnctW2tZ8
+e3p3G96zdNSHodZhKA/Gk7n2CQ3yhqKzTla56Ec/xU6j6w7S5emhy9vlVcjKa+EO
+aRQ7WcPxXpZLnNqlvTz8TyGW9EPjwhP+zU8qKzSDUTES77L3FjaYImcjsxMX0fjb
+HVRLhXmeEvpTLrDDisFhtuFbzxqBDY5hOF6gE8S9Wkhou7jHa7/tm7MY/yhLhTP/
+uqLrfvkd1Tnh6KJGpS5Zp6yZXoTfJS/QWxPNmf01w0JmvjHKQlZ4a9ztTLc9tcEm
+B2ACiN2yxe2RJHgCjPBVCqkst5P8QA==
+=0cuL
+-----END PGP SIGNATURE-----
 
+--4jHBzb1L9C6kFbAC--
