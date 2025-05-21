@@ -1,179 +1,129 @@
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DFB81804A;
-	Wed, 21 May 2025 15:37:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AA6320CCE5
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 15:37:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747841855; cv=none; b=dTx7ARlQ0DKFLtO4oGBt0lJ3o2jtU0hf7wStE4NCovFSWLSQ5T2HzCO04Bgqal6Jx3yE0IzIVcjpgw4d1/mv7/sc8gI3XCM4gh58D3N1tJZxoBRzsjo5ySNPVDec6WNVrM9fpeMpMXRLhH/7wgoPA+c5d7v5X4eKI0Mk4DMmVs0=
+	t=1747841881; cv=none; b=F/Dj3Lka1vtnNVtQknBXf8GCMSyxDKd9+vyLNkA+CKuZTShdP3Yu1Hp4ydFaGf441AK/Es9rGQa19mAim4TYa2kGdFWb3LmtaBYzj/s++rUjJ8wU5zIPqBqlBSdWXZyhJBh6+ifIHlKeIjOp8OWqAkwj9tfTlw7ZT1Iplx7RQkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747841855; c=relaxed/simple;
-	bh=ADK/Td3RDt99ZV4Od+lvJYGkKDEJfqfUeq/jiR79XOg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nka8/AkFZcT+fXOxktZBPeLJ/hhnpMstidthA2VrztpMWTJGDjl6Mj1JMIOrKJzXDGopG5vudOZhUfHtwAK7IDhYnOadtTFgE+4O0/LKe+5IzrhGZwhAx32cDspakOxvLMos28x9YmB9/rZqmkbQa1LDY6Ua5ZCCisBlQsB0SZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i3WGDN1Y; arc=none smtp.client-ip=209.85.128.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747841881; c=relaxed/simple;
+	bh=mOFwZi8uF/Vd7QR19RQnmQPwENX+UWRgxsy3kizbkWA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=k2ODKSdx1wj/EKYZAff3O3cYIPDVhWMFUUvMzz06OAXYWkWubvNO6pXTmXMgP362y43l1ofiPSigEOeTeeCDVM5yMC+tSiqy1zLeTFaLFaqdQ0N0W7HYtNRJS8GdZu18E7qCUvGxt4MpWarDIiddkFNOYurC5t2yW1fpb3UyKw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CCNipJKN; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i3WGDN1Y"
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-7053f85f059so59814387b3.2;
-        Wed, 21 May 2025 08:37:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747841853; x=1748446653; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LXz9lx51WkGfQh0LsBFFBo4w6d+gyQqxpGMLfxBRNqY=;
-        b=i3WGDN1YgnSNpGmlDOxVz26GCOzKot1bEI33sacV/B09WwTthwQZfzpdwQ59XURqbk
-         sJ6IRjuVxjU8iaPuMiGHt4m01BYi7H6FSM+HsVLVEzUHWtH9BysMkzfGW90meuji1dPB
-         t9pv79Hc5F99OjcgU4hKEezKlEbm/kcjbzP8wB2KaCYM4l3WlztDOWqx7DPtd5Bq4qss
-         8h3A0AlbJXLh2KiPuPji8pc31aE1MTQxF/82doQf69h59XhXdCdJHWTTDlEtbXIQr9M7
-         GHBWD1y+6fg+p+LaOu0sbmRswYhGJKp0odl8RBXT8hNJdsnhL9bIa0WVE4SbVzs8mQMc
-         +SUA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CCNipJKN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747841878;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4OYI585nduQE5fAKYci/xXzRDgiHeBkKRLTnL/6NwgA=;
+	b=CCNipJKN/k89nGBdgOdnknhJqmjAbb19znfU7J5gycbbcHoCdB7M3AdQqb19hYxCrfp+s0
+	QjMlb9CMTMqt2eot22VUOonI6eDEuJwZmjoVD8pEcKJ72paR3kCpFirjYTPgrxzzqFudgG
+	G1wWXuQd5wNdK4MEDvq5FQzXj7E5c0c=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-614-FoouQ4NoMHisH0oP0zKggw-1; Wed, 21 May 2025 11:37:57 -0400
+X-MC-Unique: FoouQ4NoMHisH0oP0zKggw-1
+X-Mimecast-MFC-AGG-ID: FoouQ4NoMHisH0oP0zKggw_1747841876
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43e9b0fd00cso35686075e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 08:37:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747841853; x=1748446653;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LXz9lx51WkGfQh0LsBFFBo4w6d+gyQqxpGMLfxBRNqY=;
-        b=NWAUkAuZYLrsxJtlmSQj3lTwEGMwxXdcEMJU8cV+hRtI1thXq8MfNcZjh87ZGeHx7D
-         aFMa4IsdJrxVmA3EU0/9LnxTzZGOujtockzAxeCHPdAdGzLaesiCxZF6a7o52qo2Lwhl
-         lz4wQrcV2WAltCXbAXP4yIeG10ClzY79uaQ5/fHEpLy5cqDi5dR3mKN5QQR7HwbiGaKK
-         O0y9aNBdPYcYlkpFy0c8/ZOcBLMiiaJFBLBt8SyJCobVMZEoXEs7udeazeBUXWhhErsb
-         /Mv1EuLa81HNmIVSd9IBsMZ4Sbr6sJG9Yv623Dz/Zu54ukCpaH0cqsy3421YYAnMl+Pg
-         m/2g==
-X-Forwarded-Encrypted: i=1; AJvYcCW91OXHi05v8dKjR/fas01BFYIbjyytWMNeRocirHM0UGKBXD8v1jEChKaFsEdWBSex/he+TmAv3EI8t5+3@vger.kernel.org, AJvYcCXrsfY4E8tDB70miIvARhghbGNus1CHdRNVBY0oEMKBz9TwfgGQnXwoDF2KG6QBnomvv7n0/Iav5rRZ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6fRjLV8dxpYM4j0HTwXUClPOY9wF81USpRyik52pou2igvUbh
-	xibgDKeyCdqFXOQZs40c2mJkztvIURaHlkxT03s1YCK05N+QSVkeJwjP
-X-Gm-Gg: ASbGnctA8co55cvZ2WClMpUQkF9wf+L3lUmSCWVyHhEJVvU95rvZDFcA8lDY18r9qxx
-	KzU0rRoPB++FMmIgM6ApV9u5crH3RmDpU7stGYUfVt12s9GPXA7vcHgUlV2CKSjlryCBp47ujdb
-	TCQBKEK+ofzWgNlfUErYhUWMxvx98oAiIMSY0yzdIU+TjZYK+sIfHomI+R/AFnx42sB9huX86QT
-	4BTXdSx0zgm7CbiRyMNupOU2GP+tuU86kHQWL2T/Z1GPeqEQPm0f1wxD9wdrfsusgL2kXG5Q2RF
-	WeeDCT0TDKDliyV/x4b8sPxO20RBNqWydrjyLwTLpHrH5nVO2W8=
-X-Google-Smtp-Source: AGHT+IHcTIpbOksovtOKwx3AWf8/MFLrvERSTWegMnFdec2dXutO1vy/yF+FCzS5NzXtLN5i0iqqNg==
-X-Received: by 2002:a05:690c:450e:b0:70d:f15d:b18f with SMTP id 00721157ae682-70df15db251mr50542587b3.26.1747841852839;
-        Wed, 21 May 2025 08:37:32 -0700 (PDT)
-Received: from localhost ([2a03:2880:25ff:71::])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-70ca852dee4sm26808817b3.113.2025.05.21.08.37.32
+        d=1e100.net; s=20230601; t=1747841876; x=1748446676;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4OYI585nduQE5fAKYci/xXzRDgiHeBkKRLTnL/6NwgA=;
+        b=gqhTCK9kHYPWJm9P3kgZxtMeUyUi3SLS5OVlSlLctjFhNE7c5JOcvRe4spFuq3brnD
+         kB4jxbzydyJfyC8PoRq7EsPNY8v4YPIm4CGaCxCYKQIDzsjSvYJULiDDQdg6HBGPDHX2
+         YMrqeH4FGFhA80u+l4sTytnhrLM8pS+yPP7auFtPhT8uFJK9DiId1GUcNQRlKlqJUqx3
+         qnllhR7O9lJVWwPfNNg7Idnbgyg3SkopuoRns7QRBNceJwDrACh61/5tTe/4uk28LG6N
+         HNIzFxnK+zKBo2/OFSkZlVMh+Pwl8B2D9LF9S01mJkHYG6RiTSWrlDm9soU5JjSthgDL
+         RkYg==
+X-Forwarded-Encrypted: i=1; AJvYcCU0JpMcz5PulL1/5eV91Ioe5aqq6AbBev6ovqlkz6SjjutibEHj+aUOJm6LGQxKsCVFlxmAxLVrX9qXZtU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkPOx++D6JS4Ohq6LRVG17T/yCIEI/wGYzwsuyL0UIi3EUB/WF
+	OZo9ANgTSBTCDv8SgnnXyHVlESs3LVuEbyglbXmKuLIswYnyp7CgeHOUnbwIsVQiHIKZqn87o03
+	ZWnQc98suxkd5m6JdNJh8IsoGcodBUvw8vitacqywRE98YPYBoMcyMcUNHa8eyvWru5gzvGCUgT
+	wu
+X-Gm-Gg: ASbGncvzThY/Ubpb/UT7VGKdt9qdNEhnHGvU65661AneuyW0GsTzG/22xC67oZq/ghw
+	vlyqyUWiZykChs4yOeHsq5Yggltu2yFrtof+aGFu1SG2fisLjYNPh7LU7o3ijMW1qZ54eMNvybV
+	FMqP9Cd9R3zShiGvUgh2M9f+L8nPf9r/jMziXoJ20cif9U6UqrcxUw+WgiBeoZMDKlX3ch39TPs
+	XsaA11PdbyYI3joFc9rjOoD06xD3zN7vCXmCfpPbuvDWEL3+EfcWP0ykuEXNf6/z3XH4PGcUC9O
+	Sg0AStGPKEuPcsJXfpbtVbvMk96SziLPcIauDHvI091y2vxn64hwT3MGSiCUX9mZPnnOR5ZR
+X-Received: by 2002:a05:600c:8889:10b0:442:f4a3:a2c0 with SMTP id 5b1f17b1804b1-443024b8820mr116363065e9.13.1747841875804;
+        Wed, 21 May 2025 08:37:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHcHFJCDU0kERgNNpbSG5LzwmKXYOVL8DXbNu1j1znxGmyPxiSylKOJBGAP3Ew47kasRlgLlA==
+X-Received: by 2002:a05:600c:8889:10b0:442:f4a3:a2c0 with SMTP id 5b1f17b1804b1-443024b8820mr116362885e9.13.1747841875376;
+        Wed, 21 May 2025 08:37:55 -0700 (PDT)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-135-146.abo.bbox.fr. [213.44.135.146])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f73d3defsm71546225e9.18.2025.05.21.08.37.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 08:37:32 -0700 (PDT)
-From: Joshua Hahn <joshua.hahnjy@gmail.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: gourry@gourry.net,
-	akpm@linux-foundation.org,
-	harry.yoo@oracle.com,
-	ying.huang@linux.alibaba.com,
-	honggyu.kim@sk.com,
-	yunjeong.mun@sk.com,
-	gregkh@linuxfoundation.org,
-	rakie.kim@sk.com,
-	rafael@kernel.org,
-	lenb@kernel.org,
-	dan.j.williams@intel.com,
-	Jonathan.Cameron@huawei.com,
-	dave.jiang@intel.com,
-	horen.chuang@linux.dev,
-	hannes@cmpxchg.org,
-	osalvador@suse.de,
-	linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-mm@kvack.org,
-	kernel-team@meta.com
-Subject: Re: [PATCH v9] mm/mempolicy: Weighted Interleave Auto-tuning
-Date: Wed, 21 May 2025 08:37:29 -0700
-Message-ID: <20250521153730.2196701-1-joshua.hahnjy@gmail.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <25283dbd-2867-4034-bb16-951e0fb81843@redhat.com>
-References: 
+        Wed, 21 May 2025 08:37:54 -0700 (PDT)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner
+ <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Sebastian Andrzej Siewior
+ <bigeasy@linutronix.de>, John Ogness <john.ogness@linutronix.de>, Clark
+ Williams <clrkwllms@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-rt-devel@lists.linux.dev, linux-rt-users@vger.kernel.org, Joe Damato
+ <jdamato@fastly.com>, Martin Karsten <mkarsten@uwaterloo.ca>, Jens Axboe
+ <axboe@kernel.dk>, Frederic Weisbecker <frederic@kernel.org>
+Subject: Re: [PATCH] eventpoll: Fix priority inversion problem
+In-Reply-To: <20250521145320.oqUIOaRG@linutronix.de>
+References: <20250519074016.3337326-1-namcao@linutronix.de>
+ <xhsmh8qmq9h37.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+ <20250521145320.oqUIOaRG@linutronix.de>
+Date: Wed, 21 May 2025 17:37:54 +0200
+Message-ID: <xhsmh5xhu9dpp.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Wed, 21 May 2025 15:04:00 +0200 David Hildenbrand <david@redhat.com> wrote:
+On 21/05/25 16:53, Nam Cao wrote:
+> On Wed, May 21, 2025 at 04:25:00PM +0200, Valentin Schneider wrote:
+>> > +	llist_for_each_entry_safe(epi, tmp, txlist.first, rdllink) {
+>> > +		/*
+>> > +		 * We are done iterating. Allow the items we took to be added back to the ready
+>> > +		 * list.
+>> > +		 */
+>> > +		xchg(&epi->link_locked, false);
+>> > +
+>> > +		/*
+>> > +		 * In the loop above, we may mark some items ready, and they should be added back.
+>> > +		 *
+>> > +		 * Additionally, someone else may also attempt to add the item to the ready list,
+>> > +		 * but got blocked by us. Add those blocked items now.
+>> > +		 */
+>> > +		if (smp_load_acquire(&epi->ready)) {
+>> >                       ep_pm_stay_awake(epi);
+>> > +			epitem_ready(epi);
+>> >               }
+>>
+>> Isn't this missing a:
+>>
+>>                 list_del_init(&epi->rdllink);
+>>
+>> AFAICT we're always going to overwrite that link when next marking the item
+>> as ready, but I'd say it's best to exit this with a clean state. That would
+>> have to be before the clearing of link_locked so it doesn't race with a
+>> concurrent epitem_ready() call.
+>
+> To confirm I understand you: there is no functional problem, and your
+> comment is more of a "just to be safe"?
+>
 
-> On 20.05.25 16:12, Joshua Hahn wrote:
+Yup, even if they're not accessed it's good to not have stray references to
+stack addresses.
 
-[...snip...]
- 
-> [...]
-> 
-> > -static void iw_table_free(void)
-> > +static void wi_state_free(void)
-> >   {
-> > -	u8 *old;
-> > +	struct weighted_interleave_state *old_wi_state;
-> >   
-> > -	mutex_lock(&iw_table_lock);
-> > -	old = rcu_dereference_protected(iw_table,
-> > -					lockdep_is_held(&iw_table_lock));
-> > -	rcu_assign_pointer(iw_table, NULL);
-> > -	mutex_unlock(&iw_table_lock);
-> > +	mutex_lock(&wi_state_lock);
-> > +
-> > +	old_wi_state = rcu_dereference_protected(wi_state,
-> > +			lockdep_is_held(&wi_state_lock));
-> > +	if (!old_wi_state) {
-> > +		mutex_unlock(&wi_state_lock);
-> > +		goto out;
-> > +	}
-> >   
-> > +	rcu_assign_pointer(wi_state, NULL);
-> > +	mutex_unlock(&wi_state_lock);
-> 
-> Just one nit: if written as:
-> 
-> ...
-> rcu_assign_pointer(wi_state, NULL);
-> mutex_unlock(&wi_state_lock);
-> 
-> old_wi_state = ...
-> if (old_wi_state) {
-> 	synchronize_rcu();
-> 	kfree(old_wi_state);
-> }
-> kfree(&wi_group->wi_kobj);
-> 
-> You can easily avoid the goto.
+> Thanks so much for the review,
+> Nam
 
-Ah I see, thank you for the suggestion!
-I think we would have to move the "old_wi_state = ..." to be inside
-the lock and before the rcu_assign_pointer since wi_state will be
-NULL at that point if we do not, but other than that, I think this
-is a great optimization over the version I have : -)
-
-I will send in a fix patch for this later as a cleanup patch, if
-that sounds good with you!
-
-> >   	synchronize_rcu();
-> > -	kfree(old);
-> > +	kfree(old_wi_state);
-> > +out:
-> > +	kfree(&wi_group->wi_kobj);
-> >   }
-> 
-> I'll note that this rather unrelated churn (renaming functions + 
-> variables) is a bit abd for review as it adds noise. Having that as part 
-> of a cleanup patch might have been better.
-
-I see, thank you for your feedback.
-I thought it might be necessary for this series, since I embedded the
-iw_table inside the wi_struct, so we can no longer just free the table,
-we would have to free the entire wi_state it was embedded in. I apologize if
-this was difficult to review -- I agree that this patch was on the longer
-side. I will do a better job of isolating parts of the patch in the future.
-
-> Nothing else jumped at me (did not an in-depth review of the logic)
-> 
-> Acked-by: David Hildenbrand <david@redhat.com>
-
-Thank you for your Ack, David! I hope you have a great day!! : -)
-Joshua
-
-> -- 
-> Cheers,
-> 
-> David / dhildenb
