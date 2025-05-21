@@ -1,210 +1,144 @@
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54CECBA27;
-	Wed, 21 May 2025 06:20:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56AC322D788
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 06:21:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747808453; cv=none; b=RDSkSK6I95+AUhCeyeCBA9Cit4kziYmNGVrg46zJNuwqYRq473YPhk/FPXizwKnKAYLWwWf4Q2xhthm6ZjESsUNWJrIMt9FNESzbmT+YGWvGpTPDsdX5wOudgDpleBa3kdXptcJXU7QglXIrWG58KFVXtc8U3e/pjJ2JVgnWAm4=
+	t=1747808480; cv=none; b=ZvRjeHq6z0w3nanbNYgtdt1qRXWc3c1hIjeoCuEmfkI6rSjNo9hXREnGUzikB4hgBrk7GFV2LEpn+mkvkW/9a9+WdbxfrRO/0V8SwPH1+4mD3LS0L//8bCaLq5tkd1BIzG93e2v8JxL9qjRXn/DNUR/rCqpy9RiVWO/tgnH17uE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747808453; c=relaxed/simple;
-	bh=gE38frMN/JeTXaKFPZ9mTU3IR80HA4hEnJBcNEHgy8U=;
+	s=arc-20240116; t=1747808480; c=relaxed/simple;
+	bh=6fd7IHRGu83NxTfyT0SalOcLlzPOsDoCo5ZLaUQUYko=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XotK3mqweKPMQyn1BPHR6GobQJbwY1EYAtWDp1MyeXUU6umUR/uAl0b7hRALWfruLGNYiQh76mHNCJadVxfgAPN2FPrwveEH2F9z/AVUjTJX/nlH+eVA3JSo/ooC1JSxh73mVTZuCwQge2//MGVjf9ryj0X5yVfxpVEOGZt2mxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EGexIUPb; arc=none smtp.client-ip=209.85.222.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Content-Type; b=OdRq0BCy1jOjLa8IZ3cNVXHWD3vPvQwvThS2v8/P/D5jwZc9Np7ykVnPGvRlT+SZMJEfwTJVTFFEhO5dnSHZ31iGjkSYd1siiCmpP21+bMoBOWGHnfHB5eKvB4wnOpjm4NJ2hTrDRXxfW4R3rGzZeDaNDjN6jmd5PAdvZsCN7GE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=JkGzmFXF; arc=none smtp.client-ip=209.85.160.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EGexIUPb"
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7cd0a7b672bso431804385a.2;
-        Tue, 20 May 2025 23:20:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="JkGzmFXF"
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-2d0920ce388so2364806fac.0
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 23:21:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747808450; x=1748413250; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+        d=bytedance.com; s=google; t=1747808477; x=1748413277; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CLhLiGzM45hB2OU8IkkJdEpBj3k3ldSSfXABvEjzrrw=;
-        b=EGexIUPbxq6nBjkXDB40Xs65IDgoBCJI91Op+PEYDQbJGKpV5kXV4xnoWr2IJBE42r
-         g5XehEHrgfsU4qVbJ3wmkw+9cCYCzb07YXjZ8i6/8s+jNVkJ0iHLheS5VHX28K7qi2yt
-         YvtrOrMoK/b7JUiJUuoZNa11KME4PJqxK/E5uLkA1hXxLstnKT2TSb7OOEXE/v1AflYc
-         TuTdKwCVrPB7s3hf7th9UkVnKZRvcjtZDstXxA0sSdAWCw27niTf58gEOCoMp4qGYzU2
-         5qZS6qL+aYVEMODMA0v90Wt8DPyDjlwJhNUAi9CZodPX7nc1F8qc0ffLFXuCc05jRKWV
-         iTAA==
+        bh=AOkB60AMJtxVpaqykf8gS9NGTSk7YEzw+V5v/2zgCaA=;
+        b=JkGzmFXF6d5ZfzW+RD3kz4XEKJf3HPXc0wUlj/dz0pA4pPXYZ3NlBO1zepgoxaVfGH
+         v2pAXaXwuYbyTfLiQSc684fd+sPAXjn4HOpQUIdzdHqw4rHKb7Br0/V0YSFVBPProPqn
+         X+QK0V4rz2ZTUlXyrMtxFhvdhdbR7ac8HexEktBoCTZIWn+E2/LkGmHuf0soRjFEud9i
+         LHduU2lI5roVW1bW2+504SAavLs/pjhsR62xdKeb85NLzaOC2kC+FC5l7W2Hn70A24Oo
+         6rxwhRAzLgj1aJQSj15iXFKOfV7thLdMNA0sZm5k/yYc807vGulx6q3qc5REH3WIYuCB
+         UffQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747808450; x=1748413250;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+        d=1e100.net; s=20230601; t=1747808477; x=1748413277;
+        h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=CLhLiGzM45hB2OU8IkkJdEpBj3k3ldSSfXABvEjzrrw=;
-        b=r/ZT71MpUtr41HV7TbFgHqUbc4dWQli+CkeztIu1IbmjEy9KbTQr4VFG9X45KXVF52
-         W0y60H4TYl/sLsKlCIQPUn4i7daBaRw5YhQZq5Pcc7D10E3MwPwnTcJmDOqw/IebfoTQ
-         jUwZTHNMHyyo1yXH0982dZrj82D6Nx/Zqt1seqtX3FxZBEm6DXlUjpCWvklM26ZHmzgw
-         0nRUZG2kRTDw1OvT4AIqFM5RzPj2UuAYmrPXQgCEZcerkV+vqkMTxClkQLl6KRNuOLPa
-         dv/uPmW43tnOoKEhhCTNfFdUSuf35onHaxufoUV5vDYcy/dO4/ihCdGiGkjyb7ELhTbm
-         /xmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVmPBnsKT9aq8IGVhT3rsU+8Ja1yUJ817Sr3Hl3YaARPXsbC6Od7P27mFSpUcpGL4SdJRf6B6tQJP4YVCOq13Q=@vger.kernel.org, AJvYcCWnZ7E/LkWC4nbGkFgXWvBJmIHmrVu9i+4cUnuF11vaZ8KTCPftdr1385slakchFENUQOzca/l8j1fq@vger.kernel.org, AJvYcCX/4INoXOxH//Ky8aRyIOpp4oHtdTpcFeP6FZFKBLt3awlzMKBFSxSw6DAkewTSd8d2NhBMCGnW/KWfYvRr@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCc+AKLIY9r7YcH6hZH72PLgpVViEV747l2iPcL0TYpFbxUUta
-	BIwcEixls57kXLjJIOTAxbL/hBPZQaTvcfNvYTm/iHUpMj6WwhfIVopxn1uQkJTYjGu+oqTqEmR
-	HvZWhl2ESNzKjVil43aZYtvCVdzNTBy4=
-X-Gm-Gg: ASbGncu4t8boDV6J3/k9riKsqryjK//FkA2cyJDLxS9tQJ7LiL+v4GUevApnkYJosZ5
-	vFSQYIvDNqK7clnkDQ/tCGhm4EbsuxVTmcPGlGtLQiQWjLkoLlR+zcId7tqXP8alz/fRboYEG3f
-	r71NQ6THvJx9KUbBok9ONhZJSimhQVlApdLw24qUMhZ8SdUa/z65S1LIE/KALZ22zlQ1QnjULFj
-	d+C
-X-Google-Smtp-Source: AGHT+IHQH0M4abcXZ9UcUrAXrorTjVO+BBeR2ZeH9Mp2Y0MovIJp2bP045sv7bTxDr7At2nGf5HnsY/U+aWu0hD2Ung=
-X-Received: by 2002:a05:622a:418a:b0:48e:ef59:db50 with SMTP id
- d75a77b69052e-494ae3dffbdmr356956261cf.31.1747808450026; Tue, 20 May 2025
- 23:20:50 -0700 (PDT)
+        bh=AOkB60AMJtxVpaqykf8gS9NGTSk7YEzw+V5v/2zgCaA=;
+        b=hINAzFCeZcY2zINsN1ESPnqFew/w91umw5gmm+nbKYB7X7+pMVC+p9ALYGHPVQFoOf
+         SZsjvf/ZKszvNEbCYn02/9puoPJWvQP6rHPg7xMVkdNSEql5+M4eoPh0MC/X33DeqQPc
+         NLgJzzSAg5RhgWcJN39YxEEhw+As9ng84Y0t8a/ymVcxUrXxJ89WHWOsxLQBSFiLRxnU
+         VZI2ZP+oYEHXSn8hTz6GoRDiLjqpqUZXILJyno/ejqqCxRrVrONI3rVJGSLErnLQl+rQ
+         Pm3ZEsYiPvriHx5Frz2N9Neh4/m/oAhc15oFTr+m4KijI8wRcpn8DErdhvNYyJJmCsCG
+         HUig==
+X-Forwarded-Encrypted: i=1; AJvYcCVWne/VH2MtLjPtNK74zV/5jr7pR/RmxhN8Vg/gSNzYS2RU206ORiVEyFfFHOJ0dY9pClA0x32WQN8HDDc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/cHChlUKdYcx8Z1FyRgmxYglb5b8X8rNYvoHweA/62eOie7GC
+	ZoFsIQhPu6DhNvuF+se30Vl9nQ4vOJtBajVj+OXEpU4kW28hznx/UxjIC3XdpPzDr0+qj6wmMeE
+	qP/P4umj4ZhpIILF6FJxc8yhaznSq65Rq+T5oD9nuEw==
+X-Gm-Gg: ASbGncv5zzDv71iFN3leOyGpZk1z/v+0sE1CgFPG0ucfFfKizFli+6c1MEmnM5pz4/E
+	x8hCODJAGjj5jbhs5GcKUhJj0te6/9rIEaXv0MeGHJmQdhZMRSCOkH3GOcpGdv30tIWRPaaIJyb
+	YwMyCb0xOPLvbDEbsih3McSv9ZSwQVTVWdyHR1mMbW7pcgKA==
+X-Google-Smtp-Source: AGHT+IFdeoiENF5NssGj08RW6C8y/2V+vUCBOiJ7eOfqfvG4ZPU6n8gvvJkZVmrcaOvrNSI0kRH1Lpo+qxGQ/w67DaQ=
+X-Received: by 2002:a05:6871:33a0:b0:2da:8a0e:6563 with SMTP id
+ 586e51a60fabf-2e3c1ed0fa7mr12098896fac.30.1747808477225; Tue, 20 May 2025
+ 23:21:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250521-vt8500-timer-updates-v4-0-2d4306a16ae4@gmail.com>
- <20250521-vt8500-timer-updates-v4-4-2d4306a16ae4@gmail.com> <38df2f02-efc4-465b-aa64-4c9e2c1919d8@roeck-us.net>
-In-Reply-To: <38df2f02-efc4-465b-aa64-4c9e2c1919d8@roeck-us.net>
-From: Alexey Charkov <alchark@gmail.com>
-Date: Wed, 21 May 2025 10:20:46 +0400
-X-Gm-Features: AX0GCFu7nbWcnctAyXMfHnwG2aQXQ0NvTnyt98ffoC7G_taLGMiut-Sz-MFKf-Q
-Message-ID: <CABjd4YxZVQSuavEYojc8U4AqwUN3GkweiNNHqn=NDTE70xZm8w@mail.gmail.com>
-Subject: Re: [PATCH v4 4/4] watchdog: Add support for VIA/WonderMedia SoC
- watchdog functionality
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org
+References: <20250513024212.74658-1-cuiyunhui@bytedance.com>
+In-Reply-To: <20250513024212.74658-1-cuiyunhui@bytedance.com>
+From: yunhui cui <cuiyunhui@bytedance.com>
+Date: Wed, 21 May 2025 14:21:06 +0800
+X-Gm-Features: AX0GCFvdsHvdDnWwbBaqd6fO_vbeMJzi4JgqkAgCH7b1GhfiOeTj9TnK_lkVy3Q
+Message-ID: <CAEEQ3wmNGNuG3v7RgowMrcHX9D7uRz3Y2q0eoORAN4i1Ep_HiQ@mail.gmail.com>
+Subject: Re: [PATCH v6 1/4] serial: 8250: fix panic due to PSLVERR
+To: arnd@arndb.de, andriy.shevchenko@linux.intel.com, 
+	benjamin.larsson@genexis.eu, cuiyunhui@bytedance.com, 
+	gregkh@linuxfoundation.org, heikki.krogerus@linux.intel.com, 
+	ilpo.jarvinen@linux.intel.com, jirislaby@kernel.org, 
+	jkeeping@inmusicbrands.com, john.ogness@linutronix.de, 
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
+	markus.mayer@linaro.org, matt.porter@linaro.org, namcao@linutronix.de, 
+	paulmck@kernel.org, pmladek@suse.com, schnelle@linux.ibm.com, 
+	sunilvl@ventanamicro.com, tim.kryger@linaro.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 21, 2025 at 3:15=E2=80=AFAM Guenter Roeck <linux@roeck-us.net> =
-wrote:
+Hi All,
+
+Gentle ping. Any comments on this patchset?
+
+On Tue, May 13, 2025 at 10:42=E2=80=AFAM Yunhui Cui <cuiyunhui@bytedance.co=
+m> wrote:
 >
-> On 5/20/25 13:01, Alexey Charkov wrote:
-> > VIA/WonderMedia SoCs can use their system timer's first channel as a
-> > watchdog device which will reset the system if the clocksource counter
-> > matches the value given in its match register 0 and if the watchdog
-> > function is enabled.
-> >
-> > Since the watchdog function is tightly coupled to the timer itself, it
-> > is implemented as an auxiliary device of the timer device
-> >
-> > Signed-off-by: Alexey Charkov <alchark@gmail.com>
-> > ---
-> >   MAINTAINERS                   |  1 +
-> >   drivers/watchdog/Kconfig      | 15 ++++++++
-> >   drivers/watchdog/Makefile     |  1 +
-> >   drivers/watchdog/vt8500-wdt.c | 80 ++++++++++++++++++++++++++++++++++=
-+++++++++
-> >   4 files changed, 97 insertions(+)
-> >
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 5362095240627f613638197fda275db6edc16cf7..97d1842625dbdf7fdca3556=
-260662dab469ed091 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -3447,6 +3447,7 @@ F:      drivers/tty/serial/vt8500_serial.c
-> >   F:  drivers/video/fbdev/vt8500lcdfb.*
-> >   F:  drivers/video/fbdev/wm8505fb*
-> >   F:  drivers/video/fbdev/wmt_ge_rops.*
-> > +F:   drivers/watchdog/vt8500-wdt.c
-> >   F:  include/linux/vt8500-timer.h
-> >
-> >   ARM/ZYNQ ARCHITECTURE
-> > diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> > index 0d8d37f712e8cfb4bf8156853baa13c23a57d6d9..8049ae630301a98123f97f6=
-e3ee868bd3bf1534a 100644
-> > --- a/drivers/watchdog/Kconfig
-> > +++ b/drivers/watchdog/Kconfig
-> > @@ -2003,6 +2003,21 @@ config PIC32_DMT
-> >         To compile this driver as a loadable module, choose M here.
-> >         The module will be called pic32-dmt.
-> >
-> > +config VT8500_WATCHDOG
-> > +     tristate "VIA/WonderMedia VT8500 watchdog support"
-> > +     depends on ARCH_VT8500 || COMPILE_TEST
-> > +     select WATCHDOG_CORE
-> > +     select AUXILIARY_BUS
-> > +     help
-> > +       VIA/WonderMedia SoCs can use their system timer as a hardware
-> > +       watchdog, as long as the first timer channel is free from other
-> > +       uses and respective function is enabled in its registers. To
-> > +       make use of it, say Y here and ensure that the device tree
-> > +       lists at least two interrupts for the VT8500 timer device.
-> > +
-> > +       To compile this driver as a module, choose M here.
-> > +       The module will be called vt8500-wdt.
-> > +
-> >   # PARISC Architecture
-> >
-> >   # POWERPC Architecture
-> > diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-> > index c9482904bf870a085c7fce2a439ac5089b6e6fee..3072786bf226c357102be37=
-34fe6e701f753d45b 100644
-> > --- a/drivers/watchdog/Makefile
-> > +++ b/drivers/watchdog/Makefile
-> > @@ -101,6 +101,7 @@ obj-$(CONFIG_MSC313E_WATCHDOG) +=3D msc313e_wdt.o
-> >   obj-$(CONFIG_APPLE_WATCHDOG) +=3D apple_wdt.o
-> >   obj-$(CONFIG_SUNPLUS_WATCHDOG) +=3D sunplus_wdt.o
-> >   obj-$(CONFIG_MARVELL_GTI_WDT) +=3D marvell_gti_wdt.o
-> > +obj-$(CONFIG_VT8500_WATCHDOG) +=3D vt8500-wdt.o
-> >
-> >   # X86 (i386 + ia64 + x86_64) Architecture
-> >   obj-$(CONFIG_ACQUIRE_WDT) +=3D acquirewdt.o
-> > diff --git a/drivers/watchdog/vt8500-wdt.c b/drivers/watchdog/vt8500-wd=
-t.c
-> > new file mode 100644
-> > index 0000000000000000000000000000000000000000..54fe5ad7695de36f6b3c1d2=
-8e955f00bef00e9db
-> > --- /dev/null
-> > +++ b/drivers/watchdog/vt8500-wdt.c
-> > @@ -0,0 +1,80 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/* Copyright (C) 2025 Alexey Charkov <alchark@gmail.com */
-> > +
-> > +#include <linux/auxiliary_bus.h>
-> > +#include <linux/container_of.h>
-> > +#include <linux/io.h>
-> > +#include <linux/limits.h>
-> > +#include <linux/module.h>
-> > +#include <linux/types.h>
-> > +#include <linux/watchdog.h>
-> > +#include <linux/vt8500-timer.h>
-> > +
-> > +static int vt8500_watchdog_start(struct watchdog_device *wdd)
-> > +{
-> > +     struct vt8500_wdt_info *info =3D watchdog_get_drvdata(wdd);
-> > +     u64 deadline =3D info->timer_next(wdd->timeout * VT8500_TIMER_HZ)=
-;
-> > +
+> When the PSLVERR_RESP_EN parameter is set to 1, the device generates
+> an error response if an attempt is made to read an empty RBR (Receive
+> Buffer Register) while the FIFO is enabled.
 >
-> wdd->timeout is the soft timeout, which may be larger
-> than the maximum hardware timeout. That means you'll need
-> to use something like "min(wdd->timeout, U32_MAX / VT8500_TIMER_HZ)
-> * VT8500_TIMER_HZ" as parameter to the timer_next call.
-
-Indeed. For some reason I thought the core splits up large user
-requested timeout values into at most max_hw_heartbeat_ms long chunks
-and feeds those to the driver via the timeout field, but now I see it
-doesn't.
-
-Do I get it right that the core worker will try and do its last ping
-of the hardware at exactly max_hw_heartbeat_ms before the user
-specified deadline?
-
-> > +     writel((u32)deadline, info->wdt_match);
+> In serial8250_do_startup(), calling serial_port_out(port, UART_LCR,
+> UART_LCR_WLEN8) triggers dw8250_check_lcr(), which invokes
+> dw8250_force_idle() and serial8250_clear_and_reinit_fifos(). The latter
+> function enables the FIFO via serial_out(p, UART_FCR, p->fcr).
+> Execution proceeds to the serial_port_in(port, UART_RX).
+> This satisfies the PSLVERR trigger condition.
 >
-> Can deadline overflow ?
+> When another CPU (e.g., using printk()) is accessing the UART (UART
+> is busy), the current CPU fails the check (value & ~UART_LCR_SPAR) =3D=3D
+> (lcr & ~UART_LCR_SPAR) in dw8250_check_lcr(), causing it to enter
+> dw8250_force_idle().
+>
+> Put serial_port_out(port, UART_LCR, UART_LCR_WLEN8) under the port->lock
+> to fix this issue.
+>
+> Panic backtrace:
+> [    0.442336] Oops - unknown exception [#1]
+> [    0.442343] epc : dw8250_serial_in32+0x1e/0x4a
+> [    0.442351]  ra : serial8250_do_startup+0x2c8/0x88e
+> ...
+> [    0.442416] console_on_rootfs+0x26/0x70
+>
+> Fixes: c49436b657d0 ("serial: 8250_dw: Improve unwritable LCR workaround"=
+)
+> Link: https://lore.kernel.org/all/84cydt5peu.fsf@jogness.linutronix.de/T/
+> Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
+> ---
+>  drivers/tty/serial/8250/8250_port.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/825=
+0/8250_port.c
+> index 6d7b8c4667c9c..07fe818dffa34 100644
+> --- a/drivers/tty/serial/8250/8250_port.c
+> +++ b/drivers/tty/serial/8250/8250_port.c
+> @@ -2376,9 +2376,10 @@ int serial8250_do_startup(struct uart_port *port)
+>         /*
+>          * Now, initialize the UART
+>          */
+> -       serial_port_out(port, UART_LCR, UART_LCR_WLEN8);
+>
+>         uart_port_lock_irqsave(port, &flags);
+> +       serial_port_out(port, UART_LCR, UART_LCR_WLEN8);
+> +
+>         if (up->port.flags & UPF_FOURPORT) {
+>                 if (!up->port.irq)
+>                         up->port.mctrl |=3D TIOCM_OUT1;
+> --
+> 2.39.2
+>
 
-Yes. The underlying hardware counter is a u32 value incrementing at
-VT8500_TIMER_HZ and continuing past wraparound. This register sets the
-next match value: once the hardware counter reaches the value of
-(u32)deadline (which might be after the counter wrapping around iff
-deadline > U32_MAX) the system resets. Perhaps it warrants a comment
-in code.
-
-Thanks for your review, Guenter!
-
-Best regards,
-Alexey
+Thanks,
+Yunhui
