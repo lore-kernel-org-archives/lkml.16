@@ -1,161 +1,156 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B7C62D600;
-	Wed, 21 May 2025 02:27:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E9BF1A5BAC
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 02:36:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747794441; cv=none; b=B9HYuRNHA0vd7hETF20shXGhDQcLaopbzmRrkXlQbBMfojvA6JlAM0j64ZopvtDhZdjzKQ+3oP9cSGIHp7qsJqFekvpZsSN0s0tKbnTyc02+9Ub4fQ7CIcr4wpSpyW96b4of0CKdSOTNxiFeAmqQlCfqomSyWFztj3Ds/F+Pjjw=
+	t=1747794997; cv=none; b=q0yDOPEwHvP7dgv8epQkTDpX+kyQYkeSCZIO0V4gkOxa5ESzRmvqmYATIzNtVgYk36ynrPQlQCVMc4i1J5dP3yj3eZaOZ/T69Wa0hUGJHT03JdBEi11w8QeWnhJVQcYGvNE7Hm3G7pXsdKDnIBJhRjqUC5smcApSag4pXAbdpz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747794441; c=relaxed/simple;
-	bh=uynU6P2rot4uafnvWQDI8RKCr3IPZZ3LS41NhE+S4sE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UEoORATySZg6Q5wq1UBvzMlxPcmOiuVTyv7o8JX7DoPyNHc1rmlqCiJFo6p7sDUHO2cwPNUia+16tsdBmlsn+gcpCdUC2mutDZ4qesRXIJN3O/Q69D5vRc4vW69CqjDcWtAFLOLMBPobbPv8YAS8PWcZVsgtApaML278dfs4kOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=iex3AFRz; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1747794997; c=relaxed/simple;
+	bh=3LlIVLVn2XJ3bMks/YIj5H5Gooj2k3xn5/ho7pAcaJ8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=h+mVF4f89EvfWRytMnL5jdEaQA9X6EKUhxHatoOD5DoaHmoxmTtKNLJOhn6a/pqwfal7bESGr5nSaFBBS6fu69RQL/IddZYZyFNqrAtNpX1mPeUROrfqoinsTXx2zclvOh1z9qgoGeyXpCekCivpZFiiabOM2SnXYX3AEPlBu1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=Z81FHlM8; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="iex3AFRz"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 9139525F81;
-	Wed, 21 May 2025 04:27:16 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id okZ1Ld-0Nx5j; Wed, 21 May 2025 04:27:16 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1747794435; bh=uynU6P2rot4uafnvWQDI8RKCr3IPZZ3LS41NhE+S4sE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=iex3AFRz+Gx1/hMg4ww6RLlp29PSfbIx3tRA+ixkIiY1d83Jx8R1JsThAYZRcPTUQ
-	 /1huVKBGcpZtVrhw19IJV0gITW9pU5C9oCFypexaAUPIfTuihShUzH8p2+WZO4SguT
-	 VeTi922bclzO2bGu6XhrZZdX6uSVog+eeUjmASuSJvCArHfPoHqx2jNwNT5c9nIXwL
-	 1Rno4kVaoFa5nhIoUhPeFcBnnUDk+mw79fMSv6o20dURjRtOjsJa4HVPtRdeh7YY26
-	 Q8TFna9BnpmZqUc6Lj14Ua/HQ3qzscAeCHS70i8/2yI8rn9kGMNGNZ6Mkb01Rvk5c0
-	 iEftsaQ/fO52A==
-Date: Wed, 21 May 2025 02:27:00 +0000
-From: Yao Zi <ziyao@disroot.org>
-To: Jonas Karlman <jonas@kwiboo.se>
-Cc: Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Frank Wang <frank.wang@rock-chips.com>,
-	Andy Yan <andy.yan@rock-chips.com>,
-	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
-	Detlev Casanova <detlev.casanova@collabora.com>,
-	Shresth Prasad <shresthprasad7@gmail.com>,
-	Chukun Pan <amadeus@jmu.edu.cn>, linux-phy@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 5/5] arm64: dts: rockchip: Add naneng-combphy for
- RK3528
-Message-ID: <aC059MLlfeUT2a18@pie>
-References: <20250519161612.14261-1-ziyao@disroot.org>
- <20250519161612.14261-6-ziyao@disroot.org>
- <079c08bc-e8cc-4ed6-a71e-7ef103f635c0@kwiboo.se>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="Z81FHlM8"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-551f14dc30dso2936397e87.1
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 19:36:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1747794993; x=1748399793; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qM0G5JhOcdolicLe8qE3SREPLKhOhXvUArudMo2s51o=;
+        b=Z81FHlM8AL7io41PK5/8o+Wpu+4y+GIEsKMMgfN362nu1It+WN2+J7y1LLw3Z8/7US
+         aae/hrGrcYrAlw6uidhsqBtxoVrG9O/WnAfh1MGj/qb9CfEMsDkWFcVfYPsfX4ae8Uzi
+         ntPqYWnWeBHnLNOV91NTDEuP7qiHDwFGow3b7maWB6+MdTEkZIu0A5jLq5CK1lv1p0aN
+         cLsWno6R8VzmOIEQ71zV5dkZW6pNFABfOuh1NI21tcdB9SsUjvqZuzxpT+RXeYR4vTMK
+         xajs+OMiQua98ddphvJ2kWBjqffuzzF9TCvJIYWL9RBzAAvT7d8htSRP6SMw56SCTL+W
+         DuJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747794993; x=1748399793;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qM0G5JhOcdolicLe8qE3SREPLKhOhXvUArudMo2s51o=;
+        b=CCoikMaQEe36NVYLTOFpHVSM/tQjGSPOEaY22I/PgAWhOYeuIMAV6daJ9uqdoLUQ0y
+         +gi9PKj1GNw8HQhzjejxOrf8xiOoXHrFyzoGUVjfLTO+ZSoBVnGV+lFSr0p4/e/9/qpY
+         ex4Z9Ns+GTw1/tvqljYBF2Oyx57WElMIM6cQMYmgoddVL2scUOsXui2zkgqpuuZ6F3AE
+         bezR3uDjwjFj2Izntz1qTeuJP2ltsg2nkMT8S5JOmurNxMY0RHUaRCTy0Y2kItlFbfBk
+         iySyQQ50wUn1DK7WnkKBrSACnUetOF72Km1x7A8+Ugyf7lB9syLEKlTNKmAsnwCh9hBq
+         kOqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWsfE0/2TTMuMSyR63oACuIJFV+93/E///NZxaV8W19tj0Z1OG3pGLbGfYuFslMy1LyQti5hzSy7eGveU4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzg3ZXI4bvd3zdMJ8t94dJLO5wx8oli4IGoL2z921e48AmBiaIR
+	A3H854vgQTrdMTcP5np3ZX3lFMSr840WtcAQ6wUqf6/uPsHq40Am7BmRKSa4BHCblKtAcjL5DpQ
+	mazlYuZdwYntDxmKlpa0HHWFVGVzgm2z0qVpDqbKFdg==
+X-Gm-Gg: ASbGncs4ecvyu3Fi0PDMyBJm9ClM9qiairde6tl3Oro0Kj1VL9YZzkIpKSaUiwCSNKw
+	8OAaFat5a7k0Zx6EqA8zEj0l92dIorH/05E4SEmSdTL4jUghtYaeEm35dm93FOfeJ0ht5l0KfSQ
+	IZDLF6c2LAPYWR0ZDH6W6/sd519a13zNgj5qE41z0zNSFEt9c=
+X-Google-Smtp-Source: AGHT+IFMmXewRgXmjMlS3bxDt2y7GJT60G7EnBYDGZNqy8uaRaWPsxnVln1J9UYx1YxOtQE5xrFUWK1Pch5pIN1ljkA=
+X-Received: by 2002:a05:6512:3995:b0:551:eb1b:f41d with SMTP id
+ 2adb3069b0e04-551eb1bf4c0mr4190306e87.27.1747794993380; Tue, 20 May 2025
+ 19:36:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <079c08bc-e8cc-4ed6-a71e-7ef103f635c0@kwiboo.se>
+References: <20250520031552.1931598-1-hezhongkun.hzk@bytedance.com> <8029d719-9dc2-4c7d-af71-4f6ae99fe256@redhat.com>
+In-Reply-To: <8029d719-9dc2-4c7d-af71-4f6ae99fe256@redhat.com>
+From: Zhongkun He <hezhongkun.hzk@bytedance.com>
+Date: Wed, 21 May 2025 10:35:57 +0800
+X-Gm-Features: AX0GCFtf0DIpERFZQTx7FOHjO5TPfEvgqV99Xyao4ksnN0_IE5VVyJ-ZpLeiARg
+Message-ID: <CACSyD1Mmt54dVRiBibcGsum_rRV=_SwP=dxioAxq=EDmPRnY2Q@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH] cpuset: introduce non-blocking cpuset.mems
+ setting option
+To: Waiman Long <llong@redhat.com>
+Cc: tj@kernel.org, hannes@cmpxchg.org, cgroups@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, muchun.song@linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 20, 2025 at 07:51:57PM +0200, Jonas Karlman wrote:
-> On 2025-05-19 18:16, Yao Zi wrote:
-> > Rockchip RK3528 ships a naneng-combphy that is shared by PCIe and USB
-> > 3.0 controllers. Describe it and the pipe-phy grf which it depends on.
-> > 
-> > Signed-off-by: Yao Zi <ziyao@disroot.org>
+On Tue, May 20, 2025 at 9:35=E2=80=AFPM Waiman Long <llong@redhat.com> wrot=
+e:
+>
+> On 5/19/25 11:15 PM, Zhongkun He wrote:
+> > Setting the cpuset.mems in cgroup v2 can trigger memory
+> > migrate in cpuset. This behavior is fine for newly created
+> > cgroups but it can cause issues for the existing cgroups.
+> > In our scenario, modifying the cpuset.mems setting during
+> > peak times frequently leads to noticeable service latency
+> > or stuttering.
+> >
+> > It is important to have a consistent set of behavior for
+> > both cpus and memory. But it does cause issues at times,
+> > so we would hope to have a flexible option.
+> >
+> > This idea is from the non-blocking limit setting option in
+> > memory control.
+> >
+> > https://lore.kernel.org/all/20250506232833.3109790-1-shakeel.butt@linux=
+.dev/
+> >
+> > Signed-off-by: Zhongkun He <hezhongkun.hzk@bytedance.com>
 > > ---
-> >  arch/arm64/boot/dts/rockchip/rk3528.dtsi | 22 ++++++++++++++++++++++
-> >  1 file changed, 22 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/rockchip/rk3528.dtsi b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
-> > index b2724c969a76..314afb94e19b 100644
-> > --- a/arch/arm64/boot/dts/rockchip/rk3528.dtsi
-> > +++ b/arch/arm64/boot/dts/rockchip/rk3528.dtsi
-> > @@ -318,6 +318,11 @@ vpu_grf: syscon@ff340000 {
-> >  			reg = <0x0 0xff340000 0x0 0x8000>;
-> >  		};
-> >  
-> > +		pipe_phy_grf: syscon@ff348000 {
-> > +			compatible = "rockchip,rk3528-pipe-phy-grf", "syscon";
-> > +			reg = <0x0 0xff348000 0x0 0x8000>;
-> > +		};
+> >   Documentation/admin-guide/cgroup-v2.rst |  7 +++++++
+> >   kernel/cgroup/cpuset.c                  | 11 +++++++++++
+> >   2 files changed, 18 insertions(+)
+> >
+> > diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/ad=
+min-guide/cgroup-v2.rst
+> > index 1a16ce68a4d7..d9e8e2a770af 100644
+> > --- a/Documentation/admin-guide/cgroup-v2.rst
+> > +++ b/Documentation/admin-guide/cgroup-v2.rst
+> > @@ -2408,6 +2408,13 @@ Cpuset Interface Files
+> >       a need to change "cpuset.mems" with active tasks, it shouldn't
+> >       be done frequently.
+> >
+> > +     If cpuset.mems is opened with O_NONBLOCK then the migration is
+> > +     bypassed. This is useful for admin processes that need to adjust
+> > +     the cpuset.mems dynamically without blocking. However, there is
+> > +     a risk that previously allocated pages are not within the new
+> > +     cpuset.mems range, which may be altered by move_pages syscall or
+> > +     numa_balance.
 > > +
-> >  		vo_grf: syscon@ff360000 {
-> >  			compatible = "rockchip,rk3528-vo-grf", "syscon";
-> >  			reg = <0x0 0xff360000 0x0 0x10000>;
-> > @@ -867,6 +872,23 @@ dmac: dma-controller@ffd60000 {
-> >  			arm,pl330-periph-burst;
-> >  		};
-> >  
-> > +		combphy: phy@ffdc0000 {
-> > +			compatible = "rockchip,rk3528-naneng-combphy";
-> > +			reg = <0x0 0xffdc0000 0x0 0x10000>;
-> > +			#phy-cells = <1>;
-> 
-> Should probably be sorted at end or before resets prop.
-
-Will sort the properties.
-
-> 
-> > +			clocks = <&cru CLK_REF_PCIE_INNER_PHY>, <&cru PCLK_PCIE_PHY>,
-> This break the ~80 line length limit mostly kept in this file.
-
-Oops, I didn't notice it. Will split them into lines.
-
-> > +				 <&cru PCLK_PIPE_GRF>;
-> > +			clock-names = "ref", "apb",
-> > +				      "pipe";
-> 
-> Could be kept on a single line.
-> 
-> > +			assigned-clocks = <&cru CLK_REF_PCIE_INNER_PHY>;
-> > +			assigned-clock-rates = <100000000>;
-> 
-> Other assigned-clock props are sorted before clocks props in this file.
-> 
-> This is also missing power-domains information (also missing from
-> dt-bindings patch):
-> 
-> 	power-domains = <&power RK3528_PD_VPU>;
-
-I didn't expect your power-domain series when writing v1, thanks for the
-reminder.
-
-As the power-domain series just came out, I'd like to wait until it
-merges and then work further on RK3528 support for naneng-combphy.
-
-I'm not sure whether it's possible to get the combphy cleanup patch (3th
-in this series) merged first. It should be ready for merging and I think
-this may avoid possible conflicts in the future, Any suggestions will be
-appreciated.
-
-> > +			resets = <&cru SRST_PCIE_PIPE_PHY>, <&cru SRST_P_PCIE_PHY>;
-> 
-> This also break the ~80 line length limit mostly kept in this file.
-
-I'm willing to keep the ~80 limit and will split the line.
-
-> Regards,
-> Jonas
-> 
-> > +			reset-names = "phy", "apb";
-> > +			rockchip,pipe-grf = <&vpu_grf>;
-> > +			rockchip,pipe-phy-grf = <&pipe_phy_grf>;
-> > +			status = "disabled";
-> > +		};
+> >     cpuset.mems.effective
+> >       A read-only multiple values file which exists on all
+> >       cpuset-enabled cgroups.
+> > diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+> > index 24b70ea3e6ce..2a0867e0c6d2 100644
+> > --- a/kernel/cgroup/cpuset.c
+> > +++ b/kernel/cgroup/cpuset.c
+> > @@ -3208,7 +3208,18 @@ ssize_t cpuset_write_resmask(struct kernfs_open_=
+file *of,
+> >               retval =3D update_exclusive_cpumask(cs, trialcs, buf);
+> >               break;
+> >       case FILE_MEMLIST:
+> > +             bool skip_migrate_once =3D false;
 > > +
-> >  		pinctrl: pinctrl {
-> >  			compatible = "rockchip,rk3528-pinctrl";
-> >  			rockchip,grf = <&ioc_grf>;
-> 
+> > +             if ((of->file->f_flags & O_NONBLOCK) &&
+> > +                     is_memory_migrate(cs) &&
+> > +                     !cpuset_update_flag(CS_MEMORY_MIGRATE, cs, 0))
+> > +                     skip_migrate_once =3D true;
+> > +
+> >               retval =3D update_nodemask(cs, trialcs, buf);
+> > +
+> > +             /* Restore the migrate flag */
+> > +             if (skip_migrate_once)
+> > +                     cpuset_update_flag(CS_MEMORY_MIGRATE, cs, 1);
+> >               break;
+> >       default:
+> >               retval =3D -EINVAL;
+>
+> I would prefer to temporarily make is_memory_migrate() helper return
+> false by also checking an internal variable, for example, instead of
+> messing with the cpuset flags.
+>
 
-Best regards,
-Yao Zi
+Sounds reasonable, thanks for the feedback. I'll give it a try later.
+
+> Cheers,
+> Longman
+>
