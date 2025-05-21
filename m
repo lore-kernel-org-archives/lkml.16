@@ -1,115 +1,83 @@
-Received: from smtp-42ac.mail.infomaniak.ch (smtp-42ac.mail.infomaniak.ch [84.16.66.172])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16FB51E47C7
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 15:22:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CDF51DE896;
+	Wed, 21 May 2025 15:22:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747840950; cv=none; b=GuOc2foy/FVZ2cVGyhd9L9o9gvJFC5TyETcW8QL5AeU695FpJusM453FAvu1bQQu9m846lMU2FSAwsL0g1r4GPkzJN97LStKfN6kcTan45poty5b3kJ/valFsnoFT39WRqzHJTD0ABtvVXve1v0nYowZiJOR7hVsf/+lCxfNg4s=
+	t=1747840975; cv=none; b=scjpzgwKxJxYkXQ8svvu9MS7HwOSKt2BhKK0yvaaso7hh0QoJy2X8CpYAblcBZbtAXAiYkh+icP4p0+6sZhKAA+jhBZO3JWlZctFOdezNnt58sFoP7Upkpa4LFshsMjZkR9MVJ56rmZU2/rASCOmA9m8SMuZxU8exTenGd9P+7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747840950; c=relaxed/simple;
-	bh=US6Qn/YPFfEQVJh/yquwxVsdo6yHequvshtAvfNQRnc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=GXfSI54Z+cMTdA9PgPcruilehk5fl7sYDw8CBwZ1NmTa8qg5RLNomKHF0+wnuX1G/Q48Vtt1KuDIbnzCNAL1DuAbqs2/V7S4lJS1++l+6MUWaM7kyNHylgXPEY2nqiIXJGlYXb1jh8c9Fin5ffZa5gg9UsoGYseuBUiytIucF6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; arc=none smtp.client-ip=84.16.66.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0leil.net
-Received: from smtp-3-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246b])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4b2Zsk0B0Bz3fC;
-	Wed, 21 May 2025 17:22:18 +0200 (CEST)
-Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4b2Zsh2wFGz8KK;
-	Wed, 21 May 2025 17:22:16 +0200 (CEST)
-From: Quentin Schulz <foss+kernel@0leil.net>
-Date: Wed, 21 May 2025 17:21:59 +0200
-Subject: [PATCH net] net: stmmac: platform: guarantee uniqueness of bus_id
+	s=arc-20240116; t=1747840975; c=relaxed/simple;
+	bh=0YkU9yBX6AgOPZ0Q3G1oIsGva2J1rIZ+xv0Abib7XUE=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=tW1TLWyEoXnXCFgrpUqD5iiSVtbqv8u2Toy11Wikj7lINdPjnd68LawVUXkpJh/SwpUkF81oRKPw1kKVJ5PS9EMCY0kRdfJ6eAHbdwqOkO/0OJ+lfnzGc6qBeBb6hMY8tf4aO179iruP7zirkdLzsbDyITH9kUv9zDkiXeEqcX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LpSmW5Pz; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LpSmW5Pz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07533C4CEE4;
+	Wed, 21 May 2025 15:22:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747840975;
+	bh=0YkU9yBX6AgOPZ0Q3G1oIsGva2J1rIZ+xv0Abib7XUE=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=LpSmW5PzppS0+oUOdkAxjwbHcHslytnqF7fAp2wxDBaSKWM+r/in36Mm2TAlWUpos
+	 FxakUGCGY+8Ge42bQMEmNglcaiZ7UtHsuOrD4yzHsA5CuJ1D1626ghUtRIAh7YjSOn
+	 UU2lOAdcMrMk/tSsLoknSm5MHdgkq7sxw0Mrlwbvu/g1OiCiL6/UyDwcKsmiMEYIdt
+	 3UYDPKTUC2nV5iesVd0nKbzehKD1ut+lDAOmVu5+4gSxfhpI73uZGb9VgJ0YFzezM4
+	 zk4bZgzJqyrE14FZu3qRsIj8OhHzkd2o32pNZSl3AiUGySAfvAwo+SywyS/KgP7ov9
+	 SgGCguBOCi40g==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB115380CEEF;
+	Wed, 21 May 2025 15:23:31 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250521-stmmac-mdio-bus_id-v1-1-918a3c11bf2c@cherry.de>
-X-B4-Tracking: v=1; b=H4sIAJbvLWgC/x3MQQqEMAxA0atI1gZsO1L0KiKDtlGzaJWmI4J49
- yku3+L/G4QSk0Bf3ZDoZOE9Fqi6ArdNcSVkXwy60W3TaoWSQ5gcBs87zj/5skejzGw/ztrOGCj
- hkWjh650OECnD+Dx/ttnzIGkAAAA=
-X-Change-ID: 20250521-stmmac-mdio-bus_id-313b74c77933
-To: Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>
-Cc: Jakob Unterwurzacher <jakob.unterwurzacher@cherry.de>, 
- Heiko Stuebner <heiko@sntech.de>, netdev@vger.kernel.org, 
- linux-stm32@st-md-mailman.stormreply.com, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Quentin Schulz <quentin.schulz@cherry.de>
-X-Mailer: b4 0.14.2
-X-Infomaniak-Routing: alpha
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v2 0/2] Bluetooth: btmtksdio: ensure btmtksdio_close is
+ executed before btmtksdio_remove
+From: patchwork-bot+bluetooth@kernel.org
+Message-Id: 
+ <174784101076.2084440.12163879869679696734.git-patchwork-notify@kernel.org>
+Date: Wed, 21 May 2025 15:23:30 +0000
+References: <20250422012156.586600-1-chris.lu@mediatek.com>
+In-Reply-To: <20250422012156.586600-1-chris.lu@mediatek.com>
+To: Chris Lu <chris.lu@mediatek.com>
+Cc: marcel@holtmann.org, johan.hedberg@gmail.com, luiz.dentz@gmail.com,
+ sean.wang@mediatek.com, jiande.lu@mediatek.com, will-cy.lee@mediatek.com,
+ ss.wu@mediatek.com, steve.lee@mediatek.com, linux-bluetooth@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
 
-From: Quentin Schulz <quentin.schulz@cherry.de>
+Hello:
 
-bus_id is currently derived from the ethernetX alias. If one is missing
-for the device, 0 is used. If ethernet0 points to another stmmac device
-or if there are 2+ stmmac devices without an ethernet alias, then bus_id
-will be 0 for all of those.
+This series was applied to bluetooth/bluetooth-next.git (master)
+by Luiz Augusto von Dentz <luiz.von.dentz@intel.com>:
 
-This is an issue because the bus_id is used to generate the mdio bus id
-(new_bus->id in drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-stmmac_mdio_register) and this needs to be unique.
+On Tue, 22 Apr 2025 09:21:54 +0800 you wrote:
+> If Bluetooth SDIO card is unexpectedly removed due to hardware removal
+> or SDIO issue, it is possible for remove to be called before close.
+> If an interrupt occurs during this process, it may cause kernel panic.
+> Therefore, it is necessary to ensure that close is executed before
+> remove to stop interrupts and cancel txrx workqueue.
+> 
+> Chris Lu (2):
+>   Bluetooth: btmtksdio: Check function enabled before doing close
+>   Bluetooth: btmtksdio: Do close if SDIO card removed without close
+> 
+> [...]
 
-This allows to avoid needing to define ethernet aliases for devices with
-multiple stmmac controllers (such as the Rockchip RK3588) for multiple
-stmmac devices to probe properly.
+Here is the summary with links:
+  - [v2,1/2] Bluetooth: btmtksdio: Check function enabled before doing close
+    https://git.kernel.org/bluetooth/bluetooth-next/c/07e90048e356
+  - [v2,2/2] Bluetooth: btmtksdio: Do close if SDIO card removed without close
+    https://git.kernel.org/bluetooth/bluetooth-next/c/0b6d58bc6ea8
 
-Obviously, the bus_id isn't guaranteed to be stable across reboots if no
-alias is set for the device but that is easily fixed by simply adding an
-alias if this is desired.
-
-Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
----
-Unsure if I should cc stable since people who encountered that issue for
-sure had to add an ethernet alias to make things work with their DT so
-shouldn't be too much of an actual issue?
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-index c73eff6a56b87a3783c91b2ffbf5807a27df303f..15205a47cafc276442c3759a36d115d8da1fe51d 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-@@ -430,6 +430,7 @@ stmmac_probe_config_dt(struct platform_device *pdev, u8 *mac)
- 	struct device_node *np = pdev->dev.of_node;
- 	struct plat_stmmacenet_data *plat;
- 	struct stmmac_dma_cfg *dma_cfg;
-+	static int bus_id = -ENODEV;
- 	int phy_mode;
- 	void *ret;
- 	int rc;
-@@ -465,8 +466,14 @@ stmmac_probe_config_dt(struct platform_device *pdev, u8 *mac)
- 	of_property_read_u32(np, "max-speed", &plat->max_speed);
- 
- 	plat->bus_id = of_alias_get_id(np, "ethernet");
--	if (plat->bus_id < 0)
--		plat->bus_id = 0;
-+	if (plat->bus_id < 0) {
-+		if (bus_id < 0)
-+			bus_id = of_alias_get_highest_id("ethernet");
-+		/* No ethernet alias found, init at -1 so first bus_id is 0 */
-+		if (bus_id < 0)
-+			bus_id = -1;
-+		plat->bus_id = ++bus_id;
-+	}
- 
- 	/* Default to phy auto-detection */
- 	plat->phy_addr = -1;
-
----
-base-commit: 4a95bc121ccdaee04c4d72f84dbfa6b880a514b6
-change-id: 20250521-stmmac-mdio-bus_id-313b74c77933
-
-Best regards,
+You are awesome, thank you!
 -- 
-Quentin Schulz <quentin.schulz@cherry.de>
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
