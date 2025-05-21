@@ -1,49 +1,57 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50D5023BCF4;
-	Wed, 21 May 2025 10:05:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D92F225B1D7;
+	Wed, 21 May 2025 10:05:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747821920; cv=none; b=ZWs6cMVwu5gefd2tDCAMRNJFHcmtH58gufXTEIkvQZrdkStTc/rS+Nu1xg9PHWZ6t6CYLFm3DAXYbE6sSBCP6UAcEhSSwfvfn5hCR2uMJ+hLYXz37c6Y3OXRx8BM0OELj7TcAox89iobMZSbtJGD4Csy6dFrvahdQlZl8VJTxvY=
+	t=1747821922; cv=none; b=q8CY6tquh8iDXPX9OtWJVmwl0GAAac2cxUedzXFXR7Mx7vi1UTsJSVpbTEK6yOF+8WXyTgCfzkNEztDsQOPQ3c/y0pLH8P2G0/zaC+CJh1EgbbbwRWNIOCqAf2j9Jy96EdFBHekKRyomqXsW/fNY2Jf2BOmjllnEzRVgU05ZSKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747821920; c=relaxed/simple;
-	bh=jYCPLpmjCZwqIjzIBMh5UL0q6Ebpw9E0czo06+AzlDA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B2bjCgRpUlq/wDEQcEqRMZFcB+MzM0XHRKNe64qlHwPUjxta2P7DvUaS3qZS2kw7InfkmfvhVMeWK7ecwDGg6IMFTNALz29ejnqsME9zKfiStnP12Sr/7WA0JhtDRBdFwvaNdBIeNcAxy9CYQRdjI59wKUmMdVK2nCgeAG9aF/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nb/7Ly5G; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747821922; c=relaxed/simple;
+	bh=QBcXV2Go+RTJKZL8GPyRsRvcvbYEH2UET43WgqAY/IA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=csk8JRvA5fpXGZyMoK+DQnipiaw7iPU9Luz0GCif3raeQeaqSx/SFfb90Dp+Kn5/nHDLSn0mZwHV/Y6Dzsr4UPWYJBqFCNEgkfEgAUuBsK4GAqRLO9qwzVyIwsBKtlDqEnYGfIhMYKKnmSfw3PAnEfy8Ckcq5FnfJs4KSehGBmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=G1xohiG3; arc=none smtp.client-ip=67.231.156.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nb/7Ly5G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6271FC4CEE4;
-	Wed, 21 May 2025 10:05:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747821918;
-	bh=jYCPLpmjCZwqIjzIBMh5UL0q6Ebpw9E0czo06+AzlDA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Nb/7Ly5GTdimYBFDrmhATZWGMNLPs1ulWJrOcXiMRXFzeUS0BKDbxVvTUvK1a762g
-	 h+T2uKG4cdbhuKNHikUMRhnFTq/WC8xRlfvW91+MFc61xA59Z0s96ywzTCkfngdfBg
-	 TbS0zxsojUzlXhw4gLROxtwIfUiYOzNlN6sSOUO9zJV/UlbWwzB5rmYxYSB7CBTC+/
-	 KD1DB93jJX/65DIEQSKyDO3HViRIvM2eojKEttRpfYZ+c5/fb4j0J0ZvvqjPgWKa5/
-	 6y4bZKb+Tb0WU6U40Mdejgt1agx2u3bHKAW4UVJ6URJJY19wd+OvfJq1K3gcN7VTwD
-	 r9xvU5DbVZhYA==
-From: Philipp Stanner <phasta@kernel.org>
-To: Matthew Brost <matthew.brost@intel.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Philipp Stanner <phasta@kernel.org>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
-Cc: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org
-Subject: [PATCH] drm/sched/tests: Use one lock for fence context
-Date: Wed, 21 May 2025 12:04:41 +0200
-Message-ID: <20250521100440.110019-2-phasta@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="G1xohiG3"
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54L9qwbi010202;
+	Wed, 21 May 2025 03:04:56 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pfpt0220; bh=ESmwcFjV+fTv0t4n/zIs3wo
+	g9UJs7PIJJd1mf0W/d/Q=; b=G1xohiG3D1hYjxp1LyDzMT5H4HxCidwddc9hG28
+	YUrHgjUcsMw0K85DIiIuGYYBXTqKrpKHxmfA7Knui6U8LGqSTTyLhQlo5HZ+B9CI
+	oT78RxggDwFAW2XBNlPVs8AmJwzyvkyDfUmzEFjuxc145vgROXwDZefa3IKuGVoj
+	DTZiqkq85Chgw6TWcVPTnLIEReN6LeIW5JIhngpfC60aBjHHpix9yLU1PSrFxleK
+	c0x4Oec1Pgo5/d4ANY73exz7JPKNJSmGvg+AHfCBvPn2Y0UFXSn29zsC8wryQ+xO
+	L9/EtXPTg3dtzdFjz3o2EjPl3iCJcDv90Hp0CchndG0ieqA==
+Received: from dc5-exch05.marvell.com ([199.233.59.128])
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 46rwfghpgd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 21 May 2025 03:04:56 -0700 (PDT)
+Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
+ DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Wed, 21 May 2025 03:04:53 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
+ (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Wed, 21 May 2025 03:04:53 -0700
+Received: from bharat-OptiPlex-Tower-Plus-7020.. (unknown [10.28.34.254])
+	by maili.marvell.com (Postfix) with ESMTP id 242DC3F70B3;
+	Wed, 21 May 2025 03:04:49 -0700 (PDT)
+From: Bharat Bhushan <bbhushan2@marvell.com>
+To: <bbrezillon@kernel.org>, <schalla@marvell.com>,
+        <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
+        <giovanni.cabiddu@intel.com>, <linux@treblig.org>,
+        <bharatb.linux@gmail.com>, <linux-crypto@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC: Bharat Bhushan <bbhushan2@marvell.com>
+Subject: [PATCH 0/4 v3] crypto: octeontx2: Fix hang and address alignment issues
+Date: Wed, 21 May 2025 15:34:43 +0530
+Message-ID: <20250521100447.94421-1-bbhushan2@marvell.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,64 +59,43 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDA5OSBTYWx0ZWRfXxbVLDjiVJxOR glwwXGWgvHUeGlCBjnnNmMXV3NiDkeY3OzRH3AcqKrRxULB8xBq3jKBn2nXsQ9XhI2W5jP8DKXT KAlFFdYM3PnS4dbhlXZRHoWMghWNW/qLalo2ERpZIsVYbH9yI9LiYYX3IfTptz9LqANN0mPsBIf
+ 8g9vz1WvkpSjXnE1Gvfc0CrAnOjkWaq3knFTuINS4rDmcJ6WePElLMy1nNnMsR2HYD0YsbdOkdX ifznzLtkjbAIY7zrhhEHOcD46roVdJRdDAfWReV71GuJv2UwyV5Ma1Qx0TsKXE/YIuENsvo+7l5 sKRcQtlJqkkcpDindy/u1/+I4GDWg7ojFT90f7o357BTEamB9+Au3R827WVH3a1h6VwTKaXX/6C
+ ZcoFwszUVVfLioolKN8Z8Gmei3vScKWLwIhx9oXBbQgPwfz/cbgsxxkUqwP5vYnEKLadMEx3
+X-Proofpoint-GUID: MTMVrTTh5psOTIC3JOHOGxcFzvm_rh-C
+X-Authority-Analysis: v=2.4 cv=T6OMT+KQ c=1 sm=1 tr=0 ts=682da548 cx=c_pps a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17 a=dt9VzEwgFbYA:10 a=voKHntS-kiqXh1f54uIA:9
+X-Proofpoint-ORIG-GUID: MTMVrTTh5psOTIC3JOHOGxcFzvm_rh-C
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-21_03,2025-05-20_03,2025-03-28_01
 
-When the unit tests were implemented, each scheduler job got its own,
-distinct lock. This is not how dma_fence context locking rules are to be
-implemented. All jobs belonging to the same fence context (in this case:
-scheduler) should share a lock for their dma_fences. This is to comply
-to various dma_fence rules, e.g., ensuring that only one fence gets
-signaled at a time.
+First patch of the series fixes possible infinite loop.
 
-Use the fence context (scheduler) lock for the jobs.
+Remaining three patches fixes address alignment issue observed
+after "9382bc44b5f5 arm64: allow kmalloc() caches aligned to the
+       smaller cache_line_size()"
+  
+First 3 patches applies to Linux version 6.5 onwards.
+Patch-4 applies to Linux version 6.8 onwards
 
-Signed-off-by: Philipp Stanner <phasta@kernel.org>
----
- drivers/gpu/drm/scheduler/tests/mock_scheduler.c | 5 ++---
- drivers/gpu/drm/scheduler/tests/sched_tests.h    | 1 -
- 2 files changed, 2 insertions(+), 4 deletions(-)
+v2->v3:
+ - Align DMA memory to ARCH_DMA_MINALIGN as that is mapped as
+   bidirectional
+ 
+v1->v2:
+ - Fixed memory padding size calculation as per review comment
 
-diff --git a/drivers/gpu/drm/scheduler/tests/mock_scheduler.c b/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
-index f999c8859cf7..17023276f4b0 100644
---- a/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
-+++ b/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
-@@ -64,7 +64,7 @@ static void drm_mock_sched_job_complete(struct drm_mock_sched_job *job)
- 
- 	job->flags |= DRM_MOCK_SCHED_JOB_DONE;
- 	list_move_tail(&job->link, &sched->done_list);
--	dma_fence_signal(&job->hw_fence);
-+	dma_fence_signal_locked(&job->hw_fence);
- 	complete(&job->done);
- }
- 
-@@ -123,7 +123,6 @@ drm_mock_sched_job_new(struct kunit *test,
- 	job->test = test;
- 
- 	init_completion(&job->done);
--	spin_lock_init(&job->lock);
- 	INIT_LIST_HEAD(&job->link);
- 	hrtimer_setup(&job->timer, drm_mock_sched_job_signal_timer,
- 		      CLOCK_MONOTONIC, HRTIMER_MODE_ABS);
-@@ -169,7 +168,7 @@ static struct dma_fence *mock_sched_run_job(struct drm_sched_job *sched_job)
- 
- 	dma_fence_init(&job->hw_fence,
- 		       &drm_mock_sched_hw_fence_ops,
--		       &job->lock,
-+		       &sched->lock,
- 		       sched->hw_timeline.context,
- 		       atomic_inc_return(&sched->hw_timeline.next_seqno));
- 
-diff --git a/drivers/gpu/drm/scheduler/tests/sched_tests.h b/drivers/gpu/drm/scheduler/tests/sched_tests.h
-index 27caf8285fb7..fbba38137f0c 100644
---- a/drivers/gpu/drm/scheduler/tests/sched_tests.h
-+++ b/drivers/gpu/drm/scheduler/tests/sched_tests.h
-@@ -106,7 +106,6 @@ struct drm_mock_sched_job {
- 	unsigned int		duration_us;
- 	ktime_t			finish_at;
- 
--	spinlock_t		lock;
- 	struct dma_fence	hw_fence;
- 
- 	struct kunit		*test;
+Bharat Bhushan (4):
+  crypto: octeontx2: add timeout for load_fvc completion poll
+  crypto: octeontx2: Fix address alignment issue on ucode loading
+  crypto: octeontx2: Fix address alignment on CN10K A0/A1 and OcteonTX2
+  crypto: octeontx2: Fix address alignment on CN10KB and CN10KA-B0
+
+ .../marvell/octeontx2/otx2_cpt_reqmgr.h       | 121 +++++++++++++-----
+ .../marvell/octeontx2/otx2_cptpf_ucode.c      |  51 +++++---
+ 2 files changed, 126 insertions(+), 46 deletions(-)
+
 -- 
-2.49.0
+2.34.1
 
