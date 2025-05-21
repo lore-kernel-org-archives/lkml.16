@@ -1,143 +1,144 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A52278C9C
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 08:49:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3E1778C9C
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 08:49:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747817342; cv=none; b=rekxHBicSd05/8ZKTzv/asMYaJPfy2zqHcM3odjwkcjpt/2EPB6w2Wx5877+xFlANxg9tqTNzE7gwdfDAxr95aWVDL8nMnmqxxi/2453VzphSfgQqMammVj+gibpAQx/arKSAz4v4AX15N44JyIItBVQlcxFV+gpAx4cG4AaQMk=
+	t=1747817364; cv=none; b=rLAbSZWXzMmi1k0UpGkLsYR8MSh/yZJ4Kj8QvC9hVOBXCgzp1bnfBX3EbXbEa9gNamBK6XPsRDH9Xv31OcUmG6jEazWR/Nvlf3ywKt4pj4++BraVv9i0mziPQi0FUH8pbYoWKwAv612A5/+P4iucWHICA62WiDrA0XheSo7ut+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747817342; c=relaxed/simple;
-	bh=IdTAw/7q5n4CViYIVlLpy2vbeybQVr45doe2wYSwj1s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k4l7oC2/1gOurmwIFkZwgAQYTf76MwkUEY0Wenl390tK/grxC2K9N5Qj8FGASTUI/nnU9OT6SEjThsJbXUggiWxQEVGcwQg5kb2h7zVydyakxzPWhQLfYehTmiqGfV+OhDrPrTNjs1Y7IDy9yVAup1wgaDECtFQ7uOrZD2HbosY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=IYnp7blK; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=kHeRh3wj; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0CkkL/cY; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=GRdrTkGa; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1747817364; c=relaxed/simple;
+	bh=djYsEI8JRsXTX9qsb8/KZKWaE2mrKR6PoSxkoBoMKCc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EZgajz729I6ti5/AVb2xgAO99WciUUikbwPh5gN/Uk6cXQ4i9wTNCbwuzz9R+ckyRwqI/xg0+psrJcvA+7FUfWV8eMPAByWdXud+fcKRDmNWwavcMoi9UU1tazNWXy6bzdvo6wWSwyWUrn8uWXgZv0KnVPbbpDuLER1Suamr9+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=rVLO/KoG; arc=none smtp.client-ip=95.215.58.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="IYnp7blK";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="kHeRh3wj";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0CkkL/cY";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="GRdrTkGa"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 192BC2125A;
-	Wed, 21 May 2025 08:48:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747817338; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="rVLO/KoG"
+Message-ID: <90b2e62f-cacc-49b2-acf7-3a33348e2210@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747817359;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=PYJxRSWIj9WyqHxSTfPZjOkXna9NizDI98LlLiwmMyk=;
-	b=IYnp7blKnCEQ+CSBUy3sB7zTf5bnWzcKXg4aN4TVqNIJKNGa1Z8gm3PwojSDjrnhIBfWpU
-	xRc5vSw66F3bgraR1EQIQEOnhPCZXl3hsFIbjYbE/ymetaSBJW6yfwppvEMXOgbgHlTsEQ
-	TcTrEI495qNPL4GxRfIAjfqUPNVskHI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747817338;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PYJxRSWIj9WyqHxSTfPZjOkXna9NizDI98LlLiwmMyk=;
-	b=kHeRh3wjbPyBx/6GhLlOhp239jRDYDZADrBbDO/OCDUNXOPZkjYavcQbBr2ko6WBcYaZUf
-	mK4tolpeDKljPABg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="0CkkL/cY";
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=GRdrTkGa
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747817337; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PYJxRSWIj9WyqHxSTfPZjOkXna9NizDI98LlLiwmMyk=;
-	b=0CkkL/cYNyrA1hH6nyhrkHau7b3GUDvRZMnQgV/g+FIX9VoPpfTjJ8TY9vK9qvVC9bxwB6
-	q75U7fjqLvmb79pWzZv+CabAf9FTT3VkS9CPShLlGqdPZmehKnsE3FH/DguDE3Sg037Qlj
-	B/pBG3CkIb+Eyn7Qm3BWNVxZQrgG1bs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747817337;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PYJxRSWIj9WyqHxSTfPZjOkXna9NizDI98LlLiwmMyk=;
-	b=GRdrTkGaRD8RwdohSA6XOzmHEwc0n7KQtZBuXkisP9h9J3W/Mg/a/BsVH0u3iwi4q3MwxI
-	R+JAt3pGVkBdtoBQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E23AE13AA0;
-	Wed, 21 May 2025 08:48:56 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id P1uLNniTLWiaNAAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Wed, 21 May 2025 08:48:56 +0000
-Date: Wed, 21 May 2025 10:48:55 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Changyuan Lyu <changyuanl@google.com>, akpm@linux-foundation.org,
-	bhe@redhat.com, chrisl@kernel.org, graf@amazon.com,
-	jasonmiu@google.com, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	pasha.tatashin@soleen.com
-Subject: Re: [PATCH 1/2] memblock: show a warning if allocation in KHO
- scratch fails
-Message-ID: <aC2TdzP1AwYrQdcW@localhost.localdomain>
-References: <aCoFphqeZAMkhq51@kernel.org>
- <20250521070310.2478491-1-changyuanl@google.com>
- <aC2EE1pg9ktQdstI@kernel.org>
+	bh=lvM3TAtnOSwCpnCUaRauuHYgKEY/9dlWJw7rQvy5oeE=;
+	b=rVLO/KoGHcoJwmvcvlU5hyra8mCT8X7Lkj+eZDzMADglAuAoNGBxt/l/z4v+g75omreJhq
+	v/qINYh72YCX/+YTdC/ZZd3nPY9vd2naa7ZH0CbkjA4MdwukNEKuQJF0afHlTcUEbcikqo
+	AuwJ93jx2qiTF8AvukpniUeVXNRjKtA=
+Date: Wed, 21 May 2025 16:48:44 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aC2EE1pg9ktQdstI@kernel.org>
-X-Rspamd-Action: no action
-X-Spam-Level: 
-X-Rspamd-Queue-Id: 192BC2125A
-X-Spam-Score: -1.51
-X-Spam-Flag: NO
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-1.51 / 50.00];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	RCVD_TLS_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[localhost.localdomain:mid];
-	RCVD_COUNT_TWO(0.00)[2];
-	DKIM_TRACE(0.00)[suse.de:+]
+Subject: Re: [PATCH 1/7] sched/fair: Add related data structure for task based
+ throttle
+To: Aaron Lu <ziqianlu@bytedance.com>,
+ Valentin Schneider <vschneid@redhat.com>, Ben Segall <bsegall@google.com>,
+ K Prateek Nayak <kprateek.nayak@amd.com>,
+ Peter Zijlstra <peterz@infradead.org>, Josh Don <joshdon@google.com>,
+ Ingo Molnar <mingo@redhat.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Xi Wang <xii@google.com>
+Cc: linux-kernel@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>,
+ Chuyi Zhou <zhouchuyi@bytedance.com>, Jan Kiszka <jan.kiszka@siemens.com>,
+ Florian Bezdeka <florian.bezdeka@siemens.com>
+References: <20250520104110.3673059-1-ziqianlu@bytedance.com>
+ <20250520104110.3673059-2-ziqianlu@bytedance.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Chengming Zhou <chengming.zhou@linux.dev>
+In-Reply-To: <20250520104110.3673059-2-ziqianlu@bytedance.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, May 21, 2025 at 10:43:15AM +0300, Mike Rapoport wrote:
-> I think we should just make sparse_init_nid() panic or at least change 
-> "sparse_init_nid: node[0] memory map backing failed. Some memory will not be available."
-> to something more visible and clear. 
+On 2025/5/20 18:41, Aaron Lu wrote:
+> From: Valentin Schneider <vschneid@redhat.com>
+> 
+> Add related data structures for this new throttle functionality.
+> 
+> Signed-off-by: Valentin Schneider <vschneid@redhat.com>
+> Signed-off-by: Aaron Lu <ziqianlu@bytedance.com>
 
-Panicking the system seems a bit too harsh.
-Those sections will not be initialized, and sure you will lose some memory,
-but still.
+Looks good to me.
 
-I think that making sure that subsection_map_init() does not access
-non-initialized values is enough.
-Because wrt. error message, I am not sure it can get more clear that we
-failed we allocate memory to back the section and so that section will
-not be activated :-)
+Reviewed-by: Chengming Zhou <chengming.zhou@linux.dev>
 
- 
+Thanks!
 
--- 
-Oscar Salvador
-SUSE Labs
+> ---
+>   include/linux/sched.h |  4 ++++
+>   kernel/sched/core.c   |  3 +++
+>   kernel/sched/fair.c   | 12 ++++++++++++
+>   kernel/sched/sched.h  |  2 ++
+>   4 files changed, 21 insertions(+)
+> 
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index b98195991031c..055f3782eeaee 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -879,6 +879,10 @@ struct task_struct {
+>   
+>   #ifdef CONFIG_CGROUP_SCHED
+>   	struct task_group		*sched_task_group;
+> +#ifdef CONFIG_CFS_BANDWIDTH
+> +	struct callback_head		sched_throttle_work;
+> +	struct list_head		throttle_node;
+> +#endif
+>   #endif
+>   
+>   
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index bece0ba6f5b3a..b7ca7cefee54e 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -4499,6 +4499,9 @@ static void __sched_fork(unsigned long clone_flags, struct task_struct *p)
+>   
+>   #ifdef CONFIG_FAIR_GROUP_SCHED
+>   	p->se.cfs_rq			= NULL;
+> +#ifdef CONFIG_CFS_BANDWIDTH
+> +	init_cfs_throttle_work(p);
+> +#endif
+>   #endif
+>   
+>   #ifdef CONFIG_SCHEDSTATS
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index eb5a2572b4f8b..75bf6186a5137 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -5825,6 +5825,18 @@ static inline int throttled_lb_pair(struct task_group *tg,
+>   	       throttled_hierarchy(dest_cfs_rq);
+>   }
+>   
+> +static void throttle_cfs_rq_work(struct callback_head *work)
+> +{
+> +}
+> +
+> +void init_cfs_throttle_work(struct task_struct *p)
+> +{
+> +	init_task_work(&p->sched_throttle_work, throttle_cfs_rq_work);
+> +	/* Protect against double add, see throttle_cfs_rq() and throttle_cfs_rq_work() */
+> +	p->sched_throttle_work.next = &p->sched_throttle_work;
+> +	INIT_LIST_HEAD(&p->throttle_node);
+> +}
+> +
+>   static int tg_unthrottle_up(struct task_group *tg, void *data)
+>   {
+>   	struct rq *rq = data;
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index c5a6a503eb6de..921527327f107 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -2703,6 +2703,8 @@ extern bool sched_rt_bandwidth_account(struct rt_rq *rt_rq);
+>   
+>   extern void init_dl_entity(struct sched_dl_entity *dl_se);
+>   
+> +extern void init_cfs_throttle_work(struct task_struct *p);
+> +
+>   #define BW_SHIFT		20
+>   #define BW_UNIT			(1 << BW_SHIFT)
+>   #define RATIO_SHIFT		8
