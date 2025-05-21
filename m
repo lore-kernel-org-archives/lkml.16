@@ -1,108 +1,133 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3357A29B23A
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 20:39:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C83628EA64
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 20:40:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747859994; cv=none; b=WisTfq0elpt2W+KaENNFDYA3ak2ZgT2AqaRwdPzWPfC26mvurygPiiBJMaVQBdegL4v9s3k4IsUppkQNqDgjTxoZ333IkUjxNYqG+8/SVhrCndpzusu35eGtfNFDbX7nHF0CANAP6pOfIS4ibg10AStUdwpHQPWw6qOSpOl4nak=
+	t=1747860038; cv=none; b=GRsRxNDI6a/8kctDc/gv95pdD/JJKZtp9nnHnUTsBZzIfa1bNu+/gbYT4LvTLc06ZtcMYGUUrhHU5LouP4OOej2Dk03nABIr3mepG6XuDlmv41H+DCPekNJes5rQ/bDoynBnI4ge/iCd4MSz61khCFAh8zJ6nvCvArF3jtrWyN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747859994; c=relaxed/simple;
-	bh=hWUF0Rmj/9yF+2TSHrisMjKZCsHHAIi1HKG4bsw7dt4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ulXKfICIn51m0Q3KhnUe3ZYE4DhUAx2mU4IHeBW7AYLJnbMMjM+ptWsWLpx8cTUEvtw5MKAEErLXPDcku+xkUCmRlLffuAx3BjJJfKxRj3IDHoIApvSIW+AiQI0YJrr3ZGs3oTHPf7AKqkUho2yANVVnRKBSiXtchRpZFsFvWnM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
-	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
-	(envelope-from <a.fatoum@pengutronix.de>)
-	id 1uHqDo-0008EG-1p; Wed, 21 May 2025 22:39:28 +0200
-Message-ID: <3ba28773-61ec-4e1e-949d-e8285525d1d2@pengutronix.de>
-Date: Wed, 21 May 2025 22:39:05 +0200
+	s=arc-20240116; t=1747860038; c=relaxed/simple;
+	bh=zbjY1wizS23vo58PabGXx/GKrU4ugGQE+QWdx9Y90HE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qr4KJhiqBHNLSuMR6wMeea5j6q7InUjlzjStkG38Wj6p6gxH+H+wb7TxiKwW36l8TcWgUpG8RtpOxmpVqC8Sj4Np56wG7XGdPOZ8dMs+PQy8Ns2uIWmXEN79mLsUwSoEhfhxrLF1O8rsEOT1V2GZp0l9EC7oxtTCVwqFP8Yc+qo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TjAQIjZP; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TjAQIjZP"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-231f61dc510so1143675ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 13:40:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747860036; x=1748464836; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=e8RIINbhOGI/c2NEEqIGsIubtNjwgvOZk5mJqYlzXzg=;
+        b=TjAQIjZP6FCN5hWP+eyi1ayVY1f9+gOmKc9VUpQFB1MKsiVCa4YmBSbMOX5JMQ03AF
+         wfp8kskeIOiDcceW6ExRJJv1kRFcjaFVeRwmg8uIZcKFddwk/X1/EZMHNUfkPUYJ+C3K
+         A5nLsyjUBhhFvEDsIVrbuXXfdQs747V76LwV89j0MS1XatYC5TbtGqIPacRzFSGse2Mx
+         OVeHwAnRp619ak/QZvACf6AseZPR0XhtAhz8tUKXflzvJLzoGX5yOT1QQT0nZFv+W9dA
+         isWla/mge0aEsbnsAan8bsA6fgJKcbNGUIUXw3ywcfT95cH7364fZVDrhS/VDdxzJq5a
+         9NOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747860036; x=1748464836;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=e8RIINbhOGI/c2NEEqIGsIubtNjwgvOZk5mJqYlzXzg=;
+        b=GfvjNmGA4PdIDTw+Dt+Tg5n09sZmywVZ7ssFnJT2B2mqE1rf+0a/94Bz41TjSEZ8Nj
+         6ziUnIWnIQCNo9IYxuV1i1hlog6IKa7ECPz9JUE8ahgjzPiKmTzB7O2l7imsUGvumGkz
+         UUGYcxvnfJaFsU3uH8tKUuJf90e9257OsDYHo8Ft6E7MP1EOdPzBUdlxvuuvwAg4aBTj
+         m1ksKC4Y19cLhOnX0e6EHFGIJAYfdjCUObi4KnNqrDiX21RZ0arMuOvkXmVkwXkHqG0i
+         KKuJLB8vB1ZFGQQBSZkbncTtmLJ9scT46S1ommtPpwtMZZWhKucCM6gxR5yB8OHlIhM7
+         qgTA==
+X-Forwarded-Encrypted: i=1; AJvYcCWzudWfR6XNRvc+xl4vSCVwQjScs/nM9zweirumV/J7KaNn0WdoaAvb6UEcAyUpWSy+QoMeTh18FgCPWo8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVk8fUuifncTYb1+/HhKxWvTDrgbhlBBcErHBYpxYasG+5Cyob
+	nqCet56O9yJWAEdjshU/edcMnnlRGgB7Zt7CXRG59RdqADnH4SIfeBUYfMQuyDdmGw==
+X-Gm-Gg: ASbGnctRQ6JRTIG7nPjG/LqQk3kJC2Pvd/aFvHl7hJYqJQE6q4bL5AUjw12R/R0j4bD
+	BU4f1Ycy1F5o0z2DHtzL8M+wnMh46uPWdUUPNNSU+ll22KiN/Z34uHlM0aaknDVRFXyc2EbZa5F
+	6mPJMm42MZRB3xx2Lpkj6abnuEHLRxK2c44Ktu0e/1fw961yR0azPGnIXkdeRpiKMqZtwrLgUXj
+	phC7CE1bpUi2912JH3bA/WiwLzim6liixe/6BwemaE3ZItatiK+QGDqdCgkugS6Xi8PuNTIsUxi
+	O8nE/9/7iTpjFdrv0PkOv6a7RMj0Qo/EeDez10tf8zzOGyiRH7DIz5gULVe1+utdoZv5WxeDKjs
+	rcH0kKAEU1ZGcgIYhRywf6DqU3aM=
+X-Google-Smtp-Source: AGHT+IFWhfr8eMQeyoGAHZpfW3xBnV+hWPIDqTflQQXz1A1UZnZRmo37vQSO8OyDvOPpm/xdlB+AMQ==
+X-Received: by 2002:a17:903:1b66:b0:22e:1858:fc25 with SMTP id d9443c01a7336-233d6dda119mr168815ad.9.1747860036185;
+        Wed, 21 May 2025 13:40:36 -0700 (PDT)
+Received: from google.com (202.108.125.34.bc.googleusercontent.com. [34.125.108.202])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eb084cd2sm10025558a12.54.2025.05.21.13.40.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 May 2025 13:40:35 -0700 (PDT)
+Date: Wed, 21 May 2025 20:40:30 +0000
+From: Peilin Ye <yepeilin@google.com>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Eduard Zingerman <eddyz87@gmail.com>,
+	Puranjay Mohan <puranjay@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH bpf] bpf: verifier: support BPF_LOAD_ACQ in
+ insn_def_regno()
+Message-ID: <aC46PuLHp6yjTBJR@google.com>
+References: <20250521183911.21781-1-puranjay@kernel.org>
+ <80ef5e2e-c2d9-45b7-9a48-f8c1a4767eae@gmail.com>
+ <CAADnVQLgPBcRAqKfCXQwZae2jKDfp=xSFZCgzHgg-jcBTYp-yw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 3/8] MAINTAINERS: add maintainer for the Ka-Ro
- tx8p-ml81 COM module
-To: Maud Spierings | GOcontroll <maudspierings@gocontroll.com>,
- Shawn Guo <shawnguo2@yeah.net>, Rob Herring <robh@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- Fabio Estevam <festevam@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "imx@lists.linux.dev" <imx@lists.linux.dev>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Shawn Guo <shawnguo@kernel.org>,
- "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-References: <20250417-initial_display-v6-0-3c6f6d24c7af@gocontroll.com>
- <20250417-initial_display-v6-3-3c6f6d24c7af@gocontroll.com>
- <aB26FRq/Ets5fiRK@dragon>
- <PA4PR04MB7630F5874577DA12FCBE1537C58AA@PA4PR04MB7630.eurprd04.prod.outlook.com>
- <aB3DuZMBIwsFXrVz@dragon>
- <PA4PR04MB76309AE2C6E2C774DF8FAE29C58AA@PA4PR04MB7630.eurprd04.prod.outlook.com>
-Content-Language: en-US
-From: Ahmad Fatoum <a.fatoum@pengutronix.de>
-In-Reply-To: <PA4PR04MB76309AE2C6E2C774DF8FAE29C58AA@PA4PR04MB7630.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
-X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAADnVQLgPBcRAqKfCXQwZae2jKDfp=xSFZCgzHgg-jcBTYp-yw@mail.gmail.com>
 
-Dear Device Tree Maintainers,
-Dear Maud and Shawn,
-
-On 09.05.25 11:03, Maud Spierings | GOcontroll wrote:
-> On 5/9/25 10:58, Shawn Guo wrote:
->>>>> +KA-RO TX8P COM MODULE
->>>>> +M:	Maud Spierings <maudspierings@gocontroll.com>
->>>>> +L:	imx@lists.linux.dev
->>>>> +S:	Maintained
->>>>> +F:	arch/arm64/boot/dts/freescale/imx8mp-tx8p-ml81.dtsi
->>>>> +
->>>>
->>>> I'm not fond of such changes, as MAINTAINERS file could be bloated
->>>> quickly by individual DTS.
->>>
->>> Is there some way you would prefer to see it? I don't really know of a better
->>> way.
->>
->> There was some discussion about getting ./scripts/get_maintainer.pl pick
->> up the Author: field (in DTS header area).  But I'm not sure where it
->> ended.
+On Wed, May 21, 2025 at 01:04:47PM -0700, Alexei Starovoitov wrote:
+> On Wed, May 21, 2025 at 12:13 PM Eduard Zingerman <eddyz87@gmail.com> wrote:
+> > I'm confused, is_atomic_load_insn() is defined as:
+> >
+> >           return BPF_CLASS(insn->code) == BPF_STX &&
+> >                  BPF_MODE(insn->code) == BPF_ATOMIC &&
+> >                  insn->imm == BPF_LOAD_ACQ;
+> >
+> > And insn_def_regno() has the following case:
+> >
+> >           case BPF_STX:
+> >                   if (BPF_MODE(insn->code) == BPF_ATOMIC ||
+> >                       BPF_MODE(insn->code) == BPF_PROBE_ATOMIC) {
+> >                           if (insn->imm == BPF_CMPXCHG)
+> >                                   return BPF_REG_0;
+> >                           else if (insn->imm == BPF_LOAD_ACQ)
+> >                                   return insn->dst_reg;
+> >                           else if (insn->imm & BPF_FETCH)
+> >                                   return insn->src_reg;
+> >                   }
+> >                   return -1;
+> >
+> > Why is it not triggering?
+> >
+> > Also, can this be tested with a BPF_F_TEST_RND_HI32 flag?
+> > E.g. see verifier_scalar_ids.c:linked_regs_and_subreg_def() test case.
 > 
-> I feel like that would be wrong in this situation too, it would pull in
-> Lothar Wassmann, who has nothing to do with me upstreaming this. I have
-> seen him around on the mailing list but given that Ka-Ro are not
-> upstreaming these themselves, I feel it would be weird to pull him into
-> this.
+> I suspect it was already fixed by commit
+> fce7bd8e385a ("bpf/verifier: Handle BPF_LOAD_ACQ instructions in
+> insn_def_regno()")
 
-We can add multiple authors. Authors not wishing to receive mail can always
-remove their name or blackhole their mail address via the mailmap.
+Ah, right; I did it when adding support for riscv64 (which needs_zext).
+I targeted bpf-next because at that time only x86_64 and arm64 (both
+!needs_zext) supported BPF_LOAD_ACQ, and didn't realize this could
+affect arm32 (needs_zext).
 
-I am not leaning strongly in favor of either way, but I am bothered a little
-by b4 nagging me about adding MAINTAINERS entry for device trees that I've
-added. It would be nice to have a guideline here.
+It should've targeted bpf with a Fixes: tag instead.  Sorry for any
+confusion.
 
-If the current guideline is not to add MAINTAINERS for device tree, then
-this patch that has generated no feedback so far could use some attention:
+Thanks,
+Peilin Ye
 
-https://lore.kernel.org/all/20250113-b4-dts-mainainers-check-v1-1-794ed5749a94@pengutronix.de/
-
-Cheers,
-Ahmad
-
-> 
-
-
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
