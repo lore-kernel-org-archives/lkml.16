@@ -1,101 +1,152 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B1E723D285
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 10:09:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B01825A621
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 10:09:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747822172; cv=none; b=d9wdzz+yCca0zf9M03Dqf0ytcOAAGIG/lSjHoK0SNd0dRj4phnhY3QKMTqBYsbvwmuO5gCXVm3RwoYDLr3xe/dQZJKS6DyWotBpGCOdyTp2Nz6jsCysPU+sN3n2dWOdU5V9H/sLGO3zhp3zNN2RwQfbvnyir6kpRrDFJF4l8f4M=
+	t=1747822185; cv=none; b=oCfVkj8MrES9zXjQ9lDPlmbbrN8tEmI4fO8Cgq2w6ms2wrdSZcyMtv4RCOx6GpJkRQxVELdEEO68wQiROBLSse149YngKY290q4lIUp9m2QEJSb3D3wQyN+x6SF3neQrOy4kj1IwI3kdg87RUx78jW6Dr//mRtoTfvcXq1jTiTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747822172; c=relaxed/simple;
-	bh=T2ohZniJWBi98PVxpm8ErkwXwbAvhGQujUtaKkLYYH0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=l4ojBSvanjaFEvCyornQx3nrswWRMBgHVqyDOZf7ACNlENiDCIHUq6pozxEm4voqlH/w7G27h06M18fE7Zsu0oh+woqhel5cnCZYogAu09xZOCH+404p0+fs7bUj2WgZ5man0kB0MN5KyiRtsK+9D89jku7wrBfQXM8OBbbucLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omnibond.com; spf=pass smtp.mailfrom=omnibond.com; dkim=pass (2048-bit key) header.d=omnibond-com.20230601.gappssmtp.com header.i=@omnibond-com.20230601.gappssmtp.com header.b=IjDzG+Dk; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omnibond.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omnibond.com
+	s=arc-20240116; t=1747822185; c=relaxed/simple;
+	bh=gZZW7tC/cpV4nKL1Hx4riTsfSqR9HnF1ZneuFND9oco=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cedqYEVRvGQ0cyN2KgFuq3Fto7zP+n5Q8EE5IruZIYO6e17I81Y90DEn77XbwdYTIcJolFOGqT2k8h04fjj5b/5wEJnjGTQKL33LXbD45xN0vmbd0tZ0jzRewEhW3rsXGZLTlQZsIPx4lgUGOVLHa9Xuw3jnFvHaMbiHbP/r8g0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=JlBM26su; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=kjgxIqum; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=JlBM26su; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=kjgxIqum; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=omnibond-com.20230601.gappssmtp.com header.i=@omnibond-com.20230601.gappssmtp.com header.b="IjDzG+Dk"
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-b26f5f47ba1so3270908a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 03:09:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=omnibond-com.20230601.gappssmtp.com; s=20230601; t=1747822169; x=1748426969; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QYGknq2XTmKqZ9GVMDYnnP5431Y08W1eWrL73PlrmDQ=;
-        b=IjDzG+DkhkWIOAF0mvkcvdLqQsTtX9XN/BNRwiKdhp72NpstjGYvy8iiYiP07/tT0E
-         AhiUcA1SPIRi8p4htxlxZZiTw+GDF82MzDoAvjm1KtZS7q4n/uTAuVdnvOUyi4dP18VU
-         3s4yWjB8qU+PqzJxq5w78FreNTLDy3CJ/WDM1mQbAga4yNMb/8X4QdV5sX/N2isl0OiS
-         jDNUYs0CoDeE+0EexqocgXYf5m+DgVEx18UThBNV6jztjDrl66ixnbEHZYK6d4/tR6rJ
-         DWykcVcPbAI3wIjnAw1nVh3FTQqLVY6mHNe+aGc9BT3esY+vvS4B8Bd68E0pX9T2BQr2
-         MhyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747822169; x=1748426969;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QYGknq2XTmKqZ9GVMDYnnP5431Y08W1eWrL73PlrmDQ=;
-        b=HPIdRQcJwyhHk6VB4GQyDSqqQQEg2MMYpRn9czAGo+FC6b0R9f0j+oot/PAbGfQIKF
-         V+RWf3c/4Q/WGFZriT5rxunMIG3Nd9MxhkW6MzjmvpBj/p2nfc0WTV+4jYq+bRH+xQve
-         36BiNsl28vNCD/8vE5sQBprzyJPBc9Pf3fl9MQDpTcsSBvZ+y/F035NaN+3fmy3g6o8t
-         3Ql8KlpBeXaoT2arscKPJuw67V31Jbj2IQP6nqrqirKJ8HChul4hsiPB8DKTYK5Yp9pU
-         YKXZJLiVFzkYmT4gsubpGyTcBXfyOB0fsVgcdmlFK9CD9AjHPSar3TTJEht8Mx856ESl
-         PN7A==
-X-Gm-Message-State: AOJu0YyeGhaUAd0Lgn4F1ifHrChfOC/dO/4V5WOuR9ECZyZa56/znchB
-	Ph4aPCl+OPaNYIrTLdjsOs2x67zO3tgNfmCI7kRURhE1GIMUSx96RZLiaBYpAgwOWkOUAowjeuq
-	v9Z1hSJrgcu9Z8FAi49pTZdwcXy7y/PK/D8wngo6M
-X-Gm-Gg: ASbGncuTpEVO2zKr1p04xoih1wBRR1zt0eHTT8CopOWbfVpsVTATNhS++kSndXdoayT
-	xFr4/pkQloyqD8S20dJW2jHPashwPWu8auXX9CRV4JZyCh0zwpl5U+VNukRfUspUusJmfzjVPzO
-	Eer5+GRG92AWclQPxKEvRwXkllYDyc1T/xHKncI//nTvYL
-X-Google-Smtp-Source: AGHT+IHxaq57x4qvgJ09saZBZQthjkNcpgYB/gaf0cvHhyJ/IV0TqlMsd6tqs8OeJATTJ07pkvn5esWsPDCQY49Kk84=
-X-Received: by 2002:a17:903:11c6:b0:21f:7880:8472 with SMTP id
- d9443c01a7336-231de370156mr298025245ad.35.1747822169450; Wed, 21 May 2025
- 03:09:29 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="JlBM26su";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="kjgxIqum";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="JlBM26su";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="kjgxIqum"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 865802090F;
+	Wed, 21 May 2025 10:09:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747822181; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ae4dGNDLprnJrk+XcRux67LTnsmy+MgMY5bukERjtzk=;
+	b=JlBM26suErECduo/NiesDgfnWAETytXGdEvIVlC34VVSfaasE9XErF9hZySxdjhmeZMho8
+	w+sNbicoJ/pi3vVy46H+sXvz4T1FjE3f5YOyU921SqqBe8fFMX3s1FikWXjNKfWvRDYTQX
+	9qFJ3Q/YffthB8SI7bPujl8CAVm5Djk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747822181;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ae4dGNDLprnJrk+XcRux67LTnsmy+MgMY5bukERjtzk=;
+	b=kjgxIqumnz+LccUy5yZYNn5hO2wYwCeOQAk2mwbZWehT03u8MaLgCASxuhhZwzumzc6Hj0
+	hBDzGeYTmmfxVJCA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747822181; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ae4dGNDLprnJrk+XcRux67LTnsmy+MgMY5bukERjtzk=;
+	b=JlBM26suErECduo/NiesDgfnWAETytXGdEvIVlC34VVSfaasE9XErF9hZySxdjhmeZMho8
+	w+sNbicoJ/pi3vVy46H+sXvz4T1FjE3f5YOyU921SqqBe8fFMX3s1FikWXjNKfWvRDYTQX
+	9qFJ3Q/YffthB8SI7bPujl8CAVm5Djk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747822181;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ae4dGNDLprnJrk+XcRux67LTnsmy+MgMY5bukERjtzk=;
+	b=kjgxIqumnz+LccUy5yZYNn5hO2wYwCeOQAk2mwbZWehT03u8MaLgCASxuhhZwzumzc6Hj0
+	hBDzGeYTmmfxVJCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5388413888;
+	Wed, 21 May 2025 10:09:41 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id HY1XE2WmLWgoSwAAD6G6ig
+	(envelope-from <hare@suse.de>); Wed, 21 May 2025 10:09:41 +0000
+Message-ID: <2f9aef5f-91c5-4501-ae83-0efcf2a79f2f@suse.de>
+Date: Wed, 21 May 2025 12:09:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250521075357.0e34ded8@canb.auug.org.au>
-In-Reply-To: <20250521075357.0e34ded8@canb.auug.org.au>
-From: Mike Marshall <hubcap@omnibond.com>
-Date: Wed, 21 May 2025 06:09:18 -0400
-X-Gm-Features: AX0GCFu4Vg0xRrfR2zj0EthKnbD8HeN7pz2lAAiEnN1jZW6HflKtoS-jmJ8jA7I
-Message-ID: <CAOg9mSRCmCY6zSDGwFz=+XDvJQcwe6k7s27h5uabqD4A0592Cg@mail.gmail.com>
-Subject: Re: linux-next: duplicate patch in the orangefs tree
-To: Stephen Rothwell <sfr@canb.auug.org.au>, Mike Marshall <hubcap@omnibond.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 01/10] net: introduce CONFIG_NET_CRC32C
+To: Eric Biggers <ebiggers@kernel.org>, netdev@vger.kernel.org
+Cc: linux-nvme@lists.infradead.org, linux-sctp@vger.kernel.org,
+ linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+ Sagi Grimberg <sagi@grimberg.me>, Ard Biesheuvel <ardb@kernel.org>
+References: <20250519175012.36581-1-ebiggers@kernel.org>
+ <20250519175012.36581-2-ebiggers@kernel.org>
+Content-Language: en-US
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <20250519175012.36581-2-ebiggers@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [-2.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FREEMAIL_CC(0.00)[lists.infradead.org,vger.kernel.org,iogearbox.net,gmail.com,grimberg.me,kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:mid,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Flag: NO
+X-Spam-Score: -2.80
+X-Spam-Level: 
 
-Hi Stephen... I asked for one of my patches to be
-pulled early because of a regression... I'll get the
-extra commit out of my regular linux-next tree today...
+On 5/19/25 19:50, Eric Biggers wrote:
+> From: Eric Biggers <ebiggers@google.com>
+> 
+> Add a hidden kconfig symbol NET_CRC32C that will group together the
+> functions that calculate CRC32C checksums of packets, so that these
+> don't have to be built into NET-enabled kernels that don't need them.
+> 
+> Make skb_crc32c_csum_help() (which is called only when IP_SCTP is
+> enabled) conditional on this symbol, and make IP_SCTP select it.
+> 
+> Signed-off-by: Eric Biggers <ebiggers@google.com>
+> ---
+>   net/Kconfig      | 4 ++++
+>   net/core/dev.c   | 2 ++
+>   net/sctp/Kconfig | 1 +
+>   3 files changed, 7 insertions(+)
+> 
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
--Mike Marshall
+Cheers,
 
-On Tue, May 20, 2025 at 5:54=E2=80=AFPM Stephen Rothwell <sfr@canb.auug.org=
-.au> wrote:
->
-> Hi all,
->
-> The following commit is also in Linus Torvalds' tree as a different commi=
-t
-> (but the same patch):
->
->   ddaa7202a930 ("orangefs: adjust counting code to recover from 665575cf"=
-)
->
-> This is commit
->
->   219bf6edd7ef ("orangefs: adjust counting code to recover from 665575cf"=
-)
->
-> in Linus' tree.
->
-> --
-> Cheers,
-> Stephen Rothwell
+Hannes
+-- 
+Dr. Hannes Reinecke                  Kernel Storage Architect
+hare@suse.de                                +49 911 74053 688
+SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
