@@ -1,106 +1,87 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B810237172;
-	Wed, 21 May 2025 06:49:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 576D3233722;
+	Wed, 21 May 2025 06:51:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747810157; cv=none; b=SG2PxyYL/k4BUPphWQp3GwtTZUFAgQ3LfWOBckWxpvp+Z0J1+2dOlDpixkQPDJxc+MQhS/rfTUK1UUEYIGMO1W1fQnsW1OqCG1Z1OiLPvHSyY8s2eCYwDJzHTFvEvRdSbhooFi31QTMk0urG5jqvv+ejiAJteweap7LVs05wuok=
+	t=1747810268; cv=none; b=ea2s3FPPkCWfcwC1nRe73BfgkU5VFRET+l3EBSmdidb2ozK1lNTk3haqNiPvplloCIDH7M8MxnKAnXZAGN3Keljudc1OJPVhomJSZZmE2hgF7Q7VqgnAOi6H+eLsEHLixZikqzPWyqSBk4oX8xAJqe/odzgzVygUhTnoR54pLQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747810157; c=relaxed/simple;
-	bh=pMgfLOarE3sLn9ApmPKE5gjOoiEH3KlE+dCmFXpW1gM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cR0pmqJgbSlokO1u35t4t+Y3BCtuHVx3ufGNEfnbgk03qvg3mBxthE7WsYnLAEx7XXrkHxXtC3VdGcaus8Z/sKqZRsWBUf8GalFq8Nabppkis7zOamgrXoy6ofPwk5Nx+1+/V5qwGIq21K/r4DF8Bl7j9i/m4QXR2fEVwEtRtVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gvGb5n1P; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747810268; c=relaxed/simple;
+	bh=fEgVgn8ddmuG94XtJzRW64JNMVcuU+HToQCr20S4KM0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=YBuKjyQHM6wcs03BzPtWlT5hMcXkSQ/nI9zvH3Zy4btEGOklxwhMNBS5BrEweeJhwIH+8fLQivGCo9yNgGNsHL+BDw6gRWyFXGwjZXjoE+uKc0xphAEt/8zM5VlbqO83Ly2f6WXpK8J9Y+ATLKamByQpUAi44W1+YCBTprkpcWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C1LXptdj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gvGb5n1P"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-30e85955bebso885697a91.0;
-        Tue, 20 May 2025 23:49:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747810155; x=1748414955; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pMgfLOarE3sLn9ApmPKE5gjOoiEH3KlE+dCmFXpW1gM=;
-        b=gvGb5n1PoCDt/jIHV2wF8JPzT0NflywpYmrJZbnbTj+dbhkzxQEHGUpXF7xqwIxkE+
-         +OG6xm+Z8HbrVG2Af9egsNHbFk+TYh4Dm+bPuOVK79L8TuQNVqWboWBwf9upaouPMzGF
-         ejoTFWbuiX5wwSq9xxd3QUUHDLmcUUBDBvm90npNj2t9m7m4Ymv0OQqoHi4XFshdMJcJ
-         YKywyOWwqoEi1i0MHKcZkqvmrgpiR2QgtJHPz9oKlIbJ4OAmTV/wIzjz673tR6ib34I/
-         rTI4aLhnBlG1d7o/OSGIyej47dR9LQYD/XgHblatuxFJFcid66EbPyLqTQTaPxROl94F
-         JevQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747810155; x=1748414955;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pMgfLOarE3sLn9ApmPKE5gjOoiEH3KlE+dCmFXpW1gM=;
-        b=obI3tX9QEVC59jJevBpHOsXt0zmiD1/26HbFtmJLutZV+AIHI7PFdn2V94idUmptRr
-         3xLMM9zniiKYjwYik+fA4VutTltzwpd4n350ctJtnIjDFdyQUoJX/vvcV7Prpbdfq122
-         kDUvgvr79tlhHLB6kWWZ6txIlpAw23mzBrRxicSZWHLshWtQvsIyW3lmfleSjyQ9/Xcj
-         cPjA8rNSjo3yBG0I/eK1QwTS3GCNfYGsrK1A0PqYnLPPFQEF3Rl6c/EGvU0vjUvkFKHy
-         XvifddLteoCAWgm5OXDpPTfvUtuoHBoGcMpCx5YrAxjzyc3Eo8fiyzmJZddYGqJQKMWW
-         IyeA==
-X-Forwarded-Encrypted: i=1; AJvYcCU791woDO2sjwSp3NVUd8i9YIIDbYmTHF1+oqZIn824/sWDiM4FrtyCB/ZWO/TAJW1zSSfjRMVtPeRIc1O6ykk=@vger.kernel.org, AJvYcCXEuF5w9lvZQJJVoM9ye17EqM9wR/tqdSlwUL1o6YOwFaYnWsDmiX4VUvJ8GvGUuJqITjfShSsdDlpOCIM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzIs7k2EVeTcc+sOmaubeFqogwO0gmbTNm8mYf1Byn1g8B4ie+
-	0Ap1za9L+EpFxT2j6XQ6RWhdG3jdRwfMg6Qo6crroGyTIKC27qHlElufsY9DqRYl0DRQVn2vbnh
-	OllK83U4eTMsxiiX1ZoJSnGV+XkSe36c=
-X-Gm-Gg: ASbGnctEqpd09fsV+vP6n5g2nvSYz7vzGPDqPVwZl4HHBoMaM+R0SSmwWkGk8TJJRCG
-	4iXspfnWRqiCtQdqjA3jEhMWvRwwZPdMUzfQpqbqOyfjbI6XhEBZPoh/Vy2WqcIhQNeiO2sZIFT
-	ba9b/7J2skHjtSfH/O15HADA9AdBNwwZQn5xTyUHamr1U=
-X-Google-Smtp-Source: AGHT+IExmNmxiGkYVIFhd609smsGiWGOh8Tpu+Ows+3ubk7FR8CgblGAfBU0mW4P84FMoxwFG0XtVUhmE0uQ2j60ZMw=
-X-Received: by 2002:a17:902:7d86:b0:233:b829:691a with SMTP id
- d9443c01a7336-233b82979b1mr7087165ad.12.1747810155231; Tue, 20 May 2025
- 23:49:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C1LXptdj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F01B7C4CEF2;
+	Wed, 21 May 2025 06:51:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747810268;
+	bh=fEgVgn8ddmuG94XtJzRW64JNMVcuU+HToQCr20S4KM0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=C1LXptdjj6O3doeZnkOI0NgfUWljdiWlLWkkzuAonzzNKlPBQWzvQL1l+DWjZtdUB
+	 7A7Pw6zfviazzlCZZW81NKhrrWjQ50KkKt3Ko0uRC1yXdWTb/+gmTIe+HTYkP4HITw
+	 jCELb0jD9ZVWHsbdwIccRLk51/M2uW78ZUu/FSzgEb/ZguLlHndlhu6p21yf25goUm
+	 4+4Kua59fqc0JIZqPImBIXyJgyJfEb4zgpRiC1Ww7BkdXkvpRATT3BxdrLGg+gq2qk
+	 tQshlaxfEgXNHs95GKtrU2f/mc7/cvHvLjzFL0BV2fYAQ/5oWA8gAtjafeWa38OFTA
+	 003x47MQbA4kw==
+Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
+	(envelope-from <mchehab+huawei@kernel.org>)
+	id 1uHdI9-00000006HuG-3lPV;
+	Wed, 21 May 2025 08:51:05 +0200
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	"Akira Yokosawa" <akiyks@gmail.com>,
+	"Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+	"Masahiro Yamada" <mchehab+huawei@kernel.org>,
+	"Nathan Chancellor" <mchehab+huawei@kernel.org>,
+	"Nicolas Schier" <nicolas.schier@linux.dev>,
+	"Randy Dunlap" <rdunlap@infradead.org>,
+	"Stephen Rothwell" <sfr@canb.auug.org.au>,
+	linux-doc@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/1] MAINTAINERS: update linux-doc entry to cover new Python scripts
+Date: Wed, 21 May 2025 08:50:26 +0200
+Message-ID: <2103a8b16ae1af39c0f767445a4072cf034c379b.1747809627.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <cover.1747809627.git.mchehab+huawei@kernel.org>
+References: <cover.1747809627.git.mchehab+huawei@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CA+G9fYvOanQBYXKSg7C6EU30k8sTRC0JRPJXYu7wWK51w38QUQ@mail.gmail.com>
- <20250407183716.796891-1-ojeda@kernel.org> <CA+G9fYt4otQK4pHv8pJBW9e28yHSGCDncKquwuJiJ_1ou0pq0w@mail.gmail.com>
- <CANiq72napRCGp3Z-xZJaA9zcgREe3Xy5efW8VW=NEZ13DAy+Xw@mail.gmail.com>
- <aAKrq2InExQk7f_k@dell-precision-5540> <CANiq72nPtr1FE_SBU_+wHVptfjnoSGaxjP4LWMzVbOF0M6LvnA@mail.gmail.com>
- <aAo_F_UP1Gd4jHlZ@dell-precision-5540> <CANiq72mPZ-ik8k+04BarAu26A1=rV_y7GYZHkFnCezW4jpXq+g@mail.gmail.com>
- <53dc3112-9e34-43c5-852d-aeafea882247@gmail.com>
-In-Reply-To: <53dc3112-9e34-43c5-852d-aeafea882247@gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Wed, 21 May 2025 08:49:01 +0200
-X-Gm-Features: AX0GCFs8alyZvoCaX-vEw4ZGLJj0dXRTRZ3S4mg4Ye5KYmwczTJfDAjcYR-KhaA
-Message-ID: <CANiq72n=pTHrXJysvJVV+xK9Y1O9owF=rxEnrMtMeN=gX4E=Sw@mail.gmail.com>
-Subject: Re: Build: arm rustgcc unknown argument '-mno-fdpic'
-To: Rudraksha Gupta <guptarud@gmail.com>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Christian Schrrefl <chrisi.schrefl@gmail.com>, Russell King <rmk+kernel@armlinux.org.uk>, 
-	Alice Ryhl <aliceryhl@google.com>, Ard Biesheuvel <ardb@kernel.org>, anders.roxell@linaro.org, 
-	arnd@arndb.de, dan.carpenter@linaro.org, laura.nao@collabora.com, 
-	linux-kernel@vger.kernel.org, lkft-triage@lists.linaro.org, 
-	regressions@lists.linux.dev, rust-for-linux@vger.kernel.org, 
-	Ben Wolsieffer <ben.wolsieffer@hefring.com>, torvalds@linux-foundation.org, 
-	Nick Clifton <nickc@redhat.com>, Richard Earnshaw <richard.earnshaw@arm.com>, 
-	Ramana Radhakrishnan <ramanara@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-On Wed, May 21, 2025 at 1:21=E2=80=AFAM Rudraksha Gupta <guptarud@gmail.com=
-> wrote:
->
-> I went ahead and sent a patch to Linus directly since it seemed to me
-> that this was about to fall thru the cracks. I signed both you and
-> Naresh on it since it seemed like you both were happy with the small
-> patch. Apologies if that's not standard, please do correct me as I'm
-> still new to kernel development.
+Changes to ABI and kernel-doc need to be c/c linux-doc. Update
+the maintainer's entry to cover those files.
 
-Yeah, it is not standard, but no worries -- I will reply there.
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ MAINTAINERS | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-> Btw Miguel, thanks for introducing Rust to Linux. I'm not too good at
-> kernel development or Rust, but hope to one day. The modern Zulip board
-> and documentation is very nice for newbies like me. Looking forward to
-> making my first Linux driver and Rust driver soon. :)
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 20e07e61a148..a668808769b6 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7173,7 +7173,10 @@ T:	git git://git.lwn.net/linux.git docs-next
+ F:	Documentation/
+ F:	scripts/check-variable-fonts.sh
+ F:	scripts/documentation-file-ref-check
+-F:	scripts/kernel-doc
++F:	scripts/get_abi.py
++F:	scripts/kernel-doc*
++F	scripts/lib/abi/*
++F	scripts/lib/kdoc/*
+ F:	scripts/sphinx-pre-install
+ X:	Documentation/ABI/
+ X:	Documentation/admin-guide/media/
+-- 
+2.49.0
 
-Thanks for the kind words! :)
-
-Cheers,
-Miguel
