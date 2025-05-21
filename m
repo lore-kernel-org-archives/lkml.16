@@ -1,156 +1,108 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43DAD283697
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 16:59:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5157C264637
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 16:59:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747846790; cv=none; b=gzArSB3p9mDnyrhFLpJ/j61ucAo4/q8IFpruPtRa3BDOl05SAiGBhzTV93gr9onnJTf+1xiruTthGYMLiajMUmB/ZbSvVxGw1DZ8Mvn5QZ2xmjuwwkXaCR16LzsMxcVytLKhQbZItPM1fBjUfLks7cAMIcEH1nOfIJHR6hd3vFc=
+	t=1747846794; cv=none; b=iWZVqtBNSPVeBMI35rYSliqusgxinG6Sfh0nU9ZA/YJESW3v/o4gau1ue4oVwqve+RUfItrGY7oSGalNOBFjw90OIWRbVFeU4ken22ei8BZS8xlAQ32+o2l40sFUydkMIxSM5RtvhVKd1kKvJWKtfgHD5m9DNCvtvzxXDh8e7Y8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747846790; c=relaxed/simple;
-	bh=9h4CHeIz0ZSdcwQxILjDnh9zeRE5JUoePsz5Wo9Q/Gk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=P4rZVwznIsIfHPhtGAWEdguxWTRQhuad8b8U8NybRFSEDQpfrDUpsSSRkmX9CP1j42a//DpmyoK9UDGAGxKPFAfhSwd1FrINOwGTpFkQyS+y+rX37acsUs4LoXqWttWkxwFeqV3M6jsuizTZb6Yz9Pd407hZ92ZfXfyJQTx777Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=dducDvup; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1747846794; c=relaxed/simple;
+	bh=y0v3mpA4u0yZ8hVDzPt7b0GP7skmvPxgwdsGFyF72PA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=t35FxCs11EYnPU7l/qoisyRm7zs7BbiCwRUS+F1xlhk8ucyYIWDi+Z5QDF54yEbuCap15mP3LR9azsH46+EcRlbh/BxZOffKOVm8UC7uFz+fLdhiMuc/UL9XAVjNKvPA2DFdhqRP8HIm1Wc7It5uutwff4TB4Y1rIPGDlbtT2kc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PrDXzSNx; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="dducDvup"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54L9XSnN027662
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 16:59:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	kRX0zzReklLbdIucEq/kXgD7SAusNflHLJJbjNtjYsc=; b=dducDvupw9M6HT+S
-	NLZBjd89p4uVba+8pcxnKSaAs3Z0LBr69gS5YDctaKse9mq5XL/nDfotIShXE/jA
-	O0hk8r5VIGyBpJ0iMOrUMV9+whjDsRY0f+LC/C4eDVkz55hZt7KA1/XO+L/01IOV
-	U9urxs901PzRLtXs20rr+4NdntsgzQnSGlPprf1vMo6f9U8K+9YudBX7eV+QxS63
-	am28kqaAaAOMORLbjPn/tSoDqcyESO6qGAAiRAIlhcuk0gzmtvK2r/HYtiSRXYG3
-	ELVEDxQhQqBNcTtkUrgqYhPt7nkcwwbF2u3a07+xU+h7FnwwgiBXwI8mHdrN+s2a
-	fG7dpg==
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf9bma0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 16:59:47 +0000 (GMT)
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-3108d4ea2edso893310a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 09:59:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PrDXzSNx"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-310a0668968so728531a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 09:59:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747846792; x=1748451592; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nn5fm8k2Ml1brz+kg+Xc6EKFqD1WyZfu8AZFfGZAdFU=;
+        b=PrDXzSNxPBQ2P0BVCmg25kUgoAJQ9K3vJ4AkgHzl99eMXAZzbPSamcxgoguTmzZ+Bw
+         9/ygqaI4MGQERA6AkbgV7vmrgu6YEfwRp+8Xvbi2OYv7tsk3jq5IESyZd8kB9Vk8CLIQ
+         Ik2VtHG/v9/yQG9Fc/ZQz3vvcoN0GEKWEfT/criEP15AwhyQzvOcCW54W7DAXsLY5ka4
+         lV0uyGDueX6BVTSgDUBIyBY4J4l6IQovTp90aV92s8PUnBeo6sQQSAo/ZQZ0Ed6RU7/O
+         45yWARheb/dCMuWjkMqEP7pcDcNTquL2VjmK3Tf9gU8iSM+9Hla6UqIoCUaKfnBwIbZG
+         WfEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747846787; x=1748451587;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kRX0zzReklLbdIucEq/kXgD7SAusNflHLJJbjNtjYsc=;
-        b=FH13TVWBz4aIhwz1tXMyQCqGxyQIRwoeEDdKaaa7YS82ZFSx8XCVoD5RLIrx5VGPQt
-         KNQpt8mH3tC7JD+BJZ0KyujKvoF3LYy81ysBrWzPlmfNDJAg6jpH53BwkvSQFl0RGmF7
-         UZumjMK5bckjmJQ+IUWt+F/RjZcNKwoQpSJ+3BaV1cgecl7bFyditLX1Ic0ZgkRia0Ar
-         XPu85MigWgQFCegctdZ4nnthDBI1IMrwoFsN3TpjQjuf3rwA0XGGYLcPYlZeOEVRAC57
-         B/bWKC/hjns0/iADw9d3M8WZI6xJi623BEaQPpC12Rg2p1osK9qKXBhgwVHHZDZ4zZ5K
-         YxLA==
-X-Forwarded-Encrypted: i=1; AJvYcCWQGU2YHpno8uuHQPcarc+n9Qoe02u1SFcJnPJLxrfxUQTDjDsx6ZjV+FKjzpZ4rpi3Sy0z49SddwwZ1vs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzoYBqSWR0qRFhjfBPA/4xZcZTfpLEIxZcnMkhoBqLoubGs0YYV
-	Yud6CtXVq29xXkADL4iLqk2bO3otWlcSBM9LyeIphqA1coT5gcJvPb0J6O6/ulKfNeXn3dNQdm+
-	T03JubxFkrcHBPf+M6M+sew4Ea79AALQtzhJDCFq3Cj9330LChG1vW0e+O3XVXRfxRAo=
-X-Gm-Gg: ASbGncv6iED+/qcyvorB5j5WVHN2nD5loQ8V3srNOBcJuKx3yHQJPLVHqmiTciIaXkg
-	WE/pUeVOGBljWlwBWH8PKkUBiG8KaJGwNehTuBBcKtz/eaU4500PCwMK18+/IRQVf8j5M18oAcQ
-	QVvUogwlQk4GMWRB3PuwWKEP6I0IqYl5XxLXHsVn9ERftjHpAhpE+6r5D3k7uJCsrvkF+waOxqV
-	szh5jffJZOKltAv3HqM2Ic94jza86RQa6Ucw3ig/mJQ9K63vNwLhYGXyt52Olx56YPUNLTYt0O7
-	fNtSqACXKwi9ccCM/+7hGCwFyGWVjeK4GNXWWZfdyRI1A0OnggXBxIDieqkocedbGSyMWU0Wj5U
-	wYAtSpq6SvPhiS/A9RwM7G7u38TUkVol4K0Nq
-X-Received: by 2002:a17:90a:d443:b0:30a:3e8e:ea30 with SMTP id 98e67ed59e1d1-30e4dbb703cmr35546437a91.11.1747846786584;
-        Wed, 21 May 2025 09:59:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEc2UvuBl5Dz/CL9fnSl4sMzh3CrOMKFOauBAMCgtqfKqZFgw34cOqWHM5pWNQAouNdLkqitw==
-X-Received: by 2002:a17:90a:d443:b0:30a:3e8e:ea30 with SMTP id 98e67ed59e1d1-30e4dbb703cmr35546399a91.11.1747846786184;
-        Wed, 21 May 2025 09:59:46 -0700 (PDT)
-Received: from hu-adisi-blr.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com. [103.229.18.19])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f365c4ee3sm3875055a91.18.2025.05.21.09.59.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 09:59:45 -0700 (PDT)
-From: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
-Date: Wed, 21 May 2025 22:29:31 +0530
-Subject: [PATCH ath-next 3/3] wifi: ath12k: fix regdomain update failure
- when connection establishes
+        d=1e100.net; s=20230601; t=1747846792; x=1748451592;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nn5fm8k2Ml1brz+kg+Xc6EKFqD1WyZfu8AZFfGZAdFU=;
+        b=h25dfZujlaL3V0obV8DI2C7vyIRS5vjzMe9MpOylYIZGC4wHyZnZNgQeOZdG+AnTIj
+         YE/lk8y/jBLRex7wCxqMRwAbdSsZFFwEHv6vJK+GAdo9eqhBuSDI//dzCfMSpCDE02Ek
+         9ky6wn303kXBAV3JsqCGyOXB54+Bu7aJCREp4VoMohPcjtXSInk9hGOlL+nqMD5ZHm9W
+         vRpLdbp32XHuRpLzdcSeoNulephVQW66WVbY76zL7pW+oX3tZaDZia4fHjXpuPPFbtIz
+         iftpjlSoX/nQGTsM41gG55qObPyxvZvK5Rz6yFbWWw7LDjfQoyAkU35vGE9JOUlxX9dV
+         iS+g==
+X-Forwarded-Encrypted: i=1; AJvYcCVfzEuu+di2RaVUqw8Nx+4L5PXBk8CWFx1r2kb4I1VEUc+q7AJ6vtDQcQwvo2Hv6Ri9tIBclemY3NSXMCg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXiM43hlHR0oKoG51jkkntF5DdJP9Sn3Es1H2QBBEHysT7NEu9
+	PNuoG+hKy1fnq5l4pCh5QpXRPqfbcf6CqTSOuVaQm6ejo9Kq91e1ZBWqKaSZJ2dnRSDpUDs7606
+	do/P8Mw==
+X-Google-Smtp-Source: AGHT+IG6dBlWQxswmpzRlpBNWMeMsVzFwgqg9N/lMiD/6PEBD2Bv2fiNQRCTifMOfGMxFV8XX1aGvjOU8lY=
+X-Received: from pjbsn4.prod.google.com ([2002:a17:90b:2e84:b0:2fc:aac:e580])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1dd1:b0:2ff:784b:ffe
+ with SMTP id 98e67ed59e1d1-30e7d522171mr38492906a91.11.1747846792524; Wed, 21
+ May 2025 09:59:52 -0700 (PDT)
+Date: Wed, 21 May 2025 09:59:51 -0700
+In-Reply-To: <aC0c4U6tsVif+M4H@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250521-ath12k-fix-ah-regd_updated-v1-3-9737de5bf98e@oss.qualcomm.com>
-References: <20250521-ath12k-fix-ah-regd_updated-v1-0-9737de5bf98e@oss.qualcomm.com>
-In-Reply-To: <20250521-ath12k-fix-ah-regd_updated-v1-0-9737de5bf98e@oss.qualcomm.com>
-To: Jeff Johnson <jjohnson@kernel.org>, Kang Yang <quic_kangyang@quicinc.com>,
-        Wen Gong <quic_wgong@quicinc.com>,
-        Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>,
-        Baochen Qiang <quic_bqiang@quicinc.com>
-Cc: Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-        linux-wireless@vger.kernel.org, ath12k@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Proofpoint-ORIG-GUID: GO4JO8T1RtZSaQrDhyskC6a_lzVkKdVY
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDE2NyBTYWx0ZWRfX8FJCbby4O5Z4
- 2MBpyxIgS30IeoUz3HXDXAquRrPk9B2PJumRTSm6M4LsxAPVXZjFr9/SCdw/JgIFab3egeZaoR6
- fi6wJL0SoLHmfmUBE84Pd614t7aAjiAyuYowgP6nvhV2ern95R6W0nsVLtyANK88hzfPiISqc9P
- eyb29Nu20p9izin5R1ruQgqiTCdlSX08IivzNF9ah0xDgEOjDHc+K1r1fKcS8Ufl5H8tXaf6d5P
- 1A7aLq3Jabif2dSycL90YHxaSLloQoJiO+hhTbWaerfc5FpvBPnBjOybgjIQ6e9KMMgbuPiYVKt
- BcLdL4sCCw+qK40OXo6BTyJfpzNCHG/518Lk/76Tl7q6EN2XEjRSyZYHWULlYL9WRpIcDag9u9t
- ARd69qUOdBLp5m7kG2ah+3C4vQ1jdN+HP5RnSLGXGqUKHrpAMk2oaC8GBciJ/lETS6KRpHcR
-X-Authority-Analysis: v=2.4 cv=GawXnRXL c=1 sm=1 tr=0 ts=682e0683 cx=c_pps
- a=vVfyC5vLCtgYJKYeQD43oA==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8
- a=EWTaEqaxvK_2CoIRUyUA:9 a=QEXdDO2ut3YA:10 a=rl5im9kqc5Lf4LNbBjHf:22
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: GO4JO8T1RtZSaQrDhyskC6a_lzVkKdVY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-21_05,2025-05-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxscore=0 mlxlogscore=999 lowpriorityscore=0 impostorscore=0
- priorityscore=1501 clxscore=1015 malwarescore=0 phishscore=0 bulkscore=0
- spamscore=0 suspectscore=0 adultscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505160000 definitions=main-2505210167
+Mime-Version: 1.0
+References: <20250512085735.564475-1-chao.gao@intel.com> <aCYLMY00dKbiIfsB@gmail.com>
+ <ed3adddc-50a9-4538-9928-22dea0583e24@intel.com> <aC0c4U6tsVif+M4H@intel.com>
+Message-ID: <aC4Gh0YMxFzNVws1@google.com>
+Subject: Re: [PATCH v7 0/6] Introduce CET supervisor state support
+From: Sean Christopherson <seanjc@google.com>
+To: Chao Gao <chao.gao@intel.com>
+Cc: Dave Hansen <dave.hansen@intel.com>, Ingo Molnar <mingo@kernel.org>, x86@kernel.org, 
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org, tglx@linutronix.de, 
+	pbonzini@redhat.com, peterz@infradead.org, rick.p.edgecombe@intel.com, 
+	weijiang.yang@intel.com, john.allen@amd.com, bp@alien8.de, 
+	chang.seok.bae@intel.com, xin3.li@intel.com, 
+	Aruna Ramakrishna <aruna.ramakrishna@oracle.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Eric Biggers <ebiggers@google.com>, "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, 
+	Kees Cook <kees@kernel.org>, Maxim Levitsky <mlevitsk@redhat.com>, 
+	Mitchell Levy <levymitchell0@gmail.com>, Nikolay Borisov <nik.borisov@suse.com>, 
+	Oleg Nesterov <oleg@redhat.com>, Samuel Holland <samuel.holland@sifive.com>, 
+	Sohil Mehta <sohil.mehta@intel.com>, Stanislav Spassov <stanspas@amazon.de>, 
+	Uros Bizjak <ubizjak@gmail.com>, Vignesh Balasubramanian <vigbalas@amd.com>, Zhao Liu <zhao1.liu@intel.com>
+Content-Type: text/plain; charset="us-ascii"
 
-From: Baochen Qiang <quic_bqiang@quicinc.com>
+On Wed, May 21, 2025, Chao Gao wrote:
+> On Fri, May 16, 2025 at 08:20:54AM -0700, Dave Hansen wrote:
+> >On 5/15/25 08:41, Ingo Molnar wrote:
+> >> * Chao Gao <chao.gao@intel.com> wrote:
+> >>> I kindly request your consideration for merging this series. Most of 
+> >>> patches have received Reviewed-by/Acked-by tags.
+> >> I don't see anything objectionable in this series.
+> >> 
+> >> The upcoming v6.16 merge window is already quite crowded in terms of 
+> >> FPU changes, so I think at this point we are looking at a v6.17 merge, 
+> >> done shortly after v6.16-rc1 if everything goes well. Dave, what do you 
+> >> think?
+> >
+> >It's getting into shape, but it has a slight shortage of reviews. For
+> >now, it's an all-Intel patch even though I _thought_ AMD had this
+> >feature too. It's also purely for KVM and has some suggested-by's from
+> >Sean, but no KVM acks on it.
+> >
+> >Sean is not exactly the quiet type about things, but it always warms me
+> >heart to see an acked-by accompanying a suggested-by because it
+> >indicates that the suggestion was heard and implemented properly.
+> 
+> Hi Sean, John,
+> 
+> Based on Dave's feedback, could you please review this series and provide your
+> reviewed-by/acked-by if appropriate?
 
-Commit 7ed3e88664e3 ("wifi: ath12k: update regulatory rules when connection
-established") introduced a call to ath12k_reg_handle_chan_list() upon
-connection to update the regulatory domain in cfg80211 based on the power
-type received from the AP.
-
-However, this update fails because ah->regd_updated was already set to true
-during the earlier regulatory update triggered when the interface was
-added.
-
-To resolve this, reset ah->regd_updated before calling
-ath12k_reg_handle_chan_list() to ensure the update proceeds correctly.
-
-Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.4.1-00199-QCAHKSWPL_SILICONZ-1
-Tested-on: WCN7850 hw2.0 PCI WLAN.HMT.1.1.c5-00284-QCAHMTSWPL_V1.0_V2.0_SILICONZ-1
-
-Fixes: 7ed3e88664e3 ("wifi: ath12k: update regulatory rules when connection established")
-Signed-off-by: Baochen Qiang <quic_bqiang@quicinc.com>
-Signed-off-by: Aditya Kumar Singh <aditya.kumar.singh@oss.qualcomm.com>
----
- drivers/net/wireless/ath/ath12k/mac.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/net/wireless/ath/ath12k/mac.c b/drivers/net/wireless/ath/ath12k/mac.c
-index 755546246915cb355fc6f40fef85a87b880e2f91..88b59f3ff87af8b48cb3fafcd364fd9ced4ff197 100644
---- a/drivers/net/wireless/ath/ath12k/mac.c
-+++ b/drivers/net/wireless/ath/ath12k/mac.c
-@@ -5860,6 +5860,7 @@ static int ath12k_mac_handle_link_sta_state(struct ieee80211_hw *hw,
- 			link_conf = ath12k_mac_get_link_bss_conf(arvif);
- 			reg_info = ab->reg_info[ar->pdev_idx];
- 			ath12k_dbg(ab, ATH12K_DBG_MAC, "connection done, update reg rules\n");
-+			ath12k_hw_to_ah(hw)->regd_updated = false;
- 			ath12k_reg_handle_chan_list(ab, reg_info, arvif->ahvif->vdev_type,
- 						    link_conf->power_type);
- 		}
-
--- 
-2.34.1
-
+The initialization of default features is a bit gnarly and I think can be improved
+without too much fuss, but otherwise this looks good.
