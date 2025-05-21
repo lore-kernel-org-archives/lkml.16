@@ -1,206 +1,112 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EB24238C1A
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 12:46:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD04B2673B7;
+	Wed, 21 May 2025 12:48:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747831614; cv=none; b=fmnF8lqZQu0NqUCk2JdijMavOU5g3l/VhBtgFjot7QBpxFw3/SDmLJ8i2BH4bq/K8io0fIBXnxzsxkr5sf4tMlybZHNhotM5St+3pdcsK10wWYJ5cFXYzbNadVap4k4dZTCF7cM3o0XlXc2OowH7nFl6nQOqoLwtKpqaL8jV2ns=
+	t=1747831713; cv=none; b=IUl9KmHpXI2Qwn33mkwGvKAY2Fdjf/jgyWOuiCEEG1MvIUeg2bR7hMApTm1mIYnwdJp49B2bNbzvJWtp5zXA1cMipXUDjT3VwnyIda1ncIKHn2ywIFHBV9/Ol202pS/p/E8TpLLt8oTTbab2+F7VvkQ5AhmgfgnypS8BU7S3gso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747831614; c=relaxed/simple;
-	bh=Xqeu1aJ9MItEqCaHvO4dZVDW/+gda4kJKzaek2qb/UU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ljHPNAe7lNWw5fBKyC9COYlWPPggwVtPFSbGzytcjEuxAXRCzZ9qY0pSq0HUl8sAEXBE2Kjnav3B4m29bsHGRR0CGGf3VmNPMKLQI2kuCXBeY5gjwVqxYAWGqQwmr9AxN3SHUrdvo6zNtWdfKso3H6ZmWfy+BzF5qqWb42fPp7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=pFdTEngw; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1747831713; c=relaxed/simple;
+	bh=6dpl5+hKXsjxHXJtgK+FmCRGvqugBoM7cVl8IOfANAo=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Content-Type; b=tqpDFRx8DpFsrSZPqC+yzdb8EHk+4VP/GwxpGnaG6zqTe2xe0+yeG5anzJKaZRCU3Pjgq5UeZBUC3mFV/r0OrLn11tT4B618ddvYBOlhLEqQyUpUc2kiHnXY7cCG2noke2EZPiBHpHlgdv3r7+e5TQoLZv7uQSMv5WrXr7QFhp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dOZgprLV; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="pFdTEngw"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54L9Xx3N032698
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 12:46:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=sDTfHXY5P0IUFKShT7L/9f91
-	7VhrL5k2KweIDi5wmfs=; b=pFdTEngwWRO0CNSUUa02wThitfFtqjr336BgyA80
-	CTQ9jIeELHzB2Vjs4HosseT/LLzKbQ8EXjrr+IU0cZepeiYK51O+IginuP7ffyU+
-	jTWkC7yv1E27pZxpHYWNxy6Etoa1mnHoknH7m6VFIT2IzFkn4Itjqg5BekNhz6Jh
-	bhwxiZCjpUZldll7dOmJMZ2bTs+pCb6s8vP+JY9Sdfbr3TPOxWD2kNNWDzrHg9ts
-	QXrQd0ZL7B/SDWKRtcAGwRafT8aSa6LHK7iKijXh3z3UGz2q+c/eCmiy+jNwH8cB
-	M9HPqXCeFJBQbxv7XQAgRwqP7RFZIAYz860dKnJpCrfVvA==
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46s8c21fe9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 12:46:51 +0000 (GMT)
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6f8c8a36dddso79136216d6.1
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 05:46:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747831610; x=1748436410;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dOZgprLV"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-30f0d8628c8so2297665a91.0;
+        Wed, 21 May 2025 05:48:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747831711; x=1748436511; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:from:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=sDTfHXY5P0IUFKShT7L/9f917VhrL5k2KweIDi5wmfs=;
-        b=rTAfdmCwuO0Mj6SvuHT7He4C0Tsvh/IX8NolMhMIYNDyHz03zKgG/TiyQvw56VHkQj
-         YgQd91Q3kSBnsncNV7Lm5X+clOG5PIBFPcnegr/Am3DXVqHlEsOrmX6ym9YFeF1mixA/
-         qo3Ye0ab+395pnGKAvUDPYz327xK1qVn9dG5K0GTjKl/V3UBc6y28//kWkMUZJYGJ7oP
-         7a8tF9zIwabvbl8BTmiwlrv7ue0XNK1y4wYMIBqiytV4YEi8QrxXX75U/1osT4T1uto1
-         klcCparjXV04hQ+yLDOE9Tpsk/L6U1AuhasicwT5m+OXC4eFopnM0+RgzPRukDSrgso+
-         /jgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV/GDUSDczXMBRH3HNimXD7xuDWR3/eIYkmU0b2MywjR1B5iLIqGvToLCRwYwWKeQ6lmn79MEC+WzXJaa8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHuLlepCygKxYQOKnYnIpQg6+NSLexdl0dLrHtcOX4ul7mSbAE
-	EgVrkqcMfb9LJD/9hbOqMGHoV74x1AhZftLk9eNno/ejiOEJgkCMdodx2YeA2fFQrUcIYdQD/X/
-	WeockdbK4H6I08kH07pbgEGpirvhcHIk5kt0+QnXBlTtozizFybN75VOBZdBRSVTc5Ng=
-X-Gm-Gg: ASbGncsKZnCg8iEuky44q+HMH1HzqQy70R/Zhxecshmn8xvuyrsRInU3wZB1Kl5f7vg
-	ZUc/P4eUHY1mBHDJh5iXbpwEA0TC+O6G5S0Fc3b9eWiCjaN9Bj0ZCPuijncFDV1Mq3FaLCE2Mfh
-	fYDPwMTf1q5XNsSDNM/BOAt3xYfooLJq3Yk/lVNhlHsWkP3nIOVXxr+BFsBpP6QnvoBQkrAF/08
-	xypaRtUAvfpgHxbZnrKzY9oxS9invl/MbsJHcpaGIgxvgqlr/QBUNOvZOCRAixPHT2rtVF+mwbT
-	VbVJ8jqJjH5y7rqKO6VHH7wGaOHHdJHhh0aLLkJb0SqeOsI7EYrKvLjUHsTvpk3jnEXVLNd50KA
-	=
-X-Received: by 2002:a05:6214:2403:b0:6f6:33aa:258b with SMTP id 6a1803df08f44-6f8b2d44cb2mr310211916d6.45.1747831610317;
-        Wed, 21 May 2025 05:46:50 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEKrrceDDu+GLUk9ALbLga29Hnv6Ac2h9d892IylQS5MNstSZj4gPJnCFx3NnyAWf0EeS1rWw==
-X-Received: by 2002:a05:6214:2403:b0:6f6:33aa:258b with SMTP id 6a1803df08f44-6f8b2d44cb2mr310211526d6.45.1747831609859;
-        Wed, 21 May 2025 05:46:49 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e703c2f3sm2798700e87.214.2025.05.21.05.46.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 05:46:48 -0700 (PDT)
-Date: Wed, 21 May 2025 15:46:47 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Jagadeesh Kona <quic_jkona@quicinc.com>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
-        Ajit Pandey <quic_ajipan@quicinc.com>,
-        Imran Shaik <quic_imrashai@quicinc.com>,
-        Taniya Das <quic_tdas@quicinc.com>,
-        Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Subject: Re: [PATCH v4 02/18] dt-bindings: clock: qcom: Update sc8280xp camcc
- bindings
-Message-ID: <the3rt4gwb766u5tmzzugoozkyt3qw7kxvy6mlemxcqb5ibs37@szcq2rzbukma>
-References: <20250515-videocc-pll-multi-pd-voting-v4-0-571c63297d01@quicinc.com>
- <20250515-videocc-pll-multi-pd-voting-v4-2-571c63297d01@quicinc.com>
- <20250519-barnacle-of-beautiful-enthusiasm-4e6af0@kuoka>
- <ec4ee2f5-162b-430d-aeb9-90ad4559707b@quicinc.com>
+        bh=/OlELLQdFDyxnorv2U2UyUYcCRMoCws2HjAojfez5Us=;
+        b=dOZgprLVPpeVrxVno988z0M6OqReXamXePP/bv/nTfLwKRINAfW2NQ1MiE9+kOf4bs
+         cfr5/tQtIi8XcP3uyBtGu26x47iqDwHS+AEi953IeVBNgUzLUdqGy8FjINre2UYk+/Oj
+         0CVnGVwD3sJYwCoKBYLPm6qAGcP5r7ZJ5qVndtl78mSwXZchrTIuwjc5Og9/3inOraFp
+         hD/Ja3FC63zD4OUIq91GSBhx/YImf42j+GL6sTmsomPsr0abl96k3y6qqT4GosEnA1eS
+         mVBUh97ZxQEHhu1QklPjTjx6nwuaPH/stj5V5W/KbuDW+hVk+sVruVJY3k2MkUkTfgBb
+         qV6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747831711; x=1748436511;
+        h=content-transfer-encoding:to:subject:from:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=/OlELLQdFDyxnorv2U2UyUYcCRMoCws2HjAojfez5Us=;
+        b=Ok/LR6pGtX2Q0eVv3c5jn8/f36+ZiElk+SDGO2oVzZOrouIyOtfw1dmHZjyP10dh5i
+         NFl0452vltYMwP1UwK1PU7c0iC7x2iR6QrjsIJiFPO73E80SbHrcVjJKwIx+HW+eYI/E
+         6/7GXl69emFPB6XsFzcUEE8LyzooAwS+gGCh7epKnkAK4Zs5ZA1tiEzHkOUrwKIIH79S
+         iYDBCTVCc8OnAX812VWy1TihqMavSMzd5hhyI3cnyaw0fL/7h9AiMKf3MSWS1+Tnb1e/
+         /Wkd0gQYsGJ2Pm7kZNAg7kUrIEiRGFM4Yovyu3QieZA+tCG6gkgoZ17Lvms4zJ4T+S2j
+         mSXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWD6z1hWuP9MZKrpRa/XZuz05qONyIXhDEE3uUNhNsmqpkXCBMytVLK4/1+1wwKvn8sXCICabjEoLmOIwA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyah86/RRsWuiswyF+Ta3aACyjWfCykNpj5awkzmILDNsl6xi+c
+	CjPxqMQ5ibX75poo6sG7fAG54Y8kj6Ws9qrTZV4Ckfezl2hnUWcDGxLb24GZhswb
+X-Gm-Gg: ASbGncsfw3rVrnlWnMDQABxPO08G74Dy0XCqVufsOIGXX4wQy797E9IypCg89qFZOOr
+	0zIY7JS9jUXIqe0rJDWw5QfcrSCdzPHfTSmukyvYQam3zSnGo/lyY3K0OZI4IRiMDRphOskf9oT
+	a4y6vdj1TQICAUQmA+QFp6qXONHrA7f1yjG5Ca0OehKyUffPG80jXeyWv/ZxisicjG1x8Pko1gE
+	FDF/lx2Gc6457OXTecq2eg7GZOICou2rM2mOy8wt+JJ1+ZBtCnf3yA3o3XnodvtINyflwac0toZ
+	/kGa0w2pfeI5ZBJaH3QbxVgMMJCKe+GLR6f7Qyoav3xKmUgAxVWnubQcLltfoBQi1IHucm8bTn+
+	4PxCHL+7cFTodupM3i32NPublJajf+Rp4/5oz2w==
+X-Google-Smtp-Source: AGHT+IHLCkETVF9IpoaNAmpLh2aR9pR6si9XDzVi377NoVdogivwd38lRxIY5SMd0CmaMqVs7afjzA==
+X-Received: by 2002:a17:90a:e710:b0:306:b593:455e with SMTP id 98e67ed59e1d1-30e7dc1f4a8mr33747981a91.1.1747831710723;
+        Wed, 21 May 2025 05:48:30 -0700 (PDT)
+Received: from [192.168.11.2] (FL1-119-244-79-106.tky.mesh.ad.jp. [119.244.79.106])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f365e5b91sm3543183a91.39.2025.05.21.05.48.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 May 2025 05:48:30 -0700 (PDT)
+Message-ID: <3e8f343f-7d66-4f7a-9f08-3910623e322f@gmail.com>
+Date: Wed, 21 May 2025 21:48:27 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ec4ee2f5-162b-430d-aeb9-90ad4559707b@quicinc.com>
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDEyMyBTYWx0ZWRfX6KWG1buJ8ScH
- gJ35HzyNmZzxwlQu5jP5rnhsRC9YpdU894rbxDs43Fjn2bKIBJ1PhAUAD3C94Cl1IE4RS5gNrBB
- Kfwa/VIx7OgVjn1SwGArBQvORkoRuj7PGKVz/kjWyck5IGyzaKNGjPcdIEeXFK713Y8Q3RzTdYi
- HJ/5MK/qHORdA6X4qxmkNvi9pcHtEIeylh+ZcdEz/LpapE61EjssGJbafqM7DvdeSuksq6axkA9
- +yOMLQWEC2eaGN/+iucTD8lKEtHwQKJnZeprBgwPUQPARpfYF8b8Ws/heOgi2WW04VUEK/rPKTE
- z0NL1vC7m3uNFQaPJhxrFVEhvzwN0hTrFsfsV8OKuEEBvAb6bHXEdTrgUQ9rbjC21SddNr6ulZZ
- VSF/n+cRDQaq93DWUcpAtL6z8783rGKR+WH7YreMHtFRBsdgMRAaNR9Lfii+M+nj4ErDbq8F
-X-Authority-Analysis: v=2.4 cv=RIuzH5i+ c=1 sm=1 tr=0 ts=682dcb3b cx=c_pps
- a=wEM5vcRIz55oU/E2lInRtA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=dt9VzEwgFbYA:10 a=P-IC7800AAAA:8 a=mlDIMNG6S_g-ndTHxx4A:9 a=CjuIK1q_8ugA:10
- a=OIgjcC2v60KrkQgK7BGD:22 a=d3PnA9EDa4IxuAV0gXij:22
-X-Proofpoint-ORIG-GUID: kjiDVW-C6BUnV9SQsQQ4BvQYKmCeNeSC
-X-Proofpoint-GUID: kjiDVW-C6BUnV9SQsQQ4BvQYKmCeNeSC
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-21_04,2025-05-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 phishscore=0 suspectscore=0 malwarescore=0 bulkscore=0
- mlxlogscore=999 spamscore=0 lowpriorityscore=0 mlxscore=0 priorityscore=1501
- adultscore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505210123
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+From: Daisuke Matsuda <dskmtsd@gmail.com>
+Subject: [bug report] [rdma] RXE ODP test hangs with new DMA map API
+To: linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+ leon@kernel.org, jgg@ziepe.ca, zyjzyj2000@gmail.com
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 21, 2025 at 03:32:34PM +0530, Jagadeesh Kona wrote:
-> 
-> 
-> On 5/19/2025 1:48 PM, Krzysztof Kozlowski wrote:
-> > On Thu, May 15, 2025 at 12:38:47AM GMT, Jagadeesh Kona wrote:
-> >> SC8280XP camcc only requires the MMCX power domain, unlike
-> >> SM8450 camcc which will now support both MMCX and MXC power
-> > 
-> > I do not see change to sm8450 here. This makes no sense on its own. You
-> > do not move compatibles - what is the point of such change?
-> >
-> 
-> I did the SM8450 changes in next patch (3/18). But I agree with you, this needs to
-> be more structured. So I am planning to drop this patch and instead take care of
-> single power domain requirement for SC8280XP within SM8450 camcc bindings using
-> minItems and maxItems properties based on if check for sc8280xp compatible similar
-> to below snippet.
+Hi,
 
-I think it is a bad idea. I liked the split that you've implemented:
-separate bindings for platforms that require MMCX (and MX), separate
-bindings for platforms which require MMCX and MXC (and MXA).
+After these two patches are merged to the for-next tree, RXE ODP test always hangs:
+   RDMA/core: Convert UMEM ODP DMA mapping to caching IOVA and page linkage
+   RDMA/umem: Store ODP access mask information in PFN
+cf. https://lore.kernel.org/linux-rdma/cover.1745831017.git.leon@kernel.org/
 
-It might be better to start by changing SM8450 binding to support MXC
-and then adding SC8280XP to those bindings.
+Here is the console log:
+```
+$ ./build/bin/run_tests.py -v -k odp
+test_odp_dc_traffic (tests.test_mlx5_dc.DCTest.test_odp_dc_traffic) ... skipped 'Can not run the test over non MLX5 device'
+test_devx_rc_qp_odp_traffic (tests.test_mlx5_devx.Mlx5DevxRcTrafficTest.test_devx_rc_qp_odp_traffic) ... skipped 'Can not run the test over non MLX5 device'
+test_odp_mkey_list_new_api (tests.test_mlx5_mkey.Mlx5MkeyTest.test_odp_mkey_list_new_api)
+Create Mkeys above ODP MR, configure it with memory layout using the new API and ... skipped 'Could not open mlx5 context (This is not an MLX5 device)'
+test_odp_async_prefetch_rc_traffic (tests.test_odp.OdpTestCase.test_odp_async_prefetch_rc_traffic) ...
 
-> 
->    power-domains:
-> -    maxItems: 1
-> +    minItems: 1
->      description:
-> -      A phandle and PM domain specifier for the MMCX power domain.
-> +      Power domains required for the clock controller to operate
-> +    items:
-> +      - description: MMCX power domain
-> +      - description: MXC power domain
-> 
-> ......
-> 
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - qcom,sc8280xp-camcc
-> +    then:
-> +      properties:
-> +        power-domains:
-> +          maxItems: 1
-> +        required-opps:
-> +          maxItems: 1
-> +
-> 
-> 
-> >> domains. Hence move SC8280XP camcc bindings from SM8450 to
-> >> SA8775P camcc.
-> > 
-> > Subject: everything could be an update. Be specific.
-> > 
-> > A nit, subject: drop second/last, redundant "bindings". The
-> > "dt-bindings" prefix is already stating that these are bindings.
-> > See also:
-> > https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
-> > 
-> 
-> Sure, I will take care of above in next series.
-> 
-> Thanks,
-> Jagadeesh
-> 
-> >>
-> >> SA8775P camcc doesn't support required-opps property currently
-> >> but SC8280XP camcc need that property,  so add required-opps
-> >> based on SC8280XP camcc conditional check in SA8775P camcc
-> >> bindings.
-> > 
-> > Best regards,
-> > Krzysztof
-> > 
 
--- 
-With best wishes
-Dmitry
+```
+
+It looks that the python process is somehow stuck in uverbs_destroy_ufile_hw():
+```
+$ sudo cat /proc/1845/task/1845/stack
+[<0>] uverbs_destroy_ufile_hw+0x24/0x100 [ib_uverbs]
+[<0>] ib_uverbs_close+0x1b/0xc0 [ib_uverbs]
+[<0>] __fput+0xea/0x2d0
+[<0>] ____fput+0x15/0x20
+[<0>] task_work_run+0x5d/0xa0
+[<0>] do_exit+0x316/0xa50
+[<0>] make_task_dead+0x81/0x160
+[<0>] rewind_stack_and_make_dead+0x16/0x20
+```
+
+I am not sure about the root cause but hope we can fix this before the next merge window.
+
+Thanks,
+Daisuke
