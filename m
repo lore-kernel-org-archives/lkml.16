@@ -1,118 +1,155 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2EA61A317A;
-	Wed, 21 May 2025 14:22:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F99018B495;
+	Wed, 21 May 2025 14:22:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747837326; cv=none; b=aumOM+Lei3guk0jF3D1YeCNbQSntQqxb1YybUJg/EARTN+3UkHWromXSl69+DDVaywwqrY8a7gDyI2D5vsSRS8J7D3y5l4Ah7mMTr1gISZPEjk5kUpTZ+dsN2u0t4o++Icfieas1/SHur+e9v9mE0X9hvy4q9PkJgsr2GQeVYFc=
+	t=1747837343; cv=none; b=Iw+TYj/xk7xfxgHWTqisRNMZXHvFDkBU1RmOQt1E/Njr7XwCu/wlxQAT1F2VLBMrgQxBc5/T154SS4uAAqbOigk1k0nPnB/d635W678gfHTNTh5/TOcD5vUusK4DGe27F67Zd/ExxHABuuvpydgIm9ZHPvgEtqW2//bRQe44ARc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747837326; c=relaxed/simple;
-	bh=DeEkaq/YR/aYXQ8EJo2m5wKNuGyxAH40rEpWj4GBF4A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SbobBDr9uxaQsum2ZvmoqGKJAKhazx38TSIIXpTZeBRGEzahfvHxhe092tWPi2JZAK/HyUThT1Z2Ke3/ZxnBTexb4Secgjq8bOFy9uZo2iwEfaqSN32Vrta9jkBBvpWTL7Oa9GTKmYNRwn0tSTMqPtXayDyy3MxULnfK3BU9JZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=mTsSVMSI; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1747837343; c=relaxed/simple;
+	bh=F5hEzDUx2SkcS2gm/dMFSeK7fTbZnXqJHdiIjgBb3Os=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=hWUKNqL5l4pa+33mnD9ty2TBINV45nW4mv+YpSYI3sXA3tltuvEsJz/PshWMiTnoZusBzGqtfJebNFvz3q12URc+rlCrE6VzFWq5ZzG96sBJ6HSZn1MmLe4mqdRGPsX2DTpRJmROSz+qn8IqZkGyMvhEB5poHogbfMac+wZ04pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jkz+Qred; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="mTsSVMSI"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54L8NSB8012153;
-	Wed, 21 May 2025 14:21:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=+pbdGlDVQ9Os2VXqbYRLNQcB+/6pA2
-	U3W63QKyIuekw=; b=mTsSVMSII5BvDvxamWrcmQPJkQfui6b6maA6SRPeusJUVr
-	EL+3/agoe/RKh6BDypzUYHR74hqAA/Qu5PVSeoSTjorxFtYDTudvTLeq1NcY1n8d
-	XwjeSLvJtZxxstTFgiyrKYipDWC8WKhN2waaHXJwWgwMdXDYWpODY/EzvGavnwha
-	k0tNDXehgaYdibJmlDR18HcktLlYyTBLyeyQc8XhVQeyEO6cflS5X6pc2o/QQy5g
-	a/9Vvz8nGBcFcbRbqppaD8MPsVf+V0Y28AtDZLTyk/hxQmMT+C8b+4SfpUpmB9Hp
-	1ttGLfqzynvmbd0HPnulaQuiJddrDUieHOV5chLQ==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46rye6mhn9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 14:21:56 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54LDZZUp015480;
-	Wed, 21 May 2025 14:21:55 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 46rwnnchb5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 14:21:55 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54LELpm218350516
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 21 May 2025 14:21:51 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AECE42004B;
-	Wed, 21 May 2025 14:21:51 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3075420040;
-	Wed, 21 May 2025 14:21:51 +0000 (GMT)
-Received: from osiris (unknown [9.87.128.135])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 21 May 2025 14:21:51 +0000 (GMT)
-Date: Wed, 21 May 2025 16:21:49 +0200
-From: Heiko Carstens <hca@linux.ibm.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: Sumanth Korikkar <sumanthk@linux.ibm.com>, linux-mm <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 1/4] mm/memory_hotplug: Add interface for runtime
- (de)configuration of memory
-Message-ID: <20250521142149.11483C95-hca@linux.ibm.com>
-References: <20241202082732.3959803-1-sumanthk@linux.ibm.com>
- <20241202082732.3959803-2-sumanthk@linux.ibm.com>
- <3151b9a0-3e96-4820-b6af-9f9ec4996ee1@redhat.com>
- <Z08WpCxt4lsIsjcN@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
- <1b9285ba-4118-4572-9392-42ec6ba6728c@redhat.com>
- <aCx-SJdHd-3Z12af@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
- <fca5fe72-55a8-456c-a179-56776848091d@redhat.com>
- <aC2sUdhavboOgS83@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
- <496e6707-bdc9-4ad2-88e2-51236549b5f2@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jkz+Qred"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43edb40f357so57520305e9.0;
+        Wed, 21 May 2025 07:22:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747837339; x=1748442139; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=s+jyCgbLr3xrcTJHsRt9Kq15QJhKLq4lab6/AE5okc8=;
+        b=Jkz+QredGO3QBuu2nwxa9v/kMh2pYT8rWROslTKj7d4EOd7chBmo5etIfrAGJ/2+F3
+         d0ZVv4qaag2DUTyQJpRIqXVLQT5drPL9r6U7u23Bg8ySEJK04he0CnEbTZXp+qa7RrXT
+         miySCqy+xAHya+KtLJCnzAk2kMjw9aVGYuR8PbfRNI6/g3oxRfBlClw81Lb5AwFgRV15
+         BpVaRDeD8/sZkDO8FwIMWftEhqLR7zY+olAG320JBd4xHRwmaxPjWGGr9tVXrIART05J
+         vL1pR3/cBl80kAXCqedjGRV6I1SpVk/+rkHL/snr98ak6K3mqkZOYGsBeM9HWKkblG95
+         FfqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747837339; x=1748442139;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=s+jyCgbLr3xrcTJHsRt9Kq15QJhKLq4lab6/AE5okc8=;
+        b=w5ZytPDkOTZH+c6qLUougUDhP6LxPUgyJ4re8oYxHyv/wAjalHPHE9bPn763RhXh8z
+         lyAfNnxnV778QAZg2Hr/rAgPQnioj+KMZ3eco1MUvVHVtS9eQWKQqa048WssPDTGgzXL
+         POL9Ko4euNh24muTRT6JKyLC6KwuekbmR/LOIbr4wvRl932qeb1rkbMSP37JmuPohM2C
+         LnbXG/b1wGl3u1RxaiXQQm4grSXvbll44+HzSDPDQJWQJ2quPOl3jtbGbYOyQi89mx/x
+         NvlruZC8pk/uVkJAJGe5AWC7l9w6ajWjcyVdvu2c8xcmifPI3cBPQlOH1bicU8RU1moB
+         BTew==
+X-Forwarded-Encrypted: i=1; AJvYcCU0XvuH7Yx7H2oCD/yyP3MT1a5M/Y2GTnG5MhOlfiEMmsMQ78XxfSTcjhrkJACnTCN5dfS246Tx/DB0@vger.kernel.org, AJvYcCUID+rU1grRewcNPb+7BYHpGAQ+c20udZJlrEo/LWlf1eT7Cs6KVDNmXWOfZ7j+SDkAzg+S77TgIjNu@vger.kernel.org, AJvYcCVYBrnGW24YoNIhXHJ6tkU/H8JBiC93dFvTvGvztCF3HoRX/IJiEbHckByb9VfxqhKcZPeB414VrJ6cIqCi@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8hXdJcDmrCGT47mbSXSP8g1r5phi9E8zO3vgEvZxh2bzQB/7u
+	ZNyFdKhLeE9ubDPPN39yDmpuP11BjzJaRtER1KvQkzS643WMcqCQMuIw
+X-Gm-Gg: ASbGnctP9hgISM4NWSP2J7s0JNb9T9y1R5BVNPv18yaai/udb75hF7r1NevgwWq9TfU
+	BaXB1wECBMJ/jzbt5gwvAH+w0GNNhc4Im55RRCYlnOzuOyKdL3+ohEXa9pr2yy6u9mRWLJ4qwGl
+	jZA+mSkMlllbpQza8wm28R51BdKqEFtfxHmigsn29AwNR3sRxCY3k8elsNjGWXJNE5ha2qhQw2X
+	hHiPZw8ScFaHwf5XHfJvHdptYKugwjpzZ5g5GAXeoT+C+P2A84UhpHpOJI3R95iRHi8IG/wsSDX
+	c9C05jiVVOn/osfuTqu/9u4yTRxgI/mgt4xfPVTseA1DlplaTds=
+X-Google-Smtp-Source: AGHT+IHDyF8zBHr8bx3AfS49+niCmB110rPNtZqQRPC4oaWWGA8YQRunaD+V7VF8sSF1eGCeXaxB0A==
+X-Received: by 2002:a05:600c:c13:b0:43d:79:ae1b with SMTP id 5b1f17b1804b1-442fd627416mr202152715e9.14.1747837339090;
+        Wed, 21 May 2025 07:22:19 -0700 (PDT)
+Received: from [10.5.0.2] ([185.174.156.4])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f7ca2dd9sm69237755e9.37.2025.05.21.07.22.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 May 2025 07:22:18 -0700 (PDT)
+Message-ID: <6b72e9dc9d574aa1f025c0f5d317dcec1d729ba9.camel@gmail.com>
+Subject: Re: [PATCH 3/3] pwm: axi-pwmgen: add support for external clock
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>, David Lechner
+	 <dlechner@baylibre.com>
+Cc: Michael Hennerich <michael.hennerich@analog.com>, Nuno
+ =?ISO-8859-1?Q?S=E1?=	 <nuno.sa@analog.com>, Trevor Gamblin
+ <tgamblin@baylibre.com>, Rob Herring	 <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley	 <conor+dt@kernel.org>,
+ linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Wed, 21 May 2025 15:22:20 +0100
+In-Reply-To: <p3ejuwktdxcjwv43nnap5tin33ziimgxfan2xoghtaaubsxgy7@tjmwjpwy6yy5>
+References: 
+	<20250520-pwm-axi-pwmgen-add-external-clock-v1-0-6cd63cc001c8@baylibre.com>
+	 <20250520-pwm-axi-pwmgen-add-external-clock-v1-3-6cd63cc001c8@baylibre.com>
+	 <zdltaexty6pzbqesoluuyluygyt6w7nq7r2wccmtfktppwuw3e@qb36fsu3jq4k>
+	 <0dd1a97e-ff7c-4d09-b18e-5df9944488c6@baylibre.com>
+	 <p3ejuwktdxcjwv43nnap5tin33ziimgxfan2xoghtaaubsxgy7@tjmwjpwy6yy5>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <496e6707-bdc9-4ad2-88e2-51236549b5f2@redhat.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDEzNyBTYWx0ZWRfX+es2tdgCqTRk DJ+MBFcXGJjGaWxKeOwxOXX3HaifE2jsF6o6EwdTUz637IAAyyIRmyLieBEilYuL54IzOfj0uKG 8HHZ05z1Lql7XFezD4n0z5MK24sCeu3zexFnWdV1fJwa6WuHsVUolLZibcVmeHFKhcknn9qtLkd
- +kaIFrHEc3EIIymkdgsHfPT4OzYAuhh8oZOZ1jUO5628XXKDKI4nh0bsHAz2yEk2qqAjfNgvG+m Cw1MKRlRUONC51E+plTgUo7+a6cbh3VwUCjX0y4oF9p7caNfRkw5uoMW5fWQN2cWjo2R8Wa1m1a +bOe8AKjG39CDxcnSp7JJ+InPS70cPMvcfE6kJ+HgJrpOYlozVzL7EkbH0Gml0uthDWVH5qziRt
- 8q6zrAwx7FEjXojfog8xb5rI6LNv5FstR6KVYmRF0dFL6jq/wj8OYGvrRPKXXwchRIxRoaI3
-X-Authority-Analysis: v=2.4 cv=esrfzppX c=1 sm=1 tr=0 ts=682de184 cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=nzSEty_UkPgyXC6r39YA:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-ORIG-GUID: x4PT5vUB9_qT4dlNxpPKkjz48cYLT3z2
-X-Proofpoint-GUID: x4PT5vUB9_qT4dlNxpPKkjz48cYLT3z2
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-21_04,2025-05-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
- lowpriorityscore=0 impostorscore=0 suspectscore=0 spamscore=0 phishscore=0
- priorityscore=1501 clxscore=1011 bulkscore=0 mlxscore=0 mlxlogscore=346
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505210137
 
-On Wed, May 21, 2025 at 02:33:42PM +0200, David Hildenbrand wrote:
-> On 21.05.25 12:34, Sumanth Korikkar wrote:
-> > As you pointed out, how about having something similar to
-> > 73954d379efd ("dax: add a sysfs knob to control memmap_on_memory behavior")
-> 
-> Right. But here, the use case is usually (a) to add a gigantic amount of
-> memory using add_memory(), not small blocks like on s390x (b) consume the
-> memmap from (slow) special-purpose memory as well.
-> 
-> Regarding (a), the memmap could be so big that add_memory() might never
-> really work (not just because of some temporary low-memory situation).
+On Wed, 2025-05-21 at 15:54 +0200, Uwe Kleine-K=C3=B6nig wrote:
+> Hello David,
+>=20
+> On Wed, May 21, 2025 at 08:19:51AM -0500, David Lechner wrote:
+> > On 5/21/25 4:22 AM, Uwe Kleine-K=C3=B6nig wrote:
+> > > Can you achieve the same effect with the (IMHO slightly nicer but
+> > > hand-crafted) following patch:
+> > >=20
+> > > =C2=A0	ddata =3D pwmchip_get_drvdata(chip);
+> > > =C2=A0	ddata->regmap =3D regmap;
+> > > =C2=A0
+> > > -	clk =3D devm_clk_get_enabled(dev, NULL);
+> > > -	if (IS_ERR(clk))
+> > > -		return dev_err_probe(dev, PTR_ERR(clk), "failed to get
+> > > clock\n");
+> > > +	axi_clk =3D devm_clk_get_enabled(dev, "axi");
+> > > +	if (IS_ERR(axi_clk))
+> > > +		return dev_err_probe(dev, PTR_ERR(axi_clk), "failed to
+> > > get axi clock\n");
+> > >=20
+> > > +	clk =3D devm_clk_get_enabled_optional(dev, "ext");
+> > > +	if (IS_ERR(clk))
+> > > +		return dev_err_probe(dev, PTR_ERR(clk), "failed to get
+> > > ext clock\n");
+> > > +	}
+> >=20
+> > The trouble with this is that it would not work with existing .dtbs
+> > that don't have clock-names set. I think it would need to be more like =
+this:
+> >=20
+> >=20
+> > 	axi_clk =3D devm_clk_get_enabled(dev, NULL);
+> > 	if (IS_ERR(axi_clk))
+> > 		return dev_err_probe(dev, PTR_ERR(axi_clk), "failed to get
+> > axi clock\n");
+> >=20
+> > 	clk =3D devm_clk_get_enabled_optional(dev, "ext");
+> > 	if (IS_ERR(clk))
+> > 		return dev_err_probe(dev, PTR_ERR(clk), "failed to get ext
+> > clock\n");
+> >=20
+> > 	if (!clk)
+> > 		clk =3D axi_clk
+> >=20
+>=20
+> If there are no clock-names, the parameter is ignored. (I didn't test,
+> only quickly checked the code.) So passing "axi" instead of NULL should
+> work and yield a more robust solution.
+>=20
+>=20
 
-What is "big"? Worst case for s390 with existing machines would be an
-increment size (aka memory block size) of 64GB. So more than 1GB for
-memmap plus pages tables, etc would be required.
+Are you sure? If there are no clock-names and you pass an id, you should ge=
+t an
+error back:
+
+https://elixir.bootlin.com/linux/v6.14.7/source/drivers/clk/clk.c#L5198
+
+
+I know it's not exactly the same we're discussing but of_property_match_str=
+ing()
+return -EINVAL if the property is not found which leads to an index < 0 and=
+ thus
+of_parse_phandle_with_args() also returns an error back.
+
+I think I'm not missing anything but it's always a possibility.
+
+- Nuno S=C3=A1
