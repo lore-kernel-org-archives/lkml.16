@@ -1,216 +1,128 @@
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 206BC14F117
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 13:50:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FBA51537C6
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 13:50:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747835419; cv=none; b=iv/yqK2dgEY2vLkGwc30Qn1Rfuk+sVGcdpPHu1An16wpxTVsll6Lw6PWSl92wHEnXjEQPUbzCDNodpExxD27yi3u7LFF0OZYmHLKmm2FI3PoKzYSfRJQpuJfZQ80eTHsE3d8KaDKF2VN7r1Qklp54P6uo/DMcyT+76HSv4NJCQU=
+	t=1747835423; cv=none; b=UShG1A8kyEDM5oVXE7gCfMtBcpeEpzZcwaoWGML3kZ5i+mXA38Pz/noa+4/GXN1k+BdaeC64X37pHYAQSSLKPYrh1PSAtr7kuBaeh0QG9NYA+zTAObpfjD3MU+xHqu3PTZcAnmcS63hX7mHmPnN9hDx4MQi51ed1Ax38649J6oo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747835419; c=relaxed/simple;
-	bh=xxclzynvG9qMLSJo82MFRje7H/LgVEU3hKXBTA0+0Es=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gqerYr/KROxx75bxts4od8ucqh5KXTlW8ZVD+DRrbOv+IyUJJbX8XIVozD2RfYiGLV2VMLIpQCKCU/6Ae3ELjzOeIinrgIrOx0VrS1i1znGOVrde87IvTd4N4EoAfFIxs9nB+RJV94lBlivdLCVpz6q8TIWQ+hFuJZQw+GKOTKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=vnxx3Nzl; arc=none smtp.client-ip=209.85.210.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1747835423; c=relaxed/simple;
+	bh=dINc/wQptmShY0mwOEHtFWIvstwWFCTzk6X6+/JBI6s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pRp33Git3YTevinVX/ouF1swPZJkq71TsSv29iFf5/u1bCAtwthKAkyXjM7FLIqrAmqVmFRhHG7QdpLWPJZuCI38Ejg2QXnHjOOPeAAHYpjtA0S2Doi2HyClj/BPh80KaqBjppBKDN3mDunhvhDtM6I7tM+Q0NdJNlK0qn5IWJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=b3qPqget; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="vnxx3Nzl"
-Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-72c7332128eso3825810a34.0
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 06:50:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b3qPqget"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b1a1930a922so4725624a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 06:50:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747835415; x=1748440215; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2JgaHRKYUX+zfvNTXojTA2fHNWkJMHbiON31ak/TWz4=;
-        b=vnxx3Nzl9Zs/QThNC7uSMbC+7jIZ/4ZlrZFyy1DREeRLzAr5DJ2aSJSDoVcJqnffyt
-         52s6VCcy35PC115wGq3Z2mPtoOkRnq5aPaCWdCvV5xIoJnV1ZodseK290BYrHxty9BJJ
-         7hTzvMUF4HVt5LFN++QYE+dfzadV/G0c3kmXkT/4qjVBTs0zAIv/YUMFSU98sx8KeKcM
-         K0yZsdnmUzofu+L2pO8bKG576piP1QFZAgf3ue9bXkdMx8uRPs5ZwNzSr1KTLkHdbr9D
-         Jd2slWIl1EQ5GCQlx28ZC2oWy6s2O8VdSnDys5O5skM5XT8DwQUiIVWookOfjRDMiXPn
-         B0dQ==
+        d=linaro.org; s=google; t=1747835420; x=1748440220; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=/dGaJJt/HUGpCICV62UDPM8z7U1rRYbsKxH587Gzyjg=;
+        b=b3qPqgetEf3GiDwfbGcdsb4hqaAY0XrK5lXwb4LPWkYhbGL2gob9EyNbBai3BDOHie
+         BzxD6cqRcez38Au7gNcjK8uCvstsGHoVWZT+U/7qrLk2h7spwvM7yn6t0fuTHK/VAffK
+         yurm4euX0yVSs1U0hXIfY6dBAYQUYZlF1Kq8LhKjrUxuIQ7aYCuyUOWDQtbZ6ahrHHlc
+         hUwAss6CSnrKVaxKAiH6aT7xHtv+YNDmh8Qdo3rn7b7pPUPr1xTL5I5F22XiXffZBTCk
+         VWG+2sbcDPo5lhO8iWB66em6oAlEHPUJahXiprR50K3IjhxY+bQ31wnD9itLgqREraHs
+         d+6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747835415; x=1748440215;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1747835420; x=1748440220;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2JgaHRKYUX+zfvNTXojTA2fHNWkJMHbiON31ak/TWz4=;
-        b=haSKTZEeGqkhiGMfnlq9kbEwLHxBtduWAD3+U668wMTMHe46I9iL4ulys1Yqh3lNjm
-         nO4T1dg0sXTPgsRyfluMDN3z1+6i/W2zBaB6w8Gr+O+ybbJCdent2uRQHoGdCu+dD3F7
-         AWC43NGYuXyCPjQdms1/dDSyt95CBeXhZQU7FWI2L9/rJyr2wotAF1z5nu1GDD19oIrV
-         XnkBf07cU274k5IA4IFePtEevR/jjmCfBNw0q+dztD0sCQToBy0YbUcKd3CWkUfjqwS9
-         Ls34MUtGUu1D1HZJS/f4Eg/7cTHUF45qHmPww8t/5+FOR0idAH4BQh+qzYqWGBo33nkr
-         ycDg==
-X-Forwarded-Encrypted: i=1; AJvYcCXZgiOLqaJueyQ3RGkSY3Zl14+Q9+NiHvkOLyi54ZvdfSa/UDedUp87H6wferBZfxvRtfkeDea0VH2FVm8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOi6RlcUHnUbItglBFzJZBJc5hdHIx4CiDD0gfNcrdl7EM9DP/
-	XSRfCmMG5lwnbJfW/FSyf/3frHiQB7stD5XT1DUzgFPl+KNdRrXr7KHJWMXgZL9q0C8=
-X-Gm-Gg: ASbGncu77Cigfgldc2tDDaMB2+a2hIDg7+wLtTDXnODNqpk+wTtJwtpzPjYcnEdsd8K
-	WdOpiSUbKfuCaMnm2T+aGNMlCFVlrR2dcbVWF5GD7xPGUtwLimXOh+gN1WrEfUp9LnjAa/VuEuu
-	81tKWwyJtq5EWnsONi6fn3f4ZsA5ZBr7ontcIhIkcSHAws5Dt7Iv0wJea4E5+TkftesEK+l/Ph6
-	0Vj+x9lioGW3SLJ9SP/2OieNyFAp3UTNiXRjGDsqbYcftc8hCih8B03odsgaBWy+wqOmj10Wr3j
-	Dv70g70mBtVAL9YIIqkp08UAY6gKb0a35/Jc8Dlc/Q8n7djr6LSyEBPYzrTml53xrGU9gW4svxi
-	3DOIANsxQ2G6/WOzFS3bY9lAdzQ==
-X-Google-Smtp-Source: AGHT+IGNsrBJay16uQjz7d1c9S8nrIXHASYHEtAmfjAXqpv6/iE+yKrM1c1mCMLDvMzkQkx9FSohfQ==
-X-Received: by 2002:a05:6830:6206:b0:727:3664:ca28 with SMTP id 46e09a7af769-734f69d3e89mr14202278a34.0.1747835414904;
-        Wed, 21 May 2025 06:50:14 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:d77b:6acc:2ad1:8ff? ([2600:8803:e7e4:1d00:d77b:6acc:2ad1:8ff])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-734f6a9a7adsm2152904a34.30.2025.05.21.06.50.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 May 2025 06:50:13 -0700 (PDT)
-Message-ID: <1424236a-eee7-4343-b73f-42cd416b594c@baylibre.com>
-Date: Wed, 21 May 2025 08:50:12 -0500
+        bh=/dGaJJt/HUGpCICV62UDPM8z7U1rRYbsKxH587Gzyjg=;
+        b=jgQUZWk3LRk2kv5SMU+YvTwzFISB9V5k7doN6qLARBAA5j0y7Xj5U+U54WfPlWH2qX
+         ehi0fSSbW+RlgmkEOjrF3jN9fQZodcjIduDUgmEbE5FZE2WMPjteghEXRzPPUgcKB+D6
+         m6PjDmeecl3geJj92bJlrQ1lEVN8GTwABmM7M8LDD6chxrYsxxJmJp91NdNGJ9WK/nXp
+         xmTYda2FIvl91oWAjjb33Aiirnux9TnohT6NOkeurTJ9TlfUitsdax3qRJwvJQjnd1pu
+         8PWy+5gJYaqCt+F3O0rc8u7N3e8x2usxRDrbkiannex/UuJ6nfadH+rGUNVrv7dgq2F7
+         k2QA==
+X-Forwarded-Encrypted: i=1; AJvYcCUiGQqT7OpT1asWbDNGpGP2/hghVRxzq8g9JEkqhXf0XUGDEBZWhlwEFeWamA9PogsEGkIRHLutY4CGgxs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywc2y3vyV1Wd799jMS97xMgoty6YBic3JRj0h/7DEXRDaMLqTW+
+	zGSmq5cYrt59gvLIby+IuG+V2tk0+6NNkYw5mQlOopan78qMYOmXW3p+gqOdQqmjoA==
+X-Gm-Gg: ASbGnct+n6pECknRd9qm+GcKA/FIqbg0KsJlQZzEm9Sktrshjhb2Dta913qaxtTCJt6
+	bz9mA6gygLAlc2y+TFFCGnpYE6eQnV3X+MDiarDv1i03Byld2N0QLj8wDja0VDyYLIB5oEiC6hg
+	X9EVeibEHcyx8Qkw1N91TXpzrRU5VLsogCbjy8gu0AmGNvhV4qoVFpSTjAJCp8T7W/kJFtJMx3W
+	DUc8D7txNwXqKR0lz7VyOrYX1kU99PuKNPCjfAmxBpcWjHWlpA4MwvhRLk4ZZ46W4j9jsAdoosy
+	2lt9oNvlIYMXszxA7k3UKvdKTVyM6Xoh1rKWPbkdoc4a9+nvdEmqehoMr2Qo
+X-Google-Smtp-Source: AGHT+IGfMgSZ1dyR31dRP9yWXfsiqsI0mIJuLiXZvdVwQ7ECl4Z67oe/m7O50OQnSlM0QTvqwXQ/Jg==
+X-Received: by 2002:a17:90b:4f4e:b0:310:8d9a:eb1c with SMTP id 98e67ed59e1d1-3108d9aeb4fmr4087282a91.21.1747835420269;
+        Wed, 21 May 2025 06:50:20 -0700 (PDT)
+Received: from thinkpad ([120.60.52.42])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f365b22a9sm3660292a91.6.2025.05.21.06.50.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 May 2025 06:50:19 -0700 (PDT)
+Date: Wed, 21 May 2025 14:50:12 +0100
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Nitin Rawat <quic_nitirawa@quicinc.com>
+Cc: vkoul@kernel.org, kishon@kernel.org, 
+	James.Bottomley@hansenpartnership.com, martin.petersen@oracle.com, bvanassche@acm.org, 
+	andersson@kernel.org, neil.armstrong@linaro.org, dmitry.baryshkov@oss.qualcomm.com, 
+	konrad.dybcio@oss.qualcomm.com, quic_rdwivedi@quicinc.com, quic_cang@quicinc.com, 
+	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-scsi@vger.kernel.org
+Subject: Re: [PATCH V5 08/11] phy: qcom-qmp-ufs: refactor qmp_ufs_power_off
+Message-ID: <heork6adpw526tfljo2cpexevplpjrlgjgeyobidvzqlsubzlc@6vn6jykxpwqx>
+References: <20250515162722.6933-1-quic_nitirawa@quicinc.com>
+ <20250515162722.6933-9-quic_nitirawa@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] dt-bindings: pwm: adi,axi-pwmgen: add external clock
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Michael Hennerich <michael.hennerich@analog.com>,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Trevor Gamblin <tgamblin@baylibre.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-pwm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250520-pwm-axi-pwmgen-add-external-clock-v1-0-6cd63cc001c8@baylibre.com>
- <20250520-pwm-axi-pwmgen-add-external-clock-v1-2-6cd63cc001c8@baylibre.com>
- <20250521-tidy-heron-of-genius-4dc9a1@kuoka>
- <be02b9cd-803c-4aae-9420-ff3bf445efc1@baylibre.com>
- <499207c7-aa40-470c-801f-a8154a253276@kernel.org>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <499207c7-aa40-470c-801f-a8154a253276@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250515162722.6933-9-quic_nitirawa@quicinc.com>
 
-On 5/21/25 8:28 AM, Krzysztof Kozlowski wrote:
-> On 21/05/2025 15:14, David Lechner wrote:
->> On 5/21/25 5:09 AM, Krzysztof Kozlowski wrote:
->>> On Tue, May 20, 2025 at 04:00:45PM GMT, David Lechner wrote:
->>>> Add external clock to the schema.
->>>>
->>>> The AXI PWMGEN IP block has a compile option ASYNC_CLK_EN that allows
->>>> the use of an external clock for the PWM output separate from the AXI
->>>> clock that runs the peripheral.
->>>>
->>>> In these cases, we should specify both clocks in the device tree. The
->>>> intention here is that if you specify both clocks, then you include the
->>>> clock-names property and if you don't have an external clock, then you
->>>> omit the clock-names property.
->>>>
->>>> There can't be more than one allOf: in the top level of the schema, so
->>>> it is stolen from $ref since it isn't needed there and used for the
->>>> more typical case of the if statement (even though technically it isn't
->>>> needed there either at this time).
->>>>
->>>> Signed-off-by: David Lechner <dlechner@baylibre.com>
->>>> ---
->>>>  .../devicetree/bindings/pwm/adi,axi-pwmgen.yaml    | 26 ++++++++++++++++++----
->>>>  1 file changed, 22 insertions(+), 4 deletions(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml b/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml
->>>> index bc44381692054f647a160a6573dae4cff2ee3f31..90f702a5cd80bd7d62e2436b2eed44314ab4fd53 100644
->>>> --- a/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml
->>>> +++ b/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml
->>>> @@ -16,8 +16,7 @@ description:
->>>>  
->>>>    https://analogdevicesinc.github.io/hdl/library/axi_pwm_gen/index.html
->>>>  
->>>> -allOf:
->>>> -  - $ref: pwm.yaml#
->>>> +$ref: pwm.yaml#
->>>>  
->>>>  properties:
->>>>    compatible:
->>>> @@ -30,7 +29,13 @@ properties:
->>>>      const: 3
->>>>  
->>>>    clocks:
->>>> -    maxItems: 1
->>>> +    minItems: 1
->>>> +    maxItems: 2
->>>> +
->>>> +  clock-names:
->>>> +    items:
->>>> +      - const: axi
->>>> +      - const: ext
->>>>  
->>>>  required:
->>>>    - reg
->>>> @@ -38,11 +43,24 @@ required:
->>>>  
->>>>  unevaluatedProperties: false
->>>>  
->>>> +allOf:
->>>> +  - if:
->>>> +      required: [clock-names]
->>>
->>>
->>> No, don't do that. If you want clock-names, just add them for both
->>> cases. Otherwise, just describe items in clocks and no need for
->>> clock-names.
->>
->> Would it be OK then to make clock-names required and just let the
->> driver still handle one clocks, no clock-names for backwards compatibility?
+On Thu, May 15, 2025 at 09:57:19PM +0530, Nitin Rawat wrote:
+> In qmp_ufs_power_off, the PHY is already powered down by asserting
+> QPHY_PCS_POWER_DOWN_CONTROL. Therefore, additional phy_reset and
+> stopping SerDes are unnecessary. Also this approach does not
+> align with the phy HW programming guide.
 > 
-> So just don't make it required.
+> Thus, refactor qmp_ufs_power_off to remove the phy_reset and stop
+> SerDes calls to simplify the code and ensure alignment with the PHY
+> HW programming guide.
 > 
->>
->>>
->>>
->>>
->>>> +    then:
->>>> +      properties:
->>>> +        clocks:
->>>> +          minItems: 2
->>>> +    else:
->>>> +      properties:
->>>> +        clocks:
->>>> +          maxItems: 1
->>>> +
->>>>  examples:
->>>>    - |
->>>>      pwm@44b00000 {
->>>>          compatible = "adi,axi-pwmgen-2.00.a";
->>>>          reg = <0x44b00000 0x1000>;
->>>> -        clocks = <&spi_clk>;
->>>> +        clocks = <&fpga_clk>, <&spi_clk>;
->>>
->>> What was the clock[0] before? Axi, right, so SPI_CLK. Now FPGA is the
->>> AXI_CLK? This feels like clock order reversed.
->>
->> The problem being fixed here is that since there was only one clock in
->> the binding, existing .dts files have either have the spi_clock or
->> the FPGA/AXI clock. So the one clock could be either and there are
->> existing .dtbs out in the world with both cases.
-> 
-> No problem like that was explained in commit msg. Nevertheless driver
+> Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
 
-You are right. I explained it in the cover letter, but failed to repeat
-that in this commit message.
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-> assumed the first clock is the SPI, didn't it? So that's your ABI, even
-> if binding was not conclusive here.
+- Mani
 
-Not quite. The driver (before this series) assumes that the clock
-is the SPI clock ("ext") if the HDL was compiled with ASYNC_CLK_EN=1
-or the AXI clock if the HDL was compiled with ASYNC_CLK_EN=0 (in this
-case, there is no "ext"/SPI clock).
-
->>
->> But we could consider reversing this so that if someone uses the new
->> bindings with an old kernel, then it would still work.
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> ---
+>  drivers/phy/qualcomm/phy-qcom-qmp-ufs.c | 7 -------
+>  1 file changed, 7 deletions(-)
 > 
-> You cannot use new bindings with old kernel. How would that work? Put
-> YAML file there? Nothing would change.
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
+> index fca47e5e8bf0..abfebf0435d8 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
+> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
+> @@ -1827,13 +1827,6 @@ static int qmp_ufs_power_off(struct phy *phy)
+>  	struct qmp_ufs *qmp = phy_get_drvdata(phy);
+>  	const struct qmp_phy_cfg *cfg = qmp->cfg;
+>  
+> -	/* PHY reset */
+> -	if (!cfg->no_pcs_sw_reset)
+> -		qphy_setbits(qmp->pcs, cfg->regs[QPHY_SW_RESET], SW_RESET);
+> -
+> -	/* stop SerDes */
+> -	qphy_clrbits(qmp->pcs, cfg->regs[QPHY_START_CTRL], SERDES_START);
+> -
+>  	/* Put PHY into POWER DOWN state: active low */
+>  	qphy_clrbits(qmp->pcs, cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL],
+>  			SW_PWRDN);
+> -- 
+> 2.48.1
 > 
-> Binding is supposed to be complete for exactly this reason. You cannot
-> change it afterwards without breaking users.
-> 
-> Best regards,
-> Krzysztof
 
+-- 
+மணிவண்ணன் சதாசிவம்
