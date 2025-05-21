@@ -1,256 +1,251 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA16B235055
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 08:57:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B3DD236A70;
+	Wed, 21 May 2025 08:57:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747817844; cv=none; b=mHbZdvyRafvOQZr54zeKGE+Hfya5tyfDWKzYjk1/3DVlA0fCTmosvde1joAPJHERxoH926hjzcKPTYj0fUi9SbNeQZCKjfUUvnDvM0QnZvxzI7dnH+RNPnFU+HwY3PGqtoo2+LykZHxFWOc4dTHNTHPA+1QHZQAiYqLAjJOOIkw=
+	t=1747817879; cv=none; b=Zx2oRhOFjdkm1WZGcKYTrImhNx3eO5s9eYomUctUnMjp3BIRPlh9KT66CZGVMlJca0QD0eHNasfnxedMx1VzlllOHawEmO0io20DKIPM2GSdzdc31NezIFw2nGgiXw+96/KrTaGL0sAR0wTf7QX64P6vIeJ+63cLMVQK9XMDkNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747817844; c=relaxed/simple;
-	bh=/4i/nK+t1ryn5HGVFpM4RXNec1OC5YglYAfJmaJDfgo=;
+	s=arc-20240116; t=1747817879; c=relaxed/simple;
+	bh=ua7q+H1WgOWVcLV6yULMClYrx7Bnz34PuVBhzv5mcnM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=irxW9NIfXSMCWu0QNfTsLNdy2lxWJ3AU0wY4lgZqbAfbjA8exqqfV8bG+Oe4dGZyt9tO1hPVzZG1VmzN3kMu/JCpKtR/2J7JlzGOmKbM5evPSPgwAkBzmi/XxvimjghuEilKuuAKnSoIE3oRFL0siPJ9JNpWBNb44PzDvnyaqMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NDLkbx4X; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=XMWQ0nnNLUl2tXWxxezcvkGxAculrzVAP0rdwu4M0paH6rFzelprgtEtjfLLOPfHLRc9xCAVPWYQVZqixo822JtHDy67B5fOLbW0qCIkqutYUoWN2uKlcPtF8zU0wHykBCRijJakSMWsfv4o4VW0hTXucNmx/OkVcvikkj1FYMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qnbh/9kI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NDLkbx4X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747817841;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JfOqXSQo7CKTaqGd/jh9hve0GBvT5oZOukPMAeA+fDA=;
-	b=NDLkbx4XHnCjLv1BqWIVv/dQaH2BZw5ibZvqGFRBjZF/wuixJgGg6vnt5DdxlLzdDUuw5L
-	YeolP0aBESDsG3ujLv56NXKQ2CJkDqn4Lgzu2HgqH9BiC2wrdfFrV1BcZ503uRjuGjAXa8
-	jDLT4gVvEakIDgMgq1Nr1VFYQqiLBpg=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-416-wXghRkhPN6SL87154hHVOQ-1; Wed, 21 May 2025 04:57:20 -0400
-X-MC-Unique: wXghRkhPN6SL87154hHVOQ-1
-X-Mimecast-MFC-AGG-ID: wXghRkhPN6SL87154hHVOQ_1747817839
-Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-acf00f500d2so200111966b.2
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 01:57:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747817839; x=1748422639;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JfOqXSQo7CKTaqGd/jh9hve0GBvT5oZOukPMAeA+fDA=;
-        b=lP6Kjt2gxIbTJPTKhtRc4tDWirauw73klgiznfWYV+vZjHut8MoKjZ3QT7mtT+RMhV
-         lSvcVMO3nLE+f8jQrS7hjXc0XiNLyCQbvJ31GTROKX9KtxzCkgo6FG7RWvigKhn+jK+d
-         4eak7zD5lZd8BRy7vGn3Pdk2M+TKmvC27yHbKf2XYbGk/KKUSh+Nggsz1of6isNZxlGM
-         f20hScCnl1zRjaueXlKga91wIed93agHqzrFZQ+l3aVOg1wbc2rU4exaFvHIHkl2lAhD
-         XZPlMR8PQ85rmHy4kUWwKnDzQzus6rLV3bGgzN1WKHo3KOJsg3gOPkKupshVmrHUx38F
-         tovg==
-X-Forwarded-Encrypted: i=1; AJvYcCVDB9o4/V2W6vH9gOA0CwgXUsD9p9aJ7Vlf+fR37GPBAJoEdXKlSdtb5B/TE5rfjl3bvQNzcWzpk18mYvE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyutWLtC2q80DYgU5ji9nxgxCTv9OTV3mVVLF3em02LvEfF3d22
-	UR1OblSpzWYuX34insNaEqQalhH+CXrnTPYY2Qq5WyL1QT+J0e/yZzkrXbIzQ0k0EA+LMmnBRjY
-	3lmwtQSB9v6nFlSDHsKpWGU2xfcRF22QSysjjAJB+ACRDyhvlgE1sGOS+cAcNKMQXHQ==
-X-Gm-Gg: ASbGncvTM0zcuqG9lQfIfbv0yp5nRYPD+oCzYcl1Lzj5z2h7uV2tIc34u1wESmJLOw9
-	87S3APCpcoPdWktgC++5aiOin3J2eRGXogT7a6Y1pnm60ywFLcpL0qnYbInj22O2sCRxOEpsK83
-	yF0a5KSrSOUGYMTfJKUbSD8dcY7jhB+DyU3pQpY9pLqqbMJQ1hw379DmlBxWQBKWoCX2hxk580Z
-	S6JZEMJuCuCzfZNnDrn4g1UUQzlAmWSSGeSKkJI7bSj9A8wC/RkTccr2oZm/GuDfTP+hewNhdSb
-	Lv5ccEZf5PIyRQCN4QLXyU6Gz9xoI1hoQ6K9rdgQIPzUaC4Jp7pGbiqKPi9Q
-X-Received: by 2002:a17:907:6d23:b0:ac1:ea29:4e63 with SMTP id a640c23a62f3a-ad52d54495amr1849743766b.26.1747817839309;
-        Wed, 21 May 2025 01:57:19 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEtnUdwERWpUNuT2ZQpVUSKe1pvNBlwNoQW+BT1WYvMhwywmwvGk8BSRk37JEWNFyWGGlv3dA==
-X-Received: by 2002:a17:907:6d23:b0:ac1:ea29:4e63 with SMTP id a640c23a62f3a-ad52d54495amr1849740766b.26.1747817838661;
-        Wed, 21 May 2025 01:57:18 -0700 (PDT)
-Received: from sgarzare-redhat (host-82-53-134-35.retail.telecomitalia.it. [82.53.134.35])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d047754sm858957766b.7.2025.05.21.01.57.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 01:57:17 -0700 (PDT)
-Date: Wed, 21 May 2025 10:57:13 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Xuewei Niu <niuxuewei97@gmail.com>
-Cc: davem@davemloft.net, fupan.lfp@antgroup.com, jasowang@redhat.com, 
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, mst@redhat.com, 
-	niuxuewei.nxw@antgroup.com, pabeni@redhat.com, stefanha@redhat.com, 
-	virtualization@lists.linux.dev, xuanzhuo@linux.alibaba.com
-Subject: Re: [PATCH 2/3] vsock/virtio: Add SIOCINQ support for all virtio
- based transports
-Message-ID: <bbn4lvdwh42m2zvi3rdyws66y5ulew32rchtz3kxirqlllkr63@7toa4tcepax3>
-References: <ca3jkuttkt3yfdgcevp7s3ejrxx3ngkoyuopqw2k2dtgsqox7w@fhicoics2kiv>
- <20250521020613.3218651-1-niuxuewei.nxw@antgroup.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qnbh/9kI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BA2CC4CEE4;
+	Wed, 21 May 2025 08:57:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747817878;
+	bh=ua7q+H1WgOWVcLV6yULMClYrx7Bnz34PuVBhzv5mcnM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Qnbh/9kIwlewmeCrHEnn70KkQc7O6ES+h8TW8j/oXsWNJ8+b91k9gp3+D3oZZAEac
+	 35c3sk+4H9+LrdhVh3+BRIaFwTuEgCY/r5l2yO92nXgCMQy61/k0yoNjWKeGc2V/Si
+	 NY9oILnzoc9TzjFhgfrBKetfvo6MC0PZqBtDlnbkaS/ubj3EVJQy1dj6E+ibksH16G
+	 rJDUt+ooLqAAhB6VGuaiYtoqpd4RD5k+dgbtaPRgKAslON+3YvDyq2wtTcroGVVnt0
+	 sLcgQKTGtDmhr5cPTHPpW0YoTRs0xFSaPqveGoMro01wO/uvx2kF19riNOx4IWeT06
+	 9A24umMO5i9CA==
+Received: by pali.im (Postfix)
+	id 61EBE723; Wed, 21 May 2025 10:57:55 +0200 (CEST)
+Date: Wed, 21 May 2025 10:57:55 +0200
+From: Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To: Andrey Albershteyn <aalbersh@redhat.com>
+Cc: Dave Chinner <david@fromorbit.com>, Amir Goldstein <amir73il@gmail.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Matt Turner <mattst88@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	Michal Simek <monstr@monstr.eu>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Rich Felker <dalias@libc.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	"David S . Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Chris Zankel <chris@zankel.net>,
+	Max Filippov <jcmvbkbc@gmail.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+	=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Stephen Smalley <stephen.smalley.work@gmail.com>,
+	Ondrej Mosnacek <omosnace@redhat.com>,
+	Tyler Hicks <code@tyhicks.com>, Miklos Szeredi <miklos@szeredi.hu>,
+	linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	sparclinux@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-security-module@vger.kernel.org, linux-api@vger.kernel.org,
+	Linux-Arch <linux-arch@vger.kernel.org>, selinux@vger.kernel.org,
+	ecryptfs@vger.kernel.org, linux-unionfs@vger.kernel.org,
+	linux-xfs@vger.kernel.org, Andrey Albershteyn <aalbersh@kernel.org>
+Subject: Re: [PATCH v5 0/7] fs: introduce file_getattr and file_setattr
+ syscalls
+Message-ID: <20250521085755.4bucg7vq2kb3mbfk@pali>
+References: <20250513-xattrat-syscall-v5-0-22bb9c6c767f@kernel.org>
+ <399fdabb-74d3-4dd6-9eee-7884a986dab1@app.fastmail.com>
+ <20250515-bedarf-absagen-464773be3e72@brauner>
+ <CAOQ4uxicuEkOas2UR4mqfus9Q2RAeKKYTwbE2XrkcE_zp8oScQ@mail.gmail.com>
+ <aCsX4LTpAnGfFjHg@dread.disaster.area>
+ <sfmrojifgnrpeilqxtixyqrdjj5uvvpbvirxmlju5yce7z72vi@ondnx7qbie4y>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250521020613.3218651-1-niuxuewei.nxw@antgroup.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <sfmrojifgnrpeilqxtixyqrdjj5uvvpbvirxmlju5yce7z72vi@ondnx7qbie4y>
+User-Agent: NeoMutt/20180716
 
-On Wed, May 21, 2025 at 10:06:13AM +0800, Xuewei Niu wrote:
->> On Mon, May 19, 2025 at 03:06:48PM +0800, Xuewei Niu wrote:
->> >The virtio_vsock_sock has a new field called bytes_unread as the return
->> >value of the SIOCINQ ioctl.
->> >
->> >Though the rx_bytes exists, we introduce a bytes_unread field to the
->> >virtio_vsock_sock struct. The reason is that it will not be updated
->> >until the skbuff is fully consumed, which causes inconsistency.
->> >
->> >The byte_unread is increased by the length of the skbuff when skbuff is
->> >enqueued, and it is decreased when dequeued.
->> >
->> >Signed-off-by: Xuewei Niu <niuxuewei.nxw@antgroup.com>
->> >---
->> > drivers/vhost/vsock.c                   |  1 +
->> > include/linux/virtio_vsock.h            |  2 ++
->> > net/vmw_vsock/virtio_transport.c        |  1 +
->> > net/vmw_vsock/virtio_transport_common.c | 17 +++++++++++++++++
->> > net/vmw_vsock/vsock_loopback.c          |  1 +
->> > 5 files changed, 22 insertions(+)
->> >
->> >diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
->> >index 802153e23073..0f20af6e5036 100644
->> >--- a/drivers/vhost/vsock.c
->> >+++ b/drivers/vhost/vsock.c
->> >@@ -452,6 +452,7 @@ static struct virtio_transport vhost_transport = {
->> > 		.notify_set_rcvlowat      = virtio_transport_notify_set_rcvlowat,
->> >
->> > 		.unsent_bytes             = virtio_transport_unsent_bytes,
->> >+		.unread_bytes             = virtio_transport_unread_bytes,
->> >
->> > 		.read_skb = virtio_transport_read_skb,
->> > 	},
->> >diff --git a/include/linux/virtio_vsock.h b/include/linux/virtio_vsock.h
->> >index 0387d64e2c66..0a7bd240113a 100644
->> >--- a/include/linux/virtio_vsock.h
->> >+++ b/include/linux/virtio_vsock.h
->> >@@ -142,6 +142,7 @@ struct virtio_vsock_sock {
->> > 	u32 buf_alloc;
->> > 	struct sk_buff_head rx_queue;
->> > 	u32 msg_count;
->> >+	size_t bytes_unread;
->>
->> Can we just use `rx_bytes` field we already have?
->>
->> Thanks,
->> Stefano
->
->I perfer not. The `rx_bytes` won't be updated until the skbuff is fully
->consumed, causing inconsistency issues. If it is acceptable to you, I'll
->reuse the field instead.
+On Wednesday 21 May 2025 10:48:26 Andrey Albershteyn wrote:
+> On 2025-05-19 21:37:04, Dave Chinner wrote:
+> > On Thu, May 15, 2025 at 12:33:31PM +0200, Amir Goldstein wrote:
+> > > On Thu, May 15, 2025 at 11:02 AM Christian Brauner <brauner@kernel.org> wrote:
+> > > >
+> > > > On Tue, May 13, 2025 at 11:53:23AM +0200, Arnd Bergmann wrote:
+> > > > > On Tue, May 13, 2025, at 11:17, Andrey Albershteyn wrote:
+> > > > >
+> > > > > >
+> > > > > >     long syscall(SYS_file_getattr, int dirfd, const char *pathname,
+> > > > > >             struct fsxattr *fsx, size_t size, unsigned int at_flags);
+> > > > > >     long syscall(SYS_file_setattr, int dirfd, const char *pathname,
+> > > > > >             struct fsxattr *fsx, size_t size, unsigned int at_flags);
+> > > > >
+> > > > > I don't think we can have both the "struct fsxattr" from the uapi
+> > > > > headers, and a variable size as an additional argument. I would
+> > > > > still prefer not having the extensible structure at all and just
+> > > >
+> > > > We're not going to add new interfaces that are fixed size unless for the
+> > > > very basic cases. I don't care if we're doing that somewhere else in the
+> > > > kernel but we're not doing that for vfs apis.
+> > > >
+> > > > > use fsxattr, but if you want to make it extensible in this way,
+> > > > > it should use a different structure (name). Otherwise adding
+> > > > > fields after fsx_pad[] would break the ioctl interface.
+> > > >
+> > > > Would that really be a problem? Just along the syscall simply add
+> > > > something like:
+> > > >
+> > > > diff --git a/fs/ioctl.c b/fs/ioctl.c
+> > > > index c91fd2b46a77..d3943805c4be 100644
+> > > > --- a/fs/ioctl.c
+> > > > +++ b/fs/ioctl.c
+> > > > @@ -868,12 +868,6 @@ static int do_vfs_ioctl(struct file *filp, unsigned int fd,
+> > > >         case FS_IOC_SETFLAGS:
+> > > >                 return ioctl_setflags(filp, argp);
+> > > >
+> > > > -       case FS_IOC_FSGETXATTR:
+> > > > -               return ioctl_fsgetxattr(filp, argp);
+> > > > -
+> > > > -       case FS_IOC_FSSETXATTR:
+> > > > -               return ioctl_fssetxattr(filp, argp);
+> > > > -
+> > > >         case FS_IOC_GETFSUUID:
+> > > >                 return ioctl_getfsuuid(filp, argp);
+> > > >
+> > > > @@ -886,6 +880,20 @@ static int do_vfs_ioctl(struct file *filp, unsigned int fd,
+> > > >                 break;
+> > > >         }
+> > > >
+> > > > +       switch (_IOC_NR(cmd)) {
+> > > > +       case _IOC_NR(FS_IOC_FSGETXATTR):
+> > > > +               if (WARN_ON_ONCE(_IOC_TYPE(cmd) != _IOC_TYPE(FS_IOC_FSGETXATTR)))
+> > > > +                       return SOMETHING_SOMETHING;
+> > > > +               /* Only handle original size. */
+> > > > +               return ioctl_fsgetxattr(filp, argp);
+> > > > +
+> > > > +       case _IOC_NR(FFS_IOC_FSSETXATTR):
+> > > > +               if (WARN_ON_ONCE(_IOC_TYPE(cmd) != _IOC_TYPE(FFS_IOC_FSSETXATTR)))
+> > > > +                       return SOMETHING_SOMETHING;
+> > > > +               /* Only handle original size. */
+> > > > +               return ioctl_fssetxattr(filp, argp);
+> > > > +       }
+> > > > +
+> > > 
+> > > I think what Arnd means is that we will not be able to change struct
+> > > sfxattr in uapi
+> > > going forward, because we are not going to deprecate the ioctls and
+> > 
+> > There's no need to deprecate anything to rev an ioctl API.  We have
+> > had to solve this "changing struct size" problem previously in XFS
+> > ioctls. See XFS_IOC_FSGEOMETRY and the older XFS_IOC_FSGEOMETRY_V4
+> > and XFS_IOC_FSGEOMETRY_V1 versions of the API/ABI.
+> > 
+> > If we need to increase the structure size, we can rename the existing
+> > ioctl and struct to fix the version in the API, then use the
+> > original name for the new ioctl and structure definition.
+> > 
+> > The only thing we have to make sure of is that the old and new
+> > structures have exactly the same overlapping structure. i.e.
+> > extension must always be done by appending new varibles, they can't
+> > be put in the middle of the structure.
+> > 
+> > This way applications being rebuild will pick up the new definition
+> > automatically when the system asserts that it is suppored, whilst
+> > existing binaries will always still be supported by the kernel.
+> > 
+> > If the application wants/needs to support all possible kernels, then
+> > if XFS_IOC_FSGEOMETRY is not supported, call XFS_IOC_FSGEOMETRY_V4,
+> > and if that fails (only on really old irix!) or you only need
+> > something in that original subset, call XFS_IOC_FSGEOMETRY_V1 which
+> > will always succeed....
+> > 
+> > > Should we will need to depart from this struct definition and we might
+> > > as well do it for the initial release of the syscall rather than later on, e.g.:
+> > > 
+> > > --- a/include/uapi/linux/fs.h
+> > > +++ b/include/uapi/linux/fs.h
+> > > @@ -148,6 +148,17 @@ struct fsxattr {
+> > >         unsigned char   fsx_pad[8];
+> > >  };
+> > > 
+> > > +/*
+> > > + * Variable size structure for file_[sg]et_attr().
+> > > + */
+> > > +struct fsx_fileattr {
+> > > +       __u32           fsx_xflags;     /* xflags field value (get/set) */
+> > > +       __u32           fsx_extsize;    /* extsize field value (get/set)*/
+> > > +       __u32           fsx_nextents;   /* nextents field value (get)   */
+> > > +       __u32           fsx_projid;     /* project identifier (get/set) */
+> > > +       __u32           fsx_cowextsize; /* CoW extsize field value (get/set)*/
+> > > +};
+> > > +
+> > > +#define FSXATTR_SIZE_VER0 20
+> > > +#define FSXATTR_SIZE_LATEST FSXATTR_SIZE_VER0
+> > 
+> > If all the structures overlap the same, all that is needed in the
+> > code is to define the structure size that should be copied in and
+> > parsed. i.e:
+> > 
+> > 	case FSXATTR..._V1:
+> > 		return ioctl_fsxattr...(args, sizeof(fsx_fileattr_v1));
+> > 	case FSXATTR..._V2:
+> > 		return ioctl_fsxattr...(args, sizeof(fsx_fileattr_v2));
+> > 	case FSXATTR...:
+> > 		return ioctl_fsxattr...(args, sizeof(fsx_fileattr));
+> > 
+> > -Dave.
+> > -- 
+> > Dave Chinner
+> > david@fromorbit.com
+> > 
+> 
+> So, looks like there's at least two solutions to this concern.
+> Considering also that we have a bit of space in fsxattr,
+> 'fsx_pad[8]', I think it's fine to stick with the current fsxattr
+> for now.
+> 
+> -- 
+> - Andrey
+> 
 
-I think here we found a little pre-existing issue that should be related
-also to what Arseniy (CCed) is trying to fix (low_rx_bytes).
-
-We basically have 2 counters:
-- rx_bytes, which we use internally to see if there are bytes to read
-   and for sock_rcvlowat
-- fwd_cnt, which we use instead for the credit mechanism and informing
-   the other peer whether we have space or not
-
-These are updated with virtio_transport_dec_rx_pkt() and 
-virtio_transport_inc_rx_pkt()
-
-As far as I can see, from the beginning, we call 
-virtio_transport_dec_rx_pkt() only when we consume the entire packet.
-This makes sense for `fwd_cnt`, because we still have occupied space in 
-memory and we don't want to update the credit until we free all the 
-space, but I think it makes no sense for `rx_bytes`, which is only used 
-internally and should reflect the current situation of bytes to read.
-
-So in my opinion we should fix it this way (untested):
-
-diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
-index 11eae88c60fc..ee70cb114328 100644
---- a/net/vmw_vsock/virtio_transport_common.c
-+++ b/net/vmw_vsock/virtio_transport_common.c
-@@ -449,10 +449,10 @@ static bool virtio_transport_inc_rx_pkt(struct virtio_vsock_sock *vvs,
-  }
-
-  static void virtio_transport_dec_rx_pkt(struct virtio_vsock_sock *vvs,
--					u32 len)
-+					u32 bytes_read, u32 bytes_dequeued)
-  {
--	vvs->rx_bytes -= len;
--	vvs->fwd_cnt += len;
-+	vvs->rx_bytes -= bytes_read;
-+	vvs->fwd_cnt += bytes_dequeued;
-  }
-
-  void virtio_transport_inc_tx_pkt(struct virtio_vsock_sock *vvs, struct sk_buff *skb)
-@@ -581,11 +581,11 @@ virtio_transport_stream_do_dequeue(struct vsock_sock *vsk,
-  				   size_t len)
-  {
-  	struct virtio_vsock_sock *vvs = vsk->trans;
--	size_t bytes, total = 0;
-  	struct sk_buff *skb;
-  	u32 fwd_cnt_delta;
-  	bool low_rx_bytes;
-  	int err = -EFAULT;
-+	size_t total = 0;
-  	u32 free_space;
-
-  	spin_lock_bh(&vvs->rx_lock);
-@@ -597,6 +597,8 @@ virtio_transport_stream_do_dequeue(struct vsock_sock *vsk,
-  	}
-
-  	while (total < len && !skb_queue_empty(&vvs->rx_queue)) {
-+		size_t bytes, dequeued = 0;
-+
-  		skb = skb_peek(&vvs->rx_queue);
-
-  		bytes = min_t(size_t, len - total,
-@@ -620,12 +622,12 @@ virtio_transport_stream_do_dequeue(struct vsock_sock *vsk,
-  		VIRTIO_VSOCK_SKB_CB(skb)->offset += bytes;
-
-  		if (skb->len == VIRTIO_VSOCK_SKB_CB(skb)->offset) {
--			u32 pkt_len = le32_to_cpu(virtio_vsock_hdr(skb)->len);
--
--			virtio_transport_dec_rx_pkt(vvs, pkt_len);
-+			dequeued = le32_to_cpu(virtio_vsock_hdr(skb)->len);
-  			__skb_unlink(skb, &vvs->rx_queue);
-  			consume_skb(skb);
-  		}
-+
-+		virtio_transport_dec_rx_pkt(vvs, bytes, dequeued);
-  	}
-
-  	fwd_cnt_delta = vvs->fwd_cnt - vvs->last_fwd_cnt;
-@@ -782,7 +784,7 @@ static int virtio_transport_seqpacket_do_dequeue(struct vsock_sock *vsk,
-  				msg->msg_flags |= MSG_EOR;
-  		}
-
--		virtio_transport_dec_rx_pkt(vvs, pkt_len);
-+		virtio_transport_dec_rx_pkt(vvs, pkt_len, pkt_len);
-  		vvs->bytes_unread -= pkt_len;
-  		kfree_skb(skb);
-  	}
-@@ -1752,6 +1754,7 @@ int virtio_transport_read_skb(struct vsock_sock *vsk, skb_read_actor_t recv_acto
-  	struct sock *sk = sk_vsock(vsk);
-  	struct virtio_vsock_hdr *hdr;
-  	struct sk_buff *skb;
-+	u32 pkt_len;
-  	int off = 0;
-  	int err;
-
-@@ -1769,7 +1772,8 @@ int virtio_transport_read_skb(struct vsock_sock *vsk, skb_read_actor_t recv_acto
-  	if (le32_to_cpu(hdr->flags) & VIRTIO_VSOCK_SEQ_EOM)
-  		vvs->msg_count--;
-
--	virtio_transport_dec_rx_pkt(vvs, le32_to_cpu(hdr->len));
-+	pkt_len = le32_to_cpu(hdr->len);
-+	virtio_transport_dec_rx_pkt(vvs, pkt_len, pkt_len);
-  	spin_unlock_bh(&vvs->rx_lock);
-
-  	virtio_transport_send_credit_update(vsk);
-
-@Arseniy WDYT?
-I will test it and send a proper patch.
-
-@Xuewei with that fixed, I think you can use `rx_bytes`, right?
-
-Also because you missed for example `virtio_transport_read_skb()` used 
-by ebpf (see commit 3543152f2d33 ("vsock: Update rx_bytes on 
-read_skb()")).
-
-Thanks,
-Stefano
-
+It is planned to extend this structure for new windows attributes as was
+discussed. And seem that the current free space would not be enough for
+everything.
