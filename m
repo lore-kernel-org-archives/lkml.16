@@ -1,156 +1,119 @@
-Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3592628682
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 01:32:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=183.62.165.209
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3654E28682;
+	Wed, 21 May 2025 01:32:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747791129; cv=none; b=Gt88anscBfcVPgN3FDATsPJqIP24Ao5lwaOYMwj/Salrp9FjxNBY+VkvOBJcK/QuX62G+XzjBwFIUrYV1TspW4k+FWkHx/Yy4zRnbYl5y3rPf+X2d77AJ6MQVkZSOsq5OrGrMpcwlNO8ZrNoosp04DljgQHFGVI1YpK0tEYd6Vs=
+	t=1747791133; cv=none; b=AB0Yid7uehfseMgWp33OSEUKiq63EOYoi6lADEY0SwJyM3Oa0xs2tF832U6quS4SW9TuIXugfjToOTEb2YQinLTo+Tp9Jk//G7RmQlvwLU9Nv8KhFMk1Y72p0CWMX0HLHz8qkzC2+6tCtV9elbOWuoARxVj5eU3XmwV6Nuh47WA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747791129; c=relaxed/simple;
-	bh=sa0nmMui7F09VxhrE4hk+fX5oghcvqnZGgKzKGwEJH8=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=tXnm5CMAlVCEep/+rhRwtHaAIm7+yVVYNlhvBioaE3+bb88E55efKYawLMUJJQSyZP3PQBkvTyrJ0oguNfmo8YsSDnckJ3ryfN6EonEZsAc3bHUTPIxnGNlPZW9zLmtKHykmueyYF06WkNPSjswHTkEZlpsWHxizFhxvcljs+p8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=183.62.165.209
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4b2DRh2wgWz51SYK;
-	Wed, 21 May 2025 09:32:00 +0800 (CST)
-Received: from njy2app04.zte.com.cn ([10.40.12.64])
-	by mse-fl1.zte.com.cn with SMTP id 54L1Vumx043334;
-	Wed, 21 May 2025 09:31:56 +0800 (+08)
-	(envelope-from jiang.kun2@zte.com.cn)
-Received: from mapi (njy2app08[null])
-	by mapi (Zmail) with MAPI id mid204;
-	Wed, 21 May 2025 09:31:57 +0800 (CST)
-Date: Wed, 21 May 2025 09:31:57 +0800 (CST)
-X-Zmail-TransId: 2b00682d2d0dffffffffcfd-3192a
-X-Mailer: Zmail v1.0
-Message-ID: <20250521093157668iQrhhcMjA-th5LQf4-A3c@zte.com.cn>
+	s=arc-20240116; t=1747791133; c=relaxed/simple;
+	bh=/C17F8NwaHps7gZMSvLoe7rxfL/GB/az1bxUkpKESoA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=XZKQXAJPLYrq4Skib1z0pKj0yjhjDeordbs+xCAuWwRv587TuGkI5muTR7ywte77C0TzLT65el7Kofsmoc7qTwgzjPoE3MEnYzIseoDYbGEq7pEGxnkX+4418G9neYdl3PJVgxl+UE7KZjt45b2wlHUAaqbbr6G9CnAIGbhxaeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=omOKrpwf; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="omOKrpwf"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54KGe2gb020685;
+	Wed, 21 May 2025 01:32:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Apy6Eq56jMsxicEJZ6kB/VOVsoKc+Ruze4hqLTGV2TY=; b=omOKrpwfaSYdrMUR
+	7MtZT8I2jIagq0v9x80EiF+ypR6mGZ1N8PukAeIZ7LAHI+E9KsVnQcsIFznAFmj1
+	l0oJEhwwXdKC+tt43znqH1BNOLb9HGlE7lzw/shGjCsj0x8Idyz3bHK0dW1P9uNB
+	AopIIJCWUpswp889ToNqLrP+URS4BzTDCcngi7debnDARFJ8+yq53pANqMtkpcgH
+	PVc+eb50RK6W3RUcEGlI20DpQAyS4ou9WtmP+Apuoh2OOcm7DJhmXRuFlYFT/HQC
+	bht3OX4o7u/6K/rkDMGtmgRJcuuTcKH7SJ4yiVIdDCLnQO5dm6iCqlT0DCLU3EGr
+	TGlMfA==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf014hc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 21 May 2025 01:32:07 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54L1W6Yx024619
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 21 May 2025 01:32:06 GMT
+Received: from [10.253.11.26] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 20 May
+ 2025 18:32:03 -0700
+Message-ID: <dabed183-6907-4483-8c79-616aafaf2851@quicinc.com>
+Date: Wed, 21 May 2025 09:32:00 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <jiang.kun2@zte.com.cn>
-To: <yang.yang29@zte.com.cn>, <akpm@linux-foundation.org>,
-        <xu.xin16@zte.com.cn>
-Cc: <bbonev@devuan.org>, <linux-kernel@vger.kernel.org>,
-        <bsingharora@gmail.com>, <jiang.kun2@zte.com.cn>,
-        <wang.yaxin@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIIGxpbnV4IG5leHQgdjNdIGRlbGF5YWNjdDogcmVtb3ZlIHJlZHVuZGFudCBjb2RlIGFuZAogYWRqdXN0IGluZGVudGF0aW9u?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl1.zte.com.cn 54L1Vumx043334
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 682D2D10.001/4b2DRh2wgWz51SYK
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] arm64: dts: qcom: qcs615: Enable camss for
+ qcs615-adp-air
+To: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>, <bryan.odonoghue@linaro.org>,
+        <todor.too@gmail.com>, <rfoss@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>
+References: <20250520-qcs615-adp-air-camss-v1-0-ac25ca137d34@quicinc.com>
+ <20250520-qcs615-adp-air-camss-v1-2-ac25ca137d34@quicinc.com>
+ <748f96f7-d690-4823-845f-67642db97a06@linaro.org>
+Content-Language: en-US
+From: Wenmeng Liu <quic_wenmliu@quicinc.com>
+In-Reply-To: <748f96f7-d690-4823-845f-67642db97a06@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: uDDGAnk3pdo2ByOo7T_kePCB7wevCY7f
+X-Proofpoint-ORIG-GUID: uDDGAnk3pdo2ByOo7T_kePCB7wevCY7f
+X-Authority-Analysis: v=2.4 cv=ZP3XmW7b c=1 sm=1 tr=0 ts=682d2d17 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
+ a=sEs97sFUeVeiuFhqRTwA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDAxMyBTYWx0ZWRfXwcTIeP4LOMYL
+ AdrIFGNSjTaWpm9WrTamLnio5XbmY5JERVRDTONAphkzCoieFEKN2ev42QpkU5q7Gw55aiy3iwz
+ J2U7HWyNfpO/48j/VOCNOkhiR7Oe8ailJHs0deeLF/1BVuZwpba1ye97mcxWyy9nl8pnrC71Ms6
+ blgZBnqYuqSk/RNUhjxV+LAoPvmcONFDzHERZWQ8DfMFMMxqY+K/Sc0UAri1OvqOQjd4z9b5cDR
+ K9Bj2R5RoaZZF0+blp1dKhWSfBQ8hFK3vSqp7TDRFbHKk44azcUja7Z4ww7a2E1Seob9NY4CWjs
+ ODtV50cq2S/ojqtkabKk0QhsJZSmgaQapLTvIYCm3HYgD6sWuSKEdliWLx8l5+you9XhQP/2r1T
+ Y6+sfBWWuU3e86NCbV/ra/Ng3rG4Cxyj/2MWNuuot22SeIQQ4YSt+s2QhE8DMnarWCQZUrnw
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-21_01,2025-05-20_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 adultscore=0 mlxlogscore=898 suspectscore=0 bulkscore=0
+ impostorscore=0 phishscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
+ clxscore=1015 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505210013
 
-From: Wang Yaxin <wang.yaxin@zte.com.cn>
-
-remove redundant code and adjust indentation of xxx_delay_max/min
-
-Signed-off-by: Wang Yaxin <wang.yaxin@zte.com.cn>
-Signed-off-by: Jiang Kun <jiang.kun2@zte.com.cn>
----
-v2->v3:
-https://lore.kernel.org/all/20250519223244317Gbg_lRkV5N9i15dnPMo63@zte.com.cn/
-1. remove redundant code in delayacct
-
- include/uapi/linux/taskstats.h |  8 +++---
- kernel/delayacct.c             | 51 +++++++++++-----------------------
- 2 files changed, 20 insertions(+), 39 deletions(-)
-
-diff --git a/include/uapi/linux/taskstats.h b/include/uapi/linux/taskstats.h
-index d71aa022b2ef..5929030d4e8b 100644
---- a/include/uapi/linux/taskstats.h
-+++ b/include/uapi/linux/taskstats.h
-@@ -225,11 +225,11 @@ struct taskstats {
- 	__u64	compact_delay_max;
- 	__u64	compact_delay_min;
-
--	__u64    wpcopy_delay_max;
--	__u64    wpcopy_delay_min;
-+	__u64	wpcopy_delay_max;
-+	__u64	wpcopy_delay_min;
-
--	__u64    irq_delay_max;
--	__u64    irq_delay_min;
-+	__u64	irq_delay_max;
-+	__u64	irq_delay_min;
- };
 
 
-diff --git a/kernel/delayacct.c b/kernel/delayacct.c
-index eb63a021ac04..30e7912ebb0d 100644
---- a/kernel/delayacct.c
-+++ b/kernel/delayacct.c
-@@ -14,6 +14,15 @@
- #include <linux/delayacct.h>
- #include <linux/module.h>
+On 2025/5/20 20:19, Vladimir Zapolskiy wrote:
+> Hello Wenmeng,
+> 
+> On 5/20/25 11:56, Wenmeng Liu wrote:
+>> This change enables camera driver for QCS615 ADP AIR board.
+> 
+> what is the rationale of enabling CAMSS on the board without giving any
+> description of any sensors connected to the SoC?
+> 
 
-+#define UPDATE_DELAY(type) \
-+do { \
-+	d->type##_delay_max = tsk->delays->type##_delay_max; \
-+	d->type##_delay_min = tsk->delays->type##_delay_min; \
-+	tmp = d->type##_delay_total + tsk->delays->type##_delay; \
-+	d->type##_delay_total = (tmp < d->type##_delay_total) ? 0 : tmp; \
-+	d->type##_count += tsk->delays->type##_count; \
-+} while (0)
-+
- DEFINE_STATIC_KEY_FALSE(delayacct_key);
- int delayacct_on __read_mostly;	/* Delay accounting turned on/off */
- struct kmem_cache *delayacct_cache;
-@@ -173,41 +182,13 @@ int delayacct_add_tsk(struct taskstats *d, struct task_struct *tsk)
+Hi Vladimir,
 
- 	/* zero XXX_total, non-zero XXX_count implies XXX stat overflowed */
- 	raw_spin_lock_irqsave(&tsk->delays->lock, flags);
--	d->blkio_delay_max = tsk->delays->blkio_delay_max;
--	d->blkio_delay_min = tsk->delays->blkio_delay_min;
--	tmp = d->blkio_delay_total + tsk->delays->blkio_delay;
--	d->blkio_delay_total = (tmp < d->blkio_delay_total) ? 0 : tmp;
--	d->swapin_delay_max = tsk->delays->swapin_delay_max;
--	d->swapin_delay_min = tsk->delays->swapin_delay_min;
--	tmp = d->swapin_delay_total + tsk->delays->swapin_delay;
--	d->swapin_delay_total = (tmp < d->swapin_delay_total) ? 0 : tmp;
--	d->freepages_delay_max = tsk->delays->freepages_delay_max;
--	d->freepages_delay_min = tsk->delays->freepages_delay_min;
--	tmp = d->freepages_delay_total + tsk->delays->freepages_delay;
--	d->freepages_delay_total = (tmp < d->freepages_delay_total) ? 0 : tmp;
--	d->thrashing_delay_max = tsk->delays->thrashing_delay_max;
--	d->thrashing_delay_min = tsk->delays->thrashing_delay_min;
--	tmp = d->thrashing_delay_total + tsk->delays->thrashing_delay;
--	d->thrashing_delay_total = (tmp < d->thrashing_delay_total) ? 0 : tmp;
--	d->compact_delay_max = tsk->delays->compact_delay_max;
--	d->compact_delay_min = tsk->delays->compact_delay_min;
--	tmp = d->compact_delay_total + tsk->delays->compact_delay;
--	d->compact_delay_total = (tmp < d->compact_delay_total) ? 0 : tmp;
--	d->wpcopy_delay_max = tsk->delays->wpcopy_delay_max;
--	d->wpcopy_delay_min = tsk->delays->wpcopy_delay_min;
--	tmp = d->wpcopy_delay_total + tsk->delays->wpcopy_delay;
--	d->wpcopy_delay_total = (tmp < d->wpcopy_delay_total) ? 0 : tmp;
--	d->irq_delay_max = tsk->delays->irq_delay_max;
--	d->irq_delay_min = tsk->delays->irq_delay_min;
--	tmp = d->irq_delay_total + tsk->delays->irq_delay;
--	d->irq_delay_total = (tmp < d->irq_delay_total) ? 0 : tmp;
--	d->blkio_count += tsk->delays->blkio_count;
--	d->swapin_count += tsk->delays->swapin_count;
--	d->freepages_count += tsk->delays->freepages_count;
--	d->thrashing_count += tsk->delays->thrashing_count;
--	d->compact_count += tsk->delays->compact_count;
--	d->wpcopy_count += tsk->delays->wpcopy_count;
--	d->irq_count += tsk->delays->irq_count;
-+	UPDATE_DELAY(blkio);
-+	UPDATE_DELAY(swapin);
-+	UPDATE_DELAY(freepages);
-+	UPDATE_DELAY(thrashing);
-+	UPDATE_DELAY(compact);
-+	UPDATE_DELAY(wpcopy);
-+	UPDATE_DELAY(irq);
- 	raw_spin_unlock_irqrestore(&tsk->delays->lock, flags);
+We can perform validation through the CSID TPG(Test Pattern Generator), 
+so I enabled CAMSS.
 
- 	return 0;
--- 
-2.25.1
+Thanks,
+Wenmeng
