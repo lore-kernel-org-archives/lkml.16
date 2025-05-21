@@ -1,23 +1,66 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2064.outbound.protection.outlook.com [40.107.93.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CA7E2367CD;
-	Wed, 21 May 2025 10:43:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747824232; cv=none; b=aX1J2MdD4vSSToy23vgQTQAt8Y5Tez71vyVUtoOiwSUG6DbvdMlmXLfj7LMXeEYFmwMCHb6vlh0jWx/vUjOwO9EkYc7hJ16LL+UmmUlZepmDkr7EMiOgFPKaxxc6afZPiEnueUf1rLG7RB/1N9aJFjEbh+DL424zJFFuyILA9Jw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747824232; c=relaxed/simple;
-	bh=HH+lS204n84cgaCLZmze7JfQG4NEAqdFOJzfDxtcNWY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dwt2wpC6PMDEYV0LgEkHaAnSTTc11JDonggpGDZoZAtao7qKywEqjgmJgXsbpaC8IE+eIev4FSUE05WvdRsusTFtVtoNlaruab+gjdlR0Zcsjq/KpVgWWDkrCoGTvxQWlZl6DIV2pYzFWwveB5EQqbi/FTjh3Zc+80TVWWGJKyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A90C943967;
-	Wed, 21 May 2025 10:43:39 +0000 (UTC)
-Message-ID: <be461744-8a74-4ee6-9029-d3aa5e69b0f1@ghiti.fr>
-Date: Wed, 21 May 2025 12:43:39 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F40CD25F972;
+	Wed, 21 May 2025 10:44:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.64
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747824258; cv=fail; b=My9WrTcUVaCEuwwfiZ4Q3wIhDqDuQdh2zBzTyZunuwigSa4vtPysyif5OVQ5LLN2okhkw9en4ysuCLU1dDiVUwoZv1AbyWgctR7DtXEVm6yC46sY+gabY6X4KSs0M9oxobSGjz2kbKMF1mquoUxUr1S7iiDlWIBcZ8waeNosPsE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747824258; c=relaxed/simple;
+	bh=jd8Mj3fgg6M9ZM6KJyMVss7Yn1ENf8vI0BA5/hGfh18=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=vFaybrV2VWZuatUyc3ZA+8zw0k2GybkNyzumfWX4z/ZH5QDoHhfq0in0V4dU4180xt7iOM75Z3zjeSSsLTzuuBCB+IgP1DZxiShc4L0rTioDTulkCL2LXLzyjW4wee2e4cp9LuHWwhwxnV4Ftq2HtOieenpZBEM8ASEipp/FZMQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=nu5ssv0h; arc=fail smtp.client-ip=40.107.93.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="nu5ssv0h"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Z6Igty8XFdvnBojM87mwBsS7udVbwl4VLUUqsJIKfYSF3VQELTB3PIw/yg55PoRBMJ3JiE6IolG29I8TG3g9LVbAdMJejyexBbDVvVtOOGdN5eTbqiHu5getHVsSI+cgHQLBFdX4RnFH1w4eIq1pk8ooe1JhK31aaiYcYpoyoRv84Pl6KAfg1MVIn0ivgOyNl1x/5XBT+tKXBQEpgTLNzePApnefFIeFE52O7D1Zx26L7zSedR+cTKArS48fRI52U1LOiiu7ZZqEdPW+l3WRR4IIOgcYsdL8unjmwm8x4akNwiC5O9P7EExglaoxj4UCT3hIhObVeu36UUkL1thJrQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=j73jbV88UiiQk9nK9TBNoXJ3ZeXMNp3bKR/PWS5J1i0=;
+ b=T3QELaDSDkVNh/zDR+U0FVHUycDzwqqkBNABNJyoNwjcjbxCepW+/Rdv3YlyMkCRGktw+NT38ZaoGBF2ad7lqw9roWmuO/NqTjthQHBCUJRk75eB9QYAA29gDEBerwH1wUZ2clsXFztpmhl4E8gBOpN6AZk2yRUtxjKXxmy3mhquA8ZIyMEq74J4aSVVAKbu4yLvy2IEJhUSNTjH1KVWl6Hut6VXng9dBf8Bqj0nV13DB6FLrCdms1ZSgMQNUVTFgYl2s04lksWMEVMoBCxxWukAcPpRFajP4c/NzBnMCX/nQrcRQeV2oVUJB4Gcql/HToS8dmMyhyiAcmsAzcbYZw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=huawei.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=j73jbV88UiiQk9nK9TBNoXJ3ZeXMNp3bKR/PWS5J1i0=;
+ b=nu5ssv0hqx2zt27W2Xazx0zOSWCKK4AAzGmGoDmbsVvzcCTZm6BmIQ6sOd3Iv/jHRJ8xw4TuYw7o9iGFALiKkq4ag9h6RKF20oqHdG/DZ8Wp1D3NGKy82PodHm2KxpEA7Mtgu/hlf8s0Q7OPPfHxM/UABguWQJYbg1EnRuL7bQDk+Dp5KQDCnxTPrTfDPSwQaZqJoKrF0zIfKJcosKrM/XpUEKR2Xg1tPIAqFSQYakJ8g7YNdXT6GjLWbjLq8v0G2vNjuYnF4/vw9u2QKocoBEuKmAe5KeHq+6DyEBYuXg/9bd6FdChS8Lu/3/rJOFLdszNcCin+4qxtPbwuqtPDnA==
+Received: from DS7PR03CA0333.namprd03.prod.outlook.com (2603:10b6:8:55::15) by
+ CYYPR12MB8990.namprd12.prod.outlook.com (2603:10b6:930:ba::9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8746.30; Wed, 21 May 2025 10:44:10 +0000
+Received: from CH3PEPF00000011.namprd21.prod.outlook.com
+ (2603:10b6:8:55:cafe::f8) by DS7PR03CA0333.outlook.office365.com
+ (2603:10b6:8:55::15) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8746.29 via Frontend Transport; Wed,
+ 21 May 2025 10:44:10 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ CH3PEPF00000011.mail.protection.outlook.com (10.167.244.116) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8792.4 via Frontend Transport; Wed, 21 May 2025 10:44:08 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 21 May
+ 2025 03:43:52 -0700
+Received: from [10.41.21.119] (10.126.230.35) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Wed, 21 May
+ 2025 03:43:47 -0700
+Message-ID: <98c87824-2c77-4ae3-b466-badd8e8187ad@nvidia.com>
+Date: Wed, 21 May 2025 16:13:44 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -25,271 +68,304 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/2] Allow for riscv-clock to pick up mmio address.
-To: aleksa.paunovic@htecgroup.com, Daniel Lezcano
- <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Paul Walmsley
- <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-riscv@lists.infradead.org,
- Djordje Todorovic <djordje.todorovic@htecgroup.com>
-References: <20250514-riscv-time-mmio-v4-0-cb0cf2922d66@htecgroup.com>
- <20250514-riscv-time-mmio-v4-2-cb0cf2922d66@htecgroup.com>
+Subject: Re: [PATCH] cpufreq: CPPC: Support for autonomous selection in
+ cppc_cpufreq
+To: Lifeng Zheng <zhenglifeng1@huawei.com>, <rafael@kernel.org>,
+	<viresh.kumar@linaro.org>, <pierre.gondois@arm.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+	<linuxarm@huawei.com>, <mario.limonciello@amd.com>,
+	<yumpusamongus@gmail.com>, <srinivas.pandruvada@linux.intel.com>,
+	<jonathan.cameron@huawei.com>, <zhanjie9@hisilicon.com>,
+	<lihuisong@huawei.com>, <cenxinghai@h-partners.com>, <yubowen8@huawei.com>,
+	<hepeng68@huawei.com>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20250507031941.2812701-1-zhenglifeng1@huawei.com>
 Content-Language: en-US
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <20250514-riscv-time-mmio-v4-2-cb0cf2922d66@htecgroup.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Sumit Gupta <sumitg@nvidia.com>
+In-Reply-To: <20250507031941.2812701-1-zhenglifeng1@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvkeejucdltddurdegfedvrddttddmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpedthfelfeejgeehveegleejleelgfevhfekieffkeeujeetfedvvefhledvgeegieenucfkphepvddttddumeekiedumeeffeekvdemvghfledtmegtugdvgeemlegsleehmeefudejsgemtgefudgrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmegtugdvgeemlegsleehmeefudejsgemtgefudgrpdhhvghloheplgfkrfggieemvddttddumeekiedumeeffeekvdemvghfledtmegtugdvgeemlegsleehmeefudejsgemtgefudgrngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopedufedprhgtphhtthhopegrlhgvkhhsrgdrphgruhhnohhvihgtsehhthgvtghgrhhouhhprdgtohhmpdhrtghpthhtohepuggrnhhivghlrdhlvgiitggrnhhosehlihhnrghrohdrohhrghdprhgtphhtt
- hhopehtghhlgieslhhinhhuthhrohhnihigrdguvgdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehprghulhdrfigrlhhmshhlvgihsehsihhfihhvvgdrtghomhdprhgtphhtthhopehprghlmhgvrhesuggrsggsvghlthdrtghomh
-X-GND-Sasl: alex@ghiti.fr
+X-ClientProxiedBy: rnnvmail201.nvidia.com (10.129.68.8) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PEPF00000011:EE_|CYYPR12MB8990:EE_
+X-MS-Office365-Filtering-Correlation-Id: ab30a8b9-5814-4baa-ec05-08dd98546a6a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|376014|7416014|7053199007|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?em5lWCttMEFQbWVRMHRTcE1xdGlqZWw4VnV6MHhGeS9HbnZEKzFDYXFpMVY3?=
+ =?utf-8?B?MlFBZzBKOFZ0T242c2g4UXR6MUNnaXpTUUhFQk5xMnZUOUM4aGk0cE5DWmdw?=
+ =?utf-8?B?RUlWeHJVMjFtNFlOTDk4b1cydzhGY0dFZVZnb1lEUTZsS3hFc1k0bXZFUzIr?=
+ =?utf-8?B?Tk1udFJDMDlvNnZsU1VYTnZvQWVVSnRtbFRrU0RJQmZxY3QraVllNzFhZk45?=
+ =?utf-8?B?TEhoRG9JdUtacVc2aGZLWVk4VFFKQmFEb3ZvOSthakE3MklOb2I2YzJOWGFt?=
+ =?utf-8?B?UGRocHh1R09sSFRTZDdtWkRva0NwS25vTkt2L0syMkJEN3BXTk1McEk0NlFL?=
+ =?utf-8?B?Nkh3cVBHVERPSkRPalUydkNXb1FwMmJkYTNpU0NLYWI3N3F4cG1Gb0Q2VzZj?=
+ =?utf-8?B?VzZLZEpzREFEZWtNUzRmaDgyOG9WMHlLSjJrQTVpSnBMMGVHWDJ5TjMrRVYy?=
+ =?utf-8?B?MldmblprbGdiNnpTQjlOTzNkank0Z2loM1hYN0lJL0Y5eXBNN0lmdE9NbUpj?=
+ =?utf-8?B?bXdlV0VKSnNTK25MbkRJaU5oRWlVa2Z5RVpaRGV0bVRBSWk1a3JCdU1TVzJK?=
+ =?utf-8?B?WWlVVG0ycXVYM1FBN3RQWmlBYTV5clVWVzRxeEw5cjZJaXA5N2ZMT01jUXpj?=
+ =?utf-8?B?ZGk4UW1zeGJkenRBTUZUSDIwQURBVEQvUHN2eDVMcnJXOE15b2FLaFlpbWRz?=
+ =?utf-8?B?OTE5M1EvblIvV3Y3SURvZ2g0SGI4WTJkbHVKRmlLbzJKTE04bmNhYllJeGZD?=
+ =?utf-8?B?Y0lYYTJQOVp5RFF2bTNOUUVvY3NsVVJmY1Y4Q0JHMmpQV2ZwbTlmakxXdEYy?=
+ =?utf-8?B?b3Q0R1lYc1B5NVB1eE52WlJPdDZPVzFmR0EvUnowRFpxUFZWS2FKUERIblMy?=
+ =?utf-8?B?MDJweVlDV2dlaUVQN08vdm9SSVV4Z25xZzBrZGkxbTJxNG1TQllwUC9pUUsr?=
+ =?utf-8?B?Q3Rjd3k5WjV0TExzdWVZYmw3Yk1kS21jeCt1OFI3NFcvTTVubitoQ1pXamtX?=
+ =?utf-8?B?VXVWb0xlSmljOUUxOS9kZ1Jzb2pkTmVPR2h3YnFWK3FyWmhJVXdIdEc4dU1x?=
+ =?utf-8?B?NzVQOU9GRFZ1eW41WUVUVUo1L0gxZnFmVm9PUWJvWFA5cW9NNjJJVDdPL1d1?=
+ =?utf-8?B?SC9DK3V6L3g4Z0t6Y0U4ZCtPVld4YitQWmdUQmdubkR5Tm13ODNGZVF1UkVm?=
+ =?utf-8?B?WUVONWwvTDMwbHI5V3NpM01VUXdwcmU1d2lxU0ViVU1UcERiVkt5SWRTZTA3?=
+ =?utf-8?B?ZDR5eFl6VEY1N0N1aVlZN1lyVUt5aldaelo2aVppKzNiMkVoMlBpSkY4MEds?=
+ =?utf-8?B?amNjS3Z0N0wzNHE4RmlrcUQ0aGdzNVV5eTN6NWJmRlVSSlBnU2YvbTdwdm1T?=
+ =?utf-8?B?T3QwWitETklFcHZhN1hEa216TVBaeUZRRzhZdGh2MjEwc0NZT3BoZ2tRWmc3?=
+ =?utf-8?B?WVo1VDU3eVg4UnN3TWFxTVJNRkNWbXZPSGVVUzh5T1VuUXJyS0RnM0Z0aHND?=
+ =?utf-8?B?N2ZrT0g1QlNtdW1tOSs0Q2NSZEp5WGdoenIwVjNRK1d2Q0NodjFIdExjRzR5?=
+ =?utf-8?B?aUFzVHdsRmppSUNmZVpCVkdvc0tuUkszSTF3MHhXb0pNSTdHY01PZGw3Y2U1?=
+ =?utf-8?B?aHRMUVVtOEM4R2ZnTVlKUk9BV011c25Cd3V2d1pidG9aVlNvdjl5SXZySVpu?=
+ =?utf-8?B?TFZ2NUNLeWNQVDl0TFZicnZvbjFuZ3M3bm9NdzYxZStZQ0t2K3lmVFNrcC9Z?=
+ =?utf-8?B?emV6L2tKanJ0TkVUdmtiVC9CdnRESjQ4eXJMQzVqQkxoTkkybE9vdEpLeDBt?=
+ =?utf-8?B?RVUwMWN3Y3NOdEc1UVFQaXdRUXV3a3ptWi9UV1dXRUtLRU4xZzJiZjZpNE1q?=
+ =?utf-8?B?QXZvc2dwQ2lwUm1GNVFQbmd3RmhwcDNDeU8vQnZOSTlmVDljQkpqelUyd2Vo?=
+ =?utf-8?B?VmlpWk1jRUtFdCsxY1A5WjJ2Wmp4TWRWRElxL0txMXZEUlc0R1Y5emp4bHRt?=
+ =?utf-8?B?RDVCdldXbWlMM0lDdWsxb0JnRzNVME9sRjA2elJtbkxCdG5CSDRYZ0g0enJh?=
+ =?utf-8?B?enR2MVl5RStESHdkTkNKdy9HeFY3ZFZwS3pNdz09?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(376014)(7416014)(7053199007)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2025 10:44:08.4957
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ab30a8b9-5814-4baa-ec05-08dd98546a6a
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH3PEPF00000011.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR12MB8990
 
-Hi Aleksa,
-
-First, you commit title should be prefixed with "riscv:".
-
-On 5/14/25 10:51, Aleksa Paunovic via B4 Relay wrote:
-> From: Aleksa Paunovic <aleksa.paunovic@htecgroup.com>
->
-> Allow faster rdtime access via GCR.U mtime shadow register on RISC-V
-> devices. This feature can be enabled by setting GCRU_TIME_MMIO during configuration.
 
 
-What's GCR.U? I can't find anything online. Conor asked something 
-similar in v2 btw.
+On 07/05/25 08:49, Lifeng Zheng wrote:
+> External email: Use caution opening links or attachments
+> 
+> 
+> Add sysfs interfaces for CPPC autonomous selection in the cppc_cpufreq
+> driver.
+> 
+> Signed-off-by: Lifeng Zheng <zhenglifeng1@huawei.com>
 
+Looks good to me.
 
->
-> Signed-off-by: Aleksa Paunovic <aleksa.paunovic@htecgroup.com>
+Reviewed-by: Sumit Gupta <sumitg@nvidia.com>
+
 > ---
->   arch/riscv/include/asm/timex.h    | 48 ++++++++++--------------------
->   drivers/clocksource/Kconfig       | 12 ++++++++
->   drivers/clocksource/timer-riscv.c | 61 +++++++++++++++++++++++++++++++++++++++
->   3 files changed, 88 insertions(+), 33 deletions(-)
->
-> diff --git a/arch/riscv/include/asm/timex.h b/arch/riscv/include/asm/timex.h
-> index a06697846e69521caceac2ae4d4e040d227d2ae7..2dea35fe32c0b080ff27587088bbbe01fad22ce6 100644
-> --- a/arch/riscv/include/asm/timex.h
-> +++ b/arch/riscv/include/asm/timex.h
-> @@ -7,31 +7,25 @@
->   #define _ASM_RISCV_TIMEX_H
->   
->   #include <asm/csr.h>
-> +#include <asm/mmio.h>
+> Hi Rafael,
+> 
+> This patch is the 8th patch in [1]. After the discussion in [2], Sumit
+> is OK with adding sysfs entries under cpufreq sysfs node, so I resend
+> this patch. He will later send his updated patch after.
+> 
+> Any comments appreciated!
+> 
+> Lifeng
+> 
+> [1] https://lore.kernel.org/all/20250206131428.3261578-1-zhenglifeng1@huawei.com/
+> [2] https://lore.kernel.org/all/20250211103737.447704-1-sumitg@nvidia.com/
+> 
+>   .../ABI/testing/sysfs-devices-system-cpu      |  54 +++++++++
+>   drivers/cpufreq/cppc_cpufreq.c                | 109 ++++++++++++++++++
+>   2 files changed, 163 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-devices-system-cpu b/Documentation/ABI/testing/sysfs-devices-system-cpu
+> index 206079d3bd5b..37065e1b8ebc 100644
+> --- a/Documentation/ABI/testing/sysfs-devices-system-cpu
+> +++ b/Documentation/ABI/testing/sysfs-devices-system-cpu
+> @@ -268,6 +268,60 @@ Description:       Discover CPUs in the same CPU frequency coordination domain
+>                  This file is only present if the acpi-cpufreq or the cppc-cpufreq
+>                  drivers are in use.
+> 
+> +What:          /sys/devices/system/cpu/cpuX/cpufreq/auto_select
+> +Date:          May 2025
+> +Contact:       linux-pm@vger.kernel.org
+> +Description:   Autonomous selection enable
 > +
-> +#include <linux/jump_label.h>
->   
->   typedef unsigned long cycles_t;
->   
-> +extern u64 __iomem *riscv_time_val;
-> +extern cycles_t (*get_cycles_ptr)(void);
-> +extern u32 (*get_cycles_hi_ptr)(void);
+> +               Read/write interface to control autonomous selection enable
+> +                       Read returns autonomous selection status:
+> +                               0: autonomous selection is disabled
+> +                               1: autonomous selection is enabled
 > +
-> +#define riscv_time_val riscv_time_val
-
-
-As already mentioned by Daniel, this is weird ^, why don't you just 
-initialize riscv_time_val with the mmio address?
-
-
+> +                       Write 'y' or '1' or 'on' to enable autonomous selection.
+> +                       Write 'n' or '0' or 'off' to disable autonomous selection.
 > +
->   #ifdef CONFIG_RISCV_M_MODE
->   
->   #include <asm/clint.h>
->   
-> -#ifdef CONFIG_64BIT
-> -static inline cycles_t get_cycles(void)
-> -{
-> -	return readq_relaxed(clint_time_val);
-> -}
-> -#else /* !CONFIG_64BIT */
-> -static inline u32 get_cycles(void)
-> -{
-> -	return readl_relaxed(((u32 *)clint_time_val));
-> -}
-> -#define get_cycles get_cycles
-> +#undef riscv_time_val
->   
-> -static inline u32 get_cycles_hi(void)
-> -{
-> -	return readl_relaxed(((u32 *)clint_time_val) + 1);
-> -}
-> -#define get_cycles_hi get_cycles_hi
-> -#endif /* CONFIG_64BIT */
-> +#define riscv_time_val clint_time_val
-
-
-Yes, I would remove that too.
-
-
->   
->   /*
->    * Much like MIPS, we may not have a viable counter to use at an early point
-> @@ -45,29 +39,17 @@ static inline unsigned long random_get_entropy(void)
->   	return get_cycles();
+> +               This file is only present if the cppc-cpufreq driver is in use.
+> +
+> +What:          /sys/devices/system/cpu/cpuX/cpufreq/auto_act_window
+> +Date:          May 2025
+> +Contact:       linux-pm@vger.kernel.org
+> +Description:   Autonomous activity window
+> +
+> +               This file indicates a moving utilization sensitivity window to
+> +               the platform's autonomous selection policy.
+> +
+> +               Read/write an integer represents autonomous activity window (in
+> +               microseconds) from/to this file. The max value to write is
+> +               1270000000 but the max significand is 127. This means that if 128
+> +               is written to this file, 127 will be stored. If the value is
+> +               greater than 130, only the first two digits will be saved as
+> +               significand.
+> +
+> +               Writing a zero value to this file enable the platform to
+> +               determine an appropriate Activity Window depending on the workload.
+> +
+> +               Writing to this file only has meaning when Autonomous Selection is
+> +               enabled.
+> +
+> +               This file is only present if the cppc-cpufreq driver is in use.
+> +
+> +What:          /sys/devices/system/cpu/cpuX/cpufreq/energy_performance_preference_val
+> +Date:          May 2025
+> +Contact:       linux-pm@vger.kernel.org
+> +Description:   Energy performance preference
+> +
+> +               Read/write an 8-bit integer from/to this file. This file
+> +               represents a range of values from 0 (performance preference) to
+> +               0xFF (energy efficiency preference) that influences the rate of
+> +               performance increase/decrease and the result of the hardware's
+> +               energy efficiency and performance optimization policies.
+> +
+> +               Writing to this file only has meaning when Autonomous Selection is
+> +               enabled.
+> +
+> +               This file is only present if the cppc-cpufreq driver is in use.
+> +
+> 
+>   What:          /sys/devices/system/cpu/cpu*/cache/index3/cache_disable_{0,1}
+>   Date:          August 2008
+> diff --git a/drivers/cpufreq/cppc_cpufreq.c b/drivers/cpufreq/cppc_cpufreq.c
+> index b3d74f9adcf0..3c3d00cec298 100644
+> --- a/drivers/cpufreq/cppc_cpufreq.c
+> +++ b/drivers/cpufreq/cppc_cpufreq.c
+> @@ -808,10 +808,119 @@ static ssize_t show_freqdomain_cpus(struct cpufreq_policy *policy, char *buf)
+> 
+>          return cpufreq_show_cpus(cpu_data->shared_cpu_map, buf);
 >   }
->   #define random_get_entropy()	random_get_entropy()
-> +#endif
->   
-> -#else /* CONFIG_RISCV_M_MODE */
-> -
-> -static inline cycles_t get_cycles(void)
-> -{
-> -	return csr_read(CSR_TIME);
-> -}
-> -#define get_cycles get_cycles
-> -
-> -static inline u32 get_cycles_hi(void)
-> -{
-> -	return csr_read(CSR_TIMEH);
-> -}
-> -#define get_cycles_hi get_cycles_hi
-> -
-> -#endif /* !CONFIG_RISCV_M_MODE */
-> +#define get_cycles get_cycles_ptr
-> +#define get_cycles_hi get_cycles_ptr_hi
->   
->   #ifdef CONFIG_64BIT
->   static inline u64 get_cycles64(void)
->   {
->   	return get_cycles();
->   }
-> -#else /* CONFIG_64BIT */
-> +#else /* !CONFIG_64BIT */
->   static inline u64 get_cycles64(void)
->   {
->   	u32 hi, lo;
-> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-> index 487c8525996724fbf9c6e9726dabb478d86513b9..0f2bb75564c7d2bc9c450a7fb0eef353e5d27e69 100644
-> --- a/drivers/clocksource/Kconfig
-> +++ b/drivers/clocksource/Kconfig
-> @@ -661,6 +661,18 @@ config CLINT_TIMER
->   	  This option enables the CLINT timer for RISC-V systems.  The CLINT
->   	  driver is usually used for NoMMU RISC-V systems.
->   
-> +config GCRU_TIME_MMIO
-> +	bool "GCR.U timer support for RISC-V platforms"
-> +	depends on !RISCV_M_MODE && RISCV
-
-
-Here you depend on dt (Conor asked for this change in v2).
-
-
-> +	default n
-> +	help
-> +        Access GCR.U shadow copy of the RISC-V mtime register
-> +        on platforms that provide a compatible device, instead of
-> +        reading the time CSR. Since reading the time CSR
-> +        traps to M mode on certain platforms, this may be more efficient.
 > +
-> +        If you don't know what to do here, say n.
-> +
->   config CSKY_MP_TIMER
->   	bool "SMP Timer for the C-SKY platform" if COMPILE_TEST
->   	depends on CSKY
-> diff --git a/drivers/clocksource/timer-riscv.c b/drivers/clocksource/timer-riscv.c
-> index 4d7cf338824a3b21461c2756a002236dedc48f5f..1ccf2a95f5bcb28946dcee435f5bbea222c6fac3 100644
-> --- a/drivers/clocksource/timer-riscv.c
-> +++ b/drivers/clocksource/timer-riscv.c
-> @@ -22,6 +22,7 @@
->   #include <linux/io-64-nonatomic-lo-hi.h>
->   #include <linux/interrupt.h>
->   #include <linux/of_irq.h>
-> +#include <linux/of_address.h>
->   #include <linux/limits.h>
->   #include <clocksource/timer-riscv.h>
->   #include <asm/smp.h>
-> @@ -32,6 +33,42 @@
->   static DEFINE_STATIC_KEY_FALSE(riscv_sstc_available);
->   static bool riscv_timer_cannot_wake_cpu;
->   
-> +u64 __iomem *riscv_time_val __ro_after_init;
-> +EXPORT_SYMBOL(riscv_time_val);
-> +
-> +#ifdef CONFIG_64BIT
-> +static cycles_t __maybe_unused mmio_get_cycles(void)
+> +static ssize_t show_auto_select(struct cpufreq_policy *policy, char *buf)
 > +{
-> +	return readq_relaxed(riscv_time_val);
-> +}
-> +#else /* !CONFIG_64BIT */
-> +static cycles_t __maybe_unused mmio_get_cycles(void)
-> +{
-> +	return readl_relaxed(((u32 *)riscv_time_val));
-> +}
-> +#endif /* CONFIG_64BIT */
+> +       bool val;
+> +       int ret;
 > +
-> +static cycles_t __maybe_unused get_cycles_csr(void)
-> +{
-> +	return csr_read(CSR_TIME);
+> +       ret = cppc_get_auto_sel(policy->cpu, &val);
+> +
+> +       /* show "<unsupported>" when this register is not supported by cpc */
+> +       if (ret == -EOPNOTSUPP)
+> +               return sysfs_emit(buf, "<unsupported>\n");
+> +
+> +       if (ret)
+> +               return ret;
+> +
+> +       return sysfs_emit(buf, "%d\n", val);
 > +}
 > +
-> +static u32 __maybe_unused mmio_get_cycles_hi(void)
+> +static ssize_t store_auto_select(struct cpufreq_policy *policy,
+> +                                const char *buf, size_t count)
 > +{
-> +	return readl_relaxed(((u32 *)riscv_time_val) + 1);
+> +       bool val;
+> +       int ret;
+> +
+> +       ret = kstrtobool(buf, &val);
+> +       if (ret)
+> +               return ret;
+> +
+> +       ret = cppc_set_auto_sel(policy->cpu, val);
+> +       if (ret)
+> +               return ret;
+> +
+> +       return count;
 > +}
 > +
-> +static u32 __maybe_unused get_cycles_hi_csr(void)
+> +static ssize_t show_auto_act_window(struct cpufreq_policy *policy, char *buf)
 > +{
-> +	return csr_read(CSR_TIMEH);
+> +       u64 val;
+> +       int ret;
+> +
+> +       ret = cppc_get_auto_act_window(policy->cpu, &val);
+> +
+> +       /* show "<unsupported>" when this register is not supported by cpc */
+> +       if (ret == -EOPNOTSUPP)
+> +               return sysfs_emit(buf, "<unsupported>\n");
+> +
+> +       if (ret)
+> +               return ret;
+> +
+> +       return sysfs_emit(buf, "%llu\n", val);
 > +}
 > +
-> +cycles_t (*get_cycles_ptr)(void) = get_cycles_csr;
-> +EXPORT_SYMBOL(get_cycles_ptr);
+> +static ssize_t store_auto_act_window(struct cpufreq_policy *policy,
+> +                                    const char *buf, size_t count)
+> +{
+> +       u64 usec;
+> +       int ret;
 > +
-> +u32 (*get_cycles_hi_ptr)(void) = get_cycles_hi_csr;
-> +EXPORT_SYMBOL(get_cycles_hi_ptr);
+> +       ret = kstrtou64(buf, 0, &usec);
+> +       if (ret)
+> +               return ret;
 > +
->   static void riscv_clock_event_stop(void)
->   {
->   	if (static_branch_likely(&riscv_sstc_available)) {
-> @@ -209,6 +246,11 @@ static int __init riscv_timer_init_dt(struct device_node *n)
->   	int cpuid, error;
->   	unsigned long hartid;
->   	struct device_node *child;
-> +#if defined(CONFIG_GCRU_TIME_MMIO)
-> +	u64 mmio_addr;
-> +	u64 mmio_size;
-> +	struct device_node *gcru;
-> +#endif
->   
->   	error = riscv_of_processor_hartid(n, &hartid);
->   	if (error < 0) {
-> @@ -226,6 +268,25 @@ static int __init riscv_timer_init_dt(struct device_node *n)
->   	if (cpuid != smp_processor_id())
->   		return 0;
->   
-> +#if defined(CONFIG_GCRU_TIME_MMIO)
-> +	gcru = of_find_compatible_node(NULL, NULL, "mti,gcru");
-> +	if (gcru) {
-> +		if (!of_property_read_reg(gcru, 0, &mmio_addr, &mmio_size)) {
-> +			riscv_time_val = ioremap((long)mmio_addr, mmio_size);
-> +			if (riscv_time_val) {
-> +				pr_info("Using mmio time register at 0x%llx\n",
-> +					mmio_addr);
-> +				get_cycles_ptr = &mmio_get_cycles;
-> +				get_cycles_hi_ptr = &mmio_get_cycles_hi;
-> +			} else {
-> +				pr_warn("Unable to use mmio time at 0x%llx\n",
-> +					mmio_addr);
-> +			}
-> +			of_node_put(gcru);
-> +		}
-> +	}
-> +#endif
+> +       ret = cppc_set_auto_act_window(policy->cpu, usec);
+> +       if (ret)
+> +               return ret;
 > +
->   	child = of_find_compatible_node(NULL, NULL, "riscv,timer");
->   	if (child) {
->   		riscv_timer_cannot_wake_cpu = of_property_read_bool(child,
-
-
-And you have a bunch of kernel test robot failures to fix too :)
-
-Thanks,
-
-Alex
-
-
+> +       return count;
+> +}
+> +
+> +static ssize_t show_energy_performance_preference_val(struct cpufreq_policy *policy, char *buf)
+> +{
+> +       u64 val;
+> +       int ret;
+> +
+> +       ret = cppc_get_epp_perf(policy->cpu, &val);
+> +
+> +       /* show "<unsupported>" when this register is not supported by cpc */
+> +       if (ret == -EOPNOTSUPP)
+> +               return sysfs_emit(buf, "<unsupported>\n");
+> +
+> +       if (ret)
+> +               return ret;
+> +
+> +       return sysfs_emit(buf, "%llu\n", val);
+> +}
+> +
+> +static ssize_t store_energy_performance_preference_val(struct cpufreq_policy *policy,
+> +                                                      const char *buf, size_t count)
+> +{
+> +       u64 val;
+> +       int ret;
+> +
+> +       ret = kstrtou64(buf, 0, &val);
+> +       if (ret)
+> +               return ret;
+> +
+> +       ret = cppc_set_epp(policy->cpu, val);
+> +       if (ret)
+> +               return ret;
+> +
+> +       return count;
+> +}
+> +
+>   cpufreq_freq_attr_ro(freqdomain_cpus);
+> +cpufreq_freq_attr_rw(auto_select);
+> +cpufreq_freq_attr_rw(auto_act_window);
+> +cpufreq_freq_attr_rw(energy_performance_preference_val);
+> 
+>   static struct freq_attr *cppc_cpufreq_attr[] = {
+>          &freqdomain_cpus,
+> +       &auto_select,
+> +       &auto_act_window,
+> +       &energy_performance_preference_val,
+>          NULL,
+>   };
+> 
+> --
+> 2.33.0
+> 
