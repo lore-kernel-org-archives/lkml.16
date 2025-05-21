@@ -1,164 +1,211 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 635981F1302;
-	Wed, 21 May 2025 11:01:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4A7921C19E
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 11:01:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747825290; cv=none; b=JWJvifIM4sPEw5O2/uIOTi1XNeVvaljrZ4cZLEbNqss4fhrvahpUuLjS7FV6Sx1CUJ87IzR7AT7JsuszgJwML5qP3Rz0VC549Hism9Jzeo38/4f0AXgKroQY7YKspxwP0RpSYpmvcc2QjNM5CCvNBzXSMODt+tu4qcF9Am9Fq9w=
+	t=1747825316; cv=none; b=NGin+r/xSdU/DEqdIX4yMFxzhHvgV0CtYUVvKA5u8o8Vr35rsNCuJmuma55l5RnXNGo7kRz6vmiraYtfLCd2UCmZNa1mF3HJI4WM6dlBc5EXPfRT/0eWcqgWk++5OYx1dcONHgWKrZ6Jm+vi9YYmX1KXVul/byG5Mkc50LYPuDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747825290; c=relaxed/simple;
-	bh=zaBsSd8mPSFOHTfY9yBi6h2zBc3yt1iHjwy2YomFPvo=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=X4c4Vs8rKy3SsXZT9BMcDABFlcRcnV4iRrCqb2VTaZb/dKLIGZpFGNRVabVgWKytHMZ3GQj1fgtinRg2t93HQXtk1iAzmxKsdULQVXC6+WThyB2QnlZe4T1IJqeS/rJz4pQCoVQAwguMRUv4pTu81vI/HbrEQgOMQMcJxFkrpuk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f4RBRtAS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747825316; c=relaxed/simple;
+	bh=hrPT87P41+vrV3EBb2pUefmNFAnv+YMPlt7UIo0NouY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Z9E8k3iYYITeMi/egfDXYiLSXWxo+9wLCL6lI4pnm9OMNMXyG7NPeZu4I/aeAtSkqkgVkQMZGFFCrnpnPweSff2AZfbJbBpDNVKekDwjaXdEtzMY7TZtNeGgwblFlGNVeRhJt3fil7g5oh3TapFrMRp3mMRBWuU8U5HrLdbiZ94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=n1Y9LeyB; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f4RBRtAS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4B5FC4CEEA;
-	Wed, 21 May 2025 11:01:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747825289;
-	bh=zaBsSd8mPSFOHTfY9yBi6h2zBc3yt1iHjwy2YomFPvo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=f4RBRtASQQgroR+gBiVGxYwzyKX+2Z2a/XJYsfTkAtQHULvNOVEA9DfovmNx95Y2Q
-	 vNEuMaMetzT9fP6nhxy3iFh51g7xGiiU6UEnMRyCBIDyM7sAJ5fVSOeGJ9V8vkRZE+
-	 2kfgkjYP+7BuwQ5tfV7JTRpcF206VmTSw/xBdO2GPiYz3beUNMM1LeMXnpu/P5qwLG
-	 1mQRNzWA1Dvv0jL6fbum1URW9C4hueLcAls2JmmpSq4ihv14RvS+tsW4gpsnuG2+Pi
-	 /5J2FVPnM79L7sc/cYIdcD/P91JWRVsqISGIc2DKZkYPe+L2ISU8YgYlRgbYctj5Y4
-	 BrHSMlibZchqg==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uHhCR-00Gu8c-1S;
-	Wed, 21 May 2025 12:01:27 +0100
-Date: Wed, 21 May 2025 12:01:26 +0100
-Message-ID: <86tt5edy7t.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Vincent Donnefort <vdonnefort@google.com>
-Cc: oliver.upton@linux.dev,
-	joey.gouly@arm.com,
-	suzuki.poulose@arm.com,
-	yuzenghui@huawei.com,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	qperret@google.com,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	kernel-team@android.com
-Subject: Re: [PATCH v5 10/10] KVM: arm64: np-guest CMOs with PMD_SIZE fixmap
-In-Reply-To: <20250520085201.3059786-11-vdonnefort@google.com>
-References: <20250520085201.3059786-1-vdonnefort@google.com>
-	<20250520085201.3059786-11-vdonnefort@google.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n1Y9LeyB"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-742c5eb7d1cso4827179b3a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 04:01:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747825314; x=1748430114; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/l6K3jbuz4XRmGqwQxxGityewoLKvt8MNkQScorN3NQ=;
+        b=n1Y9LeyB9MjaMt1V+3rHFCJnYJWSOQLBwv4cB6N+uLBR5kcrXnhV1WlRopkmouq5qh
+         jX3ARAx0Rg0zq2YclNM3hpzDCzX91IY1fF5AWfhxGWnLPiTXfarVlRhQ6ikwWjOu/cYG
+         +0tfZ2w7kLtyiTxhFc3wE/1rZZIdvLeJVXL1cXsXH8TEOMRn2NnkoCI5QUOQzzqGtRBh
+         31kHajar72fb1UB1ADLFSltDShBRziUkcTosuFvHQDlU9100Iqxk6dcmlUrnxXzk5Oqf
+         Avxtwil0yZ/guELlxLsxiJFyeMY/Zbhc97YT6bRB36hEOVZLTAZPfwNqVpq4S3WFo7+m
+         DipQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747825314; x=1748430114;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/l6K3jbuz4XRmGqwQxxGityewoLKvt8MNkQScorN3NQ=;
+        b=IIxJGteZ7W2Mm7UwnvLKIG+3aWGtkenYj0OVB7DFIkT6XxIH13ol33NKkXqTHqrVG4
+         ba7wIzDIqQpTlEyLdEmIOsfpVSZTMzTLN1QzLHEtwDGApDkxuPA62R/CxBY5KgN8uHXH
+         9+JVU6EcVFgFhoYva3x30yNIhjYnnrckUF5FfoKov/op1tVAMElx5cVCrrzv6WRn6Cdv
+         VRn8hsB3WiVOS2HJMdFBNCGJL/TlVq7PxQ9mWEfn+IAjMrFb8kifcSYLLxp6ivghFg9S
+         mJ1lqf5EzfUTuxgPBZVcQNPDuMAcewE/u/yBhaKRhxhQFKaLvrlbVM+frXpfGyAlRugH
+         zOFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVE+Z6tYVNwM0lBHNwHTfo6ZaUB11PkdOqX/iJeRwabwqKYa/smmbS348c8C7SGuKiaSCsbdflDaaptnMw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxY7A8YzjxtrtmGoiM93ZmeHiMYlI4VudaiB7v3U3962GTB7anx
+	yR7Q6BHRVA6SJgMaejd/z0OKQBc22t6dMcO/vRtrUSNcSl5+We/2LLT+QMXCFB/wcSAl2m2xyEG
+	ZXdepZBcXTwf+kfkS9VJ0ybiiFjYUNjkshH6n7JhPGAO8uBKkOsI6cz8=
+X-Gm-Gg: ASbGncvOSXBdVoLCchIpTPzoiJxOtw3R4bTd7Rn8jj0c3+E9eIPRGBYakCVE8HVw+7T
+	whI010VE6N7bcAvSLKPEiL/LqmDdqlXQZZEMsTcLHasR5bDh7+/a3M+T58qN7fntuTfjPQDKIBa
+	UnD3O09AkzGCBZi/ORVwi1UpBVJa8pk6HAgkfPlDihdAaQfukFWdQHeSENcPsxIY5BSQ==
+X-Google-Smtp-Source: AGHT+IFtPnW8AoQGtwyutR1H47pYRQ/umAxXPwEtqvL0Csvl2g3kWlnp4aaxIBqaK5FczC06PPS+55VKgNqfiL+W/1E=
+X-Received: by 2002:a05:6122:1ac1:b0:52a:c143:4faf with SMTP id
+ 71dfb90a1353d-52dba845512mr18483479e0c.5.1747825302812; Wed, 21 May 2025
+ 04:01:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: vdonnefort@google.com, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, qperret@google.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, kernel-team@android.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+References: <20250520125800.653047540@linuxfoundation.org>
+In-Reply-To: <20250520125800.653047540@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Wed, 21 May 2025 16:31:31 +0530
+X-Gm-Features: AX0GCFtamnilUZjJWuCos6TbCcPgap8DnQbDAmOeiCR-1gj2mb5T7pmYkLby90Q
+Message-ID: <CA+G9fYu8+PxraN6QUkQuFVHyTkfeJC_B_WZxybNP2dcaaUyRMg@mail.gmail.com>
+Subject: Re: [PATCH 6.1 00/97] 6.1.140-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 20 May 2025 09:52:01 +0100,
-Vincent Donnefort <vdonnefort@google.com> wrote:
-> 
-> With the introduction of stage-2 huge mappings in the pKVM hypervisor,
-> guest pages CMO is needed for PMD_SIZE size. Fixmap only supports
-> PAGE_SIZE and iterating over the huge-page is time consuming (mostly due
-> to TLBI on hyp_fixmap_unmap) which is a problem for EL2 latency.
-> 
-> Introduce a shared PMD_SIZE fixmap (hyp_fixblock_map/hyp_fixblock_unmap)
-> to improve guest page CMOs when stage-2 huge mappings are installed.
-> 
-> On a Pixel6, the iterative solution resulted in a latency of ~700us,
-> while the PMD_SIZE fixmap reduces it to ~100us.
-> 
-> Because of the horrendous private range allocation that would be
-> necessary, this is disabled for 64KiB pages systems.
-> 
-> Suggested-by: Quentin Perret <qperret@google.com>
-> Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
-> Signed-off-by: Quentin Perret <qperret@google.com>
-> 
-> diff --git a/arch/arm64/include/asm/kvm_pgtable.h b/arch/arm64/include/asm/kvm_pgtable.h
-> index 1b43bcd2a679..2888b5d03757 100644
-> --- a/arch/arm64/include/asm/kvm_pgtable.h
-> +++ b/arch/arm64/include/asm/kvm_pgtable.h
-> @@ -59,6 +59,11 @@ typedef u64 kvm_pte_t;
->  
->  #define KVM_PHYS_INVALID		(-1ULL)
->  
-> +#define KVM_PTE_TYPE			BIT(1)
-> +#define KVM_PTE_TYPE_BLOCK		0
-> +#define KVM_PTE_TYPE_PAGE		1
-> +#define KVM_PTE_TYPE_TABLE		1
-> +
->  #define KVM_PTE_LEAF_ATTR_LO		GENMASK(11, 2)
->  
->  #define KVM_PTE_LEAF_ATTR_LO_S1_ATTRIDX	GENMASK(4, 2)
-> diff --git a/arch/arm64/kvm/hyp/include/nvhe/mm.h b/arch/arm64/kvm/hyp/include/nvhe/mm.h
-> index 230e4f2527de..6e83ce35c2f2 100644
-> --- a/arch/arm64/kvm/hyp/include/nvhe/mm.h
-> +++ b/arch/arm64/kvm/hyp/include/nvhe/mm.h
-> @@ -13,9 +13,11 @@
->  extern struct kvm_pgtable pkvm_pgtable;
->  extern hyp_spinlock_t pkvm_pgd_lock;
->  
-> -int hyp_create_pcpu_fixmap(void);
-> +int hyp_create_fixmap(void);
->  void *hyp_fixmap_map(phys_addr_t phys);
->  void hyp_fixmap_unmap(void);
-> +void *hyp_fixblock_map(phys_addr_t phys, size_t *size);
-> +void hyp_fixblock_unmap(void);
->  
->  int hyp_create_idmap(u32 hyp_va_bits);
->  int hyp_map_vectors(void);
-> diff --git a/arch/arm64/kvm/hyp/nvhe/mem_protect.c b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
-> index 1490820b9ebe..962948534179 100644
-> --- a/arch/arm64/kvm/hyp/nvhe/mem_protect.c
-> +++ b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
-> @@ -216,34 +216,42 @@ static void guest_s2_put_page(void *addr)
->  	hyp_put_page(&current_vm->pool, addr);
->  }
->  
-> -static void clean_dcache_guest_page(void *va, size_t size)
-> +static void __apply_guest_page(void *va, size_t size,
-> +			       void (*func)(void *addr, size_t size))
->  {
->  	size += va - PTR_ALIGN_DOWN(va, PAGE_SIZE);
->  	va = PTR_ALIGN_DOWN(va, PAGE_SIZE);
->  	size = PAGE_ALIGN(size);
->  
->  	while (size) {
-> -		__clean_dcache_guest_page(hyp_fixmap_map(__hyp_pa(va)),
-> -					  PAGE_SIZE);
-> -		hyp_fixmap_unmap();
-> -		va += PAGE_SIZE;
-> -		size -= PAGE_SIZE;
-> +		size_t map_size = PAGE_SIZE;
-> +		void *map;
-> +
-> +		if (size >= PMD_SIZE)
-> +			map = hyp_fixblock_map(__hyp_pa(va), &map_size);
+On Tue, 20 May 2025 at 19:26, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.1.140 release.
+> There are 97 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Thu, 22 May 2025 12:57:37 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
+6.1.140-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-6.1.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-You seem to consider that if size if PMD_SIZE (or more), then va must
-be PMD aligned. I don't think this is correct.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Such an iterator should start by doing PAGE_SIZEd operations until va
-is PMD-aligned. Only at this point can it perform PMD_SIZEd
-operations, until the remaining size is less than PMD_SIZE. And at
-that point, it's PAGE_SIZE all over again until the end.
+Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Does that make sense to you?
+## Build
+* kernel: 6.1.140-rc1
+* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
+rc.git
+* git commit: 1fb2f21fca7786e898e99a8b92606fa61519c261
+* git describe: v6.1.139-98-g1fb2f21fca77
+* test details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.1.y/build/v6.1.1=
+39-98-g1fb2f21fca77
 
-	M.
+## Test Regressions (compared to v6.1.138-97-g03bf4e168bff)
 
--- 
-Without deviation from the norm, progress is not possible.
+## Metric Regressions (compared to v6.1.138-97-g03bf4e168bff)
+
+## Test Fixes (compared to v6.1.138-97-g03bf4e168bff)
+
+## Metric Fixes (compared to v6.1.138-97-g03bf4e168bff)
+
+## Test result summary
+total: 159745, pass: 140741, fail: 4152, skip: 14627, xfail: 225
+
+## Build Summary
+* arc: 5 total, 5 passed, 0 failed
+* arm: 133 total, 133 passed, 0 failed
+* arm64: 41 total, 41 passed, 0 failed
+* i386: 21 total, 19 passed, 2 failed
+* mips: 26 total, 22 passed, 4 failed
+* parisc: 4 total, 4 passed, 0 failed
+* powerpc: 32 total, 31 passed, 1 failed
+* riscv: 11 total, 11 passed, 0 failed
+* s390: 14 total, 14 passed, 0 failed
+* sh: 10 total, 10 passed, 0 failed
+* sparc: 7 total, 7 passed, 0 failed
+* x86_64: 33 total, 31 passed, 2 failed
+
+## Test suites summary
+* boot
+* commands
+* kselftest-arm64
+* kselftest-breakpoints
+* kselftest-capabilities
+* kselftest-clone3
+* kselftest-core
+* kselftest-cpu-hotplug
+* kselftest-exec
+* kselftest-fpu
+* kselftest-futex
+* kselftest-intel_pstate
+* kselftest-kcmp
+* kselftest-kvm
+* kselftest-livepatch
+* kselftest-membarrier
+* kselftest-mincore
+* kselftest-mqueue
+* kselftest-openat2
+* kselftest-ptrace
+* kselftest-rseq
+* kselftest-rtc
+* kselftest-sigaltstack
+* kselftest-size
+* kselftest-timers
+* kselftest-tmpfs
+* kselftest-tpm2
+* kselftest-user_events
+* kselftest-vDSO
+* kselftest-x86
+* kunit
+* kvm-unit-tests
+* lava
+* libgpiod
+* libhugetlbfs
+* log-parser-boot
+* log-parser-build-clang
+* log-parser-build-gcc
+* log-parser-test
+* ltp-capability
+* ltp-commands
+* ltp-containers
+* ltp-controllers
+* ltp-cpuhotplug
+* ltp-crypto
+* ltp-cve
+* ltp-dio
+* ltp-fcntl-locktests
+* ltp-fs
+* ltp-fs_bind
+* ltp-fs_perms_simple
+* ltp-hugetlb
+* ltp-ipc
+* ltp-math
+* ltp-mm
+* ltp-nptl
+* ltp-pty
+* ltp-sched
+* ltp-smoke
+* ltp-syscalls
+* ltp-tracing
+* modules
+* perf
+* rcutorture
+
+--
+Linaro LKFT
+https://lkft.linaro.org
