@@ -1,168 +1,219 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3502F1D63C2
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 14:42:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC2B31D7989;
+	Wed, 21 May 2025 14:42:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747838536; cv=none; b=YI9NSRYVLqCg1lpj4f53fN5pfT6ms46NBKgw5iM37fb3gxJT3BpzrT4PwIwINfO8GIGTGS8Uarm9iCeNH4kW2NaCrcOTSg188nnw2e3Wa4LabSqlYQJSGVjRnT4d3yfdJu1MCDEcZ9yMqqUN27mbWewmIge+oRtrbUdZrVtpMCs=
+	t=1747838582; cv=none; b=LqoGPvVwa/kYXsKvSKsxcMvkjyNPf8yep7fSxvpr31kcALg5XPunCW36FgrB2lM9yCD4F2/W8waP5rwVXIGf6gxBYt/Ine3rykrA7U8GBfeMcYL5XrFqWekaMU1mR3vGgID9hatXdr2pE7NTtYLSltaJY+fWpwaKutKEUVpxuUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747838536; c=relaxed/simple;
-	bh=MeIreJ0VzWT2UiLJVYu37D2mNjDEruPiWRZcit3nFDU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=V2LseawHxsszI1t6gMU2P1io39fSO0aeuWj1Dgx5AdrGwQTFgEaK+jbmArirIEEDVfPn5+uZLdmjOQ/ZZXh6d7qKIaTaGBHtYPF2/Mkru+ivpA1ZkmsLqCOnVs7TTwKGHLOz8BPz8pmWxIPJViAOFIoj0fVQaxtzGoQkxTw7ttY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yl8rcKfd; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yl8rcKfd"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-231ba6da557so720395ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 07:42:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747838534; x=1748443334; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MeIreJ0VzWT2UiLJVYu37D2mNjDEruPiWRZcit3nFDU=;
-        b=yl8rcKfdmTnA2glzI6CDGMGJzJw8woIbVZ8oU12U1HYxR0M+dHGBOg1/oZBPgw3taM
-         q78cYU+YditqGcWoM4IZaarAIrEjwctqzPzWgsUhbjNrGBs+n9KUsnlWAJG0Qyss1Lhh
-         faaymkhMilJAab4/EkZWaqAQ0h58S4Qj4ANwc1nixAp88y1gR4Y6Bz3CJP9OoXhge9ru
-         r/mvEKPlouRMG8uQwGCODWs/WZoUM38cZqMEWGZWB3SsrnKQVjirPvE4g78Pjfb/rcGi
-         /3EaG2O5vDGOxlD/gfhLE89kSCVbpHVpNhHdnV4luS3eOBp/SRS3RZdK3dOUWQWy4Qag
-         h9AA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747838534; x=1748443334;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MeIreJ0VzWT2UiLJVYu37D2mNjDEruPiWRZcit3nFDU=;
-        b=YW7r0mygCbxdnoM0EXr/pcxRPpgz294ndXOFH2t0JaY5EhDen4aiGuWoVhsVcfE9xz
-         /RaPxJnLI9/+Bpb3TwsJuYya3fON0rT8cC+o5eBISSfEGVtWZPcpQyv42yMsoao7696S
-         fwbjFjJVVh3kUnuFtxpp+n+TUZ8LrK+b0DV/aS+n5RJcDFwDmtnUFBo+MqDfvPP6NgNU
-         W3dZIjD3PUTREJRuvMfNhSRjQpuEmlY8Rmvlnl77znOsBIXYqK+3mGpxJiRek/JXBQo+
-         42b8/+6acEZxIxcPPIxmdzj+GtQa9JgS1WBvxz+3upypL+4NFF0d7f1aEABfibdLGjyq
-         9AlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUqlchAPbjGLswdBbosCrdLSzb9AXqCdcIfGarRiFG2chGfHjBHPH3RZ6IGtf3RPpQcOXd5wilXsqB2IZM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwzoPBmumWxFjXzyc2180CHPtbvOqTUk9xL+dbH94oxKux13y4C
-	gfjn7TH9F5DOI8Ky9LMBIWXSgmmdI8ZBIPTe9eQO0TtxDlM6SRuwzgeDlVhEOHLzt131vHlJxuU
-	huvWReFTr+UKtf7qcgjTzJS497DIDLylXymYZGMg+
-X-Gm-Gg: ASbGncvBzKHmRAvU/fct4T3vj0FyyGR3muDSEl1BW+naXJq4vF09HgPL6rDVyeI7qQS
-	fyMvUZUFRHSFJD6+GUBiT4VTLTb07jxKiHqg+MXgadp5n9qhkZF6DYHeURkwywJuuDfkBBdKWN8
-	rQwJN914QqAZZoJmka/ypZ3E6thquiGUzplKF6NK+a5hiDN8RhcaXG1EN6pgXOcyzqGKi4jVuPV
-	QM=
-X-Google-Smtp-Source: AGHT+IG2dIYCeOz3RfprKj5ASeFAdVUkomyHxXDYNyHo+nRE69+av8tpRMQ+wxHyswC7YgfpsfFFUwky7GIhiFkkWlc=
-X-Received: by 2002:a17:902:cecd:b0:231:d7cf:cf18 with SMTP id
- d9443c01a7336-23203eee503mr11647135ad.1.1747838533592; Wed, 21 May 2025
- 07:42:13 -0700 (PDT)
+	s=arc-20240116; t=1747838582; c=relaxed/simple;
+	bh=D5RhzRWw4d0omBLnLJq7eWCJqJ16WamE4002P45GfM4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FifzLXnliZkE2mSQ1tJqm/WoD8LnE6cJmn1N6RWCiyrZt4cPE/FzvgqFFApl4zOJxxUFXiFPGP+7sRJvIQmDBAYJQCs88V1FBsDCap2nbcU5EBH8sLo+VnBQQK7aMfD7ULdZI6S1E908973Hbim84zSjL6ubBUAONluwuyfSBnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id AEF7A43137;
+	Wed, 21 May 2025 14:42:56 +0000 (UTC)
+Message-ID: <3be862ef-f8b7-40d6-a3b1-5e8161801ba1@ghiti.fr>
+Date: Wed, 21 May 2025 16:42:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1747264138.git.ackerleytng@google.com> <d3832fd95a03aad562705872cbda5b3d248ca321.1747264138.git.ackerleytng@google.com>
- <CA+EHjTxtHOgichL=UvAzczoqS1608RSUNn5HbmBw2NceO941ng@mail.gmail.com>
- <CAGtprH8eR_S50xDnnMLHNCuXrN2Lv_0mBRzA_pcTtNbnVvdv2A@mail.gmail.com>
- <CA+EHjTwjKVkw2_AK0Y0-eth1dVW7ZW2Sk=73LL9NeQYAPpxPiw@mail.gmail.com>
- <CAGtprH_Evyc7tLhDB0t0fN+BUx5qeqWq8A2yZ5-ijbJ5UJ5f-g@mail.gmail.com>
- <CA+EHjTy7iBNBb9DRdtgq8oYmvgykhSNvZL3FrRV4XF90t3XgBg@mail.gmail.com>
- <CAGtprH_7jSpwF77j1GW8rjSrbtZZ2OW2iGck5=Wk67+VnF9vjQ@mail.gmail.com>
- <CA+EHjTzMhKCoftfJUuL0WUZW4DdqOHgVDcn0Cmf-0r--8rBdbg@mail.gmail.com>
- <diqzecwjnk95.fsf@ackerleytng-ctop.c.googlers.com> <CA+EHjTyY5C1QgkoAqvJ0kHM4nUvKc1e1nQ0Uq+BANtVEnZH90w@mail.gmail.com>
-In-Reply-To: <CA+EHjTyY5C1QgkoAqvJ0kHM4nUvKc1e1nQ0Uq+BANtVEnZH90w@mail.gmail.com>
-From: Vishal Annapurve <vannapurve@google.com>
-Date: Wed, 21 May 2025 07:42:01 -0700
-X-Gm-Features: AX0GCFtAT9R_Oe05rYdzQPFgRH8-_eDMLizxCLAk0K-mKF9SD9rgeSxLsWR73nE
-Message-ID: <CAGtprH-fE=G923ctBAcq5zFna+2WULhmHDSbXUsZKUrin29b4g@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 04/51] KVM: guest_memfd: Introduce
- KVM_GMEM_CONVERT_SHARED/PRIVATE ioctls
-To: Fuad Tabba <tabba@google.com>
-Cc: Ackerley Tng <ackerleytng@google.com>, kvm@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, x86@kernel.org, linux-fsdevel@vger.kernel.org, 
-	aik@amd.com, ajones@ventanamicro.com, akpm@linux-foundation.org, 
-	amoorthy@google.com, anthony.yznaga@oracle.com, anup@brainfault.org, 
-	aou@eecs.berkeley.edu, bfoster@redhat.com, binbin.wu@linux.intel.com, 
-	brauner@kernel.org, catalin.marinas@arm.com, chao.p.peng@intel.com, 
-	chenhuacai@kernel.org, dave.hansen@intel.com, david@redhat.com, 
-	dmatlack@google.com, dwmw@amazon.co.uk, erdemaktas@google.com, 
-	fan.du@intel.com, fvdl@google.com, graf@amazon.com, haibo1.xu@intel.com, 
-	hch@infradead.org, hughd@google.com, ira.weiny@intel.com, 
-	isaku.yamahata@intel.com, jack@suse.cz, james.morse@arm.com, 
-	jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, jhubbard@nvidia.com, 
-	jroedel@suse.de, jthoughton@google.com, jun.miao@intel.com, 
-	kai.huang@intel.com, keirf@google.com, kent.overstreet@linux.dev, 
-	kirill.shutemov@intel.com, liam.merwick@oracle.com, 
-	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, maz@kernel.org, 
-	mic@digikod.net, michael.roth@amd.com, mpe@ellerman.id.au, 
-	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
-	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
-	paul.walmsley@sifive.com, pbonzini@redhat.com, pdurrant@amazon.co.uk, 
-	peterx@redhat.com, pgonda@google.com, pvorel@suse.cz, qperret@google.com, 
-	quic_cvanscha@quicinc.com, quic_eberman@quicinc.com, 
-	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com, quic_pheragu@quicinc.com, 
-	quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com, richard.weiyang@gmail.com, 
-	rick.p.edgecombe@intel.com, rientjes@google.com, roypat@amazon.co.uk, 
-	rppt@kernel.org, seanjc@google.com, shuah@kernel.org, steven.price@arm.com, 
-	steven.sistare@oracle.com, suzuki.poulose@arm.com, thomas.lendacky@amd.com, 
-	usama.arif@bytedance.com, vbabka@suse.cz, viro@zeniv.linux.org.uk, 
-	vkuznets@redhat.com, wei.w.wang@intel.com, will@kernel.org, 
-	willy@infradead.org, xiaoyao.li@intel.com, yan.y.zhao@intel.com, 
-	yilun.xu@intel.com, yuzenghui@huawei.com, zhiquan1.li@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] riscv: enable mseal sysmap for RV64
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>
+Cc: jeffxu@chromium.org, jszhang@kernel.org, akpm@linux-foundation.org,
+ Liam.Howlett@oracle.com, kees@kernel.org,
+ Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-hardening@vger.kernel.org
+References: <5e7f2acd-2eef-4e69-9c11-ba8d1ec0bbc5@lucifer.local>
+ <mhng-db41d38d-d3ec-4515-99f9-7368c82d46ca@palmer-ri-x1c9a>
+ <26e04390-058f-4174-ad6f-3f0afd803fb1@lucifer.local>
+Content-Language: en-US
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <26e04390-058f-4174-ad6f-3f0afd803fb1@lucifer.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdeffeehucdltddurdegfedvrddttddmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomheptehlvgigrghnughrvgcuifhhihhtihcuoegrlhgvgiesghhhihhtihdrfhhrqeenucggtffrrghtthgvrhhnpeefueejtdegkedvhefhudfhgeefieevheeugeehgedvgfejhfetjeeiudelvdefteenucffohhmrghinhepghhithhhuhgsrdgtohhmpdhkvghrnhgvlhdrohhrghdpihhnfhhrrgguvggrugdrohhrghenucfkphepvddttddumeekiedumeeffeekvdemvghfledtmeduheehvdemtgdviedvmegvsgejsgemvdhfudefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvddttddumeekiedumeeffeekvdemvghfledtmeduheehvdemtgdviedvmegvsgejsgemvdhfudefpdhhvghloheplgfkrfggieemvddttddumeekiedumeeffeekvdemvghfledtmeduheehvdemtgdviedvmegvsgejsgemvdhfudefngdpmhgrihhlfhhrohhmpegrlhgvgiesghhhihhtihdrfhhrpdhnsggprhgtphhtthhopedufedprhgtphhtthhopehlohhrvghniihordhsthhorghkvghssehorhgrtghlvgdrt
+ ghomhdprhgtphhtthhopehprghlmhgvrhesuggrsggsvghlthdrtghomhdprhgtphhtthhopehjvghffhiguhestghhrhhomhhiuhhmrdhorhhgpdhrtghpthhtohepjhhsiihhrghngheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghkphhmsehlihhnuhigqdhfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopefnihgrmhdrjfhofihlvghtthesohhrrggtlhgvrdgtohhmpdhrtghpthhtohepkhgvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehprghulhdrfigrlhhmshhlvgihsehsihhfihhvvgdrtghomh
+X-GND-Sasl: alex@ghiti.fr
 
-On Wed, May 21, 2025 at 5:36=E2=80=AFAM Fuad Tabba <tabba@google.com> wrote=
-:
-> ....
-> > When rebooting, the memslots may not yet be bound to the guest_memfd,
-> > but we want to reset the guest_memfd's to private. If we use
-> > KVM_SET_MEMORY_ATTRIBUTES to convert, we'd be forced to first bind, the=
-n
-> > convert. If we had a direct ioctl, we don't have this restriction.
-> >
-> > If we do the conversion via vcpu_run() we would be forced to handle
-> > conversions only with a vcpu_run() and only the guest can initiate a
-> > conversion.
-> >
-> > On a guest boot for TDX, the memory is assumed to be private. If the we
-> > gave it memory set as shared, we'd just have a bunch of
-> > KVM_EXIT_MEMORY_FAULTs that slow down boot. Hence on a guest reboot, we
-> > will want to reset the guest memory to private.
-> >
-> > We could say the firmware should reset memory to private on guest
-> > reboot, but we can't force all guests to update firmware.
+Hi Lorenzo,
+
+On 5/8/25 20:08, Lorenzo Stoakes wrote:
+> On Thu, May 08, 2025 at 10:39:35AM -0700, Palmer Dabbelt wrote:
+>> On Wed, 07 May 2025 09:22:09 PDT (-0700), lorenzo.stoakes@oracle.com wrote:
+>>> On Wed, May 07, 2025 at 09:18:31AM -0700, Jeff Xu wrote:
+>>>> Hi Jisheng
+>>>>
+>>>> It seems mm maintainers might prefer arch change reviewed by arch
+>>>> maintainer and goes to arch tree, according to discussion in [1], I
+>>>> don't have an opinion on this,  adding mm maintainers as FYI.
+>>> Thanks Jeff, appreciate the ping!
+>>>
+>>> Jisheng - the main point here is to ensure that the arch doesn't rely in any way
+>>> on, within the arch code itself, relocating any of these mappings. It's pretty
+>>> easy to eyeball it and get a sense.
+>>>
+>>> Because if this is the case, the arch will be broken by this change should a
+>>> user enable it, and obviously we'd rather avoid that! :)
+>>>
+>>> It's really likely that you're fine, as it'd be unusual for an arch to do this,
+>>> but I strongly suggest you do so.
+>>>
+>>> And yes, I think these should really go through arch trees as explicitly arch
+>>> code.
+>>>
+>>> Thanks, Lorenzo
+>>>
+>>>> On Sat, Apr 26, 2025 at 7:16 AM Jisheng Zhang <jszhang@kernel.org> wrote:
+>>>>> Provide support for CONFIG_MSEAL_SYSTEM_MAPPINGS for RV64, covering the
+>>>>> vdso, vvar.
+>>>>>
+>>>>> Passed sysmap_is_sealed and mseal_test self tests.
+>>>>> Passed booting a buildroot rootfs image and a cli debian rootfs image.
+>>>>>
+>>>> mm maintainers like to get confirmation that the arch doesn't rely on
+>>>> remapping the VDSO, VVAR, or any other special mappings, see
+>>>> discussion in [2]
+>> Do you have some description of what remapping is disallowed here?  There's
+>> not a ton in that referenced thread.
+> Any remapping of these special VMAs that would be disallowed by mseal that is
+> being performed by kernel code.
 >
-> Here is where I disagree. I do think that this is the CoCo guest's
-> responsibility (and by guest I include its firmware) to fix its own
-> state after a reboot. How would the host even know that a guest is
-> rebooting if it's a CoCo guest?
+>> We play a few tricks with remapping, including some aliasing to handle
+>> different VA widths and text patching (via poke pages).  IIRC those are
+>> similar in spirit to what's going on in x86/arm64 land, though sometimes the
+>> exact flavor of the trick matters.  If you've got something I can look at it
+>> might save me from having to read though the mm code...
+> To risk sounding grumpy, and it's not your fault of course, but... this is
+> the... fifth? Architecture where somebody's enabled this without seeming to
+> understand what the feature does, and I'm a bit tired of it. And every time it's
+> been _me_ who goes to check :)
+>
+> Anyway, I guess let me go check again.
+>
+> So it looks fine to me - the initial mapping to mm->context.vdso done by
+> __setup_additional_pages() in arch/riscv/kernel/vdso.c appears to be final,
+> except when vdso_mremap() is invoked, but that's when _userland_ does it,
+> which this feature strictly disables, but that's fine.
+>
+> Note that the patch simply indicates that the architecture _supports_ this
+> feature, the feature itself is disabled by default as it breaks a bunch of
+> userland, which is why I insisted on it being put behind a config flag for
+> users who really know what they're doing.
+>
+> So perhaps I can link to this again in future, what I'm talking about is:
+>
+> - Any instance of the architecture code, NOT at the behest of userland
+>    (which we expect the sealing to break), but for its OWN purposes, for
+>    whatever reason, moving the VDSO, VVAR or other special mapping around in
+>    virtual memory.
+>
+> - So you'd really need to be doing something _weird_ for this to be the
+>    case. It's unlikely but until each architecture is checked we are being
+>    conservative - so as not to break the kernel (!) - and disabling
+>    architectures until we know they're safe.
+>
+> - Sending a patch setting ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS is _very
+>    explicitly_ stating that you have checked and are certain there are _no
+>    problems_ with the architecture doing this.
+>
+> So this is why it's quite annoying to have people enable this with a commit
+> message like 'enable mseal system mappings' rather than 'I have carefully
+> checked the architecture code and the architecture does not manipulate the
+> VDSO, VVAR or special mappings after establishing them, I have also tested
+> the feature in practice'.
+>
+> I feel like anybody setting 'ARCH_SUPPORTS_xxx' should - you know - have
+> determined that the architecture supports xxx. But maybe that's
+> unreasonable...
+>
+>> and ya, we'll pick it up through the arch tree once one of us can be
+>> convinced this works ;)
+>>
+> Thanks! :) Your skepticism is appropriate. But I do think this will be fine
+> for risc v.
+>
+> I'd ideally like to hear from somebody who's checked this on a risc v
+> system with CONFIG_MSEAL_SYSTEM_MAPPINGS enabled just to be doubly sure.
 
-There are a bunch of complexities here, reboot sequence on x86 can be
-triggered using multiple ways that I don't fully understand, but few
-of them include reading/writing to "reset register" in MMIO/PCI config
-space that are emulated by the host userspace directly. Host has to
-know when the guest is shutting down to manage it's lifecycle.
 
-x86 CoCo VM firmwares don't support warm/soft reboot and even if it
-does in future, guest kernel can choose a different reboot mechanism.
-So guest reboot needs to be emulated by always starting from scratch.
-This sequence needs initial guest firmware payload to be installed
-into private ranges of guest_memfd.
+So I double checked and tested this so I'll merge it for 6.16 and:
+
+Tested-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+
+Thanks,
+
+Alex
+
 
 >
-> Either the host doesn't (or cannot even) know that the guest is
-> rebooting, in which case I don't see how having an IOCTL would help.
-
-Host does know that the guest is rebooting.
-
-> Or somehow the host does know that, i.e., via a hypercall that
-> indicates that. In which case, we could have it so that for that type
-> of VM, we would reconvert its pages to private on a reboot.
-
-This possibly could be solved by resetting the ranges to private when
-binding with a memslot of certain VM type. But then Google also has a
-usecase to support intrahost migration where a live VM and associated
-guest_memfd files are bound to new KVM VM and memslots.
-
-Otherwise, we need an additional contract between userspace/KVM to
-intercept/handle guest_memfd range reset.
+> Thanks, Lorenzo
+>
+>>>>> Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+>>>>> Cc: Jeff Xu <jeffxu@chromium.org>
+>>>>> ---
+>>>>>   arch/riscv/Kconfig       | 1 +
+>>>>>   arch/riscv/kernel/vdso.c | 2 +-
+>>>>>   2 files changed, 2 insertions(+), 1 deletion(-)
+>>>> Please consider updating document as part of your patch:
+>>>> features/core/mseal_sys_mappings/arch-support.txt
+>>>> Documentation/userspace-api/mseal.rst
+>>>>
+>>>> Sample change in [3]
+>>>>
+>>>>> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+>>>>> index bbec87b79309..3cb0b05eef62 100644
+>>>>> --- a/arch/riscv/Kconfig
+>>>>> +++ b/arch/riscv/Kconfig
+>>>>> @@ -70,6 +70,7 @@ config RISCV
+>>>>>          # LLD >= 14: https://github.com/llvm/llvm-project/issues/50505
+>>>>>          select ARCH_SUPPORTS_LTO_CLANG if LLD_VERSION >= 140000
+>>>>>          select ARCH_SUPPORTS_LTO_CLANG_THIN if LLD_VERSION >= 140000
+>>>>> +       select ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS if 64BIT && MMU
+>>>> The "if 64BIT && MMU" are not needed here.
+>>>>
+>>>> MMU is not checked by MSEAL_SYSTEM_MAPPINGS, which we should,  this
+>>>> can go to security/Kconfig separately. If you'd like, please submit a
+>>>> fix to mm tree directly.
+>>>>
+>>>> [1] https://lore.kernel.org/all/7EB087B72C4FBDD3+20250417132410.404043-1-wangyuli@uniontech.com/,
+>>>> [2] https://lore.kernel.org/all/3de559d6-be19-44bc-ba8f-4c52d4bca684@lucifer.local/
+>>>> [3] https://lore.kernel.org/all/648AB3031B5618C0+20250415153903.570662-1-wangyuli@uniontech.com/
+>>>>
+>>>> Thanks
+>>>> -Jeff
+>>>>
+>>>>>          select ARCH_SUPPORTS_PAGE_TABLE_CHECK if MMU
+>>>>>          select ARCH_SUPPORTS_PER_VMA_LOCK if MMU
+>>>>>          select ARCH_SUPPORTS_RT
+>>>>> diff --git a/arch/riscv/kernel/vdso.c b/arch/riscv/kernel/vdso.c
+>>>>> index cc2895d1fbc2..3a8e038b10a2 100644
+>>>>> --- a/arch/riscv/kernel/vdso.c
+>>>>> +++ b/arch/riscv/kernel/vdso.c
+>>>>> @@ -136,7 +136,7 @@ static int __setup_additional_pages(struct mm_struct *mm,
+>>>>>
+>>>>>          ret =
+>>>>>             _install_special_mapping(mm, vdso_base, vdso_text_len,
+>>>>> -               (VM_READ | VM_EXEC | VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC),
+>>>>> +               (VM_READ | VM_EXEC | VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC | VM_SEALED_SYSMAP),
+>>>>>                  vdso_info->cm);
+>>>>>
+>>>>>          if (IS_ERR(ret))
+>>>>> --
+>>>>> 2.47.2
+>>>>>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
