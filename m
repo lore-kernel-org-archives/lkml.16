@@ -1,204 +1,131 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 026E518BBB9
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 14:10:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCFB118E050;
+	Wed, 21 May 2025 14:11:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747836642; cv=none; b=RXHY/e8TOatSwBHo3LQCr+PyyI9g1dODbVmfx5Jq2NYKh/icYkjvNHo40NRdQ02EzVHrVlftfx8fGiuZZ3BFfjvWUf5/jvB6+atWJX7m450HfSo+uLRc6SbLI+pnOGfB9JxfDREomD8bMN0XWWEYxjCXazXRevdpqbuAjQIZ8uE=
+	t=1747836678; cv=none; b=jIVDUVz/KWuq9vZFjNobpHfpL4p4tgRiDCzZOfBXlCcfUWx3p//MrXMiZC4XmCAWkQBSKhkHyESFvdS3d9EN0IGAEmI6MUqP0VGChOFh3wFnp56ANzmYbeHwGnhGah5fYz89xDzc7cgVU0pIu0pLdAVIxtJiXIRXti7gaoPihlE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747836642; c=relaxed/simple;
-	bh=OQ1NjhaRqgeRJck8clk8hAkhTOm7Z0typP+i2KOU6uY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LclJpCMMfww4qOxU666VjtfGk99B2dDi3Nsv+1VGZpkoKYazmj1cDpvQlaE0YQpOdRgkyB3guqdhfiifoowE5Iouhssg/pdFzynu7dlW1+8YmWzkxL0SQzum/YbTv0IAT6YRS9b04A8DqQwkDyuVYeY7jBXSYt6lnYHFt+d98yQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=VjfA0xGd; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	s=arc-20240116; t=1747836678; c=relaxed/simple;
+	bh=apjPYqlsNolUKpGTQKj62mtZjwY4zQpEjSEbJumiJuY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W1vnJ03GOfDj+PFudUEjUcNYC+GYNvrhaov8BuirLrVE/wpxcRAdgg0gnL7JOqhvXDn95TZaqVKYHRd+ejNj5HPbogQ4HjSQzjK6azg1ZGQbtNndHzrA4uyOHp7isv0Jy2lmBygM+p6I5EmWz/ScqVG4C5dLXny0W3gnVs0/mTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hPrNBiNA; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="VjfA0xGd"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-3105ef2a08dso62915491fa.0
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 07:10:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1747836639; x=1748441439; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=j2m/AQHhUKCMB2ooeH4OXmkM2QdyDkeRoTJbiJc49Qw=;
-        b=VjfA0xGdXDoWq9hSZ2KqMc3b7yEDYNdulcYH+LMi+10GXsb7u7OU/QZpubAOvuf3o1
-         hkn0s+Gfz3NAGOUnGJSbNm039VM+MMpQIJLry1M47eJIbV+moaFrgNxG1rzqRnpvFOv8
-         CbxU2X/KeA6Z5Wo581riRsjyuRoCY75pEGfABGEZ+MhhkHGYC4tdPqNWbpW+bY/9XU9q
-         7V1KQlkomcrDxazHXO3RR5JC2c5LLM+WnCXI+86584dgzytyKqUH/g12GDc5ix6bOns+
-         YJ0K+tp7pvvvT90m7FwqPMJLboR+oZvN/3MWXKqE//6aeD+lazcckOawDAVTdm6Y2iKe
-         tMXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747836639; x=1748441439;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=j2m/AQHhUKCMB2ooeH4OXmkM2QdyDkeRoTJbiJc49Qw=;
-        b=JLBDbd0sa4pZu+bko7gMDZA2CRgXxurh6qLsv/PXDLDHxoFgks4DdWNiN3qrJAFAi4
-         kIEb5IlWJGg+8G4cuaj65ceQVd6sTz9OYUQ3qnmKhRoHuxG+kxnzf4ylE2HWo1F2kF3l
-         89FBHNudOKZK9q/4kjyPZi9GLCE7kCIBxgIwEesKFfPPhc4DeIgBcsX8zPbFiZiJb6da
-         e5st1J0qCwzx70lKQdPbbVw63eAfZo6xI52gJe4ouRTszO3MizmNys2KbFccxwk1kSEo
-         8xSQRYttceLBsr9iD7Bh2Bn8qLvYJ6NGbcAvwyOmr5pWNn3vk7pe3jdBGqgiSP578XVL
-         wKlg==
-X-Forwarded-Encrypted: i=1; AJvYcCXP6wxd7303cHiH6igHcJSZ5bPqTvHIPq5tT8gSfLtPf6zrKm8shHOARYE3TH6CWk7GYqaE/uuiFzzKKiU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwbGXXx7Vjgg5ezTXv6WZ991h4/Geeli1F+KRqxamMbdrHv2Fpo
-	pKoYDpLrHdRt+GEAtDUHtbxgwxEjFz52L1LJGHRukNN9COUpMvQ4QaDi0B0+vzCzb0GPoZQYYdd
-	q1GAw
-X-Gm-Gg: ASbGncu7WE+A3N+aRxGEavU4BdcYCgzBy0Bb5t4+sutQLEKghweafs/jMgJ5FbrFFjI
-	w8+JaG8dA+vzDatXt6YrIzZeZYUWn3Nnpy8qZCBGoCiuz2BcNGhkdi2psSgW+2dFoMilcYBYq6J
-	ErrXS4HZBZjZkiX4QKy2Ty+0KwUUx9XkQP9soRwOj74EyxaKIqU03zHeyjW+F93HPgp/W23WMbX
-	hes353ZqRWlNADCEWZL1LZBRRGUw0vdqp+e5E+Sswn5DT2y5y/oVFJ282AGynZEh5aylunyaDZ+
-	yIE8tLPRKOPFGjEqhH0JYWWb06xxpCrTpKX8ABmJegO0gz/zw5o4GNFumpVqhX9fqWqItNtVq2+
-	7jxHi
-X-Google-Smtp-Source: AGHT+IGdD+yAG7ixkuPBvb5SmYpr1MB+zCBzWTmXhHcnzFLU4L4Om8QGyJVgnGJCce8K1qT9dbWwIA==
-X-Received: by 2002:a17:907:968f:b0:ad2:53fc:a884 with SMTP id a640c23a62f3a-ad52d549101mr2013009566b.29.1747836628448;
-        Wed, 21 May 2025 07:10:28 -0700 (PDT)
-Received: from claudiu-X670E-Pro-RS.. ([82.78.167.58])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d271916sm914552866b.69.2025.05.21.07.10.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 07:10:27 -0700 (PDT)
-From: Claudiu <claudiu.beznea@tuxon.dev>
-X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
-To: vkoul@kernel.org,
-	kishon@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	p.zabel@pengutronix.de,
-	geert+renesas@glider.be,
-	magnus.damm@gmail.com,
-	yoshihiro.shimoda.uh@renesas.com,
-	kees@kernel.org,
-	gustavoars@kernel.org,
-	biju.das.jz@bp.renesas.com
-Cc: claudiu.beznea@tuxon.dev,
-	linux-phy@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	john.madieu.xa@bp.renesas.com,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: [PATCH v3 12/12] arm64: dts: renesas: rzg3s-smarc: Enable USB support
-Date: Wed, 21 May 2025 17:09:43 +0300
-Message-ID: <20250521140943.3830195-13-claudiu.beznea.uj@bp.renesas.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250521140943.3830195-1-claudiu.beznea.uj@bp.renesas.com>
-References: <20250521140943.3830195-1-claudiu.beznea.uj@bp.renesas.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hPrNBiNA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747836677; x=1779372677;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=apjPYqlsNolUKpGTQKj62mtZjwY4zQpEjSEbJumiJuY=;
+  b=hPrNBiNAMwphEH5M0mwk3i8TA2RNCnsTmNFI7GEdCCTKt+TDu0Ig4n7C
+   Bxjs+5yBYrHSSHv1Vl9ziAMJcv87xwXmF7f9HkWbDnqBK80KpIo/bCQTh
+   4o052uehjhGGLnkJJHpMTEhA37r0NSeCigDCTWsfUn2O8j+LD7dOzCqfH
+   /mi9r0muM9JaHYygE96CwANFZmrleWZqIirNXwPK4Gs37TPAQ290cdM0a
+   9wpJNKQPt+4zx1a5wMnxkcF/gOpukdMcl1Hs+YPbo1VB7QGdFBz0pzALW
+   GUlkrvvWJxbwQWwFX1iL+xZhaHQm5PLzSjH+GWQPn6Bdk+Z0YflgYX1XX
+   A==;
+X-CSE-ConnectionGUID: R0deUqU1SM6jKWpnRCtBRg==
+X-CSE-MsgGUID: 8sSvTEOQSL67+g5//2tepQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="60862273"
+X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
+   d="scan'208";a="60862273"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 07:11:14 -0700
+X-CSE-ConnectionGUID: 6U0vakLaRt+lIMk/VQo9uA==
+X-CSE-MsgGUID: VAbYWIpDQzWHSTf1mcFaTQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
+   d="scan'208";a="144067842"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 07:11:08 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uHk9w-00000003dxH-3Ck6;
+	Wed, 21 May 2025 17:11:04 +0300
+Date: Wed, 21 May 2025 17:11:04 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Anup Patel <apatel@ventanamicro.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jassi Brar <jassisinghbrar@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>,
+	Rahul Pathak <rpathak@ventanamicro.com>,
+	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+	Atish Patra <atish.patra@linux.dev>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Anup Patel <anup@brainfault.org>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 13/23] irqchip: Add driver for the RPMI system MSI
+ service group
+Message-ID: <aC3e-IXYb68RoIyu@smile.fi.intel.com>
+References: <20250511133939.801777-1-apatel@ventanamicro.com>
+ <20250511133939.801777-14-apatel@ventanamicro.com>
+ <aCGaKXOOWyM4JQMg@smile.fi.intel.com>
+ <CAK9=C2U1rzSa42qMNqxfTtjAC5RiJrhwg_32_B86nT2+xJ4Qow@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK9=C2U1rzSa42qMNqxfTtjAC5RiJrhwg_32_B86nT2+xJ4Qow@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+On Wed, May 21, 2025 at 05:07:05PM +0530, Anup Patel wrote:
+> On Mon, May 12, 2025 at 12:20 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Sun, May 11, 2025 at 07:09:29PM +0530, Anup Patel wrote:
 
-Enable USB support (host, device, USB PHYs).
+...
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
----
+> > > +#include <linux/bitfield.h>
+> > > +#include <linux/bitops.h>
+> > > +#include <linux/cpu.h>
+> > > +#include <linux/interrupt.h>
+> > > +#include <linux/irqchip.h>
+> > > +#include <linux/mailbox_client.h>
+> > > +#include <linux/mailbox/riscv-rpmi-message.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/msi.h>
+> > > +#include <linux/of_irq.h>
+> > > +#include <linux/platform_device.h>
+> > > +#include <linux/printk.h>
+> > > +#include <linux/smp.h>
+> >
+> > + types.h
+> >
+> > Actually this one is most clean, the rest of the patches where the new code
+> > is introduced has semi-random list of the inclusions, please, follow the IWYU
+> > principle.
+> 
+> Sure, I will simplify the #includes
 
-Changes in v3:
-- collected tags
+Oh, IWYU (Include What You Use) is not about simplification. It's about
+comprehension. It usually means that *more* headers need to be included
+and *only some* of the existing will be dropped.
 
-Changes in v2:
-- this was patch 15/16 in v1:
-- dropped sysc enablement as it is now done in SoC dtsi file
-
- arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi | 57 ++++++++++++++++++++
- 1 file changed, 57 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi b/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi
-index 5e044a4d0234..5586dd43c4d5 100644
---- a/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi
-+++ b/arch/arm64/boot/dts/renesas/rzg3s-smarc.dtsi
-@@ -92,6 +92,20 @@ &audio_clk2 {
- 	clock-frequency = <12288000>;
- };
- 
-+&ehci0 {
-+	dr_mode = "otg";
-+	status = "okay";
-+};
-+
-+&ehci1 {
-+	status = "okay";
-+};
-+
-+&hsusb {
-+	dr_mode = "otg";
-+	status = "okay";
-+};
-+
- &i2c0 {
- 	status = "okay";
- 
-@@ -132,6 +146,15 @@ power-monitor@44 {
- 	};
- };
- 
-+&ohci0 {
-+	dr_mode = "otg";
-+	status = "okay";
-+};
-+
-+&ohci1 {
-+	status = "okay";
-+};
-+
- &pinctrl {
- 	audio_clock_pins: audio-clock {
- 		pins = "AUDIO_CLK1", "AUDIO_CLK2";
-@@ -207,6 +230,27 @@ ssi3_pins: ssi3 {
- 			 <RZG2L_PORT_PINMUX(18, 4, 8)>, /* TXD */
- 			 <RZG2L_PORT_PINMUX(18, 5, 8)>; /* RXD */
- 	};
-+
-+	usb0_pins: usb0 {
-+		peri {
-+			pinmux = <RZG2L_PORT_PINMUX(5, 0, 1)>, /* VBUS */
-+				 <RZG2L_PORT_PINMUX(5, 2, 1)>; /* OVC */
-+		};
-+
-+		otg {
-+			pinmux = <RZG2L_PORT_PINMUX(5, 3, 1)>; /* OTG_ID */
-+			bias-pull-up;
-+		};
-+	};
-+
-+	usb1_pins: usb1 {
-+		pinmux = <RZG2L_PORT_PINMUX(5, 4, 5)>, /* OVC */
-+			 <RZG2L_PORT_PINMUX(6, 0, 1)>; /* VBUS */
-+	};
-+};
-+
-+&phyrst {
-+	status = "okay";
- };
- 
- &scif0 {
-@@ -242,3 +286,16 @@ &ssi3 {
- 	pinctrl-0 = <&ssi3_pins>, <&audio_clock_pins>;
- 	status = "okay";
- };
-+
-+&usb2_phy0 {
-+	pinctrl-0 = <&usb0_pins>;
-+	pinctrl-names = "default";
-+	vbus-supply = <&usb0_vbus_otg>;
-+	status = "okay";
-+};
-+
-+&usb2_phy1 {
-+	pinctrl-0 = <&usb1_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
 -- 
-2.43.0
+With Best Regards,
+Andy Shevchenko
+
 
