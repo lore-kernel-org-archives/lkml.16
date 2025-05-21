@@ -1,123 +1,80 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB1162343C9
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 07:29:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16A6422FE02
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 07:30:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747812589; cv=none; b=djv3qnbwNcm3gXkvp4qE+4mOq0I1KvkOM8XIcsPuJaLQkDcqtmGUcXBceN/TqTIourS4/nc3HZPV/cWuFpCFHWqlJKhBZKtcA9DD0WmM7J5IvxHjbnkEM4vEjsBW7kY1jsWV5wi9aQrS+4xlJUEPR3nH4fAMfa8KBn7OO7LpWhk=
+	t=1747812614; cv=none; b=pZu8jtuU8pk8O8QYuu94fIU8c/gUg0ysGQoINeTxW4lFHoa/gUNPV23PhNIrvp2KRVZSb4Zbw/vugpk9FrfppSH3N/vzprs+rlBIpH9Tj+VeWPaN1pdoeBq6Bq4iMHwkm3mRP6dihPFRQXCQXxmoAaazDr7JvQejD0B2Dw2g7dM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747812589; c=relaxed/simple;
-	bh=5QOEFujNAU224Hj3QqjjAu8F3cWlAhTNz/g3jWicV+8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mRrGCvL73rHLnRt+jvapGFsLXLdIPQntuKVMwksoCgWrZY5U2hhprpPkERB9K+zDjjMGneMgis21AT7vLEPV0gjrb8GZeQKE0GzMKEc30SVOmUfuVgCYRcPkY2MqK28HQuK1Sz46FuoLwdbp3gO+zgpJct6sgC0mka6MuC17IcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ew0hBRMw; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1747812614; c=relaxed/simple;
+	bh=kHoF45hUCogyr1b9AyVQsB5qBGzunVeolUQxgQ54lzg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ub1aY+B8I5ayLjvq8MxwycdMhb1zaAVOJwFI3KjzyG6Kog/nm1GAQHo3/g35B5PZ7zaQ0rYs7eMdC9WEBEdt/iv1wj+teDj+UakLNof1PgMiBJIYuQEsbK7Ba++mocAxveiU/V83ROGmlbVKlzR7DqX9soHQ3kO+S8mpBWHOjew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TqtXNqi3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ew0hBRMw"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-54298ec925bso9978061e87.3
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 00:29:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1747812586; x=1748417386; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5PH6FcCTvcCsGA3pEC6MGqn/kU/j9G10vtPXCblGsYM=;
-        b=ew0hBRMwWqQfrWBtC+6CDjFA4CU5xUx2DgehQ0p8CYG+buN8XvYpW1fj0l4k1DDWS5
-         r20rxGmpooM+p16oRF5zY+wMNiW1ear0FL4bcocNSXvl6/fdxQV8J5SYa5lw13iHmuHN
-         kTKfebRVmOoGhQAgEGJMIcIodqSEvryZzcGRiQ04yYaKinC+ERH8wZMSCej37VpzLc+y
-         VyH13dJhCHZHFazy7xs/NGsupNjwv8vT9vm69P/hvR4rVYylbOSdhmPoKyNw/g79jJCp
-         DMKdOTOHvpzdHAtcL8/+GrRwbIK9uQKh3FwKNHg3ywrZB/3fCDANbmOMFNFnYE4NAPSN
-         dosA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747812586; x=1748417386;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5PH6FcCTvcCsGA3pEC6MGqn/kU/j9G10vtPXCblGsYM=;
-        b=Mgrc/afd9kophOW5GcnI0BFP8b0eT0DZ0R+cvEbmjt3Au2XPbGomdto+resjf9SOTM
-         WfDqVjaTgwPWlHoN9nRw1aEalkRNDwfPkZiExGOH72mvuwePPPJP6AQ9yfHegJK8VDw+
-         Q4zjj7D+KmWkqudi7azxvvRNX4BnZEFvT00lUaFqyF5u/xNX5kafcexe06gHXIduheF4
-         uE/tVsl6IlkbtHvYs3Va/z7JAklRmZWlxMuTiGi0ktLYqTpdjQ6nVu/sz2XK5bXq3/De
-         F/qIasOv33jEYy5U7HVsawRHmJoBSRV9wMByVqvTHHwis0qZkqwrf90Cpa/drV4NRe1w
-         adJg==
-X-Forwarded-Encrypted: i=1; AJvYcCWakf3zSclyfEUqF2mfZMSnFklDEFptw+RH2k/ocvvpXwNcDi8mnsoICe3YoKkdZm16OMmMkfv1tyDOSbc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzpXPwbMVorKgshC/F7IEXp5NCOJ7r23M4BDlSAD7qgWRblmocr
-	aC38kXzTL1tVTMEvS8WXu67mftB0pFKetZMZWvHmtFro8GjpHvUNWDdkFNFHqXnjlesUpNqEI2a
-	88FjSef73brFf+7PmzUNJIB/SfORLNvvOQ4I2bJuAJQ==
-X-Gm-Gg: ASbGncs9F7a9OcIOYfGpfPaUn/1SRjW5Xtk+tpsG0REkucpcFz90kqxfYQNGbHWJWMZ
-	cURxUgVFICxmqhosYvyQAzTIxsDo4/gvMLV6uRznwIm8GxWOLQNWSLv0c6tEHtwetBQ34Mo+M1f
-	OIyfTCpvcUPihd/Xzopcws7DG8YAm675oM59CpH9WzyFgdxNCzpG3lwvxGtN5TEjG7
-X-Google-Smtp-Source: AGHT+IGi+hlDlFryu83MUl58HnzanyHhkItUmquYyNR0YbZhFjMMynLVndB6XnoFry/M/qE8qsetk+tJQInM0Vftoe0=
-X-Received: by 2002:a05:6512:6c5:b0:549:b0f3:439b with SMTP id
- 2adb3069b0e04-550e71bfaffmr7680730e87.16.1747812585795; Wed, 21 May 2025
- 00:29:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TqtXNqi3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 129F6C4CEE4;
+	Wed, 21 May 2025 07:30:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747812613;
+	bh=kHoF45hUCogyr1b9AyVQsB5qBGzunVeolUQxgQ54lzg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=TqtXNqi3Vltcn7eXM2pjk8DV8x/Cp+dDz507Gul9YXLQ2p3DvcJnJ+nMdUBia53F6
+	 FOiZLki3BNQK8XkwXbxSX9sf+RewnU2jDCtAHvCeh5ZBZT3dkxdtUgvOcysqD1ExhX
+	 RhPuJCV3bb6en2HvCBSWiwoiMLdQQ8ck058/8UO/M8SrwlioXFOmBMnHeGaiCx3NMX
+	 JYBOyCSwOG+89ofFfbgm5yuNbhBcVrCAmZo3Zc/90xjUPOWaBDsOlNNnoYq3W3F5ZF
+	 WZd29o9gFzDO/QUc2oHfGuh2Ezh7P3oDa3LBi1/j/SlRxfIlE6HxyNHpbfFkoiMTmT
+	 vozD39dnSmcWg==
+From: Maxime Ripard <mripard@kernel.org>
+To: Neil Armstrong <neil.armstrong@linaro.org>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Icenowy Zheng <icenowy@aosc.io>,
+	Jagan Teki <jagan@amarulasolutions.com>,
+	Ondrej Jirman <megi@xff.cz>,
+	Javier Martinez Canillas <javierm@redhat.com>,
+	Michael Trimarchi <michael@amarulasolutions.com>,
+	Michael Walle <mwalle@kernel.org>,
+	Jagan Teki <jagan@edgeble.ai>,
+	=?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
+	Purism Kernel Team <kernel@puri.sm>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Jianhua Lu <lujianhua000@gmail.com>,
+	Stefan Mavrodiev <stefan@olimex.com>,
+	Anusha Srivatsa <asrivats@redhat.com>
+Cc: Maxime Ripard <mripard@kernel.org>,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 00/30] drm/panel: Use refcounted allocation in place of devm_kzalloc() - Part2
+Date: Wed, 21 May 2025 09:30:07 +0200
+Message-ID: <174781258973.998238.825385797307727839.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250520-drivers-mass-convert-part2-v3-0-f7ae7b723c68@redhat.com>
+References: <20250520-drivers-mass-convert-part2-v3-0-f7ae7b723c68@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250521072048.1053190-1-peng.fan@oss.nxp.com>
-In-Reply-To: <20250521072048.1053190-1-peng.fan@oss.nxp.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 21 May 2025 09:29:33 +0200
-X-Gm-Features: AX0GCFuARv8NTEaBZbmAi5mo_wX4qtDCQAqZq8myL7yOFqeC3xBU1D2u36DDp2U
-Message-ID: <CAMRc=MfbQMebHDa4_=79ZaFRf_0V47wQHh8bP+MQh1Qj=wjOyA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: davinci: select GPIOLIB_IRQCHIP
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: linus.walleij@linaro.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>, 
-	kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 21, 2025 at 9:22=E2=80=AFAM Peng Fan (OSS) <peng.fan@oss.nxp.co=
-m> wrote:
->
-> From: Peng Fan <peng.fan@nxp.com>
->
-> This driver uses gpiochip_irq_reqres() and gpiochip_irq_relres() which
-> are only built with GPIOLIB_IRQCHIP=3Dy. Add the missing Kconfig select.
->
-> Fixes: 3f50bb3124d7 ("gpio: davinci: Make irq_chip immutable")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202505210606.PudPm5pC-lkp@i=
-ntel.com/
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->
-> Hi Bartosz,
->
->  I follow same approach as you did.
->  My last build using multi defconfig was not enough.
->  I tried build all arch/arm/configs/*, no errors with this patch applied.
->
-> Thanks,
-> Peng
->
->  drivers/gpio/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index a559d5bb8249..c3465fd82b08 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -253,6 +253,7 @@ config GPIO_DAVINCI
->         tristate "TI Davinci/Keystone GPIO support"
->         default y if ARCH_DAVINCI
->         depends on ((ARM || ARM64) && (ARCH_DAVINCI || ARCH_KEYSTONE || A=
-RCH_K3)) || COMPILE_TEST
-> +       select GPIOLIB_IRQCHIP
->         help
->           Say yes here to enable GPIO support for TI Davinci/Keystone SoC=
-s.
->
-> --
-> 2.37.1
->
+On Tue, 20 May 2025 22:03:31 -0500, Anusha Srivatsa wrote:
+> Convert drivers to use the API - devm_drm_panel_alloc().
+> There are a lot of occurences of the panel allocation across the
+> subsystem. Much thanks to Maxime for the semanic patch which actually
+> gives a list of panels allocated unsafely.
+> 
+> virtual report
+> 
+> [...]
 
-Ah, you beat me to it by 2 minutes.
+Applied to misc/kernel.git (drm-misc-next).
 
-Bart
+Thanks!
+Maxime
