@@ -1,120 +1,210 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C417A1A83ED;
-	Wed, 21 May 2025 06:17:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54CECBA27;
+	Wed, 21 May 2025 06:20:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747808226; cv=none; b=gN8t3GvXevEEFYQ6eU6h1FnrSv3FAq32IZaD+Iwzx7CNdqZxcGiSg9n1Z4oKINZBzv5SsHlg7HCimzU8xuXoaM2m/D/3HydAp6dV9v2XvkfF0od20XOXFM+PnxgTwsb4zDghzQxYeqPT8tWNUM/Co41Zm3mDIwhZ8YgC0PjDlm0=
+	t=1747808453; cv=none; b=RDSkSK6I95+AUhCeyeCBA9Cit4kziYmNGVrg46zJNuwqYRq473YPhk/FPXizwKnKAYLWwWf4Q2xhthm6ZjESsUNWJrIMt9FNESzbmT+YGWvGpTPDsdX5wOudgDpleBa3kdXptcJXU7QglXIrWG58KFVXtc8U3e/pjJ2JVgnWAm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747808226; c=relaxed/simple;
-	bh=N8fS/PrdoLfYNjfVcJkFIYiSWo69y3Qai+YU19Ch5VA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=IgmRDuvoJjvbQrE9CUkS+/6rGcF8cqZ6c/3H+eNzI+xxayhWU0gvOmGWg+x7FOxG3cTdahAg51qRHsS6nVcb/oRgjk5UbKb91ldNJ0nImZCYL7d72P1lb135MR4+kJuchGS1LwRHl7/6CTEGmmlQBqF8JVQrG4Mu5srxH/beDZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=sVWrXBC2; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1747808453; c=relaxed/simple;
+	bh=gE38frMN/JeTXaKFPZ9mTU3IR80HA4hEnJBcNEHgy8U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XotK3mqweKPMQyn1BPHR6GobQJbwY1EYAtWDp1MyeXUU6umUR/uAl0b7hRALWfruLGNYiQh76mHNCJadVxfgAPN2FPrwveEH2F9z/AVUjTJX/nlH+eVA3JSo/ooC1JSxh73mVTZuCwQge2//MGVjf9ryj0X5yVfxpVEOGZt2mxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EGexIUPb; arc=none smtp.client-ip=209.85.222.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="sVWrXBC2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1747808219;
-	bh=suzT5qmoGe2eGH7zmAVnbRaMOCyy2nfC6Kn9PBY1kSA=;
-	h=Date:From:To:Cc:Subject:From;
-	b=sVWrXBC2k17QWxCnA92lG181eRDLAzb0/LvFsnCJL64bUqAuXZrq9brZdiDMt3ifx
-	 DID4GOBIMrdklZDX6imBofFiNnIdvwgSUk9Ve5I0QlLx5160TmtAoglO4+gak8vt9E
-	 pOvEYD1HLUbXf3d3JXC9SFDde56nrdcMsJIHP6G0U+e/SGrSSTIvTJ3O7dDhh43fcH
-	 b+LFZDEGrMLe3cDMIAcF0nVcCKdReLRsUhmkdoq1Jr86w4a+4cDJ8awl71a5LIgu3M
-	 xPYkCaU9GNQmWs5EiiRXn4fQne1O42js7LvqJBlpWXQK5XKQ1MWsuRYDfRbWLcBghD
-	 VKZFxWKkyMiQg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b2LmT3vnBz4x5k;
-	Wed, 21 May 2025 16:16:57 +1000 (AEST)
-Date: Wed, 21 May 2025 16:16:56 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>,
- "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
- Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi
- <lpieralisi@kernel.org>, Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?=
- <kwilczynski@kernel.org>
-Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>, Hector Martin
- <marcan@marcan.st>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>, Manivannan Sadhasivam
- <manivannan.sadhasivam@linaro.org>, Marc Zyngier <maz@kernel.org>
-Subject: linux-next: manual merge of the tip tree with the pci tree
-Message-ID: <20250521161656.429889eb@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EGexIUPb"
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7cd0a7b672bso431804385a.2;
+        Tue, 20 May 2025 23:20:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747808450; x=1748413250; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CLhLiGzM45hB2OU8IkkJdEpBj3k3ldSSfXABvEjzrrw=;
+        b=EGexIUPbxq6nBjkXDB40Xs65IDgoBCJI91Op+PEYDQbJGKpV5kXV4xnoWr2IJBE42r
+         g5XehEHrgfsU4qVbJ3wmkw+9cCYCzb07YXjZ8i6/8s+jNVkJ0iHLheS5VHX28K7qi2yt
+         YvtrOrMoK/b7JUiJUuoZNa11KME4PJqxK/E5uLkA1hXxLstnKT2TSb7OOEXE/v1AflYc
+         TuTdKwCVrPB7s3hf7th9UkVnKZRvcjtZDstXxA0sSdAWCw27niTf58gEOCoMp4qGYzU2
+         5qZS6qL+aYVEMODMA0v90Wt8DPyDjlwJhNUAi9CZodPX7nc1F8qc0ffLFXuCc05jRKWV
+         iTAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747808450; x=1748413250;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CLhLiGzM45hB2OU8IkkJdEpBj3k3ldSSfXABvEjzrrw=;
+        b=r/ZT71MpUtr41HV7TbFgHqUbc4dWQli+CkeztIu1IbmjEy9KbTQr4VFG9X45KXVF52
+         W0y60H4TYl/sLsKlCIQPUn4i7daBaRw5YhQZq5Pcc7D10E3MwPwnTcJmDOqw/IebfoTQ
+         jUwZTHNMHyyo1yXH0982dZrj82D6Nx/Zqt1seqtX3FxZBEm6DXlUjpCWvklM26ZHmzgw
+         0nRUZG2kRTDw1OvT4AIqFM5RzPj2UuAYmrPXQgCEZcerkV+vqkMTxClkQLl6KRNuOLPa
+         dv/uPmW43tnOoKEhhCTNfFdUSuf35onHaxufoUV5vDYcy/dO4/ihCdGiGkjyb7ELhTbm
+         /xmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVmPBnsKT9aq8IGVhT3rsU+8Ja1yUJ817Sr3Hl3YaARPXsbC6Od7P27mFSpUcpGL4SdJRf6B6tQJP4YVCOq13Q=@vger.kernel.org, AJvYcCWnZ7E/LkWC4nbGkFgXWvBJmIHmrVu9i+4cUnuF11vaZ8KTCPftdr1385slakchFENUQOzca/l8j1fq@vger.kernel.org, AJvYcCX/4INoXOxH//Ky8aRyIOpp4oHtdTpcFeP6FZFKBLt3awlzMKBFSxSw6DAkewTSd8d2NhBMCGnW/KWfYvRr@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCc+AKLIY9r7YcH6hZH72PLgpVViEV747l2iPcL0TYpFbxUUta
+	BIwcEixls57kXLjJIOTAxbL/hBPZQaTvcfNvYTm/iHUpMj6WwhfIVopxn1uQkJTYjGu+oqTqEmR
+	HvZWhl2ESNzKjVil43aZYtvCVdzNTBy4=
+X-Gm-Gg: ASbGncu4t8boDV6J3/k9riKsqryjK//FkA2cyJDLxS9tQJ7LiL+v4GUevApnkYJosZ5
+	vFSQYIvDNqK7clnkDQ/tCGhm4EbsuxVTmcPGlGtLQiQWjLkoLlR+zcId7tqXP8alz/fRboYEG3f
+	r71NQ6THvJx9KUbBok9ONhZJSimhQVlApdLw24qUMhZ8SdUa/z65S1LIE/KALZ22zlQ1QnjULFj
+	d+C
+X-Google-Smtp-Source: AGHT+IHQH0M4abcXZ9UcUrAXrorTjVO+BBeR2ZeH9Mp2Y0MovIJp2bP045sv7bTxDr7At2nGf5HnsY/U+aWu0hD2Ung=
+X-Received: by 2002:a05:622a:418a:b0:48e:ef59:db50 with SMTP id
+ d75a77b69052e-494ae3dffbdmr356956261cf.31.1747808450026; Tue, 20 May 2025
+ 23:20:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/S4Ljyc=OH0.WN2a0M5Hj_Eq";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_/S4Ljyc=OH0.WN2a0M5Hj_Eq
-Content-Type: text/plain; charset=US-ASCII
+References: <20250521-vt8500-timer-updates-v4-0-2d4306a16ae4@gmail.com>
+ <20250521-vt8500-timer-updates-v4-4-2d4306a16ae4@gmail.com> <38df2f02-efc4-465b-aa64-4c9e2c1919d8@roeck-us.net>
+In-Reply-To: <38df2f02-efc4-465b-aa64-4c9e2c1919d8@roeck-us.net>
+From: Alexey Charkov <alchark@gmail.com>
+Date: Wed, 21 May 2025 10:20:46 +0400
+X-Gm-Features: AX0GCFu7nbWcnctAyXMfHnwG2aQXQ0NvTnyt98ffoC7G_taLGMiut-Sz-MFKf-Q
+Message-ID: <CABjd4YxZVQSuavEYojc8U4AqwUN3GkweiNNHqn=NDTE70xZm8w@mail.gmail.com>
+Subject: Re: [PATCH v4 4/4] watchdog: Add support for VIA/WonderMedia SoC
+ watchdog functionality
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On Wed, May 21, 2025 at 3:15=E2=80=AFAM Guenter Roeck <linux@roeck-us.net> =
+wrote:
+>
+> On 5/20/25 13:01, Alexey Charkov wrote:
+> > VIA/WonderMedia SoCs can use their system timer's first channel as a
+> > watchdog device which will reset the system if the clocksource counter
+> > matches the value given in its match register 0 and if the watchdog
+> > function is enabled.
+> >
+> > Since the watchdog function is tightly coupled to the timer itself, it
+> > is implemented as an auxiliary device of the timer device
+> >
+> > Signed-off-by: Alexey Charkov <alchark@gmail.com>
+> > ---
+> >   MAINTAINERS                   |  1 +
+> >   drivers/watchdog/Kconfig      | 15 ++++++++
+> >   drivers/watchdog/Makefile     |  1 +
+> >   drivers/watchdog/vt8500-wdt.c | 80 ++++++++++++++++++++++++++++++++++=
++++++++++
+> >   4 files changed, 97 insertions(+)
+> >
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 5362095240627f613638197fda275db6edc16cf7..97d1842625dbdf7fdca3556=
+260662dab469ed091 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -3447,6 +3447,7 @@ F:      drivers/tty/serial/vt8500_serial.c
+> >   F:  drivers/video/fbdev/vt8500lcdfb.*
+> >   F:  drivers/video/fbdev/wm8505fb*
+> >   F:  drivers/video/fbdev/wmt_ge_rops.*
+> > +F:   drivers/watchdog/vt8500-wdt.c
+> >   F:  include/linux/vt8500-timer.h
+> >
+> >   ARM/ZYNQ ARCHITECTURE
+> > diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> > index 0d8d37f712e8cfb4bf8156853baa13c23a57d6d9..8049ae630301a98123f97f6=
+e3ee868bd3bf1534a 100644
+> > --- a/drivers/watchdog/Kconfig
+> > +++ b/drivers/watchdog/Kconfig
+> > @@ -2003,6 +2003,21 @@ config PIC32_DMT
+> >         To compile this driver as a loadable module, choose M here.
+> >         The module will be called pic32-dmt.
+> >
+> > +config VT8500_WATCHDOG
+> > +     tristate "VIA/WonderMedia VT8500 watchdog support"
+> > +     depends on ARCH_VT8500 || COMPILE_TEST
+> > +     select WATCHDOG_CORE
+> > +     select AUXILIARY_BUS
+> > +     help
+> > +       VIA/WonderMedia SoCs can use their system timer as a hardware
+> > +       watchdog, as long as the first timer channel is free from other
+> > +       uses and respective function is enabled in its registers. To
+> > +       make use of it, say Y here and ensure that the device tree
+> > +       lists at least two interrupts for the VT8500 timer device.
+> > +
+> > +       To compile this driver as a module, choose M here.
+> > +       The module will be called vt8500-wdt.
+> > +
+> >   # PARISC Architecture
+> >
+> >   # POWERPC Architecture
+> > diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+> > index c9482904bf870a085c7fce2a439ac5089b6e6fee..3072786bf226c357102be37=
+34fe6e701f753d45b 100644
+> > --- a/drivers/watchdog/Makefile
+> > +++ b/drivers/watchdog/Makefile
+> > @@ -101,6 +101,7 @@ obj-$(CONFIG_MSC313E_WATCHDOG) +=3D msc313e_wdt.o
+> >   obj-$(CONFIG_APPLE_WATCHDOG) +=3D apple_wdt.o
+> >   obj-$(CONFIG_SUNPLUS_WATCHDOG) +=3D sunplus_wdt.o
+> >   obj-$(CONFIG_MARVELL_GTI_WDT) +=3D marvell_gti_wdt.o
+> > +obj-$(CONFIG_VT8500_WATCHDOG) +=3D vt8500-wdt.o
+> >
+> >   # X86 (i386 + ia64 + x86_64) Architecture
+> >   obj-$(CONFIG_ACQUIRE_WDT) +=3D acquirewdt.o
+> > diff --git a/drivers/watchdog/vt8500-wdt.c b/drivers/watchdog/vt8500-wd=
+t.c
+> > new file mode 100644
+> > index 0000000000000000000000000000000000000000..54fe5ad7695de36f6b3c1d2=
+8e955f00bef00e9db
+> > --- /dev/null
+> > +++ b/drivers/watchdog/vt8500-wdt.c
+> > @@ -0,0 +1,80 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/* Copyright (C) 2025 Alexey Charkov <alchark@gmail.com */
+> > +
+> > +#include <linux/auxiliary_bus.h>
+> > +#include <linux/container_of.h>
+> > +#include <linux/io.h>
+> > +#include <linux/limits.h>
+> > +#include <linux/module.h>
+> > +#include <linux/types.h>
+> > +#include <linux/watchdog.h>
+> > +#include <linux/vt8500-timer.h>
+> > +
+> > +static int vt8500_watchdog_start(struct watchdog_device *wdd)
+> > +{
+> > +     struct vt8500_wdt_info *info =3D watchdog_get_drvdata(wdd);
+> > +     u64 deadline =3D info->timer_next(wdd->timeout * VT8500_TIMER_HZ)=
+;
+> > +
+>
+> wdd->timeout is the soft timeout, which may be larger
+> than the maximum hardware timeout. That means you'll need
+> to use something like "min(wdd->timeout, U32_MAX / VT8500_TIMER_HZ)
+> * VT8500_TIMER_HZ" as parameter to the timer_next call.
 
+Indeed. For some reason I thought the core splits up large user
+requested timeout values into at most max_hw_heartbeat_ms long chunks
+and feeds those to the driver via the timeout field, but now I see it
+doesn't.
 
-Today's linux-next merge of the tip tree got a conflict in:
+Do I get it right that the core worker will try and do its last ping
+of the hardware at exactly max_hw_heartbeat_ms before the user
+specified deadline?
 
-  drivers/pci/controller/pcie-apple.c
+> > +     writel((u32)deadline, info->wdt_match);
+>
+> Can deadline overflow ?
 
-between commit:
+Yes. The underlying hardware counter is a u32 value incrementing at
+VT8500_TIMER_HZ and continuing past wraparound. This register sets the
+next match value: once the hardware counter reaches the value of
+(u32)deadline (which might be after the counter wrapping around iff
+deadline > U32_MAX) the system resets. Perhaps it warrants a comment
+in code.
 
-  3f1ccd6e85d7 ("PCI: apple: Abstract register offsets via a SoC-specific s=
-tructure")
+Thanks for your review, Guenter!
 
-from the pci tree and commit:
-
-  5d627a9484ec ("PCI: apple: Convert to MSI parent infrastructure")
-
-from the tip tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/pci/controller/pcie-apple.c
-index c3fb2c1cc103,3d412a931774..000000000000
---- a/drivers/pci/controller/pcie-apple.c
-+++ b/drivers/pci/controller/pcie-apple.c
-@@@ -183,8 -134,6 +184,7 @@@ struct apple_pcie=20
-  	struct mutex		lock;
-  	struct device		*dev;
-  	void __iomem            *base;
- +	const struct hw_info	*hw;
-- 	struct irq_domain	*domain;
-  	unsigned long		*bitmap;
-  	struct list_head	ports;
-  	struct completion	event;
-
---Sig_/S4Ljyc=OH0.WN2a0M5Hj_Eq
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgtb9gACgkQAVBC80lX
-0Gy65Af/Y8j+nZb0moCh6IxTVrMyIWt4XBNW72W3j26jUQ5s8FPAK6ophXd/ywOT
-tDIyY+Qyz+WYKPHFD9ZJC/5V8g8HDRdkq+S5eg08vk2vh/N5qAcP5KRaltfXCso/
-QfZZEjhdAj1X9WlhmqThiueoil+AoJC7MllZcyBKEZOPHiJjLcQF3Y+lXrTYvK34
-lqyRXuHJvdga7Oo/IUn+s8iyeedNdKLZhRd1xeyrQTbogrrKVCfeVGmZSYJJKavG
-JD8r+6AgdRb5NNhUuAR2pWGiqnVEq5c42/KlWitkKyWyJskUFv8izUwfxEgB9aij
-SY4zpYIcFwsgV8zsOtO0ISwV4UIpEg==
-=iTLP
------END PGP SIGNATURE-----
-
---Sig_/S4Ljyc=OH0.WN2a0M5Hj_Eq--
+Best regards,
+Alexey
