@@ -1,128 +1,134 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23997262FD9;
-	Wed, 21 May 2025 11:40:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C79CF263F25
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 11:41:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747827657; cv=none; b=c9lhxxh1l+a8XZvNCogJAr03JnkbHemzRsN8ui6UpoDPlL+Ml8mevvl4C5lSWIW5Ap/qGux6GnL0S6IQ+cMqwhJRtdQgmeJXgGip6BBxbqF4Td56MKaeysLA2WRdjYEpSZMJUQoqcC/0k5138mBWqyFOEjnHqSYSOaAgOaXXA5Q=
+	t=1747827700; cv=none; b=pGj4aANWEfScxHEl7p38tR5wzT3SZsRIdkXJAfcY3fG8z5b0PbKwYcpUxv5bHJnMW8XtZbxB/zpwXrODo2PD5LnYg0sxfCOIse2M7MPEpXEeFi0Uf34KtoqdeNxei2PtCtoAfk/kzp2SYBOC+u4jWiY3kIMgY0dyc1RgW0hl/GY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747827657; c=relaxed/simple;
-	bh=s/NcY3SINg1iBtbSiIAXOaPuq5jYZKVkctKM8NepVdI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ovhHyn8Uf+Rrl3E3jZUA7CcH499ZG4wtJwp7E1w5YyyOXKx6zQSzTDUemECY9xvX0F4TqhGfmSu/xCbYqcw/VF+Dxl2Hvq+gSmWjFp6r8GY/VxxWFRKMddFBvX+hKjRO60McfaP2FUg71nwOckBPc+lOFQ7A6Mtwv9kADrlBooQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UhXf/0u+; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747827700; c=relaxed/simple;
+	bh=MqsLTq+Q9ipAuMRrtVo5YYhsxU4uQvPSZlQLm21r3d4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JkE/NdbQ8DsL93/67uxmkJWVFxpCktfu++AKqgxxcLmN+sVfe4vHK4LzEcYBxcJvQOss4gzGhB5DFXKlOcZcYa8B8BotnX9VxHqxyi9lR0OBTq3Ex+1sl/Ax8TuUUnkB5NoGKNZTOYO5f70cQWvDqmn7+d6oCGzRRDOWC4OArZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BZoqG/Bp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UhXf/0u+"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-551f14dc30dso3388351e87.1;
-        Wed, 21 May 2025 04:40:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747827654; x=1748432454; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Z9d59y1AAUBQBeLns7WWUxwr1G+hlDyrZidnmum2/Ds=;
-        b=UhXf/0u+/k7jmZ8d/yQ9H8hnGW6ISfLYa2d7YFNDh4OVR7zQ/l927+Th4e0j4eyw9P
-         StZ0XCZcj39Q4joR+3I3s+S88bP1Ll5GyUdL2mbQdBI/XL04QxrNjFXYs/QE2YBopQPV
-         a2GGknnu8MjAtKWlxdnQK8TFsLnJYv1BjZ99/1IhQ4ntpO5C/VOxpV9DgVz4NtdrNTFz
-         e8R5XK0mmxdcqk+/DqldEOsCfsAhlE3raq9aXcPhGVmGJNyCqHEvnH6Dfy7o1cJimTFF
-         z2taF4oDnaof4RAN0DxKleujljti1yG1En8iVEUqe3Es/OMQy6dU4iIS7XqIWGg/AzVJ
-         b5iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747827654; x=1748432454;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Z9d59y1AAUBQBeLns7WWUxwr1G+hlDyrZidnmum2/Ds=;
-        b=U4Cg+uvjdrxVMtZlvn7rNx/vYmRELsNgVbvWL92SZ2/kct1WGq6EicB9pvE9B0R9Xh
-         EEtC6FdI3De9qPQt8G/JrSNtrRy/NuXuuY9fsCWRAnDboBe14e6wKB8eYb1ACzTpSPdz
-         Wrhv5HJdNrvKSfyfgZHT1Ykeh9eCLCiO6gnNSxm9pcznfy+33mnhpgp+bYEu1KTpUOYj
-         1dWUUTrCIfEZkgBvUIn0Yimx1K8REcBSXEqoSSanpMn0WQzzBJFetrKDZU5+V/5EAHvp
-         qNekn9PMGj63kmmPjRfDMa7O/cxwPXFI6e9SxA5p5mq4KQu1uUoAORBikOrJRyXTvnOY
-         0luA==
-X-Forwarded-Encrypted: i=1; AJvYcCVRPr+4HzNKnwvihAWuBrS51nNWD/gAf1QM0q2JZ7CCrzezRsKBCWhki+emnJqwn5NZhrS8fqfY3UDj@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+In6t6zxjdjLnKLqcSHub+2k2yeDFhPqrFU4SBwMT59291iUJ
-	kZ55QvXEr4sRh9YWBoUPpoxoK3PbmsCqNTR8gNY8Vqd5l340QwT2Zoq5GOUo81d8amL+6dm//HO
-	9lVDsClCa09vM9ClFvNjAm91yCPkCnbkgXw==
-X-Gm-Gg: ASbGncsFi8RDM1dnz8Wvj9AsnCSyOXHjPzX0C5feasv2LKY0qVEo6UYOnwAvPeM2I1g
-	zi+9Wjbqjt/yd2W1Un8FImtfBWVA2ba756HS8T9LTMU0vde6VCdixA9b58KN3mF/Jf991Cw5Qfs
-	HN3dyePfYklXOKA2muVQS7MVdPjiC5PLn3husGhAqbktsD4GL0AHkETZtkQB4PujRvgGvHHPDBy
-	gw=
-X-Google-Smtp-Source: AGHT+IEBT7uTeEaD1M6QcMlftPN+Diu0RdjP2HkZ+bs8PtCVUYHorsV+7TdTYTFNdPAyQT5oPUXJJVDEF5pcsY0RnQI=
-X-Received: by 2002:a05:6512:3c85:b0:551:ebc1:bc84 with SMTP id
- 2adb3069b0e04-551ebc1bff9mr4320652e87.8.1747827653907; Wed, 21 May 2025
- 04:40:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BZoqG/Bp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0803C4CEE4;
+	Wed, 21 May 2025 11:41:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747827699;
+	bh=MqsLTq+Q9ipAuMRrtVo5YYhsxU4uQvPSZlQLm21r3d4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=BZoqG/BpvalAwmzbxwUNX7uXOYiIJyRpidDQ6/kDo9axT7Ey9xSU7wAq0IjIEdHgc
+	 EySGyaKeA7K8nZLtVOJV1GPs1Agp/zbdgrteg465YGg5BSUgrEezuDq8yiOuA2lJjV
+	 vL8xYUNmhEURlyMaGDZZteqcNCoE99w4+PAqxhKfpDFdfD4gcRSo1o2pnqOrfppKQj
+	 etV5eae1wEX9IyTPO15iTz5NNun6rJc/OJezE6bwb5ybYppwa61XG63wIAPYGFrP+W
+	 ELm1y3IrXGIVAGxxJw0Ex7qEoRI32y0sdYi87pfmC5GZc6PLSTNI1frg8GwUeY95K5
+	 ACcAiKc+nZTBQ==
+From: Chao Yu <chao@kernel.org>
+To: jaegeuk@kernel.org
+Cc: linux-f2fs-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	Chao Yu <chao@kernel.org>,
+	syzbot+aa5bb5f6860e08a60450@syzkaller.appspotmail.com,
+	Qi Han <hanqi@vivo.com>
+Subject: [PATCH] f2fs: fix to skip f2fs_balance_fs() if checkpoint is disabled
+Date: Wed, 21 May 2025 19:41:32 +0800
+Message-ID: <20250521114132.824349-1-chao@kernel.org>
+X-Mailer: git-send-email 2.49.0.1143.g0be31eac6b-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250521092826.1035448-1-dario.binacchi@amarulasolutions.com> <20250521092826.1035448-4-dario.binacchi@amarulasolutions.com>
-In-Reply-To: <20250521092826.1035448-4-dario.binacchi@amarulasolutions.com>
-From: Fabio Estevam <festevam@gmail.com>
-Date: Wed, 21 May 2025 08:40:41 -0300
-X-Gm-Features: AX0GCFvuahJEGWjKzRmbj_fSU5phUy4za7_-MZjI-5ppsFQyUQtxl9C1m5zGqss
-Message-ID: <CAOMZO5D-d7bmBfXKe936W5QjmsukRRX3y0ge+xtizqFx0HPE8A@mail.gmail.com>
-Subject: Re: [PATCH 3/3] ARM: dts: mxs: support i.MX28 Amarula rmm board
-To: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-Cc: linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com, 
-	michael@amarulasolutions.com, Conor Dooley <conor+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Rob Herring <robh@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Dario,
+INFO: task syz-executor328:5856 blocked for more than 144 seconds.
+      Not tainted 6.15.0-rc6-syzkaller-00208-g3c21441eeffc #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:syz-executor328 state:D stack:24392 pid:5856  tgid:5832  ppid:5826   task_flags:0x400040 flags:0x00004006
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5382 [inline]
+ __schedule+0x168f/0x4c70 kernel/sched/core.c:6767
+ __schedule_loop kernel/sched/core.c:6845 [inline]
+ schedule+0x165/0x360 kernel/sched/core.c:6860
+ io_schedule+0x81/0xe0 kernel/sched/core.c:7742
+ f2fs_balance_fs+0x4b4/0x780 fs/f2fs/segment.c:444
+ f2fs_map_blocks+0x3af1/0x43b0 fs/f2fs/data.c:1791
+ f2fs_expand_inode_data+0x653/0xaf0 fs/f2fs/file.c:1872
+ f2fs_fallocate+0x4f5/0x990 fs/f2fs/file.c:1975
+ vfs_fallocate+0x6a0/0x830 fs/open.c:338
+ ioctl_preallocate fs/ioctl.c:290 [inline]
+ file_ioctl fs/ioctl.c:-1 [inline]
+ do_vfs_ioctl+0x1b8f/0x1eb0 fs/ioctl.c:885
+ __do_sys_ioctl fs/ioctl.c:904 [inline]
+ __se_sys_ioctl+0x82/0x170 fs/ioctl.c:892
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-On Wed, May 21, 2025 at 6:28=E2=80=AFAM Dario Binacchi
-<dario.binacchi@amarulasolutions.com> wrote:
->
-> The board includes the following resources:
->  - 256 Mbytes NAND Flash
->  - 256 Mbytes SRAM
+The root cause is after 84b5bb8bf0f6 ("f2fs: modify f2fs_is_checkpoint_ready
+logic to allow more data to be written with the CP disable"), we will get
+chance to allow f2fs_is_checkpoint_ready() to return true once below
+conditions are all true:
+1. checkpoint is disabled
+2. there are not enough free segments
+3. there are enough free blocks
 
-SRAM or DDR?
+Then it will cause f2fs_balance_fs() to trigger foreground GC.
 
->  - LCD-TFT controller
+void f2fs_balance_fs(struct f2fs_sb_info *sbi, bool need)
+...
+	if (!f2fs_is_checkpoint_ready(sbi))
+		return;
 
-The LCD support is not described in the dts.
+And it mounts f2fs image w/ gc_merge,checkpoint=disable, so below deadloop
+will happen:
 
-> +/ {
-> +       model =3D "Amarula i.MX28 rmm";
-> +       compatible =3D "amarula,imx28-rmm", "fsl,imx28";
-> +
-> +       memory@40000000 {
-> +               device_type =3D "memory";
-> +               reg =3D <0x40000000 0x08000000>;
+- f2fs_do_shutdown		- vfs_fallocate				- gc_thread_func
+				 - file_start_write
+				  - __sb_start_write(SB_FREEZE_WRITE)
+				 - f2fs_fallocate
+				  - f2fs_expand_inode_data
+				   - f2fs_map_blocks
+				    - f2fs_balance_fs
+				     - prepare_to_wait
+				     - wake_up(gc_wait_queue_head)
+				     - io_schedule
+ - bdev_freeze
+  - freeze_super
+   - sb->s_writers.frozen = SB_FREEZE_WRITE;
+   - sb_wait_write(sb, SB_FREEZE_WRITE);
+									 - if (sbi->sb->s_writers.frozen >= SB_FREEZE_WRITE) continue;
+									 : cause deadloop
 
-In the commit log, you say 256 MB, but here we have 128 MB.
+This patch fix to add check condition in f2fs_balance_fs(), so that if
+checkpoint is disabled, we will just skip trigger foreground GC to
+avoid above deadloop issue.
 
-> +&i2c0 {
-> +       pinctrl-names =3D "default";
-> +       pinctrl-0 =3D <&i2c0_pins_a>;
-> +       status =3D "okay";
-> +
-> +       polytouch: edt-ft5x06@38 {
+Reported-by: syzbot+aa5bb5f6860e08a60450@syzkaller.appspotmail.com
+Fixes: 84b5bb8bf0f6 ("f2fs: modify f2fs_is_checkpoint_ready logic to allow more data to be written with the CP disable")
+Cc: Qi Han <hanqi@vivo.com>
+Signed-off-by: Chao Yu <chao@kernel.org>
+---
+ fs/f2fs/segment.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Node names should be generic: touchscreen@38
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index 5ff0111ed974..19b716fda72a 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -433,6 +433,8 @@ void f2fs_balance_fs(struct f2fs_sb_info *sbi, bool need)
+ 	if (need && excess_cached_nats(sbi))
+ 		f2fs_balance_fs_bg(sbi, false);
+ 
++	if (unlikely(is_sbi_flag_set(sbi, SBI_CP_DISABLED)))
++		return;
+ 	if (!f2fs_is_checkpoint_ready(sbi))
+ 		return;
+ 
+-- 
+2.49.0
 
-> +
-> +&pinctrl {
-> +       pinctrl-names =3D "default";
-> +       pinctrl-0 =3D <&hog_pins_a>;
-> +
-> +       hog_pins_a: hog-0 {
-> +               reg =3D <0>;
-> +               fsl,pinmux-ids =3D <
-> +                       MX28_PAD_LCD_RESET__GPIO_3_30 /* LCD reset */
-> +                       MX28_PAD_SSP2_SS1__GPIO_2_20  /* External power *=
-/
-
-Proper panel bindings should better describe these pins than hog pins.
-
-Do you plan to add display support?
