@@ -1,108 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70B9919994F;
-	Wed, 21 May 2025 14:12:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA80F166F0C;
+	Wed, 21 May 2025 14:13:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747836779; cv=none; b=cR9MUcxmXY7SgPhnXevFCxhYwGK+PCVJ4wICtXPGrCYV4kEhTw60GcKdiyFq1gcwS2WQWYFSjKWArTu3d+4GnXTcoVysTNcnqwxGRyynTDNUz1m+TjsqxwSVZyDqyBh0RqHSAiDcl6ODqQDFnh1g5rYureZ4ed8PrZ5EMvyMblk=
+	t=1747836813; cv=none; b=I6Z/px4SXmDVhCsslhIVXanurwLa/YD//Ll5Q6EjFgl6a1wna1LQfztAx8Il2O58fQCW5irrsb9LvnoXxwh4/1cr1MeePZmeMb8Jvn1jgXN49xEhntnTEA5/vWK2xCbd2APSqKTqd8aaCY6kPAxALDq0BmravelhOKr2YulFhJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747836779; c=relaxed/simple;
-	bh=9koPT3VkQu5e46R8uquB22uxKLgPwZcQVQd4EqXZkeU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N65b2QVS7BDLGPlxUtA13sRaL9aR0LF2LYrH0zbQ5TL4N6GqtrnX5RIodR4D3kUUI7kTEpVSWPAP8C1ACQPLx00oOjxSOq0bXeFpA51tKXExbW4cgn4Trw7v4zIGgzjofzxaGvygsA22oRid6UIoBrSNKLEAWfqUokdFQcJ8Ivw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PNdjBJ7C; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747836813; c=relaxed/simple;
+	bh=oaxMgYhPNZMs2/XTZyPamnePQQnQGkysxNcqm+SqnTk=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=SdKFeBvvku0K2AzqHbmJHI9NsFIMbvSrCcN1GWGqE4rHzJPQjDbOtUy94FHKjXH+0MfPL1dKog4xWi0PHnPi6LsBaFs9jNwTpp9pq2927okLTW+hdhVsYwddsNnRoHCOC6h6JtVA/h9OJ8LSJ9o3oLOs8n388U6vollv9SFxCyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ze9geiXd; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PNdjBJ7C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C11FC4CEE4;
-	Wed, 21 May 2025 14:12:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747836777;
-	bh=9koPT3VkQu5e46R8uquB22uxKLgPwZcQVQd4EqXZkeU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PNdjBJ7CSO3ZqCZ/RnABu6MtND7cIX2CCbZbc/IhR5f+iSMQyGRlg5OCcEeimrO94
-	 t1yMs9apazpeGnB/ZFy9oOh/EbWe+lFx5Vp09JvkzGBKQZqjfZb2JIqBkFFE3kTlxP
-	 5RJBvrscnSmmKyT4g8NUzxRcIbSsmh4GTnWglhEknxL55oMBv7kh1RBxv92k31aWdr
-	 mBQGUFhEmfZi/0ayRewsXoxeKI1dDN/HfYk+qf/53Bp3xgo93MZKbx4sCwurPt3t5B
-	 0BJqP6HQIyGKpk7nYwS90z2kpUWlxaeKiXXzfwNE0HOMYNS7gC57t/UcZ7acItnk5O
-	 DI6lcECyRW2Tw==
-Date: Wed, 21 May 2025 16:12:51 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Christian Schrefl <chrisi.schrefl@gmail.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee@kernel.org>,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Gerald =?iso-8859-1?Q?Wisb=F6ck?= <gerald.wisboeck@feather.ink>,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] rust: miscdevice: add additional data to
- MiscDeviceRegistration
-Message-ID: <aC3fYyvPvTB1DkeR@cassiopeiae>
-References: <20250517-b4-rust_miscdevice_registrationdata-v3-0-cdb33e228d37@gmail.com>
- <20250517-b4-rust_miscdevice_registrationdata-v3-1-cdb33e228d37@gmail.com>
- <aCiSRZjOETsD8MhX@pollux>
- <2025052107-awhile-drainer-38d0@gregkh>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ze9geiXd"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-327ff195303so57591831fa.1;
+        Wed, 21 May 2025 07:13:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747836810; x=1748441610; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=oaxMgYhPNZMs2/XTZyPamnePQQnQGkysxNcqm+SqnTk=;
+        b=Ze9geiXdRASSnANYhg1tci2KKRTMqWuge+I2lMYjhN87Tu13uKq0uXM4TePEKYMgRC
+         RInM7hKWRHn8oJIlKblE+UB2oYa+g8/m8zQiJc/mTgfBMzSpgsI/4VHTJl1GdiUsCsk0
+         A+PVnfeiRGaewBuLJK9IEZ8txjmpnQB9EjWjzC9Qa+uBurt2hL4SRjQB5KbB2DQZVF/B
+         NwIOwu/Y3Vy8u2gflbmh4ffDP64YiFljOG01WxbdbBhjuCx3Njx/JOLcIsx7lO2z2OwN
+         xYjhzS6+XJdgjOu9YsbFE3tWe3u0F8Ns+oau3BYLJjFcjoji19j/ZRdlm1msEzkSrkfE
+         HFvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747836810; x=1748441610;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=oaxMgYhPNZMs2/XTZyPamnePQQnQGkysxNcqm+SqnTk=;
+        b=oDnAh+96WFTFJKiDc0QN4flqyDjriOnd5uSgr+tsxfsHmoYG0NmLcJTD+WWI1Q6hp5
+         GNnTEnysUbUM1m2uWX+QeyLtZUmr2Kb1JxLFPF611Sxnzua3QJDEtF4lwSeRF2CVn/2i
+         PUD0GIoPEXsiD7T0gLY4d7ryLILLvJ3CePmZlKVLr0zEY7XzQgloPw8TM3XP+guuEXJH
+         4aU4PSi6MFsB+5/48ZW/kJcivcgJrTAWiy7Xwx8khGaHglas9MkThfqPekTtdOROWb7+
+         eVSfaUl2pDpmq71ba/tSBbauiCZLlBAT/15a1ansbcCE3M+FHR6QUaULdM0b5c9YHj/R
+         IAKw==
+X-Forwarded-Encrypted: i=1; AJvYcCUbmKHbKgPjvXTW0oK6lmhLN84LdB8kmLlceyXPQVfCtbA/QZTPyDq935UIu48oHiXHsl/HDZNypLoVWrI=@vger.kernel.org, AJvYcCXep4fRzwP31rRD6po9kbxTnE6dNl1rFV/59toHyBp+18X4GfdjykiktRFT1ZV4x3Mx8i4uU8HB@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx37RJ8jb5M9alsCdgmE5E2nzQ9ZZXWTd6vDbyIXkPUMiQjjoTc
+	Zx7KKIL4spFL1ockpJUlLfVjkTfymiGN+RrxgrRJ7HnbYSpvFCHKfU/WMQ4xQGESSsWoT6V5jOv
+	tFWq+qp3zQfcF8KestAXMRN/uTaxRsbZjcJJDBA==
+X-Gm-Gg: ASbGncslX8H4CxzZWtYabEWrYTyboGvgGKH1V+7hbmTBSF/ltVlC2GhC0QtHO1oYoNk
+	Zqr/N556owbKQiy2seKQb4/fZEqNnm9lmccCHP/3+oJiRq706hNRUmK0/4CdrKPhU5H3ZGX0yRj
+	LjpE0gexroeeBkHADQQXcqWAYZugoApqAVaogJF0RxuX0Zqjz972qX3oQ8uq8OETQg
+X-Google-Smtp-Source: AGHT+IEOaJbZM++Q0KRojp+3Aw+w6HCigFRyvGnKt7bSYukI4l+/DOz+RnKW0io0hgTr694UyJcCFQl5DVWoxiXsTNM=
+X-Received: by 2002:a2e:a590:0:b0:309:bc3:3a71 with SMTP id
+ 38308e7fff4ca-32807791587mr73247681fa.31.1747836809372; Wed, 21 May 2025
+ 07:13:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2025052107-awhile-drainer-38d0@gregkh>
+From: John <john.cs.hey@gmail.com>
+Date: Wed, 21 May 2025 22:13:15 +0800
+X-Gm-Features: AX0GCFtOanhlZwGarVR69NoPJG3inDQ0psVlqb1GB6FHnNhWwdUWQX8s8vwof3g
+Message-ID: <CAP=Rh=N4QcPLWQ2dqUHmKYeEhig3Cbi-3N8Q4-7qGT00htXrVw@mail.gmail.com>
+Subject: [Bug] "WARNING in should_fail_ex" in Linux kernel v6.14
+To: "David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: Simon Horman <horms@kernel.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, May 21, 2025 at 01:55:36PM +0200, Greg Kroah-Hartman wrote:
-> On Sat, May 17, 2025 at 03:42:29PM +0200, Danilo Krummrich wrote:
-> > On Sat, May 17, 2025 at 01:33:49PM +0200, Christian Schrefl wrote:
-> > > +pub struct MiscDeviceRegistration<T: MiscDevice> {
-> > >      #[pin]
-> > >      inner: Opaque<bindings::miscdevice>,
-> > > +    #[pin]
-> > > +    data: UnsafePinned<T::RegistrationData>,
-> > >      _t: PhantomData<T>,
-> > >  }
-> > 
-> > I recommend not to store data within a Registration type itself.
-> > 
-> > I know that this is designed with the focus on using misc device directly from
-> > the module scope; and in this context it works great.
-> > 
-> > However, it becomes quite suboptimal when used from a driver scope. For
-> > instance, if the misc device is registered within a platform driver's probe()
-> > function.
-> > 
-> > I know this probably isn't supported yet. At least, I assume it isn't supported
-> > "officially", given that the abstraction does not provide an option to set a
-> > parent device. Yet I think we should consider it.
-> 
-> It's going to be a requirement to properly set the parent device, and
-> as you point out, this really should be in some sort of scope, not just
-> a module.
-> 
-> But, we have two types of users of a misc device, one like this is
-> written, for a module-scope, and one for the "normal" device scope.  The
-> device scope is going to be tricker as it can, and will, get
-> disconnected from the device separately from the misc device lifespan,
-> so when that logic is added, it's going to be tricky as you point out.
-> 
-> So I'll take this now, but in the future this is going to have to be
-> cleaned up and modified.
+Dear Linux Kernel Maintainers,
 
-I'm about to sketch up something based on this patch that works properly for
-both cases, i.e. module-scope and driver-scope.
+I hope this message finds you well.
 
-I think it would also be good for the misc device abstraction to demonstrate
-how to properly make class device abstractions (such as misc device, DRM device,
-input device etc.) go along with bus devices in the context of a driver.
+I am writing to report a potential vulnerability I encountered during
+testing of the Linux Kernel version v6.14.
 
-misc device isn't *the* perfect example, given that it doesn't have the typical
-create and register split and another complication is that we also have to deal
-with the module-scope case, but it's still a very good candidate given that it
-is very simple compared to other class devices.
+Git Commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557 (tag: v6.14)
+
+Bug Location: net/ipv4/ipmr.c:440 ipmr_free_table net/ipv4/ipmr.c:440
+
+Bug report: https://pastebin.com/xkfF5DBt
+
+Complete log: https://pastebin.com/uCfqY4D8
+
+Entire kernel config: https://pastebin.com/MRWGr3nv
+
+Root Cause Analysis:
+The kernel warning is triggered in ipmr_free_table() at
+net/ipv4/ipmr.c:440, where the multicast routing table (mr_table) is
+being freed during network namespace exit (ipmr_rules_exit).
+The warning indicates that the multicast forwarding cache count
+(mfc_cache_cnt) is non-zero, implying that resources were not
+correctly cleaned up prior to netns teardown.
+This suggests a possible bug in reference counting or teardown logic
+of the IPv4 multicast routing infrastructure.
+Additionally, the environment is running with fail_usercopy fault
+injection enabled, which deliberately triggers copy-from-user failures
+to test kernel error paths.
+While these failures are expected, they may interact with multicast
+socket setup/teardown paths, exacerbating latent issues.
+
+At present, I have not yet obtained a minimal reproducer for this
+issue. However, I am actively working on reproducing it, and I will
+promptly share any additional findings or a working reproducer as soon
+as it becomes available.
+
+Thank you very much for your time and attention to this matter. I
+truly appreciate the efforts of the Linux kernel community.
+
+Best regards,
+John
