@@ -1,125 +1,166 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E32231857
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 07:46:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F79A17BD3;
+	Wed, 21 May 2025 07:47:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747813598; cv=none; b=oRzrvTOjWqkiQkwsKnYHf66+28UQtufwsPhGUwtP8MUAezqinR9Zogq1LFxPsP6DK+p+Ax+oy4HWBe521vw2ZGgEmTdXB+7spx/nTbUTwSfaSScdEiVII+tzn0q4m8WYZHx4fvuWwjEmGuOG3r5ZDs0Vrb3MgtSAP2dpiKVRndM=
+	t=1747813639; cv=none; b=gBCZxxvjlUpx5sFLjM3IaiRnBKusM9bCpLvXXZxVVKMzKLMw1RGa0OPVY3Un+aBYdaZeWJ+if1CJ2JwMgkDlh2V6OGwxXEXmdiGniyKKn3lW8XmjsfK1MEU6HIYVvSTPX743oVoDzj2gMZjVdbougsNtAys2BT0vvF3FW6SVucg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747813598; c=relaxed/simple;
-	bh=oreHSgri2cfnKtkxjkpiXf4vyARssVogaa7+aGSrTHg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Wy0fUSrEWtUVqalqwei1k97o6xgWjN1KbsNsZtQnUOdPtJTJmrBHvFirrx3iSF8tpu6uRwJu0Y7m3QDYGrNUqiaaN445lrTMBPpLax69K3H7dVfLZLIcYRKIaR6qv1CwtSreHTxVLygFdJ2+C6oQNcsyxzGm40qYYbpxM3bx6To=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ngXfwcoJ; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747813639; c=relaxed/simple;
+	bh=vw26JKiFKR4uYW0R5VgaxwfnFZ2lLm+iwytxYxWPGNM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Xw0crJITGmw/1Z8mEQ1WynI1UZR66jodCXsF/cbdFZiRv7ecgsBOLDBaqb7fsfC62YqslAGzZIc5HVV/2t/ZVAbcSl3X+3id1P0kvHGiK+RsaFSDG33Yy/wT4DuC5RSyEzdegw08YZ79XRUkir0pv+lNVj73x1NgGqbLCpQfijE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ACTXc4/o; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ngXfwcoJ"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-742c9563fd9so2967581b3a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 00:46:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747813597; x=1748418397; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0pilOcdT2VkT2U8kVqgqtToKFgXk1Tev6+CBnmTk+fE=;
-        b=ngXfwcoJXyzp8UOmJP971hTcVk/+pzoPN3TL+H1ucTq7v4kGSw7Uek58Fw+7Nye92a
-         Ag2SaRJQ8fKYE8cemC/RSlr8UEnBio2/5nC1pJpcVnLyhNEbTwVkDp9qaDoHgxI6S49t
-         xmA8Ea1JrJpEgOvqgFnaZ1wsTkIqa45td5rSHorPe78GJ2tfi20h5jp9n/PBEHH78aca
-         BniqR/Rpw3Oe299w3wRIkC4eV5e0PV7OOu0sMSHU0UTOMfYoVBbX6U9M7WdCsEBN186y
-         BhXD8Kri0DMYFUzzKYSUIMCE9xRrVNHlQ0bisaWzeCgvub021hyIKlKMa9Y4tDxrXbec
-         EuDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747813597; x=1748418397;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0pilOcdT2VkT2U8kVqgqtToKFgXk1Tev6+CBnmTk+fE=;
-        b=MzuiIwlJwK+6CN6+liulqYQFe/8Ghy87JH/v33qrXJ2LTtj0zg9R5zcW0DYHclA71P
-         VtC10W9ecgmBkNJGAB3qN2B/pRUcVb4n/Fy8jhcvkCmnJhwmC3hip1MIYaRqqMkMGggf
-         pP8n+5A9GK9dSQwzbDnf41DHOaSxp414z9LG8OHD9M+/5akYDPfSil21Zq8khnlpFRg8
-         /P/o1D1j2XsBzLznYQvCzg5m+D3sNz8KVmZPAD1rJPGVxHgizr6w53EFVTUDtSrEVRF2
-         MDg1vAKtmp9FqTc70+I3M3Jq4dlPBSPy3LGjvBXmDm4N1aM3wr4fepivB5GuVynKP0sJ
-         b/gA==
-X-Forwarded-Encrypted: i=1; AJvYcCUaVqofUDGNaoLHeikqTHTi5pk3FgUXWArs8absQpCyibFcJA50Y+ek+UQt2pPbfSPerhs2VZL39wYOz60=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzR8pWX2emrjQgfQJ4tlsZhtwKEQ9Q4BOrKlsTGt4ipP6vtP5yG
-	05E6ZnvdHka0v1Hbsekl/02VxnXdRnKSHT+vPuNBVQbEYcShw/0x6cLgFB13woX0x/8=
-X-Gm-Gg: ASbGncvZAmHY1psUZ4g9/czPhHq8C3bOggzvxTfh3fmS6zuIsvcE56vUF666544hx5i
-	Frd4CFDD6SMdzK/aHpVV9bpFuGEfvJKUxK5zV9Wwt5bpMB1gN7dlmgsiFz5IX3yj+pVO4r4jnL5
-	12YRhleJ0rqmp/R2KnhZyX/tq4alfQRf86lZMAe0GvWejpr2C4eqbV6sfuXLmVcKC9/9uL20Jmk
-	aWwoYIlW7BZsQyfWO7dGqnVdu2+n57TXHy708wV820nOQ6dqzXR4XW8wOOV7V9/eRTwAZUsec/d
-	Vce/5sDMMDKcS6CK3/4st9ItT8HCGTCE/DgO1kp6Rnxu
-X-Google-Smtp-Source: AGHT+IH93EkCLEEdKAJhbPek7T8TIC1hOKN/VmJI8xmXdKi9w+hCClmhOIHGlFmoeRJeKlWx3PgC8Q==
-X-Received: by 2002:a05:6a20:734c:b0:215:f723:81b2 with SMTP id adf61e73a8af0-2170ccb39c2mr29076396637.21.1747813596705;
-        Wed, 21 May 2025 00:46:36 -0700 (PDT)
-Received: from gmail.com ([116.237.135.88])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a96de111sm9030991b3a.3.2025.05.21.00.46.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 00:46:36 -0700 (PDT)
-From: Qingfang Deng <dqfext@gmail.com>
-To: =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Cc: Himanshu Chauhan <hchauhan@ventanamicro.com>,
-	Anup Patel <apatel@ventanamicro.com>,
-	Xu Lu <luxu.kernel@bytedance.com>,
-	Atish Patra <atishp@atishpatra.org>,
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: Re: [PATCH v4 3/4] drivers: firmware: add riscv SSE support
-Date: Wed, 21 May 2025 15:46:26 +0800
-Message-ID: <20250521074627.4042832-1-dqfext@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250516152355.560448-4-cleger@rivosinc.com>
-References: <20250516152355.560448-4-cleger@rivosinc.com> <20250516152355.560448-1-cleger@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ACTXc4/o"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 38AC24419F;
+	Wed, 21 May 2025 07:47:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1747813634;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jAkGPmegLdQxHulVFPQ6dFcIpdSagHdTkvZYmKcnSVA=;
+	b=ACTXc4/o+mMoqzwhNv+UGAz0M0a5g3o98X/sNukDWTJQMtaLdCPjbquD17VyXUsI2c4DVs
+	Yf01cH71Y2KMm7FMY2wrmFXak3iFbcGqxbbU6A4rrsaof47YkDnU+sfvmbb2a/sHer/Rxx
+	Hsn4zJYeZkfzT5O3jN+IItqZ79D2JdpbuCU++r2YHfdUYubNDaxMKRtz+QaU8az64HQQGQ
+	sFtu9e2lezdPa4Q+NS4uYLPTFF9mahXq++y/bv4y8rnGoc87PGUsbMfoGKSwjK6Y2C49Gs
+	qKVNnY426ssWE32mSuv/gBRwZg9P4zRNINfwS2Tk7aMFRZ16ZfAHrlEK31HROw==
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>, Thomas Bogendoerfer
+ <tsbogend@alpha.franken.de>
+Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, =?utf-8?Q?Th?=
+ =?utf-8?Q?=C3=A9o?= Lebrun
+ <theo.lebrun@bootlin.com>, Tawfik Bayouk <tawfik.bayouk@mobileye.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MIPS: CPS: Optimise delay CPU calibration for SMP
+In-Reply-To: <8c4ef90e-82db-4711-a5f3-446bcca00e9d@app.fastmail.com>
+References: <20250520-smp_calib-v1-1-cd04f0a78648@bootlin.com>
+ <8c4ef90e-82db-4711-a5f3-446bcca00e9d@app.fastmail.com>
+Date: Wed, 21 May 2025 09:47:13 +0200
+Message-ID: <87ecwipfr2.fsf@BLaptop.bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvhedvucdltddurdegfedvrddttddmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufgjfhffkfggtgfgsehtqhertddttdejnecuhfhrohhmpefirhgvghhorhihucevnffgoffgpffvuceoghhrvghgohhrhidrtghlvghmvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgffhgedvhefgtdejvdethfdvieekgfetuefhueekteetgfdvueeutedttdekgeevnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemtgejgegrmedurggvheemsgejfehfmeektdejudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemtgejgegrmedurggvheemsgejfehfmeektdejuddphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepghhrvghgohhrhidrtghlvghmvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepkedprhgtphhtthhopehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhmpdhrtghpthhtohepthhssghoghgvnhgusegrlhhphhgrrdhfrhgrnhhkvghnrdguvgdpr
+ hgtphhtthhopehvlhgrughimhhirhdrkhhonhgurhgrthhivghvsehmohgsihhlvgihvgdrtghomhdprhgtphhtthhopehthhgvohdrlhgvsghruhhnsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepthgrfihfihhkrdgsrgihohhukhesmhhosghilhgvhigvrdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhugidqmhhiphhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-GND-Sasl: gregory.clement@bootlin.com
 
-Hi Clément,
+Hello Jiaxun,
 
-On Fri, 16 May 2025 17:23:41 +0200, Clément Léger wrote:
-> +static struct sse_event *sse_event_get(u32 evt)
-> +{
-> +	struct sse_event *event = NULL, *tmp;
-> +
-> +	scoped_guard(spinlock, &events_list_lock) {
-> +		list_for_each_entry(tmp, &events, list) {
-> +			if (tmp->evt_id == evt)
-> +				return event;
+> =E5=9C=A82025=E5=B9=B45=E6=9C=8820=E6=97=A5=E5=91=A8=E4=BA=8C =E4=B8=8B=
+=E5=8D=884:21=EF=BC=8CGregory CLEMENT=E5=86=99=E9=81=93=EF=BC=9A
+> [...]
+>>
+>> This allows to implement calibrate_delay_is_known(), which will return
+>> 0 (triggering calibration) only for the primary CPU of each
+>> cluster. For other CPUs, we can simply reuse the value from their
+>> cluster's primary CPU core.
+>
+> Is __cpu_primary_cluster_mask really necessary?
+>
+> Maybe we can just test if current CPU is the first powered up CPU
+> in the cluster?
 
-`event` is not being updated by the loop and therefore is always NULL.
-Did you mean to return `tmp`?
+That is exactly the point of __cpu_primary_cluster_mask: setting in an
+efficient way the first powered-up CPU for each cluster. This adds only
+a single variable (which is actually just a long) and allows for minimal
+impact during boot time, by doing the minimum write and read operations.
 
-> +		}
-> +	}
-> +
-> +	return NULL;
-> +}
+I don't see a better alternative. What do you have in mind ?
 
-<snip>
+Gregory
 
-> +static int __init sse_init(void)
-> +{
-> +	int cpu, ret;
-> +
-> +	if (sbi_probe_extension(SBI_EXT_SSE) <= 0) {
-> +		pr_err("Missing SBI SSE extension\n");
-> +		return -EOPNOTSUPP;
-> +	}
-> +	pr_info("SBI SSE extension detected\n");
-> +
-> +	for_each_possible_cpu(cpu)
-> +		INIT_LIST_HEAD(&events);
+>
+> Thanks
+> Jiaxun
+>
+>>
+>> With the introduction of this patch, a configuration running 32 cores
+>> spread across two clusters sees a significant reduction in boot time
+>> by approximately 600 milliseconds.
+>>
+>> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+>> ---
+>>  arch/mips/kernel/smp-cps.c | 20 ++++++++++++++++++++
+>>  1 file changed, 20 insertions(+)
+>>
+>> diff --git a/arch/mips/kernel/smp-cps.c b/arch/mips/kernel/smp-cps.c
+>> index=20
+>> 02bbd7ecd1b9557003186b9d3d98ae17eac5eb9f..93e01b90b4a21323c7629350211083=
+a81eb549d4=20
+>> 100644
+>> --- a/arch/mips/kernel/smp-cps.c
+>> +++ b/arch/mips/kernel/smp-cps.c
+>> @@ -40,6 +40,7 @@ static u64 core_entry_reg;
+>>  static phys_addr_t cps_vec_pa;
+>>=20
+>>  struct cluster_boot_config *mips_cps_cluster_bootcfg;
+>> +struct cpumask __cpu_primary_cluster_mask __read_mostly;
+>>=20
+>>  static void power_up_other_cluster(unsigned int cluster)
+>>  {
+>> @@ -225,6 +226,7 @@ static void __init cps_smp_setup(void)
+>>  		if (mips_cm_revision() >=3D CM_REV_CM3_5)
+>>  			power_up_other_cluster(cl);
+>>=20
+>> +		cpumask_set_cpu(nvpes, &__cpu_primary_cluster_mask);
+>>  		ncores =3D mips_cps_numcores(cl);
+>>  		for (c =3D 0; c < ncores; c++) {
+>>  			core_vpes =3D core_vpe_count(cl, c);
+>> @@ -281,6 +283,24 @@ static void __init cps_smp_setup(void)
+>>  #endif /* CONFIG_MIPS_MT_FPAFF */
+>>  }
+>>=20
+>> +unsigned long calibrate_delay_is_known(void)
+>> +{
+>> +	int i, this_cpu =3D smp_processor_id(), primary_cpu_cluster =3D 0;
+>> +
+>> +	/* The calibration has to be done on the primary CPU of the cluster */
+>> +	if (cpumask_test_cpu(this_cpu, &__cpu_primary_cluster_mask))
+>> +		return 0;
+>> +
+>> +	/* Look for the primary CPU of the cluster this CPU belongs to */
+>> +	for_each_cpu(i, &__cpu_primary_cluster_mask) {
+>> +		/* we reach the next cluster */
+>> +		if (i > this_cpu)
+>> +			break;
+>> +		primary_cpu_cluster =3D i;
+>> +	}
+>> +	return cpu_data[primary_cpu_cluster].udelay_val;
+>> +}
+>> +
+>>  static void __init cps_prepare_cpus(unsigned int max_cpus)
+>>  {
+>>  	unsigned int nclusters, ncores, core_vpes, c, cl, cca;
+>>
+>> ---
+>> base-commit: 3b3704261e851e25983860e4c352f1f73786f4ab
+>> change-id: 20250520-smp_calib-6d3009e1f5b9
+>>
+>> Best regards,
+>> --=20
+>> Gr=C3=A9gory CLEMENT, Bootlin
+>> Embedded Linux and Kernel engineering
+>> https://bootlin.com
+>
+> --=20
+> - Jiaxun
 
-`events` is already initialized.
-
-Qingfang
+--=20
+Gr=C3=A9gory CLEMENT, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
