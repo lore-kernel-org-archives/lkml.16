@@ -1,142 +1,116 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7701322F15E
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 18:56:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F8C91D7999
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 18:57:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747853784; cv=none; b=VbEgbccW6wmd1cxfnOmkzWnIbU9Ic6g8aH/uF+hJMMpzwbYBAHreklicU3sn/6g+2thacj0jA1URCfbG/2/2XFv2v9Lbt4idASWQyIhJHj36Dm7rHP1sGd/wdLQzgZtboArFcHM96+orTTxY9CZV7EjDvmlBP/qKyfDi0Ezuymg=
+	t=1747853852; cv=none; b=TXpczPEwlp46/ZmwHsq1Lz9+h2ieGUfObkNabFts4VOYCve4eUkTGMWsOVTatkREAoMU0yH2viq4urbbfcrxY1VlGkZDus4E4nMnMo7KM09vXD4yGoe+3IX1xwzEHAZ6IvdXswsZHB+hnzkbWODf21NkqJokgYwNn8T/+1cJq5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747853784; c=relaxed/simple;
-	bh=bGPSy0+YD6cQHaXx8Ue0ONJh3Y+wNW+bjWa2dogEwyY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=PKqPyX1MnLUUkt40P9AfBZT81QBdaMCJeK/uYsEyNOGC/+aEy/luGCEZ+dvZ/XijGSmSZJblRXAE5bOBkxCpDGrkQ86k1Otq7sbEkV4IStMGK/oxkXScfsMositteXPPvwPFTa4Z4/W6aUsNyPjV5pC91piQr3k1v9rwb0WyRVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bJd67sRU; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uNULY8bn; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1747853852; c=relaxed/simple;
+	bh=k2elYg8hDgZT2hWIWlT2Vld7InAVkC2ziHcimQmJalY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rUlcGLTpBWuKFNaN32nEJ8cWOt8NaphV9ostIlyqTPCiy+i3yL5n5WwLL2kzx96MHQhLEO52ZQobm2bff6EtIGBl+qS+9aemfEklsejnSCQvEb/kL12PCzYlbFMhFr4tdiNKEKqNaYmqzaQX4AYCqjlmz7lvGwMbCFINFGlj8bc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UzhHc2p3; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bJd67sRU";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uNULY8bn"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747853780;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UzhHc2p3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747853849;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=MWjvfPcrcsP2Spen+qbA9dIQii5siDbTqhdBm82QdAs=;
-	b=bJd67sRUWc64BWBaToxN2dRsqspUaqJRbzE1MENkDjsNQwhjAJqb4+MvNd7xFIntKTG9rh
-	6ye3j0uWa9WRBK3wetekil9CvIuKKg5Alm38io2u+eho3k5RaTWAi/U4dhuwlRoDwZNuD3
-	jrvOoWUe2y0seCV6Ztl12bWDBl1/heT+HDiotNIj5J11d5+n1g+1xlrm7SLMqmY24wtOEd
-	tNGLtjUSGwzyeNWe4YhHQcsjydED98PV3DYopiPFtRNqLgBxyFuOoZxUp1UKqnLnul825+
-	9JIOw7VIy1ZDdCRcDOsWOhhirk6JP9v+T/R57JrNVickJUrlDFVDmoFcqNamww==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747853780;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MWjvfPcrcsP2Spen+qbA9dIQii5siDbTqhdBm82QdAs=;
-	b=uNULY8bnHq3Hi8C8G5x5m4wZoF7H7flbzjIxBhclO9+OAw6Re1UdhOJiByck6N4yoeVcXK
-	CNBWw416aC+fL6Cw==
-To: Borislav Petkov <bp@alien8.de>
-Cc: Ingo Molnar <mingo@kernel.org>, "Ahmed S. Darwish"
- <darwi@linutronix.de>, Ard Biesheuvel <ardb+git@google.com>,
- linux-kernel@vger.kernel.org, x86@kernel.org, Ard Biesheuvel
- <ardb@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, Brian
- Gerst <brgerst@gmail.com>, "Kirill A. Shutemov" <kirill@shutemov.name>
-Subject: Re: [PATCH v4 1/6] x86/cpu: Use a new feature flag for 5 level paging
-In-Reply-To: <20250521181141.GDaC4XXW8BmtvJFy6a@fat_crate.local>
-References: <20250517091639.3807875-8-ardb+git@google.com>
- <20250517091639.3807875-9-ardb+git@google.com>
- <20250519094038.GIaCr8ltHvLBYjk8iI@fat_crate.local>
- <aCstaIBSfcHXpr8D@gmail.com>
- <20250519131944.GCaCsv8A71vn21AB1W@fat_crate.local> <874ixernra.ffs@tglx>
- <20250521181141.GDaC4XXW8BmtvJFy6a@fat_crate.local>
-Date: Wed, 21 May 2025 20:56:19 +0200
-Message-ID: <87sekxrdws.ffs@tglx>
+	bh=zZX3oSNR/OiJ1Y9Pq6xf64GYTpDGG51TH1sjZ6Ombb8=;
+	b=UzhHc2p36yEUuJKLjqo7CWPEM8fwLVGdbMZbwLc9ku9P31Fdf5chyoyAVCPFeD4TIVhfj6
+	D7dggcwRd7ZXsDFaT0+f3lDdRna0qO6vmboaj+bBJLaprwEUCiDqWgEFcBwsNeuGMyhxDv
+	EzJwJFR54i528Cvl0yQKO+GCwjMvgVk=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-658-FSskb9s4MEGF1rAt0YXNDg-1; Wed, 21 May 2025 14:57:28 -0400
+X-MC-Unique: FSskb9s4MEGF1rAt0YXNDg-1
+X-Mimecast-MFC-AGG-ID: FSskb9s4MEGF1rAt0YXNDg_1747853848
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7caef20a528so1836713685a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 11:57:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747853848; x=1748458648;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zZX3oSNR/OiJ1Y9Pq6xf64GYTpDGG51TH1sjZ6Ombb8=;
+        b=oxXFU4uYorrUGc8gcWPIn8NhT8zTB5V7emJmS7gTP3K/YDbxyAWaMbr+zlEKmhFPkt
+         RxSlyVSMxffCAV4SyGo8y7PHOnNEpxEnZqlDOhr6lmnYVQsgiz8wC20PLnpdS0j9WA+u
+         vodybIyMcsLbGJNCZJp3Peb98wE/HwyM6/34/uXdesWphLZiBD1e3D/vGEOQkjFawvQj
+         Pjs0GR/4ceITbRioEq0I/Dl1zheOH/Ev5vym92RJ9dD4OpnKhaq9zNbHZO1nc1bKazOY
+         saM+66CK1lQVGpoR8h3ZfdV8rzuKpyYK8e8KGTspTfIrOHqxZ9BRAG3FzKmjR+wrZgzE
+         8png==
+X-Forwarded-Encrypted: i=1; AJvYcCVnoEihwfWIwRZSfbMlnA9FCrecGbKyMS7bqIlm2FR5S++xTJB4CARdw+QRpuqpjy42zLVosFwGh+v4buc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKjcG1n9XJeG2/BYK86S6YTLMDOuLtKDThYXVkNFSi4ja8zYyX
+	r+q5+sumCKiSnjCztd0nQVQtB7WAuY5nW0DHF7+0FLkPyHEJYbrETXEHXH3UFP8NI1u8ERbhyLb
+	2mvDKn0KJAidR7fWtzz8+y7zkfRGGD3hr9HoPGBCYiSEyhuva7ysdCI3i7UUQYS4mo8oP+I8kaZ
+	6KX0w=
+X-Gm-Gg: ASbGncvm8mok/xKPFd0srs4dtWRfPeODRQAZoX1WjBoUKgkmdPq4eVpxMgTPn76Y0c1
+	u/gKdUsxc+mm997Oye+6cyG+YpDx2r2JpLqa/DQb/7Eznd0QwYMdOM1VFeuQyRB1K6LzsuZx2+7
+	Xbsywob/WFs6/Uvfd+JfziQib4zlp+nOXlf1Ns48kugVW5piK8rOO6o7NgqT7abk59HtQRBHUJP
+	oXUGy34mFMbJ4t7W4W210mRGG0GVTNkKPsKDjMsilLx+nr/IH6Ta67H4Y646YSHB/6e7uSWWAaE
+	99UFb6t4sMfeWdBmWjGqT9PcYrzX+hhrl0KQrOO3LTcqu04lmfHdBr+pPrs=
+X-Received: by 2002:a05:620a:3194:b0:7c5:4cb7:ac97 with SMTP id af79cd13be357-7cd47efff63mr3121622085a.1.1747853848077;
+        Wed, 21 May 2025 11:57:28 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFnvoFRahZcZi6WjpnTrtmy9zuSJztpTCLgI9ec8JwApSBatPo0Ayv6017ChDQEfE2ZP9lO6g==
+X-Received: by 2002:a05:620a:3194:b0:7c5:4cb7:ac97 with SMTP id af79cd13be357-7cd47efff63mr3121619885a.1.1747853847768;
+        Wed, 21 May 2025 11:57:27 -0700 (PDT)
+Received: from ?IPV6:2600:4040:5308:eb00:a77e:fec5:d269:f23e? ([2600:4040:5308:eb00:a77e:fec5:d269:f23e])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cd467dae90sm912153585a.46.2025.05.21.11.57.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 May 2025 11:57:27 -0700 (PDT)
+Message-ID: <9501613e-e8e5-4734-aa2f-ca3a3e4ca990@redhat.com>
+Date: Wed, 21 May 2025 14:57:26 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: Potential heapify performance issue in dm-vdo
+Content-Language: en-US
+To: Kuan-Wei Chiu <visitorckw@gmail.com>
+Cc: dm-devel@lists.linux.dev, linux-kernel@vger.kernel.org,
+ jserv@ccns.ncku.edu.tw
+References: <aC3riPZ6GV/dlr7Y@visitorckw-System-Product-Name>
+From: Matthew Sakai <msakai@redhat.com>
+In-Reply-To: <aC3riPZ6GV/dlr7Y@visitorckw-System-Product-Name>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 21 2025 at 20:11, Borislav Petkov wrote:
 
-> On Wed, May 21, 2025 at 05:23:37PM +0200, Thomas Gleixner wrote:
->> Now what about software defined (artificial) feature bits including BUG
->> bits?
->> 
->> We still need them and there is no reason why we would replace them with
->> something else. But, what we want to do here, is basically the same as
->> we do for the real CPUID information:
->> 
->>    Create and document real artifical leafs (there is enough reserved
->>    number space in the CPUID numbering scheme) and put those into the
->>    CPUID database as well.
->
-> I presume here, when the kernel patch is being sent, the accompanying CPUID db
-> patch needs to go out too?
 
-Yes, and the process is that the leaf/bit needs to be in the data base so
-that the headers containing the new leaf/bit can be auto generated.
+On 5/21/25 11:04 AM, Kuan-Wei Chiu wrote:
+> Hi Matthew,
+> 
+> Recently noticed that the current heapify method in min_heap.h may
+> degrade performance when the heap contains many compare-equal elements,
+> compared to the previous version.
+> 
+> In detail, the new heapify reduces the number of comparisons by about
+> 50% when all elements are distinct. However, when all elements are
+> equal, the comparison count can degrade from O(1) to O(log n).
+> 
+> I don't have enough domain knowledge of dm-vdo, so I'd like to ask
+> whether it uses heaps with many compare-equal elements. If so, I'll
+> work on fixing the issue.
+> 
+> Regards,
+> Kuan-Wei
 
->> This also means, that we switch to a model where the software defined
->> bits are not longer subject to random introduction and removal. We
->> simply keep them around, mark them as not longer used and introduce new
->> ones with proper documentation. That requires due process, which
->> prevents the adhoc messing around with feature bits, which has us bitten
->> more than once in the past.
->
-> Right, so in this particular example with la57, the CPUID bit which denotes
-> that the hw is capable of doing 5-level paging is needed only during kernel
-> init so that we can know whether we should even try to setup 5-level paging.
->
-> After that, the rest of the kernel will need to look only at "our" bit which
-> means, 5-level is *enabled*.
->
-> Because that's what the code cares for - whether it is running on 5-level or
-> not.
->
-> And 5-level *enabled* implies 5-level possible. So that first bit is kinda
-> redundant and perhaps even confusing. That's why I think merging the two bits
-> simplifies things.
->
-> You're already basically doing that with proc="false" but it should be even
-> less visible. No one besides us cares if the hw is capable - users care if the
-> feature is enabled or not.
+Hi Kuan-Wei,
 
-Kinda, but you're conflating things here. leaf_7.la57 is a hardware
-property and leaf_linux_$N.la57 is a software property.
+dm-vdo uses heapify for two different operations, but in both cases we 
+define heap elements that can never be equal to each other. So I think 
+this is not an issue for dm-vdo. (We have not noticed any issues with 
+this in our regular testing, either.)
 
-Of course you might say, that clearing leaf_7.la57 is sufficient to achieve
-this.
+Matt
 
-But in fact, "clearing" the hardware view is the wrong thing to do from
-a conceptual point of view. The hardware view is "cast in stone" no
-matter what and having a clear distinction of a separate software view
-will make things way more clear and understandable.
-
-I've stared at code for hours just to figure out that there was some
-obscure way to end up with a disabled feature bit.
-
-Having a software view in the first place makes it clear that this is
-subject to a logical operation of 'hardware capable' _and_ 'software
-willing' instead of some hidden and obscure 'pretend that the hardware
-is not capable' magic.
-
-Clear conceptual seperation is the only way to keep sanity in this ever
-increasing complexity nightmare.
-
-Claiming that saving 5 bits of extra memory is a brilliant idea was
-even wrong 30 years ago when all of this madness started.
-
-I freely admit that I was thinking the same way back then, because I was
-coming from really memory constraint microcontroller systems. But in the
-context of Linux and contemporary hardware complexity we really need to
-shift the focus to comprehensible concepts and strict abstractions
-between the hardware and software point of view.
-
-Thanks,
-
-        tglx
