@@ -1,131 +1,243 @@
-Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA0022F15E
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 19:14:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16EB9234971
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 19:17:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747854870; cv=none; b=hS+spqRAF2R3V239RJcKEa7WqFYZRkCqtUuUtsjmBmjpQeaUwlUiMU2onrcUlzzPULJ8wlvpIneZsrb+hZMLkaNDXWq7fhWxCmAKJqx93jVVAlDy24Dhlzb4CuyHHyhw1A+U6epmCNuKtHmNOS2+0k9twAMULpqzCYt9stFd39A=
+	t=1747855041; cv=none; b=Yv4RjeUb/0dF9AyYms4zXQyvQqXZhnD8jCFkVNz95yOaRJpZQPrG5ItrDffj8lCURrxeMZ4d6N3NV72SY9V5Oh8LW3kntSfU+lI3uzjPtebgmB/V5I+TcuMmYJDf4aEZ7PIJzCh8sQELfzP3JOOKP/IvDkHe/NinNDH4Zrzb+4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747854870; c=relaxed/simple;
-	bh=vrRsV4qLCDV0XdnD0S1yBCF6VGBs96BIYUPfqY3D0ms=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=opkIpOcZ5F+BT9lNxD7WuyRcwvf08kuh7XarrTaWnRCJqPnXGsnEFjbq+Zj7rYfaLozzFyHRSULvgyXihMX15riStOaJSXSL5YgHWuTHuoMSOavPybVHFvkxjOqLmwzD9tANwsiHTmHP8XDfcq/9DLxfkGejxBfpdYnthyqfSwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-8610d7ec4d3so1098196839f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 12:14:28 -0700 (PDT)
+	s=arc-20240116; t=1747855041; c=relaxed/simple;
+	bh=9kZv0wB7aYOjgY0M3wV8Agi5BwVU9rPueqNiaXYr230=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NJebyQydlMZorveStamF/4G2kl56KKmeGs0stQp8d6ani6UzghD282VXcftgccZdBAJlwVTXiJFfWPAmcA9HEy9n1H/xYmGTQLxmUT4z1pklEB0VGQLQwoxpSsXVyj+Dk2TSWQL2n1a7QBwBqGSioSvVq2ofLp2Jrwj81x1GAIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cwnmEjUZ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cwnmEjUZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747855036;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nJXXXDW4PYAr8Jjvjaer7RTmIfx81VQn47DGQ6gp/X4=;
+	b=cwnmEjUZwY4yoJwThopPL1OSBnuyhcSUDviCGZh+MHWkv2JHpELoULz18ZzVuMPfTY4C5x
+	Tziic956THPxvzviBS0SIdwO1lrI1fNchZTclmYkvCEFnT9QkmIEoDO/mlQHKDx0EJE3nR
+	Qouke4lwvW7nrvL/O/O0Xj34nim+g4o=
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com
+ [209.85.166.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-357-TQ374jlPMaupZ3G-hCnAaQ-1; Wed, 21 May 2025 15:17:15 -0400
+X-MC-Unique: TQ374jlPMaupZ3G-hCnAaQ-1
+X-Mimecast-MFC-AGG-ID: TQ374jlPMaupZ3G-hCnAaQ_1747855035
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-85b3e93e052so127672739f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 12:17:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747854867; x=1748459667;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=y8YGFdliMkUSr1J7gzFt8Ls4s92TDOscM1r/Go3DS6o=;
-        b=wtfM1jztHBP1Hy4QTZBeBXe7HcnLzm6ltRcJFyHiofwJC9M2hYDHyA+qeEv1q2fxxR
-         j/7RKlQVST49oSwd7XlKate+g1w0Pz1NKSN3idIPCTEH1p35/aOEdL9t2Wf6+k6XbFsU
-         ni2+tHBsprVXyRKWzvFDiwMtg+/EoTK2qBFHgSqzX+1ir8nD15DcrOR15AAoF2VWJ11H
-         tbees1v85ckBMeeNeNRmsN12Zaew15O34Rxa3V9ZRJtnqFsK2mpoUSLtb0PQ9lYAhEbz
-         T9At2Pn8fQSzoeoONLmEWuj5z78usNrLcGpFsAJUSl6xoi/EHXYP68sCQBWAODETQWL+
-         y4rA==
-X-Forwarded-Encrypted: i=1; AJvYcCVaNucmvddu1yAGclxB11asllPQlTqD2Xaw4szQrmBE/FeHdaJhuL7NSaBU9uAy8oIWWXGVPtGWJ3W+CuU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYIOVOsZANLkWGBo478VsDmnuAPJ5uv94Vp/vcUR4RpZcZBHsQ
-	YZJnkv+FZXqnwUDS/+Ve6IGB7pWDBHFgeawgigf9N3/zlOeca5CMfK4AJnDOp+cfVe6i6bTQha+
-	DzMESZJoD9SZ80duc/Z72df5nBaREvR1xnnTv1UUSgOfWLOX6jCnFpdloo8o=
-X-Google-Smtp-Source: AGHT+IHfT5WaQnmmJ9kkC9N0FO1IV90UAQ6Pd8LlzJAMFikI/3t9dlwkdEE/DiNid766qTipJKXOq4Uww120NBPetUbxn6oiUAU8
+        d=1e100.net; s=20230601; t=1747855034; x=1748459834;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nJXXXDW4PYAr8Jjvjaer7RTmIfx81VQn47DGQ6gp/X4=;
+        b=UsNQfIryBwdXeVofR24iJBrGoxASeDmpH3HOdRh5eR3I+l5wPQULwuC+pCkna7Ogwn
+         8GXSOOndGYe0fAmksJ6ZhFFIHF0/sanaZwZtdD0YS4bvfkXbLml8enK94QotfyKvmkeh
+         7WrN6KfUrn4dfY+zdouQIVBhxehz+jXgGBcJ+fFblCY3L2vapkALLN5rjHR2o9Ts+lgw
+         4bgZqNLrQgnd8C1QV6+JAuDrTYc7urPbl+wIPQw8TvW1fug5fUSctXJqeS3CxkKwEwxn
+         yxHOl8+pZ1PpIiSO62Bt6rzmTHhuLdHT/IjgZ0oti+P42Br10bCmoqvDy8peXuYlij5Z
+         +YJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWSsKeNiD1EPrJ2U73LfieLSti6uUpNUs5Xr9wQLO/91iwIswZ1iUDSwYIyfL/SrULHgg8UB2M6AMfLynw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxyy2qM5OpmWSgS/HxZWO6avi0RHAsLKMR8N42W2fHvjgZeafGZ
+	OFxFYO78JCO86XV9fTPHUKI1efi4e90MbQ+WHqF6LT68q3zvw6D3bw3wNfzicwiVeXe81zVe20Y
+	9DoNOloXgyFBDi/uvqpqT9QnPkmq9lYkl0meYEEda50QxrL11IhE5EttwBs2sUjW5q6HrLzULXw
+	==
+X-Gm-Gg: ASbGnculOEYiezIRbceUys+I0Z2eEb9OdVPkz4dnlYfcFJVgQ+5FpZS2jJBqGHHoz5a
+	6thhLmYO8xy5Y3XNxA6JDi0L94HtFdHZh4EJa3qwqMCE8E/yOulYj27oBG5aHfTAcK5owo79It+
+	kH6+f/uEYWyQGz+WUrdnY6yF569opYgcIHvp1eLuFvFrKV/LahQvFyPVYdAcvxDo+QmWQVxw/DL
+	3F8feJmOdGOf0+WXFDIrWzP2RLo9pAii+t7mN9K/LTuwhcB8FDkDN8MY4qMabqeiq4ffcmUGOCr
+	+l0Y03YG5f9XzG8=
+X-Received: by 2002:a05:6602:2d8d:b0:85d:9738:54ac with SMTP id ca18e2360f4ac-86a2319bcf3mr742131239f.2.1747855034255;
+        Wed, 21 May 2025 12:17:14 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGSvVThNYy1+dND2QTneRwGhWDuKajIiFFHmLrsqDkQp1WNz78tRhTCrOQoZ5e3B+h1U5LwsA==
+X-Received: by 2002:a05:6602:2d8d:b0:85d:9738:54ac with SMTP id ca18e2360f4ac-86a2319bcf3mr742129539f.2.1747855033881;
+        Wed, 21 May 2025 12:17:13 -0700 (PDT)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-86a2360cb1esm266746339f.24.2025.05.21.12.17.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 May 2025 12:17:13 -0700 (PDT)
+Date: Wed, 21 May 2025 13:17:11 -0600
+From: Alex Williamson <alex.williamson@redhat.com>
+To: lizhe.67@bytedance.com
+Cc: david@redhat.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ muchun.song@linux.dev, peterx@redhat.com
+Subject: Re: [PATCH v4] vfio/type1: optimize vfio_pin_pages_remote() for
+ large folios
+Message-ID: <20250521131711.4e0d3f2f.alex.williamson@redhat.com>
+In-Reply-To: <20250521042507.77205-1-lizhe.67@bytedance.com>
+References: <20250521042507.77205-1-lizhe.67@bytedance.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:f118:0:b0:86a:2373:aa3d with SMTP id
- ca18e2360f4ac-86a2373aa86mr2118933739f.3.1747854867493; Wed, 21 May 2025
- 12:14:27 -0700 (PDT)
-Date: Wed, 21 May 2025 12:14:27 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <682e2613.a00a0220.2a3337.0003.GAE@google.com>
-Subject: [syzbot] [net?] KMSAN: uninit-value in xfrm_state_find (4)
-From: syzbot <syzbot+7ed9d47e15e88581dc5b@syzkaller.appspotmail.com>
-To: davem@davemloft.net, edumazet@google.com, herbert@gondor.apana.org.au, 
-	horms@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, pabeni@redhat.com, steffen.klassert@secunet.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On Wed, 21 May 2025 12:25:07 +0800
+lizhe.67@bytedance.com wrote:
 
-syzbot found the following issue on:
+> From: Li Zhe <lizhe.67@bytedance.com>
+> 
+> When vfio_pin_pages_remote() is called with a range of addresses that
+> includes large folios, the function currently performs individual
+> statistics counting operations for each page. This can lead to significant
+> performance overheads, especially when dealing with large ranges of pages.
+> 
+> This patch optimize this process by batching the statistics counting
+> operations.
+> 
+> The performance test results for completing the 8G VFIO IOMMU DMA mapping,
+> obtained through trace-cmd, are as follows. In this case, the 8G virtual
+> address space has been mapped to physical memory using hugetlbfs with
+> pagesize=2M.
+> 
+> Before this patch:
+> funcgraph_entry:      # 33813.703 us |  vfio_pin_map_dma();
+> 
+> After this patch:
+> funcgraph_entry:      # 16071.378 us |  vfio_pin_map_dma();
+> 
+> Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
+> Co-developed-by: Alex Williamson <alex.williamson@redhat.com>
+> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+> ---
 
-HEAD commit:    172a9d94339c Merge tag '6.15-rc6-smb3-client-fixes' of git..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=17b062d4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=56e29fa09e87dea7
-dashboard link: https://syzkaller.appspot.com/bug?extid=7ed9d47e15e88581dc5b
-compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+Given the discussion on v3, this is currently a Nak.  Follow-up in that
+thread if there are further ideas how to salvage this.  Thanks,
 
-Unfortunately, I don't have any reproducer for this issue yet.
+Alex
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/da9615d2ee0b/disk-172a9d94.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/997b6c928374/vmlinux-172a9d94.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/30f01bdce820/bzImage-172a9d94.xz
+> Changelogs:
+> 
+> v3->v4:
+> - Use min_t() to obtain the step size, rather than min().
+> - Fix some issues in commit message and title.
+> 
+> v2->v3:
+> - Code simplification.
+> - Fix some issues in comments.
+> 
+> v1->v2:
+> - Fix some issues in comments and formatting.
+> - Consolidate vfio_find_vpfn_range() and vfio_find_vpfn().
+> - Move the processing logic for hugetlbfs folio into the while(true) loop
+>   and use a variable with a default value of 1 to indicate the number of
+>   consecutive pages.
+> 
+> v3 patch: https://lore.kernel.org/all/20250520070020.6181-1-lizhe.67@bytedance.com/
+> v2 patch: https://lore.kernel.org/all/20250519070419.25827-1-lizhe.67@bytedance.com/
+> v1 patch: https://lore.kernel.org/all/20250513035730.96387-1-lizhe.67@bytedance.com/
+> 
+>  drivers/vfio/vfio_iommu_type1.c | 48 +++++++++++++++++++++++++--------
+>  1 file changed, 37 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> index 0ac56072af9f..bd46ed9361fe 100644
+> --- a/drivers/vfio/vfio_iommu_type1.c
+> +++ b/drivers/vfio/vfio_iommu_type1.c
+> @@ -319,15 +319,22 @@ static void vfio_dma_bitmap_free_all(struct vfio_iommu *iommu)
+>  /*
+>   * Helper Functions for host iova-pfn list
+>   */
+> -static struct vfio_pfn *vfio_find_vpfn(struct vfio_dma *dma, dma_addr_t iova)
+> +
+> +/*
+> + * Find the first vfio_pfn that overlapping the range
+> + * [iova, iova + PAGE_SIZE * npage) in rb tree.
+> + */
+> +static struct vfio_pfn *vfio_find_vpfn_range(struct vfio_dma *dma,
+> +		dma_addr_t iova, unsigned long npage)
+>  {
+>  	struct vfio_pfn *vpfn;
+>  	struct rb_node *node = dma->pfn_list.rb_node;
+> +	dma_addr_t end_iova = iova + PAGE_SIZE * npage;
+>  
+>  	while (node) {
+>  		vpfn = rb_entry(node, struct vfio_pfn, node);
+>  
+> -		if (iova < vpfn->iova)
+> +		if (end_iova <= vpfn->iova)
+>  			node = node->rb_left;
+>  		else if (iova > vpfn->iova)
+>  			node = node->rb_right;
+> @@ -337,6 +344,11 @@ static struct vfio_pfn *vfio_find_vpfn(struct vfio_dma *dma, dma_addr_t iova)
+>  	return NULL;
+>  }
+>  
+> +static inline struct vfio_pfn *vfio_find_vpfn(struct vfio_dma *dma, dma_addr_t iova)
+> +{
+> +	return vfio_find_vpfn_range(dma, iova, 1);
+> +}
+> +
+>  static void vfio_link_pfn(struct vfio_dma *dma,
+>  			  struct vfio_pfn *new)
+>  {
+> @@ -681,32 +693,46 @@ static long vfio_pin_pages_remote(struct vfio_dma *dma, unsigned long vaddr,
+>  		 * and rsvd here, and therefore continues to use the batch.
+>  		 */
+>  		while (true) {
+> +			struct folio *folio = page_folio(batch->pages[batch->offset]);
+> +			long nr_pages;
+> +
+>  			if (pfn != *pfn_base + pinned ||
+>  			    rsvd != is_invalid_reserved_pfn(pfn))
+>  				goto out;
+>  
+> +			/*
+> +			 * Note: The current nr_pages does not achieve the optimal
+> +			 * performance in scenarios where folio_nr_pages() exceeds
+> +			 * batch->capacity. It is anticipated that future enhancements
+> +			 * will address this limitation.
+> +			 */
+> +			nr_pages = min_t(long, batch->size, folio_nr_pages(folio) -
+> +						folio_page_idx(folio, batch->pages[batch->offset]));
+> +			if (nr_pages > 1 && vfio_find_vpfn_range(dma, iova, nr_pages))
+> +				nr_pages = 1;
+> +
+>  			/*
+>  			 * Reserved pages aren't counted against the user,
+>  			 * externally pinned pages are already counted against
+>  			 * the user.
+>  			 */
+> -			if (!rsvd && !vfio_find_vpfn(dma, iova)) {
+> +			if (!rsvd && (nr_pages > 1 || !vfio_find_vpfn(dma, iova))) {
+>  				if (!dma->lock_cap &&
+> -				    mm->locked_vm + lock_acct + 1 > limit) {
+> +				    mm->locked_vm + lock_acct + nr_pages > limit) {
+>  					pr_warn("%s: RLIMIT_MEMLOCK (%ld) exceeded\n",
+>  						__func__, limit << PAGE_SHIFT);
+>  					ret = -ENOMEM;
+>  					goto unpin_out;
+>  				}
+> -				lock_acct++;
+> +				lock_acct += nr_pages;
+>  			}
+>  
+> -			pinned++;
+> -			npage--;
+> -			vaddr += PAGE_SIZE;
+> -			iova += PAGE_SIZE;
+> -			batch->offset++;
+> -			batch->size--;
+> +			pinned += nr_pages;
+> +			npage -= nr_pages;
+> +			vaddr += PAGE_SIZE * nr_pages;
+> +			iova += PAGE_SIZE * nr_pages;
+> +			batch->offset += nr_pages;
+> +			batch->size -= nr_pages;
+>  
+>  			if (!batch->size)
+>  				break;
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+7ed9d47e15e88581dc5b@syzkaller.appspotmail.com
-
-=====================================================
-BUG: KMSAN: uninit-value in xfrm_state_find+0x2423/0xaae0 net/xfrm/xfrm_state.c:1438
- xfrm_state_find+0x2423/0xaae0 net/xfrm/xfrm_state.c:1438
- xfrm_tmpl_resolve_one net/xfrm/xfrm_policy.c:2519 [inline]
- xfrm_tmpl_resolve net/xfrm/xfrm_policy.c:2570 [inline]
- xfrm_resolve_and_create_bundle+0xabc/0x58b0 net/xfrm/xfrm_policy.c:2868
- xfrm_lookup_with_ifid+0x48c/0x3ac0 net/xfrm/xfrm_policy.c:3202
- xfrm_lookup net/xfrm/xfrm_policy.c:3333 [inline]
- xfrm_lookup_route+0x63/0x2b0 net/xfrm/xfrm_policy.c:3344
- ip_route_output_flow+0x20d/0x2b0 net/ipv4/route.c:2918
- ip_route_connect include/net/route.h:352 [inline]
- tcp_v4_connect+0xa43/0x1cd0 net/ipv4/tcp_ipv4.c:252
- tcp_v6_connect+0x134a/0x1d40 net/ipv6/tcp_ipv6.c:240
- __inet_stream_connect+0x2d3/0x1760 net/ipv4/af_inet.c:677
- inet_stream_connect+0x69/0xd0 net/ipv4/af_inet.c:748
- __sys_connect_file net/socket.c:2038 [inline]
- __sys_connect+0x523/0x680 net/socket.c:2057
- __do_sys_connect net/socket.c:2063 [inline]
- __se_sys_connect net/socket.c:2060 [inline]
- __x64_sys_connect+0x95/0x100 net/socket.c:2060
- x64_sys_call+0x23bb/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:43
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xd9/0x1b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Local variable tmp.i.i created at:
- xfrm_tmpl_resolve_one net/xfrm/xfrm_policy.c:2491 [inline]
- xfrm_tmpl_resolve net/xfrm/xfrm_policy.c:2570 [inline]
- xfrm_resolve_and_create_bundle+0x3a7/0x58b0 net/xfrm/xfrm_policy.c:2868
- xfrm_lookup_with_ifid+0x48c/0x3ac0 net/xfrm/xfrm_policy.c:3202
-
-CPU: 1 UID: 0 PID: 11691 Comm: syz.5.1451 Not tainted 6.15.0-rc6-syzkaller-00278-g172a9d94339c #0 PREEMPT(undef) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-=====================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
