@@ -1,91 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CB942AE7F;
-	Wed, 21 May 2025 17:15:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5498264614;
+	Wed, 21 May 2025 17:16:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747847729; cv=none; b=S/mQhD5mO3z8U9E4MUP/znDbzmOHxsgGuZzxKKxNyAfAk0hbVzK9htnAmC2smDijTBeZT1nT6cws1jA3ebhq7hiN30QXr2RFCmmG2YK4HJkuiK+O2F4FFe7pMOhWFtC7VLivTqNzpOseEjew1Gr/LYKTWB0U8O9x4ZFLHZPewOo=
+	t=1747847812; cv=none; b=Yu8gX3s0tKiDsSre6sNZw4DruqKy+vMQpS1ToIlMVg/E7hnRJInliXWEm+zefXvWq3XS7yKrKhY1uedpImDfS5xa6zbAgQX32N2IGcyzic2seF4Z255tAg2zHs9mhxYyyxgAvcfJStv/OgF7x1Du+VkcDVQH8DGwZMZ5ya0PDVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747847729; c=relaxed/simple;
-	bh=q52XUM2vSxcxPQEQuuOUFa3+mPV81gHnnS0ZTj1olr4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WQhYGlWxh83Sv0IxSX2o8Io3xI9eJM85IAk3q18xFD8aJd8KXBd9Bw/b8w8pEX93BBWphmzZuJe9rM93LvSh+n/0OkvyMxovu+7owpscomB2TvBxIBJArKWYqmn8/iO9kGz0/+tXVIwLRrR8y3iu9byLLVpoVa/vLCmquhYUAxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=goD2IQSg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747847812; c=relaxed/simple;
+	bh=fWpLvvACEVSDjDTolN7S+h5eTfjZAN5/5xDugxoVK7g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AluF1/GsZyJraeqcksoAR89vAbANhSWC4CnGKwfCvXinGSqJSxPZyBNn4we6ZichF9x4urQDuteaL6WnGbbbQCJtH4joSv6gMTPuLHVwdikV7dTLayuSHwZ4TLY1zzr4xKRemfhfTeSrhMaQWrU6EmNJN2PzASS8VAZr2dfdfgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=j7iiHsA/; arc=none smtp.client-ip=83.149.199.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="goD2IQSg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3188C4CEE4;
-	Wed, 21 May 2025 17:15:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747847729;
-	bh=q52XUM2vSxcxPQEQuuOUFa3+mPV81gHnnS0ZTj1olr4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=goD2IQSg8Iqr75Mxh+L0hjRvVyLcWNBcRMB0Od+bjEQB3lJbYdeYvDgFxLp5ROt3B
-	 EmQijeb9nrDPglumQlJVuaM2JL+5YdhhbhT3B2BxZTGTbhK6MquF9P5gpKjzfxbljN
-	 LIHijBT1EOvXeajeGNkttpyjDWqbV2YQhQNWJ8PwJacrsPW/ma5/bBXVmGFfjkmpi3
-	 aXzEOQ9RrPjdl3u+jHASMO0FBObtLljOtO8AXbp9zG6L6NMiecqYmHbiXDgis+5d1Y
-	 VjPe//Pg3yjQp0mG3rcneq7CVF/Kf3bZLqeE9oq2/Qq+eJcS2zPMu7XIy/3ZxkYArq
-	 sdLHmapanRKCw==
-Date: Wed, 21 May 2025 07:15:28 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Zhongkun He <hezhongkun.hzk@bytedance.com>
-Cc: hannes@cmpxchg.org, longman@redhat.com, cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org, muchun.song@linux.dev
-Subject: Re: [PATCH] cpuset: introduce non-blocking cpuset.mems setting option
-Message-ID: <aC4KMCK9JIbLCFcl@slm.duckdns.org>
-References: <20250521034527.3476332-1-hezhongkun.hzk@bytedance.com>
+	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="j7iiHsA/"
+Received: from fedora.intra.ispras.ru (unknown [10.10.165.10])
+	by mail.ispras.ru (Postfix) with ESMTPSA id ECA5F4017243;
+	Wed, 21 May 2025 17:16:47 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru ECA5F4017243
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
+	s=default; t=1747847808;
+	bh=BNsdjHd06G7z309kEr7togqzRjGcVaxuLsI5s4ltPlw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=j7iiHsA/S1rxAgcXTkGdcEV5eq5hnGGX8H+sIu6Ekwsj3shdAwtVZ9TqPf2SYVBhN
+	 jd3NJKjr5tSWq6EHp1zCggzSS/oUNlf+jlVvQbqN+agW/NfXrgaJWcDaOpOREAetjB
+	 WIlmkZQc7eFGSER8g0c8idt5P/zojVpghHbpMsTk=
+From: Fedor Pchelkin <pchelkin@ispras.ru>
+To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	stable@vger.kernel.org
+Cc: Fedor Pchelkin <pchelkin@ispras.ru>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org
+Subject: [PATCH 5.15 0/1] Oopses on module unload seen on 5.15-rc
+Date: Wed, 21 May 2025 20:16:33 +0300
+Message-ID: <20250521171635.848656-1-pchelkin@ispras.ru>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250521034527.3476332-1-hezhongkun.hzk@bytedance.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 21, 2025 at 11:45:27AM +0800, Zhongkun He wrote:
-> Setting the cpuset.mems in cgroup v2 can trigger memory
-> migrate in cpuset. This behavior is fine for newly created
-> cgroups but it can cause issues for the existing cgroups.
-> In our scenario, modifying the cpuset.mems setting during
-> peak times frequently leads to noticeable service latency
-> or stuttering.
-> 
-> It is important to have a consistent set of behavior for
-> both cpus and memory. But it does cause issues at times,
-> so we would like to have a flexible option.
-> 
-> This idea is from the non-blocking limit setting option in
-> memory control.
-> 
-> https://lore.kernel.org/all/20250506232833.3109790-1-shakeel.butt@linux.dev/
-> 
-> Signed-off-by: Zhongkun He <hezhongkun.hzk@bytedance.com>
-> ---
->  Documentation/admin-guide/cgroup-v2.rst | 7 +++++++
->  kernel/cgroup/cpuset-internal.h         | 6 ++++++
->  kernel/cgroup/cpuset.c                  | 7 +++++++
->  3 files changed, 20 insertions(+)
-> 
-> diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
-> index 1a16ce68a4d7..d9e8e2a770af 100644
-> --- a/Documentation/admin-guide/cgroup-v2.rst
-> +++ b/Documentation/admin-guide/cgroup-v2.rst
-> @@ -2408,6 +2408,13 @@ Cpuset Interface Files
->  	a need to change "cpuset.mems" with active tasks, it shouldn't
->  	be done frequently.
->  
-> +	If cpuset.mems is opened with O_NONBLOCK then the migration is
-> +	bypassed. This is useful for admin processes that need to adjust
-> +	the cpuset.mems dynamically without blocking. However, there is
-> +	a risk that previously allocated pages are not within the new
-> +	cpuset.mems range, which may be altered by move_pages syscall or
-> +	numa_balance.
+A followup to the similar patch sent to 6.1.y:
+https://lore.kernel.org/stable/20250521165909.834545-1-pchelkin@ispras.ru/
 
-As said in the other thread, nack on this approach.
+commit 959cadf09dbae7b304f03e039b8d8e13c529e2dd
+Author: Peter Zijlstra <peterz@infradead.org>
+Date:   Mon Oct 14 10:05:48 2024 -0700
 
-Thanks.
+    x86/its: Use dynamic thunks for indirect branches
+    
+    commit 872df34d7c51a79523820ea6a14860398c639b87 upstream.
+
+being ported to 5.15.y would lead to kernel crashes there after module
+unload operations.
+
+As mentioned in the blamed patch comment describing the backport
+adaptations:
+
+[ pawan: CONFIG_EXECMEM and CONFIG_EXECMEM_ROX are not supported on
+        backport kernel, made changes to use module_alloc() and
+        set_memory_*() for dynamic thunks. ]
+
+module_alloc/module_memfree in conjunction with memory protection routines
+were used. The allocated memory is vmalloc-based, and it ends up being ROX
+upon release inside its_free_mod().
+
+Freeing of special permissioned memory in vmalloc requires its own
+handling. VM_FLUSH_RESET_PERMS flag was introduced for these purposes.
+
+In-kernel users dealing with the stuff had to care about this explicitly
+before commit 4c4eb3ecc91f ("x86/modules: Set VM_FLUSH_RESET_PERMS in
+module_alloc()"). It fixes the current problem.
+
+More recent kernels starting from 6.2 have the commit and are not affected.
+
+Found by Linux Verification Center (linuxtesting.org).
+
+Thomas Gleixner (1):
+  x86/modules: Set VM_FLUSH_RESET_PERMS in module_alloc()
+
+ arch/x86/kernel/ftrace.c       | 2 --
+ arch/x86/kernel/kprobes/core.c | 1 -
+ arch/x86/kernel/module.c       | 9 +++++----
+ 3 files changed, 5 insertions(+), 7 deletions(-)
 
 -- 
-tejun
+2.49.0
+
