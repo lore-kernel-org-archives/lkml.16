@@ -1,35 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CDF51DE896;
-	Wed, 21 May 2025 15:22:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD34118CBFB;
+	Wed, 21 May 2025 15:23:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747840975; cv=none; b=scjpzgwKxJxYkXQ8svvu9MS7HwOSKt2BhKK0yvaaso7hh0QoJy2X8CpYAblcBZbtAXAiYkh+icP4p0+6sZhKAA+jhBZO3JWlZctFOdezNnt58sFoP7Upkpa4LFshsMjZkR9MVJ56rmZU2/rASCOmA9m8SMuZxU8exTenGd9P+7s=
+	t=1747840999; cv=none; b=DRrcFWVnNKSj+9rVzqIensNUwa6o3SLgmg/oOi5SyA2vEEUpe0VgDKULa2jprvaCHpPKxg/aXagVt4jTu4V6ke0b8OFB4ahiXXRqSlw5n/T7veIkjKsWKfH6iFx69zB+U6ZMOWhi3qy5NYURBSbH/LnO/XZeCuIwoQDVTtOEoGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747840975; c=relaxed/simple;
-	bh=0YkU9yBX6AgOPZ0Q3G1oIsGva2J1rIZ+xv0Abib7XUE=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=tW1TLWyEoXnXCFgrpUqD5iiSVtbqv8u2Toy11Wikj7lINdPjnd68LawVUXkpJh/SwpUkF81oRKPw1kKVJ5PS9EMCY0kRdfJ6eAHbdwqOkO/0OJ+lfnzGc6qBeBb6hMY8tf4aO179iruP7zirkdLzsbDyITH9kUv9zDkiXeEqcX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LpSmW5Pz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747840999; c=relaxed/simple;
+	bh=h3GAfnHqQdjYb8KerfxcMvxAQu/1JesrqC8XxoefLB8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=N18MSmd1sBsGCN9w++OVhvd0FXDpkbJxgUZMf6O3AbQ/kdemxBZR1dbWkmLNT9KJxbmEEdEFFdp6ndVIVW+ypawA/+hhG0W7cP8aXyh49lc2uVt/a0txNl1wnJaZCn9Drxx9ffa7ZSehV8I5tq2ZLRS/4+7yXy8ADyNrNj4bX3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bAXkDsC/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LpSmW5Pz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07533C4CEE4;
-	Wed, 21 May 2025 15:22:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bAXkDsC/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F893C4CEE4;
+	Wed, 21 May 2025 15:23:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747840975;
-	bh=0YkU9yBX6AgOPZ0Q3G1oIsGva2J1rIZ+xv0Abib7XUE=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=LpSmW5PzppS0+oUOdkAxjwbHcHslytnqF7fAp2wxDBaSKWM+r/in36Mm2TAlWUpos
-	 FxakUGCGY+8Ge42bQMEmNglcaiZ7UtHsuOrD4yzHsA5CuJ1D1626ghUtRIAh7YjSOn
-	 UU2lOAdcMrMk/tSsLoknSm5MHdgkq7sxw0Mrlwbvu/g1OiCiL6/UyDwcKsmiMEYIdt
-	 3UYDPKTUC2nV5iesVd0nKbzehKD1ut+lDAOmVu5+4gSxfhpI73uZGb9VgJ0YFzezM4
-	 zk4bZgzJqyrE14FZu3qRsIj8OhHzkd2o32pNZSl3AiUGySAfvAwo+SywyS/KgP7ov9
-	 SgGCguBOCi40g==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB115380CEEF;
-	Wed, 21 May 2025 15:23:31 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1747840998;
+	bh=h3GAfnHqQdjYb8KerfxcMvxAQu/1JesrqC8XxoefLB8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=bAXkDsC/cnA0VecY2wJBf4tmIpStq23KiR5PSsUguOpRKAw8o3H7/pskGwaAIzAgx
+	 TuN6bZsJeY6sMZS/QpWtA56N/lNt97NaVNAhREYmlv3jDsE2V3BmoTfAnXWdqAFn9z
+	 nGYwmmLzy9eeq6tGbMBA02yTX+UoxWYuesEhML8gK/GzVgd5TtUWPnXdoe0z1OBCk0
+	 XLp8UbfOMbQVol3GeJJuTvbxh3av6fPgONRFrziESf4eeu2QvKek8+ZV4boK4+R0U/
+	 6pZBHzrPA8GiC+QMbMs8tBOs3CudkMf36w+pHMpTtloIjvJQ6d7+sLv/IeAjgDyeAj
+	 QhxB6xZWNzNeA==
+From: Miguel Ojeda <ojeda@kernel.org>
+To: richard120310@gmail.com,
+	aliceryhl@google.com
+Cc: a.hindborg@kernel.org,
+	alex.gaynor@gmail.com,
+	benno.lossin@proton.me,
+	bjorn3_gh@protonmail.com,
+	boqun.feng@gmail.com,
+	gary@garyguo.net,
+	jserv@ccns.ncku.edu.tw,
+	linux-kernel-mentees@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	ojeda@kernel.org,
+	rust-for-linux@vger.kernel.org,
+	skhan@linuxfoundation.org,
+	tmgross@umich.edu
+Subject: Re: [PATCH] rust: list: Use "List::is_empty()" to perform checking when possible
+Date: Wed, 21 May 2025 17:23:07 +0200
+Message-ID: <20250521152307.1055810-1-ojeda@kernel.org>
+In-Reply-To: <20250310073853.427954-1-richard120310@gmail.com>
+References: <20250310073853.427954-1-richard120310@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,47 +54,22 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2 0/2] Bluetooth: btmtksdio: ensure btmtksdio_close is
- executed before btmtksdio_remove
-From: patchwork-bot+bluetooth@kernel.org
-Message-Id: 
- <174784101076.2084440.12163879869679696734.git-patchwork-notify@kernel.org>
-Date: Wed, 21 May 2025 15:23:30 +0000
-References: <20250422012156.586600-1-chris.lu@mediatek.com>
-In-Reply-To: <20250422012156.586600-1-chris.lu@mediatek.com>
-To: Chris Lu <chris.lu@mediatek.com>
-Cc: marcel@holtmann.org, johan.hedberg@gmail.com, luiz.dentz@gmail.com,
- sean.wang@mediatek.com, jiande.lu@mediatek.com, will-cy.lee@mediatek.com,
- ss.wu@mediatek.com, steve.lee@mediatek.com, linux-bluetooth@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
 
-Hello:
+On Mon, 10 Mar 2025 15:38:52 +0800 I Hsin Cheng <richard120310@gmail.com> wrote:
+>
+> "List::is_empty()" provides a straight forward convention to check
+> whether a given "List" is empty or not. There're numerous places in the
+> current implementation still use "self.first.is_null()" to perform the
+> equivalent check, replace them with "List::is_empty()".
+>
+> Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
 
-This series was applied to bluetooth/bluetooth-next.git (master)
-by Luiz Augusto von Dentz <luiz.von.dentz@intel.com>:
+There are a couple cases that still apply here (i.e. after the cursor
+between elements change), so I will pick it up.
 
-On Tue, 22 Apr 2025 09:21:54 +0800 you wrote:
-> If Bluetooth SDIO card is unexpectedly removed due to hardware removal
-> or SDIO issue, it is possible for remove to be called before close.
-> If an interrupt occurs during this process, it may cause kernel panic.
-> Therefore, it is necessary to ensure that close is executed before
-> remove to stop interrupts and cancel txrx workqueue.
-> 
-> Chris Lu (2):
->   Bluetooth: btmtksdio: Check function enabled before doing close
->   Bluetooth: btmtksdio: Do close if SDIO card removed without close
-> 
-> [...]
+By the way, for some reason, your email did not reach my inbox.
 
-Here is the summary with links:
-  - [v2,1/2] Bluetooth: btmtksdio: Check function enabled before doing close
-    https://git.kernel.org/bluetooth/bluetooth-next/c/07e90048e356
-  - [v2,2/2] Bluetooth: btmtksdio: Do close if SDIO card removed without close
-    https://git.kernel.org/bluetooth/bluetooth-next/c/0b6d58bc6ea8
+Thanks!
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Cheers,
+Miguel
