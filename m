@@ -1,139 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B55838F80;
-	Wed, 21 May 2025 13:30:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B1F4143736
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 13:31:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747834255; cv=none; b=hDiSOOk7mF3yAbrxv/zZudH0M0cNiILes2DBlIOQ6clmHFT3RNcOOuDCWZJWh8U4Yx9KLh+V4gJHK4/Hf1rOTxsgxopt8xNV/n9dFt8Mv63TI0IzzhsU6JgORegbq0nlpsUALrTiD/TUxNevKSbbHqWRX4pZLijShF9bo+STrA0=
+	t=1747834262; cv=none; b=sNHWBMsl5K6Y69hwUpxTHWt0dlgCArpNMWbqA6KDowrEmmOVmqCCnFOID8uUxdyPMgb/WOhcft4+3cFMN9aClJHSsPb+Qip444Erl6Ao0wIFkZJSzP9c8Lm955bJw5GqexPYXNEeyRFYGNbopi/rm/5X5qKfd5A1OFK6fwoo2ew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747834255; c=relaxed/simple;
-	bh=FbftMvFzXBf+sBlRHMUppUqDkvlQbcnS3dG1NEYpdxE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rpbH4eJykIa2ZTJMkaJpRdiB3PcGzfnaFXzgcDkiPlDMtSxusMiVqE+nYuf/+UeJxKQPiz3R51BUBjgKr3LKQMSQrFG5+xOd5jn3W3v6oX0Z+T1eMUcABhEYORck0L/tHQnIkw2G9ynb3jEG+FwhM67SwSEVAMbJG5dJTNKJ5iY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G8aP/npv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747834262; c=relaxed/simple;
+	bh=dE8S8U/P80oKy7v+PkEG7Bznl75i8IVoc76G1GRGRf8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OygRCc3guDA5ADiDVp5c/IVomFo6XdMNJ7EsuBTZHEykaqnT+o3/0Do5erubeIGYFIQeAUbWn3hhhL1tHhsaPx6zXBlcsGnYn63jNPRl2B9ZKvl4yHzp5Gn3l+5Cxyv7fjyfuArgXaXrzE+GfF9V2UQhvnVmVNAdd44elSdri5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ykx86oHR; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G8aP/npv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F868C4CEE4;
-	Wed, 21 May 2025 13:30:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747834255;
-	bh=FbftMvFzXBf+sBlRHMUppUqDkvlQbcnS3dG1NEYpdxE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=G8aP/npvm651s6qpzUgatkERAVuimNo5EZyl+sPW/pLYwNl9E3B/ZFVmk4lhc4OmS
-	 scM5zQ9uYZCxDqI+crmbSP8FaACKqA6gYYn/60q6vnHnJEXs9t5hU+XzCToysw9rkk
-	 U91M4Xq+GgR2SKfiyGYqttR9xqtP4FerzZ0Q44xKAUie3ziIY69llrTj4huuRjJ3Xr
-	 ygvDp2U1T9Z/WPtXeVtnU+5PtRdBWH8dBgX7rSlIyP+x7cqySOpR7JGPfYdyBxa7bM
-	 Kl7kj/Quwph9EAFOdBCJH1wjZI5uxDQeYbX43UkM85OA27jnzAiPe//pukxU9YML07
-	 vzthoMfjuFFAw==
-Message-ID: <17a9ee62-8185-4833-acfc-1639fd17efc5@kernel.org>
-Date: Wed, 21 May 2025 15:30:50 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ykx86oHR"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-30572effb26so6288392a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 06:31:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747834260; x=1748439060; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=z1dbDjgMLEJrOwumrDgSLpVT4yaU17ZjFGTyjnMHOQ4=;
+        b=ykx86oHRpqzZLUu/PhAr12S1HWVP3F9SAavNqBFCef9dPiX7Amh+HvtTgtvoe1ghdL
+         4ZVunBabZhX8TKIHZ3+BZ0bEs1E4BEU97/2D/rmqHSr8tjKFOfPNVnsAgqrAYXdLca6V
+         4CYl0ihbhDn/ckt4ETo0KEkFVqvcfcmME3P4MvrIuwgQZl6AitENJTC9LzKlM48hiaET
+         0Ng5X1KqBAgkJGW9rO4J/jRpDvCJdPvEYskDlwpsRdq9UkIzzJmm6xXj+eF+YaQY7j/C
+         TiKmXpZ397Wa521vp2cqBqMgl3Abptd3GsDmYjLXJbpFVXJjmX5kcoxYxMLx9Ck8v6ku
+         Yk7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747834260; x=1748439060;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=z1dbDjgMLEJrOwumrDgSLpVT4yaU17ZjFGTyjnMHOQ4=;
+        b=Q5fZps04gQOXmgb4ok1G/OxQJpQ+c/W0gmfYUjaLfOe0VrQ2tC355vWfx3+rAtwTLZ
+         YITQn5TbUWo0If9THYClTi5Vgf8+UZ8lT7vg64ijWs/TyIoO+vK1U8tozTKnMcqKPAhx
+         t6HAWufLNiwl74HinAEO+xntbzBxINWVQocWlpLqpbyWHgC0M5S94khn9rHqotib9MFi
+         OYBxXq6uzqrxQ9lY7cAN2i/J1LD7xmJnxOiCCFFZIjYypBw0GFpsQJ2Zh1UHTyTO08aR
+         IjK4HxC5IfRzQRIHLc1pINx8S3YxsWujZAcfdP9I8rua5+HVPdPd2vkk+rCuhI37HJGw
+         nNMg==
+X-Forwarded-Encrypted: i=1; AJvYcCVUO0YDGlDaWo5mkn7A1Ud7RL1fEIazda0Mf4YEYjSW0PTUWmANgzIdaWhrYd5QjGSzDFMGQbQZiYyUXpQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzPz2FJeI1q4IjQUhz0MDUoK3zvgptfcfbj7EbSRSkPKMc1Gja/
+	ZSTqYllhXrYzeeqxOCthysFSCSygLWIMbeeMWEf8RVF2UjLUqSzxdCrQQ66W6FCWTA==
+X-Gm-Gg: ASbGncuav6wGggnkQfmztaHfwDh1MWTxZZf5Qnn6IZBfifVR+o33aC6I+fqpg5yZNwz
+	ASmn0qeqjDkOgTX5S6LovI3urYn15Xr9mrFnlWUosjRZmJ3teix9stKMON/Bz9PwK3UUdDzAnNT
+	dh69pED4eGWjyId2sMr6vkCmCNfoJYVhibxnIu91/TE7iGB9sXxynBydUrzZDy4gha0tuJXmMcy
+	5KHDgi8zLMiwHsEkpa0ILC2qXBepDxH1jVIs2OFc7a6ahrHcjaeP/vbP/rU0Rp+ahhuAZadn7QR
+	NfNDcFBdPbv30ezF2nqb7y7cZtftK5Vkly+iqCkd3DN/2V30/DgHsw6KhDHW9FT7Q0qCrLA=
+X-Google-Smtp-Source: AGHT+IGPKkuMknbqbSMLVX+JBJd/UAyJcjpyOY/yvUsxjBau5eWt4Mkj+OEXtvgnfC9urBGO+cN+Qg==
+X-Received: by 2002:a17:90b:2f0d:b0:2fe:68a5:d84b with SMTP id 98e67ed59e1d1-30e7d4e7e1bmr29895277a91.1.1747834260260;
+        Wed, 21 May 2025 06:31:00 -0700 (PDT)
+Received: from thinkpad ([120.60.52.42])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f364907dfsm3632884a91.23.2025.05.21.06.30.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 May 2025 06:30:59 -0700 (PDT)
+Date: Wed, 21 May 2025 14:30:53 +0100
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Nitin Rawat <quic_nitirawa@quicinc.com>
+Cc: vkoul@kernel.org, kishon@kernel.org, 
+	James.Bottomley@hansenpartnership.com, martin.petersen@oracle.com, bvanassche@acm.org, 
+	andersson@kernel.org, neil.armstrong@linaro.org, dmitry.baryshkov@oss.qualcomm.com, 
+	konrad.dybcio@oss.qualcomm.com, quic_rdwivedi@quicinc.com, quic_cang@quicinc.com, 
+	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-scsi@vger.kernel.org
+Subject: Re: [PATCH V5 05/11] phy: qcom-qmp-ufs: Remove qmp_ufs_com_init()
+Message-ID: <z3yfou4oolymsgb72dpakwcsmq6v3gnx64mdals7krnxdhpc2a@lsepak4kc2mg>
+References: <20250515162722.6933-1-quic_nitirawa@quicinc.com>
+ <20250515162722.6933-6-quic_nitirawa@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] pwm: axi-pwmgen: add support for external clock
-To: David Lechner <dlechner@baylibre.com>
-Cc: Michael Hennerich <michael.hennerich@analog.com>,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Trevor Gamblin <tgamblin@baylibre.com>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-pwm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250520-pwm-axi-pwmgen-add-external-clock-v1-0-6cd63cc001c8@baylibre.com>
- <20250520-pwm-axi-pwmgen-add-external-clock-v1-3-6cd63cc001c8@baylibre.com>
- <20250521-nostalgic-pretty-hedgehog-d08a77@kuoka>
- <dc9c370c-e1e7-4ef9-8738-e6ac8887ee61@baylibre.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <dc9c370c-e1e7-4ef9-8738-e6ac8887ee61@baylibre.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250515162722.6933-6-quic_nitirawa@quicinc.com>
 
-On 21/05/2025 15:23, David Lechner wrote:
-> On 5/21/25 5:10 AM, Krzysztof Kozlowski wrote:
->> On Tue, May 20, 2025 at 04:00:46PM GMT, David Lechner wrote:
->>> Add support for external clock to the AXI PWM generator driver.
->>>
->>> In most cases, there is a separate external clock that drives the PWM
->>> output separate from the peripheral clock. This allows enabling both
->>> clocks.
->>>
->>> Signed-off-by: David Lechner <dlechner@baylibre.com>
->>> ---
->>>  drivers/pwm/pwm-axi-pwmgen.c | 23 ++++++++++++++++++++---
->>>  1 file changed, 20 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/drivers/pwm/pwm-axi-pwmgen.c b/drivers/pwm/pwm-axi-pwmgen.c
->>> index 4337c8f5acf055fc87dc134f2a70b99b0cb5ede6..67992a7561ec0440b1c1fa327f844a0602872771 100644
->>> --- a/drivers/pwm/pwm-axi-pwmgen.c
->>> +++ b/drivers/pwm/pwm-axi-pwmgen.c
->>> @@ -280,9 +280,26 @@ static int axi_pwmgen_probe(struct platform_device *pdev)
->>>  	ddata = pwmchip_get_drvdata(chip);
->>>  	ddata->regmap = regmap;
->>>  
->>> -	clk = devm_clk_get_enabled(dev, NULL);
->>> -	if (IS_ERR(clk))
->>> -		return dev_err_probe(dev, PTR_ERR(clk), "failed to get clock\n");
->>> +	/* When clock-names is present, there is a separate ext clock. */
->>> +	if (device_property_present(dev, "clock-names")) {
->>
->> No. List is ordered, you do not need such dance at all.
+On Thu, May 15, 2025 at 09:57:16PM +0530, Nitin Rawat wrote:
+> The qmp_ufs_power_on() function acts as a wrapper, solely invoking
+> qmp_ufs_com_init(). Additionally, the code within qmp_ufs_com_init()
+> does not correspond well with its name.
 > 
-> I should have added more to the comment here. This is also needed for
-> backwards compatibility where only what should be the "ext" clock is
-> given as clocks = <&spi_clk>; and the AXI clock was missing.
+> Therefore, to enhance the readability and eliminate unnecessary
+> function call inline qmp_ufs_com_init() into qmp_ufs_power_on().
+> 
+> There is no change to the functionality.
+> 
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
+> ---
+>  drivers/phy/qualcomm/phy-qcom-qmp-ufs.c | 43 ++++++++++---------------
+>  1 file changed, 17 insertions(+), 26 deletions(-)
+> 
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
+> index 33d238cf49aa..d3f9ee490a32 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
+> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
+> @@ -1758,12 +1758,28 @@ static void qmp_ufs_init_registers(struct qmp_ufs *qmp, const struct qmp_phy_cfg
+>  		qmp_ufs_init_all(qmp, &cfg->tbls_hs_b);
+>  }
+>  
+> -static int qmp_ufs_com_init(struct qmp_ufs *qmp)
+> +static int qmp_ufs_com_exit(struct qmp_ufs *qmp)
 
-I do not see this needed at all. That's already handled by old code. You
-only need to take new optional, second clock - axi clk. You take it by
-index.
+Since there is no qmp_ufs_com_init() now, qmp_ufs_com_exit() lacks symmetry.
+Maybe you should rename it too.
 
-Best regards,
-Krzysztof
+>  {
+>  	const struct qmp_phy_cfg *cfg = qmp->cfg;
+> +
+> +	reset_control_assert(qmp->ufs_reset);
+> +
+> +	clk_bulk_disable_unprepare(qmp->num_clks, qmp->clks);
+> +
+> +	regulator_bulk_disable(cfg->num_vregs, qmp->vregs);
+> +
+> +	return 0;
+> +}
+> +
+> +static int qmp_ufs_power_on(struct phy *phy)
+> +{
+> +	struct qmp_ufs *qmp = phy_get_drvdata(phy);
+> +	const struct qmp_phy_cfg *cfg = qmp->cfg;
+>  	void __iomem *pcs = qmp->pcs;
+>  	int ret;
+>  
+> +	dev_vdbg(qmp->dev, "Initializing QMP phy\n");
+
+Now, this debug print doesn't make sense. You can drop it.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
