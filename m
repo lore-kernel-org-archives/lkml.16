@@ -1,61 +1,46 @@
-Received: from mail.netfilter.org (mail.netfilter.org [217.70.190.124])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8DF225E465;
-	Wed, 21 May 2025 10:28:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.190.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1670E242D66;
+	Wed, 21 May 2025 10:29:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747823328; cv=none; b=iIcNjSxW1s0Wai8YPcUhjV6HhK4KkJU3xK8qP0zI3Xzg9IBXs+w/+TYcu7bAPXzYaC7ym/zj7qQu1y14Wv3D6pQCom2NDY1/AxHS+DGcL/N7lpF0XATzY9qecewTjDU6LH8Jc/dFoh5LJcvn95l3fn+S52gK6u/A+BVO7PVw0NU=
+	t=1747823359; cv=none; b=HPjp/NB88GbmksTyaGcaQjbNiGNmnZE8502gLd3m9pS3pZbMm+8qfByKRjuR96qZJPky6ai1rZ9BqlkKQja2WEqsSkJL3/gP6MMuaY0CcYftMWvz+c8GZ3ZrCgG7QaR8A2rcyArvpCwOwlFQebG2bC3lmRodCavgijHFBsaqqcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747823328; c=relaxed/simple;
-	bh=3d0obmYsX3T2V9AzCr4AMDxRbYCNnGvKP0ArUwkntt0=;
+	s=arc-20240116; t=1747823359; c=relaxed/simple;
+	bh=BsLfk4W6hGOyAxKG4j9DTDZxtWJhOXlWv1hSc+4+WMk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NvxhccAHnBtUuOEbAOVKRVEXaAVukYphQ1/QK8lBGOFAI+ogq/1VtJqX1Z9QVriFQ6sSyp3VpcoyDlYZ0U9q5r8z2A608co+uxJ4v/r+oj7HAxl38m+r810EnDWt/eRfZdgj+m3RVUP7xw0FpAvw1OxmzzxzwVWGF2GfV6vklck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org; spf=pass smtp.mailfrom=netfilter.org; dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b=DXpZlLaI; dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b=qe5jRX0m; arc=none smtp.client-ip=217.70.190.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netfilter.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZKUONegi+F/O6NUbj40+A+w4aPMavCyy4VH7A1NmUYCNDRVAR/+A+IOtwZbG8k4Y//XSUEzEZejAvo8vKyJ5AKxT9sXP9r0cTNrUh5qduu37HRCrDaid/Iixms8apfDXtWu4XpS7NcCx61Qe4ehz6B9KCM8mrZDJIe2aEr2C004=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=NLlvw1/Y; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b="DXpZlLaI";
-	dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b="qe5jRX0m"
-Received: by mail.netfilter.org (Postfix, from userid 109)
-	id 3C6A7602D6; Wed, 21 May 2025 12:28:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=netfilter.org;
-	s=2025; t=1747823325;
-	bh=GMiyj9YVk+wS3RYRfkCFc1jyeRHyyRXJ5KrReLVUun0=;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="NLlvw1/Y"
+Received: from pendragon.ideasonboard.com (179.218-130-109.adsl-dyn.isp.belgacom.be [109.130.218.179])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id E5AEA6B5;
+	Wed, 21 May 2025 12:28:52 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1747823333;
+	bh=BsLfk4W6hGOyAxKG4j9DTDZxtWJhOXlWv1hSc+4+WMk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DXpZlLaIQxf8D/BzUmaH1hkoyvEHWHD2NU3HENd+E0pOa53EcvShJt8ul9MUKgfBs
-	 koraho3mBkJOq5ps7Yz0lKxfVlsFFrtoovEcLsAb13MrHwdgp3TVNXuQlnH1BX9Y7d
-	 EwVmZBns2IDHBCS72PdJ8jmPDBn6Nb8OD9r0Cbw3TfEwrsaf14OOBnF94C2jsaZIh4
-	 VqqTBKQhHH+9EYpdbFcS1PGgkfm8pHmsL+NcesxKTJ9Qyyy+CJHtA8JD06jP15g62h
-	 Q/FHITnIqelxjc1vbO+nCaeGZXAMLnKvxHihvF5kBwhLmpslC/nFsUIA6Tc4Mn1+FJ
-	 7pqiqjNaRpoRg==
-X-Spam-Level: 
-Received: from netfilter.org (mail-agni [217.70.190.124])
-	by mail.netfilter.org (Postfix) with ESMTPSA id D6234602D6;
-	Wed, 21 May 2025 12:28:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=netfilter.org;
-	s=2025; t=1747823323;
-	bh=GMiyj9YVk+wS3RYRfkCFc1jyeRHyyRXJ5KrReLVUun0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qe5jRX0m5+3IIM4xWpcbgvh/730Fq0XQDenhPe3s9Tu18LoHrg/gUo9w945JClTlk
-	 wnGcUiB/wqe1uXGPEVBH/j0pe+PxXLuB1nh6DPDlKTNv34wH6yKGeuspkEy6q+LcNw
-	 24vF0Va+fRQJ6zXQPcblZkpU3LmXlE2u4/WDeXtvwyBlin1eXp+z0P5Ozr3UPGsple
-	 8n80KQddfcpzfSCWvRfeU56UAPX8sv30GXG7IN17GTa9uoj5T+05XXOUQtI+gIOX39
-	 CsNAI6Urgrcwh/25KHWNlpCJPKD6hfZ1DRKVYa82xxR7RomVctYln0iwafI/0YMFHl
-	 BAYIgltyOTncA==
-Date: Wed, 21 May 2025 12:28:40 +0200
-From: Pablo Neira Ayuso <pablo@netfilter.org>
-To: lvxiafei <xiafei_xupt@163.com>
-Cc: Jozsef Kadlecsik <kadlec@netfilter.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, lvxiafei <lvxiafei@sensetime.com>,
-	netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] netfilter: nf_conntrack: table full detailed log
-Message-ID: <aC2q2OgYNVd8-5Yw@calendula>
-References: <20250508081313.57914-1-xiafei_xupt@163.com>
+	b=NLlvw1/Y4ia1wdjBQBL+MvyXbkNjDVqVYL5E7KOxl3KbXr+r8v1HVN0ZvZjWxbs+m
+	 MYwVMN7qZpxxjKgEgMWXBVL9dC8zm8T+uVnfOAOhuP2shHn/HTzMUhQx8ekUkwnHXz
+	 IEJPsQoG8kjYBL367bcoLEBcz8KFa5pNsDJe6M/A=
+Date: Wed, 21 May 2025 12:29:08 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Krzysztof =?utf-8?Q?Ha=C5=82asa?= <khalasa@piap.pl>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, linux-media@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i.MX8 ISI crossbar: simplify a couple of error messages
+Message-ID: <20250521102908.GD12514@pendragon.ideasonboard.com>
+References: <m3plgi9pwu.fsf@t19.piap.pl>
+ <20250509091549.GD28896@pendragon.ideasonboard.com>
+ <m3sekz8r7z.fsf@t19.piap.pl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,41 +49,82 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250508081313.57914-1-xiafei_xupt@163.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <m3sekz8r7z.fsf@t19.piap.pl>
 
-Hi,
+Hi Krzysztof,
 
-On Thu, May 08, 2025 at 04:13:12PM +0800, lvxiafei wrote:
-> From: lvxiafei <lvxiafei@sensetime.com>
+On Tue, May 20, 2025 at 01:19:12PM +0200, Krzysztof Hałasa wrote:
+> Laurent Pinchart <laurent.pinchart@ideasonboard.com> writes:
 > 
-> Add the netns field in the "nf_conntrack: table full,
-> dropping packet" log to help locate the specific netns
-> when the table is full.
+> > The goal was indeed to save memory.
+> >
+> >> --- a/drivers/media/platform/nxp/imx8-isi/imx8-isi-crossbar.c
+> >> +++ b/drivers/media/platform/nxp/imx8-isi/imx8-isi-crossbar.c
+> >> @@ -352,9 +352,8 @@ static int mxc_isi_crossbar_enable_streams(struct v4l2_subdev *sd,
+> >>                                                sink_streams);
+> >>               if (ret) {
+> >>                       dev_err(xbar->isi->dev,
+> >> -                             "failed to %s streams 0x%llx on '%s':%u: %d\n",
+> >> -                             "enable", sink_streams, remote_sd->name,
+> >> -                             remote_pad, ret);
+> >> +                             "failed to enable streams 0x%llx on '%s':%u: %d\n",
+> >> +                             sink_streams, remote_sd->name, remote_pad, ret);
+> >>                       mxc_isi_crossbar_gasket_disable(xbar, sink_pad);
+> >>                       return ret;
+> >>               }
+> >> @@ -392,9 +391,8 @@ static int mxc_isi_crossbar_disable_streams(struct v4l2_subdev *sd,
+> >>                                                 sink_streams);
+> >>               if (ret)
+> >>                       dev_err(xbar->isi->dev,
+> >> -                             "failed to %s streams 0x%llx on '%s':%u: %d\n",
+> >> -                             "disable", sink_streams, remote_sd->name,
+> >> -                             remote_pad, ret);
+> >> +                             "failed to disable streams 0x%llx on '%s':%u: %d\n",
+> >> +                             sink_streams, remote_sd->name, remote_pad, ret);
 > 
-> Signed-off-by: lvxiafei <lvxiafei@sensetime.com>
-> ---
->  net/netfilter/nf_conntrack_core.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> It appears the current code saves (in my default build) 8 bytes of
+> memory, at the cost of readability and inability to search with grep:
 > 
-> diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
-> index 7f8b245e287a..71849960cf0c 100644
-> --- a/net/netfilter/nf_conntrack_core.c
-> +++ b/net/netfilter/nf_conntrack_core.c
-> @@ -1659,7 +1659,8 @@ __nf_conntrack_alloc(struct net *net,
->  			if (!conntrack_gc_work.early_drop)
->  				conntrack_gc_work.early_drop = true;
->  			atomic_dec(&cnet->count);
-> -			net_warn_ratelimited("nf_conntrack: table full, dropping packet\n");
-> +			net_warn_ratelimited("nf_conntrack: table full in netns %u, dropping packet\n",
-> +					     net->ns.inum);
-
-Maybe print this only if this is not init_netns?
-
-Thanks
-
->  			return ERR_PTR(-ENOMEM);
->  		}
->  	}
-> -- 
-> 2.40.1
+> Current:
+> Name          Size      File off
+> .text         00000bf4  00000040
+> .data         00000000  00000c34
+> .rodata.str1.8 000001b8 00000c38
+> __jump_table  00000030  00000df0
+> .rodata       000001b8  00000e20
 > 
+> With patch:
+> Name          Size      File off
+> .text         00000bd4  00000040
+> .data         00000000  00000c14
+> .rodata.str1.8 000001e0 00000c18
+> __jump_table  00000030  00000df8
+> .rodata       000001b8  00000e28
+> 
+> Built as a module it doesn't even save that - the number of pages stays
+> the same.
+> 
+> Just FYI.
+
+Fair enough. I'll take the patch, with an update to the commit message:
+
+media: nxp: imx8-isi: Simplify a couple of error messages
+
+The error messages in the mxc_isi_crossbar_enable_streams() and 
+mxc_isi_crossbar_disable_streams() functions are similar, with a single
+word difference between them. The word is moved out of the format string
+to a separate dev_err() argument to try and save memory through string 
+de-duplication. The total savings are however small, as the .data size 
+reduction is partly offset by a .text size increase, with a total saving
+of 8 bytes in total on an ARM64 platforms. They also come at the cost of
+making the error message difficult to grep, which outweights the gains.
+
+Simplify the error messages to make them grep-able.
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+-- 
+Regards,
+
+Laurent Pinchart
