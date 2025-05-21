@@ -1,64 +1,64 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B780222B586;
-	Wed, 21 May 2025 15:49:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58A2222D7B7;
+	Wed, 21 May 2025 15:49:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747842583; cv=none; b=iAltRxckH6KQcqEsRVgHljOIiY9D1MNraJ85FQRqqRoeNtaFFCVL4GYPiF4DILsipve2TiXdpr85PcxqAzOibKf8xTQ8wTfeo3xTN6ns7HW8ue06E3wpcieXAoQXxEZFUS8G00/JPPdTb4KdzkkPnr/vxiYl5hmxInk6m02sMvo=
+	t=1747842585; cv=none; b=D3tuVOriwYsuXYR2WNSb3e/ZjphhKQBwzGaSF5fLAY61a7VlSSfENT6rXUsGLw+I3dLxxQELrAPGWXC6FZHxd4W05aH0uSwdQr9kj+/90qnTTLE8SkIB2YnI1rpWmJ2jraG3p2TQgo3hq+kFl98QpxUk3hUol115G9iXJ/K2qZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747842583; c=relaxed/simple;
-	bh=RoL6MAn+oOTJXbLL/osL1Bo4dfugTQk+XMhwbzmVLP0=;
+	s=arc-20240116; t=1747842585; c=relaxed/simple;
+	bh=6lfRm5uJsWtjg9wrUn7yd0o6zu7bMUupiiQKJ6fArNU=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=LBkLD6+3VFl+lai5ZCBqrOrkuyqMhy+Ub11YRHhg1NIO6DcOiDj00jDHum5Vy4+mAdU+V1lIsSvM/sGk/bjXmSXPqV3RaDx2a5gRqanGPlD4Ybm2ioGbfHbJJegJKxjGg95G78MZfYASRNb8Y8sryt+L/7xJherJQvqJgec/grs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gYRhCYT3; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vDMe5UTg; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=d4guiA+ot4NgPR3DOwhUGlWJq/DH/kMUNBazmUOk2H6nJC27AHlYhS87CsNvWYlKZpRfJMyncbTL7GTENLbIUyTQ2ht26J/r8FggKE/jWjWZ90uVQeGpTOosBUiHRHzyBIIAwTXZd2AMG5QFmk0zbyw3KRm4deMUp4NXcbCMAGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=O+BTW7hT; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=z6mnmr6U; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gYRhCYT3";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vDMe5UTg"
-Date: Wed, 21 May 2025 15:49:39 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="O+BTW7hT";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="z6mnmr6U"
+Date: Wed, 21 May 2025 15:49:41 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747842580;
+	s=2020; t=1747842582;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=88W74Z93WNJ9RJMnsT5Lxsj4PXjrFVeYvOfZnp5DKt4=;
-	b=gYRhCYT3Ntg37I/6S3tnak5pZ9xulOSV+CJSW7tZfG0Cv5o3rYL53DEPLEeGNffjHqarPQ
-	XRHS+sF7H+n5OhZZbAzA2LWu1vgFXYadtq64HJfMH8QnElJfyKqcHzCSwrX++j+AGGhOTF
-	Qj/H3W2YVOQL5JISYd1ZMc9JS+/+feS7jP5WRZWwRLRDvgPkChoG/V0JzpohV1G+IBsZ2z
-	k4gT0FWK/2PIfoD3jVWPsLyoQVN9ZkPZoRt5fPPPJ1wS7epEWXBQAAJTsDcUwfc6059Vr9
-	/pX5MPpyyZhIrr0vxGsBQSXXlKjKjTdijzG9ZdNfZqbnvVvFNh1KbtwCHf62AQ==
+	bh=8OlPTwB4OHfWl1yAAKyQx+j3W7tkeURG2F8enN92XiA=;
+	b=O+BTW7hTgtgDv1g4qeDt5hxEkD4Tnbk9Or5D0rQ0qpFbB8l7wEVLJUUmkDmXOvQG+RIsXC
+	aMv7toAFE+ZV1tF1U3V3vM3utfv6nJg8W3lg1OHP9l/ltExWOtI3+TCU72Efb8s8Q4lrGb
+	DG4yfSvSXKOLrSY5y3RpYU364EMA3uXritvIveTL9vVEVFvY0aSJR/eyuPgGbloQ2WhSTh
+	WtxS33DPzJOoe4+l5rAOHc7k4fqDGDDIyGFkR40wsKMzzOTNpBZkASR6LtvrHVR1AScUAL
+	GUODsaprGI9OVz7oV+yhTv5Vf72NjlXYx/gyJFexrO+4x1j2JWTmICy53FpYLg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747842580;
+	s=2020e; t=1747842582;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=88W74Z93WNJ9RJMnsT5Lxsj4PXjrFVeYvOfZnp5DKt4=;
-	b=vDMe5UTgBdLDR8z9wWOimtPe9un1Sc6ijoufcLCthtAF5ETMCn5soU+HF/1Ntll8TxgD70
-	uHSMeLWz0zeKsoCA==
-From: "tip-bot2 for Rob Herring (Arm)" <tip-bot2@linutronix.de>
+	bh=8OlPTwB4OHfWl1yAAKyQx+j3W7tkeURG2F8enN92XiA=;
+	b=z6mnmr6Uq4rNGcXyv2ulC0iPld3whD7tUJe0/T6XMF/AuNsjpZX7ozmVo3BaIqKOBX5y0E
+	GD4981fiLih+p9Cw==
+From: "tip-bot2 for robelin" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/clocksource] dt-bindings: timer: Convert csky,mptimer to
- DT schema
-Cc: "Rob Herring (Arm)" <robh@kernel.org>, Guo Ren <guoren@kernel.org>,
+Subject: [tip: timers/clocksource] clocksource/drivers/timer-tegra186: Remove
+ unused bits
+Cc: robelin <robelin@nvidia.com>, Thierry Reding <treding@nvidia.com>,
  Daniel Lezcano <daniel.lezcano@linaro.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250506022228.2587029-1-robh@kernel.org>
-References: <20250506022228.2587029-1-robh@kernel.org>
+In-Reply-To: <20250507044311.3751033-4-robelin@nvidia.com>
+References: <20250507044311.3751033-4-robelin@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174784257948.406.7442341595034534014.tip-bot2@tip-bot2>
+Message-ID: <174784258107.406.2455116961690341481.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,126 +68,43 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the timers/clocksource branch of tip:
 
-Commit-ID:     157265afbdf257c99280511a3a557933d5b2e9f1
-Gitweb:        https://git.kernel.org/tip/157265afbdf257c99280511a3a557933d5b2e9f1
-Author:        Rob Herring (Arm) <robh@kernel.org>
-AuthorDate:    Mon, 05 May 2025 21:22:27 -05:00
+Commit-ID:     39b27ddf4d680fc908b2fc788039406e2e1c4601
+Gitweb:        https://git.kernel.org/tip/39b27ddf4d680fc908b2fc788039406e2e1c4601
+Author:        robelin <robelin@nvidia.com>
+AuthorDate:    Wed, 07 May 2025 12:43:11 +08:00
 Committer:     Daniel Lezcano <daniel.lezcano@linaro.org>
 CommitterDate: Fri, 16 May 2025 11:10:33 +02:00
 
-dt-bindings: timer: Convert csky,mptimer to DT schema
+clocksource/drivers/timer-tegra186: Remove unused bits
 
-Convert the C-SKY Multi-processor timer binding to DT schema format.
-It's a straight-forward conversion.
+The intention to keep the unsed if(0) block is gone now. Remove
+them for clean codes.
 
-Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-Acked-by: Guo Ren <guoren@kernel.org>
-Link: https://lore.kernel.org/r/20250506022228.2587029-1-robh@kernel.org
+Signed-off-by: robelin <robelin@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
+Link: https://lore.kernel.org/r/20250507044311.3751033-4-robelin@nvidia.com
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- Documentation/devicetree/bindings/timer/csky,mptimer.txt  | 42 +------
- Documentation/devicetree/bindings/timer/csky,mptimer.yaml | 46 +++++++-
- 2 files changed, 46 insertions(+), 42 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/timer/csky,mptimer.txt
- create mode 100644 Documentation/devicetree/bindings/timer/csky,mptimer.yaml
+ drivers/clocksource/timer-tegra186.c |  9 ---------
+ 1 file changed, 9 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/timer/csky,mptimer.txt b/Documentation/devicetree/bindings/timer/csky,mptimer.txt
-deleted file mode 100644
-index f5c7e99..0000000
---- a/Documentation/devicetree/bindings/timer/csky,mptimer.txt
-+++ /dev/null
-@@ -1,42 +0,0 @@
--============================
--C-SKY Multi-processors Timer
--============================
+diff --git a/drivers/clocksource/timer-tegra186.c b/drivers/clocksource/timer-tegra186.c
+index fb8a51a..e5394f9 100644
+--- a/drivers/clocksource/timer-tegra186.c
++++ b/drivers/clocksource/timer-tegra186.c
+@@ -174,15 +174,6 @@ static void tegra186_wdt_enable(struct tegra186_wdt *wdt)
+ 		value &= ~WDTCR_PERIOD_MASK;
+ 		value |= WDTCR_PERIOD(1);
+ 
+-		/* enable local FIQ and remote interrupt for debug dump */
+-		if (0)
+-			value |= WDTCR_REMOTE_INT_ENABLE |
+-				 WDTCR_LOCAL_FIQ_ENABLE;
 -
--C-SKY multi-processors timer is designed for C-SKY SMP system and the
--regs is accessed by cpu co-processor 4 registers with mtcr/mfcr.
+-		/* enable system debug reset (doesn't properly reboot) */
+-		if (0)
+-			value |= WDTCR_SYSTEM_DEBUG_RESET_ENABLE;
 -
-- - PTIM_CTLR "cr<0, 14>" Control reg to start reset timer.
-- - PTIM_TSR  "cr<1, 14>" Interrupt cleanup status reg.
-- - PTIM_CCVR "cr<3, 14>" Current counter value reg.
-- - PTIM_LVR  "cr<6, 14>" Window value reg to trigger next event.
--
--==============================
--timer node bindings definition
--==============================
--
--	Description: Describes SMP timer
--
--	PROPERTIES
--
--	- compatible
--		Usage: required
--		Value type: <string>
--		Definition: must be "csky,mptimer"
--	- clocks
--		Usage: required
--		Value type: <node>
--		Definition: must be input clk node
--	- interrupts
--		Usage: required
--		Value type: <u32>
--		Definition: must be timer irq num defined by soc
--
--Examples:
-----------
--
--	timer: timer {
--		compatible = "csky,mptimer";
--		clocks = <&dummy_apb_clk>;
--		interrupts = <16>;
--		interrupt-parent = <&intc>;
--	};
-diff --git a/Documentation/devicetree/bindings/timer/csky,mptimer.yaml b/Documentation/devicetree/bindings/timer/csky,mptimer.yaml
-new file mode 100644
-index 0000000..12cc528
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/csky,mptimer.yaml
-@@ -0,0 +1,46 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/timer/csky,mptimer.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: C-SKY Multi-processors Timer
-+
-+maintainers:
-+  - Flavio Suligoi <f.suligoi@asem.it>
-+  - Guo Ren <guoren@kernel.org>
-+
-+description: |
-+  C-SKY multi-processors timer is designed for C-SKY SMP system and the regs are
-+  accessed by cpu co-processor 4 registers with mtcr/mfcr.
-+
-+   - PTIM_CTLR "cr<0, 14>" Control reg to start reset timer.
-+   - PTIM_TSR  "cr<1, 14>" Interrupt cleanup status reg.
-+   - PTIM_CCVR "cr<3, 14>" Current counter value reg.
-+   - PTIM_LVR  "cr<6, 14>" Window value reg to trigger next event.
-+
-+properties:
-+  compatible:
-+    items:
-+      - const: csky,mptimer
-+
-+  clocks:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - clocks
-+  - interrupts
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    timer {
-+        compatible = "csky,mptimer";
-+        clocks = <&dummy_apb_clk>;
-+        interrupts = <16>;
-+    };
+ 		/* enable system POR reset */
+ 		value |= WDTCR_SYSTEM_POR_RESET_ENABLE;
+ 
