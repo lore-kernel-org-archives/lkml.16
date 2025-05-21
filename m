@@ -1,240 +1,124 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE5EE14EC60
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 14:02:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05C0914EC60;
+	Wed, 21 May 2025 14:02:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747836123; cv=none; b=r9wOHOJ5/llrXNlNiI06juj5TIibfBlDnl2lvF3X6DB1Shw4NkF+jav43EzMdLNLo07VUzndDl+FCkj2/vwZmxqlk7OYGrQk160wvOb4kWI4o13cKxWrRVVqFJ5MILxOV0AJRvVnkhUuH8KwVl4X1L2tpeRg+gOFCK89BRAyNE8=
+	t=1747836159; cv=none; b=ZvIUnhXSsZNL747C5yfKD7Ew/YDBjbEe/lKyTq3WmhWTttzSz3f7HF0/h2FWrM+YZIdiI1hEllRMbmMRppF7VtDh1VGuJHJdhSkY/lLy2q65xxXGP4d5lAK93BW9imErG+m+9+wY8/zDmBem1lADAC3SvVpSVuYWCVNNkWvA1Fw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747836123; c=relaxed/simple;
-	bh=a6q/PZWmc+zPlm1zQM70skfxQwhxsKqszX4R4ML9J3c=;
+	s=arc-20240116; t=1747836159; c=relaxed/simple;
+	bh=XzBNibcp7iKkeEFDUAzJdibe/Jo7NOOf5PX3W+wxgD0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mCmLYRX1i4mvx1MrxN2IkMUwgzp+ZIWxCbg/Zw4NVfEPoHNEUyrK5hd04FqEimtmXBUPpj1RKZcHbSS4dwy69HPOuDlT2Bcdcq+NMSAcc+jQ5zCfEhxbuX8/B4LZtTx3VnvAICStVOfesc/xJIrsy93FbM8PlXN2GewzU+2gh6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=y3vvbkJZ; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=mVoNPW/8h8D5A1ZVIHUikLgf550p2RT8gjypiqVVm253W18VizrHa0Xi6yRDAMat3+GUzeEwzNykWvQKmzWMGXBG87992ZgHEDEN/gVQ4zOFhg+1qvSlPk11BzIg3oOoEN6uHI1AJlDc5q6xpzJYYgNy4sELsrVt61F6Fn61+vs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qqYnON9t; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y3vvbkJZ"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2320d06b728so34523395ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 07:02:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747836121; x=1748440921; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=U8z5zCjsJqPPABNBLHUQv6MTVvI28kl/Vcyk8IPH4kI=;
-        b=y3vvbkJZjf4nmva7ofHqi4lZBbtX4ewZ04Q7XgInZ5Y4P/oCTq/eQKbFMtmYUBzbiA
-         78fexcNTXSPfOFur0mIY5PWjEDeE+pADiJekNPizI8pMcBRfZWibTsWMsgbKZfSLLgyK
-         C274xMnv0UifPRx+ub8/6Q/814oaQtBJtyDQ9S/TjbeRQcwXw/P0SoTyBv1cKUZW4c63
-         NeD/jwLMlfTNJsET9OAdtOiW4lHO8AZeeCCD6oLXdlrgJLgmo9fBjjWqOIkKfhOZ6XA9
-         q00RhquRYSRMAqkKqxEkoW8k+UMXp0GZYBVDytu23YEYyYKAdPLjXSNF8qgX/RnENAub
-         r9KA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747836121; x=1748440921;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=U8z5zCjsJqPPABNBLHUQv6MTVvI28kl/Vcyk8IPH4kI=;
-        b=Km0v63tCVm16qLLRPD9459ulPbbzlsi57c/zQx5ibLRMHRhleuc/YRZJqL/On7Krd0
-         80BbL1aXYis+mAOi6Ve1hfNFoIf8pe0LlftjQgvgJbBFmOyJoGiMrmtyZTF8kVbhEDVm
-         U9mq1d1VqiQtcdiq68EEgywViN8zfG4BTk+3K0RNroAXzj2Mm30z0/g9Z5QHwXImQHIb
-         RWbCj/2VhaJKf0hwOecJb7yA5K6qi0ciY5xhKwvu1i7uyEElInayK77sQzTFzbTdJPf7
-         2eiYaUf8OXpcI0j91TMNY93XqT0EUGwSIbGJ+Bn+H4yFlrNPQ4OFj5jh/7SreYtsu8l+
-         1QVw==
-X-Forwarded-Encrypted: i=1; AJvYcCV7knLM/FRYY+2dWF97XXWus2dwk2MxGJLhRAFuU/0OE4t9TzAS+FBVKTXco9V4os5ucHf4gMo9x6cmfBg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6b82LiYPhrjp3Xc2fnNGhWlzNRfKhFw8wfmPHIklvgstOKmXi
-	8mX9o2BDLpsR8KZugQ+DyOJCR52WPLeHlm/lJGTanF18TCyd6wM82fM4Yv8VtOklpA==
-X-Gm-Gg: ASbGnctrljGRkqmqvqtnXAde9W4qDQyA5YSF+AZyq1h1Y9O8si5SFaIC9IWCVELhKYa
-	f6sNLpbbMSYBagtnPZ9qdgrV3FFlmpCwd/hmu1s2wuORkDQB41ggfPagPJPgFUfNHaJBoLx26u3
-	BI1U0KVmdYAUFl45hwPxPznrFX1tcwRKWeqYJglnILJ+BemXsEly7v3YdhOQyF22NlyDAEdFxdv
-	Mjc4zKsmzOW6BuPSrJdlKSiMGihpctpUBOSHhfcaOO1dq/K2N0ajh9/Apf9c3mwLqzOgm7vJ1qb
-	q3/i/FplZaoDWjZaoTD/t3W+T0h8+DkJyD/eOuKvn0F0DrlI4/Zw6rlHdGQDS2pmInFL6+I=
-X-Google-Smtp-Source: AGHT+IHIKKP2uksl9GvcLkBetglbjC+Wy6dDEa7BT/2+qE2OwFvCRiVTKh+kE7VBMoCdz8xwjqLNFA==
-X-Received: by 2002:a17:902:e5d1:b0:224:b60:3cd3 with SMTP id d9443c01a7336-231d43ada94mr273520735ad.19.1747836120495;
-        Wed, 21 May 2025 07:02:00 -0700 (PDT)
-Received: from thinkpad ([120.60.52.42])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4ed239bsm93587855ad.219.2025.05.21.07.01.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 07:01:59 -0700 (PDT)
-Date: Wed, 21 May 2025 15:01:53 +0100
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Nitin Rawat <quic_nitirawa@quicinc.com>
-Cc: vkoul@kernel.org, kishon@kernel.org, 
-	James.Bottomley@hansenpartnership.com, martin.petersen@oracle.com, bvanassche@acm.org, 
-	andersson@kernel.org, neil.armstrong@linaro.org, dmitry.baryshkov@oss.qualcomm.com, 
-	konrad.dybcio@oss.qualcomm.com, quic_rdwivedi@quicinc.com, quic_cang@quicinc.com, 
-	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-scsi@vger.kernel.org
-Subject: Re: [PATCH V5 10/11] scsi: ufs: qcom : Introduce phy_power_on/off
- wrapper function
-Message-ID: <k37lk3poz6kzrgnby4sikwmz6rg4ysxsticn3opcil4j3njylp@cvmgwiw6nwy5>
-References: <20250515162722.6933-1-quic_nitirawa@quicinc.com>
- <20250515162722.6933-11-quic_nitirawa@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qqYnON9t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE7C4C4CEE4;
+	Wed, 21 May 2025 14:02:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747836158;
+	bh=XzBNibcp7iKkeEFDUAzJdibe/Jo7NOOf5PX3W+wxgD0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qqYnON9tKaNxbz622vXY3a5h7IsI/+xBDvDXZa2hyvFfYeSmdv8EYSNVWOsAZRhSo
+	 4VMLh5AP7aPS0z++jYbK1J81HUMEYW+CVwNZdITNgGWHALlo5mUgQmM/RdLr7T3519
+	 hxt1g0F01btuw74hzw9xKDzXf+AD45KPhCbMVqrLqbSl8DsTCbgkA2h+D252WseKg9
+	 2dvz6JNAm0Qa4qcC3jd8so/+1qjD3zKHrJ8i3FR4DkeDngUckkbLaBezxLC5nECWQn
+	 eUBfkvyTuzMsNPtIsfzIyZRbnbqeuOgf7IptoXwQurBKBjODWatfRl3vkhFI3d9ZDC
+	 gqIOVPi1xYw5A==
+Date: Wed, 21 May 2025 15:02:31 +0100
+From: Simon Horman <horms@kernel.org>
+To: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+	decui@microsoft.com, stephen@networkplumber.org, kys@microsoft.com,
+	paulros@microsoft.com, olaf@aepfle.de, vkuznets@redhat.com,
+	davem@davemloft.net, wei.liu@kernel.org, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, leon@kernel.org,
+	longli@microsoft.com, ssengar@linux.microsoft.com,
+	linux-rdma@vger.kernel.org, daniel@iogearbox.net,
+	john.fastabend@gmail.com, bpf@vger.kernel.org, ast@kernel.org,
+	hawk@kernel.org, tglx@linutronix.de,
+	shradhagupta@linux.microsoft.com, andrew+netdev@lunn.ch,
+	kotaranov@microsoft.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next,v2] net: mana: Add support for Multi Vports on
+ Bare metal
+Message-ID: <20250521140231.GW365796@horms.kernel.org>
+References: <1747671636-5810-1-git-send-email-haiyangz@microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250515162722.6933-11-quic_nitirawa@quicinc.com>
+In-Reply-To: <1747671636-5810-1-git-send-email-haiyangz@microsoft.com>
 
-On Thu, May 15, 2025 at 09:57:21PM +0530, Nitin Rawat wrote:
-
-Subject should mention ufs_qcom_phy_power_{on/off} as phy_power_{on/off} are
-generic APIs.
-
-> There can be scenarios where phy_power_on is called when PHY is
-> already on (phy_count=1). For instance, ufs_qcom_power_up_sequence
-> can be called multiple times from ufshcd_link_startup as part of
-> ufshcd_hba_enable call for each link startup retries(max retries =3),
-> causing the PHY reference count to increase and leading to inconsistent
-> phy behavior.
+On Mon, May 19, 2025 at 09:20:36AM -0700, Haiyang Zhang wrote:
+> To support Multi Vports on Bare metal, increase the device config response
+> version. And, skip the register HW vport, and register filter steps, when
+> the Bare metal hostmode is set.
 > 
-> Similarly, there can be scenarios where phy_power_on or phy_power_off
-> might be called directly from the UFS controller driver when the PHY
-> is already powered on or off respectiely, causing similar issues.
-> 
-> To fix this, introduce ufs_qcom_phy_power_on and ufs_qcom_phy_power_off
-> wrappers for phy_power_on and phy_power_off. These wrappers will use an
-> is_phy_pwr_on flag to check if the PHY is already powered on or off,
-> avoiding redundant calls. Protect the is_phy_pwr_on flag with a mutex
-> to ensure safe usage and prevent race conditions.
-> 
-
-This smells like the phy_power_{on/off} calls are not balanced and you are
-trying to workaround that in the UFS driver.
-
-- Mani
-
-> Co-developed-by: Can Guo <quic_cang@quicinc.com>
-> Signed-off-by: Can Guo <quic_cang@quicinc.com>
-> Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
+> Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
 > ---
->  drivers/ufs/host/ufs-qcom.c | 44 +++++++++++++++++++++++++++++++------
->  drivers/ufs/host/ufs-qcom.h |  4 ++++
->  2 files changed, 41 insertions(+), 7 deletions(-)
+> v2:
+>   Updated comments as suggested by ALOK TIWARI.
+>   Fixed the version check.
 > 
-> diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
-> index 3ee4ab90dfba..583db910efd4 100644
-> --- a/drivers/ufs/host/ufs-qcom.c
-> +++ b/drivers/ufs/host/ufs-qcom.c
-> @@ -479,6 +479,38 @@ static u32 ufs_qcom_get_hs_gear(struct ufs_hba *hba)
->  	return UFS_HS_G3;
->  }
->  
-> +static int ufs_qcom_phy_power_on(struct ufs_hba *hba)
-> +{
-> +	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
-> +	struct phy *phy = host->generic_phy;
-> +	int ret = 0;
-> +
-> +	guard(mutex)(&host->phy_mutex);
-> +	if (!host->is_phy_pwr_on) {
-> +		ret = phy_power_on(phy);
-> +		if (!ret)
-> +			host->is_phy_pwr_on = true;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static int ufs_qcom_phy_power_off(struct ufs_hba *hba)
-> +{
-> +	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
-> +	struct phy *phy = host->generic_phy;
-> +	int ret = 0;
-> +
-> +	guard(mutex)(&host->phy_mutex);
-> +	if (host->is_phy_pwr_on) {
-> +		ret = phy_power_off(phy);
-> +		if (!ret)
-> +			host->is_phy_pwr_on = false;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->  static int ufs_qcom_power_up_sequence(struct ufs_hba *hba)
->  {
->  	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
-> @@ -507,7 +539,7 @@ static int ufs_qcom_power_up_sequence(struct ufs_hba *hba)
->  		return ret;
->  
->  	if (phy->power_count) {
-> -		phy_power_off(phy);
-> +		ufs_qcom_phy_power_off(hba);
->  		phy_exit(phy);
->  	}
->  
-> @@ -524,7 +556,7 @@ static int ufs_qcom_power_up_sequence(struct ufs_hba *hba)
->  		goto out_disable_phy;
->  
->  	/* power on phy - start serdes and phy's power and clocks */
-> -	ret = phy_power_on(phy);
-> +	ret = ufs_qcom_phy_power_on(hba);
->  	if (ret) {
->  		dev_err(hba->dev, "%s: phy power on failed, ret = %d\n",
->  			__func__, ret);
-> @@ -1121,7 +1153,6 @@ static int ufs_qcom_setup_clocks(struct ufs_hba *hba, bool on,
->  				 enum ufs_notify_change_status status)
->  {
->  	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
-> -	struct phy *phy = host->generic_phy;
->  	int err;
->  
->  	/*
-> @@ -1142,7 +1173,7 @@ static int ufs_qcom_setup_clocks(struct ufs_hba *hba, bool on,
->  				ufs_qcom_dev_ref_clk_ctrl(host, false);
->  			}
->  
-> -			err = phy_power_off(phy);
-> +			err = ufs_qcom_phy_power_off(hba);
->  			if (err) {
->  				dev_err(hba->dev, "phy power off failed, ret=%d\n", err);
->  				return err;
-> @@ -1151,7 +1182,7 @@ static int ufs_qcom_setup_clocks(struct ufs_hba *hba, bool on,
->  		break;
->  	case POST_CHANGE:
->  		if (on) {
-> -			err = phy_power_on(phy);
-> +			err = ufs_qcom_phy_power_on(hba);
->  			if (err) {
->  				dev_err(hba->dev, "phy power on failed, ret = %d\n", err);
->  				return err;
-> @@ -1339,10 +1370,9 @@ static int ufs_qcom_init(struct ufs_hba *hba)
->  static void ufs_qcom_exit(struct ufs_hba *hba)
->  {
->  	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
-> -	struct phy *phy = host->generic_phy;
->  
->  	ufs_qcom_disable_lane_clks(host);
-> -	phy_power_off(phy);
-> +	ufs_qcom_phy_power_off(hba);
->  	phy_exit(host->generic_phy);
->  }
->  
-> diff --git a/drivers/ufs/host/ufs-qcom.h b/drivers/ufs/host/ufs-qcom.h
-> index 0a5cfc2dd4f7..f51b774e17be 100644
-> --- a/drivers/ufs/host/ufs-qcom.h
-> +++ b/drivers/ufs/host/ufs-qcom.h
-> @@ -281,6 +281,10 @@ struct ufs_qcom_host {
->  	u32 phy_gear;
->  
->  	bool esi_enabled;
-> +	/* flag to check if phy is powered on */
-> +	bool is_phy_pwr_on;
-> +	/* Protect the usage of is_phy_pwr_on against racing */
-> +	struct mutex phy_mutex;
->  };
->  
->  struct ufs_qcom_drvdata {
-> -- 
-> 2.48.1
+> ---
+>  drivers/net/ethernet/microsoft/mana/mana_en.c | 24 ++++++++++++-------
+>  include/net/mana/mana.h                       |  4 +++-
+>  2 files changed, 19 insertions(+), 9 deletions(-)
 > 
+> diff --git a/drivers/net/ethernet/microsoft/mana/mana_en.c b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> index 2bac6be8f6a0..9c58d9e0bbb5 100644
+> --- a/drivers/net/ethernet/microsoft/mana/mana_en.c
+> +++ b/drivers/net/ethernet/microsoft/mana/mana_en.c
+> @@ -921,7 +921,7 @@ static void mana_pf_deregister_filter(struct mana_port_context *apc)
+>  
+>  static int mana_query_device_cfg(struct mana_context *ac, u32 proto_major_ver,
+>  				 u32 proto_minor_ver, u32 proto_micro_ver,
+> -				 u16 *max_num_vports)
+> +				 u16 *max_num_vports, u8 *bm_hostmode)
+>  {
+>  	struct gdma_context *gc = ac->gdma_dev->gdma_context;
+>  	struct mana_query_device_cfg_resp resp = {};
+> @@ -932,7 +932,7 @@ static int mana_query_device_cfg(struct mana_context *ac, u32 proto_major_ver,
+>  	mana_gd_init_req_hdr(&req.hdr, MANA_QUERY_DEV_CONFIG,
+>  			     sizeof(req), sizeof(resp));
+>  
+> -	req.hdr.resp.msg_version = GDMA_MESSAGE_V2;
+> +	req.hdr.resp.msg_version = GDMA_MESSAGE_V3;
+>  
+>  	req.proto_major_ver = proto_major_ver;
+>  	req.proto_minor_ver = proto_minor_ver;
 
--- 
-மணிவண்ணன் சதாசிவம்
+> @@ -956,11 +956,16 @@ static int mana_query_device_cfg(struct mana_context *ac, u32 proto_major_ver,
+>  
+>  	*max_num_vports = resp.max_num_vports;
+>  
+> -	if (resp.hdr.response.msg_version == GDMA_MESSAGE_V2)
+> +	if (resp.hdr.response.msg_version >= GDMA_MESSAGE_V2)
+>  		gc->adapter_mtu = resp.adapter_mtu;
+>  	else
+>  		gc->adapter_mtu = ETH_FRAME_LEN;
+>  
+> +	if (resp.hdr.response.msg_version >= GDMA_MESSAGE_V3)
+> +		*bm_hostmode = resp.bm_hostmode;
+> +	else
+> +		*bm_hostmode = 0;
+
+Hi,
+
+Perhaps not strictly related to this patch, but I see
+that mana_verify_resp_hdr() is called a few lines above.
+And that verifies a minimum msg_version. But I do not see
+any verification of the maximum msg_version supported by the code.
+
+I am concerned about a hypothetical scenario where, say the as yet unknown
+version 5 is sent as the version, and the above behaviour is used, while
+not being correct.
+
+Could you shed some light on this?
+
+...
