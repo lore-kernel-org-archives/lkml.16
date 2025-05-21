@@ -1,163 +1,267 @@
-Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2088.outbound.protection.outlook.com [40.107.249.88])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFB0112E5B;
-	Wed, 21 May 2025 07:29:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.249.88
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747812561; cv=fail; b=APZ5VxNSfHRGDQ79tnpFd6gkNekUOulzc69EebfXo3bStkjzyicECpPZVnTVq5Sj4gXajXA2B+NblQ55n1IBe+1M8Zq+W1RFimmDEd31ezVx4koPSTRa5cD01x9duYkX/yXJaE+eG+X64FE6egLW4NC4WiSKep9iwXGQrxJSyuU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747812561; c=relaxed/simple;
-	bh=ObzFp8nRFEUvDD9OMTgWvzHKEvqnzc4qEmtgZlfBYlE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=qN8gi9u7aBpzvbNBYWvNKI42rZamFexIBZjOpTnqKA6CIi4vVRvsgGRqvLhcJkcWi+b4HXbHXSKkEOtAhYbl/cKY5v92TyEIozxyhhMAJ6WwlxVgpMgggrr+cX+z26e0bVv52y8ytBwlb99w+kVktXDnv4M8jR5n8bwzEALSvFs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=YV4/W+oE; arc=fail smtp.client-ip=40.107.249.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9132323506E
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 07:29:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747812562; cv=none; b=LZMYcJxmcYatu0MCq39YEXV+W2EyF1OG3ZA7YIv3Ix+FKMuiWQYotxTNl0xSjN4EkwQiGmSImJS4NKfz7jAm2oB38mF3tqtv59QMm60z3zMYstPf0p0q4GQbC31JxOZsid1mwD9nOSTW0/GGEGRNMFk1bVZhVapItQEzC3tNP4s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747812562; c=relaxed/simple;
+	bh=voGPLbPeWldljp2/xrSsWfXMeeq9v3Xxq3Z0djb2A88=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G/kvWtQyRUYoyiCdl5pzVRF+4b4tjlqBUIpDSjI4UYahWUWpEpSV/IT4tGGuVFVhWsvOnuSAAk6QuFEsvSEmVZ5H1VfRaWVmgMFDQEheuXKoou+NPMwroeE0KtwNtn2kKVw7g7OfwDrM29G+DkRc4pvtqwZd/GWm/zUFR4rkqHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AWuI1uf7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="YV4/W+oE"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=PkE0FOX8QlTGPUg0+kOOBTKNGopKxE3O1W72HnBVrjhehMhPyrMCFmdmKwGEdHs54SyWqDiwhMURyHD0lN0JBQUdbBiR76ML6KvhJ5ysOZmfqBDcykdrhl2qU8CwNav9P47MDC9TNC3fWmpYiVkajmyoRwAtUBa3MFIHVgbXDRM9OZUzhImaDqEB+eM1SH3j47eNjKGlcHUz8v39yDUrgTTRafHuHy5O86XHZ4VnH3cF984Sn5QESJGHbOY6wud895MhpEPuq03d/thsZSIRW9BDMi/2c6HvWexRynA1GJgKrFme//7/6v7wGkzX1Mid4dJtG45oah1MklS3TJrkvw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ObzFp8nRFEUvDD9OMTgWvzHKEvqnzc4qEmtgZlfBYlE=;
- b=U9t3tGSREzuNh+28+Iak9ELyt98BPZR8NliaAy+lbAWylbu30+tJQCkxqTBznvwmNqjXt2wNzZo1QQb65XifijaAXFSxs6C2u8w4pywITaOaSOEYlZSq9U0r8P/V/1eBdr9av3NmqV5SkWipxSH53EXRzHQtoXB8W+wf66xWvRKg80f9pdwjjoHmWIgVxnant4Lngy0fYSwfpRr5hnxkGTmdNkRh9ySqu6XnSwa7u5vl2ysLvJFJzqgweV0bttDycoV0iNs3FoyXUHTY7M9JoFJXNl4x2PODlu6QRo5q9XGqVl7SYZIW0zh6pcnWkfSr2A1ptS/ALfpKxxaK3KqSgA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ObzFp8nRFEUvDD9OMTgWvzHKEvqnzc4qEmtgZlfBYlE=;
- b=YV4/W+oEZEIOHfTAqg967YT9B1Vhg8goK7qQR6wgJ6QD7EzWd0AHVYeI9vhQ7pS5TREeopzCEqqozjXl24Zwj3ALik+dBbXUR8OyAY5OBmIBLAIzTxMPweu3f73clKSIU0W+lJK86gaf9WyFNxCd6icbT0/UxQe0iV7Fw+62l93X37AFLVuhXDkbiph4PfoDr5pn7rOl6dVCvrWHLWHgvp6D5pdvoYLYrwjVQpyXe0d7/WonsZjakrWbkN892gbbN0rPbZKqT/erEe/Y4Td+ATQmm9tOwUiZkj/04zgSpbQ3GC8OqTjcla3ye5kKyn6T0gH87HHM9KBXMMvK4kUxBw==
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
- by AM9PR04MB8539.eurprd04.prod.outlook.com (2603:10a6:20b:436::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.31; Wed, 21 May
- 2025 07:29:16 +0000
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630%4]) with mapi id 15.20.8722.031; Wed, 21 May 2025
- 07:29:16 +0000
-From: Peng Fan <peng.fan@nxp.com>
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, "linus.walleij@linaro.org"
-	<linus.walleij@linaro.org>, "brgl@bgdev.pl" <brgl@bgdev.pl>
-CC: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, kernel test
- robot <lkp@intel.com>
-Subject: RE: [PATCH] gpio: davinci: select GPIOLIB_IRQCHIP
-Thread-Topic: [PATCH] gpio: davinci: select GPIOLIB_IRQCHIP
-Thread-Index: AQHbyiEjEl7a/CI4dUeAWBDO4NdhhbPcr9kg
-Date: Wed, 21 May 2025 07:29:16 +0000
-Message-ID:
- <PAXPR04MB84592BA061B3F981B3E76F69889EA@PAXPR04MB8459.eurprd04.prod.outlook.com>
-References: <20250521072048.1053190-1-peng.fan@oss.nxp.com>
-In-Reply-To: <20250521072048.1053190-1-peng.fan@oss.nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PAXPR04MB8459:EE_|AM9PR04MB8539:EE_
-x-ms-office365-filtering-correlation-id: e959e62c-4dfc-4502-9b31-08dd9839316f
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|376014|1800799024|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?LLS/rSSAEXIMgy0hFhUShZobeTpdsCF6nIgaGSmpxSe+pLAkg3GzDYdd9so4?=
- =?us-ascii?Q?NIDYSwidHJjrWq+m05rdwiW/sAuLlkOlai+zrc5HdV8fvlMd61awJra9oAkk?=
- =?us-ascii?Q?dPJQqgXvyFhWw+7dADDI683PagTXai9ScgZAtSDikmiEOg8fQCX5txQo4JYF?=
- =?us-ascii?Q?tc9yyIKhvgPj7p5SGmguOsHEeHB9/y+17+JOQh35X/IVho+sPqgA33MX8fsV?=
- =?us-ascii?Q?cEdChWZ59+0pHt/crkrwCH1fcun7k6bhY1SF2vdm1HL7g+0s+CJboo/Bc0ht?=
- =?us-ascii?Q?9cmtTImugMtp+eujsdlzq5F+98muImRfpBuDeDPSYmWc9vYC6vIeGyVEv6Sk?=
- =?us-ascii?Q?21IqFXjGDy1Ux2L2bnHripqcbp+4ooUQlmtQhHhHidkKNky8kU641inwucU9?=
- =?us-ascii?Q?q97LrKpH4exvmzwhUvJdoE+IgF6KSgWsh3zBg7g593x1bOI34SvwNpfIxoR0?=
- =?us-ascii?Q?82GUIXZ93VbWXDZYR55uGkYINSbmNbK9IKnFNAgPRwCYtnX2yUSFJ/5Pq2fu?=
- =?us-ascii?Q?GkBGBKP6CrGWN8HZjcWrJvqGz2zScwESJRTSMlrkZe+8pnG0D040FNjM5qec?=
- =?us-ascii?Q?a1CPZGDs3oC5T2lzgI3pUCFdNeXzo5EDsRb5LWXrICRMjfHc7WHU57x0+yPa?=
- =?us-ascii?Q?GJ5aJd5LtJj07bGJnDFIgLydC/fnnsKpbeVCAe4U/eVnuHiZoewGrdyhqm0R?=
- =?us-ascii?Q?t5E5G4Y91rwpsvqT2Rx1iTP5jdtD4wOpzZDVuQXCQTE2anSsrva0JOuQqs3B?=
- =?us-ascii?Q?jaN6RrLB9Ouj/6jW+DN9srV3eG388bDn04nZ+Er77vbR+uk55kGihoyBI1hD?=
- =?us-ascii?Q?fBseOOAGE1AjNmWqUDkouJXpuZDWo6M6Od+QrgdB30CSudW/znRI87hL2qVn?=
- =?us-ascii?Q?xsxB4OVofZunESArtA/0ZzjK9r3YLiZ6la8Bov3yORq1VYV+MfuojGiLlIKn?=
- =?us-ascii?Q?LPG1nUQwG266axHUiqacwcXFexbm1t0Ggj6fcGrs/lNv8HVTpMMNNK5fwHw1?=
- =?us-ascii?Q?taUtasQjsTJLmy5wD0PA3oo2u6tA/ZgzyrSXIqeGgmmBD7aI/cdMwNR3iibx?=
- =?us-ascii?Q?V98yEpjJRgpMxenVB/I1IH1J5xQ2QYFp8zsyfiPLna+0euu39zAY3KvuIutt?=
- =?us-ascii?Q?eDGBcZomv7JHtsyKrkdAVQaa8qI9buPXFG6rYF751Un0uSV212+EB+eqfn0J?=
- =?us-ascii?Q?J4EuBXujkBHOob7TKlOx7DjikEU+GDrZ60H/46DSXfpSfnoX0cJv4ICRAPCe?=
- =?us-ascii?Q?wfku+KeCwtMSAi9mjos00a1Ru+UPK42vW1pscvw0+8Ky4KBeZoH+WHx3W2FS?=
- =?us-ascii?Q?n6996Mnx40HpzRrSsAIHuMlzKBT/TVSecRRwsR0Q5qacJ1eapbwOxCe4SEnw?=
- =?us-ascii?Q?PKiXRxHdwhuNCnYUT4BTOyhuflZDyxP9PFwFgnPXZ0Z1DaBk5eT1Pgvv7ZG6?=
- =?us-ascii?Q?9qubISWHoRQ=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?P8FfUblRj5WsV7R2LPFVMyne/QmavKcktmrHH/XjCjQZzxpHHDnZwqKDWtD/?=
- =?us-ascii?Q?Mu+/8fL3/kG/pP1XPHCIwBCYye7wSzqaM314YH3MTrZjKGHRQUJl7nJWFpv6?=
- =?us-ascii?Q?FYRZYcNuS2t/Ukhtj3x5dRL8H8luEcpbU0fOqSyT3nspwWynT2Dgfjjr8uI4?=
- =?us-ascii?Q?6g68Tgh2ohJAjWx/EkIgxRVIpXNeB1A/sgg7tzl54giEuPRr1/Klof3iAO8B?=
- =?us-ascii?Q?zd6G9tR6oNQkSM9RMJBL0cm3ynUsXax8KHomqSynhcvB6hTY2Jx5Qe82i+R7?=
- =?us-ascii?Q?F4ymF6MvkQxzUJlbqcHDEgsD2xP1cEE+Uh0UsmD0QAwXV3LekIDlFdXkDKGA?=
- =?us-ascii?Q?311G7SX40yEklwDlzaQ2NCkNpsEOe0J7Ak5GVIIX/qWb5SaViJpTBVaDHsHF?=
- =?us-ascii?Q?lnaOLaHuBMJk/C+VOeI7jo9z5QBPjBubOZWsLQquptBW7A9OMR6OviQDnoLK?=
- =?us-ascii?Q?jS1NrDGczgv+u122xlgK2925McDDAquxlAkD9kfosJKHNgbd21xs/Y764lYR?=
- =?us-ascii?Q?exMY+glSY8/1Ok2tGkdj7sIEJHXUFCGbU5xsKjWedPJQPz8R1hjGx4Jq5Z/j?=
- =?us-ascii?Q?BVwQMruNLNav+wC2xLdHXtAPY8A6/7alBmwU0m5dteb2vc7hqoAigZj5OpSQ?=
- =?us-ascii?Q?wTyMSrLoLb97VeEZMuia7WUOv3w75aK6XYiRSy8H+C1Q29mO80kBefoD9EtI?=
- =?us-ascii?Q?XR3UM2xi7m6GHUblIJY+Yg0lbVdRKGwtqaeMoFWDtUrnk8dYNJs/CZcEaPbc?=
- =?us-ascii?Q?DNxfHuofdRpUXWJYuDjHaKC95UgS63eoYhcIgexhFnFYdy2aFcjooJv39Er6?=
- =?us-ascii?Q?pvu8DrAP9YdDU2jeXjq9eNc7IOK/A+gvSxu0WvcfImvKD6ViZB3wKTLQOqxv?=
- =?us-ascii?Q?kIgNuCOSTZ058SPH3h259OL8JD/nd80YFjArd5AcHuRj136mRhSgckdP2c6c?=
- =?us-ascii?Q?osbWS+n3WztrcFd5d79sJTwwXF09OeHtyap/i2X9wyc8TGG92z4Ar9yWZmrX?=
- =?us-ascii?Q?7rSDz+6RleswdhLpZOE1327pp9CzxN6Ay7XzqcFpDlUhXgUTU1x+aZTOKiPd?=
- =?us-ascii?Q?yU8WFYjUFZojG+QvxgM3qznEJy+CWCYOzCKKvcus+NOlSyT2ESuJTBRzQmDH?=
- =?us-ascii?Q?ZNgQbCnaXv/W98DujYr0O5+qKrmzMBEFICmJgQMMPxaLt31B7cxRnjGcJk5j?=
- =?us-ascii?Q?2Dl3i7/NV6QF7UI+tX2cr25E9Iv6ZXz5m+jB72CZMpsjuHmt4ZvcWS3nOUWe?=
- =?us-ascii?Q?KVV9Z0BxErW7avKU/hrI8KZvLQHVurDza13lSQipyIVNhprhbGp4emsUw+O5?=
- =?us-ascii?Q?ukLB0EH34umYvJf3tcsCdzSE8sa0VoF1P78vLei28HviEVT83+Q7Nvg2/jHm?=
- =?us-ascii?Q?P+On73m+l/SGC04KJnp7dpP7vXU2E2hMCJ6XjwABSlrvQtM20Maur1Mfgudf?=
- =?us-ascii?Q?wbQhaNcv9i2a2ujDS1vXUMOhNyab0RDfGd31jxAxYv9/PKa10LFS7cc+A4Z8?=
- =?us-ascii?Q?e5oSyuDFGNNGc/nb+dHjQSSwccrrf49GpVoThAQQL6ykpHerGc95zl/j6/g+?=
- =?us-ascii?Q?VJuS8ke1AK3l8at9znE=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AWuI1uf7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04C0DC4CEE4;
+	Wed, 21 May 2025 07:29:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747812562;
+	bh=voGPLbPeWldljp2/xrSsWfXMeeq9v3Xxq3Z0djb2A88=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AWuI1uf7vkevTM4Efk5+3Nkhb2ZqntSJyi8XvPWz3pFnL4NBBMyyVIURHEgOf7y8x
+	 IEWIz/zwjxBVywZm7BFXGW6jerdwGeYzS5H4JHqqhyTeZBqXKlgNsPFj6wNK7GRNeb
+	 RUqsaBVIyS8Ws96d68lUAwwf+eOktFoGa4OXOeToqlUuwn14YrMk/wIaSBr5APJ/LC
+	 9tkrVcwmn6U/mfIK5XoaTo1rRYtmSW+U5uILkJSpXg/I6r4AHvlb/iU9qm5Obj2/TV
+	 Pcqb4x7mKca8lyC3Gn8RdFa7ownexmD/NtyclOKuN8UVFUqL85REldL7HYTMGXeLq2
+	 bjh6lENCIL2xw==
+Date: Wed, 21 May 2025 09:29:14 +0200
+From: Alexey Gladkov <legion@kernel.org>
+To: Chen Ridong <chenridong@huaweicloud.com>
+Cc: akpm@linux-foundation.org, paulmck@kernel.org, bigeasy@linutronix.de,
+	roman.gushchin@linux.dev, brauner@kernel.org, tglx@linutronix.de,
+	frederic@kernel.org, peterz@infradead.org, oleg@redhat.com,
+	joel.granados@kernel.org, viro@zeniv.linux.org.uk,
+	lorenzo.stoakes@oracle.com, avagin@google.com,
+	mengensun@tencent.com, linux@weissschuh.net, jlayton@kernel.org,
+	ruanjinjie@huawei.com, kees@kernel.org,
+	linux-kernel@vger.kernel.org, lujialin4@huawei.com,
+	Eric Biederman <ebiederm@xmission.com>
+Subject: Re: [RFC next v2 0/5] ucount: add rlimit cache for ucount
+Message-ID: <aC2AyjNxKRLQf0fd@example.org>
+References: <20250509072054.148257-1-chenridong@huaweicloud.com>
+ <aCcl9M-BgOJ86gVJ@example.org>
+ <f5c701d5-c501-4179-959c-85057705a09d@huaweicloud.com>
+ <aCtdCkSGQJKCYApm@example.org>
+ <6c3b4ac3-fe33-45d0-b7e8-d722e29c8240@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e959e62c-4dfc-4502-9b31-08dd9839316f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 May 2025 07:29:16.6263
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 93Zi7w4U0vQR/eGL3UQYgcpnBUnfzUQoGjfPBNSYHJGZbBr5wdbGpfOuZINgKN4yu8N8jTu5McVCEZab8ccnVQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8539
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6c3b4ac3-fe33-45d0-b7e8-d722e29c8240@huaweicloud.com>
 
-> Subject: [PATCH] gpio: davinci: select GPIOLIB_IRQCHIP
->=20
-> From: Peng Fan <peng.fan@nxp.com>
->=20
-> This driver uses gpiochip_irq_reqres() and gpiochip_irq_relres() which
-> are only built with GPIOLIB_IRQCHIP=3Dy. Add the missing Kconfig select.
->=20
-> Fixes: 3f50bb3124d7 ("gpio: davinci: Make irq_chip immutable")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-
-> all/202505210606.PudPm5pC-lkp@intel.com/
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+On Wed, May 21, 2025 at 09:32:12AM +0800, Chen Ridong wrote:
+> 
+> 
+> On 2025/5/20 0:32, Alexey Gladkov wrote:
+> > On Mon, May 19, 2025 at 09:39:34PM +0800, Chen Ridong wrote:
+> >>
+> >>
+> >> On 2025/5/16 19:48, Alexey Gladkov wrote:
+> >>> On Fri, May 09, 2025 at 07:20:49AM +0000, Chen Ridong wrote:
+> >>>> The will-it-scale test case signal1 [1] has been observed. and the test
+> >>>> results reveal that the signal sending system call lacks linearity.
+> >>>
+> >>> The signal1 testcase is pretty synthetic. It sends a signal in a busy loop.
+> >>>
+> >>> Do you have an example of a closer-to-life scenario where this delay
+> >>> becomes a bottleneck ?
+> >>>
+> >>> https://github.com/antonblanchard/will-it-scale/blob/master/tests/signal1.c
+> >>>
+> >>
+> >> Thank you for your prompt reply. Unfortunately, I do not have the
+> >> specific scenario.
+> >>
+> >> Motivation:
+> >> I plan to use servers with 384 cores, and potentially even more in the
+> >> future. Therefore, I am testing these system calls to identify any
+> >> scalability bottlenecks that could arise in massively parallel
+> >> high-density computing environments.
+> > 
+> > But it turns out that you're proposing complex changes for something that
+> 
+> Using percpu_couter is not as complex as this patch set.
+> 
+> > is essentially a non-issue. In the real world, applications don't spam
+> > signals and I'm not sure we want to support that scenario.
+> > 
+> >> In addition, we hope that the containers can be isolated as much as
+> >> possible to avoid interfering with each other.
+> > 
+> > But that's impossible. Even before migration to ucounts, some rlimits
+> > (RLIMIT_MSGQUEUE, RLIMIT_MEMLOCK, RLIMIT_SIGPENDING, RLIMIT_NPROC) were
+> > bound to user_struct. I mean, atomic counter and "bottleneck" was there.
+> > We can't remove the counters for that rlimits and they will have an
+> > impact.
+> > 
+> > These rlimits are now counted per-namespace. In real life, docker/podman
+> > creates a separate user namespace for each container from init_user_ns.
+> > Usually only one additional counter is added for each rlimit in this way.
+> > 
+> The problem is that when increasing an rlimit in Docker, the limit has
+> to be increased in the init_user_ns even if a separate user namespace
+> has been created. This is why I believe this issue deserves to be fixed.
 
-Drop this patch.=20
+man setrlimit(2):
 
-Bartosz had a fix.
+  An unprivileged process may set only its soft limit to a value in the
+  range from 0 up to the hard limit, and (irreversibly) lower its hard
+  limit. A privileged process may make arbitrary changes to either limit
+  value.
 
-Thanks,
-Peng.
+This is a well-documented behavior. But it works in all user namespaces.
+If a unprivileged user has rlimits in init_user_ns, they should not be
+exceeded even if that process uses a different user namespeces.
+
+So even if you increase rlimits in the new user namespace as root (in the
+new userns), it doesn't mean that rlimits in the parent user namespace
+cease to apply or should somehow increase. You still have limitations from
+the upper user namespace.
+
+I don't see a issue here.
+
+> > All I'm saying is that "bottleneck" with atomic counter was there before
+> > and can't be removed anywhere.
+> > 
+> 
+> Yes, it can not be removed anywhere, maybe we can make it better.
+
+Yes, we probably can, but we need to have a reason to complicate the code.
+And we're still talking about a synthetic test.
+
+> 
+> Best regards,
+> Ridong
+> 
+> >>
+> >> Best regards,
+> >> Ridong
+> >>
+> >>>> To further investigate this issue, we initiated a series of tests by
+> >>>> launching varying numbers of dockers and closely monitored the throughput
+> >>>> of each individual docker. The detailed test outcomes are presented as
+> >>>> follows:
+> >>>>
+> >>>> 	| Dockers     |1      |4      |8      |16     |32     |64     |
+> >>>> 	| Throughput  |380068 |353204 |308948 |306453 |180659 |129152 |
+> >>>>
+> >>>> The data clearly demonstrates a discernible trend: as the quantity of
+> >>>> dockers increases, the throughput per container progressively declines.
+> >>>> In-depth analysis has identified the root cause of this performance
+> >>>> degradation. The ucouts module conducts statistics on rlimit, which
+> >>>> involves a significant number of atomic operations. These atomic
+> >>>> operations, when acting on the same variable, trigger a substantial number
+> >>>> of cache misses or remote accesses, ultimately resulting in a drop in
+> >>>> performance.
+> >>>>
+> >>>> Notably, even though a new user_namespace is created upon docker startup,
+> >>>> the problem persists. This is because all these dockers share the same
+> >>>> parent node, meaning that rlimit statistics continuously modify the same
+> >>>> atomic variable.
+> >>>>
+> >>>> Currently, when incrementing a specific rlimit within a child user
+> >>>> namespace by 1, the corresponding rlimit in the parent node must also be
+> >>>> incremented by 1. Specifically, if the ucounts corresponding to a task in
+> >>>> Docker B is ucount_b_1, after incrementing the rlimit of ucount_b_1 by 1,
+> >>>> the rlimit of the parent node, init_ucounts, must also be incremented by 1.
+> >>>> This operation should be ensured to stay within the limits set for the
+> >>>> user namespaces.
+> >>>>
+> >>>> 	init_user_ns                             init_ucounts
+> >>>> 	^                                              ^
+> >>>> 	|                        |                     |
+> >>>> 	|<---- usr_ns_a(docker A)|usr_ns_a->ucount---->|
+> >>>> 	|                        |                     |
+> >>>> 	|<---- usr_ns_b(docker B)|usr_ns_a->ucount---->|
+> >>>> 					^
+> >>>> 					|
+> >>>> 					|
+> >>>> 					|
+> >>>> 					ucount_b_1
+> >>>>
+> >>>> What is expected is that dockers operating within separate namespaces
+> >>>> should remain isolated and not interfere with one another. Regrettably,
+> >>>> the current signal system call fails to achieve this desired level of
+> >>>> isolation.
+> >>>>
+> >>>> Proposal:
+> >>>>
+> >>>> To address the aforementioned issues, the concept of implementing a cache
+> >>>> for each namespace's rlimit has been proposed. If a cache is added for
+> >>>> each user namespace's rlimit, a certain amount of rlimits can be allocated
+> >>>> to a particular namespace in one go. When resources are abundant, these
+> >>>> resources do not need to be immediately returned to the parent node. Within
+> >>>> a user namespace, if there are available values in the cache, there is no
+> >>>> need to request additional resources from the parent node.
+> >>>>
+> >>>> 	init_user_ns                             init_ucounts
+> >>>> 	^                                              ^
+> >>>> 	|                        |                     |
+> >>>> 	|<---- usr_ns_a(docker A)|usr_ns_a->ucount---->|
+> >>>> 	|                        |                     |
+> >>>> 	|<---- usr_ns_b(docker B)|usr_ns_b->ucount---->|
+> >>>> 			^		^
+> >>>> 			|		|
+> >>>> 			cache_rlimit--->|
+> >>>> 					|
+> >>>> 					ucount_b_1
+> >>>>
+> >>>>
+> >>>> The ultimate objective of this solution is to achieve complete isolation
+> >>>> among namespaces. After applying this patch set, the final test results
+> >>>> indicate that in the signal1 test case, the performance does not
+> >>>> deteriorate as the number of containers increases. This effectively meets
+> >>>
+> >>>> the goal of linear scalability.
+> >>>>
+> >>>> 	| Dockers     |1      |4      |8      |16     |32     |64     |
+> >>>> 	| Throughput  |381809 |382284 |380640 |383515 |381318 |380120 |
+> >>>>
+> >>>> Challenges:
+> >>>>
+> >>>> When checking the pending signals in the parent node using the command
+> >>>>  cat /proc/self/status | grep SigQ, the retrieved value includes the
+> >>>> cached signal counts from its child nodes. As a result, the SigQ value
+> >>>> in the parent node fails to accurately and instantaneously reflect the
+> >>>> actual number of pending signals.
+> >>>>
+> >>>> 	# cat /proc/self/status | grep SigQ
+> >>>> 	SigQ:	16/6187667
+> >>>>
+> >>>> TODO:
+> >>>>
+> >>>> Add cache for the other rlimits.
+> >>>>
+> >>>> [1] https://github.com/antonblanchard/will-it-scale/blob/master/tests/
+> >>>>
+> >>>> Chen Ridong (5):
+> >>>>   user_namespace: add children list node
+> >>>>   usernamespace: make usernamespace rcu safe
+> >>>>   user_namespace: add user_ns iteration helper
+> >>>>   uounts: factor out __inc_rlimit_get_ucounts/__dec_rlimit_put_ucounts
+> >>>>   ucount: add rlimit cache for ucount
+> >>>>
+> >>>>  include/linux/user_namespace.h |  23 ++++-
+> >>>>  kernel/signal.c                |   2 +-
+> >>>>  kernel/ucount.c                | 181 +++++++++++++++++++++++++++++----
+> >>>>  kernel/user.c                  |   2 +
+> >>>>  kernel/user_namespace.c        |  60 ++++++++++-
+> >>>>  5 files changed, 243 insertions(+), 25 deletions(-)
+> >>>>
+> >>>> -- 
+> >>>> 2.34.1
+> >>>>
+> >>>
+> >>
+> > 
+> 
+
+-- 
+Rgrds, legion
+
