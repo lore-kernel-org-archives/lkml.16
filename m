@@ -1,81 +1,76 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3150F4A3C;
-	Wed, 21 May 2025 13:45:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 784FF4A21
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 13:46:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747835147; cv=none; b=lzxkvwg2UdMv+VB8dMCM7rwczy1B/gdmNwMicCb/1Rwq/GRlr752YQ+taPpT1yLWd0RgC0qoblJCzQL8EIz9M0wt95WT56oNtPJ0O3BU7UqEKTHn70J8gVnV5W7zrm7+2w9C5HnrUoCczRmi6f2aAsR/hRlrR9SwXXibmE4gvFo=
+	t=1747835184; cv=none; b=OTcOhZcvhl5POOzq0hO+w+Ltd6bgayEJ4K1ELNX7oenaXzaNCXzVSBYVA+8tTSbuFx0EzEd1vrMCn5H99c+8WzM86mwciFkrjKBh8XpKlFJutj3CN8TN10M0hiapVyYrQAlAbDK0bCnmG2QvSbAeA8dT1rFwUNcNkp503DMaoxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747835147; c=relaxed/simple;
-	bh=hx9EAyMNBqoj/aG1NmgHhN/MjwuVyWn7maaU7B7ayuU=;
+	s=arc-20240116; t=1747835184; c=relaxed/simple;
+	bh=eQ8+Cd8WCJ96TP2sE+wg5x88FjD5Yy+Ylv7G3FxH/jw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kA9RZxQxGA3XG1xjX22OLgE2LZYvJ1XOVnu33SAZElrB99FoPv2qubPE6WMnK7b5CcrKXOLMZZY9O77tquv7Q8hhGjJadEWhir/8DPR1TpxBeBL1Q8tL3hzv1NMbiIub8CBBORLCkpdUREf8dr5vu8Px/2c3g9k0vV0fqgDl/ko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=jFXO8i7Z; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	 Content-Type:Content-Disposition:In-Reply-To; b=RPywCyFuQUcMdKZYEo0GuxUUDJ9UeejMCHhpXMOXpVjYUXwSqsaNzYtW9EdfgBOg9WGvdD2Qh5oFCeMEZ2WF2gkpSzjviubS4iMSEFMzPT+jl6jh9RgBngIWIYJISZ7P0YL5i0HcSvd1oQk+bpC/PvogPPulmbg5ahHMGWt9huk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=1d1/GTmX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="jFXO8i7Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1747835143;
-	bh=hx9EAyMNBqoj/aG1NmgHhN/MjwuVyWn7maaU7B7ayuU=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="1d1/GTmX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BF8EC4CEE4;
+	Wed, 21 May 2025 13:46:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1747835184;
+	bh=eQ8+Cd8WCJ96TP2sE+wg5x88FjD5Yy+Ylv7G3FxH/jw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jFXO8i7Z7jC48u8qWZRrNqVJtjA9N8sr2YcLKGWhMrWSQ/OPiJMB4j7B4/Rjebmu6
-	 ELu826BpMc18fIvPyzP/xXSMB4H5AY89zvvHmgb6SOKlZHVH+QDVneBWd9ccIhn1IY
-	 lcf8qIuSr/PNo7aYbvSV5K1SX+BfgjWp32wuGUOY=
-Date: Wed, 21 May 2025 15:45:42 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Mark Brown <broonie@kernel.org>
-Cc: Willy Tarreau <w@1wt.eu>, Shuah Khan <shuah@kernel.org>, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 1/9] tools/nolibc: move ioctl() to sys/ioctl.h
-Message-ID: <198bf1a8-98d0-4693-a4cf-234cad728c9b@t-8ch.de>
-References: <20250515-nolibc-sys-v1-0-74f82eea3b59@weissschuh.net>
- <20250515-nolibc-sys-v1-1-74f82eea3b59@weissschuh.net>
- <eda3af4a-8dfe-4f82-a934-2d0256b754e2@sirena.org.uk>
- <89bb5a3e-dd6c-475d-9c5d-0bd1595be735@t-8ch.de>
- <744a1aa8-1efc-4c20-b45e-070fc038f6e8@sirena.org.uk>
+	b=1d1/GTmX9zR8jwvfxNp0EMQIvK05DiyefwEDgWii0Jhch8gTl70ysBGEQZnkF94L1
+	 uf9wJ2oMabANFswNyqXqqRChBN9xVYXQvCTN1Zp95TjGn9miRrG9dkVOly1csc7ucy
+	 1wB2n4CMNi/0yJKdbRT4bg8uTJVWoIaypoMO3tyM=
+Date: Wed, 21 May 2025 15:46:21 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org,
+	gregory.clement@bootlin.com, richard.genoud@bootlin.com,
+	u-kumar1@ti.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Davis <afd@ti.com>
+Subject: Re: [PATCH RESEND v3] mux: mmio: Add suspend and resume support
+Message-ID: <2025052157-uncurious-crayfish-0d58@gregkh>
+References: <20250407-mux-mmio-resume-support-v3-1-cb88abc04db7@bootlin.com>
+ <c65c01b0-f407-4479-a6ad-6969c5cab06e@bootlin.com>
+ <2025052119-agenda-greyhound-d37c@gregkh>
+ <8f6fb9b4-dc84-4443-b7e2-1a857400f79a@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <744a1aa8-1efc-4c20-b45e-070fc038f6e8@sirena.org.uk>
+In-Reply-To: <8f6fb9b4-dc84-4443-b7e2-1a857400f79a@bootlin.com>
 
-On 2025-05-21 14:22:30+0100, Mark Brown wrote:
-> On Wed, May 21, 2025 at 03:08:05PM +0200, Thomas Weißschuh wrote:
-> > On 2025-05-21 14:03:37+0100, Mark Brown wrote:
+On Wed, May 21, 2025 at 02:54:04PM +0200, Thomas Richard wrote:
+> On 5/21/25 14:27, Greg KH wrote:
+> > On Wed, May 07, 2025 at 10:33:22AM +0200, Thomas Richard wrote:
+> >> On 4/7/25 15:06, Thomas Richard wrote:
+> >>> The status of each mux is read during suspend and stored in the private
+> >>> memory of the mux_chip.
+> >>> Then the state is restored during the resume.
+> >>>
+> >>> Reviewed-by: Andrew Davis <afd@ti.com>
+> >>> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+> >>
+> >> Hi Greg,
+> >>
+> >> I apologize for involving you, but Peter is not responding anymore. I
+> >> pinged him several times, resent the patch but no news.
+> >>
+> >> Could you please review and apply this patch directly?
+> > 
+> > Does not apply to my tree :(
 > 
-> > > > +/* make sure to include all global symbols */
-> > > > +#include "nolibc.h"
-> 
-> > > assumes that the nolibc include directory is in the include path, or
-> > > otherwise set up with a -I path, previously you just had to include
-> > > nolibc.h with the includes that are there working due to being relative
-> > > to nolibc.h.  I'll send a patch for the arm64 tests.
-> 
-> > Thanks for the report.
-> > Inside sys/ this should actually be #include "../nolibc.h".
-> > I'll doublecheck all of sys/ and see why our new header checks didn't
-> > catch this.
-> 
-> Ah, you expect what's currently there to work - good.  I noticed that
-> the vDSO tests had a -I for the nolibc directory which made me think it
-> was expected that it be there, it's the only user on most arches.
+> I just tested again and it applies on v6.15-rc1.
+> Which tree are you talking about ?
 
-The -I is useful to compile applications without guarding the system
-includes with #ifndef NOLIBC.
+char-misc-next.  Or try it on linux-next, 6.15-rc1 is quite old now.
 
-What do I have to do to cross-compile these selftests?
-I get various compiler errors.
-Or you could run your testsuite with the new nolibc for-next branch
-which should be fixed now.
+thanks,
 
-<snip>
-
-
-Thomas
+greg k-h
