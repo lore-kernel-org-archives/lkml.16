@@ -1,35 +1,42 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 750791AC43A;
-	Wed, 21 May 2025 01:50:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72B2D19D07B
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 01:52:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747792200; cv=none; b=HvyI06d4eC+wSAo2B4fcQrFDA0NOMZTNrGhXQHmPnGJMtvzJiWPKVDuAMJJO44GwABlUJKJFCuUi/+oVqYqLOiDOjWT/QUa4Z8FqLna5Wtckh+ll7ImrW5yPyQkwO9peJ0mbMY8z8LuFMPKkfRFI71eCSjTOaIZA9LZ03LrzsLw=
+	t=1747792351; cv=none; b=r9Qga88ZoE5q20vvjbxAqL0LyCxH4qG5V84gKfnJwT+SIktFp5fjbRux6RuakvyOIJJnQK80XYPg7t2FczElHweHi0ZeFn2ooKZasf6z/Y1B5B3QYi61TcL2gn4scTzizEv36wXQLtwOCOYRafBtHsiUW6nUklhzmYbnQugUthM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747792200; c=relaxed/simple;
-	bh=dRWvsaYGYRWrcyvlu6C9BPSvDpDDZnOCcNdOY/cneHk=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=NgwrrB4YBByuzBC80alfcPeUhXYO9cFw8AApCONlV1yakyJ70IyKssrdCZyucDP8EQ01K55vdLMfcsyq6FwzKAtoqoTHTmq+/FvfbKjFvs9WXEnXhS5i2IhxhcPISJjCgVgR1H4+Jk/hcHnesthrtZRUDhT1PwiLTkjG06j8a4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gVUcL+kE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747792351; c=relaxed/simple;
+	bh=eJukfN/QnEFuUjo5/8Cknbd639EiAbrOw0Td6RFxca8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aihvg08F0RLa5NNKiCRsl9M3ORTgJFNNq8/E4t0QuZXO0Y0SE9e6LGzqieMFIG1fscSvVz0u5z18zHjCNUjB9UoM7lNdiXx0cAtL/SkQR7He7JVsek2o48BnFU3LJCkZyRLWnB/ijSNrNxEdPRF/eFPNgAoF8EP93BXGY+K+Rek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=jq/x3oBV; arc=none smtp.client-ip=115.124.30.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gVUcL+kE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9526C4CEE9;
-	Wed, 21 May 2025 01:49:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747792199;
-	bh=dRWvsaYGYRWrcyvlu6C9BPSvDpDDZnOCcNdOY/cneHk=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=gVUcL+kEVcd1NY16muInO5FqJa4/AuOELDCX+Cl6eYmsbyT6oJpr5O+WcQVx/glOm
-	 RZ6B8DrjmsgCtpjhFUdP6159OHzvrFXwRtUyGFzJV5szEMKXfL0FQkjEPGCnmWVGrA
-	 yAq69DhpAMbfu3wh3cX58pDLI8z/xRDYUaVzU9nxWZSMRgabSkG2vtI248N6jwJ3wX
-	 qp5oL1rhthw/bfZ81iOCjsQRHr/zfx3D8VF4NSWFh5rzRWIGh2j171W8sA40qNKvVJ
-	 xlG41mWVPgwbVz8OsMkNxTD/oQoC7gLtnwMrD4AGJ+wpmuxi1jyux5Zmrf0XtzS8Qp
-	 2SC5/grOIz1kw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAC6A380AAD0;
-	Wed, 21 May 2025 01:50:36 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="jq/x3oBV"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1747792339; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=xTkM+0D8//f566GySy7EXd19ZJqJeoizAhZSsoZc1/w=;
+	b=jq/x3oBVN8+aFaoF3JKdf5G8q2g1Bel5+s5wWudzdc23hoC8g5TMPj6rGgAryAwAxQYQ60HbwVeiMVDqkI58qjTpFEdDP+aLTYWSXCbP+QdsvYm63ClV3bAvJobR7YHRPxzcwiHyEK6cEOhom1zr+816N4pOt1SJJPjsJSG6qHc=
+Received: from localhost(mailfrom:feng.tang@linux.alibaba.com fp:SMTPD_---0WbPY5eZ_1747792022 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 21 May 2025 09:47:02 +0800
+From: Feng Tang <feng.tang@linux.alibaba.com>
+To: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Yang Shi <yang@os.amperecomputing.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Baruch Siach <baruch@tkos.co.il>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Feng Tang <feng.tang@linux.alibaba.com>
+Subject: [PATCH RFC] arm64/mm: Lift the cma address limit when CONFIG_DMA_NUMA_CMA=y
+Date: Wed, 21 May 2025 09:47:01 +0800
+Message-Id: <20250521014701.73046-1-feng.tang@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,46 +44,51 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v3 0/3] net: bcmgenet: 64bit stats and expose more stats in
- ethtool
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174779223573.1533629.605506624462580045.git-patchwork-notify@kernel.org>
-Date: Wed, 21 May 2025 01:50:35 +0000
-References: <20250519113257.1031-1-zakkemble@gmail.com>
-In-Reply-To: <20250519113257.1031-1-zakkemble@gmail.com>
-To: Zak Kemble <zakkemble@gmail.com>
-Cc: opendmb@gmail.com, florian.fainelli@broadcom.com,
- bcm-kernel-feedback-list@broadcom.com, andrew+netdev@lunn.ch,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Hello:
+When porting an cma related usage from x86_64 server to arm64 server,
+the "cma=4G" setup failed on arm64, and the reason is arm64 has 4G (32bit)
+address limit for cma reservation.
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+The limit is reasonable due to device DMA requirement, but for NUMA
+servers which have CONFIG_DMA_NUMA_CMA enabled, the limit is not required
+as that config already allows cma area to be reserved on different NUMA
+nodes whose memory very likely goes beyond 4G limit.
 
-On Mon, 19 May 2025 12:32:54 +0100 you wrote:
-> Hi, this patchset updates the bcmgenet driver with new 64bit statistics via
-> ndo_get_stats64 and rtnl_link_stats64, now reports hardware discarded
-> packets in the rx_missed_errors stat and exposes more stats in ethtool.
-> 
-> v1:
-> - https://lore.kernel.org/all/20250513144107.1989-1-zakkemble@gmail.com
-> 
-> [...]
+Lift the cma limit for platform with such configuration.
 
-Here is the summary with links:
-  - [v3,1/3] net: bcmgenet: switch to use 64bit statistics
-    https://git.kernel.org/netdev/net-next/c/59aa6e3072aa
-  - [v3,2/3] net: bcmgenet: count hw discarded packets in missed stat
-    https://git.kernel.org/netdev/net-next/c/e985b97ac1b1
-  - [v3,3/3] net: bcmgenet: expose more stats in ethtool
-    https://git.kernel.org/netdev/net-next/c/bbdf9ec61053
+Signed-off-by: Feng Tang <feng.tang@linux.alibaba.com>
+---
+ arch/arm64/mm/init.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-You are awesome, thank you!
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index b99bf3980fc6..661758678cc4 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -312,6 +312,7 @@ void __init arm64_memblock_init(void)
+ void __init bootmem_init(void)
+ {
+ 	unsigned long min, max;
++	phys_addr_t cma_limit;
+ 
+ 	min = PFN_UP(memblock_start_of_DRAM());
+ 	max = PFN_DOWN(memblock_end_of_DRAM());
+@@ -343,8 +344,14 @@ void __init bootmem_init(void)
+ 
+ 	/*
+ 	 * Reserve the CMA area after arm64_dma_phys_limit was initialised.
++	 *
++	 * When CONFIG_DMA_NUMA_CMA is enabled, system may have CMA reserved
++	 * area in different NUMA nodes, which likely goes beyond the 32bit
++	 * limit, thus use (PHYS_MASK+1) as cma limit.
+ 	 */
+-	dma_contiguous_reserve(arm64_dma_phys_limit);
++	cma_limit = IS_ENABLED(CONFIG_DMA_NUMA_CMA) ?
++			(PHYS_MASK + 1) : arm64_dma_phys_limit;
++	dma_contiguous_reserve(cma_limit);
+ 
+ 	/*
+ 	 * request_standard_resources() depends on crashkernel's memory being
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.39.5 (Apple Git-154)
 
