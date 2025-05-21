@@ -1,159 +1,187 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 246F217C21B;
-	Wed, 21 May 2025 14:47:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84FC81537C6;
+	Wed, 21 May 2025 14:49:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747838823; cv=none; b=PSHlW9UGdbdu8/mCqKYx3Hd7okOJyC2Tg2DHsoWFXQ1Pzx5aQrqhb9fhnWHHTk5XX6PBl8dolnJakTvxUQ8ILD0WI4BCKPc9BSd495eMl2V0TbseFQd9RbhHbgbzwpuImDz2KtATJbSl6CWee/jr0bIhGOkEvejyiK7AoswhcLc=
+	t=1747838966; cv=none; b=I38Whf2Vw7zHmWi1hr684V5pz58+vLHuOMl2ziWOVOvw4SGTnWPQnWF7kZ6NU4xemh/bcUTSztLjJXpQ3a/QSqJy8ds8QXZqYxhQvIA9XCvo9IuXCxSyzpgvtlMPotsHFHJmE6zocMlwm75e8gkrgYMySfmGZ3G9Gk2LrQYm+ck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747838823; c=relaxed/simple;
-	bh=wceNbE82aRL6dk03/moFFtc9ICxSDqGxhtj33U1LJrE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SPVivgDiYpCb8MJFMB3P1LpdWqpzRFUTdcxG6JcmzVeTmQAx/AxtgjDoYjAPKYVOdbqrHroD4De/vV1Effaz2sLe5XOwIH+A8MLpFz/48Yjuq4vaMdjomhtjVplkIrap8EKJq8TApVozrE+PndKv6y54chX2fu6QS9iMhrH/r88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NrxpGQCs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747838966; c=relaxed/simple;
+	bh=Ikd7c90aq2jxYEaiZ15DovdKivS9lNNSecfO21RFtbE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jk6jDFOQVGGTAz4xrVJfsnJbUJV7UU62DPHSzXcHHEnzNDVktCWXfvLL3G5rJZp7whxm+IdFKVNNeG/+gKfS0WdKeGT9bFD5zgcewrLO7OVRkCkucM/AnRtzEOZrTbEQyp+2OxxDshxZvymbexgL7N2iMYoDUPqxJMbZ6KUO8Bk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UJsOElDh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NrxpGQCs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 113A7C4CEE7;
-	Wed, 21 May 2025 14:47:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UJsOElDh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94617C4CEE4;
+	Wed, 21 May 2025 14:49:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747838822;
-	bh=wceNbE82aRL6dk03/moFFtc9ICxSDqGxhtj33U1LJrE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NrxpGQCsGMnpB2mqtmJiF7sv9/AHwyeh/WLP3Y+vBM55w4kNrNF27219aktHe4Gch
-	 njN5n7+XC5OnYOlkpDuBcRD9avDlxb6uD66rwiy58Udd5PvQQ4dHRdDjLJb3VUQozU
-	 obsnwM0M0nQHsMZ08cmEbTkY6nbioNoY6V/tKvSxaGhMf85l+3VgcRXCLS6uU6m3A1
-	 BYiaXmAICImJRnXekKiC8t4HX00Ie+3kt/myk+TN2k1B9z1VUgf6VcgctKMOUn8B+S
-	 pvJCqOW1Ov8TumjHufNDGN4PVdm2bHUE9BDSIDBGhi9HhvL38N7cTemHkofFYiVDBW
-	 n+UwWlTGtKFzQ==
-Date: Wed, 21 May 2025 11:46:59 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Gautam Menghani <gautam@linux.ibm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, maddy@linux.ibm.com
-Subject: Re: [PATCH v3 7/7] perf python: Add counting.py as example for
- counting perf events
-Message-ID: <aC3nY4jVQ9ufeXqn@x1>
-References: <20250519195148.1708988-1-irogers@google.com>
- <20250519195148.1708988-8-irogers@google.com>
+	s=k20201202; t=1747838966;
+	bh=Ikd7c90aq2jxYEaiZ15DovdKivS9lNNSecfO21RFtbE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=UJsOElDhFoFiAmm7sWz27VVd8viwyB1H/fnSSPvRNTxZC3r4jUFrQevIZdjbJfOkI
+	 JIfvs95PyVyI6/QeHmji4PmXRktqlMKVRjh0AcEQwxe9nSq+V3m9eqn6s65Qmvq1vj
+	 3s14fISOWdsFC1m2gDbHGdMKrbkuV0Sx73atF1aaMr8rAeL3MihoRF/ex9AsQlhl7/
+	 s+ovqQ9fO8WKuDVrxL0Ep3EniBeKLUv3VY/aNpxsJzbCXnvIBcNndgkvqxTwAJO31T
+	 YJoivbrwzIAlrhX7jaolbKCiOF5Dm92uHxcrx250EvwDdVs52E2XnufoEqocvdBoH0
+	 ahe/C0YVrEXZQ==
+From: Lee Jones <lee@kernel.org>
+To: lee@kernel.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Jens Axboe <axboe@kernel.dk>,
+	Sasha Levin <sashal@kernel.org>,
+	Michal Luczaj <mhal@rbox.co>,
+	Rao Shoaib <Rao.Shoaib@oracle.com>,
+	Pavel Begunkov <asml.silence@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Cc: stable@vger.kernel.org,
+	Lee Jones <joneslee@google.com>
+Subject: [PATCH v6.6 00/26] af_unix: Align with upstream to avoid a potential UAF
+Date: Wed, 21 May 2025 14:45:08 +0000
+Message-ID: <20250521144803.2050504-1-lee@kernel.org>
+X-Mailer: git-send-email 2.49.0.1112.g889b7c5bd8-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250519195148.1708988-8-irogers@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 19, 2025 at 12:51:44PM -0700, Ian Rogers wrote:
-> From: Gautam Menghani <gautam@linux.ibm.com>
-> 
-> Add counting.py - a python version of counting.c to demonstrate
-> measuring and reading of counts for given perf events.
-> 
-> Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
-> Signed-off-by: Ian Rogers <irogers@google.com>
+From: Lee Jones <joneslee@google.com>
 
-Tested and applied:
+This is the second attempt at achieving the same goal.  This time, the
+submission avoids forking the current code base, ensuring it remains
+easier to maintain over time.
 
-Committer testing:
+The set has been tested using the SCM_RIGHTS test suite [1] using QEMU
+and has been seen to successfully mitigate a UAF on on a top tier
+handset.
 
-Build perf and make the generated python binding somewhere you can point
-to to avoid using the one in the distro python3-perf (fedora, may be
-different in other distros):
+RESULTS:
 
-  $ make -k O=/tmp/build/$(basename $PWD)/ -C tools/perf install-bin
+  TAP version 13
+  1..20
+  # Starting 20 tests from 5 test cases.
+  #  RUN           scm_rights.dgram.self_ref ...
+  #            OK  scm_rights.dgram.self_ref
+  ok 1 scm_rights.dgram.self_ref
+  #  RUN           scm_rights.dgram.triangle ...
+  #            OK  scm_rights.dgram.triangle
+  ok 2 scm_rights.dgram.triangle
+  #  RUN           scm_rights.dgram.cross_edge ...
+  #            OK  scm_rights.dgram.cross_edge
+  ok 3 scm_rights.dgram.cross_edge
+  #  RUN           scm_rights.dgram.backtrack_from_scc ...
+  #            OK  scm_rights.dgram.backtrack_from_scc
+  ok 4 scm_rights.dgram.backtrack_from_scc
+  #  RUN           scm_rights.stream.self_ref ...
+  #            OK  scm_rights.stream.self_ref
+  ok 5 scm_rights.stream.self_ref
+  #  RUN           scm_rights.stream.triangle ...
+  #            OK  scm_rights.stream.triangle
+  ok 6 scm_rights.stream.triangle
+  #  RUN           scm_rights.stream.cross_edge ...
+  #            OK  scm_rights.stream.cross_edge
+  ok 7 scm_rights.stream.cross_edge
+  #  RUN           scm_rights.stream.backtrack_from_scc ...
+  #            OK  scm_rights.stream.backtrack_from_scc
+  ok 8 scm_rights.stream.backtrack_from_scc
+  #  RUN           scm_rights.stream_oob.self_ref ...
+  #            OK  scm_rights.stream_oob.self_ref
+  ok 9 scm_rights.stream_oob.self_ref
+  #  RUN           scm_rights.stream_oob.triangle ...
+  #            OK  scm_rights.stream_oob.triangle
+  ok 10 scm_rights.stream_oob.triangle
+  #  RUN           scm_rights.stream_oob.cross_edge ...
+  #            OK  scm_rights.stream_oob.cross_edge
+  ok 11 scm_rights.stream_oob.cross_edge
+  #  RUN           scm_rights.stream_oob.backtrack_from_scc ...
+  #            OK  scm_rights.stream_oob.backtrack_from_scc
+  ok 12 scm_rights.stream_oob.backtrack_from_scc
+  #  RUN           scm_rights.stream_listener.self_ref ...
+  #            OK  scm_rights.stream_listener.self_ref
+  ok 13 scm_rights.stream_listener.self_ref
+  #  RUN           scm_rights.stream_listener.triangle ...
+  #            OK  scm_rights.stream_listener.triangle
+  ok 14 scm_rights.stream_listener.triangle
+  #  RUN           scm_rights.stream_listener.cross_edge ...
+  #            OK  scm_rights.stream_listener.cross_edge
+  ok 15 scm_rights.stream_listener.cross_edge
+  #  RUN           scm_rights.stream_listener.backtrack_from_scc ...
+  #            OK  scm_rights.stream_listener.backtrack_from_scc
+  ok 16 scm_rights.stream_listener.backtrack_from_scc
+  #  RUN           scm_rights.stream_listener_oob.self_ref ...
+  #            OK  scm_rights.stream_listener_oob.self_ref
+  ok 17 scm_rights.stream_listener_oob.self_ref
+  #  RUN           scm_rights.stream_listener_oob.triangle ...
+  #            OK  scm_rights.stream_listener_oob.triangle
+  ok 18 scm_rights.stream_listener_oob.triangle
+  #  RUN           scm_rights.stream_listener_oob.cross_edge ...
+  #            OK  scm_rights.stream_listener_oob.cross_edge
+  ok 19 scm_rights.stream_listener_oob.cross_edge
+  #  RUN           scm_rights.stream_listener_oob.backtrack_from_scc ...
+  #            OK  scm_rights.stream_listener_oob.backtrack_from_scc
+  ok 20 scm_rights.stream_listener_oob.backtrack_from_scc
+  # PASSED: 20 / 20 tests passed.
+  # Totals: pass:20 fail:0 xfail:0 xpass:0 skip:0 error:0
 
-Copy /tmp/build/perf-tools-next/python/perf.cpython-313-x86_64-linux-gnu.so to
-somewhere outside this toolbox container and then use it with root:
+[0] https://lore.kernel.org/all/20250304030149.82265-1-kuniyu@amazon.com/
+[1] https://lore.kernel.org/all/20240325202425.60930-16-kuniyu@amazon.com/
 
-  # export PYTHONPATH=/root/python/
-  # ls -la /root/python/
-  total 10640
-  drwxr-xr-x. 1 root root       72 May 21 11:40 .
-  dr-xr-x---. 1 root root      574 May 21 11:40 ..
-  -rwxr-xr-x. 1 acme acme 10894360 May 21 11:40 perf.cpython-313-x86_64-linux-gnu.so
-  # tools/perf/python/counting.py | head -5
-  For evsel(software/cpu-clock/) val: 2930946 enable: 2932479 run: 2932479
-  For evsel(software/cpu-clock/) val: 2924975 enable: 2926267 run: 2926267
-  For evsel(software/cpu-clock/) val: 2921017 enable: 2922430 run: 2922430
-  For evsel(software/cpu-clock/) val: 2914966 enable: 2916549 run: 2916549
-  For evsel(software/cpu-clock/) val: 2910027 enable: 2911589 run: 2911589
-  #
+Kuniyuki Iwashima (24):
+  af_unix: Return struct unix_sock from unix_get_socket().
+  af_unix: Run GC on only one CPU.
+  af_unix: Try to run GC async.
+  af_unix: Replace BUG_ON() with WARN_ON_ONCE().
+  af_unix: Remove io_uring code for GC.
+  af_unix: Remove CONFIG_UNIX_SCM.
+  af_unix: Allocate struct unix_vertex for each inflight AF_UNIX fd.
+  af_unix: Allocate struct unix_edge for each inflight AF_UNIX fd.
+  af_unix: Link struct unix_edge when queuing skb.
+  af_unix: Bulk update unix_tot_inflight/unix_inflight when queuing skb.
+  af_unix: Iterate all vertices by DFS.
+  af_unix: Detect Strongly Connected Components.
+  af_unix: Save listener for embryo socket.
+  af_unix: Fix up unix_edge.successor for embryo socket.
+  af_unix: Save O(n) setup of Tarjan's algo.
+  af_unix: Skip GC if no cycle exists.
+  af_unix: Avoid Tarjan's algorithm if unnecessary.
+  af_unix: Assign a unique index to SCC.
+  af_unix: Detect dead SCC.
+  af_unix: Replace garbage collection algorithm.
+  af_unix: Remove lock dance in unix_peek_fds().
+  af_unix: Try not to hold unix_gc_lock during accept().
+  af_unix: Don't access successor in unix_del_edges() during GC.
+  af_unix: Add dead flag to struct scm_fp_list.
 
-It would be nice to have something that compares the output for some
-envent obtained from both 'perf stat' and using these new python
-counting classes, but that can be done later.
+Michal Luczaj (1):
+  af_unix: Fix garbage collection of embryos carrying OOB with
+    SCM_RIGHTS
 
-Applied to perf-tools-next,
+Shigeru Yoshida (1):
+  af_unix: Fix uninit-value in __unix_walk_scc()
 
-- Arnaldo
+ include/net/af_unix.h |  49 ++-
+ include/net/scm.h     |  11 +
+ net/Makefile          |   2 +-
+ net/core/scm.c        |  17 ++
+ net/unix/Kconfig      |   5 -
+ net/unix/Makefile     |   2 -
+ net/unix/af_unix.c    | 120 +++++---
+ net/unix/garbage.c    | 691 +++++++++++++++++++++++++++++-------------
+ net/unix/scm.c        | 161 ----------
+ net/unix/scm.h        |  10 -
+ 10 files changed, 617 insertions(+), 451 deletions(-)
+ delete mode 100644 net/unix/scm.c
+ delete mode 100644 net/unix/scm.h
 
-> ---
-> Ian modified from v2 to make the API take a CPU and thread then
-> compute from these the appropriate indices. This was discussed as the
-> preferred API with Arnaldo:
-> https://lore.kernel.org/linux-perf-users/20250512055748.479786-1-gautam@linux.ibm.com/
-> The use of a thread_map and cpu_map was also removed to make the code
-> cleaner, instead the cpus and threads of the parsed evsel are
-> used. Support for command line events is also added. The indent is
-> reduced from 8 to 4 to match the preferred python PEP8 indent.
-> ---
->  tools/perf/python/counting.py | 36 +++++++++++++++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
->  create mode 100755 tools/perf/python/counting.py
-> 
-> diff --git a/tools/perf/python/counting.py b/tools/perf/python/counting.py
-> new file mode 100755
-> index 000000000000..02121d2bb11d
-> --- /dev/null
-> +++ b/tools/perf/python/counting.py
-> @@ -0,0 +1,36 @@
-> +#!/usr/bin/env python3
-> +# SPDX-License-Identifier: GPL-2.0
-> +# -*- python -*-
-> +# -*- coding: utf-8 -*-
-> +
-> +import argparse
-> +import perf
-> +
-> +def main(event: str):
-> +    evlist = perf.parse_events(event)
-> +
-> +    for evsel in evlist:
-> +        evsel.read_format = perf.FORMAT_TOTAL_TIME_ENABLED | perf.FORMAT_TOTAL_TIME_RUNNING
-> +
-> +    evlist.open()
-> +    evlist.enable()
-> +
-> +    count = 100000
-> +    while count > 0:
-> +        count -= 1
-> +
-> +    evlist.disable()
-> +
-> +    for evsel in evlist:
-> +        for cpu in evsel.cpus():
-> +            for thread in evsel.threads():
-> +                counts = evsel.read(cpu, thread)
-> +                print(f"For {evsel} val: {counts.val} enable: {counts.ena} run: {counts.run}")
-> +
-> +    evlist.close()
-> +
-> +if __name__ == '__main__':
-> +    ap = argparse.ArgumentParser()
-> +    ap.add_argument('-e', '--event', help="Events to open", default="cpu-clock,task-clock")
-> +    args = ap.parse_args()
-> +    main(args.event)
-> -- 
-> 2.49.0.1101.gccaa498523-goog
-> 
+
+-- 
+2.49.0.1112.g889b7c5bd8-goog
+
