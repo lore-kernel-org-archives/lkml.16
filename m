@@ -1,86 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-fw-52005.amazon.com (smtp-fw-52005.amazon.com [52.119.213.156])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F46C234966;
-	Wed, 21 May 2025 18:49:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F93822B8AD;
+	Wed, 21 May 2025 18:50:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747853383; cv=none; b=DpaJYxG007OMl9wQ6c49ftgr7uy7j+Ze+EVRvTLTvP9gvAIdQ4bhF6LZbZZ7NRcac96iTOyjhbu+5LKMgG8LanEFKLuDbuy9/j3mv0TT3jDr7ahmj9bd98drUCjOfiu8epOv5zd2YrJ/qQ8WMl/VoF6polpEut8bt6sslutrrHY=
+	t=1747853446; cv=none; b=U1wnAUXoMhhh+zRDazoDovY2//hcPcLFlgQsDem6z9h7c9QEdOGM2eprF3tKRj+XJgehwaDyCXNC4jTHYsFfEImFNFk62XugeHNNbfxfrswCSRMLlwhZdrWx7cON5wGjNIOIr99+QdPCK1O3JfvP7dsLXFW6V6EU0E/oDvKZEv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747853383; c=relaxed/simple;
-	bh=IMq9nfW8HsQwncGqiX9E6lz4FwMzx6mYREOfYHX1eio=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XP6t5rHDH4sHyR50EHtqPFI/CkBL0RhpSZG4krkQyIOrtthoholBV83pRNCjfCImsYLxn4W+/zVu662kDV+XPzMf9mOJtztUdUF6mwYY4+V3UGa9dcqWVff2Acs86Sp5Rc1x1mjwD6FqBFseVpEjG0pCKNDo1+vVJ7SwlLE41kc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hlw6QwHX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747853446; c=relaxed/simple;
+	bh=9XMv9SxJ06o/qz7m+z95pFFzS62JgbbA+p4iLf4Anko=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PIACRcoUI1GQESR43H+0OQ9+AAZwL5cOG+piDj8glMU1XY1mPs0W2qQLwJNJiSfDdKQTezgH6bEPEP9AMO/s6eLI0AxeX5LNBnlOgmuYjr9YmxQ06MgwVNeOKEbCzcLf+fKJTqXvn0vgKhKLPF3XuoEMX9RPkmUHMHXVApE1rVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=tE2Ewykv; arc=none smtp.client-ip=52.119.213.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hlw6QwHX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E74BFC4CEE4;
-	Wed, 21 May 2025 18:49:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747853383;
-	bh=IMq9nfW8HsQwncGqiX9E6lz4FwMzx6mYREOfYHX1eio=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Hlw6QwHXZoDWGF9UhIsMlw2m28hE8LDttCV1UqAqMZZrnkPo2XDCzsFaiulgww14t
-	 xHxsycQMJwRVfmOuvXWSRB/kDHNncf7NlgzXYmn456cLmGZxWW99/bojw5jajoYigd
-	 t5I71C+NjD7uBtiM1tKWmmm531cyk74pEHXGzi/NSdilIeYbMGrRgebRCZJDYnzCyk
-	 9VaSpF1F5CMu1GFHcLz4IwaORCoKEZ/zXhPGbEf6NstdIwuBa9TtdXn3VaZEP20jOt
-	 25NOpFmYE/hc2tH8amOWwGqYK+mJ/DOs59oqGxZf47ZUHHlSfk15+sr4auDU54cqkT
-	 8oZ4zhEcIsnmw==
-Date: Wed, 21 May 2025 19:49:39 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Cc: Willy Tarreau <w@1wt.eu>, Shuah Khan <shuah@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 1/9] tools/nolibc: move ioctl() to sys/ioctl.h
-Message-ID: <ccc18ae8-80e5-471e-b1ef-da132b13b27c@sirena.org.uk>
-References: <20250515-nolibc-sys-v1-0-74f82eea3b59@weissschuh.net>
- <20250515-nolibc-sys-v1-1-74f82eea3b59@weissschuh.net>
- <eda3af4a-8dfe-4f82-a934-2d0256b754e2@sirena.org.uk>
- <89bb5a3e-dd6c-475d-9c5d-0bd1595be735@t-8ch.de>
- <744a1aa8-1efc-4c20-b45e-070fc038f6e8@sirena.org.uk>
- <198bf1a8-98d0-4693-a4cf-234cad728c9b@t-8ch.de>
+	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="tE2Ewykv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
+  t=1747853445; x=1779389445;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=sBKVsfi1NKHVCtjpithQ8ltEShaCCBzCJAIuJ+fqkHM=;
+  b=tE2EwykvBXUXgQ4OFjMBO/FMaFxoTRCI1AyfH6LXi8073tY8Gu5iUaVW
+   DlsvFf+mgFkih6s00Wui3vmGtvqpAKFu6i5sVUJmR4NLpQSdhsFLwe3j2
+   BXZm2dZdYZKPV9O3ISWn8s5BJVAIiDCiGHP8H5wfOvMkv6Pcd3FDwkuRJ
+   zvW925/rSzJt8fJmgsxMCEWgTIYJhZmy9RlFolQtCLHsraIr/LIhN2P0x
+   T3dqfLV9l6Ha2N8hu0cKqflKx7v31L61tGBo+ib7nqSHsVFRMdbNWSbfV
+   qS0Z26hugSBV2WqwX8n40pUb5MAV95Tz5H7c2Un2NvbdFgsSpSVPOWRaN
+   Q==;
+X-IronPort-AV: E=Sophos;i="6.15,304,1739836800"; 
+   d="scan'208";a="747108293"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-52005.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 18:50:38 +0000
+Received: from EX19MTAUWA001.ant.amazon.com [10.0.38.20:23358]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.52.117:2525] with esmtp (Farcaster)
+ id fb42e788-7b2c-41af-9a95-325593b16934; Wed, 21 May 2025 18:50:37 +0000 (UTC)
+X-Farcaster-Flow-ID: fb42e788-7b2c-41af-9a95-325593b16934
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWA001.ant.amazon.com (10.250.64.217) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Wed, 21 May 2025 18:50:36 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.94.52.104) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Wed, 21 May 2025 18:50:34 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <john.cs.hey@gmail.com>
+CC: <davem@davemloft.net>, <dsahern@kernel.org>, <edumazet@google.com>,
+	<horms@kernel.org>, <kuba@kernel.org>, <linux-kernel@vger.kernel.org>,
+	<netdev@vger.kernel.org>, <pabeni@redhat.com>
+Subject: Re: [Bug] "WARNING in should_fail_ex" in Linux kernel v6.14
+Date: Wed, 21 May 2025 11:50:22 -0700
+Message-ID: <20250521185026.56042-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <CAP=Rh=N4QcPLWQ2dqUHmKYeEhig3Cbi-3N8Q4-7qGT00htXrVw@mail.gmail.com>
+References: <CAP=Rh=N4QcPLWQ2dqUHmKYeEhig3Cbi-3N8Q4-7qGT00htXrVw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="cXi9NBIssmtNxLQa"
-Content-Disposition: inline
-In-Reply-To: <198bf1a8-98d0-4693-a4cf-234cad728c9b@t-8ch.de>
-X-Cookie: 42
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D036UWC002.ant.amazon.com (10.13.139.242) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
+From: John <john.cs.hey@gmail.com>
+Date: Wed, 21 May 2025 22:13:15 +0800
+> Dear Linux Kernel Maintainers,
+> 
+> I hope this message finds you well.
+> 
+> I am writing to report a potential vulnerability I encountered during
+> testing of the Linux Kernel version v6.14.
+> 
+> Git Commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557 (tag: v6.14)
+> 
+> Bug Location: net/ipv4/ipmr.c:440 ipmr_free_table net/ipv4/ipmr.c:440
+> 
+> Bug report: https://pastebin.com/xkfF5DBt
+> 
+> Complete log: https://pastebin.com/uCfqY4D8
+> 
+> Entire kernel config: https://pastebin.com/MRWGr3nv
+> 
+> Root Cause Analysis:
+> The kernel warning is triggered in ipmr_free_table() at
+> net/ipv4/ipmr.c:440, where the multicast routing table (mr_table) is
+> being freed during network namespace exit (ipmr_rules_exit).
+> The warning indicates that the multicast forwarding cache count
+> (mfc_cache_cnt) is non-zero, implying that resources were not
+> correctly cleaned up prior to netns teardown.
+> This suggests a possible bug in reference counting or teardown logic
+> of the IPv4 multicast routing infrastructure.
+> Additionally, the environment is running with fail_usercopy fault
+> injection enabled, which deliberately triggers copy-from-user failures
+> to test kernel error paths.
+> While these failures are expected, they may interact with multicast
+> socket setup/teardown paths, exacerbating latent issues.
 
---cXi9NBIssmtNxLQa
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I think this was fixed by
 
-On Wed, May 21, 2025 at 03:45:42PM +0200, Thomas Wei=DFschuh wrote:
+commit c46286fdd6aa1d0e33c245bcffe9ff2428a777bd
+Author: Paolo Abeni <pabeni@redhat.com>
+Date:   Thu May 15 18:49:26 2025 +0200
 
-> Or you could run your testsuite with the new nolibc for-next branch
-> which should be fixed now.
-
-That seems to build with 869c788909b93a78ead1ca28c42b95eeb0779215 which
-is the current HEAD of:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/nolibc/linux-nolibc.git for=
--next
-
---cXi9NBIssmtNxLQa
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmguIEIACgkQJNaLcl1U
-h9B1Mwf/fr9vilzSS2UINyADwkicrOK6YKNXByxHydqukjnrjvmREnuEyWIGbWdm
-aaXAcTk/BIL56KUYNZzT10LdcARo1awOjBkvByxyUfcVyuzzxYlZGxQrkdf3fkif
-JG6xBi1HbkkCpB4VDI9CQnBaZ2yeb7ozeVyYSYyelS507/WVJPuseqr6dSnOIfQW
-5UkfVUXF7rcz6uRL5zuQV+NRi+z2y8u35VsqBUVvbw00WqET7E5DS6BuX3az8oON
-Cbehf52bKh0CoZIxaCMuKJeiu/Vk+otCiTtqnNKS3kpn0umsFoDj4rfH/ccj5qV+
-ptfCS8730VjULFesybpXpXjhzBnbUg==
-=f5MH
------END PGP SIGNATURE-----
-
---cXi9NBIssmtNxLQa--
+    mr: consolidate the ipmr_can_free_table() checks.
