@@ -1,122 +1,99 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D749933993;
-	Wed, 21 May 2025 02:59:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D3642868B;
+	Wed, 21 May 2025 03:00:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747796394; cv=none; b=DZIVnem0TlpHOo2wCVuKkwkDDNGfil7D2Gd8oke66VUhfzJLAOT4GqA6SOLzOE2x1QlHfVRr2eZrUazQ/WFb78GPwPRXSN8qaMSYOECnVuvx+P4tEjbKZaagBLKgYh1Gpqm/9AaBlEA8AhBAbKZ3EWrROf9axQWb3EC1WmievVQ=
+	t=1747796422; cv=none; b=Dgnk+ur4TN5cynGewEW+CxYVVWVSy9JXeMjkgDUNuT2VWXqCTLh3T9Y0a2KqKUE54c04GDvIQWlgt1sFJRh2OU6weQ3jkCc0vB9YphA+AWHNaLPS/p3gJZI4+GlTu9ge+ql9KMUwkSu5qUDswJ48LeoEqUHL2LRRoyr0QeGxrug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747796394; c=relaxed/simple;
-	bh=DWnTpUcVS9gEwUqlWPLX5iGaBOT6uUwgAc58sofILkM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=l6eFb1TlOzW23KHWBH897qjDrWpmOtnSFK4djLx8yCY5TDs5qBcz6axHibP4SO1o1Wf5LVTuwA+dCzH89Nj26XEKruESwdRAwC+Wi1thwvh8gIqXwm3dIcw2ddcPor/5F5oc0DvXGm8AsiFCCbShFd0ShjCias4/8i61Bsy/Xws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=bzlaJ2oP; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1747796422; c=relaxed/simple;
+	bh=m+G5nHu6Bq5QPf4p+ILeCqIjJYylj+PUCNxI2yBZxho=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hdHuzzFC405cG+iXIzM7BCqcdqQis42idMF762i+OEU7CxTMghsROKyfduniq1Fg8fU7mBQtRlIiLvJakHe2AiHr3+MwnoWIYDW9OwzKokPRaNdwTJTMlxxCtMNvsRYii1B91dPBiDb7MI1dMH/QxXp94fhtYLzYtYVc0d+Zrrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gQOd6G0X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="bzlaJ2oP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1747796387;
-	bh=B77FrxfdcIdIw47gVoeltLsReyoXVDKLk0E1A7BBxrU=;
-	h=Date:From:To:Cc:Subject:From;
-	b=bzlaJ2oP5BXQ2AfT3b9oXXTRUS/a1OsYPNdJH7mr2TD9YVbxnrn9HFW1uZ0wsrRQw
-	 4rfLmsg+YoUpl1yV6CIlqP02In+wAYQvaZtaZXmN0u5KyoxbUpMUipDATTMHD71YIo
-	 9Y+1DMsmw8ypw2uDzFC09FqAI5ok+8ZLiDGizuSYtWVFTT/A2aPkDZS1ZslsS9dg1/
-	 IUPXrVEKqpuV43SmLhEOCVWa/N/tUga//lB0d6waixmoaHAdE9Gi/EQxNUaTBZ4qWM
-	 jGfD2hc5DD+dNcSnRUL7aSqj3BjbnFVeelBro1wS7Dl4wRFJRHraFmrF3suXOVOSS+
-	 Zs83Vn2fasnCQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b2GNz4t99z4xTx;
-	Wed, 21 May 2025 12:59:47 +1000 (AEST)
-Date: Wed, 21 May 2025 12:59:46 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Viresh Kumar <viresh.kumar@linaro.org>, Andreas Hindborg
- <a.hindborg@kernel.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: manual merge of the cpufreq-arm tree with the configfs
- tree
-Message-ID: <20250521125946.664a79c1@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gQOd6G0X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5182CC4CEE9;
+	Wed, 21 May 2025 03:00:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747796421;
+	bh=m+G5nHu6Bq5QPf4p+ILeCqIjJYylj+PUCNxI2yBZxho=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=gQOd6G0XA3fsa3Ie4n85ShZVJ+UZ6M/AhZAvEkv53cSH0Q0xRd4NYgul0qk1sjK7Y
+	 oOjugUw6pUJMj63xSNIiZknaJgOdd58CU2zqF3mpAl7o29IhuLZObYXVpa44EzPr3a
+	 nEUNTeoYOWNKjwiS/2sqnu9FlNgIK6+Czl6anc6fMBgIiQuPE/AFbNeH2U8BzTQ/fk
+	 MQoW+MWGO4TfikmfBAP2DSktAe9X6H+6eyvjDbfPu0iRC1mT41hjWqTbcpoDng1NlY
+	 FVtFCNMNz32Ks4Xg0D53E5nTM1yy92J2ONXwl5INgWZrgvDrfcpT7COa09mtg+PrWb
+	 JUfR7IPriZ5SQ==
+Date: Tue, 20 May 2025 20:00:20 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc: Stanislav Fomichev <stfomichev@gmail.com>, netdev@vger.kernel.org,
+ davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
+ horms@kernel.org, linux-kernel@vger.kernel.org,
+ syzbot+b191b5ccad8d7a986286@syzkaller.appspotmail.com
+Subject: Re: [PATCH net] af_packet: move notifier's packet_dev_mc out of rcu
+ critical section
+Message-ID: <20250520200020.270ff8b1@kernel.org>
+In-Reply-To: <682d3d5a77189_97c02294a3@willemb.c.googlers.com.notmuch>
+References: <20250520202046.2620300-1-stfomichev@gmail.com>
+	<682d3d5a77189_97c02294a3@willemb.c.googlers.com.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/H48+ronUthA5v_h_EE3BDT2";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_/H48+ronUthA5v_h_EE3BDT2
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-Hi all,
+On Tue, 20 May 2025 22:41:30 -0400 Willem de Bruijn wrote:
+> > @@ -4277,6 +4280,13 @@ static int packet_notifier(struct notifier_block *this,
+> >  		}
+> >  	}
+> >  	rcu_read_unlock();
+> > +
+> > +	/* packet_dev_mc might grab instance locks so can't run under rcu */
+> > +	list_for_each_entry_safe(ml, tmp, &mclist, remove_list) {
+> > +		packet_dev_mc(dev, ml, -1);
+> > +		kfree(ml);
+> > +	}
+> > +  
+> 
+> Just verifying my understanding of the not entirely obvious locking:
+> 
+> po->mclist modifications (add, del, flush, unregister) are all
+> protected by the RTNL, not the RCU. The RCU only protects the sklist
+> and by extension the sks on it. So moving the mclist operations out of
+> the RCU is fine.
+> 
+> The delayed operation on the mclist entry is still within the RTNL
+> from unregister_netdevice_notifier. Which matter as it protects not
+> only the list, but also the actual operations in packet_dev_mc, such
+> as inc/dec on dev->promiscuity and associated dev_change_rx_flags.
+> And new packet_mclist.remove_list too.
 
-Today's linux-next merge of the cpufreq-arm tree got a conflict in:
+Matches my understanding FWIW, but this will be a great addition 
+to the commit message. Let's add it in v2..
 
-  rust/kernel/lib.rs
+> >  	return NOTIFY_DONE;
+> >  }
+> >  
+> > diff --git a/net/packet/internal.h b/net/packet/internal.h
+> > index d5d70712007a..1e743d0316fd 100644
+> > --- a/net/packet/internal.h
+> > +++ b/net/packet/internal.h
+> > @@ -11,6 +11,7 @@ struct packet_mclist {
+> >  	unsigned short		type;
+> >  	unsigned short		alen;
+> >  	unsigned char		addr[MAX_ADDR_LEN];
+> > +	struct list_head	remove_list;  
+> 
+> INIT_LIST_HEAD on alloc in packet_mc_add?
 
-between commit:
-
-  446cafc295bf ("rust: configfs: introduce rust support for configfs")
-
-from the configfs tree and commits:
-
-  8961b8cb3099 ("rust: cpumask: Add initial abstractions")
-  d01d70205601 ("rust: clk: Add initial abstractions")
-  3accb57d56a9 ("rust: cpu: Add from_cpu()")
-  2207856ff0bc ("rust: cpufreq: Add initial abstractions for cpufreq framew=
-ork")
-
-from the cpufreq-arm tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc rust/kernel/lib.rs
-index 354eb1605194,133ebee4f9d3..000000000000
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@@ -42,8 -42,11 +42,13 @@@ pub mod alloc
-  pub mod block;
-  #[doc(hidden)]
-  pub mod build_assert;
-+ pub mod clk;
- +#[cfg(CONFIG_CONFIGFS_FS)]
- +pub mod configfs;
-+ pub mod cpu;
-+ #[cfg(CONFIG_CPU_FREQ)]
-+ pub mod cpufreq;
-+ pub mod cpumask;
-  pub mod cred;
-  pub mod device;
-  pub mod device_id;
-
---Sig_/H48+ronUthA5v_h_EE3BDT2
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgtQaIACgkQAVBC80lX
-0GzHXwf9HJfIeoKogbwE8fPjcKrbYEx7b1n1T5tmQFAHE2S6lLg5klKYiiDzkmBh
-YZJ7/jVFkp66ZjYbJf1LpomoWib/QBbOArD7TAtLx14BfnI9uejKM3p7rKRFpSsp
-WdT51GBJYUPNuWD3Sard1T/8qvybvl7MFK2PJ2MfsVFXKk0pw9GRDJChzSySUEQl
-NFY3CTUdhYyqYqx3eXSiIFMtY/GbuI+Oap+ojN9aobGAeikD7xFWy0Gd2mSCqDXK
-K+M37Bm4T5SX6yPR7nswLeFIUrn0h0YbMvYgwGRAb1mUYR6W5yXbrS4Ogxuk35ll
-FcTe2ZdMbw5YaEVjvYKvJ9QVKet5cQ==
-=7T/M
------END PGP SIGNATURE-----
-
---Sig_/H48+ronUthA5v_h_EE3BDT2--
+Just to be clear this is an "entry node" not a "head node",
+is it common to init "entry nodes"? 
+-- 
+for the commit msg:
+pw-bot: cr
