@@ -1,64 +1,66 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E55CA262FCE;
-	Wed, 21 May 2025 15:49:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 221CE27584F;
+	Wed, 21 May 2025 15:49:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747842586; cv=none; b=mOZWw8IEjyEcOG95h6JxNpXdI0+ZtBrxC1PSoMh2Wafb02OsFaEUjJGlReWhbRoZytY52G8YuUlNPCuQ3OVkybc1fOsSIr1HiD8N/9jEcykD5fTTRJz13Te/jzIhbe5UWlWav9+dSBXMRuPcZsbfGsD98qvtL+/xJK9DDHpWNMQ=
+	t=1747842588; cv=none; b=DKeu5B2aIh4XQT40Za2+7UM82GjptK7Bwe5MMkwLIxp1eCLDwL6QoMnpLi1waj6V67h/dRH8Lu33QcEYeAgA5GCLKyJeE+IXjen/g2Pc/2doDy2hLfAZUP2JkO8mEFHRMKmbvfOfJS0ExT8ZDqDuEvvg79D41qOyNbG0wbC3Z0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747842586; c=relaxed/simple;
-	bh=Lq0GpIiWnElGdv98PF+mwpA+8gEQD0zAKetf3u4/ziM=;
+	s=arc-20240116; t=1747842588; c=relaxed/simple;
+	bh=bs8d5/4Cdzb2eqEflKfBmAdbYnWAKQlC53mlnQiE2xo=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=Wn9SpuLjtL+bip7eIh6/9Rmpo3CW0x7IWcj9LR4VOZONDYV1Wr2f2aP4EN83Ob5y0fsRLr3uYaBxZfTviLkSREd6jFGCNSdFIPncMsUxi74MfEtXp7EnRLuklYjnEArzJFzic/o/rR/DTIy+eMTpIfnvQZHsNcqrNF36kAXm0cI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=j8RSAMHR; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CIy5LDdQ; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=OfTnf7L19sJiCh2CuYeOKMm0z5Gx+5IkyPeatE2zBupQiBEBDfvMMntB7yebIFPLamCMNpb6OH8VnASDN6WZm/4JXFQSCVUkOZzSHrfRG6cGnxV9HBD/k75cudBX4Sbn66T8jjc84sCkDBvcY2QkJbseD9UZs3N1VDlle8VeZH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=W6e7R2G3; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=N2vbeB//; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="j8RSAMHR";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CIy5LDdQ"
-Date: Wed, 21 May 2025 15:49:42 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="W6e7R2G3";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="N2vbeB//"
+Date: Wed, 21 May 2025 15:49:44 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747842583;
+	s=2020; t=1747842585;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=gTnr4nSdPF2MnlxKTiIo5MXK/IX2z+jqtDtLAUgIEug=;
-	b=j8RSAMHRFxHxzL1DTpKuKcY0EVUCD0rxut8WZ1pWn3+WEnLBNqKRLWgrpGGPBD8MmYmTPO
-	cBtXxvOoDflgh5w4Uq+oHt45Yk+DEX55vYD/xKcrS8XKRY0VaVib6bCiASF+5/SPOiNBsZ
-	4g6imWjkyRpDdeMtBm6yFgvto0WmjgbL108foi3dtqmb2LVf1kdyzl09LvsCeE1nAlhGc0
-	FstjOv0ETNf/TSQAN5qJyrBv6ZrFPOw3BU24k4QAEi64vBDOHX/lxLqCt063zg+NsxWez3
-	xRFvPkPAf70s3RP5XS+8VKgoowVZ7U0+LuVGNlJJKsfWjMV4W6oPCi5ZLDVeNg==
+	bh=qL+D+Z2tktdPi5YNiFx0Zq08nQCwQxp3+jjmarJxAUQ=;
+	b=W6e7R2G3u2HJhOqQH7mFwDol5VBgmk5wUmprqw7EfrQebizu9TUmTxGr6BiuMBFxABoLkY
+	hMSWyGxvdlK2g0ym3Z3+GwxKPzBjhL103AAeVhFSaJ7I4nvovXSMFsoLDPKbo/E93tdGAN
+	bbMKm6b5v/MVI3WdvFbqDuonLqySD2d+8gmNILUn3kjF33Eg6lS0XZtHGOh2QE6W9daprG
+	aM7Hjnq/biC85MxZG9mBbBNBdTJtjTm+tJtOC7msjmzX3qVmEkx33xqKfrK0PHTr42Czu+
+	8MtioLKqM94W6Ao8VVjLDVFC6Wvy8J1A2JkOoQqF7J9TPgKgN2P57HARx4CmrA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747842583;
+	s=2020e; t=1747842585;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=gTnr4nSdPF2MnlxKTiIo5MXK/IX2z+jqtDtLAUgIEug=;
-	b=CIy5LDdQ0vg8sVBEs9AeCuyiezOXrnLh/YPRu9ImuYvLroQm8hNiqL70mHuMxLQNQuugAV
-	W104k9JI9KsLTmCw==
-From: "tip-bot2 for Pohsun Su" <tip-bot2@linutronix.de>
+	bh=qL+D+Z2tktdPi5YNiFx0Zq08nQCwQxp3+jjmarJxAUQ=;
+	b=N2vbeB//aNvyi9+pikvV/F39hYOlEhRwryS78rNNOgfhW95cAo5zTk8k786r3DRtnvPE0I
+	E+X3P3jqgr01d+Aw==
+From: "tip-bot2 for Arnd Bergmann" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/clocksource] clocksource/drivers/timer-tegra186: Add
- WDIOC_GETTIMELEFT support
-Cc: Pohsun Su <pohsuns@nvidia.com>, Robert Lin <robelin@nvidia.com>,
- Daniel Lezcano <daniel.lezcano@linaro.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250507044311.3751033-2-robelin@nvidia.com>
-References: <20250507044311.3751033-2-robelin@nvidia.com>
+Subject: [tip: timers/clocksource] clocksource/drivers/atmel_tcb: Fix kconfig
+ dependency
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>,
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250409155313.1096915-1-arnd@kernel.org>
+References: <20250409155313.1096915-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174784258262.406.6289460058363239153.tip-bot2@tip-bot2>
+Message-ID: <174784258417.406.8798688138719774746.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,127 +70,47 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the timers/clocksource branch of tip:
 
-Commit-ID:     28c842c8b0f5d1c2da823b11326e63cdfdbc3def
-Gitweb:        https://git.kernel.org/tip/28c842c8b0f5d1c2da823b11326e63cdfdbc3def
-Author:        Pohsun Su <pohsuns@nvidia.com>
-AuthorDate:    Wed, 07 May 2025 12:43:09 +08:00
+Commit-ID:     b8239054194ad67aff7d244185ef46890c5ae71a
+Gitweb:        https://git.kernel.org/tip/b8239054194ad67aff7d244185ef46890c5ae71a
+Author:        Arnd Bergmann <arnd@arndb.de>
+AuthorDate:    Wed, 09 Apr 2025 17:53:08 +02:00
 Committer:     Daniel Lezcano <daniel.lezcano@linaro.org>
 CommitterDate: Fri, 16 May 2025 11:10:32 +02:00
 
-clocksource/drivers/timer-tegra186: Add WDIOC_GETTIMELEFT support
+clocksource/drivers/atmel_tcb: Fix kconfig dependency
 
-This change adds support for WDIOC_GETTIMELEFT so userspace
-programs can get the number of seconds before system reset by
-the watchdog timer via ioctl.
+Build-testing this driver on arm without CONFIG_OF produces a warning:
 
-Signed-off-by: Pohsun Su <pohsuns@nvidia.com>
-Signed-off-by: Robert Lin <robelin@nvidia.com>
-Link: https://lore.kernel.org/r/20250507044311.3751033-2-robelin@nvidia.com
+drivers/clocksource/timer-atmel-tcb.c:368:34: error: 'atmel_tcb_of_match' defined but not used [-Werror=unused-const-variable=]
+  368 | static const struct of_device_id atmel_tcb_of_match[] = {
+      |                                  ^~~~~~~~~~~~~~~~~~
+
+Change the dependency to require CONFIG_OF for build testing to
+avoid the warning. Testing remains possible on all architectures
+as CONFIG_OF is user-selectable.
+
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+Cc: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/r/20250409155313.1096915-1-arnd@kernel.org
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- drivers/clocksource/timer-tegra186.c | 64 ++++++++++++++++++++++++++-
- 1 file changed, 63 insertions(+), 1 deletion(-)
+ drivers/clocksource/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clocksource/timer-tegra186.c b/drivers/clocksource/timer-tegra186.c
-index 5d4cf52..5eb6b7e 100644
---- a/drivers/clocksource/timer-tegra186.c
-+++ b/drivers/clocksource/timer-tegra186.c
-@@ -1,8 +1,9 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Copyright (c) 2019-2020 NVIDIA Corporation. All rights reserved.
-+ * Copyright (c) 2019-2025 NVIDIA Corporation. All rights reserved.
-  */
+diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+index 2861b2c..3b63a28 100644
+--- a/drivers/clocksource/Kconfig
++++ b/drivers/clocksource/Kconfig
+@@ -437,8 +437,8 @@ config ATMEL_ST
  
-+#include <linux/bitfield.h>
- #include <linux/clocksource.h>
- #include <linux/module.h>
- #include <linux/interrupt.h>
-@@ -29,6 +30,7 @@
+ config ATMEL_TCB_CLKSRC
+ 	bool "Atmel TC Block timer driver" if COMPILE_TEST
+-	depends on ARM && HAS_IOMEM
+-	select TIMER_OF if OF
++	depends on ARM && OF && HAS_IOMEM
++	select TIMER_OF
+ 	help
+ 	  Support for Timer Counter Blocks on Atmel SoCs.
  
- #define TMRSR 0x004
- #define  TMRSR_INTR_CLR BIT(30)
-+#define  TMRSR_PCV GENMASK(28, 0)
- 
- #define TMRCSSR 0x008
- #define  TMRCSSR_SRC_USEC (0 << 0)
-@@ -45,6 +47,9 @@
- #define  WDTCR_TIMER_SOURCE_MASK 0xf
- #define  WDTCR_TIMER_SOURCE(x) ((x) & 0xf)
- 
-+#define WDTSR 0x004
-+#define  WDTSR_CURRENT_EXPIRATION_COUNT GENMASK(14, 12)
-+
- #define WDTCMDR 0x008
- #define  WDTCMDR_DISABLE_COUNTER BIT(1)
- #define  WDTCMDR_START_COUNTER BIT(0)
-@@ -234,12 +239,69 @@ static int tegra186_wdt_set_timeout(struct watchdog_device *wdd,
- 	return 0;
- }
- 
-+static unsigned int tegra186_wdt_get_timeleft(struct watchdog_device *wdd)
-+{
-+	struct tegra186_wdt *wdt = to_tegra186_wdt(wdd);
-+	u32 expiration, val;
-+	u64 timeleft;
-+
-+	if (!watchdog_active(&wdt->base)) {
-+		/* return zero if the watchdog timer is not activated. */
-+		return 0;
-+	}
-+
-+	/*
-+	 * Reset occurs on the fifth expiration of the
-+	 * watchdog timer and so when the watchdog timer is configured,
-+	 * the actual value programmed into the counter is 1/5 of the
-+	 * timeout value. Once the counter reaches 0, expiration count
-+	 * will be increased by 1 and the down counter restarts.
-+	 * Hence to get the time left before system reset we must
-+	 * combine 2 parts:
-+	 * 1. value of the current down counter
-+	 * 2. (number of counter expirations remaining) * (timeout/5)
-+	 */
-+
-+	/* Get the current number of counter expirations. Should be a
-+	 * value between 0 and 4
-+	 */
-+	val = readl_relaxed(wdt->regs + WDTSR);
-+	expiration = FIELD_GET(WDTSR_CURRENT_EXPIRATION_COUNT, val);
-+	if (WARN_ON_ONCE(expiration > 4))
-+		return 0;
-+
-+	/* Get the current counter value in microsecond. */
-+	val = readl_relaxed(wdt->tmr->regs + TMRSR);
-+	timeleft = FIELD_GET(TMRSR_PCV, val);
-+
-+	/*
-+	 * Calculate the time remaining by adding the time for the
-+	 * counter value to the time of the counter expirations that
-+	 * remain.
-+	 */
-+	timeleft += (((u64)wdt->base.timeout * USEC_PER_SEC) / 5) * (4 - expiration);
-+
-+	/*
-+	 * Convert the current counter value to seconds,
-+	 * rounding up to the nearest second. Cast u64 to
-+	 * u32 under the assumption that no overflow happens
-+	 * when coverting to seconds.
-+	 */
-+	timeleft = DIV_ROUND_CLOSEST_ULL(timeleft, USEC_PER_SEC);
-+
-+	if (WARN_ON_ONCE(timeleft > U32_MAX))
-+		return U32_MAX;
-+
-+	return lower_32_bits(timeleft);
-+}
-+
- static const struct watchdog_ops tegra186_wdt_ops = {
- 	.owner = THIS_MODULE,
- 	.start = tegra186_wdt_start,
- 	.stop = tegra186_wdt_stop,
- 	.ping = tegra186_wdt_ping,
- 	.set_timeout = tegra186_wdt_set_timeout,
-+	.get_timeleft = tegra186_wdt_get_timeleft,
- };
- 
- static struct tegra186_wdt *tegra186_wdt_create(struct tegra186_timer *tegra,
