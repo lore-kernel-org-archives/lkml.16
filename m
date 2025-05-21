@@ -1,25 +1,25 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 968F72163BD
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 11:45:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC1CE264614
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 11:45:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747827919; cv=none; b=AlpgrEjqzG45TpcAH2OULgsJAW2d8Qm73161S3p3/x8iH/BEad1g2Qotv1n+xUhexpbt1vtM04/eW0bt+Q5I9q1/yIujfFfi+Xr0mtdocP32fshiWGjOHRsjAusUs5Ca5PKvxGs11C21qs7z1Q9mr1BJN2ARLGx1HpdV1qgwGmE=
+	t=1747827925; cv=none; b=NN8t1L+Ln0ywkS2zIgcfPMA0cefW6TXpH8kE1sMDFMBTNqSVqeYrbqhTaobFLRam0UXBwMcQjP8gm86ST19msTMFzpM8Dtu2VmopXFHU8pUFrd+92LgetIo3tKN710DJpVeJc9EOvbGg5fPX0o4tLS3+G/EPcAaAwjW/46y+sU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747827919; c=relaxed/simple;
-	bh=td/pyxwNtvx4HW46UhbjzrcmN3XyrFV0b2aBZlY01Dw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cCMdq5Z61zXSugTyvhtYNa/rS2q7ANHmV69rOArUVUdWwto1tdo8/fzt1gX17gw+FuzxWctKXiofslkb2y9BC1OQg120H8D1/1TorkqWhJOXOUw8jDaR6stEPVcz/IZjR4HtppvdqG5Ku8kSK8DXcjJzcsH/ziUUY0fqA3PWNwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
-	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
-	(envelope-from <a.fatoum@pengutronix.de>)
-	id 1uHhsc-00018T-H7; Wed, 21 May 2025 13:45:02 +0200
-Message-ID: <721420c6-5e65-48a4-81c5-b161d0df8cfd@pengutronix.de>
-Date: Wed, 21 May 2025 13:44:59 +0200
+	s=arc-20240116; t=1747827925; c=relaxed/simple;
+	bh=LHmftg48uOSPM9d1ROZ7ItxmnGefyebUpsZpGGD93Z0=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=fNpn1xgVgqCsDHPtQHJDfQkO4XeWercwsUG2DolkNm4OZm82X4ti5DOdhgRhyXIhUUvxy+YBDyKTH05Ysike/JgOD2MB+TlIgUOzcw9qxe4G+M96xMtthBW1FdHvSb+q+URo3n9YxyjqzflOcAAaoSzHZFZTEFQmOpcCwMI4z7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3598C1515;
+	Wed, 21 May 2025 04:45:08 -0700 (PDT)
+Received: from [10.57.94.227] (unknown [10.57.94.227])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4380D3F6A8;
+	Wed, 21 May 2025 04:45:18 -0700 (PDT)
+Message-ID: <7a1ae902-d97c-41ae-a3e7-5b6258ced1c5@arm.com>
+Date: Wed, 21 May 2025 12:45:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,87 +27,77 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mmc: sdhci-esdhc-imx: inherit pins_100mhz from
- pins_200mhz when unconfigured
-To: ziniu.wang_1@nxp.com, haibo.chen@nxp.com, adrian.hunter@intel.com,
- ulf.hansson@linaro.org, linux-mmc@vger.kernel.org
-Cc: imx@lists.linux.dev, s32@nxp.com, shawnguo@kernel.org,
- s.hauer@pengutronix.de, linux-kernel@vger.kernel.org, kernel@pengutronix.de,
- festevam@gmail.com, linux-arm-kernel@lists.infradead.org
-References: <20250521112042.266111-1-ziniu.wang_1@nxp.com>
-Content-Language: en-US
-From: Ahmad Fatoum <a.fatoum@pengutronix.de>
-In-Reply-To: <20250521112042.266111-1-ziniu.wang_1@nxp.com>
+Subject: Re: [PATCH v3 2/5] mm: Add batched versions of
+ ptep_modify_prot_start/commit
+Content-Language: en-GB
+From: Ryan Roberts <ryan.roberts@arm.com>
+To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org
+Cc: david@redhat.com, willy@infradead.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will@kernel.org,
+ Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, vbabka@suse.cz,
+ jannh@google.com, anshuman.khandual@arm.com, peterx@redhat.com,
+ joey.gouly@arm.com, ioworker0@gmail.com, baohua@kernel.org,
+ kevin.brodsky@arm.com, quic_zhenhuah@quicinc.com,
+ christophe.leroy@csgroup.eu, yangyicong@hisilicon.com,
+ linux-arm-kernel@lists.infradead.org, hughd@google.com,
+ yang@os.amperecomputing.com, ziy@nvidia.com
+References: <20250519074824.42909-1-dev.jain@arm.com>
+ <20250519074824.42909-3-dev.jain@arm.com>
+ <59242559-5e90-4422-82f7-179a44eb968a@arm.com>
+In-Reply-To: <59242559-5e90-4422-82f7-179a44eb968a@arm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
-X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Hi Luke,
+On 21/05/2025 12:16, Ryan Roberts wrote:
+> On 19/05/2025 08:48, Dev Jain wrote:
+>> Batch ptep_modify_prot_start/commit in preparation for optimizing mprotect.
+>> Architecture can override these helpers; in case not, they are implemented
+>> as a simple loop over the corresponding single pte helpers.
+>>
+>> Signed-off-by: Dev Jain <dev.jain@arm.com>
 
-Thanks for your patch.
+[...]
 
-On 21.05.25 13:20, ziniu.wang_1@nxp.com wrote:
-> From: Luke Wang <ziniu.wang_1@nxp.com>
 > 
-> On some new i.MX platforms, hardware guidelines recommend using identical
-> pin configurations for SDR50/DDR50 (100MHz) and SDR104/HS400 (200MHz)
-> modes. But defining two identical pinctrl for 100MHz and 200MHz in dts
-> creates redundancy.
-
-I am not convinced this is an improvement. If 200mhz is missing, it's understood
-that it's not supported. Now if 100mhz is missing, it means something different
-depending on whether state_200mhz exists or not. This is more mental overhead
-than having:
-
-  pinctrl-names = "default", "state_100mhz", "state_200mhz";
-  pinctrl-0 = <&pinctrl_usdhc1>;        
-  pinctrl-1 = <&pinctrl_usdhc1_uhs>;   
-  pinctrl-2 = <&pinctrl_usdhc1_uhs>;
-
-where it's directly evident that you share pinctrl states.
-
-> In this case, omit explicit 100MHz configuration,
-> driver will inherit 100MHz pinctrl from 200MHz.
+> I have some general concerns about the correctness of batching these functions.
+> The support was originally added by Commit 1ea0704e0da6 ("mm: add a
+> ptep_modify_prot transaction abstraction"), and the intent was to make it easier
+> to defer the pte updates for XEN on x86.
 > 
-> Preserves existing behavior if 100MHz is configured but 200MHz not (e.g,
-> imx8mp-navq.dts usdhc1 supports SDR50/DDR50 but SDR104/HS400 not).
+> Your default implementations of the batched versions will match the number of
+> ptep_modify_prot_start() calls with the same number of ptep_modify_prot_commit()
+> calls, even if modify_prot_commit_ptes() is called incrementally for sub-batches
+> of the batch used for modify_prot_start_ptes(). That's a requirement and you've
+> met it. But in the batched case, there are 2 differences;
+> 
+>   - You can now have multiple PTEs within a start-commit block at one time. I
+> hope none of the specialized implementations care about that (i.e. XEN).
 
-This conflicts with the binding, which doesn't allow for state_200mhz
-to exist without state_100mhz, so that would need adaptation.
+I had a look; this isn't a problem.
 
-As noted before though, I don't think we really need to change anything
-here though.
+> 
+>   - when calling ptep_modify_prot_commit(), old_pte may not be exactly what
+> ptep_modify_prot_start() returned for that pte. You have collected the A/D bits,
+> and according to your docs "PTE bits in the PTE range besides the PFN can
+> differ" when calling modify_prot_start_ptes() so R/W and other things could
+> differ here.
+
+It looks like powerpc will break if you provide old_pte which has different
+permissions to the "real" old_pte, see radix__ptep_modify_prot_commit(). So I
+think you need to at least spec modify_prot_start_ptes() to require that all
+bits of the PTE except the PFN, access and dirty are identical. And perhaps you
+can VM_WARN if found to be otherwise? And perhaps modify
+ptep_modify_prot_commit()'s documentation to explcitly allow old_pte's
+access/dirty to be "upgraded" from what was actually read in
+ptep_modify_prot_start()?
+
+XEN/x86 and arm64 don't care about old_pte.
 
 Thanks,
-Ahmad
+Ryan
 
 > 
-> Signed-off-by: Luke Wang <ziniu.wang_1@nxp.com>
-> ---
->  drivers/mmc/host/sdhci-esdhc-imx.c | 3 +++
->  1 file changed, 3 insertions(+)
+> I'm not sure if these are problems in practice; they probably are not. But have
+> you checked the XEN implementation (and any other specialized implementations)
+> are definitely compatible with your batched semantics?
 > 
-> diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
-> index f206b562a6e3..dfd8be5000c8 100644
-> --- a/drivers/mmc/host/sdhci-esdhc-imx.c
-> +++ b/drivers/mmc/host/sdhci-esdhc-imx.c
-> @@ -1810,6 +1810,9 @@ sdhci_esdhc_imx_probe_dt(struct platform_device *pdev,
->  						ESDHC_PINCTRL_STATE_100MHZ);
->  		imx_data->pins_200mhz = pinctrl_lookup_state(imx_data->pinctrl,
->  						ESDHC_PINCTRL_STATE_200MHZ);
-> +
-> +		if (IS_ERR_OR_NULL(imx_data->pins_100mhz))
-> +			imx_data->pins_100mhz = imx_data->pins_200mhz;
->  	}
->  
->  	/* call to generic mmc_of_parse to support additional capabilities */
-
-
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
