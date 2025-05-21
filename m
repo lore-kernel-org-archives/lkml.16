@@ -1,116 +1,224 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2056.outbound.protection.outlook.com [40.107.220.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5FE7221FAF
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 15:57:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747843043; cv=none; b=bPwdfBE4bQZUI3+80QdFwE3koQmjE32SaAo6dbWoomLqLEjiQiz+e4Wcuklr47FGBZlAK4NIrD6N5rzn3QPcw2u/4urpfAh5I5mjuNJ6AuEDhfozfvqhPv4XZTALrSo41PcHsOEl8qTR4cF+dk/Dq5fPFx528AwEKZ/bsTK5AgY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747843043; c=relaxed/simple;
-	bh=cu+NuJemimQYmwhNsSM3z/pVnmIZv/JSAilKNPCIcvY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=iUsb2XnepYOqMUJaq6uvd3/KoDtmRMRmIj5+CzgO5saQiq67LcxoTSpBzkbUTjuYbRsyVOHUSM3mnmll6zlZZdAOtk2WZ/FVtoy7iLtHLaBdQyJfXiKfnURw4B6NgNmVz350m+eGA5ppXhncTNmNas9qj2tJJbIFFELRCYOV1OY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FLs6pzax; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 978F2265CBD;
+	Wed, 21 May 2025 15:57:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.56
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747843057; cv=fail; b=qikfIJbySgbEeKSZsyUb3MoJToYLCjaSXYyFaM8ae1PjhkeRIP2kyF4SIujMNVUr0ilgiYWnnVB3RanpU+e6tANkvNPFwoK4pPtnqqjg9SAZ43zJu/6JhNOU0pJj7cG9ceQv8HNj5XyqHGjmn506D4ug1eDHWQomfBD2wftrbwM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747843057; c=relaxed/simple;
+	bh=tpXPgIjKTBs2jXNwJtySwHEBYl1F9pLQ1In0RBzyrEY=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=VG4Oryp57YWVdD/gK62NqW/sS3Qw2kaWpGQokRmaLsLXZSl5UwsymALPo0HOboLrOiJTVBPWXFsRTcMbgEwc8JYQUfh/PHZjgSkAN3qjLBqHvyqwEZN0hfREfH164au9DwxANA10kqXUtSdyHa8225MTXNUyfwCPxBpOWR8o9VA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=dwot1npt; arc=fail smtp.client-ip=40.107.220.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FLs6pzax"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747843038; x=1779379038;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=cu+NuJemimQYmwhNsSM3z/pVnmIZv/JSAilKNPCIcvY=;
-  b=FLs6pzaxFx6o5PGPUBO6eD2bYGQghWXF6jbNwwur9pAb0FznejKKYPTI
-   +KMHfHNRDJ+/zisa5tXSR6UFUUPQIfbF5t+yEowbCLlxFeLXtyi/SGd4Z
-   dmEpsStoDIhJjb3kGr4hYNlOZyWPBWb2x2kF590+ZHtF391GMelOI+4LF
-   lVsq/qPmyNRR3Z7gy40i9KZ7V/A4OYEDZjY2dIJvtwby2pXpXdOF9X4K4
-   QSqKzzkKyU3NzFF9MYeXWFGLrjRZvrlcf1UxYJT/fk256my/K+R0Fw1gk
-   D/o7+rPIbr3nOCrdN5wJEpvyRNmEaHbfLJM8cxSaUWvEbTrG2+5+ik88a
-   w==;
-X-CSE-ConnectionGUID: YxLhxAdtS4S7xM+XwRUgBg==
-X-CSE-MsgGUID: w3KBIYrFTjqF62/C9xIOaw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="49088879"
-X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
-   d="scan'208";a="49088879"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 08:57:17 -0700
-X-CSE-ConnectionGUID: thJYo7RuQ3aTMXIseYI9RA==
-X-CSE-MsgGUID: T4hGK9ZRRlOgA33Gev9T1A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
-   d="scan'208";a="145391427"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 21 May 2025 08:57:16 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uHlof-000OPw-2T;
-	Wed, 21 May 2025 15:57:13 +0000
-Date: Wed, 21 May 2025 23:57:03 +0800
-From: kernel test robot <lkp@intel.com>
-To: Baisong Zhong <zhongbaisong@huawei.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Luis Chamberlain <mcgrof@kernel.org>
-Subject: kernel/sched/rt.c:9:18: warning: 'max_rt_runtime' defined but not
- used
-Message-ID: <202505212328.gm09NHiP-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="dwot1npt"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=CaX8kyRKLI0EXrYxPxLsdbQYOYEK1s9S7DSbzzPE/I4sWvVhRCtEpo1A3fEv0QlYPT5O4KQmOW2yFIi/cGJuGlVJKe6ksHN0yy3sRpN+sSdQ0Pb1tshsS62qb9IcZSpPexLacSelh+GLUR/enzy+mSB3EhpHTj7M1O7MreQ5w6cMC3vhXAjX0nNx8V81hFb8c64A5z0ygjtD+Kj/cnDTMYF8zKLvp7QUx4jG3iVse/EGlz1Y8qf3W1FJr7rDY93cFHTHxW/zrzzdomX1Bh1zxLnq4HB1wwS0qrBdPhXeJKcZSdLjNm/cP9FoVG5we9E9JN0V8XBNm790Ew9Ie9Jzjw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=PJZfDRBxLAskRg2z2v0qVIYkaMVohtNGxga+8f4YHP0=;
+ b=DMjHvLDynsVmjuLn5el4bkl6hMt+XWOL+22bbpM0VKEI1x78OhykViwaaCk9pLX0jZq4y/5r3D3JMlzcUM7UgOhyGaP4ZjawtxxEGhdZGOslupk5GoYQhomIP1lAbWGIS552q6W2Nkwjn29X0XrHlCHEuYoHWYydcSoVK8NoyhHO7XyP/v5W3eJPSu5LwniYU3mb53jPKLpCa19DecMeFi6wQL0NEgf/qzkcm8AQx4KGhTWR2qmqaQ1knSPnJ2+DdexUcJwsZh0tiX+nfxnhnBC4j8O/zEuPtgPCMRzVqHPHKjZ7K9EaIDAnqiTWOuW50J8dbUMHrCR4jCFRAV5MAA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PJZfDRBxLAskRg2z2v0qVIYkaMVohtNGxga+8f4YHP0=;
+ b=dwot1npt/31pezk1vD/3tLnVe+Jk5cVm6Lo0/+RHLrOAr/K7LJStlrJtBImhGTC9x8ToauykJmbgjBo3jwkwXW2kKtuHQ5GiB0IsITBWoZA/DIEizQPqFFM0wBao8ykajPjl213h1yFtB0P508ZG2RtIKN9S0ByxI9SIOXh1w8mD7SAYnFLaKuFSxPcmyISfpz432K8yUSTfeTS1N+NNck7Mird9V2xczDJB+xry5uLMlrfFf+rg2F6AXBz3tHUoYFGeG1bthS88JdRaiRJhX0Hlc5Ce1fdAS1o9Nb9HYnwGjNC4yeXlHeRqcdhHUh6SjvnZpq+Hk6ktJEp0+kL/MQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
+ by MW4PR12MB7481.namprd12.prod.outlook.com (2603:10b6:303:212::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.20; Wed, 21 May
+ 2025 15:57:28 +0000
+Received: from SN7PR12MB8059.namprd12.prod.outlook.com
+ ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
+ ([fe80::4ee2:654e:1fe8:4b91%3]) with mapi id 15.20.8746.030; Wed, 21 May 2025
+ 15:57:28 +0000
+Message-ID: <0d5a71b7-92d4-4052-93a8-ed61bc9ebb67@nvidia.com>
+Date: Wed, 21 May 2025 11:57:24 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 01/20] rust: dma: expose the count and size of
+ CoherentAllocation
+To: Boqun Feng <boqun.feng@gmail.com>, Alexandre Courbot <acourbot@nvidia.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>,
+ Timur Tabi <ttabi@nvidia.com>, Alistair Popple <apopple@nvidia.com>,
+ linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+ nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+References: <20250521-nova-frts-v4-0-05dfd4f39479@nvidia.com>
+ <20250521-nova-frts-v4-1-05dfd4f39479@nvidia.com> <aC3KbKeEVlHggi5l@Mac.home>
+Content-Language: en-US
+From: Joel Fernandes <joelagnelf@nvidia.com>
+In-Reply-To: <aC3KbKeEVlHggi5l@Mac.home>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MN0PR05CA0024.namprd05.prod.outlook.com
+ (2603:10b6:208:52c::32) To SN7PR12MB8059.namprd12.prod.outlook.com
+ (2603:10b6:806:32b::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|MW4PR12MB7481:EE_
+X-MS-Office365-Filtering-Correlation-Id: 54fe45cc-e24d-4608-fb8e-08dd98802fc5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?cjA4K2tzeGYyM0UrWnloYnIxZ3psT1hZUko1Njgvb0Q5dTBweXdVZTYxVUZ4?=
+ =?utf-8?B?UkRkTVlOTkh3UE8rbE94cWxHdklVa0RacjdDVUdpSW1OY0RVRVNiM1ArL2Jv?=
+ =?utf-8?B?dHdJdC8vam1WSCtFU2F5S0g2eTVqaTJrSmRvNTl1Rmh2dnhCbzRva2xudmt1?=
+ =?utf-8?B?K3ZvSHR5N3F5a2N4Vm1OZTg2ZTFpb05pL1BzaGZrS084TjVvWVZlL1UvMGZ6?=
+ =?utf-8?B?b1p6Q0NZZW9NL0JtTlRmMGlYeHNyMGpMQkhDeUx5eFgwdXdITldHSEpkYUVr?=
+ =?utf-8?B?MWRsd25LdGI3MWRUMEpibHJWR0JGMjR1UVhRcXEwMkpUZHJaZmEvbC8vdWhJ?=
+ =?utf-8?B?VG9VaVdXOHRoM2IyaVloSkZrdVRpZm5kMStEVmRqSVI5WmRuYU5hYkJzNzBv?=
+ =?utf-8?B?VXJZSENHTGRPUGhQQWsyeFdxOTdFR0xhSURDcEJtQVB6Q05uRXRVdFNyMXpm?=
+ =?utf-8?B?ejkzMjJLcTN1TjErazI3b1NPSnhCQmZMTnI4SW5mOUNQYTRJeHlrbHlPaUh3?=
+ =?utf-8?B?QklYcXY2SXpMaTBRZmU3VzhJZU00QndIZlliek5MeGg5dXVpRjAzdHhHZUx4?=
+ =?utf-8?B?TkV4K1FXYzljbjVTamJ3L2ZYeU5nYUF3V3ZtMVBESC9kaSt4WHFxN25lUVJ1?=
+ =?utf-8?B?bC9SUnI0eHA0WnlQeUpFamlQdkYzSGpnc2xDOU11VTlZSDJzYlhzQkhqOEhP?=
+ =?utf-8?B?LzhBMDlDUW80aUlNVlhzY3lKeU90TytIUC9GaGhQZXE2ZjFteml6RkVVemZq?=
+ =?utf-8?B?bTl2ZkZMSTZCakxXYzBjZFN1aUxuQjVVa051Wm5XSU9QWmhjSnErZWZqZERn?=
+ =?utf-8?B?V0cwUmtQeTNVMGdGb1FrTVUyMEltcjBrS1NzeDF5Qk1xVVBZekt0SzVTM2k4?=
+ =?utf-8?B?VUh3VFdBTzhpMjRuWDFUd2owWkQ4OU5wRHpNQ3dZaWZkdm5PaDcyY21CS0tL?=
+ =?utf-8?B?ODZPU0o5ZXFoQjhyYm0vd0hXak50SEZ3RXIvR3o5OHhYYjlqaitISjFGbGEy?=
+ =?utf-8?B?NkpHTDZ0TUt0aHg4NWE2QU5ldkd3eHFmZVRmMmhkVzVtOVFTYm5zOGxGMnZk?=
+ =?utf-8?B?b3ZZR1YwNVFJcFNDbWZWQURwbzFmbXZUTmljZXFZSHU2NERVZUZONm1Da0dU?=
+ =?utf-8?B?YkdsM3F1aXEvSWd0U0xJM3pWRVNucEFtbE1lTnBHNUJyQ290UnQ1OWoxMzhT?=
+ =?utf-8?B?Rlo1MkVyc1V6YW9CTWlMYlN6SjIydHN4NUIvaUlzdXJlV2J3QkY3dkZRRm1V?=
+ =?utf-8?B?bmh4NG52RlZpMU0yanZkVVMrOFA0SWJ1cTFxcG1aQmoyUXpuK002SjhQaWVK?=
+ =?utf-8?B?YTVNZlpsOHY5U0pRT1hnQWFzSEJvd2NrUWVDclp1L3A0dFE3NWZlNWVKcWV4?=
+ =?utf-8?B?SExINWNDWDh4MUY3REk4aDMrMlJHc0VSVzhWVnV4RWJCSEZXY2YyNFFBWjlm?=
+ =?utf-8?B?Qm94d1dXelZMTzROYk0ybEtiYW83R1U0OGw0MnBneXB1T2dtZFExbDNwOGQx?=
+ =?utf-8?B?N3A1ZXlPdzAraUgrVzMza2s1UFZlZjMxd0xYVkQ4YlFZL3I2UWFqdldZQjk3?=
+ =?utf-8?B?V1hZb1ZzMUNPamVXMUE0cUVNWCtJMm9ncjZXNmdseFA5dW5nMjhmSjlNRXpa?=
+ =?utf-8?B?T1F3R0hVREhhR1lCdmF6L3FKUjhSNS9La3RZZHQ1ai9kQ1czZlFNNEFzRStV?=
+ =?utf-8?B?MTg3elRnYmVuQUdtZWNZbXdOWVJ6OG5TWVplUXZ3clJHeXpzUVVQTnhkenJS?=
+ =?utf-8?B?TmF2a1V6RGtXQjJVV0lEVzRBK0ZHRDFSSHBzK2JFTE9mN0hhcWNnMEFpdzFr?=
+ =?utf-8?B?ZmpmN0pabnN5a25LV0trU0E5bVVrRndaallyS2s2OHUwVUZFYUlDK3lFNCtL?=
+ =?utf-8?B?aTVyR3pzQkpSaG1uNWprajVyd1JmU1JwTis3OU1MalV6M1czVktUMGhNU3lY?=
+ =?utf-8?Q?bR8rscXmSRQ=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?dEQzN3JMbFBkWFE5MXpaNDM0L24rSEVvWGl6NmhIVktPTzNrWjhUZy9wTHZX?=
+ =?utf-8?B?OWt0eXl6Wkk4RzFueS9IVytwRysybzlibXF5Sk8vQnpiYXU0dmQxdEdKNVZI?=
+ =?utf-8?B?cUF4cnVWZHJzZlo4VlVOZTJoOWVtWm1hOEJHYTg3a09aQ2x6ZDEyMGVCbiti?=
+ =?utf-8?B?MmRvNlEwekVPRTRDL3Z4eGc3ZDBuVTQ5WCt0bDJCSU15VGhDV1FrZXhxRUVa?=
+ =?utf-8?B?REtUczl4OVBkQlk3Z1dKN3F3NmZNZDlGS0JnOGgwSmZuSW4yWVdocW1DSkhy?=
+ =?utf-8?B?L2lBRzFhRWJ3cnE1OFBVMFc5c0RqZjdJLzh4MFJhUnRBZ1lzSFZ5aFR4N2NG?=
+ =?utf-8?B?dWltOCt4WFZxazVtWWdaOGVOd2R5eWNYOVYweGJicnJua2xad3kwN0lHRDlm?=
+ =?utf-8?B?amREK0JrUXNIWldrdVc4NkJKOTZRY2tLN2VoeHNXaXBaaWJaRWVPbFpuN3VH?=
+ =?utf-8?B?TG1RcStTQ1d1anRMdjlldmpOT1F4MUJ2QW1oZGxNd3cvWkVSSTRLVksxVER3?=
+ =?utf-8?B?QkFKcXpWMm5qcXhLOVBFR3A4UStSRThWQkFqTE9sZC9rcmpPcUI2dURDb0FE?=
+ =?utf-8?B?YWF3S213bW9HdEVHRXZFa3NCVUF6NmpWaHNmUWpEYlpYbFIwYUtLVE9mMFVo?=
+ =?utf-8?B?RFR5cXZiN3VTNnBtN2tQMCtFZk4xSDNRZEExd1BPTHFKUFhaWnRWT3hDbThY?=
+ =?utf-8?B?Nm5kSXlldkJLN1A0aUY5V244Mm1LL1c2TG5YWFdYNnBicXgxeXk0V1BUb2x4?=
+ =?utf-8?B?czB3OFdKd0pyY09pOXp0M0piVjgyelRwM3Fyb25vdk53eGJhZVM1QnNtNG1p?=
+ =?utf-8?B?VU96cDNMY2s4UVNzRk5zcllzajdnNk02UmU1bk04Wkl5MUdFOUpXM0ZYdm1Z?=
+ =?utf-8?B?RlJjZ3VETTMza1RhcCt4ejJ6NGk2ZTRpSnRoNkl2S1F2Zmd5N0RBbVY3dzNE?=
+ =?utf-8?B?QXNLWWpkcWpPd3BBZlBLV0JVdU1kUXpqRkx2M1RJVmpFb3F4VjJTSHZvWDl1?=
+ =?utf-8?B?SGduREgycHFQTXlyaVhHU1hBaTljbk05cDFnYXhUMzRoOW9meGh1NVNnN3Nk?=
+ =?utf-8?B?bWVhOSsvNFNJWDV5NDRhZUZOaUttWXVzbSthVCtkT1BZS2syakVHSmR4UGNh?=
+ =?utf-8?B?RkFnTGFhLzFSdFhZcVJSUytMT3hFSG1yR0FHT3VLSnpOczQvZko2RDlGMkJp?=
+ =?utf-8?B?U2xwVklFWGdsVjQxTzNYUkUrYzlNdU83cVFmczY0V3NZYUovZFdRcWJ2UkFH?=
+ =?utf-8?B?MlJ1aW5CNnFPdVdQVjhzczVtNWM4KzBPUWRpSlp5NFFYR3RGQ0pKc0NpN0h4?=
+ =?utf-8?B?TWZVcjRXdVM1Q3lnRmN6UFlSU0c4bnBKbE96dlJVSEF3L3FxM1Nhb3pTM2Uz?=
+ =?utf-8?B?QlE4ZDdJMDBKMjFSckYwWHlOM3ZlNVNyUkdNaTNnaDhYNWZlSHhvaU9KS2dN?=
+ =?utf-8?B?ZXhzU29oOWlaaGJRY21ES2Q1Mm9uSk9TRW5EcWRGSGwyRWxZQS9jL3JsTEYw?=
+ =?utf-8?B?Q2xESnovUEdwR0tQNHllNkE0SnZ2N2lvVkFydkt3L1pCR05ib2J1cm9kNlpy?=
+ =?utf-8?B?YVVnRUFJaVk3alV1bVlvQU9ZQmdFQUxFY2l2ZXJmR0RDdzJmRmZOdnYxN0RW?=
+ =?utf-8?B?Y3QzcitPNTFFUGppWkE4Tjg1WEtUVXJCUm40SUprY3VGUDdpdi9iU3IvcFFT?=
+ =?utf-8?B?SDlPYXhlakJwcjJsYVZBQitrbDVqMFVPNE50QXpaQm53dDYxd1hYek95T3Zu?=
+ =?utf-8?B?ak5mdDRBVlZuSU1lQW5sbDdRRkk3ME9iSkpaZkw3cWVYenhIOFNvc3J3am03?=
+ =?utf-8?B?bC92TWFrVUxUbFlIajhDZDIzUVM3OXpqcDY0Vzk4bm1SVnFlS2ZaUnlpU3dP?=
+ =?utf-8?B?U0ZQT0lDM3JkdmV3clR1WWJseUMwU0tYKyt4ZmF5bzF5djZ6TXJNUXVBSHFY?=
+ =?utf-8?B?d2s1MXgwZnFtV3FnSXBkejZoRjdseVpnajVlREpuWExsVmhiOGRZbkxicllj?=
+ =?utf-8?B?cXVDWUJxd1U4VWRWanRscU5kZzhSS0plMlF6QWNqOGJxNDVTaHEvT2hxTzRL?=
+ =?utf-8?B?SDdNYlJwcjRrR0Y0ZmJBRTRGdFlNMnVsTFlTTGFGNGtrVFB0Tmo1TmJCR0FR?=
+ =?utf-8?Q?3A3V+rCuCrWU+iBccAUT/rwM1?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 54fe45cc-e24d-4608-fb8e-08dd98802fc5
+X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2025 15:57:28.2559
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: KMJJ0KSRE0WDhKg6Ci9QAwZFFg3WoCmj3Oh4B3TND6oAufZy505wwgo/wgl/lEuJLJ/uUOr2JKZ+h+pddKmveA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7481
 
-Hi Baisong,
-
-FYI, the error/warning still remains.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   4a95bc121ccdaee04c4d72f84dbfa6b880a514b6
-commit: 28f152cd0926596e69d412467b11b6fe6fe4e864 sched/rt: fix build error when CONFIG_SYSCTL is disable
-date:   3 years, 2 months ago
-config: csky-randconfig-r001-20230826 (https://download.01.org/0day-ci/archive/20250521/202505212328.gm09NHiP-lkp@intel.com/config)
-compiler: csky-linux-gcc (GCC) 12.4.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250521/202505212328.gm09NHiP-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505212328.gm09NHiP-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   In file included from kernel/sched/build_policy.c:43:
-   kernel/sched/rt.c:309:6: warning: no previous prototype for 'unregister_rt_sched_group' [-Wmissing-prototypes]
-     309 | void unregister_rt_sched_group(struct task_group *tg) { }
-         |      ^~~~~~~~~~~~~~~~~~~~~~~~~
-   kernel/sched/rt.c:311:6: warning: no previous prototype for 'free_rt_sched_group' [-Wmissing-prototypes]
-     311 | void free_rt_sched_group(struct task_group *tg) { }
-         |      ^~~~~~~~~~~~~~~~~~~
-   kernel/sched/rt.c:313:5: warning: no previous prototype for 'alloc_rt_sched_group' [-Wmissing-prototypes]
-     313 | int alloc_rt_sched_group(struct task_group *tg, struct task_group *parent)
-         |     ^~~~~~~~~~~~~~~~~~~~
-   kernel/sched/rt.c:716:6: warning: no previous prototype for 'sched_rt_bandwidth_account' [-Wmissing-prototypes]
-     716 | bool sched_rt_bandwidth_account(struct rt_rq *rt_rq)
-         |      ^~~~~~~~~~~~~~~~~~~~~~~~~~
->> kernel/sched/rt.c:9:18: warning: 'max_rt_runtime' defined but not used [-Wunused-const-variable=]
-       9 | static const u64 max_rt_runtime = MAX_BW;
-         |                  ^~~~~~~~~~~~~~
 
 
-vim +/max_rt_runtime +9 kernel/sched/rt.c
+On 5/21/2025 8:43 AM, Boqun Feng wrote:
+> On Wed, May 21, 2025 at 03:44:56PM +0900, Alexandre Courbot wrote:
+>> These properties are very useful to have and should be accessible.
+>>
+>> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
+>> ---
+>>  rust/kernel/dma.rs | 18 ++++++++++++++++++
+>>  1 file changed, 18 insertions(+)
+>>
+>> diff --git a/rust/kernel/dma.rs b/rust/kernel/dma.rs
+>> index 605e01e35715667f93297fd9ec49d8e7032e0910..2a60eefa47dfc1f836c30ee342e26c6ff3e9b13a 100644
+>> --- a/rust/kernel/dma.rs
+>> +++ b/rust/kernel/dma.rs
+>> @@ -129,6 +129,10 @@ pub mod attrs {
+>>  //
+>>  // Hence, find a way to revoke the device resources of a `CoherentAllocation`, but not the
+>>  // entire `CoherentAllocation` including the allocated memory itself.
+>> +//
+>> +// # Invariants
+>> +//
+>> +// The size in bytes of the allocation is equal to `size_of::<T> * count()`.
+>>  pub struct CoherentAllocation<T: AsBytes + FromBytes> {
+>>      dev: ARef<Device>,
+>>      dma_handle: bindings::dma_addr_t,
+>> @@ -201,6 +205,20 @@ pub fn alloc_coherent(
+>>          CoherentAllocation::alloc_attrs(dev, count, gfp_flags, Attrs(0))
+>>      }
+>>  
+>> +    /// Returns the number of elements `T` in this allocation.
+>> +    ///
+>> +    /// Note that this is not the size of the allocation in bytes, which is provided by
+>> +    /// [`Self::size`].
+>> +    pub fn count(&self) -> usize {
+>> +        self.count
+>> +    }
+>> +
+>> +    /// Returns the size in bytes of this allocation.
+>> +    pub fn size(&self) -> usize {
+>> +        // As per the invariants of `CoherentAllocation`.
+>> +        self.count * core::mem::size_of::<T>()
+> 
+> I think we need a comment or even an invariant saying this multiply
+> cannot overflow.
+> 
+If there is a coding error (say large count passed to alloc_coherent()), then I
+don't think it can guaranteed. Maybe use
+self.count.checked_mul(core::mem::size_of::<T>())?
 
-d505b8af58912a Huaixin Chang  2020-04-25  @9  static const u64 max_rt_runtime = MAX_BW;
-ce0dbbbb30aee6 Clark Williams 2013-02-07  10  
+thanks,
 
-:::::: The code at line 9 was first introduced by commit
-:::::: d505b8af58912ae1e1a211fabc9995b19bd40828 sched: Defend cfs and rt bandwidth quota against overflow
+ - Joel
 
-:::::: TO: Huaixin Chang <changhuaixin@linux.alibaba.com>
-:::::: CC: Peter Zijlstra <peterz@infradead.org>
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
