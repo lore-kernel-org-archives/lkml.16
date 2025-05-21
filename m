@@ -1,130 +1,200 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fout-b2-smtp.messagingengine.com (fout-b2-smtp.messagingengine.com [202.12.124.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B94E5238C16;
-	Wed, 21 May 2025 09:02:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AF4A238C29;
+	Wed, 21 May 2025 09:03:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747818163; cv=none; b=fN2WiSMByF+hYqapJTMFDLfK7CbaB92LiwSEDSscrQTL1SadbZtxGqxpIyrc0xbmC63gD/HVo4Eymdsat6I+vSjP6X7al363EjHZFWa4JE50ve6/tnaKZfM5y3mRsCOd0w7ZSP/QcyvtDHr4lab9snCgvFy7ii4rtMtR+4219Eo=
+	t=1747818191; cv=none; b=GlTRsbhepQk4aWHmk3lzeAQvXNdN13ZVmM5CbrZjNaEgf9f54xA/EfVe5KI/SgCYjjxPFGBpO3VDmT4Mjv7CjMntbq1Zjc7xjx7h1SOjN5hUXltqXbGJKivqMmc6X4aUcRSl9SPq9VV8Mt8pb+Zs2n5mhRfxba1RXH32u4+siBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747818163; c=relaxed/simple;
-	bh=RHaIWcN8RKu7hWMQ6BWOpFnFMTzBn0vqTSYhbOt0Hhk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HiQhw7fGfSQFehEJPS1xN6GlahYojaMwrkU57da0jVnfKxhkylSb7POqn8WuR+nEbIQvd6twlYMKAGGVK5r8yHzZAHuwgl6tmXHOo5qoTsFv5ACjZclyoUxCFh5602Zx64PEhCdA1GSURvpg91gvcC/3b0nC/tbKlk3+Mtq3Paw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FI5w5J4m; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747818191; c=relaxed/simple;
+	bh=TPCgsW3gKqojbMYnaqiOIUCbBB/zEcZHRB+lyzzANDo=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=LdHYiFDSppXWtpZBv68HYelc0zW3snKWBTZPcSI+vGjM/JuADmVNG8OuerCwQwm2AyIwtaOYIEgjgp35K0l0chLYiqf1WuPfwnR+mQrXLkQ7GJmOisUPfWZQ3utLMdLR3eo2wc2PDZLjI7mN7sykbcK+LTtAkiegVZ1iJI2aJcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=44QKW2Ej; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=PiyMkS4t; arc=none smtp.client-ip=202.12.124.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FI5w5J4m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7DB9C4CEE4;
-	Wed, 21 May 2025 09:02:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747818163;
-	bh=RHaIWcN8RKu7hWMQ6BWOpFnFMTzBn0vqTSYhbOt0Hhk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FI5w5J4m8fOlsArp2GXpfaHSJ7At4lAhl3yYOEYj6PsgDFVJQ+aMdonauBV4teN+O
-	 GElayUeVtP/44LIlgawnclP3ZK3vTouYa4Uo2kow1ykc/H9JnUzINcW4BXcgOf80t1
-	 V+zhGLinvtRcgZJfbFgs4iDb9sIVkvdzH2UxSIpXEjSKpknqGIdZ4pXJnPt9ZLhZmr
-	 II0Pcu79NA8LuKTfpyRl9P12IJ5CYlNzTiP6uSGLy/Tjd8XhOZ+iy5GjZHlTaBXhUU
-	 KVOmdFmcA4RYAC2KilXH+76+Ezqzabs75Oodo34VLV31YUTlWCV7Swg6+LOoz7h3z8
-	 wFUF/FJWNEXxA==
-Date: Wed, 21 May 2025 11:02:40 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Steffen Trumtrar <kernel@pengutronix.de>, 
-	Pavel Machek <pavel@kernel.org>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] dt-bindings: leds: add lp5860 LED controller
-Message-ID: <20250521-versatile-hamster-of-completion-d96e0a@kuoka>
-References: <20250514-v6-14-topic-ti-lp5860-v2-0-72ecc8fa4ad7@pengutronix.de>
- <20250514-v6-14-topic-ti-lp5860-v2-1-72ecc8fa4ad7@pengutronix.de>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="44QKW2Ej";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PiyMkS4t"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.stl.internal (Postfix) with ESMTP id 6CCBC1140117;
+	Wed, 21 May 2025 05:03:05 -0400 (EDT)
+Received: from phl-imap-12 ([10.202.2.86])
+  by phl-compute-05.internal (MEProxy); Wed, 21 May 2025 05:03:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1747818185;
+	 x=1747904585; bh=PcLZXiuxQaS428giR3RzU3lnofnEDkKQy05a9KBTIH4=; b=
+	44QKW2EjNMBrd4paaBb98Za0n5eQXbDuRmuEyEPl7MzdF8CRsSdDeJn/6KFv1d9/
+	J+UqYrs5YbHTYZWp64xosvAVPJu97H2/ESnJBERgyFvsXXdnMVy71RmoopCPzs2K
+	8cnpPwY6ccDn8l6hgbVcw4SGVZ9YZxSI0lnnE+oiIDV68NHt/KUlEpj3B6UaggzM
+	fXsGFBQ97R3TTp7uDpzCForvxvGV+5w9WntXFpHEQRHiH9z0ekoDndWlx/TNW1RK
+	ueIHzMFvlBrs47UNz1s8ENReVj0XcCtaxbx1PpS4jn3+G6m0zRj/ZdYDuEkegNhX
+	UBXmHhmbsypk3n4N8ffWFw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1747818185; x=
+	1747904585; bh=PcLZXiuxQaS428giR3RzU3lnofnEDkKQy05a9KBTIH4=; b=P
+	iyMkS4tWOmrGv/vpw7irwVReFarSLJuUxrNvQmyMkpEQ8cpSOY70srNEdrBoSott
+	08fJHliKKI+BESplRaocdpofajWhnc+bonE2BZTVfJJufh2XP2fS5Bv6+rTzhqt1
+	EWUAo1kDKrWqQH7Jq3GejRpNR8D9K4STJk0A4HurL3jP84ET5YFg2Q/Msoa7JMar
+	BeTftpPhEDz2DodFoWLVDvvVRsOq9btSG3lFrBCZEyII3wIDzPROw9g5PwZt8Ii9
+	glqwjQ/hW4VqcxgaZLKtopR2ydT2yl1h+KtrRlgWJNUyBAw+9Tk+IGLe4oEqjZMw
+	F/Eg1mNK7+3q2wGS3eOHw==
+X-ME-Sender: <xms:yJYtaAb-TJls2WOkrq9mpn2wOU-KJlEfxbLlOct4EiYiQK4fhALM3Q>
+    <xme:yJYtaLaofxvD2GIRhy9a0vnO00FynOzr_dpi6y3Z5dJQ0Obrt4iSZ35KCsui7Fd6H
+    Z2jDi0iicV0qI8OeZo>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvieejucdltddurdegfedvrddttd
+    dmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgf
+    nhhsuhgsshgtrhhisggvpdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttd
+    enucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgj
+    fhfutgfgsehtjeertdertddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuc
+    eorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedu
+    keetgefggffhjeeggeetfefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuih
+    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdp
+    nhgspghrtghpthhtohepudelpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopeihsh
+    grthhosehushgvrhhsrdhsohhurhgtvghfohhrghgvrdhjphdprhgtphhtthhopegvtghr
+    hihpthhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqd
+    grlhhphhgrsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidq
+    rghpihesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdgrrh
+    gthhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhfshgu
+    vghvvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkh
+    gvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidq
+    mhhiphhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqph
+    grrhhishgtsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:yJYtaK-xFrqwHFlSoPZsAwI6SH46IFNL08vZdZZnEX48dTBkNJ5g6Q>
+    <xmx:yJYtaKpNhHPesWqvCybrcX__rJUQ_l4GwqXIc4b_m8Zteex_AV4onQ>
+    <xmx:yJYtaLqRF067g7BLsBZYkcFDJbY3ilyaHz9UIWGgiqSsmznTFSDuCw>
+    <xmx:yJYtaITEVJFbPtqN1X1pHXVcfzSO_Ov1_9MfVHbGO_Ly5vQ-bzLLuw>
+    <xmx:yZYtaCNRmKcuC8xdsvf4Ayd4y8gO62bGFb5MlZxgaQXse5XtiW7MD5C6>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 341AD1060061; Wed, 21 May 2025 05:03:04 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250514-v6-14-topic-ti-lp5860-v2-1-72ecc8fa4ad7@pengutronix.de>
+X-ThreadId: Tdb8541d917685bac
+Date: Wed, 21 May 2025 11:02:42 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Andrey Albershteyn" <aalbersh@redhat.com>,
+ "Dave Chinner" <david@fromorbit.com>
+Cc: "Amir Goldstein" <amir73il@gmail.com>,
+ "Christian Brauner" <brauner@kernel.org>,
+ "Richard Henderson" <richard.henderson@linaro.org>,
+ "Matt Turner" <mattst88@gmail.com>,
+ "Russell King" <linux@armlinux.org.uk>,
+ "Catalin Marinas" <catalin.marinas@arm.com>,
+ "Will Deacon" <will@kernel.org>,
+ "Geert Uytterhoeven" <geert@linux-m68k.org>,
+ "Michal Simek" <monstr@monstr.eu>,
+ "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
+ "James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>,
+ "Helge Deller" <deller@gmx.de>,
+ "Madhavan Srinivasan" <maddy@linux.ibm.com>,
+ "Michael Ellerman" <mpe@ellerman.id.au>,
+ "Nicholas Piggin" <npiggin@gmail.com>,
+ "Christophe Leroy" <christophe.leroy@csgroup.eu>,
+ "Naveen N Rao" <naveen@kernel.org>, "Heiko Carstens" <hca@linux.ibm.com>,
+ "Vasily Gorbik" <gor@linux.ibm.com>,
+ "Alexander Gordeev" <agordeev@linux.ibm.com>,
+ "Christian Borntraeger" <borntraeger@linux.ibm.com>,
+ "Sven Schnelle" <svens@linux.ibm.com>,
+ "Yoshinori Sato" <ysato@users.sourceforge.jp>,
+ "Rich Felker" <dalias@libc.org>,
+ "John Paul Adrian Glaubitz" <glaubitz@physik.fu-berlin.de>,
+ "David S . Miller" <davem@davemloft.net>,
+ "Andreas Larsson" <andreas@gaisler.com>,
+ "Andy Lutomirski" <luto@kernel.org>,
+ "Thomas Gleixner" <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>,
+ "Borislav Petkov" <bp@alien8.de>,
+ "Dave Hansen" <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>, "Chris Zankel" <chris@zankel.net>,
+ "Max Filippov" <jcmvbkbc@gmail.com>,
+ "Alexander Viro" <viro@zeniv.linux.org.uk>, "Jan Kara" <jack@suse.cz>,
+ =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+ =?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>,
+ =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
+ "Paul Moore" <paul@paul-moore.com>, "James Morris" <jmorris@namei.org>,
+ "Serge E. Hallyn" <serge@hallyn.com>,
+ "Stephen Smalley" <stephen.smalley.work@gmail.com>,
+ "Ondrej Mosnacek" <omosnace@redhat.com>,
+ "Tyler Hicks" <code@tyhicks.com>, "Miklos Szeredi" <miklos@szeredi.hu>,
+ linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-m68k@lists.linux-m68k.org,
+ linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+ linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-security-module@vger.kernel.org,
+ linux-api@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>,
+ selinux@vger.kernel.org, ecryptfs@vger.kernel.org,
+ linux-unionfs@vger.kernel.org, linux-xfs@vger.kernel.org,
+ "Andrey Albershteyn" <aalbersh@kernel.org>
+Message-Id: <d638db28-2603-448f-b149-b33eca821a64@app.fastmail.com>
+In-Reply-To: 
+ <sfmrojifgnrpeilqxtixyqrdjj5uvvpbvirxmlju5yce7z72vi@ondnx7qbie4y>
+References: <20250513-xattrat-syscall-v5-0-22bb9c6c767f@kernel.org>
+ <399fdabb-74d3-4dd6-9eee-7884a986dab1@app.fastmail.com>
+ <20250515-bedarf-absagen-464773be3e72@brauner>
+ <CAOQ4uxicuEkOas2UR4mqfus9Q2RAeKKYTwbE2XrkcE_zp8oScQ@mail.gmail.com>
+ <aCsX4LTpAnGfFjHg@dread.disaster.area>
+ <sfmrojifgnrpeilqxtixyqrdjj5uvvpbvirxmlju5yce7z72vi@ondnx7qbie4y>
+Subject: Re: [PATCH v5 0/7] fs: introduce file_getattr and file_setattr syscalls
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 14, 2025 at 12:36:28PM GMT, Steffen Trumtrar wrote:
-> The lp5860 is a LED matrix driver with 18 constant current sinks and 11
-> scan switches for 198 LED dots:
->   * Supply range from 2.7 V to 5.5 V
->   * 0.1mA - 50mA per current sink
->   * 1MHz I2C and 12MHz SPI control interface
->   * 8-bit analog dimming
->   * 8/16-bit PWM dimming
->   * individual ON and OFF control for each LED dot
->   * globat 3-bit Maximum Current setting for all LED dots
->   * individual LED dot open/short detection
-> 
-> Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-> ---
->  .../devicetree/bindings/leds/leds-lp5860.yaml      | 112 +++++++++++++++++++++
->  1 file changed, 112 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/leds-lp5860.yaml b/Documentation/devicetree/bindings/leds/leds-lp5860.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..330ff42b27fb19395e64f813da4b0ab1fa22fe69
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-lp5860.yaml
-> @@ -0,0 +1,112 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/leds/leds-lp5860.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: LED driver for LP5860 RGB LED from Texas Instruments.
-> +
-> +maintainers:
-> +  - Steffen Trumtrar <kernel@pengutronix.de>
-> +
-> +description: |
-> +  The LP5860 is multi-channel, I2C and SPI RGB LED Driver that can group RGB LEDs
-> +  into a LED group or control them individually.
-> +
-> +  For more product information please see the link below:
-> +  https://www.ti.com/lit/ds/symlink/lp5860.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - ti,lp5860
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  spi-max-frequency:
-> +    maximum: 12000000
+On Wed, May 21, 2025, at 10:48, Andrey Albershteyn wrote:
+> On 2025-05-19 21:37:04, Dave Chinner wrote:
 
-So that's a SPI device? Where is the definition of this field? You miss
-ref to peripheral props.
+>> > +struct fsx_fileattr {
+>> > +       __u32           fsx_xflags;     /* xflags field value (get/set) */
+>> > +       __u32           fsx_extsize;    /* extsize field value (get/set)*/
+>> > +       __u32           fsx_nextents;   /* nextents field value (get)   */
+>> > +       __u32           fsx_projid;     /* project identifier (get/set) */
+>> > +       __u32           fsx_cowextsize; /* CoW extsize field value (get/set)*/
+>> > +};
+>> > +
+>> > +#define FSXATTR_SIZE_VER0 20
+>> > +#define FSXATTR_SIZE_LATEST FSXATTR_SIZE_VER0
+>> 
+>> If all the structures overlap the same, all that is needed in the
+>> code is to define the structure size that should be copied in and
+>> parsed. i.e:
+>> 
+>> 	case FSXATTR..._V1:
+>> 		return ioctl_fsxattr...(args, sizeof(fsx_fileattr_v1));
+>> 	case FSXATTR..._V2:
+>> 		return ioctl_fsxattr...(args, sizeof(fsx_fileattr_v2));
+>> 	case FSXATTR...:
+>> 		return ioctl_fsxattr...(args, sizeof(fsx_fileattr));
 
-...
+I think user space these days, in particular glibc, expects that
+you can build using new kernel headers and run on older kernels
+but still get behavior that is compatible with old headers, so
+redefining FS_IOC_FSGETXATTR would be considered a bug.
 
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
+I'm fairly sure that in the past it was common to expect userspace
+to never be built against newer headers and run on older kernels,
+but the expectation seems to have gradually shifted away from that.
 
-And this is unevaluated. See other examples.
+> So, looks like there's at least two solutions to this concern.
+> Considering also that we have a bit of space in fsxattr,
+> 'fsx_pad[8]', I think it's fine to stick with the current fsxattr
+> for now.
 
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
+You still have to document what you expect to happen with the
+padding fields for both the ioctl and the syscall, as the
+current behavior of ignoring the padding in the ioctl is not
+what we expect for a syscall which tends to check unknown
+fields for zero. I don't see a good solution here if you
+use the same structure.
 
-Where do you use this header?
-
-> +    #include <dt-bindings/leds/common.h>
-> +
-> +    spi {
-> +        #address-cells = <1>;
-
-Best regards,
-Krzysztof
-
+      Arnd
