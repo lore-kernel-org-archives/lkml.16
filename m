@@ -1,101 +1,218 @@
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62C2325C71C
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 12:43:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D4D6266562;
+	Wed, 21 May 2025 12:44:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747831433; cv=none; b=B1A+mzowBhpPP1i+vr8EkDkWUfUmn+2H65zopfJHuL5BdDz6aLbCR53RB7GF43x1HbJSA7j+Gc7FTPwMFPfeBf5j7y6lDKc9zGmpm6sB6McsI9q32LYlcQUMoF2OS6FkcSynAAR8rRajePkrnw8XuoxGDxYghBA/QkD8lHHWLJw=
+	t=1747831448; cv=none; b=fXSXjOLco4fczYCGJ+eu9T+JhrU1WTsH3QQDQ6vEq56vRvrYnqmUYv/ujvbk6rzwbjQ7t/gdCBEgnR0ejjfeSSzS7rqp/Y9+h6fNYugllJ10l17BfnxpIycsUaMpIg/BJXx8MOCqUI4fD/rvkJPE5ELl/u6t1HYN6yFxIU0FUwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747831433; c=relaxed/simple;
-	bh=g/E+6a/KWS9AoRfupTUlbB92Hehc/fNW6oXPu1RuI4U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SNiZMhUrh7iOK6oEXOgSMygt9cof02YuUTd8YYNoSo+oTE1Z7wfCmmBrS1z+UltrrmiPc9CJGImeLeEsaj7773zKB061se2HzHLbghM2ugnyHOz9EFSokT1D+O/qJljgB5c4PHPQjQhCWO8kr1QR1etCTm5HY1iFZ5u3Uv4554w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jHmEdBNW; arc=none smtp.client-ip=209.85.219.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747831448; c=relaxed/simple;
+	bh=tbVvEWwUPQ0G7AjWNLe9xc646p0TUIopt3jZzBbJx40=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ggJmG24pjj2150BcB64DPZ2/HVJIXcBf8+AHfN9km8588vLq+v2LWlQTBY07RmxcJJEtoqCLjSrHRBNFdes3d3uZgkpRAel7zUnL/EOh3W5W3ITI6p8/F6CEraWvhsG2gsAD6auCwb18YE1qmVtnR/n/92MJAd8yikluyT3777A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=WR4fOisG; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jHmEdBNW"
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e7b9972069dso3399854276.3
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 05:43:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747831431; x=1748436231; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=g/E+6a/KWS9AoRfupTUlbB92Hehc/fNW6oXPu1RuI4U=;
-        b=jHmEdBNWjUrzRe73BO2Q+jQnxr2GUrEPkyhYJCZnTW9GenTzOTNt9K3V2ns7w8eMD2
-         PWbpnruD+bMuiYb8GruB/Talw+LssKVGi4d1S9EcHCwJ2w1xfBNlbGi6fRAP1DpvWXbq
-         asfILGdtw0ortdvQkD9pcOsr4lRBawncDpsz7+mUp2nRJj0puJAFs2vbv8O8YE4n2Vvl
-         UMOB/U/rCU7ijM5Ldy61o3H0Wqtixdcl5lvdxlpUvn2hiNEtDIEwHR8x2nP45OHU4McE
-         UzpOhrJS7MSeRx7dxeA7PeAi9f75yLRUJ4I4bx1j5X6lye/xii4ZBjwy6JOL4NAF2TKB
-         P5XA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747831431; x=1748436231;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=g/E+6a/KWS9AoRfupTUlbB92Hehc/fNW6oXPu1RuI4U=;
-        b=ZSUh9dluQFAt5SzPh1MmfhRr4emQEt+SEsz4bRU5eTS5quvUNo9xZxpxVuo0gnELkI
-         kAda42ooU7XOAIFgDawtnWqwAMEoogaaXMc9PlNtXc7KDMVXwmIOOgWjXwarjCqo14Pn
-         n+1zd5Sze2/6dWJ6k9rGvC62OaOE1YscZfWz3C4y6U0XLiArTQp/9q6j8J8XzLKvS9xH
-         kZGbkYTzodQ01XLRatiH08u3okV59We4+t0cBAa6QcAoBlu8yia+mNTl+gNpBpkiVRLl
-         sjKiXzry5v1ow4fIVc33wXpuaqWQXHOQ9ePS4zWajw3zUpzpqbkcGszuAEy4tg0kal+7
-         typQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW6HMBfYeN0m9vbzTryLEDQ/TSqkdFfk0n3LrDqKdkqtWinIS80CQ4yjih+MIi/VVsbpUwhFtV6NNhyl9I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyyLZBn/znPboyJNuCC7dfKYf5AnPGynAnTwMUXVBofqt53bcd0
-	3HypT2iWVKpSg8wW3ww+mzFG8W7OIU1JScDNM9paTWCGqWQFlTTjWUCw3wdG5pUuOAiYY4Q4yBi
-	Pt+ErlENH3LoesqDQsoXEFvZi/AjvgpVYfs6FE/hCew==
-X-Gm-Gg: ASbGncvPfOYvM16sq79NmOXhytMgMFMZvecgPNznduEN6klA3OI8Vz5GcTnUHHXmewa
-	6EQxZDgzRFOIcU/mdmdo/R0Si5VOsYnHlFGYf4qjNMHdN2lA9y1VdqI0An6X+Ua8JG0goQtKtiI
-	rbdcYkgXxVCIXxJYObdRvFGxpDBbyZ7kbzYA==
-X-Google-Smtp-Source: AGHT+IHrf3yFJE5nkM7mTBJOaEWSNoHcIKcp9Pj5czvAg+e2Q2xsCFIRTCxMIzjNh1kxMUtU4OpLdyLcFK7WNX682rA=
-X-Received: by 2002:a05:6902:91c:b0:e7b:6881:5272 with SMTP id
- 3f1490d57ef6-e7b6a41073cmr27363209276.41.1747831431305; Wed, 21 May 2025
- 05:43:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="WR4fOisG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1747831446; x=1779367446;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=tbVvEWwUPQ0G7AjWNLe9xc646p0TUIopt3jZzBbJx40=;
+  b=WR4fOisGQxeCgVjMYDZsY6THhdgi90aAcDykXABgaViR6j88DSjb4gaS
+   M4BuzLKKJrJUr1J0cwRYvE632N2DRWSAX0HszTm9tl9iM4kyL0VHcy2m5
+   k7RZoM1dPeSqmTKA/kLsgEJRaTCWCFg2GJ8EDI4lqo5lOIyYk3RHUo5O0
+   70GxmLxYDETa5MD/7RoWfF6fPKzpBEvdKl3Y5mLHbujTDixHTdTSWASC7
+   bbWwqwUrKbojfZ/ACS1u3E4tcatV/f3wmAwZyrchu2/624AamuxxuFWC1
+   qh+t1vGMhZuHuzKDcratISmg1Tw/RuCgY9aopNaf1G7Ge6GDK6CVz2orI
+   A==;
+X-CSE-ConnectionGUID: 8vLVWBVUQ369tMbve2m25Q==
+X-CSE-MsgGUID: l5aKfXWFRLywCIoNkSfgew==
+X-IronPort-AV: E=Sophos;i="6.15,303,1739862000"; 
+   d="scan'208";a="41899942"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 21 May 2025 05:44:04 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Wed, 21 May 2025 05:43:41 -0700
+Received: from DEN-DL-M31836.microchip.com (10.10.85.11) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.2507.44 via Frontend Transport; Wed, 21 May 2025 05:43:39 -0700
+From: Horatiu Vultur <horatiu.vultur@microchip.com>
+To: <horatiu.vultur@microchip.com>, <UNGLinuxDriver@microchip.com>,
+	<andrew+netdev@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
+	<kuba@kernel.org>, <pabeni@redhat.com>, <richardcochran@gmail.com>
+CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH net] net: lan966x: Fix 1-step timestamping over ipv4 or ipv6
+Date: Wed, 21 May 2025 14:41:59 +0200
+Message-ID: <20250521124159.2713525-1-horatiu.vultur@microchip.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250516092716.3918-1-victorshihgli@gmail.com>
- <20250516092716.3918-3-victorshihgli@gmail.com> <CAPDyKFqCo2-9fYYAoNpmJf7XOiTvLM07hQks1io-S0MvmbAjCQ@mail.gmail.com>
- <e9559e3d-8c77-4748-90ce-4be5e8ac6ead@intel.com>
-In-Reply-To: <e9559e3d-8c77-4748-90ce-4be5e8ac6ead@intel.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Wed, 21 May 2025 14:43:14 +0200
-X-Gm-Features: AX0GCFvGmElWazgfg-Gv2KRHx7HeRJnhhCbIQ8A-GtSNRIlA87-xwixs9iFXc6c
-Message-ID: <CAPDyKFppthqZe-=_MuKCZLk=7u_Usu0Q3Enixh2BUC4ZJt=0+A@mail.gmail.com>
-Subject: Re: [PATCH V1 2/2] mmc: sdhci-uhs2: Adjust some error messages and
- register dump for SD UHS-II card
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Victor Shih <victorshihgli@gmail.com>, linux-mmc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, benchuanggli@gmail.com, 
-	HL.Liu@genesyslogic.com.tw, Greg.tu@genesyslogic.com.tw, 
-	Ben Chuang <ben.chuang@genesyslogic.com.tw>, 
-	Victor Shih <victor.shih@genesyslogic.com.tw>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Wed, 21 May 2025 at 13:04, Adrian Hunter <adrian.hunter@intel.com> wrote:
->
-> On 19/05/2025 15:24, Ulf Hansson wrote:
-> > On Fri, 16 May 2025 at 11:27, Victor Shih <victorshihgli@gmail.com> wrote:
-> >>
-> >> From: Victor Shih <victor.shih@genesyslogic.com.tw>
-> >>
-> >> Adjust some error messages to debug mode and register dump to dynamic
-> >> debug mode to avoid causing misunderstanding it is an error.
-> >
-> > Dumping the register may be useful for the debug level, I am not sure.
-> > Maybe Adrian has an opinion?
->
-> My understanding was that the original issue was that these messages
-> appear when it is not a UHS-II card, so the register dump should also
-> become debug-only.
+When enabling 1-step timestamping for ptp frames that are over udpv4 or
+udpv6 then the inserted timestamp is added at the wrong offset in the
+frame, meaning that will modify the frame at the wrong place, so the
+frame will be malformed.
+To fix this, the HW needs to know which kind of frame it is to know
+where to insert the timestamp. For that there is a field in the IFH that
+says the PDU_TYPE, which can be NONE  which is the default value,
+IPV4 or IPV6. Therefore make sure to set the PDU_TYPE so the HW knows
+where to insert the timestamp.
+Like I mention before the issue is not seen with L2 frames because by
+default the PDU_TYPE has a value of 0, which represents the L2 frames.
 
-Good point, I agree!
+Fixes: 77eecf25bd9d2f ("net: lan966x: Update extraction/injection for timestamping")
+Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+---
+ .../ethernet/microchip/lan966x/lan966x_main.c |  6 +++
+ .../ethernet/microchip/lan966x/lan966x_main.h |  5 ++
+ .../ethernet/microchip/lan966x/lan966x_ptp.c  | 49 ++++++++++++++-----
+ 3 files changed, 47 insertions(+), 13 deletions(-)
 
-[...]
+diff --git a/drivers/net/ethernet/microchip/lan966x/lan966x_main.c b/drivers/net/ethernet/microchip/lan966x/lan966x_main.c
+index 0af143ec0f869..427bdc0e4908c 100644
+--- a/drivers/net/ethernet/microchip/lan966x/lan966x_main.c
++++ b/drivers/net/ethernet/microchip/lan966x/lan966x_main.c
+@@ -353,6 +353,11 @@ static void lan966x_ifh_set_rew_op(void *ifh, u64 rew_op)
+ 	lan966x_ifh_set(ifh, rew_op, IFH_POS_REW_CMD, IFH_WID_REW_CMD);
+ }
+ 
++static void lan966x_ifh_set_oam_type(void *ifh, u64 oam_type)
++{
++	lan966x_ifh_set(ifh, oam_type, IFH_POS_PDU_TYPE, IFH_WID_PDU_TYPE);
++}
++
+ static void lan966x_ifh_set_timestamp(void *ifh, u64 timestamp)
+ {
+ 	lan966x_ifh_set(ifh, timestamp, IFH_POS_TIMESTAMP, IFH_WID_TIMESTAMP);
+@@ -380,6 +385,7 @@ static netdev_tx_t lan966x_port_xmit(struct sk_buff *skb,
+ 			return err;
+ 
+ 		lan966x_ifh_set_rew_op(ifh, LAN966X_SKB_CB(skb)->rew_op);
++		lan966x_ifh_set_oam_type(ifh, LAN966X_SKB_CB(skb)->pdu_type);
+ 		lan966x_ifh_set_timestamp(ifh, LAN966X_SKB_CB(skb)->ts_id);
+ 	}
+ 
+diff --git a/drivers/net/ethernet/microchip/lan966x/lan966x_main.h b/drivers/net/ethernet/microchip/lan966x/lan966x_main.h
+index 1efa584e71077..1f9df67f05044 100644
+--- a/drivers/net/ethernet/microchip/lan966x/lan966x_main.h
++++ b/drivers/net/ethernet/microchip/lan966x/lan966x_main.h
+@@ -75,6 +75,10 @@
+ #define IFH_REW_OP_ONE_STEP_PTP		0x3
+ #define IFH_REW_OP_TWO_STEP_PTP		0x4
+ 
++#define IFH_PDU_TYPE_NONE		0
++#define IFH_PDU_TYPE_IPV4		7
++#define IFH_PDU_TYPE_IPV6		8
++
+ #define FDMA_RX_DCB_MAX_DBS		1
+ #define FDMA_TX_DCB_MAX_DBS		1
+ 
+@@ -254,6 +258,7 @@ struct lan966x_phc {
+ 
+ struct lan966x_skb_cb {
+ 	u8 rew_op;
++	u8 pdu_type;
+ 	u16 ts_id;
+ 	unsigned long jiffies;
+ };
+diff --git a/drivers/net/ethernet/microchip/lan966x/lan966x_ptp.c b/drivers/net/ethernet/microchip/lan966x/lan966x_ptp.c
+index 63905bb5a63a8..87e5e81d40dc6 100644
+--- a/drivers/net/ethernet/microchip/lan966x/lan966x_ptp.c
++++ b/drivers/net/ethernet/microchip/lan966x/lan966x_ptp.c
+@@ -322,34 +322,55 @@ void lan966x_ptp_hwtstamp_get(struct lan966x_port *port,
+ 	*cfg = phc->hwtstamp_config;
+ }
+ 
+-static int lan966x_ptp_classify(struct lan966x_port *port, struct sk_buff *skb)
++static void lan966x_ptp_classify(struct lan966x_port *port, struct sk_buff *skb,
++				 u8 *rew_op, u8 *pdu_type)
+ {
+ 	struct ptp_header *header;
+ 	u8 msgtype;
+ 	int type;
+ 
+-	if (port->ptp_tx_cmd == IFH_REW_OP_NOOP)
+-		return IFH_REW_OP_NOOP;
++	if (port->ptp_tx_cmd == IFH_REW_OP_NOOP) {
++		*rew_op = IFH_REW_OP_NOOP;
++		*pdu_type = IFH_PDU_TYPE_NONE;
++		return;
++	}
+ 
+ 	type = ptp_classify_raw(skb);
+-	if (type == PTP_CLASS_NONE)
+-		return IFH_REW_OP_NOOP;
++	if (type == PTP_CLASS_NONE) {
++		*rew_op = IFH_REW_OP_NOOP;
++		*pdu_type = IFH_PDU_TYPE_NONE;
++		return;
++	}
+ 
+ 	header = ptp_parse_header(skb, type);
+-	if (!header)
+-		return IFH_REW_OP_NOOP;
++	if (!header) {
++		*rew_op = IFH_REW_OP_NOOP;
++		*pdu_type = IFH_PDU_TYPE_NONE;
++		return;
++	}
+ 
+-	if (port->ptp_tx_cmd == IFH_REW_OP_TWO_STEP_PTP)
+-		return IFH_REW_OP_TWO_STEP_PTP;
++	if (type & PTP_CLASS_L2)
++		*pdu_type = IFH_PDU_TYPE_NONE;
++	if (type & PTP_CLASS_IPV4)
++		*pdu_type = IFH_PDU_TYPE_IPV4;
++	if (type & PTP_CLASS_IPV6)
++		*pdu_type = IFH_PDU_TYPE_IPV6;
++
++	if (port->ptp_tx_cmd == IFH_REW_OP_TWO_STEP_PTP) {
++		*rew_op = IFH_REW_OP_TWO_STEP_PTP;
++		return;
++	}
+ 
+ 	/* If it is sync and run 1 step then set the correct operation,
+ 	 * otherwise run as 2 step
+ 	 */
+ 	msgtype = ptp_get_msgtype(header, type);
+-	if ((msgtype & 0xf) == 0)
+-		return IFH_REW_OP_ONE_STEP_PTP;
++	if ((msgtype & 0xf) == 0) {
++		*rew_op = IFH_REW_OP_ONE_STEP_PTP;
++		return;
++	}
+ 
+-	return IFH_REW_OP_TWO_STEP_PTP;
++	*rew_op = IFH_REW_OP_TWO_STEP_PTP;
+ }
+ 
+ static void lan966x_ptp_txtstamp_old_release(struct lan966x_port *port)
+@@ -374,10 +395,12 @@ int lan966x_ptp_txtstamp_request(struct lan966x_port *port,
+ {
+ 	struct lan966x *lan966x = port->lan966x;
+ 	unsigned long flags;
++	u8 pdu_type;
+ 	u8 rew_op;
+ 
+-	rew_op = lan966x_ptp_classify(port, skb);
++	lan966x_ptp_classify(port, skb, &rew_op, &pdu_type);
+ 	LAN966X_SKB_CB(skb)->rew_op = rew_op;
++	LAN966X_SKB_CB(skb)->pdu_type = pdu_type;
+ 
+ 	if (rew_op != IFH_REW_OP_TWO_STEP_PTP)
+ 		return 0;
+-- 
+2.34.1
 
-Kind regards
-Uffe
