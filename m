@@ -1,122 +1,159 @@
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9ACC1A238F;
-	Wed, 21 May 2025 18:36:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E8A7289820;
+	Wed, 21 May 2025 18:37:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747852588; cv=none; b=kzO18I2fm3svd4pJ8404ji4bF+Szn6ypISH9CxngfyOvEip4yTUQyknpewCTQNg1PoG2raFrx4Sol2L4fd9lT3zCnRjw6gq4BBQiUxkY0rUvm555D9zjosqLLPc3MKPdnqdWxThHtULy2DntCg/7TrV0L1vD3PhVHF0yVAPQ5Fk=
+	t=1747852664; cv=none; b=l9o2qRO4tQUaAj2mLN2Ie46dp3HPGhLN7YF3Sho5rdIlR+y90HwK/BMi4JAb+gUW81KvahykUYiyqtDCTULEwYPFu4LEjz0BuQg5oSCkYNYtkDJG+xpQy7RW1KeA/UMR6jRX3dFvvAmTevt7cTTfmNqIq5k/Zm/HL5QK4RG4vHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747852588; c=relaxed/simple;
-	bh=4pF/fnEt73KK2G+WRSbc7QaKThEjnl0yHnYizDARC00=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=T8uk7FpiJsWjdZ8esxv/FaNXJ0qCwoQvVT1qejn45VqWlT9SbInBkxtpIfND/saKuqfiDh58TyeCkaxdruX6jsf2j1Is/pTH3V8XSJqqI9hf14vdbFckhx54s4HfJD5rHb5oF6yx8ePsjF0BQGio1cbHux3w6n22bOosBcIrpMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buenzli.dev
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4b2g9Y1Y4bz9tBD;
-	Wed, 21 May 2025 20:36:17 +0200 (CEST)
+	s=arc-20240116; t=1747852664; c=relaxed/simple;
+	bh=Aos9Ol6hokUVBuT33LhS3DKWl1E6gsmX4YWWAPnjFxk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FSAhNqeaNeKR9H7TzGveIoCfNtcxoDQlonJh+JEWyTSZIvPnW7e7byasFm/8Rd2VjM5qYHQCkTuCAyiw5ZMDLzIzYfIjydqbgI2bzN+sYYfRkX3H6wuljOrE2YlRPU5C9F8RqgZvggsqSnsuWjaKqzNBYdRfKraUbnvmPjSSeqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1811C4CEE4;
+	Wed, 21 May 2025 18:37:39 +0000 (UTC)
+Date: Wed, 21 May 2025 19:37:37 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Ankur Arora <ankur.a.arora@oracle.com>
+Cc: linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, bpf@vger.kernel.org,
+	arnd@arndb.de, will@kernel.org, peterz@infradead.org,
+	akpm@linux-foundation.org, mark.rutland@arm.com,
+	harisokn@amazon.com, cl@gentwo.org, ast@kernel.org,
+	memxor@gmail.com, zhenglifeng1@huawei.com,
+	xueshuai@linux.alibaba.com, joao.m.martins@oracle.com,
+	boris.ostrovsky@oracle.com, konrad.wilk@oracle.com
+Subject: Re: [PATCH v2 1/7] asm-generic: barrier: add
+ smp_cond_load_relaxed_timewait()
+Message-ID: <aC4dcZ2veeavM2dR@arm.com>
+References: <20250502085223.1316925-1-ankur.a.arora@oracle.com>
+ <20250502085223.1316925-2-ankur.a.arora@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 21 May 2025 20:36:10 +0200
-Message-Id: <DA220Y73P1NR.192OYSQH3UD7A@buenzli.dev>
-To: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Cc: "Rob Herring" <robh@kernel.org>, "Saravana Kannan"
- <saravanak@google.com>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
- <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
- "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
- <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Danilo
- Krummrich" <dakr@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- "Dirk Behme" <dirk.behme@de.bosch.com>, <linux-kernel@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH v5 4/9] rust: device: Enable printing fwnode name and
- path
-From: "Remo Senekowitsch" <remo@buenzli.dev>
-References: <20250520200024.268655-1-remo@buenzli.dev>
- <20250520200024.268655-5-remo@buenzli.dev>
- <2025052153-steadier-bargraph-e81a@gregkh>
- <DA1UXY2O47Y2.1ND9MC6L01217@buenzli.dev> <2025052116-gem-blend-2585@gregkh>
-In-Reply-To: <2025052116-gem-blend-2585@gregkh>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250502085223.1316925-2-ankur.a.arora@oracle.com>
 
-On Wed May 21, 2025 at 6:58 PM CEST, Greg Kroah-Hartman wrote:
-> On Wed, May 21, 2025 at 03:03:07PM +0200, Remo Senekowitsch wrote:
->> On Wed May 21, 2025 at 2:02 PM CEST, Greg Kroah-Hartman wrote:
->> > On Tue, May 20, 2025 at 10:00:19PM +0200, Remo Senekowitsch wrote:
->> >> Add two new public methods `display_name` and `display_path` to
->> >> `FwNode`. They can be used by driver authors for logging purposes. In
->> >> addition, they will be used by core property abstractions for automat=
-ic
->> >> logging, for example when a driver attempts to read a required but
->> >> missing property.
->> >>=20
->> >> Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
->> >> ---
->> >>  rust/kernel/device/property.rs | 72 ++++++++++++++++++++++++++++++++=
-++
->> >>  1 file changed, 72 insertions(+)
->> >>=20
->> >> diff --git a/rust/kernel/device/property.rs b/rust/kernel/device/prop=
-erty.rs
->> >> index 70593343bd811..6ccc7947f9c31 100644
->> >> --- a/rust/kernel/device/property.rs
->> >> +++ b/rust/kernel/device/property.rs
->> >> @@ -32,6 +32,78 @@ pub(crate) fn as_raw(&self) -> *mut bindings::fwno=
-de_handle {
->> >>          self.0.get()
->> >>      }
->> >> =20
->> >> +    /// Returns an object that implements [`Display`](core::fmt::Dis=
-play) for
->> >> +    /// printing the name of a node.
->> >> +    pub fn display_name(&self) -> impl core::fmt::Display + '_ {
->> >> +        struct FwNodeDisplayName<'a>(&'a FwNode);
->> >> +
->> >> +        impl core::fmt::Display for FwNodeDisplayName<'_> {
->> >> +            fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core:=
-:fmt::Result {
->> >> +                // SAFETY: self is valid by its type invariant
->> >> +                let name =3D unsafe { bindings::fwnode_get_name(self=
-.0.as_raw()) };
->> >> +                if name.is_null() {
->> >> +                    return Ok(());
->> >
->> > So if there is no name, you are returning Ok()?  Are you sure that's o=
-k
->> > to do?  What will the result of the string look like then?
->>=20
->> In that case we're not writing anything to the formatter, which is
->> equivalent to an empty string. `Ok(())` means that writing succeeded.
->>=20
->> I assumed that a valid node would always have a name. And we're
->> guaranteed to have a valid node. So I assumed this case would never
->> happen and didn't think too hard about it. But even if a valid node has
->> not name, empty string is probably the correct thing, right?
->
-> I don't know what this "name" is used for.  An empty string might not be
-> what you want to use here, given that you could be naming something
-> based on it, right?  fwnode_get_name() is used for many things,
-> including the detection if a name is not present at all, and if not,
-> then the code needs to clean up and abort.
->
-> So what exactly are you going to be using this for?
+Hi Ankur,
 
-Valid question... I'm not using it for anything. I was trying to match
-the C API which has capabilities to print a fwnode's name and full path.
-I think the format specifiers are %pfwP and %pfwf if I'm reading the
-source correctly. It also looks to me like the C API for printing fwnode
-names does the same thing - print nothing if the name is null. [1] [2]
+Sorry, it took me some time to get back to this series (well, I tried
+once and got stuck on what wait_policy is supposed to mean, so decided
+to wait until I had more coffee ;)).
 
-[1] https://elixir.bootlin.com/linux/v6.14.7/source/lib/vsprintf.c#L2242
-[2] https://elixir.bootlin.com/linux/v6.14.7/source/lib/vsprintf.c#L711
+On Fri, May 02, 2025 at 01:52:17AM -0700, Ankur Arora wrote:
+> diff --git a/include/asm-generic/barrier.h b/include/asm-generic/barrier.h
+> index d4f581c1e21d..a7be98e906f4 100644
+> --- a/include/asm-generic/barrier.h
+> +++ b/include/asm-generic/barrier.h
+> @@ -273,6 +273,64 @@ do {									\
+>  })
+>  #endif
+>  
+> +/*
+> + * Non-spin primitive that allows waiting for stores to an address,
+> + * with support for a timeout. This works in conjunction with an
+> + * architecturally defined wait_policy.
+> + */
+> +#ifndef __smp_timewait_store
+> +#define __smp_timewait_store(ptr, val) do { } while (0)
+> +#endif
+> +
+> +#ifndef __smp_cond_load_relaxed_timewait
+> +#define __smp_cond_load_relaxed_timewait(ptr, cond_expr, wait_policy,	\
+> +					 time_expr, time_end) ({	\
+> +	typeof(ptr) __PTR = (ptr);					\
+> +	__unqual_scalar_typeof(*ptr) VAL;				\
+> +	u32 __n = 0, __spin = 0;					\
+> +	u64 __prev = 0, __end = (time_end);				\
+> +	bool __wait = false;						\
+> +									\
+> +	for (;;) {							\
+> +		VAL = READ_ONCE(*__PTR);				\
+> +		if (cond_expr)						\
+> +			break;						\
+> +		cpu_relax();						\
+> +		if (++__n < __spin)					\
+> +			continue;					\
+> +		if (!(__prev = wait_policy((time_expr), __prev, __end,	\
+> +					  &__spin, &__wait)))		\
+> +			break;						\
+> +		if (__wait)						\
+> +			__smp_timewait_store(__PTR, VAL);		\
+> +		__n = 0;						\
+> +	}								\
+> +	(typeof(*ptr))VAL;						\
+> +})
+> +#endif
+> +
+> +/**
+> + * smp_cond_load_relaxed_timewait() - (Spin) wait for cond with no ordering
+> + * guarantees until a timeout expires.
+> + * @ptr: pointer to the variable to wait on
+> + * @cond: boolean expression to wait for
+> + * @wait_policy: policy handler that adjusts the number of times we spin or
+> + *  wait for cacheline to change (depends on architecture, not supported in
+> + *  generic code.) before evaluating the time-expr.
+> + * @time_expr: monotonic expression that evaluates to the current time
+> + * @time_end: compared against time_expr
+> + *
+> + * Equivalent to using READ_ONCE() on the condition variable.
+> + */
+> +#define smp_cond_load_relaxed_timewait(ptr, cond_expr, wait_policy,	\
+> +					 time_expr, time_end) ({	\
+> +	__unqual_scalar_typeof(*ptr) _val;;				\
+> +	_val = __smp_cond_load_relaxed_timewait(ptr, cond_expr,		\
+> +					      wait_policy, time_expr,	\
+> +					      time_end);		\
+> +	(typeof(*ptr))_val;						\
+> +})
+
+IIUC, a generic user of this interface would need a wait_policy() that
+is aware of the arch details (event stream, WFET etc.), given the
+__smp_timewait_store() implementation in patch 3. This becomes clearer
+in patch 7 where one needs to create rqspinlock_cond_timewait().
+
+The __spin count can be arch specific, not part of some wait_policy,
+even if such policy is most likely implemented in the arch code (as the
+generic caller has no clue what it means). The __wait decision, again, I
+don't think it should be the caller of this API to decide how to handle,
+it's something internal to the API implementation based on whether the
+event stream (or later WFET) is available.
+
+The ___cond_timewait() implementation in patch 4 sets __wait if either
+the event stream of WFET is available. However, __smp_timewait_store()
+only uses WFE as per the __cmpwait_relaxed() implementation. So you
+can't really decouple wait_policy() from how the spinning is done, in an
+arch-specific way. In this implementation, wait_policy() would need to
+say how to wait - WFE, WFET. That's not captured (and I don't think it
+should, we can't expand the API every time we have a new method of
+waiting).
+
+I still think this interface can be simpler and fairly generic, not with
+wait_policy specific to rqspinlock or poll_idle. Maybe you can keep a
+policy argument for an internal __smp_cond_load_relaxed_timewait() if
+it's easier to structure the code this way but definitely not for
+smp_cond_*().
+
+Another aspect I'm not keen on is the arbitrary fine/coarse constants.
+Can we not have the caller pass a slack value (in ns or 0 if it doesn't
+care) to smp_cond_load_relaxed_timewait() and let the arch code decide
+which policy to use?
+
+In summary, I see the API something like:
+
+#define smp_cond_load_relaxed_timewait(ptr, cond_expr,
+				       time_expr, time_end, slack_ns)
+
+We can even drop time_end if we capture it in time_expr returning a bool
+(like we do with cond_expr).
+
+Thanks.
+
+-- 
+Catalin
