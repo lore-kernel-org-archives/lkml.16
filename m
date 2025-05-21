@@ -1,267 +1,158 @@
-Received: from mail-lj1-f201.google.com (mail-lj1-f201.google.com [209.85.208.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F3EF272E5C
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 12:51:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 123AD267B10
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 12:52:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747831891; cv=none; b=RAr6p9eyS/7DGvvC+asAQGpcfX2Jf55PagC55Yr+AI0YHjB6sZO9eOp4pbN0bj6CsVDHmZVA+KmJN4f/0f6nFNlZoi5p7liWRBUtZVNjocZt9NLL4hJ5WBl+PsrjQgrOcMkTDnj3Mf7BTxakFUFrajM777sOs+bL90cAqAa1WSk=
+	t=1747831951; cv=none; b=WwIzKNlFQjrrIFke1fiXz2ukCg6pL06HvzSedAPHAUHCfC+TBZe6JRxdgXx4sthAyDhs0lQm++OvTeaVK4/fe/d5uQ948aoYzjxA1OCFue9aNjHIljurfVOMvsIZ5Ab7WQlL+N1DTbuCTq/gM/lvIuC+4F1c6AzcfkCSCOV29z8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747831891; c=relaxed/simple;
-	bh=Jxm7YsSOcl7SbKDCg4jgzBC7+DrbcLOhLsnFtsowMSE=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=am9j2rpSEWNmr+RyTYJFDaD3MmtVivrPlAQIP8GN1+JGdzSIsYibHmFqoZDySF8eryqGgjJVuGOmMxAyyCeti25rV8+qse0zAe5SYdzzeUd53Mxu8NTATuFKgfSP+qBd7EZTEfg1IYRPsAaUpzPsbiRi97EvsN1Nptxb8dTj1mQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=j9VsMwX0; arc=none smtp.client-ip=209.85.208.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--vdonnefort.bounces.google.com
+	s=arc-20240116; t=1747831951; c=relaxed/simple;
+	bh=ubr0IoG6QxDImEoRbYeRtQ/EWZKK2tR2JQKhedixIks=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TPp1lVW4XFb3VTSQBNxFrL6pa00Ug9wzaxc+zJxoelvRDX7DvF1kl6HM07xOiKidpl2/OLVS5F5RWHa9DW5bdWaWEXLt61z7OYN/nFCKnmnsMfR2vjYnQdru71O267pwhj/O9EAp4K7DYjBNP8OqMnwJnecwusHkSU75Tzxz9do=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=I2+5K89a; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j9VsMwX0"
-Received: by mail-lj1-f201.google.com with SMTP id 38308e7fff4ca-32813317834so29059281fa.1
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 05:51:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747831887; x=1748436687; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+mAmm5g1Jwly1b5ldQINlnDEQuSKb4osn8uy2X9OeKI=;
-        b=j9VsMwX0yc4r2F/4TEoW8DHB8lOhKosRnm70w685WtAWvAbv71UB3bXa9g+au/Ix4R
-         Oc87I9uXjG5h+bJ/FnGjPCbUmDTfGSGoT23Xob5j93MOG1B0GDSIKsZUf+ahk80uhbTy
-         Wlo6l7aSITrlx+H30XI61Uo/mnO83yb1uyRK+x+Hap4LOP2+cNbrn3AZu4/XUCibN/xp
-         6Uuzp6FELThKdYnN+PYED22ukYCHrNbmuhAQo7vmeZ5C1R2Tnrlq6t3jVm3afoO+0Ell
-         A+9vV7XndMXQFFli+Smo0yIaSDIq7YKtF5XolmBeAa9X5sQBi1hm2yZqwib5smDnHygo
-         zWIQ==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="I2+5K89a"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54L9Xn71016898
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 12:52:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=tZm1FcnWYSxqGc6IW3xjphoG
+	JpTqJodC7MLjwn9TjHc=; b=I2+5K89aoGBs7qFoEkVBHrm9duJlO+OREk4tVzZN
+	bN78S83KHmUIrZSlzqpDD4XlIIUnqmGThqZOCSUxQlOrAU+qmTtYVrLeLdEPV2GR
+	YMho5mIM6UyTLiODbPn4xmrUwYSfz9GQERP0kRbiaZhnYZAR3A679uq8loBZcc3B
+	L1/j6JtwzecCR16ca6EgfeslWqbmFKw3cm6PefVsbmxli/PWWHSs9YJo43/vh5sf
+	DmbCLSwz33iVp/jODtCXYKGS9ptuGuYbwuzoyygHISkb6wW7znl1tv5iK1nMEX1m
+	Kr++J7svvc+ctNhMkEpxwudiqknRYQq54iz6A8VLR0MRaA==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf9u03w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 12:52:28 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c5c82c6d72so1212105385a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 05:52:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747831887; x=1748436687;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+mAmm5g1Jwly1b5ldQINlnDEQuSKb4osn8uy2X9OeKI=;
-        b=O5fmgCptBAwo/fp2mJ8DZy4mMx1xUsEOjTohjYuWMdTM167GqJLABJ0Eigmg0MP51l
-         BUcQFa/ytJ1YBFq2Q6/A3sTrsbk+QUu75u1YkuGkf4nmC4DeafEuxkd18VmbN63yqmt6
-         2J3/rgFRTSmNtGjbBT2RJoyBsQqXjB7egeedT6/spOIb+4ZiGHVSVz17RfAnBtb5OEvb
-         IFqUf9GxkEKjsBcBNTzRJxBzf4Tpy2sihbR0YeFIZLCmE6k4CNCSBLQpVkZU1LmujL49
-         tJdt0TI65P3wdlMBkABAvZcoETE0Zvltggm6xB3YTxFvboWBBbTPWDKe02o+TqfcfJeP
-         pMdg==
-X-Forwarded-Encrypted: i=1; AJvYcCVe0zneVoyEqcOeYMVqAo7mTnuTnXh3FaZBww3kCDsKzkAFY9lz6q3PsrWKjnL1rjctmfqqkgmtB8MFWbg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRMe9/oqPDdJ/yq1TRPvM/wTzWo0xw0UsaJgjJT0welFXqhkd5
-	0Dgnhtl0Yh0fHhmEr0wAilkvBWuuJdK58viMJ3rez4MG5+kBrogjxxGekCmtib1DcjYJCZtv1aM
-	F6BfVNtcZgLTQCuvt31nYoA==
-X-Google-Smtp-Source: AGHT+IEUewuPBYFEtkW3sMmEWy+gJssUHZIxGZsES1eNOW8n7Onooz0aLiuqT7Knq0tYOoF85SSNBz4q6/qkCg9C
-X-Received: from wmsu25.prod.google.com ([2002:a05:600c:c3d9:b0:43c:fd72:aae1])
- (user=vdonnefort job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:1d07:b0:43c:e305:6d50 with SMTP id 5b1f17b1804b1-442fd660721mr162062465e9.24.1747831876497;
- Wed, 21 May 2025 05:51:16 -0700 (PDT)
-Date: Wed, 21 May 2025 13:48:31 +0100
-In-Reply-To: <20250521124834.1070650-1-vdonnefort@google.com>
+        d=1e100.net; s=20230601; t=1747831948; x=1748436748;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tZm1FcnWYSxqGc6IW3xjphoGJpTqJodC7MLjwn9TjHc=;
+        b=Zrl62HdApBSc/3uhi7rJXRTk7V9KzHTiOMz0s966fur3i9LD/cbnhPhczH+2vUSa3E
+         zX8javtCLfGuqZYnTm6bS1VJxQiRi5fTElfXDkMf5y4IZrvouRex8OeLp6fjRkIKEorv
+         +Yd2Ut37yU+t08Ob/1NPyNYnXeLrIv5Cv6Le+68y6Egp/W6a/ofIJ15/nIlpnNzUgNOV
+         dbl9TNk0K/cBQJCUb8a+tPQvqmMeGRM4sC1AQmAhOpo1E1Wp5pyxalQ8k7zIippqBVNd
+         G9/JxvKXfHP+ecHMO9X9f7PwsHDiVZdEOCnl2FhBGvn3oB7fwmzaaf45r9+8/5fZm+2i
+         Mz3w==
+X-Forwarded-Encrypted: i=1; AJvYcCU3Oa/3d96pQjaFxoDd4DYoiR28iUbh03NmfYIVH6Po+A+tu1Qg6PsK7Q5Rva2iu22tmtxzyh5px/EC1vk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5+aDqArFqMX+Y7K+MSWJl15h88mBjen0u/alCKfy6NCC5CVDP
+	zzkgdnZqZq0gCz4l/0iZnXaKrZhJp+QZFS1cITHvygPEtL7bsxQ/D0ikbAIfnOW2UUiiU3DzSWk
+	otKHJwQbyr0zAF1AUq4reUwY8SslP8aJlOMRZJnwI8jyKXbvSI/b6aYbQmwh1yQWX8Ss=
+X-Gm-Gg: ASbGncvhkulXC9h0X+is7kX11VnDfmBtjCyxQxJdHoF1LinCMQIPQnvZVWlzD01hLhE
+	FGCsJ1nxPOYG3TBb6iJvBCXcKAvkxvLpCDWfk9gkD5i2xUdwUE3Kc7+Jfn4ji3us+hUHRxBPZxL
+	rl//MyO0NDTSKHXxHJdzprlo21EuQK+tWoJ/L+62UcyxPYDj6nZrJaOYc3klgU98F2Xrkfb1rKL
+	w4EYuwRX4aG74GOzfFiJO2jvZk2F1+37Z5gIxOu1UNyPC0rEBhdjphmA8XgQIET12IUUL44xlZi
+	2SLt5066p4pgGyfrnwiL32J+CsH0XbheC80gzvpoxspmZWYDk8IePSTOlEJ9MOdrDOBSXgP7R/A
+	=
+X-Received: by 2002:a05:620a:459f:b0:7cd:31ca:d81 with SMTP id af79cd13be357-7cd4673b9e8mr2611202085a.27.1747831947943;
+        Wed, 21 May 2025 05:52:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IElTuLwfN5LBdLDm3L5ftLVYf4GR8LqxAuo0yz1nHnyhymUVMITO1eRg42xfg0uzDWWAlCCaQ==
+X-Received: by 2002:a05:620a:459f:b0:7cd:31ca:d81 with SMTP id af79cd13be357-7cd4673b9e8mr2611198585a.27.1747831947533;
+        Wed, 21 May 2025 05:52:27 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e6f16394sm2826161e87.5.2025.05.21.05.52.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 May 2025 05:52:26 -0700 (PDT)
+Date: Wed, 21 May 2025 15:52:25 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Maulik Shah <maulik.shah@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v2 2/3] soc: qcom: qcom_stats: Add QMP support for
+ syncing ddr stats
+Message-ID: <jl4g7mutb65ifxuv3covropjntziv5enxyc3lgz2fi7ddu64bd@e726p6by3vfh>
+References: <20250521-ddr_stats_-v2-0-2c54ea4fc071@oss.qualcomm.com>
+ <20250521-ddr_stats_-v2-2-2c54ea4fc071@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250521124834.1070650-1-vdonnefort@google.com>
-X-Mailer: git-send-email 2.49.0.1112.g889b7c5bd8-goog
-Message-ID: <20250521124834.1070650-8-vdonnefort@google.com>
-Subject: [PATCH v6 07/10] KVM: arm64: Convert pkvm_mappings to interval tree
-From: Vincent Donnefort <vdonnefort@google.com>
-To: maz@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, 
-	suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, 
-	will@kernel.org
-Cc: qperret@google.com, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, kernel-team@android.com, 
-	Vincent Donnefort <vdonnefort@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250521-ddr_stats_-v2-2-2c54ea4fc071@oss.qualcomm.com>
+X-Authority-Analysis: v=2.4 cv=V9990fni c=1 sm=1 tr=0 ts=682dcc8c cx=c_pps
+ a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=Prqm17leZL3r9GWXGqMA:9 a=CjuIK1q_8ugA:10
+ a=PEH46H7Ffwr30OY-TuGO:22
+X-Proofpoint-ORIG-GUID: z19GdLSs27QjKjCJ5hfEagI8-KEXPd8I
+X-Proofpoint-GUID: z19GdLSs27QjKjCJ5hfEagI8-KEXPd8I
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDEyNCBTYWx0ZWRfX63ZEDKZYTfMV
+ GNwksFRI/WhOL3gfpdCY/4aAzkq1skNO/JTEt4SfeJjPEXGa0QnVNsH2zFgSyN4qCwQY3TG5VJR
+ Y/k4/zfuzs2uF5M//Mr0HyCVBzICf3wWrEZeG/JUbsiXRnSDoNux1U3ctsnGfLMXR1zLa8EMF/i
+ 2rqRqu5kRwLf5mCJva4A2s7JJMMd7mUFZUE82traoFp4vI31LqnKY9zZzCzVeAHMVxkiMsEr4mj
+ LTdcpAYSy4Iwl9hfYJo+/zudi1+n3UCEoVgqMPxcz3KgL/U2avlPtaQyWvlaltro08Ah/7jNsQu
+ QcKkcPH60PjfWh+IsbPtCwQtKekdQ03FRNrriIXzK9h0aS8J9hpeO57ksY88RYHMsUwktAD70It
+ 7HrO2bjYFs6NizxsIU44nsKct6mqbAtVFoUD0erz19ey/RzSTHVIBfe+qVVSATFRgb2ACvf/
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-21_04,2025-05-20_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxlogscore=999 bulkscore=0 impostorscore=0 clxscore=1015 priorityscore=1501
+ lowpriorityscore=0 mlxscore=0 spamscore=0 phishscore=0 suspectscore=0
+ adultscore=0 malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505210124
 
-From: Quentin Perret <qperret@google.com>
+On Wed, May 21, 2025 at 02:02:11PM +0530, Maulik Shah wrote:
+> Recent SoCs (SM8450 onwards) require QMP command to be sent before reading
+> ddr stats. The duration field of ddr stats will get populated only if QMP
+> command is sent.
+> 
+> Add support to send ddr stats freqsync QMP command.
+> 
+> Signed-off-by: Maulik Shah <maulik.shah@oss.qualcomm.com>
+> ---
+>  drivers/soc/qcom/qcom_stats.c | 29 ++++++++++++++++++++++++++++-
+>  1 file changed, 28 insertions(+), 1 deletion(-)
+> 
+> @@ -310,6 +329,14 @@ static int qcom_stats_probe(struct platform_device *pdev)
+>  	qcom_create_subsystem_stat_files(root, config);
+>  	qcom_create_soc_sleep_stat_files(root, reg, d, config);
+>  	qcom_create_ddr_stat_files(root, reg, config);
+> +	/*
+> +	 * QMP is used for DDR stats syncing to MSG RAM for recent SoCs (SM8450 onwards).
+> +	 * The prior SoCs do not need QMP handle as the required stats are already present
+> +	 * in MSG RAM, provided the DDR_STATS_MAGIC_KEY matches.
+> +	 */
+> +	qcom_stats_qmp = qmp_get(&pdev->dev);
+> +	if (IS_ERR(qcom_stats_qmp))
+> +		qcom_stats_qmp = NULL;
 
-In preparation for supporting stage-2 huge mappings for np-guest, let's
-convert pgt.pkvm_mappings to an interval tree.
+Don't we need to handle QMP being not probed _yet_? In other words,
+there are several distinct cases:
 
-No functional change intended.
+- No QMP defined, proceed without it
+- QMP defined, not probed yet, return -EPROBE_DEFER here
+- QMP defined, qmp_get() returns an error, return that error code
+- QMP defined, qmp_get() returned valid pointer, proceed with using it.
 
-Suggested-by: Vincent Donnefort <vdonnefort@google.com>
-Signed-off-by: Quentin Perret <qperret@google.com>
-Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+>  
+>  	platform_set_drvdata(pdev, root);
+>  
+> 
+> -- 
+> 2.34.1
+> 
 
-diff --git a/arch/arm64/include/asm/kvm_pgtable.h b/arch/arm64/include/asm/kvm_pgtable.h
-index 6b9d274052c7..1b43bcd2a679 100644
---- a/arch/arm64/include/asm/kvm_pgtable.h
-+++ b/arch/arm64/include/asm/kvm_pgtable.h
-@@ -413,7 +413,7 @@ static inline bool kvm_pgtable_walk_lock_held(void)
-  */
- struct kvm_pgtable {
- 	union {
--		struct rb_root					pkvm_mappings;
-+		struct rb_root_cached				pkvm_mappings;
- 		struct {
- 			u32					ia_bits;
- 			s8					start_level;
-diff --git a/arch/arm64/include/asm/kvm_pkvm.h b/arch/arm64/include/asm/kvm_pkvm.h
-index d91bfcf2db56..da75d41c948c 100644
---- a/arch/arm64/include/asm/kvm_pkvm.h
-+++ b/arch/arm64/include/asm/kvm_pkvm.h
-@@ -173,6 +173,7 @@ struct pkvm_mapping {
- 	struct rb_node node;
- 	u64 gfn;
- 	u64 pfn;
-+	u64 __subtree_last;	/* Internal member for interval tree */
- };
- 
- int pkvm_pgtable_stage2_init(struct kvm_pgtable *pgt, struct kvm_s2_mmu *mmu,
-diff --git a/arch/arm64/kvm/pkvm.c b/arch/arm64/kvm/pkvm.c
-index 057874bbe3e1..8a1a2faf66a8 100644
---- a/arch/arm64/kvm/pkvm.c
-+++ b/arch/arm64/kvm/pkvm.c
-@@ -5,6 +5,7 @@
-  */
- 
- #include <linux/init.h>
-+#include <linux/interval_tree_generic.h>
- #include <linux/kmemleak.h>
- #include <linux/kvm_host.h>
- #include <asm/kvm_mmu.h>
-@@ -256,80 +257,67 @@ static int __init finalize_pkvm(void)
- }
- device_initcall_sync(finalize_pkvm);
- 
--static int cmp_mappings(struct rb_node *node, const struct rb_node *parent)
-+static u64 __pkvm_mapping_start(struct pkvm_mapping *m)
- {
--	struct pkvm_mapping *a = rb_entry(node, struct pkvm_mapping, node);
--	struct pkvm_mapping *b = rb_entry(parent, struct pkvm_mapping, node);
--
--	if (a->gfn < b->gfn)
--		return -1;
--	if (a->gfn > b->gfn)
--		return 1;
--	return 0;
-+	return m->gfn * PAGE_SIZE;
- }
- 
--static struct rb_node *find_first_mapping_node(struct rb_root *root, u64 gfn)
-+static u64 __pkvm_mapping_end(struct pkvm_mapping *m)
- {
--	struct rb_node *node = root->rb_node, *prev = NULL;
--	struct pkvm_mapping *mapping;
--
--	while (node) {
--		mapping = rb_entry(node, struct pkvm_mapping, node);
--		if (mapping->gfn == gfn)
--			return node;
--		prev = node;
--		node = (gfn < mapping->gfn) ? node->rb_left : node->rb_right;
--	}
--
--	return prev;
-+	return (m->gfn + 1) * PAGE_SIZE - 1;
- }
- 
-+INTERVAL_TREE_DEFINE(struct pkvm_mapping, node, u64, __subtree_last,
-+		     __pkvm_mapping_start, __pkvm_mapping_end, static,
-+		     pkvm_mapping);
-+
- /*
-- * __tmp is updated to rb_next(__tmp) *before* entering the body of the loop to allow freeing
-- * of __map inline.
-+ * __tmp is updated to iter_first(pkvm_mappings) *before* entering the body of the loop to allow
-+ * freeing of __map inline.
-  */
- #define for_each_mapping_in_range_safe(__pgt, __start, __end, __map)				\
--	for (struct rb_node *__tmp = find_first_mapping_node(&(__pgt)->pkvm_mappings,		\
--							     ((__start) >> PAGE_SHIFT));	\
-+	for (struct pkvm_mapping *__tmp = pkvm_mapping_iter_first(&(__pgt)->pkvm_mappings,	\
-+								  __start, __end - 1);		\
- 	     __tmp && ({									\
--				__map = rb_entry(__tmp, struct pkvm_mapping, node);		\
--				__tmp = rb_next(__tmp);						\
-+				__map = __tmp;							\
-+				__tmp = pkvm_mapping_iter_next(__map, __start, __end - 1);	\
- 				true;								\
- 		       });									\
--	    )											\
--		if (__map->gfn < ((__start) >> PAGE_SHIFT))					\
--			continue;								\
--		else if (__map->gfn >= ((__end) >> PAGE_SHIFT))					\
--			break;									\
--		else
-+	    )
- 
- int pkvm_pgtable_stage2_init(struct kvm_pgtable *pgt, struct kvm_s2_mmu *mmu,
- 			     struct kvm_pgtable_mm_ops *mm_ops)
- {
--	pgt->pkvm_mappings	= RB_ROOT;
-+	pgt->pkvm_mappings	= RB_ROOT_CACHED;
- 	pgt->mmu		= mmu;
- 
- 	return 0;
- }
- 
--void pkvm_pgtable_stage2_destroy(struct kvm_pgtable *pgt)
-+static int __pkvm_pgtable_stage2_unmap(struct kvm_pgtable *pgt, u64 start, u64 end)
- {
- 	struct kvm *kvm = kvm_s2_mmu_to_kvm(pgt->mmu);
- 	pkvm_handle_t handle = kvm->arch.pkvm.handle;
- 	struct pkvm_mapping *mapping;
--	struct rb_node *node;
-+	int ret;
- 
- 	if (!handle)
--		return;
-+		return 0;
- 
--	node = rb_first(&pgt->pkvm_mappings);
--	while (node) {
--		mapping = rb_entry(node, struct pkvm_mapping, node);
--		kvm_call_hyp_nvhe(__pkvm_host_unshare_guest, handle, mapping->gfn);
--		node = rb_next(node);
--		rb_erase(&mapping->node, &pgt->pkvm_mappings);
-+	for_each_mapping_in_range_safe(pgt, start, end, mapping) {
-+		ret = kvm_call_hyp_nvhe(__pkvm_host_unshare_guest, handle, mapping->gfn, 1);
-+		if (WARN_ON(ret))
-+			return ret;
-+		pkvm_mapping_remove(mapping, &pgt->pkvm_mappings);
- 		kfree(mapping);
- 	}
-+
-+	return 0;
-+}
-+
-+void pkvm_pgtable_stage2_destroy(struct kvm_pgtable *pgt)
-+{
-+	__pkvm_pgtable_stage2_unmap(pgt, 0, ~(0ULL));
- }
- 
- int pkvm_pgtable_stage2_map(struct kvm_pgtable *pgt, u64 addr, u64 size,
-@@ -357,28 +345,16 @@ int pkvm_pgtable_stage2_map(struct kvm_pgtable *pgt, u64 addr, u64 size,
- 	swap(mapping, cache->mapping);
- 	mapping->gfn = gfn;
- 	mapping->pfn = pfn;
--	WARN_ON(rb_find_add(&mapping->node, &pgt->pkvm_mappings, cmp_mappings));
-+	pkvm_mapping_insert(mapping, &pgt->pkvm_mappings);
- 
- 	return ret;
- }
- 
- int pkvm_pgtable_stage2_unmap(struct kvm_pgtable *pgt, u64 addr, u64 size)
- {
--	struct kvm *kvm = kvm_s2_mmu_to_kvm(pgt->mmu);
--	pkvm_handle_t handle = kvm->arch.pkvm.handle;
--	struct pkvm_mapping *mapping;
--	int ret = 0;
--
--	lockdep_assert_held_write(&kvm->mmu_lock);
--	for_each_mapping_in_range_safe(pgt, addr, addr + size, mapping) {
--		ret = kvm_call_hyp_nvhe(__pkvm_host_unshare_guest, handle, mapping->gfn, 1);
--		if (WARN_ON(ret))
--			break;
--		rb_erase(&mapping->node, &pgt->pkvm_mappings);
--		kfree(mapping);
--	}
-+	lockdep_assert_held_write(&kvm_s2_mmu_to_kvm(pgt->mmu)->mmu_lock);
- 
--	return ret;
-+	return __pkvm_pgtable_stage2_unmap(pgt, addr, addr + size);
- }
- 
- int pkvm_pgtable_stage2_wrprotect(struct kvm_pgtable *pgt, u64 addr, u64 size)
 -- 
-2.49.0.1112.g889b7c5bd8-goog
-
+With best wishes
+Dmitry
