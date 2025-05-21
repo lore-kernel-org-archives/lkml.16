@@ -1,118 +1,194 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A1922367B2
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 08:47:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24A48237173;
+	Wed, 21 May 2025 08:47:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747817254; cv=none; b=el1wNXX3pIwp1abcXl/jjLMenYQx205jyQ5+rOjtYmxQFHoVe3q7MIhLb/gcByV6j/qGVDVuxuMiDvdAbRDO30tMmjdrrkl4so5SX4xYCgUx60beB/DE8LN+FKnv+rkrDQNrYEXVVjFM+fMAt0ClT6aJcvC65VrzXkUvncsgjbQ=
+	t=1747817267; cv=none; b=rC16cS8X3T56hVR8vwEV/xJoSM4ocF/Hb7JMyQq4Jqnh29usESwIHtoQ3mflDI2fJlEP59Z3XzBsWBDfmrWu38xq5heDKafM5vPuCU/6F/RAiNlwe/mn13qG3Ul2bnkdwgHpF5wRUzUh8+ZnAm7hS91lct/FE8Jm3RrdAx6MEZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747817254; c=relaxed/simple;
-	bh=Vum0oqAC+JTXMo2IPeqOsM3O2/5b5k4lLi0I4ejYeUE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=DVrkY2qoMhJjt5ixCmCfa8EShwV1jHzUP01OLKwGLNCooPO/JDsFHTiUehE+EfADP4S10KO7Owtudk2o1N4FrUraianWUy15X849JwM+Lhiz8ueGfRvGvtIK/J2S4DXJlhgvs+Mh/IgmADngiAuVYOq5lL8Y7Aove7qeZXCMHjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=O0wWe6xu; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1747817267; c=relaxed/simple;
+	bh=Z+DbRsu4BCqlhGXMmulSIqXan3jSfGw/K2SHdYnl8lg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Nb25xdM0yMuR9gJQdCcefk4fv6ftRLJiKfOe3MXT+3oVP5bDfPotUybyvegQznYucZ73AlFBr4t5FDMU9uCWTdHYT5T8WQ7JFwd9ConTFSF7itE6fw6G/OQNw7gDdy3hChTxNMCqDf4yLRw8Lba4VMaEGM46tpWVN3LhyOQ1w1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BTlsrRpJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="O0wWe6xu"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id D652243212;
-	Wed, 21 May 2025 08:47:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1747817250;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=dbNkpN9tvCI3cQTDcf6zqNVW0pUx2ezrzHjvqif17ck=;
-	b=O0wWe6xuQyx8V44slil22KruQ1AZuaM03OtCG0w9Nw+wUYXTyxAsdjqjEuVCJky/yoWXso
-	3UGcfxY+HnAO6IM4zpx2inLesVRXZIUO7hR16fWM/1jyfNRpmUqCcJ1mAE+/YRkRp3VHd8
-	rlssfx2ieLcLYravSiWw3Z4k/S/zATKkDeoyAJjg5KjnoIn714p6Egubolk3X6JcDycQRB
-	/HiQHkPHzGzi/d1P7UpoEARjq8FzJ8SZtmo8KC8HsXKoR7QMvruTzjwy6bjDOWi7FDezSQ
-	kFEVvWHr5C4/WHYp2qn5PORaKo0C6x0fU4N28XvNsWtLHzuRIwuwTYWGBgcrtA==
-From: Romain Gantois <romain.gantois@bootlin.com>
-Date: Wed, 21 May 2025 10:47:24 +0200
-Subject: [PATCH] regulator: core: do not ignore repeated requests on
- stepped regulators
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BTlsrRpJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BEBBC4CEE4;
+	Wed, 21 May 2025 08:47:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747817266;
+	bh=Z+DbRsu4BCqlhGXMmulSIqXan3jSfGw/K2SHdYnl8lg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=BTlsrRpJmvudDwvB5CiouCMJ2hIQHlNeWFTnQKQvyC3p4oViYCR+vkV9lFD+o+cEl
+	 FGQxZWsy7M/ilINtBb8rC0Vs9s1jaljtIrWA4UH0EWpc/jqxYnuUEvhYoeaZ63pCnY
+	 kcGCwYGidKATCkL1eXHgiFey08DkMy188XqTT+5FNLClc3nGWGgHfG+WgBRMP6lp8t
+	 xjk6r2W/bOEJGpv2RL8eCtnTO4fkJRoNYJaFI8VeuYcNJ3NPCkefD95HvcKCFjuvdB
+	 w8s+qWI8+2yGbJHyqndBJKtjSkT7cELxUrlqedf2b2SjYYKWMq6OZ/rqyQJNzyhZMM
+	 WD05VeMqmxCPg==
+Message-ID: <7fec4945-eec5-4247-9979-a6ee2229626d@kernel.org>
+Date: Wed, 21 May 2025 10:47:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] phy: exyons5-usbdrd: support HS phy for
+ ExynosAutov920
+To: Pritam Manohar Sutar <pritam.sutar@samsung.com>,
+ 'Neil Armstrong' <neil.armstrong@linaro.org>, vkoul@kernel.org,
+ kishon@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ alim.akhtar@samsung.com, andre.draszik@linaro.org, peter.griffin@linaro.org,
+ kauschluss@disroot.org, m.szyprowski@samsung.com, s.nawrocki@samsung.com
+Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-samsung-soc@vger.kernel.org, rosa.pila@samsung.com,
+ dev.tailor@samsung.com, faraz.ata@samsung.com, muhammed.ali@samsung.com,
+ selvarasu.g@samsung.com
+References: <20250516102650.2144487-1-pritam.sutar@samsung.com>
+ <CGME20250516101803epcas5p2d9403d89d840dcad88a03d437a48aceb@epcas5p2.samsung.com>
+ <20250516102650.2144487-3-pritam.sutar@samsung.com>
+ <a5c1a064-d760-4140-9e78-d74823b400a8@linaro.org>
+ <1f63af35-7d10-434b-b802-115611ce2ed6@kernel.org>
+ <000201dbca1f$737647d0$5a62d770$@samsung.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <000201dbca1f$737647d0$5a62d770$@samsung.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250521-regulator-stepping-v1-1-b681ad012c0f@bootlin.com>
-X-B4-Tracking: v=1; b=H4sIAByTLWgC/x3MQQqAIBBA0avErBtQy0VdJVpYTjYQJmNFEN09a
- fkW/z+QSZgy9NUDQhdn3mOBriuYVxcDIftiMMpYZY1GoXBu7tgF80EpcQyop8XPTUtWNR2UMAk
- tfP/TYXzfD049+pRkAAAA
-X-Change-ID: 20250521-regulator-stepping-1bfdc34e5039
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- linux-kernel@vger.kernel.org, Romain Gantois <romain.gantois@bootlin.com>
-X-Mailer: b4 0.14.2
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgddvieegucdltddurdegfedvrddttddmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkvfevofesthejredtredtjeenucfhrhhomheptfhomhgrihhnucfirghnthhoihhsuceorhhomhgrihhnrdhgrghnthhoihhssegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeefkeduiefhhfefieffvddtudfhgeduheeivdfgueevkeegkeejuddvleejudetieenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduledvrdduieekrddtrddufegnpdhmrghilhhfrhhomheprhhomhgrihhnrdhgrghnthhoihhssegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeehpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtoheprhhomhgrihhnrdhgrghnthhoihhssegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhgihhrugifohhougesghhmrghilhdrtghomhdpr
- hgtphhtthhopegsrhhoohhnihgvsehkvghrnhgvlhdrohhrgh
-X-GND-Sasl: romain.gantois@bootlin.com
 
-Currently, the regulator_set_voltage() function will assume a noop if a
-consumer requests the same voltage range twice in a row.
+On 21/05/2025 09:10, Pritam Manohar Sutar wrote:
+> Hi Krzysztof,
+> 
+>> -----Original Message-----
+>> From: Krzysztof Kozlowski <krzk@kernel.org>
+>> Sent: 20 May 2025 01:13 PM
+>> To: Neil Armstrong <neil.armstrong@linaro.org>; Pritam Manohar Sutar
+>> <pritam.sutar@samsung.com>; vkoul@kernel.org; kishon@kernel.org;
+>> robh@kernel.org; krzk+dt@kernel.org; conor+dt@kernel.org;
+>> alim.akhtar@samsung.com; andre.draszik@linaro.org; peter.griffin@linaro.org;
+>> kauschluss@disroot.org; m.szyprowski@samsung.com;
+>> s.nawrocki@samsung.com
+>> Cc: linux-phy@lists.infradead.org; devicetree@vger.kernel.org; linux-
+>> kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-samsung-
+>> soc@vger.kernel.org; rosa.pila@samsung.com; dev.tailor@samsung.com;
+>> faraz.ata@samsung.com; muhammed.ali@samsung.com;
+>> selvarasu.g@samsung.com
+>> Subject: Re: [PATCH v2 2/2] phy: exyons5-usbdrd: support HS phy for
+>> ExynosAutov920
+>>
+>> On 20/05/2025 09:39, neil.armstrong@linaro.org wrote:
+>>>> diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c
+>>>> b/drivers/phy/samsung/phy-exynos5-usbdrd.c
+>>>> index 634c4310c660..b440b56c6595 100644
+>>>> --- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
+>>>> +++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
+>>>> @@ -177,6 +177,9 @@
+>>>>   #define HSPHYPLLTUNE_PLL_P_TUNE			GENMASK(3,
+>> 0)
+>>>>
+>>>>   /* Exynos850: USB DRD PHY registers */
+>>>> +#define EXYNOSAUTOv920_DRD_CTRL_VER		0x00
+>>>> +#define CTRL_VER_MAJOR_VERSION			GENMASK(31,
+>> 24)
+>>>> +
+>>>>   #define EXYNOS850_DRD_LINKCTRL			0x04
+>>>>   #define LINKCTRL_FORCE_RXELECIDLE		BIT(18)
+>>>>   #define LINKCTRL_FORCE_PHYSTATUS		BIT(17)
+>>>> @@ -1772,6 +1775,10 @@ static const char * const
+>> exynos5_regulator_names[] = {
+>>>>   	"vbus", "vbus-boost",
+>>>>   };
+>>>>
+>>>> +static const char * const exynosautov920_clk_names[] = {
+>>>> +	"ext_xtal",
+>>>> +};
+>>>> +
+>>>>   static const struct exynos5_usbdrd_phy_drvdata exynos5420_usbdrd_phy =
+>> {
+>>>>   	.phy_cfg		= phy_cfg_exynos5,
+>>>>   	.phy_ops		= &exynos5_usbdrd_phy_ops,
+>>>> @@ -1847,6 +1854,81 @@ static const struct exynos5_usbdrd_phy_drvdata
+>> exynos850_usbdrd_phy = {
+>>>>   	.n_regulators		= ARRAY_SIZE(exynos5_regulator_names),
+>>>>   };
+>>>>
+>>>> +static void exynosautov920_usbdrd_utmi_init(struct
+>>>> +exynos5_usbdrd_phy *phy_drd) {
+>>>> +	u32 version;
+>>>> +
+>>>> +	version = readl(phy_drd->reg_phy +
+>> EXYNOSAUTOv920_DRD_CTRL_VER);
+>>>> +	dev_info(phy_drd->dev, "usbphy: version:0x%x\n", version);
+>>>
+>>> Please do not add mode info to boot log, use dev_dbg instead.
+>>
+>> Just drop entirely, not even worth dbg (see coding style, driver development
+>> debugging guide). It is fixed per given compatible, isn't it? If not, there is entire
+>> commit msg to explain unusual things.
+> 
+> This SoC has a single USB 3.1 DRD combo v400 phy and three USB2.0 DRD phy v303
 
-This can lead to unexpected behavior if the target regulator has a maximum
-voltage step constraint. With such constraints, the regulator core may
-clamp the requested voltage to a lesser value, to ensure that the voltage
-delta stays under the specified limit.
 
-This means that the resulting regulator voltage depends on the current
-voltage, as well as the requested range, which invalidates the assumption
-that a repeated request for a specific voltage range will amount to a noop.
+That's a different device, no? Look at the compatible here - it says
+usb31drd.
 
-Considering the case of a regulator with a maximum voltage step constraint
-of 1V:
+What does 31 stand for?
 
-initial voltage: 2.5V
-
-consumer requests 4V
-expected result: 3.5V
-resulting voltage: 3.5V
-
-consumer requests 4V again
-expected result: 4V
-actual result: 3.5V
-
-Do not ignore repeated calls to regulator_set_voltage() if the regulator
-has a voltage step constraint.
-
-Signed-off-by: Romain Gantois <romain.gantois@bootlin.com>
----
- drivers/regulator/core.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index 7a248dc8d2e2ffd21e7daf729de9b33a5efc1937..4196b1d79fd53bfdd2d8e780272f5037d5ddab0e 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -3810,8 +3810,13 @@ static int regulator_set_voltage_unlocked(struct regulator *regulator,
- 	/* If we're setting the same range as last time the change
- 	 * should be a noop (some cpufreq implementations use the same
- 	 * voltage for multiple frequencies, for example).
-+	 *
-+	 * This isn't true for regulator devices with a "max_uV_step"
-+	 * constraint, as they can progressively step their voltage with each
-+	 * subsequent request.
- 	 */
--	if (voltage->min_uV == min_uV && voltage->max_uV == max_uV)
-+	if (voltage->min_uV == min_uV && voltage->max_uV == max_uV &&
-+	    !rdev->constraints->max_uV_step)
- 		goto out;
- 
- 	/* If we're trying to set a range that overlaps the current voltage,
-
----
-base-commit: a02c7665c216471413ed5442637a34364221e91c
-change-id: 20250521-regulator-stepping-1bfdc34e5039
+> controllers those only support the UTMI+ interface. Currently, supporting only 
+> v303 phy in this patch-set, and planning v400 phy later (soon). Same may be 
+> also updated in commit  message. 
+> 
+> If there's any issue in phy init, dbg print is needed to debug which phy caused it. 
+No, rethink rather this makes sense at all. Please read carefully
+writing bindings, which will tell you that you cannot have different
+devices under the same compatible. Unless you say these are the same
+devices and it differs by other phy? But this is a phy... so many questions.
 
 Best regards,
--- 
-Romain Gantois <romain.gantois@bootlin.com>
-
+Krzysztof
