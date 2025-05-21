@@ -1,64 +1,66 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B2D3221D99;
-	Wed, 21 May 2025 15:49:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EEAA227BA4;
+	Wed, 21 May 2025 15:49:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747842577; cv=none; b=TkJqhzD4LA3vgNHH6gAEryYu5E3B0m6NTLAL1Uitk5D+6+tRbtWSUaWgO9ZAzKFRyKtzEBamb/+3O8DlP8+i8E9eVsrNthx+S0uePqoKwt68WwQ7OhiCMYL4Xb+tt+yKMhh+zX5QnCFhyc6Q9zLFxNUvjZMJvFdMZ88pqi6u0vE=
+	t=1747842578; cv=none; b=YxWL+A6gPbpeM5hDMdAe0bGKJRVA2kB5qr/LEBnoDMVX3bibhEowRRCJa23ri8Z31uITEBoUb4gykkwAxP9KJV07HXr5ghH6rFFY1iX8PE5AEA9OFCcKvggqzSh6uHcMKYqwCRBftTs2V/otDf1k+MTJS88CxtxTggJiRr8SVOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747842577; c=relaxed/simple;
-	bh=aw9zYKs9MISJLI8iig2OA3oFf/4iilKNknnX3HbRSG8=;
+	s=arc-20240116; t=1747842578; c=relaxed/simple;
+	bh=+eIHLKlB3m9h3txg4FPvGyJv9d45hnjLW9twXz9aSlE=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=SaUg2sK8ryV22Qpnbz+7lQaM/wXywS4J2sBlHnSpBuoWEK5KFr64CP3Rkktz4aGW1lzbmkFgu+Tkxo7souIK3N0URoCy5fWBDh68slF8BckxlyPGxeZ6FAkj/4NEj+FvvJCRi8p4WLLgxGX18jtxH2XhQdOGsqQHeeLt9vcMwxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mgtliNf/; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WB96/xk+; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=ZAl0Ev/rAJN6cpelExspwTqXm3n1XTbnd0dDHcvGs++FoFSuSRaYFf0jD5e+xDxZNDeq18CVFuat8DWVzV/sBHrW1jZc0kB8jIxe7jXt4NLPuc1PowdE6pMdra6rrkWUAtc1KGrmz++jIQ5pCQSVbFRe8iGakmcifaNiG8eZXLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LxYN+5cm; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+TFZuiG+; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mgtliNf/";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WB96/xk+"
-Date: Wed, 21 May 2025 15:49:31 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LxYN+5cm";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+TFZuiG+"
+Date: Wed, 21 May 2025 15:49:33 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1747842572;
+	s=2020; t=1747842574;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=GeNjqHciE3nwYrjZ2uSVDx3uUbuyDOjTCQLq1jX4Uv8=;
-	b=mgtliNf/Sz+fTb2/E+22Fr8zIS9nMUPOlW7IjG0kE9O9SVPBjp/YiDX1WQCiiZwOZw+qMC
-	4zptKIqT+m11NVki6TrTtw5V7B0840xf/1qjloFNq3UIbZUe74dTLse2xLt+hCq8uakYJp
-	7n8xdDKPPRTqqCKE3WEoPiDmWCZRmXNBuvMpOmV2zYLJGddkfERQNw3wKwr1/TJ4v0BsQa
-	zFisOO266Z50+fes2OY25C42Qc0Nkj6gA2wW3gqiAdNsL+/ISkfJbg024CkVkXFXRAfm4A
-	LZ6QMyc/a4dzf/w4uKQOIGtkmZYyMR0jXfAgc3YXXnZQPk1tlCBriIEdIg9ylw==
+	bh=u63FRrFnIJArMmJGkvpu0JUACZmwR81v1rj3Xu0ZvBE=;
+	b=LxYN+5cmPjqzbM2WAtZnxlMThHcF0Aa9FrbUrzZHnEuBcn6XXiXzTrnI1yC7b18+5dWdIc
+	75uhm39ZnA1+MFwfkdTV/wUA9CclCH/luSBXsDyRldvhWTyVtkSlI4De8rmFEnOSNflhjV
+	pELto1H/Cf4pctcpSXWEBsbbKj3RJc0P3ajf94U+EjqhO4tknWJMuFF8iRGADN+sMZq0Uh
+	vjz+E7X5ZXCZ9LX7+ZY+YCstmlKZ+rl/as55euX7iFga6Dtcz4kqa+EJl5oljRDjnuyBQQ
+	dKAIVDRgIFxk0vKUtVpZ5KQHoEx88Vs/twdOXL/oWQfjsqxjbKJFrT+qaaqSGQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1747842572;
+	s=2020e; t=1747842574;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=GeNjqHciE3nwYrjZ2uSVDx3uUbuyDOjTCQLq1jX4Uv8=;
-	b=WB96/xk+QxGwfbLdPv649D8hquLZfyD6eFnlx6HoD/cldhvblp6ltlEETz7vhKjL+JbQte
-	Ok2nQzCN5fI4y+DA==
-From: "tip-bot2 for Rob Herring (Arm)" <tip-bot2@linutronix.de>
+	bh=u63FRrFnIJArMmJGkvpu0JUACZmwR81v1rj3Xu0ZvBE=;
+	b=+TFZuiG+6n34/EuL+0oD2JsfZx6m6LXbUxEws7MXOw12hcP60gxtqcIdEtMgZVLpORiRXZ
+	DsmXqaeffFDAmPCQ==
+From: "tip-bot2 for Darshan Prajapati" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/clocksource] dt-bindings: timer: Convert
- ezchip,nps400-timer to DT schema
-Cc: "Rob Herring (Arm)" <robh@kernel.org>,
+Subject: [tip: timers/clocksource] dt-bindings: timer: Add ESWIN EIC7700 CLINT
+Cc: Darshan Prajapati <darshan.prajapati@einfochips.com>,
+ Samuel Holland <samuel.holland@sifive.com>,
+ Pinkesh Vaghela <pinkesh.vaghela@einfochips.com>,
+ Conor Dooley <conor.dooley@microchip.com>,
  Daniel Lezcano <daniel.lezcano@linaro.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250506022237.2587355-1-robh@kernel.org>
-References: <20250506022237.2587355-1-robh@kernel.org>
+In-Reply-To: <20250410152519.1358964-9-pinkesh.vaghela@einfochips.com>
+References: <20250410152519.1358964-9-pinkesh.vaghela@einfochips.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174784257145.406.4047795947097755103.tip-bot2@tip-bot2>
+Message-ID: <174784257392.406.10780208654660770750.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,123 +70,36 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the timers/clocksource branch of tip:
 
-Commit-ID:     2b3b58f233afb4b1edf779c95e8106fe7c707c7c
-Gitweb:        https://git.kernel.org/tip/2b3b58f233afb4b1edf779c95e8106fe7c707c7c
-Author:        Rob Herring (Arm) <robh@kernel.org>
-AuthorDate:    Mon, 05 May 2025 21:22:35 -05:00
+Commit-ID:     6d1ca2236dbe987f0fb9fa194916fb453024b553
+Gitweb:        https://git.kernel.org/tip/6d1ca2236dbe987f0fb9fa194916fb453024b553
+Author:        Darshan Prajapati <darshan.prajapati@einfochips.com>
+AuthorDate:    Thu, 10 Apr 2025 20:55:17 +05:30
 Committer:     Daniel Lezcano <daniel.lezcano@linaro.org>
 CommitterDate: Fri, 16 May 2025 11:10:33 +02:00
 
-dt-bindings: timer: Convert ezchip,nps400-timer to DT schema
+dt-bindings: timer: Add ESWIN EIC7700 CLINT
 
-Convert the EZChip NPS400 Timer bindings to DT schema format. It's a
-straight-forward conversion. The 2 bindings only differ in compatible
-and one required property, so the schemas can be combined.
+Add compatible string for ESWIN EIC7700 CLINT.
 
-Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-Link: https://lore.kernel.org/r/20250506022237.2587355-1-robh@kernel.org
+Signed-off-by: Darshan Prajapati <darshan.prajapati@einfochips.com>
+Reviewed-by: Samuel Holland <samuel.holland@sifive.com>
+Signed-off-by: Pinkesh Vaghela <pinkesh.vaghela@einfochips.com>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Link: https://lore.kernel.org/r/20250410152519.1358964-9-pinkesh.vaghela@einfochips.com
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- Documentation/devicetree/bindings/timer/ezchip,nps400-timer.yaml | 45 +++++++++++++++++++++++++++++++++++++++++++++
- Documentation/devicetree/bindings/timer/ezchip,nps400-timer0.txt | 17 -----------------
- Documentation/devicetree/bindings/timer/ezchip,nps400-timer1.txt | 15 ---------------
- 3 files changed, 45 insertions(+), 32 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/timer/ezchip,nps400-timer.yaml
- delete mode 100644 Documentation/devicetree/bindings/timer/ezchip,nps400-timer0.txt
- delete mode 100644 Documentation/devicetree/bindings/timer/ezchip,nps400-timer1.txt
+ Documentation/devicetree/bindings/timer/sifive,clint.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/timer/ezchip,nps400-timer.yaml b/Documentation/devicetree/bindings/timer/ezchip,nps400-timer.yaml
-new file mode 100644
-index 0000000..317c501
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/ezchip,nps400-timer.yaml
-@@ -0,0 +1,45 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/ezchip,nps400-timer.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: EZChip NPS400 Timers
-+
-+maintainers:
-+  - Noam Camus <noamca@mellanox.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ezchip,nps400-timer0
-+      - ezchip,nps400-timer1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - clocks
-+
-+additionalProperties: false
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: ezchip,nps400-timer0
-+    then:
-+      required: [ interrupts ]
-+
-+examples:
-+  - |
-+    timer {
-+        compatible = "ezchip,nps400-timer0";
-+        interrupts = <3>;
-+        clocks = <&sysclk>;
-+    };
-diff --git a/Documentation/devicetree/bindings/timer/ezchip,nps400-timer0.txt b/Documentation/devicetree/bindings/timer/ezchip,nps400-timer0.txt
-deleted file mode 100644
-index e3cfce8..0000000
---- a/Documentation/devicetree/bindings/timer/ezchip,nps400-timer0.txt
-+++ /dev/null
-@@ -1,17 +0,0 @@
--NPS Network Processor
--
--Required properties:
--
--- compatible :	should be "ezchip,nps400-timer0"
--
--Clocks required for compatible = "ezchip,nps400-timer0":
--- interrupts : The interrupt of the first timer
--- clocks : Must contain a single entry describing the clock input
--
--Example:
--
--timer {
--	compatible = "ezchip,nps400-timer0";
--	interrupts = <3>;
--	clocks = <&sysclk>;
--};
-diff --git a/Documentation/devicetree/bindings/timer/ezchip,nps400-timer1.txt b/Documentation/devicetree/bindings/timer/ezchip,nps400-timer1.txt
-deleted file mode 100644
-index c0ab419..0000000
---- a/Documentation/devicetree/bindings/timer/ezchip,nps400-timer1.txt
-+++ /dev/null
-@@ -1,15 +0,0 @@
--NPS Network Processor
--
--Required properties:
--
--- compatible :	should be "ezchip,nps400-timer1"
--
--Clocks required for compatible = "ezchip,nps400-timer1":
--- clocks : Must contain a single entry describing the clock input
--
--Example:
--
--timer {
--	compatible = "ezchip,nps400-timer1";
--	clocks = <&sysclk>;
--};
+diff --git a/Documentation/devicetree/bindings/timer/sifive,clint.yaml b/Documentation/devicetree/bindings/timer/sifive,clint.yaml
+index 653e2e0..d85a1a0 100644
+--- a/Documentation/devicetree/bindings/timer/sifive,clint.yaml
++++ b/Documentation/devicetree/bindings/timer/sifive,clint.yaml
+@@ -30,6 +30,7 @@ properties:
+       - items:
+           - enum:
+               - canaan,k210-clint       # Canaan Kendryte K210
++              - eswin,eic7700-clint     # ESWIN EIC7700
+               - sifive,fu540-c000-clint # SiFive FU540
+               - spacemit,k1-clint       # SpacemiT K1
+               - starfive,jh7100-clint   # StarFive JH7100
