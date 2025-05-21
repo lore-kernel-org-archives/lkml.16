@@ -1,145 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA20623184A;
-	Wed, 21 May 2025 06:53:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 494AD21CFFA;
+	Wed, 21 May 2025 06:56:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747810413; cv=none; b=ahswjWoOpNJXJ1U4Md253FrytjbFC2LYqRfEcY+/tOgpf4dV9C5C/PQKBtytuuKP/4O+6x9mk87CowbdWYDn0uGErlXzCTCQc9d8M+hrxmx6jS0TxKE3gTbjPCK8UnSl9X6Cha9iNuebUij9Pc1+2ASPTym3xNOecSL413P6Rdc=
+	t=1747810604; cv=none; b=PxtfYXF1bxafLjUbG39ffR2MJpO6NLIxEtg9qZF+WIHoS0Lc56NnMpl3TkaYwWf9bbD/7dwHlXEf7cWbP1w7dQeMMiGYnpxrsAhEaDTPy3voQeOnXPx3jkQQx99amz7KiHAZqDsjXsGPppBKStT67UrzzkoJazDj7ZPFLKjZGlg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747810413; c=relaxed/simple;
-	bh=Q+Sd4eOk0jd48CvkzoRG923+qvQRtH20pp/6Vw0a1WY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=INQ+1mG3QfHakttcGnvR8C9mKA+ao1SPpW8or1VTTHKisbSfHzwvA3DKfTj0S8IT1F3N1pGtBpgw1VunBmCaA/x+QzrfwCm/CTZO+GGFVeP7Lvt8CJcunLLaXl2/n1Ox+lHaYPvU06OfeN5JBzDz55sG079OPkDfoKyxm3kMnK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BT9AhCy1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747810604; c=relaxed/simple;
+	bh=F3uEABgfR1+DkLbPYcAfXvhGvJq3EQGGdZgGUi1GdVM=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=M9uSnAYDLVuxjOrqSUKcqw2O2PKnAIqgCCkPXdrloQeSm/kXWJ8vGySX2di7dSuzVnQmwwEPe9JwYa9SaANoSE966IKZ7gj+Ug/ps3FZSIWb8QCdYkO7XgsVoRtT+eqpZTiA2YBrwa+kqhLVxfX5GIY660G+VA7WdhBYizxFQa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lLKDkpLs; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xm9St06R; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BT9AhCy1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0AD0C4CEE4;
-	Wed, 21 May 2025 06:53:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747810412;
-	bh=Q+Sd4eOk0jd48CvkzoRG923+qvQRtH20pp/6Vw0a1WY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=BT9AhCy1ECmPOvr6cevMtyD7RcLB2vWDD4YfEixS0d7we08SdWPS4iMniDaA8V6Lb
-	 PK2R6maJWrdGCf1lDSr2lIM42Vvy/BdpfXoqxFIIaJ5fuBzhKhS4/Nd9Bx+sDwDVAv
-	 2V7l7buF1XlXYkmCddBOUltllqrbJGVJR5fsArteat0HR6ifyHd9wnCyCxFsGdJ1nJ
-	 nZm8eebbug+TbvHpvL4uBTUagXq0M7vn+L+EwFZGdpP8u91p/yln3gq0c4A6/vUfR7
-	 vW/dBcrZTVHXnz5E9lxUaoWuxH/oLo80rTMEjNhZzfpRCRSGiKQOwTpf3S4BMm2wsP
-	 dlQ/C33PlbquA==
-Message-ID: <b8003fdf-66a1-47e1-8c78-069f0739ea37@kernel.org>
-Date: Wed, 21 May 2025 08:53:26 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lLKDkpLs";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xm9St06R"
+Date: Wed, 21 May 2025 06:56:40 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747810601;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/JZggDRh9VVMymbY9g3QDIHxu0xR+YS4bx4xyJb/nSo=;
+	b=lLKDkpLsVB6Oo0lyokO2MdcVybPWUOHU9pGqY6emtPU4oyWwKLRVR2Js8xLbrvgRiS9KB5
+	5cEvt6uh0XjzafwIstjQRcmfuA//Tq3S9jPGtdmJqJ2ssGhdgTTYu0f+mc+xn0vcNDfox9
+	nOJDow8DmoclQ56aIaiv8K2k0BiufOGSdv+EGD1xJ4K88X16n65P5WyJnwnzpSwrs/lDbO
+	BH5oGMnn2doWZ03dDUiY3ENshaIsMloUpLahK7MKlGDD6IjSpDLjUPHotwVATg17fjGyKC
+	Zm3A2DO+Li5m9bXK9x+tRmpzBSbK8iK4fO17jHODdGG+KuLnhujZYN57Z2HqLw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747810601;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/JZggDRh9VVMymbY9g3QDIHxu0xR+YS4bx4xyJb/nSo=;
+	b=xm9St06RjS/Zwj2OuBqGICl2ryWzJqU8lo7SRx1K3V+diY28pXxhTLv3Mbey+GarJItfVJ
+	YuCLOU3Il16eg0DA==
+From: "tip-bot2 for Xin Li (Intel)" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/core] x86/xen/msr: Fix uninitialized variable 'err'
+Cc: Dan Carpenter <dan.carpenter@linaro.org>, "Xin Li (Intel)" <xin@zytor.com>,
+ Ingo Molnar <mingo@kernel.org>, Juergen Gross <jgross@suse.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250517165713.935384-1-xin@zytor.com>
+References: <20250517165713.935384-1-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/5] dt-bindings: watchdog: qcom-wdt: Document
- qcom,imem property
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
- Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>,
- Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck
- <linux@roeck-us.net>, Rajendra Nayak <quic_rjendra@quicinc.com>,
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
-References: <20250519-wdt_reset_reason-v4-0-d59d21275c75@oss.qualcomm.com>
- <20250519-wdt_reset_reason-v4-3-d59d21275c75@oss.qualcomm.com>
- <20250520-portable-anteater-of-respect-c7be5c@kuoka>
- <37bd619d-242e-4488-8d45-c2c85612bee9@oss.qualcomm.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <37bd619d-242e-4488-8d45-c2c85612bee9@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
+Message-ID: <174781060040.406.8154038959914617178.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-On 20/05/2025 18:00, Konrad Dybcio wrote:
-> On 5/20/25 9:25 AM, Krzysztof Kozlowski wrote:
->> On Mon, May 19, 2025 at 02:04:03PM GMT, Kathiravan Thirumoorthy wrote:
->>> Document the "qcom,imem" property for the watchdog device on Qualcomm
->>> IPQ platforms. Use this property to extract the restart reason from
->>> IMEM, which is updated by XBL. Populate the watchdog's bootstatus sysFS
->>> entry with this information, when the system reboots due to a watchdog
->>> timeout.
->>>
->>> Describe this property for the IPQ5424 watchdog device and extend support
->>> to other targets subsequently.
->>>
->>> Signed-off-by: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
->>> ---
->>> Changes in v4:
->>> 	- New patch
->>> ---
->>>  .../devicetree/bindings/watchdog/qcom-wdt.yaml       | 20 ++++++++++++++++++++
->>>  1 file changed, 20 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml b/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
->>> index 49e2b807db0bc9d3edfc93ec41ad0df0b74ed032..bbe9b68ff4c8b813744ffd86bb52303943366fa2 100644
->>> --- a/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
->>> +++ b/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
->>> @@ -81,6 +81,16 @@ properties:
->>>      minItems: 1
->>>      maxItems: 5
->>>  
->>> +  qcom,imem:
->>
->> Shoouldn't this be existing 'sram' property? If IMEM is something
->> similar to OCMEM, then we already use sram for that.
-> 
-> We specifically want a handle to a predefined byte in IMEM, something akin
-> to qcom,4ln-config-sel in
-> 
-> Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml
+The following commit has been merged into the x86/core branch of tip:
 
-Nothing stops that with sram. Above example is poor, because it mentions
-syscon. There is no hardware as syscon. Does not exist. What is IMEM
-here, what is this relationship?
+Commit-ID:     e95534e107d2e9e136aa4d7cbededb3827e80074
+Gitweb:        https://git.kernel.org/tip/e95534e107d2e9e136aa4d7cbededb3827e80074
+Author:        Xin Li (Intel) <xin@zytor.com>
+AuthorDate:    Sat, 17 May 2025 09:57:12 -07:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Wed, 21 May 2025 08:44:31 +02:00
 
-Best regards,
-Krzysztof
+x86/xen/msr: Fix uninitialized variable 'err'
+
+xen_read_msr_safe() currently passes an uninitialized argument 'err' to
+xen_do_read_msr(). But as xen_do_read_msr() may not set the argument,
+xen_read_msr_safe() could return err with an unpredictable value.
+
+To ensure correctness, initialize err to 0 (representing success)
+in xen_read_msr_safe().
+
+Do the same in xen_read_msr(), even err is not used after being passed
+to xen_do_read_msr().
+
+Closes: https://lore.kernel.org/xen-devel/aBxNI_Q0-MhtBSZG@stanley.mountain/
+Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Juergen Gross <jgross@suse.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Link: https://lore.kernel.org/r/20250517165713.935384-1-xin@zytor.com
+---
+ arch/x86/xen/enlighten_pv.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
+index 7f9ded1..26bbaf4 100644
+--- a/arch/x86/xen/enlighten_pv.c
++++ b/arch/x86/xen/enlighten_pv.c
+@@ -1162,7 +1162,7 @@ static void xen_do_write_msr(u32 msr, u64 val, int *err)
+ 
+ static int xen_read_msr_safe(u32 msr, u64 *val)
+ {
+-	int err;
++	int err = 0;
+ 
+ 	*val = xen_do_read_msr(msr, &err);
+ 	return err;
+@@ -1179,7 +1179,7 @@ static int xen_write_msr_safe(u32 msr, u64 val)
+ 
+ static u64 xen_read_msr(u32 msr)
+ {
+-	int err;
++	int err = 0;
+ 
+ 	return xen_do_read_msr(msr, xen_msr_safe ? &err : NULL);
+ }
