@@ -1,102 +1,78 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24E0A22F15E;
-	Wed, 21 May 2025 17:01:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AFE621D5B0
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 17:05:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747846912; cv=none; b=WltghUFFMw1f4J5mJKck/N9hFHQi87Ddhz2r9Gud2XAuVNLvxUry/dA1Ige5DxVZbGAwpHUmUUPi+rZM5LpEASXuRh+wW8u8xCM8u6eSULj7Ozrbz25AkQZGJ6MjO18kjegI4PbhRmIZlgcJZZ2rhtpBWSSe7mFFyqjql3IWr4w=
+	t=1747847112; cv=none; b=s0na5elvReU+eULlx9U4sqg5uzA/89rzuoy6f5dwJs1Hk4hAYpeMFsP+BtdkJ6gMo/d5bYnyqJ9Xx56AkfoFQu4kUwfoOtvynCNQxuBtRUsgEqfwVc4vDcM7ZfgaplnkW0f0h/R6Izu+rCT7hadFXvYByx1TRtt9NjPm6QBP6F4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747846912; c=relaxed/simple;
-	bh=1VT/9jZFLOXENQjEMSO3cV9vUhB4/4XxiCpXx9AgHhc=;
+	s=arc-20240116; t=1747847112; c=relaxed/simple;
+	bh=h9K08S4/SppBRJEIj4ASAYVF9uE7myCzmPGq+LngFAM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O71NGXj7tt9OJ/5XOIyOrUAlDxeJfQw6r6OOr+p5qUz+VSZXJl3WTcNo07PMjbVoclXkXrqDM+IC4tMvu6mZzpfP2RK32Zmzlg/K9oI770gDFDKIDfC/dfRUC4p0fZzv1FaBNY5xiD+gi4NoMH0pWjC5XoqQIAbmXZXmFE3jivQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YEUWSBcZ; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=G4fW+PoWrJgZx3f1YwA7Ch7PxLx9/5r35FBSywhtkXt6et7FoW/UNAnPmWvS7GxY+Y8TBtaBwf3bGX8Rbh4TSOyDY9AGKLFEltZJNtpHLPV0fiNqohyU/UQKXy0wIP3MxUvETNR4Wv9AdH6/NzSMriJJcYKh3oDExqTNcENsejk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=gf8mQIyX; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YEUWSBcZ"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-231ecd4f2a5so45245385ad.0;
-        Wed, 21 May 2025 10:01:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="gf8mQIyX"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-30e57a37294so6642370a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 10:05:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747846910; x=1748451710; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=PWmX5o1KZHES75Hln8YX3lrBwYIMaAXXEFNBxe0jHFM=;
-        b=YEUWSBcZPXVjokfotdKKg/zka6gnfrsrHcdWXBsXOJ09PcndbTJqxv/r7aLFGtMlMk
-         5HnMYpOHhZv6o2CoE1yDeLhW+p+HN2/QU15/Seoi67hdsJqlisZAPA3IiUCduEUvwmhG
-         2bMU1q/B+ErhH8i8B6+V/eMLB23YdVwGeNIKslPWSINHY7CjLUl6muwcZ6zeMufXzSYK
-         QkPfYjS9cEUEuVg8aBGO9IQST/XAmh4Bp3Gpa2F4SRgYmRRTWuyKG8kGANFgfEpkamme
-         aCVPdM/FUyi3bj/kqRe4+agre36U4FIKEJ4ioyzrhLuLlmh4R4+ypAAHDXm2YTujpePr
-         IvDQ==
+        d=ventanamicro.com; s=google; t=1747847110; x=1748451910; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ADPBqv1nsQy1jMr9cHUjBrE8nBO9SxIHgR5hgX7pnl8=;
+        b=gf8mQIyX3c5auSAlleQTKZSazjF7zedqcjS55Bo3wen6ZKzE05ItTH6uGFhLYV89lF
+         YLepLHNMr3+ZEpKKB89YZbNUCuAND4fkLV8xdU57DVQb0W7FDCd6hiL+e9K9QhqFhO16
+         gWtJ7xpmMgyB76pYnfYLLwk0HMR8EyFH+REzHxxCFm3zzIyK4Ah1t65Sw4oWXq7j2L1w
+         M2pPN9sLiKLSbLYPZDLix9djggFx+hVp3iA/HlkD+3EFqMx3kpK5M6Xz9zKfuuxx4p/C
+         B1B++RZzkeDRrUr/x993+zUEmZBfwebBXPh4RuERiHjLTtBMr0blzfB/Q8BlhzDQqcMk
+         YQgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747846910; x=1748451710;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PWmX5o1KZHES75Hln8YX3lrBwYIMaAXXEFNBxe0jHFM=;
-        b=qtNRERutm497IIbxW/zFKKbwVuGO0Hoh6a0o5oTx/kdVe+R9yPbf57pDS4fzEbreNj
-         vciF7vV4n5ZcX6vnpiohgYDdU5ibpmdfbGhecUh8iY4QZKnhmI5rQV9e34ZNex8npuV+
-         ZSo9ZgwPCSnJn7gWe5zDnBCkxP+97boMr5ZbYVYjBHu8qg2ynWt/kIAsSOPdy1yXe+be
-         E2ECvVh4cISl4wb75dqLlOcSgoanADXV6lfEWK/wJcpPdPuouLAL7gugLX5qNMO9PdjQ
-         supZ01BCl0H3dNEvybP5RKWUKchKwbZbOT38nntJZ3g9t8X5ignZ0IKdbpXgeYKPvY4+
-         yWgg==
-X-Forwarded-Encrypted: i=1; AJvYcCVFcnuMdkyDe29QHkYdvglpkWwgmME2mWykdBP1rlpHCJCC/f1zry9YZYhL4yNFQwsLed/AxIW9m+WyPA==@vger.kernel.org, AJvYcCWHKlc8cRBbNXs+Nu0KqL0JExKUU+EuXklRqEmwyn/YApNvje9KtYtwqWtypQI72ckXoKFtyIEIOfPBxyQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzdrn6nA4mLOlOT02NhY9SUXEta5xol8bC/ZKKNItHMHnPtWsQy
-	v/pxb13EruT0rtHgnMgIks2zc0d0SWD+JG1CtGKUGUX3Mc94GVttelw=
-X-Gm-Gg: ASbGncsAlYet/0RJwPsDP2sHscNkAQR8fl+kzCosaNwbyyoBAP5rU3tLPBXfCDa7Hx4
-	039ozl0OJMZImz7wEobAATL2lM7Fg0GTXRmePAeYKYn2rPYeP7hdLAvMIpIV+RafZO8ILXFOexW
-	hTOGJLY3KxHPEBgnQC5VlMKBjy784gYcsK5y3oSsOwqOuzojcaS7/MKBGTysUt3Ge3kS1g8ZTX4
-	rJcunb5ygw5d+L/0y2gegx7Zj8pORzK/Jk7Tc0zDrwuefBqU4HGrYwL5J50LuZYGpLIUR4ka3S7
-	X4ndXebM6xR8HhO94ojM2/tR/axwQgkS39zixxtN+BdQSqH57Y2u20fOo+20H4+B6E3UDGhrb6x
-	Oq/4CTDocsZpl3XPcGA48G1o=
-X-Google-Smtp-Source: AGHT+IG0Sa3DbuCkqkmdcG/fc0MxWlV6cSP48i9+QjTx97ZOfBSkfimF0N4vSUQyUW8Hx/YktfqF6A==
-X-Received: by 2002:a17:902:ea0c:b0:22e:61b2:5eb6 with SMTP id d9443c01a7336-231de3030bemr301106515ad.15.1747846910234;
-        Wed, 21 May 2025 10:01:50 -0700 (PDT)
-Received: from localhost (c-73-158-218-242.hsd1.ca.comcast.net. [73.158.218.242])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-231d4e988c3sm95414665ad.120.2025.05.21.10.01.49
+        d=1e100.net; s=20230601; t=1747847110; x=1748451910;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ADPBqv1nsQy1jMr9cHUjBrE8nBO9SxIHgR5hgX7pnl8=;
+        b=EzN7e4VS6+pR1sKV8ja8diySxJzpq6OVOx9Zmvf5TLhOMGWi/xRKuHj/CaIS1btDsc
+         lf9piGKUUKBvzhtBSyYYBBXvlCQOhvhF0RKB81BNfEShxl2Zhuqs5ntE6EK6RX9xXVoP
+         +IiGvYLAi67tJaOB9e3ReUe5sRfzmezk1h9Cz1H0suvNzdNukdltEy9/DSro5ekBme3A
+         zTmH8F6EdnfFSHWkhYmdvYP3lGkTUOtPsr9he1/sW0OVnqaCyxE/58DFWYl1LY0Kh/UT
+         x8f7T+pKummMq0XLF5OQigKlQPC+qn7KLGPVWrPsKfZjQlIRjymP7YenvObBo/O/Wn1C
+         0Qww==
+X-Forwarded-Encrypted: i=1; AJvYcCXcPe/c28zomaP+PSzIh5uEkB/gNnH4Nh6ghlhy0F4autmyqBeCfr8mHQqTIEuFOj8pyJGYpDLogslImsk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMZuO1t+0GCprC4oaRMwqlc5lpJoWSOE6zHetJiidur3nAK6el
+	3cwZR0EImxYReaaEzoHH5Ekd32kPubG6FJxd3z1R6hdrln45wsfWGufbPGiD6n/IrCE=
+X-Gm-Gg: ASbGncsUsY3NNntWwRp8M1cWtIB0+has54oGNwjhN5QXaXD2r92bnZiQzrbU1qNJW41
+	UEzwF/lkg3OXXBwWwhkskDxlp0YVbvi9ecxWOBU+P+YG9Nl25p5RKk+3ZlHP+quZWHU1nVPVrAN
+	+1vTHGWRUaflbIYeInVIBFxG6XfRwUtrerBKCkmVP+7xd/EDnqu+ud6wzoQ7U60iFGukrhxXBZt
+	izGwa+2JPUAjPtXe2ee4B7zCF5QP4sJ4Zs39oxGx4Gmj24JWRsFm2aaOUqTbGWjiFcG6CaLgWAy
+	WwdWrpjwjjNc0AYuu8fcxkk1Ff5yDXFu7iW42YFqIjfuKMlQDwjmDgd9078=
+X-Google-Smtp-Source: AGHT+IH5FlEBgBhpIaKFt/ZqP/tgTMkpBf8AOBXDeEu9TZyI2338VGdq/Pc/ytgRQkhJH2aRJWXKWQ==
+X-Received: by 2002:a17:90b:55cc:b0:30e:4bb3:2533 with SMTP id 98e67ed59e1d1-30e830ebd4cmr36089630a91.10.1747847109762;
+        Wed, 21 May 2025 10:05:09 -0700 (PDT)
+Received: from sunil-laptop ([103.97.166.196])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f365f7a43sm3872992a91.47.2025.05.21.10.05.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 10:01:49 -0700 (PDT)
-Date: Wed, 21 May 2025 10:01:48 -0700
-From: Stanislav Fomichev <stfomichev@gmail.com>
-To: "Loktionov, Aleksandr" <aleksandr.loktionov@intel.com>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"davem@davemloft.net" <davem@davemloft.net>,
-	"edumazet@google.com" <edumazet@google.com>,
-	"kuba@kernel.org" <kuba@kernel.org>,
-	"pabeni@redhat.com" <pabeni@redhat.com>,
-	"skalluru@marvell.com" <skalluru@marvell.com>,
-	"manishc@marvell.com" <manishc@marvell.com>,
-	"andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
-	"michael.chan@broadcom.com" <michael.chan@broadcom.com>,
-	"pavan.chebbi@broadcom.com" <pavan.chebbi@broadcom.com>,
-	"ajit.khaparde@broadcom.com" <ajit.khaparde@broadcom.com>,
-	"sriharsha.basavapatna@broadcom.com" <sriharsha.basavapatna@broadcom.com>,
-	"somnath.kotur@broadcom.com" <somnath.kotur@broadcom.com>,
-	"Nguyen, Anthony L" <anthony.l.nguyen@intel.com>,
-	"Kitszel, Przemyslaw" <przemyslaw.kitszel@intel.com>,
-	"tariqt@nvidia.com" <tariqt@nvidia.com>,
-	"saeedm@nvidia.com" <saeedm@nvidia.com>,
-	"louis.peens@corigine.com" <louis.peens@corigine.com>,
-	"shshaikh@marvell.com" <shshaikh@marvell.com>,
-	"GR-Linux-NIC-Dev@marvell.com" <GR-Linux-NIC-Dev@marvell.com>,
-	"ecree.xilinx@gmail.com" <ecree.xilinx@gmail.com>,
-	"horms@kernel.org" <horms@kernel.org>,
-	"dsahern@kernel.org" <dsahern@kernel.org>,
-	"ruanjinjie@huawei.com" <ruanjinjie@huawei.com>,
-	"mheib@redhat.com" <mheib@redhat.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
-	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-	"oss-drivers@corigine.com" <oss-drivers@corigine.com>,
-	"linux-net-drivers@amd.com" <linux-net-drivers@amd.com>,
-	"leon@kernel.org" <leon@kernel.org>
-Subject: Re: [Intel-wired-lan] [PATCH net-next 1/3] net: ASSERT_RTNL remove
- netif_set_real_num_{rx, tx}_queues
-Message-ID: <aC4G_Pj118yoW-35@mini-arch>
-References: <20250520203614.2693870-1-stfomichev@gmail.com>
- <20250520203614.2693870-2-stfomichev@gmail.com>
- <SJ0PR11MB58660E85F76E4A347197C768E59EA@SJ0PR11MB5866.namprd11.prod.outlook.com>
+        Wed, 21 May 2025 10:05:09 -0700 (PDT)
+Date: Wed, 21 May 2025 22:35:00 +0530
+From: Sunil V L <sunilvl@ventanamicro.com>
+To: Alexandre Ghiti <alex@ghiti.fr>
+Cc: syzbot <syzbot+2cae92ded758083f5bde@syzkaller.appspotmail.com>,
+	aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, palmer@dabbelt.com,
+	paul.walmsley@sifive.com, syzkaller-bugs@googlegroups.com,
+	Mark Pearson <mpearson-lenovo@squebb.ca>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	linux-acpi@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+	Jiri Kosina <jkosina@suse.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [syzbot] riscv/fixes test error: can't ssh into the instance (2)
+Message-ID: <aC4HvHXJf17NAOzG@sunil-laptop>
+References: <682b0412.a70a0220.3849cf.00b1.GAE@google.com>
+ <8368aa6d-e5a9-4136-8eb6-c059bc888979@ghiti.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -105,42 +81,138 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <SJ0PR11MB58660E85F76E4A347197C768E59EA@SJ0PR11MB5866.namprd11.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8368aa6d-e5a9-4136-8eb6-c059bc888979@ghiti.fr>
 
-On 05/21, Loktionov, Aleksandr wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Intel-wired-lan <intel-wired-lan-bounces@osuosl.org> On Behalf
-> > Of Stanislav Fomichev
-> > Sent: Tuesday, May 20, 2025 10:36 PM
-> > To: netdev@vger.kernel.org
-> > Cc: davem@davemloft.net; edumazet@google.com; kuba@kernel.org;
-> > pabeni@redhat.com; skalluru@marvell.com; manishc@marvell.com;
-> > andrew+netdev@lunn.ch; michael.chan@broadcom.com;
-> > pavan.chebbi@broadcom.com; ajit.khaparde@broadcom.com;
-> > sriharsha.basavapatna@broadcom.com; somnath.kotur@broadcom.com;
-> > Nguyen, Anthony L <anthony.l.nguyen@intel.com>; Kitszel, Przemyslaw
-> > <przemyslaw.kitszel@intel.com>; tariqt@nvidia.com; saeedm@nvidia.com;
-> > louis.peens@corigine.com; shshaikh@marvell.com; GR-Linux-NIC-
-> > Dev@marvell.com; ecree.xilinx@gmail.com; horms@kernel.org;
-> > dsahern@kernel.org; ruanjinjie@huawei.com; mheib@redhat.com;
-> > stfomichev@gmail.com; linux-kernel@vger.kernel.org; intel-wired-
-> > lan@lists.osuosl.org; linux-rdma@vger.kernel.org; oss-
-> > drivers@corigine.com; linux-net-drivers@amd.com; leon@kernel.org
-> > Subject: [Intel-wired-lan] [PATCH net-next 1/3] net: ASSERT_RTNL
-> > remove netif_set_real_num_{rx, tx}_queues
+On Mon, May 19, 2025 at 06:35:15PM +0200, Alexandre Ghiti wrote:
+> On 5/19/25 12:12, syzbot wrote:
+> > Hello,
 > > 
-> Can you consider more explicit title like:
-> net: remove redundant ASSERT_RTNL() in queue setup functions
-> ?
-> 
-> > Existing netdev_ops_assert_locked takes care of asserting either
-> > netdev lock or RTNL.
+> > syzbot found the following issue on:
 > > 
-> I'd recommend rephrasing like:
-> The existing netdev_ops_assert_locked() already asserts that either
-> the RTNL lock or the per-device lock is held, making the explicit
-> ASSERT_RTNL() redundant.
+> > HEAD commit:    01534f3e0dd7 Merge tag 'riscv-fixes-6.15-rc6' of ssh://git..
+> > git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git fixes
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=158796f4580000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=2c32351e59d854b7
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=2cae92ded758083f5bde
+> > compiler:       riscv64-linux-gnu-gcc (Debian 12.2.0-13) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+> > userspace arch: riscv64
+> > 
+> > Downloadable assets:
+> > disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/a741b348759c/non_bootable_disk-01534f3e.raw.xz
+> > vmlinux: https://storage.googleapis.com/syzbot-assets/4ca1cbb891a9/vmlinux-01534f3e.xz
+> > kernel image: https://storage.googleapis.com/syzbot-assets/5fb1db315d47/Image-01534f3e.xz
+> > 
+> > IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> > Reported-by: syzbot+2cae92ded758083f5bde@syzkaller.appspotmail.com
+> > 
+> > 
+> > 
+> > ---
+> > This report is generated by a bot. It may contain errors.
+> > See https://goo.gl/tpsmEJ for more information about syzbot.
+> > syzbot engineers can be reached at syzkaller@googlegroups.com.
+> > 
+> > syzbot will keep track of this issue. See:
+> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> > 
+> > If the report is already addressed, let syzbot know by replying with:
+> > #syz fix: exact-commit-title
+> > 
+> > If you want to overwrite report's subsystems, reply with:
+> > #syz set subsystems: new-subsystem
+> > (See the list of subsystem names on the web dashboard)
+> > 
+> > If the report is a duplicate of another one, reply with:
+> > #syz dup: exact-subject-of-another-report
+> > 
+> > If you want to undo deduplication, reply with:
+> > #syz undup
+> > 
+> > _______________________________________________
+> > linux-riscv mailing list
+> > linux-riscv@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-riscv
+> 
+> 
+> So we hit the following warning:
+> 
+> [   33.466472][    C6] WARNING: CPU: 6 PID: 1 at fs/sysfs/group.c:131
+> internal_create_group+0xa22/0xdd8
+> [   33.471115][    C6] Modules linked in:
+> [   33.475123][    C6] CPU: 6 UID: 0 PID: 1 Comm: swapper/0 Not tainted
+> 6.15.0-rc6-dirty #3 PREEMPT
+> [   33.476075][    C6] Hardware name: riscv-virtio,qemu (DT)
+> [   33.476615][    C6] epc : internal_create_group+0xa22/0xdd8
+> [   33.477194][    C6]  ra : internal_create_group+0xa22/0xdd8
+> [   33.477696][    C6] epc : ffffffff80dd956c ra : ffffffff80dd956c sp :
+> ffffffc600087b50
+> [   33.478048][    C6]  gp : ffffffff89a659e0 tp : ffffffd681688000 t0 :
+> ffffffc600087a80
+> [   33.478377][    C6]  t1 : 1ffffff8c0010f78 t2 : ffffffff89b70a80 s0 :
+> ffffffc600087cc0
+> [   33.478690][    C6]  s1 : ffffffc600087c40 a0 : 0000000000000000 a1 :
+> 0000000000000000
+> [   33.478990][    C6]  a2 : 0000000000000002 a3 : ffffffff80dd956c a4 :
+> 0000000000000000
+> [   33.479291][    C6]  a5 : ffffffd681689000 a6 : fffffffff1f1f1f1 a7 :
+> ffffffff80dd8b4a
+> [   33.479602][    C6]  s2 : dfffffff00000000 s3 : ffffffff86a381a0 s4 :
+> ffffffc600087dc0
+> [   33.479967][    C6]  s5 : 0000000000000002 s6 : 0000000000000000 s7 :
+> 0000000000000000
+> [   33.480327][    C6]  s8 : 1ffffffff136df40 s9 : ffffffff89b6fa00 s10:
+> 1ffffff8c0010fa4
+> [   33.480673][    C6]  s11: ffffffff87bece20 t3 : 0000000000000000 t4 :
+> fffffffef10e33b2
+> [   33.481019][    C6]  t5 : fffffffef10e33b3 t6 : ffffffd68aabf2f8
+> [   33.481326][    C6] status: 0000000200000120 badaddr: ffffffff80dd956c
+> cause: 0000000000000003
+> [   33.481962][    C6] [<ffffffff80dd956c>]
+> internal_create_group+0xa22/0xdd8
+> [   33.482681][    C6] [<ffffffff80dd9944>] sysfs_create_group+0x22/0x2e
+> [   33.483136][    C6] [<ffffffff86289d82>] platform_profile_init+0x74/0xb2
+> [   33.483555][    C6] [<ffffffff80061860>] do_one_initcall+0x198/0xa9e
+> [   33.484158][    C6] [<ffffffff8620293e>] kernel_init_freeable+0x6d8/0x780
+> [   33.484689][    C6] [<ffffffff8609fe54>] kernel_init+0x28/0x24c
+> [   33.485208][    C6] [<ffffffff860c2542>] ret_from_fork+0xe/0x18
+> [   33.485885][    C6] irq event stamp: 950699
+> [   33.486072][    C6] hardirqs last  enabled at (950699):
+> [<ffffffff80a6182c>] kasan_quarantine_put+0x1a8/0x208
+> [   33.486710][    C6] hardirqs last disabled at (950698):
+> [<ffffffff80a61726>] kasan_quarantine_put+0xa2/0x208
+> [   33.487398][    C6] softirqs last  enabled at (950420):
+> [<ffffffff801533a6>] handle_softirqs+0x98e/0x119c
+> [   33.487930][    C6] softirqs last disabled at (950413):
+> [<ffffffff80153fd6>] __irq_exit_rcu+0x2e8/0x53c
+> 
+> Because we don't have acpi enabled and then acpi_kobj is null
+> (https://elixir.bootlin.com/linux/v6.15-rc6/source/fs/sysfs/group.c#L131).
+> 
+> The following patch fixes it, but not sure this is the right way, let me
+> know if I should send it, it would be nice to have it in 6.15:
+> 
+> diff --git a/drivers/acpi/platform_profile.c
+> b/drivers/acpi/platform_profile.c
+> index ffbfd32f4cf1b..afbe4705d3e7a 100644
+> --- a/drivers/acpi/platform_profile.c
+> +++ b/drivers/acpi/platform_profile.c
+> @@ -688,6 +688,9 @@ static int __init platform_profile_init(void)
+>  {
+>         int err;
+> 
+> +       if (acpi_disabled)
+> +               return -ENOTSUPP;
+> +
+>         err = class_register(&platform_profile_class);
+>         if (err)
+>                 return err;
+> 
+Looks good to me. But I think Arnd/Rafael are better to confirm this.
+I think HID driver enabling CONFIG_ACPI_PLATFORM_PROFILE can cause this
+issue on both arm and riscv when they boot the same ACPI enabled kernel
+with DT.
 
-Sure, will do, thanks!
+Thanks,
+Sunil
+
