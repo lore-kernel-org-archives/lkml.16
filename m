@@ -1,89 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4104F24167F;
-	Wed, 21 May 2025 09:33:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C903B248195;
+	Wed, 21 May 2025 09:34:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747820007; cv=none; b=EkpF2TZaEKIyNkGeTUJaSzXY2q1Mxga1DONBRQRmdvoMu1uNbVwpqqLHnZTGAOeT0E4AbpnXcO95FuUpGETvO9of3GCk3ZnRJCsNDHxT4ruNrM/SZ1Sq6jcj3UXOEBFLTn6gxADM1ScHU78tQYz2AJh+UxUHJSZhncaXQ6HUkOA=
+	t=1747820048; cv=none; b=c4PxbYF72u39VIyxSfhu9pzcPTWjUDpLDNsmTUuhsIRkodhy4nC9XMGxPekW7iB1akKK077l5+TpEbAjeYK73rxNsOczNHjLoNukrvGH/sxwvgjjyD5zAaoZhqVS61cVMSERQixJjLG6gW02qdV5L3JFq6OaByPPmvRyG3v1g4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747820007; c=relaxed/simple;
-	bh=LO1Ga9BqywoKA5/tkG4lU/4FfpBVnRF8ud6CdXRAeEU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VW7trVLW7aKYfQ7ovNOskcxd40DC8KtCmcGdcpeC/LZh2qAGDlyTPzY69aCIl+XT1vu3FtChyxvbQmWWbwDMJLvSMOZ+/kVHViVerhbBwSs49uyt2wG7e3C1u4SLqnIDq+RaK0z25Jz+7Z+3mGjJfM79ulI7+AexZUj/uJuKsSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=limWBBwd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747820048; c=relaxed/simple;
+	bh=6MklwD4j40E48FymB+qMAWubmyldDoIUnAjfIwDOqsw=;
+	h=Message-ID:Subject:Date:From:To:Cc:References:In-Reply-To; b=oUVKiNIRbGoZYF/PiqjVbHw+spLW5LBe5ihreVEmLNX2SPXgUPXXvm/OXx2LpnxxyFkJQPV0uCYf68z0Aop70tVkU9g6NudkYqejidsDvgPtg2MpJKYqJE6zZU8vBlHdkLsHQu8QNt2KCLdPLDPc1swN/aGfjl+Ndubb+1WNRfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=O8986z6W; arc=none smtp.client-ip=115.124.30.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="limWBBwd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16532C4CEE4;
-	Wed, 21 May 2025 09:33:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747820006;
-	bh=LO1Ga9BqywoKA5/tkG4lU/4FfpBVnRF8ud6CdXRAeEU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=limWBBwdIVKd11QilI9brElBRTvN1t8GNaQ/k6R8ky+uF0CoAvdxsuzcB3K1+yTVE
-	 ZPZMhNiJ5QtsNy9lKxOQG3PsD26LeEFNG1KIDtFASu9YVtEcvjmy37Armt85fk+gBR
-	 TOjBfvjURC0z9iZytH1o7eBmzEZpJ9CD+JKwfXmRjvRk5NK/+QH0Y9UHH0107SKQZR
-	 bczqbsEAM95KOPNVf9iWMQbGp29Gyu3Pxhky9or877ayyRY4S3Yb45xoynnGP+BqMN
-	 EcA28eLeGe0cB4fbCmJPNkV6lxOwCq/hYZss64SKRHeYD2HrY70hpBueE+OlTU30lp
-	 KeLTNdYHSfqJQ==
-Date: Wed, 21 May 2025 11:33:24 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Shradha Todi <shradha.t@samsung.com>
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.or, linux-kernel@vger.kernel.org, 
-	linux-phy@lists.infradead.org, manivannan.sadhasivam@linaro.org, lpieralisi@kernel.org, 
-	kw@linux.com, robh@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, alim.akhtar@samsung.com, vkoul@kernel.org, 
-	kishon@kernel.org, arnd@arndb.de, m.szyprowski@samsung.com, jh80.chung@samsung.com
-Subject: Re: [PATCH 07/10] dt-bindings: phy: Add PHY bindings support for FSD
- SoC
-Message-ID: <20250521-quirky-tanuki-of-tact-a79b86@kuoka>
-References: <20250518193152.63476-1-shradha.t@samsung.com>
- <CGME20250518193252epcas5p3e4d1d329f1e5616e842801ceb26728b6@epcas5p3.samsung.com>
- <20250518193152.63476-8-shradha.t@samsung.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="O8986z6W"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1747820042; h=Message-ID:Subject:Date:From:To;
+	bh=4klK27j5BAbxyRg1TaacVwZnbxVU14qKElYWcSUrg+E=;
+	b=O8986z6W+X7UU0fNpOkrLePsJ1mfbhy2wFikFR/XXAGLWu8xQIUzeiQ6T56FjLbpJiDWhxWjsiZSrjQ1do0jTie4pkf2VqZ/9pjrnrseAzCa7IWEXfept4Cu25IP1ghE8EmhW2oZEr+fAiO6TcXyZz66744XJZMc8zJ/fMSubso=
+Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0WbRDZA._1747820041 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 21 May 2025 17:34:01 +0800
+Message-ID: <1747820036.241548-2-xuanzhuo@linux.alibaba.com>
+Subject: Re: [PATCH v2 2/3] virtio_net: Cleanup '2+MAX_SKB_FRAGS'
+Date: Wed, 21 May 2025 17:33:56 +0800
+From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+To: Laurent Vivier <lvivier@redhat.com>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>,
+ netdev@vger.kernel.org,
+ Jason Wang <jasowang@redhat.com>,
+ linux-kernel@vger.kernel.org
+References: <20250521092236.661410-1-lvivier@redhat.com>
+ <20250521092236.661410-3-lvivier@redhat.com>
+In-Reply-To: <20250521092236.661410-3-lvivier@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250518193152.63476-8-shradha.t@samsung.com>
 
-On Mon, May 19, 2025 at 01:01:49AM GMT, Shradha Todi wrote:
-> Document PHY device tree bindings for Tesla FSD SoCs.
-> 
-> Signed-off-by: Shradha Todi <shradha.t@samsung.com>
+On Wed, 21 May 2025 11:22:35 +0200, Laurent Vivier <lvivier@redhat.com> wrote:
+> Improve consistency by using everywhere it is needed
+> 'MAX_SKB_FRAGS + 2' rather than '2+MAX_SKB_FRAGS' or
+> '2 + MAX_SKB_FRAGS'.
+>
+> No functional change.
+>
+> Signed-off-by: Laurent Vivier <lvivier@redhat.com>
+
+Reviewed-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+
 > ---
->  .../devicetree/bindings/phy/samsung,exynos-pcie-phy.yaml  | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/samsung,exynos-pcie-phy.yaml b/Documentation/devicetree/bindings/phy/samsung,exynos-pcie-phy.yaml
-> index 41df8bb08ff7..3a5bff0fb82d 100644
-> --- a/Documentation/devicetree/bindings/phy/samsung,exynos-pcie-phy.yaml
-> +++ b/Documentation/devicetree/bindings/phy/samsung,exynos-pcie-phy.yaml
-> @@ -15,10 +15,14 @@ properties:
->      const: 0
->  
->    compatible:
-> -    const: samsung,exynos5433-pcie-phy
-> +    oneOf:
-
-Drop, that's just enumm unless you already add here more?
-
-> +      - enum:
-> +          - samsung,exynos5433-pcie-phy
-> +          - tesla,fsd-pcie-phy
->  
->    reg:
-> -    maxItems: 1
-> +    minItems: 1
-> +    maxItems: 2
-
-You need to list the items and constrain existing variants. I do not get
-why exynos5433 gets now two MMIO ranges.
-
-Best regards,
-Krzysztof
-
+>  drivers/net/virtio_net.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+> index e53ba600605a..ff4160243538 100644
+> --- a/drivers/net/virtio_net.c
+> +++ b/drivers/net/virtio_net.c
+> @@ -1084,7 +1084,7 @@ static bool tx_may_stop(struct virtnet_info *vi,
+>  	 * Since most packets only take 1 or 2 ring slots, stopping the queue
+>  	 * early means 16 slots are typically wasted.
+>  	 */
+> -	if (sq->vq->num_free < 2+MAX_SKB_FRAGS) {
+> +	if (sq->vq->num_free < MAX_SKB_FRAGS + 2) {
+>  		struct netdev_queue *txq = netdev_get_tx_queue(dev, qnum);
+>
+>  		netif_tx_stop_queue(txq);
+> @@ -1116,7 +1116,7 @@ static void check_sq_full_and_disable(struct virtnet_info *vi,
+>  		} else if (unlikely(!virtqueue_enable_cb_delayed(sq->vq))) {
+>  			/* More just got used, free them then recheck. */
+>  			free_old_xmit(sq, txq, false);
+> -			if (sq->vq->num_free >= 2+MAX_SKB_FRAGS) {
+> +			if (sq->vq->num_free >= MAX_SKB_FRAGS + 2) {
+>  				netif_start_subqueue(dev, qnum);
+>  				u64_stats_update_begin(&sq->stats.syncp);
+>  				u64_stats_inc(&sq->stats.wake);
+> @@ -2998,7 +2998,7 @@ static void virtnet_poll_cleantx(struct receive_queue *rq, int budget)
+>  			free_old_xmit(sq, txq, !!budget);
+>  		} while (unlikely(!virtqueue_enable_cb_delayed(sq->vq)));
+>
+> -		if (sq->vq->num_free >= 2 + MAX_SKB_FRAGS) {
+> +		if (sq->vq->num_free >= MAX_SKB_FRAGS + 2) {
+>  			if (netif_tx_queue_stopped(txq)) {
+>  				u64_stats_update_begin(&sq->stats.syncp);
+>  				u64_stats_inc(&sq->stats.wake);
+> @@ -3195,7 +3195,7 @@ static int virtnet_poll_tx(struct napi_struct *napi, int budget)
+>  	else
+>  		free_old_xmit(sq, txq, !!budget);
+>
+> -	if (sq->vq->num_free >= 2 + MAX_SKB_FRAGS) {
+> +	if (sq->vq->num_free >= MAX_SKB_FRAGS + 2) {
+>  		if (netif_tx_queue_stopped(txq)) {
+>  			u64_stats_update_begin(&sq->stats.syncp);
+>  			u64_stats_inc(&sq->stats.wake);
+> --
+> 2.49.0
+>
