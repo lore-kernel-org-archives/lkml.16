@@ -1,211 +1,237 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB2F71A257D;
-	Wed, 21 May 2025 14:24:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3B351A0BE0
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 14:25:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747837470; cv=none; b=m07viskCZbgJdRtp6gMmq1dvZaNVX0CtWN9/nQBBNwvupVPiazDowJFpj2kMqHJadLh+l96glcGnOiYpKqEoV//oYElRgSucbWFuuyNoJ91ba32uK4c5gcVgZu9VV8FW+3vZAzkEYcUB/yFHNnxNKc/necAgP06GUoLxtT9eeRM=
+	t=1747837508; cv=none; b=K9eFE+4GKoLIvEiY3j0E2ciy2LbImE1VhPP0IcE/51mdrUboIXUYSRh3xGBKLxPB+6qsjPskbMu3h1k9MDzANa0uDpBMhvnZ+wklRWMh7uuJNgzKp8vNVxTkNCZd+S3Imbm0saeDRjaQt8hcCvoSwlCpTFr/q58DutJ1tMdc7GI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747837470; c=relaxed/simple;
-	bh=ooII1SG546YuRx1haJqB/YGVc4axhqFDEgHnwiiK0E8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p7WehdrwENnM2YZMA6YkGFjMig0IoM7n3R1ziqPpjYWd97bWjCCe2dyPXaudLuILo9K+InwERxoQshesgG296y3xVpsZKNIPu6q4/GYfqXsLNGCSjocK4UNphuYCng3wg+0LblVpN/iIthSrVeK5zTq0uszl30JCH5eYarpkq4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Y/jvpc/H; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1747837508; c=relaxed/simple;
+	bh=dGwumfjerIdNUT+ZWre17rwws9aXIHeRWCUz04oVeYs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=SATCFz8wwaTGHB2o6DyyvWHu/dIb0sNuLFYT3yRbusw9aTDyf+vW2+L0/8tS0LmDZASpH+8R1Ximgk8YdMpEjOhoxuOySrt0TlKD4ngyzcpm2350+7aIHGFblDJFG+XL5fwet0t4RfrYkekUoWK6G2VTbOzZAz5mzJLMd1znBn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OqMwCyTJ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Y/jvpc/H"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54LDn2TU006457;
-	Wed, 21 May 2025 14:24:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=CUmBkivY7tO/sQL1SI7gmFR8qaMp1g
-	AKSVaJ+GrGhvY=; b=Y/jvpc/H8c2Gebn0ZcHWJGrx+40mASN/UkEGB2J4AhIb57
-	VVW+plauERibi90Ja54FKix1X5C5kutduoEf9CT/mWj2SNBWAeU9weMCzf7FIbUm
-	HiafDs7LStkm00oNhikUUUO0vaA1wWUy8LytFsCtrU9t6ze5dmlax78u0nyy+VnJ
-	WoJYvyAsBFAft6KEhl0ahtRetZ3NYUq5Fmc4LxDjMdeGsJWuVQFRbwKe0+xKaKa6
-	/HDMSaM9s+ng8jFupW7ic9o/fW273hFqITbueVZEyXF0+Y9ZR32zbe/xfinZy/jN
-	vON4tKsjl8vb+5QBakf4rb/USlXOklCHvKqR7uqw==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46sg2305rc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 14:24:20 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54LDctAW024664;
-	Wed, 21 May 2025 14:24:19 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46rwkr4j49-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 14:24:19 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54LEOFqf49086972
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 21 May 2025 14:24:15 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7CBBF20043;
-	Wed, 21 May 2025 14:24:15 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id F3FFF20040;
-	Wed, 21 May 2025 14:24:14 +0000 (GMT)
-Received: from li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com (unknown [9.87.130.155])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 21 May 2025 14:24:14 +0000 (GMT)
-Date: Wed, 21 May 2025 16:24:13 +0200
-From: Sumanth Korikkar <sumanthk@linux.ibm.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-mm <linux-mm@kvack.org>, Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 1/4] mm/memory_hotplug: Add interface for runtime
- (de)configuration of memory
-Message-ID: <aC3iDR8mB0uFWzAT@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
-References: <20241202082732.3959803-1-sumanthk@linux.ibm.com>
- <20241202082732.3959803-2-sumanthk@linux.ibm.com>
- <3151b9a0-3e96-4820-b6af-9f9ec4996ee1@redhat.com>
- <Z08WpCxt4lsIsjcN@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
- <1b9285ba-4118-4572-9392-42ec6ba6728c@redhat.com>
- <aCx-SJdHd-3Z12af@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
- <fca5fe72-55a8-456c-a179-56776848091d@redhat.com>
- <aC2sUdhavboOgS83@li-2b55cdcc-350b-11b2-a85c-a78bff51fc11.ibm.com>
- <496e6707-bdc9-4ad2-88e2-51236549b5f2@redhat.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OqMwCyTJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747837505;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zgFUH6Mk2Tk3iZDN9fsX7d3b+mQtNEFvHxIiCpWP5nk=;
+	b=OqMwCyTJjkDSp9GPYkPHvXHUFhfhni4dsK1EYsaE6C5Aqjf4NFXZuAEbvHAS7oeRcKqIpc
+	Iw3jCngXlM8pDVc+3IR0U8dsG/oqMzlRSJ2reShGq5NWgFz4/+yb2J8TSC5HRYE0Cuhr8e
+	DoxrOe1Uq6mJ1is9/7mVur9JW1Rn6gI=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-219-X96c0DJAO4-HyDbQHHAXrQ-1; Wed, 21 May 2025 10:25:04 -0400
+X-MC-Unique: X96c0DJAO4-HyDbQHHAXrQ-1
+X-Mimecast-MFC-AGG-ID: X96c0DJAO4-HyDbQHHAXrQ_1747837503
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43cf172ffe1so51102345e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 07:25:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747837503; x=1748442303;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zgFUH6Mk2Tk3iZDN9fsX7d3b+mQtNEFvHxIiCpWP5nk=;
+        b=gfqtRYnl2TM/aDjNFjQI2dEZcxJiioXAB4cC44DAiDu/0/peatfW3/9vKxMi7B4Swb
+         NU1hBwtMfe5+6zg/Nv084nlUE3rkLQ7Ovzg8P+UfPRXIA3ALUrkUCIWdghblFfiVSSaN
+         yY4MMeQE01HPs1m5LoZ8/7VVA8sCqmseqLllyqLOsIlWaqYN7HMOQvrYvxGf/fV1shnD
+         ihwGMjZRhF4i6lmBY+ES5ZE/ua+DbPVmOLbPFKtj0Myd8nR60tBJgkIxddr5ZIW4w2PI
+         SNHlehykuwwtFRI8ensrBfUl8NYesyw+byTEYmBJwEv5RYX0FSf9QmDwRqVQPl2sFt9i
+         3YPA==
+X-Forwarded-Encrypted: i=1; AJvYcCW5WqF+X2ftl5uF/pXHggJHXJPFTMjys+b+cIEZPHNBx/TuTS3Niundjm3ANFgJZH0vzlhEG/C5XzHydFU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzI82afJMFDIZTTJ0jm3jDKeGfai8YkgAkwWle+C3i+qykAAuaz
+	KD/mgXaAi/3IvusDxHjdVglekdoje9SxYHcYpATJX4oD5rlPGURlmlvzDRvAQb67X7tq+M7rk2w
+	FtP4PetmX9bUH2MjeiDW8RAJqWJtXeFEwXsLu6pXUUDIHHCLb83T/hgrPEGuVUPoHUQ==
+X-Gm-Gg: ASbGncstSs5hxJYPCaDCDEZo39LbCbH5QUn+TaoL5dyiD3JTCejwMJ82sDWSkYZVhfH
+	CSZ9v0xGyhhPJUa8kU8/gWzYSBcKcKds/+N7B6EboetyKBaFbWo/jITEHHnh5o4ZogvHa7+ijWX
+	97Okf2DKRDWesoi3J7XbxWERmRhFSPARrKjaCNEe+A/BIwrqqe2BFGVa9lag28iK3ajRET6KVzk
+	QJGjpPSrZa/RloqjR8zQHlozc8G+HMF8oAxCafVUhbu0CZo54SFixRXh1MhQrJseSEowKphIcRt
+	lZq8I71LkPvMAtwyxBAknKQbJcEbuwYnc5MEYkIYB7JJ2iSAZfC9rVGRk1CFkaIn7MYH5Jvb
+X-Received: by 2002:a5d:6702:0:b0:3a3:62c0:ff2 with SMTP id ffacd0b85a97d-3a362c010eemr15257835f8f.55.1747837503046;
+        Wed, 21 May 2025 07:25:03 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH/QB/m/PaAE/NQF15UKfuoxKAy6eEZT5rwMLl3Ovj5Sqrsob4y4T/qN2qBBMxZXcSFJxkoRA==
+X-Received: by 2002:a5d:6702:0:b0:3a3:62c0:ff2 with SMTP id ffacd0b85a97d-3a362c010eemr15257810f8f.55.1747837502559;
+        Wed, 21 May 2025 07:25:02 -0700 (PDT)
+Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-135-146.abo.bbox.fr. [213.44.135.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca88978sm20266010f8f.65.2025.05.21.07.25.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 May 2025 07:25:01 -0700 (PDT)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Nam Cao <namcao@linutronix.de>, Alexander Viro
+ <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan
+ Kara <jack@suse.cz>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ John Ogness <john.ogness@linutronix.de>, Clark Williams
+ <clrkwllms@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-rt-devel@lists.linux.dev, linux-rt-users@vger.kernel.org, Joe Damato
+ <jdamato@fastly.com>, Martin Karsten <mkarsten@uwaterloo.ca>, Jens Axboe
+ <axboe@kernel.dk>
+Cc: Nam Cao <namcao@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>
+Subject: Re: [PATCH] eventpoll: Fix priority inversion problem
+In-Reply-To: <20250519074016.3337326-1-namcao@linutronix.de>
+References: <20250519074016.3337326-1-namcao@linutronix.de>
+Date: Wed, 21 May 2025 16:25:00 +0200
+Message-ID: <xhsmh8qmq9h37.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <496e6707-bdc9-4ad2-88e2-51236549b5f2@redhat.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: Q6gjXwEoWQYoOp3sliZjbUuUNyqrKs_g
-X-Authority-Analysis: v=2.4 cv=RPmzH5i+ c=1 sm=1 tr=0 ts=682de214 cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=bvEob7D9_O_jlljhXYMA:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDEzNyBTYWx0ZWRfX7o+5WipuuU+M stjIdMAdyweWio/VWFcfnIcikD21aSkj3Omcty8zM8johLgnCa2laa+LmLzSzuRdJvfaS0Wb2rd lC11aUE58vDn4RCbAid57cawOVjceIJ0XmCRFceXdh+HkCoC3tbHYIuyellW1DsjHREAuQSDqvQ
- oiaIjGawlgwcw14hjZ1u6LiD7CXcaijhJxNzQptA8u6BQoxgQq+YOsndgLPzB2VWhTJeowLSQGy 9vG9ZQ2bmdhSOS21kXLciesiMe7CAQMA2mrAJx14dtk3upK44P016Np59QEv/CxXAv4wcI74SAd r02ndZFbeAx5yOLNC2uxiKMnSapB1XQiFZZkvtsJHUQ7H+B898D6Jsrc91GgWAHUIuQX1FQapgY
- tKgYB0MKG0RMIlKpPC5W9K9DxXoS6/FDmwr+vpQaeUCiuPM3DFS4T0b36t2SFMcJidOrr7+s
-X-Proofpoint-GUID: Q6gjXwEoWQYoOp3sliZjbUuUNyqrKs_g
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-21_04,2025-05-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- lowpriorityscore=0 impostorscore=0 adultscore=0 priorityscore=1501
- bulkscore=0 phishscore=0 mlxscore=0 malwarescore=0 spamscore=0
- mlxlogscore=999 suspectscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505160000 definitions=main-2505210137
+Content-Type: text/plain
 
-> So, the same as /sys/devices/system/memory/block_size_bytes ?
-> 
-> In a future where we could have variable sized memory blocks, what would be
-> the granularity here?
+On 19/05/25 09:40, Nam Cao wrote:
+> @@ -136,14 +136,28 @@ struct epitem {
+>               struct rcu_head rcu;
+>       };
+>
+> -	/* List header used to link this structure to the eventpoll ready list */
+> -	struct list_head rdllink;
+> +	/*
+> +	 * Whether this item can be added to the eventpoll ready list. Adding to the list can be
+> +	 * blocked for two reasons:
+> +	 *
+> +	 *  1. This item is already on the list.
+> +	 *  2. A waiter is consuming the ready list and has consumed this item. The waiter therefore
+> +	 *     is blocking this item from being added again, preventing seeing the same item twice.
+> +	 *     If adding is blocked due to this reason, the waiter will add this item to the list
+> +	 *     once consuming is done.
+> +	 */
+> +	bool link_locked;
 
-I wasnt aware of this variable sized memory blocks. Then either
-introduce block_size_bytes attribute inside each memoryX/ directory ? or
-add it only when variable sized memory blocks support is implemented?
+Nit: IIUC it's not just the readylist, it's anytime the link is used
+(e.g. to punt it on a txlist), so how about:
 
-> I assume, because that is assumed to be the smallest granularity in which we
-> can add_memory().
-> 
-> And the memory block size is currently always at least the storage increment
-> size, correct?
-> 
-> > 
-> > As I understand it, add_memory() operates on memory block granularity,
-> > and this is enforced by check_hotplug_memory_range(), which ensures the
-> > requested range aligns with the memory block size.
-> 
-> Yes. I was rather wondering, if we could have storage increment size >
-> memory block size.
+        /*
+         * Whether epitem.rdllink is currently used in a list. When used, it
+         * cannot be detached or inserted elsewhere.
+         *
+         * It may be in use for two reasons:
+         *
+         * 1. This item is on the eventpoll ready list
+         * 2. This item is being consumed by a waiter and stashed on a temporary
+         *    list. If adding is blocked due to this reason, the waiter will add
+         *    this item to the list once consuming is done.
+         */
+         bool link_used;
 
-I tried the following:
+>
+>       /*
+> -	 * Works together "struct eventpoll"->ovflist in keeping the
+> -	 * single linked chain of items.
+> +	 * Indicate whether this item is ready for consumption. All items on the ready list has this
+> +	 * flag set. Item that should be on the ready list, but cannot be added because of
+> +	 * link_locked (in other words, a waiter is consuming the ready list), also has this flag
+> +	 * set. When a waiter is done consuming, the waiter will add ready items to the ready list.
+>        */
+> -	struct epitem *next;
+> +	bool ready;
+> +
+> +	/* List header used to link this structure to the eventpoll ready list */
+> +	struct llist_node rdllink;
+>
+>       /* The file descriptor information this item refers to */
+>       struct epoll_filefd ffd;
 
-* Config1 (zvm, 8GB online + 4GB standby)
-  vmcp q v store
-  STORAGE = 8320M MAX = 2T INC = 16M STANDBY = 3968M RESERVED = 0
-  the increment size is 16MB in this case and block size is 128MB.
+> @@ -361,10 +368,27 @@ static inline int ep_cmp_ffd(struct epoll_filefd *p1,
+>               (p1->file < p2->file ? -1 : p1->fd - p2->fd));
+>  }
+>
+> -/* Tells us if the item is currently linked */
+> -static inline int ep_is_linked(struct epitem *epi)
+> +static void epitem_ready(struct epitem *epi)
+>  {
+> -	return !list_empty(&epi->rdllink);
+> +	/*
+> +	 * Mark it ready, just in case a waiter is blocking this item from going into the ready
+> +	 * list. This will tell the waiter to add this item to the ready list, after the waiter is
+> +	 * finished.
+> +	 */
+> +	xchg(&epi->ready, true);
 
-* Config2 (zvm, 512M online + 512M standby)
-  vmcp q v storage
-  STORAGE = 512M MAX = 2T INC = 1M STANDBY = 512M RESERVED = 0
+Perhaps a stupid question, why use an xchg() for .ready and .link_locked
+(excepted for that epitem_ready() cmpxchg()) writes when the return value
+is always discarded? Wouldn't e.g. smp_store_release() suffice, considering
+the reads are smp_load_acquire()?
 
-  But, memory_block_size_bytes() would return max(increment_size,
-  MIN_MEMORY_BLOCK_SIZE)
+> +
+> +	/*
+> +	 * If this item is not blocked, add it to the ready list. This item could be blocked for two
+> +	 * reasons:
+> +	 *
+> +	 * 1. It is already on the ready list. Then nothing further is required.
+> +	 * 2. A waiter is consuming the ready list, and has consumed this item. The waiter is now
+> +	 *    blocking this item, so that this item won't be seen twice. In this case, the waiter
+> +	 *    will add this item to the ready list after the waiter is finished.
+> +	 */
+> +	if (!cmpxchg(&epi->link_locked, false, true))
+> +		llist_add(&epi->rdllink, &epi->ep->rdllist);
+> +
+>  }
+>
+>  static inline struct eppoll_entry *ep_pwq_from_wait(wait_queue_entry_t *p)
 
-  In both cases, therefore, memory block size will be 128MB.
+> @@ -1924,19 +1874,39 @@ static int ep_send_events(struct eventpoll *ep,
+>                        * Trigger mode, we need to insert back inside
+>                        * the ready list, so that the next call to
+>                        * epoll_wait() will check again the events
+> -			 * availability. At this point, no one can insert
+> -			 * into ep->rdllist besides us. The epoll_ctl()
+> -			 * callers are locked out by
+> -			 * ep_send_events() holding "mtx" and the
+> -			 * poll callback will queue them in ep->ovflist.
+> +			 * availability.
+>                        */
+> -			list_add_tail(&epi->rdllink, &ep->rdllist);
+> +			xchg(&epi->ready, true);
+> +		}
+> +	}
+> +
+> +	llist_for_each_entry_safe(epi, tmp, txlist.first, rdllink) {
+> +		/*
+> +		 * We are done iterating. Allow the items we took to be added back to the ready
+> +		 * list.
+> +		 */
+> +		xchg(&epi->link_locked, false);
+> +
+> +		/*
+> +		 * In the loop above, we may mark some items ready, and they should be added back.
+> +		 *
+> +		 * Additionally, someone else may also attempt to add the item to the ready list,
+> +		 * but got blocked by us. Add those blocked items now.
+> +		 */
+> +		if (smp_load_acquire(&epi->ready)) {
+>                       ep_pm_stay_awake(epi);
+> +			epitem_ready(epi);
+>               }
 
+Isn't this missing a:
 
-On the other hand, I checked one of the lpars,
-the increment size is 2GB, which is greater than MIN_MEMORY_BLOCK_SIZE.
-Hence, memory block size is 2GB here.
+                list_del_init(&epi->rdllink);
 
-> > I was wondering about the following practical scenario:
-> > 
-> > When online memory is nearly full, the user can add a standby memory
-> > block with memmap_on_memory enabled. This allows the system to avoid
-> > consuming already scarce online memory for metadata.
-> 
-> Right, that's the use case I mentioned. But we're talking about ~ 2/4 MiB on
-> s390x for a single memory block. There are other things we have to allocate
-> memory for when onlining memory, so there is no guarantee that it would work
-> with memmap_on_memory either.
-> 
-> It makes it more likely to succeed :)
+AFAICT we're always going to overwrite that link when next marking the item
+as ready, but I'd say it's best to exit this with a clean state. That would
+have to be before the clearing of link_locked so it doesn't race with a
+concurrent epitem_ready() call.
 
-You're right, I wasn't precise.
+>       }
+> -	ep_done_scan(ep, &txlist);
+> +
+> +	__pm_relax(ep->ws);
+>       mutex_unlock(&ep->mtx);
+>
+> +	if (!llist_empty(&ep->rdllist)) {
+> +		if (waitqueue_active(&ep->wq))
+> +			wake_up(&ep->wq);
+> +	}
+> +
+>       return res;
+>  }
+>
 
-> > After enabling and bringing that standby memory online, the user now
-> > has enough free online memory to add additional memory blocks without
-> > memmap_on_memory. These later blocks can provide physically contiguous
-> > memory, which is important for workloads or devices requiring continuous
-> > physical address space.
-> > 
-> > If my interpretation is correct, I see good potential for this be be
-> > useful.
-> 
-> Again, I think only in the case where we don't have have 2/4 MiB for the
-> memmap.
-
-I think, it is not 2/4Mib in every usecase.
-
-On my LPAR, the increment size is 2GB. This means 32MB struct pages
-metadata - per memory block.
-
-> > As you pointed out, how about having something similar to
-> > 73954d379efd ("dax: add a sysfs knob to control memmap_on_memory behavior")
-> 
-> Right. But here, the use case is usually (a) to add a gigantic amount of
-> memory using add_memory(), not small blocks like on s390x (b) consume the
-> memmap from (slow) special-purpose memory as well.
-> 
-> Regarding (a), the memmap could be so big that add_memory() might never
-> really work (not just because of some temporary low-memory situation).
-
-Sorry, I didnt understand it correctly. 
-regarding a): If add_memory() is performed with memmap_on_memory, altmap
-metadata should fit into that added memory right?
-
-> > 1) To configure/deconfigure a memory block
-> > /sys/firmware/memory/memoryX/config
-> > 
-> > 1 -> configure
-> > 0 -> deconfigure
-> > 
-> > 2) Determine whether memory block should have memmap_on_memory or not.
-> > /sys/firmware/memory/memoryX/memmap_on_memory
-> > 1 -> with altmap
-> > 0 -> without altmap
-> > 
-> > This attribute must be set before the memoryX is configured. Or else, it
-> > will default to CONFIG_MHP_MEMMAP_ON_MEMORY / memmap_on_memory parameter.
-> 
-> I don't have anything against that option. Just a thought if we really have
-> to introduce this right now.
-
-If there are no objections on this design, I'm happy to start exploring
-it further. Thank you
