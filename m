@@ -1,152 +1,120 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7170623D2A1;
-	Wed, 21 May 2025 09:20:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49380221549;
+	Wed, 21 May 2025 09:21:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747819250; cv=none; b=RCi5j8Ma8maFcMFfo9RYHqu/cDBKvtaepYW4LW0wiXu3K2vwgVrxS1Py4GyjXxLYUEnQctUH8prDh/gt6ZD2IlRGIEVmcWcJWrrXd7FyYhifXygieS638fHQzK/i8G7poi0uvSN5hLnMJgEhVKo8kZIsBnxKDlQ/BluG4vegThg=
+	t=1747819318; cv=none; b=FvPnwsnvWkfMLrdIaLp9TKXNNRYxCBWpHZC/xOQsB+vRkQrEj8kYoxf5uXkDRF4hJSU0K7XGCBRasRr7/Pg2KBoo78ZjlZ7rMG1Fhoz2e98kuvnwhCQcDu5QKQENWtI+i9uflcZ997SBFhfMKByVANzBhtHiUGSlbbC2dmC6Qo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747819250; c=relaxed/simple;
-	bh=nhHBBZzFkwk0xr6cgUIFHE4SdJrJmeu6i70RAsXrpjY=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LjCd0ltCTjbS/GmUNQd7pYm20+ltRY4VqwVgs+4r9yeSarDsVFAXObyhDHWhT3YXvhX765b45yhk7nenN/iihrRiI8FcztCwnKTD3PIsjhQY0iWzbsy9FcALEexKcr7FxxEyhNdu4kKt1zKybcgt9GNrggGiZbwvr4nvlTNzeXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b2QqW4CpMz6GDJ7;
-	Wed, 21 May 2025 17:19:51 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3E4251402C3;
-	Wed, 21 May 2025 17:20:44 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 21 May
- 2025 11:20:43 +0200
-Date: Wed, 21 May 2025 10:20:41 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: <linux-pci@vger.kernel.org>, Jon Pan-Doh <pandoh@google.com>, "Karolina
- Stolarek" <karolina.stolarek@oracle.com>, Weinan Liu <wnliu@google.com>,
-	Martin Petersen <martin.petersen@oracle.com>, Ben Fuller
-	<ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, "Anil
- Agrawal" <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, Ilpo
- =?ISO-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, Sathyanarayanan
- Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Lukas Wunner
-	<lukas@wunner.de>, Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney"
-	<paulmck@kernel.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Oliver
- O'Halloran <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>, Keith
- Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>, "Terry Bowman"
-	<terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>, "Dave Jiang"
-	<dave.jiang@intel.com>, <linux-kernel@vger.kernel.org>,
-	<linuxppc-dev@lists.ozlabs.org>, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v7 04/17] PCI/AER: Consolidate Error Source ID logging
- in aer_isr_one_error_type()
-Message-ID: <20250521102041.00004901@huawei.com>
-In-Reply-To: <20250520215047.1350603-5-helgaas@kernel.org>
-References: <20250520215047.1350603-1-helgaas@kernel.org>
-	<20250520215047.1350603-5-helgaas@kernel.org>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1747819318; c=relaxed/simple;
+	bh=cG2It/o5K1guofgcqdeku8OVjfaZZB5/SW3spEARnt8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mgissw5NMNJANzNfxAt4ioCP4Xae6jMgkqb0RVgquALQ/bZgJb5LeMHO6K4TBhNjpzDjz+X6P0GcpTMtcdtQElwM/yAxlv32Cr1qf3do05NG0p1wnlMCc4hO43UyGIhVCzOCJj9pKnAkrqsl9QVtx2DRuA7s9Mjg820FwtnSA/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: rBwTygqwQna1pwGSd1QVuQ==
+X-CSE-MsgGUID: ZCyaXk9rSEep0CHEKfv9aA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="49047727"
+X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
+   d="scan'208";a="49047727"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 02:21:55 -0700
+X-CSE-ConnectionGUID: efxh/olVQzaksKAyqTKUQw==
+X-CSE-MsgGUID: YnYAIHTIRpyaZWzogC1ncA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
+   d="scan'208";a="143977678"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 02:21:53 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1uHfe2-00000003ZRl-1SSp;
+	Wed, 21 May 2025 12:21:50 +0300
+Date: Wed, 21 May 2025 12:21:50 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com,
+	corbet@lwn.net, lucas.p.stankus@gmail.com, lars@metafoo.de,
+	Michael.Hennerich@analog.com, linux-iio@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 09/12] iio: accel: adxl313: add activity sensing
+Message-ID: <aC2bLrxMP2DhY4go@smile.fi.intel.com>
+References: <20250520225007.10990-1-l.rubusch@gmail.com>
+ <20250520225007.10990-10-l.rubusch@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250520225007.10990-10-l.rubusch@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, 20 May 2025 16:50:21 -0500
-Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Tue, May 20, 2025 at 10:50:04PM +0000, Lothar Rubusch wrote:
+> Add possibilities to set a threshold for activity sensing. Extend the
+> interrupt handler to process activity interrupts. Provide functions to set
+> the activity threshold and to enable/disable activity sensing. Further add
+> a fake channel for having x, y and z axis anded on the iio channel.
+> 
+> This is a preparatory patch. Some of the definitions and functions are
+> supposed to be extended for inactivity later on.
 
-> From: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> Previously we decoded the AER Error Source ID in aer_isr_one_error_type(),
-> then again in find_source_device() if we didn't find any devices with
-> errors logged in their AER Capabilities.
-> 
-> Consolidate this so we only decode and log the Error Source ID once in
-> aer_isr_one_error_type().  Add a "details" parameter so we can add a note
-> when we didn't find any downstream devices with errors logged in their AER
-> Capability.
-> 
-> This changes the dmesg logging when we found no devices with errors logged:
-> 
->   - pci 0000:00:01.0: AER: Correctable error message received from 0000:02:00.0
->   - pci 0000:00:01.0: AER: found no error details for 0000:02:00.0
->   + pci 0000:00:01.0: AER: Correctable error message received from 0000:02:00.0 (no details found)
-> 
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+...
 
-Nice little improvement.  I'll assume you reuse
-details later as otherwise passing a bool and creating
-the (no details found) in aer_print_port_info() would
-have been simpler to my eyes as it would have put all the
-string generation in one place.
+> +	int axis_en, int_en, ret;
+> +
+> +	ret = regmap_read(data->regmap, ADXL313_REG_ACT_INACT_CTL, &axis_ctrl);
+> +	if (ret)
+> +		return ret;
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> +	/* Check if axis for activity are enabled */
+> +	if (type == ADXL313_ACTIVITY)
+> +		axis_en = FIELD_GET(ADXL313_ACT_XYZ_EN, axis_ctrl);
+> +	else
 
-> ---
->  drivers/pci/pcie/aer.c | 22 +++++++++-------------
->  1 file changed, 9 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 568229288ca3..488a6408c7a8 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -733,16 +733,17 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
->  			info->severity, info->tlp_header_valid, &info->tlp);
->  }
->  
-> -static void aer_print_port_info(struct pci_dev *dev, struct aer_err_info *info)
-> +static void aer_print_port_info(struct pci_dev *dev, struct aer_err_info *info,
-> +				const char *details)
->  {
->  	u8 bus = info->id >> 8;
->  	u8 devfn = info->id & 0xff;
->  
-> -	pci_info(dev, "%s%s error message received from %04x:%02x:%02x.%d\n",
-> +	pci_info(dev, "%s%s error message received from %04x:%02x:%02x.%d%s\n",
->  		 info->multi_error_valid ? "Multiple " : "",
->  		 aer_error_severity_string[info->severity],
->  		 pci_domain_nr(dev->bus), bus, PCI_SLOT(devfn),
-> -		 PCI_FUNC(devfn));
-> +		 PCI_FUNC(devfn), details);
->  }
->  
->  #ifdef CONFIG_ACPI_APEI_PCIEAER
-> @@ -926,15 +927,8 @@ static bool find_source_device(struct pci_dev *parent,
->  	else
->  		pci_walk_bus(parent->subordinate, find_device_iter, e_info);
->  
-> -	if (!e_info->error_dev_num) {
-> -		u8 bus = e_info->id >> 8;
-> -		u8 devfn = e_info->id & 0xff;
-> -
-> -		pci_info(parent, "found no error details for %04x:%02x:%02x.%d\n",
-> -			 pci_domain_nr(parent->bus), bus, PCI_SLOT(devfn),
-> -			 PCI_FUNC(devfn));
-> +	if (!e_info->error_dev_num)
->  		return false;
-> -	}
->  	return true;
->  }
->  
-> @@ -1281,9 +1275,11 @@ static inline void aer_process_err_devices(struct aer_err_info *e_info)
->  static void aer_isr_one_error_type(struct pci_dev *root,
->  				   struct aer_err_info *info)
->  {
-> -	aer_print_port_info(root, info);
-> +	bool found;
->  
-> -	if (find_source_device(root, info))
-> +	found = find_source_device(root, info);
-> +	aer_print_port_info(root, info, found ? "" : " (no details found");
-> +	if (found)
->  		aer_process_err_devices(info);
->  }
->  
+Probably redundant 'else'. Wouldn't
+
+	if (!=)
+		return 0;
+
+work?
+
+> +		return 0;
+
+> +	/* The axis are enabled, now check if specific interrupt is enabled */
+> +	ret = regmap_read(data->regmap, ADXL313_REG_INT_ENABLE, &regval);
+> +	if (ret)
+> +		return ret;
+
+> +	int_en = adxl313_act_int_reg[type] & regval;
+> +
+> +	return axis_en && int_en;
+
+With the above these lines become:
+
+	if (FIELD_GET(ADXL313_ACT_XYZ_EN, axis_ctrl) == 0)
+		return 0;
+
+	return !!(adxl313_act_int_reg[type] & regval);
+
+...
+
+> +	ret = regmap_update_bits(data->regmap,
+> +				 ADXL313_REG_ACT_INACT_CTL,
+> +				 axis_ctrl,
+> +				 cmd_en ? 0xff : 0x00);
+
+Please, utilize given space. You have a lot of it in each line above.
+
+> +	if (ret)
+> +		return ret;
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
