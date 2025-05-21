@@ -1,210 +1,226 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62BFA1922EE
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 16:42:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82A21190696
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 16:44:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747845756; cv=none; b=f+LXw6tCREESAX4ewPtBL6qceh37CMRXH+cSpgpywl4ApeToULrYMDqD05q5kKuLFDGJPFldQy8spPnyvT5AWYAmDiCRYjeR34f1WJ/9c5AxdwiNcpjQapGCchK/9oYV183WLNuvZyR6hmeDNryb0/Rdu0ycQSsiuFNCFZSuYOo=
+	t=1747845861; cv=none; b=nld/kRB4dSPKm+I6IDsELjeGGj00lMbdOfPTVZmQcgj7zpX96v0dBjMYgeR3Dc+3SNRwYzZH4ORW7T97lc0M05S7DgZemU+nlUqz8nFoOBxmjeYFQqcdYWyj+1bx6DoXb//KdoVwdrCJvlb8nMBkSMpE7cvMJxlkplZkhlaP/aM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747845756; c=relaxed/simple;
-	bh=Pr2iXeGarO2eWOWIEMNqbxZ1u9Fg64PXjfplyLT7Rjg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=dJsf5R6QAu/AswxnOmJWsBiEW26zvDIJqGKvCT9O9pI1rqGu/F+3ZroESqS21INNJHEozPzMa8OCXXCysAh869VfRf70hr5TZTDTjUVElabVNukrjyH+NuALR5R6DxEnu1AIYdMxguSgOFrVoQf/NgDycxezuF32VNIkST9YBWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=QUjIDCZz; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1747845861; c=relaxed/simple;
+	bh=8Z+3ylf6wiqbT9gZJ4LTT4wiiT+/ExKUoC5g5qCQ0e4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hvBA2xaBYDeArQyMflcjlMdSEPRamAxV9MrmKmCsQ3AH4PoKJ4HEmwxcY409s0OsYgmDcxe4vA8Mko/cDqkAksUeXi5hkFWrgCnnpS5tRlO7pCmFswnsppmt/N/DgEkw2cvC2Nkdu+Cc5ZV6zP790GzC1cSQJl4Y18L9OMRoZZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AS1DdKN4; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="QUjIDCZz"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-442e9c00bf4so51824045e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 09:42:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747845752; x=1748450552; darn=vger.kernel.org;
-        h=mime-version:message-id:date:user-agent:references:in-reply-to
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=p+rpUaNjQK4QRzCb0yqL+gVJP+k0UxVN5eahq6kD2BQ=;
-        b=QUjIDCZzypEAp3braYoAzUW1MvQCKpD34MLEGgUt50cLFKOIktdfM3WDh1bbmkYyGp
-         hiYPHaJJEXtJ9K+CAVJCR/nfgSK6XiHCZbnEeZDdmvmG8Msgd0XYdVk/zQqFmJ246uzQ
-         6HVGY58dMzZfC82LxJhdn0dJ52FCR3BJYCJHenifQv2OS9QgNHxUsVmNSkzvvAzHhxbh
-         JZbqQEBQsW1KJMyBdALrcdPZFRw2f8+QS5I+2fOYg+UXygXsSfVMS3IRmTTLwRyEhkHY
-         U1/y7/LseFbpPeR77F9MFULueysSJtexz8uiE/9L3m+IwbLdnV0txfUo7t8PPFIeRp4b
-         Yeow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747845752; x=1748450552;
-        h=mime-version:message-id:date:user-agent:references:in-reply-to
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p+rpUaNjQK4QRzCb0yqL+gVJP+k0UxVN5eahq6kD2BQ=;
-        b=L9gBaOqRhRazIEr1cCaXlz12c9BNdbP/6SSs8v/0JoWQ05Dw1vVY+n1KzcIYWZhjJr
-         Wfkgt+8cpsujhhEFhF3j/2iDd4PXRBF9H/PR8CpVcTbKn79eeLvNxpZxuj2W0LViBHi9
-         sUjSQikUXAvWoDLm7PhmeMJvGVzOtsLb41LuJkzV0A3I2KvSod3HDMuopsCp9ngRCRLL
-         jb12iBu0ee2TKSAEeo4PvNwwSPl+ILrSCM5B2AREpAH5czggnafOkAEcGKqVJKabf9+z
-         E+rdomn/5LZAgY+ekLA0KzUDC3qNYJBqjaf0n1HwZH+vCrpxvGJPyuTXCojlHEfOM1vw
-         7vBw==
-X-Forwarded-Encrypted: i=1; AJvYcCVxsLoTZM8OgmGaeXR1vPN8oJyWB+G+9yz1+hfhoMnk/QvMHsbHNETjJ4kqW2iObejc7Z892MDZg0hwfkU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdBRXD+xgqv0xxpX/JFT2j+1vqNj3yevLrDfQTMFA5FAWdafCg
-	LRG0LwCbP2O3xL1IZfCchmm3zAMcyIJ4HpjS6xGDHk4YHPeutJnrAGqXqHzaNjyFQYM=
-X-Gm-Gg: ASbGncuMujnnf14lKrqXgFBBzBQmZ6tZFox7KyTAWUQxceANqNJirAy2tVN399L8LwV
-	4Bwgw8qux8KTiq96U0a6Lb3DH1Q9ui+hQoUcglo7wWM9LL21onS5n7rUAv/Tmy9MyqFLqJE11xy
-	WhLxulqh8g9JC7vuip7RyxOFUo19nuQeDOD/ry9gj/FzVKtv/OWF5/mr2PTitEZq8N4SumH6atl
-	yJ8CAWeqKFGIeWQ/mofKIfn4U+oFet0HqU3svdh9Jds7+/EhimNiHOvbW2gPJodwbdrpf42jMOY
-	Mi8XH/TpvBxvFG04vzZL/83a/iUwHpxJ4n9F/Y0LfitPoYRkLQ==
-X-Google-Smtp-Source: AGHT+IEeXDpnI4NwMcbKV1XjqWsxVe0v1X9IAk4NWkX0pUgdvpaaFVRgCRCctQA58qHtRm5Ki9qQtw==
-X-Received: by 2002:a05:600c:1992:b0:43d:45a:8fca with SMTP id 5b1f17b1804b1-442ff039684mr199120715e9.30.1747845752620;
-        Wed, 21 May 2025 09:42:32 -0700 (PDT)
-Received: from localhost ([2a01:e0a:3c5:5fb1:9e2b:b056:8709:130])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-442ebda7d2csm167543525e9.3.2025.05.21.09.42.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 09:42:32 -0700 (PDT)
-From: Jerome Brunet <jbrunet@baylibre.com>
-To: Frank Li <Frank.li@nxp.com>
-Cc: Jon Mason <jdmason@kudzu.us>,  Dave Jiang <dave.jiang@intel.com>,  Allen
- Hubbe <allenbh@gmail.com>,  Manivannan Sadhasivam
- <manivannan.sadhasivam@linaro.org>,  Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
- <kw@linux.com>,
-  Kishon Vijay Abraham I <kishon@kernel.org>,  Bjorn Helgaas
- <bhelgaas@google.com>,  ntb@lists.linux.dev,  linux-pci@vger.kernel.org,
-  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] PCI: endpoint: pci-epf-vntb: align mw naming with
- config names
-In-Reply-To: <aC3/PL3jdGMVHX3n@lizhi-Precision-Tower-5810> (Frank Li's message
-	of "Wed, 21 May 2025 12:28:44 -0400")
-References: <20250505-pci-vntb-bar-mapping-v1-0-0e0d12b2fa71@baylibre.com>
-	<20250505-pci-vntb-bar-mapping-v1-2-0e0d12b2fa71@baylibre.com>
-	<aCugvDoKTflV9+P0@lizhi-Precision-Tower-5810>
-	<1jecwjn2pp.fsf@starbuckisacylon.baylibre.com>
-	<aC3/PL3jdGMVHX3n@lizhi-Precision-Tower-5810>
-User-Agent: mu4e 1.12.9; emacs 30.1
-Date: Wed, 21 May 2025 18:42:30 +0200
-Message-ID: <1jwma9lxu1.fsf@starbuckisacylon.baylibre.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AS1DdKN4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747845859; x=1779381859;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=8Z+3ylf6wiqbT9gZJ4LTT4wiiT+/ExKUoC5g5qCQ0e4=;
+  b=AS1DdKN4Ko5CXlWnQ6TrsZc43miSkVFzdfF85x9owHpqXYilJxJnFGXb
+   natXMZ9lr2LQ92rdQng3LsqD4l9CXX8mfMYXiRowKtzYFGT0lyOpaKfnU
+   5NKF0fk+O+FmNBHRfMkgCHgug1dBK39pfp20KHfYGyHRCAFuYUHWvjkxa
+   atsoiiIN4KIY/e8TBy+M1ceWhSfgTWN8+AtA7fYUEmFjbMssMdiE3I2uG
+   YMVzs1J4CmzZHSRfvgk8FpeAxRvlgxYT7Hu1x7UZ3nV3q5wwVby1HfB7v
+   8eMwezpksRD5GzQ2JaLEgTJolnG/h9PIgQwlwro1oOYnFxf2HfsktpLrR
+   g==;
+X-CSE-ConnectionGUID: g+QVPThHSe6b7oRh59Y0mA==
+X-CSE-MsgGUID: aZqUPCfrR2i9DMgFqB5oOQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="49825553"
+X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
+   d="scan'208";a="49825553"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 09:44:17 -0700
+X-CSE-ConnectionGUID: 6RG9KOdBQBqAXMWhn2kaOA==
+X-CSE-MsgGUID: aozAfW8TQimflIsiVCXmuQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
+   d="scan'208";a="145289701"
+Received: from nsridha1-mobl.amr.corp.intel.com (HELO desk) ([10.125.146.22])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 09:44:18 -0700
+Date: Wed, 21 May 2025 09:44:12 -0700
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: x86@kernel.org, David Kaplan <david.kaplan@amd.com>,
+	linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>
+Subject: Re: [PATCH 2/2] x86/its: Allow "=stuff" mitigation when eIBRS is
+ enabled
+Message-ID: <20250521164412.wjrs3tfe7f4cu5d7@desk>
+References: <20250520-eibrs-fix-v1-0-91bacd35ed09@linux.intel.com>
+ <20250520-eibrs-fix-v1-2-91bacd35ed09@linux.intel.com>
+ <20250521095914.GBaC2j8kmYixjs66Sd@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250521095914.GBaC2j8kmYixjs66Sd@fat_crate.local>
 
-On Wed 21 May 2025 at 12:28, Frank Li <Frank.li@nxp.com> wrote:
+On Wed, May 21, 2025 at 11:59:14AM +0200, Borislav Petkov wrote:
+> On Tue, May 20, 2025 at 10:35:36PM -0700, Pawan Gupta wrote:
+> > After a recent restructuring of ITS mitigation, RSB stuffing can no
+> > longer be enabled in eIBRS+Retpoline mode. Before ITS, retbleed
+> > mitigation only allowed stuffing when eIBRS was not enabled. This was
+> > perfectly fine since eIBRS mitigates retbleed.
+> > 
+> > However, RSB stuffing mitigation for ITS is still required with eIBRS.
+> > The restructuring solely relies on retbleed to deploy stuffing, and does
+> > not allow it when eIBRS is enabled. This behavior is different from
+> > what was before the restructuring.
+> > 
+> > Allow RSB stuffing mitigation when eIBRS+retpoline is enabled. Also
+> > allow retbleed and ITS mitigation to independently enable stuffing. The
+> > dependency is only with respect to retpoline. It is a valid case for
+> > retbleed to be mitigated by eIBRS while ITS deploys stuffing at the same
+> > time.
+> 
+> This one definitely needs splitting, just from reading the commit message
+> I can see separate patches.
+> 
+> > 
+> > Fixes: 8c57ca583ebf ("x86/bugs: Restructure ITS mitigation")
+> > Closes: https://lore.kernel.org/lkml/20250519235101.2vm6sc5txyoykb2r@desk/
+> > Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+> > ---
+> >  arch/x86/kernel/cpu/bugs.c | 101 ++++++++++++++++++++++++++++++---------------
+> >  1 file changed, 67 insertions(+), 34 deletions(-)
+> > 
+> > diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+> > index 7f94e6a5497d9a2d312a76095e48d6b364565777..642d234943fe8fc657c7331ceb3a605201444166 100644
+> > --- a/arch/x86/kernel/cpu/bugs.c
+> > +++ b/arch/x86/kernel/cpu/bugs.c
+> > @@ -113,6 +113,9 @@ void (*x86_return_thunk)(void) __ro_after_init = __x86_return_thunk;
+> >  
+> >  static void __init set_return_thunk(void *thunk)
+> >  {
+> > +	if (thunk == x86_return_thunk)
+> > +		return;
+> 
+> This needs a separate patch too.
 
-> On Tue, May 20, 2025 at 09:47:14AM +0200, Jerome Brunet wrote:
->> On Mon 19 May 2025 at 17:21, Frank Li <Frank.li@nxp.com> wrote:
->>
->> > On Mon, May 05, 2025 at 07:41:48PM +0200, Jerome Brunet wrote:
->> >
->> > PCI tree require keep consistent at subject
->> > git log --oneline drivers/pci/endpoint/functions/pci-epf-vntb.c
->> >
->> > require first char is UP case.
->>
->> Noted
->>
->> >
->> > Align memory window naming with configfs names.
->> >
->> >> The config file related to the memory windows start the numbering of
->> >
->> >                                  memory windows (MW)
->> >  then you can use MW later.
->>
->> Sure
->>
->> >
->> >> the MW from 1. The other NTB function does the same, yet the enumeration
->> >> defining the BARs of the vNTB function starts numbering the MW from 0.
->> >>
->> >> Both numbering are fine I suppose but mixing the two is a bit confusing.
->> >> The configfs file being the interface with userspace, lets keep that stable
->> >> and consistently start the numbering of the MW from 1.
->> >>
->> >> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
->> >> ---
->> >>  drivers/pci/endpoint/functions/pci-epf-vntb.c | 11 ++++++-----
->> >>  1 file changed, 6 insertions(+), 5 deletions(-)
->> >>
->> >> diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
->> >> index 35fa0a21fc91100a5539bff775e7ebc25e1fb9c1..f9f4a8bb65f364962dbf1e9011ab0e4479c61034 100644
->> >> --- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
->> >> +++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
->> >> @@ -70,9 +70,10 @@ static struct workqueue_struct *kpcintb_workqueue;
->> >>  enum epf_ntb_bar {
->> >>  	BAR_CONFIG,
->> >>  	BAR_DB,
->> >> -	BAR_MW0,
->> >>  	BAR_MW1,
->> >>  	BAR_MW2,
->> >> +	BAR_MW3,
->> >> +	BAR_MW4,
->> >
->> > where use BAR_MW3 and BAR_MW4?
->>
->> This is aligned with the file available in configfs and what is possible
->> in theory with the function, same as the NTB function and NTB host driver.
->>
->> Stopping at MW1 because it is only one used in the driver would be weird
->> and the number later introduced would be wrong.
->
-> Yes, but BAR_MW3 and BAR_MW4 should be added only when both was used in code
-> actaully.
+Will do.
 
-If you want to be strict about that then BAR_MW4 should go to the next change,
-it is needed in the enum.
+> >  	if (x86_return_thunk != __x86_return_thunk)
+> >  		pr_warn("x86/bugs: return thunk changed\n");
+> >  
+> > @@ -1120,6 +1123,39 @@ early_param("nospectre_v1", nospectre_v1_cmdline);
+> >  
+> >  enum spectre_v2_mitigation spectre_v2_enabled __ro_after_init = SPECTRE_V2_NONE;
+> >  
+> > +static inline bool spectre_v2_in_retpoline_mode(enum spectre_v2_mitigation mode)
+> > +{
+> > +	switch (mode) {
+> > +	case SPECTRE_V2_NONE:
+> > +	case SPECTRE_V2_IBRS:
+> > +	case SPECTRE_V2_EIBRS:
+> > +	case SPECTRE_V2_LFENCE:
+> > +	case SPECTRE_V2_EIBRS_LFENCE:
+> > +		return false;
+> > +
+> > +	case SPECTRE_V2_RETPOLINE:
+> > +	case SPECTRE_V2_EIBRS_RETPOLINE:
+> > +		return true;
+> > +	}
+> > +
+> > +	pr_warn("Unknown spectre_v2 mitigation mode %d\n", mode);
+> > +
+> > +	return false;
+> > +}
+> 
+> A whole function with a almost useless switch-case just for this?
 
-BAR_MW3 shall stay here because the purpose of this change is to shift the MW
-naming by one. MW2 which was present becomes MW3.
+Ok, will remove this function.
 
->
-> Frank
->>
->>
->> >
->> > Frank
->> >>  };
->> >>
->> >>  /*
->> >> @@ -576,7 +577,7 @@ static int epf_ntb_mw_bar_init(struct epf_ntb *ntb)
->> >>
->> >>  	for (i = 0; i < ntb->num_mws; i++) {
->> >>  		size = ntb->mws_size[i];
->> >> -		barno = ntb->epf_ntb_bar[BAR_MW0 + i];
->> >> +		barno = ntb->epf_ntb_bar[BAR_MW1 + i];
->> >>
->> >>  		ntb->epf->bar[barno].barno = barno;
->> >>  		ntb->epf->bar[barno].size = size;
->> >> @@ -629,7 +630,7 @@ static void epf_ntb_mw_bar_clear(struct epf_ntb *ntb, int num_mws)
->> >>  	int i;
->> >>
->> >>  	for (i = 0; i < num_mws; i++) {
->> >> -		barno = ntb->epf_ntb_bar[BAR_MW0 + i];
->> >> +		barno = ntb->epf_ntb_bar[BAR_MW1 + i];
->> >>  		pci_epc_clear_bar(ntb->epf->epc,
->> >>  				  ntb->epf->func_no,
->> >>  				  ntb->epf->vfunc_no,
->> >> @@ -676,7 +677,7 @@ static int epf_ntb_init_epc_bar(struct epf_ntb *ntb)
->> >>  	epc_features = pci_epc_get_features(ntb->epf->epc, ntb->epf->func_no, ntb->epf->vfunc_no);
->> >>
->> >>  	/* These are required BARs which are mandatory for NTB functionality */
->> >> -	for (bar = BAR_CONFIG; bar <= BAR_MW0; bar++, barno++) {
->> >> +	for (bar = BAR_CONFIG; bar <= BAR_MW1; bar++, barno++) {
->> >>  		barno = pci_epc_get_next_free_bar(epc_features, barno);
->> >>  		if (barno < 0) {
->> >>  			dev_err(dev, "Fail to get NTB function BAR\n");
->> >> @@ -1048,7 +1049,7 @@ static int vntb_epf_mw_set_trans(struct ntb_dev *ndev, int pidx, int idx,
->> >>  	struct device *dev;
->> >>
->> >>  	dev = &ntb->ntb.dev;
->> >> -	barno = ntb->epf_ntb_bar[BAR_MW0 + idx];
->> >> +	barno = ntb->epf_ntb_bar[BAR_MW1 + idx];
->> >>  	epf_bar = &ntb->epf->bar[barno];
->> >>  	epf_bar->phys_addr = addr;
->> >>  	epf_bar->barno = barno;
->> >>
->> >> --
->> >> 2.47.2
->> >>
->>
->> --
->> Jerome
+> > +
+> > +/* Depends on spectre_v2 mitigation selected already */
+> > +static inline bool cdt_possible(enum spectre_v2_mitigation mode)
+> > +{
+> > +	if (!IS_ENABLED(CONFIG_MITIGATION_CALL_DEPTH_TRACKING) ||
+> > +	    !IS_ENABLED(CONFIG_MITIGATION_RETPOLINE))
+> > +		return false;
+> > +
+> > +	if (!spectre_v2_in_retpoline_mode(mode))
+> > +		return false;
+> 
+> You're using this function only once here. What's wrong with
+> 
+> 	if ((mode != SPECTRE_V2_RETPOLINE) &&
+> 	    (mode != SPECTRE_V2_EIBRS_RETPOLINE))
 
--- 
-Jerome
+will do it this way.
+
+> > +
+> > +	return true;
+> > +}
+> > +
+> >  #undef pr_fmt
+> >  #define pr_fmt(fmt)     "RETBleed: " fmt
+> >  
+> > @@ -1258,24 +1294,16 @@ static void __init retbleed_update_mitigation(void)
+> >  	if (retbleed_mitigation == RETBLEED_MITIGATION_NONE)
+> >  		goto out;
+> >  
+> > -	/*
+> > -	 * retbleed=stuff is only allowed on Intel.  If stuffing can't be used
+> > -	 * then a different mitigation will be selected below.
+> > -	 *
+> > -	 * its=stuff will also attempt to enable stuffing.
+> > -	 */
+> > -	if (retbleed_mitigation == RETBLEED_MITIGATION_STUFF ||
+> > -	    its_mitigation == ITS_MITIGATION_RETPOLINE_STUFF) {
+> > -		if (spectre_v2_enabled != SPECTRE_V2_RETPOLINE) {
+> > -			pr_err("WARNING: retbleed=stuff depends on spectre_v2=retpoline\n");
+> > -			retbleed_mitigation = RETBLEED_MITIGATION_AUTO;
+> > -		} else {
+> > -			if (retbleed_mitigation != RETBLEED_MITIGATION_STUFF)
+> > -				pr_info("Retbleed mitigation updated to stuffing\n");
+> > +	 /* ITS can also enable stuffing */
+> 
+> This needs a separate patch.
+
+Ok.
+
+...
+> >  static void __init its_apply_mitigation(void)
+> >  {
+> > -	/* its=stuff forces retbleed stuffing and is enabled there. */
+> > -	if (its_mitigation != ITS_MITIGATION_ALIGNED_THUNKS)
+> > -		return;
+> > -
+> > -	if (!boot_cpu_has(X86_FEATURE_RETPOLINE))
+> > -		setup_force_cpu_cap(X86_FEATURE_INDIRECT_THUNK_ITS);
+> > +	switch (its_mitigation) {
+> > +	case ITS_MITIGATION_OFF:
+> > +	case ITS_MITIGATION_AUTO:
+> > +	case ITS_MITIGATION_VMEXIT_ONLY:
+> > +		break;
+> > +	case ITS_MITIGATION_ALIGNED_THUNKS:
+> > +		if (!boot_cpu_has(X86_FEATURE_RETPOLINE))
+> > +			setup_force_cpu_cap(X86_FEATURE_INDIRECT_THUNK_ITS);
+> >  
+> > -	setup_force_cpu_cap(X86_FEATURE_RETHUNK);
+> > -	set_return_thunk(its_return_thunk);
+> > +		setup_force_cpu_cap(X86_FEATURE_RETHUNK);
+> > +		set_return_thunk(its_return_thunk);
+> > +		break;
+> > +	case ITS_MITIGATION_RETPOLINE_STUFF:
+> > +		setup_force_cpu_cap(X86_FEATURE_RETHUNK);
+> > +		setup_force_cpu_cap(X86_FEATURE_CALL_DEPTH);
+> > +		set_return_thunk(call_depth_return_thunk);
+> > +		break;
+> > +	}
+> 
+> I don't think you need to return the switch-case back but this is
+> unreviewable. Please split. It is perfectly fine if you split into trivial
+> patches which do one logical thing and one logical thing only.
+
+Sure, will split this into multiple patches.
