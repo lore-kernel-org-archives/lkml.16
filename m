@@ -1,95 +1,215 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from smtp01.aussiebb.com.au (smtp01.aussiebb.com.au [121.200.0.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1702221573;
-	Wed, 21 May 2025 05:44:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EDE6230BC0;
+	Wed, 21 May 2025 05:45:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=121.200.0.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747806284; cv=none; b=RwLDnH1JmP2Whq3/q/9QEq2flNI8iHC6dw9kKu3EhFlxLtaxNMyCqNo43ca2qAs/MWm/79ChL+P7B9Nj71onE4/bDzwGk4pkGuJm9qrZmEz2+Ejh3YmuMInzUCl4p48px5/+59fwcLcukJbY1OkzG1qkeoIAQRB+zuT8ZjOkcU4=
+	t=1747806312; cv=none; b=Fh1peBFnMfO9339SjT8qMPLioHExPVuUUp/YCCIdaVA9lZS6S6LUP0QRH+LIWPBMlPv/Vj674UYoWq8YIUlAy69yQfXqBtjC5W06TGQUe4NJHFxaNLnKjtgMapvsbboA8g1l3FSMiwRUiw9pfxxcDvVN9cWQkyxvrqH/K3+PCtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747806284; c=relaxed/simple;
-	bh=K7bMnq0n3jG5IfmeVwyzBiEB38kEhphyrlTYWLlNtKw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=M9klPJKrPM2E7YIxwymzMVtZQmYygjnJEysfPWW+UgzIfPpahnXKouGoWYN401MYJcfVybuoz8REmUyfqjTjEML2SP6l8agKILTR0mUUc5kwvT2VkvbN3tlsCHvbTsQfsWl2BJIQA73ES19aalmyCaFWHDcKcJ9iVQ3dlkTBOvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=1/3ow9bb; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="1/3ow9bb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1747806282; x=1779342282;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=K7bMnq0n3jG5IfmeVwyzBiEB38kEhphyrlTYWLlNtKw=;
-  b=1/3ow9bbFTYuLiAdCNPx4CzZibAFXKgDWBEN5dbIsOVDKezScHVYfDWf
-   vWll7FHiWxanJC7l+eQsFeUaV0+lEebdGaZ5do1ANwZKsH32vplGpQcDb
-   IRDhkvF0JcXFTXsV0z3TKwt5+fWvdlgqkvHVBMEOe4t3fa/bfD6fE11jF
-   IXjHexFaJV5SA15CzcuyILOMZ5NCtCjt9uSConhI3UV6BR/4p0Jr7T826
-   qZTvBjkyVfLHthaoYj3kC+Ny+r3TN54XALn7L/iLgHySbQJPoOYmgRO1h
-   6GEGE3qpmAbgfN5DEDkZZT0xmiJ561FxB0GxpB1vEZ+GnMWM145Y6TyGO
-   g==;
-X-CSE-ConnectionGUID: OHsW4HofReOO8QjhtcrDLg==
-X-CSE-MsgGUID: 9ssiEkXmRVWT+8rHJ/me/g==
-X-IronPort-AV: E=Sophos;i="6.15,303,1739862000"; 
-   d="scan'208";a="41428790"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 20 May 2025 22:44:41 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Tue, 20 May 2025 22:43:45 -0700
-Received: from che-lt-i67131.microchip.com (10.10.85.11) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.2507.44 via Frontend Transport; Tue, 20 May 2025 22:43:40 -0700
-From: Manikandan Muralidharan <manikandan.m@microchip.com>
-To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-	<claudiu.beznea@tuxon.dev>, <tudor.ambarus@linaro.org>,
-	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-CC: Manikandan Muralidharan <manikandan.m@microchip.com>
-Subject: [PATCH v2 4/4] ARM: dts: microchip: sama5d2_icp: rename spi-cs-setup-ns property to spi-cs-setup-delay-ns
-Date: Wed, 21 May 2025 11:13:09 +0530
-Message-ID: <20250521054309.361894-4-manikandan.m@microchip.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250521054309.361894-1-manikandan.m@microchip.com>
-References: <20250521054309.361894-1-manikandan.m@microchip.com>
+	s=arc-20240116; t=1747806312; c=relaxed/simple;
+	bh=4HkLYWOsf+KFAlrO53Rwzj64dyrRJwyoObLm6cr2DQ0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=JmehYf3f2EojOrzW2JW6ODa9JMQBTc1zJxicFD/uSBRLY2enu13+oLX1Pv+Kfh9Jsw6OBFdyfSU8d3FH8s/JUDVrVl2yHxqrcYiEJt5YT+AJ1G/bCyLudcRKHqgo6LQK4PjSbTWfHPCin2nA/4hYFnW012Q+dav92FAJjJAuIcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=themaw.net; spf=fail smtp.mailfrom=themaw.net; arc=none smtp.client-ip=121.200.0.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=themaw.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=themaw.net
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by smtp01.aussiebb.com.au (Postfix) with ESMTP id 8BF4B1004A3;
+	Wed, 21 May 2025 15:35:16 +1000 (AEST)
+X-Virus-Scanned: Debian amavisd-new at smtp01.aussiebb.com.au
+Received: from smtp01.aussiebb.com.au ([127.0.0.1])
+	by localhost (smtp01.aussiebb.com.au [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id r3nvpw_bx252; Wed, 21 May 2025 15:35:16 +1000 (AEST)
+Received: by smtp01.aussiebb.com.au (Postfix, from userid 116)
+	id 728121004AD; Wed, 21 May 2025 15:35:16 +1000 (AEST)
+X-Spam-Level: 
+Received: from [192.168.68.229] (159-196-82-144.9fc452.per.static.aussiebb.net [159.196.82.144])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: ian146@aussiebb.com.au)
+	by smtp01.aussiebb.com.au (Postfix) with ESMTPSA id 0B9391004A3;
+	Wed, 21 May 2025 15:35:13 +1000 (AEST)
+Message-ID: <c36cb32c-9434-4978-af75-ff6f04468c44@themaw.net>
+Date: Wed, 21 May 2025 13:35:12 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5.10 0/5] kernfs: backport locking and concurrency
+ improvement
+To: Qingfang Deng <dqfext@gmail.com>, stable@vger.kernel.org,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tejun Heo <tj@kernel.org>,
+ linux-kernel@vger.kernel.org
+References: <20250521015336.3450911-1-dqfext@gmail.com>
+Content-Language: en-US
+From: Ian Kent <raven@themaw.net>
+Autocrypt: addr=raven@themaw.net; keydata=
+ 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
+In-Reply-To: <20250521015336.3450911-1-dqfext@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The naming scheme for delay properties includes "delay" in the name,
-so renaming spi-cs-setup-ns property to spi-cs-setup-delay-ns.
+On 21/5/25 09:53, Qingfang Deng wrote:
+> KCSAN reports concurrent accesses to inode->i_mode:
+>
+> ==================================================================
+> BUG: KCSAN: data-race in generic_permission / kernfs_iop_permission
+>
+> write to 0xffffffe001129590 of 2 bytes by task 2477 on cpu 1:
+>   kernfs_iop_permission+0x72/0x1a0
+>   link_path_walk.part.0.constprop.0+0x348/0x420
+>   path_openat+0xee/0x10f0
+>   do_filp_open+0xaa/0x160
+>   do_sys_openat2+0x252/0x380
+>   sys_openat+0x4c/0xa0
+>   ret_from_syscall+0x0/0x2
+>
+> read to 0xffffffe001129590 of 2 bytes by task 3902 on cpu 3:
+>   generic_permission+0x26/0x120
+>   kernfs_iop_permission+0x150/0x1a0
+>   link_path_walk.part.0.constprop.0+0x348/0x420
+>   path_lookupat+0x58/0x280
+>   filename_lookup+0xae/0x1f0
+>   user_path_at_empty+0x3a/0x70
+>   vfs_statx+0x82/0x170
+>   __do_sys_newfstatat+0x36/0x70
+>   sys_newfstatat+0x2e/0x50
+>   ret_from_syscall+0x0/0x2
+>
+> Reported by Kernel Concurrency Sanitizer on:
+> CPU: 3 PID: 3902 Comm: ls Not tainted 5.10.104+ #0
+> ==================================================================
 
-Fixes: 46a8a137d8f6 ("ARM: dts: at91: sama5d2_icp: Set sst26vf064b SPI NOR flash at its maximum frequency")
-Signed-off-by: Manikandan Muralidharan <manikandan.m@microchip.com>
----
-changes in v2:
-- add fixes tag
----
- arch/arm/boot/dts/microchip/at91-sama5d2_icp.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+It's been soo long since this was merged.
 
-diff --git a/arch/arm/boot/dts/microchip/at91-sama5d2_icp.dts b/arch/arm/boot/dts/microchip/at91-sama5d2_icp.dts
-index 9fa6f1395aa6..fbae6a9af6c3 100644
---- a/arch/arm/boot/dts/microchip/at91-sama5d2_icp.dts
-+++ b/arch/arm/boot/dts/microchip/at91-sama5d2_icp.dts
-@@ -714,7 +714,7 @@ flash@0 {
- 		compatible = "jedec,spi-nor";
- 		reg = <0>;
- 		spi-max-frequency = <104000000>;
--		spi-cs-setup-ns = <7>;
-+		spi-cs-setup-delay-ns = <7>;
- 		spi-tx-bus-width = <4>;
- 		spi-rx-bus-width = <4>;
- 		m25p,fast-read;
--- 
-2.25.1
+I seem to vaguely remember something along these lines and after 
+analyzing it
 
+came to the conclusion it was a false positive.
+
+Let me think about it for a while and see if I can remember the reasoning.
+
+
+Ian
+
+>
+> kernfs_iop_permission+0x72/0x1a0:
+>
+> kernfs_refresh_inode at fs/kernfs/inode.c:174
+>   169 	
+>   170 	static void kernfs_refresh_inode(struct kernfs_node *kn, struct inode *inode)
+>   171 	{
+>   172 		struct kernfs_iattrs *attrs = kn->iattr;
+>   173 	
+>> 174<		inode->i_mode = kn->mode;
+>   175 		if (attrs)
+>   176 			/*
+>   177 			 * kernfs_node has non-default attributes get them from
+>   178 			 * persistent copy in kernfs_node.
+>   179 			 */
+>
+> (inlined by) kernfs_iop_permission at fs/kernfs/inode.c:285
+>   280 			return -ECHILD;
+>   281 	
+>   282 		kn = inode->i_private;
+>   283 	
+>   284 		mutex_lock(&kernfs_mutex);
+>> 285<		kernfs_refresh_inode(kn, inode);
+>   286 		mutex_unlock(&kernfs_mutex);
+>   287 	
+>   288 		return generic_permission(inode, mask);
+>   289 	}
+>   290 	
+>
+> generic_permission+0x26/0x120:
+>
+> acl_permission_check at fs/namei.c:298
+>   293 	 * Note that the POSIX ACL check cares about the MAY_NOT_BLOCK bit,
+>   294 	 * for RCU walking.
+>   295 	 */
+>   296 	static int acl_permission_check(struct inode *inode, int mask)
+>   297 	{
+>> 298<		unsigned int mode = inode->i_mode;
+>   299 	
+>   300 		/* Are we the owner? If so, ACL's don't matter */
+>   301 		if (likely(uid_eq(current_fsuid(), inode->i_uid))) {
+>   302 			mask &= 7;
+>   303 			mode >>= 6;
+>
+> (inlined by) generic_permission at fs/namei.c:353
+>   348 		int ret;
+>   349 	
+>   350 		/*
+>   351 		 * Do the basic permission checks.
+>   352 		 */
+>> 353<		ret = acl_permission_check(inode, mask);
+>   354 		if (ret != -EACCES)
+>   355 			return ret;
+>   356 	
+>   357 		if (S_ISDIR(inode->i_mode)) {
+>   358 			/* DACs are overridable for directories */
+>
+> Backport the series from 5.15 to fix the concurrency bug.
+> https://lore.kernel.org/all/162642752894.63632.5596341704463755308.stgit@web.messagingengine.com
+>
+> Ian Kent (5):
+>    kernfs: add a revision to identify directory node changes
+>    kernfs: use VFS negative dentry caching
+>    kernfs: switch kernfs to use an rwsem
+>    kernfs: use i_lock to protect concurrent inode updates
+>    kernfs: dont call d_splice_alias() under kernfs node lock
+>
+>   fs/kernfs/dir.c             | 153 ++++++++++++++++++++----------------
+>   fs/kernfs/file.c            |   4 +-
+>   fs/kernfs/inode.c           |  26 +++---
+>   fs/kernfs/kernfs-internal.h |  24 +++++-
+>   fs/kernfs/mount.c           |  12 +--
+>   fs/kernfs/symlink.c         |   4 +-
+>   include/linux/kernfs.h      |   7 +-
+>   7 files changed, 138 insertions(+), 92 deletions(-)
+>
