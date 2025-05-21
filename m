@@ -1,244 +1,255 @@
-Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8F3E236A70;
-	Wed, 21 May 2025 08:58:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8837B23815B
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 08:58:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747817926; cv=none; b=IqMLKg9123pCkfQ1AsiWwfGd5hGoc86spVbGykNTBnrHGy816mVzSrDSzxzJWeVT1DRuwPPk0uhlUfD8i0GX361C/2mdbkBRgLY/iiRE5CaFt0UtKNCLWkLkg0A7gXlYCyv2wQevl6+DcRNA+58UNx+zWqarppVt7AMk5VrqshM=
+	t=1747817936; cv=none; b=b5nhYRzLGh7G6Wwo2r6AabzQ0wUWq99kHAle08dPAvVgjvg43aNwKdVdV+c0sne7oAi/e4ZjA8yhTH0YTYt/57OPQz3kCbeEiOelvLOFmGe+hF4U859CHGYExvxUi75pN8SCfAAjVpAe8B2fk3ENOvEbHBi9yCpaWfXSpuAGkcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747817926; c=relaxed/simple;
-	bh=9oROgaRpgyQ3GB1/syDa8YVnvOgoQfHrFkuJQfbXF/s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=AYrzTh5JIRAxrWBP7Ani6vxzigRo8vR7t5zv3sGKQQkMOzNXWroI6cgVh+PzCU03b7wabCbwCA587OM4d0/zCWEbZr2cSoySJnhH9Id91dn4c0rAQlhv8hcGL1wTeCpQjjWnJJn85mnfm/PsHzoT3/S4HZ6I2f1aP+T9LNfHx0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=j0LK7o6z; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1747817936; c=relaxed/simple;
+	bh=cLZbAH3cI8GYQszXgLGU9IFYoJPGHxcZkZ0FHMaI3Rg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Hf08ao6Ame5PDIsAqICQtW+S7ySlKR16DAcHqetGUA5g/7vil6JLt9+LvS2kcwNcyslV5uCLJCNicypcjtLwpblChxCHF/E3GnHApCmpkF2A9D7UkV2VqQO8ad5ErY08S6X6T76nSxZPOo8DgVBzmf9D1B7WBY/uXqIJ5rrS99o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LGh9DoA4; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="j0LK7o6z"
-Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54L8LBSd011048;
-	Wed, 21 May 2025 10:58:26 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	jlDfocRpLBC1fqG7olksB35wg8e5cS+aaD6BkzKFG5o=; b=j0LK7o6zzY5H6ERp
-	KASP8VeL6lA1ee/e/Xs48FG4No36uIe57CbEWV5rnfO6dsyFGGTsg2QSI3sUH15W
-	ZnRGscPNBO0/8qBUaacySTI+a7W8cr+AqRL9Dv10FupmnslnRgPwl7CsaUkkPkF8
-	BM2TDOBFT9k5QfbmL/+T7A5rYa7bRMpQvRpi6TmxdjrLN/zdjieneVI40x/Hvc+T
-	l7vSE6skj2+o/Xc5UTq4o8f3aVofCgCaxPL2gESTuqbdU7wZLBx/u5Ujp+5XTkID
-	qSNxhPAcw6mmg0U+Bn90Nbj2/cj2hkf3/RyhTvuJjv40FQ84qUDpOmOnSfe1mrbm
-	TGERrA==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46rwfa2y9u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 10:58:26 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id AB3E140054;
-	Wed, 21 May 2025 10:57:11 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 42724B4B444;
-	Wed, 21 May 2025 10:55:35 +0200 (CEST)
-Received: from [10.48.81.67] (10.48.81.67) by SHFDAG1NODE2.st.com
- (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 21 May
- 2025 10:55:34 +0200
-Message-ID: <0d113a6c-712b-440a-8f45-e12fd498fa51@foss.st.com>
-Date: Wed, 21 May 2025 10:55:33 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LGh9DoA4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747817932;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eVISUslNkkC359wr6/5NqmJ9IWZFEQzKItzM+WQ542w=;
+	b=LGh9DoA46FgbRoMNm0QAHGkVhRhC9EiwTfXlkaWC9btd4kPc5OiohoXRf3z4cNp3dp0sc/
+	1sutdA3cfm/CznPtgKSNjt/FtyS1kn3QwHQTxQ1i6Qyn+YRLQa3Yx9DbL/WNT1K4Wexi5D
+	eOU0QZ27FtgbKGOYny8x3lDbsO7nUbQ=
+Received: from mail-yw1-f197.google.com (mail-yw1-f197.google.com
+ [209.85.128.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-546-dHI4BA7hOO2R_FMqV8G5cA-1; Wed, 21 May 2025 04:58:51 -0400
+X-MC-Unique: dHI4BA7hOO2R_FMqV8G5cA-1
+X-Mimecast-MFC-AGG-ID: dHI4BA7hOO2R_FMqV8G5cA_1747817930
+Received: by mail-yw1-f197.google.com with SMTP id 00721157ae682-70df9b0b9d9so2610867b3.3
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 01:58:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747817930; x=1748422730;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eVISUslNkkC359wr6/5NqmJ9IWZFEQzKItzM+WQ542w=;
+        b=ZxxJlMYyoBsmLjtrXx/b8UjvY6gf81VKAisdO9WDjfTmFU+iaB3MVyGBPTUmDAdb6o
+         3LK9XWbYV8S/749hLgTUXVqaZPsP8MX8jYdpkhfTLHELY0wZe7HbK+ztqvK23FceXsR9
+         wYDn6fkVLWCEiVwjUwf5vDpU6suItjaxpzrnBh23APt249NYpvFz/EPrv045mKyttka7
+         oXCqy/lsL3XFH/cBdN+EwMPI9uHIE3NFXakoNIMgOZgz97FZV9BX32etf8rBdsBY/AJ5
+         dwWwkz19ev74CMdB2Wn5syFkrEfEo3VYEGAqxwVfvoXJLHfuoG2ou3REFy780ZcDo38I
+         VD5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX94fBlUG1DlDQviY5M1YXigRfrbtvMgEU9oK5hRmDpbagupUc7LsQsG3tO6YMwrBMXahrxfiv58RU1Y40=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwHaWXqAEXLrU5wamXxKRv7nsfU4vxNyiO83vnGclmOIAN0dNFq
+	tWN9c7Y7shuadKYUtoCjHuYFXhdNhjvpelqBLagiAfgp/Ha5bb3UEdi+y7QG3osB7JpIzvHwEsT
+	4DXXgOUs7MdrtqUdCqyv0A/OIC87kF5+u2Ql+SjgdqkoL+RN04d/0lRO6QqmJnS0nwLJjO7pO1Z
+	imSEDRc4dRR1Nyt7ZpnuYJbDAZE19+OPjvidkEAhSbVgTa5klB
+X-Gm-Gg: ASbGncvMopJgXTQmuXMmukK4cWNvFKqj4XP/dcVFxARGOOAaWvlpSyXfQmA3RVbh58m
+	/d3elPvK4FHH+LDvguQ6EbAi2r1Mzlr46To590Gw4RH0Z9EljRNNEpLEs80OadAjgSik=
+X-Received: by 2002:a05:690c:386:b0:709:1b68:9f5c with SMTP id 00721157ae682-70ca79efe56mr284490567b3.16.1747817930400;
+        Wed, 21 May 2025 01:58:50 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEbsmo76CHdnOR6GqD8MpHPXZmwbQT3nuKbnT5FlUWzjISwiCA3vCYiMP0N1f4gKVoMHCzEb54dGnO5DlBvWi4=
+X-Received: by 2002:a05:690c:386:b0:709:1b68:9f5c with SMTP id
+ 00721157ae682-70ca79efe56mr284490257b3.16.1747817929934; Wed, 21 May 2025
+ 01:58:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/8] dt-bindings: pinctrl: stm32: Introduce HDP
-To: Rob Herring <robh@kernel.org>
-CC: Linus Walleij <linus.walleij@linaro.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime Coquelin
-	<mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, <linux-kernel@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20250520-hdp-upstream-v2-0-53f6b8b5ffc8@foss.st.com>
- <20250520-hdp-upstream-v2-1-53f6b8b5ffc8@foss.st.com>
- <20250520193711.GA1227434-robh@kernel.org>
-Content-Language: en-US
-From: Clement LE GOFFIC <clement.legoffic@foss.st.com>
-In-Reply-To: <20250520193711.GA1227434-robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-21_02,2025-05-20_03,2025-03-28_01
+References: <ca3jkuttkt3yfdgcevp7s3ejrxx3ngkoyuopqw2k2dtgsqox7w@fhicoics2kiv>
+ <20250521020613.3218651-1-niuxuewei.nxw@antgroup.com> <bbn4lvdwh42m2zvi3rdyws66y5ulew32rchtz3kxirqlllkr63@7toa4tcepax3>
+In-Reply-To: <bbn4lvdwh42m2zvi3rdyws66y5ulew32rchtz3kxirqlllkr63@7toa4tcepax3>
+From: Stefano Garzarella <sgarzare@redhat.com>
+Date: Wed, 21 May 2025 10:58:38 +0200
+X-Gm-Features: AX0GCFs5skc8nIzcPaCTdrKZN88iXmzsQVaSrJKyy593gFhRVNImi9lYzr9o8V4
+Message-ID: <CAGxU2F78hGUarnzz8Mf1UUOHPQin_Mf4U=wX0nASzmNTr1A6+g@mail.gmail.com>
+Subject: Re: [PATCH 2/3] vsock/virtio: Add SIOCINQ support for all virtio
+ based transports
+To: Xuewei Niu <niuxuewei97@gmail.com>, Krasnov Arseniy <Oxffffaa@gmail.com>
+Cc: davem@davemloft.net, fupan.lfp@antgroup.com, jasowang@redhat.com, 
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, mst@redhat.com, 
+	niuxuewei.nxw@antgroup.com, pabeni@redhat.com, stefanha@redhat.com, 
+	virtualization@lists.linux.dev, xuanzhuo@linux.alibaba.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 5/20/25 21:37, Rob Herring wrote:
-> On Tue, May 20, 2025 at 05:02:28PM +0200, Clément Le Goffic wrote:
->> 'HDP' stands for Hardware Debug Port, it is an hardware block in
->> STMicrolectronics' MPUs that let the user decide which internal SoC's
->> signal to observe.
->> It provides 8 ports and for each port there is up to 16 different
->> signals that can be output.
->> Signals are different for each MPU.
->>
->> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
->> ---
->>   .../bindings/pinctrl/st,stm32-pinctrl-hdp.yaml     | 188 +++++++++++++++++++++
->>   1 file changed, 188 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl-hdp.yaml b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl-hdp.yaml
->> new file mode 100644
->> index 000000000000..6251e9c16ced
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl-hdp.yaml
->> @@ -0,0 +1,188 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +# Copyright (C) STMicroelectronics 2025.
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/pinctrl/st,stm32-pinctrl-hdp.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: STM32 Hardware Debug Port Mux/Config
->> +
->> +maintainers:
->> +  - Clément LE GOFFIC <clement.legoffic@foss.st.com>
->> +
->> +description:
->> +  STMicroelectronics's STM32 MPUs integrate a Hardware Debug Port (HDP).
->> +  It allows to output internal signals on SoC's GPIO.
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - st,stm32mp131-hdp
->> +      - st,stm32mp151-hdp
->> +      - st,stm32mp251-hdp
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    maxItems: 1
->> +
->> +patternProperties:
->> +  "^hdp[0-7]-pins$":
->> +    type: object
->> +    $ref: pinmux-node.yaml#
->> +    additionalProperties: false
->> +
->> +    properties:
->> +      pins:
->> +        enum: [ HDP0, HDP1, HDP2, HDP3, HDP4, HDP5, HDP6, HDP7 ]
-> 
-> This can be:
-> 
-> pattern: '^HDP[0-7]$'
+Forgot to CC Arseniy.
 
-Hi Rob, thanks for pattern tips I didn't know it was possible
-> 
-> 
->> +
->> +      function:
->> +        maxItems: 1
-> 
-> This is always 1 item, so just 'function: true' here.
-
-Yes, I know I fought to make it work, and the maxItems was the only idea 
-that came out.
-> 
->> +
->> +    required:
->> +      - function
->> +      - pins
->> +
->> +allOf:
->> +  - $ref: pinctrl.yaml#
->> +  - if:
->> +      properties:
->> +        compatible:
->> +          contains:
->> +            const: st,stm32mp131-hdp
->> +    then:
->> +      patternProperties:
->> +        "^hdp[0-7]-pins$":
->> +          properties:
->> +            function:
->> +              enum: [ pwr_pwrwake_sys, pwr_stop_forbidden, pwr_stdby_wakeup, pwr_encomp_vddcore,
->> +                      bsec_out_sec_niden, aiec_sys_wakeup, none, ddrctrl_lp_req,
->> +                      pwr_ddr_ret_enable_n, dts_clk_ptat, sram3ctrl_tamp_erase_act, gpoval0,
->> +                      pwr_sel_vth_vddcpu, pwr_mpu_ram_lowspeed, ca7_naxierrirq, pwr_okin_mr,
->> +                      bsec_out_sec_dbgen, aiec_c1_wakeup, rcc_pwrds_mpu, ddrctrl_dfi_ctrlupd_req,
->> +                      ddrctrl_cactive_ddrc_asr, sram3ctrl_hw_erase_act, nic400_s0_bready, gpoval1,
->> +                      pwr_pwrwake_mpu, pwr_mpu_clock_disable_ack, ca7_ndbgreset_i,
->> +                      bsec_in_rstcore_n, bsec_out_sec_bsc_dis, ddrctrl_dfi_init_complete,
->> +                      ddrctrl_perf_op_is_refresh, ddrctrl_gskp_dfi_lp_req, sram3ctrl_sw_erase_act,
->> +                      nic400_s0_bvalid, gpoval2, pwr_sel_vth_vddcore, pwr_mpu_clock_disable_req,
->> +                      ca7_npmuirq0, ca7_nfiqout0, bsec_out_sec_dftlock, bsec_out_sec_jtag_dis,
->> +                      rcc_pwrds_sys, sram3ctrl_tamp_erase_req, ddrctrl_stat_ddrc_reg_selfref_type0,
->> +                      dts_valobus1_0, dts_valobus2_0, tamp_potential_tamp_erfcfg, nic400_s0_wready,
->> +                      nic400_s0_rready, gpoval3, pwr_stop2_active, ca7_nl2reset_i,
->> +                      ca7_npreset_varm_i, bsec_out_sec_dften, bsec_out_sec_dbgswenable,
->> +                      eth1_out_pmt_intr_o, eth2_out_pmt_intr_o, ddrctrl_stat_ddrc_reg_selfref_type1,
->> +                      ddrctrl_cactive_0, dts_valobus1_1, dts_valobus2_1, tamp_nreset_sram_ercfg,
->> +                      nic400_s0_wlast, nic400_s0_rlast, gpoval4, ca7_standbywfil2,
->> +                      pwr_vth_vddcore_ack, ca7_ncorereset_i, ca7_nirqout0, bsec_in_pwrok,
->> +                      bsec_out_sec_deviceen, eth1_out_lpi_intr_o, eth2_out_lpi_intr_o,
->> +                      ddrctrl_cactive_ddrc, ddrctrl_wr_credit_cnt, dts_valobus1_2, dts_valobus2_2,
->> +                      pka_pka_itamp_out, nic400_s0_wvalid, nic400_s0_rvalid, gpoval5,
->> +                      ca7_standbywfe0, pwr_vth_vddcpu_ack, ca7_evento, bsec_in_tamper_det,
->> +                      bsec_out_sec_spniden, eth1_out_mac_speed_o1, eth2_out_mac_speed_o1,
->> +                      ddrctrl_csysack_ddrc, ddrctrl_lpr_credit_cnt, dts_valobus1_3, dts_valobus2_3,
->> +                      saes_tamper_out, nic400_s0_awready, nic400_s0_arready, gpoval6,
->> +                      ca7_standbywfi0, pwr_rcc_vcpu_rdy, ca7_eventi, ca7_dbgack0, bsec_out_fuse_ok,
->> +                      bsec_out_sec_spiden, eth1_out_mac_speed_o0, eth2_out_mac_speed_o0,
->> +                      ddrctrl_csysreq_ddrc, ddrctrl_hpr_credit_cnt, dts_valobus1_4, dts_valobus2_4,
->> +                      rng_tamper_out, nic400_s0_awavalid, nic400_s0_aravalid, gpoval7 ]
-
-Do you know if it is possible to add an "and" in the if condition ?
-I want to restrict the function name per pin name:
-If compatible is "st,stm32mp131-hdp" and pin is "HDP2" then
-function:
-	enum: [..]
-Is it somehow feasible ?
-
-Thank you
-
-Clément
-
-[...]
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - clocks
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/clock/stm32mp1-clks.h>
->> +
->> +    pinctrl@54090000 {
->> +      compatible = "st,stm32mp15-hdp";
->> +      reg = <0x54090000 0x400>;
->> +      clocks = <&rcc HDP>;
->> +      pinctrl-names = "default";
->> +      pinctrl-0 = <&hdp2_gpo>;
->> +      hdp2_gpo: hdp2-pins {
->> +        function = "gpoval2";
->> +        pins = "HDP2";
->> +      };
->> +    };
->>
->> -- 
->> 2.43.0
->>
+On Wed, 21 May 2025 at 10:57, Stefano Garzarella <sgarzare@redhat.com> wrote:
+>
+> On Wed, May 21, 2025 at 10:06:13AM +0800, Xuewei Niu wrote:
+> >> On Mon, May 19, 2025 at 03:06:48PM +0800, Xuewei Niu wrote:
+> >> >The virtio_vsock_sock has a new field called bytes_unread as the return
+> >> >value of the SIOCINQ ioctl.
+> >> >
+> >> >Though the rx_bytes exists, we introduce a bytes_unread field to the
+> >> >virtio_vsock_sock struct. The reason is that it will not be updated
+> >> >until the skbuff is fully consumed, which causes inconsistency.
+> >> >
+> >> >The byte_unread is increased by the length of the skbuff when skbuff is
+> >> >enqueued, and it is decreased when dequeued.
+> >> >
+> >> >Signed-off-by: Xuewei Niu <niuxuewei.nxw@antgroup.com>
+> >> >---
+> >> > drivers/vhost/vsock.c                   |  1 +
+> >> > include/linux/virtio_vsock.h            |  2 ++
+> >> > net/vmw_vsock/virtio_transport.c        |  1 +
+> >> > net/vmw_vsock/virtio_transport_common.c | 17 +++++++++++++++++
+> >> > net/vmw_vsock/vsock_loopback.c          |  1 +
+> >> > 5 files changed, 22 insertions(+)
+> >> >
+> >> >diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
+> >> >index 802153e23073..0f20af6e5036 100644
+> >> >--- a/drivers/vhost/vsock.c
+> >> >+++ b/drivers/vhost/vsock.c
+> >> >@@ -452,6 +452,7 @@ static struct virtio_transport vhost_transport = {
+> >> >            .notify_set_rcvlowat      = virtio_transport_notify_set_rcvlowat,
+> >> >
+> >> >            .unsent_bytes             = virtio_transport_unsent_bytes,
+> >> >+           .unread_bytes             = virtio_transport_unread_bytes,
+> >> >
+> >> >            .read_skb = virtio_transport_read_skb,
+> >> >    },
+> >> >diff --git a/include/linux/virtio_vsock.h b/include/linux/virtio_vsock.h
+> >> >index 0387d64e2c66..0a7bd240113a 100644
+> >> >--- a/include/linux/virtio_vsock.h
+> >> >+++ b/include/linux/virtio_vsock.h
+> >> >@@ -142,6 +142,7 @@ struct virtio_vsock_sock {
+> >> >    u32 buf_alloc;
+> >> >    struct sk_buff_head rx_queue;
+> >> >    u32 msg_count;
+> >> >+   size_t bytes_unread;
+> >>
+> >> Can we just use `rx_bytes` field we already have?
+> >>
+> >> Thanks,
+> >> Stefano
+> >
+> >I perfer not. The `rx_bytes` won't be updated until the skbuff is fully
+> >consumed, causing inconsistency issues. If it is acceptable to you, I'll
+> >reuse the field instead.
+>
+> I think here we found a little pre-existing issue that should be related
+> also to what Arseniy (CCed) is trying to fix (low_rx_bytes).
+>
+> We basically have 2 counters:
+> - rx_bytes, which we use internally to see if there are bytes to read
+>    and for sock_rcvlowat
+> - fwd_cnt, which we use instead for the credit mechanism and informing
+>    the other peer whether we have space or not
+>
+> These are updated with virtio_transport_dec_rx_pkt() and
+> virtio_transport_inc_rx_pkt()
+>
+> As far as I can see, from the beginning, we call
+> virtio_transport_dec_rx_pkt() only when we consume the entire packet.
+> This makes sense for `fwd_cnt`, because we still have occupied space in
+> memory and we don't want to update the credit until we free all the
+> space, but I think it makes no sense for `rx_bytes`, which is only used
+> internally and should reflect the current situation of bytes to read.
+>
+> So in my opinion we should fix it this way (untested):
+>
+> diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
+> index 11eae88c60fc..ee70cb114328 100644
+> --- a/net/vmw_vsock/virtio_transport_common.c
+> +++ b/net/vmw_vsock/virtio_transport_common.c
+> @@ -449,10 +449,10 @@ static bool virtio_transport_inc_rx_pkt(struct virtio_vsock_sock *vvs,
+>   }
+>
+>   static void virtio_transport_dec_rx_pkt(struct virtio_vsock_sock *vvs,
+> -                                       u32 len)
+> +                                       u32 bytes_read, u32 bytes_dequeued)
+>   {
+> -       vvs->rx_bytes -= len;
+> -       vvs->fwd_cnt += len;
+> +       vvs->rx_bytes -= bytes_read;
+> +       vvs->fwd_cnt += bytes_dequeued;
+>   }
+>
+>   void virtio_transport_inc_tx_pkt(struct virtio_vsock_sock *vvs, struct sk_buff *skb)
+> @@ -581,11 +581,11 @@ virtio_transport_stream_do_dequeue(struct vsock_sock *vsk,
+>                                    size_t len)
+>   {
+>         struct virtio_vsock_sock *vvs = vsk->trans;
+> -       size_t bytes, total = 0;
+>         struct sk_buff *skb;
+>         u32 fwd_cnt_delta;
+>         bool low_rx_bytes;
+>         int err = -EFAULT;
+> +       size_t total = 0;
+>         u32 free_space;
+>
+>         spin_lock_bh(&vvs->rx_lock);
+> @@ -597,6 +597,8 @@ virtio_transport_stream_do_dequeue(struct vsock_sock *vsk,
+>         }
+>
+>         while (total < len && !skb_queue_empty(&vvs->rx_queue)) {
+> +               size_t bytes, dequeued = 0;
+> +
+>                 skb = skb_peek(&vvs->rx_queue);
+>
+>                 bytes = min_t(size_t, len - total,
+> @@ -620,12 +622,12 @@ virtio_transport_stream_do_dequeue(struct vsock_sock *vsk,
+>                 VIRTIO_VSOCK_SKB_CB(skb)->offset += bytes;
+>
+>                 if (skb->len == VIRTIO_VSOCK_SKB_CB(skb)->offset) {
+> -                       u32 pkt_len = le32_to_cpu(virtio_vsock_hdr(skb)->len);
+> -
+> -                       virtio_transport_dec_rx_pkt(vvs, pkt_len);
+> +                       dequeued = le32_to_cpu(virtio_vsock_hdr(skb)->len);
+>                         __skb_unlink(skb, &vvs->rx_queue);
+>                         consume_skb(skb);
+>                 }
+> +
+> +               virtio_transport_dec_rx_pkt(vvs, bytes, dequeued);
+>         }
+>
+>         fwd_cnt_delta = vvs->fwd_cnt - vvs->last_fwd_cnt;
+> @@ -782,7 +784,7 @@ static int virtio_transport_seqpacket_do_dequeue(struct vsock_sock *vsk,
+>                                 msg->msg_flags |= MSG_EOR;
+>                 }
+>
+> -               virtio_transport_dec_rx_pkt(vvs, pkt_len);
+> +               virtio_transport_dec_rx_pkt(vvs, pkt_len, pkt_len);
+>                 vvs->bytes_unread -= pkt_len;
+>                 kfree_skb(skb);
+>         }
+> @@ -1752,6 +1754,7 @@ int virtio_transport_read_skb(struct vsock_sock *vsk, skb_read_actor_t recv_acto
+>         struct sock *sk = sk_vsock(vsk);
+>         struct virtio_vsock_hdr *hdr;
+>         struct sk_buff *skb;
+> +       u32 pkt_len;
+>         int off = 0;
+>         int err;
+>
+> @@ -1769,7 +1772,8 @@ int virtio_transport_read_skb(struct vsock_sock *vsk, skb_read_actor_t recv_acto
+>         if (le32_to_cpu(hdr->flags) & VIRTIO_VSOCK_SEQ_EOM)
+>                 vvs->msg_count--;
+>
+> -       virtio_transport_dec_rx_pkt(vvs, le32_to_cpu(hdr->len));
+> +       pkt_len = le32_to_cpu(hdr->len);
+> +       virtio_transport_dec_rx_pkt(vvs, pkt_len, pkt_len);
+>         spin_unlock_bh(&vvs->rx_lock);
+>
+>         virtio_transport_send_credit_update(vsk);
+>
+> @Arseniy WDYT?
+> I will test it and send a proper patch.
+>
+> @Xuewei with that fixed, I think you can use `rx_bytes`, right?
+>
+> Also because you missed for example `virtio_transport_read_skb()` used
+> by ebpf (see commit 3543152f2d33 ("vsock: Update rx_bytes on
+> read_skb()")).
+>
+> Thanks,
+> Stefano
 
