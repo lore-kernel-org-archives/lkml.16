@@ -1,338 +1,109 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 094ECBE5E
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 21:30:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37F921FDE19;
+	Wed, 21 May 2025 21:35:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747863058; cv=none; b=e4NhPZoyNOCA703eyuv6SHDbw5afCJ3jWjIl/w5Y+LZThqeq+aLgJL+qTbaGyQdwVaCPC/me4qbDRvOkzoNEMeJo7bGnJ4lnX4U1pSSoOZiXsICpg9zbUUfwUxJkb6TTvrsokP6WsKFZ3wKf3XsND6dfO9vzdfUrWg4YzCwxR3k=
+	t=1747863327; cv=none; b=BakOBG2PF0W8UYpx1uaF99tKpJv9vc8Wwdhl2q8y91IBylU7yDha7hwa3YOtCdSBtZFbHuvWK0nhTP8ybKlgC2N6Rp42dKOtTskfa0EfjKB81LQLmSS3tlVCiD0UVbDMkHXhJJXbzp/UKGhA1m1E9M4dexzQnBIYcIV+UJEoulQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747863058; c=relaxed/simple;
-	bh=4IsUBObZyCqxdYnBUATUNrl8vZQG6USZkZ1mnqy7LKs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=W+H2ONjUDct2TTzKjpqZ7gaG1TIeO+qv3kaTemVITZTCH20/9Z5Flalwz0llQDpq7SPO131X4QKV+irQqyV/MXMCbrFDLCHb5SagRefBt6YD4uguV4nOSbonCA+eVmnqW0E1MyXFvyMmVGfJxfU6JepYHR55gWNznd6uN9gjQEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=06CXl+IK; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747863327; c=relaxed/simple;
+	bh=JY3+EDGgRxvxsrUQbrwFOjb3pPNzoNfUgnXnt2viI8E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C8zF/D/V/LU+IBGpz1O4GwFH8PhSW8svFLZr7/bXcE1AhgzMsdiQz42UIUgTN8xi4mJcwvWNrz62OcC3NZFzC3QObgKxbpJ8OYZL7vPDfXErsTjzXEuUSdd50qmTGHizNVXA8DT4YDGN6dl1NcramhQsqlgn7ojgNf4g0pdgxxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Mz5yFJmz; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="06CXl+IK"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-47e9fea29easo1911791cf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 14:30:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747863056; x=1748467856; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bWdOovJf964fqY7rP1f70MsVKty0VjlMR4j1MeuRSSY=;
-        b=06CXl+IKWehGh6KpVDoN2AW82P8eJQ02m9fqn8ycn89kH+AZKKHxq5iAGZ7HKuKjts
-         PrA8WIXRWGAAY5yoD9QLrKf6Utc25ta82zTOLtkiW8uFrE+YxJvdHoGl6HVH/oIDhrek
-         lrnA9ZqdawlvW8v5q4Iu767tGV2Os6WVd0CJczHeEHzrWrAmRroNKhNcmXxpc4lzapL9
-         5JkcSzexYPMgpS+OAdzryT2E6ZHXPo5NaWe5c9jkCnEORmRaO3wymIsMrFV+UJqbXFjd
-         rr+97BptMOUOtSfUKZPWDx/Zwf4HXUjGItaEQo9XdhaF1lGrvJCSExa6XH2RBb6U970w
-         4Cog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747863056; x=1748467856;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bWdOovJf964fqY7rP1f70MsVKty0VjlMR4j1MeuRSSY=;
-        b=sDlCtTCwvRXPrXoMM2fcpmaBy5jK6winyXMcQIE45vj97egqREB06sg0FLwk2+EXvE
-         yOPQwx1Xg2j9IvpWaKeqjNQ0WjPYJiH81k3yhO/IyK6+MHgtV1YXic4EYYdhDmFwwPTf
-         afakfQJtVkUEzZE3mw5ggEXi7NN1NwrwOQoBjs8vX9AkTOZrdJdzTJ3aTRBqr6EuZ/sL
-         sWvHmQuF2D2UFQSQxcdvdu3IZ4pPsrrXJ6cDwkaKLE0aymOIuSfM/zpkyQWxqqWWYTVW
-         X/PYwYmkFjmqEwR7Bq6GqG7s5Sb5AWXDWx/YhtGvqUwr09+lA3eRUYdFEpUIE3GOvUQf
-         tFvA==
-X-Forwarded-Encrypted: i=1; AJvYcCX8MTSt71NlXJGjQLJVERsXTw4hp4OzbYdNVVU7m8v68Nq8ffVIgwPkKkzowhe3MPVWlvN0EaHF+hyyEMA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZJGsAwO1rgBHhTEf+DfYgweEe3aqwlImoRv03fPuGnu9O1sN7
-	2V7qoWzoPM9lG1ScL4xtNvxA6TBPy7gRWev32ffF+xJ18Z+YhLqTyxVmVrcMsq9B0lWfaCuWiTA
-	JNtNb9G5UmPPOMyoMwxTtuWCfS1THYj8b+M8HR+zC
-X-Gm-Gg: ASbGncttlW+R0wuHDf+nsQ3O33RojEQ+0AkgziW3/6sTUu5VwtTnrO4Z7+W+XF7K+8M
-	9AVfXffKubQVqt9zZz0Cv/NM1oZ+BBRe8Aur7vevDdlhcrDtJnCQxDPwe2R3DJCZ1n7Xfjn4UZN
-	oAhc5fGEtWCO6fu9Nn2tyKkNlxBnLZBAv4xzKGxpIiog==
-X-Google-Smtp-Source: AGHT+IGHW1Le+Th0rF31ilk1bMi7uSr/wQssgDMLiHfYo3VTiUKmx6GZR0ECB2AxON+cYr0kcIlo3a3/BRVv1Ddt61I=
-X-Received: by 2002:a05:622a:101:b0:494:4aa0:ad5b with SMTP id
- d75a77b69052e-49cefbe04a6mr422601cf.2.1747863055480; Wed, 21 May 2025
- 14:30:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Mz5yFJmz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747863325; x=1779399325;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=JY3+EDGgRxvxsrUQbrwFOjb3pPNzoNfUgnXnt2viI8E=;
+  b=Mz5yFJmzs1kfGGoujmyiqihleoW6RKXAjj3MwFqv9BDwSUCG+NYT6CrZ
+   OHtLhLtBEKrRc0LT4pw2CqD5qIPPVnyZk9gWYu96ew9aAlsYrNipUE5aq
+   DXm5/pxMEUgOZOSMZbAWmpEncyhCnQ8Lrprnx9Dl4ghOweX8ORQaWOpN0
+   HH/I05Dcb0O1dZmMe6xg6zhjBxo8npuQUs6b/QJ2596VWTczsOTZXYFf6
+   3bq9ckI+MLO2qlb54KW9fQrKlblXaUelOoUwhogMkvFKIDlAd8FnqBDSZ
+   xUcdT1kOjs5KFYB2+Chk6JZTgwLSV0T5efwVTXmA4/6W1qb2San7V8Be3
+   g==;
+X-CSE-ConnectionGUID: 9uRVCFAMQxycbOFn2oLTfw==
+X-CSE-MsgGUID: OjNn1xedT4i8XoMg6nMj2w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="61208554"
+X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
+   d="scan'208";a="61208554"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 14:35:21 -0700
+X-CSE-ConnectionGUID: 3aiUfBnrQaSQSzx9A/Y0FQ==
+X-CSE-MsgGUID: yUBaWO8+THO92MV2mqshbg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
+   d="scan'208";a="145393226"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa005.jf.intel.com with ESMTP; 21 May 2025 14:35:18 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uHr5n-000Oee-2g;
+	Wed, 21 May 2025 21:35:15 +0000
+Date: Thu, 22 May 2025 05:34:52 +0800
+From: kernel test robot <lkp@intel.com>
+To: =?iso-8859-1?Q?Cl=E9ment?= Le Goffic <clement.legoffic@foss.st.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	=?iso-8859-1?Q?Cl=E9ment?= Le Goffic <clement.legoffic@foss.st.com>
+Subject: Re: [PATCH v2 2/8] pinctrl: stm32: Introduce HDP driver
+Message-ID: <202505220509.cwmpJvcz-lkp@intel.com>
+References: <20250520-hdp-upstream-v2-2-53f6b8b5ffc8@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250521160602.1940771-1-surenb@google.com> <CALCePG2f+aXvabQiJ-=jYL1c4Z-RZW-=Rkj3LLxXDW+WFXwuBA@mail.gmail.com>
-In-Reply-To: <CALCePG2f+aXvabQiJ-=jYL1c4Z-RZW-=Rkj3LLxXDW+WFXwuBA@mail.gmail.com>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Wed, 21 May 2025 14:30:43 -0700
-X-Gm-Features: AX0GCFsaZ4v0KFQhyMLGDjF1IPg4de-UDXi21dVKxL3pD1IRz55dfTMPWlc_JzU
-Message-ID: <CAJuCfpHVXa=ou=y9oJHLJPCL_x_wbhuMK6YGyaDBema9qpF=Wg@mail.gmail.com>
-Subject: Re: [PATCH 1/1] alloc_tag: handle module codetag load errors as
- module load failures
-To: Casey Chen <cachen@purestorage.com>
-Cc: akpm@linux-foundation.org, kent.overstreet@linux.dev, mcgrof@kernel.org, 
-	petr.pavlu@suse.com, samitolvanen@google.com, da.gomez@samsung.com, 
-	00107082@163.com, linux-kernel@vger.kernel.org, linux-modules@vger.kernel.org, 
-	linux-mm@kvack.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250520-hdp-upstream-v2-2-53f6b8b5ffc8@foss.st.com>
 
-On Wed, May 21, 2025 at 2:04=E2=80=AFPM Casey Chen <cachen@purestorage.com>=
- wrote:
->
-> On Wed, May 21, 2025 at 9:06=E2=80=AFAM Suren Baghdasaryan <surenb@google=
-.com> wrote:
-> >
-> > Failures inside codetag_load_module() are currently ignored. As a
-> > result an error there would not cause a module load failure and freeing
-> > of the associated resources. Correct this behavior by propagating the
-> > error code to the caller and handling possible errors. With this change=
-,
-> > error to allocate percpu counters, which happens at this stage, will no=
-t
-> > be ignored and will cause a module load failure and freeing of resource=
-s.
-> > With this change we also do not need to disable memory allocation
-> > profiling when this error happens, instead we fail to load the module.
-> >
-> > Fixes: 10075262888b ("alloc_tag: allocate percpu counters for module ta=
-gs dynamically")
-> > Reported-by: Casey Chen <cachen@purestorage.com>
-> > Closes: https://lore.kernel.org/all/20250520231620.15259-1-cachen@pures=
-torage.com/
-> > Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-> > Cc: stable@vger.kernel.org
-> > ---
-> >  include/linux/codetag.h |  8 ++++----
-> >  kernel/module/main.c    |  5 +++--
-> >  lib/alloc_tag.c         | 12 +++++++-----
-> >  lib/codetag.c           | 34 +++++++++++++++++++++++++---------
-> >  4 files changed, 39 insertions(+), 20 deletions(-)
-> >
-> > diff --git a/include/linux/codetag.h b/include/linux/codetag.h
-> > index 0ee4c21c6dbc..5f2b9a1f722c 100644
-> > --- a/include/linux/codetag.h
-> > +++ b/include/linux/codetag.h
-> > @@ -36,8 +36,8 @@ union codetag_ref {
-> >  struct codetag_type_desc {
-> >         const char *section;
-> >         size_t tag_size;
-> > -       void (*module_load)(struct module *mod,
-> > -                           struct codetag *start, struct codetag *end)=
-;
-> > +       int (*module_load)(struct module *mod,
-> > +                          struct codetag *start, struct codetag *end);
-> >         void (*module_unload)(struct module *mod,
-> >                               struct codetag *start, struct codetag *en=
-d);
-> >  #ifdef CONFIG_MODULES
-> > @@ -89,7 +89,7 @@ void *codetag_alloc_module_section(struct module *mod=
-, const char *name,
-> >                                    unsigned long align);
-> >  void codetag_free_module_sections(struct module *mod);
-> >  void codetag_module_replaced(struct module *mod, struct module *new_mo=
-d);
-> > -void codetag_load_module(struct module *mod);
-> > +int codetag_load_module(struct module *mod);
-> >  void codetag_unload_module(struct module *mod);
-> >
-> >  #else /* defined(CONFIG_CODE_TAGGING) && defined(CONFIG_MODULES) */
-> > @@ -103,7 +103,7 @@ codetag_alloc_module_section(struct module *mod, co=
-nst char *name,
-> >                              unsigned long align) { return NULL; }
-> >  static inline void codetag_free_module_sections(struct module *mod) {}
-> >  static inline void codetag_module_replaced(struct module *mod, struct =
-module *new_mod) {}
-> > -static inline void codetag_load_module(struct module *mod) {}
-> > +static inline int codetag_load_module(struct module *mod) { return 0; =
-}
-> >  static inline void codetag_unload_module(struct module *mod) {}
-> >
-> >  #endif /* defined(CONFIG_CODE_TAGGING) && defined(CONFIG_MODULES) */
-> > diff --git a/kernel/module/main.c b/kernel/module/main.c
-> > index 5c6ab20240a6..9861c2ac5fd5 100644
-> > --- a/kernel/module/main.c
-> > +++ b/kernel/module/main.c
-> > @@ -3399,11 +3399,12 @@ static int load_module(struct load_info *info, =
-const char __user *uargs,
-> >                         goto sysfs_cleanup;
-> >         }
-> >
-> > +       if (codetag_load_module(mod))
-> > +               goto sysfs_cleanup;
-> > +
-> >         /* Get rid of temporary copy. */
-> >         free_copy(info, flags);
-> >
-> > -       codetag_load_module(mod);
-> > -
-> >         /* Done! */
-> >         trace_module_load(mod);
-> >
-> > diff --git a/lib/alloc_tag.c b/lib/alloc_tag.c
-> > index 45dae7da70e1..d48b80f3f007 100644
-> > --- a/lib/alloc_tag.c
-> > +++ b/lib/alloc_tag.c
-> > @@ -607,15 +607,16 @@ static void release_module_tags(struct module *mo=
-d, bool used)
-> >         mas_unlock(&mas);
-> >  }
-> >
-> > -static void load_module(struct module *mod, struct codetag *start, str=
-uct codetag *stop)
-> > +static int load_module(struct module *mod, struct codetag *start, stru=
-ct codetag *stop)
-> >  {
-> >         /* Allocate module alloc_tag percpu counters */
-> >         struct alloc_tag *start_tag;
-> >         struct alloc_tag *stop_tag;
-> >         struct alloc_tag *tag;
-> >
-> > +       /* percpu counters for core allocations are already statically =
-allocated */
-> >         if (!mod)
-> > -               return;
-> > +               return 0;
-> >
-> >         start_tag =3D ct_to_alloc_tag(start);
-> >         stop_tag =3D ct_to_alloc_tag(stop);
-> > @@ -627,12 +628,13 @@ static void load_module(struct module *mod, struc=
-t codetag *start, struct codeta
-> >                                 free_percpu(tag->counters);
-> >                                 tag->counters =3D NULL;
-> >                         }
-> > -                       shutdown_mem_profiling(true);
-> > -                       pr_err("Failed to allocate memory for allocatio=
-n tag percpu counters in the module %s. Memory allocation profiling is disa=
-bled!\n",
-> > +                       pr_err("Failed to allocate memory for allocatio=
-n tag percpu counters in the module %s\n",
-> >                                mod->name);
-> > -                       break;
-> > +                       return -ENOMEM;
-> >                 }
-> >         }
-> > +
-> > +       return 0;
-> >  }
-> >
-> >  static void replace_module(struct module *mod, struct module *new_mod)
-> > diff --git a/lib/codetag.c b/lib/codetag.c
-> > index de332e98d6f5..650d54d7e14d 100644
-> > --- a/lib/codetag.c
-> > +++ b/lib/codetag.c
-> > @@ -167,6 +167,7 @@ static int codetag_module_init(struct codetag_type =
-*cttype, struct module *mod)
-> >  {
-> >         struct codetag_range range;
-> >         struct codetag_module *cmod;
-> > +       int mod_id;
-> >         int err;
-> >
-> >         range =3D get_section_range(mod, cttype->desc.section);
-> > @@ -190,11 +191,20 @@ static int codetag_module_init(struct codetag_typ=
-e *cttype, struct module *mod)
-> >         cmod->range =3D range;
-> >
-> >         down_write(&cttype->mod_lock);
-> > -       err =3D idr_alloc(&cttype->mod_idr, cmod, 0, 0, GFP_KERNEL);
-> > -       if (err >=3D 0) {
-> > -               cttype->count +=3D range_size(cttype, &range);
-> > -               if (cttype->desc.module_load)
-> > -                       cttype->desc.module_load(mod, range.start, rang=
-e.stop);
-> > +       mod_id =3D idr_alloc(&cttype->mod_idr, cmod, 0, 0, GFP_KERNEL);
-> > +       if (mod_id >=3D 0) {
-> > +               if (cttype->desc.module_load) {
-> > +                       err =3D cttype->desc.module_load(mod, range.sta=
-rt, range.stop);
-> > +                       if (!err)
-> > +                               cttype->count +=3D range_size(cttype, &=
-range);
-> > +                       else
-> > +                               idr_remove(&cttype->mod_idr, mod_id);
-> > +               } else {
-> > +                       cttype->count +=3D range_size(cttype, &range);
-> > +                       err =3D 0;
-> > +               }
-> > +       } else {
-> > +               err =3D mod_id;
-> >         }
-> >         up_write(&cttype->mod_lock);
-> >
->
-> Overall looks good, just one small nit: should we not increase
-> cttype->count if there is no module_load callback ?
+Hi Clément,
 
-No, a codetag type might not require module_load callback but can
-still have a non-empty tags section.
+kernel test robot noticed the following build warnings:
 
-> Personally I prefer having tag allocation and counter allocation at
-> the same place in move_module() by calling something like
-> codetag_alloc_module_tag_counter(). But your approach looks more
-> modular. I don't have a strong preference, you can choose what you
-> want. Thanks!
+[auto build test WARNING on 09fac5c576bbff764dddf2baca0038b359376fd8]
 
-Yeah, I try to keep the codetagging footprint in the module loading
-code as small as possible, so let's avoid adding more hooks there.
-Thanks,
-Suren.
+url:    https://github.com/intel-lab-lkp/linux/commits/Cl-ment-Le-Goffic/dt-bindings-pinctrl-stm32-Introduce-HDP/20250520-230751
+base:   09fac5c576bbff764dddf2baca0038b359376fd8
+patch link:    https://lore.kernel.org/r/20250520-hdp-upstream-v2-2-53f6b8b5ffc8%40foss.st.com
+patch subject: [PATCH v2 2/8] pinctrl: stm32: Introduce HDP driver
+config: arc-randconfig-r121-20250522 (https://download.01.org/0day-ci/archive/20250522/202505220509.cwmpJvcz-lkp@intel.com/config)
+compiler: arc-linux-gcc (GCC) 14.2.0
+reproduce: (https://download.01.org/0day-ci/archive/20250522/202505220509.cwmpJvcz-lkp@intel.com/reproduce)
 
->
-> int codetag_alloc_module_tag_counter(struct module *mod, void *start_addr=
-,
->                                         unsigned long size)
-> {
->         struct codetag_type *cttype;
->         int ret =3D -ENODEV;
->
->         mutex_lock(&codetag_lock);
->         list_for_each_entry(cttype, &codetag_types, link) {
->                 if (WARN_ON(!cttype->desc.alloc_counter_mem))
->                         break;
->
->                 down_write(&cttype->mod_lock);
->                 ret =3D cttype->desc.alloc_counter_mem(mod, start_addr, s=
-ize);
->                 up_write(&cttype->mod_lock);
->                 break;
->         }
->         mutex_unlock(&codetag_lock);
->
->         return ret;
-> }
->
-> Casey
->
-> > @@ -295,17 +305,23 @@ void codetag_module_replaced(struct module *mod, =
-struct module *new_mod)
-> >         mutex_unlock(&codetag_lock);
-> >  }
-> >
-> > -void codetag_load_module(struct module *mod)
-> > +int codetag_load_module(struct module *mod)
-> >  {
-> >         struct codetag_type *cttype;
-> > +       int ret =3D 0;
-> >
-> >         if (!mod)
-> > -               return;
-> > +               return 0;
-> >
-> >         mutex_lock(&codetag_lock);
-> > -       list_for_each_entry(cttype, &codetag_types, link)
-> > -               codetag_module_init(cttype, mod);
-> > +       list_for_each_entry(cttype, &codetag_types, link) {
-> > +               ret =3D codetag_module_init(cttype, mod);
-> > +               if (ret)
-> > +                       break;
-> > +       }
-> >         mutex_unlock(&codetag_lock);
-> > +
-> > +       return ret;
-> >  }
-> >
-> >  void codetag_unload_module(struct module *mod)
-> >
-> > base-commit: 9f3e87f6c8d4b28b96eb8bddb22d3ba4b846e10b
-> > --
-> > 2.49.0.1112.g889b7c5bd8-goog
-> >
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505220509.cwmpJvcz-lkp@intel.com/
+
+sparse warnings: (new ones prefixed by >>)
+>> drivers/pinctrl/stm32/pinctrl-stm32-hdp.c:720:1: sparse: sparse: symbol 'stm32_hdp_pm_ops' was not declared. Should it be static?
+
+vim +/stm32_hdp_pm_ops +720 drivers/pinctrl/stm32/pinctrl-stm32-hdp.c
+
+   719	
+ > 720	DEFINE_SIMPLE_DEV_PM_OPS(stm32_hdp_pm_ops, stm32_hdp_suspend, stm32_hdp_resume);
+   721	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
