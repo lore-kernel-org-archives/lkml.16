@@ -1,151 +1,139 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26789267B74;
-	Wed, 21 May 2025 12:52:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EB7426FA40
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 12:52:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747831962; cv=none; b=pzSEvbxrnEzYki/9huwD9aZzAP1ZFLb9JadHIkAagvqwFfxI4vj2rkUrzRETCSpe7mFQ46SaK3HkVkgPrOhAVEw9GG6ildo25pE0ScuSDP+WdPr1FdFMKfEg95jqerCvA73OTC4qu8gJDayZIhPBymXjioo+FgOlaf8fb523/mM=
+	t=1747831972; cv=none; b=eAqHtqe6HqgYar2WE8Dy6coWs/KiH4AphABsA+DutR8VZhPa8nac7GwvcXL6M5sl4jqlNTVZiD0ROcDBmHiS3ZwlknXsoHD8cNgFEESjMqJMEFDUc1rUmJRga3oCjvXdzyjNAb296utINfQt3gKVaTf7C0MkGd7pYLefl5Ho3ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747831962; c=relaxed/simple;
-	bh=rgboF6O42TahFs/8pXgNbmH2+IAqnYb0uPyGcWYivRM=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
-	 In-Reply-To:Content-Type; b=Sjw1slXKObLfbQZh4xk4yS86FJCQhLnszBVvs6DgtC8q3nftNOdRch39mycMOkX3lBvoCtt6OGuAoNhvzfBMfrVz8IU+iuVaCgZofO2+EyTwoEyi1TjqZckx+L6nzoarHQb/r2u5atJLw9ATX/EoZjdwFMb/PUMeXUBMPH4iquQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=DQOlnmv/; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1747831972; c=relaxed/simple;
+	bh=ex8fec4lSvRbizAHGxTk9eHxJUEJr45NNb5J8gjLy/w=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BrHA1wpVYRaQ074YLVT3mkfL+i9UdN+sLCKVfQP2GLwEv3pwTIPgiM+GHKKTDUBRA+7A7VfACujD1i6zYZ83wjFxkG15mOb3JJpEJjjGzDPIhBPpNtSPhJz4e5YXYCSTkCyF3D3iNgcsptt0kxrbhV7/y4kpwFoa01IDVRWRH14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bhDTcpxO; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="DQOlnmv/"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54L9XNIu029164;
-	Wed, 21 May 2025 12:52:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	zAkNkquuUoYz7N8pVRuD9/VogaSosp8jzMIXjAaUFXs=; b=DQOlnmv/yR7/cuRp
-	dnHWHgqEi+r8gdlhjgt8IvX64z4XfQ2QpKecAzWnh4sp638MdHpRurNkYctpCKV9
-	SzRNqNN+qhRvV9giFDlONaIRO5iQXEmGc2V7WKowEY5oIcnvG2cF3vkHLhY2lKT6
-	h1F0EoqikmiCzKHCJhEMRqJg/uCqGQgs8fAV/BeQKsititybyNlCV1DOvhdXh0Vs
-	BA1JZxGl7NzBPtnFBhm93NdQN3JVkjzs0WyDrMY3wD4cO5g4qzqDTSrIHYMRDoQc
-	Bo/+W6NCF56RkRZl4cVMGIBrUXbNfjmZKGSwil21shQSHJz6SkiMzeucqeZsNjCX
-	tBXosw==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf430us-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 12:52:12 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54LCqBI6021618
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 12:52:11 GMT
-Received: from [10.253.72.103] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 21 May
- 2025 05:52:08 -0700
-Message-ID: <a7edb7e8-37ac-45ae-b5c7-2c9034dce4d7@quicinc.com>
-Date: Wed, 21 May 2025 20:50:48 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bhDTcpxO"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43cf680d351so47028605e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 05:52:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747831968; x=1748436768; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=s2Q5akduCpfDqsqlBatix18/uxsvR0mlb10E3tY0o/A=;
+        b=bhDTcpxOaNbgXzjZ3lKI6e/Mk0QzcX/rfuqtDl/D5O2VWzH2zpPe3Jj4Vp7Z1MzIDq
+         Gpcslx0Vrt00zGjYRsh+O4zciweXuA0f8zowKzc6/p3TmVdiDsvKl6YniFZZ9iaryyrF
+         GY7QxwmOcLiPq+zklcyR6ktpVM3th72v6cNcNrNIaNWnRpdeTBvdW09Wad+ZIF//aLKp
+         d1xYqEUzVbXqMYshYBdrtiA3Q3dLPqgu/nSFu+LBp15/LAJrZBj+WKgbmM/pRjgRDJep
+         c5ThhUI6077Cln6xACX/FV85O6jNMqajjwcs45ED6oAS4Gpc0CRAULsRv2mX4GKaRyaC
+         ZLhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747831968; x=1748436768;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=s2Q5akduCpfDqsqlBatix18/uxsvR0mlb10E3tY0o/A=;
+        b=ZWbf9fQ2blBAVPi2J1dbqWXcl9V1qePvSOGHpjEDh/Lkf12urYdaK72w2TLm2ZqAFe
+         MRN4h94Wz+9svneeIBN1LGu/ZLcMbPn4wZm6aFNrakx0E6xfTzKILWs0d6E/Ks9BrNSy
+         JW3xpcaJwJOKfDbtSi9HH8n+PNESMTI+sLhSTAhhkDv9jwuSgt2d8sozgDKPCWjwVFaJ
+         STkCgz5Ayoz6ouU6QNo5Eivh/gfRYDAkV1Onsu+pAzjSgZQyFLUaIYvw3N7MYy2hLQrY
+         l2A6eB+hURe9W2DmtLOVFhsuXIKp70vhcyLEVTea9/iqkcawv267FpgXErrDFs6WOCwN
+         Tx0w==
+X-Forwarded-Encrypted: i=1; AJvYcCVAu3ksKoMZdIKaGhCFBzPemBc2p9oBFe962fuHLvmv7oLeL5wh3nS1W8znWq6i7BJ6Jy6aG2Axy58r7g0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywnm2tyecIf9wzWF87Bxsr5nGaYHwV1gKPt7eT/xhsXWdlhSTKO
+	ykBToWCAHzB3yJbHHNxWycV9BM2ak4fxSSs9msByyk7XTGeXoOvemB+M
+X-Gm-Gg: ASbGncvJPOJPXO+gEFDR5bGA4tsUMGth3xczJ0gmHqSVcbwbZPxU4KRjFvhFQu0wude
+	HqGSMed77Po6T/HXaxWTxOugHS7Dt9QpL2IknlVjvvKoxgpkmyhxTmiAt+4c9IF6Q8lfpCl1xRd
+	v3KdcRwtZmyqsBwaX1ipTr3IKD2/iSOS/f+yv50ecmI/yh9PYX5noQhPXJdE27fFEGoXck77hfh
+	r/p0YIFua4sYF4onKsbuzW9eLYHmKfrQtjwH1WhtScYiFm04ZpUxemZrXujNnsDHjsc4Cp7j29y
+	u10eRPtanUbfgGF8cZBSxGR9F/+I8NiLv56LYIyEI76EI3+3sMhzZAm5Ww6QblJK5DrOvHgdq4f
+	kCRYC5duytWI5oA==
+X-Google-Smtp-Source: AGHT+IHpc2l2SfVRc0jgMEt9V5illJo3BE9u9sMuf0NrsqS1uKt+nwi8QhzuuqN+dnknkaKa3RFBGQ==
+X-Received: by 2002:a05:6000:40db:b0:3a3:7465:7e60 with SMTP id ffacd0b85a97d-3a374657eb0mr9527460f8f.26.1747831968274;
+        Wed, 21 May 2025 05:52:48 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f7d975f4sm67311505e9.39.2025.05.21.05.52.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 May 2025 05:52:47 -0700 (PDT)
+Date: Wed, 21 May 2025 13:52:46 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Nicolas Pitre <npitre@baylibre.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org,
+ u.kleine-koenig@baylibre.com, Oleg Nesterov <oleg@redhat.com>, Peter
+ Zijlstra <peterz@infradead.org>, Biju Das <biju.das.jz@bp.renesas.com>
+Subject: Re: [PATCH v2 next 3/4] lib: Add mul_u64_add_u64_div_u64() and
+ mul_u64_u64_div_u64_roundup()
+Message-ID: <20250521135246.7dab6bda@pumpkin>
+In-Reply-To: <148nop5q-s958-n0q4-66r8-o91ns4pnr4on@onlyvoer.pbz>
+References: <20250518133848.5811-1-david.laight.linux@gmail.com>
+	<20250518133848.5811-4-david.laight.linux@gmail.com>
+	<321rs9r7-8858-p195-263n-49q78q8rn25o@onlyvoer.pbz>
+	<20250520223700.2ec735fd@pumpkin>
+	<148nop5q-s958-n0q4-66r8-o91ns4pnr4on@onlyvoer.pbz>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Lei Wei <quic_leiwei@quicinc.com>
-Subject: Re: [net-next PATCH v4 03/11] net: pcs: Add subsystem
-To: Sean Anderson <sean.anderson@linux.dev>, <netdev@vger.kernel.org>,
-        Andrew
- Lunn <andrew+netdev@lunn.ch>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni
-	<pabeni@redhat.com>, Russell King <linux@armlinux.org.uk>
-CC: <upstream@airoha.com>, Kory Maincent <kory.maincent@bootlin.com>,
-        Simon
- Horman <horms@kernel.org>,
-        Christian Marangi <ansuelsmth@gmail.com>,
-        <linux-kernel@vger.kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>, <linux-doc@vger.kernel.org>
-References: <20250512161013.731955-1-sean.anderson@linux.dev>
- <20250512161013.731955-4-sean.anderson@linux.dev>
- <e92c87cf-2645-493c-b9d3-ce92249116d1@quicinc.com>
- <4556e55b-2360-4780-a282-b2f04f5cc994@linux.dev>
-Content-Language: en-US
-In-Reply-To: <4556e55b-2360-4780-a282-b2f04f5cc994@linux.dev>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDEyNCBTYWx0ZWRfX5PbrLYDXKQWN
- uA4IqaIqcLFXtjMfEtGdnJAjsZ0l8dStAF2Wa8I401PwZVMy+972FVizFtdaq4eMFYzBuBUERH1
- Q/BxixJHLfyyRlksqyOS7YZJlIarxHHwhLe9e0Bmzqjs/MhfgIqSOnry4TrOrgl5IMEiwrwSKQ+
- DYuxDnXaNn1LWTxjxFobossQ7VwPCCwSQwuJA6y9DA0deMbaAst7VWKUUnb7assHoQAZlhMxuIo
- tIaW8/WXrSKv62kquiOxJU6GvCCCAavlqdvTFfdxD72fd33AjEX+RN55PylCOANP9HkPTZv4/pA
- OnNNsrERJbATPA0Y2OjsjyxT64wb9TCow+73yy2gzCmlogRwOWNizu3DzS6589SgO8SJ9Lkwy+j
- XW+klpxtSor22+03ojDZubcB5cSLCE4y9yFEg/3Hz3MJpGbitRs/Fg+O3BpnIaxZlg2qFuSS
-X-Proofpoint-GUID: qNMarVzvYdQZ0J3EKqySIf0AQkmmAfEk
-X-Authority-Analysis: v=2.4 cv=Ws8rMcfv c=1 sm=1 tr=0 ts=682dcc7c cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10
- a=eH__3MDfRxuffPQLZlIA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: qNMarVzvYdQZ0J3EKqySIf0AQkmmAfEk
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-21_04,2025-05-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 malwarescore=0 clxscore=1015 suspectscore=0 mlxscore=0
- bulkscore=0 phishscore=0 priorityscore=1501 impostorscore=0
- lowpriorityscore=0 mlxlogscore=999 adultscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505160000 definitions=main-2505210124
 
+On Tue, 20 May 2025 18:24:58 -0400 (EDT)
+Nicolas Pitre <npitre@baylibre.com> wrote:
 
-
-On 5/20/2025 1:43 AM, Sean Anderson wrote:
-> On 5/14/25 12:22, Lei Wei wrote:
->>
->>
->> On 5/13/2025 12:10 AM, Sean Anderson wrote:
->>> +/**
->>> + * pcs_register_full() - register a new PCS
->>> + * @dev: The device requesting the PCS
->>> + * @fwnode: The PCS's firmware node; typically @dev.fwnode
->>> + * @pcs: The PCS to register
->>> + *
->>> + * Registers a new PCS which can be attached to a phylink.
->>> + *
->>> + * Return: 0 on success, or -errno on error
->>> + */
->>> +int pcs_register_full(struct device *dev, struct fwnode_handle *fwnode,
->>> +              struct phylink_pcs *pcs)
->>> +{
->>> +    struct pcs_wrapper *wrapper;
->>> +
->>> +    if (!dev || !pcs->ops)
->>> +        return -EINVAL;
->>> +
->>> +    if (!pcs->ops->pcs_an_restart || !pcs->ops->pcs_config ||
->>> +        !pcs->ops->pcs_get_state)
->>> +        return -EINVAL;
->>> +
->>> +    wrapper = kzalloc(sizeof(*wrapper), GFP_KERNEL);
->>> +    if (!wrapper)
->>> +        return -ENOMEM;
->>
->> How about the case where pcs is removed and then comes back again? Should we find the original wrapper and attach it to pcs again instead of creating a new wrapper?
+> On Tue, 20 May 2025, David Laight wrote:
 > 
-> When the PCS is removed the old wrapper is removed from pcs_wrappers, so
-> it can no longer be looked up any more. I think trying to save/restore
-> the wrapper would be much more trouble than it's worth.
+> > On Mon, 19 May 2025 23:03:21 -0400 (EDT)
+> > Nicolas Pitre <npitre@baylibre.com> wrote:
+> >   
+...
+> > > Here you should do:
+> > > 
+> > > 	if (ilog2(a) + ilog2(b) <= 62) {
+> > > 		u64 ab = a * b;
+> > > 		u64 abc = ab + c;
+> > > 		if (ab <= abc)
+> > > 			return div64_u64(abc, d);
+> > > 	}
+> > > 
+> > > This is cheap and won't unconditionally discard the faster path when c != 0;  
+> > 
+> > That isn't really cheap.
+> > ilog2() is likely to be a similar cost to a multiply
+> > (my brain remembers them both as 'latency 3' on x86).  
 > 
+> I'm not discussing the ilog2() usage though. I'm just against limiting 
+> the test to !c. My suggestion is about supporting all values of c.
 
-In the case where Ethernet is not removed but PCS is removed and then
-comes back (when the sysfs unbind followed by bind method is used),
-it will not work because the Ethernet probe will not be initiated again, 
-to call "pcs_get" again to obtain the new wrapper, it would still hold 
-the old wrapper.
+I've had further thoughts on that test.
+Most (but not all - and I've forgotten which) 64bit cpu have a 64x64=>128
+multiple and support u128.
+So the 'multiply in parts' code is mostly for 32bit.
+That means that the 'a * b' for the call to div64_u64() has to be three
+32x32=>64 multiplies with all the extra 'add' and 'adc $0' to generate
+a correct 64bit result.
+This is (well should be) much the same as the multiply coded in the
+function - except it is generated by the compiler itself.
+The only parts it can ignore are the those that set 'z' and 'y_hi'.
+If my clock sequence (in the other email) is correct it saves 3 of 10
+clocks - so test to avoid the multiply has to be better than that.
+That probably means the only worthwhile check is for a and b being 32bit
+so a single multiply can be used.
 
-> --Sean
+The generated code for 32bit x86 isn't as good as one might hope.
+partially due to only having 7 (6 if %bp is a stack frame) registers.
+clang makes a reasonable job of it, gcc doesn't.
+There is already a mul_u32_u32() wrapper in arch/x86/include/asm/div64.h.
+There needs to be a similar add_u64_u32() (contains add %s,%d_lo, adc $0,%d_hi).
+Without them gcc spills a lot of values to stack - including constant zeros.
+
+I might add those and use them in v3 (which I need to send anyway).
+They'll match what my 'pending' faster code does.
+
+	David
 
