@@ -1,419 +1,151 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83E46165F13;
-	Wed, 21 May 2025 15:52:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E64A21EB9E1
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 15:53:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747842769; cv=none; b=q9eFXuyiP44AlrG+19QnS4MQcYfi3MxfpNsrwiMQXQlqCjI2ZF0R7YzeXEXFy7ppDJsLixr/roLobs37XphF/xg5JE03FnQzvmP1mD6bucvXkpJAm8wL/7vgoscByO0kZaD4N9K3a9O4SmEL6pXG3eOdgRTKrE2OlnSDmlhejFE=
+	t=1747842825; cv=none; b=s7S+U0XqIwxmrllujIh8X8Z/KSeIF3/rf4vZfd+mSCovcz5Ty4vfkyBi21w2gliQHGKQX2PEcMOxLFhjBBvTyfyipeE8uJBTBegtuXUQTHsbB5MiPbdCNBxtMVKyzvXrJtsAl5UOOB6ZrCRfVAW96zA8x3ChjZ6+y5J3nGfOMeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747842769; c=relaxed/simple;
-	bh=gazusUjIDHYGeBls9NzBeRjfoUNPoMiTIMbk2OVXKXw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=s8HPvCRvpVlhLaQo4d7KuErCh+fG2yEiwBioea5p9T4eS+TQv3AmUIKyqnyWQh6Viz0t5R6KwCLHPxhE1/WYjcrZTiiURNwZUbWMGBDZxDwCzONFAWG47t2KyJ7hWqDBeq3V3Ux3YnDwgq1fYi31628FJRLNGTRBex9UMsfJIkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BA1951C14;
-	Wed, 21 May 2025 08:52:31 -0700 (PDT)
-Received: from [10.57.23.70] (unknown [10.57.23.70])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D9DBC3F6A8;
-	Wed, 21 May 2025 08:52:42 -0700 (PDT)
-Message-ID: <0a8f056f-ac06-438a-987e-4e8b18572224@arm.com>
-Date: Wed, 21 May 2025 16:52:42 +0100
+	s=arc-20240116; t=1747842825; c=relaxed/simple;
+	bh=pqWjaAWILbv3c6nvYzijStZPUipPsAKp7i+AMZEi+RY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tF+G1XiLhZiGz+0otsMQRREqynsQKKi06wwLZUz22HEeT/RLQtof1UsP4xexMQbMe3G5UhT2vwyauHlfGNnF1BC869xFvVfBp8k/zsiCMFt/DvPgesZ4VMkMX4j9YhlWqgypqBbkrMBwq9SFwvBPpgYKgp+MCTgBk1dSEEN/yE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=B2evFl1G; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=c3szFugv; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=BuQv6eh9; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=gBH+2m9h; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="B2evFl1G";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="c3szFugv";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="BuQv6eh9";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="gBH+2m9h"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id E8D4D338B0;
+	Wed, 21 May 2025 15:53:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747842821; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NwWfw1tFLg+rteBWXiVctmBLqNA9fuGap1VPFoVp1ws=;
+	b=B2evFl1GngYRie7RWcyHlY1VjozvQMrJqfOMt/EMXSTxzTOs2N8IR7xXZIjiyyQkEu5qgf
+	Gsbpn39dCtwTPYlsYc6haMivHFFcphW3WYmnfiVy9Rxb1PhmJz3evfqzUGbRsWfeNknvxZ
+	835oSQ4NpjbDz60jb+FvBmdBBYUz3Ds=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747842821;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NwWfw1tFLg+rteBWXiVctmBLqNA9fuGap1VPFoVp1ws=;
+	b=c3szFugvkeRTjq4WbqHyoijpV/+4HER9piQr8tIF2SuXAeK9/FnJG7PEnTtT0Ov+pQ+G76
+	AJRsV3O/bHJSCFBA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=BuQv6eh9;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=gBH+2m9h
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1747842820; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NwWfw1tFLg+rteBWXiVctmBLqNA9fuGap1VPFoVp1ws=;
+	b=BuQv6eh9AgRdPV40Lf7xCr4RnXAVqqRjRk30RZR5a1efE8ygDTfi5ZgZewdut1/fCbOJkO
+	RNzMG+97iH1stf5qwn4v9hu2HxWUlT+b+qA8pu5ZeIdH0suuGDrw62/2WniF4EjyhshSxN
+	fwTTHrmhdsQ8QFMcrllECEj2bfcMcjI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1747842820;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NwWfw1tFLg+rteBWXiVctmBLqNA9fuGap1VPFoVp1ws=;
+	b=gBH+2m9hPxqOxTGtZrn3mnzBAJC3Dzg68WIdod4SQEdFykOWQkwbtM2UCZAMyw17UTmBsd
+	r4QKAZRpEofr9gCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B519B13888;
+	Wed, 21 May 2025 15:53:40 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id Sq9lKwT3LWjwKwAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Wed, 21 May 2025 15:53:40 +0000
+Date: Wed, 21 May 2025 17:53:39 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: Hugh Dickins <hughd@google.com>
+Cc: Gavin Guo <gavinguo@igalia.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, muchun.song@linux.dev,
+	akpm@linux-foundation.org, mike.kravetz@oracle.com,
+	kernel-dev@igalia.com, stable@vger.kernel.org,
+	Florent Revest <revest@google.com>, Gavin Shan <gshan@redhat.com>
+Subject: Re: [PATCH v2] mm/hugetlb: fix a deadlock with pagecache_folio and
+ hugetlb_fault_mutex_table
+Message-ID: <aC33A65HFJOSO1_R@localhost.localdomain>
+References: <20250521115727.2202284-1-gavinguo@igalia.com>
+ <30681817-6820-6b43-1f39-065c5f1b3596@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/5] drm/panfrost: show device-wide list of DRM GEM
- objects over DebugFS
-To: =?UTF-8?Q?Adri=C3=A1n_Larumbe?= <adrian.larumbe@collabora.com>,
- linux-kernel@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org,
- Boris Brezillon <boris.brezillon@collabora.com>, kernel@collabora.com,
- Rob Herring <robh@kernel.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Sumit Semwal <sumit.semwal@linaro.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
-References: <20250520174634.353267-1-adrian.larumbe@collabora.com>
- <20250520174634.353267-5-adrian.larumbe@collabora.com>
-From: Steven Price <steven.price@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20250520174634.353267-5-adrian.larumbe@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <30681817-6820-6b43-1f39-065c5f1b3596@google.com>
+X-Rspamd-Action: no action
+X-Spam-Level: 
+X-Rspamd-Queue-Id: E8D4D338B0
+X-Spam-Score: -1.51
+X-Spam-Flag: NO
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-1.51 / 50.00];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
 
-On 20/05/2025 18:44, Adrián Larumbe wrote:
-> This change is essentially a Panfrost port of commit a3707f53eb3f
-> ("drm/panthor: show device-wide list of DRM GEM objects over DebugFS").
-> 
-> The DebugFS file is almost the same as in Panthor, minus the GEM object
-> usage flags, since Panfrost has no kernel-only BO's.
-> 
-> Two additional GEM state flags which are displayed but aren't relevant
-> to Panthor are 'Purged' and 'Purgeable', since Panfrost implements an
-> explicit shrinker and a madvise ioctl to flag objects as reclaimable.
-> 
-> Signed-off-by: Adrián Larumbe <adrian.larumbe@collabora.com>
+On Wed, May 21, 2025 at 08:10:46AM -0700, Hugh Dickins wrote:
+> Unless you have a very strong argument why this folio is invisible to
+> the rest of the world, including speculative accessors like compaction
+> (and the name "pagecache_folio" suggests very much the reverse): the
+> pattern of unlocking a lock when you see it locked is like (or worse
+> than) having no locking at all - it is potentially unlocking someone
+> else's lock.
 
-Reviewed-by: Steven Price <steven.price@arm.com>
+hugetlb_fault() locks 'pagecache_folio' and unlocks it after returning
+from hugetlb_wp().
+This patch introduces the possibility that hugetlb_wp() can also unlock it for
+the reasons explained.
+So, when hugetlb_wp() returns back to hugetlb_fault(), we
 
-> ---
->  drivers/gpu/drm/panfrost/panfrost_device.c |   5 +
->  drivers/gpu/drm/panfrost/panfrost_device.h |  15 +++
->  drivers/gpu/drm/panfrost/panfrost_drv.c    |  35 ++++++
->  drivers/gpu/drm/panfrost/panfrost_gem.c    | 134 +++++++++++++++++++++
->  drivers/gpu/drm/panfrost/panfrost_gem.h    |  47 ++++++++
->  5 files changed, 236 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_device.c b/drivers/gpu/drm/panfrost/panfrost_device.c
-> index 5d35076b2e6d..04bec27449cb 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_device.c
-> +++ b/drivers/gpu/drm/panfrost/panfrost_device.c
-> @@ -209,6 +209,11 @@ int panfrost_device_init(struct panfrost_device *pfdev)
->  
->  	spin_lock_init(&pfdev->cycle_counter.lock);
->  
-> +#ifdef CONFIG_DEBUG_FS
-> +	mutex_init(&pfdev->debugfs.gems_lock);
-> +	INIT_LIST_HEAD(&pfdev->debugfs.gems_list);
-> +#endif
-> +
->  	err = panfrost_pm_domain_init(pfdev);
->  	if (err)
->  		return err;
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_device.h b/drivers/gpu/drm/panfrost/panfrost_device.h
-> index dcff70f905cd..077525a3ad68 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_device.h
-> +++ b/drivers/gpu/drm/panfrost/panfrost_device.h
-> @@ -111,6 +111,17 @@ struct panfrost_compatible {
->  	u8 gpu_quirks;
->  };
->  
-> +/**
-> + * struct panfrost_device_debugfs - Device-wide DebugFS tracking structures
-> + */
-> +struct panfrost_device_debugfs {
-> +	/** @gems_list: Device-wide list of GEM objects owned by at least one file. */
-> +	struct list_head gems_list;
-> +
-> +	/** @gems_lock: Serializes access to the device-wide list of GEM objects. */
-> +	struct mutex gems_lock;
-> +};
-> +
->  struct panfrost_device {
->  	struct device *dev;
->  	struct drm_device *ddev;
-> @@ -164,6 +175,10 @@ struct panfrost_device {
->  		atomic_t use_count;
->  		spinlock_t lock;
->  	} cycle_counter;
-> +
-> +#ifdef CONFIG_DEBUG_FS
-> +	struct panfrost_device_debugfs debugfs;
-> +#endif
->  };
->  
->  struct panfrost_mmu {
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_drv.c b/drivers/gpu/drm/panfrost/panfrost_drv.c
-> index 179fbaa1cd0c..f576cb215898 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_drv.c
-> +++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
-> @@ -13,6 +13,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/pm_runtime.h>
->  #include <drm/panfrost_drm.h>
-> +#include <drm/drm_debugfs.h>
->  #include <drm/drm_drv.h>
->  #include <drm/drm_ioctl.h>
->  #include <drm/drm_syncobj.h>
-> @@ -659,6 +660,37 @@ static const struct file_operations panfrost_drm_driver_fops = {
->  	.show_fdinfo = drm_show_fdinfo,
->  };
->  
-> +#ifdef CONFIG_DEBUG_FS
-> +static int panthor_gems_show(struct seq_file *m, void *data)
-> +{
-> +	struct drm_info_node *node = m->private;
-> +	struct drm_device *dev = node->minor->dev;
-> +	struct panfrost_device *pfdev = dev->dev_private;
-> +
-> +	panfrost_gem_debugfs_print_bos(pfdev, m);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct drm_info_list panthor_debugfs_list[] = {
-> +	{"gems", panthor_gems_show, 0, NULL},
-> +};
-> +
-> +static int panthor_gems_debugfs_init(struct drm_minor *minor)
-> +{
-> +	drm_debugfs_create_files(panthor_debugfs_list,
-> +				 ARRAY_SIZE(panthor_debugfs_list),
-> +				 minor->debugfs_root, minor);
-> +
-> +	return 0;
-> +}
-> +
-> +static void panfrost_debugfs_init(struct drm_minor *minor)
-> +{
-> +	panthor_gems_debugfs_init(minor);
-> +}
-> +#endif
-> +
->  /*
->   * Panfrost driver version:
->   * - 1.0 - initial interface
-> @@ -683,6 +715,9 @@ static const struct drm_driver panfrost_drm_driver = {
->  
->  	.gem_create_object	= panfrost_gem_create_object,
->  	.gem_prime_import_sg_table = panfrost_gem_prime_import_sg_table,
-> +#ifdef CONFIG_DEBUG_FS
-> +	.debugfs_init = panfrost_debugfs_init,
-> +#endif
->  };
->  
->  static int panfrost_probe(struct platform_device *pdev)
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_gem.c b/drivers/gpu/drm/panfrost/panfrost_gem.c
-> index 04483d5fb45d..bb73f2a68a12 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_gem.c
-> +++ b/drivers/gpu/drm/panfrost/panfrost_gem.c
-> @@ -12,6 +12,36 @@
->  #include "panfrost_gem.h"
->  #include "panfrost_mmu.h"
->  
-> +#ifdef CONFIG_DEBUG_FS
-> +static void panfrost_gem_debugfs_bo_add(struct panfrost_device *pfdev,
-> +					struct panfrost_gem_object *bo)
-> +{
-> +	bo->debugfs.creator.tgid = current->group_leader->pid;
-> +	get_task_comm(bo->debugfs.creator.process_name, current->group_leader);
-> +
-> +	mutex_lock(&pfdev->debugfs.gems_lock);
-> +	list_add_tail(&bo->debugfs.node, &pfdev->debugfs.gems_list);
-> +	mutex_unlock(&pfdev->debugfs.gems_lock);
-> +}
-> +
-> +static void panfrost_gem_debugfs_bo_rm(struct panfrost_gem_object *bo)
-> +{
-> +	struct panfrost_device *pfdev = bo->base.base.dev->dev_private;
-> +
-> +	if (list_empty(&bo->debugfs.node))
-> +		return;
-> +
-> +	mutex_lock(&pfdev->debugfs.gems_lock);
-> +	list_del_init(&bo->debugfs.node);
-> +	mutex_unlock(&pfdev->debugfs.gems_lock);
-> +}
-> +#else
-> +static void panfrost_gem_debugfs_bo_add(struct panfrost_device *pfdev,
-> +					struct panfrost_gem_object *bo)
-> +{}
-> +static void panfrost_gem_debugfs_bo_rm(struct panfrost_gem_object *bo) {}
-> +#endif
-> +
->  /* Called DRM core on the last userspace/kernel unreference of the
->   * BO.
->   */
-> @@ -37,6 +67,7 @@ static void panfrost_gem_free_object(struct drm_gem_object *obj)
->  	WARN_ON_ONCE(!list_empty(&bo->mappings.list));
->  
->  	kfree_const(bo->label.str);
-> +	panfrost_gem_debugfs_bo_rm(bo);
->  	mutex_destroy(&bo->label.lock);
->  
->  	if (bo->sgts) {
-> @@ -266,6 +297,8 @@ struct drm_gem_object *panfrost_gem_create_object(struct drm_device *dev, size_t
->  	obj->base.map_wc = !pfdev->coherent;
->  	mutex_init(&obj->label.lock);
->  
-> +	panfrost_gem_debugfs_bo_add(pfdev, obj);
-> +
->  	return &obj->base.base;
->  }
->  
-> @@ -354,3 +387,104 @@ panfrost_gem_internal_set_label(struct drm_gem_object *obj, const char *label)
->  
->  	panfrost_gem_set_label(obj, str);
->  }
-> +
-> +#ifdef CONFIG_DEBUG_FS
-> +struct gem_size_totals {
-> +	size_t size;
-> +	size_t resident;
-> +	size_t reclaimable;
-> +};
-> +
-> +struct flag_def {
-> +	u32 flag;
-> +	const char *name;
-> +};
-> +
-> +static void panfrost_gem_debugfs_print_flag_names(struct seq_file *m)
-> +{
-> +	int len;
-> +	int i;
-> +
-> +	static const struct flag_def gem_state_flags_names[] = {
-> +		{PANFROST_DEBUGFS_GEM_STATE_FLAG_IMPORTED, "imported"},
-> +		{PANFROST_DEBUGFS_GEM_STATE_FLAG_EXPORTED, "exported"},
-> +		{PANFROST_DEBUGFS_GEM_STATE_FLAG_PURGED, "purged"},
-> +		{PANFROST_DEBUGFS_GEM_STATE_FLAG_PURGEABLE, "purgeable"},
-> +	};
-> +
-> +	seq_puts(m, "GEM state flags: ");
-> +	for (i = 0, len = ARRAY_SIZE(gem_state_flags_names); i < len; i++) {
-> +		seq_printf(m, "%s (0x%x)%s", gem_state_flags_names[i].name,
-> +			   gem_state_flags_names[i].flag, (i < len - 1) ? ", " : "\n\n");
-> +	}
-> +}
-> +
-> +static void panfrost_gem_debugfs_bo_print(struct panfrost_gem_object *bo,
-> +					  struct seq_file *m,
-> +					  struct gem_size_totals *totals)
-> +{
-> +	unsigned int refcount = kref_read(&bo->base.base.refcount);
-> +	char creator_info[32] = {};
-> +	size_t resident_size;
-> +	u32 gem_state_flags = 0;
-> +
-> +	/* Skip BOs being destroyed. */
-> +	if (!refcount)
-> +		return;
-> +
-> +	resident_size = bo->base.pages ? bo->base.base.size : 0;
-> +
-> +	snprintf(creator_info, sizeof(creator_info),
-> +		 "%s/%d", bo->debugfs.creator.process_name, bo->debugfs.creator.tgid);
-> +	seq_printf(m, "%-32s%-16d%-16d%-16zd%-16zd0x%-16lx",
-> +		   creator_info,
-> +		   bo->base.base.name,
-> +		   refcount,
-> +		   bo->base.base.size,
-> +		   resident_size,
-> +		   drm_vma_node_start(&bo->base.base.vma_node));
-> +
-> +	if (bo->base.base.import_attach)
-> +		gem_state_flags |= PANFROST_DEBUGFS_GEM_STATE_FLAG_IMPORTED;
-> +	if (bo->base.base.dma_buf)
-> +		gem_state_flags |= PANFROST_DEBUGFS_GEM_STATE_FLAG_EXPORTED;
-> +
-> +	if (bo->base.madv < 0)
-> +		gem_state_flags |= PANFROST_DEBUGFS_GEM_STATE_FLAG_PURGED;
-> +	else if (bo->base.madv > 0)
-> +		gem_state_flags |= PANFROST_DEBUGFS_GEM_STATE_FLAG_PURGEABLE;
-> +
-> +	seq_printf(m, "0x%-10x", gem_state_flags);
-> +
-> +	scoped_guard(mutex, &bo->label.lock) {
-> +		seq_printf(m, "%s\n", bo->label.str ? : "");
-> +	}
-> +
-> +	totals->size += bo->base.base.size;
-> +	totals->resident += resident_size;
-> +	if (bo->base.madv > 0)
-> +		totals->reclaimable += resident_size;
-> +}
-> +
-> +void panfrost_gem_debugfs_print_bos(struct panfrost_device *pfdev,
-> +				    struct seq_file *m)
-> +{
-> +	struct gem_size_totals totals = {0};
-> +	struct panfrost_gem_object *bo;
-> +
-> +	panfrost_gem_debugfs_print_flag_names(m);
-> +
-> +	seq_puts(m, "created-by                      global-name     refcount        size            resident-size   file-offset       state       label\n");
-> +	seq_puts(m, "-----------------------------------------------------------------------------------------------------------------------------------\n");
-> +
-> +	scoped_guard(mutex, &pfdev->debugfs.gems_lock) {
-> +		list_for_each_entry(bo, &pfdev->debugfs.gems_list, debugfs.node) {
-> +			panfrost_gem_debugfs_bo_print(bo, m, &totals);
-> +		}
-> +	}
-> +
-> +	seq_puts(m, "===================================================================================================================================\n");
-> +	seq_printf(m, "Total size: %zd, Total resident: %zd, Total reclaimable: %zd\n",
-> +		   totals.size, totals.resident, totals.reclaimable);
-> +}
-> +#endif
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_gem.h b/drivers/gpu/drm/panfrost/panfrost_gem.h
-> index 3d87c41ad09d..8de3e76f2717 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_gem.h
-> +++ b/drivers/gpu/drm/panfrost/panfrost_gem.h
-> @@ -8,9 +8,47 @@
->  #include <drm/drm_mm.h>
->  
->  struct panfrost_mmu;
-> +struct panfrost_device;
->  
->  #define PANFROST_BO_LABEL_MAXLEN	4096
->  
-> +enum panfrost_debugfs_gem_state_flags {
-> +	/** @PANFROST_DEBUGFS_GEM_STATE_FLAG_IMPORTED: GEM BO is PRIME imported. */
-> +	PANFROST_DEBUGFS_GEM_STATE_FLAG_IMPORTED = BIT(0),
-> +
-> +	/** @PANFROST_DEBUGFS_GEM_STATE_FLAG_EXPORTED: GEM BO is PRIME exported. */
-> +	PANFROST_DEBUGFS_GEM_STATE_FLAG_EXPORTED = BIT(1),
-> +
-> +	/** @PANFROST_DEBUGFS_GEM_STATE_FLAG_PURGED: GEM BO was reclaimed by the shrinker. */
-> +	PANFROST_DEBUGFS_GEM_STATE_FLAG_PURGED = BIT(2),
-> +
-> +	/**
-> +	 * @PANFROST_DEBUGFS_GEM_STATE_FLAG_PURGEABLE: GEM BO pages were marked as no longer
-> +	 * needed by UM and can be reclaimed by the shrinker.
-> +	 */
-> +	PANFROST_DEBUGFS_GEM_STATE_FLAG_PURGEABLE = BIT(3),
-> +};
-> +
-> +/**
-> + * struct panfrost_gem_debugfs - GEM object's DebugFS list information
-> + */
-> +struct panfrost_gem_debugfs {
-> +	/**
-> +	 * @node: Node used to insert the object in the device-wide list of
-> +	 * GEM objects, to display information about it through a DebugFS file.
-> +	 */
-> +	struct list_head node;
-> +
-> +	/** @creator: Information about the UM process which created the GEM. */
-> +	struct {
-> +		/** @creator.process_name: Group leader name in owning thread's process */
-> +		char process_name[TASK_COMM_LEN];
-> +
-> +		/** @creator.tgid: PID of the thread's group leader within its process */
-> +		pid_t tgid;
-> +	} creator;
-> +};
-> +
->  struct panfrost_gem_object {
->  	struct drm_gem_shmem_object base;
->  	struct sg_table *sgts;
-> @@ -59,6 +97,10 @@ struct panfrost_gem_object {
->  
->  	bool noexec		:1;
->  	bool is_heap		:1;
-> +
-> +#ifdef CONFIG_DEBUG_FS
-> +	struct panfrost_gem_debugfs debugfs;
-> +#endif
->  };
->  
->  struct panfrost_gem_mapping {
-> @@ -108,4 +150,9 @@ void panfrost_gem_shrinker_cleanup(struct drm_device *dev);
->  void panfrost_gem_set_label(struct drm_gem_object *obj, const char *label);
->  void panfrost_gem_internal_set_label(struct drm_gem_object *obj, const char *label);
->  
-> +#ifdef CONFIG_DEBUG_FS
-> +void panfrost_gem_debugfs_print_bos(struct panfrost_device *pfdev,
-> +				    struct seq_file *m);
-> +#endif
-> +
->  #endif /* __PANFROST_GEM_H__ */
+1) either still hold the lock (because hugetlb_fault() took it)
+2) or we do not anymore because hugetlb_wp() unlocked it for us.
 
+So it is not that we are unlocking anything blindly, because if the lock
+is still 'taken' (folio_test_locked() returned true) it is because we,
+hugetlb_fault() took it and we are still holding it.
+
+
+
+-- 
+Oscar Salvador
+SUSE Labs
