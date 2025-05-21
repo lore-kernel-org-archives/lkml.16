@@ -1,75 +1,89 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 716C023C51A;
-	Wed, 21 May 2025 09:27:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FA7023D29A;
+	Wed, 21 May 2025 09:27:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747819632; cv=none; b=hPj1FfiICZsY6Kh00DZ6h0uACq25TIhssEXSvLu/sdXdyEa1rKJwgbynnY5a2ONXRkRPctpUXgVy5fsqrPXx2evxnsItNejN8cKG+mGUEA+OHsU95iuLpiZ+QFQsVy52BWRHnyB5eEregRmBifXtV3GAqp+LmFTZ1y/t9zOtRDQ=
+	t=1747819649; cv=none; b=A4QjpdLDSjL3CF1677ZXietfZKfTSgF3H6mV5jK72/7Gk72b7f5Lg+BG5SRR6pYz+RxePoiWLv+CtV78yAiV2gdDBKo1GNQZRTsjmOS3xJRfDvd4lyub7uBnSz+X0KmLR+FCH/HQVTz5tDAtg+DgNILekierpGkaVHq0kUlU2kE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747819632; c=relaxed/simple;
-	bh=+lR4EOoNJ4nGzX8DuzXU2f7FDxq7F4tGHeg5UFgI61c=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=obbvZT3ZGcOjHHLt9Cn10Eir4IQ0b85EAeMuK9XTcd2DaPcx4MaR1gBaoBQmSBbFCuQfKjYLCvdmRV3LkET/RfVFQyKr7lGTEdBO5zh2efkySIK2H9O2mofOQwyIFe7Ga1SGNcbCW2FpI6Il11a0ag2fCfumg3hCfEVc1xNxFy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b2Qyv0bLgz6L52y;
-	Wed, 21 May 2025 17:26:15 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id A2F8F1404FC;
-	Wed, 21 May 2025 17:27:07 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 21 May
- 2025 11:27:06 +0200
-Date: Wed, 21 May 2025 10:27:04 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: <linux-pci@vger.kernel.org>, Jon Pan-Doh <pandoh@google.com>, "Karolina
- Stolarek" <karolina.stolarek@oracle.com>, Weinan Liu <wnliu@google.com>,
-	Martin Petersen <martin.petersen@oracle.com>, Ben Fuller
-	<ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, "Anil
- Agrawal" <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, Ilpo
- =?UTF-8?Q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Sathyanarayanan
- Kuppuswamy" <sathyanarayanan.kuppuswamy@linux.intel.com>, Lukas Wunner
-	<lukas@wunner.de>, Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney"
-	<paulmck@kernel.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, "Oliver
- O'Halloran" <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>, "Keith
- Busch" <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>, Terry Bowman
-	<terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>, Dave Jiang
-	<dave.jiang@intel.com>, <linux-kernel@vger.kernel.org>,
-	<linuxppc-dev@lists.ozlabs.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-Subject: Re: [PATCH v7 09/17] PCI/AER: Simplify pci_print_aer()
-Message-ID: <20250521102704.00002f74@huawei.com>
-In-Reply-To: <20250520215047.1350603-10-helgaas@kernel.org>
-References: <20250520215047.1350603-1-helgaas@kernel.org>
-	<20250520215047.1350603-10-helgaas@kernel.org>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1747819649; c=relaxed/simple;
+	bh=jpIOQ71B8uL6kn1/azTQ+K9S3vdBIXwX0L0/UC4eifU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QpYN1KsmZGUtz406RrvquHOOt2nDDKzEnpHHfvGVlFK8i3nJewECT8TeJKniiWK921sutF5rOCYrFXa9OGLjkJRv1NQ9yMNjPf83dGQUitHRUpEw+QRXtP6h8U1HqBI13J62fTQKNmeEvcdhDsRPLdOajNhedLyDVJYXQqHuFvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cje40TS+; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cje40TS+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07CD9C4CEE4;
+	Wed, 21 May 2025 09:27:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747819648;
+	bh=jpIOQ71B8uL6kn1/azTQ+K9S3vdBIXwX0L0/UC4eifU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cje40TS+YMTlJJTFCJ5bQLFmAyakrEDBxVUYKSwb+ohK4Xu5k8yHUYBZ2vKf40mwW
+	 EE65JdJj72iAmbpGkyYfS2x3No4yiOgJ6Wv4Zf1wsBi2ZnIhClsFjohW9lLS4WYleI
+	 bqnpBHozKHrYPYjYNyr8Lnvmc4U2wKT0D1Nf2Anpjuuvz6Nmr9idpiUQ+z9L3bbqXs
+	 z9PnO/na4cX/uRqdD8K/775pPxVU4eMkZyspz9eXwBiBZKinAmEkMbxFVKSA6K++0C
+	 RbhQ2EhXfCFb43I3NtNbYaIWqmDTr/7kq8AZjXQDk1629VdXto1eQLUB/6PWJAcyBI
+	 1i5JT5rsp+ydw==
+Date: Wed, 21 May 2025 11:27:25 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Alejandro Enrique <alejandroe1@geotab.com>
+Cc: Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: gnss: u-blox: add "safeboot-gpios"
+ binding
+Message-ID: <20250521-qualified-smart-myna-bddfc8@kuoka>
+References: <20250514-ubx-safeboot-v1-0-1ae771335356@geotab.com>
+ <20250514-ubx-safeboot-v1-1-1ae771335356@geotab.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250514-ubx-safeboot-v1-1-1ae771335356@geotab.com>
 
-On Tue, 20 May 2025 16:50:26 -0500
-Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Wed, May 14, 2025 at 03:54:41PM GMT, Alejandro Enrique wrote:
+> U-Blox M8/M9 chip have a pin to start it in safeboot mode, to be used
+> to recover from situations where the flash content has become
+> corrupted and needs to be restored. Introduce a binding to support
+> this safeboot pin.
+> 
+> Signed-off-by: Alejandro Enrique <alejandroe1@geotab.com>
+> ---
+>  Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml b/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml
+> index 7d4b6d49e5eea2201ac05ba6d54b1c1721172f26..16d922279def99257c194520a7ac820f2a26e9c7 100644
+> --- a/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml
+> +++ b/Documentation/devicetree/bindings/gnss/u-blox,neo-6m.yaml
+> @@ -32,6 +32,9 @@ properties:
+>    reset-gpios:
+>      maxItems: 1
+>  
+> +  safeboot-gpios:
+> +    maxItems: 1
+> +
 
-> From: Bjorn Helgaas <bhelgaas@google.com>
->=20
-> Simplify pci_print_aer() by initializing the struct aer_err_info "info"
-> with a designated initializer list (it was previously initialized with
-> memset()) and using pci_name().
->=20
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> Tested-by: Krzysztof Wilczy=C5=84ski <kwilczynski@kernel.org>
-> Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-Another nice cleanup.
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+You need if:then: disallowing (:false) this for 6m and 8. Move entire allOf down
+and add there new if: clause. (see example schema)
+
+>    vcc-supply:
+>      description: >
+>        Main voltage regulator
+> @@ -61,5 +64,6 @@ examples:
+>              v-bckp-supply = <&gnss_v_bckp_reg>;
+>              vcc-supply = <&gnss_vcc_reg>;
+>              reset-gpios = <&gpio 1 GPIO_ACTIVE_LOW>;
+> +            safeboot-gpios = <&gpio 2 GPIO_ACTIVE_LOW>;
+
+Thats 8, not 8m?
+
+Best regards,
+Krzysztof
+
