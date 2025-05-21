@@ -1,260 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 841AF22D9FB;
-	Wed, 21 May 2025 03:19:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 027E61C6FE4;
+	Wed, 21 May 2025 03:22:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747797598; cv=none; b=T7OJ1MKgX8K5VEYcFoVFb6odFymDu2roFIX8MEUr8LpR9NyVxEfJlaWKWgSgK4SzCX8wMDAcIgF/+8K6gpJH7gbyLuL5tcUb0OeTA41aauJgdirCVXiaFL30GjR0JUUgQICxlW2Vd3+JxWSSj2JsMpua5Y0FOcX4XA1cG4/DwXo=
+	t=1747797747; cv=none; b=dK7KnwMsHIxa/EN4eWAG7mtKdkLzGk54rXbdcxN/N4apTuLFo+w/GpgmqdBarrqoe+g235QiXzc+MUNv3/1e8BFZGu6kn3NifgOGnXg6Km36Vgo7EOxSeTc0pCe+kiR7NoB2bqUrJOJwKEvH8f01b9kU02Z43NXzXnTzSg5ko4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747797598; c=relaxed/simple;
-	bh=xlb1hFCZHKPe922gxi3v68NhnIgKYyYUZCFuJIwfggk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=IqLVHiRUOLVctnVTtu/P+bnZy/uluvsBLeCEZhrGJQQArODCrZckkvFyIUfGR4bu9Veq7QXXd5HjTc8EM37ML97LEKN/Gi7rAGjbr9NtBfx237tVW9etMYbCyCslYfRUZ23m3uXAlDW2auDDv9fpESPGcM5mfJm8Pp5+uNJKzMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=laXZNrji; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747797747; c=relaxed/simple;
+	bh=hfpTbGukhUuuV/oX81p85tSk0qYsKNTnGDkObllnbMk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=K81yxo/xpICa/ihBgj1kjpNKjKQln6V0iDAir5tqrUwC7ziO3kB1LTqvRGJUPK85mJ/t9dvWBD2bsvgZgEhHMbnpiHoSzaVj/2zSvx53Klcg/sJciiYpsZtiBWVBs6/S2X5oE+MnR5Vavwtn6uCOOD68qKIhWm/Qozij9il57O4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=acZXug5F; arc=none smtp.client-ip=115.124.30.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="laXZNrji"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0089BC4CEF2;
-	Wed, 21 May 2025 03:19:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747797598;
-	bh=xlb1hFCZHKPe922gxi3v68NhnIgKYyYUZCFuJIwfggk=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=laXZNrjiHl+azqzTqJ3vZR9Y1jVwqiD0wiqDvXVDNGUqx/pRJZlqIehc1B1PGvVU0
-	 su/enxPz16tIdkgjNDDO/iY0jtTN/hPMX2PzImRXI4+4wVgy6z4VeQ8epoi7cVHSq9
-	 aneebdWkiO7R2gi8Dx70zpW8vLnyjbAhteQPUpWAqEXEyOyHKfrWos88c4DQMDeYUZ
-	 RXQRiKRicuLsWMUNx7azYQOE0HViQ9HU/bjghsSOD5OglpRmRCejfI9adkHWmUc+OG
-	 VtTfKE2gYqkdSrMROLQWPVgPx/kQysBC7W2lTrTZO4EuhNSh+MI2qqTLKkamapWU7a
-	 4u4dSRmWxLFdQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB57C3ABC9;
-	Wed, 21 May 2025 03:19:57 +0000 (UTC)
-From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
-Date: Wed, 21 May 2025 11:19:59 +0800
-Subject: [PATCH v2 5/8] pinctrl: meson: support amlogic S6/S7/S7D SoC
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="acZXug5F"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1747797740; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=zlVKiVEB7vpkr2KFpFFhqSVF1yp9ZMoxg8EAbgOOIjk=;
+	b=acZXug5FDz6rLRCySBP2l905UQHq6JBmHsgCO2EmjUX74QXjNFZt2x+30RgYld72STzpnWQRLlP2gKD4ozeo42p9oJ7F+sQU/lNNPEZyGHfNqFTunc8wgDnK34LAsMsF/YReiXhg/Od9YA1F+gTkJcNp9eioRqV+Q/FE6+5Q1+I=
+Received: from 30.74.144.111(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WbPwqoP_1747797739 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 21 May 2025 11:22:20 +0800
+Message-ID: <6f0b7332-477b-4028-b663-09803718e8d9@linux.alibaba.com>
+Date: Wed, 21 May 2025 11:22:18 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mmc: sdhci-sprd: Add error handling for
+ sdhci_runtime_suspend_host()
+To: Wentao Liang <vulab@iscas.ac.cn>, adrian.hunter@intel.com,
+ ulf.hansson@linaro.org, orsonzhai@gmail.com, zhang.lyra@gmail.com
+Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20250519123347.2242-1-vulab@iscas.ac.cn>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <20250519123347.2242-1-vulab@iscas.ac.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250521-s6-s7-pinctrl-v2-5-0ce5e3728404@amlogic.com>
-References: <20250521-s6-s7-pinctrl-v2-0-0ce5e3728404@amlogic.com>
-In-Reply-To: <20250521-s6-s7-pinctrl-v2-0-0ce5e3728404@amlogic.com>
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, 
- Xianwei Zhao <xianwei.zhao@amlogic.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747797595; l=5342;
- i=xianwei.zhao@amlogic.com; s=20231208; h=from:subject:message-id;
- bh=qYNWhkH55B8d6PXwynFbW7T5kFGFgc23N8HQ5eIP7KU=;
- b=QvYZPAPFGbFupNf3kMpAq0MdikmqUAzF9AkXLAjKTxDOrf3pOwraAOdhugAivF8DWRbC4FKSK
- FMX5FoBXxyfC1xgktF5YcL60skrUEzR9hMrVZYdwt3yuXnnp9Wnb9nu
-X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
- pk=o4fDH8ZXL6xQg5h17eNzRljf6pwZHWWjqcOSsj3dW24=
-X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20231208 with
- auth_id=107
-X-Original-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
-Reply-To: xianwei.zhao@amlogic.com
-
-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
-
-In some Amlogic SoCs, to save register space or due to some
-abnormal arrangements, two sets of pins share one mux register.
-
-A group starting from pin0 is the main pin group, which acquires
-the register address through DTS and has management permissions,
-but the register bit offset is undetermined.
-
-Another GPIO group as a subordinate group. Some pins mux use share
-register and bit offset from bit0 . But this group do not have
-register management permissions.
-
-This submission implements this situation.
-
-Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
----
- drivers/pinctrl/meson/pinctrl-amlogic-a4.c | 101 ++++++++++++++++++++++++++++-
- 1 file changed, 99 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pinctrl/meson/pinctrl-amlogic-a4.c b/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
-index 90d4d10ca10b..598c126ff62e 100644
---- a/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
-+++ b/drivers/pinctrl/meson/pinctrl-amlogic-a4.c
-@@ -50,8 +50,23 @@ struct aml_pio_control {
- 	u32 bit_offset[AML_NUM_REG];
- };
- 
-+/*
-+ * partial bank(subordinate) pins mux config use other bank(main) mux registgers
-+ * m_bank_id:	the main bank which pin_id from 0, but register bit not from bit 0
-+ * m_bit_offs:	bit offset the main bank mux register
-+ * sid:         start pin_id of subordinate bank
-+ * eid:         end pin_id of subordinate bank
-+ */
-+struct multi_mux {
-+	unsigned int m_bank_id;
-+	unsigned int m_bit_offs;
-+	unsigned int sid;
-+	unsigned int eid;
-+};
-+
- struct aml_pctl_data {
- 	unsigned int number;
-+	const struct multi_mux *p_mux;
- };
- 
- struct aml_pmx_func {
-@@ -71,10 +86,12 @@ struct aml_gpio_bank {
- 	struct gpio_chip		gpio_chip;
- 	struct aml_pio_control		pc;
- 	u32				bank_id;
-+	u32				mux_bit_offs;
- 	unsigned int			pin_base;
- 	struct regmap			*reg_mux;
- 	struct regmap			*reg_gpio;
- 	struct regmap			*reg_ds;
-+	const struct multi_mux		*p_mux;
- };
- 
- struct aml_pinctrl {
-@@ -106,13 +123,46 @@ static const char *aml_bank_name[31] = {
- "GPIOCC", "TEST_N", "ANALOG"
- };
- 
-+const struct multi_mux multi_mux_s7[] = {
-+	{
-+		.m_bank_id = AMLOGIC_GPIO_CC,
-+		.m_bit_offs = 24,
-+		.sid = (AMLOGIC_GPIO_X << 8) + 16,
-+		.eid = (AMLOGIC_GPIO_X << 8) + 19,
-+	},
-+};
-+
-+const struct aml_pctl_data s7_priv_data = {
-+	.number = ARRAY_SIZE(multi_mux_s7),
-+	.p_mux = multi_mux_s7,
-+};
-+
-+const struct multi_mux multi_mux_s6[] = {
-+	{
-+		.m_bank_id = AMLOGIC_GPIO_CC,
-+		.m_bit_offs = 24,
-+		.sid = (AMLOGIC_GPIO_X << 8) + 16,
-+		.eid = (AMLOGIC_GPIO_X << 8) + 19,
-+	}, {
-+		.m_bank_id = AMLOGIC_GPIO_F,
-+		.m_bit_offs = 4,
-+		.sid = (AMLOGIC_GPIO_D << 8) + 6,
-+		.eid = (AMLOGIC_GPIO_D << 8) + 6,
-+	},
-+};
-+
-+const struct aml_pctl_data s6_priv_data = {
-+	.number = ARRAY_SIZE(multi_mux_s6),
-+	.p_mux = multi_mux_s6,
-+};
-+
- static int aml_pmx_calc_reg_and_offset(struct pinctrl_gpio_range *range,
- 				       unsigned int pin, unsigned int *reg,
- 				       unsigned int *offset)
- {
- 	unsigned int shift;
- 
--	shift = (pin - range->pin_base) << 2;
-+	shift = ((pin - range->pin_base) << 2) + *offset;
- 	*reg = (shift / 32) * 4;
- 	*offset = shift % 32;
- 
-@@ -124,9 +174,36 @@ static int aml_pctl_set_function(struct aml_pinctrl *info,
- 				 int pin_id, int func)
- {
- 	struct aml_gpio_bank *bank = gpio_chip_to_bank(range->gc);
-+	unsigned int shift;
- 	int reg;
--	int offset;
-+	int i;
-+	unsigned int offset = bank->mux_bit_offs;
-+	const struct multi_mux *p_mux;
-+
-+	/* peculiar mux reg set */
-+	if (bank->p_mux) {
-+		p_mux = bank->p_mux;
-+		if (pin_id >= p_mux->sid && pin_id <= p_mux->eid) {
-+			bank = NULL;
-+			for (i = 0; i < info->nbanks; i++) {
-+				if (info->banks[i].bank_id == p_mux->m_bank_id) {
-+					bank = &info->banks[i];
-+						break;
-+				}
-+			}
-+
-+			if (!bank || !bank->reg_mux)
-+				return -EINVAL;
-+
-+			shift = (pin_id - p_mux->sid) << 2;
-+			reg = (shift / 32) * 4;
-+			offset = shift % 32;
-+			return regmap_update_bits(bank->reg_mux, reg,
-+					0xf << offset, (func & 0xf) << offset);
-+		}
-+	}
- 
-+	/* normal mux reg set */
- 	if (!bank->reg_mux)
- 		return 0;
- 
-@@ -836,12 +913,30 @@ static const struct gpio_chip aml_gpio_template = {
- static void init_bank_register_bit(struct aml_pinctrl *info,
- 				   struct aml_gpio_bank *bank)
- {
-+	const struct aml_pctl_data *data = info->data;
-+	const struct multi_mux *p_mux;
- 	int i;
- 
- 	for (i = 0; i < AML_NUM_REG; i++) {
- 		bank->pc.reg_offset[i] = aml_def_regoffs[i];
- 		bank->pc.bit_offset[i] = 0;
- 	}
-+
-+	bank->mux_bit_offs = 0;
-+
-+	if (data) {
-+		for (i = 0; i < data->number; i++) {
-+			p_mux = &data->p_mux[i];
-+			if (bank->bank_id == p_mux->m_bank_id) {
-+				bank->mux_bit_offs = p_mux->m_bit_offs;
-+				break;
-+			}
-+			if (p_mux->sid >> 8 == bank->bank_id) {
-+				bank->p_mux = p_mux;
-+				break;
-+			}
-+		}
-+	}
- }
- 
- static int aml_gpiolib_register_bank(struct aml_pinctrl *info,
-@@ -1008,6 +1103,8 @@ static int aml_pctl_probe(struct platform_device *pdev)
- 
- static const struct of_device_id aml_pctl_of_match[] = {
- 	{ .compatible = "amlogic,pinctrl-a4", },
-+	{ .compatible = "amlogic,pinctrl-s7", .data = &s7_priv_data, },
-+	{ .compatible = "amlogic,pinctrl-s6", .data = &s6_priv_data, },
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, aml_pctl_dt_match);
-
--- 
-2.37.1
 
 
+
+On 2025/5/19 20:33, Wentao Liang wrote:
+> The dhci_sprd_runtime_suspend() calls sdhci_runtime_suspend_host() but
+> does not handle the return value. A proper implementation can be found
+> in sdhci_am654_runtime_suspend().
+> 
+> Add error handling for sdhci_runtime_suspend_host(). Return the error
+> code if the suspend fails.
+> 
+> Fixes: fb8bd90f83c4 ("mmc: sdhci-sprd: Add Spreadtrum's initial host controller")
+> Cc: stable@vger.kernel.org # v4.20
+> Signed-off-by: Wentao Liang <vulab@iscas.ac.cn>
+
+LGTM.
+Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+
+> ---
+>   drivers/mmc/host/sdhci-sprd.c | 5 ++++-
+>   1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci-sprd.c b/drivers/mmc/host/sdhci-sprd.c
+> index db5e253b0f79..dd41427e973a 100644
+> --- a/drivers/mmc/host/sdhci-sprd.c
+> +++ b/drivers/mmc/host/sdhci-sprd.c
+> @@ -922,9 +922,12 @@ static int sdhci_sprd_runtime_suspend(struct device *dev)
+>   {
+>   	struct sdhci_host *host = dev_get_drvdata(dev);
+>   	struct sdhci_sprd_host *sprd_host = TO_SPRD_HOST(host);
+> +	int ret;
+>   
+>   	mmc_hsq_suspend(host->mmc);
+> -	sdhci_runtime_suspend_host(host);
+> +	ret = sdhci_runtime_suspend_host(host);
+> +	if (ret)
+> +		return ret;
+>   
+>   	clk_disable_unprepare(sprd_host->clk_sdio);
+>   	clk_disable_unprepare(sprd_host->clk_enable);
