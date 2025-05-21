@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32DB018C002;
-	Wed, 21 May 2025 01:20:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4760192B90;
+	Wed, 21 May 2025 01:20:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747790419; cv=none; b=HR5s4THO+OVEvB/1KvHoG+7lG0h09tpKrFFOoVDK9jJAgsHwH6fRNO1XTOmhvdus1hbw34ApRtPWfYUJ0Sp98klJQHrYly7NjTwDfttnpGibrPLMIM5jxmwhUv5c+Uc82L3dLdTUJZQnR19h8B5RiilRcp2lIeih+5luLYF3p20=
+	t=1747790422; cv=none; b=evjYkEJo0gKHXX01okSAYTzT9LP1mg0sl7yORznvPOr4cughwSESJY87HZwSU572pLZsJMU9dBaPpzUZ0zJ7UoyvE/ydrqB+zudNuG3ZvzS9qQmXLMtXCnky5uifp6rZe4OqKaNH+bXM7lIDv4bPkhUfkSrONocIRzQb0WpTy6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747790419; c=relaxed/simple;
-	bh=LNS1vEUuMVV9aSljVz0rghhANekQi0j1/WToBCW6RQ4=;
+	s=arc-20240116; t=1747790422; c=relaxed/simple;
+	bh=dMgkJgqMz3ctMMmSbSC4dm+FOOp5kC87tNKqiMADZQs=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=mEqMF//lvPI1MLf6uQor8QWEYTAm+o4pgaZpsx03d1y/p0Nv/NauydBBJ8xh+u0MIvt4oDWl1epKlK+ZmOlplNmIsVgjjS4EO12l33EDr94aukI+kcFySUmiQKAhiK24tVGs5TQfahzcAKsGlV9au1tDJlSET6xgP3e/jnRBsOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VrVP50T0; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=so10qnuMzmUYt5LkWCsNggzXCwyLEe3Cz1EmsjZpfivPCQBu9lSYIBbnXtpddHMkwxcKuNZBeND1fnqm4DKsb9oUfmdd0a+SoJsK1wcLLvSvwdPAQ1wo1fml8VvbPnmbxqNqPVMOqe/IstP4BGPMzT7tJNmG9TZwAo1hg+MyXVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XsZubK87; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VrVP50T0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9895CC4CEE9;
-	Wed, 21 May 2025 01:20:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XsZubK87"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A07FC4CEEB;
+	Wed, 21 May 2025 01:20:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747790418;
-	bh=LNS1vEUuMVV9aSljVz0rghhANekQi0j1/WToBCW6RQ4=;
+	s=k20201202; t=1747790421;
+	bh=dMgkJgqMz3ctMMmSbSC4dm+FOOp5kC87tNKqiMADZQs=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=VrVP50T03j67dvpY5M1u1w72AT0KYlLtXNvrKQ8eF+PvrrsCDTqfxAfBsGLGlgvRt
-	 93a/XykLLi0ribvvQqHql/zDQQXKRJW4XPDE8q2ObdXIN5HzajpUWTbl8T8DTLC5tO
-	 8sRs+P12V73cGx61qDbKlEGaZU60nrxcFu8xWqkjgFArCOhWYoXznus1jkWUg7cgeB
-	 Pa3PLTmLumbsK8MEkzGB6kAgODaqyvWc6f/jUHMAPdJdL5bo8aCRX73BOwH2jtHBH7
-	 CnPFZsHbAYajehsjm/U6fbIFKD99A1NMJibxvWAmYml3V5kIDGtQexw20NE8mCiNoY
-	 gaLLGzBg2AoIA==
+	b=XsZubK87LEUjL9tKkGsshfsmYLQqDzEUEPa/dLYIFoBBjhpQDLBiNVw35b5iTUekd
+	 ZOoM2R4ycsxSEqsn8cqBIgvNw9fUOaUh2esaZ51uvduwMK7m1gYmW0cMWrvcVj4Q5W
+	 M1IDj7V36GcXtCzPg9VhMjnLXKeuI0fK0ZFCjOzQXvxFAx1vRRo8U/vzLdtvyEk9WX
+	 eGCxVp/Ye2xrPUPBjAhd3mH2bqgMC41b/kY/onU4jLWXRNESWyNyRtM5R2w2Y+dWBr
+	 h5mQKm7BXOUZSW0/7k9pPa+GUvh2YqMN+JzrtyG3K3KyDgwKgN6VlmgNgp8PD99Kyw
+	 Xup13pnMT43ng==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADDC1380AAD0;
-	Wed, 21 May 2025 01:20:55 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70C7F380AAD0;
+	Wed, 21 May 2025 01:20:58 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,40 +37,38 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net v2] selftests: net: validate team flags propagation
+Subject: Re: [PATCH net-next] net: enetc: fix the error handling in
+ enetc4_pf_netdev_create()
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <174779045449.1526198.4318547635095706511.git-patchwork-notify@kernel.org>
-Date: Wed, 21 May 2025 01:20:54 +0000
-References: <20250516232205.539266-1-stfomichev@gmail.com>
-In-Reply-To: <20250516232205.539266-1-stfomichev@gmail.com>
-To: Stanislav Fomichev <stfomichev@gmail.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, andrew+netdev@lunn.ch, horms@kernel.org,
- jiri@resnulli.us, shuah@kernel.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org
+ <174779045699.1526198.11812446231836291706.git-patchwork-notify@kernel.org>
+Date: Wed, 21 May 2025 01:20:56 +0000
+References: <20250516052734.3624191-1-wei.fang@nxp.com>
+In-Reply-To: <20250516052734.3624191-1-wei.fang@nxp.com>
+To: Wei Fang <wei.fang@nxp.com>
+Cc: claudiu.manoil@nxp.com, vladimir.oltean@nxp.com, xiaoning.wang@nxp.com,
+ andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, imx@lists.linux.dev
 
 Hello:
 
 This patch was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Fri, 16 May 2025 16:22:05 -0700 you wrote:
-> Cover three recent cases:
-> 1. missing ops locking for the lowers during netdev_sync_lower_features
-> 2. missing locking for dev_set_promiscuity (plus netdev_ops_assert_locked
->    with a comment on why/when it's needed)
-> 3. rcu lock during team_change_rx_flags
+On Fri, 16 May 2025 13:27:34 +0800 you wrote:
+> Fix the handling of err_wq_init and err_reg_netdev paths in
+> enetc4_pf_netdev_create() function.
 > 
-> Verified that each one triggers when the respective fix is reverted.
-> Not sure about the placement, but since it all relies on teaming,
-> added to the teaming directory.
-> 
-> [...]
+> Fixes: 6c5bafba347b ("net: enetc: add MAC filtering for i.MX95 ENETC PF")
+> Signed-off-by: Wei Fang <wei.fang@nxp.com>
+> ---
+>  drivers/net/ethernet/freescale/enetc/enetc4_pf.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 
 Here is the summary with links:
-  - [net,v2] selftests: net: validate team flags propagation
-    https://git.kernel.org/netdev/net-next/c/f792709e0baa
+  - [net-next] net: enetc: fix the error handling in enetc4_pf_netdev_create()
+    https://git.kernel.org/netdev/net-next/c/b98b70c103de
 
 You are awesome, thank you!
 -- 
