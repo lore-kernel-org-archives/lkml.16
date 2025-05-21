@@ -1,353 +1,144 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BA17238D53;
-	Wed, 21 May 2025 09:10:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EA15238D53
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 09:11:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747818671; cv=none; b=l4CP+IwcIM6uWXcYwon5hT96Ce9ZnhmKYYJd8y2DW2BWJ/6xaTpJgcY0i2nsCGagtlmycQ+7urmmqhm/QA57UDBDjh0ELVDZr/EoBDqoGC3KZ+/hfLhCEtGSq1i38b8FDSh/0A4MaBggavh8prEs8X692Scc0BLp4v3vcyXfgn8=
+	t=1747818676; cv=none; b=gIlKZevucrDyBMKpDkf3WSB6PFzwRWoSKm/WHZDaA7tIHTlir/Sfmh6A59oMy8mU9+GzP1Nk8wEHcEKWNHXkIlgLPGKAezpfPOMdS/5ik0EHmbCgCry1cCsWCuwvX+n5WPyC7eD6fdRkEzSGWuVEtK05CWoFdsfBUcH0w7hyD64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747818671; c=relaxed/simple;
-	bh=siftGh43D73bCW3rfiYqiafo3E2wCnhURCeldIYzrWQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SfCvYHllr1jmNGK57Su6LuMaFhesj2sSQRGt3gXwjme4fGVX7oF6vtJG7ca7XV8irMH6bTxxPF07JrSsyV2FAwEho4EF9quQiZn61PuFXWrfeqNnpEEMBcKxrQIKYUNUnOsbKO8wmAouSo6oIj0GKX2YBBwDhihRqig9Sd3B5sU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 00AC91515;
-	Wed, 21 May 2025 02:10:39 -0700 (PDT)
-Received: from [10.57.23.70] (unknown [10.57.23.70])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3955D3F6A8;
-	Wed, 21 May 2025 02:10:48 -0700 (PDT)
-Message-ID: <c6ae4a77-6477-4e37-bca7-1ddfdfbce803@arm.com>
-Date: Wed, 21 May 2025 10:10:46 +0100
+	s=arc-20240116; t=1747818676; c=relaxed/simple;
+	bh=AyTlo5MV4RoWb0/jlG7PaHacCmtKMIX6jHJZ5hNGkqo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nt0XqoGsxpoLbBRyal+w4g3WPvLoTS8is6096rF1h4fKQmCE+7am/U/zBHrS263bwUlwQswP1l5emvIwJBvqIb98ZpOJ66oJE01Fwa1xFwFkA4goBkpoUzZabkgg6Qn80jLKr5Q65r8/2zfPoJt0vzfXNaW34czFFqMDTBizrS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WfzsStLm; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WfzsStLm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747818675; x=1779354675;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=AyTlo5MV4RoWb0/jlG7PaHacCmtKMIX6jHJZ5hNGkqo=;
+  b=WfzsStLml9i75yHwjIcOt+3CTxOikjzCnXzWXZek9CVg0IvPD6LtcaSh
+   8AWNaldt6fcfpNgN6wN5s+ViawYeWpexP7wteCHyka9mduP7xdKZ9ODBJ
+   k3Jcuk1kWYLW96pTYgwCDAXIer2E8xDdGfR4eGHhb0om828Irwvaz2Fd0
+   8oUIdQdPD+iS1h98Jh7pbPBU0pHigzOZCAHMOzbMjNahMyFtE/ddIDshv
+   HhKk+bivNdx+heFYge3iAljrFWcOHdvOJEWHPWaJMYQwFqbBydTUfDaMH
+   7H2B4TmVOpRNCPDGZPeOVlvbIEfQCFGfB5GT/yzRj9bx9folWcDcRZyPv
+   g==;
+X-CSE-ConnectionGUID: dX74oQ5mR92rspM4OLqE1A==
+X-CSE-MsgGUID: WojZ0WbQR5SlW0yywsurHA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="53595237"
+X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
+   d="scan'208";a="53595237"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 02:11:14 -0700
+X-CSE-ConnectionGUID: CNu791ZaRYCb5Aog6f/7NQ==
+X-CSE-MsgGUID: QRyvUxAxS/aBYV8nILle/Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
+   d="scan'208";a="140044302"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 02:11:10 -0700
+Date: Wed, 21 May 2025 12:11:07 +0300
+From: Raag Jadav <raag.jadav@intel.com>
+To: =?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	siqueira@igalia.com, airlied@gmail.com, simona@ffwll.ch,
+	rodrigo.vivi@intel.com, jani.nikula@linux.intel.com,
+	Xaver Hugl <xaver.hugl@gmail.com>,
+	Krzysztof Karas <krzysztof.karas@intel.com>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	kernel-dev@igalia.com, amd-gfx@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org, intel-gfx@lists.freedesktop.org
+Subject: Re: [PATCH v5 1/3] drm: Create a task info option for wedge events
+Message-ID: <aC2Yq89IL5tx8MY3@black.fi.intel.com>
+References: <20250520163243.328746-1-andrealmeid@igalia.com>
+ <20250520163243.328746-2-andrealmeid@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 20/43] arm64: RME: Runtime faulting of memory
-To: Suzuki K Poulose <suzuki.poulose@arm.com>, kvm@vger.kernel.org,
- kvmarm@lists.linux.dev
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>, Zenghui Yu <yuzenghui@huawei.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Joey Gouly <joey.gouly@arm.com>, Alexandru Elisei
- <alexandru.elisei@arm.com>, Christoffer Dall <christoffer.dall@arm.com>,
- Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
- Gavin Shan <gshan@redhat.com>, Shanker Donthineni <sdonthineni@nvidia.com>,
- Alper Gun <alpergun@google.com>, "Aneesh Kumar K . V"
- <aneesh.kumar@kernel.org>
-References: <20250416134208.383984-1-steven.price@arm.com>
- <20250416134208.383984-21-steven.price@arm.com>
- <3a04995a-524c-4d07-8c8b-82930f9bca72@arm.com>
-From: Steven Price <steven.price@arm.com>
-Content-Language: en-GB
-In-Reply-To: <3a04995a-524c-4d07-8c8b-82930f9bca72@arm.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250520163243.328746-2-andrealmeid@igalia.com>
 
-On 19/05/2025 18:35, Suzuki K Poulose wrote:
-> Hi Steven
+On Tue, May 20, 2025 at 01:32:41PM -0300, Andr� Almeida wrote:
+> When a device get wedged, it might be caused by a guilty application.
+> For userspace, knowing which task was the cause can be useful for some
+> situations, like for implementing a policy, logs or for giving a chance
+> for the compositor to let the user know what task caused the problem.
+> This is an optional argument, when the task info is not available, the
+> PID and TASK string won't appear in the event string.
 > 
-> On 16/04/2025 14:41, Steven Price wrote:
->> At runtime if the realm guest accesses memory which hasn't yet been
->> mapped then KVM needs to either populate the region or fault the guest.
->>
->> For memory in the lower (protected) region of IPA a fresh page is
->> provided to the RMM which will zero the contents. For memory in the
->> upper (shared) region of IPA, the memory from the memslot is mapped
->> into the realm VM non secure.
->>
->> Signed-off-by: Steven Price <steven.price@arm.com>
-> 
-> Please find some comments below.
-> 
-> ...
-> 
->> diff --git a/arch/arm64/kvm/rme.c b/arch/arm64/kvm/rme.c
->> index f6af3ea6ea8a..b6959cd17a6c 100644
->> --- a/arch/arm64/kvm/rme.c
->> +++ b/arch/arm64/kvm/rme.c
->> @@ -714,6 +714,186 @@ static int
->> realm_create_protected_data_page(struct realm *realm,
->>       return -ENXIO;
->>   }
->>   +static int fold_rtt(struct realm *realm, unsigned long addr, int
->> level)
->> +{
->> +    phys_addr_t rtt_addr;
->> +    int ret;
->> +
->> +    ret = realm_rtt_fold(realm, addr, level, &rtt_addr);
->> +    if (ret)
->> +        return ret;
->> +
->> +    free_delegated_granule(rtt_addr);
->> +
->> +    return 0;
->> +}
->> +
->> +int realm_map_protected(struct realm *realm,
->> +            unsigned long ipa,
->> +            kvm_pfn_t pfn,
->> +            unsigned long map_size,
->> +            struct kvm_mmu_memory_cache *memcache)
->> +{
->> +    phys_addr_t phys = __pfn_to_phys(pfn);
->> +    phys_addr_t rd = virt_to_phys(realm->rd);
->> +    unsigned long base_ipa = ipa;
->> +    unsigned long size;
->> +    int map_level;
->> +    int ret = 0;
->> +
->> +    if (WARN_ON(!IS_ALIGNED(map_size, RMM_PAGE_SIZE)))
->> +        return -EINVAL;
->> +
->> +    if (WARN_ON(!IS_ALIGNED(ipa, map_size)))
->> +        return -EINVAL;
->> +
->> +    if (IS_ALIGNED(map_size, RMM_L2_BLOCK_SIZE))
->> +        map_level = 2;
-> 
-> minor nit : RMM_RTT_BLOCK_LEVEL
-> 
->> +    else
->> +        map_level = 3;
-> 
-> minor nit:  RMM_RTT_MAX_LEVEL ?
+> Sometimes just the PID isn't enough giving that the task might be already
+> dead by the time userspace will try to check what was this PID's name,
+> so to make the life easier also notify what's the task's name in the user
+> event.
 
-Ack
+...
 
->> +
->> +    if (map_level < RMM_RTT_MAX_LEVEL) {
->> +        /*
->> +         * A temporary RTT is needed during the map, precreate it,
->> +         * however if there is an error (e.g. missing parent tables)
->> +         * this will be handled below.
->> +         */
->> +        realm_create_rtt_levels(realm, ipa, map_level,
->> +                    RMM_RTT_MAX_LEVEL, memcache);
->> +    }
->> +
->> +    for (size = 0; size < map_size; size += RMM_PAGE_SIZE) {
->> +        if (rmi_granule_delegate(phys)) {
->> +            /*
->> +             * It's likely we raced with another VCPU on the same
->> +             * fault. Assume the other VCPU has handled the fault
->> +             * and return to the guest.
->> +             */
->> +            return 0;
->> +        }
->> +
->> +        ret = rmi_data_create_unknown(rd, phys, ipa);
->> +
->> +        if (RMI_RETURN_STATUS(ret) == RMI_ERROR_RTT) {
->> +            /* Create missing RTTs and retry */
->> +            int level = RMI_RETURN_INDEX(ret);
->> +
->> +            WARN_ON(level == RMM_RTT_MAX_LEVEL);
->> +
->> +            ret = realm_create_rtt_levels(realm, ipa, level,
->> +                              RMM_RTT_MAX_LEVEL,
->> +                              memcache);
->> +            if (ret)
->> +                goto err_undelegate;
->> +
->> +            ret = rmi_data_create_unknown(rd, phys, ipa);
->> +        }
->> +
->> +        if (WARN_ON(ret))
->> +            goto err_undelegate;
->> +
->> +        phys += RMM_PAGE_SIZE;
->> +        ipa += RMM_PAGE_SIZE;
->> +    }
->> +
->> +    if (map_size == RMM_L2_BLOCK_SIZE) {
->> +        ret = fold_rtt(realm, base_ipa, map_level + 1);
->> +        if (WARN_ON(ret))
->> +            goto err;
->> +    }
->> +
->> +    return 0;
->> +
->> +err_undelegate:
->> +    if (WARN_ON(rmi_granule_undelegate(phys))) {
->> +        /* Page can't be returned to NS world so is lost */
->> +        get_page(phys_to_page(phys));
->> +    }
->> +err:
->> +    while (size > 0) {
->> +        unsigned long data, top;
->> +
->> +        phys -= RMM_PAGE_SIZE;
->> +        size -= RMM_PAGE_SIZE;
->> +        ipa -= RMM_PAGE_SIZE;
->> +
->> +        WARN_ON(rmi_data_destroy(rd, ipa, &data, &top));
->> +
->> +        if (WARN_ON(rmi_granule_undelegate(phys))) {
->> +            /* Page can't be returned to NS world so is lost */
->> +            get_page(phys_to_page(phys));
->> +        }
->> +    }
->> +    return -ENXIO;
->> +}
->> +
->> +int realm_map_non_secure(struct realm *realm,
->> +             unsigned long ipa,
->> +             kvm_pfn_t pfn,
->> +             unsigned long size,
->> +             struct kvm_mmu_memory_cache *memcache)
->> +{
->> +    phys_addr_t rd = virt_to_phys(realm->rd);
->> +    phys_addr_t phys = __pfn_to_phys(pfn);
->> +    unsigned long offset;
->> +    int map_size, map_level;
->> +    int ret = 0;
->> +
->> +    if (WARN_ON(!IS_ALIGNED(size, RMM_PAGE_SIZE)))
->> +        return -EINVAL;
->> +
->> +    if (WARN_ON(!IS_ALIGNED(ipa, size)))
->> +        return -EINVAL;
->> +
->> +    if (IS_ALIGNED(size, RMM_L2_BLOCK_SIZE)) {
->> +        map_level = 2;
->> +        map_size = RMM_L2_BLOCK_SIZE;
-> 
-> Same here, stick to the symbols than digits.
+> -int drm_dev_wedged_event(struct drm_device *dev, unsigned long method)
+> +int drm_dev_wedged_event(struct drm_device *dev, unsigned long method,
+> +			 struct drm_wedge_task_info *info)
+>  {
+>  	const char *recovery = NULL;
+>  	unsigned int len, opt;
+> -	/* Event string length up to 28+ characters with available methods */
+> -	char event_string[32];
+> -	char *envp[] = { event_string, NULL };
+> +	char event_string[WEDGE_STR_LEN], pid_string[PID_LEN] = "", comm_string[TASK_COMM_LEN] = "";
+> +	char *envp[] = { event_string, NULL, NULL, NULL };
+>  
+>  	len = scnprintf(event_string, sizeof(event_string), "%s", "WEDGED=");
+>  
+> @@ -582,6 +586,13 @@ int drm_dev_wedged_event(struct drm_device *dev, unsigned long method)
+>  	drm_info(dev, "device wedged, %s\n", method == DRM_WEDGE_RECOVERY_NONE ?
+>  		 "but recovered through reset" : "needs recovery");
+>  
+> +	if (info && ((info->comm && info->comm[0] != '\0'))) {
 
-Ack
+Thanks for adding this. Should we check if pid > 0?
 
->> +    } else {
->> +        map_level = 3;
->> +        map_size = RMM_PAGE_SIZE;
->> +    }
->> +
->> +    for (offset = 0; offset < size; offset += map_size) {
->> +        /*
->> +         * realm_map_ipa() enforces that the memory is writable,
-> 
-> The function names seems to be obsolete, please fix.
+Also, I was wondering what if the driver only has info on one of the
+given members? Should we allow it to be flagged independently?
 
-realm_map_ipa() is in arch/arm64/kvm/mmu.c and contains...
+> +		snprintf(pid_string, sizeof(pid_string), "PID=%u", info->pid);
+> +		snprintf(comm_string, sizeof(comm_string), "TASK=%s", info->comm);
+> +		envp[1] = pid_string;
+> +		envp[2] = comm_string;
+> +	}
+> +
+>  	return kobject_uevent_env(&dev->primary->kdev->kobj, KOBJ_CHANGE, envp);
+>  }
+>  EXPORT_SYMBOL(drm_dev_wedged_event);
 
-	/*
-	 * Write permission is required for now even though it's possible to
-	 * map unprotected pages (granules) as read-only. It's impossible to
-	 * map protected pages (granules) as read-only.
-	 */
-	if (WARN_ON(!(prot & KVM_PGTABLE_PROT_W)))
-		return -EFAULT;
+...
 
-...which is what this is referring to.
-[And now I've read your follow up email ;) ]
+> diff --git a/include/drm/drm_device.h b/include/drm/drm_device.h
+> index e2f894f1b90a..c13fe85210f2 100644
+> --- a/include/drm/drm_device.h
+> +++ b/include/drm/drm_device.h
+> @@ -30,6 +30,14 @@ struct pci_controller;
+>  #define DRM_WEDGE_RECOVERY_REBIND	BIT(1)	/* unbind + bind driver */
+>  #define DRM_WEDGE_RECOVERY_BUS_RESET	BIT(2)	/* unbind + reset bus device + bind */
+>  
+> +/**
+> + * struct drm_wedge_task_info - information about the guilty app of a wedge dev
 
->> +         * so for now we permit both read and write.
->> +         */
->> +        unsigned long desc = phys |
->> +                     PTE_S2_MEMATTR(MT_S2_FWB_NORMAL) |
->> +                     KVM_PTE_LEAF_ATTR_LO_S2_S2AP_R |
->> +                     KVM_PTE_LEAF_ATTR_LO_S2_S2AP_W;
->> +        ret = rmi_rtt_map_unprotected(rd, ipa, map_level, desc);
->> +
->> +        if (RMI_RETURN_STATUS(ret) == RMI_ERROR_RTT) {
-> 
-> Could we hit the following case and end up in failure ?
-> 
-> * Initially a single page is shared and the S2 is mapped
-> * Later the Realm shares the entire L2 block and encounters a fault
->   at a new IPA within the L2 block.
-> 
-> In this case, we may try to L2 mapping when there is a L3 mapping and
-> we could encounter (RMI_ERROR_RTT, 2).
+s/app/task, missed an instance ;)
 
-Ugh! You are of course correct, this is broken. It turns out this is all
-irrelevant as things stand because we don't currently support anything
-bigger than (host) PAGE_SIZE mappings (forced in user_mem_abort()).
+> + */
+> +struct drm_wedge_task_info {
+> +	pid_t pid;
+> +	char *comm;
+> +};
 
-Given this I'm very much tempted to just delete the code supporting
-block mappings for now (just set map_level to RMM_RTT_MAX_LEVEL).
-
-Longer term, I'm not sure what is the best approach, the options are:
-
-1. Drop down and map the region at L3 (ignoring conflicting entries),
-   followed by attempting to fold.
-
-2. Destroy the table and directly map at L2.
-
-Option 2 is clearly the most performant, but is potentially racy. In
-particular I'm not 100% sure whether you could end up with another
-thread attempting to map at L3 between the destroy and map, and
-therefore recreating the table.
-
-Thanks,
-Steve
-
-> 
->> +            /* Create missing RTTs and retry */
->> +            int level = RMI_RETURN_INDEX(ret);
-> 
-> So we should probably go down the rtt create step, with the following
-> check.
-> 
->             if (level < map_level) {
-> 
->> +
->> +            ret = realm_create_rtt_levels(realm, ipa, level,
->> +                              map_level, memcache);
->> +            if (ret)
->> +                return -ENXIO;
->> +
->> +            ret = rmi_rtt_map_unprotected(rd, ipa, map_level, desc);
-> 
-> 
->         } else {
-> 
-> Otherwise, may be we need to do some more hard work to fix it up.
-> 
-> 1. If map_level == 3, something is terribly wrong or we raced with
-> another thread ?
-> 
-> 2. If map_level < 3 and we didn't race :
-> 
->   a. Going one level down and creating the mappings there and then
-> folding. But we could endup dealing with ERROR_RTT,3 as in (1).
-> 
->   b. Easiest is to destroy the table at "map_level + 1" and retry the map.
-> 
-> 
-> Suzuki
-> 
-> 
-> 
->> +        }
->> +        /*
->> +         * RMI_ERROR_RTT can be reported for two reasons: either the
->> +         * RTT tables are not there, or there is an RTTE already
->> +         * present for the address.  The call to
->> +         * realm_create_rtt_levels() above handles the first case, and
->> +         * in the second case this indicates that another thread has
->> +         * already populated the RTTE for us, so we can ignore the
->> +         * error and continue.
->> +         */
->> +        if (ret && RMI_RETURN_STATUS(ret) != RMI_ERROR_RTT)
->> +            return -ENXIO;
->> +
->> +        ipa += map_size;
->> +        phys += map_size;
->> +    }
->> +
->> +    return 0;
->> +}
->> +
->>   static int populate_region(struct kvm *kvm,
->>                  phys_addr_t ipa_base,
->>                  phys_addr_t ipa_end,
-> 
-
+Raag
