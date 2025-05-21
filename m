@@ -1,256 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9788222596;
-	Wed, 21 May 2025 15:33:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BE5F223704
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 15:33:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747841630; cv=none; b=UVpUs5ty9RiIduP7EGBtXRDgQcCXUDVjFiTTbRn2eQTJ9PpQIxxdV/XAGOrVGyuC4tYnWku37WJbUtF1n1E5MLR/TGUyyNukw3Du/NE48jtq+wUZxARKan1LnpZOA5DIopUHxP18flHDhZp9Z6/OtOKgdjJJTEtl4B6OPGEs6HU=
+	t=1747841633; cv=none; b=RjjYzHEn77ZcYh+yuIIV0Ietl/DneEG3VgzaidgJ3J69Se0Yl6Eo3el/apStYannzvx3YUjhfzEZiym2U0jMeLDAamCe3bYQY1pgOCrMNiloi8pKYNODKOYI7bw+e+n2sliqFG2YC3RthtqtsNevfIjfPEOG5yL5ArWRs9DGfMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747841630; c=relaxed/simple;
-	bh=HI9OdU+GOMA19WqHEJ+k84G8liPCrsrz2n9jkc+dL7Q=;
+	s=arc-20240116; t=1747841633; c=relaxed/simple;
+	bh=Vtcw7mINIlvUr04SjFTIlN54iDrSaPcKmCM119sSc1U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=B0gCmp6xjAxlkuBhp63Ymd+dLLDgvoV6kq7mgUjtFAl7CeNh4MoZLFQoENfarfxwzUjTW5WJwtv5lLSR/rJyNjfkvFRzYFp+pLuezX0ClGa5xuS+MyVzbwuK0F4gMcW6VtdZjS/mFr1gi/JgYY56gRneJ7TQULoHZEjYZDg57C8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TU9HqmfK; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=DJD789RHqQaNmSzi/yEmIqYALtVkuMZIKjiLwXCUhw+qLICVeRdO/YgWcu//+2d8A8mapoTSC4WqtqgOM3nAcRqYSKEdT5BRjOHfd+lAK/ujvOnXn/BGwb628nyv9kTiMgGCYpqXnBSbqiW7P8qQ3D0Gy0pNATWve8mCftd+SkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=CDdiQgZJ; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TU9HqmfK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70AB0C4CEE7;
-	Wed, 21 May 2025 15:33:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747841629;
-	bh=HI9OdU+GOMA19WqHEJ+k84G8liPCrsrz2n9jkc+dL7Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TU9HqmfKtQnnVuEYeK4LThXwnFXPjSQ8OKC9gNQxOCV4MrgEXiUxDTPMmnFNh3Wgl
-	 80RJr62BDiAQimwjkfH4kG+/0hKtULoN2Va1q6KimDM0swgdpMfVUGiN6MyBG6OCmb
-	 mbO3sj7yDqd6Sq0HOyY4hdODrCV89BspuXysFkC0fjbL8J1rhQlgpnh/zx5OvyAbke
-	 PIOOtVzGGc3Y0EFc2fIA1s66ta7ix9uqZzLE/8DV2c/f0zjp8zUzQnoNQXGbCtiQtm
-	 xkJzRT8JpEK/ug5mn8OnEMkflhpyOIgh7slw5Dshx3JMyIjn1CMOJeshwhriXilvJO
-	 eNY4XhhkVdAWw==
-From: Lee Jones <lee@kernel.org>
-To: lee@kernel.org,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Jens Axboe <axboe@kernel.dk>,
-	Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>,
-	Sasha Levin <sashal@kernel.org>,
-	Michal Luczaj <mhal@rbox.co>,
-	Rao Shoaib <Rao.Shoaib@oracle.com>,
-	Simon Horman <horms@kernel.org>,
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="CDdiQgZJ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:
+	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=2n0ULhZnCu8C1LAodYKH8luvq5s03x0GpqQhjbAmhMQ=; b=CDdiQgZJuyOHdycIWE5ong+n1y
+	hGKkeWEzmpu7iGH/gFNeISG2CNzvIPEZBUPc/F7/vdjfbiTjlwW6JltqSTiNwGu0IbNwxeSwiDzeD
+	LEzoEw+t07pSTz56wJRXrbqfjmz+WCvArfcA4/Wi4geAV8Kq4pwYQpPm83G2p72p3tNgbYGVPkAz7
+	eY+hUz9d7J3sIcr8+ueNcoLX9pOWfbdBif/gwiqOocBxrNARPbiZD4uQSDMvbzl3zG45w3+Ot4DgJ
+	pLyW6DBXSHWJsUQF77OxFrB9owKkJZZf40VDco6hThr22HS347JFTh9nVYGeotxpmHZW5EKDKPvv4
+	0lUmkcdA==;
+Received: from [191.204.192.64] (helo=localhost.localdomain)
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1uHlRu-00BGxd-8X; Wed, 21 May 2025 17:33:42 +0200
+From: =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
+To: "Alex Deucher" <alexander.deucher@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	siqueira@igalia.com,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	"Raag Jadav" <raag.jadav@intel.com>,
+	rodrigo.vivi@intel.com,
+	jani.nikula@linux.intel.com,
+	Xaver Hugl <xaver.hugl@gmail.com>,
+	Krzysztof Karas <krzysztof.karas@intel.com>
+Cc: dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Cc: stable@vger.kernel.org
-Subject: [PATCH v6.1 13/27] af_unix: Detect Strongly Connected Components.
-Date: Wed, 21 May 2025 16:27:12 +0100
-Message-ID: <20250521152920.1116756-14-lee@kernel.org>
-X-Mailer: git-send-email 2.49.0.1143.g0be31eac6b-goog
-In-Reply-To: <20250521152920.1116756-1-lee@kernel.org>
-References: <20250521152920.1116756-1-lee@kernel.org>
+	kernel-dev@igalia.com,
+	amd-gfx@lists.freedesktop.org,
+	intel-xe@lists.freedesktop.org,
+	intel-gfx@lists.freedesktop.org,
+	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>
+Subject: [PATCH v6 3/3] drm/amdgpu: Make use of drm_wedge_task_info
+Date: Wed, 21 May 2025 12:33:23 -0300
+Message-ID: <20250521153323.935974-4-andrealmeid@igalia.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250521153323.935974-1-andrealmeid@igalia.com>
+References: <20250521153323.935974-1-andrealmeid@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To notify userspace about which task (if any) made the device get in a
+wedge state, make use of drm_wedge_task_info parameter, filling it with
+the task PID and name.
 
-[ Upstream commit 3484f063172dd88776b062046d721d7c2ae1af7c ]
-
-In the new GC, we use a simple graph algorithm, Tarjan's Strongly
-Connected Components (SCC) algorithm, to find cyclic references.
-
-The algorithm visits every vertex exactly once using depth-first
-search (DFS).
-
-DFS starts by pushing an input vertex to a stack and assigning it
-a unique number.  Two fields, index and lowlink, are initialised
-with the number, but lowlink could be updated later during DFS.
-
-If a vertex has an edge to an unvisited inflight vertex, we visit
-it and do the same processing.  So, we will have vertices in the
-stack in the order they appear and number them consecutively in
-the same order.
-
-If a vertex has a back-edge to a visited vertex in the stack,
-we update the predecessor's lowlink with the successor's index.
-
-After iterating edges from the vertex, we check if its index
-equals its lowlink.
-
-If the lowlink is different from the index, it shows there was a
-back-edge.  Then, we go backtracking and propagate the lowlink to
-its predecessor and resume the previous edge iteration from the
-next edge.
-
-If the lowlink is the same as the index, we pop vertices before
-and including the vertex from the stack.  Then, the set of vertices
-is SCC, possibly forming a cycle.  At the same time, we move the
-vertices to unix_visited_vertices.
-
-When we finish the algorithm, all vertices in each SCC will be
-linked via unix_vertex.scc_entry.
-
-Let's take an example.  We have a graph including five inflight
-vertices (F is not inflight):
-
-  A -> B -> C -> D -> E (-> F)
-       ^         |
-       `---------'
-
-Suppose that we start DFS from C.  We will visit C, D, and B first
-and initialise their index and lowlink.  Then, the stack looks like
-this:
-
-  > B = (3, 3)  (index, lowlink)
-    D = (2, 2)
-    C = (1, 1)
-
-When checking B's edge to C, we update B's lowlink with C's index
-and propagate it to D.
-
-    B = (3, 1)  (index, lowlink)
-  > D = (2, 1)
-    C = (1, 1)
-
-Next, we visit E, which has no edge to an inflight vertex.
-
-  > E = (4, 4)  (index, lowlink)
-    B = (3, 1)
-    D = (2, 1)
-    C = (1, 1)
-
-When we leave from E, its index and lowlink are the same, so we
-pop E from the stack as single-vertex SCC.  Next, we leave from
-B and D but do nothing because their lowlink are different from
-their index.
-
-    B = (3, 1)  (index, lowlink)
-    D = (2, 1)
-  > C = (1, 1)
-
-Then, we leave from C, whose index and lowlink are the same, so
-we pop B, D and C as SCC.
-
-Last, we do DFS for the rest of vertices, A, which is also a
-single-vertex SCC.
-
-Finally, each unix_vertex.scc_entry is linked as follows:
-
-  A -.  B -> C -> D  E -.
-  ^  |  ^         |  ^  |
-  `--'  `---------'  `--'
-
-We use SCC later to decide whether we can garbage-collect the
-sockets.
-
-Note that we still cannot detect SCC properly if an edge points
-to an embryo socket.  The following two patches will sort it out.
-
-Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
-Acked-by: Paolo Abeni <pabeni@redhat.com>
-Link: https://lore.kernel.org/r/20240325202425.60930-7-kuniyu@amazon.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-(cherry picked from commit 3484f063172dd88776b062046d721d7c2ae1af7c)
-Signed-off-by: Lee Jones <lee@kernel.org>
+Signed-off-by: André Almeida <andrealmeid@igalia.com>
 ---
- include/net/af_unix.h |  3 +++
- net/unix/garbage.c    | 46 +++++++++++++++++++++++++++++++++++++++++--
- 2 files changed, 47 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 19 +++++++++++++++++--
+ drivers/gpu/drm/amd/amdgpu/amdgpu_job.c    |  6 +++++-
+ 2 files changed, 22 insertions(+), 3 deletions(-)
 
-diff --git a/include/net/af_unix.h b/include/net/af_unix.h
-index 9d51d675cc9f..e6f7bba19152 100644
---- a/include/net/af_unix.h
-+++ b/include/net/af_unix.h
-@@ -32,8 +32,11 @@ void wait_for_unix_gc(struct scm_fp_list *fpl);
- struct unix_vertex {
- 	struct list_head edges;
- 	struct list_head entry;
-+	struct list_head scc_entry;
- 	unsigned long out_degree;
- 	unsigned long index;
-+	unsigned long lowlink;
-+	bool on_stack;
- };
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+index d27091d5929c..c29c924aa506 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+@@ -6362,8 +6362,23 @@ int amdgpu_device_gpu_recover(struct amdgpu_device *adev,
  
- struct unix_edge {
-diff --git a/net/unix/garbage.c b/net/unix/garbage.c
-index 295dd1a7b8e0..cdeff548e130 100644
---- a/net/unix/garbage.c
-+++ b/net/unix/garbage.c
-@@ -251,11 +251,19 @@ static LIST_HEAD(unix_visited_vertices);
- static void __unix_walk_scc(struct unix_vertex *vertex)
- {
- 	unsigned long index = UNIX_VERTEX_INDEX_START;
-+	LIST_HEAD(vertex_stack);
- 	struct unix_edge *edge;
- 	LIST_HEAD(edge_stack);
+ 	atomic_set(&adev->reset_domain->reset_res, r);
  
- next_vertex:
-+	/* Push vertex to vertex_stack.
-+	 * The vertex will be popped when finalising SCC later.
-+	 */
-+	vertex->on_stack = true;
-+	list_add(&vertex->scc_entry, &vertex_stack);
+-	if (!r)
+-		drm_dev_wedged_event(adev_to_drm(adev), DRM_WEDGE_RECOVERY_NONE, NULL);
++	if (!r) {
++		struct drm_wedge_task_info aux, *info = NULL;
 +
- 	vertex->index = index;
-+	vertex->lowlink = index;
- 	index++;
- 
- 	/* Explore neighbour vertices (receivers of the current vertex's fd). */
-@@ -283,12 +291,46 @@ static void __unix_walk_scc(struct unix_vertex *vertex)
- 			edge = list_first_entry(&edge_stack, typeof(*edge), stack_entry);
- 			list_del_init(&edge->stack_entry);
- 
-+			next_vertex = vertex;
- 			vertex = edge->predecessor->vertex;
++		if (job) {
++			struct amdgpu_task_info *ti;
 +
-+			/* If the successor has a smaller lowlink, two vertices
-+			 * are in the same SCC, so propagate the smaller lowlink
-+			 * to skip SCC finalisation.
-+			 */
-+			vertex->lowlink = min(vertex->lowlink, next_vertex->lowlink);
-+		} else if (next_vertex->on_stack) {
-+			/* Loop detected by a back/cross edge.
-+			 *
-+			 * The successor is on vertex_stack, so two vertices are
-+			 * in the same SCC.  If the successor has a smaller index,
-+			 * propagate it to skip SCC finalisation.
-+			 */
-+			vertex->lowlink = min(vertex->lowlink, next_vertex->index);
-+		} else {
-+			/* The successor was already grouped as another SCC */
- 		}
- 	}
- 
--	/* Don't restart DFS from this vertex in unix_walk_scc(). */
--	list_move_tail(&vertex->entry, &unix_visited_vertices);
-+	if (vertex->index == vertex->lowlink) {
-+		struct list_head scc;
-+
-+		/* SCC finalised.
-+		 *
-+		 * If the lowlink was not updated, all the vertices above on
-+		 * vertex_stack are in the same SCC.  Group them using scc_entry.
-+		 */
-+		__list_cut_position(&scc, &vertex_stack, &vertex->scc_entry);
-+
-+		list_for_each_entry_reverse(vertex, &scc, scc_entry) {
-+			/* Don't restart DFS from this vertex in unix_walk_scc(). */
-+			list_move_tail(&vertex->entry, &unix_visited_vertices);
-+
-+			vertex->on_stack = false;
++			ti = amdgpu_vm_get_task_info_pasid(adev, job->pasid);
++			if (ti) {
++				aux.pid = ti->pid;
++				aux.comm = ti->process_name;
++				info = &aux;
++				amdgpu_vm_put_task_info(ti);
++			}
 +		}
 +
-+		list_del(&scc);
++		drm_dev_wedged_event(adev_to_drm(adev), DRM_WEDGE_RECOVERY_NONE, info);
 +	}
  
- 	/* Need backtracking ? */
- 	if (!list_empty(&edge_stack))
+ 	return r;
+ }
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c
+index a47b2eb301e5..5cb17e62df57 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c
+@@ -89,6 +89,7 @@ static enum drm_gpu_sched_stat amdgpu_job_timedout(struct drm_sched_job *s_job)
+ {
+ 	struct amdgpu_ring *ring = to_amdgpu_ring(s_job->sched);
+ 	struct amdgpu_job *job = to_amdgpu_job(s_job);
++	struct drm_wedge_task_info aux, *info = NULL;
+ 	struct amdgpu_task_info *ti;
+ 	struct amdgpu_device *adev = ring->adev;
+ 	int idx;
+@@ -127,6 +128,9 @@ static enum drm_gpu_sched_stat amdgpu_job_timedout(struct drm_sched_job *s_job)
+ 		dev_err(adev->dev,
+ 			"Process information: process %s pid %d thread %s pid %d\n",
+ 			ti->process_name, ti->tgid, ti->task_name, ti->pid);
++		aux.pid = ti->pid;
++		aux.comm = ti->process_name;
++		info = &aux;
+ 		amdgpu_vm_put_task_info(ti);
+ 	}
+ 
+@@ -166,7 +170,7 @@ static enum drm_gpu_sched_stat amdgpu_job_timedout(struct drm_sched_job *s_job)
+ 			if (amdgpu_ring_sched_ready(ring))
+ 				drm_sched_start(&ring->sched, 0);
+ 			dev_err(adev->dev, "Ring %s reset succeeded\n", ring->sched.name);
+-			drm_dev_wedged_event(adev_to_drm(adev), DRM_WEDGE_RECOVERY_NONE, NULL);
++			drm_dev_wedged_event(adev_to_drm(adev), DRM_WEDGE_RECOVERY_NONE, info);
+ 			goto exit;
+ 		}
+ 		dev_err(adev->dev, "Ring %s reset failure\n", ring->sched.name);
 -- 
-2.49.0.1143.g0be31eac6b-goog
+2.49.0
 
