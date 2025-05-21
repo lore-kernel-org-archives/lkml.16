@@ -1,107 +1,216 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E19B01514F6
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 13:49:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 206BC14F117
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 13:50:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747835398; cv=none; b=MtOhnlUBQFpMH6dJBrQzE6zg9nxY85kSDgW7Ri8bf3UClbq/e8qVdbxejRaCF0nqL902+hg+pKJBaBKNE+MacdpXQ8ogmBac8z4koSho3Nv9Ge1CHT4MIfTBzFBr9ZYQ0tcUnNP2zJkxKyA/j/M5kL2zM3YN/rOFFeDyfiQoIw0=
+	t=1747835419; cv=none; b=iv/yqK2dgEY2vLkGwc30Qn1Rfuk+sVGcdpPHu1An16wpxTVsll6Lw6PWSl92wHEnXjEQPUbzCDNodpExxD27yi3u7LFF0OZYmHLKmm2FI3PoKzYSfRJQpuJfZQ80eTHsE3d8KaDKF2VN7r1Qklp54P6uo/DMcyT+76HSv4NJCQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747835398; c=relaxed/simple;
-	bh=oSV11ENTMg2w3bSJEVf0KH0iJTJ+aiohPEtiAl5sHSA=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=nyqWycn0L9UwPj1AXeOG2kszq6aB5STYNCayJtYqdeSW/EUskPYJIZROlDq8D75zi2bLMjYDl95TFkhHhVU8S9+Ca9xvnIcwdc89EoeY+dx3ZR8JkkNKh6ROsHTmWPOKLn/cTRbvdTzUWTtdAIy0kLSUSakgp5ZbFiSlprNgEY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eBsi6bGL; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747835419; c=relaxed/simple;
+	bh=xxclzynvG9qMLSJo82MFRje7H/LgVEU3hKXBTA0+0Es=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gqerYr/KROxx75bxts4od8ucqh5KXTlW8ZVD+DRrbOv+IyUJJbX8XIVozD2RfYiGLV2VMLIpQCKCU/6Ae3ELjzOeIinrgIrOx0VrS1i1znGOVrde87IvTd4N4EoAfFIxs9nB+RJV94lBlivdLCVpz6q8TIWQ+hFuJZQw+GKOTKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=vnxx3Nzl; arc=none smtp.client-ip=209.85.210.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eBsi6bGL"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-327fcd87a3cso57067551fa.0
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 06:49:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="vnxx3Nzl"
+Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-72c7332128eso3825810a34.0
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 06:50:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747835395; x=1748440195; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=oSV11ENTMg2w3bSJEVf0KH0iJTJ+aiohPEtiAl5sHSA=;
-        b=eBsi6bGL9Voe1iKx90OKM+cbAbCVVgQQ9YQ03gk6bCD3AEs9w2A2fldHNpuw8pGb+a
-         yt7ZQpWKbXMet/WdasMYAvlXYV4lJ/wsijKxRM3JFpu+qtYcT24dI+USE89fmRW74bqt
-         qWrdNLlT/dCnrsuV0BbtzPvTDJN+KtkLgQGN3EmnZCFU9XG7dL9TNRg8bgZn0JBt4DRQ
-         ErsapL/KifdC4MwlpMTH8mWT/+iSQrqTjoOWDmktg4hgULftQ7sMY0FiYiLrwhBKPtPR
-         AZayzCPq99qEkR3wAx+VC2sV9ES2toRbC8Kdy1vCH4tdPn5drCa1cZwNtY+OqU5CKBgQ
-         Aopg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747835395; x=1748440195;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747835415; x=1748440215; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=oSV11ENTMg2w3bSJEVf0KH0iJTJ+aiohPEtiAl5sHSA=;
-        b=dhF0Txbm8XctF/DsmBNiXyHuWLE/V/WAIl+Xul0naQa9Aju7IZBbqqitAF1FD10ofP
-         8HdrGaX1P6Jzu2YNbMKBq777oz5XnHcqpffRrFwjxtYT57yhxdw54IyVjY9m2YYL5lI4
-         XJIswCDGfEHd4GvKTeAvscuxI6oCvgoKCkDRhrdB7dQaeWkNhzX3QHnlc/IhIkDfrNqv
-         Bno+S72fVzRDq7jDuY/EGRYI2Cbb6EPPMb7bVcm7dV7jDPGz32x+ctZTDinJvGLg9NLo
-         3kVkmkAD631GkvT2kLnMH6ER0SMm3wvsa2eZa9J8dYfhK48upeHrHdihT//XuGNXrQY6
-         kcxw==
-X-Forwarded-Encrypted: i=1; AJvYcCX910Mpf+f6AqwJ/IfS+9vX7zmdARBvOe+fQRs9DWDGRdkMOEtPb+VZhAr1iRyMBgD3GcZKYU/FdkzKsaM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPWwz/Yrautmvm5iX6GtXjn0lpxijvZxEq8Ktmmba0gjW0VBXI
-	djPVSLm8rIPXpjwj9CDWfXa0+QrFFhGtT+xZLbi2L7JTAqP43jCymiGHC0m4N6GdgiwFffVTXIs
-	jx12yms1VSR7z3hhOqW09XwlZawaBkw==
-X-Gm-Gg: ASbGncvkY4HMj33bBoZosyPEFZtGe4Jku4YsZc/NOIWR4EEyEK+YMT42IGaTzblKo97
-	m55McpgWuO0BnYzachS3bYzhyCqwdSWJBj0llJ7nPYzIt8PnUhi11Iy7FFONdkGGY3PGsqtLUNA
-	aIUGuo1ndruy19qVfs+02vWjgvkb9BPZjgrEhLgpPyuM4W4BVXZOrUsg==
-X-Google-Smtp-Source: AGHT+IF1J/6kLNLfMhffERVH52BxFyrMfiCmBFfWaxLicPEgoFedKGGTMH69Uxdu3ehFeVQfEU7ZiuqQ1HursAepV/w=
-X-Received: by 2002:a05:651c:30d1:b0:30b:ec4d:e5df with SMTP id
- 38308e7fff4ca-328097add4amr72171661fa.34.1747835394830; Wed, 21 May 2025
- 06:49:54 -0700 (PDT)
+        bh=2JgaHRKYUX+zfvNTXojTA2fHNWkJMHbiON31ak/TWz4=;
+        b=vnxx3Nzl9Zs/QThNC7uSMbC+7jIZ/4ZlrZFyy1DREeRLzAr5DJ2aSJSDoVcJqnffyt
+         52s6VCcy35PC115wGq3Z2mPtoOkRnq5aPaCWdCvV5xIoJnV1ZodseK290BYrHxty9BJJ
+         7hTzvMUF4HVt5LFN++QYE+dfzadV/G0c3kmXkT/4qjVBTs0zAIv/YUMFSU98sx8KeKcM
+         K0yZsdnmUzofu+L2pO8bKG576piP1QFZAgf3ue9bXkdMx8uRPs5ZwNzSr1KTLkHdbr9D
+         Jd2slWIl1EQ5GCQlx28ZC2oWy6s2O8VdSnDys5O5skM5XT8DwQUiIVWookOfjRDMiXPn
+         B0dQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747835415; x=1748440215;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2JgaHRKYUX+zfvNTXojTA2fHNWkJMHbiON31ak/TWz4=;
+        b=haSKTZEeGqkhiGMfnlq9kbEwLHxBtduWAD3+U668wMTMHe46I9iL4ulys1Yqh3lNjm
+         nO4T1dg0sXTPgsRyfluMDN3z1+6i/W2zBaB6w8Gr+O+ybbJCdent2uRQHoGdCu+dD3F7
+         AWC43NGYuXyCPjQdms1/dDSyt95CBeXhZQU7FWI2L9/rJyr2wotAF1z5nu1GDD19oIrV
+         XnkBf07cU274k5IA4IFePtEevR/jjmCfBNw0q+dztD0sCQToBy0YbUcKd3CWkUfjqwS9
+         Ls34MUtGUu1D1HZJS/f4Eg/7cTHUF45qHmPww8t/5+FOR0idAH4BQh+qzYqWGBo33nkr
+         ycDg==
+X-Forwarded-Encrypted: i=1; AJvYcCXZgiOLqaJueyQ3RGkSY3Zl14+Q9+NiHvkOLyi54ZvdfSa/UDedUp87H6wferBZfxvRtfkeDea0VH2FVm8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyOi6RlcUHnUbItglBFzJZBJc5hdHIx4CiDD0gfNcrdl7EM9DP/
+	XSRfCmMG5lwnbJfW/FSyf/3frHiQB7stD5XT1DUzgFPl+KNdRrXr7KHJWMXgZL9q0C8=
+X-Gm-Gg: ASbGncu77Cigfgldc2tDDaMB2+a2hIDg7+wLtTDXnODNqpk+wTtJwtpzPjYcnEdsd8K
+	WdOpiSUbKfuCaMnm2T+aGNMlCFVlrR2dcbVWF5GD7xPGUtwLimXOh+gN1WrEfUp9LnjAa/VuEuu
+	81tKWwyJtq5EWnsONi6fn3f4ZsA5ZBr7ontcIhIkcSHAws5Dt7Iv0wJea4E5+TkftesEK+l/Ph6
+	0Vj+x9lioGW3SLJ9SP/2OieNyFAp3UTNiXRjGDsqbYcftc8hCih8B03odsgaBWy+wqOmj10Wr3j
+	Dv70g70mBtVAL9YIIqkp08UAY6gKb0a35/Jc8Dlc/Q8n7djr6LSyEBPYzrTml53xrGU9gW4svxi
+	3DOIANsxQ2G6/WOzFS3bY9lAdzQ==
+X-Google-Smtp-Source: AGHT+IGNsrBJay16uQjz7d1c9S8nrIXHASYHEtAmfjAXqpv6/iE+yKrM1c1mCMLDvMzkQkx9FSohfQ==
+X-Received: by 2002:a05:6830:6206:b0:727:3664:ca28 with SMTP id 46e09a7af769-734f69d3e89mr14202278a34.0.1747835414904;
+        Wed, 21 May 2025 06:50:14 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:d77b:6acc:2ad1:8ff? ([2600:8803:e7e4:1d00:d77b:6acc:2ad1:8ff])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-734f6a9a7adsm2152904a34.30.2025.05.21.06.50.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 May 2025 06:50:13 -0700 (PDT)
+Message-ID: <1424236a-eee7-4343-b73f-42cd416b594c@baylibre.com>
+Date: Wed, 21 May 2025 08:50:12 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: John <john.cs.hey@gmail.com>
-Date: Wed, 21 May 2025 21:49:41 +0800
-X-Gm-Features: AX0GCFt9zN5vfFG1MxMxUEBvRB2bKYQsqwL6bvzWAU5wGxUAtBlRug_dBXzVy9w
-Message-ID: <CAP=Rh=PtKsiXGLYeK5tr4LSw-AHJ6LM4kuTWR3Hs5sQQp02wCw@mail.gmail.com>
-Subject: [Bug] "BUG: soft lockup in perf_event_open" in Linux kernel v6.14
-To: Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] dt-bindings: pwm: adi,axi-pwmgen: add external clock
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Michael Hennerich <michael.hennerich@analog.com>,
+ =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+ Trevor Gamblin <tgamblin@baylibre.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-pwm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250520-pwm-axi-pwmgen-add-external-clock-v1-0-6cd63cc001c8@baylibre.com>
+ <20250520-pwm-axi-pwmgen-add-external-clock-v1-2-6cd63cc001c8@baylibre.com>
+ <20250521-tidy-heron-of-genius-4dc9a1@kuoka>
+ <be02b9cd-803c-4aae-9420-ff3bf445efc1@baylibre.com>
+ <499207c7-aa40-470c-801f-a8154a253276@kernel.org>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <499207c7-aa40-470c-801f-a8154a253276@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Dear Linux Kernel Maintainers,
+On 5/21/25 8:28 AM, Krzysztof Kozlowski wrote:
+> On 21/05/2025 15:14, David Lechner wrote:
+>> On 5/21/25 5:09 AM, Krzysztof Kozlowski wrote:
+>>> On Tue, May 20, 2025 at 04:00:45PM GMT, David Lechner wrote:
+>>>> Add external clock to the schema.
+>>>>
+>>>> The AXI PWMGEN IP block has a compile option ASYNC_CLK_EN that allows
+>>>> the use of an external clock for the PWM output separate from the AXI
+>>>> clock that runs the peripheral.
+>>>>
+>>>> In these cases, we should specify both clocks in the device tree. The
+>>>> intention here is that if you specify both clocks, then you include the
+>>>> clock-names property and if you don't have an external clock, then you
+>>>> omit the clock-names property.
+>>>>
+>>>> There can't be more than one allOf: in the top level of the schema, so
+>>>> it is stolen from $ref since it isn't needed there and used for the
+>>>> more typical case of the if statement (even though technically it isn't
+>>>> needed there either at this time).
+>>>>
+>>>> Signed-off-by: David Lechner <dlechner@baylibre.com>
+>>>> ---
+>>>>  .../devicetree/bindings/pwm/adi,axi-pwmgen.yaml    | 26 ++++++++++++++++++----
+>>>>  1 file changed, 22 insertions(+), 4 deletions(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml b/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml
+>>>> index bc44381692054f647a160a6573dae4cff2ee3f31..90f702a5cd80bd7d62e2436b2eed44314ab4fd53 100644
+>>>> --- a/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml
+>>>> +++ b/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml
+>>>> @@ -16,8 +16,7 @@ description:
+>>>>  
+>>>>    https://analogdevicesinc.github.io/hdl/library/axi_pwm_gen/index.html
+>>>>  
+>>>> -allOf:
+>>>> -  - $ref: pwm.yaml#
+>>>> +$ref: pwm.yaml#
+>>>>  
+>>>>  properties:
+>>>>    compatible:
+>>>> @@ -30,7 +29,13 @@ properties:
+>>>>      const: 3
+>>>>  
+>>>>    clocks:
+>>>> -    maxItems: 1
+>>>> +    minItems: 1
+>>>> +    maxItems: 2
+>>>> +
+>>>> +  clock-names:
+>>>> +    items:
+>>>> +      - const: axi
+>>>> +      - const: ext
+>>>>  
+>>>>  required:
+>>>>    - reg
+>>>> @@ -38,11 +43,24 @@ required:
+>>>>  
+>>>>  unevaluatedProperties: false
+>>>>  
+>>>> +allOf:
+>>>> +  - if:
+>>>> +      required: [clock-names]
+>>>
+>>>
+>>> No, don't do that. If you want clock-names, just add them for both
+>>> cases. Otherwise, just describe items in clocks and no need for
+>>> clock-names.
+>>
+>> Would it be OK then to make clock-names required and just let the
+>> driver still handle one clocks, no clock-names for backwards compatibility?
+> 
+> So just don't make it required.
+> 
+>>
+>>>
+>>>
+>>>
+>>>> +    then:
+>>>> +      properties:
+>>>> +        clocks:
+>>>> +          minItems: 2
+>>>> +    else:
+>>>> +      properties:
+>>>> +        clocks:
+>>>> +          maxItems: 1
+>>>> +
+>>>>  examples:
+>>>>    - |
+>>>>      pwm@44b00000 {
+>>>>          compatible = "adi,axi-pwmgen-2.00.a";
+>>>>          reg = <0x44b00000 0x1000>;
+>>>> -        clocks = <&spi_clk>;
+>>>> +        clocks = <&fpga_clk>, <&spi_clk>;
+>>>
+>>> What was the clock[0] before? Axi, right, so SPI_CLK. Now FPGA is the
+>>> AXI_CLK? This feels like clock order reversed.
+>>
+>> The problem being fixed here is that since there was only one clock in
+>> the binding, existing .dts files have either have the spi_clock or
+>> the FPGA/AXI clock. So the one clock could be either and there are
+>> existing .dtbs out in the world with both cases.
+> 
+> No problem like that was explained in commit msg. Nevertheless driver
 
-I hope this message finds you well.
+You are right. I explained it in the cover letter, but failed to repeat
+that in this commit message.
 
-I am writing to report a potential vulnerability I encountered during
-testing of the Linux Kernel version v6.14.
+> assumed the first clock is the SPI, didn't it? So that's your ABI, even
+> if binding was not conclusive here.
 
-Git Commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557 (tag: v6.14)
+Not quite. The driver (before this series) assumes that the clock
+is the SPI clock ("ext") if the HDL was compiled with ASYNC_CLK_EN=1
+or the AXI clock if the HDL was compiled with ASYNC_CLK_EN=0 (in this
+case, there is no "ext"/SPI clock).
 
-Bug Location: 0010:orc_find arch/x86/kernel/unwind_orc.c:217
+>>
+>> But we could consider reversing this so that if someone uses the new
+>> bindings with an old kernel, then it would still work.
+> 
+> You cannot use new bindings with old kernel. How would that work? Put
+> YAML file there? Nothing would change.
+> 
+> Binding is supposed to be complete for exactly this reason. You cannot
+> change it afterwards without breaking users.
+> 
+> Best regards,
+> Krzysztof
 
-Bug report: https://pastebin.com/QzuTF9kT
-
-Complete log: https://pastebin.com/XjZYbiCH
-
-Entire kernel config: https://pastebin.com/MRWGr3nv
-
-Root Cause Analysis:
-
-A soft lockup occurred on CPU#0 in the unwind_next_frame() function
-during stack unwinding triggered by arch_stack_walk().
-This was called in the middle of __kasan_slab_free() as part of RCU
-reclamation path (rcu_do_batch()), likely triggered by a SLAB object
-free in SELinux's avc_reclaim_node().
-The system was under heavy AVC pressure due to continuous audit and
-avc_has_perm() calls (e.g., from selinux_perf_event_open), leading to
-repeated avc_node allocations and reclamations under spinlocks.
-
-At present, I have not yet obtained a minimal reproducer for this
-issue. However, I am actively working on reproducing it, and I will
-promptly share any additional findings or a working reproducer as soon
-as it becomes available.
-
-Thank you very much for your time and attention to this matter. I
-truly appreciate the efforts of the Linux kernel community.
-
-Best regards,
-John
