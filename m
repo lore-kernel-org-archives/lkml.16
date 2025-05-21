@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 293211624CE;
-	Wed, 21 May 2025 21:07:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9D1E50276;
+	Wed, 21 May 2025 21:07:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747861668; cv=none; b=KJbROlLKX3lobn0VJitcGxTOyqlWeJLBWGWH73SiTW1xxvtaeIsFaUd5jHcji8WK2QyottVnxphZ8oapS3T73K0zIes6t0NF1w1VBqUhfswmxFPxHVZOkpCBWhyCA7hWGoqeiN5nkxACJphVinH4McKneYqxECqQD9bK6b4pASQ=
+	t=1747861677; cv=none; b=PKyVkFu2ay8x0Xqyz2h+/DQw/u5vvzuADd9T2qyyIdqF+rideV5z6uu50D4Qnrog4+rTw8yv4GR39CanVujb2psZ9b+OgHOyczgYl5c+FnV4Rap+7CWeusqdXhALgrnBaq81ovTVN0tUKC+rpkWgWbrGJCOZpDjb/+uEHRippRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747861668; c=relaxed/simple;
-	bh=N6pm5AJXfl3EP2ikOAv/3aedBwcqB97XpBhWv2VjutA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PXzkvGat4M6Xe1XYyAAdIz6XQdtbadMN3EwqXTVlbt+ANcMbOUwGmI+EFHQ+YJjkKmH0sEiCUBfrgq7ufOu5tuKFxQ4OBlVZW0jMPKOts12WKuyJ35s4CEZF7PvjQLzTX9HGxe7NqDPNO0hXQCnAEnyKaAsMcBeWsTk2FGezCfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mVw9nk6R; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747861677; c=relaxed/simple;
+	bh=nGFyVKNPyoTaPlmw24+T44IdzETxFPg/pmUonSikyF0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MHf894p2C97vdyls7FgTAymfJutvaP1GIXKmjTK56KoLwFnTjzERSaWk471rz1OESm3tw4XOumkE1HztIz7JSNdavr1mnhE3XeTaHTusw4ixCmUWBc+EC1vsRpq6WvYASyTn1KWlIPlPqyNbo2gO9+CPVqPB0WFt1ZuRsrBg3NQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dNBcxmV7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mVw9nk6R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D821C4CEE4;
-	Wed, 21 May 2025 21:07:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dNBcxmV7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91C2FC4CEEA;
+	Wed, 21 May 2025 21:07:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747861667;
-	bh=N6pm5AJXfl3EP2ikOAv/3aedBwcqB97XpBhWv2VjutA=;
+	s=k20201202; t=1747861676;
+	bh=nGFyVKNPyoTaPlmw24+T44IdzETxFPg/pmUonSikyF0=;
 	h=From:To:Cc:Subject:Date:From;
-	b=mVw9nk6R+cKUqriGslMoMdssk0fygiQVYhZy6fFYWAs5PvObDYvSAyLDugnIWTVcy
-	 nrxw3y6t08vW0nrLTya94EXOD0xY126AauQd/NFAEHE801aR3UX3Rh4cFLka26A5SP
-	 RnYFwPitB8hGaBNaPv2DthNbfXOOV98yVFTXhPCwHYQzbyvs8qFZLXAi+QTU5xba9H
-	 pa1KVttfjQCxOka6oNr1jNz0M0RaW7b/vCF1yUx/HljjZHs9KyeALOSMJWseQFKhup
-	 xjJ8yqcx7GUnIQonCkPerNyaRdzjbOwvZ/Wct6w1ZNJLTbL3DUduMd0FnoCKjzn5Vx
-	 qfkA4p6dHOuyA==
+	b=dNBcxmV7fEWBXwTAa3Fsx8mdetuZ2YdCdNBAWeuISVfjShD/VVF6ByK0GTWfk2sor
+	 2QgQOpXaiIpc5dF9xkT4yIf06iL0cu93ddue1kHZ/MOh3iaCQ0gqzCErVDpN7IFStQ
+	 RreEjjbOl5LETsISjaeMIdugJuPoZQeaevytoOkB6Bdjtgixn7FWMQoYEiK6eKZStN
+	 CADyykWzMEFtxWv37ZIrDxideudi+B/B8jhtcnLceG+XW9xJTTJ0cgvfxB6cxKM0n+
+	 bhG73e1bPOG3rMbCIbjnxOyQa1aDTKuxd1pghFQzCGyVSg/9cI4utGzzItiXfJ7bDw
+	 wr3cpeW1qK1Eg==
 From: "Rob Herring (Arm)" <robh@kernel.org>
 To: Michael Turquette <mturquette@baylibre.com>,
 	Stephen Boyd <sboyd@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Anders Berg <anders.berg@lsi.com>
+	Daniel Tang <dt.tangr@gmail.com>
 Cc: linux-clk@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: clock: Convert lsi,axm5516-clks to DT schema
-Date: Wed, 21 May 2025 16:07:40 -0500
-Message-ID: <20250521210741.60467-1-robh@kernel.org>
+Subject: [PATCH] dt-bindings: clock: Convert TI-NSPIRE clocks to DT schema
+Date: Wed, 21 May 2025 16:07:49 -0500
+Message-ID: <20250521210750.60759-1-robh@kernel.org>
 X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -46,101 +46,86 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Convert the Intel/LSI AXM5516 clock binding to DT schema format. It's
-a straight forward conversion.
+Convert the TI-NSPIRE clock bindings to DT schema format. It's a
+straight forward conversion.
 
 Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- .../bindings/clock/lsi,axm5516-clks.txt       | 29 -------------
- .../bindings/clock/lsi,axm5516-clks.yaml      | 43 +++++++++++++++++++
- 2 files changed, 43 insertions(+), 29 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/clock/lsi,axm5516-clks.txt
- create mode 100644 Documentation/devicetree/bindings/clock/lsi,axm5516-clks.yaml
+ .../bindings/clock/lsi,nspire-cx-clock.yaml   | 33 +++++++++++++++++++
+ .../bindings/clock/nspire-clock.txt           | 24 --------------
+ 2 files changed, 33 insertions(+), 24 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/lsi,nspire-cx-clock.yaml
+ delete mode 100644 Documentation/devicetree/bindings/clock/nspire-clock.txt
 
-diff --git a/Documentation/devicetree/bindings/clock/lsi,axm5516-clks.txt b/Documentation/devicetree/bindings/clock/lsi,axm5516-clks.txt
-deleted file mode 100644
-index 3ce97cfe999b..000000000000
---- a/Documentation/devicetree/bindings/clock/lsi,axm5516-clks.txt
-+++ /dev/null
-@@ -1,29 +0,0 @@
--AXM5516 clock driver bindings
-------------------------------
--
--Required properties :
--- compatible : shall contain "lsi,axm5516-clks"
--- reg : shall contain base register location and length
--- #clock-cells : shall contain 1
--
--The consumer specifies the desired clock by having the clock ID in its "clocks"
--phandle cell. See <dt-bindings/clock/lsi,axxia-clock.h> for the list of
--supported clock IDs.
--
--Example:
--
--	clks: clock-controller@2010020000 {
--		compatible = "lsi,axm5516-clks";
--		#clock-cells = <1>;
--		reg = <0x20 0x10020000 0 0x20000>;
--	};
--
--	serial0: uart@2010080000 {
--		compatible = "arm,pl011", "arm,primecell";
--		reg = <0x20 0x10080000 0 0x1000>;
--		interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&clks AXXIA_CLK_PER>;
--		clock-names = "apb_pclk";
--	};
--																																};
--
-diff --git a/Documentation/devicetree/bindings/clock/lsi,axm5516-clks.yaml b/Documentation/devicetree/bindings/clock/lsi,axm5516-clks.yaml
+diff --git a/Documentation/devicetree/bindings/clock/lsi,nspire-cx-clock.yaml b/Documentation/devicetree/bindings/clock/lsi,nspire-cx-clock.yaml
 new file mode 100644
-index 000000000000..7a792dbeffb3
+index 000000000000..52c217d210d0
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/lsi,axm5516-clks.yaml
-@@ -0,0 +1,43 @@
++++ b/Documentation/devicetree/bindings/clock/lsi,nspire-cx-clock.yaml
+@@ -0,0 +1,33 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+# Copyright 2025 LSI
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/clock/lsi,axm5516-clks.yaml#
++$id: http://devicetree.org/schemas/clock/lsi,nspire-cx-clock.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: LSI AXM5516 Clock Controller
++title: TI-NSPIRE Clocks
 +
 +maintainers:
-+  - Anders Berg <anders.berg@lsi.com>
-+
-+description:
-+  See <dt-bindings/clock/lsi,axxia-clock.h> for the list of supported clock IDs.
++  - Daniel Tang <dt.tangr@gmail.com>
 +
 +properties:
 +  compatible:
-+    const: lsi,axm5516-clks
++    enum:
++      - lsi,nspire-cx-ahb-divider
++      - lsi,nspire-classic-ahb-divider
++      - lsi,nspire-cx-clock
++      - lsi,nspire-classic-clock
 +
 +  reg:
 +    maxItems: 1
 +
++  clocks:
++    maxItems: 1
++
 +  '#clock-cells':
-+    const: 1
++    const: 0
++
++additionalProperties: false
 +
 +required:
 +  - compatible
 +  - reg
-+  - '#clock-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    bus {
-+        #address-cells = <2>;
-+        #size-cells = <1>;
-+        clock-controller@2010020000 {
-+            compatible = "lsi,axm5516-clks";
-+            #clock-cells = <1>;
-+            reg = <0x20 0x10020000 0x20000>;
-+        };
-+    };
+diff --git a/Documentation/devicetree/bindings/clock/nspire-clock.txt b/Documentation/devicetree/bindings/clock/nspire-clock.txt
+deleted file mode 100644
+index 7c3bc8bb5b9f..000000000000
+--- a/Documentation/devicetree/bindings/clock/nspire-clock.txt
++++ /dev/null
+@@ -1,24 +0,0 @@
+-TI-NSPIRE Clocks
+-
+-Required properties:
+-- compatible: Valid compatible properties include:
+-	"lsi,nspire-cx-ahb-divider" for the AHB divider in the CX model
+-	"lsi,nspire-classic-ahb-divider" for the AHB divider in the older model
+-	"lsi,nspire-cx-clock" for the base clock in the CX model
+-	"lsi,nspire-classic-clock" for the base clock in the older model
+-
+-- reg: Physical base address of the controller and length of memory mapped
+-	region.
+-
+-Optional:
+-- clocks: For the "nspire-*-ahb-divider" compatible clocks, this is the parent
+-	clock where it divides the rate from.
+-
+-Example:
+-
+-ahb_clk {
+-	#clock-cells = <0>;
+-	compatible = "lsi,nspire-cx-clock";
+-	reg = <0x900B0000 0x4>;
+-	clocks = <&base_clk>;
+-};
 -- 
 2.47.2
 
