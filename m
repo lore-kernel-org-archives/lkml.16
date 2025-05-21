@@ -1,152 +1,246 @@
-Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F8B1244690;
-	Wed, 21 May 2025 23:18:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 106D723AE95;
+	Wed, 21 May 2025 23:19:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747869538; cv=none; b=KL0JPBPeGPJcP7lDxIMzdv3y1x7aKfc60qH4NAFaVNDr2tOcBIaxl8D7ohy5et/Q46vgAKxSDGTuLtZ6i1q4KzkOLgW8o9UvTpH3PxQgknU4kwJQIMf+nRnE5mF2QoCh1Ni0sa9DQ93b5Bzcj9vIdAtyszrVqcBLZdMAZH+O1kg=
+	t=1747869545; cv=none; b=AuY/zUXnSuHOjS6yjFnsuZQ+gYP/XV3QWyf5PrOUdCeRIIkV0Y2KL3f18ZJ4/h0lo2Ldvw9v/4gbvv9t1pAo4vapQisMSixFZ00p4ki7LDeupt53KXeMoRpK0tuw/esvUzk87z5Ji4Q8AR5rtm3j+mxZtFM42vcZOwliFlVwW10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747869538; c=relaxed/simple;
-	bh=RgHh53qO04IzdhQwdSdmt5/Eg9HVXvCfLyxgadPYTMs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bPOxW6fDaeRlXaks7QGspe5n12KMYlBaBpbZi8rfkkroVP6qL06Zqg8P0YWXmS59j+ttrO6/jfEpIpe/+qOQsFsLyPEOD5DPgkLe8sCnGo0SVeA8xsWDW3s7AilUzX7wkbY5H5WEY8VPnMPO/hLUer0YletFGAlp8NmP9soOhDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=tLOdnYy9; arc=none smtp.client-ip=185.226.149.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="tLOdnYy9"
-Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
-	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.93)
-	(envelope-from <mhal@rbox.co>)
-	id 1uHsi6-004Rs8-AV; Thu, 22 May 2025 01:18:54 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
-	s=selector2; h=Cc:To:In-Reply-To:References:Message-Id:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From;
-	bh=w5+hynXTnivL9b8zzxm+8KXzEt6wUm+ZgXKinlnqOoo=; b=tLOdnYy9OFpPcJX1QK6wziFfDb
-	tzO7S/ZmMLv/ENR1x2IIyBZ69tAlhTFaLMQpRkX51sY2OlRlfwyRHK7q/jUGM+YZGYWRkENXGCLph
-	FULa/JsmCoTMDesXqGtYYOT/QsPbiGX1AohLql5xm7hyUlGvb9ax84Q3ndJGxLcEt5cxGX5Hxh+yg
-	yZBBVyJh7B144EhPx2MisFhxYWl9w6hzFGRTfi975gAiPooyStsyMskMj9tbTXbtgLzuHnhn9h5ih
-	1mTEHA6ezxAH33I8XZ713Lk4cNu0lGaJmwnF1s9bxDf0h7WSvzNChlzo9nhJ9kpCW5olYlviBNBv9
-	nw5h1GNw==;
-Received: from [10.9.9.73] (helo=submission02.runbox)
-	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
-	(envelope-from <mhal@rbox.co>)
-	id 1uHsi6-0000kU-1I; Thu, 22 May 2025 01:18:54 +0200
-Received: by submission02.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.93)
-	id 1uHsht-002oFI-NQ; Thu, 22 May 2025 01:18:41 +0200
-From: Michal Luczaj <mhal@rbox.co>
-Date: Thu, 22 May 2025 01:18:25 +0200
-Subject: [PATCH net-next v6 5/5] vsock/test: Add test for an unexpectedly
- lingering close()
+	s=arc-20240116; t=1747869545; c=relaxed/simple;
+	bh=5KYpDNUpr65gculRdpQd+tomtSj8rRT5qn006JuM4Xc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=d/Zl7+V8FrhgyLpK79SwkcigAl13u+p5SHhm2Lrg10lasSWPrqlF29k8/gNegKGdpyPgzIUryzZEZD4yzAsV7zO+mvlwtnlhp0oHl5qv5RrDbtai4s/tuml7y7YvPKoM3hsnvjajHW8k2e7I/3GrbOpTDR/RyLKjcFPhkPsTXJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AFEBC4CEE4;
+	Wed, 21 May 2025 23:19:03 +0000 (UTC)
+Date: Wed, 21 May 2025 19:19:47 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] tracing: ring_buffer: Rewind persistent ring buffer
+ when reboot
+Message-ID: <20250521191947.3f800c34@gandalf.local.home>
+In-Reply-To: <20250521145128.3a776466@gandalf.local.home>
+References: <174730775661.3893490.10420015749079085314.stgit@mhiramat.tok.corp.google.com>
+	<20250521145128.3a776466@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250522-vsock-linger-v6-5-2ad00b0e447e@rbox.co>
-References: <20250522-vsock-linger-v6-0-2ad00b0e447e@rbox.co>
-In-Reply-To: <20250522-vsock-linger-v6-0-2ad00b0e447e@rbox.co>
-To: Stefano Garzarella <sgarzare@redhat.com>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>, 
- Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
- =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
- Stefan Hajnoczi <stefanha@redhat.com>
-Cc: virtualization@lists.linux.dev, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
- Michal Luczaj <mhal@rbox.co>
-X-Mailer: b4 0.14.2
 
-There was an issue with SO_LINGER: instead of blocking until all queued
-messages for the socket have been successfully sent (or the linger timeout
-has been reached), close() would block until packets were handled by the
-peer.
+On Wed, 21 May 2025 14:51:28 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Add a test to alert on close() lingering when it should not.
+> On Thu, 15 May 2025 20:15:56 +0900
+> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> 
+> > diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> > index 6859008ca34d..48f5f248eb4c 100644
+> > --- a/kernel/trace/ring_buffer.c
+> > +++ b/kernel/trace/ring_buffer.c
+> > @@ -1358,6 +1358,13 @@ static inline void rb_inc_page(struct buffer_page **bpage)
+> >  	*bpage = list_entry(p, struct buffer_page, list);
+> >  }
+> >  
+> > +static inline void rb_dec_page(struct buffer_page **bpage)
+> > +{
+> > +	struct list_head *p = rb_list_head((*bpage)->list.prev);
+> > +
+> > +	*bpage = list_entry(p, struct buffer_page, list);
+> > +}
+> > +
+> >  static struct buffer_page *
+> >  rb_set_head_page(struct ring_buffer_per_cpu *cpu_buffer)
+> >  {
+> > @@ -1866,10 +1873,11 @@ static int rb_validate_buffer(struct buffer_data_page *dpage, int cpu)
+> >  static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
+> >  {
+> >  	struct ring_buffer_cpu_meta *meta = cpu_buffer->ring_meta;
+> > -	struct buffer_page *head_page;
+> > +	struct buffer_page *head_page, *orig_head;
+> >  	unsigned long entry_bytes = 0;
+> >  	unsigned long entries = 0;
+> >  	int ret;
+> > +	u64 ts;
+> >  	int i;
+> >  
+> >  	if (!meta || !meta->head_buffer)
+> > @@ -1885,8 +1893,93 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
+> >  	entry_bytes += local_read(&cpu_buffer->reader_page->page->commit);
+> >  	local_set(&cpu_buffer->reader_page->entries, ret);
+> >  
+> > -	head_page = cpu_buffer->head_page;
+> > +	orig_head = head_page = cpu_buffer->head_page;
+> > +	ts = head_page->page->time_stamp;
+> > +
+> > +	/*
+> > +	 * Try to rewind the head so that we can read the pages which already
+> > +	 * read in the previous boot.
+> > +	 */
+> > +	if (head_page == cpu_buffer->tail_page)
+> > +		goto rewound;  
+> 
+> Hmm, jumping to a label called "rewound" when you didn't do a rewind seems
+> confusing.
+> 
+> Perhaps call the label "skip_rewind"?
+> 
+> > +
+> > +	rb_dec_page(&head_page);
+> > +	for (i = 0; i < meta->nr_subbufs + 1; i++, rb_dec_page(&head_page)) {
+> > +
+> > +		/* Rewind until tail (writer) page. */
+> > +		if (head_page == cpu_buffer->tail_page)
+> > +			break;
+> > +
+> > +		/* Ensure the page has older data than head. */
+> > +		if (ts < head_page->page->time_stamp)
+> > +			break;
+> > +
+> > +		ts = head_page->page->time_stamp;
+> > +		/* Ensure the page has correct timestamp and some data. */
+> > +		if (!ts || rb_page_commit(head_page) == 0)
+> > +			break;
+> > +
+> > +		/* Stop rewind if the page is invalid. */
+> > +		ret = rb_validate_buffer(head_page->page, cpu_buffer->cpu);
+> > +		if (ret < 0)
+> > +			break;
+> > +
+> > +		/* Recover the number of entries and update stats. */
+> > +		local_set(&head_page->entries, ret);
+> > +		if (ret)
+> > +			local_inc(&cpu_buffer->pages_touched);
+> > +		entries += ret;
+> > +		entry_bytes += rb_page_commit(head_page);
+> > +	}
+> > +	pr_info("Rewound %d pages on cpu%d\n", i, cpu_buffer->cpu);  
+> 
+> Should state this is coming from the ring buffer and use "[%d]" for cpu
+> number as the other pr_info()'s do. Also only print if it did a rewind:
+> 
+> 	if (i)
+> 		pr_info("Ring buffer [%d] rewound %d pages\n", cpu_buffer->cpu, i);
+> 
+> 
+> > +
+> > +	/* The last rewound page must be skipped. */
+> > +	if (head_page != orig_head)
+> > +		rb_inc_page(&head_page);
+> >  
+> > +	/* If there are rewound pages, rewind the reader page too. */  
+> 
+> I would change the comment to:
+> 
+> 	/*
+> 	 * If the ring buffer was rewound, then inject the reader page
+> 	 * into the location just before the original head page.
+> 	 */
+> 
+> > +	if (head_page != orig_head) {
+> > +		struct buffer_page *bpage = orig_head;
+> > +
+> > +		rb_dec_page(&bpage);
+> > +		/*
+> > +		 * Insert the reader_page before the original head page.
+> > +		 * Since the list encode RB_PAGE flags, general list
+> > +		 * operations should be avoided.
+> > +		 */
+> > +		cpu_buffer->reader_page->list.next = &orig_head->list;
+> > +		cpu_buffer->reader_page->list.prev = orig_head->list.prev;
+> > +		orig_head->list.prev = &cpu_buffer->reader_page->list;
+> > +		bpage->list.next = &cpu_buffer->reader_page->list;
+> > +
+> > +		/* Make the head_page tthe new read page */  
+> 
+> Typo "tthe" and call it "new reader page", not "read page".
+> 
+> > +		cpu_buffer->reader_page = head_page;
+> > +		bpage = head_page;
+> > +		rb_inc_page(&head_page);
+> > +		head_page->list.prev = bpage->list.prev;
+> > +		rb_dec_page(&bpage);
+> > +		bpage->list.next = &head_page->list;
+> > +		rb_set_list_to_head(&bpage->list);
 
-Signed-off-by: Michal Luczaj <mhal@rbox.co>
----
- tools/testing/vsock/vsock_test.c | 52 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
+When testing this patch, it kept crashing. I had to add this here:
 
-diff --git a/tools/testing/vsock/vsock_test.c b/tools/testing/vsock/vsock_test.c
-index b3258d6ba21a5f51cf4791514854bb40451399a9..f669baaa0dca3bebc678d00eafa80857d1f0fdd6 100644
---- a/tools/testing/vsock/vsock_test.c
-+++ b/tools/testing/vsock/vsock_test.c
-@@ -1839,6 +1839,53 @@ static void test_stream_linger_server(const struct test_opts *opts)
- 	close(fd);
- }
- 
-+/* Half of the default to not risk timing out the control channel */
-+#define LINGER_TIMEOUT	(TIMEOUT / 2)
-+
-+static void test_stream_nolinger_client(const struct test_opts *opts)
-+{
-+	bool waited;
-+	time_t ns;
-+	int fd;
-+
-+	fd = vsock_stream_connect(opts->peer_cid, opts->peer_port);
-+	if (fd < 0) {
-+		perror("connect");
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	enable_so_linger(fd, LINGER_TIMEOUT);
-+	send_byte(fd, 1, 0); /* Left unread to expose incorrect behaviour. */
-+	waited = vsock_wait_sent(fd);
-+
-+	ns = current_nsec();
-+	close(fd);
-+	ns = current_nsec() - ns;
-+
-+	if (!waited) {
-+		fprintf(stderr, "Test skipped, SIOCOUTQ not supported.\n");
-+	} else if (DIV_ROUND_UP(ns, NSEC_PER_SEC) >= LINGER_TIMEOUT) {
-+		fprintf(stderr, "Unexpected lingering\n");
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	control_writeln("DONE");
-+}
-+
-+static void test_stream_nolinger_server(const struct test_opts *opts)
-+{
-+	int fd;
-+
-+	fd = vsock_stream_accept(VMADDR_CID_ANY, opts->peer_port, NULL);
-+	if (fd < 0) {
-+		perror("accept");
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	control_expectln("DONE");
-+	close(fd);
-+}
-+
- static struct test_case test_cases[] = {
- 	{
- 		.name = "SOCK_STREAM connection reset",
-@@ -1999,6 +2046,11 @@ static struct test_case test_cases[] = {
- 		.run_client = test_stream_linger_client,
- 		.run_server = test_stream_linger_server,
- 	},
-+	{
-+		.name = "SOCK_STREAM SO_LINGER close() on unread",
-+		.run_client = test_stream_nolinger_client,
-+		.run_server = test_stream_nolinger_server,
-+	},
- 	{},
- };
- 
+		cpu_buffer->pages = &head_page->list;
 
--- 
-2.49.0
+That's because my test would end up having cpu_buffer->pages pointing to
+the reader page, and that will cause issues later. It has to point into the
+writing portion of the buffer.
+
+> > +
+> > +		cpu_buffer->head_page = head_page;
+> > +		meta->head_buffer = (unsigned long)head_page->page;
+> > +
+> > +		/* Reset all the indexes */
+> > +		bpage = cpu_buffer->reader_page;
+> > +		meta->buffers[0] = rb_meta_subbuf_idx(meta, bpage->page);
+> > +		bpage->id = 0;
+> > +
+> > +		for (i = 0, bpage = head_page; i < meta->nr_subbufs;
+> > +		     i++, rb_inc_page(&bpage)) {
+> > +			meta->buffers[i + 1] = rb_meta_subbuf_idx(meta, bpage->page);
+> > +			bpage->id = i + 1;
+> > +		}
+
+Can we convert the above to:
+
+		for (i = 1, bpage = head_page; i < meta->nr_subbufs;
+		     i++, rb_inc_page(&bpage)) {
+			meta->buffers[i] = rb_meta_subbuf_idx(meta, bpage->page);
+			bpage->id = i;
+		}
+
+By starting i at one, we can remove the "+ 1" inside the loop. It's a bit
+cleaner that way.
+
+-- Steve
+
+
+> > +
+> > +		/* We'll restart verifying from orig_head */
+> > +		head_page = orig_head;
+> > +	}
+> > +
+> > + rewound:  
+> 
+>  skip_rewind:
+> 
+> Also, I know other's don't like to do this, but I do add a space before
+> labels. It makes patch diffs easier to see which functions they are,
+> otherwise the patch shows the label and not the function.
+> 
+> -- Steve
+> 
+> 
+> >  	/* If the commit_buffer is the reader page, update the commit page */
+> >  	if (meta->commit_buffer == (unsigned long)cpu_buffer->reader_page->page) {
+> >  		cpu_buffer->commit_page = cpu_buffer->reader_page;
+> > @@ -5348,7 +5441,6 @@ rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
+> >  	 */
+> >  	local_set(&cpu_buffer->reader_page->write, 0);
+> >  	local_set(&cpu_buffer->reader_page->entries, 0);
+> > -	local_set(&cpu_buffer->reader_page->page->commit, 0);
+> >  	cpu_buffer->reader_page->real_end = 0;
+> >  
+> >   spin:
+> > @@ -6642,7 +6734,6 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
+> >  		cpu_buffer->read_bytes += rb_page_size(reader);
+> >  
+> >  		/* swap the pages */
+> > -		rb_init_page(bpage);
+> >  		bpage = reader->page;
+> >  		reader->page = data_page->data;
+> >  		local_set(&reader->write, 0);  
+> 
 
