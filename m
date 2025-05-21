@@ -1,55 +1,55 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+Received: from mail-lj1-f202.google.com (mail-lj1-f202.google.com [209.85.208.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DE28238174
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 08:52:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70583237A3B
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 08:52:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747817561; cv=none; b=skV4d6wK6KCYTDr5ytZPQGvbbjlxoPiInh7K9M+yhJPvikS4upLf/UyETrYwX0ArEhCArHBum1oyds2y4bPl28CqoD4vAE6dpqOBIB8LLAvX4cKtktOUhrCes5yYKdfb71FeH3rBUe2OPSbz0e8opHq1PTqG8OnSR9gIEFe3OCM=
+	t=1747817565; cv=none; b=CluqZ19ufJpKdIwRbrDJc/FoV8nbOQNXRXiTHg2jEnnqAbiiohrUZCCxPye/XmH6LO/uUIsIzx+9LI2EhVe04J622sfx6VzpUY1Bw6RRkEpa9aVjQDAVH2JwQ1SO+JQpI5DlidJzRGgpka+HVp7cqXrl8JhCV3z6vszUHZbl3j8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747817561; c=relaxed/simple;
-	bh=PD46+ourdXDcszKYFR2bVHsQctHZM0RLmWsbQVapegI=;
+	s=arc-20240116; t=1747817565; c=relaxed/simple;
+	bh=camf3GO2Tud40W0EVzvx6255cHllttpLo07ATEHkw9I=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=D7k7ntas0jVs1mzl7QsSEAcEsdHlEh3XDOgRArLKmMkUpaqfq4cNyplR3pf6r2vnnlxxQEUsUtBhSC50D6PXbpcb3zbnVUJ3mIbyChvigz/Ro14bOx+LTnXU2PG3UYq4nEaFlULzSQ8SRgNqqAU0o00Pcc8ioHXddFT2Q5U81Mw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=w2JVM/O4; arc=none smtp.client-ip=209.85.128.74
+	 To:Cc:Content-Type; b=OvYoVxbCyN8+/3Qw4sTTVhOJbRcuyap+daJ3xM8YuAYL0TX0zSoakwJMD/7P6mMDJMg2eOsPXOayiSYBUUZcB4N97o/wFlgeSHqIzl6RGMUA6T139RBf72lXUWvo8Ab+O4xziUxBIO8ZbiYLZyUKF/ftVVP4AYOvQfk21is7/CM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KP/FU3ST; arc=none smtp.client-ip=209.85.208.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--dvyukov.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="w2JVM/O4"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43d5ca7c86aso40827885e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 01:52:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KP/FU3ST"
+Received: by mail-lj1-f202.google.com with SMTP id 38308e7fff4ca-3290bc321a6so24301621fa.0
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 01:52:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747817558; x=1748422358; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747817560; x=1748422360; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WHj8OpGfndLIKKcorEWM8n6SM67qF6VgisoF/dxjdy4=;
-        b=w2JVM/O4iqm+ROVS+0S8saBRPo8czB5haJSKpA1pTS/nZ+1A+Me/mwCkLlk/YX1oyw
-         n0iJ7eKjrYn64fTbe79+o9lB1nTM9iVeTuT63THtLlwi9rNE4q+GX7wHNiC2WxuZeCe2
-         fAcq0b8DebGA9b88sHAh3bTi/pt5e0t5YEoEX0YDQCIPB0kOk0dED5+7V+BhwrMKuMu0
-         djbbleyinVChJSHqKuMM4KtRv8facIbE65TXKg1/hWSbvGQ/CLvqwTJJnTDk18uXkpYV
-         gK3uQk4EYYC3itbItSV+0l2sS2W+vhdjWPbDMlU35IZXnSW87mwnmpJeuRfaGeLDY8li
-         4SWA==
+        bh=WNoBQfA/IQC/YYpacvNXlhrzua/HY9YirhkydO/KS+M=;
+        b=KP/FU3STth/Avf0/trRFFD8TbDGqgZfbR7Dd+nZ3PreUAudO0wt8f2E6WLCKBhwVM8
+         H6N9YXAL7fM2gCCQZ5ajsU32riNtvjs0ynUtuaThaiqwyD+fxafWNpE3tgsYMrfXFZcM
+         nLFYQi/UJyTRmMbJTmcqA1GODDsQlJemyRVKoC0pf0SdPBMv7ojXEH/tjtLe7BsVyyvz
+         K4H8T3FR5+a5nSO/GfemcigJojBrnCfYMJ4uyZIxNtWM9AuY4zZubLnb8RicB8IeYp+1
+         rqIShvHaHy9eWm/E5+wXzyzrEjyOkz1R7u/6faSGXIn99K71PStY73kSO7JxVIN9RsAB
+         14Bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747817558; x=1748422358;
+        d=1e100.net; s=20230601; t=1747817560; x=1748422360;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WHj8OpGfndLIKKcorEWM8n6SM67qF6VgisoF/dxjdy4=;
-        b=wA2Chz3g1UgMx87urEmiMYoYsVWDSwAuNmzbd/zV+vE09Ln2i5qCcS4lwuZOQuY52v
-         jI9XD8jr2CCCNHodUt1dM9JizAE8PmGi+2e881l+OTVZ66KDqlkFD3Qu+36mSvICKNvL
-         tyUD1YUsvn0CLSidajYm5CGNT2MGf3DCv405X+NJ+fUoODdnsAg3UQtlYcRZbX8E5mD/
-         kmhcsJZyR0KyBqf6q2Zdj3H12eacSc/h7Vxy7kg+DpcicdzV76GfBZwgM+9gXktiHp59
-         yxQcgmk6oUfDdBBTzpcg88+DktEEhOa0sOao8B9w5ry51HenxEwfHahF7CWbKndD3FNy
-         IdHA==
-X-Forwarded-Encrypted: i=1; AJvYcCV2kQdIPXzTQUSnNotuUim5N40Hpu2gL5NDtcLjdm5qXE9FpDMSnwJ6DleqLUExgWGxq7IxVyhOTpOELQM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMJRAcFNb32YUPGqUx4QzGCclK0EaUUR/5wYtOfmga8Yd488Tk
-	pqphpa/IwyN1EefU/DB1Xv+B4nvzUQSM7CA4yCQYfk3arACeZM8vycOsXxDu7yKsqX3BofXU89x
-	O++xXduyCiw==
-X-Google-Smtp-Source: AGHT+IHDJtY/2c6fXiE2M6SJD4QN66toVQpvNWxET8tGnEUZy7qObhe8e+RKYr/Jiu/2SWeO2//H748sAcwK
-X-Received: from wmbdt15.prod.google.com ([2002:a05:600c:630f:b0:43c:f8ae:4d6c])
- (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:4f42:b0:43b:cb12:ba6d
- with SMTP id 5b1f17b1804b1-442fd60b543mr196886765e9.3.1747817557800; Wed, 21
- May 2025 01:52:37 -0700 (PDT)
-Date: Wed, 21 May 2025 10:47:49 +0200
+        bh=WNoBQfA/IQC/YYpacvNXlhrzua/HY9YirhkydO/KS+M=;
+        b=j9xcdQmYRZnnhqrR5kWTh5mG+X6J5U7OE9ziLBDFNNoC01jkFR82vvEFxkqpbXZU1D
+         wsqgK+h3ouYb1cFtFWf0BAN2k1/S6cbiHRWkCtqvtU+5+9wNUyAm2adrx+n2P9eqARQk
+         4DI3a/QB9pslLxMJCjDpdwYY1m5hW425loXyNonmrKt56XIu+OzN5DPO2/3/aqL3N8y9
+         xjANhaOzg/ue7e14D19vg/U4iznbgRIGWNjWr9dbIc5keWfF6bjZgzykPo29j0cWpYE0
+         vQ9QbaPPi55HMMbY21IiyABcjyt+TqIxebx2wvUo4hCGnAoW16X7JxJuKSOFFAgVM5hK
+         0NGg==
+X-Forwarded-Encrypted: i=1; AJvYcCWkKYXItfDwxQoue3i92ZQAmaC/3e1m0u2M7Ifr0BOjaBJv8FfoFYoZusroEkkvAS6iXOsd6ADqPM0f7iU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8ghLDKXL/VR2T2AJn1KATIakR0P6B/xxv/Popdn6drwTXweNf
+	nH5Cfs9lEU6RbGhPlg50fvDBPyqgIW3y1noKDfh1mN0XC4/I5677BSeuEEvWhpSG7EDy/YKGNhw
+	H9bH7Kt3esA==
+X-Google-Smtp-Source: AGHT+IHWDG5pW542MTNGAZV/c69QibZMHkxG6r/hjurBVXLKMjKC1/4FTSuaCFyEIACWOBO5QP40tA7KrQ9q
+X-Received: from wrut15.prod.google.com ([2002:a5d:690f:0:b0:3a3:6a82:b2a2])
+ (user=dvyukov job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6000:2902:b0:3a3:6c37:eb48
+ with SMTP id ffacd0b85a97d-3a36c37edadmr10301693f8f.19.1747817550101; Wed, 21
+ May 2025 01:52:30 -0700 (PDT)
+Date: Wed, 21 May 2025 10:47:46 +0200
 In-Reply-To: <cover.1747817128.git.dvyukov@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <cover.1747817128.git.dvyukov@google.com>
 X-Mailer: git-send-email 2.49.0.1143.g0be31eac6b-goog
-Message-ID: <0dc8992f3fe4a76d7fdd73f553236a570dc5a5eb.1747817128.git.dvyukov@google.com>
-Subject: [PATCH v7 4/4] selftests/rseq: Add test for rseq+pkeys
+Message-ID: <4092b965068efe1077cc3e83724ede18866b9241.1747817128.git.dvyukov@google.com>
+Subject: [PATCH v7 1/4] pkeys: add API to switch to permissive/zero pkey register
 From: Dmitry Vyukov <dvyukov@google.com>
 To: mathieu.desnoyers@efficios.com, peterz@infradead.org, boqun.feng@gmail.com, 
 	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
@@ -70,8 +70,11 @@ Cc: Dmitry Vyukov <dvyukov@google.com>, "Paul E. McKenney" <paulmck@kernel.org>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Add a test that ensures that PKEY-protected struct rseq_cs
-works and does not lead to process kills.
+The API allows to switch to permissive pkey register that allows accesses
+to all PKEYs, and to a value that allows access to the 0 (default) PKEY.
+x86 signal delivery already uses switching to permissive PKEY register
+value, and rseq needs to allow access to PKEY 0 while accessing
+struct rseq/rseq_cs.
 
 Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
@@ -86,164 +89,171 @@ Cc: "H. Peter Anvin" <hpa@zytor.com>
 Cc: Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
 Cc: x86@kernel.org
 Cc: linux-kernel@vger.kernel.org
-Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+Reviewed-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Fixes: d7822b1e24f2 ("rseq: Introduce restartable sequences system call")
 
 ---
-Changes in v7:
- - Add rseq_unregister_current_thread() call in the test
-
 Changes in v5:
- - Use static for variables/functions
- - Use RSEQ_READ/WRITE_ONCE instead of volatile
+ - Removed leftover dead code in enable_zero_pkey_val
+ - Clarified commit message
 
 Changes in v4:
  - Added Fixes tag
 
 Changes in v3:
- - added Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
- - rework the test to work when only pkey 0 is supported for rseq
+ - Renamed API functions to write_permissive_pkey_val/write_pkey_val
+ - Added enable_zero_pkey_val for rseq
+ - Added Reviewed-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 
 Changes in v2:
- - change test to install protected rseq_cs instead of rseq
+ - Fixed typo in commit description
 ---
- tools/testing/selftests/rseq/Makefile    |   2 +-
- tools/testing/selftests/rseq/pkey_test.c | 101 +++++++++++++++++++++++
- tools/testing/selftests/rseq/rseq.h      |   1 +
- 3 files changed, 103 insertions(+), 1 deletion(-)
+ arch/x86/Kconfig             |  1 +
+ arch/x86/include/asm/pkeys.h | 30 ++++++++++++++++++++++++++++++
+ arch/x86/include/asm/pkru.h  | 10 +++++++---
+ include/linux/pkeys.h        | 31 +++++++++++++++++++++++++++++++
+ mm/Kconfig                   |  2 ++
+ 5 files changed, 71 insertions(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/rseq/Makefile b/tools/testing/selftests/rseq/Makefile
-index 0d0a5fae59547..e5fd819011582 100644
---- a/tools/testing/selftests/rseq/Makefile
-+++ b/tools/testing/selftests/rseq/Makefile
-@@ -17,7 +17,7 @@ OVERRIDE_TARGETS = 1
- TEST_GEN_PROGS = basic_test basic_percpu_ops_test basic_percpu_ops_mm_cid_test param_test \
- 		param_test_benchmark param_test_compare_twice param_test_mm_cid \
- 		param_test_mm_cid_benchmark param_test_mm_cid_compare_twice \
--		syscall_errors_test
-+		syscall_errors_test pkey_test
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index e21cca404943e..90e60f5651bb6 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -1820,6 +1820,7 @@ config X86_INTEL_MEMORY_PROTECTION_KEYS
+ 	depends on X86_64 && (CPU_SUP_INTEL || CPU_SUP_AMD)
+ 	select ARCH_USES_HIGH_VMA_FLAGS
+ 	select ARCH_HAS_PKEYS
++	select ARCH_HAS_PERMISSIVE_PKEY
+ 	help
+ 	  Memory Protection Keys provides a mechanism for enforcing
+ 	  page-based protections, but without requiring modification of the
+diff --git a/arch/x86/include/asm/pkeys.h b/arch/x86/include/asm/pkeys.h
+index 2e6c04d8a45b4..614099766d5f2 100644
+--- a/arch/x86/include/asm/pkeys.h
++++ b/arch/x86/include/asm/pkeys.h
+@@ -2,6 +2,8 @@
+ #ifndef _ASM_X86_PKEYS_H
+ #define _ASM_X86_PKEYS_H
  
- TEST_GEN_PROGS_EXTENDED = librseq.so
++#include "pkru.h"
++
+ /*
+  * If more than 16 keys are ever supported, a thorough audit
+  * will be necessary to ensure that the types that store key
+@@ -123,4 +125,32 @@ static inline int vma_pkey(struct vm_area_struct *vma)
+ 	return (vma->vm_flags & vma_pkey_mask) >> VM_PKEY_SHIFT;
+ }
  
-diff --git a/tools/testing/selftests/rseq/pkey_test.c b/tools/testing/selftests/rseq/pkey_test.c
-new file mode 100644
-index 0000000000000..5dc214cd7a1e6
---- /dev/null
-+++ b/tools/testing/selftests/rseq/pkey_test.c
-@@ -0,0 +1,101 @@
-+// SPDX-License-Identifier: LGPL-2.1
-+/*
-+ * Ensure that rseq works when rseq data is inaccessible due to PKEYs.
-+ */
++typedef u32 pkey_reg_t;
 +
-+#define _GNU_SOURCE
-+#include <err.h>
-+#include <errno.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <sys/mman.h>
-+#include <sys/syscall.h>
-+#include <ucontext.h>
-+#include <unistd.h>
-+
-+#include "rseq.h"
-+#include "rseq-abi.h"
-+
-+static int pkey;
-+static ucontext_t ucp0, ucp1;
-+
-+static void coroutine(void)
++static inline pkey_reg_t write_permissive_pkey_val(void)
 +{
-+	int i, orig_pk0, old_pk0, old_pk1, pk0, pk1;
-+	/*
-+	 * When we disable access to pkey 0, globals and TLS become
-+	 * inaccessible too, so we need to tread carefully.
-+	 * Pkey is global so we need to copy it onto the stack.
-+	 */
-+	int pk = RSEQ_READ_ONCE(pkey);
-+	struct timespec ts;
-+
-+	orig_pk0 = pkey_get(0);
-+	if (pkey_set(0, PKEY_DISABLE_ACCESS))
-+		err(1, "pkey_set failed");
-+	old_pk0 = pkey_get(0);
-+	old_pk1 = pkey_get(pk);
-+
-+	/*
-+	 * Prevent compiler from initializing it by loading a 16-global.
-+	 */
-+	RSEQ_WRITE_ONCE(ts.tv_sec, 0);
-+	RSEQ_WRITE_ONCE(ts.tv_nsec, 10 * 1000);
-+	/*
-+	 * If the kernel misbehaves, context switches in the following loop
-+	 * will terminate the process with SIGSEGV.
-+	 * Trigger preemption w/o accessing TLS.
-+	 * Note that glibc's usleep touches errno always.
-+	 */
-+	for (i = 0; i < 10; i++)
-+		syscall(SYS_clock_nanosleep, CLOCK_MONOTONIC, 0, &ts, NULL);
-+
-+	pk0 = pkey_get(0);
-+	pk1 = pkey_get(pk);
-+	if (pkey_set(0, orig_pk0))
-+		err(1, "pkey_set failed");
-+
-+	/*
-+	 * Ensure that the kernel has restored the previous value of pkeys
-+	 * register after changing them.
-+	 */
-+	if (old_pk0 != pk0)
-+		errx(1, "pkey 0 changed %d->%d", old_pk0, pk0);
-+	if (old_pk1 != pk1)
-+		errx(1, "pkey 1 changed %d->%d", old_pk1, pk1);
-+
-+	swapcontext(&ucp1, &ucp0);
-+	abort();
++	return write_pkru(0);
 +}
 +
-+int main(int argc, char **argv)
++static inline pkey_reg_t enable_zero_pkey_val(void)
 +{
-+	pkey = pkey_alloc(0, 0);
-+	if (pkey == -1) {
-+		printf("[SKIP]\tKernel does not support PKEYs: %s\n",
-+			strerror(errno));
++	u32 pkru;
++
++	if (!cpu_feature_enabled(X86_FEATURE_OSPKE))
 +		return 0;
-+	}
++	/*
++	 * WRPKRU is relatively expensive compared to RDPKRU,
++	 * avoid it if possible.
++	 */
++	pkru = rdpkru();
++	if ((pkru & (PKRU_AD_BIT|PKRU_WD_BIT)) != 0)
++		wrpkru(pkru & ~(PKRU_AD_BIT|PKRU_WD_BIT));
++	return pkru;
++}
 +
-+	if (rseq_register_current_thread())
-+		err(1, "rseq_register_current_thread failed");
++static inline void write_pkey_val(pkey_reg_t val)
++{
++	write_pkru(val);
++}
 +
-+	if (getcontext(&ucp1))
-+		err(1, "getcontext failed");
-+	ucp1.uc_stack.ss_size = getpagesize() * 4;
-+	ucp1.uc_stack.ss_sp = mmap(NULL, ucp1.uc_stack.ss_size,
-+		PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
-+	if (ucp1.uc_stack.ss_sp == MAP_FAILED)
-+		err(1, "mmap failed");
-+	if (pkey_mprotect(ucp1.uc_stack.ss_sp, ucp1.uc_stack.ss_size,
-+			PROT_READ | PROT_WRITE, pkey))
-+		err(1, "pkey_mprotect failed");
-+	makecontext(&ucp1, coroutine, 0);
-+	if (swapcontext(&ucp0, &ucp1))
-+		err(1, "swapcontext failed");
+ #endif /*_ASM_X86_PKEYS_H */
+diff --git a/arch/x86/include/asm/pkru.h b/arch/x86/include/asm/pkru.h
+index 74f0a2d34ffdd..b9bf9b7f2753b 100644
+--- a/arch/x86/include/asm/pkru.h
++++ b/arch/x86/include/asm/pkru.h
+@@ -39,16 +39,20 @@ static inline u32 read_pkru(void)
+ 	return 0;
+ }
+ 
+-static inline void write_pkru(u32 pkru)
++static inline u32 write_pkru(u32 pkru)
+ {
++	u32 old_pkru;
 +
-+	if (rseq_unregister_current_thread())
-+		err(1, "rseq_unregister_current_thread failed");
+ 	if (!cpu_feature_enabled(X86_FEATURE_OSPKE))
+-		return;
++		return 0;
+ 	/*
+ 	 * WRPKRU is relatively expensive compared to RDPKRU.
+ 	 * Avoid WRPKRU when it would not change the value.
+ 	 */
+-	if (pkru != rdpkru())
++	old_pkru = rdpkru();
++	if (pkru != old_pkru)
+ 		wrpkru(pkru);
++	return old_pkru;
+ }
+ 
+ static inline void pkru_write_default(void)
+diff --git a/include/linux/pkeys.h b/include/linux/pkeys.h
+index 86be8bf27b41b..262d60f6a15f8 100644
+--- a/include/linux/pkeys.h
++++ b/include/linux/pkeys.h
+@@ -48,4 +48,35 @@ static inline bool arch_pkeys_enabled(void)
+ 
+ #endif /* ! CONFIG_ARCH_HAS_PKEYS */
+ 
++#ifndef CONFIG_ARCH_HAS_PERMISSIVE_PKEY
++
++/*
++ * Common name for value of the register that controls access to PKEYs
++ * (called differently on different arches: PKRU, POR, AMR).
++ */
++typedef char pkey_reg_t;
++
++/*
++ * Sets PKEY access register to the most permissive value that allows
++ * accesses to all PKEYs. Returns the current value of PKEY register.
++ * Code should generally arrange switching back to the old value
++ * using write_pkey_val(old_value).
++ */
++static inline pkey_reg_t write_permissive_pkey_val(void)
++{
 +	return 0;
 +}
-diff --git a/tools/testing/selftests/rseq/rseq.h b/tools/testing/selftests/rseq/rseq.h
-index f51a5fdb04443..cdb34cbad1adb 100644
---- a/tools/testing/selftests/rseq/rseq.h
-+++ b/tools/testing/selftests/rseq/rseq.h
-@@ -8,6 +8,7 @@
- #ifndef RSEQ_H
- #define RSEQ_H
++
++/*
++ * Sets PKEY access register to a value that allows access to the 0 (default)
++ * PKEY. Returns the current value of PKEY register.
++ */
++static inline pkey_reg_t enable_zero_pkey_val(void)
++{
++	return 0;
++}
++
++static inline void write_pkey_val(pkey_reg_t val) {}
++#endif /* ! CONFIG_ARCH_HAS_PERMISSIVE_PKEY */
++
+ #endif /* _LINUX_PKEYS_H */
+diff --git a/mm/Kconfig b/mm/Kconfig
+index e113f713b4938..37f5706445e2e 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -1131,6 +1131,8 @@ config ARCH_USES_HIGH_VMA_FLAGS
+ 	bool
+ config ARCH_HAS_PKEYS
+ 	bool
++config ARCH_HAS_PERMISSIVE_PKEY
++	bool
  
-+#include <assert.h>
- #include <stdint.h>
- #include <stdbool.h>
- #include <pthread.h>
+ config ARCH_USES_PG_ARCH_2
+ 	bool
 -- 
 2.49.0.1143.g0be31eac6b-goog
 
