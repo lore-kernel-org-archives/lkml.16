@@ -1,138 +1,216 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 583361CEEB2;
-	Wed, 21 May 2025 15:44:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 686951990D8
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 15:45:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747842288; cv=none; b=BN0mjg9Fwe7walS1COIglal5hSooBKyUSfgrsxx6s06F303ov3pkf1dxOFcnRXgPMzx4/baGjv+Hyr/eC4+aJo6BhBX76g7VASmYjI2asEg0woajfZ3b/3go8ph4AoqiRqAZrhDHot7P4IwUDNnO/9FX5dnElwMnqQnoxZMTtkg=
+	t=1747842325; cv=none; b=FBxSjCchCMU86J+55cnT8qHpu7GatOB8ngTMuDz6Nh9wPn1RfuX630VvG7fQsTTRTUgMVzXRFjV9qIFSkiNjwojuPXq/lXxeXmoh05Vunt3aoQXy14sILZp1sc8z6RbiAOrN7xjCKEMHWwu2JTk/EKzuMv2KPCtQ0xV+RDpdwy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747842288; c=relaxed/simple;
-	bh=iHa2EVnHG0LTko76+gbPKXWrBiAxk4n72dulqY6tgX8=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZECLQAbEqpy58MrjjAKIFSHpMHwqD6QagXt4LqbCegpfb9RLa0XGks0NocLkp4XvFm20+Jb/HWe5WpShfySfzZJxl+HorrUGZfDrWOo/5fqAw2evlknpfgkr3pDUCAzTicFQeqhVObjk6ymsLbHS4Si0hlPcHfK79aEWJwixoVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=BTOkVLVv; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1747842325; c=relaxed/simple;
+	bh=yoo7Pbk4q9EQbJCx1fpa8UGP4E7ZGrMF4YnmPofM9Hg=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Ezig4QXdychLcWtjWmcJQfQkPiIx+xyiRt2Zb5dIg2w7Zcs+TtYs+g1RmBnskNcC/PmEiqmUynLVjM7snY833ELWa2e7R/UY+r4CJPbSGIQ3BKlajVegvnrtO7qkVoitUXTU4ZcMsoZ2TwvqRzI2OYX7nuGn5u761QoTw1+NBg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0MCkY5V9; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BTOkVLVv"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54L9XPlq011367;
-	Wed, 21 May 2025 15:44:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=BLCSidJjFiZ4Md8l3XZRARX2
-	HKLxBVA0IkrpnexySCs=; b=BTOkVLVvAjjXwK2jOIdLVlDYt58M3sXskluVwbVk
-	Jt9jXtSRUw0Zw0icuTGHAhXlbIgimwP3ZSgx8qAdysX9NAymaBURcIACGSf/zHDN
-	Tj4GMrUXym5J/pRvym99sBDOmk1PUx3zbbfm+rCWnJ11Iepdk/gD5ZKTrnH6KfC4
-	8K2pxOAKkQwCEo5C1djgxgUNX8NX+aMehTsvaAVEUHUimDVu1M9LQGenpSl6LHaH
-	G+seEHIVWlLO7QG3q8PRaowQ4IFowG0tyClvXGMTmzYLCmmNrm2OhW3LLw4cmUfI
-	Idy4fV6yHb5XMi6sfVh1X7v/ZWTnaeIsQFjEhM5chpaOEg==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwfb3dun-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 15:44:43 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54LFigAf030380
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 15:44:42 GMT
-Received: from hu-wasimn-hyd.qualcomm.com (10.80.80.8) by
- nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 21 May 2025 08:44:36 -0700
-Date: Wed, 21 May 2025 21:14:32 +0530
-From: Wasim Nazir <quic_wasimn@quicinc.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-CC: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel@quicinc.com>, <kernel@oss.qualcomm.com>,
-        Sayali Lokhande <quic_sayalil@quicinc.com>
-Subject: Re: [PATCH v7 6/6] arm64: dts: qcom: Add UFS support for qcs9075
- IQ-9075-EVK
-Message-ID: <aC304FksYd9r8hBa@hu-wasimn-hyd.qualcomm.com>
-References: <20250521140807.3837019-1-quic_wasimn@quicinc.com>
- <20250521140807.3837019-7-quic_wasimn@quicinc.com>
- <b9ecd0c9-c8fd-45e6-b2ff-6ccb72bdfd49@kernel.org>
- <585d1751-a909-442d-986e-88721a093ec8@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0MCkY5V9"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-30e2bd11716so7039770a91.3
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 08:45:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747842322; x=1748447122; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KGfD6Lt7AWlUqczGy/2lWkOYK/KBxBEZXw+C7OEpdvI=;
+        b=0MCkY5V9dyoJp5w7PrEuFgOqP7qyi7/QYSXpyJzlrEhYy088JvqXAWbR1qttJxHSWV
+         r9lDocPutfYvloUUqenWCUDEx71PyWdbr+poOrAFQZO9m62G/SFwD6Gdy9ACXUVR4D/K
+         hljY3LAvS6HQbgIckQeZSe5mqidZle6Q+1agBVJ9QRV9+bEu9YZy2XpjXNIaLYPWF54x
+         wQxVBR0ZMXjgb9B1rFpwI8/exAq4NOO8hCY0JaBB1boeeX3UKpyfecoQ9Yi4P8pygqq6
+         zGi30ZYwc0Gc5432z7g+vgoasDPpK9fnm0b0T4ygqqBcCMFi2ozcDYFyg/9nfN4g2nyo
+         /lPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747842322; x=1748447122;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KGfD6Lt7AWlUqczGy/2lWkOYK/KBxBEZXw+C7OEpdvI=;
+        b=A1PGAqmfgarUIX+fJjx/UuBTnHzbusPsgDCWiH3xKHPFwyXR0VCLH16CQfFgbJ2QN2
+         PrFcS44U/ImR7k009tXjWcxHpHrDuYaJriil5X1rkpPk8g/hrZOaK+H6hRrEcVsWTUUm
+         EgIFrKgzMQA+dXKbBeu7GDWUuzfHjewzwEm9N4wuyMjR5hGD1byR+2ykgO5yJV8rtL2o
+         /UVFYlLPbXKPshmPSPVsBJNC3L/ShzvovUf55KI9JhRUYfuhTBrZiO8da93XhCFFgtKm
+         BCrIbnEuWJnsdduz/0FDr4dGK8TXDlaLhBzrdXLGNF6Ppy3h6i37GSHjXUKWBw4Pe8hA
+         Hu2g==
+X-Forwarded-Encrypted: i=1; AJvYcCUOZJ/zSLHb8CSzaLWQscPcMBzrvXIWFyCOTIewo2X3ri2sQGg6YYv4BG5Sl/vI0v+dbV0M8H9ijyfmPCE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAFPtdMmZ7kxiTLiz8Gg2YsvKW7ExFlP2YXNKgaSJD03N2IOFn
+	yl3GTeZEuhvGiKiJ8J63h3dx9PLRC9UHvzJtBzxG/3N+Gr8GIUT2mZ4YaLWGlA/QoGeOymgORok
+	AZaY9Yg==
+X-Google-Smtp-Source: AGHT+IEF1qPUzq4BlErEYu7Xd5Q90YOhv8rHaJY+RZXAoiCRRlJbaX8/E3b+d3lzEtxfAC35W1OjHa68m+s=
+X-Received: from pjm6.prod.google.com ([2002:a17:90b:2fc6:b0:2fa:a101:755])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3d85:b0:2f9:d9fe:e72e
+ with SMTP id 98e67ed59e1d1-30e8312dcd2mr40125626a91.16.1747842322673; Wed, 21
+ May 2025 08:45:22 -0700 (PDT)
+Date: Wed, 21 May 2025 08:45:21 -0700
+In-Reply-To: <aC0wT68EY4Ybz+wI@yzhao56-desk.sh.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+References: <20250519023613.30329-1-yan.y.zhao@intel.com> <20250519023737.30360-1-yan.y.zhao@intel.com>
+ <aCsy-m_esVjy8Pey@google.com> <52bdeeec0dfbb74f90d656dbd93dc9c7bb30e84f.camel@intel.com>
+ <aCtlDhNbgXKg4s5t@google.com> <aCwUO7cQkPzIe0ZA@yzhao56-desk.sh.intel.com>
+ <aCyqJTSDTKt1xiKr@google.com> <aC0wT68EY4Ybz+wI@yzhao56-desk.sh.intel.com>
+Message-ID: <aC31EXLNzCVGT0EP@google.com>
+Subject: Re: [PATCH 1/2] KVM: x86/mmu: Add RET_PF_RETRY_INVALID_SLOT for fault
+ retry on invalid slot
+From: Sean Christopherson <seanjc@google.com>
+To: Yan Zhao <yan.y.zhao@intel.com>
+Cc: Rick P Edgecombe <rick.p.edgecombe@intel.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"pbonzini@redhat.com" <pbonzini@redhat.com>, Reinette Chatre <reinette.chatre@intel.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <585d1751-a909-442d-986e-88721a093ec8@kernel.org>
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: UlL4iVynxJ3NU82-aR9cY4z0SBFnffJ3
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDE1NCBTYWx0ZWRfX71M563czuOCP
- VXEn/AlCt6zreA38WMmRPg4NIF5SNHfecwV87h/TGp59W/+4UAJ6VnI9YufySwxVE7IJxI6Oi1V
- 5n0+aMJrYVERtYOeNH9YHvgAtv6W4ekHyQpGx2LBqwJwgdouFaCjHmympuDEL8DzipJiaIoBsUU
- n/gjF83sgn9ghxT8QJl502q4+UEVOdVKzp77xRKuOicarMsSCOtROCK8mw55JY/aMxvjqxvFLWd
- rdBfNEv6bBy1LOfdZi7ez1TlghnJ09cFBRIPvZxms7E3CR9PnoejjQqaFyGYBJthGFR/h00tK9S
- ZejlsKX0slOPonIp7VVkXrYb0BUsfFx7OkykQL+aOx2vpWumPKhkdLa5AuQpR3Yz2de4XdOPe8X
- 4HqeQBHfTkyqycrciFJFrLZF0hpK7ZC1gWQslhXCr15QLz2pgUAzvtVIRi5g20Z/7X8L1YQG
-X-Proofpoint-GUID: UlL4iVynxJ3NU82-aR9cY4z0SBFnffJ3
-X-Authority-Analysis: v=2.4 cv=dLCmmPZb c=1 sm=1 tr=0 ts=682df4eb cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
- a=1cfLOKoaPCSdn8JfHDsA:9 a=CjuIK1q_8ugA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-21_05,2025-05-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxscore=0 clxscore=1015 adultscore=0 bulkscore=0 phishscore=0 suspectscore=0
- impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=867 spamscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505210154
 
-On Wed, May 21, 2025 at 04:23:02PM +0200, Krzysztof Kozlowski wrote:
-> On 21/05/2025 16:21, Krzysztof Kozlowski wrote:
-> > On 21/05/2025 16:08, Wasim Nazir wrote:
-> >> From: Sayali Lokhande <quic_sayalil@quicinc.com>
-> >>
-> >> Add UFS support for qcs9075 IQ-9075-EVK board.
-> >>
-> >> Signed-off-by: Sayali Lokhande <quic_sayalil@quicinc.com>
-> >> Signed-off-by: Wasim Nazir <quic_wasimn@quicinc.com>
-> >> ---
-> >>  .../arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts | 17 +++++++++++++++++
-> >>  1 file changed, 17 insertions(+)
-> >>
-> >> diff --git a/arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts b/arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts
-> >> index 30a36ffa40be..ba8a359d8fee 100644
-> >> --- a/arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts
-> >> +++ b/arch/arm64/boot/dts/qcom/qcs9075-iq-9075-evk.dts
-> >> @@ -276,3 +276,20 @@ &uart10 {
-> >>  &xo_board_clk {
-> >>  	clock-frequency = <38400000>;
-> >>  };
-> >> +
-> >> +&ufs_mem_hc {
+On Wed, May 21, 2025, Yan Zhao wrote:
+> On Tue, May 20, 2025 at 09:13:25AM -0700, Sean Christopherson wrote:
+> > > > @@ -4891,6 +4884,28 @@ int kvm_tdp_map_page(struct kvm_vcpu *vcpu, gpa_t gpa, u64 error_code, u8 *level
+> > > >  }
+> > > >  EXPORT_SYMBOL_GPL(kvm_tdp_map_page);
+> > > >  
+> > > > +int kvm_tdp_prefault_page(struct kvm_vcpu *vcpu, gpa_t gpa, u64 error_code, u8 *level)
+> > > > +{
+> > > > +	int r;
+> > > > +
+> > > > +	/*
+> > > > +	 * Restrict to TDP page fault, since that's the only case where the MMU
+> > > > +	 * is indexed by GPA.
+> > > > +	 */
+> > > > +	if (vcpu->arch.mmu->page_fault != kvm_tdp_page_fault)
+> > > > +		return -EOPNOTSUPP;
+> > > > +
+> > > > +	for (;;) {
+> > > > +		r = kvm_tdp_map_page(vcpu, gpa, error_code, level);
+> > > > +		if (r != -EAGAIN)
+> > > > +			break;
+> > > > +
+> > > > +		/* Comment goes here. */
+> > > > +		kvm_vcpu_srcu_read_unlock(vcpu);
+> > > > +		kvm_vcpu_srcu_read_lock(vcpu);
+> > > For the hang in the pre_fault_memory_test reported by Reinette [1], it's because
+> > > the memslot removal succeeds after releasing the SRCU, then the old root is
+> > > stale. So kvm_mmu_reload() is required here to prevent is_page_fault_stale()
+> > > from being always true.
 > > 
-> > Please follow DTS coding style.
+> > That wouldn't suffice, KVM would also need to process KVM_REQ_MMU_FREE_OBSOLETE_ROOTS,
+> > otherwise kvm_mmu_reload() will do nothing.
+> In commit 20a6cff3b283 ("KVM: x86/mmu: Check and free obsolete roots in
+> kvm_mmu_reload()"), KVM_REQ_MMU_FREE_OBSOLETE_ROOTS is processed in
+> kvm_mmu_reload().
 
-Thanks for pointing it out. This will help other contributors to
-understand the issue.
+Oh, right!  I completely forgot about that.  Hmm, that reduces the complexity a
+little bit, but I'm still leaning towards punting -EAGAIN to userspace.
 
+> > Thinking about this scenario more, I don't mind punting this problem to userspace
+> > for KVM_PRE_FAULT_MEMORY because there's no existing behavior/ABI to uphold, and
+> > because the complexity vs. ABI tradeoffs are heavily weighted in favor of punting
+> > to userspace.  Whereas for KVM_RUN, KVM can't change existing behavior without
+> > breaking userspace, should provide consistent behavior regardless of VM type, and
+> > KVM needs the "complex" code irrespective of this particular scenario.
+> > 
+> > I especially like punting to userspace if KVM returns -EAGAIN, not -ENOENT,
+> > because then KVM is effectively providing the same overall behavior as KVM_RUN,
+> > just without slightly different roles and responsibilities between KVM and
+> > userspace.  And -ENOENT is also flat out wrong for the case where a memslot is
+> > being moved, but the new base+size still contains the to-be-faulted GPA.
+> > 
+> > I still don't like RET_PF_RETRY_INVALID_SLOT, because that bleeds gory MMU details
+> > into the rest of KVM, but KVM can simply return -EAGAIN if an invalid memslot is
+> > encountered during prefault (as identified by fault->prefetch).
+> >
+> > For TDX though, tdx_handle_ept_violation() needs to play nice with the scenario,
+> > i.e. punting to userspace is not a viable option.  But that path also has options
+> > that aren't available to prefaulting.  E.g. it could (and probably should) break
+> > early if a request is pending instead of special casing KVM_REQ_VM_DEAD, which
+> Hmm, for TDX, there's no request KVM_REQ_MMU_FREE_OBSOLETE_ROOTS for slot
+> removal. (see commit aa8d1f48d353 ("KVM: x86/mmu: Introduce a quirk to control
+> memslot zap behavior").
 > 
-> And you just added this file. Squash the patches so you will see the
-> mishap in ordering.
-
-Sure will do that in next series.
-
+> > would take care of the KVM_REQ_MMU_FREE_OBSOLETE_ROOTS scenario.  And as Rick
+> > called out, the zero-step mess really needs to be solved in a more robust fashion.
+> > 
+> > So this?
+> Looks good to me for non-TDX side.
 > 
-> Best regards,
-> Krzysztof
+> For TDX, could we provide below fix based on your change?
 
-Regards,
-Wasim
+Hmm, I'd prefer not to, mainly because I don't want to special case things even
+more in the common MMU code, e.g. I don't want to bleed the "no memslot == exit"
+logic into multiple locations.  And very strictly speaking, a memory fault exit
+isn't guaranteed, as userspace could set a new memory region before the vCPU
+retries the fault.
+
+Returning -EAGAIN isn't an option because that would break userspace (e.g. our
+VMM doesn't handle EAGAIN and supports SNP), and documenting the behavior would
+be weird.  For KVM_PRE_FAULT_MEMORY, KVM's documentation can simply state that
+EAGAIN is returned KVM encounters temporary resource contention and that userspace
+should simply try again.  It's an ABI change, but for a nascent ioctl() and a
+scenario that won't be hit in practice, so I'm confident we can make the change
+without breaking userspace.
+
+And again, this is an unfortunate side effect of zero-step; there's no such
+restriction for SNP, and ideally the TDX zero-step pain will be solved and this
+would also go away for TDX too, so I'm hesitant to bake this behavior into KVM's
+ABI.
+
+My best idea is to special case this in tdx_handle_ept_violation().  It's also
+very gross, but at least the nastiness is limited to the zero-step mitigation
+mess, and is co-located with the code that doesn't actually play nice with
+RET_PF_RETRY.  E.g.
+
+diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+index b952bc673271..ca47d08ae112 100644
+--- a/arch/x86/kvm/vmx/tdx.c
++++ b/arch/x86/kvm/vmx/tdx.c
+@@ -1907,6 +1907,8 @@ static int tdx_handle_ept_violation(struct kvm_vcpu *vcpu)
+         * handle retries locally in their EPT violation handlers.
+         */
+        while (1) {
++               struct kvm_memory_slot *slot;
++
+                ret = __vmx_handle_ept_violation(vcpu, gpa, exit_qual);
+ 
+                if (ret != RET_PF_RETRY || !local_retry)
+@@ -1920,6 +1922,10 @@ static int tdx_handle_ept_violation(struct kvm_vcpu *vcpu)
+                        break;
+                }
+ 
++               slot = kvm_vcpu_gfn_to_memslot(vcpu, fault.gfn);
++               if (slot && slot->flags & KVM_MEMSLOT_INVALID)
++                       break;
++
+                cond_resched();
+        }
+        return ret;
+
+> For private fault, -EFAULT will be returned to userspace after the retry anyway
+> after the slot is completed removed, which is unlike non-private faults that go
+> to emulate path after retry.
+> --- a/arch/x86/kvm/mmu/mmu.c
+> +++ b/arch/x86/kvm/mmu/mmu.c
+> @@ -4602,6 +4602,11 @@ static int kvm_mmu_faultin_pfn(struct kvm_vcpu *vcpu,
+>                 if (fault->prefetch)
+>                         return -EAGAIN;
+> 
+> +               if (fault->is_private) {
+> +                       kvm_mmu_prepare_memory_fault_exit(vcpu, fault);
+> +                       return -EFAULT;
+> +               }
+> +
+>                 return RET_PF_RETRY;
+>         }
+> 
+> 
+> And would you mind if I included your patch in my next version? I can update the
+> related selftests as well.
+
+Yes, please do!
