@@ -1,168 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4025D22127A;
-	Wed, 21 May 2025 15:34:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB1F1221297;
+	Wed, 21 May 2025 15:34:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747841679; cv=none; b=qh2yhxsRWaDY5UMu022GpAdxD57iPC7dqEH2CBl4cfeNXV7Uz5QbJvp8YV+yvaHjEd714aAXQQ2qQWEIKQoN77PUBM+CmV9N3+K8E8Ee8pSfiqL3vrIbV/Cpn6Wd3LcU+QKbf5Qs/lBoZwfSiqJhX9/y+wmKUnTlREpSZ6EcAsQ=
+	t=1747841683; cv=none; b=G/J/ETuPJWSOuH7oACay3JerWb3sAi/9td/fd9SaYgBd3wFG49Zk2nLBiIqlCD+d/dNcDEa0NhS0UA3GfdFJu2MaHmhx2y3G+diBW0KocC5wfLNztsabvqQamKKkSefAWTNyivyZ8MKstrDSfXkkL5jozjYuqaXASg6YHOqO048=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747841679; c=relaxed/simple;
-	bh=HEKPamw4N0SlwDUEynkY5dfMAkCnnRNBCS9aAC+V1kg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kTpQZNfA0tuuqETiGgYljfc3ES5aoZvS/biKyeukpxJGrcaYojJXWQ1S9/qQdLPXHYs/imcDNqRXRh5Irl09d3SmAhYZp8LVDvebGQs50y9zl1stfgR2Vu6XaBbO8Xrp0o15fm+qPrBtoBzfP6ykQLFuc+JKy69E6Bmvk23Oc2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NLkJs1ml; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747841683; c=relaxed/simple;
+	bh=/amBSm5I9J5IaO88xw0RyZWxwOgvbaTAgzX9oG5SXMk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=plbg6JPUGtUttMdpDcEuP/6Tuhe4FurnUUCZDH1ECEzhAuiraSg7g6vc1O+bi0ilY7k/wbQ701kbk47C8ndmjhk0muT5DFTax0kmdGg1TF/+K2ic8VHl+m0dYIUHM0XThrh6N/G0mPLia9FHL0m/hGnML8EggUYmcZ5/uREkHcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yfn1GPaH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NLkJs1ml"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D4A9C4CEE7;
-	Wed, 21 May 2025 15:34:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yfn1GPaH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A056BC4CEE4;
+	Wed, 21 May 2025 15:34:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747841679;
-	bh=HEKPamw4N0SlwDUEynkY5dfMAkCnnRNBCS9aAC+V1kg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NLkJs1mlGZOcEy/Rd5EZWCQArgVcPmHGtil0q3tehtMMwKrpmFCmEjcE3YlErsjgY
-	 H4utljsy5djUbPijWEWwQBZk2p/IT+ZGsEWz90sABAkGcT19qhvkBtE7gijEIWK6JA
-	 Vek5jhv47XzspmDZgfQBv/DqK3A5gCXcfHVNXLQlzKaFlrVjc7pTLOkDAoueLtUoMU
-	 9OaMhRUKdrNZJt/qp2OyEm+ODSFleJJi/LLeR+KD6i78Ycka/eMGrm9D5Vu52PddSX
-	 wCg/YV85iEoCm7XDa026Xrw0VLevXKsrEJirSVy1Vk5pnnjmr2N7aD8AE8kZ8ktJtT
-	 +4zbb3h8i20BA==
-From: Lee Jones <lee@kernel.org>
-To: lee@kernel.org,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>,
-	Jens Axboe <axboe@kernel.dk>,
-	Sasha Levin <sashal@kernel.org>,
-	Michal Luczaj <mhal@rbox.co>,
-	Rao Shoaib <Rao.Shoaib@oracle.com>,
-	Pavel Begunkov <asml.silence@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Cc: stable@vger.kernel.org
-Subject: [PATCH v6.1 20/27] af_unix: Detect dead SCC.
-Date: Wed, 21 May 2025 16:27:19 +0100
-Message-ID: <20250521152920.1116756-21-lee@kernel.org>
-X-Mailer: git-send-email 2.49.0.1143.g0be31eac6b-goog
-In-Reply-To: <20250521152920.1116756-1-lee@kernel.org>
-References: <20250521152920.1116756-1-lee@kernel.org>
+	s=k20201202; t=1747841683;
+	bh=/amBSm5I9J5IaO88xw0RyZWxwOgvbaTAgzX9oG5SXMk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Yfn1GPaHIuvKHnHI+miBXmeiq85J68kYtDwLB6WZxpGTex0+8pkUdFPI4ffS0mmHk
+	 7ySSF6k6dW8gOXvH/oTo/vSEsZUbnK0r90TMMkn9BQINQAjdxOszaEbJeMtsDxE2nW
+	 l8Cr8sSHB03vzB7XVPXYNqbWoW7/nAkRaTXv/HS0lmiJcDVUF0L6kFzxrIo2uZb5Bf
+	 T0TzCMo37mfxzeg0O8D0NV9Y/DZtpOrKktgN0PBmbnZxMxTf88sVsD796RuEeoCAkO
+	 yCpzSD3C95szCTQGTnxeARQGH5IUHTiZhTX8TXUpjnWnLcQaKirOT+yhgrTX14dxji
+	 DhWdLLEE9M3iw==
+Date: Wed, 21 May 2025 17:34:39 +0200
+From: Antoine Tenart <atenart@kernel.org>
+To: Horatiu Vultur <horatiu.vultur@microchip.com>
+Cc: andrew@lunn.ch, hkallweit1@gmail.com, linux@armlinux.org.uk, 
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	richardcochran@gmail.com, kory.maincent@bootlin.com, shannon.nelson@amd.com, 
+	viro@zeniv.linux.org.uk, atenart@kernel.org, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] net: phy: mscc: Fix memory leak when using one step
+ timestamping
+Message-ID: <vmtli7u7fnsj56xhih7eqtzt6w3v4yp7dviyssqyyybvsioznj@lzwdr5dpo5wg>
+References: <20250521131114.2719084-1-horatiu.vultur@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250521131114.2719084-1-horatiu.vultur@microchip.com>
 
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
+On Wed, May 21, 2025 at 03:11:14PM +0200, Horatiu Vultur wrote:
+> Fix memory leak when running one-step timestamping. When running
+> one-step sync timestamping, the HW is configured to insert the TX time
+> into the frame, so there is no reason to keep the skb anymore. As in
+> this case the HW will never generate an interrupt to say that the frame
+> was timestamped, then the frame will never released.
+> Fix this by freeing the frame in case of one-step timestamping.
+> 
+> Fixes: 7d272e63e0979d ("net: phy: mscc: timestamping and PHC support")
+> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+> ---
+>  drivers/net/phy/mscc/mscc_ptp.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/net/phy/mscc/mscc_ptp.c b/drivers/net/phy/mscc/mscc_ptp.c
+> index ed8fb14a7f215..db8ca1dfd5322 100644
+> --- a/drivers/net/phy/mscc/mscc_ptp.c
+> +++ b/drivers/net/phy/mscc/mscc_ptp.c
+> @@ -1173,6 +1173,13 @@ static void vsc85xx_txtstamp(struct mii_timestamper *mii_ts,
+>  		return;
+>  	}
+>  
+> +	if (vsc8531->ptp->tx_type == HWTSTAMP_TX_ONESTEP_SYNC) {
+> +		if (ptp_msg_is_sync(skb, type)) {
+> +			kfree_skb(skb);
+> +			return;
+> +		}
+> +	}
 
-[ Upstream commit a15702d8b3aad8ce5268c565bd29f0e02fd2db83 ]
+I don't remember everything about TS but I think the above is fine. Also
+while looking at this I saw this function is doing the following too:
 
-When iterating SCC, we call unix_vertex_dead() for each vertex
-to check if the vertex is close()d and has no bridge to another
-SCC.
+  if (!vsc8531->ptp->configured)
+	return;
 
-If both conditions are true for every vertex in SCC, we can
-execute garbage collection for all skb in the SCC.
+I guess we should free the skb for all paths not putting it in the tx
+queue. As there would be 3 paths freeing the skb + returning, you might
+as well use a label for easier maintenance.
 
-The actual garbage collection is done in the following patch,
-replacing the old implementation.
-
-Signed-off-by: Kuniyuki Iwashima <kuniyu@amazon.com>
-Acked-by: Paolo Abeni <pabeni@redhat.com>
-Link: https://lore.kernel.org/r/20240325202425.60930-14-kuniyu@amazon.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-(cherry picked from commit a15702d8b3aad8ce5268c565bd29f0e02fd2db83)
-Signed-off-by: Lee Jones <lee@kernel.org>
----
- net/unix/garbage.c | 44 +++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 43 insertions(+), 1 deletion(-)
-
-diff --git a/net/unix/garbage.c b/net/unix/garbage.c
-index 2e66b57f3f0f..1f53c25fc71b 100644
---- a/net/unix/garbage.c
-+++ b/net/unix/garbage.c
-@@ -289,6 +289,39 @@ void unix_destroy_fpl(struct scm_fp_list *fpl)
- 	unix_free_vertices(fpl);
- }
- 
-+static bool unix_vertex_dead(struct unix_vertex *vertex)
-+{
-+	struct unix_edge *edge;
-+	struct unix_sock *u;
-+	long total_ref;
-+
-+	list_for_each_entry(edge, &vertex->edges, vertex_entry) {
-+		struct unix_vertex *next_vertex = unix_edge_successor(edge);
-+
-+		/* The vertex's fd can be received by a non-inflight socket. */
-+		if (!next_vertex)
-+			return false;
-+
-+		/* The vertex's fd can be received by an inflight socket in
-+		 * another SCC.
-+		 */
-+		if (next_vertex->scc_index != vertex->scc_index)
-+			return false;
-+	}
-+
-+	/* No receiver exists out of the same SCC. */
-+
-+	edge = list_first_entry(&vertex->edges, typeof(*edge), vertex_entry);
-+	u = edge->predecessor;
-+	total_ref = file_count(u->sk.sk_socket->file);
-+
-+	/* If not close()d, total_ref > out_degree. */
-+	if (total_ref != vertex->out_degree)
-+		return false;
-+
-+	return true;
-+}
-+
- static bool unix_scc_cyclic(struct list_head *scc)
- {
- 	struct unix_vertex *vertex;
-@@ -377,6 +410,7 @@ static void __unix_walk_scc(struct unix_vertex *vertex, unsigned long *last_inde
- 
- 	if (vertex->index == vertex->scc_index) {
- 		struct list_head scc;
-+		bool scc_dead = true;
- 
- 		/* SCC finalised.
- 		 *
-@@ -391,6 +425,9 @@ static void __unix_walk_scc(struct unix_vertex *vertex, unsigned long *last_inde
- 
- 			/* Mark vertex as off-stack. */
- 			vertex->index = unix_vertex_grouped_index;
-+
-+			if (scc_dead)
-+				scc_dead = unix_vertex_dead(vertex);
- 		}
- 
- 		if (!unix_graph_maybe_cyclic)
-@@ -431,13 +468,18 @@ static void unix_walk_scc_fast(void)
- 	while (!list_empty(&unix_unvisited_vertices)) {
- 		struct unix_vertex *vertex;
- 		struct list_head scc;
-+		bool scc_dead = true;
- 
- 		vertex = list_first_entry(&unix_unvisited_vertices, typeof(*vertex), entry);
- 		list_add(&scc, &vertex->scc_entry);
- 
--		list_for_each_entry_reverse(vertex, &scc, scc_entry)
-+		list_for_each_entry_reverse(vertex, &scc, scc_entry) {
- 			list_move_tail(&vertex->entry, &unix_visited_vertices);
- 
-+			if (scc_dead)
-+				scc_dead = unix_vertex_dead(vertex);
-+		}
-+
- 		list_del(&scc);
- 	}
- 
--- 
-2.49.0.1143.g0be31eac6b-goog
-
+Thanks,
+Antoine
