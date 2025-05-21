@@ -1,255 +1,186 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8837B23815B
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 08:58:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3CA323370A
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 08:59:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747817936; cv=none; b=b5nhYRzLGh7G6Wwo2r6AabzQ0wUWq99kHAle08dPAvVgjvg43aNwKdVdV+c0sne7oAi/e4ZjA8yhTH0YTYt/57OPQz3kCbeEiOelvLOFmGe+hF4U859CHGYExvxUi75pN8SCfAAjVpAe8B2fk3ENOvEbHBi9yCpaWfXSpuAGkcs=
+	t=1747817982; cv=none; b=BHWlFU9Y5k1YXmWjqTIWt7i6uT/Dc9iL0IgjCPYM61r3e7sWu48cqnbl06q0igvIPVHe9gROtF5PJFqKocHuuDLNYEzZVFwUsVZrAkX04GcS98yCIJHePRO+pDu0u+zrLSWfNplVoSXkpiVHKdbZ1qGC1+z1Nqnu+TGdYaFhO60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747817936; c=relaxed/simple;
-	bh=cLZbAH3cI8GYQszXgLGU9IFYoJPGHxcZkZ0FHMaI3Rg=;
+	s=arc-20240116; t=1747817982; c=relaxed/simple;
+	bh=i4wZouwFlkojP3jWV+qlAhibaIlOcs9zqHWcwHgDZ9g=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Hf08ao6Ame5PDIsAqICQtW+S7ySlKR16DAcHqetGUA5g/7vil6JLt9+LvS2kcwNcyslV5uCLJCNicypcjtLwpblChxCHF/E3GnHApCmpkF2A9D7UkV2VqQO8ad5ErY08S6X6T76nSxZPOo8DgVBzmf9D1B7WBY/uXqIJ5rrS99o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LGh9DoA4; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 To:Cc:Content-Type; b=mRtB1ystu98hrIjLzqMH3ruPEF9lmL466Gta80aQBmHbtj5AC8DqWNONz6YQmvtrJt4rxeNy9FPKeVR4E9eeq6l0t7bXNHeSvsurQLxCWKBzDDppbdBybWERTQd0gRjdco4nJK0t81XKFG5pT2pxiss+YOmjjscLsTQSixkRfQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Q3frywYX; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LGh9DoA4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747817932;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=eVISUslNkkC359wr6/5NqmJ9IWZFEQzKItzM+WQ542w=;
-	b=LGh9DoA46FgbRoMNm0QAHGkVhRhC9EiwTfXlkaWC9btd4kPc5OiohoXRf3z4cNp3dp0sc/
-	1sutdA3cfm/CznPtgKSNjt/FtyS1kn3QwHQTxQ1i6Qyn+YRLQa3Yx9DbL/WNT1K4Wexi5D
-	eOU0QZ27FtgbKGOYny8x3lDbsO7nUbQ=
-Received: from mail-yw1-f197.google.com (mail-yw1-f197.google.com
- [209.85.128.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-546-dHI4BA7hOO2R_FMqV8G5cA-1; Wed, 21 May 2025 04:58:51 -0400
-X-MC-Unique: dHI4BA7hOO2R_FMqV8G5cA-1
-X-Mimecast-MFC-AGG-ID: dHI4BA7hOO2R_FMqV8G5cA_1747817930
-Received: by mail-yw1-f197.google.com with SMTP id 00721157ae682-70df9b0b9d9so2610867b3.3
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 01:58:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q3frywYX"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-32805275d68so35470321fa.3
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 01:59:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747817979; x=1748422779; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=lsmGTT3WJ7QBK0EqaweIw3NkYfBoONRBDLxbR8aeSoc=;
+        b=Q3frywYXVGS/GqP/bXC0IyC6FGz4fam804mylDYcZ4P4KUiKmKnyZV47hBuVjRk72K
+         je0iaisB65M49Dh8A8ZMm3ZbT3dKRkTsaPG59/nric2Ef4N37g33a3CcJH4s4uVySyN6
+         +ly3AtSdFdK9ws5UCguL+1YQ1blqP/P16XutTdlIOyIDWLeAKQSnmuRVrORlNsGw6A6c
+         6XpDG1A54teVIAPoyPrrMYiaR9JjOBBPX3IMOW7Zc+BwzYkHGwstuDqxbpPRKCT7UbM3
+         sHMMi4RXURZUf7iroqt8oX4D6tz6c5pn7TLdFXDHs1HJow6QLmytc29KI2syRnA5truu
+         YKvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747817930; x=1748422730;
+        d=1e100.net; s=20230601; t=1747817979; x=1748422779;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=eVISUslNkkC359wr6/5NqmJ9IWZFEQzKItzM+WQ542w=;
-        b=ZxxJlMYyoBsmLjtrXx/b8UjvY6gf81VKAisdO9WDjfTmFU+iaB3MVyGBPTUmDAdb6o
-         3LK9XWbYV8S/749hLgTUXVqaZPsP8MX8jYdpkhfTLHELY0wZe7HbK+ztqvK23FceXsR9
-         wYDn6fkVLWCEiVwjUwf5vDpU6suItjaxpzrnBh23APt249NYpvFz/EPrv045mKyttka7
-         oXCqy/lsL3XFH/cBdN+EwMPI9uHIE3NFXakoNIMgOZgz97FZV9BX32etf8rBdsBY/AJ5
-         dwWwkz19ev74CMdB2Wn5syFkrEfEo3VYEGAqxwVfvoXJLHfuoG2ou3REFy780ZcDo38I
-         VD5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCX94fBlUG1DlDQviY5M1YXigRfrbtvMgEU9oK5hRmDpbagupUc7LsQsG3tO6YMwrBMXahrxfiv58RU1Y40=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHaWXqAEXLrU5wamXxKRv7nsfU4vxNyiO83vnGclmOIAN0dNFq
-	tWN9c7Y7shuadKYUtoCjHuYFXhdNhjvpelqBLagiAfgp/Ha5bb3UEdi+y7QG3osB7JpIzvHwEsT
-	4DXXgOUs7MdrtqUdCqyv0A/OIC87kF5+u2Ql+SjgdqkoL+RN04d/0lRO6QqmJnS0nwLJjO7pO1Z
-	imSEDRc4dRR1Nyt7ZpnuYJbDAZE19+OPjvidkEAhSbVgTa5klB
-X-Gm-Gg: ASbGncvMopJgXTQmuXMmukK4cWNvFKqj4XP/dcVFxARGOOAaWvlpSyXfQmA3RVbh58m
-	/d3elPvK4FHH+LDvguQ6EbAi2r1Mzlr46To590Gw4RH0Z9EljRNNEpLEs80OadAjgSik=
-X-Received: by 2002:a05:690c:386:b0:709:1b68:9f5c with SMTP id 00721157ae682-70ca79efe56mr284490567b3.16.1747817930400;
-        Wed, 21 May 2025 01:58:50 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEbsmo76CHdnOR6GqD8MpHPXZmwbQT3nuKbnT5FlUWzjISwiCA3vCYiMP0N1f4gKVoMHCzEb54dGnO5DlBvWi4=
-X-Received: by 2002:a05:690c:386:b0:709:1b68:9f5c with SMTP id
- 00721157ae682-70ca79efe56mr284490257b3.16.1747817929934; Wed, 21 May 2025
- 01:58:49 -0700 (PDT)
+        bh=lsmGTT3WJ7QBK0EqaweIw3NkYfBoONRBDLxbR8aeSoc=;
+        b=OIcf/t3zkrLFr0UaoduJsD3IDZASR1KPhaMAQ6i46IImpqd3GLAE7xaE2j+mxoisJe
+         U8ggjg0uyRfMWuIR+tTBgXmeV9VreQe3KKt5lluFQj3YNHgTD7FmhQafvx81J3fJx0LI
+         jeI6ubjlPcyk2iO6cXBWaQqyw3VtVBpKlxMj7oxPYdZl4L0+HzictHAlPbywrtYLFoGi
+         d9UtPPAPgTKY/fBMZgkgISPa/EMKYh9vIvf1zWHD7W7YlfJp4sNoE1PCPX1ITYi7+hXR
+         g6bFYAI5OqNZKWdraPPH0Si+08En3ou5sNcWXYLmdMh2dwk5cCaYnVTRew8KvReUu9CL
+         eo3g==
+X-Forwarded-Encrypted: i=1; AJvYcCUn5jvH4RUhSoA8BMM5Qe3do+S8b4809RCNG2ql6As1shZFE+eHv1qneh99AAhrmkxwkkIzX7u04fqGhjs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywd1E9cV2qqQByuhSPDM1zntM3aCgtdZRuiOMpCaAkxERwtN41x
+	BrOhR6pJYVhIKjsFrKikc3KRiJVzJTdJ0xQ2Tkv9YjDrBXl9EyvTDaY7ER/oc0D1Z1nBYbgsfgL
+	JLxqkVSBUzMDbFwnYCG12BKWN3F5RS6FV//8PGQ4K
+X-Gm-Gg: ASbGncsYyzuTtiWvQCy4jFKdehjpqGbriuhZGIvkZQmrNbpZX+7iru79ohG7oPIUCO+
+	EznRjwUqh99oh+FsUdXOK6xADNax6DA0heqWjWQ1bCquoaz+oCQJJlqv55R4FH3ljtbAHNDdMdu
+	gZkBH+Q7QZnhHaRk+Ng1J5ni0lsenEEQt5KkTu6MHBmrIUVHOxNQziuYYjJAX4dyE3KZvmffAGp
+	Mc=
+X-Google-Smtp-Source: AGHT+IEUyqnFN/BfMkVdGPu+JwoBWcxfxJ4tRllplvtsrVwylzIEz++xeiOZkSqczqg4oMjQZrC8vZw9SpFHBrMWTII=
+X-Received: by 2002:a05:651c:2229:b0:30b:efa5:69c3 with SMTP id
+ 38308e7fff4ca-3280778ac09mr79117911fa.22.1747817978687; Wed, 21 May 2025
+ 01:59:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ca3jkuttkt3yfdgcevp7s3ejrxx3ngkoyuopqw2k2dtgsqox7w@fhicoics2kiv>
- <20250521020613.3218651-1-niuxuewei.nxw@antgroup.com> <bbn4lvdwh42m2zvi3rdyws66y5ulew32rchtz3kxirqlllkr63@7toa4tcepax3>
-In-Reply-To: <bbn4lvdwh42m2zvi3rdyws66y5ulew32rchtz3kxirqlllkr63@7toa4tcepax3>
-From: Stefano Garzarella <sgarzare@redhat.com>
-Date: Wed, 21 May 2025 10:58:38 +0200
-X-Gm-Features: AX0GCFs5skc8nIzcPaCTdrKZN88iXmzsQVaSrJKyy593gFhRVNImi9lYzr9o8V4
-Message-ID: <CAGxU2F78hGUarnzz8Mf1UUOHPQin_Mf4U=wX0nASzmNTr1A6+g@mail.gmail.com>
-Subject: Re: [PATCH 2/3] vsock/virtio: Add SIOCINQ support for all virtio
- based transports
-To: Xuewei Niu <niuxuewei97@gmail.com>, Krasnov Arseniy <Oxffffaa@gmail.com>
-Cc: davem@davemloft.net, fupan.lfp@antgroup.com, jasowang@redhat.com, 
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, mst@redhat.com, 
-	niuxuewei.nxw@antgroup.com, pabeni@redhat.com, stefanha@redhat.com, 
-	virtualization@lists.linux.dev, xuanzhuo@linux.alibaba.com
+References: <cover.1747817128.git.dvyukov@google.com> <138c29bd5f5a0a22270c9384ecc721c40b7d8fbd.1747817128.git.dvyukov@google.com>
+In-Reply-To: <138c29bd5f5a0a22270c9384ecc721c40b7d8fbd.1747817128.git.dvyukov@google.com>
+From: Dmitry Vyukov <dvyukov@google.com>
+Date: Wed, 21 May 2025 10:59:27 +0200
+X-Gm-Features: AX0GCFtGAPb8-GG75JNkuSMgwg8Mwu_bG6XNoqFo6nwKLpneMMwMEV1UdKOAo7M
+Message-ID: <CACT4Y+ZcQV3JWEaeh7BXNwXUsoH6RcVRyG2iNUA+_mrOBOHfNA@mail.gmail.com>
+Subject: Re: [PATCH v7 3/4] rseq: Make rseq work with protection keys
+To: mathieu.desnoyers@efficios.com, peterz@infradead.org, boqun.feng@gmail.com, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, hpa@zytor.com, aruna.ramakrishna@oracle.com, 
+	elver@google.com
+Cc: "Paul E. McKenney" <paulmck@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org, 
+	Ingo Molnar <mingo@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 
-Forgot to CC Arseniy.
+On Wed, 21 May 2025 at 10:52, Dmitry Vyukov <dvyukov@google.com> wrote:
+>
+> If an application registers rseq, and ever switches to another pkey
+> protection (such that the rseq becomes inaccessible), then any
+> context switch will cause failure in __rseq_handle_notify_resume()
+> attempting to read/write struct rseq and/or rseq_cs. Since context
+> switches are asynchronous and are outside of the application control
+> (not part of the restricted code scope), temporarily switch to
+> pkey value that allows access to the 0 (default) PKEY.
+>
+> Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
+> Reviewed-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: "Paul E. McKenney" <paulmck@kernel.org>
+> Cc: Boqun Feng <boqun.feng@gmail.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
+> Cc: x86@kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Fixes: d7822b1e24f2 ("rseq: Introduce restartable sequences system call")
 
-On Wed, 21 May 2025 at 10:57, Stefano Garzarella <sgarzare@redhat.com> wrote:
->
-> On Wed, May 21, 2025 at 10:06:13AM +0800, Xuewei Niu wrote:
-> >> On Mon, May 19, 2025 at 03:06:48PM +0800, Xuewei Niu wrote:
-> >> >The virtio_vsock_sock has a new field called bytes_unread as the return
-> >> >value of the SIOCINQ ioctl.
-> >> >
-> >> >Though the rx_bytes exists, we introduce a bytes_unread field to the
-> >> >virtio_vsock_sock struct. The reason is that it will not be updated
-> >> >until the skbuff is fully consumed, which causes inconsistency.
-> >> >
-> >> >The byte_unread is increased by the length of the skbuff when skbuff is
-> >> >enqueued, and it is decreased when dequeued.
-> >> >
-> >> >Signed-off-by: Xuewei Niu <niuxuewei.nxw@antgroup.com>
-> >> >---
-> >> > drivers/vhost/vsock.c                   |  1 +
-> >> > include/linux/virtio_vsock.h            |  2 ++
-> >> > net/vmw_vsock/virtio_transport.c        |  1 +
-> >> > net/vmw_vsock/virtio_transport_common.c | 17 +++++++++++++++++
-> >> > net/vmw_vsock/vsock_loopback.c          |  1 +
-> >> > 5 files changed, 22 insertions(+)
-> >> >
-> >> >diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
-> >> >index 802153e23073..0f20af6e5036 100644
-> >> >--- a/drivers/vhost/vsock.c
-> >> >+++ b/drivers/vhost/vsock.c
-> >> >@@ -452,6 +452,7 @@ static struct virtio_transport vhost_transport = {
-> >> >            .notify_set_rcvlowat      = virtio_transport_notify_set_rcvlowat,
-> >> >
-> >> >            .unsent_bytes             = virtio_transport_unsent_bytes,
-> >> >+           .unread_bytes             = virtio_transport_unread_bytes,
-> >> >
-> >> >            .read_skb = virtio_transport_read_skb,
-> >> >    },
-> >> >diff --git a/include/linux/virtio_vsock.h b/include/linux/virtio_vsock.h
-> >> >index 0387d64e2c66..0a7bd240113a 100644
-> >> >--- a/include/linux/virtio_vsock.h
-> >> >+++ b/include/linux/virtio_vsock.h
-> >> >@@ -142,6 +142,7 @@ struct virtio_vsock_sock {
-> >> >    u32 buf_alloc;
-> >> >    struct sk_buff_head rx_queue;
-> >> >    u32 msg_count;
-> >> >+   size_t bytes_unread;
-> >>
-> >> Can we just use `rx_bytes` field we already have?
-> >>
-> >> Thanks,
-> >> Stefano
-> >
-> >I perfer not. The `rx_bytes` won't be updated until the skbuff is fully
-> >consumed, causing inconsistency issues. If it is acceptable to you, I'll
-> >reuse the field instead.
->
-> I think here we found a little pre-existing issue that should be related
-> also to what Arseniy (CCed) is trying to fix (low_rx_bytes).
->
-> We basically have 2 counters:
-> - rx_bytes, which we use internally to see if there are bytes to read
->    and for sock_rcvlowat
-> - fwd_cnt, which we use instead for the credit mechanism and informing
->    the other peer whether we have space or not
->
-> These are updated with virtio_transport_dec_rx_pkt() and
-> virtio_transport_inc_rx_pkt()
->
-> As far as I can see, from the beginning, we call
-> virtio_transport_dec_rx_pkt() only when we consume the entire packet.
-> This makes sense for `fwd_cnt`, because we still have occupied space in
-> memory and we don't want to update the credit until we free all the
-> space, but I think it makes no sense for `rx_bytes`, which is only used
-> internally and should reflect the current situation of bytes to read.
->
-> So in my opinion we should fix it this way (untested):
->
-> diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
-> index 11eae88c60fc..ee70cb114328 100644
-> --- a/net/vmw_vsock/virtio_transport_common.c
-> +++ b/net/vmw_vsock/virtio_transport_common.c
-> @@ -449,10 +449,10 @@ static bool virtio_transport_inc_rx_pkt(struct virtio_vsock_sock *vvs,
->   }
->
->   static void virtio_transport_dec_rx_pkt(struct virtio_vsock_sock *vvs,
-> -                                       u32 len)
-> +                                       u32 bytes_read, u32 bytes_dequeued)
->   {
-> -       vvs->rx_bytes -= len;
-> -       vvs->fwd_cnt += len;
-> +       vvs->rx_bytes -= bytes_read;
-> +       vvs->fwd_cnt += bytes_dequeued;
->   }
->
->   void virtio_transport_inc_tx_pkt(struct virtio_vsock_sock *vvs, struct sk_buff *skb)
-> @@ -581,11 +581,11 @@ virtio_transport_stream_do_dequeue(struct vsock_sock *vsk,
->                                    size_t len)
->   {
->         struct virtio_vsock_sock *vvs = vsk->trans;
-> -       size_t bytes, total = 0;
->         struct sk_buff *skb;
->         u32 fwd_cnt_delta;
->         bool low_rx_bytes;
->         int err = -EFAULT;
-> +       size_t total = 0;
->         u32 free_space;
->
->         spin_lock_bh(&vvs->rx_lock);
-> @@ -597,6 +597,8 @@ virtio_transport_stream_do_dequeue(struct vsock_sock *vsk,
->         }
->
->         while (total < len && !skb_queue_empty(&vvs->rx_queue)) {
-> +               size_t bytes, dequeued = 0;
-> +
->                 skb = skb_peek(&vvs->rx_queue);
->
->                 bytes = min_t(size_t, len - total,
-> @@ -620,12 +622,12 @@ virtio_transport_stream_do_dequeue(struct vsock_sock *vsk,
->                 VIRTIO_VSOCK_SKB_CB(skb)->offset += bytes;
->
->                 if (skb->len == VIRTIO_VSOCK_SKB_CB(skb)->offset) {
-> -                       u32 pkt_len = le32_to_cpu(virtio_vsock_hdr(skb)->len);
-> -
-> -                       virtio_transport_dec_rx_pkt(vvs, pkt_len);
-> +                       dequeued = le32_to_cpu(virtio_vsock_hdr(skb)->len);
->                         __skb_unlink(skb, &vvs->rx_queue);
->                         consume_skb(skb);
->                 }
-> +
-> +               virtio_transport_dec_rx_pkt(vvs, bytes, dequeued);
->         }
->
->         fwd_cnt_delta = vvs->fwd_cnt - vvs->last_fwd_cnt;
-> @@ -782,7 +784,7 @@ static int virtio_transport_seqpacket_do_dequeue(struct vsock_sock *vsk,
->                                 msg->msg_flags |= MSG_EOR;
->                 }
->
-> -               virtio_transport_dec_rx_pkt(vvs, pkt_len);
-> +               virtio_transport_dec_rx_pkt(vvs, pkt_len, pkt_len);
->                 vvs->bytes_unread -= pkt_len;
->                 kfree_skb(skb);
->         }
-> @@ -1752,6 +1754,7 @@ int virtio_transport_read_skb(struct vsock_sock *vsk, skb_read_actor_t recv_acto
->         struct sock *sk = sk_vsock(vsk);
->         struct virtio_vsock_hdr *hdr;
->         struct sk_buff *skb;
-> +       u32 pkt_len;
->         int off = 0;
->         int err;
->
-> @@ -1769,7 +1772,8 @@ int virtio_transport_read_skb(struct vsock_sock *vsk, skb_read_actor_t recv_acto
->         if (le32_to_cpu(hdr->flags) & VIRTIO_VSOCK_SEQ_EOM)
->                 vvs->msg_count--;
->
-> -       virtio_transport_dec_rx_pkt(vvs, le32_to_cpu(hdr->len));
-> +       pkt_len = le32_to_cpu(hdr->len);
-> +       virtio_transport_dec_rx_pkt(vvs, pkt_len, pkt_len);
->         spin_unlock_bh(&vvs->rx_lock);
->
->         virtio_transport_send_credit_update(vsk);
->
-> @Arseniy WDYT?
-> I will test it and send a proper patch.
->
-> @Xuewei with that fixed, I think you can use `rx_bytes`, right?
->
-> Also because you missed for example `virtio_transport_read_skb()` used
-> by ebpf (see commit 3543152f2d33 ("vsock: Update rx_bytes on
-> read_skb()")).
->
-> Thanks,
-> Stefano
+Dave, can you please ack this patch? Ingo said he was waiting for your
+review before taking this to -tip.
 
+> ---
+> Changes in v7:
+>  - Added Mathieu's Reviewed-by
+>
+> Changes in v6:
+>  - Added a comment to struct rseq with MPK rules
+>
+> Changes in v4:
+>  - Added Fixes tag
+>
+> Changes in v3:
+>  - simplify control flow to always enable access to 0 pkey
+>
+> Changes in v2:
+>  - fixed typos and reworded the comment
+> ---
+>  include/uapi/linux/rseq.h |  4 ++++
+>  kernel/rseq.c             | 11 +++++++++++
+>  2 files changed, 15 insertions(+)
+>
+> diff --git a/include/uapi/linux/rseq.h b/include/uapi/linux/rseq.h
+> index c233aae5eac90..019fd248cf749 100644
+> --- a/include/uapi/linux/rseq.h
+> +++ b/include/uapi/linux/rseq.h
+> @@ -58,6 +58,10 @@ struct rseq_cs {
+>   * contained within a single cache-line.
+>   *
+>   * A single struct rseq per thread is allowed.
+> + *
+> + * If struct rseq or struct rseq_cs is used with Memory Protection Keys,
+> + * then the assigned pkey should either be accessible whenever these structs
+> + * are registered/installed, or they should be protected with pkey 0.
+>   */
+>  struct rseq {
+>         /*
+> diff --git a/kernel/rseq.c b/kernel/rseq.c
+> index b7a1ec327e811..88fc8cb789b3b 100644
+> --- a/kernel/rseq.c
+> +++ b/kernel/rseq.c
+> @@ -10,6 +10,7 @@
+>
+>  #include <linux/sched.h>
+>  #include <linux/uaccess.h>
+> +#include <linux/pkeys.h>
+>  #include <linux/syscalls.h>
+>  #include <linux/rseq.h>
+>  #include <linux/types.h>
+> @@ -424,11 +425,19 @@ static int rseq_ip_fixup(struct pt_regs *regs)
+>  void __rseq_handle_notify_resume(struct ksignal *ksig, struct pt_regs *regs)
+>  {
+>         struct task_struct *t = current;
+> +       pkey_reg_t saved_pkey;
+>         int ret, sig;
+>
+>         if (unlikely(t->flags & PF_EXITING))
+>                 return;
+>
+> +       /*
+> +        * Enable access to the default (0) pkey in case the thread has
+> +        * currently disabled access to it and struct rseq/rseq_cs has
+> +        * 0 pkey assigned (the only supported value for now).
+> +        */
+> +       saved_pkey = enable_zero_pkey_val();
+> +
+>         /*
+>          * regs is NULL if and only if the caller is in a syscall path.  Skip
+>          * fixup and leave rseq_cs as is so that rseq_sycall() will detect and
+> @@ -441,9 +450,11 @@ void __rseq_handle_notify_resume(struct ksignal *ksig, struct pt_regs *regs)
+>         }
+>         if (unlikely(rseq_update_cpu_node_id(t)))
+>                 goto error;
+> +       write_pkey_val(saved_pkey);
+>         return;
+>
+>  error:
+> +       write_pkey_val(saved_pkey);
+>         sig = ksig ? ksig->sig : 0;
+>         force_sigsegv(sig);
+>  }
+> --
+> 2.49.0.1143.g0be31eac6b-goog
+>
