@@ -1,93 +1,164 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AE9B23504B;
-	Wed, 21 May 2025 15:35:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9580221DB5;
+	Wed, 21 May 2025 15:35:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747841724; cv=none; b=No4lGjA4dhVPrCMdt6yaAmICmR7kX6yCkqBCcwUQPvTTsWtkumlKIxnnNHCKxK6Ildbfz+GNuzAD6/pUxdAb2aIdf3bt5f/9QVehGjX0c2wm+iTkZmLhnHARAMe06zQjoOKSZn379HfpQkgr9gXHRtB4ZbJMThQcxHmH448AubY=
+	t=1747841730; cv=none; b=bWcyVB4a/VwcTI+0WWqXy7VogwJSV+gB50A1yPV+mvQCvxFbMmlg403gLifzuwqNFpvKQjeMtVjNOZn4ul6EM16RTpD8GllHCjJNGgLOgaWONzEwmcAVnWPJn5Uugc/q9aG2nfZOkVxOrcAvJSLAiJ9ogq4tLjafB060yhDNhYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747841724; c=relaxed/simple;
-	bh=XooCWNNRqdvEVYuLjZIbG1ceuypLG3gFSa95qeXEvfE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=Kzva44tUJ4SpMYuPbUYigPjC8MQLZlSbS9Oowj/IXHWwCeJ6Ug93il7rE/+4Ug9Ol5qI2N5ZgBnjN/rzJQ/PUvtMCd8PvZ67DlhEs1uu8kJO7NWm9kU3odybUTuEgnXyo1Z8nLAomRwVTx3PGRZPVOlbvhP5Ug7N29nfheqD9ac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=oFrr2zGL reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1747841730; c=relaxed/simple;
+	bh=SvoYm9cLZxsVGUhdWCKXpdKXEpXhlruEw3SXmHGIogA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=OGjm5iKsCZt3HvMlCFiBjABhQfvE04fVcTYXEwLvz/MRytrQlTwR9MOf+GVdivevJGhCDyhIPvDXU1rwpqYb0jlbTNRMKZzMou8v6E4N28VU/3yCaQTg64632OLB2yRg+PgDR8/i2X5P3e/j5KnY4LEW6nlK7JzX20E6xam7Srk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LHaSSF/F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="oFrr2zGL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:To:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=HX9rihR1zHLjYS5jyqHPAYE/ranZ14TkA50FbFx3orU=; b=o
-	Frr2zGLthFHzFYVAcUkBUjXXLOSlZ120AH5LcIkqNWnIIuyCUTpX9LUY89c+Le28
-	loAaGbNxdix/dnKKWpTsG+FuYH/ptqG+OYpduJUWHv5qIMBIfZegk28gwR3ZqXor
-	9uwKQPl/9aRdKOSMEW9rWrbsUbxeNzGwvMuB3b6B9A=
-Received: from 00107082$163.com ( [111.35.189.95] ) by
- ajax-webmail-wmsvr-40-135 (Coremail) ; Wed, 21 May 2025 23:34:33 +0800
- (CST)
-Date: Wed, 21 May 2025 23:34:33 +0800 (CST)
-From: "David Wang" <00107082@163.com>
-To: "Greg KH" <gregkh@linuxfoundation.org>, oneukum@suse.com,
-	mathias.nyman@intel.com
-Cc: stern@rowland.harvard.edu, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] USB: core: add a memory pool to urb caching
- host-controller private data
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
- Copyright (c) 2002-2025 www.mailtech.cn 163com
-In-Reply-To: <5d02ca20.a42f.196f3251196.Coremail.00107082@163.com>
-References: <20250517083819.6127-1-00107082@163.com>
- <2025052148-cannot-football-74e1@gregkh>
- <572f1814.9a08.196f2971eea.Coremail.00107082@163.com>
- <2025052132-sloped-strewn-397a@gregkh>
- <5d02ca20.a42f.196f3251196.Coremail.00107082@163.com>
-X-NTES-SC: AL_Qu2fBfSfvk4s5SeZYukZnEYQheY4XMKyuPkg1YJXOp80hiXs5y0de1tdNELQyv2tARCglDysXjJszPZVeZNJZIy7KvkByAZv0zRQ0kTHlPVY
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LHaSSF/F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F383BC4CEE4;
+	Wed, 21 May 2025 15:35:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747841730;
+	bh=SvoYm9cLZxsVGUhdWCKXpdKXEpXhlruEw3SXmHGIogA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=LHaSSF/Fy3guyqdDiWwPzUqDlUzYT6GKMDfJ389bO4fjwDTbytNCRXezZ7UHxA709
+	 Sdb1e8VneNYpNnkWVceB+mqVblHC66pes2ZAV68PDMWohN6WZ+Albwsw71wvUGJ3tC
+	 +yV802jx2wBz4SazDoP1rvLJ9k2/QoclqlnKHElwtQN4UiIXgRErZk67qFFaMSEO6T
+	 /7Nldxppb/KMXbh23+w38saz3xkMcNEOdHgHiMVJOXHck7Nkn7E5P7YuxX47kIDsRz
+	 AG5tlA8FhKwuqpoRmW3Bn5Qx54IhD8v2QYnR0jPFiB5UFsB+VTwqjErNq6oz845m+x
+	 9yqw0Hqj1T/hQ==
+From: Lee Jones <lee@kernel.org>
+To: lee@kernel.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Jens Axboe <axboe@kernel.dk>,
+	Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>,
+	Sasha Levin <sashal@kernel.org>,
+	Michal Luczaj <mhal@rbox.co>,
+	Rao Shoaib <Rao.Shoaib@oracle.com>,
+	Simon Horman <horms@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Cc: stable@vger.kernel.org,
+	Shigeru Yoshida <syoshida@redhat.com>,
+	syzkaller <syzkaller@googlegroups.com>
+Subject: [PATCH v6.1 27/27] af_unix: Fix uninit-value in __unix_walk_scc()
+Date: Wed, 21 May 2025 16:27:26 +0100
+Message-ID: <20250521152920.1116756-28-lee@kernel.org>
+X-Mailer: git-send-email 2.49.0.1143.g0be31eac6b-goog
+In-Reply-To: <20250521152920.1116756-1-lee@kernel.org>
+References: <20250521152920.1116756-1-lee@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <69909e94.a8db.196f37b69fb.Coremail.00107082@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:hygvCgD3_waK8i1oKAQKAA--.25306W
-X-CM-SenderInfo: qqqrilqqysqiywtou0bp/xtbB0gdUqmgt31KRMgAEsE
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Transfer-Encoding: 8bit
 
-QXQgMjAyNS0wNS0yMSAyMjowMDoxNCwgIkRhdmlkIFdhbmciIDwwMDEwNzA4MkAxNjMuY29tPiB3
-cm90ZToKPgo+V2hlbiBsb29raW5nIGluIGNvZGVzLCBJIG5vdGljZSB4ZW4taGNkIGhhdmUgYWxy
-ZWFkeSBpbXBsZW1lbnRlZCBhIG1lbXBvb2wsIGZvciBleGFtcGxlOgo+ZHJpdmVycy91c2IvaG9z
-dC94ZW4taGNkLmMKPjEzMjMgc3RhdGljIGludCB4ZW5oY2RfdXJiX2VucXVldWUoc3RydWN0IHVz
-Yl9oY2QgKmhjZCwgc3RydWN0IHVyYiAqdXJiCj4uLi4KPjEzMzQgICAgICAgICB1cmJwID0ga21l
-bV9jYWNoZV96YWxsb2MoeGVuaGNkX3VyYnBfY2FjaGVwLCBtZW1fZmxhZ3MpOwo+MTMzNSAgICAg
-ICAgIGlmICghdXJicCkKPjEzMzYgICAgICAgICAgICAgICAgIHJldHVybiAtRU5PTUVNOwo+MTMz
-NyAKPjEzMzggICAgICAgICBzcGluX2xvY2tfaXJxc2F2ZSgmaW5mby0+bG9jaywgZmxhZ3MpOwo+
-MTMzOSAKPjEzNDAgICAgICAgICB1cmJwLT51cmIgPSB1cmI7Cj4xMzQxICAgICAgICAgdXJiLT5o
-Y3ByaXYgPSB1cmJwOwo+MTM0MiAgICAgICAgIHVyYnAtPnJlcV9pZCA9IH4wOwo+Cj5CdXQgbW9z
-dCBvdGhlcnMgc3RpbGwgdXNlIGt6YWxsb2MuICAgCj5CZXR3ZWVuIGttZW1fY2FjaGUgYW5kIGEg
-bWVtIHNsb3QgaW4gVVJCLCBJIHdhbnQgc2F5IHRoZSBtZW0gc2xvdCBpbiBVUkIgaXMgbWFuYWdl
-ZCBtb3JlIGVmZmljaWVudGx5L2JhbGFuY2VkLAo+YW5kIHdvdWxkIGl0IGJlICBoZWFsdGh5IHRv
-IGFkZCBrbWVtX2NhY2hlIGluIGVhY2ggaGNkcyBhcyB0aGV5IHNlZSB0aGUgbmVlZHMsIHdlIHdv
-dWxkIGhhdmUgc2VwYXJhdGVkIGttZW1fY2FjaGUKPmV2ZXJ5d2hlcmUuCj4KPgo+VGhhbmtzCj5E
-YXZpZAoKaGNkcyBmb3VuZCB1c2luZyBrbWVtX2NhY2hlICBmb3IgaGMgcHJpdmF0ZSBkYXRhOgoK
-Li9kcml2ZXJzL3VzYi9kd2MyL2hjZC5jOgkJaHNvdGctPmRlc2NfZ2VuX2NhY2hlID0ga21lbV9j
-YWNoZV9jcmVhdGUoImR3YzItZ2VuLWRlc2MiLAouL2RyaXZlcnMvdXNiL2R3YzIvaGNkLmM6CQlo
-c290Zy0+ZGVzY19oc2lzb2NfY2FjaGUgPSBrbWVtX2NhY2hlX2NyZWF0ZSgiZHdjMi1oc2lzb2Mt
-ZGVzYyIsCi4vZHJpdmVycy91c2IvZHdjMi9oY2QuYzoJCWhzb3RnLT51bmFsaWduZWRfY2FjaGUg
-PSBrbWVtX2NhY2hlX2NyZWF0ZSgiZHdjMi11bmFsaWduZWQtZG1hIiwKLi9kcml2ZXJzL3VzYi9p
-c3AxNzYwL2lzcDE3NjAtaGNkLmM6CXVyYl9saXN0aXRlbV9jYWNoZXAgPSBrbWVtX2NhY2hlX2Ny
-ZWF0ZSgiaXNwMTc2MF91cmJfbGlzdGl0ZW0iLAouL2RyaXZlcnMvdXNiL2lzcDE3NjAvaXNwMTc2
-MC1oY2QuYzoJcXRkX2NhY2hlcCA9IGttZW1fY2FjaGVfY3JlYXRlKCJpc3AxNzYwX3F0ZCIsCi4v
-ZHJpdmVycy91c2IvaXNwMTc2MC9pc3AxNzYwLWhjZC5jOglxaF9jYWNoZXAgPSBrbWVtX2NhY2hl
-X2NyZWF0ZSgiaXNwMTc2MF9xaCIsIHNpemVvZihzdHJ1Y3QgaXNwMTc2MF9xaCksCi4vZHJpdmVy
-cy91c2IvaG9zdC91aGNpLWhjZC5jOgl1aGNpX3VwX2NhY2hlcCA9IGttZW1fY2FjaGVfY3JlYXRl
-KCJ1aGNpX3VyYl9wcml2IiwKLi9kcml2ZXJzL3VzYi9ob3N0L3hlbi1oY2QuYzoJeGVuaGNkX3Vy
-YnBfY2FjaGVwID0ga21lbV9jYWNoZV9jcmVhdGUoInhlbmhjZF91cmJfcHJpdiIsCgpJIHRoaW5r
-IHRob3NlIGhjZHMgaGF2ZSBhbHJlYWR5IGNvbnNpZGVyZWQgdGhlIGhpZ2ggZnJlcXVlbmN5IG9m
-IG1lbW9yeSBhbGxvY2F0aW9uIGZvciBwcml2YXRlIGRhdGEgIGFzIGFuIGlzc3VlIGFuZAphZGRy
-ZXNzIGl0IHZpYSBhIGNvbnN0IHNpemVkIG1lbW9yeSBwb29sLi4KeGhjaSBjb3VsZCBub3QgZm9s
-bG93IHRoaXMgcGF0dGVybiBzaW5jZSBpdCBuZWVkcyBhIHZhcmlhYmxlIGxlbmd0aCBtZW1vcnku
-CkJ1dCBpcyB0aGlzIGEgZ29vZCBwYXR0ZXJuIHRvIGZvbGxvdz8gQSBzaW5nbGUgc2xvdCBvZiBt
-ZW1vcnkgaW4gVVJCIGNhbiBoYW5kbGUgYWxsIHRob3NlIHJlcXVlc3QuCgoKVGhhbmtzCkRhdmlk
-CiAgCgo=
+From: Shigeru Yoshida <syoshida@redhat.com>
+
+[ Upstream commit 927fa5b3e4f52e0967bfc859afc98ad1c523d2d5 ]
+
+KMSAN reported uninit-value access in __unix_walk_scc() [1].
+
+In the list_for_each_entry_reverse() loop, when the vertex's index
+equals it's scc_index, the loop uses the variable vertex as a
+temporary variable that points to a vertex in scc. And when the loop
+is finished, the variable vertex points to the list head, in this case
+scc, which is a local variable on the stack (more precisely, it's not
+even scc and might underflow the call stack of __unix_walk_scc():
+container_of(&scc, struct unix_vertex, scc_entry)).
+
+However, the variable vertex is used under the label prev_vertex. So
+if the edge_stack is not empty and the function jumps to the
+prev_vertex label, the function will access invalid data on the
+stack. This causes the uninit-value access issue.
+
+Fix this by introducing a new temporary variable for the loop.
+
+[1]
+BUG: KMSAN: uninit-value in __unix_walk_scc net/unix/garbage.c:478 [inline]
+BUG: KMSAN: uninit-value in unix_walk_scc net/unix/garbage.c:526 [inline]
+BUG: KMSAN: uninit-value in __unix_gc+0x2589/0x3c20 net/unix/garbage.c:584
+ __unix_walk_scc net/unix/garbage.c:478 [inline]
+ unix_walk_scc net/unix/garbage.c:526 [inline]
+ __unix_gc+0x2589/0x3c20 net/unix/garbage.c:584
+ process_one_work kernel/workqueue.c:3231 [inline]
+ process_scheduled_works+0xade/0x1bf0 kernel/workqueue.c:3312
+ worker_thread+0xeb6/0x15b0 kernel/workqueue.c:3393
+ kthread+0x3c4/0x530 kernel/kthread.c:389
+ ret_from_fork+0x6e/0x90 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+
+Uninit was stored to memory at:
+ unix_walk_scc net/unix/garbage.c:526 [inline]
+ __unix_gc+0x2adf/0x3c20 net/unix/garbage.c:584
+ process_one_work kernel/workqueue.c:3231 [inline]
+ process_scheduled_works+0xade/0x1bf0 kernel/workqueue.c:3312
+ worker_thread+0xeb6/0x15b0 kernel/workqueue.c:3393
+ kthread+0x3c4/0x530 kernel/kthread.c:389
+ ret_from_fork+0x6e/0x90 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+
+Local variable entries created at:
+ ref_tracker_free+0x48/0xf30 lib/ref_tracker.c:222
+ netdev_tracker_free include/linux/netdevice.h:4058 [inline]
+ netdev_put include/linux/netdevice.h:4075 [inline]
+ dev_put include/linux/netdevice.h:4101 [inline]
+ update_gid_event_work_handler+0xaa/0x1b0 drivers/infiniband/core/roce_gid_mgmt.c:813
+
+CPU: 1 PID: 12763 Comm: kworker/u8:31 Not tainted 6.10.0-rc4-00217-g35bb670d65fc #32
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-2.fc40 04/01/2014
+Workqueue: events_unbound __unix_gc
+
+Fixes: 3484f063172d ("af_unix: Detect Strongly Connected Components.")
+Reported-by: syzkaller <syzkaller@googlegroups.com>
+Signed-off-by: Shigeru Yoshida <syoshida@redhat.com>
+Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+Link: https://patch.msgid.link/20240702160428.10153-1-syoshida@redhat.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+(cherry picked from commit 927fa5b3e4f52e0967bfc859afc98ad1c523d2d5)
+Signed-off-by: Lee Jones <lee@kernel.org>
+---
+ net/unix/garbage.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/net/unix/garbage.c b/net/unix/garbage.c
+index dfe94a90ece4..23efb78fe9ef 100644
+--- a/net/unix/garbage.c
++++ b/net/unix/garbage.c
+@@ -476,6 +476,7 @@ static void __unix_walk_scc(struct unix_vertex *vertex, unsigned long *last_inde
+ 	}
+ 
+ 	if (vertex->index == vertex->scc_index) {
++		struct unix_vertex *v;
+ 		struct list_head scc;
+ 		bool scc_dead = true;
+ 
+@@ -486,15 +487,15 @@ static void __unix_walk_scc(struct unix_vertex *vertex, unsigned long *last_inde
+ 		 */
+ 		__list_cut_position(&scc, &vertex_stack, &vertex->scc_entry);
+ 
+-		list_for_each_entry_reverse(vertex, &scc, scc_entry) {
++		list_for_each_entry_reverse(v, &scc, scc_entry) {
+ 			/* Don't restart DFS from this vertex in unix_walk_scc(). */
+-			list_move_tail(&vertex->entry, &unix_visited_vertices);
++			list_move_tail(&v->entry, &unix_visited_vertices);
+ 
+ 			/* Mark vertex as off-stack. */
+-			vertex->index = unix_vertex_grouped_index;
++			v->index = unix_vertex_grouped_index;
+ 
+ 			if (scc_dead)
+-				scc_dead = unix_vertex_dead(vertex);
++				scc_dead = unix_vertex_dead(v);
+ 		}
+ 
+ 		if (scc_dead)
+-- 
+2.49.0.1143.g0be31eac6b-goog
+
