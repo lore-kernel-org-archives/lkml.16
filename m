@@ -1,80 +1,96 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6188221549;
-	Wed, 21 May 2025 09:22:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E98A1239E62
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 09:22:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747819361; cv=none; b=uTopTBnEPN4jUnHdRADPQkZy/WHGgOoJe1Ml6dKKSbpAzYPJ27u/12UeY97qBu/Khka2l73O6/4jLPTO1Oo5Ftg3Xnn+pnRJDvAIXxIskDpOYlu71Zj1S8u9XYP5CDhWjeXgwqmWAMgtwMTYw8LCBYpLds2K8mcqmSe0gxeCab4=
+	t=1747819367; cv=none; b=lcSaLuN2d4aTbCGfwxboX8QKp1R5S5Zwzfx8Sc7Q7f5bjVmqkn+ZX2OYLQxIdDZt1zIPC2bgKLoh7Yuq5oHGFnnKBggDkmxqe0RSjAsyJ5xiKmSUZ82LqYOyza0u1xjvgO8erHQOELURL8UkDsa8Xi3qQZ5dVLTubS5yVYdiDhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747819361; c=relaxed/simple;
-	bh=bCmT3vfeUi4izEBzYuy7AQHOHeQpWT2kMw2gXQ95Ijk=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ayszRb1gq+3RYlKWFSTYjDP8MvkV6OWv38oyrDVJzeL4ueHMkUAMDEY3tkIcO9m8F0gwMcqllyw5TveHEDEUZFesbGCQDEqQUCKAbYRpFpJNxh1BkyAIpEyOQuL8K9CgnluWlIiI83Y4LH+YY0EWuUNiiouZktcYBddZ2rbw5aA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4b2Qn60w5Xz6D9Cy;
-	Wed, 21 May 2025 17:17:46 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 597331400F4;
-	Wed, 21 May 2025 17:22:37 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 21 May
- 2025 11:22:36 +0200
-Date: Wed, 21 May 2025 10:22:34 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: <linux-pci@vger.kernel.org>, Jon Pan-Doh <pandoh@google.com>, "Karolina
- Stolarek" <karolina.stolarek@oracle.com>, Weinan Liu <wnliu@google.com>,
-	Martin Petersen <martin.petersen@oracle.com>, Ben Fuller
-	<ben.fuller@oracle.com>, Drew Walton <drewwalton@microsoft.com>, "Anil
- Agrawal" <anilagrawal@meta.com>, Tony Luck <tony.luck@intel.com>, Ilpo
- =?UTF-8?Q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Sathyanarayanan
- Kuppuswamy" <sathyanarayanan.kuppuswamy@linux.intel.com>, Lukas Wunner
-	<lukas@wunner.de>, Sargun Dhillon <sargun@meta.com>, "Paul E . McKenney"
-	<paulmck@kernel.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, "Oliver
- O'Halloran" <oohall@gmail.com>, Kai-Heng Feng <kaihengf@nvidia.com>, "Keith
- Busch" <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>, Terry Bowman
-	<terry.bowman@amd.com>, Shiju Jose <shiju.jose@huawei.com>, Dave Jiang
-	<dave.jiang@intel.com>, <linux-kernel@vger.kernel.org>,
-	<linuxppc-dev@lists.ozlabs.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>
-Subject: Re: [PATCH v7 06/17] PCI/AER: Rename aer_print_port_info() to
- aer_print_source()
-Message-ID: <20250521102234.00005ba9@huawei.com>
-In-Reply-To: <20250520215047.1350603-7-helgaas@kernel.org>
-References: <20250520215047.1350603-1-helgaas@kernel.org>
-	<20250520215047.1350603-7-helgaas@kernel.org>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1747819367; c=relaxed/simple;
+	bh=wELH2J/IT6nUMcutWahGCkII6lye8Rt6V2YclprHGJ8=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=E1QClBkRyqVlg+gwnWZnEZOkzhL5Xdg1PipTqJqxBpyxzppBvekDCNakxHqhml5PiIopMlZiXdEntk5j71X23v/5wQ4lLfyYGvUhqhyfwz8me3q4m63BQsOQFG8ICVFdHMnaM6xXHxJ7jExGtKMZX4wFO4WjdQ498iUnJw5LDSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DiVRJpS2; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DiVRJpS2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747819364;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=9kYvyHsBvtT7cFBXdw28B6joF6f1auo5bdzpPtbct48=;
+	b=DiVRJpS29VT/7IrGJF884QI8TffDQ8aAzY7+0DEmQKjn5owrxPK2bkZ8LD3ZJ5RK5W+QBW
+	IP3ofM3VHV2HwdZtdLvEh9xxJ6jktCsxM+S4Duud+WDMgZTfPyMXD7kicvAg7yD1ZQxJW1
+	IaSTMbnLli6lXaOYTJIfGmQGM23SJP8=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-461-1ZkSnRYnNounJHSvDmB9mA-1; Wed,
+ 21 May 2025 05:22:41 -0400
+X-MC-Unique: 1ZkSnRYnNounJHSvDmB9mA-1
+X-Mimecast-MFC-AGG-ID: 1ZkSnRYnNounJHSvDmB9mA_1747819360
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 513CB18004AD;
+	Wed, 21 May 2025 09:22:40 +0000 (UTC)
+Received: from lenovo-t14s.redhat.com (unknown [10.44.33.64])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id ED802195608F;
+	Wed, 21 May 2025 09:22:37 +0000 (UTC)
+From: Laurent Vivier <lvivier@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: "Michael S. Tsirkin" <mst@redhat.com>,
+	netdev@vger.kernel.org,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+Subject: [PATCH v2 0/3] virtio: Fixes for TX ring sizing and resize error reporting
+Date: Wed, 21 May 2025 11:22:33 +0200
+Message-ID: <20250521092236.661410-1-lvivier@redhat.com>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- frapeml500008.china.huawei.com (7.182.85.71)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Tue, 20 May 2025 16:50:23 -0500
-Bjorn Helgaas <helgaas@kernel.org> wrote:
+This patch series contains two fixes and a cleanup for the virtio subsystem=
+.=0D
+=0D
+The first patch fixes an error reporting bug in virtio_ring's=0D
+virtqueue_resize() function. Previously, errors from internal resize=0D
+helpers could be masked if the subsequent re-enabling of the virtqueue=0D
+succeeded. This patch restores the correct error propagation, ensuring that=
+=0D
+callers of virtqueue_resize() are properly informed of underlying resize=0D
+failures.=0D
+=0D
+The second patch does a cleanup of the use of '2+MAX_SKB_FRAGS'=0D
+=0D
+The third patch addresses a reliability issue in virtio_net where the TX=0D
+ring size could be configured too small, potentially leading to=0D
+persistently stopped queues and degraded performance. It enforces a=0D
+minimum TX ring size to ensure there's always enough space for at least one=
+=0D
+maximally-fragmented packet plus an additional slot.=0D
+=0D
+v2: clenup '2+MAX_SKB_FRAGS'=0D
+=0D
+Laurent Vivier (3):=0D
+  virtio_ring: Fix error reporting in virtqueue_resize=0D
+  virtio_net: Cleanup '2+MAX_SKB_FRAGS'=0D
+  virtio_net: Enforce minimum TX ring size for reliability=0D
+=0D
+ drivers/net/virtio_net.c     | 14 ++++++++++----=0D
+ drivers/virtio/virtio_ring.c |  8 ++++++--=0D
+ 2 files changed, 16 insertions(+), 6 deletions(-)=0D
+=0D
+-- =0D
+2.49.0=0D
+=0D
 
-> From: Jon Pan-Doh <pandoh@google.com>
->=20
-> Rename aer_print_port_info() to aer_print_source() to be more descriptive.
-> This logs the Error Source ID logged by a Root Port or Root Complex Event
-> Collector when it receives an ERR_COR, ERR_NONFATAL, or ERR_FATAL Message.
->=20
-> [bhelgaas: aer_print_rp_info() -> aer_print_source()]
-> Signed-off-by: Jon Pan-Doh <pandoh@google.com>
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> Tested-by: Krzysztof Wilczy=C5=84ski <kwilczynski@kernel.org>
-> Reviewed-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
-> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux=
-.intel.com>
-Makes sense.
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
