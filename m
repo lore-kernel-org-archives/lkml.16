@@ -1,174 +1,142 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFAAE233701
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 06:36:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A2C9219EB
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 06:37:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747809410; cv=none; b=g4wjOgPVIj6LtE5j7QFiiyVhCA3fbNwuMyJDeii9hHplIHD8XthKyAe4Ddxx1bnI+leq2rVj6UHDXEoio9sgokclvQE4xFg8krV3M0iVNTXubrhscDtfOYdpqTzixrWM8lI6Hd3g/9PYPDhC4mrAnuyJ+wx1F2NjrLkHU2Gq66A=
+	t=1747809446; cv=none; b=D8BRdBlCqqRw6XTEcoGgN92DN0D/LLi+ETrqlY0GAYJTBUPoWbgVfmrjDKEKZlGbL3oP4hhBm4hyjDqsB9p5CXTrJr7EI34WVWS2iJs9kRKCkCa20sS4Q6z1UbvRGQ24iOmgZeMla2eM9Fm5t6V9dBT0gOGgIJanl6kmug/rSdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747809410; c=relaxed/simple;
-	bh=Kz0jgOrwuFulcWr0P93iPFcHzxvFK9RLVKBOU8rPpyY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LAwXlltN0so5WhUNBiuR4m5JibhzAvSyb9AHIXm9gj91UilO94zDCwu8C+dEAmLyF3+yWwtAP1pBMGuTg/iaecP3Rsyy6IG87VaageQkDG4oRUB+5G/E3FWcCaZSD8neh7hkgrCBPhfdGkQWx3tHKIIrIkziKK6PRLCLtmxoYxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cdqYitFN; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747809446; c=relaxed/simple;
+	bh=VhuoHg3jQGfRZHvIXt/xWCqRtiaBwPsPV6EGEAMa9rY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vD4iPGONVWFp4vebKJGRlF3gn0xFyJ/ItrDXN0okWVKL49nypx4fCeSOomAqM9z5BoMXDQBF1VYVIay9TOjXvzGH2MAV5VF1ZDZ81Mv2vFz+Tss4eVBd2ByGmjJ7o5QVqF8sWLBiL+zGzgC1hfNKDOYqMKwsLnSUcBbEWUEL7sI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=dfcnj2eS; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cdqYitFN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747809407;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=xnnddLTK9d+NEX5hWWsGOa8jqB/IXOsu8XDFeUKUERg=;
-	b=cdqYitFN439e80BMPck6ZDx7aEgryDyk+E8yAGpP6wvhP+aqkFHyOZgNjBV0MVP0FglgMn
-	XHuHNq9WMVkcggSbaTGyBaClsVcxm1kEw2GjVWwp9aCLWCjbBbO6W4VyN+N2DsvPpdBRRG
-	JWaY14Xqgdl9/nNsbKqtknRfp3cglEM=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-208-GDMD1JLhOQWb35AHmMGEoA-1; Wed, 21 May 2025 02:36:43 -0400
-X-MC-Unique: GDMD1JLhOQWb35AHmMGEoA-1
-X-Mimecast-MFC-AGG-ID: GDMD1JLhOQWb35AHmMGEoA_1747809402
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a362939f61so2364842f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 23:36:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="dfcnj2eS"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7399a2dc13fso8069857b3a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 20 May 2025 23:37:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1747809444; x=1748414244; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=w3mJUSzRUuycSX2Q6iIlOiZHH9hgJ0lk+kEJmIsy7hA=;
+        b=dfcnj2eSum88Piz8OQaZqOvtA5oSfB6Y0LOmHOdE+33j7vAUM7DMR/zlcbMeIgcwfz
+         2stJ7hfYzLeCbN/zqWceqaJ4MKE74/hPfGyL5BGa+CGZmvS6fmpLA4inPy/jIx8S69rG
+         YlmUZkizrswKug0Z0Uqar4wv3xfLvqo2DlJY6dIvDdKI+drFtXY1vXkgEiATluyLt7gM
+         7EB8YiRnULMUUu1MQdaFFtouxPEJ2uug6Nbb4yf/md6qZxBLLbqT6Vu6RYNqgIju4yuM
+         V72hQ06TQ1/73jZGPmQme+eAX11MRW8V+LREEVOKwCJmc/17CaVeEABf2H2vWd8USzqP
+         zpvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747809401; x=1748414201;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=xnnddLTK9d+NEX5hWWsGOa8jqB/IXOsu8XDFeUKUERg=;
-        b=gv1Ej/r639gCUEWGdAp5xzqpFaJjBmaigwLis2yd1Vv7oC+JHl+lwhihHHe8Bfn+oo
-         dbJlzdoJKVVJqcDB73d4bC1OJCpIVxgKahSRRMTlZcSvfQpWHqivjzjFI54089bY+/5d
-         oWU8vvnoK3DEVf1+Mf/kzdZ9Pvb8m7AKF1jSHdCtJkhfUgCC4YDEZQMFc+mE+YD58Rea
-         QWzYo/yEA+FKtwGLK+f2Vi8fk/bKT1lO4HGn3xiKaaUlSOJ/leNQvomZbscSGx29UWCM
-         fHo1ag6/q8bs9dD3+iJ8RwgJCkmkyCkT89QC2Ub8XTFtXJy+fo0rUvIHsjAHrKQfbivP
-         yCTw==
-X-Forwarded-Encrypted: i=1; AJvYcCWbf92eiQ7JjbNDQy0idtIPYHRnEyinkOxfbPccgaela+5mOQa/X9Inz5J7UTVUMB4kAfujnlwoDpyatOU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBo/1sgmsTZHgKYp1BLRYfNYHV4+8Id3NdWuDliLbMPRWXE72h
-	jX+GqIqId4EGP6fmLz1TpqCZWmcqOhitChey33lHq9I3Q6RdmxKeI++2H61w//b9BLcTG1LkaMs
-	Bx1wENW/shW9nvaqpKYw/IxQ6spwnv/9vizcCtb1DYb4V1DTELxvz0/vnstYTHhIfwg==
-X-Gm-Gg: ASbGncv1ReFe9gIW//va4kdQj+DsUQ+em63KqSYYMAiyR+voU9hS3xa4B4guvvO1QPf
-	iYrysnratxb7qX1uSE82nps/a7kvQmXVl/4YW/TiAPe+QonFZpJ6uhqIKLL8CXl0xtjs+5iYmwO
-	as+aV+YgUbFtcq3aACd2YTSj4K5CQeeDENQrgzLwinxQfYbeXnxHknefPZX+7K2xOw9I9CuxpDn
-	Wysk9UgxEp0UWKjEE0wp41cCPNhdQwWJTMZBOnnSnP0Pbp7jam5NIVbnFNQpe1XRbz6nePAU2eK
-	1+XSRUI+rO/05TxKhtE25vleslXbwYw3E+UhNukHjPoK6V6JcVXjaL6FPDeenaiqN0FB3/abwrT
-	qCY0WdHmgFOGvfzvCSzYSg/gRISOkt2RtlP7/5dg=
-X-Received: by 2002:a5d:64ee:0:b0:391:43cb:43fa with SMTP id ffacd0b85a97d-3a3601dbd53mr18332568f8f.51.1747809401676;
-        Tue, 20 May 2025 23:36:41 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFxWlhxdDm+a+e1Yh0PAVOe6GR0EmnM/ALUPWJGHDoVigRmlf0n867uL6HDqo5jFSxoObpnpA==
-X-Received: by 2002:a5d:64ee:0:b0:391:43cb:43fa with SMTP id ffacd0b85a97d-3a3601dbd53mr18332551f8f.51.1747809401323;
-        Tue, 20 May 2025 23:36:41 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f25:9c00:e2c7:6eb5:8a51:1c60? (p200300d82f259c00e2c76eb58a511c60.dip0.t-ipconnect.de. [2003:d8:2f25:9c00:e2c7:6eb5:8a51:1c60])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca4d2ddsm18501895f8f.7.2025.05.20.23.36.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 May 2025 23:36:40 -0700 (PDT)
-Message-ID: <810975b2-7a6f-4c81-a827-40a6765b7d3e@redhat.com>
-Date: Wed, 21 May 2025 08:36:40 +0200
+        d=1e100.net; s=20230601; t=1747809444; x=1748414244;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=w3mJUSzRUuycSX2Q6iIlOiZHH9hgJ0lk+kEJmIsy7hA=;
+        b=UMX1msPT2Nyeeii3OyO+9G5pxGwH1Ae8QBlqXuqFLvrZR51E/JVsNzpcFUuB3WRCSz
+         Tiip2HoBuVh2F1pdcijcuX+QsthFyQsIdNk1ig/Qy/q2rAgy45U9kGcDMmJYOKazfz4t
+         5lDXYNZDgOMjw4lj81P8QEiQhfHiwKB+XHi0qbcik7QdeBtHoBYzueaQkg2kOksgH/ZJ
+         RwLfxRV2eQYY4rhQSggyiVkqMgQlonnGIZKLYj947AivmQ+BnK65jbO2N4oCY5tXyChp
+         4oOHD7bCoEo7N0j1mW7XtDfI3EcorhUlXXS5jWXSzv+8PLd+WuUHYbR1svS0k+Hbu2cM
+         30GQ==
+X-Forwarded-Encrypted: i=1; AJvYcCULkpTQh4i8l/2AU6Jjt5E/q+s2UCUgslubXkQp/VllW8YswjgCEz5GlPZ1fHgPUAdeqjNxPPFiTTGhTy0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyjq5G6SwKD5S0vax5YpkFEzqjP9Ha+zi4L7lpCmvkx+OThSPgu
+	b5tdYuNzaNak+F3Mjen6sTFxTpvEXZfMxflFbBtpmJlpajdSsjH0JKowaTmiwYfq6A==
+X-Gm-Gg: ASbGncsum0RrTFa6QViUPwByt0/eAoHU1vYyOk3R9auYNg4I3BQFDkx3kNPF07Xeobn
+	JqnYtDIDJg71qrmfOgxxIgQZuKH9CUFm1840VLEj3/VxjOVkROXzWop8ZnvOodgN7/wd8NwStPT
+	YLs0Km39kX5bikBZimibU43dPp6nhtpFHMAZn8nZSYD4FK0k97kSNLSAEmVc2Xw2AY8E/LQLWNn
+	CVcwqJxuCsFEaaigyF2SbtMfjjyuAz+ZqRX3W9bf6GZZ5wsjYTWA50jlFuKJkYU2FlxV/Jb6ijO
+	ei8fUAQcadJhYaPmH11agilkmcTaeJtD4THllzo3ezUe//E82PU=
+X-Google-Smtp-Source: AGHT+IGksfHB8GP2Cr7l3dVRe3nYbg7hfMxDMcI9hzDvYhK2y00Jh+kUBQkpg18kBXjK/7Ki8ipazA==
+X-Received: by 2002:a05:6a20:958f:b0:215:e60b:3bc7 with SMTP id adf61e73a8af0-2170cde5298mr26460904637.26.1747809443633;
+        Tue, 20 May 2025 23:37:23 -0700 (PDT)
+Received: from bytedance ([115.190.40.14])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-742a987708asm8911809b3a.155.2025.05.20.23.37.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 May 2025 23:37:23 -0700 (PDT)
+Date: Wed, 21 May 2025 14:37:05 +0800
+From: Aaron Lu <ziqianlu@bytedance.com>
+To: Florian Bezdeka <florian.bezdeka@siemens.com>
+Cc: Valentin Schneider <vschneid@redhat.com>,
+	Ben Segall <bsegall@google.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Josh Don <joshdon@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Xi Wang <xii@google.com>, linux-kernel@vger.kernel.org,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>,
+	Chengming Zhou <chengming.zhou@linux.dev>,
+	Chuyi Zhou <zhouchuyi@bytedance.com>,
+	Jan Kiszka <jan.kiszka@siemens.com>
+Subject: Re: [PATCH 2/7] sched/fair: prepare throttle path for task based
+ throttle
+Message-ID: <20250521063705.GA4059166@bytedance>
+References: <20250520104110.3673059-1-ziqianlu@bytedance.com>
+ <20250520104110.3673059-3-ziqianlu@bytedance.com>
+ <844ecab14632381bb5dd6a168a988dede64b459e.camel@siemens.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] vfio/type1: optimize vfio_pin_pages_remote() for large
- folios
-To: lizhe.67@bytedance.com, alex.williamson@redhat.com
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, muchun.song@linux.dev,
- peterx@redhat.com
-References: <20250521042507.77205-1-lizhe.67@bytedance.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250521042507.77205-1-lizhe.67@bytedance.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <844ecab14632381bb5dd6a168a988dede64b459e.camel@siemens.com>
 
-On 21.05.25 06:25, lizhe.67@bytedance.com wrote:
-> From: Li Zhe <lizhe.67@bytedance.com>
+On Tue, May 20, 2025 at 02:02:54PM +0200, Florian Bezdeka wrote:
+> On Tue, 2025-05-20 at 18:41 +0800, Aaron Lu wrote:
+> > @@ -6744,6 +6805,7 @@ static bool check_cfs_rq_runtime(struct cfs_rq *cfs_rq) { return false; }
+> >  static void check_enqueue_throttle(struct cfs_rq *cfs_rq) {}
+> >  static inline void sync_throttle(struct task_group *tg, int cpu) {}
+> >  static __always_inline void return_cfs_rq_runtime(struct cfs_rq *cfs_rq) {}
+> > +static void task_throttle_setup_work(struct task_struct *p) {}
+> >  
+> >  static inline int cfs_rq_throttled(struct cfs_rq *cfs_rq)
+> >  {
+> > @@ -8851,6 +8913,7 @@ static struct task_struct *pick_task_fair(struct rq *rq)
+> >  {
+> >  	struct sched_entity *se;
+> >  	struct cfs_rq *cfs_rq;
+> > +	struct task_struct *p;
+> >  
+> >  again:
+> >  	cfs_rq = &rq->cfs;
+> > @@ -8871,7 +8934,14 @@ static struct task_struct *pick_task_fair(struct rq *rq)
+> >  		cfs_rq = group_cfs_rq(se);
+> >  	} while (cfs_rq);
+> >  
+> > -	return task_of(se);
+> > +	p = task_of(se);
+> > +	if (throttled_hierarchy(cfs_rq_of(se))) {
+> > +		/* Shuold not happen for now */
 > 
-> When vfio_pin_pages_remote() is called with a range of addresses that
-> includes large folios, the function currently performs individual
-> statistics counting operations for each page. This can lead to significant
-> performance overheads, especially when dealing with large ranges of pages.
-> 
-> This patch optimize this process by batching the statistics counting
-> operations.
-> 
-> The performance test results for completing the 8G VFIO IOMMU DMA mapping,
-> obtained through trace-cmd, are as follows. In this case, the 8G virtual
-> address space has been mapped to physical memory using hugetlbfs with
-> pagesize=2M.
-> 
-> Before this patch:
-> funcgraph_entry:      # 33813.703 us |  vfio_pin_map_dma();
-> 
-> After this patch:
-> funcgraph_entry:      # 16071.378 us |  vfio_pin_map_dma();
-> 
-> Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
-> Co-developed-by: Alex Williamson <alex.williamson@redhat.com>
-> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-> ---
-> Changelogs:
-> 
-> v3->v4:
-> - Use min_t() to obtain the step size, rather than min().
-> - Fix some issues in commit message and title.
+> Typo: s/Shuold/Should
+>
 
-It's usually a good idea to wait with re submissions until the 
-discussions on the previous version have ended.
+Ah right, thanks.
 
--- 
-Cheers,
+> Btw: Is there a trace point in place when throttling/unthrottling
+> happens? Would be nice to see that in a trace, but might be that I
+> missed those events in my configuration up to now.
 
-David / dhildenb
+There is no trace point for throttle related events yet.
 
+I tried to see if bpftrace can do the job but unfortunately, bpftrace
+does not allow variable as array indice so I failed to get cfs_rq when
+probing tg_throttle_down(tg, data)...
+
+Thanks,
+Aaron
+
+> > +		WARN_ON_ONCE(1);
+> > +		task_throttle_setup_work(p);
+> > +	}
+> > +
+> > +	return p;
+> >  }
+> 
