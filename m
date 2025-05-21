@@ -1,255 +1,241 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 465E62AF1E;
-	Wed, 21 May 2025 16:40:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747845612; cv=fail; b=pBHcz305qoyGIsvL4sLhqOL+2puub9ZH1Uyangsl2cl2i9RpeLOrl1bo/lOYp94D77+PHpPwr/hAZ1GQd0KGauNrf5676xbLGzZx0ljWpwttRFBOoUBmYuJiMCOB1/IsMjl39Mz+S/tL+3l4neCnux8UjlCJEPaf/nzvkkItLjA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747845612; c=relaxed/simple;
-	bh=ZjG7CEy17d36Wm+iptq/yAitDlyV7lmw5U2nh8s0aA8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=jfA+lMRp3I59SLqVDrcvFvJxi/EtDQ7ywsQ9DVP/5oXcO7wj2sS6Mu0IrkWlTRpyvHD5DCVl1lgvtamiJeEKER6vugrMc6NRFxYwRsH0sj9/Xu6T9FKVkhjTAaEkW7hmnAbTix/RBEjqlruLbBNqdje6cjXItlsyF3oLvOwQn60=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=a+3tNbjV; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=RJf03Nfr; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EC1122B5B6
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 16:40:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747845639; cv=none; b=VYHTXaTNp9ooSFWduXYFXjOCrFrJ8+OnET0tm82tJSCol+yLUHQ/Y0POf12ttO/M7Nr+mI9nHV6r248k9+cLhyTo3wKuzYcAdeOTSU5/A+6viwsVgAfkFm1ZLHS3MaKxVbzDYdzLl3kcAsATdE0p4FbvDMDiANH+nRVDolnEgRQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747845639; c=relaxed/simple;
+	bh=i+IU1QCJyrmxUj+2NG/biIrn6pnadTEnC90RSDK6E6c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=N21uAGY6TC5QKKsB8E8WSTmaWIIzdXKYfHR690h9uZtOgfbkGTHS2I7XkxRWaWQhyw9rswfa8Bm/yk544TY4izy3OIAT8rS9mSYVdyk7QsRWg+F4JQtEKWkI3W/FESRCuRTJiuUrJ/PfsOL6lp98RrLgTfhbyEHkclvm6uYize4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T4aWhQ2P; arc=none smtp.client-ip=209.85.210.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="a+3tNbjV";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="RJf03Nfr"
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54LGZ6AU026708;
-	Wed, 21 May 2025 16:39:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2025-04-25; bh=auhF6X6stmgzIsS+qh
-	fxDWqMn5ab/PY6M2VQX5Ip/9w=; b=a+3tNbjV0kt8tg6XZgi1u4oTLog+FoEBQ9
-	9ceQZkW4Gs0eYWUA7D9+6CcG3xbikXB8UdqV7H0kpa0cOpYcCe6Emnii/xy2rjp7
-	uVciOxZypkwGauXkIFLI3cuSVJekMDzZlIQ0IBDR6+jZm3t6NLV2ufpsKn+ZGwsp
-	QqEZJ3xesdxC75AY6cqzs21wzKL+upF99o78EcdXNXqz5L6yZlsNYGv/oy9C3B12
-	ek8Qxy0ughW7ascfncebhDP+Xbvks80MpdRcAFM/5E8K+M2I0nk8aOpdDDI+DtA5
-	BwB5u2Db6ZDCdqJyxUefbNPvvBmtayh3Mo5smYBQ52o9kz6IbIzw==
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46sj6fg2ce-16
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 21 May 2025 16:39:34 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 54LFJUdm034530;
-	Wed, 21 May 2025 16:37:21 GMT
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11on2055.outbound.protection.outlook.com [40.107.236.55])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 46rweq3758-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 21 May 2025 16:37:21 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=kRRbBX25zMfeV7zcVJD0bMK9u8D1w+KWc/t6RWX3dVax/Gy66x3uubfs3fivu7Eu0hD5wGFPLbhWdGZQ1AeXmCkC0IpvFQzz1IF1neKDJla8VeERoxbohRhOBtWQqreabECIIYUINHVDNnp6SqtKWv9OWjSVHEH1ORg53IsrZmOwbBctQ+laveklXkun5ZB2gta7Qq8xLAk52n9nTW2M3byXWxuUobko33gVxmJNyVCXW/+S+7sEnRvlQNNJtdiYbuEdadqc5v0lGKfm3/emcnWAQLt3TYPPRQ7VP9HlXGP6OKx6mtfdzi0exVdJ3/AwBdYFS6x0wEghD0ioK/7VJw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=auhF6X6stmgzIsS+qhfxDWqMn5ab/PY6M2VQX5Ip/9w=;
- b=RIRkENU5NPUdD+fRjcV/DV01Ao+3EEhqptwgG4B4Ka4bqam21bTUWTyUUEZBM5PPFLlK3FmKO59TBUqDRUkzraAQcdijpu62ZLodbks7Jm+UTi4sZtsIBQ/4mBoXi0SK8li/mxX0egeDqVX8OunFXTZulq2gfKyHTIjT1eUVyTVBf6jrYtA8BJ92wk0rpdvcJmWFXE4CJUnoBgIR1CI/Rs0N2XuaQlVnPWgerTAFH8egeMy/FQL0Yhsfz/Sn7Cd6rCL2cpWaMd80ogwO6dYoiSJZ/P2Kt7JWQErDjV/7pwcXTrfCGV4b1ZhwNhhM1UCLUGEpAwU1uvw0Bn6DFVtSCQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T4aWhQ2P"
+Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-72bceb93f2fso4836767a34.0
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 09:40:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=auhF6X6stmgzIsS+qhfxDWqMn5ab/PY6M2VQX5Ip/9w=;
- b=RJf03NfrSf5076Qzc8xCxKkmvirjlctc1OJHO0ICLNMeV2g7Oqhi4Ffxx6Ij9U+zdG6qvVDvhJzZqWUdFoWg7Ej/Xmtm4NR94ThH7IEJ0IErMk+c/vhdxBZTvXa7TsOZWkwbTmc4H99XXFAOkVA8GXvAqJeDLLxtvNitLVubxYY=
-Received: from PH0PR10MB5777.namprd10.prod.outlook.com (2603:10b6:510:128::16)
- by BN0PR10MB4839.namprd10.prod.outlook.com (2603:10b6:408:126::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.31; Wed, 21 May
- 2025 16:37:19 +0000
-Received: from PH0PR10MB5777.namprd10.prod.outlook.com
- ([fe80::75a8:21cc:f343:f68c]) by PH0PR10MB5777.namprd10.prod.outlook.com
- ([fe80::75a8:21cc:f343:f68c%6]) with mapi id 15.20.8746.030; Wed, 21 May 2025
- 16:37:19 +0000
-Date: Wed, 21 May 2025 12:37:14 -0400
-From: "Liam R. Howlett" <Liam.Howlett@oracle.com>
-To: Usama Arif <usamaarif642@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, david@redhat.com,
-        linux-mm@kvack.org, hannes@cmpxchg.org, shakeel.butt@linux.dev,
-        riel@surriel.com, ziy@nvidia.com, laoar.shao@gmail.com,
-        baolin.wang@linux.alibaba.com, lorenzo.stoakes@oracle.com,
-        npache@redhat.com, ryan.roberts@arm.com, vbabka@suse.cz,
-        jannh@google.com, Arnd Bergmann <arnd@arndb.de>,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        kernel-team@meta.com
-Subject: Re: [PATCH v3 0/7] prctl: introduce PR_SET/GET_THP_POLICY
-Message-ID: <ass5hz6l26jc6xhbtybmgdjf55hmb3v4vvhrxhqampv6ohl67u@qi6iacwzwfk5>
-Mail-Followup-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Usama Arif <usamaarif642@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, david@redhat.com, 
-	linux-mm@kvack.org, hannes@cmpxchg.org, shakeel.butt@linux.dev, riel@surriel.com, 
-	ziy@nvidia.com, laoar.shao@gmail.com, baolin.wang@linux.alibaba.com, 
-	lorenzo.stoakes@oracle.com, npache@redhat.com, ryan.roberts@arm.com, vbabka@suse.cz, 
-	jannh@google.com, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, kernel-team@meta.com
-References: <20250519223307.3601786-1-usamaarif642@gmail.com>
- <p3lc5tuzpblwtikfodj5d5wjbpklqwg6oexn4xw3cdwspqwkmy@l7vhj72rjgsb>
- <f7f54cd8-cc60-44ad-aab1-c1c082ed70f1@gmail.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f7f54cd8-cc60-44ad-aab1-c1c082ed70f1@gmail.com>
-User-Agent: NeoMutt/20240425
-X-ClientProxiedBy: YT3PR01CA0120.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:85::13) To PH0PR10MB5777.namprd10.prod.outlook.com
- (2603:10b6:510:128::16)
+        d=gmail.com; s=20230601; t=1747845636; x=1748450436; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QbKXb/kp3YLXJYoIi/689hXGBZs3zu8VOmGvJyjvrIg=;
+        b=T4aWhQ2PnAtxF8TYdYSCZuBbgRKFcvP2sZvFshSXZoSUUVm9WrEDY2wQVGx9TOrrJX
+         hgqCwGyQN1BBBV8Qe4Sfh44XDpNWLUqI1Fwdve6XkLK9jDo9ooQI6PoWoETNuuDNTJRA
+         YmU6w7vuQbXRD+KkHAdqkKOMvqcmLKBKrRcd0ier5CuDrH3G5BvPVA6cjjeDDBsY1PHH
+         bQaqkXDave6sCXfTxqR3eqJHOZ5naLikqObhcCjz6SaQaXuIVjeFtzV3KjBjhdBqquTo
+         GVVd76LVN8gnWe/klKmuLX/Dd6fH92tHtLDPCEyb29llqV7wS/Vei5OjRql/oo9d018B
+         Q8kQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747845636; x=1748450436;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QbKXb/kp3YLXJYoIi/689hXGBZs3zu8VOmGvJyjvrIg=;
+        b=naSgrI3svrxkSbcCuCDTHsnmZ0T70iHPT4PNqN+yvx/qAWVTYIEYIyLjeQaMEbGN8S
+         KfsDnrHDrYTqms3pCNC1xNUPUqn4eloHzeC0p9rSghM6gCjnaDAxNtQJ5oRlHNvNYRZ5
+         cRCteqFt1CHyyCfzanYIfqruqoEAwvC41QBMzPo9C+ON44yLJg+F3lD4d6ub+jJq+cVP
+         nG4taWkwJz8Pz4FqFdaCBOgwEyDKmknU0tNf6JJ9mEm3yzjjBumYzPS6NXlkNqaWukF1
+         Aywlf08r7Xf1mbjWXN5TfLwmBkd6MMTGdwwNRqI56CRWtz7KYWXRLcsQnPSxKcGoKsU7
+         5Mmw==
+X-Forwarded-Encrypted: i=1; AJvYcCUmSRyuMuAGbYuVwYlAqnJLNknyLOVZBYDnmOF/vLZaiK4lGcwL93VhdWxGoUYqM0Kd97i03lLK4sGQQbQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCV1xri3dt69e/eWVouQVQt4TnWTSfbJDkmshZfQlMiYOYy4Zy
+	zvgU+2WALB/VmIjUoeScHJDAa1NrNaZrwy+fH5tE1KJYDm4YA0Qi4TK54pDEFzRsNhB/bBzyVLx
+	Sjf2mkjLkfzw55to5xcIuPduvrCMcdEpB8FYwx9s4Pzs73Fk=
+X-Gm-Gg: ASbGncsKKdT+nylfGOQMsshtxwfsUJqkY93C3oo2fhvVYmo+BMwSQHjRFHm59Dof9yd
+	a/g+an97WYo5NbINONgoT01OAx4kkrpYF9Cpxn+T4032aqxF/Xr8iSGVOVVT73tj/xQ4SimDyN7
+	iy1+19zdImQ58ANJVfOKif/5H0MNzBwIifHw==
+X-Google-Smtp-Source: AGHT+IHRzqYtPxSRPnFk2+3DUAgyMi453aULIFTaFyWd4/OQ62pgXMsAQz4aLm5vDHuUiu6i/M949FaN1jbgvx+0LzI=
+X-Received: by 2002:a05:6871:2317:b0:2d5:f8f:56eb with SMTP id
+ 586e51a60fabf-2e3c274eff6mr12085787fac.2.1747845636323; Wed, 21 May 2025
+ 09:40:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR10MB5777:EE_|BN0PR10MB4839:EE_
-X-MS-Office365-Filtering-Correlation-Id: 52960015-a023-4395-95f6-08dd9885c0b2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|7416014|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Yfi0lhXGEdCJm0z+YKNCdkU4jqGa34b3/p4UC0ppYpU03WSSR/jU22JJrhfK?=
- =?us-ascii?Q?NYCSxlPtjNGolnYJEOd3+szU1ZcTpuTunXZx9AvpcAIDoHWd3c1jhf1jHbm0?=
- =?us-ascii?Q?kFXuB0QPg5998YOfd+smq3ly98DLqzHCzxiBPaEUCkM2BDzQ1HxewVFVFNJK?=
- =?us-ascii?Q?A4mpfTL/IYEBT4UvsonFdZGDwY4Qv8uHDFvfp7E0Vc1MvGCbGhqHo18hvGn2?=
- =?us-ascii?Q?l4KRla8nKi6xXHit4FQ1zcCrLGxvE+fPsM0HSrwT/kDW9B6rMzQrjPOXn1h/?=
- =?us-ascii?Q?UAhypMS8JaOiln/dJw3IEGCALmrp1aZUUY5aishsaxJUQIOtV15XqpORpk/o?=
- =?us-ascii?Q?GdkVgKDh/vVYtR/JwqmNW8k4qCefHMUQDNsd79+E5DcMASZ193Pun/gTypVf?=
- =?us-ascii?Q?EW67nxHfDUgexzeO8xbPD9FzIjr+lVSE+k+sLuzyHwmY8QUfZv2TcdF/84yy?=
- =?us-ascii?Q?YJpBfTTL/eUjgmGyR96GJQbguwXj00CuPvUus5yx756XK9+H9WIekaCKoR6L?=
- =?us-ascii?Q?CX/aQAL4jTSXfDdBLmf+HjnC7lxgMtETUqRGnjZ/TkcS28t48crYc7H6Ff5k?=
- =?us-ascii?Q?MHNQ3+dHbnWvpTCS3QRU7hTwjVClTPPDG3gD9HPFQvO4SdecdJ4F+jCPTt16?=
- =?us-ascii?Q?ruJiVgHCLTpWs2haiVyBIjcDGOoMKWx4/DpVG9TgJbJl8u8PfiNanW+UoTvz?=
- =?us-ascii?Q?taBrDdIKVEMgNUR6+mxvhqBU+Ma/g4tWyd4DEsV9yGQm3DBdjMRZtQeGGfD8?=
- =?us-ascii?Q?rJ2Vf+vWPXf1K4WWRHCdQ1fhQHERH7NuLg1CXnVxqPq3Wk7nscO4Zhb318wm?=
- =?us-ascii?Q?p32peXx/62utzFOJbEBOWacAhoU/gFdbTkimLiL2k8Vin/rieM5JiHOlwEWk?=
- =?us-ascii?Q?QKCnO5msHwB2zVtj42ivtOK/Q3GO4kAyJDZhNNMouPcgByr6P1CvT1gkmlYC?=
- =?us-ascii?Q?CbH4sfI5cXEEdlgsmIErCg63iEeUcsSW1BuN3tPguDdKEHZwioryd8/FFzN4?=
- =?us-ascii?Q?hgCgDhrf9h6lHLmUd/C9bSFJldkCOOWPTirKj4GYdJk+d9J5xnxsOIfLwxft?=
- =?us-ascii?Q?k+Y3nVAX+u2UudYxuL9GrBUqHMbcxWtzhLOML6Y3vrHnswCToaS4apZlmqJu?=
- =?us-ascii?Q?bOFSvjGUOPSJp+p+1+U/hjB6F+ULfHYwK2awojDlugdQdbXzpBpgxCqaFnmI?=
- =?us-ascii?Q?3BBKKxEbAFDXJUhRRe7iMZCkE9qhsPK1+uez7hMWbLiLuaEIj/HHQENPCi0T?=
- =?us-ascii?Q?hmUNN5+QxBmnunrRy2n8xrAopXfznfFuJWCnLKMzDsxeKhDDVSGp6BpROFOD?=
- =?us-ascii?Q?ZRwqGg8PjgAoM5YeitmAp1jW8nc3a2C8DT2BesVJhRfnwvlRon823IHFjoRc?=
- =?us-ascii?Q?DbAlya1Hx+WQ37ErdVgCe4ZK/OSc7j6Xq++8lueZC04CfCVuHstByvMJXRFN?=
- =?us-ascii?Q?5FAEVC1gKw8=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB5777.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?a5YEZaGLVlM3y7/HWXn8FZ+6LX98X2Bs+OjgIxaORgTWc7ERqGO1pwsCMf3C?=
- =?us-ascii?Q?bwWI+vnLjheW4ViEW7v0+g6n48PI9BkBhUYPNG0TrYLFsn0+/chLBZlWQFpn?=
- =?us-ascii?Q?HT6kgx/O+rGXc2mtZcEGdIA5cZi+XwwYmQ6mPaMOvDAX3Anv4ZZ55lEdYtG4?=
- =?us-ascii?Q?s8mxIfiZcCtW1B0K4yw7x+crNAsvFAEYMvxEVQrwwWDqd519vFMNosSf+T1h?=
- =?us-ascii?Q?CSatIkl6DGMt+xMuEzo34jWdPlyAlAInHqzF3G7y0Y1KC9lKEjQiKSgaOexY?=
- =?us-ascii?Q?HxEcuPkcQ2I/mklJP+LL6xawQ1oIqYdVRBzVVF39+PBQvGsiMSHpJquRhOKU?=
- =?us-ascii?Q?Dxo82TuLOb6MyycSg7D5ykDGvRf1fmxhWPZAcCzexUsDfI03QLLqm0vurK8q?=
- =?us-ascii?Q?8FPaIcT0Br9vAtDOQgIvnSIB1XXmkrM9FUrRXPfTbh74t53dDoukMfoXENXn?=
- =?us-ascii?Q?Rr/iSe/iwg3TcXCiKxpvQ9+FSuywn5ALDRR3GrS36dkFUaJboO90AMOo6rgD?=
- =?us-ascii?Q?IbOSySxtpNxJlsRd2vQZqQXYoqSdiZ6fCTRqiS3Mmr9E8qsaDwHSWiNWA7Ur?=
- =?us-ascii?Q?I9fsxi1ZQAqVO1dTlbw0NfPjWt1hNMLiP9vpOQZCsGw/zHxFUI9ZLJLWaFn6?=
- =?us-ascii?Q?G9ZnSFin9UHWyAbbJHbJY5QGo6qh+Bf3ui1N8pdE/PMCryF7BdOmhLOII6Qa?=
- =?us-ascii?Q?nqTiqLTNDCy1CNlLpRyrFKr1g8ZPOdPLvj/HBSfYBFhGYkQ1OH7UB0f4exxS?=
- =?us-ascii?Q?QXhLB2H0VmZGH9gSh1yhCLT940eCc2+AvqF3DqhEeJ4pJBQFce8AVVtpbLki?=
- =?us-ascii?Q?OMjB7q1UU2VgnK6NPaqnNldSnKjptyquxFPMxw3wtpTWLDS73sbQjIVflco5?=
- =?us-ascii?Q?k2l4DqgUKi/mdK05KauUpfd/MZkl6db8v23k0DuBFOoaw3OV/M0P9iS4wzKF?=
- =?us-ascii?Q?Q2t8T4ZYW8ULji4n2S0vhCljXBkHWyrZhVl+u5gFqpSGYBtiQtT94Ktem2j5?=
- =?us-ascii?Q?x2AuSeZc3yx7T1crjriw1S5os1OOZCBz5YWt1QJHV8zEfDeL3KuzztSfN8ob?=
- =?us-ascii?Q?HU9qNyMzTyVMNF/a8aLzS5C971uLZC4ZIRACKE2zwr8buIFZ/H4/xHAOYeFe?=
- =?us-ascii?Q?pjabkH2cg5/SOCnnM1YmN+WZWuE2WyTe1ZikoVuSp/lPrcOnXLqWkvuzzUOO?=
- =?us-ascii?Q?ALRc2Yqa/BPNMIUVB3Duu77gWVXUyOsv0a8g3Gp0DSqjR7zlSEXCWYZGXiS+?=
- =?us-ascii?Q?GVIlibEN+HfetDFIy7b5lD+VFh8c1lCA31XGHK6lZ5j+7u6ALKYXn+5lBooI?=
- =?us-ascii?Q?wdPem1HLjCozKlWLXzkY6BaKfmvvc9Ws/onuP9MAOD06cbJcNOpKUKeWV28z?=
- =?us-ascii?Q?hhC3sX85224Cw808ByEvn92puN20EjvFC90QffrDwY8uHz1xkJlArPp5txUA?=
- =?us-ascii?Q?LyBrmp2vZecHJ8g9X1FWVCA/44SK08x5D60bl6VW2aALhpZv0QXvLq/NSh9b?=
- =?us-ascii?Q?GucC7IqH1ikR9lcT0859t0biIDUOA48WvrZWqiNYoVxbKGU6ZoHUfviCuf+P?=
- =?us-ascii?Q?TxO0wApi4mmFKJQUcXLzYN/i8eZLXUc6lkPgbm2X?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	b5D2a6xhhDoI1127mkYJKe1uJuuJGZde8QQs57zkFmXYYEZVuAikGCSwS7bNcYkZhrrNm5mihkQz0AFkjieYKX6p1FDLToFNdfMy5MqblTyQGybf7UytWigtB1UQRXwIiPuyoFv+PLFNCnTlY+rI9I3w1cYftHIAUNpTokhorFSe3AGNPWcr/wIxvDVGx+vPuo8o2+Q13Ds28Esj7+2H9tItGO1s6tqqQof+o0LWIqKiQhc13r7LxRn1uFg9aCUl8eP47eD7h4iz4kpXClJS/ZaqLah7XYAmFPvKKoZ3irv+wCtKgtn40GdaLq54ummrDHfcgncC77UFPpOJbd/ih74PC+5SwkFr4KtOoonOrYrieKEDxyUUNTp1qYhvUTZFvFxB0XufIEeYiFwGT9jvN1ukvaAXeDgC4tfcAYpx8uFtVSi44OV325xFI90TeSaKWu66L5lTncOd9awrMEj9c3teMs7Y0OcFl9xX+CFOJyOubze0+oXmmLm9xnXiBrJrDxGc239gprivC8O2lHoxT9r+L9pOqKtpNuJhnIerguqfhOdJMpg6dJduDFfY0O1VvWxCDD9XslOAzGWUxxno5kObOLU7Q8l9UoTFlPIoxoQ=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 52960015-a023-4395-95f6-08dd9885c0b2
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB5777.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2025 16:37:19.0314
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dygqaMseqzwGr/SYM9TwHnjjVKw0Tbahj92CngGXi5zil0iQfn4ksQoEVHk0Jid/+YIvzg+VPSs/U/AXIrbhQQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN0PR10MB4839
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-21_05,2025-05-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0 spamscore=0
- suspectscore=0 adultscore=0 malwarescore=0 phishscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
- definitions=main-2505210163
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDE2MyBTYWx0ZWRfX/QlOyEKqVP7c wT6jWycIyTOBX9W5s0awbN5CkqYgIu52yWaCfLmobDuNThKd7/aBIyRcC/z6OMVA2AkxA7DIzEq Pian553LPNEOJValuQARoiuJpTBSIDfxRhDdvU3GT2VgQSQeT26ofiZajI+9eg+mICL2Wdcg0p8
- OyskxDiqqygQsp6Pw4qu/mvEizQE78PjbCcHEq5niLxycC9r4wxzZQo2yppe35w0SFvGbavKtN6 BLtBwYp0JeYh7MaQDxXnPs0FInclm+Ttj0p13uQrdiGwChdOgNSJmd7tyAj+xt5jcz486iO6Xu3 GgXzDTMgabGWjgC5UIVgVgzKJ/5VRm2hUeyY7uotKRwSOQ2bGZCEKYt/YuXbEbpBdFbzdQjej8y
- yO/sHHCrOmAlgxqu552yGMAi5qYzHe/iV5r1kBp/foLoiPNX0Y5hVJy8KZ7/jVvGZ6kjzwrJ
-X-Proofpoint-ORIG-GUID: _kckZ-nGuuMn0knBYLLzInvAlC8TbCDF
-X-Authority-Analysis: v=2.4 cv=Y5H4sgeN c=1 sm=1 tr=0 ts=682e01c6 b=1 cx=c_pps a=zPCbziy225d3KhSqZt3L1A==:117 a=zPCbziy225d3KhSqZt3L1A==:17 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19
- a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=GoEa3M9JfhUA:10 a=pGLkceISAAAA:8 a=WCdTcLu4AuRS5FSS4aEA:9 a=CjuIK1q_8ugA:10 cc=ntf awl=host:13206
-X-Proofpoint-GUID: _kckZ-nGuuMn0knBYLLzInvAlC8TbCDF
+References: <CABXGCsPLAs+rCktbM_ao3bP3VZuaLqXSMpXZt1m-B9nqf91EQw@mail.gmail.com>
+ <CH0PR12MB52845B90BB3D7B94473B6FDA8B9FA@CH0PR12MB5284.namprd12.prod.outlook.com>
+ <CABXGCsNmsQgvNZL0_pHxnHLKNZS=k_yzmMNoGgfGQqsimTWucQ@mail.gmail.com>
+In-Reply-To: <CABXGCsNmsQgvNZL0_pHxnHLKNZS=k_yzmMNoGgfGQqsimTWucQ@mail.gmail.com>
+From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Date: Wed, 21 May 2025 21:40:24 +0500
+X-Gm-Features: AX0GCFtFYjMJi9YPXvSgdqYaH5RROiQZ_pBJ31Id_wrVLR1st4fss_KHTUWYW-0
+Message-ID: <CABXGCsMgEnrtHjJvPPmrXDFkmMkU5TN57bU_396PuF_D02oQSQ@mail.gmail.com>
+Subject: Re: 6.15-rc6/regression/bisected - after commit f1c6be3999d2 error
+ appeared: *ERROR* dc_dmub_srv_log_diagnostic_data: DMCUB error
+To: "Pillai, Aurabindo" <Aurabindo.Pillai@amd.com>
+Cc: "Chung, ChiaHsuan (Tom)" <ChiaHsuan.Chung@amd.com>, "Wu, Ray" <Ray.Wu@amd.com>, 
+	"Wheeler, Daniel" <Daniel.Wheeler@amd.com>, "Deucher, Alexander" <Alexander.Deucher@amd.com>, 
+	amd-gfx list <amd-gfx@lists.freedesktop.org>, dri-devel <dri-devel@lists.freedesktop.org>, 
+	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-* Usama Arif <usamaarif642@gmail.com> [250521 05:31]:
-> 
-> 
-> On 21/05/2025 03:33, Liam R. Howlett wrote:
-> > * Usama Arif <usamaarif642@gmail.com> [250519 18:34]:
-> >> This series allows to change the THP policy of a process, according to the
-> >> value set in arg2, all of which will be inherited during fork+exec:
-> >> - PR_DEFAULT_MADV_HUGEPAGE: This will set VM_HUGEPAGE and clear VM_NOHUGEPAGE
-> >>   for the default VMA flags. It will also iterate through every VMA in the
-> >>   process and call hugepage_madvise on it, with MADV_HUGEPAGE policy.
-> >>   This effectively allows setting MADV_HUGEPAGE on the entire process.
-> >>   In an environment where different types of workloads are run on the
-> >>   same machine, this will allow workloads that benefit from always having
-> >>   hugepages to do so, without regressing those that don't.
-> >> - PR_DEFAULT_MADV_NOHUGEPAGE: This will set VM_NOHUGEPAGE and clear VM_HUGEPAGE
-> >>   for the default VMA flags. It will also iterate through every VMA in the
-> >>   process and call hugepage_madvise on it, with MADV_NOHUGEPAGE policy.
-> >>   This effectively allows setting MADV_NOHUGEPAGE on the entire process.
-> >>   In an environment where different types of workloads are run on the
-> >>   same machine,this will allow workloads that benefit from having
-> >>   hugepages on an madvise basis only to do so, without regressing those
-> >>   that benefit from having hugepages always.
-> >> - PR_THP_POLICY_SYSTEM: This will reset (clear) both VM_HUGEPAGE and
-> >>   VM_NOHUGEPAGE process for the default flags.
-> >>
-> > 
-> > Subject seems outdated now?  PR_DEFAULT_ vs PR_SET/GET_THP ?
-> 
-> No its not.
-> 
-> prctl takes 5 args, the first 2 are relevant here.
-> 
-> The first arg is to decide the op. This series introduces 2 ops. PR_SET_THP_POLICY
-> and PR_GET_THP_POLICY to set and get the policy. This is the subject.
-> 
-> The 2nd arg describes the policies: PR_DEFAULT_MADV_HUGEPAGE, PR_DEFAULT_MADV_NOHUGEPAGE
-> and PR_THP_POLICY_SYSTEM.
-> 
-> The subject is correct.
+On Tue, May 20, 2025 at 9:22=E2=80=AFPM Mikhail Gavrilov
+<mikhail.v.gavrilov@gmail.com> wrote:
+>
+> > Could you more details about your setup, and how you were able to repro=
+ it ?
+> >
 
-Thanks, that makes sense.  You are adding an entire new configuration
-item to the prctl fun.
+Hi,
+Were you able to reproduce the issue?
 
-> 
-> > 
-> > On that note, doesn't it make sense to change the default mm flag under
-> > PR_SET_MM?  PR_SET_MM_FLAG maybe?
-> 
-> I don't think thats the right approach. PR_SET_MM is used to modify kernel
-> memory map descriptor fields. Thats not what we are doing here.
+I=E2=80=99ve prepared a step-by-step guide that may help:
+1. Set up a system with a Radeon 6900XT and an LG TV connected via HDMI.
+2. Install Fedora Rawhide.
+3. Build and install kernel 6.15-rc7 using my .config (attached in the
+first message).
+4. Boot into the custom-built kernel.
+5. Set the display resolution to 3840=C3=972160 @ 120=E2=80=AFHz.
+(This step is optional but may help trigger the issue faster.)
+6. Generate heavy system load. I use an infinite kernel rebuild loop:
+<fish shell>
+> for i in (seq 1 400000); make clean && make -j32 bzImage && make -j32 mod=
+ules; end
+</fish shell>
 
-Fair enough, you are changing the memory map default flags for vmas.
+Expected behavior:
+System remains stable during heavy load.
 
-So we are going to add another top level THP specific prctl that changes
-flags, but now def_flags and that's communicated by the word POLICY.
+Actual behavior:
+1. First, the kernel log is filled with repeated messages:
+amdgpu 0000:03:00.0: amdgpu: [drm] DP AUX transfer fail:4
+2. After a short while under load, more severe errors appear:
+amdgpu 0000:03:00.0: [drm] *ERROR* dc_dmub_srv_log_diagnostic_data:
+DMCUB error - collecting diagnostic data
+3. Finally, the system completely freezes with a hard lockup:
+watchdog: CPU28: Watchdog detected hard LOCKUP on cpu 28
+Modules linked in: uinput rfcomm snd_seq_dummy snd_hrtimer nft_queue
+nfnetlink_queue nf_conntrack_netbios_ns nf_conntrack_broadcast
+nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet
+nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct nft_chain_nat nf_nat
+nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 ip_set nf_tables qrtr bnep
+sunrpc binfmt_misc amd_atl intel_rapl_msr intel_rapl_common
+edac_mce_amd btusb snd_hda_codec_realtek btrtl mt7921e btintel
+mt7921_common snd_hda_codec_generic btbcm mt792x_lib btmtk
+snd_hda_scodec_component snd_hda_codec_hdmi snd_usb_audio
+mt76_connac_lib kvm_amd snd_hda_intel bluetooth mt76 snd_intel_dspcfg
+snd_usbmidi_lib snd_intel_sdw_acpi snd_hda_codec mc kvm spd5118
+mac80211 snd_ump snd_hda_core snd_rawmidi snd_hwdep vfat irqbypass fat
+snd_seq snd_seq_device wmi_bmof libarc4 rapl r8169 pcspkr snd_pcm
+cfg80211 i2c_piix4 snd_timer k10temp i2c_smbus realtek snd rfkill
+joydev soundcore gpio_amdpt gpio_generic loop nfnetlink zram
+lz4hc_compress lz4_compress amdgpu amdxcp
+ i2c_algo_bit drm_ttm_helper ttm drm_exec nvme polyval_clmulni
+gpu_sched polyval_generic ghash_clmulni_intel drm_suballoc_helper
+ucsi_ccg nvme_core sha512_ssse3 typec_ucsi drm_panel_backlight_quirks
+sha256_ssse3 drm_buddy nvme_keyring typec sha1_ssse3 sp5100_tco
+nvme_auth drm_display_helper cec video wmi fuse
+irq event stamp: 117172
+hardirqs last  enabled at (117171): [<ffffffff9e001566>]
+asm_common_interrupt+0x26/0x40
+hardirqs last disabled at (117172): [<ffffffffa1c00f97>]
+irqentry_enter+0x57/0x60
+softirqs last  enabled at (117144): [<ffffffff9e614919>]
+handle_softirqs+0x579/0x840
+softirqs last disabled at (117137): [<ffffffff9e614d16>]
+__irq_exit_rcu+0x126/0x240
+CPU: 28 UID: 1000 PID: 1737394 Comm: as Tainted: G        W    L
+------  ---  6.15.0-0.rc6.250515g088d13246a46.54.fc43.x86_64+debug #1
+PREEMPT(lazy)
+Tainted: [W]=3DWARN, [L]=3DSOFTLOCKUP
+Hardware name: ASRock B650I Lightning WiFi/B650I Lightning WiFi, BIOS
+3.08 09/18/2024
+RIP: 0010:delay_halt_mwaitx+0x20/0x50
+Code: 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 0f 1f 44 00 00 53 65
+48 8b 05 56 13 0d 04 31 d2 48 89 d1 48 05 00 00 ca a5 0f 01 fa <b8> ff
+ff ff ff b9 02 00 00 00 48 39 c6 48 0f 47 f0 b8 f0 00 00 00
+RSP: 0000:ffffc9003b68f820 EFLAGS: 00000087
+RAX: ffff888fda610000 RBX: 000000000000118c RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 000000000000118c RDI: 000023b4c02956f6
+RBP: 000023b4c02956f6 R08: ffffffffc14b01a9 R09: fffffbfff49570d4
+R10: 000000000000001c R11: 0000000000002000 R12: ffffed1040583d43
+R13: ffffed1040583d17 R14: 00000000000186a0 R15: ffff888202c1e800
+FS:  00007f1da07bcd00(0000) GS:ffff889034970000(0000) knlGS:000000000000000=
+0
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f1da0a43930 CR3: 00000003e594a000 CR4: 0000000000f50ef0
+PKRU: 55555554
+Call Trace:
+ <TASK>
+ delay_halt.part.0+0x33/0x60
+ dmub_srv_wait_for_idle+0x12f/0x1d0 [amdgpu]
+ dc_dmub_srv_cmd_run_list+0x99/0x2a0 [amdgpu]
+ dc_dmub_srv_drr_update_cmd+0x158/0x340 [amdgpu]
+ ? __lock_acquire+0x40f/0x1160
+ ? __pfx_dc_dmub_srv_drr_update_cmd+0x10/0x10 [amdgpu]
+ ? lock_acquire.part.0+0xc8/0x270
+ ? local_clock_noinstr+0xf/0x130
+ optc1_set_drr+0x18b/0xf20 [amdgpu]
+ ? rcu_is_watching+0x15/0xe0
+ set_drr_and_clear_adjust_pending+0xa6/0x180 [amdgpu]
+ ? __lock_acquire+0x40f/0x1160
+ dcn10_set_drr+0x224/0x390 [amdgpu]
+ ? __pfx_dcn10_set_drr+0x10/0x10 [amdgpu]
+ ? local_clock+0x15/0x30
+ ? __lock_release.isra.0+0x1cb/0x340
+ ? rcu_is_watching+0x15/0xe0
+ dc_stream_adjust_vmin_vmax+0x4d9/0xd60 [amdgpu]
+ ? __pfx_dc_stream_adjust_vmin_vmax+0x10/0x10 [amdgpu]
+ ? dm_crtc_high_irq+0x4c8/0xb70 [amdgpu]
+ ? __raw_spin_lock_irqsave+0x60/0x90
+ dm_crtc_high_irq+0x7b5/0xb70 [amdgpu]
+ ? amdgpu_dm_irq_handler+0xf3/0x2a0 [amdgpu]
+ amdgpu_dm_irq_handler+0x19a/0x2a0 [amdgpu]
+ amdgpu_irq_dispatch+0x286/0x670 [amdgpu]
+ ? find_held_lock+0x2b/0x80
+ ? __pfx_amdgpu_irq_dispatch+0x10/0x10 [amdgpu]
+ ? __pfx___drm_dev_dbg+0x10/0x10
+ ? do_raw_spin_unlock+0x59/0x230
+ ? __wake_up+0x44/0x60
+ amdgpu_ih_process+0x1c4/0x3a0 [amdgpu]
+ ? __pfx_amdgpu_irq_handler+0x10/0x10 [amdgpu]
+ amdgpu_irq_handler+0x27/0xb0 [amdgpu]
+ ? __pfx_amdgpu_irq_handler+0x10/0x10 [amdgpu]
+ __handle_irq_event_percpu+0x1b5/0x510
+ handle_irq_event+0xab/0x1c0
+ handle_edge_irq+0x213/0xb50
+ __common_interrupt+0xad/0x1d0
+ ? irq_enter_rcu+0x26/0x190
+ common_interrupt+0x5a/0xe0
+ asm_common_interrupt+0x26/0x40
+RIP: 0033:0x5639d9e740ee
+Code: 45 c8 85 d2 74 04 41 80 08 04 48 83 c4 58 4c 89 c8 5b 41 5c 41
+5d 41 5e 41 5f 5d c3 48 8b 57 10 44 8b 15 fd bd 08 00 4c 03 0a <45> 85
+d2 0f 84 33 ff ff ff 83 c8 04 4c 89 4f 20 88 07 4c 89 c8 c3
+RSP: 002b:00007ffce2334e38 EFLAGS: 00000202
+RAX: 0000000000000001 RBX: 00007f1d91572388 RCX: 0000000000000002
+RDX: 00007f1d90e9c750 RSI: 0000000000000000 RDI: 00007f1d912e5d20
+RBP: 00007ffce2334e40 R08: 00007f1d912e5d20 R09: 000000000000e119
+R10: 0000000000000001 R11: 0000000000000002 R12: 00007f1d9157f008
+R13: 0000000000000000 R14: 00005639d9e74f90 R15: 00007f1da06fe730
+ </TASK>
+INFO: NMI handler (perf_event_nmi_handler) took too long to run: 5.441 msec=
+s
 
-I'm not sure this is the right approach either.
+Environment:
+GPU: AMD Radeon 6900XT
+Display: LG TV via HDMI
+Kernel: 6.15-rc7, built from source using provided config
+Distro: Fedora Rawhide
+Motherboard: ASRock B650I Lightning WiFi
+BIOS: 3.08 (2024-09-18)
 
-Thanks,
-Liam
+Additional diagnostic info:
+Full kernel log ending with stack trace from delay_halt_mwaitx()
+Series of dc_dmub_srv_drr_update_cmd() and
+dc_stream_adjust_vmin_vmax() calls in call trace
+System enters unrecoverable lock state after ~few minutes of heavy compilat=
+ion
+
+--=20
+Best Regards,
+Mike Gavrilov.
