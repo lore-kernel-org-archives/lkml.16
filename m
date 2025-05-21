@@ -1,162 +1,98 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FCBD16132F
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 13:57:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24CFF86331;
+	Wed, 21 May 2025 13:58:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747835860; cv=none; b=tMSeJcpQQt4EXQBUzeKILpgBA+uws250naLf9PStKGX26MnXedqnmf8Zq8R0RpO4sprhWACM9+bO9BAM4VnFXV4DRJXA0CYfl5UYFBBH1uoiq/E5t2d2xfJ9u4H8+dsRNaqski/UJg4xBsuyFMkjr19T/tAQMA//PCB9uZUSdCA=
+	t=1747835901; cv=none; b=Q/psWx86sRo2EvVI6rYDnzakElR/60zfuyCeCsjuyPZqTbCD49qKia9/dAHb1VSF1kgp6tAZ1ITB2lOkwHjNkeydA7gMRH3sNcH2Nbudzu8M1WLarQijAzLEPhN9PUc5dX6//Wsc+bcPiXm5GWQ2Ylr2rmRj9V6tpEkEph5/alw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747835860; c=relaxed/simple;
-	bh=Gv0HXV2263oNPGZof5l9I3MBc9ogn1UNaQ90T56vuFY=;
+	s=arc-20240116; t=1747835901; c=relaxed/simple;
+	bh=TV5Um3wEwSm9Yw2CbWgV1hqPi3iVOdmeNBmDMsMJJus=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=howCfx6Kybsehe5mxTD5L+u6LFcFU9FnfMb+kj8YSuepRvA81D6MG2WA+joOZLRsTks9+aQUgQAZ+WS+WavKnPcvuV2oMsGD/9yjbc8hfwQ5IZSvD0700RrsuAEicmsMNIkN9djm8xSFxENUAZDw95THtGykMOqM91oo7G4oSf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=t5JTTVBQ; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=qSeF2URdAEdWQANI1vNMYdFu1meSiKS1GDL+3Gwvm9mSFqUbjLv75pAI+Hh5p+TS5q7NtTCC/T34a+m5/gOm/xv4AiCBOjjFwrf0JF9lWSGbQ2rOOKTnh/5Kds+vtMjI3eXwsP/aPFxr1GaQH95NL9u56Gz2PayUMtF6VsnVM5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kMxNZFK/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="t5JTTVBQ"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-30ea559c18aso5392279a91.2
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 06:57:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747835857; x=1748440657; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=4V2npzngN7XE+T5CnS00fIFW0qBnhbmPIQOpJiEFacY=;
-        b=t5JTTVBQMT0VpqzR/U2iZhhV8L4TgzKFm+d8O69FsxqdW+YxNJBb/4RIeB24cE17lc
-         Wm4WSqrw9ig1mYgAUOkEYFFm5mw6/cBKWWNswPiZk/9zw+Onle8c7vtIkqS+kOTPmdNd
-         av/XR4lb9TSjutk5/63u7E7+wSVMC9koXKpEJYdW3+JbP+0OWxPfAyy4an9eAvPKMrxr
-         ESukKAhSIZqEcetXZpV+NR6n/hUBn48k12vHN/JMlG3LCth6gQTzK2uXm9gh7g90O0nw
-         UEkUv46c+Cz5ovCcvhgc7WWqEpPM0NqazvORMAK2zHqzFufQDssVJ8Am1lUtvtxmeeH4
-         asMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747835857; x=1748440657;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4V2npzngN7XE+T5CnS00fIFW0qBnhbmPIQOpJiEFacY=;
-        b=k+hoYME8FYVUf3quOgxcC0ZJm+kTqyFG8adcRKkF9WDMtElNVIhVRa0mXaas8DqVCH
-         Pfo0vPYEESpr3rXrlrp57z5VwIkNkCMMVHYfpMUZCNrDGa6BsgPrMCGgT8VyWqRyz7PP
-         tHBwa9YgJ3N/2Sq81VF7sfQ//xEfnOebbWgvhbOUrifsqtykf1H9CSzXtxNkUfbWZ+1E
-         tz6VtFbaGmys2uCwbTcjotIPh6fFCwRzfiOuSij3OMWaGPwfuy7Io5/jfpbWIrgTBKmt
-         dd/9a/AWPxp+b25NvCu3sqMK+H+zIfrB9pjknpx7kxqK5egSHwMjdMtw0y6MVejBxZFc
-         lfBw==
-X-Forwarded-Encrypted: i=1; AJvYcCUBBmsj0X3igWrVvrogGAtoKtw/n/PRdG42blHLcBjG6brZQB76kg8U82qX9CqmPTSg2EMdjnOceq41z8E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1dqgYJKEdbPxufJvf2Y0+SZ3MC2IAAyICz2reW5nnwPPz+xcX
-	cb7jeAedUH3+jzzXjx8HAYDBr2vki5iq0meb7ih2iddGYW2mwcHn84uP0MSuYlSDmb1qW3xJA9A
-	65uU=
-X-Gm-Gg: ASbGnctmivxoU04OEMcD8yDhztdR2sM3UyWfkONzhoSXf22VzevdY/9Dmv9S8sATCb7
-	4TTYBND2cQyHcEsbhfxGloueBBUTXDE/MWDZ2P6NYjyw5GsGbHizeCM6BdUzbSpwmOKrZKsS/ky
-	1oAzBiBJLP4uThl/uB8+2JZqXi3LVoQjhrKHUUQlt3yOT7aWunXymT3TS1aaWsvVh7iFzgBQlvE
-	gRWbIU1BYLr5xsQw9bSRviG33hkS2unFzJFCP1lxK/sdpstKU+rqAMTiKKo5kNdyajytzo/W/Km
-	aZjk+QJiLkm6wue8e4KeTPrmQCuNgHVGnFLTG4eogYldJALQLC/WhNqQ743J
-X-Google-Smtp-Source: AGHT+IHRB6a4p+x/fLfJd+xB4iokXTvEugUEwgXrmK670XBatNkGHNJpzX5R1He9NQDvMhn300VvPg==
-X-Received: by 2002:a17:90b:56cc:b0:30e:3338:8c0e with SMTP id 98e67ed59e1d1-30e7d5a8b5amr30665302a91.27.1747835857527;
-        Wed, 21 May 2025 06:57:37 -0700 (PDT)
-Received: from thinkpad ([120.60.52.42])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30f365b22b5sm3663633a91.5.2025.05.21.06.57.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 06:57:37 -0700 (PDT)
-Date: Wed, 21 May 2025 14:57:31 +0100
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Nitin Rawat <quic_nitirawa@quicinc.com>
-Cc: vkoul@kernel.org, kishon@kernel.org, 
-	James.Bottomley@hansenpartnership.com, martin.petersen@oracle.com, bvanassche@acm.org, 
-	andersson@kernel.org, neil.armstrong@linaro.org, dmitry.baryshkov@oss.qualcomm.com, 
-	konrad.dybcio@oss.qualcomm.com, quic_rdwivedi@quicinc.com, quic_cang@quicinc.com, 
-	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-scsi@vger.kernel.org
-Subject: Re: [PATCH V5 09/11] scsi: ufs: qcom : Refactor phy_power_on/off
- calls
-Message-ID: <knlhbl3mwo3b7xc4rjp4y7yka2nwythumjacmvn236v72ykddo@r3cp2w4uomol>
-References: <20250515162722.6933-1-quic_nitirawa@quicinc.com>
- <20250515162722.6933-10-quic_nitirawa@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kMxNZFK/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60E2EC4CEE4;
+	Wed, 21 May 2025 13:58:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747835900;
+	bh=TV5Um3wEwSm9Yw2CbWgV1hqPi3iVOdmeNBmDMsMJJus=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kMxNZFK/lgC4ZaEQYoSnJ5VGx6lIKQCL0sODzOUx5mwG4ZPRe5i/T8aw8Nq06ZHQb
+	 9b4Xdw3EV2a2gE0zwB9Xmgqv+lIIEf4Qi46mntSlWQTNNIxqPzhp9djxkXftPNE9Vm
+	 J6k2ZqM+dofAr3L6hoBk5tJk8zt5+f/Fom/HogY3ngdlxV1PAXLXS5JCre12D9p+Hu
+	 vNGSYqzy/hMa6Uz7O3TW36/H/OSFr5C3MZYYAK7r8aKY1gl8i2U8fEqvQ6gM7SALhM
+	 YQNL3z8rlMgv0E5rd7f+Hw+ZLVAVGWb4S5E6RN6LyysgrWxA0o6onC6W8swidmOaov
+	 xSwn+Ig7M1T9g==
+Date: Wed, 21 May 2025 14:58:16 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
+Cc: Willy Tarreau <w@1wt.eu>, Shuah Khan <shuah@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 1/9] tools/nolibc: move ioctl() to sys/ioctl.h
+Message-ID: <5ca9d57f-b711-4929-89ca-79e6966bf3be@sirena.org.uk>
+References: <20250515-nolibc-sys-v1-0-74f82eea3b59@weissschuh.net>
+ <20250515-nolibc-sys-v1-1-74f82eea3b59@weissschuh.net>
+ <eda3af4a-8dfe-4f82-a934-2d0256b754e2@sirena.org.uk>
+ <89bb5a3e-dd6c-475d-9c5d-0bd1595be735@t-8ch.de>
+ <744a1aa8-1efc-4c20-b45e-070fc038f6e8@sirena.org.uk>
+ <198bf1a8-98d0-4693-a4cf-234cad728c9b@t-8ch.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="o1EjMuOZVPaPj0Gi"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250515162722.6933-10-quic_nitirawa@quicinc.com>
+In-Reply-To: <198bf1a8-98d0-4693-a4cf-234cad728c9b@t-8ch.de>
+X-Cookie: 42
 
-On Thu, May 15, 2025 at 09:57:20PM +0530, Nitin Rawat wrote:
-> Commit 3f6d1767b1a0 ("phy: ufs-qcom: Refactor all init steps into
-> phy_poweron") removes the phy_power_on/off from ufs_qcom_setup_clocks
 
-s/removes/moved
+--o1EjMuOZVPaPj0Gi
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> to suspend/resume func.
-> 
-> To have a better power saving, remove the phy_power_on/off calls from
-> resume/suspend path and put them back to ufs_qcom_setup_clocks, so that
-> PHY regulators & clks can be turned on/off along with UFS's clocks.
-> 
-> Since phy phy_power_on is separated out from phy calibrate, make
-> separate calls to phy_power_on and phy_calibrate calls from ufs qcom
-> driver.
-> 
+On Wed, May 21, 2025 at 03:45:42PM +0200, Thomas Wei=DFschuh wrote:
+> On 2025-05-21 14:22:30+0100, Mark Brown wrote:
 
-This patch is not calling phy_calibrate().
+> > Ah, you expect what's currently there to work - good.  I noticed that
+> > the vDSO tests had a -I for the nolibc directory which made me think it
+> > was expected that it be there, it's the only user on most arches.
 
-> Co-developed-by: Can Guo <quic_cang@quicinc.com>
-> Signed-off-by: Can Guo <quic_cang@quicinc.com>
-> Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
-> ---
->  drivers/ufs/host/ufs-qcom.c | 61 ++++++++++++++++++-------------------
->  1 file changed, 29 insertions(+), 32 deletions(-)
-> 
+> The -I is useful to compile applications without guarding the system
+> includes with #ifndef NOLIBC.
 
-[...]
+These tests are all nolibc specific and so don't reference the system
+headers, the whole point is to not use a real libc.
 
->  static int ufs_qcom_setup_clocks(struct ufs_hba *hba, bool on,
->  				 enum ufs_notify_change_status status)
->  {
->  	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
-> +	struct phy *phy = host->generic_phy;
-> +	int err;
->  
->  	/*
->  	 * In case ufs_qcom_init() is not yet done, simply ignore.
-> @@ -1157,10 +1141,22 @@ static int ufs_qcom_setup_clocks(struct ufs_hba *hba, bool on,
->  				/* disable device ref_clk */
->  				ufs_qcom_dev_ref_clk_ctrl(host, false);
->  			}
-> +
-> +			err = phy_power_off(phy);
-> +			if (err) {
-> +				dev_err(hba->dev, "phy power off failed, ret=%d\n", err);
-> +				return err;
-> +			}
->  		}
->  		break;
->  	case POST_CHANGE:
->  		if (on) {
-> +			err = phy_power_on(phy);
-> +			if (err) {
-> +				dev_err(hba->dev, "phy power on failed, ret = %d\n", err);
-> +				return err;
-> +			}
-> +
->  			/* enable the device ref clock for HS mode*/
->  			if (ufshcd_is_hs_mode(&hba->pwr_info))
->  				ufs_qcom_dev_ref_clk_ctrl(host, true);
-> @@ -1343,9 +1339,10 @@ static int ufs_qcom_init(struct ufs_hba *hba)
->  static void ufs_qcom_exit(struct ufs_hba *hba)
->  {
->  	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
-> +	struct phy *phy = host->generic_phy;
->  
->  	ufs_qcom_disable_lane_clks(host);
-> -	phy_power_off(host->generic_phy);
-> +	phy_power_off(phy);
+> What do I have to do to cross-compile these selftests?
+> I get various compiler errors.
 
-This change is not at all needed.
+Any specific errors?  It's just a standard selftest build, eg:
 
-- Mani
+   make -C tools/testing/selftests LLVM=3D1 ARCH=3Darm64 TARGETS=3Darm64
 
--- 
-மணிவண்ணன் சதாசிவம்
+Unless you've got very current userspace headers you'll probably need
+a headers_install too (that's generally needed for the selftests).
+
+--o1EjMuOZVPaPj0Gi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgt2/cACgkQJNaLcl1U
+h9ARDwf7BozdrB4Bcr6jM/YF1p6VqVRrJ0CeeWvtqJRfjrYx1kAx8w2sVJXMrHhb
+yq0/tQ5Nbms6IAM4evFvplCaqGsxSkjc3rsruqHstlyzQKzGRqEjrqAa9gnuWdHF
+ubgamRun3Ff0/xjVppOSdU8oxMPECjlLfQWgc4MDYNzyg0/B9ALeIOAsb3mjYk1U
+LirAWbSvbWzMqi8lL9gOwFtUyQn0j2+xhYN0pMuAt+g09tFc1+B6j8aPJq/pGbkk
+eko4YyzFx9eB18yUl4NWuv48oUZ46dMokY5K/lBFVo774BYHjFf4SRgATZ+mPkPw
+/BiHFCRIYPs+abzjfSbP6VZpw04SxA==
+=zzfQ
+-----END PGP SIGNATURE-----
+
+--o1EjMuOZVPaPj0Gi--
