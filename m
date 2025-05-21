@@ -1,159 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6218C50276;
-	Wed, 21 May 2025 19:39:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5682450276
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 19:39:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747856360; cv=none; b=RmIR/oaZWnzdLkLHqoy9JWynM7dDS6WQJ83D9gV9XkRwGaFSbIi0ihurqQ68Gce8XJRPyZ/lBMEW01vCx0+xtagB7tXlLEbw31KDvcVaUOBi3CayOMEFXBMRmNpP9xbO3g78eTvW0Q3z/4WuDX41NqPZU0EMvwF3jJ/wLRw4+Sw=
+	t=1747856397; cv=none; b=OEr+UQEw5Gjq/BFT4xuthWknmwliuQZf+bBjj2qMXt590pCq1EhyGo2rABbOgxlhj0CxrKcZv5PXeRkLo3RTzNdY+WYPLVI4UNegOC2tVGC0X1Oy/oyRQ/6Yocu6v8Sh9NJxSHmqvKolC4FLlfBs8rezLEEJ45Myp4DjhRjeC94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747856360; c=relaxed/simple;
-	bh=iZNF7m2weWyRiFFUPmLZk4GdZHibUNgz62DAAiUCwoo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=bPaaj2b57EZj3ZJD1xMZbcNQPo2eJ6uhQUxDPzn0wuEGCwwRAIW0O/OErcmFbO8SGpZzji8HjXd5lwtBK4P2+mCveausYkwy2tgHeo17cvAiAUZBJMz3qXuO9J1JjkEVKQAany81Oz9vimeNCTbaq58vvRk5S7fmObIyTutuzP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qbrZJDl8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747856397; c=relaxed/simple;
+	bh=3F4V6Kk5yfSrfxV1Xk6aG9kELD/+rYisOBq19yOkN6Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CB+FS+1lnH/TDCIzGFDaByP4wbFGnu3BD5YzMk55EXwMkyyjCziBEUe+TI68qb5xWTVsKEg/ZFxG507Q34Mu0YRa4NTU1HKHOKWIqsxZtiAsEZIPfQ6+dJrJNTnYmBDMXH3jrAe/EK413PJv1pJheUcYkpqfUerIo83Wvo+e9II=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=kjFMCH/j; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qbrZJDl8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B2CAC4CEE4;
-	Wed, 21 May 2025 19:39:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747856359;
-	bh=iZNF7m2weWyRiFFUPmLZk4GdZHibUNgz62DAAiUCwoo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=qbrZJDl8hYs4Lku2GffW+PA1dRJT33mZGXYDWUqy1XEAWnFGgIxCR/VU/edoGM7jR
-	 Wn6XJ8BD/k0hmbud2LPowvgKJ2lvw6100SrAoeiJjNhzkGsuagFV6TQVJROSg6dywZ
-	 Bu7NZx6YXBEgJv+dNsVHzrU4/dPS4aJZh+D1r4rR8PELMe7KC8oMEhWTxRKWOSA4in
-	 CkCYTQ3nNkq9PPHXSg4ZI5jMLSGIlK9qDWW+el297eCRB9BIuo1ys1JtfIMfH4QYXk
-	 poU1Fyxg49UqJGp0Bp1oTyQyciP8K/Z2xkhZU9Gk0NLL/mqyMaxGD1whvAhzM2S7f2
-	 a6Y8bJjDD1MPA==
-Date: Wed, 21 May 2025 14:39:18 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: linux-pci@vger.kernel.org, Jon Pan-Doh <pandoh@google.com>,
-	Karolina Stolarek <karolina.stolarek@oracle.com>,
-	Weinan Liu <wnliu@google.com>,
-	Martin Petersen <martin.petersen@oracle.com>,
-	Ben Fuller <ben.fuller@oracle.com>,
-	Drew Walton <drewwalton@microsoft.com>,
-	Anil Agrawal <anilagrawal@meta.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Lukas Wunner <lukas@wunner.de>, Sargun Dhillon <sargun@meta.com>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	Oliver O'Halloran <oohall@gmail.com>,
-	Kai-Heng Feng <kaihengf@nvidia.com>,
-	Keith Busch <kbusch@kernel.org>, Robert Richter <rrichter@amd.com>,
-	Terry Bowman <terry.bowman@amd.com>,
-	Shiju Jose <shiju.jose@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>, linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v7 04/17] PCI/AER: Consolidate Error Source ID logging in
- aer_isr_one_error_type()
-Message-ID: <20250521193918.GA1437038@bhelgaas>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="kjFMCH/j"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id DC46140E0239;
+	Wed, 21 May 2025 19:39:52 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id DxCjkhgYBK3e; Wed, 21 May 2025 19:39:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1747856389; bh=7Wv82UlKiO32xVOUId3a1M/WlN7MlP+8Xbq94XNWyQU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kjFMCH/jXkH3MkCtSn51dWtij/fA+lwbuchPkn6Fxmzwk7zqbYmZeRQV59I26xkiD
+	 RGDJhdm9vmMX8Fwg9LWPB5cP1rWGMZd/biAEBoompdMaWVZQ76V6VgRHTK0/crp6iR
+	 AhEAv/6CKSTo5hPh2vCp022+ybELNQ+Inly8MU5iuP1vEBAymqswYr3CzVx4duno6i
+	 6+1inoNJkfVO8AKI0wWXANKA+F1U0J6M8YYgwdedFw4EC+aqFhhtNDuqs+b7GbIFx5
+	 f2/7VWJ5WvsstaNdLF+LPEg/jyR2Y+zmHXlFT39L6M5ZC0+64y0YDbtsiNfDjdTYRs
+	 rFH8oE9TdrFcq7JOcfUDwnW26+vtbg00Aa+fOgbvVjgW6mwC/LYt27mnkyIoy+tjd7
+	 SlC7Kz9tXwU0mLKdNKKPsNtYmU8QLHObtaZNhfPhzXuRVojOwPt6YlIF9Yr2mczUkn
+	 NH4gIvDKNXpHJZnfD1m+vXEuSZiOSrCLT8IUaB/4bT7wbF3UPUgHG5pQLCzABHut7S
+	 j4gT4Pp5hk2imReftLFw4X6mERtWv6OAt1hYY/agkQ5Lh+eqUYEYjue1VrBOuBo60c
+	 G91a8+e8/D5llE7xJk5WWRuTA/SwPB/xHv4r0c9dJT92qnMbmwyVqOB3s+p4P2MKr+
+	 eE41aG3u+MKeZkNKsCibgIeU=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 47BAB40E01FA;
+	Wed, 21 May 2025 19:39:35 +0000 (UTC)
+Date: Wed, 21 May 2025 21:39:34 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Rik van Riel <riel@surriel.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
+	kernel-team@meta.com, dave.hansen@linux.intel.com, luto@kernel.org,
+	peterz@infradead.org, tglx@linutronix.de, mingo@redhat.com,
+	hpa@zytor.com, nadav.amit@gmail.com, Rik van Riel <riel@fb.com>,
+	Yu-cheng Yu <yu-cheng.yu@intel.com>
+Subject: Re: [RFC v2 4/9] x86/mm: Introduce X86_FEATURE_RAR
+Message-ID: <20250521193934.GFaC4r9h38nCeHbt26@fat_crate.local>
+References: <20250520010350.1740223-1-riel@surriel.com>
+ <20250520010350.1740223-5-riel@surriel.com>
+ <20250521115343.GCaC2-x8LsmMApUkjQ@fat_crate.local>
+ <cb657cabbc3c87e0a821c7c3fcc16e62b7d854f4.camel@surriel.com>
+ <20250521145339.GCaC3o87kpaouLZ_3D@fat_crate.local>
+ <bdf83ab6f5149678ba08cfc52ef806ed705aa283.camel@surriel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250521102041.00004901@huawei.com>
+In-Reply-To: <bdf83ab6f5149678ba08cfc52ef806ed705aa283.camel@surriel.com>
 
-On Wed, May 21, 2025 at 10:20:41AM +0100, Jonathan Cameron wrote:
-> On Tue, 20 May 2025 16:50:21 -0500
-> Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Wed, May 21, 2025 at 12:06:59PM -0400, Rik van Riel wrote:
+> On Wed, 2025-05-21 at 16:53 +0200, Borislav Petkov wrote:
+> > On Wed, May 21, 2025 at 09:57:52AM -0400, Rik van Riel wrote:
+> > > I had the same thought, and tried that already.
+> > > 
+> > > It didn't work.
+> > 
+> > Care to share why?
+> > 
+> It resulted in RAR not being properly initialized,
+> and the system hanging when trying to use RAR to
+> flush the TLB.
 > 
-> > From: Bjorn Helgaas <bhelgaas@google.com>
-> > 
-> > Previously we decoded the AER Error Source ID in aer_isr_one_error_type(),
-> > then again in find_source_device() if we didn't find any devices with
-> > errors logged in their AER Capabilities.
-> > 
-> > Consolidate this so we only decode and log the Error Source ID once in
-> > aer_isr_one_error_type().  Add a "details" parameter so we can add a note
-> > when we didn't find any downstream devices with errors logged in their AER
-> > Capability.
-> > 
-> > This changes the dmesg logging when we found no devices with errors logged:
-> > 
-> >   - pci 0000:00:01.0: AER: Correctable error message received from 0000:02:00.0
-> >   - pci 0000:00:01.0: AER: found no error details for 0000:02:00.0
-> >   + pci 0000:00:01.0: AER: Correctable error message received from 0000:02:00.0 (no details found)
-> > 
-> > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> Nice little improvement.  I'll assume you reuse
-> details later as otherwise passing a bool and creating
-> the (no details found) in aer_print_port_info() would
-> have been simpler to my eyes as it would have put all the
-> string generation in one place.
+> I don't remember exactly what sequence of events
+> was happening here, maybe something with the
+> boot CPU per-cpu RAR initialization being called
+> (or not, due to X86_FEATURE_RAR not being set)
+> before the systemwide initialization?
 
-Great idea!  Since there's only one caller, I think passing a bool is
-much nicer.
+I'm asking you to move it from this path to
 
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> 
-> > ---
-> >  drivers/pci/pcie/aer.c | 22 +++++++++-------------
-> >  1 file changed, 9 insertions(+), 13 deletions(-)
-> > 
-> > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> > index 568229288ca3..488a6408c7a8 100644
-> > --- a/drivers/pci/pcie/aer.c
-> > +++ b/drivers/pci/pcie/aer.c
-> > @@ -733,16 +733,17 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
-> >  			info->severity, info->tlp_header_valid, &info->tlp);
-> >  }
-> >  
-> > -static void aer_print_port_info(struct pci_dev *dev, struct aer_err_info *info)
-> > +static void aer_print_port_info(struct pci_dev *dev, struct aer_err_info *info,
-> > +				const char *details)
-> >  {
-> >  	u8 bus = info->id >> 8;
-> >  	u8 devfn = info->id & 0xff;
-> >  
-> > -	pci_info(dev, "%s%s error message received from %04x:%02x:%02x.%d\n",
-> > +	pci_info(dev, "%s%s error message received from %04x:%02x:%02x.%d%s\n",
-> >  		 info->multi_error_valid ? "Multiple " : "",
-> >  		 aer_error_severity_string[info->severity],
-> >  		 pci_domain_nr(dev->bus), bus, PCI_SLOT(devfn),
-> > -		 PCI_FUNC(devfn));
-> > +		 PCI_FUNC(devfn), details);
-> >  }
-> >  
-> >  #ifdef CONFIG_ACPI_APEI_PCIEAER
-> > @@ -926,15 +927,8 @@ static bool find_source_device(struct pci_dev *parent,
-> >  	else
-> >  		pci_walk_bus(parent->subordinate, find_device_iter, e_info);
-> >  
-> > -	if (!e_info->error_dev_num) {
-> > -		u8 bus = e_info->id >> 8;
-> > -		u8 devfn = e_info->id & 0xff;
-> > -
-> > -		pci_info(parent, "found no error details for %04x:%02x:%02x.%d\n",
-> > -			 pci_domain_nr(parent->bus), bus, PCI_SLOT(devfn),
-> > -			 PCI_FUNC(devfn));
-> > +	if (!e_info->error_dev_num)
-> >  		return false;
-> > -	}
-> >  	return true;
-> >  }
-> >  
-> > @@ -1281,9 +1275,11 @@ static inline void aer_process_err_devices(struct aer_err_info *e_info)
-> >  static void aer_isr_one_error_type(struct pci_dev *root,
-> >  				   struct aer_err_info *info)
-> >  {
-> > -	aer_print_port_info(root, info);
-> > +	bool found;
-> >  
-> > -	if (find_source_device(root, info))
-> > +	found = find_source_device(root, info);
-> > +	aer_print_port_info(root, info, found ? "" : " (no details found");
-> > +	if (found)
-> >  		aer_process_err_devices(info);
-> >  }
-> >  
-> 
+                if (this_cpu->c_early_init)
+                        this_cpu->c_early_init(c);
+
+or
+
+                if (this_cpu->c_bsp_init)
+                        this_cpu->c_bsp_init(c);
+
+a couple of lines above.
+
+This doesn't change anything: you're still running it on the BSP once. So
+I don't see how any of the above confusion would happen.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
