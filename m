@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9D1E50276;
-	Wed, 21 May 2025 21:07:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6A502BCF70;
+	Wed, 21 May 2025 21:08:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747861677; cv=none; b=PKyVkFu2ay8x0Xqyz2h+/DQw/u5vvzuADd9T2qyyIdqF+rideV5z6uu50D4Qnrog4+rTw8yv4GR39CanVujb2psZ9b+OgHOyczgYl5c+FnV4Rap+7CWeusqdXhALgrnBaq81ovTVN0tUKC+rpkWgWbrGJCOZpDjb/+uEHRippRM=
+	t=1747861684; cv=none; b=jc7LeTk587hLE/rrwm8YZHeXl1LUlQ965qrNKdOckz+UcxiankP8rZjT27gMW1rwuMwgeZzT9eT/+aX2PAmumprabl1YN/r8u3MP6XbONR4Q8q8dWQqKHMKN5uNVk2tzG8mFZ+L7Lpxu3FbfJLaQWK5U0SPZVL5U5CbHuXEMFH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747861677; c=relaxed/simple;
-	bh=nGFyVKNPyoTaPlmw24+T44IdzETxFPg/pmUonSikyF0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MHf894p2C97vdyls7FgTAymfJutvaP1GIXKmjTK56KoLwFnTjzERSaWk471rz1OESm3tw4XOumkE1HztIz7JSNdavr1mnhE3XeTaHTusw4ixCmUWBc+EC1vsRpq6WvYASyTn1KWlIPlPqyNbo2gO9+CPVqPB0WFt1ZuRsrBg3NQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dNBcxmV7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747861684; c=relaxed/simple;
+	bh=bv5BYb6hSzBYlfuHwkB+R74XVZnHjcjUw7RiQCpsz/8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Hx2LiszqLt3k2pD36qZAlX6VQD7d5b8sLoZSf/Gv9EXT4+8jXeUQ/RpSibhIlGeor2lb+vIs7z3wh02fQCoZJSiU2TW+CMq6gqxRdnSNf18aV4/ykLOWwopJySPN4BfbCYP1hIr0ZzQjI7IT37HNCFNTQ8kbiagjb/3Maj3skc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mweq7vHO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dNBcxmV7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91C2FC4CEEA;
-	Wed, 21 May 2025 21:07:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mweq7vHO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00F74C4CEE4;
+	Wed, 21 May 2025 21:08:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747861676;
-	bh=nGFyVKNPyoTaPlmw24+T44IdzETxFPg/pmUonSikyF0=;
+	s=k20201202; t=1747861684;
+	bh=bv5BYb6hSzBYlfuHwkB+R74XVZnHjcjUw7RiQCpsz/8=;
 	h=From:To:Cc:Subject:Date:From;
-	b=dNBcxmV7fEWBXwTAa3Fsx8mdetuZ2YdCdNBAWeuISVfjShD/VVF6ByK0GTWfk2sor
-	 2QgQOpXaiIpc5dF9xkT4yIf06iL0cu93ddue1kHZ/MOh3iaCQ0gqzCErVDpN7IFStQ
-	 RreEjjbOl5LETsISjaeMIdugJuPoZQeaevytoOkB6Bdjtgixn7FWMQoYEiK6eKZStN
-	 CADyykWzMEFtxWv37ZIrDxideudi+B/B8jhtcnLceG+XW9xJTTJ0cgvfxB6cxKM0n+
-	 bhG73e1bPOG3rMbCIbjnxOyQa1aDTKuxd1pghFQzCGyVSg/9cI4utGzzItiXfJ7bDw
-	 wr3cpeW1qK1Eg==
+	b=Mweq7vHOV6sJ3vlc6QITbHKUetDa5OluhVASRIjLH4AAm7JLkC5ksMqzfwuvvHySl
+	 Ab8kJhAWMoOHhWdfmQ6JpXyiS3hPLNlQHj0BYc0DrIBpp6LmKpJEKQVr4gyBIoF2hr
+	 3DXvQwUII/yf8kujtm8M7OENkT8ZQZzwiXiAiDbLsXPw4wSt7ZnVhO5cRav6v+aKvH
+	 qK0s1xyRTHO2vehuW8hiTTBWQpP83nByEyX1wauahWT4oj0ExfxMwTsBTGSAz+Hc4a
+	 Lkv7O0exCPLzM8rMeGlfwj+3QXt3JPa0xFMUeB8BHZi0y/wVcqR3iZoFCrrWnYmSTn
+	 MXhEKxomjC0sw==
 From: "Rob Herring (Arm)" <robh@kernel.org>
 To: Michael Turquette <mturquette@baylibre.com>,
 	Stephen Boyd <sboyd@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Daniel Tang <dt.tangr@gmail.com>
+	Andrew Lunn <andrew@lunn.ch>,
+	Gregory Clement <gregory.clement@bootlin.com>
 Cc: linux-clk@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: clock: Convert TI-NSPIRE clocks to DT schema
-Date: Wed, 21 May 2025 16:07:49 -0500
-Message-ID: <20250521210750.60759-1-robh@kernel.org>
+Subject: [PATCH] dt-bindings: clock: Convert marvell,armada-370-corediv-clock to DT schema
+Date: Wed, 21 May 2025 16:07:58 -0500
+Message-ID: <20250521210759.61036-1-robh@kernel.org>
 X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -46,85 +47,106 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Convert the TI-NSPIRE clock bindings to DT schema format. It's a
-straight forward conversion.
+Convert the Marvell Armada 3xx Core Divider clock binding to DT schema
+format.
+
+Add the missing "marvell,armada-390-corediv-clock" compatible and
+"clock-output-names" property.
 
 Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- .../bindings/clock/lsi,nspire-cx-clock.yaml   | 33 +++++++++++++++++++
- .../bindings/clock/nspire-clock.txt           | 24 --------------
- 2 files changed, 33 insertions(+), 24 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/lsi,nspire-cx-clock.yaml
- delete mode 100644 Documentation/devicetree/bindings/clock/nspire-clock.txt
+ .../marvell,armada-370-corediv-clock.yaml     | 52 +++++++++++++++++++
+ .../bindings/clock/mvebu-corediv-clock.txt    | 23 --------
+ 2 files changed, 52 insertions(+), 23 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/marvell,armada-370-corediv-clock.yaml
+ delete mode 100644 Documentation/devicetree/bindings/clock/mvebu-corediv-clock.txt
 
-diff --git a/Documentation/devicetree/bindings/clock/lsi,nspire-cx-clock.yaml b/Documentation/devicetree/bindings/clock/lsi,nspire-cx-clock.yaml
+diff --git a/Documentation/devicetree/bindings/clock/marvell,armada-370-corediv-clock.yaml b/Documentation/devicetree/bindings/clock/marvell,armada-370-corediv-clock.yaml
 new file mode 100644
-index 000000000000..52c217d210d0
+index 000000000000..9d936185c7ca
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/lsi,nspire-cx-clock.yaml
-@@ -0,0 +1,33 @@
++++ b/Documentation/devicetree/bindings/clock/marvell,armada-370-corediv-clock.yaml
+@@ -0,0 +1,52 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/clock/lsi,nspire-cx-clock.yaml#
++$id: http://devicetree.org/schemas/marvell,armada-370-corediv-clock.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: TI-NSPIRE Clocks
++title: Marvell MVEBU Core Divider Clock
 +
 +maintainers:
-+  - Daniel Tang <dt.tangr@gmail.com>
++  - Andrew Lunn <andrew@lunn.ch>
++  - Gregory Clement <gregory.clement@bootlin.com>
 +
 +properties:
 +  compatible:
-+    enum:
-+      - lsi,nspire-cx-ahb-divider
-+      - lsi,nspire-classic-ahb-divider
-+      - lsi,nspire-cx-clock
-+      - lsi,nspire-classic-clock
++    oneOf:
++      - enum:
++        - marvell,armada-370-corediv-clock
++        - marvell,armada-375-corediv-clock
++        - marvell,armada-380-corediv-clock
++        - marvell,mv98dx3236-corediv-clock
++      - items:
++          - const: marvell,armada-390-corediv-clock
++          - const: marvell,armada-380-corediv-clock
 +
 +  reg:
 +    maxItems: 1
 +
++  "#clock-cells":
++    const: 1
++
 +  clocks:
 +    maxItems: 1
 +
-+  '#clock-cells':
-+    const: 0
-+
-+additionalProperties: false
++  clock-output-names:
++    maxItems: 1
 +
 +required:
 +  - compatible
 +  - reg
-diff --git a/Documentation/devicetree/bindings/clock/nspire-clock.txt b/Documentation/devicetree/bindings/clock/nspire-clock.txt
++  - "#clock-cells"
++  - clocks
++
++additionalProperties: false
++
++examples:
++  - |
++    clock-controller@18740 {
++        compatible = "marvell,armada-370-corediv-clock";
++        reg = <0x18740 0xc>;
++        #clock-cells = <1>;
++        clocks = <&pll>;
++    };
+diff --git a/Documentation/devicetree/bindings/clock/mvebu-corediv-clock.txt b/Documentation/devicetree/bindings/clock/mvebu-corediv-clock.txt
 deleted file mode 100644
-index 7c3bc8bb5b9f..000000000000
---- a/Documentation/devicetree/bindings/clock/nspire-clock.txt
+index c7b4e3a6b2c6..000000000000
+--- a/Documentation/devicetree/bindings/clock/mvebu-corediv-clock.txt
 +++ /dev/null
-@@ -1,24 +0,0 @@
--TI-NSPIRE Clocks
+@@ -1,23 +0,0 @@
+-* Core Divider Clock bindings for Marvell MVEBU SoCs
+-
+-The following is a list of provided IDs and clock names on Armada 370/XP:
+- 0 = nand (NAND clock)
 -
 -Required properties:
--- compatible: Valid compatible properties include:
--	"lsi,nspire-cx-ahb-divider" for the AHB divider in the CX model
--	"lsi,nspire-classic-ahb-divider" for the AHB divider in the older model
--	"lsi,nspire-cx-clock" for the base clock in the CX model
--	"lsi,nspire-classic-clock" for the base clock in the older model
+-- compatible : must be "marvell,armada-370-corediv-clock",
+-		       "marvell,armada-375-corediv-clock",
+-		       "marvell,armada-380-corediv-clock",
+-                       "marvell,mv98dx3236-corediv-clock",
 -
--- reg: Physical base address of the controller and length of memory mapped
--	region.
--
--Optional:
--- clocks: For the "nspire-*-ahb-divider" compatible clocks, this is the parent
--	clock where it divides the rate from.
+-- reg : must be the register address of Core Divider control register
+-- #clock-cells : from common clock binding; shall be set to 1
+-- clocks : must be set to the parent's phandle
 -
 -Example:
 -
--ahb_clk {
--	#clock-cells = <0>;
--	compatible = "lsi,nspire-cx-clock";
--	reg = <0x900B0000 0x4>;
--	clocks = <&base_clk>;
+-corediv_clk: corediv-clocks@18740 {
+-	compatible = "marvell,armada-370-corediv-clock";
+-	reg = <0x18740 0xc>;
+-	#clock-cells = <1>;
+-	clocks = <&pll>;
 -};
 -- 
 2.47.2
