@@ -1,123 +1,109 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 654BA18B47C;
-	Wed, 21 May 2025 14:06:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DD291917F9;
+	Wed, 21 May 2025 14:07:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747836418; cv=none; b=Sxf0t7OEpC2nsqYT0NDRK/5PUQ3vI5D782gdveahCLMguaiUwSZkKF1GZoU36GMZkInV747JUwblPTs2/Wv5HqyeBFJfJQh3HwSu2/7wYPgJo1ATSkAUKAbBnFGRVg4Rg8offILynC3Sa5RjYWKG909PDE0LzjDQnn/t+poNIVY=
+	t=1747836423; cv=none; b=goXZM+HZPknQ5uFznqOKkIWuTE29D5/Yfl2KXW2WRsK+fyHOGb1PqUnaALx06BHlM/EgR7xTcauSFOrbk+/qLLHyJbVhR59+++dQUHAA2MIipGgRcJUeU4Dhght/L4aifz/RoQH2LmbsaXeE4EMEmIxn8gZJtecDextL/Zrd/l8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747836418; c=relaxed/simple;
-	bh=SVBIAry5diav5AcInN8gs8lqjfGsmpDJg/gQpPaZMrE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=rsSVNXqWvBROZEfiE3AnIVYOY02qZMjBFY1DbdKqfbTfUFVDpSJha+o5Swp7pHEAThWSEssSMlKSE5o/rttUY4EXAxOV8XuOEqEogByQ6s49wjcqWG4HXs2+JB8gz4+LCmhBcBifAklFwrpjaFFQhs06WWlXg/fqXTf7Bz5Ntak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ViuagPKs; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1747836423; c=relaxed/simple;
+	bh=PrdPwrTaCyVZJ6LhMx3co+GcbOb13kfr2nu9W6OuDZM=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=ht3emG9Q2dGbP+x7ktgE58ZDZfwVrd1bPxi+com6/0dn5T7R6oyTf56mPdePSB1dZWAE+7AUJD0MdPz7dXLce+UIiR1Putll5kcQhAfYpFsUGH7bUzU6xAsrC1znwIMCa0tOETZDto3bWcvSvhTe2af2wjXSbrJeI4m3BM5PTdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nRp1YWSS; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ViuagPKs"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54L9XJXV031702;
-	Wed, 21 May 2025 14:06:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	mQbP+SH9J660U0q35K9OzSg2MdznoCxxpaUVi93Eyoc=; b=ViuagPKsl3+Zz7Ia
-	gi6GtNJhcGpolvim25UGwYExvsDy1TNLUo1L3Y2JKQYE5nPodfsin1akzmzIwUsP
-	01fP6jy0uIVBbVr7Qn0mIAsharaJArDiBY4CAETD2pKHstwkoHBnAeMs1iFQrlRv
-	ZqdjfVifnS6Zm+Nlk/uifqGn+jJxwGsiSkVDVKtQcObZxr1eOmX31ZovXBY4SuXs
-	sf7WD0I16RuxEShAzbImTtQ0G5ONwZstbRWadypDJ44z5clNSJvdQF5UCKFn5dKj
-	hDfJB1NfxmdYwTqemjFlcAB9vq0b1mYi3fGQvRdUQhuCJxfHSMOvilVww1TvxR7J
-	oo9dyQ==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46s8c21pn6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 14:06:50 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54LE6o4h003288
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 21 May 2025 14:06:50 GMT
-Received: from [10.219.49.109] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 21 May
- 2025 07:06:46 -0700
-Message-ID: <3b498b4e-7159-4cb4-bc71-78f32feaf402@quicinc.com>
-Date: Wed, 21 May 2025 19:36:31 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nRp1YWSS"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a376ba6f08so1792239f8f.1;
+        Wed, 21 May 2025 07:07:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747836420; x=1748441220; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=PrdPwrTaCyVZJ6LhMx3co+GcbOb13kfr2nu9W6OuDZM=;
+        b=nRp1YWSSkjg4jDEDMNkgHlCwS181eUwqj9lFpLtn04ZAY43ggzs8D8Dd7/IgDJqYE2
+         5yrtHlUJtYIJXcZe5mrjbzgzyE8HuukjJpHRWzhOzl7eus2xoM9GWSJIb/x42vHxvdFe
+         5ziUJAOvxnxeQoOfOxewgcxGJgwVSqq9q1/ncY7Pk1YG3Ea2W5zQoSf9redOg4XkZ8/+
+         9Wza35U7J13XongDDdo4Zaf+4mRX5agTOL4ItoH4tykEkg9voCg0F836Bmh808bIpbFI
+         OQES569ag+yRdGpF5ZOdQjiM2DKaTviCL5NcmFnUFQnLQvFilsEE7tPRi/Kth1tOVpxw
+         2yRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747836420; x=1748441220;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PrdPwrTaCyVZJ6LhMx3co+GcbOb13kfr2nu9W6OuDZM=;
+        b=Dflo427qvgepvJ8yrsbFTsg1S3Od0Of9LFpFFhh2qgj/Be1QhSRkW/TE6bs19rkTVO
+         n+2OltN98VckgfaPhon0m/e3Ma2VZBBO/I7qNxXy4jGcdqqu/mVVmn+B+1M4vhlDmi0t
+         uJIvBLM6jRNhTUZsE2Sg42X7dP8dyIZCNjkAqkgeWCSate3ChJfE8i8qihMb3EwT89Aj
+         hdW657JmCrP5a+gtct9n71d2EF0yjyKNHdNpTJkR9gW4dAZLb6j4GDGddEE630s8EIgF
+         fFFlmnr8PDkSv6KRcVDaqgPOgzm8FW5tVkIOo3Lsh2ZaSyivYbwyQOQbimh9Duw+HO7+
+         SpRw==
+X-Forwarded-Encrypted: i=1; AJvYcCUiwrf321Riz+Za2/BrVhH7aQxqgDwP6ey/MOsc2e5sdAxZ6vuCiMGItO2O3+GmlntN4QPhi0MrsyxhIhU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3B5+2KonyUoWAvsWESQGkswybEXYEhDLqgJ4tCol45BGoi/Mk
+	srsZmud7pfK2nzTz3azre3cldFcNpD64BIRsIAVsvB/aAWFIscoUNc/q+rPAN3RlxeR7Pg1vz2k
+	EWxIVnPIaAn4yvA5N1HHTVjpZa5sT5YAjcw9itw==
+X-Gm-Gg: ASbGnctuOWpRYEvacQcKbWvJVbFPINSF8zmDAvuOOaQ/rK+DcOycJp0NQFl5ZuoZLap
+	mHPflUn6ZciL90coglP+SehBOPOmckYZL+O0pPiZiex7vcajRyz2sEc6IslHGC/0hpbHT7/MVif
+	dKy3gkDFoCJrCcEeTlZ7x9uLPflwkmXl9OGIqn/F8tBh/J+xENBeO/Vg==
+X-Google-Smtp-Source: AGHT+IGWlj44DyZkDHN2p0d1xh93yb6V5ZaLQlfiMVxPwmzJHtxveqB5gjDhKF+gkEh0V5Z9d7d6NdyN03te1+8qmX4=
+X-Received: by 2002:a2e:a553:0:b0:326:e80a:46c6 with SMTP id
+ 38308e7fff4ca-328077b3495mr80523321fa.34.1747836408759; Wed, 21 May 2025
+ 07:06:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/7] arm64: dts: qcom: qcs6490-rb3gen2: Add sound card
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-CC: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        <cros-qcom-dts-watchers@chromium.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel@oss.qualcomm.com>, Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-References: <20250520062618.2765109-1-quic_pkumpatl@quicinc.com>
- <20250520062618.2765109-6-quic_pkumpatl@quicinc.com>
- <3fbffse4iqkegqjheeptnmsofz7fasqgnpbhhbzlzibv5qjxx6@dft4vafwlkfr>
-Content-Language: en-US
-From: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
-In-Reply-To: <3fbffse4iqkegqjheeptnmsofz7fasqgnpbhhbzlzibv5qjxx6@dft4vafwlkfr>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDEzNyBTYWx0ZWRfX0Pje3bpufgC2
- pwf5NEMkOa2EEfQho1UKiQRp8FeUtrYbbL44siFulM28OTsM4G12LEXCVV60Y6vhoXEjy5f0aTI
- oW36nEwE/qKpWgJTO3nQWzHy60OnoNsd3T0Xs+tHZF7GMAgFVn6Fdg5wWNI/OOQMBJSQVVo+c2R
- iKsxDzlL0tySFpgzVwiQFn9yZWioV2qJcQJ6Zfh7dxH6HOj9fPMHQwlvQ9/NL7clxV9M8ym7Cjl
- A9aTakFg0xouVLLIUXpFzi3n39bv3YqM+75xSrVpANFEtKiibbjHgPEMhZqxI+j1qlv6wNf973L
- lYBtJASM4A16/mtAoSTzrLWNUK7AvHpEWfV0RdDRwfKSYT4P6CtH9qotGEP+E6eaVcy9y25bjmW
- ijbSbuHjbWOHtV8fwmkLRweZSgGktyIW7JolusPFXTKRVKrRIyc8EdsJCK0oANcqoOacZhpS
-X-Authority-Analysis: v=2.4 cv=RIuzH5i+ c=1 sm=1 tr=0 ts=682dddfa cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
- a=_2Pm6FfrxIRCaX_8azEA:9 a=QEXdDO2ut3YA:10 a=zgiPjhLxNE0A:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: j6b06aqaouBsH941gbF5Akd6-Q0Aza2R
-X-Proofpoint-GUID: j6b06aqaouBsH941gbF5Akd6-Q0Aza2R
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-21_04,2025-05-20_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 phishscore=0 suspectscore=0 malwarescore=0 bulkscore=0
- mlxlogscore=571 spamscore=0 lowpriorityscore=0 mlxscore=0 priorityscore=1501
- adultscore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505210137
+From: John <john.cs.hey@gmail.com>
+Date: Wed, 21 May 2025 22:06:35 +0800
+X-Gm-Features: AX0GCFt1Kr1QhJULNOmld5jR13TDzBLZ3oxzE20BweSiEtr1U6s_Oz1QcZvRmtk
+Message-ID: <CAP=Rh=M50sHJqAUYfqBsOR1iTRaoykZy-C1wHsM2gQmE0i-__Q@mail.gmail.com>
+Subject: [Bug] "WARNING in __ieee80211_beacon_update_cntdwn" in Linux kernel v6.14
+To: Johannes Berg <johannes@sipsolutions.net>
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+Dear Linux Kernel Maintainers,
 
+I hope this message finds you well.
 
-On 5/21/2025 1:33 AM, Dmitry Baryshkov wrote:
-> On Tue, May 20, 2025 at 11:56:16AM +0530, Prasad Kumpatla wrote:
->> From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
->>
->> Add the sound card node with tested playback over WSA8835 speakers
->> and digital on-board mics.
-> 
-> No WCD codec?
+I am writing to report a potential vulnerability I encountered during
+testing of the Linux Kernel version v6.14.
 
-Yes, No WCD on qcs6490-rb3gen2.
+Git Commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557 (tag: v6.14)
 
-Thanks,
-Prasad>
->>
->> Signed-off-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
->> Co-developed-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
->> Signed-off-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
->> ---
->>   arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts | 45 ++++++++++++++++++++
->>   1 file changed, 45 insertions(+)
-> 
+Bug Location: 0010:__ieee80211_beacon_update_cntdwn.isra.0.part.0+0x6/0x10
+net/mac80211/tx.c:5040
 
+Bug report: https://pastebin.com/8BAbTqUc
+
+Complete log: https://pastebin.com/YgXnKSiP
+
+Entire kernel config: https://pastebin.com/MRWGr3nv
+
+Root Cause Analysis:
+The kernel warning originates from __ieee80211_beacon_update_cntdwn()
+in net/mac80211/tx.c, where the countdown field for Channel Switch
+Announcement (CSA) elements in beacon frames is updated.
+ The warning is triggered due to an invalid internal state, likely
+caused by malformed netlink input.
+The user-space process syz.0.238 sent a netlink message with an
+invalid attribute length, and the simulated driver mac80211_hwsim
+attempted to process it.
+This resulted in invalid countdown offset handling, leading to a
+WARN_ON() in beacon generation. This is indicative of missing sanity
+checks on user-provided parameters in the beacon update logic of
+mac80211.
+
+At present, I have not yet obtained a minimal reproducer for this
+issue. However, I am actively working on reproducing it, and I will
+promptly share any additional findings or a working reproducer as soon
+as it becomes available.
+
+Thank you very much for your time and attention to this matter. I
+truly appreciate the efforts of the Linux kernel community.
+
+Best regards,
+John
