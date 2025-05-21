@@ -1,410 +1,207 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mail1.bemta44.messagelabs.com (mail1.bemta44.messagelabs.com [67.219.246.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43E5323E229;
-	Wed, 21 May 2025 23:43:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747871028; cv=none; b=o/jj9Z0NNYOr66238aCa2knmItng3T8UZ4u5/QJi2Lq3fI/tBuJjiNA0X8xEdTNoMQgoDGGSQt1Nw4rLKGXB8yG8svlooRdOgAgEdllf8ZP4J19UBMU18gQtbp1zm1pLzTwCudw/LiGRHVdZ/wyyXWZvlaZnLaYi5QhaxM1G+9A=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747871028; c=relaxed/simple;
-	bh=4B1koA9h0WMC5kCEpLY9cJl3Bkf5HrbfIBnhnfPPLWE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D2MPDYgUyxLdUa/9LfLcisfJtadc/W28AXky7Oux6kM0A8ILDkZP1xp2ZNyVq+w3dwjzzZxHjZiYbwUJP4T3ea1B++B7dWvsrcyAfRJENL4ImVnt/PZVlvc1ItFtCkOivUiRJUXV56syfCsjYwaIBjcWB5kdcI7CNgDmROwscS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YJh2p6Ri; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2606DF58;
+	Wed, 21 May 2025 23:46:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.219.246.2
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747871218; cv=fail; b=k5EZYEpHz+6QFy+Gw/CqnKlrk5icIuthAs2qv4Cc8SL+P/DsVHSGQtEeUWTcVXwYHbf8rUOTNW2M04Ix0gpeNQMbddyvE6YeL2YvlnJ+dSC4nloi5SAIyOJFEw2k8bnBgSEAQNewhCvU5z4GccPYHZftB5sOF9FIfoD1L2JEURg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747871218; c=relaxed/simple;
+	bh=cdfwOby0l3/9746vq3GHpu0O+eJeMlwBMYIPSd5sspw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sqtMp5Rxn3bXJUf++D0zTS6wggygV0QOJJfJJOxAmHJmZmo7ude41WvQUFY32Sros6oHpa6fgHJ1eJ2YdTBTw6/qIH3+VU7jHBzDvJDo26QD2AwL56wItFgop6ND+5FENhIfVOuH9oeITN5pjSuvDu1hwaK8a3mqlRjOlYczsdg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=semtech.com; spf=pass smtp.mailfrom=semtech.com; dkim=pass (2048-bit key) header.d=semtech.com header.i=@semtech.com header.b=h4E76Fyp; dkim=fail (1024-bit key) header.d=SemtechCorp.onmicrosoft.com header.i=@SemtechCorp.onmicrosoft.com header.b=EM7x2RkT reason="signature verification failed"; arc=fail smtp.client-ip=67.219.246.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=semtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=semtech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YJh2p6Ri"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747871026; x=1779407026;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=4B1koA9h0WMC5kCEpLY9cJl3Bkf5HrbfIBnhnfPPLWE=;
-  b=YJh2p6RikchLX8cuaQtOqA6X/Kwyatzhb2kCYEF22bmSPbtESN/nM6SI
-   U+xtdAfsjpUslxBGuiD+WzoT/vuNRMNu6kxekrAiLqkbtQ33Xw5nY6JPv
-   9EbyPsOspAq2giTFEeFzv2e85F7T7OwpFRALgravH5ufMqjrAr9V1CFbG
-   4Ud3fWmeG8gD5EEInZHNRu9Vd4HPJQcnUu/6rkF3cMBRY/JGiLkFoV8Jf
-   0/lDBLiwj9zPjukv0vXWEzP7QnIP3z9KkyjijWM2z1ArgDZhG1sHf5cP9
-   PhuyJNAXUQ3bZmM/aymcWQSxuM9MlBftq/Q0J4RThiz8DcH5mFbQaOZW7
-   A==;
-X-CSE-ConnectionGUID: 3M516FdnQ0e4ma0xcrou8w==
-X-CSE-MsgGUID: T5Ic7+HRTceIWE3B1jcpAA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="67430813"
-X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
-   d="scan'208";a="67430813"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 16:43:46 -0700
-X-CSE-ConnectionGUID: WaySK+hXRKSARcQotf3PXw==
-X-CSE-MsgGUID: 1ldfND80TjGKMfA+wyQwRQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
-   d="scan'208";a="177468506"
-Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.103.51])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 16:43:44 -0700
-Date: Wed, 21 May 2025 16:43:43 -0700
-From: "Luck, Tony" <tony.luck@intel.com>
-To: Reinette Chatre <reinette.chatre@intel.com>
-Cc: Peter Newman <peternewman@google.com>, "Moger, Babu" <bmoger@amd.com>,
-	babu.moger@amd.com, corbet@lwn.net, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	james.morse@arm.com, dave.martin@arm.com, fenghuay@nvidia.com,
-	x86@kernel.org, hpa@zytor.com, paulmck@kernel.org,
-	akpm@linux-foundation.org, thuth@redhat.com, rostedt@goodmis.org,
-	ardb@kernel.org, gregkh@linuxfoundation.org,
-	daniel.sneddon@linux.intel.com, jpoimboe@kernel.org,
-	alexandre.chartre@oracle.com, pawan.kumar.gupta@linux.intel.com,
-	thomas.lendacky@amd.com, perry.yuan@amd.com, seanjc@google.com,
-	kai.huang@intel.com, xiaoyao.li@intel.com,
-	kan.liang@linux.intel.com, xin3.li@intel.com, ebiggers@google.com,
-	xin@zytor.com, sohil.mehta@intel.com, andrew.cooper3@citrix.com,
-	mario.limonciello@amd.com, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, maciej.wieczor-retman@intel.com,
-	eranian@google.com, Xiaojian.Du@amd.com, gautham.shenoy@amd.com
-Subject: Re: [PATCH v13 00/27] x86/resctrl : Support AMD Assignable Bandwidth
- Monitoring Counters (ABMC)
-Message-ID: <aC5lL_qY00vd8qp4@agluck-desk3>
-References: <cover.1747349530.git.babu.moger@amd.com>
- <CALPaoChSzzU5mzMZsdT6CeyEn0WD1qdT9fKCoNW_ty4tojtrkw@mail.gmail.com>
- <4dbcea13-382e-4af2-960d-0e66652cc2f5@amd.com>
- <8dd6e3a0-b2e1-48a7-8fa4-62e78b1407ae@intel.com>
- <6c77b065-a54e-4b9c-a4cf-8b81676f2ab2@amd.com>
- <f4178258-f7ad-4db2-9284-3f28e8ee8d00@intel.com>
- <92bcab75-72c6-46d4-97a2-119e7124c90c@amd.com>
- <11465976-f030-4c1b-88c6-3eebf0c8f13b@intel.com>
- <CALPaoCjTwySGX9i7uAtCWLKQpmELKP55xDLJhHmUve8ptsfFTw@mail.gmail.com>
- <7f10fa69-d1fe-4748-b10c-fa0c9b60bd66@intel.com>
+	dkim=pass (2048-bit key) header.d=semtech.com header.i=@semtech.com header.b="h4E76Fyp";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=SemtechCorp.onmicrosoft.com header.i=@SemtechCorp.onmicrosoft.com header.b="EM7x2RkT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=semtech.com; s=k1;
+	t=1747871215; i=@semtech.com;
+	bh=NiWm2qQOyJMNR7Xp+qeVrOO8SyuhU/0vuFW4UpU6r2Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:
+	 Content-Transfer-Encoding:Content-Type;
+	b=h4E76FypOIw9mheZ29tSxng/eKKK6tZTgc6+QTd2vI4xfUSRKhLPCUgLCUDaJSJHB
+	 BGazx9ymYvVkd8zeplQP7Y6nTivzhQpTqsBNR14Ryu3uuuMtOTyR6yIfOLHankw7Kj
+	 uMcAh9Za86+ZkB1lXJIR3XytH/mKLgn7gWasP5a12lHfHEsgvzNsthdJQNwYSlRCIR
+	 coJT5op+x2eOhdt3SHqs72yQ3yGwofYgIUmIxa1khav87kBDyMGLFGRMIHY34PG5po
+	 QWXDref1m2lRD+SvaICgvlWDwCYWALUJjGYTbnHUlczuMBF9uSZmpXdpQW1SZFfIQE
+	 riyK3gd+gNCSw==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprKJsWRWlGSWpSXmKPExsWSoW+9Qvddql6
+  GwcEVShYT959lt7i8aw6bA5PH501yAYxRrJl5SfkVCawZLw5MZilYxV1x6s9ylgbG55xdjFwc
+  jALLmCV27pvKAuEsZpW4c38KK4QzjUnicdNZJhCHRWA7s8SxL5fYQBwhgflMErP2zQfq4QRyV
+  jBJvJ2WDpKQEDjKKHHp80QWiKqzjBK3mv+zQzi3GSUuH7oDlZnMKPHp83U2kH42AUWJ1i+nwb
+  aIgMw6P+c42GBmAS2Jn49vMoLYwgIlElt37wazWQRUJTo2fGUCsXkFzCV+/DsLZksIyEss3rG
+  cGSIuKHFy5hOoOfISzVtnM0McKyuxYkIvG0R9sMTxH5uZIWxJiWs3L7BD2LISR8/OYYGwHSUW
+  nO+BmiMhcfDFC6h6X4lVTc+h5shJnOo9B3fDzo23oXqjJY4s3AdV3ykgsX0pEySQ3jFKzOjYw
+  QiRkJFov7yAdQKjxiwkd89CcvcsJLsXMDKvYrQoTi0qSy3SNTbSSyrKTM8oyU3MzNFLrNJN1C
+  st1k1OzSspSswx1EtPLtBLLS7WK67MTc5J0ctLLdnECEwtXB8qenYwHpzSrH+IUZKDSUmUd1K
+  CXoYQX1J+SmVGYnFGfFFpTmrxIUYZDg4lCV6nJKCcYFFqempFWmYOMM3BpCU4eJREeJmsgdK8
+  xQWJucWZ6RCpU4yKUuK8qilACQGQREZpHlwbLLVeYpSVEuZlZGBgEOIpSC3KzSxBlX/FKM7Bq
+  CTMuwZkCk9mXgnc9FdAi5mAFnfn6YIsLklESEk1MJ21WXTN/Hb2a/Pzm5YJhDV/fGK33nPps4
+  dzeUrX2m6vaF82N2+G9mvenoOxXN8/fm1Zxsva8+X6qViurymS81+ekb7+u6TEZ9+EH03/Epf
+  s+tqybur19y1K83JfrCoK5H1xxMil3/8Gt4rYylUbbdPCZz/eIDVhas77mCmbShWbaqdHXdwX
+  YW1acfL+xf1z/u34Jpazw/qv5VRWA8uAY8I2h8rMuJbFnfBp3/t561LGpWfOPppa/+0uz8s7R
+  hZrebnCJ23wPPKpmG/lsWNT5tpPa2Jg8nVe/fvyweWfS5xlJYwMds49Z12ma3VbXezvkhvXXD
+  Z3mM83T3KqfbZ5/5eTGT/YVk3db5Z1gu8V+xHX00osxRmJhlrMRcWJAJK6alMoBAAA
+X-Env-Sender: zxue@semtech.com
+X-Msg-Ref: server-4.tower-904.messagelabs.com!1747871214!4887228!1
+X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
+X-StarScan-Received:
+X-StarScan-Version: 9.117.2; banners=semtech.com,-,-
+X-VirusChecked: Checked
+Received: (qmail 14229 invoked from network); 21 May 2025 23:46:54 -0000
+Received: from mail-dm6nam12lp2168.outbound.protection.outlook.com (HELO NAM12-DM6-obe.outbound.protection.outlook.com) (104.47.59.168)
+  by server-4.tower-904.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 21 May 2025 23:46:54 -0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=MJPQoujRqDkTZdj5AFMwzToOCiNJ++msSqs3MvG4KulD1zMz7k3jIOoZT5N/GYuZHJa4xITk7avsCbaFNiV/5CvkhSpAE9Lb+NKFYFwLptEMC8d9S50QYYwFALD7IHe6Y5mPWFCPRWMAhYaaMCgLRtKpTS0K9vTs6ADpb6rdUjKg6C5MLLKr3HXTGAfCP7B0mSzot5qZ1UEmZLJBDlgyuz4naQo327xmklQSzdvAnpjcbcnN1/xNpZ2Htdnzt0R8e+sJ6qeBJivnMoSQkf/rYIjPyYBnZlDx6/urA8gY01dIF/zJGSo7j1EnFZ72+Ok7KSeaSa08p7gUdNmnPUFrPA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tgfXmplSujZqKAN+4qyFq4IDDhrFttOHqvoQ4is65oI=;
+ b=bUUgEYMs8swWsOC9FXDmxP1f4AQxYJikv6EIAoWR/v5AM/EX5SVOeT2atxfaz9xpqQZ9jUasPBLV2tUwWPQliNxrdaltXQg27OHYwvLz8G0pmARo9AR/j5D9byL+uNHusofhjg2FtOIKdkFjo9shAlgTbBPiUflOmsg3hRzQQdM+sN/mcvyoP54H20Y/oZ5OZZiEdjhUjol3le8xa/DWNg5ryUrjWHgFuPBQ2czCgcclae1MOXl3Gmb7/gNPiAkRT8Y4vy7dNIjjzE2WibPgHo9lhrIy/+2ttDQc/yJrN0QqNmynnYGB2M7cbTcQkf4Sdllo7UIFDMos2xGonRu4Jw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 38.104.251.66) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=semtech.com;
+ dmarc=pass (p=quarantine sp=none pct=100) action=none
+ header.from=semtech.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=SemtechCorp.onmicrosoft.com; s=selector1-SemtechCorp-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tgfXmplSujZqKAN+4qyFq4IDDhrFttOHqvoQ4is65oI=;
+ b=EM7x2RkTAFdNOCziebkanGYiukbCKjxXp0J9ijwFwEtqih+uP86g+UIv7HsxAYuFJGgYjOwIWgz2aQCREMXj3mT+zJ/W7zd6B037hhs9BAZjSjqmrEJHXKh/DJ4Q1SPtz8oa5CghRYiMIbScsifOdCOhdPri+k4dax1KLZpHB6w=
+Received: from DM6PR02CA0149.namprd02.prod.outlook.com (2603:10b6:5:332::16)
+ by SJ2PR20MB5876.namprd20.prod.outlook.com (2603:10b6:a03:4c9::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.30; Wed, 21 May
+ 2025 23:46:52 +0000
+Received: from DS3PEPF000099DD.namprd04.prod.outlook.com
+ (2603:10b6:5:332:cafe::50) by DM6PR02CA0149.outlook.office365.com
+ (2603:10b6:5:332::16) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8746.30 via Frontend Transport; Wed,
+ 21 May 2025 23:46:52 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 38.104.251.66)
+ smtp.mailfrom=semtech.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=semtech.com;
+Received-SPF: Pass (protection.outlook.com: domain of semtech.com designates
+ 38.104.251.66 as permitted sender) receiver=protection.outlook.com;
+ client-ip=38.104.251.66; helo=CA07RELAY1.semtech.com; pr=C
+Received: from CA07RELAY1.semtech.com (38.104.251.66) by
+ DS3PEPF000099DD.mail.protection.outlook.com (10.167.17.199) with Microsoft
+ SMTP Server id 15.20.8769.18 via Frontend Transport; Wed, 21 May 2025
+ 23:46:52 +0000
+Received: from ca08gitmail.local ([10.23.50.249]) by CA07RELAY1.semtech.com with Microsoft SMTPSVC(10.0.20348.1);
+	 Wed, 21 May 2025 19:46:51 -0400
+From: Adam Xue <zxue@semtech.com>
+To: manivannan.sadhasivam@linaro.org,
+	slark_xiao@163.com,
+	johan+linaro@kernel.org,
+	quic_vpernami@quicinc.com,
+	tglx@linutronix.de,
+	fabio.porcedda@gmail.com,
+	quic_msarkar@quicinc.com,
+	mank.wang@netprisma.us,
+	mhi@lists.linux.dev,
+	linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: zxue@semtech.com,
+	imocanu@semtech.com
+Subject: [PATCH v1] bus: mhi: host: pci_generic: Add support for EM929x and set MRU to 32768 for better performance.
+Date: Wed, 21 May 2025 16:46:40 -0700
+Message-ID: <20250521234640.3056893-1-zxue@semtech.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <7f10fa69-d1fe-4748-b10c-fa0c9b60bd66@intel.com>
+X-OriginalArrivalTime: 21 May 2025 23:46:51.0619 (UTC) FILETIME=[A00F9B30:01DBCAAA]
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS3PEPF000099DD:EE_|SJ2PR20MB5876:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: 49e7273b-c5aa-4c74-f1af-08dd98c1c2dd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|82310400026|376014|36860700013|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?i41RXU89sfVCRdAaTKirRhrz+7PF2E47rsFHoBFnhCEBzXWnWaSOtuMHKwsF?=
+ =?us-ascii?Q?VkfljPv2/lMzu7c7zIVniP5j/dz9FDPVibwLg9g3xI3kNmngMQDekV4/ydNM?=
+ =?us-ascii?Q?kF6QSANaJEoIy6r9EFcs9nB7tGG9NlYN2bVB6RDhmfE2tGc7zD2ebCfc5N0v?=
+ =?us-ascii?Q?kdQJ/zKZJLHzs2uM96890xCJECbQ9G+fvLHjJf8ldxYI1rlzlrKd2jS3TZ5q?=
+ =?us-ascii?Q?VZpouDtA6DzSmwzAOJScaVQ5mftzVWFNLhuDJVMJ9pnNRop7KEjvETgc9ieo?=
+ =?us-ascii?Q?9H1Vc9JkM8DUNURoKuUeq0jxz0aPOt7vQU8NcsF9q5DOYaGL+BbADczG+qOo?=
+ =?us-ascii?Q?KwQyy74eZwYNrWX5aY22OlxSaiiLBEqe/3s2AhK9XuevVFjCHH5bBXXkE4xR?=
+ =?us-ascii?Q?d+Rhv7HjBlWvepB/ahXcfbHZIuyafUIcH5WIc0kRlPRZPA8Ukj8O200r0D0P?=
+ =?us-ascii?Q?KcYZZisFV4EBK8sVrqAwEOp8ov75s5cjqzxd1n/XiD7VvOwMZVH2Y/At0oTb?=
+ =?us-ascii?Q?uYh/RVRGQ0whUsInQyXQ9xbF/bCU9ofz0m8j6E7Hs8HFf5kWfM9Lz739lldP?=
+ =?us-ascii?Q?SCijVcHbpkMMNWHmbuvHi7Yx/1GgHsqkbujPvDLuDEKVSGawOhSS/+XUgfMa?=
+ =?us-ascii?Q?fN5kyq7ukKzk/A9IEYo3hthJJcAth4PmbnghRqHQ3XOw14s6+bdSeK2GaVJE?=
+ =?us-ascii?Q?ABIrP3FD+FTChztLa07Dnl+rNqWu2DrUB/JKV3dfSkumcgGh0HzrRwfzi1Zz?=
+ =?us-ascii?Q?f86CybgJtYwAMdjLBTAH23IBn4qMl0SaPZYx4f/T0aenAm39im2jOHph2Hjv?=
+ =?us-ascii?Q?2DnQwe5DlPqTc5mH308pC5MiwqPCTHDVHIWp71/8HBDWIxTezW8sx92Tomgs?=
+ =?us-ascii?Q?VYwFNJkSvJaYZtBLkWSgSMQuxwSEijWQDzmNKHBlTOlSe/ECaBLbBna9A+eA?=
+ =?us-ascii?Q?3m2I33B/iLU692kuwSU2myv0C+M4lHEUgtV7kZ4FhQONY8gutstgJyCSVseQ?=
+ =?us-ascii?Q?kkSZjWraXJtlS/GXGRqg7D7uXqGVyvhhV0nhlYosyEuVuw8NwFniBxxEn+pd?=
+ =?us-ascii?Q?u0x1W3RejRSaMeXWekQXPqSV1AZv6SRavwlGUM8fEoDFSs5STwt4CiMG5Pxk?=
+ =?us-ascii?Q?nzHbkbndTij5HZZrnf/U6T7aQw2kjEM2HUJcLH8gvBx2x9S44HszBD/6NvtM?=
+ =?us-ascii?Q?MeJJ3/penGUKoJHnrk/6LU3xouQ0RL4HdUNuQmow4FYS3gUt8Ur03lg+PkRR?=
+ =?us-ascii?Q?0p9ld7fIVkthKJ8iuawrngdU2L5JDSdwxAcGYB3dQ2NKsdjWGmSAcOy2unqQ?=
+ =?us-ascii?Q?gFB9RarExVxbSPn3ctZwnVihGID54lA52jRgCEaG8Vj8jmU2wyuE5qU7PcZh?=
+ =?us-ascii?Q?V28hB+kQPm7KWrJyL5G73pwnxevAv0dOZYV4Zuhv159B2mjji6Mxgal+94xg?=
+ =?us-ascii?Q?spwG0+MAHxp/akHEVEXa4Rar1env/9vLkKWsF/fowkiVgPoK9igOMv9IcYL+?=
+ =?us-ascii?Q?TCoGLhaUzAAyJZlPJcQM8qEEU1PCqszao/uc+9Lr6qRKaij4MYxqW06BnQ?=
+ =?us-ascii?Q?=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:38.104.251.66;CTRY:CA;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CA07RELAY1.semtech.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(376014)(36860700013)(921020);DIR:OUT;SFP:1102;
+X-OriginatorOrg: semtech.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2025 23:46:52.0428
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 49e7273b-c5aa-4c74-f1af-08dd98c1c2dd
+X-MS-Exchange-CrossTenant-Id: b105310d-dc1a-4d6e-bf0d-b11c10c47b0f
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=b105310d-dc1a-4d6e-bf0d-b11c10c47b0f;Ip=[38.104.251.66];Helo=[CA07RELAY1.semtech.com]
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TreatMessagesAsInternal-DS3PEPF000099DD.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR20MB5876
 
-On Wed, May 21, 2025 at 04:03:37PM -0700, Reinette Chatre wrote:
-> Hi Peter and Babu,
-> 
-> On 5/21/25 2:18 AM, Peter Newman wrote:
-> > Hi Babu/Reinette,
-> > 
-> > On Wed, May 21, 2025 at 1:44 AM Reinette Chatre
-> > <reinette.chatre@intel.com> wrote:
-> >>
-> >> Hi Babu,
-> >>
-> >> On 5/20/25 4:25 PM, Moger, Babu wrote:
-> >>> Hi Reinette,
-> >>>
-> >>> On 5/20/2025 1:23 PM, Reinette Chatre wrote:
-> >>>> Hi Babu,
-> >>>>
-> >>>> On 5/20/25 10:51 AM, Moger, Babu wrote:
-> >>>>> Hi Reinette,
-> >>>>>
-> >>>>> On 5/20/25 11:06, Reinette Chatre wrote:
-> >>>>>> Hi Babu,
-> >>>>>>
-> >>>>>> On 5/20/25 8:28 AM, Moger, Babu wrote:
-> >>>>>>> On 5/19/25 10:59, Peter Newman wrote:
-> >>>>>>>> On Fri, May 16, 2025 at 12:52 AM Babu Moger <babu.moger@amd.com> wrote:
-> >>>>>>
-> >>>>>> ...
-> >>>>>>
-> >>>>>>>>> /sys/fs/resctrl/info/L3_MON/num_mbm_cntrs: Reports the number of monitoring
-> >>>>>>>>> counters available for assignment.
-> >>>>>>>>
-> >>>>>>>> Earlier I discussed with Reinette[1] what num_mbm_cntrs should
-> >>>>>>>> represent in a "soft-ABMC" implementation where assignment is
-> >>>>>>>> implemented by assigning an RMID, which would result in all events
-> >>>>>>>> being assigned at once.
-> >>>>>>>>
-> >>>>>>>> My main concern is how many "counters" you can assign by assigning
-> >>>>>>>> RMIDs. I recall Reinette proposed reporting the number of groups which
-> >>>>>>>> can be assigned separately from counters which can be assigned.
-> >>>>>>>
-> >>>>>>> More context may be needed here. Currently, num_mbm_cntrs indicates the
-> >>>>>>> number of counters available per domain, which is 32.
-> >>>>>>>
-> >>>>>>> At the moment, we can assign 2 counters to each group, meaning each RMID
-> >>>>>>> can be associated with 2 hardware counters. In theory, it's possible to
-> >>>>>>> assign all 32 hardware counters to a group—allowing one RMID to be linked
-> >>>>>>> with up to 32 counters. However, we currently lack the interface to
-> >>>>>>> support that level of assignment.
-> >>>>>>>
-> >>>>>>> For now, the plan is to support basic assignment and expand functionality
-> >>>>>>> later once we have the necessary data structure and requirements.
-> >>>>>>
-> >>>>>> Looks like some requirements did not make it into this implementation.
-> >>>>>> Do you recall the discussion that resulted in you writing [2]? Looks like
-> >>>>>> there is a question to Peter in there on how to determine how many "counters"
-> >>>>>> are available in soft-ABMC. I interpreted [3] at that time to mean that this
-> >>>>>> information would be available in a future AMD publication.
-> >>>>>
-> >>>>> We already have a method to determine the number of counters in soft-ABMC
-> >>>>> mode, which Peter has addressed [4].
-> >>>>>
-> >>>>> [4]
-> >>>>> https://lore.kernel.org/lkml/20250203132642.2746754-1-peternewman@google.com/
-> >>>>>
-> >>>>> This appears to be more of a workaround, and I doubt it will be included
-> >>>>> in any official AMD documentation. Additionally, the long-term direction
-> >>>>> is moving towards ABMC.
-> >>>>>
-> >>>>> I don’t believe this workaround needs to be part of the current series. It
-> >>>>> can be added later when soft-ABMC is implemented.
-> >>>>
-> >>>> Agreed. What about the plans described in [2]? (Thanks to Peter for
-> >>>> catching this!).
-> >>>>
-> >>>> It is important to keep track of requirements while working on a feature to
-> >>>> ensure that the implementation supports the planned use cases. Re-reading that
-> >>>> thread it is not clear to me how soft-ABMC's per-group assignment would look.
-> >>>> Could you please share how you see it progress from this implementation?
-> >>>> This includes the single event vs. multiple event assignment. I would like to
-> >>>> highlight that this is not a request for this to be supported in this implementation
-> >>>> but there needs to be a plan for how this can be supported on top of interfaces
-> >>>> established by this work.
-> >>>>
-> >>>
-> >>> Here’s my current understanding of soft-ABMC. Peter may have a more in-depth perspective on this.
-> >>>
-> >>> Soft-ABMC:
-> >>> a. num_mbm_cntrs: This is a software-defined limit based on the number of active RMIDs that can be supported. The value can be obtained using the code referenced in [4].
-> > 
-> > I would call it a hardware-defined limit that can be probed by software.
-> > 
-> > The main question is whether this file returns the exact number of
-> > RMIDs hardware can track or double that number (mbm_total_bytes +
-> > mbm_local_bytes) so that the value is always measured in events.
-> 
-> tl;dr: I continue [3] to find it most intuitive for num_mbm_cntrs to be the exact
-> number of "active" RMIDs that the system can support *and* changing the name of
-> the modes to help user interpret num_mbm_cntrs: "mbm_cntr_event_assign" for ABMC,
-> "mbm_cntr_group_assign" for soft-ABMC.
-> 
-> details
-> -------
-> 
-> We are now back to the previous discussion about what user can expect from
-> the interface. Let me try and re-cap that discussion so that we can all hopefully
-> get back on the same page. Please add corrections/updates where needed.
-> 
-> soft-ABMC
-> ---------
->   soft-ABMC manages "active" (term TBD) RMID assignment to monitor groups. When an
->   "active" RMID is assigned to a monitor group then *all* MBM events (not LLC occupancy)
->   in that monitor group are counted. "Active" RMID assignment can be done per domain.
-> 
->   Requirement: resctrl should accurately reflect which events are counted. That is,
->   we do not want resctrl to pretend to allow user to assign an "active" RMID to
->   only one event in a monitor group while all events are actually counted.
-> 
->   Caveat: To support rapid re-assignment of RMIDs to monitor groups, llc_occupancy
->   event is disabled when soft-ABMC is enabled.
-> 
-> ABMC
-> ----
->   ABMC manages (hardware) counter assignment to monitor group (RMID), event pairs.
->   When a hardware counter is assigned to an RMID, event pair then only that
->   RMID, event is counted. Hardware counter assignment can be done per domain.
-> 
-> 
-> shared assignment
-> -----------------
-> A shared assignment applies to both soft-ABMC and ABMC. A user can designate a
-> "counter" (could be hardware counter or "active" RMID) as shared and that means
-> the counter within that domain is shared between different monitor groups and actual
-> assignment is scheduled by resctrl.  
-> 
-> 
-> user interface
-> --------------
-> 
-> Next, consider the interface while keeping above definitions and requirements in mind.
-> 
-> This series introduces (using implementation, not cover-letter):
-> 
-> /sys/fs/resctrl/info/L3_MON/num_mbm_cntrs 
-> "num_mbm_cntrs":                                                               
-> 	The maximum number of monitoring counters (total of available and assigned
-> 	counters) in each domain when the system supports mbm_cntr_assign mode. 
-> 
-> /sys/fs/resctrl/mbm_L3_assignments
-> "mbm_L3_assignments":                                                          
-> 	This interface file is created when the mbm_cntr_assign mode is supported
-> 	and shows the assignment status for each group.              
-> 
-> Consider "mbm_L3_assignments" first. The interface is documented for ABMC support
-> where it is possible to manage individual event assignment within monitor group.
-> 
-> For ABMC it is possible to assign just one event at a time and doing so consumes
-> one counter in that domain:
-> 
-> a) Starting state on system with 32 counters per domain, two events in default
->    resource group consumes two counters in that domain:
-> # cat /sys/fs/resctrl/info/L3_MON/num_mbm_cntrs
-> 0=30;1=32
-> # cat /sys/fs/resctrl/mbm_L3_assignments
-> mbm_total_bytes:0=e;1=_
-> mbm_local_bytes:0=e;1=_
-> 
-> b) Assign counter to mbm_local_bytes in domain 1:
-> # echo "mbm_local_bytes:1=e" > /sys/fs/resctrl/mbm_L3_assignments
-> # cat /sys/fs/resctrl/mbm_L3_assignments
-> mbm_total_bytes:0=e;1=_
-> mbm_local_bytes:0=e;1=e
-> # cat /sys/fs/resctrl/info/L3_MON/num_mbm_cntrs
-> 0=30;1=31
-> 
-> The question is how this should look on soft-ABMC system. Let's say hypothetically
-> that on a soft-ABMC system it is possible to have 32 "active" RMIDs.
-> 
-> a) Starting state on system with 32 "active RMIDs" per domain, two events in default
->    resource group consumes one RMID in that domain:
-> 
-> # cat /sys/fs/resctrl/mbm_L3_assignments
-> mbm_total_bytes:0=e;1=_
-> mbm_local_bytes:0=e;1=_
-> 
-> What should num_mbm_cntrs display?
-> 
-> Option A (counters are RMIDs):
-> # cat /sys/fs/resctrl/info/L3_MON/num_mbm_cntrs
-> 0=31;1=32
-> 
-> Option B (pretend RMIDs are events):
-> # cat /sys/fs/resctrl/info/L3_MON/num_mbm_cntrs
-> 0=62;1=64
-> 
-> b) Assign counter to mbm_local_bytes in domain 1:
-> # echo "mbm_local_bytes:1=e" > /sys/fs/resctrl/mbm_L3_assignments
-> # cat /sys/fs/resctrl/mbm_L3_assignments
-> mbm_total_bytes:0=e;1=e
-> mbm_local_bytes:0=e;1=e
-> 
-> Note that even though user requested only mbm_local_bytes to be assigned, it
-> actually results in both mbm_total_bytes and mbm_local_bytes to be assigned. This
-> ensures accurate state representation to user space but this also creates an
-> inconsistent user interface between soft-ABMC and ABMC since user space intends
-> to use the same interface but "sometimes" assigning one event results in assign
-> of one event while "sometimes" it results in assign of multiple events.
-> 
-> wrt "num_mbm_cntrs"
-> 
-> Option A (counters are RMIDs):
-> # cat /sys/fs/resctrl/info/L3_MON/num_mbm_cntrs
-> 0=31;1=31
-> 
-> Option B (pretend RMIDs are events):
-> # cat /sys/fs/resctrl/info/L3_MON/num_mbm_cntrs
-> 0=62;1=62 
-> 
-> Neither option seems ideal to me since the interface cannot be consistent
-> between ABMC and soft-ABMC.
-> As I mentioned in [2] it is not possible to hide ABMC and soft-ABMC behind
-> the same interface. When user space wants to monitor a particular monitor group
-> then it should be clear how that can be accomplished. Not knowing if
-> an assignment/unassignment to/from an event would impact one or all events
-> and whether it will consume one or multiple counters does not sound like a good
-> interface to me. 
-> 
-> As I understand current interface, user is required to know how ABMC and soft-ABMC
-> is implemented to be able to configure the system. For example, if user has file like:
-> 	# cat /sys/fs/resctrl/mbm_L3_assignments
-> 	mbm_total_bytes:0=e;1=e
-> 	mbm_local_bytes:0=e;1=e
-> user must know underlying implementation to be able to manage monitoring of
-> events and assigning counters otherwise it will be a surprise to lose monitoring
-> of all events when unassigning one event.
-> 
-> This is why I proposed in [3] that the name of the mode reflects how user can interact
-> with the system. Instead of one "mbm_cntr_assign" mode there can be "mbm_cntr_event_assign"
-> that is used for ABMC and "mbm_cntr_group_assign" that is used for soft-ABMC. The mode should
-> make it clear what the system is capable of wrt counter assignments.
-> 
-> Considering this the interface should be clear:
-> num_mbm_cntrs: reflects the number of counters in each domain that can be assigned. In
-> "mbm_cntr_event_assign" this will be the number of counters that can be assigned to 
-> each event within a monitoring group, in "mbm_cntr_group_assign" this will be the number
-> of counters that can be assigned to entire monitoring groups impacting all MBM events.
-> 
-> mbm_L3_assignments: manages the counter assignment in each group. When user knows the mode
-> is "mbm_cntr_event_assign"/"mbm_cntr_group_assign" then it should be clear to user space how the
-> interface behaves wrt assignment, no surprises of multiple events impacted when
-> assigning/unassigning single event.
-> 
-> For soft-ABMC I thus find it most intuitive for num_mbm_cntrs to be the exact number
-> of "active" RMIDs that the system can support *and* changing the name of the modes
-> to help user interpret num_mbm_cntrs.
-> 
-> > 
-> > There's also the mongroup-RMID overcommit use case I described
-> > above[1]. On Intel we can safely assume that there are counters to
-> > back all RMIDs, so num_mbm_cntrs would be calculated directly from
-> > num_rmids.
-> 
-> This is about the:
-> 	There's now more interest in Google for allowing explicit control of
-> 	where RMIDs are assigned on Intel platforms. Even though the number of
-> 	RMIDs implemented by hardware tends to be roughly the number of
-> 	containers they want to support, they often still need to create
-> 	containers when all RMIDs have already been allocated, which is not
-> 	currently allowed. Once the container has been created and starts
-> 	running, it's no longer possible to move its threads into a monitoring
-> 	group whenever RMIDs should become available again, so it's important
-> 	for resctrl to maintain an accurate task list for a container even
-> 	when RMIDs are not available.
-> 
-> I see a monitor group as a collection of tasks that need to be monitored together.
-> The "task list" is the group of tasks that share a monitoring ID that
-> is required to be a valid ID since when any of the tasks are scheduled that ID is
-> written to the hardware. I intentionally tried to not use RMID since I believe
-> this is required for all archs.
-> I thus do not understand how a task can start running when it does not have
-> a valid monitoring ID. The idea of "deferred assignment" is not clear to me,
-> there can never be "unmonitored tasks", no? I think I am missing something here.
+Add MHI controller config for EM929x. It uses the same configuration
+as EM919x. Also set the MRU to 32768 to improve downlink throughput.
 
-In the AMD/RMID implemenentation this might be achieved with something
-extra in the task structure to denote whether a task is in a monitored
-group or not. E.g. We add "task->rmid_valid" as well as "task->rmid".
-Tasks in an unmonitored group retain their "task->rmid" (that's what
-identifies them as a member of a group) but have task->rmid_valid set
-to false.  Context switch code would be updated to load "0" into the
-IA32_PQR_ASSOC.RMID field for tasks without a valid RMID. So they
-would still be monitored, but activity would be bundled with all
-tasks in the default resctrl group.
+02:00.0 Unassigned class [ff00]: Qualcomm Technologies, Inc Device 0308
+	Subsystem: Device 18d7:0301
 
-Presumably something analogous could be done for ARM/MPAM.
+Signed-off-by: Adam Xue <zxue@semtech.com>
+---
+ drivers/bus/mhi/host/pci_generic.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-> > I realized this use case is more difficult to implement on MPAM,
-> > because a PARTID is effectively a CLOSID+RMID, so deferring assigning
-> > a unique PARTID to a group also results in it being in a different
-> > allocation group. It will work if the unmonitored groups could find a
-> > way to share PARTIDs, but this has consequences on allocation - but
-> > hopefully no worse than sharing CLOSIDs on x86.
-> > 
-> > There's a lot of interest in monitoring ID overcommit in Google, so I
-> > think it's worth it for me to investigate the additional structural
-> > changes needed in resctrl (i.e., breaking the FS-level association
-> > between mongroups and HW monitoring IDs). Such a framework could be a
-> > better fit for soft-ABMC. For example, if overcommit is allowed, we
-> > would just report the number of simultaneous RMIDs we were able to
-> > probe as num_rmids. I would want the same shared assignment scheduler
-> > to be able to work with RMIDs and counters, though.
-> > 
-> > Thanks,
-> > -Peter
-> > 
-> > [1] https://lore.kernel.org/lkml/CALPaoChSzzU5mzMZsdT6CeyEn0WD1qdT9fKCoNW_ty4tojtrkw@mail.gmail.com/
-> 
-> Reinette
-> 
-> [2] https://lore.kernel.org/lkml/b9e48e8f-3035-4a7e-a983-ce829bd9215a@intel.com/
-> [3] https://lore.kernel.org/lkml/b3babdac-da08-4dfd-9544-47db31d574f5@intel.com/
+diff --git a/drivers/bus/mhi/host/pci_generic.c b/drivers/bus/mhi/host/pci_generic.c
+index 03aa88795209..9bf8e7991745 100644
+--- a/drivers/bus/mhi/host/pci_generic.c
++++ b/drivers/bus/mhi/host/pci_generic.c
+@@ -695,6 +695,7 @@ static const struct mhi_pci_dev_info mhi_sierra_em919x_info = {
+ 	.config = &modem_sierra_em919x_config,
+ 	.bar_num = MHI_PCI_DEFAULT_BAR_NUM,
+ 	.dma_data_width = 32,
++	.mru_default = 32768,
+ 	.sideband_wake = false,
+ };
+ 
+@@ -813,6 +814,9 @@ static const struct pci_device_id mhi_pci_id_table[] = {
+ 	/* EM919x (sdx55), use the same vid:pid as qcom-sdx55m */
+ 	{ PCI_DEVICE_SUB(PCI_VENDOR_ID_QCOM, 0x0306, 0x18d7, 0x0200),
+ 		.driver_data = (kernel_ulong_t) &mhi_sierra_em919x_info },
++	/* EM929x (sdx65), use the same configuration as EM919x */
++	{ PCI_DEVICE_SUB(PCI_VENDOR_ID_QCOM, 0x0308, 0x18d7, 0x0301),
++		.driver_data = (kernel_ulong_t) &mhi_sierra_em919x_info },
+ 	/* Telit FN980 hardware revision v1 */
+ 	{ PCI_DEVICE_SUB(PCI_VENDOR_ID_QCOM, 0x0306, 0x1C5D, 0x2000),
+ 		.driver_data = (kernel_ulong_t) &mhi_telit_fn980_hw_v1_info },
+-- 
+2.45.2
 
--Tony
+
+To view our privacy policy, including the types of personal information we collect, process and share, and the rights and options you have in this respect, see www.semtech.com/legal.
