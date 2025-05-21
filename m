@@ -1,86 +1,242 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18FF3233728
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 12:54:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1D17267F48;
+	Wed, 21 May 2025 12:54:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747832049; cv=none; b=QQXWi7GidfNhC+WwSup28F8UmU5fgOaLDV+Vi/HOpL7y7bR2xK4t3IkmHUmrnRIJaqyKf2/p+IddRSmTQeadRAa8HYzFC2EgkA1JpS8DYPdf9Y7QRVW1lDsMCcq80GM7xUDh5VXJEbXbSIqOAz15QkeCTxgXYvfLpP89eXRl7f0=
+	t=1747832070; cv=none; b=uXHENk+sl0tX9aDakITXXrpZcTAEd3QRtoeY6h7CLcx498F8iPBbWtyASs6T777vSZr68f0BT9NPzKomlyu8HftEMximBi5QmLblrv2wrl5O690VwOJg5m6pRt/e1FqBjGuZs58sM4KpsDHnJcJhJ7fW6xuDwAl3uJd1pS5/ec8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747832049; c=relaxed/simple;
-	bh=WlUeDq00lkzPztyiHb0sHgFJ6Ma360A2yW8/IYtoTr8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EBxDqU22HYW6dhlvEuRX66xa/jz8CcqfJ2h1cJNMf+rUGtID9RV7U1nzEAC/S96LYt+ZbS+6Xc+eWYNwne+zW+V18ea8LlRUqip8+x35M/QFftQvDkJlTer68l/s7LrXj9i5Y9yFI0gzjj809hhy+GWlH0hTtmekABO6fIOQSV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=XBL2KBf3; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1747832070; c=relaxed/simple;
+	bh=5BHjPodNxPkDFRb2pZOoLtV2R+N3FjkRVfnZRtvxEoI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=LUkiypfEY0a7d9IF98cmx+/eM6e+K8e4tTfnLnb7Tk295P4Nw45Xq6EXZtpIw5Ov+D6u9F2/9+1XWVE+iccRGRg69Jvx6WHACg5LMPxvjQRRAYqs7x/ihM588+Pi97ERsvU30HCPAdx7vrr8uUdYu3fLYuSzlTNMUHO/lLomZ1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=WG5lWPVB; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="XBL2KBf3"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A6A9A439FF;
-	Wed, 21 May 2025 12:54:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1747832045;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fdrCrgS4ayB6MeGy7Xp7zYGpRk46T4s6g0elV560Deo=;
-	b=XBL2KBf366f040xaaol3YK52yxWPIbSAmCQauXVcBvpGHC/OkW4eaCQ1VAHcXx1sI851Nf
-	5QpiR06FTH/29Kn+qtLc3T8Sc72JkEc19cnt4T/U0BLoQdapWBh+jqc9nITqZknRlDRMXO
-	O5FKebakLAdBgGOjMNFK+FjohAovXD6BQTTzizLkc7+M8/tQ68by3AiiC4Z4QQPzrbe9Xt
-	j/HxvuKXneZTj16ZN3+OqGzry9kn6jCWDgL+/2gpHNi1eZJN/taza11xycXaR5IWqJS6mI
-	5VFjzrI2J8GQDzCOlUSw4QJUDec0KA9JZ1Ckquug0loDLfnWC9uRW7w3L+h4Kg==
-Message-ID: <8f6fb9b4-dc84-4443-b7e2-1a857400f79a@bootlin.com>
-Date: Wed, 21 May 2025 14:54:04 +0200
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="WG5lWPVB"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54L7DXpH012569;
+	Wed, 21 May 2025 12:54:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=9njQgb
+	HwVVKKgMPLZo8Fg1k9epS2wmidLMKCgwjiL4Q=; b=WG5lWPVBUw+Hh4ajtt6ve5
+	SFnUkhSPWfHJ1+yq6plxE1SVz1pdDzfJ12Gw0+gvAb/W3P5D1WTAfIZ7YiQzEXTd
+	xk09NGWS/+MayLrGQnDbr5ReSk3mV2iDifunrRypRzR97FeSaI5MwNxQeJGhOCGj
+	As85eYQcOrgtnOIaSUCsBmqbdCwS1WSPQ9kG9DFiD+MBNJUDJk9wJuHQuGmwiS8V
+	Gs20jUfFwKcZfgWaPSI9zCAKFF7wnxgBuC0X0BQRSGg8AHavPVDawlmqv/ttv/No
+	InCbxTThy2Smv1h7uunAFFKl8rfdhiV9XLqTkGJ+MPqNwntvq9O1v5CdzVNZcd3Q
+	==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46rye6m4s4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 21 May 2025 12:54:13 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54L9JE5i015497;
+	Wed, 21 May 2025 12:54:12 GMT
+Received: from smtprelay06.dal12v.mail.ibm.com ([172.16.1.8])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 46rwnnc7t0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 21 May 2025 12:54:12 +0000
+Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
+	by smtprelay06.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54LCsBKq22938140
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 21 May 2025 12:54:12 GMT
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BF4EA5805E;
+	Wed, 21 May 2025 12:54:11 +0000 (GMT)
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E88BA58052;
+	Wed, 21 May 2025 12:54:10 +0000 (GMT)
+Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.23.72])
+	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 21 May 2025 12:54:10 +0000 (GMT)
+Message-ID: <1d2848fe45dbf58707cecf16c4fc46b179e24415.camel@linux.ibm.com>
+Subject: Re: [PATCH] ima: add a knob ima= to make IMA be able to be disabled
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: Baoquan He <bhe@redhat.com>, linux-integrity@vger.kernel.org,
+        kexec@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, pmenzel@molgen.mpg.de, coxu@redhat.com,
+        ruyang@redhat.com, chenste@linux.microsoft.com
+Date: Wed, 21 May 2025 08:54:10 -0400
+In-Reply-To: <aCaFNvHbYxrCaPbe@MiWiFi-R3L-srv>
+References: <20250515233953.14685-1-bhe@redhat.com>
+	 <aCaFNvHbYxrCaPbe@MiWiFi-R3L-srv>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND v3] mux: mmio: Add suspend and resume support
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org,
- gregory.clement@bootlin.com, richard.genoud@bootlin.com, u-kumar1@ti.com,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Davis <afd@ti.com>
-References: <20250407-mux-mmio-resume-support-v3-1-cb88abc04db7@bootlin.com>
- <c65c01b0-f407-4479-a6ad-6969c5cab06e@bootlin.com>
- <2025052119-agenda-greyhound-d37c@gregkh>
-Content-Language: en-US
-From: Thomas Richard <thomas.richard@bootlin.com>
-In-Reply-To: <2025052119-agenda-greyhound-d37c@gregkh>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdefudefucdltddurdegfedvrddttddmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomhepvfhhohhmrghsucftihgthhgrrhguuceothhhohhmrghsrdhrihgthhgrrhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeegteekfeevudduvdduveehgeejuefgieeitdeuvdekgfdvgefhjedtffdufeegheenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrpdhhvghloheplgfkrfggieemvdgrtddumegtsgdugeemheehieemjegrtddtmegutgekudemrggrugdtmehfuggtrgemtggtudgrngdpmhgrihhlfhhrohhmpehthhhomhgrshdrrhhitghhrghrugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepledprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehpvggurgesrgigvghnt
- hhirgdrshgvpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepghhrvghgohhrhidrtghlvghmvghnthessghoohhtlhhinhdrtghomhdprhgtphhtthhopehrihgthhgrrhgurdhgvghnohhuugessghoohhtlhhinhdrtghomhdprhgtphhtthhopehuqdhkuhhmrghrudesthhirdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtoheprghfugesthhirdgtohhm
-X-GND-Sasl: thomas.richard@bootlin.com
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIxMDEyMiBTYWx0ZWRfX+v9fZt+yWeWp /dzdbNrtWM3bCphbSBrlGm/yvLFy2lWUz/g+LEdXUpoRgQWgOBz+yyAO4+yUloNNpvFSogr9OFx rb1wj+jASPx8Wa37WnUXNWDh58J8YtDPbLpL1LuvWnLGbYv679hkIh0Z4T40Hr2/Y1rykuZjXDR
+ zNsE+FJBBQVP1aSatPijD0oLTHt1UWn+xZFCsL4ELZgOTpYNp6ru/03UQ3mHFj0Pxaax4YPpbBn oIrhc8VkaaLXCkpGrjOki0kLdtDoMoack0RMbHhI2KdU60VvMR+esUlATvMqOMWGhuNJRTLVAkI 3MmPLcSBR+0Y+54sLhylMnBXPSseDXtsNbvVzqRrt6mqrQGNwo06g0dVsBV1ge3DY8C0e7O7jQ9
+ yuqocjV0YqAsnWsEpTSlbz18ZC90ygYXXnasAp0SJoIJC62v+VWwrVBYOLMA2gRe3W7TYeM1
+X-Authority-Analysis: v=2.4 cv=esrfzppX c=1 sm=1 tr=0 ts=682dccf5 cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=UeMwZWw34uBX8khp:21 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=20KFwNOVAAAA:8 a=2HI49ejy6j84m9CP7MAA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: J-RZBjokabeiWH5x4PVvyOY15NRYoHOn
+X-Proofpoint-GUID: J-RZBjokabeiWH5x4PVvyOY15NRYoHOn
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-21_04,2025-05-20_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
+ lowpriorityscore=0 impostorscore=0 suspectscore=0 spamscore=0 phishscore=0
+ priorityscore=1501 clxscore=1011 bulkscore=0 mlxscore=0 mlxlogscore=999
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505210122
 
-On 5/21/25 14:27, Greg KH wrote:
-> On Wed, May 07, 2025 at 10:33:22AM +0200, Thomas Richard wrote:
->> On 4/7/25 15:06, Thomas Richard wrote:
->>> The status of each mux is read during suspend and stored in the private
->>> memory of the mux_chip.
->>> Then the state is restored during the resume.
->>>
->>> Reviewed-by: Andrew Davis <afd@ti.com>
->>> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
->>
->> Hi Greg,
->>
->> I apologize for involving you, but Peter is not responding anymore. I
->> pinged him several times, resent the patch but no news.
->>
->> Could you please review and apply this patch directly?
-> 
-> Does not apply to my tree :(
+On Fri, 2025-05-16 at 08:22 +0800, Baoquan He wrote:
+> CC kexec list.
+>=20
+> On 05/16/25 at 07:39am, Baoquan He wrote:
+> > Kdump kernel doesn't need IMA functionality, and enabling IMA will cost
+> > extra memory. It would be very helpful to allow IMA to be disabled for
+> > kdump kernel.
 
-I just tested again and it applies on v6.15-rc1.
-Which tree are you talking about ?
+The real question is not whether kdump needs "IMA", but whether not enablin=
+g
+IMA in the kdump kernel could be abused.  The comments below don't address
+that question but limit/emphasize, as much as possible, turning IMA off is
+limited to the kdump kernel.
 
-Best Regards,
+> >=20
+> > And Coiby also mentioned that for kdump kernel incorrect ima-policy loa=
+ded
+> > by systemd could cause kdump kernel hang, and it's possible the booting
+> > process may be stopped by a strict, albeit syntax-correct policy and us=
+ers
+> > can't log into the system to fix the policy. In these cases, allowing t=
+o
+> > disable IMA is very helpful too for kdump kernel.
+> >=20
+> > Hence add a knob ima=3Don|off here to allow people to disable IMA in kd=
+ump
+> > kenrel if needed.
 
-Thomas
+^kernel
 
+> >=20
+> > Signed-off-by: Baoquan He <bhe@redhat.com>
+> > ---
+> > =C2=A0.../admin-guide/kernel-parameters.txt=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 5 +++++
+> > =C2=A0security/integrity/ima/ima_main.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 22 +++++++++++++++++++
+> > =C2=A02 files changed, 27 insertions(+)
+> >=20
+> > diff --git a/Documentation/admin-guide/kernel-parameters.txt
+> > b/Documentation/admin-guide/kernel-parameters.txt
+> > index d9fd26b95b34..762fb6ddcc24 100644
+> > --- a/Documentation/admin-guide/kernel-parameters.txt
+> > +++ b/Documentation/admin-guide/kernel-parameters.txt
+> > @@ -2202,6 +2202,11 @@
+> > =C2=A0			different crypto accelerators. This option can be
+> > used
+> > =C2=A0			to achieve best performance for particular HW.
+> > =C2=A0
+> > +	ima=3D		[IMA] Enable or disable IMA
+> > +			Format: { "off" | "on" }
+> > +			Default: "on"
+> > +			Note that this is only useful for kdump kernel.
+
+Instead of "useful" I would prefer something clearer like "limited".
+
+> > +
+> > =C2=A0	init=3D		[KNL]
+> > =C2=A0			Format: <full_path>
+> > =C2=A0			Run specified binary instead of /sbin/init as
+> > init
+> > diff --git a/security/integrity/ima/ima_main.c
+> > b/security/integrity/ima/ima_main.c
+> > index f3e7ac513db3..07af5c6af138 100644
+> > --- a/security/integrity/ima/ima_main.c
+> > +++ b/security/integrity/ima/ima_main.c
+> > @@ -27,6 +27,7 @@
+> > =C2=A0#include <linux/fs.h>
+> > =C2=A0#include <linux/iversion.h>
+> > =C2=A0#include <linux/evm.h>
+> > +#include <linux/crash_dump.h>
+> > =C2=A0
+> > =C2=A0#include "ima.h"
+> > =C2=A0
+> > @@ -38,11 +39,27 @@ int ima_appraise;
+> > =C2=A0
+> > =C2=A0int __ro_after_init ima_hash_algo =3D HASH_ALGO_SHA1;
+> > =C2=A0static int hash_setup_done;
+> > +static int ima_disabled;
+
+Like the ima_hash_algo variable definition above, ima_disabled should be
+defined as __ro_after_init.
+
+> > =C2=A0
+> > =C2=A0static struct notifier_block ima_lsm_policy_notifier =3D {
+> > =C2=A0	.notifier_call =3D ima_lsm_policy_change,
+> > =C2=A0};
+> > =C2=A0
+> > +static int __init ima_setup(char *str)
+> > +{
+
+is_kdump_kernel() should also be called here, before the tests below.=20
+Something like:
+
++       if (!is_kdump_kernel()) {
++               pr_info("Warning ima setup option only permitted in kdump")=
+;
++               return 1;
++       }
+
+> > +	if (strncmp(str, "off", 3) =3D=3D 0)
+> > +		ima_disabled =3D 1;
+> > +	else if (strncmp(str, "on", 2) =3D=3D 0)
+> > +		ima_disabled =3D 0;
+> > +	else
+> > +		pr_err("Invalid ima setup option: \"%s\" , please specify
+> > ima=3Don|off.", str);
+> > +
+> > +	return 1;
+> > +}
+> > +__setup("ima=3D", ima_setup);
+> > +
+> > +
+> > +
+
+Remove the extraneous blank line.
+
+> > =C2=A0static int __init hash_setup(char *str)
+> > =C2=A0{
+> > =C2=A0	struct ima_template_desc *template_desc =3D
+> > ima_template_desc_current();
+> > @@ -1184,6 +1201,11 @@ static int __init init_ima(void)
+> > =C2=A0{
+> > =C2=A0	int error;
+> > =C2=A0
+> > +	if (ima_disabled && is_kdump_kernel()) {
+> > +		pr_info("IMA functionality is disabled");
+> > +		return 0;
+> > +	}
+> > +
+
+Even with the additional call to is_kdump_kernel() in ima_setup, please kee=
+p
+the is_kdump_kernel() test here as well.  Even though the code is self
+describing, please add a one line comment emphasizing disabling IMA is limi=
+ted
+to kdump.
+
+> > =C2=A0	ima_appraise_parse_cmdline();
+> > =C2=A0	ima_init_template_list();
+> > =C2=A0	hash_setup(CONFIG_IMA_DEFAULT_HASH);
+> > --=20
+> > 2.41.0
+> >=20
+>=20
+>=20
+
+thanks,
+
+Mimi
