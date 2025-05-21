@@ -1,159 +1,108 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53FCF1E572F
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 18:44:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BF7428F511;
+	Wed, 21 May 2025 18:45:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747853071; cv=none; b=FOSqDKp7TLEb32FWXUlW5MiXav1xZnqSI8YqG/fFCi0QHbyhsxoDOn68zDHziOleDSXKTsvBmMYiRs8VMSfNlA7Sssix2m7QlM/iYJo54/Ji72CNQDc+RHchdUZ1FVS+jVabjQrvkJ/Ce7dKtNswMUehXorGrHEJhUnECM+bvVk=
+	t=1747853109; cv=none; b=AC49gZD6Ac3gHFq7VVQ8Qt8BR7d6UDoNreKfQdqOShFB4FJEG8U+cZqO/rovNVSOkMdzpGw32+PHJKWdBOuSctABLCcgndUvSYQmt4pyZpD/f8y830k2XGOpgari1ovNKKmhwbsGSIP7FdSskaZJcoh+08BJzv8oZJCuGiUQrZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747853071; c=relaxed/simple;
-	bh=PLqqVYRvu9j0UKOWgjWi+5YgAEEpqzV1wFno5gm5Av0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rjXHpUX3TTCHYDWeKFEhGALtWf6tMnnS/z6uDfx/om9CGi/DF5MEQ/dZRkFin6mePQ5Ose0j7yhqxCxzL/VxEZo/fIabb3Xl9BtDsmeTlj8XJAHmiV4jpwbHiCc5SXdn8NYXU2WgMY5lqsHD9/xDAry7sAGwMjghy2WloLuNX4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VcbGsXcS; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1747853109; c=relaxed/simple;
+	bh=jBLoeuewKrege5Wtka5Hd1ay2J4eD2x0XIFMdXt+N5g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aab6VE8iwIVC43P359e2hNJKbb9IJCM6sAS4dIjC3Fe3qRCpAX6WjDbZkHXPXCa9UVyA+JIplgeGF/Co58B9B2Xn060RP3N1Ni4d6LB6+WT3haaiSOgFKy7q+x5ZGGXcpezCniMEHldWiMN06H4WfqRF/KHxINtpmTLgg27kY7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W3cygqJW; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VcbGsXcS"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-231f6c0b692so820885ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 11:44:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W3cygqJW"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ad53a96baf9so845240866b.3;
+        Wed, 21 May 2025 11:45:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747853069; x=1748457869; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Fmtb/X1TjI57UQfJNDD/ZVOXAdbzBipTI0IG+wPw1r0=;
-        b=VcbGsXcS72vrxfTqAxvshNu2Agd7LXMVnNAMSqiNXD6EKUn23xb7jlyH4tLCVu79zH
-         mGZ0fk3psqiPuq1QCoLzlwJt8Kuvi71sVwnerO7cNR+z/9m6mtcPu6XLsU2AsZyfBHAX
-         1/JflIHFR1xWz2TGKEg0t+tMQYGIHV7eGf/x/uDk0w3K284mX5R6P2yQd67EsKGZcJQa
-         5RcI5sK+rlsIxVxDN3Q9ZfS2ddR26H0Ams9Al1BGB5ohG7S3H3bncYdslTyu3BfYkJLe
-         0K8iTbSv5dF++u1N+bSifDukKGI/K/0KasmMiS0q7x4wZV71/PWvxVKR+vbm82iSfga4
-         HEMQ==
+        d=gmail.com; s=20230601; t=1747853104; x=1748457904; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=B2lUyA33NhEkDq8F9MLJ5zGOQr8lFEQZWi132GjmsnQ=;
+        b=W3cygqJWKiNvxsMAc0co8foe4GMH5lI/Xh5LetWjd7GBWME5UPj41B4ccHLSzcnqHh
+         e1Qvm6quYkxsSaFMwvANIHXIhB+7Kw8BZq50yjMQij12zMz7vTdfR+WEHWQYUSb3e7Yh
+         xJ24lRy4FBECqrPJfRmiPrixMNARI7Dldua+/Zyt5yuHjcbm3GID9xOOw9CwCWOkiShe
+         IZfNVjbIeGM02fZJpQo719A0i1A82VD0oDpr2QXFelZmBn8rbvb2a4kTOsffCKU55VK2
+         +FBqzHna/MsevUFhl4Db8ym0JlcB9ZlcoH/ywZy2Jx5FvB/5cLwwX8nQ5YMvt6o0fDIh
+         Mtcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747853069; x=1748457869;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Fmtb/X1TjI57UQfJNDD/ZVOXAdbzBipTI0IG+wPw1r0=;
-        b=moA/ywWEjxBb1JP1TB1JCEDRJiUf1KydxCLQOdtC1SAO9c1SaBYYZqwrzgDfZn4VbK
-         otCq/LWfd3/YTeS7NszaYRGPGu75RO3tUrpIeq+FVkFt6Yd2nWFTLfY2q0hZQ+wVTeSz
-         YF+mAnc76GLuzCuAfqPv/HYfxt45yyPhaJkKsqaGEd7mR0tP3CW7kJU3xM3aE3bD22hB
-         kUzozOZ/PzlPG27kzPbpl9cACvvq3lk0RyDYiJ5LzXk3qxrfWE50Q3YPdG2EUOZLjWgR
-         Z3ANeyenC0qJ17XfqsStDvmHlHql3BLdMuy7Qugazlh1kWPyO+UrPwAGGxe4NiG0mSSp
-         8bUA==
-X-Forwarded-Encrypted: i=1; AJvYcCUYPNfR6CwdPE9pikscZ7+mEtrHqYKxfNvDRns5httITvn1zxjKFpkPzApkUEL1cbpy1ZbtwdnNuFb2xLw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCw+VgAqzH73XKeghtYYOi9+S4b16UGGRDaoSIJ4Qq3JiyLBAL
-	IdIH4DHb08xNttpeU2wOk5lsLKFuptEWyGrKJpzrWXVNduz4x348X56ebr8VBPbL5KOhlRTobxG
-	44m8b/HLuFEEMFI+st56sAgMniL+2JqRQ57LO1FeY
-X-Gm-Gg: ASbGncu3DdGkp0jgQf2XGQYHKwkSjN9T9Eumll1/5Vq0PpFqsnBpN0ts4MUrBV+4owz
-	L+WiziGBnUmMgNwyBJcx5hHcL2Mn5G3hZOU2RyIbGiw0S6WDDMcEBhFaUU2JVLYCzwH8mCTGR9I
-	F7r5JwCMYtTs3MteRHJX/p7tu/CofcdeQQv+vNpnXAfZ7XvqMz9RnGMrglNnD9ss4/b4Gfe3J6A
-	hitBw/69aOs
-X-Google-Smtp-Source: AGHT+IEXiFi22m1AAuPknA7/mPQrtbieW/QpfJyBFNu2dBtKz+56sUuaE2f+PCmIYXDfcQ4AGifNPJkDf8Hj0nibFdU=
-X-Received: by 2002:a17:903:17c6:b0:21f:2ded:bfc5 with SMTP id
- d9443c01a7336-231ffdde32emr11175455ad.28.1747853069239; Wed, 21 May 2025
- 11:44:29 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1747853104; x=1748457904;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=B2lUyA33NhEkDq8F9MLJ5zGOQr8lFEQZWi132GjmsnQ=;
+        b=fDvUH8RdHJw5p+Op1FgwWqdeN0cs+pCNVJnLh1GVDv/Xr5SXPCq5e5BT69NqpkUbNS
+         gQfW9kDOG4TYZAzrAoGrBxOZQGkrbVMhDTnQAo7qXQfPSdvwgxpctS2XF2E2i1lQ2tLV
+         n2Zr3Tk7fq0jWlW7rZCRF7wG9gB6gjvu4nHsxKBW4NLWunRuiXIbWN1w/RiS9vsyk5JT
+         RBMwVzF8c05D+VISL7c+rjN7wOxdGWbieoWdtjPVPs3WZbmmzlB2ZZCfTMAfB/8q44Bq
+         Omm5NRqbS5fXIDIPibzbrXy3pI0reGxcVGqIezioQDyxzx1WkXnMWaStxdWV1W0x+O38
+         DwAg==
+X-Forwarded-Encrypted: i=1; AJvYcCUcJDChbhxedtbFA6tahphpCEnjfKcPzeUlNCjlBupvB1LbyVgdzIP7kZVNYTCUu1pyeSBPiNOnGCzGtqmt@vger.kernel.org, AJvYcCXTAvJJVplj4MGhOH4CrJ4IFFd5szwvm7FR2qCMY5pE697wdroue/SsnPf004FMXqNz4H/J/m5rFmEm@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMb2XOyKFnWlyunodaSAmeJES7M7B7qoDVXXv2ZJV0+ZsXohFx
+	eRW2+hq3s9w2d0E6Gs+GzGrePWjSNrOM0cHN1lW5sVMDxoB5gK1Y2KOm
+X-Gm-Gg: ASbGnctLdyLSX5PUOGMJ+9iV2nY02u/A4bRS0GTjHtscZO96+GINKqYYYAoNMBIqJpi
+	dU0O+KVyHLDvh1vw7pzvEfuO8kRrcyoOeDr4+6iiG9Msv4Yfkf8YKHEyKksvhFOAgSZqYyEn0/f
+	NC6pZ4trvZ5hqqLGn+djxsw0y+21BlB6NuugKqTmyjs1IX7LeD/jkJ9s+swlHsAUORnRrBRr5KM
+	NUKNAaj5DWrcLoi8LjDrnZ+4g6uLSZAt4qoVsho3n/MXr8PkW0FZlf2NNqY328LGOxqvMs9KPAM
+	iB5CkGqViyg4VcnxpFrsQY3lI/IL4dg/ciN2aBTPa5/MfjfJhra+xYuvzyZzaEa91ncnf5cWbCr
+	ZDyXwAAPB4nDlwT4C/9ODU9bhISQ=
+X-Google-Smtp-Source: AGHT+IFh/3BL64icpWdGBo9UdEEehAhQzADDMRBLK+4dhIoXxMOv/ZTRgq/fhO+UtaOMiprk3tI39w==
+X-Received: by 2002:a17:907:788:b0:acb:5583:6fe4 with SMTP id a640c23a62f3a-ad52d42c0e1mr1750819566b.6.1747853103323;
+        Wed, 21 May 2025 11:45:03 -0700 (PDT)
+Received: from ?IPV6:2620:10d:c096:325:8d0:f08c:4e6a:b32f? ([2620:10d:c092:600::8a7e])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d04e665sm935977566b.5.2025.05.21.11.45.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 May 2025 11:45:02 -0700 (PDT)
+Message-ID: <a1b24903-fad0-4337-875b-72f97908908a@gmail.com>
+Date: Wed, 21 May 2025 19:45:01 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250520203044.2689904-1-stfomichev@gmail.com>
- <CAHS8izOTWF9PO9N6ZamJ0xSCTOojXV+LfYm+5B5b8Ad1MA0QpA@mail.gmail.com> <aC4OgpSHKf51wQS-@mini-arch>
-In-Reply-To: <aC4OgpSHKf51wQS-@mini-arch>
-From: Mina Almasry <almasrymina@google.com>
-Date: Wed, 21 May 2025 11:44:16 -0700
-X-Gm-Features: AX0GCFtFyK-Rzh-K3EDETVyBIHWoSb0XFsUtd60DFFl1a6amDAz9DWLctNHnqIw
-Message-ID: <CAHS8izOEQHwFcQ6L7bPeonWNVgjuZ4yKWwi+3LBhnQnCG+VC-w@mail.gmail.com>
-Subject: Re: [PATCH net-next 1/3] net: devmem: support single IOV with sendmsg
-To: Stanislav Fomichev <stfomichev@gmail.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com, 
-	kuba@kernel.org, pabeni@redhat.com, viro@zeniv.linux.org.uk, horms@kernel.org, 
-	andrew+netdev@lunn.ch, shuah@kernel.org, sagi@grimberg.me, willemb@google.com, 
-	asml.silence@gmail.com, jdamato@fastly.com, kaiyuanz@google.com, 
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 0/5] add process_madvise() flags to modify behaviour
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Shakeel Butt <shakeel.butt@linux.dev>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ David Hildenbrand <david@redhat.com>, Vlastimil Babka <vbabka@suse.cz>,
+ Jann Horn <jannh@google.com>, Arnd Bergmann <arnd@arndb.de>,
+ Christian Brauner <brauner@kernel.org>, linux-mm@kvack.org,
+ linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+ SeongJae Park <sj@kernel.org>
+References: <7tzfy4mmbo2utodqr5clk24mcawef5l2gwrgmnp5jmqxmhkpav@jpzaaoys6jro>
+ <5604190c-3309-4cb8-b746-2301615d933c@lucifer.local>
+ <uxhvhja5igs5cau7tomk56wit65lh7ooq7i5xsdzyqsv5ikavm@kiwe26ioxl3t>
+ <e8c459cb-c8b8-4c34-8f94-c8918bef582f@lucifer.local>
+ <226owobtknee4iirb7sdm3hs26u4nvytdugxgxtz23kcrx6tzg@nryescaj266u>
+ <7a214bee-d184-460f-88d6-2249b9d513ba@lucifer.local>
+ <djdcvn3flljlbl7pwyurpdplqxikxy6j2obj6cwcjd4znr6hwj@w3lzlvdibi2i>
+ <b78e0fd8-e6b9-47c6-bec8-a44a8be242f1@gmail.com>
+ <1a7be28f-c805-4092-a7dc-d71759920714@lucifer.local>
+ <9ca3f5eb-e76f-4135-91d8-363851f5c3ea@gmail.com>
+ <733527d5-c10d-4f3c-b022-78cc3c21c4d6@lucifer.local>
+Content-Language: en-US
+From: Usama Arif <usamaarif642@gmail.com>
+In-Reply-To: <733527d5-c10d-4f3c-b022-78cc3c21c4d6@lucifer.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 21, 2025 at 10:33=E2=80=AFAM Stanislav Fomichev
-<stfomichev@gmail.com> wrote:
->
-> On 05/21, Mina Almasry wrote:
-> > On Tue, May 20, 2025 at 1:30=E2=80=AFPM Stanislav Fomichev <stfomichev@=
-gmail.com> wrote:
-> > >
-> > > sendmsg() with a single iov becomes ITER_UBUF, sendmsg() with multipl=
-e
-> > > iovs becomes ITER_IOVEC. iter_iov_len does not return correct
-> > > value for UBUF, so teach to treat UBUF differently.
-> > >
-> > > Cc: Al Viro <viro@zeniv.linux.org.uk>
-> > > Cc: Pavel Begunkov <asml.silence@gmail.com>
-> > > Cc: Mina Almasry <almasrymina@google.com>
-> > > Fixes: bd61848900bf ("net: devmem: Implement TX path")
-> > > Signed-off-by: Stanislav Fomichev <stfomichev@gmail.com>
-> > > ---
-> > >  include/linux/uio.h | 8 +++++++-
-> > >  net/core/datagram.c | 3 ++-
-> > >  2 files changed, 9 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/include/linux/uio.h b/include/linux/uio.h
-> > > index 49ece9e1888f..393d0622cc28 100644
-> > > --- a/include/linux/uio.h
-> > > +++ b/include/linux/uio.h
-> > > @@ -99,7 +99,13 @@ static inline const struct iovec *iter_iov(const s=
-truct iov_iter *iter)
-> > >  }
-> > >
-> > >  #define iter_iov_addr(iter)    (iter_iov(iter)->iov_base + (iter)->i=
-ov_offset)
-> > > -#define iter_iov_len(iter)     (iter_iov(iter)->iov_len - (iter)->io=
-v_offset)
-> > > +
-> > > +static inline size_t iter_iov_len(const struct iov_iter *i)
-> > > +{
-> > > +       if (i->iter_type =3D=3D ITER_UBUF)
-> > > +               return i->count;
-> > > +       return iter_iov(i)->iov_len - i->iov_offset;
-> > > +}
-> > >
-> >
-> > This change looks good to me from devmem perspective, but aren't you
-> > potentially breaking all these existing callers to iter_iov_len?
-> >
-> > ackc -i iter_iov_len
-> > fs/read_write.c
-> > 846:                                            iter_iov_len(iter), ppo=
-s);
-> > 849:                                            iter_iov_len(iter), ppo=
-s);
-> > 858:            if (nr !=3D iter_iov_len(iter))
-> >
-> > mm/madvise.c
-> > 1808:           size_t len_in =3D iter_iov_len(iter);
-> > 1838:           iov_iter_advance(iter, iter_iov_len(iter));
-> >
-> > io_uring/rw.c
-> > 710:                    len =3D iter_iov_len(iter);
-> >
-> > Or are you confident this change is compatible with these callers for
-> > some reason?
->
-> Pavel did go over all callers, see:
-> https://lore.kernel.org/netdev/7f06216e-1e66-433e-a247-2445dac22498@gmail=
-.com/
->
 
-Thanks, I'm not confident enough in my understanding of the other call
-sites of iter_iov_len to provide a reviewed-by, but this looks fine to
-me for devmem TCP, so I think acked-by is appropriate.
 
-Acked-by: Mina Almasry <almasrymina@google.com>
+On 21/05/2025 19:40, Lorenzo Stoakes wrote:
+> I feel this will get circular. So let's not get lost in the weeds here.
+> 
+> Let's see what others think, and if not too much push-back I'll put out
+> another RFC for the mcontrol() concept and we can compare to your RFC and
+> use that to reach consensus if that works for you?
+> 
+> Thanks, Lorenzo
 
-Thanks!
-
---=20
-Thanks,
-Mina
+Sure sounds good, Thanks.
