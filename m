@@ -1,187 +1,65 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ED911A9B4C;
-	Wed, 21 May 2025 09:12:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8B281A9B4C;
+	Wed, 21 May 2025 09:12:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747818745; cv=none; b=fWvedgIVr6vc4JUeszXtGdNB3krRWYhjBH8+U15tLL3CQEvL75oKgA2ZYYkMl8iXsbfGWcCziLmRQczCSopckP5AwdTsHRAByBka+mbhr20O7GfzFZS6wLz0ddNqgMfkV3X86VQw+cGJ/DKaOVTns8Ciz+oWUCPNU9e2H/jwv2c=
+	t=1747818753; cv=none; b=B+4X5qpBPbuLPjxumRF6qIrK48SXprjUj8I4Yd/VSuLDZAJw/PsJ4QNo/LXiMU5HQvi6zgGSci4tnR0BARAOWmYsDf8udJ8Qzv0MHPXcRNgtmMszHSqXqmVtJZ3QSnnbifeCvr4ilayDf8F06job2JvvN9Ih6umzKGfaDHpwsRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747818745; c=relaxed/simple;
-	bh=Y79uDuogax25dTt9+OzgCk6nHYwyKb9v3cGEu2DGz+g=;
+	s=arc-20240116; t=1747818753; c=relaxed/simple;
+	bh=ikhygHFZ9rkod/U2Fm9+LcynIwgOWRtuw85hfh8xlFI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ayI9SBvhejXJ6F/sULny9WLdLWJ/k5+3qqHk4seLiLQNaY9+xmeFzirVIsDUzmEyut7Qm3eWth5VbUxu/so3yHW0fQ9ExlyfwQJ20fOgC0vaEtUcQrxoNl/iIgImv3uaz9o84qwIpwPiz5GjSNhBq9A0RPR9Uk2IJEtvoRpH+90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O2ZqpZVY; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=NdwPIURF/ezp+WNnaZrbJFj2sfAsxVc3vTnxZSzaAVHCVVOkLd3Umn39hgwQFibOry2wvAw0pJD625DmENCzA3WLLYB+1tMNFopBGztzgmKM4KaGapUDwhGTmneVAOXXiJwh7xlZluP75/tK6P7dpw0hYUo4cr2bzjNUVI/z1f4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZEc+xk//; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O2ZqpZVY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15BB7C4CEE4;
-	Wed, 21 May 2025 09:12:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZEc+xk//"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81DC6C4CEE4;
+	Wed, 21 May 2025 09:12:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747818744;
-	bh=Y79uDuogax25dTt9+OzgCk6nHYwyKb9v3cGEu2DGz+g=;
+	s=k20201202; t=1747818753;
+	bh=ikhygHFZ9rkod/U2Fm9+LcynIwgOWRtuw85hfh8xlFI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=O2ZqpZVY1GHVQvRnH+uS7bAcwOBaeSTumQS66Srfn7xj+j7LlO+ktInrIjSC0n1z5
-	 Mop4xRkyEeXpYUd1sXgZA1PbIsxrSoy08anRBx6uhut3Ugb2V/J12aVEKzr6iQXoU0
-	 powBgA1aXpH0J0yVHeLMCEfgPYh+09+/x0ld2pEYZ7r5aqAqIFMkeWWlRBGy/54J6I
-	 x57UfcllCfGdE5juXSdZwDGxN5215O/VY2Aa92ku1PBKW9mdKIJTRhL4A1LxgRtxRd
-	 RzErkNhAdxYQjbOdoP9Auqi2JccH/TZt55kOb9mpyP9IOxad/WzQfqLuDfknrCSIwe
-	 +c4rL0NVdPbVA==
-Date: Wed, 21 May 2025 11:12:22 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Shubhi Garg <shgarg@nvidia.com>
-Cc: jonathanh@nvidia.com, lee@kernel.org, robh@kernel.org, 
-	alexandre.belloni@bootlin.com, thierry.reding@gmail.com, devicetree@vger.kernel.org, 
-	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 3/6] mfd: nvvrs: add NVVRS PSEQ MFD driver
-Message-ID: <20250521-observant-wildcat-of-weather-8ecc4e@kuoka>
-References: <20250520090832.3564104-1-shgarg@nvidia.com>
- <20250520090832.3564104-4-shgarg@nvidia.com>
+	b=ZEc+xk//2FDV1smvV+SbO7L/jlMiX0+LJgXCZXKaAnU7gmB7rpcmkX3jEDGQC/LHp
+	 BQ4KxbdKxLjTPqRxSeH7JRWT8LqB5VY4LiVDbHU0fZCubn/IhChovJ9hc/hd5wSmjy
+	 DBxUu2tBNpT8+ryRw796niU5rXRNAGA44F69qub8e/LlyxlC5ww5Sza5kklyHvCHsI
+	 ysln0q2RBRMvtdFLeZbSNuyiHFrAeLkghcK1L0Q2SIoKyLYOtrmX08IuKtY2AZ74tp
+	 Ipvw5niNVqkYGQ/Rb4Z9TD3d7UZmjo/pHpzZwsqdxLvcTa6dt/fYzo2BL2tQer4wTd
+	 F1elYkxuNhqNg==
+Date: Wed, 21 May 2025 10:12:28 +0100
+From: Simon Horman <horms@kernel.org>
+To: Jijie Shao <shaojijie@huawei.com>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, andrew+netdev@lunn.ch, shenjian15@huawei.com,
+	wangpeiyang1@huawei.com, liuyonglong@huawei.com,
+	chenhao418@huawei.com, jonathan.cameron@huawei.com,
+	shameerali.kolothum.thodi@huawei.com, salil.mehta@huawei.com,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 net 1/2] net: hibmcge: fix incorrect statistics update
+ issue
+Message-ID: <20250521091228.GS365796@horms.kernel.org>
+References: <20250517095828.1763126-1-shaojijie@huawei.com>
+ <20250517095828.1763126-2-shaojijie@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250520090832.3564104-4-shgarg@nvidia.com>
+In-Reply-To: <20250517095828.1763126-2-shaojijie@huawei.com>
 
-On Tue, May 20, 2025 at 09:08:29AM GMT, Shubhi Garg wrote:
-> Add support for NVIDIA VRS (Voltage Regulator Specification) power
-> sequencer device driver. This driver manages ON/OFF and suspend/resume
-> power sequencing of system power rails for NVIDIA Tegra234 SoC. It also
-> provides 32kHz RTC clock support with backup battery for system timing.
+On Sat, May 17, 2025 at 05:58:27PM +0800, Jijie Shao wrote:
+> When the user dumps statistics, the hibmcge driver automatically
+> updates all statistics. If the driver is performing the reset operation,
+> the error data of 0xFFFFFFFF is updated.
 > 
-> Signed-off-by: Shubhi Garg <shgarg@nvidia.com>
-> ---
+> Therefore, if the driver is resetting, the hbg_update_stats_by_info()
+> needs to return directly.
 > 
-> v2:
-> - removed unnecessary error logs
-> - changed dev_info to dev_dbg
-> - changed dev_err to dev_err_probe
-> - fixed "of_match_table" assignment
-> 
->  drivers/mfd/Kconfig                 |  12 ++
->  drivers/mfd/Makefile                |   1 +
->  drivers/mfd/nvidia-vrs-pseq.c       | 270 ++++++++++++++++++++++++++++
->  include/linux/mfd/nvidia-vrs-pseq.h | 127 +++++++++++++
->  4 files changed, 410 insertions(+)
->  create mode 100644 drivers/mfd/nvidia-vrs-pseq.c
->  create mode 100644 include/linux/mfd/nvidia-vrs-pseq.h
-> 
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 6fb3768e3d71..3144b8f3eb9b 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -1437,6 +1437,18 @@ config MFD_SC27XX_PMIC
->  	  This driver provides common support for accessing the SC27xx PMICs,
->  	  and it also adds the irq_chip parts for handling the PMIC chip events.
->  
-> +config MFD_NVVRS_PSEQ
-> +	tristate "NVIDIA Voltage Regulator Specification Power Sequencer"
-> +	depends on I2C=y
+> Fixes: c0bf9bf31e79 ("net: hibmcge: Add support for dump statistics")
+> Signed-off-by: Jijie Shao <shaojijie@huawei.com>
 
-Why I2C cannot be a module? This is a module.
-
-> +	select MFD_CORE
-> +	select REGMAP_I2C
-> +	select REGMAP_IRQ
-> +	help
-> +	  Say Y here to add support for NVIDIA Voltage Regulator Specification
-> +	  Power Sequencer. NVVRS_PSEQ supports ON/OFF, suspend/resume sequence of
-> +	  system power rails. It provides 32kHz RTC clock support with backup
-> +	  battery for system timing.
-> +
-
-...
-
-> +static int nvvrs_pseq_irq_clear(void *irq_drv_data)
-> +{
-> +	struct nvvrs_pseq_chip *chip = (struct nvvrs_pseq_chip *)irq_drv_data;
-> +	struct i2c_client *client = chip->client;
-> +	u8 reg, val;
-> +	unsigned int i;
-> +	int ret = 0;
-> +
-> +	/* Write 1 to clear the interrupt bit in the Interrupt
-> +	 * Source Register, writing 0 has no effect, writing 1 to a bit
-> +	 * which is already at 0 has no effect
-> +	 */
-> +
-> +	for (i = 0; i < chip->irq_chip->num_regs; i++) {
-> +		reg = (u8)(chip->irq_chip->status_base + i);
-> +		ret = i2c_smbus_read_byte_data(client, reg);
-> +		if (ret) {
-> +			val = (u8)ret;
-> +			dev_dbg(chip->dev, "Clearing interrupts! Interrupt status reg 0x%02x = 0x%02x\n",
-> +				reg, val);
-
-ratelimit
-
-...
-
-> +
-> +static int nvvrs_pseq_probe(struct i2c_client *client)
-> +{
-> +	const struct regmap_config *rmap_config;
-> +	struct nvvrs_pseq_chip *nvvrs_chip;
-> +	const struct mfd_cell *mfd_cells;
-> +	int n_mfd_cells;
-> +	int ret;
-> +
-> +	nvvrs_chip = devm_kzalloc(&client->dev, sizeof(*nvvrs_chip), GFP_KERNEL);
-> +	if (!nvvrs_chip)
-> +		return -ENOMEM;
-> +
-> +	/* Set PEC flag for SMBUS transfer with PEC enabled */
-> +	client->flags |= I2C_CLIENT_PEC;
-> +
-> +	i2c_set_clientdata(client, nvvrs_chip);
-> +	nvvrs_chip->client = client;
-> +	nvvrs_chip->dev = &client->dev;
-> +	nvvrs_chip->chip_irq = client->irq;
-> +	mfd_cells = nvvrs_pseq_children;
-> +	n_mfd_cells = ARRAY_SIZE(nvvrs_pseq_children);
-> +	rmap_config = &nvvrs_pseq_regmap_config;
-> +	nvvrs_chip->irq_chip = &nvvrs_pseq_irq_chip;
-> +
-> +	nvvrs_chip->rmap = devm_regmap_init_i2c(client, rmap_config);
-> +	if (IS_ERR(nvvrs_chip->rmap)) {
-> +		ret = PTR_ERR(nvvrs_chip->rmap);
-
-Useless assignment
-
-> +		return dev_err_probe(nvvrs_chip->dev, ret,
-> +				     "Failed to initialise regmap\n");
-> +	}
-
-Drop }
-
-> +
-> +	ret = nvvrs_pseq_vendor_info(nvvrs_chip);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	nvvrs_pseq_irq_chip.irq_drv_data = nvvrs_chip;
-> +	ret = devm_regmap_add_irq_chip(nvvrs_chip->dev, nvvrs_chip->rmap, client->irq,
-> +				       IRQF_ONESHOT | IRQF_SHARED, 0,
-> +				       &nvvrs_pseq_irq_chip,
-> +				       &nvvrs_chip->irq_data);
-> +	if (ret < 0) {
-> +		return dev_err_probe(nvvrs_chip->dev, ret,
-> +				     "Failed to add regmap irq\n");
-> +	}
-
-Drop }
-
-Your entire code is full of that.
-
-Please run scripts/checkpatch.pl on the patches and fix reported
-warnings. After that, run also 'scripts/checkpatch.pl --strict' on the
-patches and (probably) fix more warnings. Some warnings can be ignored,
-especially from --strict run, but the code here looks like it needs a
-fix. Feel free to get in touch if the warning is not clear.
-
-Best regards,
-Krzysztof
+Reviewed-by: Simon Horman <horms@kernel.org>
 
