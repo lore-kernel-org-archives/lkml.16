@@ -1,65 +1,73 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F8BE4CB5B;
-	Wed, 21 May 2025 13:16:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C173263F47
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 13:17:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747833419; cv=none; b=K35vV4zuDmBE8OLA+nc7bze0STQ0ruYG+LYjNcIzeYQ7WfD57MrzBIehBkQNdfUAnPBwpk9rHm4NRYTt7E/prYfuXy43Kxlp03vmfKGDsFisaXeof/mLAPiqb78iZFtiuPm1JIhY1M1JNXbhmm+4xTtdPPtB1omjWlFc/oamnbo=
+	t=1747833456; cv=none; b=Tc6cqkrRaK/a/SUMXKzdbV7Dhd7Y9pXMeys1MRpzeuPr3nIeE4vZ6mcfVWEStOP9y1xcPTC3OAlFk4Stk5NY0W7V5r36uqjiizArqX7yVuqgBwv9DGoKAajFxV9TH7qwFzoNFlOW8GFZ0192NXJa3WAMYQLBDJ3s8yRZMzT2zds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747833419; c=relaxed/simple;
-	bh=vKhw6z6V7OCV8t82boQCakDHSPpGxBivjHyP4/VgWOQ=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=bKtwj8agBs7R9GPiucwECH+NNf7PzJmwRTufL4ykEhxeAALyqXdeShvgE1VQeH2TFW5as3VphIllA8fNBam1oFx01PoE/N32juKnzUmQTDP0k4nAPXg4p4yHIsmshVt8BDwVc2JJ1fhenMUZn+sPHpQyZmjaWUXLjuMX+Jj/KRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EJhNf7t7; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747833456; c=relaxed/simple;
+	bh=XckVhXw8ESk7jST+7YujIxuoI+7R0vtUdI8l3qyTGk8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=s23HHEC5d45iVngPIJtn0Z2CVuvdlbFefeLX6uBAVP2yTIovCKJAs+bfj+bgCmQ8YH20QO+F/f8eOlMYYNVZZ6aNX6hAS/XZSAVqrcQLlsAE5CQdeAV95vGeFgGYhZGXR1KedqrZCiqoX1doHNEvVNdNqddtj+NVaYwLbLfoZGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cIu0C5rH; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EJhNf7t7"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2322f8afe02so31003715ad.2;
-        Wed, 21 May 2025 06:16:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747833417; x=1748438217; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :to:from:subject:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7cYgvyteFUsDXg+ceLCjMI2UWdgFf/NgcDDOuU7Imm8=;
-        b=EJhNf7t7noGNkty2s5qCtX38m44kKIg1GyMJ3q50+q99ihoAL8MecdHWgVSfiL7Nsg
-         pWe2YsW1nVZDPDOiUdEmya3xPOTP9GfY+BLZneGZdEKz/4oZNR/aWZa4/xsijbuqhNct
-         zEGsO+dxQOEOGwBLgaP+BT/N3R5AwNabsfZqGg2gxsTnJDLw4LmSX9y8pmbYMCsdiO5W
-         dWrkpmJUcwruJp89WtoXtFNkOoxjoxOStkdx6hyDoWxq8xPbrHtke9APNyELvVG9LtfB
-         bTAC3lFRNxZfmnwVxIb23v3ORpHGfr3sUAOBI7NGtTLVpzS/33gfYRoK/rfEThoWWI27
-         URRw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cIu0C5rH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747833454;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Coxx2aEBIqRB645mhtV+IgPRr+CylFQ+cGu0rui4m0s=;
+	b=cIu0C5rH1dOiOg/nnaQuoee2PvCk/bGjYo104RY+jB+g9GScnvvmAdFgDHW+uXA55nlSKn
+	qOFi1XSdUVoih06eNJ7Kyvq1lszeZNEYh3wFK/6bar1IG7sbMt59KBOfacq/ddvRlzu6Na
+	8+qF26oAScDYKvIcZO2DE7PbX7hcspo=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-567-JihAraNmP6iVacoKL2RvTA-1; Wed, 21 May 2025 09:17:30 -0400
+X-MC-Unique: JihAraNmP6iVacoKL2RvTA-1
+X-Mimecast-MFC-AGG-ID: JihAraNmP6iVacoKL2RvTA_1747833450
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-442e0e6eb84so42777515e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 06:17:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747833417; x=1748438217;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7cYgvyteFUsDXg+ceLCjMI2UWdgFf/NgcDDOuU7Imm8=;
-        b=OhKitthchX4xExpA3Xym36a6ETOgY6QZrovWeHcr7xPZAW8Oo1+GgAWOA3/bVtJbx5
-         +UPzrmxg0e/72eTTYeT+MbmW33yztYd+gRS8BLYMTyppIRI7er+hy6GQVwa87UupHUcE
-         4NCijyl3vTSFLh9OlLQoi6qLsZIx34wsjRMAlRuE9wJaqafRUDem36Wuo0bJgcuRy9pY
-         BFVaFHCu6XIKAC+Z+qfchtbonYdU4hHf3rZ3GMgZ+0x3KA3+E8nhqXgcjYMQA5l8ZS48
-         Y8ntL/U9+FB08XHxWsKJr2+Ea+2uIuURelIATewuKi6v7256mU+wupQKyq8Jdf5RL37Q
-         /vPA==
-X-Forwarded-Encrypted: i=1; AJvYcCWL+NbIQvwMIkgMg0rWh12qQm8saPoOs8t+d9JWt+vpDYY3lB11cj+hCKdZv25JpBBc1rX2Wn3naAM+nMw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxSRLhE4mlnUMtK0eYdEQxnESsg922rvdVZ30PGMEOWrtZ9x6D
-	jrRzYjUoNuQ+ly2cvsgSsTnUSlbyH2XhU4CXLiRkbWXraYZiiElbdIELqRy6VPrZ
-X-Gm-Gg: ASbGnctdKX1ussmvJ7ZLuYAUopv3S0nXaqhoWEhuBzZK3t9QC8Ff31dTaki8O0uZN0d
-	xfraP9rmqUkHFDO4+6PPeUR6kQSTPGoXdQYjkbY23vnEFaondvMcj6dgCgWlp/Qc5Tp/llOhdJK
-	BwJlgiBLiYeZ3IKXj380rPZkSnac7Vj8URqFRDVmrAePC5y1FjN/XEUxieStpbqYJoEyOTiv43i
-	ADDmbWDaE6TZez/1XxAZrEkx7M/R/PpjBMcJYM5wChaIwjH2cEZVZY9TV1fSA8NZS/o7UojDPmc
-	rLYeg/iY494cOWLZfMPjPC/JYwAvy6HrxLJMdtPOuPPVihbKpZqJhIHZ9e7J7/rsrwlFbwbtjN+
-	5PUWXKPUZ4wbJhosNttzSzvfbIXY=
-X-Google-Smtp-Source: AGHT+IEivtc5dtn52yLZuRGBOCa9xzAJH8RadB2Uw1Xoob3rPki8A8YLhX1DkIkTXI+bI/7zg+cbTg==
-X-Received: by 2002:a17:902:d4c3:b0:232:4f8c:1af9 with SMTP id d9443c01a7336-2324f8c1c69mr142772375ad.21.1747833417107;
-        Wed, 21 May 2025 06:16:57 -0700 (PDT)
-Received: from [192.168.11.2] (FL1-119-244-79-106.tky.mesh.ad.jp. [119.244.79.106])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4adbfe1sm92901325ad.66.2025.05.21.06.16.55
+        d=1e100.net; s=20230601; t=1747833449; x=1748438249;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Coxx2aEBIqRB645mhtV+IgPRr+CylFQ+cGu0rui4m0s=;
+        b=r4XN+PLU8FF+ARbouqT99Snr/isPyWnClKwWLGABG4GmN7GBkMQNod0VYZOmLD6nLJ
+         x3WZmbdzmDmYvwkf87EmnpVu7VEEEsCwYJYgBUrv3tQ6Gt69fo45CIVYLQfebQ0DvYTl
+         5J/84qPALZlzrCn40b3gxgSWvunXJpXcRMe9ooFL+i0KRXh/AcF/63i6ppaAXADgNZf7
+         N+Qcja2aStofmtEevhgw1EPWX54VejRTZ3/z51nezzyNC0IY5KgAqha/Mw93nIXcNNao
+         paJAcwObINtgmhogDTgF+wW78bzUwUETj2aJH0H9oIr1gR1Ob0HI6QLX4ctRrWf1L37r
+         dGGA==
+X-Forwarded-Encrypted: i=1; AJvYcCV47+7Iwqu2+Tza9pWA4VcmP5fARpAkgzeCMIyI7Txnp+GBUxMftDTgSgzkot3ljRYSYHBmCSJxOgxQhdo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz1Ms9qhLRWS8SSRhUl5AIKOWIgSPHMz1aknX0zDZciz3cDaXei
+	5KhQvQgR/kxWvVPv1dHlX+tqTM2xl/+PVClZkGQO5unBEgyv05046FOVZ5RV8m77eElPJKtHnj5
+	e0LQCq6s1+gQQo9xevxJtz47YdPMttfCaUq9e3gQDt7dNqnZW3Z73qPNb7BJvmAw1aA==
+X-Gm-Gg: ASbGncspwSyAlpAuk/uNpQDetxLEhPQ9PJ91TwX8RsnZwtKZqAYVBjS2rsrgblx1ml2
+	7BNR9cMu7UydOgMdmr9zlYdge2DRNflWO+5iANeZMLUM0ySPE2e8pkhZflJCadWch90N7xJ1gXw
+	d8pgRIOnMvure7uLxBiYPdkpan/6i1ugPXL8zKwnB/Bj5rCTd7scIUVEhoK+leTWBKakhCyf/0+
+	231I7wEST7y8Hl1AJRcWK+41liGXSmhwuAwfTJehDfcU0XmwKkXBIYVqk9GxH1VJQrOjE4Pihwe
+	Gjl12OP7y2asjpjFKqs4EOPKv7zL9DeE38gQh0jZ1ULcaFbPi/6vJEo9YQlTvKKTm95+MZ0PJeY
+	y2DsUUFijBBEJGxjRqrMgbxgkJcQ4EyU6c7YH+IM=
+X-Received: by 2002:a05:600c:45cf:b0:43c:f470:7605 with SMTP id 5b1f17b1804b1-442fd610128mr201632415e9.12.1747833449498;
+        Wed, 21 May 2025 06:17:29 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGeTvtRM9vsH0rx7yrcgJiEKJ2q99qlmz+CtY4GE46ewWI4BIjJPn0Gdy7a/BJ9+neXKRuaEA==
+X-Received: by 2002:a05:600c:45cf:b0:43c:f470:7605 with SMTP id 5b1f17b1804b1-442fd610128mr201631645e9.12.1747833448945;
+        Wed, 21 May 2025 06:17:28 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f25:9c00:e2c7:6eb5:8a51:1c60? (p200300d82f259c00e2c76eb58a511c60.dip0.t-ipconnect.de. [2003:d8:2f25:9c00:e2c7:6eb5:8a51:1c60])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442eb85bb20sm186557675e9.0.2025.05.21.06.17.26
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 May 2025 06:16:56 -0700 (PDT)
-Message-ID: <3016329a-4edd-4550-862f-b298a1b79a39@gmail.com>
-Date: Wed, 21 May 2025 22:16:53 +0900
+        Wed, 21 May 2025 06:17:28 -0700 (PDT)
+Message-ID: <a2aacca8-cc70-451c-be2b-44911ca3caaa@redhat.com>
+Date: Wed, 21 May 2025 15:17:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,99 +75,132 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [bug report] [rdma] RXE ODP test hangs with new DMA map API
-From: Daisuke Matsuda <dskmtsd@gmail.com>
-To: linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
- leon@kernel.org, jgg@ziepe.ca, zyjzyj2000@gmail.com
-References: <3e8f343f-7d66-4f7a-9f08-3910623e322f@gmail.com>
+Subject: Re: [PATCH v4 3/5] kvm: arm64: New memslot flag to indicate cacheable
+ mapping
+To: ankita@nvidia.com, jgg@nvidia.com, maz@kernel.org,
+ oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com,
+ yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org,
+ ryan.roberts@arm.com, shahuang@redhat.com, lpieralisi@kernel.org
+Cc: aniketa@nvidia.com, cjia@nvidia.com, kwankhede@nvidia.com,
+ kjaju@nvidia.com, targupta@nvidia.com, vsethi@nvidia.com,
+ acurrid@nvidia.com, apopple@nvidia.com, jhubbard@nvidia.com,
+ danw@nvidia.com, zhiw@nvidia.com, mochs@nvidia.com, udhoke@nvidia.com,
+ dnigam@nvidia.com, alex.williamson@redhat.com, sebastianene@google.com,
+ coltonlewis@google.com, kevin.tian@intel.com, yi.l.liu@intel.com,
+ ardb@kernel.org, akpm@linux-foundation.org, gshan@redhat.com,
+ linux-mm@kvack.org, ddutile@redhat.com, tabba@google.com,
+ qperret@google.com, seanjc@google.com, kvmarm@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ maobibo@loongson.cn
+References: <20250518054754.5345-1-ankita@nvidia.com>
+ <20250518054754.5345-4-ankita@nvidia.com>
+From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
-In-Reply-To: <3e8f343f-7d66-4f7a-9f08-3910623e322f@gmail.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250518054754.5345-4-ankita@nvidia.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-
->    RDMA/umem: Store ODP access mask information in PFN
-
-This one generates a build error. I modified manually and tried running the test.
-It also hanged with ERROR:
-```
-$ ./build/bin/run_tests.py -v -k odp
-test_odp_dc_traffic (tests.test_mlx5_dc.DCTest.test_odp_dc_traffic) ... skipped                                                                                                                                                              'Can not run the test over non MLX5 device'
-test_devx_rc_qp_odp_traffic (tests.test_mlx5_devx.Mlx5DevxRcTrafficTest.test_dev                                                                                                                                                             x_rc_qp_odp_traffic) ... skipped 'Can not run the test over non MLX5 device'
-test_odp_mkey_list_new_api (tests.test_mlx5_mkey.Mlx5MkeyTest.test_odp_mkey_list                                                                                                                                                             _new_api)
-Create Mkeys above ODP MR, configure it with memory layout using the new API and                                                                                                                                                              ... skipped 'Could not open mlx5 context (This is not an MLX5 device)'
-test_odp_async_prefetch_rc_traffic (tests.test_odp.OdpTestCase.test_odp_async_pr                                                                                                                                                             efetch_rc_traffic) ... skipped 'Advise MR with flags (0) and advice (0) is not s                                                                                                                                                             upported'
-test_odp_implicit_async_prefetch_rc_traffic (tests.test_odp.OdpTestCase.test_odp                                                                                                                                                             _implicit_async_prefetch_rc_traffic) ... skipped 'ODP implicit is not supported'
-test_odp_implicit_rc_traffic (tests.test_odp.OdpTestCase.test_odp_implicit_rc_tr                                                                                                                                                             affic) ... skipped 'ODP implicit is not supported'
-test_odp_implicit_sync_prefetch_rc_traffic (tests.test_odp.OdpTestCase.test_odp_                                                                                                                                                             implicit_sync_prefetch_rc_traffic) ... skipped 'ODP implicit is not supported'
-test_odp_prefetch_async_no_page_fault_rc_traffic (tests.test_odp.OdpTestCase.tes                                                                                                                                                             t_odp_prefetch_async_no_page_fault_rc_traffic) ... skipped 'Advise MR with flags                                                                                                                                                              (0) and advice (2) is not supported'
-test_odp_prefetch_sync_no_page_fault_rc_traffic (tests.test_odp.OdpTestCase.test                                                                                                                                                             _odp_prefetch_sync_no_page_fault_rc_traffic) ... skipped 'Advise MR with flags (                                                                                                                                                             1) and advice (2) is not supported'
-test_odp_qp_ex_rc_atomic_write (tests.test_odp.OdpTestCase.test_odp_qp_ex_rc_ato                                                                                                                                                             mic_write) ... ERROR
-
-
-```
-
-Here are the stack of the process:
-```
-[<0>] rxe_ib_invalidate_range+0x3e/0xa0 [rdma_rxe]
-[<0>] __mmu_notifier_invalidate_range_start+0x197/0x200
-[<0>] unmap_vmas+0x184/0x190
-[<0>] vms_clear_ptes+0x12c/0x190
-[<0>] vms_complete_munmap_vmas+0x83/0x1d0
-[<0>] do_vmi_align_munmap+0x17f/0x1b0
-[<0>] do_vmi_munmap+0xd3/0x190
-[<0>] __vm_munmap+0xbb/0x190
-[<0>] __x64_sys_munmap+0x1b/0x30
-[<0>] x64_sys_call+0x1ea8/0x2660
-[<0>] do_syscall_64+0x7e/0x170
-[<0>] entry_SYSCALL_64_after_hwframe+0x76/0x7e
-```
-I think this one is related to umem mutex.
-
-So it looks there are two problems:
-The stuck issue in rxe_ib_invalidate_range() comes from "RDMA/umem: Store ODP access mask information in PFN",
-and the stuck issue in uverbs_destroy_ufile_hw() derives from "RDMA/core: Convert UMEM ODP DMA mapping to caching IOVA and page linkage".
-
-I'd welcome your help in fixing them.
-
-Thanks,
-Daisuke
-
-On 2025/05/21 21:48, Daisuke Matsuda wrote:
-> Hi,
+On 18.05.25 07:47, ankita@nvidia.com wrote:
+> From: Ankit Agrawal <ankita@nvidia.com>
 > 
-> After these two patches are merged to the for-next tree, RXE ODP test always hangs:
->    RDMA/core: Convert UMEM ODP DMA mapping to caching IOVA and page linkage
->    RDMA/umem: Store ODP access mask information in PFN
-> cf. https://lore.kernel.org/linux-rdma/cover.1745831017.git.leon@kernel.org/
+> Introduce a new memslot flag KVM_MEM_ENABLE_CACHEABLE_PFNMAP
+> as a tool for userspace to indicate that it expects a particular
+> PFN range to be mapped cacheable.
 > 
-> Here is the console log:
-> ```
-> $ ./build/bin/run_tests.py -v -k odp
-> test_odp_dc_traffic (tests.test_mlx5_dc.DCTest.test_odp_dc_traffic) ... skipped 'Can not run the test over non MLX5 device'
-> test_devx_rc_qp_odp_traffic (tests.test_mlx5_devx.Mlx5DevxRcTrafficTest.test_devx_rc_qp_odp_traffic) ... skipped 'Can not run the test over non MLX5 device'
-> test_odp_mkey_list_new_api (tests.test_mlx5_mkey.Mlx5MkeyTest.test_odp_mkey_list_new_api)
-> Create Mkeys above ODP MR, configure it with memory layout using the new API and ... skipped 'Could not open mlx5 context (This is not an MLX5 device)'
-> test_odp_async_prefetch_rc_traffic (tests.test_odp.OdpTestCase.test_odp_async_prefetch_rc_traffic) ...
+> This will serve as a guide for the KVM to activate the code that
+> allows cacheable PFNMAP.
 > 
+> CC: Oliver Upton <oliver.upton@linux.dev>
+> CC: Catalin Marinas <catalin.marinas@arm.com>
+> CC: Jason Gunthorpe <jgg@nvidia.com>
+> Suggested-by: Marc Zyngier <maz@kernel.org>
+> Signed-off-by: Ankit Agrawal <ankita@nvidia.com>
+> ---
+>   include/uapi/linux/kvm.h | 1 +
+>   virt/kvm/kvm_main.c      | 6 ++++--
+>   2 files changed, 5 insertions(+), 2 deletions(-)
 > 
-> ```
-> 
-> It looks that the python process is somehow stuck in uverbs_destroy_ufile_hw():
-> ```
-> $ sudo cat /proc/1845/task/1845/stack
-> [<0>] uverbs_destroy_ufile_hw+0x24/0x100 [ib_uverbs]
-> [<0>] ib_uverbs_close+0x1b/0xc0 [ib_uverbs]
-> [<0>] __fput+0xea/0x2d0
-> [<0>] ____fput+0x15/0x20
-> [<0>] task_work_run+0x5d/0xa0
-> [<0>] do_exit+0x316/0xa50
-> [<0>] make_task_dead+0x81/0x160
-> [<0>] rewind_stack_and_make_dead+0x16/0x20
-> ```
-> 
-> I am not sure about the root cause but hope we can fix this before the next merge window.
-> 
-> Thanks,
-> Daisuke
+> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> index b6ae8ad8934b..9defefe7bdf0 100644
+> --- a/include/uapi/linux/kvm.h
+> +++ b/include/uapi/linux/kvm.h
+> @@ -51,6 +51,7 @@ struct kvm_userspace_memory_region2 {
+>   #define KVM_MEM_LOG_DIRTY_PAGES	(1UL << 0)
+>   #define KVM_MEM_READONLY	(1UL << 1)
+>   #define KVM_MEM_GUEST_MEMFD	(1UL << 2)
+> +#define KVM_MEM_ENABLE_CACHEABLE_PFNMAP	(1UL << 3)
+>   
+>   /* for KVM_IRQ_LINE */
+>   struct kvm_irq_level {
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index e85b33a92624..a3e77fe57cc4 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -1524,12 +1524,14 @@ static void kvm_replace_memslot(struct kvm *kvm,
+>    * only allows these.
+>    */
+>   #define KVM_SET_USER_MEMORY_REGION_V1_FLAGS \
+> -	(KVM_MEM_LOG_DIRTY_PAGES | KVM_MEM_READONLY)
+> +	(KVM_MEM_LOG_DIRTY_PAGES | KVM_MEM_READONLY | \
+> +	 KVM_MEM_ENABLE_CACHEABLE_PFNMAP)
+>   
+>   static int check_memory_region_flags(struct kvm *kvm,
+>   				     const struct kvm_userspace_memory_region2 *mem)
+>   {
+> -	u32 valid_flags = KVM_MEM_LOG_DIRTY_PAGES;
+> +	u32 valid_flags = KVM_MEM_LOG_DIRTY_PAGES |
+> +			  KVM_MEM_ENABLE_CACHEABLE_PFNMAP;
+
+Should we have some kind of kvm_arch_supports ... check? Because anybody 
+else except arm64 will not respect this?
+
+-- 
+Cheers,
+
+David / dhildenb
 
