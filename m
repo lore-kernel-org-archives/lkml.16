@@ -1,217 +1,443 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8365928F924;
-	Wed, 21 May 2025 18:50:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 849791D7999;
+	Wed, 21 May 2025 18:51:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.120.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747853447; cv=none; b=kR6oD4mS4GFWpJXogmNl/vswfDaK6roqGrlAovfLoQrVCRysqT9HSPBd8/VJHfNOOtfS63Q//QCtqbnlfuK0TFMp8tDGAx+8tcfwWBPmlPf5QtUEK/QWUFFhx1ntI59ReSTOK/7vP9JPEdTSBzL8I6H6f7BfqV0fBLbWVIm2KpQ=
+	t=1747853503; cv=none; b=P4wUCMjt1tBaDo48r/rSE3r5wIRVJGmuEDbTZ6n4jDYXgGDWXXt31nSLm5GLMCnZE/1u6yQYUzythzjFidOy/U6dbR6T8aYz22kgwmofQjym1OP5LSTE3oP37IZS1hjntEsF1QAr4HR/orIHWycfDOYdNZcMNo/C+8cUVuO1hGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747853447; c=relaxed/simple;
-	bh=m/p53xeTaae0aSVNMfZaX6mxgKhG2SUBo4ZklWZrjZk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=E7qAhbRcuvE7vj7aCcpy6D4uzsbIAEl1aegzztc3wsIwhR4mk5WGuAJlBCYpc2s5iNrvp2nfb6omwJhe84qEwYCOmGIekHQGBTWbS1PNQfGCkBSVim1hqtBNFjwoHSGz6W2CKoOW/voCvngFj0sB30jDyXOIgyOT7eojC5wi9E8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75F98C4CEE4;
-	Wed, 21 May 2025 18:50:45 +0000 (UTC)
-Date: Wed, 21 May 2025 14:51:28 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] tracing: ring_buffer: Rewind persistent ring buffer
- when reboot
-Message-ID: <20250521145128.3a776466@gandalf.local.home>
-In-Reply-To: <174730775661.3893490.10420015749079085314.stgit@mhiramat.tok.corp.google.com>
-References: <174730775661.3893490.10420015749079085314.stgit@mhiramat.tok.corp.google.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1747853503; c=relaxed/simple;
+	bh=HViRkR9IseycG4RqrUMvqT/5luymndQHFzGO64flSWY=;
+	h=Date:From:To:Cc:Message-Id:In-Reply-To:References:Mime-Version:
+	 Content-Type:Subject; b=kOsm/kTGJBajTzqYZ6kBNSiI2kdA6BUwlCIszNMXQLpMXs1nowx3xThBwQ0ZM3dDed7W1+GwHW2PN3oCUasUU4N2d+g5UN0iQx8fZjiNSDX5NGLG7syABP2DV6TAqpq+FAvRDdXescxaz06i6YKaVCH8z6SHNWiqxIEhl14l8xw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com; spf=pass smtp.mailfrom=hugovil.com; dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b=LJjflFB6; arc=none smtp.client-ip=162.243.120.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hugovil.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b="LJjflFB6"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
+	; s=x; h=Subject:Content-Transfer-Encoding:Mime-Version:Message-Id:Cc:To:From
+	:Date:subject:date:message-id:reply-to;
+	bh=pLajyTKvSnjIeuhbiBRiqcZn2G1t4YqZMJu2Cek90Gc=; b=LJjflFB6AayCbZwPaANqL6treh
+	acw9Gk8X7GrVLSN+graw1u0fxSTvULAwfZurT3Zbo0eKQP2swDTGMcYWoGWKr9A/R3OKBQQHd2jQt
+	C/QFaEalCaJ2XeyvHfkKQcoLWeF4qJBT2Tt67U8GF7AJDzBnU1s8DPFutKrIKfr1x7wM=;
+Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:43264 helo=pettiford.lan)
+	by mail.hugovil.com with esmtpa (Exim 4.92)
+	(envelope-from <hugo@hugovil.com>)
+	id 1uHoX9-0004sc-Id; Wed, 21 May 2025 14:51:20 -0400
+Date: Wed, 21 May 2025 14:51:19 -0400
+From: Hugo Villeneuve <hugo@hugovil.com>
+To: Biju Das <biju.das.jz@bp.renesas.com>
+Cc: "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+ "mripard@kernel.org" <mripard@kernel.org>, "tzimmermann@suse.de"
+ <tzimmermann@suse.de>, "airlied@gmail.com" <airlied@gmail.com>,
+ "simona@ffwll.ch" <simona@ffwll.ch>, "dri-devel@lists.freedesktop.org"
+ <dri-devel@lists.freedesktop.org>, "linux-renesas-soc@vger.kernel.org"
+ <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+ Chris Brandt <Chris.Brandt@renesas.com>
+Message-Id: <20250521145119.7b842eed340b403c024dff6b@hugovil.com>
+In-Reply-To: <TYCPR01MB113329D284B9AFDD68F9E64A3869EA@TYCPR01MB11332.jpnprd01.prod.outlook.com>
+References: <20250520171034.3488482-2-hugo@hugovil.com>
+	<TYCPR01MB113329D284B9AFDD68F9E64A3869EA@TYCPR01MB11332.jpnprd01.prod.outlook.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 70.80.174.168
+X-SA-Exim-Mail-From: hugo@hugovil.com
+X-Spam-Level: 
+X-Spam-Report: 
+	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
+	*  0.1 URIBL_CSS_A Contains URL's A record listed in the Spamhaus CSS
+	*      blocklist
+	*      [URIs: hugovil.com]
+	*  0.1 URIBL_CSS Contains an URL's NS IP listed in the Spamhaus CSS
+	*      blocklist
+	*      [URIs: hugovil.com]
+	* -0.3 NICE_REPLY_A Looks like a legit reply (A)
+Subject: Re: [PATCH 1/2] drm: rcar-du: rzg2l_mipi_dsi: Implement host
+ transfers
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 
-On Thu, 15 May 2025 20:15:56 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+Hi Biju,
 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 6859008ca34d..48f5f248eb4c 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -1358,6 +1358,13 @@ static inline void rb_inc_page(struct buffer_page **bpage)
->  	*bpage = list_entry(p, struct buffer_page, list);
->  }
->  
-> +static inline void rb_dec_page(struct buffer_page **bpage)
-> +{
-> +	struct list_head *p = rb_list_head((*bpage)->list.prev);
-> +
-> +	*bpage = list_entry(p, struct buffer_page, list);
-> +}
-> +
->  static struct buffer_page *
->  rb_set_head_page(struct ring_buffer_per_cpu *cpu_buffer)
->  {
-> @@ -1866,10 +1873,11 @@ static int rb_validate_buffer(struct buffer_data_page *dpage, int cpu)
->  static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
->  {
->  	struct ring_buffer_cpu_meta *meta = cpu_buffer->ring_meta;
-> -	struct buffer_page *head_page;
-> +	struct buffer_page *head_page, *orig_head;
->  	unsigned long entry_bytes = 0;
->  	unsigned long entries = 0;
->  	int ret;
-> +	u64 ts;
->  	int i;
->  
->  	if (!meta || !meta->head_buffer)
-> @@ -1885,8 +1893,93 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
->  	entry_bytes += local_read(&cpu_buffer->reader_page->page->commit);
->  	local_set(&cpu_buffer->reader_page->entries, ret);
->  
-> -	head_page = cpu_buffer->head_page;
-> +	orig_head = head_page = cpu_buffer->head_page;
-> +	ts = head_page->page->time_stamp;
-> +
-> +	/*
-> +	 * Try to rewind the head so that we can read the pages which already
-> +	 * read in the previous boot.
-> +	 */
-> +	if (head_page == cpu_buffer->tail_page)
-> +		goto rewound;
+On Wed, 21 May 2025 07:43:08 +0000
+Biju Das <biju.das.jz@bp.renesas.com> wrote:
 
-Hmm, jumping to a label called "rewound" when you didn't do a rewind seems
-confusing.
+> Hi Hugo,
+> 
+> Thanks for the patch.
+> 
+> For some reason, your cover letter is not showing link to this patch
+> [1] https://lore.kernel.org/all/20250520164034.3453315-1-hugo@hugovil.com/
 
-Perhaps call the label "skip_rewind"?
+My server had problems, and only sent the cover letter, forcing me to
+manually send the two remaining patches thinking it would be ok :)
 
-> +
-> +	rb_dec_page(&head_page);
-> +	for (i = 0; i < meta->nr_subbufs + 1; i++, rb_dec_page(&head_page)) {
-> +
-> +		/* Rewind until tail (writer) page. */
-> +		if (head_page == cpu_buffer->tail_page)
-> +			break;
-> +
-> +		/* Ensure the page has older data than head. */
-> +		if (ts < head_page->page->time_stamp)
-> +			break;
-> +
-> +		ts = head_page->page->time_stamp;
-> +		/* Ensure the page has correct timestamp and some data. */
-> +		if (!ts || rb_page_commit(head_page) == 0)
-> +			break;
-> +
-> +		/* Stop rewind if the page is invalid. */
-> +		ret = rb_validate_buffer(head_page->page, cpu_buffer->cpu);
-> +		if (ret < 0)
-> +			break;
-> +
-> +		/* Recover the number of entries and update stats. */
-> +		local_set(&head_page->entries, ret);
-> +		if (ret)
-> +			local_inc(&cpu_buffer->pages_touched);
-> +		entries += ret;
-> +		entry_bytes += rb_page_commit(head_page);
-> +	}
-> +	pr_info("Rewound %d pages on cpu%d\n", i, cpu_buffer->cpu);
+> 
+> > -----Original Message-----
+> > From: Hugo Villeneuve <hugo@hugovil.com>
+> > Sent: 20 May 2025 18:11
+> > Subject: [PATCH 1/2] drm: rcar-du: rzg2l_mipi_dsi: Implement host transfers
+> 
+> rcar-du->rz-du
 
-Should state this is coming from the ring buffer and use "[%d]" for cpu
-number as the other pr_info()'s do. Also only print if it did a rewind:
-
-	if (i)
-		pr_info("Ring buffer [%d] rewound %d pages\n", cpu_buffer->cpu, i);
+Yes, and other commits use "drm: renesas: rz-du:", so I will change it
+to this prefix.
 
 
-> +
-> +	/* The last rewound page must be skipped. */
-> +	if (head_page != orig_head)
-> +		rb_inc_page(&head_page);
->  
-> +	/* If there are rewound pages, rewind the reader page too. */
+> > From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+> > 
+> > Add support for sending MIPI DSI command packets from the host to a peripheral. This is required for
+> > panels that need configuration before they accept video data.
+> > 
+> > Based on Renesas Linux kernel v5.10 repos [1].
+> 
+> > 
+> > Link: https://github.com/renesas-rz/rz_linux-cip.git
+> > Cc: Biju Das <biju.das.jz@bp.renesas.com>
+> > Cc: Chris Brandt <chris.brandt@renesas.com>
+> > Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+> > ---
+> >  .../gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c    | 174 ++++++++++++++++++
+> >  .../drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h   |  56 ++++++
+> >  2 files changed, 230 insertions(+)
+> > 
+> > diff --git a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c b/drivers/gpu/drm/renesas/rz-
+> > du/rzg2l_mipi_dsi.c
+> > index dc6ab012cdb69..77d3a31ff8e35 100644
+> > --- a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
+> > +++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
+> > @@ -6,6 +6,7 @@
+> >   */
+> >  #include <linux/clk.h>
+> >  #include <linux/delay.h>
+> > +#include <linux/dma-mapping.h>
+> >  #include <linux/io.h>
+> >  #include <linux/iopoll.h>
+> >  #include <linux/module.h>
+> > @@ -23,9 +24,12 @@
+> >  #include <drm/drm_of.h>
+> >  #include <drm/drm_panel.h>
+> >  #include <drm/drm_probe_helper.h>
+> > +#include <video/mipi_display.h>
+> > 
+> >  #include "rzg2l_mipi_dsi_regs.h"
+> > 
+> > +#define RZG2L_DCS_BUF_SIZE	128 /* Maximum DCS buffer size in external memory. */
+> > +
+> >  struct rzg2l_mipi_dsi {
+> >  	struct device *dev;
+> >  	void __iomem *mmio;
+> > @@ -44,6 +48,10 @@ struct rzg2l_mipi_dsi {
+> >  	unsigned int num_data_lanes;
+> >  	unsigned int lanes;
+> >  	unsigned long mode_flags;
+> > +
+> > +	/* DCS buffer pointers when using external memory. */
+> > +	dma_addr_t dcs_buf_phys;
+> > +	u8 *dcs_buf_virt;
+> >  };
+> > 
+> >  static inline struct rzg2l_mipi_dsi *
+> > @@ -651,9 +659,168 @@ static int rzg2l_mipi_dsi_host_detach(struct mipi_dsi_host *host,
+> >  	return 0;
+> >  }
+> > 
+> > +static ssize_t rzg2l_mipi_dsi_read_response(struct rzg2l_mipi_dsi *dsi,
+> > +					    const struct mipi_dsi_msg *msg) {
+> > +	u8 *msg_rx = msg->rx_buf;
+> > +	u16 size;
+> > +	u8 datatype;
+> > +	u32 result;
+> 
+> Please arrange the variables in reverse xmas tree fashion.
 
-I would change the comment to:
+Ok.
 
-	/*
-	 * If the ring buffer was rewound, then inject the reader page
-	 * into the location just before the original head page.
-	 */
+  
+> > +
+> > +	result = rzg2l_mipi_dsi_link_read(dsi, RXRSS0R);
+> > +	if (result & RXRSS0R_RXPKTDFAIL) {
+> > +		dev_err(dsi->dev, "packet rx data did not save correctly\n");
+> > +		return -EPROTO;
+> > +	}
+> > +
+> > +	if (result & RXRSS0R_RXFAIL) {
+> > +		dev_err(dsi->dev, "packet rx failure\n");
+> > +		return -EPROTO;
+> > +	}
+> > +
+> > +	if (!(result & RXRSS0R_RXSUC))
+> > +		return -EPROTO;
+> > +
+> > +	datatype = FIELD_GET(RXRSS0R_DT, result);
+> > +
+> > +	switch (datatype) {
+> > +	case 0:
+> > +		dev_dbg(dsi->dev, "ACK\n");
+> > +		return 0;
+> > +	case MIPI_DSI_RX_END_OF_TRANSMISSION:
+> > +		dev_dbg(dsi->dev, "EoTp\n");
+> > +		return 0;
+> > +	case MIPI_DSI_RX_ACKNOWLEDGE_AND_ERROR_REPORT:
+> > +		dev_dbg(dsi->dev, "Acknowledge and error report: $%02x%02x\n",
+> > +			(u8)FIELD_GET(RXRSS0R_DATA1, result),
+> > +			(u8)FIELD_GET(RXRSS0R_DATA0, result));
+> > +		return 0;
+> > +	case MIPI_DSI_RX_DCS_SHORT_READ_RESPONSE_1BYTE:
+> > +	case MIPI_DSI_RX_GENERIC_SHORT_READ_RESPONSE_1BYTE:
+> > +		msg_rx[0] = FIELD_GET(RXRSS0R_DATA0, result);
+> > +		return 1;
+> > +	case MIPI_DSI_RX_DCS_SHORT_READ_RESPONSE_2BYTE:
+> > +	case MIPI_DSI_RX_GENERIC_SHORT_READ_RESPONSE_2BYTE:
+> > +		msg_rx[0] = FIELD_GET(RXRSS0R_DATA0, result);
+> > +		msg_rx[1] = FIELD_GET(RXRSS0R_DATA1, result);
+> > +		return 2;
+> > +	case MIPI_DSI_RX_GENERIC_LONG_READ_RESPONSE:
+> > +	case MIPI_DSI_RX_DCS_LONG_READ_RESPONSE:
+> > +		size = FIELD_GET(RXRSS0R_WC, result);
+> > +
+> > +		if (size > msg->rx_len) {
+> > +			dev_err(dsi->dev, "rx buffer too small");
+> > +			return -ENOSPC;
+> > +		}
+> > +
+> > +		memcpy(msg_rx, dsi->dcs_buf_virt, size);
+> > +		return size;
+> > +	default:
+> > +		dev_err(dsi->dev, "unhandled response type: %02x\n", datatype);
+> > +		return -EPROTO;
+> > +	}
+> > +}
+> > +
+> > +static ssize_t rzg2l_mipi_dsi_host_transfer(struct mipi_dsi_host *host,
+> > +					    const struct mipi_dsi_msg *msg) {
+> > +	struct rzg2l_mipi_dsi *dsi = host_to_rzg2l_mipi_dsi(host);
+> > +	struct mipi_dsi_packet packet;
+> > +	bool need_bta;
+> > +	u32 value;
+> > +	int ret;
+> > +
+> > +	ret = mipi_dsi_create_packet(&packet, msg);
+> > +	if (ret < 0)
+> > +		return ret;
+> > +
+> > +	/* Terminate operation after this descriptor is finished */
+> > +	value = SQCH0DSC0AR_NXACT_TERM;
+> > +
+> > +	if (msg->flags & MIPI_DSI_MSG_REQ_ACK) {
+> > +		need_bta = true; /* Message with explicitly requested ACK */
+> > +		value |= FIELD_PREP(SQCH0DSC0AR_BTA, SQCH0DSC0AR_BTA_NON_READ);
+> > +	} else if (msg->rx_buf && msg->rx_len > 0) {
+> > +		need_bta = true; /* Read request */
+> > +		value |= FIELD_PREP(SQCH0DSC0AR_BTA, SQCH0DSC0AR_BTA_READ);
+> > +	} else {
+> > +		need_bta = false;
+> > +		value |= FIELD_PREP(SQCH0DSC0AR_BTA, SQCH0DSC0AR_BTA_NONE);
+> > +	}
+> > +
+> > +	/* Set transmission speed */
+> > +	if (msg->flags & MIPI_DSI_MSG_USE_LPM)
+> > +		value |= SQCH0DSC0AR_SPD_LOW;
+> > +	else
+> > +		value |= SQCH0DSC0AR_SPD_HIGH;
+> > +
+> > +	/* Write TX packet header */
+> > +	value |= FIELD_PREP(SQCH0DSC0AR_DT, packet.header[0]) |
+> > +		FIELD_PREP(SQCH0DSC0AR_DATA0, packet.header[1]) |
+> > +		FIELD_PREP(SQCH0DSC0AR_DATA1, packet.header[2]);
+> > +
+> > +	if (mipi_dsi_packet_format_is_long(msg->type)) {
+> > +		value |= SQCH0DSC0AR_FMT_LONG;
+> > +
+> > +		if (packet.payload_length > RZG2L_DCS_BUF_SIZE) {
+> > +			dev_err(dsi->dev, "Packet Tx payload size (%d) too large",
+> > +				(unsigned int)packet.payload_length);
+> > +			return -ENOSPC;
+> > +		}
+> > +
+> > +		/* Copy TX packet payload data to memory space */
+> > +		memcpy(dsi->dcs_buf_virt, packet.payload, packet.payload_length);
+> > +	} else {
+> > +		value |= SQCH0DSC0AR_FMT_SHORT;
+> > +	}
+> > +
+> > +	rzg2l_mipi_dsi_link_write(dsi, SQCH0DSC0AR, value);
+> > +
+> > +	/*
+> > +	 * Write: specify payload data source location, only used for
+> > +	 *        long packet.
+> > +	 * Read:  specify payload data storage location of response
+> > +	 *        packet. Note: a read packet is always a short packet.
+> > +	 *        If the response packet is a short packet or a long packet
+> > +	 *        with WC = 0 (no payload), DTSEL is meaningless.
+> > +	 */
+> > +	rzg2l_mipi_dsi_link_write(dsi, SQCH0DSC0BR,
+> > +SQCH0DSC0BR_DTSEL_MEM_SPACE);
+> > +
+> > +	/*
+> > +	 * Set SQCHxSR.AACTFIN bit when descriptor actions are finished.
+> > +	 * Read: set Rx result save slot number to 0 (ACTCODE).
+> > +	 */
+> > +	rzg2l_mipi_dsi_link_write(dsi, SQCH0DSC0CR, SQCH0DSC0CR_FINACT);
+> > +
+> > +	/* Set rx/tx payload data address, only relevant for long packet. */
+> > +	rzg2l_mipi_dsi_link_write(dsi, SQCH0DSC0DR, (u32)dsi->dcs_buf_phys);
+> > +
+> > +	/* Start sequence 0 operation */
+> > +	value = rzg2l_mipi_dsi_link_read(dsi, SQCH0SET0R);
+> > +	value |= SQCH0SET0R_START;
+> > +	rzg2l_mipi_dsi_link_write(dsi, SQCH0SET0R, value);
+> > +
+> > +	/* Wait for operation to finish */
+> > +	ret = read_poll_timeout(rzg2l_mipi_dsi_link_read,
+> > +				value, value & SQCH0SR_ADESFIN,
+> > +				2000, 20000, false, dsi, SQCH0SR);
+> > +	if (ret == 0) {
+> > +		/* Success: clear status bit */
+> > +		rzg2l_mipi_dsi_link_write(dsi, SQCH0SCR, SQCH0SCR_ADESFIN);
+> > +
+> > +		if (need_bta)
+> > +			ret = rzg2l_mipi_dsi_read_response(dsi, msg);
+> > +		else
+> > +			ret = packet.payload_length;
+> > +	}
+> > +
+> > +	return ret;
+> > +}
+> > +
+> >  static const struct mipi_dsi_host_ops rzg2l_mipi_dsi_host_ops = {
+> >  	.attach = rzg2l_mipi_dsi_host_attach,
+> >  	.detach = rzg2l_mipi_dsi_host_detach,
+> > +	.transfer = rzg2l_mipi_dsi_host_transfer,
+> >  };
+> > 
+> >  /* -----------------------------------------------------------------------------
+> > @@ -771,6 +938,11 @@ static int rzg2l_mipi_dsi_probe(struct platform_device *pdev)
+> >  	if (ret < 0)
+> >  		goto err_pm_disable;
+> > 
+> > +	dsi->dcs_buf_virt = dma_alloc_coherent(dsi->host.dev, RZG2L_DCS_BUF_SIZE,
+> > +					       &dsi->dcs_buf_phys, GFP_KERNEL);
+> > +	if (!dsi->dcs_buf_virt)
+> > +		return -ENOMEM;
+> > +
+> >  	return 0;
+> > 
+> >  err_phy:
+> > @@ -785,6 +957,8 @@ static void rzg2l_mipi_dsi_remove(struct platform_device *pdev)  {
+> >  	struct rzg2l_mipi_dsi *dsi = platform_get_drvdata(pdev);
+> > 
+> > +	dma_free_coherent(dsi->host.dev, RZG2L_DCS_BUF_SIZE, dsi->dcs_buf_virt,
+> > +			  dsi->dcs_buf_phys);
+> >  	mipi_dsi_host_unregister(&dsi->host);
+> >  	pm_runtime_disable(&pdev->dev);
+> >  }
+> > diff --git a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h b/drivers/gpu/drm/renesas/rz-
+> > du/rzg2l_mipi_dsi_regs.h
+> > index 1dbc16ec64a4b..33cd669bc74b1 100644
+> > --- a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h
+> > +++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h
+> > @@ -81,6 +81,16 @@
+> >  #define RSTSR_SWRSTLP			(1 << 1)
+> >  #define RSTSR_SWRSTHS			(1 << 0)
+> > 
+> > +/* Rx Result Save Slot 0 Register */
+> > +#define RXRSS0R				0x240
+> > +#define RXRSS0R_RXPKTDFAIL		BIT(28)
+> > +#define RXRSS0R_RXFAIL			BIT(27)
+> > +#define RXRSS0R_RXSUC			BIT(25)
+> > +#define RXRSS0R_DT			GENMASK(21, 16)
+> > +#define RXRSS0R_DATA1			GENMASK(15, 8)
+> > +#define RXRSS0R_DATA0			GENMASK(7, 0)
+> > +#define RXRSS0R_WC			GENMASK(15, 0) /* Word count for long packet. */
+> > +
+> >  /* Clock Lane Stop Time Set Register */
+> >  #define CLSTPTSETR			0x314
+> >  #define CLSTPTSETR_CLKKPT(x)		((x) << 24)
+> > @@ -148,4 +158,50 @@
+> >  #define VICH1HPSETR_HFP(x)		(((x) & 0x1fff) << 16)
+> >  #define VICH1HPSETR_HBP(x)		(((x) & 0x1fff) << 0)
+> > 
+> > +/* Sequence Channel 0 Set 0 Register */
+> > +#define SQCH0SET0R			0x5c0
+> > +#define SQCH0SET0R_START		BIT(0)
+> > +
+> > +/* Sequence Channel 0 Set 1 Register */
+> > +#define SQCH0SET1R			0x5c4
+> 
+> Unused. Drop it.
 
-> +	if (head_page != orig_head) {
-> +		struct buffer_page *bpage = orig_head;
-> +
-> +		rb_dec_page(&bpage);
-> +		/*
-> +		 * Insert the reader_page before the original head page.
-> +		 * Since the list encode RB_PAGE flags, general list
-> +		 * operations should be avoided.
-> +		 */
-> +		cpu_buffer->reader_page->list.next = &orig_head->list;
-> +		cpu_buffer->reader_page->list.prev = orig_head->list.prev;
-> +		orig_head->list.prev = &cpu_buffer->reader_page->list;
-> +		bpage->list.next = &cpu_buffer->reader_page->list;
-> +
-> +		/* Make the head_page tthe new read page */
+Ok, will remove all unused macros.
 
-Typo "tthe" and call it "new reader page", not "read page".
+> 
+> > +
+> > +/* Sequence Channel 0 Status Register */
+> > +#define SQCH0SR				0x5d0
+> > +#define SQCH0SR_RUNNING			BIT(2)
+> Unused
+> 
+> > +#define SQCH0SR_ADESFIN			BIT(8)
+> > +
+> > +/* Sequence Channel 0 Status Clear Register */
+> > +#define SQCH0SCR			0x5d4
+> > +#define SQCH0SCR_ADESFIN		BIT(8)
+> > +
+> > +/* Sequence Channel 0 Descriptor 0-A Register */
+> > +#define SQCH0DSC0AR			0x780
+> > +#define SQCH0DSC0AR_NXACT_TERM		0
+> > +#define SQCH0DSC0AR_NXACT_OPER		BIT(28)
+> Unused
+> 
+> > +#define SQCH0DSC0AR_BTA			GENMASK(27, 26)
+> > +#define SQCH0DSC0AR_BTA_NONE		0
+> > +#define SQCH0DSC0AR_BTA_NON_READ	1
+> > +#define SQCH0DSC0AR_BTA_READ		2
+> > +#define SQCH0DSC0AR_BTA_ONLY		3
+> > +#define SQCH0DSC0AR_SPD_HIGH		0
+> > +#define SQCH0DSC0AR_SPD_LOW		BIT(25)
+> > +#define SQCH0DSC0AR_FMT_SHORT		0
+> > +#define SQCH0DSC0AR_FMT_LONG		BIT(24)
+> > +#define SQCH0DSC0AR_DT			GENMASK(21, 16)
+> > +#define SQCH0DSC0AR_DATA1		GENMASK(15, 8)
+> > +#define SQCH0DSC0AR_DATA0		GENMASK(7, 0)
+> > +
+> > +/* Sequence Channel 0 Descriptor 0-B Register */
+> > +#define SQCH0DSC0BR			0x784
+> > +#define SQCH0DSC0BR_DTSEL_PAYLOAD_DR	0	/* Use packet payload data register */
+> Unused
+> 
+> > +#define SQCH0DSC0BR_DTSEL_MEM_SPACE	BIT(24)	/* Use external memory */
+> > +
+> > +/* Sequence Channel 0 Descriptor 0-C Register */
+> > +#define SQCH0DSC0CR			0x788
+> > +#define SQCH0DSC0CR_FINACT		BIT(0)
+> > +#define SQCH0DSC0CR_AUXOP		BIT(22)
+> Unused
+> 
+> > +
+> > +/* Sequence Channel 0 Descriptor 0-D Register */
+> > +#define SQCH0DSC0DR			0x78c
+> > +
+> 
+> Cheers,
+> Biju
+> 
+> >  #endif /* __RZG2L_MIPI_DSI_REGS_H__ */
+> > --
+> > 2.39.5
+> 
+> 
 
-> +		cpu_buffer->reader_page = head_page;
-> +		bpage = head_page;
-> +		rb_inc_page(&head_page);
-> +		head_page->list.prev = bpage->list.prev;
-> +		rb_dec_page(&bpage);
-> +		bpage->list.next = &head_page->list;
-> +		rb_set_list_to_head(&bpage->list);
-> +
-> +		cpu_buffer->head_page = head_page;
-> +		meta->head_buffer = (unsigned long)head_page->page;
-> +
-> +		/* Reset all the indexes */
-> +		bpage = cpu_buffer->reader_page;
-> +		meta->buffers[0] = rb_meta_subbuf_idx(meta, bpage->page);
-> +		bpage->id = 0;
-> +
-> +		for (i = 0, bpage = head_page; i < meta->nr_subbufs;
-> +		     i++, rb_inc_page(&bpage)) {
-> +			meta->buffers[i + 1] = rb_meta_subbuf_idx(meta, bpage->page);
-> +			bpage->id = i + 1;
-> +		}
-> +
-> +		/* We'll restart verifying from orig_head */
-> +		head_page = orig_head;
-> +	}
-> +
-> + rewound:
 
- skip_rewind:
-
-Also, I know other's don't like to do this, but I do add a space before
-labels. It makes patch diffs easier to see which functions they are,
-otherwise the patch shows the label and not the function.
-
--- Steve
-
-
->  	/* If the commit_buffer is the reader page, update the commit page */
->  	if (meta->commit_buffer == (unsigned long)cpu_buffer->reader_page->page) {
->  		cpu_buffer->commit_page = cpu_buffer->reader_page;
-> @@ -5348,7 +5441,6 @@ rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
->  	 */
->  	local_set(&cpu_buffer->reader_page->write, 0);
->  	local_set(&cpu_buffer->reader_page->entries, 0);
-> -	local_set(&cpu_buffer->reader_page->page->commit, 0);
->  	cpu_buffer->reader_page->real_end = 0;
->  
->   spin:
-> @@ -6642,7 +6734,6 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
->  		cpu_buffer->read_bytes += rb_page_size(reader);
->  
->  		/* swap the pages */
-> -		rb_init_page(bpage);
->  		bpage = reader->page;
->  		reader->page = data_page->data;
->  		local_set(&reader->write, 0);
-
+-- 
+Hugo Villeneuve
