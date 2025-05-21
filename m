@@ -1,91 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E835B1607A4;
-	Wed, 21 May 2025 15:27:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA3511C84BC;
+	Wed, 21 May 2025 15:27:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747841245; cv=none; b=h4ZS2MgiF8ZAcsTkR9DpPieB903BWGiMGXHtyCW2B0JDAVespUEFHDGLRzMdAMu7Ntc9p0rpgYtO2eJGRDtaCjHomIJ5v3Vj1lTu21/TwLroZoYjLWc9lqYGr81HssZIs+g16NpQ+G60iYV/vlAWadwfR8VrX8a7dyIPS+//fdE=
+	t=1747841256; cv=none; b=RgcjaGq9bx+AO7RqCagMonUmZpqBVEYyyQbDTJCmEOWT7Z6FytU6n4xylH8YQbOMbCu4IR3KmhnQT2dcvx16MWTY6EUE56+U2tIAHRY1zPw/RZbbgCF70NB7jJBgIe3buzmUFHsZZTeV8M/+K/VaPCKB9+OqBc1wBda7lbH1EL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747841245; c=relaxed/simple;
-	bh=1Ss0ZBRaHEV8F3rUqaE1lwJOphYa1YfsxLlCy/ljJ/s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dsFrIM7OvT7M551lYa1t+3eV1jEAPVJgxWuCJTohQ2YFH6OmC/muCYaH5UJVtAY4yNrnma/9xcya9ELl9oCSPy1uBObmKOD7XedPUDsd8Q/PQuwX8srMeSrxeMha6Rfsy8skD7mbRBPZs8hQM+jFbbGBTd/DcEQJtUysRNcgk+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NDihUauO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747841256; c=relaxed/simple;
+	bh=5mMVj7zoSNrsqSxpmi4fJbUKy4RL0210P19TixtTxq8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K31wdAS6kKLUxE/zV9xLup8+fdcCzgCXP5ioeyb0KuUu8ziTQa0dnHq8kGKv6DlzRSIsr9HxFI8NHVHlda3iPCAWz25juXzYPcomoDL5/S+p+RrHpg7odIKXYL07/8MsCanomfvc+7HghJe/7337JlbD7R61lFn3+tIkjKuXdQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S2TFrE20; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NDihUauO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C06D7C4CEE4;
-	Wed, 21 May 2025 15:27:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S2TFrE20"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24733C4CEEF;
+	Wed, 21 May 2025 15:27:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747841244;
-	bh=1Ss0ZBRaHEV8F3rUqaE1lwJOphYa1YfsxLlCy/ljJ/s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NDihUauOCxLT+TOKx/cv9W6c4iEgwOc7tKgC4GKSbNeqJ7Hg8jHz7cYO5U7llA9Y9
-	 6hlluj+bY+QwKq2rHZuxtCiXV0fbeCpqYuF51piLngZ9s2ZUaL4Uh8B8XRunKZ3XtH
-	 oNHBMJh9NK5lZfTssdqJiRfhk2n5PolNyeddJCkqDCaonPpLNxZjKsyFFUHxEZ5OhE
-	 /OSOH/OqYcKAgkfCUGZxWVK95kHII+yliC6/93sFRT0Kokk2PqtOiZRik6/QJZ0ZDa
-	 gp+lC11w+Ct8cFyzufRMM9UqjesNMHD3YLgZhL/LIoxaP3VCE9D8BLWrxv+00gEvgp
-	 f06UgpMA7xawQ==
-From: Miguel Ojeda <ojeda@kernel.org>
-To: richard120310@gmail.com
-Cc: a.hindborg@kernel.org,
-	alex.gaynor@gmail.com,
-	aliceryhl@google.com,
-	benno.lossin@proton.me,
-	bjorn3_gh@protonmail.com,
-	boqun.feng@gmail.com,
-	dakr@kernel.org,
-	gary@garyguo.net,
-	jserv@ccns.ncku.edu.tw,
-	linux-kernel-mentees@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	ojeda@kernel.org,
-	rust-for-linux@vger.kernel.org,
-	skhan@linuxfoundation.org,
-	tmgross@umich.edu
-Subject: Re: [RFC PATCH v2] rust: list: Add examples for linked list
-Date: Wed, 21 May 2025 17:27:05 +0200
-Message-ID: <20250521152705.1056252-1-ojeda@kernel.org>
-In-Reply-To: <20250311133357.90322-1-richard120310@gmail.com>
-References: <20250311133357.90322-1-richard120310@gmail.com>
+	s=k20201202; t=1747841255;
+	bh=5mMVj7zoSNrsqSxpmi4fJbUKy4RL0210P19TixtTxq8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=S2TFrE20fMrmKXZ80cld55DvJ8DdxhLf8F7XawqoKWV6sIPp2pJeewXhZtad0WtZG
+	 ZOG7t/6paQbeTepTTu79f61Tt5Os0tJVpPPqMoApI00jtUBbMcyUBaBgCwX2oGLpFo
+	 1MvLGAdheHpx2DVozNxflJzeu03mnfKCnhEaxHplWcYJ0y9WmfxtS8JpQ+S6lPxgCI
+	 aZMd2HOiB3d0zEMX0x++DkxY947AoU3Z5zAvy3t1ggZMyZBGu2RxV4ZgMO4WJddnu9
+	 Y56dSdSD7gLDYOIj49w5J7Oq8bob7HRlqGsyQkwHBPNeKRLvm340LPD7l+loHK3Ql9
+	 wpnT2KJ0XyvdQ==
+Date: Wed, 21 May 2025 16:27:30 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Gabriel Fernandez <gabriel.fernandez@foss.st.com>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] dt-bindings: stm32: cosmetic fixes for STM32MP25
+ clock and reset bindings
+Message-ID: <20250521-lapdog-important-eab513a1f0c0@spud>
+References: <20250521-upstream_rcc_mp21-v3-0-cac9d8f63d20@foss.st.com>
+ <20250521-upstream_rcc_mp21-v3-3-cac9d8f63d20@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="VmVkhvbJ+txMTgWr"
+Content-Disposition: inline
+In-Reply-To: <20250521-upstream_rcc_mp21-v3-3-cac9d8f63d20@foss.st.com>
 
-On Tue, 11 Mar 2025 21:33:57 +0800 I Hsin Cheng <richard120310@gmail.com> wrote:
->
-> Add basic examples for the structure "List", also serve as the unit
-> tests for basic list methods. Including the following manipulations:
-> * List creation
-> * List emptiness check
-> * List insertion through push_front(), push_back()
-> * List item removal through pop_front(), pop_back()
-> * Push one list to another through push_all_back()
->
-> The method "remove()" doesn't have an example here because insertion
-> with push_front() or push_back() will take the ownership of the item,
-> which means we can't keep any valid reference to the node we want to
-> remove, unless Cursor is used. The remove example through Cursor is
-> already demonstrate with 'commit 52ae96f5187c ("rust: list: make the
-> cursor point between elements")' .
->
-> Link: https://github.com/Rust-for-Linux/linux/issues/1121
-> Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
 
-It would be nice to pick this one up, even if it is similar to the
-cursor one -- some methods shown here are not in the other example.
+--VmVkhvbJ+txMTgWr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Any reviews Reviewed-bys/Tested-bys, anyone? (I can clean a few nits on
-my side when applying).
+On Wed, May 21, 2025 at 02:38:51PM +0200, Gabriel Fernandez wrote:
+> - drop minItems from access-controllers
+> - remove rcc label from example
+> - fixes typos
+> - remove double '::' from 'See also::'
+>=20
+> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@foss.st.com>
 
-By the way, similarly to the other one, your email did not reach my
-inbox for some reason.
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-Thanks!
+--VmVkhvbJ+txMTgWr
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Cheers,
-Miguel
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaC3w4gAKCRB4tDGHoIJi
+0pXnAQC8hATk3hUwzGttwspTMjh0lSDX8+wInM4ZNqQ+El50uwD/U1qOZLNLaKRf
+GewLL+A/wyRnHVMpEQf/1LcRSOQreQo=
+=mwyf
+-----END PGP SIGNATURE-----
+
+--VmVkhvbJ+txMTgWr--
