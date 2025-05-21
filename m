@@ -1,282 +1,86 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 560C425A62E
-	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 10:06:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9C125A62E
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 10:07:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747822013; cv=none; b=Kl1xnWlcwlDK166/5HFseGC/tWDf5DPccd4JDGancm8ycVdEmMvuLMdbEYyRplrI87Yfe66Xe6xE3+e3deW4aJgek8McqBYRQ97qiHKbAsvnuUaxGj+b0Y9mUV5ebsK2P53ofwAhzQmEccOGMHi5yH8qZrkQuoomN6/xZoDidcY=
+	t=1747822029; cv=none; b=sgxPAXjTzNSEHz08DaB39hpoScD1ek3xq17gUBU34vtaoP0HZeEZBlPvIfr4N0djElpGgWYTmNs+E1BvkUQIWRqNGmhS/KMRocpdtyay52Iq+vMMsC1mCkaJs6bJHZrMY8m3RWEjzkVh9GAvImq0e7zrjVkFuLpkakD3MIDDnb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747822013; c=relaxed/simple;
-	bh=gIiCV2qHZsYrLp4F4GGrR+qzRaTbL4nJhegKhHZOL9U=;
+	s=arc-20240116; t=1747822029; c=relaxed/simple;
+	bh=TzaC5F/34ze80jqx91fjVtxmtYeM5S4kzBik7NxwHhc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SxwTzIydSgen0VkDmQo0IgosTPEwlkbgxaJjY71B3CMg8RKPZsl2CAseTR2tsFbgEjW3xcW6LcC1edng91mtIyY+o71SsUfWRv8h410fxujsDcsRDGQ/6F6/WhJTb0GAw2GelG7MclXBy9YQlHktKttm5pUX6s+ukckSaLUPjbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Zh482XLI; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=tXRQRagL0Gac1nFxIlITv2GcSy/DftKya2BEPChAYRaTAHu1wT2XcDALbi1Guo9kfQP/VBLIvSEr5OhLro67hcnbAPLKyv6LYBwep6EhpYV27ZHbpSYQFhJVt8s130hY8Hk87S5xZpzpjh4ckBdNxPQ9T3/Dwrb6j6xTEQpeMpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fgUAiugH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zh482XLI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747822008;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V4vig+UBkOHWEC7q6eYysZp9vtHyxiu6x3tPs7w6Jt8=;
-	b=Zh482XLIs2e1dIS2R38EkmGH0LaRYShxrhF8Sl3H+KYvdGe1RSkPoerRExiU+oXD8XvJPX
-	PjFUi+JXJ8bcQFiz2YIWSVps9bDnNrsNj/CMaH3f584kjiSbjS7ar9AaQZO9lCiv+WHvvt
-	Bzdf4lzIhCS9I8AIR/5b9XIJY2McIrQ=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-251-N8hotpriNamBLTpilGCpfw-1; Wed, 21 May 2025 06:06:47 -0400
-X-MC-Unique: N8hotpriNamBLTpilGCpfw-1
-X-Mimecast-MFC-AGG-ID: N8hotpriNamBLTpilGCpfw_1747822006
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-ad5385781d8so284237166b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 03:06:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747822006; x=1748426806;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=V4vig+UBkOHWEC7q6eYysZp9vtHyxiu6x3tPs7w6Jt8=;
-        b=gfbvyBALmunxA73+jAcoRgKCuBzZwNuBjuEMXE+4Jia8FuS4DOFYHiPXu6rXTjKSQU
-         zWQZr4qyw70yP1pKdJm8pEDADxVwu4FCm8sj8rH0jR89QI+2Ip68ccPTBBpWKRX1Bii5
-         3x2PwoUGjujcmTCwZ8x7aLqNpbb2iBAJ/VlOhesNdSP4fnUERw6U8Aj9skC2kTDD17m8
-         SgLxL/ADz6OCucWugJCE3DOFuQxNLN+Br75h37Qjm2Bd6Q6BKo1xmL52uEldEtOho5Il
-         kdSt+Pjs1wI6pkY1qZ9oEGuBnqbeYFXQIHmI+dLpHXWgaLJSSJ8F1zpXuZhEmVqjDJdM
-         8Ohg==
-X-Forwarded-Encrypted: i=1; AJvYcCXOEJkMmuyXCoen66Bt2uM/lkBmeWAnZCzYcBctQ/FWkVhn1B5/9Fmv81TS7rCV1q2fcTEna4z3D0Jjx4g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw482+E0nvXyrYgEiuW2H/Ybj3Gn3ZSk1JPkbfj1urnSpW9wxWh
-	3Z7BTjuK+Exn6GA+BPp0ANuVkBQgNCQNc10i8Y4fT83nT4DFzEdb1TvWxmgts1VyBdsBgybOeOA
-	ytFBGvU9Ey8gfvQpGqlONSYbuw65I6vbOumX90lFYZsiShm3UB2zWmlxnhGHX6XMl
-X-Gm-Gg: ASbGncvJ/orylpMHBzwtlfv28cOzjJGNDFwoOub/j+MNaO+WI2Z7iUBV7FgxF91RBIb
-	EhcuSpqkztQjyHBacQ2tIh2+inhqMQqtYNbM/maZDaQ8iIjiVDAUfbtWAFel3+X2p7Dwc/wjaEu
-	adxgcsNnTDBfOp9pq85ZJRy4jcgehe1SGaOGnY4zChwC+qzuVFBYYwE2IZ4Dtk2Ip9/epGyyaGY
-	TF03MXES6GtjXKfA4sPiSOYxZ0mDZDNjkevhMP5EgBSZTbQ5BtQ51tcezHj3hA2yU54MNomndSE
-	3F4Lp6Te9KARkzx29jKHuqg=
-X-Received: by 2002:a17:907:7f20:b0:ad2:1f65:8569 with SMTP id a640c23a62f3a-ad52d4cac82mr1768735466b.28.1747822005797;
-        Wed, 21 May 2025 03:06:45 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHrDhSRrFDtKo/q2kMry7jRxoxTndGDEB75ZiBniuUCDsbNGVDoC1oaveLmJXZWQWEiNaVF6A==
-X-Received: by 2002:a17:907:7f20:b0:ad2:1f65:8569 with SMTP id a640c23a62f3a-ad52d4cac82mr1768728666b.28.1747822005178;
-        Wed, 21 May 2025 03:06:45 -0700 (PDT)
-Received: from thinky ([2a0e:fd87:a051:1:d224:1f1f:6cfc:763a])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d278adcsm868243066b.84.2025.05.21.03.06.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 03:06:44 -0700 (PDT)
-Date: Wed, 21 May 2025 12:06:32 +0200
-From: Andrey Albershteyn <aalbersh@redhat.com>
-To: Amir Goldstein <amir73il@gmail.com>, pali@kernel.org
-Cc: Dave Chinner <david@fromorbit.com>, 
-	Christian Brauner <brauner@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Richard Henderson <richard.henderson@linaro.org>, Matt Turner <mattst88@gmail.com>, 
-	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	Michal Simek <monstr@monstr.eu>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E . J . Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Naveen N Rao <naveen@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
-	Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, 
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, "David S . Miller" <davem@davemloft.net>, 
-	Andreas Larsson <andreas@gaisler.com>, Andy Lutomirski <luto@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>, =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, 
-	Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>, Paul Moore <paul@paul-moore.com>, 
-	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
-	Stephen Smalley <stephen.smalley.work@gmail.com>, Ondrej Mosnacek <omosnace@redhat.com>, 
-	Tyler Hicks <code@tyhicks.com>, Miklos Szeredi <miklos@szeredi.hu>, linux-alpha@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, 
-	sparclinux@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-api@vger.kernel.org, 
-	Linux-Arch <linux-arch@vger.kernel.org>, selinux@vger.kernel.org, ecryptfs@vger.kernel.org, 
-	linux-unionfs@vger.kernel.org, linux-xfs@vger.kernel.org, 
-	Andrey Albershteyn <aalbersh@kernel.org>
-Subject: Re: [PATCH v5 0/7] fs: introduce file_getattr and file_setattr
- syscalls
-Message-ID: <mw2d36mqwzqoveguw5vlggrnw2wirsbhdxkox33z3fg7k6huz6@hj4ntgg3oj7p>
-References: <20250513-xattrat-syscall-v5-0-22bb9c6c767f@kernel.org>
- <399fdabb-74d3-4dd6-9eee-7884a986dab1@app.fastmail.com>
- <20250515-bedarf-absagen-464773be3e72@brauner>
- <CAOQ4uxicuEkOas2UR4mqfus9Q2RAeKKYTwbE2XrkcE_zp8oScQ@mail.gmail.com>
- <aCsX4LTpAnGfFjHg@dread.disaster.area>
- <sfmrojifgnrpeilqxtixyqrdjj5uvvpbvirxmlju5yce7z72vi@ondnx7qbie4y>
- <CAOQ4uxiM+BBNODHfxu=v3XN2ezA-0k54qC5R4qdELbZW+W-xkg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fgUAiugH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2E59C4CEE4;
+	Wed, 21 May 2025 10:07:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747822029;
+	bh=TzaC5F/34ze80jqx91fjVtxmtYeM5S4kzBik7NxwHhc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fgUAiugHXphRBD17o3cAucyoZXqmQMZ6vEwqtoKg7FVvAFK0MezPSsQi0o+ML31vc
+	 UZwOFhqf/6Sl9e+7uF+k8tDWR3J7Qzj4abb7Q3vMQ8pA4740tBXsNLYzx2923v5V05
+	 W54sP3bX6rCYqIYneAZ2MGYxJbDu5/sPZdKh+5QBhaPC6m/kxIKmLIVd/rrwMog0hC
+	 qVbpx0aGvKd2bvizlXr8BUZXiDKh/DslhJMuOePaACKCKaBBJamULraB37Cj6r4KKU
+	 ghSku52QwjoPCSpQvlAP+g+Zyi3K2e4i6fvpwBstgkF6gAIWian+LQHRTyzZ+OK1Cb
+	 G4UlnfrIk9GPQ==
+Date: Wed, 21 May 2025 11:07:05 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Romain Gantois <romain.gantois@bootlin.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] regulator: core: do not ignore repeated requests on
+ stepped regulators
+Message-ID: <65ea2969-b528-4a7d-b6ae-21376fe2e517@sirena.org.uk>
+References: <20250521-regulator-stepping-v1-1-b681ad012c0f@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="k5qcTD3KBFY121W5"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOQ4uxiM+BBNODHfxu=v3XN2ezA-0k54qC5R4qdELbZW+W-xkg@mail.gmail.com>
+In-Reply-To: <20250521-regulator-stepping-v1-1-b681ad012c0f@bootlin.com>
+X-Cookie: 42
 
-On 2025-05-21 11:36:31, Amir Goldstein wrote:
-> On Wed, May 21, 2025 at 10:48 AM Andrey Albershteyn <aalbersh@redhat.com> wrote:
-> >
-> > On 2025-05-19 21:37:04, Dave Chinner wrote:
-> > > On Thu, May 15, 2025 at 12:33:31PM +0200, Amir Goldstein wrote:
-> > > > On Thu, May 15, 2025 at 11:02 AM Christian Brauner <brauner@kernel.org> wrote:
-> > > > >
-> > > > > On Tue, May 13, 2025 at 11:53:23AM +0200, Arnd Bergmann wrote:
-> > > > > > On Tue, May 13, 2025, at 11:17, Andrey Albershteyn wrote:
-> > > > > >
-> > > > > > >
-> > > > > > >     long syscall(SYS_file_getattr, int dirfd, const char *pathname,
-> > > > > > >             struct fsxattr *fsx, size_t size, unsigned int at_flags);
-> > > > > > >     long syscall(SYS_file_setattr, int dirfd, const char *pathname,
-> > > > > > >             struct fsxattr *fsx, size_t size, unsigned int at_flags);
-> > > > > >
-> > > > > > I don't think we can have both the "struct fsxattr" from the uapi
-> > > > > > headers, and a variable size as an additional argument. I would
-> > > > > > still prefer not having the extensible structure at all and just
-> > > > >
-> > > > > We're not going to add new interfaces that are fixed size unless for the
-> > > > > very basic cases. I don't care if we're doing that somewhere else in the
-> > > > > kernel but we're not doing that for vfs apis.
-> > > > >
-> > > > > > use fsxattr, but if you want to make it extensible in this way,
-> > > > > > it should use a different structure (name). Otherwise adding
-> > > > > > fields after fsx_pad[] would break the ioctl interface.
-> > > > >
-> > > > > Would that really be a problem? Just along the syscall simply add
-> > > > > something like:
-> > > > >
-> > > > > diff --git a/fs/ioctl.c b/fs/ioctl.c
-> > > > > index c91fd2b46a77..d3943805c4be 100644
-> > > > > --- a/fs/ioctl.c
-> > > > > +++ b/fs/ioctl.c
-> > > > > @@ -868,12 +868,6 @@ static int do_vfs_ioctl(struct file *filp, unsigned int fd,
-> > > > >         case FS_IOC_SETFLAGS:
-> > > > >                 return ioctl_setflags(filp, argp);
-> > > > >
-> > > > > -       case FS_IOC_FSGETXATTR:
-> > > > > -               return ioctl_fsgetxattr(filp, argp);
-> > > > > -
-> > > > > -       case FS_IOC_FSSETXATTR:
-> > > > > -               return ioctl_fssetxattr(filp, argp);
-> > > > > -
-> > > > >         case FS_IOC_GETFSUUID:
-> > > > >                 return ioctl_getfsuuid(filp, argp);
-> > > > >
-> > > > > @@ -886,6 +880,20 @@ static int do_vfs_ioctl(struct file *filp, unsigned int fd,
-> > > > >                 break;
-> > > > >         }
-> > > > >
-> > > > > +       switch (_IOC_NR(cmd)) {
-> > > > > +       case _IOC_NR(FS_IOC_FSGETXATTR):
-> > > > > +               if (WARN_ON_ONCE(_IOC_TYPE(cmd) != _IOC_TYPE(FS_IOC_FSGETXATTR)))
-> > > > > +                       return SOMETHING_SOMETHING;
-> > > > > +               /* Only handle original size. */
-> > > > > +               return ioctl_fsgetxattr(filp, argp);
-> > > > > +
-> > > > > +       case _IOC_NR(FFS_IOC_FSSETXATTR):
-> > > > > +               if (WARN_ON_ONCE(_IOC_TYPE(cmd) != _IOC_TYPE(FFS_IOC_FSSETXATTR)))
-> > > > > +                       return SOMETHING_SOMETHING;
-> > > > > +               /* Only handle original size. */
-> > > > > +               return ioctl_fssetxattr(filp, argp);
-> > > > > +       }
-> > > > > +
-> > > >
-> > > > I think what Arnd means is that we will not be able to change struct
-> > > > sfxattr in uapi
-> > > > going forward, because we are not going to deprecate the ioctls and
-> > >
-> > > There's no need to deprecate anything to rev an ioctl API.  We have
-> > > had to solve this "changing struct size" problem previously in XFS
-> > > ioctls. See XFS_IOC_FSGEOMETRY and the older XFS_IOC_FSGEOMETRY_V4
-> > > and XFS_IOC_FSGEOMETRY_V1 versions of the API/ABI.
-> > >
-> > > If we need to increase the structure size, we can rename the existing
-> > > ioctl and struct to fix the version in the API, then use the
-> > > original name for the new ioctl and structure definition.
-> > >
-> > > The only thing we have to make sure of is that the old and new
-> > > structures have exactly the same overlapping structure. i.e.
-> > > extension must always be done by appending new varibles, they can't
-> > > be put in the middle of the structure.
-> > >
-> > > This way applications being rebuild will pick up the new definition
-> > > automatically when the system asserts that it is suppored, whilst
-> > > existing binaries will always still be supported by the kernel.
-> > >
-> > > If the application wants/needs to support all possible kernels, then
-> > > if XFS_IOC_FSGEOMETRY is not supported, call XFS_IOC_FSGEOMETRY_V4,
-> > > and if that fails (only on really old irix!) or you only need
-> > > something in that original subset, call XFS_IOC_FSGEOMETRY_V1 which
-> > > will always succeed....
-> > >
-> > > > Should we will need to depart from this struct definition and we might
-> > > > as well do it for the initial release of the syscall rather than later on, e.g.:
-> > > >
-> > > > --- a/include/uapi/linux/fs.h
-> > > > +++ b/include/uapi/linux/fs.h
-> > > > @@ -148,6 +148,17 @@ struct fsxattr {
-> > > >         unsigned char   fsx_pad[8];
-> > > >  };
-> > > >
-> > > > +/*
-> > > > + * Variable size structure for file_[sg]et_attr().
-> > > > + */
-> > > > +struct fsx_fileattr {
-> > > > +       __u32           fsx_xflags;     /* xflags field value (get/set) */
-> > > > +       __u32           fsx_extsize;    /* extsize field value (get/set)*/
-> > > > +       __u32           fsx_nextents;   /* nextents field value (get)   */
-> > > > +       __u32           fsx_projid;     /* project identifier (get/set) */
-> > > > +       __u32           fsx_cowextsize; /* CoW extsize field value (get/set)*/
-> > > > +};
-> > > > +
-> > > > +#define FSXATTR_SIZE_VER0 20
-> > > > +#define FSXATTR_SIZE_LATEST FSXATTR_SIZE_VER0
-> > >
-> > > If all the structures overlap the same, all that is needed in the
-> > > code is to define the structure size that should be copied in and
-> > > parsed. i.e:
-> > >
-> > >       case FSXATTR..._V1:
-> > >               return ioctl_fsxattr...(args, sizeof(fsx_fileattr_v1));
-> > >       case FSXATTR..._V2:
-> > >               return ioctl_fsxattr...(args, sizeof(fsx_fileattr_v2));
-> > >       case FSXATTR...:
-> > >               return ioctl_fsxattr...(args, sizeof(fsx_fileattr));
-> > >
-> > > -Dave.
-> > > --
-> > > Dave Chinner
-> > > david@fromorbit.com
-> > >
-> >
-> > So, looks like there's at least two solutions to this concern.
-> > Considering also that we have a bit of space in fsxattr,
-> > 'fsx_pad[8]', I think it's fine to stick with the current fsxattr
-> > for now.
-> 
-> Not sure which two solutions you are referring to.
 
-Suggested by Christian and Dave
+--k5qcTD3KBFY121W5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> I proposed fsx_fileattr as what I think is the path of least resistance.
-> There are opinions that we may be able to avoid defining
-> this struct, but I don't think there was any objection to adding it.
-> 
-> So unless I am missing an objection that I did not understand
-> define it and get over this hurdle?
+On Wed, May 21, 2025 at 10:47:24AM +0200, Romain Gantois wrote:
+> Currently, the regulator_set_voltage() function will assume a noop if a
+> consumer requests the same voltage range twice in a row.
+>=20
+> This can lead to unexpected behavior if the target regulator has a maximum
+> voltage step constraint. With such constraints, the regulator core may
+> clamp the requested voltage to a lesser value, to ensure that the voltage
+> delta stays under the specified limit.
 
-I see, sure, I misinterpreted the communication :) no problems, I
-will create 'struct fsx_fileattr' then.
+No, if there's an issue here we should handle it the first time we set
+the voltage by doing multiple steps in one set_voltage() call.  Having
+individual client drivers all having to repeatedly call set_voltage() is
+obviously not a good API.
 
-Pali, ah sorry, I forgot that you will extend fsxattr right away
+--k5qcTD3KBFY121W5
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-- Andrey
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgtpcgACgkQJNaLcl1U
+h9A78Qf9GOQYlI0H5HoY6sia+l8Gdmup2wk8FQdCBbzHmfp9SR2uDd65F0Fg0dkL
+KN4j4unzaogew1puE9Zvy8lYzDnYoIOJ4i327nuRolqfo+F4YhyRXOsw4Yl7qk7j
+KEvR1v+f+RLWCuuq9zMbOO0ZQVWu5e8yaBkza7IGWC1JTS0BN86lWd0z15XKtulT
++9fHANtunmZX+KBzTCYuTXb6LNGdjfyYSNGDasShsZjSgL5iPdiFGXtM/yp/UYsN
+qrf2vP8wlTftTYbfSbZEBj8s9YKtfa48h+ImNU1ZbUO4ZokjUlgG8xWiJSscXFZV
+gAzWwPhF4JcYTB1HoEFcz1pKBfvdFg==
+=p6w4
+-----END PGP SIGNATURE-----
+
+--k5qcTD3KBFY121W5--
