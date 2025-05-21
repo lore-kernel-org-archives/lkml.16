@@ -1,81 +1,49 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C5AE74040;
-	Wed, 21 May 2025 16:28:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F97D16DC28
+	for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 16:28:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747844886; cv=none; b=ilDYYZnGmdTnFq3hWzO7aLe6YCkONFh6Nleiz0/0XWV2AiwW2flCb14nllxOY0OgTITzVfYksXeufTFrZD4VrBTcvk16isTC9QK4o1dV49fHggxQAqUChOBSUWQMXgpeXsCZfgaClI9M9ZCzfXEf3/cz5Yc+5BqPow2viosZDnk=
+	t=1747844936; cv=none; b=ZNN3cuyZT7MmoD+E3cukBCeQnIZGbRLugC/NTmRlbzgZwOF1Tly7dn0GwcBSBbGwaNmYc/QjZcO4zFMEOP1ni9J0EyXadAW5QBJCrwf6ocqiiveJi1HxMdNzFy5di6lB6nCeZN4OB6PjWtoSZUxc9X903b985m/ccUQACD7wLaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747844886; c=relaxed/simple;
-	bh=hkYsZjTKh8+Lp6DlZpq/TDRKDHkOiRiet7Xu0/jptts=;
+	s=arc-20240116; t=1747844936; c=relaxed/simple;
+	bh=MovtPJ97xgjLnkj7ZaiIdZH7WgUBe302vbJgYyVUqcE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TmLHkoiA9WbR2fK0DXyNprRbty+d7tnA2+MEyo3+jg5rWrgHH8Wc9b6Hhbt7NzlysBlz/kBnOKnRa47/MZ/G1OtWFyWxs8ef54IM3kNKLTe9CBSb8hfxEQKRtvy6QGsO4ipRgX6+6yMyvnnGlM9IU3SGaZWhrYj5OyCfRH58jNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b0U8w8ga; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=JLt7M6ZwigAK0SrOVmCVlRAUKwsfI04HavFkhUsOj/oB4LZgOWZecR40GygpMJ8aUvDD6DdbAxTLEsUWJya+/DeXcf77bOmvJpJgqmQzpfW9NPLmIeIL7efm3BmPCciUvtkDwwKbuGPa3N+FJCESYEEu1kA1ibO+df/6pP3pB94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=mazIODrw; arc=none smtp.client-ip=95.215.58.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b0U8w8ga"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-231fd67a9aeso38557275ad.1;
-        Wed, 21 May 2025 09:28:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747844884; x=1748449684; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hkYsZjTKh8+Lp6DlZpq/TDRKDHkOiRiet7Xu0/jptts=;
-        b=b0U8w8ga/NXkbae61omVAK7KuKVlyfXl5/RRbinlA3x1dnNG9rcdPKMPGSQiR9nJn3
-         uE9oyGf6z7SnkjqMWoSXNBAq0g74uSExU4ZECHgFiSxBitcEFBQEIk2qFvKNdcbNN4Y9
-         1RPgsfjXYdFo8gL84jnglj+UyNVz8wl0Rn4DdmFC0swssNkusG3bgVffIMjQVyUujDAd
-         2DJgdN9V7nKKs9fEOa2cRe1v5dC3UZO7Vwfhd6iGmVTkFB95+/a0/5V+aI4sOAs9WuSO
-         dLF20DMdReFaG0oemSdtumc90oXxZ7Hqkm9RTU2/myffgDGGgKDOOpCR8m9woEJkZ+Mk
-         5SYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747844884; x=1748449684;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hkYsZjTKh8+Lp6DlZpq/TDRKDHkOiRiet7Xu0/jptts=;
-        b=Gm+yTT3nZrDln2Q3vO1ML++6ZDUlhA0PfL07TarWYNhcKZZsrSucxvqQp4Bz1ANyZ8
-         k9+z+jQjnNO8Q9BNICYH9AMTnuGZAuobde/GGirSk4fGulMErHBYnjhbvNQhUGsDgo4j
-         0SQUUfP6bz9Th8trqjYNUGGoxUKo/o+ZRtID03gM2vQEAmE7NT/N9PhjQSVijGIuD5cy
-         TglmwiTrpEaywC6+cK91PWNtpI8sEfqCJuWiZMjHh+omKQHizkdLOJV4ESgCAB/kOGpT
-         mnkQcViqeYChKsh6tvMhtgSfBYBcAqB/EiQ8vFEy3hf3t/lyvz5jLfPQzInCZTGgS8Gy
-         a9qQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWB0JKCIhK5FqJ3l+UcWCPeOW4dVJ/WhZm2Jx2x6WqaNydWgGJpOEgdfl8dpwC14GZkdhb9yZOD7evoT31G@vger.kernel.org, AJvYcCXZGiyzxiBniQFRa19Wb/T9c0DFHbA9lzsGr6QTJBQLCiozIC0UgEefW43UJ3JaHcyrpKKGYF1dzjDU01ce@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqqOp8Dz+gWDK0Wm3mWXoJiDKmFCmRzD9PxKGq9i1+lEqwbtJa
-	sLJmbxc+Ka/hSVSbCl/XYcVJUn7ySJC7eY9X0BAsdXlBM1jbJQ2Vf3JyDfsHZcWP+7g=
-X-Gm-Gg: ASbGncv/1UeY5vkPxQ7Yc3/IjUppZMKtOtmgGPl8s1pWNQrcBzy1k3U5G7WF3g9SYbW
-	bVrlneaEswSwE6uqm3WO2sZOlO7Fjl+ksSblO+YquiUkZt4KCx3RDmkuvDfY4V6u6pW06mgLPab
-	SGh88Gsskzq/OLR6oh+Y6MwRGJnIbBJbimR0UEY4TpmB2mPiPYscfqmUE7B+SGK/K4ZwR37df8K
-	NiycZNy6LUSfnOWykY1htdpvO9AAc3WsNRRkNjTxH7tqnXOesTGAt52emw/w3gI2qXY+Fx74h8Y
-	79kbu8WR1IlzR+XwthlLQwivlIzBVWeUNSAC9nBu0BGYgQj6vfRHz2uX
-X-Google-Smtp-Source: AGHT+IGDFAfADczlykPv5P2upLGOWFwo2LuRz6MNJKlIPSGrAoz3aDFMma+mezPuKEYNdVrgr78y1w==
-X-Received: by 2002:a17:902:d484:b0:231:e413:986c with SMTP id d9443c01a7336-231e4139adamr268386555ad.11.1747844884384;
-        Wed, 21 May 2025 09:28:04 -0700 (PDT)
-Received: from eaf ([168.226.86.241])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4eba368sm95212305ad.200.2025.05.21.09.27.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 09:28:03 -0700 (PDT)
-Date: Wed, 21 May 2025 13:27:53 -0300
-From: Ernesto =?utf-8?Q?A=2E_Fern=C3=A1ndez?= <ernesto.mnd.fernandez@gmail.com>
-To: Jan Kara <jack@suse.cz>
-Cc: Yangtao Li <frank.li@vivo.com>, ethan@ethancedwards.com,
-	asahi@lists.linux.dev, brauner@kernel.org, dan.carpenter@linaro.org,
-	ernesto@corellium.com, gargaditya08@live.com,
-	gregkh@linuxfoundation.org, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
-	sven@svenpeter.dev, tytso@mit.edu, viro@zeniv.linux.org.uk,
-	willy@infradead.org, slava@dubeyko.com,
-	glaubitz@physik.fu-berlin.de
-Subject: Re: Subject: [RFC PATCH v2 0/8] staging: apfs: init APFS filesystem
- support
-Message-ID: <20250521162753.GA6112@eaf>
-References: <20250319-apfs-v2-0-475de2e25782@ethancedwards.com>
- <20250512101122.569476-1-frank.li@vivo.com>
- <20250512234024.GA19326@eaf>
- <226043d9-068c-496a-a72c-f3503da2f8f7@vivo.com>
- <20250520185939.GA7885@eaf>
- <n7kkoptktdvldadvymcfmnaw3yqbk6bfmzpxvgdkpsvvpc3p7i@ilqcgz7wur7i>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="mazIODrw"
+Date: Wed, 21 May 2025 09:28:43 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747844930;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BuCnyimXJYTBiSiJApNKXD2ocLe2FBL7gUkaHIDT7BI=;
+	b=mazIODrw+IOz7VwSGL+2Xl8x5lJ5AmQuwHZRrF1eExMLwPp9jhqdHZFXztMu+Nnlk9eD4X
+	3bhKJLX2NJSJlmA2RjfRDW/xymvAUgG6G1YZh1NGbngOI2fNMMulOtBRxsBJRsiVnplqHs
+	ToeKyCI7sWH9vGiR7eqyxtfpyXrP7vo=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>, David Hildenbrand <david@redhat.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Christian Brauner <brauner@kernel.org>, linux-mm@kvack.org, linux-arch@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, SeongJae Park <sj@kernel.org>, 
+	Usama Arif <usamaarif642@gmail.com>
+Subject: Re: [RFC PATCH 0/5] add process_madvise() flags to modify behaviour
+Message-ID: <djdcvn3flljlbl7pwyurpdplqxikxy6j2obj6cwcjd4znr6hwj@w3lzlvdibi2i>
+References: <cover.1747686021.git.lorenzo.stoakes@oracle.com>
+ <7tzfy4mmbo2utodqr5clk24mcawef5l2gwrgmnp5jmqxmhkpav@jpzaaoys6jro>
+ <5604190c-3309-4cb8-b746-2301615d933c@lucifer.local>
+ <uxhvhja5igs5cau7tomk56wit65lh7ooq7i5xsdzyqsv5ikavm@kiwe26ioxl3t>
+ <e8c459cb-c8b8-4c34-8f94-c8918bef582f@lucifer.local>
+ <226owobtknee4iirb7sdm3hs26u4nvytdugxgxtz23kcrx6tzg@nryescaj266u>
+ <7a214bee-d184-460f-88d6-2249b9d513ba@lucifer.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,24 +52,25 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <n7kkoptktdvldadvymcfmnaw3yqbk6bfmzpxvgdkpsvvpc3p7i@ilqcgz7wur7i>
+In-Reply-To: <7a214bee-d184-460f-88d6-2249b9d513ba@lucifer.local>
+X-Migadu-Flow: FLOW_OUT
 
-Hi,
-just one nitpick:
+On Wed, May 21, 2025 at 05:21:19AM +0100, Lorenzo Stoakes wrote:
+> On Tue, May 20, 2025 at 03:02:09PM -0700, Shakeel Butt wrote:
+> 
+[...]
+> 
+> So, something Liam mentioned off-list was the beautifully named
+> 'mmadvise()'. Idea being that we have a system call _explicitly for_
+> mm-wide modifications.
+> 
+> With Barry's series doing a prctl() for something similar, and a whole host
+> of mm->flags existing for modifying behaviour, it would seem a natural fit.
+> 
+> I could do a respin that does something like this instead.
+> 
 
-On Wed, May 21, 2025 at 12:14:53PM +0200, Jan Kara wrote:
-> We already carry
-> quite a few filesystem drivers used by very few people and since few people
-> are interested it them it's difficult to find people to get these drivers
-> converted to new mount API, iomap infrastructure, new page cache APIs etc.
-> which forces us to keep carring the old interfaces. This gets particularly
-> painful for filesystems where we don't have full specification so usually
-> the mkfs and fsck tooling is not as comprehensive which makes testing
-> changes harder.
+Please let's first get consensus on this before starting the work.
 
-For the record, my fsck [1] is far more thorough than the official one, I
-don't take data corruption lightly. It's only for testing though, it doesn't
-actually fix anything. And of course it could have mistakes since the
-specification is incomplete and buggy.
+Usama, David, Johannes and others, WDYT?
 
-[1] https://github.com/linux-apfs/apfsprogs
