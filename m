@@ -1,235 +1,86 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EA00236451;
-	Wed, 21 May 2025 11:59:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EDEA236451;
+	Wed, 21 May 2025 11:59:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747828766; cv=none; b=lPVSo5E1FsSX6BN5OtsXRawG1dCq9do2WEka+PZ5FzPi2nuw61b6hgghLb3K5Ogyfy5RNIAZ0/JwWvCK/FPfD0DtmHfpcQ4CGTPSYYCyIjMf7y7P3hLreMYCS4PIaItLPJ3IrtTC2TQnzfQrbt6IKNiRehVsabHEZK/CgtdYZXo=
+	t=1747828775; cv=none; b=oP0hqHEQSVEe5Xm1RfmEHX2cffvvSEgh1n3VZa+rGTXGvE2LC0TxEibTxzYFMNHgA4PcNE/872Cclq5Wjb+uB+MvIxbTy3BmkgdaOAke3KjH6mS+EG2S9P4MD6t+3/mDLrxHRgetqSixq7g+6zwZXnIwyrl5EjOaQ9JOVUzkUBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747828766; c=relaxed/simple;
-	bh=5dt1g8pn+Jh8br5QSCoVGCe/8Bkvni/CW+cuvrKopqQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Zrwthejd8gekMD1ybO3omBNUO9/s3zCaMe3UvKw/Ku7jb6j5RRwNs2jo84SrL/JAuIvDjI0ePVyvGjRqAC58C3TB1/pTI6wk0x0tOhuxQ6ND2taxQD5kgl90nBtGSE1dyxiI6tT8esdEZdDOHp0rlmaS4Zz1NMNol2pJSay+Qk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=I+5vvgji; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1747828775; c=relaxed/simple;
+	bh=VB+9/B3bnqfyE1YkqB4s1Q7fIX4qpcah8DL7O16Ihhk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n04OVZ0yJa631FoytRLY3IyLMgOxeRzEBA3rHl3dLbYoQCzm6Kw1T7vGTkN1utEB0B+A4LCEJ99IyEit3i6X6Qrtu0co2hwcixROER8cwhUBlnGFYT9dnpVg08gMgEMg7tfWDh2qAEKctRBZdi+XAENsXdJ8gCpuBl5mlzrlYEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=b8Yb+OKS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="I+5vvgji"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:
-	Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=N9sYw0TeO31vWyO3chtwUv0asVF+M8rR6zI58PzyBRY=; b=I+5vvgjii/9GWHaI3gAduroUyu
-	bR3m6GfpDP9MRZwUhO55qDIwiRseoQLeVX3Bk93j/BP+nMjtY8il6QLKJoOZUX/3viW1f+B6mJyCP
-	F0akexuNwXPgeoiDZmXBNzXCVaH23an8sX+u1Hmb45Yw//BxEHPQ7Q9R+y6fwJb4ogTigG8HXxn8A
-	6t3tP9OLbpjvGO6UgSwoCds3OemKEnaVz8FjkMczE+km5oHV8xJGfMKYC0RSFgA6KJ+pBL+O01wvL
-	zQ51S4W++BQ5vK4/jc0iKGZlSeHc7xcuQRxj9flkocawak6C/KQO9hxuHxm37wDuaZt7F2hnY4tou
-	4LTquzQw==;
-Received: from 114-44-250-28.dynamic-ip.hinet.net ([114.44.250.28] helo=gavin-HP-Z840-Workstation..)
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1uHi6P-00BBJI-EF; Wed, 21 May 2025 13:59:18 +0200
-From: Gavin Guo <gavinguo@igalia.com>
-To: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org,
-	muchun.song@linux.dev,
-	osalvador@suse.de,
-	akpm@linux-foundation.org,
-	mike.kravetz@oracle.com,
-	kernel-dev@igalia.com,
-	Gavin Guo <gavinguo@igalia.com>,
-	stable@vger.kernel.org,
-	Hugh Dickins <hughd@google.com>,
-	Florent Revest <revest@google.com>,
-	Gavin Shan <gshan@redhat.com>
-Subject: [PATCH v2] mm/hugetlb: fix a deadlock with pagecache_folio and hugetlb_fault_mutex_table
-Date: Wed, 21 May 2025 19:57:27 +0800
-Message-ID: <20250521115727.2202284-1-gavinguo@igalia.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="b8Yb+OKS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7261BC4CEE4;
+	Wed, 21 May 2025 11:59:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1747828774;
+	bh=VB+9/B3bnqfyE1YkqB4s1Q7fIX4qpcah8DL7O16Ihhk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=b8Yb+OKSfjDvn66A5nAiMYrGLurbMl3zYcrIdb63RHToD/OOxi/WWwTsgC3+MMLSY
+	 yJUjHPbsAaEpube5MR1xomv7QaH5aHhMX6WVIu+26AYhe9AtPyJppCbDLKfrFAfldP
+	 t2cvbluPMls2wK9ROFDHfQoH4pLT38iQMgm6edPA=
+Date: Wed, 21 May 2025 13:59:32 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Remo Senekowitsch <remo@buenzli.dev>
+Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Dirk Behme <dirk.behme@de.bosch.com>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v5 2/9] rust: device: Enable accessing the FwNode of a
+ Device
+Message-ID: <2025052143-ergonomic-ongoing-36e5@gregkh>
+References: <20250520200024.268655-1-remo@buenzli.dev>
+ <20250520200024.268655-3-remo@buenzli.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250520200024.268655-3-remo@buenzli.dev>
 
-The patch fixes a deadlock which can be triggered by an internal
-syzkaller [1] reproducer and captured by bpftrace script [2] and its log
-[3] in this scenario:
+On Tue, May 20, 2025 at 10:00:17PM +0200, Remo Senekowitsch wrote:
+> Subsequent patches will add methods for reading properties to FwNode.
+> The first step to accessing these methods will be to access the "root"
+> FwNode of a Device.
+> 
+> Add the method `fwnode` to `Device`.
+> 
+> Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
+> ---
+>  rust/kernel/device.rs | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
+> index d8619d4485fb4..b4b7056eb80f8 100644
+> --- a/rust/kernel/device.rs
+> +++ b/rust/kernel/device.rs
+> @@ -186,6 +186,21 @@ unsafe fn printk(&self, klevel: &[u8], msg: fmt::Arguments<'_>) {
+>          };
+>      }
+>  
+> +    /// Obtain the [`FwNode`](property::FwNode) corresponding to the device.
+> +    pub fn fwnode(&self) -> Option<&property::FwNode> {
+> +        // SAFETY: `self` is valid.
+> +        let fwnode_handle = unsafe { bindings::__dev_fwnode(self.as_raw()) };
 
-Process 1                              Process 2
----				       ---
-hugetlb_fault
-  mutex_lock(B) // take B
-  filemap_lock_hugetlb_folio
-    filemap_lock_folio
-      __filemap_get_folio
-        folio_lock(A) // take A
-  hugetlb_wp
-    mutex_unlock(B) // release B
-    ...                                hugetlb_fault
-    ...                                  mutex_lock(B) // take B
-                                         filemap_lock_hugetlb_folio
-                                           filemap_lock_folio
-                                             __filemap_get_folio
-                                               folio_lock(A) // blocked
-    unmap_ref_private
-    ...
-    mutex_lock(B) // retake and blocked
+Why isn't this calling __dev_fwnode_const()?  And there's no way to just
+use dev_fwnode() directly?  Ugh, it's a macro...
 
-This is a ABBA deadlock involving two locks:
-- Lock A: pagecache_folio lock
-- Lock B: hugetlb_fault_mutex_table lock
+thanks,
 
-The deadlock occurs between two processes as follows:
-1. The first process (let’s call it Process 1) is handling a
-copy-on-write (COW) operation on a hugepage via hugetlb_wp. Due to
-insufficient reserved hugetlb pages, Process 1, owner of the reserved
-hugetlb page, attempts to unmap a hugepage owned by another process
-(non-owner) to satisfy the reservation. Before unmapping, Process 1
-acquires lock B (hugetlb_fault_mutex_table lock) and then lock A
-(pagecache_folio lock). To proceed with the unmap, it releases Lock B
-but retains Lock A. After the unmap, Process 1 tries to reacquire Lock
-B. However, at this point, Lock B has already been acquired by another
-process.
-
-2. The second process (Process 2) enters the hugetlb_fault handler
-during the unmap operation. It successfully acquires Lock B
-(hugetlb_fault_mutex_table lock) that was just released by Process 1,
-but then attempts to acquire Lock A (pagecache_folio lock), which is
-still held by Process 1.
-
-As a result, Process 1 (holding Lock A) is blocked waiting for Lock B
-(held by Process 2), while Process 2 (holding Lock B) is blocked waiting
-for Lock A (held by Process 1), constructing a ABBA deadlock scenario.
-
-The error message:
-INFO: task repro_20250402_:13229 blocked for more than 64 seconds.
-      Not tainted 6.15.0-rc3+ #24
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:repro_20250402_ state:D stack:25856 pid:13229 tgid:13228 ppid:3513   task_flags:0x400040 flags:0x00004006
-Call Trace:
- <TASK>
- __schedule+0x1755/0x4f50
- schedule+0x158/0x330
- schedule_preempt_disabled+0x15/0x30
- __mutex_lock+0x75f/0xeb0
- hugetlb_wp+0xf88/0x3440
- hugetlb_fault+0x14c8/0x2c30
- trace_clock_x86_tsc+0x20/0x20
- do_user_addr_fault+0x61d/0x1490
- exc_page_fault+0x64/0x100
- asm_exc_page_fault+0x26/0x30
-RIP: 0010:__put_user_4+0xd/0x20
- copy_process+0x1f4a/0x3d60
- kernel_clone+0x210/0x8f0
- __x64_sys_clone+0x18d/0x1f0
- do_syscall_64+0x6a/0x120
- entry_SYSCALL_64_after_hwframe+0x76/0x7e
-RIP: 0033:0x41b26d
- </TASK>
-INFO: task repro_20250402_:13229 is blocked on a mutex likely owned by task repro_20250402_:13250.
-task:repro_20250402_ state:D stack:28288 pid:13250 tgid:13228 ppid:3513   task_flags:0x400040 flags:0x00000006
-Call Trace:
- <TASK>
- __schedule+0x1755/0x4f50
- schedule+0x158/0x330
- io_schedule+0x92/0x110
- folio_wait_bit_common+0x69a/0xba0
- __filemap_get_folio+0x154/0xb70
- hugetlb_fault+0xa50/0x2c30
- trace_clock_x86_tsc+0x20/0x20
- do_user_addr_fault+0xace/0x1490
- exc_page_fault+0x64/0x100
- asm_exc_page_fault+0x26/0x30
-RIP: 0033:0x402619
- </TASK>
-INFO: task repro_20250402_:13250 blocked for more than 65 seconds.
-      Not tainted 6.15.0-rc3+ #24
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:repro_20250402_ state:D stack:28288 pid:13250 tgid:13228 ppid:3513   task_flags:0x400040 flags:0x00000006
-Call Trace:
- <TASK>
- __schedule+0x1755/0x4f50
- schedule+0x158/0x330
- io_schedule+0x92/0x110
- folio_wait_bit_common+0x69a/0xba0
- __filemap_get_folio+0x154/0xb70
- hugetlb_fault+0xa50/0x2c30
- trace_clock_x86_tsc+0x20/0x20
- do_user_addr_fault+0xace/0x1490
- exc_page_fault+0x64/0x100
- asm_exc_page_fault+0x26/0x30
-RIP: 0033:0x402619
- </TASK>
-
-Showing all locks held in the system:
-1 lock held by khungtaskd/35:
- #0: ffffffff879a7440 (rcu_read_lock){....}-{1:3}, at: debug_show_all_locks+0x30/0x180
-2 locks held by repro_20250402_/13229:
- #0: ffff888017d801e0 (&mm->mmap_lock){++++}-{4:4}, at: lock_mm_and_find_vma+0x37/0x300
- #1: ffff888000fec848 (&hugetlb_fault_mutex_table[i]){+.+.}-{4:4}, at: hugetlb_wp+0xf88/0x3440
-3 locks held by repro_20250402_/13250:
- #0: ffff8880177f3d08 (vm_lock){++++}-{0:0}, at: do_user_addr_fault+0x41b/0x1490
- #1: ffff888000fec848 (&hugetlb_fault_mutex_table[i]){+.+.}-{4:4}, at: hugetlb_fault+0x3b8/0x2c30
- #2: ffff8880129500e8 (&resv_map->rw_sema){++++}-{4:4}, at: hugetlb_fault+0x494/0x2c30
-
-Link: https://drive.google.com/file/d/1DVRnIW-vSayU5J1re9Ct_br3jJQU6Vpb/view?usp=drive_link [1]
-Link: https://github.com/bboymimi/bpftracer/blob/master/scripts/hugetlb_lock_debug.bt [2]
-Link: https://drive.google.com/file/d/1bWq2-8o-BJAuhoHWX7zAhI6ggfhVzQUI/view?usp=sharing [3]
-Fixes: 40549ba8f8e0 ("hugetlb: use new vma_lock for pmd sharing synchronization")
-Cc: stable@vger.kernel.org
-Cc: Hugh Dickins <hughd@google.com>
-Cc: Florent Revest <revest@google.com>
-Cc: Gavin Shan <gshan@redhat.com>
-Suggested-by: Oscar Salvador <osalvador@suse.de>
-Signed-off-by: Gavin Guo <gavinguo@igalia.com>
----
-V1 -> V2
-Suggested-by Oscar Salvador:
-  - Use folio_test_locked to replace the unnecessary parameter passing.
-
- mm/hugetlb.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
-
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 7ae38bfb9096..ed501f134eff 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -6226,6 +6226,12 @@ static vm_fault_t hugetlb_wp(struct folio *pagecache_folio,
- 			u32 hash;
- 
- 			folio_put(old_folio);
-+			/*
-+			 * The pagecache_folio needs to be unlocked to avoid
-+			 * deadlock when the child unmaps the folio.
-+			 */
-+			if (pagecache_folio)
-+				folio_unlock(pagecache_folio);
- 			/*
- 			 * Drop hugetlb_fault_mutex and vma_lock before
- 			 * unmapping.  unmapping needs to hold vma_lock
-@@ -6823,8 +6829,13 @@ vm_fault_t hugetlb_fault(struct mm_struct *mm, struct vm_area_struct *vma,
- out_ptl:
- 	spin_unlock(vmf.ptl);
- 
-+	/*
-+	 * hugetlb_wp() might have already unlocked pagecache_folio, so
-+	 * skip it if that is the case.
-+	 */
- 	if (pagecache_folio) {
--		folio_unlock(pagecache_folio);
-+		if (folio_test_locked(pagecache_folio))
-+			folio_unlock(pagecache_folio);
- 		folio_put(pagecache_folio);
- 	}
- out_mutex:
-
-base-commit: 4a95bc121ccdaee04c4d72f84dbfa6b880a514b6
--- 
-2.43.0
-
+greg k-h
