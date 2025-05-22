@@ -1,36 +1,36 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19EE819F40B;
-	Thu, 22 May 2025 04:45:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F1E819DF66
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 04:45:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747889116; cv=none; b=dQ2Rj3iZlJtabqPsq8hgmpr3/v6u/XFXiYAv/8p0EbD8kFbs3tKxhrOHiwEn5YvDX7FmUtTX449KUd/Av/bQhNS5LYLu6SIxEYYZ3kgcZ7tz8RIlrXCPYJjCNXpF9qYeAbmFqZRNDn36mQKyk3obnOx/8e42bApVmV5zssV+oxw=
+	t=1747889128; cv=none; b=goHLE8hwUijxznkr88prUynIJWp0wte7j7ORt4x+xPzEq7TjDzbhQ/YlYoj4LKJjG53hSlS/YhIK233yIJvebKMJcsSls1Oayt2m+4M6zB93MAuvx+hUT5dnPrqkQ44Xbc5HiGk8+f+PF9Mwx2aMRecARSMJCzO1XIetrFo7ipw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747889116; c=relaxed/simple;
-	bh=gt7aXgMBvPNR41wMkDoLRtl01sUdXWLmkb3HaADdYyM=;
+	s=arc-20240116; t=1747889128; c=relaxed/simple;
+	bh=MI0UzchgfZjHRRr4t4+5f3tFo54LMgRfeWFwCE/OLiI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bsVKj2y69c+HppB00P82i1uIy0/iI2OCwwfPDgQcb57rB32eziZjvlEP2PXPRfbZTR1LdE4VI/xxQsNjBJyFZYBIQX4WAwJhTHoVZG9BtOrmfiLEPXUyptDPJrS/2Y9jzoME1X/OgEyjaWdVY7vmH3WSfqATFvfrw0t4tPICKM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=qim8KvWr; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=A7Mjb5pVgXUGyIQxPtTwqHk4xDJogVDrGWYGRUz6EsR/cgRWUXR/LHCw6Hjc8Nc4wRztYBxoAYc2E+9YM7G5p67x3j3n0AWZzEjv8hK/RrS7+Jd+sbZa7M7S7A3BvGJVPu6ouRVDuXWfl0/82wxqRrFGzkAIVIEIYzMPaIs6RgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=FkXpzrRc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="qim8KvWr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20E1DC4CEE4;
-	Thu, 22 May 2025 04:45:14 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="FkXpzrRc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8006BC4CEE4;
+	Thu, 22 May 2025 04:45:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1747889115;
-	bh=gt7aXgMBvPNR41wMkDoLRtl01sUdXWLmkb3HaADdYyM=;
+	s=korg; t=1747889127;
+	bh=MI0UzchgfZjHRRr4t4+5f3tFo54LMgRfeWFwCE/OLiI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qim8KvWr/Iz7q4/ZTQunwKruKnIBgRxqLxUR1biIZL23u1RqNzkvqe7m/k6KM2eZT
-	 NKC3SwT/eQEQbs2Lp66eLt3Z53/vDr9lpbO1yFJekwdy4UG96BU8ZCUitRBK6QL73j
-	 oyK1loZ3jIl7tTq8SYMACoZdROiniTlzzC7Vyt9Y=
-Date: Thu, 22 May 2025 06:45:12 +0200
+	b=FkXpzrRccn3jQE6xIX3qto77OWuktvbPhqfifkD6+mh2oJQzAx2CPh9OyO4CleypV
+	 V3MlFlX41S9VQaDA8WmVzqGe/1th4JIxuU0l4r6Q4OCeg5JtCDM+txZm+IMCFZLgNo
+	 NjRDKB3STyGn9LI2c2Ct2oSIEYLsojdtSBB4FpzM=
+Date: Thu, 22 May 2025 06:45:25 +0200
 From: Greg KH <gregkh@linuxfoundation.org>
 To: Donny Turizo <donnyturizo13@gmail.com>
-Cc: linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] staging: rtl8723bs: Fix typo in variable name
- 'ips_deffer_ms'
-Message-ID: <2025052256-duly-clapped-c7a7@gregkh>
-References: <20250521232326.20438-1-donnyturizo13@gmail.com>
+Cc: devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] drivers/staging/rtl8723bs: Fix camelCase to
+ snake_case style in core files
+Message-ID: <2025052216-compacted-esteemed-bb32@gregkh>
+References: <20250522000412.22210-1-donnyturizo13@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,19 +39,11 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250521232326.20438-1-donnyturizo13@gmail.com>
+In-Reply-To: <20250522000412.22210-1-donnyturizo13@gmail.com>
 
-On Wed, May 21, 2025 at 11:23:26PM +0000, Donny Turizo wrote:
-> Fixes a typo in the variable name 'ips_deffer_ms', which was
-> misspelled as 'deffer' instead of 'defer'. This patch renames
-> it to 'ips_defer_ms' to correct the spelling and improve code clarity.
-> 
-> Changes in v2:
-> - Rebased on gregkh/staging-testing
-> - Fixed build error reported by kernel test robot
+On Thu, May 22, 2025 at 12:04:12AM +0000, Donny Turizo wrote:
+> Signed-off-by: Donny Turizo <donnyturizo13@gmail.com>
+> ---
 
-This goes below the --- line, as is documented.
+No changelog?  No v2 information?
 
-thanks,
-
-greg k-h
