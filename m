@@ -1,111 +1,102 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC07333DB
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 10:49:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91D9833DB;
+	Thu, 22 May 2025 10:52:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747910949; cv=none; b=BnU3Xa4pCxD510Ncb0ISh5FSpLMxqh+vzDWd6OeAH8NVlX/lp8eTFPBMOaQcnNW2wMiiqZ1CI5116TMDPQrkTEhxEStAUimARnKxWQ/Gojjcqn5pPBog57jvYcWWC498wVMYAR+7orcEK3Hqy+7/4z6j3eO7FpiGGS1ijrPGS6c=
+	t=1747911176; cv=none; b=VC/jLB22NrHZyBfWmK0+SScjOKvrjTIOfBSZRrgyoPLzCJBJm7tGl0YFUJyXE5CNBcJRsadNgEEXXsbQqiS2bffYDZyyuUfFEd8mlpolTCNrB9qLWBCnqvl4sl5PZap0mVghNxTK0XnQnxrGyHxGuuobuzoF8TUQZC9VE/qapoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747910949; c=relaxed/simple;
-	bh=b1jA/JmPZfGSjyBQho4a1/wR7TWihgI9QJ4xrU3j21k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qRQnxdCqJVOlmiP3RnPYGcHiDreUTyrDEfRcaIQQJw9+JJ4+oUV9MLFh/VJW/P3FwRlhkQSXYtxh0wWBNZDVpsSmM8wV1g0jBD9yOiEwBHGERRIMxieGsnF+oLWqq9Jt4PEigEUjiFS9QKT0hGKP5SwKDjJGROuN4CTJwRegyfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=BQrKXCij; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1747911176; c=relaxed/simple;
+	bh=zKB0CIeVdSCddRrlGjAiKbibALkSxqSv1mysxrdExQM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=n8sp2NoyFw6o9Oun0f4GD62W4LzRdxk4pj0tppioGx1gU+PQIzMGLnYBeM+4Fm1jJSgh5nDRqAO2pNu9WvGFzlBKLKaXj3C9eG7Wkyh1hUQfzCndKlvb+SeVWZfDNedE3XwO9DMTjF9rS8Dgw2Kjyf/VevivgGF0tJUTQAVT+kI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CEU4Razo; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BQrKXCij"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=RVuKIb6DBOmyqCHMM98pwZpdSdwUjm0UpHEs16rMVRo=; b=BQrKXCij4q0yH/WM1zqb4p8XUW
-	OnbqYWEFKvvQqOHkmYjxc1IljuLP/86ia90Qv5ITH33FqzpIVvZsFD8izC92GUJ31Qtsv0JvDsRaR
-	XtbfmVSekIZY4Nj4PUcEzXOdAA6qyKWvOCxoFYVqXhfakyqNqL2aedd+AP6Q2D4HIRUEOa2ydWrum
-	fosrY2mo7ZtuA9AqJi6INl2uy4rEL+Wcpjtmt6XNkBQjxtJNYRkHQrOeGHymJr1f6MyuCMB4JHiM2
-	zE/C6Ttd4Aj8SZ0bx8WtDX85qtUdzqfoLzSZnYzZMbtAUopb0WrXxeh9ZQQHlPhFelLIfuSCWavpd
-	dIkeiBqQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1uI3Ti-000000011R5-0PLA;
-	Thu, 22 May 2025 10:48:46 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id D8F50300472; Thu, 22 May 2025 12:48:43 +0200 (CEST)
-Date: Thu, 22 May 2025 12:48:43 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Aaron Lu <ziqianlu@bytedance.com>
-Cc: Valentin Schneider <vschneid@redhat.com>,
-	Ben Segall <bsegall@google.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Josh Don <joshdon@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Xi Wang <xii@google.com>, linux-kernel@vger.kernel.org,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Chuyi Zhou <zhouchuyi@bytedance.com>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
-	Florian Bezdeka <florian.bezdeka@siemens.com>
-Subject: Re: [PATCH 2/7] sched/fair: prepare throttle path for task based
- throttle
-Message-ID: <20250522104843.GG39944@noisy.programming.kicks-ass.net>
-References: <20250520104110.3673059-1-ziqianlu@bytedance.com>
- <20250520104110.3673059-3-ziqianlu@bytedance.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CEU4Razo"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-440685d6afcso83542145e9.0;
+        Thu, 22 May 2025 03:52:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747911173; x=1748515973; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=POZn5cMRur2JoIRBO8c/Z65zsHmAuO3h0XzsNYJfMMo=;
+        b=CEU4RazoRDJJxloc6A25RcMctxC8glKVCZG39JxC2ZRkUz0Uf4ukloDzsQoV2ZkBUp
+         q+QlOmIhY8jTi0Yq9bFO0tRtuNpBg7aBLGKgvKlfAitM5xjRZAd5getTwy9H6IAPUPLY
+         PwhXPVGZd4G1dVO/UmPMaYXUvL/+aQL9uch3lBSB7g2g/NxS7dOwUAaE0PQMCDpscNHb
+         3DoSCSXzJa/MwkDnYVMgMRfggRbVge/uQa9zvkLqXYtuKb0KGX+Bv3JgO/mWeCyla/4s
+         kcdten0v3RP04CP/LqE7V1qjoAYLzTQSy58S9qSEvJjVQsdmWjAnYj/pLUV/NbGaKfZK
+         sjfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747911173; x=1748515973;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=POZn5cMRur2JoIRBO8c/Z65zsHmAuO3h0XzsNYJfMMo=;
+        b=gguqoYJCBNmwE21mhA1CVWvXQ1t+f/46ZC2dn6V1waBf4zmMtQjOtOnc43Xdn0881a
+         NG20WF94t33fPczIldQn/IWy6iYejuIEHaOOJxrBq9YUXx6kCG4SYgcw1MTnPjTVrt/Q
+         SVeYo4ZAcxSuWRa5m73RASwdc5V45mtcNyQUagE/WE9wcBX3Rij/zYveWhl7kaKLpf+X
+         VwXcgN3mVF3prIzOf8f/VslY7p5+xQe5jMFvv+O3/LdCyyKWq5GUZksy3ir+uDyhb8ih
+         zbvs68/vi9FXUywCjPQsxrHNavaMK21sKFniP50Zr4OS9vVwJfeDarTk++XQVMSc5Umj
+         IN4A==
+X-Forwarded-Encrypted: i=1; AJvYcCVggDNi5p62wted2A15vxPvm3Rn/nREpuBdGqMsPIw2KAsUI3llrcqA9huVBPi360ublhKEvsPcDvvLIDiOTQjA@vger.kernel.org, AJvYcCW05+QsXjAVWe26/C3+KxBEOksSzL/mueeK45Fg9yW2ijalZj9uP0iSune2joj4gZv2C2eN0gFhu/LuOq8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwuF4CNfUNzl5muocOMF5nNvUjzLe4QDaOjZ2gYDIdXiRm6XJj2
+	kwgYFtgtqdwH9cFiM8h7/vFKVCQ/BskEhVmmaKIaGJbuJlDYYrr0V714
+X-Gm-Gg: ASbGncs/iQSbO3VCc5bt8kalXE81JRNYKZOHzu9gvYzPPpNehfRERIPAMzOwbjloC4O
+	D1lWSzw6KEMOY+3VCJEt9TFuNljRiWZUJL8KQIvj0O2B97fF9yHIysob5X1tMPKcHKuhfi40D0A
+	EjlBEUJGNABaE4WG6DjekELmyCdIi5/SQXR3EeSYOMT4dJpTTJwiAm3Ds6+/4WyLqXL3RXU6ox1
+	OOYkCtJ7YrTZBf59/fcyJl3D0Ae3YVwPj/49z9a2R9LQDfOqrmTkRu2v72RlozsaKgx8L7JDEIc
+	znHn9on7mPbZRFlDxseOnpth4cZZYVZa8+5bY2kGHJgfkHx5ng==
+X-Google-Smtp-Source: AGHT+IFoe3Jp7nsZr5IfKAHYwg+2QD1lpVGTPmThnKvRQ85d6HzvTmpaS3TjqdHESQRPlvAIpYV7qg==
+X-Received: by 2002:a05:600c:4e4b:b0:43d:45a:8fc1 with SMTP id 5b1f17b1804b1-442fefd77f8mr235249915e9.4.1747911172532;
+        Thu, 22 May 2025 03:52:52 -0700 (PDT)
+Received: from localhost ([87.254.0.133])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-447f6b29633sm107682075e9.8.2025.05.22.03.52.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 May 2025 03:52:52 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Shuah Khan <shuah@kernel.org>,
+	linux-kselftest@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] selftests/futex: Fix spelling mistake "manaul" -> "manual"
+Date: Thu, 22 May 2025 11:52:41 +0100
+Message-ID: <20250522105241.2761774-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250520104110.3673059-3-ziqianlu@bytedance.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 20, 2025 at 06:41:05PM +0800, Aaron Lu wrote:
+There is a spelling mistake in a ksft_test_result message. Fix it.
 
->  static void throttle_cfs_rq_work(struct callback_head *work)
->  {
-> +	struct task_struct *p = container_of(work, struct task_struct, sched_throttle_work);
-> +	struct sched_entity *se;
-> +	struct cfs_rq *cfs_rq;
-> +	struct rq *rq;
-> +
-> +	WARN_ON_ONCE(p != current);
-> +	p->sched_throttle_work.next = &p->sched_throttle_work;
-> +
-> +	/*
-> +	 * If task is exiting, then there won't be a return to userspace, so we
-> +	 * don't have to bother with any of this.
-> +	 */
-> +	if ((p->flags & PF_EXITING))
-> +		return;
-> +
-> +	scoped_guard(task_rq_lock, p) {
-> +		se = &p->se;
-> +		cfs_rq = cfs_rq_of(se);
-> +
-> +		/* Raced, forget */
-> +		if (p->sched_class != &fair_sched_class)
-> +			return;
-> +
-> +		/*
-> +		 * If not in limbo, then either replenish has happened or this
-> +		 * task got migrated out of the throttled cfs_rq, move along.
-> +		 */
-> +		if (!cfs_rq->throttle_count)
-> +			return;
-> +		rq = scope.rq;
-> +		update_rq_clock(rq);
-> +		WARN_ON_ONCE(!list_empty(&p->throttle_node));
-> +		dequeue_task_fair(rq, p, DEQUEUE_SLEEP | DEQUEUE_SPECIAL);
-> +		list_add(&p->throttle_node, &cfs_rq->throttled_limbo_list);
-> +		resched_curr(rq);
-> +	}
-> +
-> +	cond_resched_tasks_rcu_qs();
->  }
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ tools/testing/selftests/futex/functional/futex_priv_hash.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-What's that cond_resched thing about? The general plan is to make
-cond_resched go away.
+diff --git a/tools/testing/selftests/futex/functional/futex_priv_hash.c b/tools/testing/selftests/futex/functional/futex_priv_hash.c
+index 2dca18fefedc..0213eb0bb4af 100644
+--- a/tools/testing/selftests/futex/functional/futex_priv_hash.c
++++ b/tools/testing/selftests/futex/functional/futex_priv_hash.c
+@@ -242,7 +242,7 @@ int main(int argc, char *argv[])
+ 	join_max_threads();
+ 
+ 	ret = futex_hash_slots_get();
+-	ksft_test_result(ret == 2, "No more auto-resize after manaul setting, got %d\n",
++	ksft_test_result(ret == 2, "No more auto-resize after manual setting, got %d\n",
+ 			 ret);
+ 
+ 	futex_hash_slots_set_must_fail(1 << 29, 0);
+-- 
+2.49.0
+
