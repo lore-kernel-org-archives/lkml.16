@@ -1,113 +1,122 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2972176ADE
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 09:06:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51E5E176ADE
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 09:06:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747904773; cv=none; b=iVmUJJPPPgxg2i/UdtBiHfPdsMHAk92dy3PcYZzlalH7DC1Miy2Hwe05oLZ5apnInBC8SzlpGtkueBZoZUAk+N6isF9ouE6FS9dlp2YK9Kxd22FS8o17j+I2675EdzZWN5mhJ2eI4nwhruTsVSN3FJZ6Lg307xsu6VrIPL71AYo=
+	t=1747904810; cv=none; b=TuPJNICCnf3X3e66s9ExTAtg8GKRSibFDc4y1Kp+Oaoeo5KQ3/tb4LQ18Jkt7zID1+lwGzuLGAQOpappYxDo0ROVpLPVQAsvRVcyorviBr8QMwM3wSWFVJj2WRdJPd0zigluc+Id3WhRKvsyoWmUf9pn++YZBPyJKPCJbIsmatY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747904773; c=relaxed/simple;
-	bh=1aA7HwU1n1v+3XowuECVC6hqzuKf1pDD5kgEoVS4InU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jMVWVCe0IKrndlgb/mDVJVkicfssoiwoDoO0JNbQTr/W5WMbZCcPK70fWuXot0H6Wtyen+CgcyZnAiHbydhfYWYBFLA4/yasKvlsj+Rfc6eacJxJgGx2WjGGpiNwXcYmdqNiEbvQTCRgoo5ksrEODfIBtG5oC2xa9T+r9bTpblE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=ISCJR0hU; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1747904810; c=relaxed/simple;
+	bh=iCfGAQGmVCFjZK4/77au4d2hBYby4UZ8uyA+VV46maI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Q6xO1E0rk3IShJ8aSCYwOKI1N9SGqKjZZfGazXKpd1hTO+E34wif9fgIJtPp5cxuxN6qVpTU1+3omdeKd92bnr6cBfJNE0mCUUMhArs88fi8JHrD+iqhdG0ograhrgnIQLH7q1VTUy7cKRdwBZQ8a14WAJJSPLaAJerKGnWPk0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=i+AkkbJq; arc=none smtp.client-ip=115.124.30.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="ISCJR0hU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=1aA7
-	HwU1n1v+3XowuECVC6hqzuKf1pDD5kgEoVS4InU=; b=ISCJR0hUQbkEnPpprBI8
-	m0nc+QlFeliFgDjh86G6Fub/BVAfW8LhFlWvAb3HbhzbBJ7cfMR2TRSvQGO500Su
-	ULuAhVOTfFHPKEAxpdGG1OBj15ZZJRZ2cXgreRDPNxuSkoCDDBV5HZayaszKwxgv
-	Rilm24fk0KHvr0EZkd6JTBUUQP+zvRl2O4O0rXjZyQmnLp6tJsROpKmMsxmNYu/V
-	Qf0dYMl678saimNHEh9rz9YZ0EtIwIAupM+It6VWmBkfHu2txeAq41TDsYN0fkdn
-	0AzS7IzACNJEjob6HdBuCuHbRdCW7v4O4hNwmk5773DswEc5cemMXuEX1jA7BkEx
-	kQ==
-Received: (qmail 3586651 invoked from network); 22 May 2025 11:06:06 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 22 May 2025 11:06:06 +0200
-X-UD-Smtp-Session: l3s3148p1@BwC1yrU1sNIgAwDPXwj7ADHm2wGe7qss
-Date: Thu, 22 May 2025 11:06:06 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Cosmin Tanislav <demonsingur@gmail.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Romain Gantois <romain.gantois@bootlin.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-Subject: Re: [PATCH v5 1/9] i2c: atr: Fix lockdep for nested ATRs
-Message-ID: <aC7o_obqzBlhW0tE@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Cosmin Tanislav <demonsingur@gmail.com>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Romain Gantois <romain.gantois@bootlin.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-References: <20250507121917.2364416-1-demonsingur@gmail.com>
- <20250507121917.2364416-2-demonsingur@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="i+AkkbJq"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1747904802; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=N8CSzgH6h+Lund+UV8UvMsQfx9po2OnLfKYLiT27LHY=;
+	b=i+AkkbJqPEl52KgeWN5NSfQLLWV7zkEw8aioIAN11zkp/jEpnUzwDE9O/s9KTGE4YApn4i8HLxG8QLu89rc0cdTgrUVeN8wkZHnyv4XlTUeruNBYj8+ViG71IUmp6zkMgLZIfbrE9/4+ma9feuEwmmUOfZ89OEWsjAt+C82Golw=
+Received: from 30.170.233.0(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WbVLUK3_1747904796 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 22 May 2025 17:06:41 +0800
+Message-ID: <7fa71441-a5b0-40aa-aee8-8f251ea96f75@linux.alibaba.com>
+Date: Thu, 22 May 2025 17:06:35 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="GkNdphenG3CBojfr"
-Content-Disposition: inline
-In-Reply-To: <20250507121917.2364416-2-demonsingur@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8] erofs: support deflate decompress by using Intel QAT
+To: Bo Liu <liubo03@inspur.com>, xiang@kernel.org, chao@kernel.org
+Cc: linux-erofs@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20250522084700.21354-1-liubo03@inspur.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20250522084700.21354-1-liubo03@inspur.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
---GkNdphenG3CBojfr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 07, 2025 at 03:19:07PM +0300, Cosmin Tanislav wrote:
-> From: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
->=20
-> When we have an ATR, and another ATR as a subdevice of the first ATR,
-> we get lockdep warnings for the i2c_atr.lock and
-> i2c_atr_chan.orig_addrs_lock. This is because lockdep uses a static key
-> for the locks, and doesn't see the locks of the separate ATR instances
-> as separate.
->=20
-> Fix this by generating a dynamic lock key per lock instance.
->=20
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
-> Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+On 2025/5/22 16:47, Bo Liu wrote:
 
-Your SoB is missing. I will add it for you if you confirm here.
+...
 
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-fs-erofs b/Documentation/ABI/testing/sysfs-fs-erofs
+> index b134146d735b..4d024f043ea1 100644
+> --- a/Documentation/ABI/testing/sysfs-fs-erofs
+> +++ b/Documentation/ABI/testing/sysfs-fs-erofs
+> @@ -27,3 +27,12 @@ Description:	Writing to this will drop compression-related caches,
+>   		- 1 : invalidate cached compressed folios
+>   		- 2 : drop in-memory pclusters
+>   		- 3 : drop in-memory pclusters and cached compressed folios
+> +
+> +What:		/sys/fs/erofs/accel
+> +Date:		May 2025
+> +Contact:	"Bo Liu" <liubo03@inspur.com>
+> +Description:	Used to set or show hardware accelerators in effect
+> +		and multiple accelerators are separated by '\n'.
+> +		Supported accelerator(s): qat_deflate.
+> +		Disable all accelerators with an empty string (echo > accel).
+> +
 
---GkNdphenG3CBojfr
-Content-Type: application/pgp-signature; name="signature.asc"
+redundent new line.
 
------BEGIN PGP SIGNATURE-----
+...
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmgu6P4ACgkQFA3kzBSg
-KbZMpxAAlHCxv5mOj63C/jK3br3u97V93aFPfK7YKaQztB1C3Dp188LFGlbtlfaU
-VOLrTsXt5s+l7E0NasMyF4XmyhJ7H90ut0vJZxkDQiXT/xsAKaByQRz5d1EHLd2b
-DiTDzo9qfT9eR3kqVE0473T5ET77IO3CPasphHfaZj/CAeBYYH2w+4Hlu3ZzjnH5
-98HJJnTFCVS+qCbtT1Alf2xLG1Vik772F2hdfg8Z7URFT+aneB5FOkdqQLbgIYsI
-Hb1yHk/0JnhHxsmLR7eBHNggyGZWfpHIyDli2HT6fAUJ5CabkIymw2SwVA0Eya5i
-6zQwkI4me06EPXe48XRd+iH0s/GRnL7M1pGozg54laT/LG0Pw4rPsogrxMY8XoDS
-SAI23WR6m7A7WDdO2SRDQIezXE6jwsK25MgG1e6BPurcFcfygA9fDTdf6bjJj45d
-hZonWI5YVnYoeFH75Kqep1fnAO6oBJWVG6GxZzbA8ZJ3tmkdFB99F12i5tqxHMgi
-H/JXKam7f3em6bT2ZjR2EsgqO3MJGa1BxXjIva/NJh94bsN0WnE7PrTaK+W5jkCv
-bxQy9saYq0L3GyoJfP7+PxgpYzISIvhedwJl/DaRaE6OCUzpRr+3q8bQbrheK3Nf
-lOP4M7OKkNsrSw/ZmVLHkBIvtoUKWP8O1565H89dTFbK/WBPvag=
-=ljn4
------END PGP SIGNATURE-----
+> diff --git a/fs/erofs/decompressor_crypto.c b/fs/erofs/decompressor_crypto.c
+> new file mode 100644
+> index 000000000000..f4891d335792
+> --- /dev/null
+> +++ b/fs/erofs/decompressor_crypto.c
+> @@ -0,0 +1,186 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +#include <linux/scatterlist.h>
+> +#include <crypto/acompress.h>
+> +
+> +#include "compress.h"
+> +
+> +static int __z_erofs_crypto_decompress(struct z_erofs_decompress_req *rq,
+> +				struct crypto_acomp *tfm)
 
---GkNdphenG3CBojfr--
+Please check your tab setting (should be 8 spaces) and
+rework it on my v4.
+
+> +{
+
+...
+
+> +
+> +int z_erofs_crypto_show_engines(char *buf, int size, char sep)
+> +{
+> +	struct z_erofs_crypto_engine *e;
+> +	int alg, len = 0;
+> +
+> +	for (alg = 0; alg < Z_EROFS_COMPRESSION_MAX; ++alg) {
+> +		for (e = z_erofs_crypto[alg]; e->crypto_name; ++e) {
+> +			if (!e->tfm)
+> +				continue;
+> +			len += scnprintf(buf + len, size - len, "%s%c",
+> +					 e->crypto_name, sep);
+> +		}
+> +	}
+> +	return len;
+> +}
+> +
+
+redundent new line.
+
+Thanks,
+Gao Xiang
+
+> diff --git a/fs/erofs/decompressor_deflate.c b/fs/erofs/decompressor_deflate.c
+> index c6908a487054..e4c9df9d7978 100644
+> --- a/fs/erofs/decompressor_deflate.c
+> +++ b/fs/erofs/decompressor_deflate.c
