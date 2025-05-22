@@ -1,139 +1,96 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2A4B1D5CE5
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 18:42:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE51A1D86D6;
+	Thu, 22 May 2025 18:43:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747939361; cv=none; b=hClChp8Ro3sjx/9UBDVCGKdrm12wIHloOIhAw4sagQYi/nS8s0RcfVpCoAb/zktOZsvp3IdZkpm6rg+aJzZz4maTdTkVEvE2iagAh4keWMu9N76mqQsowHAjiH0s40XnlOdv02fp8A3g+KMT9c2zVKdTlsns2XqOH7k3BM25+Ig=
+	t=1747939382; cv=none; b=ruKqEd9BQMNJHKLZuqfZBM8gd5oVd8UimJHk0aGLjyk/EckjQjt7aFLRlVuP5rxmN9y2+1SctQLHKRtwCleHYsCWzFWaX36Vm8t1rtQvTF7A3Y1zOJj9q9oKJNYpjJ5YUcJjHx/TTuWsWALv/yAfXs01RL4EjZEBaY9NxiMqGUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747939361; c=relaxed/simple;
-	bh=TU68+MuHaZ+V2rT99YhiKs+Jtl9VRqI9iPpGrxXlQoQ=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=syP84mbkEFsQRO/cPcvc+gUp2dILVwp99O3e2T4XfkWabhoQLOs8xoKhQmd3s3eZ1OVYyteCJplbC5+HMpOVbdkm+7yOt/cCMBtEspTsjNEVRbd5mnUgju62Z2oeM+Pc/3o/PkJEX9eK0NgckAR225pB9+SZ0dOocdMnCqV5vCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=qvvrFRs/; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=iDQxvoUb; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=qvvrFRs/; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=iDQxvoUb; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1747939382; c=relaxed/simple;
+	bh=ZkJEJGa6FXALiA4X2OLwZ2QNA/cqpUan1XjXOQf6OSs=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=SO1JZmpRfNd2xLc7oLz+OnDviv9YYpjpdhRPHckszQJRyp4ZQWuDh+bF6z5wIbxN3VsJBQ7DBWWSLoOv5Mv8dBYFNRGXFhLwq6iU9fY3WOH/tZleoZ0VRGbRNJvjei7LE8IZg9hUAosR0e8ez+7p0Q/S5wq8V9mRVyKZTVSWsn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CvoFGs93; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="qvvrFRs/";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="iDQxvoUb";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="qvvrFRs/";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="iDQxvoUb"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 45E952191C;
-	Thu, 22 May 2025 18:37:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747939029; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MRNC0M2Usv0fLv7UIfWx3OQDLNTlcrnoPK+AWpnhyaw=;
-	b=qvvrFRs/0quPeZtxTgbqWT5X3YMzWs/AK6Gq7XU201+B51o5Xs+KH+Rc171Tp2zjkQbduc
-	8CfF5ubD/MThzrVRNcihWmikGSVNp1Ito+hWCpjm44ZC0c4DeJ3clEi9c3M07GwJK17nSI
-	XyVrWRXMI10p3t6DiXeOd5y2dQw5NNY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747939029;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MRNC0M2Usv0fLv7UIfWx3OQDLNTlcrnoPK+AWpnhyaw=;
-	b=iDQxvoUbsgjcc9bkZLut5qNfE2GCgHFifO4BFZTrHxjbSjUqkZmazn0P7UFScBpZ9UkFNz
-	SzXLyICaYApvJhAg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="qvvrFRs/";
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=iDQxvoUb
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747939029; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MRNC0M2Usv0fLv7UIfWx3OQDLNTlcrnoPK+AWpnhyaw=;
-	b=qvvrFRs/0quPeZtxTgbqWT5X3YMzWs/AK6Gq7XU201+B51o5Xs+KH+Rc171Tp2zjkQbduc
-	8CfF5ubD/MThzrVRNcihWmikGSVNp1Ito+hWCpjm44ZC0c4DeJ3clEi9c3M07GwJK17nSI
-	XyVrWRXMI10p3t6DiXeOd5y2dQw5NNY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747939029;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MRNC0M2Usv0fLv7UIfWx3OQDLNTlcrnoPK+AWpnhyaw=;
-	b=iDQxvoUbsgjcc9bkZLut5qNfE2GCgHFifO4BFZTrHxjbSjUqkZmazn0P7UFScBpZ9UkFNz
-	SzXLyICaYApvJhAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 17823137B8;
-	Thu, 22 May 2025 18:37:09 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id hDrvBNVuL2iVXAAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Thu, 22 May 2025 18:37:09 +0000
-Date: Thu, 22 May 2025 20:37:08 +0200
-Message-ID: <87y0uo7aqz.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Jaroslav Kysela <perex@perex.cz>,	Takashi Iwai <tiwai@suse.com>,	Nicolas
- Ferre <nicolas.ferre@microchip.com>,	Alexandre Belloni
- <alexandre.belloni@bootlin.com>,	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
-	Takashi Iwai <tiwai@suse.de>,	linux-sound@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ALSA: atmel: Replace deprecated strcpy() with strscpy()
-In-Reply-To: <20250522180111.12144-2-thorsten.blum@linux.dev>
-References: <20250522180111.12144-2-thorsten.blum@linux.dev>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CvoFGs93"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-32925727810so37798031fa.0;
+        Thu, 22 May 2025 11:43:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747939379; x=1748544179; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ANyAXegvaMs+K+iayy0voxCwU2HFvk5vXonKcxX/jac=;
+        b=CvoFGs93VaZVDFSM31vZ2YrA3j1iQCFSlgyrV45V+yQkqdWFPV3ps5ByJoA5ZCrreC
+         mVpTr4SNLossetjDlMPL1/7uXx1A4jhiG0XFv0g25HVPopFeqtkvAdselxZAyAtEujy+
+         kehpCwubm5Ut4OpXhC5hTiCyVGNs/UPGEQzXiCQsdsoA+lAmYhaYWNAMHP3QaJYiVF31
+         FfGohqph/l07OcA5mXwYvwb9pqLimjoI2OwFd1pzV1+XMoZNCYvXb0EeDvaSgQpdR+hP
+         2tx9YlbUBZp0Lz6WYiy3tHm8/KS399FNhS4Nn86ZhKRoQbD0X3UXEH9tGeVYvmtsAh4j
+         XOvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747939379; x=1748544179;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ANyAXegvaMs+K+iayy0voxCwU2HFvk5vXonKcxX/jac=;
+        b=d0EuGgMrca5E0UnX0FYvYjs1v7OMuNWfWqIrsoZcfphsajqkrmAyGDoCoUuvHlQBUk
+         0vBd9lje6byigTxrm3eXoWFsz6xg0jYQRehZmbdKPcAWlSOsZueCzeSQUuA8RWM34hub
+         1/rYdWF6iE7wexwcquAnJSa1wgdfDm0LgiC8KTlY6yyIPb2Hm6U/u0eUIx6PO67ikVkn
+         pxAqTGVp5fmDue/af47WFN93ug5c86nSRuM7Rh7HCiulxiz9nmjnlwlADvP7cCM8c4y0
+         YUfLIVUcy6B+xXsm5llMx1/yq8aZ2xCu7l5eCDR11HpdzRSH2NkFuMRm8+zsDlGFqwlg
+         qTrw==
+X-Forwarded-Encrypted: i=1; AJvYcCVxjuh7O1ZYNUflCk6ibpjJdlQdPf68Pom9AiuP1mRFagXUdmI9wwdYKXedazLSQre9U98BHSbczFxT@vger.kernel.org
+X-Gm-Message-State: AOJu0YxU31tNIbLFmBsbY0PelzdBlO927C8wCbTUcGGdxdXndhLDJ0ZT
+	bDre9gsy9ocTy/Y38vfXANQmNRK8RczdEIgwlY24mutr6Ma8j55pLcfA1Ul40ahdrjo/SdIeepx
+	KCHWZAE57nSxE9IbZsiN9Vph2tp7pgaf2JKh7
+X-Gm-Gg: ASbGnct9UfYMpGKYt9Qy3mWlgfOVkvzq3XQFKhrsRHhZB8rq8c+NZ1FAXMw73+KfGUV
+	LTHuLNXyiihrkon1Vi8iK0Vrhl8GjZHl6BMaSPT54LE0jiLE9h5Cjf2qCPPAjZR7A+MsrfJG94s
+	fskAS58016os/PQewCYIi2878paGejVlHTSksly668xMfgfx9rk+fVm+goim3zMmrLHig=
+X-Google-Smtp-Source: AGHT+IGCW8CQC8kMeFroE4B+niY7i6MyD4gT3eCZN0EagioH1W7me5Q0QvjXw5SEujnZ3rq+L55yKj/JNhiWp7lFBww=
+X-Received: by 2002:a05:651c:111a:b0:30d:b31e:262d with SMTP id
+ 38308e7fff4ca-328076ef608mr77337051fa.8.1747939378510; Thu, 22 May 2025
+ 11:42:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Level: 
-X-Spamd-Bar: /
-X-Spam-Flag: NO
-X-Spam-Score: -0.51
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: 45E952191C
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-0.51 / 50.00];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
-	DKIM_TRACE(0.00)[suse.de:+]
+MIME-Version: 1.0
+From: Steve French <smfrench@gmail.com>
+Date: Thu, 22 May 2025 13:42:47 -0500
+X-Gm-Features: AX0GCFsfauaBHhe4ZCaKvOUrTyOD2UBtiWE3Vc2lo0ULc7CfRHrfKHkTDg0G3qA
+Message-ID: <CAH2r5mvC+E8L719+MGf1C+mj0One1kn=VZbSAiF2mGCqgPvqYQ@mail.gmail.com>
+Subject: [GIT PULL] smb3 client fixes
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, CIFS <linux-cifs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 22 May 2025 20:01:09 +0200,
-Thorsten Blum wrote:
-> 
-> strcpy() is deprecated; use strscpy() instead. Use strscpy() to copy the
-> long name because there's no string to format with sprintf().
-> 
-> No functional changes intended.
-> 
-> Link: https://github.com/KSPP/linux/issues/88
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+Please pull the following changes since commit
+a5806cd506af5a7c19bcd596e4708b5c464bfd21:
 
-Applied now.  Thanks.
+  Linux 6.15-rc7 (2025-05-18 13:57:29 -0700)
 
+are available in the Git repository at:
 
-Takashi
+  git://git.samba.org/sfrench/cifs-2.6.git tags/6.15-rc8-smb3-client-fixes
+
+for you to fetch changes up to e48f9d849bfdec276eebf782a84fd4dfbe1c14c0:
+
+  smb: client: Reset all search buffer pointers when releasing buffer
+(2025-05-19 20:29:06 -0500)
+
+----------------------------------------------------------------
+Two smb3 client fixes
+- Two fixes for use after free in readdir code paths
+----------------------------------------------------------------
+Wang Zhaolong (2):
+      smb: client: Fix use-after-free in cifs_fill_dirent
+      smb: client: Reset all search buffer pointers when releasing buffer
+
+ fs/smb/client/readdir.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+-- 
+Thanks,
+
+Steve
