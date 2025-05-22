@@ -1,178 +1,76 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D01EF2036FA;
-	Thu, 22 May 2025 19:27:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747942043; cv=pass; b=aiJ7O04yc8RWENkFVkn/79QdF1KG/Q+52wQb8uqymiJOV4aulKe1Ylq3VN4T8j8AGPBMEral75y+JxkabRVOca3aLDcNXhAO5JBKdwCjx7nHVb+0xAE61RL4aGuwIIJmWInZMJU3IBmRYMJZw5mE+oHu2TJAugjm4DG6498Wetw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747942043; c=relaxed/simple;
-	bh=uTYOQyPePK9NBePWjUBS1H0sCndAGXIoJvcnIbmQ8v0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Q1hSdDmIWDshuBJLNllsm22n2qkRsi6ERLLRkLgyUM6AbbSg71F0WNO3xa2UYKT3D9/dL7nwyucJxBfv6zBOgraj7BdsElxRIQEzI2ESEMYO08Ti7Ld5yiRKQhw5cICdckbRVUJYhM9gvMWO8q+MjOvMx1tC3ATCGjLkjGCyxV0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=gkUZUsht; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D30497083A;
+	Thu, 22 May 2025 19:29:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747942157; cv=none; b=SVyxRHj4FRDF+VUd7xdUsHpaQ40DGw2uzE20I/nRr/NxiSrSfGvownkNSMhIZWLpIMa9d745OHI+Ds2x6B8IvdmL2OUudl2XKsRusCRCy34Bf9Cx7Ix+lcAt8lcTFQj0N3F3VrB6Km/R3GUf0GqcwcvqnbUgoYRIidq3aIXFRYs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747942157; c=relaxed/simple;
+	bh=VTQ1sOp3emeRBHQnf/LKwayGmF56J10umRqQ1zOkHuo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=D0PaBBF4yMzITDHIqIgt2Pafw5vXO0CjDkLIBv3TFFkCNkFeQaSeHJK927qW4y21kRXqalWGNmcH+aQX0ltI/oCiD1aA/QPaIGiDa3TgSPSM8/2NbPs3ppj+mt55pBgTljjgJGzyk4jOZIDeHj3RJNcwmGRLkGYLwYgUu+aWB8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UF0ifT+y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="gkUZUsht"
-ARC-Seal: i=1; a=rsa-sha256; t=1747942021; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=l4Gg25EeLEA1PB0GOBF6OIyIQVjdmVFp92feHIxrVdW7lbgBKQzvzjxRTAvneGeZegExkv94EiRdssvKiZdSiaphcdTLf6ekcKhvW6wHiOKpYiLNum4TqhbnnOc39zhfs1weTC6+MzO1VRoU1W1l6ua5tPai6DsypM7NqfOI8WQ=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1747942021; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=AJzBv5LvwO9EFRe8OVUlb9OM9yAWwvged+nVh5RBniI=; 
-	b=FvEiYz+Zk3Zx8Wjzj2Wj30/OkSKlahTbUJxZa7YzPE5u1YUvZiMCZXOc4Jc36LFnDLX/C8J1SwYBX9f9FrkmnAHgiMQ823Ot/b/OKoCTdH7fTi5leQIeyhBLFgMTLqEOXUDrUHUOEFDVm9uRBZxH0G4xo64R+noNyFkEnKDvgA0=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
-	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1747942021;
-	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:To:To:Cc:Cc:Reply-To;
-	bh=AJzBv5LvwO9EFRe8OVUlb9OM9yAWwvged+nVh5RBniI=;
-	b=gkUZUsht3DMKagUvyLNTwgLMsMMFHBh/eQHXKLF4AUveD1CrnwbuiGvyWIVw+4C/
-	8zHMhEY9HMsCU49eeIjTjCDxF/aQ/7+68Q5Hr5+Y7Zk9gKi0T3gjcecgswUmQBM0kNQ
-	EG2yk6IUwci2sucS8fKh6Bh/1cmhNpnjwzJAxxNk=
-Received: by mx.zohomail.com with SMTPS id 1747942019407306.2477470606051;
-	Thu, 22 May 2025 12:26:59 -0700 (PDT)
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Date: Thu, 22 May 2025 21:26:44 +0200
-Subject: [PATCH] pwm: rockchip: round period/duty down on apply, up on get
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UF0ifT+y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3855FC4CEF4;
+	Thu, 22 May 2025 19:29:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747942157;
+	bh=VTQ1sOp3emeRBHQnf/LKwayGmF56J10umRqQ1zOkHuo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=UF0ifT+yPGipUqRwatAPxXxUS1qjhektWWKkqXlvbMCdwDGPhEFenTgcA2AkMLKH2
+	 0WClS46Pfb9QbGX9AM3JQlQ1OPS3Ixedi1cairenbBP6+fUYhVvDao6kdSTrXZVOgw
+	 qRVmvfRLAn5IXoKIpOZXy26tVxwo066iCYFx5o70OFAOPQ4ZAz8YmJ6usEJ1TAU+4U
+	 Gn4RE1ksvLCLLmpV8tq0ROhkX64Z5duoL5kQgsOBa24+VTeEOtIjLxim6Szdlo/opG
+	 GKYw+IlQK5UPFBFL4F4uHtvBw79wIzHtpbZkft99XCiw/Vzqs30Op07BFVSQ9fcItV
+	 iFn2QrjURlaJQ==
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-4766631a6a4so86142781cf.2;
+        Thu, 22 May 2025 12:29:17 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUN/f4TSw+I3larpyyj+s6aAVpLdk0ourAUQj0W7DMq5Kgkn16R02vHsMqqdVdQ+VBiBv46c1Y4nzlcp0M=@vger.kernel.org, AJvYcCUXtYEjcc1Q0TG2DzBDczzPz9/jpwhfuMQy8hN69+wAKCZD7mzmSS/M4CTDTQHqxslJ7Xy1rqUeMlGdqYlGpQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQ6HMXOCxmydbcFdRm4gM2oxkuCrdyHSKfTgIcnJRYjVdzNRk0
+	1csWvTQJR/OPEGLMv0hrmb3jxwd9G9sCHRZY6J0BwgYYtMPC/yNIVoT/2//L9NNODO3S+4hsZp6
+	RqAUKaHApac31Gsxnd4mMlDy0nRxEAgc=
+X-Google-Smtp-Source: AGHT+IHxoucucHwQiQ5k+QlgHbE2CP5qSpkJS6DGAZHp8GwQn8AznRtvdzBRm9o3lXbC6hZ3zyegkI2oQ1ANI3VBptk=
+X-Received: by 2002:ac8:714f:0:b0:494:b8bc:8adb with SMTP id
+ d75a77b69052e-494b8bcca9emr317745361cf.5.1747942156330; Thu, 22 May 2025
+ 12:29:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250522-rockchip-pwm-rounding-fix-v1-1-b516ad76a25a@collabora.com>
-X-B4-Tracking: v=1; b=H4sIAHN6L2gC/zWNywqDMBBFf0Vm3YGYYlF/pbhI41SHkkeTaAXx3
- ztUujwH7j07ZEpMGfpqh0QrZw5eoL5UYGfjJ0IehUEr3ahGa0zBvuzMEePHCSx+ZD/hkzfsWnO
- 9KdspamuQfUwk+vd9H05O9F4kUU4JD5MJbXCOS1952gr+MzAcxxejJ93onAAAAA==
-X-Change-ID: 20250522-rockchip-pwm-rounding-fix-98a360c90e81
-To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Heiko Stuebner <heiko@sntech.de>, Brian Norris <briannorris@chromium.org>, 
- Boris Brezillon <bbrezillon@kernel.org>, 
- Thierry Reding <thierry.reding@gmail.com>
-Cc: kernel@collabora.com, linux-pwm@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
- linux-kernel@vger.kernel.org, 
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-X-Mailer: b4 0.14.2
+References: <20250522184249.3137187-1-dylanbhatch@google.com> <20250522184249.3137187-2-dylanbhatch@google.com>
+In-Reply-To: <20250522184249.3137187-2-dylanbhatch@google.com>
+From: Song Liu <song@kernel.org>
+Date: Thu, 22 May 2025 12:29:04 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW6=kz5v2fBC2fwGXSG3orRPuDf4qdh1ZsLBfQNn6Zpi6A@mail.gmail.com>
+X-Gm-Features: AX0GCFsoCb4olxuchinpzxOR6O-IyGNTRm4ViSFvjwWy9gpvmYeUfBQw7wSB5O8
+Message-ID: <CAPhsuW6=kz5v2fBC2fwGXSG3orRPuDf4qdh1ZsLBfQNn6Zpi6A@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] livepatch, x86/module: Generalize late module
+ relocation locking.
+To: Dylan Hatch <dylanbhatch@google.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Josh Poimboeuf <jpoimboe@kernel.org>, Jiri Kosina <jikos@kernel.org>, 
+	Miroslav Benes <mbenes@suse.cz>, Petr Mladek <pmladek@suse.com>, 
+	Joe Lawrence <joe.lawrence@redhat.com>, Ard Biesheuvel <ardb@kernel.org>, 
+	Sami Tolvanen <samitolvanen@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-With CONFIG_PWM_DEBUG=y, the rockchip PWM driver produces warnings like
-this:
+On Thu, May 22, 2025 at 11:43=E2=80=AFAM Dylan Hatch <dylanbhatch@google.co=
+m> wrote:
+>
+> Late module relocations are an issue on any arch that supports
+> livepatch, so move the text_mutex locking to the livepatch core code.
+>
+> Signed-off-by: Dylan Hatch <dylanbhatch@google.com>
 
-  rockchip-pwm fd8b0010.pwm: .apply is supposed to round down
-  duty_cycle (requested: 23529/50000, applied: 23542/50000)
-
-This is because the driver chooses ROUND_CLOSEST for idempotency
-reasons. However, it's possible to keep idempotency while always
-rounding down in .apply.
-
-Do this by making get_state always round up, and making apply always
-round down. This is done with u64 maths, and setting both period and
-duty to U32_MAX (the biggest the hardware can support) if they would
-exceed their 32 bits confines.
-
-Fixes: 12f9ce4a5198 ("pwm: rockchip: Fix period and duty cycle approximation")
-Fixes: 1ebb74cf3537 ("pwm: rockchip: Add support for hardware readout")
-Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
----
-This fix may need some careful testing from others before definitely
-being applied and backported. While I did test it myself of course,
-making sure to try a combination of periods and duty cycles, I really
-don't want to accidentally undo someone else's fix.
-
-Some of the u64 math is a bit overkill, but I don't want to assume
-prescalers will never get larger than 4, which is where we start needing
-the 64-bit prescaled NSECS_PER_SEC value. clk_rate could also
-comfortably fit within u32 for any expected clock rate, but unsigned
-long can fit more depending on architecture, even if nobody is running
-the PWM hardware at 4.294967296 GHz.
----
- drivers/pwm/pwm-rockchip.c | 31 +++++++++++++++++++------------
- 1 file changed, 19 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/pwm/pwm-rockchip.c b/drivers/pwm/pwm-rockchip.c
-index c5f50e5eaf41ac7539f59fa03f427eee6263ca90..983c7354becddd1d322a0b9c2947e0a4603c52dd 100644
---- a/drivers/pwm/pwm-rockchip.c
-+++ b/drivers/pwm/pwm-rockchip.c
-@@ -8,6 +8,8 @@
- 
- #include <linux/clk.h>
- #include <linux/io.h>
-+#include <linux/limits.h>
-+#include <linux/math64.h>
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/platform_device.h>
-@@ -61,6 +63,7 @@ static int rockchip_pwm_get_state(struct pwm_chip *chip,
- 				  struct pwm_state *state)
- {
- 	struct rockchip_pwm_chip *pc = to_rockchip_pwm_chip(chip);
-+	u64 prescaled_ns = (u64)pc->data->prescaler * NSEC_PER_SEC;
- 	u32 enable_conf = pc->data->enable_conf;
- 	unsigned long clk_rate;
- 	u64 tmp;
-@@ -78,12 +81,12 @@ static int rockchip_pwm_get_state(struct pwm_chip *chip,
- 	clk_rate = clk_get_rate(pc->clk);
- 
- 	tmp = readl_relaxed(pc->base + pc->data->regs.period);
--	tmp *= pc->data->prescaler * NSEC_PER_SEC;
--	state->period = DIV_ROUND_CLOSEST_ULL(tmp, clk_rate);
-+	tmp *= prescaled_ns;
-+	state->period = DIV_U64_ROUND_UP(tmp, clk_rate);
- 
- 	tmp = readl_relaxed(pc->base + pc->data->regs.duty);
--	tmp *= pc->data->prescaler * NSEC_PER_SEC;
--	state->duty_cycle =  DIV_ROUND_CLOSEST_ULL(tmp, clk_rate);
-+	tmp *= prescaled_ns;
-+	state->duty_cycle =  DIV_U64_ROUND_UP(tmp, clk_rate);
- 
- 	val = readl_relaxed(pc->base + pc->data->regs.ctrl);
- 	state->enabled = (val & enable_conf) == enable_conf;
-@@ -103,8 +106,9 @@ static void rockchip_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 			       const struct pwm_state *state)
- {
- 	struct rockchip_pwm_chip *pc = to_rockchip_pwm_chip(chip);
--	unsigned long period, duty;
--	u64 clk_rate, div;
-+	u64 prescaled_ns = (u64)pc->data->prescaler * NSEC_PER_SEC;
-+	u64 clk_rate, tmp;
-+	u32 period, duty;
- 	u32 ctrl;
- 
- 	clk_rate = clk_get_rate(pc->clk);
-@@ -114,12 +118,15 @@ static void rockchip_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	 * bits, every possible input period can be obtained using the
- 	 * default prescaler value for all practical clock rate values.
- 	 */
--	div = clk_rate * state->period;
--	period = DIV_ROUND_CLOSEST_ULL(div,
--				       pc->data->prescaler * NSEC_PER_SEC);
--
--	div = clk_rate * state->duty_cycle;
--	duty = DIV_ROUND_CLOSEST_ULL(div, pc->data->prescaler * NSEC_PER_SEC);
-+	tmp = mul_u64_u64_div_u64(clk_rate, state->period, prescaled_ns);
-+	if (tmp > U32_MAX)
-+		tmp = U32_MAX;
-+	period = tmp;
-+
-+	tmp = mul_u64_u64_div_u64(clk_rate, state->duty_cycle, prescaled_ns);
-+	if (tmp > U32_MAX)
-+		tmp = U32_MAX;
-+	duty = tmp;
- 
- 	/*
- 	 * Lock the period and duty of previous configuration, then
-
----
-base-commit: 6add743d2854d744c3037235b87c1c9d164fd132
-change-id: 20250522-rockchip-pwm-rounding-fix-98a360c90e81
-
-Best regards,
--- 
-Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-
+Acked-by: Song Liu <song@kernel.org>
