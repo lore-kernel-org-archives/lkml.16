@@ -1,65 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63C8C1E5202;
-	Thu, 22 May 2025 22:47:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1384D28D82B
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 22:48:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747954062; cv=none; b=P0NSCqYroxvuflOdv/op8fNjw3y0YldeBzzdFvUinuTrIL8q4yNqtdlNZYZhr1STBRoSJqdHNCcvHsqWIOlMv1gAbo3QJLRHpLinkaQQysG4hO3EdRowWjKZyFbtM/dcu3DizvfABEbYJHbqpSw9VmlBO6OWmPyvoMWIrn7HWVo=
+	t=1747954130; cv=none; b=IlzZKcXEvpH9H48t+HTTUfz7XdAlnmJxAOyUx44USAKFKtP5VOckeEZPxiz7Df4vCnN8RDjgbncf3NnTY4h4+N0rTU8RA2+UThluJPz2Xhj0x14MlXaU9bGFvXPzd6q/50pBTXrWMrz8JNMO/FH96ESVxtzq/pfYajZB/IRxi3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747954062; c=relaxed/simple;
-	bh=Kqb87YqrH7GgbRIjtu3CSrvC/nfpw9kj2G/CS9u5zDI=;
-	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
-	 Subject:From:Cc:To:Date; b=mBCeRVsAvSRC/jRlZPffsiUwwsoJ1GKf1EF/PA90f+hvTzFP5IZOlYYebsLJZvknTwv5ARgUc5kCualkk7LMUwF5lnpIHveM1rdmh/AZmnrJMq892zhq728DYOo4T1OrCgtJUgfzsBznjWa/LmCkrkCZMoimFjo2CvQ3Y4aG+8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H9SBvD25; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747954130; c=relaxed/simple;
+	bh=Lh5XAd4GRusClK6uzw8nnaO+2cTgkyRFtkF5BPYJ2GM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JdPFP/vP0/A6KkdbRQFqockmlTp7ACrCc+8Y3CUQvaisF1BhWd/dLEWqu8Tb6zgZu2jd6C0yaDjJxwhYpYrIDaj++SUOE3M2w/HS60xhuJuo9Dk0siTt+Ir90D0qMeVnlQdfFwgVr3QPW7uGHgMKyK9Csq7X0DqdHH0gVmRP1Wo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ob+8ZXMl; arc=none smtp.client-ip=209.85.166.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H9SBvD25"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C6CEC4CEE4;
-	Thu, 22 May 2025 22:47:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747954062;
-	bh=Kqb87YqrH7GgbRIjtu3CSrvC/nfpw9kj2G/CS9u5zDI=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=H9SBvD25Q2PU4UflB41Gd97nlaKsoI8SbBuXLVrsWgQJPn08cEjwwG4+hn50kJ/mF
-	 +Z3oRbYBMY03HCGgKutmjHhfiUkuBI/7FY5lGlF6yzUk4kYDCEzMUyQRG2+xGQRh6I
-	 ypc76/fUP4HHZcvpaE3jJebn/F+jehfq3+LJdpWrHwTCSN1E+9Iyk07a+qUqA/GIEs
-	 9bCbllTUz/giCzT9FLWPNXCMP7WArMCddkmI8VxxxEBrH6Rj95veyfF1C+WK+9XgWL
-	 auPisFZjm08OSeq5/vytZDsxymD08ImPmYr3Qkmqh/dhSGlOBCg4UIdrZ8sEXu5aMd
-	 WzE6SNvlg7bXQ==
-Message-ID: <4932d11de93098b86e3f18e858930388@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ob+8ZXMl"
+Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3db82534852so63265ab.0
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 15:48:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747954128; x=1748558928; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Lh5XAd4GRusClK6uzw8nnaO+2cTgkyRFtkF5BPYJ2GM=;
+        b=ob+8ZXMlEWoRKRBV0qSBfYePxB0rTmP8oXNU1hRwyFiR+EdP5/O3XPrmYYcCC+VjKK
+         dsO6plBZiZis1EaD3byfNwxVFxdzZ0DhkRYUbRnL74YUdhh3k97NR1X/H3CdxkmL3Kgq
+         UK4QuEltix4d+3wjdax9+rYkG9UxhSMFUygfdnZmxIAGFxYGgbWulX+213AyeEpbMToA
+         AMEer515GJyCPQ8UjNIsbKW6vmi4kM9Jxl0zc2afpe4jw99p0BGKEquJuwbrp/pglyNs
+         wjzpWGdDJIyK7bFBJipBWo/FYvDWoEPVn3DxR5WldYz4GgVwQgSLLErTp+HbTbgXBbTb
+         oY5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747954128; x=1748558928;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Lh5XAd4GRusClK6uzw8nnaO+2cTgkyRFtkF5BPYJ2GM=;
+        b=cB56lOBJ2mgfrfQPG6A4SJ57leHTGWWQa987TEjfQh9v8smBjAtr4vn63vghIx5tat
+         rWjLFMMVXaHVFQ79E5sEms0evDaYcXwgEsPwaP+Ot46ZJpallOHqVHTQt7LutmcSuvSN
+         aR5HB9ZeW5o4Rm+CAlcxvXi5Y6lOqTsLnh9abzmK9otk905aNYTKtrIqXT1bkDvsOPvs
+         v2dVrzRobn/DtFP0a564BKK9gmt6NdvjI24VsG8RncPk0/KsmfTOc8LupmlCIcQybQci
+         JX0gFAg1kRt5pZhZifXyk+aWEY40CVO34YGitC2GISt2Z95m8jFggO7TP6607NrApAX0
+         MvUA==
+X-Forwarded-Encrypted: i=1; AJvYcCV/Cd3qBuc8hZ7JSosC9ritfuBSDyoNvYdfgll9TIG9Cw9qs50YnBVAvl3/m/QHT1W+hTXalTMww56gmo0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSmH315H37XbdxJNs8OKL3jt6KcHj6MQbSj403uBa5OXSCIN6B
+	LlyqlEwwhryFks2tjfRYm73zejUNo61OMPNum7PTmgqIj02WevRw2kBwGpsDLtK2H2ojlcYyqId
+	yge7eN8dwbvueQgQWfVP6XO+3hSeHUoetlh6sS3PM
+X-Gm-Gg: ASbGncvzEinMJ9bSFHOgiS25zDV6woO5lIbJJafnf+pgC1OyrB8AXb8L7ndOSm0c58Z
+	GgOrkgeNLofssfhP+XrD9gln9ZIeQ70yABWjisQJzrd9by7DGmL2DH0tCA8nDnnEvVh6LMvnWd8
+	WJCXK9rafqlovaMgZPfLrY6OlkudCgAwPNCW9pn9QPWd+DlCtt1EHy
+X-Google-Smtp-Source: AGHT+IEcVuhl6pdBtsJPO9SxSrdyzAjcwGvNTyJ8sZXSxIg3HhDaeESwLUjKBACBrwiGRGmplI7LBnRquwe4/RS9YQ8=
+X-Received: by 2002:a92:cd85:0:b0:3dc:8041:2363 with SMTP id
+ e9e14a558f8ab-3dc94246b2amr483255ab.3.1747954127815; Thu, 22 May 2025
+ 15:48:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250509072054.148257-1-chenridong@huaweicloud.com>
+ <aCcl9M-BgOJ86gVJ@example.org> <f5c701d5-c501-4179-959c-85057705a09d@huaweicloud.com>
+ <aCtdCkSGQJKCYApm@example.org> <6c3b4ac3-fe33-45d0-b7e8-d722e29c8240@huaweicloud.com>
+ <aC2AyjNxKRLQf0fd@example.org>
+In-Reply-To: <aC2AyjNxKRLQf0fd@example.org>
+From: Andrei Vagin <avagin@google.com>
+Date: Thu, 22 May 2025 15:48:35 -0700
+X-Gm-Features: AX0GCFuP8oirMe6LkdD-GgSjeQX2qm3v4SPNsrZEFtM8AzcFsq5DRdNoFRaP9Bk
+Message-ID: <CAEWA0a6t8nsXkiM=VF_zQ+vk+6hrbGt23oig1jf8No2GopGR1w@mail.gmail.com>
+Subject: Re: [RFC next v2 0/5] ucount: add rlimit cache for ucount
+To: Alexey Gladkov <legion@kernel.org>
+Cc: Chen Ridong <chenridong@huaweicloud.com>, akpm@linux-foundation.org, 
+	paulmck@kernel.org, bigeasy@linutronix.de, roman.gushchin@linux.dev, 
+	brauner@kernel.org, tglx@linutronix.de, frederic@kernel.org, 
+	peterz@infradead.org, oleg@redhat.com, joel.granados@kernel.org, 
+	viro@zeniv.linux.org.uk, lorenzo.stoakes@oracle.com, mengensun@tencent.com, 
+	linux@weissschuh.net, jlayton@kernel.org, ruanjinjie@huawei.com, 
+	kees@kernel.org, linux-kernel@vger.kernel.org, lujialin4@huawei.com, 
+	Eric Biederman <ebiederm@xmission.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250513101407.22233-2-krzysztof.kozlowski@linaro.org>
-References: <20250513101407.22233-2-krzysztof.kozlowski@linaro.org>
-Subject: Re: [GIT PULL] clk: samsung: drivers for v6.16
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Chanwoo Choi <cw00.choi@samsung.com>, linux-clk@vger.kernel.org, Sylwester Nawrocki <snawrocki@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Michael Turquette <mturquette@baylibre.com>
-Date: Thu, 22 May 2025 15:47:40 -0700
-User-Agent: alot/0.12.dev8+g17a99a841c4b
 
-Quoting Krzysztof Kozlowski (2025-05-13 03:14:08)
-> The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089a=
-c8:
->=20
->   Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
->=20
-> are available in the Git repository at:
->=20
->   https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/sam=
-sung-clk-6.16
->=20
-> for you to fetch changes up to 81214185e7e1fc6dfc8661a574c457accaf9a5a4:
->=20
->   clk: samsung: correct clock summary for hsi1 block (2025-05-12 08:30:06=
- +0200)
->=20
-> ----------------------------------------------------------------
+On Wed, May 21, 2025 at 12:29=E2=80=AFAM Alexey Gladkov <legion@kernel.org>=
+ wrote:
+<....>
+>
+> > > All I'm saying is that "bottleneck" with atomic counter was there bef=
+ore
+> > > and can't be removed anywhere.
+> > >
+> >
+> > Yes, it can not be removed anywhere, maybe we can make it better.
+>
+> Yes, we probably can, but we need to have a reason to complicate the code=
+.
+> And we're still talking about a synthetic test.
 
-Thanks. Pulled into clk-next
+I think I have a real use case that will be negatively impacted by this
+issue. This involves gVisor with the systrap platform. gVisor is an
+application kernel, similar to user-mode Linux. The systrap platform
+utilizes seccomp to intercept guest syscalls, meaning each guest syscall
+triggers a SIGSYS signal. For some workloads, the signal handling overhead
+accounts for over 50% of the total workload execution time.
+
+However, considering the gVisor problem, I think the solution could be
+simpler. Each task could reserve one signal in advance. Then, when a signal
+is triggered by an 'exception' (e.g., seccomp or page fault), the kernel
+could queue a force signal without incurring a ucount charge. Even
+currently, such signals are allocated with the override_rlimit flag set,
+meaning they are not subject to standard resource limits.
+
+Thanks,
+Andrei
