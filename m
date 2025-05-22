@@ -1,159 +1,216 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC71323371B
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 12:03:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9468E1DF965
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 12:04:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747915429; cv=none; b=XSwB/Lv8jSRwLC1t2ln4xZrFgJ7dd7C8XwNPyZzRvHPdlvM15oNW3ALJKYLbZNFQDD0WSHDoWh/xtCKLcsMCeV/FJxClKM1a5MtZS/wg15ErXhPXk55mSbfz0dgPCkDlsYegPilZmFOPB8Vg8JSFbWS6A62G5zls9J+x/Bfe9NE=
+	t=1747915468; cv=none; b=ZU3ea3DM2Tldb6CZZ9Wv2raNeUftex55O4gplrwSQM4kdnGECSvsBUwGvI2TElc2H/YsdaI1MnDybLoB2fUS8IctdcYFWNpTzSRj9yhNcuQkz5eao7vZz4ehiWYYmFT59eRvtWSkRPBXPqLMKlkD/APyZqCDlBBrinbf+b5IETQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747915429; c=relaxed/simple;
-	bh=YlIdXE+cJPEmJedyy48Hi1mFUG5wnxkldNpJmyCsljg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ekL4kzs6HpGr43MRxE0XeA9DAANmbAccRC2CWfCdz8LLwY47TNK6uvG0aYDzvX9w/PRUOWihm51in/Sp7ByHew63op4ylOJWTtQN6XAHHYygp8HatdI0JfAjM/kFvi4x1v1q9CjFdT9KsFdnVLWBSfHYissO4Y9jjLI+uTQijFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=UWxVev89; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1747915468; c=relaxed/simple;
+	bh=4wX/3Pa82sfG0nToWe9Rdgbq4x29T+ZV/w+SFWDYNZI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=o8mRT6FRjoD2BLM0B1quJkbclQsfcS+vidYSunx3EdxSK5vUc4FTALUkXrfvBHN3IaucSvXJ2Z+ueBdtM/Evj4obdpwlDrGVMEUQZlrg/XnDtnCRSvqPDeLOtBFqN4S+t6t2OCtJga7B0VDLD57neCUiEh6Rgm7ta7fM8yNfUFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YPe3DAwi; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UWxVev89"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=un//2bnJRdpx8IjyRQKuHD2l1EewbSIXc625KMcFxxA=; b=UWxVev89r6+X05qFWyTMxScrS8
-	2GcAk5g79QDcCz4cse1QxLPWJa0JtPWoEddR8SuRyDxPS5kT3uGOe+d/7UmxOWy/QfEE4dlFDY0T0
-	7NsYXrxdJReenhT6sMHPi2ug6Bu7Fhi3eXNZWmlyZAn/UKQCN8xNuE6O34LFN0JkdjYtGgSXtF2vv
-	lJHpXyOJpECpYMe4zcKMUV2xDCVVmU2cKavP+6dz+nd3dW/CHo5+re5RasNNwS0+KWILUYbiZ5hoP
-	2LiBc+erX9C7tgMr99ga+ngUVtQNdu4kej0WHFU5Wi65ZEZ9BQClAMgpgRBCaMB93SSazemWrQsHj
-	bCHCw6Gg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1uI4e9-000000011lA-0ETu;
-	Thu, 22 May 2025 12:03:37 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 9BD263002E5; Thu, 22 May 2025 14:03:36 +0200 (CEST)
-Date: Thu, 22 May 2025 14:03:36 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Aaron Lu <ziqianlu@bytedance.com>
-Cc: Valentin Schneider <vschneid@redhat.com>,
-	Ben Segall <bsegall@google.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Josh Don <joshdon@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Xi Wang <xii@google.com>, linux-kernel@vger.kernel.org,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Chuyi Zhou <zhouchuyi@bytedance.com>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
-	Florian Bezdeka <florian.bezdeka@siemens.com>
-Subject: Re: [PATCH 4/7] sched/fair: Take care of group/affinity/sched_class
- change for throttled task
-Message-ID: <20250522120336.GI39944@noisy.programming.kicks-ass.net>
-References: <20250520104110.3673059-1-ziqianlu@bytedance.com>
- <20250520104110.3673059-5-ziqianlu@bytedance.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YPe3DAwi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747915464;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=SE1l7LwOJdzhSNTpk1qJSyj60i+zwkLVGGrsHxlqMck=;
+	b=YPe3DAwigoGffLDS4GiL/TLKBfnhp/Yjde/tMppnZGAMT5XchVwQrYDGNsXjbTvBu5NeWG
+	sfOEXXCESEiKyN74G/TrFJPhbjVMrxg0cbwbFEKN79OK8oJtNFqflXr0T7i/1C0ymfUCTx
+	13wdN5/yUhvyDBeMbrPJjEsog48Qf/Y=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-498-UJd-vbWaO4Om9aelh8JJfQ-1; Thu, 22 May 2025 08:04:23 -0400
+X-MC-Unique: UJd-vbWaO4Om9aelh8JJfQ-1
+X-Mimecast-MFC-AGG-ID: UJd-vbWaO4Om9aelh8JJfQ_1747915462
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-442d472cf7fso61009755e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 05:04:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747915462; x=1748520262;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=SE1l7LwOJdzhSNTpk1qJSyj60i+zwkLVGGrsHxlqMck=;
+        b=qpl1HFFMupt5cBN6U20yLt2QQSe8uXYuLH1+ljhiOREFR8G0Gv3cdymHcNi96CqDFv
+         ZHNHSd9wR9fK3e9ORMwIlHGuEt9DBPVq8cRgfjWYRvpWRAoamX37ZwccSN9C/UoxUZzR
+         Nvk+qTl+uk2h10iopRFtgjLv8wuFRKQcCfPynqS9TCi2f4lBSe0MfKhmxwNksjuCh3Xs
+         s03MIs5G0ZGLAeY3A1jg6+uG0nAyU/tMepoWYFpu8Ju8YM5VaT4c63Xa/aQVayxVsy67
+         I5pJHK22ZWb8qG+iYUjbXvZsuVfjFu59eqqxOb6sOm35RAgFsgs2PvxlJOYJieBB28Js
+         dq8Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWXyqPQn4Bcb0c7GXnMHKDWlNpX0SSYfzIQDCDrjHXPMlNccM1Bx1huJ1FLx4LbeE57nx/O0caNdJfyE50=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywz8v4ipJH5O6DN+EygJRk01MoEjNz/J3WUpucBJs/VCXt4nOVI
+	4T4EYxbYnBf4Rs/Y8244xZfahS0Ny0iNczAm7myOTB0jbn/wnaXXMyF4FusiOzZ1sy04vLF9Q9s
+	W8sy6GU8TNCYHiVJR1VoRhca5R1slkjQZOyGCmo66RoQHoQVQnNjlG2pxr2PmzK0oWQ==
+X-Gm-Gg: ASbGncv+zFNpAbNbZcfnQhHABx6G7u4rvgl7NjinyS7H/3w2fpX3fgc13Rf+AM0u2k3
+	YIOCfC57DhoWZB1h60hBGLUNQlmDgIbFl54BflK+zBTGQ+4OKmt1jZ3blZKh1k28NG1LkhEXSbd
+	CGFiUWNMqfA0yD1QrHamiHg1g8JY2AzdWc0FV+1JdsIQW7TumLvXQnDtSPe26oldQensNqg4ZX3
+	1xXs4bXpZ38HX3maOzQAhZJ6gF+VjcCl6sHLmTpwJmLXw8j3dQeENq0666ipOhEUojBaUlv10Dz
+	VX8Bh8/lXvL8EM/mC55Z5sqbqDqUbHYl8lxwaulz4hQBaVXTdX0JPsNSKJMY8wIvbypRbvAU3Qs
+	bRz3BzUnfUVfuwYwhnJrhieonqlsil98QC0wABJk=
+X-Received: by 2002:a05:600c:6748:b0:442:e011:7eb with SMTP id 5b1f17b1804b1-442fd671befmr283747195e9.30.1747915461992;
+        Thu, 22 May 2025 05:04:21 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHBeNOf9p7XQMEo661VsP3lNb83xqKoazNsruCMHoqOB07PdLk122+DzoLdl3opzWhYkLxpDg==
+X-Received: by 2002:a05:600c:6748:b0:442:e011:7eb with SMTP id 5b1f17b1804b1-442fd671befmr283746665e9.30.1747915461561;
+        Thu, 22 May 2025 05:04:21 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f22:2e00:6e71:238a:de9f:e396? (p200300d82f222e006e71238ade9fe396.dip0.t-ipconnect.de. [2003:d8:2f22:2e00:6e71:238a:de9f:e396])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f24b6471sm103717145e9.24.2025.05.22.05.04.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 May 2025 05:04:21 -0700 (PDT)
+Message-ID: <6894a8b1-a1a7-4a35-8193-68df3340f0ad@redhat.com>
+Date: Thu, 22 May 2025 14:04:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250520104110.3673059-5-ziqianlu@bytedance.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC v2 0/2] add THP_HUGE_ZERO_PAGE_ALWAYS config option
+To: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>,
+ Mike Rapoport <rppt@kernel.org>
+Cc: Pankaj Raghav <p.raghav@samsung.com>,
+ Suren Baghdasaryan <surenb@google.com>, Vlastimil Babka <vbabka@suse.cz>,
+ Ryan Roberts <ryan.roberts@arm.com>, Michal Hocko <mhocko@suse.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Nico Pache <npache@redhat.com>,
+ Dev Jain <dev.jain@arm.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+ "H . Peter Anvin" <hpa@zytor.com>, Zi Yan <ziy@nvidia.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>, Jens Axboe <axboe@kernel.dk>,
+ linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ "Darrick J . Wong" <djwong@kernel.org>, gost.dev@samsung.com, hch@lst.de,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, willy@infradead.org,
+ x86@kernel.org, mcgrof@kernel.org
+References: <20250522090243.758943-1-p.raghav@samsung.com>
+ <aC8LGDwJXvlDl866@kernel.org>
+ <6lhepdol4nlnht7elb7jx7ot5hhckiegyyl6zeap2hmltdwb5t@ywsaklwnakuh>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <6lhepdol4nlnht7elb7jx7ot5hhckiegyyl6zeap2hmltdwb5t@ywsaklwnakuh>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 20, 2025 at 06:41:07PM +0800, Aaron Lu wrote:
-> On task group change, for tasks whose on_rq equals to TASK_ON_RQ_QUEUED,
-> core will dequeue it and then requeued it.
+On 22.05.25 14:00, Pankaj Raghav (Samsung) wrote:
+> Hi Mike,
 > 
-> The throttled task is still considered as queued by core because p->on_rq
-> is still set so core will dequeue it, but since the task is already
-> dequeued on throttle in fair, handle this case properly.
+>>> Add a config option THP_HUGE_ZERO_PAGE_ALWAYS that will always allocate
+>>> the huge_zero_folio, and it will never be freed. This makes using the
+>>> huge_zero_folio without having to pass any mm struct and a call to put_folio
+>>> in the destructor.
+>>
+>> I don't think this config option should be tied to THP. It's perfectly
+>> sensible to have a configuration with HUGETLB and without THP.
+>>   
 > 
-> Affinity and sched class change is similar.
+> Hmm, that makes sense. You mean something like this (untested):
 > 
-> Signed-off-by: Aaron Lu <ziqianlu@bytedance.com>
-> ---
->  kernel/sched/fair.c | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
-> 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 74bc320cbc238..4c66fd8d24389 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -5866,6 +5866,10 @@ static void throttle_cfs_rq_work(struct callback_head *work)
->  		update_rq_clock(rq);
->  		WARN_ON_ONCE(!list_empty(&p->throttle_node));
->  		dequeue_task_fair(rq, p, DEQUEUE_SLEEP | DEQUEUE_SPECIAL);
-> +		/*
-> +		 * Must not add it to limbo list before dequeue or dequeue will
-> +		 * mistakenly regard this task as an already throttled one.
-> +		 */
->  		list_add(&p->throttle_node, &cfs_rq->throttled_limbo_list);
->  		resched_curr(rq);
->  	}
-> @@ -5881,6 +5885,20 @@ void init_cfs_throttle_work(struct task_struct *p)
->  	INIT_LIST_HEAD(&p->throttle_node);
->  }
->  
-> +static void dequeue_throttled_task(struct task_struct *p, int flags)
-> +{
-> +	/*
-> +	 * Task is throttled and someone wants to dequeue it again:
-> +	 * it must be sched/core when core needs to do things like
-> +	 * task affinity change, task group change, task sched class
-> +	 * change etc.
-> +	 */
-> +	WARN_ON_ONCE(p->se.on_rq);
-> +	WARN_ON_ONCE(flags & DEQUEUE_SLEEP);
-> +
-> +	list_del_init(&p->throttle_node);
-> +}
-> +
->  static void enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags);
->  static int tg_unthrottle_up(struct task_group *tg, void *data)
->  {
-> @@ -6834,6 +6852,7 @@ static inline void sync_throttle(struct task_group *tg, int cpu) {}
->  static __always_inline void return_cfs_rq_runtime(struct cfs_rq *cfs_rq) {}
->  static void task_throttle_setup_work(struct task_struct *p) {}
->  static bool task_is_throttled(struct task_struct *p) { return false; }
-> +static void dequeue_throttled_task(struct task_struct *p, int flags) {}
->  
->  static inline int cfs_rq_throttled(struct cfs_rq *cfs_rq)
->  {
-> @@ -7281,6 +7300,11 @@ static int dequeue_entities(struct rq *rq, struct sched_entity *se, int flags)
->   */
->  static bool dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
->  {
-> +	if (unlikely(task_is_throttled(p))) {
-> +		dequeue_throttled_task(p, flags);
-> +		return true;
-> +	}
-> +
->  	if (!(p->se.sched_delayed && (task_on_rq_migrating(p) || (flags & DEQUEUE_SAVE))))
->  		util_est_dequeue(&rq->cfs, p);
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index 2e1527580746..d447a9b9eb7d 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -151,8 +151,8 @@ config X86
+>          select ARCH_WANT_OPTIMIZE_DAX_VMEMMAP   if X86_64
+>          select ARCH_WANT_OPTIMIZE_HUGETLB_VMEMMAP       if X86_64
+>          select ARCH_WANT_HUGETLB_VMEMMAP_PREINIT if X86_64
+> +       select ARCH_WANTS_HUGE_ZERO_PAGE_ALWAYS if X86_64
+>          select ARCH_WANTS_THP_SWAP              if X86_64
+> -       select ARCH_WANTS_THP_ZERO_PAGE_ALWAYS  if X86_64
+>          select ARCH_HAS_PARANOID_L1D_FLUSH
+>          select BUILDTIME_TABLE_SORT
+>          select CLKEVT_I8253
+> diff --git a/mm/Kconfig b/mm/Kconfig
+> index a2994e7d55ba..83a5b95a2286 100644
+> --- a/mm/Kconfig
+> +++ b/mm/Kconfig
+> @@ -823,9 +823,19 @@ config ARCH_WANT_GENERAL_HUGETLB
+>   config ARCH_WANTS_THP_SWAP
+>          def_bool n
+>   
+> -config ARCH_WANTS_THP_ZERO_PAGE_ALWAYS
+> +config ARCH_WANTS_HUGE_ZERO_PAGE_ALWAYS
+>          def_bool n
+>   
+> +config HUGE_ZERO_PAGE_ALWAYS
 
-This is asymmetric -- dequeue removes it from that throttle list, but
-the corresponding enqueue will not add it back, what gives?
+Likely something like
 
-Because now we have:
+PMD_ZERO_PAGE
 
- p->on_rq=1
- p->throttle_node on list
+Will be a lot clearer.
 
-move_queued_task()
-  deactivate_task()
-    dequeue_task_fair()
-      list_del_init(throttle_node)
-    p->on_rq = 2
+ > +       def_bool y> +       depends on HUGETLB_PAGE && 
+ARCH_WANTS_HUGE_ZERO_PAGE_ALWAYS
 
-  activate_task()
-    enqueue_task_fair()
-      // nothing special, makes the thing runnable
-    p->on_rq = 1;
+I suspect it should then also be independent of HUGETLB_PAGE?
 
-and we exit with a task that is on-rq and not throttled ?!?
+> +       help
+> +         Typically huge_zero_folio, which is a huge page of zeroes, is allocated
+> +         on demand and deallocated when not in use. This option will always
+> +         allocate huge_zero_folio for zeroing and it is never deallocated.
+> +         Not suitable for memory constrained systems.
 
-Why is this? Are we relying on pick_task_fair() to dequeue it again and
-fix up our inconsistencies? If so, that had better have a comment on.
+I assume that code then has to live in mm/memory.c ?
+
+
+-- 
+Cheers,
+
+David / dhildenb
+
