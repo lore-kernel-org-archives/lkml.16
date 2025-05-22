@@ -1,316 +1,102 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A2C32BD014
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 22:57:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEBE42BEC51
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 22:58:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747954637; cv=none; b=Z5Viuikltll6kWCYZd33VNLW++FgqXnRKZ/oQCHqa+5SLT9rwoUZHq22YE7XqtViW1IXEDEA3Wj+YqkWOFWMaKmUYm2ir2wUJgkcofysbYfRdH/TMPPq6/Pa/gvmpc1j1Sea/G9FzMDFGui6t5EIGz2mxJ1z57UbegU4phb4vE8=
+	t=1747954711; cv=none; b=BQ3G205ir5OgB3IrZGAgFu015pDimxZH2x+EX29kWI2Y05s03v4jprQ0cUX/47V8jn0ukLnIA0S7aRI6gG1MBeUT3d7Uvs24iQbCfGVqYAcjDLFf+43p/SziXSqk2cQJ5OteIZXL2ADGs6f8efJ3X6h7of9jrFij8B2QN4Nd3+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747954637; c=relaxed/simple;
-	bh=ShpH2Lrz40L9DOsJ3UQSgxelkKBLo/YVsgqN9p+w034=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=Ka6Rpvq4u4ehQDX1xP3G5+KTU8UmTajSE3dr7IRDd1ubQ/oDGQg6kOUqqDSORyhsIBvUbkSpnj6vJWjzKsxAM0cs9/65aRVExZoYdrseo9fzTapkXZ9S1JWEoEiJIAkJTZlXuvX34/ojCIdZVNSOwm6ARn3Y55RM5k8NsBt6tSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Hvwi6Dhm; arc=none smtp.client-ip=95.215.58.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1747954711; c=relaxed/simple;
+	bh=Hc0JPcPl68y6C0hdcL7gbZ8AMjRkQxPCg50ZfHFH9Zw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HS9m6eZesH06Vc/0JZ+8uPLZOvEODqcv2mYB7SzxQPgqK3CwOJovvO8t4H42Teg2rGqZIww79HoPmVquM1hMdJRJGVoQrrYWxSc4m2jVfxLsDi0l4Tq18GZPVNSgaLxqjc5+0p/0ReHFu/LMSMtXXAF2vKzXg6n9X0TvsrNhpno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=FURSHTWL; arc=none smtp.client-ip=209.85.166.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Hvwi6Dhm"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="FURSHTWL"
+Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-85b3f92c8f8so789931939f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 15:58:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1747954707; x=1748559507; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LifDm7A2s/glTLRHRleF9EaeJkLoBTqPk54K6bg46PY=;
+        b=FURSHTWLV58s1Xn2iH4rQQI8NFDxkL134WNpCyLPuv0Y3dS4Y2eK+n0/vr9NjrLWlV
+         Sr0RVDnhpZtlM59jIA1/kFskIA+jZX07cCKh7XQngeb3EEGyNQu4eifgMtH9djPDUUzi
+         FHcUQTt8HhqwINh5XgGPI1ZVMmbAArojD+Hpg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747954707; x=1748559507;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LifDm7A2s/glTLRHRleF9EaeJkLoBTqPk54K6bg46PY=;
+        b=PdYJHzxh2xqVw8RuX15ujE3Uzro6ArLtuUlwauvbYK06nCJ84/MIrzllkZp2gro3li
+         FqDC6OYDlumOV0xeU/8HKXJJGInkqzEufcK39dfP1dBIqB+7RAOpyNKwN8VuCNbwZN6I
+         9qMlP40FoJHTc0owGuk5PnbcB6VvMOu7N8ihDSdDILSTF324TG080M1WZKzT+iJTIy1W
+         BF5/bM/louUmAit8og3Xwob6M4A3LwqD9+RCwWgyGbdpQrYJCDnxzV6OEvxmyhlwGXSk
+         8oKpqUY3QdUBgbaEmIc4mMEMic1shBclss3BWX7XpWy1JO/oGVV8D/fALch5K/UcSD57
+         6WtA==
+X-Gm-Message-State: AOJu0YyUg/SfVAMFAfUqwEgCK54YpTdE3XHdf9TKfJTPCoTLSBpLRkit
+	TnF3NLR3qlqfgHorWxEAuvpYrhqlxjxTY1rYkAAMhUo3pN01u7/pRxvzg8JtcCnHgNc=
+X-Gm-Gg: ASbGncvs5WONgHLfPrSElnasgjDWH4ZXrjxgYz6NK0MbzQiZT57/z4s3qqmeyO8wF/O
+	p+m0FFkJAEzHmmCuAiMAElfziggZTfvBwkbPcp3+b9pcpH14b++3IYetnqNjIsgfHj6MU3fQoQj
+	HRiDfO1ue+OxUDvFrRMeNz41yvRNCR2TckzP1fse9sRp0JG6LHGxyyyx+ORYC3/zffmP1bYKCJR
+	gTYZfHtkBl/HEb3dx2oM5SGXsb+KkSxbfjleXRvHQr0ZKRlIO3nWbE0cxzw+pHiBkRq3fV+RgNZ
+	hzh2dZ3Min7dh2HYAAdTup5IniJArxG0fQ4KZI5EjfN44ZI9Xkjgv8LhYbObEg==
+X-Google-Smtp-Source: AGHT+IHAGSdQbUlxXzwcnENTVeYrRQfzTmXk0ARVU7ftTHOp+/8ZyfmjGdb4tKBcU6VK1raUF+dbew==
+X-Received: by 2002:a05:6e02:b43:b0:3dc:7c44:cff9 with SMTP id e9e14a558f8ab-3dc7c44db95mr143962145ab.8.1747954707464;
+        Thu, 22 May 2025 15:58:27 -0700 (PDT)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4fbcc4ea4d3sm3384858173.134.2025.05.22.15.58.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 May 2025 15:58:26 -0700 (PDT)
+Message-ID: <a0f5b68d-e321-4ed3-a22c-24f80f4d906f@linuxfoundation.org>
+Date: Thu, 22 May 2025 16:58:26 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747954618;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XJDADEXuHfqfTmAHEHNUhMdj/6JudXWWJl8mcFP32/s=;
-	b=Hvwi6Dhm6PdUO0889euxLcZpJjDxz7rpCSpB/RGawHif/VbiSsxwSQPXU9mg+YDp0qhrDq
-	Lal+XtseX+emD5Ba/1IN93xFlGK26cyLKSGBWYC4xH3cdiWXUVOCWw2Idh0tYxoOr5xga5
-	9/fTCY8YHHZEmZZwJoGjUHOO68apVPM=
-Date: Thu, 22 May 2025 22:56:52 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Jiayuan Chen" <jiayuan.chen@linux.dev>
-Message-ID: <2c8ab490e47d44ef5250ac755a5388fe147345d4@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH bpf-next v6] bpf, sockmap: avoid using sk_socket after
- free when sending
-To: "Martin KaFai Lau" <martin.lau@linux.dev>
-Cc: bpf@vger.kernel.org, "Michal Luczaj" <mhal@rbox.co>, "John Fastabend"
- <john.fastabend@gmail.com>, "Jakub Sitnicki" <jakub@cloudflare.com>,
- "David S. Miller" <davem@davemloft.net>, "Eric Dumazet"
- <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>, "Paolo Abeni"
- <pabeni@redhat.com>, "Simon Horman" <horms@kernel.org>, "Thadeu Lima de
- Souza Cascardo" <cascardo@igalia.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <3eb50302-d90c-4477-b296-f5f29a7d1eca@linux.dev>
-References: <20250516141713.291150-1-jiayuan.chen@linux.dev>
- <3eb50302-d90c-4477-b296-f5f29a7d1eca@linux.dev>
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] docs: ABI: Fix "diasble" to "disable"
+To: Sumanth Gavini <sumanth.gavini@yahoo.com>
+Cc: linux-kernel@vger.kernel.org
+References: <20250517091814.1263768-1-sumanth.gavini.ref@yahoo.com>
+ <20250517091814.1263768-1-sumanth.gavini@yahoo.com>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20250517091814.1263768-1-sumanth.gavini@yahoo.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-2025/5/23 03:25, "Martin KaFai Lau" <martin.lau@linux.dev> wrote:
+On 5/17/25 03:18, Sumanth Gavini wrote:
+>   Fix misspelling reported by codespell
+> 
+> Signed-off-by: Sumanth Gavini <sumanth.gavini@yahoo.com>
+> ---
+>   Documentation/ABI/testing/sysfs-devices-power | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-devices-power b/Documentation/ABI/testing/sysfs-devices-power
+> index 54195530e97a..d3da88b26a53 100644
+> --- a/Documentation/ABI/testing/sysfs-devices-power
+> +++ b/Documentation/ABI/testing/sysfs-devices-power
+> @@ -56,7 +56,7 @@ Date:		January 2009
+>   Contact:	Rafael J. Wysocki <rjw@rjwysocki.net>
+>   Description:
+>   		The /sys/devices/.../async attribute allows the user space to
+> -		enable or diasble the device's suspend and resume callbacks to
+> +		enable or disable the device's suspend and resume callbacks to
+>   		be executed asynchronously (ie. in separate threads, in parallel
+>   		with the main suspend/resume thread) during system-wide power
+>   		transitions (eg. suspend to RAM, hibernation).
 
->=20
->=20On 5/16/25 7:17 AM, Jiayuan Chen wrote:
->=20
->=20>=20
->=20> The sk->sk_socket is not locked or referenced in backlog thread, an=
-d
-> >=20
->=20>  during the call to skb_send_sock(), there is a race condition with
-> >=20
->=20>  the release of sk_socket. All types of sockets(tcp/udp/unix/vsock)
-> >=20
->=20>  will be affected.
-> >=20
->=20>  Race conditions:
-> >=20
->=20>  '''
-> >=20
->=20>  CPU0 CPU1
-> >=20
->=20>  backlog::skb_send_sock
-> >=20
->=20>  sendmsg_unlocked
-> >=20
->=20>  sock_sendmsg
-> >=20
->=20>  sock_sendmsg_nosec
-> >=20
->=20>  close(fd):
-> >=20
->=20>  ...
-> >=20
->=20>  ops->release() -> sock_map_close()
-> >=20
->=20>  sk_socket->ops =3D NULL
-> >=20
->=20>  free(socket)
-> >=20
->=20>  sock->ops->sendmsg
-> >=20
->=20>  ^
-> >=20
->=20>  panic here
-> >=20
->=20>  '''
-> >=20
->=20>  The ref of psock become 0 after sock_map_close() executed.
-> >=20
->=20>  '''
-> >=20
->=20>  void sock_map_close()
-> >=20
->=20>  {
-> >=20
->=20>  ...
-> >=20
->=20>  if (likely(psock)) {
-> >=20
->=20>  ...
-> >=20
->=20>  // !! here we remove psock and the ref of psock become 0
-> >=20
->=20>  sock_map_remove_links(sk, psock)
-> >=20
->=20>  psock =3D sk_psock_get(sk);
-> >=20
->=20>  if (unlikely(!psock))
-> >=20
->=20>  goto no_psock; <=3D=3D=3D Control jumps here via goto
-> >=20
->=20>  ...
-> >=20
->=20>  cancel_delayed_work_sync(&psock->work); <=3D=3D=3D not executed
-> >=20
->=20>  sk_psock_put(sk, psock);
-> >=20
->=20>  ...
-> >=20
->=20>  }
-> >=20
->=20>  '''
-> >=20
->=20>  Based on the fact that we already wait for the workqueue to finish=
- in
-> >=20
->=20>  sock_map_close() if psock is held, we simply increase the psock
-> >=20
->=20>  reference count to avoid race conditions.
-> >=20
->=20>  With this patch, if the backlog thread is running, sock_map_close(=
-) will
-> >=20
->=20>  wait for the backlog thread to complete and cancel all pending wor=
-k.
-> >=20
->=20>  If no backlog running, any pending work that hasn't started by the=
-n will
-> >=20
->=20>  fail when invoked by sk_psock_get(), as the psock reference count =
-have
-> >=20
->=20>  been zeroed, and sk_psock_drop() will cancel all jobs via
-> >=20
->=20>  cancel_delayed_work_sync().
-> >=20
->=20>  In summary, we require synchronization to coordinate the backlog t=
-hread
-> >=20
->=20>  and close() thread.
-> >=20
->=20>  The panic I catched:
-> >=20
->=20>  '''
-> >=20
->=20>  Workqueue: events sk_psock_backlog
-> >=20
->=20>  RIP: 0010:sock_sendmsg+0x21d/0x440
-> >=20
->=20>  RAX: 0000000000000000 RBX: ffffc9000521fad8 RCX: 0000000000000001
-> >=20
->=20>  ...
-> >=20
->=20>  Call Trace:
-> >=20
->=20>  <TASK>
-> >=20
->=20>  ? die_addr+0x40/0xa0
-> >=20
->=20>  ? exc_general_protection+0x14c/0x230
-> >=20
->=20>  ? asm_exc_general_protection+0x26/0x30
-> >=20
->=20>  ? sock_sendmsg+0x21d/0x440
-> >=20
->=20>  ? sock_sendmsg+0x3e0/0x440
-> >=20
->=20>  ? __pfx_sock_sendmsg+0x10/0x10
-> >=20
->=20>  __skb_send_sock+0x543/0xb70
-> >=20
->=20>  sk_psock_backlog+0x247/0xb80
-> >=20
->=20>  ...
-> >=20
->=20>  '''
-> >=20
->=20>  Reported-by: Michal Luczaj <mhal@rbox.co>
-> >=20
->=20>  Fixes: 4b4647add7d3 ("sock_map: avoid race between sock_map_close =
-and sk_psock_put")
-> >=20
->=20>  Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
-> >=20
->=20>  ---
-> >=20
->=20>  V5 -> V6: Use correct "Fixes" tag.
-> >=20
->=20>  V4 -> V5:
-> >=20
->=20>  This patch is extracted from my previous v4 patchset that containe=
-d
-> >=20
->=20>  multiple fixes, and it remains unchanged. Since this fix is relati=
-vely
-> >=20
->=20>  simple and easy to review, we want to separate it from other fixes=
- to
-> >=20
->=20>  avoid any potential interference.
-> >=20
->=20>  ---
-> >=20
->=20>  net/core/skmsg.c | 8 ++++++++
-> >=20
->=20>  1 file changed, 8 insertions(+)
-> >=20
->=20>  diff --git a/net/core/skmsg.c b/net/core/skmsg.c
-> >=20
->=20>  index 276934673066..34c51eb1a14f 100644
-> >=20
->=20>  --- a/net/core/skmsg.c
-> >=20
->=20>  +++ b/net/core/skmsg.c
-> >=20
->=20>  @@ -656,6 +656,13 @@ static void sk_psock_backlog(struct work_stru=
-ct *work)
-> >=20
->=20>  bool ingress;
-> >=20
->=20>  int ret;
-> >=20
->=20>  > + /* Increment the psock refcnt to synchronize with close(fd) pa=
-th in
-> >=20
->=20>  + * sock_map_close(), ensuring we wait for backlog thread completi=
-on
-> >=20
->=20>  + * before sk_socket freed. If refcnt increment fails, it indicate=
-s
-> >=20
->=20>  + * sock_map_close() completed with sk_socket potentially already =
-freed.
-> >=20
->=20>  + */
-> >=20
->=20>  + if (!sk_psock_get(psock->sk))
-> >=20
->=20
-> This seems to be the first use case to pass "psock->sk" to "sk_psock_ge=
-t()".
->=20
->=20I could have missed the sock_map details here. Considering it is raci=
-ng with sock_map_close() which should also do a sock_put(sk) [?],
->=20
->=20could you help to explain what makes it safe to access the psock->sk =
-here?
->=20
->=20>=20
->=20> + return;
-> >=20
->=20>  mutex_lock(&psock->work_mutex);
-> >=20
->=20>  while ((skb =3D skb_peek(&psock->ingress_skb))) {
-> >=20
->=20>  len =3D skb->len;
-> >=20
->=20>  @@ -708,6 +715,7 @@ static void sk_psock_backlog(struct work_struc=
-t *work)
-> >=20
->=20>  }
-> >=20
->=20>  end:
-> >=20
->=20>  mutex_unlock(&psock->work_mutex);
-> >=20
->=20>  + sk_psock_put(psock->sk, psock);
-> >=20
->=20>  }
-> >=20
->=20>  > struct sk_psock *sk_psock_init(struct sock *sk, int node)
-> >
->
+cc linux-pm, documentation list and PM maintainers on this patch. Looks like
+get_maintainers.pl doesn't give you the complete list.
 
-Hi Martin,
-
-Using 'sk_psock_get(psock->sk)' in the workqueue is safe because
-sock_map_close() only reduces the reference count of psock to zero, while
-the actual memory release is fully handled by the RCU callback: sk_psock_=
-destroy().
-
-In sk_psock_destroy(), we first cancel_delayed_work_sync() to wait for th=
-e
-workqueue to complete, and then perform sock_put(psock->sk). This means w=
-e
-already have an explicit synchronization mechanism in place that guarante=
-es
-safe access to both psock and psock->sk in the workqueue context.
-
-Thanks.
+thanks,
+-- Shuah
