@@ -1,126 +1,162 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D18D0184E;
-	Thu, 22 May 2025 17:06:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1883615A85A;
+	Thu, 22 May 2025 17:07:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747933613; cv=none; b=ol612tKN1tGKpgwTXlcSdoFuS3ELjVDGW+FFYgtHoIyxrltc0yhvjUnTZqhY1HZzZzclQ4YxMKY+7KPaaY5h7FKr5U/Iw9ABEIwH4iUMFcOTxANX+84nXYWUkObvZg0fhqvUQ3gnY89ENBN99H6cLMfgFsohquh6/UNtveKg5Ws=
+	t=1747933668; cv=none; b=ZahixwKoCULfOdZoy0l1MeahvdPvOeaBeAngh7WuAdoBVdfx5WjpQ3vQ23evMcBPG3O04W2FRYOoeOnUWOHXptP7vtmQpiCHOvxSVfFuqnuN40OeNRRLjtP+OX3VieUO14yQCc91UVUIN89SUqyrVjNdeM6Abms0IiuBdRLgKTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747933613; c=relaxed/simple;
-	bh=Xrq8IL2vFlNFiAWRKzVMFO5UYY1UmJBFHebhTXzI1EA=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=hrDsxz5STX1aw5TI+FvqiBl4USugp0TkvXralAX/IgIG/4nxwOjd55E1btyWEgqZWFRYT7yJ63rLn0FmKEU0Gz6r9vqUejjZHMFM7TXI57Zv1+hSJlzYYAoGgYp4l7okHOl/tPVw7he6kb4qLGBArSW5z7SBcuM/SX0WUo0TecI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AxoYyJEL; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747933668; c=relaxed/simple;
+	bh=xGm4gGN4zrT0UXQUtb8Q82nSx7dmZ58S0QFDxN4SRrQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nZxuiGSQn8+lCbvHx9X/oz3PGZO79R00IbzV2Nl5l/iy0Xk2gtgloJ+gEhJQEnktybnfjfavKtfkoQlEj1J6Y0H2CRaRGnQLzfCRAMaPBZKTnUcZb1TypQfCyCRFMdlyLI41yx9hwzT4BpZ9Z+unOD2keaWRVA6G7rGRvjY/rqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=g8lItOQa; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AxoYyJEL"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-476ac73c76fso118503391cf.0;
-        Thu, 22 May 2025 10:06:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747933610; x=1748538410; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Vqz4uQ6Mi4Zp+A95QCJrlEDt3IrPpTzX/7MsZrQkvuY=;
-        b=AxoYyJELsTiZGF9fICZ3F84JGmxiHeRAyEilQFKqjs2Q4jVlDYHP/q2vI/OMzMevqf
-         UlVxJKCOtPat37z1R00ifnvy+h1PWChWzXPj0mvAt/I7SItojDWnU4J1FXl3Jvz81pTg
-         +Febii3qv4QkmT4LrM5Xn9HeOt04deGF6o0dd/DFEFfnINHQNw96vuAoWuh9UQhkNBTU
-         rKvjH05CO8rVKZNb/MfjE44hZKkHoG9xIaGmxA0RypMx5mjHsrCZ/GsjN2nIk6eexdbd
-         YCkilEd9kUx2+Vsv5zi62FKnmZ7gax9rOt6uWPEHGVjJu1XMoAKyuhqeO2pfZvZRWVni
-         +JuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747933610; x=1748538410;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Vqz4uQ6Mi4Zp+A95QCJrlEDt3IrPpTzX/7MsZrQkvuY=;
-        b=nM48T2rO36TNS2a/A4Aq24h9lN5HxfeCLpApWU8yaHe5LS70GrPk4UsmCbdu3fcK70
-         tRCWeazn15ba9oQRm2QnvWUd1AbhTeRdlFkQM8Yog65jZJEtSzTCYiqwphivU9rJESWt
-         MCqRsBtu965kNThJqTpPEgvNl0Ob2APtcuoErqJ+EhBaOaHaEVRM7xI5hAkjnZVpewIW
-         dVvH03xD2AspKm+ikFyHs4frVOMfQbdj78Lo30xGnyClWSEq7dutDirMFmdWdP55v4mq
-         eIpKUonjP7TJKwGrybyoqes5nkbB+uzWKKBuQF/fAkpODuyWldLmxPs7nhC5dsiDlV9M
-         fN6A==
-X-Forwarded-Encrypted: i=1; AJvYcCWFuVE+9eo3TprKrNloJ7JEO/ysAmWAlCne3Q1VNQJ63PM/SHLJtp1TFwzH7WJ/uTeXzaWIIi2CJXmUdSs=@vger.kernel.org, AJvYcCWdbPFS42yKVnsh8adYZ71YYbX5ZlWbcotb60n+KG/6eoaP9xnnXDANFmuCXVzempSGvpZYIHEO@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiuZIYylgf5FHOw/lGBXKP4fftqfi1pglvjA7yW/gwKs9PwKbW
-	Mui7XObc82wS0IiT2fsy72ti845R8t2gAA+B06f8+zzGB252VCM3AFFh
-X-Gm-Gg: ASbGncs1WqxjOaP9hPN0OEZeNCU5Ui0d/P1AaoWPG8lrfHSNbqCZJVTkmFHTawFLcwb
-	z0p1GMzKLot7oaMI7qdZGawPqbjVF/8AH33h4+M7e+OuxATcUOrvOlM7EEWKgUSTKTKeNkryh/p
-	5AaJ08uxctjhGyL95yS8zb7YJNbX8vWF0KQek8qAJvaQdnktk+BgdrI5ngc3ZxL4JfcseRzDh0T
-	/pj3RGRAsHviacyC7nTJJui0wNSncC5vSJRupZRyBdQ6VjqVwYGY2T1lDG8YqLBUlndbY0a/lEv
-	M9PIgNdcrC/vu7vanumEaH5nT0SEK5pxD3zGss/yitpHbdua5MzW+5DBYq/0952iFHwjT5nKUPu
-	iQg4MJmOvhWlC8UYsj1rGsk0=
-X-Google-Smtp-Source: AGHT+IEGDWqUbNThCKT87ztwaE/lAdSrYVWFPyDYaua7c+9Il+9cIbYYQSfVU0q3Jm88R5lZgZ8UIg==
-X-Received: by 2002:ac8:718a:0:b0:476:ad9d:d4e9 with SMTP id d75a77b69052e-494ae3d6caamr253225061cf.24.1747933610635;
-        Thu, 22 May 2025 10:06:50 -0700 (PDT)
-Received: from localhost (23.67.48.34.bc.googleusercontent.com. [34.48.67.23])
-        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-497ae224a4bsm76673711cf.76.2025.05.22.10.06.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 10:06:49 -0700 (PDT)
-Date: Thu, 22 May 2025 13:06:49 -0400
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-To: Stanislav Fomichev <stfomichev@gmail.com>, 
- netdev@vger.kernel.org
-Cc: davem@davemloft.net, 
- edumazet@google.com, 
- kuba@kernel.org, 
- pabeni@redhat.com, 
- willemdebruijn.kernel@gmail.com, 
- horms@kernel.org, 
- stfomichev@gmail.com, 
- linux-kernel@vger.kernel.org, 
- syzbot+b191b5ccad8d7a986286@syzkaller.appspotmail.com
-Message-ID: <682f59a9887be_12c79229452@willemb.c.googlers.com.notmuch>
-In-Reply-To: <20250522031129.3247266-1-stfomichev@gmail.com>
-References: <20250522031129.3247266-1-stfomichev@gmail.com>
-Subject: Re: [PATCH net v2] af_packet: move notifier's packet_dev_mc out of
- rcu critical section
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="g8lItOQa"
+Received: from pendragon.ideasonboard.com (179.218-130-109.adsl-dyn.isp.belgacom.be [109.130.218.179])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 55C8D8FA;
+	Thu, 22 May 2025 19:07:21 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1747933641;
+	bh=xGm4gGN4zrT0UXQUtb8Q82nSx7dmZ58S0QFDxN4SRrQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=g8lItOQaLgm7Hr4+9r7MBGx6km1W6nU55kF0PGEVDDq7BS/91knDhvLOw3WmjQh0S
+	 M7PAn4PuoXTBqct/GknMEqaTbt46Jb138ErEkgfghTcFGyf7j3K5VHNj9zHk4h9m1S
+	 cMm+emLnjaWu0PwBwKc7K30tig8XFZN1ta+IW/sk=
+Date: Thu, 22 May 2025 19:07:36 +0200
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: git@apitzsch.eu
+Cc: Ricardo Ribalda <ribalda@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 4/5] media: dt-bindings: sony,imx214: Deprecate
+ property clock-frequency
+Message-ID: <20250522170736.GW12514@pendragon.ideasonboard.com>
+References: <20250521-imx214_ccs_pll-v3-0-bfb4a2b53d14@apitzsch.eu>
+ <20250521-imx214_ccs_pll-v3-4-bfb4a2b53d14@apitzsch.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250521-imx214_ccs_pll-v3-4-bfb4a2b53d14@apitzsch.eu>
 
-Stanislav Fomichev wrote:
-> Syzkaller reports the following issue:
-> 
->  BUG: sleeping function called from invalid context at kernel/locking/mutex.c:578
->  __mutex_lock+0x106/0xe80 kernel/locking/mutex.c:746
->  team_change_rx_flags+0x38/0x220 drivers/net/team/team_core.c:1781
->  dev_change_rx_flags net/core/dev.c:9145 [inline]
->  __dev_set_promiscuity+0x3f8/0x590 net/core/dev.c:9189
->  netif_set_promiscuity+0x50/0xe0 net/core/dev.c:9201
->  dev_set_promiscuity+0x126/0x260 net/core/dev_api.c:286 packet_dev_mc net/packet/af_packet.c:3698 [inline]
->  packet_dev_mclist_delete net/packet/af_packet.c:3722 [inline]
->  packet_notifier+0x292/0xa60 net/packet/af_packet.c:4247
->  notifier_call_chain+0x1b3/0x3e0 kernel/notifier.c:85
->  call_netdevice_notifiers_extack net/core/dev.c:2214 [inline]
->  call_netdevice_notifiers net/core/dev.c:2228 [inline]
->  unregister_netdevice_many_notify+0x15d8/0x2330 net/core/dev.c:11972
->  rtnl_delete_link net/core/rtnetlink.c:3522 [inline]
->  rtnl_dellink+0x488/0x710 net/core/rtnetlink.c:3564
->  rtnetlink_rcv_msg+0x7cf/0xb70 net/core/rtnetlink.c:6955
->  netlink_rcv_skb+0x219/0x490 net/netlink/af_netlink.c:2534
-> 
-> Calling `PACKET_ADD_MEMBERSHIP` on an ops-locked device can trigger
-> the `NETDEV_UNREGISTER` notifier, which may require disabling promiscuous
-> and/or allmulti mode. Both of these operations require acquiring
-> the netdev instance lock.
-> 
-> Move the call to `packet_dev_mc` outside of the RCU critical section.
-> The `mclist` modifications (add, del, flush, unregister) are protected by
-> the RTNL, not the RCU. The RCU only protects the `sklist` and its
-> associated `sks`. The delayed operation on the `mclist` entry remains
-> within the RTNL.
-> 
-> Reported-by: syzbot+b191b5ccad8d7a986286@syzkaller.appspotmail.com
-> Closes: https://syzkaller.appspot.com/bug?extid=b191b5ccad8d7a986286
-> Fixes: ad7c7b2172c3 ("net: hold netdev instance lock during sysfs operations")
-> Signed-off-by: Stanislav Fomichev <stfomichev@gmail.com>
+Hi André,
 
-Reviewed-by: Willem de Bruijn <willemb@google.com>
+Thank you for the patch.
+
+On Wed, May 21, 2025 at 09:34:27PM +0200, André Apitzsch via B4 Relay wrote:
+> From: André Apitzsch <git@apitzsch.eu>
+> 
+> Deprecate the clock-frequency property in favor of assigned-clock-rates.
+> 
+> While at it, re-order properties according to coding style and fix the
+> link-frequency in the example.  See commit acc294519f17 ("media: i2c:
+> imx214: Fix link frequency validation").
+> 
+> Signed-off-by: André Apitzsch <git@apitzsch.eu>
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> ---
+>  .../devicetree/bindings/media/i2c/sony,imx214.yaml | 29 ++++++++++++----------
+>  1 file changed, 16 insertions(+), 13 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml b/Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml
+> index 0162eec8ca993a7614d29908f89fa9fe6d4b545d..aea99ebf8e9ed15f8066841228d9fdecc822b553 100644
+> --- a/Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml
+> +++ b/Documentation/devicetree/bindings/media/i2c/sony,imx214.yaml
+> @@ -33,20 +33,21 @@ properties:
+>  
+>    clock-frequency:
+>      description: Frequency of the xclk clock in Hz.
+> +    deprecated: true
+>  
+>    enable-gpios:
+>      description: GPIO descriptor for the enable pin.
+>      maxItems: 1
+>  
+> -  vdddo-supply:
+> -    description: Chip digital IO regulator (1.8V).
+> -
+>    vdda-supply:
+>      description: Chip analog regulator (2.7V).
+>  
+>    vddd-supply:
+>      description: Chip digital core regulator (1.12V).
+>  
+> +  vdddo-supply:
+> +    description: Chip digital IO regulator (1.8V).
+> +
+>    flash-leds: true
+>    lens-focus: true
+>  
+> @@ -84,11 +85,10 @@ required:
+>    - compatible
+>    - reg
+>    - clocks
+> -  - clock-frequency
+>    - enable-gpios
+> -  - vdddo-supply
+>    - vdda-supply
+>    - vddd-supply
+> +  - vdddo-supply
+>    - port
+>  
+>  unevaluatedProperties: false
+> @@ -104,22 +104,25 @@ examples:
+>          camera-sensor@1a {
+>              compatible = "sony,imx214";
+>              reg = <0x1a>;
+> -            vdddo-supply = <&pm8994_lvs1>;
+> -            vddd-supply = <&camera_vddd_1v12>;
+> +
+> +            clocks = <&camera_clk>;
+> +            assigned-clocks = <&camera_clk>;
+> +            assigned-clock-rates = <24000000>;
+> +
+> +            enable-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
+> +
+>              vdda-supply = <&pm8994_l17>;
+> +            vddd-supply = <&camera_vddd_1v12>;
+> +            vdddo-supply = <&pm8994_lvs1>;
+> +
+>              lens-focus = <&ad5820>;
+> -            enable-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
+> -            clocks = <&camera_clk>;
+> -            clock-frequency = <24000000>;
+>  
+>              port {
+>                  imx214_ep: endpoint {
+>                      data-lanes = <1 2 3 4>;
+> -                    link-frequencies = /bits/ 64 <480000000>;
+> +                    link-frequencies = /bits/ 64 <600000000>;
+>                      remote-endpoint = <&csiphy0_ep>;
+>                  };
+>              };
+>          };
+>      };
+> -
+> -...
+
+-- 
+Regards,
+
+Laurent Pinchart
