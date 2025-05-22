@@ -1,222 +1,123 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A6A228A700
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 12:50:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 191202F41;
+	Thu, 22 May 2025 12:50:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747918227; cv=none; b=N3hG11o+WggYwa0Fw2oIZFmqacMuC7qB/bGEv5gp/gXxkcLV2dfIylj63rAug8YKaIgqwcjSWneDg5JA9zwv/rAu5aCCLHKTLJrcO/0nnbF3y8pFjyUe6pdr4dIzrZFwTtB8UO2lCqLtLtVUhjvQDR7lKXXJMsD3KzFwXEYXXFM=
+	t=1747918259; cv=none; b=P9Xz14xa+uyUuNaYs+fKfROd4/52XXOSFDjnNRnd8KWxUjCWdm5GSwHE/qlALJUi979jrJBebyti+acJLpLAsYbJG32/tyXp5SHnpJG9vtesxijRVMHE070fa8DAJGV14TWckv9FwxOrlAWvnLhZkN7m2zwEHGYk3Ld3FXc5cs4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747918227; c=relaxed/simple;
-	bh=QpkY9r1mt0Qh6PDkfZqElFxquznfMB6ymlK6B2iiEu4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bJIFruKXTzFmnOM8XjkEms5jovD8Wi1FqouhmWNtw6S/UfGGGdTyGm8crc5UcH2sPh6S/v3Er6P8QyWmmGSZWHtZJJ+lRYvi/Lrk0JfarZoQh4ifZav/BSGCacMnut8/ofFrp8Iw7U1Y2VTDbBz+nQPD6fe4P2TUlcXCtlWdGe4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KDIuJ2G8; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747918259; c=relaxed/simple;
+	bh=AmQ+WbfG9xtw0Z+jRNSrCJrEUIrK7Wv3brjyfx7Lyiw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YnY6abJpbIWz9UaPvPyYIzmy/yGq5Dxk7Gpx294MA32HglFAsHa3/UPKqWyd3YGOQ7tsXkLhuajdr/JLn+hm3hFIDrvVgttJ+OB2ox65T9m6GIYZwjE6wbmMYfzJOt9SQeWmKNn/dQnPOMhj0KYW1qrXPPrCUGObD1RROOuKtls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Fe+uMmjt; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KDIuJ2G8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747918225;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=fx6oiSpfXxbM5W7Ps+W13NostgzfLtcsszzWV/K4XTM=;
-	b=KDIuJ2G8cJN2AcfXnyCHNa5oEKoVKfj5qWrbpObAMH4KF0Z1bMxY+IS5l6lq2mdIjCxO1v
-	vyxlEkPd7HAwtYsx9Qb/pNR23V51OZ+Y6/bEPcEQHqlgajvUQhYENiK55nl8V1Yv1GK7Zt
-	3vgl3boMZFDaEIkStnYNfW0N6dxCwHg=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-642-62JWVTnqOeCvaD5O5f0LBA-1; Thu, 22 May 2025 08:50:23 -0400
-X-MC-Unique: 62JWVTnqOeCvaD5O5f0LBA-1
-X-Mimecast-MFC-AGG-ID: 62JWVTnqOeCvaD5O5f0LBA_1747918223
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a379218f6cso1528708f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 05:50:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747918222; x=1748523022;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=fx6oiSpfXxbM5W7Ps+W13NostgzfLtcsszzWV/K4XTM=;
-        b=ObbJoUAZsePgaCNDXZ+WobhmoCnrS5zvnjJZkYiUhSHwTGCPbKWscFepHcIrFLAu04
-         BLs9tJTpiws+Ah8tAgxofBgYQKtluN3TZHYFxMGxnj9neQ7ugajITJFglmL9nLt9NbzK
-         eIKyrV+jhZUieBLmynTHNmAbWqe8p+F6V7eDLunJl91WA/NetxSwAPgndA9PQgeU9j6/
-         7EpeKnYovSblMYyS3nnHDxAL2K4Mc2BCYnIPj9kMC+2IU03jx+rMHTzfGFVTb++YlSav
-         5ADvrwxfMlmu+VUBub+07goSU5ruJnj1wQ1iCvD+/8t3W2K00sJim2xMPHxeBzYYnz6D
-         1yhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVFLWSHe9v1je4SSCQLOqrL7KLr0617CgFegT8LbFDtoBJqXT0r7/wcAeL/LTdcxYMi6Q+gCGy/Ge+BqtI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzBL2PgIXwf9feM1x4cwJAfObzqv8B968pfh+wmTiR+KFmu15Sz
-	V4deUn6wj+PF5tvJ0Lu7w1QgmsW2NxAG8XHwV+LipcWsirrtI6jNo0vwfhlM3gxmKBl7vAk7ypI
-	h4/qPdoIwuF3yOPfspLY9nov88lW1lzOsXZj0LCcTBvo9MUxROKr9f3+Q7v7FRGwrww==
-X-Gm-Gg: ASbGnctRWR5rCp65vT3FQwESbidwcWczrmdDjPVTBNCuE1CPJjNINBxLOv8KsfXflWk
-	hmTHBBKzY4/FW/TbFs/sKc5aS0ZzH7FGCii6G+vM3Kh2tHLip2opevfZJ5guM2Aj7zp+Hy0KcZn
-	Or2ITFZlbIgIWRikNjgnB8KC18ccgFcQh0eDyLm+nOH5zFd1noLGKFWmYdVVE/xOOLXKMV5bVou
-	5K7b5rFHWnsJY2+PxGo1OyuV8RJLkPgG7KLjuSQjm9eWmTdlsbtHx6S8atN9Piu54/M5fxtO2W0
-	BCHgNquAqxxinhkG6YoYjssKf3lBxfCvuzaP5RtClhDcz2YH8berAamWPRX5W6JdWwN+ekVENHK
-	NvGqJkSD6YQ9aWG4FSSvx4SLdlcuA/DmXwn2W5Ac=
-X-Received: by 2002:a05:6000:2282:b0:3a3:7bbc:d940 with SMTP id ffacd0b85a97d-3a37bbcdbe0mr11775961f8f.39.1747918222498;
-        Thu, 22 May 2025 05:50:22 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE+kyGLojq8h/T8VO4XZrWF8YZH8eZH2PYErLG2heEckxcUG749bgICqDS3VcMXObIs6BDDSw==
-X-Received: by 2002:a05:6000:2282:b0:3a3:7bbc:d940 with SMTP id ffacd0b85a97d-3a37bbcdbe0mr11775923f8f.39.1747918222139;
-        Thu, 22 May 2025 05:50:22 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f22:2e00:6e71:238a:de9f:e396? (p200300d82f222e006e71238ade9fe396.dip0.t-ipconnect.de. [2003:d8:2f22:2e00:6e71:238a:de9f:e396])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f7bae847sm100971515e9.36.2025.05.22.05.50.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 May 2025 05:50:21 -0700 (PDT)
-Message-ID: <eab4b461-9717-47df-8d56-c303c3f6012d@redhat.com>
-Date: Thu, 22 May 2025 14:50:20 +0200
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Fe+uMmjt"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=ziV+qFWQFPGemtwtFuQ2yto/+aZFcx7ZXSBvpy3WpXs=; b=Fe+uMmjtdt4LUngmv3HG9SnhGa
+	ae1zfCnl9CkSjiudDhV24Xr3nhTqPUAd0fp+PeA8Dm7cZTkUmNC0BCN9fsFkZdNc+VRHiRJ6Ru+gL
+	WKMEE9yXPOyV1bECHpNIcwT59ilUoK+dAMpkgpZoRtjOimeLgLMNSZDASTdZoGWju0Rw=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uI5No-00DUjP-Ee; Thu, 22 May 2025 14:50:48 +0200
+Date: Thu, 22 May 2025 14:50:48 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Quentin Schulz <quentin.schulz@cherry.de>
+Cc: Quentin Schulz <foss+kernel@0leil.net>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Jakob Unterwurzacher <jakob.unterwurzacher@cherry.de>,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Kever Yang <kever.yang@rock-chips.com>
+Subject: Re: [PATCH 2/2] arm64: dts: rockchip: support Ethernet Switch
+ adapter for RK3588 Jaguar
+Message-ID: <9c99aba9-87f5-41fe-8b11-7ef27525750c@lunn.ch>
+References: <20250521-jaguar-mezz-eth-switch-v1-0-9b5c48ebb867@cherry.de>
+ <20250521-jaguar-mezz-eth-switch-v1-2-9b5c48ebb867@cherry.de>
+ <657a085c-4214-4096-8a68-047d57a40d60@lunn.ch>
+ <19574942-d06b-44b0-8b6c-d3ddd94db89f@cherry.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC v2 0/2] add THP_HUGE_ZERO_PAGE_ALWAYS config option
-To: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-Cc: Mike Rapoport <rppt@kernel.org>, Pankaj Raghav <p.raghav@samsung.com>,
- Suren Baghdasaryan <surenb@google.com>, Vlastimil Babka <vbabka@suse.cz>,
- Ryan Roberts <ryan.roberts@arm.com>, Michal Hocko <mhocko@suse.com>,
- Thomas Gleixner <tglx@linutronix.de>, Nico Pache <npache@redhat.com>,
- Dev Jain <dev.jain@arm.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
- Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
- "H . Peter Anvin" <hpa@zytor.com>, Zi Yan <ziy@nvidia.com>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>, Jens Axboe <axboe@kernel.dk>,
- linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- "Darrick J . Wong" <djwong@kernel.org>, gost.dev@samsung.com, hch@lst.de,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, willy@infradead.org,
- x86@kernel.org, mcgrof@kernel.org
-References: <20250522090243.758943-1-p.raghav@samsung.com>
- <aC8LGDwJXvlDl866@kernel.org>
- <6lhepdol4nlnht7elb7jx7ot5hhckiegyyl6zeap2hmltdwb5t@ywsaklwnakuh>
- <6894a8b1-a1a7-4a35-8193-68df3340f0ad@redhat.com>
- <625s5hffr3iz35uv4hts4sxpprwwuxxpbsmbvasy24cthlsj6x@tg2zqm6v2wqm>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <625s5hffr3iz35uv4hts4sxpprwwuxxpbsmbvasy24cthlsj6x@tg2zqm6v2wqm>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <19574942-d06b-44b0-8b6c-d3ddd94db89f@cherry.de>
 
-On 22.05.25 14:34, Pankaj Raghav (Samsung) wrote:
-> Hi David,
+On Thu, May 22, 2025 at 10:18:12AM +0200, Quentin Schulz wrote:
+> Hi Andrew,
 > 
->>>    config ARCH_WANTS_THP_SWAP
->>>           def_bool n
->>> -config ARCH_WANTS_THP_ZERO_PAGE_ALWAYS
->>> +config ARCH_WANTS_HUGE_ZERO_PAGE_ALWAYS
->>>           def_bool n
->>> +config HUGE_ZERO_PAGE_ALWAYS
->>
->> Likely something like
->>
->> PMD_ZERO_PAGE
->>
->> Will be a lot clearer.
+> On 5/21/25 6:25 PM, Andrew Lunn wrote:
+> > > +&gmac1 {
+> > > +	clock_in_out = "output";
+> > > +	phy-mode = "rgmii";
+> > 
+> > Does the PCB have extra long clock lines to implement the 2ns delays?
+> > 
 > 
-> Sounds much better :)
+> Not that I am aware no.
 
-And maybe something like
-
-"STATIC_PMD_ZERO_PAGE"
-
-would be even clearer.
-
-The other one would be the dynamic one.
+So 'rgmii-id' describes the hardware.
 
 > 
->>
->>> +       def_bool y> +       depends on HUGETLB_PAGE &&
->> ARCH_WANTS_HUGE_ZERO_PAGE_ALWAYS
->>
->> I suspect it should then also be independent of HUGETLB_PAGE?
+> The issue here is that I believe the Linux driver actually got the whole
+> phy-mode thing wrong?
+
+Quite possible, a few drivers do.
+
+> drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
 > 
-> You are right. So we don't depend on any of these features.
+> First, tx_delay defaults to 0x30 if absent, rx_delay to 0x10 if absent,
+> which seems a bit odd but why not.
 > 
->>
->>> +       help
->>> +         Typically huge_zero_folio, which is a huge page of zeroes, is allocated
->>> +         on demand and deallocated when not in use. This option will always
->>> +         allocate huge_zero_folio for zeroing and it is never deallocated.
->>> +         Not suitable for memory constrained systems.
->>
->> I assume that code then has to live in mm/memory.c ?
+> Then you have rk_gmac_powerup() handling the delays.
 > 
-> Hmm, then huge_zero_folio should have always been in mm/memory.c to
-> begin with?
+> If RGMII, then use rx_delay and tx_delay. If RGMII-ID, use neither. If
+> RGMII-RXID use tx_delay. If RGMII-TXID use rx_delay.
 > 
+> This is the complete opposite of what I was expecting?
 
-It's complicated. Only do_huge_pmd_anonymous_page() (and fsdax) really 
-uses it, and it may only get mapped into a process under certain 
-conditions (related to THP / PMD handling).
+This driver, and the aspeed driver cause a lot of problems....
 
-> I assume probably this was placed in mm/huge_memory.c because the users
-> of this huge_zero_folio has been a part of mm/huge_memory.c?
-
-Yes.
-
+> > Since this has a switch on the other end, its a bit more complicated
+> > with RGMII delays. Normally, the MAC does nothing and passed rgmii-id
+> > to the PHY, and the PHY then does the delays. However, here you don't
+> > have a PHY. So you have the MAC add the delays. This looks O.K. I
 > 
-> So IIUC your comment, we should move the huge_zero_page_init() in the
-> first patch to mm/memory.c and the existing shrinker code can be a part
-> where they already are?
+> The switch actually supports adding delays on the port used for DSA conduit.
 
-Good question. At least the "static" part can easily be moved over. 
-Maybe the dynamic part as well.
+That actually looks to be the simplest and correct solution. Set the
+MAC to 'rgmii-id', rx_delay and tx_delay to 0, even if they are
+ignored. And in the switch, also 'rgmii-id' and let it insert the 2ns
+delay. You can use rx-internal-delay-ps and tx-internal-delay-ps if
+you want, but it seems to default to sensible values.
 
-Worth trying it out and seeing how it looks :)
+> I'm a bit confused by the following sentence:
+> 
+> """
+> Normally, the MAC does nothing and passed rgmii-id
+> """
+> 
+> is this something that the MAC driver is supposed to do or is the subsystem
+> handling that somehow? How do I know how/when to rewrite the phy-mode passed
+> to the PHY?
 
--- 
-Cheers,
+A small number of MACs have hard coded delays. You cannot turn the
+delay off. So the MAC has no choice but to do the delay. 'rgmii' is
+simply not possible, so -EINVAL. For 'rgmii-id', if you pass that to
+the PHY, it will also add a delay, and 4ns in total does not work. So
+when the MAC is adding delays, it needs to mask out the delays it is
+adding before calling phy_attach() passing an rgmii mode.
 
-David / dhildenb
-
+	Andrew
