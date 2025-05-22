@@ -1,106 +1,77 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94E0D288535;
-	Thu, 22 May 2025 09:30:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2377F1AB6F1;
+	Thu, 22 May 2025 09:30:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747906207; cv=none; b=YAW55At+u4wf6leLUohMJga6AQ6wRQYhy1cgJ3zAq1dKej5nGiiYDUktCxqyPbeHep5UJS/7567G7dRB8x/9LNxNm5yw/LJTdvR2QwFrRGBDc73vs3tslyTmNjYg2VpTh4UAtynz0TAfzHf8e34YYuvbbn1N35JZLN6xOUV9Jhw=
+	t=1747906260; cv=none; b=lNXOUZRfdMbnpo2WNFnHKqfkPsqAgHCzyXwO6iGBAualCpG+KQbOgQrb0bVPDgVb5xuZF/mBQ17FdC7L3bQUoWUASYCqw1yxvU+vGPVmjGbo2LZfrnspB7c6/k8iOSCkFWEMx64QXKFJhxOLImkvnjstnLChxtzeh8eJg6jCsuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747906207; c=relaxed/simple;
-	bh=lFkLA3mCN5Zc7iN6ia2qqsL8B/9v2WkT8vIEHAa/Hvo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AtCG9Rj3GZLq5dU1f7oiEPkpQ498aqF2HS55aDLZde0efewUIhVUovwpzVMo5HCG5ymb79WdN2EHytzDThqXyS6WJV5eiHmMXM8jAWWtHkutMpoapkpt0zuNcP8fKIs9+2ZMmLileP9Qt3lXdsT0/EkCRmYwbXxWfusOKZtpNHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tomeuvizoso.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-acbb85ce788so1511197066b.3;
-        Thu, 22 May 2025 02:30:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747906204; x=1748511004;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=P9imWNVpcHY4/YQmn253SAWo0LBrDG5vEkbvmzjj06E=;
-        b=nrWU9XX5ROTG66rj09DmYgezHp79+ZVxcP9Zc+OQzirBzeb3Vl8/RYX1DxuljN9QW/
-         RoIBdA/sk0O4k9xeS8ix0qYKtdblWvmnziCCgMnWOzlCS8HEpCojFwKG98tMxotZJf4I
-         SyuWtKiEDvkMNeWPbrwvgZiF6bbDOBIPahGrN6CcjV3iLVi2OZWbSxsCT0W8/D8aWvvk
-         aD8ZEpfPFb7AmAEREwaF+bIRnDfu5kQy3NIxUHxMUOBBZQni4BTrtMLbJMBh6zh9i80g
-         NSqu2IsVHz46o/eOnfal79n/0hmwUIuqfSoczYTKO8OFpyWJJvxD+XstV3VcCHbmPxCP
-         u2Pw==
-X-Forwarded-Encrypted: i=1; AJvYcCXo/F48HMgaVceeiAHSBevujNgQrzsnEQlyJQlMrKLD3RQTf7K4b+CkJ6tqhyiV2UJQhFtIlxvIFidH@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvzNyXS0aoX0Ggv1DvnwTGlPPHRcD8nJman2sm/W3g8P5Zy8PK
-	2Sg6PEBkzA09KIBXJLmTq8hHTlQtSEHObo1idGmaNxy9TgnugrzvQLQudTNcJg==
-X-Gm-Gg: ASbGncvaefjo6TjwT+yLEXv+8pkXrVTbs/LPoU7AQ5pIewj6KUvBxJ9VnlYq/JJAwTC
-	Ix11jQSOmyxmUDXOtqE7HhrAAB0+cwXOxdqMw5D3KflGms7j1ZtDSFJxy4LoT0B9l4tLXqeCCSU
-	D9hO2yHOT3YpDTARt6U7swrHOqr04rIEOJk/iV59yQau2mEdBf4Cl4COEvNypayt6cfgSTtg54u
-	d+zVriTIGoUkB40aXiTxSed84S1kyZKQoBGSEqXZc9sVB3eIK1JN8TG3G7NK7ads74bvE4lZ4DV
-	c5zY/+X+BkRSRyLXZrdx3PXHnIvqEr5J34eQxQn66PeISkSm+S1+9nzv8V1aDBa4yDoFMTRYm2U
-	mVXnDgbnQ03IQ
-X-Google-Smtp-Source: AGHT+IH6PGZyeMyvQHBRQvlVXtj8Ud+yS5Bla8HVE2j+rxlb85y3AIQhMi0Fu03PZQrmAkfqeb8vWg==
-X-Received: by 2002:a17:906:6a14:b0:ad2:2e5c:89c5 with SMTP id a640c23a62f3a-ad52d4c511cmr2217008666b.20.1747906203469;
-        Thu, 22 May 2025 02:30:03 -0700 (PDT)
-Received: from ramallet.home (cst-prg-46-162.cust.vodafone.cz. [46.135.46.162])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad52d4ca3bdsm1036951466b.160.2025.05.22.02.30.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 02:30:03 -0700 (PDT)
-From: Tomeu Vizoso <tomeu@tomeuvizoso.net>
-To: linux-kernel@vger.kernel.org
-Cc: Tomeu Vizoso <tomeu@tomeuvizoso.net>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-amlogic@lists.infradead.org
-Subject: [PATCH] arm64: dts: amlogic: Enable the npu node for Alta and VIM3
-Date: Thu, 22 May 2025 11:29:40 +0200
-Message-ID: <20250522092940.3293889-1-tomeu@tomeuvizoso.net>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1747906260; c=relaxed/simple;
+	bh=jCPrtR+co5QtXIxUKcx9Ji16YPvD1Y1ViAthhJhUujg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ssGVYz6S1DQ5dEi2feigBv/u5OQPWJsVGAArMTb3XvH5JCYtg6WYRWidmfv0npOtdpEKVBC74p8/ZMtpWN+3iUhIIefhMRlc3zUK6nmwl80qM9NiGH0Wz5huVHB/55qaN8TUUHQjvoGZ3AMAWaZuHEMQf2B/On3Fl3AWVxyHzqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TGi745s1; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TGi745s1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B7DAC4CEED;
+	Thu, 22 May 2025 09:30:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747906259;
+	bh=jCPrtR+co5QtXIxUKcx9Ji16YPvD1Y1ViAthhJhUujg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=TGi745s1u4AYsh830wUJ5LwNma9da8VcSNHHE3eCXCOIM3KqoaAzLr3RM8Pdn2Elz
+	 13k6JuqkiI0UyQn5GVY69GZyRfgunfJkKM5ibuJUEMxUU2YDFm04xhAALbntxMNJ8n
+	 2yNa86G2RO5WsliYpEWjZhA1+1CNx6uZj3f8nVhA4lAWZsb1xPeWrlDVikn5W8PdRh
+	 nYHGgorgjevnqSA+YlKvsOHSMKXBhJXNNQIdpSVBErGyf/aQprFU2ucRtqb/JPxeWN
+	 rXQMR839P/Q4cVH41/ScCApzd7uUh+fI2pcEmvu+q/CnQFYpUyv3iETRfmApwuPkM5
+	 bay6YxeZh3u/A==
+From: alexs@kernel.org
+To: si.yanteng@linux.dev,
+	corbet@lwn.net,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	jiang.kun2@zte.com.cn
+Cc: Alex Shi <alexs@kernel.org>,
+	xu.xin16@zte.com.cn,
+	yang.yang29@zte.com.cn,
+	wang.yaxin@zte.com.cn,
+	fan.yu9@zte.com.cn,
+	he.peilin@zte.com.cn,
+	tu.qiang35@zte.com.cn,
+	qiu.yutan@zte.com.cn,
+	zhang.yunkai@zte.com.cn,
+	ye.xingchen@zte.com.cn
+Subject: Re: [PATCH linux next v3] Docs/zh_CN: Translate napi.rst to Simplified Chinese
+Date: Thu, 22 May 2025 17:30:25 +0800
+Message-ID: <174790621596.181766.8318425479251968426.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <202505202059281560ibnRharfZKdmfk-fERTt@zte.com.cn>
+References: <202505202059281560ibnRharfZKdmfk-fERTt@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-We now have support in Mesa and everything is ready in distros such as
-Debian.
+From: Alex Shi <alexs@kernel.org>
 
-Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
----
- arch/arm64/boot/dts/amlogic/meson-g12b-a311d-khadas-vim3.dts  | 4 ++++
- arch/arm64/boot/dts/amlogic/meson-g12b-a311d-libretech-cc.dts | 4 ++++
- 2 files changed, 8 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-a311d-khadas-vim3.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-a311d-khadas-vim3.dts
-index 124a80901084..9fd68195be3f 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12b-a311d-khadas-vim3.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b-a311d-khadas-vim3.dts
-@@ -39,3 +39,7 @@ &usb {
- 	phy-names = "usb2-phy0", "usb2-phy1";
- };
-  */
-+
-+&npu {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-a311d-libretech-cc.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-a311d-libretech-cc.dts
-index adedc1340c78..8e9f7e0d4542 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12b-a311d-libretech-cc.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12b-a311d-libretech-cc.dts
-@@ -117,3 +117,7 @@ &cpu103 {
- &pwm_ab {
- 	pinctrl-0 = <&pwm_a_e_pins>, <&pwm_b_x7_pins>;
- };
-+
-+&npu {
-+	status = "okay";
-+};
+On Tue, 20 May 2025 20:59:28 +0800, jiang.kun2@zte.com.cn wrote:
+> translate the "napi.rst" into Simplified Chinese.
+> 
+> Update to commit bf1b8e0abc39("documentation: networking: Add NAPI config")
+> 
+> 
+
+Applied, thanks!
+
+[1/1] Docs/zh_CN: Translate napi.rst to Simplified Chinese
+      commit: 4276b69fcd84f3130552210f6c3be87689bcdb29
+
+Best regards,
 -- 
-2.49.0
-
+Alex Shi <alexs@kernel.org>
