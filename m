@@ -1,111 +1,103 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B8DD3CF58;
-	Thu, 22 May 2025 16:20:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1C797DA73
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 16:21:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747930841; cv=none; b=iePqOWF4u0x7rYsXD9Qqr6FtqrDpwTX7LbXq6Wpyh12Y3sWS08vxh+GQg5r4tWB4FJKAsllCKFBHvQi0Ie5n5njNKHu+elxcebZWlLCnVcdVAeYInVxAJgWCsj66dN9wzkW023Xy+B/iDiWw3bhCfyakotVQMtXtrh2ASwkJiSg=
+	t=1747930875; cv=none; b=jzvG806U6C0bMSloHBWGTLRWFH0I9CaxaH6Xg295EsbEaHWgAV9rE0JynssnDfRZGU/jDt3C8iEK5fMt/x2TuTjl0WT39DJsdph046gWSxRFLf9Q0gLDD5Ik9xWlSmw05U47FUvJwxoCTG3DCMVgGwgzA7xxNOV6feFRPdZYL20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747930841; c=relaxed/simple;
-	bh=vjDOkbQJPeCHQdLjzb80j6kReUjfQOyax0Exyv33VFI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AsgGVPZplnUp5L9RXgopYr37vCWGzlKkbDujJAsFLYN//VZzIi4MIwq03fOmdH3I0OecLpAknR3tlKdFOWW2TQxVbpa8l97++5AWD69hK6AW45ZVoSkRkcvVxD62P1q2aW08ky5tTm/0/iRjB4QRgXb30hqKD0tt3+B2IVVEfUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=g2o6a9L6; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1747930875; c=relaxed/simple;
+	bh=rrLDAIKiEK4nCi+9i4gqRmBlWWl8TS9ByU/6a1reG7A=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=d0SX3JWUFO5eRLigEAywJh0Rgqfg0F1z8tWbcBX2VplMwL0Ivaq5/q0g+GVWCbuLD4HzqUfNxrj8yp5vFp/TqlsGCLLWQnLkms99RS1/gqrg1lTo32ZFzLr8CwqTta4dmAI8c6WWp8onIiryBM89mITWxFEaJj0O7ywIJbleVWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=brighamcampbell.com; spf=pass smtp.mailfrom=brighamcampbell.com; dkim=fail (0-bit key) header.d=brighamcampbell.com header.i=@brighamcampbell.com header.b=kjJRtSdx reason="key not found in DNS"; arc=none smtp.client-ip=209.85.166.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=brighamcampbell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=brighamcampbell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="g2o6a9L6"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 4681940E0238;
-	Thu, 22 May 2025 16:20:35 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id ZEKBJU_o0Asi; Thu, 22 May 2025 16:20:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1747930829; bh=jup7dp1wpyFPvMkHA2/0L8YCzJUVV1Xivs6Wtb8oDF8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=g2o6a9L60Zrk/VI3OcCkCom+2Hn9WIJnCAJEFxlPT0YzQjhW538GToiaBL21HncjJ
-	 mcrKukMGkzjurLXePvSiJLZ8ZWIS9KLFanKG75FXzv/VbySS+wKb77fkvGsAFziKGS
-	 E3flmgW8nqQxfwc3qCoN4E3Yn1PNOVxPfLZFTe7Y9+vxN4hz9NO2TfHhNn6d4GEg+/
-	 GWtH/GBS5+x4/OOLo6qD6vtYl7Q/jN6RAad3DIkqJvLS9AeRPWvgdYhcG163SZVDtD
-	 zb8LSfH6SOkmI/QUJOVgYg2f0X1B+wy3jZZ4u+Sk+yDBA0a7n6hOrKfy371SLSVda3
-	 c2S+GQHcU1xj9O2euwII+AakDlOB6gulERLS9CXT9Rs/FLl4iY2Kli//p/HyQ1onVP
-	 2A1iUB/AOf7R/GCPFm/hHWGViR8xU1bNdqPlyC/lMpxxJqceFnaPhwjpewrDnzSH5b
-	 8ADsEFmcrfG8QzyfXVla4/1Gtm0fPKPbBYUSkCFspzOyNrkmmFqgDC9gnlrkSh9fNN
-	 ksDRlRHRQhW1NpkTq4jrWTlQ4EjQ/lHzx4cz8g/Dci05zoXu8f49olCnMqThi0FzmF
-	 OS46elbeIaR78RhewYxXF5Dclxe0Yd2lRH5BAdG0PSF2uiOOBXtw7T3xrJP7Q7Lar9
-	 c53EguIlmNSThsIW2A4gOG8w=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7A9BA40E0192;
-	Thu, 22 May 2025 16:20:21 +0000 (UTC)
-Date: Thu, 22 May 2025 18:20:15 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: David Thompson <davthompson@nvidia.com>
-Cc: Shravan Ramani <shravankr@nvidia.com>,
-	"tony.luck@intel.com" <tony.luck@intel.com>,
-	"james.morse@arm.com" <james.morse@arm.com>,
-	"mchehab@kernel.org" <mchehab@kernel.org>,
-	"rric@kernel.org" <rric@kernel.org>,
-	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] EDAC/bluefield: dont use bluefield_edac_readl result on
- error
-Message-ID: <20250522162015.GEaC9Ov72e1AEPivj4@fat_crate.local>
-References: <20250318214747.12271-1-davthompson@nvidia.com>
- <PH7PR12MB590226280DF463501FA9D0F8C799A@PH7PR12MB5902.namprd12.prod.outlook.com>
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=brighamcampbell.com header.i=@brighamcampbell.com header.b="kjJRtSdx"
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3d6d6d82633so25826095ab.0
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 09:21:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brighamcampbell.com; s=google; t=1747930873; x=1748535673; darn=vger.kernel.org;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rrLDAIKiEK4nCi+9i4gqRmBlWWl8TS9ByU/6a1reG7A=;
+        b=kjJRtSdxbbKx6m7257Q1Yf5MyDqQiy1gVp6Ghey6vSDA6bxJRB/Yf4rh1yDIOYmr3z
+         quBh8qkb7oMSy5KKqNvva8I8kjRXOXwDaTMqLaAg/g0onePypucRj5qqapQI7jPO4eqM
+         PTjh57Jw5JNMPsv4KCoqrFxEw1F7GWYSCRJJ41lgDpAub9+v/IN5TztiFp95o7SLLsNV
+         gA6Zc6CdTT3IoGJ1Lvh4rYGbOwfnOiGxHshhwINqy3KmE+01nxw1MoMcj+jl4Xfoxud1
+         EyEh6MQVuvCRYjB+uoINWEn295outnc+SUgy1jNdi8gqu9OKA3HZR1PUMxmaWmoVlfXA
+         y+zQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747930873; x=1748535673;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=rrLDAIKiEK4nCi+9i4gqRmBlWWl8TS9ByU/6a1reG7A=;
+        b=DSUQVOQeEzM9RFizzxFZdunsobnb6+QlP5O+nqvMtrXoKgmbmm9n1a88J6ffEJEuqJ
+         QQVpYnR3BnRXE+0krtsk892XzSlEd4ukagj9MH7ydR1ACAQzwgjkgvAPhu4+5ET83JhB
+         qYXIfmCtkN/AYuSMdKJc/DAzFGYz5H9HyFrM/FxAitOC6QtG8K10XDFkIpU7Ny15Kb49
+         YCqsk5IJgiiExax2j4wCfykqTB1r0gI9jz1QaeMq5LY7kB8NEIUBRu/tVP91ZPKF49lq
+         B6wEVVt7a0VIFWxcQeapE3ttjzPgqlFqKuJVaD3j4M3jKTF5j7e8h7nwgpa5lDZj8lhU
+         SZxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU/HY/mEmJxzjZcbcQ5XBAe0c7wgsp3Squ8iIK5fJ5oXCIYyjxJUHg+F1Yb+uYTU66Ckqba0cKgSoqdnFo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCt61o5GjaR7+LOo4AFlPlnQzuXqvQpHJCjrc6QQZ41ykD4JqQ
+	yIY4X9mavpNrWs2FEtygQJfhfxYcp+QUAi49I4w2h7SJNa5z7txmyRgqH3wDkCn5gorfHvnuX5X
+	JOjvoPwHIIw==
+X-Gm-Gg: ASbGncvqRnFJDd5lpURNFMi9Af35SP+65CLupq4Xj5S1BemPU48Deya7UXMp9B5gdm0
+	7LieS1a8M08FiQCObHhOBgUrIUJDjxvgOMWsmbKaEVrywTXviHL8ZT6IlJcRUqngl3N+hPgvHYK
+	mhlCTReXmYl0n0gZz0fJkd1n82g1HUgTIQ5/OwaScQtf6De0GWDffcClsK9IQ4Bd3x0070KoJBR
+	POzq6qgYdqrCKN8KouqMmMmHhiZb8NkGEP3hHMykYsRmvQPZfgEp8F6jZQn5vKUrY7bqfwJMJJG
+	xS6iKrutHCKPJ0LPJWAB+lnKbQAeP+R/W3Rn8ThdIKEJjN6L
+X-Google-Smtp-Source: AGHT+IHOQ0SWVebfgDZDKmRx+6jWi05MfuX7gwZSb++7o+5qstcoX0pcP1SvRwbgMuT4PSBEfZtP+A==
+X-Received: by 2002:a05:6e02:743:b0:3dc:8c4e:2b8b with SMTP id e9e14a558f8ab-3dc8c4e2c10mr39021205ab.8.1747930872568;
+        Thu, 22 May 2025 09:21:12 -0700 (PDT)
+Received: from localhost ([64.71.154.6])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3dc89bfeee0sm6988515ab.70.2025.05.22.09.21.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 May 2025 09:21:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <PH7PR12MB590226280DF463501FA9D0F8C799A@PH7PR12MB5902.namprd12.prod.outlook.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 22 May 2025 10:21:10 -0600
+Message-Id: <DA2TS4HXZHLK.1WH4DSREYSAP4@brighamcampbell.com>
+Subject: Re: [PATCH 1/1] usb: typec: tipd: fix typo in
+ TPS_STATUS_HIGH_VOLAGE_WARNING macro
+From: "Brigham Campbell" <me@brighamcampbell.com>
+To: "Greg KH" <gregkh@linuxfoundation.org>
+Cc: "Jihed Chaibi" <jihed.chaibi.dev@gmail.com>,
+ <heikki.krogerus@linux.intel.com>, <linux-usb@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-kernel-mentees@lists.linux.dev>,
+ <skhan@linuxfoundation.org>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250521214851.386796-1-jihed.chaibi.dev@gmail.com>
+ <DA2IV4ZGT2M8.3QXO3L57VXSA5@brighamcampbell.com>
+ <2025052234-brewing-recall-a7ed@gregkh>
+In-Reply-To: <2025052234-brewing-recall-a7ed@gregkh>
 
-On Thu, May 22, 2025 at 03:41:23PM +0000, David Thompson wrote:
-> > -----Original Message-----
-> > From: David Thompson <davthompson@nvidia.com>
-> > Sent: Tuesday, March 18, 2025 5:48 PM
-> > To: Shravan Ramani <shravankr@nvidia.com>; bp@alien8.de;
-> > tony.luck@intel.com; james.morse@arm.com; mchehab@kernel.org;
-> > rric@kernel.org
-> > Cc: linux-edac@vger.kernel.org; linux-kernel@vger.kernel.org; David Thompson
-> > <davthompson@nvidia.com>
-> > Subject: [PATCH] EDAC/bluefield: dont use bluefield_edac_readl result on error
-> > 
-> > The "bluefield_edac_readl()" routine returns an uninitialized result during error
-> > paths. In those cases the calling routine should not use the uninitialized result.
-> > The driver should simply log the error, and then return early.
-> > 
-> > Fixes: e41967575474 ("EDAC/bluefield: Use Arm SMC for EMI access on
-> > BlueField-2")
-> > Signed-off-by: David Thompson <davthompson@nvidia.com>
-> > Reviewed-by: Shravan Kumar Ramani <shravankr@nvidia.com>
-> > ---
-> >  drivers/edac/bluefield_edac.c | 20 +++++++++++++++-----
-> >  1 file changed, 15 insertions(+), 5 deletions(-)
-> > 
-> 
-> Refreshing this review...
-> 
-> Does anyone have feedback on this EDAC driver patch?
+On Thu May 22, 2025 at 2:30 AM MDT, Greg KH wrote:
+>
+> Too many characters for that sha1 value :)
 
-Looks like it fell through the cracks... :-\
+I heard recently about concerns regarding the collision of 12-character
+sha1 abbreviations [1] and had assumed that using 16 characters is
+acceptable. Regrettably, I neglected to read Linus's response to the
+email which rose those concerns. After reading his response, I'm
+satisfied knowing that there is still very little risk of a collision
+between the abbreviations of commit objects specifically.
 
-Queued now.
+I'll modify my git config to use 12 character abbrevs.
 
-Thx.
+Thanks,
+Brigham
 
--- 
-Regards/Gruss,
-    Boris.
+[1]: https://lore.kernel.org/lkml/cover.1733421037.git.geert+renesas@glider=
+.be/
 
-https://people.kernel.org/tglx/notes-about-netiquette
