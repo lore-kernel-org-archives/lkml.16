@@ -1,101 +1,168 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05AEE221F01
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 06:43:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3B4C12F5A5;
+	Thu, 22 May 2025 06:46:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747896228; cv=none; b=Z7gCV5rJznZZUKjwox936CP44KdDAjiYxmmIhwxmoCD9PG7S+Yd+Yh2sT5VFzuycUDf3FOqmlKm++o0Ca/3glDdKgBPvEwjMpXUqf95VtO+vrWanp+GBYhAiAcALkwxQdPBEQceyKFNlw2J+Wj5IVP6IvuA1VxU9EEr/Nq6Rzyo=
+	t=1747896415; cv=none; b=MGEgzyJyFj+doHHVFHrdmBPWo/wAWhHAFraripTHeDcc1EUD69uWJ1ocZMGqyN8+7/ICKhdeWoVeKcLaA9vglMYWZ3IekL4Omjp4B6sEsBh+VIsxTwTkhS8ppsTrQmc7BOPozNKvM2ovU39FXWG9/suK8F9s2ZHV3ZOroP7Q4XQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747896228; c=relaxed/simple;
-	bh=dxDP5IQt5rtpMdaHBgCk/Tk6qBhSaHaiq5AmRp9SC68=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=arZ/hulQnRxCcmi3kSFQrwGy8z/mymnOpYnSJ90pPTVFM1qfbHv7fbx5V9NTFCunYBDygC2+ltcIgxSHDxpbk4KLaJRhHxkBizCyEjjx7zhpvDixuDPF9N+CdLhHnVfaxayViweH17uxJ/A88yy6f985XnhBPcr2mc4PnlMOCS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uHzeA-0006k1-53; Thu, 22 May 2025 08:43:18 +0200
-Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uHze7-000gpo-02;
-	Thu, 22 May 2025 08:43:15 +0200
-Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uHze6-002gka-2f;
-	Thu, 22 May 2025 08:43:14 +0200
-Date: Thu, 22 May 2025 08:43:14 +0200
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Donald Hunter <donald.hunter@gmail.com>,
-	Rob Herring <robh@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	Simon Horman <horms@kernel.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	netdev@vger.kernel.org, linux-doc@vger.kernel.org,
-	Kyle Swenson <kyle.swenson@est.tech>,
-	Dent Project <dentproject@linuxfoundation.org>,
-	kernel@pengutronix.de,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v11 01/13] net: pse-pd: Introduce
- attached_phydev to pse control
-Message-ID: <aC7Hgu_ieB31Wy_r@pengutronix.de>
-References: <20250520-feature_poe_port_prio-v11-0-bbaf447e1b28@bootlin.com>
- <20250520-feature_poe_port_prio-v11-1-bbaf447e1b28@bootlin.com>
+	s=arc-20240116; t=1747896415; c=relaxed/simple;
+	bh=GntJ46Pe7OL9GI/++GGxztMdl1ZF1FnVhVklUpvl2HI=;
+	h=Subject:To:References:CC:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=bT1Ql+amdqV99jbx0qH1wAdnNW2lnvCHaecLO1mA6+ODiSbnty6Ui8hBcAddDuNBm6bXf6q2BZZUOvRJqUM08d6OoFP6RweRmDG/sAiWkVGuGD2nUi2dFnja0wKqOscy2wdfa3fo97r42NIQWMTWEWAnZr/2Zv/dvWSZmDEPZFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=fZ9CViOj; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="fZ9CViOj"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54LIUrH9029931;
+	Thu, 22 May 2025 06:46:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	DYC0rzIdZxlJJeGf6OrdPUKmgETi+Xr2+QL01aSGH5k=; b=fZ9CViOjuH82jasi
+	Qi4jh6zpb8Xg0dIvHlLpXAiL2zDTWOD1L4vDVe1JHpxaG7Qmr2etVfuvxHxJwBsH
+	ZNebRTYt71YcXqjKCbqH7ikAnWJNo7n/WHZXXxs5AP3kvWQ+t/QRkqQzgho4A5IR
+	qpd80hSjHsl7JHXMJIYYGa4cSviiF92PO5TUYWcivXT2fmiqTviY15L89xWmfF9x
+	+MyH0QCRTsTwe/6Q5D+DvxB/oHTGB6YamMs2oN23VMqt0sTTG2Me6N06Vm2K6n09
+	4jSSh10lPpn47DMbPWMSaXSIpZG7QYwvbebP0umx+ju+oQBcHiRMJtdyVwE7a+mJ
+	3O8LCA==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf45c2e-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 22 May 2025 06:46:50 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54M6knnK016781
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 22 May 2025 06:46:49 GMT
+Received: from [10.218.49.64] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 21 May
+ 2025 23:46:47 -0700
+Subject: Re: [PATCH v5] remoteproc: Add device awake calls in rproc boot and
+ shutdown path
+To: Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20250408104317.926833-1-quic_schowdhu@quicinc.com>
+ <91d8efa0-c61c-eb17-b6f4-cb9804e5fff9@quicinc.com>
+ <cf3fffda-8d88-b962-398d-d038cd10b981@quicinc.com>
+CC: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
+From: Souradeep Chowdhury <quic_schowdhu@quicinc.com>
+Message-ID: <fde458da-5f44-7947-f746-270b9ecf2991@quicinc.com>
+Date: Thu, 22 May 2025 12:16:41 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.1.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250520-feature_poe_port_prio-v11-1-bbaf447e1b28@bootlin.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <cf3fffda-8d88-b962-398d-d038cd10b981@quicinc.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIyMDA2NiBTYWx0ZWRfX8zewmwTo5zBy
+ 3McAB7WnZg6WNjjoBvctL4hHXvguDA0VBwyE4ysMb+/426u1eQhflwSzUX6Ldc8S7n/2xTOK16M
+ vGaqgCjny/0I36vAWsR7L2JVCbs5woKbnWMx9pUT6W6rL5Pfmvnoh4nDog0PKBPhXegDFdnmNIT
+ Dw5dyH2eZn686cM+/CeziThJtUyfSKoivJLtsjKyFEbZr/Us5+J+cysFn5c6SmvcmMtjN/buhHW
+ rFWxMwJ5hHuesrATjaXfIKkqiWjkYYny3CjRx7MshnIZUMHRbqo3rh1/qnZNkkw7SitiqZQGH3p
+ cYIjCDO1WU9LnHZZZ2nmxeinRVjvpMV5IjlVEGAXr7C3mF5m29q7Hen/EqO9EnjI3E9Y7sREAr0
+ yejpyHRqt4MC+vgC9O003IPb6KQUlJMnpUx8xxawhgFLHT7wTMO+6NgSblANWKa8az2vRtEQ
+X-Proofpoint-GUID: UPjDAgniazdh4w5HozastPh2DpawPt81
+X-Authority-Analysis: v=2.4 cv=Ws8rMcfv c=1 sm=1 tr=0 ts=682ec85a cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=N659UExz7-8A:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8
+ a=EUspDBNiAAAA:8 a=Q4YDo1DU0dsJeT-W-eMA:9 a=pILNOxqGKmIA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: UPjDAgniazdh4w5HozastPh2DpawPt81
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-22_03,2025-05-20_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 malwarescore=0 clxscore=1015 suspectscore=0 mlxscore=0
+ bulkscore=0 phishscore=0 priorityscore=1501 impostorscore=0
+ lowpriorityscore=0 mlxlogscore=999 adultscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505160000 definitions=main-2505220066
 
-On Tue, May 20, 2025 at 06:11:03PM +0200, Kory Maincent wrote:
-> From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
-> 
-> In preparation for reporting PSE events via ethtool notifications,
-> introduce an attached_phydev field in the pse_control structure.
-> This field stores the phy_device associated with the PSE PI,
-> ensuring that notifications are sent to the correct network
-> interface.
-> 
-> The attached_phydev pointer is directly tied to the PHY lifecycle. It
-> is set when the PHY is registered and cleared when the PHY is removed.
-> There is no need to use a refcount, as doing so could interfere with
-> the PHY removal process.
-> 
-> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+Gentle Reminder
 
-Reviewed-by: Oleksij Rempel <o.rempel@pengutronix.de> 
 
-Thank you!
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+On 5/19/2025 10:54 AM, Souradeep Chowdhury wrote:
+> Gentle Reminder
+>
+>
+> On 5/14/2025 1:03 PM, Souradeep Chowdhury wrote:
+>> Gentle Reminder
+>>
+>>
+>> On 4/8/2025 4:13 PM, Souradeep Chowdhury wrote:
+>>> Add device awake calls in case of rproc boot and rproc shutdown path.
+>>> Currently, device awake call is only present in the recovery path
+>>> of remoteproc. If an user stops and starts rproc by using the sysfs
+>>> interface, then on pm suspension the firmware fails to load as the
+>>> request_firmware call under adsp_load relies on usermodehelper
+>>> process which gets freezed on pm suspension. Add device awake calls
+>>> to fix this.
+>>>
+>>> Signed-off-by: Souradeep Chowdhury <quic_schowdhu@quicinc.com>
+>>> Reviewed-by: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
+>>> ---
+>>> Changes in v5
+>>>
+>>> *Added more details to commit description
+>>>
+>>> Changes in v4
+>>>
+>>> *Remove stability from mailing list
+>>> *Remove the extra tab in v3
+>>> *Change the commit description
+>>>
+>>>   drivers/remoteproc/remoteproc_core.c | 4 ++++
+>>>   1 file changed, 4 insertions(+)
+>>>
+>>> diff --git a/drivers/remoteproc/remoteproc_core.c 
+>>> b/drivers/remoteproc/remoteproc_core.c
+>>> index c2cf0d277729..5d6c4e694b4c 100644
+>>> --- a/drivers/remoteproc/remoteproc_core.c
+>>> +++ b/drivers/remoteproc/remoteproc_core.c
+>>> @@ -1917,6 +1917,7 @@ int rproc_boot(struct rproc *rproc)
+>>>           return -EINVAL;
+>>>       }
+>>>   +    pm_stay_awake(rproc->dev.parent);
+>>>       dev = &rproc->dev;
+>>>         ret = mutex_lock_interruptible(&rproc->lock);
+>>> @@ -1961,6 +1962,7 @@ int rproc_boot(struct rproc *rproc)
+>>>           atomic_dec(&rproc->power);
+>>>   unlock_mutex:
+>>>       mutex_unlock(&rproc->lock);
+>>> +    pm_relax(rproc->dev.parent);
+>>>       return ret;
+>>>   }
+>>>   EXPORT_SYMBOL(rproc_boot);
+>>> @@ -1991,6 +1993,7 @@ int rproc_shutdown(struct rproc *rproc)
+>>>       struct device *dev = &rproc->dev;
+>>>       int ret = 0;
+>>>   +    pm_stay_awake(rproc->dev.parent);
+>>>       ret = mutex_lock_interruptible(&rproc->lock);
+>>>       if (ret) {
+>>>           dev_err(dev, "can't lock rproc %s: %d\n", rproc->name, ret);
+>>> @@ -2027,6 +2030,7 @@ int rproc_shutdown(struct rproc *rproc)
+>>>       rproc->table_ptr = NULL;
+>>>   out:
+>>>       mutex_unlock(&rproc->lock);
+>>> +    pm_relax(rproc->dev.parent);
+>>>       return ret;
+>>>   }
+>>>   EXPORT_SYMBOL(rproc_shutdown);
+>>
+>
+
