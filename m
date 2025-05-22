@@ -1,138 +1,135 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA8B26A1C3;
-	Thu, 22 May 2025 22:10:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94089269CFA;
+	Thu, 22 May 2025 22:11:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747951839; cv=none; b=N85cp+NFdV37Tj05I/oBLuskKGtWet2WfC97eK0ltpglHOdkQB6ov42pCPawyP6PBSZWlJob9uy/d+DLM0Uoup8av8HlB74IjXUJjfy1ljV5Kba0gszLmIuzqe4GgBOz33rVXlLqRJsVtfoDtXS7xRSHuPZdF/gQ8pnhS+VTQh8=
+	t=1747951904; cv=none; b=sca8UREPt+Wi1jP6whsNMAqTYIaA0XIZhFRSaDMKsJMlaBt5oVDSHUU6tOIJYWVHzy+1IIsHAMgkvBE9HjyaRL41947dVMVy6U8azDNOiAqE44WY3F/azNkrleSctJpcZbtMbKrK1w2jn2CTyvsuvdasoXk7frtTLgvJ47smOPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747951839; c=relaxed/simple;
-	bh=Vwp7L6L0DbadGmW+6IbLFn7FDl7XlbaZVO+AUTwmZBA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MwMwdyLsHDvLimENrulVzopNfWe0csOgNSi5jDR7HOZhxYpZHww/Kpghizlrct0vZ4H6KonaHvmispX161H7OmAkvLSYL4vefnBFFcJzLD6UyEhfXFzuz0+Et+fRyJXbWZwhSmyGou9Vm0vyNWQGBJhQ92k9IF3tGtdoqkiZD1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XnWL0igM; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747951904; c=relaxed/simple;
+	bh=KZiFQSdib5SAC4/JvoIWXS6NRECRieWGZ7Tfu3oNlvs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tg68xcNu/KpCyE+H+IKCWyEO09JPmNKvV5QmMx5Oq4vBi2K3w8EBCmCyHFLfGx6Mr2W1hx883C107xKIH3UQw54d9rpORBf7AvBUD3K4Ljz0A4RdmanmAiNRlUaLxlE/bpARkGftL5Aw7i2tAwamgEKttw2OgBHgwxjsKP2alIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k5M1xSyC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XnWL0igM"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-231ba912ba1so8555145ad.2;
-        Thu, 22 May 2025 15:10:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747951837; x=1748556637; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QaVcQnOHZhXdhQaf8IN9xC9rWiAxsOh9GVu5nLs1VX8=;
-        b=XnWL0igMo5ImU27Dr1cDv7pEPZbGBDS865Qun5D52pzVRa3Q51oa9l9/pMnXopidBG
-         nPZMF2oOMop7RWc9YKxmsE3Wh1/8WS6WPGFxnOA61TGATn5FMap0BBhRSWVbRWJa3l4W
-         rIlkRxtc3QWWY5ttZo7YDX6iFYoxtzo2Zc2FItg/QiX5v8rAYu3F6+L1KihtJ4HaI3P/
-         wKZp0r6/DnS8CifaB/fT7xQ+zXtkXBXGEndMa3lS3ZlhFJzsEWybztlaXdiSZp3OrJir
-         n56d23ULQXTXncRZGaDRMtjAQt1xsPk2Y3wL6NWQpD9lls6qLv42euvdn4nFfzTKOEWu
-         n2Hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747951837; x=1748556637;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QaVcQnOHZhXdhQaf8IN9xC9rWiAxsOh9GVu5nLs1VX8=;
-        b=nIOc1ErzHjVvLhXkbRgPFjQG9nqipJFSaVcHcce3DV4CahGrV9SNmwlFkPvGRTazTD
-         T6OeEvEAym/+OsfcTgJ2g3oe9NKFW4zEsuRIY4gFFN3rIF6k0rlaer4o3J0FhIeanD7n
-         JrOIdDQvo6hNaZKIPbsEJZ7tA6yEPuykqbBPtrhyAEN7fMlG9iyQE3pdZPCYQmaT9ZWv
-         ywPRLhtxRxJZ71OThg7BFRQ6Wika5y7zEuAsiKJUeOG/mNs4J0Wojn8MPdNOmoQuuOrJ
-         DfufiVwBN3WEdy3L8ytvAPLh/XLnUAjPe7UBbjKbIcR0qsKtFsm0FR7CMG8d5XPpfHJQ
-         ELzw==
-X-Forwarded-Encrypted: i=1; AJvYcCXDXJ6ISCgUeTpbUXvc3lHw3vCGrQw5kVx1jkggnbfnkroWETZGPZd0SQGqHKHVU14XCBmHFCW/3IPyGtfNv3M=@vger.kernel.org, AJvYcCXRsunBudnCAMZSk8HDKvEPgu9fiBLRZLfEgACVROFNbx4K5NnEt3xNsval3dnjvwk83QeGDP7B74AorOs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwsJP8SpsJFKeeg/ehaex75x9fI2/wsx8hwtiK1VfXnEKuFqCPE
-	AXoI7Z/MKHvK+po9tjFVx2sBPuyLROVDidJzkWEtBW/7CXrZJWQ8Ie0tER5zNbel3k1oBYaySqW
-	4XdMZ66Uo4pzcz3RRFSuKMnguyxKKanQ=
-X-Gm-Gg: ASbGnctTqUikpE+GIj/4zBTm7/WWqgBN+xAW/phTrtzlwSnfjQ8BHj2e2LfmFr5FqzU
-	yTqa714iVXuu5O7SS7kBmJVGAmCoNvPD14nTYi2IPJ/OFtHVh0pO9yolSIvBhUtTDVrMulbv7H0
-	XGmxQiSHx10Z9QsnlhYFWBUD3pSXwMF2JW
-X-Google-Smtp-Source: AGHT+IE6aWxf93Mgju2436vKfZ9FnWr6MAWyx+AfEYRoQoWD+Un59jcMnqr7D+uOUxx2gT5GGNl/U6k7mzVQmXV29jA=
-X-Received: by 2002:a17:903:4b28:b0:22e:50d1:b8d1 with SMTP id
- d9443c01a7336-233f3658cafmr976555ad.3.1747951837366; Thu, 22 May 2025
- 15:10:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k5M1xSyC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04787C4CEE4;
+	Thu, 22 May 2025 22:11:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747951904;
+	bh=KZiFQSdib5SAC4/JvoIWXS6NRECRieWGZ7Tfu3oNlvs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=k5M1xSyCLAaTzrGsViDJk/UZITks+AuMEgusboQ3J3QPmFPax50ttimc4GWI6nWFn
+	 pBlXxxgBEZCKHNlYz1Y1OFZaB5hwRlzqTqIEHYCSCkeWC9a2KvYZJjyoN0ldcK4bUF
+	 Uo1rkZSDzRH+B01crReH2jA7snhqYbC5THBZT0R0lJRPhy6WVyd2dtFc8E+zi5A0tg
+	 BNkXlYNsvyR2eLYuUqb1izVqaKvar50bauW2DxBbOCBp3yX4oXNsMWCjkXP6v8Sjsl
+	 J5nQhrJ2LcezDcr0VPJa7JEMeakduAbqrrYqarinIggJl79zecVg16VypxOB4y5TFq
+	 W6f2QhbIqMrmg==
+Date: Thu, 22 May 2025 19:11:41 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>, Howard Chu <howardchu95@gmail.com>
+Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf test: Add cgroup summary test case for perf trace
+Message-ID: <aC-hHTgArwlF_zu9@x1>
+References: <20250522142551.1062417-1-namhyung@kernel.org>
+ <CAH0uvoiZ2difXdPsjkdLikHTRwYROYUeuCdZ+gQ5uRfQ2rzwGQ@mail.gmail.com>
+ <aC9VoTL_Cv4R7J-j@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250325184309.97170-1-ojeda@kernel.org>
-In-Reply-To: <20250325184309.97170-1-ojeda@kernel.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Fri, 23 May 2025 00:10:24 +0200
-X-Gm-Features: AX0GCFuI-Cp0LblAbfBsD5C8vBzb-kYyMkgjULkrHzzq5fNIwQ_8FcHrtWkpgus
-Message-ID: <CANiq72mwbJZ4kDe6CGBovX=_y0h+6y_xzYKoY6384oyCmcazSw@mail.gmail.com>
-Subject: Re: [PATCH] rust: workaround `bindgen` issue with forward references
- to `enum` types
-To: Miguel Ojeda <ojeda@kernel.org>
-Cc: Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aC9VoTL_Cv4R7J-j@x1>
 
-On Tue, Mar 25, 2025 at 7:43=E2=80=AFPM Miguel Ojeda <ojeda@kernel.org> wro=
-te:
->
-> `bindgen` currently generates the wrong type for an `enum` when there
-> is a forward reference to it. For instance:
->
->     enum E;
->     enum E { A };
->
-> generates:
->
->     pub const E_A: E =3D 0;
->     pub type E =3D i32;
->
-> instead of the expected:
->
->     pub const E_A: E =3D 0;
->     pub type E =3D ffi::c_uint;
->
-> The issue was reported to upstream `bindgen` [1].
->
-> Now, both GCC and Clang support silently these forward references to
-> `enum` types, unless `-Wpedantic` is passed, and it turns out that some
-> headers in the kernel depend on them.
->
-> Thus, depending on how the headers are included, which in turn may depend
-> on the kernel configuration or the architecture, we may get a different
-> type on the Rust side for a given C `enum`.
->
-> That can be quite confusing, to say the least, especially since
-> developers may only notice issues when building for other architectures
-> like in [2]. In particular, they may end up forcing a cast and adding
-> an `#[allow(clippy::unnecessary_cast)]` like it was done in commit
-> 94e05a66ea3e ("rust: hrtimer: allow timer restart from timer handler"),
-> which isn't great.
->
-> Instead, let's have a section at the top of our `bindings_helper.h` that
-> `#include`s the headers with the affected types -- hopefully there are
-> not many cases and there is a single ordering that covers all cases.
->
-> This allows us to remove the cast and the `#[allow]`, thus keeping the
-> correct code in the source files. When the issue gets resolved in upstrea=
-m
-> `bindgen` (and we update our minimum `bindgen` version), we can easily
-> remove this section at the top.
->
-> Link: https://github.com/rust-lang/rust-bindgen/issues/3179 [1]
-> Link: https://lore.kernel.org/rust-for-linux/87tt7md1s6.fsf@kernel.org/ [=
-2]
-> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
+On Thu, May 22, 2025 at 01:49:37PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Thu, May 22, 2025 at 08:33:16AM -0700, Howard Chu wrote:
+> > $ sudo /tmp/perf/perf test -vv 112
+> > 112: perf trace summary:
+> > 112: perf trace summary
+> > --- start ---
+> > test child forked, pid 1574993
+> > testing: perf trace -s -- true
+> > testing: perf trace -S -- true
+> > testing: perf trace -s --summary-mode=thread -- true
+> > testing: perf trace -S --summary-mode=total -- true
+> > testing: perf trace -as --summary-mode=thread --no-bpf-summary -- true
+> > testing: perf trace -as --summary-mode=total --no-bpf-summary -- true
+> > testing: perf trace -as --summary-mode=thread --bpf-summary -- true
+> > testing: perf trace -as --summary-mode=total --bpf-summary -- true
+> > testing: perf trace -aS --summary-mode=total --bpf-summary -- true
+> > testing: perf trace -as --summary-mode=cgroup --bpf-summary -- true
+> > testing: perf trace -aS --summary-mode=cgroup --bpf-summary -- true
+> > ---- end(0) ----
+> > 112: perf trace summary                                              : Ok
+ 
+> Thanks, tested and applied to perf-tools-next,
 
-Applied to `rust-next` -- thanks everyone!
+But then when running all the tests, since this does system wide
+tracing, it fails:
 
-    [ Added extra paragraph on the comment to clarify that the workaround m=
-ay
-      not be possible in some cases. - Miguel ]
+112: perf trace summary                                              : FAILED!
 
-Cheers,
-Miguel
+It works with the following patch applied, please check and ack/review:
+
+From 8c868979d886e2e88aa89f4e3d884e1b6450a7b2 Mon Sep 17 00:00:00 2001
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Date: Thu, 22 May 2025 19:01:47 -0300
+Subject: [PATCH 1/1] perf tests trace_summary.sh: Run in exclusive mode
+
+And it is being successfull only when running alone, probably because
+there are some tests that add the vfs_getname probe that gets used by
+'perf trace' and alter how it does syscall arg pathname resolution.
+
+This should be removed or made a fallback to the preferred BPF mode of
+getting syscall parameters, but till then, run this in exclusive mode.
+
+For reference, here are some of the tests that run close to this one:
+
+  127: perf record offcpu profiling tests                              : Ok
+  128: perf all PMU test                                               : Ok
+  129: perf stat --bpf-counters test                                   : Ok
+  130: Check Arm CoreSight trace data recording and synthesized samples: Skip
+  131: Check Arm CoreSight disassembly script completes without errors : Skip
+  132: Check Arm SPE trace data recording and synthesized samples      : Skip
+  133: Test data symbol                                                : Ok
+  134: Miscellaneous Intel PT testing                                  : Skip
+  135: test Intel TPEBS counting mode                                  : Skip
+  136: perf script task-analyzer tests                                 : Ok
+  137: Check open filename arg using perf trace + vfs_getname          : Ok
+  138: perf trace summary                                              : Ok
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Howard Chu <howardchu95@gmail.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: James Clark <james.clark@linaro.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/tests/shell/trace_summary.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/tests/shell/trace_summary.sh b/tools/perf/tests/shell/trace_summary.sh
+index bb350dfabdc2bf5e..49766524dc21b534 100755
+--- a/tools/perf/tests/shell/trace_summary.sh
++++ b/tools/perf/tests/shell/trace_summary.sh
+@@ -1,5 +1,5 @@
+ #!/bin/sh
+-# perf trace summary
++# perf trace summary (exclusive)
+ # SPDX-License-Identifier: GPL-2.0
+ 
+ # Check that perf trace works with various summary mode
+-- 
+2.49.0
+
