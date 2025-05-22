@@ -1,102 +1,136 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A11C41F94C;
-	Thu, 22 May 2025 14:57:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 842E928D838
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 14:57:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747925851; cv=none; b=KMxozXpiKZCkLahMxKHgfrk0P9Jw/3PFHhqmTPzAAFSFkeH/SetNlpqfFMEhHP632UK/gFB9hnSGS37+rn4p9SMeW6A18Xkvc7mJmxneOtvUNV//S+G9vFOTNRbO02kT8KPuigKBilKe76UmuzL8IB0K5u0E8TMPoYPpKt5Q5sw=
+	t=1747925853; cv=none; b=JrIyCxdteGHqdpQItbez4AwDQ5YImuoACwejAz4xz4Bg1GzmOiFQR4f8Ce/uKAH3ye/ztk5QDgU6diNqc2zTu9IPg2wgxQpPItFj1IDXZSdfUFOmRx5IMFIxOktD+VAhsD7EZxrcOUM0SWl4QaZo5P/AKAMDamZKeA4eYqmJ4BE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747925851; c=relaxed/simple;
-	bh=kruNur/Jjoa2McD4ecCvVnpPDxpW5xiYdISEw8XfiQU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j2GC+phATM+TBQJTS7+TFZWWaZrDvFHOb6IdPSEm1Gb1+W1m7Cp1GqqIj0sBNgC6+fhbPZAIomIEm9Ik6BCalxxHoo/gfuHrj5HbHPbjSs/eH/QOmzA/EYIgD1RGPf1LAVtI43Ijl9IRexXgznc1oIKoZzZUnYuPbDvJnmJh7Vg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=lkQi7wtY; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1747925853; c=relaxed/simple;
+	bh=x84Jv7lQMIOw1R3qsq+oOaAa+7Pp/x2Vq0hlZPSj9TY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=A38tgHQFmwV+8j5Opyyf+yDDEqYDx6epXQcJx/jD9tSRYrOZAs6usuAbMUqG2jfTOw/0gzRSvwCi4Gs8CXISAfIiTLkoWRNU6Ce1cRtMue8NzL/wB+z0anKkFh4VmMsL1mxnqw0TNqd+p15sNARrBEg/GQf9GvqWctRU7SlhD4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=crNk2Wjo; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="lkQi7wtY"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54MDo3xk012080;
-	Thu, 22 May 2025 14:57:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=UCEzZooc5j845GMXjKyZHy13dz7CzR
-	lmF1GoAsSZHJo=; b=lkQi7wtY6Y00BoSWHRzd7XF+6sZ/GrpPHN1vZet5hfOCYt
-	RHQyPbilt122eP4q7Yjre/VhTzbrbGJzsWjvUfgKH2tV5u2X8w6ymrgrmgyC8GNA
-	lY6m6YWf+eFWevsRFQr83xEm5xyL+B4IyjocWGozloq7EtIbNNJ0cQXaZY0nmiyV
-	+Iq3PEAIR1d+ZZxRNFKEU/QCEphnvqKiZsDO6pj1CTGQ0u6iZGHvlap8Ad5j5r18
-	iBAvwn7rN/oIYngcYDCDe1ZO7O9xYUckTBL1dzVAqU7gKCvHdffAc0BmhYi4c+JE
-	X8Wa+J/ptr8X3kJdTLYcu/DGxeS7JMDwWH8NTAVA==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46t5530b66-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 May 2025 14:57:26 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54MDfSNZ020749;
-	Thu, 22 May 2025 14:57:26 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 46rwkq1xbw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 May 2025 14:57:25 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54MEvMkU31850968
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 22 May 2025 14:57:22 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 130FD2004E;
-	Thu, 22 May 2025 14:57:22 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C6B8E20040;
-	Thu, 22 May 2025 14:57:21 +0000 (GMT)
-Received: from osiris (unknown [9.155.199.163])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Thu, 22 May 2025 14:57:21 +0000 (GMT)
-Date: Thu, 22 May 2025 16:57:20 +0200
-From: Steffen Eiden <seiden@linux.ibm.com>
-To: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, frankja@linux.ibm.com,
-        borntraeger@de.ibm.com, nsg@linux.ibm.com, nrb@linux.ibm.com,
-        david@redhat.com, hca@linux.ibm.com, agordeev@linux.ibm.com,
-        svens@linux.ibm.com, gor@linux.ibm.com, schlameuss@linux.ibm.com
-Subject: Re: [PATCH v3 4/4] KVM: s390: simplify and move pv code
-Message-ID: <20250522145720.311722-D-seiden@linux.ibm.com>
-References: <20250522132259.167708-1-imbrenda@linux.ibm.com>
- <20250522132259.167708-5-imbrenda@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="crNk2Wjo"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-74068f95d9fso7133932b3a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 07:57:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747925851; x=1748530651; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8+s5922QNFxHhwB+9M0M0SMe23D26Zax/vzJ20NnmTQ=;
+        b=crNk2Wjo+hg2ZoJyOu7vTIS0fdxFlRrQ1IJ5cU7M1taINr9L0RTjzWMftYuFIfXLcT
+         5n+xx1d5fIQBMEfNgheruEjVgJc3ZA0iVg1ZODwB0Waw8ehOWfZQbRJvs1cB73UfwQIv
+         XcyjR4Kl4po4PhlO6XZEXd41kSLaB3eUwiY5oGHRn1XxDPOHH2LDXsbrfmS8qKq6hyGV
+         rdk99HVW7K/8GF8CXosgp9qRG5965HWDyMzQ2d9ffxZhjoaGzf+hmwYMOlardRF8dVQl
+         x8mJOPi9CwHySojmWSjjA9vhWqV73A6Mrj4IWxMn6DCRLs6fp07I29/FegcRDHet197+
+         ohUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747925851; x=1748530651;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8+s5922QNFxHhwB+9M0M0SMe23D26Zax/vzJ20NnmTQ=;
+        b=xTv1jTBK1xjC1uMAUsyHa5j7HwF4g3xSVk6VPdc2YWs8kxm+QBF0p60gbv/CbHbl/c
+         pAw4VSz2/lXCSgJzY5A9V+0CnRcObfxxAs8D4vV3vUbrELSVNKlwfnDeSGhRaM4uCrRc
+         AtBvxCuUz2SfuAlUf0rOPnBRBvinI3J8iRAZwHniOY6yU1z8HOWxtaoe7qEYMbb0MFXQ
+         aU854jDgbzVvAVNRmaAb127LQ1oN2Lj4E2zb+EbMQ4jzDsFeKhBCCWyGAbzgo0mNFd3Q
+         1ZkHcqPMZh4pP6c0HXzVouMJB/Jc95NObklVSGLq1As1l4efR2PuZp75zQHRON14eZJy
+         HNRA==
+X-Gm-Message-State: AOJu0Yx0JOg37DqGlrzhgnpc2A5hNuX0q4HuM8FK/tSzNFRKwquqNi3S
+	nM5iI8oJE1QesYfQGhoJ63CtDM816Y4kXhvnARSxtTefbC0jp9stwZhs2vwjTg==
+X-Gm-Gg: ASbGncu8SZE34lZqxd03EbWEr9N1p+KcGFx4QeC1Mdd24wRgqPUEQugalv5f7Ycc409
+	5mnHc5fuGrfN8F73Nb0qlbifzpVHbRlDfypDwhnEvSWDu9B4kN8yoRiaff0pnqXmPEUAvJpzHxE
+	uvd3TvHX1ymNAOXj2l4XWwUK1MPdPnKjV6/1R7rAyCIKRkzZS+6XGghvbh/nkkGbaSvdH8dPu2h
+	tki/R8F31eoRK5+Vld9TwkCzT8b+2fJgLgVpZ/zG7/QRe27C6nNfHFDpzi0q7AwYVK0vLFuE8VA
+	5MlqoE9MyeRGdDah3qx1qrIY/1d8KQtVxt8uw2huVJcGJ4TSxfEhZGbHIxwo4AmIpi+n9n5cA03
+	4XTymUxfc
+X-Google-Smtp-Source: AGHT+IFK2YPRWz07OH8DUrztEUg8Ad2S3iLjo3B1kKh2kMU0GV2Qh/c/7clUgSRBynbH7jZKtZ3nwg==
+X-Received: by 2002:a05:6a21:695:b0:1f5:8cc8:9cbe with SMTP id adf61e73a8af0-2170cb07de7mr32530144637.5.1747925850808;
+        Thu, 22 May 2025 07:57:30 -0700 (PDT)
+Received: from localhost.localdomain ([221.239.193.52])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b26eb0a9893sm11477407a12.72.2025.05.22.07.57.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 May 2025 07:57:30 -0700 (PDT)
+From: stephen.eta.zhou@gmail.com
+To: daniel.lezcano@linaro.org
+Cc: linux-kernel@vger.kernel.org,
+	stephen.eta.zhou@gmail.com,
+	tglx@linutronix.de
+Subject: Re: [PATCH v3] clocksource: timer-sp804: Fix read_current_timer() issue when clock source is not registered
+Date: Thu, 22 May 2025 22:57:25 +0800
+Message-Id: <20250522145725.4014136-1-stephen.eta.zhou@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <aBsVsZu50MMJkI0q@mai.linaro.org>
+References: <aBsVsZu50MMJkI0q@mai.linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250522132259.167708-5-imbrenda@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: iHMqyzSPZAPB5dDuN9Udn2bRKONiReWJ
-X-Proofpoint-ORIG-GUID: iHMqyzSPZAPB5dDuN9Udn2bRKONiReWJ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIyMDE0OSBTYWx0ZWRfX2adNjxHmXMmm u451t3AHzh8ynh772XLMNjCNRs9kLmjJp8lITprXKHcVBr0q0lrQk6A7BrDLwk7Qc8ZxtqQXqUi tk4eh5hRx+qVGhexc5Pynjb2NY201SjKwuGPIdHVDX5HnH/am4DvIxqPqKtnrVMeWcVTlQSC7Bj
- P+8blyA9PzoEz9aVzLWNnr0hGZqKUMwPM0lTuLYjxYm4E7PZW0b2tXom7Qnfo0dSJgBK2GzM9Ub ZuS9SBQSTHdQKDg1HMjTUpzO8zAnczSgdHQhWnf6dBeOHBF/FkeYRiMoH+ak87JwKeDmbhB4Ylo TeIl1gaJ4bXWENXUoKTYatNqncTIVCH9KRum/1nnsUw9gxtco1gbq2aaE25Usbc5IiqQz0s4qoA
- S2OVkhV+i5HYBmGYVtS9+oyUE+utrkVGuibW9hzJVLg9zbUoD1MrneJxp4nz31V+AOdzTcJo
-X-Authority-Analysis: v=2.4 cv=BOmzrEQG c=1 sm=1 tr=0 ts=682f3b56 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=G0SGIs7KnoaDR9FhA_UA:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-22_07,2025-05-22_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_spam_definite policy=outbound score=100 mlxlogscore=-999
- priorityscore=1501 malwarescore=0 phishscore=0 spamscore=100
- suspectscore=0 impostorscore=0 bulkscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=100 adultscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505160000 definitions=main-2505220149
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 22, 2025 at 03:22:59PM +0200, Claudio Imbrenda wrote:
-> All functions in kvm/gmap.c fit better in kvm/pv.c instead.
-> Move and rename them appropriately, then delete the now empty
-> kvm/gmap.c and kvm/gmap.h.
+Hi Daniel,
+
+On Wed, May 7, 2025 at 10:11:29AM +0200, Daniel Lezcano:
+> #ifdef CONFIG_ARM
+> static struct delay_timer delay;
+> static unsigned long sp804_read_delay_timer_read(void)
+> {
+>         return sp804_read();
+> }
 > 
-> Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-> Reviewed-by: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
+> static void sp804_register_delay_timer(int freq)
+> {
+>         delay.freq = freq;
+>         delay.read_current_timer = sp804_read_delay_timer_read;
+>         register_current_timer_delay(&delay);
+> }
+> #else
+> static inline void sp804_register_delay_timer(int freq) {}
+> #endif
 
-Reviewed-by: Steffen Eiden <seiden@linux.ibm.com>
+Thank you for taking the time to help me improve this patch.
 
+>>  static int __init sp804_clocksource_and_sched_clock_init(void __iomem *base,
+>>                                                         const char *name,
+>>                                                         struct clk *clk,
+>> @@ -114,6 +127,10 @@ static int __init sp804_clocksource_and_sched_clock_init(void __iomem *base,
+>>        if (rate < 0)
+>>                return -EINVAL;
+>> 
+>> +#ifdef CONFIG_ARM
+>> +     delay.freq = rate;
+>> +#endif
+> 
+> drop the above
+> 
+>         sp804_register_delay_timer(rate);
+>>        clkevt = sp804_clkevt_get(base);
+>> 
+>>        writel(0, clkevt->ctrl);
+>> @@ -318,6 +335,12 @@ static int __init sp804_of_init(struct device_node *np, struct sp804_timer *time
+>>                if (ret)
+>>                        goto err;
+>>        }
+>> +
+>> +#ifdef CONFIG_ARM
+>> +     delay.read_current_timer = sp804_read_delay_timer_read;
+>> +     register_current_timer_delay(&delay);
+>> +#endif
+>> +
+> 
+> drop the above
+
+Thanks for your feedback.
+
+I'll make the changes accordingly and send out v4 soon.
+
+Best regards,
+Stephen
