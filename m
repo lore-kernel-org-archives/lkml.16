@@ -1,147 +1,163 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com [209.85.128.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56A528D828
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 14:51:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6611414A4E0
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 14:52:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747925513; cv=none; b=KDNNcIdfkhxSHDI4fFC9zqtGg3H6f/EOpMZ37Exgfhfv3yjh8b/0cRnkbNSzBCES++P1VCTr1u0tiOH7wjADK68+quSOG2k1zb+AT0cMpx4trRDpa428/7a/bcokcomCnNzbpGYYp3DeblDR9wws7Y6FCd8crURVaMB4BdV81PY=
+	t=1747925562; cv=none; b=CTFwR1bbmyPb8GVGHEZLoX9gk9E4nm5HT3qlBMKcV0SUFNQxzZsDWP5RHMB5lXBRM6zby62pE8r9mSJm+d2p6J1ijnHYpketiVy+EMCGqjtjQraLU/alIM1EbrKYJBV3YpBjfy5PbMmt3EaK5aLApCc4+Vs2wbOSkqQrgKMBy08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747925513; c=relaxed/simple;
-	bh=NEGa2Lvo0VHyrDn2dfZSXfnMD3VzC1tI27MkvHbZIKo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bCVdLwBPJWrrdr+aP0cokVcLkSIWaoo+O6FM1Ds/wBphed2sxfQCUJSQhVATkVu6Elbir+5b+d5Zx9uvXaE5izAzNxJfN6B3Wym8cbLKZ8RPoug/CLEQoGVz9QjgyKitv/3eU880xRaiP1nEyatdBKxNtiTwngM9NTD5l1MxG6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kdiCYPFw; arc=none smtp.client-ip=209.85.218.43
+	s=arc-20240116; t=1747925562; c=relaxed/simple;
+	bh=tdIGdyYQ20MkL5rp4ZKUkrznRFJ9rMy7wxoT6sn8RP4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=XCVQcoBmM5CePTb3ehXuyL12+mKRzDNd/JL+LJaLfKq+GVjMEb+CRQOv8rVW5FX06BIGe81lVERuto6IS0ciaIiy935zO2ZJbra0D4+lUvdXmiET4vyIRJcIZF2z+DaSyM3wbXVoiakKCTNiQheVcZfkAn6cDN0Z5HQkLsSX9SI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=i5AH8kMw; arc=none smtp.client-ip=209.85.128.65
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kdiCYPFw"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ad52dfe06ceso730002066b.3
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 07:51:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i5AH8kMw"
+Received: by mail-wm1-f65.google.com with SMTP id 5b1f17b1804b1-442f9043f56so47676605e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 07:52:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747925510; x=1748530310; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=if965oZYMwcs5T6DXjAoq7MGEz2mOJ2Vn9bNEq+AKGA=;
-        b=kdiCYPFwh/BzNTGN726u5e7M7b5UHKkMGeJtbVoa+X9FGbEqniIf3QM+6+Ab19QMXE
-         /hCkE0bvYc58O69B04iiiQABmK2AUh3VUUfib7NdbfmTNvVDJCKgDcmJuV1/daZ5M+Mt
-         X02CX71mlwD1QsnpjAtrfSug/MM7grNxd+M0Ok9aLWul/jS03u4BnTAvVL0tecKo/pHi
-         C1uENx+wmrXVng+gOZm4/kby6gUzZQwWVeaGaUzibzO7BSue4MA/Qwo2HnAOlmLKELm9
-         PRRJ1ISgpJ+pnuC0/DZR3+/p1HKqhjDqq1lpmavoxHBBTieDkYNa2NGKaySG0MlhiFyZ
-         ggjA==
+        d=linaro.org; s=google; t=1747925559; x=1748530359; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=VEeX4pHU5dbnP7BXmwT5H8fSOKMWm7ham8iEEngBq2c=;
+        b=i5AH8kMwkl9dlsOMchu+w6bP/rKe9y9aujCYrvb+YSBCBA/39dE/JYJx2t9jo+nC+8
+         E0bzyABESMThdygMzuagKiBUJ29vHewmuNe0YoMo1WkAte03WQD7HzqE2bgxK+KoQ+wB
+         vpI+d3ACNhipJw2expDepLaL5McDf/vUMeDLpZAiXUmhzl5dr4GzbT2XKROGO/u3lc8Z
+         ZhYbFQpVlNuFwHLtkTkUTlo+v2Vk68EulLh5eYIL1mAhxEqt+yI1i+wHFj0GsOUJdeeN
+         FCMutJXGkMfaMY05d4xuLjx6qI81OERi6G1vf3IK8MHZdOCIvDa1DvcpL3p3YrxK+ZWJ
+         JsUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747925510; x=1748530310;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1747925559; x=1748530359;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=if965oZYMwcs5T6DXjAoq7MGEz2mOJ2Vn9bNEq+AKGA=;
-        b=gKRPTDTv4g5JPVM2/HQpeBp08YkN3WIXTi2Vvr4FKzuq09j56Sc5RhhssbR/1HOYdb
-         G3ZTNNAqXWo4laMRxQIT1UOHL5/nuy9FXFZCQhI6VueuvC+PJfFmA6a8CGHbnK2BZyBC
-         3WJSQ9KmGoHNvYB2VsHtsek9hJLKW/bX8He1LZEFDoODq/GwPUesbvo4RlVFHwuMvRvG
-         V/2aM6SDf7+BDfhGrbb5nGVIlCl2tmugeclV1Eq6hUxRLOY+O27oTL1gxONT8RJT9uTQ
-         /FrE+CPrRm9am2LmOPkj0NDuDZCcSLq1s9IBHf1eSs9dLnmqObXvmMh0z781cmVLGmci
-         vPWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWHU5+REKzj4MeKiWmlJ18dyQEBTs2BcvQI15qJoa/WZU23la+WpIEtNO3dQhOzWuafp5DrfDvdhbTr3tU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzz6bV0BUw2gVEaPQF4GcwiVzD1RuyDHWRnW44PHNxDmkTalNm1
-	zrYPubaMumjszDpMshs7gnAgftauxBoMKLVd1X/PEuxjfJtjmI3P6vNuqAhWnxBNMToc+U/lbuk
-	1msLafloFhENqG33aqaoxR64S14RoQd2i6df1kePlUw==
-X-Gm-Gg: ASbGnctc5tI9m1WncqzoHnaly2Qo0XloA3JzcZHfh04CNtq80YJbSz2+iuPY7EN4Zbi
-	6ofF5+ytr8d9RsUQU2EcbRDp36pRmMmI5iv2BnIi//jClKkYXbEdK/csKYVNTjZZ0txOmBbs35H
-	8e8z0CvZJiXmeU/3922Pa+zTWCybKulyZQsHJc33CdLe0PSHZsQSqz1WH5HdA=
-X-Google-Smtp-Source: AGHT+IEWWodIXY6RPzmgsLl29LtMjEztepnXSAqOidAoBrsS8Lw4awvNzuVYZIqKaYEoqKapvbrKCUHcq2jJyT9DmhA=
-X-Received: by 2002:a17:906:6a14:b0:ac3:bf36:80e2 with SMTP id
- a640c23a62f3a-ad52d4c2ed3mr2316934866b.20.1747925510014; Thu, 22 May 2025
- 07:51:50 -0700 (PDT)
+        bh=VEeX4pHU5dbnP7BXmwT5H8fSOKMWm7ham8iEEngBq2c=;
+        b=BOfujLupCxAQJoQ60I2X1bWEFQxMZoFLeGWEEVOHWiRb/zyNjl3XYys4ma6P5Uwztc
+         zE6n8IHzezNn25EcmGd7eaLo1AUXVY92YgfiN0rSpaqbiZXc0jMTgqDGcsqFvgLHHW5t
+         IZcwVKjGqgvU0/NY9kmL4jjS7HoSZJfeNJuP8Q3+jezIR49IubtOYOT+EDpMRyA3tF+S
+         hfjK6+PFF4nr1u36/UXF4dxeyAa+mffO7Lj1Gb7VlOinscLg9L+QkSrHf/BBTzxSKF8T
+         VUvytWG2ohQEbrMH0OULMIzlOSibnhHiMpp0Kl9NGmCSuws7bIFfFo4zD1VxO704RkOC
+         ZWgw==
+X-Forwarded-Encrypted: i=1; AJvYcCUPet4J22Mu8BGjN/ay+WYEFBjyLHdQd6kzPQe+NvI43gACaO82n8qUDK+/ocRHmnkU0IEUMeEOZ1T7K2U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNmzAbMilDLIAZT6eWwK7xiGZJOmNPWM2VWOBh8A6ZxYdx3zgy
+	6Ux2KthSssgW6hOapSXchq6RS3moV94cs1TReQfaEph1jyuVL42/NcyHZVqvvP98Vvk=
+X-Gm-Gg: ASbGncv2An6ZPTWwqjAvwCAKh+4EzhKw7r//zSpJYufrySBcOOSEBn7nki2VmqA7kYX
+	s2IUekZcZab/e2UKvXysY+5h8zKTGzQixbCgFttoXruDK1qgjRqZbCYkNv2nYqFzx0zoMO9/DqY
+	8nb80hz2yEpZyHYWX0U9XWXQMYyN7zCNfOYws1IQ6B8edM7QTbupoNSpC95td1RHeh3xzsCycAf
+	HkZO51aZLEFoOJmP5J7LjwqVhZrhl4GSD2dEpo7vMuyO5hvZEdfFaz2L5eVwIDfbND28WeTJYFc
+	VHwzDnxiae6Ga3C601vwdXimX5563z21XrDJGFF9LrO6ZDhE3xx5ofujxTUa
+X-Google-Smtp-Source: AGHT+IGuO6Y6d+kCxwoNrEY38IpkexCj4wL5pVJUa3/XxA+mRVZ8kHkKd9XIST6kB9JCbxHGl+gsxw==
+X-Received: by 2002:a05:600c:3114:b0:440:61eb:2ce5 with SMTP id 5b1f17b1804b1-442fd64e335mr299932885e9.17.1747925558639;
+        Thu, 22 May 2025 07:52:38 -0700 (PDT)
+Received: from ho-tower-lan.lan ([37.18.136.128])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f78aeb56sm104965555e9.27.2025.05.22.07.52.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 May 2025 07:52:38 -0700 (PDT)
+From: James Clark <james.clark@linaro.org>
+Subject: [PATCH v2 00/14] spi: spi-fsl-dspi: DSPI support for NXP S32G
+ platforms
+Date: Thu, 22 May 2025 15:51:29 +0100
+Message-Id: <20250522-james-nxp-spi-v2-0-bea884630cfb@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <AA29CA6A-EC92-4B45-85F5-A9DE760F0A92@ateme.com>
- <4c0f13ab-c9cd-42c4-84bd-244365b450e2@amd.com> <996ca8cb-3ac8-4f1b-93f1-415f43922d7a@ateme.com>
- <3daac950-3656-4ec4-bbee-7a3bbad6d631@amd.com> <CAKfTPtBovA700=_0BajnzkdDP6MkdgLU=E3M0GTq4zoLW=RGhA@mail.gmail.com>
- <de22462b-cda6-400f-b28c-4d1b9b244eec@amd.com> <CAKfTPtC6siPqX=vBweKz+dt2zoGiSQEGo32yh+MGhxNLSSW1_w@mail.gmail.com>
- <c0e87c08-f863-47f3-8016-c44e3dce2811@amd.com> <db7b5ad7-3dad-4e7c-a323-d0128ae818eb@ateme.com>
-In-Reply-To: <db7b5ad7-3dad-4e7c-a323-d0128ae818eb@ateme.com>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Thu, 22 May 2025 16:51:34 +0200
-X-Gm-Features: AX0GCFvdXP-4idhTJtDESTwuQOtxpJxvvZ6RDqVKNRr-ZF6A0JkBHH_UMh9yOgw
-Message-ID: <CAKfTPtDkmsFD=1uG+dGOrYfdaap4SWupc8kVV8LanwaXSbxruA@mail.gmail.com>
-Subject: Re: IPC drop down on AMD epyc 7702P
-To: Jean-Baptiste Roquefere <jb.roquefere@ateme.com>
-Cc: K Prateek Nayak <kprateek.nayak@amd.com>, Peter Zijlstra <peterz@infradead.org>, 
-	"mingo@kernel.org" <mingo@kernel.org>, Juri Lelli <juri.lelli@redhat.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Borislav Petkov <bp@alien8.de>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	"Gautham R. Shenoy" <gautham.shenoy@amd.com>, Swapnil Sapkal <swapnil.sapkal@amd.com>, 
-	Valentin Schneider <vschneid@redhat.com>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, 
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPE5L2gC/13MQQ6CMBCF4auQWTumnaYLXHkPw6LCFMZo27SEY
+ Ah3t+LO5f+S921QOAsXuDQbZF6kSAw16NRAP7kwMspQG0iRVYYsPtyLC4Y1YUmCvfOaSbUtGQ3
+ 1kzJ7WQ/v1tWepMwxvw9+0d/1J1nV/kmLRoWG7r4fyLPT+vqU4HI8xzxCt+/7B7lZF6qrAAAA
+To: Vladimir Oltean <olteanv@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Conor Dooley <conor+dt@kernel.org>, Frank Li <Frank.Li@nxp.com>, 
+ Chester Lin <chester62515@gmail.com>, Matthias Brugger <mbrugger@suse.com>, 
+ Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>, 
+ NXP S32 Linux Team <s32@nxp.com>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, Chao Fu <B44548@freescale.com>, 
+ Xiubo Li <Li.Xiubo@freescale.com>, Lukasz Majewski <lukma@denx.de>, 
+ linux-spi@vger.kernel.org, imx@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, 
+ Vladimir Oltean <vladimir.oltean@nxp.com>, 
+ Dan Carpenter <dan.carpenter@linaro.org>, 
+ Larisa Grigore <larisa.grigore@nxp.com>, 
+ Xulin Sun <xulin.sun@windriver.com>, James Clark <james.clark@linaro.org>, 
+ Bogdan-Gabriel Roman <bogdan-gabriel.roman@nxp.com>, 
+ Marius Trifu <marius.trifu@nxp.com>, 
+ Ciprian Marian Costea <ciprianmarian.costea@nxp.com>, 
+ Andra-Teodora Ilie <andra.ilie@nxp.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Stoica Cosmin-Stefan <cosmin.stoica@nxp.com>, Dan Nica <dan.nica@nxp.com>, 
+ Larisa Grigore <Larisa.Grigore@nxp.com>, 
+ Stefan-Gabriel Mirea <stefan-gabriel.mirea@nxp.com>, 
+ "Radu Pirea (NXP OSS)" <radu-nicolae.pirea@oss.nxp.com>
+X-Mailer: b4 0.14.0
 
-Hi Jean-Baptiste,
+DT and driver changes for DSPI on S32G platforms. First 3 commits are
+fixes for various edge cases which also apply to other platforms.
+Remaining commits add new S32G registers and device settings, some S32G
+specific fixes and then finally add the DT compatibles and binding docs.
 
-On Fri, 16 May 2025 at 17:05, Jean-Baptiste Roquefere
-<jb.roquefere@ateme.com> wrote:
->
-> Hello Prateek,
-> long time no see... I've been very busy lately.
->
-> Did he try with relax_domain_level=3, i.e. prevent newilde idle
->
->
-> >> balance between LLC ? I don't see results showing that it's not enough
-> >> to prevent newly idle migration between LLC
-> >
-> > I don't think he did. JB if it isn't too much trouble, could you please
-> > try running with "relax_domain_level=3" in kernel cmdline and see if
-> > the performance is similar to "relax_domain_level=2".
->
-> I just tried relax_domain_level=3 on my payload. As you can see
-> relax_domain_level=3 performances are more or less the same
+Tested in both host and target mode on S32G-VNP-RDB3 by transferring to
+an external device over spi1 using spidev_test.c
 
-As there is no difference between level2 and level3, I assume that the
-problem is not linked to a core to core migration but only the
-migration between LLC.
+---
+Changes in v2:
+- Add trailing commas to lists
+- Line length fixes
+- DT coding style changes
+- Remove fake "rohm,dh2228fv" device for testing
+- Improve some commit messages
+- Put all fixes commits first and add fixes: tags
+- Link to v1: https://lore.kernel.org/r/20250509-james-nxp-spi-v1-0-32bfcd2fea11@linaro.org
 
-As said previously, I don't see an obvious connection between commit
-16b0a7a1a0af  ("sched/fair: Ensure tasks spreading in LLC during LB")
-which mainly ensures a better usage of CPUs inside a LLC. Do you have
-cpufreq and freq scaling enabled ? The only link that I could think
-of, is that the spread of task inside a llc favors inter LLC newly
-idle load balance
+---
+Andra-Teodora Ilie (1):
+      spi: spi-fsl-dspi: Enable modified transfer protocol on S32G
 
->
-> +--------------------+---------------------+---------------------+
-> | Kernel             | 6.12.17 relax dom 2 | 6.12.17 relax dom 3 |
-> +--------------------+---------------------+---------------------+
-> | Utilization (%)    | 52,01               | 52,15 |
-> | CPU effective freq | 1 294,12            | 1 309,85 |
-> | IPC                | 1,42                | 1,40 |
-> | L2 access (pti)    | 38,18               | 38,03 |
-> | L2 miss   (pti)    | 7,78                | 7,90 |
-> | L3 miss   (abs)    | 33 929 609 924,00   | 33 705 899 797,00 |
-> | Mem (GB/s)         | 49,10               | 48,91 |
-> | Context switches   | 107 896 729,00      | 106 441 463,00 |
-> | CPU migrations     | 16 075 947,00       | 18 129 700,00 |
-> | Real time (s)      | 193,39              | 193,41 |
-> +--------------------+---------------------+---------------------+
->
-> We got the point that tuning this variable is not a good solution, but
-> for now it's the only one we can apply.
->
-> Without this tuning our solution loses real time video processing. With
-> : we keep real time on.
->
->
-> Thanks for your help, I'll stay alert on this thread if someday a better
-> solution can emerge.
->
->
-> Regards,
->
->
-> jb
->
+Bogdan-Gabriel Roman (1):
+      spi: spi-fsl-dspi: Halt the module after a new message transfer
+
+Ciprian Marian Costea (2):
+      dt-bindings: spi: dspi: Add S32G support
+      spi: spi-fsl-dspi: Enable support for S32G platforms
+
+James Clark (2):
+      spi: spi-fsl-dspi: Re-use one volatile regmap for both device types
+      spi: spi-fsl-dspi: Define regmaps per device
+
+Larisa Grigore (7):
+      spi: spi-fsl-dspi: restrict register range for regmap access
+      spi: spi-fsl-dspi: Reset SR flags before sending a new message
+      spi: spi-fsl-dspi: Add config and regmaps for S32G platforms
+      spi: spi-fsl-dspi: Avoid setup_accel logic for DMA transfers
+      spi: spi-fsl-dspi: Use DMA for S32G controller in target mode
+      spi: spi-fsl-dspi: Reinitialize DSPI regs after resuming for S32G
+      arm64: dts: Add DSPI entries for S32G platforms
+
+Marius Trifu (1):
+      spi: spi-fsl-dspi: Use spi_alloc_target for target
+
+ .../devicetree/bindings/spi/fsl,dspi.yaml          |  18 +
+ arch/arm64/boot/dts/freescale/s32g2.dtsi           |  78 +++++
+ arch/arm64/boot/dts/freescale/s32g3.dtsi           |  78 +++++
+ arch/arm64/boot/dts/freescale/s32gxxxa-evb.dtsi    |  83 +++++
+ arch/arm64/boot/dts/freescale/s32gxxxa-rdb.dtsi    |  83 +++++
+ drivers/spi/Kconfig                                |   4 +-
+ drivers/spi/spi-fsl-dspi.c                         | 362 +++++++++++++++------
+ 7 files changed, 600 insertions(+), 106 deletions(-)
+---
+base-commit: d608703fcdd9e9538f6c7a0fcf98bf79b1375b60
+change-id: 20250325-james-nxp-spi-caf1e2099231
+
+Best regards,
+-- 
+James Clark <james.clark@linaro.org>
+
