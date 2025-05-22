@@ -1,69 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1AC045C14;
-	Thu, 22 May 2025 08:30:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 344DE195;
+	Thu, 22 May 2025 08:32:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747902652; cv=none; b=C2j0ZJceEUqhGiqcSBG1rn4qSd8C4yTBqvtCaqqKY+zxIdSR1Z8QJ063nR+4IZ05l6KvSAGRt44eUEcTuZ/9gMnIl+nOw9oT3uRsZdHr5bI69rYg8m37BHBDBWemoHw0SpBpnjo6Xca4IMsUrbVYtrSQk8LNfJNd17m/cxxT+1o=
+	t=1747902732; cv=none; b=YLK6Y6P0E33LTGa1/5ErZ13D+588njshHLEBzPAQLuK+efPcWqprLAVqjEema+vwtnmwEVPHtAkOUyO/eULyjnrYu1yBx1svKItFZ3wxF3M8Q6NIlj9xf2GLtym2iY9y17AQKR2NU3gdggyeq2bE0pTCOCpqYyoUd8Ync0JU0Io=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747902652; c=relaxed/simple;
-	bh=MRJHNZRt9utLQVgyJmGAvzAudoQRvVSqgUZWOLGd3q8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jv1rrlGf73afUFrKSjcGK7LQlpHqCiRWqGXbva6y7ntXc2nqu44GosObSwF5RJddAnyqS5MQt55z9hpzQ8T7gUw7JC8eN/HjPh0r2/M7mF1OIfbcqv2rJkvs1+4jR1LbFfnrAvbJqLHiDWHjNJBl2l5lC481GzpbtYIuJsvjfJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=CzSOAiWp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747902732; c=relaxed/simple;
+	bh=WZQ6HWfccKpwFuwd6OP4pxDr+2OU5kN37ioPZebYFl8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=iwUN/XBEfbYopsDe4MWszv/f9vMwfC3d9oEMdjG+/yjI3oV7FDkAsceb8/AkIUR2JaPPTerNWgN+QkPHxVo368bRGYmdYP1GgQmRF+JhyktYyc8t+E1P0szjOogBug2a7Rk5TECgurjnCBglWCnvizI0QlTpG+7B6bSEuyUsTLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YM0ss1GM; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="CzSOAiWp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B94D1C4CEE4;
-	Thu, 22 May 2025 08:30:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1747902651;
-	bh=MRJHNZRt9utLQVgyJmGAvzAudoQRvVSqgUZWOLGd3q8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CzSOAiWpzq2SF4bRdzcZra8Y0lJ9jYJsXDPzTyeKMwBj3YL5xWevgvOYL1kGdJXxP
-	 +0Y6IF0wYPml8dytGbDEex0dbCaNv8XxGtbNQz8CbwM7Z1sgOThHQ4nLjnY/eqWskY
-	 YTIJKgza7PNoKC7rN7PuED5q59C9aCRFub2SVkuo=
-Date: Thu, 22 May 2025 10:30:48 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Brigham Campbell <me@brighamcampbell.com>
-Cc: Jihed Chaibi <jihed.chaibi.dev@gmail.com>,
-	heikki.krogerus@linux.intel.com, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev,
-	skhan@linuxfoundation.org
-Subject: Re: [PATCH 1/1] usb: typec: tipd: fix typo in
- TPS_STATUS_HIGH_VOLAGE_WARNING macro
-Message-ID: <2025052234-brewing-recall-a7ed@gregkh>
-References: <20250521214851.386796-1-jihed.chaibi.dev@gmail.com>
- <DA2IV4ZGT2M8.3QXO3L57VXSA5@brighamcampbell.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YM0ss1GM"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-44a57d08bbfso4392485e9.2;
+        Thu, 22 May 2025 01:32:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747902729; x=1748507529; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=SrIJdQiEhSsbGgqftG4sW4hqql7zVGZrpv/yvD1/dGY=;
+        b=YM0ss1GM3VIAb1pDTO8vPvQVtWKTnCSHMogESU1yixqLQDUlCdM8Q0BjCvjw2G5iHk
+         WxX+jy2IpIDbHU6kfIf7LQAGDHCa2Ak7TOhLVZuisID/0B4ukAVgjgFjlW/HK0OQA1Ma
+         elBLHmSc915XNtMy2cLXOk3NLqKLGIQyI9QfaVAXoR1dOs+6wNEVntBNKiPoMm4ZbvB4
+         n+n5GXDJmib7AxLZuwV+j/lpUPljea98f1JWQdDdeuhu4VuASZAmVaSe4eJrIqS/qCan
+         xwNFG9InQJXwkkqUkbhLGH18Tup2pp4/QLmrm8e/KPMRF8l3aPz2yeQvRZ1922fR82yR
+         FsSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747902729; x=1748507529;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SrIJdQiEhSsbGgqftG4sW4hqql7zVGZrpv/yvD1/dGY=;
+        b=g7xjfiUxUgJtCB/OcQxnMpScxiCMMBGJ60ReCXFeGSCm5SDDWUz0A/p97xSxBPwYE8
+         ewzubPEn1K1TXICAamdssbswGk9BMI7+3xVM2s4ZOAtAcaL5UFXKedPAp0YaPX+aEcCV
+         BGb6OlItg8OP6IRvzAzD1koaNqSsY2/FdUC21KF1+0UWLE+YS8Fcbs5D4Xnvwx2159ZN
+         dP0SS2hbAi2V7Iear1SEJ/MoU5NAmidBDJ57DKxHGYsItsblMCW7IS5ht+GI4NXobkzE
+         NOAC1EtMAen3Qs1Qo/PsSUEb+8UOFhFZ15KgvfnqmGG5wbLTubqfgNF/eLoI5HobWzQ3
+         ToRw==
+X-Forwarded-Encrypted: i=1; AJvYcCUE8UTYHb3LAqzqFxlx5cC6wT5IJX63ml6YtQPNI7kv1b8xxZ5iBvLZLrFNfHEnWvCNPvdiiT7ZT5Oz27g=@vger.kernel.org, AJvYcCWWPwJQQ6jQM5xzhPvUEdqHr/SgMnwQfYqnjBlztDe0fmYnmS/CL1O3nLYxzputzazZa2oK1nFrKYw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx00v79L5vWhep+sVPVoVlmiRjqtS9cdDkeiHpDg+qtDAifSQ9g
+	tMvO0Ok+h6GRKIaglbHQ6vy1dSL5p1Ln6QSjgsOxEbAYgRFo/Q07f//d
+X-Gm-Gg: ASbGncuHf+8/KeSimNFaTqyfJeLxU2JO/eq8fHB8av/BHu6W6n1qAuj83Z/saYJXgrs
+	bDRFDpFjm7IRg9jsooIRWJhX6n8hLjC1gNw+LZvnQROnXrGWmhvmZ8PvZPalDDM/Ueln/q/4IFS
+	lDTw6zQxfguiwQlbhoGxNA0HsydQk6xnrRlj3Y31AGt+LX0TXSKUu6UFKVN49HPX5PBk4nf+2Aa
+	4YZcfZ+JWjWdZtZgLNNn5XCEhsK6wqPo0fHHyUcV38ezwyGp41ceNSaA3Y0piUR7tTGWgOHLed8
+	8LcYHiL3olx6xh7VHlIohnrwiKP7xx6saOZ6NiLqgyhs5piFPg==
+X-Google-Smtp-Source: AGHT+IEWxTNbNldirqzkPayemAcdRy+LiGEXRQOfWvBP6iR1PKB5wnbTpTszol6POISM5nSMgXTsUA==
+X-Received: by 2002:a05:600c:8709:b0:44a:b478:1387 with SMTP id 5b1f17b1804b1-44ab48784e8mr9569075e9.17.1747902729154;
+        Thu, 22 May 2025 01:32:09 -0700 (PDT)
+Received: from localhost ([87.254.0.133])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-447f7ca2dd9sm93544565e9.37.2025.05.22.01.32.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 May 2025 01:32:08 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: "Rafael J . Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	linux-pm@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] thermal/drivers/airoha: Fix spelling mistake "calibrarion" -> "calibration"
+Date: Thu, 22 May 2025 09:31:57 +0100
+Message-ID: <20250522083157.1957240-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DA2IV4ZGT2M8.3QXO3L57VXSA5@brighamcampbell.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 22, 2025 at 01:47:54AM -0600, Brigham Campbell wrote:
-> On Wed May 21, 2025 at 3:48 PM MDT, Jihed Chaibi wrote:
-> > "VOLAGE" should become "VOLTAGE"
-> >
-> > Signed-off-by: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
-> 
-> Nice work! I was able to successfully compile this driver with your
-> changes and I don't see any further references to the misspelled macro.
-> 
-> Patches which fix issues which were introduced in some previous commit
-> typically indicate the offending commit via the "Fixes" tag. Admittedly,
-> I don't know if the tag is reserved for technical bugs rather than typos
-> such as the one you addressed, but such a tag would look like the
-> following for this patch:
-> 
-> Fixes: e011178579b57c03 ("usb: typec: tipd: fix typo in TPS_STATUS_HIGH_VOLAGE_WARNING macro")
+There is a spelling mistake in a dev_info message. Fix it.
 
-Too many characters for that sha1 value :)
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ drivers/thermal/airoha_thermal.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-thanks,
+diff --git a/drivers/thermal/airoha_thermal.c b/drivers/thermal/airoha_thermal.c
+index 9a7a702a17de..b9fd6bfc88e5 100644
+--- a/drivers/thermal/airoha_thermal.c
++++ b/drivers/thermal/airoha_thermal.c
+@@ -352,7 +352,7 @@ static void airoha_thermal_setup_adc_val(struct device *dev,
+ 		priv->default_offset = airoha_get_thermal_ADC(priv);
+ 		priv->default_slope = EN7581_SLOPE_X100_DIO_DEFAULT;
+ 		priv->init_temp = EN7581_INIT_TEMP_NONK_X10;
+-		dev_info(dev, "missing thermal calibrarion EFUSE, using non calibrated value\n");
++		dev_info(dev, "missing thermal calibration EFUSE, using non calibrated value\n");
+ 	}
+ }
+ 
+-- 
+2.49.0
 
-greg k-hj
