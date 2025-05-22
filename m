@@ -1,109 +1,105 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66D7C2BF3C2
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 20:10:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74E682BFC64
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 20:10:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747944612; cv=none; b=oXw6sAZYdHPaYhGa0vC4cRLkhbhJws9Eb8WbJN3b9dDvOxO0VymDXPYAvFqPkFfnqpeiyevZ6VFQC9BsXI7fleUA9/UcmurwVIyvPjbUib8OX3K8PLDRXJMmaWEcBaabk2Z3S713NNWJRjuelWVEy/U/Cn3As0/hPUrUMMy4P+c=
+	t=1747944619; cv=none; b=KO49nxNMEDq5HILuU/AwF21cCUBx8ol0+MCUthc7qJ+VXE7EIde6D4EbI4M1G1rSSgOS3X+K7Ozprer4ybM45grPaBetngUAVY+SeLvLOtbx0Htn1l04I+m1j0YHK1yRNtJm2YI0jwFKcv6m7jK7sz/WUqWRwcXJ+0QC8y87AqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747944612; c=relaxed/simple;
-	bh=uw9HYp7TY+y8RJAkMxxO3mIxoLQxok6Z5rtlhqEMtzA=;
+	s=arc-20240116; t=1747944619; c=relaxed/simple;
+	bh=u1d0amzEQMXWLc+O6o+EmY9H47Q/ZLgRR2P2wcViHWM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jpuU/IEOD6AuwoOmmyW8rFTsFZziEounnBdp210CwN0/8rWSMvL7nSrykRuKSlRfdWGz5JpHuWqenblkMLB/U7pUzVOBfYH3PrtUo2BGC3ERyNlaIXwiiCfiO29xa08gbAmLAv5QvnXWtV/33CTGtG0jtHRYjf0LvAtdqVSuhPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eD1TjFOP; arc=none smtp.client-ip=209.85.214.176
+	 To:Cc:Content-Type; b=Y8IXQei1d+oHg8yvjRGUHHMWov3RX4ktNj+KfVhUrxML69f6aELJH/7lXEO/IMrp7S791qKnaJisf8AXfIaWhIf0OkBG2T5przei3M0cwrV8VPHQ6n+imGDkeIUYz+v7dLSIU74y2RPuSZpvSTNnSblFhkr0T31bVPb2pLR7DbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Fl556fUl; arc=none smtp.client-ip=209.85.221.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eD1TjFOP"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-231f61dc510so46585ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 13:10:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Fl556fUl"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a36748920cso5608310f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 13:10:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747944609; x=1748549409; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1747944616; x=1748549416; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=uw9HYp7TY+y8RJAkMxxO3mIxoLQxok6Z5rtlhqEMtzA=;
-        b=eD1TjFOPkjSwBVHXOIHu76jvAcFSaXXMXMXz2HL9y/4ezxy3cb3qPBTibsfEjVuYgJ
-         cGWALBcfHDy+D+dn7e8Wkai5YMUGyqXdpm+cT7kl6ImiCE3TRmGjrdANxBtCLG8XflCA
-         BV1Jjxe+1pT5Y8IaHz3pzqaIfsPVE35Qn0FA2q3e8JNBUcW26RoTkQ0xTpuhwLUcB65p
-         x1a8HlvchAwJ4o7yqjv/ObZ/dq+6uEUPW0suT00Qgb6aSO59sd3eKaP8nfrzVV7vqgpo
-         13Op0nlDZulKS+8UN63TLdZMNEOq8tVMkxdYYJaojJBdz7UB+FqgPOv4+gBEbzMKCOl4
-         IjGQ==
+        bh=Zi6UK63Kniro/hiv/vg69lXNbuiW+Rc4uGAFOEdYP7c=;
+        b=Fl556fUljacUaSLGbWtgKpbXHUXrH7uPQgGPfrjX3KR0zEHB/4GmEqMjK9OCeqq94z
+         Bn8oiIWpZT6IoX6uJDM4OyfYFDyKDzEEpM2eAu2xd2ft+Img4qTmPLAASVD6X1BE37u/
+         aRF2XK9oZt7FJiAAMy44KmBT0wW/s+jg0kxLFZ0cG1WQ8goucEU3TEMV+x3bNujiOK8v
+         cUP5MaZlySPFYWlvxBs6uA7XO/l2SsodAaYTQscV+ej4fVnWH64606/gis6bDQxBRojM
+         csCO4LwkEohVkZ30yoCSUBW4tBD9JkLYqC4amEwjjeqaWWo084R8Hneq2YK7REzztQpy
+         ukHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747944609; x=1748549409;
+        d=1e100.net; s=20230601; t=1747944616; x=1748549416;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=uw9HYp7TY+y8RJAkMxxO3mIxoLQxok6Z5rtlhqEMtzA=;
-        b=r3h0jN1PL5QLZAWCzndpLqBdWw33g16Ium8lf9Lc/I4AHBtV6Q0FQNjLNUFXmh1Ytf
-         zJhKQ36x9eftfS9Ugvw6Q95PN8C3mETxzO8s/RDf/H0DSNj4i7/JQ3njeNadPBw2Tqs3
-         MKpfcceC1hQkq05GJr0Tchw5avf0z5U0TPraz4aK6qQ4j7+NwaLy66r2tMLAvDRDVMOs
-         uCySEp5+JbCWgm1WC4N0zCfX8mJXxD//ChPwMLXai6j+1BgW7UyFRJlhcoflff1XVnW+
-         kvmm/IRNZuic5FUralh/TzLYYy9rSsK0dAtJF9u1Xt1fCtM3XX7CG7G4OCIFsmGDiX25
-         6v6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWhea9DifxW7MMNidZt6zjnDPWgPnWS2CxEfoZxRs4vhLyTW2NCSAnP9aZAN18HhniPmmkyBPAf7agW9EM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLtPQ3BtWAqoJRSwAxNPMT+Bw5eX5VOZC2zoyVLt/mV1pN6Neh
-	7GgCRgW4ScKNvuue3v2hgktaf+S6iT71JsgQWxkfD7sVTbv+t/RBcJKB1TLju8MUgRBnJQzKjYK
-	+AIFuHRYpdU8LI7E/HtMMREQ1s2fLZecvAi/znAE0
-X-Gm-Gg: ASbGncv+fd1zaIxrnNvs1p7rM33YH+Ss1CLNch62avoPlGhZcR7CNSDNZOJ9HHJX8nI
-	hrFUJBznjMcVkvW1vOVIWIdT5elhAim3I/cNjHNt5auHYGqjtQxYZJFJyRhZrI9jeI4bCHHjH1h
-	DM9sVAlh32P8FHDihkiEDORnFF14exJXe30ZXm57STVlIQtBgAy5YVCZ6ciXtkSlmvyq7qnPxCu
-	dUxUREj6SA=
-X-Google-Smtp-Source: AGHT+IG4FGsVqHi6rXN0E0dPwqX5wRsFdCXEIotJn97oIcWC4dLCcVTQiIBGn9UbqgH9et/oSpeWPLDEyduIif4u4cA=
-X-Received: by 2002:a17:903:41ca:b0:216:4d90:47af with SMTP id
- d9443c01a7336-233f2ee4e98mr119985ad.29.1747944609372; Thu, 22 May 2025
- 13:10:09 -0700 (PDT)
+        bh=Zi6UK63Kniro/hiv/vg69lXNbuiW+Rc4uGAFOEdYP7c=;
+        b=HEAlrLiK3p+DW1qzkcqcMp++HWU2wmmtHG4432E82/tzZwZa6tRjAUAQkD/914jFp/
+         pdqWXAguwnAImImdlj0rkmWe5BM8n7aSR+RRlJ81O26o4orUwglmJGz1geFyWLJhGg82
+         xqYQ3tviAr97s71UlbSN5iafuce6l1Hj5IAtZb+sBw+it1RBrWBoKh/dSt6i6/mWjNay
+         n/Dj4VV+ZJxwIila5bG/oOX3trv+HEno9JDF7+7t8ZAQgjaSWq3OCP9OKN9a5gNu0+FG
+         qc1v15sPEtf7uVDqGOZbPDMrG3bhe/kbNsUO+rE3tD/75AMHwj0ybz84pK8z/U+Ls0fU
+         25fA==
+X-Forwarded-Encrypted: i=1; AJvYcCX9OX2nzryuus+Cpxh9buLLhNzKdFnikfNm5aYYvBFETQgo9QJ0qAnZGm+7I8rria3YPs3v6g0x2RAzVk8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywy7eFsXwFtg1ThuujnfrkjJkQMC9N8PIh7ApqfRs8Zu4EIkZuk
+	5a6IKnPWFmtvFx2o6Z2VuDiZKtSyOGAMIBDPnRf2bY8qg/wHRQHjrTdTS+wYwbKK/T6If728w9W
+	aeKhkn0mKpDaIxvYLOrOWSQguT8Ej6Krt2vFXFi05
+X-Gm-Gg: ASbGncsqQ9+v0HcdbjTD9MxiW1pijTryfW/KQU9AlBhl4pn/lTArEcqyLShHnicTWGj
+	XmlTTW5T+sRA5iGIggFLOR6tkw2m/epsHCXo/m9CmLOiCr3bDLKFnRy8y0KI9OTWIXQxjzptZ/r
+	LF9ZJ7KuqjoVjTW+UIW7xGT97QMzx7VA/qrUlyIrfx4/29LkP/TVVPi/HnoSZrt/aReNxQAXJsl
+	A==
+X-Google-Smtp-Source: AGHT+IHd6YqAoxYw8miBcoEkIf/xB+HqLUuOOhvJRjCeKRZF7C69+8RuD1SZ5w0zECEw6IKhFE00IUJDA7Pw53bTrRo=
+X-Received: by 2002:a5d:64c7:0:b0:3a3:6584:3fa1 with SMTP id
+ ffacd0b85a97d-3a365844ba6mr22936770f8f.44.1747944615640; Thu, 22 May 2025
+ 13:10:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250522171044.1075583-1-namhyung@kernel.org>
-In-Reply-To: <20250522171044.1075583-1-namhyung@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 22 May 2025 13:09:56 -0700
-X-Gm-Features: AX0GCFtaaENpG6rhZsQXbUSYKKSuPuamXi8st3_wtE7GATXAz04cGZxz0L4ToMs
-Message-ID: <CAP-5=fXDaKueO9HE-Gr3Q7R6qm2EjwnL845nh7R2OU+DCfrhyA@mail.gmail.com>
-Subject: Re: [PATCH 1/3] perf test: Support arch-specific shell tests
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+References: <20250413005650.1745894-1-ojeda@kernel.org> <CAH5fLgiF0kZdOYaQi18_LTNx6Onq-5PBomA=bwS0m0z+C0wtvg@mail.gmail.com>
+ <CANiq72ngfTJ5PTYaJOOQ2NedERrLYzA62hL8Fgw5C4QkuZ2R-Q@mail.gmail.com>
+ <Z_0X8Z9M2H0mmcK8@google.com> <CANiq72=ttuQYrGNDqNZDmBN5G4TUpna+ex8eD85HvOP723frDw@mail.gmail.com>
+In-Reply-To: <CANiq72=ttuQYrGNDqNZDmBN5G4TUpna+ex8eD85HvOP723frDw@mail.gmail.com>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Thu, 22 May 2025 13:10:03 -0700
+X-Gm-Features: AX0GCFsS36Reksqvi8aRibe6a18Oz-bTGUW4k34hhUquW5v3Uv-Z43TgekyqjRs
+Message-ID: <CAH5fLggfFJ3TmoDbVa1SqOPywOHKDy85CR5pz5wZ8VpZj+Cr6w@mail.gmail.com>
+Subject: Re: [PATCH] rust: add C FFI types to the prelude
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 22, 2025 at 10:10=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
- wrote:
+On Thu, May 22, 2025 at 1:05=E2=80=AFPM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
 >
-> This is a preparation for shell tests belong to an arch.
+> On Mon, Apr 14, 2025 at 4:13=E2=80=AFPM Alice Ryhl <aliceryhl@google.com>=
+ wrote:
+> >
+> > Hmm. Maybe, but I think having it at the end is okay. Could we catch
+> > core::ffi with checkpath instead of clippy? Just search for core::ffi?
+>
+> Sure, we can add it as a good first issue (Clippy would still be ideal
+> -- it allows to check all the current code).
+>
+> I came up with this, which puts the right way first:
+>
+>     Rust kernel code refers to C types, such as ``int``, using type
+>     aliases such as ``c_int``, which are readily available from
+>     the ``kernel`` prelude. Please do not use the aliases from
+>     ``core::ffi`` -- they may not map to the correct types.
+>
+> If neither of you are against that, I will put that in a few days,
+> including Danilo's tag.
 
-I keep repeating that I don't like arch and I think ideally we'd be
-getting rid of the C arch tests. I just sent out a patch doing this
-for 1 test:
-https://lore.kernel.org/lkml/20250521165317.713463-2-irogers@google.com/
-We should be able to make perf, tests, etc. dependent on a PMU rather
-than an architecture. This means that running perf built for ARM will
-be able to do things running on an instruction emulator on x86. It
-means the tool, the kernel APIs, etc. are generic and new
-architectures like RISC-V can test things. It means cross-platform
-(record on 1 machine type, report on another) can work without
-tripping over load bearing architecture ifdefs. It means that we
-benefit from more testing on generic pieces of code on all
-architectures - like sample parsing. We can always strcmp the PMU name
-or the architecture at runtime.
-
-Structure wise we could have:
-tools/perf/pmu/ibs_op/tests/
-tools/perf/pmu/ibs_op/tests/shell
-
-It feels noisy compared to just having the shell test in
-tools/perf/tests/shell skip when the PMU isn't present. There are also
-things like library dependencies that aren't clear when we have >1
-directory. I'd prefer if new testing followed the existing model
-rather than this.
-
-Thanks,
-Ian
+LGTM
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
