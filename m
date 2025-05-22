@@ -1,119 +1,113 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 919E113212A;
-	Thu, 22 May 2025 09:03:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2972176ADE
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 09:06:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747904597; cv=none; b=PFNSXrh10IcV7NYhS+P96pxCoUdEJOUh0whTlNq/vxvOCtRIrrxzgAxwXykJIHyBINwSAOce2jVF3au7f5N8LypM1LSpqKPCusx0V28pQtxuh7645xjNDN2zmRf78pu2Dw2ro7U3q3nmKpziWBvzLuzA7zLvZi9VloRtaNFbA+A=
+	t=1747904773; cv=none; b=iVmUJJPPPgxg2i/UdtBiHfPdsMHAk92dy3PcYZzlalH7DC1Miy2Hwe05oLZ5apnInBC8SzlpGtkueBZoZUAk+N6isF9ouE6FS9dlp2YK9Kxd22FS8o17j+I2675EdzZWN5mhJ2eI4nwhruTsVSN3FJZ6Lg307xsu6VrIPL71AYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747904597; c=relaxed/simple;
-	bh=/2FzKQy6N923y+2/aYeRTf7lFGlB3ZaKNCL5XEte00g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LO6ozZayc1buD1UhtWvIy1v1PjZb72C1cDAESYcp5PHqZ2mIpMsxNGbz25UZoG/Mcj9pn/htR3DX2H4kQqEbYgxpQ3Y265y4D0DODWiw2AlX+I6tu8+87TFwT7NzRpsf44kXRkc2+gbU1KiNlKEItpEfK3R+kZvregewiGv7i9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=pankajraghav.com; arc=none smtp.client-ip=80.241.56.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4b32Pq2VNhz9t4X;
-	Thu, 22 May 2025 11:03:11 +0200 (CEST)
-From: Pankaj Raghav <p.raghav@samsung.com>
-To: Suren Baghdasaryan <surenb@google.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Michal Hocko <mhocko@suse.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Nico Pache <npache@redhat.com>,
-	Dev Jain <dev.jain@arm.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Zi Yan <ziy@nvidia.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	David Hildenbrand <david@redhat.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
-	Jens Axboe <axboe@kernel.dk>
-Cc: linux-block@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	"Darrick J . Wong" <djwong@kernel.org>,
-	gost.dev@samsung.com,
-	kernel@pankajraghav.com,
-	hch@lst.de,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	willy@infradead.org,
-	x86@kernel.org,
-	mcgrof@kernel.org,
-	Pankaj Raghav <p.raghav@samsung.com>
-Subject: [RFC v2 2/2] block: use mm_huge_zero_folio in __blkdev_issue_zero_pages()
-Date: Thu, 22 May 2025 11:02:43 +0200
-Message-ID: <20250522090243.758943-3-p.raghav@samsung.com>
-In-Reply-To: <20250522090243.758943-1-p.raghav@samsung.com>
-References: <20250522090243.758943-1-p.raghav@samsung.com>
+	s=arc-20240116; t=1747904773; c=relaxed/simple;
+	bh=1aA7HwU1n1v+3XowuECVC6hqzuKf1pDD5kgEoVS4InU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jMVWVCe0IKrndlgb/mDVJVkicfssoiwoDoO0JNbQTr/W5WMbZCcPK70fWuXot0H6Wtyen+CgcyZnAiHbydhfYWYBFLA4/yasKvlsj+Rfc6eacJxJgGx2WjGGpiNwXcYmdqNiEbvQTCRgoo5ksrEODfIBtG5oC2xa9T+r9bTpblE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=ISCJR0hU; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="ISCJR0hU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=1aA7
+	HwU1n1v+3XowuECVC6hqzuKf1pDD5kgEoVS4InU=; b=ISCJR0hUQbkEnPpprBI8
+	m0nc+QlFeliFgDjh86G6Fub/BVAfW8LhFlWvAb3HbhzbBJ7cfMR2TRSvQGO500Su
+	ULuAhVOTfFHPKEAxpdGG1OBj15ZZJRZ2cXgreRDPNxuSkoCDDBV5HZayaszKwxgv
+	Rilm24fk0KHvr0EZkd6JTBUUQP+zvRl2O4O0rXjZyQmnLp6tJsROpKmMsxmNYu/V
+	Qf0dYMl678saimNHEh9rz9YZ0EtIwIAupM+It6VWmBkfHu2txeAq41TDsYN0fkdn
+	0AzS7IzACNJEjob6HdBuCuHbRdCW7v4O4hNwmk5773DswEc5cemMXuEX1jA7BkEx
+	kQ==
+Received: (qmail 3586651 invoked from network); 22 May 2025 11:06:06 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 22 May 2025 11:06:06 +0200
+X-UD-Smtp-Session: l3s3148p1@BwC1yrU1sNIgAwDPXwj7ADHm2wGe7qss
+Date: Thu, 22 May 2025 11:06:06 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Cosmin Tanislav <demonsingur@gmail.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Romain Gantois <romain.gantois@bootlin.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+Subject: Re: [PATCH v5 1/9] i2c: atr: Fix lockdep for nested ATRs
+Message-ID: <aC7o_obqzBlhW0tE@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Cosmin Tanislav <demonsingur@gmail.com>,
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Romain Gantois <romain.gantois@bootlin.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+References: <20250507121917.2364416-1-demonsingur@gmail.com>
+ <20250507121917.2364416-2-demonsingur@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="GkNdphenG3CBojfr"
+Content-Disposition: inline
+In-Reply-To: <20250507121917.2364416-2-demonsingur@gmail.com>
 
-Use mm_huge_zero_folio in __blkdev_issue_zero_pages(). Fallback to
-ZERO_PAGE if mm_huge_zero_folio is not available.
 
-On systems that allocates mm_huge_zero_folio, we will end up sending larger
-bvecs instead of multiple small ones.
+--GkNdphenG3CBojfr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Noticed a 4% increase in performance on a commercial NVMe SSD which does
-not support OP_WRITE_ZEROES. The device's MDTS was 128K. The performance
-gains might be bigger if the device supports bigger MDTS.
+On Wed, May 07, 2025 at 03:19:07PM +0300, Cosmin Tanislav wrote:
+> From: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+>=20
+> When we have an ATR, and another ATR as a subdevice of the first ATR,
+> we get lockdep warnings for the i2c_atr.lock and
+> i2c_atr_chan.orig_addrs_lock. This is because lockdep uses a static key
+> for the locks, and doesn't see the locks of the separate ATR instances
+> as separate.
+>=20
+> Fix this by generating a dynamic lock key per lock instance.
+>=20
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>
+> Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 
-Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
----
- block/blk-lib.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+Your SoB is missing. I will add it for you if you confirm here.
 
-diff --git a/block/blk-lib.c b/block/blk-lib.c
-index 4c9f20a689f7..221389412359 100644
---- a/block/blk-lib.c
-+++ b/block/blk-lib.c
-@@ -196,6 +196,12 @@ static void __blkdev_issue_zero_pages(struct block_device *bdev,
- 		sector_t sector, sector_t nr_sects, gfp_t gfp_mask,
- 		struct bio **biop, unsigned int flags)
- {
-+	struct folio *zero_folio;
-+
-+	zero_folio = mm_get_huge_zero_folio(NULL);
-+	if (!zero_folio)
-+		zero_folio = page_folio(ZERO_PAGE(0));
-+
- 	while (nr_sects) {
- 		unsigned int nr_vecs = __blkdev_sectors_to_bio_pages(nr_sects);
- 		struct bio *bio;
-@@ -208,11 +214,12 @@ static void __blkdev_issue_zero_pages(struct block_device *bdev,
- 			break;
- 
- 		do {
--			unsigned int len, added;
-+			unsigned int len, added = 0;
- 
--			len = min_t(sector_t,
--				PAGE_SIZE, nr_sects << SECTOR_SHIFT);
--			added = bio_add_page(bio, ZERO_PAGE(0), len, 0);
-+			len = min_t(sector_t, folio_size(zero_folio),
-+				    nr_sects << SECTOR_SHIFT);
-+			if (bio_add_folio(bio, zero_folio, len, 0))
-+				added = len;
- 			if (added < len)
- 				break;
- 			nr_sects -= added >> SECTOR_SHIFT;
--- 
-2.47.2
 
+--GkNdphenG3CBojfr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmgu6P4ACgkQFA3kzBSg
+KbZMpxAAlHCxv5mOj63C/jK3br3u97V93aFPfK7YKaQztB1C3Dp188LFGlbtlfaU
+VOLrTsXt5s+l7E0NasMyF4XmyhJ7H90ut0vJZxkDQiXT/xsAKaByQRz5d1EHLd2b
+DiTDzo9qfT9eR3kqVE0473T5ET77IO3CPasphHfaZj/CAeBYYH2w+4Hlu3ZzjnH5
+98HJJnTFCVS+qCbtT1Alf2xLG1Vik772F2hdfg8Z7URFT+aneB5FOkdqQLbgIYsI
+Hb1yHk/0JnhHxsmLR7eBHNggyGZWfpHIyDli2HT6fAUJ5CabkIymw2SwVA0Eya5i
+6zQwkI4me06EPXe48XRd+iH0s/GRnL7M1pGozg54laT/LG0Pw4rPsogrxMY8XoDS
+SAI23WR6m7A7WDdO2SRDQIezXE6jwsK25MgG1e6BPurcFcfygA9fDTdf6bjJj45d
+hZonWI5YVnYoeFH75Kqep1fnAO6oBJWVG6GxZzbA8ZJ3tmkdFB99F12i5tqxHMgi
+H/JXKam7f3em6bT2ZjR2EsgqO3MJGa1BxXjIva/NJh94bsN0WnE7PrTaK+W5jkCv
+bxQy9saYq0L3GyoJfP7+PxgpYzISIvhedwJl/DaRaE6OCUzpRr+3q8bQbrheK3Nf
+lOP4M7OKkNsrSw/ZmVLHkBIvtoUKWP8O1565H89dTFbK/WBPvag=
+=ljn4
+-----END PGP SIGNATURE-----
+
+--GkNdphenG3CBojfr--
