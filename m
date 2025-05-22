@@ -1,110 +1,109 @@
-Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDB1D299A82;
-	Thu, 22 May 2025 20:10:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66D7C2BF3C2
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 20:10:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747944607; cv=none; b=pI/Tl2JBPFLivThZ9jrJpa5BiCdFiFLr8l4hftcuS+W9MS4ENI3iHahl8GKXdegFmsRkHe9WBQn5voU4iKKeFCh8cERUu9TYYypMtYgIzaDdZ0JGFyC24tBEMODUc+uRYnRycDbVVfzVBj4mseErj4yPzKqfyoHesaI4I65hUq8=
+	t=1747944612; cv=none; b=oXw6sAZYdHPaYhGa0vC4cRLkhbhJws9Eb8WbJN3b9dDvOxO0VymDXPYAvFqPkFfnqpeiyevZ6VFQC9BsXI7fleUA9/UcmurwVIyvPjbUib8OX3K8PLDRXJMmaWEcBaabk2Z3S713NNWJRjuelWVEy/U/Cn3As0/hPUrUMMy4P+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747944607; c=relaxed/simple;
-	bh=yErHsHeJjWcuHxho3mY47hFQuRX/I6iGr/Ifguem7hM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ogPSwcF+SRVe5hK6zBI5Z1GS4ShcNahQ++hFLlQdJUYmVK+Y0alqXgQ+lROEUN5cp9gJ7/y2vjPYQ7CUz0u160xVDcOiDx0DEF93YjzSlicHpm9XyMpQ/VO4FszIoIU1EGbeaKaO3F4EWaAji95zykfywrkd0wEP23jEv0SIFq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GgxJA3Ab; arc=none smtp.client-ip=209.85.167.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1747944612; c=relaxed/simple;
+	bh=uw9HYp7TY+y8RJAkMxxO3mIxoLQxok6Z5rtlhqEMtzA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jpuU/IEOD6AuwoOmmyW8rFTsFZziEounnBdp210CwN0/8rWSMvL7nSrykRuKSlRfdWGz5JpHuWqenblkMLB/U7pUzVOBfYH3PrtUo2BGC3ERyNlaIXwiiCfiO29xa08gbAmLAv5QvnXWtV/33CTGtG0jtHRYjf0LvAtdqVSuhPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eD1TjFOP; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GgxJA3Ab"
-Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-404da7584adso3475902b6e.3;
-        Thu, 22 May 2025 13:10:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eD1TjFOP"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-231f61dc510so46585ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 13:10:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747944605; x=1748549405; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1747944609; x=1748549409; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FkXwot3ZtDxYGxFh1Bb5xfVQC7W9CJxSBom6soP1diU=;
-        b=GgxJA3AbWiqVgs1oxo0VYbPzOKdnQJvLhpHcOSFxshZM/QuF34eyYB12G/rBsPmgQc
-         BbLw/E4Nbv/5gPYWD6xc2bLsq59ks0stWZu+Vf3JhhjzgO+6BzdJfGAjVzu2jqKaks2j
-         CL6rtHFGpttofjV+nNWI3tJ/KUnoZs6UHILurjSJSBsDfudb4waSUhdAMDYXLnlCWX2v
-         4FYm8xl15WApCECPyOxfFdjdeVApL8hO9MiCiiAUrQYKwrTgjhDzuSAJ8PiQDqHkwy3H
-         bqx2k2ANK2Gj2W5hUPH97VTn+dw5eOsLgWardH+E3rOv8FShTav1hkCkJluytILRNZUD
-         lvdw==
+        bh=uw9HYp7TY+y8RJAkMxxO3mIxoLQxok6Z5rtlhqEMtzA=;
+        b=eD1TjFOPkjSwBVHXOIHu76jvAcFSaXXMXMXz2HL9y/4ezxy3cb3qPBTibsfEjVuYgJ
+         cGWALBcfHDy+D+dn7e8Wkai5YMUGyqXdpm+cT7kl6ImiCE3TRmGjrdANxBtCLG8XflCA
+         BV1Jjxe+1pT5Y8IaHz3pzqaIfsPVE35Qn0FA2q3e8JNBUcW26RoTkQ0xTpuhwLUcB65p
+         x1a8HlvchAwJ4o7yqjv/ObZ/dq+6uEUPW0suT00Qgb6aSO59sd3eKaP8nfrzVV7vqgpo
+         13Op0nlDZulKS+8UN63TLdZMNEOq8tVMkxdYYJaojJBdz7UB+FqgPOv4+gBEbzMKCOl4
+         IjGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747944605; x=1748549405;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1747944609; x=1748549409;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FkXwot3ZtDxYGxFh1Bb5xfVQC7W9CJxSBom6soP1diU=;
-        b=jVqe6fHRPLozDyXDVeD8HU0H8zRTvstKteXIJrZ0P4qpOFHDMouXweDTcxc06RnTA3
-         VGbQq/Nd1H9wDh835TlTEjBFPrEXXZhIGHyRqjTNVz6VbVool4KeU8y1DNGJSML4821p
-         vq0QN3aXh7zCcvoemR+pnQtoEN9jARe3T6m5vTh/bO+3y3t3dTPKm/IT5xmAfg1sZS4d
-         POs1QC0ap9qWRId5inGYgCkL8RpNLcWFFNDuTn8d3+Vl8tqWCR8Ix+st3bMMMeuMI5Ld
-         kFV1NZJm9A/MoHDQbetY7bU3+SAYI5CUkuIJMV5qjcHHqZ+vb/JTZ1hCGYWA29l28jMN
-         BSnw==
-X-Forwarded-Encrypted: i=1; AJvYcCV5Ab+QAeCowU1wyWEM49+n5vdg2LiNHIwgCVEaQdihWip5az5NWieSrz4T/fbWOfqKT7iXP9Zmcf64AgHBBeXCfxid@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFvUitTHcuijFUzo5skE9NgzeCvEeORrRklMyqJqWh2naMhLzX
-	cS8j6LYCtjYkTaRKgj369s0cIXwY2Xc9twnvZoaLhSfZTJxXNY2OWshecfUEAA==
-X-Gm-Gg: ASbGncuQrPwbrSAgUGOzWORcj3lLN3dwB0kS8rEr7sug+LBO8a18HK0YdGgelzJgxUH
-	sT8Vuy4HzEVWWO5OhIZ0jyk1SLUcfnAyzjMzS03mEkUPRWWGSl54LCl9lZ5KUqTS70sZ4wRUNwX
-	cPeACXJrUUaY1CRMLrt42buG/IHRm1oU+1HFmKV1YyND+pKFS2WZdC3ux3n4QJCRTilKYIbg2P7
-	gdMB83oqkUk/dvOeHtwQj2Txw3a9CvmZb+KOhSYbcZ5+FrlH86YGQy8pi8b7RKUc857DMP/+L2L
-	RBDk1gPUA6OomPsjPRdwNWrTwKg5lpA4ZZ0M4wA98u7nYlR5wljZY3uPTO6EMGEgJ3b+0NvRaZe
-	gCQSzGZpUfNVbyWEfdDTj4/inw6Fa
-X-Google-Smtp-Source: AGHT+IH6ha5kvvBtNWk2XVpq5k0TXr5PkbekFejLm0LBd2r/JtF9zjhFNbUsW5Xjvw8N0fVUmGuTSw==
-X-Received: by 2002:a05:6808:6c8b:b0:3f8:e55c:16d6 with SMTP id 5614622812f47-404d87fe3c5mr17659445b6e.28.1747944604804;
-        Thu, 22 May 2025 13:10:04 -0700 (PDT)
-Received: from localhost.localdomain.adc.delllabs.net ([143.166.81.254])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-404d98b2762sm2651046b6e.32.2025.05.22.13.10.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 13:10:04 -0700 (PDT)
-From: Stuart Hayes <stuart.w.hayes@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	platform-driver-x86@vger.kernel.org
-Cc: Stuart Hayes <stuart.w.hayes@gmail.com>
-Subject: [PATCH v2 3/3] platform/x86: dell_rbu: Stop overwriting data buffer
-Date: Thu, 22 May 2025 15:09:37 -0500
-Message-ID: <20250522200937.9578-4-stuart.w.hayes@gmail.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250522200937.9578-1-stuart.w.hayes@gmail.com>
-References: <20250522200937.9578-1-stuart.w.hayes@gmail.com>
+        bh=uw9HYp7TY+y8RJAkMxxO3mIxoLQxok6Z5rtlhqEMtzA=;
+        b=r3h0jN1PL5QLZAWCzndpLqBdWw33g16Ium8lf9Lc/I4AHBtV6Q0FQNjLNUFXmh1Ytf
+         zJhKQ36x9eftfS9Ugvw6Q95PN8C3mETxzO8s/RDf/H0DSNj4i7/JQ3njeNadPBw2Tqs3
+         MKpfcceC1hQkq05GJr0Tchw5avf0z5U0TPraz4aK6qQ4j7+NwaLy66r2tMLAvDRDVMOs
+         uCySEp5+JbCWgm1WC4N0zCfX8mJXxD//ChPwMLXai6j+1BgW7UyFRJlhcoflff1XVnW+
+         kvmm/IRNZuic5FUralh/TzLYYy9rSsK0dAtJF9u1Xt1fCtM3XX7CG7G4OCIFsmGDiX25
+         6v6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWhea9DifxW7MMNidZt6zjnDPWgPnWS2CxEfoZxRs4vhLyTW2NCSAnP9aZAN18HhniPmmkyBPAf7agW9EM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyLtPQ3BtWAqoJRSwAxNPMT+Bw5eX5VOZC2zoyVLt/mV1pN6Neh
+	7GgCRgW4ScKNvuue3v2hgktaf+S6iT71JsgQWxkfD7sVTbv+t/RBcJKB1TLju8MUgRBnJQzKjYK
+	+AIFuHRYpdU8LI7E/HtMMREQ1s2fLZecvAi/znAE0
+X-Gm-Gg: ASbGncv+fd1zaIxrnNvs1p7rM33YH+Ss1CLNch62avoPlGhZcR7CNSDNZOJ9HHJX8nI
+	hrFUJBznjMcVkvW1vOVIWIdT5elhAim3I/cNjHNt5auHYGqjtQxYZJFJyRhZrI9jeI4bCHHjH1h
+	DM9sVAlh32P8FHDihkiEDORnFF14exJXe30ZXm57STVlIQtBgAy5YVCZ6ciXtkSlmvyq7qnPxCu
+	dUxUREj6SA=
+X-Google-Smtp-Source: AGHT+IG4FGsVqHi6rXN0E0dPwqX5wRsFdCXEIotJn97oIcWC4dLCcVTQiIBGn9UbqgH9et/oSpeWPLDEyduIif4u4cA=
+X-Received: by 2002:a17:903:41ca:b0:216:4d90:47af with SMTP id
+ d9443c01a7336-233f2ee4e98mr119985ad.29.1747944609372; Thu, 22 May 2025
+ 13:10:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250522171044.1075583-1-namhyung@kernel.org>
+In-Reply-To: <20250522171044.1075583-1-namhyung@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 22 May 2025 13:09:56 -0700
+X-Gm-Features: AX0GCFtaaENpG6rhZsQXbUSYKKSuPuamXi8st3_wtE7GATXAz04cGZxz0L4ToMs
+Message-ID: <CAP-5=fXDaKueO9HE-Gr3Q7R6qm2EjwnL845nh7R2OU+DCfrhyA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] perf test: Support arch-specific shell tests
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The dell_rbu driver will use memset to clear the data held by each packet
-when it is no longer needed (when the driver is unloaded, the packet size
-is changed, etc).
+On Thu, May 22, 2025 at 10:10=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
+>
+> This is a preparation for shell tests belong to an arch.
 
-The amount of memory that is cleared is (currently) the normal packet
-size.  However, the last packet in the list may be smaller.  Fix this to
-only clear the memory actually used by each packet, to prevent it from
-writing past the end of data buffer.
+I keep repeating that I don't like arch and I think ideally we'd be
+getting rid of the C arch tests. I just sent out a patch doing this
+for 1 test:
+https://lore.kernel.org/lkml/20250521165317.713463-2-irogers@google.com/
+We should be able to make perf, tests, etc. dependent on a PMU rather
+than an architecture. This means that running perf built for ARM will
+be able to do things running on an instruction emulator on x86. It
+means the tool, the kernel APIs, etc. are generic and new
+architectures like RISC-V can test things. It means cross-platform
+(record on 1 machine type, report on another) can work without
+tripping over load bearing architecture ifdefs. It means that we
+benefit from more testing on generic pieces of code on all
+architectures - like sample parsing. We can always strcmp the PMU name
+or the architecture at runtime.
 
-Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
----
- drivers/platform/x86/dell/dell_rbu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Structure wise we could have:
+tools/perf/pmu/ibs_op/tests/
+tools/perf/pmu/ibs_op/tests/shell
 
-diff --git a/drivers/platform/x86/dell/dell_rbu.c b/drivers/platform/x86/dell/dell_rbu.c
-index c03d4d55fcc1..7d5b26735a20 100644
---- a/drivers/platform/x86/dell/dell_rbu.c
-+++ b/drivers/platform/x86/dell/dell_rbu.c
-@@ -322,7 +322,7 @@ static void packet_empty_list(void)
- 		 * zero out the RBU packet memory before freeing
- 		 * to make sure there are no stale RBU packets left in memory
- 		 */
--		memset(newpacket->data, 0, rbu_data.packetsize);
-+		memset(newpacket->data, 0, newpacket->length);
- 		set_memory_wb((unsigned long)newpacket->data,
- 			1 << newpacket->ordernum);
- 		free_pages((unsigned long) newpacket->data,
--- 
-2.47.1
+It feels noisy compared to just having the shell test in
+tools/perf/tests/shell skip when the PMU isn't present. There are also
+things like library dependencies that aren't clear when we have >1
+directory. I'd prefer if new testing followed the existing model
+rather than this.
 
+Thanks,
+Ian
