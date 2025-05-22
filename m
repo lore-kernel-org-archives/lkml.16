@@ -1,114 +1,158 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA0FE28CF74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ADDA28D8CA
 	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 14:52:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747925570; cv=none; b=RJiA2n5MrqN2bm4kGsGTJl4pdqkf+fpl/706h3hxQmJnoD+LIaVADmrqlkH/Fa5fUuub0OAgoE5ZI9z1OC/NJeEAOJG+f6Aaj6aP4GGx4F7pNsvHyQrZCdgoiTGpLggcI7fka3XdJp+oSrDMlHdTFTr+v/VdSHu60yZLFBn1HV8=
+	t=1747925569; cv=none; b=IWD6mqPDHIwx1YHng2bn175TfVR+qrVhI6j/u0tCkxcekvpFHD5QiFENwizd+TKtGyNQWe6DTY8Tm4mUtGk366Ubm2UTic886FVPTGFfdPHCD30FkzXgfV6Lmp3chsb0iPiQrxA1ZeK50Y7H+kphMSdy4HXM9TQ+23mZJxTe+wQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747925570; c=relaxed/simple;
-	bh=7uAUNv82+LtkHA55DSD3QR6OnOrjU66RtE2T6otPNFw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MPadByqsHb/sO0F4x1Xg/PByxxuno/iAagFO4QVG+ExuPzpZPJ2DLWSk3Ih0XRpWcHF8V4AoUstEyZfCgi/6dBj7sE8suWJpZFl8v57U1JUl4C5mZ5yjN5ysmHfVMG40/6zC31NbxEEq+/Vb8AlMrMfNf0aFdX76tQZYnDeWa5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CLtw3qnB; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1747925569; c=relaxed/simple;
+	bh=vEU6OoOW4QiG7DnelFnexzER5F3I/xGLtYoU/uX9NAc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=famZH7yIUaYweWur5jDfnQ72mJwX0QLkO1msjVnd98Uf2CVS1HS9c5O8JH0Clt8ACtUst20J+FsLLcGRdwHMz+3M+FxSmPfAF0LgGNxXdkI22RTq+CuSaVUh8ZN9Cm8a9qTnpPqKqN5e9k6a2hnk6S18XakE+kOcgaR5eLNAZpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kWLSo5Ln; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CLtw3qnB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747925566;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pRqvAWIG+gW89awdSOcbpmSa/4HXlHRyH1DkS4kHixo=;
-	b=CLtw3qnBKcV53XvXZanT8KqJSCvoV6yMoEWnGpHM4YqvBcmdL+HjWSzbgk2K95wcRXLkrc
-	NYdWMizxnNJaOt5hANVPSlkHnSdfQoav8MQspp488BIkCzU0o6v+eVIMozRo+HGyt7grPb
-	M1HkzAa49Uv8hTtVOg9j4yX16p4gfjw=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-678-CcOIsM9IPI2ikLnRdLq8jw-1; Thu,
- 22 May 2025 10:52:44 -0400
-X-MC-Unique: CcOIsM9IPI2ikLnRdLq8jw-1
-X-Mimecast-MFC-AGG-ID: CcOIsM9IPI2ikLnRdLq8jw_1747925563
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5D92619560AA;
-	Thu, 22 May 2025 14:52:43 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.172])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 60F0218001D8;
-	Thu, 22 May 2025 14:52:40 +0000 (UTC)
-Date: Thu, 22 May 2025 22:52:37 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Mimi Zohar <zohar@linux.ibm.com>, piliu@redhat.com, prudo@redhat.com
-Cc: linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org, pmenzel@molgen.mpg.de,
-	coxu@redhat.com, ruyang@redhat.com, chenste@linux.microsoft.com
-Subject: Re: [PATCH] ima: add a knob ima= to make IMA be able to be disabled
-Message-ID: <aC86NSypHlER2C3L@MiWiFi-R3L-srv>
-References: <20250515233953.14685-1-bhe@redhat.com>
- <aCaFNvHbYxrCaPbe@MiWiFi-R3L-srv>
- <1d2848fe45dbf58707cecf16c4fc46b179e24415.camel@linux.ibm.com>
- <aC6Y3S9hEB1snvwj@MiWiFi-R3L-srv>
- <c0f1df02160138d0782cb897eda844287b3d7792.camel@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kWLSo5Ln"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so85556615e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 07:52:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747925565; x=1748530365; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5NSuSoLSh+LHiSs84RzlVPklfrqct9bYGikZDMbgQUs=;
+        b=kWLSo5LnbyKT5XEPMXRRF1qHee9/oE3Ni7mHdjgcNB1Ssow8B3b5BQeKSCSoVDj8YA
+         Wqvd8Lg3o4DcgdpbGH2HLIgDlZF7t45TF04w+GpQFaFGDIfUrx/f/bvRKTMfIJAETPeD
+         GE9p5PK6NxegObEd+1V0CnLN+TOCUh8ZYhuUjrfKuzSomfi0U94TfLcx/nhUoXelW+Uk
+         xiZqC1wDFLUssmUrhc6VWp86rYQ7+6/dJdqNxrJgW8Owa6iRMc43NGQqeO/uxNR2MxLS
+         q/h7sbnabBzRbHFZXQpJ0jEwZRE20Zs7S2+J8Si8T/E0UMSf14NwWKPd2lcoaG4Jf804
+         l/kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747925565; x=1748530365;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5NSuSoLSh+LHiSs84RzlVPklfrqct9bYGikZDMbgQUs=;
+        b=a+SQdfxDoQHvfIA8OeQEfPBPcsva2Vj3n5Kux1ixDJ5AiSkLA5jxQCZXuPqmkra3jg
+         3SSPK5Jia6Wc/gPKCgwpsn4v/l7Yz285EtH19oVdRaNCeWPPgYT3RVj0DyUqd4HlXMk4
+         I2bHtzU8xp1+27lftvogK6+pK8qnFcRKoAH+DsbFATbkq2b9iG/R2tf9e9OjtbYTC1wp
+         BSBNvU8VCZzXZCjApI5kkwkeq0i1RH8rjNLz0TYDmV4pQGEkRqO2KnCBtdLKE+mmtoUf
+         XgznV6c9EL+fpR2i1wSm3s7HL4trdbVmXnCW9gl768BQdpw/yMO0B/glC0zuexEodMjD
+         J/WQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUPAgyjGTJrOaWDR1DMtaEEvlF9nBMaSYizvHAx1Tg7UjQ9J3M+VM8/l+QskClAB31N3hf5a+cqJLtmZXE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxdgmEoUdBTr44toNndyMLdQzF1V95rkpf3TvSmqBjGZ1JP2ETq
+	Sr2ri8bWvNM4f0mHe9Ah5mdgTkfcztFaXcpZ55k1fagObhgvQFlB1lW5/E50Tp7mFBo=
+X-Gm-Gg: ASbGncvwfUbZcYX5wMzidOmoc+F1fTuftDh3o2BJUo3DySrnJCffC9nrVd68K+eU4np
+	rBQ5eb/EyF5JeFb52v8gtubhf4WuVmlVuZgaPYvKmyU30h4vmMDTxycVPrwvZsbW4SQlgOc4cfy
+	O92t8eG3xe1NNWN4OBgItWWlROz1Bn/Z5sVIviuf0xoGrRzyJdyRzzEkUozU4Opte4vK1PjQZEg
+	iFsA+Nqz+pHSUUmMfBOq2Bw3086DJoyOsTyIVrqWnISQf3a4EMaO7Hoqm+1Lx1JJ2dv3E0U2/cz
+	aIzLxZ3AA6LzqcSVhztG2SFGshtMlEOffSVZIbat15NdrM3O4U1iYc0DS127
+X-Google-Smtp-Source: AGHT+IG7lHM8gO7TjtKSOgQg+mAp19Lx1pEqwgmpnkH4a719vOS4PONUqtAkN0R9pGn1dejyXRQUIQ==
+X-Received: by 2002:a05:600c:870e:b0:43c:ed61:2c26 with SMTP id 5b1f17b1804b1-44b0c60f240mr12764035e9.17.1747925565562;
+        Thu, 22 May 2025 07:52:45 -0700 (PDT)
+Received: from ho-tower-lan.lan ([37.18.136.128])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f78aeb56sm104965555e9.27.2025.05.22.07.52.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 May 2025 07:52:45 -0700 (PDT)
+From: James Clark <james.clark@linaro.org>
+Date: Thu, 22 May 2025 15:51:33 +0100
+Subject: [PATCH v2 04/14] spi: spi-fsl-dspi: Re-use one volatile regmap for
+ both device types
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c0f1df02160138d0782cb897eda844287b3d7792.camel@linux.ibm.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250522-james-nxp-spi-v2-4-bea884630cfb@linaro.org>
+References: <20250522-james-nxp-spi-v2-0-bea884630cfb@linaro.org>
+In-Reply-To: <20250522-james-nxp-spi-v2-0-bea884630cfb@linaro.org>
+To: Vladimir Oltean <olteanv@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Conor Dooley <conor+dt@kernel.org>, Frank Li <Frank.Li@nxp.com>, 
+ Chester Lin <chester62515@gmail.com>, Matthias Brugger <mbrugger@suse.com>, 
+ Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>, 
+ NXP S32 Linux Team <s32@nxp.com>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, Chao Fu <B44548@freescale.com>, 
+ Xiubo Li <Li.Xiubo@freescale.com>, Lukasz Majewski <lukma@denx.de>, 
+ linux-spi@vger.kernel.org, imx@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, 
+ Vladimir Oltean <vladimir.oltean@nxp.com>, 
+ Dan Carpenter <dan.carpenter@linaro.org>, 
+ James Clark <james.clark@linaro.org>
+X-Mailer: b4 0.14.0
 
-On 05/22/25 at 07:08am, Mimi Zohar wrote:
-> On Thu, 2025-05-22 at 11:24 +0800, Baoquan He wrote:
-> > On 05/21/25 at 08:54am, Mimi Zohar wrote:
-> > > On Fri, 2025-05-16 at 08:22 +0800, Baoquan He wrote:
-> > > > CC kexec list.
-> > > > 
-> > > > On 05/16/25 at 07:39am, Baoquan He wrote:
-> > > > > Kdump kernel doesn't need IMA functionality, and enabling IMA will cost
-> > > > > extra memory. It would be very helpful to allow IMA to be disabled for
-> > > > > kdump kernel.
-> > 
-> > Thanks a lot for careufl reviewing and great suggestions.
-> > 
-> > > 
-> > > The real question is not whether kdump needs "IMA", but whether not enabling
-> > > IMA in the kdump kernel could be abused.  The comments below don't address
-> > > that question but limit/emphasize, as much as possible, turning IMA off is
-> > > limited to the kdump kernel.
-> > 
-> > Are you suggesting removing below paragraph from patch log because they
-> > are redundant? I can remove it in v2 if yes.
-> 
-> "The comments below" was referring to my comments on the patch, not the next
-> paragraph.  "don't address that question" refers to whether the kdump kernel
-> could be abused.
-> 
-> We're trying to close integrity gaps, not add new ones.  Verifying the UKI's
-> signature addresses the integrity of the initramfs.  What about the integrity of
-> the kdump initramfs (or for that matter the kexec initramfs)?  If the kdump
-> initramfs was signed, IMA would be able to verify it before the kexec.
+max_register overrides anything in the volatile ranges, so we can get
+away with sharing the same one for both types. In a later commit we'll
+add more devices so this avoids adding even more duplication. Also
+replace the max_register magic numbers with their register definitions
+so it's clearer what's going on.
 
-Kdump initramfs could be generated each time when loading once change is
-detected, e.g newer kernel, kdump config tuning. It's different than
-UNI's normal initramfs. We don't need verify it as far as I know
-according to discussion with UNI dev, so ima=off can be set by default
-in kdump kernel. Even though one day that's really needed, ima=on|off is
-a switch, not a hard code.
+No functional changes.
 
-Add people woiking on kdump UKI to CC.
+Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
+Signed-off-by: James Clark <james.clark@linaro.org>
+---
+ drivers/spi/spi-fsl-dspi.c | 19 ++++---------------
+ 1 file changed, 4 insertions(+), 15 deletions(-)
 
-> 
-> As for the next paragraph, based on Coiby's response, please remove it.
+diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+index 863781ba6c16..09b2b25ed274 100644
+--- a/drivers/spi/spi-fsl-dspi.c
++++ b/drivers/spi/spi-fsl-dspi.c
+@@ -1209,6 +1209,7 @@ static const struct regmap_range dspi_volatile_ranges[] = {
+ 	regmap_reg_range(SPI_MCR, SPI_TCR),
+ 	regmap_reg_range(SPI_SR, SPI_SR),
+ 	regmap_reg_range(SPI_PUSHR, SPI_RXFR3),
++	regmap_reg_range(SPI_SREX, SPI_SREX),
+ };
+ 
+ static const struct regmap_access_table dspi_volatile_table = {
+@@ -1220,31 +1221,19 @@ static const struct regmap_config dspi_regmap_config = {
+ 	.reg_bits	= 32,
+ 	.val_bits	= 32,
+ 	.reg_stride	= 4,
+-	.max_register	= 0x88,
++	.max_register	= SPI_RXFR3,
+ 	.volatile_table	= &dspi_volatile_table,
+ 	.rd_table	= &dspi_access_table,
+ 	.wr_table	= &dspi_access_table,
+ };
+ 
+-static const struct regmap_range dspi_xspi_volatile_ranges[] = {
+-	regmap_reg_range(SPI_MCR, SPI_TCR),
+-	regmap_reg_range(SPI_SR, SPI_SR),
+-	regmap_reg_range(SPI_PUSHR, SPI_RXFR3),
+-	regmap_reg_range(SPI_SREX, SPI_SREX),
+-};
+-
+-static const struct regmap_access_table dspi_xspi_volatile_table = {
+-	.yes_ranges	= dspi_xspi_volatile_ranges,
+-	.n_yes_ranges	= ARRAY_SIZE(dspi_xspi_volatile_ranges),
+-};
+-
+ static const struct regmap_config dspi_xspi_regmap_config[] = {
+ 	{
+ 		.reg_bits	= 32,
+ 		.val_bits	= 32,
+ 		.reg_stride	= 4,
+-		.max_register	= 0x13c,
+-		.volatile_table	= &dspi_xspi_volatile_table,
++		.max_register	= SPI_SREX,
++		.volatile_table	= &dspi_volatile_table,
+ 		.rd_table	= &dspi_access_table,
+ 		.wr_table	= &dspi_access_table,
+ 	},
 
-Got it, thanks.
+-- 
+2.34.1
 
