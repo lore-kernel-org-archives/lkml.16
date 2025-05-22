@@ -1,172 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9A8C2F3E;
-	Thu, 22 May 2025 01:37:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3C0A64D;
+	Thu, 22 May 2025 01:38:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747877828; cv=none; b=F1oJsqntpgLhZbMBhTI8EW1zmI9UHET0gaqGnF7cBmA3mzn/G4J5sOmEOHxLGWHIkq9Jhe0YKf/OLKUz+6MvYbZHCuwIMx+RTEvDqi2I8InMcCayWAZOOFOov79gcIsuM13/DP464I3sTWVjVOrRiX9wZIzmoBlxC7ZRxeenmRc=
+	t=1747877902; cv=none; b=ou33T/IFRGDpNTXW7OYBJh23eksdUjBlOPt5L0kPT6vALmGkpccNn7hyBmqGuiV83dtjlP1FCsBbUxq75n139cyFMoSxvBhzf52RudKHX1vh5AdJkWzyZPbtsPI3AlMBb22KY+c6t4DTtEe+WoJYIR67Pbnx67T5CUvYpvWq5IA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747877828; c=relaxed/simple;
-	bh=il8bkfvjDGki95nEhszu8/+jTMJsPVEjXY92QWq+E2c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Xd5Ct/jm1Z66hl+8zGLPGxPTyBYPHd6YxIQ0/1Yq29hGEHYEQxnDjB0qZMfn0bwajiekbUzyj45KRrExHFr+/7UkOcevvG5sweyY7jRHBAJvQrR2tbefMVYgU3xLTtfWcu8M9w3QFpcRbYbrw8IaW9ObWX9mQ94QmmSlyUSrsx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j9qKkD0E; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1747877902; c=relaxed/simple;
+	bh=BEcRxXbLnAwl3PtiI4DCx5Iy2cLgenzbEJb8ZfQPbBk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=MuEcMuMMTMaSy0evVAssfSbrFPjLtB5AYN8gcJk+80rcuShSCbd9Fn8h3iReDvaKW/O6ldOnHpdef4JJ0MPnzuYLGweFKXTTYk0Pbb6ekqGV1w7MTPC0Tuv/BycEyPYtP80YSMYIcPOE1bqlTICsZl/ZLDLbn6ZLkpidwLgbNOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=hlspnOyC; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j9qKkD0E"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747877827; x=1779413827;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=il8bkfvjDGki95nEhszu8/+jTMJsPVEjXY92QWq+E2c=;
-  b=j9qKkD0ER66xklUP046L6dHQfR4INVuZRsaVPNOjGu+UvQSt+yi+Suhw
-   CvG9ptfw2rUt0BwpfgNKkgpqzqLGl8UpkeU6RlDfW3q34W3VmYPYOVNng
-   GOAE4okyFj5LWCXI3p3brKMyD6iSgzy4G9ljOszOUvzBOkeS9t97qF/IT
-   n+8RKCFVBhuKQDgTYPo+NYTbKwp7b4zGFOMSBztieZM15aGgd9YYpp4Jw
-   /UEfWibICIQ/HNMD/lnOs284TKvHTbWanzieb64Vr6EzzPXu4ucy1TK+y
-   dZYV/1hPy82z2TPPNkW8yRsk3LjxS1eYZ37j4/LjOhk5pyfoA3w2X4UCb
-   w==;
-X-CSE-ConnectionGUID: ZUTzSXpeTgaAA69GWi6Zrw==
-X-CSE-MsgGUID: Y3/PJWctQpaIb1QxOh8Yzg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11440"; a="60932147"
-X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
-   d="scan'208";a="60932147"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 18:37:06 -0700
-X-CSE-ConnectionGUID: hTO/8/4JRweAIlDGpCaZKw==
-X-CSE-MsgGUID: OndiVDn1RQyRZW1/vkilgg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,304,1739865600"; 
-   d="scan'208";a="171331916"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2025 18:36:58 -0700
-Message-ID: <2e227e09-b8aa-4f94-abd3-8c31d46f7e3e@linux.intel.com>
-Date: Thu, 22 May 2025 09:36:55 +0800
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="hlspnOyC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1747877898;
+	bh=wCwvSW5OEksD89Qr7XzRychnTaoVvwYQQkOOKkNRy6w=;
+	h=Date:From:To:Cc:Subject:From;
+	b=hlspnOyCwtVTDzyR7g0vVyjNHjgjARrP5flzvR2AmsENWTeqNsUhWxQsQwA6ySdLM
+	 de1GFQqHSHEBswai454lFDGD7HSNPpT2YbA1ks9m3j37VehQ/HSeZviBB1XXVnn/F3
+	 9gvKt2Bfzb5YyQ2EOfEiS88kZ96NezX7ahLEHaKC+463Euu1qaAEq1eqbTBBZBbXKP
+	 /CrqikIvZrMzWKorkMiYL3TmlMUlaAL6kds52tE1T+gvMc0cPe6m7v+xzPJ8C7GVoa
+	 txyLPOeh1dHoN3gMgoYd8ojqh87b8KaoOE4CWxxfygJFKBciX8CVRQjD/DCQJuul10
+	 /mH57Xd2LWWZQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4b2rXT2s94z4x8X;
+	Thu, 22 May 2025 11:38:17 +1000 (AEST)
+Date: Thu, 22 May 2025 11:38:16 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Alexandre Torgue <alexandre.torgue@st.com>, Arnd Bergmann
+ <arnd@arndb.de>
+Cc: ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: duplicate patches in the stm32 tree
+Message-ID: <20250522113816.16953357@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 14/38] KVM: x86/pmu: Introduce enable_mediated_pmu
- global parameter
-To: Sean Christopherson <seanjc@google.com>
-Cc: Mingwei Zhang <mizhang@google.com>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com,
- Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
- Yongwei Ma <yongwei.ma@intel.com>,
- Xiong Zhang <xiong.y.zhang@linux.intel.com>,
- Jim Mattson <jmattson@google.com>, Sandipan Das <sandipan.das@amd.com>,
- Zide Chen <zide.chen@intel.com>, Eranian Stephane <eranian@google.com>,
- Shukla Manali <Manali.Shukla@amd.com>,
- Nikunj Dadhania <nikunj.dadhania@amd.com>
-References: <20250324173121.1275209-1-mizhang@google.com>
- <20250324173121.1275209-15-mizhang@google.com> <aCUwvXPKD0ANKFb7@google.com>
- <1d024d71-0b02-4481-a0d4-f1786313c1e7@linux.intel.com>
- <aC4ezRH8msD6yUhC@google.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <aC4ezRH8msD6yUhC@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/qoujmc87Y0T_mUnsyo03b0r";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
+--Sig_/qoujmc87Y0T_mUnsyo03b0r
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 5/22/2025 2:43 AM, Sean Christopherson wrote:
-> On Thu, May 15, 2025, Dapeng Mi wrote:
->> On 5/15/2025 8:09 AM, Sean Christopherson wrote:
->>> On Mon, Mar 24, 2025, Mingwei Zhang wrote:
->>>> +	return vcpu->kvm->arch.enable_pmu &&
->>> This is superfluous, pmu->version should never be non-zero without the PMU being
->>> enabled at the VM level.
->> Strictly speaking, "arch.enable_pmu" and pmu->version doesn't indicates
->> fully same thing.  "arch.enable_pmu" indicates whether PMU function is
->> enabled in KVM, but the "pmu->version" comes from user space configuration.
->> In theory user space could configure a "0"  PMU version just like
->> pmu_counters_test does. Currently I'm not sure if the check for
->> "pmu->version" can be removed, let me have a double check.
-> Gah, sorry, my comment was vague and confusing.  What I was trying to say is that
-> the vcpu->kvm->arch.enable_pmu check is superfluous and can be dropped.
+Hi all,
 
-Hmm, yes.  "pmu->version > 0" implies that arch.enable_pmu must be true
-(kvm_pmu_refresh() checks if arch.enable_pmu is true before setting
-pmu->verison).
+The following commits are also in the arm-soc tree as different commits
+(but the same patches):
 
+  0a0e8571837d ("ARM: dts: stm32: add vrefint calibration on stm32mp13")
+  2a47c4033e09 ("ARM: dts: stm32: add an extra pin map for USART1 on stm32h=
+743"
+  3acfa4becfda ("arm64: dts: st: Add SPI NOR flash support on stm32mp257f-e=
+v1 board")
+  3bd31eb4f6ee ("ARM: dts: stm32: add vrefint support to adc on stm32mp13")
+  3f70ddb86143 ("ARM: dts: stm32: add initial support for stm32mp157-ultra-=
+fly-sbc board")
+  46e2ad9fd187 ("ARM: dts: stm32: add low power timer on STM32F746")
+  532c5a818d2e ("arm64: defconfig: enable STM32 LP timer clockevent driver")
+  7b6bbef62485 ("ARM: dts: stm32: support STM32h747i-disco board")
+  7b7b6bb0f98d ("dt-bindings: clock: stm32h7: rename USART{7,8}_CK to UART{=
+7,8}_CK")
+  826e6fb26193 ("dt-bindings: vendor-prefixes: Add Ultratronik")
+  878dec8597d4 ("arm64: dts: st: Add OMM node on stm32mp251")
+  8b773be67b10 ("MAINTAINERS: Add entry for ULTRATRONIK BOARD SUPPORT")
+  8c18889c702d ("arm64: dts: st: use lptimer3 as tick broadcast source on s=
+tm32mp257f-ev1")
+  a4d2108a4b3f ("ARM: stm32: add a new SoC - STM32H747")
+  a09cdc01ad4a ("ARM: dts: stm32: add pin map for UART8 controller on stm32=
+h743")
+  bf98eb91ac66 ("ARM: dts: stm32h7-pinctrl: add _a suffix to u[s]art_pins p=
+handles")
+  caeec8e2b846 ("dt-bindings: arm: stm32: add compatible for stm32h747i-dis=
+co board")
+  dd9bfe13b47e ("ARM: dts: st: stm32: Align wifi node name with bindings")
+  df863325b92c ("arm64: dts: st: add low-power timer nodes on stm32mp251")
+  f069852c9b33 ("dt-bindings: arm: stm32: Document Ultratronik's Fly board =
+DT binding")
+  f80958d949c3 ("arm64: dts: st: Add ospi port1 pinctrl entries in stm32mp2=
+5-pinctrl.dtsi")
+  fe8690b58efb ("ARM: dts: stm32: add uart8 node for stm32h743 MCU")
 
->
->>>> +	kvm->arch.enable_pmu = enable_pmu && !enable_mediated_pmu;
->>> So I tried to run a QEMU with this and it failed, because QEMU expected the PMU
->>> to be enabled and tried to write to PMU MSRs.  I haven't dug through the QEMU
->>> code, but I assume that QEMU rightly expects that passing in PMU in CPUID when
->>> KVM_GET_SUPPORTED_CPUID says its supported will result in the VM having a PMU.
->> As long as the module parameter "enable_mediated_pmu" is enabled, qemu
->> needs below extra code to enable mediated vPMU, otherwise PMU is disabled
->> in KVM.
->>
->> https://lore.kernel.org/all/20250324123712.34096-1-dapeng1.mi@linux.intel.com/
->>
->>> I.e. by trying to get cute with backwards compatibility, I think we broke backwards
->>> compatiblity.  At this point, I'm leaning toward making the module param off-by-default,
->>> but otherwise not messing with the behavior of kvm->arch.enable_pmu.  Not sure if
->>> that has implications for KVM_PMU_CAP_DISABLE though.
->> I'm not sure if it's a kind of break for backwards compatibility.  As long
->> as "enable_mediated_pmu" is not enabled, the qemu doesn't need any changes,
->> the legacy vPMU can still be enabled by old qemu version. But if user want
->> to enable mediated vPMU, so they should use the new version qemu which has
->> the capability to enable mediated vPMU, it sounds reasonable for me.
-> I agree it's reasonable to require a userspace update to take advantage of new
-> features, what I don't like is what happens if userspace _hasn't_ been updated.
-> I also don't love that forcing a userspace update in this case is more than a bit
-> contrived.  It's very doable to let existing userspace utilize the mediated PMU,
-> forcing KVM_CAP_PMU_CAPABILITY is essentially KVM punting a problem to userspace.
->
-> And the complications with the mediated PMU don't really have anything to do with
-> the VMM, they're more about all the other tasks and daemons running on the system,
-> e.g. that might be using perf.
->
-> Thinking more about this, the problem isn't so much that enabling mediated PMUs
-> by default is undesirable, it's that giving userspace a binary choise doesn't
-> provide enough flexibility.  E.g. for single-user QEMU-based use cases (including
-> my use of QEMU), requiring a new QEMU is painful and annoying, and so having an
-> on-by-default option would be nice.
->
-> But for use cases that already utilize KVM_CAP_PMU_CAPABILITY, e.g. to explicitly
-> disable PMUs for a subset of VMs, on-by-default is very undesirable, e.g. would
-> require KVM to support KVM_PMU_CAP_DISABLE, and would generate unnecessary noise
-> and contention in perf.
->
-> So, what if we simply make enable_mediated_pmu a tri-state of sorts?
->
->   0   == disabled
->   > 0 == enabled for all VMs (no opt-in or opt-out supported)
->   < 0 == enabled, but off by default (requires opt-in)
->
-> Then use cases like my personal usage of QEMU can run with enable_mediated_pmu=1,
-> while use cases like Google Cloud can run with enable_mediated_pmu=-1, and everyone
-> is happy (hopefully), without too much added complexity in KVM.
+--=20
+Cheers,
+Stephen Rothwell
 
-Hmm, I agree. a tri-state "enable_mediated_pmu" is much flexible, but we
-need to a good document to describe it, maybe like this.
+--Sig_/qoujmc87Y0T_mUnsyo03b0r
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-enable_mediated_pmu
+-----BEGIN PGP SIGNATURE-----
 
-0       ==  globally disabled for all VMs
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgugAgACgkQAVBC80lX
+0GyUqQf/W5uVleIo3eT3hTnHyNVzKnk2fEGgFQbvlV6gDcKb5hzhSh8ikWLX9lvK
+QHAYzer2OtndCp4WAWQ8SJ/PcRNwmK5x8xwhloO7erf/o+EWpav5VfRkKFb3fJ5t
+08Iux3FTmIb+mz07M4gAHH33pR/ogLJNV4zEoIn28FbKkGXngGF1Q+PZWXIQ1eNU
+cBIGtttSRXD4AiUJmtPPHt9DYZBnYyLXj1uTUAOeyrrFJsAQDd4CL6FT0tKdyIAF
+qp2DQKHnGjkF7TiJf06TAaGhBxvkbXsSycV6pyp1wTvoJZch9ijOimrSj8Mzt2tp
+3q2qsWrIHz1Nn/gss7PF6xAqcsd2rw==
+=trE7
+-----END PGP SIGNATURE-----
 
-> 0    ==  globally enabled for all VMs
-
-< 0    ==  VM-scoped disabled, need VMM explicitly enables by
-KVM_CAP_PMU_CAPABILITY ioctl.
-
-
-
+--Sig_/qoujmc87Y0T_mUnsyo03b0r--
