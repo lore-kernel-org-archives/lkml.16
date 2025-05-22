@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 104BE13C8EA;
-	Thu, 22 May 2025 16:28:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E316241662;
+	Thu, 22 May 2025 16:28:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747931283; cv=none; b=IjnpJxmo8sgKyIBdFx1fjOy36o6lcqabXzVLRNKQ0Q5VIely8gq3dVi6B4ZIRDI3YkS0cht6HdqfWd6MTmpc7O/wUnA7b54xauu5fyrOLjdwTAK1ukvyrTlIiJDkHQwxm7OVNUz8WghiXe4miXk8YhXGvoHODBH2yTZlFd53V+E=
+	t=1747931284; cv=none; b=doRSK6UsSbdottT4v3H6uAwMnZtmNlj/N+3WnuqxG8a04TLhBU/GU5stE1PVeoo0hvMVoR8F6hqqmyrvustcs6q5rNkPhBFSsIX2fsruI6pdh+onYPqSWEjVQGyhAo3P34Gn96xxibQcfMWHBdOBlm5etglwJbl6ztj0In0dpX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747931283; c=relaxed/simple;
-	bh=Oo7katdjAPrApiDFIg790a/KcGz4l2Mds8fE4FckuV8=;
+	s=arc-20240116; t=1747931284; c=relaxed/simple;
+	bh=NyiPQIIfELwduH7AoKb4g6Ijqllck0NOU16OdARE5yg=;
 	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=aOQTeGGRPRznZVTGFMpGo3p5PdunImbiFmVuYOwKwuOwstDuelUKTdICIBd4UYxzocVlSm3X6Y07XgkQhr4LS9jMYKAD5gIYwD5N+1MLtUNqD6V1mmv92v5ceKCyB88vgNhFR7ZheA6JG1ozFK0P8YhJOBc64SfhEOspYW+bvPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CxC29PAs; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=DRyoKsr16ZzFpPaKk05HxOD4NZeQTOs+azWd1gmd2fKz4E4o0DHPPZ6XEYoQdZaj5VSZ7Qi14HXXjJN1kyQV+7a5muF1XSPz+E7SQCpVHp2IGMFRt0udAXZZ++SostU+1URVsKapf7bOCplt5KMo5iL2GHq28vVxuYAtX8FRYco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EU1YcPV6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CxC29PAs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 490CEC4CEF7;
-	Thu, 22 May 2025 16:28:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EU1YcPV6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29DECC4CEF2;
+	Thu, 22 May 2025 16:28:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747931282;
-	bh=Oo7katdjAPrApiDFIg790a/KcGz4l2Mds8fE4FckuV8=;
+	s=k20201202; t=1747931284;
+	bh=NyiPQIIfELwduH7AoKb4g6Ijqllck0NOU16OdARE5yg=;
 	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=CxC29PAs+c3XS6Oxq47coqmerR9OpS6uOjJeBKKliXtMm8/JN48qZAYyZXQq6+kPJ
-	 ym/96qY9dGvJiis1WclAIXcutRsoofW6mbl34ge6a0gBYjgLW8nlMJo6133x2XX9+f
-	 lUrg7iJFp3L6HCsE1A3dmgh7oAgJoWPjXU4hqR+KKnLZdGyd0V/S0uVSAe9UE5AsoH
-	 AaI3WC917CEnmWxe/+vazeaO0+1nbA+ONxri0DSMjMPsIuGtmlIqqDIou1dayKARq9
-	 hB7tlYjgXImV3wG4oX9KKsXR7MKNeFVf1mKiFqk/yqrF1JU79KfniLLGoolrDiZYTU
-	 HbMlZe9+KcMcw==
-Date: Thu, 22 May 2025 11:28:00 -0500
+	b=EU1YcPV62lPn2CDEwd3NrUGdn48rE5kYlZ++IbC4/dLPjPpxWUzazHIDEyZy8PIar
+	 ETTDfZaUNv0/d/Pv8N2uTcYNA1emnk+VG8Ixdnt+p09G3w+mzPxPDKDqzinKn8aB0i
+	 52J1sTctfVP/8x4+9fJ2N+I7fJcjBGry3O7ufXMWqbMXV5z3Lm48Qn4JdP8/LHZorC
+	 VDasXLPQztgJHAKZFv2TaL0GUo4gozfo6F3OVYobXLYVrJWz8BhcptWQi4ERHeqUlQ
+	 BEFLaZcN7HrAOIHCuPEWFylkfAh+KolaaTK/V1vtRboBP49B8TS9N8Cm+9pOzT3jL6
+	 g45hOMmMUqvvw==
+Date: Thu, 22 May 2025 11:28:02 -0500
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -36,68 +36,60 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, devicetree@vger.kernel.org, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Trevor Gamblin <tgamblin@baylibre.com>, 
- linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Michael Hennerich <michael.hennerich@analog.com>
-To: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <20250522-pwm-axi-pwmgen-add-external-clock-v2-2-086ea9e6ecf0@baylibre.com>
-References: <20250522-pwm-axi-pwmgen-add-external-clock-v2-0-086ea9e6ecf0@baylibre.com>
- <20250522-pwm-axi-pwmgen-add-external-clock-v2-2-086ea9e6ecf0@baylibre.com>
-Message-Id: <174793127939.2927580.11316141266712516597.robh@kernel.org>
-Subject: Re: [PATCH v2 2/3] dt-bindings: pwm: adi,axi-pwmgen: fix clocks
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Conor Dooley <conor+dt@kernel.org>, 
+ Chun-Kuang Hu <chunkuang.hu@kernel.org>, Mark Brown <broonie@kernel.org>, 
+ paul-pl.chen@mediatek.com, Matthias Brugger <matthias.bgg@gmail.com>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, singo.chang@mediatek.com, 
+ linux-kernel@vger.kernel.org, 
+ Project_Global_Chrome_Upstream_Group@mediatek.com, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, 
+ jason-jh.lin@mediatek.com, linux-arm-kernel@lists.infradead.org
+To: "Nancy.Lin" <nancy.lin@mediatek.com>
+In-Reply-To: <20250522150426.3418225-2-nancy.lin@mediatek.com>
+References: <20250522150426.3418225-1-nancy.lin@mediatek.com>
+ <20250522150426.3418225-2-nancy.lin@mediatek.com>
+Message-Id: <174793128032.2927822.14103783450131636692.robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: regulator: mediatek: Add MT8196 vmm
+ controller
 
 
-On Thu, 22 May 2025 09:49:40 -0500, David Lechner wrote:
-> Fix a shortcoming in the bindings that doesn't allow for a separate
-> external clock.
+On Thu, 22 May 2025 23:03:33 +0800, Nancy.Lin wrote:
+> From: Nancy Lin <nancy.lin@mediatek.com>
 > 
-> The AXI PWMGEN IP block has a compile option ASYNC_CLK_EN that allows
-> the use of an external clock for the PWM output separate from the AXI
-> clock that runs the peripheral.
+> Add a device tree binding document for the MediaTek MT8196 VMM (Vcore
+> for MultiMedia) regulator controller. The VMM controller acts as the
+> main power supplier for multimedia power domains, such as those used
+> by display, video encode and decode subsystems. It provides virtual
+> regulators that serve as the power sources for various multimedia IPs,
+> and coordinates with the hardware common clock framework (hwccf) and
+> the Video Companion Processor (VCP) to manage the power domains of
+> these components. The regulator is controlled by the VCP firmware,
+> and the operating system signals its requirement through a voting
+> hardware block (hwccf).
 > 
-> This was missed in the original bindings and so users were writing dts
-> files where the one and only clock specified would be the external
-> clock, if there was one, incorrectly missing the separate AXI clock.
-> 
-> The correct bindings are that the AXI clock is always required and the
-> external clock is optional (must be given only when HDL compile option
-> ASYNC_CLK_EN=1).
-> 
-> Fixes: 1edf2c2a2841 ("dt-bindings: pwm: Add AXI PWM generator")
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
+> Signed-off-by: Nancy Lin <nancy.lin@mediatek.com>
 > ---
->  Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml | 14 ++++++++++++--
->  1 file changed, 12 insertions(+), 2 deletions(-)
+>  .../mediatek,mt8196-vmm-regulator.yaml        | 70 +++++++++++++++++++
+>  1 file changed, 70 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/regulator/mediatek,mt8196-vmm-regulator.yaml
 > 
 
 My bot found errors running 'make dt_binding_check' on your patch:
 
 yamllint warnings/errors:
-./Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml:40:9: [warning] wrong indentation: expected 10 but found 8 (indentation)
 
 dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml: properties:clock-names:enum: 'oneOf' conditional failed, one must be fixed:
-	{'const': 'axi'} is not of type 'integer'
-	{'const': 'axi'} is not of type 'string'
-	{'items': [{'const': 'axi'}, {'const': 'ext'}]} is not of type 'integer'
-	{'items': [{'const': 'axi'}, {'const': 'ext'}]} is not of type 'string'
-	hint: "enum" must be an array of either integers or strings
-	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml: properties:clock-names:enum:0: {'const': 'axi'} is not of type 'string'
-	from schema $id: http://devicetree.org/meta-schemas/string-array.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.yaml: properties:clock-names:enum:1: {'items': [{'const': 'axi'}, {'const': 'ext'}]} is not of type 'string'
-	from schema $id: http://devicetree.org/meta-schemas/string-array.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.example.dtb: pwm@44b00000 (adi,axi-pwmgen-2.00.a): clock-names: ['axi', 'ext'] is not one of [{'const': 'axi'}, {'items': [{'const': 'axi'}, {'const': 'ext'}]}]
-	from schema $id: http://devicetree.org/schemas/pwm/adi,axi-pwmgen.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pwm/adi,axi-pwmgen.example.dtb: pwm@44b00000 (adi,axi-pwmgen-2.00.a): Unevaluated properties are not allowed ('clock-names' was unexpected)
-	from schema $id: http://devicetree.org/schemas/pwm/adi,axi-pwmgen.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/regulator/mediatek,mt8196-vmm-regulator.yaml: patternProperties:^(vdisp|vdec-vcore)$:properties:regulator-name:type: 'string' is not one of ['boolean', 'object']
+	from schema $id: http://devicetree.org/meta-schemas/core.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/regulator/mediatek,mt8196-vmm-regulator.example.dtb: vmm (mediatek,mt8196-vmm): vdisp:regulator-name: ['vdisp'] is not of type 'string'
+	from schema $id: http://devicetree.org/schemas/regulator/mediatek,mt8196-vmm-regulator.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/regulator/mediatek,mt8196-vmm-regulator.example.dtb: vmm (mediatek,mt8196-vmm): vdec-vcore:regulator-name: ['vdec-vcore'] is not of type 'string'
+	from schema $id: http://devicetree.org/schemas/regulator/mediatek,mt8196-vmm-regulator.yaml#
 
 doc reference errors (make refcheckdocs):
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250522-pwm-axi-pwmgen-add-external-clock-v2-2-086ea9e6ecf0@baylibre.com
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250522150426.3418225-2-nancy.lin@mediatek.com
 
 The base for the series is generally the latest rc1. A different dependency
 should be noted in *this* patch.
