@@ -1,259 +1,269 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B96928C015;
-	Thu, 22 May 2025 14:04:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B7C12E7E
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 14:06:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747922651; cv=none; b=P20k/gJxdwS+scxOtolXuPPDPWXXezNqQqSnlygtHGht677KDXVPSlcxa/FndYvdYxpcDjp/QajWh/AtMhz7xJLVSHdFVrYP7cFe5+8U+LBhSsdXQi0WZgr7QosA/OQNHLYgNKcMZhuvlBTOOLc1tR98wBvrDsqffupPZxz35Gs=
+	t=1747922787; cv=none; b=WO18EODTrH+2L3FUmM4uZ5lz9krRwGo9S0sxKEbysQ5a2SJmKvrm6nBY3OthFJq5wY87ihyqnv1RojNWWTvce2v4hXMtm41YwaN16ouagdQgjqJ0ZECIhxcXkgXYbDxxpqtS9llC4mXu4NnikZGMsbiXmeTzcT7SvEC2jnVw1qE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747922651; c=relaxed/simple;
-	bh=gaVhOROGrfN2y5e11GTj0NSjXZTkCP3N2RkrF3r87Uw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OkLEbtL3XDjgzpIBlaPBPKlEVwBgpCTMow8/YrCa9CLClzrFeYCuQEEx44JmnhJbZq/64n7tMurbL2W8PAhLk+EXsVuAeB19gSkD5u8EZgfkvcHdCxReQdgO1TBITaesOj8KeYMaqaoF5MfpZ3I8koz3MtrVQc6nMdxbqyMX9Vk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jIjrUFAK; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1747922787; c=relaxed/simple;
+	bh=xfBF38J9bt5VGneQgc7FSBpY7hg7BcB+R4X03vn0Zos=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=npMBjMtZKUvkb7fBShU19NyyXpMo1Bo4615at0f9EVW6pA7A/bl5ngU/I4TvwBBYxO1jYIztiNgNPZRJQ0OwciaE2FAKrsUjXgkoSlELDa/VZl3ELEmW3DKlfr6L/lCkpYbDN5uOJK6dge/WSNUxjCqeaM7oFlO69hCX/dU8hLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=kFkEowyM; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jIjrUFAK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1747922648; x=1779458648;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=gaVhOROGrfN2y5e11GTj0NSjXZTkCP3N2RkrF3r87Uw=;
-  b=jIjrUFAKJxqBHRwA7xK76g+qyGmbx8ziUrbLUtJbRRa4GlyhejSoVFkj
-   oJ2Q5yEqd75KBCbZAeGNg1jxVOWyRPwbZs3zuqCyA5HfLyfIbZg3mA3ny
-   pLLyb25W3O7COnhSiv50AnIWPQSkOgvw6FFeZdL74hSQ/qY4VhZcUIGB7
-   QU5njHKmq/FSdja7jzDE6znxOZ/rJ7B8XCuL8GgdN47xiwNp3MuNakfOI
-   GdxYYlbXTJlhprhOQg69s4Rq8dm4O/BkT3swDqR7vn50968qfVNBY9Rb2
-   E2Gi4bEMNI+QGEj959XycENTWmggsAwDT59Gu+93wn2ANEhLkT1Dp7Ysw
-   Q==;
-X-CSE-ConnectionGUID: YPN+j42wRnO9BtiTjlNWWA==
-X-CSE-MsgGUID: 1avFidFSSuu0lQqKV9qlQg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11441"; a="49944410"
-X-IronPort-AV: E=Sophos;i="6.15,306,1739865600"; 
-   d="scan'208";a="49944410"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2025 07:03:54 -0700
-X-CSE-ConnectionGUID: EbxyZ75ZSg6LJ8butZLGqw==
-X-CSE-MsgGUID: 91H7rSN0RQa+6dJLZGYsTA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,306,1739865600"; 
-   d="scan'208";a="177746893"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 22 May 2025 07:03:52 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uI6WT-000PP6-0t;
-	Thu, 22 May 2025 14:03:49 +0000
-Date: Thu, 22 May 2025 22:03:39 +0800
-From: kernel test robot <lkp@intel.com>
-To: Alexander Wilhelm <alexander.wilhelm@westermo.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] soc: qcom: QMI encoding/decoding for big endian
-Message-ID: <202505222118.Hv5tsNGQ-lkp@intel.com>
-References: <20250521092554.1026716-2-alexander.wilhelm@westermo.com>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="kFkEowyM"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=LxOfN+DgOQopqmC4mkMS08LT54mgjKxByXwstgI4G8s=; b=kFkEowyM9Vldo661qcdTjfNBfx
+	GUhng8/9JUlG13fKp23524PA+l8FGHkMxMX3lmNHAAFIkKF69Fe/fQuqYwgvnNmYPRVUVuXNKGgbS
+	D4C+8v7K607lDmpEYd8CxZ0KJzVpYmnyT77PzlrNMf9xsax9qrEghNBkxOJO+BrAmKz6h4yUR/U/g
+	HtAUDJ9mKZspFyVyaqNQbaVhHihSVndRTj3hZLSs2AP7rXYKw3OJu60Q8SxfKZ6C6nPuEZzPo9WgT
+	nHBinRnRkZAmN3W3VWY35CSl479nCmGoZeNwSDuSNXgbE1hF2mzI2Mfgj4HIYMEiRyVRstWhgJqj9
+	IYk9AIlg==;
+Received: from [81.79.92.254] (helo=[192.168.0.101])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1uI6Yi-00Bk71-4Z; Thu, 22 May 2025 16:06:08 +0200
+Message-ID: <b24d5c5e-8a9e-4dfb-886b-b3ad70e62e76@igalia.com>
+Date: Thu, 22 May 2025 15:06:07 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250521092554.1026716-2-alexander.wilhelm@westermo.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/5] drm/sched/tests: Port tests to new cleanup method
+To: Philipp Stanner <phasta@kernel.org>, Lyude Paul <lyude@redhat.com>,
+ Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Matthew Brost <matthew.brost@intel.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>
+Cc: dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+References: <20250522082742.148191-2-phasta@kernel.org>
+ <20250522082742.148191-4-phasta@kernel.org>
+Content-Language: en-GB
+From: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+In-Reply-To: <20250522082742.148191-4-phasta@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Alexander,
 
-kernel test robot noticed the following build warnings:
+On 22/05/2025 09:27, Philipp Stanner wrote:
+> The drm_gpu_scheduler now supports a callback to help drm_sched_fini()
+> avoid memory leaks. This callback instructs the driver to signal all
+> pending hardware fences.
+> 
+> Implement the new callback
+> drm_sched_backend_ops.cancel_pending_fences().
+> 
+> Have the callback use drm_mock_sched_job_complete() with a new error
+> field for the fence error.
+> 
+> Keep the job status as DRM_MOCK_SCHED_JOB_DONE for now, since there is
+> no party for which checking for a CANCELED status would be useful
+> currently.
+> 
+> Signed-off-by: Philipp Stanner <phasta@kernel.org>
+> ---
+>   .../gpu/drm/scheduler/tests/mock_scheduler.c  | 67 +++++++------------
+>   drivers/gpu/drm/scheduler/tests/sched_tests.h |  4 +-
+>   2 files changed, 25 insertions(+), 46 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/scheduler/tests/mock_scheduler.c b/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
+> index f999c8859cf7..eca47f0395bc 100644
+> --- a/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
+> +++ b/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
+> @@ -55,7 +55,7 @@ void drm_mock_sched_entity_free(struct drm_mock_sched_entity *entity)
+>   	drm_sched_entity_destroy(&entity->base);
+>   }
+>   
+> -static void drm_mock_sched_job_complete(struct drm_mock_sched_job *job)
+> +static void drm_mock_sched_job_complete(struct drm_mock_sched_job *job, int err)
+>   {
+>   	struct drm_mock_scheduler *sched =
+>   		drm_sched_to_mock_sched(job->base.sched);
+> @@ -63,7 +63,9 @@ static void drm_mock_sched_job_complete(struct drm_mock_sched_job *job)
+>   	lockdep_assert_held(&sched->lock);
+>   
+>   	job->flags |= DRM_MOCK_SCHED_JOB_DONE;
+> -	list_move_tail(&job->link, &sched->done_list);
+> +	list_del(&job->link);
+> +	if (err)
+> +		dma_fence_set_error(&job->hw_fence, err);
+>   	dma_fence_signal(&job->hw_fence);
+>   	complete(&job->done);
+>   }
+> @@ -89,7 +91,7 @@ drm_mock_sched_job_signal_timer(struct hrtimer *hrtimer)
+>   			break;
+>   
+>   		sched->hw_timeline.cur_seqno = job->hw_fence.seqno;
+> -		drm_mock_sched_job_complete(job);
+> +		drm_mock_sched_job_complete(job, 0);
+>   	}
+>   	spin_unlock_irqrestore(&sched->lock, flags);
+>   
+> @@ -212,26 +214,33 @@ mock_sched_timedout_job(struct drm_sched_job *sched_job)
+>   
+>   static void mock_sched_free_job(struct drm_sched_job *sched_job)
+>   {
+> -	struct drm_mock_scheduler *sched =
+> -			drm_sched_to_mock_sched(sched_job->sched);
+>   	struct drm_mock_sched_job *job = drm_sched_job_to_mock_job(sched_job);
+> -	unsigned long flags;
+>   
+> -	/* Remove from the scheduler done list. */
+> -	spin_lock_irqsave(&sched->lock, flags);
+> -	list_del(&job->link);
+> -	spin_unlock_irqrestore(&sched->lock, flags);
+>   	dma_fence_put(&job->hw_fence);
+> -
+>   	drm_sched_job_cleanup(sched_job);
+>   
+>   	/* Mock job itself is freed by the kunit framework. */
+>   }
+>   
+> +static void mock_sched_cancel_pending_fences(struct drm_gpu_scheduler *gsched)
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.15-rc7 next-20250522]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+"gsched" feels like a first time invention. Maybe drm_sched?
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Alexander-Wilhelm/soc-qcom-QMI-encoding-decoding-for-big-endian/20250521-172849
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20250521092554.1026716-2-alexander.wilhelm%40westermo.com
-patch subject: [PATCH 1/2] soc: qcom: QMI encoding/decoding for big endian
-config: csky-randconfig-r132-20250522 (https://download.01.org/0day-ci/archive/20250522/202505222118.Hv5tsNGQ-lkp@intel.com/config)
-compiler: csky-linux-gcc (GCC) 15.1.0
-reproduce: (https://download.01.org/0day-ci/archive/20250522/202505222118.Hv5tsNGQ-lkp@intel.com/reproduce)
+> +{
+> +	struct drm_mock_sched_job *job, *next;
+> +	struct drm_mock_scheduler *sched;
+> +	unsigned long flags;
+> +
+> +	sched = container_of(gsched, struct drm_mock_scheduler, base);
+> +
+> +	spin_lock_irqsave(&sched->lock, flags);
+> +	list_for_each_entry_safe(job, next, &sched->job_list, link)
+> +		drm_mock_sched_job_complete(job, -ECANCELED);
+> +	spin_unlock_irqrestore(&sched->lock, flags);
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505222118.Hv5tsNGQ-lkp@intel.com/
+Canceling of the timers belongs in this call back I think. Otherwise 
+jobs are not fully cancelled.
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/soc/qcom/qmi_encdec.c:359:50: sparse: sparse: cast to restricted __le16
->> drivers/soc/qcom/qmi_encdec.c:676:31: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned int [usertype] val32 @@     got restricted __le32 [usertype] @@
-   drivers/soc/qcom/qmi_encdec.c:676:31: sparse:     expected unsigned int [usertype] val32
-   drivers/soc/qcom/qmi_encdec.c:676:31: sparse:     got restricted __le32 [usertype]
+Hm, I also think, conceptually, the order of first canceling the timer 
+and then signaling the fence should be kept.
 
-vim +359 drivers/soc/qcom/qmi_encdec.c
+At the moment it does not matter hugely, since the timer does not signal 
+the jobs directly and will not find unlinked jobs, but if that changes 
+in the future, the reversed order could cause double signaling. So if 
+you keep it in the correct logical order that potential gotcha is 
+avoided. Basically just keep the two pass approach verbatim, as is in 
+the current drm_mock_sched_fini.
 
-   279	
-   280	/**
-   281	 * qmi_encode() - Core Encode Function
-   282	 * @ei_array: Struct info array describing the structure to be encoded.
-   283	 * @out_buf: Buffer to hold the encoded QMI message.
-   284	 * @in_c_struct: Pointer to the C structure to be encoded.
-   285	 * @out_buf_len: Available space in the encode buffer.
-   286	 * @enc_level: Encode level to indicate the depth of the nested structure,
-   287	 *             within the main structure, being encoded.
-   288	 *
-   289	 * Return: The number of bytes of encoded information on success or negative
-   290	 * errno on error.
-   291	 */
-   292	static int qmi_encode(const struct qmi_elem_info *ei_array, void *out_buf,
-   293			      const void *in_c_struct, u32 out_buf_len,
-   294			      int enc_level)
-   295	{
-   296		const struct qmi_elem_info *temp_ei = ei_array;
-   297		u8 opt_flag_value = 0;
-   298		u32 data_len_value = 0, data_len_sz;
-   299		u8 *buf_dst = (u8 *)out_buf;
-   300		u8 *tlv_pointer;
-   301		u32 tlv_len;
-   302		u8 tlv_type;
-   303		u32 encoded_bytes = 0;
-   304		const void *buf_src;
-   305		int encode_tlv = 0;
-   306		int rc;
-   307		u8 val8;
-   308		u16 val16;
-   309	
-   310		if (!ei_array)
-   311			return 0;
-   312	
-   313		tlv_pointer = buf_dst;
-   314		tlv_len = 0;
-   315		if (enc_level == 1)
-   316			buf_dst = buf_dst + (TLV_LEN_SIZE + TLV_TYPE_SIZE);
-   317	
-   318		while (temp_ei->data_type != QMI_EOTI) {
-   319			buf_src = in_c_struct + temp_ei->offset;
-   320			tlv_type = temp_ei->tlv_type;
-   321	
-   322			if (temp_ei->array_type == NO_ARRAY) {
-   323				data_len_value = 1;
-   324			} else if (temp_ei->array_type == STATIC_ARRAY) {
-   325				data_len_value = temp_ei->elem_len;
-   326			} else if (data_len_value <= 0 ||
-   327				    temp_ei->elem_len < data_len_value) {
-   328				pr_err("%s: Invalid data length\n", __func__);
-   329				return -EINVAL;
-   330			}
-   331	
-   332			switch (temp_ei->data_type) {
-   333			case QMI_OPT_FLAG:
-   334				rc = qmi_encode_basic_elem(&opt_flag_value, buf_src,
-   335							   1, sizeof(u8));
-   336				if (opt_flag_value)
-   337					temp_ei = temp_ei + 1;
-   338				else
-   339					temp_ei = skip_to_next_elem(temp_ei, enc_level);
-   340				break;
-   341	
-   342			case QMI_DATA_LEN:
-   343				data_len_sz = temp_ei->elem_size == sizeof(u8) ?
-   344						sizeof(u8) : sizeof(u16);
-   345				/* Check to avoid out of range buffer access */
-   346				if ((data_len_sz + encoded_bytes + TLV_LEN_SIZE +
-   347				    TLV_TYPE_SIZE) > out_buf_len) {
-   348					pr_err("%s: Too Small Buffer @DATA_LEN\n",
-   349					       __func__);
-   350					return -ETOOSMALL;
-   351				}
-   352				if (data_len_sz == sizeof(u8)) {
-   353					val8 = *(u8 *)buf_src;
-   354					data_len_value = val8;
-   355					rc = qmi_encode_basic_elem(buf_dst, &val8,
-   356								   1, data_len_sz);
-   357				} else {
-   358					val16 = *(u16 *)buf_src;
- > 359					data_len_value = le16_to_cpu(val16);
-   360					rc = qmi_encode_basic_elem(buf_dst, &val16,
-   361								   1, data_len_sz);
-   362				}
-   363				UPDATE_ENCODE_VARIABLES(temp_ei, buf_dst,
-   364							encoded_bytes, tlv_len,
-   365							encode_tlv, rc);
-   366				if (!data_len_value)
-   367					temp_ei = skip_to_next_elem(temp_ei, enc_level);
-   368				else
-   369					encode_tlv = 0;
-   370				break;
-   371	
-   372			case QMI_UNSIGNED_1_BYTE:
-   373			case QMI_UNSIGNED_2_BYTE:
-   374			case QMI_UNSIGNED_4_BYTE:
-   375			case QMI_UNSIGNED_8_BYTE:
-   376			case QMI_SIGNED_2_BYTE_ENUM:
-   377			case QMI_SIGNED_4_BYTE_ENUM:
-   378				/* Check to avoid out of range buffer access */
-   379				if (((data_len_value * temp_ei->elem_size) +
-   380				    encoded_bytes + TLV_LEN_SIZE + TLV_TYPE_SIZE) >
-   381				    out_buf_len) {
-   382					pr_err("%s: Too Small Buffer @data_type:%d\n",
-   383					       __func__, temp_ei->data_type);
-   384					return -ETOOSMALL;
-   385				}
-   386				rc = qmi_encode_basic_elem(buf_dst, buf_src,
-   387							   data_len_value,
-   388							   temp_ei->elem_size);
-   389				UPDATE_ENCODE_VARIABLES(temp_ei, buf_dst,
-   390							encoded_bytes, tlv_len,
-   391							encode_tlv, rc);
-   392				break;
-   393	
-   394			case QMI_STRUCT:
-   395				rc = qmi_encode_struct_elem(temp_ei, buf_dst, buf_src,
-   396							    data_len_value,
-   397							    out_buf_len - encoded_bytes,
-   398							    enc_level + 1);
-   399				if (rc < 0)
-   400					return rc;
-   401				UPDATE_ENCODE_VARIABLES(temp_ei, buf_dst,
-   402							encoded_bytes, tlv_len,
-   403							encode_tlv, rc);
-   404				break;
-   405	
-   406			case QMI_STRING:
-   407				rc = qmi_encode_string_elem(temp_ei, buf_dst, buf_src,
-   408							    out_buf_len - encoded_bytes,
-   409							    enc_level);
-   410				if (rc < 0)
-   411					return rc;
-   412				UPDATE_ENCODE_VARIABLES(temp_ei, buf_dst,
-   413							encoded_bytes, tlv_len,
-   414							encode_tlv, rc);
-   415				break;
-   416			default:
-   417				pr_err("%s: Unrecognized data type\n", __func__);
-   418				return -EINVAL;
-   419			}
-   420	
-   421			if (encode_tlv && enc_level == 1) {
-   422				QMI_ENCDEC_ENCODE_TLV(tlv_type, tlv_len, tlv_pointer);
-   423				encoded_bytes += (TLV_TYPE_SIZE + TLV_LEN_SIZE);
-   424				tlv_pointer = buf_dst;
-   425				tlv_len = 0;
-   426				buf_dst = buf_dst + TLV_LEN_SIZE + TLV_TYPE_SIZE;
-   427				encode_tlv = 0;
-   428			}
-   429		}
-   430	
-   431		return encoded_bytes;
-   432	}
-   433	
+The rest of the conversion is I think good.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Only a slight uncertainty after I cross-referenced with my version 
+(->cancel_job()) around why I needed to add signaling to 
+mock_sched_timedout_job() and manual job cleanup to the timeout test. It 
+was more than a month ago that I wrote it so can't remember right now. 
+You checked for memory leaks and the usual stuff?
+
+Regards,
+
+Tvrtko
+
+> +}
+> +
+>   static const struct drm_sched_backend_ops drm_mock_scheduler_ops = {
+>   	.run_job = mock_sched_run_job,
+>   	.timedout_job = mock_sched_timedout_job,
+> -	.free_job = mock_sched_free_job
+> +	.free_job = mock_sched_free_job,
+> +	.cancel_pending_fences = mock_sched_cancel_pending_fences,
+>   };
+>   
+>   /**
+> @@ -265,7 +274,6 @@ struct drm_mock_scheduler *drm_mock_sched_new(struct kunit *test, long timeout)
+>   	sched->hw_timeline.context = dma_fence_context_alloc(1);
+>   	atomic_set(&sched->hw_timeline.next_seqno, 0);
+>   	INIT_LIST_HEAD(&sched->job_list);
+> -	INIT_LIST_HEAD(&sched->done_list);
+>   	spin_lock_init(&sched->lock);
+>   
+>   	return sched;
+> @@ -280,38 +288,11 @@ struct drm_mock_scheduler *drm_mock_sched_new(struct kunit *test, long timeout)
+>    */
+>   void drm_mock_sched_fini(struct drm_mock_scheduler *sched)
+>   {
+> -	struct drm_mock_sched_job *job, *next;
+> -	unsigned long flags;
+> -	LIST_HEAD(list);
+> +	struct drm_mock_sched_job *job;
+>   
+> -	drm_sched_wqueue_stop(&sched->base);
+> -
+> -	/* Force complete all unfinished jobs. */
+> -	spin_lock_irqsave(&sched->lock, flags);
+> -	list_for_each_entry_safe(job, next, &sched->job_list, link)
+> -		list_move_tail(&job->link, &list);
+> -	spin_unlock_irqrestore(&sched->lock, flags);
+> -
+> -	list_for_each_entry(job, &list, link)
+> +	list_for_each_entry(job, &sched->job_list, link)
+>   		hrtimer_cancel(&job->timer);
+>   
+> -	spin_lock_irqsave(&sched->lock, flags);
+> -	list_for_each_entry_safe(job, next, &list, link)
+> -		drm_mock_sched_job_complete(job);
+> -	spin_unlock_irqrestore(&sched->lock, flags);
+> -
+> -	/*
+> -	 * Free completed jobs and jobs not yet processed by the DRM scheduler
+> -	 * free worker.
+> -	 */
+> -	spin_lock_irqsave(&sched->lock, flags);
+> -	list_for_each_entry_safe(job, next, &sched->done_list, link)
+> -		list_move_tail(&job->link, &list);
+> -	spin_unlock_irqrestore(&sched->lock, flags);
+> -
+> -	list_for_each_entry_safe(job, next, &list, link)
+> -		mock_sched_free_job(&job->base);
+> -
+>   	drm_sched_fini(&sched->base);
+>   }
+>   
+> @@ -346,7 +327,7 @@ unsigned int drm_mock_sched_advance(struct drm_mock_scheduler *sched,
+>   		if (sched->hw_timeline.cur_seqno < job->hw_fence.seqno)
+>   			break;
+>   
+> -		drm_mock_sched_job_complete(job);
+> +		drm_mock_sched_job_complete(job, 0);
+>   		found++;
+>   	}
+>   unlock:
+> diff --git a/drivers/gpu/drm/scheduler/tests/sched_tests.h b/drivers/gpu/drm/scheduler/tests/sched_tests.h
+> index 27caf8285fb7..22e530d87791 100644
+> --- a/drivers/gpu/drm/scheduler/tests/sched_tests.h
+> +++ b/drivers/gpu/drm/scheduler/tests/sched_tests.h
+> @@ -32,9 +32,8 @@
+>    *
+>    * @base: DRM scheduler base class
+>    * @test: Backpointer to owning the kunit test case
+> - * @lock: Lock to protect the simulated @hw_timeline, @job_list and @done_list
+> + * @lock: Lock to protect the simulated @hw_timeline and @job_list
+>    * @job_list: List of jobs submitted to the mock GPU
+> - * @done_list: List of jobs completed by the mock GPU
+>    * @hw_timeline: Simulated hardware timeline has a @context, @next_seqno and
+>    *		 @cur_seqno for implementing a struct dma_fence signaling the
+>    *		 simulated job completion.
+> @@ -49,7 +48,6 @@ struct drm_mock_scheduler {
+>   
+>   	spinlock_t		lock;
+>   	struct list_head	job_list;
+> -	struct list_head	done_list;
+>   
+>   	struct {
+>   		u64		context;
+
