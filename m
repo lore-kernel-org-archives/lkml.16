@@ -1,335 +1,194 @@
-Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11022125.outbound.protection.outlook.com [52.101.43.125])
+Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D292EA50;
-	Thu, 22 May 2025 00:22:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.125
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747873368; cv=fail; b=AvpABkuSiwd/EB/cS8J7QRVKHOc7x9Hw16zRFwbEv5PZfh4aybA/blyMNg1xXXmVIl0rriKutmJ8QPq8KL1KswFHUGAno3z9ArUN4b4rGpHb9Jm6qbsHusTpr6zlYx2BW/d+409k8x/YKrVRJJ6CfGpS5hgJfA906kEXxKPK3Zs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747873368; c=relaxed/simple;
-	bh=Ju/15Cmmg0PsH41xyC1YzraQjeo85diTURllwH3DFI0=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=gkQsLeigBbrkTK4WqHWiJVpcictHOMXYvOO68zOMoO5ZWKgUyzm03CfBtZHSRf+KVy7p+sIF0FlUyrl/gMCfLfYM8CbSIGNdCUK74r3KOsxq6xyx+1w+S8XfKTiV/IRnABy/81XIVVFQr+0AH08VvxkonZTblD2npfcHYAx3VmA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=hOJGpoWQ; arc=fail smtp.client-ip=52.101.43.125
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CCF580B
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 00:24:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747873449; cv=none; b=ptfDi8tnUwoRA3J7o7B+i1cOJfq2nwv5a4Wf4IjhYPnPrVtA1X+Hzjy0N+OcN9r2AOryorwzRkDTR7btu4y/8ZfMNsNt4e1P+YfyHQ3Kw9mssjnZf84MQUjSE+86KOrm0ZLs6mjENWSlCa+6KrxfRXdTR0riqklbTvOX3/dgVi0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747873449; c=relaxed/simple;
+	bh=T106uyTJtpqmU/8F1Pt7pFSZf7m5+fq2dbi8ntf+5KA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=gfsvMV8wexSX/SlaBH19/mWREqXSa0pL+f1MJSg8YMcX4uGVsVhDpOLqeRPYFGYGnga9iLO2p8NBwQSWYX3osDIK3Q6NtAR+ULapKzXR+3rZF+n3QooM/W0P2iAP7RncjgiOCx8lofqDCaElRmdPtNyzCh7LleeT/g4RoVWBN8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=nsDeIZWy; arc=none smtp.client-ip=95.215.58.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="hOJGpoWQ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bl6SOD9KdtKor5/Alv98yIb23/QhTgjhhYZQvBPcs1wXZWQuoHTVmgk40YKdBHG3aiE3C3sSa0xCiLyp6JLDh1R7cvmUerSr5eBV/D5DEJjxVHTduq0hGAqB9TcppRVjLgJczqjeaYC/ocd70UvR2ORECtMDij3MSvuJiJWdXduF39adIHgdSynyOgjkd+e4XFQ4yEKdZ0L6uWZlPhL7j+2Q6zxv8ip9R4afLpfJwDIVNss0Nj1zyLi4NYbpsdrIOhND71Maoqmf21aV06+JH6nr/rus+qVC/QSKJTayfUO5Iy//X/C5dzKjen2huD0ow9c2FohOvba52bwGDAJ16A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=P3XWxBX5ttpvehZ4CQmrOTEokgdD+fQf0kcgFwXsVeI=;
- b=d9hzfMWUw0GvROzmY/RA7edpB+fs/+bS8wlTnZY1hVl5Y1rXzo1nQRuVv5NmjuH3M0vLPVJWeC/xxi8+PTQyadVFEmbRxwkoiLjfXiVXxlw5i5R5eo9W2aMDD8Sgzbg2tOVYJtt/xoKwAl4+XrcLzS6tYTIT39UI48Q2TqMWTJBYS5xIVr610sodgAoKjltB6bwKoKLZnZBmrHGzBPMZFaJcjCYD+aHaNLwk5P/4GYQ1XezC4suD/8oKQLbi3pGHf6WZr1j8QT4XJOq4TBBSeYigbdIy8r3C/aAlFp5UjmbYk5dSCaPyPbWJlBLwlpUwt9Qz5OLLQxC+AxcJ7frXoQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P3XWxBX5ttpvehZ4CQmrOTEokgdD+fQf0kcgFwXsVeI=;
- b=hOJGpoWQlXvThgUfUijLmqbW5uGzo6KzDQeHSUqGC7IRgQc6AfpMuN7gd+BFDTs0bfs465bSXgkkFbEYEGrLwZQCHbOrwQp3m5pfr4S+q/QScaQMQMqtOQMkLKKK3/oafwdw/K66uKRq3PnH3cXRAGaNYYmtUQHJaP+ML3IcN+w=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-Received: from MN0PR21MB3606.namprd21.prod.outlook.com (2603:10b6:208:3d1::17)
- by BL1PR21MB3355.namprd21.prod.outlook.com (2603:10b6:208:39f::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8792.5; Thu, 22 May
- 2025 00:22:42 +0000
-Received: from MN0PR21MB3606.namprd21.prod.outlook.com
- ([fe80::5120:641f:e060:2dc4]) by MN0PR21MB3606.namprd21.prod.outlook.com
- ([fe80::5120:641f:e060:2dc4%4]) with mapi id 15.20.8769.001; Thu, 22 May 2025
- 00:22:42 +0000
-From: Haiyang Zhang <haiyangz@microsoft.com>
-To: linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org
-Cc: haiyangz@microsoft.com,
-	decui@microsoft.com,
-	stephen@networkplumber.org,
-	kys@microsoft.com,
-	paulros@microsoft.com,
-	olaf@aepfle.de,
-	vkuznets@redhat.com,
-	davem@davemloft.net,
-	wei.liu@kernel.org,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	leon@kernel.org,
-	longli@microsoft.com,
-	ssengar@linux.microsoft.com,
-	linux-rdma@vger.kernel.org,
-	daniel@iogearbox.net,
-	john.fastabend@gmail.com,
-	bpf@vger.kernel.org,
-	ast@kernel.org,
-	hawk@kernel.org,
-	tglx@linutronix.de,
-	shradhagupta@linux.microsoft.com,
-	andrew+netdev@lunn.ch,
-	kotaranov@microsoft.com,
-	horms@kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next,v5] net: mana: Add handler for hardware servicing events
-Date: Wed, 21 May 2025 17:22:23 -0700
-Message-Id: <1747873343-3118-1-git-send-email-haiyangz@microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-Content-Type: text/plain
-X-ClientProxiedBy: MW3PR06CA0012.namprd06.prod.outlook.com
- (2603:10b6:303:2a::17) To MN0PR21MB3606.namprd21.prod.outlook.com
- (2603:10b6:208:3d1::17)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="nsDeIZWy"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1747873444;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wrH9jBCKBEOrByQtkD+ofBzbo0nje3TFiKainJjRQrc=;
+	b=nsDeIZWy0XQL+FstjkzXh/izAGEdF4IebwLXaH5pOGKGp2q24y3Q0lptRQ/59ZhA2jC6iF
+	vUQqf64nQljBBhW0zsOXjhIF5haPqkB14hEUVM69YztfqBmNIrqvHq6r4geqcZ4lVQZtU2
+	OMyWkZaqLeeL/68drUJeGbGFQavzRnU=
+From: Roman Gushchin <roman.gushchin@linux.dev>
+To: Jann Horn <jannh@google.com>
+Cc: Hugh Dickins <hughd@google.com>,  Andrew Morton
+ <akpm@linux-foundation.org>,  Peter Zijlstra <peterz@infradead.org>,
+  linux-kernel@vger.kernel.org,  linux-mm@kvack.org,  Will Deacon
+ <will@kernel.org>,  "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,  Nick
+ Piggin <npiggin@gmail.com>,  linux-arch@vger.kernel.org
+Subject: Re: [PATCH v5] mmu_gather: move tlb flush for VM_PFNMAP/VM_MIXEDMAP
+ vmas into free_pgtables()
+In-Reply-To: <CAG48ez39SaJe=cwq3JZ6UM0BLMHEj76Kdmd9=Ho1nr17fAco6Q@mail.gmail.com>
+	(Jann Horn's message of "Wed, 21 May 2025 02:38:20 +0200")
+References: <20250520214813.3946964-1-roman.gushchin@linux.dev>
+	<CAG48ez39SaJe=cwq3JZ6UM0BLMHEj76Kdmd9=Ho1nr17fAco6Q@mail.gmail.com>
+Date: Wed, 21 May 2025 17:23:57 -0700
+Message-ID: <878qmpwl0i.fsf@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Sender: LKML haiyangz <lkmlhyz@microsoft.com>
-X-MS-Exchange-MessageSentRepresentingType: 2
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR21MB3606:EE_|BL1PR21MB3355:EE_
-X-MS-Office365-Filtering-Correlation-Id: e09eb63e-e119-4331-dbca-08dd98c6c3fe
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|7416014|376014|52116014|1800799024|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?wNJIMkRuGeJvSIhTABsU9TmbM9wEaKfl96KFsNtCc0FYe3U4hWtHCaDrAz6c?=
- =?us-ascii?Q?AgABBtUdAXTnJfu+IKbIsqjUSnQ12a78O0NRCEf0TYdNOGBsi6r3HXzLn6vr?=
- =?us-ascii?Q?o5uR/5y3bEE+iBPdAcU0/6dsM6aOMlhE7XWuVh0JJlMMT9SjWy3X0QXEn8um?=
- =?us-ascii?Q?tbaaN3CPd6TLE9QTzHdzVWoncwE8K518LgzC6AIIhdBQKLpoYOlJUuKbcpjC?=
- =?us-ascii?Q?W0p3JLMjzD4HTuMYW+qIhcpiZZNz5N230Cs4H+b7ky5GZs9rWhTLuNTM9YBP?=
- =?us-ascii?Q?DPYtwrtnazq2k+rbpMgT4MLp0PVnstVWCmk6vOpbk3WazYF89TFUeN2Kf3p0?=
- =?us-ascii?Q?NMA72OM6MnstJgZ3lP5nVgN/G/UgQmO0QncP6+k5Z8bXAVHy5buyoNjW0dCi?=
- =?us-ascii?Q?tij/2FdfoBJLIuGvl2LFewZOdCXmCBu7bknmYq5GqkAnckwwTVZQJoFOsRPG?=
- =?us-ascii?Q?LvjfK/eTmTJVffHcQn+OJobfnX5GbI/MloVPEcYbSK9b5/6RnufTo2VCekko?=
- =?us-ascii?Q?2h6ieBl93+oq58x81i/LFr3W0pf4Ct5+fNSmPu8XFta6rWLaK01yIbK/wAHx?=
- =?us-ascii?Q?mT4ix4NIec7FIsZwqTr2OrB4CL3IhnwtQFqgqAaAg/FmxvBmsI0Edn8p7ETz?=
- =?us-ascii?Q?2UerIcO3xjZK4B5y/khUlNN8WPt4PZtth1MyxpgRACeGV0I742bAQgVKjosG?=
- =?us-ascii?Q?vWRvpl7oeOjuWldHMjS7tw4Q2Tm63IXphh7oSqCawOjsqJDV6IqJ7PPXd/by?=
- =?us-ascii?Q?p53WBsp9KVksnnm+J5GWoduyygw5kp50b22Yk6sTxSmR4LZQZOLCBeQ9mpeH?=
- =?us-ascii?Q?bVP8zeH3uA+l3Ume3fiiz8T4wLrzrnYVgDRDU7xeGNnwAp4O6JCGNfcKc1ks?=
- =?us-ascii?Q?cQ3rVHFlKV1dRiGYykvfXJNJrEAZY3THHCkpmxZTUdBcdY1lVqEuYhlK+E56?=
- =?us-ascii?Q?akoU3xHQ5oJt1xeeG4fbcZkYRZwCVL20nGZi+JXNjPPs3VvnkHIRhoJhLOAP?=
- =?us-ascii?Q?OcamvLWR2hC1YPHABr3A09gCiESaztWI5Icaf9MmV2XjfL4tgii7AeEI6pfR?=
- =?us-ascii?Q?t5dSx9uWN4+zk91D7wKlmuT1rT9rm9o3mzJLytKQ+HQEEoKlG5ubR4KPKJUe?=
- =?us-ascii?Q?LYVv23El74oWQb8rUB3H+OXRi4r6qNO2B8q5i6fqqohlPj9R+4iFzYiXdIYG?=
- =?us-ascii?Q?Y7/y1n7gF3kxjhkzNF/FhrlO+zefYeI4Fqu9dw5uuprAwQt6HW4sWtks/RFD?=
- =?us-ascii?Q?LZahQtMcKwX+67je4E+huOZyUCkzKkyguSy7GhIGMJx1NAiIPm5OXIUCBdF0?=
- =?us-ascii?Q?w5hUJRZlyRdbyQ4tF4iSyUpZCPmqDmeC6I2Jdsb0HJlNgecxNifyGY1GpH5T?=
- =?us-ascii?Q?cqS1vycgiR4zqfaN+ZmemWgD6kRkdO5LZb9wcMRpSRFzvDC+S2/76e2chkgg?=
- =?us-ascii?Q?sQRUbNjdhpML3rmAEuLK+Mhtz+RRCAP6yyBBO1kCGZ4E9kih8a6xQA=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR21MB3606.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(52116014)(1800799024)(38350700014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?c1KBcN0TTnWDprQ7ju5bmLiUpwUaJ2QDrueDBPpJEoEJyMgwCZNU1AuPaiaN?=
- =?us-ascii?Q?RdRJ7crBM693+QzE3Je77N6eddSA26wsfmHFXQ8uNEqoFhTX46YoJyO7o1Xx?=
- =?us-ascii?Q?Q7G58KbHJDrlfjAgh2BP/ufpomtsJ/UhtA3crjdgyCOcjjGV67scxnvLAd+2?=
- =?us-ascii?Q?hTAXjl3eo1A1MXJRyeAPKv+wOLbqVqDHDYUntE2+rXGYy762ndW4fopGW5md?=
- =?us-ascii?Q?4Qyo6n5yKYQRwBrbG7nt0W9QdRi5M5LiMPzZ8x5ZCj5ovCumS0wEiNNvHVqT?=
- =?us-ascii?Q?C1bzRqiVHqaveEUzchMB72BE9QFVXGOOSbwIFWBwUIYD1vYMqlvBZbpCpynD?=
- =?us-ascii?Q?IGFW+jNGJW+K5tbtb+ILZ/fEHDq3KgriE+sw1+f3PWETpsNw5dgDD1JchbVx?=
- =?us-ascii?Q?/8y4bDmobSq82yencM5VdqtshM93HB+CfC66szKUSPqQPKi4qN3vrF4eT9Tu?=
- =?us-ascii?Q?7VVrnmKFempVYM5nBE3M9YzU/uZaDnkSR3WLB2ZQKA8Qd7o/q9YZGYDTmn90?=
- =?us-ascii?Q?JndJVZPkKeom/fJivDcs+XhU3dq4whqioRWx/oXdqjpZzyTrvtdrZAm85Bnt?=
- =?us-ascii?Q?7NYfoTegB/SeT+SJOVjSSNdK9gS+Biu+YQw3Vzq4LO5A3br0YwfewxDyOhCs?=
- =?us-ascii?Q?xlfE6XBwjjENyaKlQ8oIpD2EQne1iLDyEJdikfuCtWif2T4r7BDm3LjfcR/m?=
- =?us-ascii?Q?1+ub3yCNSVeGuqXlTT6QN/Tpa4oneWINXYc8/PmPUmZdJTFgnGRn4VhpjekV?=
- =?us-ascii?Q?bAy89Uvik+aMNfdiA+tLwKDXVjkNQk630E1wUhcuC+hp31P3DM+zZ+lQHou4?=
- =?us-ascii?Q?Tsyou+jMaG7S6iQ7Hi7yevTqxn8yV0VB6gIyWUnjGyxsDnuqsAnPmiQidneq?=
- =?us-ascii?Q?Osb3wRNaX6KFfK4ZAHXPFC90e7MMSESYCRT1FsHOF6o6wNoo8Jd7lglIK5Is?=
- =?us-ascii?Q?3i1lceUF4kohCjmTuTnDwjMx8WYlPLpBxJPwuTGn0Ue3DXpS6GMqlK1TYP2f?=
- =?us-ascii?Q?VfuZhXfs/E0rq3CRemS3JQdUtER/NP01vyoz04jB94bnGBuoH7D9sDK2UxCU?=
- =?us-ascii?Q?E3dPkfF8S2q0S60FCwg4EeOXQjUjrEAzwbrS7GvwHMV8J1hxBih2bu5mqAxK?=
- =?us-ascii?Q?QPZ50tzJSV8ixpZh7MJOYVzTUZekxqyR9TGJJ7rCqaKQhdSdBimDz9TGLV8X?=
- =?us-ascii?Q?zidjt40+9eGlQvBtl1GcPTQqoAoVNMYr7zXg8rNTRyzYj+iSQlG/6F+4FQ9O?=
- =?us-ascii?Q?O+BU5UYxc27I4DXEAsATlmxOdCtiWO3nzccXUSckpFWZ+Emc8WjnNMNno1QX?=
- =?us-ascii?Q?/6hNIXT5e+vVnByet2Eak3D4F2lSp29G6ocqnembO1ncjGR9oWdkaMxBBqtz?=
- =?us-ascii?Q?eVi2/9mSASJNsbwuV3P0atiVj1u3t9vub25PLj0FTDHhmu0R1t9wc3CHJFJ6?=
- =?us-ascii?Q?ZauZxk/EBsN+lo3js4WCSXYVOoNQxdONGjv4TMMV4H6/OEPsq98cKzdSPITx?=
- =?us-ascii?Q?CEgtfaLMu30IqZfaWGVSH+r0Sx0FKqMlU4YBlpEMxEwuYLgdc8lhonSBNDp3?=
- =?us-ascii?Q?Pz56BvpCw8WLG8R+rtSSuzdD6FQwAsvUMxRXgqF1?=
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e09eb63e-e119-4331-dbca-08dd98c6c3fe
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR21MB3606.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2025 00:22:42.0591
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Qc4cpGbK30k8nB+aPkWVDTKIv5ZdzaWCz7qJgE23jt2XtbXN6r+zaYDzFjstkFDJifEa6GaivzY4Z/MAb6AELA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR21MB3355
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Migadu-Flow: FLOW_OUT
 
-To collaborate with hardware servicing events, upon receiving the special
-EQE notification from the HW channel, remove the devices on this bus.
-Then, after a waiting period based on the device specs, rescan the parent
-bus to recover the devices.
+Jann Horn <jannh@google.com> writes:
 
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-Reviewed-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
-Reviewed-by: Simon Horman <horms@kernel.org>
----
-v5:
-Get refcnt of the pdev struct to avoid removal before running the work
-as suggested by Jakub Kicinski.
+> On Tue, May 20, 2025 at 11:50=E2=80=AFPM Roman Gushchin
+> <roman.gushchin@linux.dev> wrote:
+>> Commit b67fbebd4cf9 ("mmu_gather: Force tlb-flush VM_PFNMAP vmas")
+>> added a forced tlbflush to tlb_vma_end(), which is required to avoid a
+>> race between munmap() and unmap_mapping_range(). However it added some
+>> overhead to other paths where tlb_vma_end() is used, but vmas are not
+>> removed, e.g. madvise(MADV_DONTNEED).
+>>
+>> Fix this by moving the tlb flush out of tlb_end_vma() into new
+>> tlb_flush_vmas() called from free_pgtables(), somewhat similar to the
+>> stable version of the original commit:
+>> commit 895428ee124a ("mm: Force TLB flush for PFNMAP mappings before
+>> unlink_file_vma()").
+>>
+>> Note, that if tlb->fullmm is set, no flush is required, as the whole
+>> mm is about to be destroyed.
+>>
+>> Signed-off-by: Roman Gushchin <roman.gushchin@linux.dev>
+>> Cc: Jann Horn <jannh@google.com>
+>> Cc: Peter Zijlstra <peterz@infradead.org>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: Nick Piggin <npiggin@gmail.com>
+>> Cc: Hugh Dickins <hughd@google.com>
+>> Cc: linux-arch@vger.kernel.org
+>> Cc: linux-mm@kvack.org
+>>
+>> ---
+>> v5:
+>>   - tlb_free_vma() -> tlb_free_vmas() to avoid extra checks
+>>
+>> v4:
+>>   - naming/comments update (by Peter Z.)
+>>   - check vma->vma->vm_flags in tlb_free_vma() (by Peter Z.)
+>>
+>> v3:
+>>   - added initialization of vma_pfn in __tlb_reset_range() (by Hugh D.)
+>>
+>> v2:
+>>   - moved vma_pfn flag handling into tlb.h (by Peter Z.)
+>>   - added comments (by Peter Z.)
+>>   - fixed the vma_pfn flag setting (by Hugh D.)
+>> ---
+>>  include/asm-generic/tlb.h | 49 +++++++++++++++++++++++++++++++--------
+>>  mm/memory.c               |  2 ++
+>>  2 files changed, 41 insertions(+), 10 deletions(-)
+>>
+>> diff --git a/include/asm-generic/tlb.h b/include/asm-generic/tlb.h
+>> index 88a42973fa47..8a8b9535a930 100644
+>> --- a/include/asm-generic/tlb.h
+>> +++ b/include/asm-generic/tlb.h
+>> @@ -58,6 +58,11 @@
+>>   *    Defaults to flushing at tlb_end_vma() to reset the range; helps w=
+hen
+>>   *    there's large holes between the VMAs.
+>>   *
+>> + *  - tlb_free_vmas()
+>> + *
+>> + *    tlb_free_vmas() marks the start of unlinking of one or more vmas
+>> + *    and freeing page-tables.
+>> + *
+>>   *  - tlb_remove_table()
+>>   *
+>>   *    tlb_remove_table() is the basic primitive to free page-table dire=
+ctories
+>> @@ -399,7 +404,10 @@ static inline void __tlb_reset_range(struct mmu_gat=
+her *tlb)
+>>          * Do not reset mmu_gather::vma_* fields here, we do not
+>>          * call into tlb_start_vma() again to set them if there is an
+>>          * intermediate flush.
+>> +        *
+>> +        * Except for vma_pfn, that only cares if there's pending TLBI.
+>>          */
+>> +       tlb->vma_pfn =3D 0;
+>
+> This looks dodgy to me. Can you explain here in more detail why this
+> is okay? Looking at current mainline, tlb->vma_pfn is only set to 1
+> when tlb_start_vma() calls into tlb_update_vma_flags(); it is never
+> set again after tlb_start_vma(), so I don't think it's legal to just
+> clear it in the middle of a VMA.
+>
+> If we had something like this callgraph on a VM_MIXEDMAP mapping, with
+> an intermediate TLB flush in the middle of the VM_MIXEDMAP mapping:
+>
+> tlb_start_vma()
+>   [sets tlb->vma_pfn]
+> zap_pte_range
+>   tlb_flush_mmu_tlbonly
+>     __tlb_reset_range
+>       [clears tlb->vma_pfn]
+> zap_pte_range
+>   [zaps more PTEs and queues a pending TLB flush]
+> tlb_end_vma()
+> free_pgtables
+>   tlb_free_vmas
+>     [checks for tlb->vma_pfn]
+>
+> then tlb_free_vmas() will erroneously not do a flush when it should've
+> done one, right?
 
-v4:
-Renamed EQE type 135 to GDMA_EQE_HWC_RESET_REQUEST, since there can
-be multiple cases of this reset request.
+Good catch!
 
-v3:
-Updated for checkpatch warnings as suggested by Simon Horman.
+>
+> Why does it even matter to you whether tlb->vma_pfn ever gets reset? I
+> think more or less at worst you do one extra TLB flush in some case
+> involving a munmap() across multiple VMAs including a mix of
+> VM_PFNMAP/VM_MIXEDMAP and non-VM_PFNMAP/VM_MIXEDMAP VMAs (which is
+> already a fairly weird scenario on its own), with the region being
+> operated on large enough or complicated enough that you already did at
+> least one TLB flush, and the unmap sufficiently large or with
+> sufficient address space around it that page tables are getting freed,
+> or something like that? That seems like a scenario in which one more
+> flush isn't going to be a big deal.
 
-v2:
-Added dev_dbg for service type as suggested by Shradha Gupta.
-Added driver cap bit.
+Agree.
 
----
- .../net/ethernet/microsoft/mana/gdma_main.c   | 75 +++++++++++++++++++
- include/net/mana/gdma.h                       | 10 ++-
- 2 files changed, 83 insertions(+), 2 deletions(-)
+>
+> If you wanted to do this properly, I think you could do something like:
+>
+>  - add another flag tlb->current_vma_pfn that tracks whether the
+> current vma is pfnmap/mixedmap
+>  - reset tlb->vma_pfn on TLB flush
+>  - set tlb->vma_pfn again if a TLB flush is enqueued while
+> tlb->current_vma_pfn is true
+>
+> But that seems way too complicated, so I would just delete these three
+> lines from the patch.
 
-diff --git a/drivers/net/ethernet/microsoft/mana/gdma_main.c b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-index 4ffaf7588885..1091f233d8ad 100644
---- a/drivers/net/ethernet/microsoft/mana/gdma_main.c
-+++ b/drivers/net/ethernet/microsoft/mana/gdma_main.c
-@@ -352,11 +352,59 @@ void mana_gd_ring_cq(struct gdma_queue *cq, u8 arm_bit)
- }
- EXPORT_SYMBOL_NS(mana_gd_ring_cq, "NET_MANA");
- 
-+#define MANA_SERVICE_PERIOD 10
-+
-+struct mana_serv_work {
-+	struct work_struct serv_work;
-+	struct pci_dev *pdev;
-+};
-+
-+static void mana_serv_func(struct work_struct *w)
-+{
-+	struct mana_serv_work *mns_wk;
-+	struct pci_bus *bus, *parent;
-+	struct pci_dev *pdev;
-+
-+	mns_wk = container_of(w, struct mana_serv_work, serv_work);
-+	pdev = mns_wk->pdev;
-+
-+	pci_lock_rescan_remove();
-+
-+	if (!pdev)
-+		goto out;
-+
-+	bus = pdev->bus;
-+	if (!bus) {
-+		dev_err(&pdev->dev, "MANA service: no bus\n");
-+		goto out;
-+	}
-+
-+	parent = bus->parent;
-+	if (!parent) {
-+		dev_err(&pdev->dev, "MANA service: no parent bus\n");
-+		goto out;
-+	}
-+
-+	pci_stop_and_remove_bus_device(bus->self);
-+
-+	msleep(MANA_SERVICE_PERIOD * 1000);
-+
-+	pci_rescan_bus(parent);
-+
-+out:
-+	pci_unlock_rescan_remove();
-+
-+	pci_dev_put(pdev);
-+	kfree(mns_wk);
-+	module_put(THIS_MODULE);
-+}
-+
- static void mana_gd_process_eqe(struct gdma_queue *eq)
- {
- 	u32 head = eq->head % (eq->queue_size / GDMA_EQE_SIZE);
- 	struct gdma_context *gc = eq->gdma_dev->gdma_context;
- 	struct gdma_eqe *eq_eqe_ptr = eq->queue_mem_ptr;
-+	struct mana_serv_work *mns_wk;
- 	union gdma_eqe_info eqe_info;
- 	enum gdma_eqe_type type;
- 	struct gdma_event event;
-@@ -400,6 +448,33 @@ static void mana_gd_process_eqe(struct gdma_queue *eq)
- 		eq->eq.callback(eq->eq.context, eq, &event);
- 		break;
- 
-+	case GDMA_EQE_HWC_FPGA_RECONFIG:
-+		dev_info(gc->dev, "Recv MANA service type:%d\n", type);
-+
-+		if (gc->in_service) {
-+			dev_info(gc->dev, "Already in service\n");
-+			break;
-+		}
-+
-+		if (!try_module_get(THIS_MODULE)) {
-+			dev_info(gc->dev, "Module is unloading\n");
-+			break;
-+		}
-+
-+		mns_wk = kzalloc(sizeof(*mns_wk), GFP_ATOMIC);
-+		if (!mns_wk) {
-+			module_put(THIS_MODULE);
-+			break;
-+		}
-+
-+		dev_info(gc->dev, "Start MANA service type:%d\n", type);
-+		gc->in_service = true;
-+		mns_wk->pdev = to_pci_dev(gc->dev);
-+		pci_dev_get(mns_wk->pdev);
-+		INIT_WORK(&mns_wk->serv_work, mana_serv_func);
-+		schedule_work(&mns_wk->serv_work);
-+		break;
-+
- 	default:
- 		break;
- 	}
-diff --git a/include/net/mana/gdma.h b/include/net/mana/gdma.h
-index 228603bf03f2..150ab3610869 100644
---- a/include/net/mana/gdma.h
-+++ b/include/net/mana/gdma.h
-@@ -58,7 +58,7 @@ enum gdma_eqe_type {
- 	GDMA_EQE_HWC_INIT_EQ_ID_DB	= 129,
- 	GDMA_EQE_HWC_INIT_DATA		= 130,
- 	GDMA_EQE_HWC_INIT_DONE		= 131,
--	GDMA_EQE_HWC_SOC_RECONFIG	= 132,
-+	GDMA_EQE_HWC_FPGA_RECONFIG	= 132,
- 	GDMA_EQE_HWC_SOC_RECONFIG_DATA	= 133,
- 	GDMA_EQE_RNIC_QP_FATAL		= 176,
- };
-@@ -388,6 +388,8 @@ struct gdma_context {
- 	u32			test_event_eq_id;
- 
- 	bool			is_pf;
-+	bool			in_service;
-+
- 	phys_addr_t		bar0_pa;
- 	void __iomem		*bar0_va;
- 	void __iomem		*shm_base;
-@@ -558,12 +560,16 @@ enum {
- /* Driver can handle holes (zeros) in the device list */
- #define GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP BIT(11)
- 
-+/* Driver can self reset on FPGA Reconfig EQE notification */
-+#define GDMA_DRV_CAP_FLAG_1_HANDLE_RECONFIG_EQE BIT(17)
-+
- #define GDMA_DRV_CAP_FLAGS1 \
- 	(GDMA_DRV_CAP_FLAG_1_EQ_SHARING_MULTI_VPORT | \
- 	 GDMA_DRV_CAP_FLAG_1_NAPI_WKDONE_FIX | \
- 	 GDMA_DRV_CAP_FLAG_1_HWC_TIMEOUT_RECONFIG | \
- 	 GDMA_DRV_CAP_FLAG_1_VARIABLE_INDIRECTION_TABLE_SUPPORT | \
--	 GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP)
-+	 GDMA_DRV_CAP_FLAG_1_DEV_LIST_HOLES_SUP | \
-+	 GDMA_DRV_CAP_FLAG_1_HANDLE_RECONFIG_EQE)
- 
- #define GDMA_DRV_CAP_FLAGS2 0
- 
--- 
-2.34.1
+Agree, except tlb->vma_pfn needs to be initialized somewhere. This
+is primarily why these lines were added based on the feedback to the
+original version. However we missed the race you pointed at.
 
+I guess instead tlb->vma_pfn can be initialized in __tlb_gather_mmu().
+
+I'll send out the fixed version shortly.
+
+Thank you!
