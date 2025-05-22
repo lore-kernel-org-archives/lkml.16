@@ -1,42 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 355FE233722;
-	Thu, 22 May 2025 08:45:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1588280309;
+	Thu, 22 May 2025 08:45:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747903528; cv=none; b=BOT4yx53SYynkR1nz6YJ99KLgyFsX74x8PsQVCHerppzsjOCG4WOFjaYd+33lKNvqkkx8jpH9isjhrSocr0UFtEXHXefsumwsa2iFeNd2bDL+VGWQ7Hq8s+Ge2lUwqzhVeBVtew4Z9NRZuRSLxAjDLAvg0CwBi9o4EFbKQBHqt4=
+	t=1747903531; cv=none; b=hyfF/ee4JzcP/j8e7BnStRzoHLlJm2FTpoT2PALKttu27PyOFPCUrunQQBVhtS4fh4hRY0O4i6kgy4/c3fiZr1vWa5mWwnSTTLUm8giPvpo2FI2+b4S7GYTSscq/MtWyICPDm7ZfixgGnGYlDsV6zICrbPvvEi+NRHRyqlW2MvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747903528; c=relaxed/simple;
-	bh=texjXElObw+GNasUGILZClaSk8zqAXIuhZPQBXgKUE8=;
+	s=arc-20240116; t=1747903531; c=relaxed/simple;
+	bh=SSS6anPKRBCb1IXkLlv4UlzxipEkufFG7dlLhh/Zkd4=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=B7MB1f300csLv4jJnfn86hEG+BQwnko37iytUxgyIjxxE0UgC4tzTNzzng1+iimyc0qkhijXZ5xLDBzS78/HxtJJdYzdnoHtskitnRAzbYKUdZF87kKsw8zrn5FboSD/H9ZQZu5pvZjgcUkqI/A9wtP89e9ndFHc46LOxBR0ono=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lwgcMULs; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=mSeA8Ijxg2qk0SBNgqyEYF1d8ZoSE5DZsgXy5Xd7uO6kRcAJYXSvsln8sOH5AUaH8vg5Ok8VhGibNUu2ovPf1BoZCeqyYp0mp9NEP6AUN5UN7t/2ryr4Us0bhY7j/NGAshI5rtWMzn5yE0R4pIOs2S7H8kwpYiO+QZ99Kflef/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E+74l36L; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lwgcMULs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED283C4CEE4;
-	Thu, 22 May 2025 08:45:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E+74l36L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D65A0C4CEEA;
+	Thu, 22 May 2025 08:45:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747903527;
-	bh=texjXElObw+GNasUGILZClaSk8zqAXIuhZPQBXgKUE8=;
+	s=k20201202; t=1747903531;
+	bh=SSS6anPKRBCb1IXkLlv4UlzxipEkufFG7dlLhh/Zkd4=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=lwgcMULsr2hRhzZpY/gYNy4WCPQR69Ik0BAcL+Hm2D7x/OYgOR9rE6INLg67zskEQ
-	 BOANIM+3l4/rkgwKzPqkuzr332RkZ227HcZSmzB8SK//EATxIUXDFrcgqE/PmXA6OC
-	 yfneQSzQ+luR6AU/9tC++Ix23nprKIYVfAWQJwIsX09bTvVPEUTia61uUGhQ2VcZcb
-	 A94c1d6IdWiPBkOhw+mrpQ7yXxJ2+AW53UrU6I4b8ZfXZ5D/PQb+MWQ3SWgLIm4+SJ
-	 l1fyE01QpTlDt/IpS894Byh7KdPnf9T6jQoR1AHjk1ggJXpPKFyONA59XWyzckuBMv
-	 EeV8uJ2jcQbHw==
+	b=E+74l36L0Vo9GRzIRBWQ+VGZmXsVfOO22TfyX/lRksoefCu8Z9pHn8FqvNwx/3oze
+	 B7u4fDqiNt7GAf0g+hKM07ZnJJK1of46mIo9HPCUAl7Fc9n+YYVa39Ykhe+xQwoLFc
+	 eF6MdyYQEDi7HbIRWfhc9AATQ8TDeaMF7xbCF0DILvgW+RshkQEmkUFQ6umqJezxJv
+	 ZIPCIv2yTDF1WTmKVApwy3GOZFGU5Wi+hqFd4WYV+36bT8FLRnTUCf6PZ2TS44vnk/
+	 XVFHNjVsz9Sy1XYWjMPU3EXjcFFKWVEpVuUnnIHrJM1TV25KP6bveRE+tKR465UEce
+	 0TFKWiuBP+weQ==
 From: Mark Brown <broonie@kernel.org>
-To: lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com, 
- Srinivas Kandagatla <srini@kernel.org>, Wentao Liang <vulab@iscas.ac.cn>
-Cc: linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-In-Reply-To: <20250519075739.1458-1-vulab@iscas.ac.cn>
-References: <20250519075739.1458-1-vulab@iscas.ac.cn>
-Subject: Re: [PATCH] ASoC: qcom: sdm845: Add error handling in
- sdm845_slim_snd_hw_params()
-Message-Id: <174790352570.11863.6206484772425321934.b4-ty@kernel.org>
-Date: Thu, 22 May 2025 09:45:25 +0100
+To: Bard Liao <yung-chuan.liao@linux.intel.com>, 
+ =?utf-8?q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@linux.intel.com>, 
+ Kai Vehmanen <kai.vehmanen@linux.intel.com>, 
+ Stefan Binding <sbinding@opensource.cirrus.com>
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ patches@opensource.cirrus.com
+In-Reply-To: <20250516152107.210994-1-sbinding@opensource.cirrus.com>
+References: <20250516152107.210994-1-sbinding@opensource.cirrus.com>
+Subject: Re: [PATCH v1 0/2] ASoC: Add Intel machine driver support for
+ CS35L63
+Message-Id: <174790352962.11863.8143259383908066219.b4-ty@kernel.org>
+Date: Thu, 22 May 2025 09:45:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,14 +49,13 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c25d1
 
-On Mon, 19 May 2025 15:57:39 +0800, Wentao Liang wrote:
-> The function sdm845_slim_snd_hw_params() calls the functuion
-> snd_soc_dai_set_channel_map() but does not check its return
-> value. A proper implementation can be found in msm_snd_hw_params().
+On Fri, 16 May 2025 16:20:46 +0100, Stefan Binding wrote:
+> This adds support to the Intel machine drivers for CS35L63 codecs using
+> soundwire, and also adds match entries for the CDB35L63-CB2 on MTL
+> systems.
 > 
-> Add error handling for snd_soc_dai_set_channel_map(). If the
-> function fails and it is not a unsupported error, return the
-> error code immediately.
+> Richard Fitzgerald (1):
+>   ASoC: Intel: soc-acpi-intel-mtl-match: Add match for CDB35L63-CB2
 > 
 > [...]
 
@@ -64,8 +65,10 @@ Applied to
 
 Thanks!
 
-[1/1] ASoC: qcom: sdm845: Add error handling in sdm845_slim_snd_hw_params()
-      commit: 688abe2860fd9c644705b9e11cb9649eb891b879
+[1/2] ASoC: intel: sof_sdw: Add support for CS35L63 into machine driver
+      commit: 898cd43bde30744e0b821efdf960781c240d4e6c
+[2/2] ASoC: Intel: soc-acpi-intel-mtl-match: Add match for CDB35L63-CB2
+      commit: 8c4d2cc1e1cb9b8c9f26af6c5f19e0c7233e6f81
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
