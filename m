@@ -1,131 +1,196 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2B962BCF48;
-	Thu, 22 May 2025 19:16:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D39E13D8B2
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 19:20:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747941416; cv=none; b=VScPfiwHbY87Y1bVFx92FBPLc/i11ij4rl01pETIZevNr2vPXmFWODb0NP6yyRBSpKolIFyUcOMOjMMNXqyqGZ7UWp5gajtvbMCWnYlmOj2+9XlGFNGzPzOacklhXdi15Chka4vQlkKl1q61Br+l4aynUY76HzB6iPUpNGTYzhM=
+	t=1747941619; cv=none; b=dOU96P99+40vBCxKKUf9UQyKh3ol7tMsKikGFprKNRwyal//R1A3TU0uYnHukUKH0raVWC4BujFLw1V6mnHaA89i6TrfA+XdIBI67f/sPxgcOMhYGM9PP0X61mnETn02MGZBDNLITihawgD3gfocg6BC5xi5XHlMUxJ3S+QehTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747941416; c=relaxed/simple;
-	bh=jpP/8y9hWQDp+QUrnRhuh/0/iscikc2TEjFcArObSGg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ounIPrNhO+JMCYHCy2+rWJAEEbLIA+q6cksYkxg01dITLf5QVtyZqEuopxZiSvK9PruSI4WXypib48Q6GS4T4Krr+8g47NCUHn+MhEbCZwqrvLuM8Z6qU/3869uWXNBuyHMHkaZ4qNP+lzvV5pdWIDvJyrvxj25gVpA18KqiYSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y38/ya5l; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747941619; c=relaxed/simple;
+	bh=Flu/isAmyCbTrz9xwLn13hoRVk9PwsB7V2D3/wlR9aE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=F0YjbKi8tXC0DQ4ppiv/jMFoLKKZPAT7Ex7t4BPxJhWBnhxcshZWWjVf3uyrG4jB+50DWWWXk1O32Idit3HNKNZ1LVUFW43Tm2ca/y4B56kVbhoRR8FShvJXh6yVxWPHPDy2fznMfn9DdtV4IOZREgCWV3yBXDylVrfMalJRlgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Kz1ddCio; arc=none smtp.client-ip=209.85.222.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y38/ya5l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74FBDC16AAE;
-	Thu, 22 May 2025 19:16:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747941416;
-	bh=jpP/8y9hWQDp+QUrnRhuh/0/iscikc2TEjFcArObSGg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Y38/ya5l3bsy3cnZM+uFbU3q8PPIvEtgzKVyNh1tYYJ8xLNyTBZb5GkHgBFM57V9I
-	 qH35cfxTMUL6zdp6ZEucwpev2r+LSLrxHOv5iy8vErP+OoIvPdmSUrPSV+tfVdHOan
-	 ZGSIKsJ00/zNvJlH5jfoBAnWY4AGc9m9Hei4RaJp71lRaX3nq7y7F/hidn/kkjQc9O
-	 XlOufCcEjZAR7MsN5JFtyzOWiVx/9pytrJKs3QOMC8JUIxLDnYnPcuKG++N3z1Qmg2
-	 m/qD8u3LE7bDdOtDmwImKl58Lz7TV4nCYRRFwBAcmggKwrC9SPPNhBbYY5GwbcrBU5
-	 vKQfmze0SK20Q==
-Date: Thu, 22 May 2025 20:16:51 +0100
-From: Simon Horman <horms@kernel.org>
-To: Tariq Toukan <tariqt@nvidia.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Leon Romanovsky <leon@kernel.org>, netdev@vger.kernel.org,
-	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Moshe Shemesh <moshe@nvidia.com>, Mark Bloch <mbloch@nvidia.com>,
-	Gal Pressman <gal@nvidia.com>, Jianbo Liu <jianbol@nvidia.com>
-Subject: Re: [PATCH net 2/2] net/mlx5e: Fix leak of Geneve TLV option object
-Message-ID: <20250522191651.GL365796@horms.kernel.org>
-References: <1747895286-1075233-1-git-send-email-tariqt@nvidia.com>
- <1747895286-1075233-3-git-send-email-tariqt@nvidia.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Kz1ddCio"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7c55500cf80so703186085a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 12:20:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1747941617; x=1748546417; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PgIZQIPQ0j6raACnSoKFPNh2DzvC29iIOKiCMVH+gE8=;
+        b=Kz1ddCio8Wg6juUFw3ZmZyvlB8xlyqBYYUdchO6LhII0ZV4DRwiyr76eJXnFRG+hoO
+         elC8V1mbezzrlEHIKqZcUfQ3idyrN1jgBnxmbXl6a1JuZ6lowKhRDaTWEETCQ83eaDQS
+         XL17dW1jw7dxZl/UrecyXvGHZJuA9hFYZuo0sIVpQtMWEwn46CxPa+C4KxOh0HOyYNYf
+         SzQTenoVJO7ZtTb12PSKawsXDi/28va9Kqh+qzSIWzQLgx7db3KgJimnSdMv4Uz6DTcT
+         4mDc9vXOlLfHHWyK36rE9/ghJpEXWijuUBtPzGB4uACRmck4NXIcr7n+5/jYHNf/ZWbA
+         v3Nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747941617; x=1748546417;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PgIZQIPQ0j6raACnSoKFPNh2DzvC29iIOKiCMVH+gE8=;
+        b=RmYOGKwg5hmBASc1HAMLTSgXWvQ3TAB9JzUiPy39cNUaaiAlQIJLUeVNQ6F9hxaRtn
+         4istyopBwZd2lfUKY5RHA9xhny1qgXd3fKPtkF8FTksntozihkG3ialKdpeKMvx8P6fi
+         7xd/dHy6KlV6bMBF4trF7AJ4fVAxpTl+iLLQh1ODi+/J4qG/m3kovwDMcg4jwyHOeS4f
+         tM/twuJ5FSwC7ppSr5mjXhVrxe5459r2+ym6wkMO8p9/FS5nfM3QjMsKoTgYR2wZlhLd
+         djHUTSlK3AfzqSV7cPJGILaFlH575uwk4hkjpsLSi6ddHU6k2zIcpt0E7oZc6nrv+7hJ
+         49Ag==
+X-Forwarded-Encrypted: i=1; AJvYcCUbBiTdROLBuE36vlyYNUvz1l0KNtBpnSkwwrlzvz0M2kLDetzCNcMdFKpc9ehRNoMu3MmDlRBvrV+GsA0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhQP0sizQkOYIYpmvdj1s4qHgmfQGwgxjRwGQPng13qKiOivdz
+	bfUi/hgYD+Zgc1ZSFMUc5ABBr+HswCRpe9I1aBV/rWYnCgAivTLyRPtW3333oYYRw2Bpu7nGOs2
+	c/pzNnxVEyQtIrPh33Jn+ePia6sDB5mOs40dy1XvL
+X-Gm-Gg: ASbGncsBC8jWO7WGLCrcgQvl388ITSV6+Bh8SYwEFclQc2Bgi9Rnc0UD/vEE5JFQgjS
+	MGEZuiV0R+JxEZEWjKNiIPfUB30KDfRS+oUdE5yTZe1vYhd441eQKrdWMnRdHG2LDFdpn/ftMc6
+	ZSuD+Ej4KjELIBYxPtvIAEPzECM7k86Q1wGtsQbXypn9+gtrP6Hy0ZoakCMjC5HV7oms7MOCMiF
+	vdYs5Ad++rr
+X-Google-Smtp-Source: AGHT+IGm1Btmu3cb/tiOOdp0UebQ2jl7A41+6mFY13R7UjK0iunERZC6D0vXs4YT7J5HKX2YgiexhtSR0yQfkPA2JxA=
+X-Received: by 2002:a05:6214:2345:b0:6f8:a7c2:bb11 with SMTP id
+ 6a1803df08f44-6fa93a29fddmr4939596d6.6.1747941616531; Thu, 22 May 2025
+ 12:20:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1747895286-1075233-3-git-send-email-tariqt@nvidia.com>
+References: <20250517043942.372315-1-royluo@google.com> <8f023425-3f9b-423c-9459-449d0835c608@linux.intel.com>
+ <CAMTwNXB0QLP-b=RmLPtRJo=T_efN_3H4dd5AiMNYrJDXddJkMA@mail.gmail.com>
+ <fbf92981-6601-4ee9-a494-718e322ac1b9@linux.intel.com> <CA+zupgyU2czaczPcqavYBi=NrPqKqgp7SbrUocy0qbJ0m9np6g@mail.gmail.com>
+ <6bfee225-7519-41ab-8ae9-99267c5ce06e@intel.com>
+In-Reply-To: <6bfee225-7519-41ab-8ae9-99267c5ce06e@intel.com>
+From: Roy Luo <royluo@google.com>
+Date: Thu, 22 May 2025 12:19:40 -0700
+X-Gm-Features: AX0GCFuJzBzMPdmywUarQdKbXYdF5W_yqGe-afth_QCS9OITwqZ39S_C5IBtRsY
+Message-ID: <CA+zupgxkvm9HxG4Aj1avPA-ZgjVxmg3T3GtbfnV=rXk9P7-pFQ@mail.gmail.com>
+Subject: Re: [PATCH v1] Revert "usb: xhci: Implement xhci_handshake_check_state()
+ helper"
+To: Mathias Nyman <mathias.nyman@intel.com>
+Cc: Mathias Nyman <mathias.nyman@linux.intel.com>, 
+	Udipto Goswami <udipto.goswami@oss.qualcomm.com>, quic_ugoswami@quicinc.com, 
+	Thinh.Nguyen@synopsys.com, gregkh@linuxfoundation.org, michal.pecio@gmail.com, 
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 22, 2025 at 09:28:06AM +0300, Tariq Toukan wrote:
-> From: Jianbo Liu <jianbol@nvidia.com>
-> 
-> Previously, a unique tunnel id was added for the matching on TC
-> non-zero chains, to support inner header rewrite with goto action.
-> Later, it was used to support VF tunnel offload for vxlan, then for
-> Geneve and GRE. To support VF tunnel, a temporary mlx5_flow_spec is
-> used to parse tunnel options. For Geneve, if there is TLV option, a
-> object is created, or refcnt is added if already exists. But the
-> temporary mlx5_flow_spec is directly freed after parsing, which causes
-> the leak because no information regarding the object is saved in
-> flow's mlx5_flow_spec, which is used to free the object when deleting
-> the flow.
-> 
-> To fix the leak, call mlx5_geneve_tlv_option_del() before free the
-> temporary spec if it has TLV object.
-> 
-> Fixes: 521933cdc4aa ("net/mlx5e: Support Geneve and GRE with VF tunnel offload")
-> Signed-off-by: Jianbo Liu <jianbol@nvidia.com>
-> Reviewed-by: Cosmin Ratiu <cratiu@nvidia.com>
-> Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
-> ---
->  drivers/net/ethernet/mellanox/mlx5/core/en_tc.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
-> index f1d908f61134..b9c1d7f8f05c 100644
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tc.c
-> @@ -2028,9 +2028,8 @@ mlx5e_tc_add_fdb_flow(struct mlx5e_priv *priv,
->  	return err;
->  }
->  
-> -static bool mlx5_flow_has_geneve_opt(struct mlx5e_tc_flow *flow)
-> +static bool mlx5_flow_has_geneve_opt(struct mlx5_flow_spec *spec)
->  {
-> -	struct mlx5_flow_spec *spec = &flow->attr->parse_attr->spec;
->  	void *headers_v = MLX5_ADDR_OF(fte_match_param,
->  				       spec->match_value,
->  				       misc_parameters_3);
-> @@ -2069,7 +2068,7 @@ static void mlx5e_tc_del_fdb_flow(struct mlx5e_priv *priv,
->  	}
->  	complete_all(&flow->del_hw_done);
->  
-> -	if (mlx5_flow_has_geneve_opt(flow))
-> +	if (mlx5_flow_has_geneve_opt(&attr->parse_attr->spec))
->  		mlx5_geneve_tlv_option_del(priv->mdev->geneve);
->  
->  	if (flow->decap_route)
+On Thu, May 22, 2025 at 5:24=E2=80=AFAM Mathias Nyman <mathias.nyman@intel.=
+com> wrote:
+>
+> On 22.5.2025 5.21, Roy Luo wrote:
+> >>>> Udipto Goswami, can you recall the platforms that needed this workar=
+oud?
+> >>>> and do we have an easy way to detect those?
+> >>>
+> >>> Hi Mathias,
+> >>>
+> >>>   From what I recall, we saw this issue coming up on our QCOM mobile
+> >>> platforms but it was not consistent. It was only reported in long run=
+s
+> >>> i believe. The most recent instance when I pushed this patch was with
+> >>> platform SM8650, it was a watchdog timeout issue where xhci_reset() -=
+>
+> >>> xhci_handshake() polling read timeout upon xhci remove. Unfortunately
+> >>> I was not able to simulate the scenario for more granular testing and
+> >>> had validated it with long hours stress testing.
+> >>> The callstack was like so:
+> >>>
+> >>> Full call stack on core6:
+> >>> -000|readl([X19] addr =3D 0xFFFFFFC03CC08020)
+> >>> -001|xhci_handshake(inline)
+> >>> -001|xhci_reset([X19] xhci =3D 0xFFFFFF8942052250, [X20] timeout_us =
+=3D 10000000)
+> >>> -002|xhci_resume([X20] xhci =3D 0xFFFFFF8942052250, [?] hibernated =
+=3D ?)
+> >>> -003|xhci_plat_runtime_resume([locdesc] dev =3D ?)
+> >>> -004|pm_generic_runtime_resume([locdesc] dev =3D ?)
+> >>> -005|__rpm_callback([X23] cb =3D 0xFFFFFFE3F09307D8, [X22] dev =3D
+> >>> 0xFFFFFF890F619C10)
+> >>> -006|rpm_callback(inline)
+> >>> -006|rpm_resume([X19] dev =3D 0xFFFFFF890F619C10,
+> >>> [NSD:0xFFFFFFC041453AD4] rpmflags =3D 4)
+> >>> -007|__pm_runtime_resume([X20] dev =3D 0xFFFFFF890F619C10, [X19] rpmf=
+lags =3D 4)
+> >>> -008|pm_runtime_get_sync(inline)
+> >>> -008|xhci_plat_remove([X20] dev =3D 0xFFFFFF890F619C00)
+> >>
+> >> Thank you for clarifying this.
+> >>
+> >> So patch avoids the long timeout by always cutting xhci reinit path sh=
+ort in
+> >> xhci_resume() if resume was caused by pm_runtime_get_sync() call in
+> >> xhci_plat_remove()
+> >>
+> >> void xhci_plat_remove(struct platform_device *dev)
+> >> {
+> >>          xhci->xhc_state |=3D XHCI_STATE_REMOVING;
+> >>          pm_runtime_get_sync(&dev->dev);
+> >>          ...
+> >> }
+> >>
+> >> I think we can revert this patch, and just make sure that we don't res=
+et the
+> >> host in the reinit path of xhci_resume() if XHCI_STATE_REMOVING is set=
+.
+> >> Just return immediately instead.
+> >>
+> >
+> > Just to be sure, are you proposing that we skip xhci_reset() within
+> > the reinit path
+> > of xhci_resume()? If we do that, could that lead to issues with
+> > subsequent operations
+> > in the reinit sequence, such as xhci_init() or xhci_run()?
+>
+> I suggest to only skip xhci_reset in xhci_resume() if XHCI_STATE_REMOVING=
+ is set.
+>
+> This should be similar to what is going on already.
+>
+> xhci_reset() currently returns -ENODEV if XHCI_STATE_REMOVING is set, unl=
+ess reset
+> completes extremely fast. xhci_resume() bails out if xhci_reset() returns=
+ error:
+>
+> xhci_resume()
+>    ...
+>    if (power_lost) {
+>      ...
+>      retval =3D xhci_reset(xhci, XHCI_RESET_LONG_USEC);
+>      spin_unlock_irq(&xhci->lock);
+>      if (retval)
+>        return retval;
+> >
+> > Do you prefer to group the change to skip xhci_reset() within the
+> > reinit path together
+> > with this revert? or do you want it to be sent and reviewed separately?
+>
+> First a patch that bails out from xhci_resume() if XHCI_STATE_REMOVING is=
+ set
+> and we are in the reinit (power_lost) path about to call xhci_reset();
+>
+> Then a second patch that reverts 6ccb83d6c497 ("usb: xhci: Implement
+> xhci_handshake_check_state()
+>
+> Does this sound reasonable?
+>
+> should avoid the QCOM 10sec watchdog issue as next xhci_rest() called
+> in xhci_remove() path has a short 250ms timeout, and ensure the
+> SNPS DWC3 USB regression won't trigger.
+>
+> Thanks
+> Mathias
+>
 
-Hi,
+Thanks for the clarification! SGTM.
+I've sent out a new patchset accordingly
+https://lore.kernel.org/linux-usb/20250522190912.457583-1-royluo@google.com=
+/
 
-The lines leading up to the hung below are:
-
-	      err = mlx5e_tc_tun_parse(filter_dev, priv, tmp_spec, f, match_level);
-              if (err) {
-                        kvfree(tmp_spec);
-                        NL_SET_ERR_MSG_MOD(extack, "Failed to parse tunnel attributes");
-                        netdev_warn(priv->netdev, "Failed to parse tunnel attributes");
-
-I am wondering if the same resource leak described in the patch description
-can occur if mlx5e_tc_tun_parse() fails after it successfully calls
-tunnel->parse_tunnel().
-
-> @@ -2580,6 +2579,8 @@ static int parse_tunnel_attr(struct mlx5e_priv *priv,
->  			return err;
->  		}
->  		err = mlx5e_tc_set_attr_rx_tun(flow, tmp_spec);
-> +		if (mlx5_flow_has_geneve_opt(tmp_spec))
-> +			mlx5_geneve_tlv_option_del(priv->mdev->geneve);
->  		kvfree(tmp_spec);
->  		if (err)
->  			return err;
-> -- 
-> 2.31.1
-> 
-> 
+Thanks,
+Roy
