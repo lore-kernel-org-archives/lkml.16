@@ -1,276 +1,238 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B98D2980AC;
-	Thu, 22 May 2025 15:23:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 305C02980AC;
+	Thu, 22 May 2025 15:23:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747927400; cv=none; b=ZwSG7VmnYAm7YFhawoYgr6bX6dAfv7B0swk2ui+SeiDtRP18kibJ3pkUChHdKFBsZgqm55CM6qz6WEQsECnOEDUJQ9Fknk3V3q2PbHbhAbVOgO+KDTEoW87b0+k2vVh/isDo0nxNA6uoG8U7QW/IKMkGEH2SVieNoOrlkXjaYS4=
+	t=1747927410; cv=none; b=glG6adjdGUVyb0xfOYow9n7ZhYm8qjhOYvmWFuvdpG24QJ6r9CtMAk+GknLQbHHaunPOw1yENg1e9WSzRgmLVQfWZKhisojStlueoDRxgHjwVL+gCZSU5Gz2FL0EqmpkTfhf3TWRiHdsmlkS6ESUp/2YESM0JOAfBodSGfw5CnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747927400; c=relaxed/simple;
-	bh=ZcEAi8N7o1JrL4hd+5iMP2Mm6L5tIGlyNxSrj79fft8=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=M39PQ2PxCwoCVQkgOzYu0dNu5e5qRY5UhnlW8+ermXKV2lwVeP/Fl1XZwpqal6olVZlj5nGxkux5Z7Bvs4rfNarbFzqdwC0Z9yBo51/qa3SOOYtFaZoqvGm5mAFb+vDSkQyiofwgIn8q5+EXdFXjubzdpGw6JcywRVVi6bjGZMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fFi/PAmm; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fFi/PAmm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15A21C4CEE4;
-	Thu, 22 May 2025 15:23:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747927399;
-	bh=ZcEAi8N7o1JrL4hd+5iMP2Mm6L5tIGlyNxSrj79fft8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=fFi/PAmm++2X+sP8ecDZdZ33Tc7fhCyH4T63JfARNbwieLU71Kuu1YjIzpsmO5Vvs
-	 8fEipaiM3oH6eZn+0KzQMDm6kzL1lPPF5yFdBj1cVGFjXSnBncF4A5aa/ZqmNBzRJK
-	 GX8ePMslOpmRDvheAD7cK9BQTFgp38pDAeGdVU4agy0qZG4H2DUnj10d7clPIlG6jz
-	 L6S1+Z5mHyUFPf1wFRnbueGAnjCrXqGkfeQQcIg8O/cIFUsftov5dlUnbmdb//hOtp
-	 lCS4t5uyX3F4m/b6kq5exRMF2zf2NNPuvuAtLq4EfCvouHLEGUpr91BoOn8OO0mzci
-	 SpGX0BAnCMIlg==
-Date: Fri, 23 May 2025 00:23:17 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] tracing: ring_buffer: Rewind persistent ring buffer
- when reboot
-Message-Id: <20250523002317.b516bea02ab2712a84bc4370@kernel.org>
-In-Reply-To: <20250521191947.3f800c34@gandalf.local.home>
-References: <174730775661.3893490.10420015749079085314.stgit@mhiramat.tok.corp.google.com>
-	<20250521145128.3a776466@gandalf.local.home>
-	<20250521191947.3f800c34@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1747927410; c=relaxed/simple;
+	bh=NJA+KbkwdUlL42lU1s09oYb2KetRDGsXFK9VBEfPQPA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mMrLmVHoA3V9dMArwDpYZyAJBNaKzWLC2OvCnUN121dFQI8YPfR0t8mmBirtOpGGIQu8uoyriw8aXtfde/5Ome9StJowrKHPPgh9OfV3mSMELBRLXBXjaWYJqCXcFy5u0XoOeUTcIk7+lK9OHYzRJJSB662CaDPXtRC5qzUSsMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4979C4CEE4;
+	Thu, 22 May 2025 15:23:24 +0000 (UTC)
+Date: Thu, 22 May 2025 16:23:22 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>, Will Deacon <will@kernel.org>,
+	=?utf-8?Q?Miko=C5=82aj?= Lenczewski <miko.lenczewski@arm.com>,
+	yang@os.amperecomputing.com, corbet@lwn.net,
+	jean-philippe@linaro.org, robin.murphy@arm.com, joro@8bytes.org,
+	akpm@linux-foundation.org, paulmck@kernel.org, mark.rutland@arm.com,
+	joey.gouly@arm.com, maz@kernel.org, james.morse@arm.com,
+	broonie@kernel.org, oliver.upton@linux.dev, baohua@kernel.org,
+	david@redhat.com, ioworker0@gmail.com, jgg@ziepe.ca,
+	nicolinc@nvidia.com, mshavit@google.com, jsnitsel@redhat.com,
+	smostafa@google.com, kevin.tian@intel.com,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev
+Subject: Re: [RESEND PATCH v6 1/3] arm64: Add BBM Level 2 cpu feature
+Message-ID: <aC9BajxkIv0UxWLq@arm.com>
+References: <78fec33d-fe66-4352-be11-900f456c9af3@arm.com>
+ <20250509134904.GA5707@willie-the-truck>
+ <aB4nqtMJuvvp7Vwm@arm.com>
+ <015746d7-ca46-4978-a441-09fba781fdd4@arm.com>
+ <4709ff5a-f89c-426e-ae95-f8356808f4f5@arm.com>
+ <99079d56-428b-4bc4-b20a-dc10032f2a2f@arm.com>
+ <aCIiwrA_MOeVhFre@arm.com>
+ <c5a74dfe-68e2-48f1-9bbb-06db8e62ffea@arm.com>
+ <aCSHESk1DzShD4vt@arm.com>
+ <0a909fc1-af17-4704-90b3-23359a00482d@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0a909fc1-af17-4704-90b3-23359a00482d@arm.com>
 
-On Wed, 21 May 2025 19:19:47 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Hi Suzuki,
 
-> On Wed, 21 May 2025 14:51:28 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > On Thu, 15 May 2025 20:15:56 +0900
-> > "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-> > 
-> > > diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> > > index 6859008ca34d..48f5f248eb4c 100644
-> > > --- a/kernel/trace/ring_buffer.c
-> > > +++ b/kernel/trace/ring_buffer.c
-> > > @@ -1358,6 +1358,13 @@ static inline void rb_inc_page(struct buffer_page **bpage)
-> > >  	*bpage = list_entry(p, struct buffer_page, list);
-> > >  }
-> > >  
-> > > +static inline void rb_dec_page(struct buffer_page **bpage)
-> > > +{
-> > > +	struct list_head *p = rb_list_head((*bpage)->list.prev);
-> > > +
-> > > +	*bpage = list_entry(p, struct buffer_page, list);
-> > > +}
-> > > +
-> > >  static struct buffer_page *
-> > >  rb_set_head_page(struct ring_buffer_per_cpu *cpu_buffer)
-> > >  {
-> > > @@ -1866,10 +1873,11 @@ static int rb_validate_buffer(struct buffer_data_page *dpage, int cpu)
-> > >  static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
-> > >  {
-> > >  	struct ring_buffer_cpu_meta *meta = cpu_buffer->ring_meta;
-> > > -	struct buffer_page *head_page;
-> > > +	struct buffer_page *head_page, *orig_head;
-> > >  	unsigned long entry_bytes = 0;
-> > >  	unsigned long entries = 0;
-> > >  	int ret;
-> > > +	u64 ts;
-> > >  	int i;
-> > >  
-> > >  	if (!meta || !meta->head_buffer)
-> > > @@ -1885,8 +1893,93 @@ static void rb_meta_validate_events(struct ring_buffer_per_cpu *cpu_buffer)
-> > >  	entry_bytes += local_read(&cpu_buffer->reader_page->page->commit);
-> > >  	local_set(&cpu_buffer->reader_page->entries, ret);
-> > >  
-> > > -	head_page = cpu_buffer->head_page;
-> > > +	orig_head = head_page = cpu_buffer->head_page;
-> > > +	ts = head_page->page->time_stamp;
-> > > +
-> > > +	/*
-> > > +	 * Try to rewind the head so that we can read the pages which already
-> > > +	 * read in the previous boot.
-> > > +	 */
-> > > +	if (head_page == cpu_buffer->tail_page)
-> > > +		goto rewound;  
-> > 
-> > Hmm, jumping to a label called "rewound" when you didn't do a rewind seems
-> > confusing.
-> > 
-> > Perhaps call the label "skip_rewind"?
-> > 
-> > > +
-> > > +	rb_dec_page(&head_page);
-> > > +	for (i = 0; i < meta->nr_subbufs + 1; i++, rb_dec_page(&head_page)) {
-> > > +
-> > > +		/* Rewind until tail (writer) page. */
-> > > +		if (head_page == cpu_buffer->tail_page)
-> > > +			break;
-> > > +
-> > > +		/* Ensure the page has older data than head. */
-> > > +		if (ts < head_page->page->time_stamp)
-> > > +			break;
-> > > +
-> > > +		ts = head_page->page->time_stamp;
-> > > +		/* Ensure the page has correct timestamp and some data. */
-> > > +		if (!ts || rb_page_commit(head_page) == 0)
-> > > +			break;
-> > > +
-> > > +		/* Stop rewind if the page is invalid. */
-> > > +		ret = rb_validate_buffer(head_page->page, cpu_buffer->cpu);
-> > > +		if (ret < 0)
-> > > +			break;
-> > > +
-> > > +		/* Recover the number of entries and update stats. */
-> > > +		local_set(&head_page->entries, ret);
-> > > +		if (ret)
-> > > +			local_inc(&cpu_buffer->pages_touched);
-> > > +		entries += ret;
-> > > +		entry_bytes += rb_page_commit(head_page);
-> > > +	}
-> > > +	pr_info("Rewound %d pages on cpu%d\n", i, cpu_buffer->cpu);  
-> > 
-> > Should state this is coming from the ring buffer and use "[%d]" for cpu
-> > number as the other pr_info()'s do. Also only print if it did a rewind:
-> > 
-> > 	if (i)
-> > 		pr_info("Ring buffer [%d] rewound %d pages\n", cpu_buffer->cpu, i);
-> > 
-> > 
-> > > +
-> > > +	/* The last rewound page must be skipped. */
-> > > +	if (head_page != orig_head)
-> > > +		rb_inc_page(&head_page);
-> > >  
-> > > +	/* If there are rewound pages, rewind the reader page too. */  
-> > 
-> > I would change the comment to:
-> > 
-> > 	/*
-> > 	 * If the ring buffer was rewound, then inject the reader page
-> > 	 * into the location just before the original head page.
-> > 	 */
-> > 
-> > > +	if (head_page != orig_head) {
-> > > +		struct buffer_page *bpage = orig_head;
-> > > +
-> > > +		rb_dec_page(&bpage);
-> > > +		/*
-> > > +		 * Insert the reader_page before the original head page.
-> > > +		 * Since the list encode RB_PAGE flags, general list
-> > > +		 * operations should be avoided.
-> > > +		 */
-> > > +		cpu_buffer->reader_page->list.next = &orig_head->list;
-> > > +		cpu_buffer->reader_page->list.prev = orig_head->list.prev;
-> > > +		orig_head->list.prev = &cpu_buffer->reader_page->list;
-> > > +		bpage->list.next = &cpu_buffer->reader_page->list;
-> > > +
-> > > +		/* Make the head_page tthe new read page */  
-> > 
-> > Typo "tthe" and call it "new reader page", not "read page".
-> > 
-> > > +		cpu_buffer->reader_page = head_page;
-> > > +		bpage = head_page;
-> > > +		rb_inc_page(&head_page);
-> > > +		head_page->list.prev = bpage->list.prev;
-> > > +		rb_dec_page(&bpage);
-> > > +		bpage->list.next = &head_page->list;
-> > > +		rb_set_list_to_head(&bpage->list);
-> 
-> When testing this patch, it kept crashing. I had to add this here:
-> 
-> 		cpu_buffer->pages = &head_page->list;
-> 
-> That's because my test would end up having cpu_buffer->pages pointing to
-> the reader page, and that will cause issues later. It has to point into the
-> writing portion of the buffer.
+Thanks for looking at this.
 
-Ah, good catch!
+On Mon, May 19, 2025 at 10:45:31AM +0100, Suzuki K Poulose wrote:
+> On 14/05/2025 13:05, Catalin Marinas wrote:
+> > On Tue, May 13, 2025 at 10:15:49AM +0100, Suzuki K Poulose wrote:
+> > > On 12/05/2025 17:33, Catalin Marinas wrote:
+> > > > Stepping back a bit, we know that the MIDR allow-list implies
+> > > > BBML2_NOABORT (and at least BBML2 as in the ID regs). In theory, we need
+> > > 
+> > > Please be aware that BBML2_NOABORT midr list may not always imply BBLM2 in
+> > > ID registers (e.g., AmpereOne. But the plan is to fixup the per cpu
+> > > ID register - struct cpuinfo_arm64 - for such cores at early boot,
+> > > individually, before it is used for sanitisation of the system wide
+> > > copy).
+> > 
+> > Ah, good point. We can then ignore BBML2 ID regs and only rely on MIDR
+> > (and some future BBML3).
+> > 
+> > > > So how about we introduce a WEAK_BOOT_CPU_FEATURE which gets enabled by
+> > > > the boot CPU if it has it _but_ cleared by any secondary early CPU if it
+> > > > doesn't (and never enabled by secondary CPUs). When the features are
+> > > > finalised, we know if all early CPUs had it. In combination with
+> > > > PERMITTED_FOR_LATE_CPU, we'd reject late CPUs that don't have it.
+> > > 
+> > > That could work, but it introduces this "clearing" a capability, which
+> > > we don't do at the moment.
+> > > 
+> > > We had an offline discussion about this some time ago, with Mark
+> > > Rutland. The best way to deal with this is to change the way we compute
+> > > capabilities. i.e.,
+> > > 
+> > > 
+> > > 1. Each boot CPU run through all the capabilities and maintain a per-cpu
+> > >     copy of the state.
+> > > 2. System wide capabilities can then be constructed from the all early
+> > >     boot CPU capability state (e.g., ANDing all the state from all CPUs
+> > >     for SCOPE_SYSTEM or ORing for LOCAL_CPU).
+> > > 
+> > > But this requires a drastic change to the infrastructure.
+> > 
+> > I think it's a lot simpler to achieve the ANDing - set the (system)
+> > capability if detected on the boot CPU, only clear it if missing on
+> > subsequent CPUs. See below on an attempt to introduce this. For lack of
+> > inspiration, I called it ARM64_CPUCAP_GLOBAL_CPU_FEATURE which has both
+> > SCOPE_LOCAL and SCOPE_SYSTEM. It's permitted for late CPUs but not
+> > optional if already enabled. The advantage of having both local&system
+> > is that the match function will be called for both scopes. I added a
+> > mask in to cpucap_default_scope() when calling matches() since so far
+> > no cap had both.
+> 
+> Thanks, the change below does the trick. I am reasoning with the way
+> the scope has been defined (hacked ;-)).
+> 
+> SCOPE_LOCAL_CPU && SCOPE_SYSTEM
+> 
+> 1. SCOPE_LOCAL_CPU : Because you need to run this on all the (early) CPUs.
+> 
+> 2. SCOPE_SYSTEM: To check if the capability holds at the end of the
+> smp boot.
+> 
+> While, we really "detect" it on SCOPE_BOOT_CPU and only run the
+> cap checks, if that is available. But put another way, BOOT_CPU
+> is only used as an easy way to detect if this CPUs is the first
+> one to run the check vs at least one CPU has run and cleared the
+> cap.
 
-> 
-> > > +
-> > > +		cpu_buffer->head_page = head_page;
-> > > +		meta->head_buffer = (unsigned long)head_page->page;
-> > > +
-> > > +		/* Reset all the indexes */
-> > > +		bpage = cpu_buffer->reader_page;
-> > > +		meta->buffers[0] = rb_meta_subbuf_idx(meta, bpage->page);
-> > > +		bpage->id = 0;
-> > > +
-> > > +		for (i = 0, bpage = head_page; i < meta->nr_subbufs;
-> > > +		     i++, rb_inc_page(&bpage)) {
-> > > +			meta->buffers[i + 1] = rb_meta_subbuf_idx(meta, bpage->page);
-> > > +			bpage->id = i + 1;
-> > > +		}
-> 
-> Can we convert the above to:
-> 
-> 		for (i = 1, bpage = head_page; i < meta->nr_subbufs;
-> 		     i++, rb_inc_page(&bpage)) {
-> 			meta->buffers[i] = rb_meta_subbuf_idx(meta, bpage->page);
-> 			bpage->id = i;
-> 		}
-> 
-> By starting i at one, we can remove the "+ 1" inside the loop. It's a bit
-> cleaner that way.
+Yes, we start with boot CPU and keep 'and-ing' new values onto it.
 
-Agreed. And maybe previous one is wrong because it writes
-'meta->buffers[meta->nr_subbufs]' (buffer overflow) and set wrong
-head_page->id.
+> I wonder if we could use some other flag to indicate the fact that,
+> a non-boot CPU is allowed to clear the capability explicitly, rather than
+> implying it with SCOPE_SYSTEM && SCOPE_LOCAL_CPU. Or may be make
+> it explicit that the capability must be matched on ALL cpus and
+> finalized at the end ?
 
-Thanks!
+I had such variant locally but then decided to reuse the SCOPE_SYSTEM
+for this, more of a way to indicate that we want something system-wide
+but checked per-CPU. We could add a new flag, though I was wondering
+whether we can have a property that's checked both per-CPU and once more
+system-wide. That's what actually happens with the above, then the probe
+function can tell whether it was called in the CPU or system scope.
 
-> 
-> -- Steve
-> 
-> 
-> > > +
-> > > +		/* We'll restart verifying from orig_head */
-> > > +		head_page = orig_head;
-> > > +	}
-> > > +
-> > > + rewound:  
-> > 
-> >  skip_rewind:
-> > 
-> > Also, I know other's don't like to do this, but I do add a space before
-> > labels. It makes patch diffs easier to see which functions they are,
-> > otherwise the patch shows the label and not the function.
-> > 
-> > -- Steve
-> > 
-> > 
-> > >  	/* If the commit_buffer is the reader page, update the commit page */
-> > >  	if (meta->commit_buffer == (unsigned long)cpu_buffer->reader_page->page) {
-> > >  		cpu_buffer->commit_page = cpu_buffer->reader_page;
-> > > @@ -5348,7 +5441,6 @@ rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
-> > >  	 */
-> > >  	local_set(&cpu_buffer->reader_page->write, 0);
-> > >  	local_set(&cpu_buffer->reader_page->entries, 0);
-> > > -	local_set(&cpu_buffer->reader_page->page->commit, 0);
-> > >  	cpu_buffer->reader_page->real_end = 0;
-> > >  
-> > >   spin:
-> > > @@ -6642,7 +6734,6 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
-> > >  		cpu_buffer->read_bytes += rb_page_size(reader);
-> > >  
-> > >  		/* swap the pages */
-> > > -		rb_init_page(bpage);
-> > >  		bpage = reader->page;
-> > >  		reader->page = data_page->data;
-> > >  		local_set(&reader->write, 0);  
-> > 
-> 
+Alternatively, we can leave the local/system combining for later and
+only add a flag to tell how they compose - "any" (default) vs "all".
 
+> /*
+>  * When paired with SCOPE_LOCAL_CPU, all CPUs must satisfy the
+>  * condition. This is different from SCOPE_SYSTEM, where the check
+>  * is performed only once at the end of SMP boot. But SCOPE_SYSTEM
+>  * may not be sufficient in cases where the capability depends on
+>  * properties that are not "sanitised" (e.g., MIDR_EL1) and must be
+>  * satisfied by all the early SMP boot CPUs.
+>  */
+> #define ARM64_CPUCAP_MATCH_ALL_EARLY_CPUS	((u16)BIT(7))
+> 
+> statici inline bool cpucap_match_all_cpus(struct arm64_capability *cap)
+> {
+> 	return !!(cap->type & ARM64_CPUCAP_MATCH_ALL_EARLY_CPUS);
+> }
+
+Yes, something like this would work.
+
+> Also, we already go through the capablity list to report the ones
+> with "cpumask" separately, and we could use that to also report
+> the ones with MATCH_ALL_CPUs. Something like:
+> 
+> 
+> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+> index 9c4d6d552b25..14cbae51d802 100644
+> --- a/arch/arm64/kernel/cpufeature.c
+> +++ b/arch/arm64/kernel/cpufeature.c
+> @@ -3769,10 +3769,15 @@ static void __init setup_system_capabilities(void)
+>         for (int i = 0; i < ARM64_NCAPS; i++) {
+>                 const struct arm64_cpu_capabilities *caps = cpucap_ptrs[i];
+> 
+> -		if (caps && caps->cpus && caps->desc &&
+> -			cpumask_any(caps->cpus) < nr_cpu_ids)
+> +		if (!caps || !caps->desc)
+> +			continue;
+> +
+> +		if (caps->cpus && cpumask_any(caps->cpus) < nr_cpu_ids)
+> 			pr_info("detected: %s on CPU%*pbl\n",
+> 				caps->desc, cpumask_pr_args(caps->cpus));
+> +
+> +		/* Report capabilities that had to be matched on all CPUs */
+> +		if (capcpucap_match_all_cpus(caps) && cpus_have_cap(caps))
+> +			pr_info("detected: %s\n", caps->desc);
+>         }
+
+Yeah, I hacked something similar with the 'global' proposal based on
+SCOPE_SYSTEM.
+
+> > ---------------------8<-----------------------------------------
+> > diff --git a/arch/arm64/include/asm/cpufeature.h b/arch/arm64/include/asm/cpufeature.h
+> > index c4326f1cb917..0b0b26a6f27b 100644
+> > --- a/arch/arm64/include/asm/cpufeature.h
+> > +++ b/arch/arm64/include/asm/cpufeature.h
+> > @@ -331,6 +331,15 @@ extern struct arm64_ftr_reg arm64_ftr_reg_ctrel0;
+> >   #define ARM64_CPUCAP_BOOT_CPU_FEATURE                  \
+> >   	(ARM64_CPUCAP_SCOPE_BOOT_CPU | ARM64_CPUCAP_PERMITTED_FOR_LATE_CPU)
+> > +/*
+> > + * CPU feature detected at boot time based on all CPUs. It is safe for a late
+> > + * CPU to have this feature even though the system hasn't enabled it, although
+> > + * the feature will not be used by Linux in this case. If the system has
+> > + * enabled this feature already, then every late CPU must have it.
+> > + */
+> > +#define ARM64_CPUCAP_GLOBAL_CPU_FEATURE			
+> 
+> #define ARM64_CPUCAP_MATCH_ALL_CPU_FEATURE ?
+> 
+> \
+> > +	 (ARM64_CPUCAP_SCOPE_LOCAL_CPU | ARM64_CPUCAP_SYSTEM_FEATURE)
+> 
+>   (ARM64_CPUCAP_SCOPE_LOCAL_CPU | ARM64_CPUCAP_MATCH_ALL_EARLY_CPUS)
+> 
+> 
+> > +
+> >   struct arm64_cpu_capabilities {
+> >   	const char *desc;
+> >   	u16 capability;
+> > @@ -391,6 +400,11 @@ static inline int cpucap_default_scope(const struct arm64_cpu_capabilities *cap)
+> >   	return cap->type & ARM64_CPUCAP_SCOPE_MASK;
+> >   }
+> > +static inline bool cpucap_global_scope(const struct arm64_cpu_capabilities *cap)
+> 
+> May be call it cpucap_match_all_cpus() ?
+
+I can respin, the alternative looks good to me.
+
+Now, we discussed offline of a different approach: for AmpereOne we'll
+have to check MIDR early (as an erratum) and pretend it has BBML2,
+populate the sanitised cpuid regs accordingly. We could do something
+similar for the other CPUs, pretend it's something like BBML3 and get
+the architects to commit to it (but this would delay the patchset).
+
+TBH, I'd rather not hack this and only rely on the MIDR for BBM_NOABORT
+(without any level) and the above MATCH_ALL_CPUS. My proposal is to
+respin this with a MATCH_ALL_CPUS flag that only checks the MIDR. We can
+later add a SCOPE_SYSTEM to the same capability that would 'or' in the
+BBML3 cap (or just use two capabilities, though we end up with two many
+branches or NOPs in the patched alternatives).
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Catalin
