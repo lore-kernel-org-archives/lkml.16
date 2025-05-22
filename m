@@ -1,112 +1,173 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E8E423BCFD;
-	Thu, 22 May 2025 12:34:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEA3C22FF2B
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 12:36:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747917297; cv=none; b=R2yBVuab/rnQVtf5i3v3BGxU7yfypGV+sMPWXbBn6747wtyns0HNso2iaaWv7iDc+2GUIctb5UePQTdVtqd5WOMtSlWly5YDly22MC0ExyyuAir6+ZTZ5h4RBDQZ1EyXE94759TyNnQcB+K/N9Q1C+eEasLxW/ix8UTRThfv80k=
+	t=1747917414; cv=none; b=omHjmmF6izp8wzkF2CPOjVj4xLI6/nHVglG7xlwiUQZemNwUylkz5DaIYgf1MQjxdKjsZ0HQUTgbPDliAQmImOzLhON4JkhZkoPoXUMUl/BmewXjAWwigMYVQy7M6HdFMOGNnVT49RD3gd3emnwo4jqIWDEoPB1a/B3AyQ5neA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747917297; c=relaxed/simple;
-	bh=zuUuuT8g4nMcnZMyuczg5ZlUGdfap0P36vBvj+Q0H0A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BvlGlgHL4Iwi1z0WLSsTUzS0+WLMA8efTl9EIlbpHZzq9wukkCgOPN2pgUADR5fG04LsqpKVg1j2lXvnlhYDHIGgxGd3hOZkklVnREogaa59OR6wldBLwkRwWH4hh+NlcuGZfKYs3VGSD+JuIemmm8KbSJXYMGqa0qKm7HKvYaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=up2GNasg; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+	s=arc-20240116; t=1747917414; c=relaxed/simple;
+	bh=hdYRP/ZlkZwZ6MgNBwKuzValqczEUy1hpGacpIQvX7Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dktogRHjVu5B1olssjfv8+g6QzkXpiIIC6SsCUWQBnp+2oBtKqqqqmvtuBzp6Q9Gp/3LKiii7b7+9ZfOSQOrq/eKGCsLPE8sRts1mIf8+h1Bwb8F5VWEo1iXYTmyBKguTDKrT8Lbja2/fjIOW6XaV7qwi/GwSw0mJSA8YQPUbHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=s5yIPK8h; arc=none smtp.client-ip=209.85.167.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="up2GNasg"
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4b37636VZDz9tR0;
-	Thu, 22 May 2025 14:34:51 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
-	s=MBO0001; t=1747917292;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=X4r3LzcAMV1o5DnD3H0c6VjFoCQr5eC95fIHbTY0YYc=;
-	b=up2GNasgSe2xnAXQsq8fTadg0OIhaLAnTlDMqNp3xxWXcE5EMzoqPVuI7RAIwUU6mk90IP
-	ikVtAwdyZhmon4woPQnJVmHB3CBgnBeM4ohYZW8DRYDfMO/yXiRYHHVS6xHFtoSLkyD8fA
-	RYPJpxpFO9jnM8cf0XS2zU15FYrwFsTJYz56lLQHW/7lbeSKBYiGJBgWockOr4H8hlWPMS
-	dg7kKh8D7dQHjOr+zDyVw0G28F7yThkajDdpHlnPaCIfSLffrXsy0T2j4yH6K007ujUaZv
-	CPQfoheI/FMHLvA5uavru89OhQc1/Q1FilTc3/nGT6qUlCCVpQUJGlZkPY5fAg==
-Date: Thu, 22 May 2025 14:34:43 +0200
-From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: Mike Rapoport <rppt@kernel.org>, Pankaj Raghav <p.raghav@samsung.com>, 
-	Suren Baghdasaryan <surenb@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Michal Hocko <mhocko@suse.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Nico Pache <npache@redhat.com>, Dev Jain <dev.jain@arm.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, 
-	"H . Peter Anvin" <hpa@zytor.com>, Zi Yan <ziy@nvidia.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
-	Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	"Darrick J . Wong" <djwong@kernel.org>, gost.dev@samsung.com, hch@lst.de, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, willy@infradead.org, x86@kernel.org, mcgrof@kernel.org
-Subject: Re: [RFC v2 0/2] add THP_HUGE_ZERO_PAGE_ALWAYS config option
-Message-ID: <625s5hffr3iz35uv4hts4sxpprwwuxxpbsmbvasy24cthlsj6x@tg2zqm6v2wqm>
-References: <20250522090243.758943-1-p.raghav@samsung.com>
- <aC8LGDwJXvlDl866@kernel.org>
- <6lhepdol4nlnht7elb7jx7ot5hhckiegyyl6zeap2hmltdwb5t@ywsaklwnakuh>
- <6894a8b1-a1a7-4a35-8193-68df3340f0ad@redhat.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s5yIPK8h"
+Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3fa6c54cc1aso5302142b6e.1
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 05:36:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747917411; x=1748522211; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=E/nM7ohI+OhW9Q09hMJxUkW/sk0nV2AyhKtXe2v8eEc=;
+        b=s5yIPK8hKKZYX4Om9GLNGNrBD7KRHd7APtqx7P6MOoqY4UwB2zKMjCdBYhnieLHavs
+         qBFYuK61Za2x0HyXndR0me77wPbFcFN6pNxye+y6GsxihVME9CgwQsvMv0RkACnKf6XC
+         nLspmnKqewWpyrGXBusRa6da6jhOC8SNrlGuGdEzyVchNn+dXC5RZ81oF8O9SfDDTDJb
+         nzddAxujXGW6xBrrn3Wd8kqtrgOC9bjD2rGEkzKYj+OU3rasC5Ml8XHMRsjZrGTYNyzi
+         sHMo85RLMdCPJL7fhMYc1IYsZY3FBXCr/9wbuBGfbWkNxvqBTpYjrh/4QtBmH3j7nXmi
+         yTyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747917411; x=1748522211;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=E/nM7ohI+OhW9Q09hMJxUkW/sk0nV2AyhKtXe2v8eEc=;
+        b=HlRkV/PjQ6YEWLt8+tqfl5rX41dy9DsbviHnfNZQtFNT4S3hwTHYRmTsTdIniIwiQ0
+         3XneuEHnbnI7gYSPyqWRbbU8gW8pfWFivF35GOW925EPs1IgxftiKLu/p4BqF52cfnN1
+         RBA3ZAMyriT7Lbl2LiyD7w8xlTDy7LetjIoD1t52Up2sDC/TxqrY4Ta8sxQZ44K569zp
+         XMs0zGjd7Sb+AKqEoTxRQrRa7ATrA8M+AHPu7vYbR5lrOYsy9V+Ds8Y+StFMx6NNRpCK
+         82qKy5CJt5iGON6XooIIEoEoMVoaUNwkQDNpPQ/tf/q7ww9AxnzXWlS2O8VnDU50d300
+         /qcQ==
+X-Gm-Message-State: AOJu0YwYYtT0iHZnUG+UqjzxUV0MYW0bV5bQ2gE/IBWLi/UrgvclDETk
+	fjxJ6axlgge9v/NvUxa4yfpvjot/7K8bbz//V9rL8c8eDs3kFC/Rl4GAmeE9wWJ8BMaoTfUqkQK
+	4/lezPpcCzldZwApwSmQPG+XgWjv6nKSP3SKcumCscQ==
+X-Gm-Gg: ASbGncuKQt2v8L+dqyvQjQrsNYfasJcMQDJqDL141kqa1/H2srIjbg9/U7mSvhN/e/r
+	cifMQCzjCb+IeUe1zBGbW5y5le1akCfPs5D80IDEjq9y3fFHyfQ1wQyJUP0B6TYL3ReTLHqoRoA
+	6Sr6/W03P34Fed+ETWXLCNuAszDHwAYVkp/g==
+X-Google-Smtp-Source: AGHT+IFaxfBHByqapVV2RXkEPTMYtDPJFaizTF3QtPLs+N+jP8G9GyXQ9nHLQfE3byrCa1MQmfMacM+snhhkwuWXSyE=
+X-Received: by 2002:a05:6808:338a:b0:3f6:a9d4:b7e4 with SMTP id
+ 5614622812f47-404d86f3f18mr17232381b6e.20.1747917411552; Thu, 22 May 2025
+ 05:36:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6894a8b1-a1a7-4a35-8193-68df3340f0ad@redhat.com>
-X-Rspamd-Queue-Id: 4b37636VZDz9tR0
+References: <20250520152436.474778-1-jens.wiklander@linaro.org>
+ <20250520152436.474778-3-jens.wiklander@linaro.org> <dffbd709-def0-47af-93ff-a48686f04153@amd.com>
+ <CAHUa44Ec0+GPoDkcEG+Vg9_TY1NC=nh3yr0F=ezHMbaeX_A0Bg@mail.gmail.com> <1a65f370-2df2-4169-85f9-c45e7c537447@amd.com>
+In-Reply-To: <1a65f370-2df2-4169-85f9-c45e7c537447@amd.com>
+From: Jens Wiklander <jens.wiklander@linaro.org>
+Date: Thu, 22 May 2025 14:36:39 +0200
+X-Gm-Features: AX0GCFtomK6Kj4MbJdPbWNPCFM5pduAepClCBqfPEiiU97RKWiikvixpOO2yK1w
+Message-ID: <CAHUa44Hgu9DnmeGXAoFKkRBt6jFCAb6Mi5zzuuvVVSgsxDZQWA@mail.gmail.com>
+Subject: Re: [PATCH v9 2/9] dma-buf: dma-heap: export declared functions
+To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
+	op-tee@lists.trustedfirmware.org, linux-arm-kernel@lists.infradead.org, 
+	Olivier Masse <olivier.masse@nxp.com>, Thierry Reding <thierry.reding@gmail.com>, 
+	Yong Wu <yong.wu@mediatek.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>, 
+	John Stultz <jstultz@google.com>, "T . J . Mercier" <tjmercier@google.com>, 
+	Sumit Garg <sumit.garg@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, azarrabi@qti.qualcomm.com, 
+	Simona Vetter <simona.vetter@ffwll.ch>, Daniel Stone <daniel@fooishbar.org>, 
+	Rouven Czerwinski <rouven.czerwinski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi David,
+On Thu, May 22, 2025 at 1:52=E2=80=AFPM Christian K=C3=B6nig
+<christian.koenig@amd.com> wrote:
+>
+> On 5/22/25 08:56, Jens Wiklander wrote:
+> > On Wed, May 21, 2025 at 9:13=E2=80=AFAM Christian K=C3=B6nig
+> > <christian.koenig@amd.com> wrote:
+> >>
+> >> On 5/20/25 17:16, Jens Wiklander wrote:
+> >>> Export the dma-buf heap functions declared in <linux/dma-heap.h>.
+> >>
+> >> That is what this patch does and that should be obvious by looking at =
+it. You need to explain why you do this.
+> >>
+> >> Looking at the rest of the series it's most likely ok, but this commit=
+ message should really be improved.
+> >
+> > I'm considering something like this for the next version:
+> > Export the dma-buf heap functions declared in <linux/dma-heap.h> to all=
+ow
+> > them to be used by kernel modules. This will enable drivers like the OP=
+-TEE
+> > driver, to utilize these interfaces for registering and managing their
+> > specific DMA heaps.
+>
+> Works for me, but it doesn't needs to be so detailed.
+>
+> Something like this here would be optimal I think:
+>
+> Export the dma-buf heap functions to allow them to be used by the OP-TEE =
+driver.
+> The OP-TEE driver wants to register and manage specific secure DMA heaps =
+with it.
 
-> >   config ARCH_WANTS_THP_SWAP
-> >          def_bool n
-> > -config ARCH_WANTS_THP_ZERO_PAGE_ALWAYS
-> > +config ARCH_WANTS_HUGE_ZERO_PAGE_ALWAYS
-> >          def_bool n
-> > +config HUGE_ZERO_PAGE_ALWAYS
-> 
-> Likely something like
-> 
-> PMD_ZERO_PAGE
-> 
-> Will be a lot clearer.
+Great, I'll use that.
 
-Sounds much better :)
+Thanks,
+Jens
 
-> 
-> > +       def_bool y> +       depends on HUGETLB_PAGE &&
-> ARCH_WANTS_HUGE_ZERO_PAGE_ALWAYS
-> 
-> I suspect it should then also be independent of HUGETLB_PAGE?
-
-You are right. So we don't depend on any of these features.
-
-> 
-> > +       help
-> > +         Typically huge_zero_folio, which is a huge page of zeroes, is allocated
-> > +         on demand and deallocated when not in use. This option will always
-> > +         allocate huge_zero_folio for zeroing and it is never deallocated.
-> > +         Not suitable for memory constrained systems.
-> 
-> I assume that code then has to live in mm/memory.c ?
-
-Hmm, then huge_zero_folio should have always been in mm/memory.c to
-begin with?
-
-I assume probably this was placed in mm/huge_memory.c because the users
-of this huge_zero_folio has been a part of mm/huge_memory.c?
-
-So IIUC your comment, we should move the huge_zero_page_init() in the
-first patch to mm/memory.c and the existing shrinker code can be a part
-where they already are?
-
---
-Pankaj
+>
+> Regards,
+> Christian.
+>
+> >
+> > Thanks,
+> > Jens
+> >
+> >>
+> >> Regards,
+> >> Christian.
+> >>
+> >>>
+> >>> Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
+> >>> ---
+> >>>  drivers/dma-buf/dma-heap.c | 3 +++
+> >>>  1 file changed, 3 insertions(+)
+> >>>
+> >>> diff --git a/drivers/dma-buf/dma-heap.c b/drivers/dma-buf/dma-heap.c
+> >>> index 3cbe87d4a464..cdddf0e24dce 100644
+> >>> --- a/drivers/dma-buf/dma-heap.c
+> >>> +++ b/drivers/dma-buf/dma-heap.c
+> >>> @@ -202,6 +202,7 @@ void *dma_heap_get_drvdata(struct dma_heap *heap)
+> >>>  {
+> >>>       return heap->priv;
+> >>>  }
+> >>> +EXPORT_SYMBOL(dma_heap_get_drvdata);
+> >>>
+> >>>  /**
+> >>>   * dma_heap_get_name - get heap name
+> >>> @@ -214,6 +215,7 @@ const char *dma_heap_get_name(struct dma_heap *he=
+ap)
+> >>>  {
+> >>>       return heap->name;
+> >>>  }
+> >>> +EXPORT_SYMBOL(dma_heap_get_name);
+> >>>
+> >>>  /**
+> >>>   * dma_heap_add - adds a heap to dmabuf heaps
+> >>> @@ -303,6 +305,7 @@ struct dma_heap *dma_heap_add(const struct dma_he=
+ap_export_info *exp_info)
+> >>>       kfree(heap);
+> >>>       return err_ret;
+> >>>  }
+> >>> +EXPORT_SYMBOL(dma_heap_add);
+> >>>
+> >>>  static char *dma_heap_devnode(const struct device *dev, umode_t *mod=
+e)
+> >>>  {
+> >>
+>
