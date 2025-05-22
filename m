@@ -1,92 +1,76 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E3629A9C0;
-	Thu, 22 May 2025 16:10:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38528299ABC;
+	Thu, 22 May 2025 16:10:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747930208; cv=none; b=T0pV2aFAEv/Nt9LfAXXjEnCKy31dkV6T+rk6tLMF/yxWvwgOpi+GE5GnG89+T/UctniF3aCZanHrb7Bnuw1wnpuRF226vyFbaRrGqtwGte29qnFBruHuDPAyHli2QtLQaowrDlLc7ZvkzInvoU0vOngA/VU9pv0+R3Lw2a7Xy1E=
+	t=1747930228; cv=none; b=OoFWcCBGL9uY01Uu8MebTnlhMwo0TYCv3yiimzxmol93YVkmHS0JBCLzZjvpVEB0eyRq5pznEGCLxCOja7ghluPwVnMK6kTrLW2sEpg3Jjry7ErFRRTyU3MRkCBIlHz1J6sjdeEcFCqNLAwo4FDDord3vYky6tdJvt0UVC4DUiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747930208; c=relaxed/simple;
-	bh=m3tpsM/qO3KErY+5snzDSjBp0eX8BQdhOe5n9KjAFNc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=l23/vmXm+UsFP0XDkY4LpJI3hXVUaxYYm5H5EdbHOZyZzjoJtpt0wCjVICsQXEbVzXLAMg8PuOR9AwkgGSAxOeiDGuOuAz9Mrh8PF5tByZJGYfSa99yF9w+u+EESXOHfSwrnORYtGKfVlWyIN23n/fc2LJ1/GAOrpGNlJS5uypg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=UDG/D7u9; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1747930228; c=relaxed/simple;
+	bh=//yqCWhyxufogzeM11hu7dBxsi7i01w6ShrWzTpUBY4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b3b4nz4LbogmYhDxcmmOiYV5PWvSMXA9weTkTe/d1PB5IrOYdsb03XZ4NHNcOQI+luH8doQtWMaZnJ77hL0/JbOyjIRKpBQB1BHc+VJQaF2SJoyqB9NKW7S5D/RvS41n31GQ7AECHc6DspgADdnKKGS0ENq7IqX5B176u3DWeLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gsu+Qr4E; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="UDG/D7u9"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id AC04343980;
-	Thu, 22 May 2025 16:09:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1747930199;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4NngisnSwgPZO0ouYjYbwumLRIx30v8UWI9kr/vOCNw=;
-	b=UDG/D7u9BA/lwYSKpoKBwp7LKnx5B9PuowOGyxi5shVQokgm+S6m5Q1oJ0Xw1JtdroUJR5
-	auCOSCprwz7o4aPv1Rmb4gcccGYHW2UhZ0XGhVLwq3ocItCocAI6IakIFyaPojiuvbDyjP
-	3CZUoKUIPltpBTc29qJusCLZgV5dgeFu5aJ3fQsTBBgYCD36GHXagiH2XiX3SixykN4MnI
-	nqcZmjyBBPrp+usNmgJHcEG2GcuI1VTz4KSryyEYCW7W1SsrsrQts/VGEgFWbgbcVI8ylc
-	fSNQ7VN7LTxaMfo11FdvMzgW25ty93NXa8ih4VWYwIiRM7q2lq6HQgjF+3olHw==
-Date: Thu, 22 May 2025 18:09:56 +0200
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Maxime Ripard <mripard@kernel.org>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann
- <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter
- <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong
- <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
- Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
- <jonas@kwiboo.se>, Louis Chauvet <louis.chauvet@bootlin.com>, Thomas
- Petazzoni <thomas.petazzoni@bootlin.com>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH v3 02/22] drm: convert many bridge drivers from
- devm_kzalloc() to devm_drm_bridge_alloc() API
-Message-ID: <20250522180956.1ab86afe@booty>
-In-Reply-To: <qkqyfksvimaks4wb4si72shewdc7ccy4n3srpkv3jf5snphepu@zpci2dquivhj>
-References: <20250509-drm-bridge-convert-to-alloc-api-v3-0-b8bc1f16d7aa@bootlin.com>
-	<20250509-drm-bridge-convert-to-alloc-api-v3-2-b8bc1f16d7aa@bootlin.com>
-	<4yeqvg3wnlr2bhb54zutgqpkehrodat5w5x4rr5qjlrc2ts3pz@gr2iosycclpl>
-	<20250512160201.7d0b21d8@booty>
-	<qkqyfksvimaks4wb4si72shewdc7ccy4n3srpkv3jf5snphepu@zpci2dquivhj>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gsu+Qr4E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45455C4CEE4;
+	Thu, 22 May 2025 16:10:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747930227;
+	bh=//yqCWhyxufogzeM11hu7dBxsi7i01w6ShrWzTpUBY4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Gsu+Qr4EUAYEmRKAdWcMXYA7WTDwWoya9pIQYv30e9k6a7jHH6ouza9NDedA3SiD1
+	 VqWIpU4+TqEY0WoqxSi1Cl7NQ9AoX1H0x6IvyYBc9Kxpv0a/T4brF0X2ZqYWMIgIRh
+	 6kpvjg3M6HD6jfGFibT4GO4LjAr4w6L3B3g5P8WSaaD6ptZMBgsaQiGHOnrudg3Fx7
+	 w9wgYxfPN0w6PLHV5jF/x8KwZ9JOvSGCZdro9/+WChqG32VHBxhP29+CyDdmSTMg9+
+	 FP005z9vCHsQJrBDqfNy356pHHHgQ7qiUEheyqLUOcgIdQDUKsN/l2KjWRpSg1+8bP
+	 hQ0d/HMgkt8eQ==
+Date: Thu, 22 May 2025 19:10:23 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Tariq Toukan <tariqt@nvidia.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, bpf@vger.kernel.org,
+	Moshe Shemesh <moshe@nvidia.com>, Mark Bloch <mbloch@nvidia.com>,
+	Gal Pressman <gal@nvidia.com>, Cosmin Ratiu <cratiu@nvidia.com>
+Subject: Re: [PATCH net-next 0/5] net/mlx5: Convert mlx5 to netdev instance
+ locking
+Message-ID: <20250522161023.GT7435@unreal>
+References: <1747829342-1018757-1-git-send-email-tariqt@nvidia.com>
+ <20250522085132.177d7a16@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdeigeduucdltddurdegfedvrddttddmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeelffefgfehhfdtvdefueefieevkefggfelkeeiudetkeektedvhedukefgvddvnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegsohhothihpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudeipdhrtghpthhtohepughmihhtrhihrdgsrghrhihshhhkohhvsehoshhsrdhquhgrlhgtohhmmhdrtghomhdprhgtphhtthhopehmrhhiphgrrhgusehkvghrnhgvlhdrohhrghdprhgtphhtthhop
- ehmrggrrhhtvghnrdhlrghnkhhhohhrshhtsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepthiiihhmmhgvrhhmrghnnhesshhushgvrdguvgdprhgtphhtthhopegrihhrlhhivggusehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopegrnhgurhiivghjrdhhrghjuggrsehinhhtvghlrdgtohhmpdhrtghpthhtohepnhgvihhlrdgrrhhmshhtrhhonhhgsehlihhnrghrohdrohhrgh
-X-GND-Sasl: luca.ceresoli@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250522085132.177d7a16@kernel.org>
 
-Hi Dmitry,
-
-On Thu, 22 May 2025 16:08:43 +0300
-Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com> wrote:
-
-> > What to do? Proposed plan:
-> > 
-> >  1. Louis immediately applies the revert (patch 1)  
+On Thu, May 22, 2025 at 08:51:32AM -0700, Jakub Kicinski wrote:
+> On Wed, 21 May 2025 15:08:57 +0300 Tariq Toukan wrote:
+> > This series by Cosmin converts mlx5 to use the recently added netdev
+> > instance locking scheme.
 > 
-> I can't help but notice that both Louis and you have bootlin.com email
-> addresses. Granted the lack of responses, can't you ping him internally?
+> Are you planning to re-submit this as a PR?
+> The subject tag and Leon's reviews being present makes me think
+> that applying directly is fine, but I wanted to confirm..
 
-Ah, sure, Louis and I were discussing it together. The question was
-quite "which is the correct process to manage an incorrectly-applied
-patch?", i.e. whether the revert itself needs to the Reviewed/Acked-by
-etc.
+Yes, please apply them directly. There are no changes in IPoIB in this
+cycle, so it will be safe to merge the code through netdev.
 
-Luca
+Cosmin added my ROB tags, after internal review, so I didn't want to be silly
+and send my Acked-by in addition to already existing tags.
 
--- 
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Thanks
