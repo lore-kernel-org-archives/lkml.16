@@ -1,28 +1,28 @@
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF86029CE6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF8BB1885B8
 	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 03:32:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747884723; cv=none; b=hun3I4WmpW46g1YDAYuNssJoCPYpgjMLKKOlz9txx8oIYPdYMv4hKxxb7WTe5MdV+lj5wWOIbbJgr+R9gz9ikhuM7GXSY8A1TJcMqbhHj9WXSNIZoMaz76f4wkMmr1TJpo2DTH4hcuH0OxYr5atrlQlKyNMHntlitAuUUMVDMIY=
+	t=1747884723; cv=none; b=W/bp4tozdDmcRHILLN3JP5mqykn5nngzTQNjben22dEcQszIJEaYcludCuCrifresoEBNeLOtJ79dO3B7M9COrmTr51c6n38mS16nzz/RO/EXGQcZC34LDFZG/8W0/tx7VICuQZUyZvTO9MqsYvKbB6GilPHwzqcFkNWsk6UYwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747884723; c=relaxed/simple;
-	bh=GN/kUFy6K+y0laQvIiBkdHLe0f4CGM17LFJkH3gaHVQ=;
+	bh=gbclfI4Iqifj6sDmzq8wra3KKIr/tGZrpKJaaFJjYnM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=E5N+dx/JAoQbLTaYHlZVZGIgHgaeRXoHG8n2diwOThAdD6yQZGc3oZ8wMj8gAnXppps5L/P6M9y8Kuwflh/Rz6XE9byEudfAfvQ76INpF2iQyBOonh+e5FvgvZQ+pGwMQ1wCm8tjyUkSP/dC2+xKeVBuYMw1mfMCX+MhurRq9c8=
+	 MIME-Version; b=iT79Jeqk3ZDLWVBOwPcV7pbOr/S7vK37b5SJh98AwlMn0CzhdfNiE4EihA8nIYAaR7uCvuz0jbb/WNo9zFYAz5rD6s3QyswDIwkwPbuj6WpWqvFfCm4iIR9APxDE/cBUGazcbUm9B5keUF5jULRDUNi63fvQ/xdhDluPFSIHlSw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4b2v392r81z4f3jtt
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4b2v390DCKz4f3jq5
 	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 11:31:33 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 49F541A0C5A
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 11:31:53 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id E584F1A08FC
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 11:31:52 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.101.6])
-	by APP1 (Coremail) with SMTP id cCh0CgC3Z3immi5okKq2Mw--.19487S6;
-	Thu, 22 May 2025 11:31:53 +0800 (CST)
+	by APP1 (Coremail) with SMTP id cCh0CgC3Z3immi5okKq2Mw--.19487S5;
+	Thu, 22 May 2025 11:31:52 +0800 (CST)
 From: Kemeng Shi <shikemeng@huaweicloud.com>
 To: akpm@linux-foundation.org
 Cc: kasong@tencent.com,
@@ -30,9 +30,9 @@ Cc: kasong@tencent.com,
 	hannes@cmpxchg.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] mm: swap: remove stale comment stale comment in cluster_alloc_swap_entry()
-Date: Thu, 22 May 2025 20:25:54 +0800
-Message-Id: <20250522122554.12209-5-shikemeng@huaweicloud.com>
+Subject: [PATCH 3/4] mm: swap: fix potensial buffer overflow in setup_clusters()
+Date: Thu, 22 May 2025 20:25:53 +0800
+Message-Id: <20250522122554.12209-4-shikemeng@huaweicloud.com>
 X-Mailer: git-send-email 2.30.0
 In-Reply-To: <20250522122554.12209-1-shikemeng@huaweicloud.com>
 References: <20250522122554.12209-1-shikemeng@huaweicloud.com>
@@ -43,50 +43,59 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgC3Z3immi5okKq2Mw--.19487S6
-X-Coremail-Antispam: 1UD129KBjvdXoWrZrWxZF4kuFyDGryrKF4UJwb_yoW3KFb_Xa
-	9rt3s7Kr45Jan7ur13J3W5Xry8W39avryYkFyfGFyak34jqF4UXas293sxJryxXayUZa4f
-	Xa1Ivr1fXa9xJjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbBkYFVCjjxCrM7AC8VAFwI0_Wr0E3s1l1xkIjI8I6I8E6xAIw20E
-	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l87I20VAvwVAaII0Ic2I_JFv_Gryl82
-	xGYIkIc2x26280x7IE14v26r126s0DM28IrcIa0xkI8VCY1x0267AKxVW5JVCq3wA2ocxC
-	64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM2
-	8EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq
-	3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8w
-	Aqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE
-	14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7
-	AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCF54CYxVCY1x0262kKe7AKxVWUAVWUtwCFx2Iq
-	xVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r
-	106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AK
-	xVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7
-	xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_
-	Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jag4hUUUUU=
+X-CM-TRANSID:cCh0CgC3Z3immi5okKq2Mw--.19487S5
+X-Coremail-Antispam: 1UD129KBjvJXoW7uFyrtw17JF13KFy8GryDKFg_yoW8Jw4fpF
+	15Kas8GF4UJr9xKr47CF1kCry3Grn5uay7KFyfAw1a9F1kWrWIgF1Dtrn0yryDKwn5JFyv
+	9rsrG34UuFsYvwUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmlb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M2
+	8IrcIa0xkI8VA2jI8067AKxVWUWwA2048vs2IY020Ec7CjxVAFwI0_Gr0_Xr1l8cAvFVAK
+	0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4
+	x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l
+	84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI
+	0_JF0_Jw1l42xK82IYc2Ij64vIr41l4c8EcI0Ec7CjxVAaw2AFwI0_JF0_Jw1l4I8I3I0E
+	4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGV
+	WUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_
+	Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rV
+	WUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4U
+	JbIYCTnIWIevJa73UjIFyTuYvjxUa75rDUUUU
 X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-As cluster_next_cpu was already dropped, the associated comment is stale
-now.
+In setup_swap_map(), we only ensure badpages are in range (0, last_page].
+As maxpages might be < last_page, setup_clusters() will encounter a
+buffer overflow when a badpage is >= maxpages.
+Only call inc_cluster_info_page() for badpage which is < maxpages to
+fix the issue.
 
+Fixes: b843786b0bd01 ("mm: swapfile: fix SSD detection with swapfile on btrfs")
 Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
 ---
- mm/swapfile.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ mm/swapfile.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
 diff --git a/mm/swapfile.c b/mm/swapfile.c
-index 63ab9f14b2c6..8525515fb06c 100644
+index a82f4ebefca3..63ab9f14b2c6 100644
 --- a/mm/swapfile.c
 +++ b/mm/swapfile.c
-@@ -956,9 +956,8 @@ static unsigned long cluster_alloc_swap_entry(struct swap_info_struct *si, int o
- 	}
- 
- 	/*
--	 * We don't have free cluster but have some clusters in
--	 * discarding, do discard now and reclaim them, then
--	 * reread cluster_next_cpu since we dropped si->lock
-+	 * We don't have free cluster but have some clusters in discarding,
-+	 * do discard now and reclaim them.
+@@ -3208,9 +3208,13 @@ static struct swap_cluster_info *setup_clusters(struct swap_info_struct *si,
+ 	 * and the EOF part of the last cluster.
  	 */
- 	if ((si->flags & SWP_PAGE_DISCARD) && swap_do_scheduled_discard(si))
- 		goto new_cluster;
+ 	inc_cluster_info_page(si, cluster_info, 0);
+-	for (i = 0; i < swap_header->info.nr_badpages; i++)
+-		inc_cluster_info_page(si, cluster_info,
+-				      swap_header->info.badpages[i]);
++	for (i = 0; i < swap_header->info.nr_badpages; i++) {
++		unsigned int page_nr = swap_header->info.badpages[i];
++
++		if (page_nr >= maxpages)
++			continue;
++		inc_cluster_info_page(si, cluster_info, page_nr);
++	}
+ 	for (i = maxpages; i < round_up(maxpages, SWAPFILE_CLUSTER); i++)
+ 		inc_cluster_info_page(si, cluster_info, i);
+ 
 -- 
 2.30.0
 
