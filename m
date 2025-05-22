@@ -1,150 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 782BA2857DC;
-	Thu, 22 May 2025 10:08:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02B242857DC;
+	Thu, 22 May 2025 10:08:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747908497; cv=none; b=pJ7RJ7mcqMgArcHRw0oET69zvZqzoZ4FyQlOvRuTOVN+Eibp3h2PnQkWgytbDyOo/QtbMGRTxmKX+rueuDEC928YWR4acWHsDK+OYoEicsfkEBaun9zHF2qXX1+GOdW8vkhDl1LIC39HvQAKF3EE2/3inOY316dMACUzL4F/2Dk=
+	t=1747908502; cv=none; b=PpQEwYbUG3Wr8vdPA+3lByAwLH4ieqLt5ITRBZvp/JcMFcxqHiotT8bKnPXAc/HF8s+yFzWSsOPXebrPwIo8gg4m4pGBfytScaC1EAWYjRAjenj79YO3hR5bPk7wxPXnZfWVTpinIxvlDxQeKjTeCRWecFtTsUVZdS0aSHdHInY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747908497; c=relaxed/simple;
-	bh=BX8oWSaa9Hi4cAQ2gf8o5haX9+XJcjZROfzkic+wEXM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sXCoE3/BMfpSEiCYy8k9opZyACXqUIr0TUzZvWDikBJAdnyqs7ZKcs/kjpeevMKbnHjBoIooHFDGPzElrxc74+qHG5gs1v3ZmHUQS2a/SsZ2vgJySa5G+Rkfs4qsegn3/uzb6guXmrmVnKdWaFVayI8kVfimRXVFTIra7DOjS04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=YStDAock; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747908502; c=relaxed/simple;
+	bh=AsDzyl49LK629MmRklC5I4eoPWBY9T1tNQJDljXq6Tk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IpBGXDuH25VEnuPQh5onggcqCbYf+FU/zLGXa/GOJ/zuBYhO7vToafwLun5ELuy+Be/fAPhFBOrZdu9mEMAU++x96Rg1MOCvLQ8qa5krkJz4w6qdoruqJ1zQpZBeqIGE/AnLS+IFgE2j7RelacF/Q5osYwzVzLUJaPxApAtFr4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HmFGi1G/; arc=none smtp.client-ip=209.85.219.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="YStDAock"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7035CC4CEE4;
-	Thu, 22 May 2025 10:08:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1747908496;
-	bh=BX8oWSaa9Hi4cAQ2gf8o5haX9+XJcjZROfzkic+wEXM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=YStDAockdhnkDtJbw9m8N5iPWSIHr9jY5YF4RV+Gh5/bOFXxfgELcQKzeCPVg45fs
-	 6/QW0ANj4Yhta+VAls6Wyu6f8y+xA/Bz3OjdCJ2GDl1vZMqTuYXySJe4/WoVbN4SY/
-	 utLn8TpJlIBB01OGKvqMcyROpmZMiNH3OBH5YgiI=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: linux-sound@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>
-Subject: [PATCH] ALSA: core: fix up bus match const issues.
-Date: Thu, 22 May 2025 12:08:05 +0200
-Message-ID: <2025052204-hyphen-thermal-3e72@gregkh>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HmFGi1G/"
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e740a09eb00so6925166276.0;
+        Thu, 22 May 2025 03:08:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1747908500; x=1748513300; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=H+ekVzBJjiUUVKOSvdTf3XQZFnehy6dFyVQdqspB96E=;
+        b=HmFGi1G/A0GNN1x6RZrWcz9qdTew4hXZbAaj94Sbhe8Mq7wWhYjbw5lxgqGKtEP50q
+         P5MBR8ZR0+kg9b28yKtfgvslHFJgGn1YsDc1Wdi0VhAlFhpV3hdxjd3l5T0CgyYvMVaL
+         vy18F5M4itCP1x9KB8VXSUa3RETxMX1xcdOSurtoE5okIOIoRyz565gGxbJCAtNahoHp
+         YVWEJkeEvZjKXvN5TdmSFj64irXZff9hT4VBYo5154uuAL2mVvZfEiTZRcE3917BDZ90
+         I47P42Y3+VqHhgA47kxpJnWB84CM/YjszzK2xNM3W4P/9/6xIA24AUQTqbCgcqtYCtHy
+         OMQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747908500; x=1748513300;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=H+ekVzBJjiUUVKOSvdTf3XQZFnehy6dFyVQdqspB96E=;
+        b=lx4l8SnRVIa3PGIevlXxjgaQzErBscrDF5tV/ORs4OgCsWYG0J8t4+4JpiFUZ0wElG
+         e5tDP5jVvT19Pf4gh3Ew0+ktwB0glboYR9mknQRfUtKx6/30a+NP2k6aUgZ4y9N6MyO5
+         2/NoQ+iVcRjABeVTI7v1bydTFUKxeCrNFHomPhmIDNHEzHTYutUQSWHVBGepz8DiTPTD
+         0A8kRsueXtnfmHCUkzsJfWOwoviXpXk4rOMxRXhKlOzPwlBnS5AtNjD4ubxHNuryayHt
+         H4ed+xlVTyBEC8IUIjbLHZA9GjA3S84LdFkJcu0VUcSP2yDjMkK/5fH6ljuODXOyU1ks
+         o4Aw==
+X-Forwarded-Encrypted: i=1; AJvYcCUVDBTxH6blpAJ8OiaTEdPu7mzsa9Hkj+fKtIrCMbeH2n5hfPunSos/x1yJcZyDVhqkvQ8zSg+VbCSOX9k=@vger.kernel.org, AJvYcCVni8pqXZ6VtfhUvZ/jyh0kT60HPUYgMgnp01B+IH6z7V4wCk6PW6Jvg4VFicMg4aEfIZdZNzJWdch9Ssd8@vger.kernel.org, AJvYcCWbeTeMX9M7dfA3x2U6YvnR6m8eybjtYIkYLEHfQ82TAfSqNBNKPONkdfD7TvpcGvtlmbWfHWXv@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywb3JFNZGPp7nuftZgEQgvfWBRkkLxhREBv8GPjr9ec+89RnLRF
+	woGK0aAQzo6rS69eKwf5nHhWlTelq/bxIrU/LY6qaZbjvtqF1Sjle3RFiMioYWc2q0sPejNUlfE
+	LMQxKmM+S/aAWbdh11xm8G3K5H6QLbUw=
+X-Gm-Gg: ASbGnct1lsysn/4kBoKG9T0My3+Xsi0wmpLEluZg2n9wrXWe02igftyy3Ciu/xnPwXB
+	uOqy8shLzxBKDwXv027yNgUxhaOm9N9zkKILXcDGGazuH9yCLH+TnTryDzYem6iA+cxgSzsqNtG
+	0wFaViiT2qXejWmbymxhh2pFuFi7dhraGG
+X-Google-Smtp-Source: AGHT+IFkLoMJ1W0sbpI/K9v0M/MWV+36N3rfaHzGPKsXVp/Y7TE6hM8ko1y1I3d8GfWS6EwCQP05jJt8knmWz+KK4JY=
+X-Received: by 2002:a05:6902:2290:b0:e7d:600c:dd39 with SMTP id
+ 3f1490d57ef6-e7d600ce014mr5736241276.19.1747908499816; Thu, 22 May 2025
+ 03:08:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4432; i=gregkh@linuxfoundation.org; h=from:subject:message-id; bh=BX8oWSaa9Hi4cAQ2gf8o5haX9+XJcjZROfzkic+wEXM=; b=owGbwMvMwCRo6H6F97bub03G02pJDBl631vmKzdsk7pR8uYMN4ORLNt7Lk6uek3O6al31IOC8 x4yn6vviGVhEGRikBVTZPmyjefo/opDil6Gtqdh5rAygQxh4OIUgInoTWGYZ5Us/inNqv+SiOTS 0nP5HzWbH7+JYlgwxejx6k7/bNcMg9yn7XtKGt9eeSQNAA==
-X-Developer-Key: i=gregkh@linuxfoundation.org; a=openpgp; fpr=F4B60CC5BF78C2214A313DCB3147D40DDB2DFB29
-Content-Transfer-Encoding: 8bit
+References: <20250521100447.94421-1-bbhushan2@marvell.com> <20250521100447.94421-4-bbhushan2@marvell.com>
+ <aC2406qOlaI17_f3@gondor.apana.org.au>
+In-Reply-To: <aC2406qOlaI17_f3@gondor.apana.org.au>
+From: Bharat Bhushan <bharatb.linux@gmail.com>
+Date: Thu, 22 May 2025 15:38:08 +0530
+X-Gm-Features: AX0GCFssFL6oJgfjgRymvpi41c5m1fHTzYicNAQL3OlyUme3fr3SGEa8EPrH6SE
+Message-ID: <CAAeCc_kxhT-JHn+U2BNeh2E+DNukMXWfypW+-D_x5f1OcZ9Hmw@mail.gmail.com>
+Subject: Re: [PATCH 3/4 v3] crypto: octeontx2: Fix address alignment on CN10K
+ A0/A1 and OcteonTX2
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Bharat Bhushan <bbhushan2@marvell.com>, bbrezillon@kernel.org, schalla@marvell.com, 
+	davem@davemloft.net, giovanni.cabiddu@intel.com, linux@treblig.org, 
+	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In commit d69d80484598 ("driver core: have match() callback in struct
-bus_type take a const *"), the match bus callback was changed to have
-the driver be a const pointer.  Unfortunately that const attribute was
-thrown away when container_of() is called, which is not correct and was
-not caught by the compiler due to how container_of() is implemented.
-Fix this up by correctly preserving the const attribute of the driver
-passed to the bus match function which requires the hdac_driver match
-function to also take a const pointer for the driver structure.
+On Wed, May 21, 2025 at 4:58=E2=80=AFPM Herbert Xu <herbert@gondor.apana.or=
+g.au> wrote:
+>
+> On Wed, May 21, 2025 at 03:34:46PM +0530, Bharat Bhushan wrote:
+> >
+> > @@ -429,22 +431,51 @@ otx2_sg_info_create(struct pci_dev *pdev, struct =
+otx2_cpt_req_info *req,
+> >               return NULL;
+> >       }
+> >
+> > -     g_sz_bytes =3D ((req->in_cnt + 3) / 4) *
+> > -                   sizeof(struct otx2_cpt_sglist_component);
+> > -     s_sz_bytes =3D ((req->out_cnt + 3) / 4) *
+> > -                   sizeof(struct otx2_cpt_sglist_component);
+> > +     /* Allocate memory to meet below alignment requirement:
+> > +      *  ----------------------------------
+> > +      * |    struct otx2_cpt_inst_info     |
+> > +      * |    (No alignment required)       |
+> > +      * |     -----------------------------|
+> > +      * |    | padding for 8B alignment    |
+> > +      * |----------------------------------|
+>
+> This should be updated to show that everything following this
+> is on an 128-byte boundary.
+>
+> > +      * |    SG List Gather/Input memory   |
+> > +      * |    Length =3D multiple of 32Bytes  |
+> > +      * |    Alignment =3D 8Byte             |
+> > +      * |----------------------------------|
+> > +      * |    SG List Scatter/Output memory |
+> > +      * |    Length =3D multiple of 32Bytes  |
+> > +      * |    Alignment =3D 8Byte             |
+> > +      * |    (padding for below alignment) |
+> > +      * |     -----------------------------|
+> > +      * |    | padding for 32B alignment   |
+> > +      * |----------------------------------|
+> > +      * |    Result response memory        |
+> > +      *  ----------------------------------
+> > +      */
+> >
+> > -     dlen =3D g_sz_bytes + s_sz_bytes + SG_LIST_HDR_SIZE;
+> > -     align_dlen =3D ALIGN(dlen, align);
+> > -     info_len =3D ALIGN(sizeof(*info), align);
+> > -     total_mem_len =3D align_dlen + info_len + sizeof(union otx2_cpt_r=
+es_s);
+> > +     info_len =3D sizeof(*info);
+> > +
+> > +     g_len =3D ((req->in_cnt + 3) / 4) *
+> > +              sizeof(struct otx2_cpt_sglist_component);
+> > +     s_len =3D ((req->out_cnt + 3) / 4) *
+> > +              sizeof(struct otx2_cpt_sglist_component);
+> > +
+> > +     dlen =3D g_len + s_len + SG_LIST_HDR_SIZE;
+> > +
+> > +     /* Allocate extra memory for SG and response address alignment */
+> > +     total_mem_len =3D ALIGN(info_len, ARCH_DMA_MINALIGN) + dlen;
+> > +     total_mem_len =3D ALIGN(total_mem_len, OTX2_CPT_DPTR_RPTR_ALIGN);
+> > +     total_mem_len +=3D (OTX2_CPT_RES_ADDR_ALIGN - 1) &
+> > +                       ~(OTX2_CPT_DPTR_RPTR_ALIGN - 1);
+> > +     total_mem_len +=3D sizeof(union otx2_cpt_res_s);
+>
+> This calculation is wrong again.  It should be:
+>
+>         total_mem_len =3D ALIGN(info_len, OTX2_CPT_DPTR_RPTR_ALIGN);
+>         total_mem_len +=3D (ARCH_DMA_MINALIGN - 1) &
+>                          ~(OTX2_CPT_DPTR_RPTR_ALIGN - 1);
+>         total_mem_len +=3D ALIGN(dlen, OTX2_CPT_RES_ADDR_ALIGN);
+>         total_mem_len +=3D sizeof(union otx2_cpt_res_s);
+>
+> Remember ALIGN may not actually give you extra memory.  So if you
+> need to add memory for alignment padding, you will need to do it
+> by hand.
 
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: Takashi Iwai <tiwai@suse.com>
-Fixes: d69d80484598 ("driver core: have match() callback in struct bus_type take a const *")
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- include/sound/hdaudio.h  | 4 ++--
- sound/core/seq_device.c  | 2 +-
- sound/hda/hda_bus_type.c | 6 +++---
- sound/pci/hda/hda_bind.c | 4 ++--
- 4 files changed, 8 insertions(+), 8 deletions(-)
+Will do changes as proposed above, Thanks for reviewing.
 
-diff --git a/include/sound/hdaudio.h b/include/sound/hdaudio.h
-index b098ceadbe74..9a70048adbc0 100644
---- a/include/sound/hdaudio.h
-+++ b/include/sound/hdaudio.h
-@@ -223,7 +223,7 @@ struct hdac_driver {
- 	struct device_driver driver;
- 	int type;
- 	const struct hda_device_id *id_table;
--	int (*match)(struct hdac_device *dev, struct hdac_driver *drv);
-+	int (*match)(struct hdac_device *dev, const struct hdac_driver *drv);
- 	void (*unsol_event)(struct hdac_device *dev, unsigned int event);
- 
- 	/* fields used by ext bus APIs */
-@@ -235,7 +235,7 @@ struct hdac_driver {
- #define drv_to_hdac_driver(_drv) container_of(_drv, struct hdac_driver, driver)
- 
- const struct hda_device_id *
--hdac_get_device_id(struct hdac_device *hdev, struct hdac_driver *drv);
-+hdac_get_device_id(struct hdac_device *hdev, const struct hdac_driver *drv);
- 
- /*
-  * Bus verb operators
-diff --git a/sound/core/seq_device.c b/sound/core/seq_device.c
-index 4492be5d2317..bac9f8603734 100644
---- a/sound/core/seq_device.c
-+++ b/sound/core/seq_device.c
-@@ -43,7 +43,7 @@ MODULE_LICENSE("GPL");
- static int snd_seq_bus_match(struct device *dev, const struct device_driver *drv)
- {
- 	struct snd_seq_device *sdev = to_seq_dev(dev);
--	struct snd_seq_driver *sdrv = to_seq_drv(drv);
-+	const struct snd_seq_driver *sdrv = to_seq_drv(drv);
- 
- 	return strcmp(sdrv->id, sdev->id) == 0 &&
- 		sdrv->argsize == sdev->argsize;
-diff --git a/sound/hda/hda_bus_type.c b/sound/hda/hda_bus_type.c
-index 7545ace7b0ee..eb72a7af2e56 100644
---- a/sound/hda/hda_bus_type.c
-+++ b/sound/hda/hda_bus_type.c
-@@ -21,7 +21,7 @@ MODULE_LICENSE("GPL");
-  * driver id_table and returns the matching device id entry.
-  */
- const struct hda_device_id *
--hdac_get_device_id(struct hdac_device *hdev, struct hdac_driver *drv)
-+hdac_get_device_id(struct hdac_device *hdev, const struct hdac_driver *drv)
- {
- 	if (drv->id_table) {
- 		const struct hda_device_id *id  = drv->id_table;
-@@ -38,7 +38,7 @@ hdac_get_device_id(struct hdac_device *hdev, struct hdac_driver *drv)
- }
- EXPORT_SYMBOL_GPL(hdac_get_device_id);
- 
--static int hdac_codec_match(struct hdac_device *dev, struct hdac_driver *drv)
-+static int hdac_codec_match(struct hdac_device *dev, const struct hdac_driver *drv)
- {
- 	if (hdac_get_device_id(dev, drv))
- 		return 1;
-@@ -49,7 +49,7 @@ static int hdac_codec_match(struct hdac_device *dev, struct hdac_driver *drv)
- static int hda_bus_match(struct device *dev, const struct device_driver *drv)
- {
- 	struct hdac_device *hdev = dev_to_hdac_dev(dev);
--	struct hdac_driver *hdrv = drv_to_hdac_driver(drv);
-+	const struct hdac_driver *hdrv = drv_to_hdac_driver(drv);
- 
- 	if (hdev->type != hdrv->type)
- 		return 0;
-diff --git a/sound/pci/hda/hda_bind.c b/sound/pci/hda/hda_bind.c
-index 9521e5e0e6e6..1fef350d821e 100644
---- a/sound/pci/hda/hda_bind.c
-+++ b/sound/pci/hda/hda_bind.c
-@@ -18,10 +18,10 @@
- /*
-  * find a matching codec id
-  */
--static int hda_codec_match(struct hdac_device *dev, struct hdac_driver *drv)
-+static int hda_codec_match(struct hdac_device *dev, const struct hdac_driver *drv)
- {
- 	struct hda_codec *codec = container_of(dev, struct hda_codec, core);
--	struct hda_codec_driver *driver =
-+	const struct hda_codec_driver *driver =
- 		container_of(drv, struct hda_codec_driver, core);
- 	const struct hda_device_id *list;
- 	/* check probe_id instead of vendor_id if set */
--- 
-2.49.0
+Thanks
+-Bharat
 
+>
+> Cheers,
+> --
+> Email: Herbert Xu <herbert@gondor.apana.org.au>
+> Home Page: http://gondor.apana.org.au/~herbert/
+> PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
