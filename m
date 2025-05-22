@@ -1,125 +1,178 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21A451531F0
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 19:26:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747942004; cv=none; b=k0BIirRSDkz3QtruHOmv0c58nlwl7qaHGWNozG73yXIWraqBXdOevWCOdxZUZIpRg7/4VSPlSIe9MwmnkRcyHIhSs0bQ2YKDreF88+6+H+1D7/zpCssFv91O5/71WI2Gqm2G7sGY1d5qla/LlHlP+sGBrNpxEevoKwSv2E+XLB0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747942004; c=relaxed/simple;
-	bh=GR9Ta8RLtW3ec58AWnv5ZHpgKed7tcJ1vlm98PMGDj8=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LxqCwjGf+F/V+4GYDEagjDfwjBBhEZPGYUde8aGw/zblvxpXKNDgCa9gGuoNJyb3NAYSknFUULCCWw98uvNWYXu8XgnHgZTYa9UuiWrxXQr8Gm6jyY1ZXaADpfSGv5EvfRaOy3HbMzQhMMO9mV2K9sr2u+YbzArWw9FH1Hd/dgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A9irluPp; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D01EF2036FA;
+	Thu, 22 May 2025 19:27:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747942043; cv=pass; b=aiJ7O04yc8RWENkFVkn/79QdF1KG/Q+52wQb8uqymiJOV4aulKe1Ylq3VN4T8j8AGPBMEral75y+JxkabRVOca3aLDcNXhAO5JBKdwCjx7nHVb+0xAE61RL4aGuwIIJmWInZMJU3IBmRYMJZw5mE+oHu2TJAugjm4DG6498Wetw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747942043; c=relaxed/simple;
+	bh=uTYOQyPePK9NBePWjUBS1H0sCndAGXIoJvcnIbmQ8v0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Q1hSdDmIWDshuBJLNllsm22n2qkRsi6ERLLRkLgyUM6AbbSg71F0WNO3xa2UYKT3D9/dL7nwyucJxBfv6zBOgraj7BdsElxRIQEzI2ESEMYO08Ti7Ld5yiRKQhw5cICdckbRVUJYhM9gvMWO8q+MjOvMx1tC3ATCGjLkjGCyxV0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=gkUZUsht; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A9irluPp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E69EC4CEE4;
-	Thu, 22 May 2025 19:26:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747942001;
-	bh=GR9Ta8RLtW3ec58AWnv5ZHpgKed7tcJ1vlm98PMGDj8=;
-	h=Date:From:To:Subject:References:In-Reply-To:From;
-	b=A9irluPpe/Rd3C/KVtELdoQJ64TcXWma8t6mIOivyCFZ8Y7mwN5eVOR78QDs4PuDl
-	 nTlYWbjR3n6c5OVulHFICtW9Nwwzagndw94B/G9Y+y6s1SS0HaD/QDJBDRhUjPDPEK
-	 YNuFADjdSIiyulv7aIxo1wqZt9enocxbmYyTjBQLr7S2Esd1LkVLj7X7ekjw/uLv8s
-	 DMT5nFqA6xVN9CsC5L4HnAKgrf74ZkP2cymnxdsYwSCyu1Cbbfe7HeoX7oGuMW1wtt
-	 yacFH9VdZq6glh1Bzvp9KSrEi5+825PmrYMb7hSMREU9VvWMEidOKLDCtiPxOTs6fQ
-	 QB7aWbz7x8d0Q==
-Date: Thu, 22 May 2025 09:26:40 -1000
-From: Tejun Heo <tj@kernel.org>
-To: David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
-	Changwoo Min <changwoo@igalia.com>, linux-kernel@vger.kernel.org,
-	sched-ext@meta.com
-Subject: Re: [PATCH sched_ext/for-6.16] sched_ext: Call ops.update_idle()
- after updating builtin idle bits
-Message-ID: <aC96cDLJmqt1Mjlx@slm.duckdns.org>
-References: <aC5SSv5Ne5IZPPl0@slm.duckdns.org>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="gkUZUsht"
+ARC-Seal: i=1; a=rsa-sha256; t=1747942021; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=l4Gg25EeLEA1PB0GOBF6OIyIQVjdmVFp92feHIxrVdW7lbgBKQzvzjxRTAvneGeZegExkv94EiRdssvKiZdSiaphcdTLf6ekcKhvW6wHiOKpYiLNum4TqhbnnOc39zhfs1weTC6+MzO1VRoU1W1l6ua5tPai6DsypM7NqfOI8WQ=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1747942021; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=AJzBv5LvwO9EFRe8OVUlb9OM9yAWwvged+nVh5RBniI=; 
+	b=FvEiYz+Zk3Zx8Wjzj2Wj30/OkSKlahTbUJxZa7YzPE5u1YUvZiMCZXOc4Jc36LFnDLX/C8J1SwYBX9f9FrkmnAHgiMQ823Ot/b/OKoCTdH7fTi5leQIeyhBLFgMTLqEOXUDrUHUOEFDVm9uRBZxH0G4xo64R+noNyFkEnKDvgA0=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1747942021;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:To:To:Cc:Cc:Reply-To;
+	bh=AJzBv5LvwO9EFRe8OVUlb9OM9yAWwvged+nVh5RBniI=;
+	b=gkUZUsht3DMKagUvyLNTwgLMsMMFHBh/eQHXKLF4AUveD1CrnwbuiGvyWIVw+4C/
+	8zHMhEY9HMsCU49eeIjTjCDxF/aQ/7+68Q5Hr5+Y7Zk9gKi0T3gjcecgswUmQBM0kNQ
+	EG2yk6IUwci2sucS8fKh6Bh/1cmhNpnjwzJAxxNk=
+Received: by mx.zohomail.com with SMTPS id 1747942019407306.2477470606051;
+	Thu, 22 May 2025 12:26:59 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Date: Thu, 22 May 2025 21:26:44 +0200
+Subject: [PATCH] pwm: rockchip: round period/duty down on apply, up on get
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aC5SSv5Ne5IZPPl0@slm.duckdns.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250522-rockchip-pwm-rounding-fix-v1-1-b516ad76a25a@collabora.com>
+X-B4-Tracking: v=1; b=H4sIAHN6L2gC/zWNywqDMBBFf0Vm3YGYYlF/pbhI41SHkkeTaAXx3
+ ztUujwH7j07ZEpMGfpqh0QrZw5eoL5UYGfjJ0IehUEr3ahGa0zBvuzMEePHCSx+ZD/hkzfsWnO
+ 9KdspamuQfUwk+vd9H05O9F4kUU4JD5MJbXCOS1952gr+MzAcxxejJ93onAAAAA==
+X-Change-ID: 20250522-rockchip-pwm-rounding-fix-98a360c90e81
+To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Heiko Stuebner <heiko@sntech.de>, Brian Norris <briannorris@chromium.org>, 
+ Boris Brezillon <bbrezillon@kernel.org>, 
+ Thierry Reding <thierry.reding@gmail.com>
+Cc: kernel@collabora.com, linux-pwm@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, 
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+X-Mailer: b4 0.14.2
 
-Applied to sched_ext/for-6.16 with commit message update suggested by
-Andrea.
+With CONFIG_PWM_DEBUG=y, the rockchip PWM driver produces warnings like
+this:
 
------- 8< ------
-From 273cc949655c70001778eb0b9e7db993df845912 Mon Sep 17 00:00:00 2001
-From: Tejun Heo <tj@kernel.org>
-Date: Wed, 21 May 2025 12:23:06 -1000
-Subject: [PATCH] sched_ext: Call ops.update_idle() after updating builtin idle
- bits
+  rockchip-pwm fd8b0010.pwm: .apply is supposed to round down
+  duty_cycle (requested: 23529/50000, applied: 23542/50000)
 
-BPF schedulers that use both builtin CPU idle mechanism and
-ops.update_idle() may want to use the latter to create interlocking between
-ops.enqueue() and CPU idle transitions so that either ops.enqueue() sees the
-idle bit or ops.update_idle() sees the task queued somewhere. This can
-prevent race conditions where CPUs go idle while tasks are waiting in DSQs.
+This is because the driver chooses ROUND_CLOSEST for idempotency
+reasons. However, it's possible to keep idempotency while always
+rounding down in .apply.
 
-For such interlocking to work, ops.update_idle() must be called after
-builtin CPU masks are updated. Relocate the invocation. Currently, there are
-no ordering requirements on transitions from idle and this relocation isn't
-expected to make meaningful differences in that direction.
+Do this by making get_state always round up, and making apply always
+round down. This is done with u64 maths, and setting both period and
+duty to U32_MAX (the biggest the hardware can support) if they would
+exceed their 32 bits confines.
 
-This also makes the ops.update_idle() behavior semantically consistent:
-any action performed in this callback should be able to override the
-builtin idle state, not the other way around.
-
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Reviewed-and-tested-by: Andrea Righi <arighi@nvidia.com>
-Acked-by: Changwoo Min <changwoo@igalia.com>
+Fixes: 12f9ce4a5198 ("pwm: rockchip: Fix period and duty cycle approximation")
+Fixes: 1ebb74cf3537 ("pwm: rockchip: Add support for hardware readout")
+Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 ---
- kernel/sched/ext_idle.c | 25 +++++++++++++++----------
- 1 file changed, 15 insertions(+), 10 deletions(-)
+This fix may need some careful testing from others before definitely
+being applied and backported. While I did test it myself of course,
+making sure to try a combination of periods and duty cycles, I really
+don't want to accidentally undo someone else's fix.
 
-diff --git a/kernel/sched/ext_idle.c b/kernel/sched/ext_idle.c
-index ae30de383913..66da03cc0b33 100644
---- a/kernel/sched/ext_idle.c
-+++ b/kernel/sched/ext_idle.c
-@@ -738,16 +738,6 @@ void __scx_update_idle(struct rq *rq, bool idle, bool do_notify)
+Some of the u64 math is a bit overkill, but I don't want to assume
+prescalers will never get larger than 4, which is where we start needing
+the 64-bit prescaled NSECS_PER_SEC value. clk_rate could also
+comfortably fit within u32 for any expected clock rate, but unsigned
+long can fit more depending on architecture, even if nobody is running
+the PWM hardware at 4.294967296 GHz.
+---
+ drivers/pwm/pwm-rockchip.c | 31 +++++++++++++++++++------------
+ 1 file changed, 19 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/pwm/pwm-rockchip.c b/drivers/pwm/pwm-rockchip.c
+index c5f50e5eaf41ac7539f59fa03f427eee6263ca90..983c7354becddd1d322a0b9c2947e0a4603c52dd 100644
+--- a/drivers/pwm/pwm-rockchip.c
++++ b/drivers/pwm/pwm-rockchip.c
+@@ -8,6 +8,8 @@
  
- 	lockdep_assert_rq_held(rq);
+ #include <linux/clk.h>
+ #include <linux/io.h>
++#include <linux/limits.h>
++#include <linux/math64.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
+@@ -61,6 +63,7 @@ static int rockchip_pwm_get_state(struct pwm_chip *chip,
+ 				  struct pwm_state *state)
+ {
+ 	struct rockchip_pwm_chip *pc = to_rockchip_pwm_chip(chip);
++	u64 prescaled_ns = (u64)pc->data->prescaler * NSEC_PER_SEC;
+ 	u32 enable_conf = pc->data->enable_conf;
+ 	unsigned long clk_rate;
+ 	u64 tmp;
+@@ -78,12 +81,12 @@ static int rockchip_pwm_get_state(struct pwm_chip *chip,
+ 	clk_rate = clk_get_rate(pc->clk);
  
--	/*
--	 * Trigger ops.update_idle() only when transitioning from a task to
--	 * the idle thread and vice versa.
--	 *
--	 * Idle transitions are indicated by do_notify being set to true,
--	 * managed by put_prev_task_idle()/set_next_task_idle().
--	 */
--	if (SCX_HAS_OP(sch, update_idle) && do_notify && !scx_rq_bypassing(rq))
--		SCX_CALL_OP(sch, SCX_KF_REST, update_idle, rq, cpu_of(rq), idle);
+ 	tmp = readl_relaxed(pc->base + pc->data->regs.period);
+-	tmp *= pc->data->prescaler * NSEC_PER_SEC;
+-	state->period = DIV_ROUND_CLOSEST_ULL(tmp, clk_rate);
++	tmp *= prescaled_ns;
++	state->period = DIV_U64_ROUND_UP(tmp, clk_rate);
+ 
+ 	tmp = readl_relaxed(pc->base + pc->data->regs.duty);
+-	tmp *= pc->data->prescaler * NSEC_PER_SEC;
+-	state->duty_cycle =  DIV_ROUND_CLOSEST_ULL(tmp, clk_rate);
++	tmp *= prescaled_ns;
++	state->duty_cycle =  DIV_U64_ROUND_UP(tmp, clk_rate);
+ 
+ 	val = readl_relaxed(pc->base + pc->data->regs.ctrl);
+ 	state->enabled = (val & enable_conf) == enable_conf;
+@@ -103,8 +106,9 @@ static void rockchip_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			       const struct pwm_state *state)
+ {
+ 	struct rockchip_pwm_chip *pc = to_rockchip_pwm_chip(chip);
+-	unsigned long period, duty;
+-	u64 clk_rate, div;
++	u64 prescaled_ns = (u64)pc->data->prescaler * NSEC_PER_SEC;
++	u64 clk_rate, tmp;
++	u32 period, duty;
+ 	u32 ctrl;
+ 
+ 	clk_rate = clk_get_rate(pc->clk);
+@@ -114,12 +118,15 @@ static void rockchip_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	 * bits, every possible input period can be obtained using the
+ 	 * default prescaler value for all practical clock rate values.
+ 	 */
+-	div = clk_rate * state->period;
+-	period = DIV_ROUND_CLOSEST_ULL(div,
+-				       pc->data->prescaler * NSEC_PER_SEC);
 -
- 	/*
- 	 * Update the idle masks:
- 	 * - for real idle transitions (do_notify == true)
-@@ -765,6 +755,21 @@ void __scx_update_idle(struct rq *rq, bool idle, bool do_notify)
- 	if (static_branch_likely(&scx_builtin_idle_enabled))
- 		if (do_notify || is_idle_task(rq->curr))
- 			update_builtin_idle(cpu, idle);
+-	div = clk_rate * state->duty_cycle;
+-	duty = DIV_ROUND_CLOSEST_ULL(div, pc->data->prescaler * NSEC_PER_SEC);
++	tmp = mul_u64_u64_div_u64(clk_rate, state->period, prescaled_ns);
++	if (tmp > U32_MAX)
++		tmp = U32_MAX;
++	period = tmp;
 +
-+	/*
-+	 * Trigger ops.update_idle() only when transitioning from a task to
-+	 * the idle thread and vice versa.
-+	 *
-+	 * Idle transitions are indicated by do_notify being set to true,
-+	 * managed by put_prev_task_idle()/set_next_task_idle().
-+	 *
-+	 * This must come after builtin idle update so that BPF schedulers can
-+	 * create interlocking between ops.update_idle() and ops.enqueue() -
-+	 * either enqueue() sees the idle bit or update_idle() sees the task
-+	 * that enqueue() queued.
-+	 */
-+	if (SCX_HAS_OP(sch, update_idle) && do_notify && !scx_rq_bypassing(rq))
-+		SCX_CALL_OP(sch, SCX_KF_REST, update_idle, rq, cpu_of(rq), idle);
- }
++	tmp = mul_u64_u64_div_u64(clk_rate, state->duty_cycle, prescaled_ns);
++	if (tmp > U32_MAX)
++		tmp = U32_MAX;
++	duty = tmp;
  
- static void reset_idle_masks(struct sched_ext_ops *ops)
+ 	/*
+ 	 * Lock the period and duty of previous configuration, then
+
+---
+base-commit: 6add743d2854d744c3037235b87c1c9d164fd132
+change-id: 20250522-rockchip-pwm-rounding-fix-98a360c90e81
+
+Best regards,
 -- 
-2.49.0
+Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 
