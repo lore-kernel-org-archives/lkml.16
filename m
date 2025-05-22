@@ -1,224 +1,228 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2053.outbound.protection.outlook.com [40.107.20.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D3B426AE4
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 02:46:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747882021; cv=none; b=RIQ7b9YZRSeNkskrHwaiuygY5urFGHy29a4UKB6KjmbAzmMA/TXc34yB2YncxVnGwq6ppehxAINmedxfwVNmE4OsQoVeG2fKpkoD76PcDLtLuLwPyhCLMbHq9aIC4TYiEmhsNI80/+useWV1UvNwgZeDKM2LVREacFHsEXwlhfY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747882021; c=relaxed/simple;
-	bh=Esruv2OeTnd3Nxix6gik9nFQkkarp07zuvi8nFzZOJc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fJ7FqF3ek8e53Uwx0AyuoW0F8vn246Bc/SeeBZtIOFLPej9WEIM/C62E25+TWI2TZVwpb3MASwovaXV0n0Y3GRJ5pNTmJQZJm8oITjUlJbCV0lnLUYfCOyQ801yb8CHkMSQcL/s/par8kL+BRYeHarofdcMG0EwN0HHYK3OJUc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ieee.org; spf=pass smtp.mailfrom=ieee.org; dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b=OKAaqHdj; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ieee.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ieee.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53F5B35958;
+	Thu, 22 May 2025 02:59:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747882790; cv=fail; b=VGdwNClNOOWELUUOubgGB8bO4sFZaEEd3azGRUfcqcdGB1JzBNCBCGe1NwI+S5gstGRTM5At6jtY02UicUhJDReFvVJ3MWzkJ/koud4z/XbDlOe/ADfTYJtU/dz2xPGVAzSElruui9LJTC74DgUqLvjX71k0TzVIn8rIsbD5o6Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747882790; c=relaxed/simple;
+	bh=dVPLJU9wePt8hn7NRBNG+vO7zCGJP7f+SUg9p/AVQuA=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=ZH8loT+v2RiRONtWtRcdCwx1gy5BGPoGjas0Iro59JeoiY/9+59ypb26TsHu9Thy0Q+Jx49g2gJpbz7u2FlO7h1uZXLATkNt6FqRyGefo2f8iUDFE3aeF7W3HcTplFShUQoCkwnu/XVQRZ/3l3j5yV64X/zgEElCyNsGsCH2vMA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=FE2AvsRx; arc=fail smtp.client-ip=40.107.20.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ieee.org header.i=@ieee.org header.b="OKAaqHdj"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-47ae894e9b7so131795211cf.3
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 19:46:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ieee.org; s=google; t=1747882018; x=1748486818; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1JpsZ+qldooFJDhxkdbsldDGrerBYCZG19R5vu/HjNk=;
-        b=OKAaqHdjMo7Uu/4YN/GpaTaPtK6mYFJ8enCQfLj35KmoF0x6GmN8jrMk3trhr/pCdL
-         VYX0d219N9INaRXEvlqKU1/2rpZvs7rFHKzvc4brOx/sHPJwQ7m7Wx+/YyHJKVoNDJ2+
-         NfGY0DT4VhrVFjizCkutREMtGJSMuDTSM6zQ4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747882018; x=1748486818;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1JpsZ+qldooFJDhxkdbsldDGrerBYCZG19R5vu/HjNk=;
-        b=L2uQu7dYiBRT63Fz0cOdIpgaszLQK7tEOpoZWGq8lQoEdpGfdVwR/k//MyVZJCKdrd
-         yLuzSv4k7VD/QQxQtzp4yPzBNlQSoLPjJokGjoWJ65hwfmds4/eAZCPG1+DHm6MnQmJb
-         U2nTp5m4ELx6kL03pG2G5puCuiIBsyTfcnWVlK5aM3U0Mpn922eyAU07c49ke/Z+Ikwt
-         VCvmPRBgI44+RF0lzQHmxBqwC492Z0tSigJ/xIptS/0gitEAFVY0/lZqZagv4/m1Qddu
-         zvGaKjrjukKKH6W4Lu66mm7ReqFjLRGWdWIN2txsFwkxLT5rN3eFN6OALs6QmbfZ+idT
-         cUjg==
-X-Forwarded-Encrypted: i=1; AJvYcCWJcW8gUO48Ktx2Oin+Yk87TUBsD1tcnV1it82Iv6h10S36f7foa13xpShwlNkFS9843EfbvPYPw2JjGPc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMLBHAPEpoVadjUIQAamFkifJTF916zOok9u4IaU4Mdzc+pdEw
-	j+bZuQejh0uVuV+p9MHfOUWo5kvUDf4aBpj/Lm3/YbtPLchfRN9ObelsCiugvk3xYuvUv2Efb7v
-	DE+zqdQ==
-X-Gm-Gg: ASbGncv8bVl2g/gjrfCOYbL8aHhewIz9WJIbRnsH7MjPXLjTKK2/6jz9Q/spKHjZYg/
-	G8YmN1D1VKUkSJnUCbGX7CYl/eczq3UbhCck8CmGcOrkVgCBVeQ4q0oWSbU8Y06axBEinmYChe+
-	Cxd/e8jfx/Q12f8ckIplf79EHXXzkLTMPa+rmEe7M+47EodsxsPvBz1smnGCZ/GLlzu9YKsioGx
-	NsPUK0pKnwjFp79RmOdUmQRXTy9DcjdW6X58YSSKm7jWOXpTF34gHGHVwLs86PoER01BXJnz410
-	EVuD+wEdyTN3fujULLXMJv6IEP8JZKyuaf7reLtb76CtJ/u3FEjtyl7SUhodkXaHKVQeumLyVpA
-	bGdNZYblSIQ==
-X-Google-Smtp-Source: AGHT+IEfApD3o9CKoZ8xxqbMVxCD6qTofN4+UBpwkmS5om6reaI+9s0pKT9F5RiyspZmLBLFt2yZPQ==
-X-Received: by 2002:a05:622a:4a13:b0:480:9ba4:3022 with SMTP id d75a77b69052e-494b078d909mr352874831cf.17.1747882007920;
-        Wed, 21 May 2025 19:46:47 -0700 (PDT)
-Received: from [172.22.22.28] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
-        by smtp.googlemail.com with ESMTPSA id d75a77b69052e-494ae3d6d84sm92828951cf.16.2025.05.21.19.46.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 May 2025 19:46:47 -0700 (PDT)
-Message-ID: <65cc6196-7ebe-453f-8148-ecb93e5b69fd@ieee.org>
-Date: Wed, 21 May 2025 21:46:45 -0500
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="FE2AvsRx"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=l+2o9EjMpd3/lEbjFSffm/79OspB3wLd/nUuVutKvVMeel/UWZGz5Y3A7NWe5l89jOnsIcZ4bmI07FsT3H0C331uCpPhBXB70CuAdHmHT/SSHJFtF9hmeJzBKVWqAItFXQ+hv5RAIPgkHtXb8ZncqOhf6fjOEqOQZi51p1716Hd61G6PHqc4Sg+U5TX2/Uesu1py5VNEqiwXKOj+uJcAI9ZzH7JoY0wmJ3ih/mbLY2Yxv1n4+kK4eeLau6xMjCwr9a+wzDsPykaJl7nuxXbYitTi0/PG52C99Tbj8zlHy6rO9GHVO1oIpFgLskI5cCZewYQS2upZIn7wa41w4cUPEw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lRhdB+p/PFB3mSvLMpBcs1TLFWsemknoxqCqF68Kod0=;
+ b=r4p8KYzwSU129f4QHD6TJBwfnIcS4XBIlgd8bDcynC6RVVfTr6Idz/G76jjLadkSO5s+LV4Sk2gHFBFitEFHQs5l0v3WQKUMqBLuPI+AOFWyYCajGvhDfCn92rrpB+o827fiPdhHuFWeGsU/5v90nJCrLRiJHJxqbxHQMwJZA8T24u/UhyJXpJvpcaKEM/eDy1dj7m5pR/9BlTuwl3SlMX2hNtzmeJbvEYhx3Xf4UXXleosTPo/gfSxGTivocQP+Q+UUavSV0ifrWsiYg+cZJwBuP2h9G6gqQikpF3tS8VaJFL+qrN8fHAU/8ZkEF0Ah2XI2IJAcQKLxPFjCoLF5Yg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lRhdB+p/PFB3mSvLMpBcs1TLFWsemknoxqCqF68Kod0=;
+ b=FE2AvsRx80CEhk5z4qtWdXzr2YVUOPJYW/B/eqPvtpuzR/cT9QeDjGcVFUHeBuDqgfmFi2+gOGbhp4YI5GANysClqfjRqUtFXqAkLMcHy0FmLnn1TXVTN1P2unsTHFrJ32TQxmTSFXfVbCyvcgsldfMz0/upPmyLzKZWb/FNWqs4SyRs3zKUYOYjDxKMidp1S3k+ryIszDcLCJVnImfHfQwIN55RbkQBCF4L/fihwCu2Fm9BfWtLSlCWHXdKCu47wmjm1ipB103W1xzTM+L0PEVU2zb4+ByprJo6TssjmE1wQfu5Q3Ha1W/wLI5p6PoG+JzKfVSwTr2iLIl3nc0guQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM7PR04MB7046.eurprd04.prod.outlook.com (2603:10a6:20b:113::22)
+ by GVXPR04MB10899.eurprd04.prod.outlook.com (2603:10a6:150:225::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.30; Thu, 22 May
+ 2025 02:59:45 +0000
+Received: from AM7PR04MB7046.eurprd04.prod.outlook.com
+ ([fe80::d1ce:ea15:6648:6f90]) by AM7PR04MB7046.eurprd04.prod.outlook.com
+ ([fe80::d1ce:ea15:6648:6f90%5]) with mapi id 15.20.8769.019; Thu, 22 May 2025
+ 02:59:45 +0000
+Message-ID: <67252c36-8b31-4c40-9d89-4f502da4a087@nxp.com>
+Date: Thu, 22 May 2025 11:01:13 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 30/34] drm/bridge: imx8qxp-pixel-combiner: convert to
+ devm_drm_bridge_alloc() API
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Andrzej Hajda <andrzej.hajda@intel.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Jagan Teki <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Douglas Anderson
+ <dianders@chromium.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+ Krzysztof Kozlowski <krzk@kernel.org>, Anusha Srivatsa
+ <asrivats@redhat.com>, Paul Kocialkowski <paulk@sys-base.io>,
+ Dmitry Baryshkov <lumag@kernel.org>, Hui Pu <Hui.Pu@gehealthcare.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ dri-devel@lists.freedesktop.org, asahi@lists.linux.dev,
+ linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org,
+ linux-renesas-soc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ freedreno@lists.freedesktop.org, linux-stm32@st-md-mailman.stormreply.com
+References: <20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com>
+ <20250424-drm-bridge-convert-to-alloc-api-v2-30-8f91a404d86b@bootlin.com>
+ <553d62ed-976a-4e17-9678-cdc3d40ce4a7@nxp.com>
+ <20250430112944.1b39caab@booty>
+ <f71d18d2-4271-4bb9-b54f-0e5a585778f3@nxp.com>
+ <20250506224720.5cbcf3e1@booty>
+From: Liu Ying <victor.liu@nxp.com>
+Content-Language: en-US
+In-Reply-To: <20250506224720.5cbcf3e1@booty>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SI2P153CA0003.APCP153.PROD.OUTLOOK.COM
+ (2603:1096:4:140::20) To AM7PR04MB7046.eurprd04.prod.outlook.com
+ (2603:10a6:20b:113::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC net-next 00/15] Add support for Silicon Labs CPC
-To: =?UTF-8?Q?Damien_Ri=C3=A9gel?= <damien.riegel@silabs.com>,
- Andrew Lunn <andrew@lunn.ch>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Silicon Labs Kernel Team <linux-devel@silabs.com>,
- netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>,
- Alex Elder <elder@kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, greybus-dev@lists.linaro.org
-References: <20250512012748.79749-1-damien.riegel@silabs.com>
- <6fea7d17-8e08-42c7-a297-d4f5a3377661@lunn.ch>
- <D9VCEGBQWBW8.3MJCYYXOZHZNX@silabs.com>
- <f1a4ab5a-f2ce-4c94-91eb-ab81aea5b413@lunn.ch>
- <D9W93CSVNNM0.F14YDBPZP64O@silabs.com>
-Content-Language: en-US
-From: Alex Elder <elder@ieee.org>
-In-Reply-To: <D9W93CSVNNM0.F14YDBPZP64O@silabs.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM7PR04MB7046:EE_|GVXPR04MB10899:EE_
+X-MS-Office365-Filtering-Correlation-Id: dc020111-7e3a-4b19-bcc6-08dd98dcb4a2
+X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+ =?utf-8?B?QVVrN0hRN3owNHZhNmRhS1BTUVZhVzR3VkRubG9wSHZxK1lFS3p2RUhNSEs2?=
+ =?utf-8?B?TGFUaDBvdUxmQ3h4MWt2czZDOVhzeFMyam9ScnZxVGNUQkRFYWZDd3hJaTc1?=
+ =?utf-8?B?bUlRT0xLdEpKVk9WOUtqcklyb1RqZ3dTWk1YZ2hTaVlrNUJjN09Ialc5ZUZp?=
+ =?utf-8?B?N2FyTkZHYjB3VzE4d1JHR0VPTEh6TzdpM0J4NGJPNGRsVEZ3RklMdVJ3NnBW?=
+ =?utf-8?B?OFIwaW5qbHlWQklPcnZXZGxra2NkUVpRWnQvbjBBV01ncTd5ZXdGOEdRTnFq?=
+ =?utf-8?B?d3dpbWNmZEZhRHJFeU1mRlRxNUcyTTlrUXZGRVhxVjhYNHJyaDRSTm1TbzJS?=
+ =?utf-8?B?V0RyQUgva2I1WW9OSytMNUQzdUxRWkRmYVdiWE5hZXp2bkJvWi95bjJtZkhx?=
+ =?utf-8?B?N29hSGxxMGlZaGU4MzZjemo0a25PNUtWdmR4WjMwOTZBZlg0N3FMNHNHWEk4?=
+ =?utf-8?B?MnhNRElzTHF3YjgvbjlhRExEZ2VQYy9SZVlzMnRTLzJPMDJlUFV6K3lmYkJo?=
+ =?utf-8?B?YjhSTHgrYW1QUE1mQlk4L3JsMkMwa09DNzd4QksyL1IrME5rLzlLYkJPZXdh?=
+ =?utf-8?B?NllYRVlpaUF6WmloSitzZ0l5YllrV2hma3gxZmdGcDgwQk5rQlFySzJPMmdh?=
+ =?utf-8?B?MHVjTTY1a1RoSFpiVDdobTMwWG1qOGQyanFudVJERmo2TGFEeVlNVnNTc3Fl?=
+ =?utf-8?B?ZjI1YzlwRVY2dVpjbjMwVmNaejZ5VWxMdGVYNVFUd0EvbmVrcVhHQkZ5VlNq?=
+ =?utf-8?B?TEpnWGZiNmVmNWV5TjVJZkpDSklDc2JJWnNDL1ptSnpMeVIxVXdTWG9ld2Nw?=
+ =?utf-8?B?dlhPemlCRTZ6T1hzbVlvZXNzcGZrakc3V2hzY0hTTWY5YiszMUEwMjlMMDE5?=
+ =?utf-8?B?dE5BTlhYWWZ3V1JJa0hKUFBsU1ZaZDE1MlVOMEhqNnA2UEFuUzBCNWdSek1h?=
+ =?utf-8?B?UFU2SlpDNkk5UzdRZWFMb0RyQ0tOWnE0OG9mR0V1YTkrWjEwbHRlQWNLdE8y?=
+ =?utf-8?B?dnI3YUY1empJZkQrY2VjV21ISndjMlBzZmRXWkhoeVVzY3dTb2xUM2tHbXdx?=
+ =?utf-8?B?UVJxNHY1VW1WK1VRVDlGd3QrZUgvNlR3MVMxUEkwNEc0bHY0REpQWUhBOTkw?=
+ =?utf-8?B?dWRzcmdXRjZtK3kxOGcyclBQTkNGSU5IdW04OE9hSFA4cE5MbU9XY3ZwcEt2?=
+ =?utf-8?B?SkV2MWVycU5MUGoxZEN4TTRhSVVTbVI1WjlSZXB1RUJOb2xMNlB0L21HbFlk?=
+ =?utf-8?B?YWxWWjQ1TUFjQy9DMnlKTm12amNqM2VSYkFJOTFESXFKRy9uM1UzV2diOVAv?=
+ =?utf-8?B?VmhLT0ZRVlF5VVFFcnM2b2MvQkxtNWxkRVlzeEhrNlBEbENLY0pISkJQN1lJ?=
+ =?utf-8?B?ZTBSYmVnWlJtNnd5dWxqWGtSMURtaTZxWnBreDZpZ0xLZkhaNjhlRnRaWTBM?=
+ =?utf-8?B?SHZBTDZKbFBxZXRmS01tRWJESExuRVBNU0ZHcUY3UnMwMG1qYVJxSXZPWXFP?=
+ =?utf-8?B?dWwrRkV0eEpYVDBwdkd1dkxQMGZZVTVmZElNb1U3SjIyTkVnelRsVjNaVSt2?=
+ =?utf-8?B?TU85enF2cWpDQmNLSEJiS3Q4UVYzenV0SUpIMmdPbGdDM0dRODdvYVAxVFZk?=
+ =?utf-8?B?TGJLVFl6UnBXcU8wSHJOY08rM2wvVndKNEZqYUV4K0lNbThoaXFoZ3NXdVdJ?=
+ =?utf-8?B?cHJETXVDemlzbzVaWTlvbW9Ld1VsS0NycXVFbnJQV1NudE1TQWVkS0FGVWpz?=
+ =?utf-8?B?OVhxQmI5bFA5RTZERzlsQ2xTYmVRQWhWKzlQSHJpSk1nTFR1ZFo5N3lkWVhs?=
+ =?utf-8?B?cFhmR2ZVazRJOVVHRWIyNjhENkdvWTNFSXBKcDFTOVlkMGUyd1A4Z0t5UDdB?=
+ =?utf-8?B?eVBFbE1DcThrN28wRllTdU10ZG8wV21Kd2FFeVRWOWZReGttTHVYbDM1Z1I1?=
+ =?utf-8?Q?eN7Mh6S5LVc=3D?=
+X-Forefront-Antispam-Report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7046.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+ =?utf-8?B?MU9UaVR5T2Fwd3czNzRidVlyYVg2MXF0eFJOTmZCMUtOZWVKa3NkcS9JRS9r?=
+ =?utf-8?B?TTV0cFV3MFRDcmNudGFaWG1Ydll0WlhZVEl4TzJMSnBkN0J0SC9SME0yNGhQ?=
+ =?utf-8?B?VDVLYjJoK1RieWxZVFNTN1lSaEpjRmdycW9WQXRoOVg0SkNna1VUTkR0aWNP?=
+ =?utf-8?B?RnRrbTE2THRNcUZqTTFlQ3JKZDVLdmE0NVVPRlg3QXl0MTMzN1JaalFmRnlq?=
+ =?utf-8?B?T3F4UWpDcDEza1dCOU53cU9HbVgvWjFUTGJtTGM2bXlQSXcyenJ0dEJmR2ZX?=
+ =?utf-8?B?cUlQc3UrWVo2OVJ4VjVtY0ttSFRybHVUbzBaNlJrK0xzRGV5Smcva0VHRVRn?=
+ =?utf-8?B?bW55elVLTVprZXpNTkY4K0hqaG50TmthMG90eGlDcktQd2d2bjVNTFFwc1Zk?=
+ =?utf-8?B?U3ZBTFhHUzRvd0VXdGxrcFpodksySmxWbk40dmZXL1Q5L3BNQkF1OEUzdVlO?=
+ =?utf-8?B?ZFBiVHp6cGlhSG5hTEJJQWhyNXg5bmV4bnRoWWI2cjBueDVndzV0bURDOWRo?=
+ =?utf-8?B?RHBhU2xReDJrUUhMR1A1dGlJSFllQVhDMjM1OGlBY1BiZDRFeXVaRXJCeE5H?=
+ =?utf-8?B?RTR6NXkwQkRCSXcxZERPMHEwUlFqOWMxdmlzZlRNY1ZKS0p4UkQ1cExLQnF6?=
+ =?utf-8?B?ZWFOMkNWR1JZZU9LaVBhTHVHczBWR3RxSnBqR09vVmNFRnlRUzl3VXNLSVdo?=
+ =?utf-8?B?cWpDM3FLKzBVbDVEcDdrU3g4M1drd2RwNSsvaFppM0NyK0VtdHpkazZYUkNw?=
+ =?utf-8?B?NUdYVmhsbXRTYk4vaGRyZDJmeHlkMkNma3FMYlZQcCsvUWoxdkVHNWdlM2Fr?=
+ =?utf-8?B?eVFiL204V2w2SDF0OE1hd3h4RzZ1TlJlWjR6TzNXWEoxVk5FNTR2WnNSVytJ?=
+ =?utf-8?B?ZEJiWXZQWnVha0pYUU5oZUxIMk0zdUt6THpCVkNTUmJHeFZ0YzF4MjkvM3ZD?=
+ =?utf-8?B?emFuMjFHNHdUREU0NWtUR01vak1XaVZIZTNSUUlSV0U4eVM2OGt4Z0FVV1Uv?=
+ =?utf-8?B?QkhqMmFsMkJ0WHZQRlRsQ25oS25PdHYwRHFHbzJFbFV0MTViOTh1ekYvUmd1?=
+ =?utf-8?B?a29waVJvOGt6VHZkZWRza1pLdVBXc05nSkNqQ2NUbGRxaXltRDN2UEJOWlNw?=
+ =?utf-8?B?cGRZckxTSnVYNUhXbG9ZWDlnZFp5OTRId3I2NEZFMnEzeUdYQUNlU0V3SE9v?=
+ =?utf-8?B?UU92SGRnM0laSERxRTVjS1I5Q21kREhLdERZajNJTEJVOUhqOUNVTEloRDA4?=
+ =?utf-8?B?SkwyUWlpZmhOU2w3WWgxeWVhZlBzNGtSblhNaTF3Vy9pK3llME5DdmM1Y0F3?=
+ =?utf-8?B?U2NLK1F2cUJNVzJ6OWpweTlsdkJNOHVRMVB1eVVGN1ByVWY0YmEvbjFzTVJp?=
+ =?utf-8?B?alNXYUkwclhVdDBWOFFGaEljTXUyb3Fzelh6Sk9Ta3c5bmdJTkN4QjFvQStu?=
+ =?utf-8?B?UUd3bFQ1aWFXYjMxY2dPVWdkRmFYdGNzV05NeFRjbHp4cnMzUkF0ajB4aCtq?=
+ =?utf-8?B?enYzSzRXUUQ0UXJiWWJyNExjTktZdG53THZMalpiV1o1bStuTytoWVRXWVNM?=
+ =?utf-8?B?V3lkdWdEcGYzc2dRYnQrNi9maERWWjFMR0c1L1VGODk1NW1DMGFCZ2dNVkVv?=
+ =?utf-8?B?MWpwWXIxdHJTUEwxQndYNXZQNytpSS93T3p6cCtRL3F0M3FnbEtZY2VBWlRl?=
+ =?utf-8?B?UFZhSW5yMk10VVNyRGlKdDN3RUtPT3RxWUxaSWttczRqRDVkZDlIRERGMWJY?=
+ =?utf-8?B?V3gwVGpldjBJOFdoa0hrMmhJM2xnZXhVRjdLRWxPUVVXcEZPYU1IZ0V4RDRB?=
+ =?utf-8?B?cjF0Z0NOYUNiYjFiRTk4U2dHS3VlVVFKNG5KMHlxTm8vRTRTVFZuOWE2Q1ZE?=
+ =?utf-8?B?d0RiM1hTZWwrMlpyVGRLSFE1VXNEMEpiYlhmUUV5QXhuUFFlaXBULzlqLytX?=
+ =?utf-8?B?amVYTTlTamdRTmFqRlZUSW8wdEhVM0syZlpwbFVvY0pxSjQ1OGpxampmYlo2?=
+ =?utf-8?B?a2VaTERxdXhlamJHS1k2dlNvQm5ITlV2c0prcHFoUFVqNUk0L3dlM09sM2FT?=
+ =?utf-8?B?alRuSlRHaGc1WXFINDRvUEVjMkRlenlhMnB2YjJ1WHlLOE9SUmJvdVRWamhw?=
+ =?utf-8?Q?+Tu4RGMePQ/0U0pmBcAJpIIeb?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dc020111-7e3a-4b19-bcc6-08dd98dcb4a2
+X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7046.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2025 02:59:45.1266
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: v0gHnvJ2YeyLuPQQQ8mcski1SO2z9xfCS02HFJP96rKtJrCx/3P+cSaeO5gPB65j0Dcdva//2HXAEu0BqnX4wA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR04MB10899
 
-On 5/14/25 5:52 PM, Damien Riégel wrote:
-> On Tue May 13, 2025 at 5:53 PM EDT, Andrew Lunn wrote:
->> On Tue, May 13, 2025 at 05:15:20PM -0400, Damien Riégel wrote:
->>> On Mon May 12, 2025 at 1:07 PM EDT, Andrew Lunn wrote:
->>>> On Sun, May 11, 2025 at 09:27:33PM -0400, Damien Riégel wrote:
->>>>> Hi,
->>>>>
->>>>>
->>>>> This patchset brings initial support for Silicon Labs CPC protocol,
->>>>> standing for Co-Processor Communication. This protocol is used by the
->>>>> EFR32 Series [1]. These devices offer a variety for radio protocols,
->>>>> such as Bluetooth, Z-Wave, Zigbee [2].
->>>>
->>>> Before we get too deep into the details of the patches, please could
->>>> you do a compare/contrast to Greybus.
->>>
->>> Thank you for the prompt feedback on the RFC. We took a look at Greybus
->>> in the past and it didn't seem to fit our needs. One of the main use
->>> case that drove the development of CPC was to support WiFi (in
->>> coexistence with other radio stacks) over SDIO, and get the maximum
->>> throughput possible. We concluded that to achieve this we would need
->>> packet aggregation, as sending one frame at a time over SDIO is
->>> wasteful, and managing Radio Co-Processor available buffers, as sending
->>> frames that the RCP is not able to process would degrade performance.
->>>
->>> Greybus don't seem to offer these capabilities. It seems to be more
->>> geared towards implementing RPC, where the host would send a command,
->>> and then wait for the device to execute it and to respond. For Greybus'
->>> protocols that implement some "streaming" features like audio or video
->>> capture, the data streams go to an I2S or CSI interface, but it doesn't
->>> seem to go through a CPort. So it seems to act as a backbone to connect
->>> CPorts together, but high-throughput transfers happen on other types of
->>> links. CPC is more about moving data over a physical link, guaranteeing
->>> ordered delivery and avoiding unnecessary transmissions if remote
->>> doesn't have the resources, it's much lower level than Greybus.
->>
->> As is said, i don't know Greybus too well. I hope its Maintainers can
->> comment on this.
->>
->>>> Also, this patch adds Bluetooth, you talk about Z-Wave and Zigbee. But
->>>> the EFR32 is a general purpose SoC, with I2C, SPI, PWM, UART. Greybus
->>>> has support for these, although the code is current in staging. But
->>>> for staging code, it is actually pretty good.
->>>
->>> I agree with you that the EFR32 is a general purpose SoC and exposing
->>> all available peripherals would be great, but most customers buy it as
->>> an RCP module with one or more radio stacks enabled, and that's the
->>> situation we're trying to address. Maybe I introduced a framework with
->>> custom bus, drivers and endpoints where it was unnecessary, the goal is
->>> not to be super generic but only to support coexistence of our radio
->>> stacks.
->>
->> This leads to my next problem.
->>
->> https://www.nordicsemi.com/-/media/Software-and-other-downloads/Product-Briefs/nRF5340-SoC-PB.pdf
->> Nordic Semiconductor has what appears to be a similar device.
->>
->> https://www.microchip.com/en-us/products/wireless-connectivity/bluetooth-low-energy/microcontrollers
->> Microchip has a similar device as well.
->>
->> https://www.ti.com/product/CC2674R10
->> TI has a similar device.
->>
->> And maybe there are others?
->>
->> Are we going to get a Silabs CPC, a Nordic CPC, a Microchip CPC, a TI
->> CPC, and an ACME CPC?
->>
->> How do we end up with one implementation?
->>
->> Maybe Greybus does not currently support your streaming use case too
->> well, but it is at least vendor neutral. Can it be extended for
->> streaming?
+On 05/07/2025, Luca Ceresoli wrote:
+
+[...]
+
+>> After looking into this patch and patch 31(though I've already provided my A-b)
+>> more closely, I think the imx8qxp_pc and imx8{qm,qxp}_ldb main structures
+>> should have the same life time with the embedded DRM bridges, because for
+>> example the clk_apb clock in struct imx8qxp_pc would be accessed by the
+>> imx8qxp_pc_bridge_mode_set DRM bridge callback.  But, IIUC, your patches extend
+>> the life time for the embedded channel/bridge structures only, but not for the
+>> main structures.  What do you think ?
 > 
-> I get the sentiment that we don't want every single vendor to push their
-> own protocols that are ever so slightly different. To be honest, I don't
-> know if Greybus can be extended for that use case, or if it's something
-> they are interested in supporting. I've subscribed to greybus-dev so
-> hopefully my email will get through this time (previous one is pending
-> approval).
-
-Greybus was designed for a particular platform, but the intention
-was to make it extensible.  It can be extended with new protocols,
-and I don't think anyone is opposed to that.
-
-> Unfortunately, we're deep down the CPC road, especially on the firmware
-> side. Blame on me for not sending the RFC sooner and getting feedback
-> earlier, but if we have to massively change our course of action we need
-> some degree of confidence that this is a viable alternative for
-> achieving high-throughput for WiFi over SDIO. I would really value any
-> input from the Greybus folks on this.
-
-I kind of assumed this.  I'm sure Andrew's message was not that
-welcome for that reason, but he's right about trying to agree on
-something in common if possible.  If Greybus can solve all your
-problems, the maintainers will support the code being modified
-to support what's needed.
-
-(To be clear, I don't assume Greybus will solve all your problems.
-For example, UniPro provides a reliable transport, so that's what
-Greybus currently expects.)
-
-I have no input on your throughput question at the moment.
-
-					-Alex
-
->> And maybe a dumb question... How do transfers get out of order over
->> SPI and SDIO? If you look at the Open Alliance TC6 specification for
->> Ethernet over SPI, it does not have any issues with ordering.
+> I see you concern, but I'm sure the change I'm introducing is not
+> creating the problem you are concerned about.
 > 
-> Sorry I wasn't very clear about that. Of course packets are sent in
-> order but several packets can be sent at once before being acknowledged
-> and we might detect CRC errors on one of these packets. CPC takes care
-> of only delivering valid packets, and packets that come after the one
-> with CRC error won't be delivered to upper layer until the faulty one is
-> retransmitted.
-> 
-> I took a look at the specification you mentioned and they completely
-> delegate that to upper layers:
-> 
->      When transmit or receive frame bit errors are detected on the SPI,
->      the retry of frames is performed by higher protocol layers that are
->      beyond the scope of this specification. [1]
-> 
-> Our goal was to be agnostic of stacks on top of CPC and reliably
-> transmit frames. To give a bit of context, CPC was originally derived
-> from HDLC, which features detecting sequence gaps and retransmission. On
-> top of that, we've now added the mechanism I mentioned in previous
-> emails that throttle the host when the RCP is not ready to receive and
-> process frames on an endpoint.
-> 
-> [1] https://opensig.org/wp-content/uploads/2023/12/OPEN_Alliance_10BASET1x_MAC-PHY_Serial_Interface_V1.1.pdf (Section 7.3.1)
+> The key aspect is that my patch is merely changing the lifetime of the
+> _allocation_ of the drm_bridge, not its usage. On drm_bridge_remove()
+> the bridge is removed from its encoder chain and it is completely not
+> reachable, both before and after my patch. With my patch it is not
 
+drm_bridge_remove() only removes a bridge from the global bridge_list defined
+in drm_bridge.c.  drm_bridge_detach() is the one which removes a bridge from
+it's encoder chain.  It looks like you wrongly thought drm_bridge_remove()
+is drm_bridge_detach().  So, even if drm_bridge_remove() is called, the removed
+bridge could still be in it's encoder chain, hence an atomic commit could still
+access the allocated bridge(with lifetime extended) and the clock_apb clock
+for example in struct imx8qxp_pc could also be accessed.  That's why I think
+the main structures should have the same lifetime with the allocated bridge.
+
+> freed immediately, but it's just a piece of "wasted" memory that is
+> still allocated until elsewhere in the kernel there are pointers to it,
+> to avoid use-after-free.
+> 
+> With this explanation, do you think my patch is correct (after fixing
+> the bug we already discussed of course)?
+> 
+> Best regards,
+> Luca
+> 
+
+-- 
+Regards,
+Liu Ying
