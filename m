@@ -1,133 +1,138 @@
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0994C13D
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 01:00:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93F5F33F7;
+	Thu, 22 May 2025 01:02:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747875629; cv=none; b=qRd+jjfRHDMdOS9dB6N8BkQP+8hdbain6JXbFIYrLc93m69/tdZNh1AA3p2l8j/C99iE6wQOmkRv0GjvFr1h7D+/Jtet3wb6rgTUi2Hxx66v00pbvHAFMYh2rQnN94sB7xS/xjftYtFvJN2JtYNbraCX+ns26CTUqx6wRN2T88M=
+	t=1747875725; cv=none; b=CPRuNdUxlsJmkwAo/NHjtli80GE4SYwWRzmqUj9IswaPmI4397W7s8MCC2FQUtyNCWJE6uoqQ2XtMb+pHhX9tyqqAhw1g9+NaLKMi++HEOKaPx5EfRq0qhY6wz/Ymc6T3iefZiliKS307V6uOYPgriGFS0lqci+Flu9yKmSAj+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747875629; c=relaxed/simple;
-	bh=WxIlv9jW4Arh7tSQEZ2nBzbxy3ddO06a/o6KaenAb7M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FwxdCK/mOc1BB7LWgb4+9aPlflWr4JIgsYZYmEiSldvIFmr4KACp3qIK/Q3lS6pFIxzFyE0G5UTtxFMLS/zC5oAlCcxWBe8V24yR47fWmfqb+gQFtb8qorJMlPixbkXLpaQ810dLaEzh5KZc63GRz9Nfj66APGJ1oM2qtsQHDII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cq3GEfjx; arc=none smtp.client-ip=209.85.219.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cq3GEfjx"
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e694601f624so5507370276.1
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 18:00:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747875626; x=1748480426; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=93V/Ukr46/zUxI5qbprXiqf9vu9M6wpGQ8h8nKlCUys=;
-        b=cq3GEfjxBYg+IyUea8p0CxJjZGqfW4ZO39ZtH1pLwskrXfY/ownC6ffxqTuFnPBHwq
-         NQ4fG8hL4xQbzKaRMUtb9XAUgRY2b6r0cZ/+7wuLY7Dz/Qjr35SVbVDxzoX37K6AjkPX
-         dBXcydZ190MaIZ0u0RCxY2/+Px37REQi9gz7LOcGomcD63drznnAoWQ2hSCfbxx4Cf/S
-         DmR1N6pmI3EUlOiiSXC+H67C8l5FJUtd0BaTsJcSWwx+81x7Dort5uFgMc13Y5JPHcg7
-         drZ3r3eGrbX7OOmrX1KaIxfFsVRdDHUvNY7R0CaCTEH92HW+EupX/Txm0tv+1dkfpyeG
-         wvOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747875626; x=1748480426;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=93V/Ukr46/zUxI5qbprXiqf9vu9M6wpGQ8h8nKlCUys=;
-        b=I6+ohJdGqOcpjQetpXu5MpWWiFiiOjdLN44AegaCCcR69Bxhju9nc3UHOA1Ua4uU+q
-         7XpaCkrEahM9BbqmEMyWeSGfhX4+8DiTuuVt+RZanpNGVbgWSW//+H40UVfVp/IOlG2E
-         DZlzPoF9o/IVGGAaI+eI6jR1jVrXw0qLGrjefjA1eGmWIWDhvR8k8I/5a30wO/G1VAeL
-         XTAo4BBj9UjMOczGQv3jrF/h/XdR29yeF8iIQuH/iGiHF2P7D0pWxita7BuLx2UBwWY4
-         G28m6DSeHSquX/97YlDnjJ4H4KCE0gsZB/zPB1L189O2Q41bDUNx1LBPuN7mCVwwLgio
-         Mjew==
-X-Forwarded-Encrypted: i=1; AJvYcCULqaCju3prRVwcHk3NcaeCXCcPDzDOgEi40za8w5/aKspd1/GTzZMtT4WZe0g8oDbZmIB/tBYtFrpbQ0o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOc+14BlNEQ339Afs8LMvyJu2VveNvLA/JXoKtpfJlapd+uAgv
-	lpf3+0JG8Hi0uBgg+PtfAxoN0ShiB1CZJZC2WeQlLJAexYYFSDj2EF6D
-X-Gm-Gg: ASbGncsw2+PEWFB0vOo5E83fzy1j1w6Jhwl5j73Jog+R2mjg7vLoewZ8hLAsSSPAH0V
-	QvpL4O1oeqY6y21d1fvbnH6m0lmOtyptN3PuIwjI6K70tTsQl4yIaJFkjgO+lpGETc8q+uMmc+F
-	PwtToFm+hH+nZht911r9d/HXNYdLX6iL41Rp9l2K/C5V9iaqnN5Eqn0u/owYXo6uk8unt/tOsmy
-	9PwoC/cJl/mqrBIc0F9z1PfJ4SEOsWf5WkawJ07dpLpu6YmWciWNQBVBgnpVG9xBtmFT5at/iSv
-	Ugx58oFGB1CAKg7MLJs7Mrc3ANrj8sqB1enptMx7dtkIkNfCuDLdgt6YCqum6Rrf/8/ewQ+LAhH
-	VUz2fOQaTL2JM
-X-Google-Smtp-Source: AGHT+IHyhsF7WtWhEVCAXjNJHaUq4eRTzhpMDtt93t8UCBYD1QyzmhPHMkS7ZbzQ7J+cr63omA1A8A==
-X-Received: by 2002:a05:6902:2385:b0:e7b:95eb:be93 with SMTP id 3f1490d57ef6-e7b95ebd2efmr23331627276.33.1747875626481;
-        Wed, 21 May 2025 18:00:26 -0700 (PDT)
-Received: from maquina-virtual-para-linux.. ([191.156.36.62])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e7b85b4448bsm3744771276.35.2025.05.21.18.00.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 18:00:26 -0700 (PDT)
-From: Donny Turizo <donnyturizo13@gmail.com>
-To: gregkh@linuxfoundation.org
-Cc: linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Donny-Dev <donnyturizo13@gmail.com>
-Subject: [PATCH] [PATCH v3] staging: rtl8723bs: rename _Read_EEPROM to _read_eeprom
-Date: Thu, 22 May 2025 01:00:19 +0000
-Message-ID: <20250522010019.24779-1-donnyturizo13@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1747875725; c=relaxed/simple;
+	bh=+KZuYa6hzZ+YGJxjVtRTfGAXCLTKEjv57gJd0aKTKPM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JmI3xS5Uamt6e02YNaS6ov5WU0HaesY4hEdXmr/FHwaXB09B5tN3LlMt5yY5aF3yOVQry9KM1/kQvogzLyCfgQ8D+VVB6JwsyfOGz/hGEc/JzeZ1NcIYDV2oiNNTi1htfV8y/Q3F5RH0kXaDNpcpR2W7B7ddXA9tp7xlyXLtmz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4b2qkc2mbczKHMVC;
+	Thu, 22 May 2025 09:02:00 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id DE1061A018D;
+	Thu, 22 May 2025 09:01:58 +0800 (CST)
+Received: from [10.174.176.88] (unknown [10.174.176.88])
+	by APP4 (Coremail) with SMTP id gCh0CgAHa1+Edy5ofVaCNA--.14635S3;
+	Thu, 22 May 2025 09:01:58 +0800 (CST)
+Message-ID: <f6a9c6ef-1fd8-41d2-8f6a-396b6b191f97@huaweicloud.com>
+Date: Thu, 22 May 2025 09:01:56 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] fs: Rename the parameter of mnt_get_write_access()
+To: Zizhi Wo <wozizhi@huaweicloud.com>, viro@zeniv.linux.org.uk,
+ brauner@kernel.org, jack@suse.cz, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: yangerkun@huawei.com
+References: <20250516032147.3350598-1-wozizhi@huaweicloud.com>
+From: Zizhi Wo <wozizhi@huaweicloud.com>
+In-Reply-To: <20250516032147.3350598-1-wozizhi@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgAHa1+Edy5ofVaCNA--.14635S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxXrWUAryUuFyruw48KryrXrb_yoW5GF48pr
+	W5KF98Kw4xAF129rnrAa9xXa4rW340kFW7K34UWw45ZFZ8Zr1aga40gr1Iqr18Ar97ZrWx
+	WF40y3sxX342v37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkv14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_JF0_
+	Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxV
+	WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI
+	7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
+	1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
+	42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUBVbkUUUUU=
+X-CM-SenderInfo: pzr2x6tkl6x35dzhxuhorxvhhfrp/
 
-From: Donny-Dev <donnyturizo13@gmail.com>
+Hello!
 
-Fixes a checkpath warning by renaming the function
-_Read_EEPROM to follow the kernel coding style (snake_case).
+There are currently two possible approaches to this patch.
+The first is to directly change the declaration, which would be
+straightforward and involve minimal modifications.
 
-Signed-off-by: Donny Turizo <donnyturizo13@gmail.com>
----
- drivers/staging/rtl8723bs/core/rtw_cmd.c         | 2 +-
- drivers/staging/rtl8723bs/include/rtw_cmd.h      | 2 +-
- drivers/staging/rtl8723bs/include/rtw_mlme_ext.h | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+However, per Al Viro's suggestion — that "mnt for vfsmount, m for mount" 
+is an informal convention. This is in line with what the current
+patch does, although I understand Jan Kara might feel that the scope of 
+the changes is a bit large.
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_cmd.c b/drivers/staging/rtl8723bs/core/rtw_cmd.c
-index 49bcefb5e8d2..a0b85beffe5d 100644
---- a/drivers/staging/rtl8723bs/core/rtw_cmd.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_cmd.c
-@@ -15,7 +15,7 @@ static struct _cmd_callback rtw_cmd_callback[] = {
- 	{GEN_CMD_CODE(_Write_BBREG), NULL},
- 	{GEN_CMD_CODE(_Read_RFREG), &rtw_getbbrfreg_cmdrsp_callback},
- 	{GEN_CMD_CODE(_Write_RFREG), NULL}, /*5*/
--	{GEN_CMD_CODE(_Read_EEPROM), NULL},
-+	{GEN_CMD_CODE(_read_eeprom), NULL},
- 	{GEN_CMD_CODE(_Write_EEPROM), NULL},
- 	{GEN_CMD_CODE(_Read_EFUSE), NULL},
- 	{GEN_CMD_CODE(_Write_EFUSE), NULL},
-diff --git a/drivers/staging/rtl8723bs/include/rtw_cmd.h b/drivers/staging/rtl8723bs/include/rtw_cmd.h
-index cb44119ce9a9..e4e7e350d0fc 100644
---- a/drivers/staging/rtl8723bs/include/rtw_cmd.h
-+++ b/drivers/staging/rtl8723bs/include/rtw_cmd.h
-@@ -636,7 +636,7 @@ enum {
- 	GEN_CMD_CODE(_Write_BBREG),
- 	GEN_CMD_CODE(_Read_RFREG),
- 	GEN_CMD_CODE(_Write_RFREG), /*5*/
--	GEN_CMD_CODE(_Read_EEPROM),
-+	GEN_CMD_CODE(_read_eeprom),
- 	GEN_CMD_CODE(_Write_EEPROM),
- 	GEN_CMD_CODE(_Read_EFUSE),
- 	GEN_CMD_CODE(_Write_EFUSE),
-diff --git a/drivers/staging/rtl8723bs/include/rtw_mlme_ext.h b/drivers/staging/rtl8723bs/include/rtw_mlme_ext.h
-index 2080408743ef..63373d665d4f 100644
---- a/drivers/staging/rtl8723bs/include/rtw_mlme_ext.h
-+++ b/drivers/staging/rtl8723bs/include/rtw_mlme_ext.h
-@@ -684,7 +684,7 @@ enum {
- 	GEN_EVT_CODE(_Read_MACREG) = 0, /*0*/
- 	GEN_EVT_CODE(_Read_BBREG),
- 	GEN_EVT_CODE(_Read_RFREG),
--	GEN_EVT_CODE(_Read_EEPROM),
-+	GEN_EVT_CODE(_read_eeprom),
- 	GEN_EVT_CODE(_Read_EFUSE),
- 	GEN_EVT_CODE(_Read_CAM),			/*5*/
- 	GEN_EVT_CODE(_Get_BasicRate),
+I would appreciate any suggestions or guidance on how to proceed. So
+friendly ping...
 
-base-commit: a481f0ebf213e0ccb85f70c07bfcd733d2dc6783
-prerequisite-patch-id: 669780b7fd46182223f192ddc59e8fe8a549c490
-prerequisite-patch-id: d6c04e7cdd735e1491a1e60522a1724b7e122af4
--- 
-2.43.0
+在 2025/5/16 11:21, Zizhi Wo 写道:
+> From: Zizhi Wo <wozizhi@huawei.com>
+> 
+> Rename the parameter in mnt_get_write_access() from "m" to "mnt" for
+> consistency between declaration and implementation.
+> 
+> Signed-off-by: Zizhi Wo <wozizhi@huawei.com>
+> ---
+>   fs/namespace.c | 14 +++++++-------
+>   1 file changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/fs/namespace.c b/fs/namespace.c
+> index 1b466c54a357..b1b679433ab3 100644
+> --- a/fs/namespace.c
+> +++ b/fs/namespace.c
+> @@ -483,7 +483,7 @@ static int mnt_is_readonly(struct vfsmount *mnt)
+>    */
+>   /**
+>    * mnt_get_write_access - get write access to a mount without freeze protection
+> - * @m: the mount on which to take a write
+> + * @mnt: the mount on which to take a write
+>    *
+>    * This tells the low-level filesystem that a write is about to be performed to
+>    * it, and makes sure that writes are allowed (mnt it read-write) before
+> @@ -491,13 +491,13 @@ static int mnt_is_readonly(struct vfsmount *mnt)
+>    * frozen. When the write operation is finished, mnt_put_write_access() must be
+>    * called. This is effectively a refcount.
+>    */
+> -int mnt_get_write_access(struct vfsmount *m)
+> +int mnt_get_write_access(struct vfsmount *mnt)
+>   {
+> -	struct mount *mnt = real_mount(m);
+> +	struct mount *m = real_mount(mnt);
+>   	int ret = 0;
+>   
+>   	preempt_disable();
+> -	mnt_inc_writers(mnt);
+> +	mnt_inc_writers(m);
+>   	/*
+>   	 * The store to mnt_inc_writers must be visible before we pass
+>   	 * MNT_WRITE_HOLD loop below, so that the slowpath can see our
+> @@ -505,7 +505,7 @@ int mnt_get_write_access(struct vfsmount *m)
+>   	 */
+>   	smp_mb();
+>   	might_lock(&mount_lock.lock);
+> -	while (READ_ONCE(mnt->mnt.mnt_flags) & MNT_WRITE_HOLD) {
+> +	while (READ_ONCE(m->mnt.mnt_flags) & MNT_WRITE_HOLD) {
+>   		if (!IS_ENABLED(CONFIG_PREEMPT_RT)) {
+>   			cpu_relax();
+>   		} else {
+> @@ -530,8 +530,8 @@ int mnt_get_write_access(struct vfsmount *m)
+>   	 * read-only.
+>   	 */
+>   	smp_rmb();
+> -	if (mnt_is_readonly(m)) {
+> -		mnt_dec_writers(mnt);
+> +	if (mnt_is_readonly(mnt)) {
+> +		mnt_dec_writers(m);
+>   		ret = -EROFS;
+>   	}
+>   	preempt_enable();
 
