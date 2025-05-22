@@ -1,74 +1,66 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 662C429A32F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9477F29AAF0
 	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 19:03:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747940631; cv=none; b=RR+holiSVdzu5xNZxE6IlKZHFWUIW68cZCaFrUpI8XF9aNI/+CaG+6Pk0nkovckmf5cCPJLEuDgkiQ45kKec6MaGS/s8kiCkX4qQRhz3S1XClGVMvueGpI974JlYj4TVHMBwxIq0x//WhAEmUNoN8cjDCqPd1dI+Nobxk8qMTfE=
+	t=1747940631; cv=none; b=jo23TqXP+SVpY5UaFWKV+RMPeHPE0kzTlRakYqCDHpHc8POiMWSA3myCU4FYcyr14cHFodOR54LOOF62DJqJqXhBrVAWMdDzpD+SlDQ4M774wTamYChIQG6iOJnjC1041EFUG1VbnhnJCS/RfvFx/piJJ4qXU8plD80TZ80HckY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1747940631; c=relaxed/simple;
-	bh=zQxYeUAVHo+xt0jOkEWcT10mYuzzGMKBHrI/C8TQAuU=;
+	bh=H9KzbsOadvXKfagdeIiEb89m8/n30ul8CWjn2anZ1Ww=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=TjbOwsF+63Y/vQB6N5AX5UC4jC+VM1+aPyPcdxW24raqf51E/uD1wV0pUqHWRBfueFYyN7IEloNb02y2YFAT2ug2Q62RLSePtuvDADGWsdzHvcmny9IkY/UnVHAwmwCcModYHrJJCZoC7Raano06qDl5oxyhYqWt07Q+9NV5uMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Qbu80mvU; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 In-Reply-To:To:Cc; b=RctxZ1M7ZsfMi7OynyxflR3Z9zGObUhhFi+TFCZAoLy/HynYtuoE80j6BU7R0gtNBBGW1hirRP12IMAfwQmq4xNpirwpVO8diNVfCxZwD9JSPxgt/oeqlCJVDwjksuqWZDFRXw1WQ7jJdEIkYAhPalSlGTdiim6jE0aTvWont78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=pr0sl2Ls; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Qbu80mvU"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54M9Fqux004048
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 19:03:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	4Qp7jh1itM43n3wIU7h6lhpLC0Hmbksbm37fexlcjaM=; b=Qbu80mvUioc4fmN7
-	UNATFhvrLnAQflx8F5+aZWsWGXYLV+fRJp6hQ/XNz50V1uvClGLyLRaCMpDyoPQ/
-	vbFpu05XVIJnp4YWRSj6x1sO0hBX9V8mo6KyttbVsuU1P6m65L/i6CBHa+StCfUz
-	fwf7buYsIxa5GepOdVwhtU6saBm1Ii/JofAmgpDZtc5cczaNdchj4+3zMg/c70S3
-	z+8Tr4aHA+T34j4ZV+fo+PjcO25xdUqN+Be1EPX0Sx/nH9sdeaSKNOd8gO5QzODY
-	Ax2dPnY+V+JLGe8i3qFaTG3QLuxcrxJ4Ud4vgQY56Wc73xOPU7LfIpLC6FeUuoRC
-	jltO5g==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwf4ycxp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 19:03:47 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5e2a31f75so256013485a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 12:03:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="pr0sl2Ls"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-b170c99aa49so5601246a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 12:03:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1747940629; x=1748545429; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fDxMnssaauwljQxlk9zc0qXTf5HAsn9k6GC49F2uSIA=;
+        b=pr0sl2LsUduqLrQhnx6l2dXR7ZXc4JQiquUmHnwAF1y/1+cHit834oob72gqtcmymC
+         BYxh39qlf5E8/WpvQN2AlHB3oTZUd4DH7pgpigiboNesh6JFQLyvOFPf2dtX09oCjg5e
+         ek0aMYUqUyJE3OdVMXtK9jZVnrn3JgOKOLhNwyK75Eh1TTdxdWg1XpEMw2h40V6PJgC0
+         6Y3KDaBlsL3pWfu0tO9vTDa84ljX2DxieP9LMNYTSn+Tsmt6NGM0QnQbjB/6E/16OBh6
+         Dbae9HU3lAP+/btiZxghgkKzODEC5HN1faya6t7tS1J0novIVYmQ4PQ4i2uc+A+CRLeU
+         YQ1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747940620; x=1748545420;
+        d=1e100.net; s=20230601; t=1747940629; x=1748545429;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4Qp7jh1itM43n3wIU7h6lhpLC0Hmbksbm37fexlcjaM=;
-        b=F0JFyfz5zJRcFelX4MeFn/3293MLfTu0H0ISoO8AlDbUuGb0d3MoFVkRvA1PBracs3
-         uwOXbcWNNvZtzFAV+CSerOgewnwUAeriCOikrUhDLcj4BIWcIszrWFA8eX3CcOVwPMBE
-         +nDnG6Z5L1/4TlxZ/tAKnIPgtqHKvR421fjigAsg0ZZq9MVETqKxScneAYtVnZqh4Zpt
-         c1T7cQPnkre02meBEQ6f7vMp954esYmfrhs9K5BzzBd2xZlYfPPx0Uu4TD23nOEGhpi6
-         sm2GYVyD6bAwwCBT/ApM0S0NwMIEXyQkQN5mb+XTpyV2GxHrLueHVgc0PVT8rBDXHUyD
-         1HgA==
-X-Forwarded-Encrypted: i=1; AJvYcCWvlLkUm3NmRVGUBKJgGuIRgLOd5K+7sHtUzkgt/JmfhUQDegBvxfrjBlz7TLdcNMj3YZ/yp+PVhzGw2x0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEMi84y7sOPY725aKxd6/SFi2MctoeaSWoYRVnbEUVYM5+6odc
-	VdhYHf2BQhS4MiJfD2Qb0KypYbYze7gDXmSMl5YYRBOEhqdkiKc1NntP0hzvayWvkhos+ZvVgQU
-	AP8rB73iZfhLLN4KsSvbyqmWHq55RX9yd5cX3iQiNGW92z8YfQ7A3jXM/95uBWlC9urE=
-X-Gm-Gg: ASbGncuUVIG4fxNoUqoFvxu2jlwadYmDdbsPdhSdTeS9TTDpcNF7DYKE1V/ML3ncPQ8
-	F8ezODgWUMbktH1ceKTaVJZ5JFH9a+w+YOfyfH6536ka38l+4IpZNQXnr+pOKnt1OvfxL8YlW7n
-	TYk+R0NYDr8n50ssXFDtEaj4e10vg8887m8PSUP4+WRcYDB+BwLeHevW/IFbjemHYYmHe8TIzHN
-	WLU7opSoUt74Hm06TBfpMVql3jdAQJnsaVuim94E07FUxoMwvK51mLNDohmylW6TjKx+nVBy8en
-	LwppYnSTfdw1+vBqglIRM6vDTt9JpepNMMhFhMAKZs0T2bFVyaCJAGqRwHIVFme9ZQv6uSslNkp
-	wcKfdO46BRCyusrkgfRdddkOT
-X-Received: by 2002:a05:620a:404f:b0:7c5:6140:734f with SMTP id af79cd13be357-7cd47f1dbe5mr3834188485a.18.1747940619830;
-        Thu, 22 May 2025 12:03:39 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFUWhtLxfwnjOCeFjmQwfRQz8WK84FyU9B8tUZnS1CJObKXZJplV3E2lQi6/zI5UpsVwRyzxQ==
-X-Received: by 2002:a05:620a:404f:b0:7c5:6140:734f with SMTP id af79cd13be357-7cd47f1dbe5mr3834183385a.18.1747940619425;
-        Thu, 22 May 2025 12:03:39 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e703c2f3sm3482506e87.214.2025.05.22.12.03.37
+        bh=fDxMnssaauwljQxlk9zc0qXTf5HAsn9k6GC49F2uSIA=;
+        b=XZQMIYB+DZEWVHEBM3kfKDPBXEDlDEG+lBB7xfv8qImmDOAH7Fv2vELBPX5tAlAuMs
+         5F6J++kOL8yc4kchrweAkjFUaUjnMyBJTmZS7KWTiv5WUz+k/ydQxxs2XU2R7iBz4PLZ
+         w1p5bFQv8QNLMxm4pyQQ6qIvfZqxJFxN1AULug0T5+0gg+YjgMe4BXxj4NeRgRgg33DH
+         lv1ctGRZWColdz0QzOLqyZ0PQn0buO9xq/IRPVzqGsc3omjol9NWd/4p57GHMFk7W+dv
+         OBPDOY6IICeEleYc4h7T/0oxnfSztFl8/Im3G6eZ8lyZsI4hlgQkLShMvC1tCn7C/oGt
+         R4Aw==
+X-Forwarded-Encrypted: i=1; AJvYcCWT8S2yUT30B8XVA9Y+3vZ9Ectus9l/kaRVLc1sP96eFgaSn57SQUzn2Jq4leYe2gmEvPXgkwKwp8+gYNk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw1t3b0tQdPDtfpS+3SEBFoUhQbohgAERBVm2b95xnHPJv7ishL
+	XfU7pKF9gNNnhvO4RMCx1zBQfW6D+/bDsaPx8GT46w3sAlD6GlntDNn2ieHz9bCL/oI=
+X-Gm-Gg: ASbGncs9qOP8p1BdCNJEqnBgHXalEkKCLqhzM/Hz3e1JF+GUrczV+ebeutua/avhIIZ
+	s/rXXxevspPZ6SXq66O60K9rz8QyVUFfZMubWne+LZauQFGBaxe1bHg1fxNKLE0o/ZFnfclZP0O
+	MXrTbOW2NQ3ugJWm4p3iCmz/kPF2G0omff3wMB0LaAZYA9JtthYXFUJWs3XUwPMI97x1p1FB7NY
+	FYpDl8l/EYRhv3QxeONzxFnKjfk7dH5ZfYdxOZXkZFEi2pFjMi6htdW4OpGZWRmV3kh4WRAewot
+	MOByDENaJ8vdGqkWJrneh2vCu9Ghk9DaVHVvWV7+byGoHuzt9UjVbLKPcXGSdeyX
+X-Google-Smtp-Source: AGHT+IG3oxLFDfbSNt6EH0ZdTZ5dYeLSDKnP9JAmNGN1V7oKcB4sbiLpNV8c6lgFnjfD3N9PA0Fqjg==
+X-Received: by 2002:a17:902:cf09:b0:22d:b240:34fe with SMTP id d9443c01a7336-231d451b294mr410839265ad.25.1747940628742;
+        Thu, 22 May 2025 12:03:48 -0700 (PDT)
+Received: from atishp.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4e9736esm111879155ad.149.2025.05.22.12.03.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 12:03:38 -0700 (PDT)
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Date: Thu, 22 May 2025 22:03:23 +0300
-Subject: [PATCH v5 04/30] drm/msm/dpu: inline _setup_dsc_ops()
+        Thu, 22 May 2025 12:03:48 -0700 (PDT)
+From: Atish Patra <atishp@rivosinc.com>
+Date: Thu, 22 May 2025 12:03:38 -0700
+Subject: [PATCH v3 4/9] drivers/perf: riscv: Implement PMU event info
+ function
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,102 +69,146 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250522-dpu-drop-features-v5-4-3b2085a07884@oss.qualcomm.com>
-References: <20250522-dpu-drop-features-v5-0-3b2085a07884@oss.qualcomm.com>
-In-Reply-To: <20250522-dpu-drop-features-v5-0-3b2085a07884@oss.qualcomm.com>
-To: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Sean Paul <sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Vinod Koul <vkoul@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1778;
- i=dmitry.baryshkov@oss.qualcomm.com; h=from:subject:message-id;
- bh=V1gYZpITbFHVwsL98bgMq1gW9yj3xDgdHDTSQqGTqRI=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoL3T8U24JiUoIwCb2cb4lL90avZ25jIcPH9tnQ
- pm8S/lgNBaJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaC90/AAKCRCLPIo+Aiko
- 1acvB/4yq2iMOwDZTbHU9A2g9u3rON7AJ+oqYKcsLzdrCpqTzvxHncYO/qMgQbv0QsJMwTSYxC5
- qMp4hIq+t2Vma1YyiZMXgae2tnodTMiA5QGfy3R4MejvdoPf2vWROyIJHaZ5q9+6jjwwT0vG1cw
- ujnxqFy6WnJ1DNSCDIp89Hk7XE0gDbL0iy27BeJ2c3606zZZ8LAy3Lktjcv5X6D4fDieCXVyShS
- i9aVgAfUUMGFrqfCKFIfzc/uKRWVh/zAL+dkAb/SN31YSaxd6MVJyIUcN1eE96bAGdwW33Ij1md
- FePu1u2uE8S3WXEciqH3O5qHHTxWbaGoPhQTRudDI7CJX+jk
-X-Developer-Key: i=dmitry.baryshkov@oss.qualcomm.com; a=openpgp;
- fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
-X-Proofpoint-GUID: tFdgj85Q0iNj-fiH805RuuMaV38d_Njn
-X-Proofpoint-ORIG-GUID: tFdgj85Q0iNj-fiH805RuuMaV38d_Njn
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIyMDE5MiBTYWx0ZWRfXwVPkIXo3D1ix
- b68CACQKIqiXS4BoMHEpffx75LlTvq/FVVjidKVmP8XmeCKy8wFQ97V/GaCJb22mXq3Z2agQ6vr
- wqBMc5qDyERHFCPbmmFnlijrYk1JeUgs7h13rBaamNejC+/JhwBADTjz5vC26i+myFm4xMkJeYR
- fe7Ub2BXrEPpPzRAFZg0ppnPxE/Z5xxLNQuMp7uzVLtMEPfuTUuUMhEIQp+DdfxL4Wi/+5RTEHy
- +78ENDwuaPAhwZgpbYSD90yEp7bovWiHIZBj4SE/Qb2kI16J041odXmXK6Es1wY8AZ5FecgXMQx
- xRNyocPvHJWg/qG/ndAEzp0jMpuZvxDbAmcK/ACKaxAA1LCdkW/Xv3/CBQWQDXu0jtc1u7gtGds
- CDs5Lwfu7d2j2dZKiW9x/O4cQhzXEqoYimNp2uiL/TwxKUpb2HIhAgs8HsDmaO4uDQkfHX51
-X-Authority-Analysis: v=2.4 cv=R7UDGcRX c=1 sm=1 tr=0 ts=682f7513 cx=c_pps
- a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=aBwJmt2KlYBR8C_sNNsA:9
- a=QEXdDO2ut3YA:10 a=bTQJ7kPSJx9SKPbeHEYW:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-22_09,2025-05-22_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 clxscore=1015 mlxlogscore=999 priorityscore=1501 spamscore=0
- bulkscore=0 lowpriorityscore=0 malwarescore=0 suspectscore=0 mlxscore=0
- impostorscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505220192
+Message-Id: <20250522-pmu_event_info-v3-4-f7bba7fd9cfe@rivosinc.com>
+References: <20250522-pmu_event_info-v3-0-f7bba7fd9cfe@rivosinc.com>
+In-Reply-To: <20250522-pmu_event_info-v3-0-f7bba7fd9cfe@rivosinc.com>
+To: Anup Patel <anup@brainfault.org>, Will Deacon <will@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, 
+ Mayuresh Chitale <mchitale@ventanamicro.com>
+Cc: linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>, 
+ kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, 
+ Atish Patra <atishp@rivosinc.com>
+X-Mailer: b4 0.15-dev-42535
 
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+With the new SBI PMU event info function, we can query the availability
+of the all standard SBI PMU events at boot time with a single ecall.
+This improves the bootime by avoiding making an SBI call for each
+standard PMU event. Since this function is defined only in SBI v3.0,
+invoke this only if the underlying SBI implementation is v3.0 or higher.
 
-Inline the _setup_dsc_ops() function, it makes it easier to handle
-different conditions involving DSC configuration.
-
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Signed-off-by: Atish Patra <atishp@rivosinc.com>
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dsc.c | 17 ++++++-----------
- 1 file changed, 6 insertions(+), 11 deletions(-)
+ arch/riscv/include/asm/sbi.h |  9 ++++++
+ drivers/perf/riscv_pmu_sbi.c | 68 ++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 77 insertions(+)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dsc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dsc.c
-index cec6d4e8baec4d00282465cfd2885d365f835976..c7db917afd27e3daf1e8aad2ad671246bf6c8fbf 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dsc.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dsc.c
-@@ -181,16 +181,6 @@ static void dpu_hw_dsc_bind_pingpong_blk(
- 	DPU_REG_WRITE(c, dsc_ctl_offset, mux_cfg);
- }
+diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
+index 6ce385a3a7bb..77b6997eb6c5 100644
+--- a/arch/riscv/include/asm/sbi.h
++++ b/arch/riscv/include/asm/sbi.h
+@@ -135,6 +135,7 @@ enum sbi_ext_pmu_fid {
+ 	SBI_EXT_PMU_COUNTER_FW_READ,
+ 	SBI_EXT_PMU_COUNTER_FW_READ_HI,
+ 	SBI_EXT_PMU_SNAPSHOT_SET_SHMEM,
++	SBI_EXT_PMU_EVENT_GET_INFO,
+ };
  
--static void _setup_dsc_ops(struct dpu_hw_dsc_ops *ops,
--			   unsigned long cap)
--{
--	ops->dsc_disable = dpu_hw_dsc_disable;
--	ops->dsc_config = dpu_hw_dsc_config;
--	ops->dsc_config_thresh = dpu_hw_dsc_config_thresh;
--	if (cap & BIT(DPU_DSC_OUTPUT_CTRL))
--		ops->dsc_bind_pingpong_blk = dpu_hw_dsc_bind_pingpong_blk;
--};
--
- /**
-  * dpu_hw_dsc_init() - Initializes the DSC hw driver object.
-  * @dev:  Corresponding device for devres management
-@@ -213,7 +203,12 @@ struct dpu_hw_dsc *dpu_hw_dsc_init(struct drm_device *dev,
+ union sbi_pmu_ctr_info {
+@@ -158,6 +159,14 @@ struct riscv_pmu_snapshot_data {
+ 	u64 reserved[447];
+ };
  
- 	c->idx = cfg->id;
- 	c->caps = cfg;
--	_setup_dsc_ops(&c->ops, c->caps->features);
++struct riscv_pmu_event_info {
++	u32 event_idx;
++	u32 output;
++	u64 event_data;
++};
 +
-+	c->ops.dsc_disable = dpu_hw_dsc_disable;
-+	c->ops.dsc_config = dpu_hw_dsc_config;
-+	c->ops.dsc_config_thresh = dpu_hw_dsc_config_thresh;
-+	if (c->caps->features & BIT(DPU_DSC_OUTPUT_CTRL))
-+		c->ops.dsc_bind_pingpong_blk = dpu_hw_dsc_bind_pingpong_blk;
++#define RISCV_PMU_EVENT_INFO_OUTPUT_MASK 0x01
++
+ #define RISCV_PMU_RAW_EVENT_MASK GENMASK_ULL(47, 0)
+ #define RISCV_PMU_PLAT_FW_EVENT_MASK GENMASK_ULL(61, 0)
+ /* SBI v3.0 allows extended hpmeventX width value */
+diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
+index 273ed70098a3..33d8348bf68a 100644
+--- a/drivers/perf/riscv_pmu_sbi.c
++++ b/drivers/perf/riscv_pmu_sbi.c
+@@ -299,6 +299,66 @@ static struct sbi_pmu_event_data pmu_cache_event_map[PERF_COUNT_HW_CACHE_MAX]
+ 	},
+ };
  
- 	return c;
- }
++static int pmu_sbi_check_event_info(void)
++{
++	int num_events = ARRAY_SIZE(pmu_hw_event_map) + PERF_COUNT_HW_CACHE_MAX *
++			 PERF_COUNT_HW_CACHE_OP_MAX * PERF_COUNT_HW_CACHE_RESULT_MAX;
++	struct riscv_pmu_event_info *event_info_shmem;
++	phys_addr_t base_addr;
++	int i, j, k, result = 0, count = 0;
++	struct sbiret ret;
++
++	event_info_shmem = kcalloc(num_events, sizeof(*event_info_shmem), GFP_KERNEL);
++	if (!event_info_shmem)
++		return -ENOMEM;
++
++	for (i = 0; i < ARRAY_SIZE(pmu_hw_event_map); i++)
++		event_info_shmem[count++].event_idx = pmu_hw_event_map[i].event_idx;
++
++	for (i = 0; i < ARRAY_SIZE(pmu_cache_event_map); i++) {
++		for (j = 0; j < ARRAY_SIZE(pmu_cache_event_map[i]); j++) {
++			for (k = 0; k < ARRAY_SIZE(pmu_cache_event_map[i][j]); k++)
++				event_info_shmem[count++].event_idx =
++							pmu_cache_event_map[i][j][k].event_idx;
++		}
++	}
++
++	base_addr = __pa(event_info_shmem);
++	if (IS_ENABLED(CONFIG_32BIT))
++		ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_EVENT_GET_INFO, lower_32_bits(base_addr),
++				upper_32_bits(base_addr), count, 0, 0, 0);
++	else
++		ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_EVENT_GET_INFO, base_addr, 0,
++				count, 0, 0, 0);
++	if (ret.error) {
++		result = -EOPNOTSUPP;
++		goto free_mem;
++	}
++
++	for (i = 0; i < ARRAY_SIZE(pmu_hw_event_map); i++) {
++		if (!(event_info_shmem[i].output & RISCV_PMU_EVENT_INFO_OUTPUT_MASK))
++			pmu_hw_event_map[i].event_idx = -ENOENT;
++	}
++
++	count = ARRAY_SIZE(pmu_hw_event_map);
++
++	for (i = 0; i < ARRAY_SIZE(pmu_cache_event_map); i++) {
++		for (j = 0; j < ARRAY_SIZE(pmu_cache_event_map[i]); j++) {
++			for (k = 0; k < ARRAY_SIZE(pmu_cache_event_map[i][j]); k++) {
++				if (!(event_info_shmem[count].output &
++				      RISCV_PMU_EVENT_INFO_OUTPUT_MASK))
++					pmu_cache_event_map[i][j][k].event_idx = -ENOENT;
++				count++;
++			}
++		}
++	}
++
++free_mem:
++	kfree(event_info_shmem);
++
++	return result;
++}
++
+ static void pmu_sbi_check_event(struct sbi_pmu_event_data *edata)
+ {
+ 	struct sbiret ret;
+@@ -316,6 +376,14 @@ static void pmu_sbi_check_event(struct sbi_pmu_event_data *edata)
+ 
+ static void pmu_sbi_check_std_events(struct work_struct *work)
+ {
++	int ret;
++
++	if (sbi_v3_available) {
++		ret = pmu_sbi_check_event_info();
++		if (!ret)
++			return;
++	}
++
+ 	for (int i = 0; i < ARRAY_SIZE(pmu_hw_event_map); i++)
+ 		pmu_sbi_check_event(&pmu_hw_event_map[i]);
+ 
 
 -- 
-2.39.5
+2.43.0
 
