@@ -1,242 +1,181 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 183F4EED8
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 16:26:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8860EED8
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 16:26:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747931202; cv=none; b=r8PYyQjvw41fmOqWsEACgVEWywQ4E/1QZZy97yYnzwndlKDxd1svs/RK/j7JxO8jyrYpy9QREo0jdU3L3ie1mZmhFjFkJxMPdvJ11kn13ULxW/ySkJHCTcJLsSFkZssKIwgnW20l735jW1kznKLjWHQuZTdidilvqc+VYf4xxtM=
+	t=1747931215; cv=none; b=MDuzlL9YMWHodVjv0f7MmVLvJEwtJKkebDSo7U2gpHe8m4jajiyh/z4TRIzWPfv/1jSs9yr1W0Vu/IXVMNgVbMNfMO0lhn8ODYfmd5FTQnrfrADimMHWbuNfeU5VOEm5n9WHDVEfwMSe29eV+3WCzArIixXp/v1qrCC6tTKhJQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747931202; c=relaxed/simple;
-	bh=FNvnwS2s3osAQ6LbrpgnW9khff6PrfUka+m3raKFi8E=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=PxRxWconA0R5pzl5Os0aOFmIrYOvdqifgIiG/Tsarvxka3DdCfgx6VPn/C+qXBp/I7f33UEX1aQQ1sscY7vBSyH8HGQ0IH5jjunxdBL5IEivvgy/EUMALCr1hvI4dL4KafMs6EsQQv850mMhUT3DmcxkcHbE0sQA5zOr78g/Jk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FymAxiNa; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1747931215; c=relaxed/simple;
+	bh=aI5bVC6CMGVcfbkkesAjm6tZj9oC86ObMe6Q3EdBIQo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JhoOQYUcfmPEi75a6lLrizJMjmECCPVAgDLzRF5UTV6ja3/Ol4CWYpttosCllEfybzjgmwo3lS3I/ysqxPUDVP+6Pg9zJtu9BrO4tKqe0JPK82QFA+1+x4IynslqAOqmQCbAEn4F5C8kraHuee7ZZ1oy9kBGcz+wkgZNfMEuAtw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JQEjmQaL; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FymAxiNa"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2322e8c4dc5so48425295ad.3
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 09:26:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1747931200; x=1748536000; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1/Y3MnN1CQvgNIXaw6MJZKAlF/SRi4SM/x7PuhK8ENM=;
-        b=FymAxiNaGFM0g17W4Z3MP8g05Wy3WchgoUrWv2VXAXodVgHNJ/t92/6vgYwst6+cmM
-         jKZsDNDIlSXz60S3TizMPjQfP4F8Oas0w5ODNfvk+61eNcSYacz8vPBH8bijbtJgVfYV
-         BLaAXWQ9KHcbl6nZkLGgBwlIPXdKR9V/Y86qudSG0ztVDOc/DW0RuYCW3HCYldJdHOUG
-         DvldUqm5rqf+T3d7c6c3lBPSg8xk+Bf1ye4HswSZ45Y51yzvHba62npZNDiM9R2HxO9i
-         ReSZ5PvCcAFi2dGvlZeCgfP7dk+DSNYsocjGLgurnCaQBrqVGc36hf9f7nvQDhA4zm+l
-         Hp8A==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JQEjmQaL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1747931212;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Z4GAYzrXgnFZGUhJjcU6Yb1IknVZdzE3mGHXYUi5CbU=;
+	b=JQEjmQaLb8SQtLzM7tZU3cKBgxr/e8JqMaaMlOqBQ5cJDZrA2wGVB4dwQJAwbdmMXx50n0
+	fB1TojQApwsXtaZOkirvfX/23u9yj9+2jZ3bttPyOB6fElgmOTxglITKfecr2MVAjcAxw2
+	iK14jdVaTB+x9C1wRbiBqfKFP2e+3Qk=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-673-k1pR4Zy4PTKzeZG7UYLxpw-1; Thu, 22 May 2025 12:26:51 -0400
+X-MC-Unique: k1pR4Zy4PTKzeZG7UYLxpw-1
+X-Mimecast-MFC-AGG-ID: k1pR4Zy4PTKzeZG7UYLxpw_1747931210
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a371fb826cso2346506f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 09:26:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747931200; x=1748536000;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1/Y3MnN1CQvgNIXaw6MJZKAlF/SRi4SM/x7PuhK8ENM=;
-        b=n4UifMZz+uPSI67xWk+1But0/QmHjUfcdamPja2ZqV+uiOi8IZX2hfjh96y05p1F7m
-         Fc/F/oqIOyRHTMzsyB4nFu6241xGElc9O8bc2cf+pVdQDTNcHYYultqeu2sAC/FiywVq
-         hSQuZfXIqSx4qA43Vlq4xjM2GUk+Y2Lgh+jZWS8SHnV+64XahLCMXqSrvAeKD1R0+qn+
-         k9U+yWWjX1VJgZuDlFOK5yMQCekHBjhZB0XMEZOrVV+AQ/2CNchrQvLBpbtHw5Jdlz+L
-         YEi9TNFtZhe/sKznLDD8EQODmWOTOvE33yeVSJni9cEJm3ng1wFBDitZ6phQuHw3Z5iN
-         hJ8g==
-X-Forwarded-Encrypted: i=1; AJvYcCUEtRci+Nh3TNck/d3sI0FZIMr2QAQrKg6PAft8WkRXBiYgSRZAGbRBH7XyXAOF+MALqGsab9YqqVrLCl4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnfV+6Vm/y9Nxkhg2ef771GhFipAia2gdlg5QwO+pseGN15xfE
-	0Le1sGY9mzFEZofE59aO7sFd9RfqpGYrXqu212/QbIL8/AfZF8BmiYJNg261uxzFg45CsNHcNCO
-	Py/1xgg==
-X-Google-Smtp-Source: AGHT+IG11bJ7U64NeAncdnegyKck+686dgfizFr3LVIf6dCovZhR/ckc60gLEITPUFULGhmCVlE/JqNg0Zo=
-X-Received: from plhw13.prod.google.com ([2002:a17:903:2f4d:b0:231:c831:9520])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:c951:b0:224:1af1:87f4
- with SMTP id d9443c01a7336-231d43bb822mr384251005ad.22.1747931200213; Thu, 22
- May 2025 09:26:40 -0700 (PDT)
-Date: Thu, 22 May 2025 09:26:38 -0700
-In-Reply-To: <CA+EHjTxjt-mb_WbtVymaBvCb1EdJAVMV_uGb4xDs_ewg4k0C4g@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1747931210; x=1748536010;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Z4GAYzrXgnFZGUhJjcU6Yb1IknVZdzE3mGHXYUi5CbU=;
+        b=ibPSgUUBY+ur5LYHYUNhlyArlpoDvyIGxEaL/CvGsJWOdYzJEVG/Gt/5P57jSC+hKb
+         By+2Ry92fy3WvxgldsiOFBhlM6VL76vAakouyy94sG/SL5fCnpOQVX4ZP3KaGiNcmruv
+         F5aYkjvNIhGGexrGVF+kB+4d5Yg/lgQLxoEPJmnpQqTjin4ryMOI2tU5H/xys1CX/eEX
+         ti+9ghGwI/ufiWXthWUdg5Bb2gbXX0PgGqxDxSp1QmtlyzMnsiWHDjnyIWAaQ+3Ffq3F
+         NzWox1k95Ypyr9fCd0uaX3NfqbhOi6zc5jZ5Zt0e/E8s7WBLV+XY+vyeswemty/6rlGh
+         giZw==
+X-Forwarded-Encrypted: i=1; AJvYcCXJjqZTFdsTi+M/6ov0PXa1JHsFigFOvbHZYbF1/qPolaFvySISkPG63FcBRYiyn4sfm2CyNkS4u/7njHc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxuz8msPItkYC3ZOZoKNsn8B7XlJTHADMebYkAFmTc4BnM05ysn
+	YYLm00gjzC0JWDW0X0rnRRXd5ifFloERRjc9AjfY1rRFgzQMkyb+0timN789FmiAhGf89x8JOL+
+	lF3lRHL+/g4R6ucKvrMY9yVhBB2YQN2e4xnyGxDAWUoMU1whuQNsaMIdEZxRNnMc7dw==
+X-Gm-Gg: ASbGncsNt0xavFTdKEjpwM/jOvnL/yjHOucj5R1aisNGYPFq4ARxBMSRoakjLAwLUHr
+	Y6NLNuqpcBhZXV1/q1n4Y8yfSj9jcsz1VGZuHmhpNvG79wGz6pjM1VnU4ZQS6vSK6VbbfikkPMq
+	DayZqetIsnjvBADliOUlBxPpc39u5ZVzLVHiwQU2uzNjGI4Hwkc4dXzyiCoPekozne/jg76ZhcS
+	3unMWWkK/TwwtWM8JyUm8VnYCAoGt4SpZKe/SW319SqJkyryu5tfbF0Dj7iXOCpvhcxVWoc9p6s
+	Sb1SP7siPuSSJOUgMkavPmzP/P3SUOwv7qLckGEfSgkB0fIZv16rDLVX5BrYFgXGupJPYBT0Qi8
+	vDBYfku1SJhXpWodTOQPSZx96JAgcAjBx0D+ikcI=
+X-Received: by 2002:a5d:5f46:0:b0:3a3:5c94:d893 with SMTP id ffacd0b85a97d-3a35c94d943mr22906358f8f.53.1747931209815;
+        Thu, 22 May 2025 09:26:49 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGaEUT5jkcGYevNN0Ed+b4v8aCTpnJTQhvBLjPHtgmmBMuRwxR+GWCr2zuYOCehyhege4s9Aw==
+X-Received: by 2002:a5d:5f46:0:b0:3a3:5c94:d893 with SMTP id ffacd0b85a97d-3a35c94d943mr22906317f8f.53.1747931209492;
+        Thu, 22 May 2025 09:26:49 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f22:2e00:6e71:238a:de9f:e396? (p200300d82f222e006e71238ade9fe396.dip0.t-ipconnect.de. [2003:d8:2f22:2e00:6e71:238a:de9f:e396])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a35ca8caaasm23285583f8f.83.2025.05.22.09.26.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 May 2025 09:26:49 -0700 (PDT)
+Message-ID: <5d6b92d8-251f-463b-adde-724ea25b2d89@redhat.com>
+Date: Thu, 22 May 2025 18:26:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <CAGtprH_7jSpwF77j1GW8rjSrbtZZ2OW2iGck5=Wk67+VnF9vjQ@mail.gmail.com>
- <CA+EHjTzMhKCoftfJUuL0WUZW4DdqOHgVDcn0Cmf-0r--8rBdbg@mail.gmail.com>
- <diqzecwjnk95.fsf@ackerleytng-ctop.c.googlers.com> <CA+EHjTyY5C1QgkoAqvJ0kHM4nUvKc1e1nQ0Uq+BANtVEnZH90w@mail.gmail.com>
- <CAGtprH-fE=G923ctBAcq5zFna+2WULhmHDSbXUsZKUrin29b4g@mail.gmail.com>
- <CA+EHjTxvufYVA8LQWRKEX7zA0gWLQUHVO2LvwKc5JXVu-XAEEA@mail.gmail.com>
- <CAGtprH_TfKT3oRPCLbh-ojLGXSfOQ2XA39pVhr47gb3ikPtUkw@mail.gmail.com>
- <CA+EHjTxJZ_pb7+chRoZxvkxuib2YjbiHg=_+f4bpRt2xDFNCzQ@mail.gmail.com>
- <aC86OsU2HSFZkJP6@google.com> <CA+EHjTxjt-mb_WbtVymaBvCb1EdJAVMV_uGb4xDs_ewg4k0C4g@mail.gmail.com>
-Message-ID: <aC9QPoEUw_nLHhV4@google.com>
-Subject: Re: [RFC PATCH v2 04/51] KVM: guest_memfd: Introduce
- KVM_GMEM_CONVERT_SHARED/PRIVATE ioctls
-From: Sean Christopherson <seanjc@google.com>
-To: Fuad Tabba <tabba@google.com>
-Cc: Vishal Annapurve <vannapurve@google.com>, Ackerley Tng <ackerleytng@google.com>, kvm@vger.kernel.org, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	linux-fsdevel@vger.kernel.org, aik@amd.com, ajones@ventanamicro.com, 
-	akpm@linux-foundation.org, amoorthy@google.com, anthony.yznaga@oracle.com, 
-	anup@brainfault.org, aou@eecs.berkeley.edu, bfoster@redhat.com, 
-	binbin.wu@linux.intel.com, brauner@kernel.org, catalin.marinas@arm.com, 
-	chao.p.peng@intel.com, chenhuacai@kernel.org, dave.hansen@intel.com, 
-	david@redhat.com, dmatlack@google.com, dwmw@amazon.co.uk, 
-	erdemaktas@google.com, fan.du@intel.com, fvdl@google.com, graf@amazon.com, 
-	haibo1.xu@intel.com, hch@infradead.org, hughd@google.com, ira.weiny@intel.com, 
-	isaku.yamahata@intel.com, jack@suse.cz, james.morse@arm.com, 
-	jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, jhubbard@nvidia.com, 
-	jroedel@suse.de, jthoughton@google.com, jun.miao@intel.com, 
-	kai.huang@intel.com, keirf@google.com, kent.overstreet@linux.dev, 
-	kirill.shutemov@intel.com, liam.merwick@oracle.com, 
-	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, maz@kernel.org, 
-	mic@digikod.net, michael.roth@amd.com, mpe@ellerman.id.au, 
-	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
-	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
-	paul.walmsley@sifive.com, pbonzini@redhat.com, pdurrant@amazon.co.uk, 
-	peterx@redhat.com, pgonda@google.com, pvorel@suse.cz, qperret@google.com, 
-	quic_cvanscha@quicinc.com, quic_eberman@quicinc.com, 
-	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com, quic_pheragu@quicinc.com, 
-	quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com, richard.weiyang@gmail.com, 
-	rick.p.edgecombe@intel.com, rientjes@google.com, roypat@amazon.co.uk, 
-	rppt@kernel.org, shuah@kernel.org, steven.price@arm.com, 
-	steven.sistare@oracle.com, suzuki.poulose@arm.com, thomas.lendacky@amd.com, 
-	usama.arif@bytedance.com, vbabka@suse.cz, viro@zeniv.linux.org.uk, 
-	vkuznets@redhat.com, wei.w.wang@intel.com, will@kernel.org, 
-	willy@infradead.org, xiaoyao.li@intel.com, yan.y.zhao@intel.com, 
-	yilun.xu@intel.com, yuzenghui@huawei.com, zhiquan1.li@intel.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v0 2/2] mm: sched: Batch-migrate misplaced pages
+To: Zi Yan <ziy@nvidia.com>
+Cc: Bharata B Rao <bharata@amd.com>, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, Jonathan.Cameron@huawei.com, dave.hansen@intel.com,
+ gourry@gourry.net, hannes@cmpxchg.org, mgorman@techsingularity.net,
+ mingo@redhat.com, peterz@infradead.org, raghavendra.kt@amd.com,
+ riel@surriel.com, rientjes@google.com, sj@kernel.org, weixugc@google.com,
+ willy@infradead.org, ying.huang@linux.alibaba.com, dave@stgolabs.net,
+ nifan.cxl@gmail.com, joshua.hahnjy@gmail.com, xuezhengchu@huawei.com,
+ yiannis@zptcorp.com, akpm@linux-foundation.org
+References: <20250521080238.209678-1-bharata@amd.com>
+ <20250521080238.209678-3-bharata@amd.com>
+ <62cef618-123c-4ffa-b45a-c38b65d2a5a3@redhat.com>
+ <AE28D27C-58C2-41A4-B553-50049E963745@nvidia.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <AE28D27C-58C2-41A4-B553-50049E963745@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 22, 2025, Fuad Tabba wrote:
-> On Thu, 22 May 2025 at 15:52, Sean Christopherson <seanjc@google.com> wrote:
-> > On Wed, May 21, 2025, Fuad Tabba wrote:
-> > > How does the host userspace find that out? If the host userspace is capable
-> > > of finding that out, then surely KVM is also capable of finding out the same.
-> >
-> > Nope, not on x86.  Well, not without userspace invoking a new ioctl, which would
-> > defeat the purpose of adding these ioctls.
-> >
-> > KVM is only responsible for emulating/virtualizing the "CPU".  The chipset, e.g.
-> > the PCI config space, is fully owned by userspace.  KVM doesn't even know whether
-> > or not PCI exists for the VM.  And reboot may be emulated by simply creating a
-> > new KVM instance, i.e. even if KVM was somehow aware of the reboot request, the
-> > change in state would happen in an entirely new struct kvm.
-> >
-> > That said, Vishal and Ackerley, this patch is a bit lacking on the documentation
-> > front.  The changelog asserts that:
-> >
-> >   A guest_memfd ioctl is used because shareability is a property of the memory,
-> >   and this property should be modifiable independently of the attached struct kvm
-> >
-> > but then follows with a very weak and IMO largely irrelevant justification of:
-> >
-> >   This allows shareability to be modified even if the memory is not yet bound
-> >   using memslots.
-> >
-> > Allowing userspace to change shareability without memslots is one relatively minor
-> > flow in one very specific use case.
-> >
-> > The real justification for these ioctls is that fundamentally, shareability for
-> > in-place conversions is a property of a guest_memfd instance and not a struct kvm
-> > instance, and so needs to owned by guest_memfd.
+On 22.05.25 18:24, Zi Yan wrote:
+> On 22 May 2025, at 12:11, David Hildenbrand wrote:
 > 
-> Thanks for the clarification Sean. I have a couple of followup
-> questions/comments that you might be able to help with:
+>> On 21.05.25 10:02, Bharata B Rao wrote:
+>>> Currently the folios identified as misplaced by the NUMA
+>>> balancing sub-system are migrated one by one from the NUMA
+>>> hint fault handler as and when they are identified as
+>>> misplaced.
+>>>
+>>> Instead of such singe folio migrations, batch them and
+>>> migrate them at once.
+>>>
+>>> Identified misplaced folios are isolated and stored in
+>>> a per-task list. A new task_work is queued from task tick
+>>> handler to migrate them in batches. Migration is done
+>>> periodically or if pending number of isolated foios exceeds
+>>> a threshold.
+>>
+>> That means that these pages are effectively unmovable for other purposes (CMA, compaction, long-term pinning, whatever) until that list was drained.
+>>
+>> Bad.
 > 
-> From a conceptual point of view, I understand that the in-place conversion is
-> a property of guest_memfd. But that doesn't necessarily mean that the
-> interface between kvm <-> guest_memfd is a userspace IOCTL.
+> Probably we can mark these pages and when others want to migrate the page,
+> get_new_page() just looks at the page's target node and get a new page from
+> the target node.
 
-kvm and guest_memfd aren't the communication endpoints for in-place conversions,
-and more importantly, kvm isn't part of the control plane.  kvm's primary role
-(for guest_memfd with in-place conversions) is to manage the page tables to map
-memory into the guest.
+How do you envision that working when CMA needs to migrate this exact 
+page to a different location?
 
-kvm *may* also explicitly provide a communication channel between the guest and
-host, e.g. when conversions are initiated via hypercalls, but in some cases the
-communication channel may be created through pre-existing mechanisms, e.g. a
-shared memory buffer or emulated I/O (such as the PCI reset case).
+It cannot isolate it for migration because ... it's already isolated ... 
+so it will give up.
 
-  guest => kvm (dumb pipe) => userspace => guest_memfd => kvm (invalidate)
+Marking might not be easy I assume ...
 
-And in other cases, kvm might not be in that part of the picture at all, e.g. if
-the userspace VMM provides an interface to the VM owner (which could also be the
-user running the VM) to reset the VM, then the flow would look like:
+-- 
+Cheers,
 
-  userspace => guest_memfd => kvm (invalidate)
+David / dhildenb
 
-A decent comparison is vCPUs.  KVM _could_ route all ioctls through the VM, but
-that's unpleasant for all parties, as it'd be cumbersome for userspace, and
-unnecessarily complex and messy for KVM.  Similarly, routing guest_memfd state
-changes through KVM_SET_MEMORY_ATTRIBUTES is awkward from both design and mechanical
-perspectives.
-
-Even if we disagree on how ugly/pretty routing conversions through kvm would be,
-which I'll allow is subjective, the bigger problem is that bouncing through
-KVM_SET_MEMORY_ATTRIBUTES would create an unholy mess of an ABI.
-
-Today, KVM_SET_MEMORY_ATTRIBUTES is handled entirely within kvm, and any changes
-take effect irrespective of any memslot bindings.  And that didn't happen by
-chance; preserving and enforcing attribute changes independently of memslots was
-a key design requirement, precisely because memslots are ephemeral to a certain
-extent.
-
-Adding support for in-place guest_memfd conversion will require new ABI, and so
-will be a "breaking" change for KVM_SET_MEMORY_ATTRIBUTES no matter what.  E.g.
-KVM will need to reject KVM_MEMORY_ATTRIBUTE_PRIVATE for VMs that elect to use
-in-place guest_memfd conversions.  But very critically, KVM can cripsly enumerate
-the lack of KVM_MEMORY_ATTRIBUTE_PRIVATE via KVM_CAP_MEMORY_ATTRIBUTES, the
-behavior will be very straightforward to document (e.g. CAP X is mutually excusive
-with KVM_MEMORY_ATTRIBUTE_PRIVATE), and it will be opt-in, i.e. won't truly be a
-breaking change.
-
-If/when we move shareability to guest_memfd, routing state changes through
-KVM_SET_MEMORY_ATTRIBUTES will gain a subtle dependency on userspace having to
-create memslots in order for state changes to take effect.  That wrinkle would be
-weird and annoying to document, e.g. "if CAP X is enabled, the ioctl ordering is
-A => B => C, otherwise the ordering doesn't matter", and would create many more
-conundrums:
-
-  - If a memslot needs to exist in order for KVM_SET_MEMORY_ATTRIBUTES to take effect,
-    what should happen if that memslot is deleted?
-  - If a memslot isn't found, should KVM_SET_MEMORY_ATTRIBUTES fail and report
-    an error, or silently do nothing?
-  - If KVM_SET_MEMORY_ATTRIBUTES affects multiple memslots that are bound to
-    multiple guest_memfd, how does KVM guarantee atomicity?  What happens if one
-    guest_memfd conversion succeeds, but a later fails?
-
-> We already communicate directly between the two. Other, even less related
-> subsystems within the kernel also interact without going through userspace.
-> Why can't we do the same here? I'm not suggesting it not be owned by
-> guest_memfd, but that we communicate directly.
-
-I'm not concerned about kvm communicating with guest_memfd, as you note it's all
-KVM.  As above, my concerns are all about KVM's ABI and who owns/controls what.
-
-> From a performance point of view, I would expect the common case to be that
-> when KVM gets an unshare request from the guest, it would be able to unmap
-> those pages from the (cooperative) host userspace, and return back to the
-> guest. In this scenario, the host userspace wouldn't even need to be
-> involved.
-
-Hard NAK, at least from an x86 perspective.  Userspace is the sole decision maker
-with respect to what memory is state of shared vs. private, full stop.  The guest
-can make *requests* to convert memory, but ultimately it's host userspace that
-decides whether or not to honor the request.
-
-We've litigated this exact issue multiple times.  All state changes must be
-controlled by userspace, because userspace is the only entity that can gracefully
-handle exceptions and edge cases, and is the only entity with (almost) full
-knowledge of the system.  We can discuss this again if necessary, but I'd much
-prefer to not rehash all of those conversations.
-
-> Having a userspace IOCTL as part of this makes that trip unnecessarily longer
-> for the common case.
-
-I'm very skeptical that an exit to userspace is going to even be measurable in
-terms of the cost to convert memory.  Conversion is going to require multiple
-locks, modifications to multiple sets of page tables with all the associated TLB
-maintenance, possibly cache maintenance, and probably a few other things I'm
-forgetting.  The cost of a few user<=>kernel transitions is likely going to be a
-drop in the bucket.
-
-If I'm wrong, and there are flows where the user<=>kernel transitions are the
-long pole, then we could certainly exploring adding a way for userspace to opt
-into a "fast path" conversion.  But it would need to be exactly that, an optional
-fast path that can fall back to the "slow" userspace-driven conversion as needed.
