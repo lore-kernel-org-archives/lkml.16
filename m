@@ -1,173 +1,238 @@
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEA3C22FF2B
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 12:36:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2103A22FF2B;
+	Thu, 22 May 2025 12:37:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747917414; cv=none; b=omHjmmF6izp8wzkF2CPOjVj4xLI6/nHVglG7xlwiUQZemNwUylkz5DaIYgf1MQjxdKjsZ0HQUTgbPDliAQmImOzLhON4JkhZkoPoXUMUl/BmewXjAWwigMYVQy7M6HdFMOGNnVT49RD3gd3emnwo4jqIWDEoPB1a/B3AyQ5neA0=
+	t=1747917461; cv=none; b=ogvLWxyrlH1qDWA7LtWfmuyCAvtg863/tWLpZ/XkWf0zcItJy26XpWL9ua+KRDzg5erYFQTtPRqyJ9mCdSuhW99Z7KMl0ckk5q9qQPwJ+s85NcVdA0HTi8Fdwh0DnU0SYxLTBSHfSKt1A7PhKo5K6MPknE0mKEOTOade83CjApY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747917414; c=relaxed/simple;
-	bh=hdYRP/ZlkZwZ6MgNBwKuzValqczEUy1hpGacpIQvX7Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dktogRHjVu5B1olssjfv8+g6QzkXpiIIC6SsCUWQBnp+2oBtKqqqqmvtuBzp6Q9Gp/3LKiii7b7+9ZfOSQOrq/eKGCsLPE8sRts1mIf8+h1Bwb8F5VWEo1iXYTmyBKguTDKrT8Lbja2/fjIOW6XaV7qwi/GwSw0mJSA8YQPUbHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=s5yIPK8h; arc=none smtp.client-ip=209.85.167.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1747917461; c=relaxed/simple;
+	bh=7BHIIAUVoOOy0N4+Qaw/456HNKKlG2GRqhkQvFpYOyc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bs4UySUkJfa9yRS9DXwll4bCSBbWKiyDkv2VzNf795JZhPARWrWiIogPPRrfQc4ZK4xDFGTZukUBOhVntVqHZANBHbOy1anW1pTAWphRzKkg4ZSDB/8G8xYm3E5ZRaJNAk3PHLo6cOyRb7hm9I7iBR+0zcoNSfFsuEKwI7rotjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Wk3m2a+6; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s5yIPK8h"
-Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3fa6c54cc1aso5302142b6e.1
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 05:36:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747917411; x=1748522211; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=E/nM7ohI+OhW9Q09hMJxUkW/sk0nV2AyhKtXe2v8eEc=;
-        b=s5yIPK8hKKZYX4Om9GLNGNrBD7KRHd7APtqx7P6MOoqY4UwB2zKMjCdBYhnieLHavs
-         qBFYuK61Za2x0HyXndR0me77wPbFcFN6pNxye+y6GsxihVME9CgwQsvMv0RkACnKf6XC
-         nLspmnKqewWpyrGXBusRa6da6jhOC8SNrlGuGdEzyVchNn+dXC5RZ81oF8O9SfDDTDJb
-         nzddAxujXGW6xBrrn3Wd8kqtrgOC9bjD2rGEkzKYj+OU3rasC5Ml8XHMRsjZrGTYNyzi
-         sHMo85RLMdCPJL7fhMYc1IYsZY3FBXCr/9wbuBGfbWkNxvqBTpYjrh/4QtBmH3j7nXmi
-         yTyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747917411; x=1748522211;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=E/nM7ohI+OhW9Q09hMJxUkW/sk0nV2AyhKtXe2v8eEc=;
-        b=HlRkV/PjQ6YEWLt8+tqfl5rX41dy9DsbviHnfNZQtFNT4S3hwTHYRmTsTdIniIwiQ0
-         3XneuEHnbnI7gYSPyqWRbbU8gW8pfWFivF35GOW925EPs1IgxftiKLu/p4BqF52cfnN1
-         RBA3ZAMyriT7Lbl2LiyD7w8xlTDy7LetjIoD1t52Up2sDC/TxqrY4Ta8sxQZ44K569zp
-         XMs0zGjd7Sb+AKqEoTxRQrRa7ATrA8M+AHPu7vYbR5lrOYsy9V+Ds8Y+StFMx6NNRpCK
-         82qKy5CJt5iGON6XooIIEoEoMVoaUNwkQDNpPQ/tf/q7ww9AxnzXWlS2O8VnDU50d300
-         /qcQ==
-X-Gm-Message-State: AOJu0YwYYtT0iHZnUG+UqjzxUV0MYW0bV5bQ2gE/IBWLi/UrgvclDETk
-	fjxJ6axlgge9v/NvUxa4yfpvjot/7K8bbz//V9rL8c8eDs3kFC/Rl4GAmeE9wWJ8BMaoTfUqkQK
-	4/lezPpcCzldZwApwSmQPG+XgWjv6nKSP3SKcumCscQ==
-X-Gm-Gg: ASbGncuKQt2v8L+dqyvQjQrsNYfasJcMQDJqDL141kqa1/H2srIjbg9/U7mSvhN/e/r
-	cifMQCzjCb+IeUe1zBGbW5y5le1akCfPs5D80IDEjq9y3fFHyfQ1wQyJUP0B6TYL3ReTLHqoRoA
-	6Sr6/W03P34Fed+ETWXLCNuAszDHwAYVkp/g==
-X-Google-Smtp-Source: AGHT+IFaxfBHByqapVV2RXkEPTMYtDPJFaizTF3QtPLs+N+jP8G9GyXQ9nHLQfE3byrCa1MQmfMacM+snhhkwuWXSyE=
-X-Received: by 2002:a05:6808:338a:b0:3f6:a9d4:b7e4 with SMTP id
- 5614622812f47-404d86f3f18mr17232381b6e.20.1747917411552; Thu, 22 May 2025
- 05:36:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Wk3m2a+6"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54M8FCLc006470;
+	Thu, 22 May 2025 12:37:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=jNmUnM
+	pfYdIVeP+Jb/MjUheQzeyhvoVC0wrvPkXFrVg=; b=Wk3m2a+6lODOpA39vwyvOz
+	Ys5GwZSKCcbeRyCNNQHBb57aZ7gwUm/g0wbLmR0GfLctdOLeMDWO54WVJtJzMU3I
+	ieHNO1NGpUpGd16M1e4c6Vhy2x00MWm22Fk0IaHzzmW+wFs+ximHhW1V6TNWhmZK
+	LFTChsnbMhBZbtO/wj3sFP6sYkQHRC94pui2oODCFYo94iqYlmGAhK6FVDlqyES6
+	KWwYjC/6ph8POBCiR7UyoqJLkKb1FMLqmB6096kDj5MtTc6aMmuMr2dHLeIXG/fz
+	ZG/hKUM1kjfidOsioI5O0nVmMKLzngwO5nV5pN0iECOYwI+j1tz9doTUU+Sh/8IQ
+	==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46sg235nhe-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 22 May 2025 12:37:27 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54M9VSRW020693;
+	Thu, 22 May 2025 12:37:27 GMT
+Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 46rwkq1eac-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 22 May 2025 12:37:27 +0000
+Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
+	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54MCbMo624511052
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 22 May 2025 12:37:22 GMT
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 01A3C58060;
+	Thu, 22 May 2025 12:37:26 +0000 (GMT)
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id ED9E558059;
+	Thu, 22 May 2025 12:37:22 +0000 (GMT)
+Received: from [9.109.198.223] (unknown [9.109.198.223])
+	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 22 May 2025 12:37:22 +0000 (GMT)
+Message-ID: <95753732-9714-42e0-8097-e2b4c3dd5820@linux.ibm.com>
+Date: Thu, 22 May 2025 18:07:21 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250520152436.474778-1-jens.wiklander@linaro.org>
- <20250520152436.474778-3-jens.wiklander@linaro.org> <dffbd709-def0-47af-93ff-a48686f04153@amd.com>
- <CAHUa44Ec0+GPoDkcEG+Vg9_TY1NC=nh3yr0F=ezHMbaeX_A0Bg@mail.gmail.com> <1a65f370-2df2-4169-85f9-c45e7c537447@amd.com>
-In-Reply-To: <1a65f370-2df2-4169-85f9-c45e7c537447@amd.com>
-From: Jens Wiklander <jens.wiklander@linaro.org>
-Date: Thu, 22 May 2025 14:36:39 +0200
-X-Gm-Features: AX0GCFtomK6Kj4MbJdPbWNPCFM5pduAepClCBqfPEiiU97RKWiikvixpOO2yK1w
-Message-ID: <CAHUa44Hgu9DnmeGXAoFKkRBt6jFCAb6Mi5zzuuvVVSgsxDZQWA@mail.gmail.com>
-Subject: Re: [PATCH v9 2/9] dma-buf: dma-heap: export declared functions
-To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
-	op-tee@lists.trustedfirmware.org, linux-arm-kernel@lists.infradead.org, 
-	Olivier Masse <olivier.masse@nxp.com>, Thierry Reding <thierry.reding@gmail.com>, 
-	Yong Wu <yong.wu@mediatek.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>, 
-	John Stultz <jstultz@google.com>, "T . J . Mercier" <tjmercier@google.com>, 
-	Sumit Garg <sumit.garg@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, azarrabi@qti.qualcomm.com, 
-	Simona Vetter <simona.vetter@ffwll.ch>, Daniel Stone <daniel@fooishbar.org>, 
-	Rouven Czerwinski <rouven.czerwinski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [linus:master] [block] 245618f8e4: stress-ng.fpunch.fail
+To: kernel test robot <oliver.sang@intel.com>
+Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-kernel@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+        Hannes Reinecke <hare@suse.de>, Ming Lei <ming.lei@redhat.com>,
+        cgroups@vger.kernel.org, linux-block@vger.kernel.org
+References: <202505221030.760980df-lkp@intel.com>
+Content-Language: en-US
+From: Nilay Shroff <nilay@linux.ibm.com>
+In-Reply-To: <202505221030.760980df-lkp@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 0BYIBvohkylXjmXVMkU7fnvyw0P-MZXz
+X-Authority-Analysis: v=2.4 cv=RPmzH5i+ c=1 sm=1 tr=0 ts=682f1a87 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=QyXUC8HyAAAA:8 a=i3X5FwGiAAAA:8 a=shPPcO8FRoZR3bCwaZgA:9
+ a=QEXdDO2ut3YA:10 a=mmqRlSCDY2ywfjPLJ4af:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIyMDEyOCBTYWx0ZWRfX7vQ1DvbqR7mX Ro6LhcUCd/NpssiUqx4AmVrXpkevmdxYZAfljNXdWhuqYV5ThTWkxKqn12NUe7wawgqMisVWeNC dob6oEuzX0RJbvmPLi24eFK9fTGSkkbnlOpKguNv3MLkDug4w1c62YA578F2cwASbWq/mZyZk/q
+ lSFtmDwc1LwxHnH/sHPoxyBcPFBO45tX8AuW7SBePFeOgnqJhbqH0hcN6jZGB3PpLnj2FMh9KBJ /bmCQyYQXhYHWDQW8hI18dJQUWJ6j7VYZ1zGOBnf/9lYgbuanNtGoWbkQlT3Ct/2tRDsN3Uwv36 oHTy+5COnmkyrMRazEQrj+4OmeFXLQDHwd7C0SyS5FXtomlhbXkyx1jZX684DvSl/mvo5EqdWXA
+ ipm6YnTlN6/8E/emBS/BW8O13DPHdhcBEtonBNflDl6rPmTDLKlEsm2BTS5kkmIYngv7iuQZ
+X-Proofpoint-GUID: 0BYIBvohkylXjmXVMkU7fnvyw0P-MZXz
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-22_06,2025-05-22_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ lowpriorityscore=0 impostorscore=0 adultscore=0 priorityscore=1501
+ bulkscore=0 phishscore=0 mlxscore=0 malwarescore=0 spamscore=0
+ mlxlogscore=999 suspectscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505160000 definitions=main-2505220128
 
-On Thu, May 22, 2025 at 1:52=E2=80=AFPM Christian K=C3=B6nig
-<christian.koenig@amd.com> wrote:
->
-> On 5/22/25 08:56, Jens Wiklander wrote:
-> > On Wed, May 21, 2025 at 9:13=E2=80=AFAM Christian K=C3=B6nig
-> > <christian.koenig@amd.com> wrote:
-> >>
-> >> On 5/20/25 17:16, Jens Wiklander wrote:
-> >>> Export the dma-buf heap functions declared in <linux/dma-heap.h>.
-> >>
-> >> That is what this patch does and that should be obvious by looking at =
-it. You need to explain why you do this.
-> >>
-> >> Looking at the rest of the series it's most likely ok, but this commit=
- message should really be improved.
-> >
-> > I'm considering something like this for the next version:
-> > Export the dma-buf heap functions declared in <linux/dma-heap.h> to all=
-ow
-> > them to be used by kernel modules. This will enable drivers like the OP=
--TEE
-> > driver, to utilize these interfaces for registering and managing their
-> > specific DMA heaps.
->
-> Works for me, but it doesn't needs to be so detailed.
->
-> Something like this here would be optimal I think:
->
-> Export the dma-buf heap functions to allow them to be used by the OP-TEE =
-driver.
-> The OP-TEE driver wants to register and manage specific secure DMA heaps =
-with it.
 
-Great, I'll use that.
+
+On 5/22/25 7:59 AM, kernel test robot wrote:
+> 
+> 
+> Hello,
+> 
+> 
+> we don't have enough knowledge if this is a kernel issue or test case issue.
+> 
+> =========================================================================================
+> tbox_group/testcase/rootfs/kconfig/compiler/nr_threads/disk/testtime/fs/test/cpufreq_governor:
+>   lkp-icl-2sp4/stress-ng/debian-12-x86_64-20240206.cgz/x86_64-rhel-9.4/gcc-12/100%/1HDD/60s/xfs/fpunch/performance
+> 
+> 3efe7571c3ae2b64 245618f8e45ff4f79327627b474
+> ---------------- ---------------------------
+>        fail:runs  %reproduction    fail:runs
+>            |             |             |
+>            :6          100%           6:6     stress-ng.fpunch.fail
+> 
+> since the failure is persistent, just report what we observed in our tests FYI.
+> 
+> 
+> kernel test robot noticed "stress-ng.fpunch.fail" on:
+> 
+> commit: 245618f8e45ff4f79327627b474b563da71c2c75 ("block: protect wbt_lat_usec using q->elevator_lock")
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+> 
+> [test failed on linus/master      b36ddb9210e6812eb1c86ad46b66cc46aa193487]
+> [test failed on linux-next/master 8566fc3b96539e3235909d6bdda198e1282beaed]
+> [test failed on fix commit        9730763f4756e32520cb86778331465e8d063a8f]
+> 
+> in testcase: stress-ng
+> version: stress-ng-x86_64-1c71921fd-1_20250212
+> with following parameters:
+> 
+> 	nr_threads: 100%
+> 	disk: 1HDD
+> 	testtime: 60s
+> 	fs: xfs
+> 	test: fpunch
+> 	cpufreq_governor: performance
+> 
+> 
+> 
+> config: x86_64-rhel-9.4
+> compiler: gcc-12
+> test machine: 128 threads 2 sockets Intel(R) Xeon(R) Platinum 8358 CPU @ 2.60GHz (Ice Lake) with 128G memory
+> 
+> (please refer to attached dmesg/kmsg for entire log/backtrace)
+> 
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <oliver.sang@intel.com>
+> | Closes: https://lore.kernel.org/oe-lkp/202505221030.760980df-lkp@intel.com
+> 
+> 2025-03-20 08:33:52 mkdir -p /mnt/stress-ng
+> 2025-03-20 08:33:52 mount /dev/sdc1 /mnt/stress-ng
+> 2025-03-20 08:33:52 cd /mnt/stress-ng
+>   File: "/mnt/stress-ng"
+>     ID: 82100000000 Namelen: 255     Type: xfs
+> Block size: 4096       Fundamental block size: 4096
+> Blocks: Total: 78604800   Free: 78518242   Available: 78518242
+> Inodes: Total: 157286400  Free: 157286397
+> 2025-03-20 08:33:52 stress-ng --timeout 60 --times --verify --metrics --no-rand-seed --fpunch 128
+> stress-ng: info:  [4680] setting to a 1 min run per stressor
+> stress-ng: info:  [4680] dispatching hogs: 128 fpunch
+> stress-ng: info:  [4680] note: /proc/sys/kernel/sched_autogroup_enabled is 1 and this can impact scheduling throughput for processes not attached to a tty. Setting this to 0 may improve performance metrics
+> stress-ng: warn:  [4680] metrics-check: all bogo-op counters are zero, data may be incorrect
+> stress-ng: metrc: [4680] stressor       bogo ops real time  usr time  sys time   bogo ops/s     bogo ops/s CPU used per       RSS Max
+> stress-ng: metrc: [4680]                           (secs)    (secs)    (secs)   (real time) (usr+sys time) instance (%)          (KB)
+> stress-ng: metrc: [4680] fpunch                0    557.92      0.40     19.56         0.00           0.00         0.03          3180
+> stress-ng: metrc: [4680] miscellaneous metrics:
+> stress-ng: metrc: [4680] fpunch              2049.12 extents per file (geometric mean of 128 instances)
+> stress-ng: info:  [4680] for a 620.45s run time:
+> stress-ng: info:  [4680]   79418.05s available CPU time
+> stress-ng: info:  [4680]       0.40s user time   (  0.00%)
+> stress-ng: info:  [4680]      19.59s system time (  0.02%)
+> stress-ng: info:  [4680]      19.99s total time  (  0.03%)
+> stress-ng: info:  [4680] load average: 250.69 349.62 213.80
+> stress-ng: info:  [4680] skipped: 0
+> stress-ng: info:  [4680] passed: 128: fpunch (128)
+> stress-ng: info:  [4680] failed: 0
+> stress-ng: info:  [4680] metrics untrustworthy: 0
+> stress-ng: info:  [4680] successful run completed in 10 mins, 20.45 secs
+> 
+> 
+> we don't observe any abnormal output in dmesg. below is an example from parent
+> commit.
+> 
+> 2025-03-20 09:12:39 mkdir -p /mnt/stress-ng
+> 2025-03-20 09:12:39 mount /dev/sdc1 /mnt/stress-ng
+> 2025-03-20 09:12:39 cd /mnt/stress-ng
+>   File: "/mnt/stress-ng"
+>     ID: 82100000000 Namelen: 255     Type: xfs
+> Block size: 4096       Fundamental block size: 4096
+> Blocks: Total: 78604800   Free: 78518242   Available: 78518242
+> Inodes: Total: 157286400  Free: 157286397
+> 2025-03-20 09:12:39 stress-ng --timeout 60 --times --verify --metrics --no-rand-seed --fpunch 128
+> stress-ng: info:  [4689] setting to a 1 min run per stressor
+> stress-ng: info:  [4689] dispatching hogs: 128 fpunch
+> stress-ng: info:  [4689] note: /proc/sys/kernel/sched_autogroup_enabled is 1 and this can impact scheduling throughput for processes not attached to a tty. Setting this to 0 may improve performance metrics
+> stress-ng: metrc: [4689] stressor       bogo ops real time  usr time  sys time   bogo ops/s     bogo ops/s CPU used per       RSS Max
+> stress-ng: metrc: [4689]                           (secs)    (secs)    (secs)   (real time) (usr+sys time) instance (%)          (KB)
+> stress-ng: metrc: [4689] fpunch             1166     60.31      0.11     34.66        19.33          33.54         0.45          3164
+> stress-ng: metrc: [4689] miscellaneous metrics:
+> stress-ng: metrc: [4689] fpunch              2051.97 extents per file (geometric mean of 128 instances)
+> stress-ng: info:  [4689] for a 60.91s run time:
+> stress-ng: info:  [4689]    7796.93s available CPU time
+> stress-ng: info:  [4689]       0.11s user time   (  0.00%)
+> stress-ng: info:  [4689]      34.68s system time (  0.44%)
+> stress-ng: info:  [4689]      34.79s total time  (  0.45%)
+> stress-ng: info:  [4689] load average: 325.78 93.83 32.28
+> stress-ng: info:  [4689] skipped: 0
+> stress-ng: info:  [4689] passed: 128: fpunch (128)
+> stress-ng: info:  [4689] failed: 0
+> stress-ng: info:  [4689] metrics untrustworthy: 0
+> stress-ng: info:  [4689] successful run completed in 1 min
+> 
+> 
+> from above, parent can finish run in 1 min, then has "bogo ops" and "bogo ops/s"
+> 
+> for 245618f8e4, the test seems run much longer, and the results for "bogo ops"
+> and "bogo ops/s" are all 0.
+> 
+> 
+> 
+> The kernel config and materials to reproduce are available at:
+> https://download.01.org/0day-ci/archive/20250522/202505221030.760980df-lkp@intel.com
+> 
+
+I tried reproducing this issue but I couldn't recreate it. Is it possible
+for you to run this test on your setup using stress-ng option "--iostat 1"
+as shown below ?
+
+# stress-ng --timeout 60 --times --verify --metrics --no-rand-seed --fpunch 128 --iostat 1
+
+If you can run test with above option then please collect logs and share it.
+That might help to further debug this.
 
 Thanks,
-Jens
+--Nilay
 
->
-> Regards,
-> Christian.
->
-> >
-> > Thanks,
-> > Jens
-> >
-> >>
-> >> Regards,
-> >> Christian.
-> >>
-> >>>
-> >>> Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
-> >>> ---
-> >>>  drivers/dma-buf/dma-heap.c | 3 +++
-> >>>  1 file changed, 3 insertions(+)
-> >>>
-> >>> diff --git a/drivers/dma-buf/dma-heap.c b/drivers/dma-buf/dma-heap.c
-> >>> index 3cbe87d4a464..cdddf0e24dce 100644
-> >>> --- a/drivers/dma-buf/dma-heap.c
-> >>> +++ b/drivers/dma-buf/dma-heap.c
-> >>> @@ -202,6 +202,7 @@ void *dma_heap_get_drvdata(struct dma_heap *heap)
-> >>>  {
-> >>>       return heap->priv;
-> >>>  }
-> >>> +EXPORT_SYMBOL(dma_heap_get_drvdata);
-> >>>
-> >>>  /**
-> >>>   * dma_heap_get_name - get heap name
-> >>> @@ -214,6 +215,7 @@ const char *dma_heap_get_name(struct dma_heap *he=
-ap)
-> >>>  {
-> >>>       return heap->name;
-> >>>  }
-> >>> +EXPORT_SYMBOL(dma_heap_get_name);
-> >>>
-> >>>  /**
-> >>>   * dma_heap_add - adds a heap to dmabuf heaps
-> >>> @@ -303,6 +305,7 @@ struct dma_heap *dma_heap_add(const struct dma_he=
-ap_export_info *exp_info)
-> >>>       kfree(heap);
-> >>>       return err_ret;
-> >>>  }
-> >>> +EXPORT_SYMBOL(dma_heap_add);
-> >>>
-> >>>  static char *dma_heap_devnode(const struct device *dev, umode_t *mod=
-e)
-> >>>  {
-> >>
->
