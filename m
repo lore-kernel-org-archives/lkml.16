@@ -1,238 +1,205 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2103A22FF2B;
-	Thu, 22 May 2025 12:37:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4039A22FF2B
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 12:37:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747917461; cv=none; b=ogvLWxyrlH1qDWA7LtWfmuyCAvtg863/tWLpZ/XkWf0zcItJy26XpWL9ua+KRDzg5erYFQTtPRqyJ9mCdSuhW99Z7KMl0ckk5q9qQPwJ+s85NcVdA0HTi8Fdwh0DnU0SYxLTBSHfSKt1A7PhKo5K6MPknE0mKEOTOade83CjApY=
+	t=1747917467; cv=none; b=USw4J8CVOD9XqVOzatbHO39QEnm/ud0qZh4Cs5TWDPx9juF5zMCYsve4mF/sU2oywcBdWMozbxW7FwAqla4YIqmBqqiIzs0+DqTl5uHtRAjV6VNvUJxVgHp+ctwRgJWEuuN+6m5PMMdmyyzHSpwFJG+/NA4zdC6oC3ekZNusU28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747917461; c=relaxed/simple;
-	bh=7BHIIAUVoOOy0N4+Qaw/456HNKKlG2GRqhkQvFpYOyc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bs4UySUkJfa9yRS9DXwll4bCSBbWKiyDkv2VzNf795JZhPARWrWiIogPPRrfQc4ZK4xDFGTZukUBOhVntVqHZANBHbOy1anW1pTAWphRzKkg4ZSDB/8G8xYm3E5ZRaJNAk3PHLo6cOyRb7hm9I7iBR+0zcoNSfFsuEKwI7rotjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Wk3m2a+6; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1747917467; c=relaxed/simple;
+	bh=W6OEXgXNX8Gqe89LMCjSeM73v/HbqEgC8SQtD8y6JEc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RMhZXYiv0ltftLWNYat41Dq5vEaKaZPKYl6yhzRftl7c5N4tML/sw2YIcCYty5s4xNtFNmsSgE2cPO6BWA8xsqc0XOxeJxupSaH4jpqqejm6Y716ggNbgWVxhAYHrDKvdwTp/XWg+6G4kWdzVO0O/M0fMS8n675g6oINtRwSvaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=puIi8/YX; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Wk3m2a+6"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54M8FCLc006470;
-	Thu, 22 May 2025 12:37:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=jNmUnM
-	pfYdIVeP+Jb/MjUheQzeyhvoVC0wrvPkXFrVg=; b=Wk3m2a+6lODOpA39vwyvOz
-	Ys5GwZSKCcbeRyCNNQHBb57aZ7gwUm/g0wbLmR0GfLctdOLeMDWO54WVJtJzMU3I
-	ieHNO1NGpUpGd16M1e4c6Vhy2x00MWm22Fk0IaHzzmW+wFs+ximHhW1V6TNWhmZK
-	LFTChsnbMhBZbtO/wj3sFP6sYkQHRC94pui2oODCFYo94iqYlmGAhK6FVDlqyES6
-	KWwYjC/6ph8POBCiR7UyoqJLkKb1FMLqmB6096kDj5MtTc6aMmuMr2dHLeIXG/fz
-	ZG/hKUM1kjfidOsioI5O0nVmMKLzngwO5nV5pN0iECOYwI+j1tz9doTUU+Sh/8IQ
-	==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46sg235nhe-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 May 2025 12:37:27 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54M9VSRW020693;
-	Thu, 22 May 2025 12:37:27 GMT
-Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 46rwkq1eac-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 May 2025 12:37:27 +0000
-Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
-	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54MCbMo624511052
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 22 May 2025 12:37:22 GMT
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 01A3C58060;
-	Thu, 22 May 2025 12:37:26 +0000 (GMT)
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id ED9E558059;
-	Thu, 22 May 2025 12:37:22 +0000 (GMT)
-Received: from [9.109.198.223] (unknown [9.109.198.223])
-	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 22 May 2025 12:37:22 +0000 (GMT)
-Message-ID: <95753732-9714-42e0-8097-e2b4c3dd5820@linux.ibm.com>
-Date: Thu, 22 May 2025 18:07:21 +0530
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="puIi8/YX"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54M7ZfFB032698
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 12:37:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=RgX9Aci2OKy/LHgxiHnopths
+	wLGl49EW6vrJhQF5Sd4=; b=puIi8/YXySjnaRhqdPF6arFGXrN64CFKlgec9+hh
+	yazluQo/TWc0lbpIj5odU7MUowdsNeEbFfK5csRrlO3C0EEFxId7eNo2CawsvJnZ
+	PTIOa8jzHsTkAenPYyRBUnBPsa7pvvNLyvf7T6hWxZCFzVqh/eKEEgepS0VGDcna
+	G8U2mZR0m3OYEZFrFk78u0L+N7rS1Jpb6elMICfZ1AdRzNVMlKr5tA9RT+E4VNtX
+	Srz+XlZbxjppxFXyMzBSpx029AEjLf5t/3+r1XP/SXtTmp2gjk84m6fTsazCuRMt
+	Y5npPMV2il3EgMdInXJaV/+Yz9ulQ52+xwmoyVDXNrZcEQ==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46s8c24wpy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 12:37:45 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5f3b8b1a1so1301667685a.3
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 05:37:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747917464; x=1748522264;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RgX9Aci2OKy/LHgxiHnopthswLGl49EW6vrJhQF5Sd4=;
+        b=tni1LZESFJKCoFtlAynmSlOKjvHb4cPLos2/FdGrhERmnpHNOOUsvSpMGQIIt2ZUJN
+         cTNEzMYLNcyKDMlTLzVcLrFrntK/0zBXo/KuMw0+eumiSJ7J9i89sNwpHHF7OUXgYoi9
+         HL8/CRtlqWVcDYbklbs6GatxZlI7gjR1i8ik81iflwt5LJmFmd9H4USXM3M+vEZQY/iX
+         VZDab6zObyYpFNogoKfzoSQYzJst22v2EEEWQNd6nHBqeL7cD9LdOwT/XHHpV/u6zhIK
+         As5puFkL/whUyQql85kqnJ5DJQ9APlNVhSmw4Oo1QmFCSfa7n12p7GYfzaqEJnNAiAHP
+         taag==
+X-Forwarded-Encrypted: i=1; AJvYcCWxhZAt3ExriZk1ARu6UBNkR/r8cB9qTZRVURJUnScWmQQXDM5jKG3KrVQGfI6PJXOf1E9mUZT8b4N5/MM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyejDtEhPxBxLwpEDxdNvYmVPvrCF1obL8rlMprB2UrIzxXIrQE
+	TYR2d/HSIfLtwn2EWxn0u1FpVqQgxsFG8eDPmepACzAwZmuDxESKFOkDa1ztrJIKQAB28ykLZon
+	wyk059Vys7wN1Jje3e02+JrasQSNrJh+QKGb7Ec6eIQilXC9/BqcwJGnItnUmORR/Dyk=
+X-Gm-Gg: ASbGncv+MP0arojeLJrL2ubqc0P1hoILS0mYpaLDgN2uZbIskBs252TB+G2daOOPE2L
+	Hj/6Zd2WY2DuOM0MVEIoJvyRKV/wwILoMnZ4je9Tv426Ypw83+WYbXWGqsifT2dvOts154whZUc
+	jmPlY4RblJuuaEmQ3V1RJxm4cBNTt0/KFsFHKP4dFvoGcxVyrxTmlrbrY7HwZu1EoQZRJK76JK/
+	J7X+dB3owAutdIjhDWIJbSkvAv5P0OrQoora6zsG4slfngTUWvlv3zTuWR7hNUGhUXpuk4ksN2R
+	wZHAoKFnDFVY+rjwreRtNyIzRwAe7HHzMYypH32ucUo4HToLvsM0dN8cOFOa6WdVYgrYyLyzRaM
+	=
+X-Received: by 2002:a05:620a:4013:b0:7ca:f447:c676 with SMTP id af79cd13be357-7cd467a017dmr3460591985a.43.1747917463781;
+        Thu, 22 May 2025 05:37:43 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEuK9ZYaNS9i+Q5elNYnjF85wlG4E7W2PQcAkgZfLcHHNu2rPiTZal61BKORpuvgC6jlMqV/w==
+X-Received: by 2002:a05:620a:4013:b0:7ca:f447:c676 with SMTP id af79cd13be357-7cd467a017dmr3460586985a.43.1747917463368;
+        Thu, 22 May 2025 05:37:43 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e702a289sm3392445e87.163.2025.05.22.05.37.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 May 2025 05:37:42 -0700 (PDT)
+Date: Thu, 22 May 2025 15:37:40 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Ai Chao <aichao@kylinos.cn>
+Cc: perex@perex.cz, tiwai@suse.com, johannes@sipsolutions.net,
+        kuninori.morimoto.gx@renesas.com, lgirdwood@gmail.com,
+        broonie@kernel.org, jbrunet@baylibre.com, neil.armstrong@linaro.org,
+        khilman@baylibre.com, martin.blumenstingl@googlemail.com,
+        shengjiu.wang@gmail.com, Xiubo.Lee@gmail.com, festevam@gmail.com,
+        nicoleotsuka@gmail.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        srinivas.kandagatla@linaro.org, linux-sound@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-renesas-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, imx@lists.linux.dev,
+        kernel@pengutronix.de, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v2 6/6] ASoC: qcom: Use helper function
+ for_each_child_of_node_scoped()
+Message-ID: <jp6lxxm3httbz7ygu7bj3xju4l7jnnhvbpaicb36ju4hyxpb2o@4lhl7xzif6qo>
+References: <20250522050300.519244-1-aichao@kylinos.cn>
+ <20250522050300.519244-7-aichao@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [linus:master] [block] 245618f8e4: stress-ng.fpunch.fail
-To: kernel test robot <oliver.sang@intel.com>
-Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-kernel@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-        Hannes Reinecke <hare@suse.de>, Ming Lei <ming.lei@redhat.com>,
-        cgroups@vger.kernel.org, linux-block@vger.kernel.org
-References: <202505221030.760980df-lkp@intel.com>
-Content-Language: en-US
-From: Nilay Shroff <nilay@linux.ibm.com>
-In-Reply-To: <202505221030.760980df-lkp@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 0BYIBvohkylXjmXVMkU7fnvyw0P-MZXz
-X-Authority-Analysis: v=2.4 cv=RPmzH5i+ c=1 sm=1 tr=0 ts=682f1a87 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=QyXUC8HyAAAA:8 a=i3X5FwGiAAAA:8 a=shPPcO8FRoZR3bCwaZgA:9
- a=QEXdDO2ut3YA:10 a=mmqRlSCDY2ywfjPLJ4af:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIyMDEyOCBTYWx0ZWRfX7vQ1DvbqR7mX Ro6LhcUCd/NpssiUqx4AmVrXpkevmdxYZAfljNXdWhuqYV5ThTWkxKqn12NUe7wawgqMisVWeNC dob6oEuzX0RJbvmPLi24eFK9fTGSkkbnlOpKguNv3MLkDug4w1c62YA578F2cwASbWq/mZyZk/q
- lSFtmDwc1LwxHnH/sHPoxyBcPFBO45tX8AuW7SBePFeOgnqJhbqH0hcN6jZGB3PpLnj2FMh9KBJ /bmCQyYQXhYHWDQW8hI18dJQUWJ6j7VYZ1zGOBnf/9lYgbuanNtGoWbkQlT3Ct/2tRDsN3Uwv36 oHTy+5COnmkyrMRazEQrj+4OmeFXLQDHwd7C0SyS5FXtomlhbXkyx1jZX684DvSl/mvo5EqdWXA
- ipm6YnTlN6/8E/emBS/BW8O13DPHdhcBEtonBNflDl6rPmTDLKlEsm2BTS5kkmIYngv7iuQZ
-X-Proofpoint-GUID: 0BYIBvohkylXjmXVMkU7fnvyw0P-MZXz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250522050300.519244-7-aichao@kylinos.cn>
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIyMDEyNyBTYWx0ZWRfX7w+7C7ZT0jR7
+ Bli4Ohhzv7SS77+Xl3eW9ogBXn5exw4Bwfivst8ulfrvOGwxcaADW6WuWQrBktNCnHQ6HcjIceE
+ xmSYqgN8uUGDjOl/jsfiolqtP+B18qh/h83Wp/bgZsDSx4tmF3fR6DYNGcyOwIqpjOQ6+T2TE2A
+ 7n2h/9luMMEgmM816Kaoq56LJ6eA/KIcQ2RwjCZAO5WckBrldm/0/Ur3ANtZSkBQQLn+y2cGUIF
+ W5fZw2/OzO6WjoQ2NA73s54lQ3Dpo8mYoFmivm72McZVGLJDca44K8kwOOWtcoU0JAl5jW80fYu
+ D7tpQUK27yOz79j59FLjlmN76NRAbwoPFBpwFyYFt46hWsd0pqxvaW/m4VFdJuK0lFA+eojjZYr
+ Zsv0P7i0oHgpzVJXBdyPFw0O+DGXaCmENQfSEzbNO7uTb988uwHrVhOq/5agkQsYSJRkCkdp
+X-Authority-Analysis: v=2.4 cv=RIuzH5i+ c=1 sm=1 tr=0 ts=682f1a99 cx=c_pps
+ a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=dt9VzEwgFbYA:10 a=rlxKSa1xbkCyiMC8iTsA:9 a=CjuIK1q_8ugA:10
+ a=NFOGd7dJGGMPyQGDc5-O:22
+X-Proofpoint-ORIG-GUID: XxG_43SFrxGsKeI71vabLKRW_SV1_U1j
+X-Proofpoint-GUID: XxG_43SFrxGsKeI71vabLKRW_SV1_U1j
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-22_06,2025-05-22_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- lowpriorityscore=0 impostorscore=0 adultscore=0 priorityscore=1501
- bulkscore=0 phishscore=0 mlxscore=0 malwarescore=0 spamscore=0
- mlxlogscore=999 suspectscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505160000 definitions=main-2505220128
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 phishscore=0 suspectscore=0 malwarescore=0 bulkscore=0
+ mlxlogscore=911 spamscore=0 lowpriorityscore=0 mlxscore=0 priorityscore=1501
+ adultscore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
+ definitions=main-2505220127
 
+On Thu, May 22, 2025 at 01:02:59PM +0800, Ai Chao wrote:
+> The for_each_child_of_node_scoped() helper provides a scope-based
+> clean-up functionality to put the device_node automatically, and
+> as such, there is no need to call of_node_put() directly.
 
+There are no calls to of_node_put() in the commit. So the commit message
+is incorrect / not-applicable.
 
-On 5/22/25 7:59 AM, kernel test robot wrote:
 > 
+> Thus, use this helper to simplify the code.
 > 
-> Hello,
+> Signed-off-by: Ai Chao <aichao@kylinos.cn>
+> ---
+>  sound/soc/qcom/lpass-cpu.c       | 3 +--
+>  sound/soc/qcom/qdsp6/q6afe-dai.c | 3 +--
+>  sound/soc/qcom/qdsp6/q6asm-dai.c | 4 +---
+>  3 files changed, 3 insertions(+), 7 deletions(-)
 > 
-> 
-> we don't have enough knowledge if this is a kernel issue or test case issue.
-> 
-> =========================================================================================
-> tbox_group/testcase/rootfs/kconfig/compiler/nr_threads/disk/testtime/fs/test/cpufreq_governor:
->   lkp-icl-2sp4/stress-ng/debian-12-x86_64-20240206.cgz/x86_64-rhel-9.4/gcc-12/100%/1HDD/60s/xfs/fpunch/performance
-> 
-> 3efe7571c3ae2b64 245618f8e45ff4f79327627b474
-> ---------------- ---------------------------
->        fail:runs  %reproduction    fail:runs
->            |             |             |
->            :6          100%           6:6     stress-ng.fpunch.fail
-> 
-> since the failure is persistent, just report what we observed in our tests FYI.
-> 
-> 
-> kernel test robot noticed "stress-ng.fpunch.fail" on:
-> 
-> commit: 245618f8e45ff4f79327627b474b563da71c2c75 ("block: protect wbt_lat_usec using q->elevator_lock")
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
-> 
-> [test failed on linus/master      b36ddb9210e6812eb1c86ad46b66cc46aa193487]
-> [test failed on linux-next/master 8566fc3b96539e3235909d6bdda198e1282beaed]
-> [test failed on fix commit        9730763f4756e32520cb86778331465e8d063a8f]
-> 
-> in testcase: stress-ng
-> version: stress-ng-x86_64-1c71921fd-1_20250212
-> with following parameters:
-> 
-> 	nr_threads: 100%
-> 	disk: 1HDD
-> 	testtime: 60s
-> 	fs: xfs
-> 	test: fpunch
-> 	cpufreq_governor: performance
-> 
-> 
-> 
-> config: x86_64-rhel-9.4
-> compiler: gcc-12
-> test machine: 128 threads 2 sockets Intel(R) Xeon(R) Platinum 8358 CPU @ 2.60GHz (Ice Lake) with 128G memory
-> 
-> (please refer to attached dmesg/kmsg for entire log/backtrace)
-> 
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <oliver.sang@intel.com>
-> | Closes: https://lore.kernel.org/oe-lkp/202505221030.760980df-lkp@intel.com
-> 
-> 2025-03-20 08:33:52 mkdir -p /mnt/stress-ng
-> 2025-03-20 08:33:52 mount /dev/sdc1 /mnt/stress-ng
-> 2025-03-20 08:33:52 cd /mnt/stress-ng
->   File: "/mnt/stress-ng"
->     ID: 82100000000 Namelen: 255     Type: xfs
-> Block size: 4096       Fundamental block size: 4096
-> Blocks: Total: 78604800   Free: 78518242   Available: 78518242
-> Inodes: Total: 157286400  Free: 157286397
-> 2025-03-20 08:33:52 stress-ng --timeout 60 --times --verify --metrics --no-rand-seed --fpunch 128
-> stress-ng: info:  [4680] setting to a 1 min run per stressor
-> stress-ng: info:  [4680] dispatching hogs: 128 fpunch
-> stress-ng: info:  [4680] note: /proc/sys/kernel/sched_autogroup_enabled is 1 and this can impact scheduling throughput for processes not attached to a tty. Setting this to 0 may improve performance metrics
-> stress-ng: warn:  [4680] metrics-check: all bogo-op counters are zero, data may be incorrect
-> stress-ng: metrc: [4680] stressor       bogo ops real time  usr time  sys time   bogo ops/s     bogo ops/s CPU used per       RSS Max
-> stress-ng: metrc: [4680]                           (secs)    (secs)    (secs)   (real time) (usr+sys time) instance (%)          (KB)
-> stress-ng: metrc: [4680] fpunch                0    557.92      0.40     19.56         0.00           0.00         0.03          3180
-> stress-ng: metrc: [4680] miscellaneous metrics:
-> stress-ng: metrc: [4680] fpunch              2049.12 extents per file (geometric mean of 128 instances)
-> stress-ng: info:  [4680] for a 620.45s run time:
-> stress-ng: info:  [4680]   79418.05s available CPU time
-> stress-ng: info:  [4680]       0.40s user time   (  0.00%)
-> stress-ng: info:  [4680]      19.59s system time (  0.02%)
-> stress-ng: info:  [4680]      19.99s total time  (  0.03%)
-> stress-ng: info:  [4680] load average: 250.69 349.62 213.80
-> stress-ng: info:  [4680] skipped: 0
-> stress-ng: info:  [4680] passed: 128: fpunch (128)
-> stress-ng: info:  [4680] failed: 0
-> stress-ng: info:  [4680] metrics untrustworthy: 0
-> stress-ng: info:  [4680] successful run completed in 10 mins, 20.45 secs
-> 
-> 
-> we don't observe any abnormal output in dmesg. below is an example from parent
-> commit.
-> 
-> 2025-03-20 09:12:39 mkdir -p /mnt/stress-ng
-> 2025-03-20 09:12:39 mount /dev/sdc1 /mnt/stress-ng
-> 2025-03-20 09:12:39 cd /mnt/stress-ng
->   File: "/mnt/stress-ng"
->     ID: 82100000000 Namelen: 255     Type: xfs
-> Block size: 4096       Fundamental block size: 4096
-> Blocks: Total: 78604800   Free: 78518242   Available: 78518242
-> Inodes: Total: 157286400  Free: 157286397
-> 2025-03-20 09:12:39 stress-ng --timeout 60 --times --verify --metrics --no-rand-seed --fpunch 128
-> stress-ng: info:  [4689] setting to a 1 min run per stressor
-> stress-ng: info:  [4689] dispatching hogs: 128 fpunch
-> stress-ng: info:  [4689] note: /proc/sys/kernel/sched_autogroup_enabled is 1 and this can impact scheduling throughput for processes not attached to a tty. Setting this to 0 may improve performance metrics
-> stress-ng: metrc: [4689] stressor       bogo ops real time  usr time  sys time   bogo ops/s     bogo ops/s CPU used per       RSS Max
-> stress-ng: metrc: [4689]                           (secs)    (secs)    (secs)   (real time) (usr+sys time) instance (%)          (KB)
-> stress-ng: metrc: [4689] fpunch             1166     60.31      0.11     34.66        19.33          33.54         0.45          3164
-> stress-ng: metrc: [4689] miscellaneous metrics:
-> stress-ng: metrc: [4689] fpunch              2051.97 extents per file (geometric mean of 128 instances)
-> stress-ng: info:  [4689] for a 60.91s run time:
-> stress-ng: info:  [4689]    7796.93s available CPU time
-> stress-ng: info:  [4689]       0.11s user time   (  0.00%)
-> stress-ng: info:  [4689]      34.68s system time (  0.44%)
-> stress-ng: info:  [4689]      34.79s total time  (  0.45%)
-> stress-ng: info:  [4689] load average: 325.78 93.83 32.28
-> stress-ng: info:  [4689] skipped: 0
-> stress-ng: info:  [4689] passed: 128: fpunch (128)
-> stress-ng: info:  [4689] failed: 0
-> stress-ng: info:  [4689] metrics untrustworthy: 0
-> stress-ng: info:  [4689] successful run completed in 1 min
-> 
-> 
-> from above, parent can finish run in 1 min, then has "bogo ops" and "bogo ops/s"
-> 
-> for 245618f8e4, the test seems run much longer, and the results for "bogo ops"
-> and "bogo ops/s" are all 0.
-> 
-> 
-> 
-> The kernel config and materials to reproduce are available at:
-> https://download.01.org/0day-ci/archive/20250522/202505221030.760980df-lkp@intel.com
+> diff --git a/sound/soc/qcom/lpass-cpu.c b/sound/soc/qcom/lpass-cpu.c
+> index 242bc16da36d..62f49fe46273 100644
+> --- a/sound/soc/qcom/lpass-cpu.c
+> +++ b/sound/soc/qcom/lpass-cpu.c
+> @@ -1046,7 +1046,6 @@ static unsigned int of_lpass_cpu_parse_sd_lines(struct device *dev,
+>  static void of_lpass_cpu_parse_dai_data(struct device *dev,
+>  					struct lpass_data *data)
+>  {
+> -	struct device_node *node;
+>  	int ret, i, id;
+>  
+>  	/* Allow all channels by default for backwards compatibility */
+> @@ -1056,7 +1055,7 @@ static void of_lpass_cpu_parse_dai_data(struct device *dev,
+>  		data->mi2s_capture_sd_mode[id] = LPAIF_I2SCTL_MODE_8CH;
+>  	}
+>  
+> -	for_each_child_of_node(dev->of_node, node) {
+> +	for_each_child_of_node_scoped(dev->of_node, node) {
+>  		ret = of_property_read_u32(node, "reg", &id);
+>  		if (ret || id < 0) {
+>  			dev_err(dev, "valid dai id not found: %d\n", ret);
+> diff --git a/sound/soc/qcom/qdsp6/q6afe-dai.c b/sound/soc/qcom/qdsp6/q6afe-dai.c
+> index 7d9628cda875..64735f2adf8f 100644
+> --- a/sound/soc/qcom/qdsp6/q6afe-dai.c
+> +++ b/sound/soc/qcom/qdsp6/q6afe-dai.c
+> @@ -962,10 +962,9 @@ static const struct snd_soc_component_driver q6afe_dai_component = {
+>  static void of_q6afe_parse_dai_data(struct device *dev,
+>  				    struct q6afe_dai_data *data)
+>  {
+> -	struct device_node *node;
+>  	int ret;
+>  
+> -	for_each_child_of_node(dev->of_node, node) {
+> +	for_each_child_of_node_scoped(dev->of_node, node) {
+>  		unsigned int lines[Q6AFE_MAX_MI2S_LINES];
+>  		struct q6afe_dai_priv_data *priv;
+>  		int id, i, num_lines;
+> diff --git a/sound/soc/qcom/qdsp6/q6asm-dai.c b/sound/soc/qcom/qdsp6/q6asm-dai.c
+> index a400c9a31fea..d7680dd3a3bb 100644
+> --- a/sound/soc/qcom/qdsp6/q6asm-dai.c
+> +++ b/sound/soc/qcom/qdsp6/q6asm-dai.c
+> @@ -1236,10 +1236,8 @@ static int of_q6asm_parse_dai_data(struct device *dev,
+>  {
+>  	struct snd_soc_dai_driver *dai_drv;
+>  	struct snd_soc_pcm_stream empty_stream;
+> -	struct device_node *node;
+>  	int ret, id, dir, idx = 0;
+>  
+> -
+>  	pdata->num_dais = of_get_child_count(dev->of_node);
+>  	if (!pdata->num_dais) {
+>  		dev_err(dev, "No dais found in DT\n");
+> @@ -1253,7 +1251,7 @@ static int of_q6asm_parse_dai_data(struct device *dev,
+>  
+>  	memset(&empty_stream, 0, sizeof(empty_stream));
+>  
+> -	for_each_child_of_node(dev->of_node, node) {
+> +	for_each_child_of_node_scoped(dev->of_node, node) {
+>  		ret = of_property_read_u32(node, "reg", &id);
+>  		if (ret || id >= MAX_SESSIONS || id < 0) {
+>  			dev_err(dev, "valid dai id not found:%d\n", ret);
+> -- 
+> 2.47.1
 > 
 
-I tried reproducing this issue but I couldn't recreate it. Is it possible
-for you to run this test on your setup using stress-ng option "--iostat 1"
-as shown below ?
-
-# stress-ng --timeout 60 --times --verify --metrics --no-rand-seed --fpunch 128 --iostat 1
-
-If you can run test with above option then please collect logs and share it.
-That might help to further debug this.
-
-Thanks,
---Nilay
-
+-- 
+With best wishes
+Dmitry
