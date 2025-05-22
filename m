@@ -1,259 +1,227 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2054.outbound.protection.outlook.com [40.107.249.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 623DD13BC02
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 03:15:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747883754; cv=none; b=bezlGRZ0O5w2l4u4AsuBXtJ2b2BdNbX4kSkzhh4gVYNR8EF1Lh6PuCptPFiW7j6KN4EN+m7M9j2iT58L30j6cGLOZPPwKqbxWscr/Lh/QtAYiHOGh+YIbiYNkvXtxCLWwSB3cWbQqARE8TZKadeWV+A/EyDURv+UlqOKiQJRaUE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747883754; c=relaxed/simple;
-	bh=ufrLgZQ485FEvo3uWuTgxV7fGaWGc6qRHQtu+pOXEFo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qUqtiLxQ45PsJEQ/lJUhObLscbxpsmmv910GRYGXqvvU8DRM/bcgDLd5ETjyW+dFtcOJCKrdL7iMw2n/wWUfmprCvQ2zM2It/cuCEIpeB6EkSZcv3WmBWr3qgnFo/zwSQbKpSHPYPvAajHHbROEKrPcHnYqwdEOAHZnNX6NNWOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fUjrZJr+; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FEE418EAB;
+	Thu, 22 May 2025 03:16:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.249.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747883779; cv=fail; b=GFNNBwW2LaIuk4ckP7ugWNYruIawqRBUDLzo93pcHubLZ5J34uKjqFOMqRM0QLxUcOG2CXqD/AXTnjGRQ3QCGGeU5KEZ0kwHpUXZkol6pjwtb+4HZmVIPl0/ng+/6LFZr04iH4uiRf+OwYaQCsCkq2b6aJK9JvERVzeu2sUaiJc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747883779; c=relaxed/simple;
+	bh=X7I4t19FQz8PfXQIdft24AQAfnB/GXDUWj4vOZYHKrE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=OtKGAAFAiLjg1WUmY+qRXIDQyvgYdZ+D97VNC995ewv+IF5ROEASjuAjeGvYfkARkMYUIAnsAqJHwosYpIqo9axikZfer7Qp1wH6k6mPs/AxqDW9cdlG8e3yKbahxLWArAR9IvGqN3FOYw5iW/2kOiNL6jMKM+nyriz4tR4j/vA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=PgvRIm0X; arc=fail smtp.client-ip=40.107.249.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fUjrZJr+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1747883751;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4hDDPXNPVUX4wJWjO3RS6faGJDUQmnN1Tk6BjYHPjDw=;
-	b=fUjrZJr+LvVoOokr7s904hGm7DhWL1V9fRPvFl6xuaiJ7zfC3eyoWipW0w5QEKmB7TUUAQ
-	pW88Gduwv5BzYbHkEldYjaEI4GngBVrP0OVkMvJ5pR6Zlw8vWVb21FllpqnFQ3dB+0VDUm
-	W05rPVesIQR9cpQmr/upUP0qTwSuoaM=
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com
- [209.85.214.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-464-yaduonmIPBmHJgqvTh6nYQ-1; Wed, 21 May 2025 23:15:49 -0400
-X-MC-Unique: yaduonmIPBmHJgqvTh6nYQ-1
-X-Mimecast-MFC-AGG-ID: yaduonmIPBmHJgqvTh6nYQ_1747883749
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-22de54b0b97so71051615ad.2
-        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 20:15:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747883749; x=1748488549;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4hDDPXNPVUX4wJWjO3RS6faGJDUQmnN1Tk6BjYHPjDw=;
-        b=wC0j6IMvUN4VPbzXJCWCf23fV339E0jP38FQKsKFsB+hsCkbNqiIZQJS6WEInvRu1B
-         6aHo1QmwNUnpzG3kZs63X2nYT322I/j4c0gYCWWb6j1nwmgVlrDENQUCxUVeBy+Z4RJm
-         Wm1rZaEXOFjEo1NJ+htYW6HDL+td4s1SzgbAMYB7uHvE4VtBdayXfIY7WcpY5lSVJ/rr
-         KJZ/XaLKmLan02yndy+MzjviNOi9H9xDq9wH435InrOLWxK3/hVtUJZ16vL8/32dkX9h
-         v7vAOcyLEiPWOcams9uNpY67zTkNXG09pQatuqLoK4kka1yUrJkShVVfjl+vkxfVDcM9
-         RG5w==
-X-Forwarded-Encrypted: i=1; AJvYcCUOHraDWfPdhbuKTFAoO/dYqH/kIshL+yjqbBrcrE5k20Igg+TPHixZWZQYfry9j/5vgJB8u25oPpNR5Aw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7KVhHPbg7lBbqk4XdJOxA7JTVEXcKpBO7tnTdVJ6Md1nUVsuN
-	kuAe8oEdoP9Mm0qZQpxb4fBdjlW9j6g49NHrV2XQ6XtX7lRiNahSxnZiFyKIJB8MzwTkHXM03rF
-	C0gCX9gpJITn7KuTK02Rk17LwpWGc+/rjCTto8CKJa2yeahUgp8Hg19nXdc6aHnwPZQ==
-X-Gm-Gg: ASbGncsuE7/ExOasTY0tupQKhiQlBaPSy3xcJiGRL6klwCMbITWwME1rLjwubNda8vB
-	wKHoNTptsdrZgQVjogC7elbAtWd2KzKA8cZybHiiljPsQnRaYi00LQRmhB50k9EPz8KbFIRxYD5
-	gLKOTVpri6LB3MB4Q8lqV0ZNRRQrzMkBCjTH8buOLQnESsbrD7cfOOnmF0YcBwRkxdwPn8pgk3I
-	9hy2xf1aioh0R34GlxkDFuOobnHrsZkjuP8SZQ95PD0K2jI5faHqS/1hUuwR7pEmDrFNwArRrRG
-	eM0=
-X-Received: by 2002:a17:902:ecd2:b0:224:2384:5b40 with SMTP id d9443c01a7336-231de31b3dbmr363597655ad.24.1747883748859;
-        Wed, 21 May 2025 20:15:48 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEcfftTSP/k2nGycwqU2/FTMkDY/jJeqv6xU/mivJ+VvdxVqymTYQF+F0wBnxQg3D8g55fOLw==
-X-Received: by 2002:a17:902:ecd2:b0:224:2384:5b40 with SMTP id d9443c01a7336-231de31b3dbmr363597425ad.24.1747883748476;
-        Wed, 21 May 2025 20:15:48 -0700 (PDT)
-Received: from localhost ([209.132.188.88])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-231d4ed195csm99296115ad.212.2025.05.21.20.15.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 May 2025 20:15:48 -0700 (PDT)
-Date: Thu, 22 May 2025 11:14:35 +0800
-From: Coiby Xu <coxu@redhat.com>
-To: Baoquan He <bhe@redhat.com>, Mimi Zohar <zohar@linux.ibm.com>
-Cc: linux-integrity@vger.kernel.org, kexec@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, pmenzel@molgen.mpg.de, ruyang@redhat.com, 
-	chenste@linux.microsoft.com
-Subject: Re: [PATCH] ima: add a knob ima= to make IMA be able to be disabled
-Message-ID: <f4qj7ql2g2yhp44f6quq2ighboq57vilzepnltxgje5gg2cymv@vi5i2krnk7zf>
-References: <20250515233953.14685-1-bhe@redhat.com>
- <aCaFNvHbYxrCaPbe@MiWiFi-R3L-srv>
- <1d2848fe45dbf58707cecf16c4fc46b179e24415.camel@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="PgvRIm0X"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=SzS1mrMIEZytt4sHc2cz/wLNsbrGoYYipG95HBwvN3q9AhYUyCi6cMI4Bsz/CBSSvjXUpDBOalrimsZlb2oah9NmznOUP/i9O+NwpY2txsh8aa844rxd3uBH3ML4Yn6bO80xRyn22dyFDD2BcQfZo/C5Rx9iF0OQO3XnnWRveOPMemTfTxdaKyp+WbsN2h6SES4kl6fTrFkfFMYBGFJF0e8pemlqr4OAnib0XssNGvrWFUSCy2zxTGOTDci+44EhduDHqqWrgHXg6Oo18lQ4kyeB64YCIhasbqSVXLQYxC2wrScN2Fr8VO+1l4y7MJ/iX3nXxztThB4X+s4vt6oXUQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=X7I4t19FQz8PfXQIdft24AQAfnB/GXDUWj4vOZYHKrE=;
+ b=QTTn/a9yTXQOajLznYjNNUgrf4JYLlA0FFieRJjF7ygl7PdcHK4cHTnYuWzlVWBkoZYjh35rxdp30H63bmrTem08OZjwG0tRCQP7sq4x0qyw2GivH0ir+Lqkxuo1OEz/YMBP3i0UXMmI8L29rbONg2NIQKmnCdcrhJYkw7lhWG7xYGSc9jEvubRVbbXIYOrG56kWosDRMUx+abhOSRmfDGpz4ppQ3iFnmWHSkdD80ZU/Pr5/rL+Z6DDwSak0AttMmOryFHDBNBNFEswvIugOg6AYfES2D4gcsQ3WO+tpULe6FhxmZprGV8XE1KMiqU/Q0bGcO+V9uuFHZbuKlUesAQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=X7I4t19FQz8PfXQIdft24AQAfnB/GXDUWj4vOZYHKrE=;
+ b=PgvRIm0XWUcFE05w/qHKzH/ngv0/t439GqPUtrxn2GiMm3br3WGHyAhKquOq2vtSbEgG8oNVLEgClCIdwCM1YRHcpgri8Gbwtn4PzIWbT2XDczVAkH568bLEremYMcAIPMdYiJdHJVk7keb9TtUbZTumkyD5TWMgXEBVLbw5d0QAApqJZgXr5IpqndwyVCPenzjaAGpFPFqMxEoNAC5/JhOYRsbYBdTj1pLzdXkuOIaX9VJUda7uYhHn+pP+ErA1nNTt3yaDIr3/ag4teiwjCZPSF3GlihQrBt5VLeKbP2mr0zmP7NUTBHg5c61K1t0uFtJNn8/skQ8nytUMSHFBvg==
+Received: from DU0PR04MB9496.eurprd04.prod.outlook.com (2603:10a6:10:32d::19)
+ by VI1PR04MB7168.eurprd04.prod.outlook.com (2603:10a6:800:129::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.21; Thu, 22 May
+ 2025 03:16:11 +0000
+Received: from DU0PR04MB9496.eurprd04.prod.outlook.com
+ ([fe80::4fa3:7420:14ed:5334]) by DU0PR04MB9496.eurprd04.prod.outlook.com
+ ([fe80::4fa3:7420:14ed:5334%4]) with mapi id 15.20.8722.031; Thu, 22 May 2025
+ 03:16:11 +0000
+From: Bough Chen <haibo.chen@nxp.com>
+To: Frank Li <frank.li@nxp.com>, Luke Wang <ziniu.wang_1@nxp.com>
+CC: "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+	"ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+	"linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+	"shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de"
+	<s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>,
+	"festevam@gmail.com" <festevam@gmail.com>, "imx@lists.linux.dev"
+	<imx@lists.linux.dev>, dl-S32 <S32@nxp.com>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] mmc: sdhci-esdhc-imx: do not change pinctrl state in
+ suspend if function irq is wakeup source
+Thread-Topic: [PATCH] mmc: sdhci-esdhc-imx: do not change pinctrl state in
+ suspend if function irq is wakeup source
+Thread-Index: AQHbygCrODuPKxSNKESLE+EO5yGJEbPdPc6AgAC6N2A=
+Date: Thu, 22 May 2025 03:16:11 +0000
+Message-ID:
+ <DU0PR04MB949685245DB01F28E15C24D29099A@DU0PR04MB9496.eurprd04.prod.outlook.com>
+References: <20250521033134.112671-1-ziniu.wang_1@nxp.com>
+ <aC33qfRFEvNbwSRn@lizhi-Precision-Tower-5810>
+In-Reply-To: <aC33qfRFEvNbwSRn@lizhi-Precision-Tower-5810>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DU0PR04MB9496:EE_|VI1PR04MB7168:EE_
+x-ms-office365-filtering-correlation-id: 7c5d9c6f-1ce3-41be-3da2-08dd98df00e9
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|366016|7416014|376014|38070700018|7053199007;
+x-microsoft-antispam-message-info:
+ =?gb2312?B?TFlkVmpQakNkVlVVR2NCQStXSHhRYnNNYmxuWXRFNzV1MlR4V3BRV2IvaXR1?=
+ =?gb2312?B?ZmMxSmMwUFlqMEZZbDRoSExRbjlQdXRoOEd0T2dmQUg5cjN4bUxhbi9kM1hX?=
+ =?gb2312?B?SjBWRTBQeU1uQWE1bm9lNkVrbnJ3MXo2NXZRdWdGOU50QVFhOGQrSWgzUFdJ?=
+ =?gb2312?B?ajJuZlZvamtuYUFzUWpYcEhyM3FpTFd3UGtHa2hrbFFQQVBNUXhnaWYzeDNn?=
+ =?gb2312?B?NzlKWVlIa1hRNEtOTlVsWkdScWJ4TTRWOVVad3F4bHlZREhLZ05pWVg2QmNj?=
+ =?gb2312?B?UXRXNUlUMWM0VENrZ3BjZlpQQzlZYkFOV091aG84R2NsYllxNGxZaFlFRGJC?=
+ =?gb2312?B?VUVPYXRNSDF1dXpiNytnLzhnRTBBSjdkVFdxdTU5Vml5WFN2bFJ5Qjk5OTJi?=
+ =?gb2312?B?VEpVVXJuM0VUbXN4Y3UyYSt6NU0yOEcyN1dkNDBtMnhSYmVLRTUvYWpQNVNC?=
+ =?gb2312?B?OGJITDBKcGFobDZoeVlDdFA2d3F6QXNWNWpZZ3RMd2w1NDIrNHNsQ3dUWUhM?=
+ =?gb2312?B?a3ZOclRYQlZTaVR2Ym9ORG9MMzI3NFFlMTRVa1Z5TzR3R1JwVTRtdWFqaFc1?=
+ =?gb2312?B?SXIwVEM4NDM2UE9PNklPL2lBcyszWE9DcDEvYXROSEFYbG5UMzNic1ZQUmI5?=
+ =?gb2312?B?K2FMdTVNaWtKeEFKRlVjWUk4NXBQY1g2R2YvQmR3OTdnazJsVXViSHN6OTN6?=
+ =?gb2312?B?U2VmOHYvQVBPMlNvcU1UQWhOV1hxemptTzhnQmNYTVp5eVZFNlJKNGwyVTFz?=
+ =?gb2312?B?bmQwZ2lrVDNzSy94N0RVYllhanU0RUxzUkltc2VHdjluUWlES1cydHZrNlJS?=
+ =?gb2312?B?Qmk3OWl1T2ZRbGlja2FoOXBKUFgyQjBtaDRhWHBrek9IRVdpZzUzNE9rQktw?=
+ =?gb2312?B?K2FsNlRkSitiMEV3SjdabFpEMnBlc3hLYVJXZndWU2xubW1lUzRWZkFzQkZR?=
+ =?gb2312?B?RnlBTVVvbXV1enJYMzRHYTA3UG10Ri9mM0sxRHZLQkJzSDMxR3p0ZmxTS0hB?=
+ =?gb2312?B?aUtJNzJMdTJGL0I2V3BQSHdKWnovMDdBWFJ0bENwMTZXbGgzL0d2bGdrQ2Ji?=
+ =?gb2312?B?ejkyclhmbTF4Y0Z1VlpadmFlL09FdHRpWFZkOHlEVW03TkZVa1M4VWptSkdZ?=
+ =?gb2312?B?aDlocFJrWEFneFVsZThXb3hSemxuODZOb0tVS1dQUXdoL1BPT295TUxnUGpV?=
+ =?gb2312?B?S0V3VHptb3hwS0RHUVdQUXF5UjRLbzRKVTBEWTBKK05KakJYOFNqbFdHWWgv?=
+ =?gb2312?B?YUFSZjN2bXI5aGZyeWdkK3A1ZHRYRVdDcEFPR2Nvc09GUE1TcVJNN3dsMHlL?=
+ =?gb2312?B?MFF4T0g3KzUrWGZ0Z1ZWZlRET0hHeStYSEYyZG1kbWIwY003eWROODUrR2xn?=
+ =?gb2312?B?SkJGSVJUWlliVEw4WGY0OGxlZngybG4zZ2xqWFRDdDJuTTNNaDd0RWtFSXdv?=
+ =?gb2312?B?YmRTNldsd1k0SVB6SHZkbVdlemFCaUQ5aU52TzR2UTFoMG9FS3dTOFYrS2dL?=
+ =?gb2312?B?bHV5TkREcHVRdjUwdzZlYVROY1ZlUFdHbkFUTnFOQjJmVDB1cGxlNmM2My9I?=
+ =?gb2312?B?Nm12OG5rOTNhVEt6ZVlBQnU2OGxLRDgxNXNXdGJtYWVwNFJyZWJlc0dKVzlI?=
+ =?gb2312?B?VUZ6c0J1Y1UybXVVTGt2VGRLUXp5eDZYRTE3bEVRQ1hqaG9vQ0pTN1BCdWg1?=
+ =?gb2312?B?eGwvU0k2eGpIY1BjNDJCK1Y5RXFLaTVqNDExemQ4VmxTTVdTamhvK3ZJelpZ?=
+ =?gb2312?B?b1JWY2t5VzA4d28xVlhxWU1EOTMyUVdrZVVVdDdZbmcrV3JTUUR1OGczZEVy?=
+ =?gb2312?B?SFFCbDFxbVUxZ0ErL3NhTmdoblZlWFpFendXa2tLMTFTNEl1VVhpLzlPMVRN?=
+ =?gb2312?B?V1pXaFEvOXFWVEhsNmFwd01aQzU3cEl5YTJabkg5TWowVzlYS3lkcUsxL0h0?=
+ =?gb2312?B?bFYrUTB5YVgwczFlSlJnQUJJektpZlpYeE9SUzFETlNvQ215TjA5eWtFdjgr?=
+ =?gb2312?B?U1JDV3NZM1FRPT0=?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:zh-cn;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9496.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(38070700018)(7053199007);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?gb2312?B?blRpbzZCODU1MVRCSHZQbGdSQSs5R0RLT2FscW9NdmMweTJCVVJNQTIxUGkr?=
+ =?gb2312?B?MysxRU9aZUJCNEZUVk1zTkpwUG5rV2hIQmVzTSt2cndYakJ2UlhCWTQzYzNr?=
+ =?gb2312?B?bnVBT25yNElFOHJIVnhwTFpKdUhHYUNzTTQ0NWhHVlRteVpZeGtaMWZjcnFP?=
+ =?gb2312?B?b3A0NFVMeHZWeGZEeVptbWRkN2RUaU5mc1ZQMmJTckwyYVU0QmQwVGwrWWxs?=
+ =?gb2312?B?NWYrME93UStYTGNualFtbXdxYVpHS2I4WHFRRDZwdU5WclRhYnJybGRyTmpo?=
+ =?gb2312?B?akw2UzFTR20ySmZsY01odThIMkJFV2xMWXNqVU1nWjljOTJOTDA5SkRwZTlq?=
+ =?gb2312?B?KzlWV2xaYStncmZ3T1REVlMyTXpseUdIQS9zSlF2TEdXbzJ0MFZ1VlRTSVM1?=
+ =?gb2312?B?OVpkSERLaTFJQUpsbnNOdHlnT2N3VUU5QjFhSW44NGo5U0RQdFpzd2JwRVoz?=
+ =?gb2312?B?bEtuL0Q1ZjVucUl1UTB3WHJmOEV3cHIrMXFFOFh5VWtTSnV1dnZUdWxHWmJN?=
+ =?gb2312?B?ajFja1JISXgvdDc2VjNuN2dZNldtd2dzZ1JhZllRM2NMbzlBRkdHMmhZUkJV?=
+ =?gb2312?B?bTRpRys0Q0hnK1RmNGovT2V5ck9uVUlCcVowYnBnajFtVllidndCY3BMTTB5?=
+ =?gb2312?B?cjhhdWdXS21DejkxZ0ZtL2Q0NGFtejN6SHhyNE1nWm9rVU5YcG0xREFQWjN1?=
+ =?gb2312?B?VmUxTk5CTVc3b3F2TjlpSGlkWE1TZis1bFBnWDRLNHZBWG1FUXo3ZUt4cEhG?=
+ =?gb2312?B?UVg3WGNpM05VVjRnaEtyWU9MMG1IdXRFTzQxa3RaamVUUVc1Q1c2ZGFhajJ1?=
+ =?gb2312?B?YUZQQWh5ZUJpOHpvbmdiMkFuZnhRdHpaemlvVGpaVU9BMXNGdmlqNXh4cFNO?=
+ =?gb2312?B?azM1U1l5Q0xMQTVZQXpJNWFIUGc4SmYzVVhjWXRMWnJpNGQ4TDVIOTZIWkFH?=
+ =?gb2312?B?SjZvSTMwU0JNbjRLc0JHYmdHOWNjSnJwMXdtMDVZYWRsajU2cVJKZE81eFFP?=
+ =?gb2312?B?M05Da1R3WGVaMWFkQ3NTMFNUQXlVN3YwVWZLOW5qVENqaVZKQnVtWWNlZWJn?=
+ =?gb2312?B?dmhhSDFWK21DdHJ5VkNNS2dHazJ4USthUmpEbmNDVVg1V0ZLYURCdXdkR01L?=
+ =?gb2312?B?cHNWM1I4NzlYTkkvQ0Y3TWpobFNvRmtTb1BqMkFmK3Vzb2NKR2tYVDJoVG04?=
+ =?gb2312?B?UHliOHBmNnpGN1BWZGdsWHExaTRySXlTVElYbGhacFVhUzcxbHNRdFV5bEM0?=
+ =?gb2312?B?bTQ0VUViSXhUd0JkMCt2b0labzJnSkZZV2tWU0MwVG1rc0hMd0w1bFI3ZHQz?=
+ =?gb2312?B?UnprU3F2OFVxQVRNVVhSaFFEMWd1L2xJeGJJbzhPcm9JQi9MTUFsVDdVWXBp?=
+ =?gb2312?B?Nys3emlFRHkrUVZYdGR0SmZhVWZOdHI0N0EzQ2h2VDZnYU9UeEFIVncvNnpU?=
+ =?gb2312?B?WjRyUnRDN1M0VldmL3U0cGVTdkhGbjZ1eWZ0VGFVMEpwZVN3ZjYyRXdlbmd6?=
+ =?gb2312?B?NDRaR0VYOVJMcDBEeVAvMUVWN1AxWGN6WEtmaDg2eHNQQjBYY0M3enh2QktG?=
+ =?gb2312?B?MGo4UWU5ckMyKy9lU0cxSUtEajhVaXJOa1R6MDFiQlBlcE12QUJTZThCRmlC?=
+ =?gb2312?B?cVdMSTJUMVZjWGd6RTlITURCeXFyNSs1aDg3V2xlVFYwV1VMN0RlTUlFdEd1?=
+ =?gb2312?B?aXdCbkdNdkg5QlFrU1pGdmppRnFWRk9SWUNSQXZTRWhzY0I5eTB5OUZpVUtJ?=
+ =?gb2312?B?SlVuczBxbDRzdDVkR1hORFpaN0U2VDd5alhqeW04OFZSRWtsemtNZEVVRW55?=
+ =?gb2312?B?ODQ5VTVXTTYxNkhJd1lkVThKYlRRT3VaL1pMM3cxejRWcjVhaG92ZlFFNTdS?=
+ =?gb2312?B?bGx6MnloV0NBanc4Z1BBUUFWdWNHUmdSVmtWTUFsVjJPSUpTTThvWm1Bakda?=
+ =?gb2312?B?dTEyNER0VlBCcjdnd2FzZ1pIS1hUSGlmUXpNZHQxU3lLRldWckpOcHM3T0VS?=
+ =?gb2312?B?T0xnZUxNaXFrZnNwUGs2b3R6citlUEFFSTlzNXRDcWdpYkNnYTFQUXRkZ1BL?=
+ =?gb2312?B?a3kyRWhDdk9YMTNodTloZDBpTDA2cnFQQ2RmYWVKcXVuVU9pSSs1U2dkSUlp?=
+ =?gb2312?Q?deTM=3D?=
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1d2848fe45dbf58707cecf16c4fc46b179e24415.camel@linux.ibm.com>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9496.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7c5d9c6f-1ce3-41be-3da2-08dd98df00e9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 May 2025 03:16:11.6833
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 2fxC89ycikbsI/jMnuwlE/up5VEN72Rv+FWKfinZEBsFSnZHe8+7Ax/kJyf+uMzAnGMwjCSgUC+WOeEBa+Nlww==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB7168
 
-On Wed, May 21, 2025 at 08:54:10AM -0400, Mimi Zohar wrote:
->On Fri, 2025-05-16 at 08:22 +0800, Baoquan He wrote:
->> CC kexec list.
->>
->> On 05/16/25 at 07:39am, Baoquan He wrote:
->> > Kdump kernel doesn't need IMA functionality, and enabling IMA will cost
->> > extra memory. It would be very helpful to allow IMA to be disabled for
->> > kdump kernel.
->
->The real question is not whether kdump needs "IMA", but whether not enabling
->IMA in the kdump kernel could be abused.  The comments below don't address
->that question but limit/emphasize, as much as possible, turning IMA off is
->limited to the kdump kernel.
->
->> >
->> > And Coiby also mentioned that for kdump kernel incorrect ima-policy loaded
->> > by systemd could cause kdump kernel hang, and it's possible the booting
->> > process may be stopped by a strict, albeit syntax-correct policy and users
->> > can't log into the system to fix the policy. In these cases, allowing to
->> > disable IMA is very helpful too for kdump kernel.
-
-To clarify, what I mentioned early is that the system hangs because
-systemd freezes after trying to load an incorrect policy or the booting
-process may be stopped by a strict, albeit syntax-correct policy. kdump
-won't be affected in these cases because the IMA policy file
-(/etc/ima/ima-policy) won't be installed into the kdump initramfs by
-default so there is no chance for this IMA policy file to affect kdump.
-Besides, if the normal/1st system does hang because of the IMA policy,
-the kdump kernel and initramfs simply won't be loaded thus no chance to
-to be booted or to load an IMA policy file.
-
-But kdump can be affected if the kernel cmdline parameter
-ima_policy=appraise_tcb is configured. Because currently files in kdump
-initramfs don't have security.ima. Without the reference value stored in
-security.ima to prove a file's integrity, IMA will prevent accessing
-this file. So in this case, IMA can also stop systemd from running.
-
->> >
->> > Hence add a knob ima=on|off here to allow people to disable IMA in kdump
->> > kenrel if needed.
->
->^kernel
->
->> >
->> > Signed-off-by: Baoquan He <bhe@redhat.com>
->> > ---
->> >  .../admin-guide/kernel-parameters.txt         |  5 +++++
->> >  security/integrity/ima/ima_main.c             | 22 +++++++++++++++++++
->> >  2 files changed, 27 insertions(+)
->> >
->> > diff --git a/Documentation/admin-guide/kernel-parameters.txt
->> > b/Documentation/admin-guide/kernel-parameters.txt
->> > index d9fd26b95b34..762fb6ddcc24 100644
->> > --- a/Documentation/admin-guide/kernel-parameters.txt
->> > +++ b/Documentation/admin-guide/kernel-parameters.txt
->> > @@ -2202,6 +2202,11 @@
->> >  			different crypto accelerators. This option can be
->> > used
->> >  			to achieve best performance for particular HW.
->> >  
->> > +	ima=		[IMA] Enable or disable IMA
->> > +			Format: { "off" | "on" }
->> > +			Default: "on"
->> > +			Note that this is only useful for kdump kernel.
->
->Instead of "useful" I would prefer something clearer like "limited".
->
->> > +
->> >  	init=		[KNL]
->> >  			Format: <full_path>
->> >  			Run specified binary instead of /sbin/init as
->> > init
->> > diff --git a/security/integrity/ima/ima_main.c
->> > b/security/integrity/ima/ima_main.c
->> > index f3e7ac513db3..07af5c6af138 100644
->> > --- a/security/integrity/ima/ima_main.c
->> > +++ b/security/integrity/ima/ima_main.c
->> > @@ -27,6 +27,7 @@
->> >  #include <linux/fs.h>
->> >  #include <linux/iversion.h>
->> >  #include <linux/evm.h>
->> > +#include <linux/crash_dump.h>
->> >  
->> >  #include "ima.h"
->> >  
->> > @@ -38,11 +39,27 @@ int ima_appraise;
->> >  
->> >  int __ro_after_init ima_hash_algo = HASH_ALGO_SHA1;
->> >  static int hash_setup_done;
->> > +static int ima_disabled;
->
->Like the ima_hash_algo variable definition above, ima_disabled should be
->defined as __ro_after_init.
->
->> >  
->> >  static struct notifier_block ima_lsm_policy_notifier = {
->> >  	.notifier_call = ima_lsm_policy_change,
->> >  };
->> >  
->> > +static int __init ima_setup(char *str)
->> > +{
->
->is_kdump_kernel() should also be called here, before the tests below.
->Something like:
->
->+       if (!is_kdump_kernel()) {
->+               pr_info("Warning ima setup option only permitted in kdump");
->+               return 1;
->+       }
-
-Yes, this kind of info will be helpful to avoid users misusing
-ima=off. I already saw a case where a user tried to use ima=0 to skip
-loading an invalid IMA policy file in order to resolve booting failure
-"systemd Freezing execution" and even filed a bug saying ima=0 doesn't
-work.
-
->
->> > +	if (strncmp(str, "off", 3) == 0)
->> > +		ima_disabled = 1;
->> > +	else if (strncmp(str, "on", 2) == 0)
->> > +		ima_disabled = 0;
->> > +	else
->> > +		pr_err("Invalid ima setup option: \"%s\" , please specify
->> > ima=on|off.", str);
->> > +
->> > +	return 1;
->> > +}
->> > +__setup("ima=", ima_setup);
->> > +
->> > +
->> > +
->
->Remove the extraneous blank line.
->
->> >  static int __init hash_setup(char *str)
->> >  {
->> >  	struct ima_template_desc *template_desc =
->> > ima_template_desc_current();
->> > @@ -1184,6 +1201,11 @@ static int __init init_ima(void)
->> >  {
->> >  	int error;
->> >  
->> > +	if (ima_disabled && is_kdump_kernel()) {
->> > +		pr_info("IMA functionality is disabled");
->> > +		return 0;
->> > +	}
->> > +
->
->Even with the additional call to is_kdump_kernel() in ima_setup, please keep
->the is_kdump_kernel() test here as well.  Even though the code is self
->describing, please add a one line comment emphasizing disabling IMA is limited
->to kdump.
->
->> >  	ima_appraise_parse_cmdline();
->> >  	ima_init_template_list();
->> >  	hash_setup(CONFIG_IMA_DEFAULT_HASH);
->> > --
->> > 2.41.0
->> >
->>
->>
->
->thanks,
->
->Mimi
-
-
--- 
-Best regards,
-Coiby
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBGcmFuayBMaSA8ZnJhbmsubGlA
+bnhwLmNvbT4NCj4gU2VudDogMjAyNcTqNdTCMjHI1SAyMzo1Ng0KPiBUbzogTHVrZSBXYW5nIDx6
+aW5pdS53YW5nXzFAbnhwLmNvbT4NCj4gQ2M6IEJvdWdoIENoZW4gPGhhaWJvLmNoZW5AbnhwLmNv
+bT47IGFkcmlhbi5odW50ZXJAaW50ZWwuY29tOw0KPiB1bGYuaGFuc3NvbkBsaW5hcm8ub3JnOyBs
+aW51eC1tbWNAdmdlci5rZXJuZWwub3JnOyBzaGF3bmd1b0BrZXJuZWwub3JnOw0KPiBzLmhhdWVy
+QHBlbmd1dHJvbml4LmRlOyBrZXJuZWxAcGVuZ3V0cm9uaXguZGU7IGZlc3RldmFtQGdtYWlsLmNv
+bTsNCj4gaW14QGxpc3RzLmxpbnV4LmRldjsgZGwtUzMyIDxTMzJAbnhwLmNvbT47DQo+IGxpbnV4
+LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVs
+Lm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBtbWM6IHNkaGNpLWVzZGhjLWlteDogZG8gbm90
+IGNoYW5nZSBwaW5jdHJsIHN0YXRlIGluDQo+IHN1c3BlbmQgaWYgZnVuY3Rpb24gaXJxIGlzIHdh
+a2V1cCBzb3VyY2UNCj4gDQo+IE9uIFdlZCwgTWF5IDIxLCAyMDI1IGF0IDExOjMxOjM0QU0gKzA4
+MDAsIHppbml1LndhbmdfMUBueHAuY29tIHdyb3RlOg0KPiA+IEZyb206IEhhaWJvIENoZW4gPGhh
+aWJvLmNoZW5AbnhwLmNvbT4NCj4gPg0KPiA+IHBpbmN0cmwgc2xlZXAgc3RhdGUgbWF5IGNvbmZp
+ZyB0aGUgcGluIG11eCB0byBjZXJ0YWluIGZ1bmN0aW9uIHRvIHNhdmUNCj4gPiBwb3dlciBpbiBz
+eXN0ZW0gUE0uIEJ1dCBpZiB1c2RoYyBpcyBzZXR0aW5nIGFzIHdha2V1cCBzb3VyY2UsIGxpa2Ug
+dGhlDQo+ID4gY2FyZCBpbnRlcnJ1cHQoU0RJTykgb3IgY2FyZCBpbnNlcnQgaW50ZXJydXB0LCBp
+dCBkZXBlbmRzIG9uIHRoZQ0KPiA+IHJlbGF0ZWQgcGluIG11eCBjb25maWd1cmVkIHRvIHVzZGhj
+IGZ1bmN0aW9uIHBhZC4NCj4gPiBlLmcuIFRvIHN1cHBvcnQgY2FyZCBpbnRlcnJ1cHQoU0RJTyBp
+bnRlcnJ1cHQpLCBpdCBuZWVkIHRoZSBwaW4gaXMNCj4gPiBjb25maWcgYXMgdXNkaGMgREFUQVsx
+XSBmdW5jdGlvbiBwaW4uDQo+IA0KPiBJIHRoaW5rIGl0IHNob3VsZCBiZSBkdHMgc2V0dGluZ3Mg
+d3JvbmcuIERvZXMgb25lIFBBRCBzZXQgYXMgZnVuY3Rpb24gaW1wYWN0DQo+IHBvd2VyIG11Y2g/
+DQoNCkhpIEZyYW5rLA0KDQpJIGRvdWJsZSBjaGVjayB0aGUgcG93ZXIgdGVhbSwgb24gaW14OTMt
+MTF4MTEtZXZrIGJvYXJkLCBGb3IgU0QgY2FyZCBvbiB1c2RoYzIsIHN3aXRjaCB0aGUgUEFEIHRv
+IGdwaW8gZnVuY3Rpb24gd2lsbCBzYXZlIGFib3V0IDN+NG13LA0KRm9yIFNESU8gd2lmaSBvbiB1
+c2RoYzMsIHN3aXRjaCB0aGUgUEFEIHRvIGdwaW8gZnVuY3Rpb24gd2lsbCBzYXZlIGFib3V0IDAu
+OH4xbXcuICh3aXRob3V0IHdha2V1cCkNCg0KUmVnYXJkcw0KSGFpYm8gQ2hlbg0KPiANCj4gRnJh
+bmsNCj4gDQo+ID4NCj4gPiBGaW5kIHRoZSBpc3N1ZSBvbiBpbXg5My0xMXgxMS1ldmsgYm9hcmQs
+IFNESU8gV2lGaSBpbiBiYW5kIGludGVycnVwdA0KPiA+IGNhbid0IHdha2V1cCBzeXN0ZW0gYmVj
+YXVzZSB0aGUgcGluY3RybCBzbGVlcCBzdGF0ZSBjb25maWcgdGhlIERBVEFbMV0NCj4gPiBwaW4g
+YXMgR1BJTyBmdW5jdGlvbi4NCj4gPg0KPiA+IEZvciB0aGlzIGNhc2UsIGRvIG5vdCBjaGFuZ2Ug
+dGhlIHBpbmN0cmwgc3RhdGUgaW4gc3VzcGVuZC4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEhh
+aWJvIENoZW4gPGhhaWJvLmNoZW5AbnhwLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBMdWtlIFdh
+bmcgPHppbml1LndhbmdfMUBueHAuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL21tYy9ob3N0
+L3NkaGNpLWVzZGhjLWlteC5jIHwgMTYgKysrKysrKysrKysrLS0tLQ0KPiA+ICAxIGZpbGUgY2hh
+bmdlZCwgMTIgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1n
+aXQgYS9kcml2ZXJzL21tYy9ob3N0L3NkaGNpLWVzZGhjLWlteC5jDQo+ID4gYi9kcml2ZXJzL21t
+Yy9ob3N0L3NkaGNpLWVzZGhjLWlteC5jDQo+ID4gaW5kZXggNWYxYzQ1YjJiZDVkLi5mMjA2YjU2
+MmE2ZTMgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9tbWMvaG9zdC9zZGhjaS1lc2RoYy1pbXgu
+Yw0KPiA+ICsrKyBiL2RyaXZlcnMvbW1jL2hvc3Qvc2RoY2ktZXNkaGMtaW14LmMNCj4gPiBAQCAt
+MjA1NywxMiArMjA1NywyMCBAQCBzdGF0aWMgaW50IHNkaGNpX2VzZGhjX3N1c3BlbmQoc3RydWN0
+IGRldmljZQ0KPiAqZGV2KQ0KPiA+ICAJCXJldCA9IHNkaGNpX2VuYWJsZV9pcnFfd2FrZXVwcyho
+b3N0KTsNCj4gPiAgCQlpZiAoIXJldCkNCj4gPiAgCQkJZGV2X3dhcm4oZGV2LCAiRmFpbGVkIHRv
+IGVuYWJsZSBpcnEgd2FrZXVwXG4iKTsNCj4gPiArCX0gZWxzZSB7DQo+ID4gKwkJLyoNCj4gPiAr
+CQkgKiBGb3IgdGhlIGRldmljZSB3aGljaCB3b3JrcyBhcyB3YWtldXAgc291cmNlLCBubyBuZWVk
+DQo+ID4gKwkJICogdG8gY2hhbmdlIHRoZSBwaW5jdHJsIHRvIHNsZWVwIHN0YXRlLg0KPiA+ICsJ
+CSAqIGUuZy4gRm9yIFNESU8gZGV2aWNlLCB0aGUgaW50ZXJydXB0IHNoYXJlIHdpdGggZGF0YSBw
+aW4sDQo+ID4gKwkJICogYnV0IHRoZSBwaW5jdHJsIHNsZWVwIHN0YXRlIG1heSBjb25maWcgdGhl
+IGRhdGEgcGluIHRvDQo+ID4gKwkJICogb3RoZXIgZnVuY3Rpb24gbGlrZSBHUElPIGZ1bmN0aW9u
+IHRvIHNhdmUgcG93ZXIgaW4gUE0sDQo+ID4gKwkJICogd2hpY2ggZmluYWxseSBibG9jayB0aGUg
+U0RJTyB3YWtldXAgZnVuY3Rpb24uDQo+ID4gKwkJICovDQo+ID4gKwkJcmV0ID0gcGluY3RybF9w
+bV9zZWxlY3Rfc2xlZXBfc3RhdGUoZGV2KTsNCj4gPiArCQlpZiAocmV0KQ0KPiA+ICsJCQlyZXR1
+cm4gcmV0Ow0KPiA+ICAJfQ0KPiA+DQo+ID4gLQlyZXQgPSBwaW5jdHJsX3BtX3NlbGVjdF9zbGVl
+cF9zdGF0ZShkZXYpOw0KPiA+IC0JaWYgKHJldCkNCj4gPiAtCQlyZXR1cm4gcmV0Ow0KPiA+IC0N
+Cj4gPiAgCXJldCA9IG1tY19ncGlvX3NldF9jZF93YWtlKGhvc3QtPm1tYywgdHJ1ZSk7DQo+ID4N
+Cj4gPiAgCS8qDQo+ID4gLS0NCj4gPiAyLjM0LjENCj4gPg0K
