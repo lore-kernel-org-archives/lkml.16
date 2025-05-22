@@ -1,119 +1,62 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4916018CC1D;
-	Thu, 22 May 2025 17:20:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B516117A2F3
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 17:21:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747934448; cv=none; b=AreDKDJJqbv0y/XX40w7R1XK02GCEu4/HszTRf+j9Yf7hN0dr1LNiAOc38ekv6Rt0Q5BIT6RsMNOI/sBzBtdaPXLJxjrzbUBWK7yEiocrJ9CZx3VbyykXw1ti7w2qELHQBu4M598nC2JFsAaFhzrPAm47vAe0M/FcO/FVm2UxlI=
+	t=1747934463; cv=none; b=WpEh9Tvcnowv4f47mjGaKeaB+DTZWALtM4+y5CEM3rl7Rk61XxmsgiVV4B9vx6Efj2J/Vw9CfnI0RZHBt1U5T0U0LJ1uPUfNHRy2xRt+KKp9Mi6IWVQpoq7FZHsgP57pVfTR+/+d5Rs5jVBXJznAmdA0U1jCce5REGNwpWtEh8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747934448; c=relaxed/simple;
-	bh=f0XMvMxyxmQO+2lM8j8iwFTLKsVl26kGRvuGKeTW2FI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gyHmQX0vd0PIGZgmFP39WP/rP9xk9LaF6ieCw8TDDZ6yb21osWHHURjkmjbyXoOLOJ3p9Vs8Axd5+eJL1rxRpPvDJCRboz24hibjljLIuNSm9avBk7o4xikaILaVpKeDi/h3i9cX/j1TQyT/UEQltPIYd7LBJ18Yi4cFqCSeTOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dImguw1T; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dImguw1T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0759C4CEF4;
-	Thu, 22 May 2025 17:20:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747934447;
-	bh=f0XMvMxyxmQO+2lM8j8iwFTLKsVl26kGRvuGKeTW2FI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=dImguw1T60mad+h3HSsvAIAGBZoPyTPvysg0PLKfbw7ZusucDBwWkXb/t8dv8WMOU
-	 ZZ6aAsxZ3NJaHzMeK/jILjLP3f8g/G5mfEWuPVyaHDO7YU2O0/3emWRgm3pOcU/MoM
-	 JmlGrDbi1bgSs7VKOTVEUhua/5BFdd5TCnrm1JsexjraKyYjwoxxR/waR0FmqALK7U
-	 xbqfkbyRGTquiPEsVtBNQYh/T7x6txLXkXBg1QEvdEh+0GNyr9mlk8LW4muXOp/J3t
-	 wYvzYg2cpvpsRfSGiwFDKDnCHx7VRengnDHNYN1c1iRuk7Zj09NcuXByPiXItZX38l
-	 KVc5EXz0yFjaw==
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac34257295dso1339062266b.2;
-        Thu, 22 May 2025 10:20:47 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVXT1/6UD6XBHV1JonEYQL83WmOLTqSbLuSoXXgaYBLlGMDKtdWHtPOqDV39cvtHgvoVS2QCpRiAS0=@vger.kernel.org, AJvYcCVgpdCRHCeBWsPqcw4v0ko0LAS0O/yxV7mAdAKLLo15EzOWmfRZeA9i36m6ThmJBZcYaMENVugZUgwO/AfaJU6a8A==@vger.kernel.org, AJvYcCWHsSwGOiHjE6vkKn7iKwfN2UTTtLgRspCyQIPzw7DY8BzjuReaomOD5TZcV8XMMOtUH3PJ/Kn5wlhQw5HB@vger.kernel.org
-X-Gm-Message-State: AOJu0YydNwJe1+3AVpaKYlVtmtTdUIpYPn8qRTGXsZY+w8SbAmcZzGvU
-	f541O1zAvQYPeW+SG1YLN6jtQFX0yCDUZUTJJXbE8shoJIDjB/SwqzQLn0JP2cg7kDgK5JDUQ+0
-	g4HGjV1J6GOV9l5pQqDhpmNBytDqQ8A==
-X-Google-Smtp-Source: AGHT+IGAYYG+vIgGuI/ayC2uGqWgyniPCcMHhUSyeQcygsPjUjSYmhf9rYJn77siFd52fYZ5ibkezDZJq/F4ygapM/I=
-X-Received: by 2002:a17:907:3f08:b0:ad5:6939:8333 with SMTP id
- a640c23a62f3a-ad569398704mr1462923066b.37.1747934446333; Thu, 22 May 2025
- 10:20:46 -0700 (PDT)
+	s=arc-20240116; t=1747934463; c=relaxed/simple;
+	bh=43AL9ojpuNtrZ2fqvpyi829zeahSoR0VBmx48UpgpXQ=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=DkPLOxz7HMgKuAv0gfVAqqQVJ9rIzKv9laTM6qkxrjpGCl3Rna0qhVT9Lg262EJML51xBFrw8AYOs18hjmGo4lEv5cns7W4dWlEWTw1wevZZgOpjh54vvlN5BayjIUsjvBdw/cSTQCtZdoPEQIarSpjS2YrnZhqe8EVuOSlfg8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-85dcaf42b61so1477351439f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 10:21:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747934461; x=1748539261;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=43AL9ojpuNtrZ2fqvpyi829zeahSoR0VBmx48UpgpXQ=;
+        b=RvB2BrwVEZVffscG9KCO96CKYnD3kYdtXY1HWIhvtw8sYUA/GAwtsjJ9GL6SCjuhmx
+         arGV0qD+J3VAyz/mokqXpLp2GfOWsNiAjeeKfz2rghNkpwm6pgdLKob/A969vh+pWJtl
+         VWh5Yrwl51bvLO+Xyr/HmyCjC5AJWDbnTeebOqj3QIhsAU009Xn7a1w6ROql+dbYD5aO
+         VBEqn5ONt9Zzi/URuGOuAlsUd+/cY+BzWz9EPgOIJJkdw+u5BPKhiPDBopaascvqpFML
+         oUehHqQHaqYN6uTF8EScNdmui9lOxdOwavaE0X9puMrGEyv5wh9ciMoaE51gHNY0Rc+I
+         5xrw==
+X-Gm-Message-State: AOJu0YydJazmVfl9DPO4yv7U8ctalNOGw68R+1OduzJUHM0Wu+IhrRtI
+	ObvwOQgo1i5sG5CFZrny4J6+0xXPkmjKOaKm8y5Tl1pTIEOePtNmYNac8+EFa7Eb4vByHEtuPLt
+	BKjvfDbcdFOpEwkVcuFbBnAbwQYAHEXmxc1G+FHmUeMqrjXgTZIwFfXCc0hU=
+X-Google-Smtp-Source: AGHT+IG33Jy7N7m1uWX9GDXbd/9FTA01tMsZdlzyyr+GD8zNqFs0Wga2XnOJLpVu40EqnbZvc1w5T/djuCmxRLjCXtRF60rAS8T5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250520-arm-brbe-v19-v22-0-c1ddde38e7f8@kernel.org>
- <20250520-arm-brbe-v19-v22-2-c1ddde38e7f8@kernel.org> <aC9NhvYzajduVm7y@e133380.arm.com>
-In-Reply-To: <aC9NhvYzajduVm7y@e133380.arm.com>
-From: Rob Herring <robh@kernel.org>
-Date: Thu, 22 May 2025 12:20:35 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKWY7rRGTbHXTmm4RC9F8fqrs133=75XFkVdm91bLHfaw@mail.gmail.com>
-X-Gm-Features: AX0GCFvVXljRLS6CQowdkTNTXjrD3dK31miPdgViETu3tYaW68KPRqx4Jf1fUa0
-Message-ID: <CAL_JsqKWY7rRGTbHXTmm4RC9F8fqrs133=75XFkVdm91bLHfaw@mail.gmail.com>
-Subject: Re: [PATCH v22 2/5] arm64: el2_setup.h: Make __init_el2_fgt labels
- consistent, again
-To: Dave Martin <Dave.Martin@arm.com>
-Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, 
-	Oliver Upton <oliver.upton@linux.dev>, Joey Gouly <joey.gouly@arm.com>, 
-	Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>, 
-	James Clark <james.clark@linaro.org>, Anshuman Khandual <anshuman.khandual@arm.com>, 
-	Leo Yan <leo.yan@arm.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, kvmarm@lists.linux.dev
+X-Received: by 2002:a05:6602:7205:b0:864:a1e9:f07 with SMTP id
+ ca18e2360f4ac-86a24c1179bmr3281022139f.8.1747934460874; Thu, 22 May 2025
+ 10:21:00 -0700 (PDT)
+Date: Thu, 22 May 2025 10:21:00 -0700
+In-Reply-To: <68170205.050a0220.11da1b.0028.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <682f5cfc.a70a0220.253bc2.005b.GAE@google.com>
+Subject: Re: [syzbot] #syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+ 9f0899d66840ce6492ad40a0c571644cb669bf34
+From: syzbot <syzbot+5fe2d5bfbfbec0b675a0@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 22, 2025 at 11:15=E2=80=AFAM Dave Martin <Dave.Martin@arm.com> =
-wrote:
->
-> On Tue, May 20, 2025 at 05:27:37PM -0500, Rob Herring (Arm) wrote:
-> > From: Anshuman Khandual <anshuman.khandual@arm.com>
-> >
-> > Commit 5b39db6037e7 ("arm64: el2_setup.h: Rename some labels to be more
-> > diff-friendly") reworked the labels in __init_el2_fgt to say what's
-> > skipped rather than what the target location is. The exception was
-> > "set_fgt_" which is where registers are written. In reviewing the BRBE
-> > additions, Will suggested "set_debug_fgt_" where HDFGxTR_EL2 are
-> > written. Doing that would partially revert commit 5b39db6037e7 undoing
-> > the goal of minimizing additions here, but it would follow the
-> > convention for labels where registers are written.
-> >
-> > So let's do both. Branches that skip something go to a "skip" label and
-> > places that set registers have a "set" label. This results in some
-> > double labels, but it makes things entirely consistent.
-> >
-> > While we're here, the SME skip label was incorrectly named, so fix it.
-> >
-> > Reported-by: Will Deacon <will@kernel.org>
-> > Cc: Dave Martin <Dave.Martin@arm.com>
-> > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> > ---
-> > This one can be applied even if the rest of the series is not.
-> >
-> > v22:
-> >  - New patch
-> > ---
-> >  arch/arm64/include/asm/el2_setup.h | 10 +++++++---
-> >  1 file changed, 7 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/arch/arm64/include/asm/el2_setup.h b/arch/arm64/include/as=
-m/el2_setup.h
-> > index ebceaae3c749..30f57b0334a3 100644
-> > --- a/arch/arm64/include/asm/el2_setup.h
-> > +++ b/arch/arm64/include/asm/el2_setup.h
-> > @@ -204,19 +204,21 @@
-> >       orr     x0, x0, #(1 << 62)
-> >
-> >  .Lskip_spe_fgt_\@:
-> > +
-> > +.Lset_debug_fgt_\@:
->
-> Dangling label?  There doesn't seem to be any branch to it in this
-> series, unless I've missed something.
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-I tried to explain that in the commit message. To have both what you
-wanted and what Will suggested, you end up with 2 labels in between
-the last skip and setting registers.
+***
 
-Rob
+Subject: #syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 9f0899d66840ce6492ad40a0c571644cb669bf34
+Author: dmantipov@yandex.ru
+
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 9f0899d66840ce6492ad40a0c571644cb669bf34
