@@ -1,149 +1,150 @@
-Received: from m16.mail.126.com (m16.mail.126.com [220.197.31.6])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2126C1CD3F;
-	Thu, 22 May 2025 03:38:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.6
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C5EF1CD3F
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 03:38:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747885095; cv=none; b=IRgf+KMGSEZ/RZHfw6VofJfuQRYjudsuwMmXEZRqNJXPvEj70WSDdgivJBmbnXlxYu7I2frRaNXaK+ztRySo3GDIJWN12rnTLsBT1HEic6L8b+vfa0Bzizp+Nq5g5VxMYZQt5GlLfpJuIwJf6lkPWidLkdV5cL5paj4gF6A1Npg=
+	t=1747885105; cv=none; b=BMBJXe7Pr/S3U9huIRUX5M3md+0yPM+hBwPcQ5wqAzk5ccKVzQMUXNbsiJKDw+FJOBCZSETw/gT0cANujDLcISfAY9vwCmCFqmAfYOGXARLRcqeqL6SjY4FlTd9AR6XSTw+yVNG45v5GWIijAZwNpf+dUKzhEYEl+zr4UakDgDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747885095; c=relaxed/simple;
-	bh=/N6NpaGRC/vAjWVcJTFfLMaFhy7yjofCS0LyfPci9cA=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=eq+rzj3GBCwGh+JT4c5mfxy9BuXAO+P164o2KOLQJ/htRcLEAwgW4JjXBLIlTTcUNMshvUw6Y1eMIVoRpj7u7IDUeTepO5WTV1hmz9yiIwU14EzP/gSC4BmtSYQKimMDF0J6YqFzeIQ2IgzyxU1/3ysMlVlQ/j8dfjr3NHjtRIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com; spf=pass smtp.mailfrom=126.com; dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b=XGKUyIWg; arc=none smtp.client-ip=220.197.31.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=126.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=126.com
+	s=arc-20240116; t=1747885105; c=relaxed/simple;
+	bh=B7veKucd9havkmICdUO03JBu9TGnzFuhn52QBIcZg2M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IuLw7Xf2Pk7vmPNiIuQPEflVwrScZ9suvdkdfEQ1NQ9XFpcOy4PByj8ez7ZN0I4R4NR4C7iF6UDbTAaVcqBha1BNdh8nYgJ8SpazMPccwsLAOI3wLnN5rhLEC+Ew8l0XzLVYqcz51lCadsnFdHJSFfMFN06+yTFDb7+6xdGCO4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=Dl1hPn9D; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="XGKUyIWg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id; bh=Cb+hzfIc+9S7u++
-	Rf7aEoQ+l3gR236pxB/DTraEd8HU=; b=XGKUyIWgdrFRtonTjjghJzjzOY7WYg+
-	uAxCSb3JXSgtfAFZ7Ul2YHV3yrGQWm7fGTNnnt+HZX+UYjcyMzKAAF82lDElH9zI
-	mvj1GRjb4G9nIFRE46mY/4u80LGEU3/BRqsHBAmar962kC6aS5Ytb9JF1l21cMfs
-	TI+wRVKMoHgA=
-Received: from hg-OptiPlex-7040.hygon.cn (unknown [])
-	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wD375FsmC5oHGIhAg--.58174S2;
-	Thu, 22 May 2025 11:22:21 +0800 (CST)
-From: yangge1116@126.com
-To: akpm@linux-foundation.org
-Cc: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	21cnbao@gmail.com,
-	david@redhat.com,
-	baolin.wang@linux.alibaba.com,
-	muchun.song@linux.dev,
-	osalvador@suse.de,
-	liuzixing@hygon.cn,
-	Ge Yang <yangge1116@126.com>
-Subject: [PATCH] mm/hugetlb: fix kernel NULL pointer dereference when replacing free hugetlb folios
-Date: Thu, 22 May 2025 11:22:17 +0800
-Message-Id: <1747884137-26685-1-git-send-email-yangge1116@126.com>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID:_____wD375FsmC5oHGIhAg--.58174S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxZw1fJF45uF4rur45urWfXwb_yoW5tr1rpr
-	y7Krs8KrWkJryDAF47JF15Jrn0yrZ8ZF4jqFWxKrnrZFn8Jw1DGryDXw4jva1rArs7JF4x
-	JFs0qa1vqF1UJaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRoGQDUUUUU=
-X-CM-SenderInfo: 51dqwwjhrrila6rslhhfrp/1tbiOhBVG2gulPN6iwAAs0
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="Dl1hPn9D"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-54b09cb06b0so8853892e87.1
+        for <linux-kernel@vger.kernel.org>; Wed, 21 May 2025 20:38:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1747885100; x=1748489900; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7FgYPmyylCiukNuFzG8jcow5rsM4M/8YB+FTfMVmi2A=;
+        b=Dl1hPn9Dj4YEJXQ/50MTKV7RFktuQ4Ko7OIs/pYVTgngmcDAvoZdi9KBtIcX9EMoEs
+         emp1fSTY3wFXua7PISLfVCr6lZwjFgt6X1lNR49Wsj8UC/C7m4yKT/gfgfgt0vz2M1Wu
+         myGgZg0eIqeV1efQPoLbk9Yxwd5qWVlmSBnmwn8HuQsMGgrbk30PDnH91CAxQWWuVGSa
+         IsPO7JzayPwmYL/WLHMWkFv4DkZT8ZKfaQgu9MidsQa34glbwp6cQkCT68KglGJn2Px6
+         lx/sYDmIaPVy/6xyVFMfr5fPJXtKZ7Tt0qUe/icYO+HhfoXMJzBdAHaOHJxVamaYh2n3
+         H0pA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747885100; x=1748489900;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7FgYPmyylCiukNuFzG8jcow5rsM4M/8YB+FTfMVmi2A=;
+        b=lJXE5Wb6b0NEtAh2QICKfaroDiakrphyeIKfnk2eQhTcCTxI6t17c+p3C3tX9RKglh
+         TZQrCXZ4ZY7fO5qEnIoj6Y648qLBbwzqr37vrF3OfPBV1VLPEMYUvLaoOIam590x+QmC
+         FI8SK3Q0EKQUUDO+Ua8IYE5OoxQ6rj/xo7k+3SfdyEsp7Qd6MTi8dwS4gX70xYf17M8/
+         qwj8vSTVXvVB3uuP4VFpQ5k6Q/sdADCBcuWsmZuACrT7cgxiQvkO3iirhCzM8T4V4ZjM
+         inbwDOiHEH4S7yelvvRqM30iuOacBdFS06njIOropo2CWXoy5fSInoIK7W2z6bGA2Ms8
+         01zw==
+X-Forwarded-Encrypted: i=1; AJvYcCVlTSqmdPpl75IXVZA89g7254teB13LOB4GYtKfBJz8d5LMaVCw2VofFZlC0kpsZZ58o6+/dvg171I5cx8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/80Zlndh4hwKmZ2R1VrTPyD7aYigKNmd+qcwDEEHMB/G+mwW7
+	2lwl/msTO/IT54Hzcf71Rd3d0qIhdjh2X+1bcp0P0P23hRXxqBmTAZV7WGUwJoBezjSGiOqPSR/
+	2fSMgLQmU/kLATXCXkjL9uqIUbQbM5cTPKTBqiYrA56J21kR77uRDvD8=
+X-Gm-Gg: ASbGncuISqWupR7u+w94kny9Y6nDkhKld+LU190Z9v5nSI47AURPk/7g1akBeGfUGhg
+	NF/tPxL6b+4A5zFm2B8KwJwZ0HmqTm9lW8XKMJdJhsNNPIn9VpmoWKxnp28D9aAsgtFi1qUycSl
+	U1jMf43CPlb/Iss9P3jeMgyZZ+Fm732AjCt38kNQy+25dxC8o=
+X-Google-Smtp-Source: AGHT+IF9pLUs8HjwlKgRVSQA4mmWk60xpv0iX/NLctG2+/Dc+wR3LVfXEJ6FzL7+WmaoR92DNaEX25NmjAdG0hdpY4k=
+X-Received: by 2002:a05:6512:39c9:b0:545:bf4:4bd4 with SMTP id
+ 2adb3069b0e04-550e7198388mr7508382e87.7.1747885100412; Wed, 21 May 2025
+ 20:38:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20250520031552.1931598-1-hezhongkun.hzk@bytedance.com>
+ <8029d719-9dc2-4c7d-af71-4f6ae99fe256@redhat.com> <CACSyD1Mmt54dVRiBibcGsum_rRV=_SwP=dxioAxq=EDmPRnY2Q@mail.gmail.com>
+ <aC4J9HDo2LKXYG6l@slm.duckdns.org>
+In-Reply-To: <aC4J9HDo2LKXYG6l@slm.duckdns.org>
+From: Zhongkun He <hezhongkun.hzk@bytedance.com>
+Date: Thu, 22 May 2025 11:37:44 +0800
+X-Gm-Features: AX0GCFs--DX027QWdS7jsTmrtgmMk3uqrLDCbttLoN2No5GjE7lXZtnGmyZlnvU
+Message-ID: <CACSyD1MvwPT7i5_PnEp32seeb7X_svdCeFtN6neJ0=QPY1hDsw@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH] cpuset: introduce non-blocking cpuset.mems
+ setting option
+To: Tejun Heo <tj@kernel.org>
+Cc: Waiman Long <llong@redhat.com>, hannes@cmpxchg.org, cgroups@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, muchun.song@linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Ge Yang <yangge1116@126.com>
+On Thu, May 22, 2025 at 1:14=E2=80=AFAM Tejun Heo <tj@kernel.org> wrote:
+>
+> On Wed, May 21, 2025 at 10:35:57AM +0800, Zhongkun He wrote:
+> > On Tue, May 20, 2025 at 9:35=E2=80=AFPM Waiman Long <llong@redhat.com> =
+wrote:
+> > >
+> > > On 5/19/25 11:15 PM, Zhongkun He wrote:
+> > > > Setting the cpuset.mems in cgroup v2 can trigger memory
+> > > > migrate in cpuset. This behavior is fine for newly created
+> > > > cgroups but it can cause issues for the existing cgroups.
+> > > > In our scenario, modifying the cpuset.mems setting during
+> > > > peak times frequently leads to noticeable service latency
+> > > > or stuttering.
+> > > >
+> > > > It is important to have a consistent set of behavior for
+> > > > both cpus and memory. But it does cause issues at times,
+> > > > so we would hope to have a flexible option.
+> > > >
+> > > > This idea is from the non-blocking limit setting option in
+> > > > memory control.
+> > > >
+> > > > https://lore.kernel.org/all/20250506232833.3109790-1-shakeel.butt@l=
+inux.dev/
+> > > >
+> > > > Signed-off-by: Zhongkun He <hezhongkun.hzk@bytedance.com>
+> > > > ---
+> > > >   Documentation/admin-guide/cgroup-v2.rst |  7 +++++++
+> > > >   kernel/cgroup/cpuset.c                  | 11 +++++++++++
+> > > >   2 files changed, 18 insertions(+)
+> > > >
+> > > > diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentatio=
+n/admin-guide/cgroup-v2.rst
+> > > > index 1a16ce68a4d7..d9e8e2a770af 100644
+> > > > --- a/Documentation/admin-guide/cgroup-v2.rst
+> > > > +++ b/Documentation/admin-guide/cgroup-v2.rst
+> > > > @@ -2408,6 +2408,13 @@ Cpuset Interface Files
+> > > >       a need to change "cpuset.mems" with active tasks, it shouldn'=
+t
+> > > >       be done frequently.
+> > > >
+> > > > +     If cpuset.mems is opened with O_NONBLOCK then the migration i=
+s
+> > > > +     bypassed. This is useful for admin processes that need to adj=
+ust
+> > > > +     the cpuset.mems dynamically without blocking. However, there =
+is
+> > > > +     a risk that previously allocated pages are not within the new
+> > > > +     cpuset.mems range, which may be altered by move_pages syscall=
+ or
+> > > > +     numa_balance.
+>
+> I don't think this is a good idea. O_NONBLOCK means "don't wait", not "sk=
+ip
+> this".
 
-A kernel crash was observed when replacing free hugetlb folios:
+Yes, I agree.  However, we have been experiencing this issue for a long tim=
+e,
+so we hope to have an option to disable memory migration in v2.
 
-BUG: kernel NULL pointer dereference, address: 0000000000000028
-PGD 0 P4D 0
-Oops: Oops: 0000 [#1] SMP NOPTI
-CPU: 28 UID: 0 PID: 29639 Comm: test_cma.sh Tainted 6.15.0-rc6-zp #41 PREEMPT(voluntary)
-RIP: 0010:alloc_and_dissolve_hugetlb_folio+0x1d/0x1f0
-RSP: 0018:ffffc9000b30fa90 EFLAGS: 00010286
-RAX: 0000000000000000 RBX: 0000000000342cca RCX: ffffea0043000000
-RDX: ffffc9000b30fb08 RSI: ffffea0043000000 RDI: 0000000000000000
-RBP: ffffc9000b30fb20 R08: 0000000000001000 R09: 0000000000000000
-R10: ffff88886f92eb00 R11: 0000000000000000 R12: ffffea0043000000
-R13: 0000000000000000 R14: 00000000010c0200 R15: 0000000000000004
-FS:  00007fcda5f14740(0000) GS:ffff8888ec1d8000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000028 CR3: 0000000391402000 CR4: 0000000000350ef0
-Call Trace:
-<TASK>
- replace_free_hugepage_folios+0xb6/0x100
- alloc_contig_range_noprof+0x18a/0x590
- ? srso_return_thunk+0x5/0x5f
- ? down_read+0x12/0xa0
- ? srso_return_thunk+0x5/0x5f
- cma_range_alloc.constprop.0+0x131/0x290
- __cma_alloc+0xcf/0x2c0
- cma_alloc_write+0x43/0xb0
- simple_attr_write_xsigned.constprop.0.isra.0+0xb2/0x110
- debugfs_attr_write+0x46/0x70
- full_proxy_write+0x62/0xa0
- vfs_write+0xf8/0x420
- ? srso_return_thunk+0x5/0x5f
- ? filp_flush+0x86/0xa0
- ? srso_return_thunk+0x5/0x5f
- ? filp_close+0x1f/0x30
- ? srso_return_thunk+0x5/0x5f
- ? do_dup2+0xaf/0x160
- ? srso_return_thunk+0x5/0x5f
- ksys_write+0x65/0xe0
- do_syscall_64+0x64/0x170
- entry_SYSCALL_64_after_hwframe+0x76/0x7e
+Would it be possible to re-enable the memory.migrate interface and
+disable memory migration by default in v2?
 
-There is a potential race between __update_and_free_hugetlb_folio()
-and replace_free_hugepage_folios():
+Alternatively, could we introduce an option in cpuset.mems to explicitly
+indicate that memory migration should not occur?
 
-CPU1                              CPU2
-__update_and_free_hugetlb_folio   replace_free_hugepage_folios
-                                    folio_test_hugetlb(folio)
-                                    -- It's still hugetlb folio.
+Please feel free to share any suggestions you might have.
 
-  __folio_clear_hugetlb(folio)
-  hugetlb_free_folio(folio)
-                                    h = folio_hstate(folio)
-                                    -- Here, h is NULL pointer
+>
+> Thanks.
 
-When the above race condition occurs, folio_hstate(folio) returns
-NULL, and subsequent access to this NULL pointer will cause the
-system to crash. To resolve this issue, execute folio_hstate(folio)
-under the protection of the hugetlb_lock lock, ensuring that
-folio_hstate(folio) does not return NULL.
-
-Fixes: 04f13d241b8b ("mm: replace free hugepage folios after migration")
-Signed-off-by: Ge Yang <yangge1116@126.com>
-Cc: <stable@vger.kernel.org>
----
- mm/hugetlb.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 3d3ca6b..6c2e007 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -2924,12 +2924,20 @@ int replace_free_hugepage_folios(unsigned long start_pfn, unsigned long end_pfn)
- 
- 	while (start_pfn < end_pfn) {
- 		folio = pfn_folio(start_pfn);
-+
-+		/*
-+		 * The folio might have been dissolved from under our feet, so make sure
-+		 * to carefully check the state under the lock.
-+		 */
-+		spin_lock_irq(&hugetlb_lock);
- 		if (folio_test_hugetlb(folio)) {
- 			h = folio_hstate(folio);
- 		} else {
-+			spin_unlock_irq(&hugetlb_lock);
- 			start_pfn++;
- 			continue;
- 		}
-+		spin_unlock_irq(&hugetlb_lock);
- 
- 		if (!folio_ref_count(folio)) {
- 			ret = alloc_and_dissolve_hugetlb_folio(h, folio,
--- 
-2.7.4
-
+>
+> --
+> tejun
