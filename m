@@ -1,318 +1,216 @@
-Received: from sonic301-21.consmr.mail.sg3.yahoo.com (sonic301-21.consmr.mail.sg3.yahoo.com [106.10.242.84])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010055.outbound.protection.outlook.com [52.101.69.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8CE924C098
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 20:57:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=106.10.242.84
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747947442; cv=none; b=JxZZkrmutX29XFqvFOrXfcgeJls3qrLwoI2vBUYACMuIsRqCY1z69MdPNQrbMCwmL20FJfixua+rmKIrTzWmOAPyntoQGsJCJflBoHPLUUh/QaRkxFb08wnqj5VLw7PPdQ2UsIkHwT+oN3svVfJC9hGOq3htGBx8F9FbU38+zSw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747947442; c=relaxed/simple;
-	bh=cNOSCFWOLKZP7eE3yFPfHSdWwgFg8Eei/ZR02aRi4Ew=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:References; b=OrHp65mqsk46lspixylNdtHiRo/Tvp4CcNPtiWNvjkTChLgjUQv+nCqfgBbUfeeYSds1Kk3BDkU67zoA9z+WL376pNIhRpkC6/Ru3/h+ve+P8NvKbHZQUNBfa/mleobgGWSJpFBeCHHNk2q6OSK+PO9oX8lRqP5DGXBQ4W5pRgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com; spf=pass smtp.mailfrom=yahoo.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=H76vvczQ; arc=none smtp.client-ip=106.10.242.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F5B24EF6E;
+	Thu, 22 May 2025 20:57:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.69.55
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747947450; cv=fail; b=L4yBRFYRWpLWoY1EnH3JVPbjctTZjCjoezC5J9Odc4uMWsMERCly5jOOUVRvINhNeJ6I3GQy7Nr7HMFNAsBuSAiVXBHkVq81MvgWwNCUXfgVHJszRdPCW+U7a/rdBsAxh10KKpkgN5jjzzBFA5ue3CjyIiHK1vA6TI820teEYXw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747947450; c=relaxed/simple;
+	bh=1ved66JkEXMp1v7+iQXqwxEvzaxaV38Q6KkAD84F63k=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=ZzWvfPgOpFXGytckC52AVIQ26KEDtym95LlVUei5MdDqgVwQWc3BVNpcE3O1e/Q9O5n5OmdgvOwplv30xPYQ9oWNFij0oOgaTQK38jkRq0SlPSXRnxzvzzVLllvAbsqPuTNCKSzxNl8slBkfCJ+q7NuHNmEdHRiRRpU5bXx9yRs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=SSWhHnkO; arc=fail smtp.client-ip=52.101.69.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="H76vvczQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1747947431; bh=WkXBQ/6jm4t5+g2iqIwRa73oLwIgViQhZB+CGikZxY8=; h=From:To:Cc:Subject:Date:References:From:Subject:Reply-To; b=H76vvczQyUCTCty/5wjMwyLjjC4EL/a5Bl7esJLZtbfF+w1VuANN4NLpeufEeao4nOkBWU9DUqt7FvRsSOKVyBfjZ82L8av+FyN95XuRKun+Koyv/DS0MpIFqWkLI+ItbSPExjQVE36ZoprDqFUzN4Y7sqkAu5siOH5oJpJr7mOVEdVxbbOk2qsiMTw1ifGvfd3OhAU0YaqbJIUCkPvMJwCwaaM9Ys+5wUdJmnMMKH8BChtBhI8j1jF0EBrbR0vAEXBXtwPLBAdK0al6wp8I2eeLGy4VrQuPPQ7yElddf8t0l3W5MDazEc0B46PLwsglx7GvTOSLyeGAfc5iPOJUDg==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1747947431; bh=PWY612N53H1qByP/PTIYplw9/L2la2VwiUTlxRNTSqE=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=J2KwWg4H2jOkOo5YanZ5dLnfYkghFdR/v93nZKMaeruq0uoIfNNGazfMQX6VTRUD/jVke8XE9jRlvI8XMd0EWXGTvJqPfNQeoCuXwpNgaJTaBm9ubSeUa2wvwb3JZ+dP6x0DShHQFKMqGbsE8ytE2n2l0s6mBB3YLAJzcMguV+froIDjvTDDmid5VJr0L4bwsiwQvFQDHjFGnVWvM5DdpCPc0/YA9T8SynyPQza6rwUKRpfn+XFc8F5vJ2l85eVQgjNVUEb/yC9lFlLPT+m2IFEJrBIu4NuYd3DqjELftKMlTkecmehxXc4Vl/8L8KtaM463aCjafD8TLnpXfA+icA==
-X-YMail-OSG: btq1b6EVM1nhBzHyV8zfTEvlt4sRgw1RSCKMTe1xPp.Hrv3hFPED9EI5cOSN9i.
- innCM27yI9xh5zeHMCnSA7HoEi82aiGJGbqodOoGAwpl.LjZDMVb_Jv9vrrdwhu3Ni0eQtwX.bNt
- ilGHOcS8ek6pGbGOJoc89B8UubOcIiuDvLsCIYUlULg0cJWummxxcNAXLoBxOTOlVB0yTyuqZzM5
- oNBSafmnwPh39gePZSVkf_s_fx9hO49iz8z8zWvfHT6bINi1mvWPFsMaa79ykTE5CZuG.azEcmIF
- ZpD2QtILZyi9wPLWOyGMK9tH0ntWAMnAI_Qc_rSjlLfxDz9qCFVsZFdB1VWsl2z34CWkQVe..VpR
- clWwhcVbOeiOsoJYBnFUVpWsiQ2vmJSEXLO1BRodGgg3RAKepSQE9UQ8M5Bsz.HdZR56X2bHGzuh
- BrlxHqa5X0plDFUsae.Y.AvHYxQ_VCkIpz4dQYdU96526sE6vdNOdltMf9s0iCdOvy6wdC9bpJgq
- w2onwqFCqOuHNPXqUCsgM970kfS7QCee3faMmjXr.P6LY15mWV7vvTu9sVtf7p.Gu8U3j3N50nhL
- qQJHWWjDovDVtFbtX3B4mG7WpYsTCuZExo6U3EUgSwredW.eUNgjn3_gt8ESkTpBDFjDdXMBwx04
- rMNDaL8lGM.ajGSIsih4DGnIRJQM30hYIlofdmHFZ8hFYSdH17x8VFxujE90E2L02w5dsGJ6DRtD
- MiZDWqCzb02bnFfT3xFjjkJJo31lHTHfK2ikvxGfZeh332nHdq2iO3F_BRUje6O0ro1Fg5VfNpdx
- m7B.kOwohQHK.9ZY7D2_3Qpa3jOG1xy1X3xxj2SYG6XwVBqoyWdmrhF9nlD40QamhWDzjc3UwQwO
- mmj79UGAjwcAyoltRNBMQKA_830AcBjxOa7AVIY65HVNUAcSx0fjmkjmN7oNNioOXJAiqggBHKKi
- bWlkihK0uFnVpz0Ibi6N8h6YUpjAKM0cwFmIKcq3L0_hPlZbD0HnxQe.V74DuAYrfYLMxBoQCUjz
- NUaqfF1i7cq62rnbDn.osQdie4rU2sOnZZNtjgn9z3CDritc6AcnfeNRotXC0N8FmNqI.vObo8x9
- 3ZTpz41_hPTYymwGBRY6m22iRGMMOSaAYMD91onr2EBP_VcmmAc440F09j_lzobgZ7T0Q0WQFSSQ
- NyF97e.899_14Rsb3qm_iYcDkMBu1xTaeWPyqrlnEjX5gP54bPVSJ3YJvPkB9mwyuQKeSXVwiFwI
- njrd40gjEc.X6yNjHG7ntsWyaWrU7DVzYhAMRn28__UbUg9X18SwBD.Tcm4oTzSmk4vlLjBNO_kx
- WEQO3okPRsrUmiLV.jiF3zT.6UDw8f.xCYY47bqXNgzM_N7pYALgNnDa_QRfaThrztzd..E24JNW
- pVH_HHUJVnIECxVYwndA5mo2ltuigr0NSzpqv7P.tUkJI_M1Hc1mffRyDUhWpUYAUJEgKZ050QlK
- M3NHvY9hx6kKSOZMGUbUz7aQXDM5g68paSk3mZSMeONGFGlgVjWquuuEGa1qTjtw2CmuJYdRwCgC
- 447GHBSfQYUSBsIciD1biEvE_PYVGvp6W2gpgeFDNuG4LP4GowU8rSO9kd5npFNCFafrscBX0egP
- o7sGVxOVjaHoNUum39WctZqRfrBHhQoXhv7eMwGZllLjgKB1iBQFKD6rl8kH6ysjH5yAx3YckM7f
- DEn9QDDpucbS5eugIOJFrD_FanBlbKDu4y9uIngTsmaXXHcNcLyNUoWefhU_XEX_xVTwGnhUDYjW
- B3YR3T1X28BvnL33_TQho3u8gItb2RKGW80NmCi8vE_KQKnJ64ycO.iUMRmIj4LeFZUGX53LEwrO
- fdbKi1qe_yPL2DWROP6hRfmp5oOf5e1UhweKuIl27ii7Hzq5ngJsPNdeY.cWuKBpto1rz7p_Qzl7
- oBbqcrMTB2.Z1Yp.dxVJlVSM1yhOZkb0e7k3hfy2vAPBpGHPJj5zEb_ZWyJCDzCaLX_r6UW4R15Z
- TiclmTbxrjdnykUmRSQZKUNEVHcLZtMowdfTfMwb_5eVK3XyD0OZBY065bLIvogMYgznJzRREMXX
- u_yIGwnbOfxBlrrnDPabLp92jAwo44wYoVrx6apHgxW2HWDatBpRRles__r0swpg075jsJtyqRaQ
- c6r_m3Vx9eFyw_lH.AxVTkLZi8ap3wyoyNyCaYycsLWcW0wd9bowPDOCJ5.u5OFvV43g6Ac60job
- 93OA6fBMwwPQ1DNuOeXK3syyRwJ6303Yn0e8PEha9KAvh374tEH3FqR6X7QuLekyoQo9TY72UOKy
- vC6j.9vEvbnyFMyN3mWQf07CrzQmEDv15GGLLS7Rb4cES8Q--
-X-Sonic-MF: <sumanth.gavini@yahoo.com>
-X-Sonic-ID: e8fdb12f-1175-4b73-923a-68eb1ca40875
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic301.consmr.mail.sg3.yahoo.com with HTTP; Thu, 22 May 2025 20:57:11 +0000
-Received: by hermes--production-gq1-74d64bb7d7-lwch7 (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 54d4537dbd31a689292303adb7330d0f;
-          Thu, 22 May 2025 20:57:06 +0000 (UTC)
-From: Sumanth Gavini <sumanth.gavini@yahoo.com>
-To: viro@zeniv.linux.org.uk,
-	mingo@kernel.org,
-	tglx@linutronix.de,
-	kvalo@kernel.org,
-	algonell@gmail.com,
-	jeff.johnson@oss.qualcomm.com
-Cc: Sumanth Gavini <sumanth.gavini@yahoo.com>,
-	linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] wifi: ath6kl: Fix spellings
-Date: Thu, 22 May 2025 13:56:53 -0700
-Message-ID: <20250522205701.393612-1-sumanth.gavini@yahoo.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="SSWhHnkO"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=CQSGB9dx5EUIQanGwsepT0+HaAVIXe4Ji5OaMxiSCVgu1V1kj42POKPtHiwXdU6ma/ewMfk9lv1WzXOxCVllbXnO2wPDUILVf4GZ5/G9BWOjdQXi63JaOerx6YW4RiOtHHa343dURzHPmirziSdv7JPJumsD0upoJRlk/07f7HzKomTB7MlboUQ6eN+fJQVjIjBPrzz52HpIYUX6VcgLflXvrbYQinyQL/4zPkIOyU8ux50kBr0bNj51BfPQ5LYD+p60oT40/OL5SJBP5OKJ2YTpFG+kuoVrHGKjXNUP81nIMsVwKetg6LbusAJcWMRd5+HPoVtrZ/757vY1yqtqIw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=69lc+IToyxYXQKppDcURAKQ0jqogtYcLRZyFwzKMUl0=;
+ b=FUzOHKfWc6HVt67dIEw0qou8D6yNrcWmRXhYNWdNOmaXZutIWJhiwTA0Y3kTCIcEsQ+S9LmN99TY+V17zUhhQcdL2SUDDkcV6xFYJFJbB+eA3JR+FSmDscdy9wMKr6mxbkxh4+MOXNZMsCnmqZdsCZ+4Si0/ARBiMVTGd4XbM6xvVZtehyETJIsXkEPwlo7wztOrv4vduIJl94SvUWMEGGwjTLhCjw52G3l348FDp8hCGxM43zbAirGDQQwsGbb6vhkV98i1D9KGjrAuXMjq6kmnWHfahbIvVkYGEMdaqeXoiKY1NzEfCqyxLZ3BWYbT7jSQNZbNqTzyhAQGoowAuA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=69lc+IToyxYXQKppDcURAKQ0jqogtYcLRZyFwzKMUl0=;
+ b=SSWhHnkO/7Ky1L8KuDh+l9br0maXGEtgfoZO9oz0NQo6LBViq0BzZB5Y/VmB54McsEzagTymjKNPI9ynTvlPeptled2r4Jn231BmwQB5B2E8PEEL6vMu5Z0LSDG7r1LY1hE2mns1gMn47XRMrQarmNQ2JWL+kJ0QyfFTac6jbt4u4mt602O4VIVbJaXrOhyJjXUjf88hKyz7iut/arHSrLvSOXXpLuFwcfzGpQ4uP0t/0Un/UBxIQ73fcMTHg+HWr/nUDxVRFnAx2KcJLZQ8+weKu23lJ9UNTpfMSSeohgE3dXxDk87q/bNlMMF43DpfUnEeTghMFq9emnnIbQqaPQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by DB9PR04MB9963.eurprd04.prod.outlook.com (2603:10a6:10:4ec::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8769.21; Thu, 22 May
+ 2025 20:57:24 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.8746.030; Thu, 22 May 2025
+ 20:57:24 +0000
+From: Frank Li <Frank.Li@nxp.com>
+To: Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-kernel@vger.kernel.org (open list:CLOCKSOURCE, CLOCKEVENT DRIVERS),
+	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
+Cc: imx@lists.linux.dev
+Subject: [PATCH 1/1] dt-bindings: timer: Add fsl,vf610-pit.yaml
+Date: Thu, 22 May 2025 16:57:09 -0400
+Message-Id: <20250522205710.502779-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: PH8P221CA0031.NAMP221.PROD.OUTLOOK.COM
+ (2603:10b6:510:346::7) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-References: <20250522205701.393612-1-sumanth.gavini.ref@yahoo.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DB9PR04MB9963:EE_
+X-MS-Office365-Filtering-Correlation-Id: 88689a11-7704-42d5-e47c-08dd997340cc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|52116014|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?sCoYo5PBskqhsu8IvNVlNBn9HREGjThjj7q9oHWzqaQMtMuTegBIEgQr2Mem?=
+ =?us-ascii?Q?xhkrbGJCMh4rxbyYwehHLXA17EXSbg3rsqT4WRZkSx5iipqRnEHDs5ypf5vM?=
+ =?us-ascii?Q?d7oc+i/f/3/bv6DIIi+bs5V0kFrdOQ/W6rE87aPRTchKqgxCKZV9tykIPEeU?=
+ =?us-ascii?Q?Q2G8DLcechI9MbnQsUFA1q2SJ76l+JYDBIAc+DbnLJO+49te4xvJoc/3dWIw?=
+ =?us-ascii?Q?Md9nJq8bHpQxSwtlTFWV03PECT3onmaWsWcL9EnmfNGuXFH8a6A1uCzcQS9K?=
+ =?us-ascii?Q?2TGNtbvnRCX3weFXXXqX5ZTHGDkyGtIheXY53UecZTvHjSG6FLNakPbA5uWs?=
+ =?us-ascii?Q?vSbM1JTv0HOkIRWm89bbKNF/y3iDjbZaQjaMHlsZXMIO4PaJLfHYra2LNJMh?=
+ =?us-ascii?Q?k334uei6ZayL33MGUUfLBL2qt72cyVTH0YEcP7BI6sqdaXh3Bm+tUXGN5yl8?=
+ =?us-ascii?Q?gdXiqLLnufKeqj8DUdovRIXbGgme2Tda+PBjDFcSETxxIFOGMyEmUzLLkh+U?=
+ =?us-ascii?Q?ArI6dlNMKSBhEWN90BOkgbn7W5jOu3Kumen3Sw7HH6D+7womMpGdUK+X/rQ3?=
+ =?us-ascii?Q?/AnvjrWfVumSpUof0d7tAcHwITcBqNLplJfh9yHcMOiNCLs9qAbVmPjk2SK/?=
+ =?us-ascii?Q?Lr/mlgeIxP/kw5sDnmkIVXpI20EQKeVoURNPKk52iMcjBoMniwgWilNYpI8x?=
+ =?us-ascii?Q?R0Wc4KNuyR/mqD6DKctmCxJugqfYdq0kMcEkJKFNRDDx3Kc7QzJjP4mlugpQ?=
+ =?us-ascii?Q?dGdct1MQt/VuYlmABYzVdCPIEvX2n3CWdAnoKjy9dlGgc6AO9oXgVNElgH5h?=
+ =?us-ascii?Q?DIjnPKdqHxOICdSNwr+yaciNAQvSyv73uwWQD6MIbFWx1zzg8GliX/HodJhg?=
+ =?us-ascii?Q?pZrrl2xXvV/NDICnDjvRsSeu/GVRcYE//QS6wl0tOpbDc5xxL4lirgcNnQ5L?=
+ =?us-ascii?Q?DWqUrHUuLE/RXzPUhdQNezWtB6I4PWxMap6G/JuTYmoMOh2D9URzahO16gr9?=
+ =?us-ascii?Q?Sc2JBwN+6Tuq0kMTwzQayQ3LFM+EriV0Nc0F5SuQklda5bSxJtSyyhTekCHg?=
+ =?us-ascii?Q?x68k8VMshAvVhf4vDD0hgqwROOZ79JjO3TXjUMpEg4Et/O0rzWB+YCIJ8KLN?=
+ =?us-ascii?Q?PvmRnA8nY7p9DpWQWxnR/1RWlqh9OTK99Hxq/FH11mGrBFjSOCe3zJeuM6v7?=
+ =?us-ascii?Q?2wY66OwJan8xWfJ756NG0ilxYgC4ilNFpxiVc1LqXp8fvh28rGLkLjSkchAd?=
+ =?us-ascii?Q?/KqRvi8Udp8Tv4/x8Tnn4pEp8ASL0l6hEA/qunyL+27uFcD90UL8n2yRopQZ?=
+ =?us-ascii?Q?FtaAlq+CP98IaJQds05QYX+doNFrwyvEiwimidIPR9uBKzxQPSV8V5Ttp/Bb?=
+ =?us-ascii?Q?lpYTL27Izg3RNi10UceXaoyM1wKihhcNUzeVN35K6uM3J27e7vzqXDiordtl?=
+ =?us-ascii?Q?KPM+mQ1QPBvzQnJrSjRcHWrbfgMPgVoP?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(52116014)(366016)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?+4JWA8hfXMpO1Eec0cdcOYMoaZ8XYdAuAB15r9w4P26QQ/IDDS81ekZnkL3m?=
+ =?us-ascii?Q?HakwvqAtHFxLU1isRuq4evUW58K4ZDHgHl+Bg32zfdZRoMwRf3gdqIMIIbkf?=
+ =?us-ascii?Q?92EbwruDHLCI2XNNVb9auXDJQ1eC9wj8F/mUvIB+HgpR6n9Qzf12vqbdj36K?=
+ =?us-ascii?Q?bEtXIMqpJvUnMc4svRF4uZ9ZdUFP/ET54sWHmdK+zX9V0nSExMhg3q8udvD0?=
+ =?us-ascii?Q?iLm5yO+9EjyFc9eXHY7i2PgYMKiAf/eCtWPCrMij6+pEwcpEK8auYh5vD+BX?=
+ =?us-ascii?Q?HIVtvaOPycKBiUx4WzLUYZQjJhbJpqUlcHxclAYcQKNbQiIWSXmUFwGFyHK4?=
+ =?us-ascii?Q?UprBalUDSWqhnhIF8PIpkkwncDzhaH1vmSd5jWU+EFa/m1/bPKFJHYMEqoOX?=
+ =?us-ascii?Q?I6l7oxDCahYLa+0O7+lIkt0Kc99+g4kFDV/TV3uEjZF+hrH98wNqPjJbIsMW?=
+ =?us-ascii?Q?Fq2nPPmNnVZ/aWkO4npopKDxYWpb7qLxxFGtlMAHRluXSw0+nEnK76ea1w5B?=
+ =?us-ascii?Q?noQGwW78PLDpRhg+qpwkCAW2F5rqfAnNdmklA1ZIyAKJe/Desfkp2C2SrvEZ?=
+ =?us-ascii?Q?my5LUt17R7PEDYxsJQYY2/yuikeGGFHasfRpodOZjHpoeMZdlMVfcGpLmvfO?=
+ =?us-ascii?Q?liImqvuz4iztvG6GzwuBSUhNW2fj2w6FnNcPDZtGZATyoPF2jsjjOWIfMvpd?=
+ =?us-ascii?Q?ZQ4bixiR6DpysHyIY2WOKoEPLf24Zb44f5wqJK5YiXdj0Ovku/LWh7PD4HYw?=
+ =?us-ascii?Q?A8UGvlUVkqjVxx1VKZUcOp83refa7SqjvmjAXToNR7OZIScWFVWbxcBPfIA7?=
+ =?us-ascii?Q?I439a+7Z9HjRUgXwXTXcZ/VJrfujh+Q+/67tPXmH4MU9U+DWcJy9IqGpY9eI?=
+ =?us-ascii?Q?0klnN3xMDvwjUy43lAURWAoMAkSYpMqNiNptFRJ0VmjuLurp+s03IajTzeY/?=
+ =?us-ascii?Q?ZjXtzZpzGT6JTLAdevUk1RLBjN5XzNAqKXlURyRZF64c0g1GliG7qQq1bPE4?=
+ =?us-ascii?Q?HCC3V+lf2Lg6ZjbGkBm3DJAarNg9BhMfa5wal9VfGyBXBPECmPs6OszZ3pwF?=
+ =?us-ascii?Q?TJFZGaC7olVgcOCtpdTdzn3vP6riAFW4/61JMKxzRjf/rH4tOXXyAcYb7TH6?=
+ =?us-ascii?Q?chczVIn3HILq8G0/GcrvY0TjFPNINoHaDaCAebK4xauc0VqwJIZnBinU75Dk?=
+ =?us-ascii?Q?1RXrSzXM/t4h7dnH+hZTqUd2BuEzBDHvjygp8KKkd7N8rBWU4R5JVeC3oFUu?=
+ =?us-ascii?Q?cG5JEdgaQ+HxnBq2N4PiPSmjSQc0tBnw+PJIWi8hc5yFc4aqFBQgHPbdGlnD?=
+ =?us-ascii?Q?IrXHsskZ+TPaA8Yx/w0vGTYBIbqKnxPsbPTJrxz7oIbyRZvBxIX1Q3E1+/Xg?=
+ =?us-ascii?Q?O1Pojn1YcanXlGZBqNdXtG3+On6JS6C2q3ITw0629QFru2MlLZKNua6+5IEL?=
+ =?us-ascii?Q?j9s0bafSEcpB68famn/A6AnLOh6MgMajjbc/+XNXmP4vm8OmjtOPE5cMWDpd?=
+ =?us-ascii?Q?If5ICeMixjMQvVVXt0EtiXj06FPhBc2QJLpBUX1BAMpRkHPBNBcVLocNx85p?=
+ =?us-ascii?Q?zKGobPtj+8zCghonLk/weoNd5D0JlmyiOPv26YZ/?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 88689a11-7704-42d5-e47c-08dd997340cc
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2025 20:57:24.7867
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: an9AUSHDnO3Om5jyr5YdkBK6/hB8aFM2YajajSo7Ya3qJhc67BL/2uvUZYy/dYdlsPGpOjrNEEUyqDXzDq/NsA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB9963
 
-Fix misspelling reported by codespell.
+Add binding doc fsl,vf610-pit.yaml to fix below CHECK_DTB warnings:
 
-Signed-off-by: Sumanth Gavini <sumanth.gavini@yahoo.com>
+arch/arm/boot/dts/nxp/vf/vf610m4-colibri.dtb:
+  /soc/bus@40000000/pit@40037000: failed to match any schema with compatible: ['fsl,vf610-pit']
+
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
 ---
- drivers/net/wireless/ath/ath6kl/core.c     |  2 +-
- drivers/net/wireless/ath/ath6kl/hif.c      |  2 +-
- drivers/net/wireless/ath/ath6kl/htc.h      |  6 +++---
- drivers/net/wireless/ath/ath6kl/htc_mbox.c |  2 +-
- drivers/net/wireless/ath/ath6kl/htc_pipe.c |  2 +-
- drivers/net/wireless/ath/ath6kl/init.c     |  4 ++--
- drivers/net/wireless/ath/ath6kl/main.c     |  2 +-
- drivers/net/wireless/ath/ath6kl/sdio.c     |  2 +-
- drivers/net/wireless/ath/ath6kl/usb.c      |  6 +++---
- drivers/net/wireless/ath/ath6kl/wmi.c      |  2 +-
- drivers/net/wireless/ath/ath6kl/wmi.h      | 10 +++++-----
- 11 files changed, 20 insertions(+), 20 deletions(-)
+ .../bindings/timer/fsl,vf610-pit.yaml         | 54 +++++++++++++++++++
+ 1 file changed, 54 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/fsl,vf610-pit.yaml
 
-diff --git a/drivers/net/wireless/ath/ath6kl/core.c b/drivers/net/wireless/ath/ath6kl/core.c
-index 4f0a7a185fc9..830350bda531 100644
---- a/drivers/net/wireless/ath/ath6kl/core.c
-+++ b/drivers/net/wireless/ath/ath6kl/core.c
-@@ -91,7 +91,7 @@ int ath6kl_core_init(struct ath6kl *ar, enum ath6kl_htc_type htc_type)
- 
- 	/*
- 	 * Turn on power to get hardware (target) version and leave power
--	 * on delibrately as we will boot the hardware anyway within few
-+	 * on deliberately as we will boot the hardware anyway within few
- 	 * seconds.
- 	 */
- 	ret = ath6kl_hif_power_on(ar);
-diff --git a/drivers/net/wireless/ath/ath6kl/hif.c b/drivers/net/wireless/ath/ath6kl/hif.c
-index d1942537ea10..c693783bb9de 100644
---- a/drivers/net/wireless/ath/ath6kl/hif.c
-+++ b/drivers/net/wireless/ath/ath6kl/hif.c
-@@ -513,7 +513,7 @@ static int proc_pending_irqs(struct ath6kl_device *dev, bool *done)
- out:
- 	/*
- 	 * An optimization to bypass reading the IRQ status registers
--	 * unecessarily which can re-wake the target, if upper layers
-+	 * unnecessarily which can re-wake the target, if upper layers
- 	 * determine that we are in a low-throughput mode, we can rely on
- 	 * taking another interrupt rather than re-checking the status
- 	 * registers which can re-wake the target.
-diff --git a/drivers/net/wireless/ath/ath6kl/htc.h b/drivers/net/wireless/ath/ath6kl/htc.h
-index d3534a29c4f0..d61be202677c 100644
---- a/drivers/net/wireless/ath/ath6kl/htc.h
-+++ b/drivers/net/wireless/ath/ath6kl/htc.h
-@@ -485,7 +485,7 @@ struct htc_endpoint_stats {
- 	/* count of credits received via another endpoint */
- 	u32 cred_from_ep0;
- 
--	/* count of consummed credits */
-+	/* count of consumed credits */
- 	u32 cred_cosumd;
- 
- 	/* count of credits returned */
-@@ -596,7 +596,7 @@ struct htc_target {
- 	/* protects free_ctrl_txbuf and free_ctrl_rxbuf */
- 	spinlock_t htc_lock;
- 
--	/* FIXME: does this protext rx_bufq and endpoint structures or what? */
-+	/* FIXME: does this protect rx_bufq and endpoint structures or what? */
- 	spinlock_t rx_lock;
- 
- 	/* protects endpoint->txq */
-@@ -624,7 +624,7 @@ struct htc_target {
- 
- 	int chk_irq_status_cnt;
- 
--	/* counts the number of Tx without bundling continously per AC */
-+	/* counts the number of Tx without bundling continuously per AC */
- 	u32 ac_tx_count[WMM_NUM_AC];
- 
- 	struct {
-diff --git a/drivers/net/wireless/ath/ath6kl/htc_mbox.c b/drivers/net/wireless/ath/ath6kl/htc_mbox.c
-index f8a94d764be6..122e07ef3965 100644
---- a/drivers/net/wireless/ath/ath6kl/htc_mbox.c
-+++ b/drivers/net/wireless/ath/ath6kl/htc_mbox.c
-@@ -938,7 +938,7 @@ static void ath6kl_htc_tx_from_queue(struct htc_target *target,
- 
- 		/*
- 		 * if an AC has bundling disabled and no tx bundling
--		 * has occured continously for a certain number of TX,
-+		 * has occurred continuously for a certain number of TX,
- 		 * enable tx bundling for this AC
- 		 */
- 		if (!bundle_sent) {
-diff --git a/drivers/net/wireless/ath/ath6kl/htc_pipe.c b/drivers/net/wireless/ath/ath6kl/htc_pipe.c
-index 2f2edfe43761..7b823be9d846 100644
---- a/drivers/net/wireless/ath/ath6kl/htc_pipe.c
-+++ b/drivers/net/wireless/ath/ath6kl/htc_pipe.c
-@@ -718,7 +718,7 @@ static struct htc_packet *htc_lookup_tx_packet(struct htc_target *target,
- 	spin_lock_bh(&target->tx_lock);
- 
- 	/*
--	 * interate from the front of tx lookup queue
-+	 * iterate from the front of tx lookup queue
- 	 * this lookup should be fast since lower layers completes in-order and
- 	 * so the completed packet should be at the head of the list generally
- 	 */
-diff --git a/drivers/net/wireless/ath/ath6kl/init.c b/drivers/net/wireless/ath/ath6kl/init.c
-index 9b100ee2ebc3..782209dcb782 100644
---- a/drivers/net/wireless/ath/ath6kl/init.c
-+++ b/drivers/net/wireless/ath/ath6kl/init.c
-@@ -207,7 +207,7 @@ static const struct ath6kl_hw hw_list[] = {
- 
- /*
-  * This configuration item sets the value of disconnect timeout
-- * Firmware delays sending the disconnec event to the host for this
-+ * Firmware delays sending the disconnect event to the host for this
-  * timeout after is gets disconnected from the current AP.
-  * If the firmware successly roams within the disconnect timeout
-  * it sends a new connect event
-@@ -221,7 +221,7 @@ struct sk_buff *ath6kl_buf_alloc(int size)
- 	struct sk_buff *skb;
- 	u16 reserved;
- 
--	/* Add chacheline space at front and back of buffer */
-+	/* Add cacheline space at front and back of buffer */
- 	reserved = roundup((2 * L1_CACHE_BYTES) + ATH6KL_DATA_OFFSET +
- 		   sizeof(struct htc_packet) + ATH6KL_HTC_ALIGN_BYTES, 4);
- 	skb = dev_alloc_skb(size + reserved);
-diff --git a/drivers/net/wireless/ath/ath6kl/main.c b/drivers/net/wireless/ath/ath6kl/main.c
-index 867089a3c096..4edda694b1bd 100644
---- a/drivers/net/wireless/ath/ath6kl/main.c
-+++ b/drivers/net/wireless/ath/ath6kl/main.c
-@@ -583,7 +583,7 @@ static int ath6kl_commit_ch_switch(struct ath6kl_vif *vif, u16 channel)
- 	switch (vif->nw_type) {
- 	case AP_NETWORK:
- 		/*
--		 * reconfigure any saved RSN IE capabilites in the beacon /
-+		 * reconfigure any saved RSN IE capabilities in the beacon /
- 		 * probe response to stay in sync with the supplicant.
- 		 */
- 		if (vif->rsn_capab &&
-diff --git a/drivers/net/wireless/ath/ath6kl/sdio.c b/drivers/net/wireless/ath/ath6kl/sdio.c
-index 9ab091044706..83de40bc4445 100644
---- a/drivers/net/wireless/ath/ath6kl/sdio.c
-+++ b/drivers/net/wireless/ath/ath6kl/sdio.c
-@@ -486,7 +486,7 @@ static void ath6kl_sdio_irq_handler(struct sdio_func *func)
- 	ar_sdio = sdio_get_drvdata(func);
- 	atomic_set(&ar_sdio->irq_handling, 1);
- 	/*
--	 * Release the host during interrups so we can pick it back up when
-+	 * Release the host during interrupts so we can pick it back up when
- 	 * we process commands.
- 	 */
- 	sdio_release_host(ar_sdio->func);
-diff --git a/drivers/net/wireless/ath/ath6kl/usb.c b/drivers/net/wireless/ath/ath6kl/usb.c
-index 5220809841a6..38bb501fc553 100644
---- a/drivers/net/wireless/ath/ath6kl/usb.c
-+++ b/drivers/net/wireless/ath/ath6kl/usb.c
-@@ -93,7 +93,7 @@ struct ath6kl_urb_context {
- #define ATH6KL_USB_EP_ADDR_APP_DATA_MP_OUT      0x03
- #define ATH6KL_USB_EP_ADDR_APP_DATA_HP_OUT      0x04
- 
--/* diagnostic command defnitions */
-+/* diagnostic command definitions */
- #define ATH6KL_USB_CONTROL_REQ_SEND_BMI_CMD        1
- #define ATH6KL_USB_CONTROL_REQ_RECV_BMI_RESP       2
- #define ATH6KL_USB_CONTROL_REQ_DIAG_CMD            3
-@@ -882,7 +882,7 @@ static int ath6kl_usb_submit_ctrl_out(struct ath6kl_usb *ar_usb,
- 			return -ENOMEM;
- 	}
- 
--	/* note: if successful returns number of bytes transfered */
-+	/* note: if successful returns number of bytes transferred */
- 	ret = usb_control_msg(ar_usb->udev,
- 			      usb_sndctrlpipe(ar_usb->udev, 0),
- 			      req,
-@@ -914,7 +914,7 @@ static int ath6kl_usb_submit_ctrl_in(struct ath6kl_usb *ar_usb,
- 			return -ENOMEM;
- 	}
- 
--	/* note: if successful returns number of bytes transfered */
-+	/* note: if successful returns number of bytes transferred */
- 	ret = usb_control_msg(ar_usb->udev,
- 				 usb_rcvctrlpipe(ar_usb->udev, 0),
- 				 req,
-diff --git a/drivers/net/wireless/ath/ath6kl/wmi.c b/drivers/net/wireless/ath/ath6kl/wmi.c
-index 3787b9fb0075..1ecf6a2171df 100644
---- a/drivers/net/wireless/ath/ath6kl/wmi.c
-+++ b/drivers/net/wireless/ath/ath6kl/wmi.c
-@@ -2601,7 +2601,7 @@ int ath6kl_wmi_create_pstream_cmd(struct wmi *wmi, u8 if_idx,
- 	}
- 
- 	/*
--	 * Indicate activty change to driver layer only if this is the
-+	 * Indicate activity change to driver layer only if this is the
- 	 * first TSID to get created in this AC explicitly or an implicit
- 	 * fat pipe is getting created.
- 	 */
-diff --git a/drivers/net/wireless/ath/ath6kl/wmi.h b/drivers/net/wireless/ath/ath6kl/wmi.h
-index 68384159870b..3080d82e25cc 100644
---- a/drivers/net/wireless/ath/ath6kl/wmi.h
-+++ b/drivers/net/wireless/ath/ath6kl/wmi.h
-@@ -655,7 +655,7 @@ enum wmi_mgmt_frame_type {
- 
- enum wmi_ie_field_type {
- 	WMI_RSN_IE_CAPB	= 0x1,
--	WMI_IE_FULL	= 0xFF,  /* indicats full IE */
-+	WMI_IE_FULL	= 0xFF,  /* indicates full IE */
- };
- 
- /* WMI_CONNECT_CMDID  */
-@@ -1178,10 +1178,10 @@ struct wmi_create_pstream_cmd {
- 	__le32 sba;
- 	__le32 medium_time;
- 
--	/* in octects */
-+	/* in octets */
- 	__le16 nominal_msdu;
- 
--	/* in octects */
-+	/* in octets */
- 	__le16 max_msdu;
- 
- 	u8 traffic_class;
-@@ -1742,7 +1742,7 @@ struct wmi_scan_complete_event {
- 
- /*
-  * Special frame receive Event.
-- * Mechanism used to inform host of the receiption of the special frames.
-+ * Mechanism used to inform host of the reception of the special frames.
-  * Consists of special frame info header followed by special frame body.
-  * The 802.11 header is not included.
-  */
-@@ -1860,7 +1860,7 @@ struct wmi_target_stats {
- /*
-  * WMI_RSSI_THRESHOLD_EVENTID.
-  * Indicate the RSSI events to host. Events are indicated when we breach a
-- * thresold value.
-+ * threshold value.
-  */
- enum wmi_rssi_threshold_val {
- 	WMI_RSSI_THRESHOLD1_ABOVE = 0,
+diff --git a/Documentation/devicetree/bindings/timer/fsl,vf610-pit.yaml b/Documentation/devicetree/bindings/timer/fsl,vf610-pit.yaml
+new file mode 100644
+index 0000000000000..bee2c35bd0e29
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/fsl,vf610-pit.yaml
+@@ -0,0 +1,54 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/timer/fsl,vf610-pit.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Freescale Periodic Interrupt Timer (PIT)
++
++maintainers:
++  - Frank Li <Frank.Li@nxp.com>
++
++description:
++  The PIT module is an array of timers that can be used to raise interrupts
++  and trigger DMA channels.
++
++properties:
++  compatible:
++    enum:
++      - fsl,vf610-pit
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    items:
++      - const: pit
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/vf610-clock.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    timer@40037000 {
++        compatible = "fsl,vf610-pit";
++        reg = <0x40037000 0x1000>;
++        interrupts = <39 IRQ_TYPE_LEVEL_HIGH>;
++        clocks = <&clks VF610_CLK_PIT>;
++        clock-names = "pit";
++    };
 -- 
-2.43.0
+2.34.1
 
