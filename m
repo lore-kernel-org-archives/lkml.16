@@ -1,272 +1,250 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B10A11C5499;
-	Thu, 22 May 2025 09:59:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A5D917BD9
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 10:00:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747907993; cv=none; b=ugPp7rLpmaxmLQT2HZd1KQ+30vIMmnRDeJubZ5kBbUrv9CTB61pvsFyRGV0ITAPcBM93hI0zRReyhyQ1nF6tGvWdF4pL6d1GaXqQf41PI2+ghWtWiir2NnTaND+Cj9JNlYzVrZBF9F/vj62mQfIKt3X51KUZnDEfzFsRkDAIbvM=
+	t=1747908028; cv=none; b=sRk13lS6LbxLCnbs4E9Hp8kpgXLuKXmYZvHGLXKveKu8Z0FFkXTvi5I1c8NvoZLBKxT6qiiVZ+ZASf3XSKH4WoVSuKJRKMynLpfPgsW7q9n+dhG8o6SzYsQHf9Mfv/dMoweaAS7JT6eXzITuaQqMm4kZN8vg3Cs15YnJNqwlRNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747907993; c=relaxed/simple;
-	bh=x8CYXIzaf4EKaaDd6/bDNuyCNj4yw8LM1r/2pOVDoX0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kcSKC0BmSxbEIkbvsW8S2xlhYtKaIILZJHjcejWnd9678hd1sCLaoxGwLePgDuWhhoAuDhAh82PRo1HHO4/kzCok0QeV6h8AlQNh3a0nehbxsKucRO4Aw5MRO5a7FmwUHdepH1K8noXIo2pWu132egbkh/b1EOTom+zG6wTQCag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bAqo/eO1; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bAqo/eO1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0083DC4CEE4;
-	Thu, 22 May 2025 09:59:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747907993;
-	bh=x8CYXIzaf4EKaaDd6/bDNuyCNj4yw8LM1r/2pOVDoX0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bAqo/eO1C6pDU6rx7Z5KCfz+VSGQBDnkmrq99T2Lx8YwGZ/vy0FOZGgXDrdKUt7IF
-	 QxEGCZ4HjF/tYTU2Z8SsjhYNNG1x3FDFZL4DBzmJWIIFDYHs+vLc4PXiDmA2xEBWkI
-	 Ynl6BY3mltwIwn7DNI4cbH0lfHg433DpO2iuZptjSodD9eamIZCBXJ4ref82xB/oxH
-	 o7Seeh7wWpIahu8Ykot9YnezJpCyOKeVvQdvxZ97TTw2OyQ+qHtThlxGrNPoNuwRf7
-	 RECoNY9Eo6fY1EH7IBuu6ozzV/C1jisIHzGOULg0xnLG1E77u/ZkpMml4DIo4NaHPc
-	 pyB/l8bFaOy1w==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uI2iM-000000008G6-078y;
-	Thu, 22 May 2025 11:59:50 +0200
-Date: Thu, 22 May 2025 11:59:50 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>
-Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Jason Gunthorpe <jgg@nvidia.com>, regressions@lists.linux.dev
-Subject: Re: [PATCH] iommu: Avoid introducing more races
-Message-ID: <aC71lkTn7_xfuivy@hovoldconsulting.com>
-References: <09d901ad11b3a410fbb6e27f7d04ad4609c3fe4a.1741706365.git.robin.murphy@arm.com>
+	s=arc-20240116; t=1747908028; c=relaxed/simple;
+	bh=G0s8ehLv/laQIT0Lceu4qyIEtrAWgMjq2TKbqXX99xE=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ZG08czP5E2yDR5pE267BTetaHv7S+FSrcKTVQ/PWLttdZFHvheqRzF3MsG6tJWKkO3i0kEWHckvv/PaDmKq9fDMjVMXgGRN0PUu82uYb8XYaHcw1osoYadj0HJREuppvxcG/yAMnxfsEayUHO8t9jwJNY6H3GH6T3HC76z/fUM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-85e7e0413c2so705467639f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 03:00:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747908025; x=1748512825;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=N9SPmBVOYISy/x3e5fpt7fXl47e2yZMZoJ4GUSrI/KA=;
+        b=qifLlOx/LJW7D0E5xg2OJiGuAt/c1r49/17/FokRqBz2T/Tq7u2CsXJNDsAfowH8Yq
+         U28jMkP2f+0MIYpxx2fVLig0vIZCQNxEkNvEGhFTCv5QnWWcj258+juJQKIaC9V/67Qu
+         Jvw00nJapvJWCfTYGQ4g7D2DNydB8cUNmwW9tbP28RHh0AI9J/NlrEEbh1weNXO1z2KP
+         vzsNeEnvNcd8KnMA70jImy8B4oxfR3Iu45ZnTl5150JSvu1vx+c8HO6fJ/4p8egPTX/d
+         0MuanGwXuU1GH6gAOvR8gPsV1d+9khPwNONSQo8WThHOHWvt7HlYJGfiBsqRn6NiB+W2
+         MjDA==
+X-Forwarded-Encrypted: i=1; AJvYcCUw6ZRkEc8uhma5d2LhrdR+nJjG+7/B2rFteM6e/qp1GweT6dCJ6nmsUwZX1PaPQWgJwRBOQinqfcswNrk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJjl45ZUD2duyY/i1KBTnAbjRgOBOrMOSV4u0I4kBYWZAEx9ss
+	MmDNrBZKaKe6NMr9jf9Ivi1kk7gMmmcGL+LQnPpWmttt7AMqwuiN2dQ7bREOZq64ne2HpBymeUG
+	ieOrMeBkSKRoRoDWQUH++HkoWijZZbr+yddZ3RX5//N95dLeyVx6mjAHrat4=
+X-Google-Smtp-Source: AGHT+IGeGrB5s+NjhCyMRV5Jxyd9Xy3QjecK2rDYBdUmmu9gL2eyjPpYHNoaeu5Fxlbw8G7iKIAu8EIbS6QXDi5dO9NkpCoyzr6h
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <09d901ad11b3a410fbb6e27f7d04ad4609c3fe4a.1741706365.git.robin.murphy@arm.com>
+X-Received: by 2002:a05:6602:3805:b0:867:6680:cfd with SMTP id
+ ca18e2360f4ac-86a2316ec56mr3262082439f.1.1747908025663; Thu, 22 May 2025
+ 03:00:25 -0700 (PDT)
+Date: Thu, 22 May 2025 03:00:25 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <682ef5b9.a00a0220.2a3337.0012.GAE@google.com>
+Subject: [syzbot] [net?] BUG: corrupted list in __hw_addr_del_entry
+From: syzbot <syzbot+30468d31a80c716b0152@syzkaller.appspotmail.com>
+To: davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
+	kuba@kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	pabeni@redhat.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Mar 11, 2025 at 03:19:25PM +0000, Robin Murphy wrote:
-> Although the lock-juggling is only a temporary workaround, we don't want
-> it to make things avoidably worse. Jason was right to be nervous, since
-> bus_iommu_probe() doesn't care *which* IOMMU instance it's probing for,
-> so it probably is possible for one walk to finish a probe which a
-> different walk started, thus we do want to check for that.
-> 
-> Also there's no need to drop the lock just to have of_iommu_configure()
-> do nothing when a fwspec already exists; check that directly and avoid
-> opening a window at all in that (still somewhat likely) case.
-> 
-> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-> ---
-> I was rather expecting to send a v3 of "iommu: Get DT/ACPI parsing into
-> the proper probe path", so I'm grateful that v2 was picked up, thanks!
-> This is the difference as a fix/squash commit instead.
-> ---
->  drivers/iommu/iommu.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-> index d824fa5166e3..c6d40abe577e 100644
-> --- a/drivers/iommu/iommu.c
-> +++ b/drivers/iommu/iommu.c
-> @@ -415,13 +415,15 @@ static int iommu_init_device(struct device *dev)
->  	 * is buried in the bus dma_configure path. Properly unpicking that is
->  	 * still a big job, so for now just invoke the whole thing. The device
->  	 * already having a driver bound means dma_configure has already run and
-> -	 * either found no IOMMU to wait for, or we're in its replay call right
-> -	 * now, so either way there's no point calling it again.
-> +	 * found no IOMMU to wait for, so there's no point calling it again.
->  	 */
-> -	if (!dev->driver && dev->bus->dma_configure) {
-> +	if (!dev->iommu->fwspec && !dev->driver && dev->bus->dma_configure) {
->  		mutex_unlock(&iommu_probe_device_lock);
->  		dev->bus->dma_configure(dev);
->  		mutex_lock(&iommu_probe_device_lock);
-> +		/* If another instance finished the job for us, skip it */
-> +		if (!dev->iommu || dev->iommu_group)
-> +			return -ENODEV;
->  	}
->  	/*
->  	 * At this point, relevant devices either now have a fwspec which will
+Hello,
 
-I hit the below NULL-pointer dereference with 6.15-rc7 (when booting the
-x1e80100-crd) and it looks like this fix would have prevented it, but
-it's currently only queued for 6.16-rc1.
+syzbot found the following issue on:
 
-It looks like the gpu smmu probe is racing with fastrpc probe and the
-latter proceeds with iommu probe when the former temporarily releases
-the iommu probe mutex. Note that the iommu->ready flag added by [1] does
-not help since the apps smmu has already been probed.
+HEAD commit:    5723cc3450bc Merge tag 'dmaengine-fix-6.15' of git://git.k..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1631cef4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4f080d149583fe67
+dashboard link: https://syzkaller.appspot.com/bug?extid=30468d31a80c716b0152
+compiler:       arm-linux-gnueabi-gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+userspace arch: arm
 
-When the probe mutex is later reacquired, symlink creation fails and the
-tear down path sets the iommu_dev pointer to NULL, which in turn
-triggers the NULL pointer dereference in iommu_probe_device() when
-calling probe_finalize().
+Unfortunately, I don't have any reproducer for this issue yet.
 
-[ Or something along those lines (e.g. as I'm not seeing the "something
-fishy" warning in the manually saved serial console log). ]
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/98a89b9f34e4/non_bootable_disk-5723cc34.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/1e90c68d0eb2/vmlinux-5723cc34.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/ee3140eb6a4e/zImage-5723cc34.xz
 
-I've only seen this once, but it's clear that this is a regression in
-6.15 due to the iommu rework. If you agree that this fix would have
-prevented it then perhaps we should try to get it into 6.15 final (or at
-least backport it when 6.16-rc1 is out).
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+30468d31a80c716b0152@syzkaller.appspotmail.com
 
-Johan
+veth0_vlan: left promiscuous mode
+ slab kmalloc-128 start 84d20900 pointer offset 0 size 128
+list_del corruption. next->prev should be 84d20780, but was 00000122. (next=84d20900)
+------------[ cut here ]------------
+kernel BUG at lib/list_debug.c:65!
+Internal error: Oops - BUG: 0 [#1] SMP ARM
+Modules linked in:
+CPU: 0 UID: 0 PID: 16584 Comm: kworker/u8:0 Not tainted 6.15.0-rc6-syzkaller #0 PREEMPT 
+Hardware name: ARM-Versatile Express
+Workqueue: netns cleanup_net
+PC is at __list_del_entry_valid_or_report+0x8c/0x108 lib/list_debug.c:65
+LR is at __wake_up_klogd.part.0+0x7c/0xac kernel/printk/printk.c:4556
+pc : [<808c8ba4>]    lr : [<802eaa70>]    psr: 60000113
+sp : e8831a58  ip : e88319a0  fp : e8831a74
+r10: 00000000  r9 : 84d20788  r8 : 84b2424c
+r7 : 84d20780  r6 : 84d20780  r5 : 856ea200  r4 : 84d20900
+r3 : 832e8c00  r2 : 00000000  r1 : 00000000  r0 : 00000055
+Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment user
+Control: 30c5387d  Table: 84770480  DAC: fffffffd
+Register r0 information: non-paged memory
+Register r1 information: NULL pointer
+Register r2 information: NULL pointer
+Register r3 information: slab task_struct start 832e8c00 pointer offset 0 size 3072
+Register r4 information: slab kmalloc-128 start 84d20900 pointer offset 0 size 128
+Register r5 information: slab kmalloc-128 start 856ea200 pointer offset 0 size 128
+Register r6 information: slab kmalloc-128 start 84d20780 pointer offset 0 size 128
+Register r7 information: slab kmalloc-128 start 84d20780 pointer offset 0 size 128
+Register r8 information: slab kmalloc-cg-2k start 84b24000 pointer offset 588 size 2048
+Register r9 information: slab kmalloc-128 start 84d20780 pointer offset 8 size 128
+Register r10 information: NULL pointer
+Register r11 information: 2-page vmalloc region starting at 0xe8830000 allocated at kernel_clone+0xac/0x3e4 kernel/fork.c:2845
+Register r12 information: 2-page vmalloc region starting at 0xe8830000 allocated at kernel_clone+0xac/0x3e4 kernel/fork.c:2845
+Process kworker/u8:0 (pid: 16584, stack limit = 0xe8830000)
+Stack: (0xe8831a58 to 0xe8832000)
+1a40:                                                       84d20780 84b2424c
+1a60: 00000001 00000004 e8831a8c e8831a78 8155a1b8 808c8b24 e8831af4 00000006
+1a80: e8831ac4 e8831a90 8155a2bc 8155a140 e8831ac4 00000000 e8831af4 84b24000
+1aa0: e8831af4 84b24238 00000000 00000000 00000000 80000010 e8831aec e8831ac8
+1ac0: 8155adc4 8155a220 00000000 00000000 00000000 84d20380 84b24000 84d20380
+1ae0: e8831b34 e8831af0 81834e9c 8155ad84 849ef540 00ff3333 00002e00 00000000
+1b00: 00000000 00000000 00000000 00000000 00000000 47b2c705 e8831b34 84e14800
+1b20: 84e14930 84d20380 e8831b64 e8831b38 81836c58 81834d98 e8831b64 e8831b48
+1b40: 848a5e80 854e2c00 000002ff 00000000 848a5e80 849ef540 e8831bd4 e8831b68
+1b60: 8180237c 81836bb8 00000000 00000820 81805424 00000000 00000000 00000000
+1b80: 00000015 00000000 ffffffff 00000000 00000000 00000000 000002ff 00000000
+1ba0: 01000000 2e0000ff 8026b438 47b2c705 84e14800 854e2c24 854e2c00 00000000
+1bc0: 84e14948 854e2c8c e8831c3c e8831bd8 81805454 81802128 81a5c5b0 0000002e
+1be0: 848a5e80 84b24000 00000000 84e14948 e8831bf0 e8831bf0 80797b44 e8831c8c
+1c00: e8831c70 8029eb0c 80797b44 47b2c705 00000000 84b24000 84e14800 848a5e80
+1c20: 00000002 8180b828 00000000 e8831d14 e8831c8c e8831c40 8180b8c0 8180501c
+1c40: e8831c8c e8831c50 81671994 8030cb14 e8831c8c e8831c60 816e9bd8 47b2c705
+1c60: 81c00000 829e57a4 829e494c ffffffd1 00000000 8180b828 00000000 e8831d14
+1c80: e8831cc4 e8831c90 802926d4 8180b834 832e8c00 00000002 00000cc0 e8831d14
+1ca0: 00000002 848a5e80 00000001 84b24000 00000000 8241df54 e8831cdc e8831cc8
+1cc0: 8029290c 80292680 00000000 802da2e4 e8831d04 e8831ce0 8154bfb4 802928f8
+1ce0: 00000000 00000000 00000000 84b24114 84b1c000 e8831d88 e8831d44 e8831d08
+1d00: 8154c5c4 8154bf6c 00000000 00000000 00000000 84b24000 00000000 47b2c705
+1d20: e8831cfc 85b14114 85ada114 e8831e08 e8831d88 00000001 e8831ddc e8831d48
+1d40: 815571e8 8154c4d4 829d1f04 e8831e70 e8831da4 e8831d60 80505bb4 80505568
+1d60: 00000001 819dadd8 829d255c 00000000 00000000 00000000 832e8c00 8241ebb4
+1d80: 81557c50 808c8a4c 84b24114 85ada114 e8831e08 85ada000 e8831ddc e8831da8
+1da0: 81557c50 808c8a4c 00000000 47b2c705 e8831ddc 848a5e7c 848a5f78 e8831e70
+1dc0: 82c1f980 e8831e90 829d1f04 e8831e70 e8831e54 e8831de0 81558928 8155700c
+1de0: e8831dfc e8831df0 81a5c3e0 e8831e90 848a5e80 8241ec70 81a4eeb4 81a5c3c0
+1e00: 848a5e7c 61c88647 84a7e90c 85ada10c 8122b314 00000000 00000000 00000000
+1e20: 00000000 47b2c705 e8831e54 829d25c4 e8831e90 829d25c4 e8831e90 829d1f04
+1e40: 829d1f04 848a6c00 e8831e74 e8831e58 8153a0e0 81558630 829d25c4 82c1f940
+1e60: 829d1ec0 e8831e90 e8831ed4 e8831e78 8153c540 8153a088 81a5c4d4 8029ce24
+1e80: 82c1f940 829d1ec0 808c9c70 8153a0e4 848a5ea0 848a5ea0 00000100 00000122
+1ea0: 00000000 47b2c705 81c01f84 8578b580 829d1ed8 8301bc00 8300e600 832e8c00
+1ec0: 8301bc15 8300f070 e8831f2c e8831ed8 802873bc 8153c29c 81c01a44 832e8c00
+1ee0: e8831f14 e8831ef0 829d1edc 829d1ed8 829d1edc 829d1ed8 e8831f2c 00000000
+1f00: 80282cf8 8578b580 8300e620 8300e600 82804d40 8578b5ac 832e8c00 61c88647
+1f20: e8831f6c e8831f30 80288004 80287214 81a5c4d4 61c88647 82804d40 61c88647
+1f40: 8028eb98 00000001 832e8c00 854fa580 ec6dde60 80287e08 8578b580 00000000
+1f60: e8831fac e8831f70 8028f07c 80287e14 80274ea8 81a5c45c 832e8c00 47b2c705
+1f80: e8831fac 85523e40 8028ef50 00000000 00000000 00000000 00000000 00000000
+1fa0: 00000000 e8831fb0 80200114 8028ef5c 00000000 00000000 00000000 00000000
+1fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+1fe0: 00000000 00000000 00000000 00000000 00000013 00000000 00000000 00000000
+Call trace: 
+[<808c8b18>] (__list_del_entry_valid_or_report) from [<8155a1b8>] (__list_del_entry_valid include/linux/list.h:124 [inline])
+[<808c8b18>] (__list_del_entry_valid_or_report) from [<8155a1b8>] (__list_del_entry include/linux/list.h:215 [inline])
+[<808c8b18>] (__list_del_entry_valid_or_report) from [<8155a1b8>] (list_del_rcu include/linux/rculist.h:168 [inline])
+[<808c8b18>] (__list_del_entry_valid_or_report) from [<8155a1b8>] (__hw_addr_del_entry+0x84/0xe0 net/core/dev_addr_lists.c:160)
+ r7:00000004 r6:00000001 r5:84b2424c r4:84d20780
+[<8155a134>] (__hw_addr_del_entry) from [<8155a2bc>] (__hw_addr_del_ex+0xa8/0xb0 net/core/dev_addr_lists.c:200)
+ r5:00000006 r4:e8831af4
+[<8155a214>] (__hw_addr_del_ex) from [<8155adc4>] (__dev_mc_del net/core/dev_addr_lists.c:909 [inline])
+[<8155a214>] (__hw_addr_del_ex) from [<8155adc4>] (dev_mc_del+0x4c/0x74 net/core/dev_addr_lists.c:927)
+ r10:80000010 r9:00000000 r8:00000000 r7:00000000 r6:84b24238 r5:e8831af4
+ r4:84b24000
+[<8155ad78>] (dev_mc_del) from [<81834e9c>] (igmp6_group_dropped+0x110/0x238 net/ipv6/mcast.c:719)
+ r6:84d20380 r5:84b24000 r4:84d20380
+[<81834d8c>] (igmp6_group_dropped) from [<81836c58>] (__ipv6_dev_mc_dec+0xac/0x1a0 net/ipv6/mcast.c:1018)
+ r6:84d20380 r5:84e14930 r4:84e14800
+[<81836bac>] (__ipv6_dev_mc_dec) from [<8180237c>] (addrconf_leave_solict net/ipv6/addrconf.c:2254 [inline])
+[<81836bac>] (__ipv6_dev_mc_dec) from [<8180237c>] (addrconf_leave_solict net/ipv6/addrconf.c:2246 [inline])
+[<81836bac>] (__ipv6_dev_mc_dec) from [<8180237c>] (__ipv6_ifa_notify+0x260/0x358 net/ipv6/addrconf.c:6302)
+ r9:849ef540 r8:848a5e80 r7:00000000 r6:000002ff r5:854e2c00 r4:848a5e80
+[<8180211c>] (__ipv6_ifa_notify) from [<81805454>] (addrconf_ifdown+0x444/0x764 net/ipv6/addrconf.c:3981)
+ r9:854e2c8c r8:84e14948 r7:00000000 r6:854e2c00 r5:854e2c24 r4:84e14800
+[<81805010>] (addrconf_ifdown) from [<8180b8c0>] (addrconf_notify+0x98/0x770 net/ipv6/addrconf.c:3780)
+ r10:e8831d14 r9:00000000 r8:8180b828 r7:00000002 r6:848a5e80 r5:84e14800
+ r4:84b24000
+[<8180b828>] (addrconf_notify) from [<802926d4>] (notifier_call_chain+0x60/0x1b4 kernel/notifier.c:85)
+ r10:e8831d14 r9:00000000 r8:8180b828 r7:00000000 r6:ffffffd1 r5:829e494c
+ r4:829e57a4
+[<80292674>] (notifier_call_chain) from [<8029290c>] (raw_notifier_call_chain+0x20/0x28 kernel/notifier.c:453)
+ r10:8241df54 r9:00000000 r8:84b24000 r7:00000001 r6:848a5e80 r5:00000002
+ r4:e8831d14
+[<802928ec>] (raw_notifier_call_chain) from [<8154bfb4>] (call_netdevice_notifiers_info+0x54/0xa0 net/core/dev.c:2176)
+[<8154bf60>] (call_netdevice_notifiers_info) from [<8154c5c4>] (call_netdevice_notifiers_extack net/core/dev.c:2214 [inline])
+[<8154bf60>] (call_netdevice_notifiers_info) from [<8154c5c4>] (call_netdevice_notifiers net/core/dev.c:2228 [inline])
+[<8154bf60>] (call_netdevice_notifiers_info) from [<8154c5c4>] (dev_close_many+0xfc/0x150 net/core/dev.c:1731)
+ r6:e8831d88 r5:84b1c000 r4:84b24114
+[<8154c4c8>] (dev_close_many) from [<815571e8>] (unregister_netdevice_many_notify+0x1e8/0xbc4 net/core/dev.c:11942)
+ r9:00000001 r8:e8831d88 r7:e8831e08 r6:85ada114 r5:85b14114 r4:e8831cfc
+[<81557000>] (unregister_netdevice_many_notify) from [<81558928>] (unregister_netdevice_many net/core/dev.c:12036 [inline])
+[<81557000>] (unregister_netdevice_many_notify) from [<81558928>] (default_device_exit_batch+0x304/0x384 net/core/dev.c:12530)
+ r10:e8831e70 r9:829d1f04 r8:e8831e90 r7:82c1f980 r6:e8831e70 r5:848a5f78
+ r4:848a5e7c
+[<81558624>] (default_device_exit_batch) from [<8153a0e0>] (ops_exit_list+0x64/0x68 net/core/net_namespace.c:177)
+ r10:848a6c00 r9:829d1f04 r8:829d1f04 r7:e8831e90 r6:829d25c4 r5:e8831e90
+ r4:829d25c4
+[<8153a07c>] (ops_exit_list) from [<8153c540>] (cleanup_net+0x2b0/0x49c net/core/net_namespace.c:654)
+ r7:e8831e90 r6:829d1ec0 r5:82c1f940 r4:829d25c4
+[<8153c290>] (cleanup_net) from [<802873bc>] (process_one_work+0x1b4/0x4f4 kernel/workqueue.c:3238)
+ r10:8300f070 r9:8301bc15 r8:832e8c00 r7:8300e600 r6:8301bc00 r5:829d1ed8
+ r4:8578b580
+[<80287208>] (process_one_work) from [<80288004>] (process_scheduled_works kernel/workqueue.c:3319 [inline])
+[<80287208>] (process_one_work) from [<80288004>] (worker_thread+0x1fc/0x3d8 kernel/workqueue.c:3400)
+ r10:61c88647 r9:832e8c00 r8:8578b5ac r7:82804d40 r6:8300e600 r5:8300e620
+ r4:8578b580
+[<80287e08>] (worker_thread) from [<8028f07c>] (kthread+0x12c/0x280 kernel/kthread.c:464)
+ r10:00000000 r9:8578b580 r8:80287e08 r7:ec6dde60 r6:854fa580 r5:832e8c00
+ r4:00000001
+[<8028ef50>] (kthread) from [<80200114>] (ret_from_fork+0x14/0x20 arch/arm/kernel/entry-common.S:137)
+Exception stack(0xe8831fb0 to 0xe8831ff8)
+1fa0:                                     00000000 00000000 00000000 00000000
+1fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+1fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+ r10:00000000 r9:00000000 r8:00000000 r7:00000000 r6:00000000 r5:8028ef50
+ r4:85523e40
+Code: e1a01006 e30f0a2c e348022a ebe4ef86 (e7f001f2) 
+---[ end trace 0000000000000000 ]---
+----------------
+Code disassembly (best guess):
+   0:	e1a01006 	mov	r1, r6
+   4:	e30f0a2c 	movw	r0, #64044	@ 0xfa2c
+   8:	e348022a 	movt	r0, #33322	@ 0x822a
+   c:	ebe4ef86 	bl	0xff93be2c
+* 10:	e7f001f2 	udf	#18 <-- trapping instruction
 
-[1] https://lore.kernel.org/lkml/88d54c1b48fed8279aa47d30f3d75173685bb26a.1745516488.git.robin.murphy@arm.com/
 
-#regzbot ^introduced: bcb81ac6ae3c2ef95b44e7b54c3c9522364a245c
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-[    7.759456] arm-smmu 3da0000.iommu: probing hardware configuration...
-[    7.792360] arm-smmu 3da0000.iommu: SMMUv2 with:
-[    7.802065] arm-smmu 3da0000.iommu:  stage 1 translation
-[    7.811229] arm-smmu 3da0000.iommu:  coherent table walk
-[    7.811233] arm-smmu 3da0000.iommu:  stream matching with 24 register groups
-[    7.811272] arm-smmu 3da0000.iommu:  22 context banks (0 stage-2 only)
-[    7.820512] remoteproc remoteproc0: remote processor adsp is now up
-[    7.821538] arm-smmu 3da0000.iommu:  Supported page sizes: 0x61311000
-[    7.845913] qcom,fastrpc 6800000.remoteproc:glink-edge.fastrpcglink-apps-dsp.-1.-1: no reserved DMA memory for FASTRPC
-[    7.851687] qcom,apr 6800000.remoteproc:glink-edge.adsp_apps.-1.-1: Adding APR/GPR dev: gprsvc:service:2:1
-[    7.852191] qcom,apr 6800000.remoteproc:glink-edge.adsp_apps.-1.-1: Adding APR/GPR dev: gprsvc:service:2:2
-[    7.852301] arm-smmu 3da0000.iommu:  Stage-1: 48-bit VA -> 40-bit IPA
-[    7.853963] remoteproc remoteproc1: remote processor cdsp is now up
-[    7.857232] qcom,fastrpc 32300000.remoteproc:glink-edge.fastrpcglink-apps-dsp.-1.-1: no reserved DMA memory for FASTRPC
-[    7.861182] platform 32300000.remoteproc:glink-edge:fastrpc:compute-cb@1: Adding to iommu group 9
-[    7.865501] arm-smmu 3da0000.iommu:  preserved 0 boot mappings
-[    7.977602] platform 6800000.remoteproc:glink-edge:fastrpc:compute-cb@3: Adding to iommu group 10
-[    7.991605] platform 3d00000.gpu: Adding to iommu group 11
-[    7.998389] platform 32300000.remoteproc:glink-edge:fastrpc:compute-cb@2: Adding to iommu group 12
-[    8.008816] platform 3d6a000.gmu: Adding to iommu group 13
-[    8.016577] platform 6800000.remoteproc:glink-edge:fastrpc:compute-cb@4: Adding to iommu group 14
-[    8.027036] platform 32300000.remoteproc:glink-edge:fastrpc:compute-cb@3: Adding to iommu group 15
-[    8.037840] platform 6800000.remoteproc:glink-edge:fastrpc:compute-cb@5: Adding to iommu group 16
-[    8.048473] platform 32300000.remoteproc:glink-edge:fastrpc:compute-cb@4: Adding to iommu group 17
-[    8.068429] platform 6800000.remoteproc:glink-edge:fastrpc:compute-cb@6: Adding to iommu group 18
-[    8.106128] sysfs: cannot create duplicate filename '/devices/platform/soc@0/15000000.iommu/iommu/smmu.0x00000000150
-00000/devices/6800000.remoteproc:glink-edge:fastrpc:compute-cb@6'
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-[    8.129705] CPU: 9 UID: 0 PID: 131 Comm: kworker/u50:4 Not tainted 6.15.0-rc7 #8 PREEMPT
-[    8.129708] Hardware name: Qualcomm CRD, BIOS 6.0.241007.BOOT.MXF.2.4-00534.1-HAMOA-1 10/ 7/2024
-[    8.129709] Workqueue: events_unbound deferred_probe_work_func
-[    8.129715] Call trace:
-[    8.129716]  show_stack+0x18/0x24 (C)
-[    8.129719]  dump_stack_lvl+0xc0/0xd0
-[    8.129722]  dump_stack+0x18/0x24
-[    8.129724]  sysfs_warn_dup+0x64/0x80
-[    8.129727]  sysfs_do_create_link_sd+0xf0/0xf8
-[    8.129729]  sysfs_create_link_sd+0x14/0x20
-[    8.129730]  sysfs_add_link_to_group+0x3c/0x68
-[    8.129732]  iommu_device_link+0x40/0xb8
-[    8.129735]  __iommu_probe_device+0x158/0x4b8
-[    8.129737]  probe_iommu_group+0x3c/0x64
-[    8.129739]  bus_for_each_dev+0x74/0xd0
-[    8.129741]  iommu_device_register+0xd8/0x23c
-[    8.129743]  arm_smmu_device_probe+0xc08/0xe94
-[    8.129745]  platform_probe+0x68/0xd8
-[    8.129747]  really_probe+0xc0/0x38c
-[    8.129750]  __driver_probe_device+0x7c/0x160
-[    8.129753]  driver_probe_device+0x40/0x110
-[    8.129754]  __device_attach_driver+0xbc/0x158
-[    8.129756]  bus_for_each_drv+0x80/0xdc
-[    8.129754]  __device_attach_driver+0xbc/0x158
-[    8.129756]  bus_for_each_drv+0x80/0xdc
-[    8.129758]  __device_attach+0xa8/0x1d4
-[    8.129759]  device_initial_probe+0x14/0x20
-[    8.129761]  bus_probe_device+0xb0/0xb4
-[    8.129763]  deferred_probe_work_func+0xa0/0xf4
-[    8.129766]  process_one_work+0x20c/0x610
-[    8.129769]  worker_thread+0x244/0x388
-[    8.129771]  kthread+0x150/0x220
-[    8.129773]  ret_from_fork+0x10/0x20
-[    8.129808] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000010
-[    8.131501] platform 32300000.remoteproc:glink-edge:fastrpc:compute-cb@5: Adding to iommu group 11
-[    8.131551] arm-smmu 3da0000.iommu: error -EEXIST: Failed to register iommu
-[    8.131574] arm-smmu 3da0000.iommu: probe with driver arm-smmu failed with error -17
-[    8.138242] Mem abort info:
-[    8.138244]   ESR = 0x0000000096000004
-[    8.138246]   EC = 0x25: DABT (current EL), IL = 32 bits
-[    8.149780] platform 32300000.remoteproc:glink-edge:fastrpc:compute-cb@6: Adding to iommu group 13
-[    8.150537] platform 32300000.remoteproc:glink-edge:fastrpc:compute-cb@7: Adding to iommu group 19
-[    8.151166] platform 32300000.remoteproc:glink-edge:fastrpc:compute-cb@8: Adding to iommu group 20
-[    8.152079] platform 32300000.remoteproc:glink-edge:fastrpc:compute-cb@10: Adding to iommu group 21
-[    8.152765] platform 32300000.remoteproc:glink-edge:fastrpc:compute-cb@11: Adding to iommu group 22
-[    8.153281]   SET = 0, FnV = 0
-[    8.153283]   EA = 0, S1PTW = 0
-[    8.153284]   FSC = 0x04: level 0 translation fault
-[    8.153286] Data abort info:
-[    8.153287]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
-[    8.153387] platform 32300000.remoteproc:glink-edge:fastrpc:compute-cb@12: Adding to iommu group 23
-[    8.154013] platform 32300000.remoteproc:glink-edge:fastrpc:compute-cb@13: Adding to iommu group 24
-[    8.159590]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-[    8.159592]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-[    8.225170] user pgtable: 4k pages, 48-bit VAs, pgdp=0000000883bb6000
-[    8.233976] [0000000000000010] pgd=0000000000000000, p4d=0000000000000000
-[    8.234001] Internal error: Oops: 0000000096000004 [#1]  SMP
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-[    8.446080] CPU: 5 UID: 0 PID: 406 Comm: (udev-worker) Not tainted 6.15.0-rc7 #8 PREEMPT
-[    8.446082] Hardware name: Qualcomm CRD, BIOS 6.0.241007.BOOT.MXF.2.4-00534.1-HAMOA-1 10/ 7/2024
-[    8.459940] pstate: 61400005 (nZCv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
-[    8.459942] pc : iommu_probe_device+0x50/0x7c
-[    8.488201] lr : iommu_probe_device+0x44/0x7c
-[    8.488203] sp : ffff800082543210
-[    8.488204] x29: ffff800082543210 x28: 000000000000000c x27: 0000000000000001
-[    8.488206] x26: 0000000000000000 x25: ffffd3551bac57c8 x24: 0000000000000000
-[    8.502233] x23: 0000000000000002 x22: ffffd3551c0407c0 x21: ffffd3551c0407c0
-[    8.502235] x20: 0000000000000000 x19: ffff23ce85720010 x18: 0000000000069e00
-[    8.502237] x17: 0000000000000028 x16: 0000000000000000
-[    8.523033]  x15: ffffd3551c1a5920
-[    8.523035] x14: ffffd3551c20f720 x13: ffff23ce811c5ba0 x12: ffff23ce90b70568
-[    8.523037] x11: ffffd3551c819960 x10: 0000000000000000 x9 : 0000000000000000
-[    8.543927] x8 : ffffd3551c103000 x7 : ffff8000825430a0 x6 : ffff800082543030
-[    8.543929] x5 : ffff800082544000 x4 : 0000000000000002 x3 : 0000000000000000
-[    8.556981] x2 : 0000000000000000 x1 : 0000000000000000 x0 : 0000000000000000
-[    8.556983] Call trace:
-[    8.556984]  iommu_probe_device+0x50/0x7c (P)
-[    8.582047]  of_iommu_configure+0x188/0x26c
-[    8.582050]  of_dma_configure_id+0xcc/0x300
-[    8.582053]  platform_dma_configure+0x80/0xa4
-[    8.582054]  really_probe+0x74/0x38c
-[    8.595015]  __driver_probe_device+0x7c/0x160
-[    8.595017]  driver_probe_device+0x40/0x110
-[    8.595019]  __device_attach_driver+0xbc/0x158
-[    8.631849]  bus_for_each_drv+0x80/0xdc
-[    8.631852]  __device_attach+0xa8/0x1d4
-[    8.631853]  device_initial_probe+0x14/0x20
-[    8.631855]  bus_probe_device+0xb0/0xb4
-[    8.631857]  device_add+0x57c/0x784
-[    8.653367]  of_device_add+0x44/0x60
-[    8.653369]  of_platform_device_create_pdata+0x98/0x140
-[    8.653371]  of_platform_bus_create+0x1b0/0x4d4
-[    8.653372]  of_platform_populate+0x60/0x14c
-[    8.653374]  fastrpc_rpmsg_probe+0x254/0x3d8 [fastrpc]
-[    8.661542]  rpmsg_dev_probe+0xc0/0x1e0 [rpmsg_core]
-[    8.671574]  really_probe+0xc0/0x38c
-[    8.671577]  __driver_probe_device+0x7c/0x160
-[    8.691391]  driver_probe_device+0x40/0x110
-[    8.691391]  driver_probe_device+0x40/0x110
-[    8.691392]  __driver_attach+0xfc/0x208
-[    8.691393]  bus_for_each_dev+0x74/0xd0
-[    8.691395]  driver_attach+0x24/0x30
-[    8.691398]  bus_add_driver+0x110/0x234
-[    8.715663]  driver_register+0x60/0x128
-[    8.715665]  __register_rpmsg_driver+0x1c/0x28 [rpmsg_core]
-[    8.715667]  fastrpc_init+0x40/0xb8 [fastrpc]
-[    8.715669]  do_one_initcall+0x64/0x30c
-[    8.730854]  do_init_module+0x58/0x204
-[    8.730857]  load_module+0x1e24/0x1f6c
-[    8.743016]  init_module_from_file+0x88/0xc4
-[    8.743017]  idempotent_init_module+0x188/0x27c
-[    8.743019]  __arm64_sys_finit_module+0x6c/0xec
-[    8.743020]  invoke_syscall+0x48/0x110
-[    8.743023]  el0_svc_common.constprop.0+0xc0/0xe0
-[    8.760436]  do_el0_svc+0x1c/0x28
-[    8.760438]  el0_svc+0x48/0x114
-[    8.760441]  el0t_64_sync_handler+0xc8/0xcc
-[    8.760443]  el0t_64_sync+0x198/0x19c
-[    8.760445] Code: 940dd1a3 35000114 f9423260 f9405000 (f9400800)
-[    8.760446] ---[ end trace 0000000000000000 ]---
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
