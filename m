@@ -1,117 +1,127 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BA9428A402;
-	Thu, 22 May 2025 15:52:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F941299942;
+	Thu, 22 May 2025 15:52:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747929157; cv=none; b=j2LD4RWUV0Fj2yDJQg55wfGzSHiMeDMAJllVtTtu0PEwMe9ge/YPQfb4bG0k5n19YGbSTsocQYcbJxRjDcBvxB8ttFf6T/Jm8XH5D4wON7OH7g4E1rEAJ2MLFml4h6C6oc61322DYLcXg7MzpuHsywWRNt0WB3UsmahzrXmTS8w=
+	t=1747929176; cv=none; b=t1kDhLiKkjR8Yc1kxUjdJIxny9Wp67uIHwxWGfll/ghNuCgNIxOt/O5593TLlzaPL3sDv2VgfsZDifRg7/gh+ROmZX8KZxmU+h1l2l+S9R5Ar+BRNji30S2YwuM3YBqy3uAbZQWC6Tl65uSKAhzqflLcYjEVMpmZGfUPFFaYdF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747929157; c=relaxed/simple;
-	bh=TuqPvPa0KFbs0i4Sez0e8pGGu8fLrLdtUf67/hwY7zc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=G903ZQ9EjjURvXKWnc/ucfVPMGuKn+FhEigy8iMqf5+wKl+T0fBh00MW6tF0wYTCHJAFVhS5iuuPVGViiyWC0bFNbAGlG1IU8fraQNyI3v1L5qeMrQwdmZNZWhk1XXUlvL1Aah1117ghzPI/9DuyfzcvjlQgC3jV2LC6RLl87B8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VJ+P5ZKq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747929176; c=relaxed/simple;
+	bh=x23FPZeEPbUJDrJ/tpjOcBaQ+IhLdc7QyoUXpM72I24=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=in8maFQI6RvkIudvu52kDl5TjPxT3bSCCBFGGC6FdrWNrIslk8dbQgRZnEg7inuPQrzXqwyGdxu21v8r7MRzvvJ0h3IgPhkE0EWFm0EfG2dvtm7x0NxJyrHMAADPuLmEWbP2pYC5wrrRsgfaWNfKJPvcKV0XemeO6jrOK3TADJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IUNHEmM9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VJ+P5ZKq"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7CA03C4CEEA;
-	Thu, 22 May 2025 15:52:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IUNHEmM9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25C20C4CEE4;
+	Thu, 22 May 2025 15:52:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747929157;
-	bh=TuqPvPa0KFbs0i4Sez0e8pGGu8fLrLdtUf67/hwY7zc=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=VJ+P5ZKqH5Rdk1mgyB73cdhHwdOHir6bn3BPb19mx8Q6GG4qvTftwpu8j7ssYmDsu
-	 zv6w9iKoVPqy6VePtl6dB45lV54gNPpsY0RMaG7N0nLjYYq48+9pNdlKkNyTHzLrPE
-	 FXWfBDI5MKpNAwStUl0SQtPGGWQqI2pGg2OI1hTLEoZlg4KRpiKWAbH5dWuz9zGXNS
-	 pqKvQWnF8tCjuLuk6LkJbSdep9QFE6XuaqKTRXEQURHcF0Z2zaJN4jmlfunSYehSeJ
-	 c04Iwhbt8Zg00pfBBQWEUMl5wmCr4t+EiOU8/4P5AK1Qq6UoPRLlkrXToNsXcfTnz4
-	 z0EYDZut/LSMA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C23FC54E65;
-	Thu, 22 May 2025 15:52:37 +0000 (UTC)
-From: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>
-Date: Thu, 22 May 2025 10:52:32 -0500
-Subject: [PATCH] gpio: palmas: Allow building as a module
+	s=k20201202; t=1747929176;
+	bh=x23FPZeEPbUJDrJ/tpjOcBaQ+IhLdc7QyoUXpM72I24=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IUNHEmM9wmT/cX42N4vNVY4CWi8ZyARLbeMEOicfgyN4H3Jk630NHkJw4W53j0Mgz
+	 GIArCDpnmFWb38Eve0kgD8Ntwn2sEEidi6so77vpxWEVj629WpXFUjcNB+vw2zmOLy
+	 H9oOo2GpSP3CuZPREwQ3FpDr2rdG0BTvsNGp7IwbnkdxrZ1wiRyHew80tn5Rldy8eq
+	 ga5svPQDayvr4dWNbBz+382JVHeZFdNM+NZ7mCoIK26EFvNxPofICgUFT2z9bGWeJw
+	 3Gkh89R0veSSJ9TUGm9U5xAKGgdCVT/xkcak+/PEPkpYr7A4Nsc4oPBr1PW4UYePL9
+	 JrQxQ92s6z5eg==
+Date: Thu, 22 May 2025 16:52:51 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>
+Cc: broonie@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, linux-spi@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	git@amd.com, amitrkcian2002@gmail.com
+Subject: Re: [PATCH v2] spi: dt-bindings: cdns,qspi-nor: Update
+ minItems/maxItems of resets for Cadence OSPI controller
+Message-ID: <20250522-dropout-hertz-6f1db9256655@spud>
+References: <20250522104745.327675-1-amit.kumar-mahapatra@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250522-gpio-palmas-gpio-v1-1-d6b1a3776ef5@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAD9IL2gC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDUyMD3fSCzHzdgsSc3MRiCDvR0jIt2cDELCXZPE0JqK2gKDUtswJsZHR
- sbS0AksojLWIAAAA=
-X-Change-ID: 20250520-gpio-palmas-gpio-a99fc046dc7f
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Aaron Kling <webgeek1234@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1747929156; l=1831;
- i=webgeek1234@gmail.com; s=20250217; h=from:subject:message-id;
- bh=pgQV1y1p+7TtH8m/CBCGl6uKbuXEGSGVeVp8ilM/kAI=;
- b=SmQgz7oXQiNMOJaWbRJp9qhuVxXfP0XyXez4YXtuQ1dzsIsah1i4l/ZDtEkcCe/3wMrofbDrG
- XZfq4v8sHE0DoajCNESNtRGT59oToTggj5mU7wRU+VIiEHeRUBSllHm
-X-Developer-Key: i=webgeek1234@gmail.com; a=ed25519;
- pk=TQwd6q26txw7bkK7B8qtI/kcAohZc7bHHGSD7domdrU=
-X-Endpoint-Received: by B4 Relay for webgeek1234@gmail.com/20250217 with
- auth_id=342
-X-Original-From: Aaron Kling <webgeek1234@gmail.com>
-Reply-To: webgeek1234@gmail.com
-
-From: Aaron Kling <webgeek1234@gmail.com>
-
-The driver works fine as a module, so allowing building as such. This
-drops the driver specific init in favor of the module macro which does
-the same, plus handling exit.
-
-Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
----
- drivers/gpio/Kconfig       |  2 +-
- drivers/gpio/gpio-palmas.c | 10 +++++-----
- 2 files changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index f2c39bbff83a33dcb12b2d32aa3ebc358a0dd949..be5d823516d0e2bff4b4231dac6a82bf10887118 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1464,7 +1464,7 @@ config GPIO_MAX77650
- 	  These chips have a single pin that can be configured as GPIO.
- 
- config GPIO_PALMAS
--	bool "TI PALMAS series PMICs GPIO"
-+	tristate "TI PALMAS series PMICs GPIO"
- 	depends on MFD_PALMAS
- 	help
- 	  Select this option to enable GPIO driver for the TI PALMAS
-diff --git a/drivers/gpio/gpio-palmas.c b/drivers/gpio/gpio-palmas.c
-index 28dba7048509a3ef9c7972c1be53ea30adddabb0..c70782be502b2719bb30cf3e40065c89ecec3cc2 100644
---- a/drivers/gpio/gpio-palmas.c
-+++ b/drivers/gpio/gpio-palmas.c
-@@ -191,9 +191,9 @@ static struct platform_driver palmas_gpio_driver = {
- 	.driver.of_match_table = of_palmas_gpio_match,
- 	.probe		= palmas_gpio_probe,
- };
-+module_platform_driver(palmas_gpio_driver);
- 
--static int __init palmas_gpio_init(void)
--{
--	return platform_driver_register(&palmas_gpio_driver);
--}
--subsys_initcall(palmas_gpio_init);
-+MODULE_ALIAS("platform:palmas_gpio");
-+MODULE_DESCRIPTION("TI PALMAS series GPIO driver");
-+MODULE_AUTHOR("Laxman Dewangan <ldewangan@nvidia.com>");
-+MODULE_LICENSE("GPL");
-
----
-base-commit: b36ddb9210e6812eb1c86ad46b66cc46aa193487
-change-id: 20250520-gpio-palmas-gpio-a99fc046dc7f
-
-Best regards,
--- 
-Aaron Kling <webgeek1234@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="yxTtStQQAneF1nFt"
+Content-Disposition: inline
+In-Reply-To: <20250522104745.327675-1-amit.kumar-mahapatra@amd.com>
 
 
+--yxTtStQQAneF1nFt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, May 22, 2025 at 04:17:45PM +0530, Amit Kumar Mahapatra wrote:
+> The Cadence Octal SPI (OSPI) controller on AMD Versal SoCs requires only
+> one reset entry. To reflect this, the maxItems for "resets" and
+> "reset-names" has been set to 1 for AMD Versal SoCs, and the minItems for
+> these properties has also been updated to 1.
+>=20
+> Signed-off-by: Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>
+> ---
+> BRANCH: mtd/next
+>=20
+> Changes in v2:
+>  - Removed "resets" & "reset-names" from required properties.
+>  - To address review comments, removed "maxItems" from "reset-names".
+> ---
+>  .../devicetree/bindings/spi/cdns,qspi-nor.yaml        | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml b/D=
+ocumentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+> index d48ecd6cd5ad..648b8452877c 100644
+> --- a/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+> +++ b/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
+> @@ -17,6 +17,13 @@ allOf:
+>            contains:
+>              const: xlnx,versal-ospi-1.0
+>      then:
+> +      properties:
+> +        resets:
+> +          maxItems: 1
+> +
+> +        reset-names:
+> +          items:
+> +            enum: [ qspi ]
+>        required:
+>          - power-domains
+>    - if:
+> @@ -132,11 +139,11 @@ properties:
+>      maxItems: 1
+> =20
+>    resets:
+> -    minItems: 2
+> +    minItems: 1
+
+I think you're still missing one of the things Krzysztof requested on
+v1, cos you reduce minItems for all platforms without restricting
+it back to 2 for non-versal platforms.
+
+>      maxItems: 3
+> =20
+>    reset-names:
+> -    minItems: 2
+> +    minItems: 1
+>      maxItems: 3
+>      items:
+>        enum: [ qspi, qspi-ocp, rstc_ref ]
+> --=20
+> 2.34.1
+>=20
+
+--yxTtStQQAneF1nFt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaC9IUwAKCRB4tDGHoIJi
+0p1HAP0fagpJMJCCCN+KFsXN+l8kHvHQutw4FibTTJ4qEE8VXgD9FJ+0yUyswsFI
+ILKnaWZg5X+qM5Icjp78cOZLteiywgI=
+=rHOR
+-----END PGP SIGNATURE-----
+
+--yxTtStQQAneF1nFt--
