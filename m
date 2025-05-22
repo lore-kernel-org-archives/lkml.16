@@ -1,127 +1,152 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F941299942;
-	Thu, 22 May 2025 15:52:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3735628A402;
+	Thu, 22 May 2025 15:53:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747929176; cv=none; b=t1kDhLiKkjR8Yc1kxUjdJIxny9Wp67uIHwxWGfll/ghNuCgNIxOt/O5593TLlzaPL3sDv2VgfsZDifRg7/gh+ROmZX8KZxmU+h1l2l+S9R5Ar+BRNji30S2YwuM3YBqy3uAbZQWC6Tl65uSKAhzqflLcYjEVMpmZGfUPFFaYdF4=
+	t=1747929213; cv=none; b=qHz4waSshiKid7RprA0sl/L9kDFdzIMtTfc5ucTxbKoJCqnazlCkldGlc4yBhKnwZF5DtbypdXH0e9jtO8Klq8Q+65ZfQr6H5XYmk3HwZIzhwOGcwRq41iUiiB6GyRc6C1B2tyZsgERxerlh0PxfKRJIuwHT/JZ20uqG7zvRMEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747929176; c=relaxed/simple;
-	bh=x23FPZeEPbUJDrJ/tpjOcBaQ+IhLdc7QyoUXpM72I24=;
+	s=arc-20240116; t=1747929213; c=relaxed/simple;
+	bh=sER6TUaJO5zCcIJR06Jkz1EP6QGdFEs+tdDFZCI1zxk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=in8maFQI6RvkIudvu52kDl5TjPxT3bSCCBFGGC6FdrWNrIslk8dbQgRZnEg7inuPQrzXqwyGdxu21v8r7MRzvvJ0h3IgPhkE0EWFm0EfG2dvtm7x0NxJyrHMAADPuLmEWbP2pYC5wrrRsgfaWNfKJPvcKV0XemeO6jrOK3TADJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IUNHEmM9; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=VTfgthVnBCfg8UKku6bNP7J1gD6qoOvAa5xJ9HxUHNr3KarBoehrfjJjmsgWRvNKM4rFpJxtkoXuF5El+9jSNoIV3w/65cl+IH72c/OK1iUXlI7iKhXd8zlAQv9Ed72jxrk734tkJxicN1QDoq4xZcSXbwAOo4U/ulrN5n4TeCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ps30CyU8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IUNHEmM9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25C20C4CEE4;
-	Thu, 22 May 2025 15:52:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ps30CyU8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55017C4CEF1;
+	Thu, 22 May 2025 15:53:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747929176;
-	bh=x23FPZeEPbUJDrJ/tpjOcBaQ+IhLdc7QyoUXpM72I24=;
+	s=k20201202; t=1747929211;
+	bh=sER6TUaJO5zCcIJR06Jkz1EP6QGdFEs+tdDFZCI1zxk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IUNHEmM9wmT/cX42N4vNVY4CWi8ZyARLbeMEOicfgyN4H3Jk630NHkJw4W53j0Mgz
-	 GIArCDpnmFWb38Eve0kgD8Ntwn2sEEidi6so77vpxWEVj629WpXFUjcNB+vw2zmOLy
-	 H9oOo2GpSP3CuZPREwQ3FpDr2rdG0BTvsNGp7IwbnkdxrZ1wiRyHew80tn5Rldy8eq
-	 ga5svPQDayvr4dWNbBz+382JVHeZFdNM+NZ7mCoIK26EFvNxPofICgUFT2z9bGWeJw
-	 3Gkh89R0veSSJ9TUGm9U5xAKGgdCVT/xkcak+/PEPkpYr7A4Nsc4oPBr1PW4UYePL9
-	 JrQxQ92s6z5eg==
-Date: Thu, 22 May 2025 16:52:51 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>
-Cc: broonie@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, linux-spi@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	git@amd.com, amitrkcian2002@gmail.com
-Subject: Re: [PATCH v2] spi: dt-bindings: cdns,qspi-nor: Update
- minItems/maxItems of resets for Cadence OSPI controller
-Message-ID: <20250522-dropout-hertz-6f1db9256655@spud>
-References: <20250522104745.327675-1-amit.kumar-mahapatra@amd.com>
+	b=Ps30CyU8dki7pBTSKkw76kLUvEJKyQFEic6MewttYzE+CvgWe/ax+9nq5P3f2QUJP
+	 zf+cvPoPHdTdzqJp3o6GP0aEdCTR87minC7VZb1eAVW5zhBsEdJQd5kNKGx4zmKIc7
+	 sEmc1bReq9hH3nziRpkR84ezFrag397mdYRklpeOMGSj4oV671U3ixUnrM4P3FgXZv
+	 xSqQ8Sd3Ucb0REymlrCPo7VKNcmmzULs3D3i2wDjdmdSQ7Y/h3dUvIFa+rkNtDbu7K
+	 1D23kkjZm3M2n23tIrgBmCL4Rt7ZunjQpuPwILGgHU8FP/NOZoNeCF83G0U7wUTX9+
+	 E+6XK1sOq1J3g==
+Date: Thu, 22 May 2025 17:53:29 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Jonathan Corbet <corbet@lwn.net>, 
+	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Anusha Srivatsa <asrivats@redhat.com>, Paul Kocialkowski <paulk@sys-base.io>, 
+	Dmitry Baryshkov <lumag@kernel.org>, =?utf-8?B?SGVydsOp?= Codina <herve.codina@bootlin.com>, 
+	Hui Pu <Hui.Pu@gehealthcare.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+	dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 2/2] drm/tests: bridge: add a KUnit test for
+ devm_drm_bridge_alloc()
+Message-ID: <20250522-fierce-carp-of-competition-1c0ecd@houat>
+References: <20250409-drm-bridge-alloc-doc-test-v7-0-a3ca4b97597f@bootlin.com>
+ <20250409-drm-bridge-alloc-doc-test-v7-2-a3ca4b97597f@bootlin.com>
+ <20250414-misty-hungry-woodlouse-dbbd64@houat>
+ <20250415132214.19b1a4ff@booty>
+ <gqe4ov7w54qe7mmfn2ud63g2ema2wh3qvyfvcaycvnh5mts3it@ef7qxryo2ccy>
+ <20250516173828.7f1aa70c@booty>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="yxTtStQQAneF1nFt"
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="5dunwaxeeh5jyh5b"
 Content-Disposition: inline
-In-Reply-To: <20250522104745.327675-1-amit.kumar-mahapatra@amd.com>
+In-Reply-To: <20250516173828.7f1aa70c@booty>
 
 
---yxTtStQQAneF1nFt
-Content-Type: text/plain; charset=us-ascii
+--5dunwaxeeh5jyh5b
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v7 2/2] drm/tests: bridge: add a KUnit test for
+ devm_drm_bridge_alloc()
+MIME-Version: 1.0
 
-On Thu, May 22, 2025 at 04:17:45PM +0530, Amit Kumar Mahapatra wrote:
-> The Cadence Octal SPI (OSPI) controller on AMD Versal SoCs requires only
-> one reset entry. To reflect this, the maxItems for "resets" and
-> "reset-names" has been set to 1 for AMD Versal SoCs, and the minItems for
-> these properties has also been updated to 1.
+On Fri, May 16, 2025 at 05:38:28PM +0200, Luca Ceresoli wrote:
+> > > Another way would be adding an optional .destroy a callback in struct
+> > > drm_bridge_funcs that is called in __drm_bridge_free(), and only the
+> > > kunit test code implements it. Maybe looks cleaner, but it would be
+> > > invasive on code that all bridges use. We had discussed a different
+> > > idea of .destroy callback in the past, for different reasons, and it
+> > > was not solving the problem we had in that case. So kunit would be the
+> > > only user for the foreseeable future. =20
+> >=20
+> > Sorry, we've had many conversations about all that work so I can't
+> > recall (or find) what your objections or concerns (or mine, maybe?) were
+> > about thing topic. It looks totally reasonable to me, and consistent
+> > with all the other DRM entities.
 >=20
-> Signed-off-by: Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>
-> ---
-> BRANCH: mtd/next
+> That was a long story and I also don't remember all the details,
+> however here's a summary of what I can recollect:
 >=20
-> Changes in v2:
->  - Removed "resets" & "reset-names" from required properties.
->  - To address review comments, removed "maxItems" from "reset-names".
-> ---
->  .../devicetree/bindings/spi/cdns,qspi-nor.yaml        | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml b/D=
-ocumentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
-> index d48ecd6cd5ad..648b8452877c 100644
-> --- a/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
-> +++ b/Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
-> @@ -17,6 +17,13 @@ allOf:
->            contains:
->              const: xlnx,versal-ospi-1.0
->      then:
-> +      properties:
-> +        resets:
-> +          maxItems: 1
-> +
-> +        reset-names:
-> +          items:
-> +            enum: [ qspi ]
->        required:
->          - power-domains
->    - if:
-> @@ -132,11 +139,11 @@ properties:
->      maxItems: 1
-> =20
->    resets:
-> -    minItems: 2
-> +    minItems: 1
+>  1. initially I proposed a .destroy called in *drm_bridge_free(), i.e.
+>     upon the last put [1]
+>      * it was used to ask the bridge driver to kfree() the driver struct
+>        that embeds the drm_bridge; that was not a good design, putting
+>        deallocation duties on each driver's shoulders
+>      * it was made unnecessary by devm_drm_bridge_alloc(), which moved
+>        the entire kfree into __drm_bridge_free() itself, based on the=20
+>        .container pointer
+>  2. we re-discussed it as a way to handle the panel_bridge, but in that
+>     case it would have been called by drm_bridge_remove() IIRC [2]
+>      * you said it was not a good solution (and I agree) and that a much
+>        wider rework would be needed for panels, eventually including the
+>        panel_bridge
+>      * then Anusha sent the patches to start the panel rework
 
-I think you're still missing one of the things Krzysztof requested on
-v1, cos you reduce minItems for all platforms without restricting
-it back to 2 for non-versal platforms.
+Thanks for the summary. I still agree with our discussions, however...
 
->      maxItems: 3
-> =20
->    reset-names:
-> -    minItems: 2
-> +    minItems: 1
->      maxItems: 3
->      items:
->        enum: [ qspi, qspi-ocp, rstc_ref ]
-> --=20
-> 2.34.1
+> So now we are discussing adding .destroy again, and in
+> __drm_bridge_free(), as it was at step 1, but for a different reason.
 >=20
+> [1] https://lore.kernel.org/all/20241231-hotplug-drm-bridge-v5-3-173065a1=
+ece1@bootlin.com/
+> [2] https://oftc.catirclogs.org/dri-devel/2025-02-14#
+>=20
+> > I'm also not entirely sure how invasive it would be? Add that callback,
+> > check if it's set and if it is, call it from __drm_bridge_free(), and
+> > you're pretty much done, right?
+>=20
+> No much added code indeed. My concern is about the fact that the
+> callback would be used only by kunit test and not "real code". It is
+> possibly worth doing anyway, so I wrote something for v8 and we'll see
+> how it looks.
 
---yxTtStQQAneF1nFt
+=2E.. It's still useful. With KMS drivers, you usually get two different
+lifetimes: the hardware device and the DRM device. The DRM device will
+outlive the hardware device. Thus, the driver instance will still be
+live even after the device is gone away, and still need to somewhat
+interact with the framework, even if in degraded mode.
+
+All the resources tied to the device (memory mapping, clocks,
+interrupts, etc.) are handled by devm. We don't have to take care of
+them in destroy, they are long gone before we reach that point.
+
+However, the bridge might still need to allocate memory, create objects,
+ to interact with the framework. Things like a private object, or a
+ scratch buffer, or... whatever.
+
+But anything that the driver needs to implement what the framework
+expects basically. *Those* are what need to be cleaned up in destroy.
+
+Maxime
+
+--5dunwaxeeh5jyh5b
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaC9IUwAKCRB4tDGHoIJi
-0p1HAP0fagpJMJCCCN+KFsXN+l8kHvHQutw4FibTTJ4qEE8VXgD9FJ+0yUyswsFI
-ILKnaWZg5X+qM5Icjp78cOZLteiywgI=
-=rHOR
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaC9IeAAKCRAnX84Zoj2+
+dogNAYCBWTPdxU7ITy8hdIEHBDmtiUmctJ46NQeWBfdzue2ao3tTwn7pHC34aPQK
+H257clIBf02ghWwpXc0wZ0WMKVGH9aW0+J8MV0GiUEaZPrTGH5ibbNZcKC6XQX+P
+3j9T4rfn1A==
+=GinJ
 -----END PGP SIGNATURE-----
 
---yxTtStQQAneF1nFt--
+--5dunwaxeeh5jyh5b--
