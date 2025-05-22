@@ -1,353 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F65C223313;
-	Thu, 22 May 2025 07:17:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AA6278F24
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 07:20:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747898277; cv=none; b=LxKwGO6kS/ChIHHhRUr/rPAsRdEQoZz8252a+x/OPBCAlAcCiC2rCCUXOn1OT5B7UPeQ1SFuMRfwcLDLmBAXGTWEj9p27HupLpzB/O6q4qGhwyVM7T5k4qC9Jg0QQaepAxmBLKMszB/DwGNkhydATcoSjjkm9XNE4KfoB906l6w=
+	t=1747898414; cv=none; b=Tv0DtGoMru1CHN/WxQDLC06On+/gJ1yW4Se5xbW7TzDPnJ/9DFVDqbs44kl/K9tjJK1ba/qLEO9IiEfsLDTSYzu/PDBRgxPXtkm0Bh10pAfpxDMFXzUF51zOpZLruaYz228RL1fJcI4ni1+KsBdc0hffiFqREiSRKpTEq7HubTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747898277; c=relaxed/simple;
-	bh=RBfEx3162mbB+OlkOVLAYGSIHMmdR4c1LkTJqUJI4rE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Emi8qh+S9i6f8/73Xc7dGG48/ZCKxaQQ6DuezBslzV64BiT9I7JijQCmcAN48DQLvxRiWl1s8Q/sLIJKo2YQd0Fao7OJaSOnyyYj78ymZRqTN/OWqXwKfERZGUvYON7u0W5Vm348CKu1sT+yeLucV7xBHBoqg+z1R+oZmq0vGPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AYZANZLF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747898414; c=relaxed/simple;
+	bh=liqnNj7ip/N1rCH19BeTslPD5eKFrKq82qizbs+1Dn4=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=izLi/zGehLeI5E+oBRG4yGAagHj0SQ1ZhyDzNyXeett+EvagmiIL0Bj7X9Be8SYodUfrSje+PJAlb4eFyT45HxzH9vFTINKXtzV6kQ74f5XXSmbAvJb8M7FwBR0dtX6dQmXu9BvYklGoBRDC2nRZafOBybt9U6Oa6bWQ3h3ZrjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SwWWEPaG; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AYZANZLF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F4D7C4CEE4;
-	Thu, 22 May 2025 07:17:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747898275;
-	bh=RBfEx3162mbB+OlkOVLAYGSIHMmdR4c1LkTJqUJI4rE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AYZANZLF1q+VpvyppqfCbYcdVmCTUt1BG6bjVEm1vkMYS+tA6MauObDFwHmEvXXYl
-	 tqJ7sbVdb2kFRIFvUzQd4pZJemTWv0sfZJnRfr1/H7HJfXTVR6S9Sb6jiRwZGjaPbs
-	 0g5sTSoxYVWHYMl3b75edj3CISgLu3o30HlsXzRxGMNwns4/mHgp6fiP9wWQBOmyEg
-	 TG+i723euNjbiEqbD7Dysg2kvKNI1UEaC6/02q68FvmjiYkPe/XkOFd55kgg8Y3Swd
-	 nN5Ss+YPQvcgiLEN5i1a7ICPE6VWeIg8l+N07wxjY4NTMupMPi4H4nG7DjmcWdw7VT
-	 WeXQYTpGsCKPA==
-From: Masahiro Yamada <masahiroy@kernel.org>
-To: linux-kbuild@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Alex Shi <alexs@kernel.org>,
-	Dongliang Mu <dzm91@hust.edu.cn>,
-	Federico Vaga <federico.vaga@vaga.pv.it>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Matthias Maennich <maennich@google.com>,
-	Yanteng Si <si.yanteng@linux.dev>,
-	linux-doc@vger.kernel.org
-Subject: [PATCH 3/3] docs/core-api/symbol-namespaces: drop table of contents and section numbering
-Date: Thu, 22 May 2025 16:17:22 +0900
-Message-ID: <20250522071744.2362563-3-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250522071744.2362563-1-masahiroy@kernel.org>
-References: <20250522071744.2362563-1-masahiroy@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SwWWEPaG"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43d04dc73b7so85052115e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 00:20:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1747898410; x=1748503210; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=h9uBgcPlsHvvGQ1VX4ZUYkfYF9TUaS+4+Ub/ZJyGnTM=;
+        b=SwWWEPaGdf6fGTQbch6pURPt7knSkv9m5p1vU8Ota5cZmAq1L9tsdlieqmLJf6hlSy
+         8BARwN2wjgJUOS3sYeIaU5ybFQWfl9SE+IOYuxqmYK7ZrfL1nUa9VWhQ9dvx+nO5K03a
+         4Um8+dO5qzS0cM/NFk2FEG5962ts+tQ8VW5BGgRgbEJkKRQ+VEw6bdE2UABWqVO+Xep5
+         17TqixJ7AlAi2gsSmF0q4GfW40T0k5AQbM56pQ8EtVZtqPNi0rm4EYSsNRxBMzeyGqD/
+         p3cgFxAMabtvcnHUCdbmTl+6MKNC3a79VGQ168h48fcAy+/s9kpkZdKwBoEesj7aO6yv
+         p3Zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747898410; x=1748503210;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=h9uBgcPlsHvvGQ1VX4ZUYkfYF9TUaS+4+Ub/ZJyGnTM=;
+        b=XgTEIgroz7CJ/WAAAPVZSdMbMCX/Xqe7Da/zNN3dZIvInhIecZX2ioNXYNjBtFd919
+         44eqhKpW75seu1D6yFZG1nundBTjXA+kjgoLGBNChlYb4TSFouGt66FtV182zDDXmKog
+         3rSgIWQJ91HygAFdObKJKAgCoa96KdYPXuSFn+ntrPPj4Yrp5HkHVThxv3hrFbwKPkm2
+         p/lCznfWLGCWhutasyi6urAAZhfGFZxgiUCY8U5gNgGSMsWu9lg5rQ6FtJu3zk6BDlxG
+         tcKunxC4OtcAVkhgkQ+sur1r2fzA7VL5Rfrv+KIZi71/pSBuv/4JECcl2teVzkB7i+0d
+         5PiA==
+X-Forwarded-Encrypted: i=1; AJvYcCWF7saidMZYhjSJF+JcnKMbREWB+/ZASqgRsO7zLsldOqNpBFx6vWEkNkghS3YqkEd1113HPG2c+0PgRIY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxwjvCfbhvYeeHHWcJ2qYuh4vSh8okmKG61wjMLaF6deDt0WFKA
+	o0YrgXl0ljgKkrTiLAPFAwn94kzntlVbG32Y4wlisyA8OMxrwKXg5qImVkXIuqRZm4g=
+X-Gm-Gg: ASbGncu/REBpWdpm6RDFua77HA3VT1FwxgHXOwKJsUO9C/c5lTjy72uVRH2uLD98yO+
+	0LVzTvw/qOKB3DX5EVu9FPyUAIAf27mdUWaIf6syPukwXeIcMUXD4RoHbc9y+UdqqEOfc4kwoSv
+	3/E441BLKpFM0vYXysVXaFZycS6m9TORrlqFvpfJTwKPrWPx5znlTtFqdRfB4qN+j6VHdp1hBUv
+	5qvAsolJl5RdgMEiIheoLQsst1U2sdHg3QpkYNvOtToRr4MWWk+XNyNNYvk7jIhl7IdNscEcxol
+	R1wBvEN54RNUxOB/xtiN8fbOkWv8fWk6m7cpVctBPivAmgvhxmyNukh4cSe27b8veu+Mou7esQO
+	eCtvXNsBiCJNVfV7vGo3xO9LfH8Yq
+X-Google-Smtp-Source: AGHT+IFWnwzP1okJY9tdDyyXM1yRdATlSP2aBPuqUBU5LyfBrvXpHgVdO6yXg/dSidOoUi6+IdDWUg==
+X-Received: by 2002:a05:6000:2385:b0:3a3:4ba4:f3cd with SMTP id ffacd0b85a97d-3a35c821e38mr19239803f8f.1.1747898410577;
+        Thu, 22 May 2025 00:20:10 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:ca6a:4d93:cd32:83a5? ([2a01:e0a:3d9:2080:ca6a:4d93:cd32:83a5])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a3699a9bf3sm17123530f8f.54.2025.05.22.00.20.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 May 2025 00:20:10 -0700 (PDT)
+Message-ID: <6d3e41a3-4fc0-4ebf-badc-6258ee7236cf@linaro.org>
+Date: Thu, 22 May 2025 09:20:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=a
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH] drm/panel-edp: Clarify the `prepare_to_enable`
+ description in comments
+To: Douglas Anderson <dianders@chromium.org>, dri-devel@lists.freedesktop.org
+Cc: Rob Clark <robdclark@gmail.com>, David Airlie <airlied@gmail.com>,
+ Jessica Zhang <quic_jesszhan@quicinc.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Simona Vetter <simona@ffwll.ch>,
+ Thomas Zimmermann <tzimmermann@suse.de>, linux-kernel@vger.kernel.org
+References: <20250521173204.1.Ic0375a9360698592f27afbf1f60f4996d504ed4f@changeid>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20250521173204.1.Ic0375a9360698592f27afbf1f60f4996d504ed4f@changeid>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The manually updated table of contents and section numbering are hard
-to maintain.
+On 22/05/2025 02:32, Douglas Anderson wrote:
+> It's unclear why I originally wrote in the description of
+> `prepare_to_enable` that "This is not specified in a standard way on
+> eDP timing diagrams" and then also wrote "It is effectively the time
+> from HPD going high till you can turn on the backlight." It seems
+> pretty clear that it's (T4+T5+T6+T8)-min. Either I was confused when I
+> wrote this or I was looking at some strange panel datasheet that I can
+> no longer find.
+> 
+> Update the description of the field so it's easier for people to fill
+> this in. Couch the description with "usually" in case there really was
+> some weird datasheet where things were specified in a different way.
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> 
+>   drivers/gpu/drm/panel/panel-edp.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/panel/panel-edp.c b/drivers/gpu/drm/panel/panel-edp.c
+> index 9adbe0f11421..74f5f9006a5b 100644
+> --- a/drivers/gpu/drm/panel/panel-edp.c
+> +++ b/drivers/gpu/drm/panel/panel-edp.c
+> @@ -113,7 +113,7 @@ struct panel_delay {
+>   	 *     // do fixed enable delay
+>   	 *     // enforce prepare_to_enable min time
+>   	 *
+> -	 * This is not specified in a standard way on eDP timing diagrams.
+> +	 * This is usually (T4+T5+T6+T8)-min on eDP timing diagrams.
+>   	 * It is effectively the time from HPD going high till you can
+>   	 * turn on the backlight.
+>   	 */
 
-Make changes similar to the following commits:
-
-  5e8f0ba38a4d ("docs/kbuild/makefiles: throw out the local table of contents")
-  1a4c1c9df72e ("docs/kbuild/makefiles: drop section numbering, use references")
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
-
- Documentation/core-api/symbol-namespaces.rst  | 45 +++++++------------
- .../it_IT/core-api/symbol-namespaces.rst      | 32 +++++++------
- .../zh_CN/core-api/symbol-namespaces.rst      | 41 +++++++----------
- 3 files changed, 47 insertions(+), 71 deletions(-)
-
-diff --git a/Documentation/core-api/symbol-namespaces.rst b/Documentation/core-api/symbol-namespaces.rst
-index c6f59c5e2564..f7cfa7b73e97 100644
---- a/Documentation/core-api/symbol-namespaces.rst
-+++ b/Documentation/core-api/symbol-namespaces.rst
-@@ -6,18 +6,8 @@ The following document describes how to use Symbol Namespaces to structure the
- export surface of in-kernel symbols exported through the family of
- EXPORT_SYMBOL() macros.
- 
--.. Table of Contents
--
--	=== 1 Introduction
--	=== 2 How to define Symbol Namespaces
--	   --- 2.1 Using the EXPORT_SYMBOL macros
--	   --- 2.2 Using the DEFAULT_SYMBOL_NAMESPACE define
--	=== 3 How to use Symbols exported in Namespaces
--	=== 4 Loading Modules that use namespaced Symbols
--	=== 5 Automatically creating MODULE_IMPORT_NS statements
--
--1. Introduction
--===============
-+Introduction
-+============
- 
- Symbol Namespaces have been introduced as a means to structure the export
- surface of the in-kernel API. It allows subsystem maintainers to partition
-@@ -31,15 +21,15 @@ its configuration, reject loading the module or warn about a missing import.
- Additionally, it is possible to put symbols into a module namespace, strictly
- limiting which modules are allowed to use these symbols.
- 
--2. How to define Symbol Namespaces
--==================================
-+How to define Symbol Namespaces
-+===============================
- 
- Symbols can be exported into namespace using different methods. All of them are
- changing the way EXPORT_SYMBOL and friends are instrumented to create ksymtab
- entries.
- 
--2.1 Using the EXPORT_SYMBOL macros
--==================================
-+Using the EXPORT_SYMBOL macros
-+------------------------------
- 
- In addition to the macros EXPORT_SYMBOL() and EXPORT_SYMBOL_GPL(), that allow
- exporting of kernel symbols to the kernel symbol table, variants of these are
-@@ -57,8 +47,8 @@ refer to ``NULL``. There is no default namespace if none is defined. ``modpost``
- and kernel/module/main.c make use the namespace at build time or module load
- time, respectively.
- 
--2.2 Using the DEFAULT_SYMBOL_NAMESPACE define
--=============================================
-+Using the DEFAULT_SYMBOL_NAMESPACE define
-+-----------------------------------------
- 
- Defining namespaces for all symbols of a subsystem can be very verbose and may
- become hard to maintain. Therefore a default define (DEFAULT_SYMBOL_NAMESPACE)
-@@ -86,8 +76,8 @@ unit as preprocessor statement. The above example would then read::
- within the corresponding compilation unit before the #include for
- <linux/export.h>. Typically it's placed before the first #include statement.
- 
--2.3 Using the EXPORT_SYMBOL_GPL_FOR_MODULES() macro
--===================================================
-+Using the EXPORT_SYMBOL_GPL_FOR_MODULES() macro
-+-----------------------------------------------
- 
- Symbols exported using this macro are put into a module namespace. This
- namespace cannot be imported.
-@@ -102,8 +92,8 @@ For example:
- will limit usage of this symbol to modules whoes name matches the given
- patterns.
- 
--3. How to use Symbols exported in Namespaces
--============================================
-+How to use Symbols exported in Namespaces
-+=========================================
- 
- In order to use symbols that are exported into namespaces, kernel modules need
- to explicitly import these namespaces. Otherwise the kernel might reject to
-@@ -125,11 +115,10 @@ inspected with modinfo::
- 
- 
- It is advisable to add the MODULE_IMPORT_NS() statement close to other module
--metadata definitions like MODULE_AUTHOR() or MODULE_LICENSE(). Refer to section
--5. for a way to create missing import statements automatically.
-+metadata definitions like MODULE_AUTHOR() or MODULE_LICENSE().
- 
--4. Loading Modules that use namespaced Symbols
--==============================================
-+Loading Modules that use namespaced Symbols
-+===========================================
- 
- At module loading time (e.g. ``insmod``), the kernel will check each symbol
- referenced from the module for its availability and whether the namespace it
-@@ -140,8 +129,8 @@ allow loading of modules that don't satisfy this precondition, a configuration
- option is available: Setting MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS=y will
- enable loading regardless, but will emit a warning.
- 
--5. Automatically creating MODULE_IMPORT_NS statements
--=====================================================
-+Automatically creating MODULE_IMPORT_NS statements
-+==================================================
- 
- Missing namespaces imports can easily be detected at build time. In fact,
- modpost will emit a warning if a module uses a symbol from a namespace
-diff --git a/Documentation/translations/it_IT/core-api/symbol-namespaces.rst b/Documentation/translations/it_IT/core-api/symbol-namespaces.rst
-index 6ee713988531..baa344f4523a 100644
---- a/Documentation/translations/it_IT/core-api/symbol-namespaces.rst
-+++ b/Documentation/translations/it_IT/core-api/symbol-namespaces.rst
-@@ -10,8 +10,8 @@ Questo documento descrive come usare lo spazio dei nomi dei simboli
- per strutturare quello che viene esportato internamente al kernel
- grazie alle macro della famiglia EXPORT_SYMBOL().
- 
--1. Introduzione
--===============
-+Introduzione
-+============
- 
- Lo spazio dei nomi dei simboli è stato introdotto come mezzo per strutturare
- l'API esposta internamente al kernel. Permette ai manutentori di un
-@@ -24,15 +24,15 @@ devono prima importare detto spazio. Altrimenti il kernel, a seconda
- della configurazione, potrebbe rifiutare di caricare il modulo o
- avvisare l'utente di un'importazione mancante.
- 
--2. Come definire uno spazio dei nomi dei simboli
--================================================
-+Come definire uno spazio dei nomi dei simboli
-+=============================================
- 
- I simboli possono essere esportati in spazi dei nomi usando diversi
- meccanismi.  Tutti questi meccanismi cambiano il modo in cui
- EXPORT_SYMBOL e simili vengono guidati verso la creazione di voci in ksymtab.
- 
--2.1 Usare le macro EXPORT_SYMBOL
--================================
-+Usare le macro EXPORT_SYMBOL
-+----------------------------
- 
- In aggiunta alle macro EXPORT_SYMBOL() e EXPORT_SYMBOL_GPL(), che permettono
- di esportare simboli del kernel nella rispettiva tabella, ci sono
-@@ -53,8 +53,8 @@ di base. Il programma ``modpost`` e il codice in kernel/module/main.c usano lo
- spazio dei nomi, rispettivamente, durante la compilazione e durante il
- caricamento di un modulo.
- 
--2.2 Usare il simbolo di preprocessore DEFAULT_SYMBOL_NAMESPACE
--==============================================================
-+Usare il simbolo di preprocessore DEFAULT_SYMBOL_NAMESPACE
-+----------------------------------------------------------
- 
- Definire lo spazio dei nomi per tutti i simboli di un sottosistema può essere
- logorante e di difficile manutenzione. Perciò è stato fornito un simbolo
-@@ -83,8 +83,8 @@ direttamente nei file da compilare. L'esempio precedente diventerebbe::
- 
- Questo va messo prima di un qualsiasi uso di EXPORT_SYMBOL.
- 
--3. Come usare i simboli esportati attraverso uno spazio dei nomi
--================================================================
-+Come usare i simboli esportati attraverso uno spazio dei nomi
-+=============================================================
- 
- Per usare i simboli esportati da uno spazio dei nomi, i moduli del
- kernel devono esplicitamente importare il relativo spazio dei nomi; altrimenti
-@@ -108,12 +108,10 @@ modinfo::
- 
- 
- Si consiglia di posizionare la dichiarazione MODULE_IMPORT_NS() vicino
--ai metadati del modulo come MODULE_AUTHOR() o MODULE_LICENSE(). Fate
--riferimento alla sezione 5. per creare automaticamente le importazioni
--mancanti.
-+ai metadati del modulo come MODULE_AUTHOR() o MODULE_LICENSE().
- 
--4. Caricare moduli che usano simboli provenienti da spazi dei nomi
--==================================================================
-+Caricare moduli che usano simboli provenienti da spazi dei nomi
-+===============================================================
- 
- Quando un modulo viene caricato (per esempio usando ``insmod``), il kernel
- verificherà la disponibilità di ogni simbolo usato e se lo spazio dei nomi
-@@ -125,8 +123,8 @@ un'opzione di configurazione: impostare
- MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS=y caricherà i moduli comunque ma
- emetterà un avviso.
- 
--5. Creare automaticamente la dichiarazione MODULE_IMPORT_NS
--===========================================================
-+Creare automaticamente la dichiarazione MODULE_IMPORT_NS
-+========================================================
- 
- La mancanza di un'importazione può essere individuata facilmente al momento
- della compilazione. Infatti, modpost emetterà un avviso se il modulo usa
-diff --git a/Documentation/translations/zh_CN/core-api/symbol-namespaces.rst b/Documentation/translations/zh_CN/core-api/symbol-namespaces.rst
-index b1bec219912d..d9477ccea98f 100644
---- a/Documentation/translations/zh_CN/core-api/symbol-namespaces.rst
-+++ b/Documentation/translations/zh_CN/core-api/symbol-namespaces.rst
-@@ -14,18 +14,8 @@
- 
- 本文档描述了如何使用符号命名空间来构造通过EXPORT_SYMBOL()系列宏导出的内核内符号的导出面。
- 
--.. 目录
--
--       === 1 简介
--       === 2 如何定义符号命名空间
--          --- 2.1 使用EXPORT_SYMBOL宏
--          --- 2.2 使用DEFAULT_SYMBOL_NAMESPACE定义
--       === 3 如何使用命名空间中导出的符号
--       === 4 加载使用命名空间符号的模块
--       === 5 自动创建MODULE_IMPORT_NS声明
--
--1. 简介
--=======
-+简介
-+====
- 
- 符号命名空间已经被引入，作为构造内核内API的导出面的一种手段。它允许子系统维护者将
- 他们导出的符号划分进独立的命名空间。这对于文档的编写非常有用（想想SUBSYSTEM_DEBUG
-@@ -33,14 +23,14 @@
- 的模块必须导入命名空间。否则，内核将根据其配置，拒绝加载该模块或警告说缺少
- 导入。
- 
--2. 如何定义符号命名空间
--=======================
-+如何定义符号命名空间
-+====================
- 
- 符号可以用不同的方法导出到命名空间。所有这些都在改变 EXPORT_SYMBOL 和与之类似的那些宏
- 被检测到的方式，以创建 ksymtab 条目。
- 
--2.1 使用EXPORT_SYMBOL宏
--=======================
-+使用EXPORT_SYMBOL宏
-+-------------------
- 
- 除了允许将内核符号导出到内核符号表的宏EXPORT_SYMBOL()和EXPORT_SYMBOL_GPL()之外，
- 这些宏的变体还可以将符号导出到某个命名空间：EXPORT_SYMBOL_NS() 和 EXPORT_SYMBOL_NS_GPL()。
-@@ -54,8 +44,8 @@
- 导出时未指明命名空间的符号将指向 ``NULL`` 。如果没有定义命名空间，则默认没有。
- ``modpost`` 和kernel/module/main.c分别在构建时或模块加载时使用名称空间。
- 
--2.2 使用DEFAULT_SYMBOL_NAMESPACE定义
--====================================
-+使用DEFAULT_SYMBOL_NAMESPACE定义
-+--------------------------------
- 
- 为一个子系统的所有符号定义命名空间可能会非常冗长，并可能变得难以维护。因此，我
- 们提供了一个默认定义（DEFAULT_SYMBOL_NAMESPACE），如果设置了这个定义， 它将成
-@@ -80,8 +70,8 @@
- 
- 应置于相关编译单元中任何 EXPORT_SYMBOL 宏之前
- 
--3. 如何使用命名空间中导出的符号
--===============================
-+如何使用命名空间中导出的符号
-+============================
- 
- 为了使用被导出到命名空间的符号，内核模块需要明确地导入这些命名空间。
- 否则内核可能会拒绝加载该模块。模块代码需要使用宏MODULE_IMPORT_NS来
-@@ -100,11 +90,10 @@
- 
- 
- 建议将 MODULE_IMPORT_NS() 语句添加到靠近其他模块元数据定义的地方，
--如 MODULE_AUTHOR() 或 MODULE_LICENSE() 。关于自动创建缺失的导入
--语句的方法，请参考第5节。
-+如 MODULE_AUTHOR() 或 MODULE_LICENSE() 。
- 
--4. 加载使用命名空间符号的模块
--=============================
-+加载使用命名空间符号的模块
-+==========================
- 
- 在模块加载时（比如 ``insmod`` ），内核将检查每个从模块中引用的符号是否可
- 用，以及它可能被导出到的名字空间是否被模块导入。内核的默认行为是拒绝
-@@ -113,8 +102,8 @@ EINVAL方式失败。要允许加载不满足这个前提条件的模块，可
- 设置 MODULE_ALLOW_MISSING_NAMESPACE_IMPORTS=y 将使加载不受影响，但会
- 发出警告。
- 
--5. 自动创建MODULE_IMPORT_NS声明
--===============================
-+自动创建MODULE_IMPORT_NS声明
-+============================
- 
- 缺少命名空间的导入可以在构建时很容易被检测到。事实上，如果一个模块
- 使用了一个命名空间的符号而没有导入它，modpost会发出警告。
--- 
-2.43.0
-
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
