@@ -1,115 +1,96 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFD39299A99;
-	Thu, 22 May 2025 15:53:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09B6C299942;
+	Thu, 22 May 2025 15:54:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747929242; cv=none; b=oX+zi8ct2nbvKpqws2mTMXzLSkci1/SLPeZlCuycsOaGdDsb5ROWejaEZo3qKmJ7DbpW00YxG/dIhVFhNec9RSUJRck6hVOEBiExWS+Sgzv/iStOv2hGkDKEark8EBVk8brmxMng/Tw0T0HlPuZaPgNHR0xfdv4MZYIMJDGyX5s=
+	t=1747929251; cv=none; b=kFwWUz8TbGa8Vw/uNYk+7XG8z4irRdpaqqihO5o5Lrl4P2g2njVKE8tx5zo8T6WZquF+OpMB7HTMGuScC7/9pBNQQRUsKzs5ISWaxzbsZXWWmF6u8fy4Qxx7LSItwdOOa4xVxRGLR3RSHgScqYXhMN4kZd/HkT8s8FcQ5eCQ5vU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747929242; c=relaxed/simple;
-	bh=tgpHzJFSP0rnDppwYe1l14XBM48ZnUDrZRXBK1lQJZE=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nF5eC2gwoluC3YpgfcGoNdXF58s7mlFX5C1OQu3poOej5hPVbk4ASVTEkwygW83k33jIEQuK+6U9akWbRWyk8XG15MzUrgaJb/2lpbvwClhhFSF5nnL/bapHw2aokl3mCONjOIdG6ZG8t/hJsSgehmrjVMUzkmkeidSTE1SiiiQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=W3i23DkB; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="W3i23DkB"
-Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 54MFrcMV1855269;
-	Thu, 22 May 2025 10:53:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1747929218;
-	bh=jySRI/8bFMF3lqKUnU42PqyJe/L7FVdEHZlxB5NuuwI=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=W3i23DkBWlVYARl6EhAZFr0Y45cTG7ZQVSO+Qo95JHu11xxtwnszehXoaeDHkiuOU
-	 fUgIE2MxKZ4Y3mMcim1JPH4bgRos4+YfUETWGsWjIrdhzdMfPCgzXk1qD3z8HgPtst
-	 FXjk+uOvdjnrLxy35TlHPzOAJO8oxDoW3up4hLOo=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 54MFrcBs3103726
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Thu, 22 May 2025 10:53:38 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 22
- May 2025 10:53:38 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 22 May 2025 10:53:38 -0500
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 54MFrccP111653;
-	Thu, 22 May 2025 10:53:38 -0500
-Date: Thu, 22 May 2025 10:53:38 -0500
-From: Nishanth Menon <nm@ti.com>
-To: Beleswar Padhi <b-padhi@ti.com>
-CC: <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <afd@ti.com>,
-        <u-kumar1@ti.com>, <hnagalla@ti.com>, <jm@ti.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 0/2] TI: K3: Switch MCU R5F cluster into Split mode
-Message-ID: <20250522155338.gpbcubkvygtju3qc@bagpipe>
-References: <20250522073426.329344-1-b-padhi@ti.com>
+	s=arc-20240116; t=1747929251; c=relaxed/simple;
+	bh=nirOL8Ac4SK3JQENRHKVh1BD1QuVRdEa+pOfJFvPSLk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=V2Dau7aVoCZF206o4ZQyaNURlRqxycxQkCn/TSwCENYP1p+9EP0P/o0UQVNxflWROuuNGqbm3hOa/ThyKmDYWOjLgTm56PAuFzSnLtzbip/M9MsIIzPYxW1ufBBOcvvl8DrZOuZmPLt7HzdEGhgfJ2dxZUcACi1KWS9LDZuY20E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E61551A2D;
+	Thu, 22 May 2025 08:53:53 -0700 (PDT)
+Received: from [10.57.47.3] (unknown [10.57.47.3])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 676C53F5A1;
+	Thu, 22 May 2025 08:54:06 -0700 (PDT)
+Message-ID: <e92a61a9-0244-4509-ad81-8ef26700dca5@arm.com>
+Date: Thu, 22 May 2025 16:54:05 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250522073426.329344-1-b-padhi@ti.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: qcom: qcs615: fix a crash issue caused by
+ infinite loop for Coresight
+Content-Language: en-GB
+To: Jie Gan <jie.gan@oss.qualcomm.com>, Bjorn Andersson
+ <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Mike Leach <mike.leach@linaro.org>,
+ James Clark <james.clark@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250522005016.2148-1-jie.gan@oss.qualcomm.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20250522005016.2148-1-jie.gan@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 13:04-20250522, Beleswar Padhi wrote:
-> Several TI K3 SoCs like J7200, J721E, J721S2, J784S4 and J742S2 have a
-> R5F cluster in the MCU domain which is configured for LockStep mode at
-> the moment. Switch this R5F cluster to Split mode by default in all
-> corresponding board level DTs to maximize the number of R5F cores.
-
-Why? I can read the patch to understand what you are trying to do, but
-the rationale needs to be explained.
-
+On 22/05/2025 01:50, Jie Gan wrote:
+> An infinite loop has been created by the Coresight devices. When only a
+> source device is enabled, the coresight_find_activated_sysfs_sink function
+> is recursively invoked in an attempt to locate an active sink device,
+> ultimately leading to a stack overflow and system crash. Therefore, disable
+> the replicator1 to break the infinite loop and prevent a potential stack
+> overflow.
 > 
-> Corresponding support to shutdown MCU R5F core 1 on SoC power on have
-> been posted in U-Boot:
-> https://lore.kernel.org/all/20250522071828.285462-1-b-padhi@ti.com/
+> replicator1_out   ->   funnel_swao_in6   ->   tmc_etf_swao_in   ->  tmc_etf_swao_out
+>       |                                                                     |
+> replicator1_in                                                     replicator_swao_in
+>       |                                                                     |
+> replicator0_out1                                                   replicator_swao_out0
+>       |                                                                     |
+> replicator0_in                                                     funnel_in1_in3
+>       |                                                                     |
+> tmc_etf_out <- tmc_etf_in <- funnel_merg_out <- funnel_merg_in1 <- funnel_in1_out
 > 
-> While at it, correct the firmware-name property for MCU R5F cores of
-> J742S2 SoC in [PATCH 1/2].
+> [call trace]
+>     dump_backtrace+0x9c/0x128
+>     show_stack+0x20/0x38
+>     dump_stack_lvl+0x48/0x60
+>     dump_stack+0x18/0x28
+>     panic+0x340/0x3b0
+>     nmi_panic+0x94/0xa0
+>     panic_bad_stack+0x114/0x138
+>     handle_bad_stack+0x34/0xb8
+>     __bad_stack+0x78/0x80
+>     coresight_find_activated_sysfs_sink+0x28/0xa0 [coresight]
+>     coresight_find_activated_sysfs_sink+0x5c/0xa0 [coresight]
+>     coresight_find_activated_sysfs_sink+0x5c/0xa0 [coresight]
+>     coresight_find_activated_sysfs_sink+0x5c/0xa0 [coresight]
+>     coresight_find_activated_sysfs_sink+0x5c/0xa0 [coresight]
+>     ...
+>     coresight_find_activated_sysfs_sink+0x5c/0xa0 [coresight]
+>     coresight_enable_sysfs+0x80/0x2a0 [coresight]
 > 
-> Testing Done:
-> 1. Tested that each patch does not generate any new warnings/errors.
-> 2. Build test on all existing TI K3 platforms.
-> 3. Tested U-Boot and Linux load of MCU R5F core in split mode on all
-> applicable boards (AM68-SK, AM69-SK, J7200-EVM, J721E-EVM, J721S2-EVM,
-> J784S4-evm, J742S2-EVM)
+> side effect after the change:
+> Only trace data originating from AOSS can reach the ETF_SWAO and EUD sinks.
 > 
-> Test logs:
-> https://gist.github.com/3V3RYONE/ee8e3cb9aa5f4c5c00b059b9c14bfa98
-> 
-> Thanks,
-> Beleswar
-> 
-> Beleswar Padhi (2):
->   arm64: dts: ti: k3-j742s2-mcu-wakeup: Override firmware-name for MCU
->     R5F cores
->   arm64: dts: ti: k3: Switch MCU R5F cluster to Split-mode
+> Fixes: bf469630552a ("arm64: dts: qcom: qcs615: Add coresight nodes")
+> Signed-off-by: Jie Gan <jie.gan@oss.qualcomm.com>
 
-NAK! We are once again churning downstream users again and for what
-reason - coverletter and the patch is vague on that!
+It is not easy to fix this in CoreSight driver. Given this is a platform
+specific issue, lets fix this in the DT. I will explore the option of
+fixing this in the driver.
 
-I would prefer the entire remote proc dts stuff cleaned up once for all
-in a comprehensive series.
 
-Let me be clear (once again): We DO NOT break backward compatibility.
-We do not break downstream users without a clear cut rationale. We do
-not break all other ecosystems depending on device tree without a very
-very solid reason.
+Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 
--- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+
