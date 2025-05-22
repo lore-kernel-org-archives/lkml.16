@@ -1,73 +1,97 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9E2013C3C2
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 05:25:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49B5813C3C2;
+	Thu, 22 May 2025 05:25:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747891515; cv=none; b=kZXANLCvAFILkzbWp3wWzmANvizMVojx9XyG0ucPIcm9kvq+BqqkAnEH5QOD5k7sNQhetDT8KmyRR87D2Dg96sUgCd0Ot8TUQ1aWnMfL0FqxrAdxmf0oRvGZel50Txp5PcAXRbr7zBrHqz/iTbJHTjAtm16A3uch9OB7I5h1Q70=
+	t=1747891544; cv=none; b=o0TBjaDDQ1LRl9qpCMxHEZLSW+FZO9f3vpFouznW/NNdy2gJyuY/hl4KbrZTOtg4b4lz+LaCH30zHVFYpdo9pdGbydb0hHcuFjEH75g/y1rGUb342AJIESJ8yQ+Zp4ZbnTbly7WapfBumZYnBVEY5xvqf6UR4OzZP4RBARbO/CY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747891515; c=relaxed/simple;
-	bh=x/Pux/huB2dYDpaiohQ+vv+OuKgZHWSRmoRM+k6IiDo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=foKw+xAQH9P3gSzvWavEV+pQkLLZsaB7k7F2B2AQIf7oKleBnFVGo8b128xkgHvXuJyk9zVPASB05B/izWpzvxwunuOf1eEoJuiu3+sIIEPYD4FJmqoOvJdVgD2iZNlLteX/7utbVb9F7T+aFK7EqtE/ut+/VUBkkdRLj4OVIm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-669ff7000002311f-32-682eb52a9d85
-Date: Thu, 22 May 2025 14:24:53 +0900
-From: Byungchul Park <byungchul@sk.com>
-To: aahringo@redhat.com
-Cc: kernel_team@skhynix.com, linux-kernel@vger.kernel.org
-Subject: [RFC] DEPT(DEPendency Tracker) with DLM(Distributed Lock Manager)
-Message-ID: <20250522052453.GA42746@system.software.com>
+	s=arc-20240116; t=1747891544; c=relaxed/simple;
+	bh=GcQ29PqkQhOZajU7gZeFJhPAP7GSVZz80HHjiyDlmJw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=tB/y+s4YfTJV8IChlfcL0vWwyrFDc20WPzqEHkguECT8bD2mmDSMKoQixA7OoCu1z8H0WC6b1kqN7A3Mpsq5El18ueWaBHqqilM3pFcXPUL/VWkVOn5Gh2JyCpPR5ybvmy8WEo3Bd5Kl2lqcCG4DgXep+srduxhWEBcDGKPXAgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r+MA0KHb; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r+MA0KHb"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id BC42FC4CEEB;
+	Thu, 22 May 2025 05:25:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747891543;
+	bh=GcQ29PqkQhOZajU7gZeFJhPAP7GSVZz80HHjiyDlmJw=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=r+MA0KHbZD0hcbnGYnuPYIvZNWk/efmWp6dZ36BJyWvsmlEu7Ht8vyW2Pyh+NrKdr
+	 JGY1LNmZViBmEE8/zKSW9tiDR6pO+jHUtX1t0C5SRDmYYO1vu6e/dXNs4prIqTNjcz
+	 IxgDdhMxpb+BQjl3yONO8V7oNXSV2KHCqaZ01J0JIiMt9v5VlB6j3dSopS+sp/RkY6
+	 9rLpCgTvCHS7Npo/JUXZ1gdMSqyl6khCGIjlnSCMkN4YlyQaKapZHWFNd73k0gieQi
+	 UiXtXbbd+cAOEiDbkp+pCUbnkveucNYEB3dnPHynkXSHnSeKp4HzHY0CEWr5SfSxOR
+	 LHyamgKf7u4Gg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F9AC54756;
+	Thu, 22 May 2025 05:25:43 +0000 (UTC)
+From: Fenglin Wu via B4 Relay <devnull+fenglin.wu.oss.qualcomm.com@kernel.org>
+Date: Thu, 22 May 2025 13:25:27 +0800
+Subject: [PATCH] mailmap: update email address for Fenglin Wu
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprMLMWRmVeSWpSXmKPExsXC9ZZnoa7WVr0MgynLNC2+Xg+2uLxrDpsD
-	k8f7fVfZPD5vkgtgiuKySUnNySxLLdK3S+DK2Dj/LlvBe7aKbR9vMjUw7mPtYuTkkBAwkfje
-	NYEdxj51awsziM0ioCpxbd1XRhCbTUBd4saNn2BxEQFxiabv08HqmQUsJebdOsbUxcjBISzg
-	JfFnSi1ImFfAQqL3TyM7hC0ocXLmExaIci2JG/9egpUzC0hLLP/HARIWFVCWOLDtOBPEBRdZ
-	JW5sCYGwJSUOrrjBMoGRbxaSSbOQTJqFMGkBI/MqRqHMvLLcxMwcE72MyrzMCr3k/NxNjMCg
-	Wlb7J3oH46cLwYcYBTgYlXh4HQ7oZgixJpYVV+YeYpTgYFYS4Y1doZMhxJuSWFmVWpQfX1Sa
-	k1p8iFGag0VJnNfoW3mKkEB6YklqdmpqQWoRTJaJg1OqgTHwpr72I3VrhnnzZyfaV7bLBriy
-	7bLaIvzw/L2Af/sL8r8nLb7G+VXgE7+444W3Uz6/Prb1tsbD+r2PBPpP5ae3aG9uNGNrn+WV
-	6Wxuw+MueiZbVu5I9oGG1HvvuRUveDxfJXGn997fnfoa/ZNDy8q23XdTfRHZ4/R5b0fg/I+H
-	3KTrWb6Z+CmxFGckGmoxFxUnAgA07+XxJgIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrNJMWRmVeSWpSXmKPExsXC5WfdrKu1VS/DoHmSpMXX68EWh+eeZLW4
-	vGsOmwOzx/t9V9k8Fr/4wOTxeZNcAHMUl01Kak5mWWqRvl0CV8bG+XfZCt6zVWz7eJOpgXEf
-	axcjJ4eEgInEqVtbmEFsFgFViWvrvjKC2GwC6hI3bvwEi4sIiEs0fZ/ODmIzC1hKzLt1jKmL
-	kYNDWMBL4s+UWpAwr4CFRO+fRnYIW1Di5MwnLBDlWhI3/r0EK2cWkJZY/o8DJCwqoCxxYNtx
-	pgmM3LOQdMxC0jELoWMBI/MqRpHMvLLcxMwcU73i7IzKvMwKveT83E2MwCBZVvtn4g7GL5fd
-	DzEKcDAq8fA6HNDNEGJNLCuuzD3EKMHBrCTCG7tCJ0OINyWxsiq1KD++qDQntfgQozQHi5I4
-	r1d4aoKQQHpiSWp2ampBahFMlomDU6qB0c9/+WzRx0vnLNDYahCWuO/EDdeCRN/O101OKXfm
-	sV7ym5q2Sje1yOq5a6yrh/bfr6p7dJdbB7j9+N8vsMlruvzmY7y/5ilx7wkN4u15lev9+87B
-	uhLbCeYu904KhGrf4VKebRjq+5/Bp/XfkzjZd74fT7bOnC1lpNHtON/43py+i5xn85OnKbEU
-	ZyQaajEXFScCALVtJr4OAgAA
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250522-update_mailmap-v1-1-4176bc0765c0@oss.qualcomm.com>
+X-B4-Tracking: v=1; b=H4sIAEa1LmgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDUyMj3dKClMSS1PjcxMyc3MQCXbMUIwNzEwNL8zQLUyWgpoKi1LTMCrC
+ B0bG1tQA22/JUYAAAAA==
+X-Change-ID: 20250522-update_mailmap-6d2074097f85
+To: Bjorn Andersson <andersson@kernel.org>, kernel@oss.qualcomm.com
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ Subbaraman Narayanamurthy <subbaraman.narayanamurthy@oss.qualcomm.com>, 
+ Fenglin Wu <fenglin.wu@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1747891542; l=1082;
+ i=fenglin.wu@oss.qualcomm.com; s=20240327; h=from:subject:message-id;
+ bh=1NkkIYA1fD3jjn3mWE8Axbp3lyQ/V9+qH0smQGVHfMw=;
+ b=Elx97E/qpeLvqm0wgHi/D/CVTtPYDk/hA3DHUTdMcxJ4tzMUrttx+obozqqIWuMrmvftP5r7p
+ 1rOrqEaM2WUDlDiTd9sVbLxbLLNWJMs6GlP1ixfNUfm3N2dCq/wJ+yh
+X-Developer-Key: i=fenglin.wu@oss.qualcomm.com; a=ed25519;
+ pk=BF8SA4IVDk8/EBCwlBehKtn2hp6kipuuAuDAHh9s+K4=
+X-Endpoint-Received: by B4 Relay for fenglin.wu@oss.qualcomm.com/20240327
+ with auth_id=406
+X-Original-From: Fenglin Wu <fenglin.wu@oss.qualcomm.com>
+Reply-To: fenglin.wu@oss.qualcomm.com
 
-Hi Alexander,
+From: Fenglin Wu <fenglin.wu@oss.qualcomm.com>
 
-We briefly talked about dept with DLM in an external channel.  However,
-it'd be great to discuss what to aim and how to make it in more detail,
-in this mailing list.
+Qualcomm is migrating email address from quicinc.com to
+oss.qualcomm.com.
 
-It's worth noting that dept doesn't track dependencies beyond different
-contexts to avoid adding false dependencies by any chance, which means
-though dept checks the dependency sanity *globally*, when it comes to
-creating dependencies, it happens only within e.g. each single system
-call context, each single irq context, each worker context, and so on,
-with its unique context id assigned to each independent context.
+Signed-off-by: Fenglin Wu <fenglin.wu@oss.qualcomm.com>
+---
+ .mailmap | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-In order for dept to work on DLM, we need a way to assign a unique
-context id to each interesting context in DLM's point of view, and let
-dept know the id.  Once making it done, I think dept can work on DLM
-perfectly.
+diff --git a/.mailmap b/.mailmap
+index 60f8ed80ec109924bf73d36c0b8b232cfe68b9a6..a05a67d554bd35f71fc4f460d94490bf58af93e3 100644
+--- a/.mailmap
++++ b/.mailmap
+@@ -234,7 +234,8 @@ Felipe W Damasio <felipewd@terra.com.br>
+ Felix Kuhling <fxkuehl@gmx.de>
+ Felix Moeller <felix@derklecks.de>
+ Feng Tang <feng.79.tang@gmail.com> <feng.tang@intel.com>
+-Fenglin Wu <quic_fenglinw@quicinc.com> <fenglinw@codeaurora.org>
++Fenglin Wu <fenglin.wu@oss.qualcomm.com> <fenglinw@codeaurora.org>
++Fenglin Wu <fenglin.wu@oss.qualcomm.com> <quic_fenglinw@quicinc.com>
+ Filipe Lautert <filipe@icewall.org>
+ Finn Thain <fthain@linux-m68k.org> <fthain@telegraphics.com.au>
+ Fiona Behrens <me@kloenk.dev>
 
-Thoughts or any concern?
+---
+base-commit: 8566fc3b96539e3235909d6bdda198e1282beaed
+change-id: 20250522-update_mailmap-6d2074097f85
 
-	Byungchul
+Best regards,
+-- 
+Fenglin Wu <fenglin.wu@oss.qualcomm.com>
+
+
