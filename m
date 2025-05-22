@@ -1,128 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C910714F70;
-	Thu, 22 May 2025 12:48:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8344928B4E7
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 12:48:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747918107; cv=none; b=FkidfwQuMVBt+vuVCOwr32WAebIbmJzgUEfNySlx4t2FQj1FCgMV4MXVoyYadHdh7EpZQ7mqtF6/vgYUzCzR569IQayTv7aFSklXthgIGujjSpOA7TLD0Szj5ZrZmMd1omzaCasKKS1Qnn5z7sn4+9sEjrOhp4I8p72I0Cue4zI=
+	t=1747918141; cv=none; b=uKmpvEH3EsbDxDXZE9oOA8et18QkokYKy2i5tYGB0DpeJ1kRwD//n31pXS9K0qhkpuTjYPGAS6zt10bBNV/RdYgGvOMS2IVp58Q7573mImG6aeMqG5EAU2nEWtRBKuWXkeTrEuSVbvIq3/S9erYiR7MNAcbfXULOcOUhu8tR4+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747918107; c=relaxed/simple;
-	bh=4PIVLiUX6c71M/3O4E763dPbAWA+r9An+3OzWuc0Inw=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=ZHhLaarnEpBog+FTwrHab3CoKoF19xxMK4v7doLp3IrkvaWQxQ96ZX35mWL0wrnFazK4SJONo0UUKziGGdWk2NLBtIRUn6F/58T4ZKwOsXhpAv+LSrQMtrofMvmMiF55OG456qG3NuX+T8sG1Q+KRyawT8QQZv8OwJsGDW+Q/bU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hwGy/TTv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747918141; c=relaxed/simple;
+	bh=+sOgwvsatgoXqEWnTWEoK+wqY6J5WR6rnVFfwBiNzm0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t5t8GN1JzUxFB2Dte8//lda1dOkYxB/Gagk52mnvjhlG8tL2mEa80wZNCeNuTIKwQ9+HBZGFIuGX/lwsEaacULXOUyWeTrdfBKPhgEAiChIlGbP08RALG72EuxUoD1tUd/jDOE2GrVVM0gh+pB3QPJyvSH/mmW5UEqzuLOXavsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=gldOz9op; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hwGy/TTv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3762BC4CEEB;
-	Thu, 22 May 2025 12:48:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747918107;
-	bh=4PIVLiUX6c71M/3O4E763dPbAWA+r9An+3OzWuc0Inw=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=hwGy/TTvhCEiFNrjef+/E1DRiMPajXi6Jaw2J15Zxj4g0FDAiPYIv32/5j64u1hwF
-	 4D0BCmRzhXX6/NliLQn23UpV39lITYTqpXvHQJk+c9Mu4D6UOQnFr74XjEGtU4WNTC
-	 GgY4wozecx+WS8i6XvQ+6+PL4ccvf1psnLRf02OnjqWg47E7fwatUfIOuvDKu/4UuM
-	 aoZur98p7l8vh6cW5orVs7TvGcELw46nds2pGjgs4x7q5IGOtlIl0QlGMd1ElWnYT8
-	 wOkTEJ5qAnMz59EvalTIPUlkJxq3LnAkUD06XFuot/rvfIOJIleOo8qjnlOsUdzk12
-	 39yybLELpFe+w==
-Message-ID: <68d83aaf-280a-4c19-becf-c6e1d9c2432b@kernel.org>
-Date: Thu, 22 May 2025 14:48:21 +0200
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="gldOz9op"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-443a787bd14so42105935e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 05:48:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747918138; x=1748522938; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=2PQIZi4PiKgy3h8l3aBRGvp5efW4SvnzfR9lcBVtAa4=;
+        b=gldOz9opknqf5IqKRO6+QXvhDmPhDFl9ToLFGE09oGiQhf8mO2n6eMITjc7UqjcXbb
+         PnqdDzFEpTWbUqBz0QVOQeGOE8h6VGOQZcZYwMPDoi3GuuFcZPiJOS0NgR8a30pwui+G
+         XZ/zyzKNAWz9mflj4O/moaA3/H7X7JLuY/vTk3r3nSm8gcPdhARWbIWZqGn0apilelTo
+         m+MQ23jYRDs7YR9p9WgsfLN8e/E/U45FOi1P8BoE4UN8xl1p/uN8RMMbqNaYunFvv6ie
+         Z5EA1jJ4z9LcG5HBQQ86JyBUeXV3x8Ty9vQPiHIAxiOhSLhXvWqeFypuBDdVbYEHD4AY
+         mgAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747918138; x=1748522938;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2PQIZi4PiKgy3h8l3aBRGvp5efW4SvnzfR9lcBVtAa4=;
+        b=bMrMEaEV8VccgQaA7f3wE3FnqpVv85hsQTCUl3A2Y9i+hIr7Uo+CkdocafIk5A52in
+         EyxZGmn1E1rH+NBVVt3C4e4ONh1ZhkCbyi9AkQZ95TYSBP6pgIBPytXiHSMjmBtV1rXp
+         VY+vijy/ompMm1b4X/VbHN3NeyTIDR+G5El+F/RZFIFUn/QDgs0RWg0r0D7oq6JPDe3b
+         qx32Fru4fTDew3Yud2xspj3w7DwByyxi/6TjYNCt0SV8yFv3i10FSeToLEQoRA0Tiu4b
+         9jvOCJXyJH1Pk1Y/YNc/yFStZCpgtuRzcA0+dhxYCO8rQGw0fk0JCzSrjv1E3LNaHZ8G
+         qh7w==
+X-Forwarded-Encrypted: i=1; AJvYcCXIiaFa8JyDLY3FA1edaYe7yCzhF5Y30467t1PFPjl8nXmaefc1hpWZAeK1mkVvcdLQhSVoOjtFUXLLA08=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz25fNCfle6iD6w6L+Jt2xHxtgopkeCdyJs5TtlR0SoC5bDWlPC
+	FH7hCM+GnFaOMtNT1dK+9eltNhI1Tv8P1mnPGWAnbHeY0ewUmcIq2RF4G2ybWx20Z2w=
+X-Gm-Gg: ASbGncuYLoO7lmqM/SizgKQGSAceRwVKsJ7Y8Xt4Je2gcuUDqHIjB2uIroL8IdjvMeg
+	dZhiZe98ncY1LPXA1zJgLgpicHeybeGD84SCJvU0RHwd/dWhjyrLpjE87eLLmMtmA9iOw669B3e
+	1PwffozhmuDwY0MEQy0rD9pg5mDeUOCGxPEBJdoyePy2c03au1HFjBRAE5JsXAdnUnPLwVP21k0
+	eqS4GOLD0vTS8gRleUP20r3HZaQWt5ZNpp7UHfAN6rnNZUuh6X64GIbQP1kFaDJNqagFabB7BxX
+	Uce3Yf4ctCNdtpBVSF94F42RWUmaPvxFqFfVIrfu6d3eNWlWrxc3e/YA7QFpIoGb6mF4tLFXW1/
+	dbjgj7yEBFmhAbd5NIjZzAWk5Rw==
+X-Google-Smtp-Source: AGHT+IGwOMBtRoR9wZDDhiLbv0hq7Tr2RTlAi7lWQeJAGufW+olLnnQ2bNPFnFVvuby1Hp4QfTgrBA==
+X-Received: by 2002:a05:600c:3d07:b0:442:f904:1305 with SMTP id 5b1f17b1804b1-442fd93d54emr238025925e9.6.1747918137812;
+        Thu, 22 May 2025 05:48:57 -0700 (PDT)
+Received: from archlinux (host-80-116-51-117.retail.telecomitalia.it. [80.116.51.117])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-447f7ca2de7sm102494745e9.35.2025.05.22.05.48.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 May 2025 05:48:57 -0700 (PDT)
+Date: Thu, 22 May 2025 14:47:41 +0200
+From: Angelo Dureghello <adureghello@baylibre.com>
+To: Andy Shevchenko <andy@kernel.org>
+Cc: Jonathan Cameron <jic23@kernel.org>, 
+	David Lechner <dlechner@baylibre.com>, Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, 
+	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 5/5] iio: adc: ad7606: add gain calibration support
+Message-ID: <r2tlw3yhjjqwytyswv7onglo7rvedyyireofyiqkwxiosrbiyl@tlk6ijhbr3cp>
+References: <20250508-wip-bl-ad7606-calibration-v4-0-91a3f2837e6b@baylibre.com>
+ <20250508-wip-bl-ad7606-calibration-v4-5-91a3f2837e6b@baylibre.com>
+ <aBz_Nlgx18UK2GIc@smile.fi.intel.com>
+ <shzx67wrpzaxje4vj6owwnof3pi5cuipdavd3k5svucyt5y527@mvytnov6zunk>
+ <aCsEeQQyGdBg2ex9@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 05/12] dt-bindings: phy: renesas,usb2-phy: Add
- renesas,sysc-signals
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Cc: vkoul@kernel.org, kishon@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, p.zabel@pengutronix.de, geert+renesas@glider.be,
- magnus.damm@gmail.com, yoshihiro.shimoda.uh@renesas.com, kees@kernel.org,
- gustavoars@kernel.org, biju.das.jz@bp.renesas.com,
- linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
- linux-hardening@vger.kernel.org, john.madieu.xa@bp.renesas.com,
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-References: <20250521140943.3830195-1-claudiu.beznea.uj@bp.renesas.com>
- <20250521140943.3830195-6-claudiu.beznea.uj@bp.renesas.com>
- <20250522-evasive-unyielding-quoll-dbc9b2@kuoka>
- <b22e7a46-7e35-4840-aae3-a855c97fbde4@tuxon.dev>
- <4a07048a-c55a-4fd3-b4e5-7f9d218de76f@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <4a07048a-c55a-4fd3-b4e5-7f9d218de76f@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aCsEeQQyGdBg2ex9@smile.fi.intel.com>
 
-On 22/05/2025 14:46, Krzysztof Kozlowski wrote:
->>>>  
->>>> +  - if:
->>>> +      properties:
->>>> +        compatible:
->>>> +          contains:
->>>> +            const: renesas,usb2-phy-r9a08g045
->>>> +    then:
->>>> +      required:
->>>> +        - renesas,sysc-signals
->>>
->>> That's ABI break.
->>
->> There is no in kernel device tree users of "renesas,usb2-phy-r9a08g045"
->> compatible. It is introduced in patch 11/12 from this series. With this do
->> you still consider it ABI break?
-> 
-> Then this patch cannot be split from binding introducing the user. Don't
-> add unused/undocumented compatibles.
-> 
-Or you meant DTS? I asked about ABI which is not about in-kernel users.
-You can always change in-kernel users, so what would be any point of a
-binding and its ABI?
+Hi Andy,
 
-Best regards,
-Krzysztof
+On 19.05.2025 13:14, Andy Shevchenko wrote:
+> On Mon, May 19, 2025 at 11:40:09AM +0200, Angelo Dureghello wrote:
+> > On 08.05.2025 22:00, Andy Shevchenko wrote:
+> > > On Thu, May 08, 2025 at 12:06:09PM +0200, Angelo Dureghello wrote:
+> 
+> ...
+> 
+> > > > +	device_for_each_child_node_scoped(dev, child) {
+> > > > +		u32 reg, r_gain;
+> > > > +
+> > > > +		ret = fwnode_property_read_u32(child, "reg", &reg);
+> > > > +		if (ret)
+> > > > +			continue;
+> > > 
+> > > > +		/* Chan reg is a 1-based index. */
+> > > > +		if (reg < 1 || reg > num_channels) {
+> > > > +			dev_warn(dev, "wrong ch number (ignoring): %d\n", reg);
+> > > > +			continue;
+> > > > +		}
+> > > 
+> > > But this will allow to have a broken DT. This check basically diminishes the
+> > > effort of the DT schema validation. If there are limits one still would be able
+> > > to create a DT that passes the driver but doesn't pass the validation.
+> > 
+> > fixed all your points on other patches of this patch-set. Still your
+> > emails are going to google spam, just could catch them on friday. 
+> > Really not clear why.
+> 
+> DKIM which I still need to configure...
+> 
+> > About the above, i understand, but the check is actually the same as
+> > in ad7606_get_chan_config(), a warning that fdt is not correct, 
+> > i dont see a blocking issue here now, so not going to change it
+> > in this next patchset.
+> 
+> I think the 'continue' above is simply wrong. We should not allow to have
+> broken tables. And I think it's kinda blocking issue.
+>
+
+Actually the driver is informing of an incorrect channel node and passes
+to the next channel, instead of a probe-fail. It is not introducing any 
+non-functionality, just skipping that channel.
+
+Not a big issue for me to fix it and issue a v6. 
+
+If it's really wrong and needed, then i should fix this same issue that
+is there in other previously accepted parts.
+ 
+> > > > +		ret = fwnode_property_read_u32(child, "adi,rfilter-ohms",
+> > > > +					       &r_gain);
+> > > > +		if (ret)
+> > > > +			/* Keep the default register value. */
+> > > > +			continue;
+> > > > +
+> > > > +		if (r_gain > AD7606_CALIB_GAIN_MAX) {
+> > > > +			dev_warn(dev, "wrong gain calibration value");
+> > > > +			continue;
+> > > > +		}
+> > > > +
+> > > > +		ret = st->bops->reg_write(st, AD7606_CALIB_GAIN(reg - 1),
+> > > > +			DIV_ROUND_CLOSEST(r_gain, AD7606_CALIB_GAIN_STEP));
+> > > > +		if (ret) {
+> > > > +			dev_warn(dev, "error writing r_gain");
+> > > > +			continue;
+> > > > +		}
+> > > > +	}
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
+
+Regards,
+angelo
