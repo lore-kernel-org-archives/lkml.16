@@ -1,168 +1,133 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D748B24E4C6
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 10:14:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B79E2288CBE;
+	Thu, 22 May 2025 10:15:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747908842; cv=none; b=Wuwi1aU4LAM4rX86nbFsQFcW13m4Iw53nK5xnmghNmRCfZXtCa2l+437NPacHNo45F1nzSP52x9wAdDE9WO41vTpSCRsjwAFLpfHvf7OSO1oSrSASwDMMWBPPJ5kG2JTQX6664FUCAUKqo2zZwWVcFSdHEY3KC84tg5aPsbTGfI=
+	t=1747908911; cv=none; b=tRR7wYG3avkDAdo1Crc5sECYSoT1tA9X2J3ARC4UrcsIy/poY8bzFpro6i1jBMf+XWJPgC6EZBvREFF93MAWScGUoWh2ZpWpro0q8n0j2Tv11eMsxZz2O89/qOtSYywxWxFLOhsXPmFCQtKsqke1kmPNyhFF3jIz0CsUt5mUR1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747908842; c=relaxed/simple;
-	bh=mU+1lrLV/UCuvsDQ9kNhrLKhkDT2B/4yK5q5d22eY44=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LRjsPHc8KI92SnOErbmzOQMuAS14IP5ueLYemnxe+DtqWwysDu9rSx+RVI4F0SLlO64UL08x99wmAjlpNX72OK/8ozxY8toozVj/4I9rsl4/WIc+DunvAs96El+9o0g1da4eYr276n3FdkLr5y7pcDtCsLkO+WMhrjvhjduGJco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=svP685j2; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=8l/rmVdx; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=CQk9PPjZ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=13aXx17F; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1747908911; c=relaxed/simple;
+	bh=Mp5hhsQk/BVM8idJglUG8IKK6i/o1HxpuCiN2vWcKrg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=g4YkfDzVZyn2mpmBF2bzPJkrs39ogqQbPWUSm4PHSRdxMpvpgEQBWdzbbfOh1qLrXbpCcksGie+W1ZHumDci0ga1ai/WUiQXYoe3k65qCaFDM5V5hXfkOwTtLw9cGMYXin/NFUguZ+USb3oRWRIVguH26XlkY/aXNOmPVsEbTX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=U5kiFUO6; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="svP685j2";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="8l/rmVdx";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="CQk9PPjZ";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="13aXx17F"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id E4C64219AF;
-	Thu, 22 May 2025 10:13:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747908839; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TTj530S0+pt4TB23fjg5olxByY/4NarPybW7KGHkyhc=;
-	b=svP685j2KPgsEpvtXT51KJY5WgnxyyO+0y1IG00r8tOBeCBFrcTJdWQJx9PeMBaYFl31ic
-	JWLFLU+Hrlau5TgTIWfO7ymgliTXfxy6eB0VZ0UtjwEAI90zICTxxkWrvBt3MLMho9Qe1h
-	cwTL9TiFTEPoQ9ARW91GP6+TdEGCXJw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747908839;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TTj530S0+pt4TB23fjg5olxByY/4NarPybW7KGHkyhc=;
-	b=8l/rmVdxqLqueF90g4p+EwikrOPcb1Y/TGbkPU80Tlvfgzo4NCjkURkda/+8hLceyXhMXw
-	ArfTvlGtz8e+4zDA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=CQk9PPjZ;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=13aXx17F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1747908838; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TTj530S0+pt4TB23fjg5olxByY/4NarPybW7KGHkyhc=;
-	b=CQk9PPjZlFADxCr7gK9SEIWJiU+uc1WV6fdhK3OD3y/ufSpu1cAEcbe71na17dMBBZZ2q2
-	UUBF0DBNvVXfxMcEzS1ISCbGnfGQvKv/o6lmVlcfklx08GKmM8gcNIc/ztPKMIqbzmrcE5
-	MGeuNfW6YemilOI2ZceRmyB2Fxn4MoE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1747908838;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TTj530S0+pt4TB23fjg5olxByY/4NarPybW7KGHkyhc=;
-	b=13aXx17FFBz1wfQvf8jdKLSxkc/F4/CE32sBzuuseWCidgW3Y0yEwwOQrquIczXobEx7Br
-	hZHWF93PHkHdmHBg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A7F50137B8;
-	Thu, 22 May 2025 10:13:58 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id gxzxJ+b4LmhAPwAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Thu, 22 May 2025 10:13:58 +0000
-Date: Thu, 22 May 2025 12:13:57 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: Muchun Song <muchun.song@linux.dev>
-Cc: yangge1116@126.com, akpm@linux-foundation.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	21cnbao@gmail.com, david@redhat.com, baolin.wang@linux.alibaba.com,
-	liuzixing@hygon.cn
-Subject: Re: [PATCH] mm/hugetlb: fix kernel NULL pointer dereference when
- replacing free hugetlb folios
-Message-ID: <aC745T00Ft3g7e7G@localhost.localdomain>
-References: <1747884137-26685-1-git-send-email-yangge1116@126.com>
- <644FF836-9DC7-42B4-BACE-C433E637B885@linux.dev>
- <aC63fmFKK84K7YiZ@localhost.localdomain>
- <065093C4-3599-456F-84B7-EDCC1A3E8AFC@linux.dev>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="U5kiFUO6"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 561DC1FCEF;
+	Thu, 22 May 2025 10:15:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1747908907;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=+r7J1xhws6aDU6U1m+dl2K9Zh5x/cHIxtpt6U5qcUxs=;
+	b=U5kiFUO6++yJX3ypo91Fl4X7mUP9Sa/hCyWHKJxXAIUJzA0hGe62i5QjAtxHTC6hJPwQMh
+	Dmq8nNbv5+Z3TZ2mPxAdW0inOfamKXXS7C2FYZI4fPj/x7mdEl4JcsTBZ0838/iER0w19a
+	ww9BPo34dIJzU8eDf9PnZFPG2v0PnK+xzdCTUHpGDn2Xk1mUNVlNEPsI2baCp7PVgoGiwQ
+	5LNcZ5y0XduQoK9iu424EtwDNWvJeCiVO+QZq/QC9dpmdUPib1y77bZ99FZ197rJnS9pyU
+	sZynPQuN1Sk6Q/fPeeQ6LsWxxhG0Pwa3QSJeLVvB3GmmnZmoC4pc55wsamiOdg==
+From: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
+Subject: [PATCH bpf-next v2 0/2] bpf, arm64: support up to 12 arguments
+Date: Thu, 22 May 2025 12:14:39 +0200
+Message-Id: <20250522-many_args_arm64-v2-0-d6afdb9cf819@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <065093C4-3599-456F-84B7-EDCC1A3E8AFC@linux.dev>
-X-Rspamd-Action: no action
-X-Spam-Level: 
-X-Rspamd-Queue-Id: E4C64219AF
-X-Spam-Score: -1.51
-X-Spam-Flag: NO
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-1.51 / 50.00];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FREEMAIL_ENVRCPT(0.00)[126.com,gmail.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_CC(0.00)[126.com,linux-foundation.org,kvack.org,vger.kernel.org,gmail.com,redhat.com,linux.alibaba.com,hygon.cn];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[localhost.localdomain:mid,suse.de:email,suse.de:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAA/5LmgC/2WNywqDMBREf0XuuinJTeqjq/5HkRL1qoGaSBJEE
+ f+9IdtuBg7DnDkhkDcU4Fmc4GkzwTibAG8F9LO2EzEzJAbk+OCInC3aHh/tp5BiKRWru0FWqqK
+ yUTWk1eppNHs2vqFbR2Zpj9CmZjYhOn/kq03kPluVEH/WTTDOuJY4UoVSNvTqnItfY++9W6C9r
+ usHhr1ZJ7oAAAA=
+X-Change-ID: 20250220-many_args_arm64-8bd3747e6948
+To: Alexei Starovoitov <ast@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, 
+ John Fastabend <john.fastabend@gmail.com>, 
+ Andrii Nakryiko <andrii@kernel.org>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, 
+ Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Puranjay Mohan <puranjay@kernel.org>, 
+ Xu Kuohai <xukuohai@huaweicloud.com>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+ Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+ Florent Revest <revest@chromium.org>
+Cc: Bastien Curutchet <bastien.curutchet@bootlin.com>, 
+ ebpf@linuxfoundation.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-kselftest@vger.kernel.org, 
+ linux-stm32@st-md-mailman.stormreply.com, 
+ =?utf-8?q?Alexis_Lothor=C3=A9_=28eBPF_Foundation=29?= <alexis.lothore@bootlin.com>, 
+ Xu Kuohai <xukuohai@huawei.com>
+X-Mailer: b4 0.14.2
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdehieelucdltddurdegfedvrddttddmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhufffkfggtgfgvfevofesthekredtredtjeenucfhrhhomheptehlvgigihhsucfnohhthhhorhoruceorghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefffedvleeltdefkeduledvkedvueffudeiveekvdeitdegfeeuhefgvdeutdfhueenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdgsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopegludelvddrudeikedrtddrvddungdpmhgrihhlfhhrohhmpegrlhgvgihishdrlhhothhhohhrvgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepfedupdhrtghpthhtoheplhhinhhugidqkhhsvghlfhhtvghsthesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegsrghsthhivghnrdgtuhhruhhttghhvghtsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepshhhuhgrhheskhgvrhhnvghlrdhorhhgpdhrt
+ ghpthhtohepgihukhhuohhhrghisehhuhgrfigvihgtlhhouhgurdgtohhmpdhrtghpthhtohepjhholhhsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhpshhinhhghheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepgihukhhuohhhrghisehhuhgrfigvihdrtghomhdprhgtphhtthhopegvsghpfheslhhinhhugihfohhunhgurghtihhonhdrohhrgh
+X-GND-Sasl: alexis.lothore@bootlin.com
 
-On Thu, May 22, 2025 at 03:13:31PM +0800, Muchun Song wrote:
-> 
-> 
-> > On May 22, 2025, at 13:34, Oscar Salvador <osalvador@suse.de> wrote:
-> > 
-> > On Thu, May 22, 2025 at 11:47:05AM +0800, Muchun Song wrote:
-> >> Thanks for fixing this problem. BTW, in order to catch future similar problem,
-> >> it is better to add WARN_ON into folio_hstate() to assert if hugetlb_lock
-> >> is not held when folio's reference count is zero. For this fix, LGTM.
-> > 
-> > Why cannot we put all the burden in alloc_and_dissolve_hugetlb_folio(),
-> > which will again check things under the lock?
-> 
-> I've also considered about this choice, because there is another similar
-> case in isolate_or_dissolve_huge_page() which could benefit from this
-> change. I am fine with both approaches. Anyway, adding an assertion into
-> folio_hstate() is an improvement for capturing invalid users in the future.
-> Because any user of folio_hstate() should hold a reference to folio or
-> hold the hugetlb_lock to make sure it returns a valid hstate for a hugetlb
-> folio.
+Hello,
 
-Yes, I am not arguing about that, it makes perfect sense to me, but I am
-just kinda against these micro-optimizations for taking the lock to check
-things when we are calling in a function that will again the lock to
-check things.
+this is the v2 of the many args series for arm64, being itself a revival
+of Xu Kuhoai's work to enable larger arguments count for BPF programs on
+ARM64 ([1]).
 
-Actually, I think that the folio_test_hugetlb() check in
-replace_free_hugepage_folios() was put there to try tro be smart and save cycles in
-case we were not dealing with a hugetlb page (so freed under us).
-Now that we learnt that we cannot do that without 1) taking a refcount
-2) or holding the lock, that becomes superfluos, so I would just wipe that
-out.
+The discussions in v1 shed some light on some issues around specific
+cases, for example with functions passing struct on stack with custom
+packing/alignment attributes: those cases can not be properly detected
+with the current BTF info. So this new revision aims to separate
+concerns with a simpler implementation, just accepting additional args
+on stack if we can make sure about the alignment constraints (and so,
+refusing attachment to functions passing structs on stacks). I then
+checked if the specific alignment constraints could be checked with
+larger scalar types rather than structs, but it appears that this use
+case is in fact rejected at the verifier level (see a9b59159d338 ("bpf:
+Do not allow btf_ctx_access with __int128 types")). So in the end the
+specific alignment corner cases raised in [1] can not really happen in
+the kernel in its current state. This new revision still brings support
+for the standard cases as a first step, it will then be possible to
+iterate on top of it to add the more specific cases like struct passed
+on stack and larger types.
 
- 
+[1] https://lore.kernel.org/all/20230917150752.69612-1-xukuohai@huaweicloud.com/#t
 
+Signed-off-by: Alexis Lothoré (eBPF Foundation) <alexis.lothore@bootlin.com>
+---
+Changes in v2:
+- remove alignment computation from btf.c
+- deduce alignment constraints directly in jit compiler for simple types
+- deny attachment to functions with "corner-cases" arguments (ie:
+  structs on stack)
+- remove custom tests, as the corresponding use cases are locked either
+  by the JIT comp or the verifier
+- drop RFC
+- Link to v1: https://lore.kernel.org/r/20250411-many_args_arm64-v1-0-0a32fe72339e@bootlin.com
+
+---
+Alexis Lothoré (eBPF Foundation) (1):
+      selftests/bpf: enable many-args tests for arm64
+
+Xu Kuohai (1):
+      bpf, arm64: Support up to 12 function arguments
+
+ arch/arm64/net/bpf_jit_comp.c                | 234 ++++++++++++++++++++-------
+ tools/testing/selftests/bpf/DENYLIST.aarch64 |   2 -
+ 2 files changed, 180 insertions(+), 56 deletions(-)
+---
+base-commit: 9435138c069117cd59a4912b5ea2ae44cc2c5ffa
+change-id: 20250220-many_args_arm64-8bd3747e6948
+
+Best regards,
 -- 
-Oscar Salvador
-SUSE Labs
+Alexis Lothoré, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
