@@ -1,123 +1,128 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C58D62030A
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 16:47:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411F018C932
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 16:49:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747932426; cv=none; b=bQEc/WHItLmWOT9lEM56vIH9+AH2/2q+NbUkAIVjiJM/1VvZOVl4aMh/l8TzuveWk5VmXWkrNV286VjRuXfol4nlhvC3cAy3zBIYwWXU/XEp5vIq+lQu5kidsAMcGGYepu3z+NUWlKJd8qO5Q7d3wmtBqRxy4lbD+7PQzu1OOWo=
+	t=1747932548; cv=none; b=fjl2EXYt/uzYZHyQkl/oaoTtcYtALKWjZEzGNZo/QE1dM/znOj49dIyLvPN0aFEu7NdxShGlwNRKwEeliFkFUyMMaOAaxYm+KKF0YX2oXK80JtMO6/oxw0k8Kuymxsso+5WQ9RpI+giqqfBviMaw1/0VcChXCPkug35sp+dzv/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747932426; c=relaxed/simple;
-	bh=XLm0hc7BzXquNGKFLwYgUdUknNpksi7bc2AsvCeutW4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GY8cwCFdqm7RUOqn7YJtGCJ28pRVSMKh3SP//3PqKjKWNXXC4/1mddYDN86idf10MTbJCDbafXqYGfVszWyvUbu6RbdNRWm4CFPxV0T4sNyRKsvgJRPHx/zmg4AEs17471Y+2EBgwmtLYTFLDLq+Sl5vMyB0bA/yKmO2VR8LTrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=V1sQz6jI; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1747932548; c=relaxed/simple;
+	bh=G3Cpj1xQBKnGsb7tyi3ON1q5bKD7o+VrGEeyArpRq6Q=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=TFMtP/RW8k10/bbnWttkR3EYhfAE6GHtxAhvV5bnXJiK9iy9YHgZySpY9HrgRjGbZ7kfhRqnK+Zj+gKkNLPq7URdE/zE1DLWyu9bn5fISEsOFmu7iRTqfVZovbwHYy6DNKRTJxvYJmDN7Mu6Airr3jKhu+fHTdvVQ0bue6gxtsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=IVdXWbYf; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="V1sQz6jI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1747932421;
-	bh=XLm0hc7BzXquNGKFLwYgUdUknNpksi7bc2AsvCeutW4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=V1sQz6jIMZ0EnmxS4YdrjtsCtiOZ8YlQH7+d682FOSt9mnKIPPZhBQI4KmYum17xv
-	 GQ6zcFsjawnMt0RYjCJ4xZLNFHJBStLKIl+OwUc1Db8PYsffnQqTTWdhlWvc1S45FV
-	 vs59bhSgmzexFxf4CoWORq8C0YsswiKRcj1AeCTk1/i+YAy12LMn2DdHP/Z47In1mc
-	 n/F3umvgvPDrIKEpq4xhmqFBvU16DlCfDPcur3ivvEJHan3jpZztuX7cZX42ugn9aF
-	 rQE92LQddTa2fJz0+Ux/HB44RWZ/E/xufBuUZgUfPQDwwuu2wvLSmsq6XMMc/GNyL+
-	 uBX2GuM21Jbkg==
-Received: from [192.168.1.90] (unknown [82.76.59.134])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: cristicc)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 65FF517E1576;
-	Thu, 22 May 2025 18:47:01 +0200 (CEST)
-Message-ID: <88e1fed3-47eb-4925-b11a-71557af9add5@collabora.com>
-Date: Thu, 22 May 2025 19:47:00 +0300
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="IVdXWbYf"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-442ec3ce724so69281035e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 09:49:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1747932542; x=1748537342; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=b5gqrpK4LLv8bvpfPMOZaO6bNExWS7LE9ydsQkkyKP8=;
+        b=IVdXWbYfdmFPxglo3DGw5Z4t6lRsOL7jupKt4RKJmU+BBBXfli9CyGgpbv89Rt0GQG
+         obDC4MqEchMUoGXKwn03tLlBh80rMZMJA3GVjV/r1NsFS+YPp37y5NaOzvewO2pwARqC
+         dlHy+Oja98KWWmD2oPEatfT7uGNCiNwLC0nQ55/fHbi02bZGb6sMQDf0SI7TS4EwjHAA
+         FKQ6MAWqj2uPfZ1H87dkUloBe5H6dc7zbNC1HxddxyefCtcE0PI12R5izyQXQ6Wy0x83
+         CEzsMMmdx0/E3+sz/Aomstk/LceDapon+uIBRx1i/G940sJKnqLlEDH0i9dkWoeO2WHp
+         ZA5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747932542; x=1748537342;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=b5gqrpK4LLv8bvpfPMOZaO6bNExWS7LE9ydsQkkyKP8=;
+        b=CLLXDNWiKIppMGLkn1ISofpD4muI/wLNSXM5KgQIeV9O+c929aplMI0Y/8Aftjqi4d
+         PNqXqQL3XEIDUGcoGpnTiu92HyRG1z6VAPZoUQL/dQfFnRBeGl1Jq4N3oNd3F4buIbwW
+         LK5nEV3tilGB4McQLYhbFXgAVF9nGLxjqO8lTwj6G4xdwcntq2/k7t0gN4O+wtuQa1SU
+         cGmmY4WB843PuoM7eH39igI7QXzhrE1SaYlqEu2oOKBGYOc1LfBczS1ZV4foNhOk/tsD
+         mkyrt0QHv6wALayCRLIi172bupiNlomnQuqOYWZ/ifHedgcBL1s9lZe8y4a8HAgRkL0x
+         fF6A==
+X-Forwarded-Encrypted: i=1; AJvYcCUrion7n8NQ6tzji5WSKEKg0N87jnq+OQC/syMxnMj9Bis0xWIb5bzJJS8JtRIa8cBDpzVYFVxK6QwzX/4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YynmTDHpsIYf3bie7XwHF6RAkHIw6cCLjJDynIJg4LMhgwdLPg1
+	geuPGQaPoqx1sZHRlMViBIVb3kVZaR87JUk41BcHeglMc7QnJCOFxwBj8VDotPTdl8s=
+X-Gm-Gg: ASbGncvlztul6lv8wEGjbKKHKSNKfpROamd2IE0UDV0VWVTgpNx1j881iZelkPKl9dP
+	yJ+PcEFOFceHHbsj+gLRjTmz+k1uQp6/WeWGV7L8osyYA7bC4uLd5s9Ww6zB0LOXetzaKyXqyr+
+	FqiU1PeQ3x25cNPzNeg2+aYGe5bRIgtQjBAecRuJ85yS17MZwEFMSu3JVTRak8su9SXNV7Oc5WF
+	BuJPdRxUnAYo31T43x4Ke4golfwow8LFlTPmnXjyoUHEFCNcpcd7zWd1mjLwsadql+tNrtGQvDd
+	Za2/79veaTRt7pxzh1r0e8rwpwM4LBr72NqIPdm2Wr0j6LD5+pqE4+LeVeIKAmnpwkC/hX5GSr0
+	9NsFwqxFvS9i4jqu+4P5V9jNEDKMXzp8=
+X-Google-Smtp-Source: AGHT+IEg48bGTV2ct67Aek6JY+HvankpKczUH7hplBNjJa3RunoOa/MAveHG5wn1OKX8yBjYaDhEJw==
+X-Received: by 2002:a05:600c:a00b:b0:441:d437:ed19 with SMTP id 5b1f17b1804b1-442fd625914mr240755165e9.11.1747932542358;
+        Thu, 22 May 2025 09:49:02 -0700 (PDT)
+Received: from [192.168.0.2] (host-80-116-51-117.retail.telecomitalia.it. [80.116.51.117])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-442ebd6fe86sm237826965e9.0.2025.05.22.09.48.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 May 2025 09:49:00 -0700 (PDT)
+From: Angelo Dureghello <adureghello@baylibre.com>
+X-Google-Original-From: Angelo Dureghello <adureghello@baylibre.org>
+Date: Thu, 22 May 2025 18:47:31 +0200
+Subject: [PATCH] iio: dac: adi-axi-dac: fix bus free check
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 14/23] drm/tests: hdmi: Add macro to support EDEADLK
- handling
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>,
- Dave Stevenson <dave.stevenson@raspberrypi.com>,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Dmitry Baryshkov <lumag@kernel.org>, kernel@collabora.com,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20250425-hdmi-conn-yuv-v4-0-5e55e2aaa3fa@collabora.com>
- <20250425-hdmi-conn-yuv-v4-14-5e55e2aaa3fa@collabora.com>
- <20250519-sturdy-cyan-mouse-6bd0f1@houat>
- <7ce1a2d1-f4cb-4975-be24-b47e184ce1a8@collabora.com>
- <20250522-fearless-muskrat-of-ampleness-1ccd49@houat>
-Content-Language: en-US
-From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-In-Reply-To: <20250522-fearless-muskrat-of-ampleness-1ccd49@houat>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250522-iio-dac-adi-axi-dac-fix-bus-read-v1-1-26ec358c57bf@baylibre.com>
+X-B4-Tracking: v=1; b=H4sIACJVL2gC/x2NQQqAMAwEvyI5G6hREfyKeIht1L2otCiC+HeLt
+ xkGdh9KFmGJ+uKhaBcS9i1LVRbkV90WY4TsJE5a14owsHNQzxrAeuPnGTdPZ+JoGliaZp686+q
+ q9pRnjmi5/xfD+L4f5IN97HIAAAA=
+X-Change-ID: 20250522-iio-dac-adi-axi-dac-fix-bus-read-244fbc07313c
+To: Nuno Sa <nuno.sa@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, 
+ Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+ Andy Shevchenko <andy@kernel.org>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Angelo Dureghello <adureghello@baylibre.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1236;
+ i=adureghello@baylibre.com; h=from:subject:message-id;
+ bh=CBPNkXDDNKLJ+wZICyoMYKylN03cbX+DDGSxmDI4mKY=;
+ b=owGbwMvMwCXGf3bn1e/btlsznlZLYsjQD1WN0luhP71j04Rt7o9N9/a91a2VUXu29s9Jn8m1P
+ zcddj1zqaOUhUGMi0FWTJGlLjHCJPR2qJTyAsbZMHNYmUCGMHBxCsBEDFsYGTr25CvX38kuOGPZ
+ veJP2M+MPxtfGzr7O4c+DNLk/X34y3qGv5L+uqUnNrPHipznzttwft7s5wZ/uERyPly+fE9W5FV
+ NLDsA
+X-Developer-Key: i=adureghello@baylibre.com; a=openpgp;
+ fpr=703CDFAD8B573EB00850E38366D1CB9419AF3953
 
-On 5/22/25 7:06 PM, Maxime Ripard wrote:
-> On Mon, May 19, 2025 at 01:35:46PM +0300, Cristian Ciocaltea wrote:
->> On 5/19/25 10:22 AM, Maxime Ripard wrote:
->>> Hi,
->>>
->>> On Fri, Apr 25, 2025 at 01:27:05PM +0300, Cristian Ciocaltea wrote:
->>>> In preparation to improve error handling throughout all test cases,
->>>> introduce a macro to check for EDEADLK and automate the restart of the
->>>> atomic sequence.
->>>>
->>>> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
->>>> ---
->>>>  drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c | 10 ++++++++++
->>>>  1 file changed, 10 insertions(+)
->>>>
->>>> diff --git a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
->>>> index c8969ee6518954ab4496d3a4398f428bf4104a36..c8bb131d63ea6d0c9e166c8d9ba5e403118cd9f1 100644
->>>> --- a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
->>>> +++ b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
->>>> @@ -224,6 +224,16 @@ drm_kunit_helper_connector_hdmi_init(struct kunit *test,
->>>>  				test_edid_hdmi_1080p_rgb_max_200mhz);
->>>>  }
->>>>  
->>>> +#define drm_kunit_atomic_restart_on_deadlock(ret, state, ctx, start) do {	\
->>>> +	if (ret == -EDEADLK) {							\
->>>> +		if (state)							\
->>>> +			drm_atomic_state_clear(state);				\
->>>> +		ret = drm_modeset_backoff(ctx);					\
->>>> +		if (!ret)							\
->>>> +			goto start;						\
->>>> +	}									\
->>>> +} while (0)
->>>> +
->>>
->>> I'm not sure here either, for pretty much the same reason. As far as
->>> locking goes, I really think we should prefer something explicit even if
->>> it means a bit more boilerplate.
->>>
->>> If you still want to push this forward though, this has nothing to do
->>> with kunit so it should be made a common helper. 
->>
->> Ack.
->>
->>> I do think it should be
->>> done in a separate series though. Ever-expanding series are a nightmare,
->>> both to contribute and to review :)
->>
->> Indeed, let me take this separately.
->>
->> If you agree, I'd prefer to drop EDEADLK handling from the new tests as
->> well, to allow sorting this out for all in a consistent manner.
-> 
-> We can't unfortunately. Most CI runners now run with WW_DEBUG that will
-> test for EDEADBLK handling.
+From: Angelo Dureghello <adureghello@baylibre.com>
 
-Ok, in that case I'll proceed with the explicit error handling for the
-new tests only.  And as soon as the series gets merged, I'll come up
-with a common helper and apply it for all tests.
+This patch is intended to fix [1] that looks not yet accepted in any
+upstream branch.
+
+Poll function must check for a value equal to 0 (bus free condition).
+
+[1] https://lore.kernel.org/linux-iio/l6vu54ltxd7pydkzl6xbbq55gedumzbsllfxnljyngwcg4c6zd@w6qxgn2vby75/
+
+Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
+---
+ drivers/iio/dac/adi-axi-dac.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/iio/dac/adi-axi-dac.c b/drivers/iio/dac/adi-axi-dac.c
+index b6cfe07701d47440df478f7b9b4c579434b99a25..a0e546dba3680371e00dc4c8973d4f450c18cf2d 100644
+--- a/drivers/iio/dac/adi-axi-dac.c
++++ b/drivers/iio/dac/adi-axi-dac.c
+@@ -641,7 +641,7 @@ static int axi_dac_wait_bus_free(struct axi_dac_state *st)
+ 	int ret;
+ 
+ 	ret = regmap_read_poll_timeout(st->regmap, AXI_DAC_UI_STATUS_REG, val,
+-		FIELD_GET(AXI_DAC_UI_STATUS_IF_BUSY, val) == -1, 10,
++		FIELD_GET(AXI_DAC_UI_STATUS_IF_BUSY, val) == 0, 10,
+ 		100 * KILO);
+ 	if (ret == -ETIMEDOUT)
+ 		dev_err(st->dev, "AXI bus timeout\n");
+
+---
+base-commit: 50b8b618e598468e35551003d7e5cc5db14ee113
+change-id: 20250522-iio-dac-adi-axi-dac-fix-bus-read-244fbc07313c
+
+Best regards,
+-- 
+Angelo Dureghello <adureghello@baylibre.com>
+
