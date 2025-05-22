@@ -1,121 +1,77 @@
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C449B223714
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 08:35:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63E472222BF
+	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 08:35:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747902918; cv=none; b=r/AkCwq+0nKweqIUlY1oiV0CdSWvgFmJkITgzG8kgTuu6n0k7ggjv4chH2bNHftbEKtHYZAhR7jrgdjqIiT04CIn9AdQc54GnXIu2entF0ka8yg1qK+/oEcTtdhj0wP9a7enLU2voigUAWle02NDaoQlGINHdRxCb211bVyVfpQ=
+	t=1747902954; cv=none; b=QVeYSe7yBQ3E/kksBeGNJczgPrw4lH51cIVI47v0MjEf+mv0MFmNsEnLWSNSLSwT42DVJ9z5HLApH0ZGpIBgIBfR9ZFJSOAgtB2wNbe7Mwj3CSCvUDGLa4xsr6O6lhAJ9vfaF2kT1uZkXzwxfBWs8fo5J3pUlsUgar9ksiIsm0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747902918; c=relaxed/simple;
-	bh=tYQxCGngj9fE9ouQsSmRNK4tfs6iy3G5wdKuIJ/e2mY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eJBWvTb8C33VsIxlISZlzu0yE1PJ7WSUEIHgfqobXkemhMIo46UoV6KtUyVS0/hTa58E/oEc0dOqVGpROGu6+80biEb7SqGXgLq8u3zqe5HdlBHfvtXGdtR4y5WT70j8NGnkPuSpyyCQAB3s0oDfbJ0zNffgQ87G1kFwTqfxsOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=E5ucawpV; arc=none smtp.client-ip=209.85.217.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E5ucawpV"
-Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-4e290e4716fso1583057137.2
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 01:35:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1747902914; x=1748507714; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tYQxCGngj9fE9ouQsSmRNK4tfs6iy3G5wdKuIJ/e2mY=;
-        b=E5ucawpV9hBnKyhd0789oN4VmgEd7bl0AhuKwnzGxw0ebAWuLaYjBZWV6AiKQn24+C
-         qRNgiYNZTRVWA03JTj6wMSV3t73L5cbMJ6JJMU/U/mocgg/ZRP//56uv6an+3e5FHEPn
-         qefn/uQGgNswrUB7dAHq3HOb+oIVbs8BOM684c3Cvuv8NgVKcOmWhcwxAnGIqU+gUPHI
-         Ez+IxySobmx0rGZktSrSH8XrJeYJU6R6fVV8qQRV6ZFH0mZButy6r7YVOP9QwuowEL6g
-         HMMvMJJRV5XDhLJjesIB2gw3Phzx1wOuvP2hLulQ18Kwu9j+pjiqrhKjJH8TNpj7yE80
-         62OA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747902914; x=1748507714;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tYQxCGngj9fE9ouQsSmRNK4tfs6iy3G5wdKuIJ/e2mY=;
-        b=fWld9npwCy0azANNSBwGQUUJOrvol795hiwcRoGGyWQJIKBB94pRoDkHDNscKBCNih
-         3RwO1TXsINHfJi976h4hngEjXbbDEDWpD/KF89ROQBcKvzld/wr/e3ljmB10WjEn0tz1
-         cDNvtnb5D4iYq2F05LC36wKmXwAL54ZAGz3f7OiGMHBQ9oqYXnYKhaBRIzEJXw2jVSjS
-         ZsalkJ5ghuSF96321m8U9XVX6LEiMYKWf/bH3xEmHT8snMNIeV1qashvNkLrfJxPvdjt
-         Xp8M6lqpZlXqLHGuYt5VqHPYwUUe9jlj4Rc1tV464pGnn4SnZVhPJs9DOdFsaA5f8Yx6
-         F4dQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVRcnhprOTPACd4DVzU3Kh6ZjrHYNXJ8GKygAHFXlGZe5EosMDR9G2x7Q37/tKaF0mFdhSVHTm2SHh1AKU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2IndMT8rOz7lB49JFTfL8WXzwz+jTEkl5iVNVemPlNm/heGWH
-	9W0ch6RHvnfyfOUTFTSOQVq17iaEP72z0QWNZPV8Zt24y22KAvoGOis2zH3/dNG/niVAJ3EW2+d
-	P6nR/xsA0eE4ybLvAU1CSrNdhAoZuboQmTsGIwa15qg==
-X-Gm-Gg: ASbGncsZ6d/rpSRzdhAAGUkY4raqiMlbydpKfI2gOedKeD6CAYAvENmvHhJrIBmvDZM
-	fd1kebQ/ZduG+dw57odFuiPUxgYPmiTJwu/FUEa3IvOlI4MOav1x3dZ9yVcPhyahvlD6h9Rt94v
-	1Et7ghfn6CrtK4ZfTavrqybNXOOWTGW5Lm14PaaXdmSvNY+XqAapzkBLeJXmvuYwLdSg==
-X-Google-Smtp-Source: AGHT+IG1tufTo2laqv0iUxS628PFmp3liCtb2kVRmJ/1753thxyKZS6oUk0xxwo4pGk44af87cl//6xqqgtgt7qTqLs=
-X-Received: by 2002:a05:6102:809b:b0:4cb:5d6c:9944 with SMTP id
- ada2fe7eead31-4dfa6ae1b10mr26679671137.3.1747902914500; Thu, 22 May 2025
- 01:35:14 -0700 (PDT)
+	s=arc-20240116; t=1747902954; c=relaxed/simple;
+	bh=pIyEqnKwCgLEw3sCLGq4MDIi+tZN/VYY/A8SDojgnJ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AyBD4XQyWIygSbR3I094Dvd9OLeztnCb7rOCc9EP6AlsIj9OBr57XFglByXAdvi3h1YYqdRu6G1h2bVtm1vIXNUODTjJrssfVo4NeoucHWC84KpIbbrjsaDdznZlUbBnNoVnkiz0Ga/fxzUmmIiabdzkw9kEd10olROdxRhFNsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uI1Ox-0004iw-8J; Thu, 22 May 2025 10:35:43 +0200
+Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uI1Ow-000hfy-2p;
+	Thu, 22 May 2025 10:35:42 +0200
+Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uI1Ow-002i60-2U;
+	Thu, 22 May 2025 10:35:42 +0200
+Date: Thu, 22 May 2025 10:35:42 +0200
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Oleksij Rempel <linux@rempel-privat.de>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: clock: Convert
+ alphascale,asm9260-clock-controller to DT schema
+Message-ID: <aC7h3omRMNjbzuuy@pengutronix.de>
+References: <20250521004712.1793193-1-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250520-rust-mno-fdpic-arm-fix-v1-1-44e77fe6b2a1@gmail.com>
- <CANiq72nUFqM7mnpSGZF65n3Aak37KVVSa0d830o31EuZyh+OfA@mail.gmail.com>
- <d6515a2d-7986-4b53-a655-869d568d4081@gmail.com> <CANiq72nDCfoy2v-VbMR9ntNbTt=3JoYsVhz_gqX=Q=4iWN1YCw@mail.gmail.com>
-In-Reply-To: <CANiq72nDCfoy2v-VbMR9ntNbTt=3JoYsVhz_gqX=Q=4iWN1YCw@mail.gmail.com>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 22 May 2025 14:04:59 +0530
-X-Gm-Features: AX0GCFsZ82FAe40c9-JDdkvEhHBvY185zJfCoLa6DZcQDwCQ-JxPg6n64Vcx6kw
-Message-ID: <CA+G9fYtM-s0cgS39wX9Go_OAXxYa4nME6h8CbhyK_-QrRvQk5w@mail.gmail.com>
-Subject: Re: [PATCH] arm: Fix rustgcc unknown argument '-mno-fdpic'
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Rudraksha Gupta <guptarud@gmail.com>, torvalds@linux-foundation.org, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Ben Wolsieffer <ben.wolsieffer@hefring.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Christian Schrrefl <chrisi.schrefl@gmail.com>, 
-	Russell King <rmk+kernel@armlinux.org.uk>, Ard Biesheuvel <ardb@kernel.org>, anders.roxell@linaro.org, 
-	arnd@arndb.de, dan.carpenter@linaro.org, laura.nao@collabora.com, 
-	lkft-triage@lists.linaro.org, regressions@lists.linux.dev, 
-	Nick Clifton <nickc@redhat.com>, Richard Earnshaw <richard.earnshaw@arm.com>, 
-	Ramana Radhakrishnan <ramanara@nvidia.com>, Linux Kernel Functional Testing <lkft@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250521004712.1793193-1-robh@kernel.org>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Wed, 21 May 2025 at 19:37, Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
-> On Wed, May 21, 2025 at 3:57=E2=80=AFPM Rudraksha Gupta <guptarud@gmail.c=
-om> wrote:
-> >
-> > This does, thanks! I'll drop this patch for now then and will assume
-> > that Naresh will eventually send it. I was hoping to get this in by the
-> > stable release that is set to happen during the weekend (doesn't excuse
-> > my sloppiness though, sorry about that once again)
-> >
-> > Anyways, thanks for being patient with me as I learn. :)
->
-> You're welcome! :)
->
-> Let's see if Naresh says something; otherwise, I think it is OK to
-> send it under your SoB after a few days (acknowledging the diff from
-> Naresh).
+On Tue, May 20, 2025 at 07:47:11PM -0500, Rob Herring (Arm) wrote:
+> Convert the Alphascale Clock Controller binding to DT schema format.
+> Add the undocumented 'clocks' property which is used in DTS. Drop the
+> clock defines and consumer examples from the old binding.
+> 
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 
-[I was off and travelling]
+Reviewed-by: Oleksij Rempel <o.rempel@pengutronix.de>
 
-Hi Miguel,
-
-Please accept this patch from Rudraksha.
-
-Acked-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-
-- Naresh
-
->
-> Thanks!
->
-> Cheers,
-> Miguel
+Thank you!
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
