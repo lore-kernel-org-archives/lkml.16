@@ -1,178 +1,202 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2086.outbound.protection.outlook.com [40.107.212.86])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D175F28BA83
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 13:08:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747919331; cv=none; b=tGBixvChxIRLo/8kLW1tpFALVQbsjTnAYEqVw4vyUdjlzaMLn9AjJpiUqwt+V5eAeNza9d/IJOn839zxXc6ZDTPwUnJiLqTaJ0+9syOMR8ZVstfRkzKo8yY4Ukj+j7UVdfDjMPcQOkPxwTsLlv5P/PilNBqNn9CZFZbKQ8tfDrc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747919331; c=relaxed/simple;
-	bh=uh7703YZKKPJekStfl+iVLIVx/3sOB1pDpzQ2JGOUJI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pq+6pd8/0+DNellTR4K3+A86MvBmMlVuznfrQlB18axLh7hanpl5YeaUzLnUI11FdSM/Bjv+WljwXm8cwwaXCkw4TTzh1EC8h1GEHJ+51LJNKMF1cYS3iN5OLprDMsl1mWIcGg1HrzKlk2O4KCZH8034dKOOoZStKJGh1Q/SBm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=TiXQUVad; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A756028A402;
+	Thu, 22 May 2025 13:09:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.86
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747919399; cv=fail; b=Nav828J4AF74p1DZRpW79DWa0nMdEBZeQ+7sDgD+ZvwZ9RqQHF3QsPGaoQ9D0gOhrVwEtjgUtdW8hmAFgHKmBZmGsOuanw0zvbIJAkG9gJnHr5uYs+A3UqOdqa21MTRZlxPLxO2k2vQZOFNCAnSEJlpiKaiZYLT8PzIY0CNZL3s=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747919399; c=relaxed/simple;
+	bh=2WVAosUHgpENnk7kHTcjaW4A6deXvQxOkf3XpMm41f8=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=PtWYPprpegQ/A/bg2j/bfdpH8nNMvtv+eQ/v6OopHJoha09dVp7gzeantpsy1afops7OxPe0s7UAOOsaQP4lr2u+vgKxlbqdhj6jy5dzoAe2r7KSRa456+/Q/yHWs4jANNSBd/fKxTTD4DBX0jLpSEuBmjWM7NkNxHHU7sfuZMI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=xDLqeSHU; arc=fail smtp.client-ip=40.107.212.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="TiXQUVad"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54M8O52e029233
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 13:08:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=DJi7j+M1RBOvHbcBZkRqK8/G
-	si/9/J2x7eD+sSVq2/k=; b=TiXQUVadb2f2+r49UHjnhJBHHT+Lo6XN1ohK8ss5
-	on5d4nEuWOlPeLqIQuBj2lcbLXfsGpl2mUdrMSK6jur/gfJsTXkouYM9OSrSZjOO
-	J7EFKWLNKlrgnv1R6s3p05pm149eIbNJ5nn/a6i0Agi3DbTKxZsCZYTIQArzF0Ai
-	piZn3Lt9wwrxuOsruegQu9OymBxFbSCJr4nJXMeGxUAn8pu0Gur3ip9Wm9aKB8O3
-	kyofoeiyXsxICiPd29HRkGMjORN0zh/5sdQaqzrOb5FQ5lQxfsxA0g9b7EYc5mEE
-	xtg6A3n8pgIqm9oSBMp9bAiT1sf/i1x+C24+xL7PtsufTA==
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46rwfb6a1v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 13:08:48 +0000 (GMT)
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3dc78d55321so40780405ab.3
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 06:08:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747919327; x=1748524127;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DJi7j+M1RBOvHbcBZkRqK8/Gsi/9/J2x7eD+sSVq2/k=;
-        b=ESKJ47STyaMl58lHV3+gSB1nKTiEUfp1uxxglsJ8u0vW8AOkrf/3A/74HmtA/3k2ap
-         yXjg8kpVyQH6ukNzVFoWtHowblmh41in8ZF2GpV9xEKDucU75DopUtBuMwO0lJW1svXP
-         8B11rM2jOQeiJtYnbs4mN1wDQkVOhpp8+T3wbr3ND8GArhAVtmKJlp3MJjzLdU2E7tHe
-         8DEnEo+Tm9o1hBTECw48gu0xEGknXj9ehFAarxodS79EsaaQ1BBhFUy10hIb8hxL32vg
-         YF/UBLKn8mTAm6zTEL80sqKlIG7umkYr/ULWHBGtn2y0RvSrab62JyNxKZ5JET6Sj2B1
-         A4uw==
-X-Forwarded-Encrypted: i=1; AJvYcCVi0rAXXq9oPJJ5kdnEv6b12RsFyxaXHzFhmazPzVB7tZd/Yx6RH2JtKvQkhSD2l3dJVayJgLDKouFC1Uo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlEk9hS4jZ1uuuwZwjS5gFibSBnNaXliLPPTz+QlYZb0qr1Fv3
-	pSXX/TEG3s3bR1qonhGTbUA2ypetJFfU6Ll7ial+tJWL07m0jHn5bNGLoTBdLhFJZELUl0AMps6
-	2hEqA3nAAzZWbAZqS71WA0aQkI0eL1kuM2L2Dl1XkevWEHqpNtOi4kU2JwdMWWLJIUbQ=
-X-Gm-Gg: ASbGnctJCdmWH12wqwiwtnIdWTMfk7y6bTLTaLV3tBawlz9luzz+6H0muD3gI0qIFYY
-	9LjoBHs9AcBQYfZQZQjPiuRa7x5eBUGMt06zF+QcWJxZZRk6N5RMA/2FX91ib05OdFYIKwXLUeF
-	w9I/uYeXcRbBmw0iTovrQfqEXcBFUmXRfP2JMUTwkGttmlSBsBZkwJoScTV8sH59kr2AG6AKqH+
-	kV18/KM9FmqOq7Cc2FTQVGeQsMucrUomXKWVP8ln2hzV11B2HLs8MDxs2Tl3LvnHKpTiNyg1fNa
-	Ao0NkitmMm8+EkkE6J2+1RiljIn9iXFWF8n+60QahgUNww0rIPqtpJ4aUJd9yfv6yopjU/IMB8w
-	=
-X-Received: by 2002:a05:6e02:1489:b0:3d8:1d7c:e197 with SMTP id e9e14a558f8ab-3db842fe965mr263415075ab.7.1747919327120;
-        Thu, 22 May 2025 06:08:47 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFvfUBsJCzHaG0IdypGYuFRgNGAJw7D+1sU0Oukz6Zh13k7pm8Eh33CZDVeTRmPagkRvVHBEg==
-X-Received: by 2002:a05:6e02:1489:b0:3d8:1d7c:e197 with SMTP id e9e14a558f8ab-3db842fe965mr263414675ab.7.1747919326670;
-        Thu, 22 May 2025 06:08:46 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-550e702d5besm3391285e87.187.2025.05.22.06.08.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 May 2025 06:08:45 -0700 (PDT)
-Date: Thu, 22 May 2025 16:08:43 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Cc: Maxime Ripard <mripard@kernel.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Andrzej Hajda <andrzej.hajda@intel.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Robert Foss <rfoss@kernel.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Louis Chauvet <louis.chauvet@bootlin.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH v3 02/22] drm: convert many bridge drivers from
- devm_kzalloc() to devm_drm_bridge_alloc() API
-Message-ID: <qkqyfksvimaks4wb4si72shewdc7ccy4n3srpkv3jf5snphepu@zpci2dquivhj>
-References: <20250509-drm-bridge-convert-to-alloc-api-v3-0-b8bc1f16d7aa@bootlin.com>
- <20250509-drm-bridge-convert-to-alloc-api-v3-2-b8bc1f16d7aa@bootlin.com>
- <4yeqvg3wnlr2bhb54zutgqpkehrodat5w5x4rr5qjlrc2ts3pz@gr2iosycclpl>
- <20250512160201.7d0b21d8@booty>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="xDLqeSHU"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=VVUb4w3kAzofIuzHjGTbiF3qC2kVvGZN5iON8pqOU41Na/2mK7BG6F2wB6Lj/AVmPdOXoEGz1GFd8my6JiOZCwvxneqDimf/DhN7XzFUsSvgZmK6gkYH/lOvlvkElsa6Wdqu+5gF3/CMG/Rrs1Um+NCvZAvTx+n7ZdX6Yy2W7bCWU3LtJnrXQbyL42VZjYzVCrPavdWW8OEXFcdJYVXsWm+d+rVWpUHeOeYDJS6lC9mOry40tCOHEePynvHErYdy+WHVG2Inclixncz4RcUpxsXrSzdDuGBID4JqW0jH2E2lgOt0uBtevwkmHFRRl6oHh0j5XccuPzEJl6B+LXmuSw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6MYzRybTptYaZMOUDQtlgQyY5V5axZWI2TscVvL0ye4=;
+ b=TgMNfrZTMqLeZMpdNEQzCYwzPhrs7NAKHeHVHSC5UbGxjdCJZ70Suusf1Vdt2KeK1eDSz1Vcr4qxmtiwsiW56+5jkBtXM3Q7BFmshwCg233nCNIoFLxAl7dV3IB8fTW+ZTkjO44kaHn/okAqVnhFdHDG+Cx0km6NhMWX63jCuXxgN340pRjxfvsWH876BN9u+N3ixr9ev1GcHlaYC5wNmufa8+PKSaAoa8Rk10vVKK0IOIzcGWSZHFSLg5mlTseOYM+A0eZE//Y99f+ME+WjV0j3xmEmS3j4Oti875+oY//f0DUpWw+DrNYLYr1wY3jiv2R2G5+K2UaTDStjxGQbTA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6MYzRybTptYaZMOUDQtlgQyY5V5axZWI2TscVvL0ye4=;
+ b=xDLqeSHUgciX2Ko59cZYoHT3wVCmyGRyXIf3vQ4DJCjTjw/tNStujLFx333ToQokfsw1IbLo9sXPofvoP1korANY8eve8d13PTMJpVJ07VrNLA/rSKAjhy74bSZ9tgjek/PFyzvug02Wq0p/uV0aBPcRd9K4frsGAsk38jVhptQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
+ by SA3PR12MB7832.namprd12.prod.outlook.com (2603:10b6:806:31f::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8746.30; Thu, 22 May
+ 2025 13:09:55 +0000
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5%7]) with mapi id 15.20.8722.031; Thu, 22 May 2025
+ 13:09:55 +0000
+Message-ID: <ebedece4-9758-47e9-b621-37b40e3f0fc3@amd.com>
+Date: Thu, 22 May 2025 15:09:49 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] drm/nouveau: Don't signal when killing the fence
+ context
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: phasta@kernel.org, Lyude Paul <lyude@redhat.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Sumit Semwal <sumit.semwal@linaro.org>, dri-devel@lists.freedesktop.org,
+ nouveau@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ linux-media@vger.kernel.org
+References: <20250522112540.161411-2-phasta@kernel.org>
+ <20250522112540.161411-3-phasta@kernel.org>
+ <af03b541-0b69-4b3d-b498-b68e0beb3dcb@amd.com>
+ <06210b9dc5e5ea8365295b77942c3ca030f02729.camel@mailbox.org>
+ <eae0ff0f-31a6-433a-b255-9bdb4727a940@amd.com> <aC8fpEXYWZ9Oy41J@pollux>
+Content-Language: en-US
+From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+In-Reply-To: <aC8fpEXYWZ9Oy41J@pollux>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: BL1PR13CA0245.namprd13.prod.outlook.com
+ (2603:10b6:208:2ba::10) To PH7PR12MB5685.namprd12.prod.outlook.com
+ (2603:10b6:510:13c::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250512160201.7d0b21d8@booty>
-X-Proofpoint-ORIG-GUID: geACeM0QAcw9mbkQpgOYQ0I4DWSbSCoL
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIyMDEzMyBTYWx0ZWRfX3TaPqqDzuWPf
- lHzjx0urGOst54236xC69jn0Py8jikgbmQFC7azoEjlCdL1c9ONaWydduPYJpj/4rVWblJ6QnKi
- jHmXTj+NHHTn0dLw/xzl1n5M34e6EXyXLHncI9+KPGDWM1hzccH99U0lpULEG69xVxQZZMAWVaN
- 3F0JKqA6x5WlBslwbb8XrDwete1msDoVIOLqd/yB9OsDA5FXObZq1hLTw94vzz460dJ5gM2/KzI
- BPyJo7qjqBb8EY7ri1Ch83RlZ6gUr/K8NHM1zKF6VbU27gTLHo2EKW9s+ICseO+GxOTG2gDLSrq
- hxQcrL4nKTAXQFqvbbpE5Qdx8cNfZ1X3gT7lJRsgbF58hzeByQQy3KXo6rJLV+klM6+R7Xep2c2
- TMtQgsxr0eMNMwl+8uW/Rx8U2y9mZNbKXkfHYLgoweGIJp4/eXSuKBmf8jPUkm2HHmxY2fDw
-X-Proofpoint-GUID: geACeM0QAcw9mbkQpgOYQ0I4DWSbSCoL
-X-Authority-Analysis: v=2.4 cv=dLCmmPZb c=1 sm=1 tr=0 ts=682f21e0 cx=c_pps
- a=i7ujPs/ZFudY1OxzqguLDw==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=P-IC7800AAAA:8 a=e5mUnYsNAAAA:8
- a=mfs67VCVHBiljQDpEFYA:9 a=CjuIK1q_8ugA:10 a=j7KN7tcCHpQA:10
- a=Ti5FldxQo0BAkOmdeC3H:22 a=d3PnA9EDa4IxuAV0gXij:22 a=Vxmtnl_E_bksehYqCbjh:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-22_06,2025-05-22_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxscore=0 clxscore=1015 adultscore=0 bulkscore=0 phishscore=0 suspectscore=0
- impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=999 spamscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505220133
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|SA3PR12MB7832:EE_
+X-MS-Office365-Filtering-Correlation-Id: 493a14e0-4ae9-4c60-e64b-08dd9931f208
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dk41K3g5U1ZaOXBMc1RNUGV0Ynp5d29OTmJaU1l3VmdsandaQ1FtNklMdnR2?=
+ =?utf-8?B?Nk1LQVVNL096WEdWaDlXQjBQaEtETmpoMWMzd1U0TXYrOEtGakFqa3hOUDgx?=
+ =?utf-8?B?NmJmQ01Qc3JIM0VreFd2emIvRERCdW5JakZvMGFlQTZtZFBXQ2FVU0tFMWNE?=
+ =?utf-8?B?c3V2VDV6ZDVHelU1WU5VbHpLb1IrVHNxbnZiZ2QvL3lxRmdhYk5xWmFnSzY0?=
+ =?utf-8?B?Q3JLVVNPZzJZWGR3WGVBOTdha0dWbHFhRWZMak5xNTdZQkJ2NVNlRGc3cEVG?=
+ =?utf-8?B?NGc2bnBlR250WFY2TE1lUlA1azFWQXJZVjQrSkIzM2tMTUx6Tm9kQjhtamcv?=
+ =?utf-8?B?WlE3Q1ZKWGhYQU1wQ0ZqNGtINGFNL0RGTGY0NERPNUk4ak4wTVNSRDhDdXVD?=
+ =?utf-8?B?NTJobU84c04xWWZVUjhnajRSQ2ZUblROdzNlMkxvL0ovZ251ZTVYZjRnZFhQ?=
+ =?utf-8?B?SWZoNGdrMlU5RXh6M0Uybmkvb2JHYndUeitZOWkxTDZBMHNkZGMwTDVRMGVG?=
+ =?utf-8?B?NStrUS9FM29xclppOUtkZXB2WnJjT3hZdkFCY01sNHUvVGNsQzdCNVdaMEF1?=
+ =?utf-8?B?dExrUVdWUW5BZ2QzOGt0ai9KOU1WdXhSU21lZ3hBWnc4dmQ5QWRva2R6MXc1?=
+ =?utf-8?B?T1hka1RmVW1zVWthYUcrNnhFbDM4U2tFOGEveGoxdk5jdHMrKzA2bjU4SUsz?=
+ =?utf-8?B?aTg4QnRUOTRsSXFZWDRwcjJ1YTRLRGpkMzRSK3ZsOEs2RlZqY1Qxc2xxaTNy?=
+ =?utf-8?B?Q3kxc25mK2F4UmNLeDFRT0ZZdm9aczg2RVBPdmpmdEIwcEFVYnVuVUI1MitF?=
+ =?utf-8?B?dkRsTkNoamJubHJubHA5YkpGY0EvbEwxM2s2SEMyTFFLbzVmYXJwWmp2cUhM?=
+ =?utf-8?B?cEhCcHZBaVFXSnVZSzVWbFFVMTVYd2REK3A2OGR0bTgrS0Zrb0U3MUdrUFF1?=
+ =?utf-8?B?eEdRUmIvMVVZL2NTNHNCcE9HQzVoNDRYR1ZXbCtYSFlMS1JwdFE5Rzc1Nkhh?=
+ =?utf-8?B?Wm9GaTRKK3Fmb1hMTTNVQVhTVXNHMElVMklqNWt3N1FJRGM5ZTkyOFZ6UHdu?=
+ =?utf-8?B?SzB6Y2NGcFRkdHBGYkdFSVJmazc4YmtXOGE5SUQ3U2VZc2lST0hUdWdqenFL?=
+ =?utf-8?B?SWQ4TmFJa0UwOVZOYXdhUjNDQXZIRXJDRkM5QnhPQmFzRUp1MEhEVUVGVzdR?=
+ =?utf-8?B?bCt4ZjZVYSsrK1RCd1kyZlQ3TU50UGhGdFdqNHF6c0RDa09kT084VXZ5S2Zi?=
+ =?utf-8?B?SWtqS2Vrak56M1hSWm9IbXc3MXRJWVVkd2Fvc3JYVWw3WEdzZUpXWXRTWFpv?=
+ =?utf-8?B?amhEZHhrdjhJN3Nvcmk3Z09vbDlEUTk0Ym9OeVluVTFWNkZ0R2xWdXMwVXpD?=
+ =?utf-8?B?UnZsTnhsREU1eExYR1hsaHRLUGc2OUxPcHhsc1NKTGFneldrajBSNkpsenpu?=
+ =?utf-8?B?cUJ6ZUNQQVZ6UmZ0WnhCZU1ZNXFGdGdRMG9GU0VGcXVTUXNnK1RLQ3c0alRj?=
+ =?utf-8?B?N0RRdk9ka1p4RXA5Zk85dVIvR0V6SXJMcyszUjZZaEo3amcwR0kyMmNVa2pj?=
+ =?utf-8?B?MFlpSU1IRnJCQTQyY05DdkJhMy93SWw3dlk0WitCODd2RUVvemN2Q3o4OERI?=
+ =?utf-8?B?V3NuUlNPR2czN1d5dWJ5aktVdjg2dkVKd2hHSXZvR1VTWStIMmwxZTRObDhv?=
+ =?utf-8?B?TzFvdzQ0ZVRQTzJFMTFwRWhKaFdTWlcwUlltOTBmOTJxdWwveVFKZ1ZBZ0sw?=
+ =?utf-8?B?UFZKelcvSzZTemJqRjM3RjBkTzFIMm9vdWd5eTNLV3k4U1NtdkRmY3JNQW9M?=
+ =?utf-8?B?dWNMZjNXQzJPRVNHRjdTVmdyRXNPc0dNTnJBZ01iQXFCS2dpdDlBY0lUWnhO?=
+ =?utf-8?B?OGFsKzlBWTNuV1VXM3hQV3J1MlRSOVlpQTUvcXdXcW5STm90dWhsNHJiNUxs?=
+ =?utf-8?Q?PMLDAKdB+jQ=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?N2VwT3paOHFnTTdZeHVqN2dlKzUySENjd01tMjU0a3k3eUVNTWpubGlZSHlX?=
+ =?utf-8?B?QlNJbWRZNFNyTVBTbGFpd2M2OWQrUkNQWFRzaUwvcDRlNjFJUjBRandPYkFt?=
+ =?utf-8?B?LzI2OVRMWFg0RHU1QlREWDBiSzVGQ0UvNStVSGYxUXNSQ3FZRmJ0L0JwdXhL?=
+ =?utf-8?B?U1lhUUZ2WEV2eDVjMHl1TkdzcjZFMTNNYmg0SWF2OUU2ZzhpdVZMcHRIeGph?=
+ =?utf-8?B?Q1hmN280TXpRMThzZ3hWRkZ4aXRySVpPU0VCQUZHcCsyaHQyRTJVL01ITjUr?=
+ =?utf-8?B?L3l1YlJwbUgxdXZjU09oRTVJNmRHMjlMNmk2NnZmL05kUVJxUU1Vd3Vwb1dB?=
+ =?utf-8?B?SzZxeDZBMC9KaWh2M1pDaW1yWHA0c1pZU2ZIakpXdm1HUTVHOTM0RDBteG5a?=
+ =?utf-8?B?YkNhSWZ3ZFEwQXA2TXFjK2dNbEF6dWR1RWZaZVNMdWZZeG5aL1Y0KzNoaXVN?=
+ =?utf-8?B?TjBwQWZOM21kRTgzaVl4OVpkV3piWlQyRmFwN3FSWDkybmtmV09iQytqNDZK?=
+ =?utf-8?B?dHVVL3ovTFN0Yk5Zblg1d0ZwZ0RsQ3BwRzRoSk8yV0E5VkZpK1Q4bHIwN1BV?=
+ =?utf-8?B?eWM1UGhYQldXaGk3UTBPQXNrb3c4OXVuamxGdHArMkdpWk9BMG1uQ0JoSkZu?=
+ =?utf-8?B?UXBCL0dOK0grWmtEMzgxckVNSFdzVTRpM3RrYTEva014SEI2N2M1ekhSZzU0?=
+ =?utf-8?B?WE5iZmZZZk5zalFrUDhabGRRZGhlZElvVDZKYzhGVS8zS09iTU0zVWFTVEZC?=
+ =?utf-8?B?TVJMU1IrSEh3WmpWTEUwUjdBemVGZUUzT25JYXlsbEVxUnFnMjBlN1RsRGtT?=
+ =?utf-8?B?anF0RHZsLyt5R3d1UjRrTUZMYW5GcFlGbXZkeWFPaWExNkpmUkFaQnJNWmVt?=
+ =?utf-8?B?dnkvbEFVNXJEb0xHQXFGWWdzT2l1MEpvUGhWZEdhb0p0S2puQUJXNlI4QzRz?=
+ =?utf-8?B?Q2sybHlxUEVpUUQvV21GeGhrb3Y5TGxtck1vTUplWmdjS1Evb2NZbTNYZnUy?=
+ =?utf-8?B?cjFJdUxvOGN4VVFyMHdrckdIT0U0SlNnckhlWC9VeHQyYlhQWFV5TVg3eis3?=
+ =?utf-8?B?cEdlV245djQ4VDBybDY1L0syYThTdmZGSjYwK2ZoMmQzU0dFVmJmQWFyVVp2?=
+ =?utf-8?B?d3ZQVXFNNlZpWW9aUXFEM1JJMEFQVGQvc0I2Q2VsSVBhREZqUEcybmJrYzRB?=
+ =?utf-8?B?UWVZby9tL01VUkNJWjljYzZYODVBV2s2ZGNQZjlxUG1vV1RoUFpGVWVmZVd0?=
+ =?utf-8?B?QTVPT2Q5OFBPRW5sbGZER0d0WEI1Uy9CMWUwMElFUGpwU0tIWElNRHMwK2xw?=
+ =?utf-8?B?RlJSOUQvWDZlaWxFdDlJUGZTRW53c2J6Nm9IR1lHT3hMRmRDOU1OOE1qV3VP?=
+ =?utf-8?B?S3lCTU1xTzJGWVJ6aVpXbWR6aTUrM0Y2ZERVc3kzTGhIZnpNUnRXTnV2dm1w?=
+ =?utf-8?B?dExtYW9qSTRTSHNrUDhjaVRLeFFxZEM5dVppTXJkd0NVOEtwaVRqUlFkRXEz?=
+ =?utf-8?B?eHRkem5RVlVZb21CSVR1bkJqWk5EK1dFK3dGSGQ3OWF0ZWJxWWIzOXhQZGFa?=
+ =?utf-8?B?cFpEbHpqeXRNdi9PdDY3TlJLdmgxY3g0WTJYZmhvT2U1RTNUcGREd2hCMWdG?=
+ =?utf-8?B?bm10YlowYnB6a2NJQ295c1NDMkN2V1dhMHE0QzRFdzVoWnlWTzdNYXM2YW5x?=
+ =?utf-8?B?bElrUFE0NThWb2NFUHVTelVLUHBZYXo5WjVROGVUT3ZUdjVCbEV0bC9lVWoz?=
+ =?utf-8?B?dE1Fb1h6TCs3TEJESnBEbWw3cHlIeFZtY2Vtc1hmMGkzOENaZWh5UkFoVm11?=
+ =?utf-8?B?NlpreElkRHd5VDRCM2ZSbWNJZks5ejcyd0lPbFU4MnFLMW95Ym1MWnpwOGpj?=
+ =?utf-8?B?VmxXRG9GVXFFdFRDVG1uMVZtUHBWTyt3NHdpcHFoeXRiZTdnbG92OE1ZNVk3?=
+ =?utf-8?B?SU8rbVY5Wjc2dk90a1E1eHVpV1diUHI5TVk5L1VmbERjdU56MTBPdllWL0FZ?=
+ =?utf-8?B?ZEhqQUJNSVZZSUpFQ2YxNFFYeTFJVHAzYklEOVJRTmpqU3B3ODU0ZHFEV2Rz?=
+ =?utf-8?B?RmY1alMyazNrOXRWOTFTaGw3aGpJK0JQTXFCRit6aWtMMjQ0ZmQ1VjZSdzhV?=
+ =?utf-8?Q?fLSSprOz9e6PCp+qimc4r0Aur?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 493a14e0-4ae9-4c60-e64b-08dd9931f208
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2025 13:09:55.0969
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Hg/9C8SvVYNahRxcFLnOD0N6u/7/WLe/iDlQYB0epGwnQU8dNke6BnPndGSK08H3
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB7832
 
-On Mon, May 12, 2025 at 04:02:01PM +0200, Luca Ceresoli wrote:
-> Hi Maxime,
+On 5/22/25 14:59, Danilo Krummrich wrote:
+> On Thu, May 22, 2025 at 02:34:33PM +0200, Christian König wrote:
+>> See all the functions inside include/linux/dma-fence.h can be used by everybody. It's basically the public interface of the dma_fence object.
 > 
-> On Sat, 10 May 2025 10:43:04 +0200
-> Maxime Ripard <mripard@kernel.org> wrote:
-> 
-> > Acked-by: Maxime Ripard <mripard@kernel.org>
-> 
-> Thanks for looking at this series!
-> 
-> Unfortunately the exynos patch is still needing a decision. Quick recap
-> of the story:
-> 
->  1. patch was sent in v2, nobody acked/reviewed it [1]
->  2. was applied by mistake to drm-misc-next [2]
->  3. you pinged maintainers, no reply do far -> should be reverted [3]
->  4. Louis (fomys) asked on IRC how to handle it, no reply [4]
->  5. in this v3 I added a revert (patch 1), no acks/reviews on it [5]
-> 
-> [1] https://lore.kernel.org/lkml/20250424-drm-bridge-convert-to-alloc-api-v2-14-8f91a404d86b@bootlin.com/
-> [2] https://lore.kernel.org/lkml/832a9db0-cf8a-4d35-8a98-08053fbd6723@bootlin.com/
-> [3] https://lore.kernel.org/lkml/20250430-arrogant-marmoset-of-justice-92ced3@houat/
-> [4] https://dri.freedesktop.org/~cbrill/dri-log/index.php?channel=dri-devel&highlight_names=&date=2025-05-07
-> [5] https://lore.kernel.org/lkml/20250509-drm-bridge-convert-to-alloc-api-v3-1-b8bc1f16d7aa@bootlin.com/
-> 
-> What to do? Proposed plan:
-> 
->  1. Louis immediately applies the revert (patch 1)
+> As you write below, in certain cases it is valid to call this from drivers, so
+> it's not unreasonable to have it as part of the public API.
 
-I can't help but notice that both Louis and you have bootlin.com email
-addresses. Granted the lack of responses, can't you ping him internally?
+The question is from which drivers?
 
->  2. I send v4 with the original patch to hopefully be reviewed/acked
+>> So testing if a fence is signaled without calling the callback is only allowed by whoever implemented the fence.
+>>
+>> In other words nouveau can test nouveau fences, i915 can test i915 fences, amdgpu can test amdgpu fences etc... But if you have the wrapper that makes it officially allowed that nouveau starts testing i915 fences and that would be problematic.
 > 
-> Plan is OK?
+> In general, I like the  __dma_fence_is_signaled() helper, because this way we
+> can document in which cases it is allowed to be used, i.e. the ones you descibe
+> above.
 > 
-> I'm assuming Louis doesn't need an Acked/Reviewed-by for that, but I might
-> be wrong, and we both would like to avoid further mess.
-> 
-> This annoying issue is taking much more effort to be fixed than it took
-> to develop it. I'd like to get past it and think about the next steps
-> in bridge lifetime management.
-> 
-> Thanks for your understanding.
-> 
-> Luca
-> 
-> -- 
-> Luca Ceresoli, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+> test_bit() can be called by anyone and there is no documentation comment
+> explaining that it is only allowed under certain conditions.
 
--- 
-With best wishes
-Dmitry
+That's a rather good argument.
+
+> Having the __dma_fence_is_signaled() helper properly documented could get you
+> rid of having to explain in which case the test_bit() dance is allowed to do
+> over and over again. :-)
+
+That's an even better argument. 
+
+> I also think the name is good, since the '__' prefix already implies that there
+> are some restrictions on the use of this helper.
+
+I'm still hesitating. Adding something to the API always made it usable by everybody.
+
+Now suddenly saying we add that to the include/linux/dma-fence.h header but only certainly code can use it still sounds questionable to me.
+
+Regards,
+Christian.
