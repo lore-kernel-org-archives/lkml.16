@@ -1,631 +1,267 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2084.outbound.protection.outlook.com [40.107.92.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92AF228C012;
-	Thu, 22 May 2025 13:23:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747920192; cv=none; b=QcCq8B9EYL+/al/KvuqIvGsUX+c1rZ9C1gAoo3EYWoyatCJsjEs+QABj1MEMYd0gSDVM7O7qhFchm06dkX2MHTQw4/fHP3bCfyd2zdl0TtIg+RYVa9yiGDRiOjC8P2Oo8wpVzu69YSY0/+efo9Gha0LGiyWI+0dBh1p/UdTjxVk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747920192; c=relaxed/simple;
-	bh=YbPWIuPs7QpLHfw25jCy/yyj8MIItSeVpSuGo+1fRNc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=h2ox0LQaWpjZMZomPIu1/9aZpwHNdtRzkcMnMiAcdHURZaz7n7BJTxOAhQAql9l9I0eVCOrMfG2eQCNB3Re9rJueI1v+f7wmE6dC1LlsnQL+0qTMNG4koA33iYJW8UqABl2vWC4otu3/jXf9b1zk6upT5y5No1WhWoqaSpa/ZuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=IlQKBVg8; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90FBE28BAAB;
+	Thu, 22 May 2025 13:24:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.84
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1747920280; cv=fail; b=cpovGnxboL6YUIeWVG7JxNKj52zL+1hBmKJP9nTkzFZYanAyfoHPkcLO3WrH+z74j+5PAgqrwj3oaPmFSXcByRbn2GmVaqalmsie4v5dIyqMBAyPbkT3ODAmnJP7Y4bGSD4XJIATz8rJBwAfp7EDqIaPwD9sWk4yaCsHgJgQjro=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1747920280; c=relaxed/simple;
+	bh=LO8OhA3KBH2HaPR1QwRypfh0EGT6F00Bn5KosGH7ME4=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=tng4Eh93GMGBt1lNpFA+9NFB4k1bdAg/yFZ68CZJ4TDp7HCboSr5qBle/LWb6K1cxwbxXVqAD+JnLB/7yVAa0u4LisxWx1hPL5xb6N4Tmm6r/JRnBSVitzOULZTUjh5En2oixXqSbjLiVt33CML0Wr364ACtrLlghgX7bVOKB6k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=MeO0q7mo; arc=fail smtp.client-ip=40.107.92.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="IlQKBVg8"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 54M6Ilc6008683;
-	Thu, 22 May 2025 13:23:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=vgayC4evPn/qHj9pG
-	VcTPc4mVjLyoHS9/81AnAB9RWY=; b=IlQKBVg81aAAYRN9qHJU5W2sl/AObT8Cy
-	qaO1XZSQbhVOJQex3nv4Wog1Yi7Qfg//rXpGkg9Y0qYr4Zcw7wlqWCdN+xZcrV9M
-	CE95Dos2l9+h2GRfLdDXJjH7Gz2IzS4t4GKBmrB9yedV5SUosKXJCnkXzfnC2tpt
-	FyP8iNY9+svoRt+v2vSUgjX3EQ6i2kM/sJceqjHBUH/TqkhtTFgxFK0AlHQxTqde
-	AHqGBc7agKiUGDrzltApVGJuPvDnQ0KRKSfCfi2AJMzRPiblD81aoCKr8YGBPr5y
-	5XFfmdWZtEWUbvUiI0N4gnM+Ldnq8CYqam7SXwkRtQkDpvuUzgq6Q==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46sxhw9w6u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 May 2025 13:23:07 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54M9IPmv031973;
-	Thu, 22 May 2025 13:23:06 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 46rwmq9jrj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 22 May 2025 13:23:06 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 54MDN29E29557034
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 22 May 2025 13:23:02 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id F2A1920043;
-	Thu, 22 May 2025 13:23:01 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8AC3C2004D;
-	Thu, 22 May 2025 13:23:01 +0000 (GMT)
-Received: from p-imbrenda.boeblingen.de.ibm.com (unknown [9.152.224.66])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 22 May 2025 13:23:01 +0000 (GMT)
-From: Claudio Imbrenda <imbrenda@linux.ibm.com>
-To: linux-kernel@vger.kernel.org
-Cc: kvm@vger.kernel.org, linux-s390@vger.kernel.org, frankja@linux.ibm.com,
-        borntraeger@de.ibm.com, seiden@linux.ibm.com, nsg@linux.ibm.com,
-        nrb@linux.ibm.com, david@redhat.com, hca@linux.ibm.com,
-        agordeev@linux.ibm.com, svens@linux.ibm.com, gor@linux.ibm.com,
-        schlameuss@linux.ibm.com
-Subject: [PATCH v3 4/4] KVM: s390: simplify and move pv code
-Date: Thu, 22 May 2025 15:22:59 +0200
-Message-ID: <20250522132259.167708-5-imbrenda@linux.ibm.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250522132259.167708-1-imbrenda@linux.ibm.com>
-References: <20250522132259.167708-1-imbrenda@linux.ibm.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="MeO0q7mo"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=GbpyGrtv39o936/ft6ppz97rcllhnHHzzKiE+rc/TyuySEFZg60SCRqTfFjZXLcTTQ3lB7MdkTeoBHPPZc2pdEARNVWC9ZB9Urvw2S1wR1d+KqAZUdnqQRY2p5OWk/oN7VXHloQq3kLiYQdVRIqe5W5FvGEXL/UcJ8OiaZoUtXqKS8KUUpKbL48mNdRjZmRSac/GDbnyOBv5Vfi/aSqkq5QKL28IcUfmcYAvZRPVQjmqHC/CSQtV0dTY5rmPhjdZTQpuSqW738EaKSEFOAVA29B26e5TvPWTDxta7b/M2NmGZ+hsFWpKsg0SqnNvxJ3ycXKF043wFxGcy6jXXUpmbw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=K7YlF0KZACNqxSiVgbF5eZ1W1FRlphmk3rs0D1HRgY8=;
+ b=AJKjv6O50KGZA1L8POBAgrZyTKA0rd35xP9mDjlRS4/eOHarV1VFcMAsr7Y2UM7THR1prqIg46H/jGZIt6GpnKk68JycIEDCW+bbNUY1qSPEwqvpu6VHUNigbUr4Atj9NSCmpj1znHn0XIBPzdVofLV0JZkE1Y2L4YcxXw/UYsSzMH06FbawUfTYViaKP9Vsxwf4WS2Cu3d6WznSLULm5RF73YXzC3OqB+tM5d1AstweYhr3pcOOD21sGESfJgf0WN7ocPFyTgVYsdTh6aPwUFfTaG/pQgRT5LXnqFI+TLJe8FC4tPno5avnzmBCwWaXBNSdTNDShpR6ZCAdaiZQeA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=K7YlF0KZACNqxSiVgbF5eZ1W1FRlphmk3rs0D1HRgY8=;
+ b=MeO0q7mo9Ftiu+lQkexoN4pa+HqAZGtH0SOAUqBoMHjOod4MlQxZDLvqsgd++1fv+VVAdpW8O/Jzshfpl5l9L0bRBY3XZaTEoybjEJCjE0ZLePhBRzxj/gCp8Uxa21s3sxROAN+qf24t5anmg8DTrdeCoJm3PqY8LCQVDwSR8nI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
+ by SA1PR12MB7247.namprd12.prod.outlook.com (2603:10b6:806:2bb::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8722.32; Thu, 22 May
+ 2025 13:24:36 +0000
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5%7]) with mapi id 15.20.8722.031; Thu, 22 May 2025
+ 13:24:35 +0000
+Message-ID: <dcc9f52a-4f46-4f24-bb33-b3af583a1956@amd.com>
+Date: Thu, 22 May 2025 15:24:29 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] drm/nouveau: Don't signal when killing the fence
+ context
+To: phasta@kernel.org, Danilo Krummrich <dakr@kernel.org>
+Cc: Lyude Paul <lyude@redhat.com>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Sumit Semwal <sumit.semwal@linaro.org>,
+ dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
+References: <20250522112540.161411-2-phasta@kernel.org>
+ <20250522112540.161411-3-phasta@kernel.org>
+ <af03b541-0b69-4b3d-b498-b68e0beb3dcb@amd.com>
+ <06210b9dc5e5ea8365295b77942c3ca030f02729.camel@mailbox.org>
+ <eae0ff0f-31a6-433a-b255-9bdb4727a940@amd.com> <aC8fpEXYWZ9Oy41J@pollux>
+ <ebedece4-9758-47e9-b621-37b40e3f0fc3@amd.com>
+ <282de2b9251e3a1b793e02ef23675dace248725b.camel@mailbox.org>
+Content-Language: en-US
+From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+In-Reply-To: <282de2b9251e3a1b793e02ef23675dace248725b.camel@mailbox.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: BL1PR13CA0322.namprd13.prod.outlook.com
+ (2603:10b6:208:2c1::27) To PH7PR12MB5685.namprd12.prod.outlook.com
+ (2603:10b6:510:13c::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTIyMDEzMyBTYWx0ZWRfXyF8PW10+1A3z FpnbtXo/Es91lKj/+zeJNz8zCqlmHHZUHE/QZeI/qtXR1OacvoOp032MWjgdR90bgmFRtsCvhIe oj99RywQ/Bdu0M3Ib8/5URM8EBoecwK61K2ZCs1wF8Dde8pibc6Skd8dPqcRHIzBLCcQKsgIa81
- CKkLsUXZfRzxj1FC36en45Iel6JdO0+pfSjXNqQ3zhzTy1KOQaXTyGIMuUGNUTTULc2HHIea2kY zw2Kxl7ccDGtvzHGiCkxkm+MvWTOfQp/MDXc4k8MqhObjJmjsDw5+wVWVKLS71MBzxwG5AzGyw5 g0IOdlskpUtKSfMctRfYb80Fv8GDBoh5NcErRStaslL/XW3aAtGMwJXSn6qnQ1lrBXdi3UvxTpo
- BV25gMZiX33KAmK73awkb/prt6YcEMvzaWPtQ5Vh2HZKIbRrkue6te/mQ3wfQyP3auI9XSGx
-X-Proofpoint-GUID: -bZMkc4kNs5GtP2oZX0INx5zCs3fp7J1
-X-Authority-Analysis: v=2.4 cv=O685vA9W c=1 sm=1 tr=0 ts=682f253b cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=20KFwNOVAAAA:8 a=7_jnfmalSeIvgFZyEUQA:9
-X-Proofpoint-ORIG-GUID: -bZMkc4kNs5GtP2oZX0INx5zCs3fp7J1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-22_06,2025-05-22_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
- spamscore=0 mlxscore=0 phishscore=0 bulkscore=0 priorityscore=1501
- lowpriorityscore=0 impostorscore=0 clxscore=1015 malwarescore=0
- suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505160000
- definitions=main-2505220133
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|SA1PR12MB7247:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2b12b684-38db-4fdf-2ebc-08dd9933fee3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?aFlqa1htcEVHdnVtRUN1T3ZLcFFzVjhTUUxvYVM1T21heHgxYzdrbklpeE01?=
+ =?utf-8?B?eDBRYW5Fbkp4aFRiRE5sSUJ3SzRiSm83UkxiNkU4aVZLODVzeHpFRmx0M0Za?=
+ =?utf-8?B?WXJqbENsejhkYmxyajk2MjVxb1dYb0JJUXNpM2F6cXJaZGdFbnA4Zjl4UWZ4?=
+ =?utf-8?B?OUlRMEplb1JRMk5WOG5HSG01WEFSR05pUVJEZnFBc3dSK0xIN1BhaU80eTV5?=
+ =?utf-8?B?MGFNNVdSZjFOZ1dPTXN3Z01MQnd6ajR2YXRPSzhRUUlQVk1qNGZYTm44c0ZX?=
+ =?utf-8?B?bGtIS3IvQVliSnk1M1gzN1BiZ3Z6V3hWRU5hU094cVM3dDBTSU84UU9jTnAw?=
+ =?utf-8?B?RW5rNlFaditoWG9uelVkNWdpbytJZEJ4d2h3RmVva3pXcmRZWTFpbGtrZDJn?=
+ =?utf-8?B?b3JndmlaSlowNnczYjNEQXJqUnMvRFc2U0pva0JlRFdXVGU0TjRkSDZOV0No?=
+ =?utf-8?B?eFJjNC9BaW1vZVlETjB5UEhOQTJ6RHZvMWwxVk9SblQ1QnoyWWtUM2NWTnRD?=
+ =?utf-8?B?dkxYK2lBSDBKeG0rT0dYdEtMUkxBdDBCSWJnZ1ZNenJyU05hamgwYWNydVJi?=
+ =?utf-8?B?WFlCTi81amV4R0RoRU1DdEttejRWQk5JN2Y2RitlTk1PczBpRWpNNEdNY0V6?=
+ =?utf-8?B?Lys1TWlPdTJCN2phLzBJMFlXQmJBUktPWXJxOU43WFUyNVc5WVV1RlFjN3B6?=
+ =?utf-8?B?cDVYNnM2cFJDc1lEeHdoc0I0VDdCQlhQb0RaVnl6TlZJVitZZHh3UTNsazJy?=
+ =?utf-8?B?QmYyelMxQ1FIZHp1ZjRPa0N1dTlWY21NREtkSmN2ZHExRUJISlBRZVhGSU9j?=
+ =?utf-8?B?T001NU1HRmRFcXNvQlRidlhjeWFQNVFkc3NhcThRQVBkckZjRXpCeWQ0L0tm?=
+ =?utf-8?B?Nzl5OWR0MUp6UHR4cGJjNUtBRnRpaGdsMm0ydDdMSnZFSFFMTkFTSVJKRkZZ?=
+ =?utf-8?B?c2ZmTys1YzNpb1F0c2FiNmptMU9ZekZkNDBhSkowZG0va2orWkczVkZOUGo3?=
+ =?utf-8?B?ZWo4OWYva2ZQTjEwQVI5UG15RHIwSTRxOEVndmpqNExvdnVKdElKY1hudEY4?=
+ =?utf-8?B?WEhmYUptUnlNM1J5SU1vRmZGREl5d21RWldaZVRPaHRtYVZVZW42Sk5Gc2N0?=
+ =?utf-8?B?allBSHR2TmhFKzhpcVZ3c3lBQWNTakp5S3FrQThJZGlDNlMxak5Ddm12dmN5?=
+ =?utf-8?B?OEJITEYzaCtWWnRmRk51cE03Z3RTRWRnaEprMFY0cjZBcWhBSnJzcm1JOE5q?=
+ =?utf-8?B?N1hGR25FSEVDWDJoUDRUaTlrWHUzZnB6M0NkWU02Vm56TFJtZUFzVkdhNlpy?=
+ =?utf-8?B?Y2xFVFducG9HY0RQUko3ZXQxMUI0aXdSMlR1cVNjbHg1R25FZzYwcnpyOWtR?=
+ =?utf-8?B?MTM0blVNTVljUFBSTXM5UE5zQ3JUSEx5bnV3QmRVWEt5MENaa2xHRlNqU0J0?=
+ =?utf-8?B?aUh6TFM0QW1zSGJuaElOR005SzlnNlJFRHQ3OXliVzhIK1Q2UWJFdGNSREFG?=
+ =?utf-8?B?YzExTEgxNittVVRDSHlGOFBXMlp4TVUxd2NFd3l5Wk9LUEpRb2hTZlh2NldQ?=
+ =?utf-8?B?TGp1MGUyS2VZUVg4QUZNaEhremNmV01ZRnZybXhncjZjaVhIaFU0REt1WVZi?=
+ =?utf-8?B?UHVmYzY4TTBDRXFtRUpXREorNlRJMWpzS1BLbUJKYktUWVZCWlMyZC93Tm9G?=
+ =?utf-8?B?dlJqRldkSUJaWDhqd0wzalordVorczQveER5YlZEbjFDUloxK2VaZTkzNnFa?=
+ =?utf-8?B?QUxqa3UySVNGZ2pnSkl0S2gxNTNMcVNpdkM5enBTQ1krNklaaTRWT2Mvam1t?=
+ =?utf-8?B?d0E4eFlCT0xtdGoydTcxRzROTmVPcjFISlZXUkRidkFYQ2dhWkpJMlFDcklE?=
+ =?utf-8?B?TGxHbUtaK0VHOWhGTk5paW1oMlRXd1k4VWQ3MnU4Zm80dUl0YkNQRm52R0lo?=
+ =?utf-8?Q?3Y3s5qqyvcY=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NzZJNWErOHYzMWxCY21TQlJTM3paalpYVFVncjdqVFpneVF5UUhqMHcyd1hi?=
+ =?utf-8?B?RHlCVTU4RStJaTRibmNnSUtrb2ZjWGkwUGp3SUcyR2pqZTlwNnNrRGhUck5R?=
+ =?utf-8?B?aXdoN0ZnNGg5VUczNWVROTF3RkJ1djB4Slhocml0NlZQOVNJTUlwZmdZblFr?=
+ =?utf-8?B?eFlzcGJPaTAyUVVIQXBIVk9FTWM2K0h5bkdhalpQNlQ4Vmg0QVAya3pXU1c4?=
+ =?utf-8?B?eHl2VGsrTzlhUUdqWFNKb2gvaUFzbEFFd09vdHVaYWhBY1FKeUt6cU83NG95?=
+ =?utf-8?B?akJSaytGb3BmM1J4aUdWcFdsdnVwclZSbnlwMmFOcHp6bnNLV0duRGtTNEJT?=
+ =?utf-8?B?aitFOHl3bDVqZjdmeUhuQmtkWFVnRnpNd1JpU0Q1dXpnRkVlNVVCQkxoOVdV?=
+ =?utf-8?B?WUdscVFJRVp3cjZPbXM5RWxadGZ6ZW4yOHlBRzQ1a3czYnBHdFN5M3A3cW9o?=
+ =?utf-8?B?a2luUjdtVjJrdStoWDFzd2w3UzhDb2I4bXRYMmFwS3lRWWNKUzErdHk0S3dI?=
+ =?utf-8?B?WFpCNW16a2R0MlNaVU5CL2FNdHp3Y05YKzI2ZDdIUUsrb1U5STVjWDJCUEhE?=
+ =?utf-8?B?STdwc28wMjF3cnhaYldnWm1JWHNaKzdDeEs4dG5pTjBTTkRBamN1RDZ3SjQy?=
+ =?utf-8?B?dzdYb1gyd3ZSVlN2Wkx0WXlTRTZWaVN5KzY0MGFTeWgwRE4rN1ppa2NNQnY2?=
+ =?utf-8?B?NmRqaDdiUzNubXl2US9leHN2R3B3S0FweWJQVU5oaHVMUHg0UVhROWhsZnFs?=
+ =?utf-8?B?NS9ON21meXA2ekwrTVIvRVJONEM1RlIvQWJ1dW9ZZWpXMzBpNTZDeVJCdUtw?=
+ =?utf-8?B?V3hsVS9jcmZjbmsvUUFXazZJRVlQUUU5TWpUOTdwN3Y4SDk0NEtybFlQS3kr?=
+ =?utf-8?B?UGlZSGtieFFGeGc4eXZtU1pFSlNGelUzdGh1OXFEUGdYT3JPQlNUUmRDMXFT?=
+ =?utf-8?B?WWUxMEkvSzd6VU0vL1Y4eFVQazY2MytMa1pwbjJ2TWFPTFl6Zkh2ZExoaW5M?=
+ =?utf-8?B?c1VKdlZBVnluZW91Szl4VXNROHpOa0x2RldZeCtrajlTNjVXT1N3NVdqRUdu?=
+ =?utf-8?B?VEx1cEdndEREOGE3dnFhaUwrRkRaMXBXRk5zUm5VNmMweENKdmQvdXFNMXl1?=
+ =?utf-8?B?NXBIWHdNZFR0elNPRFIyV3Y0VjdHL0xKWGFYNzdtQ0hEdmdNNTFQV2dsalZF?=
+ =?utf-8?B?SFhab09mdjVNdVl2OHRUa0FTcUJoUHJyUk5rczlSdWpZRS9vUnhaZko4T1E2?=
+ =?utf-8?B?bGpXL3ordjlMZUFzRFdweUFNMk9WZXhiMHZTQzRIeWQ2cFMwMlBXeDNjZndL?=
+ =?utf-8?B?OStUTW5LMkcvTEkrQWtBNDl6ak5MaVlBTnRocDYzQllqd2Q3WFpZZ2V4bW1V?=
+ =?utf-8?B?SENSQlRJdzBlaVhoTEZEYmcrZjNpMndjWUNva29tU3dhRHpiN3QzS1Z5YVEx?=
+ =?utf-8?B?Q1RBQW5rUlg4VVFWV01OTEk2YVg5ekpZQlFLa2wxREF0Qmo4bGFGQzg5emtz?=
+ =?utf-8?B?LzJ0YW05OER0eXBpQkdNZzRYb0hMNTVEelczQno4cVp1OEJBajNaSWJXdWg1?=
+ =?utf-8?B?akN5dVp3WTJrMXdieS96MTRqSFRuWlM2S252OTViVTdQbzVEQytFSzVLYi9a?=
+ =?utf-8?B?dmxPRlhxdFFGcmxTS2czcjl2Z1lkTkNEZlFuUmFQd2lLMzFRQUhIeDd3eHNO?=
+ =?utf-8?B?R3ZDeFMyd0tmaDVmdEp3Yng0UHRBeURqZzM4TVR4UjIwS2RTOVZZZktubkor?=
+ =?utf-8?B?aHFTRW1GUkpnYWd5UU9NcWQxSWhBc2ZPUGNuUUdYaUdaT1g5dmRxc1Jud2kr?=
+ =?utf-8?B?MFgrcEpXYnVDTlJIS013SFR1Qk9XUHJDZlI2b0Vld0kzbzVVTFhuOG5MVWxl?=
+ =?utf-8?B?Z0EvU2FzSFlSc2x2NEIrZHFwRTJOazY3OTFHSHdHQ2Ztam1uN3pjaWZzc0lO?=
+ =?utf-8?B?bkp0TE9UM3RIQXRRUG5EOVdhNGtLaFZ0RisrR0RrMUFzdWNkMmw3U01jMEty?=
+ =?utf-8?B?ZEs4MTBTN1lhUUNFRnUwb1JxenIrcXVzNGdrdmxCWVE0cXRBMXVYL0dXZm1X?=
+ =?utf-8?B?NlRrU0ExMXhNRk5pMTRHR3FlUmZ0MGZ2eVk5ZlFMYW9WVlgyWXJDcVY4YWlH?=
+ =?utf-8?Q?xO9k7qfIl6INur4do8+ijcCq9?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2b12b684-38db-4fdf-2ebc-08dd9933fee3
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 May 2025 13:24:35.6782
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: YP+DzqvkFUv6+gNrw3bG02g5n7WttWns/O2JtGUhr2ML1VmckM7r6Y2OPCduscNj
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7247
 
-All functions in kvm/gmap.c fit better in kvm/pv.c instead.
-Move and rename them appropriately, then delete the now empty
-kvm/gmap.c and kvm/gmap.h.
+On 5/22/25 15:16, Philipp Stanner wrote:
+> On Thu, 2025-05-22 at 15:09 +0200, Christian König wrote:
+>> On 5/22/25 14:59, Danilo Krummrich wrote:
+>>> On Thu, May 22, 2025 at 02:34:33PM +0200, Christian König wrote:
+>>>> See all the functions inside include/linux/dma-fence.h can be
+>>>> used by everybody. It's basically the public interface of the
+>>>> dma_fence object.
+>>>
+>>> As you write below, in certain cases it is valid to call this from
+>>> drivers, so
+>>> it's not unreasonable to have it as part of the public API.
+>>
+>> The question is from which drivers?
+>>
+>>>> So testing if a fence is signaled without calling the callback is
+>>>> only allowed by whoever implemented the fence.
+>>>>
+>>>> In other words nouveau can test nouveau fences, i915 can test
+>>>> i915 fences, amdgpu can test amdgpu fences etc... But if you have
+>>>> the wrapper that makes it officially allowed that nouveau starts
+>>>> testing i915 fences and that would be problematic.
+>>>
+>>> In general, I like the  __dma_fence_is_signaled() helper, because
+>>> this way we
+>>> can document in which cases it is allowed to be used, i.e. the ones
+>>> you descibe
+>>> above.
+>>>
+>>> test_bit() can be called by anyone and there is no documentation
+>>> comment
+>>> explaining that it is only allowed under certain conditions.
+>>
+>> That's a rather good argument.
+>>
+>>> Having the __dma_fence_is_signaled() helper properly documented
+>>> could get you
+>>> rid of having to explain in which case the test_bit() dance is
+>>> allowed to do
+>>> over and over again. :-)
+>>
+>> That's an even better argument. 
+>>
+>>> I also think the name is good, since the '__' prefix already
+>>> implies that there
+>>> are some restrictions on the use of this helper.
+>>
+>> I'm still hesitating. Adding something to the API always made it
+>> usable by everybody.
+>>
+>> Now suddenly saying we add that to the include/linux/dma-fence.h
+>> header but only certainly code can use it still sounds questionable
+>> to me.
+> 
+> If I understand the current code correctly, the documentation state and
+> the question "which driver is allowed to do it?" is the same, because
+> the documentation for the signaled callback doesn't specify that:
+> 
+> 
+> 	/**
+> 	 * @signaled:
+> 	 *
+> 	 * Peek whether the fence is signaled, as a fastpath optimization for
+> 	 * e.g. dma_fence_wait() or dma_fence_add_callback(). Note that this
+> 	 * callback does not need to make any guarantees beyond that a fence
+> 	 * once indicates as signalled must always return true from this
+> 	 * callback. This callback may return false even if the fence has
+> 	 * completed already, in this case information hasn't propogated throug
+> 	 * the system yet. See also dma_fence_is_signaled().
+> 	 *
+> 	 * May set &dma_fence.error if returning true.
+> 	 *
+> 	 * This callback is optional.
+> 	 */
+> 	bool (*signaled)(struct dma_fence *fence);
+> 
+> 
+> "optional". What if I don't ipmlement it? Who should implement it?
+> 
+> If the callback is optional, then dma_fence_is_signaled() is the same
+> as __dma_fence_is_signaled().
+> 
+> IOW, it already needs to be better documented who needs to implement
+> the callback and who doesn't. If we get clarity on that, we also get
+> clarity on who may use __dma_fence_is_signaled().
 
-Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Reviewed-by: Nina Schoetterl-Glausch <nsg@linux.ibm.com>
----
- arch/s390/kernel/uv.c     |  12 ++--
- arch/s390/kvm/Makefile    |   2 +-
- arch/s390/kvm/gaccess.c   |   3 +-
- arch/s390/kvm/gmap-vsie.c |   1 -
- arch/s390/kvm/gmap.c      | 121 --------------------------------------
- arch/s390/kvm/gmap.h      |  39 ------------
- arch/s390/kvm/intercept.c |  10 +---
- arch/s390/kvm/kvm-s390.c  |   5 +-
- arch/s390/kvm/kvm-s390.h  |  42 +++++++++++++
- arch/s390/kvm/pv.c        |  61 ++++++++++++++++++-
- arch/s390/kvm/vsie.c      |  19 +++++-
- 11 files changed, 133 insertions(+), 182 deletions(-)
- delete mode 100644 arch/s390/kvm/gmap.c
- delete mode 100644 arch/s390/kvm/gmap.h
+Well there is no need to implement it, but when it is implemented the caller *must* call it when polling.
 
-diff --git a/arch/s390/kernel/uv.c b/arch/s390/kernel/uv.c
-index 9a5d5be8acf4..644c110287c4 100644
---- a/arch/s390/kernel/uv.c
-+++ b/arch/s390/kernel/uv.c
-@@ -135,7 +135,7 @@ int uv_destroy_folio(struct folio *folio)
- {
- 	int rc;
- 
--	/* See gmap_make_secure(): large folios cannot be secure */
-+	/* Large folios cannot be secure */
- 	if (unlikely(folio_test_large(folio)))
- 		return 0;
- 
-@@ -184,7 +184,7 @@ int uv_convert_from_secure_folio(struct folio *folio)
- {
- 	int rc;
- 
--	/* See gmap_make_secure(): large folios cannot be secure */
-+	/* Large folios cannot be secure */
- 	if (unlikely(folio_test_large(folio)))
- 		return 0;
- 
-@@ -403,15 +403,15 @@ EXPORT_SYMBOL_GPL(make_hva_secure);
- 
- /*
-  * To be called with the folio locked or with an extra reference! This will
-- * prevent gmap_make_secure from touching the folio concurrently. Having 2
-- * parallel arch_make_folio_accessible is fine, as the UV calls will become a
-- * no-op if the folio is already exported.
-+ * prevent kvm_s390_pv_make_secure() from touching the folio concurrently.
-+ * Having 2 parallel arch_make_folio_accessible is fine, as the UV calls will
-+ * become a no-op if the folio is already exported.
-  */
- int arch_make_folio_accessible(struct folio *folio)
- {
- 	int rc = 0;
- 
--	/* See gmap_make_secure(): large folios cannot be secure */
-+	/* Large folios cannot be secure */
- 	if (unlikely(folio_test_large(folio)))
- 		return 0;
- 
-diff --git a/arch/s390/kvm/Makefile b/arch/s390/kvm/Makefile
-index f0ffe874adc2..9a723c48b05a 100644
---- a/arch/s390/kvm/Makefile
-+++ b/arch/s390/kvm/Makefile
-@@ -8,7 +8,7 @@ include $(srctree)/virt/kvm/Makefile.kvm
- ccflags-y := -Ivirt/kvm -Iarch/s390/kvm
- 
- kvm-y += kvm-s390.o intercept.o interrupt.o priv.o sigp.o
--kvm-y += diag.o gaccess.o guestdbg.o vsie.o pv.o gmap.o gmap-vsie.o
-+kvm-y += diag.o gaccess.o guestdbg.o vsie.o pv.o gmap-vsie.o
- 
- kvm-$(CONFIG_VFIO_PCI_ZDEV_KVM) += pci.o
- obj-$(CONFIG_KVM) += kvm.o
-diff --git a/arch/s390/kvm/gaccess.c b/arch/s390/kvm/gaccess.c
-index f6fded15633a..e23670e1949c 100644
---- a/arch/s390/kvm/gaccess.c
-+++ b/arch/s390/kvm/gaccess.c
-@@ -16,9 +16,10 @@
- #include <asm/gmap.h>
- #include <asm/dat-bits.h>
- #include "kvm-s390.h"
--#include "gmap.h"
- #include "gaccess.h"
- 
-+#define GMAP_SHADOW_FAKE_TABLE 1ULL
-+
- /*
-  * vaddress union in order to easily decode a virtual address into its
-  * region first index, region second index etc. parts.
-diff --git a/arch/s390/kvm/gmap-vsie.c b/arch/s390/kvm/gmap-vsie.c
-index a6d1dbb04c97..56ef153eb8fe 100644
---- a/arch/s390/kvm/gmap-vsie.c
-+++ b/arch/s390/kvm/gmap-vsie.c
-@@ -22,7 +22,6 @@
- #include <asm/uv.h>
- 
- #include "kvm-s390.h"
--#include "gmap.h"
- 
- /**
-  * gmap_find_shadow - find a specific asce in the list of shadow tables
-diff --git a/arch/s390/kvm/gmap.c b/arch/s390/kvm/gmap.c
-deleted file mode 100644
-index 6d8944d1b4a0..000000000000
---- a/arch/s390/kvm/gmap.c
-+++ /dev/null
-@@ -1,121 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--/*
-- * Guest memory management for KVM/s390
-- *
-- * Copyright IBM Corp. 2008, 2020, 2024
-- *
-- *    Author(s): Claudio Imbrenda <imbrenda@linux.ibm.com>
-- *               Martin Schwidefsky <schwidefsky@de.ibm.com>
-- *               David Hildenbrand <david@redhat.com>
-- *               Janosch Frank <frankja@linux.vnet.ibm.com>
-- */
--
--#include <linux/compiler.h>
--#include <linux/kvm.h>
--#include <linux/kvm_host.h>
--#include <linux/pgtable.h>
--#include <linux/pagemap.h>
--
--#include <asm/lowcore.h>
--#include <asm/gmap.h>
--#include <asm/uv.h>
--
--#include "gmap.h"
--
--/**
-- * gmap_make_secure() - make one guest page secure
-- * @gmap: the guest gmap
-- * @gaddr: the guest address that needs to be made secure
-- * @uvcb: the UVCB specifying which operation needs to be performed
-- *
-- * Context: needs to be called with kvm->srcu held.
-- * Return: 0 on success, < 0 in case of error.
-- */
--int gmap_make_secure(struct gmap *gmap, unsigned long gaddr, void *uvcb)
--{
--	struct kvm *kvm = gmap->private;
--	unsigned long vmaddr;
--
--	lockdep_assert_held(&kvm->srcu);
--
--	vmaddr = gfn_to_hva(kvm, gpa_to_gfn(gaddr));
--	if (kvm_is_error_hva(vmaddr))
--		return -EFAULT;
--	return make_hva_secure(gmap->mm, vmaddr, uvcb);
--}
--
--int gmap_convert_to_secure(struct gmap *gmap, unsigned long gaddr)
--{
--	struct uv_cb_cts uvcb = {
--		.header.cmd = UVC_CMD_CONV_TO_SEC_STOR,
--		.header.len = sizeof(uvcb),
--		.guest_handle = gmap->guest_handle,
--		.gaddr = gaddr,
--	};
--
--	return gmap_make_secure(gmap, gaddr, &uvcb);
--}
--
--/**
-- * __gmap_destroy_page() - Destroy a guest page.
-- * @gmap: the gmap of the guest
-- * @page: the page to destroy
-- *
-- * An attempt will be made to destroy the given guest page. If the attempt
-- * fails, an attempt is made to export the page. If both attempts fail, an
-- * appropriate error is returned.
-- *
-- * Context: must be called holding the mm lock for gmap->mm
-- */
--static int __gmap_destroy_page(struct gmap *gmap, struct page *page)
--{
--	struct folio *folio = page_folio(page);
--	int rc;
--
--	/*
--	 * See gmap_make_secure(): large folios cannot be secure. Small
--	 * folio implies FW_LEVEL_PTE.
--	 */
--	if (folio_test_large(folio))
--		return -EFAULT;
--
--	rc = uv_destroy_folio(folio);
--	/*
--	 * Fault handlers can race; it is possible that two CPUs will fault
--	 * on the same secure page. One CPU can destroy the page, reboot,
--	 * re-enter secure mode and import it, while the second CPU was
--	 * stuck at the beginning of the handler. At some point the second
--	 * CPU will be able to progress, and it will not be able to destroy
--	 * the page. In that case we do not want to terminate the process,
--	 * we instead try to export the page.
--	 */
--	if (rc)
--		rc = uv_convert_from_secure_folio(folio);
--
--	return rc;
--}
--
--/**
-- * gmap_destroy_page() - Destroy a guest page.
-- * @gmap: the gmap of the guest
-- * @gaddr: the guest address to destroy
-- *
-- * An attempt will be made to destroy the given guest page. If the attempt
-- * fails, an attempt is made to export the page. If both attempts fail, an
-- * appropriate error is returned.
-- *
-- * Context: may sleep.
-- */
--int gmap_destroy_page(struct gmap *gmap, unsigned long gaddr)
--{
--	struct page *page;
--	int rc = 0;
--
--	mmap_read_lock(gmap->mm);
--	page = gfn_to_page(gmap->private, gpa_to_gfn(gaddr));
--	if (page)
--		rc = __gmap_destroy_page(gmap, page);
--	kvm_release_page_clean(page);
--	mmap_read_unlock(gmap->mm);
--	return rc;
--}
-diff --git a/arch/s390/kvm/gmap.h b/arch/s390/kvm/gmap.h
-deleted file mode 100644
-index c8f031c9ea5f..000000000000
---- a/arch/s390/kvm/gmap.h
-+++ /dev/null
-@@ -1,39 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/*
-- *  KVM guest address space mapping code
-- *
-- *    Copyright IBM Corp. 2007, 2016, 2025
-- *    Author(s): Martin Schwidefsky <schwidefsky@de.ibm.com>
-- *               Claudio Imbrenda <imbrenda@linux.ibm.com>
-- */
--
--#ifndef ARCH_KVM_S390_GMAP_H
--#define ARCH_KVM_S390_GMAP_H
--
--#define GMAP_SHADOW_FAKE_TABLE 1ULL
--
--int gmap_make_secure(struct gmap *gmap, unsigned long gaddr, void *uvcb);
--int gmap_convert_to_secure(struct gmap *gmap, unsigned long gaddr);
--int gmap_destroy_page(struct gmap *gmap, unsigned long gaddr);
--struct gmap *gmap_shadow(struct gmap *parent, unsigned long asce, int edat_level);
--
--/**
-- * gmap_shadow_valid - check if a shadow guest address space matches the
-- *                     given properties and is still valid
-- * @sg: pointer to the shadow guest address space structure
-- * @asce: ASCE for which the shadow table is requested
-- * @edat_level: edat level to be used for the shadow translation
-- *
-- * Returns 1 if the gmap shadow is still valid and matches the given
-- * properties, the caller can continue using it. Returns 0 otherwise, the
-- * caller has to request a new shadow gmap in this case.
-- *
-- */
--static inline int gmap_shadow_valid(struct gmap *sg, unsigned long asce, int edat_level)
--{
--	if (sg->removed)
--		return 0;
--	return sg->orig_asce == asce && sg->edat_level == edat_level;
--}
--
--#endif
-diff --git a/arch/s390/kvm/intercept.c b/arch/s390/kvm/intercept.c
-index b4834bd4d216..c7908950c1f4 100644
---- a/arch/s390/kvm/intercept.c
-+++ b/arch/s390/kvm/intercept.c
-@@ -16,13 +16,11 @@
- #include <asm/irq.h>
- #include <asm/sysinfo.h>
- #include <asm/uv.h>
--#include <asm/gmap.h>
- 
- #include "kvm-s390.h"
- #include "gaccess.h"
- #include "trace.h"
- #include "trace-s390.h"
--#include "gmap.h"
- 
- u8 kvm_s390_get_ilen(struct kvm_vcpu *vcpu)
- {
-@@ -546,7 +544,7 @@ static int handle_pv_uvc(struct kvm_vcpu *vcpu)
- 			  guest_uvcb->header.cmd);
- 		return 0;
- 	}
--	rc = gmap_make_secure(vcpu->arch.gmap, uvcb.gaddr, &uvcb);
-+	rc = kvm_s390_pv_make_secure(vcpu->kvm, uvcb.gaddr, &uvcb);
- 	/*
- 	 * If the unpin did not succeed, the guest will exit again for the UVC
- 	 * and we will retry the unpin.
-@@ -654,10 +652,8 @@ int kvm_handle_sie_intercept(struct kvm_vcpu *vcpu)
- 		break;
- 	case ICPT_PV_PREF:
- 		rc = 0;
--		gmap_convert_to_secure(vcpu->arch.gmap,
--				       kvm_s390_get_prefix(vcpu));
--		gmap_convert_to_secure(vcpu->arch.gmap,
--				       kvm_s390_get_prefix(vcpu) + PAGE_SIZE);
-+		kvm_s390_pv_convert_to_secure(vcpu->kvm, kvm_s390_get_prefix(vcpu));
-+		kvm_s390_pv_convert_to_secure(vcpu->kvm, kvm_s390_get_prefix(vcpu) + PAGE_SIZE);
- 		break;
- 	default:
- 		return -EOPNOTSUPP;
-diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index 10cfc047525d..d5ad10791c25 100644
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -53,7 +53,6 @@
- #include "kvm-s390.h"
- #include "gaccess.h"
- #include "pci.h"
--#include "gmap.h"
- 
- #define CREATE_TRACE_POINTS
- #include "trace.h"
-@@ -4976,7 +4975,7 @@ static int vcpu_post_run_handle_fault(struct kvm_vcpu *vcpu)
- 		 * previous protected guest. The old pages need to be destroyed
- 		 * so the new guest can use them.
- 		 */
--		if (gmap_destroy_page(vcpu->arch.gmap, gaddr)) {
-+		if (kvm_s390_pv_destroy_page(vcpu->kvm, gaddr)) {
- 			/*
- 			 * Either KVM messed up the secure guest mapping or the
- 			 * same page is mapped into multiple secure guests.
-@@ -4998,7 +4997,7 @@ static int vcpu_post_run_handle_fault(struct kvm_vcpu *vcpu)
- 		 * guest has not been imported yet. Try to import the page into
- 		 * the protected guest.
- 		 */
--		rc = gmap_convert_to_secure(vcpu->arch.gmap, gaddr);
-+		rc = kvm_s390_pv_convert_to_secure(vcpu->kvm, gaddr);
- 		if (rc == -EINVAL)
- 			send_sig(SIGSEGV, current, 0);
- 		if (rc != -ENXIO)
-diff --git a/arch/s390/kvm/kvm-s390.h b/arch/s390/kvm/kvm-s390.h
-index 8d3bbb2dd8d2..c44fe0c3a097 100644
---- a/arch/s390/kvm/kvm-s390.h
-+++ b/arch/s390/kvm/kvm-s390.h
-@@ -308,6 +308,9 @@ int kvm_s390_pv_dump_stor_state(struct kvm *kvm, void __user *buff_user,
- 				u64 *gaddr, u64 buff_user_len, u16 *rc, u16 *rrc);
- int kvm_s390_pv_dump_complete(struct kvm *kvm, void __user *buff_user,
- 			      u16 *rc, u16 *rrc);
-+int kvm_s390_pv_destroy_page(struct kvm *kvm, unsigned long gaddr);
-+int kvm_s390_pv_convert_to_secure(struct kvm *kvm, unsigned long gaddr);
-+int kvm_s390_pv_make_secure(struct kvm *kvm, unsigned long gaddr, void *uvcb);
- 
- static inline u64 kvm_s390_pv_get_handle(struct kvm *kvm)
- {
-@@ -319,6 +322,41 @@ static inline u64 kvm_s390_pv_cpu_get_handle(struct kvm_vcpu *vcpu)
- 	return vcpu->arch.pv.handle;
- }
- 
-+/**
-+ * __kvm_s390_pv_destroy_page() - Destroy a guest page.
-+ * @page: the page to destroy
-+ *
-+ * An attempt will be made to destroy the given guest page. If the attempt
-+ * fails, an attempt is made to export the page. If both attempts fail, an
-+ * appropriate error is returned.
-+ *
-+ * Context: must be called holding the mm lock for gmap->mm
-+ */
-+static inline int __kvm_s390_pv_destroy_page(struct page *page)
-+{
-+	struct folio *folio = page_folio(page);
-+	int rc;
-+
-+	/* Large folios cannot be secure. Small folio implies FW_LEVEL_PTE. */
-+	if (folio_test_large(folio))
-+		return -EFAULT;
-+
-+	rc = uv_destroy_folio(folio);
-+	/*
-+	 * Fault handlers can race; it is possible that two CPUs will fault
-+	 * on the same secure page. One CPU can destroy the page, reboot,
-+	 * re-enter secure mode and import it, while the second CPU was
-+	 * stuck at the beginning of the handler. At some point the second
-+	 * CPU will be able to progress, and it will not be able to destroy
-+	 * the page. In that case we do not want to terminate the process,
-+	 * we instead try to export the page.
-+	 */
-+	if (rc)
-+		rc = uv_convert_from_secure_folio(folio);
-+
-+	return rc;
-+}
-+
- /* implemented in interrupt.c */
- int kvm_s390_handle_wait(struct kvm_vcpu *vcpu);
- void kvm_s390_vcpu_wakeup(struct kvm_vcpu *vcpu);
-@@ -398,6 +436,10 @@ void kvm_s390_vsie_gmap_notifier(struct gmap *gmap, unsigned long start,
- 				 unsigned long end);
- void kvm_s390_vsie_init(struct kvm *kvm);
- void kvm_s390_vsie_destroy(struct kvm *kvm);
-+int gmap_shadow_valid(struct gmap *sg, unsigned long asce, int edat_level);
-+
-+/* implemented in gmap-vsie.c */
-+struct gmap *gmap_shadow(struct gmap *parent, unsigned long asce, int edat_level);
- 
- /* implemented in sigp.c */
- int kvm_s390_handle_sigp(struct kvm_vcpu *vcpu);
-diff --git a/arch/s390/kvm/pv.c b/arch/s390/kvm/pv.c
-index 22c012aa5206..14c330ec8ceb 100644
---- a/arch/s390/kvm/pv.c
-+++ b/arch/s390/kvm/pv.c
-@@ -17,7 +17,6 @@
- #include <linux/sched/mm.h>
- #include <linux/mmu_notifier.h>
- #include "kvm-s390.h"
--#include "gmap.h"
- 
- bool kvm_s390_pv_is_protected(struct kvm *kvm)
- {
-@@ -33,6 +32,64 @@ bool kvm_s390_pv_cpu_is_protected(struct kvm_vcpu *vcpu)
- }
- EXPORT_SYMBOL_GPL(kvm_s390_pv_cpu_is_protected);
- 
-+/**
-+ * kvm_s390_pv_make_secure() - make one guest page secure
-+ * @kvm: the guest
-+ * @gaddr: the guest address that needs to be made secure
-+ * @uvcb: the UVCB specifying which operation needs to be performed
-+ *
-+ * Context: needs to be called with kvm->srcu held.
-+ * Return: 0 on success, < 0 in case of error.
-+ */
-+int kvm_s390_pv_make_secure(struct kvm *kvm, unsigned long gaddr, void *uvcb)
-+{
-+	unsigned long vmaddr;
-+
-+	lockdep_assert_held(&kvm->srcu);
-+
-+	vmaddr = gfn_to_hva(kvm, gpa_to_gfn(gaddr));
-+	if (kvm_is_error_hva(vmaddr))
-+		return -EFAULT;
-+	return make_hva_secure(kvm->mm, vmaddr, uvcb);
-+}
-+
-+int kvm_s390_pv_convert_to_secure(struct kvm *kvm, unsigned long gaddr)
-+{
-+	struct uv_cb_cts uvcb = {
-+		.header.cmd = UVC_CMD_CONV_TO_SEC_STOR,
-+		.header.len = sizeof(uvcb),
-+		.guest_handle = kvm_s390_pv_get_handle(kvm),
-+		.gaddr = gaddr,
-+	};
-+
-+	return kvm_s390_pv_make_secure(kvm, gaddr, &uvcb);
-+}
-+
-+/**
-+ * kvm_s390_pv_destroy_page() - Destroy a guest page.
-+ * @kvm: the guest
-+ * @gaddr: the guest address to destroy
-+ *
-+ * An attempt will be made to destroy the given guest page. If the attempt
-+ * fails, an attempt is made to export the page. If both attempts fail, an
-+ * appropriate error is returned.
-+ *
-+ * Context: may sleep.
-+ */
-+int kvm_s390_pv_destroy_page(struct kvm *kvm, unsigned long gaddr)
-+{
-+	struct page *page;
-+	int rc = 0;
-+
-+	mmap_read_lock(kvm->mm);
-+	page = gfn_to_page(kvm, gpa_to_gfn(gaddr));
-+	if (page)
-+		rc = __kvm_s390_pv_destroy_page(page);
-+	kvm_release_page_clean(page);
-+	mmap_read_unlock(kvm->mm);
-+	return rc;
-+}
-+
- /**
-  * struct pv_vm_to_be_destroyed - Represents a protected VM that needs to
-  * be destroyed
-@@ -638,7 +695,7 @@ static int unpack_one(struct kvm *kvm, unsigned long addr, u64 tweak,
- 		.tweak[0] = tweak,
- 		.tweak[1] = offset,
- 	};
--	int ret = gmap_make_secure(kvm->arch.gmap, addr, &uvcb);
-+	int ret = kvm_s390_pv_make_secure(kvm, addr, &uvcb);
- 	unsigned long vmaddr;
- 	bool unlocked;
- 
-diff --git a/arch/s390/kvm/vsie.c b/arch/s390/kvm/vsie.c
-index a78df3a4f353..13a9661d2b28 100644
---- a/arch/s390/kvm/vsie.c
-+++ b/arch/s390/kvm/vsie.c
-@@ -23,7 +23,6 @@
- #include <asm/facility.h>
- #include "kvm-s390.h"
- #include "gaccess.h"
--#include "gmap.h"
- 
- enum vsie_page_flags {
- 	VSIE_PAGE_IN_USE = 0,
-@@ -68,6 +67,24 @@ struct vsie_page {
- 	__u8 fac[S390_ARCH_FAC_LIST_SIZE_BYTE];	/* 0x0800 */
- };
- 
-+/**
-+ * gmap_shadow_valid() - check if a shadow guest address space matches the
-+ *                       given properties and is still valid
-+ * @sg: pointer to the shadow guest address space structure
-+ * @asce: ASCE for which the shadow table is requested
-+ * @edat_level: edat level to be used for the shadow translation
-+ *
-+ * Returns 1 if the gmap shadow is still valid and matches the given
-+ * properties, the caller can continue using it. Returns 0 otherwise; the
-+ * caller has to request a new shadow gmap in this case.
-+ */
-+int gmap_shadow_valid(struct gmap *sg, unsigned long asce, int edat_level)
-+{
-+	if (sg->removed)
-+		return 0;
-+	return sg->orig_asce == asce && sg->edat_level == edat_level;
-+}
-+
- /* trigger a validity icpt for the given scb */
- static int set_validity_icpt(struct kvm_s390_sie_block *scb,
- 			     __u16 reason_code)
--- 
-2.49.0
+IIRC the background that we didn't allowed this was that we already had the case that users only looked at the signaling bit and then where surprised that it never changed.
+
+Regards,
+Christian.
+
+> 
+> 
+> P.
+> 
+>>
+>> Regards,
+>> Christian.
+> 
 
