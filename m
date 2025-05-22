@@ -1,161 +1,136 @@
-Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29FE823371B;
-	Thu, 22 May 2025 12:00:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3D6828A70A;
+	Thu, 22 May 2025 12:00:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747915239; cv=none; b=gMq+Q0VjA2zWmYad+kMAnYg9MTbH7vp+gC1FaG4stADfNwX1I48xOeKemO/KTt1igaUFH1AJ4CZSqoUW9Dhc22A5lJVl+Qa2YKvUUB4x19UdD1fxFneeDElEJ/DeqvxfdFSK5rPgPW37nuVeay68yFQVkBrrtJRnfwJm0UfxCQQ=
+	t=1747915243; cv=none; b=nM5kpv8eRrx0N1CVA16apfsjoQ45sAsT26WY8lnYzPighD+YJuKDmBJdN5V1gj1s/g96BHNUVv8EQI2U8FDWSjs/P47CKZO5maizMw1TtFId/mFol4DvAxlGiiw7i+dZ2njXUdxiSuu8+FuXAGRPl8oYfD6dMc3z5L694U0KmOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747915239; c=relaxed/simple;
-	bh=TZJBtckr+0YhiYU4JYBefTLIvZ1GesF7M+rIRbesUv8=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=Df0S88K3fm1X5DuRhboaPar+P2uYYzdFx09pDX6GoR5FIOSyAdEbhA61jUoAzkUw3Sg6UTrwXghBU5QuJyycdVqw36/ek2WCTsLelNYF2MO8Ee4McxY7VTwL9IO1lDnrKktl8iy9sQyzR5eK+L4czjHOvz4ioPdI13xf93GeiQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca; spf=pass smtp.mailfrom=squebb.ca; dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b=rGramiku; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=aszY0/Ka; arc=none smtp.client-ip=103.168.172.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=squebb.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=squebb.ca
+	s=arc-20240116; t=1747915243; c=relaxed/simple;
+	bh=Z4X0XCrbM0mnB5ZH4yaTgRVEEMoqTq9XQP/4zfL/KUE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vn1aw05fY5unknkMlj3Uvb+oIRHY+2SRsIhyLi0iokn2qe6UOWxcx/7/xpu6e7lQSH7RZnbPdAuno0DLWHMe5hCw1/yq5JXheZo52Kq4PT2dnoBtl6fbyzAE89kfNTPOXeA53X37XiLnL30YBYOA3inO2Wb81Du0bKgU/o1keQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com; spf=pass smtp.mailfrom=pankajraghav.com; dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b=Pkv878VW; arc=none smtp.client-ip=80.241.56.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pankajraghav.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=squebb.ca header.i=@squebb.ca header.b="rGramiku";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="aszY0/Ka"
-Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
-	by mailfout.phl.internal (Postfix) with ESMTP id 36BEC1380F1F;
-	Thu, 22 May 2025 08:00:36 -0400 (EDT)
-Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-12.internal (MEProxy); Thu, 22 May 2025 08:00:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=squebb.ca; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1747915236;
-	 x=1748001636; bh=R2+3bXIxZtLULTw/4QW5SXosCY7HWSreFWCjsRAqiqQ=; b=
-	rGramikuRirMGNPVClxY5GMAE9dNzHy1QeHygqyEfCTO73UlEPdRb1GZxUGBOajJ
-	1ccd6eFQ2vFQvU6fOt4xwgj0Qn2DtAVItrbYW1ZAjqvTH/+Hu9qjE8mBgi6455kV
-	Q5BR/kUGfX3wqKJqIvr/8FCa/4nYUGbxPSuSDXMByoL47uBF1AUlKy+I9OanI59r
-	A1047NWf+zqwkVrYSn7WQjplK7On8v4VilW5EksZ27PgKiJp/gCjcssFEVt9nzoS
-	/3SzBHfWXxx/rdY8EpSn79vMWiG6gOkqSXg4/Fln3i5Xfn+7RheUzckkHXPjoEFT
-	KPA80/bIeK2t4nFiwjfWbQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1747915236; x=
-	1748001636; bh=R2+3bXIxZtLULTw/4QW5SXosCY7HWSreFWCjsRAqiqQ=; b=a
-	szY0/KaQsutSJRjnfRzSFy0lHKhm/GzvDdNCvSZXql3nxPzGe0iipmQgcTKslkTf
-	DvQ1Z8kUizgtkVWwF4J82ckHqxFlmUZsQRc9w2AprpUar7sOrNPZ1gwnlqtCLDyL
-	PVE9Ut/UYAgl6GPEtHX3RdWfOfAlWtmBIk4s1nB5DMWqe0zfl4Dzzk3wytcLxVnv
-	j8SHAYAqmg1cpHmihqNLN3lwzriCckAHwMMAETRqCVB3gfIuEUxnxjFulSNxNxCK
-	TlpjIT/iVErGDBds8KcbDwkYetyLWqBTfQYA1wK/cOT9sjjVnCjdCex4HRk1b+gp
-	cMTZ9tkRZgakRQ2QtaJ0A==
-X-ME-Sender: <xms:4hEvaLVjIdjF8BSjiHszfeyLjcQXXg4Wal-S_mlwuYgGXMTjdPxKLA>
-    <xme:4hEvaDkuni4_LQ1lDcWpz3rtXLNCJg_DZM7Eo7eOk6M2wJy0TXuD1CLc0p-M6B6zR
-    TZI6pfkAH4Ir_YosNE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddtgdehleduucdltddurdegfedvrddttd
-    dmucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgf
-    nhhsuhgsshgtrhhisggvpdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttd
-    enucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgj
-    fhfutgfgsehtqhertdertdejnecuhfhrohhmpedfofgrrhhkucfrvggrrhhsohhnfdcuoe
-    hmphgvrghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggrqeenucggtffrrghtthgv
-    rhhnpefhveekjeeuueekfefhleeljeehuedugfetffdvteekffejudelffdvjeekfeehvd
-    enucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmphgv
-    rghrshhonhdqlhgvnhhovhhosehsqhhuvggssgdrtggrpdhnsggprhgtphhtthhopeduke
-    dpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepmhgrrhhiohdrlhhimhhonhgtihgv
-    lhhlohesrghmugdrtghomhdprhgtphhtthhopehrihgsrghluggrsegthhhrohhmihhumh
-    drohhrghdprhgtphhtthhopehhlhhjuhhnghhgrhestghishgtohdrtghomhdprhgtphht
-    thhopehsvggsrghsthhirghnrdhfrhhitghkvgestgholhhlrggsohhrrgdrtghomhdprh
-    gtphhtthhopehhrghnnhgvlhhothhtrgesghhmrghilhdrtghomhdprhgtphhtthhopeif
-    pggrrhhmihhnsehgmhigrdguvgdprhgtphhtthhopehjohhnrghthhgrnhdrtggrmhgvrh
-    honheshhhurgifvghirdgtohhmpdhrtghpthhtohepuggrvhgvrdhjihgrnhhgsehinhht
-    vghlrdgtohhmpdhrtghpthhtohepmhgthhgvhhgrsgeskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:4hEvaHY8zfhnfEFBLb0x36Mm6hSeEP6nvp17mn71Jx-rzvnbOwh_Fg>
-    <xmx:4hEvaGUuYKnHLqA_zOELro7QZ1Thvp6IuzVz_24fC3HdsD8Gh6R9bQ>
-    <xmx:4hEvaFlDAh_GHTF1gdqbFP7lKTamJd8zJY_5q-B4dfd84uQuDClrPA>
-    <xmx:4hEvaDc_awGxOys5fvnEE7mP4ER2GQqzvbEjfw1D5ya8GcreouxIiA>
-    <xmx:5BEvaGuU4u8mIdopa_Tq35LohciGgxpd01S0DKXRhxhgytx4qzFASm8Y>
-Feedback-ID: ibe194615:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 89D1D2CE005D; Thu, 22 May 2025 08:00:34 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=pankajraghav.com header.i=@pankajraghav.com header.b="Pkv878VW"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4b36LY6tWDz9sX2;
+	Thu, 22 May 2025 14:00:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pankajraghav.com;
+	s=MBO0001; t=1747915238;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YiqNVJ3Ja/qa7EwLGVyAuJ+LbC6RFtVqKpoDvDxemGo=;
+	b=Pkv878VWYaSiGxGtPIxOgTTFm1YVhgzPuTL6FagLP/Z9FzSB5h1tbzrk4qw07Vv9LJMK5y
+	vyxih8RFzNo8TMj7z3HH5GC2HxN57o+ceICE5WE0dVf2oSUE+jSWCrQ7Yset+0BvYKlQCH
+	CE9KfRLIi4SlTX41Tn/oBimuri9Kd7rT1Wy2G2ymVxjxDREGRpaRtNz9bPQwxZ3OZICSrU
+	mt0ETZMnRrfT7pmyW/qnMtMRbvOQtnCXT0H1x6n5w4VAeDH3y/9fQHMA64mdJOgUZr1hmS
+	mPDzZzGytUxb/CKDvMgyjwePoPwUfW72VW2negsBOFtlSo8IzGaFd7BYsW/Mwg==
+Date: Thu, 22 May 2025 14:00:14 +0200
+From: "Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Pankaj Raghav <p.raghav@samsung.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Michal Hocko <mhocko@suse.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Nico Pache <npache@redhat.com>, Dev Jain <dev.jain@arm.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, 
+	"H . Peter Anvin" <hpa@zytor.com>, Zi Yan <ziy@nvidia.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, David Hildenbrand <david@redhat.com>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, "Darrick J . Wong" <djwong@kernel.org>, gost.dev@samsung.com, 
+	hch@lst.de, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	willy@infradead.org, x86@kernel.org, mcgrof@kernel.org
+Subject: Re: [RFC v2 0/2] add THP_HUGE_ZERO_PAGE_ALWAYS config option
+Message-ID: <6lhepdol4nlnht7elb7jx7ot5hhckiegyyl6zeap2hmltdwb5t@ywsaklwnakuh>
+References: <20250522090243.758943-1-p.raghav@samsung.com>
+ <aC8LGDwJXvlDl866@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Tf116baca9747cd23
-Date: Thu, 22 May 2025 08:00:03 -0400
-From: "Mark Pearson" <mpearson-lenovo@squebb.ca>
-To: =?UTF-8?Q?Hanne-Lotta_M=C3=A4enp=C3=A4=C3=A4?= <hannelotta@gmail.com>,
- mchehab@kernel.org, ribalda@chromium.org, hverkuil@xs4all.nl,
- sebastian.fricke@collabora.com, hljunggr@cisco.com, dave.jiang@intel.com,
- jgg@ziepe.ca, saeedm@nvidia.com, Jonathan.Cameron@huawei.com,
- "Jonathan Corbet" <corbet@lwn.net>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- "Limonciello, Mario" <mario.limonciello@amd.com>,
- "Armin Wolf" <W_Armin@gmx.de>, skhan@linuxfoundation.org
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kernel-mentees@lists.linux.dev
-Message-Id: <6554dc5c-55dc-4051-b835-187d9f43cb08@app.fastmail.com>
-In-Reply-To: <20250522115255.137450-4-hannelotta@gmail.com>
-References: <20250522115255.137450-1-hannelotta@gmail.com>
- <20250522115255.137450-4-hannelotta@gmail.com>
-Subject: Re: [PATCH v2 4/4] docs: Fix typos, improve grammar in Userspace API
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aC8LGDwJXvlDl866@kernel.org>
+X-Rspamd-Queue-Id: 4b36LY6tWDz9sX2
 
-On Thu, May 22, 2025, at 7:52 AM, Hanne-Lotta M=C3=A4enp=C3=A4=C3=A4 wro=
-te:
-> Fix a typo and improve wording and punctuation in
-> the documentation for Userspace API.
->
-> Signed-off-by: Hanne-Lotta M=C3=A4enp=C3=A4=C3=A4 <hannelotta@gmail.co=
-m>
-> ---
->
-> Notes:
->     v1 -> v2: No changes
->
->  Documentation/userspace-api/sysfs-platform_profile.rst | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/Documentation/userspace-api/sysfs-platform_profile.rst=20
-> b/Documentation/userspace-api/sysfs-platform_profile.rst
-> index 7f013356118a..6613e188242a 100644
-> --- a/Documentation/userspace-api/sysfs-platform_profile.rst
-> +++ b/Documentation/userspace-api/sysfs-platform_profile.rst
-> @@ -18,9 +18,9 @@ API for selecting the platform profile of these=20
-> automatic mechanisms.
->  Note that this API is only for selecting the platform profile, it is
->  NOT a goal of this API to allow monitoring the resulting performance
->  characteristics. Monitoring performance is best done with device/vend=
-or
-> -specific tools such as e.g. turbostat.
-> +specific tools, e.g. turbostat.
->=20
-> -Specifically when selecting a high performance profile the actual ach=
-ieved
-> +Specifically, when selecting a high performance profile the actual ac=
-hieved
->  performance may be limited by various factors such as: the heat gener=
-ated
->  by other components, room temperature, free air flow at the bottom of=
- a
->  laptop, etc. It is explicitly NOT a goal of this API to let userspace=
- know
-> @@ -44,7 +44,7 @@ added. Drivers which wish to introduce new profile n=
-ames must:
->  "Custom" profile support
->  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->  The platform_profile class also supports profiles advertising a "cust=
-om"
-> -profile. This is intended to be set by drivers when the setttings in =
-the
-> +profile. This is intended to be set by drivers when the settings in t=
-he
->  driver have been modified in a way that a standard profile doesn't re=
-present
->  the current state.
->=20
-> --=20
-> 2.39.5
-Looks good to me.
-Reviewed-by: Mark Pearson <mpearson-lenovo@squebb.ca>
+Hi Mike,
+
+> > Add a config option THP_HUGE_ZERO_PAGE_ALWAYS that will always allocate
+> > the huge_zero_folio, and it will never be freed. This makes using the
+> > huge_zero_folio without having to pass any mm struct and a call to put_folio
+> > in the destructor.
+> 
+> I don't think this config option should be tied to THP. It's perfectly
+> sensible to have a configuration with HUGETLB and without THP.
+>  
+
+Hmm, that makes sense. You mean something like this (untested):
+
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 2e1527580746..d447a9b9eb7d 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -151,8 +151,8 @@ config X86
+        select ARCH_WANT_OPTIMIZE_DAX_VMEMMAP   if X86_64
+        select ARCH_WANT_OPTIMIZE_HUGETLB_VMEMMAP       if X86_64
+        select ARCH_WANT_HUGETLB_VMEMMAP_PREINIT if X86_64
++       select ARCH_WANTS_HUGE_ZERO_PAGE_ALWAYS if X86_64
+        select ARCH_WANTS_THP_SWAP              if X86_64
+-       select ARCH_WANTS_THP_ZERO_PAGE_ALWAYS  if X86_64
+        select ARCH_HAS_PARANOID_L1D_FLUSH
+        select BUILDTIME_TABLE_SORT
+        select CLKEVT_I8253
+diff --git a/mm/Kconfig b/mm/Kconfig
+index a2994e7d55ba..83a5b95a2286 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -823,9 +823,19 @@ config ARCH_WANT_GENERAL_HUGETLB
+ config ARCH_WANTS_THP_SWAP
+        def_bool n
+ 
+-config ARCH_WANTS_THP_ZERO_PAGE_ALWAYS
++config ARCH_WANTS_HUGE_ZERO_PAGE_ALWAYS
+        def_bool n
+ 
++config HUGE_ZERO_PAGE_ALWAYS
++       def_bool y
++       depends on HUGETLB_PAGE && ARCH_WANTS_HUGE_ZERO_PAGE_ALWAYS
++       help
++         Typically huge_zero_folio, which is a huge page of zeroes, is allocated
++         on demand and deallocated when not in use. This option will always
++         allocate huge_zero_folio for zeroing and it is never deallocated.
++         Not suitable for memory constrained systems.
++
++
+ config MM_ID
+        def_bool n
+ 
+@@ -898,15 +908,6 @@ config READ_ONLY_THP_FOR_FS
+          support of file THPs will be developed in the next few release
+          cycles.
+ 
+-config THP_ZERO_PAGE_ALWAYS
+-       def_bool y
+-       depends on TRANSPARENT_HUGEPAGE && ARCH_WANTS_THP_ZERO_PAGE_ALWAYS
+-       help
+-         Typically huge_zero_folio, which is a THP of zeroes, is allocated
+-         on demand and deallocated when not in use. This option will always
+-         allocate huge_zero_folio for zeroing and it is never deallocated.
+-         Not suitable for memory constrained systems.
+-
+ config NO_PAGE_MAPCOUNT
+        bool "No per-page mapcount (EXPERIMENTAL)"
+        help
+
+--
+Pankaj
