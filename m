@@ -1,118 +1,121 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACE181C3C04;
-	Thu, 22 May 2025 09:56:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 129153C38;
+	Thu, 22 May 2025 09:56:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747907762; cv=none; b=Vv5d9aT8nJ8L9lc8BtXbfFxx10xT0UPrJh78E0XQ4gUzutoIeFVwa4I4yDp9JR3hb8oE90jrwjIOEAu77mV4B2ZOe3Dk39BobPNn3vVitAElvbxsJs4Iet8cImbXPYwy4+cGS1MjsgBEUkzq9VI4yH/dHsH4gt2LCAytnLXq0QM=
+	t=1747907796; cv=none; b=ipHVCThUlg2XUcE7yqOmKp+TOlMKCb49rHI9l5d7buNsqC8UsviF6L1cDMUlz8MtUCEIEog8mZOayPC5SKZP3e2mVzZoUAlkxlB2kzCdBfSN9Y9n5UMN48KUecCGv3zETkzGc0mg3vihMpSVk2MZPlWLuyuWIk9b1q3iPRS5cuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747907762; c=relaxed/simple;
-	bh=zZQDvy6Qo42/2W4QwFrXPUZcYGV2s/FRajduLAvDQCw=;
+	s=arc-20240116; t=1747907796; c=relaxed/simple;
+	bh=l+UBCZ90uofbpfwu3YkJzh8e5MpIZHy9Wgl4VOlqqQ8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J+Lfgf7f+44C4TVVhp4Xw/vWDZdcDqaZht+lUnUSxf0IEDHBup5gh3sA7xFzuCufKkrkvr2fp1v/kMDMoWTyuYRrLa9FckJuGzgdfB+SekWcTmPgcg3tLcnHlVfa0IxiL8lbiw4D54nB2u3NrBydgY/hXqSVFQY3eSRGtnSUji0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T+D+mimX; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=uDBf+lfVdHRyiPxybkixwWfyNwWd6uvef5b4bOsrUCn11uiF+C2dB7ogwqQAPwi+/jg/u7qrF6d54X23hw3uVG87cSCqfC9OSESZRwxcw1iSnPkHFabQaecNQaHW6/u7Jjnm5WnLBe1JLBS43WOZt7ha/1orFF3Jg2crbxbiEjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sOGhBB7A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T+D+mimX"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-23179999d4aso7267805ad.1;
-        Thu, 22 May 2025 02:56:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1747907760; x=1748512560; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=G09KB2onuKyHVmfE50lXFfjm4aLc9EdRitHUC4rY5fE=;
-        b=T+D+mimXQ46By4fAZkutHRPKovk9gCqPHKQto/nypip1KEu2bvlhtaQwQ0s+Icz/do
-         mQjSAbdXsOflzFt4QL73H5lA03x4MYJ8GChmX0D8p4vRrC1eyZ0W0zNjYBgSCYmFo2EJ
-         Bu5Yc00O/Y72nN+aGZFxs2QZq0TDOZbcVC5sjk0dKysdhErTP5zshz0LGHk3oRZ1lqv3
-         C4sAufye0lSEgHL7PdZwXn6PKvbKyBypX67v4svSpiyL7g3vStdjdxdQIxgWbaJYxEfw
-         bPphNio599WbK09AsRV0IhhrmQgk0lXGHYjAyQGDDJ03F5QL3EYMXq9EXqZJD1C9jx8O
-         Ky+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747907760; x=1748512560;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=G09KB2onuKyHVmfE50lXFfjm4aLc9EdRitHUC4rY5fE=;
-        b=r7loNg5bKTSHA2YiPiTtu+zvmy7jPC2j+mXYzFRnGBUf13NuqHK/fmLkqYBpum50O7
-         DtwdeYtI5LFiM7XhylwEFVsQToviR2XH1+NuDracaWCAzKyimrEHMtWV/m6tugCjXKJf
-         2aZxsMpW9JSGnU51I9AcsQyOsyo9iSSq/mJwgbTSwAU09lc5z1x5fj4qvwL48nO1tPDu
-         bCG8DsQMQd0/luz9EvaFunlzE+Pg7v7h4H4cDqJCTwj9uPOHY0iXnX8z0EL0UE5IQBcU
-         EswDELAW7+J1oXNSav3wGhpEkimSunEKWEme9nK4D3jycYtSWcf6PM7RNVTvyXaOPf2W
-         kplw==
-X-Forwarded-Encrypted: i=1; AJvYcCV76uNjzKErdG2y3L9Xwxh0kVptu3vvU8+GQW/5TeXsnHc0XNliyf/GBM8L7Mr1LwHeG2iKP1FUuXPo13pG4A8=@vger.kernel.org, AJvYcCVev0TBH15CS65D1FdHkCcklitwgDHiWZi0q2/HWYnYyXoDzjrkpHO0E6bMIT2fG5aVMa+V5VZ07PsnzhQ=@vger.kernel.org, AJvYcCXAAE4xFgPCCUPQ8YW+Iu5PRofMmUwawi1aelOQW4nNsoYSaOpRlUfxPr0g/HhcviiZ1eQaNbAg@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz9TiuonZZzRH5IC1/llKRUSawtWpE4GR9Xqsu5CfVnZRSmTD3I
-	b3o/hXGugEQuFWR8MViLXavfE3fonuCm0+uvFUKDjQfG15fHBG/kaASUqTvCCnjg/Sb+1ZUGXlg
-	D/Io2kvGvuP4h/Ui8xGkVh+xuIQmRzUA=
-X-Gm-Gg: ASbGncshv4oM9h7V4pvwppUa7WK1qD0StpaPvqTa7cdfLYlUkF9QiyU7RbrWfNBUhoj
-	C7OQ9yKKVuJFDN6RnFCxWjM9nzVi0iOQ5oMIvTZa7Pwvi5m1pFdHgtE8I5xQEdcJnRp8jT8WStP
-	JpFc6jrdAOgNFgFMzAnGJHOp1GD2OBavcZ
-X-Google-Smtp-Source: AGHT+IFYIWC+n60Jh+NK0oH7ocg0CH8rKVpjvpng/mDoRMQvt9OfeYljH/Z2woY7cuOpizBcWnXFwX5FdQwCp7RVY2c=
-X-Received: by 2002:a17:902:fc48:b0:224:88c:9255 with SMTP id
- d9443c01a7336-231d438c7f1mr136853785ad.3.1747907759865; Thu, 22 May 2025
- 02:55:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sOGhBB7A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74330C4CEE4;
+	Thu, 22 May 2025 09:56:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747907794;
+	bh=l+UBCZ90uofbpfwu3YkJzh8e5MpIZHy9Wgl4VOlqqQ8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=sOGhBB7AyYSHlj7s2xcnLFewRhTps5gnKReHSzWTEv8zi3E98oOyS9oyoqLK62vRu
+	 jyy8rRfgpQAnXZ9HZ7zBzmKaeTZjRs229VPnKLG4KGH5kysl1/rf2OAQs9qmZF0P6Y
+	 7BfzEdsSSvIYATjrOFYUAizciWlFftbXCaGf7zk5RFEJBhbf6KOBqoJkUoHPjBEWwQ
+	 TCmW1vWkXLUI3xdgV8BIgDkmwzXtewI7CU144XoA371TaF9OepfCpmvBtVWDh/2/Hq
+	 kdHh0ZgNC8DOm2qQQDUmgkDCff9h+jbflCaglp92F4i7Drkub1MdLT9sZ6g8QDSBId
+	 gN/o3tp9TnZ0Q==
+Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-604f0d27c24so4082080eaf.2;
+        Thu, 22 May 2025 02:56:34 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUWUfWuPSb0mbGJJmzPD+HZTF5QDVVNbmuiV5jyc4IOt5S/O77zDTrU56WFueqTG+el3mA5n54ovlc=@vger.kernel.org, AJvYcCV1CNCVHuuhTGkP7wH0Bic1//mbV0OXRimpjDDLZQnZfB9pROJyPXbZ9fFm013XyEBHlw6MyawSJMQ=@vger.kernel.org, AJvYcCVBF9KMq/Lj59JBfxHM/0b8It6hJO75ecWY863rp1x26BBbrLGOhhYQbz2KZbCgJG32OtwHCcL7Kf34kqWv@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCrT4x94uWNozXSS2WduA4Gu9wg7Vre62mH/Rkl3nkrSSxfck0
+	E/FAfAQp6lWnE+vioOujvx6BCkuG5ghjHhGam3KTEA8oDBf29r7NtthpOla+0z3z/R4HxShth/C
+	AIQOROsAd3Wr5xetxisSwFwDCLEHQsMQ=
+X-Google-Smtp-Source: AGHT+IFDlauQgvFUHi7zRroxnG0JT5GL+TEEToKRpHxNLwLE2g/bn421wTKa1Lj6BeKs24deqdV/eZDC+3zwVRMva/k=
+X-Received: by 2002:a4a:ec49:0:b0:607:dd61:9c33 with SMTP id
+ 006d021491bc7-609f48646b0mr13509442eaf.1.1747907793770; Thu, 22 May 2025
+ 02:56:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250520185555.825242-1-ojeda@kernel.org>
-In-Reply-To: <20250520185555.825242-1-ojeda@kernel.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Thu, 22 May 2025 11:55:46 +0200
-X-Gm-Features: AX0GCFt5zXlczwrJWYedrmHdatCH6TtH7LDmwwL7WwbulsfmTEouK13Fcs43C90
-Message-ID: <CANiq72mPJDA55t=TGz3wFBBch9iPxjQ0V_CV30XR6XijWnh3dw@mail.gmail.com>
-Subject: Re: [PATCH] objtool/rust: relax slice condition to cover more
- `noreturn` Rust functions
-To: Miguel Ojeda <ojeda@kernel.org>
-Cc: Alex Gaynor <alex.gaynor@gmail.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, patches@lists.linux.dev, stable@vger.kernel.org, 
-	John Hubbard <jhubbard@nvidia.com>, Timur Tabi <ttabi@nvidia.com>, Kane York <kanepyork@gmail.com>, 
-	Joel Fernandes <joelagnelf@nvidia.com>
+References: <20250522-userspace-governor-doc-v1-1-c8a038e39084@sony.com>
+ <15871c67-0d18-430f-935e-261b2cda855b@gmail.com> <aC7yeQvKVQ1No9EW@JPC00244420>
+In-Reply-To: <aC7yeQvKVQ1No9EW@JPC00244420>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 22 May 2025 11:56:22 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0i6i6xt5-QOU2r0MDxR+7aOXYBUJ4kkJFQg6+RekayTNQ@mail.gmail.com>
+X-Gm-Features: AX0GCFuDeg96kru4SyCumlyfA3Q7mWIK4DCxHnyPBE6HaK68vl43j7pxhzrRxqk
+Message-ID: <CAJZ5v0i6i6xt5-QOU2r0MDxR+7aOXYBUJ4kkJFQg6+RekayTNQ@mail.gmail.com>
+Subject: Re: [PATCH] cpufreq, docs: (userspace governor) add that actual freq
+ is >= scaling_setspeed
+To: Shashank Balaji <shashank.mahadasyam@sony.com>
+Cc: Russell Haley <yumpusamongus@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Jonathan Corbet <corbet@lwn.net>, linux-pm@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Shinya Takumi <shinya.takumi@sony.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 20, 2025 at 8:56=E2=80=AFPM Miguel Ojeda <ojeda@kernel.org> wro=
-te:
+On Thu, May 22, 2025 at 11:46=E2=80=AFAM Shashank Balaji
+<shashank.mahadasyam@sony.com> wrote:
 >
-> Developers are indeed hitting other of the `noreturn` slice symbols in
-> Nova [1], thus relax the last check in the list so that we catch all of
-> them, i.e.
+> Hi Russell,
 >
->     *_4core5slice5index22slice_index_order_fail
->     *_4core5slice5index24slice_end_index_len_fail
->     *_4core5slice5index26slice_start_index_len_fail
->     *_4core5slice5index29slice_end_index_overflow_fail
->     *_4core5slice5index31slice_start_index_overflow_fail
+> On Thu, May 22, 2025 at 03:50:55AM -0500, Russell Haley wrote:
+> > If the user asks for the frequency to be set from userspace, the
+> > frequency had damn well better be set from userspace.
 >
-> These all exist since at least Rust 1.78.0, thus backport it too.
->
-> See commit 56d680dd23c3 ("objtool/rust: list `noreturn` Rust functions")
-> for more details.
->
-> Cc: stable@vger.kernel.org # Needed in 6.12.y and later.
-> Cc: John Hubbard <jhubbard@nvidia.com>
-> Cc: Timur Tabi <ttabi@nvidia.com>
-> Cc: Kane York <kanepyork@gmail.com>
-> Cc: Josh Poimboeuf <jpoimboe@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Reported-by: Joel Fernandes <joelagnelf@nvidia.com>
-> Link: https://lore.kernel.org/rust-for-linux/20250513180757.GA1295002@joe=
-lnvbox/ [1]
-> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
+> First of all, I agree with you. In fact, before sending this patch, I
+> was considering adding CPUFREQ_GOV_STRICT_TARGET to the userspace
+> governor. intel_pstate should handle the rest of it.
 
-Applied to `rust-next` early so that others can benefit on -next --
-thanks everyone!
+This wouldn't work the way you expect, though.  It would cause the
+driver to always set the frequency to policy->max.
 
-    Fixes: 56d680dd23c3 ("objtool/rust: list `noreturn` Rust functions")
+> > In my opinion, the documentation is correct, and it is the
+> > implementation in intel_pstate that is wrong. If the user wanted two
+> > separate knobs that control the minimum and maximum frequencies, they
+> > could leave intel_pstate in "active" mode and change scaling_min_freq
+> > and scaling_max_freq.
+>
+> If intel_pstate is left in "active" mode, then userspace can't use any
+> of the other governors. Moreover, intel_pstate's min and max frequencies
+> apply to all the cpus.
 
-Cheers,
-Miguel
+That's not true.
+
+scaling_min_freq and scaling_max_freq is per CPU, but the values from
+there are subject to hardware coordination.
+
+> Whereas, the userspace governor can be set on a per-cpu basis.
+
+This is also subject to hardware coordination.
+
+> Let's say this is "fixed" by adding CPUFREQ_GOV_STRICT_TARGET flag to
+> the userspace governor. Then userspace has no way to get back the
+> current behavior where the hardware automagically increases frequency
+> beyond the target frequency. At least not without a new interface.
+>
+> With the current behaviour, userspace can have it both ways:
+>     - actual frequency =3D target frequency
+>     - actual frequency >=3D target frequency
+>
+> And the occasional higher frequency shouldn't hurt performance, right?
+> But if they still want exact equality, with the current interface, they
+> can do that too.
+>
+> This consideration is what led me to document the "actual freq >=3D targe=
+t
+> freq" rather than patch it so that "actual freq =3D target freq".
+
+The documentation can be adjusted by replacing "set" with "request" in
+the userspace governor description and adding a clarification to it
+that the requested frequency is between the policy min and max levels.
+
+With HWP enabled, the closest to setting the frequency to a specific
+value one can get is by setting scaling_min_freq and scaling_max_freq
+to that value.
