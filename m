@@ -1,103 +1,213 @@
-Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40C1F26FD8B
-	for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 22:20:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0F8D26B96F;
+	Thu, 22 May 2025 22:20:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747952443; cv=none; b=nhlopm4SD7sV73dtg6Qj1/oGZuTCuU8hbQHtrYwVYhHvIVXp+UUXbjDZWU4nP3TRXO6uZ7pWr1RTlVj3WTz05uJX3bVccLhZlIbdrY+aU/Pvarh8Pj64Ry1OiWU3DBZRcLng8xF5TK3O3wogAZ54MluSpW7s/D6HJmYxUvhn8WA=
+	t=1747952457; cv=none; b=denvYE8tnxcnLBrK8RamzZbzB4bLNBMMSeHHAm7lBoXUJj92zxag80mxW2wGZxjbQxoxowTvvOo2K3PHKynzjmC3AHpElyDMj7d9ckeHLgppYIoTpYGgzLwS/fnAmuC/P53PXLAn3W2mFdVCfphvpHKdmwwlf36z6qObOiY7Mkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747952443; c=relaxed/simple;
-	bh=mnHKE1BUo31x7AyUtPinsLwcx+oySEsRQhIFnGP6ry4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gNji78b5wjSPk0VLc3nKxNHVUELwyrVcgFyym/7RFr5S3T55EgiXugIH2aPcX9PYpMCKJZW8yiJHwN8VLpOSruDunKYSeVbxhirw6BVBbpd/cmaYTucc/6MI73mYGq1F6D5w06Y6FNSywJy80wLqhwpozsX2FmsBE5AZL32G0IE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=DHtiU/rg; arc=none smtp.client-ip=209.85.166.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1747952457; c=relaxed/simple;
+	bh=dVDrWKoaeesLRoXCHObxVsyqMqgIy+JXfIFLh9pO2d0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pFxGeE1DCGVkoIfT91sQQtmvHArkC/Y/HOKbCv4m3meto6OxUYbLU0NWKQ1Zz4gBoRyqZJbn1TxheKSmn02Sg4f6G6hOA9qSFJYMJRTBfRyWaAJ/EwUWjaHpMwjzv/uKYdOA7fjgUmXluaRetcR9fiPrDThXeQAHnO0oj18uOoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XnfRoa1J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="DHtiU/rg"
-Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3dc75fe4e9bso1328335ab.0
-        for <linux-kernel@vger.kernel.org>; Thu, 22 May 2025 15:20:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1747952439; x=1748557239; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=L5BNM50paBCJ37VNYgPqSl677v0Imj9cFeeb/Yu2EZA=;
-        b=DHtiU/rg9UHDrIoAolmV1etUXS4B8DXyupmcqavapjXEAq2NhCUkDKi9oglV3if5rP
-         RDkcmJGOnsMc+DwIhjjpMb53eOM/lH2bRdXzV0LYZNm4trYer/5jEYRcdrLkFcFTxfOW
-         2n+LHhd1FkquURNgGhMz/G4ojyFdvskrDvVdY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1747952439; x=1748557239;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=L5BNM50paBCJ37VNYgPqSl677v0Imj9cFeeb/Yu2EZA=;
-        b=pmzY3SJCQ+rEjN/URNKd1Po1Vo26+Vuh32eveOOX/OwkEVZbaDQWQ5d6Q2LPOifU5h
-         88nPff4sgC/Zjchvcl37M9IGfDl71gqLFd811d6JeTCEHBC9sshG7MCdP/rY4EFXXEiI
-         6rs3gHnAgIgSpLpfz6jUubE2Ljqe/JlLtNIF2i4v2ql3llGEq2dGL1AL8Z+POSmvOupY
-         Bi2Vq0YCf8850oFQDtZzRVH5FnZZiIUqlrnfHmUqwXO9Qhz2OIDozx1WxFDbznhVGSf4
-         Ox/VdtfCmj9ygqTKwUt963gTEC1EshTXZeMqJ5i1t2aez8NtI59ERA3B1xSk4K+GRqYC
-         xcVw==
-X-Forwarded-Encrypted: i=1; AJvYcCVCrgJui1mIzi5c/bHEi74y5ODSgWeofuD9jtJp91tSM3FhQxWuep9Qqcnm0jRVreGYjp4rCJTYMiCLI6o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTZ2D5cA0h5aCh0C2Sy9jgblc5nE068Ip4ZdYvZ/++sxGNvbZD
-	zmO7VZT2sT4kmHXM1oh/JVczbV69zHQydOxMWRsz97ZlFkY3ELrjzqn0sYoQ11iaKco=
-X-Gm-Gg: ASbGncuEqOcFNUZy72z7jqeBoyDwrT0GikoMnr32rH+WAHIvyrDc7O+3hXfemdvY6Za
-	rFaTyAXKlzMVUpOT32feCXHRLDnHo2XQpidcyUDFf5liIDM4abvMIzCzO2LVWI5LoOH0mIHe6n4
-	IRRftS64JxeaCEu2BBkxWiGTfM85EuyqOHPw/vbtO6LmwN+z7Gn6WMAvjC9itr+LvJI6fpDzf15
-	ItC6g1m9qqc62+U/tcc+1SRs69T+PSSlRdcgYEqbAw7nipkApCkvcBH9I0L2Wab/u4q/R2H8fpd
-	5VssllK1XqIUyiShw50TAb6Ua5Fv6wpOB1SPwfv7WJzoT7PnzxdCQ2vgDFktFfIMolETO3np
-X-Google-Smtp-Source: AGHT+IGYLQ2LO5QOfE62VgsMxmlKAhEOBopbDS6A7t9QHHagvVdXFcgpgAg/8sKLAv9dg/KeRHZBUw==
-X-Received: by 2002:a05:6e02:16ce:b0:3dc:8e8b:42af with SMTP id e9e14a558f8ab-3dc92bf6514mr15590275ab.7.1747952439346;
-        Thu, 22 May 2025 15:20:39 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3dc85440323sm10378805ab.50.2025.05.22.15.20.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 May 2025 15:20:38 -0700 (PDT)
-Message-ID: <2973cc3d-a4e2-4120-ae89-730581090ef8@linuxfoundation.org>
-Date: Thu, 22 May 2025 16:20:38 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XnfRoa1J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5526CC4CEEB;
+	Thu, 22 May 2025 22:20:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1747952457;
+	bh=dVDrWKoaeesLRoXCHObxVsyqMqgIy+JXfIFLh9pO2d0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XnfRoa1JVaE5HSMaUwOq4y9ptbtkDVd0gwCUZd74m0Sg0aDm6uG9UzMBH6Qs+pqOe
+	 Sdmsd9NmgYOCZVP2D9POGPRM950b0RddA5BltuJVgdUHTyzPHikL++CfF6YAZmngwG
+	 cJs9suQ/WeqOZ2obt3Rkx6aWtuXfH7o4otvVvfzDNkQrZ/CRqQqz+u7gD0Ux3u+Cef
+	 o2u2NOsr7Fc7CABVBIUHHwJJfHs/3CNvvN0fZ7hA2PRmUNsOu95b3H+TBSi4nsPYQR
+	 s7Y/RK/5ocVEx1zT9FegZ9wwCALpSXPJS/3lOTVWkCv22fpdz4M0ft/LjczR8v2Kiq
+	 uvRHNnNPL6RqA==
+Date: Thu, 22 May 2025 19:20:55 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Gautam Menghani <gautam@linux.ibm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, maddy@linux.ibm.com
+Subject: Re: [PATCH v3 4/7] perf python: Add support for perf_counts_values
+ to return counter data
+Message-ID: <aC-jR0b3mji4oJ7Q@x1>
+References: <20250519195148.1708988-1-irogers@google.com>
+ <20250519195148.1708988-5-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] docs: filesystems: removed repeated word
-To: Nidhish Chauhan <solemnsquire@gmail.com>
-Cc: linux-kernel-mentees@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250516164648.15396-1-solemnsquire@gmail.com>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20250516164648.15396-1-solemnsquire@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250519195148.1708988-5-irogers@google.com>
 
-On 5/16/25 10:46, Nidhish Chauhan wrote:
-> Removed a repeated word 'at' from journalling.rst at line no. 96 in
-> filesystems directory.
+On Mon, May 19, 2025 at 12:51:41PM -0700, Ian Rogers wrote:
+> From: Gautam Menghani <gautam@linux.ibm.com>
 > 
-> Signed-off-by: Nidhish Chauhan <solemnsquire@gmail.com>
+> Add support for perf_counts_values struct to enable the python
+> bindings to read and return the counter data.
+> 
+> Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
 > ---
->   Documentation/filesystems/journalling.rst | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+>  tools/perf/util/python.c | 92 +++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 91 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/filesystems/journalling.rst b/Documentation/filesystems/journalling.rst
-> index 863e93e623f7..2825f6c030c2 100644
-> --- a/Documentation/filesystems/journalling.rst
-> +++ b/Documentation/filesystems/journalling.rst
-> @@ -93,7 +93,7 @@ easily as on jbd2_journal_start().
->   
->   Try to reserve the right number of blocks the first time. ;-). This will
->   be the maximum number of blocks you are going to touch in this
-> -transaction. I advise having a look at at least ext4_jbd.h to see the
-> +transaction. I advise having a look at least ext4_jbd.h to see the
->   basis on which ext4 uses to make these decisions.
->   
->   Another wriggle to watch out for is your on-disk block allocation
+> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> index ead3afd2d996..1cbddfe77c7c 100644
+> --- a/tools/perf/util/python.c
+> +++ b/tools/perf/util/python.c
+> @@ -626,6 +626,92 @@ static int pyrf_thread_map__setup_types(void)
+>  	return PyType_Ready(&pyrf_thread_map__type);
+>  }
+>  
+> +struct pyrf_counts_values {
+> +	PyObject_HEAD
+> +
+> +	struct perf_counts_values values;
+> +};
+> +
+> +static const char pyrf_counts_values__doc[] = PyDoc_STR("perf counts values object.");
+> +
+> +static void pyrf_counts_values__delete(struct pyrf_counts_values *pcounts_values)
+> +{
+> +	Py_TYPE(pcounts_values)->tp_free((PyObject *)pcounts_values);
+> +}
+> +
+> +#define counts_values_member_def(member, ptype, help) \
+> +	{ #member, ptype, \
+> +	  offsetof(struct pyrf_counts_values, values.member), \
+> +	  0, help }
+> +
+> +static PyMemberDef pyrf_counts_values_members[] = {
+> +	counts_values_member_def(val, Py_T_ULONG, "Value of event"),
+> +	counts_values_member_def(ena, Py_T_ULONG, "Time for which enabled"),
+> +	counts_values_member_def(run, Py_T_ULONG, "Time for which running"),
+> +	counts_values_member_def(id, Py_T_ULONG, "Unique ID for an event"),
+> +	counts_values_member_def(lost, Py_T_ULONG, "Num of lost samples"),
+> +	{NULL}
+> +};
 
-Please run get_maintainers.pl to get the correct list of recipients for
-this patch.
+So the above is failing on a aarch64 debian (rpi5):
 
-thanks,
--- Shuah
+acme@raspberrypi:~/git/perf-tools-next $ dpkg -S /usr/include/python3.11/structmember.h
+libpython3.11-dev:arm64: /usr/include/python3.11/structmember.h
+acme@raspberrypi:~/git/perf-tools-next $
+
+Where it only has:
+
+acme@raspberrypi:~/git/perf-tools-next $ grep -r Py_T_ULONG /usr/include/
+acme@raspberrypi:~/git/perf-tools-next $ grep -rw Py_T_ULONG /usr/include/
+acme@raspberrypi:~/git/perf-tools-next $ grep -rw T_ULONG /usr/include/
+/usr/include/python3.11/structmember.h:#define T_ULONG     12
+acme@raspberrypi:~/git/perf-tools-next $
+
+while on fedora 42 x86_64:
+
+⬢ [acme@toolbx perf-tools-next]$ grep -rw Py_T_ULONG /usr/include/
+/usr/include/python3.13/descrobject.h:#define Py_T_ULONG     12
+/usr/include/python3.13/structmember.h:#define T_ULONG     Py_T_ULONG
+⬢ [acme@toolbx perf-tools-next]$
+
+So I'm making it use the T_ULONG and others as all the other PyMemberDef
+arrays in tools/perf/util/python.c, ok?
+
+- Arnaldo
+
+> +static PyObject *pyrf_counts_values_get_values(struct pyrf_counts_values *self, void *closure)
+> +{
+> +	PyObject *vals = PyList_New(5);
+> +
+> +	if (!vals)
+> +		return NULL;
+> +	for (int i = 0; i < 5; i++)
+> +		PyList_SetItem(vals, i, PyLong_FromLong(self->values.values[i]));
+> +
+> +	return vals;
+> +}
+> +
+> +static int pyrf_counts_values_set_values(struct pyrf_counts_values *self, PyObject *list,
+> +					 void *closure)
+> +{
+> +	Py_ssize_t size;
+> +	PyObject *item = NULL;
+> +
+> +	if (!PyList_Check(list)) {
+> +		PyErr_SetString(PyExc_TypeError, "Value assigned must be a list");
+> +		return -1;
+> +	}
+> +
+> +	size = PyList_Size(list);
+> +	for (Py_ssize_t i = 0; i < size; i++) {
+> +		item = PyList_GetItem(list, i);
+> +		if (!PyLong_Check(item)) {
+> +			PyErr_SetString(PyExc_TypeError, "List members should be numbers");
+> +			return -1;
+> +		}
+> +		self->values.values[i] = PyLong_AsLong(item);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static PyGetSetDef pyrf_counts_values_getset[] = {
+> +	{"values", (getter)pyrf_counts_values_get_values, (setter)pyrf_counts_values_set_values,
+> +		"Name field", NULL},
+> +	{NULL}
+> +};
+> +
+> +static PyTypeObject pyrf_counts_values__type = {
+> +	PyVarObject_HEAD_INIT(NULL, 0)
+> +	.tp_name	= "perf.counts_values",
+> +	.tp_basicsize	= sizeof(struct pyrf_counts_values),
+> +	.tp_dealloc	= (destructor)pyrf_counts_values__delete,
+> +	.tp_flags	= Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,
+> +	.tp_doc		= pyrf_counts_values__doc,
+> +	.tp_members	= pyrf_counts_values_members,
+> +	.tp_getset	= pyrf_counts_values_getset,
+> +};
+> +
+> +static int pyrf_counts_values__setup_types(void)
+> +{
+> +	pyrf_counts_values__type.tp_new = PyType_GenericNew;
+> +	return PyType_Ready(&pyrf_counts_values__type);
+> +}
+> +
+>  struct pyrf_evsel {
+>  	PyObject_HEAD
+>  
+> @@ -1475,7 +1561,8 @@ PyMODINIT_FUNC PyInit_perf(void)
+>  	    pyrf_evlist__setup_types() < 0 ||
+>  	    pyrf_evsel__setup_types() < 0 ||
+>  	    pyrf_thread_map__setup_types() < 0 ||
+> -	    pyrf_cpu_map__setup_types() < 0)
+> +	    pyrf_cpu_map__setup_types() < 0 ||
+> +	    pyrf_counts_values__setup_types() < 0)
+>  		return module;
+>  
+>  	/* The page_size is placed in util object. */
+> @@ -1520,6 +1607,9 @@ PyMODINIT_FUNC PyInit_perf(void)
+>  	Py_INCREF(&pyrf_cpu_map__type);
+>  	PyModule_AddObject(module, "cpu_map", (PyObject*)&pyrf_cpu_map__type);
+>  
+> +	Py_INCREF(&pyrf_counts_values__type);
+> +	PyModule_AddObject(module, "counts_values", (PyObject *)&pyrf_counts_values__type);
+> +
+>  	dict = PyModule_GetDict(module);
+>  	if (dict == NULL)
+>  		goto error;
+> -- 
+> 2.49.0.1101.gccaa498523-goog
